@@ -2,223 +2,312 @@ version: '1.0'
 module: checkpoint-foundations
 level: a2
 inline:
-- id: quiz
+- id: quiz-mixed-grammar
   type: quiz
   instruction: Оберіть правильний варіант
   items:
-  - question: У мене є два _____.
+  - question: У мене зараз немає ____ часу.
+    options:
+    - вільного
+    - вільний
+    - вільному
+    - вільна
+    correct: 0
+  - question: Сьогодні вранці ми ____ яблучний сік.
+    options:
+    - купили
+    - купували
+    - купуємо
+    - куплять
+    correct: 0
+  - question: Вона довго ____ довгого листа.
+    options:
+    - писала
+    - написала
+    - пише
+    - напишу
+    correct: 0
+  - question: У кабінеті є п'ять старих ____.
+    options:
+    - столів
+    - столи
+    - стіл
+    - столу
+    correct: 0
+  - question: Він прийшов на урок без ____.
+    options:
+    - телефона
+    - телефон
+    - телефону
+    - телефоні
+    correct: 0
+  - question: Вчора він швидко ____ домашнє завдання.
+    options:
+    - зробив
+    - робив
+    - робить
+    - зроблю
+    correct: 0
+  - question: У мого друга є три ____.
     options:
     - брати
     - братів
+    - брат
+    - брату
+    correct: 0
+  - question: Це велика машина мого старшого ____.
+    options:
     - брата
-    - братом
+    - брат
+    - брату
+    - браті
     correct: 0
-  - question: Вона довго _____ цей текст.
-    options:
-    - читала
-    - прочитала
-    - читав
-    - прочитав
-    correct: 0
-  - question: У мене немає вільного _____.
-    options:
-    - час
-    - часу
-    - часом
-    - часі
-    correct: 1
-  - question: Учора він швидко _____ нове завдання.
-    options:
-    - робив
-    - зробив
-    - робила
-    - зробила
-    correct: 1
-  - question: П'ять нових _____ лежать на столі.
-    options:
-    - книги
-    - книг
-    - книгах
-    - книгами
-    correct: 1
-  - question: Ми _____ продукти на ринку весь ранок.
+  - question: Ми часто ____ свіже молоко тут.
     options:
     - купували
     - купили
-    - купував
-    - купив
+    - купимо
+    - купують
     correct: 0
-  - question: Без _____ тут дуже сумно.
+  - question: Сьогодні немає гарної ____.
     options:
-    - ти
-    - тебе
-    - тобі
-    - тобою
-    correct: 1
-  - question: Вона нарешті написала правильну _____.
-    options:
-    - відповідь
-    - відповіді
-    - відповіддю
-    - відповідям
+    - погоди
+    - погода
+    - погоду
+    - погоді
     correct: 0
-  title: Оберіть правильний варіант
-- id: fill-in
+- id: fill-in-transformation
   type: fill-in
-  instruction: Напишіть правильну форму слова в дужках
+  instruction: Вставте правильне слово
   items:
-  - sentence: У мене немає ____.
-    answer: брата
-  - sentence: Сьогодні не було свіжого ____.
-    answer: хліба
-  - sentence: Я чекаю свого старого ____.
-    answer: друга
-  - sentence: Ми йдемо до великого ____.
-    answer: парку
-  - sentence: У класі п'ять ____.
-    answer: студентів
-  - sentence: На столі лежать два ____.
+  - sentence: Я вчора ____ нову книгу три години.
+    answer: читав
+    options:
+    - читав
+    - прочитав
+    - читає
+  - sentence: На столі немає гарячої ____.
+    answer: кави
+    options:
+    - кави
+    - кава
+    - каву
+  - sentence: Я успішно ____ цю книгу за один вечір.
+    answer: прочитав
+    options:
+    - читав
+    - прочитав
+    - читає
+  - sentence: У мене немає старшої ____.
+    answer: сестри
+    options:
+    - сестри
+    - сестра
+    - сестру
+  - sentence: Я завжди довго ____ домашнє завдання.
+    answer: робив
+    options:
+    - робив
+    - зробив
+    - роблю
+  - sentence: Він швидко ____ завдання за п'ять хвилин.
+    answer: зробив
+    options:
+    - зробив
+    - робив
+    - робить
+  - sentence: Я живу недалеко від ____ міста.
+    answer: центру
+    options:
+    - центру
+    - центр
+    - центром
+  - sentence: Він з'їв сім солодких ____.
+    answer: яблук
+    options:
+    - яблук
+    - яблука
+    - яблуко
+  - sentence: У нашому класі стоїть два великі ____.
     answer: столи
-  - sentence: Вона прочитала три нові ____.
-    answer: книги
-  - sentence: Без вільного ____ складно відпочивати.
-    answer: часу
-  title: Напишіть правильну форму слова в дужках
-- id: fill-in-2
+    options:
+    - столи
+    - столів
+    - стіл
+  - sentence: Раптом вона ____ зелений чай.
+    answer: купила
+    options:
+    - купила
+    - купувала
+    - купує
+- id: fill-in-production
   type: fill-in
-  instruction: Напишіть правильне дієслово або форму слова
+  instruction: Вставте правильне слово в речення
   items:
-  - sentence: Що ви _____ вчора весь вечір?
-    answer: робили
-  - sentence: Вона швидко _____ довгу статтю.
-    answer: написала
-  - sentence: Сьогодні у нас важлива _____.
-    answer: перевірка
-  - sentence: Ми _____ продукти на ринку дві години.
-    answer: купували
-  - sentence: Студенти успішно виконали всі _____.
-    answer: вправи
-  - sentence: Ця _____ дуже важлива для нас.
-    answer: контрольна точка
-  title: Напишіть правильне дієслово або форму слова
+  - sentence: Я пішов у магазин, але не ____ молока.
+    answer: купив
+    options:
+    - купив
+    - купував
+  - sentence: Вона шукала довго, але не знайшла ____.
+    answer: ключів
+    options:
+    - ключів
+    - ключі
+  - sentence: Ми були там, але не побачили наших ____.
+    answer: друзів
+    options:
+    - друзів
+    - друзі
+  - sentence: Він купив газету, але не прочитав цікавої ____.
+    answer: статті
+    options:
+    - статті
+    - стаття
+  - sentence: Я хотів працювати, але не мав вільного ____.
+    answer: часу
+    options:
+    - часу
+    - час
+  - sentence: У мене є два старші ____.
+    answer: брати
+    options:
+    - брати
+    - братів
+  - sentence: А у мого друга п'ять ____.
+    answer: братів
+    options:
+    - братів
+    - брати
+  - sentence: Я нарешті ____ цю книгу.
+    answer: прочитав
+    options:
+    - прочитав
+    - читав
+  - sentence: Вчора я ____ телевізор три години.
+    answer: дивився
+    options:
+    - дивився
+    - подивився
+  - sentence: Я купив п'ять червоних ____.
+    answer: яблук
+    options:
+    - яблук
+    - яблука
 workbook:
-- id: aspect-sort
-  type: group-sort
-  instruction: Розподіліть дієслова за видами
-  groups:
-  - label: Недоконаний вид (процес)
-    items:
-    - робити
-    - читати
-    - писати
-    - купувати
-    - говорити
-    - зустрічати
-    - дивитися
-  - label: Доконаний вид (результат)
-    items:
-    - зробити
-    - прочитати
-    - написати
-    - купити
-    - сказати
-    - зустріти
-    - подивитися
-  title: Розподіліть дієслова за видами
-- id: aspect-match
-  type: match-up
-  instruction: З'єднайте видові пари
-  pairs:
-  - left: робити
-    right: зробити
-  - left: читати
-    right: прочитати
-  - left: писати
-    right: написати
-  - left: купувати
-    right: купити
-  - left: говорити
-    right: сказати
-  - left: зустрічати
-    right: зустріти
-  - left: дивитися
-    right: подивитися
-  title: З'єднайте видові пари
-- id: sentence-jumble
+- id: wb-translate-sentences
+  type: translate
+  instruction: Оберіть правильний переклад
+  items:
+  - source: Every language requires time for review.
+    options:
+    - text: Кожна мова потребує часу на повторення.
+      correct: true
+    - text: Кожна мова потребує час для повторення.
+      correct: false
+  - source: I don't have free time right now.
+    options:
+    - text: У мене зараз немає вільного часу.
+      correct: true
+    - text: У мене зараз немає вільний час.
+      correct: false
+  - source: He arrived without his phone.
+    options:
+    - text: Він прийшов без свого телефона.
+      correct: true
+    - text: Він прийшов без свій телефон.
+      correct: false
+  - source: This is my older brother's car.
+    options:
+    - text: Це машина мого старшого брата.
+      correct: true
+    - text: Це машина мій старший брат.
+      correct: false
+  - source: I bought three interesting books.
+    options:
+    - text: Я купив три цікаві книги.
+      correct: true
+    - text: Я купив три цікавих книжок.
+      correct: false
+  - source: My neighbor has ten books.
+    options:
+    - text: Мій сусід має десять книжок.
+      correct: true
+    - text: Мій сусід має десять книги.
+      correct: false
+  - source: I very much need help.
+    options:
+    - text: Я дуже сильно потребую допомоги.
+      correct: true
+    - text: Я дуже сильно потребую допомогу.
+      correct: false
+  - source: She is taking a shower now.
+    options:
+    - text: Зараз вона бере душ.
+      correct: true
+    - text: Зараз вона приймає душ.
+      correct: false
+  - source: We are participating today.
+    options:
+    - text: Сьогодні ми беремо участь.
+      correct: true
+    - text: Сьогодні ми приймаємо участь.
+      correct: false
+  - source: I did not buy milk.
+    options:
+    - text: Я не купив молока.
+      correct: true
+    - text: Я не купив молоко.
+      correct: false
+- id: wb-unjumble-sentences
   type: unjumble
   instruction: Складіть правильне речення зі слів
   items:
   - words:
-    - немає
-    - часу.
+    - зараз
+    - вільного
     - мене
     - У
-    - вільного
+    - часу.
+    - немає
     correct_order:
     - У
     - мене
+    - зараз
     - немає
     - вільного
     - часу.
   - words:
-    - цей
-    - прочитав
-    - за
-    - Він
-    - текст
-    - годину.
+    - купив
+    - Я
+    - п'ять
+    - яблук.
+    - червоних
     correct_order:
-    - Він
-    - прочитав
-    - цей
-    - текст
-    - за
-    - годину.
+    - Я
+    - купив
+    - п'ять
+    - червоних
+    - яблук.
   - words:
-    - писали
-    - Студенти
-    - есе.
-    - довго
-    - складне
+    - завжди
+    - каву
+    - Вона
+    - вранці.
+    - купувала
     correct_order:
-    - Студенти
-    - довго
-    - писали
-    - складне
-    - есе.
+    - Вона
+    - завжди
+    - купувала
+    - каву
+    - вранці.
   - words:
-    - нові
-    - Ми
-    - вчора.
-    - купили
-    - книги
-    correct_order:
-    - Ми
-    - купили
-    - нові
-    - книги
-    - вчора.
-  - words:
-    - було
-    - магазині
-    - не
-    - У
-    - хліба.
-    - свіжого
-    correct_order:
-    - У
-    - магазині
-    - не
-    - було
-    - свіжого
-    - хліба.
-  - words:
-    - і
-    - сестер?
+    - братів
     - Скільки
     - у
     - тебе
-    - братів
+    - сестер?
+    - і
     correct_order:
     - Скільки
     - у
@@ -226,45 +315,317 @@ workbook:
     - братів
     - і
     - сестер?
-  title: Складіть правильне речення зі слів
-- id: translate-aspect
-  type: translate
-  instruction: Оберіть правильний переклад
+  - words:
+    - великі
+    - класі
+    - нашому
+    - У
+    - два
+    - столи.
+    - стоїть
+    correct_order:
+    - У
+    - нашому
+    - класі
+    - стоїть
+    - два
+    - великі
+    - столи.
+  - words:
+    - гарної
+    - немає
+    - погоди.
+    - Сьогодні
+    correct_order:
+    - Сьогодні
+    - немає
+    - гарної
+    - погоди.
+  - words:
+    - я
+    - Вчора
+    - телевізор.
+    - дивився
+    - просто
+    correct_order:
+    - Вчора
+    - я
+    - просто
+    - дивився
+    - телевізор.
+  - words:
+    - сьогодні
+    - ти
+    - Але
+    - вчитися.
+    - мусиш
+    correct_order:
+    - Але
+    - сьогодні
+    - ти
+    - мусиш
+    - вчитися.
+  - words:
+    - великий
+    - Цей
+    - подарунок
+    - тільки
+    - тебе.
+    - для
+    correct_order:
+    - Цей
+    - великий
+    - подарунок
+    - тільки
+    - для
+    - тебе.
+  - words:
+    - прочитав
+    - книгу.
+    - Я
+    - успішно
+    - нову
+    correct_order:
+    - Я
+    - успішно
+    - прочитав
+    - нову
+    - книгу.
+- id: wb-true-false-grammar
+  type: true-false
+  instruction: Правда чи ні?
   items:
-  - source: I was reading this book for three hours.
+  - statement: Після слова «немає» ми завжди використовуємо родовий відмінок.
+    correct: true
+    explanation: «Немає» вимагає родового відмінка (немає часу).
+  - statement: Дієслово «брати» використовуємо у фразі «брати участь».
+    correct: true
+    explanation: Це правильна українська форма, а не «приймати участь».
+  - statement: Дієслово «читати» — це доконаний вид.
+    correct: false
+    explanation: Це процес, отже це недоконаний вид.
+  - statement: Ми кажемо «два брати», але «п'ять братів».
+    correct: true
+    explanation: Числа 2-4 вимагають називного множини, а 5+ родового.
+  - statement: Словосполучення «без молока» стоїть у знахідному відмінку.
+    correct: false
+    explanation: Прийменник «без» вимагає родового відмінка.
+  - statement: Дієслово «потребувати» вимагає знахідного відмінка.
+    correct: false
+    explanation: «Потребувати» завжди вимагає родового відмінка (потребувати допомоги).
+  - statement: Якщо є слово «часто», ми зазвичай використовуємо недоконаний вид.
+    correct: true
+    explanation: «Часто» вказує на регулярну дію (процес).
+  - statement: Якщо результат досягнуто швидко, використовуємо доконаний вид.
+    correct: true
+    explanation: Доконаний вид підкреслює результат дії.
+  - statement: Форма «десять столів» є правильною для родового відмінка множини.
+    correct: true
+    explanation: Число 10 вимагає родового відмінка множини.
+  - statement: Фраза «приймати душ» є правильною в українській мові.
+    correct: false
+    explanation: Правильно казати «брати душ».
+- id: wb-match-up-aspect
+  type: match-up
+  instruction: З'єднайте видові пари дієслів (недоконаний — доконаний)
+  pairs:
+  - left: читати
+    right: прочитати
+  - left: писати
+    right: написати
+  - left: робити
+    right: зробити
+  - left: купувати
+    right: купити
+  - left: вчити
+    right: вивчити
+  - left: готувати
+    right: приготувати
+  - left: шукати
+    right: знайти
+  - left: дивитися
+    right: подивитися
+  - left: відпочивати
+    right: відпочити
+  - left: бачити
+    right: побачити
+- id: wb-group-sort-numbers
+  type: group-sort
+  instruction: Розподіліть числа та їх закінчення
+  groups:
+  - label: Один (Називний однини)
+    items:
+    - один стіл
+    - один брат
+    - одне яблуко
+    - одна сестра
+  - label: Два, три, чотири (Називний множини)
+    items:
+    - два столи
+    - три брати
+    - чотири яблука
+    - дві сестри
+  - label: П'ять і більше (Родовий множини)
+    items:
+    - п'ять столів
+    - шість братів
+    - сім яблук
+    - вісім сестер
+- id: wb-error-correction-grammar
+  type: error-correction
+  instruction: Знайдіть і виправте помилку
+  items:
+  - sentence: Я довго прочитав цю книгу.
+    error: прочитав
+    correction: читав
+    error_type: word
+    explanation: Слово «довго» вказує на процес (недоконаний вид).
     options:
-    - text: Я читав цю книгу три години.
-      correct: true
-    - text: Я прочитав цю книгу три години.
-      correct: false
-  - source: I finally finished reading this book.
+    - читав
+    - читає
+    - почитав
+  - sentence: Він прийшов без свій телефон.
+    error: свій телефон
+    correction: свого телефона
+    error_type: phrase
+    explanation: Після «без» потрібен родовий відмінок.
     options:
-    - text: Я нарешті прочитав цю книгу.
-      correct: true
-    - text: Я нарешті читав цю книгу.
-      correct: false
-  - source: He was doing his homework all evening.
+    - свого телефона
+    - своєму телефону
+    - своїм телефоном
+  - sentence: Ми часто купили тут каву.
+    error: купили
+    correction: купували
+    error_type: word
+    explanation: «Часто» вказує на регулярну дію (недоконаний вид).
     options:
-    - text: Він робив своє завдання весь вечір.
-      correct: true
-    - text: Він зробив своє завдання весь вечір.
-      correct: false
-  - source: He got the task done in five minutes.
+    - купували
+    - купуємо
+    - купимо
+  - sentence: У кімнаті є шість великих вікна.
+    error: вікна
+    correction: вікон
+    error_type: word
+    explanation: Після «шість» потрібен родовий відмінок множини.
     options:
-    - text: Він зробив завдання за п'ять хвилин.
-      correct: true
-    - text: Він робив завдання за п'ять хвилин.
-      correct: false
-  - source: We have no time for conversations.
+    - вікон
+    - вікно
+    - вікнам
+  - sentence: Він швидко робив домашнє завдання за п'ять хвилин.
+    error: робив
+    correction: зробив
+    error_type: word
+    explanation: Результат дії за короткий час вимагає доконаного виду.
     options:
-    - text: У нас немає часу на розмови.
-      correct: true
-    - text: У нас немає час на розмови.
-      correct: false
-  - source: I met my brother today.
+    - зробив
+    - робить
+    - зробить
+  - sentence: Я потребую вашу допомогу.
+    error: вашу допомогу
+    correction: вашої допомоги
+    error_type: phrase
+    explanation: Дієслово «потребувати» вимагає родового відмінка.
     options:
-    - text: Сьогодні я зустрів брата.
-      correct: true
-    - text: Сьогодні я зустрічав брата.
-      correct: false
-  title: Оберіть правильний переклад
+    - вашої допомоги
+    - вашій допомозі
+    - вашою допомогою
+  - sentence: У мене немає вільний час.
+    error: вільний час
+    correction: вільного часу
+    error_type: phrase
+    explanation: Після «немає» завжди потрібен родовий відмінок.
+    options:
+    - вільного часу
+    - вільному часу
+    - вільним часом
+  - sentence: Це нова машина мій брат.
+    error: мій брат
+    correction: мого брата
+    error_type: phrase
+    explanation: Для позначення власності використовуємо родовий відмінок.
+    options:
+    - мого брата
+    - моєму брату
+    - моїм братом
+  - sentence: Я з'їв чотири солодких яблук.
+    error: яблук
+    correction: яблука
+    error_type: word
+    explanation: Після «чотири» потрібен називний відмінок множини.
+    options:
+    - яблука
+    - яблуко
+    - яблуку
+  - sentence: Вчора вона довго приймала душ.
+    error: приймала
+    correction: брала
+    error_type: word
+    explanation: Українською правильно «брати душ».
+    options:
+    - брала
+    - робила
+    - мала
+- id: wb-fill-in-endings
+  type: fill-in
+  instruction: Вставте правильне закінчення або форму слова
+  items:
+  - sentence: У нашому класі стоїть два великі ____.
+    answer: столи
+    options:
+    - столи
+    - столів
+    - стіл
+  - sentence: У цьому кабінеті є шість старих ____.
+    answer: столів
+    options:
+    - столів
+    - столи
+    - столам
+  - sentence: Я вчора купив три цікаві ____.
+    answer: книги
+    options:
+    - книги
+    - книжок
+    - книгам
+  - sentence: Мій сусід має десять товстих ____.
+    answer: книжок
+    options:
+    - книжок
+    - книги
+    - книжкам
+  - sentence: Вона завжди довго ____ домашнє завдання.
+    answer: робила
+    options:
+    - робила
+    - зробила
+    - робить
+  - sentence: Він швидко ____ своє завдання.
+    answer: зробив
+    options:
+    - зробив
+    - робив
+    - робить
+  - sentence: Ми вчимо нові слова кожного ____.
+    answer: ранку
+    options:
+    - ранку
+    - ранок
+    - ранком
+  - sentence: Сьогодні ми нарешті ____ всі слова.
+    answer: вивчили
+    options:
+    - вивчили
+    - вчили
+    - вчимо
+  - sentence: Брат часто ____ вечерю.
+    answer: готував
+    options:
+    - готував
+    - приготував
+    - готує
+  - sentence: Брат ____ дуже смачну вечерю.
+    answer: приготував
+    options:
+    - приготував
+    - готував
+    - готує

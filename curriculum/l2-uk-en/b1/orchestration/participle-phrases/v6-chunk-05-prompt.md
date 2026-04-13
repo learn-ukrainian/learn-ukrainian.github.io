@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-про найпоширеніші **пунктуаційні пастки** *(punctuation traps)*, у які часто потрапляють навіть досвідчені студенти. Найбільш типова помилка на цьому рівні — це загублена кома всередині складного речення. Ми вже добре знаємо базове правило: якщо дієприкметниковий зворот стоїть після іменника, він завжди виділяється комами. Але якщо цей зворот знаходиться в самій середині речення, він має чітко виділятися комами з обох боків. Студенти часто автоматично ставлять першу кому на початку звороту, але зовсім забувають закрити його другою комою в кінці. Розглянемо поширене неправильне речення: «Книга, написана відомим автором лежала на столі». Тут критично не вистачає другої коми після слова «автором». Чому вона там потрібна? Тому що ми маємо візуально показати, де саме закінчується зворот і де продовжується головна думка нашого речення. Правильний і грамотний варіант виглядає виключно так: «Книга, написана відомим автором, лежала на столі». Завжди уявляйте собі, що коми — це звичайні математичні дужки. Якщо ви відкрили дужку, ви обов'язково мусите її закрити. Якщо ви почали виділяти зворот комою, обов'язково поставте кому і після його логічного завершення. Це робить речення зрозумілим і дуже легким для читання. Наступна серйозна граматична помилка стосується самої логіки побудови українського речення. Її лінгвісти часто називають помилкою **зміщеного логічного зв'язку** *(dangling participle)*. Суть цього правила дуже проста: дієприкметник завжди має логічно та граматично стосуватися саме того конкретного іменника, який він описує. Якщо ви випадково розірвете цей тісний зв'язок, ваше речення миттєво втратить здоровий глузд і стане комічним. Розглянемо класичний приклад такої кумедної помилки: «Прочитана всіма учнями, бібліотекар забрала книгу». Що саме тут не так? Зворот «прочитана всіма учнями» граматично стоїть безпосередньо перед словом «бібліотекар» у називному відмінку. Виходить, що це бідна бібліотекар була прочитана всіма студентами! Це, звісно, абсолютна нісенітниця. Насправді прочитаною була саме книга. Щоб швидко виправити цю грубу помилку, ми повинні поставити зворот безпосередньо поруч із тим словом, яке він описує. Ми маємо змінити відмінок звороту, щоб він ідеально узгоджувався зі словом «книгу». Правильний варіант звучить так: «Прочитану всіма учнями книгу бібліотекар забрала». Або ж ми можемо елегантно поставити зворот після слова: «Бібліотекар забрала книгу, прочитану всіма учнями». Завжди уважно перевіряйте, чи ваш дієприкметник дійсно описує правильний предмет у тексті. Наостанок ми маємо обговорити надзвичайно важливе питання **мовної чистоти** *(linguistic purity)*. Українська граматика відрізняється від російської, і змішування цих норм створює **суржик** *(Surzhyk — a mixed language)*. В українській мові суворо заборонено використовувати активні дієприкметники минулого часу з суфіксами «-вш» або «-ш». Такі слова, як «читавший», «склавший» чи «зробивший» — це дуже грубі **русизми** *(Russianisms)*. Вони звучать неприродно. Якщо вам потрібно висловити таку думку, ви завжди повинні використовувати підрядне речення. Замість неправильного «студент, склавший іспит», ви маєте завжди казати: «студент, який склав іспит». Замість «людина, прочитавша статтю», правильним буде варіант «людина, яка прочитала статтю». Ось ще п'ять поширених кальок та їхні правильні українські відповідники. Ніколи не кажіть «прийшовший» — кажіть «той, хто прийшов». Забудьте слово «перемігший» — використовуйте «той, який переміг». Замість «бачивший» кажіть «той, що бачив». Неправильне «заснувший» негайно замініть на «той, який заснув». А замість «зрозумівший» використовуйте «той, що зрозумів». Правильне використання цих конструкцій показує вашу глибоку повагу до мови. <!-- INJECT_ACTIVITY: error-correction-punctuation -->
+другу кому, ви порушите логічну структуру всього висловлювання. Інша критична помилка — це так званий «звисаючий» дієприкметник. Кожен дієприкметниковий зворот завжди виконує роль **означення** (attribute) і повинен логічно описувати правильний іменник. Дія, яку виражає дієприкметник, має належати тому самому об'єкту, з яким він узгоджується. Розглянемо такий класичний помилковий приклад: «*Прочитана всіма, бібліотекар забрала книгу». Хто був прочитаний усіма? За правилами граматики, зворот на початку речення автоматично прив'язується до підмета, тобто до слова «бібліотекар». Виходить абсурдна ситуація: студенти прочитали бібліотекаря, і після цього вона забрала книгу. Щоб виправити цей логічний збій, ми повинні поставити зворот безпосередньо перед правильним словом, яке він описує. Або ж ми можемо змінити структуру речення. Правильний варіант звучатиме так: «Прочитану всіма книгу бібліотекар забрала». Тепер дієприкметник «прочитана» стоїть у **препозиції** (preposition) до слова «книга», і логіка речення повністю відновлена. Будьте дуже уважні, коли починаєте речення з дієприкметникового звороту. > *Another critical mistake is the so-called "dangling participle". Every participle phrase always acts as an attribute and must logically describe the correct noun. The action expressed by the participle must belong to the exact same object it agrees with. Let's look at this classic erroneous example: "Read by everyone, the librarian took the book." Who was read by everyone? According to grammar rules, a phrase at the beginning of a sentence automatically attaches to the subject, meaning the word "librarian". This creates an absurd situation: the students read the librarian, and after that, she took the book. To fix this logical failure, we must place the phrase directly before the correct word it describes. Or we can change the sentence structure. The correct version will sound like this: "The librarian took the book read by everyone." Now the participle stands in preposition to the word "book", and the logic of the sentence is completely restored. Be very careful when starting a sentence with a participle phrase.* Остання і найважливіша проблема стосується деколонізації вашої української мови. Російська граматика активно використовує активні дієприкметники минулого часу із суфіксами «-вш-» або «-ш-». В українській мові такі форми є абсолютно неприродними, і їх використання вважається грубим суржиком. Ви ніколи не повинні використовувати слова на зразок «*читавший», «*склавший» чи «*зробивший». Замість цього українська мова пропонує елегантне рішення: ми просто використовуємо **підрядне речення** (subordinate clause) зі словами «який» або «що». Давайте розглянемо п'ять найпоширеніших суржикових кальок та їхні правильні українські відповідники. Замість потворного «*побідивший спортсмен» ми кажемо «спортсмен, який переміг». Замість «*запізнившийся студент» правильно казати «студент, що спізнився». Ніколи не пишіть «*написавший автор», використовуйте нормативну конструкцію «автор, який написав». Фразу «*прийшовший гість» завжди замінюйте на «гість, який прийшов». І нарешті, замість «*виживші люди» українці кажуть «люди, які вижили». Ця проста трансформація робить вашу мову чистою, автентичною та стилістично бездоганною. :::info **Grammar box** Active past participles (like *читавший*) do not exist in modern literary Ukrainian. Always substitute them with a subordinate clause (*який читав*). This is the #1 way to make your Ukrainian sound natural and authentic! ::: <!-- INJECT_ACTIVITY: error-correction-punctuation, find 10 sentences with misplaced or missing commas in participle phrases and fix them -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -530,7 +530,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -543,18 +610,61 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] дієприкметниковий зворот (participle phrase)
+- [ ] означуване слово (modified word — the noun the participle refers to)
+- [ ] означення (attribute — syntactic role of the participle phrase)
+- [ ] відокремлення (setting off — punctuation with commas)
+- [ ] постпозиція (postposition — phrase after the noun)
+- [ ] препозиція (preposition — phrase before the noun)
+- [ ] підрядне речення (subordinate clause)
+- [ ] залежні слова (dependent words)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Читання та практика (~930 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

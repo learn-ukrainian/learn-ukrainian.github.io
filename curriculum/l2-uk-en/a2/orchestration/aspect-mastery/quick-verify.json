@@ -1,18 +1,7 @@
 {
-  "attempt": 4,
+  "attempt": 1,
   "passed": true,
   "errors": [],
-  "warnings": [
-    {
-      "check": "VOCABULARY",
-      "severity": "WARNING",
-      "message": "Missing 3/10 required vocab: починати / почати (to begin — impf./pf.), закінчувати / закінчити (to finish — impf./pf.), допомагати / допомогти (to help — impf./pf.)"
-    },
-    {
-      "check": "EXERCISES",
-      "severity": "WARNING",
-      "message": "Plan expects 4 exercise(s) but content has 0 placeholders"
-    }
-  ],
-  "timestamp": "2026-04-08T14:16:38.396506+00:00"
+  "warnings": [],
+  "timestamp": "2026-04-12T21:14:07.790543+00:00"
 }

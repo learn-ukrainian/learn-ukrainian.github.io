@@ -1,47 +1,48 @@
 # Build Summary: reading-ukrainian (A1)
 
-Generated: 2026-04-11 00:50
+Generated: 2026-04-13 21:25
 
 ## Pipeline Phases
 
 | Phase | Status | Timestamp |
 |-------|--------|-----------|
-| check | complete | 2026-04-08 22:20:13 |
-| research | complete | 2026-04-08 22:20:13 |
-| skeleton | complete | 2026-04-08 22:20:45 |
-| pre-verify | complete | 2026-04-08 22:21:37 |
-| write | complete | 2026-04-08 22:23:28 |
-| exercises | complete | 2026-04-08 22:23:28 |
-| activities | complete | 2026-04-08 22:24:47 |
-| verify-exercises | complete | 2026-04-08 22:24:47 |
-| annotate | complete | 2026-04-08 22:24:47 |
-| vocab | complete | 2026-04-08 22:25:31 |
-| enrich | complete | 2026-04-08 22:25:31 |
-| verify | complete | 2026-04-08 22:25:31 |
-| review | complete | 2026-04-08 22:26:34 |
-| stress | complete | 2026-04-08 22:26:36 |
-| publish | complete | 2026-04-10 22:50:22 |
-| audit | complete | 2026-04-10 22:50:22 |
+| check | complete | 2026-04-12 17:06:07 |
+| research | complete | 2026-04-12 17:06:07 |
+| skeleton | complete | 2026-04-12 17:07:08 |
+| pre-verify | complete | 2026-04-12 17:08:44 |
+| write | complete | 2026-04-12 17:11:04 |
+| exercises | complete | 2026-04-12 17:11:04 |
+| activities | complete | 2026-04-12 17:13:51 |
+| repair | complete | 2026-04-12 17:13:51 |
+| verify-exercises | complete | 2026-04-12 17:13:51 |
+| annotate | complete | 2026-04-12 17:13:51 |
+| vocab | complete | 2026-04-12 17:15:03 |
+| enrich | complete | 2026-04-12 17:15:03 |
+| verify | complete | 2026-04-12 17:15:03 |
+| review | complete | 2026-04-12 17:26:59 |
+| stress | complete | 2026-04-12 17:27:02 |
+| publish | complete | 2026-04-13 08:55:56 |
+| audit | complete | 2026-04-13 08:55:56 |
 
 ## Reviews
 
 | Round | File |
 |-------|------|
 | 1 | reading-ukrainian-review-r1.md |
+| 2 | reading-ukrainian-review-r2.md |
 
 ## Dispatch Log
 
 | Phase | Agent | Duration | OK |
 |-------|-------|----------|----|
-| pre-verify | gemini-tools (gemini-3-flash-preview) | 52s | ✅ |
-| skeleton | gemini (gemini-3-flash-preview) | 32s | ✅ |
-| write | gemini-tools (gemini-3.1-pro-preview) | 111s | ✅ |
-| write | gemini-tools (gemini-3.1-pro-preview) | 123s | ✅ |
-| activities | gemini-tools (gemini-3.1-pro-preview) | 79s | ✅ |
-| activities | gemini-tools (gemini-3.1-pro-preview) | 83s | ✅ |
-| activities | gemini-tools (gemini-3.1-pro-preview) | 158s | ✅ |
-| vocab | gemini (gemini-3-flash-preview) | 33s | ✅ |
-| review | gemini-tools (gemini-3.1-pro-preview) | 63s | ✅ |
+| pre-verify | gemini-tools (gemini-3.1-pro-preview) | 95s | ✅ |
+| skeleton | gemini (gemini-3.1-pro-preview) | 60s | ✅ |
+| write | gemini-tools (gemini-3.1-pro-preview) | 139s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 60s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 105s | ✅ |
+| vocab | gemini (gemini-3.1-pro-preview) | 65s | ✅ |
+| review | codex-tools (gpt-5.4) | 375s | ✅ |
+| review | codex-tools (gpt-5.4) | 340s | ✅ |
 
 ## Friction
 
@@ -55,6 +56,7 @@ Generated: 2026-04-11 00:50
 - `pre-verify-results.md`
 - `quick-verify.json`
 - `review-structured-r1.yaml`
+- `review-structured-r2.yaml`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

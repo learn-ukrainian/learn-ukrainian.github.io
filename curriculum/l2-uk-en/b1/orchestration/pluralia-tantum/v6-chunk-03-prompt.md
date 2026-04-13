@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-*(perfume)* та гіркі аптечні **ліки** *(medicine)*. Дуже цікавим та несподіваним прикладом для багатьох англомовних студентів є слово **меблі** *(furniture)*. В англійській мові «furniture» є класичним незлічуваним іменником і завжди вживається виключно в однині, тоді як українські «меблі» — це типове та яскраве *pluralia tantum*. Якщо ви купуєте нову велику шафу та м'який диван для вітальні, ви купуєте «нові меблі» (множина), а не «нові мебль». Так само ми постійно використовуємо слово **харчі** *(provisions/food)* для позначення домашніх запасів їжі на зиму. Ці слова чудово показують, як саме мова структурує нашу реальність. Деякі речі ми бачимо як єдину масу, але граматично оформлюємо її саме через форму множини. Третя семантична група об'єднує різноманітні **часові періоди, події та ігри** *(time periods, events, and games)*. Багато тривалих життєвих процесів або складних багатокомпонентних святкових подій українці традиційно виражають саме через граматичну множину. Наприклад, омріяні всіма школярами та студентами літні **канікули** *(holidays/vacation)* завжди є виключно множинними. Іншим чудовим культурним прикладом є українські **іменини** *(name day)* — традиційне родинне свято на честь святого християнського покровителя, чиє ім'я ви гордо носите. Дуже важливо ніколи не плутати його зі словом «день народження» *(birthday)*, де головне слово «день» має абсолютно звичайну форму однини. До цієї ж категорії впевнено та логічно належать важливі державні політичні **вибори** *(elections)* та романтичні весільні **заручини** *(engagement)*. Також сюди історично входять традиційні сільськогосподарські **жнива** *(harvest)*, які зазвичай складаються з багатьох тижнів важкої щоденної праці в золотому українському полі. Якщо ми говоримо про популярні домашні розваги, то інтелектуальні **шахи** *(chess)* теж зовсім не мають форми однини. Ця граматична множинність чудово та точно відображає внутрішню складність самого явища. Адже канікули тривають багато днів підряд, демократичні вибори складаються з мільйонів голосів громадян, а для гри в шахи потрібно багато різних фігур на чорно-білій дошці. Давайте детальніше подивимося, як ці специфічні слова працюють у звичайному живому спілкуванні. Уявіть знайому побутову ситуацію: людина пакує речі для переїзду з Одеси до Києва, а добрий сусід активно допомагає їй збирати коробки. Зверніть особливу увагу на те, як абсолютно всі прикметники та дієслова ідеально узгоджуються з іменниками *pluralia tantum* виключно у формі множини. > — **Сусід:** Я вже акуратно спакував твої книги. Де мої нові сонцезахисні **окуляри** *(glasses)*? Я не можу їх ніде знайти. > — **Мешканець:** Твої дорогі окуляри лежать он там, на столі. А де лежать кравецькі **ножиці** *(scissors)*? Мені треба відрізати цей скотч. > — **Сусід:** Гострі металеві ножиці лежать у тій найменшій коробці. Ти вже сховав готівкові **гроші** *(money)*? > — **Мешканець:** Так, усі гроші надійно лежать у конверті в моєму рюкзаку. Я ніколи не кладу їх у багажні валізи. > — **Сусід:** Це дуже розумне рішення. Твої важкі дерев'яні **меблі** *(furniture)* вантажники заберуть завтра рано вранці. > — **Мешканець:** Дуже добре. Тоді я беру свій рюкзак та виходжу. Вхідні **двері** *(door)* вже зачинені на ключ? > — **Сусід:** Так, металеві двері надійно зачинені. Ми можемо спокійно їхати на залізничний вокзал. Як ви бачите з цього діалогу, хоча ми говоримо про одні конкретні двері та одні окуляри, слова «зачинені», «нові», «лежать» і «гострі» завжди граматично стоять у множині. <!-- INJECT_ACTIVITY: group-sort-categories -->
+форму множини. Його часто плутають зі словом «день народження». Пам'ятайте, що «день народження» — це два окремих слова, де головне слово «день» має форму однини. Тому ми кажемо «мій день народження», але «мої іменини». > *The word "іменини" denotes a traditional holiday in honor of the saint whose name a person bears. This holiday always takes the plural form. It is often confused with the word "день народження" (birthday). Remember that "день народження" is two separate words, where the main word "день" has a singular form. Therefore, we say "мій день народження" (my birthday) but "мої іменини" (my name day).* Finally, the fourth group consists of geographical names (*географічні назви*). A surprising number of cities, regions, and mountain ranges in Ukrainian are *pluralia tantum*. The most iconic example is the **Карпати** (Carpathians). When you travel to the mountains, you are literally traveling to a plural destination. Therefore, when discussing your trips, you must ensure your verbs and adjectives reflect the plural number, known as **множина** (plural number). Let's see how these words operate in a natural conversational setting. When using *pluralia tantum* nouns, remember that grammatical **узгодження** (agreement) is strictly plural. Adjectives, pronouns, and verbs must all reflect the plural number, even if the object being discussed seems singular in your mind. In the following dialogue, a resident is packing boxes for a move to a new apartment, and a neighbor drops by to help. Notice how words like *окуляри*, *ножиці*, *гроші*, and **двері** (door) dictate the forms of the surrounding words. We will look at how to form the **родовий відмінок** (genitive case) for these tricky nouns in the next section, but for now, focus on mastering their basic Nominative agreement. > — **Сусід:** Привіт! Тобі допомогти з речами? *(Hi! Do you need help with your things?)* > — **Мешканець:** Привіт! Так, дякую. Де мої **окуляри**? Вони лежали на столі. *(Hi! Yes, thank you. Where are my glasses? They were lying on the table.)* > — **Сусід:** Я поклав їх у цю коробку. А де **ножиці**? Мені треба розрізати скотч. *(I put them in this box. And where are the scissors? I need to cut the tape.)* > — **Мешканець:** Вони у тій великій коробці, де **меблі**. Обережно, там ще старі мамині **парфуми**. *(They are in that big box where the furniture is. Careful, my mom's old perfume is there too.)* > — **Сусід:** Зрозумів. А що робити з цим конвертом? *(Understood. And what should I do with this envelope?)* > — **Мешканець:** Там **гроші**. Поклади їх у мій рюкзак, будь ласка. *(There is money there. Put it in my backpack, please.)* > — **Сусід:** Добре. Ми все зібрали? *(Good. Have we gathered everything?)* > — **Мешканець:** Здається, так. Перевір, чи зачинені **двері**. *(I think so. Check if the door is locked.)* > — **Сусід:** Так, **двері** зачинені на ключ. Можемо їхати. *(Yes, the door is locked with a key. We can go.)* <!-- INJECT_ACTIVITY: group-sort, Sort nouns: pluralia tantum / singularia tantum / both числа, 12 items -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -604,7 +604,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -617,18 +684,68 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] двері (door — pluralia tantum, Р. дверей)
+- [ ] окуляри (glasses — pluralia tantum, Р. окулярів)
+- [ ] гроші (money — pluralia tantum, Р. грошей, Ор. грішми/грошима)
+- [ ] ворота (gate — pluralia tantum, Р. воріт, Ор. ворітьми/воротами)
+- [ ] ножиці (scissors — pluralia tantum, Р. ножиць)
+- [ ] Карпати (Carpathians — geographical pluralia tantum)
+- [ ] канікули (holidays/vacation — pluralia tantum)
+- [ ] ліки (medicine — pluralia tantum, connects to M16)
+- [ ] меблі (furniture — pluralia tantum)
+- [ ] сани (sleigh — pluralia tantum, Р. саней)
+- [ ] дріжджі (yeast — pluralia tantum)
+- [ ] однина (singular number)
+- [ ] множина (plural number)
+- [ ] родовий відмінок (genitive case)
+- [ ] узгодження (agreement — grammatical concord)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Відмінювання (~700 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

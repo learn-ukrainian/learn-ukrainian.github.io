@@ -1,0 +1,69 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T00-07-a315891d.json
+phase: write-chunk-03
+prompt_chars: 45758
+response_chars: 6170
+prompt_words: 6543
+response_words: 999
+sections:
+- name: header
+  start: 0
+  length: 483
+  fraction: 0.0106
+- name: skeleton
+  start: 483
+  length: 2443
+  fraction: 0.0534
+- name: prior_summary
+  start: 2926
+  length: 3274
+  fraction: 0.0716
+- name: plan
+  start: 6200
+  length: 12245
+  fraction: 0.2676
+- name: wiki
+  start: 11732
+  length: 27060
+  fraction: 0.5914
+- name: output_spec
+  start: 45505
+  length: 253
+  fraction: 0.0055
+large_sections:
+- wiki
+directives_total: 25
+directives_covered: 18
+directives_missed:
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: EVERY word in the checklist below MUST appear at least once with a bold Ukrainian
+    form and English translation in a natural sentence.
+  covered: false
+  coverage_note: 5/15 keywords (33%)
+- kind: skeleton_para
+  text: 'P6 (130w): Consolidation exercise walkthrough. Show a short, choppy paragraph
+    composed of simple sentences, and then rewrite it into natural, connected prose
+    using a mix of cause, concession, and coordination to demonstrate flow and stylistic
+    maturity.'
+  covered: false
+  coverage_note: 10/26 keywords (38%)
+- kind: inject_activity
+  text: group-sort-conjunctions
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-conjunction-choice
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-compound
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up, Match two halves of sentences — причина with наслідок, допуст with
+    результат
+  covered: false
+  coverage_note: marker missing

@@ -1,22 +1,36 @@
-## Практика: Знаряддя чи супутник? (Practice: Tool or Companion?)
+## Практика: Знаряддя чи супутник? (Practice: Tool or Companion?) (~500 words total)
 
-Англомовні студенти часто роблять одну типову помилку. *(English-speaking students often make one typical mistake.)* In English, you use the preposition "with" for both tools and companions. В українській мові це дві різні граматичні ситуації. *(In the Ukrainian language, these are two different grammatical situations.)* Коли ми використовуємо предмет як інструмент, ми беремо Орудний відмінок без прийменника. *(When we use an object as a tool, we take the Instrumental case without a preposition.)* Наприклад, ми говоримо: «**Я пишу ручкою**» *(I am writing with a pen)*. The pen is the tool you are using to perform the action. Але прийменник «**з**» *(with)* має інше значення. *(But the preposition "з" has another meaning.)* It indicates accompaniment or being together. Якщо ви скажете «**Я йду з ручкою**» *(I am walking with a pen)*, це означає, що ви просто тримаєте ручку. *(If you say "I am walking with a pen", it means you are just holding a pen.)* The pen is your companion, not your tool. Уявіть, що ви гуляєте, і ручка гуляє разом із вами. *(Imagine that you are walking, and the pen is walking together with you.)* Це дуже важлива різниця. *(This is a very important difference.)*
+One of the most common mistakes English speakers make is using the preposition **з** (with) when talking about tools or means. In English, you write "with a pen" and go "with a friend." In Ukrainian, these are two completely different grammar structures. If an object is a tool or a means to do something, we use the Instrumental case without any prepositions. If someone or something is your companion, you must use **з** plus the Instrumental case.
 
-Ця ж логіка працює для транспорту. *(This same logic works for transport.)* When you travel by a vehicle, the vehicle is the means of your action. Тому ми кажемо: «**Він їде автобусом**» *(He is travelling by bus)*. Тут автобус — це засіб пересування. *(Here the bus is the means of transport.)* Але якщо ви їдете разом із людиною, ця людина є вашим супутником. *(But if you are travelling together with a person, this person is your companion.)* Тоді ми говоримо: «**Він їде з другом**» *(He is travelling with a friend)*. What happens if you mix them up? Якщо ви скажете «**Я їду з автобусом**» *(I am travelling with a bus)*, це звучить кумедно. *(If you say "I am travelling with a bus", it sounds funny.)* It sounds like you are travelling alongside a bus, perhaps in a car next to it, rather than being inside it. Транспорт — це засіб, а люди — це супутники. *(Transport is a means, and people are companions.)*
+Я пишу синьою ручкою, а суп їм ложкою. Ручка та ложка — це мої інструменти. Але фраза «я йду до школи з ручкою» означає зовсім інше. Це означає, що я маю ручку в кишені. Вона — мій супутник, а не інструмент. Тому ми ніколи не кажемо «я пишу з ручкою». Ми також не кажемо «я ріжу з ножем».
 
-В українській мові є особливі дієслова. *(In the Ukrainian language, there are special verbs.)* Вони завжди вимагають Орудного відмінка без прийменника. *(They always require the Instrumental case without a preposition.)* These verbs often express the "means" or "manner" of a state. Чудовий приклад — це дієслово «**пахнути**» *(to smell of)*. Навесні парк **пахне квітами** *(In spring, the park smells of flowers)*. The flowers are the source or the means of the smell. Інший приклад — дієслово «**займатися**» *(to be engaged in, to do)*. Мій брат **займається спортом** *(My brother does sports)*. Студенти часто **цікавляться історією** *(Students are often interested in history)*. У цих фразах ми ніколи не використовуємо прийменник «з». *(In these phrases, we never use the preposition "з".)* The objects act as the logical instruments of your interest or activity. Запам'ятайте ці корисні вирази. *(Remember these useful expressions.)* Вони роблять вашу мову дуже природною. *(They make your language very natural.)*
+> *I write with a blue pen (ручкою), and I eat soup with a spoon (ложкою). The pen and the spoon are my tools. But the phrase "I am going to school with a pen" (з ручкою) means something completely different. It means that I have a pen in my pocket. It is my companion, not a tool. That is why we never say "I write with a pen" (я пишу з ручкою). We also do not say "I cut with a knife" (я ріжу з ножем).*
 
-Подивімося, як це працює на практиці. *(Let's see how this works in practice.)* Прочитайте цей діалог у художній школі. *(Read this dialogue in an art school.)* Студенти обговорюють свої інструменти. *(The students are discussing their tools.)*
+:::info
+**Grammar box** — The preposition **з** always implies accompaniment (together with). If you use it with a tool or a vehicle, it sounds like that object is walking right next to you holding your hand!
+:::
 
-> — **Вчитель:** Добрий день! Чим ви сьогодні малюєте? *(Good day! What are you drawing with today?)*
-> — **Марко:** Я малюю цим м'яким олівцем. *(I am drawing with this soft pencil.)* А також я креслю довгою лінійкою. *(And also I am drafting with a long ruler.)*
-> — **Ганна:** А я працюю фарбами та широким пензлем. *(And I am working with paints and a wide brush.)*
-> — **Вчитель:** Дуже добре. А чим ви приїхали на урок? *(Very well. And how did you arrive to the lesson?)*
-> — **Ганна:** Я приїхала швидким трамваєм. *(I arrived by a fast tram.)*
-> — **Марко:** А я прийшов пішки з великою лінійкою і з новим другом! *(And I came on foot with a big ruler and with a new friend!)*
-> — **Вчитель:** Це чудово, що ви цікавитеся мистецтвом. *(It is wonderful that you are interested in art.)*
+This logic applies perfectly to transport and people. When a vehicle is the means of transport, you use the bare Instrumental case. When a person travels alongside you, they are your companion, so you use the preposition **з**.
 
-Як бачите, Марко використовує прийменник «з» для лінійки і друга. *(As you can see, Marko uses the preposition "з" for the ruler and the friend.)* He brought them as companions, he didn't use them as tools or transport. Але Ганна використовує трамвай як засіб. *(But Hanna uses the tram as a means.)*
+Мій брат їде на роботу автобусом, а сестра летить літаком. Автобус і літак — це їхній засіб пересування. Але мій брат їде туди з другом. Друг — це людина, яка сидить поруч. Фраза «я їду з автобусом» звучить дуже дивно. Українці подумають, що ви біжите поруч із великою машиною. Тому ми кажемо «їхати трамваєм», але «їхати з братом».
 
-<!-- INJECT_ACTIVITY: quiz-companion-choice -->
-<!-- INJECT_ACTIVITY: group-sort-categories -->
+> *My brother goes to work by bus (автобусом), and my sister flies by airplane (літаком). The bus and the airplane are their means of transport (засіб). But my brother is going there with a friend (з другом). The friend is the person who sits next to him. The phrase "I am traveling with a bus" (з автобусом) sounds very strange. Ukrainians will think that you are running next to a big machine. That is why we say "to travel by tram" (їхати трамваєм), but "to travel with a brother" (їхати з братом).*
+
+Beyond tools and transport, Ukrainian uses the bare Instrumental case in several common fixed expressions. These verbs naturally take the Instrumental to indicate the means, manner, or focus of an action without needing any prepositions.
+
+Мій дідусь любить цікавитися історією. Моя сестра обожнює займатися спортом щоранку. Навесні наш сад починає пахнути квітами. У цих фразах ми завжди використовуємо орудний відмінок без прийменника. Ви не можете сказати «займатися зі спортом». Ви також не можете сказати «пахнути з квітами».
+
+> *My grandfather likes to be interested in history (цікавитися історією). My sister loves to do sports (займатися спортом) every morning. In the spring, our garden begins to smell of flowers (пахнути квітами). In these phrases, we always use the instrumental case without a preposition. You cannot say "to do with sports". You also cannot say "to smell with flowers".*
+
+Let's see how these rules play out in a real conversation. In this dialogue, an art teacher is asking students about their tools and how they arrived at the studio. Pay attention to how they use the bare Instrumental for both their art supplies and their transport.
+
+> — **Вчителька:** Діти, чим ви сьогодні працюєте? *(Children, what are you working with today?)*
+> — **Олена:** Я малюю цим м'яким олівцем. *(I am drawing with this soft pencil.)*
+> — **Марко:** А я працюю фарбами та пензлем. *(And I am working with paints and a brush.)*
+> — **Вчителька:** Дуже добре! А як ви сьогодні дісталися до школи? *(Very good! And how did you get to school today?)*
+> — **Олена:** Я приїхала трамваєм, а Марко прийшов пішки з великою лінійкою. *(I arrived by tram, and Marko came on foot with a big ruler.)*
+> — **Вчителька:** Марку, ти прийшов пішки чи приїхав автобусом? *(Marko, did you come on foot or arrive by bus?)*
+> — **Марко:** Пішки! Але мій старший брат приїхав потягом. *(On foot! But my older brother arrived by train.)*
+
+<!-- INJECT_ACTIVITY: quiz, Choose between з + Instrumental (companion) and bare Instrumental (tool) -->
+<!-- INJECT_ACTIVITY: group-sort, Sort sentences into Tool/Means vs. Accompaniment categories -->

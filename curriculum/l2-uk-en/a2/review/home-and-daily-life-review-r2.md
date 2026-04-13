@@ -1,60 +1,88 @@
 ## Linguistic Scan
-1 error found:
-- Russian calque: "одні і ті ж речі" (literal translation of "одни и те же вещи"). The correct natural Ukrainian phrasing is "ті самі речі".
+No Russianisms, Surzhyk, paronym errors, or forbidden Russian letters found.
+
+Found factual grammar-teaching errors:
+
+1. Scenario 1: `Для опису місця ми завжди використовуємо місцевий відмінок.`
+Issue: this is too broad and false. Location in Ukrainian is not always Locative; the same section already uses `біля вікна`, which is Genitive.
+
+2. Scenario 1: `We also use it to express quantity when asking questions or stating exactly how many rooms are in a house.`
+Issue: this overstates Genitive usage. Later the module correctly says `два столи`, `три ліжка`, `чотири стільці`, so the explanation contradicts its own examples.
+
+3. Scenario 2: `The question "What time is it?" is «Котра година?». It uses the Nominative case and an ordinal number.`
+Issue: `котра` here is not an ordinal numeral; this teaches the wrong grammar.
+
+4. Scenario 2: `Прийменник «з» вимагає Орудного відмінка.`
+Issue: false as a general rule. `з` can govern different cases; here only the comitative meaning (`з родиною`) takes Instrumental.
 
 ## Exercise Check
-- `<!-- INJECT_ACTIVITY: fill-in-home-cases -->`: Present, logically placed after the Home/Rooms section, matches plan (8 items, fill-in).
-- `<!-- INJECT_ACTIVITY: quiz-daily-routine -->`: Present, logically placed after the Daily Routine section, matches plan (8 items, quiz).
-- `<!-- INJECT_ACTIVITY: match-up-activities -->`: Present, logically placed after the Daily Routine section, matches plan (8 items, match-up).
-- `<!-- INJECT_ACTIVITY: error-correction-cases -->`: Present, logically placed after the Visiting section, matches plan (6 items, error-correction).
-All exercises match the expected types and counts perfectly.
+Four markers are present, matching the four `activity_hints` in the plan:
+
+- `fill-in-home-description` after Scenario 1
+- `quiz-daily-routine-cases` after Scenario 2
+- `match-up-routine-times` after Scenario 2
+- `error-correction-cases-routine` after Scenario 3
+
+Placement is sensible and spread through the module rather than clustered at the end. Marker IDs match the planned exercise types and focuses closely enough. No inline DSL exercises are present, so distractor logic and answer-key quality cannot be audited from this content alone.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 8/10 | Missing several vocabulary items explicitly listed in the plan: `кабінет`, `стіл`, `стілець`, `дзеркало`. The plan explicitly required teaching "Instrumental for characteristics (стіл з дерева)", but this was entirely omitted. The speaking task checklist missed the Dative case requirement. |
-| 2. Linguistic accuracy | 9/10 | Excellent grasp of case endings and prepositions, but used the Russian calque "одні і ті ж" instead of "ті самі". |
-| 3. Pedagogical quality | 9/10 | Grammar is presented clearly with logical examples (e.g., the contrast between "у/в" for enclosed spaces and "на" for surfaces). Deducted 1 point because it failed to teach the Instrumental case for characteristics as required by the plan. |
-| 4. Vocabulary coverage | 8/10 | Covered all required and recommended words, but missed some specific room and furniture nouns from the plan outline (`кабінет`, `стіл`, `стілець`, `дзеркало`). |
-| 5. Exercise quality | 10/10 | Exercise markers are perfectly placed, matching the plan's exact requirements and testing the freshly taught material. |
-| 6. Engagement & tone | 10/10 | Friendly, natural, and encouraging tone. Good use of the teacher persona without being overly corporate or gamified. |
-| 7. Structural integrity | 10/10 | Very solid structure. 2673 words, well above the 2000 target. Headings map perfectly to the plan. |
-| 8. Cultural accuracy | 10/10 | Represents Ukrainian hospitality naturally (e.g., offering tea/coffee, conversational dynamics in a host's home). Use of 24-hour/12-hour time concepts is accurate. |
-| 9. Dialogue & conversation quality | 10/10 | Dialogues are natural and contextualized, providing a realistic framework for the grammatical cases being taught. |
+| 1. Plan adherence | 7/10 | The section structure and word budgets track the plan, and required/recommended vocabulary is covered. But the plan calls for characteristic-description patterns, and Scenario 1 gives `дерев'яний стіл` rather than explicitly teaching the planned `стіл з дерева / кімната з великими вікнами` style; the speaking-task tip about room counts also clashes with the model answer `У квартирі є три кімнати: велика спальня, вітальня і маленька кухня.` |
+| 2. Linguistic accuracy | 6/10 | No Russianisms found, but there are several factual grammar errors: `Для опису місця ми завжди використовуємо місцевий відмінок`, `It uses the Nominative case and an ordinal number`, and `Прийменник «з» вимагає Орудного відмінка.` |
+| 3. Pedagogical quality | 6/10 | The module has good example density, but key explanations overgeneralize and misteach: `We also use it to express quantity ... stating exactly how many rooms are in a house`, `Для опису місця ми завжди...`, and the wrong analysis of `Котра година?`. |
+| 4. Vocabulary coverage | 9/10 | All required plan vocabulary appears naturally in prose: `помешкання`, `кімната`, `кухня`, `спальня`, `вітальня`, `меблі`, `розпорядок дня`, `вставати`, `снідати`, `лягати спати`. Recommended items also appear: `балкон`, `коридор`, `килим`, `пригощатися`, `господар`. |
+| 5. Exercise quality | 8/10 | Marker coverage matches the plan, and placement follows the teaching sequence. Actual generated exercise content is not present here, so answer logic and distractor quality cannot be verified. |
+| 6. Engagement & tone | 8/10 | The tone is mostly teacherly and useful, with concrete situations like a house tour, routine description, and visiting friends. Some prose is padded by generic lines such as `Mastering this case is essential for smooth communication.` |
+| 7. Structural integrity | 10/10 | All planned H2 sections are present and ordered correctly. The pipeline word count is 2968, well above the 2000 target, and there are no dangling sections or obvious formatting artifacts. |
+| 8. Cultural accuracy | 8/10 | Hospitality details are solid (`гостинці`, `Пригощайтеся!`, dinner visit scenario). The tip about `двокімнатна квартира` is useful, but it is undermined by the model answer counting the kitchen inside `три кімнати`. |
+| 9. Dialogue & conversation quality | 8/10 | Dialogues have named speakers and plausible home/daily-life contexts. Scenario 1 is somewhat inventory-driven, but Scenario 3 feels more natural and socially grounded. |
 
 ## Findings
-[1. Plan adherence] [Major]
-Location: Section 1 paragraph "Це кухня, вітальня..." and paragraph "Тут є диван..."
-Issue: Missing room and furniture vocabulary words from the plan: `кабінет`, `стіл`, `стілець`, `дзеркало`.
-Fix: Add these vocabulary items to the respective listing sentences.
+[LINGUISTIC ACCURACY] [SEVERITY: critical]  
+Location: Scenario 1, `Для опису місця ми завжди використовуємо місцевий відмінок.`  
+Issue: This is factually wrong. Ukrainian location expressions also use other cases, including Genitive (`біля вікна`) and Instrumental (`за столом`).  
+Fix: Narrow the rule to `у/в` and `на` constructions instead of presenting Locative as universal.
 
-[1. Plan adherence] [Major]
-Location: Section 1 paragraph "Finally, let's make our room descriptions richer with descriptive adjectives."
-Issue: Failed to teach the Instrumental case for characteristics (e.g., `стіл з дерева`, `кімната з великими вікнами`) as explicitly requested in the plan outline.
-Fix: Add a sentence explaining the use of Instrumental for characteristics before the adjective explanation.
+[PEDAGOGICAL QUALITY] [SEVERITY: critical]  
+Location: Scenario 1, `We also use it to express quantity when asking questions or stating exactly how many rooms are in a house.`  
+Issue: This misstates Genitive usage and contradicts the module’s own later explanation that `2/3/4` take Nominative plural.  
+Fix: Limit the claim to `скільки`, `багато`, and similar quantity words.
 
-[1. Plan adherence] [Major]
-Location: Section 4 paragraph "Fourth, use the Instrumental case..."
-Issue: The checklist for the speaking task omits the Dative case, which was required in the plan's checklist ("Dat. (for whom)").
-Fix: Add the Dative case to the grammar checklist sequence.
+[LINGUISTIC ACCURACY] [SEVERITY: critical]  
+Location: Scenario 2, `The question "What time is it?" is «Котра година?». It uses the Nominative case and an ordinal number.`  
+Issue: `котра` is not an ordinal numeral here; this teaches the wrong grammatical analysis.  
+Fix: Explain that the phrase uses the interrogative word `котра` plus the noun `година`.
 
-[2. Linguistic accuracy] [Critical]
-Location: Section 2 paragraph "Ось мій звичайний розпорядок дня... Кожного дня я роблю одні і ті ж речі."
-Issue: "одні і ті ж" is a Russian calque (from "одни и те же"). The natural Ukrainian phrasing is "ті самі".
-Fix: Change to "Щодня я роблю ті самі речі."
+[LINGUISTIC ACCURACY] [SEVERITY: critical]  
+Location: Scenario 2, `Прийменник «з» вимагає Орудного відмінка.`  
+Issue: This is false as a general rule. In this sentence the Instrumental is required because `з` means accompaniment, not because `з` always governs Instrumental.  
+Fix: Qualify the rule: `У значенні «разом із кимось»...`
+
+[PLAN ADHERENCE] [SEVERITY: major]  
+Location: Scenario 1 furniture paragraph, `... м'яке **крісло** (armchair) та дерев'яний стіл.`  
+Issue: The plan explicitly wants characteristic-description patterns like `стіл з дерева` and `кімната з великими вікнами`, but the prose does not teach that pattern directly.  
+Fix: Revise this paragraph to include those constructions in context.
+
+[CULTURAL ACCURACY] [SEVERITY: major]  
+Location: Speaking task model answer, `У квартирі є три кімнати: велика спальня, вітальня і маленька кухня.`  
+Issue: This conflicts with the immediately preceding tip that room counts usually exclude the kitchen in Ukrainian housing talk.  
+Fix: Change the model answer so the room count and listed spaces are consistent with the tip.
 
 ## Verdict: REVISE
-The module is fundamentally excellent, well-structured, and highly readable. However, it contains one clear Russian calque and misses a few specific explicit requirements from the plan (Instrumental for characteristics, some vocabulary, and a checklist item). Applying targeted fixes will bring it to full compliance.
+The module is structurally complete and vocabulary-rich, but it contains multiple critical grammar-teaching errors. That alone blocks PASS, and several scored dimensions fall below 9.
 
 <fixes>
-- find: "Це кухня, вітальня, спальня, **ванна кімната** *(bathroom)*, коридор та **балкон** *(balcony)*."
-  replace: "Це кухня, вітальня, спальня, **ванна кімната** *(bathroom)*, коридор, **балкон** *(balcony)* та **кабінет** *(study/office)*."
-- find: "Тут є **диван** *(sofa)*, **крісло** *(armchair)*, **шафа** *(wardrobe)*, **ліжко** *(bed)*, **полиця** *(shelf)* та м'який **килим** *(carpet)*."
-  replace: "Тут є **диван** *(sofa)*, **крісло** *(armchair)*, **стіл** *(table)*, **стілець** *(chair)*, **шафа** *(wardrobe)*, **ліжко** *(bed)*, **полиця** *(shelf)*, **дзеркало** *(mirror)* та м'який **килим** *(carpet)*."
-- find: "Finally, let's make our room descriptions richer with descriptive adjectives."
-  replace: "Finally, let's make our room descriptions richer. We can use the Instrumental case with the preposition «з» (with) to describe characteristics: **стіл з дерева** *(table made of wood)* or **кімната з великими вікнами** *(room with large windows)*. We also use descriptive adjectives."
-- find: "Fourth, use the Instrumental case to explain how you commute or exactly who you eat breakfast with. Finally, use the Locative case to describe exactly where furniture items are located and to state the specific time you usually wake up."
-  replace: "Fourth, use the Instrumental case to explain how you commute or exactly who you eat breakfast with. Fifth, use the Dative case to express for whom something is or who likes something. Finally, use the Locative case to describe exactly where furniture items are located and to state the specific time you usually wake up."
-- find: "Кожного дня я роблю одні і ті ж речі."
-  replace: "Щодня я роблю ті самі речі."
+- find: "Для опису місця ми завжди використовуємо місцевий відмінок."
+  replace: "Для опису місця з прийменниками **у/в** і **на** ми зазвичай використовуємо місцевий відмінок."
+- find: "We also use it to express quantity when asking questions or stating exactly how many rooms are in a house."
+  replace: "We also use it to express quantity in questions like «Скільки у вас кімнат?» and after quantity words like «багато»."
+- find: "The question \"What time is it?\" is «Котра година?». It uses the Nominative case and an ordinal number."
+  replace: "The question \"What time is it?\" is «Котра година?». It uses the interrogative word «котра» and the noun «година», not an ordinal numeral."
+- find: "Коли я вдома, я йду у ванну кімнату. Тут ми використовуємо Знахідний відмінок для напрямку. Потім я їду на роботу автобусом. Слово «автобус» стоїть в Орудному відмінку, бо це засіб транспорту. Я завжди **снідаю** з родиною або з друзями. Прийменник «з» вимагає Орудного відмінка."
+  replace: "Коли я вдома, я йду у ванну кімнату. Тут ми використовуємо Знахідний відмінок для напрямку. Потім я їду на роботу автобусом. Слово «автобус» стоїть в Орудному відмінку, бо це засіб транспорту. Я завжди **снідаю** з родиною або з друзями. У значенні «разом із кимось» прийменник «з» вимагає Орудного відмінка."
+- find: "Мої нові меблі дуже зручні та красиві. У кімнаті стоїть великий **диван** (sofa), м'яке **крісло** (armchair) та дерев'яний стіл. Біля стола є зручний стілець, а біля стіни стоїть висока шафа. У спальні ми поставили широке ліжко. На стіні висить полиця, яскравий **килим** (rug) і дзеркало."
+  replace: "Мої нові меблі дуже зручні та красиві. У кімнаті з великими вікнами стоїть великий **диван** (sofa), м'яке **крісло** (armchair) та стіл з дерева. Біля стола є зручний стілець, а біля стіни стоїть висока шафа. У спальні ми поставили широке ліжко. На стіні висить полиця, яскравий **килим** (rug) і дзеркало."
+- find: "У квартирі є три кімнати: велика спальня, вітальня і маленька кухня."
+  replace: "У квартирі є дві кімнати: велика спальня і вітальня. Кухня маленька, але затишна."
 </fixes>

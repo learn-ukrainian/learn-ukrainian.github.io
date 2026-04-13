@@ -25,7 +25,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-які ми маємо вивчити. Літери «я», «ю», «є», «ї» — це унікальна група в алфавіті. Їх традиційно називають **йотовані літери** *(iotated letters)*. Вони дуже часто позначають два різні звуки одночасно. Один із цих звуків завжди є приголосним [й]. Інший звук — це звичайний чистий голосний. Наприклад, літера «я» — це звук [й] плюс звук [а]. Літера «ї» завжди позначає два звуки [й] та [і] у будь-якій позиції. Але інші три літери з цієї групи працюють трохи інакше. Вони позначають два звуки тільки у трьох конкретних випадках. Перший випадок: позиція на самому початку слова. Наприклад, у відомому слові «яма» *(hole)* ми чітко чуємо два звуки [йама]. У слові «юнак» *(young man)* ми також чуємо два звуки [йунак]. Другий випадок: позиція відразу після іншого голосного звука. Наприклад, у слові «мрія» *(dream)* літера «я» стоїть після голосного «і». Тому ми правильно вимовляємо це слово як [мр'ійа]. Третій випадок: позиція після апострофа. Апостроф показує нам, що звуки не зливаються разом. У слові «п'ять» *(five)* ми читаємо два окремі звуки після апострофа: [пйат']. У слові «об'єм» *(volume)* ми ясно чуємо звуки [обйем]. Але що відбувається тоді, коли літери «я», «ю», «є» стоять відразу після приголосного? Якщо перед ними немає апострофа, правило читання кардинально змінюється. У такій позиції ці літери повністю втрачають свій приголосний звук [й]. Замість цього вони виконують іншу надзвичайно важливу роботу. Вони ефективно пом'якшують попередній приголосний звук у слові. Тобто вони просто віддають свою м'якість сусідньому звуку зліва. Наприклад, візьмемо гарне слово «люстра» *(chandelier)*. Літера «ю» стоїть тут відразу після приголосного «л». Тому ми не читаємо її як два окремі звуки. Вона просто робить звук [л] м'яким під час вимови: [л'устра]. Інший чудовий приклад — це відоме слово «пісня» *(song)*. Літера «я» стоїть відразу після звука «н». Вона робить цей конкретний звук м'яким, і ми вимовляємо слово як [п'іс'н'а]. Отже, у цих випадках літера позначає лише один голосний звук. Але вона також показує м'якість попереднього приголосного на письмі. Ще одна дуже важлива тема для вивчення — це **ненаголошені голосні** *(unstressed vowels)*. Особливо це правило стосується складних звуків [е] та [и]. Коли на ці звуки не падає сильний наголос, вони звучать дуже схоже. Українці часто самі роблять типові помилки під час написання таких слів. Наприклад, як саме правильно писати: «зелений» чи можливо «зилений»? Для вирішення цієї проблеми існує дуже просте фонетичне правило. Нам треба змінити форму слова або знайти споріднене слово. Це нове слово має бути таким, щоб наголос падав на сумнівний звук. Наприклад, ми голосно кажемо слово «зелень» *(greenery)*. Тут ми дуже чітко чуємо чистий звук [е]. Тому ми завжди пишемо слово «зелений» з літерою «е». Слово «крило» *(wing)* ми перевіряємо формою множини «крила» *(wings)*. Ми добре чуємо звук [и], тому сміливо пишемо літеру «и». Також ми можемо шукати чергування зі звуком [і]. Якщо звук легко змінюється на [і], то це точно літера «е». Наприклад, форма слова «осені» *(autumn - genitive)* має літеру «е». Чому ми так пишемо? Бо в іншому відмінку ми кажемо слово «осінь» *(autumn)*. Це базові правила української орфографії. <!-- INJECT_ACTIVITY: match-up, Match Ukrainian phonetic terms to their definitions -->
+«ю» та «є» позначають два звуки на початку слова. Наприклад, слово «яма» ми вимовляємо як [йама]. Також вони позначають два звуки після іншого голосного звука. У слові «мрія» ми чуємо транскрипцію як [мр'ійа]. Третя позиція — це місце після апострофа. Апостроф показує, що звуки не зливаються, тому слово «п'ять» звучить як [пйат']. > *The letters "я", "ю", and "є" represent two sounds at the beginning of a word. For example, we pronounce the word "яма" as [йама]. They also represent two sounds after another vowel sound. In the word "мрія", we hear the transcription as [мр'ійа]. The third position is the place after an apostrophe. The apostrophe shows that the sounds do not merge, so the word "п'ять" sounds like [пйат'].* What happens when they appear directly after a consonant? In this position, the letters «я», «ю», and «є» lose their hidden [й] sound entirely. Instead, they give their softness to the consonant that comes right before them. Якщо літера «я», «ю» або «є» стоїть після приголосного, вона позначає лише один голосний звук. Це звуки [а], [у] або [е]. У цьому випадку літера просто показує, що попередній приголосний звук є м'яким. Наприклад, у слові «люстра» літера «ю» позначає звук [у] і робить звук [л] м'яким. Ми записуємо це у транскрипції як [л'устра]. > *If the letter "я", "ю", or "є" stands after a consonant, it represents only one vowel sound. These are the sounds [а], [у], or [е]. In this case, the letter simply shows that the preceding consonant sound is soft. For example, in the word "люстра", the letter "ю" represents the sound [у] and makes the sound [л] soft. We write this in transcription as [л'устра].* The last major vowel concept involves the letters «е» and «и». When these vowels are spoken loudly and clearly, they are easy to tell apart. We call a stressed syllable **наголошений** (stressed). But when they are in an unstressed position, they sound almost identical. An unstressed syllable is **ненаголошений** (unstressed). Ukrainian schoolchildren spend years learning how to spell these correctly. Українці часто роблять помилки, коли пишуть ненаголошені голосні. Щоб перевірити правильну літеру, треба змінити форму слова. Наголос має впасти на сумнівний звук. Ми пишемо «зелений», тому що перевірне слово — «зелень». Іноді звук [е] чергується зі звуком [і]. Наприклад, ми пишемо «осені», бо знаємо слово «осінь». > *Ukrainians often make mistakes when they write unstressed vowels. To check the correct letter, you need to change the form of the word. The stress must fall on the doubtful sound. We write "зелений" (green) because the check word is "зелень" (greenery). Sometimes the sound [е] alternates with the sound [і]. For example, we write "осені" (of autumn) because we know the word "осінь" (autumn).* :::info **Grammar box** — The alternation between [е] and [і] is a famous feature of Ukrainian phonetics. If you can change the word to make an [і] appear in a closed syllable, the original unstressed vowel is guaranteed to be an «е», never an «и». ::: <!-- INJECT_ACTIVITY: match-up-phonetic-terms -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -477,7 +477,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 6: A2 finale (A2 M51-M69)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 40%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 40% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 70-90% Ukrainian.
 LANGUAGE ROLES:
@@ -496,18 +563,69 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] фонетика (phonetics — the study of speech sounds)
+- [ ] звук (sound — what we hear and pronounce)
+- [ ] літера (letter — what we see and write)
+- [ ] фонема (phoneme — abstract sound unit that distinguishes meaning)
+- [ ] голосний (vowel — sound made with voice only)
+- [ ] приголосний (consonant — sound made with obstruction)
+- [ ] дзвінкий (voiced — consonant produced with voice + noise)
+- [ ] глухий (voiceless — consonant produced with noise only)
+- [ ] сонорний (sonorant — consonant where voice dominates over noise)
+- [ ] твердий (hard — non-palatalized consonant)
+- [ ] м'який (soft — palatalized consonant)
+- [ ] наголос (stress — emphasized pronunciation of a syllable)
+- [ ] наголошений (stressed — syllable bearing the stress)
+- [ ] ненаголошений (unstressed — syllable without stress)
+- [ ] транскрипція (transcription — phonetic notation in square brackets)
+- [ ] склад (syllable)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Приголосні звуки: дзвінкі та глухі (~770 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

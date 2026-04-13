@@ -2,10 +2,10 @@
   "module": "days-and-months",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-11T00:57:31.159229Z",
+  "last_audit": "2026-04-11T16:42:09.053378Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-11T00:57:30.600783Z",
+    "md": "2026-04-11T11:55:20.655272Z",
     "meta": null,
     "activities": "2026-04-09T06:42:50.071892Z",
     "vocabulary": "2026-04-09T06:44:26.814506Z",
@@ -32,6 +32,15 @@
       "status": "pass",
       "violations": 0,
       "message": "40/1"
+    },
+    "vocab_progression": {
+      "status": "warn",
+      "violations": 0,
+      "message": "\u0394 +16 | premature=0 | gaps=8 | well-paced=12",
+      "delta": 16,
+      "premature": 0,
+      "gaps": 8,
+      "well_paced": 12
     },
     "naturalness": {
       "status": "info",

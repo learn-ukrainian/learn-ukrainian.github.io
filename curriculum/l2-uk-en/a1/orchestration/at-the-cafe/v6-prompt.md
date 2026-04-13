@@ -300,27 +300,29 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-- Confirmed: кафе (n, indecl.), меню (n, indecl.), рахунок (m), замовляти (verb), офіціант (m), смачно (adv), ласка (noun, for "будь ласка"), ресторан (m), рекомендувати (verb), чайові (pl. noun), готівка (f), картка (f), гостре (neuter adj.), вегетаріанський (adj.)
-- Not found: [None]
+- Confirmed: кафе, меню, рахунок, замовляти, офіціант, смачно, ресторан, рекомендувати, чайові, готівка, картка, гостре, вегетаріанський, будь, ласка
+- Not found: будь ласка (multi-word phrases are not indexed as single units in VESUM, but components are confirmed)
 
 ## Grammar Rules
-- Accusative Case (Ordering): Правопис §82 (2019) — confirmed "каву" as the correct accusative form of "кава". The pattern "Мені [Accusative]" is the standard polite way to order.
-- Dative Case (Pronouns): Confirmed "мені" as the dative form of "я", used for expressing "to me" in ordering contexts.
-- Instrumental Case (Accompaniment): Note that "з + Instrumental" (e.g., кава з молоком) is used in dialogues as a memorized lexical chunk, as the full Instrumental case is not formally introduced until A2.4.
+- [Невідмінювані іменники]: Правопис §100 — Відмінювання слів іншомовного походження. Іменники іншомовного походження з кінцевим голосним (наприклад, "кафе", "меню") не відмінюються, їхнє закінчення залишається незмінним у всіх відмінках.
 
 ## Calque Warnings
-- замовляти: OK — confirmed as the correct term for ordering in a restaurant (as opposed to the Russianism "заказувати").
-- рахунок: OK — confirmed as the correct term for a restaurant bill/check.
-- чайові: OK — confirmed as the standard plural noun for gratuity/tips.
-- будь ласка: OK — confirmed as the standard fixed phrase for "please".
+- [заказати їжу]: calque — правильна українська форма: "замовляти їжу" (у плані коректно використано "замовляти").
+- [одну хвилинку]: OK — правильна розмовна форма.
+- [приходьте ще]: OK — типова форма ввічливості.
 
 ## CEFR Check
 - кафе: A1 — OK
 - меню: A1 — OK
 - рахунок: A1 — OK
-- офіціант: A1 — OK
 - замовляти: A1 — OK
+- офіціант: A1 — OK
 - смачно: A1 — OK
+- ресторан: A1 — OK
+- картка: A1 — OK
+- готівка: A2 — above target
+- вегетаріанський: A2 — above target
+- чайові: Not found in PULS — above target
 </pre_verified_facts>
 
 
@@ -667,12 +669,14 @@ This topic is highly susceptible to colonial narratives, and it is imperative to
 
 ## Section Structure
 
-Write these sections as H2 headings, in this exact order:
+Write these sections as H2 headings, in this **exact** order:
 
 - `## Діалоги (Dialogues)` (~300 words)
 - `## Як замовити (How to Order)` (~300 words)
 - `## Культура кафе (Cafe Culture)` (~300 words)
 - `## Підсумок — Summary` (~300 words)
+
+**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim** as an `## H2` line. This includes the FINAL summary/transition section (`Підсумок: ...`, `Підсумок та перехід до M...`, etc.) — the writer's most common failure is silently dropping the closing section. Do NOT skip it. Do NOT renumber. Do NOT merge headings. The post-write quick-verify check will fail your build if any heading is missing, even if the prose itself is excellent.
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -680,16 +684,17 @@ Each section should follow the word budget specified. The total must reach 1200 
 
 ## Content Rules
 
-TARGET: 20-35% Ukrainian.
+TARGET: 20-35% Ukrainian. ⚠️ HARD GATE — the audit REJECTS modules below 20%.
 LANGUAGE ROLES:
-- THEORY & EXPLANATION: English prose — brief and clear. Show, don't tell.
+- THEORY & EXPLANATION: English prose — brief, 2-3 sentences per concept. No long expository paragraphs. Explain once, then show Ukrainian.
+- UKRAINIAN NARRATIVE PARAGRAPHS: **REQUIRED — minimum 1 per section.** A 3-6 sentence Ukrainian paragraph demonstrating the concept in use, followed IMMEDIATELY by a `> *English translation*` blockquote. This is the PRIMARY driver of hitting the immersion target. Without these paragraphs you cannot reach 20%.
 - PARADIGM TABLES: Conjugation/declension tables with all cells Ukrainian.
-- EXAMPLE LISTS: Ukrainian sentences in bulleted lists (each: Ukrainian — English gloss).
-- DIALOGUES: Mini-dialogues in blockquotes with English gloss per line.
+- EXAMPLE LISTS: Ukrainian sentences in bulleted lists (each: Ukrainian — English gloss). Minimum 5 per rule.
+- DIALOGUES: Mini-dialogues in blockquotes with English gloss per line. At least 1 dialogue per module.
 - PATTERN BOXES: Show transformations: `читати → читай → читайте`.
 - INLINE: Ukrainian words/phrases bolded in English prose.
-- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian. Full Ukrainian sentences go in tables, bulleted lists, dialogues, or pattern boxes.
-Ukrainian sentences max 10 words. Mix container types.
+- STRUCTURAL RULE: Every section MUST contain a Ukrainian narrative paragraph (3-6 sentences, translated in blockquote) PLUS supporting tables/lists/dialogues/pattern boxes. Pure-English sections are FORBIDDEN at M35+.
+Ukrainian sentences max 12 words. Mix container types.
 
 HARD GRAMMAR RULES (audit will reject violations):
 - Max 10 words per Ukrainian sentence (STRICT — count every word)
@@ -719,6 +724,25 @@ HARD GRAMMAR RULES (audit will reject violations):
 - **Zero calques**: No приймати душ→брати душ, приймати рішення→ухвалювати рішення
 - **Zero paronyms**: тактична≠тактовна, ефектний≠ефективний — use the right word, not a similar-sounding one
 - **Natural Ukrainian**: Write how a Ukrainian teacher would explain this to a student. Not robotic, not textbook-dry, not overly casual.
+
+### FORBIDDEN WORDS — never write these (#1189)
+
+The following Russian words have leaked into past builds and broken modules. They are **hard-banned** — the post-write toxic-token scanner will fail your build the moment it sees one. Use the Ukrainian alternative every time, even in dialogues, even in casual prose, even when quoting a learner's mistake (use a `<!-- VERIFY -->` placeholder instead of typing the Russian form):
+
+| Russian (FORBIDDEN) | Ukrainian (USE THIS) |
+|---|---|
+| хорошо | добре |
+| конечно | звичайно / певна річ |
+| спасибо | дякую |
+| пожалуйста | будь ласка / прошу |
+| ничего | нічого |
+| сейчас | зараз |
+| тоже | теж / також |
+| здесь | тут |
+| кот | кіт |
+| кон | кін |
+
+This list is enforced word-for-word by `scripts/build/quick_verify.py` (SEVERE_RUSSIANISMS). If you produce any of these tokens — even inside a quoted example, even inside a dialogue line spoken by a Russian-speaking character — the build halts immediately. There is no exception.
 
 **Authority hierarchy (if uncertain about a word, check in this order):**
 VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (stress) → Антоненко-Давидович (style) → Грінченко (etymology).
@@ -829,43 +853,41 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Діалоги — Dialogues (~330 words)
-- P1 (~60 words): Intro to the setting — a cozy café in Lviv. Explain the vibe of "кава" culture and how ordering starts with a polite greeting (Добрий день) and the request for a menu (Можна меню?).
-- P2 (~100 words): Dialogue 1 — Ordering. Ростик and Іванка at the table. Ростик: "Добрий день! Можна меню?" Офіціант: "Ось, будь ласка." Ростик: "Що ви рекомендуєте?" Офіціант: "Борщ дуже смачний." Ростик: "Добре, мені борщ і хліб. А тобі, Іванко?" Іванка: "Мені каву з молоком і тістечко."
-- P3 (~70 words): Linguistic breakdown of Dialogue 1. Explain the usage of "Мені + [accusative]" for ordering and how "рекомендувати" (to recommend) is used by the waiter. Point out the gender of items: каву (f), чай (m), тістечко (n).
-- P4 (~100 words): Dialogue 2 — Paying the bill. Ростик: "Вибачте, можна рахунок?" Офіціант: "Так, одну хвилинку. З вас сто двадцять гривень. Карткою чи готівкою?" Ростик: "Карткою, будь ласка." Офіціант: "Ось термінал. Дякую." Іванка: "Дуже смачно було! Дякуємо!" Офіціант: "Приходьте ще!"
-- <!-- INJECT_ACTIVITY: match-up-functions --> [match-up, Match Ukrainian cafe phrases with their functions, 8 items]
+## Діалоги (Dialogues) (~330 words total)
+- P1 (~40 words): Introduction to ordering food and drinks in Ukrainian, focusing on the foundational politeness required in every interaction (`Добрий день`, `будь ласка`, `дякую`).
+- P2 (~100 words): Dialogue 1 text. A date at a cozy Lviv café between Ростик and Іванка ordering from the menu. Includes `Ось меню.`, `Що ви рекомендуєте?`, `борщ і хліб`, and `каву з молоком`.
+- P3 (~50 words): Breakdown of Dialogue 1, pointing out the polite ordering pattern `мені` + accusative case and how to ask for recommendations.
+- P4 (~100 words): Dialogue 2 text. Paying the bill. Includes `Рахунок, будь ласка.`, `Сто двадцять гривень.`, `Можна карткою?`, and praising the food with `дуже смачно було!`.
+- P5 (~40 words): Breakdown of Dialogue 2, highlighting the process of asking for the bill, specifying the payment method, and leaving a compliment.
+- <!-- INJECT_ACTIVITY: fill-in-dialogue --> [fill-in, Complete the cafe dialogue with correct phrases, 6 items]
 
-## Як замовити — How to Order (~330 words)
-- P1 (~80 words): Deep dive into the "Можна мені...?" formula. Explain it as the most versatile A1 polite request. Provide 4 examples with Accusative: "Можна мені каву?", "Можна мені воду?", "Можна мені сік?", "Можна мені меню?". Mention that it literally means "Is it possible for me...".
-- P2 (~80 words): Using "Дайте, будь ласка" and "Я буду/хочу". Explain that "Я буду" (I will have) is the standard way to state a final choice from the menu. Examples: "Я буду піцу і чай", "Я буду салат і суп". Contrast this with "Я хочу" (I want), which is also used but slightly more direct.
-- P3 (~90 words): Asking about the menu. Teach phrases for dietary and taste preferences: "Це гостре?" (Is it spicy?), "Це з м'ясом?" (Is it with meat?), "Це вегетаріанське?" (Is it vegetarian?). Explain how to ask "Що це?" (What is this?) when pointing at something unfamiliar on the menu or in the display case.
-- P4 (~80 words): Handling quantities and extras. Teach "Ще одну каву, будь ласка" (One more coffee) and modifiers like "без цукру" (without sugar) or "з лимоном" (with lemon). Explain the crucial "Вам тут чи з собою?" (For here or to go?) question heard at coffee counters.
-- <!-- INJECT_ACTIVITY: fill-in-ordering-accusative --> [fill-in, Order at a cafe: choose correct accusative, 8 items]
+## Як замовити (How to Order) (~350 words total)
+- P1 (~60 words): The core request formulas: `Можна мені, будь ласка, [item]?` and `Я буду / Я хочу [item]`. Emphasize that these are the most versatile ways to state a choice.
+- P2 (~90 words): Applying the accusative case to ordering. Explain how to use the accusative case from Module 37 for real applications: `Мені каву` (кава -> каву), `воду`, `піцу`, `борщ`, `салат`.
+- P3 (~80 words): Asking about the menu. How to inquire before ordering: `Що ви рекомендуєте?`, `Це гостре?` (Is it spicy?), `Це з м'ясом?`, `А що це?`, `Скільки коштує?`, and `Є вегетаріанське меню?`.
+- P4 (~60 words): The critical verb for ordering. Explain that `замовляти` is the correct Ukrainian verb, and explicitly warn against the common Russianism `заказати`.
+- P5 (~60 words): "For here or to go?". Explain the highly frequent barista question `Вам тут чи з собою?` and the two simple replies `Тут` and `З собою`.
+- <!-- INJECT_ACTIVITY: fill-in-accusative --> [fill-in, Order at a cafe: Мені ___, будь ласка. (choose correct accusative), 8 items]
 
-## Культура кафе — Cafe Culture (~340 words)
-- P1 (~90 words): The linguistic "Golden Rule" — avoid "заказати" (Russianism). Emphasize that in Ukrainian, we only use "замовляти" (to order). Explain the concept of indeclinable nouns like "кафе" and "меню" — they NEVER change their endings (in the cafe = в кафе, not в кафі). Mention "какао", "метро", and "ескімо".
-- P2 (~80 words): The etiquette of the bill (рахунок). Explain that in Ukraine, waiters rarely bring the bill automatically to avoid rushing the guest. You must catch their eye and say "Можна рахунок?". Discuss "чайові" (tips) — 10% is standard in cities, usually left in the folder or added to the card payment.
-- P3 (~80 words): Payment logistics. "Карткою чи готівкою?". Explain that Ukraine has one of the highest card/contactless payment rates in Europe; even small kiosks usually have a terminal. Use vocabulary: "термінал", "оплата", "решта" (change).
-- P4 (~90 words): Social phrases for the cafe. How to ask "Тут вільно?" (Is this seat free?) in a crowded place. Explain the phrase "Смачного!" (Bon appétit!) used by waiters and how to respond with "Дякую!". Describe the compliment "Все було дуже смачно!" (Everything was very delicious!) as a standard way to end the meal.
-- <!-- INJECT_ACTIVITY: quiz-situation-choice --> [quiz, What do you say? Match situation to phrase, 8 items]
-- <!-- INJECT_ACTIVITY: dialogue-completion-cafe --> [fill-in, Complete the cafe dialogue with correct phrases, 6 items]
+## Культура кафе (Cafe Culture) (~330 words total)
+- P1 (~70 words): `Кафе` vs `ресторан`. Explain the difference in formality. Reiterate that words like `кафе`, `меню`, and `десерт` are internationalisms, and that `кафе` and `меню` are indeclinable (they never change their endings).
+- P2 (~80 words): Finding a seat and getting the menu. Teach phrases like `Вільно?` / `Тут вільно?` and `Можна меню?`. Note that the waiter brings the menu, but you usually have to actively ask for it or the bill.
+- P3 (~80 words): Customizing the order and complimenting. Asking for `Ще одну каву, будь ласка`, `Без цукру`, or `З лимоном`. How to praise the meal using `Все було дуже смачно!` instead of unnatural literal translations.
+- P4 (~100 words): Paying and tipping (`чайові`). Explain asking for the bill (`Рахунок, будь ласка`). Discuss the cashier's question `Картка чи готівка?` (Card or cash?) and standard tipping practices (10% is standard but not obligatory).
+- <!-- INJECT_ACTIVITY: quiz-situations --> [quiz, What do you say? Match situation to phrase (order/pay/ask/compliment), 8 items]
+- <!-- INJECT_ACTIVITY: match-up-phrases --> [match-up, Match Ukrainian cafe phrases with their functions, 8 items]
 
-## Підсумок — Summary (~300 words)
-- P1 (~150 words): Cafe communication toolkit recap. Provide a bulleted list of essential patterns: 
-  - To order: "Мені [accusative], будь ласка."
-  - To ask: "Скільки коштує? Що рекомендуєте?" 
-  - To pay: "Рахунок, будь ласка. Можна карткою?" 
-  - To compliment: "Дуже смачно! Дякую!" 
-  Remind the learner that "Будь ласка" is the magic key for all interactions.
-- P2 (~150 words): Self-check checklist. 
-  - Can you greet the waiter and ask for a menu? (Добрий день, можна меню?)
-  - Can you order a drink and a main course using the Accusative case? (Мені каву і піцу.)
-  - Can you ask if a dish is spicy or vegetarian? (Це гостре? Є вегетаріанське меню?)
-  - Can you ask for the bill and specify the payment method? (Можна рахунок? Карткою, будь ласка.)
-  - Do you remember to use "замовляти" instead of "заказати"?
+## Підсумок — Summary (~310 words total)
+- P1 (~90 words): Recap of the cafe communication toolkit for ordering and asking questions. Remind learners of the patterns: `Мені [accusative], будь ласка.`, `Скільки коштує?`, and `Що рекомендуєте?`.
+- P2 (~90 words): Recap of paying and complimenting. Remind learners of the essential phrases to end the meal: `Рахунок, будь ласка.`, `Можна карткою?`, and `Дуже смачно!`.
+- P3 (~130 words): Self-check tasks presented as a bulleted Q&A list.
+  - Q: How do you order coffee and a croissant? A: Мені каву і круасан, будь ласка.
+  - Q: How do you ask if a dish is spicy? A: Це гостре?
+  - Q: How do you ask for the bill? A: Рахунок, будь ласка.
+  - Q: How do you say you want to pay by card? A: Можна карткою?
+  - Q: How do you compliment the food? A: Все було дуже смачно!
 
-Grand total: ~1300 words
+Grand total: ~1320 words
 </skeleton>
 
 ## Output Format
@@ -873,11 +895,56 @@ Grand total: ~1300 words
 Write in Markdown. Use:
 - `## Section Title` for main sections
 - `### Subsection` for subsections within a section
-- `**bold**` for Ukrainian words being taught — EVERY bold Ukrainian word MUST have an English translation on first use, either in parentheses `**слово** (translation)` or inline `**слово** means "translation"`. No exceptions.
+- `**bold**` for Ukrainian words being taught. For **A1 and A2** levels, provide an English translation on first use (e.g. `**стіл** (table)`) because learners lack the vocabulary to infer meaning. For **B1 and above**, do NOT provide inline translations for standard vocabulary — the learner will use the module's словник (vocabulary table). You may provide ONE parenthetical English translation ONLY for highly abstract grammar/linguistic terms on first use (e.g. `**видова пара** (aspectual pair)`).
 - Tables for paradigms (conjugation, declension)
 - `:::tip` / `:::caution` / `:::note` for callout boxes
 - `<!-- INJECT_ACTIVITY: {id} -->` for exercise placement (markers only — do NOT write exercise content)
 
 Do NOT write MDX component syntax, JSON, or DSL exercise blocks (:::quiz, etc.). Plain Markdown with injection markers.
+
+---
+
+## MANDATORY FINAL CHECKLIST (#1189)
+
+Before you finish writing, verify the prose against this checklist. Failing any item will fail the build.
+
+### Section headings (verbatim)
+
+Every heading from "Section Structure" above MUST appear as an `## H2` in your output, in order, **including the closing `Підсумок:` / `Підсумок та перехід до M...` summary**. The single most common writer failure across the B1 build has been silently dropping the final summary section. Re-read your output before stopping. If the last section in the plan is missing, write it now.
+
+### Required vocabulary (every word must appear)
+
+You MUST use **every word** from the list below at least once in the prose, in a natural sentence with bold + English translation. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, прагматика, діагностика, дієвідмінювання, зворотний, двовидовий, одновидовий, неозначено-кількісний, etc.) is the most frequently dropped category — actively find homes for those words even if it means adding a sentence that defines them.
+
+- [ ] кафе (cafe, n, indecl.)
+- [ ] меню (menu, n, indecl.)
+- [ ] рахунок (bill, m)
+- [ ] замовляти (to order)
+- [ ] офіціант (waiter, m)
+- [ ] смачно (delicious — adverb)
+- [ ] будь ласка (please)
+
+### Forbidden words (never produce)
+
+Do not write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use `<!-- VERIFY -->` instead). The post-write toxic-token scanner will fail the build immediately:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+### Level-specific immersion check
+
+The level-appropriate immersion rule was already injected at the top of
+this prompt as `IMMERSION RULE`. Re-read it now BEFORE you stop writing.
+If your level's rule contains a CHECKLIST block, walk through every item.
+If it doesn't, just verify your output matches the LANGUAGE ROLES and
+TARGET stated in that block.
+
+This used to hard-code a B1+ checklist that confused A1/A2 models (where
+translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+The single source of truth is now
+`scripts/pipeline/config_tables.py:IMMERSION_RULES`.
+
+---
 
 Begin writing now. Start with the first section heading.

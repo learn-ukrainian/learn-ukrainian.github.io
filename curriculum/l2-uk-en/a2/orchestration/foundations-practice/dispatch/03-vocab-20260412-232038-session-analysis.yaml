@@ -1,0 +1,70 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T21-20-4375f956.json
+phase: vocab
+prompt_chars: 20538
+response_chars: 1795
+prompt_words: 3322
+response_words: 214
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.0389
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.0112
+- name: plan
+  start: 1028
+  length: 19510
+  fraction: 0.9499
+large_sections:
+- plan
+directives_total: 10
+directives_covered: 0
+directives_missed:
+- kind: must
+  text: Whenever you use words like **багато** (a lot), **мало** (a little), or specific
+    numbers (five and up), the item being counted must take the Genitive plural form.
+  covered: false
+  coverage_note: 5/20 keywords (25%)
+- kind: must
+  text: To state that an action is successfully completed, you must use the perfective
+    aspect.
+  covered: false
+  coverage_note: 1/10 keywords (10%)
+- kind: must
+  text: For instance, you must learn the verb pair **планувати / запланувати** (to
+    plan) when organizing a social event.
+  covered: false
+  coverage_note: 4/13 keywords (31%)
+- kind: must
+  text: When you want to describe an ongoing action or set the scene in the past,
+    you must use the imperfective aspect.
+  covered: false
+  coverage_note: 1/13 keywords (8%)
+- kind: must
+  text: In sharp contrast, when you want to report a clear sequence of completed events,
+    you must use the perfective aspect.
+  covered: false
+  coverage_note: 1/14 keywords (7%)
+- kind: must
+  text: In Ukrainian, if you actually finished reading the book, you must use the
+    perfective "прочитав".
+  covered: false
+  coverage_note: 1/10 keywords (10%)
+- kind: inject_activity
+  text: quiz-role-play-planning-a-party-aspect-in-future-tense
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-shopping-groceries
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-story-aspect
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-narrative-questions
+  covered: false
+  coverage_note: marker missing

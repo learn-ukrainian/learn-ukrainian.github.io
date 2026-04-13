@@ -1,20 +1,21 @@
-# Section-by-Section Generation — Section 2/5
+# Section-by-Section Generation — Section 2/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 42: 30 найважливіших видових пар (A2, A2.6 [Aspect, Tenses, and Motion])
-**Section to write:** 30 пар: Список і приклади (~650 words total)
-**Word target for this section:** 650 words (aim for 715 to account for undershoot)
+**Section to write:** 30 пар: Список і приклади (~660 words)
+**Word target for this section:** 660 words (aim for 726 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## 30 пар: Список і приклади (~650 words total)
-- P1 (~160 words): Group A — Daily Routine and Housework (10 pairs). Listing: готувати/приготувати, їсти/з'їсти, пити/випити, варити/зварити, мити/помити, прибирати/прибрати, прасувати/випрасувати, вмиватися/вмитися, одягатися/одягнутися, дивитися/подивитися. Example: "Я варив борщ годину" (process) vs "Я зварив борщ" (result).
-- P2 (~170 words): Group B — Communication, Learning, and Cognition (10 pairs). Listing: говорити/сказати, відповідати/відповісти, запитувати/запитати, пояснювати/пояснити, вчити/вивчити, розуміти/зрозуміти, перекладати/перекласти, писати/написати, читати/прочитати, розповідати/розповісти. Contrast: "Вчитель пояснював правило" (background) vs "Він нарешті пояснив" (success).
-- P3 (~170 words): Group C — Social Interaction and Movement (10 pairs). Listing: брати/взяти, давати/дати, купувати/купити, платити/заплатити, допомагати/допомогти, відкривати/відкрити, закривати/закрити, починати/почати, закінчувати/закінчити, телефонувати/зателефонувати. Example: "Ми купували квитки" (attempt/process) vs "Ми купили квитки" (possession).
-- P4 (~150 words): Minimal contrast drills. Short pairs of sentences illustrating the semantic difference between the 30 pairs. "Вона пила каву" (sipping) vs "Вона випила каву" (cup is empty). "Ми починали о дев'ятій" (habitual start) vs "Ми почали о дев'ятій" (specific start yesterday).
+## 30 пар: Список і приклади (~660 words)
+- P1 (~80 words): Introduce the master list of the 30 most essential aspect pairs for everyday A2 communication, divided into three thematic groups. Emphasize that learning them as linked pairs is the key to fluency.
+- P2 (~180 words): Present Group A — Daily actions (10 pairs). List them: робити/зробити, писати/написати, читати/прочитати, готувати/приготувати, їсти/з'їсти, пити/випити, варити/зварити, мити/помити, прибирати/прибрати, прасувати/випрасувати. Provide minimal contrast sentences for context: "Я варив суп" (was cooking, process) vs. "Я зварив суп" (cooked it, result is ready).
+- P3 (~180 words): Present Group B — Communication & learning (10 pairs). List them: говорити/сказати, питати/запитати, відповідати/відповісти, пояснювати/пояснити, вчити/вивчити, розуміти/зрозуміти, казати/сказати, розповідати/розповісти, записувати/записати, перекладати/перекласти. Give examples showing process vs. completed fact (e.g., Вчитель довго пояснював правило vs. Нарешті він пояснив).
+- P4 (~180 words): Present Group C — Movement & interaction (10 pairs). List them: брати/взяти, давати/дати, класти/покласти, відкривати/відкрити, закривати/закрити, починати/почати, закінчувати/закінчити, допомагати/допомогти, купувати/купити, платити/заплатити. Highlight the highly irregular "брати/взяти" and "давати/дати" with examples (Я брав книгу vs. Я взяв книгу).
+- P5 (~40 words): Provide a brief summary tip on how to practice these pairs actively by writing personal sentences.
 - <!-- INJECT_ACTIVITY: match-up-pairs --> [match-up, Match imperfective verbs with their perfective partners from the 30 pairs, 8 items]
 
 ---
@@ -23,7 +24,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-та **зробити** *(to do, to get done)*. Ми їмо обід: **їсти** *(to eat)* та **з'їсти** *(to eat up)*. The prefix you need to add is unpredictable, so you just have to memorize it with the verb. Часто ми використовуємо префікс «с-». В українській мові є спеціальне фонетичне правило, яке називається «Кафе Птах» *(Cafe Ptakh)*. If the verb root starts with the letters к, п, т, ф, or х, we must use the prefix «с-» instead of «з-». Наприклад, ми кажемо **сфотографувати** *(to take a photo)*, а не «зфотографувати». Інші приклади включають **казати** *(to say)* та **сказати** *(to tell)*, або **пекти** *(to bake)* та **спекти** *(to bake completely)*. This phonetic rule makes pronunciation much easier and more natural. Другий спосіб творення видових пар — це зміна суфікса. Often, the perfective verb already exists, and we make it imperfective to show a process. Ми змінюємо короткий **суфікс** *(suffix)* доконаного виду на довший суфікс недоконаного виду. Дуже часто ми змінюємо суфікси «-ити» або «-нути» на «-увати» чи «-ати». Наприклад, ми беремо пару **вирішувати** *(to decide, process)* та **вирішити** *(to decide, result)*. Ми маємо дієслова **записувати** *(to note down)* та **записати** *(to write down completely)*. Ми чуємо звук: **стукати** *(to knock, repeatedly)* та **стукнути** *(to knock, once)*. Третій спосіб — це зміна самої основи слова або чергування звуків. Sometimes, the vowels or consonants inside the root of the verb change when the aspect changes. Один із найчастіших прикладів — це зміна звуків «ог» на «ага». Так працює пара **допомагати** *(to help, regularly)* та **допомогти** *(to help, once)*. Інший приклад показує зміну приголосних у корені слова. Ми використовуємо **відповідати** *(to answer, process)* та **відповісти** *(to answer, result)*. Ми бачимо це у парі **запрошувати** *(to invite, process)* та **запросити** *(to invite, result)*. These internal changes might look complex, but they follow consistent historical sound shifts in Ukrainian. З часом ви навчитеся легко розпізнавати ці типові суфікси та чергування. Четвертий спосіб — це використання абсолютно різних слів. These are called suppletive pairs, and they have completely different roots for the imperfective and perfective forms. Хоча таких пар небагато, вони є найбільш вживаними словами в мові. You absolutely must memorize them as unique vocabulary items because you cannot guess the pair. Ось найголовніші приклади для вас. Дієслова **брати** *(to take, process)* та **взяти** *(to take, result)* є дуже популярними. Ми використовуємо **говорити** *(to speak)* та сказати. Ми маємо дієслова **ловити** *(to catch, process)* та **піймати** *(to catch, result)*. Ми постійно використовуємо **шукати** *(to look for)* та **знайти** *(to find)*. Ці слова не мають спільного кореня, але означають одну і ту ж дію. Коли ви шукаєте ключі, ви кажете: «Я шукаю ключі». Коли ви бачите свої ключі, ви кажете: «Я знайшов ключі!». It is crucial to practice these specific pairs daily because they appear in almost every conversation. Наприклад, ми часто питаємо: «Що ти говориш?», але «Що ти сказав?». Without knowing these distinct pairs, expressing basic ideas about finding, taking, or speaking becomes impossible. <!-- INJECT_ACTIVITY: group-sort, Sort aspect pairs by formation pattern (prefix, suffix, stem change, suppletive) -->
+the word mirrors the lengthening of the action into an ongoing process. Такі дієслова недоконаного виду завжди довші за своїх партнерів. Ми маємо такі пари: записувати і записати, розповідати і розповісти, пояснювати і пояснити. Іноді ми бачимо цікаве чергування приголосних звуків у корені. Наприклад, пара **допомагати / допомогти** (to help — impf./pf.) має різні приголосні звуки. Це допомагає зробити вимову слова легшою і красивішою. Пари **починати / почати** (to begin — impf./pf.) та **закінчувати / закінчити** (to finish — impf./pf.) також використовують суфікси. > *Such imperfective verbs are always longer than their partners. We have pairs like: to record and to have recorded, to tell and to have told, to explain and to have explained. Sometimes we see an interesting alternation of consonant sounds in the root. For example, the pair "to help" has different consonant sounds. This helps make the pronunciation of the word easier and more beautiful. The pairs "to begin" and "to finish" also use suffixes.* The third pattern involves internal transformations. Sometimes the stem of the verb changes slightly between the imperfective and perfective forms. In a few rare cases, the only difference between the two verbs is the syllable that receives the vocal stress. While these internal changes are less common, you will still encounter them in everyday speech. Деякі видові пари виглядають майже однаково. У них може змінюватися лише основа слова. Наприклад, ми кажемо «відповідати», але доконаний вид — це слово «відповісти». Інколи змінюється тільки наголос. Українці кажуть «розрізати» як процес, але «розрізати» як фінальний результат. Ці пари треба просто запам'ятати. > *Some aspect pairs look almost identical. Only the stem of the word might change in them. For example, we say "to answer" (imperfective), but the perfective aspect is the word "to answer". Sometimes only the stress changes. Ukrainians say "to cut" as a process, but "to cut" as a final result. You just need to memorize these pairs.* The final pattern involves suppletive pairs. These are pairs where the imperfective and perfective verbs have completely different roots. They look and sound like unrelated words, but they form a strict grammatical pair for a single action. Because these are usually the most ancient and frequently used verbs in the language, you must memorize them by heart. Ці видові пари мають абсолютно різні корені. Вони зовсім не схожі одна на одну. Найважливіша пара — це **брати / взяти** (to take — impf./pf.). Ви також часто будете чути пари **давати / дати** (to give — impf./pf.) та **класти / покласти** (to put — impf./pf.). Інша дуже популярна видова пара — це **говорити / сказати** (to say — impf./pf.). Ми також маємо важливу пару «шукати» і «знайти». > *These aspect pairs have completely different roots. They do not look like each other at all. The most important pair is "to take". You will also often hear the pairs "to give" and "to put". Another very popular aspect pair is "to say". We also have the important pair "to search" and "to find".* <!-- INJECT_ACTIVITY: group-sort-formation -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -378,7 +379,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -397,18 +465,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] видова пара (aspect pair)
+- [ ] префікс (prefix)
+- [ ] суфікс (suffix)
+- [ ] брати / взяти (to take — impf./pf.)
+- [ ] давати / дати (to give — impf./pf.)
+- [ ] говорити / сказати (to say — impf./pf.)
+- [ ] класти / покласти (to put — impf./pf.)
+- [ ] починати / почати (to begin — impf./pf.)
+- [ ] закінчувати / закінчити (to finish — impf./pf.)
+- [ ] допомагати / допомогти (to help — impf./pf.)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## 30 пар: Список і приклади (~660 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

@@ -2,13 +2,13 @@
   "module": "where-to",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-11T00:58:28.629439Z",
+  "last_audit": "2026-04-13T21:15:47.856812Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-11T00:58:28.106782Z",
+    "md": "2026-04-13T21:15:35.176256Z",
     "meta": null,
-    "activities": "2026-04-10T11:39:35.057193Z",
-    "vocabulary": "2026-04-09T00:30:15.804749Z",
+    "activities": "2026-04-12T21:55:59.825713Z",
+    "vocabulary": "2026-04-12T21:56:38.934085Z",
     "research": null,
     "plan": "2026-03-30T22:17:20.671525Z"
   },
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1448/1200 (raw: 1646)"
+      "message": "1386/1200 (raw: 1480)"
     },
     "activities": {
       "status": "pass",
@@ -31,7 +31,16 @@
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "31/1"
+      "message": "33/1"
+    },
+    "vocab_progression": {
+      "status": "warn",
+      "violations": 0,
+      "message": "\u0394 -12 | premature=1 | gaps=9 | well-paced=1",
+      "delta": -12,
+      "premature": 1,
+      "gaps": 9,
+      "well_paced": 1
     },
     "naturalness": {
       "status": "info",

@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-*(of whom? of what?)* 3. **Давальний** *(Dative)* — кому? чому? *(to whom? to what?)* 4. **Знахідний** *(Accusative)* — кого? що? *(whom? what?)* 5. **Орудний** *(Instrumental)* — ким? чим? *(by whom? with what?)* 6. **Місцевий** *(Locative)* — на кому? на чому? *(on whom? on what?)* 7. **Кличний** *(Vocative)* — це форма для звертання *(this is the form for address)*. Він не має питань. *(It does not have questions.)* Ці сім відмінків — база української граматики. *(These seven cases are the base of Ukrainian grammar.)* Як запам'ятати всі ці назви по порядку? *(How to remember all these names in order?)* Українські школярі мають один секрет. *(Ukrainian schoolchildren have one secret.)* Вони вчать спеціальну фразу: «**Нашого Ромчика Дивує Зебра — Оця Маленька Красуня**» *(Our Romchik is surprised by the zebra — this little beauty)*. Перша літера кожного слова — це перша літера назви відмінка. *(The first letter of each word is the first letter of the case name.)* * Н — Називний * Р — Родовий * Д — Давальний * З — Знахідний * О — Орудний * М — Місцевий * К — Кличний Це дуже зручний і веселий метод. *(This is a very convenient and fun method.)* Ви можете придумати власну фразу! *(You can invent your own phrase!)* Головний секрет відмінків — це метод питань. *(The main secret of cases is the question method.)* Не треба відразу вчити всі закінчення. *(You don't need to learn all endings right away.)* Спочатку треба навчитися **задати питання** *(to ask a question)*. *(First, you need to learn to ask a question.)* Ми завжди задаємо питання від дієслова до іменника. *(We always ask the question from the verb to the noun.)* Наприклад, у нас є таке речення: «Я даю подарунок братові». *(For example, we have such a sentence: "I give a gift to my brother".)* Як знайти відмінок слова «братові»? *(How to find the case of the word "brother"?)* Ми беремо дієслово «даю» і питаємо: даю кому? — братові. *(We take the verb "give" and ask: give to whom? — to brother.)* Питання «кому?» — це завжди Давальний відмінок. *(The question "to whom?" is always the Dative case.)* Цей метод чудово працює. *(This method works wonderfully.)* <!-- INJECT_ACTIVITY: fill-in, Complete the case name and its question pair (e.g., Родовий — ___? ___?), 8 items --> Українські підручники для початкової школи дуже просто пояснюють цю тему. *(Ukrainian primary school textbooks explain this topic very simply.)* Наприклад, підручник автора Вашуленка пише цікаву річ. *(For example, Vashulenko's textbook writes an interesting thing.)* Там сказано, що відмінки допомагають словам «дружити» між собою. *(It is said there that cases help words "make friends" with each other.)* Це створює **зв'язок слів у реченні** *(connection of words in a sentence)*. Без відмінків ми мали б просто випадковий список слів. *(Without cases, we would just have a random list of words.)* Відмінки — це клей, який тримає речення разом. *(Cases are the glue that holds the sentence together.)* Тому їх так важливо розуміти. *(That is why it is so important to understand them.)*
+кота»? *(And if I say: "I don't have a cat"?)* > — **Студент Б:** У мене немає кого? Кота. Це родовий відмінок. *(I don't have whom? A cat. This is the genitive case.)* В українській мові є сім відмінків, і кожен має свою назву та пару обов'язкових питань. Називний відмінок відповідає на питання «хто?» або «що?». Родовий відмінок відповідає на питання «кого?» або «чого?». Давальний відмінок потрібен для отримувача: «кому?» або «чому?». Знахідний відмінок маркує прямий об'єкт: «кого?» або «що?». Орудний відмінок показує інструмент або компанію: «ким?» або «чим?». Місцевий відмінок завжди потребує прийменника і відповідає на питання «на кому?» або «на чому?». Кличний відмінок не має питань, бо він використовується тільки для звертання. > *In Ukrainian, there are seven cases, and each has its name and a pair of mandatory questions. The nominative case answers the questions "who?" or "what?". The genitive case answers the questions "of whom?" or "of what?". The dative case is needed for the receiver: "to whom?" or "to what?". The accusative case marks the direct object: "whom?" or "what?". The instrumental case shows the instrument or company: "with whom?" or "with what?". The locative case always needs a preposition and answers the questions "on whom?" or "on what?". The vocative case has no questions because it is used only for addressing.* Українські школярі часто використовують спеціальну фразу, щоб легко запам'ятати порядок відмінків. Ця весела фраза звучить так: «Нашого Ромчика Дивує Зебра — Оця Маленька Красуня». Перша літера кожного слова відповідає першій літері назви відмінка. Слово «Нашого» — це Називний, «Ромчика» — Родовий, «Дивує» — Давальний, «Зебра» — Знахідний, «Оця» — Орудний, «Маленька» — Місцевий, «Красуня» — Кличний. Це дуже простий і ефективний метод для запам'ятовування. The absolute secret to mastering Ukrainian cases is not memorizing tables of endings first. The secret is learning to ask the right question relative to the action. Ukrainian teachers call this method **задати питання** (to ask a question). When you have a **дієслово** (verb), you ask a specific question to find the right ending for the noun. For example, if you use the verb "to give", you ask «даю кому?» (I give to whom?). The question «кому?» automatically points you to the dative case. If you say "I write with a pen", you ask «пишу чим?» (I write with what?), which leads you directly to the instrumental case. :::note **Quick tip** — Always memorize the case questions as a pair for animate and inanimate objects, like «кого? / чого?». This habit will save you from many mistakes later. ::: <!-- INJECT_ACTIVITY: fill-in, Complete the case name and its question pair (e.g., Родовий — ___? ___?), 8 items --> У підручнику для початкових класів автори пояснюють цей процес дуже просто. Вони пишуть, що слова в реченні мають «дружити» між собою. Зміна закінчень допомагає встановити правильний зв’язок слів у реченні. Без відмінків слова були б просто окремими цеглинами. Відмінки роблять із цих цеглин міцний і гарний будинок. Ти можеш думати про відмінки як про граматичний клей, який тримає все речення разом.
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -373,7 +373,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 6: A2 finale (A2 M51-M69)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 40%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 40% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 70-90% Ukrainian.
 LANGUAGE ROLES:
@@ -392,18 +459,65 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] іменник (noun)
+- [ ] прикметник (adjective)
+- [ ] дієслово (verb)
+- [ ] займенник (pronoun)
+- [ ] числівник (numeral)
+- [ ] прислівник (adverb)
+- [ ] прийменник (preposition)
+- [ ] сполучник (conjunction)
+- [ ] називний відмінок (nominative case)
+- [ ] родовий відмінок (genitive case)
+- [ ] рід (gender, grammatical)
+- [ ] однина (singular)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Рід і число: чоловічий, жіночий, середній (~500 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

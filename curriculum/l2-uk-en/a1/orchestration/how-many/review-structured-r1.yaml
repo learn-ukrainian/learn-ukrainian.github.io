@@ -2,46 +2,52 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 9
-  evidence: Covers almost all points perfectly, including dialogues and outline. Missed
-    the recommended vocabulary word `копійка`.
+  score: 7
+  evidence: 'All four planned H2 sections are present, but the module does not naturally
+    cite the planned ULP references anywhere (`ULP: 0` in module search), and recommended
+    plan vocab `копійка` is absent (`копій'
 - dimension: 2
   name: Linguistic accuracy
-  score: 10
-  evidence: All Ukrainian text is grammatically correct and uses natural phrasing.
+  score: 8
+  evidence: Core Ukrainian forms verify cleanly in VESUM and there are no Russian-only
+    characters, but the phonetics claim “This symbol acts like a tiny pause” is inaccurate
+    for the apostrophe.
 - dimension: 3
   name: Pedagogical quality
-  score: 8
-  evidence: The rule for currency endings based on final digits fails to explicitly
-    exclude the teens (11-14) which behave differently ("For amounts ending in one...
-    For amounts ending in two, three, or four...")
+  score: 7
+  evidence: The module has a usable PPP spine, but `Числа 1-20` shifts into explicit
+    rule-teaching — “We call this the 1, 2-4, 5+ pattern” — even though the plan says
+    to learn these as chunks, not as grammar rule
 - dimension: 4
   name: Vocabulary coverage
-  score: 9
-  evidence: All required vocabulary is present. Missed one recommended word (`копійка`).
+  score: 8
+  evidence: Required core vocabulary is covered well, but recommended `копійка` never
+    appears in the prose despite the price section being the obvious place to introduce
+    it.
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: Markers are placed correctly and logically test the immediately preceding
-    content.
+  score: 8
+  evidence: All four planned marker IDs exist and the activity YAML logic is sound,
+    but `quiz-ages` is placed after the prices teaching rather than after the age
+    teaching it tests.
 - dimension: 6
   name: Engagement & tone
   score: 9
-  evidence: Good, encouraging teacher tone. Opens with a slightly abstract hook ("invisible
-    architecture") but transitions quickly into practical scenarios.
+  evidence: The teacher voice is warm and clear, with direct classroom phrasing like
+    “Let us look at...” and practical self-checks at the end.
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: All required H2 headings are present. Word count is 1530 (well above the
-    1200 target).
+  evidence: All required H2 headings are present and ordered correctly, markers are
+    intact, and the pipeline word count is 1361, which is above the 1200 target.
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: Accurate and real Ukrainian context used (prices in hryvnia, traditional
-    bakery, standard phone number grouping).
+  score: 9
+  evidence: 'The module stays Ukrainian-centered: hryvnia, shopping, age, and phone-number
+    contexts are presented on their own terms without Russian-comparison framing.'
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: Dialogues flow naturally and perfectly incorporate the targeted numbers
-    and phrases in realistic contexts.
+  score: 9
+  evidence: Dialogues use named speakers and realistic everyday purposes; the age
+    dialogue extends beginner conversation patterns effectively.
 findings: []

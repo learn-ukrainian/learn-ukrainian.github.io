@@ -1,0 +1,45 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T19-27-78569ace.json
+phase: vocab
+prompt_chars: 10813
+response_chars: 2845
+prompt_words: 1769
+response_words: 314
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.0738
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.0213
+- name: plan
+  start: 1028
+  length: 9785
+  fraction: 0.9049
+large_sections:
+- plan
+directives_total: 5
+directives_covered: 0
+directives_missed:
+- kind: must
+  text: In Ukrainian, possessive pronouns like **мій**, **моя**, and **моє** must
+    agree with the object they describe, not the person who owns it.
+  covered: false
+  coverage_note: 3/16 keywords (19%)
+- kind: inject_activity
+  text: quiz-pronoun-test
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-possessive
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-gender-endings
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: group-sort-objects
+  covered: false
+  coverage_note: marker missing

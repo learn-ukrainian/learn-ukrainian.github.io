@@ -15,7 +15,6 @@ import yaml
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from build.v6_build import (
-    _build_resources_tab,
     _build_resources_tab_full,
     _build_slovnyk_tab,
     _build_workbook_tab,
@@ -115,43 +114,6 @@ class TestBuildWorkbookTab:
         result = _build_workbook_tab(activities)
         assert "<MatchUp" in result
         assert "<TrueFalse" in result
-
-
-# ---------------------------------------------------------------------------
-# _build_resources_tab
-# ---------------------------------------------------------------------------
-
-
-class TestBuildResourcesTab:
-    def test_no_plan_no_resources(self, tmp_path):
-        """When plan and external resources don't exist, show placeholder."""
-        # Patch CURRICULUM_ROOT and PROJECT_ROOT to tmp_path
-        with patch("build.v6_build.CURRICULUM_ROOT", tmp_path), \
-             patch("build.v6_build.PROJECT_ROOT", tmp_path):
-            result = _build_resources_tab("a1", "nonexistent-module")
-            assert "References" in result
-
-    def test_with_plan_references(self, tmp_path):
-        """Plan references are included in output."""
-        plans_dir = tmp_path / "plans" / "a1"
-        plans_dir.mkdir(parents=True)
-        plan = {
-            "title": "Test",
-            "references": [
-                "Пономарова Grade 3, p.86",
-                {"title": "ULP Episode 6", "url": "https://example.com", "note": "Gender"},
-            ],
-        }
-        (plans_dir / "test-mod.yaml").write_text(
-            yaml.dump(plan, allow_unicode=True), "utf-8"
-        )
-
-        with patch("build.v6_build.CURRICULUM_ROOT", tmp_path), \
-             patch("build.v6_build.PROJECT_ROOT", tmp_path):
-            result = _build_resources_tab("a1", "test-mod")
-            assert "Пономарова" in result
-            assert "ULP Episode 6" in result
-            assert "https://example.com" in result
 
 
 # ---------------------------------------------------------------------------
@@ -293,8 +255,8 @@ class TestBuildResourcesTabFull:
             assert "https://example.com" in result
 
     def test_no_plan_falls_back(self, tmp_path):
-        """Falls back to simple _build_resources_tab when no plan exists."""
+        """Shows the localized placeholder when no resources exist."""
         with patch("build.v6_build.CURRICULUM_ROOT", tmp_path), \
              patch("build.v6_build.PROJECT_ROOT", tmp_path):
             result = _build_resources_tab_full("a1", "nonexistent-mod")
-            assert "References" in result
+            assert result == "_Ресурси будуть додані пізніше._"

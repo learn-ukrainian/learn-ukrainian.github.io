@@ -1,20 +1,21 @@
-## Підсумок
+## Підсумок (~350 words)
 
-Отже, ми успішно завершуємо наше детальне знайомство з однією з найцікавіших граматичних категорій української мови. **Мішана група** (mixed group) іменників другої відміни вимагає особливої уваги, але її правила є дуже логічними та послідовними. Давайте ще раз повторимо найголовніші принципи. Ці базові правила обов'язково допоможуть вам говорити та писати українською мовою бездоганно і цілком природно.
+We have reached the end of our exploration of the **мішана група** (mixed group). You now know that any noun whose stem ends in a **шиплячий** (hissing consonant) belongs here. The defining characteristic of these nouns is how their **закінчення** (ending) behaves across different grammatical roles. This hybrid behavior is what makes the category so fascinating to master.
 
-По-перше, надійним фундаментом цієї специфічної групи є **шиплячі приголосні** (hissing consonants). Якщо основа іменника другої відміни закінчується на літери ж, ч, ш, щ або звукосполучення дж, це слово гарантовано належить до мішаної групи. Цей фінальний звук основи завжди є вашим головним граматичним орієнтиром.
+When identifying the correct **відмінок** (grammatical case), you must remember that these words borrow traits from both hard and soft groups. The **орудний відмінок** (instrumental case) always takes the soft "-ем" in the singular. Furthermore, the **кличний відмінок** (vocative case) requires careful attention to specific suffixes. Understanding these specific forms is essential for sounding natural in conversation.
 
-По-друге, міцно запам'ятайте найважливіше правило для **орудного відмінка** (instrumental case) в однині. Іменники чоловічого роду мішаної групи завжди і без винятків приймають закінчення **-ем**. Ви повинні впевнено казати: надійним **сторожем** (watchman), гострим **ножем** (knife), смачним і гарячим **борщем** (borscht). Використання закінчення **-ом** у таких словах є грубою помилкою та типовою калькою з російської мови.
+Whether you are speaking in the **однина** (singular number) or the **множина** (plural number), the final consonant dictates the path forward. The plural instrumental case switches to the hard "-ами" pattern. Even neuter body parts like a **плече** (shoulder) align perfectly with this paradigm. Consistency is key when dealing with these structural shifts.
 
-По-третє, **кличний відмінок** (vocative case) вимагає від вас швидкого аналізу структури слова. Якщо ваш іменник є безсуфіксним, ви сміливо додаєте закінчення **-е**: мій **стороже** (watchman!). Але якщо слово має професійний суфікс (особливо **-ач**) або це поширене слово **товариш** (comrade), від вас вимагається закінчення **-у**: дорогий **слухачу** (listener!), поважний **читачу** (reader!), мій вірний **товаришу** (comrade!).
+Let us review some of the specific animate and inanimate nouns we practiced. A **сторож** (watchman) takes "-е" in the vocative, matching the pattern of other unsuffixed stems. Similarly, a **товариш** (companion) falls into this exact same category of address. Meanwhile, a combat **ніж** (knife) follows the exact same instrumental rule as these animate beings.
 
-По-четверте, суворі правила мішаної групи також охоплюють іменники середнього роду. Такі слова, як праве **плече** (shoulder), старе **кладовище** (cemetery) або ваше родинне **прізвище** (surname), в орудному відмінку однини також приймають закінчення **-ем**. Ви маєте пишатися своїм красивим **прізвищем** (surname).
+Words formed with specific suffixes behave slightly differently when addressing someone directly. A **слухач** (listener) requires the "-у" ending to form a proper vocative phrase. Every dedicated **читач** (reader) will notice that this pattern applies to all professions ending in "-ач". Inanimate objects without this suffix, such as a **плащ** (raincoat), simply rely on the standard instrumental forms.
 
-По-п'яте, граматична поведінка цих слів кардинально змінюється у множині. Саме тому ця група отримала свою унікальну назву — мішана. В орудному відмінку множини ці іменники раптом починають використовувати тверді закінчення — **-ами**. Ми пишаємося нашими вірними **товаришами** (comrades), милуємося мальовничими **пейзажами** (landscapes), користуємося гострими **ножами** (knives).
+Finally, we can apply these rules to everyday vocabulary you already know. When you eat a traditional **борщ** (borscht), the instrumental case demands the "-ем" ending. This proves that high-level grammar rules seamlessly integrate into basic daily discussions. All these words come together to create a rich, expressive language.
 
-Тепер настав час для вашої фінальної самоперевірки. Спробуйте самостійно та вголос дати відповіді на такі контрольні запитання:
-1. Які саме приголосні звуки називаються шиплячими в українській мові?
-2. Чому ця специфічна категорія іменників другої відміни отримала назву «мішана»? Які закінчення в ній змішуються?
-3. Провідміняйте слово **борщ** (borscht) у всіх семи відмінках однини. Зверніть свою особливу увагу на орудний та місцевий відмінки.
+:::tip
+**Did you know?** — The transition from singular to plural instrumental case (from soft "-ем" to hard "-ами") is the exact reason linguists named this the "mixed" group. It refuses to pick just one side!
+:::
 
-Ви чудово попрацювали з іменниками другої відміни. Наступний модуль (M14) відкриє для вас абсолютно нову граматичну територію. Ми почнемо детально вивчати іменники жіночого роду з нульовим закінченням, які формують третю відміну. Там на вас також чекатимуть знайомі шиплячі приголосні, але вони поводитимуться зовсім інакше.
+Підсумовуючи цей модуль, дайте відповіді на кілька запитань для самоперевірки. Які приголосні називаються шиплячими? Чому саме ця група іменників отримала назву мішаної? Спробуйте самостійно провідміняти кілька нових слів, щоб закріпити пройдений матеріал. Пам'ятайте, що регулярна практика читання допоможе вам інтуїтивно відчувати правильні форми без постійного звернення до граматичних таблиць. У наступному модулі ми розглянемо жіночий рід з нульовим закінченням, де ці самі приголосні знову зіграють важливу роль у формуванні слів.
+
+> *Summarizing this module, answer a few questions for self-checking. Which consonants are called hissing? Why exactly did this group of nouns get the name mixed? Try to independently decline a few new words to solidify the covered material. Remember that regular reading practice will help you intuitively feel the correct forms without constant reference to grammar tables. In the next module, we will examine the feminine gender with a zero ending, where these same consonants will again play an important role in word formation.*

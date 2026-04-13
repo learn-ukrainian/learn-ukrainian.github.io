@@ -1,0 +1,61 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T10-43-76c8b712.json
+phase: write-chunk-04
+prompt_chars: 50625
+response_chars: 6506
+prompt_words: 7189
+response_words: 1009
+sections:
+- name: header
+  start: 0
+  length: 428
+  fraction: 0.0085
+- name: skeleton
+  start: 428
+  length: 1196
+  fraction: 0.0236
+- name: prior_summary
+  start: 1624
+  length: 3394
+  fraction: 0.067
+- name: plan
+  start: 5018
+  length: 16709
+  fraction: 0.3301
+- name: wiki
+  start: 15603
+  length: 28690
+  fraction: 0.5667
+- name: output_spec
+  start: 50417
+  length: 208
+  fraction: 0.0041
+large_sections:
+- wiki
+directives_total: 17
+directives_covered: 11
+directives_missed:
+- kind: checklist
+  text: питально-відносний (interrogative-relative)
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: checklist
+  text: зворотний (reflexive — себе)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: себе (oneself — reflexive pronoun, no Н.в.)
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 4/11 keywords (36%)
+- kind: inject_activity
+  text: indefinite-pronoun-choice
+  covered: false
+  coverage_note: marker missing

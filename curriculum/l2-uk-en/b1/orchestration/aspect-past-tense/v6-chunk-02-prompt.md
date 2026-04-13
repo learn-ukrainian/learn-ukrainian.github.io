@@ -25,7 +25,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-you "подивилися" (watched) a film, you are reporting a result. Perhaps it was a famous film that everyone is discussing, and now you also know the plot and are ready to share your thoughts.* In Ukrainian, your choice of aspect tells the listener what you value in that moment: the experience itself or the final completion. <!-- INJECT_ACTIVITY: quiz-aspect-intuition --> To see how aspect colors the personality and tone of a speaker, let us listen to a conversation between two colleagues. Pay attention to how Taras and Oksana describe their days using different verb forms. Their choice of verbs reveals how they feel about their work. One feels successful, while the other feels drained. > — **Тарас:** Привіт! Як твій день учора? Я вчора написав три звіти, відправив усі листи і зробив презентацію. *(Hi! How was your day yesterday? Yesterday I wrote three reports, sent all the letters, and made a presentation.)* > — **Оксана:** Привіт... А я цілий день писала один звіт, робила презентацію, намагалася знайти помилку в таблиці, але так нічого і не закінчила. *(Hi... And I spent the whole day writing one report, making a presentation, trying to find a mistake in the table, but I didn't finish anything.)* > — **Тарас:** Ого. Але ж ти працювала весь день? *(Wow. But you were working the whole day?)* > — **Оксана:** Так, я дуже втомилася, хоча результату немає. *(Yes, I am very tired, even though there is no result.)* Notice the stark contrast in their language. Taras uses the perfective aspect («написав», «відправив», «зробив»). His narrative is a checklist of victories and completed tasks. He focuses purely on results. Oksana, on the other hand, relies heavily on the imperfective aspect («писала», «робила», «намагалася»). Her verbs convey an exhausting, continuous process that dragged on without reaching a conclusion. The grammar directly reflects their emotional states: triumph versus frustration. This brings us to the core concept of this module. In Ukrainian grammar, aspect is not just a rigid set of rules; it is a mindset. The Ukrainian metalanguage uses specific terms to describe this phenomenon. The word **результат** (result) aligns with the perfective aspect, emphasizing that a goal was reached. The word **процес** (process) aligns with the imperfective aspect, focusing on the flow of time. :::info **Вид як спосіб мислення** When speaking Ukrainian, you must decide what your communicative goal is. Are you emphasizing **завершеність** (completeness) or simply stating that an activity took place? You are the director of your sentence. ::: Коли ви розмовляєте українською, ви не просто вибираєте форму дієслова. Ви вирішуєте, як ваш слухач побачить цю подію. Вид дієслова — це ваш інструмент, щоб показати, що для вас було найважливішим у тій ситуації. Від цього залежить уся атмосфера вашої розповіді. > *When you speak Ukrainian, you don't just choose a verb form. You decide how your listener will see this event. The verb aspect is your tool to show what was most important to you in that situation. The entire atmosphere of your story depends on this.*
+і швидко відправив фінансовий звіт. А потім зробив усі свої домашні справи. *(Hi! How did your day go? Yesterday I wrote three letters and quickly sent the financial report. And then I did all my household chores.)* > — **Оксана:** О, а я цілий день важко писала свій звіт, але так і не закінчила його. Потім ще дві довгі години готувала вечерю для гостей. *(Oh, and I was writing my report hard all day, but still didn't finish it. Then I was cooking dinner for the guests for another two long hours.)* > — **Тарас:** Але ж ти приготувала її? *(But did you cook it?)* > — **Оксана:** Так, нарешті ми змогли спокійно поїсти. *(Yes, finally we were able to eat peacefully.)* In this exchange, Тарас sounds highly productive and energized. Every verb he uses implies a closed, successfully managed task. Оксана, on the other hand, sounds incredibly tired. Her verbs stretch out over the timeline, emphasizing the heavy burden of the activity rather than the joy of finishing it. What if she wants to complain about the **повторюваність** (recurrence) of this situation, noting that it happens **щоразу** (every time) they host guests? Her verbs would stay exactly the same until she **нарешті** (finally) finishes the task. This stark contrast brings us to the core concept of this module: Aspect as a Mindset. You can describe the exact same event focusing on its **тривалість** (duration), or you can emphasize the final **результат** (result). :::info **Grammar box** A **видова пара** (aspectual pair) is a set of two verbs that describe the same core action but belong to different aspects. For example, **готувати** (to prepare/cook) focuses on the effort, while **приготувати** (to prepare/cook) focuses on the finished meal. Similarly, you might study a topic for hours, but your ultimate goal is to completely **вивчити** (to learn thoroughly) the material. Knowing when to use which verb is the key to natural speech. ::: Вибір між цими двома граматичними інструментами залежить тільки від вас як від автора історії. Якщо для вас важлива завершеність, ви свідомо обираєте дієслово доконаного виду. Якщо ж вас більше цікавить сам процес дії чи її повторюваність, ви використовуєте дієслово недоконаного виду. Українська граматика просто підкоряється вашому баченню світу. > *The choice between these two grammatical tools depends entirely on you as the author of the story. If completedness is important to you, you consciously choose a perfective verb. If, however, you are more interested in the process itself or its recurrence, you use an imperfective verb. Ukrainian grammar simply obeys your vision of the world.* :::note **Quick tip** Every time you want to talk about the past, ask yourself: "Do I care about the journey, or do I care about the destination?" Your answer will immediately point you to the correct aspect. Of course, **іноді** (sometimes) an action happens **раптом** (suddenly), interrupting the journey entirely. For instance, if you were reading a book and decided to **зателефонувати** (to call) a friend, that single, sudden action demands a perfective verb. :::
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -697,6 +697,41 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] доконаний вид
+- [ ] недоконаний вид
+- [ ] видова пара
+- [ ] результат
+- [ ] процес
+- [ ] тривалість
+- [ ] завершеність
+- [ ] повторюваність
+- [ ] однократність
+- [ ] одного разу
+- [ ] щодня
+- [ ] щоразу
+- [ ] завжди
+- [ ] іноді
+- [ ] нарешті
+- [ ] раптом
+- [ ] готувати
+- [ ] приготувати
+- [ ] вивчити
+- [ ] зателефонувати
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Результат чи процес? Основний вибір (~1200 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

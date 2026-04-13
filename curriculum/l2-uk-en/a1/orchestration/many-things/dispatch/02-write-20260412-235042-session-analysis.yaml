@@ -1,0 +1,85 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T21-49-b1a438ff.json
+phase: write
+prompt_chars: 64504
+response_chars: 11880
+prompt_words: 9513
+response_words: 1803
+sections:
+- name: preamble
+  start: 0
+  length: 6402
+  fraction: 0.0992
+- name: plan
+  start: 6402
+  length: 7282
+  fraction: 0.1129
+- name: wiki
+  start: 12779
+  length: 25817
+  fraction: 0.4002
+- name: rules
+  start: 39501
+  length: 10570
+  fraction: 0.1639
+- name: skeleton
+  start: 50071
+  length: 4506
+  fraction: 0.0699
+- name: output_spec
+  start: 54577
+  length: 9927
+  fraction: 0.1539
+large_sections:
+- wiki
+directives_total: 58
+directives_covered: 46
+directives_missed:
+- kind: checklist
+  text: No 'Let us...', 'In this section...', or formulaic openers
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: checklist
+  text: Every exercise marker from the skeleton is placed
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: must
+  text: For A1 early modules, the learner cannot read Cyrillic — English must dominate.
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: must
+  text: This is a fundamental concept with no direct English equivalent and must be
+    drilled.
+  covered: false
+  coverage_note: 3/8 keywords (38%)
+- kind: must
+  text: '**Avoid Surzhyk and Russianisms:** The writer must be vigilant in using vocabulary.'
+  covered: false
+  coverage_note: 3/8 keywords (38%)
+- kind: must
+  text: translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: must
+  text: '- **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).'
+  covered: false
+  coverage_note: 2/9 keywords (22%)
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-sounds-vs-letters
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-sounds-vs-letters
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-false-friends
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing

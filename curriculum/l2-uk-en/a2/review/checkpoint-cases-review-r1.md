@@ -1,65 +1,179 @@
 ## Linguistic Scan
-Two linguistic errors found:
-1. `вушима` — Used as an example of the `-има` Instrumental plural ending for body parts. While historically attested as a dual remnant, the standard modern Ukrainian Instrumental for "вуха" is "вухами". Teaching `вушима` as standard alongside `очима` and `плечима` is incorrect.
-2. `по суботах` — Used to teach schedule/recurring time expressions with `по` + Locative plural. This is a Russian calque ("по субботам"). Standard Ukrainian uses the adverb `щосуботи` or `щовихідних` without a preposition.
+- No Russianisms, Surzhyk, calques, paronym errors, or banned Russian characters were found.
+- [Linguistic accuracy] [SEVERITY: critical] Location: `So, «очами» is wrong; the correct form is «очима».`
+  Issue: This is too absolute. VESUM attests `очами` as an archaic/poetic instrumental plural, so teaching it as simply “wrong” is inaccurate.
+  Fix: Rephrase it as a standard-vs-archaic distinction and teach `очима` as the preferred modern form.
 
 ## Exercise Check
-- All 8 `<!-- INJECT_ACTIVITY: ... -->` markers are present and correspond to the 8 specific exercises outlined in the `content_outline`.
-- Marker IDs map logically to the planned exercises (e.g. `dialogue-gap-fill` for point 8, `case-trigger-quiz` for point 4).
-- Markers are placed correctly after their respective theory sections and do not test concepts before they are taught.
+- 4 activity markers are present, and their IDs match the plan’s `activity_hints`: `group-sort-cases`, `fill-in-mixed-cases`, `quiz-error-correction`, `error-correction-mixed`.
+- Marker placement is locally logical, but all 4 markers are clustered in Part 2.
+- Part 1 exercises are mostly prose placeholders rather than concrete task items.
+- Exercise 5 is announced with `Read a short text and identify the case and trigger for the underlined nouns.` but no short text follows.
+- Exercise 8 is announced with `complete a dialogue where you fill in the missing noun forms` but no blanks/dialogue exercise follows.
+- The plan explicitly includes `по + Loc.`, but the preposition section never teaches it.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 9/10 | The module effectively covers almost all points, but missed teaching the irregular plural `око` -> `очі` in Part 1 ("Remember the "high priority trio" of irregular plurals: друг..."). It also missed the `у 2014 році` time expression in Part 2. |
-| 2. Linguistic accuracy | 8/10 | Good overall command of cases, but contains a critical Russian calque teaching `по суботах` for schedules, and an archaic/substandard form `вушима` taught as standard. |
-| 3. Pedagogical quality | 10/10 | Excellent pedagogical approach. It successfully contrasts Direct Object (Accusative) vs Negation (Genitive), and company (Instrumental) vs origin (Genitive). |
-| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary words from the plan are naturally integrated into the text (e.g., `контрольна точка`, `перевірка`, `завдання`, `впевнено`, `вихідний день`). |
-| 5. Exercise quality | 10/10 | 8 exercises are correctly placed, with clear mapping to the planned exercises. |
-| 6. Engagement & tone | 10/10 | The tone is encouraging and maintains a good teacher persona without being overly corporate. The "case compass" metaphor creates a continuous learning thread. |
-| 7. Structural integrity | 9/10 | Word count is above the target (2154 vs 1500). H2 tags match. However, there is a dangling cut-off sentence at the very end: "6 to add the flesh...". |
-| 8. Cultural accuracy | 10/10 | Uses authentic Ukrainian contexts (Lviv, Carpathians) and natural names (Олена, Максим, Сергій). |
-| 9. Dialogue & conversation quality | 10/10 | The wedding planning dialogue successfully weaves all 7 cases into a natural conversation. The responses logically match question cases. |
+| 1. Plan adherence | 5/10 | The plan requires `по + Loc.`, textbook references, and a wedding dialogue where “all 7 cases” appear. The module never teaches `по + Loc.`, never cites `Заболотний` or `Варзацька`, and the dialogue claims `This dialogue contains all seven cases` while only analyzing six. |
+| 2. Linguistic accuracy | 7/10 | The Ukrainian is mostly clean, but `So, «очами» is wrong; the correct form is «очима».` is an inaccurate overstatement. |
+| 3. Pedagogical quality | 6/10 | There are many examples, but several exercises remain abstract instructions instead of usable tasks: `Your завдання... Think about...`, `Read a short text...`, `complete a dialogue...`. |
+| 4. Vocabulary coverage | 10/10 | All required vocabulary appears naturally: `перевірка`, `контрольна точка`, `завдання`, `помилка`, `виправити`, `відмінок`, `множина`, `однина`; recommended words also appear: `самоперевірка`, `впевнено`, `вихідний день`. |
+| 5. Exercise quality | 5/10 | The marker IDs match the plan, but Part 1 lacks concrete item sets, Exercise 5 has no short text, and Exercise 8 has no actual blanked dialogue. |
+| 6. Engagement & tone | 7/10 | The teacherly tone is generally fine, but lines like `You must memorize these completely because you will use them every single day` and `Practice is the only way to build this fluency` add filler rather than instruction. |
+| 7. Structural integrity | 8/10 | Headings are clean and the pipeline word count is above target, but the closing sentence is malformed: `If you can answer "yes" to these questions,  Keep practicing...` |
+| 8. Cultural accuracy | 9/10 | The module is Ukrainian-centered and the wedding/day-off contexts are culturally neutral and appropriate. |
+| 9. Dialogue & conversation quality | 6/10 | The Наталя/Олег exchange is natural enough, but the wedding dialogue is still mostly a grammar showcase, and its “all seven cases” claim is not supported by the actual noun forms shown. |
 
 ## Findings
+- [LINGUISTIC ACCURACY] [SEVERITY: critical]
+  Location: `So, «очами» is wrong; the correct form is «очима».`
+  Issue: `очами` is attested; it is not simply “wrong.”
+  Fix: Teach `очима` as the standard modern form and label `очами` as archaic/poetic.
 
-[1. Plan adherence] [major]
-Location: `Частина 1: Форми множини` ("Remember the "high priority trio" of irregular plurals: друг (friend) becomes друзі, людина (person) becomes люди, and дитина (child) becomes діти.")
-Issue: The plan explicitly required teaching the irregular plural of `око`, which was omitted.
-Fix: Update the sentence to include `око` (eye) becomes `очі`.
+- [PLAN ADHERENCE] [SEVERITY: critical]
+  Location: `This dialogue contains all seven cases. Let us analyze them:`
+  Issue: The dialogue as written does not include a clear Nominative noun example, so the “all seven cases” claim is false.
+  Fix: Add a nominative noun sentence to the dialogue and analyze it explicitly.
 
-[1. Plan adherence] [major]
-Location: `Частина 2: Який відмінок?` ("Days of the week take the Accusative: у четвер (on Thursday). Hours of the day take the Locative: о п'ятій годині (at five o'clock).")
-Issue: The plan explicitly required teaching `у 2014 році` as a time expression, which was omitted.
-Fix: Add `у 2014 році` to the time expressions examples.
+- [PLAN ADHERENCE] [SEVERITY: major]
+  Location: Part 2 preposition teaching block around `The preposition «у» or «в»...` / `Similarly, the preposition «з»...`
+  Issue: The plan explicitly requires `по + Loc.`, but `по` is never taught.
+  Fix: Add at least one `по + Locative` example before the activity marker.
 
-[2. Linguistic accuracy] [critical]
-Location: `Частина 1: Форми множини` ("Double body parts" take the unique **-има** ending in the Instrumental case: **очима** (with eyes), **плечима** (with shoulders), **вушима** (with ears).)
-Issue: `вушима` is an archaic/substandard dual form. In standard modern Ukrainian, the instrumental of "вуха" is "вухами". It should not be taught alongside `очима` and `плечима` as taking the `-има` ending.
-Fix: Remove `**вушима** (with ears)`.
+- [PLAN ADHERENCE] [SEVERITY: major]
+  Location: `## Підсумок`
+  Issue: The plan references `Заболотний Grade 6` and `Варзацька Grade 4, с. 38`, but the module never cites them.
+  Fix: Add a short review-reference sentence in the summary.
 
-[2. Linguistic accuracy] [critical]
-Location: `Частина 2: Який відмінок?` (The preposition **по** is used for movement along a surface or a schedule in the Locative: "йти по **вулицях**" (to walk along the streets), "по **суботах**" (on Saturdays).)
-Issue: Using `по` + Locative plural to denote a regular schedule (`по суботах`) is a Russian calque ("по субботам"). Standard Ukrainian uses the adverb `щосуботи`. Teaching this as a valid grammar rule is a critical error.
-Fix: Remove the reference to "schedule" and the "по суботах" example.
+- [EXERCISE QUALITY] [SEVERITY: major]
+  Location: `Your **завдання** (task, exercise) is to form the Nominative plural for a mixed-gender list of ten singular nouns. Think about how words like «книга», «зошит», and «вікно» change.`
+  Issue: Exercise 1 is only described; the learner never receives the actual 10-item list promised by the plan.
+  Fix: Replace the placeholder with a concrete noun list.
 
-[7. Structural integrity] [minor]
-Location: `Підсумок` (The case system is the foundation. 6 to add the flesh of adjectives and verbs of motion to this strong structure!)
-Issue: Typo/cut-off sentence at the end of the file. It is missing "Ready for A2.".
-Fix: Change "6 to add" to "Ready for A2.6 to add".
+- [EXERCISE QUALITY] [SEVERITY: major]
+  Location: `To master this, your next task is to form the Genitive plural for ten challenging nouns.` and `Complete quantity expressions with the correct Genitive plural forms: \`п'ять...\`, \`багато...\`, \`скільки...\`?`
+  Issue: Exercises 2 and 3 are also only described, not instantiated.
+  Fix: Replace both placeholders with concrete prompts.
+
+- [EXERCISE QUALITY] [SEVERITY: major]
+  Location: `Read a short text and identify the case and trigger for the underlined nouns.`
+  Issue: Exercise 5 is missing its actual short text.
+  Fix: Insert a short text with marked nouns and a clear identification task.
+
+- [EXERCISE QUALITY] [SEVERITY: major]
+  Location: `To test your understanding, complete a dialogue where you fill in the missing noun forms in the correct case, both singular and plural.`
+  Issue: Exercise 8 is missing its actual blanked dialogue.
+  Fix: Replace the instruction with a real completion exercise.
+
+- [PLAN ADHERENCE] [SEVERITY: major]
+  Location: self-check list ending with `- Чи готовий я до рівня A2.6?`
+  Issue: The plan’s self-assessment checklist includes `Can I use the case compass from M31?`, but that item is absent.
+  Fix: Add an M31 case-compass self-check bullet.
+
+- [ENGAGEMENT & TONE] [SEVERITY: minor]
+  Location: `You must memorize these completely because you will use them every single day:`
+  Issue: This is generic emphasis, not instruction.
+  Fix: Replace it with a more concrete teacher cue.
+
+- [STRUCTURAL INTEGRITY] [SEVERITY: minor]
+  Location: `If you can answer "yes" to these questions,  Keep practicing...`
+  Issue: The sentence is malformed and has a doubled space.
+  Fix: Repair the sentence.
 
 ## Verdict: REVISE
-The module provides a very strong and structurally sound synthesis of the case system. However, it contains two critical linguistic errors (`вушима` taught as standard, `по суботах` taught as a rule), misses two explicit plan points, and has a visible typo at the very end. Applying these specific find/replace fixes will make the module accurate and ready for publication.
+The module is salvageable, but it cannot pass as written. It contains one factual linguistic overstatement, one false grammar-analysis claim, and multiple major plan/exercise omissions.
 
 <fixes>
-- find: "Remember the \"high priority trio\" of irregular plurals: **друг** (friend) becomes **друзі**, **людина** (person) becomes **люди**, and **дитина** (child) becomes **діти**."
-  replace: "Remember these irregular plurals: **друг** (friend) becomes **друзі**, **людина** (person) becomes **люди**, **дитина** (child) becomes **діти**, and **око** (eye) becomes **очі**."
-- find: "Days of the week take the Accusative: **у четвер** (on Thursday). Hours of the day take the Locative: **о п'ятій годині** (at five o'clock)."
-  replace: "Days of the week take the Accusative: **у четвер** (on Thursday). Years and hours take the Locative: **у 2014 році** (in 2014), **о п'ятій годині** (at five o'clock)."
-- find: "**очима** (with eyes), **плечима** (with shoulders), **вушима** (with ears)."
-  replace: "**очима** (with eyes), **плечима** (with shoulders)."
-- find: "movement along a surface or a schedule in the Locative: \"йти по **вулицях**\" (to walk along the streets), \"по **суботах**\" (on Saturdays)."
-  replace: "movement along a surface in the Locative: \"йти по **вулицях**\" (to walk along the streets)."
-- find: "The case system is the foundation. 6 to add the flesh of adjectives and verbs of motion to this strong structure!"
-  replace: "The case system is the foundation. Ready for A2.6 to add the flesh of adjectives and verbs of motion to this strong structure!"
+- find: |
+    However, the most frequently used words often have irregular forms. You must memorize these completely because you will use them every single day:
+  replace: |
+    However, some very common words have irregular forms. These are worth memorizing early because they appear often in everyday Ukrainian:
+
+- find: |
+    Your **завдання** (task, exercise) is to form the Nominative plural for a mixed-gender list of ten singular nouns. Think about how words like «книга», «зошит», and «вікно» change.
+  replace: |
+    Your **завдання** (task, exercise) is to form the Nominative plural for these ten singular nouns: **книга, зошит, вікно, студент, ніч, море, дитина, людина, око, друг**. Write the plural form next to each word, then group the answers by ending pattern.
+
+- find: |
+    To master this, your next task is to form the Genitive plural for ten challenging nouns. Can you form the Genitive plural for **теля** (calf)? It becomes **телят**!
+  replace: |
+    To master this, form the Genitive plural for these ten nouns: **книга, місто, ніч, море, студент, олівець, гість, яблуко, річ, теля**. Then compare your answers with the patterns above. Remember: **теля → телят**.
+
+- find: |
+    Complete quantity expressions with the correct Genitive plural forms: `п'ять...`, `багато...`, `скільки...`?
+  replace: |
+    Complete these quantity expressions with the correct Genitive plural forms:
+    1. `п'ять ___` (студент)
+    2. `багато ___` (місто)
+    3. `скільки ___?` (книга)
+    4. `мало ___` (гроші)
+    5. `десять ___` (ніч)
+
+- find: |
+    <!-- INJECT_ACTIVITY: group-sort-cases -->
+  replace: |
+    The preposition «по» also commonly takes the Locative when we mean movement along a place or distribution across a surface.
+    > Ми довго гуляли по **парку**. *(We walked around the park for a long time.)*
+    > Книжки лежать по **полицях**. *(The books are lying on the shelves.)*
+
+    <!-- INJECT_ACTIVITY: group-sort-cases -->
+
+- find: |
+    Read a short text and identify the case and trigger for the underlined nouns.
+  replace: |
+    Read the short text and identify the case and trigger for the underlined nouns.
+
+    > У суботу я був у __музеї__. Там я бачив __друзів__. Один хлопець був у синьому __светрі__. Після екскурсії я подзвонив __сестрі__. Ми повернулися з __центру__ без __парасольки__.
+
+    For each underlined noun, name the case and say whether the trigger is a verb, a preposition, or a time construction.
+
+- find: |
+    Another issue is ignoring dual remnants in the Instrumental case. For body parts that come in pairs, we use «-има» instead of «-ами». So, «очами» is wrong; the correct form is «очима». Similarly, we say «плечима» (with shoulders) and «дверима» (with doors). 
+  replace: |
+    Another issue is choosing the standard Instrumental plural forms for paired nouns. In standard modern Ukrainian, we usually use forms like «очима», «плечима», and «дверима». The form «очами» does exist, but it is archaic or poetic, so A2 learners should prefer «очима». 
+
+- find: |
+    > **Подруга:** Не хвилюйся, усе буде чудово на **весіллі**! *(Do not worry, everything will be wonderful at the wedding!)*
+  replace: |
+    > **Подруга:** Не хвилюйся, усе буде чудово на **весіллі**! *(Do not worry, everything will be wonderful at the wedding!)*
+    > **Наречена:** Наш **фотограф** уже чекає біля ресторану. *(Our photographer is already waiting by the restaurant.)*
+
+- find: |
+    This dialogue contains all seven cases. Let us analyze them:
+    - «Олено!» is the Vocative case. It is used to address the person directly.
+  replace: |
+    This dialogue contains all seven cases. Let us analyze them:
+    - «фотограф» is the Nominative singular. It names the subject of the sentence.
+    - «Олено!» is the Vocative case. It is used to address the person directly.
+
+- find: |
+    To test your understanding, complete a dialogue where you fill in the missing noun forms in the correct case, both singular and plural. Read the surrounding words carefully to find the triggers.
+  replace: |
+    To test your understanding, complete this dialogue with the correct noun forms in the correct case.
+
+    > **Андрій:** Ти вже запросила всіх ___ (гість)?
+    > **Олена:** Так, і я вже купила подарунок ___ (подруга).
+    > **Андрій:** А фотограф буде з ___ (молодята)?
+    > **Олена:** Так, він чекатиме нас на ___ (весілля).
+    > **Андрій:** Добре. Тоді я ще подзвоню ___ (батьки) і ___ (друзі).
+    > **Олена:** Чудово, дякую тобі, ___ (Андрій)!
+
+- find: |
+    We have covered a lot of ground in this module. Take a moment for a **самоперевірка** (self-check). Ask yourself these questions:
+  replace: |
+    We have covered a lot of ground in this module. Take a moment for a **самоперевірка** (self-check). If you want extra review, compare these patterns with the declension table in Варзацька Grade 4, с. 38, and the review exercises in Заболотний Grade 6. Ask yourself these questions:
+
+- find: |
+    - Чи використовую я Кличний відмінок при звертанні до людей?
+    - Чи готовий я до рівня A2.6?
+  replace: |
+    - Чи використовую я Кличний відмінок при звертанні до людей?
+    - Чи вмію я користуватися «case compass» з M31, коли сумніваюся?
+    - Чи готовий я до рівня A2.6?
+
+- find: |
+    If you can answer "yes" to these questions,  Keep practicing, read more texts, and do not be afraid to make a **помилка** — every error is a step toward fluency.
+  replace: |
+    If you can answer "yes" to these questions, keep practicing, read more texts, and do not be afraid to make a **помилка** — every error is a step toward fluency.
 </fixes>

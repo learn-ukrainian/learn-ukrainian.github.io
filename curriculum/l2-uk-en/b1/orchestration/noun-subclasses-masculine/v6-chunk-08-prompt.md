@@ -27,7 +27,7 @@ Grand total: ~4400 слів
 <previous_context>
 [...previous sections truncated...]
 
-довга однина і коротка множина — створює унікальний граматичний ритм української мови. Щоб говорити природно, вам потрібно звикнути відтинати цей суфікс, щойно ви уявляєте більше ніж одну особу. Аналіз типових помилок іноземних студентів показує, що найважче дається саме ця відмова від суфікса. Студенти часто намагаються утворити множину за базовим правилом — просто додаючи закінчення **-и** до початкової форми слова. Так виникають неправильні, штучні форми: «киянини» замість **кияни**, або «громадянини» замість **громадяни**. Щоб назавжди позбутися цієї помилки, створіть для себе міцну звукову асоціацію. Згадайте новини або офіційні звернення: ви завжди чуєте слово **громадяни**, і ніколи — «громадянини». Використовуйте це слово як золотий еталон. Якщо ви сумніваєтеся, як сказати про жителів Львова (один **львів'янин** *(Lviv resident)*), просто згадайте модель слова «громадяни». За цією ж аналогією ви легко утворите правильну форму: **львів'яни**. <!-- INJECT_ACTIVITY: error-correction-in --> ## Культурний контекст: -ар/-яр у літературі Суфікси **-ар** та **-яр** мають не лише граматичне, а й глибоке культурне значення в Україні. Найвідоміший приклад — це слово **кобзар** *(kobza player)*. Історично кобзарі були мандрівними сліпими музикантами, які грали на кобзі або бандурі. Проте вони були не просто вуличними виконавцями чи співаками. Кобзарі виконували надзвичайно важливу роль хранителів національної пам'яті, століттями передаючи з уст в уста історичні пісні та героїчні думи про козацьку славу. Вони підтримували бойовий дух народу в найтяжчі часи. Саме тому Тарас Шевченко, найвидатніший український поет, назвав свою головну збірку поезій «Кобзар» *(The Kobzar)*. Згодом це слово стало його почесним епітетом. Для українців кобзар — це абсолютно сакральне поняття, що символізує правдивий голос народу, його чисту совість та незламний дух. Називаючи Шевченка Великим Кобзарем, українці підкреслюють його унікальну роль духовного лідера та пророка нації. Інший знаковий приклад використання суфікса **-яр** — це слово **каменяр** *(stonecutter)*. Цей термін назавжди пов'язаний з іменем ще одного генія української літератури — Івана Франка. Його традиційно називають Великим Каменярем. Це шанобливе прізвисько походить від його знаменитого вірша «Каменярі» *(The Stonecutters)*, написаного наприкінці дев'ятнадцятого століття. У цьому філософському творі поет створив надзвичайно потужну метафору. Він описав, як люди важкою щоденною працею розбивають монолітну гранітну скелю, щоб прокласти новий світлий шлях для майбутніх поколінь. Каменяр у цьому контексті виступає символом невтомного борця за національну свободу, науковий прогрес та соціальну справедливість. Суфікс -яр у цьому слові вдало підкреслює активну, цілеспрямовану дію людини. Завдяки Франку звичайна назва фізично важкої робітничої професії назавжди перетворилася на величний поетичний образ будівничого нового, вільного суспільства. Словотворча модель на -ар та -яр також міцно закарбувалася в українській антропоніміці — науці, що вивчає власні імена. Багато сучасних українських прізвищ походять саме від назв давніх ремісничих професій. Наприклад, прізвище видатного українського романіста Олеся Гончара буквально означає **гончар** *(potter)* — майстер, який робить посуд із глини. Прізвище автора славетної «Енеїди» Івана Котляревського походить від слова **котляр** *(boilermaker)* — фахівця, який виготовляв мідні казани. Варто згадати й історичне слово **швець** *(shoemaker)*, від якого утворилося найпопулярніше українське прізвище Шевченко. Хоча тут немає суфікса -ар, логіка утворення прізвища від професії залишається тією ж. Розуміння цих суфіксів допомагає не лише правильно відмінювати слова, але й значно глибше розуміти історію своєї родини та цікаве походження багатьох українських прізвищ.
+like «киянини». You can avoid this trap by associating these words with the highly frequent word for citizens. If you know that citizens are «громадяни», you automatically know that Kyivans are «кияни». :::info **Grammar box** — The **кличний відмінок** (vocative case) for nouns ending in `-ин` always takes the `-е` ending (киянине, громадянине). This is because the stem ends in a hard consonant, and the suffix prevents any consonant alternation. ::: <!-- INJECT_ACTIVITY: error-correction-in --> ## Культурний контекст: -ар/-яр у літературі (~380 слів) The word **кобзар** (kobza player) represents much more than just a traveling musician. Historically, these blind minstrels were the keepers of national memory across the Ukrainian lands. They traveled between villages, singing epic dumas about historical battles and folk heroes. This specific **іменник** (noun) carries a profound cultural weight that resonates today. Тарас Шевченко назвав свою найвідомішу збірку віршів «Кобзар», і це слово набуло справді сакрального значення. Сам поет швидко став символічним кобзарем для всієї нації. Він невтомно пробуджував національну свідомість своїм пророчим словом. Сьогодні цей іменник міцно асоціюється з культурною пам'яттю та незламністю українців. > *Taras Shevchenko named his most famous collection of poems "Kobzar", and this word acquired a truly sacred meaning. The poet himself quickly became a symbolic kobzar for the entire nation. He tirelessly awakened national consciousness with his prophetic word. Today, this noun is strongly associated with cultural memory and the resilience of Ukrainians.* Another iconic literary figure deeply associated with the `-яр` suffix is Ivan Franko. He is known universally across the country by the powerful epithet Великий Каменяр. The word каменяр comes directly from the root for stone. It is combined with a **суфікс** (suffix) denoting a person's demanding **професія** (profession). У знаменитому вірші Франка «Каменярі» робітники завзято розбивають гранітні скелі важкими молотами. Вони роблять це, щоб прокласти новий шлях до свободи для майбутніх поколінь. Цей героїчний образ ідеально відображає титанічну працю письменника заради свого народу. Звичайний словотвірний суфікс перетворює важку фізичну роботу на величний життєвий подвиг. These specific word-formation patterns extend far beyond literature and poetry. They reach directly into Ukrainian anthroponymy, the historical study of surnames. In the past, a person's geographic **походження** (origin) or daily trade became the primary basis for their family name. Because village life relied heavily on specialized craftsmen, these suffixes evolved into permanent identifiers. Наприклад, видатний письменник Олесь Гончар мав прізвище, яке означає майстра з виготовлення глиняного посуду. Прізвище засновника нової української літератури Івана Котляревського походить від слова «котляр» — майстра, який робить металеві котли. Такі поширені сьогодні прізвища, як Скляр, Бондар або Тесляр, є прямим відображенням тогочасного суспільного життя. Ці слова надійно зберігають історію давніх ремесел, перетворюючи звичайні назви на родинну спадщину. :::info **Grammar box** — Surnames derived from historical occupations decline exactly like the common nouns they come from. If you are speaking about the famous author Oles Honchar, use the **родовий відмінок** (genitive case) for absence, and the **кличний відмінок** (vocative case) for addressing him. **Немає Олеся Гончара.** — *There is no Oles Honchar.* **Пане Гончарю!** — *Mr. Honchar!* :::
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -628,7 +628,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -641,18 +708,69 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (8/8).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] суфікс (suffix — word-formation morpheme after the root)
+- [ ] іменник (noun)
+- [ ] відміна (declension class)
+- [ ] відмінювання (declension — changing a word through cases)
+- [ ] однина (singular number)
+- [ ] множина (plural number)
+- [ ] кличний відмінок (vocative case)
+- [ ] родовий відмінок (genitive case)
+- [ ] походження (origin — where someone is from)
+- [ ] професія (profession)
+- [ ] пекар (baker — person who bakes)
+- [ ] лікар (doctor)
+- [ ] школяр (student — person who attends school)
+- [ ] кобзар (kobza player — traditional Ukrainian musician)
+- [ ] киянин (Kyivan — resident of Kyiv)
+- [ ] громадянин (citizen)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Підсумок (~340 слів)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

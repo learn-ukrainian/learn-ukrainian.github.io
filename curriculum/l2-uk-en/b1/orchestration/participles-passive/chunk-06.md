@@ -1,21 +1,33 @@
-## Підсумок
+## Підсумок (~500 слів)
 
-Ми детально розібрали **пасивні дієприкметники** *(passive participles)* — особливі форми дієслова, які виражають ознаку предмета за дією, яку над ним виконав хтось інший. На відміну від активних форм, де предмет сам виконує дію, пасивні конструкції описують кінцевий результат («**посаджений сад**» *(planted garden)*). Це надзвичайно природний, красивий і продуктивний спосіб будувати речення в українській мові, особливо в письмовому та офіційному стилях. Для їх творення ми використовуємо три основні суфікси, вибір яких завжди залежить від кінцівки основи **інфінітива** *(infinitive)*: **-н-**, **-ен-** (або **-єн-**) та **-т-**. Найбільшої уваги потребує саме суфікс **-ен-**, адже перед ним майже завжди відбувається **чергування приголосних** *(consonant alternation)*, якщо основа закінчується на певні звуки. Наприклад, звук [т] обов'язково змінюється на [ч], а [д] переходить у [дж]. Це робить звучання нашої мови значно більш плавним та мелодійним.
+In this module, we have explored the concept of the **пасивний дієприкметник** (passive participle — subject receives the action). These participles express a feature or state of an object resulting from an action performed by someone else. Unlike active participles, the subject here is the receiver of the action. We learned that they are formed using three primary suffixes: «-н-», «-ен-» (or «-єн-»), and «-т-». The choice of suffix depends entirely on the stem of the infinitive. Additionally, when adding the «-ен-» suffix, we often observe a **чергування** (alternation — consonant changes in formation) of the final stem consonant.
 
-Щоб упевнено утворювати ці пасивні форми без помилок, запам'ятайте цей простий покроковий алгоритм.
+Кожен такий дієприкметник показує результат дії. Наприклад, коли ми кажемо «збудований дім», ми розуміємо, що хтось збудував цей дім. Коли ми бачимо «вишитий рушник», ми знаємо, що хтось його вишив.
 
-1. Якщо основа інфінітива закінчується на голосний **-а-**, ми просто додаємо суфікс **-н-**: дієслово «прочитати» перетворюється на «**прочитаний**» *(read)*, а «написати» стає формою «**написаний**» *(written)*.
-2. Якщо основа закінчується на приголосний звук або на голосні **-и-** чи **-і-**, використовуємо суфікс **-ен-** та перевіряємо можливе чергування. Наприклад, «сплатити» дає нам «**сплачений**» *(paid)*, а «зробити» — форму «**зроблений**» *(made)*.
-3. Для **односкладових** *(monosyllabic)* дієслів або тих, що мають характерний суфікс **-ну-**, ми беремо суфікс **-т-**: «мити» утворює «**митий**» *(washed)*, а «розбити» — «**розбитий**» *(broken)*.
+> *Each such participle shows the result of an action. For example, when we say "a built house", we understand that someone built this house. When we see an "embroidered towel", we know that someone embroidered it.*
 
-Після правильного додавання суфікса ми відмінюємо ці слова так само, як звичайні **прикметники** *(adjectives)* твердої групи. Ми змінюємо їх за родами, числами та відмінками, щоб вони ідеально узгоджувалися з головним іменником у реченні.
+Let's review the step-by-step formation algorithm. First, if the verb stem ends in the vowel «-а-», we use the suffix «-н-». This gives us forms like **прочитаний** (read — passive participle from прочитати) and **написаний** (written — passive participle from написати). Another common example is **збудований** (built — passive participle from збудувати).
 
-Перед тим як успішно перейти до наступної граматичної теми, перевірте себе за допомогою цих контрольних питань:
+Second, if the stem ends in a consonant or the vowels «-и-» or «-і-», we use the suffix «-ен-». Without alternation, we see forms like **принесений** (brought — passive participle from принести). However, this suffix often triggers a consonant change, such as [б] to [бл] in **зроблений** (made/done — passive participle from зробити).
 
-- Чи можу я легко відрізнити активний дієприкметник від пасивного? Яка граматична різниця між словами «**сяючий**» *(shining)* та «**пофарбований**» *(painted)*?
-- Який саме суфікс я маю обрати для дієслова «**зачинити**» *(to close)*? Правильна відповідь: суфікс **-ен-**, тому у нас вийде форма «**зачинений**» *(closed)*.
-- Яке чергування приголосних відбудеться під час творення форми від дієслова «**замовити**» *(to order)*? Згадайте про обов'язкову появу звука **[л]** — вийде «**замовлений**» *(ordered)*.
-- Як правильно узгодити граматичну форму «написаний» з іменником «**лист**» *(letter)* у **родовому відмінку** *(genitive case)*? Має вийти словосполучення «**написаного листа**» *(of the written letter)*.
-- Чим суттєво відрізняється звичайне словосполучення «**варена картопля**» *(cooked potatoes)* від форми «**зварена картопля**» *(boiled potatoes)*? До якого з них можна логічно додати виконавця дії?
+Other examples of this alternation include [т] changing to [ч] in **закручений** (twisted — with [т]→[ч] alternation) and [с] changing to [ш] in **ношений** (worn/carried — with [с]→[ш] alternation). 
 
-Якщо ви легко та швидко відповідаєте на всі ці запитання, ви повністю готові рухатися далі! Наступного разу ми дізнаємося, як ці пасивні форми допомагають будувати великі **дієприкметникові звороти** *(participle phrases)* та які суворі правила пунктуації для них існують.
+Finally, monosyllabic verbs and some specific stems take the suffix «-т-». This produces words like **відкритий** (opened — passive participle from відкрити) and **вишитий** (embroidered — passive participle from вишити). Regardless of the suffix, all these words decline exactly like hard-group adjectives.
+
+:::tip
+**Did you know?** — Passive participles are the foundation for the impersonal «-но» and «-то» forms you will use frequently. Mastering their formation now will make advanced sentence structures much easier to learn.
+:::
+
+Перед переходом до наступного модуля перевірте свої знання. Спробуйте відповісти на ці питання:
+- Чи можу я відрізнити активний дієприкметник від пасивного? Наприклад, слова «сяючий» та «пофарбований».
+- Який суфікс я оберу для дієслова «зачинити»? (Відповідь: «зачинений»).
+- Яке чергування відбудеться у слові «замовити»? (Відповідь: «замовлений»).
+- Як узгодити слово «написаний» з іменником «лист» у родовому відмінку? (Відповідь: «написаного листа»).
+- Чим відрізняється «варена картопля» від «звареної мамою картоплі»?
+
+> *Before moving to the next module, check your knowledge. Try answering these questions:*
+> *- Can I distinguish an active participle from a passive one? For example, the words "shining" and "painted".*
+> *- Which suffix will I choose for the verb "зачинити"? (Answer: "зачинений").*
+> *- What alternation will happen in the word "замовити"? (Answer: "замовлений").*
+> *- How do I agree the word "написаний" with the noun "лист" in the Genitive case? (Answer: "написаного листа").*
+> *- What is the difference between "варена картопля" and "зварена мамою картопля"?*

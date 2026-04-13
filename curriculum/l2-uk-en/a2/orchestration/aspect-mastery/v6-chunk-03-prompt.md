@@ -1,22 +1,22 @@
-# Section-by-Section Generation — Section 3/5
+# Section-by-Section Generation — Section 3/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 42: 30 найважливіших видових пар (A2, A2.6 [Aspect, Tenses, and Motion])
-**Section to write:** Вибір виду в складних ситуаціях (~550 words total)
+**Section to write:** Вибір виду в складних ситуаціях (~550 words)
 **Word target for this section:** 550 words (aim for 605 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Вибір виду в складних ситуаціях (~550 words total)
-- P1 (~140 words): Sequence of events vs. Interruption. Explain that a chain of completed actions uses only perfective (Я встав, вмився, одягнувся). Contrast this with interruption where an imperfective background action is "cut" by a perfective event: "Я читав (impf), коли мама зайшла (pf)".
-- P2 (~140 words): Habitual actions vs. Single Result. Use signal words (завжди, часто, зазвичай) for imperfective. Contrast with specific time markers (вчора, один раз, раптом) for perfective. Examples: "Він завжди допомагав" (habit) vs "Він допоміг мені вчора" (specific act).
-- P3 (~140 words): Negation nuances. Explain the difference between "Я не робив" (general denial of action or process) and "Я не зробив" (failure to achieve result despite attempt). Use the example: "Я не читав" (never touched it) vs "Я не прочитав" (didn't finish it).
-- P4 (~130 words): Aspect in the Future. Brief recap on how Imperfective uses "бути + infinitive" (буду писати) while Perfective uses the simple future form (напишу). Reiterate that "буду + perfective" is a major error (буду прочитати ❌).
-- <!-- INJECT_ACTIVITY: fill-in-aspect-context --> [fill-in, Complete sentences by choosing the correct aspect based on context (sequence, interruption, habit, single event), 8 items]
-- <!-- INJECT_ACTIVITY: quiz-aspect-justification --> [quiz, Read a mini-situation and choose the correct aspect form with justification, 8 items]
+## Вибір виду в складних ситуаціях (~550 words)
+- P1 (~110 words): Transition from forms to usage in complex situations. Explain that while "process vs. result" is the basic rule, real sentences often have combinations of actions. Introduce the four common scenarios for choosing aspect.
+- P2 (~120 words): Detail Scenario 1: Sequence of completed events. Explain that when narrating a chronological chain of events, use ONLY perfective verbs. Provide the example: "Я встав, вмився, поснідав і пішов на роботу" (I got up, washed, had breakfast, and left for work). Each action is a completed step before the next begins.
+- P3 (~110 words): Detail Scenario 2: Interruption. Explain this classic pattern: a long, ongoing background action (Imperfective) is interrupted by a sudden, completed event (Perfective). Provide the example: "Коли я готувала вечерю, подзвонила подруга" (While I was cooking [impf] dinner, a friend called [pf]).
+- P4 (~100 words): Detail Scenario 3: Habitual vs. Single Result. Explain that for things done regularly, always use imperfective, even if they finish each time: "Вона завжди допомагала сусідам" (habit, impf). For a specific, one-time result, use perfective: "Вона допомогла сусідці вчора" (single event, pf).
+- P5 (~110 words): Detail Scenario 4: Negation nuances. Explain that negating the imperfective means the action didn't happen at all or is a general fact: "Я не читав цю книгу" (I haven't read it). Negating the perfective often implies the action was attempted but the result wasn't achieved: "Я не прочитав цю книгу" (I started but didn't finish reading it).
+- <!-- INJECT_ACTIVITY: fill-in-context --> [fill-in, Complete sentences by choosing the correct aspect based on context (sequence, interruption, habit, single event), 8 items]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-*(to understand / to grasp)* * **перекладати** / **перекласти** *(to translate / to finish translating)* * **писати** / **написати** *(to write / to finish writing)* * **читати** / **прочитати** *(to read / to finish reading)* * **розповідати** / **розповісти** *(to tell / to tell a complete story)* We often use the imperfective aspect to set a background scene, and the perfective aspect to highlight a successful action. Вчитель пояснював правило. *(The teacher was explaining the rule.)* Він нарешті пояснив правило. *(He finally explained the rule.)* The imperfective form «пояснював» shows the ongoing effort. The perfective form «пояснив» shows that the students now understand it. Achieving success is a perfective concept. Третя важлива група — це соціальна взаємодія та рух. Ми щодня щось купуємо, беремо або починаємо. Без цих слів важко жити в місті. Social interactions often involve the transfer of objects or money. These ten pairs are crucial for navigating everyday situations like shopping or working. * **брати** / **взяти** *(to take / to take hold of)* * **давати** / **дати** *(to give / to hand over)* * **купувати** / **купити** *(to buy / to purchase)* * **платити** / **заплатити** *(to pay / to pay off)* * **допомагати** / **допомогти** *(to help / to provide help)* * **відкривати** / **відкрити** *(to open / to get open)* * **закривати** / **закрити** *(to close / to get closed)* * **починати** / **почати** *(to begin / to start)* * **закінчувати** / **закінчити** *(to finish / to complete)* * **телефонувати** / **зателефонувати** *(to call / to make a phone call)* Sometimes, the imperfective verb shows the attempt, while the perfective verb confirms actual possession or a finalized transaction. Ми купували квитки. *(We were buying tickets.)* Ми купили квитки. *(We bought the tickets.)* If you say «купували», you are describing the process, and maybe you failed. If you say «купили», the transaction is done and the tickets are yours. Тепер давайте порівняємо ці слова. Ви чітко побачите різницю між процесом та результатом. Let's analyze some minimal contrast drills to solidify your understanding. These short pairs of sentences illustrate the semantic difference between the two aspects. Вона пила каву. *(She was drinking coffee.)* Вона випила каву. *(She drank the coffee.)* The first sentence implies she was sitting, sipping, and enjoying the process. The second sentence implies her cup is completely empty. Ми починали о дев'ятій. *(We used to start at nine.)* Ми почали о дев'ятій. *(We started at nine.)* The imperfective verb here shows a habitual, repeating action in the past. It was a regular routine. The perfective verb points to one specific event, like yesterday morning. Він читав книгу. *(He was reading a book.)* Він прочитав книгу. *(He read the book.)* In the first case, he spent time with the book, but he might still be reading. In the second case, he has reached the final page. The perfective aspect always implies a boundary that has been reached. <!-- INJECT_ACTIVITY: match-up, Match imperfective verbs with their perfective partners from the 30 pairs, 8 items -->
+important to know: to understand and to have understood. In a lesson, we use: to write down and to have written down, to translate and to have translated.* Вчитель довго пояснював нове правило. Нарешті він пояснив це правило дуже добре. Мій друг розповів мені цікаву історію. > *The teacher was explaining the new rule for a long time. Finally, he explained this rule very well. My friend told me an interesting story.* The final group deals with movement, exchanging objects, and social interaction. This group contains some of the most ancient and irregular verbs in the language, like **брати / взяти** (to take — impf./pf.) and **давати / дати** (to give — impf./pf.). For objects, we use verbs like **класти / покласти** (to put — impf./pf.). Остання група — це рух та взаємодія. Тут є абсолютно нерегулярна пара: брати і взяти. Ми також маємо дуже схожу пару: давати і дати. Для об'єктів ми використовуємо слова: класти і покласти. У кімнаті ми кажемо: відкривати і відкрити, закривати і закрити. > *The last group is movement and interaction. Here is an absolutely irregular pair: to take and to have taken. We also have a very similar pair: to give and to have given. For objects, we use the words: to put and to have put. In a room, we say: to open and to have opened, to close and to have closed.* :::info **Grammar box** — Notice how "брати" and "взяти" look completely different. These are suppletive pairs, meaning they use entirely different roots for the imperfective and perfective forms. You must memorize them by heart! ::: Every action has its start and finish, like **починати / почати** (to begin — impf./pf.) and **закінчувати / закінчити** (to finish — impf./pf.). You will also frequently use **допомагати / допомогти** (to help — impf./pf.). Кожна дія має свій старт і фініш. Це такі слова: починати і почати, закінчувати і закінчити. Інші корисні дієслова: допомагати і допомогти, купувати і купити. У магазині ми часто кажемо: платити і заплатити. > *Every action has its start and finish. These are such words: to begin and to have begun, to finish and to have finished. Other useful verbs: to help and to have helped, to buy and to have bought. In a store, we often say: to pay and to have paid.* Я брав цю книгу вчора. Я взяв твою книгу. Брат давав мені гроші щотижня. Сьогодні він дав мені двісті гривень. > *I was taking this book yesterday. I took your book. My brother was giving me money every week. Today he gave me two hundred hryvnias.* Найкращий спосіб вивчити ці дієслова — це активна практика. Ви повинні писати свої власні речення кожного дня. Пишіть про свої щоденні плани та реальні результати. > *The best way to learn these verbs is active practice. You must write your own sentences every day. Write about your daily plans and real results.* <!-- INJECT_ACTIVITY: match-up-pairs --> [match-up, Match imperfective verbs with their perfective partners from the 30 pairs, 8 items]
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -379,7 +379,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -398,18 +465,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] видова пара (aspect pair)
+- [ ] префікс (prefix)
+- [ ] суфікс (suffix)
+- [ ] брати / взяти (to take — impf./pf.)
+- [ ] давати / дати (to give — impf./pf.)
+- [ ] говорити / сказати (to say — impf./pf.)
+- [ ] класти / покласти (to put — impf./pf.)
+- [ ] починати / почати (to begin — impf./pf.)
+- [ ] закінчувати / закінчити (to finish — impf./pf.)
+- [ ] допомагати / допомогти (to help — impf./pf.)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Вибір виду в складних ситуаціях (~550 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

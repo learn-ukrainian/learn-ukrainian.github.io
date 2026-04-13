@@ -1,101 +1,54 @@
-## У лікаря: що вас турбує?
+## У лікаря: що вас турбує? (~800 words total)
 
-Коли ви погано почуваєтесь, вам треба звернутися до лікаря. В Україні люди зазвичай ідуть у поліклініку або в приватну лікарню. Лікар завжди спочатку запитає вас про ваші симптоми.
+We have just learned how to use the Genitive case to buy food and describe quantities at the **ринок** (market). Now, let us imagine you need to visit a clinic to talk about your **здоров'я** (health). The language of medicine relies heavily on the grammatical patterns you just practiced. Whether you are asking for a **кілограм** (kilogram) of apples or explaining to a doctor that you do not have a fever, the Genitive case remains a vital tool. We use it frequently to talk about what we lack or to identify the source of a problem.
 
-When you feel unwell in Ukraine, the first step is usually to visit a **поліклініка** (clinic) or a private hospital to see a **терапевт** (general practitioner). The medical culture here is quite direct. When you enter the office, the doctor will not ask you about your day. Instead, they will start with a very specific, practical question.
+Сьогодні ми йдемо до лікаря, бо мій брат несподівано захворів. Він каже, що йому дуже погано і потрібна медична допомога. У нього зовсім немає сил, тому я йду разом із ним до поліклініки. Ми хочемо дізнатися, що сталося, і як швидко повернути його здоров'я.
 
-«**Що вас турбує?**» (What is bothering you?) is the standard opening phrase. You will also often hear «**На що скаржитесь?**» (What are you complaining about?). To answer these questions, you need to describe your physical state accurately.
+> *Today we are going to the doctor because my brother unexpectedly got sick. He says that he feels very bad and needs medical help. He has absolutely no energy, so I am going together with him to the clinic. We want to find out what happened, and how to quickly restore his health.*
 
-Кожна людина іноді хворіє. У мене часто болить голова. Мій друг каже, що у нього болить спина.
+Here is a typical conversation you might have during a medical consultation. Pay attention to how the doctor asks about symptoms and how the patient responds using simple, direct phrases.
 
-In English, you say "I have a headache" or "My throat hurts". In Ukrainian, we almost exclusively use the construction «**у мене болить...**» (it hurts at my place) to describe pain. This is very similar to how we say "I have", but instead of an object, the subject of the sentence is the body part that hurts.
-
-Because the body part is the subject, it must be in the Nominative case. The verb «**боліти**» (to hurt, to ache) must agree with the number of the body part. If one thing hurts, use the singular «**болить**». If multiple things hurt, use the plural «**болять**».
-
-- **У мене болить...** (Singular) + **голова** (head), **горло** (throat), **живіт** (stomach), **спина** (back).
-- **У мене болять...** (Plural) + **ноги** (legs), **очі** (eyes), **коліна** (knees), **вуха** (ears).
-
-:::note **Читаємо українською (Reading in Ukrainian)**
-Лікар завжди питає, що мене турбує.
-Сьогодні у мене дуже сильно болить голова.
-Мій брат каже, що у нього болить живіт після обіду.
-Після довгої прогулянки парком у мене болять ноги.
-У мого дідуся часто болять коліна.
-:::
-
-Минулого тижня я був хворий, але зараз у мене немає температури.
-
-When visiting a doctor, you also need to explain what symptoms you *do not* have. We already know that the word «**немає**» (there is no) requires the Genitive case. This rule is extremely important for medical conversations.
-
-When a doctor asks «**Чи є у вас температура?**» (Do you have a fever?), your negative answer must use the Genitive.
-
-- **немає температури** (no fever)
-- **немає апетиту** (no appetite)
-- **немає кашлю** (no cough)
-- **немає сил** (no energy)
-- **немає нежиті** (no runny nose)
-
-:::tip **Читаємо українською (Reading in Ukrainian)**
-Сьогодні я відчуваю себе значно краще.
-У мене вже немає високої температури.
-Але я досі слабкий, у мене зовсім немає сил.
-Лікар сказав, що у мене немає грипу.
-У хворої дитини немає апетиту, вона нічого не їсть.
-:::
-
-Лікар виписав мені сильні ліки від кашлю.
-
-The preposition «**від**» (from, against) always takes the Genitive case. In a medical context, it has two very important functions.
-
-First, it describes the cause of your pain or discomfort. For example, «**У мене болить горло від холоду**» (My throat hurts from the cold).
-
-Second, and most importantly for a pharmacy or clinic, «від» describes the *purpose* of a medicine. In English, you take medicine "for" a cough. In Ukrainian, you take medicine "against" or "from" it.
-
-- **ліки від кашлю** (cough medicine)
-- **краплі від нежиті** (drops for a runny nose)
-- **таблетки від головного болю** (headache pills)
-- **сироп від болю у горлі** (syrup for a sore throat)
-
-:::note **Читаємо українською (Reading in Ukrainian)**
-> — **Покупець:** Добрий день. Мені потрібні ліки від алергії. *(Good day. I need medicine for allergy.)*
-> — **Фармацевт:** Добрий день. У вас є рецепт? *(Good day. Do you have a prescription?)*
-> — **Покупець:** Ні, немає. Дайте щось без рецепта. *(No, I do not. Give me something without a prescription.)*
-> — **Фармацевт:** Ось хороші таблетки. Вони дуже допомагають. *(Here are good pills. They help a lot.)*
-:::
-
-Let us see how these phrases come together in a typical visit to the clinic. Read this dialogue between a **пацієнт** (patient) and a **лікар** (doctor).
-
-> — **Лікар:** Добрий день! Проходьте, сідайте. Що вас турбує? *(Good day! Come in, sit down. What is bothering you?)*
-> — **Пацієнт:** Добрий день. Я погано почуваюсь. Я застудився. *(Good day. I feel unwell. I caught a cold.)*
-> — **Лікар:** Розумію. У вас болить горло? *(I understand. Does your throat hurt?)*
-> — **Пацієнт:** Так, болить горло і дуже болить голова. *(Yes, my throat hurts and my head hurts a lot.)*
+> — **Лікар:** Добрий день! Що вас турбує? *(Good day! What troubles you?)*
+> — **Пацієнт:** Добрий день. У мене дуже сильно болить горло і голова. *(Good day. My throat and head hurt very much.)*
+> — **Лікар:** Як давно це почалося? *(How long ago did this start?)*
+> — **Пацієнт:** Вчора ввечері, після роботи. *(Yesterday evening, after work.)*
 > — **Лікар:** Чи є у вас температура? *(Do you have a fever?)*
-> — **Пацієнт:** Ні, температури немає. Але у мене сильний кашель і немає сил. *(No, there is no fever. But I have a bad cough and no energy.)*
-> — **Лікар:** Я випишу вам рецепт. Ось ліки від кашлю. *(I will write you a prescription. Here is cough medicine.)*
-> — **Пацієнт:** Дякую. Скільки разів на день їх пити? *(Thank you. How many times a day should I drink them?)*
-> — **Лікар:** Тричі на день. І вам треба багато відпочивати. *(Three times a day. And you need to rest a lot.)*
+> — **Пацієнт:** Ні, температури немає, але є сильний кашель. *(No, there is no fever, but there is a strong cough.)*
 
-Іноді у нас немає сильного болю, але є загальна слабкість. Мені дуже погано і холодно. Мене нудить після вечері.
+When you want to say that something hurts, you cannot literally translate the English phrase "I have a headache." Instead, Ukrainian uses a special construction: **У мене болить...** (literally: "At me hurts..."). In this structure, the body part that hurts is the actual subject of the sentence, so it must be in the Nominative case. Importantly, the verb **боліти** (to hurt) must agree with that body part in number.
 
-Sometimes you do not have a specific pain, but your overall state is bad. For these general feelings, Ukrainian uses impersonal constructions. Instead of saying "I feel cold", you say "To me it is cold". The person experiencing the feeling takes the Dative case (which we will study later, but you should learn these fixed phrases now as «**мені**» — to me).
+У мене болить голова, тому я сьогодні не хочу читати. Мій дідусь часто каже, що у нього болять коліна після довгої прогулянки. Якщо у вас сильно болить живіт, вам треба йти до лікарні. У моєї сестри болять очі, коли вона довго працює за комп'ютером.
 
-- **Мені погано.** (I feel bad.)
-- **Мені краще.** (I feel better.)
-- **Мені холодно.** (I am cold.)
-- **Мені гаряче.** (I am hot.)
+> *My head hurts, so today I do not want to read. My grandfather often says that his knees hurt after a long walk. If your stomach hurts a lot, you need to go to the hospital. My sister's eyes hurt when she works at the computer for a long time.*
 
-Якщо у вас проблеми зі шлунком, ви використовуєте спеціальне дієслово.
-
-If you feel sick to your stomach, you use a special verb: «**Мене нудить**» (I feel nauseous). 
-
-:::tip **Читаємо українською (Reading in Ukrainian)**
-Учора ввечері мені було дуже погано.
-Я випив гарячий чай, і зараз мені краще.
-Відчини вікно, будь ласка, бо мені гаряче.
-Одягни теплий светр, якщо тобі холодно.
-Я не хочу їсти, бо мене нудить.
+:::info
+**У мене болить / болять**
+Use **болить** (singular verb) for one body part: У мене болить спина (My back hurts).
+Use **болять** (plural verb) for multiple body parts: У мене болять ноги (My legs hurt).
 :::
 
-Combining these phrases with the Genitive vocabulary gives you a complete toolkit to explain your health to any doctor.
+Another crucial use of the Genitive case in a medical context is the Genitive of Absence. Whenever you want to state that you *do not* have a certain symptom, like an **апетит** (appetite) or a **температура** (temperature, fever), you must use the negative word **немає** followed by the symptom in the Genitive case. This is a strict rule that applies to the absence of anything, whether it is a physical object like a **пляшка** (bottle) of syrup or a medical condition.
 
-<!-- INJECT_ACTIVITY: quiz-health-phrases -->
+Лікар уважно дивиться на мене і питає, чи є у мене алергія. Я швидко відповідаю, що у мене немає алергії. Інший пацієнт каже, що у нього зовсім немає апетиту вже два дні. На щастя, у мого брата немає високої температури.
+
+> *The doctor looks at me carefully and asks if I have an allergy. I quickly answer that I have no allergy. Another patient says that he has absolutely no appetite for two days already. Fortunately, my brother has no high fever.*
+
+Sometimes you just feel unwell without a specific localized pain. To describe your general physical state, Ukrainian uses impersonal constructions featuring the Dative case and an adverb. You place the pronoun in the Dative (such as **мені**, **йому**, **їй**) and follow it with a descriptive adverb like **погано** (bad) or **холодно** (cold). If you feel nauseous, there is a specific verb used with the Accusative case: **Мене нудить** (I feel nauseous).
+
+Взимку на вулиці мені часто буває дуже холодно. Коли ми довго їхали в старому автобусі, моїй мамі раптом стало погано. Вона сказала, що її трохи нудить від запаху бензину. Зараз їй вже набагато краще, і ми йдемо додому.
+
+> *In winter outside I am often very cold. When we were riding for a long time in an old bus, my mom suddenly started to feel bad. She said that she felt a little nauseous from the smell of gasoline. Now she is already much better, and we are walking home.*
+
+If you know the cause of your pain or physical state, you can explain it using the preposition **від** (from) followed by the Genitive case. This is very common when describing symptoms related to weather, such as a **кашель** (cough) from the cold. Interestingly, we also use this exact same preposition when we buy medicine *against* a specific symptom.
+
+У мене зараз сильно болить горло від холодної води. Цей жахливий кашель у мого колеги з'явився від пилу на будівництві. Моя подруга скаржиться, що у неї болить голова від гучної музики. Ввечері ми підемо купувати ефективні краплі від нежиті.
+
+> *Right now I have a very sore throat from cold water. This terrible cough of my colleague appeared from the dust at the construction site. My friend complains that her head hurts from loud music. In the evening we will go to buy effective drops for a runny nose.*
+
+At the end of your visit, the doctor will usually give you some professional advice and write out a **рецепт** (prescription). These instructions often combine simple imperative verbs with the quantity words we learned earlier, which naturally require the Genitive case. Finally, the doctor will tell you to go to the **аптека** (pharmacy) to buy your **ліки** (medicine).
+
+Лікар серйозно дивиться на брата і каже: пийте багато теплої води та більше відпочивайте. Він радить їсти багато свіжих фруктів і менше цукру. Потім він виписує рецепт і каже йти в найближчу аптеку. Там ми купимо всі необхідні ліки.
+
+> *The doctor looks seriously at my brother and says: drink a lot of warm water and rest more. He advises eating a lot of fresh fruits and less sugar. Then he writes a prescription and says to go to the nearest pharmacy. There we will buy all the necessary medicine.*
+
+<!-- INJECT_ACTIVITY: quiz, Choose the correct Genitive phrase for health complaints and remedies, 8 items -->

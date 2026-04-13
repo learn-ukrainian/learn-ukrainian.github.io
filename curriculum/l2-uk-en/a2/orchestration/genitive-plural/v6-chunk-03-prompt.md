@@ -3,29 +3,24 @@
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 14: Багато книг, мало студентів (A2, A2.2 [Genitive Case Complete])
-**Section to write:** Середній рід та узагальнення (~710 words total)
-**Word target for this section:** 710 words (aim for 781 to account for undershoot)
+**Section to write:** Середній рід та узагальнення (~700 words)
+**Word target for this section:** 700 words (aim for 770 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Середній рід та узагальнення (~710 words total)
-- P1 (~100 words): [Neuter Zero Ending: Explain that neuter nouns in -о follow the feminine pattern by dropping the -о. Examples: місто → міст, слово → слів (о→і change), село → сіл.]
-- P2 (~90 words): [Neuter Vowel Insertion: Just like feminine nouns, neuter stems with consonant clusters insert vowels. Examples: вікно → вікон, полотно → полотен, число → чисел.]
-- P3 (~90 words): [Soft Neuter Exceptions (-ів): Highlight that some neuter nouns ending in -е take the masculine-style -ів ending. Examples: море → морів, поле → полів (though "піль" exists, "полів" is standard A2).]
-- P4 (~100 words): [Collective/Abstract Neuter in -я: Explain the pattern for nouns like "завдання" and "питання". The doubling disappears and we use a soft sign or zero ending. Examples: завдання → завдань, питання → питань, обличчя → облич.]
-- P5 (~80 words): [Fourth Declension (IV) Stems: Briefly explain the stem changes for names and young animals. Examples: ім'я → імен, теля → телят, лоша → лошат.]
-- P6 (~100 words): [Summary of Body Parts: Mention the unique -ей/-ø forms for paired parts often used in Genitive Plural. Examples: око → очей, плече → плечей, вухо → вух (regular).]
-- P7 (~150 words): [Підсумок — Summary: Recapping the Genitive Plural complexity. 
-    - Masculine: mostly -ів (братів), rare zero (селян).
-    - Feminine: mostly zero (книг), watch for vowel insertion (жінок).
-    - Neuter: mostly zero (міст), -ів for some soft stems (морів).
-    - Key Quantity Words: багато, мало, кілька, скільки.
-    - Strategic advice: memorize high-frequency forms like "людей", "грошей", "років".]
-- <!-- INJECT_ACTIVITY: group-sort-genitive --> [group-sort, Sort Genitive plural forms by ending type (-ів/-їв vs. zero vs. -ей), 8 items]
+## Середній рід та узагальнення (~700 words)
+- P1 (~120 words): Explain neuter nouns with hard stems (`-о`). Show that they follow the feminine pattern by dropping the `-о` to take a **zero ending**. Examples: `вікно` → `вікон` (with inserted `о`), `слово` → `слів` (with `о`→`і` alternation), `місто` → `міст`.
+- P2 (~120 words): Discuss soft neuter nouns (`-е`). Point out that surprisingly, they take the **-ів** ending, not zero. Examples: `море` → `морів`, `поле` → `полів`. Contrast this with neuter nouns ending in `-ння`, which take a zero ending plus a soft sign (and drop the double consonant): `завдання` → `завдань`, `питання` → `питань`.
+- P3 (~120 words): Explain neuter nouns ending in `-тя` and words for young animals (IV declension). Show their special stem changes in the plural. Examples: `ім'я` → `імен`, `теля` → `телят`. 
+- P4 (~120 words): Provide a summary table for masculine (`-ів`, rare zero), feminine (zero + vowel insertion or `ь`, rare `-ей` exceptions), and neuter (zero/`-ів`). Introduce the true `-ей` ending in a small closed group of II declension masculine and neuter nouns: `гість` → `гостей`, `кінь` → `коней`, `око` → `очей`. 
+- P5 (~120 words): Review quantity expressions and integrate everything. Show full phrases combining numbers, quantity words, and Genitive plural nouns of all genders: `багато студентів`, `кілька книг`, `мало міст`, `декілька днів`, `скільки людей`.
+- P6 (~100 words): Conclusion and key insight. Emphasize that the Genitive plural has the MOST variation of any case in Ukrainian. Advise learners to memorize common words, learn the main patterns, and accept exceptions naturally as part of the language's richness.
+- <!-- INJECT_ACTIVITY: group-sort-endings --> [group-sort, Sort Genitive plural forms by ending type (-ів/-їв vs. zero vs. -ей), 8 items]
+- <!-- INJECT_ACTIVITY: fill-in-all-genders --> [fill-in, Form the Genitive plural of given nouns (all three genders), 8 items]
 
-Grand total: ~2100 words
+Grand total: ~2190 words
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -33,7 +28,7 @@ Grand total: ~2100 words
 <previous_context>
 [...previous sections truncated...]
 
-This group includes some words ending in a double consonant plus "-я" (like **стаття** → **статей**), words with an apostrophe (like **сім'я** → **сімей**), and a few specific nouns (like **миша** → **мишей**). Additionally, feminine nouns of the third declension that end in a consonant, such as **ніч** (night), also take this ending, becoming **ночей**. Відомий журналіст написав кілька цікавих наукових статей. У цьому сучасному місті живе багато молодих сімей. У підвалі старого будинку ми знайшли п'ять мишей. Я дуже втомився, бо працював кілька довгих ночей. Вони не бачили цих статей. > *The famous journalist wrote several interesting scientific articles. Many young families live in this modern city. In the basement of the old house, we found five mice. I am very tired because I worked for several long nights. They did not see these articles.* Finally, we have feminine nouns whose stems end in the shibilant consonants "ж", "ч", "ш", or "щ". These words belong to the mixed group. When forming the Genitive plural, they take a clean zero ending without any inserted vowels, even if it looks like there might be a cluster. For example, **площа** (square) becomes **площ**, and **задача** (task) becomes **задач**. Note that the word **тиша** (silence) grammatically becomes **тиш**, though it is rarely used in the plural in everyday speech. У центрі європейського міста є кілька старовинних площ. На математичному іспиті студенти вирішили п'ять складних задач. У цьому районі немає великих площ. Діти не зрозуміли цих важких задач. > *In the center of the European city, there are several ancient squares. At the math exam, the students solved five difficult tasks. There are no large squares in this area. The children did not understand these hard tasks.* Now that we have seen the different patterns for the **жіночий рід** (feminine gender), let's put them together in context. You will soon compare these to the **чоловічий рід** (masculine gender) and the **середній рід** (neuter gender). The Genitive plural is most frequently used after quantity words like **кілька** (a few, several), **багато** (many), **мало** (few, a little), and the question word **скільки** (how many). Using these words naturally requires you to instantly recall the correct plural form of the noun. Practice reading these sentences aloud to get used to the sound of these combinations. Скільки українських народних пісень ти вже знаєш? У центральній бібліотеці є кілька рідкісних книг. На головній площі міста завжди багато красивих жінок. У нього мало вільних хвилин для відпочинку. Скільки цікавих статей ви сьогодні прочитали? На вулиці зараз багато різних людей. У мене є кілька важливих питань і нових завдань. > *How many Ukrainian folk songs do you already know? There are several rare books in the central library. There are always many beautiful women on the main square of the city. He has few free minutes for rest. How many interesting articles did you read today? There are many different people on the street now. I have several important questions and new tasks.* <!-- INJECT_ACTIVITY: fill-in-genitive-plural --> <!-- INJECT_ACTIVITY: quiz-ending-choice -->
+Студентка стає студенток. Зупинка стає зупинок. Жінка стає жінок. На вулиці стоїть багато студенток. Ми проїхали кілька зупинок. У залі було багато жінок. > *A female student becomes female students. A stop becomes stops. A woman becomes women. Many female students are standing on the street. We passed a few stops. There were many women in the hall.* :::note **Quick tip** — When a feminine noun ends in a consonant + **-ка** (like «сумка» or «ручка»), you can almost always expect an **о** to appear in the Genitive plural: «сумок», «ручок». ::: Feminine nouns with soft stems (ending in **-я**) also use the **нульове закінчення** (zero ending). Because they lose their final vowel, they add a soft sign (**ь**) at the end to show that their stem is still soft. If dropping the vowel creates a consonant cluster, an **е** is often inserted. Пісня стає пісень. Вишня стає вишень. Земля стає земель. Хор співає багато пісень. У саду росте кілька вишень. Вони купили багато земель. > *A song becomes songs. A cherry becomes cherries. Land becomes lands. The choir sings many songs. A few cherries grow in the garden. They bought a lot of lands.* For words ending in **-ія**, the **-я** drops, and the remaining **-і-** takes a **-й** to close the syllable: «станція» becomes «станцій», «лекція» becomes «лекцій». The mixed group consists of feminine nouns whose stems end in hissing consonants: **ж**, **ч**, **ш**, or **щ** (like «площа» or «задача»). These nouns take a zero ending in the Genitive plural. Because hissing consonants in Ukrainian are historically hard, they do not take a soft sign at the end. Площа стає площ. Задача стає задач. Межа стає меж. У центрі міста є кілька площ. Студенти вирішили багато задач. Ми не бачимо меж на карті. > *A square becomes squares. A problem becomes problems. A border becomes borders. There are several squares in the city center. The students solved many problems. We do not see borders on the map.* Just drop the final **-а** and you have the correct form, with no extra letters or soft signs. Finally, a small, closed group of feminine nouns ending in **-я** take the ending **-ей** instead of a zero ending. These are important exceptions, such as the word **стаття** (article). Стаття стає статей. Сім'я стає сімей. Миша стає мишей. Журналіст написав багато статей. У будинку живе кілька сімей. Кіт зловив багато мишей. > *An article becomes articles. A family becomes families. A mouse becomes mice. The journalist wrote many articles. Several families live in the building. The cat caught many mice.* :::info **Grammar box** — The word «стаття» has a double consonant in the singular. In the Genitive plural («статей»), the double consonant disappears to simplify the spelling. ::: When speaking with other **люди** (people), every native **людина** (person) uses these forms naturally. If someone asks you a **питання** (question) like «Скільки пісень?» or if you state there are **мало** (a little, few) сестер, mastering this case is essential. <!-- INJECT_ACTIVITY: quiz-genitive-endings -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -671,6 +666,31 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (3/3).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] множина (plural)
+- [ ] нульове закінчення (zero ending)
+- [ ] кілька (a few, several)
+- [ ] багато (a lot, many)
+- [ ] мало (a little, few)
+- [ ] скільки (how many)
+- [ ] людина (person) / люди (people)
+- [ ] стаття (article)
+- [ ] завдання (task, assignment)
+- [ ] питання (question)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Середній рід та узагальнення (~700 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

@@ -1,37 +1,40 @@
-## Коли вживати недоконаний вид
+## Коли вживати недоконаний вид (~550 words)
 
-Ми дуже часто говоримо про час у нашому житті. We often talk about how long we were doing something. Ми використовуємо недоконаний вид, коли хочемо показати процес або тривалість дії. We use the imperfective aspect when an action takes time, and our focus is on that time spent. The action stretched over a period, and we are not talking about its end or its result. У таких реченнях ми часто бачимо спеціальні слова. These signal words tell us that the process was long and continuous. Це такі слова: **довго** *(for a long time)*, **весь день** *(all day)*, **дві години** *(two hours)*, **цілий рік** *(a whole year)*. Ці слова показують довгий процес. Therefore, you must use the imperfective aspect. Наприклад, подивіться на це речення.
+The imperfective aspect in the **минулий час** (past tense) often describes a continuous action. When an activity occupies our time, we focus on the **процес** (process) rather than the final **результат** (result). We see this clearly with verb pairs like **писати / написати** (to write — impf./pf.) and **вчити / вивчити** (to study/learn — impf./pf.).
 
-> — **Тарас:** Я довго **писав** *(was writing)* листа.
+Уяви, що ти хочеш розповісти другові про свій вечір. Ти просто кажеш, що довго писав листа. Ми не знаємо, чи цей лист готовий. Головне тут — це тривалість дії. Дієслово «писати» показує цей неперервний процес.
 
-The writing was a journey, a process that took time. Ми не знаємо, чи Тарас закінчив цього листа. Можливо, він ще лежить на столі у кімнаті. Головне те, що він витратив багато часу на цю дію. Ось ще один приклад тривалої дії.
+> *Imagine you want to tell a friend about your evening. You simply say that you were writing a letter for a long time. We do not know if this letter is ready. The main thing here is the duration of the action. The verb "to write" shows this continuous process.*
 
-> — **Оля:** Ми весь день **гуляли** *(were walking)* у великому парку.
+**Я довго писав листа.** — *I was writing a letter for a long time.*
 
-We do not focus on a destination or a result here. We only care that the walking lasted all day. Це тривалий процес, тому ми використовуємо недоконаний вид.
+Another major function of the imperfective aspect is describing repeated actions or habits. If something happened more than once, it is treated as a routine. This rule applies to everyday pairs like **готувати / приготувати** (to cook/prepare — impf./pf.) or **читати / прочитати** (to read — impf./pf.).
 
-Друга важлива ситуація — це регулярне повторення дії. The second use case for the imperfective aspect is repetition and habits. Repeated actions in the past are always imperfective. It does not matter if the action was successfully "completed" each individual time it happened. If it happened regularly, it is a habit, and habits always require the imperfective aspect. Ми використовуємо інші сигнальні слова для таких ситуацій. Це слова: **завжди** *(always)*, **часто** *(often)*, **щодня** *(every day)*, **зазвичай** *(usually)*, **кожного ранку** *(every morning)*. Коли дія постійно повторюється, вона стає частиною рутини. Наприклад, подивіться на цю типову ситуацію.
+Кожна регулярна подія в минулому вимагає недоконаного виду. Наприклад, вона щодня готувала сніданок. Кожен окремий сніданок був готовий, але ми описуємо звичку, яка повторювалася. Тому ми завжди використовуємо недоконаний вид, коли говоримо про щоденну рутину.
 
-> — **Мама:** Вона щодня **готувала** *(used to cook)* смачний сніданок.
+> *Every regular event in the past requires the imperfective aspect. For example, she made breakfast every day. Each individual breakfast was finished, but we are describing a habit that repeated. Therefore, we always use the imperfective aspect when we talk about daily routine.*
 
-This describes a daily routine, not one single isolated event. Even if the breakfast was successfully finished every single morning, the repetition makes it imperfective.
+**Вона щодня готувала сніданок.** — *She made breakfast every day.*
 
-> — **Тарас:** Я дуже часто **читав** *(used to read)* цей популярний журнал.
+The imperfective past also sets the scene. It acts as the ongoing background against which another event takes place. The background action is in progress when something else interrupts it. Pairs like **робити / зробити** (to do — impf./pf.) often appear here. 
 
-He read it many times in the past, so it is a habit. Якщо ви бачите слово **завжди**, сміливо використовуйте недоконаний вид.
+Недоконаний вид чудово створює фон для інших подій. Коли я снідав, подзвонив друг. Твій сніданок — це довгий процес. А дзвінок друга — це подія, яка сталася раптом на тлі цього процесу. Перша дія має недоконаний вид, а друга є доконаною.
 
-> — **Оля:** Ми завжди **купували** *(used to buy)* свіжий хліб у цьому магазині.
+> *The imperfective aspect perfectly creates a background for other events. While I was having breakfast, a friend called. Your breakfast is a long process. And the friend's call is an event that happened suddenly against the background of this process. The first action has the imperfective aspect, and the second is perfective.*
 
-The repetition over time makes the process the main focus of the sentence.
+**Коли я снідав, подзвонив друг.** — *While I was having breakfast, a friend called.*
 
-Третя ситуація — це фон для іншої важливої події. The third use case is setting the scene or describing background actions. When narrating a story, the "long" background action must be imperfective. This is the action that was already happening when something else suddenly occurred. Для цього ми дуже часто використовуємо популярне слово **коли** *(when)*. The long background action sets the stage, and then a short, sudden action interrupts it. Подивіться на цей класичний і дуже зрозумілий приклад.
+To make choosing the right aspect easier, use specific signal words. A marker like **довго** (for a long time) or **раптом** (suddenly) can immediately tell you which form to pick.
 
-> — **Тарас:** Коли я **снідав** *(was having breakfast)*, **раптом** *(suddenly)* подзвонив мій друг.
+У нашій мові є спеціальні слова-маркери. Для процесу ми використовуємо слово «довго». Для рутини ми кажемо «часто», «завжди», «щодня» або «зазвичай». А для фонової дії ідеальним маркером є слово «коли». Якщо ти бачиш ці слова, обирай недоконаний вид.
 
-Тут **снідав** — це дуже довгий процес, наш загальний фон. The breakfast was already in progress when the phone rang. The friend's call was the short, completed action that interrupted the process. Тому ми завжди використовуємо недоконаний вид для такого фону. Ось ще один дуже хороший приклад для цієї ситуації.
+> *In our language, there are special signal words. For a process, we use the word "for a long time". For a routine, we say "often", "always", "every day", or "usually". And for a background action, the ideal marker is the word "when". If you see these words, choose the imperfective aspect.*
 
-> — **Оля:** Коли ми повільно **йшли** *(were walking)* додому, почався сильний дощ.
+**Я часто читав казки.** — *I often read fairy tales.*
 
-Walking is the continuous background process that takes time. The start of the rain is the sudden, unexpected event. Завжди використовуйте недоконаний вид для дії, яка створює атмосферу або фон у вашій історії. Це робить вашу розповідь дуже природною і цікавою.
+**Він довго готував вечерю.** — *He was cooking dinner for a long time.*
 
-<!-- INJECT_ACTIVITY: match-signal-words -->
+:::info
+**Grammar box**
+Signal words like **довго** or **часто** conceptually stretch an action out over time. This makes a focus on a single completed outcome impossible, requiring the imperfective aspect.
+:::

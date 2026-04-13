@@ -1,0 +1,45 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T20-14-bb5d39a6.json
+phase: vocab
+prompt_chars: 11110
+response_chars: 3037
+prompt_words: 1792
+response_words: 358
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.0718
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.0207
+- name: plan
+  start: 1028
+  length: 10082
+  fraction: 0.9075
+large_sections:
+- plan
+directives_total: 7
+directives_covered: 2
+directives_missed:
+- kind: must
+  text: When expressing exactly how you travel, you must remember the two distinct
+    grammatical patterns.
+  covered: false
+  coverage_note: 3/12 keywords (25%)
+- kind: inject_activity
+  text: quiz-which-transport
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-instrumental-or-locative
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-buy-ticket
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-ask-directions
+  covered: false
+  coverage_note: marker missing

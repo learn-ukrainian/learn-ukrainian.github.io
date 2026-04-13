@@ -1,0 +1,52 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: All `content_outline` points are covered with examples, and all four planned
+    activity types are present, but the plan references are not integrated into the
+    prose; literal search found `0` occurrences
+- dimension: 2
+  name: Linguistic accuracy
+  score: 6
+  evidence: The examples are mostly sound, but the neuter explanation incorrectly
+    states `Soft neuter nouns ending in **-е** ... take the **-ів** ending` and repeats
+    `those ending in **-е** take **-ів**`; VESUM c
+- dimension: 3
+  name: Pedagogical quality
+  score: 7
+  evidence: The module follows a clear PPP shape and gives many examples, but it teaches
+    the inaccurate `-е` neuter rule and also says `Neuter nouns ending in **-тя**
+    ...` before giving `ім'я → імен`, which miscl
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: All required plan vocabulary appears naturally in prose, including `множини`,
+    `нульове закінчення`, `кілька`, `багато`, `мало`, `скільки`, `людина/люди`, `стаття`,
+    `завдання`, `питання`.
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: 'The marker inventory cleanly matches the plan: `match-up` after masculine,
+    `quiz` after feminine, `group-sort` and `fill-in` after the full all-genders summary.'
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: The tone is teacherly and concrete, with usable situations like inventory
+    checking, university questions, and city counts.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All three planned H2 sections are present and ordered correctly; marker
+    count is complete; pipeline word count is `3020`, which is above the `2000` target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Ukrainian is presented on its own terms, with no Russian-centric framing
+    or cultural distortion.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Dialogues use named speakers and plausible situations (`Продавець/Помічник`,
+    `Анна/Максим`, `Оксана/Марко`) rather than anonymous drill lines.
+findings: []

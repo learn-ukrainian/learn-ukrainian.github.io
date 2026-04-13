@@ -2,12 +2,12 @@
   "module": "plural-nominative-accusative",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-04-11T00:49:49.805460Z",
+  "last_audit": "2026-04-11T14:05:13.143879Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-11T00:39:49.629363Z",
+    "md": "2026-04-11T14:05:10.181620Z",
     "meta": null,
-    "activities": "2026-04-11T00:39:50.251168Z",
+    "activities": "2026-04-11T14:00:51.136524Z",
     "vocabulary": "2026-04-08T01:48:19.017498Z",
     "research": null,
     "plan": "2026-04-04T22:04:59.978970Z"
@@ -20,18 +20,27 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 1,
-      "message": "2366/2000 (raw: 2412) | engagement: 0/3"
+      "violations": 2,
+      "message": "3242/2000 (raw: 3311) | engagement: 1/3 | immersion: 32.4% LOW (target 50-80% (A2.2))"
     },
     "activities": {
       "status": "fail",
       "violations": 1,
-      "message": "7/0 | density: 2 < 8"
+      "message": "5/0 | density: 2 < 8"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
       "message": "66/1"
+    },
+    "vocab_progression": {
+      "status": "warn",
+      "violations": 0,
+      "message": "\u0394 -39 | premature=9 | gaps=0 | well-paced=3",
+      "delta": -39,
+      "premature": 9,
+      "gaps": 0,
+      "well_paced": 3
     },
     "naturalness": {
       "status": "info",

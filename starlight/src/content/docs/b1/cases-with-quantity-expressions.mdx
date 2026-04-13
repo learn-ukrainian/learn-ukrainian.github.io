@@ -7,250 +7,218 @@ pipeline: v6
 build_status: draft
 ---
 
-import ErrorCorrection from '@site/src/components/ErrorCorrection';
 import EssayResponse from '@site/src/components/EssayResponse';
 import FillIn from '@site/src/components/FillIn';
 import FlashcardDeck from '@site/src/components/FlashcardDeck';
 import GroupSort from '@site/src/components/GroupSort';
 import MatchUp from '@site/src/components/MatchUp';
 import Quiz from '@site/src/components/Quiz';
+import Translate from '@site/src/components/Translate';
+import Unjumble from '@site/src/components/Unjumble';
 import YouTubeVideo from '@site/src/components/YouTubeVideo';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 <Tabs syncKey="module-tab">
 <TabItem label="Урок">
 
-## Вступ та діалог: Сільський перепис
+## Вступ та діалог: Сільський перепис (~200 слів)
 
-Точний підрахунок має величезне значення в нашому житті, починаючи від загальнонаціонального перепису населення і закінчуючи пропорціями інгредієнтів у кулінарних рецептах. Коли ми говоримо про кількість в українській мові, недостатньо просто знати числівники. Найбільша складність полягає в узгодженні цих числівників з іменниками. На відміну від багатьох інших мов, українські кількісні вирази вимагають від нас особливої уваги до відмінків, адже закінчення іменника кардинально змінюється залежно від того, яке саме число стоїть перед ним. Вибір правильної форми часто стає справжнім випробуванням для тих, хто вивчає мову.
+Counting things accurately is a fundamental part of daily life, whether you are following a family recipe, reading national statistics, or answering questions during a population census. In Ukrainian, numbers do more than just state a quantity; they actively change the grammar of the sentence. Depending on the number you use, the noun that follows it must change its case and sometimes its number. This relationship, known as **узгодження** (agreement), is one of the most distinctive features of the language. You will learn to use a standard **кількісний числівник** (cardinal numeral), a specialized **збірний числівник** (collective numeral) for groups, and a **неозначено-кількісний** (indefinite-quantitative) word for approximations, such as **кілька** (several).
 
-> *Accurate counting is of immense importance in our lives, starting from a nationwide census and ending with the proportions of ingredients in culinary recipes. When we talk about quantity in the Ukrainian language, it is not enough to simply know the numerals. The greatest difficulty lies in the agreement of these numerals with nouns. Unlike many other languages, Ukrainian quantity expressions require our special attention to cases, because the ending of the noun changes drastically depending on exactly which number stands before it. Choosing the correct form often becomes a real test for language learners.*
+Залежно від ситуації, ми можемо назвати точну цифру або використати слова для приблизної кількості. У повсякденному спілкуванні дуже важливо правильно поєднувати ці слова з предметами або людьми.
 
-This module will guide you through the intricate rules of Ukrainian quantity expressions. We will explore how numbers like two, three, and four demand completely different noun endings than numbers from five onwards. We will also learn how to use collective numerals and indefinite quantity words, which are essential for sounding natural in everyday conversations.
+> *Depending on the situation, we can name an exact number or use words for approximate quantities. In everyday communication, it is very important to correctly combine these words with objects or people.*
 
-Уявіть ситуацію: до українського села приїхав державний переписувач. Його завдання — зібрати точну статистику про кожного мешканця, розміри господарства та кількість майна. Господар дому відповідає на запитання, використовуючи різноманітні кількісні вирази. Зверніть увагу на те, як змінюються закінчення іменників після різних чисел та слів, що позначають кількість.
+To see these rules in action, let's listen to a conversation between a census worker and a homeowner in a Ukrainian village. Notice how the endings of the nouns change depending on whether they are counting five people, two children, or measuring land.
 
 <div class="dialogue">
 
-<div class="dialogue-line">*Imagine a situation: a state census worker has arrived in a Ukrainian village. His task is to collect accurate statistics about every resident, the size of the household, and the amount of property. The master of the house answers the questions using various quantity expressions. Pay attention to how the noun endings change after different numbers and words that denote quantity.*</div>
+<div class="dialogue-line"><span class="speaker">Переписувач:</span> Доброго дня! Я проводжу сільський перепис. Можна поставити вам **декілька** (several) запитань? *(Good afternoon! I am conducting a village census. May I ask you several questions?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Переписувач:</span> Добрий день! Я проводжу перепис населення. Скільки людей постійно проживає у вашому домі? *(Good day! I am conducting a census. How many people permanently live in your house?)*</div>
+<div class="dialogue-line"><span class="speaker">Господар:</span> Доброго здоров'я! Звичайно, заходьте. У мене є **достатньо** (enough) часу. *(Good health! Of course, come in. I have enough time.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Господар:</span> Добрий день. П'ятеро: я, моя дружина, двоє дітей та моя літня мати. *(Good day. Five: me, my wife, two children, and my elderly mother.)*</div>
+<div class="dialogue-line"><span class="speaker">Переписувач:</span> Скільки людей живе у вашому домі? *(How many people live in your house?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Переписувач:</span> Зрозуміло. А скільки кімнат має ваш будинок? *(Understood. And how many rooms does your house have?)*</div>
+<div class="dialogue-line"><span class="speaker">Господар:</span> Зараз нас п'ятеро: я, моя дружина, двоє батьків і двоє дітей. *(Right now there are five of us: me, my wife, two parents, and two children.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Господар:</span> Ми маємо кілька кімнат: три спальні, одну велику вітальню та кухню. *(We have several rooms: three bedrooms, one large living room, and a kitchen.)*</div>
+<div class="dialogue-line"><span class="speaker">Переписувач:</span> Зрозуміло. А скільки кімнат у цьому будинку? *(I see. And how many rooms are in this house?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Переписувач:</span> Ви маєте багато землі біля хати? *(Do you have a lot of land near the house?)*</div>
+<div class="dialogue-line"><span class="speaker">Господар:</span> У нас три великі кімнати та одна маленька кухня. *(We have three large rooms and one small kitchen.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Господар:</span> Так, чимало. Ми обробляємо два гектари поля. На це йде дуже багато зусиль та часу. *(Yes, quite a lot. We cultivate two hectares of field. It takes a lot of effort and time.)*</div>
+<div class="dialogue-line"><span class="speaker">Переписувач:</span> Добре. Ви маєте багато землі? *(Good. Do you have a lot of land?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Переписувач:</span> Чи тримаєте ви худобу? *(Do you keep livestock?)*</div>
+<div class="dialogue-line"><span class="speaker">Господар:</span> Так, маємо **близько** (about/approximately) двох гектарів. Ми витрачаємо **чимало** (quite a lot) зусиль, щоб усе виростити. *(Yes, we have about two hectares. We spend quite a lot of effort to grow everything.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Господар:</span> Мало худоби залишилося. Тільки одна корова, двоє коней та десять курей. *(Little livestock is left. Only one cow, two horses, and ten chickens.)*</div>
+<div class="dialogue-line"><span class="speaker">Переписувач:</span> А чи тримаєте ви худобу? *(And do you keep livestock?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Господар:</span> Маємо мало худоби: одну корову та четверо поросят. Але у нас є **понад** (more than) двадцять курей. *(We have little livestock: one cow and four piglets. But we have more than twenty chickens.)*</div>
 
 </div>
 
 :::note
-**Grammar spotlight** — Notice how the noun endings shift dramatically in the dialogue: **двоє дітей** (genitive plural) versus **одна корова** (nominative singular) or **два гектари** (nominative plural).
+**Quick tip** — Pay attention to how the speaker uses words like «п'ятеро», «двоє», and «четверо» when counting people and young animals, instead of standard numbers. These are collective numerals, which require the noun to be in the genitive plural.
 :::
 
 ## 1. Узгодження кількісних числівників з іменниками (~850 слів)
 
-Let's begin with the simplest numeral, **один** (one). It behaves exactly like an adjective and fully agrees with the noun it modifies in gender, number, and case. This fundamental rule always applies, even in large compound numbers ending with one.
+The **узгодження** (agreement) between numbers and nouns is a fundamental concept in Ukrainian grammar. Every **кількісний числівник** (cardinal numeral) dictates the specific case and number of the noun that follows it. The simplest rule applies to the number one (*один*). It behaves exactly like an adjective, fully agreeing with the noun in gender, number, and case. You will say *один стіл* (masculine), *одна книжка* (feminine), and *одне вікно* (neuter). This exact logic also applies to compound numbers that end in one, such as *двадцять один студент* (twenty-one students) or *сто одна проблема* (one hundred and one problems).
 
-**Один стіл.** — *One table (masculine).*
-**Одна книжка.** — *One book (feminine).*
-**Одне вікно.** — *One window (neuter).*
+Числівники два, три та чотири мають інше правило. Після цих чисел іменник завжди повинен стояти у формі називного відмінка множини. Ми говоримо «два студенти», «три сценарії» або «чотири подруги». 
 
-Числівники «два», «три» та «чотири» мають власне важливе правило. Після них іменник завжди стоїть у формі називного відмінка множини. Наприклад, ми кажемо «два студенти», «три сценарії» або «чотири будинки». Особливу увагу варто звертати на жіночий рід: ми обов'язково використовуємо форму «дві», а не «два». Тому правильно казати «дві книжки», «дві подруги» чи «дві пісні».
-
-> *The numerals "два" (two), "три" (three), and "чотири" (four) have their own important rule. After them, the noun always takes the form of the nominative plural. For example, we say "два студенти", "три сценарії", or "чотири будинки". Special attention should be paid to the feminine gender: we must use the form "дві", not "два". Therefore, it is correct to say "дві книжки", "дві подруги", or "дві пісні".*
+Why do we say *два студенти* using the nominative plural, rather than the genitive singular? This is a critical feature that distinguishes Ukrainian from other Slavic languages like Russian, which uses the genitive singular (*два студента*). The Ukrainian structure preserves the ancient dual form from Old East Slavic, which eventually merged with the regular nominative plural. Saying *два студенти* immediately shows that you are speaking natural, authentic Ukrainian.
 
 :::info
-**Grammar box** — A unique historical legacy.
-
-This rule often causes difficulties, especially if you compare Ukrainian grammar with Russian, which requires the genitive singular after these specific numbers. The Ukrainian construction preserved the form of the Old East Slavic dual number, which over time merged with the nominative plural. Saying that you see two students using the genitive singular is a gross mistake and a calque.
-
-**Два студенти.** — *Two students.*
+**Grammar box** — Remember that *два* changes to *дві* when counting feminine nouns. You cannot say *два книжки*; it must always be *дві книжки*.
 :::
 
-Звісно, кожне правило має свої винятки. Якщо іменник чоловічого роду має суфікс «-ин-», який зникає у множині, то після чисел два, три і чотири він ставиться у родовий відмінок однини. Ми говоримо «два киянина», «три селянина» або «чотири громадянина». Також це стосується іменників четвертої відміни. Правильно казати «два поросяти» або «три імені».
+З цього правила є два винятки. Перший стосується іменників чоловічого роду із суфіксом -ин-, який зникає у множині. З числами два, три і чотири такі слова ставляться у родовому відмінку однини: два киянина, три селянина. Другий виняток — це іменники четвертої відміни. Ми кажемо два поросяти та три імені.
 
-With numerals from five to twenty, as well as with round tens like thirty or one hundred, the situation is completely different. These numbers strictly require the genitive plural form from the noun. This case is very important to remember for correct communication.
+> *There are two exceptions to this rule. The first concerns masculine nouns with the suffix -ин-, which disappears in the plural. With the numbers two, three, and four, such words are placed in the genitive singular: two Kyiv residents, three villagers. The second exception is nouns of the fourth declension. We say two piglets and three names.*
 
-**П'ять озер.** — *Five lakes.*
-**Десять метрів.** — *Ten meters.*
-**Сорок будинків.** — *Forty houses.*
+For numbers from five to twenty, as well as thirty and all round tens (*сорок*, *п'ятдесят*, *сто*), the rule changes again. These numbers require the noun to be in the genitive plural. Therefore, you will say *п'ять озер* (five lakes), *десять метрів* (ten meters), and *сто книжок* (a hundred books). 
 
-У складених числівниках форму іменника визначає лише останнє слово. Якщо число закінчується на одиницю, іменник стоїть в однині. Якщо на два, три чи чотири — у називному відмінку множини. А якщо число закінчується на п'ять і більше, ми використовуємо родовий відмінок множини. Тому ми говоримо «сорок один студент», «сорок два студенти» та «сорок п'ять студентів».
-
-<Quiz client:only="react" questions={[{"question": "Скільки людей постійно живе у будинку господаря?", "options": [{"text": "Троє", "correct": false}, {"text": "Четверо", "correct": false}, {"text": "П'ятеро", "correct": true}, {"text": "Десятеро", "correct": false}]}, {"question": "Скільки гектарів поля має ця сільська родина?", "options": [{"text": "Один гектар", "correct": false}, {"text": "Два гектари", "correct": true}, {"text": "П'ять гектарів", "correct": false}, {"text": "Тридцять п'ять гектарів", "correct": false}]}, {"question": "Який відмінок іменника використовується після числівників «два», «три», «чотири»?", "options": [{"text": "Називний однини", "correct": false}, {"text": "Родовий однини", "correct": false}, {"text": "Називний множини", "correct": true}, {"text": "Родовий множини", "correct": false}]}, {"question": "Який вислів є грубою граматичною помилкою (русизмом)?", "options": [{"text": "Два студенти", "correct": false}, {"text": "Два студента", "correct": true}, {"text": "П'ять студентів", "correct": false}, {"text": "Один студент", "correct": false}]}, {"question": "Яка форма іменника потрібна після складеного числа «сорок п'ять»?", "options": [{"text": "Називний однини", "correct": false}, {"text": "Родовий однини", "correct": false}, {"text": "Називний множини", "correct": false}, {"text": "Родовий множини", "correct": true}]}, {"question": "Яке слово у діалозі означає, що зараз у родини недостатньо худоби?", "options": [{"text": "Багато", "correct": false}, {"text": "Чимало", "correct": false}, {"text": "Замало", "correct": true}, {"text": "Достатньо", "correct": false}]}]} instruction={"Дайте відповіді на запитання за текстом діалогу та першого розділу."} />
+When you use compound numerals, the grammatical form of the noun is determined exclusively by the last word. The noun ignores the tens or hundreds and only looks at the final digit. For example, *сорок один студент* uses the nominative singular. *Сорок два студенти* takes the nominative plural, while *сорок п'ять студентів* shifts to the genitive plural because the final word is five.
 
 ## 2. Відмінювання кількісних числівників (~750 слів)
 
-The numeral one behaves exactly like a regular adjective. It changes endings to match the noun in gender, number, and case.
+Кожний **кількісний числівник** (cardinal numeral) змінює свою форму залежно від відмінка, так само як іменники та прикметники. Числівник «один» відмінюється як звичайний прикметник твердої групи. Він має форми чоловічого, жіночого та середнього роду, а також множини: одного, одному, одним, на одному. Натомість числівники «два», «три» та «чотири» мають свої унікальні спільні закінчення в непрямих відмінках. У родовому та місцевому відмінках вони мають закінчення -ох: двох, трьох, чотирьох. У давальному відмінку з'являється закінчення -ом: двом, трьом, чотирьом. Наприклад, ви можете сказати, що у вас немає двох столів, або що ви хочете допомогти чотирьом друзям. Важливо пам'ятати, що форма знахідного відмінка для цих чисел залежить від істотності іменника.
 
-**Він не має одного стола.** — *He does not have one table.*
-**Вона працює з одним другом.** — *She works with one friend.*
-
-The numerals two, three, and four share a distinct pattern. They take **-ох** in the genitive and locative, **-ом** in the dative, and **-ма** in the instrumental. Note that the instrumental form for four is **чотирма**, without the soft sign.
-
-У нашій аудиторії немає двох великих столів. Я хочу допомогти цим чотирьом новим друзям. Ми довго говорили про тих трьох студентів.
-
-> *There are not two large tables in our classroom. I want to help these four new friends. We talked for a long time about those three students.*
-
-Numbers from five to twenty, and thirty, decline like third declension feminine nouns such as **ніч** (night) and **піч** (oven). In the genitive, dative, and locative cases, they take the ending **-и**. 
-
-In the instrumental case, you have two parallel forms. You can use either the shorter **-ма** or the longer **-ома**. Both are completely natural, but the longer form is slightly more common in formal writing.
-
-Сьогодні директор зустрічається з десятьма колегами. Вони обговорять проєкт з цими шістьома фахівцями. У мене залишилося близько дев'яти вільних хвилин.
-
-> *Today the director is meeting with ten colleagues. They will discuss the project with these six specialists. I have about nine free minutes left.*
-
-:::note
-**Quick tip** — When numbers are combined with prepositions, the case is determined by the preposition. The phrase **з десятьма** is in the instrumental case because of the preposition **з** (with).
+:::info
+**Grammar box** — The numeral *один* behaves purely like an adjective, taking endings corresponding to gender, case, and number. The numerals *два*, *три*, and *чотири* follow a distinct declension pattern with characteristic *-ох* and *-ом* endings in oblique cases.
 :::
 
-The numbers from fifty to eighty are complex numerals. The critical rule is that both the first and second parts must change their endings. In the instrumental case, you can use the shorter or longer form.
+Числівники від п'яти до двадцяти, а також число тридцять, відмінюються зовсім за іншою логікою. Вони змінюються подібно до іменників третьої відміни, таких як «ніч» або «піч». У родовому, давальному та місцевому відмінках ці числа найчастіше мають закінчення -и: п'яти, десяти, двадцяти. Проте в орудному відмінку існують дві паралельні правильні форми. Ви можете використовувати закінчення -ма, наприклад, п'ятьма, десятьма, двадцятьма. Також можна використовувати форму із закінченням -ома: п'ятьома, десятьома, двадцятьома. Обидва варіанти є нормативними в сучасній українській мові. Тому ви можете зустрітися з десятьма колегами або з десятьома колегами, і це буде однаково правильно.
 
-**Я маю справу з п'ятдесятьма людьми.** — *I am dealing with fifty people.*
+> *Numerals from five to twenty, as well as thirty, decline following a completely different logic. They change similarly to third-declension nouns, such as «ніч» or «піч». In the genitive, dative, and locative cases, these numbers most often have the -и ending: п'яти, десяти, двадцяти. However, in the instrumental case, there are two parallel correct forms. You can use the -ма ending, for example, п'ятьма, десятьма, двадцятьма. You can also use the form with the -ома ending: п'ятьома, десятьома, двадцятьома. Both variants are absolutely standard in the modern Ukrainian language. Therefore, you can meet with ten colleagues using either form, and it will be equally correct.*
 
-In sharp contrast, the numbers forty, ninety, and one hundred are incredibly simple. In all oblique cases, they simply take the ending **-а**.
+Наступна група — це десятки від п'ятдесяти до вісімдесяти. Це так звані складні числівники, які складаються з двох коренів. Головне правило тут — це правило «двох частин», згідно з яким при відмінюванні змінюються обидві частини слова. Наприклад, у родовому відмінку від числа п'ятдесят ми отримуємо форму п'ятдесяти. У давальному відмінку це буде п'ятдесятьом, а в орудному — п'ятдесятьма або п'ятдесятьома. Потрібно уважно змінювати як першу, так і другу половину слова. Натомість числівники сорок, дев'яносто та сто мають максимально спрощене відмінювання. У називному та знахідному відмінках вони зберігають свою початкову форму, а в усіх інших непрямих відмінках просто отримують закінчення -а: сорока, дев'яноста, ста.
 
-**Нам не вистачає сорока гривень.** — *We are short forty hryvnias.*
-**Він живе за сто кілометрів звідси.** — *He lives one hundred kilometers from here.*
-
-For compound numerals consisting of multiple words, the strict literary rule is that every single word must decline. 
-
-**Вона працює з двадцятьма п'ятьма студентами.** — *She works with twenty-five students.*
-
-While native speakers often simplify this in everyday speech by declining only the last word, full declension is strictly required in writing.
+Найбільшу складність часто становлять складені числівники у непрямих відмінках. Правило української літературної норми вимагає, щоб у таких виразах відмінювалися всі слова без винятку. Якщо вам потрібно поставити число двадцять п'ять в орудний відмінок, ви повинні змінити кожне слово: з двадцятьма п'ятьма студентами. В усному повсякденному мовленні носії мови дуже часто спрощують цю конструкцію, відмінюючи лише останнє слово і залишаючи попередні в називному відмінку. Проте важливо розуміти, що таке спрощення є порушенням офіційної граматики. Для письмових текстів, офіційних документів та іспитів ви завжди повинні зберігати повне **узгодження** (agreement) всіх частин складеного числівника.
 
 ## 3. Збірні числівники: Коли і як? (~650 слів)
 
-Українська мова має особливу групу слів для опису кількості — збірні числівники. Ми використовуємо їх, коли хочемо показати групу людей або предметів як одне неподільне ціле. Наприклад, слова «двоє», «троє» або «четверо» підкреслюють єдність цієї групи. Збірні числівники можна утворити від чисел від двох до двадцяти, а також від числа тридцять. Так з'являються форми «п'ятеро», «десятеро», «двадцятеро» і навіть «тридцятеро».
+Українська мова має особливу групу числівників, які допомагають нам описувати предмети або істоти не просто як окремі одиниці, а як єдине ціле. Це **збірний числівник** (*collective numeral*). Такі слова утворюються за допомогою спеціальних суфіксів і закінчень, найчастіше це -оє або -еро. Наприклад, від числа два ми утворюємо слово «двоє», від три — «троє». Далі ми використовуємо суфікс -еро: «четверо», «п'ятеро», «шестеро» і так далі. Ця форма існує для чисел від двох до двадцяти, а також для числа тридцять («двадцятеро», «тридцятеро»).
 
-> *The Ukrainian language has a special group of words to describe quantity — collective numerals. We use them when we want to show a group of people or objects as one indivisible whole. For example, the words "двоє", "троє", or "четверо" emphasize the unity of this group. Collective numerals can be formed from numbers from two to twenty, as well as from the number thirty. This is how forms like "п'ятеро", "десятеро", "двадцятеро", and even "тридцятеро" appear.*
+> *The Ukrainian language has a special group of numerals that help us describe objects or beings not just as separate units, but as a single whole. This is the collective numeral. Such words are formed using special suffixes and endings, most often -оє or -еро. For example, from the number two we form the word «двоє», from three — «троє». Then we use the suffix -еро: «четверо», «п'ятеро», «шестеро» and so on. This form exists for numbers from two to twenty, as well as for the number thirty («двадцятеро», «тридцятеро»).*
 
-Collective numerals are highly characteristic of spoken Ukrainian and literature. They add a natural, authentic flavor to your speech. We use them primarily with masculine nouns that denote people or animals. For instance, you might say **двоє хлопців** (two boys) to emphasize the group. They are also the standard choice when talking about children or baby animals, such as **троє дітей** (three children).
+Збірні числівники мають дуже чіткі правила використання, тому важливо знати, з якими саме словами їх можна поєднувати. Насамперед вони чудово працюють з іменниками чоловічого роду, які позначають людей або тварин. Ви можете сказати «двоє хлопців», «троє друзів» або «четверо коней». Також ці числівники традиційно вживаються з назвами дітей та малят тварин. Тому ми говоримо «п'ятеро дітей», «шестеро немовлят», «троє кошенят» або «двоє ягнят». Ця форма додає вашому мовленню природності та емоційності, тому вона надзвичайно популярна у розмовному стилі.
 
-Another crucial category for collective numerals is nouns that only exist in the plural form, known as pluralia tantum. You cannot use standard numbers like **два**, **три**, or **чотири** with these words. Instead, you must use collective numerals to count them. Therefore, we say **двоє ножиць** (two pairs of scissors) and **троє дверей** (three doors). Using regular numbers here would be a grammatical mistake.
+Ще одна унікальна сфера, де збірні числівники є незамінними, — це іменники, які мають лише форму множини. В українській мові є слова на зразок «двері», «ножиці», «ворота», «сани» чи «окуляри». З такими словами ми не можемо використовувати звичайні кількісні числівники «два», «три» або «чотири», тому що ці числівники вимагають називного відмінка множини, а структура цих іменників не дозволяє побудувати правильну фразу. Тому ми обов'язково повинні сказати «двоє ножиць», «троє дверей», «четверо воріт» або «п'ятеро саней».
 
-Збірні числівники мають суворі граматичні обмеження. Їх ніколи не можна використовувати з іменниками жіночого роду. Вираз «двоє дівчат» є граматичною помилкою, правильно говорити тільки «дві дівчини» або «три жінки». Єдиним винятком є слово «обидві», яке спеціально створене для жіночого роду. Також збірні числівники заборонено вживати з неістотами чоловічого роду. Ми використовуємо звичайні числа для предметів і кажемо «два столи» чи «три комп'ютери», але ніколи не «двоє столів».
+Однак існують суворі обмеження, про які іноземці часто забувають. Збірні числівники ніколи не вживаються з іменниками жіночого роду. Сказати «двоє дівчат» або «троє жінок» — це серйозна граматична помилка. Замість цього потрібно використовувати звичайні числа: «дві дівчини», «три жінки». Єдиним винятком для жіночого роду є слово «обидві». Також збірні числівники не можна поєднувати з іменниками чоловічого роду, які позначають неживі предмети. Тому ми говоримо тільки «два столи», «три комп'ютери» або «чотири парки», але ніколи не скажемо «двоє столів».
 
-The agreement for collective numerals is very straightforward. In the nominative case, they always require the noun to be in the genitive plural. This is why we say **двоє друзів** (two friends) and **четверо коней** (four horses). In all oblique cases, the collective numerals decline just like the regular number **п'ять** and match the noun's case.
+Правильне **узгодження** (*agreement*) є ключовим для побудови речень зі збірними числівниками. Головне правило полягає в тому, що після збірного числівника іменник завжди ставиться у формі родового відмінка множини. Наприклад, ми кажемо «двоє студентів», «троє братів», «четверо коней».
 
-:::note
-**Quick tip** — When you are unsure whether to use a collective numeral or a regular numeral for a group of men, remember that both **три хлопці** and **троє хлопців** are grammatically correct. The collective form just sounds more natural in casual storytelling.
+:::info
+**Grammar box** — In oblique cases (genitive, dative, instrumental, locative), collective numerals lose their unique suffixes (-оє, -еро) and decline exactly like standard cardinal numerals. They must agree with the noun in the given case. For example, the nominative phrase «двоє друзів» becomes «з двома друзями» in the instrumental case.
 :::
 
-<MatchUp client:only="react" pairs={[{"left": "двоє", "right": "ножиць"}, {"left": "троє", "right": "хлопців"}, {"left": "четверо", "right": "дверей"}, {"left": "п'ятеро", "right": "поросят"}, {"left": "десятеро", "right": "курчат"}, {"left": "семеро", "right": "козаків"}]} instruction={"З'єднайте збірні числівники з відповідними іменниками, з якими вони можуть вживатися."} />
+## 4. Дроби та змішані кількості (§4.2.1.3) (~550 слів)
 
-## 4. Дроби та мішані кількості (~550 слів)
+В українській мові дробові числівники допомагають нам говорити про частини цілого. Найпопулярніші прості дроби мають свої власні назви: «половина» (одна друга), «третина» (одна третя) та «чверть» (одна четверта). Коли ми використовуємо ці слова, важливо пам'ятати головне правило: правильне **узгодження** (agreement) вимагає, щоб іменник після них стояв у формі родового відмінка однини. Наприклад, ми говоримо «половина яблука», «третина населення» або «чверть години». Слово «чверть» є іменником жіночого роду, який закінчується на приголосний, тому воно відмінюється за правилами третьої відміни. В орудному відмінку ми скажемо «з чвертю», так само як «з радістю».
 
-When we talk about parts of a whole, we use fractions. The most common simple fractions in everyday life are **половина** (a half), **третина** (a third), and **чверть** (a quarter).
+Окрему групу становлять слова «півтора», «півтори» та «півтораста». Це унікальні числівники, які означають півтора (одна ціла і п'ять десятих) та сто п'ятдесят відповідно. Вони не змінюють свою форму за відмінками, але мають чіткий розподіл за родами. Для іменників чоловічого та середнього роду ми використовуємо форму «півтора»: «півтора метра», «півтора відра». Для жіночого роду існує форма «півтори»: «півтори години», «півтори тонни». Після слів «півтора» та «півтори» іменник ставиться в родовому відмінку однини. Натомість числівник «півтораста» вимагає після себе родового відмінка множини, наприклад, «півтораста учнів».
 
-Українські дробові слова вимагають після себе іменника у формі родового відмінка однини. Ми кажемо «половина яблука», «третина населення» або «чверть години». Це логічно, адже ми беремо частину від одного цілого предмета. Слово «чверть» є іменником третьої відміни, тому воно відмінюється як слово «ніч» або «осінь»: родовий відмінок — «чверті», орудний — «чвертю».
+> *A separate group consists of the words «півтора», «півтори», and «півтораста». These are unique numerals that mean one and a half and one hundred fifty, respectively. They do not change their form by cases, but they have a clear gender distribution. For masculine and neuter nouns, we use the form «півтора»: «півтора метра», «півтора відра». For the feminine gender, there is the form «півтори»: «півтори години», «півтори тонни». After the words «півтора» and «півтори», the noun is placed in the genitive singular. In contrast, the numeral «півтораста» requires the genitive plural after it, for example, «півтораста учнів».*
 
-> *Ukrainian fractional words require the noun following them to be in the genitive singular form. We say "половина яблука" (half of an apple), "третина населення" (a third of the population), or "чверть години" (a quarter of an hour). This is logical, because we are taking a part of one whole object. The word "чверть" is a third declension noun, so it declines like the word "ніч" (night) or "осінь" (autumn): genitive case — "чверті", instrumental — "чвертю".*
+Коли ми говоримо про статистику чи фінанси, ми використовуємо відсотки. Слово «відсоток» є іменником чоловічого роду і підпорядковується стандартним правилам. Тому ми кажемо «один відсоток», «два відсотки», але «п'ять відсотків». Якщо ми маємо мішане число зі словами «з половиною» або «з чвертю», то іменник узгоджується з цілою частиною. Наприклад, ми скажемо «два з половиною кілометри», тому що число «два» вимагає називного відмінка множини. Але десяткові та прості дроби, такі як «одна ціла і дві десятих» або «дві третіх», завжди вимагають після себе родового відмінка однини. Тому правильно казати «одна ціла і дві десятих кілометра» та «дві третіх площі».
 
-A very unique feature of the Ukrainian language is the words for "one and a half". Instead of saying "один з половиною", we almost always use the special words **півтора** and **півтори**.
-
-Вибір між цими словами залежить від роду іменника. Якщо ми говоримо про предмети чоловічого або середнього роду, ми використовуємо слово «півтора»: «півтора метра», «півтора відра» чи «півтора місяця». Для іменників жіночого роду існує окрема форма «півтори»: «півтори години», «півтори тонни». Ці слова ніколи не відмінюються, але іменник після них завжди стоїть у родовому відмінку однини. Також існує слово «півтораста», яке означає сто п'ятдесят. Воно вимагає після себе родового відмінка множини: «півтораста гривень».
-
-In modern life, we constantly encounter percentages and exact decimal measurements. The word for percentage is **відсоток**.
-
-Слово «відсоток» узгоджується з цілими числами за стандартними правилами. Ми кажемо «один відсоток» (називний однини), «два відсотки» (називний множини), але «п'ять відсотків» (родовий множини). Якщо ж ми маємо справу з десятковими дробами, правило змінюється. Після таких чисел, як «одна ціла і дві десятих», іменник завжди має форму родового відмінка однини. Наприклад, ми говоримо «одна ціла і дві десятих відсотка» або «три цілих і п'ять десятих кілометра», оскільки ми вказуємо на частину від одного відсотка чи кілометра.
-
-:::note
-**Quick tip** — When reading decimal numbers in Ukrainian, we use the feminine gender for the numbers because they imply the word **частина** (part). So, 1.5 is read as **одна ціла і п'ять десятих** (one whole and five tenths).
+:::info
+**Grammar box** — When reading decimal fractions out loud, the noun always takes the Genitive singular case because the fraction implies "of a whole" (від цілого). For example, 1.5 кг is read as «одна ціла і п'ять десятих кілограма», and 2.5% is «дві цілі і п'ять десятих відсотка». Mixed fractions with "з половиною" follow the whole number: «п'ять з половиною літрів» (like «п'ять літрів»).
 :::
+
+<Quiz client:only="react" questions={[{"question": "Ми чекали _____ .", "options": [{"text": "півтори години", "correct": true}, {"text": "півтора години", "correct": false}, {"text": "півтори годин", "correct": false}, {"text": "півтора годин", "correct": false}]}, {"question": "Купіть, будь ласка, _____ яблук.", "options": [{"text": "півтора кілограма", "correct": true}, {"text": "півтори кілограма", "correct": false}, {"text": "півтора кілограмів", "correct": false}, {"text": "півтори кілограм", "correct": false}]}, {"question": "На столі лежить _____ .", "options": [{"text": "чверть хлібини", "correct": true}, {"text": "чверть хлібина", "correct": false}, {"text": "четвертина хліб", "correct": false}, {"text": "чверть хлібину", "correct": false}]}, {"question": "Він віддав на благодійність _____ свого прибутку.", "options": [{"text": "половину", "correct": true}, {"text": "половина", "correct": false}, {"text": "половини", "correct": false}, {"text": "половиною", "correct": false}]}, {"question": "У цьому розчині _____ солі.", "options": [{"text": "п'ять цілих і сім десятих відсотка", "correct": true}, {"text": "п'ять цілих і сім десятих відсотків", "correct": false}, {"text": "п'ять цілих і сім десятих відсотку", "correct": false}, {"text": "п'ять цілі і сім десятих відсотка", "correct": false}]}, {"question": "Спортсмен пробіг _____ .", "options": [{"text": "два з половиною кілометри", "correct": true}, {"text": "два з половиною кілометра", "correct": false}, {"text": "дві з половиною кілометри", "correct": false}, {"text": "два з половиною кілометрів", "correct": false}]}]} instruction={"Оберіть правильний варіант: лексика та граматика з розділу «Узгодження кількісних числівників з іменниками»."} />
 
 ## 5. Неозначено-кількісні слова та наближення (~550 слів)
 
-In many situations, you don't need an exact number. When describing general amounts, Ukrainian uses a special group of words called indefinite-quantitative words. The most common of these express everyday concepts like "many", "few", "several", and "quite a lot".
+Sometimes we do not know the exact number of objects or people, so we use an **неозначено-кількісний** (indefinite-quantitative) word. The most popular of these are «багато», «мало», **кілька** (several), and **чимало** (quite a lot). These words function in a sentence similarly to numerals from five to twenty. The main rule is that they all require a noun in the Genitive plural form after them. They help make speech more natural when exact numbers are not important.
 
-Слова «багато», «мало», «кілька», «декілька» та «чимало» граматично поводяться так само, як числівники від п'яти до двадцяти. Після них іменник завжди стоїть у формі родового відмінка множини. Ми кажемо «кілька книжок», «багато людей» або «чимало зусиль». Виняток становлять незліченні іменники, які мають лише форму однини. З такими словами ми використовуємо родовий відмінок однини, наприклад, «багато часу» чи «мало води».
+A common synonym for "several" is **декілька** (several). You can use it interchangeably with «кілька» in any context.
 
-> *The words for "many", "few", "several", and "quite a lot" behave grammatically just like the numerals from five to twenty. After them, the noun always stands in the genitive plural form. We say "кілька книжок" (several books), "багато людей" (many people), or "чимало зусиль" (quite a lot of effort). The exception is uncountable nouns, which only have a singular form. With such words, we use the genitive singular, for example, "багато часу" (much time) or "мало води" (little water).*
+Ми часто використовуємо ці слова у повсякденних розмовах. Наприклад, ми кажемо «кілька книжок», якщо маємо на увазі три або чотири штуки. Ми скажемо «декілька разів», коли дія повторювалася, але ми не рахували точно. Слово «чимало» підкреслює досить велику кількість, тому ми говоримо «чимало зусиль» або «чимало проблем». В усіх цих випадках іменник стоїть у родовому відмінку множини.
 
-When you want to give a rough estimate rather than a vague amount, Ukrainian relies on specific prepositions. The most standard word for "about" or "approximately" is **близько**, which requires the genitive case. For example, **близько ста людей** means "about a hundred people". To express "more than" or "over", we use **понад** with the accusative case, as in **понад тисячу гривень**. If you need to indicate an upper limit meaning "up to", the preposition **до** is used with the genitive case.
+> *We often use these words in everyday conversations. For example, we say «кілька книжок» if we mean three or four pieces. We will say «декілька разів» when an action was repeated, but we didn't count exactly. The word «чимало» emphasizes a fairly large amount, so we say «чимало зусиль» or «чимало проблем». In all these cases, the noun is in the genitive plural.*
+
+When we want to express an approximate number, Ukrainian has several specific prepositions. The word **близько** (about/approximately) requires the noun and the numeral to be in the Genitive case. For example, «близько ста людей» means "about a hundred people". On the other hand, the preposition **понад** (more than) governs the Accusative case, so you would say «понад тисячу гривень» for "more than a thousand hryvnias". We also use the prepositions «до» (up to) and «біля» (near/around) with the Genitive case, as in «до десяти днів» (up to ten days) or «біля двадцяти метрів» (around twenty meters).
 
 :::note
-**Quick tip** — In spoken Ukrainian, you might hear the preposition **біля** instead of **близько** to mean "about". While common in everyday conversation, the literary standard strongly prefers **близько** for quantities.
+**Quick tip** — In conversational speech, you might hear the particle «з» used to show approximation, like «з десяток» (around a dozen), which keeps the noun in the Accusative case.
 :::
 
-Для вираження дуже приблизної кількості в розмовній мові часто використовують частку «з». Ця частка додається до числівника і не змінює його відмінка. Якщо ви скажете «я купив з десяток яблук», це означатиме, що яблук було приблизно десять. Ця конструкція звучить дуже природно і робить ваше мовлення схожим на мовлення носіїв.
+Finally, we use specific words to talk about having exactly what we need, too much, or too little. The word **достатньо** (enough) requires the Genitive case, just like «багато» and «мало».
 
-Іноді важливо передати не лише саму кількість, а й власне ставлення до неї. Слова «забагато» та «замало» вказують на надмірність або нестачу чогось. Як і всі кількісні слова цієї групи, вони вимагають родового відмінка. Ви можете поскаржитися, що у вас «замало часу», або зазначити, що в супі «забагато солі». Коли ж кількість ідеально відповідає потребам, ми використовуємо слово «достатньо». Наприклад, ви можете сказати колегам: «Для цього проєкту нам достатньо двох годин». Усі ці слова допомагають точно описати ситуацію, будь то планування бюджету чи приготування їжі.
+Крім того, ми часто говоримо про надмірність або достатність чогось. Коли ми плануємо бюджет або розраховуємо час, нам потрібні спеціальні слова. Слово «достатньо» показує, що нам вистачає ресурсів для певної мети. Слова «забагато» та «замало» вказують на те, що кількість перевищує норму або є недостатньою. Усі ці вирази також вимагають після себе родового відмінка. Ми можемо сказати: «нам достатньо двох годин», «у супі забагато солі» або «виділили замало грошей».
 
-<FillIn client:only="react" items={[{"sentence": "На площу прийшло _____ ста людей.", "answer": "близько", "options": ["близько", "понад", "забагато"]}, {"sentence": "Цей проєкт коштує _____ тисячу гривень.", "answer": "понад", "options": ["понад", "близько", "чимало"]}, {"sentence": "Мені _____ п'яти гривень для покупки, я позичу у друга.", "answer": "бракує", "options": ["бракує", "достатньо", "вдосталь"]}, {"sentence": "У мене _____ вільного часу, я дуже зайнятий.", "answer": "замало", "options": ["замало", "чимало", "вдосталь"]}, {"sentence": "На небі з'явилася _____ зірок.", "answer": "безліч", "options": ["безліч", "кілька", "жменя"]}, {"sentence": "Для повноцінного відпочинку нам _____ двох годин.", "answer": "достатньо", "options": ["достатньо", "бракує", "близько"]}]} instruction={"Вставте правильне неозначено-кількісне слово за контекстом."} />
+> *In addition, we often talk about the excess or sufficiency of something. When we plan a budget or calculate time, we need special words. The word «достатньо» shows that we have enough resources for a specific goal. The words «забагато» and «замало» indicate that the amount exceeds the norm or is insufficient. All these expressions also require the genitive case after them. We can say: "two hours is enough for us," "there is too much salt in the soup," or "they allocated too little money."*
+
+<FillIn client:only="react" items={[{"sentence": "На зустріч прийшло понад двісті _____.", "answer": "людей", "options": ["людей", "людина", "людини"]}, {"sentence": "У нас залишилося замало _____.", "answer": "часу", "options": ["часу", "час", "часом"]}, {"sentence": "Для цього проєкту потрібно чимало _____.", "answer": "зусиль", "options": ["зусиль", "зусилля", "зусиллями"]}, {"sentence": "Він заплатив близько _____ гривень.", "answer": "тисячі", "options": ["тисячі", "тисяча", "тисячею"]}, {"sentence": "У цьому рецепті забагато _____.", "answer": "солі", "options": ["солі", "сіль", "сіллю"]}, {"sentence": "Мені достатньо _____ годин для цієї роботи.", "answer": "двох", "options": ["двох", "два", "двома"]}]} instruction={"Вставте правильну граматичну форму у реченнях на тему узгодження кількісних числівників з іменниками."} />
 
 ## 6. Кількісні вирази в контексті: Рецепти та Статистика (~750 слів)
 
-Now that we have covered the rules of agreement and declension, it is time to see how quantitative expressions work in everyday situations. One of the most common places you will encounter them is in the kitchen. Ukrainian recipes rely heavily on precise measurements, fractions, and grammatical agreement.
+In the culinary world, precise quantity expressions are essential. When reading a Ukrainian recipe, you will constantly encounter numbers and measurements. For example, you might see instructions to use three eggs and two hundred grams of flour.
 
-Коли ви відкриваєте українську кулінарну книгу, ви одразу бачите безліч кількісних виразів. Типовий рецепт млинців може вимагати взяти три яйця, двісті грамів борошна та півтори склянки молока. Зверніть увагу на відмінки: числівник «три» вимагає називного відмінка множини, тому ми кажемо «яйця». Натомість після слова «двісті» іменник стоїть у родовому відмінку множини, утворюючи форму «грамів». Слово «півтори» завжди поєднується з родовим відмінком однини для іменників жіночого роду, тому ми використовуємо форму «склянки». Часто в розмовній мові можна почути скорочені форми, такі як «півкіло цукру» або «чверть ложки солі». Ці вирази роблять процес приготування їжі чудовим тренуванням для вашої граматики.
+**Три яйця.** — *Three eggs.*
+**Двісті грамів борошна.** — *Two hundred grams of flour.*
 
-> *When you open a Ukrainian cookbook, you immediately see a multitude of quantitative expressions. A typical recipe for crepes might require you to take three eggs, two hundred grams of flour, and one and a half cups of milk. Pay attention to the cases: the numeral "три" (three) requires the nominative plural, so we say "яйця" (eggs). In contrast, after the word "двісті" (two hundred), the noun is in the genitive plural, forming "грамів" (grams). The word "півтори" (one and a half) always combines with the genitive singular for feminine nouns, so we use the form "склянки" (cups). Often in spoken language, you can hear shortened forms, such as "півкіло цукру" (half a kilo of sugar) or "чверть ложки солі" (a quarter spoon of salt). These expressions make the cooking process an excellent workout for your grammar.*
+Notice the **узгодження** (agreement) in these phrases. The number "три" requires the Nominative plural, while "двісті" requires the Genitive plural. A very common mistake is confusing the plural forms of weight measurements. In Ukrainian, the correct Genitive plural forms are «грамів» and «кілограмів», not the shortened versions found in some other languages. You might also need fractions for liquids.
 
-:::note
-**Quick tip** — When measuring weight, the standard literary forms for the genitive plural are **грамів** and **кілограмів**. However, in everyday speech, you will frequently hear people drop the ending and say **двісті грам**, **п'ять кілограм**. While common, it is best to stick to the full forms in writing.
-:::
+**Півтори склянки молока.** — *One and a half glasses of milk.*
 
-Another area where numbers play a crucial role is in reading news, geography, and statistics. Large numbers, such as thousands and millions, are used to describe populations, distances, and areas.
+Here, the feminine form "півтори" is used because the noun "склянка" is feminine, and it is correctly followed by the Genitive singular.
 
-Українська статистика та географія також використовують великі числа, які вимагають правильного узгодження. Якщо ви хочете описати велику країну, ви можете сказати, що її населення становить близько сорока мільйонів людей. У цьому випадку числівник «сорока» стоїть у родовому відмінку після прийменника «близько». Коли ми говоримо про площу, ми часто використовуємо великі складені числівники. Наприклад, площа України становить шістсот три тисячі шістсот двадцять вісім квадратних кілометрів. Оскільки останнє слово числівника — «вісім», воно вимагає від іменника родового відмінка множини, тому ми кажемо «кілометрів». Якщо ж місто має площу вісімсот двадцять два квадратні кілометри, іменник стоїть у називному відмінку множини через числівник «два». Читання новин або географічних статей допомагає швидко звикнути до таких конструкцій.
+When reading statistics, two prepositions are extremely common. The word **близько** (about/approximately) requires the Genitive case, while **понад** (more than) requires the Accusative case. You will frequently see these used alongside large numbers.
 
-Finally, shopping at a local market is the ultimate test of your numeral skills. Here, you must rapidly combine numbers, weights, and prices while interacting with sellers. Let us look at a typical conversation at a bazaar.
+Світ чисел і фактів вимагає точного використання великих числівників. Коли ми описуємо країну, ми часто говоримо про її населення або територію. Наприклад, ми можемо сказати, що населення України становить близько сорока мільйонів людей. Зверніть увагу, що після слова «близько» ми використовуємо родовий відмінок. Якщо ми хочемо сказати, що площа країни — шістсот три тисячі квадратних кілометрів, слово «тисячі» стоїть у називному відмінку множини, бо воно узгоджується з числівником «три». А коли ми кажемо, що в місті живе понад три мільйони мешканців, ми вживаємо знахідний відмінок.
+
+> *The world of numbers and facts requires the accurate use of large numerals. When we describe a country, we often talk about its population or territory. For example, we can say that the population of Ukraine is about forty million people. Note that after the word "близько" we use the Genitive case. If we want to say that the area of the country is six hundred three thousand square kilometers, the word "thousand" is in the Nominative plural because it agrees with the numeral "three". And when we say that more than three million residents live in the city, we use the Accusative case.*
+
+Shopping is another situation where you must quickly navigate these phrases. When buying produce at a local market, you will naturally use a mix of fractions, indefinite quantities, and any standard **кількісний числівник** (cardinal numeral).
 
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Покупець:</span> Добрий день! Дайте, будь ласка, три кілограми яблук. *(Good day! Give me three kilograms of apples, please.)*</div>
+<div class="dialogue-line"><span class="speaker">Продавець:</span> Добрий день! Що вам зважити? *(Good day! What should I weigh for you?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Продавець:</span> Ось, тримайте. Це буде рівно три кілограми. Щось ще? *(Here you go. This is exactly three kilograms. Anything else?)*</div>
+<div class="dialogue-line"><span class="speaker">Покупець:</span> Дайте, будь ласка, два кілограми картоплі, півкіло помідорів і триста грамів сиру. *(Please give me two kilograms of potatoes, half a kilo of tomatoes, and three hundred grams of cheese.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Покупець:</span> Так, скільки коштують ці п'ять персиків? *(Yes, how much do these five peaches cost?)*</div>
+<div class="dialogue-line"><span class="speaker">Продавець:</span> Ось, тримайте. Щось іще? *(Here you go. Anything else?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Продавець:</span> Вони великі, тому коштують вісімдесят п'ять гривень. Але я зроблю вам знижку на п'ятнадцять відсотків. *(They are large, so they cost eighty-five hryvnias. But I will give you a discount of fifteen percent.)*</div>
+<div class="dialogue-line"><span class="speaker">Покупець:</span> Скільки коштують ці п'ять яблук? *(How much do these five apples cost?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Покупець:</span> Дякую! Тоді візьму ще півкілограма слив. *(Thank you! Then I will also take half a kilogram of plums.)*</div>
+<div class="dialogue-line"><span class="speaker">Продавець:</span> Тридцять п'ять гривень. *(Thirty-five hryvnias.)*</div>
 
 </div>
 
-## Підсумок
-
-Let us review the most important rules for quantitative expressions. The way numerals interact with nouns is one of the most distinctive features of the Ukrainian language, requiring your constant attention to cases and endings.
-
-Узгодження числівників з іменниками залежить від останнього слова у складеному числі. Це фундаментальне правило, яке допомагає швидко будувати правильні фрази під час розмови. Якщо число закінчується на один, ми використовуємо називний відмінок однини. Якщо на два, три або чотири — називний відмінок множини. А числа від п'яти і більше вимагають родового відмінка множини.
-
-> *The agreement of numerals with nouns depends on the last word in a compound number. This is a fundamental rule that helps you quickly build correct phrases during a conversation. If the number ends in one, we use the nominative singular. If in two, three, or four — the nominative plural. And numbers from five onwards require the genitive plural.*
-
-Here is a quick reference table to help you remember the core agreement patterns in the nominative case:
-
-| Числівник (Останнє слово) | Відмінок іменника | Приклад |
-| :--- | :--- | :--- |
-| **1** (один, одна, одне) | Називний однини | двадцять одна сторінка |
-| **2, 3, 4** | Називний множини | тридцять дві сторінки |
-| **5... 20, 30...** (та інші) | Родовий множини | сорок п'ять сторінок |
-
-:::info
-**Grammar box** — Remember that collective numerals like **двоє** and **троє** are only used with specific groups of nouns, such as masculine persons or pluralia tantum nouns. They always require the genitive plural. You can say **двоє хлопців** (two boys), but you must say **два столи** (two tables), because tables are inanimate objects.
+:::note
+**Quick tip** — When shopping, it is very common to use the word «півкіло» (half a kilo). It is invariable and does not change its form in any case, making it very easy to use!
 :::
 
-Щоб вільно використовувати ці конструкції, намагайтеся звертати увагу на числа у повсякденному житті. Коли ви йдете до магазину, подумки перекладайте ціни та вагу продуктів українською мовою. Практика з реальними об'єктами допоможе вам швидко закріпити правила узгодження та навчитися автоматично обирати правильний відмінок.
+## Підсумок (~450 слів)
 
-> *To use these constructions fluently, try to pay attention to numbers in everyday life. When you go to the store, mentally translate the prices and weights of products into Ukrainian. Practicing with real objects will help you quickly solidify the agreement rules and learn to automatically choose the correct case.*
+Ми розглянули складну систему числівників в українській мові. Для того щоб говорити грамотно, важливо розуміти базове правило: кожен **кількісний числівник** вимагає певного відмінка від іменника.
 
-Now, test your understanding with this short self-check list. If you can answer these questions confidently,  It is **двадцять одна сторінка** and **двадцять дві сторінки**.
-*   **Self-check 2:** When do you use the collective numeral instead of the regular cardinal? Use the collective form for groups of people, like **двоє хлопців**. Use the regular cardinal numeral for inanimate objects, like **два столи**.
-*   **Self-check 3:** How do you say "1.5 hours" in Ukrainian? The word for hour is feminine, so we use the feminine form of one and a half, which is **півтори години**.
-*   **Self-check 4:** Which case does the word "кілька" require? Indefinite quantity words require the genitive plural, just like the number five. We say **кілька студентів**.
-*   **Self-check 5:** How do you decline the phrase for "three students" in the instrumental case? In oblique cases, the noun and the numeral must agree in the same case. The instrumental form is **трьома студентами**.
+> *We have examined the complex system of numerals in the Ukrainian language. In order to speak correctly, it is important to understand the basic rule: every cardinal numeral requires a specific case from the noun.*
 
-In the next module, we will explore advanced pronouns, which will add even more flexibility and precision to your speech. This will be your final grammatical stepping stone before our comprehensive communication checkpoint.
+Here is a quick summary table to help you navigate the endings:
+*   **1 (один, одна, одне)** + Nominative singular.
+*   **2, 3, 4 (два, дві, три, чотири)** + Nominative plural.
+*   **5+ (п'ять, десять, сто)** + Genitive plural.
+
+Ви також вивчили спеціальні слова для позначення кількості. Кожен **збірний числівник** (наприклад, «двоє» або «троє») завжди поєднується з родовим відмінком множини, але використовується тільки з певними групами іменників. Крім того, будь-який **неозначено-кількісний** вислів також вимагає родового відмінка. Слова **кілька**, **декілька**, **чимало** та **достатньо** працюють за тим самим принципом, що і числівник «п'ять». Якщо ви хочете вказати приблизну кількість, пам'ятайте про прийменники: **близько** вимагає родового відмінка, а **понад** — знахідного.
+
+> *You have also learned special words for indicating quantity. Every collective numeral (for example, "двоє" or "троє") is always combined with the Genitive plural, but is used only with certain groups of nouns. Furthermore, any indefinite-quantitative expression also requires the Genitive case. The words several (кілька/декілька), quite a lot (чимало), and enough (достатньо) work on the same principle as the numeral "five". If you want to indicate an approximate quantity, remember the prepositions: about/approximately (близько) requires the Genitive case, and more than (понад) requires the Accusative.*
+
+:::note
+**Quick tip** — **Узгодження** (agreement) in compound numerals only depends on the *last* word. «Двадцять один» acts like «один», while «двадцять два» acts like «два».
+:::
+
+Before moving on to the next topics, test yourself with this checklist:
+*   Can you agree the numbers 21 and 22 with the noun «сторінка»? (**двадцять одна сторінка**, **двадцять дві сторінки**).
+*   When do you use «двоє» and when «два»? (**двоє хлопців**, because they are animate masculine nouns, but **два столи**).
+*   How do you say "1.5 hours" in Ukrainian? (**півтори години**).
+*   What case does the word «кілька» require? (Genitive plural).
+*   How do you decline «три студенти» in the Instrumental case? (**трьома студентами**).
+
+Looking ahead, mastering these expressions is essential for building complex syntactic structures and speaking professionally. In the next module, we will explore advanced pronouns, which will be your final grammar step before the comprehensive communication checkpoint.
 
 </TabItem>
 <TabItem label="Словник">
@@ -303,17 +271,18 @@ In the next module, we will explore advanced pronouns, which will add even more 
 </TabItem>
 <TabItem label="Зошит">
 
-<Quiz client:only="react" questions={[{"question": "Як правильно сказати: 1.5 години?", "options": [{"text": "півтора години", "correct": false}, {"text": "півтори години", "correct": true}, {"text": "одна і пів години", "correct": false}, {"text": "півтори годин", "correct": false}]}, {"question": "Як правильно написати: 1/2 яблука?", "options": [{"text": "пів-яблука", "correct": false}, {"text": "півяблука", "correct": false}, {"text": "пів яблука", "correct": true}, {"text": "пів'яблука", "correct": false}]}, {"question": "Який відмінок потрібен після слова «чверть»?", "options": [{"text": "Називний однини", "correct": false}, {"text": "Родовий однини", "correct": true}, {"text": "Родовий множини", "correct": false}, {"text": "Знахідний множини", "correct": false}]}, {"question": "Як прочитати дріб 2/3 кілограма?", "options": [{"text": "дві третіх кілограма", "correct": true}, {"text": "два третіх кілограми", "correct": false}, {"text": "дві треті кілограмів", "correct": false}, {"text": "двоє третіх кілограма", "correct": false}]}, {"question": "Як правильно сказати: 2.5 кілометри?", "options": [{"text": "два з половиною кілометри", "correct": true}, {"text": "два з половиною кілометрів", "correct": false}, {"text": "дві з половиною кілометри", "correct": false}, {"text": "двоє з половиною кілометрів", "correct": false}]}, {"question": "Який відмінок іменника вимагає слово «півтораста» (150)?", "options": [{"text": "Називний однини", "correct": false}, {"text": "Родовий однини", "correct": false}, {"text": "Називний множини", "correct": false}, {"text": "Родовий множини", "correct": true}]}]} instruction={"Оберіть правильний варіант узгодження дробів та мішаних чисел."} />
+<MatchUp client:only="react" pairs={[{"left": "кількісний числівник", "right": "позначає точну кількість, відповідає на питання «скільки?»"}, {"left": "збірний числівник", "right": "позначає кількість як єдине нероздільне ціле (наприклад, «двоє»)"}, {"left": "неозначено-кількісне слово", "right": "вказує на приблизну або неточну кількість (наприклад, «чимало»)"}, {"left": "дробовий числівник", "right": "позначає частину від цілого (наприклад, «половина»)"}, {"left": "узгодження", "right": "граматична залежність форми іменника від числівника"}, {"left": "складений числівник", "right": "складається з двох або більше окремих слів (наприклад, «сто двадцять»)"}]} instruction={"З'єднайте терміни з розділу «Відмінювання кількісних числівників» з їхніми визначеннями."} />
 
-<FillIn client:only="react" items={[{"sentence": "На столі лежать два великі _____.", "answer": "столи", "options": ["столи", "стола", "столів"]}, {"sentence": "У нашому місті є п'ять нових _____.", "answer": "шкіл", "options": ["шкіл", "школи", "школа"]}, {"sentence": "Ми купили двадцять один _____ на потяг.", "answer": "квиток", "options": ["квиток", "квитки", "квитків"]}, {"sentence": "На зустріч прийшли три розумні _____.", "answer": "студенти", "options": ["студенти", "студента", "студентів"]}, {"sentence": "Ця цікава книжка коштує сорок чотири _____.", "answer": "гривні", "options": ["гривні", "гривень", "гривня"]}, {"sentence": "Він уважно прочитав сто _____ тексту.", "answer": "сторінок", "options": ["сторінок", "сторінки", "сторінка"]}]} instruction={"Вставте іменник у правильній формі після числівника."} />
+<FillIn client:only="react" items={[{"sentence": "У кімнаті стоять два _____.", "answer": "столи", "options": ["столи", "стола", "столів"]}, {"sentence": "Ми прочитали п'ять _____.", "answer": "книжок", "options": ["книжок", "книжки", "книжці"]}, {"sentence": "На вулиці було троє _____.", "answer": "студентів", "options": ["студентів", "студенти", "студента"]}, {"sentence": "Я купив півтора _____ яблук.", "answer": "кілограма", "options": ["кілограма", "кілограми", "кілограмів"]}, {"sentence": "Для господарства потрібно дві _____.", "answer": "корови", "options": ["корови", "корів", "корову"]}, {"sentence": "Ми побачили близько ста _____.", "answer": "озер", "options": ["озер", "озера", "озерах"]}]} instruction={"Вставте іменник у правильній відмінковій формі."} />
 
-<MatchUp client:only="react" pairs={[{"left": "1/2", "right": "одна друга"}, {"left": "2/3", "right": "дві третіх"}, {"left": "0.5", "right": "нуль цілих і п'ять десятих"}, {"left": "1.2", "right": "одна ціла і дві десятих"}, {"left": "4/5", "right": "чотири п'ятих"}, {"left": "2.5 метри", "right": "два з половиною метри"}]} instruction={"З'єднайте математичні вирази та числа з їхнім правильним прочитанням."} />
+<GroupSort client:only="react" groups={{"Називний відмінок множини": ["два столи", "три вікна", "чотири подруги", "двадцять два дні"], "Родовий відмінок однини": ["півтори години", "півтора метра", "одна ціла і п'ять десятих кілограма"], "Родовий відмінок множини": ["п'ять книжок", "десять метрів", "двоє хлопців", "кілька людей"]}} instruction={"Розподіліть кількісні вирази за відмінком іменника, якого вони вимагають у називному відмінку."} />
 
-<ErrorCorrection client:only="react" items={[{"sentence": "У мене є двоє нових комп'ютерів.", "errorWord": "двоє", "correctForm": "два", "options": ["два", "двої", "двійко"], "explanation": "З неістотами чоловічого роду використовуються тільки кількісні числівники, а не збірні."}, {"sentence": "Вона купила на ринку біля ста яблук.", "errorWord": "біля", "correctForm": "близько", "options": ["близько", "понад", "чимало"], "explanation": "Казати «біля ста» — це калька. Правильно вказувати приблизну кількість словом «близько»."}, {"sentence": "На важливу зустріч прийшли троє жінок.", "errorWord": "троє", "correctForm": "три", "options": ["три", "трої", "трійко"], "explanation": "Збірні числівники не можна вживати з іменниками жіночого роду."}, {"sentence": "Я працював над цим складним проєктом півтора години.", "errorWord": "півтора", "correctForm": "півтори", "options": ["півтори", "половину", "одна"], "explanation": "Слово «година» належить до жіночого роду, тому використовується форма «півтори»."}, {"sentence": "У нашому класі зараз навчається двадцять два учнів.", "errorWord": "учнів", "correctForm": "учні", "options": ["учні", "учня", "учню"], "explanation": "Форму іменника визначає останнє слово «два», яке вимагає називного відмінка множини."}, {"sentence": "У нас залишилося дуже мало часу, немає навіть п'ятидесяти хвилин.", "errorWord": "п'ятидесяти", "correctForm": "п'ятдесяти", "options": ["п'ятдесяти", "п'ятидесят", "п'ятдесятьох"], "explanation": "Перша частина числівника «п'ятдесят» ніколи не відмінюється."}]} instruction={"Знайдіть і виправте граматичні помилки у вживанні числівників."} />
+<Translate client:only="react" questions={[{"source": "one and a half hours", "options": [{"text": "півтори години", "correct": true}, {"text": "півтора годин", "correct": false}, {"text": "півтора години", "correct": false}]}, {"source": "three rooms", "options": [{"text": "три кімнати", "correct": true}, {"text": "три кімнат", "correct": false}, {"text": "троє кімнат", "correct": false}]}, {"source": "five books", "options": [{"text": "п'ять книжок", "correct": true}, {"text": "п'ять книжки", "correct": false}, {"text": "п'ятеро книжок", "correct": false}]}, {"source": "about a hundred people", "options": [{"text": "близько ста людей", "correct": true}, {"text": "близько сто людей", "correct": false}, {"text": "близько ста людини", "correct": false}]}, {"source": "twenty-one pages", "options": [{"text": "двадцять одна сторінка", "correct": true}, {"text": "двадцять одна сторінки", "correct": false}, {"text": "двадцять одні сторінок", "correct": false}]}, {"source": "too much salt", "options": [{"text": "забагато солі", "correct": true}, {"text": "забагато сіль", "correct": false}, {"text": "дуже солі", "correct": false}]}]} instruction={"Оберіть правильний переклад кількісних виразів."} />
 
-<GroupSort client:only="react" groups={{"Називний множини": ["два", "три", "чотири", "двадцять два"], "Родовий множини": ["п'ять", "десять", "багато", "кілька", "двоє"], "Родовий однини": ["половина", "чверть", "півтора", "півтори"]}} instruction={"Розподіліть числівники та вирази залежно від того, якого відмінка іменника вони вимагають після себе."} />
+<Unjumble client:only="react" items={[{"words": "працює / сорок / У / два / офісі / співробітники.", "answer": "У офісі працює сорок два співробітники."}, {"words": "півтори / зустріч. / години / Нам / достатньо / на", "answer": "Нам достатньо півтори години на зустріч."}, {"words": "солі. / У / супі / цьому / забагато", "answer": "У цьому супі забагато солі."}, {"words": "двох / У / студентів. / немає / нас", "answer": "У нас немає двох студентів."}, {"words": "близько / Це / коштує / тисячі / гривень.", "answer": "Це коштує близько тисячі гривень."}, {"words": "прочитав / Він / понад / сторінок. / двісті", "answer": "Він прочитав понад двісті сторінок."}]} instruction={"Складіть правильне речення зі слів."} />
 
-<EssayResponse client:only="react" title={""} prompt={"Напишіть мінімум 5 речень про ваші щоденні покупки або рецепт улюбленої страви, використовуючи кількісні числівники, дроби (наприклад, півтора, половина) та неозначено-кількісні слова (забагато, достатньо, кілька)."} modelAnswer={"Для приготування мого улюбленого пирога мені потрібно чимало свіжих інгредієнтів. Спочатку я беру півтора кілограма яблук і нарізаю їх дрібними шматочками. Потім додаю близько двохсот грамів цукру і дві третіх склянки борошна. Важливо не додати забагато солі, достатньо лише однієї чверті чайної ложки. На ринку я витратив на всі ці продукти понад сто п'ятдесят гривень, але пиріг вийшов дуже смачним."} />
+<EssayResponse client:only="react" title={"Напишіть 5 речень, використовуючи нову лексику з розділу «Відмінювання кількісних числівників»."} prompt={"Опишіть своє улюблене свято або подію, використовуючи кількісні числівники (наприклад: скільки гостей прийшло, скільки страв приготували, скільки годин тривало свято). Використайте слова: **кілька**, **половина**, **понад**, **забагато**, **чимало**. Напишіть щонайменше 5 речень (не менше 50 слів)."} modelAnswer={`На моє свято прийшло близько тридцяти гостей. Ми запросили п'ятьох друзів зі школи та кілька родичів. На столі було понад десять страв: два салати, троє гарячих страв і один великий торт. На жаль, ми приготували забагато їжі, тому половина залишилася на завтра. Свято тривало півтори години, і всім було дуже весело.
+`} />
 
 </TabItem>
 <TabItem label="Ресурси">

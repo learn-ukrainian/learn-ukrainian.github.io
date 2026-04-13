@@ -1,0 +1,113 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T19-44-1d6c48a4.json
+phase: write
+prompt_chars: 66127
+response_chars: 9762
+prompt_words: 9444
+response_words: 1543
+sections:
+- name: preamble
+  start: 0
+  length: 6406
+  fraction: 0.0969
+- name: plan
+  start: 6406
+  length: 6134
+  fraction: 0.0928
+- name: wiki
+  start: 11656
+  length: 27696
+  fraction: 0.4188
+- name: rules
+  start: 40236
+  length: 10672
+  fraction: 0.1614
+- name: skeleton
+  start: 50908
+  length: 5338
+  fraction: 0.0807
+- name: output_spec
+  start: 56246
+  length: 9881
+  fraction: 0.1494
+large_sections:
+- wiki
+directives_total: 59
+directives_covered: 41
+directives_missed:
+- kind: checklist
+  text: No 'Let us...', 'In this section...', or formulaic openers
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: checklist
+  text: Every exercise marker from the skeleton is placed
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: must
+  text: Your output must be original teaching prose at the correct CEFR level, not
+    a rephrased version of the article.
+  covered: false
+  coverage_note: 4/13 keywords (31%)
+- kind: must
+  text: 'This must be taught explicitly (Джерело: `4-klas-ukrayinska-mova-ponomarova-2021-1_s0118`).'
+  covered: false
+  coverage_note: 3/10 keywords (30%)
+- kind: must
+  text: '` | The preposition `у`/`в` is required when playing a sport (`грати у`).'
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: must
+  text: 'The distinction between `у` (sports) and `на` (instruments) must be explicitly
+    taught (Джерело: `6-klas-ukrmova-betsa-2023_s0020`).'
+  covered: false
+  coverage_note: 3/12 keywords (25%)
+- kind: must
+  text: The verb must be in the 3rd person plural (`подобаються`), not singular.
+  covered: false
+  coverage_note: 2/8 keywords (25%)
+- kind: must
+  text: 'This must be drilled with examples like `любити (що?) країну` (Джерело: `3-klas-ukrainska-mova-ponomarova-2020-1_s0044`).'
+  covered: false
+  coverage_note: 3/13 keywords (23%)
+- kind: must
+  text: '**This is a mandatory section for all pedagogical briefs.'
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: must
+  text: '**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim**
+    as an `## H2` line.'
+  covered: false
+  coverage_note: 4/11 keywords (36%)
+- kind: must
+  text: Every heading from "Section Structure" above MUST appear as an `## H2` in
+    your output, in order, **including the closing `Підсумок:` / `Підсумок та перехід
+    до M.
+  covered: false
+  coverage_note: 5/15 keywords (33%)
+- kind: must
+  text: translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: must
+  text: '- **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).'
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-sounds-vs-letters
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-sounds-vs-letters
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-false-friends
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing

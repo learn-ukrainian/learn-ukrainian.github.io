@@ -1,21 +1,21 @@
-## Підсумок
+## Підсумок (~330 words total)
 
-Ми вивчили багато нових і дуже важливих термінів сьогодні. *We have learned many new and very important terms today.* Тепер ви знаєте справжню лінгвістичну українську мову. Давайте ще раз повторимо наш базовий словник. *Let's repeat our basic dictionary one more time.*
+To summarize our progress, let us review the core terminology. The science of **фонетика** (phonetics) studies every single **звук** (sound) that we hear and pronounce. When we write these sounds down, we use a graphic symbol called a **літера** (letter).
 
-**Фонетика** *(phonetics)* — це наука про звуки. **Звук** *(sound)* — це те, що ми чуємо і вимовляємо. **Літера** *(letter)* — це знак, який ми бачимо і пишемо. **Фонема** *(phoneme)* — це абстрактний звук, який розрізняє значення слів.
+Linguists also use the term **фонема** (phoneme) for the abstract sound unit that distinguishes meaning. The sounds themselves are divided into two main groups. A **голосний** (vowel) is formed only with the voice, while a **приголосний** (consonant) involves some kind of obstruction.
 
-Всі звуки ми ділимо на дві великі групи. Це **голосний** *(vowel)* та **приголосний** *(consonant)* звук. Приголосні можуть бути різними. **Дзвінкий** *(voiced)* приголосний має голос і шум. **Глухий** *(voiceless)* має тільки шум. **Сонорний** *(sonorant)* приголосний має дуже багато голосу. За місцем творення існують **свистячий** *(sibilant)*, **шиплячий** *(hushing)* та **губний** *(labial)* приголосний звук. 
+Consonants have specific categories based on how they are produced. A **дзвінкий** (voiced) consonant has both voice and noise, whereas a **глухий** (voiceless) consonant has only noise. If the voice dominates over the noise, it is a **сонорний** (sonorant) consonant.
 
-Також приголосні бувають різні за своїм звучанням. Це **твердий** *(hard)*, **м'який** *(soft)* та **пом'якшений** *(partially softened)* звук. Окрема група — це **йотований** *(iotated)* звук, тобто букви «я», «ю», «є», «ї».
+Consonants also differ by their palatalization. They can be **твердий** (hard) or **м'який** (soft). As we combine sounds, every word is divided into parts, and the basic unit of pronunciation is the **склад** (syllable).
 
-Кожне слово має **склад** *(syllable)*. Один склад завжди має головний **наголос** *(stress)*. Щоб правильно записати точне звучання слова, нам потрібна фонетична **транскрипція** *(transcription)*.
+When we emphasize a specific part of a word, we use **наголос** (stress). That part becomes **наголошений** (stressed), and the rest of the word remains **ненаголошений** (unstressed). 
 
-Тепер час для самоперевірки. *Now is the time for a self-check.* Дайте правильні відповіді на ці п'ять запитань. *Give correct answers to these five questions.*
+Finally, we record the exact pronunciation using phonetic **транскрипція** (transcription). Knowing these terms will help you understand advanced grammar rules in the future.
 
-1. Скільки звуків існує в українській мові? В українському алфавіті є тридцять три літери. Але в українській мові є рівно тридцять вісім звуків. *But there are exactly thirty-eight sounds in the Ukrainian language.*
-2. Які букви називаються йотованими? Це чотири спеціальні літери: «я», «ю», «є» та «ї». Вони часто позначають два звуки одночасно. *They often represent two sounds simultaneously.*
-3. Який приголосний звук є завжди м'яким? Це звук [й]. Він ніколи не буває твердим. *It is never hard.*
-4. Що позначає скісна риска ['] у фонетичній транскрипції? Цей спеціальний знак показує м'якість попереднього приголосного звука. *This special mark shows the softness of the previous consonant sound.* Наприклад, у слові «день» ми пишемо [ден'].
-5. Чому українська вимова слова «сад» відрізняється від німецької чи російської мови? Тому що українські дзвінкі приголосні в кінці слова ніколи не оглушуються. *Because Ukrainian voiced consonants at the end of a word are never devoiced.* Ми завжди чітко і дзвінко вимовляємо звук [д] у кінці цього слова. Це наше золоте правило. *This is our golden rule.*
+Тепер перевірте свої знання та дайте відповіді на п'ять запитань. Скільки звуків в українській мові? Їх рівно тридцять вісім. Які букви називаються йотованими? Це букви «я», «ю», «є» та «ї». Який приголосний завжди м'який? Це звук [й], який ніколи не буває твердим. Що позначає скісна риска у транскрипції? Вона показує м'якість попереднього приголосного. Чому українська вимова слова «сад» відрізняється від німецької чи російської? Тому що дзвінкі звуки в кінці слова ніколи не оглушуються.
 
-Якщо ви відповіли правильно на всі запитання, ви чудово засвоїли цей матеріал. *If you answered all questions correctly, you have mastered this material wonderfully.* Ви готові до вивчення наступного граматичного модуля! *You are ready to study the next grammar module!*
+> *Now test your knowledge and answer five questions. How many sounds are in the Ukrainian language? There are exactly thirty-eight of them. Which letters are called iotated? These are the letters "я", "ю", "є", and "ї". Which consonant is always soft? It is the sound [й], which is never hard. What does the slash mark in transcription indicate? It shows the softness of the preceding consonant. Why does the Ukrainian pronunciation of the word "сад" differ from German or Russian? Because voiced sounds at the end of a word are never voiceless.*
+
+:::tip
+**Did you know?** — Now that you can name sounds properly, you are ready for the next step. In the upcoming modules, we will look at how words are built and how vowels change places. Your new phonetic vocabulary will make learning these complex rules much easier!
+:::

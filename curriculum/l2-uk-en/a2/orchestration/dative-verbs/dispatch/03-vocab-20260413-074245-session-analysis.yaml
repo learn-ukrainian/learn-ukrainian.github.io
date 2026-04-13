@@ -1,0 +1,73 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T05-42-d643d92c.json
+phase: vocab
+prompt_chars: 21161
+response_chars: 1486
+prompt_words: 3471
+response_words: 173
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.0377
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.0109
+- name: plan
+  start: 1028
+  length: 20133
+  fraction: 0.9514
+large_sections:
+- plan
+directives_total: 14
+directives_covered: 3
+directives_missed:
+- kind: must
+  text: You must always say **дякую тобі** (I give thanks *to* you).
+  covered: false
+  coverage_note: 2/8 keywords (25%)
+- kind: must
+  text: When you direct these actions to specific people rather than using pronouns,
+    you must change the nouns into the Dative case.
+  covered: false
+  coverage_note: 1/17 keywords (6%)
+- kind: must
+  text: However, you must pay special attention to the crucial consonant alternations
+    that happen in feminine nouns before this ending.
+  covered: false
+  coverage_note: 1/16 keywords (6%)
+- kind: must
+  text: Because the thing you like is the actual grammatical subject of the sentence,
+    the verb must agree with it in number.
+  covered: false
+  coverage_note: 2/12 keywords (17%)
+- kind: must
+  text: In Ukrainian, the past tense of **подобатися** must match the gender and number
+    of the Nominative subject, not the person who liked it.
+  covered: false
+  coverage_note: 1/14 keywords (7%)
+- kind: must
+  text: And for plural nouns, you must use the plural form **подобалися**.
+  covered: false
+  coverage_note: 1/7 keywords (14%)
+- kind: must
+  text: For all other numbers, including five and above, as well as the teen numbers
+    (eleven through nineteen) and zero, you must use the Genitive plural form.
+  covered: false
+  coverage_note: 1/18 keywords (6%)
+- kind: inject_activity
+  text: fill-in-dative-verbs
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-podobatysia
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: true-false-age
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-dative-vs-accusative
+  covered: false
+  coverage_note: marker missing

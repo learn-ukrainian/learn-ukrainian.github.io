@@ -25,7 +25,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-**піч** *(oven)* та **сіль** *(salt)*. На відміну від першої чи другої відмін, ці слова не поділяються на тверду, м'яку або мішану групи. Як же ми знаємо, що ці слова є жіночого роду, якщо вони не мають типового закінчення на голосний? Відповідь ховається в глибокій історії мови. У давнину ці слова належали до особливого типу відмінювання, який закінчувався на короткий звук [і]. З плином часу цей короткий голосний звук повністю зник, і слова отримали сучасне **нульове закінчення**. Проте їхня базова жіноча граматична природа збереглася незмінною. Щоб швидко перевірити рід такого слова, ми можемо додати до нього вказівний або присвійний займенник. Ми завжди кажемо «моя **ніч**» *(my night)*, а не «мій ніч», або говоримо про почуття як «справжня **любов**» *(true love)*. Це внутрішня логіка мови, яку потрібно просто прийняти та запам'ятати: відсутність голосного звука наприкінці не завжди означає чоловічий рід. Українська мова зберегла цей давній клас іменників, і сьогодні він додає мовленню особливого мелодійного звучання. Зверніть увагу, що багато з цих слів мають м'який знак наприкінці: **осінь** *(autumn)*, **тінь** *(shadow)*. Але є й такі, що закінчуються на твердий чи шиплячий приголосний: **кров** *(blood)*, **подорож** *(journey)*. У третій відміні є один абсолютно унікальний іменник, який заслуговує на вашу окрему увагу. Це слово **мати** *(mother)*. На перший погляд, воно закінчується на голосний **-и**, що зовсім не схоже на нульове закінчення інших слів цієї відміни. Чому ж тоді граматика відносить його до цієї специфічної групи? Річ у тім, що історично це дуже давнє слово мало надзвичайно складну парадигму. Коли ми починаємо відмінювати слово «мати», у його основі одразу з'являється новий елемент — суфікс **-ер-** або **-ір-**. Наприклад, у родовому відмінку ми правильно кажемо «немає **матері**» *(there is no mother)*, а в орудному — «пишаюся **матір'ю**» *(I am proud of the mother)*. Така поведінка основи при відмінюванні зближує це слово саме з третьою відміною. Важливо ніколи не плутати його зі словом **мама** *(mom)*. Слово «мама» має стандартне закінчення **-а** і відмінюється за звичайними правилами першої відміни. Натомість слово «мати» є більш офіційним, піднесеним та поетичним, і воно зберігає свою архаїчну структуру. Щоб вам було значно легше впізнавати слова третьої відміни в текстах, корисно знати, що вони часто об'єднуються у певні логічні та смислові групи. По-перше, це абстрактні поняття та різноманітні людські риси. Багато з них продуктивно утворюються за допомогою суфікса **-ість**. Наприклад: **радість** *(joy)*, **гідність** *(dignity)*, **мудрість** *(wisdom)*, **ніжність** *(tenderness)*, **гордість** *(pride)*. Це величезна категорія лексики, яка використовується щодня. По-друге, це назви різних речовин, матеріалів та збірні поняття. Найчастіше ми використовуємо такі іменники, як **сіль** *(salt)*, **мідь** *(copper)*, **кров** *(blood)*, **суміш** *(mixture)* або **молодь** *(youth)*. По-третє, до цієї відміни належить багато красивих слів, що позначають природні явища, час та навколишній простір: **осінь** *(autumn)*, **ніч** *(night)*, **тінь** *(shadow)*, **подорож** *(journey)*, **мить** *(instant)*. Звісно, є і звичайні побутові предмети, наприклад, **піч** *(oven)* чи **річ** *(thing)*. Загалом, коли ви бачите слово, яке позначає щось абстрактне чи емоційне і закінчується на приголосний, дуже ймовірно, що це третя відміна. <!-- INJECT_ACTIVITY: quiz, focus: Determine відміна for nouns: III відміна or not? (e.g., гість vs ніч, день vs тінь), 8 items -->
+жіночого роду голосні літери. Найвідоміші приклади таких базових слів — це **ніч** (night) та **сіль** (salt). > *According to school textbooks, the third declension consists of feminine nouns that have a zero ending in the nominative singular. This means they end in a consonant sound, not the typical vowels for the feminine gender. The most famous examples of such basic words are night and salt.* You might logically wonder how a word ending in a consonant is identified as feminine in the first place, especially since most consonant-ending words in Ukrainian are masculine. Historically, these specific nouns belonged to an ancient "i-stem" declension class. Over centuries of linguistic evolution, the final short vowel disappeared from the spoken language. Despite losing this vowel, these nouns stubbornly retained their original feminine grammatical gender. You simply have to memorize that a **річ** (thing), a **піч** (oven), or **любов** (love) is grammatically a "she". :::tip **Did you know?** Many nouns of the third declension denote concepts that are deeply embedded in ancient daily life, natural elements, and human emotions. This historical group has preserved some of the oldest phonetic patterns in the Ukrainian language, including famous vowel alternations. ::: There is one very notable exception that does not visually fit the standard pattern of a consonant ending, yet it strictly belongs to the third declension. This is the highly irregular word **мати** (mother). It is crucial for learners not to confuse it with the everyday word *мама*, which ends in "-a" and declines exactly like a standard first-declension noun. Іменник «мати» відмінюється за правилами третьої відміни, оскільки в непрямих відмінках його основа розширюється. У його формах з'являється історичний суфікс «-ер-» або «-ір-». Наприклад, у знахідному відмінку ми кажемо «матір», а в орудному відбувається типове для цієї групи явище, хоча й без такого елемента як **подвоєння** (doubling). Beyond simply recognizing the grammatical structure, you can often identify a third-declension noun by analyzing its meaning. These nouns generally fall into three broad and predictable semantic categories. First, they describe natural phenomena and environmental elements, such as an **осінь** (autumn) or a **тінь** (shadow). Second, they frequently represent uncountable physical substances and vital materials, like **кров** (blood) or copper. Ще одна велика група охоплює абстрактні поняття та людські якості. Українська мова дуже часто утворює такі слова від прикметників за допомогою суфікса «-ість». Завдяки цьому інструменту ми маємо такі чудові та глибокі іменники, як **радість** (joy), **гордість** (pride) та **мудрість** (wisdom). As you progress through this module, you will learn the specific rules for declining these words across all cases, including how to correctly talk about a **подорож** (journey). The most distinctive feature of the third declension is how it behaves in the instrumental case, where final consonants interact with endings in fascinating ways. Завжди перевіряйте рід нового слова у словнику, якщо воно закінчується на приголосний. Якщо це чоловічий рід, то слово належатиме до другої відміни. Але якщо це жіночий рід, ви точно знаєте, що перед вами третя відміна з усіма її унікальними правилами. <!-- INJECT_ACTIVITY: quiz-declension-id -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -648,7 +648,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -661,18 +728,69 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] любов (love — III відміна, орудний: любов'ю)
+- [ ] осінь (autumn — III відміна, орудний: осінню)
+- [ ] радість (joy — III відміна, орудний: радістю, no подвоєння)
+- [ ] подорож (journey — III відміна, орудний: подорожжю)
+- [ ] ніч (night — III відміна, орудний: ніччю, чергування і→о)
+- [ ] піч (oven — III відміна, орудний: піччю, чергування і→е)
+- [ ] сіль (salt — III відміна, орудний: сіллю)
+- [ ] кров (blood — III відміна, орудний: кров'ю, no подвоєння)
+- [ ] мати (mother — III відміна, unique stem expansion -ер-/-ір-)
+- [ ] подвоєння (doubling — consonant doubling in орудний)
+- [ ] нульове закінчення (zero ending — no visible suffix in називний)
+- [ ] відміна (declension type — I through IV)
+- [ ] гордість (pride — abstract noun from гордий)
+- [ ] мудрість (wisdom — abstract noun from мудрий)
+- [ ] тінь (shadow — III відміна, орудний: тінню)
+- [ ] річ (thing — III відміна, чергування і→е, орудний: річчю)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Відмінювання III відміни в однині (~850 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

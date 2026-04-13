@@ -1,0 +1,77 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T15-49-9501d75e.json
+phase: write-chunk-03
+prompt_chars: 33782
+response_chars: 3634
+prompt_words: 4832
+response_words: 609
+sections:
+- name: header
+  start: 0
+  length: 456
+  fraction: 0.0135
+- name: skeleton
+  start: 456
+  length: 1117
+  fraction: 0.0331
+- name: prior_summary
+  start: 1573
+  length: 3395
+  fraction: 0.1005
+- name: plan
+  start: 4968
+  length: 12599
+  fraction: 0.373
+- name: wiki
+  start: 11084
+  length: 15986
+  fraction: 0.4732
+- name: output_spec
+  start: 33553
+  length: 229
+  fraction: 0.0068
+large_sections:
+- wiki
+directives_total: 17
+directives_covered: 7
+directives_missed:
+- kind: checklist
+  text: прикметник (adjective)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: дієслово (verb)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: займенник (pronoun)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: числівник (numeral)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: прислівник (adverb)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: прийменник (preposition)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: сполучник (conjunction)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: inject_activity
+  text: quiz-word-labels
+  covered: false
+  coverage_note: marker missing

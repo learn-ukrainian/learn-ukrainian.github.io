@@ -1,0 +1,44 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T10-46-d5a57fdd.json
+phase: write-chunk-07
+prompt_chars: 50431
+response_chars: 5288
+prompt_words: 7127
+response_words: 807
+sections:
+- name: header
+  start: 0
+  length: 410
+  fraction: 0.0081
+- name: skeleton
+  start: 410
+  length: 692
+  fraction: 0.0137
+- name: prior_summary
+  start: 1102
+  length: 3535
+  fraction: 0.0701
+- name: plan
+  start: 4637
+  length: 16914
+  fraction: 0.3354
+- name: wiki
+  start: 15222
+  length: 28690
+  fraction: 0.5689
+- name: output_spec
+  start: 50241
+  length: 190
+  fraction: 0.0038
+large_sections:
+- wiki
+directives_total: 18
+directives_covered: 16
+directives_missed:
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: inject_activity
+  text: fill-in, decline universal pronouns and choose between sam and samyi
+  covered: false
+  coverage_note: marker missing

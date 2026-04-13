@@ -1,0 +1,53 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T02-46-1069c865.json
+phase: vocab
+prompt_chars: 12297
+response_chars: 3784
+prompt_words: 1910
+response_words: 447
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.0649
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.0187
+- name: plan
+  start: 1028
+  length: 11269
+  fraction: 0.9164
+large_sections:
+- plan
+directives_total: 9
+directives_covered: 2
+directives_missed:
+- kind: must
+  text: Saying `без цукор` is wrong; it must be `без цукру`.
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: must
+  text: Once you recognize the prepositions, you must build the phrase correctly.
+  covered: false
+  coverage_note: 2/8 keywords (25%)
+- kind: must
+  text: If the noun is in the genitive case, the adjectives and possessive pronouns
+    must match it.
+  covered: false
+  coverage_note: 2/8 keywords (25%)
+- kind: inject_activity
+  text: quiz-preposition-identification
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-genitive-agreement
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: error-correction-genitive
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-situations
+  covered: false
+  coverage_note: marker missing

@@ -2,12 +2,6 @@
   "attempt": 1,
   "passed": true,
   "errors": [],
-  "warnings": [
-    {
-      "check": "VOCABULARY",
-      "severity": "WARNING",
-      "message": "Missing 1/10 required vocab: стосунок (relationship)"
-    }
-  ],
-  "timestamp": "2026-04-10T23:08:38.647194+00:00"
+  "warnings": [],
+  "timestamp": "2026-04-12T19:54:21.129324+00:00"
 }

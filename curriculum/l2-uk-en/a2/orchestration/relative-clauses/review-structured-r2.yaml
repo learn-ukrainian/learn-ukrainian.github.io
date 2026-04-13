@@ -1,0 +1,53 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 7
+  evidence: All planned sections are present and the content does cover nominative/accusative
+    `який`, `де/куди/звідки`, common mistakes, and `котрий`. But the pipeline total
+    is **2967** words against a **2000** t
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: No Russian characters found; no clear Russianisms, Surzhyk, calques, or
+    wrong Ukrainian forms surfaced. VESUM spot-checks confirmed forms such as `означальний`,
+    `відносний`, `котрий`, `котра`, `знаход
+- dimension: 3
+  name: Pedagogical quality
+  score: 7
+  evidence: The module gives many usable examples (`Людина, яку я зустрів...`, `Парк,
+    куди ми ходимо...`, `Країна, звідки вона приїхала...`). But it opens with **156
+    words of English theory before the first Ukrai
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 'Required plan vocabulary appears naturally in the prose: `який/яка/яке/які`,
+    `де`, `куди`, `звідки`, `означальний`, `описувати`, `речення`. Recommended items
+    also appear: `котрий`, `затишне`, `знаходи'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: All five planned exercise types have markers, and each marker comes after
+    the concept it should test. No clustering-at-the-end problem.
+- dimension: 6
+  name: Engagement & tone
+  score: 7
+  evidence: The teacher voice is mostly fine, but lines like `This single word serves
+    as a powerful bridge` and `shows your high level of language proficiency` add
+    filler and self-congratulatory framing instead o
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: All H2 headings from the plan are present and ordered correctly; markers
+    are intact; the pipeline count is above target, so there is no underlength problem.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: No Russia-centered framing, no cultural inaccuracies, and the examples
+    stay within neutral Ukrainian contexts.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: The realtor dialogue has named speakers, a plausible situation, and multiple
+    turns tied to the grammar focus.
+findings: []

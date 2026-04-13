@@ -1,41 +1,31 @@
-# Section-by-Section Generation — Section 2/5
+# Section-by-Section Generation — Section 2/3
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 47: Тому що, бо, хоча (A2, A2.7 [Complex Sentences and Conditionals])
-**Section to write:** Чому? Тому що... / Бо... (Why? Because...) (~700 words)
-**Word target for this section:** 700 words (aim for 770 to account for undershoot)
+**Section to write:** Хоча... (Although...) (~660 words total)
+**Word target for this section:** 660 words (aim for 726 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Чому? Тому що... / Бо... (Why? Because...) (~700 words)
-- P1 (~100 words): [Defining the "причина" (cause) relationship. Introducing the question "Чому?" and the two primary answers: "тому що" and "бо". Example: "Я вдома, бо сьогодні дощ."]
-- P2 (~120 words): [Register and usage differences. "Бо" as the workhorse of spoken Ukrainian—short, direct, and slightly informal. "Тому що" as the neutral, universal choice for both speech and writing. Compare: "Я поспішаю, бо запізнююся" vs. "Земля прекрасна, тому що на ній живуть люди."]
-- P3 (~120 words): [Word order rules. Explaining that "тому що" can start a sentence when giving a direct answer to a question, whereas "бо" is strictly a connector that sits between clauses. Example: "— Чому ти не прийшов? — Тому що був зайнятий."]
-- P4 (~100 words): [The "Because-What" trap. Warning English speakers against adding "що" to "бо" (a common calque error). Explain that "бо" is a complete conjunction on its own. Example: "Я вчу мову, бо (not бо що) мені подобається."]
-- P5 (~130 words): [Punctuation focus. The comma is the "border guard" between the main clause and the cause clause. Always place a comma before "тому що" and "бо". Use examples: "Вона вивчає українську, бо хоче розуміти друзів."]
-- P6 (~130 words): [Syntactic transformation. How to turn two facts into a logical argument. Fact A: "Петро винайшов вулик." Fact B: "Він відомий бджоляр." Result: "Петро — найвідоміший бджоляр, тому що він винайшов вулик."]
-- <!-- INJECT_ACTIVITY: quiz-cause-choice --> [Quiz: Choose between "тому що" and "бо" based on context and sentence position, 8 items]
-- <!-- INJECT_ACTIVITY: fill-in-cause-clauses --> [Fill-in: Complete compound sentences by adding a logical reason clause after "бо", 8 items]
+## Хоча... (Although...) (~660 words total)
+- P1 (~120 words): [Introduce concessive clauses (допуст) with 'хоча' (although, even though). Explain that it expresses a contrast between an expectation and the actual reality. Example: "Хоча надворі холодно, ми пішли гуляти."]
+- P2 (~130 words): [Distinguish 'хоча' (concession) from 'але' (simple contrast). Compare "Хоча він втомився, він продовжив працювати" (focusing on the unexpected outcome) with "Він втомився, але продовжив працювати" (stating a simple sequence of contrasting facts). Warn learners against redundantly combining them as "Хоча..., але..." for A2 level simplicity.]
+- P3 (~140 words): [Discuss position flexibility. The 'хоча' clause can be placed either first or second in the sentence. Compare: "Ми пішли на прогулянку, хоча йшов дощ" vs. "Хоча йшов дощ, ми пішли на прогулянку." Reiterate the rule of using a comma to separate the two clauses.]
+- P4 (~150 words): [Provide natural examples and introduce 'хоч' as a slightly shorter, more conversational variant of 'хоча'. Example: "Хоча я вчу українську недовго, я вже розумію багато." Briefly mention the formal phrase 'незважаючи на те що' (despite the fact that) for passive recognition in reading.]
+- P5 (~120 words): [Common L2 error warning: Anglophones often translate the English "..., though" by placing 'хоча' at the end of a sentence. Clarify that in Ukrainian, 'хоча' MUST introduce the dependent clause and stand at its beginning. "Радянська пропаганда так казала, хоча насправді це не було правдою."]
+- <!-- INJECT_ACTIVITY: match-up-halves --> [match-up, Match two halves of sentences — причина with наслідок, допуст with результат, 8 items]
+- <!-- INJECT_ACTIVITY: unjumble-sentences --> [unjumble, Reorder words to form correct compound sentences with тому що, бо, and хоча, 6 items]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
 
 <previous_context>
-## Вступ та діалог
+[...previous sections truncated...]
 
-> — **Студент 1:** Привіт. Я сьогодні не піду в університет, **бо** *(because)* дуже втомився після роботи. Я працював до пізньої ночі.
-> — **Студент 2:** Привіт. Але тобі обов'язково треба йти сьогодні. Ти що, забув про наш розклад?
-> — **Студент 1:** А що там сьогодні таке? Чому я маю йти на цю пару?
-> — **Студент 2:** Тобі треба бути там, **тому що** *(because)* завтра буде дуже важлива **контрольна** *(test)* з історії.
-> — **Студент 1:** Ох, я зовсім забув про неї. Але я так хочу спати зараз.
-> — **Студент 2:** Розумію тебе. Слухай, **хоча** *(although)* я теж дуже втомився, я все одно піду. Ця **лекція** *(lecture)* буде дуже корисна.
-> — **Студент 1:** Добре, ти маєш рацію. Я зараз вип'ю велику чашку кави і теж піду на заняття.
-
-Прості речення — це добре для початку, але на рівні А2 цього вже замало. Вам треба вміти будувати довгі та складні речення. Ви маєте пояснювати свої дії та думки. Для цього вам потрібна **причина** *(reason)* та **допуст** *(concession)*. Ці маленькі слова роблять вашу мову дуже живою та природною. Сьогодні ми навчимося з'єднувати різні ідеї в одне ціле. Ми будемо активно використовувати сполучники «тому що», «бо» та «хоча».
-
+logical pauses you make while speaking. ✅ **Я не прийшов, тому що був дуже зайнятий.** — *I did not come because I was very busy.* ❌ **Я не прийшов тому що був дуже зайнятий.** ::: Here are some natural, everyday examples demonstrating how native speakers use these conjunctions to explain their actions, feelings, and daily motivations. As you read these sentences, pay close attention to the mandatory comma placement and the smooth rhythmic flow of the sentence structure. Я сьогодні не прийшов на роботу, тому що був дуже зайнятий іншими справами. Моя подруга активно вивчає українську мову, бо вона хоче краще розуміти колег. Ми вчора вирішили залишитися вдома, тому що на вулиці несподівано почався сильний дощ. Маленькі діти щиро радіють, бо зовсім скоро нарешті почнуться довгі літні канікули. > *I did not come to work today because I was very busy with other matters. My friend is actively learning the Ukrainian language because she wants to better understand colleagues. We decided to stay at home yesterday because a heavy rain unexpectedly started outside. Little children are sincerely rejoicing because long summer holidays will finally start very soon.* In traditional Ukrainian culture and folklore, there is a famous and beautiful proverb that perfectly illustrates the use of the shorter conversational conjunction in a deeply philosophical and meaningful way. **Держімося землі, бо земля держить нас.** — *Let us hold on to the earth, because the earth holds us.* A highly effective way to practice using these conjunctions is to take two simple, completely independent sentences and combine them into one flowing, complex thought. Imagine you have the two separate sentences below. You can easily link them by identifying the logical cause. **Погода була дуже погана.** — *The weather was very bad.* **Ми залишилися вдома.** — *We stayed home.* Погана погода — це головна причина нашої дії. Отже, ми можемо об'єднати ці факти в одне довге речення. Ми можемо сказати: «Ми залишилися вдома, тому що погода була дуже погана». Або ми можемо використати більш розмовний варіант і сказати набагато коротше. Наприклад: «Ми залишилися вдома, бо погода була дуже погана». > *Bad weather is the main cause of our action. Therefore, we can combine these facts into one long sentence. We can say: "We stayed home because the weather was very bad." Or we can use a more colloquial option and say much shorter. For example: "We stayed home because the weather was very bad."* Sometimes, instead of starting with the final result and giving the reason later, you want to state the reason first and then explain the resulting action. For this specific reverse structure, we use the word **тому** (therefore, that is why). Notice how the sentence structure beautifully flips: **Погода була дуже погана, тому ми залишилися вдома.** — *The weather was very bad, therefore we stayed home.* This creates a perfect, logical chain of cause and effect in your everyday storytelling. <!-- INJECT_ACTIVITY: quiz, Choose the correct conjunction (тому що, бо) to complete the sentences based on cause and effect -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -508,7 +498,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -527,18 +584,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] тому що (because)
+- [ ] бо (because — colloquial)
+- [ ] хоча (although, even though)
+- [ ] але (but)
+- [ ] проте (however, yet)
+- [ ] однак (however)
+- [ ] причина (reason, cause)
+- [ ] сполучник (conjunction)
+- [ ] складне речення (complex sentence)
+- [ ] тому (therefore, that is why)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Хоча... (Although...) (~660 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

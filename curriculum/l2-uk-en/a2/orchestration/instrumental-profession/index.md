@@ -1,6 +1,6 @@
 # Build Summary: instrumental-profession (A2)
 
-Generated: 2026-04-07 23:56
+Generated: 2026-04-11 13:25
 
 ## Pipeline Phases
 
@@ -12,15 +12,15 @@ Generated: 2026-04-07 23:56
 | pre-verify | complete | 2026-04-07 21:39:02 |
 | write | complete | 2026-04-07 21:44:30 |
 | exercises | complete | 2026-04-07 21:44:30 |
-| activities | complete | 2026-04-07 21:47:33 |
+| activities | complete | 2026-04-11 01:19:22 |
 | verify-exercises | complete | 2026-04-07 21:47:33 |
 | annotate | complete | 2026-04-07 21:47:33 |
 | vocab | complete | 2026-04-07 21:51:38 |
 | enrich | complete | 2026-04-07 21:51:38 |
 | verify | complete | 2026-04-07 21:51:38 |
-| review | complete | 2026-04-07 21:56:57 |
 | stress | complete | 2026-04-07 21:56:57 |
-| publish | complete | 2026-04-07 21:56:59 |
+| publish | complete | 2026-04-11 11:25:17 |
+| audit | complete | 2026-04-11 11:25:17 |
 
 ## Reviews
 
@@ -35,16 +35,28 @@ Generated: 2026-04-07 23:56
 | pre-verify | gemini-tools (auto) | 489s | ✅ |
 | skeleton | gemini (auto) | 94s | ✅ |
 | activities | gemini-tools (gemini-3.1-pro-preview) | 183s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 69s | ✅ |
 | vocab | gemini (auto) | 239s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 318s | ✅ |
 | write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 98s | ✅ |
+| write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 45s | ✅ |
+| write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 55s | ✅ |
 | write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 96s | ✅ |
+| write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 40s | ✅ |
+| write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 40s | ✅ |
 | write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 69s | ✅ |
+| write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 50s | ✅ |
+| write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 70s | ✅ |
 | write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 42s | ✅ |
+| write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 60s | ✅ |
+| write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 75s | ✅ |
 | write-chunk-05 | gemini-tools (gemini-3.1-pro-preview) | 22s | ✅ |
+| write-chunk-05 | gemini-tools (gemini-3.1-pro-preview) | 35s | ✅ |
+| write-chunk-05 | gemini-tools (gemini-3.1-pro-preview) | 50s | ✅ |
 
 ## Files
 
+- `.build.lock`
 - `chunk-01.md`
 - `chunk-02.md`
 - `chunk-03.md`

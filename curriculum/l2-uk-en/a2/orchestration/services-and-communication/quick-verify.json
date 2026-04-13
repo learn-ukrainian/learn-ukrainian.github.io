@@ -4,10 +4,10 @@
   "errors": [],
   "warnings": [
     {
-      "check": "EXERCISES",
+      "check": "VOCABULARY",
       "severity": "WARNING",
-      "message": "Plan expects 4 exercise(s) but content has 3"
+      "message": "Missing 1/10 required vocab: марка (stamp)"
     }
   ],
-  "timestamp": "2026-04-07T23:55:24.638736+00:00"
+  "timestamp": "2026-04-13T06:48:07.307050+00:00"
 }

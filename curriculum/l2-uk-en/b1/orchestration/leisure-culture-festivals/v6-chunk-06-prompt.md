@@ -27,7 +27,7 @@ Grand total: ~4380 words
 <previous_context>
 [...previous sections truncated...]
 
-хоче слухати нові музичні гурти. > — **Олена:** Якщо ми правильно пояснимо нашу історію, молодь із великою радістю буде **святкувати** *(to celebrate)* традиційні дні. Наприклад, розписувати **писанки** *(decorated Easter eggs)* — це справжнє унікальне мистецтво, яке об'єднує покоління. > — **Максим:** Я згоден, але якщо ми об'єднаємо давні традиції із сучасною культурою, це буде ще цікавіше. Я переконаний, що **культура** *(culture)* повинна постійно і динамічно розвиватися, щоб бути живою. > — **Олена:** Це справді чудова ідея для нових фестивалів. Якщо ми успішно знайдемо цей ідеальний баланс, наша національна спадщина буде жити вічно. Ще одним потужним інструментом для переконливої аргументації є яскраве порівняння. Коли ми описуємо живопис, оригінальну музику або класичну літературу, нам часто бракує звичайних слів. Людські емоції бувають занадто складними для простих речень. У таких випадках ми використовуємо порівняльні підрядні речення зі сполучниками «як», «мов», «немов», «наче» та «ніби». Наприклад, коли ви дивитеся на геніальну картину в галереї, ви можете емоційно сказати: «Ця картина виглядає так, мов вона справді жива». Або, слухаючи талановитого оперного співака, ви можете прокоментувати: «Його сильний голос звучить так, неначе це співає справжній янгол». Використання таких поетичних порівнянь робить вашу особисту аргументацію дуже образною та нестандартною. Ви не просто констатуєте сухий факт, а створюєте красивий візуальний образ у голові вашого співрозмовника. Це особливо корисно, коли ви намагаєтеся переконати когось відвідати нову **виставку** *(exhibition)*. Такі фрази миттєво привертають увагу та викликають щиру зацікавленість у ваших друзів. Найсильнішим аргументом у будь-якій серйозній дискусії є пряме посилання на авторитетні джерела. Щоб ваша позиція звучала максимально професійно, активно використовуйте цитування та непряму мову. Для введення думки відомого експерта ми часто використовуємо такі популярні вступні конструкції: «За словами істориків...» або «Як стверджують видатні критики...». Наприклад: «За словами професійних культурологів, національна культурна спадщина є надійним фундаментом кожної незалежної держави». Якщо ви хочете переказати слова конкретної людини, використовуйте з'ясувальні речення з непрямою мовою. Наприклад: «Відомий український режисер сказав, що ця унікальна вистава повністю змінить наше уявлення про театр». Використовуючи чужі розумні думки для підтвердження своєї правоти, ви яскраво демонструєте свою високу ерудицію. Ваші співрозмовники чітко бачать, що ваша позиція базується на реальних фактах та експертних оцінках. Це показує, що ви глибоко досліджували тему перед тим, як робити власні висновки. Отже, давайте підсумуємо, як логічно побудувати зв'язний текст для успішного захисту своєї позиції. Розглянемо дуже актуальне питання сучасності: «Чи важливо активно підтримувати культуру під час війни?». Свій сильний аргумент ви можете легко побудувати так: «Я твердо переконаний, що підтримка культури є критично важливою сьогодні». «Хоча наша економіка потребує багато ресурсів, ми не маємо морального права забувати про **мистецтво** *(art)*». «Якщо нація втрачає свою автентичну культуру, вона назавжди втрачає глибокий сенс своєї боротьби». «За словами видатних українських письменників, саме мова та традиції об'єднують людей у найважчі часи». «Тому ця важлива підтримка виглядає так, наче ми інвестуємо в наше безпечне майбутнє». Як бачите, майстерна комбінація різних складних речень робить вашу громадянську позицію абсолютно незламною. Використовуючи ці конструкції, ви створюєте міцний логічний ланцюжок. Спробуйте частіше використовувати ці синтаксичні моделі на практиці, і ваше щоденне спілкування стане значно багатшим. <!-- INJECT_ACTIVITY: quiz --> <!-- INJECT_ACTIVITY: essay-response -->
+use of comparative clauses (порівняльні підрядні речення). When you want to describe exactly how an artwork looks, how a melody sounds, or how a performance feels, you can compare it to something else using conjunctions like **як** (as, like), **мов** (as if), **ніби** (as if), or **наче** (as though). This technique adds rich imagery to your speech and helps convey your deep emotional reaction to an exhibition or a classical concert much more effectively than simple adjectives. Коли я уважно дивлюся на цю старовинну картину, вона виглядає так, мов вона дійсно жива і дихає. Кольори на полотні настільки яскраві та теплі, наче талановитий художник малював їх самим сонячним світлом. Музика під час вчорашнього вечірнього концерту звучала так потужно і велично, ніби велика океанська хвиля раптово накрила весь глядацький зал. Такі яскраві порівняння допомагають нам набагато краще передати свої щирі враження від мистецтва. A strong, convincing argument often relies on the authority and knowledge of others. To cite experts, professional critics, or historical sources, we frequently use reported speech (непряма мова). Instead of quoting exactly what someone said word for word, we summarize their main idea using a subordinate clause starting with **що** (that). Alternatively, you can use prepositional phrases like **за словами...** (according to the words of...) or **на думку...** (in the opinion of...) followed by a noun in the genitive case to introduce an expert's perspective. :::info **Граматика** — Цитування експертів When reporting opinions, use the Genitive case after **за словами** or **на думку**: *За словами істориків...* (According to historians...), *На думку критиків...* (In the critics' opinion...). This elevates your Ukrainian to a more formal, academic register. ::: За словами відомих істориків, багата культурна спадщина є міцним фундаментом кожної вільної та незалежної держави. Авторитетний мистецтвознавець написав у своїй рецензії, що ця нова художня виставка стала найважливішою культурною подією цього року. На думку багатьох європейських експертів, якщо суспільство не підтримує і не цінує своїх митців, воно поступово втрачає свій унікальний голос і своє обличчя у великому світі. Now it is your turn to build a cohesive and persuasive argument. The culmination of Phase eight grammar is the ability to write a well-structured opinion paragraph using a variety of complex sentences. A good argumentative paragraph should state a clear personal opinion, provide logical reasons, acknowledge potential counterarguments, and offer a strong, memorable conclusion. Read the following example paragraph that thoughtfully answers the complex question: "Is it actually important to support national culture and art during a difficult war?" Я глибоко переконаний, що підтримувати і розвивати національну культуру під час війни — це надзвичайно важливе завдання. Хоча деякі люди щиро вважають, що всі доступні ресурси зараз треба витрачати виключно на військову оборону, проте саме мистецтво часто дає нам внутрішні сили боротися далі. За словами багатьох українських військових, саме рідна пісня або щирий вірш часто допомагають їм триматися у найважчі моменти на фронті. Якщо ми сьогодні не будемо захищати нашу мову, нашу історію та наші давні традиції, ми просто не матимемо того фундаменту, заради якого варто перемагати ворога. <!-- INJECT_ACTIVITY: essay-response, argumentative-paragraph-culture -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -527,7 +527,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -540,18 +607,71 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (6/6).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] дозвілля (leisure, free time)
+- [ ] захоплення (hobby, passion)
+- [ ] мистецтво (art)
+- [ ] виставка (exhibition)
+- [ ] вистава (performance, show)
+- [ ] Різдво (Christmas)
+- [ ] Великдень (Easter)
+- [ ] свято (holiday, celebration)
+- [ ] традиція (tradition)
+- [ ] культура (culture)
+- [ ] святкувати (to celebrate)
+- [ ] колядка (Christmas carol)
+- [ ] писанка (decorated Easter egg)
+- [ ] ресторан (restaurant)
+- [ ] меню (menu)
+- [ ] замовлення (order)
+- [ ] страва (dish)
+- [ ] шеф-кухар (chef)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Підсумок (~420 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

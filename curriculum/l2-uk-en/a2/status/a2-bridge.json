@@ -2,36 +2,45 @@
   "module": "a2-bridge",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-04-11T01:19:30.229648Z",
+  "last_audit": "2026-04-13T21:07:59.564484Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-11T01:19:29.783543Z",
+    "md": "2026-04-13T21:07:56.789948Z",
     "meta": null,
-    "activities": "2026-04-10T23:57:18.207177Z",
-    "vocabulary": "2026-04-10T23:57:18.280397Z",
+    "activities": "2026-04-13T10:57:41.056464Z",
+    "vocabulary": "2026-04-12T20:28:43.774076Z",
     "research": null,
-    "plan": "2026-04-04T13:29:52.185803Z"
+    "plan": "2026-04-13T20:15:09.166433Z"
   },
   "gates": {
     "meta": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Valid Structure"
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Summary'"
     },
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2776/2000 (raw: 2840)"
+      "message": "2897/2000 (raw: 2939)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "7/0"
+      "message": "9/0"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "44/1"
+      "message": "18/1"
+    },
+    "vocab_progression": {
+      "status": "warn",
+      "violations": 0,
+      "message": "\u0394 -2 | premature=2 | gaps=0 | well-paced=4",
+      "delta": -2,
+      "premature": 2,
+      "gaps": 0,
+      "well_paced": 4
     },
     "naturalness": {
       "status": "info",
@@ -50,10 +59,12 @@
     }
   },
   "overall": {
-    "status": "pass",
-    "blocking_issues": [],
-    "pass_count": 6,
-    "fail_count": 0,
+    "status": "fail",
+    "blocking_issues": [
+      "Structure: Missing '## Summary'"
+    ],
+    "pass_count": 5,
+    "fail_count": 1,
     "deferred_count": 0
   }
 }

@@ -1,6 +1,6 @@
 # Build Summary: dative-pronouns (A2)
 
-Generated: 2026-04-11 02:32
+Generated: 2026-04-11 12:43
 
 ## Pipeline Phases
 
@@ -19,8 +19,8 @@ Generated: 2026-04-11 02:32
 | enrich | complete | 2026-04-07 22:24:28 |
 | verify | complete | 2026-04-07 22:24:28 |
 | stress | complete | 2026-04-07 22:29:50 |
-| publish | complete | 2026-04-11 00:32:06 |
-| audit | complete | 2026-04-11 00:32:06 |
+| publish | complete | 2026-04-11 10:43:48 |
+| audit | complete | 2026-04-11 10:43:48 |
 
 ## Reviews
 
@@ -42,14 +42,19 @@ Generated: 2026-04-11 02:32
 | review | gemini-tools (gemini-3.1-pro-preview) | 192s | ✅ |
 | write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 29s | ✅ |
 | write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 60s | ✅ |
+| write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 54s | ✅ |
 | write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 50s | ✅ |
 | write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 45s | ✅ |
+| write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 55s | ✅ |
 | write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 62s | ✅ |
 | write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 40s | ✅ |
+| write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 50s | ✅ |
 | write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 36s | ✅ |
 | write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 25s | ✅ |
+| write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 40s | ✅ |
 | write-chunk-05 | gemini-tools (gemini-3.1-pro-preview) | 30s | ✅ |
 | write-chunk-05 | gemini-tools (gemini-3.1-pro-preview) | 29s | ✅ |
+| write-chunk-05 | gemini-tools (gemini-3.1-pro-preview) | 35s | ✅ |
 
 ## Files
 

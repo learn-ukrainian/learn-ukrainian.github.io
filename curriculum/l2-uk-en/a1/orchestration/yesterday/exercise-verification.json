@@ -1,6 +1,6 @@
 {
-  "total_items": 87,
-  "grounded_items": 65,
+  "total_items": 72,
+  "grounded_items": 46,
   "ungrounded": [
     {
       "word": "десятій",
@@ -9,129 +9,153 @@
       "role": "context"
     },
     {
-      "word": "він",
-      "exercise_type": "group-sort",
-      "context": "Чоловічий рід (Він)",
+      "word": "там",
+      "exercise_type": "fill-in",
+      "context": "Там я ____ продукти.",
       "role": "context"
     },
     {
-      "word": "вона",
+      "word": "чоловічий",
       "exercise_type": "group-sort",
-      "context": "Жіночий рід (Вона)",
+      "context": "Він (Чоловічий рід)",
       "role": "context"
     },
     {
-      "word": "вкрав",
-      "exercise_type": "quiz",
-      "context": "Що вкрав чоловік у свідка?",
+      "word": "рід",
+      "exercise_type": "group-sort",
+      "context": "Він (Чоловічий рід)",
+      "role": "context"
+    },
+    {
+      "word": "жіночий",
+      "exercise_type": "group-sort",
+      "context": "Вона (Жіночий рід)",
+      "role": "context"
+    },
+    {
+      "word": "слово",
+      "exercise_type": "true-false",
+      "context": "Слово «зранку» ми використовуємо для вечора.",
+      "role": "context"
+    },
+    {
+      "word": "використовуємо",
+      "exercise_type": "true-false",
+      "context": "Слово «зранку» ми використовуємо для вечора.",
+      "role": "context"
+    },
+    {
+      "word": "для",
+      "exercise_type": "true-false",
+      "context": "Слово «зранку» ми використовуємо для вечора.",
+      "role": "context"
+    },
+    {
+      "word": "вечора",
+      "exercise_type": "true-false",
+      "context": "Слово «зранку» ми використовуємо для вечора.",
+      "role": "context"
+    },
+    {
+      "word": "допомагає",
+      "exercise_type": "true-false",
+      "context": "Слово «потім» допомагає з'єднати події в історії.",
+      "role": "context"
+    },
+    {
+      "word": "з'єднати",
+      "exercise_type": "true-false",
+      "context": "Слово «потім» допомагає з'єднати події в історії.",
+      "role": "context"
+    },
+    {
+      "word": "події",
+      "exercise_type": "true-false",
+      "context": "Слово «потім» допомагає з'єднати події в історії.",
+      "role": "context"
+    },
+    {
+      "word": "історії",
+      "exercise_type": "true-false",
+      "context": "Слово «потім» допомагає з'єднати події в історії.",
       "role": "context"
     },
     {
       "word": "чоловік",
-      "exercise_type": "quiz",
-      "context": "Що вкрав чоловік у свідка?",
-      "role": "context"
-    },
-    {
-      "word": "свідка",
-      "exercise_type": "quiz",
-      "context": "Що вкрав чоловік у свідка?",
-      "role": "context"
-    },
-    {
-      "word": "де",
-      "exercise_type": "quiz",
-      "context": "Де свідок припаркував велосипед?",
-      "role": "context"
-    },
-    {
-      "word": "куди",
-      "exercise_type": "quiz",
-      "context": "Куди Тарас пішов зранку?",
-      "role": "context"
-    },
-    {
-      "word": "ким",
-      "exercise_type": "quiz",
-      "context": "З ким обідав Тарас?",
-      "role": "context"
-    },
-    {
-      "word": "котрій",
-      "exercise_type": "quiz",
-      "context": "О котрій годині Анна лягла спати?",
-      "role": "context"
-    },
-    {
-      "word": "годині",
-      "exercise_type": "quiz",
-      "context": "О котрій годині Анна лягла спати?",
-      "role": "context"
-    },
-    {
-      "word": "анна",
-      "exercise_type": "quiz",
-      "context": "О котрій годині Анна лягла спати?",
-      "role": "context"
-    },
-    {
-      "word": "кепка",
-      "exercise_type": "match-up",
-      "context": "кепка",
-      "role": "answer"
-    },
-    {
-      "word": "офіс",
-      "exercise_type": "match-up",
-      "context": "офіс",
-      "role": "answer"
-    },
-    {
-      "word": "пізно",
-      "exercise_type": "error-correction",
-      "context": "Анна ліг спати пізно.",
-      "role": "context"
-    },
-    {
-      "word": "сказав",
-      "exercise_type": "error-correction",
-      "context": "Свідок сказав: Я бачила чоловіка.",
-      "role": "context"
-    },
-    {
-      "word": "бачила",
-      "exercise_type": "error-correction",
-      "context": "Свідок сказав: Я бачила чоловіка.",
-      "role": "context"
-    },
-    {
-      "word": "моя",
-      "exercise_type": "error-correction",
-      "context": "Моя подруга купив продукти.",
-      "role": "context"
-    },
-    {
-      "word": "купив",
-      "exercise_type": "error-correction",
-      "context": "Моя подруга купив продукти.",
-      "role": "context"
-    },
-    {
-      "word": "снідала",
       "exercise_type": "true-false",
-      "context": "Анна снідала салатом і соком.",
+      "context": "Чоловік каже «я пішла на роботу».",
       "role": "context"
     },
     {
-      "word": "салатом",
+      "word": "каже",
       "exercise_type": "true-false",
-      "context": "Анна снідала салатом і соком.",
+      "context": "Чоловік каже «я пішла на роботу».",
       "role": "context"
     },
     {
-      "word": "соком",
+      "word": "жінка",
       "exercise_type": "true-false",
-      "context": "Анна снідала салатом і соком.",
+      "context": "Жінка каже «я лягла спати».",
+      "role": "context"
+    },
+    {
+      "word": "зазвичай",
+      "exercise_type": "true-false",
+      "context": "Слово «нарешті» зазвичай використовують наприкінці розповіді",
+      "role": "context"
+    },
+    {
+      "word": "використовують",
+      "exercise_type": "true-false",
+      "context": "Слово «нарешті» зазвичай використовують наприкінці розповіді",
+      "role": "context"
+    },
+    {
+      "word": "наприкінці",
+      "exercise_type": "true-false",
+      "context": "Слово «нарешті» зазвичай використовують наприкінці розповіді",
+      "role": "context"
+    },
+    {
+      "word": "розповіді",
+      "exercise_type": "true-false",
+      "context": "Слово «нарешті» зазвичай використовують наприкінці розповіді",
+      "role": "context"
+    },
+    {
+      "word": "дієслова",
+      "exercise_type": "true-false",
+      "context": "Дієслова минулого часу змінюються за родами (чоловічий, жіно",
+      "role": "context"
+    },
+    {
+      "word": "минулого",
+      "exercise_type": "true-false",
+      "context": "Дієслова минулого часу змінюються за родами (чоловічий, жіно",
+      "role": "context"
+    },
+    {
+      "word": "часу",
+      "exercise_type": "true-false",
+      "context": "Дієслова минулого часу змінюються за родами (чоловічий, жіно",
+      "role": "context"
+    },
+    {
+      "word": "змінюються",
+      "exercise_type": "true-false",
+      "context": "Дієслова минулого часу змінюються за родами (чоловічий, жіно",
+      "role": "context"
+    },
+    {
+      "word": "за",
+      "exercise_type": "true-false",
+      "context": "Дієслова минулого часу змінюються за родами (чоловічий, жіно",
+      "role": "context"
+    },
+    {
+      "word": "родами",
+      "exercise_type": "true-false",
+      "context": "Дієслова минулого часу змінюються за родами (чоловічий, жіно",
       "role": "context"
     }
   ],

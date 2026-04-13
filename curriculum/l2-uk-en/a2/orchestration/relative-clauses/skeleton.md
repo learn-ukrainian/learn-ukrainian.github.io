@@ -1,38 +1,30 @@
-## Який? Яка? Яке? Які? (Which? What Kind?) (~800 words total)
-- P1 (~120 words): Introduction to the concept of relative clauses (означальні підрядні речення). Explain that just as an adjective describes a noun (гарна книга), a relative clause expands this description into a full action or fact (книга, яку я читаю). Define the main clause (головне речення) and the subordinate clause (підрядне речення).
-- P2 (~150 words): Explaining gender agreement for the relative pronoun "який". Use concrete examples for each gender: masculine (*будинок, який стоїть...*), feminine (*квартира, яка має...*), and neuter (*місто, яке знаходиться...*). Emphasize that "який" mirrors the gender of the noun it describes, regardless of its role in the sentence.
-- P3 (~130 words): Plural agreement logic for "які". Provide examples with people and objects to show universality: *люди, які працюють тут*, *ключі, які лежать на столі*. Contrast singular and plural forms to highlight the transition from "який/яка" to "які".
-- P4 (~180 words): The logic of Cases for "який". Explain that while the gender comes from the main noun, the case comes from the pronoun's role *inside* the sub-clause. Focus on the distinction between Nominative (subject of the sub-clause: *хлопець, який прийшов*) and Accusative (object of the sub-clause: *хлопець, якого я бачив*). Provide a mini-paradigm for feminine Accusative (*книга -> яку*) and masculine animate Accusative (*друг -> якого*).
-- P5 (~100 words): The mandatory comma rule. Explain that in Ukrainian, unlike English, you *must* place a comma before the relative pronoun "який". Use the metaphor of a "gate" opening to provide more detail. Show a "Wrong vs Right" example: *Машина яка стоїть там... (❌)* vs *Машина, яка стоїть там... (✅)*.
-- P6 (~120 words): Decolonization note: The role of "що" as a relative connector. Explain that while "який" is common, using "що" for Nominative and Accusative cases is a natural, non-declining, and highly idiomatic Ukrainian pattern. Example: *Це людина, що (who) завжди допомагає*. This aligns with the "Think in Ukrainian" mandate by showing "що" as a valid alternative to the more formal "який".
-- D1 (~120 words): Dialogue: "The Real Estate Agent". A realtor describes an apartment to a buyer. *Ріелтор: «Це квартира, яка має великий балкон. Ось кімната, яка виходить на парк. А це сусід, який живе тут десять років».* The buyer responds using relative clauses to confirm details.
-- <!-- INJECT_ACTIVITY: fill-in-yakiy-agreement --> [fill-in, focus: Insert the correct form of який (яка, яке, які) into relative clauses matching gender and number, 8 items]
-- <!-- INJECT_ACTIVITY: true-false-comma-agreement --> [true-false, focus: Judge whether relative clauses have correct agreement and comma placement, 8 items]
+## Який? Яка? Яке? Які? (Which? What Kind?) (~800 words)
+- P1 (~100 words): Introduce relative clauses (означальні підрядні речення). Explain they act like a long adjective, describing a noun in the main sentence to provide more detail without starting a new sentence.
+- P2 (~120 words): Dialogue: Real estate agent showing apartments. "Це квартира (f), яка має балкон (m). Ось кімната (f), де можна працювати. Сусід (m), який живе поруч, дуже тихий." This grounds the grammar in a practical A2 scenario.
+- P3 (~130 words): Gender and number agreement of `який` in the Nominative case. Explain it must match the noun it describes. Provide examples: "Книжка, яка лежить на столі...", "Хлопець, який прийшов вчора...", "Місто, яке я люблю...", "Друзі, які живуть у Києві...".
+- P4 (~150 words): The Accusative case of `який`. Emphasize that `який` takes the case required by its role in the SUBORDINATE clause, not the main clause. Contrast "Людина, яка мене зустріла (Nom.)" vs "Людина, яку я зустрів (Acc.)". Provide examples with masculine inanimate/animate, feminine, neuter, and plural in Accusative.
+- P5 (~100 words): Punctuation rule. Always put a comma before `який/яка/яке/які` to introduce the relative clause. Explain this is a strict rule in Ukrainian, unlike English "that".
+- P6 (~100 words): Contrast with questions. Clarify the difference between asking a question "Який це фільм?" and using it as a connector "Фільм, який ми дивилися вчора, був цікавий". Same word, different function.
+- P7 (~100 words): Briefly introduce the invariant word `що` as a very common, natural alternative to `який` in the Nominative/Accusative. Example: "Це Євген, що працює зі мною в офісі." 
+- <!-- INJECT_ACTIVITY: fill-in-yakiy --> [fill-in, Insert the correct form of який (яка, яке, які) into relative clauses, matching gender and number, 8 items]
 
-## Де, куди, звідки — місце (Where, Where To, Where From — Place) (~650 words total)
-- P1 (~100 words): Transitioning from "what kind" (який) to "where" (місце). Explain that when describing a place, we often use relative adverbs like "де", "куди", and "звідки" instead of "який".
-- P2 (~150 words): Using "де" for static location. Explain that "де" often replaces the more complex construction "в якому" (in which). Provide natural examples: *ресторан, де ми обідали* (the restaurant where we had lunch), *вулиця, де я живу*. Note that "де" is simpler and preferred in spoken Ukrainian for locations.
-- P3 (~120 words): Using "куди" for direction or motion. Contrast "де" (location) with "куди" (movement to). Examples: *місто, куди ми поїдемо у відпустку* (the city where we will go on vacation), *магазин, куди вона зайшла*.
-- P4 (~100 words): Using "звідки" for origin or source. Show how to describe where something or someone came from. Example: *село, звідки привезли це молоко* (the village where this milk was brought from), *країна, звідки він приїхав*.
-- P5 (~130 words): Dialogue: "Exploring the Neighborhood". The buyer asks about amenities. *Покупець: «Де знаходиться парк, куди ми можемо ходити?». Ріелтор: «Ось вулиця, де є гарна кав'ярня, звідки завжди пахне свіжою кавою».* Focus on the natural flow of these place-based connectors.
-- P6 (~50 words): Recap of place connectors: Use "де" for "at", "куди" for "to", and "звідки" for "from".
-- <!-- INJECT_ACTIVITY: quiz-place-connectors --> [quiz, focus: Choose де, куди, or звідки to complete sentences about places, 8 items]
+## Де, куди, звідки — місце (Where, Where To, Where From — Place) (~650 words)
+- P1 (~120 words): Introduce relative adverbs for places. Explain that while you can say "в якому" (in which), using `де` is simpler and much more natural at the A2 level for describing locations.
+- P2 (~150 words): Using `де` for location (where something is). Explain it replaces "в/на якому" and indicates static position. Examples: "Кафе, де ми зустрілися, було затишне." "Місто, де я народився, знаходиться на заході."
+- P3 (~130 words): Using `куди` for direction (where to). Explain it must be used with verbs of motion (іти, їхати) instead of `де`. Example: "Парк, куди ми ходимо гуляти, дуже гарний."
+- P4 (~130 words): Using `звідки` for origin (where from). Example: "Країна, звідки вона приїхала, — це Україна."
+- P5 (~120 words): Comparison summary. Show how the same place changes the relative word based on the verb in the subordinate clause: "Місто, де я живу" (location) vs. "Місто, куди я їду" (direction) vs. "Місто, звідки я повернувся" (origin).
+- <!-- INJECT_ACTIVITY: quiz-places --> [quiz, Choose де, куди, or звідки to complete sentences about places, 8 items]
 
-## Описуємо людей, речі та місця (Describing People, Things, and Places) (~600 words total)
-- P1 (~150 words): Synthesis of relative clauses. Show how to build complex descriptions of people by combining "який" with professions or habits. Example: *Мій брат, який працює лікарем, живе зараз у Польщі*. Contrast this with two short sentences: *Мій брат живе у Польщі. Він працює лікарем.* to show how the relative clause adds elegance and flow.
-- P2 (~120 words): Avoiding the "Redundant Pronoun" error. Explain that English speakers often want to repeat the subject inside the clause (*Книга, яку я читав її...*). Correct this by showing that "яку" already represents the book, so "її" is redundant. *Книга, яку я читав... (✅)*.
-- P3 (~120 words): Intonation and the "Breath Pause". Explain the prosody of a relative clause: the pitch drops slightly for the parenthetical insert (the sub-clause) and returns to normal for the rest of the main sentence. The comma isn't just a mark; it's a micro-pause for breath and processing.
-- P4 (~110 words): Stacking information. Show how to describe a place using multiple relative clauses naturally: *Це старий будинок, який стоїть на горі і де колись жив відомий поет*. This demonstrates the ability to combine place and quality in one complex sentence.
-- P5 (~100 words): Practical Production Prompt. Provide a model answer for describing a favorite object or person. *Мій улюблений предмет — це годинник, який подарував мені дідусь і який завжди показує точний час*. Encourage learners to think about the "history" or "location" of the items they describe.
-- <!-- INJECT_ACTIVITY: match-up-sentence-combine --> [match-up, focus: Combine two simple sentences into one using a relative clause, 8 items]
-- <!-- INJECT_ACTIVITY: unjumble-relative-clauses --> [unjumble, focus: Reorder words to form correct relative clauses with який/яка/яке and де/куди/звідки, 6 items]
-
-## Підсумок (~150 words)
-- P1 (~150 words): Recap of the module's key rules in a bulleted format for quick review:
-  - "Який" must match the gender (m/f/n) and number (sg/pl) of the noun it describes.
-  - Always place a comma before "який", "де", "куди", or "звідки".
-  - Use "де" for location, "куди" for movement, and "звідки" for origin.
-  - Inside the sub-clause, "який" takes the case required by the verb (e.g., *яку я бачу* - Accusative).
-  - Self-check question: Can you describe your best friend using "який" and "де" in one sentence? (*Мій найкращий друг, який живе в Одесі, дуже любить море*).
+## Описуємо людей, речі та місця (Describing People, Things, and Places) (~750 words)
+- P1 (~120 words): Combining sentences to sound more advanced. Show how to stack information naturally. Instead of short, choppy sentences ("Це мій друг. Він живе у Києві. Він працює програмістом."), combine them: "Це мій друг, який живе у Києві і працює програмістом."
+- <!-- INJECT_ACTIVITY: match-up-combine --> [match-up, Combine two simple sentences into one using a relative clause, 8 items]
+- P2 (~150 words): Describing complex scenes using both relative pronouns and adverbs together. Example: "Ресторан, де ми вчора вечеряли, знаходиться біля парку, який ми дуже любимо." Explain how this builds narrative flow.
+- P3 (~150 words): Avoiding common L2 errors. 1) Omitting the relative pronoun (English "The book I read" vs. Ukrainian "Книга, яку я читав" — mandatory pronoun). 2) Redundant pronouns ("Книжка, яка вона цікава" = WRONG). 3) English "who/which" confusion — Ukrainian uses `який` for both humans and objects.
+- <!-- INJECT_ACTIVITY: true-false-agreement --> [true-false, Judge whether relative clauses have correct agreement and comma placement, 8 items]
+- P4 (~120 words): Intonation of означальні речення. Explain that the main clause begins with neutral intonation, the relative clause (after the comma) carries a slightly lower pitch as a parenthetical insert, and then returns to normal pitch. The comma signals the listener to expect a descriptive addition.
+- P5 (~100 words): Mention formal synonym `котрий`. Explain it means "which" and is recognizable in texts, but at A2, learners should actively use `який` or `що`.
+- P6 (~110 words): Practical production prompt. Encourage learners to think about how they would describe their favorite place, a person they admire, or an object they use daily using these relative clauses.
+- <!-- INJECT_ACTIVITY: unjumble-relative --> [unjumble, Reorder words to form correct relative clauses with який/яка/яке and де/куди/звідки, 6 items]
 
 Grand total: ~2200 words

@@ -1,65 +1,53 @@
 ## Linguistic Scan
-1 semantic error found: «Я бачив це» is incorrectly translated as "I was looking at it". "Бачити" is a stative verb meaning "to see", whereas "to look" is "дивитися". This is a critical semantic error.
+No linguistic errors found. Checked candidate forms such as `класно`, `передала`, `відправив`, `ярмарку`, `одноразовий`, `концепція`, `тривалий`, and `завершений` in VESUM; all are attested, and no Russian characters (`ы`, `э`, `ё`, `ъ`) appear in the Ukrainian text.
 
 ## Exercise Check
-Activity markers are present and match the plan's inventory. However, `aspect-sorting-process-result` and `identify-aspect-in-sentences` are injected at the end of Section 2. This places them *before* the perfective aspect has been introduced in Section 3, forcing learners to sort and identify concepts they haven't been taught yet.
+4 markers are present, they match the 4 `activity_hints`, and they are placed after the relevant teaching sections:
+`quiz-aspect-sorting` after the introduction, `fill-in-identify-aspect` after imperfective, `match-up-choose-aspect` after perfective, and `error-correction-fix-aspect` after the comparison section. No sequencing or visible logic issues are apparent from the placeholders themselves.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 6/10 | Missing English translations in 3 section headings. Mandatory references (Заболотний, ULP) and recommended vocabulary (одноразовий, концепція) are omitted from the text. |
-| 2. Linguistic accuracy | 7/10 | The text incorrectly translates "Я бачив це" as "I was looking at it". "Бачити" means "to see"; "to look" is "дивитися". |
-| 3. Pedagogical quality | 6/10 | Quizzes testing both aspects are placed at the end of Section 2, before the perfective aspect is taught in Section 3. |
-| 4. Vocabulary coverage | 7/10 | All required vocabulary is included, but recommended words "одноразовий" and "концепція" are missing. |
-| 5. Exercise quality | 9/10 | Activity markers match the plan exactly in number and focus, though their placement needs fixing (deducted in Pedagogy). |
-| 6. Engagement & tone | 10/10 | Excellent teacher persona. The movie vs. "The End" screen analogy is highly effective. |
-| 7. Structural integrity | 8/10 | Excellent word count (2478 words), but missing English translations in headings breaks structural consistency with the plan. |
-| 8. Cultural accuracy | 10/10 | Explains aspect natively without comparing it directly to Russian, using standard Ukrainian pedagogical tricks ("Що робити?"). |
-| 9. Dialogue & conversation quality | 10/10 | The football match dialogue perfectly demonstrates the grammar points in a natural context. |
+| 1. Plan adherence | 8/10 | The module covers all four planned sections and the football dialogue matches the plan, but the plan references are not integrated: `Авраменко` and `ULP` have 0 occurrences in the provided module text. |
+| 2. Linguistic accuracy | 10/10 | No confirmed Russianisms, Surzhyk, calques, paronym misuse, or grammar errors in the Ukrainian examples; checked forms are standard, and the rule about present-tense forms being imperfective is accurate. |
+| 3. Pedagogical quality | 8/10 | The explanations are example-rich, but one conceptual sentence is wrong: `Almost every concept in Ukrainian exists as a pair of these two aspects.` The module should say `verb`, not `concept`. |
+| 4. Vocabulary coverage | 8/10 | All required plan vocabulary appears naturally, but the recommended items `завершений`, `тривалий`, `одноразовий`, and `концепція` are absent from the prose. |
+| 5. Exercise quality | 10/10 | All four planned exercise types have corresponding markers placed after the relevant teaching blocks: `quiz-aspect-sorting`, `fill-in-identify-aspect`, `match-up-choose-aspect`, `error-correction-fix-aspect`. |
+| 6. Engagement & tone | 9/10 | The football opener and later room/book/homework examples keep the tone concrete and teacherly without corporate or gamified filler. |
+| 7. Structural integrity | 10/10 | All H2 headings from the plan are present and ordered correctly; the pipeline word count is 2487, above target, and the inject markers are clean. |
+| 8. Cultural accuracy | 10/10 | The module explains Ukrainian grammar on its own terms and avoids Russian-centric framing. |
+| 9. Dialogue & conversation quality | 9/10 | The named-speaker football exchange is relevant to the aspect contrast and works as a natural short opener. |
 
 ## Findings
-[Plan adherence] [Major]
-Location: Section headings
-Issue: The plan specifies English translations in the H2 headings, but 3 out of 4 headings omitted them.
-Fix: Add the English translations to the headings for Sections 1, 2, and 4.
+[PLAN ADHERENCE] [SEVERITY: major]  
+Location: Section 1, paragraph beginning `In Ukrainian schools, children learn a simple trick to determine the aspect of any verb.`  
+Issue: The plan lists `Авраменко Grade 7, §28-30` and `ULP: Ukrainian Verb Aspect` as references, but neither source is cited anywhere in the module. Search confirmed 0 occurrences of `Авраменко` and `ULP`.  
+Fix: Add one brief source-anchoring sentence to the school-rule paragraph.
 
-[Pedagogical quality] [Critical]
-Location: End of Section 2
-Issue: Activity markers `aspect-sorting-process-result` and `identify-aspect-in-sentences` are placed before the perfective aspect is taught, meaning learners cannot successfully complete them.
-Fix: Move these two markers to the end of Section 3.
+[VOCABULARY COVERAGE] [SEVERITY: minor]  
+Location: Section 1, paragraph `Уяви, що недоконаний вид — це довге кіно...`  
+Issue: The recommended vocabulary from the plan is not reinforced in the prose. Search confirmed 0 occurrences of `завершений`, `тривалий`, `одноразовий`, and `концепція`.  
+Fix: Revise the analogy paragraph so it naturally includes those four words.
 
-[Linguistic accuracy] [Critical]
-Location: Section 4, paragraph 1: "«Я бачив це» *(I saw this, I was looking at it)*"
-Issue: "Бачити" means "to see", not "to look". Translating it as "I was looking at it" teaches incorrect vocabulary (confusing it with "дивитися").
-Fix: Change the translation to "I saw this" and adjust the perfective translation to "I spotted it, I caught sight of it".
-
-[Plan adherence] [Major]
-Location: Entire text
-Issue: Mandatory references (Заболотний Grade 6, ULP) and recommended vocabulary ('одноразовий', 'концепція') are missing.
-Fix: Integrate the references and missing vocabulary naturally into the prose.
+[PEDAGOGICAL QUALITY] [SEVERITY: major]  
+Location: Section 1, paragraph `Almost every concept in Ukrainian exists as a pair of these two aspects.`  
+Issue: This is conceptually wrong. Aspect pairs are pairs of verbs, not “concepts.”  
+Fix: Replace `concept` with `verb`.
 
 ## Verdict: REVISE
-The text is highly engaging and explains the concept well, but suffers from a critical pedagogical sequencing error (testing before teaching) and a critical semantic mistranslation of "бачити". Applying the fixes will bring it fully up to standard.
+REVISE. The module is structurally solid and linguistically clean, but it has three fixable quality problems: missing plan references, missing recommended vocabulary, and one conceptual misstatement. Dimensions 1, 3, and 4 are below 9, so this cannot pass as-is.
 
 <fixes>
-- find: "## Що таке вид дієслова?"
-  replace: "## Що таке вид дієслова? (What is Verb Aspect?)"
-- find: "## Недоконаний вид: Процес і повторення"
-  replace: "## Недоконаний вид: Процес і повторення (Imperfective: Process & Repetition)"
-- find: "## Порівняння пар: Бачимо різницю"
-  replace: "## Порівняння пар: Бачимо різницю (Comparing Pairs: Seeing the Difference)"
-- find: "<!-- INJECT_ACTIVITY: aspect-sorting-process-result -->\n<!-- INJECT_ACTIVITY: identify-aspect-in-sentences -->"
-  replace: ""
-- find: "<!-- INJECT_ACTIVITY: match-up-context-aspect -->"
-  replace: "<!-- INJECT_ACTIVITY: aspect-sorting-process-result -->\n<!-- INJECT_ACTIVITY: identify-aspect-in-sentences -->\n<!-- INJECT_ACTIVITY: match-up-context-aspect -->"
-- find: "«Я бачив це» *(I saw this, I was looking at it)* versus «Я побачив це» *(I spotted it)*."
-  replace: "«Я бачив це» *(I saw this)* versus «Я побачив це» *(I spotted it, I caught sight of it)*."
-- find: "When Ukrainian children learn grammar in school, they do not memorize long lists"
-  replace: "When Ukrainian children learn grammar in school textbooks (like Заболотний for Grade 6), they do not memorize long lists"
-- find: "Keep this in mind, and you will navigate Ukrainian verbs with confidence."
-  replace: "Keep this in mind, and you will navigate Ukrainian verbs with confidence. For further listening, resources like the Ukrainian Lessons Podcast (ULP) offer excellent audio practice for verb aspects."
-- find: "The concept of aspect is not about time at all."
-  replace: "This **концепція** (concept) of aspect is not about time at all."
-- find: "It describes a **завершена дія** (completed action)."
-  replace: "It describes a **завершена дія** (completed action) or an **одноразовий** (single, one-time) event."
+- find: |-
+    In Ukrainian schools, children learn a simple trick to determine the aspect of any verb. If the infinitive form answers the question «що робити?» (what to do?), it is imperfective. For example, the verb **робити** (to do) focuses on the activity itself. If the verb answers the question «що зробити?» (what to have done?), it is perfective. The verb **зробити** (to do / to have done) focuses entirely on the completion of the task.
+  replace: |-
+    In Ukrainian schools, children learn a simple trick to determine the aspect of any verb. If the infinitive form answers the question «що робити?» (what to do?), it is imperfective. For example, the verb **робити** (to do) focuses on the activity itself. If the verb answers the question «що зробити?» (what to have done?), it is perfective. The verb **зробити** (to do / to have done) focuses entirely on the completion of the task. This school-style rule matches Авраменко, Grade 7, §28-30, and learners can compare it with the explanation in ULP: Ukrainian Verb Aspect.
+- find: |-
+    Almost every concept in Ukrainian exists as a pair of these two aspects.
+  replace: |-
+    Almost every verb in Ukrainian exists as a pair of these two aspects.
+- find: |-
+    Уяви, що недоконаний вид — це довге кіно. Ти дивишся фільм кадр за кадром і бачиш повільний процес. Доконаний вид — це фінальні титри або одна фотографія. Ти бачиш тільки швидкий фінал і результат цієї дії.
+  replace: |-
+    Уяви, що недоконаний вид — це довге кіно. Ти дивишся фільм кадр за кадром і бачиш тривалий процес. Доконаний вид — це фінальні титри або одна фотографія. Ти бачиш одноразовий, завершений фінал і результат цієї дії. Ця концепція допомагає швидко відчути різницю між видами.
 </fixes>

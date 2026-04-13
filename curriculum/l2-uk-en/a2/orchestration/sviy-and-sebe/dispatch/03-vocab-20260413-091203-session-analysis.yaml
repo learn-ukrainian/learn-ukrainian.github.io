@@ -1,0 +1,72 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T07-11-d6585da4.json
+phase: vocab
+prompt_chars: 19843
+response_chars: 1552
+prompt_words: 3104
+response_words: 177
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.0402
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.0116
+- name: plan
+  start: 1028
+  length: 18815
+  fraction: 0.9482
+large_sections:
+- plan
+directives_total: 11
+directives_covered: 0
+directives_missed:
+- kind: must
+  text: If the owner is NOT the subject, you must use regular pronouns (**його**,
+    **її**, etc.
+  covered: false
+  coverage_note: 0/10 keywords (0%)
+- kind: must
+  text: This means it must constantly adapt its form to match the noun it describes.
+  covered: false
+  coverage_note: 0/10 keywords (0%)
+- kind: must
+  text: If a man is reading his own book, the pronoun must match the feminine noun
+    for book, completely ignoring the masculine subject of the sentence.
+  covered: false
+  coverage_note: 3/15 keywords (20%)
+- kind: must
+  text: You must carefully check the gender, number, and case of that noun before
+    you decline the pronoun.
+  covered: false
+  coverage_note: 0/12 keywords (0%)
+- kind: must
+  text: To truly master natural Ukrainian, you must learn several fixed expressions
+    that rely on these reflexive forms.
+  covered: false
+  coverage_note: 0/15 keywords (0%)
+- kind: must
+  text: A man must say "I did this myself" (using "sam").
+  covered: false
+  coverage_note: 0/8 keywords (0%)
+- kind: inject_activity
+  text: quiz-sviy-vs-possessive
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: true-false-sviy-cases
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-insert-the-correct-case-form-of
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-match-expressions-with-to-their-meanings
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: error-correction-find-and-fix-incorrect-usage-of-and
+  covered: false
+  coverage_note: marker missing

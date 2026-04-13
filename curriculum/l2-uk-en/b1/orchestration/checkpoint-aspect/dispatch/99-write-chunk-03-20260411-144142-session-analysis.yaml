@@ -1,0 +1,70 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T12-40-4f86c75c.json
+phase: write-chunk-03
+prompt_chars: 51567
+response_chars: 7770
+prompt_words: 7048
+response_words: 1209
+sections:
+- name: header
+  start: 0
+  length: 439
+  fraction: 0.0085
+- name: skeleton
+  start: 439
+  length: 1480
+  fraction: 0.0287
+- name: prior_summary
+  start: 1919
+  length: 3761
+  fraction: 0.0729
+- name: plan
+  start: 5680
+  length: 18488
+  fraction: 0.3585
+- name: wiki
+  start: 17364
+  length: 27193
+  fraction: 0.5273
+- name: output_spec
+  start: 51361
+  length: 206
+  fraction: 0.004
+large_sections:
+- wiki
+directives_total: 26
+directives_covered: 18
+directives_missed:
+- kind: checklist
+  text: тло розповіді (narrative background — imperfective setting/scene)
+  covered: false
+  coverage_note: 1/7 keywords (14%)
+- kind: checklist
+  text: послідовність подій (sequence of events — perfective event chain)
+  covered: false
+  coverage_note: 2/7 keywords (29%)
+- kind: checklist
+  text: умовний спосіб (conditional mood — hypothetical actions with би/б)
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: must
+  text: '**MANDATORY — never omit.'
+  covered: false
+  coverage_note: 1/3 keywords (33%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 3/11 keywords (27%)
+- kind: inject_activity
+  text: match-up-negation-meaning
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: 'group-sort, focus: "Розподіліть дієслова за видом і контекстом: тло / подія
+    / загальна інструкція / конкретна команда", 10 items'
+  covered: false
+  coverage_note: marker missing

@@ -2,54 +2,50 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 8
-  evidence: The module misses the required `з + instrumental` preview construction
-    from the plan (e.g., "Вона з карими очима") and relies entirely on "У неї..."
-    and compound adjectives. It also misses the compoun
+  score: 6
+  evidence: All four planned H2 sections are present, but one planned exemplar pair
+    is only half-covered (`блакитноокий` has 0 occurrences), and the quiz marker is
+    `quiz-aspect-choice` instead of the planned adje
 - dimension: 2
   name: Linguistic accuracy
   score: 6
-  evidence: Repeated use of the calque/surzhyk "виглядати" for appearance ("Як виглядає
-    твій новий колега?", "Він виглядає дуже серйозно"). Textbooks classify this as
-    incorrect, preferring "мати вигляд". Addition
+  evidence: Most Ukrainian is clean, but the tip claiming `«Вона виглядає гарно»`
+    is wrong teaches false usage.
 - dimension: 3
   name: Pedagogical quality
-  score: 9
-  evidence: The text follows the PPP flow beautifully, with numerous well-integrated
-    contrast examples. However, failing to introduce the planned `з + instrumental`
-    construction removes an important stepping ston
+  score: 6
+  evidence: There are good contextual examples, but `Моя сестра завжди каже правду,
+    тому вона мені довіряє.` is logically backwards for the point being taught, and
+    `Моя нова колега дуже працьовитий спеціаліст` in
 - dimension: 4
   name: Vocabulary coverage
-  score: 9
-  evidence: Most required vocabulary is present, but the word `стосунок` (relationship),
-    which is explicitly required by the plan, is missing (the English word "relationships"
-    is used in Section 3 without its Ukr
+  score: 8
+  evidence: Required vocabulary is used repeatedly (`людина`, `характер`, `зовнішність`,
+    `привітний`, `щирий`, `працьовитий`, `терплячий`, `сусід`, `описувати`), and recommended
+    items like `впертий`, `чуйний`, `н
 - dimension: 5
   name: Exercise quality
-  score: 8
-  evidence: Exercises match the plan's focus, but `group-sort-traits` is placed after
-    the wrong section, creating a pedagogical disconnect between the teaching of character
-    traits and the subsequent test.
+  score: 5
+  evidence: Markers usually follow teaching, but `quiz-aspect-choice` does not match
+    the plan’s quiz focus, and duplicated fill-in markers distort the activity mix.
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: Excellent teacher persona. The cultural notes (e.g., the significance
-    of "добра людина" over "красива людина", and the positive connotation of "впертий")
-    are fantastic and engaging.
+  score: 8
+  evidence: The teacher voice is warm and specific; notes on `впертий` and `добра
+    людина` add useful cultural color without gamified filler.
 - dimension: 7
   name: Structural integrity
-  score: 10
-  evidence: The module exceeds the 2000-word target (3168 words), provides all required
-    sections, and maintains clean formatting.
+  score: 8
+  evidence: 'The module has all main sections and exceeds the target word count (pipeline:
+    2878), but duplicate fill-in markers leave the structure uneven.'
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: Strong, decolonized explanations of how Ukrainians view and describe people
-    and relationships (e.g., the distinction between a "знайомий", "товариш", and
-    a true "друг").
+  score: 8
+  evidence: The module is generally Ukrainian-centered, but the `виглядає гарно` note
+    turns a culture/usage tip into misinformation.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 9
-  evidence: Dialogues are natural and correctly formatted. They don't perfectly align
-    with the specific situational prompts in the plan, but they function well in context.
+  score: 8
+  evidence: Dialogues are named and multi-turn, but the `довіряє` example reads forced
+    to serve grammar rather than natural meaning.
 findings: []

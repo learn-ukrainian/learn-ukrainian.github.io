@@ -1,21 +1,26 @@
 ## VESUM Verification
 - Confirmed: щоб, мета, сказати, відповісти, пояснити, запитати, повідомлення, зрозуміти, непряма, мова, додати, навіщо, передати, попросити, пряма
-- Not found: None (All constituent words of terms like "непряма мова" are verified).
+- Not found: (none)
 
 ## Grammar Rules
-- Purpose Clauses: СУМ-11 (щоб) — "Приєднує підрядні речення мети." Same-subject: щоб + інфінітив (Я прийшов, щоб допомогти). Different-subject: щоб + минулий час (Він хоче, щоб я прийшов).
-- Reported Speech: Grade 9, Avramenko (§ 7) — Transforms direct speech into indirect using conjunctions: що (declarative), щоб (imperative/request), чи or question words (interrogative). "Я прийду" -> Він сказав, що прийде. "Допоможи" -> Він попросив, щоб я допоміг.
+- Пряма мова: Правопис §48 — З великої букви пишемо перше слово після двокрапки: а) коли це початок прямої мови (напр. Горлиця питає: «Чи, може, хто гніздечко зруйнував?»); б) коли цитату подано після слів автора як пряму мову.
 
 ## Calque Warnings
-- задавати запитання: Calque — ставити запитання / запитувати
-- рахувати, що: Calque — вважати, що (рахувати is for counting numbers)
-- вибачатися: Potential Calque — перепрошувати / просити вибачення (self-action reflexivity)
-- вірний: Calque (if meaning "correct") — правильний (вірний is "faithful")
+- з метою: канцеляризм/calque — щоб (разом з інфінітивом) або для (з іменником). Наприклад, замість "з метою виявлення" треба писати "щоб виявити".
+- задавати питання / задати питання: calque — поставити запитання / запитати.
+- питається: calque (від рос. "спрашивается") — постає питання / виникає питання / спитати б.
 
 ## CEFR Check
-- сказати: A1 — OK
-- мета: A2 — OK
+- щоб: A2 — OK
+- мета: B1 — ABOVE TARGET
 - повідомлення: A2 — OK
+- непряма (непрямий): A2 — OK
+- зрозуміти: A1 — OK
 - пояснити: A2 — OK
-- навіщо: A2 — OK
-- непряма мова: B1 term (pedagogically introduced as simplified concept at A2.7) — OK
+- відповісти: A2 — OK
+- навіщо: B1 — ABOVE TARGET
+- сказати: A1 — OK
+- додати: A2 — OK
+- передати: A2 — OK
+- попросити: A1 — OK
+- запитати: A1 — OK

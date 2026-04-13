@@ -72,7 +72,7 @@ vocabulary:
   gender: ''
   verified: true
 - word: непряма мова
-  translation: indirect speech, reported speech
+  translation: indirect/reported speech
   expression: true
   pos: ''
   gender: ''
@@ -83,51 +83,15 @@ vocabulary:
   pos: дієсл.
   gender: ''
   verified: true
+- word: я хочу, щоб...
+  translation: I want you to...
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
 - word: чи
   translation: if, whether
   expression: false
   pos: спол.
-  gender: ''
-  verified: true
-- word: причи́на
-  translation: reason, cause
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: результа́т
-  translation: result
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: бажа́ння
-  translation: wish, desire
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: проха́ння
-  translation: request
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: нака́з
-  translation: order, command
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: Я чув, що...
-  translation: I heard that...
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Мені сказали, що...
-  translation: I was told that...
-  expression: true
-  pos: ''
   gender: ''
   verified: true

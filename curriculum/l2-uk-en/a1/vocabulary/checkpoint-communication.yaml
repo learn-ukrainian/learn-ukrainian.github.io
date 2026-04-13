@@ -1,70 +1,4 @@
 vocabulary:
-- word: плака́т
-  translation: poster
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: квито́к
-  translation: ticket
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: напі́й
-  translation: drink
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: стіле́ць
-  translation: chair
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: Різдво́
-  translation: Christmas
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: кутя́
-  translation: kutia (traditional Christmas grain dish)
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: сві́чка
-  translation: candle
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: рані́ше
-  translation: earlier
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: гаря́чий
-  translation: hot
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: холо́дний
-  translation: cold
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: ра́зом
-  translation: together
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
 - word: але́
   translation: but
   expression: false
@@ -72,25 +6,25 @@ vocabulary:
   gender: ''
   verified: true
 - word: коли́
-  translation: when (conjunction)
+  translation: when
   expression: false
   pos: ім.
   gender: ''
   verified: true
-- word: Навза́єм
-  translation: Likewise!
+- word: кутя́
+  translation: kutia (traditional sweet grain pudding)
   expression: false
-  pos: присл.
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: святкува́ти
+  translation: to celebrate
+  expression: false
+  pos: дієсл.
   gender: ''
   verified: true
-- word: Вас також!
-  translation: You too!
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: прийти́
-  translation: to come
+- word: запроси́ти
+  translation: to invite
   expression: false
   pos: дієсл.
   gender: ''
@@ -101,21 +35,21 @@ vocabulary:
   pos: дієсл.
   gender: ''
   verified: true
-- word: сказа́ти
-  translation: to tell / to say
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: да́ти
-  translation: to give
+- word: сві́чка
+  translation: candle
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: запроси́ти
-  translation: to invite
+- word: ві́льний
+  translation: free
   expression: false
-  pos: дієсл.
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: Ходімо до мене!
+  translation: Let's go to my place!
+  expression: true
+  pos: ''
   gender: ''
   verified: true

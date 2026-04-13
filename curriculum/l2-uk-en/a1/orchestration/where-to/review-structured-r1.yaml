@@ -2,51 +2,51 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 9
-  evidence: The module strictly follows the plan, successfully explaining the directional
-    Accusative and its contrast with the Locative. All required vocabulary is used,
-    but the recommended word `повертатися` was
+  score: 7
+  evidence: Core grammar is covered, but the first dialogue uses `Я йду на роботу...
+    Потім іду в магазин` instead of the planned `на пошту` / `в аптеку` split-up scenario,
+    and `ULP` / `Episode 18` never appears.
 - dimension: 2
   name: Linguistic accuracy
   score: 10
-  evidence: Excellent. The explanation of inanimate masculine/neuter stability vs
-    feminine shifting is accurate. The use of prepositions, euphony, and cases is
-    flawless.
+  evidence: No Russianisms, Surzhyk, calques, paronym slips, bad case endings, or
+    forbidden Russian letters found; spot-checks with local VESUM/RAG confirmed forms
+    such as `Одесу`, `Львів`, `додому`, `вулицю`, an
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: The rule presentation is very clear. The comparison table for static vs
-    dynamic states (Де/Куди) is an outstanding teaching tool. Incorporating the Grade
-    4 helper words ("бачу — кого? що?") is a great
+  score: 7
+  evidence: The module has a clear PPP shape, but some rule presentation is too English-heavy
+    before examples, e.g. `There is excellent news for learners... the "No-Change"
+    rule...`.
 - dimension: 4
   name: Vocabulary coverage
-  score: 9
-  evidence: All required vocabulary is introduced naturally in context. The recommended
-    phrase `повертатися додому` was partially missed (`додому` is there, but not the
-    verb).
+  score: 8
+  evidence: All required plan vocabulary appears in prose, and several recommended
+    items do too, but planned dialogue vocabulary `пошта` and `аптека` is absent.
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: All required exercise markers are present and logically distributed, matching
-    the plan's `activity_hints`.
+  score: 9
+  evidence: 'All 4 expected markers are present and placed after the relevant teaching:
+    accusative formation, `Де?` vs `Куди?`, sorting, and `йти` vs `їхати`.'
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: The tone is encouraging and focused. The narrative context for the dialogues
-    makes the grammar feel immediately practical.
+  score: 8
+  evidence: 'Mostly teacherly, but some wording is overstated: `fundamental concept
+    in Ukrainian grammar` and `Ukrainian grammar forces you...`.'
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: The module is well-structured, comfortably exceeding the 1200-word target
-    at 1445 words. All headings match the plan exactly.
+  evidence: All planned H2 sections are present and ordered correctly; markers are
+    intact; pipeline word count is 1529, which is above the 1200 target.
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: Spot on. The explicit instruction to say "в Україну" (and never "на")
-    is an excellent and culturally critical inclusion.
+  score: 9
+  evidence: No Russia-centering or factual cultural distortion; the Ukrainian errand/travel
+    framing is acceptable.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: Dialogues are natural and correctly highlight the grammar points while
-    sounding like a real weekend conversation.
+  score: 8
+  evidence: Named speakers and a real errands scenario help, but the conversations
+    are still very question-led, and the first dialogue misses the more natural split-up
+    / meet-up pattern from the plan.
 findings: []

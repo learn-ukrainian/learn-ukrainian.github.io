@@ -1,38 +1,37 @@
-## Вступ: Кому ми даруємо радість? (~200 words total)
-- P1 (~80 words): [Introduction to the Dative case (давальний відмінок) concept as the "giving case." Explain the primary questions "Кому?" (to whom?) and "Чому?" (to what?). Introduce the core example: "Я даю книгу (кому?) сестрі" to illustrate the recipient function.]
-- P2 (~120 words): [Dialogue at the post office: A sender (Відправник) and a postal worker (Працівник пошти). The sender addresses a package to a student (студентові), a postcard to a sister (сестрі), and a toy to a child (дитині). This natural dialogue previews the three gender endings -ові, -і, and -і (for neuter).]
+## Давальний відмінок іменників чоловічого роду (~700 words total)
+- P1 (~100 words): Introduce the Dative case (давальний відмінок) for nouns, answering the questions "кому? чому?" (to whom? to what?). Explain its primary function: designating the recipient of an action (адресат дії). Provide a clear starting example: "Я даю подарунок студентові."
+- P2 (~120 words): Focus on II declension masculine nouns. Introduce the unique parallel endings: -ові/-еві/-єві and -у/-ю. Stress that both are grammatically correct and interchangeable (братові = брату, лікареві = лікарю), but explicitly note that -ові/-еві is a rich, stylistic feature of Ukrainian, especially preferred for living beings.
+- P3 (~120 words): Break down the rules for the -ові/-еві/-єві endings. Explain that hard stems take -ові (студентові, другові, батькові). Soft stems and sibilants take -еві (вчителеві, товаришеві, читачеві). Stems ending in a vowel take -єві (героєві, Андрієві).
+- P4 (~100 words): Break down the rules for the -у/-ю endings. Explain that hard and mixed stems take -у (студенту, товаришу), while soft stems take -ю (лікарю). Reiterate that while valid, learners should actively practice the -ові group for natural-sounding speech.
+- P5 (~100 words): Introduce the stylistic rule from Заболотний for multiple consecutive masculine dative nouns. Explain that to avoid phonological monotony, speakers alternate the endings. Provide examples: "подякувати сусідові Данилу" (instead of сусідові Данилові) and "написати видавцеві Сергію".
+- P6 (~80 words): Address common I and II declension masculine nouns ending in -о (Дмитро, батько, тато). Explain that they reliably take -ові in the dative case (Дмитрові, батькові, татові), aligning nicely with the pattern for masculine people.
+- P7 (~80 words): Provide 3-4 short example sentences using common A1/A2 masculine vocabulary to solidify the concept: "Я допомагаю братові", "Він пише листа другові", "Ми дякуємо вчителеві".
+- <!-- INJECT_ACTIVITY: fill-in-dative-masculine --> [fill-in, Put the noun in brackets into the dative case (e.g., подарувати [брат] → братові), 8 items]
 
-## Давальний відмінок іменників чоловічого роду (~650 words total)
-- P1 (~100 words): [Explanation of II declension masculine nouns. Introduce the concept of "parallel endings" (-ові/-еві/-єві vs. -у/-ю), explaining that both are grammatically correct but have different stylistic weights in modern Ukrainian.]
-- P2 (~120 words): [Hard stems (-ові/-у). Explain that -ові is the uniquely Ukrainian ending and is highly preferred for people (animate nouns). Examples: студент → студентові/студенту, брат → братові/брату, батько → батькові/батьку, пан → панові/пану.]
-- P3 (~120 words): [Soft stems and sibilants (-еві/-ю). Explain the usage of -еві after soft consonants and sibilants (ж, ч, ш, щ). Examples: вчитель → учителеві/учителю, лікар → лікареві/лікарю, товариш → товаришеві/товаришу, хлопець → хлопцеві/хлопцю.]
-- P4 (~100 words): [Stems ending in vowels (-єві/-ю). Explain the iotation after vowels. Examples: герой → героєві/герою, Сергій → Сергієві/Сергію, Андрій → Андрієві/Андрію.]
-- P5 (~110 words): [Stylistic rule from Zabolotnyi. Explain the "avoidance of monotony" rule: when two masculine dative nouns appear together (e.g., a title and a name), one should use -ові/-еві and the other -у/-ю. Example: "подякувати сусідові Данилу" or "пану директорові".]
-- P6 (~100 words): [I declension masculine nouns (e.g., Микола, Ілля). Explain that nouns ending in -а/-я follow the feminine pattern (ending in -і). Examples: Микола → Миколі, Ілля → Іллі. Note that despite the gender, the ending follows the declension class.]
-- <!-- INJECT_ACTIVITY: fill-in-masculine-dat --> [fill-in, Put the masculine noun in brackets into the dative case using the preferred -ові/-еві ending, 8 items]
+## Давальний відмінок іменників жіночого роду (~550 words total)
+- P1 (~100 words): Introduce I declension feminine nouns. Explain that hard and soft stems both take -і in the dative case (мама → мамі, сестра → сестрі, земля → землі, пісня → пісні). Nouns ending in -ія take -ії (станція → станції, надія → надії).
+- P2 (~110 words): Introduce the crucial phonetic rule: consonant alternation before -і. Explain that the consonants г, к, х change to з, ц, с. Emphasize that this is a natural, predictable phonetic shift in Ukrainian, not a random exception.
+- P3 (~110 words): Provide clear examples of each alternation. Show г→з (подруга → подрузі, книга → книзі), к→ц (рука → руці, доріжка → доріжці), and х→с (муха → мусі, свекруха → свекрусі).
+- P4 (~80 words): Address L2 error prevention and decolonization. Explicitly emphasize that "подрузі" is the only correct form, contrasting it with Russian-influenced incorrect forms (like *подругі) that learners might mistakenly produce.
+- P5 (~70 words): Briefly cover III declension feminine nouns (nouns ending in a consonant). Explain that they also take -і in the dative case. Provide examples: ніч → ночі, мати → матері, любов → любові, радість → радості.
+- P6 (~80 words): Provide example sentences demonstrating feminine indirect objects in natural contexts: "Я хочу подарувати квіти мамі", "Вона написала листа подрузі", "Брат розповів історію сестрі".
+- <!-- INJECT_ACTIVITY: quiz-feminine-alternation --> [quiz, Choose the correct dative ending for nouns with consonant alternation (подруга→подрузі vs. *подругі), 8 items]
 
-## Давальний відмінок іменників жіночого роду (~500 words total)
-- P1 (~100 words): [I declension (hard stems). Explain the ending -і for nouns like мама, сестра, жінка. Focus on nouns that do NOT involve consonant changes first. Examples: мама → мамі, сестра → сестрі, Олена → Олені.]
-- P2 (~100 words): [I declension (soft stems). Explain the ending -і (spelled -і or -ї). Examples: земля → землі, вулиця → вулиці, надія → надії, Марія → Марії. Contrast the -ії ending for nouns in -ія with simple soft stems.]
-- P3 (~150 words): [Consonant alternations (the "G-K-Kh to Z-Ts-S" rule). This is a critical Ukrainian feature. Explain that before the ending -і, velars change: г → з, к → ц, х → с. Examples: подруга → подрузі, книга → книзі, рука → руці, донька → доньці, муха → мусі, свекруха → свекрусі.]
-- P4 (~150 words): [III declension feminine nouns (ending in a consonant + "мати"). Explain the ending -і. Examples: ніч → ночі, любов → любові, радість → радості, подорож → подорожі. Special focus on "мати" → "матері".]
-- <!-- INJECT_ACTIVITY: quiz-feminine-alternation --> [quiz, Choose the correct dative ending for feminine nouns involving consonant alternation, 8 items]
+## Давальний відмінок іменників середнього роду (~400 words total)
+- P1 (~110 words): Introduce II declension neuter nouns. Explain that hard stems take the ending -у. Provide common examples: місто → місту, слово → слову, вікно → вікну, село → селу.
+- P2 (~100 words): Explain the rules for soft and mixed neuter stems. Soft stems take -ю (море → морю, серце → серцю). Mixed stems take -у (плече → плечу).
+- P3 (~100 words): Introduce IV declension neuter nouns, specifically those denoting babies or young animals (with suffixes -ат-/-ят-). Explain they take -аті/-яті. Provide examples: немовля → немовляті, курча → курчаті. Add that "ім'я" becomes "імені".
+- P4 (~90 words): Provide contextual examples for neuter nouns. Explain that they are often used in abstract contexts or locational assignments, such as: "дати назву місту" (give a name to the city) or "радіти сонцю" (to rejoice at the sun).
+- <!-- INJECT_ACTIVITY: group-sort-dative-gender --> [group-sort, Sort dative nouns by gender (masculine -ові/-у, feminine -і, neuter -у/-ю), 8 items]
 
-## Давальний відмінок іменників середнього роду (~350 words total)
-- P1 (~100 words): [II declension neuter (hard stems). Explain the ending -у. Examples: місто → місту, вікно → вікну, село → селу, слово → слову. Note the similarity to masculine -у.]
-- P2 (~100 words): [II declension neuter (soft stems). Explain the ending -ю. Examples: море → морю, серце → серцю, обличчя → обличчю, знання → знанню.]
-- P3 (~150 words): [IV declension (animals and babies ending in -а/-я with suffixes -ат-/-ят-). Explain the ending -аті/-яті. Examples: немовля → немовляті, курча → курчаті, теля → теляті, кошеня → кошеняті. This distinguishes "child-category" nouns from standard neuters.]
-- <!-- INJECT_ACTIVITY: group-sort-genders --> [group-sort, Sort dative nouns into three columns: Masculine (-ові/-у), Feminine (-і), and Neuter (-у/-ю), 8 items]
-
-## Давальний відмінок у реченні (~500 words total)
-- P1 (~120 words): [The Indirect Object sentence structure. Explain the typical word order: Subject + Verb + Dative (recipient) + Accusative (object). Use clear examples: "Тетяна подарувала (кому?) братові (що?) книгу" and "Вчитель показав (кому?) студентам (що?) карту".]
-- P2 (~130 words): [List and explanation of common "Dative verbs." Group them into categories: Giving (дарувати, дати), Telling (розповісти, сказати, написати, пояснити, відповісти), and Showing (показати). Provide a sentence for each.]
-- P3 (~130 words): [Contrast with Genitive and Prepositional constructions. Explain that while English uses "for" (for my brother), Ukrainian uses the dative case WITHOUT a preposition for direct recipients. Contrast "купити для брата" (Genitive - purpose) with "дати братові" (Dative - destination).]
-- P4 (~120 words): [Application Dialogue: Two friends discussing a birthday party. They use dative nouns and pronouns: "Що ти порадиш (кому?) мені?", "Я хочу подарувати (кому?) сестрі Олені (що?) квіти", "Ми зателефонуємо (кому?) другові Андрію".]
-- <!-- INJECT_ACTIVITY: match-up-dative-verbs --> [match-up, Match Ukrainian verb + dative noun phrases to their English meanings, 8 items]
-- <!-- INJECT_ACTIVITY: unjumble-dative-syntax --> [unjumble, Reorder words to form correct sentences with indirect objects and dative nouns, 6 items]
-
-## Підсумок (~150 words)
-- P1 (~150 words): [Follow the plan: Recap the main endings for each gender (M: -ові/-у, F: -і with alternations, N: -у/-ю). Self-check questions: 1. Які паралельні закінчення мають іменники чоловічого роду? (-ові/-у). 2. Як змінюється слово "подруга" в давальному відмінку? (подрузі). 3. Яке закінчення мають іменники середнього роду типу "немовля"? (-аті). Final encouraging sentence about mastering the case of "giving and telling."]
-
-Grand total: ~2350 words
+## Давальний відмінок у реченні (~550 words total)
+- P1 (~120 words): Explain the Two-object verb pattern (Direct + Indirect Object). Break down the structure: Subject + Verb + Dative (recipient) + Accusative (thing). Provide clear examples: "Тетяна подарувала братові книгу" and "Вчитель показав студентам карту."
+- P2 (~110 words): List and define common verbs that frequently require the Dative case for a recipient. Include: подарувати (to give as a gift), показати (to show), дати (to give), розповісти (to tell/narrate), написати (to write), пояснити (to explain), відповісти (to answer).
+- P3 (~120 words): Present a dialogue situation set at a post office addressing packages to different people.
+  Відправник: Доброго дня. Я хочу відправити ці пакунки.
+  Працівник пошти: Кому вони?
+  Відправник: Студентові Петренку — підручник. Сестрі Олені — листівка. А дитині — іграшка.
+- P4 (~100 words): Contrast the Dative case with the Genitive case to prevent structural confusion. Compare "дати братові" (give to brother - Dative destination) versus "немає брата" (no brother - Genitive absence/possession).
+- P5 (~100 words): Connect to earlier knowledge by showing how impersonal constructions used with pronouns ('мені треба') apply to nouns. Provide examples: "Студентові треба вчитися", "Мамі холодно", "Другові 25 років".
+- <!-- INJECT_ACTIVITY: match-up-verb-phrases --> [match-up, Match verb + dative noun phrases to their English meanings, 8 items]
+- <!-- INJECT_ACTIVITY: unjumble-dative-syntax --> [unjumble, Reorder words to form correct dative constructions with indirect objects (e.g., подарувати братові книгу), 6 items]

@@ -1,32 +1,29 @@
-## Dialogues (~320 words total)
-- P1 (~60 words): Introduction to the importance of storytelling in the past tense. Transition from isolated sentences ("I ate") to a connected narrative ("Yesterday I woke up, then I ate"). Contrast "Сьогодні я працюю" with "Учора я працював."
-- P2 (~100 words): Dialogue 1 — The Police Report. A witness describes a theft. Use vocabulary from the plan: "Я припаркував велосипед (m) біля магазину. Потім зайшов у кав'ярню (f). Коли вийшов, велосипед зник." Focus on the sequencing of actions to establish facts.
-- P3 (~100 words): Dialogue 2 — A typical day. Two friends catch up: "Як пройшов твій день? — Добре! Зранку я прокинувся о сьомій, поснідав і пішов на роботу." Focus on the division of the day into "зранку," "вдень," and "ввечері" to structure the conversation.
-- P4 (~60 words): Analysis of the dialogues. Point out how "потім" (then) and "а потім" (and then) act as the glue between verbs. Explain that in a story, we don't repeat the subject "я" (I) in every single sentence if the context is clear.
+## Dialogues (~330 words total)
+- P1 (~40 words): Introduce the communicative goal of narrating a past day. Explain that talking about your daily routine is one of the most common conversational topics, and it requires chaining together past events in a logical sequence.
+- P2 (~100 words): Present Dialogue 1 ("Як пройшов твій день?"). A masculine speaker describes his workday: "Зранку я прокинувся о сьомій. Я поснідав і пішов на роботу. Вдень я працював і обідав з колегою. Ввечері я дивився фільм і рано ліг спати." Include English translations for context.
+- P3 (~60 words): Analyze Dialogue 1. Point out the use of core time markers (зранку, вдень, ввечері) to give the story structure, and highlight the masculine past tense verb endings (-в/-вся) for "прокинувся", "пішов", "працював", "ліг".
+- P4 (~100 words): Present Dialogue 2 ("Що ти робила у суботу?"). A feminine speaker shares her fun weekend: "Зранку я ходила на ринок і купила фрукти. Потім я готувала обід... Ввечері ми з подругою ходили в ресторан." Include English translations.
+- P5 (~30 words): Analyze Dialogue 2. Highlight the feminine verb endings (-ла) such as "робила", "ходила", "купила", and note the use of "потім" (then) and "а потім" to sequence the narrative.
 
-## Розповідь про день (Narrating a Day) (~300 words total)
-- P1 (~100 words): Detailed explanation of time adverbs as anchors for a story: зранку (in the morning), вдень (in the afternoon), ввечері (in the evening), вночі (at night). Note the orthography and stress of "вдень" to avoid confusion with the phrase "в день" (on the day), as per decolonization notes.
-- P2 (~100 words): Mastering the logic of sequencing. Introduce "спочатку" (first/at first), "потім" (then), "після цього" (after that), and "нарешті" (finally). Show how these words create a chronological chain of events: "Спочатку я випив каву. Після цього я пішов у парк."
-- P3 (~100 words): Vocabulary focus on daily routine verbs in the past tense. Provide a table for high-frequency verbs with both masculine and feminine forms: прокинувся/прокинулася (woke up), поснідав/поснідала (had breakfast), пішов/пішла (went), обідав/обідала (had lunch), повернувся/повернулася (returned), ліг/лягла (lay down).
-- <!-- INJECT_ACTIVITY: ordering-daily-routine --> [Ordering, focus on putting daily actions in chronological order using time markers, 6 items]
+## Розповідь про день (Narrating a Day) (~330 words total)
+- P1 (~80 words): Introduce the core time markers for structuring a story chronologically: зранку (in the morning), вдень (in the afternoon), ввечері (in the evening), вночі (at night). Show how they establish the timeline of a day.
+- P2 (~80 words): Explain sequencing words that connect separate sentences into a cohesive story: спочатку (first), потім (then), після цього (after that), нарешті (finally). Provide a clear example: "Спочатку я поснідав. Потім я пішов на роботу. Після цього я обідав."
+- P3 (~90 words): Present the imperfective past tense of daily routine verbs, explicitly reminding learners of gender agreement. Show both masculine and feminine forms: прокинутися (прокинувся / прокинулася), поснідати (поснідав / поснідала), піти (пішов / пішла).
+- P4 (~80 words): Continue with the remaining high-frequency routine verbs: обідати (обідав / обідала), повернутися (повернувся / повернулася), лягти спати (ліг / лягла спати). Emphasize that these verbs form the backbone of any daily narrative.
+- <!-- INJECT_ACTIVITY: order-daily-routine --> [ordering, Put the daily routine in chronological order, 6 items]
 
 ## Мій учорашній день (My Yesterday) (~330 words total)
-- P1 (~120 words): Model Narrative — Anna's Day. A full-prose example of a female speaker narrating her day. "Учора був звичайний день. Зранку я прокинулася о пів на сьому. Я поснідала — їла кашу і пила каву. Потім я пішла на роботу." Use 8-10 sentences to show consistency in the "-ла" ending.
-- P2 (~100 words): Breakdown of the model narrative. Explain why "звичайний день" (ordinary day) is a good starting point. Point out the gender agreement between the speaker (Anna) and every verb (прокинулася, поснідала, пішла, обідала, купила, готувала, лягла).
-- P3 (~110 words): Transition to learner's practice. Provide a "Narrative Template" for the student to adapt. "Учора... (час)... я (дієслово). Потім я...". Encourage the combination of past tense with known A1 topics like food (салат, сік), places (офіс, кафе), and people (друг, колега).
-- <!-- INJECT_ACTIVITY: fill-in-narrative-flow --> [Fill-in-the-blanks, focus on choosing the correct time markers and sequenced verbs in context, 6 items]
-- <!-- INJECT_ACTIVITY: gender-consistency-drill --> [Fill-in-the-blanks, focus on choosing between masculine (-в) and feminine (-ла) forms for a female narrator, 4 items]
+- P1 (~50 words): Explain that a natural story combines time markers, sequencing words, past tense verbs, and known vocabulary (places, food, people) to create a rich, detailed narrative.
+- P2 (~120 words): Provide the model narrative — "Anna's yesterday." Text: "Учора був звичайний день. Зранку я прокинулася о пів на сьому. Я поснідала — їла кашу і пила каву. Потім я пішла на роботу. Вдень я обідала в кафе біля офісу. Я замовила салат і сік. Після роботи я ходила в магазин і купила продукти. Ввечері я готувала вечерю і дивилася серіал. О одинадцятій я лягла спати."
+- P3 (~60 words): Analyze Anna's story. Emphasize that because Anna is female, absolutely every verb must end in -ла (прокинулася, поснідала, пішла, обідала). Note how she integrated food (каша, кава, салат) and places (робота, кафе, магазин) effortlessly.
+- P4 (~100 words): Provide the "Your turn" template: "Учора... Зранку я... Потім... Вдень... Ввечері...". Instruct learners to build their own narrative by plugging in their own places (кафе, парк, магазин), food (каша, кава, салат), and people (друг, колега, подруга), bringing together everything learned in A1.
+- <!-- INJECT_ACTIVITY: fill-in-time-markers --> [fill-in, Complete the narrative with time markers and sequenced verbs, 6 items]
+- <!-- INJECT_ACTIVITY: fill-in-gender-consistency --> [fill-in, Practice gender consistency in narration (Female speaker 'Anna'), 4 items]
 
-## Summary (~300 words total)
-- P1 (~150 words): The "Narration Toolkit" recap. Provide a clear summary table:
-    * Times: зранку → вдень → ввечері → вночі.
-    * Sequencing: спочатку → потім → після цього → нарешті.
-    * Key Forms: Masculine endings (-в/-вся) vs. Feminine endings (-ла/-лася).
-- P2 (~150 words): Final self-check and practical task.
-    * Question Checklist:
-        - Чи використав я принаймні 5 дієслів у минулому часі? (Did I use at least 5 verbs?)
-        - Чи всі дієслова мають однаковий рід (чоловічий або жіночий)? (Are all verbs the same gender?)
-        - Чи є в моїй розповіді "спочатку" і "потім"? (Are there 'first' and 'then'?)
-    * Task: Tell the story of your yesterday aloud to a partner or yourself, making sure to include what you ate for breakfast (поснідав/поснідала) and when you went to sleep (ліг/лягла спати).
+## Підсумок (~330 words total)
+- P1 (~80 words): Recap the Narration toolkit's time structure. Remind learners that dividing the story into "зранку → вдень → ввечері → вночі" provides a clear, natural flow that native speakers expect when listening to a recounted day.
+- P2 (~80 words): Recap the sequencing words: спочатку, потім, після цього, нарешті. Emphasize that using these words is the secret to moving beyond disjointed, isolated sentences into a fluid, connected story.
+- P3 (~100 words): Summarize the daily routine past forms taught in this module: прокинувся/-лася, поснідав/-ла, пішов/пішла, обідав/-ла, повернувся/-лася, ліг/лягла спати. Remind learners that mastering this core list covers 80% of what happens in an average day.
+- P4 (~70 words): Give a final, critical reminder on gender consistency: male speakers must strictly use -в/-вся forms throughout their narrative, while female speakers must strictly use -ла/-лася. End with a self-check task: "Tell the story of your yesterday aloud using at least 5 of the routine verbs."
 
-Grand total: ~1250 words
+Grand total: ~1320 words

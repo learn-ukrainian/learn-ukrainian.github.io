@@ -1,63 +1,27 @@
 vocabulary:
-- word: метро́
-  translation: subway
+- word: тури́ст
+  translation: tourist
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: Кана́да
+  translation: Canada
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: з Канади
+  translation: from Canada
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: тому́
+  translation: therefore
   expression: false
   pos: ім.
   gender: с.
-  verified: true
-- word: у центрі
-  translation: in the center
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: на метро
-  translation: by subway
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Золоті ворота
-  translation: Golden Gate
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: пі́шки
-  translation: on foot
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: Я йду пішки
-  translation: I am walking on foot
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Скажіть, будь ласка
-  translation: Tell me, please
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: напра́во
-  translation: to the right
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: налі́во
-  translation: to the left
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: пря́мо
-  translation: straight
-  expression: false
-  pos: присл.
-  gender: ''
   verified: true
 - word: пло́ща
   translation: square
@@ -65,86 +29,56 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: шко́ла
-  translation: school
+- word: місце́вий
+  translation: local
   expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: робо́та
-  translation: work
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: Куди́
-  translation: To where? (direction)
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: Зві́дки
-  translation: From where? (origin)
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: Ви́бачте
-  translation: Excuse me
-  expression: false
-  pos: дієсл.
+  pos: прикм.
   gender: ''
   verified: true
 - word: діста́тися
-  translation: to get to / to reach
+  translation: to reach / to get to
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: ї́хати
-  translation: to go by vehicle
+- word: від метро
+  translation: from the metro
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ви́йдіть
+  translation: exit
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: від
-  translation: from
+- word: по́тім
+  translation: then
   expression: false
-  pos: прийм.
+  pos: присл.
   gender: ''
   verified: true
-- word: до
-  translation: to
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: ву́лиця
-  translation: street
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: сходи
-  translation: stairs
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: порт
-  translation: port
+- word: вокза́л
+  translation: train station
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: пляж
-  translation: beach
+- word: ї́дьте
+  translation: drive / travel
   expression: false
-  pos: ім.
-  gender: ч.
+  pos: дієсл.
+  gender: ''
   verified: true
-- word: Я хочу каву
-  translation: I want coffee
+- word: Де тут музей?
+  translation: Where is the museum here?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: А як дістатися від метро?
+  translation: And how do I get there from the metro?
   expression: true
   pos: ''
   gender: ''

@@ -48,7 +48,7 @@ vocabulary:
   gender: ж.
   verified: true
 - word: пан
-  translation: Mr. / sir
+  translation: Mr.
   expression: false
   pos: ім.
   gender: ч.
@@ -60,121 +60,31 @@ vocabulary:
   gender: ч.
   verified: true
 - word: ма́ма
-  translation: mother
+  translation: mom
   expression: false
   pos: ім.
   gender: ж.
   verified: true
 - word: та́то
-  translation: father / dad
+  translation: dad
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: приві́т
-  translation: hi
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: телефо́н
-  translation: phone
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: на столі
-  translation: on the table
+- word: А в тебе?
+  translation: And with you?
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: ключі́
-  translation: keys
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: у кишені
-  translation: in the pocket
+- word: ходи сюди!
+  translation: come here!
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: будьте обережні
-  translation: be careful
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: до побачення
-  translation: goodbye
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Добрий ранок
-  translation: Good morning
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Добрий вечір
-  translation: Good evening
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: На добраніч
-  translation: Good night
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Смачного
-  translation: Bon appetit / enjoy your meal
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: зо́шит
-  translation: notebook
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: хочу їсти
-  translation: I want to eat
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: маши́на
-  translation: car
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: ка́зка
-  translation: fairy tale
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: пита́ння
-  translation: question
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: маю рацію
-  translation: to be right / to have a point
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: ходи сюди
-  translation: come here
+- word: Добрий день
+  translation: Good day
   expression: true
   pos: ''
   gender: ''

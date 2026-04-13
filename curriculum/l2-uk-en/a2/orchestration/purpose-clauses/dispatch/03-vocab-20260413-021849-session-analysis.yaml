@@ -1,0 +1,88 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T00-18-c8ce169a.json
+phase: vocab
+prompt_chars: 20563
+response_chars: 1324
+prompt_words: 3385
+response_words: 158
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.0388
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.0112
+- name: plan
+  start: 1028
+  length: 19535
+  fraction: 0.95
+large_sections:
+- plan
+directives_total: 14
+directives_covered: 0
+directives_missed:
+- kind: must
+  text: '" You must use the structure **щоб** plus an infinitive when the person performing
+    the main action and the person performing the goal action are exactly the same
+    individual.'
+  covered: false
+  coverage_note: 3/17 keywords (18%)
+- kind: must
+  text: For this, you must use **щоб** followed immediately by the verb in its past
+    tense form.
+  covered: false
+  coverage_note: 2/12 keywords (17%)
+- kind: must
+  text: You must use **щоб** and the past tense verb agreeing with the new subject.
+  covered: false
+  coverage_note: 2/10 keywords (20%)
+- kind: must
+  text: If the original speaker used the pronoun **я** (I), you must change it to
+    **він** (he) or **вона** (she) to match the person you are talking about.
+  covered: false
+  coverage_note: 1/15 keywords (7%)
+- kind: must
+  text: Instead, you must use the particle **чи** (if/whether).
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: must
+  text: However, if you are reporting a command, you must use **щоб** (in order to,
+    so that) followed by the past tense verb.
+  covered: false
+  coverage_note: 4/14 keywords (29%)
+- kind: must
+  text: 'Always ask yourself: "Am I reporting a fact, or am I reporting what someone
+    wants another person to do?" If it involves an action someone else must perform,
+    use **щоб** and the past tense verb.'
+  covered: false
+  coverage_note: 3/20 keywords (15%)
+- kind: must
+  text: Because you are not speaking directly to the person at that exact moment,
+    you must use «що» and «щоб» to set the context and give instructions clearly.
+  covered: false
+  coverage_note: 3/18 keywords (17%)
+- kind: inject_activity
+  text: fill-in-schob-forms
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-tomuscho-vs-schob
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: unjumble-schob-clauses
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-reported-speech
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: unjumble-reorder-words-to-form-correct-purpose-clauses-and-reported-speech-sentences
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-choose-between-and-to-complete-sentences
+  covered: false
+  coverage_note: marker missing

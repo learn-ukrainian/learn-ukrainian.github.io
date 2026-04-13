@@ -1,35 +1,27 @@
-## Діалоги (~330 words total)
-- P1 (~50 words): Introduction to the social context of food in Ukraine—how discussing what you're eating for lunch ("Що ти їси?") is a primary way colleagues and friends bond. Mention the cultural distinction between the verbs "to eat" and "to drink" regarding soups.
-- D1 (~110 words): Breakfast conversation between two colleagues. One describes eating porridge (*каша*) and drinking coffee (*кава*), while the other mentions their children eating eggs (*яйця*) and drinking milk (*молоко*). Focus on singular and plural present tense forms of *їсти* and *пити*.
-- P2 (~60 words): Analysis of the first dialogue. Identify the high-frequency phrases used: *Що ти їси?* and *Я їм...*. Highlight the contrast between the irregular *їси* and the standard *п'єш*.
-- D2 (~110 words): Lunch break scenario. Two friends unpacking lunch boxes. One has a sandwich (*бутерброд*) and tea (*чай*), while the other has salad (*салат*) and juice (*сік*). They discuss wanting water (*вода*) later. Focus on the inanimate masculine and feminine objects in the accusative.
+## Діалоги (Dialogues) (~330 words total)
+- P1 (~50 words): Introduction to the topic of food and drinks, setting the scene for daily meals (`сніданок`, `обід`, `вечеря`) and the verbs used to describe eating and drinking habits.
+- P2 (~140 words): Dialogue 1 — Breakfast conversation. Two colleagues discuss their morning meals. Includes the text: "— Що ти їш на сніданок? — Я їм кашу і п'ю каву. — А Олена? — Вона їсть хліб з маслом і п'є чай. — А діти? — Вони їдять яйця і п'ють молоко." Showcases full conjugation of `їсти` and `пити` in a natural context.
+- P3 (~140 words): Dialogue 2 — At lunch. A conversation about lunch orders. Includes the text: "— Що ви їсте на обід? — Ми їмо суп і салат. — А що п'єте? — Ми п'ємо воду або сік. — Я теж хочу суп. — Добре, замовляй!" Reviews `їсти` and `пити` with plural subjects and introduces the verb `хотіти` (to want).
 
-## Їсти і пити (~330 words total)
-- P1 (~80 words): Detailed breakdown of the verb *їсти* (to eat). Explain its unique, irregular status in Ukrainian grammar—it belongs neither to Group I nor Group II. Provide the full paradigm: *я їм, ти їси, він/вона їсть, ми їмо, ви їсте, вони їдять*.
-- P2 (~60 words): Phonetic focus on the letter *ї*. Use the wiki brief's advice to explain that *їсти* must be pronounced as [йісти], not [істи]. Provide three example sentences using different subjects: *Я їм суп*, *Ми їмо яблуко*, *Діти їдять банан*.
-- P3 (~80 words): Detailed explanation of the verb *пити* (to drink). While it follows Group I patterns, highlight the elision/shift where the *и* disappears and the endings start with *’ю* or *’є*. Provide the paradigm: *я п'ю, ти п'єш, він/вона п'є, ми п'ємо, ви п'єте, вони п'ють*.
-- P4 (~60 words): Practice sentences for *пити*. Focus on natural pairings: *Я п'ю воду*, *Ти п'єш каву*, *Вони п'ють сік*. Mention that unlike English "to have a drink," Ukrainians use the direct verb *пити* for almost all beverages.
-- <!-- INJECT_ACTIVITY: verb-conjugation-drill --> [fill-in, focus: conjugating їсти and пити in present tense, 8 items]
-- P5 (~50 words): The "Soup Rule." Explain that in Ukraine, you "eat" (*їсти*) soup and borscht, even if they are liquid. Contrast this with "drinking" (*пити*) tea or compote. Use the example: *Я їм борщ, але я п'ю чай*.
+## Їсти і пити (To Eat and To Drink) (~330 words total)
+- P1 (~110 words): Introduction to the two essential, high-frequency daily verbs `їсти` (to eat) and `пити` (to drink). Note that `їсти` is irregular and does not follow the standard Group I or II patterns, while `пити` is a Group I verb with a shifting stem.
+- P2 (~110 words): Present tense conjugation table and explanation for `їсти` (я їм, ти їси, він/вона їсть, ми їмо, ви їсте, вони їдять). Highlight the common L2 error of confusing `я їм` (I eat) with `він їсть` (he eats). Provide examples: `Я їм суп.` and `Вони їдять кашу.`
+- P3 (~110 words): Present tense conjugation table and explanation for `пити` (я п'ю, ти п'єш, він/вона п'є, ми п'ємо, ви п'єте, вони п'ють). Emphasize the pronunciation of the apostrophe. Provide examples: `Я п'ю воду.` and `Ми п'ємо чай.`
+- <!-- INJECT_ACTIVITY: fill-in-conjugation --> [fill-in, Conjugate the verbs їсти (irregular) and пити (Group I), 8 items]
 
-## Знахідний відмінок — неживе (~340 words total)
-- P1 (~80 words): Introduction to the Accusative Case (*Знахідний відмінок*). Explain the concept of the "direct object"—the thing being acted upon. Use the Ukrainian school prompt "Бачу що?" (I see what?) as the mental trigger for this case when dealing with inanimate objects.
-- P2 (~80 words): The Masculine and Neuter rule: No change. Explain that words like *хліб*, *сік*, *молоко*, and *м'ясо* look exactly the same in the accusative as they do in the dictionary. Provide examples: *Я їм хліб* (m), *Я п'ю молоко* (n).
-- P3 (~90 words): The Feminine rule: The -а → -у and -я → -ю shift. This is the primary grammatical change at the A1 level. Illustrate with clear transformations: *вода* → *воду*, *кава* → *каву*, *риба* → *рибу*, *каша* → *кашу*. Explain that this signals the noun is the object of the action.
-- <!-- INJECT_ACTIVITY: accusative-form-builder --> [fill-in, focus: forming feminine accusative (-у/-ю) vs masc/neut (no change), 8 items]
-- <!-- INJECT_ACTIVITY: noun-change-sorting --> [group-sort, focus: identifying which nouns change in the accusative, 8 items]
-- P4 (~90 words): Using the Accusative with the verb *хотіти* (to want) and ordering phrases. Explain the phrase *Мені, будь ласка, ...* from the wiki brief, where the object must be in the accusative. Example: *Мені, будь ласка, піцу і воду*.
-- <!-- INJECT_ACTIVITY: accusative-choice-quiz --> [quiz, focus: choosing the correct accusative ending for food/drink items, 6 items]
+## Знахідний відмінок — неживе (Accusative Inanimate) (~330 words total)
+- P1 (~90 words): Introduce the concept of the direct object (`Знахідний відмінок` - Accusative case). Explain the Ukrainian school approach: the accusative answers the question "Бачу що?" (What do I see/eat/drink?). For inanimate objects like food, the question is `що?`. E.g., `Я їм (що?) хліб.` and `Я п'ю (що?) каву.`
+- P2 (~80 words): Explain the rule for Masculine and Neuter inanimate nouns: NO CHANGE. They look exactly like their nominative (dictionary) forms. Provide examples to reassure learners: `хліб` → `хліб` (`Я їм хліб`), `сік` → `сік` (`Я п'ю сік`), `молоко` → `молоко` (`Я п'ю молоко`), `яйце` → `яйце` (`Я їм яйце`).
+- P3 (~160 words): Explain the critical rule for Feminine nouns: the ending `-а` changes to `-у`, and `-я` changes to `-ю`. Emphasize that this is the most important accusative change for A1 learners. Provide clear contrasting examples: `кава` → `каву` (`Я п'ю каву`), `вода` → `воду` (`Я п'ю воду`), `риба` → `рибу` (`Я їм рибу`), `каша` → `кашу` (`Я їм кашу`), `картопля` → `картоплю` (`Я їм картоплю`). Point out that this rule applies to any verb taking a direct object (`їм`, `п'ю`, `хочу`).
+- <!-- INJECT_ACTIVITY: fill-in-accusative-endings --> [fill-in, Form the accusative case for feminine (-а/-я → -у/-ю) and masculine/neuter (no change), 8 items]
+- <!-- INJECT_ACTIVITY: group-sort-accusative --> [group-sort, Sort nouns based on how they change in the accusative case (inanimate), 8 items]
+- <!-- INJECT_ACTIVITY: quiz-accusative-selection --> [quiz, Select the correct accusative form to complete the sentence, 6 items]
 
-## Підсумок (~320 words total)
-- P1 (~80 words): Summary of the core grammar. Recap that *їсти* is irregular and requires memorization, while *пити* has a specific spelling shift. Remind the learner of the critical feminine ending change -а → -у.
-- P2 (~60 words): "Watch Out" section: Address the common Russianism *кофе* (incorrect) vs the Ukrainian *кава* (correct), and the importance of using *сир* for both cheese and cottage cheese at this level.
-- P3 (~60 words): Final overview of the Accusative Inanimate: Masc/Neut = Nom; Fem = -у/-ю. Contrast *Я п'ю сік* (no change) with *Я п'ю каву* (change).
-- P4 (~120 words): Interactive Self-Check.
-    - Can you conjugate *їсти* for all pronouns? (Try: *Я ..., ти ..., вони ...*)
-    - Can you conjugate *пити*? (Try: *Я ..., він ..., ми ...*)
-    - Say three things you eat today using the accusative: *Я їм ...* (e.g., *суп, рибу, яблуко*)
-    - Say three things you drink today: *Я п'ю ...* (e.g., *чай, воду, сік*)
-    - What is the accusative form of *картопля*? (Answer: *картоплю*)
+## Підсумок — Summary (~330 words total)
+- P1 (~165 words): A concise recap of the Accusative inanimate rules. Remind learners that Masculine and Neuter nouns do not change form (`хліб`, `молоко` stay the same). Reiterate that Feminine nouns ending in `-а` change to `-у`, and those ending in `-я` change to `-ю` (`кава` → `каву`, `картопля` → `картоплю`). Mention that this applies after verbs like `їсти` and `пити`.
+- P2 (~165 words): Provide a short self-check test in a bulleted Q&A format.
+  * Test: Я їм ___ (`риба` → `рибу`).
+  * Test: Я п'ю ___ (`вода` → `воду`).
+  * Self-check: Say 3 things you eat and 3 things you drink today. Use the correct accusative form for each item.
 
 Grand total: ~1320 words

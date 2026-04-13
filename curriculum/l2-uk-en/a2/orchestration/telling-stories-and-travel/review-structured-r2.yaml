@@ -2,49 +2,50 @@ round: 2
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 8
-  evidence: Deductions for missing required questions from the plan in the dialogues.
-    Scenario 2 is missing "Як доберемося? Поїдемо потягом чи полетимо?" and "Що будемо
-    робити?". Scenario 3 is missing "Що найбіль
+  score: 7
+  evidence: 'Required vocab is covered, but two plan items are not fully delivered:
+    the Scenario 1 content outline promises guided storytelling “given a sequence
+    of pictures or prompts,” and the module never provi'
 - dimension: 2
   name: Linguistic accuracy
-  score: 7
-  evidence: 'Found several critical errors: a Russianism superlative ("сама активна"),
-    a mistranslation of intent vs reality ("мало трапитися"), and a phraseological
-    calque ("отримав багато вражень").'
+  score: 10
+  evidence: No Russianisms, Surzhyk, calques, paronym errors, or Ukrainian-form errors
+    found in the Ukrainian text. Spot-checked VESUM forms passed.
 - dimension: 3
   name: Pedagogical quality
-  score: 9
-  evidence: Excellent breakdown of "Stage vs. Action" principle for imperfective/perfective.
-    Good examples of future tense formation and gender agreement in past tense.
+  score: 7
+  evidence: 'The aspect explanations are clear, but Section 1 stops at explanation
+    plus analysis and does not add the guided retelling practice promised by the plan.
+    One English gloss also mis-teaches vocabulary: '
 - dimension: 4
   name: Vocabulary coverage
   score: 10
-  evidence: All required and recommended vocabulary are used smoothly and contextually
-    throughout the text.
+  evidence: 'All required plan words appear in prose: `подорож`, `розповісти/розповідати`,
+    `трапитися`, `квиток`, `потяг`, `вокзал`, `зупинитися`, `доїхати`, `сподобатися`,
+    `враження`. Recommended items are also p'
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: Exact match with the 4 `activity_hints` provided in the plan. Logical
-    placement.
+  score: 9
+  evidence: All four planned exercise types are present as markers and placed after
+    the relevant teaching sections. No visible count or sequencing problem.
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: Positive, encouraging tone. Very clear and natural phrasing without relying
-    on gamified corporate language.
+  score: 9
+  evidence: Tone is teacherly and mostly substantive; examples are concrete and travel-focused.
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: All headers and sections are perfectly ordered. The word count is 2794,
-    well above the 2000 target.
+  evidence: All H2 sections from the plan are present and ordered correctly. Pipeline
+    word count is 2848, so the module is safely above target.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Superb emphasis on authentic Ukrainian city names (Київ, Львів) and transportation
-    terminology ("подорож", "двірець", warning against "білет" and "путешествіє").
+  evidence: No Russian-centered framing or cultural inaccuracies found. Settings like
+    `Карпати`, `Одеса`, `вокзал`, `площа Ринок` are appropriate.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 8
-  evidence: The dialogues are realistic and contextualize the grammar well, but docked
-    points due to missing the questions defined in the plan outline.
+  score: 7
+  evidence: 'Scenario 3 is mostly interview-style: `Де ти була? / Як ви доїхали? /
+    Що ви там бачили? / Що тобі найбільше сподобалося?` with short reactive answers.
+    It reads functional, not especially natural.'
 findings: []

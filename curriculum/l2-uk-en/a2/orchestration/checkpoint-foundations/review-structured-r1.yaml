@@ -2,56 +2,53 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 10
-  evidence: The module strictly follows the plan outline, integrating the `Заболотний
-    Grade 5-6` reference naturally ("According to the standard curriculum guidelines,
-    such as those found in the classic *Заболотн
+  score: 6
+  evidence: 'The required/recommended vocabulary is present, but the plan reference
+    `Заболотний Grade 5-6` is never cited (`Заболотний` appears 0 times), and Part
+    3 gives only an English paraphrase instead of the '
 - dimension: 2
   name: Linguistic accuracy
-  score: 10
-  evidence: 'Flawless grammatical execution. The text accurately models complex genitive
-    case rules for numerical agreement ("Два нові столи" vs "П''ять старих столів")
-    and correctly contrasts aspectual verb pairs '
+  score: 7
+  evidence: No Russianisms, Surzhyk, paronym misuse, or forbidden Russian characters
+    were found, but the rule `Numbers 5 and above always require the Genitive plural...
+    The numbers 2, 3, and 4... requiring the No
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: Provides deep, substantial pedagogical value. For example, explaining
-    the historical Old East Slavic roots of numbers 5 and above ("originally nouns
-    in Old East Slavic... literally translating to a ph
+  score: 7
+  evidence: 'The module has many examples, but it opens with a long English preamble:
+    `Learning a language requires stopping to review what you know... Mastering these
+    forms moves you away from speaking in broken '
 - dimension: 4
   name: Vocabulary coverage
   score: 10
-  evidence: 'All required words (`вправа`, `перевірка`, `контрольна точка`, `завдання`,
-    `текст`, `речення`, `відповідь`) and recommended words (`правильний`, `варіант`,
-    `обрати`, `написати`) are woven organically '
+  evidence: 'All required plan words appear in prose: `вправа`, `перевірка`, `контрольна
+    точка`, `завдання`, `текст`, `речення`, `відповідь`; recommended `правильний`,
+    `варіант`, `обрати`, `написати` also appear.'
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: The exercise placeholders correspond precisely to the `activity_hints`
-    in the plan and evaluate the exact material taught in the preceding sections,
-    ensuring active engagement and retention.
+  score: 4
+  evidence: 'The prose promises `<!-- INJECT_ACTIVITY: error-correction-mixed -->`,
+    but the inline YAML has no such id; only `quiz-mixed-grammar`, `fill-in-transformation`,
+    and `fill-in-production` exist. In addit'
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: The teacher persona is strong, direct, and structured. It sets clear,
-    objective expectations for the checkpoint while remaining encouraging through
-    its use of accessible, real-world examples and dialo
+  score: 7
+  evidence: The teacher voice is not gamified, but lines like `Mastering these forms
+    moves you away from speaking in broken phrases` and `This checkpoint confirms
+    your solid understanding...` read as generic fill
 - dimension: 7
   name: Structural integrity
-  score: 10
-  evidence: The text is cleanly formatted in Markdown, hits all planned sections,
-    and significantly exceeds the required word count (1994 words vs the 1500 target),
-    demonstrating thoroughness.
+  score: 9
+  evidence: All planned H2 sections are present and ordered cleanly; formatting is
+    intact; pipeline word count is 2493, so the module is safely above target.
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: The module goes beyond mere translation, actively guarding against colonial
-    linguistic habits by explicitly warning learners away from prevalent Russianisms
-    ("вірний" meaning "correct") and calques ("
+  score: 9
+  evidence: No Russia-centering or cultural inaccuracies found. The module treats
+    Ukrainian grammar on its own terms.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: The dialogues feature distinct, natural voices ("Олена" and "Марко", "Вчитель"
-    and "Анна") engaging in contextually appropriate conversations that successfully
-    model the grammar targeted by the lesson
+  score: 9
+  evidence: The peer-study setup from the plan is preserved, the speakers are named,
+    and both dialogues are multi-turn rather than transactional.
 findings: []

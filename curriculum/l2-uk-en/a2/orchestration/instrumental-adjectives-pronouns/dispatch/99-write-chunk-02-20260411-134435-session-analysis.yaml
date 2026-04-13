@@ -1,0 +1,65 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T11-43-9bb0fa33.json
+phase: write-chunk-02
+prompt_chars: 47549
+response_chars: 4580
+prompt_words: 6503
+response_words: 724
+sections:
+- name: header
+  start: 0
+  length: 473
+  fraction: 0.0099
+- name: skeleton
+  start: 473
+  length: 1682
+  fraction: 0.0354
+- name: prior_summary
+  start: 2155
+  length: 3513
+  fraction: 0.0739
+- name: plan
+  start: 5668
+  length: 12327
+  fraction: 0.2592
+- name: wiki
+  start: 11501
+  length: 29300
+  fraction: 0.6162
+- name: output_spec
+  start: 47295
+  length: 254
+  fraction: 0.0053
+large_sections:
+- wiki
+directives_total: 21
+directives_covered: 14
+directives_missed:
+- kind: checklist
+  text: гарний (nice, beautiful)
+  covered: false
+  coverage_note: 1/3 keywords (33%)
+- kind: checklist
+  text: сусід (neighbor (male))
+  covered: false
+  coverage_note: 1/3 keywords (33%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: inject_activity
+  text: match-up-nom-ins
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-pronoun-gender
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-adj-endings
+  covered: false
+  coverage_note: marker missing

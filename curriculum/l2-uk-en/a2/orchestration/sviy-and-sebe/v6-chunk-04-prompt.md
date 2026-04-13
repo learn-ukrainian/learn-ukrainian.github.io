@@ -1,20 +1,23 @@
-# Section-by-Section Generation — Section 4/5
+# Section-by-Section Generation — Section 4/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 56: Своє та себе (A2, A2.8 [Refinement and Graduation])
-**Section to write:** Свій та себе у мовленні (Свій and Себе in Speech) (~440 words total)
+**Section to write:** Свій та себе у мовленні (Свій and Себе in Speech) (~440 words)
 **Word target for this section:** 440 words (aim for 484 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Свій та себе у мовленні (Свій and Себе in Speech) (~440 words total)
-- P1 (~140 words): [Dialogue between friends discussing daily routines and habits. Use `свій` and `себе` in a natural flow. Example: `Я завжди беру з собою парасольку. А ти? Я почуваю себе добре у своєму місті, тому рідко кудись їду. Але я купив собі нову машину, щоб їздити до своєї бабусі.`]
-- P2 (~150 words): [Short reading passage: "Мій ранок". A narrative describing a typical morning: `Я прокидаюся у своєму ліжку, дивлюся на себе у дзеркало, готую собі каву і починаю свою роботу.` This reinforces the "subject = owner/recipient" logic in a connected text.]
-- P3 (~150 words): [Troubleshooting common errors. Address the L2 trap of using `його` when `свій` is needed, and the omission of adverbs after `почувати себе`. Use the wiki warning: `Вона добре себе поводить` is often better as `Вона добре поводиться`—explain why both might be heard but one is more idiomatic.]
-- <!-- INJECT_ACTIVITY: error-correction-sviy-sebe --> [Error-correction, Find and fix incorrect usage of свій and себе in a short paragraph, 6 items]
+## Свій та себе у мовленні (Свій and Себе in Speech) (~440 words)
+- P1 (~100 words): Explain how to use "свій" and "себе" to sound natural and idiomatic in daily storytelling. Introduce a short reading text about a daily routine to show these pronouns in a continuous, realistic context.
+- P2 (~120 words): Short reading practice text. A narrator describes their morning independence: "Я прокидаюся і готую собі сніданок. Беру свою парасольку і йду на свою роботу. Я почуваю себе добре, коли все йде за моїм планом."
+- P3 (~120 words): Address typical L2 direct-translation mistakes. Highlight and correct three specific errors: *Він любить його дружину (must be свою to mean his own), *Я почуваю себе (must have an adverb like добре/погано, "почувати себе" alone is incomplete), and translating English "myself" with "себе" instead of "сам" when meaning "without help" (*Я зробив це себе -> Я зробив це сам).
+- P4 (~100 words): Conversational dialogue demonstrating natural conversational flow between two friends discussing habits: "Я завжди беру з собою парасольку. А ти?" - "А я довіряю своїй інтуїції і почуваю себе чудово."
+- <!-- INJECT_ACTIVITY: error-correction-sviy-sebe --> [error-correction, Find and fix incorrect usage of свій and себе, 6 items]
+
+Grand total: ~2200 words
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -22,7 +25,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-*(mirror)*». І так само ви скажете про інших людей: «Вони часто бачать себе у великому дзеркалі». Форма слова ніколи не змінюється, хто б не виконував цю дію. Це робить правило дуже простим. Як і слово «свій», займенник «себе» має кілька різних форм. Він завжди змінюється за відмінками. У родовому та знахідному відмінках ми використовуємо базову форму «себе». Наприклад: «Він дуже любить тільки себе і нікого більше». У давальному та місцевому відмінках форма змінюється на коротке слово «собі». Наприклад: «Я завжди бажаю собі великого успіху перед складним іспитом». Або: «Вона несе цей важкий рюкзак на собі». В орудному відмінку ми завжди використовуємо красиву форму «собою». Наприклад: «Він склав дуже складний іспит і тепер справді задоволений собою». Або: «Я завжди ношу цю стару фотографію із собою в гаманці». Як бачите, ці закінчення дуже схожі на відмінювання інших знайомих вам займенників або прикметників. Їх потрібно просто запам'ятати і часто використовувати під час розмов. Займенник «себе» дуже часто працює разом із певними дієсловами. Найпопулярніші з них — це «почувати себе» та «вести себе». Коли ви хочете сказати, як ви фізично або морально почуваєтеся, ви використовуєте цю конструкцію. Але тут є одна надзвичайно важлива деталь. Англомовні студенти часто роблять одну типову помилку. Вони просто кажуть: «Я почуваю себе...» і відразу ставлять крапку. В українській мові так говорити не можна. Після фрази «почувати себе» ви обов'язково повинні додати конкретний **прислівник** *(adverb)*. Ви повинні чітко відповісти на запитання «як?». Наприклад: «Сьогодні я почуваю себе дуже добре». Або: «Вчора він почував себе трохи погано після довгої роботи». Це правило також працює для дієслова «вести себе». Ви маєте сказати: «Ця маленька дитина веде себе дуже погано в школі». Форма «собі» також має своє власне спеціальне значення в українських розмовах. Українці дуже часто використовують її, коли вони говорять про **самостійні** *(independent)* дії або якусь особисту вигоду. Вона чітко показує, що людина робить щось саме для себе, а не для когось іншого. Наприклад: «Завтра я хочу купити собі нову **парасольку** *(umbrella)* на ринку». Тут «собі» означає те саме, що «для мене». Інший популярний приклад — це ваші внутрішні процеси. Ми часто кажемо друзям: «Ти взагалі можеш **уявити** *(to imagine)* собі цю ситуацію?». У таких фразах форма «собі» робить речення набагато більш емоційним та особистим. Вона показує ваш внутрішній світ. Або коли людина живе тихо і спокійно, ми часто кажемо про неї: «Він живе сам по собі». Ви вже точно знаєте багато українських дієслів, які закінчуються на суфікс «-ся». Наприклад: «називатися», «вчитися», «сміятися». Але чи знаєте ви, звідки взагалі з'явився цей суфікс? Насправді суфікс «-ся» — це дуже стара і максимально коротка форма займенника «себе». Колись дуже давно люди говорили довгими фразами: «Я мию себе зранку». Але жива мова завжди шукає простіші і коротші форми. Тому з часом фраза «мити себе» логічно перетворилася на одне коротке слово «митися». Фраза «одягати себе» швидко стала словом «одягатися». Такі зворотні дієслова показують, що дія завжди повертається назад на самого суб'єкта. Розуміння історії слова «себе» дійсно допомагає набагато краще зрозуміти всю українську граматику. Ви починаєте бачити логіку мови. <!-- INJECT_ACTIVITY: fill-in-sebe-cases --> <!-- INJECT_ACTIVITY: match-up-sebe-idioms -->
+use the form "sebe". The dative and locative cases always require the very soft form "sobi". The instrumental case has its single unchangeable form "sobou". You no longer need to learn long tables of endings for each individual person.* Let's look much closer at how the Genitive and Accusative forms operate in everyday Ukrainian speech. Because these two cases share the exact same identical form, you will hear it constantly in direct object situations. If you want to say "I see myself", you simply use the Accusative case directly after the active verb. It clearly shows who is receiving the action. When you decide to buy a necessary item for your own benefit, you will frequently use the Genitive case. This is almost always paired with the common preposition "для". :::info **Grammar box** — The reflexive pronoun is universally identical for all possible subjects in a sentence. "Я бачу себе" (I see myself), "Ти бачиш себе" (You see yourself), and "Він бачить себе" (He sees himself) all use the exact same word without any modifications. ::: Давальний відмінок звучить як «собі». Ми дуже часто використовуємо це слово, коли робимо щось корисне для власної вигоди. Наприклад, мій старший брат вчора купив собі велику чашку смачної кави. Також ми можемо просто взяти цей новий зошит собі для цікавої роботи. Орудний відмінок звучить як «собою». Моя найкраща подруга завжди радіє і дуже пишається собою після складного іспиту. Це дуже природний і традиційний спосіб щиро говорити про власні емоції щодня. > *The dative case sounds like "sobi". We very often use this word when we do something useful for our own benefit. For example, my older brother bought himself a large cup of delicious coffee yesterday. Also, we can simply take this new notebook for ourselves for interesting work. The instrumental case sounds like "sobou". My best friend always rejoices and is very proud of herself after a difficult exam. This is a very natural and traditional way to sincerely talk about one's own emotions every day.* To truly master natural Ukrainian, you must learn several fixed expressions that rely on these reflexive forms. The dative form is **собі** (oneself, dative), and the instrumental form is **собою** (oneself, instrumental). For instance, to ask how someone is physically doing, we use the phrase **почувати себе** (to feel). When teachers talk about children, they often discuss how well they **вести себе** (to behave). If you do well on a test, you might say **горджуся** (I am proud) to express satisfaction with yourself. Sometimes you just need to **уявити** (to imagine) a situation, which typically takes the dative reflexive form. Also, don't forget to take your **парасолька** (umbrella) with you when it rains! Interestingly, the common reflexive verb suffix "-ся" historically evolved directly from this exact pronoun. Words ending in "-ся" literally mean the action is directed right back at the speaker. <!-- INJECT_ACTIVITY: fill-in, Insert the correct case form of себе (себе, собі, собою) --> <!-- INJECT_ACTIVITY: match-up, Match expressions with себе to their meanings -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -53,8 +56,8 @@ objectives:
     speech.
 dialogue_situations:
   - setting: 'Family argument about whose things are whose: Це мій светр (m)! Ні,
-      це свій — я його купив собі! Вона взяла свою сумку (f), а не твою. Він дивиться
-      на себе у дзеркало (n).'
+      він мій — я купив його собі сам! Вона взяла свою сумку (f), а не твою. Він
+      дивиться на себе у дзеркало (n).'
     speakers:
       - Брат
       - Сестра
@@ -511,14 +514,100 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
 
-TARGET: 70-90% Ukrainian.
+**You are in PHASE 6: A2 finale (A2 M51-M69)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 40%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 40% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
+
+TARGET: 70-90% Ukrainian. THIS IS A HARD GATE — the audit REJECTS modules outside this range.
+
 LANGUAGE ROLES:
-- PRIMARY: Ukrainian for everything.
-- ENGLISH: Only in vocabulary tables and one-line grammar notes where absolutely necessary.
-- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English.
-A2 register. Concrete everyday vocabulary. No literary language, no metaphors. Near-full Ukrainian immersion. Ukrainian sentences max 15 words. Max 2 clauses. All cases allowed. Simple subordinate clauses only. Full aspect pairs. No participles.
+- PRIMARY: Ukrainian for narrative, dialogues, examples, section intros, cultural notes, Reading Practice blocks, learning callouts.
+- METALANGUAGE: For abstract grammar terms, you may provide ONE parenthetical English translation on FIRST use only, e.g. `**доконаний вид** (perfective aspect)`. Subsequent uses must be Ukrainian only.
+- VOCABULARY TABLE: English glosses live here, not in prose.
+- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English. Never mix mid-sentence.
+
+⚠️ HARD STRUCTURAL RULES — READ THIS TWICE:
+- FORBIDDEN: long English narrative paragraphs explaining grammar. If a concept needs more than ONE sentence of English scaffolding, it goes in a `:::info` or `:::tip` callout, NOT in the main prose.
+- FORBIDDEN: mirroring a Ukrainian paragraph with an English translation paragraph. Write ONE paragraph in Ukrainian, move on.
+- FORBIDDEN: `> *English translation*` blockquotes after Ukrainian dialogues. They were required at A1 but they cap immersion below 50% — at A2-late they MUST be removed.
+
+ESCAPE HATCH (the 'Dual Ladder'):
+For genuinely abstract grammar concepts, you may use ONE `:::info` or `:::tip` callout written in English per section to clarify the concept. Because callouts are stripped from the immersion metric, this serves as on-demand scaffolding for struggling learners without penalising the immersion score. Do NOT abuse this — at most one English callout per major section.
+
+A2 register. Concrete everyday vocabulary. No literary language, no metaphors. Ukrainian sentences max 15 words. Max 2 clauses. All cases allowed. Simple subordinate clauses only (який/що/коли). Full aspect pairs. No participles.
+
+CHECKLIST (re-read before writing each section):
+- [ ] Every narrative paragraph in Ukrainian?
+- [ ] Zero `> *English translation*` blockquotes after dialogues?
+- [ ] At most ONE English `:::info` callout per major section?
+- [ ] Metalanguage terms parenthetically translated on first use only (max 2 per section)?
+- [ ] Reading Practice / Читаємо українською block in EVERY major section?
+
 
 GRAMMAR RULES:
 - Max 15 words per Ukrainian sentence
@@ -530,18 +619,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (4/4).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] свій (one's own)
+- [ ] себе (oneself, accusative/genitive)
+- [ ] собі (oneself, dative)
+- [ ] собою (oneself, instrumental)
+- [ ] почувати себе (to feel)
+- [ ] вести себе (to behave)
+- [ ] горджуся (I am proud)
+- [ ] уявити (to imagine)
+- [ ] дзеркало (mirror)
+- [ ] парасолька (umbrella)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Свій та себе у мовленні (Свій and Себе in Speech) (~440 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

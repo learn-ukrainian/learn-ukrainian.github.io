@@ -1,7 +1,7 @@
 # Audit Report: M66 — participles-passive.md
 **Level:** B1 | **Module:** M66 | **Phase:** B1.6 | **Pedagogy:** PPP | **Target:** 4000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-04-10 21:26:35
+**Generated:** 2026-04-11 14:01:38
 
 ## Configuration
 **Type:** B1-grammar
@@ -18,121 +18,98 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | fill-in | Вставте правильну граматичну форму (пасивний дієприкметник) у речення. | 6 | 8 | ❌ |
-| 2 | match-up | З'єднайте інфінітив дієслова з правильним пасивним дієприкметником. | 6 | 8 | ❌ |
-| 3 | error-correction | Знайдіть і виправте помилки у творенні пасивних дієприкметників (зверніть увагу  | 6 | 6 | ✅ |
-| 4 | fill-in | Вставте пасивний дієприкметник у правильному відмінку, узгоджуючи його з іменник | 6 | 8 | ❌ |
-| 5 | quiz | Визначте синтаксичну роль (функцію) виділеного пасивного дієприкметника або конс | 6 | 8 | ❌ |
-| 6 | quiz | Визначте, чим є виділене слово: пасивним дієприкметником чи звичайним прикметник | 6 | 8 | ❌ |
-| 7 | reading | Прочитайте текст про пасивні дієприкметники та дайте відповіді на запитання. | 0 | 3 | ❌ |
-| 8 | essay-response | Напишіть 5 речень, використовуючи нову лексику з розділу «Творення пасивних дієп | 1 | 6 | ❌ |
-| 9 | group-sort | Розподіліть пасивні дієприкметники за суфіксом, за допомогою якого вони утворені | 12 | 6 | ✅ |
-| 10 | true-false | Визначте, чи є ці твердження про пасивні дієприкметники правильними (Правда) чи  | 6 | 8 | ❌ |
-| 11 | match-up | З'єднайте українські пасивні дієприкметники з їхніми англійськими перекладами. | 8 | 8 | ✅ |
-| 12 | translate | Оберіть правильний український переклад для англійських словосполучень. | 6 | 6 | ✅ |
-| 13 | unjumble | Складіть правильні речення зі слів, звертаючи увагу на пасивні конструкції. | 6 | 6 | ✅ |
+| 1 | fill-in |  | 6 | 8 | ❌ |
+| 2 | match-up |  | 6 | 8 | ❌ |
+| 3 | quiz |  | 6 | 8 | ❌ |
+| 4 | fill-in |  | 6 | 8 | ❌ |
+| 5 | essay-response |  | 1 | 6 | ❌ |
 
 **Summary:**
-- Total activities: 13 (target: 0-4) ❌
-- Unique types: 10 (minimum: 3) ✅
-- Priority types used: 5/7 (error-correction, essay-response, fill-in, match-up, quiz) ✅
-- Low density activities: 8
-
-## LINT ERRORS
-- ❌ Line 79: Invalid Checkbox format. Use '- [ ]' or '- [x]'.
-- ❌ Line 80: Invalid Checkbox format. Use '- [ ]' or '- [x]'.
-- ❌ Line 81: Invalid Checkbox format. Use '- [ ]' or '- [x]'.
-- ❌ Line 82: Invalid Checkbox format. Use '- [ ]' or '- [x]'.
-- ❌ Line 83: Invalid Checkbox format. Use '- [ ]' or '- [x]'.
+- Total activities: 5 (target: 0-4) ❌
+- Unique types: 4 (minimum: 3) ✅
+- Priority types used: 4/7 (essay-response, fill-in, match-up, quiz) ✅
+- Low density activities: 5
 
 ## PEDAGOGICAL VIOLATIONS
 - **[LEVEL_RESTRICTION]** Activity 'essay-response' not allowed at B1
   - FIX: Use level-appropriate activities. 'essay-response' is introduced at A2+.
-- **[COMPLEXITY]** fill-in 'Вставте правильну граматичну форму (пасивний дієприкметник) у речення.' has 6 items (minimum: 8)
+- **[COMPLEXITY]** fill-in '' has 6 items (minimum: 8)
   - FIX: Add more items. B1 fill-in requires at least 8 items.
-- **[COMPLEXITY]** match-up 'З'єднайте інфінітив дієслова з правильним пасивним дієприкметником.' has 6 pairs (target: 12-16)
+- **[COMPLEXITY]** match-up '' has 6 pairs (target: 12-16)
   - FIX: Adjust number of pairs to 12-16.
-- **[COMPLEXITY]** fill-in 'Вставте пасивний дієприкметник у правильному відмінку, узгоджуючи його з іменник' has 6 items (minimum: 8)
+- **[COMPLEXITY]** quiz '' has 6 items (minimum: 8)
+  - FIX: Add more items. B1 quiz requires at least 8 items.
+- **[COMPLEXITY]** fill-in '' has 6 items (minimum: 8)
   - FIX: Add more items. B1 fill-in requires at least 8 items.
-- **[COMPLEXITY]** quiz 'Визначте синтаксичну роль (функцію) виділеного пасивного дієприкметника або конс' has 6 items (minimum: 8)
-  - FIX: Add more items. B1 quiz requires at least 8 items.
-- **[COMPLEXITY]** quiz 'Визначте, чим є виділене слово: пасивним дієприкметником чи звичайним прикметник' has 6 items (minimum: 8)
-  - FIX: Add more items. B1 quiz requires at least 8 items.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначте, чим є виділене слово: пасивним дієприкметником чи звичайним прикметник' Q5 prompt length 4 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY]** reading 'Прочитайте текст про пасивні дієприкметники та дайте відповіді на запитання.' has 0 items (minimum: 3)
-  - FIX: Add more items. B1 reading requires at least 3 items.
-- **[COMPLEXITY]** true-false 'Визначте, чи є ці твердження про пасивні дієприкметники правильними (Правда) чи ' has 6 items (minimum: 8)
-  - FIX: Add more items. B1 true-false requires at least 8 items.
-- **[COMPLEXITY]** match-up 'З'єднайте українські пасивні дієприкметники з їхніми англійськими перекладами.' has 8 pairs (target: 12-16)
-  - FIX: Adjust number of pairs to 12-16.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть правильні речення зі слів, звертаючи увагу на пасивні конструкції.' item 1 has 5 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть правильні речення зі слів, звертаючи увагу на пасивні конструкції.' item 2 has 5 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть правильні речення зі слів, звертаючи увагу на пасивні конструкції.' item 3 has 4 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть правильні речення зі слів, звертаючи увагу на пасивні конструкції.' item 4 has 6 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть правильні речення зі слів, звертаючи увагу на пасивні конструкції.' item 5 has 6 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть правильні речення зі слів, звертаючи увагу на пасивні конструкції.' item 6 has 5 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[STATE_STANDARD_LOW_IMMERSION]** Module 66 has 87.8% immersion (target: 90.0%+)
+- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "**Смажена картопля** (fried potatoes — adjective) vs.". Shares significant keywords with sentence at index 176.
+  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
+- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "**Підсмажена на салі картопля** (potatoes fried in salo — passive participle).*
+> *2.". Shares significant keywords with sentence at index 177.
+  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
+- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "**Вчена людина** (a learned/educated person — adjective) vs.". Shares significant keywords with sentence at index 178.
+  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
+- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "**Вивчений студентом матеріал** (material learned by the student — passive participle).*
+> *3.". Shares significant keywords with sentence at index 179.
+  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
+- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "**Спечений бабусею торт** (a cake baked by grandma — passive participle).*
+> *4.". Shares significant keywords with sentence at index 180.
+  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
+- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "**Битий шлях** (a beaten track/well-trodden path — adjective, metaphorical) vs.". Shares significant keywords with sentence at index 181.
+  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
+- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'the sound...'.
+  - FIX: Vary sentence structure.
+- **[RUSSICISM_DETECTED]** Found 2 Russicism(s) in content: 'давайте подивимося' → подивімося
+  - FIX: Replace Russicisms with standard Ukrainian equivalents. These are Russian calques that have standard Ukrainian forms. See Phase B prompt 'Russianisms Pre-Output Scan' table.
+- **[GLOSSARY_LIST_IN_PROSE]** Glossary-style list (3 items) in narrative prose starting: '**У моїй кімнаті стоїть пофарбований стіл.** — *In my room stands a painted tabl' — vocab tables belong in vocabulary YAML
+  - FIX: Move vocabulary definitions to vocabulary/{slug}.yaml or rewrite as natural prose with words introduced in context
+- **[STATE_STANDARD_LOW_IMMERSION]** Module 66 has 44.5% immersion (target: 90.0%+)
   - FIX: Add more Ukrainian content to reach 90%+ immersion for full immersion modules
-- **[SALAD_EXCESSIVE_INLINE_GLOSSES]** paragraph has 7 inline **term** (gloss) markers across 7 sentence(s) — too dense; move to vocabulary section or convert to UK paragraph + translation block
-  - FIX: Convert inline-gloss paragraphs to monolingual Ukrainian paragraphs followed by a blockquote + italic English translation block. See docs/best-practices/language-salad.md.
-- **[SALAD_EXCESSIVE_INLINE_GLOSSES]** paragraph has 4 inline **term** (gloss) markers across 4 sentence(s) — too dense; move to vocabulary section or convert to UK paragraph + translation block
-  - FIX: Convert inline-gloss paragraphs to monolingual Ukrainian paragraphs followed by a blockquote + italic English translation block. See docs/best-practices/language-salad.md.
-- **[SALAD_EXCESSIVE_INLINE_GLOSSES]** paragraph has 4 inline **term** (gloss) markers across 4 sentence(s) — too dense; move to vocabulary section or convert to UK paragraph + translation block
-  - FIX: Convert inline-gloss paragraphs to monolingual Ukrainian paragraphs followed by a blockquote + italic English translation block. See docs/best-practices/language-salad.md.
 
 ## Recommendation
-**📝 UPDATE** (severity 70/100)
+**🔄 REWRITE** (severity 100/100)
 
-- Revision recommended (severity 70/100)
-- 20 violations (severe - consider revision)
-- 5 format errors
+- 15 violations (severe - consider revision)
+- Immersion 40% off target (major rebalancing needed)
 - Activity density below minimum
 
 ## Gates
-- **Words:** ⚠️ 3876/4000 (raw: 4068) (124 short)
-- **Activities:** ✅ 13/0
-- **Density:** ❌ 8 < 6
-- **Unique_types:** ✅ 10/3 types
+- **Words:** ✅ 5169/4000 (raw: 5419)
+- **Activities:** ✅ 5/0
+- **Density:** ❌ 5 < 6
+- **Unique_types:** ✅ 4/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ❌ 0/5
+- **Engagement:** ❌ 2/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 75/25
 - **Structure:** ✅ Valid Structure
-- **Lint:** ❌ 5 Format Errors
-- **Pedagogy:** ✅ Level-appropriate
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 87.8% (target 85-100% (B1.7-8 Ukraine))
-- **Richness:** ❌ 56% < 95% min (grammar) - REWRITE needed
+- **Immersion:** ❌ 44.5% LOW (target 85-100% (B1.7-8 Ukraine))
+- **Richness:** ❌ 58% < 95% min (grammar) - REWRITE needed
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
 
 ## Richness Details
-**Score:** 56% (minimum: 95%)
+**Score:** 58% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 41 | 24 | 100% | 20% | 20.0% |
+| examples | 65 | 24 | 100% | 20% | 20.0% |
 | engagement | 0 | 5 | 0% | 15% | 0.0% |
 | dialogues | 0 | 4 | 0% | 15% | 0.0% |
-| variety | 0.98 | - | 98% | 10% | 9.8% |
-| cultural | 1 | 3 | 33% | 10% | 3.3% |
+| variety | 0.92 | - | 92% | 10% | 9.2% |
+| cultural | 2 | 3 | 67% | 10% | 6.7% |
 | realworld | 20 | 3 | 100% | 10% | 10.0% |
 | visual | 0 | 3 | 0% | 5% | 0.0% |
-| questions | 17 | 5 | 100% | 5% | 5.0% |
+| questions | 24 | 5 | 100% | 5% | 5.0% |
 | tables | 1 | 2 | 50% | 4% | 2.0% |
 | paragraph_var | 1.00 | - | 100% | 3% | 3.0% |
 | proverbs | 10 | 1 | 100% | 3% | 3.0% |
-| **TOTAL** | | | | | **56.1%** |
+| **TOTAL** | | | | | **58.9%** |
 
 ### Dryness Flags & Fixes
 - ❌ **NO_ENGAGEMENT**
@@ -172,32 +149,23 @@
     
     IMPORTANT: Dialogues OUTSIDE blockquotes (>) using **Speaker:** format are NOT detected.
     Place dialogues inside [!dialogue] callouts or blockquotes.
-- ❌ **LOW_CULTURAL_ANCHOR**
-  - FIX:
-    Add more cultural references (need 3+ total). Include:
-    - Named Ukrainian places (Поділ, Бесарабський ринок, Острозька академія)
-    - Ukrainian traditions or customs
-    - Contemporary Ukrainian life examples
 
 ## Low Density Activities
 | Activity | Type | Items | Required | Fix |
 |----------|------|-------|----------|-----|
-| Вставте правильну граматичну форму (пасивний дієприкметник) у речення. | fill-in | 6 | 8 | Add 2 more items |
-| З'єднайте інфінітив дієслова з правильним пасивним дієприкметником. | match-up | 6 | 8 | Add 2 more items |
-| Вставте пасивний дієприкметник у правильному відмінку, узгоджуючи його з іменник | fill-in | 6 | 8 | Add 2 more items |
-| Визначте синтаксичну роль (функцію) виділеного пасивного дієприкметника або конс | quiz | 6 | 8 | Add 2 more items |
-| Визначте, чим є виділене слово: пасивним дієприкметником чи звичайним прикметник | quiz | 6 | 8 | Add 2 more items |
-| Прочитайте текст про пасивні дієприкметники та дайте відповіді на запитання. | reading | 0 | 3 | Add 3 more items |
-| Напишіть 5 речень, використовуючи нову лексику з розділу «Творення пасивних дієп | essay-response | 1 | 6 | Add 5 more items |
-| Визначте, чи є ці твердження про пасивні дієприкметники правильними (Правда) чи  | true-false | 6 | 8 | Add 2 more items |
+|  | fill-in | 6 | 8 | Add 2 more items |
+|  | match-up | 6 | 8 | Add 2 more items |
+|  | quiz | 6 | 8 | Add 2 more items |
+|  | fill-in | 6 | 8 | Add 2 more items |
+|  | essay-response | 1 | 6 | Add 5 more items |
 
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 543 | Included in Core |
-| **Творення пасивних дієприкметників** | ✅ | 1067 | Included in Core |
-| **Відмінювання пасивних дієприкметників** | ✅ | 513 | Included in Core |
-| **Дієприкметник чи прикметник? Процес ад'єктивації** | ✅ | 522 | Included in Core |
-| **Практика: пасивні дієприкметники у тексті та контексті** | ✅ | 615 | Included in Core |
-| **Підсумок та перехід до M59** | ✅ | 616 | Included in Core |
+| **Intro/Narrative** | ✅ | 445 | Included in Core |
+| **Творення пасивних дієприкметників (~1000 слів)** | ✅ | 1225 | Included in Core |
+| **Відмінювання пасивних дієприкметників (~700 слів)** | ✅ | 794 | Included in Core |
+| **Дієприкметник чи прикметник? (~550 слів)** | ✅ | 958 | Included in Core |
+| **Практика: пасивні дієприкметники у тексті (~800 слів)** | ✅ | 1055 | Included in Core |
+| **Підсумок та перехід до M59** | ✅ | 692 | Included in Core |

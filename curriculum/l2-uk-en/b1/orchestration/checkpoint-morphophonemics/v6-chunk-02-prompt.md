@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-нашу систему дієслівних часів. В українській мові ми маємо минулий, теперішній та майбутній час, але головна складність ховається у **виді дієслова** (*verb aspect*). Минулий час може описувати довгий процес або вже завершений результат. Якщо ви кажете «я **писав** (*was writing*) довгий лист», ви акцентуєте увагу на процесі дії. Це класичний **недоконаний вид** (*imperfective aspect*). Але якщо ви хочете повідомити про результат, ви використовуєте **доконаний вид** (*perfective aspect*): «я нарешті **написав** (*have written*) цей лист». Ця сама логіка бездоганно працює і для планів на майбутнє. Коли ви обіцяєте «я **буду писати** (*will be writing*) звіт увесь вечір», ви плануєте витратити на це час. Якщо ж ви твердо гарантуєте результат, ви кажете «я **напишу** (*will write*) його до ранку». Розуміння цієї різниці є ключовим для щоденного спілкування. Майбутній час недоконаного виду має дві паралельні форми, і на рівні B1 ви повинні впевнено користуватися обома. Перша форма — це відома вам аналітична конструкція: «я **буду працювати** (*will be working*) над проєктом». Вона складається з допоміжного дієслова та інфінітива. Друга форма — це елегантна синтетична: «я **працюватиму** (*will work*) без перерви». Вона утворюється додаванням специфічного суфікса до інфінітива і завжди звучить дуже природно та сучасно. Обидві ці форми чудово описують тривалий процес у майбутньому. Але якщо ваша дія буде одноразовою або короткочасною, ми використовуємо просту форму доконаного виду: «я трохи **попрацюю** (*will work a bit*)» або «я швидко це **зроблю** (*will do*)». Свідомий вибір форми майбутнього часу допомагає точно передати ваші наміри: чи ви плануєте довгу рутину, чи гарантуєте швидкий результат вашої праці. <!-- INJECT_ACTIVITY: quiz, choosing between доконаний/недоконаний based on completion vs ongoing action --> Окрім граматики часів, ми активно збагачували наш словниковий запас. У модулі про психологічний портрет і стосунки ми вивчили багато нових слів, щоб зробити розповіді про людей живими та цікавими. Ми більше не обмежуємося простими прикметниками на кшталт «добрий» чи «поганий». Тепер ми можемо впевнено сказати, що людина надзвичайно **щира** (*sincere*), абсолютно **врівноважена** (*balanced*) або, навпаки, імпульсивна. Ми навчилися красиво описувати **зовнішність** (*appearance*), звертаючи увагу на риси обличчя, статуру та стиль одягу. Ці нові слова дозволяють нам створювати глибокі психологічні портрети наших знайомих, колег чи членів сім'ї. Точне використання такої портретної лексики одразу показує, що ваш поточний рівень володіння українською мовою став значно вищим і багатшим. Щоб об'єднати граматику і нову лексику, давайте подивимося на невелику розповідь. «Мій університетський товариш Олег останнім часом дуже змінився. Раніше він **був** (*was*) невпевненим, часто мовчав і вкрай рідко усміхався. Він постійно **носив** (*wore*) старі окуляри та безформні светри. Але минулого року він раптово **знайшов** (*found*) престижну роботу, і його зовнішність кардинально змінилася. Тепер він виглядає як справжній професіонал: завжди акуратний, спокійний, врівноважений і дуже щирий у спілкуванні. Наступного тижня ми обов'язково **зустрінемося** (*will meet*) в кафе, і я детально **розпитаю** (*will ask*) його про ці трансформації. Я впевнений, що він із радістю **розповідатиме** (*will be telling*) мені про свої нові успіхи». У цьому тексті ми чітко бачимо, як минулий процес змінюється минулим результатом, а портретна лексика допомагає побачити позитивну еволюцію персонажа. <!-- INJECT_ACTIVITY: fill-in, completing descriptions of people and their relationships -->
+or a specific, punctual achievement. :::info **Grammar box: The Aspect-Tense Link** Remember that only imperfective verbs (**недоконаний вид**) have a present tense form. Perfective verbs (**доконаний вид**) exist only in the past and future because a "completed result" cannot happen exactly at the moment of speaking. ::: <!-- INJECT_ACTIVITY: quiz, tense-aspect-identification --> Майбутній час в українській мові пропонує нам три цікаві шляхи для вираження намірів. Якщо ви хочете підкреслити сам процес, ви можете обрати аналітичну форму «буду працювати» або синтетичну форму «працюватиму». Обидві вони належать до недоконаного виду, але синтетична форма часто надає вашій мові особливої елегантності та вишуканості. Проте, коли вам потрібно вказати на конкретний результат у майбутньому, ви використовуєте доконаний вид, наприклад «попрацюю». Розуміння цих нюансів дозволяє вам точно планувати свій день та професійне життя, уникаючи двозначності у розмовах з колегами чи друзями. Moving from verbs to nouns, our review of Module 03 brings us back to the art of portraiture and human connections. Describing someone’s character requires more than just basic adjectives; it requires an understanding of how personality traits like being **щирий** (sincere) or **врівноважений** (balanced) define a person's **зовнішність** (appearance) and their relationships. At the B1 level, we move beyond simple labels to complex descriptions that use specific nouns to indicate family ties and professional connections. Коли ми описуємо своїх близьких, ми часто звертаємо увагу не лише на риси обличчя, а й на те, як людина поводиться у різних ситуаціях. Мій найкращий друг завжди залишається спокійним навіть під час стресу, тому я називаю його врівноваженим. Його зовнішність також відображає цей внутрішній спокій: він має добрі очі та щиру посмішку, яка викликає довіру у кожного. Вміння правильно поєднувати ці слова допомагає нам не лише ідентифікувати людей, а й виражати своє ставлення до них, що є надзвичайно важливим для побудови міцних соціальних зв’язків в українському суспільстві. <!-- INJECT_ACTIVITY: fill-in, portrait-vocabulary --> To close this section, let’s synthesize these elements into a short narrative. Imagine describing a friend you haven't seen for several years. You will need to use the past tense to describe how they used to look, the present to explain their current state, and the future to predict how your relationship will evolve. This exercise tests your ability to navigate across time while maintaining lexical accuracy and correct grammatical agreement. Минулого тижня я зустрів свого старого знайомого, якого не бачив майже п'ять років. Раніше він був дуже худим і сором'язливим, але зараз він виглядає як дорослий, впевнений у собі чоловік. Його зовнішність стала більш солідною, хоча його вдача залишилася такою ж щирою, як і в студентські роки. Він розповів мені, що наступного місяця обов'язково поїде у відпустку до Карпат і надішле мені багато фотографій. Я впевнений, що ми будемо підтримувати зв'язок і надалі, адже справжня дружба не зникає з часом, навіть якщо ми рідко бачимося. :::tip **Did you know?** Descriptions of character in Ukrainian often use nouns related to "soul" (**душа**) or "heart" (**серце**). A "sincere" person is often described as having an «відкрита душа» (open soul), emphasizing the cultural value of emotional honesty. :::
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -629,7 +629,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -642,18 +709,68 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] чергування (alternation — sound change in related word forms)
+- [ ] спрощення (simplification — consonant cluster reduction)
+- [ ] мішана група (mixed group — nouns with шиплячий stem ending)
+- [ ] відміна (declension type — I through IV)
+- [ ] подвоєння (doubling — in орудний of III відміна)
+- [ ] однина (singular number)
+- [ ] множина (plural number)
+- [ ] відмінок (grammatical case)
+- [ ] орудний відмінок (instrumental case)
+- [ ] родовий відмінок (genitive case)
+- [ ] здоров'я (health)
+- [ ] біль (pain — чергування і→о: болить)
+- [ ] ліки (medicine — pluralia tantum)
+- [ ] лікар (doctor — II відміна, -ар suffix)
+- [ ] скаржитися (to complain — на + Зн.)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Огляд чергувань (~650 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

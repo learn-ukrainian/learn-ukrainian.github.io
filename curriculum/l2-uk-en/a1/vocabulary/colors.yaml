@@ -1,33 +1,57 @@
 vocabulary:
-- word: ко́лір
-  translation: color
+- word: кори́чневий
+  translation: brown
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: роже́вий
+  translation: pink
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: помара́нчевий
+  translation: orange
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: фіоле́товий
+  translation: purple
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: те́мний
+  translation: dark
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: те́мно-
+  translation: dark (prefix)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: сві́тлий
+  translation: light
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: сві́тло-
+  translation: light (prefix)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: пра́пор
+  translation: flag (m)
   expression: false
   pos: ім.
   gender: ч.
-  verified: true
-- word: якого кольору?
-  translation: what color?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: бі́лий
-  translation: white
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: чо́рний
-  translation: black
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: сі́рий
-  translation: grey
-  expression: false
-  pos: прикм.
-  gender: ''
   verified: true
 - word: черво́ний
   translation: red
@@ -59,80 +83,38 @@ vocabulary:
   pos: прикм.
   gender: ''
   verified: true
-- word: кори́чневий
-  translation: brown
+- word: бі́лий
+  translation: white
   expression: false
   pos: прикм.
   gender: ''
   verified: true
-- word: роже́вий
-  translation: pink
+- word: чо́рний
+  translation: black
   expression: false
   pos: прикм.
   gender: ''
   verified: true
-- word: помара́нчевий
-  translation: orange
+- word: сі́рий
+  translation: grey
   expression: false
   pos: прикм.
   gender: ''
   verified: true
-- word: фіоле́товий
-  translation: purple
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: те́мний
-  translation: dark
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: сві́тлий
-  translation: light
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: пра́пор
-  translation: flag
+- word: ко́лір
+  translation: color (m)
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: си́ньо-жо́втий
-  translation: blue-and-yellow
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: Мені подобається
-  translation: I like
+- word: Якого кольору?
+  translation: What color?
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: кві́ти
-  translation: flowers
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: кві́тка
-  translation: flower
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: троя́нда
-  translation: rose
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: со́няшник
-  translation: sunflower
+- word: продаве́ць
+  translation: seller
   expression: false
   pos: ім.
   gender: ч.
@@ -143,17 +125,35 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: ли́стя
-  translation: leaves, foliage
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: су́мка
-  translation: bag
+- word: троя́нди
+  translation: roses
   expression: false
   pos: ім.
   gender: ж.
+  verified: true
+- word: лі́лії
+  translation: lilies
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: со́няшники
+  translation: sunflowers
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: Мені подобається
+  translation: I like
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Чудово!
+  translation: Wonderful!
+  expression: true
+  pos: ''
+  gender: ''
   verified: true
 - word: кімна́та
   translation: room
@@ -167,23 +167,11 @@ vocabulary:
   pos: ім.
   gender: с.
   verified: true
-- word: су́кня
-  translation: dress
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
 - word: светр
   translation: sweater
   expression: false
   pos: ім.
   gender: ч.
-  verified: true
-- word: пальто́
-  translation: coat
-  expression: false
-  pos: ім.
-  gender: с.
   verified: true
 - word: череви́ки
   translation: shoes
@@ -191,20 +179,26 @@ vocabulary:
   pos: ім.
   gender: ''
   verified: true
-- word: со́нце
-  translation: sun
+- word: су́кня
+  translation: dress
   expression: false
   pos: ім.
-  gender: с.
+  gender: ж.
   verified: true
-- word: не́бо
-  translation: sky
+- word: Га́рно
+  translation: Nice
   expression: false
-  pos: ім.
-  gender: с.
+  pos: присл.
+  gender: ''
   verified: true
-- word: мо́ре
-  translation: sea, ocean
+- word: тверда група
+  translation: hard-stem group
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: борщ
+  translation: borsch
   expression: false
   pos: ім.
   gender: ч.
@@ -215,32 +209,62 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: жи́то
-  translation: rye
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: оліве́ць
-  translation: pencil
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: я́блуко
-  translation: apple
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: виши́ва́нка
-  translation: vyshyvanka (traditional embroidered shirt)
+- word: ка́ва
+  translation: coffee
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: ша́фа
-  translation: wardrobe, cupboard
+- word: сніг
+  translation: snow
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: м'яка група
+  translation: soft-stem group
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: кни́га
+  translation: book
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: вікно́
+  translation: window
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: си́ньо-жо́втий
+  translation: blue and yellow
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: жи́то
+  translation: wheat
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: голуби́й
+  translation: light blue (Russian-influenced)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: кві́тка
+  translation: flower
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: виши́ва́нка
+  translation: embroidered shirt
   expression: false
   pos: ім.
   gender: ж.

@@ -29,7 +29,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-такі слова, як «уряд», «держава», «демократія» чи «вибори». Крім того, автори часто застосовують емоційно забарвлені слова та яскраві фразеологізми, щоб привернути увагу своєї аудиторії. Характерним елементом для публіцистичного стилю є риторичні запитання. У статтях можна часто зустріти глибокі питання: «Хто ми є в цьому світі?» або «Яке майбутнє нас чекає?». Ці прийоми допомагають автору встановити емоційний контакт із читачем. Щоб краще зрозуміти, як працюють медіа зсередини, уявімо типовий робочий процес створення новин. Наша сцена — це великий ньюзрум на відомій **Київській телестудії** *(Kyiv TV studio)*. > — **Головний редактор:** Добрий вечір усім! Які в нас сьогодні головні новини для вечірнього випуску? > — **Журналіст:** Вітаю! Журналіст, **готуючи** *(preparing)* свій репортаж, помітив одну важливу деталь і повідомив, що наші рятувальники прибули на місце надзвичайної події вчасно. > — **Головний редактор:** Це чудово. А що щодо масштабної евакуації в тому небезпечному регіоні? > — **Журналіст:** Так, незважаючи на вкрай складні погодні умови, **евакуацію** *(evacuation)* успішно **завершено** *(completed)*. Також як стало відомо щойно, наш **уряд** *(government)* терміново виділив додаткові **кошти** *(funds)* для всіх постраждалих родин. > — **Головний редактор:** Дуже добре, це якісний та оперативний матеріал. Пускаємо цей інформаційний сюжет у наш вечірній прямий ефір. Сучасний український медійний ландшафт має свої унікальні особливості, які критично важливо розуміти кожному. Серед найвідоміших та впливових видань країни варто обов'язково назвати **«Українську правду»** *(Ukrainska Pravda)*. Також дуже важливим є незалежне видання **«Новинарня»** *(Novynarnia)* та головний суспільний мовник **«Суспільне»** *(Suspilne)*. Ключову історичну роль у захисті українського інформаційного простору відіграє закон про забезпечення функціонування державної мови. Він встановлює обов'язкові мовні **квоти** *(quotas)* для радіостанцій та телебачення. Закон гарантує, що більшість контенту транслюється саме українською мовою. Ця державна політика є життєво важливою для деколонізації медіапростору. Вона зменшує вплив російської пропаганди та зміцнює українську національну ідентичність. Завдяки цим законодавчим квотам українська мова сьогодні впевнено домінує в національному телевізійному ефірі. Сьогодні більшість людей щоденно отримує новини саме з соціальних мереж. Для типового українського користувача існує своя спеціальна і дуже поширена термінологія. Коли ви пишете цікавий текст або публікуєте фото, ви створюєте **допис** *(post)*. Людина, яка постійно стежить за вашою сторінкою, — це ваш **підписник** *(subscriber)*. Усі нові дописи від друзів та цікавих сторінок з'являються у вашій **стрічці** *(feed)* новин. Якщо вам подобається певний корисний контент, ви маєте можливість його **поширити** *(to share)*. Завдяки цьому ваші друзі теж його побачать. Типові фрази українців у соціальній мережі звучать приблизно так: «Будь ласка, залиште коментар під цим дописом» або «Обов'язково поширте цю важливу інформацію у своїх стрічках». Офіційні визначення та складні медіатексти дуже часто використовують особливі граматичні форми. До таких форм належать **дієприкметники** *(participles)* та **дієприслівники** *(gerunds)*. Дієприкметники чудово допомагають журналістам максимально стисло і точно описувати стан подій. Наприклад, ми часто бачимо слова **повідомлений** *(reported)* або **вибраний** *(selected)* в офіційних новинах. Дієприслівники детально описують додаткову дію, яка супроводжує основну. Слово **інформуючи** *(informing)* надзвичайно часто зустрічається в текстах, коли ЗМІ описують свою головну місію. Ці граматичні форми роблять публіцистичний стиль формальним, точним і професійним. Їх доречне використання свідчить про високий рівень володіння українською мовою. <!-- INJECT_ACTIVITY: reading-media-definition --> <!-- INJECT_ACTIVITY: fill-in-media-grammar --> <!-- INJECT_ACTIVITY: quiz-media-lexica -->
+the evening broadcast?)* > — **Журналіст:** Я, готуючи репортаж, помітив невелику помилку в тексті. *(While preparing the report, I noticed a small mistake in the text.)* > — **Головний редактор:** Виправте негайно. Що повідомив наш кореспондент з місця подій? *(Correct it immediately. What did our correspondent report from the scene?)* > — **Журналіст:** Рятувальники прибули вчасно. Незважаючи на складні умови, евакуацію завершено. *(The rescuers arrived on time. Despite difficult conditions, the evacuation has been completed.)* > — **Головний редактор:** Добре. Як стало відомо, уряд виділив кошти на відбудову. Це надійне джерело? *(Good. As it became known, the government has allocated funds for rebuilding. Is this a reliable source?)* > — **Журналіст:** Так, ми маємо підтверджений факт. *(Yes, we have a confirmed fact.)* Understanding the Ukrainian media landscape is essential for grasping the country's modern cultural context. Outlets like «Суспільне», «Українська правда», and «Новинарня» play a crucial role in providing reliable information. A vital aspect of this landscape is the «Закон про мову» (Language Law), which establishes mandatory quotas for Ukrainian-language content on television and radio. This law is a fundamental tool for decolonizing the information space. When you read a text, always consider the **джерело** (source) to see if it provides a verifiable statement, a **факт** (fact), or merely expresses a personal view, a **думка** (opinion). Сьогодні соціальні мережі стали невіддільною частиною медіапростору, де кожен користувач може створювати контент. Українці активно користуються платформами, де ключовою лексикою є такі слова: допис, підписник, стрічка новин та коментар. Коли ви бачите цікаву публікацію, ви можете вподобати її або поширити серед друзів. Важливо пам'ятати про медіагігієну: перш ніж поширити сенсаційний матеріал, перевірте інформацію, щоб уникнути обману. Соціальні мережі дозволяють швидко обмінюватися поглядами, але вимагають критичного підходу до кожної прочитаної тези. Не забувайте також про важливі соціальні ініціативи, які часто обговорюються та організовуються онлайн. :::info **Grammar box** Notice how the gerund **готуючи** (preparing) and the passive participle form **завершено** (completed) appear in formal media language. These verb forms allow journalists to pack more actions into a single concise sentence, which is a hallmark of the publicistic style. ::: As you read authentic articles, pay attention to the grammar that structures formal definitions. You will frequently encounter participles, such as *повідомлений* (reported) or *вибраний* (selected), which act like adjectives describing a state resulting from an action. Similarly, gerunds like *інформуючи* (informing) show a secondary action happening simultaneously. Recognizing these forms helps you quickly unpack complex sentences, understand a catchy **заголовок** (headline), and spot hidden influence, known as **маніпулювання** (manipulation). This critical reading skill is vital for everyone, from a professional journalist to a dedicated community **волонтер** (volunteer). When journalists need **повідомити** (to report) important updates, they rely on clear, structured language to ensure the audience understands the message without ambiguity. <!-- INJECT_ACTIVITY: reading, "Прочитайте текст про що таке медіа? і дайте відповіді на запитання." --> <!-- INJECT_ACTIVITY: fill-in, "Вставте правильну граматичну форму у реченнях на тему що таке медіа? (дієприкметники/дієприслівники)." --> <!-- INJECT_ACTIVITY: quiz, "Оберіть правильний варіант: лексика та граматика з розділу «Що таке медіа?»." -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -571,7 +571,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -584,18 +651,66 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] засоби масової інформації (mass media — channels of public communication)
+- [ ] суспільство (society — organized community of people)
+- [ ] громадянин (citizen — member of a state)
+- [ ] публіцистичний стиль (publicistic style — media register)
+- [ ] новина (news item — report of a recent event)
+- [ ] заголовок (headline — title of a news article)
+- [ ] факт (fact — verifiable statement)
+- [ ] думка (opinion — personal view)
+- [ ] маніпулювання (manipulation — hidden influence)
+- [ ] волонтер (volunteer — person working without pay)
+- [ ] джерело (source — origin of information)
+- [ ] кореспондент (correspondent — reporter)
+- [ ] повідомити (to report — to convey news)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Читання новин (~880 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

@@ -17,96 +17,60 @@ vocabulary:
   pos: прикм.
   gender: ''
   verified: true
-- word: багатоспрямований
-  translation: multidirectional
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
 - word: зві́дки
   translation: from where
   expression: false
   pos: присл.
   gender: ''
   verified: true
-- word: куди́
-  translation: where to
+- word: іти́ / ходи́ти
+  translation: to go on foot
   expression: false
-  pos: присл.
+  pos: ''
   gender: ''
-  verified: true
-- word: іти́
-  translation: to go on foot (unidirectional)
+  verified: false
+- word: ї́хати / ї́здити
+  translation: to go by vehicle
   expression: false
-  pos: дієсл.
+  pos: ''
   gender: ''
-  verified: true
-- word: ходи́ти
-  translation: to go on foot (multidirectional)
+  verified: false
+- word: леті́ти / літа́ти
+  translation: to fly
   expression: false
-  pos: дієсл.
+  pos: ''
   gender: ''
-  verified: true
-- word: ї́хати
-  translation: to go by vehicle (unidirectional)
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: ї́здити
-  translation: to go by vehicle (multidirectional)
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: леті́ти
-  translation: to fly (unidirectional)
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: літа́ти
-  translation: to fly (multidirectional)
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
+  verified: false
 - word: піти
-  translation: to leave on foot (perfective)
+  translation: to leave on foot
   expression: false
   pos: ім.
   gender: ж.
   verified: true
 - word: пої́хати
-  translation: to leave by vehicle (perfective)
+  translation: to leave by vehicle
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: полеті́ти
-  translation: to fly off (perfective)
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: каза́ти
+- word: каза́ти / кажу́
   translation: to say
   expression: false
-  pos: дієсл.
+  pos: ''
   gender: ''
-  verified: true
-- word: пи́ти
+  verified: false
+- word: пи́ти / п'ю
   translation: to drink
   expression: false
-  pos: дієсл.
+  pos: ''
   gender: ''
-  verified: true
-- word: боро́тися
-  translation: to fight / struggle
+  verified: false
+- word: боро́тися / борю́ся
+  translation: to fight / to struggle
   expression: false
-  pos: дієсл.
+  pos: ''
   gender: ''
-  verified: true
+  verified: false
 - word: на́прямок
   translation: direction
   expression: false
@@ -114,10 +78,22 @@ vocabulary:
   gender: ч.
   verified: true
 - word: рух
-  translation: movement / motion
+  translation: movement, motion
   expression: false
   pos: ім.
   gender: ч.
+  verified: true
+- word: полеті́ти
+  translation: to fly off
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: сказа́ти
+  translation: to say
+  expression: false
+  pos: дієсл.
+  gender: ''
   verified: true
 - word: писа́ти
   translation: to write
@@ -126,7 +102,7 @@ vocabulary:
   gender: ''
   verified: true
 - word: би́ти
-  translation: to hit / beat
+  translation: to hit
   expression: false
   pos: дієсл.
   gender: ''
@@ -137,56 +113,56 @@ vocabulary:
   pos: дієсл.
   gender: ''
   verified: true
+- word: на
+  translation: onto
+  expression: false
+  pos: виг.
+  gender: ''
+  verified: true
+- word: в / у
+  translation: into
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: з / із
+  translation: from
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
 - word: че́рез
-  translation: through / across (preposition)
+  translation: through
   expression: false
   pos: прийм.
   gender: ''
   verified: true
 - word: по
-  translation: along / around (preposition)
+  translation: along
   expression: false
   pos: прийм.
   gender: ''
   verified: true
-- word: щодня́
-  translation: every day
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: туди й назад
-  translation: back and forth
+- word: Куди?
+  translation: Where to?
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: у справах
-  translation: for business
+- word: Де?
+  translation: Where at?
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: на вихідних
-  translation: on weekends
+- word: Зрозуміло.
+  translation: Understood.
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: пішов геть
-  translation: left away / gone
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: щасливої дороги!
-  translation: have a safe trip!
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Поїхали!
-  translation: Let's go! / We're off!
+- word: Класно!
+  translation: Cool!
   expression: true
   pos: ''
   gender: ''

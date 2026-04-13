@@ -6,19 +6,20 @@ Asking for information is the foundation of any conversation. When you travel, m
 > **Перехо́жий:** Центр там. *(The center is there.)*
 > **Турист:** Дякую! Куди́ іде́ цей авто́бус? *(Thanks! Where does this bus go?)*
 > **Перехожий:** Цей автобус іде в парк. *(This bus goes to the park.)*
+> **Турист:** Ко́ли він іде? *(When does it go?)*
+> **Перехожий:** За́раз. *(Now.)*
 > **Турист:** До́бре. Як пройти́ до парку? *(Good. How to get to the park?)*
 > **Перехожий:** Пря́мо і напра́во. *(Straight and to the right.)*
 
-When arriving in a new city, finding your way relies heavily on your ability to use question words. The tourist uses **де** (where) to locate a static place, **куди** (where to) to ask about the direction of the bus, and **як** (how) to request instructions for reaching a destination.
+When arriving in a new city, finding your way relies heavily on your ability to use question words. The tourist uses **де** (where) to locate a static place, **куди** (where to) to ask about the direction of the bus, **коли** (when) to ask about timing, and **як** (how) to request instructions for reaching a destination.
 
 > **Марко́:** Хто ти? *(Who are you?)*
-> **А́нна:** Я студе́нтка. *(I am a student.)*
-> **Марко:** Що ти вивча́єш? *(What do you study?)*
-> **Анна:** Я вивча́ю украї́нську. *(I study Ukrainian.)*
-> **Марко:** Де ти живе́ш? *(Where do you live?)*
-> **Анна:** Я живу́ в Ки́єві. *(I live in Kyiv.)*
-> **Марко:** Ко́ли ти працю́єш? *(When do you work?)*
-> **Анна:** Вра́нці. *(In the morning.)*
+> **А́нна:** Я Анна, студе́нтка. А ти? *(I am Anna, a student. And you?)*
+> **Марко:** Я Марко. Що ти вивча́єш? *(I am Marko. What do you study?)*
+> **Анна:** Я вивча́ю украї́нську. А де ти живе́ш? *(I study Ukrainian. And where do you live?)*
+> **Марко:** Я живу́ в Ки́єві. А ти? *(I live in Kyiv. And you?)*
+> **Анна:** Теж у Києві. Коли ти працю́єш? *(Also in Kyiv. When do you work?)*
+> **Марко:** Вра́нці. *(In the morning.)*
 
 When you meet someone new, you naturally want to expand the conversation beyond basic greetings. Notice how each question targets a specific detail. The word **хто** (who) asks about a person's identity, **що** (what) targets an action or object, and **коли** (when) establishes a timeframe.
 
@@ -35,14 +36,14 @@ A typical domestic scene often involves missing items and a lack of information.
 
 ## Пита́льні слова́ (Question Words)
 
-To gather information effectively, you need a core set of linguistic tools. Ukrainian relies on seven essential question words: **хто** (who), **що** (what), **де** (where), **куди** (where to), **коли** (when), **чому** (why), and **як** (how). In a typical sentence, these question words take the very first position.
+To gather information effectively, you need a core set of linguistic tools. Ukrainian relies on seven essential question words: **хто** (who), **що** (what), **де** (where), **куди** (where to), **коли** (when), **чому** (why), and **як** (how). In neutral questions, these words usually come first. This matches the basic school-textbook treatment of question words in Grade 4 materials such as Варзацька and the word-order and intonation focus in Ukrainian Lessons Podcast Season 1, Episode 35.
 
 *   **Хто це?** (Who is this?)
 *   **Хто гово́рить?** (Who speaks?)
 *   **Що це?** (What is this?)
 *   **Що ти ро́биш?** (What are you doing?)
 
-The distinction between **хто** (who) and **що** (what) is strictly tied to animacy. You must use **хто** when asking about people or animals, and **що** when asking about inanimate objects or abstract concepts. English speakers frequently use "what" to ask for a description or specification, such as "What color is it?" or "What kind of car is it?". You cannot do this in Ukrainian. The word **що** only asks for identification. If you point to a vehicle and ask **Що це?** (What is this?), the answer is simply "A car." To ask for a description, you must use the word **яки́й** (what kind / which). This clear separation prevents confusion and guarantees that you receive the specific information you want.
+The distinction between **хто** (who) and **що** (what) is important, but **що** does more than ask for identification. Use **хто** for a person or another animate being. Use **що** for a thing, an event, or an action: **Що це?** (What is this?) and **Що ти робиш?** (What are you doing?). When you ask about a quality or type, Ukrainian usually uses **яки́й**: **Який це ко́лір?** (What color is it?) or **Яка це маши́на?** (What kind of car is it?).
 
 Understanding location and movement requires mastering a spatial and temporal triplet: **де** (where), **куди** (where to), and **коли** (when). English often uses "where" for both a static location and a destination. Ukrainian separates these two concepts entirely. You use **де** when a person or object is resting in one place. You use **куди** strictly when there is physical motion directed toward a destination.
 
@@ -92,7 +93,8 @@ Stating what is not happening or what you do not know is just as crucial as aski
 *   **Він не хо́че.** (He does not want.)
 *   **Він не працю́є.** (He does not work.)
 
-The particle **не** forms a very tight unit with the verb that immediately follows it. You must never separate them with other words. 
+In the basic A1 pattern, **не** usually goes before the verb: **Я не знаю. Він не працює.** At higher levels, other words can appear between **не** and the verb, but beginners should first master the simple pattern **не + verb**.
+ 
 
 When you need to answer a question negatively without providing a full sentence, you use the standalone word **ні** (no).
 
@@ -124,7 +126,7 @@ Applying English logic to Ukrainian negation leads directly to grammatical error
 
 ## Підсумок — Summary
 
-This module provided the essential tools for extracting information and expressing negative statements. You now possess a complete set of question words to navigate daily situations, gather facts, and build relationships.
+This module introduced the main question words and the basic negation patterns you need for everyday A1 communication.
 
 *   **Хто?** (Who?)
 *   **Що?** (What?)
@@ -136,7 +138,8 @@ This module provided the essential tools for extracting information and expressi
 
 You learned that yes/no questions rely almost entirely on raising your intonation at the end of the sentence, such as **Ти знаєш?** (Do you know?). You also saw how the particle **чи** can optionally mark these questions in a more formal register, without ever altering the fundamental word order.
 
-Negation in Ukrainian follows strict but simple patterns. The particle **не** always stands directly before the verb. When expressing absolute absence, Ukrainian demands double negation. 
+Negation in Ukrainian follows simple beginner patterns. In the core A1 pattern, **не** goes before the verb: **Я не знаю.** When expressing absolute absence, Ukrainian demands double negation.
+ 
 
 | Структу́ра (Structure) | Приклад (Example) | Переклад (Translation) |
 | :--- | :--- | :--- |
@@ -147,6 +150,6 @@ Negation in Ukrainian follows strict but simple patterns. The particle **не** 
 To verify your progress, respond to the following prompts. These practical tasks test your ability to apply the patterns you just read to real situations.
 
 1.  Ask three questions about a friend's life using **де** (where), **що** (what), and **коли** (when). For example: **Де живе́ твій друг?** (Where does your friend live?)
-2.  Change the positive statement "Я бачу все" (I see everything) into a negative statement meaning "I see nothing" using the double negation rule.
+2.  Write two negative sentences: one with **не** (**Я не знаю.**) and one with **Ніхто не...** (**Ніхто не знає.**).
 3.  Form a question from the statement **Ти говориш українською** (You speak Ukrainian) using only your intonation.
 4.  Explain the grammatical difference between asking **Де ти?** (Where are you?) and **Куди ти йдеш?** (Where are you going?).

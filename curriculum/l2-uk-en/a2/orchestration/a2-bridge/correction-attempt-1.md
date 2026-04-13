@@ -1,8 +1,7 @@
 <correction_directive>
 CRITICAL: Your previous attempt failed the following checks. Fix ONLY the listed errors. Keep everything else exactly as is — do not rewrite sections that are working correctly.
 
-- FIX: Missing 3/9 required vocab: голосний (vowel), приголосний (consonant), наголос (stress (accent))
-- NOTE: Plan expects 4 exercise(s) but content has 3
+- FIX: Russian characters found: ы
 </correction_directive>
 
 LEARNINGS FROM PAST BUILDS (same error patterns seen before):

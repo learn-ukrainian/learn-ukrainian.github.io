@@ -2,49 +2,50 @@ round: 2
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 9
-  evidence: The module covers all required sections and topics. However, it claims
-    that certain words appeared in the dialogues when they did not ("ковбаса" and
-    "масло").
+  score: 7
+  evidence: 'All planned H2 sections are present, but the middle sections overshoot
+    the 300-word plan budgets substantially: `Скільки коштує?` and `Де купити?` are
+    roughly 436 and 440 words, driven by long English'
 - dimension: 2
   name: Linguistic accuracy
-  score: 10
-  evidence: All Ukrainian text is correct. No Russianisms, Surzhyk, or calques were
-    detected.
+  score: 7
+  evidence: “**Notice how the last digit entirely determines the currency's form.**”
+    teaches an incorrect rule; `11–14` require `гривень`.
 - dimension: 3
   name: Pedagogical quality
-  score: 8
-  evidence: The explanation of currency pluralization is slightly imprecise ("For
-    the number five and any number above it" instead of specifying the final digit),
-    which could confuse learners about numbers like 2
+  score: 7
+  evidence: The module often explains grammar abstractly in English instead of keeping
+    A1 patterning tight, e.g. “**It takes a form called the genitive case, which indicates
+    "of something"**...”. The summary also
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: All required and recommended vocabulary items from the plan are integrated
-    naturally into the text.
+  score: 9
+  evidence: 'Required and recommended vocabulary are well represented in prose: `знижка`,
+    `гроші`, `готівка`, `кілограм`, `літр`, `пляшка`, `пачка`, `супермаркет`, `ринок`.'
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: The injected markers align perfectly with the plan's activity hints and
-    are positioned exactly where they should be.
+  score: 9
+  evidence: All four planned exercise markers appear once each and follow the relevant
+    teaching content. Marker coverage and placement are strong.
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: Excellent, encouraging tone. The cultural notes about the market atmosphere
-    and the use of diminutives (картопелька, яблучка) are fantastic.
+  score: 8
+  evidence: Tone is teacherly and not gamified, but some filler/meta phrasing adds
+    words without much extra learner value, e.g. “**The most important question in
+    your shopping toolkit...**” and “**This is a funda
 - dimension: 7
   name: Structural integrity
-  score: 10
-  evidence: Clean markdown, appropriate use of callouts, and the word count exceeds
-    the target.
+  score: 9
+  evidence: All required H2 headings are present and in order, and the pipeline word
+    count is 1525, above target. The main weakness is section sprawl in the middle.
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: The distinction between "ринок" and "супермаркет", as well as the historical
-    note about the "шаг" coin, are highly accurate and culturally enriching.
+  score: 9
+  evidence: The module stays in Ukrainian shopping contexts (`ринок`, `супермаркет`,
+    `аптека`) and avoids Russian-centric framing.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 7
-  evidence: The dialogues are natural and communicative, but the first dialogue contains
-    a mathematical error in the total price calculation (75 instead of 110).
+  score: 9
+  evidence: The market dialogue is natural, multi-turn, and usable. The supermarket
+    dialogue is functional and anchored in a real shopping situation.
 findings: []

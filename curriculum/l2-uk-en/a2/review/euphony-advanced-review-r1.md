@@ -1,78 +1,80 @@
 ## Linguistic Scan
-Found one linguistic error regarding phonetic classification ("з, с, ц" are "свистячі", not "шиплячі"). The rest of the Ukrainian text, including complex euphony alternations (у/в, з/із/зі, і/й), is accurate and follows the 2019 Pravopys. (Note: The VESUM unverified words were all proper nouns or false-positive substrings of correct words like *учитель*, *Одесі*).
+- Factually wrong rule claim in the first section: `At the start of a sentence, we look only at the first letter of the next word. If the next word starts with a vowel, we use «в». If it starts with a consonant, we use «у»...` This is too absolute; sentence-initial `у/в` is a norm with variation, not a one-choice binary rule.
+- Factually wrong rule claim in the third section: `Найбезпечніший варіант після коми — завжди «і»... Це помилка...` This is false as stated; school-textbook norms allow `й` after a pause before a vowel.
+- Overstated status claim in the opening: `It is not just an optional style choice; it is a strict grammar rule.` This misframes милозвучність as rigid mechanics rather than a pronunciation/usage norm.
 
 ## Exercise Check
-- `<!-- INJECT_ACTIVITY: quiz-euphony-variants -->` - Present, placed after 'У чи в' section. Matches plan.
-- `<!-- INJECT_ACTIVITY: fill-in-z-variants -->` - Present, placed after 'З/із/зі' section. Matches plan.
-- `<!-- INJECT_ACTIVITY: match-up-conjunctions -->` - Present, placed after 'І чи й' section. Matches plan.
-- `<!-- INJECT_ACTIVITY: error-correction -->` - Present, placed after 'Все разом' section. Matches plan.
-All required markers are distributed evenly and test the immediate preceding concepts perfectly.
+Four markers are present, and they are placed after the relevant teaching blocks:
+`match-up` after `У чи в?`
+`error-correction` after `З, із чи зі?`
+`fill-in` after `І чи й?`
+`quiz` after `Все разом`
+
+They match the four `activity_hints` in the plan and are evenly distributed. No exercise-placement issues found.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 9/10 | Covered all complex grammar rules and euphony scenarios. However, the section titles dropped the English translations for 3 out of 4 sections (e.g., `## І чи й? У складних реченнях` instead of `(I or Y? In Complex Sentences)` as requested in the plan). |
-| 2. Linguistic accuracy | 8/10 | Excellent application of euphony rules in examples. Two inaccuracies: 1) It incorrectly classifies "з, с, ц" as "шиплячі" ("перед шиплячими: з, с, ц, ш, ч, ж") whereas they are "свистячі". 2) The summary creates a "Forbidden Five" mnemonic for `в` but lists only 5 items (`в, ф, хв, св, льв`), contradicting its own earlier correct list of 6 items (which included `тв`). |
-| 3. Pedagogical quality | 9/10 | Strong PPP flow with clear rules and realistic dialogue examples. One pedagogical/cultural flaw: "А я вчуся у школі. Я ще студентка." In the Ukrainian system, a person at a "школа" is an "учениця" (pupil); a "студент(ка)" attends a VNZ (university). |
-| 4. Vocabulary coverage | 10/10 | All required vocabulary (`милозвучність, евфонія, чергування, голосний, приголосний, збіг, прийменник, сполучник, вживати, складний`) is used naturally and correctly within the instructional text. |
-| 5. Exercise quality | 10/10 | All 4 requested activity hints are correctly mapped to injection markers and placed logically after their respective instruction blocks. |
-| 6. Engagement & tone | 10/10 | Uses an encouraging, instructional tone. Explaining Ukrainian as having a "phonetic ecology" and "forbidden collisions" makes the grammar rules feel intuitive and engaging. |
-| 7. Structural integrity | 10/10 | Clean markdown without artifacts. Word count is 2121 (safely above the 2000-word target). The logical sequence perfectly mirrors the plan. |
-| 8. Cultural accuracy | 10/10 | Highly respectful and culturally accurate representation of Ukrainian as a naturally melodic language. |
-| 9. Dialogue & conversation quality | 9/10 | Good multi-turn dialogues demonstrating rules. Minor issues: A tense mismatch ("Де всі студенти?" answered with past tense "Вона співала..."), and speaker Оленка unnaturally stating she is traveling with "Оленою" (herself). |
+| 1. Plan adherence | 9/10 | All four planned H2 sections are present in order; section pacing is close to plan (~660/~660/~550/~330 vs 600/600/500/300), and all four planned activity types appear as markers. |
+| 2. Linguistic accuracy | 5/10 | Two categorical rule claims are wrong as written: `If the next word starts with a vowel, we use «в». If it starts with a consonant, we use «у»` and `Найбезпечніший варіант після коми — завжди «і» ... Це помилка`. Local textbook corpus explicitly allows variation at sentence start and gives `Й` after a pause before a vowel. |
+| 3. Pedagogical quality | 6/10 | The module has a usable PPP spine (dialogue -> explanation -> activity markers), but it repeatedly turns flexible euphony norms into hard prohibitions, which will teach learners to “correct” acceptable forms. |
+| 4. Vocabulary coverage | 10/10 | All required plan vocabulary is introduced in context: `милозвучність`, `евфонія`, `чергування`, `голосний`, `приголосний`, `збіг`, `прийменник`, `сполучник`, `вживати`, `складний`. |
+| 5. Exercise quality | 10/10 | All four plan hint types are represented by markers and placed after the relevant teaching sections. |
+| 6. Engagement & tone | 8/10 | The teacher voice is clear and energetic, but `Your tongue will thank you, and you will immediately sound like a native speaker` overpromises and reads less like classroom guidance. |
+| 7. Structural integrity | 10/10 | All planned headings are present, markdown is clean, and the pipeline word count is 2790, well above the 2000 target. |
+| 8. Cultural accuracy | 10/10 | Fully Ukrainian-centered; no Russian comparison frame and no cultural distortion. |
+| 9. Dialogue & conversation quality | 9/10 | The opening dialogue uses named speakers, a real trip-planning situation, and multiple target alternations in context. |
 
 ## Findings
+[LINGUISTIC ACCURACY] [SEVERITY: critical]  
+Location: `At the start of a sentence, we look only at the first letter of the next word. If the next word starts with a vowel, we use «в». If it starts with a consonant, we use «у» to create a smooth sound transition.`  
+Issue: This teaches sentence-initial `у/в` as an absolute binary rule. School-textbook norms treat these as strong tendencies, not an invariant one-choice rule in every context.  
+Fix: Reword this paragraph as a preference/norm: `в` is common before vowels, `у` is common before consonants, but the choice is not purely mechanical.
 
-[Structural integrity] [Minor]
-Location: `## З, із чи зі? Правила перед збігами приголосних` (and subsequent headers)
-Issue: Missing the English translation from the plan outline (`(Z, Iz, or Zi?)`), making it inconsistent with the first heading.
-Fix: Append the English translations to the headings as defined in the plan.
+[LINGUISTIC ACCURACY] [SEVERITY: critical]  
+Location: `Найбезпечніший варіант після коми — завжди «і»... Це помилка... Правильно: «Вона заспівала, і усі заплакали».`  
+Issue: This falsely teaches that `й` after a comma before a vowel is wrong. Textbook norms explicitly allow `й` after a pause before a vowel.  
+Fix: Replace the passage with wording that says `і` is common after a pause, but `й` before a vowel is also possible when it sounds natural.
 
-[Linguistic accuracy] [Major]
-Location: `What is the "Forbidden Five" for **в**? \n    **A:** Words starting with **в**, **ф**, **хв**, **св**, and **льв**.`
-Issue: The list mathematically omits `тв`, contradicting the earlier correct rule that lists 6 items. 
-Fix: Change "Forbidden Five" to "Forbidden Six" and add `тв` to the list.
+[PEDAGOGICAL QUALITY] [SEVERITY: major]  
+Location: `It is not just an optional style choice; it is a strict grammar rule.`  
+Issue: This frames милозвучність as rigid mechanics instead of a pronunciation/usage norm and encourages overcorrection.  
+Fix: Replace `strict grammar rule` with wording that presents it as an important norm of standard usage.
 
-[Linguistic accuracy] [Major]
-Location: `* перед шиплячими: з, с, ц, ш, ч, ж *(before sibilants)*`
-Issue: Incorrect phonetic classification. "з, с, ц" are "свистячі" (hissing), not "шиплячі" (hushing). Grouping them all as "шиплячі" is factually incorrect.
-Fix: Change to "перед свистячими та шиплячими".
-
-[Pedagogical quality] [Major]
-Location: `А я вчуся у школі. Я ще студентка. *(I study at school. I'm a student.)*`
-Issue: Semantic contradiction in the Ukrainian educational system. A person studying at a "школа" is an "учениця", not a "студентка".
-Fix: Change "студентка" to "учениця" (and update the English translation to "pupil").
-
-[Dialogue & conversation quality] [Minor]
-Location: `> — **Тарас:** Де всі студенти? *(Where are all the students?)*`
-Issue: Tense mismatch. Taras asks where they are *now* (present), but Olena answers what they *were doing* (past).
-Fix: Change Taras's question to past tense: "Де були всі студенти?".
-
-[Dialogue & conversation quality] [Minor]
-Location: `Але я поїду туди **з Оленою й Андрієм**.` (Spoken by Оленка)
-Issue: The speaker's name is Оленка (a form of Олена). It is highly unnatural for her to say she is traveling with "Олена", as it implies she is traveling with herself.
-Fix: Change "Оленою" to "Марією".
+[ENGAGEMENT & TONE] [SEVERITY: minor]  
+Location: `Always say «у вікно» and «у Львові». Your tongue will thank you, and you will immediately sound like a native speaker.`  
+Issue: The line overpromises outcome and slips into marketing-style reassurance.  
+Fix: Replace it with a concrete pronunciation benefit instead of a native-speaker promise.
 
 ## Verdict: REVISE
-The module exceeds the word count and has an excellent, engaging pedagogical flow. However, it contains clear linguistic classification errors (свистячі vs шиплячі, Forbidden Five mismatch) and a cultural terminology error (студентка in a K-12 school) that must be deterministically fixed before publishing.
+REVISE. The module is structurally strong and well-scaffolded, but it contains critical factual inaccuracies about `у/в` and `і/й`. A language module that teaches acceptable forms as mistakes cannot pass.
 
 <fixes>
-- find: "## З, із чи зі? Правила перед збігами приголосних"
-  replace: "## З, із чи зі? Правила перед збігами приголосних (Z, Iz, or Zi?)"
-- find: "## І чи й? У складних реченнях"
-  replace: "## І чи й? У складних реченнях (I or Y? In Complex Sentences)"
-- find: "## Все разом: мелодійні речення"
-  replace: "## Все разом: мелодійні речення (Putting It All Together)"
-- find: "**Q:** What is the \"Forbidden Five\" for **в**?"
-  replace: "**Q:** What is the \"Forbidden Six\" for **в**?"
-- find: "**A:** Words starting with **в**, **ф**, **хв**, **св**, and **льв**."
-  replace: "**A:** Words starting with **в**, **ф**, **хв**, **тв**, **св**, and **льв**."
-- find: "* перед шиплячими: з, с, ц, ш, ч, ж *(before sibilants)*"
-  replace: "* перед свистячими та шиплячими: з, с, ц, ш, ч, ж *(before sibilants)*"
-- find: "А я вчуся у школі. Я ще студентка. *(I study at school. I'm a student.)*"
-  replace: "А я вчуся у школі. Я ще учениця. *(I study at school. I'm a pupil.)*"
-- find: "> — **Тарас:** Де всі студенти? *(Where are all the students?)*"
-  replace: "> — **Тарас:** Де були всі студенти? *(Where were all the students?)*"
-- find: "Але я поїду туди **з Оленою й Андрієм**. *(But I will go there with Olena and Andrii.)*"
-  replace: "Але я поїду туди **з Марією й Андрієм**. *(But I will go there with Mariia and Andrii.)*"
+- find: |-
+    It is not just an optional style choice; it is a strict grammar rule.
+  replace: |-
+    It is not just a style preference; it is an important pronunciation norm in standard Ukrainian, but speakers still choose the variant that sounds smoother in context.
+
+- find: |-
+    However, real speech is a **складний** (complex, compound) flow of words. What happens at the beginning of a sentence? At the start of a sentence, we look only at the first letter of the next word. If the next word starts with a vowel, we use «в». If it starts with a consonant, we use «у» to create a smooth sound transition.
+  replace: |-
+    However, real speech is a **складний** (complex, compound) flow of words. What happens at the beginning of a sentence? At the start of a sentence, speakers usually choose the variant that sounds smoother with the next word. Before a vowel, «в» is common: «В Україні». Before a consonant, «у» is common: «У лісі». These are strong preferences, not a mechanical rule for every context.
+
+- find: |-
+    When building complex sentences, pay close attention to commas. A comma represents a natural pause that completely resets the phonetic context, so you only look at the sound *after* the comma to know which word to **вживати** (to use, to apply).
+
+    Після коми ми робимо паузу, тому попередній звук не має значення. Найбезпечніший варіант після коми — завжди «і»: «Він прийшов, і ми поїхали». Іноді студенти бачать наступний голосний і пишуть «й»: «Вона заспівала, й усі заплакали». Це помилка, бо після паузи звук «й» губиться. Правильно: «Вона заспівала, і усі заплакали».
+
+    > *After a comma we make a pause, so the previous sound doesn't matter. The safest option after a comma is always «і»: "He arrived, and we left". Sometimes students see the next vowel and write «й»: "She started singing, and everyone started crying". This is a mistake, because after a pause the «й» sound gets lost. Correct: "She started singing, and everyone started crying" (with і).*
+  replace: |-
+    When building complex sentences, pay close attention to commas. A comma creates a pause, so the choice after it is often guided by what sounds smoother in the next phrase, not by a rigid ban on one form.
+
+    Після коми ми робимо паузу, тому попередній звук часто відступає на другий план. Після паузи дуже часто вживають «і»: «Він прийшов, і ми поїхали». Але форма «й» перед голосним теж можлива, якщо вона звучить природно: «Вона заспівала, й усі заплакали». Обидва варіанти трапляються в нормативному мовленні, тож тут важливо не перетворювати милозвучність на жорстку механічну схему.
+
+    > *After a comma we make a pause, so the previous sound is often less important. After a pause, «і» is very common: "He arrived, and we left". But «й» before a vowel is also possible if it sounds natural: "She started singing, and everyone started crying". Both forms occur in standard usage, so euphony should not be turned into a rigid mechanical rule.*
+
+- find: |-
+    Always say «у вікно» and «у Львові». Your tongue will thank you, and you will immediately sound like a native speaker.
+  replace: |-
+    In standard usage, «у вікно» and «у Львові» sound more natural and are easier to pronounce clearly.
 </fixes>

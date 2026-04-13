@@ -1,67 +1,40 @@
-## Відмінювання порядкових числівників
+## Відмінювання порядкових числівників (~900 words)
 
-When we count items or talk about their specific sequence, we use ordinal numerals, which are called **порядкові числівники** in Ukrainian. Unlike cardinal numerals that answer the question "how many?" (скільки?), ordinal numerals answer the specific question **«котрий?»** (which one in order?). This distinction is crucial because it completely changes how the word functions in a sentence. The most foundational rule you need to know about ordinal numerals is that they behave exactly like adjectives. They share the same declension patterns, take the same endings, and follow the exact same rules for grammatical agreement. If you already know how to decline an adjective for gender, number, and case, you automatically know how to decline an ordinal numeral.
+When we need to express the specific order or sequence of items, people, or events, we use an ordinal numeral, **порядковий числівник** (ordinal numeral). While cardinal numerals tell us "how many" items there are in total, ordinal numerals answer the specific question **котрий?** (which one in order?). For instance, knowing that there are five books on a shelf is conceptually different from needing the fifth book specifically. The foundational rule for mastering ordinal numerals in Ukrainian is brilliantly simple and highly logical: they behave exactly like adjectives. This means that if you already understand how to modify and decline a standard Ukrainian adjective, you already possess the grammatical machinery required to use ordinal numerals fluently. They have the exact same endings, follow the exact same declension patterns, and must agree perfectly with the nouns they modify.
 
-Більшість порядкових числівників в українській мові належать до твердої групи. Це означає, що вони відмінюються за зразком звичайних прикметників, таких як «зелений» або «новий». До цієї великої групи належать слова «перший», «другий», «четвертий», «п'ятий», «шостий» та багато інших. Щоб правильно змінити ці слова за відмінками, достатньо згадати знайомі закінчення прикметників твердої групи. Розгляньмо повну парадигму на прикладі числівника «п'ятий».
-
-> *Most ordinal numerals in the Ukrainian language belong to the hard group. This means they decline following the pattern of regular adjectives, such as "green" or "new". This large group includes words like "first", "second", "fourth", "fifth", "sixth", and many others. To correctly change these words by cases, it is enough to recall the familiar endings of hard group adjectives. Let's look at the full paradigm using the numeral "fifth" as an example.*
-
-| Відмінок | Чоловічий рід | Жіночий рід | Середній рід | Множина |
-| :--- | :--- | :--- | :--- | :--- |
-| **Н.** | п'ятий | п'ята | п'яте | п'яті |
-| **Р.** | п'ятого | п'ятої | п'ятого | п'ятих |
-| **Д.** | п'ятому | п'ятій | п'ятому | п'ятим |
-| **Зн.** | Н. або Р. | п'яту | п'яте | Н. або Р. |
-| **Ор.** | п'ятим | п'ятою | п'ятим | п'ятими |
-| **М.** | (на) п'ятому | (на) п'ятій | (на) п'ятому | (на) п'ятих |
-| **Кл.** | п'ятий | п'ята | п'яте | п'яті |
-
-While the vast majority of ordinal numerals follow the standard hard group pattern we just saw, there is one critical exception you must memorize: the numeral **третій** (third). This word uniquely belongs to the soft group of adjectives, meaning it declines exactly like the word **синій** (blue). Notice the presence of the soft sign or soft vowel letters (я, ю, є, ї) in its endings across the different cases and genders. For example, the feminine nominative form is «третя» instead of a hard ending, and the neuter form is «третє». Understanding this single exception is vital because the word "third" appears frequently in everyday speech, particularly when discussing dates, addresses, and sequence. Here is the full seven-case paradigm for this unique numeral to help you internalize its soft endings.
-
-| Відмінок | Чоловічий рід | Жіночий рід | Середній рід | Множина |
-| :--- | :--- | :--- | :--- | :--- |
-| **Н.** | третій | третя | третє | треті |
-| **Р.** | третього | третьої | третього | третіх |
-| **Д.** | третьому | третій | третьому | третім |
-| **Зн.** | Н. або Р. | третю | третє | Н. або Р. |
-| **Ор.** | третім | третьою | третім | третіми |
-| **М.** | (на) третьому | (на) третій | (на) третьому | (на) третіх |
-| **Кл.** | третій | третя | третє | треті |
-
-Because ordinal numerals function grammatically as adjectives, they must perfectly agree with the noun they describe. This means the ordinal numeral and the noun must match in gender, number, and case. When you build a sentence, the noun dictates these three grammatical properties, and the ordinal numeral simply copies them. If the noun is masculine and in the Nominative case, the numeral must be masculine and Nominative. If the noun is plural and in the Genitive case, the numeral must take the corresponding plural Genitive form.
-
-Для прикладу, ми говоримо «перший урок», тому що слово «урок» чоловічого роду в називному відмінку. Якщо ми читаємо книгу, ми скажемо «Я читаю першу книжку», використовуючи знахідний відмінок жіночого роду. Для дати ми скажемо «першого вересня», де обидва слова стоять у родовому відмінку. А коли говоримо про людей, ми можемо згадати «перших учнів» у родовому відмінку множини.
-
-> *For example, we say "first lesson" (перший урок) because the word "lesson" is masculine in the nominative case. If we are reading a book, we will say "I am reading the first book" (першу книжку), using the accusative case of the feminine gender. For a date, we will say "of the first of September" (першого вересня), where both words are in the genitive case. And when talking about people, we might mention the "first students" (перших учнів) in the genitive plural.*
-
-To fully grasp this synchronized agreement in practice, let's walk through a step-by-step declension of the phrase **п'ятий клас** (fifth grade). Since the noun «клас» is a masculine, inanimate object, the ordinal numeral will follow the masculine column from our hard group table. Notice how the ending of the numeral changes in perfect grammatical harmony with the ending of the noun across all seven cases. They move together as a single semantic unit.
-
-*   **Н.** (хто? що?): п'ятий клас
-*   **Р.** (кого? чого?): п'ятого класу
-*   **Д.** (кому? чому?): п'ятому класу
-*   **Зн.** (кого? що?): п'ятий клас
-*   **Ор.** (ким? чим?): п'ятим класом
-*   **М.** (на кому? на чому?): (у) п'ятому класі
-*   **Кл.** (кличний): п'ятий класе
-
-Коли ми працюємо з великими числами, ми використовуємо складені числівники, які складаються з кількох слів. Головне правило тут дуже просте: у складених порядкових числівниках відмінюється лише останнє слово. Усі попередні слова завжди залишаються у формі називного відмінка і не змінюються. Порівняйте називний відмінок «двадцять третій день» і родовий відмінок «двадцять третього дня». Слово «двадцять» залишається незмінним. Розгляньмо відмінювання фрази «сто п'ятнадцята сторінка».
-
-> *When we work with large numbers, we use compound numerals, which consist of several words. The main rule here is very simple: in compound ordinal numerals, only the last word declines. All preceding words always remain in the nominative case form and do not change. Compare the nominative case "twenty-third day" (двадцять третій день) and the genitive case "of the twenty-third day" (двадцять третього дня). The word "twenty" remains unchanged. Let's look at the declension of the phrase "one hundred fifteenth page" (сто п'ятнадцята сторінка).*
-
-*   **Н.** сто п'ятнадцята сторінка
-*   **Р.** сто п'ятнадцятої сторінки
-*   **Д.** сто п'ятнадцятій сторінці
-*   **Зн.** сто п'ятнадцяту сторінку
-*   **Ор.** сто п'ятнадцятою сторінкою
-*   **М.** (на) сто п'ятнадцятій сторінці
-*   **Кл.** сто п'ятнадцята сторінко
-
-Finally, there is an excellent piece of news regarding pronunciation and speaking confidence. Unlike some cardinal numbers that constantly shift their stress depending on the case or gender, ordinal numerals have a fixed, reliable stress pattern. The stress always remains on the exact same syllable throughout all cases. For instance, words like **перший**, **другий**, **третій**, **сьомий**, and **десятий** will never surprise you with a moving accent when you decline them. This dramatically simplifies your memorization process: once you learn where the stress falls in the basic nominative dictionary form, you can confidently pronounce the word in any other case without hesitation. You will never have to guess whether the stress moves to the ending or stays on the root.
+Переважна більшість українських порядкових числівників належить до так званої твердої групи. Це означає, що їхня граматична поведінка абсолютно ідентична до відмінювання звичайних прикметників із твердим закінченням, наприклад, таких слів як «зелений» або «новий». Візьмемо для детального аналізу числівник «п'ятий». У називному відмінку ми маємо такі базові форми: п'ятий для чоловічого роду, п'ята для жіночого роду, п'яте для середнього роду та п'яті для множини. Під час відмінювання за відмінками ці закінчення плавно змінюються за стандартною і передбачуваною прикметниковою схемою. У родовому відмінку це будуть форми п'ятого, п'ятої, п'ятого та п'ятих відповідно. Давальний відмінок завжди вимагає закінчень п'ятому, п'ятій, п'ятому, п'ятим. Правила знахідного відмінка також стандартні: для істот чоловічого роду та множини форма збігається з родовим відмінком, а для неістот — із називним. Для жіночого роду в знахідному відмінку маємо специфічну форму п'яту, а для середнього — п'яте. Орудний відмінок оформлюється як п'ятим, п'ятою, п'ятим, п'ятими. Місцевий відмінок традиційно вживається виключно з прийменником: на п'ятому, на п'ятій, на п'ятому, на п'ятих.
 
 :::info
-**Grammar tip**
-Always ask yourself the question **«котрий?»** (which one?) when deciding between cardinal and ordinal numerals. If the answer is about the sequence or position rather than the total amount, you must use an ordinal numeral and decline it like an adjective.
+**Grammar box**
+You might occasionally see a shorter form in the masculine and neuter Locative case, such as **на п'ятім** instead of **на п'ятому**. Both forms are grammatically correct, but the longer **-ому** ending is much more common in modern standard Ukrainian.
 :::
 
-<!-- INJECT_ACTIVITY: fill-in-declension -->
-<!-- INJECT_ACTIVITY: quiz-declension -->
+З цього універсального та зручного правила твердої групи існує один надзвичайно важливий виняток, який потрібно запам'ятати, — це числівник «третій». На відміну від усіх інших простих порядкових числівників, він історично належить до м'якої групи. Його відмінювання повністю копіює парадигму м'яких прикметників, таких як «синій», «останній» або «вечірній». У називному відмінку він має м'які форми: третій, третя, третє, треті. У родовому відмінку з'являється характерний м'який знак, який вказує на пом'якшення попереднього приголосного звука: третього, третьої, третього, третіх. Давальний відмінок також стабільно зберігає цю м'якість у своїх закінченнях: третьому, третій, третьому, третім. Знахідний відмінок для жіночого роду отримує специфічну форму третю з літерою «ю» наприкінці. В орудному відмінку ми використовуємо форми третім, третьою, третім, третіми. У місцевому відмінку фраза звучатиме як на третьому, на третій, на третьому, на третіх. Завжди звертайте особливу увагу на написання м'якого знака в непрямих відмінках цього слова.
+
+> *There is one incredibly important exception to this universal and convenient rule of the hard group that you need to remember — the numeral "третій" (third). Unlike all other simple ordinal numerals, it historically belongs to the soft group. Its declension completely copies the paradigm of soft adjectives, such as "синій" (dark blue), "останній" (last), or "вечірній" (evening). In the Nominative case, it has the soft forms: третій, третя, третє, треті. In the Genitive case, a characteristic soft sign appears, indicating the softening of the preceding consonant sound: третього, третьої, третього, третіх. The Dative case also stably retains this softness in its endings: третьому, третій, третьому, третім. The Accusative case for the feminine gender gets the specific form третю with the letter "ю" at the end. In the Instrumental case, we use the forms третім, третьою, третім, третіми. In the Locative case, the phrase will sound like на третьому, на третій, на третьому, на третіх. Always pay special attention to the spelling of the soft sign in the oblique cases of this word.*
+
+The absolute core principle of effectively using ordinal numerals in everyday communication is strict grammatical agreement. Because these numerals function exactly like adjectives in a sentence, the ordinal numeral and the noun it modifies must perfectly align and harmonize in three categories: gender, number, and case. You cannot mix a masculine numeral with a feminine noun, nor can you use a Nominative numeral with a noun in the Genitive case. Here are clear examples of this agreement in action:
+
+**Перший урок.** — *The first lesson.* (Nominative masculine)
+**Першу книжку.** — *The first book.* (Accusative feminine)
+**Першого вересня.** — *Of the first of September.* (Genitive neuter)
+**Перших учнів.** — *Of the first students.* (Genitive plural)
+
+Щоб краще зрозуміти та назавжди запам'ятати цей механізм синхронного граматичного узгодження, варто детально провідміняти словосполучення «п'ятий клас» через усі сім українських відмінків. У називному відмінку ми маємо базову, словникову форму: п'ятий клас. У родовому відмінку обов'язково змінюються обидва слова: п'ятого класу. Давальний відмінок вимагає відповідних форм: п'ятому класу. Оскільки слово «клас» позначає неістоту, знахідний відмінок у цьому конкретному випадку повністю дублює називний: п'ятий клас. В орудному відмінку ми використовуємо глибоке та звучне закінчення: п'ятим класом. У місцевому відмінку разом із відповідним прийменником фраза набуває вигляду: у п'ятому класі. І, нарешті, у кличному відмінку ми просто використовуємо називну форму числівника поруч із кличною формою іменника: п'ятий класе. Цей покроковий процес узгодження є абсолютно ідентичним до відмінювання будь-якого стандартного прикметника з іменником, що робить його дуже передбачуваним.
+
+As you progress in your language journey and begin dealing with larger numbers, dates, or historical periods, you will frequently encounter a compound ordinal, **складений числівник** (compound numeral). These are numerals made up of multiple distinct words, such as "twenty-fifth", "one hundred fourteenth", or "two thousand twenty-fourth". The critical grammatical rule that governs compound ordinals is beautifully efficient: ONLY the very last word in the sequence declines and changes its form. All the preceding words in the compound numeral remain permanently frozen in their standard Nominative form. For instance, notice carefully how the first word remains completely untouched when we change cases:
+
+**Двадцять третій день.** — *The twenty-third day.* (Nominative)
+**Двадцять третього дня.** — *Of the twenty-third day.* (Genitive)
+
+The same principle applies to much larger numbers. Observe how only the final word declines:
+
+**Сто п'ятнадцята сторінка.** — *The one hundred fifteenth page.* (Nominative)
+**Сто п'ятнадцятої сторінки.** — *Of the one hundred fifteenth page.* (Genitive)
+**Сто п'ятнадцятій сторінці.** — *To the one hundred fifteenth page.* (Dative)
+**Сто п'ятнадцятою сторінкою.** — *By the one hundred fifteenth page.* (Instrumental)
+
+Однією з найбільших фонетичних переваг українських порядкових числівників є їхній стабільний та фіксований наголос. На відміну від деяких кількісних числівників або складних іменників, вони ніколи не змінюють наголошену літеру. Порядкові числівники завжди зберігають наголос на одному й тому самому складі протягом усього процесу відмінювання. Такі поширені слова, як «перший», «другий», «третій», «сьомий» та «десятий», ніколи не зрадять вас раптовою зміною ритму. Якщо ви один раз запам'ятали правильний наголос у називному відмінку, ви можете бути абсолютно впевнені у ньому завжди. Він залишиться рівно на тому самому місці у родовому, давальному, орудному чи будь-якому іншому відмінку. Це просте правило значно полегшує процес артикуляції та робить ваше повсякденне мовлення набагато природнішим.
+
+<!-- INJECT_ACTIVITY: fill-in, Вставте правильну граматичну форму у реченнях на тему відмінювання порядкових числівників, 10 items -->
+<!-- INJECT_ACTIVITY: quiz, Оберіть правильний варіант: лексика та граматика з розділу «Відмінювання порядкових числівників», 10 items -->

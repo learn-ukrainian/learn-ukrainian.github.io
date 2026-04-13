@@ -137,99 +137,147 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Діалоги — Розкажи про плани
+## Діалоги (Dialogues)
 
-When you want to know what someone is doing in their **вільний час** (free time), the most natural approach is to ask about their upcoming weekend. By starting a conversation with **Що ти робиш у вихідні?** (What are you doing this weekend?), you can gauge their availability before suggesting an activity. This is the perfect way to begin a discussion about plans, hobbies, and how people prefer to spend their time outside of work or study.
+At a community-center bulletin board, **Вітя** (Vitya) and **Оленка** (Olenka) talk about their hobbies and make a weekend plan. This gives us a simple model for asking about free time and inviting someone to an activity.
 
-> **Вітя:** Привіт, Оленко! Що ти робиш у вихідні? *(Hi, Olenka! What are you doing this weekend?)*
-> **Оленка:** Привіт! Зазвичай я гуляю і читаю. *(Hi! Usually I walk and read.)*
-> **Вітя:** Ходімо в кіно в суботу! *(Let's go to the cinema on Saturday!)*
-> **Оленка:** Добре! О котрій годині? *(Okay! At what time?)*
+> **Вітя:** Привіт, Оленко! Що ти робиш у **вихідні**? *(Hi, Olenka! What do you do on the weekend?)*
+> **Оленка:** Привіт! **Зазвичай** я гуляю і читаю. *(Hi! Usually I walk and read.)*
+> **Вітя:** **Ходімо** в **кіно** в суботу! *(Let's go to the cinema on Saturday!)*
+> **Оленка:** Добре! О котрій? *(Good! At what time?)*
 > **Вітя:** О п'ятій. *(At five.)*
-> **Оленка:** Чудово! До зустрічі! *(Great! See you!)*
+> **Оленка:** Чудово! *(Great!)*
 
-:::tip Invitation Patterns
-When you want to invite someone to join you, use the imperative phrase **Ходімо!** (Let's go!). You might also hear native speakers use **Давай!** (Let's!), which is a very common informal and conversational alternative. However, **Ходімо!** is the standard, grammatically correct form to prioritize when suggesting a shared activity. 
+Notice the core pattern here: «Що ти робиш у вихідні?», «Ходімо в кіно в суботу!», and «О котрій? — О п'ятій». To connect this module to earlier A1.4 material, you can also combine activities with weather: **Сьогодні тепло. Ходімо в парк у суботу!** *(It is warm today. Let's go to the park on Saturday!)* **Сьогодні холодно. Я читаю вдома.** *(It is cold today. I read at home.)*
+
+> **Оленка:** Вітю, ти любиш **спорт**? *(Vitya, do you like sport?)*
+> **Вітя:** Так, я граю у **футбол**. *(Yes, I play football.)*
+> **Оленка:** Як **часто**? *(How often?)*
+> **Вітя:** Двічі на тиждень, у вівторок і четвер. *(Twice a week, on Tuesday and Thursday.)*
+> **Оленка:** А ще? *(And what else?)*
+> **Вітя:** **Іноді** слухаю музику і малюю. *(Sometimes I listen to music and draw.)*
+
+In this second conversation, Olenka asks a direct question: «Ти любиш спорт?» (Do you like sport?). The word **спорт** (sport) is easy to recognize. Vitya answers affirmatively with «Так, я граю у футбол» (Yes, I play football), using the word **футбол** (football). Olenka wants to know more about his routine, so she asks «Як часто?» (How often?). The word **часто** means "often". Vitya gives a precise answer: «Двічі на тиждень» (Twice a week). He also adds more details about his other interests, saying «Іноді слухаю музику» (Sometimes I listen to music). The word **іноді** (sometimes) shows that this is an occasional hobby.
+
+:::note
+In Ukraine, many towns and cities have a «Будинок культури» (House of Culture). These are active community centers where people of all ages go to participate in art classes, sports, dance groups, and musical performances. Bulletin boards in these centers are great places to find a new hobby or join a club!
 :::
 
-> **Вітя:** Ти любиш спорт? *(Do you like sports?)*
-> **Оленка:** Так, я граю у футбол. *(Yes, I play football.)*
-> **Вітя:** Як часто? *(How often?)*
-> **Оленка:** Двічі на тиждень, у вівторок і четвер. *(Twice a week, on Tuesday and Thursday.)*
-> **Вітя:** А ще що ти робиш? *(And what else do you do?)*
-> **Оленка:** Іноді слухаю музику і малюю. *(Sometimes I listen to music and draw.)*
+## Хобі і спорт (Hobbies and Sports)
 
-<!-- INJECT_ACTIVITY: fill-in-invitations -->
+To talk about hobbies, ask: «Що ти любиш робити у вільний час?» (What do you like to do in your free time?). The basic pattern is **Я люблю + infinitive**: «Я люблю читати» (I like to read), «Я люблю відпочивати» (I like to rest).
 
-## Хобі і спорт — Що ти любиш?
+To talk about sports, use **грати у / в + sport**: «Я граю у футбол», «Він грає у баскетбол», «Ми граємо у теніс».
 
-The simplest and most direct way to talk about your interests is to use the verb **любити** (to love/like) followed by an infinitive verb. This structure allows you to express your preferences without needing complex grammar rules. For example, if your hobby is reading, you simply combine the two verbs. Here are some common examples of activities you might enjoy:
-* **читати книги** (to read books)
-* **малювати вдома** (to draw at home)
-* **фотографувати** (to take photos)
-* **готувати** (to cook)
+*   **Я граю у футбол.** (I play football.)
+*   **Він грає у баскетбол.** (He plays basketball.)
+*   **Ми граємо у теніс.** (We play tennis.)
 
-When talking about sports and games, Ukrainian uses the verb **грати** (to play) with the preposition **у** (or **в**). This specific combination is required for any competitive sport or structured game. Remember that the preposition you choose depends on the first letter of the next word to maintain a smooth flow of sound. 
-* **грати у футбол** (to play football)
-* **грати у баскетбол** (to play basketball)
-* **грати у теніс** (to play tennis)
-* **грати у комп'ютерні ігри** (to play computer games)
-
-In contrast to sports, playing a musical instrument uses a completely different pattern. You still use the verb **грати**, but you must combine it with the preposition **на** (on) followed by the instrument. This is a fixed chunk of language that you should memorize as a single unit. It literally translates to "playing on" the instrument.
-* **грати на гітарі** (to play guitar)
-* **грати на піаніно** (to play piano)
-* **грати на скрипці** (to play violin)
-
-For places of entertainment, we use the verb **ходити** (to go habitually) to describe visiting them regularly. Just like with sports and instruments, different venues require different prepositions. We use the chunk **ходити в** for most buildings and physical structures, such as **ходити в кіно** (to go to the cinema), **ходити в театр** (to go to the theater), or **ходити в музей** (to go to a museum). However, for events and performances, we use the chunk **ходити на**. You would say **ходити на концерт** (to go to a concert) or **ходити на футбол** (to go to a football match).
-
-<!-- INJECT_ACTIVITY: match-up-hobbies -->
-<!-- INJECT_ACTIVITY: preposition-check -->
-
-## Як часто? — Прислівники частоти
-
-To describe how regularly you participate in your hobbies, you need adverbs of frequency. The most common positive frequency adverbs are **завжди** (always), **зазвичай** (usually), **часто** (often), and **іноді** or **інколи** (sometimes). In a Ukrainian sentence, these adverbs typically sit right before the main verb. This placement highlights the frequency of the action you are describing.
-* **Я часто гуляю в парку.** (I often walk in the park.)
-* **Ми зазвичай читаємо ввечері.** (We usually read in the evening.)
-* **Вона іноді фотографує місто.** (She sometimes photographs the city.)
-
-When expressing negative frequency, we use words like **рідко** (rarely) and **ніколи** (never). There is a critical grammatical rule regarding the word **ніколи**: it requires a double negation. This means it must always be followed by the particle **не** (not) and the main verb. The word **рідко**, on the other hand, stands alone and does not take a negative particle.
-* **Я ніколи не граю у футбол.** (I never play football.)
-* **Він ніколи не читає журнали.** (He never reads magazines.)
-* **Ми рідко ходимо в кіно.** (We rarely go to the cinema.)
-
-:::note Double Negation
-In English, double negatives are considered incorrect grammar. In Ukrainian, they are absolutely mandatory when using negative adverbs like **ніколи**. You must say "I never not do something" for the sentence to make sense.
+:::tip
+How do you know whether to use «у» or «в»? Ukrainian loves harmony and flow! If the previous word ends in a consonant and the next word starts with a consonant, we use «у» to break them up to make pronunciation easier. If there are vowels around, we prefer «в». This rule is called euphony, or "beautiful sounding."
 :::
 
-If you want to be more specific about your schedule, you can use numbers with the phrase **на тиждень** (per week) or **на місяць** (per month). These fixed expressions indicate exactly how many times an action occurs within a given timeframe. Another highly useful and common alternative is **кожен день** (every day), which serves as a more literal substitute for **завжди**.
-* **раз на тиждень** (once a week)
-* **двічі на тиждень** (twice a week)
-* **тричі на тиждень** (three times a week)
+For musical instruments, use **грати на + instrument**: «Я граю на гітарі», «Вона грає на піаніно», «Ти граєш на скрипці?»
 
-You can synthesize all of these elements by combining the days of the week with your frequency adverbs and activity verbs. This allows you to describe a complete, detailed routine in a single sentence.
-* **У понеділок я завжди займаюся спортом.** (On Monday I always practice sports.)
-* **У п'ятницю ми часто ходимо в театр.** (On Friday we often go to the theater.)
+*   **Я граю на гітарі.** (I play the guitar.)
+*   **Вона грає на піаніно.** (She plays the piano.)
+*   **Ти граєш на скрипці?** (Do you play the violin?)
 
-<!-- INJECT_ACTIVITY: fill-in-frequency -->
+Of course, not everyone plays sports or instruments. There are many other relaxing activities you can describe using simple verbs. You can combine these action verbs with nouns to create full hobby phrases without needing any extra prepositions.
+
+*   **Я люблю слухати музику.** (I like to listen to music.)
+*   **Ми любимо дивитися фільми.** (We like to watch movies.)
+*   **Вони люблять дивитися серіали.** (They like to watch series.)
+*   **Я малюю.** (I draw.)
+*   **Він фотографує.** (He takes photos.)
+
+Notice how we use the verb «слухати» (to listen) directly with «музику» (music), or «дивитися» (to watch) directly with «фільми» (movies) or «серіали» (series).
+
+Another very important verb for free time is «ходити» (to go regularly). We use this verb to talk about places we visit for entertainment as a habit. For now, you should learn these phrases as fixed vocabulary chunks. The grammar behind these endings will be explained later.
+
+*   **Я ходжу в кіно.** (I go to the cinema.)
+*   **Він ходить у театр.** (He goes to the theater.)
+*   **Ми ходимо на концерт.** (We go to a concert.)
+*   **Вони ходять у музей.** (They go to a museum.)
+
+The words **театр** (theater), **концерт** (concert), and **музей** (museum) are very useful for making weekend plans. The word **кіно** (cinema) is special because it never changes its ending, no matter how we use it in a sentence!
+
+<!-- INJECT_ACTIVITY: match-hobbies-verbs -->
+
+<!-- INJECT_ACTIVITY: fill-in-prepositions-activities -->
+
+## Як часто? (How Often?)
+
+To ask about routine, say «Як часто?» (How often?). The answer usually uses a frequency adverb.
+
+*   **завжди** (always)
+*   **зазвичай** (usually)
+*   **часто** (often)
+*   **іноді** / **інколи** (sometimes)
+*   **рідко** (rarely)
+*   **ніколи** (never)
+
+The words **іноді** and «інколи» mean exactly the same thing. You can use whichever one you prefer. These adverbs are incredibly useful because they allow you to add detail and precision to your daily routine descriptions.
+
+In a Ukrainian sentence, frequency adverbs are almost always placed directly before the main verb. They describe the action, so they sit right next to it. 
+
+*   **Я часто гуляю.** (I often walk.)
+*   **Я іноді читаю.** (I sometimes read.)
+*   **Він зазвичай працює.** (He usually works.)
+
+There is one extremely important rule when using the word **ніколи** (never). Ukrainian requires a double negation. This means that if you use the word "never", you must also add the negative particle «не» (not) before the verb.
+
+*   **Я ніколи не працюю у неділю.** (I never work on Sunday.)
+*   **Ми ніколи не дивимося серіали.** (We never watch series.)
+
+:::caution
+English speakers often miss the extra **не** here. In Ukrainian, **ніколи** is used together with **не**: «Я ніколи не працюю». Without **не**, the sentence is ungrammatical.
+:::
+
+Sometimes adverbs like "often" or **рідко** (rarely) are not specific enough. When you want to give an exact schedule, you can use numbers combined with the word **раз** (once / one time). The word **раз** is used to count occurrences.
+
+*   **раз на тиждень** (once a week)
+*   **двічі на тиждень** (twice a week)
+*   **тричі на тиждень** (three times a week)
+*   **кожен день** (every day)
+
+You can place these specific frequency expressions at the end of your sentence to give clear details about your routine.
+
+*   **Я граю у футбол двічі на тиждень.** (I play football twice a week.)
+*   **Я ходжу в кіно раз на місяць.** (I go to the cinema once a month.)
+
+Now that you can talk about your hobbies and schedule, you might want to invite someone to join you! The most natural and authentic Ukrainian way to say "Let's go!" is **ходімо!**. This is a powerful, enthusiastic invitation that you can combine with activities, days, and times.
+
+*   **Ходімо в кіно у суботу!** (Let's go to the cinema on Saturday!)
+*   **Ходімо в парк!** (Let's go to the park!)
+
+If you are speaking casually with a good friend, you can also use the informal word **давай!** (let's!).
+
+*   **Давай грати у теніс!** (Let's play tennis!)
+*   **Давай дивитися фільм!** (Let's watch a movie!)
+
+<!-- INJECT_ACTIVITY: fill-in-invitations-frequency -->
 
 ## Підсумок — Summary
 
-You now possess the essential tools to discuss your free time, hobbies, and weekend plans in Ukrainian. You have learned how to use **любити** with an infinitive verb to express your general interests, and you have mastered the crucial difference between the phrases **грати у** for competitive sports and **грати на** for musical instruments. You also know how to invite a friend to an event using the standard imperative **Ходімо!**, and how to specify whether you are going into a building with **ходити в** or attending an event with **ходити на**. Finally, you can accurately describe the frequency of your activities using adverbs like **часто** and **ніколи**, remembering the vital rule of double negation for the latter.
+In this module, you learned how to talk about free time with **Я люблю + infinitive**, **грати у / в + sport**, and **грати на + instrument**. These patterns let you describe hobbies clearly and naturally.
 
-Use the following self-check questions to verify that you can confidently apply these new communication skills. Read the question, formulate your own answer, and then compare it to the provided model response.
-* **Що ви любите робити у вільний час?** (What do you like to do in your free time?)
-  * Model answer: **Я люблю читати і ходити в кіно.** (I like to read and go to the cinema.)
-* **Як часто ви граєте у футбол?** (How often do you play football?)
-  * Model answer: **Я граю у футбол двічі на тиждень.** (I play football twice a week.)
-* **Ви граєте на піаніно?** (Do you play the piano?)
-  * Model answer: **Ні, я ніколи не граю на піаніно, але я слухаю музику.** (No, I never play the piano, but I listen to music.)
-* **Як запросити друга в театр?** (How to invite a friend to the theater?)
-  * Model answer: **Ходімо в театр у суботу!** (Let's go to the theater on Saturday!)
+We also practiced how to make exciting weekend plans. To invite a friend out, the best word to use is **ходімо!** (let's go!). This single word is a complete invitation. You can combine it with places we like to visit, such as the cinema or the theater. For example, you can say «Ходімо в кіно!» or «Ходімо на концерт!». If you are talking to a close friend in a relaxed setting, you can also use the casual word **давай!** to suggest an activity.
 
-By combining your knowledge of time, weather, days of the week, and now free time activities, you can easily describe your perfect weekend routine. This comprehensive foundation prepares you to review all of these interconnected concepts in the upcoming Checkpoint module, where your ability to communicate about daily life will be put to the test.
+To add detail to your conversations, you now have a full set of vocabulary for expressing frequency. You can answer the question «Як часто?» (How often?) using general adverbs like **завжди** (always), **часто** (often), **іноді** (sometimes), **рідко** (rarely), and **ніколи** (never). Just remember the double negation rule: **ніколи** must be paired with «не». If you need to be precise, you can use numbered expressions like «раз на тиждень» (once a week) or «двічі на тиждень» (twice a week).
+
+:::tip
+The best way to remember these frequency words is to connect them to your actual life. Pick your favorite hobby and write down your schedule. Seeing your own routine written in Ukrainian will help lock these words into your memory!
+:::
+
+Now it is time to practice these new skills yourself. Try to complete this quick self-check to see how much you have remembered:
+
+*   Name 3 hobbies you have in Ukrainian using the «Я люблю» pattern.
+*   Look at your hobbies. How often do you do each one? Try to use a different frequency word for each.
+*   Think of a friend. Invite them to do something fun this weekend using the phrase **ходімо**.
 </generated_module_content>
 
-**PIPELINE NOTE — Word count: 1257 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
+**PIPELINE NOTE — Word count: 1403 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -405,37 +453,169 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 94 words | Not found: 1 words
+Verified: 92 words | Not found: 2 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
+  ✗ Вітю — NOT IN VESUM
   ✗ Вітя — NOT IN VESUM
 
-All 94 other words are confirmed to exist in VESUM.
+All 92 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
-## Verification Tools (MCP)
+---
 
-You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
+## Verification Tools (Shell Commands)
 
-**Core Verification:**
-- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
-- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
+You have access to verification tools via shell commands. Use these to verify
+Ukrainian vocabulary, check grammar, and search textbook content **as you write**.
 
-**Content Quality:**
-- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+**IMPORTANT:** Run verification commands BEFORE finalizing any Ukrainian text.
+Batch multiple verifications together to minimize round-trips.
 
-**Reference:**
-- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp_rag_search_literary` — verify literary references against primary sources
-- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
+### 1. Batch-verify Ukrainian words exist in VESUM (preferred — one call for many words)
 
-**Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_words
+results = verify_words(['слово1', 'слово2', 'слово3'])
+for w, matches in results.items():
+    if matches:
+        print(f'{w}: FOUND — lemma={matches[0][\"lemma\"]}, pos={matches[0][\"pos\"]}')
+    else:
+        print(f'{w}: NOT FOUND — may not exist in standard Ukrainian')
+"
+```
+
+### 2. Verify a single Ukrainian word in VESUM (with full morphological tags)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_word
+results = verify_word('WORD_HERE')
+if results:
+    for m in results:
+        print(f'lemma={m[\"lemma\"]}, pos={m[\"pos\"]}, tags={m[\"tags\"]}')
+else:
+    print('NOT FOUND in VESUM')
+"
+```
+
+### 3. Get all inflected forms of a lemma (declension/conjugation)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_lemma
+forms = verify_lemma('LEMMA_HERE')
+for f in forms[:20]:
+    print(f'{f[\"word_form\"]:20s} {f[\"pos\"]:8s} {f[\"tags\"]}')
+print(f'... {len(forms)} forms total')
+"
+```
+
+### 4. Check CEFR level of a word (is it level-appropriate?)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import query_cefr_level
+results = query_cefr_level('WORD_HERE')
+for r in results:
+    print(f'{r[\"word\"]}: {r[\"level\"]} ({r[\"pos\"]})')
+if not results:
+    print('Not in CEFR database')
+"
+```
+
+### 5. Search textbook content (Ukrainian school textbooks, Grades 1-11)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_textbooks
+keywords = {'keyword1', 'keyword2'}
+results = search_textbooks(keywords, 5)
+for r in results:
+    title = r.get('section_title', r.get('title', ''))
+    grade = r.get('grade', '?')
+    text = r.get('text', '')[:200]
+    print(f'Grade {grade} | {title}')
+    print(f'  {text}')
+    print()
+"
+```
+
+### 6. Search style guide for calques/Russianisms (Антоненко-Давидович, 279 entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_style_guide
+results = search_style_guide('TOPIC_HERE', 3)
+for r in results:
+    print(f'--- {r.get(\"word\", \"\")} [{r.get(\"section\", \"\")}]')
+    print(r.get('text', '')[:300])
+    print()
+if not results:
+    print('No style guide entries found')
+"
+```
+
+### 7. Look up word definition in СУМ-11 (Ukrainian explanatory dictionary, 127K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_definitions
+results = search_definitions('WORD_HERE', 3)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+### 8. Search idioms (Фразеологічний словник, 25K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_idioms
+results = search_idioms('WORD_HERE', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"text\", r.get(\"definition\", \"\")))[:200]}')
+"
+```
+
+### 9. English-to-Ukrainian translation (Балла, 79K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import translate_en_uk
+results = translate_en_uk('ENGLISH_WORD', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+---
+
+**WHEN to use these tools:**
+
+1. **Before writing any Ukrainian text** — batch-verify all key vocabulary with
+   `verify_words` (tool 1). Any word that returns NOT FOUND must be replaced.
+2. **When you suspect a Russicism or calque** — search the style guide (tool 6)
+   and verify the correct Ukrainian form with `verify_word` (tool 2).
+3. **When writing for A1/A2** — check CEFR levels (tool 4) to ensure vocabulary
+   is level-appropriate.
+4. **When unsure about a case ending or conjugation** — use `verify_lemma` (tool 3)
+   to see the full paradigm.
+5. **When covering a grammar topic** — search textbooks (tool 5) to see how
+   Ukrainian school textbooks teach it.
+6. **When you need the precise Ukrainian meaning** — use СУМ-11 (tool 7).
+7. **When looking for natural Ukrainian expressions** — search idioms (tool 8).
+
+**Batching rule:** Collect all words you want to verify, then run ONE `verify_words`
+call instead of multiple `verify_word` calls. This is faster and uses fewer tokens.

@@ -1,0 +1,56 @@
+round: 4
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: The planned grammar/content points are covered with direct examples like
+    `"стіл → столи"`, `"книга → книги"`, `"вікно → вікна"`, and `"**ці** means \"these\"
+    and **ті** means \"those\""`, with textboo
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: 'Core Ukrainian forms are correct throughout: `"стілець → стільці"`, `"великий
+    стіл → великі столи"`, `"чисте вікно → чисті вікна"`. No Russian letters `ы`,
+    `э`, `ё`, `ъ` appear.'
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'The module follows a clean presentation-to-rule-to-practice flow: dialogues
+    first, then `"Один → бага́то"`, then `"Прикме́тники у множині́"`, then review/self-check.
+    Each grammar point has multiple ex'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 7
+  evidence: All required vocabulary is present, including `"столи"`, `"книги"`, `"вікна"`,
+    `"стільці"`, `"ці"`, `"ті"`, `"мої́ нові книги"`, and `"які"`. But recommended
+    `сумки`, `лампи`, `дзеркала`, and `речі` d
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: The four markers align with the plan’s four activity hints and are placed
+    after the relevant teaching sections. The singular/plural markers follow the plural
+    explanation, and the adjective-agreement m
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: The tone is teacherly and mostly substantive, with practical prompts like
+    `"Look around your own room or classroom..."`. It is a bit functional, but not
+    padded or gamified.
+- dimension: 7
+  name: Structural integrity
+  score: 5
+  evidence: 'All required H2 sections are present and ordered correctly, but the pipeline
+    note gives 986 words, below the 1200 target. Section balance is also short versus
+    the 300-word outline in three sections: a'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Ukrainian is presented on its own terms, with no Russian-centered framing
+    or cultural distortion.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 7
+  evidence: 'The classroom dialogue works, but the shop exchange is thin: `"Так! Які
+    ручки? Черво́ні чи си́ні? ... Скі́льки? ... Три зошити."` It stays grammatical,
+    but it reads like a drill rather than a natural '
+findings: []

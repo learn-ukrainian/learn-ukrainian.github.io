@@ -25,7 +25,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-цих закінчень є критично важливим для того, щоб ваша українська звучала природно і грамотно. Плутанина між «е» та «и» в закінченнях — це дуже помітна помилка. The easiest and most deterministic way to identify a verb's conjugation class is to look at its third person plural form, which corresponds to the pronoun «вони». This is the ultimate test. If the verb ends in **-уть** or **-ють**, it always belongs to the first conjugation. If it ends in **-ать** or **-ять**, it always belongs to the second conjugation. This simple rule will save you from endless guessing. :::tip **The 3rd Person Plural Trick** Always check the «вони» form when in doubt. First conjugation: **-уть** / **-ють** Second conjugation: **-ать** / **-ять** ::: You must be careful with some tricky verbs that look like they belong to one group but actually belong to another. For example, the verb «хотіти» ends in «-іти», which often signals the second conjugation. But if we look at its plural form, it is «хочуть». Because it has the **-уть** ending, it belongs to the first conjugation, giving us forms like «ти хочеш» and «він хоче». Similarly, the verb «стояти» looks like it might belong to the first conjugation because of the «-яти» ending, but its plural form is «стоять». The **-ять** ending places it firmly in the second conjugation, resulting in forms like «ти стоїш» and «вона стоїть». Ви, напевно, помітили щось незвичне, коли ми відмінювали дієслово «робити». В інфінітиві ми маємо літеру «б», але у формі першої особи однини з'являється «роблю», що додає зайвий звук. Це мовне явище називається чергуванням приголосних, і в теперішньому часі воно впливає виключно на форму першої особи однини. Певні приголосні в кінці основи змінюються перед закінченням «-у» або «-ю». Найпоширеніші зміни такі: звук «д» перетворюється на «дж» (сидіти — сиджу), а «с» стає «ш» (просити — прошу). Також звук «з» переходить у «ж» (возити — вожу), а буквосполучення «зд» стає «ждж» (їздити — їжджу). Крім того, губні приголосні, такі як «б», «п», «в», «м» та «ф», отримують додатковий звук «л» перед закінченням. Це означає, що «б» стає «бл» (любити — люблю), а «п» перетворюється на «пл» (терпіти — терплю). Ці чергування роблять слова легшими для вимови та дозволяють їм звучати більш природно. Не дозволяйте їм збити вас із пантелику. Решта парадигми завжди повертається до оригінального приголосного, який ви бачите в інфінітиві. :::info **Decolonization Marker: The Dropped "-ть"** A key morphological feature of the modern Ukrainian language is the dropping of the **-ть** ending in the third person singular of the first conjugation. While some neighboring languages retain this ending (e.g., Russian *он знает*, *он несёт*), Ukrainian drops it entirely: **він знає**, **він несе**. This is not a colloquial simplification or a recent change; it is the established literary standard and a historical marker of Ukrainian linguistic identity. Always ensure your third person singular verbs in the first conjugation end cleanly on the thematic vowel without any trailing consonants. ::: <!-- INJECT_ACTIVITY: group-sort, Distribute verbs between I and II conjugation classes -->
+verb «хотіти» looks like it should belong to the second conjugation because of the «і» sound before the infinitive ending. However, the third person plural is «вони хочуть». The -уть ending definitively places it in the first conjugation. Similarly, «стояти» might look like a first conjugation verb, but its plural is «вони стоять», firmly establishing it as a second conjugation verb. :::tip **The Plural Test** Always use the "вони" form to check the conjugation class. For example, "вони читають" ends in -ють, so "читати" is I conjugation. "Вони стоять" ends in -ять, so "стояти" is II conjugation. ::: One of the most distinctive features of Ukrainian verbs is the phenomenon of consonant mutation, or чергування, during conjugation. When adding the first person singular ending (-у or -ю), the final consonant of the verb stem often changes. This happens primarily to make the word easier to pronounce. This change is strictly limited to the "я" form; all other persons retain the original consonant of the stem. This rule also applies to any **зворотний** (reflexive — verbs with -ся/-сь) verb, because the reflexive postfix is added after the personal ending. Чергування приголосних найчастіше відбувається у дієсловах другої дієвідміни. Приголосний «д» перетворюється на «дж» (сидіти — я сиджу). Приголосний «с» переходить у «ш» (просити — я прошу). Губні приголосні «б», «п», «в», «м», «ф» отримують додатковий звук «л» перед закінченням (любити — я люблю). Це правило також працює для зворотних дієслів: від дієслова «дивитися» ми утворюємо форму «я дивлюся». Такі зміни роблять мову більш плавною та мелодійною. > *Consonant alternation most often occurs in verbs of the second conjugation. The consonant "д" turns into "дж" (to sit — I sit). The consonant "с" transitions into "ш" (to ask — I ask). The labial consonants "б", "п", "в", "м", "ф" receive an additional sound "л" before the ending (to love — I love). This rule also works for reflexive verbs: from the verb "дивитися" we form the form "я дивлюся". Such changes make the language more fluid and melodic.* Finally, let us consider a crucial phonetic detail that highlights the unique historical development of the Ukrainian language. In the third person singular (the "він", "вона", "воно" form) of the first conjugation, Ukrainian verbs drop the final "-ть" sound entirely. Українська мова має унікальну рису в третій особі однини першої дієвідміни. Ми кажемо «він знає», «вона пише», «воно несе». Тут немає кінцевого приголосного звука. Ця форма історично сформувалася саме так і є важливою ознакою природного українського мовлення. Збереження цієї легкості та відкритості складу є ключовим елементом автентичної вимови. > *The Ukrainian language has a unique feature in the third person singular of the first conjugation. We say "he knows", "she writes", "it carries". There is no final consonant sound here. This form historically developed exactly this way and is an important marker of natural Ukrainian speech. Preserving this lightness and openness of the syllable is a key element of authentic pronunciation.* <!-- INJECT_ACTIVITY: group-sort, Distribute verbs between I and II conjugation classes, 10 items -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -722,6 +722,33 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] теперішній час (present tense)
+- [ ] минулий час (past tense)
+- [ ] дієвідміна (conjugation class — I or II)
+- [ ] особа (person — 1st, 2nd, 3rd)
+- [ ] число (number — однина, множина)
+- [ ] рід (gender — чоловічий, жіночий, середній)
+- [ ] доконаний вид (perfective aspect — completed action)
+- [ ] недоконаний вид (imperfective aspect — ongoing action)
+- [ ] інфінітив (infinitive — the base form ending in -ти/-тися)
+- [ ] дієвідмінювання (conjugation — changing verb by person and number)
+- [ ] зворотний (reflexive — verbs with -ся/-сь)
+- [ ] видова пара (aspectual pair — e.g., писати/написати)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Минулий час: утворення і вживання (~850 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

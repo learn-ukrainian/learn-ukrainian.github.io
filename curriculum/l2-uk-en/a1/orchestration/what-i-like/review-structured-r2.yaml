@@ -1,0 +1,54 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: All planned content points are covered in prose, e.g. `Я люблю читати
+    і слухати музику.`, `Мені подобається музика.`, `Я не люблю готувати.`, `Ти любиш
+    читати?`; however the planned references are not
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: Checked forms such as `люблю`, `любиш`, `подобається`, `готуєш`, `Київ`,
+    `борщ` are valid; no Russian characters, clear Russianisms, Surzhyk, calques,
+    or paronym errors found.
+- dimension: 3
+  name: Pedagogical quality
+  score: 7
+  evidence: 'The pattern is correct, but `Мені подобається...` spends too long on
+    theory right after saying grammar will not be analyzed: `The grammatical mechanics
+    behind it actually involve the dative case...` T'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'Required and recommended vocabulary is all present in context: `читати`,
+    `гуляти`, `готувати`, `слухати`, `дивитися`, `грати`, `малювати`, `подорожувати`,
+    `співати`, `музика`, `фільм`, `книга`.'
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 4 planned activity slots are present, and each follows the material
+    it is supposed to test.
+- dimension: 6
+  name: Engagement & tone
+  score: 7
+  evidence: Some lines are padding rather than teaching, e.g. `This allows them to
+    express their hobbies clearly and simply, directly stating the activities they
+    are passionate about.`
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All planned H2 headings are present and ordered correctly; pipeline word
+    count is 1262, so the module is above target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: The Kyiv language-exchange setting, tea, and `борщ` are locally grounded
+    and not Russiancentric.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: 'Dialogue 1 works well, but Dialogue 2 is thin and list-like: `Тобі подобається
+    ця книга? ... А цей фільм? ... Мені подобається музика.` It teaches the chunk,
+    but not as a very natural exchange.'
+findings: []

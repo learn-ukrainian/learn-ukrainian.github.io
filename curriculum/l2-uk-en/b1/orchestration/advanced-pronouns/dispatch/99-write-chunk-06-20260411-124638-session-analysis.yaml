@@ -1,0 +1,87 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T10-45-e7226e87.json
+phase: write-chunk-06
+prompt_chars: 50358
+response_chars: 4461
+prompt_words: 7125
+response_words: 675
+sections:
+- name: header
+  start: 0
+  length: 429
+  fraction: 0.0085
+- name: skeleton
+  start: 429
+  length: 820
+  fraction: 0.0163
+- name: prior_summary
+  start: 1249
+  length: 3501
+  fraction: 0.0695
+- name: plan
+  start: 4750
+  length: 16709
+  fraction: 0.3318
+- name: wiki
+  start: 15335
+  length: 28690
+  fraction: 0.5697
+- name: output_spec
+  start: 50149
+  length: 209
+  fraction: 0.0042
+large_sections:
+- wiki
+directives_total: 19
+directives_covered: 7
+directives_missed:
+- kind: checklist
+  text: питально-відносний (interrogative-relative)
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: checklist
+  text: зворотний (reflexive — себе)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: заперечний (negative — ніхто, ніщо)
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: checklist
+  text: себе (oneself — reflexive pronoun, no Н.в.)
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: checklist
+  text: хтось (someone — known to speaker)
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: checklist
+  text: будь-хто (anyone — no specificity)
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: checklist
+  text: ніщо (nothing)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: must
+  text: The one who takes responsibility must always think about others, and not only
+    about oneself.
+  covered: false
+  coverage_note: 2/12 keywords (17%)
+- kind: must
+  text: Notice that **себе** (oneself) never has a Nominative form and changes according
+    to the case required by the verb.
+  covered: false
+  coverage_note: 4/13 keywords (31%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 4/11 keywords (36%)
+- kind: inject_activity
+  text: quiz, classify pronoun types
+  covered: false
+  coverage_note: marker missing

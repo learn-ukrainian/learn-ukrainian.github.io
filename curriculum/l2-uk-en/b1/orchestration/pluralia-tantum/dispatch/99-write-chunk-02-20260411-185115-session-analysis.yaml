@@ -1,0 +1,53 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T16-49-b1ddb9fc.json
+phase: write-chunk-02
+prompt_chars: 50414
+response_chars: 7328
+prompt_words: 7099
+response_words: 1153
+sections:
+- name: header
+  start: 0
+  length: 405
+  fraction: 0.008
+- name: skeleton
+  start: 405
+  length: 1475
+  fraction: 0.0293
+- name: prior_summary
+  start: 1880
+  length: 3490
+  fraction: 0.0692
+- name: plan
+  start: 5370
+  length: 19027
+  fraction: 0.3774
+- name: wiki
+  start: 17893
+  length: 25819
+  fraction: 0.5121
+- name: output_spec
+  start: 50216
+  length: 198
+  fraction: 0.0039
+large_sections:
+- wiki
+directives_total: 24
+directives_covered: 20
+directives_missed:
+- kind: must
+  text: must memorize which pattern each noun follows.
+  covered: false
+  coverage_note: 2/7 keywords (29%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 3/11 keywords (27%)
+- kind: inject_activity
+  text: group-sort-categories
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: 'quiz, Identify pluralia tantum: which nouns exist only in множина?, 8 items'
+  covered: false
+  coverage_note: marker missing

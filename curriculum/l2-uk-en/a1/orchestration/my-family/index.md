@@ -1,26 +1,28 @@
 # Build Summary: my-family (A1)
 
-Generated: 2026-04-11 01:17
+Generated: 2026-04-13 21:25
 
 ## Pipeline Phases
 
 | Phase | Status | Timestamp |
 |-------|--------|-----------|
-| check | complete | 2026-04-08 23:23:31 |
-| research | complete | 2026-04-08 23:23:31 |
-| skeleton | complete | 2026-04-08 23:25:05 |
-| pre-verify | complete | 2026-04-08 23:32:14 |
-| write | complete | 2026-04-08 23:33:02 |
-| exercises | complete | 2026-04-08 23:33:02 |
-| activities | complete | 2026-04-10 22:52:59 |
-| verify-exercises | complete | 2026-04-08 23:34:15 |
-| annotate | complete | 2026-04-08 23:34:15 |
-| vocab | complete | 2026-04-08 23:36:02 |
-| enrich | complete | 2026-04-08 23:36:02 |
-| verify | complete | 2026-04-08 23:36:03 |
-| stress | complete | 2026-04-08 23:37:05 |
-| review | complete | 2026-04-10 23:16:57 |
-| publish | complete | 2026-04-10 23:17:04 |
+| check | complete | 2026-04-12 18:36:42 |
+| research | complete | 2026-04-12 18:36:42 |
+| skeleton | complete | 2026-04-12 18:37:32 |
+| pre-verify | complete | 2026-04-12 18:38:48 |
+| write | complete | 2026-04-12 18:39:58 |
+| exercises | complete | 2026-04-12 18:39:58 |
+| activities | complete | 2026-04-12 18:41:34 |
+| repair | complete | 2026-04-12 18:41:35 |
+| verify-exercises | complete | 2026-04-12 18:41:35 |
+| annotate | complete | 2026-04-12 18:41:35 |
+| vocab | complete | 2026-04-12 18:42:33 |
+| enrich | complete | 2026-04-12 18:42:33 |
+| verify | complete | 2026-04-12 18:42:34 |
+| review | complete | 2026-04-12 18:53:20 |
+| stress | complete | 2026-04-12 18:53:23 |
+| publish | complete | 2026-04-13 08:57:00 |
+| audit | complete | 2026-04-13 08:57:00 |
 
 ## Reviews
 
@@ -33,14 +35,13 @@ Generated: 2026-04-11 01:17
 
 | Phase | Agent | Duration | OK |
 |-------|-------|----------|----|
-| pre-verify | gemini-tools (gemini-3-flash-preview) | 429s | ✅ |
-| skeleton | gemini (gemini-3-flash-preview) | 94s | ✅ |
-| write | gemini-tools (gemini-3.1-pro-preview) | 48s | ✅ |
-| activities | gemini-tools (gemini-3.1-pro-preview) | 73s | ✅ |
-| activities | gemini-tools (gemini-3.1-pro-preview) | 134s | ✅ |
-| vocab | gemini (gemini-3-flash-preview) | 99s | ✅ |
-| review | gemini-tools (gemini-3.1-pro-preview) | 61s | ✅ |
-| review | gemini-tools (gemini-3.1-pro-preview) | 160s | ✅ |
+| pre-verify | gemini-tools (gemini-3.1-pro-preview) | 75s | ✅ |
+| skeleton | gemini (gemini-3.1-pro-preview) | 50s | ✅ |
+| write | gemini-tools (gemini-3.1-pro-preview) | 69s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 95s | ✅ |
+| vocab | gemini (gemini-3.1-pro-preview) | 54s | ✅ |
+| review | codex-tools (gpt-5.4) | 320s | ✅ |
+| review | codex-tools (gpt-5.4) | 325s | ✅ |
 
 ## Files
 

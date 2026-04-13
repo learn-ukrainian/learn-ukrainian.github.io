@@ -35,7 +35,7 @@ Grand total: ~4410 words
 <previous_context>
 [...previous sections truncated...]
 
-«я нуджу». Правильно сказати: **мене нудить** *(I feel nauseous)*. У цій фразі ви використовуєте займенник у формі знахідного відмінка (кого? мене) і дієслово у третій особі однини. Так само ми говоримо про інші відчуття: мене лихоманить *(I have the chills)*. Якщо інфекція потрапила у ваше горло, виникне інша проблема. Ви скажете лікареві: **мені боляче ковтати** *(it hurts to swallow)*. Тут ми вже використовуємо займенник у давальному відмінку (кому? мені), прислівник стану (боляче) та інфінітив дієслова. Це універсальна модель. Ви можете її змінювати: мені боляче дихати, мені боляче ходити. А коли у вас подразнений ніс і ви постійно видаєте різкі звуки, ви просто кажете: **я чхаю** *(I am sneezing)*, використовуючи звичайне дієслово. Інший частий симптом — це **кашель** *(cough)*. Ви кажете: у мене сильний кашель, або я постійно кашляю. Згадайте, що слово кашель є іменником чоловічого роду, тому в давальному відмінку воно матиме форму кашлю. Звичайно, найважливіший показник вашого стану — це **температура** *(temperature)*. В Україні температуру тіла вимірюють у градусах Цельсія. Нормальна температура здорової людини — це тридцять шість і шість. Якщо ви захворіли, вона починає підвищуватися. Коли ви повідомляєте результат лікареві, ви зазвичай називаєте цифри: у мене температура тридцять сім і дві, або у мене висока температура — тридцять вісім і п'ять. Зверніть увагу, що ми часто опускаємо слово «градусів» і слово «десятих», просто називаючи два числа. Ця проста розмовна форма є абсолютно природною і найчастіше звучить у кабінеті лікаря. Звісно, лікувати хворобу — це добре, але ще краще взагалі не хворіти. Для цього в медицині існує таке поняття, як **профілактика** *(prevention)*. Це цілий комплекс заходів, які допомагають нашому організму залишатися сильним і боротися з вірусами. Головна мета профілактики — це зміцнити ваш **імунітет** *(immunity)*, тобто природну захисну систему тіла. Чим міцніший у вас імунітет, тим менше шансів підхопити інфекцію. Один із найбільш надійних способів захистити себе від багатьох хвороб — це вчасне **щеплення** *(vaccination)*. Медики всього світу постійно наголошують на його важливості. Зверніть увагу на це українське слово: воно належить до середнього роду і має типовий суфікс -ення, як і слова лікування чи обстеження. Як правильно давати медичні поради українською мовою? Для цього ми часто використовуємо спеціальні безособові конструкції з інфінітивом. Замість того, щоб прямо наказувати, лікар зазвичай скаже: вам **варто** *(it is worth / you should)* зробити щеплення від грипу цієї осені. Слово варто показує, що дія принесе вам користь і є бажаною. Інше популярне слово — це **слід** *(one should)*. Наприклад: для міцного здоров'я слід більше гуляти на свіжому повітрі та їсти свіжі фрукти. А якщо ситуація вимагає обов'язкових дій, ми використовуємо слово **потрібно** *(it is necessary / one must)*: вам терміново потрібно здати аналізи, або хворому потрібно залишатися в ліжку. Ці слова (варто, слід, потрібно) не змінюються за особами чи числами. Після них ви просто ставите інфінітив головного дієслова. Якщо ви хочете вказати, кому саме адресована порада, ви ставите особу в давальному відмінку: мені варто, вам слід, пацієнту потрібно. Використовуючи ці граматичні конструкції разом із медичною лексикою, ви зможете не лише розповісти про симптоми, але й чудово зрозуміти рекомендації вашого лікаря. <!-- INJECT_ACTIVITY: error-correction-medical -->
+in cases used for these sensations. For general feelings and pain, Ukrainian uses the dative case to mark the experiencer, as seen in "мені боляче" (it is painful to me). However, the verb for nausea is different. To say you are nauseous, you must use the accusative case, resulting in the phrase "мене нудить" (it nauseates me). :::info **Grammar box** When Ukrainians report their **температура** (temperature), they use a very specific decimal format. Instead of saying "thirty-seven point two degrees", they simply say "тридцять сім і дві" (thirty-seven and two [tenths]). The word for degrees is almost always omitted in casual medical conversations. If your temperature is perfectly normal (36.6 °C), you can proudly announce: "тридцять шість і шість". ::: Medical professionals prefer that you never get sick in the first place. Therefore, a significant portion of medical vocabulary revolves around avoiding illness. This includes building your body's natural defenses and following specific guidelines to stay healthy during the cold season. You will often hear conversations about maintaining immunity and getting vaccinations before the peak of flu season hits the country. Найкращий спосіб уникнути вірусів — це своєчасна профілактика та міцний імунітет. Лікарі завжди наголошують, що хворобу легше попередити, ніж потім довго її лікувати. Для цього потрібно вести здоровий спосіб життя та правильно харчуватися. Восени також варто зробити щеплення від грипу, щоб захистити свій організм від серйозних ускладнень. Коли лікар дає вам рекомендації, він використовує спеціальні слова. Він скаже: «Вам слід більше відпочивати» або «Тобі варто пити багато теплого чаю». Ці слова завжди вимагають після себе дієслова в неозначеній формі. Якщо ви захворіли, вам необхідно залишатися вдома. > *The best way to avoid viruses is timely prevention and strong immunity. Doctors always emphasize that a disease is easier to prevent than to treat for a long time later. For this, it is necessary to lead a healthy lifestyle and eat right. In autumn, it is also worth getting a flu vaccination to protect your body from serious complications. When a doctor gives you recommendations, they use special words. They will say: "You should rest more" or "It is worth it for you to drink a lot of warm tea". These words always require a verb in the infinitive form after them. If you get sick, it is necessary for you to stay at home.* When a doctor or a concerned friend gives you medical advice, they will rely on modal words that express necessity or recommendation. The word "потрібно" indicates a strong necessity, translating directly to "must" or "need to". If the advice is a firm professional suggestion, you will hear "слід" (ought to or should). For friendlier, softer advice about what is a good idea, Ukrainians use "варто" (it is worth doing). All of these modal markers are followed immediately by an infinitive verb, making them incredibly easy to use once you memorize the pattern. You simply state the action that is worth doing to maintain your health and avoid a trip to the pharmacy. <!-- INJECT_ACTIVITY: error-correction-medical -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -617,7 +617,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -630,18 +697,69 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (6/6).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] здоров'я (health — noun, III відміна pattern with апостроф)
+- [ ] лікар (doctor — II відміна, -ар agent suffix)
+- [ ] хвороба (disease — I відміна feminine)
+- [ ] біль (pain — II відміна masculine, чергування: біль-болить)
+- [ ] температура (temperature — I відміна)
+- [ ] кашель (cough — II відміна masculine, м'яка група)
+- [ ] нежить (runny nose — II відміна masculine)
+- [ ] ліки (medicine — pluralia tantum)
+- [ ] рецепт (prescription)
+- [ ] аптека (pharmacy — I відміна)
+- [ ] діагноз (diagnosis — II відміна)
+- [ ] симптом (symptom — II відміна)
+- [ ] скаржитися (to complain — на + Зн.)
+- [ ] лікувати (to treat — imperfective)
+- [ ] одужати (to recover — perfective)
+- [ ] призначити (to prescribe — perfective)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Підсумок — Здоров'я українською (~550 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

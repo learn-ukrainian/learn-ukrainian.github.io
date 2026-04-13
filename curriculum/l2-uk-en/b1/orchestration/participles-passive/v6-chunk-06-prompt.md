@@ -32,7 +32,7 @@ Grand total: ~4100 слів
 <previous_context>
 [...previous sections truncated...]
 
-by a baker)* або «**зварена мамою картопля**» *(potatoes boiled by mom)*, то це безсумнівно дієприкметник. Якщо ж додати виконавця неможливо або це звучить дивно, слово стало прикметником. Ми не кажемо «печений пекарем хліб», ми кажемо просто «печений хліб». Наявність обставини часу чи місця також вказує на дієприкметник: «**вчора змелена кава**» *(coffee ground yesterday)*. <!-- INJECT_ACTIVITY: quiz-participle-vs-adjective --> Розуміння цієї тонкої різниці допомагає краще відчувати **стилістичні нюанси** *(stylistic nuances)*. У побутовому спілкуванні ми частіше використовуємо прикметники для опису звичайних речей: «Дай мені вареної картоплі». Проте в офіційному чи науковому стилях нам завжди потрібна максимальна точність. Там ми описуємо реальні процеси та їхні результати, тому використовуємо дієприкметники: «**оброблені дані** *(processed data)*» або «**затверджений комісією проєкт** *(project approved by the commission)*». ## Практика: пасивні дієприкметники у тексті > — **Екскурсовод:** Вітаю в Києві! Перед вами — **Маріїнський палац** *(Mariinskyi Palace)*. Зверніть увагу на цей **відреставрований фасад** *(restored facade)*. > — **Турист:** Яка краса! А ким був **створений** *(created)* цей проєкт? > — **Екскурсовод:** Палац був **збудований** *(built)* за проєктом архітектора Бартоломео Растреллі. Усередині на вас чекають **збережені інтер'єри** *(preserved interiors)* та **відновлені розписи** *(restored murals)*. > — **Туристка:** Чи можна фотографувати **написані** *(painted)* у дев'ятнадцятому столітті картини? > — **Екскурсовод:** Так, але без спалаху. Також ми побачимо **залишені** *(left/kept)* імператорською родиною меблі та **застелені** *(covered/laid)* розкішними килимами підлоги. > — **Турист:** Чи всі кімнати зараз **відкриті** *(opened)* для відвідувачів? > — **Екскурсовод:** Ні, деякі зали наразі **зачинені** *(closed)* на реконструкцію. Але **побаченого** *(seen)* вам точно вистачить для яскравих вражень! Давайте проаналізуємо цей діалог. Ви, напевно, помітили велику кількість пасивних дієприкметників. Наприклад, слово «відреставрований» утворене від дієслова «відреставрувати» за допомогою суфікса **-н-**, оскільки основа закінчується на **-а-**. Слово «збережені» походить від «зберегти». Тут ми бачимо суфікс **-ен-** та типове чергування приголосних: звук **[г]** змінюється на **[ж]**. А в слові «відновлені» (від «відновити») перед суфіксом **-ен-** з'являється звук **[л]** (це чергування **[в]** — **[вл]**). Дієприкметник «відкриті» утворено від односкладової основи «відкри-» за допомогою суфікса **-т-**. <!-- INJECT_ACTIVITY: reading, Прочитайте текст про пасивні дієприкметники: значення і дайте відповіді на запитання --> Тепер потренуємося утворювати пасивні конструкції самостійно. Часто нам потрібно перетворити речення з активного стану на пасивний, щоб змінити фокус уваги. Порівняйте: «Майстриня **вишила** *(embroidered)* сорочку» (активний стан) та «Сорочка, **вишита** майстринею» (пасивний стан). У другому варіанті головним об'єктом стає сама сорочка, а виконавець дії (або агент) завжди стоїть в **орудному відмінку** *(instrumental case)*. Ще кілька прикладів: «Художник намалював картину» перетворюється на «Картина, **намальована** художником». Або: «Робітники збудували міст» стає «Міст, збудований робітниками». Спробуйте подумки перетворити просту фразу: «Мама зварила картоплю». Щоб закріпити нову граматику, спробуйте описати добре знайоме вам місце — наприклад, вашу кімнату або улюблену кав'ярню. Використовуйте пасивні дієприкметники як означення. Розкажіть про речі навколо вас: ким вони були зроблені, принесені чи подаровані. Наприклад: «У моїй кімнаті стоїть **пофарбований** *(painted)* стіл. На стіні висить **подарована** *(gifted)* другом фотографія. На підлозі лежить **куплений** *(bought)* учора килим». Це допоможе вам зробити своє мовлення значно більш виразним, точним та природним. <!-- INJECT_ACTIVITY: essay-response, Напишіть 5 речень, використовуючи нову лексику з розділу «Творення пасивних дієприкметників» (опис кімнати/об'єкта) -->
+many such words describing the state of the palace. For example, the word **збудований** (built — passive participle from збудувати) is formed from the infinitive «збудувати» using the suffix «-н-». The participle **написаний** (written — passive participle from написати) comes from «написати». We can find other examples as well. The word **відкритий** (opened — passive participle from відкрити) has the suffix «-т-» because it comes from «відкрити». The form **принесений** (brought — passive participle from принести) is formed from «принести» using the suffix «-ен-». Finally, pay attention to the word **закручений** (twisted — with [т]→[ч] alternation) from the verb «закрутити». When forming these words, you will often notice a **чергування** (alternation — consonant changes in formation) of consonants. Here, the sound [т] changed to [ч] in the word *закручений*. You might also see an extra [л] appear after labial consonants, such as in *відновлений* from the verb *відновити*. Recognizing these patterns will make it much easier to identify the original verb. <!-- INJECT_ACTIVITY: reading-mariinskyi-palace --> Now let's try to transform active sentences into passive ones. This is a very useful skill for written language. To do this, we take the object from the accusative case and make it the main word in the nominative case. We then put the performer of the action in the instrumental case. For example, look at this transformation using the word **вишитий** (embroidered — passive participle from вишити): **Майстриня вишила сорочку.** — *The craftswoman embroidered the shirt.* **Сорочка, вишита майстринею.** — *The shirt, embroidered by the craftswoman.* You can apply this to other sentences too. Look at the following active sentence and its passive transformation using the word **зроблений** (made/done — passive participle from зробити): **Робітник зробив стіл.** — *The worker made the table.* **Стіл, зроблений робітником.** — *The table, made by the worker.* Now consider another example. Here we see the word **ношений** (worn/carried — with [с]→[ш] alternation), where the consonant [с] changes to [ш]: **Брат носив светр.** — *The brother wore the sweater.* **Светр, ношений братом.** — *The sweater, worn by the brother.* :::info **Grammar box** — When transforming an active sentence into a passive one, the original subject becomes the agent in the Instrumental case (орудний відмінок), and the original object becomes the new subject in the Nominative case (називний відмінок). ::: To practice this grammar in free speech, try describing your own room or a favorite object. Look around and think about how the things surrounding you were made. For example, you might use the word **прочитаний** (read — passive participle from прочитати): **У моїй кімнаті стоїть пофарбований стіл.** — *In my room stands a painted table.* **На стіні висить намальована картина.** — *A painted picture hangs on the wall.* **На ліжку лежить прочитаний журнал.** — *A read magazine lies on the bed.* Використання пасивних дієприкметників робить текст більш виразним та детальним. Коли ви описуєте події або предмети, ця граматика дозволяє зосередити увагу на результаті дії. Офіційні документи, новини та література дуже часто спираються на ці конструкції. <!-- INJECT_ACTIVITY: essay-response-description -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -567,7 +567,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -580,18 +647,64 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (6/6).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] пасивний дієприкметник (passive participle — subject receives the action)
+- [ ] прочитаний (read — passive participle from прочитати)
+- [ ] збудований (built — passive participle from збудувати)
+- [ ] написаний (written — passive participle from написати)
+- [ ] вишитий (embroidered — passive participle from вишити)
+- [ ] зроблений (made/done — passive participle from зробити)
+- [ ] принесений (brought — passive participle from принести)
+- [ ] відкритий (opened — passive participle from відкрити)
+- [ ] ношений (worn/carried — with [с]→[ш] alternation)
+- [ ] закручений (twisted — with [т]→[ч] alternation)
+- [ ] чергування (alternation — consonant changes in formation)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Підсумок (~500 слів)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

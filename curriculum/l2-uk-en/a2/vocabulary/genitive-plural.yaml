@@ -35,6 +35,12 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
+- word: нульове закінчення
+  translation: zero ending
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
 - word: кі́лька
   translation: a few, several
   expression: false
@@ -89,8 +95,74 @@ vocabulary:
   pos: ім.
   gender: с.
   verified: true
-- word: това́р
-  translation: inventory, goods
+- word: студе́нт
+  translation: student
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: учи́тель
+  translation: teacher
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: оліве́ць
+  translation: pencil
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: геро́й
+  translation: hero
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: трамва́й
+  translation: tram
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: подві́р'я
+  translation: courtyard
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: відкриття́
+  translation: discovery
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: хло́пець
+  translation: boy
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: громадя́нин
+  translation: citizen
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: селяни́н
+  translation: villager
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: болга́рин
+  translation: Bulgarian
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: чолові́к
+  translation: man
   expression: false
   pos: ім.
   gender: ч.
@@ -107,123 +179,63 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: бу́лка
-  translation: bun
+- word: кни́га
+  translation: book
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: терміно́во
-  translation: urgently
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: громадя́нин
-  translation: citizen
+- word: жі́нка
+  translation: woman
   expression: false
   pos: ім.
-  gender: ч.
+  gender: ж.
   verified: true
-- word: селяни́н
-  translation: villager
+- word: студе́нтка
+  translation: female student
   expression: false
   pos: ім.
-  gender: ч.
+  gender: ж.
+  verified: true
+- word: зупи́нка
+  translation: bus stop
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: пі́сня
+  translation: song
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ста́нція
+  translation: station
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: пло́ща
+  translation: square
+  expression: false
+  pos: ім.
+  gender: ж.
   verified: true
 - word: зада́ча
-  translation: task, math problem
+  translation: task
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: ти́ша
-  translation: silence
+- word: сім'я́
+  translation: family
   expression: false
   pos: ім.
   gender: ж.
-  verified: true
-- word: ді́ло
-  translation: matter, business, thing to do
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: крі́сло
-  translation: armchair
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: обли́ччя
-  translation: face
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: знання́
-  translation: knowledge
-  expression: false
-  pos: ім.
-  gender: с.
   verified: true
 - word: ім'я́
   translation: name
   expression: false
   pos: ім.
   gender: с.
-  verified: true
-- word: кошеня́
-  translation: kitten
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: теля́
-  translation: calf
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: лоша́
-  translation: foal
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: о́ко
-  translation: eye
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: ву́хо
-  translation: ear
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: плече́
-  translation: shoulder
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: рік
-  translation: year
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: Родовий відмінок множини
-  translation: Genitive plural case
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Правило п'яти
-  translation: The rule of five
-  expression: true
-  pos: ''
-  gender: ''
   verified: true

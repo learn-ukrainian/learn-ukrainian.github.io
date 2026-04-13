@@ -1,0 +1,50 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T12-24-60234fc8.json
+phase: write-chunk-05
+prompt_chars: 51648
+response_chars: 8526
+prompt_words: 6555
+response_words: 1125
+sections:
+- name: header
+  start: 0
+  length: 427
+  fraction: 0.0083
+- name: skeleton
+  start: 427
+  length: 1217
+  fraction: 0.0236
+- name: prior_summary
+  start: 1644
+  length: 3917
+  fraction: 0.0758
+- name: plan
+  start: 5561
+  length: 9637
+  fraction: 0.1866
+- name: wiki
+  start: 15198
+  length: 36243
+  fraction: 0.7017
+- name: output_spec
+  start: 51441
+  length: 207
+  fraction: 0.004
+large_sections:
+- wiki
+directives_total: 21
+directives_covered: 18
+directives_missed:
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 4/11 keywords (36%)
+- kind: inject_activity
+  text: error-correction-punctuation, find 10 sentences with misplaced or missing
+    commas in participle phrases and fix them
+  covered: false
+  coverage_note: marker missing

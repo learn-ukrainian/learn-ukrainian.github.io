@@ -1,0 +1,81 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T15-29-3025a7f7.json
+phase: write-chunk-08
+prompt_chars: 46552
+response_chars: 3585
+prompt_words: 6265
+response_words: 524
+sections:
+- name: header
+  start: 0
+  length: 418
+  fraction: 0.009
+- name: skeleton
+  start: 418
+  length: 1255
+  fraction: 0.027
+- name: prior_summary
+  start: 1673
+  length: 3700
+  fraction: 0.0795
+- name: plan
+  start: 5373
+  length: 14249
+  fraction: 0.3061
+- name: wiki
+  start: 13324
+  length: 26726
+  fraction: 0.5741
+- name: output_spec
+  start: 46348
+  length: 204
+  fraction: 0.0044
+large_sections:
+- wiki
+directives_total: 20
+directives_covered: 11
+directives_missed:
+- kind: must
+  text: '* :::info **Grammar box** Remember that a **дієприкметниковий зворот** (participle
+    phrase) always describes a noun and must agree with it in case, while a **дієприслівниковий
+    зворот** (gerund phrase) modifies the main verb and is completely indeclinable.'
+  covered: false
+  coverage_note: 9/23 keywords (39%)
+- kind: must
+  text: However, it must perfectly match the aspectual logic of the narrative.
+  covered: false
+  coverage_note: 1/7 keywords (14%)
+- kind: must
+  text: If the background action is fully completed before the main verb begins, you
+    must select a perfective gerund to show a finished result.
+  covered: false
+  coverage_note: 3/16 keywords (19%)
+- kind: must
+  text: 'must choose correct suffix and apply consonant alternations: квітнути → ?'
+  covered: false
+  coverage_note: 2/8 keywords (25%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: EVERY word in the checklist below MUST appear at least once with a bold Ukrainian
+    form and English translation in a natural sentence.
+  covered: false
+  coverage_note: 3/15 keywords (20%)
+- kind: skeleton_para
+  text: "P1 (150w): Self-assessment checklist based on the objectives:\n  - Дієприкметники:\
+    \ Чи правильно я утворюю активні й пасивні форми?\n  - Звороти: Чи впевнено я\
+    \ ставлю коми залежно від позиції звороту?\n  - Дієприслівники: Чи розумію я різницю\
+    \ між одночасністю (читаючи) та різночасністю (прочитавши)?\n  - Короткі прикметники:\
+    \ Чи пам'ятаю я, що потрібен/певен змінюються за родами?\n  - Академічний стиль:\
+    \ Чи можу я використовувати ці форми для наукового опису?"
+  covered: false
+  coverage_note: 9/41 keywords (22%)
+- kind: inject_activity
+  text: integrated-cloze-assessment
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: production-essay-education
+  covered: false
+  coverage_note: marker missing

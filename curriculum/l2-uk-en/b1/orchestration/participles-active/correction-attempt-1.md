@@ -2,8 +2,6 @@
 CRITICAL: Your previous attempt failed the following checks. Fix ONLY the listed errors. Keep everything else exactly as is — do not rewrite sections that are working correctly.
 
 - FIX: Missing section heading: 'Підсумок та перехід до M58'
-- NOTE: Missing 3/13 required vocab: пасивний дієприкметник (passive participle — subject receives the action), опалий (fallen, shed — past active participle, leaves), описовий зворот (descriptive phrase — alternative to participle)
-- NOTE: Plan expects 6 exercise(s) but content has 5
 </correction_directive>
 
 LEARNINGS FROM PAST BUILDS (same error patterns seen before):

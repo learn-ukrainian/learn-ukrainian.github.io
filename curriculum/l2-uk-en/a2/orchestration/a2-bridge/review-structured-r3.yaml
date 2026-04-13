@@ -2,50 +2,54 @@ round: 3
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 9
-  evidence: 'Covers almost all outline points with great detail, but misses two specific
-    details in the final "Що нас чекає на рівні А2?" section: "verb conjugation patterns"
-    and "Setting expectations: A2 is where'
+  score: 7
+  evidence: The four planned sections and A2 roadmap are present, but the plan point
+    `'the first palatalization (г/ж, к/ч, х/ш) ... (нога/ніжка, рука/ручка)'` is not
+    actually taught; instead the module says `"«г»
 - dimension: 2
   name: Linguistic accuracy
-  score: 9
-  evidence: Excellent and perfectly accurate phonological descriptions. The only minor
-    issue is the use of "Добрий ранок" instead of the standard "Доброго ранку" in
-    the opening dialogue.
+  score: 7
+  evidence: The Ukrainian examples are mostly clean, but the phonology section factually
+    misidentifies `"г/з, к/ц, х/с"` before `-і` as `"the first palatalization"`, which
+    teaches the wrong grammatical label.
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: Exceptional PPP flow and very clear rules (e.g., stating the Locative
-    always taking a preposition, breaking down the mechanics of vowel alternations
-    in closed syllables). Examples are highly relevant.
+  score: 7
+  evidence: 'Example density is good, but the euphony section teaches preferences
+    as absolutes: `"it is a strict grammatical rule that every speaker follows"` and
+    repeated `"you must use"` phrasing oversimplify th'
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: All required vocabulary is used correctly and naturally in the text in
-    Ukrainian (e.g., "відмінок", "називний", "чергування", "наголос", "приголосний").
+  score: 9
+  evidence: 'All required plan vocabulary appears in context: `відмінок`, `називний`,
+    `знахідний`, `місцевий`, `кличний`, `чергування`, `голосний`, `приголосний`, `наголос`;
+    recommended `милозвучність`, `система`,'
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: Activity markers are placed precisely at the end of the relevant conceptual
-    sections and match the exact counts/focus requested.
+  score: 9
+  evidence: The planned exercise markers are correctly distributed after the sections
+    they test, and each marker matches the plan’s activity type/focus.
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: Very natural teaching tone. "This case is a vibrant, living marker of
-    the authentic Ukrainian language" is motivating without being overly corporate.
+  score: 7
+  evidence: The teacher voice is generally warm, but `"immediately marks you as a
+    foreigner"` is harsher than the target persona, and some of the encouragement
+    leans into hype rather than instruction.
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: All H2 headers are correct. Markdown is clean. Word count (2180) easily
-    exceeds the 2000-word target.
+  evidence: All four H2 headings are present and ordered correctly, markdown is clean,
+    and the pipeline word count is 2777, safely above the 2000-word target.
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: Correctly highlights the Vocative case as a key distinction of authentic
-    Ukrainian versus Russian.
+  score: 6
+  evidence: 'Two passages explain Ukrainian through Russian: `"Unlike in Russian..."`
+    and `"stands in stark contrast to Russian..."`; that framing cuts against the
+    decolonized standard.'
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 9
-  evidence: The dialogue integrates the required A1 grammar phrases successfully,
-    though it is slightly short.
+  score: 7
+  evidence: The opening scene is plausible and speakers are named, but `"Привіт, Оксано!"`
+    to a teacher and `"Що ви робите тут?"` make the exchange feel staged rather than
+    natural.
 findings: []

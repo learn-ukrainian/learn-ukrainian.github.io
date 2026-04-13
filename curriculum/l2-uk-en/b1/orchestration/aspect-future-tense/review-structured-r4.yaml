@@ -1,0 +1,51 @@
+round: 4
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: The structure follows the outline perfectly, but fails to include the
+    mandatory textbook citations (Литвінова Grade 7 p.44/46, Заболотний Grade 7 p.73)
+    within the prose. It also misses several require
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: Excellent Ukrainian overall, but contains one calque ("давайте спочатку
+    перевіримо") and one English typo ("in front of a verb, and  \"I will read,\"").
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Brilliant "Process vs Result" framing and logical presentation. However,
+    the `group-sort-constructions` exercise marker is placed before the third future
+    construction is taught, testing learners on ma
+- dimension: 4
+  name: Vocabulary coverage
+  score: 8
+  evidence: Six words from the `vocabulary_hints` are completely missing from the
+    text ("постаратися", "запланувати", "закінчувати", "розмовний стиль", "писемний
+    стиль", "передбачення").
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: The exercise types match the plan accurately, but the placement of the
+    sort exercise is structurally flawed (as noted in Pedagogical quality).
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Excellent teacher persona. Phrases like "congratulations — you already
+    intuitively understand" provide natural, meaningful encouragement.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All sections are present and properly ordered. The word count is 5242,
+    safely exceeding the 4000-word target. Clean markdown formatting.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Accurately and respectfully presents the Ukrainian aspectual system on
+    its own terms, highlighting how the language forces a commitment to intent.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The dialogues are superb. Dmytro's "Process Defense" is a brilliant, natural
+    demonstration of grammar functioning as a psychological tool in conversation.
+findings: []

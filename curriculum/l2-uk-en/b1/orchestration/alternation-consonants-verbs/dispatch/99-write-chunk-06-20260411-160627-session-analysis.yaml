@@ -1,0 +1,67 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T14-03-8b17d981.json
+phase: write-chunk-06
+prompt_chars: 52833
+response_chars: 4578
+prompt_words: 7447
+response_words: 698
+sections:
+- name: header
+  start: 0
+  length: 448
+  fraction: 0.0085
+- name: skeleton
+  start: 448
+  length: 1046
+  fraction: 0.0198
+- name: prior_summary
+  start: 1494
+  length: 3625
+  fraction: 0.0686
+- name: plan
+  start: 5119
+  length: 18667
+  fraction: 0.3533
+- name: wiki
+  start: 17304
+  length: 28821
+  fraction: 0.5455
+- name: output_spec
+  start: 52607
+  length: 226
+  fraction: 0.0043
+large_sections:
+- wiki
+directives_total: 19
+directives_covered: 12
+directives_missed:
+- kind: checklist
+  text: 'зубний (dental — consonant formed at the teeth: д, т)'
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: checklist
+  text: 'губний (labial — consonant formed with lips: б, п, в, м, ф)'
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: checklist
+  text: 'задньоязиковий (velar — consonant formed at back of mouth: г, к, х)'
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: must
+  text: '**Найвищий пріоритет (Must Know):** Чергування **`[г], [к], [х] → [з''],
+    [ц''], [с'']`** в **давальному** та **місцевому** відмінках однини **іменників
+    І відміни**.'
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 0/11 keywords (0%)
+- kind: inject_activity
+  text: fill-in-imperfective
+  covered: false
+  coverage_note: marker missing

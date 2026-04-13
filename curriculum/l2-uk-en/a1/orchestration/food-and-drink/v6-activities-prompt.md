@@ -1,4 +1,4 @@
-<!-- version: 1.1.0 | updated: 2026-03-31 -->
+<!-- version: 1.2.0 | updated: 2026-04-12 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -11,6 +11,35 @@ Generate an `activities/food-and-drink.yaml` file for module **36: Food and Drin
 
 ---
 
+## ⚠️ HARD COUNT TARGETS — READ TWICE
+
+These are the binding numerical contracts for THIS module. The audit will FAIL if you fall short.
+
+| Bucket | Min | Max | Notes |
+|---|---|---|---|
+| Total activities | 10 | 10+ | inline + workbook combined |
+| Inline (lesson tab) | 4 | 6 | one per `<!-- INJECT_ACTIVITY -->` marker, see below |
+| Workbook (Зошит tab) | 6 | 9 | extended practice |
+| Items per activity | 6 | — | each activity must have at least 6 items (unless its type cap is lower — see Activity Type Reference below) |
+
+**You MUST ship at least 4 inline activities AND at least 6 workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+
+**Type diversity is required.** The module (inline + workbook combined) MUST use at least **0** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level. (If `0` is `0`, the audit profile for this level does not enforce type diversity — but variety still produces a better lesson, so aim for 4+ types when the workbook allows it.)
+
+---
+
+## Allowed types for THIS level
+
+- **Inline (lesson) types:** image-to-letter, letter-grid, match-up, watch-and-repeat, quiz, true-false, fill-in, classify
+- **Inline priority (preferred):** image-to-letter, match-up, fill-in, quiz, watch-and-repeat
+- **Workbook types:** fill-in, match-up, group-sort, anagram, unjumble, quiz, true-false, classify, divide-words, count-syllables, pick-syllables, observe, phrase-table, odd-one-out
+- **Workbook priority (preferred):** fill-in, match-up, group-sort, anagram, unjumble
+- **FORBIDDEN at this level:** cloze, error-correction, mark-the-words, translate, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, highlight-morphemes, grammar-identify, select
+
+Pick from the allowed list. Lean heavily on the priority lists. Do not use any forbidden type — the build will reject it.
+
+---
+
 ## Inline vs Workbook Split
 
 Activities have two placement categories:
@@ -19,7 +48,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Rule of thumb:** inline = 2-3 quick checks after key teaching points. Workbook = 4-8 deeper practice exercises covering the full topic.
+**Rule of thumb:** inline = 4–6 quick checks after key teaching points. Workbook = 6–9 deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
 
 ---
 
@@ -27,10 +56,10 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: quiz-meals-dishes -->`
-- `<!-- INJECT_ACTIVITY: match-up-food-vocab -->`
+- `<!-- INJECT_ACTIVITY: match-up-food-drink -->`
 - `<!-- INJECT_ACTIVITY: group-sort-food-drinks -->`
 - `<!-- INJECT_ACTIVITY: fill-in-chunks -->`
+- `<!-- INJECT_ACTIVITY: quiz-meals-dishes -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -148,103 +177,107 @@ required:
 <module_content>
 ## Діалоги (Dialogues)
 
-A typical Saturday morning in a Ukrainian home is a lively and sensory experience. The kitchen smells of fresh herbs, earthy vegetables, and warm bread. An older woman, a **бабуся** (grandma), is standing by the stove, preparing to cook. Her granddaughter, an **онучка** (granddaughter), comes in for a morning meal. They are about to cook the national dish, but first, they need to eat.
+Food is central to Ukrainian hospitality and culture. When you visit a Ukrainian home, the first question is usually about what you would like to eat or drink. Offering a meal or a hot drink is a sign of respect and care, and refusing food from a host is often seen as impolite. This section presents everyday conversations about meals and food preferences.
 
-They begin their day with a conversation about food. Notice how they use the preposition **з** (with) to describe food pairings as they decide what to eat. 
+Ми їмо щодня. Це наша **їжа** (food). Уранці я снідаю. Удень я обідаю. Увечері моя сім'я вечеряє. Ми любимо їсти. Наша їжа дуже смачна.
+> *We eat every day. This is our food. In the morning I eat breakfast. In the afternoon I eat lunch. In the evening my family eats dinner. We love to eat. Our food is very tasty.*
+
+Dialogue 1 — At home in the morning. Here is a short conversation between a grandmother (**Бабуся**) and her granddaughter (**Онучка**) choosing what to eat to start the day. In Ukraine, grandmothers are famous for making sure everyone is well-fed:
 
 > **Бабуся:** Що ти хочеш на сніданок? *(What do you want for breakfast?)*
 > **Онучка:** Каву з молоком і хліб з маслом. *(Coffee with milk and bread with butter.)*
 > **Бабуся:** А я хочу чай з цукром і кашу. *(And I want tea with sugar and porridge.)*
 
-Then, they prepare the fresh ingredients for their soup. Grandma uses this moment to explain that every single ingredient has a grammatical gender, reinforcing a core rule of the language while they cook. 
+Notice the question structure: "Що ти хочеш на сніданок?" (What do you want for breakfast?). The verb "хочеш" comes from "хотіти" (to want). The word **сніданок** (breakfast) is your first meal of the day. You will also see food and drink combinations presented as single phrases or chunks, like "кава з молоком" (coffee with milk) and "хліб з маслом" (bread with butter). You do not need to worry about the grammatical endings here; just learn them as complete expressions so you can answer questions quickly.
 
-> **Бабуся:** Для борщу потрібен буряк. Це він. *(For borshch, beetroot is needed. It is a "he".)*
-> **Онучка:** А картопля і капуста? *(And potato and cabbage?)*
-> **Бабуся:** Це вона. Морква і цибуля — теж вона. *(That is a "she". Carrot and onion are also "she".)*
-> **Онучка:** А м'ясо? *(And meat?)*
-> **Бабуся:** М'ясо — воно. А в кінці буде сметана! *(Meat is an "it". And at the end there will be sour cream!)*
+Dialogue 2 — Talking about food preferences. Two friends discuss their daily meals:
 
-Food structures our entire day. Ukrainians divide their daily eating habits into three main meals:
-* **сніданок** — breakfast
-* **обід** — lunch
-* **вечеря** — dinner
+> **Максим:** Що ти зазвичай їш на обід? *(What do you usually eat for lunch?)*
+> **Анна:** Суп і салат. А на вечерю? *(Soup and salad. And for dinner?)*
+> **Максим:** М'ясо з картоплею або рибу з рисом. *(Meat with potatoes or fish with rice.)*
 
-In the morning, you eat a **сніданок**. In the middle of the day, usually early afternoon, you eat an **обід**, which is traditionally the largest meal. In the evening, you gather with family for a **вечеря**. The verb meaning "to eat" is **їсти**. Learning to talk about these meals helps you describe your daily routine.
-
-:::note Culture
-Ukrainian hospitality is deeply connected to food. Being invited to share a meal, whether it is a simple **сніданок** or a festive **вечеря**, is a true sign of friendship and respect.
-:::
-
-People frequently talk about their food preferences and ask what others eat. When ordering or asking for food, you use the accusative case for the direct object. Combinations like meat with potatoes form memorized phrases that you can use immediately. 
-
-> **Онучка:** Що ти зазвичай їш на обід? *(What do you usually eat for lunch?)*
-> **Бабуся:** Суп і салат. *(Soup and salad.)*
-> **Онучка:** А на вечерю? *(And for dinner?)*
-> **Бабуся:** М'ясо з картоплею або рибу з рисом. *(Meat with potatoes or fish with rice.)*
-
-<!-- INJECT_ACTIVITY: quiz-meals-dishes -->
+In this second dialogue, we identify the other two main meals of the day: **обід** (lunch) and **вечеря** (dinner). You can ask what someone eats for a specific meal using the simple pattern "Що ти їш на + [meal]". For example, "Що ти їш на обід?" or "Що ти їш на вечерю?". Knowing these meal names allows you to navigate daily schedules and make plans with friends.
 
 ## Їжа (Food)
 
-The general word for food is **їжа** (food). Grains and bakery products are fundamental to the Ukrainian diet. The most sacred and respected food on the table is **хліб** (bread). It accompanies almost every meal, and offering bread is a traditional sign of hospitality. You will also frequently eat **каша** (porridge or cereal), which is a common dish for breakfast or served as a warm side dish. Other staple carbohydrates that you will find in any pantry include **рис** (rice) and **макарони** (pasta). 
+Every Ukrainian kitchen contains core staple foods that form the foundation of most meals. The most important is **хліб** (bread). Bread is an indispensable part of a Ukrainian meal; people eat it with soup, meat, and salads. It is so culturally important that historically, bread represented life itself. Other essential carbohydrates include **каша** (porridge), **рис** (rice), and **макарони** (pasta). For protein, Ukrainians frequently eat **м'ясо** (meat), **курка** (chicken), and **риба** (fish). A typical meal often features a main protein served alongside a carbohydrate.
 
-For proteins and dairy, the Ukrainian kitchen offers many rich options. The general word for meat is **м'ясо** (meat), and a very common, affordable type is **курка** (chicken). If you prefer seafood, you can eat **риба** (fish). A basic ingredient used for a quick breakfast or for baking is an **яйце** (egg). Dairy products are also essential to everyday meals. You will often drink **молоко** (milk) or eat **йогурт** (yogurt). You spread **масло** (butter) on your bread, and you add a spoonful of **сметана** (sour cream) to your soup. 
+На столі стоїть смачна їжа. Ось лежить великий хліб. Там стоїть гарячий **суп** (soup). Поруч лежить м'ясо. Це мій улюблений обід. Я дуже люблю їсти.
+> *Tasty food stands on the table. Here lies a large bread. Hot soup stands there. Meat lies nearby. This is my favorite lunch. I really love to eat.*
 
-:::caution Russianisms
-Never use the Russian word «творог» for cottage cheese or quark. The authentic Ukrainian word for all types of cheese, both yellow hard cheese and soft farmer's cheese, is **сир** (cheese). Context will always tell you which one a person means.
-:::
+Fresh produce provides variety, color, and flavor to Ukrainian cuisine. Common vegetables (**овочі**) include **картопля** (potato), **морква** (carrot), **цибуля** (onion), **помідор** (tomato), and **огірок** (cucumber). Notice the genders: картопля and морква are feminine, while помідор and огірок are masculine. Common fruits (**фрукти**) are **яблуко** (apple), **банан** (banana), and **апельсин** (orange). Many families grow their own vegetables and fruits in summer gardens.
 
-A Ukrainian garden provides abundant and fresh produce. Common **овочі** (vegetables) form the base for many salads and hearty soups. You will frequently cook with **картопля** (potato), **морква** (carrot), **цибуля** (onion), **помідор** (tomato), and **огірок** (cucumber). For a sweet snack or dessert, you eat **фрукти** (fruits). Popular choices include a **яблуко** (apple), a **банан** (banana), or an **апельсин** (orange). For basic cooking, your pantry needs **цукор** (sugar) for sweetness, **сіль** (salt) for flavor, and liquid **олія** (oil) for frying.
+In the dairy section and pantry, you will find **молоко** (milk), **сир** (cheese), **масло** (butter), **сметана** (sour cream), and **йогурт** (yogurt). You will also need staples like **яйце** (egg), **цукор** (sugar), **сіль** (salt), and **олія** (oil). Note that the word **сир** is uniquely used for both yellow hard cheese and soft quark (cottage cheese) in Ukrainian. There is no separate word for quark. You might also eat international foods like **піца** (pizza) or **салат** (salad), which are very popular in modern Ukrainian cities.
 
-Cultural spotlight: iconic Ukrainian dishes. The absolute national symbol of Ukrainian cuisine is **борщ** (beet soup). It is recognized as a UNESCO intangible cultural heritage and serves as a point of immense national pride. Borshch is definitively Ukrainian, not a generic Eastern European soup. Another beloved favorite is **вареники** (filled dumplings), which cooks stuff with potato, cabbage, meat, or sweet cherries. A highly traditional and culturally significant ingredient is **сало** (cured pork fat), often eaten thin-sliced with dark bread and garlic. Finally, **деруни** (potato pancakes) are a crispy, savory dish always served with a generous spoonful of sour cream. For a modern, quick meal, many people simply order a hot **піца** (pizza), or they prepare a light **суп** (soup) and a fresh **салат** (salad).
+You can use these words to describe your meals:
+- Цей хліб дуже смачний. *(This bread is very tasty.)*
+- Я люблю свіже м'ясо. *(I love fresh meat.)*
+- Вона готує рибу. *(She cooks fish.)*
+- Наш суп гарячий. *(Our soup is hot.)*
+- Ми їмо курку. *(We eat chicken.)*
 
-<!-- INJECT_ACTIVITY: match-up-food-vocab -->
+Iconic Ukrainian foods represent deep cultural identity. The national dish is **борщ** (beet soup), which is recognized worldwide. A traditional борщ is made with **буряк** (beetroot), картопля, **капуста** (cabbage), and м'ясо. It is often served with a large spoon of сметана and a slice of dark хліб. Other famous dishes are **вареник** (dumpling, usually eaten in plural as вареники), **сало** (cured pork fat), **галушки** (dumplings), and **деруни** (potato pancakes). Sweet вареники often contain cherries, while savory ones contain картопля or сир. Сало is frequently eaten thin-sliced on dark bread with garlic as an appetizer.
 
 ## Напої (Drinks)
 
-Daily hydration involves both hot and cold choices. The general word for a drink is a **напій** (drink). For a hot drink, many people start the day with a strong **кава** (coffee). Alternatively, you can drink a warm **чай** (tea). For cold drinks, the most basic necessity is **вода** (water) or a sweet fruit **сік** (juice). If you order water in a cafe, a waiter might ask if you want **вода з газом** (sparkling water, literally "water with gas") or **вода без газу** (still water).
+Ukrainian drinks fall into hot and cold categories. Hot drinks (гарячі) include **кава** (coffee) and **чай** (tea). Ukraine has a vibrant coffee culture, especially in cities like Lviv, where drinking coffee is a daily ritual. Cold drinks (холодні) include **вода** (water), **сік** (juice), **компот** (fruit drink), and **лимонад** (lemonade). **Компот** is a traditional, popular household drink made from boiling fresh or dried fruit with water and sugar. It is served chilled and is especially popular in summer when fresh berries and fruits are abundant in gardens. Families often preserve jars of компот for the winter.
 
-:::caution Russianisms
-Do not use the Russian word «кофе». The correct Ukrainian word for coffee is always **кава**.
-:::
+Я хочу пити. Це мій улюблений **напій** (drink). Я п'ю холодну воду. Мій брат п'є гарячий чай. Ми п'ємо смачні напої. Сестра любить солодкий сік. Батько п'є чорну каву.
+> *I want to drink. This is my favorite drink. I drink cold water. My brother drinks hot tea. We drink tasty drinks. Sister loves sweet juice. Father drinks black coffee.*
 
-Traditional beverages and milk-based drinks hold a special place on the table. A very popular homemade sweet drink is **компот** (fruit water), made by boiling fresh berries or fruits. In a modern restaurant, you might order a cold **лимонад** (lemonade). During winter holidays, families prepare **узвар** (dried fruit drink), which has a rich, slightly smoky flavor and deep cultural roots. For dairy drinks, the most common choice is **молоко** (milk), but many people also drink **кефір** (a fermented milk drink) for its health benefits. Adults might also recognize alcoholic options like **пиво** (beer) and **вино** (wine).
+Dairy drinks are also very common. You already know молоко, but you should also recognize **кефір** (kefir). Кефір is a cultured, slightly sour milk drink that is excellent for digestion and very popular across Ukraine. You can buy it in any supermarket, and people often drink it plain or use it in baking. For alcoholic drinks, you will frequently see **пиво** (beer) and **вино** (wine) on restaurant menus.
 
-The 'з + Noun' formula is your key to describing what goes into your drink or meal. In Ukrainian, you often describe drinks and dishes with additions using the preposition **з** (with). At this early stage of learning, you should treat these combinations as single, memorized chunks rather than complex grammar rules. You simply memorize the ending **-ом** for masculine or neuter additions, and **-ою** for feminine additions. By treating the preposition and the noun as a single unit representing the flavor profile, you can speak fluently now without worrying about the full instrumental case table. 
+Here is a short dialogue about ordering drinks in a cafe:
 
-Learn these common combinations as fixed phrases:
-* **кава з молоком** — coffee with milk
-* **чай з цукром** — tea with sugar
-* **вода з газом** — sparkling water
-* **чай з лимоном** — tea with lemon (using the word **лимон**, lemon)
-* **м'ясо з картоплею** — meat with potatoes
+> **Офіціант:** Що ви будете пити? *(What will you drink?)*
+> **Клієнт:** Дайте, будь ласка, каву з молоком. *(Give me, please, coffee with milk.)*
+> **Офіціант:** А для вас? *(And for you?)*
+> **Клієнтка:** Я буду пити сік. *(I will drink juice.)*
 
+A key pattern you will use constantly is the "з + noun" chunk for additions to your drinks or food. When ordering in a cafe or preparing food at home, you combine a base item with an addition using fixed phrases. Memorize these very common combinations:
+- кава з молоком (coffee with milk)
+- чай з цукром (tea with sugar)
+- чай з лимоном (tea with lemon)
+- вода з газом (sparkling water)
+
+Why use chunks instead of grammar here? The endings you see on the second words (-ом, -ою, -ем) belong to the instrumental case. You will learn the rules for this case in the A2 level. At the A1 level, it is best to simply memorize these whole phrases. This allows you to sound natural and order food immediately without calculating grammar rules in your head. Just say the phrase as one complete unit.
+
+- Я хочу каву з молоком. *(I want coffee with milk.)*
+- Вона п'є чай з цукром. *(She drinks tea with sugar.)*
+- Він любить воду з газом. *(He likes sparkling water.)*
+
+<!-- INJECT_ACTIVITY: match-up-food-drink -->
 <!-- INJECT_ACTIVITY: group-sort-food-drinks -->
 <!-- INJECT_ACTIVITY: fill-in-chunks -->
 
 ## Підсумок — Summary
 
-You now possess the fundamental vocabulary to name what you eat and drink in a Ukrainian kitchen. You know that the day revolves around three main meals: **сніданок** (breakfast), **обід** (lunch), and **вечеря** (dinner). When someone asks **Що ти хочеш?** (What do you want?), you can confidently reply with your preferences. You can use the preposition **з** to describe additions as memorized chunks, saying **кава з молоком** or **чай з цукром**. Beyond just words, you recognize the deep cultural weight of Ukrainian cuisine, understanding that dishes like borshch and varenyky are an essential part of national identity and heritage. Food brings people together, and knowing these terms helps you connect with Ukrainians on a personal level.
+This module provides a foundational Food and Drink toolkit. You now have the core phrases needed for expressing your daily desires, talking about meals, and ordering basic items in a cafe or restaurant. Building this vocabulary is essential for daily life and cultural connection.
 
-To test your reading comprehension, read these short texts about daily routines:
+Ми купуємо продукти. Я беру хліб і молоко. Мама купує м'ясо і сир. Ми готуємо смачний борщ. Уся сім'я любить українську їжу. Увечері ми вечеряємо разом. 
+> *We buy groceries. I take bread and milk. Mom buys meat and cheese. We cook tasty borscht. The whole family loves Ukrainian food. In the evening we dine together.*
 
-> **Я снідаю вдома. Я їм хліб з сиром. Я п'ю каву з молоком. На обід я їм суп і салат. На вечерю я готую рибу. Це дуже смачно!**
-> *(I have breakfast at home. I eat bread with cheese. I drink coffee with milk. For lunch I eat soup and salad. For dinner I cook fish. It is very tasty!)*
+The most important question you learned is "Що ти хочеш?" (What do you want?). You can answer this with a direct object, or by using the memorized chunks we practiced: "Каву з молоком" or "Хліб з маслом". Using these chunks helps you communicate fluently right away without worrying about complex grammar rules. You say the whole phrase naturally, exactly as a Ukrainian speaker would. Practice answering this question out loud.
 
-> **Я люблю холодний компот. Мій друг любить гарячий чай з лимоном. У кафе ми замовляємо воду з газом.**
-> *(I love cold fruit water. My friend loves hot tea with lemon. In a cafe we order sparkling water.)*
+- Що ти хочеш пити? — Воду з лимоном. *(What do you want to drink? — Water with lemon.)*
+- Що вона хоче їсти? — Суп і хліб. *(What does she want to eat? — Soup and bread.)*
+- Що ви хочете на вечерю? — Ми хочемо м'ясо. *(What do you want for dinner? — We want meat.)*
 
-Before moving forward, verify that you can confidently answer the following questions:
-* Name 5 foods you have in your kitchen right now (for example: **хліб**, **яйце**, **сир**, **морква**, **яблуко**).
-* Name 3 drinks you like (for example: **кава**, **чай**, **сік**).
-* Translate the phrase: "What do you want?" — "I want coffee with milk and bread with butter" (**Що ти хочеш? — Каву з молоком і хліб з маслом**).
-* Translate the question: "What do you eat for breakfast, lunch, and dinner?" (**Що ти їш на сніданок, обід і вечерю?**)
-* Explain the difference between **сніданок** and **вечеря**, and name a typical food you might eat for each meal.
-* Why is **борщ** important to Ukrainians? (It is a powerful symbol of identity and cultural heritage).
-* Name one traditional Ukrainian cold drink (**компот** or **узвар**).
+You also learned the daily meal structure. Remember the three main meals: сніданок (breakfast), обід (lunch), and вечеря (dinner). You can ask people about their habits using the question pattern "Що ти їш на сніданок / обід / вечерю?". These questions are excellent conversation starters when talking to Ukrainian friends about their daily routines.
 
-If you can answer these questions and name your favorite foods, you are ready to continue your culinary journey and start ordering in Ukrainian cafes.
+- Що ти їш на сніданок? — Я їм яйце і сир. *(What do you eat for breakfast? — I eat an egg and cheese.)*
+- Що ти їш на вечерю? — Я їм салат. *(What do you eat for dinner? — I eat a salad.)*
+- Що вона їсть на обід? — Вона їсть борщ. *(What does she eat for lunch? — She eats borscht.)*
 
+Take a moment for a self-check. Review your progress by seeing if you can do the following tasks without looking at the vocabulary list:
+1. Name 5 foods and 3 drinks you like. (For example: хліб, м'ясо, сир, яблуко, суп / кава, вода, сік).
+2. What are the three daily meals? (сніданок, обід, вечеря).
+3. Name one iconic Ukrainian dish (like борщ or вареники) and describe its cultural importance briefly.
+4. Ask a partner what they want to eat or drink using the proper question forms.
+
+If you can confidently answer these questions and use the simple ordering phrases, you are ready to use your new vocabulary in a restaurant or a Ukrainian kitchen. Food is a wonderful way to connect with the culture, so enjoy exploring these new tastes and words.
+
+<!-- INJECT_ACTIVITY: quiz-meals-dishes -->
 </module_content>
 
 ---
@@ -258,48 +291,68 @@ version: "1.0"
 module: food-and-drink
 level: a1
 
+# NOTE — these are SHAPE examples. The real targets are at the top of this prompt
+# (10 total / 4–6 inline / 6–9 workbook,
+# 6+ items per activity). The shapes below are TRUNCATED for readability;
+# YOUR output MUST hit those minimums.
+
 inline:
   - id: marker-id-here        # MUST match an <!-- INJECT_ACTIVITY: ... --> marker
     type: quiz                 # activity type
     instruction: "Оберіть правильний варіант"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - question: "_____ стіл"
-        options: ["мій", "моя", "моє"]
+        options: ["мій", "моя", "моє", "мої"]
         correct: 0             # 0-based index
+      - question: "Це ____ книга."
+        options: ["мій", "моя", "моє", "мої"]
+        correct: 1
+      # ... add at least 6 items total — never stop at 1-2
 
   - id: another-marker-id
     type: fill-in
     instruction: "Вставте правильне слово"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - sentence: "Це ____ кімната."
         answer: "моя"
         options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ вікно."
+        answer: "моє"
+        options: ["мій", "моя", "моє"]
+      # ... ≥ 6 items total
 
 workbook:
-  - type: match-up
+  - id: match-up-vocab
+    type: match-up
     instruction: "З'єднайте пари"
-    pairs:
+    pairs:                     # ← real output: ≥ 6 pairs
       - left: "стіл"
         right: "він"
       - left: "книга"
         right: "вона"
       - left: "вікно"
         right: "воно"
+      # ... ≥ 6 pairs total
 
-  - type: group-sort
+  - id: group-sort-gender
+    type: group-sort
     instruction: "Розподіліть слова за категоріями"
     groups:
-      - label: "Category A"
-        items: ["word1", "word2"]
-      - label: "Category B"
-        items: ["word3", "word4"]
+      - label: "Чоловічий рід"
+        items: ["стіл", "олівець", "будинок"]   # ≥ 3 items per group
+      - label: "Жіночий рід"
+        items: ["книга", "ручка", "школа"]
+      - label: "Середній рід"
+        items: ["вікно", "море", "молоко"]
 
-  - type: true-false
+  - id: true-false-grammar
+    type: true-false
     instruction: "Правда чи ні?"
-    items:
-      - statement: "Statement here"
-        correct: true
-        explanation: "Why it's true"
+    items:                     # ← real output: ≥ 6 items
+      - statement: "«Книга» — це чоловічий рід."
+        correct: false
+        explanation: "Книга закінчується на -а, отже жіночий рід."
+      # ... ≥ 6 items total
 
   - type: error-correction
     instruction: "Виправте помилку"
@@ -370,7 +423,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -447,10 +500,15 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 ## Quality Rules
 
-**ITEM COUNT MINIMUMS (non-negotiable):**
-- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
-- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
-- If you can't think of enough items, add more examples from the module's vocabulary and content.
+**ACTIVITY COUNT MINIMUMS (non-negotiable, audit-enforced):**
+- **Total: 10 activities.** Inline: 4–6. Workbook: 6–9. The audit gate FAILS the module if you ship fewer.
+- **Type diversity: workbook MUST cover ≥5 distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
+- **Match the inline markers exactly.** Every `<!-- INJECT_ACTIVITY: id -->` marker in the prose needs a matching inline activity with that exact id. Skipping markers means the lesson tab is broken.
+
+**ITEM COUNT MINIMUMS (non-negotiable, per-activity):**
+- **Default minimum: 6 items per activity.** Quiz, fill-in, match-up, true-false, anagram, error-correction, translate, cloze, mark-the-words, divide-words, count-syllables, odd-one-out, group-sort categories: all ≥ 6.
+- **Lower minimums for specific types only:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items, essay-response/critical-analysis = 1 prompt.
+- If you can't think of enough items, add more examples from the module's vocabulary and content. NEVER ship a 1-item or 2-item activity unless its type cap explicitly allows it.
 - **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
 - **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
@@ -557,6 +615,27 @@ IMPORTANT: After using tools, output your COMPLETE module content as plain text.
 1. Run `verify_words` on all Ukrainian words in your exercises — every word must exist in VESUM
 2. Run `query_cefr_level` on any word you're unsure about — it must be a1-appropriate
 3. For fill-in answers and distractors, verify the exact form (case, number, gender) with `verify_lemma`
+
+---
+
+## ⚠️ MANDATORY FINAL CHECKLIST — verify before emitting YAML
+
+Walk through this checklist explicitly before you start emitting. If ANY box is unchecked, fix it FIRST.
+
+- [ ] My output has **at least 4** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
+- [ ] My output has **at least 6** workbook activities.
+- [ ] **Total ≥ 10.**
+- [ ] **Every** activity has **at least 6** items, pairs, or statements (except types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3, essay-response=1).
+- [ ] The module (inline + workbook combined) uses **at least 0 distinct activity types** (or 4+ when 0 = 0 and the workbook size allows it). I am NOT shipping a wall of quizzes.
+- [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
+- [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
+- [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+- [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+- [ ] My inline count is between 4 and 6. I did NOT create more injection markers than 6.
+- [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
+- [ ] At B1+, all instructions are in Ukrainian (no English fallback).
+
+If you cannot tick all of these, REGENERATE the activities BEFORE outputting. Shipping under-spec means the build rejects you and the heal loop has to redo your work — wasting compute.
 
 ---
 

@@ -1,0 +1,28 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T11-14-2ad0148b.json
+phase: review
+prompt_chars: 68185
+response_chars: 48393
+prompt_words: 9835
+response_words: 6990
+sections:
+- name: preamble
+  start: 0
+  length: 459
+  fraction: 0.0067
+- name: plan
+  start: 459
+  length: 63783
+  fraction: 0.9354
+- name: output_spec
+  start: 64242
+  length: 3943
+  fraction: 0.0578
+large_sections:
+- plan
+directives_total: 30
+directives_covered: 29
+directives_missed:
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing

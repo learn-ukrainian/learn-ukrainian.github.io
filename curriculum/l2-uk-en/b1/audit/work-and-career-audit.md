@@ -1,7 +1,7 @@
 # Audit Report: M09 — work-and-career.md
 **Level:** B1 | **Module:** M09 | **Phase:** B1.0 | **Pedagogy:** TTT | **Target:** 4000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-04-10 21:25:57
+**Generated:** 2026-04-11 14:27:38
 
 ## Configuration
 **Type:** B1-grammar
@@ -18,82 +18,85 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | match-up | match-up | 10 | 8 | ✅ |
-| 2 | group-sort | group-sort | 20 | 6 | ✅ |
-| 3 | fill-in | fill-in | 8 | 8 | ✅ |
-| 4 | quiz | quiz | 6 | 8 | ❌ |
-| 5 | essay-response | essay-response | 1 | 6 | ❌ |
-| 6 | error-correction | error-correction | 6 | 6 | ✅ |
-| 7 | fill-in | fill-in | 6 | 8 | ❌ |
-| 8 | translate | translate | 6 | 6 | ✅ |
+| 1 | match-up |  | 7 | 8 | ❌ |
+| 2 | group-sort |  | 15 | 6 | ✅ |
+| 3 | fill-in |  | 7 | 8 | ❌ |
+| 4 | quiz |  | 6 | 8 | ❌ |
+| 5 | error-correction |  | 6 | 6 | ✅ |
+| 6 | translate |  | 6 | 6 | ✅ |
+| 7 | essay-response |  | 1 | 6 | ❌ |
 
 **Summary:**
-- Total activities: 8 (target: 0-4) ❌
+- Total activities: 7 (target: 0-4) ❌
 - Unique types: 7 (minimum: 3) ✅
 - Priority types used: 5/7 (error-correction, essay-response, fill-in, match-up, quiz) ✅
-- Low density activities: 3
+- Low density activities: 4
+
+## LINT ERRORS
+- ❌ Line 147: AI Contamination detected ('\bMy previous\b'). Remove thinking/self-correction artifacts.
+- ❌ Line 267: AI Contamination detected ('\bMy previous\b'). Remove thinking/self-correction artifacts.
 
 ## PEDAGOGICAL VIOLATIONS
 - **[LEVEL_RESTRICTION]** Activity 'essay-response' not allowed at B1
   - FIX: Use level-appropriate activities. 'essay-response' is introduced at A2+.
-- **[COMPLEXITY]** match-up '' has 10 pairs (target: 12-16)
+- **[COMPLEXITY]** match-up '' has 7 pairs (target: 12-16)
   - FIX: Adjust number of pairs to 12-16.
+- **[COMPLEXITY]** fill-in '' has 7 items (minimum: 8)
+  - FIX: Add more items. B1 fill-in requires at least 8 items.
 - **[COMPLEXITY]** quiz '' has 6 items (minimum: 8)
   - FIX: Add more items. B1 quiz requires at least 8 items.
-- **[COMPLEXITY]** fill-in '' has 6 items (minimum: 8)
-  - FIX: Add more items. B1 fill-in requires at least 8 items.
-- **[INLINE_ENGLISH_IN_PROSE]** Inline English translations in B1+ prose (5 occurrences): (Instrumental case), (Instrumental case), (Accusative case) — breaks immersion target
+- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "> *For their work, every employee receives financial compensation.". Shares significant keywords with sentence at index 57.
+  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
+- **[INLINE_ENGLISH_IN_PROSE]** Inline English translations in B1+ prose (4 occurrences): (Locative case), (Accusative case), (Genitive case) — breaks immersion target
   - FIX: Remove inline English translations. Use context clues, Ukrainian definitions, or move translations to vocabulary section
-- **[SALAD_EXCESSIVE_INLINE_GLOSSES]** paragraph has 4 inline **term** (gloss) markers across 4 sentence(s) — too dense; move to vocabulary section or convert to UK paragraph + translation block
-  - FIX: Convert inline-gloss paragraphs to monolingual Ukrainian paragraphs followed by a blockquote + italic English translation block. See docs/best-practices/language-salad.md.
-- **[SALAD_EXCESSIVE_INLINE_GLOSSES]** paragraph has 7 inline **term** (gloss) markers across 7 sentence(s) — too dense; move to vocabulary section or convert to UK paragraph + translation block
-  - FIX: Convert inline-gloss paragraphs to monolingual Ukrainian paragraphs followed by a blockquote + italic English translation block. See docs/best-practices/language-salad.md.
+- **[STATE_STANDARD_LOW_IMMERSION]** Module 9 has 26.0% immersion (target: 90.0%+)
+  - FIX: Add more Ukrainian content to reach 90%+ immersion for full immersion modules
 
 ## Recommendation
-**📝 UPDATE** (severity 40/100)
+**🔄 REWRITE** (severity 82/100)
 
-- Revision recommended (severity 40/100)
 - 7 violations (significant)
+- Immersion 59% off target (major rebalancing needed)
 - Activity density below minimum
 
 ## Gates
-- **Words:** ✅ 5404/4000 (raw: 5452)
-- **Activities:** ✅ 8/0
-- **Density:** ❌ 3 < 6
+- **Words:** ✅ 6901/4000 (raw: 7025)
+- **Activities:** ✅ 7/0
+- **Density:** ❌ 4 < 6
 - **Unique_types:** ✅ 7/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ❌ 0/5
+- **Engagement:** ✅ 5/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 56/25
 - **Structure:** ✅ Valid Structure
-- **Lint:** ✅ Clean Format
+- **Lint:** ❌ 2 Format Errors
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 95.3% (target 85-100% (B1.1 Aspect))
-- **Richness:** ❌ 50% < 95% min (grammar) - REWRITE needed
+- **Immersion:** ❌ 26.0% LOW (target 85-100% (B1.1 Aspect))
+- **Richness:** ❌ 65% < 95% min (grammar) - REWRITE needed
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
 
 ## Richness Details
-**Score:** 50% (minimum: 95%)
+**Score:** 65% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 100 | 24 | 100% | 20% | 20.0% |
+| examples | 52 | 24 | 100% | 20% | 20.0% |
 | engagement | 0 | 5 | 0% | 15% | 0.0% |
-| dialogues | 0 | 4 | 0% | 15% | 0.0% |
-| variety | 0.99 | - | 99% | 10% | 9.9% |
+| dialogues | 6 | 4 | 100% | 15% | 15.0% |
+| variety | 0.93 | - | 93% | 10% | 9.3% |
 | cultural | 0 | 3 | 0% | 10% | 0.0% |
 | realworld | 20 | 3 | 100% | 10% | 10.0% |
 | visual | 0 | 3 | 0% | 5% | 0.0% |
-| questions | 18 | 5 | 100% | 5% | 5.0% |
+| questions | 15 | 5 | 100% | 5% | 5.0% |
 | tables | 0 | 2 | 0% | 4% | 0.0% |
 | paragraph_var | 1.00 | - | 100% | 3% | 3.0% |
 | proverbs | 10 | 1 | 100% | 3% | 3.0% |
-| **TOTAL** | | | | | **50.9%** |
+| **TOTAL** | | | | | **65.3%** |
 
 ### Dryness Flags & Fixes
 - ❌ **NO_ENGAGEMENT**
@@ -111,28 +114,6 @@
     > 🌍 **У реальному житті**
     >
     > [Practical scenario where this grammar is used]
-- ❌ **NO_DIALOGUE**
-  - FIX:
-    Add 4+ mini-dialogues. The detector counts lines in blockquotes with bold speaker names.
-    
-    Use ONE of these formats (blockquote is required for detection):
-    
-    Format 1 — Bold speaker in blockquote (PREFERRED):
-    > **Студент:** Чому тут знахідний відмінок?
-    > **Викладач:** Бо дієслово «бачити» вимагає знахідного.
-    > **Студент:** А якщо це заперечення?
-    > **Викладач:** Тоді родовий: «не бачу **книжки**».
-    
-    Format 2 — Em-dash in blockquote:
-    > — Чому тут знахідний?
-    > — Бо дієслово вимагає знахідного.
-    
-    Format 3 — Plain А:/Б: speakers:
-    А: Чому тут знахідний?
-    Б: Бо дієслово вимагає знахідного.
-    
-    IMPORTANT: Dialogues OUTSIDE blockquotes (>) using **Speaker:** format are NOT detected.
-    Place dialogues inside [!dialogue] callouts or blockquotes.
 - ❌ **NO_TABLES**
   - FIX:
     Address this issue to improve richness score
@@ -149,15 +130,16 @@
 ## Low Density Activities
 | Activity | Type | Items | Required | Fix |
 |----------|------|-------|----------|-----|
-| quiz | quiz | 6 | 8 | Add 2 more items |
-| essay-response | essay-response | 1 | 6 | Add 5 more items |
-| fill-in | fill-in | 6 | 8 | Add 2 more items |
+|  | match-up | 7 | 8 | Add 1 more items |
+|  | fill-in | 7 | 8 | Add 1 more items |
+|  | quiz | 6 | 8 | Add 2 more items |
+|  | essay-response | 1 | 6 | Add 5 more items |
 
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 1410 | Included in Core |
-| **Вид дієслова у розповіді про роботу** | ✅ | 1567 | Included in Core |
-| **На співбесіді: ситуативне мовлення** | ✅ | 1149 | Included in Core |
-| **Підсумок: робота і вид дієслова** | ✅ | 1278 | Included in Core |
+| **Intro/Narrative** | ✅ | 1727 | Included in Core |
+| **Вид дієслова у розповіді про роботу (~1100 words total)** | ✅ | 1551 | Included in Core |
+| **На співбесіді: ситуативне мовлення** | ✅ | 1678 | Included in Core |
+| **Підсумок: робота і вид дієслова (~1100 words total)** | ✅ | 1945 | Included in Core |

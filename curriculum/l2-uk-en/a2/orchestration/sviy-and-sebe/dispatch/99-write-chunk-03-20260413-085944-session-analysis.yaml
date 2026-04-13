@@ -1,0 +1,79 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T06-58-bc67e0de.json
+phase: write-chunk-03
+prompt_chars: 44375
+response_chars: 4706
+prompt_words: 6430
+response_words: 748
+sections:
+- name: header
+  start: 0
+  length: 453
+  fraction: 0.0102
+- name: skeleton
+  start: 453
+  length: 1767
+  fraction: 0.0398
+- name: prior_summary
+  start: 2220
+  length: 3486
+  fraction: 0.0786
+- name: plan
+  start: 5706
+  length: 13279
+  fraction: 0.2992
+- name: wiki
+  start: 10872
+  length: 25153
+  fraction: 0.5668
+- name: output_spec
+  start: 44138
+  length: 237
+  fraction: 0.0053
+large_sections:
+- wiki
+directives_total: 24
+directives_covered: 14
+directives_missed:
+- kind: checklist
+  text: Zero `> *English translation*` blockquotes after dialogues?
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: checklist
+  text: At most ONE English `:::info` callout per major section?
+  covered: false
+  coverage_note: 2/8 keywords (25%)
+- kind: checklist
+  text: Metalanguage terms parenthetically translated on first use only (max 2 per
+    section)?
+  covered: false
+  coverage_note: 2/10 keywords (20%)
+- kind: checklist
+  text: Reading Practice / Читаємо українською block in EVERY major section?
+  covered: false
+  coverage_note: 1/8 keywords (12%)
+- kind: must
+  text: They were required at A1 but they cap immersion below 50% — at A2-late they
+    MUST be removed.
+  covered: false
+  coverage_note: 2/10 keywords (20%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 3/11 keywords (27%)
+- kind: inject_activity
+  text: fill-in-sebe-cases
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-sebe-expressions
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: true-false-sviy-cases
+  covered: false
+  coverage_note: marker missing

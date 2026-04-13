@@ -1,0 +1,152 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T08-57-98362b43.json
+phase: activities
+prompt_chars: 59068
+response_chars: 10087
+prompt_words: 8745
+response_words: 1078
+sections:
+- name: preamble
+  start: 0
+  length: 2127
+  fraction: 0.036
+- name: plan
+  start: 2127
+  length: 56833
+  fraction: 0.9622
+- name: output_spec
+  start: 58960
+  length: 108
+  fraction: 0.0018
+large_sections:
+- plan
+directives_total: 65
+directives_covered: 36
+directives_missed:
+- kind: must
+  text: '** Your very first character must be `version:`.'
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: must
+  text: Each inline activity MUST have an `id` that matches one of these markers.
+  covered: false
+  coverage_note: 1/10 keywords (10%)
+- kind: must
+  text: Each inline activity's `id` must match one of these markers exactly (lowercase,
+    hyphenated).
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: must
+  text: You MUST create activities that cover all these hints.
+  covered: false
+  coverage_note: 0/9 keywords (0%)
+- kind: must
+  text: '**Grounding rule:** Every Ukrainian word in your exercises must appear either
+    in the prose content or in this vocabulary list.'
+  covered: false
+  coverage_note: 1/15 keywords (7%)
+- kind: must
+  text: 'The most important rule you must remember: only verbs of the imperfective
+    aspect can have a present tense form.'
+  covered: false
+  coverage_note: 4/15 keywords (27%)
+- kind: must
+  text: You must be careful with some tricky verbs that look like they belong to one
+    group but actually belong to another.
+  covered: false
+  coverage_note: 2/16 keywords (12%)
+- kind: must
+  text: This brings us to a fundamental shift in how you must think about verbs in
+    the past tense.
+  covered: false
+  coverage_note: 3/12 keywords (25%)
+- kind: must
+  text: If a man says "I worked," he must say **я працював**, using the masculine
+    ending.
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: must
+  text: '" Here, the pronoun **ми** (we) is plural, so the verb must take the plural
+    ending **-ли**, resulting in **їздили**.'
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: must
+  text: 'However, in Ukrainian, **сестра** is a feminine noun, so the verb must reflect
+    that femininity: **Моя сестра сказала**.'
+  covered: false
+  coverage_note: 3/12 keywords (25%)
+- kind: must
+  text: You must strictly separate the two systems in your mind.
+  covered: false
+  coverage_note: 0/8 keywords (0%)
+- kind: must
+  text: 'Always double-check your sentence: if the subject is "вона" or a feminine
+    noun, your verb must end in **-ла**.'
+  covered: false
+  coverage_note: 2/12 keywords (17%)
+- kind: must
+  text: If a woman looks into the mirror, the reflection must be feminine (**-ла**).
+  covered: false
+  coverage_note: 0/7 keywords (0%)
+- kind: must
+  text: If a crowd looks, it must be plural (**-ли**).
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: You must always learn both verbs together to communicate effectively.
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: must
+  text: '- id: marker-id-here # MUST match an <!-- INJECT_ACTIVITY: .'
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: must
+  text: '**CRITICAL RULE: EVERY single activity object MUST include an `id` field
+    (a unique string like "quiz-grammar", "match-up-vocab").'
+  covered: false
+  coverage_note: 2/16 keywords (12%)
+- kind: must
+  text: 'Required: id, instruction, items[] (array of strings), correct_order[] (TOP-LEVEL
+    array of **integers** — zero-based indices into items).'
+  covered: false
+  coverage_note: 3/13 keywords (23%)
+- kind: must
+  text: 'Required: id, syllables[], correctIndices[], category.'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: 'Required: id, letters[{upper, lower}].'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: 'Required: id, items[{video}].'
+  covered: false
+  coverage_note: 1/3 keywords (33%)
+- kind: must
+  text: '- **critical-analysis**: Required: id, prompt.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**You MUST use these patterns.'
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: must
+  text: If the pattern lists divide-words, count-syllables, and odd-one-out — your
+    output MUST include all three.
+  covered: false
+  coverage_note: 0/15 keywords (0%)
+- kind: must
+  text: '**Test LANGUAGE, not trivia** — exercises must test Ukrainian language skills.'
+  covered: false
+  coverage_note: 0/8 keywords (0%)
+- kind: must
+  text: '- **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).'
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: '...'
+  covered: false
+  coverage_note: marker missing

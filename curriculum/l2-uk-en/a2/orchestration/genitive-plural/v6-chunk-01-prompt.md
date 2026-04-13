@@ -3,23 +3,21 @@
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 14: Багато книг, мало студентів (A2, A2.2 [Genitive Case Complete])
-**Section to write:** Чоловічий рід: -ів та нульове закінчення (~670 words total)
-**Word target for this section:** 670 words (aim for 737 to account for undershoot)
+**Section to write:** Чоловічий рід: -ів та нульове закінчення (~720 words)
+**Word target for this section:** 720 words (aim for 792 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Чоловічий рід: -ів та нульове закінчення (~670 words total)
-- P1 (~50 words): [Hook — introduce the "Final Boss" of Ukrainian cases: the Genitive Plural. Explain why counting "how many" of something requires a whole new set of endings, shifting from the Nominative Plural.]
-- P2 (~120 words): [Dialogue: Inventory check at a village shop. Продавець and Помічник count leftovers. Examples: скільки пляшок (f), банок (f), булок (f). Motivation: realizing that words change when we say "five" or "many" versus "two" or "three".]
-- P3 (~80 words): [The Core Rule of Quantity: Explain that numerals 5+ (п'ять, десять, сто) and indefinite quantity words (багато, мало, кілька, скільки) trigger the Genitive Plural. Contrast with 2, 3, 4 (Nom. Pl.).]
-- P4 (~100 words): [Main Masculine Pattern -ів: Explain that most hard-stem masculine nouns simply add -ів. Examples: столів, будинків, підручників, студентів, братів.]
-- P5 (~90 words): [Soft-stem Masculine -ів: Explain that soft stems also take -ів, but watch for fleeting vowels (е/о drop). Examples: учитель → учителів, олівець → олівців, хлопець → хлопців.]
-- P6 (~80 words): [The -їв ending: Detail that -їв only appears after vowel stems or apostrophes. Examples: герой → героїв, трамвай → трамваїв, подвір'я → подвір'їв, відкриття → відкриттів.]
-- P7 (~90 words): [Zero Ending Masculine (The Exception): Nouns with the -ин/-їн suffix (nationalities/social groups) lose the suffix and take a zero ending. Examples: громадянин → громадян, селянин → селян, болгарин → болгар, татарин → татар.]
-- P8 (~60 words): [Special Case — Чоловік: Explain the parallel forms for the word "man/person". When counting people specifically as a unit of measure, we use "чоловік" (п'ять чоловік), but "чоловіків" is also valid in general contexts.]
-- <!-- INJECT_ACTIVITY: match-up-masc-genitive --> [match-up, Match Nominative singular nouns to their Genitive plural forms, 8 items]
+## Чоловічий рід: -ів та нульове закінчення (~720 words)
+- P1 (~120 words): Introduction to the Genitive Plural case. Explain that this form is required after numbers 5 and above (`п'ять`, `шість`, `десять`) and after words denoting quantity like `багато` (a lot), `мало` (a little), `кілька` (a few), and the question word `скільки` (how many). Give initial examples: `п'ять студентів`, `багато столів`.
+- P2 (~120 words): Introduce the dominant pattern for masculine nouns: the **-ів** ending. Explain that most hard-stem masculine nouns take this ending. Provide examples: `стіл` → `столів`, `брат` → `братів`, `студент` → `студентів`, `будинок` → `будинків`, `підручник` → `підручників`.
+- P3 (~120 words): Explain that soft-stem masculine nouns also predominantly take the **-ів** ending. Provide examples: `учитель` → `учителів`, `олівець` → `олівців`. Emphasize that this is a highly productive ending in Ukrainian and a key feature distinguishing it from other Slavic languages. 
+- P4 (~120 words): Explain the **-їв** variant. Clarify that true `-їв` appears only after stems ending in a vowel or an apostrophe. Include the plan's examples: `подвір'я` → `подвір'їв`, `відкриття` → `відкриттів`, `герой` → `героїв`, `трамвай` → `трамваїв`. Reiterate that most soft masculine nouns take `-ів`, not `-їв`.
+- P5 (~120 words): Discuss fleeting vowels (`о` or `е`) in masculine nouns. Explain that these vowels in the last syllable often drop when adding the `-ів` ending. Provide examples: `день` → `днів` (`е` drops), `хлопець` → `хлопців` (`е` drops).
+- P6 (~120 words): Introduce the rare **zero ending** for masculine nouns. Explain that nouns losing the `-ин`/`-їн` suffix in the plural take a zero ending: `громадянин` → `громадян`, `селянин` → `селян`, `болгарин` → `болгар`. Mention the word `чоловік`, which has parallel forms (`чоловік`/`чоловіків`).
+- <!-- INJECT_ACTIVITY: match-up-masculine --> [match-up, Match Nominative singular nouns to their Genitive plural forms, 8 items]
 
 ---
 ## Full Plan (for reference)
@@ -654,6 +652,31 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] множина (plural)
+- [ ] нульове закінчення (zero ending)
+- [ ] кілька (a few, several)
+- [ ] багато (a lot, many)
+- [ ] мало (a little, few)
+- [ ] скільки (how many)
+- [ ] людина (person) / люди (people)
+- [ ] стаття (article)
+- [ ] завдання (task, assignment)
+- [ ] питання (question)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Чоловічий рід: -ів та нульове закінчення (~720 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

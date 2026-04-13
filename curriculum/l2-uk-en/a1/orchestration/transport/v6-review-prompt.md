@@ -121,97 +121,109 @@ references:
 <generated_module_content>
 ## Діалоги (Dialogues)
 
-Navigating a new city always starts with understanding the local transit system and learning how to ask the right questions. When arriving at the **Бориспіль** (Boryspil) airport outside of the capital city of Kyiv, the immediate practical challenge is reaching the city center. Travelers have a wide variety of choices depending on their budget, luggage, and final destination: they might take a regular public bus, board a fast express train, call a private taxi, or eventually transfer to the vast underground metro network.
+Imagine you have just arrived at the Boryspil airport outside of Kyiv, and you need to navigate to your hotel in the city center. Or perhaps you want to visit a friend across town. To use transport in Ukrainian, you need a few core skills: ask for directions, find the stop, and buy a ticket.
+ 
 
-> **Приїжджий:** Вибачте, як дістатися до вокзалу? *(Excuse me, how to get to the train station?)*
-> **Друг:** Їдьте автобусом або на метро. *(Take a bus or by metro.)*
-> **Приїжджий:** Який автобус? А можна на метро? *(Which bus? And is it possible by metro?)*
-> **Друг:** Номер сім. Зупинка ось там. Спочатку треба їхати автобусом до метро «Харківська». *(Number seven. The stop is right there. First you must take a bus to the "Kharkivska" metro.)*
+Consider this practical scenario: a visitor needs to get to the main railway station.
+
+> **Приїжджий:** Як дістатися до вокзалу? *(How do I get to the train station?)*
+> **Друг:** Їдьте автобусом або на метро. *(Take a bus or the metro.)*
+> **Приїжджий:** Який автобус? *(Which bus?)*
+> **Друг:** Номер сім. Зупинка ось там. *(Number seven. The stop is over there.)*
 > **Приїжджий:** Дякую! *(Thank you!)*
 > **Друг:** На здоров'я! *(You are welcome!)*
 
-The key phrase in the first exchange is **як дістатися до...** (how to get to...), which is the most natural and common way to ask for directions to a specific place. This grammatical structure is always followed by a noun in the genitive case to indicate the destination, as seen in the word forms **до вокзалу** (to the station) and **до станції** (to the station). If a local resident helps you with directions and you thank them, a polite native response you will often hear is **На здоров'я!** (You are welcome!).
+This short exchange introduces several vital pieces of information. The phrase **як дістатися до** (how to get to) is your primary and most natural tool for asking directions. Notice the response: the speaker uses **їдьте** (go / ride) followed by **автобусом** (by bus) or **на метро** (by metro). Finally, locating the **зупинка** (stop) is the necessary last step before boarding the vehicle.
 
-> **Пасажир:** Добрий день! Один квиток до Львова, будь ласка. *(Good day! One ticket to Lviv, please.)*
+Once you arrive at the train or bus station, you will often need to interact with a cashier at the ticket window. Purchasing a ticket for an intercity trip involves specific conversational patterns.
+
+> **Приїжджий:** Один квиток до Львова, будь ласка. *(One ticket to Lviv, please.)*
 > **Касир:** В один бік чи туди й назад? *(One way or round trip?)*
-> **Пасажир:** Туди й назад. Скільки коштує? *(Round trip. How much does it cost?)*
-> **Касир:** П'ятсот гривень. Є потяг о дев'ятій ранку. *(Five hundred hryvnias. There is a train at nine in the morning.)*
-> **Пасажир:** Дякую. О котрій годині він рушає? *(Thank you. At what time does it depart?)*
-> **Касир:** О дев'ятій рівно. *(At nine exactly.)*
+> **Приїжджий:** Туди й назад. Скільки коштує? *(Round trip. How much does it cost?)*
+> **Касир:** П'ятсот гривень. *(Five hundred hryvnias.)*
+> **Приїжджий:** О котрій відправлення? *(At what time is the departure?)*
+> **Касир:** О дев'ятій ранку. *(At nine in the morning.)*
 
-When buying tickets at a terminal or speaking with a conductor, the clerk will routinely ask if your journey is **в один бік** (one way) or **туди й назад** (round trip, literally "there and back"). This everyday interaction naturally integrates expressions of time like **о дев'ятій** (at nine) and simple numbers such as **п'ятсот** (five hundred) to quickly confirm the departure schedule and the final price. Knowing these set phrases makes traveling across Ukraine much smoother and reduces confusion at the ticket counter.
-
-<!-- INJECT_ACTIVITY: fill-in-ticket-buying -->
+In this transaction, you are combining your new knowledge of transport with previously learned numbers and time expressions. Asking **скільки коштує** (how much does it cost) is a universal skill. You also just learned the highly useful phrases **в один бік** (one way) and **туди й назад** (round trip).
 
 ## Транспорт (Transport Types)
 
-Every major Ukrainian city relies on a robust and heavily utilized network of **громадський транспорт** (public transport). The core of this system typically consists of the "big four" modes of transit. You will frequently see an **автобус** (bus, masculine), a **тролейбус** (trolleybus, masculine), and a **трамвай** (tram, masculine) operating above ground, while larger metropolitan areas like Kyiv and Kharkiv feature a fast underground **метро** (metro, neuter). Grammatically, the words **метро** (metro) and **таксі** (taxi, neuter) are special cases in the language. They are nouns of foreign origin and are completely indeclinable, meaning their word endings never change regardless of their role in a sentence.
+Common city transport includes **автобус** (bus, masculine), **тролейбус** (trolleybus, masculine), **трамвай** (tram, masculine), **маршрутка** (minibus, feminine), **метро** (metro, neuter), and **таксі** (taxi, neuter). The nouns **метро** and **таксі** are indeclinable, so their forms do not change. For longer trips, common options are **потяг** (train, masculine), intercity **автобус** (bus), and **літак** (plane, masculine).
 
-For longer journeys stretching between cities, travelers rely heavily on intercity options like a passenger **потяг** (train, masculine) or a commercial **літак** (plane, masculine). In daily conversation, the word **потяг** (train) is often used interchangeably with **поїзд** (train). Within city limits and for commuting between nearby towns, you will undoubtedly encounter the ubiquitous **маршрутка** (minibus, feminine), which operates on fixed municipal routes but traditionally stops on passenger demand. Personal transit is usually done by **машина** (car, feminine). To catch any of these transport types, you need to know the right location: you must head to a **вокзал** (station) for trains, navigate to an **аеропорт** (airport) for flights, or simply wait patiently at a local neighborhood **зупинка** (stop).
+<!-- INJECT_ACTIVITY: quiz-which-transport -->
 
-When stating exactly how you are traveling, the Ukrainian language makes a strict grammatical distinction between moving on foot and moving by a vehicle. While you say **іти пішки** (to go on foot), traveling by any type of machine requires the motion verb **їхати** (to go by transport). For standard declinable nouns, you indicate the means of transportation by putting the noun directly into the instrumental case without any added preposition. This form clearly shows the instrument or tool you use to travel.
-*   «Я їду **автобусом**.» *(I am going by bus.)*
-*   «Він їде **потягом**.» *(He is going by train.)*
-*   «Ми їдемо **трамваєм**.» *(We are going by tram.)*
-*   «Вони їдуть **тролейбусом**.» *(They are going by trolleybus.)*
+In the Ukrainian language, verbs of motion are highly specific and descriptive. While English uses the general verb "to go" for almost everything, Ukrainian strictly separates walking from riding. You must use the verb **іти** (to go on foot) when walking, but you must use the verb **їхати** (to go by vehicle) whenever you use any form of transport. When stating the exact method of transport, Ukrainian uses two distinct patterns. The first pattern uses the instrumental case chunk, which simply changes the ending of the noun to mean "by means of."
 
-A fundamentally different grammatical pattern applies to indeclinable nouns and certain specific vehicles. Instead of using the bare instrumental case, you must use the preposition **на** (on/at) followed immediately by the locative case. Since words like **метро** (metro) and **таксі** (taxi) do not decline, their forms remain identical, while words like **машина** (car) take standard locative endings. Both patterns simply mean "by" a certain transport, but they are grammatically distinct.
-*   «Я їду **на метро**.» *(I am going by metro.)*
-*   «Він їде **на таксі**.» *(He is going by taxi.)*
-*   «Ми їдемо **на машині**.» *(We are going by car.)*
+*   **їхати автобусом** — to go by bus
+*   **їхати тролейбусом** — to go by trolleybus
+*   **їхати трамваєм** — to go by tram
+*   **їхати потягом** — to go by train
 
-:::caution
-Never mix these two grammatical patterns together. A common learner mistake is saying «на автобусом» — this structure is strictly incorrect. While the locative form «на автобусі» (on the bus) is grammatically possible and occasionally heard, using the pure instrumental form **автобусом** (by bus) is far more idiomatic and natural for native speakers. You should learn each transport type with its preferred prepositional or non-prepositional pattern from the beginning.
-:::
+The second pattern uses the preposition **на** (on / at) followed by the locative case chunk. This prepositional pattern is strictly used for indeclinable nouns and for the word for car. Because indeclinable nouns cannot change their endings, they simply follow the preposition without any modification.
 
-<!-- INJECT_ACTIVITY: quiz-transport-patterns -->
-<!-- INJECT_ACTIVITY: quiz-match-situation -->
+*   **їхати на метро** — to go by metro
+*   **їхати на таксі** — to go by taxi
+*   **їхати на машині** — to go by car
+
+Note that both of these patterns translate identically to "by [transport]" in English. You simply need to memorize which vehicle uses which grammatical pattern.
+
+<!-- INJECT_ACTIVITY: quiz-instrumental-or-locative -->
 
 ## Корисні фрази (Useful Phrases)
 
-When navigating unfamiliar city streets or crowded transit hubs, a few precise questions will help you find the correct transit option without getting lost. If you are looking for a place to wait for a ride, simply ask a friendly passerby **Де зупинка автобуса?** (Where is the bus stop?) or **Де найближча станція метро?** (Where is the nearest metro station?). Once you locate the physical stop, you must ensure you board the vehicle going in the right direction. Use these straightforward phrases to identify the correct route:
-*   «**Який автобус їде в центр?**» *(Which bus goes to the center?)*
-*   «**Вам потрібен номер п'ять.**» *(You need number five.)*
+Start with a few core questions: where the **зупинка** is, how much a **квиток** costs, and how to get to a place.
 
-If you need to check the schedule or fare while standing at the terminal, you can confidently ask **Коли наступний потяг?** (When is the next train?) or **Скільки коштує квиток?** (How much is a ticket?) to gather the necessary details.
+*   **Де зупинка автобуса?** — Where is the bus stop?
+*   **Де станція метро?** — Where is the metro station?
 
-Once you board a vehicle, communicating effectively with other passengers becomes highly important, especially during the morning or evening rush hour. If you are unsure of your current location along the route, you can simply ask **Яка це зупинка?** (What stop is this?). Ukrainian public transport can get quite crowded during peak times. If someone is blocking your path to the exit doors, the standard, polite way to ask them to let you pass is **Вибачте, ви виходите?** (Excuse me, are you getting off?). If they are not stepping out, they will generally move aside. When the vehicle doors finally open, you can ask **Мені виходити тут?** (Do I get off here?) to confirm your destination, or firmly announce that you are leaving.
+Once you arrive there, you will likely need a **квиток** (ticket). To purchase one at a kiosk, simply state the quantity and your destination:
 
-When asking the bus driver or a local resident to guide you to a location, you will frequently hear basic directional vocabulary. We now revisit the core movement words: **прямо** (straight), **направо** (right), and **наліво** (left). These spatial adverbs combine seamlessly with transport instructions to create clear routes. If you need help finding a specific landmark, you can ask **Вибачте, як дістатися до...?** (Excuse me, how do I get to...?).
-*   «Ідіть **прямо** до вокзалу.» *(Go straight to the station.)*
-*   «Поїдьте **прямо**, а потім поверніть **направо** на зупинці.» *(Drive straight, and then turn right at the stop.)*
-*   «Станція метро **наліво**.» *(The metro station is to the left.)*
-Recognizing these three distinct directions ensures you can properly follow instructions whether you are walking to a transit platform or directing a taxi driver to your hotel.
+*   **Один квиток, будь ласка.** — One ticket, please.
+*   **Скільки коштує квиток?** — How much does the ticket cost?
 
-Discussing schedules and timetables requires using accurate verbs of departure. Many learners mistakenly use the word «відправлятися» (to depart), but this is a direct phonetic calque from Russian and sounds unnatural in standard conversational Ukrainian. Instead, you must use native verbs that describe motion accurately based on the type of vehicle. For heavy transit vehicles like trains starting to move along a track, use the verb **рушати** (to depart / to set in motion). For scheduled vehicles like buses leaving a large station, use **відбувати** (to depart) or **виїжджати** (to drive out / to leave).
-*   «**Потяг рушає о восьмій.**» *(The train departs at eight.)*
-*   «**Автобус виїжджає з автовокзалу.**» *(The bus leaves from the bus station.)*
+If you are waiting on the platform for a train to arrive, you might ask someone nearby:
 
-<!-- INJECT_ACTIVITY: fill-in-directions -->
+*   **Коли наступний потяг?** — When is the next train?
+
+<!-- INJECT_ACTIVITY: fill-in-buy-ticket -->
+
+Sometimes you need clear directions to a specific landmark or a distant station. The most natural and polite way to ask someone for this information is by using the phrase **як дістатися до** (how to get to).
+
+*   **Вибачте, як дістатися до аеропорту?** — Excuse me, how do I get to the airport?
+*   **Як дістатися до центру міста?** — How do I get to the city center?
+*   **Як дістатися до вокзалу?** — How do I get to the train station?
+
+Locals may reply with the direction words you learned in earlier modules, for example: **Йдіть прямо, потім наліво** (Go straight, then left) or **Поверніть направо** (Turn right).
+
+Once you are safely on board your chosen vehicle, you may still need to interact with fellow passengers to ensure you are on the right track. If you are unsure of your current location, you can politely ask:
+
+*   **Яка це зупинка?** — What stop is this?
+
+If you think it is your time to leave the vehicle, you can politely ask someone who is blocking the door:
+
+*   **Мені виходити тут?** — Do I get off here?
+*   **Ви виходите?** — Are you getting off?
+
+<!-- INJECT_ACTIVITY: fill-in-ask-directions -->
 
 ## Підсумок — Summary
 
-Navigating a bustling Ukrainian city is remarkably straightforward once you master the core transport vocabulary and foundational grammatical patterns. In this module, we have learned to correctly identify the main types of transit vehicles, including the **автобус** (bus), **потяг** (train), **таксі** (taxi), and **метро** (metro). You now know exactly how to describe your specific method of travel using two distinct linguistic structures: the direct instrumental case pattern for declinable nouns like **автобусом** (by bus), and the locative construction with a preposition for indeclinable nouns like **на метро** (by metro). We also covered highly practical daily scenarios, such as buying a train ticket at a station window by asking for **один квиток** (one ticket) and inquiring about transit schedules using precise phrases like **о котрій годині** (at what time) and the authentic Ukrainian motion verb **рушати** (to depart). Mastering these fundamental elements allows you to travel across the country with much greater confidence.
+In this module, you have acquired the essential vocabulary needed to effectively navigate urban and intercity environments in Ukraine. We explored common city transport options such as the **автобус** (bus), **трамвай** (tram), and the very useful indeclinable nouns **метро** (metro) and **таксі** (taxi). For much longer journeys, you now know the word **потяг** (train) and **літак** (plane). Crucially, you learned to distinguish between walking (**іти**) and riding (**їхати**). When expressing exactly how you travel, you must remember the two distinct grammatical patterns. The first pattern uses the instrumental chunk directly, such as **автобусом** (by bus) or **потягом** (by train). The second pattern requires the preposition **на** for indeclinable nouns and cars, resulting in phrases like **на метро** (by metro) or **на машині** (by car). You also practiced finding the **зупинка** (stop) and asking **як дістатися до** (how to get to) a specific destination.
 
-Review the following questions to verify your personal understanding of this module's key phrases. Cover the provided answers and test yourself aloud before moving forward to the next lesson.
+Review these practical examples to build your confidence and solidify your new skills. Practice saying them aloud multiple times until they feel completely natural to you.
 
-**How do you say "I am going to work by bus"?**
-> «Я їду на роботу автобусом.»
+*   How do you get to work? — **Я їду на роботу автобусом.** (I go to work by bus.)
+*   Or by metro: — **Я їду на роботу на метро.** (I go to work by metro.)
+*   Buy a train ticket to Lviv. — **Один квиток до Львова, будь ласка.** (One ticket to Lviv, please.)
+*   Ask where the bus stop is. — **Вибачте, де зупинка автобуса?** (Excuse me, where is the bus stop?)
+*   Ask how to get to the station. — **Як дістатися до вокзалу?** (How do I get to the train station?)
+*   Ask the price of a ticket. — **Скільки коштує квиток?** (How much does the ticket cost?)
+*   Check if you need to get off at this stop. — **Мені виходити тут?** (Do I get off here?)
 
-**How do you ask "Where is the train station?"**
-> «Де залізничний вокзал?»
-
-**How do you buy a train ticket to Lviv (round trip)?**
-> «Один квиток до Львова туди й назад, будь ласка.»
-
-**How do you ask "What stop is this?"**
-> «Яка це зупинка?»
-
-**How do you say "Go straight and then left"?**
-> «Ідіть прямо, а потім наліво.»
+You are now fully ready to confidently travel across the city or across the country!
 </generated_module_content>
 
-**PIPELINE NOTE — Word count: 1690 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
+**PIPELINE NOTE — Word count: 1270 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -387,38 +399,168 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 115 words | Not found: 2 words
+Verified: 76 words | Not found: 1 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
-  ✗ Бориспіль — NOT IN VESUM
   ✗ Львова — NOT IN VESUM
 
-All 115 other words are confirmed to exist in VESUM.
+All 76 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
-## Verification Tools (MCP)
+---
 
-You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
+## Verification Tools (Shell Commands)
 
-**Core Verification:**
-- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
-- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
+You have access to verification tools via shell commands. Use these to verify
+Ukrainian vocabulary, check grammar, and search textbook content **as you write**.
 
-**Content Quality:**
-- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+**IMPORTANT:** Run verification commands BEFORE finalizing any Ukrainian text.
+Batch multiple verifications together to minimize round-trips.
 
-**Reference:**
-- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp_rag_search_literary` — verify literary references against primary sources
-- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
+### 1. Batch-verify Ukrainian words exist in VESUM (preferred — one call for many words)
 
-**Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_words
+results = verify_words(['слово1', 'слово2', 'слово3'])
+for w, matches in results.items():
+    if matches:
+        print(f'{w}: FOUND — lemma={matches[0][\"lemma\"]}, pos={matches[0][\"pos\"]}')
+    else:
+        print(f'{w}: NOT FOUND — may not exist in standard Ukrainian')
+"
+```
+
+### 2. Verify a single Ukrainian word in VESUM (with full morphological tags)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_word
+results = verify_word('WORD_HERE')
+if results:
+    for m in results:
+        print(f'lemma={m[\"lemma\"]}, pos={m[\"pos\"]}, tags={m[\"tags\"]}')
+else:
+    print('NOT FOUND in VESUM')
+"
+```
+
+### 3. Get all inflected forms of a lemma (declension/conjugation)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_lemma
+forms = verify_lemma('LEMMA_HERE')
+for f in forms[:20]:
+    print(f'{f[\"word_form\"]:20s} {f[\"pos\"]:8s} {f[\"tags\"]}')
+print(f'... {len(forms)} forms total')
+"
+```
+
+### 4. Check CEFR level of a word (is it level-appropriate?)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import query_cefr_level
+results = query_cefr_level('WORD_HERE')
+for r in results:
+    print(f'{r[\"word\"]}: {r[\"level\"]} ({r[\"pos\"]})')
+if not results:
+    print('Not in CEFR database')
+"
+```
+
+### 5. Search textbook content (Ukrainian school textbooks, Grades 1-11)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_textbooks
+keywords = {'keyword1', 'keyword2'}
+results = search_textbooks(keywords, 5)
+for r in results:
+    title = r.get('section_title', r.get('title', ''))
+    grade = r.get('grade', '?')
+    text = r.get('text', '')[:200]
+    print(f'Grade {grade} | {title}')
+    print(f'  {text}')
+    print()
+"
+```
+
+### 6. Search style guide for calques/Russianisms (Антоненко-Давидович, 279 entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_style_guide
+results = search_style_guide('TOPIC_HERE', 3)
+for r in results:
+    print(f'--- {r.get(\"word\", \"\")} [{r.get(\"section\", \"\")}]')
+    print(r.get('text', '')[:300])
+    print()
+if not results:
+    print('No style guide entries found')
+"
+```
+
+### 7. Look up word definition in СУМ-11 (Ukrainian explanatory dictionary, 127K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_definitions
+results = search_definitions('WORD_HERE', 3)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+### 8. Search idioms (Фразеологічний словник, 25K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_idioms
+results = search_idioms('WORD_HERE', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"text\", r.get(\"definition\", \"\")))[:200]}')
+"
+```
+
+### 9. English-to-Ukrainian translation (Балла, 79K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import translate_en_uk
+results = translate_en_uk('ENGLISH_WORD', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+---
+
+**WHEN to use these tools:**
+
+1. **Before writing any Ukrainian text** — batch-verify all key vocabulary with
+   `verify_words` (tool 1). Any word that returns NOT FOUND must be replaced.
+2. **When you suspect a Russicism or calque** — search the style guide (tool 6)
+   and verify the correct Ukrainian form with `verify_word` (tool 2).
+3. **When writing for A1/A2** — check CEFR levels (tool 4) to ensure vocabulary
+   is level-appropriate.
+4. **When unsure about a case ending or conjugation** — use `verify_lemma` (tool 3)
+   to see the full paradigm.
+5. **When covering a grammar topic** — search textbooks (tool 5) to see how
+   Ukrainian school textbooks teach it.
+6. **When you need the precise Ukrainian meaning** — use СУМ-11 (tool 7).
+7. **When looking for natural Ukrainian expressions** — search idioms (tool 8).
+
+**Batching rule:** Collect all words you want to verify, then run ONE `verify_words`
+call instead of multiple `verify_word` calls. This is faster and uses fewer tokens.

@@ -1,70 +1,73 @@
 ## Linguistic Scan
-- `магазина` — Incorrect Genitive for "store" (building), and incorrectly presented as a "concrete building" that takes `-а`. Ukrainian orthography specifies `-у` for buildings/institutions (магазину).
-- `Хрещатику` — Incorrect Genitive. The standard Genitive of Хрещатик is `Хрещатика`.
-- `знаходиться` — Calque from Russian "находиться" when used for physical location. The correct word is `розташована/розташований` or simply `є`.
+- Factual grammar error in Part 1: "`Remember the core logic: concrete, countable objects and people take **-а/-я** ... while abstract concepts, materials, and institutions take **-у/-ю**`" is too absolute. VESUM confirms parallel genitive singular forms such as `стола/столу` and `магазина/магазину`, so this is not a clean semantic split learners can rely on.
+- Factual grammar error in Part 2: "`For feminine words, the ending is **-ої** (or **-еї** for soft sounds)`" is wrong as stated. VESUM confirms forms like `синьої`, `моєї`, `цієї`; the contrast here is not a simple "soft sounds = -еї" rule.
+- Factual grammar error in Part 2: "`For plural words of all genders, the adjective and pronoun ending is uniformly **-их**`" is wrong. VESUM confirms genitive plural forms such as `нових`, `синіх`, `моїх`, `цих`.
+- Factual grammar error in Part 2: "`negation always demands the genitive`" overstates the rule and teaches bad grammar generalization. The example with `немає` is correct, but the universal claim is not.
 
 ## Exercise Check
-- `quiz-genitive-prepositions` - matches plan, correctly placed after Part 1.
-- `fill-in-genitive-forms` - matches plan, correctly placed in Part 2.
-- `error-correction-genitive-checks` - matches plan, correctly placed at the end of Part 2.
-- `match-up-genitive-situational` - matches plan, correctly placed in Part 3.
-Exercises are logically distributed and precisely align with the plan's requirements.
+Markers found: `quiz-preposition-identification`, `fill-in-genitive-agreement`, `error-correction-genitive`, `match-up-situations`.
+
+Placement is correct:
+- `quiz-preposition-identification` appears after the Part 1 preposition/triggers explanation.
+- `fill-in-genitive-agreement` and `error-correction-genitive` appear after the Part 2 agreement/plural/error section.
+- `match-up-situations` appears after the Part 3 real-life usage section.
+
+Plan alignment is good:
+- Marker types match the plan’s `activity_hints`.
+- Markers are distributed across the module rather than dumped at the end.
+- No inline DSL exercise blocks were present to audit for answer logic.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 9/10 | Missed the required vocabulary word "однина", though translated it multiple times in English. Otherwise followed all outlines. |
-| 2. Linguistic accuracy | 6/10 | Critical error in teaching `-а` for "concrete building" using `магазина` (buildings take `-у`). Incorrect form `Хрещатику`. Calque `знаходиться`. |
-| 3. Pedagogical quality | 8/10 | Excellent structure and PPP flow, but the rule about "concrete building" taking `-а` is misleading and factually wrong. |
-| 4. Vocabulary coverage | 8/10 | Missed the required word `однина`. The rest are present. |
-| 5. Exercise quality | 10/10 | Markers perfectly align with the `activity_hints` in both type and count. |
-| 6. Engagement & tone | 10/10 | Natural, encouraging teacher tone. |
-| 7. Structural integrity | 6/10 | Two dangling, incomplete sentences in the conclusion ("If you answer yes to these questions, "). |
-| 8. Cultural accuracy | 10/10 | Good use of Kyiv landmarks (Golden Gates, Khreshchatyk, St. Sophia). |
-| 9. Dialogue & conversation quality | 9/10 | Dialogue is natural and effectively uses the Genitive, but was marred by the `Хрещатику` error. |
+| 1. Plan adherence | 9/10 | The module follows the planned three-part structure and uses the planned situations almost verbatim: "`біля Софійського собору` ... `без квитка` ... `для групи з десяти людей` ... `до Хрещатика`," plus market, pharmacy, and directions contexts. |
+| 2. Linguistic accuracy | 5/10 | Part 2 contains several wrong rules: "`For feminine words, the ending is **-ої** (or **-еї** for soft sounds)`," "`uniformly **-их**`," and "`negation always demands the genitive`." |
+| 3. Pedagogical quality | 6/10 | Several explanations are taught as absolutes when they are not: "`concrete, countable objects and people take **-а/-я**`," "`uniformly **-их**`," "`negation always demands the genitive`." Learners could memorize false rules. |
+| 4. Vocabulary coverage | 10/10 | All required and recommended plan vocabulary appears in prose: "`родовий відмінок`, `прийменник`, `узгодження`, `множина`, `однина`, `закінчення`, `перевірка`, `помилка`, `виправити`, `впізнати`, `вибрати`." |
+| 5. Exercise quality | 9/10 | All four planned activity types have corresponding markers placed after the relevant teaching blocks: `quiz-preposition-identification`, `fill-in-genitive-agreement`, `error-correction-genitive`, `match-up-situations`. |
+| 6. Engagement & tone | 9/10 | The tone is teacherly and concrete, with usable prompts and scenarios such as "`Звідки ви?` / `Я з України.`" and the Kyiv tour dialogue. |
+| 7. Structural integrity | 9/10 | All planned sections are present and ordered correctly, and the pipeline word count is 1630; there is one visible formatting artifact in the first dialogue: "`**Гід** (Guide)**:**`." |
+| 8. Cultural accuracy | 10/10 | The module uses Ukrainian settings and examples on their own terms: "`Софійського собору`," "`Хрещатика`," market/pharmacy/city-navigation contexts, with no Russia-centric framing. |
+| 9. Dialogue & conversation quality | 9/10 | The dialogues are multi-turn and situational rather than robotic one-liners: tour guide, market, pharmacy, and question-answer pairs like "`Для кого цей новий телефон?` / `Це подарунок для мого молодшого брата.`" |
 
 ## Findings
-[DIMENSION 2] [CRITICAL]
-Location: "> Ми йдемо до **магазина**. (We are walking to the store.) *Concrete building.*"
-Issue: Teaching that "concrete buildings" take the `-а` ending is a factual error. In Ukrainian orthography, buildings and institutions take the `-у` ending (магазину, театру, університету). `магазина` is a critical error in this context.
-Fix: Replace with an actual concrete object that takes `-а` (e.g., рюкзака).
+[LINGUISTIC ACCURACY] [SEVERITY: critical]  
+Location: Part 1 — "`Remember the core logic: concrete, countable objects and people take **-а/-я** (`біля стола`, `без брата`), while abstract concepts, materials, and institutions take **-у/-ю** (`без цукру`, `до університету`).`"  
+Issue: This teaches a false deterministic rule for masculine genitive singular. VESUM confirms parallel forms like `стола/столу` and `магазина/магазину`, so the explanation must be presented as a tendency, not a hard rule.  
+Fix: Rewrite this sentence to say it is a broad tendency and note that some masculine nouns allow more than one genitive form.
 
-[DIMENSION 2] [CRITICAL]
-Location: "> **Гід:** **До Хрещатику** десять хвилин, а до собору — п'ять."
-Issue: `Хрещатику` is an incorrect Genitive form. The standard Genitive of Хрещатик is `Хрещатика`.
-Fix: Change `Хрещатику` to `Хрещатика`.
+[LINGUISTIC ACCURACY] [SEVERITY: critical]  
+Location: Part 2 — "`For feminine words, the ending is **-ої** (or **-еї** for soft sounds).`"  
+Issue: This is factually wrong as a rule for adjectives and pronouns. Verified feminine genitive forms include `синьої`, `моєї`, `цієї`; "`soft sounds = -еї`" is not an accurate rule.  
+Fix: Replace with wording that distinguishes adjective and pronoun patterns, e.g. adjectives often `-ої`, pronouns `-ої / -єї` depending on the word.
 
-[DIMENSION 2] [MAJOR]
-Location: "Лікарня знаходиться **навпроти парку**." and "Де знаходиться **центр міста**?"
-Issue: `знаходиться` is a calque from Russian `находиться` when referring to physical location. The correct Ukrainian verb is `розташований/розташована`.
-Fix: Replace `знаходиться` with `розташована` and `розташований`.
+[LINGUISTIC ACCURACY] [SEVERITY: critical]  
+Location: Part 2 — "`For plural words of all genders, the adjective and pronoun ending is uniformly **-их**.`"  
+Issue: This is false. Verified genitive plural forms include both `нових` and `синіх`, as well as pronouns `моїх`, `цих`.  
+Fix: Change the rule to `-их / -іх, depending on the word`.
 
-[DIMENSION 7] [MAJOR]
-Location: "If you answer "yes" to these questions, " and "If you feel confident with these points,  Keep practicing,"
-Issue: The conclusion contains dangling, incomplete sentences, likely due to a generation glitch.
-Fix: Complete the sentences properly.
+[LINGUISTIC ACCURACY] [SEVERITY: critical]  
+Location: Part 2 — "`Second, never forget that negation always demands the genitive: \"I don't have a sister\" is `У мене немає сестри`, never `У мене немає сестра`.`"  
+Issue: The example with `немає` is correct, but the universal claim "`always demands the genitive`" is grammatically false and overteaches the rule.  
+Fix: Limit the claim to negative constructions like `немає` instead of presenting it as an absolute rule for all negation.
 
-[DIMENSION 4] [MAJOR]
-Location: "the **закінчення** (ending) for singular and plural nouns."
-Issue: The plan explicitly required teaching the vocabulary word `однина` (singular), but it was only used in English.
-Fix: Add `**однина** (singular)` to the text.
+[STRUCTURAL INTEGRITY] [SEVERITY: minor]  
+Location: Part 1 opening dialogue — "`**Гід** (Guide)**:**`"  
+Issue: Markdown formatting artifact.  
+Fix: Change it to "`**Гід** (Guide):`".
 
 ## Verdict: REVISE
-The module contains a critical pedagogical and linguistic error (teaching that buildings take `-а` with the example `магазина`) and an incorrect Genitive form (`Хрещатику`). It also suffers from structural glitches at the end. Fixes are required before publishing.
+REVISE because the module has multiple critical factual grammar errors in the teaching text. PASS is blocked both by the severity gate and by dimensions below 9, even though the structure, vocabulary coverage, and exercise-marker placement are strong.
 
 <fixes>
-- find: "> Ми йдемо до **магазина**. (We are walking to the store.) *Concrete building.*"
-  replace: "> Я дістав зошит з **рюкзака**. (I took a notebook from the backpack.) *Concrete object.*"
-- find: "> **Гід:** **До Хрещатику** десять хвилин, а до собору — п'ять. *(To Khreshchatyk it is ten minutes, and to the cathedral — five.)*"
-  replace: "> **Гід:** **До Хрещатика** десять хвилин, а до собору — п'ять. *(To Khreshchatyk it is ten minutes, and to the cathedral — five.)*"
-- find: "Лікарня знаходиться **навпроти парку**. (The hospital is located opposite the park.)"
-  replace: "Лікарня розташована **навпроти парку**. (The hospital is located opposite the park.)"
-- find: "Де знаходиться **центр міста**? (Where is the city center?)"
-  replace: "Де розташований **центр міста**? (Where is the city center?)"
-- find: "the **закінчення** (ending) for singular and plural nouns."
-  replace: "the **закінчення** (ending) for **однина** (singular) and plural nouns."
-- find: "If you answer \"yes\" to these questions,"
-  replace: "If you answer \"yes\" to these questions, you are ready to move on:"
-- find: "If you feel confident with these points,  Keep practicing,"
-  replace: "If you feel confident with these points, keep practicing,"
+- find: "Remember the core logic: concrete, countable objects and people take **-а/-я** (`біля стола`, `без брата`), while abstract concepts, materials, and institutions take **-у/-ю** (`без цукру`, `до університету`)."
+  replace: "Remember a broad tendency, not an absolute rule: many names of people and many concrete objects use **-а/-я** (`без брата`), while many abstract nouns, materials, and institutions use **-у/-ю** (`без цукру`, `до університету`). Some masculine nouns allow more than one genitive form, so it is best to learn common phrases individually."
+- find: "For feminine words, the ending is **-ої** (or **-еї** for soft sounds)."
+  replace: "For feminine words, genitive forms commonly include **-ої** in adjectives and **-ої / -єї** in pronouns, depending on the word."
+- find: "For plural words of all genders, the adjective and pronoun ending is uniformly **-их**."
+  replace: "For plural words of all genders, adjective and pronoun forms commonly end in **-их / -іх**, depending on the word."
+- find: "Second, never forget that negation always demands the genitive: \"I don't have a sister\" is `У мене немає сестри`, never `У мене немає сестра`."
+  replace: "Second, remember that the genitive is very common in negative constructions with words like `немає`: \"I don't have a sister\" is `У мене немає сестри`, never `У мене немає сестра`."
+- find: "> **Гід** (Guide)**:** Добрий день! Сьогодні ми гуляємо центром Києва. Зараз ми стоїмо **біля Софійського собору** (near Saint Sophia Cathedral)."
+  replace: "> **Гід** (Guide): Добрий день! Сьогодні ми гуляємо центром Києва. Зараз ми стоїмо **біля Софійського собору** (near Saint Sophia Cathedral)."
 </fixes>

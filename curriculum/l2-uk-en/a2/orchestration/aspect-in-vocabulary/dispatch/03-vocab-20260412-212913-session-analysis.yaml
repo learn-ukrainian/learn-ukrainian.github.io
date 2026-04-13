@@ -1,0 +1,50 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T19-28-7398bb3d.json
+phase: vocab
+prompt_chars: 21786
+response_chars: 2910
+prompt_words: 3535
+response_words: 355
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.0366
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.0106
+- name: plan
+  start: 1028
+  length: 20758
+  fraction: 0.9528
+large_sections:
+- plan
+directives_total: 6
+directives_covered: 0
+directives_missed:
+- kind: must
+  text: It is essentially the default tool the language reaches for to create a perfective
+    partner when no other specific nuance is required.
+  covered: false
+  coverage_note: 1/13 keywords (8%)
+- kind: must
+  text: Finally, we must warn you about a very common false pair trap that confuses
+    many learners.
+  covered: false
+  coverage_note: 2/14 keywords (14%)
+- kind: inject_activity
+  text: quiz-find-partner
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-fill-in-the-blanks-with-the-correct-pair
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-categorize
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-choose-partner
+  covered: false
+  coverage_note: marker missing

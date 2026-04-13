@@ -1,0 +1,56 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: All four planned H2 sections are present and in the planned order; the
+    module covers motion pairs, conjugation/perfective partners, the three verb models,
+    and motion + prepositions/cases. The plan ref
+- dimension: 2
+  name: Linguistic accuracy
+  score: 6
+  evidence: Section 3 incorrectly says `боротися` “features a stem change from «от»
+    to «ор»,” and the pronunciation note for `-ться/-шся` is factually wrong/imprecise
+    for a teaching module.
+- dimension: 3
+  name: Pedagogical quality
+  score: 7
+  evidence: 'The overall PPP flow is good, but the lesson teaches two unsafe rules
+    in a core grammar section: the false `от → ор` explanation for `боротися` and
+    the wrong/imprecise pronunciation rule for reflexive'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'Required vocabulary is integrated into prose, not dumped as a list: `іти
+    / ходити`, `їхати / їздити`, `летіти / літати`, `піти`, `поїхати`, `казати / кажу`,
+    `пити / п''ю`, `боротися / борюся`, `напрямо'
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 5 planned activity types are represented by markers, and each is placed
+    after the relevant teaching content. No inline exercise logic is present here
+    to contradict the prose.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: The module uses concrete travel/daily-life scenarios and mostly keeps
+    a teacherly, explanatory tone. The only notable drag is one awkward exchange in
+    the opening dialogue.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean markdown structure, all planned sections present, no stray formatting
+    artifacts beyond expected injection markers, and pipeline word count is `2907`,
+    which is above the `2000` target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: The module treats Ukrainian as its own system, uses Ukrainian places/examples
+    naturally (`Київ`, `Львів`, `Україна`), and avoids Russian-centric framing.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: 'The module includes multi-turn dialogues, but the airport dialogue ends
+    with a non-answer: `А батьки вже вдома?` is answered with `Так, ми пішли з квартири...`,
+    which shifts subject and breaks coheren'
+findings: []

@@ -22,7 +22,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-Коли ми хочемо змінити **доконаний вид** *(perfective aspect)* на **недоконаний вид** *(imperfective aspect)*, ми часто додаємо новий суфікс і змінюємо позицію наголосу. Як дуже влучно зазначає відомий мовознавець Олександр Заболотний у своєму шкільному підручнику, саме поява нового суфікса та перенесення наголосу змушують голосний звук у корені слова фонетично трансформуватися. Це напрочуд логічний фізіологічний процес. Довший суфікс вимагає значно більше енергії та часу для вимови. Тому традиційно короткий і слабкий звук у базовому корені автоматично розтягується і перетворюється на довший і фонетично сильніший звук. Давайте дуже детально розглянемо найпоширенішу граматичну модель — динамічний перехід звука [е] в [і] або [и]. Уявіть добре знайоме вам коротке дієслово **летіти** *(to fly)*. Якщо ми хочемо показати регулярну, постійно повторювану дію в небі, ми додаємо продуктивний суфікс «-а-». Цей новий суфікс миттєво посилює корінь слова, і звук [е] закономірно перетворюється на глибокий і довгий звук [і]. Так народжується форма **літати** *(to fly regularly)*. Подібний гармонійний процес відбувається у базовій парі **текти** *(to flow)* та **витікати** *(to flow out)*. Суфікс «-а-» діє як потужний магніт для сили вашого голосу. Інколи це фонетичне посилення йде трохи іншим шляхом, і звук [е] змінюється на [и]. Це завжди трапляється, коли суфікс «-а-» стає наголошеним. Наприклад, ми швидко кажемо **стерти** *(to wipe off)*, але коли дія стає довгою та тривалою, з'являється форма **стирати** *(to be wiping)*. Або коротке слово **завмерти** *(to freeze)* логічно перетворюється на процес **завмирати** *(to be freezing)*. Інша, не менш надзвичайно популярна і фонетично красива модель — це класичне чергування звуків [о] та [а]. Цей живий процес також дуже тісно пов'язаний із раптовою появою суфікса «-а-». Наголошений суфікс буквально і фізично витягує звук [о] з кореня і змушує його звучати значно ширше. Він перетворює його на відкритий звук [а]. Найкращий приклад, який ви стовідсотково вже чули і використовували, — це стандартна пара **допомогти** *(to help, perfective)* та **допомагати** *(to help, imperfective)*. Зверніть особливу увагу: у першому короткому слові корінь має два ідентичні звуки [о]. Але як тільки з'являється новий суфікс «-а-», останній звук [о] відразу змінюється на [а]. Цей самий чарівний і безвідмовний механізм працює у величезній кількості інших дуже корисних слів. Наприклад, швидка та раптова одноразова дія **схопити** *(to grab)* плавно перетворюється на тривалий процес **хапати** *(to be grabbing)*. Або героїчне слово **перемогти** *(to win)* завдяки цьому правилу стає надихаючим дієсловом **перемагати** *(to be winning)*. Глибоке розуміння та відчуття цих фонетичних змін є абсолютно критичним для вільного володіння українською мовою на рівні B1. Коли ви впевнено говорите, ці чергування допомагають вашим співрозмовникам миттєво зрозуміти важливі деталі. Вони одразу чують, чи ваша дія вже успішно завершилася, чи вона все ще активно триває. Наприклад, у складному реченні «Він не міг допомогти, але завжди щиро намагався допомагати» граматичний зміст повністю спирається саме на зміну голосного звука в корені. Тепер вам більше не потрібно щоразу механічно запам'ятовувати кожну окрему пару дієслів просто як абсолютно нові слова. Ви нарешті бачите чітку та струнку систему. Бачите суфікс «-а-» — впевнено чекайте зміни голосного в корені. Ця глибока мовна логіка робить вивчення української граматики набагато легшим, свідомішим і приємнішим. <!-- INJECT_ACTIVITY: error-fix-verb-stems -->
+often lengthens and turns into [і]. A classic example is the pair "летіти" (to fly) and "літати" (to fly around). Notice how the appearance of a new suffix changes the very nature of the word. A similar process occurs in words like "текти" (to flow) and "витікати" (to flow out), or "мести" (to sweep) and "замітати" (to sweep up). Sometimes this same suffix demands an even more drastic change, transforming the root [е] into [и]. This is clearly seen in the example of the verbs "стерти" (to wipe off) and "стирати" (to be wiping off), or "завмерти" (to freeze) and "завмирати" (to be freezing). Here, the stress plays a crucial role, because it is the stressed suffix "-а-" that provokes the appearance of the sound [и] in the root.* The second major pattern in verb roots involves back vowels, specifically the shift from [о] to [а]. Just like the previous pattern, this change is triggered when we create an imperfective verb by attaching the suffix «-а-» to the stem. The newly stressed suffix acts like a magnet, "pulling" the round [о] in the **корінь** (root) and stretching it into a wide [а]. You already use this rule constantly without realizing it. Consider the high-frequency verb pair «допомогти» and «допомагати». The completed action uses the tight, closed [о], while the ongoing, repeated action physically opens up into [а] because of the new suffix. Another excellent example is «схопити» and «хапати». The mechanics are identical. The original **голосний** (vowel) is [о], but the addition of the aspectual suffix forces the change. Recognizing this predictable behavior turns a seemingly random vocabulary list into a logical, masterable system. :::info **Grammar box** When you are unsure whether to write [о] or [а] in a verb root, look at the suffix. If the verb has the stressed suffix «-а-» indicating an ongoing or repeated action (imperfective aspect), you will almost always write [а] in the root. ::: Розуміння цих процесів дозволяє вам вільно будувати складні речення. Розгляньмо такий приклад: «Він не міг допомогти, але завжди намагався допомагати». У цій фразі ми чітко бачимо контраст між одноразовою неможливістю та постійним процесом. Коли ви опануєте це чергування, ви перестанете сприймати видові пари як окремі слова. Ви почнете бачити єдиний корінь, який просто змінює свій звук залежно від того, як довго триває дія. Це справжній показник мовної компетентності на рівні B1. > *Understanding these processes allows you to freely construct complex sentences. Let's look at this example: "He couldn't help, but he always tried to help." In this phrase, we clearly see the contrast between a one-time impossibility and a continuous process. When you master this alternation, you will stop perceiving aspectual pairs as separate words. You will begin to see a single root that simply changes its sound depending on how long the action lasts. This is a true indicator of linguistic competence at the B1 level.* <!-- INJECT_ACTIVITY: error-correction, Find and fix vowel spelling errors in sentences caused by incorrect application of alternation rules, 6 items -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -440,7 +440,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -453,18 +520,67 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] чергування (alternation — systematic sound change between word forms)
+- [ ] голосний (vowel — sound produced without obstruction)
+- [ ] відкритий склад (open syllable — ending in a vowel sound)
+- [ ] закритий склад (closed syllable — ending in a consonant sound)
+- [ ] корінь (root — the core meaning-bearing part of a word)
+- [ ] наголос (stress — emphasized pronunciation of a syllable)
+- [ ] біглий голосний (fleeting vowel — vowel that disappears in some forms)
+- [ ] нуль звука (zero sound — absence of a vowel in an alternation)
+- [ ] суфікс (suffix — morpheme added after the root)
+- [ ] закінчення (ending — inflectional morpheme at the end of a word)
+- [ ] шиплячий (hushing consonant — ж, ч, ш, дж)
+- [ ] орфограма (orthographic rule — a spelling pattern requiring a rule)
+- [ ] відмінок (grammatical case)
+- [ ] форма слова (word form — a specific inflected variant of a word)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Чергування і наголос: як вони пов'язані (~550 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

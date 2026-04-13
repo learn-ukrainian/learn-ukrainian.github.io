@@ -25,7 +25,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-ми використовуємо слово в реченні. Це ніби слово щоразу переодягається у новий фонетичний костюм для кожної нової граматичної ситуації. Ви вже добре знаєте базові фонетичні терміни з попередніх уроків. **Голосний** *(vowel)* звук утворюється без перешкод, а **приголосний** *(consonant)* звук має перешкоду під час вимови. Також ви знаєте, що **наголос** *(stress)* робить один склад сильнішим. Крім того, ви вже вмієте правильно розрізняти склади. **Відкритий склад** *(open syllable)* завжди закінчується на голосний звук (наприклад, у словах *ко-ні*, *се-ло*, *ро-ку*). **Закритий склад** *(closed syllable)* закінчується виключно на приголосний звук (наприклад, у словах *кінь*, *стіл*, *рік*). В українській мові ці фонетичні правила мають величезний і безпосередній вплив на всю граматику. На відміну від багатьох інших європейських мов, українська фонетика активно і динамічно керує морфологією. Коли слово змінює свою **форму слова** *(word form)*, відкритий склад може раптово стати закритим, або навпаки. І тоді наша мова вимагає систематичної заміни одних звуків на інші. Цей органічний процес і називається чергуванням. Як пише відомий мовознавець Олександр Авраменко, звук у корені може закономірно змінюватися на інший. Це відбувається тоді, коли ми утворюємо зовсім нове слово або лише його нову форму. Наприклад, подивіться на слово **сіль** *(salt)*. Тут ми маємо звук [і], але у формі **солі** *(of salt)* або в прикметнику **соляний** *(salty)* ми вже чітко чуємо [о]. Інший класичний приклад: слово *корінь* має голосний [і], але форма **кореня** *(of the root)* має голосний [е]. Це мовне явище лінгвісти називають **чергуванням звуків** *(alternation of sounds)*. Звуки ніби свідомо міняються місцями, щоб зберегти традиційну милозвучність. Вони повинні відповідати суворим правилам вимови. Це не якась випадковість і не прикрий виняток із правил. Навпаки, це сувора математична система нашої мови. Корінь слова гнучко адаптується до нових фонетичних умов, повністю зберігаючи свій первісний лексичний зміст. Чому це так важливо для вашого навчання? **Чергування** *(alternation)* голосних — це фундаментальна, визначальна риса української фонетичної системи. Здатність голосних звуків [о] та [е] переходити в [і] історично відрізняє українську мову від інших сусідніх слов'янських мов. Там, де українці століттями кажуть «стіл», «кінь» або «піч», російська мова зберегла давні, незмінні звуки [о] та [е]. Як зазначає мовознавиця Олександра Глазова, таке чергування є унікальним ідентифікаційним маркером української мови. Якщо ви зрозумієте і глибоко засвоїте це фонетичне правило, ви отримаєте потужний універсальний ключ. Цей ключ автоматично відкриє вам правильне написання і бездоганну вимову тисяч українських слів. Вам більше ніколи не доведеться сліпо вгадувати або механічно заучувати кожну граматичну форму окремо. Ви нарешті будете бачити і розуміти глибинну логіку мови. У цьому модулі ми детально і структуровано розглянемо три головні стовпи **морфонології** *(morphophonology)*. Ця складна наука вивчає тісний зв'язок звуків і форм слова. По-перше, ми вивчимо класичне правило відкритого і закритого складу, де звуки [о] та [е] регулярно чергуються з [і]. По-друге, ми познайомимося з так званими **біглими голосними** *(fleeting vowels)*, або «нулем звука». Це дивовижні ситуації, коли голосний взагалі повністю зникає зі слова (як у відомій парі *день* — *дня*). По-третє, ми розберемо дуже специфічне чергування звука [о] зі звуком [е] після **шиплячих** *(hushing consonants)* приголосних. Розуміння цих трьох базових механізмів підніме ваше відчуття української мови на абсолютно новий, експертний рівень.
+grammar exist in separate rooms, rarely interacting directly. In Ukrainian, however, phonology directly dictates morphology through systematic changes. When a word changes its ending to fit a grammatical context, the syllable structure often shifts from open to closed, or vice versa. This shift acts as a trigger, forcing the internal vowel to transform so that the word remains naturally rhythmic and euphonious. Іноді, коли ми утворюємо нове спільнокореневе слово або змінюємо його форму, певний звук може закономірно змінюватися на інший. Наприклад, ми кажемо «сіль», але прикметник звучить як «соляний». Ми бачимо слово «корінь», але в родовому відмінку воно перетворюється на «кореня». Це мовне явище називають чергуванням звуків. Звуки не зникають безслідно і не з'являються випадково, а слухняно замінюють один одного за чіткими правилами. Така орфограма вимагає уваги, адже вона впливає на правильне написання тисяч українських слів. > *Sometimes, when we form a new cognate word or change its form, a certain sound can systematically change into another. For example, we say "сіль" (salt), but the adjective sounds like "соляний" (salty). We see the word "корінь" (root), but in the genitive case it turns into "кореня". This linguistic phenomenon is called the alternation of sounds. Sounds do not disappear without a trace and do not appear randomly, but obediently replace each other according to clear rules. Such an orthographic rule requires attention, as it affects the correct spelling of thousands of Ukrainian words.* :::tip **Did you know?** The shift from `[о]` and `[е]` to `[і]` in closed syllables is called *ікавізм* (ikavism). This phonetic process began in the 12th century and is one of the most distinctive historical developments that gave the Ukrainian language its unique melody. ::: Why does this matter beyond passing a spelling test? This **чергування** (alternation) is a defining marker of the Ukrainian language. It distinctly separates Ukrainian phonetics from other East Slavic languages. Where a Russian speaker preserves the original vowels in the **корінь** (root) of words like *стол* or *печь*, a Ukrainian speaker naturally raises the vowel to `[і]` in a closed syllable to form *стіл* and *піч*. When the word changes its **відмінок** (grammatical case), the syllable often opens again, and the original vowel returns. As noted by linguist Oleksandra Glazova, this phenomenon is characteristic of the Ukrainian language and distinguishes it among its linguistic neighbors. Mastering this concept is like finding the master key to Ukrainian orthography. In this module, we will explore the three main pillars of vowel change in Ukrainian morphology, stepping into the fascinating field of morphophonology (морфонологія). First, we will examine the famous open and closed syllable rule, where `[о]` and `[е]` turn into `[і]`. Next, we will meet the elusive **біглий голосний** (fleeting vowel), which appears in some forms but vanishes into **нуль звука** (zero sound) when endings are attached. Finally, we will learn why vowels shift after hushing consonants depending on the surrounding sounds. Understanding how the **наголос** (stress) drives these transformations will turn what seems like a list of random exceptions into a beautifully logical system.
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -443,7 +443,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -456,18 +523,67 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] чергування (alternation — systematic sound change between word forms)
+- [ ] голосний (vowel — sound produced without obstruction)
+- [ ] відкритий склад (open syllable — ending in a vowel sound)
+- [ ] закритий склад (closed syllable — ending in a consonant sound)
+- [ ] корінь (root — the core meaning-bearing part of a word)
+- [ ] наголос (stress — emphasized pronunciation of a syllable)
+- [ ] біглий голосний (fleeting vowel — vowel that disappears in some forms)
+- [ ] нуль звука (zero sound — absence of a vowel in an alternation)
+- [ ] суфікс (suffix — morpheme added after the root)
+- [ ] закінчення (ending — inflectional morpheme at the end of a word)
+- [ ] шиплячий (hushing consonant — ж, ч, ш, дж)
+- [ ] орфограма (orthographic rule — a spelling pattern requiring a rule)
+- [ ] відмінок (grammatical case)
+- [ ] форма слова (word form — a specific inflected variant of a word)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Чергування [о], [е] з [і] (~950 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

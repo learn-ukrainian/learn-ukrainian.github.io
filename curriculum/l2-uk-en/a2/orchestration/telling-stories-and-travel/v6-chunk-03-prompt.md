@@ -1,22 +1,22 @@
-# Section-by-Section Generation — Section 3/5
+# Section-by-Section Generation — Section 3/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 45: Розповіді та подорожі (A2, A2.6 [Aspect, Tenses, and Motion])
-**Section to write:** Сценарій 3: Розкажи про поїздку! (~600 words total)
+**Section to write:** Сценарій 3: Розкажи про поїздку! (~600 words)
 **Word target for this section:** 600 words (aim for 660 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Сценарій 3: Розкажи про поїздку! (~600 words total)
-- P1 (~120 words): [Dialogue: A friend returns from a trip to Odesa and shares impressions. Usage of "Де ти був?" vs "Куди ти їздив?". Focus on the cultural aspect of Odesa: пляж (beach), море (sea), and the specific verb доїхати (to reach/arrive).]
-- P2 (~120 words): [Grammar focus: The "Round-trip" Past Tense logic. Explain why "Я їздив до Києва" implies the speaker is back, while "Він поїхав до Києва" implies he is still there or the focus is on his departure. Compare їздив (Impf. but used for completed round-trip) and поїхав (Pf. departure).]
-- P3 (~120 words): [Narrative sequence of a past trip. Provide a cohesive model: "Спочатку ми приїхали (Pf), потім ми зупинилися в готелі (Pf). Вдень ми ходили по місту (Impf), а ввечері відвідали оперу (Pf)." Focus on how walking around is a process, but visiting a site is a result.]
-- P4 (~110 words): [Expressing impressions and feelings about the journey. Keywords: Мені сподобалося (I liked it), я отримав багато вражень (I got many impressions), було чудово/весело/цікаво. Explain the construction "Мені сподобалось" + infinitive or noun.]
-- P5 (~110 words): [Decolonization and Lexical Choice: Emphasize the word 'подорож' over 'путешествіє'. Explain the history of the word 'двірець' (station) as an authentic Western Ukrainian synonym for 'вокзал'. Differentiate between 'зупинка' (bus stop) and 'станція' (train station).]
-- <!-- INJECT_ACTIVITY: fill-in-travel-narrative --> [Fill-in-the-blanks: Complete a travel blog post by choosing the correct aspect (читав/прочитав) and motion verb form (їхав/поїхав/їздив). 8 items.]
+## Сценарій 3: Розкажи про поїздку! (~600 words)
+- P1 (~120 words): [Dialogue: One friend asks another about their recent trip to Одеса, looking at photos of the пляж, море, and a ресторан. Use natural questions: Де ти був? Куди їздив? Як доїхав? Що бачив? Що найбільше сподобалось?]
+- P2 (~120 words): [Grammar explanation: The critical contrast between їздив (was there, round-trip completed) and поїхав (departed, left). Provide the contrasting examples: "Я їздив до Києва" (I went and came back) vs. "Він поїхав до Києва" (He left for Kyiv and might still be there).]
+- P3 (~130 words): [Narrative example: A cohesive story about the Odesa trip. "Минулого тижня я їздив до Одеси. Ми поїхали потягом. Доїхали за десять годин. Там ми ходили по місту, відвідали музей, купили сувеніри і з'їли найсмачніший борщ."]
+- P4 (~110 words): [Vocabulary: Expressing impressions and opinions. Introduce phrases: Мені дуже сподобалось, Було чудово / цікаво / весело, Я хочу поїхати ще раз, and the noun враження. Note that сподобатися is perfective, summarizing the final opinion of the completed trip.]
+- P5 (~120 words): [Guided analysis: Break down the Odesa narrative from P3. Show how "їздив" establishes the round-trip context, "поїхали/доїхали" describe the transit milestones, "ходили" gives the background activity, and "відвідали/купили/з'їли" list the specific perfective achievements.]
+- <!-- INJECT_ACTIVITY: fill-in-travel-narrative --> [fill-in, Complete a travel narrative by choosing the correct verb form (aspect and motion verb type) for each blank, 8 items]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-the mountains today.)* > — **Оксана:** Супер! Я впевнена, що наша подорож буде цікавою. *(Super! I am sure our trip will be interesting.)* Зверніть увагу на слова, які використовують друзі. Вони активно планують своє майбутнє. In Ukrainian, we have two primary ways to form the future tense depending on our focus. The first method is the compound form, which we use to describe ongoing processes or habits in the future. It consists of the conjugated auxiliary verb «бути» (to be) and the infinitive of an imperfective verb. This structure is very straightforward. You simply conjugate «бути» — я буду, ти будеш, він буде, ми будемо, ви будете, вони будуть — and add the main action. Ось гарний приклад: «У Карпатах ми **будемо гуляти** (will walk)». Ми **будемо дихати** (will breathe) свіжим повітрям і **будемо багато відпочивати** (will rest a lot). These verbs show continuous, pleasant processes without a specific final result. The second method is the simple form of the future tense. We use this specifically when we want to emphasize a completed action or a one-time result in the future. This form is built using perfective verbs. Interestingly, we conjugate these perfective verbs using the exact same endings as the present tense. For instance, when Taras talks about accommodation, he says: «Я забронюю хатинку». He focuses on the successful completion of the task. Let's look at a clear contrast. Якщо ви кажете: «Я **буду купувати** (will be buying) квитки», ви описуєте довгий процес вибору. Але якщо ви кажете: «Я **куплю** (will buy) квитки сьогодні», ви гарантуєте фінальний результат. The tickets will be purchased and ready. When we plan a trip, verbs of motion are absolutely essential. For the actual journey to your destination, we use unidirectional perfective verbs. Ви кажете: «Я **поїду** (will go by vehicle) до міста» або «Я **полечу** (will fly) за кордон». Ці слова показують конкретний рух в одному напрямку. However, for general movement around the destination once you arrive, we use the compound future with multidirectional verbs. Наприклад: «Там я **буду їздити** (will ride around) на екскурсії». We also must pay close attention to prepositions. Ми використовуємо прийменник «до» з родовим відмінком для міст та країн: до Києва, до Львова. Але ми використовуємо прийменник «на» зі знахідним відмінком для відкритих просторів чи подій. Наприклад: на море, на фестиваль, на концерт. Для успішної подорожі нам потрібні правильні слова. Щоб сісти в транспорт, ви повинні мати **квиток** (ticket). Please note that the authentic Ukrainian word is «квиток», which helps us avoid the common Russianism «білет». Якщо ви любите подорожувати по землі, ви обираєте **потяг** (train). Потяги їздять там, де є **залізниця** (railway). Якщо ви цінуєте свій час, ваш вибір — це **літак** (airplane). Ваш політ завжди починається там, де розташований **аеропорт** (airport). Коли ви подорожуєте Україною, вкрай важливо використовувати правильні українські назви міст. You must always say Київ, Львів, Харків, Рівне, Одеса. Using Russian versions of these names is incorrect and represents a legacy of russification. Справжня українська мова поважає власні історичні назви. <!-- INJECT_ACTIVITY: match-up-travel-verbs -->
+комфортний готель або маленьку хатинку. > *Any trip begins with planning. First, we buy a ticket. Then we go to the train station or the airport. We can travel in different ways. For example, we get on a train, an airplane, or a bus. When we arrive, we need to stay somewhere. Usually, tourists choose a comfortable hotel or a small cabin.* Notice the verbs Mark and Olena used to plan their trip. They used the future tense, but with two different aspects. When you talk about a specific, one-time journey to a destination, use the simple future perfective. For example, the phrase «Ми поїдемо потягом» means "We will go by train" for a specific upcoming trip. The verb here is perfective. However, when you ask about general activities or processes that will happen during the trip, use the compound future imperfective. Mark asks «Що будемо робити?», and Olena answers «Будемо гуляти». These describe ongoing actions. Compare this with how you talk about habits in the present or past, like «Зазвичай ми їздимо туди влітку», where the verb is imperfective for repeated trips. :::info **Grammar box** — Use perfective motion verbs (like **поїхати**, **полетіти**) to focus on reaching the destination in the future. Use imperfective verbs (like **будемо гуляти**) for the activities you will do once you get there. ::: Destination and origin require specific prepositions and cases. When you travel to a city, country, or a person, use **до** plus the Genitive case. When you travel to an event, an open area, or specific buildings like a station, use **на** plus the Accusative case. To say where you are coming from, use **з** (or **зі**, **із**) plus the Genitive case. Завтра мій брат поїде до Києва на конференцію. Минулого року він їздив до друга у гості. Влітку ми часто їздимо на море або на фестиваль. Вчора ми довго чекали таксі на вокзал. Сьогодні вранці наша бабуся прилетіла зі Швеції, а мій дядько повернувся з Лондона. > *Tomorrow my brother will go to Kyiv for a conference. Last year he went to a friend's place as a guest. In the summer we often go to the sea or to a festival. Yesterday we waited a long time for a taxi to the train station. This morning our grandmother flew in from Sweden, and my uncle returned from London.* Let's combine motion verbs, vehicles, and prepositional phrases. To state how you are traveling (by what vehicle), simply use the noun in the Instrumental case without any prepositions. * **Ми поїдемо потягом до Львова.** — *We will go to Lviv by train.* * **Вони полетять літаком на море.** — *They will fly to the sea by plane.* * **Мій брат поїде автобусом до університету.** — *My brother will go to the university by bus.* * **Завтра я поїду машиною на вокзал.** — *Tomorrow I will go to the train station by car.* * **Туристи прилетять літаком з Канади.** — *The tourists will fly in from Canada by plane.* <!-- INJECT_ACTIVITY: match-up-motion-prepositions -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -496,7 +496,74 @@ Teaching Ukrainian grammar requires a conscious effort to separate it from Russi
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -515,18 +582,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] подорож (trip, journey)
+- [ ] розповідати / розповісти (to tell/narrate — impf./pf.)
+- [ ] трапитися (to happen)
+- [ ] квиток (ticket)
+- [ ] потяг (train)
+- [ ] вокзал (station)
+- [ ] зупинитися (to stay, to stop — pf.)
+- [ ] доїхати (to reach by vehicle — pf.)
+- [ ] сподобатися (to like — pf.)
+- [ ] враження (impression)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Сценарій 3: Розкажи про поїздку! (~600 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

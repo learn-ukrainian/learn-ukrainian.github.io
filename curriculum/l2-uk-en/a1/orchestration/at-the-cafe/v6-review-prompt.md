@@ -188,92 +188,133 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Діалоги — Dialogues
+## Діалоги (Dialogues)
 
-Welcome to a cozy **кафе** (cafe) in the heart of Lviv. The city is famous for its rich **кава** (coffee) culture, where locals spend hours talking over a warm cup. Before you can enjoy the atmosphere, you need to know how to navigate the interaction. Every cafe visit begins with a polite greeting, such as **Добрий день** (Good day), and a direct request to see what they offer. To start, you simply ask the waiter: **Можна меню?** (Can I have the menu?). Politeness is your strongest tool, so always keep **будь ласка** (please) and **дякую** (thank you) ready.
+A Ukrainian cafe is a good place to practice short, polite phrases right away. Start with a greeting, listen to the waiter's question, and answer with one clear ordering formula.
 
-> **Ростик:** Добрий день! Можна меню? *(Good day! Can I have the menu?)*
-> **Офіціант:** Ось, будь ласка. *(Here, please.)*
-> **Ростик:** Що ви рекомендуєте? *(What do you recommend?)*
-> **Офіціант:** Борщ дуже смачний. *(The borscht is very delicious.)*
-> **Ростик:** Добре, мені борщ і хліб. А тобі, Іванко? *(Good, I will have borscht and bread. And for you, Ivanka?)*
-> **Іванка:** Мені каву з молоком і тістечко. *(I will have a coffee with milk and a pastry.)*
+> У неділю ми йдемо в **кафе** (cafe). **Офіціант** (waiter) несе **меню** (menu). Ми читаємо меню. Ми замовляємо каву. Ми кажемо "**будь ласка**" (please) і "дякую". Це дуже важливо.
+> *On Sunday we go to a cafe. The waiter brings the menu. We read the menu. We order coffee. We say "please" and "thank you". This is very important.*
 
-This dialogue shows the core structure of ordering. When the waiter approaches, Rostyk asks for advice using the verb **рекомендувати** (to recommend). Once they decide, they use the pattern **Мені + [Accusative case]** to state their choices. You already know the accusative case from the previous module. Notice the noun genders: the feminine **кава** (coffee) changes to **каву**, while the masculine **чай** (tea) and neuter **тістечко** (pastry) stay exactly the same. Even when you are ordering a complex combination like **кава з молоком** (coffee with milk), only the main noun changes its ending.
+Imagine a relaxing date at a cozy, dimly lit Lviv café. The air smells of freshly roasted beans. Rostyk and Ivanka sit at a comfortable table near the large window. The waiter approaches to take their order. They will look at the menu, discuss the options, and order coffee, traditional borsch, and a fresh pastry.
 
-> **Ростик:** Вибачте, можна рахунок? *(Excuse me, can I have the bill?)*
-> **Офіціант:** Так, одну хвилинку. З вас сто двадцять гривень. Карткою чи готівкою? *(Yes, one minute. From you, one hundred twenty hryvnias. By card or by cash?)*
-> **Ростик:** Карткою, будь ласка. *(By card, please.)*
-> **Офіціант:** Ось термінал. Дякую. *(Here is the terminal. Thank you.)*
-> **Іванка:** Дуже смачно було! Дякуємо! *(It was very delicious! We thank you!)*
-> **Офіціант:** Приходьте ще! *(Come again!)*
+> **Офіціант:** Добрий день! Ось меню. *(Good day! Here is the menu.)*
+> **Ростик:** Дякую. Що ви рекомендуєте? *(Thank you. What do you recommend?)*
+> **Офіціант:** Борщ дуже смачний. Сьогодні також є свіжі салати. *(The borsch is very delicious. Today there are also fresh salads.)*
+> **Ростик:** Добре, мені борщ і хліб, будь ласка. *(Good, borsch and bread for me, please.)*
+> **Офіціант:** А що будете пити? *(And what will you drink?)*
+> **Іванка:** Мені каву з молоком, будь ласка. А ще круасан. *(Coffee with milk for me, please. And also a croissant.)*
+> **Офіціант:** Добре, одну хвилинку. *(Good, one minute.)*
 
-<!-- INJECT_ACTIVITY: match-up-functions -->
+Notice how Rostyk and Ivanka order their food. Instead of using complex verbs, they rely on a simple and polite pattern: the word **мені** (to/for me) followed by the item they want in the accusative case. They also use the key question **Що ви рекомендуєте?** (What do you recommend?) to ask the waiter for advice. This straightforward approach helps you sound polite and natural without needing advanced grammar.
 
-## Як замовити — How to Order
+After enjoying a pleasant meal and a long conversation, it is time to conclude the date. Rostyk gets the attention of the waiter to ask for the total cost. He will check if he can use his bank card, and Ivanka will make sure to compliment the chef's work before they leave.
 
-The most versatile request phrase you can learn at this level is **Можна мені...?**. Literally, it means "Is it possible for me...?" and it is the standard, polite way to ask for anything you need. Always follow this phrase with the item in the accusative case. Let us look at a few examples:
+> **Ростик:** Рахунок, будь ласка. *(The bill, please.)*
+> **Офіціант:** Ось, будь ласка. Сто двадцять гривень. *(Here you go, please. One hundred twenty hryvnias.)*
+> **Ростик:** Можна карткою? *(Can I pay by card?)*
+> **Офіціант:** Так, звичайно. Ось ваш чек. *(Yes, of course. Here is your receipt.)*
+> **Іванка:** Дякую, дуже смачно було! *(Thank you, it was very delicious!)*
+> **Офіціант:** Дякуємо, приходьте ще! *(We thank you, come again!)*
 
-*   **Можна мені каву?** — Can I have a coffee?
-*   **Можна мені воду?** — Can I have some water?
-*   **Можна мені сік?** — Can I have juice?
-*   **Можна мені меню?** — Can I have the menu?
+When the meal is finished, you must ask for the bill directly. You then confirm your payment method. Finally, it is always polite to leave a sincere compliment about the food before you depart from the table.
 
-Another polite option is **Дайте, будь ласка** (Give me, please), which is slightly more direct but perfectly acceptable. When you are finally ready to tell the waiter your decision, you will often use the phrase **Я буду** (I will have). This is the standard way to state a final choice from the menu. 
+<!-- INJECT_ACTIVITY: fill-in-dialogue -->
 
-*   **Я буду піцу і чай.** — I will have pizza and tea.
-*   **Я буду салат і суп.** — I will have a salad and soup.
+## Як замовити (How to Order)
 
-You might also hear people say **Я хочу** (I want). While **Я хочу** is grammatically correct and widely used, it sounds slightly more demanding than **Я буду**. Both require the accusative case.
+There are several core request formulas you can use when ordering at a cafe. The most versatile and polite approach is to use the phrase **Можна мені, будь ласка, ...?** (Can I please have...?). Another common and direct way to state your choice is to say **Я буду...** (I will have...) or **Я хочу...** (I want...). These phrases function as simple, prefabricated chunks of language that allow you to express exactly what you desire without worrying about complicated verb conjugations in the moment.
 
-Before you make a final decision, you may need to ask questions about the food. You can easily check for specific dietary preferences or tastes using simple questions. If you do not like spicy food, you ask: **Це гостре?** (Is it spicy?). If you want to know the ingredients, you can ask: **Це з м'ясом?** (Is it with meat?) or **Є вегетаріанське меню?** (Is there a vegetarian menu?). Often, you will see a delicious pastry in the display case but you do not know the name. In that situation, you simply point and ask: **А що це?** (And what is this?). 
+> Я приходжу в кафе. Я хочу **замовляти** (to order) їжу. Я читаю меню. Я вибираю гарячий суп і холодну воду. Офіціант питає: "Що будете замовляти?" Я кажу: "Мені воду і суп, будь ласка."
+> *I arrive at the cafe. I want to order food. I read the menu. I choose hot soup and cold water. The waiter asks: "What will you be ordering?" I say: "Water and soup for me, please."*
 
-Sometimes you just need a bit more. You can handle extra quantities easily by saying: **Ще одну каву, будь ласка** (One more coffee, please). You can also add simple modifiers to your drink order. You might ask for a drink **без цукру** (without sugar) or **з лимоном** (with lemon). Finally, listen carefully for the most common question at any modern coffee counter: **Вам тут чи з собою?** (For here or to go?). You just reply **Тут** (Here) or **З собою** (To go).
+Whenever you ask for a specific item using the patterns above, you must place the noun in the accusative case. This is because the food or drink is the direct object of your request. You learned the accusative case rules in Module 37, and a cafe is the perfect place to practice them in a real application. Feminine nouns ending in **-а** change to **-у**, while masculine and neuter inanimate nouns remain the same as their dictionary forms. Here are practical examples:
 
-<!-- INJECT_ACTIVITY: fill-in-ordering-accusative -->
+* **Мені каву, будь ласка.** (Coffee for me, please.) — from **кава**.
+* **Можна воду?** (Can I have water?) — from **вода**.
+* **Дайте, будь ласка, піцу.** (Give me pizza, please.) — from **піца**.
+* **Я буду борщ.** (I will have borsch.) — from **борщ** (masculine, no change).
+* **Я хочу салат.** (I want a salad.) — from **салат** (masculine, no change).
 
-## Культура кафе — Cafe Culture
+Before you make your final decision, you might need to ask the staff a few questions about the dishes. You can easily inquire about ingredients, prices, or dietary options using short questions. The verb **рекомендувати** (to recommend) is very useful in these situations. Here are the most useful phrases for inquiring about the menu:
 
-When it is time to order, there is one linguistic "Golden Rule" you must follow: always use the verb **замовляти** (to order). You might sometimes hear people use the word *заказати*, but this is a direct calque from Russian and is considered incorrect in modern standard Ukrainian. You should always say **Я замовляю піцу** (I am ordering a pizza). 
+* **Що ви рекомендуєте?** (What do you recommend?)
+* **Це гостре?** (Is it **гостре** — spicy?)
+* **Це з м'ясом?** (Is it with meat?)
+* **А що це?** (What is this?)
+* **Скільки коштує?** (How much does it cost?)
+* **Є вегетаріанське меню?** (Is there a **вегетаріанський** — vegetarian menu?)
+* **Можна меню, будь ласка?** (Can I have the menu, please?)
 
-Additionally, you need to recognize a special group of nouns like **кафе** (cafe) and **меню** (menu). These are indeclinable foreign words. This means they NEVER change their endings, no matter what case they are in. You say **Це кафе** (This is a cafe) and you also say **Я в кафе** (I am in the cafe). The ending stays exactly the same. Other common indeclinable words you will hear include **какао** (cocoa), **метро** (subway), and **ескімо** (popsicle). 
+When you want to say "to order" in Ukrainian, the standard verbs are **замовляти** (imperfective) and **замовити** (perfective). This is a crucial point for building authentic language skills from the very beginning.
 
 :::caution
-Never try to change the ending of **кафе** or **меню**. Forms like *кафі* or *менюю* do not exist in Ukrainian. Keep them exactly as they are in the dictionary.
+**Decolonization Note: Avoid Russianisms**
+You might occasionally hear people use the verb **заказати** when referring to ordering food. This is a direct calque (Russianism) and is incorrect in standard Ukrainian. Always use the authentic Ukrainian verbs **замовляти / замовити** when you want to order a meal, a drink, or a service.
 :::
 
-When you finish eating, there is an important point of etiquette regarding the **рахунок** (bill). In a traditional **ресторан** (restaurant) or a formal cafe, the waiter rarely brings the bill automatically. This is done so you do not feel rushed to leave. You must catch their eye, raise your hand slightly, and ask: **Можна рахунок?** (Can I have the bill?). Once the bill arrives, you must consider the **чайові** (tips). In most cities, leaving a 10% tip is standard for good service. You can usually leave cash in the folder they provide or ask to add it directly to your card payment.
+Finally, if you are buying a drink or a quick snack at a counter, the barista will almost certainly ask you one highly frequent question: **Вам тут чи з собою?** (For here or to go?). You only need to remember two simple replies for this situation.
 
-When it comes to payment logistics, the waiter will almost always ask: **Карткою чи готівкою?** (By card or by cash?). Ukraine has one of the highest rates of contactless payment in Europe. Even a small street kiosk usually has a **термінал** (payment terminal). You can confidently reply **Карткою, будь ласка** (By card, please). If you pay with cash, they will take your **оплата** (payment) and bring you the **решта** (change).
+* **Тут.** (Here.)
+* **З собою.** (To go.)
 
-Finally, you need a few social phrases to complete the cafe experience. If you enter a crowded place and see an empty chair at a shared table, you should politely ask: **Тут вільно?** (Is this seat free?). When the waiter brings your food, they will always say: **Смачного!** (Bon appétit!), and you should reply with **Дякую!** (Thank you!). As you leave, the best compliment you can give the staff is to smile and say: **Все було дуже смачно!** (Everything was very delicious!). 
+:::tip
+**Listening Comprehension**
+When standing at the counter, the barista might speak quickly. Listen closely for the word **тут** (here) or **з собою** (with oneself / to go). Answering with a single word is perfectly polite in a fast-paced environment.
+:::
 
-<!-- INJECT_ACTIVITY: quiz-situation-choice -->
-<!-- INJECT_ACTIVITY: dialogue-completion-cafe -->
+<!-- INJECT_ACTIVITY: fill-in-accusative -->
+
+## Культура кафе (Cafe Culture)
+
+Understanding local customs is just as important as knowing the vocabulary. In Ukraine, there is a distinct difference in formality between a **кафе** and a **ресторан** (restaurant). A cafe is generally casual, perfect for a quick coffee, a sweet pastry, or a light lunch. A restaurant is more formal and is typically meant for a full dinner experience. It is important to note that many common food-related words in Ukrainian are internationalisms borrowed from French and other languages. Words like **кафе**, **меню**, and **десерт** will sound familiar to you. Furthermore, **кафе** and **меню** are indeclinable nouns; they never change their endings, regardless of their role in the sentence.
+
+> Українські кафе дуже затишні. Люди часто п'ють каву або чай. Вони розмовляють або працюють там. Час платити. Ми просимо **рахунок** (bill). Все дуже **смачно** (delicious). Ми залишаємо чайові.
+> *Ukrainian cafes are very cozy. People often drink coffee or tea. They talk or work there. It is time to pay. We ask for the bill. Everything is very delicious. We leave a tip.*
+
+When you enter a busy venue, you may need to ask if a table or an empty chair is available. You can simply ask, **Тут вільно?** (Is this seat free?) or just **Вільно?** (Is it free?). Once you are seated, the waiter will usually bring the menu to your table. If they are busy and do not see you immediately, or if the menu is not already on the table, you should politely ask for it by saying: **Можна меню?** (Can I have the menu?). You do not need to wait passively.
+
+You can easily customize your drinks using the preposition **без** (without) with the genitive case, or **з** (with) with the instrumental case. If you need a refill, you simply ask for one more.
+
+* **Ще одну каву, будь ласка.** (One more coffee, please.)
+* **Чай без цукру.** (Tea without sugar.)
+* **Вода з лимоном.** (Water with lemon.)
+
+When you finish your meal, it is a wonderful gesture to praise the food. Instead of attempting a literal, unnatural translation of an English compliment, you should use the standard Ukrainian phrase: **Все було дуже смачно!** (Everything was very delicious!) or simply say that the food is **смачно**.
+
+When you are ready to pay, it will not be brought to you automatically at the end of the meal. You say: **Рахунок, будь ласка** (The bill, please). The staff will often ask you how you prefer to pay: **Картка чи готівка?** (Card or cash?). Most modern places in Ukraine easily accept cards, so you can confidently ask: **Можна карткою?** (Can I pay by **картка** — card?). If you prefer paper money, you use **готівка** (cash). Finally, leaving **чайові** (tips) is a common practice to show your appreciation for good service. While not strictly obligatory, leaving around ten percent of the total bill is the standard custom in cafes and restaurants.
+
+:::note
+**Payment Etiquette**
+Unlike in some countries where the tip is automatically added or written on the receipt, tipping in Ukraine is usually handled separately. You can leave the tip in cash on the table or ask the waiter to add it to the card terminal before you tap.
+:::
+
+<!-- INJECT_ACTIVITY: quiz-situations -->
+<!-- INJECT_ACTIVITY: match-up-phrases -->
 
 ## Підсумок — Summary
 
-You now have the complete communication toolkit needed to navigate a Ukrainian cafe with confidence. You understand that politeness is key, and you know how to use the accusative case to make clear, accurate requests. Here is a recap of the essential patterns you should memorize:
+You now have the essential cafe communication toolkit to comfortably navigate dining out in Ukrainian. You know how to politely place an order using the reliable pattern **Мені [accusative], будь ласка** or by stating **Я буду [accusative]**. You also have the vocabulary to inquire about the menu before making a choice, asking crucial questions such as **Скільки коштує?** (How much does it cost?), **Що рекомендуєте?** (What do you recommend?), and checking if a dish is suitable by asking **Є вегетаріанське меню?** or **Це гостре?**.
 
-*   **To order:** Мені [accusative], будь ласка. *(Мені каву, будь ласка.)*
-*   **To ask:** Скільки коштує? Що рекомендуєте? *(How much does it cost? What do you recommend?)*
-*   **To pay:** Рахунок, будь ласка. Можна карткою? *(The bill, please. Can I pay by card?)*
-*   **To compliment:** Дуже смачно! Дякую! *(Very delicious! Thank you!)*
+> Я дуже люблю українську їжу. Ми часто їмо в кафе. Я завжди замовляю гарячий суп. Мій друг замовляє свіжий салат. Все дуже смачно.
+> *I really love Ukrainian food. We often eat at cafes. I always order hot soup. My friend orders fresh salad. Everything is very delicious.*
 
-Remember that the phrase **будь ласка** (please) is your magic key for all interactions. It softens any request and shows respect for the person helping you. 
+Beyond just ordering, you are prepared to complete the entire dining experience gracefully. You understand the culture of paying the bill and the importance of asking **Рахунок, будь ласка** when you are ready to pay. You can confirm your payment method by asking **Можна карткою?** instead of relying entirely on cash. Most importantly, you know how to leave a warm, culturally appropriate compliment by telling the staff **Дуже смачно!** to show your appreciation for their hard work.
 
-Before you move to the next module, do a quick self-check. Can you perform all of these tasks?
+Use this practical self-check checklist to verify your readiness before you visit a real Ukrainian coffee shop. Read each question carefully and try to formulate the answer in your head before looking at the solution. Practice these functional phrases aloud multiple times until they feel completely natural and effortless to you.
 
-*   Can you greet the waiter and ask for a menu? (**Добрий день, можна меню?**)
-*   Can you order a drink and a main course using the accusative case? (**Мені каву і піцу.**)
-*   Can you ask if a dish is spicy or vegetarian? (**Це гостре? Є вегетаріанське меню?**)
-*   Can you ask for the bill and specify your payment method? (**Можна рахунок? Карткою, будь ласка.**)
-*   Do you remember to use the correct verb **замовляти** (to order) instead of the Russianism *заказати*?
-
-If you can confidently handle these situations, you are ready to order your next meal in Ukrainian!
+*   **Q: How do you order coffee and a croissant?**
+    **A:** Мені каву і круасан, будь ласка.
+*   **Q: How do you ask if a dish is spicy?**
+    **A:** Це гостре?
+*   **Q: How do you ask for the bill?**
+    **A:** Рахунок, будь ласка.
+*   **Q: How do you say you want to pay by card?**
+    **A:** Можна карткою?
+*   **Q: How do you compliment the food?**
+    **A:** Все було дуже смачно!
 </generated_module_content>
 
-**PIPELINE NOTE — Word count: 1402 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
+**PIPELINE NOTE — Word count: 1818 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -449,41 +490,169 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 84 words | Not found: 5 words
+Verified: 126 words | Not found: 2 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
   ✗ Іванка — NOT IN VESUM
-  ✗ Іванко — NOT IN VESUM
   ✗ Ростик — NOT IN VESUM
-  ✗ кафі — NOT IN VESUM
-  ✗ менюю — NOT IN VESUM
 
-All 84 other words are confirmed to exist in VESUM.
+All 126 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
-## Verification Tools (MCP)
+---
 
-You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
+## Verification Tools (Shell Commands)
 
-**Core Verification:**
-- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
-- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
+You have access to verification tools via shell commands. Use these to verify
+Ukrainian vocabulary, check grammar, and search textbook content **as you write**.
 
-**Content Quality:**
-- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+**IMPORTANT:** Run verification commands BEFORE finalizing any Ukrainian text.
+Batch multiple verifications together to minimize round-trips.
 
-**Reference:**
-- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp_rag_search_literary` — verify literary references against primary sources
-- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
+### 1. Batch-verify Ukrainian words exist in VESUM (preferred — one call for many words)
 
-**Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_words
+results = verify_words(['слово1', 'слово2', 'слово3'])
+for w, matches in results.items():
+    if matches:
+        print(f'{w}: FOUND — lemma={matches[0][\"lemma\"]}, pos={matches[0][\"pos\"]}')
+    else:
+        print(f'{w}: NOT FOUND — may not exist in standard Ukrainian')
+"
+```
+
+### 2. Verify a single Ukrainian word in VESUM (with full morphological tags)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_word
+results = verify_word('WORD_HERE')
+if results:
+    for m in results:
+        print(f'lemma={m[\"lemma\"]}, pos={m[\"pos\"]}, tags={m[\"tags\"]}')
+else:
+    print('NOT FOUND in VESUM')
+"
+```
+
+### 3. Get all inflected forms of a lemma (declension/conjugation)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_lemma
+forms = verify_lemma('LEMMA_HERE')
+for f in forms[:20]:
+    print(f'{f[\"word_form\"]:20s} {f[\"pos\"]:8s} {f[\"tags\"]}')
+print(f'... {len(forms)} forms total')
+"
+```
+
+### 4. Check CEFR level of a word (is it level-appropriate?)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import query_cefr_level
+results = query_cefr_level('WORD_HERE')
+for r in results:
+    print(f'{r[\"word\"]}: {r[\"level\"]} ({r[\"pos\"]})')
+if not results:
+    print('Not in CEFR database')
+"
+```
+
+### 5. Search textbook content (Ukrainian school textbooks, Grades 1-11)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_textbooks
+keywords = {'keyword1', 'keyword2'}
+results = search_textbooks(keywords, 5)
+for r in results:
+    title = r.get('section_title', r.get('title', ''))
+    grade = r.get('grade', '?')
+    text = r.get('text', '')[:200]
+    print(f'Grade {grade} | {title}')
+    print(f'  {text}')
+    print()
+"
+```
+
+### 6. Search style guide for calques/Russianisms (Антоненко-Давидович, 279 entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_style_guide
+results = search_style_guide('TOPIC_HERE', 3)
+for r in results:
+    print(f'--- {r.get(\"word\", \"\")} [{r.get(\"section\", \"\")}]')
+    print(r.get('text', '')[:300])
+    print()
+if not results:
+    print('No style guide entries found')
+"
+```
+
+### 7. Look up word definition in СУМ-11 (Ukrainian explanatory dictionary, 127K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_definitions
+results = search_definitions('WORD_HERE', 3)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+### 8. Search idioms (Фразеологічний словник, 25K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_idioms
+results = search_idioms('WORD_HERE', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"text\", r.get(\"definition\", \"\")))[:200]}')
+"
+```
+
+### 9. English-to-Ukrainian translation (Балла, 79K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import translate_en_uk
+results = translate_en_uk('ENGLISH_WORD', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+---
+
+**WHEN to use these tools:**
+
+1. **Before writing any Ukrainian text** — batch-verify all key vocabulary with
+   `verify_words` (tool 1). Any word that returns NOT FOUND must be replaced.
+2. **When you suspect a Russicism or calque** — search the style guide (tool 6)
+   and verify the correct Ukrainian form with `verify_word` (tool 2).
+3. **When writing for A1/A2** — check CEFR levels (tool 4) to ensure vocabulary
+   is level-appropriate.
+4. **When unsure about a case ending or conjugation** — use `verify_lemma` (tool 3)
+   to see the full paradigm.
+5. **When covering a grammar topic** — search textbooks (tool 5) to see how
+   Ukrainian school textbooks teach it.
+6. **When you need the precise Ukrainian meaning** — use СУМ-11 (tool 7).
+7. **When looking for natural Ukrainian expressions** — search idioms (tool 8).
+
+**Batching rule:** Collect all words you want to verify, then run ONE `verify_words`
+call instead of multiple `verify_word` calls. This is faster and uses fewer tokens.

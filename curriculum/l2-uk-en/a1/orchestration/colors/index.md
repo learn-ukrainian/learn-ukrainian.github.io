@@ -1,54 +1,57 @@
 # Build Summary: colors (A1)
 
-Generated: 2026-04-11 00:53
+Generated: 2026-04-13 21:25
 
 ## Pipeline Phases
 
 | Phase | Status | Timestamp |
 |-------|--------|-----------|
-| check | complete | 2026-04-09 00:27:18 |
-| research | complete | 2026-04-09 00:27:18 |
-| skeleton | complete | 2026-04-09 00:35:54 |
-| pre-verify | complete | 2026-04-09 00:37:18 |
-| write | complete | 2026-04-09 00:39:07 |
-| exercises | complete | 2026-04-09 00:39:07 |
-| activities | complete | 2026-04-09 00:40:24 |
-| verify-exercises | complete | 2026-04-09 00:40:24 |
-| annotate | complete | 2026-04-09 00:40:24 |
-| vocab | complete | 2026-04-09 00:41:49 |
-| enrich | complete | 2026-04-09 00:41:49 |
-| verify | complete | 2026-04-09 00:41:49 |
-| review | complete | 2026-04-09 00:43:52 |
-| stress | complete | 2026-04-09 00:43:54 |
-| publish | complete | 2026-04-10 22:53:36 |
-| audit | complete | 2026-04-10 22:53:36 |
+| check | complete | 2026-04-12 20:01:28 |
+| research | complete | 2026-04-12 20:01:28 |
+| skeleton | complete | 2026-04-12 20:02:24 |
+| pre-verify | complete | 2026-04-12 20:04:10 |
+| write | complete | 2026-04-12 20:05:26 |
+| exercises | complete | 2026-04-12 20:05:26 |
+| activities | complete | 2026-04-12 20:09:23 |
+| repair | complete | 2026-04-12 20:09:23 |
+| verify-exercises | complete | 2026-04-12 20:09:23 |
+| annotate | complete | 2026-04-12 20:09:23 |
+| vocab | complete | 2026-04-12 20:10:18 |
+| enrich | complete | 2026-04-12 20:10:18 |
+| verify | complete | 2026-04-12 20:10:18 |
+| review | complete | 2026-04-12 20:26:10 |
+| stress | complete | 2026-04-12 20:26:12 |
+| publish | complete | 2026-04-13 08:58:05 |
+| audit | complete | 2026-04-13 08:58:05 |
 
 ## Reviews
 
 | Round | File |
 |-------|------|
 | 1 | colors-review-r1.md |
+| 2 | colors-review-r2.md |
 
 ## Dispatch Log
 
 | Phase | Agent | Duration | OK |
 |-------|-------|----------|----|
-| pre-verify | gemini-tools (gemini-3-flash-preview) | 85s | ✅ |
-| skeleton | gemini (gemini-3-flash-preview) | 300s | ❌ |
-| skeleton | gemini (auto) | 216s | ✅ |
-| write | gemini-tools (gemini-3.1-pro-preview) | 108s | ✅ |
-| activities | gemini-tools (gemini-3.1-pro-preview) | 77s | ✅ |
-| vocab | gemini (gemini-3-flash-preview) | 79s | ✅ |
-| review | gemini-tools (gemini-3.1-pro-preview) | 122s | ✅ |
+| pre-verify | gemini-tools (gemini-3.1-pro-preview) | 105s | ✅ |
+| skeleton | gemini (gemini-3.1-pro-preview) | 55s | ✅ |
+| write | gemini-tools (gemini-3.1-pro-preview) | 75s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 85s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 150s | ✅ |
+| vocab | gemini (gemini-3.1-pro-preview) | 50s | ✅ |
+| review | codex-tools (gpt-5.4) | 471s | ✅ |
+| review | codex-tools (gpt-5.4) | 481s | ✅ |
 
 ## Files
 
 - `.build.lock`
 - `exercise-verification.json`
-- `pacing-plan.txt`
 - `pre-verify-results.md`
 - `quick-verify.json`
 - `review-structured-r1.yaml`
+- `review-structured-r2.yaml`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

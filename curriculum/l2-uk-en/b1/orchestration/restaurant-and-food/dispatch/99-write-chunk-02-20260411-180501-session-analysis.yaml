@@ -1,0 +1,74 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T16-02-e19da3ac.json
+phase: write-chunk-02
+prompt_chars: 52996
+response_chars: 7232
+prompt_words: 7452
+response_words: 1137
+sections:
+- name: header
+  start: 0
+  length: 425
+  fraction: 0.008
+- name: skeleton
+  start: 425
+  length: 2097
+  fraction: 0.0396
+- name: prior_summary
+  start: 2522
+  length: 3689
+  fraction: 0.0696
+- name: plan
+  start: 6211
+  length: 18188
+  fraction: 0.3432
+- name: wiki
+  start: 17844
+  length: 28377
+  fraction: 0.5355
+- name: output_spec
+  start: 52776
+  length: 220
+  fraction: 0.0042
+large_sections:
+- wiki
+directives_total: 22
+directives_covered: 13
+directives_missed:
+- kind: checklist
+  text: деруни (potato pancakes — pl of дерун)
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: checklist
+  text: сало (cured pork fat — iconic Ukrainian product)
+  covered: false
+  coverage_note: 1/7 keywords (14%)
+- kind: checklist
+  text: узвар (dried fruit compote — traditional Ukrainian drink)
+  covered: false
+  coverage_note: 2/7 keywords (29%)
+- kind: checklist
+  text: кухня (cuisine/kitchen — both meanings in Ukrainian)
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: must
+  text: '* **Must-know:** `склянка води/молока`, `ложка цукру/солі`, `кілограм борошна/м''яса`.'
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: must
+  text: '**MANDATORY:** Українська кулінарна та професійна лексика має суттєві відмінності
+    від російської.'
+  covered: false
+  coverage_note: 0/9 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 3/11 keywords (27%)
+- kind: inject_activity
+  text: match-dishes-descriptions
+  covered: false
+  coverage_note: marker missing

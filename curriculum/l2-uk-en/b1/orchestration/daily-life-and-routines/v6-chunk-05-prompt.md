@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-важливе правило: дієслово **відпочивати** *(to rest)* ніколи не буває зворотним в українській мові! Воно не має і ніколи не може мати частки «-ся». Іноді студенти за аналогією до інших рефлексивних дієслів намагаються додати цю частку і кажуть помилкове «я відпочиваюся». Це неправильно, адже процес відпочинку не є дією, яку суб'єкт спрямовує безпосередньо сам на себе, як у випадку з умиванням чи одяганням. Отже, ми просто і спокійно відпочиваємо на зручному дивані або весело розважаємося на гучній вечірці. Щоб красиво та офіційно описувати свої інтереси, ми активно використовуємо віддієслівні іменники, які ми ретельно вивчали раніше. Замість того, щоб просто сказати «Я люблю малювати», ви можете побудувати набагато елегантнішу фразу: «Моє улюблене заняття — це **малювання** *(painting)*». Такі слова, як **читання** *(reading)* цікавої літератури, **подорожування** *(traveling)* екзотичними країнами або **фотографування** *(photographing)* дикої природи, звучать дуже природно і збагачують ваш словниковий запас. Ця граматична конструкція дозволяє вам узагальнити процес і зробити його головним предметом вашої розмови. Наприклад, ви можете впевнено сказати своїм новим знайомим: «Спортивне плавання чудово знімає стрес, але саме кулінарія приносить мені найбільше задоволення у вільний час». Щоб ваші плани на вихідні стали реальністю, потрібно вміти правильно запрошувати інших людей скласти вам компанію. Для цього ми використовуємо форми наказового способу або ввічливі умовні конструкції. Якщо ви звертаєтеся до близького друга, ви можете радісно сказати: «**Ходімо разом** *(Let's go together)* у новий музей!». Для організації зустрічі ідеально підійде фраза: «**Давайте зустрінемося** *(Let's meet)* біля станції метро о сьомій годині». Щоб звучати максимально ввічливо, особливо з малознайомими людьми, краще використати умовний спосіб: «**Чи не хотіли б ви** *(Would you like)* випити кави зі мною завтра вранці?». Такі прості, але дуже ефективні фрази роблять ваше щоденне спілкування природним, ввічливим та дружнім. Більшість українців обожнюють проводити свої вільні дні не в задушливих квартирах, а десь надворі. Ми любимо довго **гуляти** *(to walk)*, коли навколо нас красива весняна **природа** *(nature)*. У великих містах люди часто виходять у зелений **парк** *(park)* або неспішно прогулюються туди-сюди, де простягається широка річкова **набережна** *(embankment)*. Головна мета таких приємних прогулянок — це можливість глибоко **дихати свіжим повітрям** *(to breathe fresh air)* та насолоджуватися теплим сонячним промінням. Коли настає спекотне літо, багато родин традиційно виїжджають **за місто** *(to the countryside)*, де вони можуть організувати веселий пікнік біля прохолодного лісового озера. Це ідеальний спосіб втекти від міського шуму, постійного стресу та щоденної метушні. Щоб ваше життя було гармонійним, надзвичайно важливо вміти правильно знаходити баланс між важкою роботою та приємним відпочинком. Ми всі знаємо, як це важко, коли щоденних справ стає занадто багато. «Щоб випадково **не запізнюватися** *(not to be late)* на важливі зустрічі, я ретельно планую свій час ще з самого раннього ранку», — так часто кажуть успішні люди. Проте навіть у найбільш насиченому графіку завжди повинно залишатися місце для улюблених хобі та спокійного дозвілля. Якщо ви будете регулярно присвячувати час читанню, мандруванню або просто приємним прогулянкам на свіжому повітрі, ви матимете значно більше енергії. Тож не забувайте відпочивати, частіше зустрічайтеся з хорошими друзями і завжди намагайтеся проводити свої вихідні максимально цікаво та з великою користю для власного здоров'я. <!-- INJECT_ACTIVITY: sentence-builder-conditionals -->
+use it in its standard active form. ::: Another elegant and highly academic way to discuss your hobbies is by using verbal nouns. As you learned previously in Phase 3, these are formal nouns formed directly from verbs, representing the physical action itself as an abstract concept. Instead of using a basic sentence structure like "I like to read," you can talk about the complex activity of читання. Similarly, the active verb *малювати* becomes the sophisticated noun малювання, and *мандрувати* turns into мандрування. You can easily use these formal nouns to describe your personal preferences in a much more advanced way. For instance, instead of saying «Я люблю читати», you might elevate your conversational speech by saying «Моє улюблене заняття — це читання». This immediately shows native speakers that you have a strong command of advanced grammar. Коли ви хочете запросити когось провести час разом, найкраще використовувати форму спільної дії наказового способу. Замість того, щоб просто запитувати про плани, ви можете впевнено сказати «Ходімо разом!» або «Давайте зустрінемося біля метро». Це звучить дуже природно, тепло і надзвичайно дружньо. Якщо ви шанобливо звертаєтеся до старшої людини на «ви», ви також можете акуратно використати ввічливий умовний спосіб для своєї пропозиції. > *When you want to invite someone to spend time together, it is best to use the inclusive imperative form. Instead of just asking about plans, you can confidently say "Let's go together!" or "Let's meet near the subway." This sounds very natural, warm, and extremely friendly. If you are respectfully addressing an older person with the formal "ви", you can also carefully use the polite conditional mood for your suggestion.* Spending a significant amount of time outdoors is a huge part of modern Ukrainian weekend culture, especially during the warm spring and summer months. People love to leave their cramped city apartments and head straight to a large public парк. Alternatively, they take a long, relaxing stroll along the набережна near the river. Many families and groups of friends prefer to completely escape the urban noise. They travel за місто to enjoy the peaceful beauty of природа. Many city dwellers have a small country house or relatives in a village, making weekend trips extremely popular. Spending time in nature allows people to quickly recharge their mental energy for the upcoming work week. The most common action verbs you will constantly hear in this context are гуляти and the descriptive phrase дихати свіжим повітрям. These specific words perfectly describe a relaxed, unhurried pace of life away from the stressful and busy city streets. Щоб мати достатньо часу на всі ці приємні справи, треба вміти правильно планувати свій графік. Я завжди намагаюся **встигати** (to manage in time) робити всю необхідну роботу в п'ятницю. Це допомагає нічого не **відкладати** (to postpone) на чудову суботу. Звісно, іноді я можу випадково **запізнюватися** (to be late) на ранкові зустрічі з друзями, але зазвичай я дуже пунктуальна людина. Найголовніше — це знайти правильний життєвий баланс і завжди мати вільний час на свої улюблені хобі. <!-- INJECT_ACTIVITY: sentence-builder-conditionals -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -586,7 +586,74 @@ Teaching Ukrainian grammar requires a conscious effort to separate it from Russi
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -599,18 +666,74 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] розпорядок дня (daily routine/schedule)
+- [ ] прокидатися (to wake up — reflexive)
+- [ ] снідати / обідати / вечеряти (to have breakfast / lunch / dinner)
+- [ ] прибирати (to clean up, tidy)
+- [ ] пилососити (to vacuum)
+- [ ] прати білизну (to do laundry — NOT *стирати)
+- [ ] прасувати (to iron)
+- [ ] виносити сміття (to take out the trash)
+- [ ] готувати їжу (to cook food)
+- [ ] займатися (to engage in, do — reflexive: займатися спортом)
+- [ ] запізнюватися (to be late — reflexive)
+- [ ] встигати (to manage in time)
+- [ ] відкладати (to postpone)
+- [ ] вихідні (weekend — pluralia tantum)
+- [ ] будильник (alarm clock)
+- [ ] хатні справи (household chores)
+- [ ] пошук роботи (job search)
+- [ ] співбесіда (interview)
+- [ ] робоче місце (workplace)
+- [ ] колега (colleague)
+- [ ] обов'язки (duties)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Розпорядок дня: планування та поради (~650 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

@@ -42,7 +42,7 @@ vocabulary:
   gender: ''
   verified: true
 - word: бі́ля
-  translation: near / next to
+  translation: near
   expression: false
   pos: прийм.
   gender: ''
@@ -83,53 +83,11 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: Вибачте, будь ласка
-  translation: Excuse me, please
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Де тут...?
-  translation: Where is ... here?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Дуже дякую!
-  translation: Thank you very much!
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: ву́лиця
-  translation: street
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
 - word: кафе́
-  translation: cafe
+  translation: café
   expression: false
   pos: ім.
   gender: с.
-  verified: true
-- word: шко́ла
-  translation: school
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: мі́сто
-  translation: city
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: є
-  translation: there is / there are
-  expression: false
-  pos: дієсл.
-  gender: ''
   verified: true
 - word: теа́тр
   translation: theater
@@ -143,68 +101,8 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: о́зеро
-  translation: lake
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
 - word: стадіо́н
   translation: stadium
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: пло́ща
-  translation: square
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: лі́ки
-  translation: medicine
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: проду́кти
-  translation: groceries
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: о́фіс
-  translation: office
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: автовокза́л
-  translation: bus station
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: аеропо́рт
-  translation: airport
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: зупи́нка
-  translation: bus stop
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: авто́бус
-  translation: bus
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: по́їзд
-  translation: train
   expression: false
   pos: ім.
   gender: ч.
@@ -215,11 +113,23 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: метро́
-  translation: metro
+- word: пло́ща
+  translation: square
   expression: false
   pos: ім.
-  gender: с.
+  gender: ж.
+  verified: true
+- word: о́фіс
+  translation: office
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: лі́ки
+  translation: medicine
+  expression: false
+  pos: ім.
+  gender: ''
   verified: true
 - word: на розі
   translation: on the corner
@@ -227,14 +137,26 @@ vocabulary:
   pos: ''
   gender: ''
   verified: true
-- word: по́руч
-  translation: nearby
-  expression: false
-  pos: присл.
+- word: біля парку
+  translation: near the park
+  expression: true
+  pos: ''
   gender: ''
   verified: true
-- word: Де ви живете?
-  translation: Where do you live?
+- word: біля дому
+  translation: near the home
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: біля університету
+  translation: near the university
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: біля магазину
+  translation: near the shop
   expression: true
   pos: ''
   gender: ''

@@ -2,12 +2,12 @@
   "module": "pluralia-tantum",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-10T21:26:05.292548Z",
+  "last_audit": "2026-04-11T18:57:33.099734Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-09T22:22:30.873378Z",
+    "md": "2026-04-11T18:56:32.612361Z",
     "meta": null,
-    "activities": "2026-04-09T22:15:56.364303Z",
+    "activities": "2026-04-11T18:48:02.204674Z",
     "vocabulary": "2026-04-09T22:16:37.017009Z",
     "research": null,
     "plan": "2026-04-04T21:31:33.324165Z"
@@ -21,17 +21,26 @@
     "lesson": {
       "status": "fail",
       "violations": 3,
-      "message": "4272/4000 (raw: 4360) | engagement: 0/5 | richness: 62% < 95% min (grammar) - REWRITE needed | salad: Phase 7 (Early B1 (B1 M01-M30)): 1 error(s) \u2014 SALAD_EXCESSIVE_INLINE_GLOSSES: paragraph has 8 inline **term** (gloss) markers across 8 sentence(s) \u2014 too dense; move to vocabulary section or convert "
+      "message": "5482/4000 (raw: 5677) | engagement: 0/5 | immersion: 34.2% LOW (target 85-100% (B1.2 Motion)) | richness: 62% < 95% min (grammar) - REWRITE needed"
     },
     "activities": {
-      "status": "fail",
-      "violations": 1,
-      "message": "13/0 | density: 3 < 6"
+      "status": "pass",
+      "violations": 0,
+      "message": "5/0"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
       "message": "54/25"
+    },
+    "vocab_progression": {
+      "status": "warn",
+      "violations": 0,
+      "message": "\u0394 -10 | premature=2 | gaps=0 | well-paced=0",
+      "delta": -10,
+      "premature": 2,
+      "gaps": 0,
+      "well_paced": 0
     },
     "naturalness": {
       "status": "info",
@@ -52,8 +61,8 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [],
-    "pass_count": 4,
-    "fail_count": 2,
+    "pass_count": 5,
+    "fail_count": 1,
     "deferred_count": 0
   }
 }

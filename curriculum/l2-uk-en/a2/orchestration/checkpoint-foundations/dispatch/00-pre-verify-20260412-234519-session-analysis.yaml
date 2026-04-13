@@ -1,0 +1,48 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T21-43-a92099f8.json
+phase: pre-verify
+prompt_chars: 3538
+response_chars: 2002
+prompt_words: 564
+response_words: 332
+sections:
+- name: preamble
+  start: 0
+  length: 560
+  fraction: 0.1583
+- name: plan
+  start: 560
+  length: 2597
+  fraction: 0.734
+- name: output_spec
+  start: 3157
+  length: 381
+  fraction: 0.1077
+large_sections:
+- plan
+directives_total: 5
+directives_covered: 0
+directives_missed:
+- kind: must
+  text: You MUST verify linguistic facts using the tools below BEFORE writing begins.
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: must
+  text: Learner must highlight all perfective verbs in one color and all imperfective
+    verbs in another.
+  covered: false
+  coverage_note: 0/10 keywords (0%)
+- kind: must
+  text: Learner must rewrite the sentence, putting the noun in the correct Genitive
+    form (e.
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: must
+  text: '- **Частина 2: Вправи на вибір (Part 2: Choice Exercises)**: Exercise 4:
+    Multiple-choice sentences where the learner must choose between the perfective
+    and imperfective form of a verb (e.'
+  covered: false
+  coverage_note: 1/18 keywords (6%)
+- kind: must
+  text: Each task MUST include at least one tool call.
+  covered: false
+  coverage_note: 1/8 keywords (12%)

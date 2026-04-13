@@ -1,6 +1,6 @@
 # Build Summary: purpose-clauses (A2)
 
-Generated: 2026-04-11 00:40
+Generated: 2026-04-11 16:17
 
 ## Pipeline Phases
 
@@ -19,8 +19,8 @@ Generated: 2026-04-11 00:40
 | enrich | complete | 2026-04-08 22:03:01 |
 | verify | complete | 2026-04-08 22:03:01 |
 | stress | complete | 2026-04-08 22:05:44 |
-| publish | complete | 2026-04-10 22:40:29 |
-| audit | complete | 2026-04-10 22:40:29 |
+| publish | complete | 2026-04-11 14:17:45 |
+| audit | complete | 2026-04-11 14:17:45 |
 
 ## Reviews
 
@@ -34,17 +34,29 @@ Generated: 2026-04-11 00:40
 |-------|-------|----------|----|
 | pre-verify | gemini-tools (gemini-3-flash-preview) | 232s | ✅ |
 | skeleton | gemini (gemini-3-flash-preview) | 46s | ✅ |
+| write | gemini-tools (gemini-3.1-pro-preview) | 0s | ❌ |
 | activities | gemini-tools (gemini-3.1-pro-preview) | 63s | ✅ |
 | vocab | gemini (gemini-3-flash-preview) | 39s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 162s | ✅ |
 | write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 70s | ✅ |
+| write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 0s | ❌ |
+| write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 0s | ❌ |
+| write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 0s | ❌ |
+| write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 110s | ✅ |
 | write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 64s | ✅ |
+| write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 69s | ✅ |
 | write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 66s | ✅ |
+| write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 300s | ✅ |
 | write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 29s | ✅ |
+| write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 50s | ✅ |
 
 ## Files
 
 - `.build.lock`
+- `chunk-01.md`
+- `chunk-02.md`
+- `chunk-03.md`
+- `chunk-04.md`
 - `exercise-verification.json`
 - `pre-verify-results.md`
 - `quick-verify.json`
@@ -57,5 +69,6 @@ Generated: 2026-04-11 00:40
 - `v6-chunk-03-prompt.md`
 - `v6-chunk-04-prompt.md`
 - `v6-pre-verify-prompt.md`
+- `v6-prompt.md`
 - `v6-review-prompt.md`
 - `v6-skeleton-prompt.md`

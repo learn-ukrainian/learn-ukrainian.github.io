@@ -1,21 +1,25 @@
-# Section-by-Section Generation — Section 3/4
+# Section-by-Section Generation — Section 3/3
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 52: Навчання і робота (A2, A2.7 [Complex Sentences and Conditionals])
-**Section to write:** Плани на майбутнє (~600 words)
-**Word target for this section:** 600 words (aim for 660 to account for undershoot)
+**Section to write:** Плани на майбутнє (Plans for the Future) (~640 words)
+**Word target for this section:** 640 words (aim for 704 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Плани на майбутнє (~600 words)
-- P1 (~150 words): [Discussing career goals using "якщо... то..." with future-oriented actions. Focus on the result of education: "Якщо я отримаю диплом, то знайду гарну роботу" and "Якщо я вивчу англійську, то зможу працювати в міжнародній компанії."]
-- P2 (~150 words): [Giving career advice with conditionals. Examples: "Якщо хочеш стати директором, треба багато працювати" and "Якщо тобі не подобається спеціальність, змінити її зараз."]
-- P3 (~150 words): [Concessions and complex situations ("хоча"). Discussing the transition from study to work: "Хоча я ще навчаюся на четвертому курсі, я вже маю досвід роботи." Use "частковий робочий день" (part-time) vs "повний день" (full-time).]
-- P4 (~150 words): [Dialogue 3: A job interview simulation. The candidate uses all complex sentence types to explain their education (який, де), their motivation (тому що), their goals (щоб), and their availability (якщо).]
-- <!-- INJECT_ACTIVITY: true-false-structure-culture --> [true-false, judge correctness of complex sentence structures and Ukrainian work culture statements, 8 items]
+## Плани на майбутнє (Plans for the Future) (~640 words)
+- P1 (~130 words): Discussing future career and education goals using conditionals (`якщо`). Example: "Якщо я складу іспит, то вступлю до магістратури." Vocabulary focus: `магістратура`, `співбесіда`, `проєкт`, `досвід`.
+- P2 (~130 words): Giving and receiving career advice using conditionals combined with the imperative mood. Examples: "Якщо хочеш знайти кращу роботу, вивчай нову мову." "Якщо тобі не подобається робота, шукай іншу."
+- P3 (~130 words): Expressing concessions and contrasting ideas about work/study using `хоча` (although). Examples: "Хоча я ще студент, я вже працюю на частковий робочий день." "Хоча зарплата невелика, робота дуже цікава."
+- <!-- INJECT_ACTIVITY: match-up-career-situations --> [match-up, Match education/career situations to appropriate responses using complex sentences, 8 items]
+- P4 (~150 words): Consolidation dialogue (10-12 lines): Career counseling session at a university between a Consultant and Student. "Що ви вивчаєте?" ("Право"). "Ким хочете стати?" ("Адвокатом"). "Де хочете працювати?" ("В юридичній фірмі"). Integrates all complex sentence types naturally (причина, мета, означення, умова, допуст).
+- P5 (~100 words): Recap of complex sentences (`тому що`, `щоб`, `який`, `якщо`, `хоча`) and how they connect education and career goals to elevate basic sentences into fluent, professional communication.
+- <!-- INJECT_ACTIVITY: quiz-complex-types --> [quiz, Choose the correct complex sentence type for work/education scenarios, 8 items]
+
+Grand total: ~2200 words
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -23,7 +27,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-use «тому що» *(because)*. «Я люблю свою роботу, тому що вона цікава». «Він став лікарем, тому що хоче допомагати людям». But every job has some difficulties. To show contrast, we use the word **хоча** *(although/even though)*. This word helps us balance the good and bad sides. «Хоча **зарплата** *(salary)* невелика, наш колектив дуже дружній». «Хоча я працюю багато, я маю вільний час у вихідні». «Хоча мій офіс далеко, я люблю туди їздити». Notice that we always put a comma before «тому що». We also put a comma between the two parts of the sentence with «хоча». These complex sentences show your high level of Ukrainian. Кожен офіс має свої власні традиції та правила. Every workplace has rules and routines. To talk about conditions, we use the construction «якщо..., то...» *(if..., then...)*. This is a real conditional. We use it for normal, everyday situations. «Якщо я закінчую проєкт вчасно, то отримую **премію** *(bonus)*». «Якщо є багато роботи, то я залишаюся в офісі довше». You can also skip the word «то». The sentence is still correct and natural. «Якщо я маю питання, я питаю свого колегу». «Якщо мій комп'ютер не працює, я дзвоню в технічну підтримку». This construction is very useful for explaining your daily professional life. It shows cause and effect clearly. Practice using it when you describe your typical working day or your office rules. Let's look at some important vocabulary for the workplace. Знати цю лексику дуже корисно для вашого резюме. Your official role is your **посада** *(position)*. Your working hours are your **графік** *(schedule)*. For example: «У мене дуже зручний графік роботи». Your boss or manager is your **керівник** *(manager/supervisor)*. «Мій керівник завжди допомагає нашій команді». When you want a new job, you need to go to a **співбесіда** *(job interview)*. We have two important verbs for career changes. **Шукати роботу** *(to look for a job)* is the process of finding employment. «Мій брат зараз шукає роботу в IT-сфері». **Змінювати роботу** *(to change jobs)* means leaving one job for another. «Вона вирішила змінити роботу, щоб мати кращу посаду». These words will help you discuss your career path. Let's see how professionals use these words in real life. Зверніть увагу на складні речення в їхній розмові. Read this dialogue. Two people meet at a social event and discuss their careers. > — **Анна:** Привіт! Ми ще не знайомі. Ким ви працюєте? > — **Віктор:** Добрий день! Я працюю архітектором на будівельній фірмі. А ви? > — **Анна:** Я працюю менеджером у компанії, яка продає техніку. > — **Віктор:** Це цікаво! Вам подобається ваша посада? > — **Анна:** Так, я люблю свою роботу, тому що вона динамічна. Хоча графік дуже складний. > — **Віктор:** Я вас чудово розумію. Якщо у нас новий проєкт, я теж працюю до ночі. > — **Анна:** А де знаходиться офіс, де ви працюєте? > — **Віктор:** У центрі міста. Мій керівник, який керує нашим відділом, сидить поруч зі мною. > — **Анна:** Чудово! Якщо ви любите свою роботу, то це найголовніше. <!-- INJECT_ACTIVITY: quiz-complex-sentence-types -->
+допомогу, я завжди намагаюся пояснити завдання. Якщо ви хочете знайти нову роботу, вам потрібно написати гарне резюме. Якщо завтра буде важлива нарада, керівник обов'язково попередить нас. Робота в команді завжди легша, якщо всі розуміють свої обов'язки. A common mistake for English speakers is translating "I work as a doctor" literally. In Ukrainian, the verb **працювати** (to work) always requires the Instrumental case for the profession. :::info **Grammar box** — You cannot say *Він працює лікар*. You must say **Він працює лікарем** using the Instrumental case (`ким?` — by whom?). Also, modern Ukrainian actively uses feminine forms for professions, such as **директорка** or **лікарка**. ::: Мій брат працює лікарем у великій лікарні. Його дружина працює директоркою у приватній школі. Раніше я працював продавцем, але тепер я працюю менеджером. Моя мама працює викладачкою в університеті, а батько працює інженером. Коли я був студентом, я працював офіціантом. Зараз багато жінок працюють програмістками та журналістками. Якщо ви хочете працювати юристом, вам потрібна вища освіта. > *My brother works as a doctor in a large hospital. His wife works as a director in a private school. Previously I worked as a seller, but now I work as a manager. My mom works as a lecturer at the university, and my father works as an engineer. When I was a student, I worked as a waiter. Now many women work as programmers and journalists. If you want to work as a lawyer, you need higher education.* Let's see how these structures come together in a natural conversation at a party. Notice how the speakers use the Instrumental case for professions, relative clauses to describe their workplace, and conditional sentences. > — **Максим:** Привіт! Ми ще не знайомі. Мене звати Максим. *(Hi! We haven't met yet. My name is Maksym.)* > — **Олена:** Привіт! А я Олена. Дуже приємно. *(Hi! And I am Olena. Nice to meet you.)* > — **Максим:** Ким ви працюєте, Олено? *(What do you do for a living, Olena?)* > — **Олена:** Я працюю архітекторкою в компанії, яка будує нові комплекси. А ви? *(I work as an architect in a company that builds new complexes. And you?)* > — **Максим:** Я працюю журналістом. Я пишу статті для порталу, який читають люди. *(I work as a journalist. I write articles for a portal that people read.)* > — **Олена:** Вам подобається ваша робота? *(Do you like your job?)* > — **Максим:** Так, я люблю свою роботу, тому що постійно спілкуюся з людьми. А що ви робите на роботі? *(Yes, I love my job because I constantly communicate with people. And what do you do at work?)* > — **Олена:** Я створюю проєкти. Якщо проєкт складний, ми працюємо командою. *(I create projects. If a project is complex, we work as a team.)* > — **Максим:** А ваш графік гнучкий? *(And is your schedule flexible?)* > — **Олена:** Так. Якщо я маю натхнення, я можу працювати ввечері. *(Yes. If I have inspiration, I can work in the evening.)* <!-- INJECT_ACTIVITY: fill-in-complex-sentences --> <!-- INJECT_ACTIVITY: true-false-culture-complex -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -543,14 +547,100 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
 
-TARGET: 70-90% Ukrainian.
+**You are in PHASE 6: A2 finale (A2 M51-M69)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 40%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 40% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
+
+TARGET: 70-90% Ukrainian. THIS IS A HARD GATE — the audit REJECTS modules outside this range.
+
 LANGUAGE ROLES:
-- PRIMARY: Ukrainian for everything.
-- ENGLISH: Only in vocabulary tables and one-line grammar notes where absolutely necessary.
-- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English.
-A2 register. Concrete everyday vocabulary. No literary language, no metaphors. Near-full Ukrainian immersion. Ukrainian sentences max 15 words. Max 2 clauses. All cases allowed. Simple subordinate clauses only. Full aspect pairs. No participles.
+- PRIMARY: Ukrainian for narrative, dialogues, examples, section intros, cultural notes, Reading Practice blocks, learning callouts.
+- METALANGUAGE: For abstract grammar terms, you may provide ONE parenthetical English translation on FIRST use only, e.g. `**доконаний вид** (perfective aspect)`. Subsequent uses must be Ukrainian only.
+- VOCABULARY TABLE: English glosses live here, not in prose.
+- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English. Never mix mid-sentence.
+
+⚠️ HARD STRUCTURAL RULES — READ THIS TWICE:
+- FORBIDDEN: long English narrative paragraphs explaining grammar. If a concept needs more than ONE sentence of English scaffolding, it goes in a `:::info` or `:::tip` callout, NOT in the main prose.
+- FORBIDDEN: mirroring a Ukrainian paragraph with an English translation paragraph. Write ONE paragraph in Ukrainian, move on.
+- FORBIDDEN: `> *English translation*` blockquotes after Ukrainian dialogues. They were required at A1 but they cap immersion below 50% — at A2-late they MUST be removed.
+
+ESCAPE HATCH (the 'Dual Ladder'):
+For genuinely abstract grammar concepts, you may use ONE `:::info` or `:::tip` callout written in English per section to clarify the concept. Because callouts are stripped from the immersion metric, this serves as on-demand scaffolding for struggling learners without penalising the immersion score. Do NOT abuse this — at most one English callout per major section.
+
+A2 register. Concrete everyday vocabulary. No literary language, no metaphors. Ukrainian sentences max 15 words. Max 2 clauses. All cases allowed. Simple subordinate clauses only (який/що/коли). Full aspect pairs. No participles.
+
+CHECKLIST (re-read before writing each section):
+- [ ] Every narrative paragraph in Ukrainian?
+- [ ] Zero `> *English translation*` blockquotes after dialogues?
+- [ ] At most ONE English `:::info` callout per major section?
+- [ ] Metalanguage terms parenthetically translated on first use only (max 2 per section)?
+- [ ] Reading Practice / Читаємо українською block in EVERY major section?
+
 
 GRAMMAR RULES:
 - Max 15 words per Ukrainian sentence
@@ -562,18 +652,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (3/3).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] освіта (education)
+- [ ] навчання (studying, learning)
+- [ ] університет (university)
+- [ ] спеціальність (specialty, major)
+- [ ] професія (profession)
+- [ ] працювати (to work)
+- [ ] робота (work, job)
+- [ ] досвід (experience)
+- [ ] іспит (exam)
+- [ ] диплом (diploma, degree)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Плани на майбутнє (Plans for the Future) (~640 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

@@ -1,4 +1,4 @@
-<!-- version: 1.1.0 | updated: 2026-03-31 -->
+<!-- version: 1.2.0 | updated: 2026-04-12 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -11,6 +11,35 @@ Generate an `activities/checkpoint-dative.yaml` file for module **23: Контр
 
 ---
 
+## ⚠️ HARD COUNT TARGETS — READ TWICE
+
+These are the binding numerical contracts for THIS module. The audit will FAIL if you fall short.
+
+| Bucket | Min | Max | Notes |
+|---|---|---|---|
+| Total activities | 10 | 10+ | inline + workbook combined |
+| Inline (lesson tab) | 3 | 5 | one per `<!-- INJECT_ACTIVITY -->` marker, see below |
+| Workbook (Зошит tab) | 7 | 10 | extended practice |
+| Items per activity | 10 | — | each activity must have at least 10 items (unless its type cap is lower — see Activity Type Reference below) |
+
+**You MUST ship at least 3 inline activities AND at least 7 workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+
+**Type diversity is required.** The module (inline + workbook combined) MUST use at least **0** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level. (If `0` is `0`, the audit profile for this level does not enforce type diversity — but variety still produces a better lesson, so aim for 4+ types when the workbook allows it.)
+
+---
+
+## Allowed types for THIS level
+
+- **Inline (lesson) types:** quiz, true-false, fill-in, match-up, group-sort, classify, mark-the-words
+- **Inline priority (preferred):** fill-in, match-up, true-false
+- **Workbook types:** cloze, error-correction, fill-in, unjumble, translate, match-up, group-sort, odd-one-out, quiz, true-false, mark-the-words, observe, phrase-table
+- **Workbook priority (preferred):** error-correction, cloze, unjumble, translate, fill-in
+- **FORBIDDEN at this level:** anagram, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables, highlight-morphemes, grammar-identify
+
+Pick from the allowed list. Lean heavily on the priority lists. Do not use any forbidden type — the build will reject it.
+
+---
+
 ## Inline vs Workbook Split
 
 Activities have two placement categories:
@@ -19,7 +48,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Rule of thumb:** inline = 2-3 quick checks after key teaching points. Workbook = 4-8 deeper practice exercises covering the full topic.
+**Rule of thumb:** inline = 3–5 quick checks after key teaching points. Workbook = 7–10 deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
 
 ---
 
@@ -29,7 +58,7 @@ The writer placed these markers in the module content. Your inline activities mu
 
 - `<!-- INJECT_ACTIVITY: quiz-dative-recognition -->`
 - `<!-- INJECT_ACTIVITY: fill-in-dative-endings -->`
-- `<!-- INJECT_ACTIVITY: match-verbs-to-case -->`
+- `<!-- INJECT_ACTIVITY: match-up-dative-verbs -->`
 - `<!-- INJECT_ACTIVITY: error-correction-dative -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
@@ -85,194 +114,140 @@ required:
 ## Module Content (the prose the learner reads before exercises)
 
 <module_content>
-## Частина 1: Розпізнавання (Part 1: Recognition)
+## Частина 1: Розпізнавання
 
-У модулях 15–19 ми детально вивчали **давальний відмінок** (the dative case). Головна функція цього відмінка — показувати адресата або отримувача дії. Він відповідає на питання **кому?** (to whom?) та **чому?** (to what?). Ми розглянули різні форми слів та безособові конструкції. Цей модуль допоможе вам повторити та закріпити всі правила.
+> **Організатор:** Що подарувати Олексієві? *(What should we give to Oleksiy?)*
+> **Колега 1:** Книгу! *(A book!)*
+> **Організатор:** А Наталці? *(And to Natalka?)*
+> **Колега 2:** Шоколад! *(Chocolate!)*
+> **Організатор:** Новому колезі — чашку. *(To the new colleague — a cup.)*
+> **Колега 1:** А шефу — вино. *(And to the boss — wine.)*
 
-In this checkpoint, we consolidate your knowledge of the dative case. The dative case identifies the recipient of an action, the person experiencing a state, or the object of specific verbs.
+The office Secret Santa game revolves around matching people with gifts. When you talk about the recipient or the addressee of an action — the person who receives the book, the chocolate, or the wine — you are using the **давальний відмінок** *(dative case)*. The name of the case comes from the verb **давати** *(to give)*, which perfectly describes its primary function in the Ukrainian language. Whether you give a present, write an email, or tell a story, the person on the receiving end always takes the **давальний відмінок** *(dative case)*.
 
-Почнемо з найважливішого: особових займенників у давальному відмінку. Щоб вільно спілкуватися, ви повинні миттєво впізнавати ці маленькі слова: **мені** (to me), **тобі** (to you), **йому** (to him/it), **їй** (to her), **нам** (to us), **вам** (to you all/formal), та **їм** (to them). Дуже важливо не плутати їх із називним відмінком або знахідним відмінком. 
+To accurately identify the **давальний відмінок** *(dative case)* in a sentence, you must ask the questions **кому?** *(to whom?)* or **чому?** *(to what?)*. These questions separate the recipient of an action from other grammatical roles. A common challenge for learners is confusing the **давальний відмінок** *(dative case)* with the locative case, because many feminine nouns share the exact same **закінчення** *(ending (grammar))* in both cases. You can distinguish them by the question they answer and the presence of a preposition. The locative case answers **на/у кому? на/у чому?** *(on/in whom? on/in what?)* and is always accompanied by a preposition. The dative case usually functions without a preposition.
 
-* **Він бачив мене.** (He saw me.)
-* **Він дав мені книгу.** (He gave a book to me.)
+*   **Ми дали білочці горішки.** *(We gave the squirrel some nuts.)* — **кому?** *(to whom?)* — **давальний відмінок** *(dative case)*.
+*   **Руда шубка на білочці.** *(The red coat is on the squirrel.)* — **на кому?** *(on whom?)* — locative case.
+*   **Я допомагаю сестрі.** *(I help my sister.)* — **кому?** *(to whom?)* — **давальний відмінок** *(dative case)*.
 
-Notice the difference in the logical roles. The accusative case identifies the direct object of the action, while the dative case identifies the recipient.
+The **давальний відмінок** *(dative case)* is also fundamental for expressing physical or emotional states in impersonal constructions. When describing how someone feels, Ukrainian often uses a dative experiencer rather than a nominative active subject. A state happens to you, rather than you actively doing it. Compare the nominative subject sentence **Я замерзла.** *(I froze. - active verb)* with the impersonal dative state **Мені холодно.** *(I am cold [cold is happening to me]. - state)*. This structure is essential for expressing needs and impressions.
 
-Займенники у давальному відмінку також відіграють головну роль у безособових реченнях. У таких конструкціях немає активного суб'єкта, а є людина, яка відчуває певний стан.
+*   **Мені потрібно працювати.** *(I need to work.)*
+*   **Тобі холодно?** *(Are you cold?)*
+*   **Йому здається, що це помилка.** *(It seems to him that this is a mistake.)*
+*   **Вам потрібно зачекати.** *(You need to wait.)*
+*   **Нам не холодно.** *(We are not cold.)*
 
-* **Я замерзла.** (I am frozen.)
-* **Мені холодно.** (It is cold to me. / I am cold.)
+To form these sentences, you must match the nominative personal pronouns to their dative counterparts: **я** → **мені**, **ти** → **тобі**, **він/воно** → **йому**, **вона** → **їй**, **ми** → **нам**, **ви** → **вам**, **вони** → **їм**.
 
-Інші приклади станів:
-* **Тобі сумно?** (Are you sad?)
-* **Нам треба йти.** (We need to go.)
-* **Йому дуже тепло.** (He is very warm.)
+This same logic applies to the verb **подобатися** *(to be pleasing to, to like)*. Ukrainian uses a syntax inversion compared to English. The person who likes something is the *experiencer* in the **давальний відмінок** *(dative case)*, and the object being liked is the grammatical subject in the nominative case. The verb agrees with the object, not the person.
 
-Impersonal constructions describe a physical or emotional state without assigning direct action to a subject. The person experiencing the state must be in the dative case.
-
-Ще одна важлива конструкція — це дієслово **подобатися** (to be pleasing to / to like). В українській мові людина, якій щось подобається, стоїть у давальному відмінку.
-
-* **Студентові подобається мова.** (The student likes the language.)
-* **Дівчині подобаються квіти.** (The girl likes flowers.)
-* **Моїй мамі подобається ця кава.** (My mom likes this coffee.)
-* **Чи подобаються тобі нові фільми?** (Do you like new movies?)
-
-The verb "подобатися" agrees with the object that is liked, which is the subject in the nominative case. It does not agree with the person who likes it, because the experiencer is in the dative case.
+*   **Мені подобається новий планшет.** *(I like the new tablet. / The new tablet is pleasing to me.)*
+*   **Їй подобаються квіти.** *(She likes flowers. / The flowers are pleasing to her.)*
+*   **Йому не подобається ця кава.** *(He does not like this coffee.)*
+*   **Нам подобається Київ.** *(We like Kyiv.)*
 
 <!-- INJECT_ACTIVITY: quiz-dative-recognition -->
 
-## Частина 2: Вибір форми (Part 2: Choosing the Correct Form)
+## Частина 2: Вибір форми
 
-Для іменників чоловічого роду ми маємо дві правильні форми для **закінчення** (ending (grammar)): **-ові** та **-у**, або **-еві** / **-єві** та **-ю**. Обидві форми є абсолютно нормативними.
+When forming the **давальний відмінок** *(dative case)* for masculine and neuter nouns, Ukrainian offers unique flexibility. For masculine nouns, there are parallel forms: **-ові / -еві / -єві** and **-у / -ю**. Both are entirely correct, but the endings **-ові / -еві / -єві** are distinctively Ukrainian and add a natural, authentic rhythm to the language. When speaking about people, these longer endings are highly preferred. Neuter nouns take the endings **-у / -ю**.
 
-* **братові** або **брату** (to a brother)
-* **директорові** або **директору** (to a director)
-* **учителеві** або **учителю** (to a teacher)
+*   **батько** → **батькові / батьку** *(to the father)*
+*   **учитель** → **учителеві / учителю** *(to the teacher)*
+*   **Андрій** → **Андрієві / Андрію** *(to Andriy)*
+*   **село** → **селу** *(to the village)*
+*   **море** → **морю** *(to the sea)*
 
-Якщо ми використовуємо два слова чоловічого роду разом, працює правило уникнення одноманітності. Ми чергуємо ці закінчення, щоб слова звучали гарно.
+If you have two masculine nouns in a row, Ukrainians often mix the endings to avoid repetition, for example, **панові директору** *(to Mr. Director)* rather than using the same ending twice.
 
-* **панові директору** (to Mr. Director)
-* **другові Василю** (to friend Vasyl)
+For feminine nouns, the standard **закінчення** *(ending (grammar))* is **-і**. However, when the noun's stem ends in the consonants **г, к,** or **х**, a mandatory consonant **чергування** *(alternation (grammar))* occurs before the **-і** ending. The consonant **г** changes to **з'**, **к** changes to **ц'**, and **х** changes to **с'**. This phonetic shift is a hallmark of the Ukrainian language and must be memorized.
 
-Іменники середнього роду завжди мають закінчення **-у** або **-ю**.
-* **місту** (to the city)
-* **морю** (to the sea)
-* **обличчю** (to the face)
+*   **подруга** → **подрузі** *(to the friend)* — **г** becomes **з'**
+*   **ріка** → **ріці** *(to the river)* — **к** becomes **ц'**
+*   **муха** → **мусі** *(to the fly)* — **х** becomes **с'**
+*   **Ольга** → **Ользі** *(to Olha)*
+*   **аптека** → **аптеці** *(to the pharmacy)*
 
-Ukrainian uses these parallel masculine endings to avoid repetitive sounds, which adds a natural melody to the language.
+When you add adjectives or possessive pronouns to a noun, you must apply strict **узгодження** *(agreement (grammar))*. The modifier must match the noun's case, gender, and number. In the **давальний відмінок** *(dative case)*, masculine and neuter modifiers take the ending **-ому**, feminine modifiers take **-ій**, and all plural modifiers take **-им**.
 
-:::note
-The parallel endings **-ові**, **-еві** / **-єві** for masculine nouns are a unique and beautiful feature of the Ukrainian language. They make sentences flow better and sound more poetic.
-:::
+*   **моєму новому колезі** *(to my new colleague)* — masculine singular
+*   **твоєму великому місту** *(to your big city)* — neuter singular
+*   **моїй старшій сестрі** *(to my older sister)* — feminine singular
+*   **нашим добрим друзям** *(to our good friends)* — plural
 
-Для іменників жіночого роду твердої групи в однині типовим закінченням є **-і**. Але найважливіше правило тут — це **чергування** (alternation (grammar)) приголосних. Перед закінченням **-і** звуки **г, к, х** завжди змінюються на **з, ц, с**.
+Verb government—the case a verb dictates for its object—often differs between English and Ukrainian. English speakers frequently use direct objects where Ukrainian requires an indirect object in the **давальний відмінок** *(dative case)*. For instance, you see a mother (accusative case: **бачити маму**), but you help a mother (dative case: **допомагати мамі**). High-frequency verbs that always govern the dative case include: **давати** *(to give)*, **подарувати** *(to give as a gift)*, **допомагати** *(to help)*, **дякувати** *(to thank)*, and **радити** *(to advise)*.
 
-* **г** → **з**: **дорога** (road) → **назустріч дорозі** (towards the road).
-* **к** → **ц**: **рука** (hand) → **дати руці** (to give to the hand).
-* **х** → **с**: **муха** (fly) → **мусі** (to the fly).
+*   **Я дякую вчителю.** *(I thank the teacher.)*
+*   **Він радить братові.** *(He advises the brother.)*
 
-Іменники м'якої групи просто отримують закінчення **-і** або **-ї**.
-* **земля** (earth) → **землі** (to the earth)
-* **мрія** (dream) → **мрії** (to the dream)
+These rules come together in everyday communicative applications, such as a visit to the post office or a delivery service.
 
-This phonetic shift is mandatory and happens automatically whenever a hard velar consonant meets the soft vowel 'і'.
+> **Працівник:** Кому ви хочете надіслати пакунок? *(To whom do you want to send the package?)*
+> **Клієнт:** Своєму братові в Київ. *(To my brother in Kyiv.)*
+> **Працівник:** А цей лист? *(And this letter?)*
+> **Клієнт:** Моїй старій подрузі. *(To my old friend.)*
 
-Коли ми додаємо прикметники або присвійні займенники до іменника, ми повинні пам'ятати про **узгодження** (agreement (grammar)). Вони також повинні стояти в давальному відмінку. Прикметники чоловічого та середнього роду мають закінчення **-ому**. Прикметники жіночого роду мають закінчення **-ій**. Для множини всіх родів ми використовуємо закінчення **-им**.
-
-* **новому колезі** (to the new colleague)
-* **моєму брату** (to my brother)
-* **старій подрузі** (to the old friend)
-* **синьому морю** (to the blue sea)
-* **нашим новим друзям** (to our new friends)
-
-Це особливо важливо, коли ви приходите на пошту або користуєтеся службами доставки.
-
-* **Я хочу надіслати посилку моєму старому другові.** (I want to send a package to my old friend.)
-
-> **Працівник пошти:** Кому ви хочете надіслати цю посилку?
-> **Клієнт:** **Моєму старому другові**.
-> **Працівник пошти:** Добре. А цей лист **новій колезі**?
-> **Клієнт:** Так.
-
-Adjectives and possessives must always agree with the noun they modify in gender, number, and case.
-
-Подивімося, як давальний відмінок працює в реальному житті. Уявіть ситуацію в офісі напередодні свят. Колеги обговорюють подарунки для гри "Таємний Санта".
-
-> **Організатор:** Колеги, скоро свято! Що ми вирішили **подарувати** (to give as a gift) **Олексієві**? *(Colleagues, the holiday is soon! What did we decide to give to Oleksiy?)*
-> **Колега 1:** Я дам цю нову книгу **Наталці**. А **Олексієві** — смачну каву. *(I will give this new book to Natalka. And to Oleksiy — delicious coffee.)*
-> **Організатор:** Добре. А що **потрібно** (necessary, needed) купити **новому колезі**? *(Good. And what is necessary to buy for the new colleague?)*
-> **Колега 2:** **Новому колезі** — красиву чашку. *(To the new colleague — a beautiful mug.)*
-> **Організатор:** А **нашому шефу**? *(And to our boss?)*
-> **Колега 1:** Ми вирішили подякувати **нашому шефу** і подарувати **йому** гарне вино! *(We decided to thank our boss and give him good wine!)*
-
-У цьому діалозі всі виділені слова позначають отримувачів дії, тому вони стоять у давальному відмінку.
+In this dialogue, the customer demonstrates full noun phrase agreement working seamlessly in a natural scenario, matching possessives, adjectives, and nouns perfectly in the **давальний відмінок** *(dative case)*.
 
 <!-- INJECT_ACTIVITY: fill-in-dative-endings -->
+<!-- INJECT_ACTIVITY: match-up-dative-verbs -->
 
-## Частина 3: Продукування (Part 3: Production)
+## Частина 3: Продукування
 
-Деякі українські дієслова завжди вимагають після себе давального відмінка. Найпоширеніші з них — це **дякувати** (to thank) та **допомагати** (to help). 
+Building complete sentences with verbs governing the **давальний відмінок** *(dative case)* requires attention to natural word order. While Ukrainian word order is flexible, the most standard and clear structure is: Subject + Verb + Dative Recipient + Accusative Object. The recipient usually precedes the direct object.
 
-* **Я дякую вчителеві за урок.** (I thank the teacher for the lesson.)
-* **Вона завжди допомагає мамі вдома.** (She always helps mom at home.)
-* **Ми щиро дякуємо вам.** (We sincerely thank you.)
+*   **Я дарую своєму другові цікаву книгу.** *(I am giving my friend an interesting book.)*
+*   **Ми надіслали бабусі довгий лист.** *(We sent grandmother a long letter.)*
+*   **Вчитель дає студентам нове завдання.** *(The teacher gives the students a new task.)*
+*   **Вона радить моїй сестрі хороший фільм.** *(She recommends a good movie to my sister.)*
 
-Також сюди належать слова **подарувати** та **надіслати** (to send).
-* **Я дарую червоні квіти моїй сестрі.** (I gift red flowers to my sister.)
-* **Він надіслав довгий лист своєму другові.** (He sent a long letter to his friend.)
+When you produce complex sentences with the verb **подобатися** *(to be pleasing to, to like)*, you must integrate full noun phrases correctly. The verb must always agree in number—singular or plural—with the nominative subject (the thing being liked). Meanwhile, the experiencer phrase—the person who likes it, including any adjectives or possessive pronouns—remains entirely in the **давальний відмінок** *(dative case)*.
 
-In English, verbs like "to thank" and "to help" take a direct object in the accusative case. In Ukrainian, these actions are directed toward a recipient, so they strictly require the dative case.
+*   **Моєму старшому братові подобаються нові автомобілі.** *(My older brother likes new cars.)* — **автомобілі** is plural, so the verb is **подобаються**.
+*   **Цій маленькій дівчинці подобається шоколад.** *(This little girl likes chocolate.)* — **шоколад** is singular, so the verb is **подобається**.
+*   **Нашим іноземним гостям подобається борщ.** *(Our foreign guests like borsch.)*
 
-Давальний відмінок також використовується для того, щоб сказати про свій вік. Конструкція складається з людини у давальному відмінку, числа, та слова рік, роки або років.
+The **давальний відмінок** *(dative case)* is also exclusively used to express age. Ukrainian does not use the verb "to be" to say someone is a certain age. Instead, it uses the dative case for the person experiencing the age, combined with the number of years. This applies to both simple pronouns and expanded noun phrases.
 
-* **Моєму синові три роки.** (My son is three years old.)
-* **Наталії двадцять один рік.** (Nataliya is twenty-one years old.)
-* **Скільки років вашому дідусеві?** (How old is your grandfather?)
-* **Моїй молодшій сестрі тільки вісім років.** (My younger sister is only eight years old.)
+*   **Скільки років вашій сестрі?** *(How old is your sister?)*
+*   **Моєму синові десять років.** *(My son is ten years old.)*
+*   **Моєму найкращому другові двадцять один рік.** *(My best friend is twenty-one years old.)*
+*   **Скільки тобі років?** *(How old are you?)*
+*   **Мені тридцять років.** *(I am thirty years old.)*
 
-Age is expressed as a state that happens to someone, similar to impersonal constructions. Therefore, the person whose age is being stated takes the dative case.
+You will frequently use the **давальний відмінок** *(dative case)* when writing short addresses, formal greetings in letters, or email salutations. A full dative noun phrase—combining an adjective, a title, and a name—is the standard way to address someone in writing. Be explicitly careful not to use the genitive case for dedications or monuments, a mistake sometimes made through direct translation from other languages. A monument is always dedicated *to* someone.
 
-Побудова повних і правильних іменникових фраз — це ознака гарного володіння мовою. Ви повинні вміти узгоджувати всі частини фрази.
+*   **Шановному пану директору** *(To the respected Mr. Director)*
+*   **Дорогій Олені** *(To dear Olena)*
+*   **Це пам'ятник Тарасові Шевченкові.** *(This is a monument to Taras Shevchenko.)*
+*   **Це подарунок моїй мамі.** *(This is a gift for my mom.)*
 
-* **Я пишу лист моїй найкращій подрузі.** (I am writing a letter to my best friend.)
+## Огляд помилок та порівняння відмінків
 
-Тут слово **подрузі** має закінчення **-і** з чергуванням. Займенник **моїй** та прикметник **найкращій** мають жіноче закінчення **-ій**.
+Even advanced learners occasionally stumble with the **давальний відмінок** *(dative case)*. One of the most common errors is mixing adjective endings, such as incorrectly saying **моєму сестрі** instead of the grammatically correct **моїй сестрі**. Another frequent mistake is forgetting the **г/к/х** consonant **чергування** *(alternation (grammar))* in feminine nouns. You must never write or say **подругі**; it must always be **подрузі**. Finally, beware of the direct translation trap with the verb **дякувати** *(to thank)*. Because "thank you" takes a direct object in English, learners often say **Дякую вас** (accusative). This is incorrect. You must use the dative case: **Дякую вам**.
 
-* **Ми надіслали подарунок нашому старому вчителеві.** (We sent a gift to our old teacher.)
+To consolidate your knowledge, review this summary comparison chart formatting the nominative, genitive, and dative endings for full phrases. Notice how the modifiers and nouns shift together.
 
-Тут слово **вчителеві** має закінчення **-еві**. Займенник **нашому** та прикметник **старому** мають чоловіче закінчення **-ому**.
-
-Коли ви підписуєте конверт, вітальну листівку або подарунок, ви використовуєте повні фрази в давальному відмінку. 
-
-* **Любій мамі** (To dear mom)
-* **Шановному панові Івану** (To respected Mr. Ivan)
-* **Дорогому другові** (To a dear friend)
-
-Addressing an envelope correctly ensures the package reaches the intended recipient, which is the core meaning of the dative case.
-
-<!-- INJECT_ACTIVITY: match-verbs-to-case -->
+| Відмінок *(Case)* | Чоловічий рід *(Masculine)* | Жіночий рід *(Feminine)* |
+| :--- | :--- | :--- |
+| **Називний** *(Nom)* | мій новий дім | моя старша сестра |
+| **Родовий** *(Gen)* | мого нового дому | моєї старшої сестри |
+| **Давальний** *(Dat)* | моєму новому дому / домові | моїй старшій сестрі |
 
 <!-- INJECT_ACTIVITY: error-correction-dative -->
 
-## Огляд помилок та порівняння відмінків (Error Review and Case Comparison)
-
-Тепер розглянемо типові помилки, яких припускаються студенти, та навчимося їх уникати. Одна з найчастіших помилок — це використання знахідного відмінка після дієслова **дякувати**. Правильно казати **Дякую вам**, а не "Дякую вас". Інша поширена проблема — забування про чергування приголосних у жіночому роді: правильно **моїй подрузі**, а не "моїй подругі". Крім того, студенти часто плутають давальний відмінок із місцевим через однакові закінчення.
-
-* **в книзі** (in the book) — місцевий відмінок (Locative).
-* **дати книзі** (to give to the book) — давальний відмінок (Dative).
-
-For successful mastery, review this comparison chart and complete the self-assessment list. Pay attention to the questions each case answers.
-
-| Відмінок (Case) | Питання | Приклад іменника | Приклад прикметника | Займенник |
-| :--- | :--- | :--- | :--- | :--- |
-| **Називний** (Nom.) | Хто? Що? | студент, сестра | новий, стара | він, вона |
-| **Родовий** (Gen.) | Кого? Чого? | студента, сестри | нового, старої | його, її |
-| **Давальний** (Dat.) | Кому? Чому? | студенту, сестрі | новому, старій | йому, їй |
-
-**Список для самоперевірки (Self-check list):**
-1. Can I say "I am 25 years old" in Ukrainian? (**Мені двадцять п'ять років.**)
-2. Do I remember to change **г** to **з** in **подрузі**?
-3. Do I use **дякую** with the dative case? (**Дякую вам**, not "Дякую вас")
-4. Can I correctly use **мені подобається**? (**Мені подобається музика.**)
-
-Якщо ви відповіли "Так" на всі запитання — ви готові рухатися далі!
-
-:::caution
-Never translate English "I am cold" literally into Ukrainian as "Я холодний" (which means your body is physically cold to the touch). Always use the dative case: **Мені холодно** (It is cold to me).
-:::
+Before moving on, review this self-assessment checklist to ensure your mastery:
+*   Чи можете ви утворити давальний відмінок від свого імені? *(Can you form the dative case from your name?)*
+*   Чи знаєте ви, як сказати про свій вік та вік друзів? *(Do you know how to talk about your age and the age of friends?)*
+*   Чи пам'ятаєте ви три дієслова, які завжди вимагають давального відмінка? *(Do you remember three verbs that always require the dative case?)*
 
 ## Підсумок
 
-Ця контрольна робота охоплює всі базові функції давального відмінка. Ви повторили, як використовувати цей відмінок для позначення адресата або отримувача дії. Ви також пригадали безособові конструкції для вираження стану та віку.
+The **давальний відмінок** *(dative case)* is a cornerstone of conversational Ukrainian, bridging the gap between simply describing objects and interacting with people. It is the grammatical tool that allows you to offer gifts, give advice, express your age, and describe your feelings or needs. By mastering the core questions **кому?** and **чому?**, you can accurately identify the recipient of any action. 
 
-Особливу увагу ми приділили правилам побудови форм: чергуванню приголосних, паралельним закінченням для чоловічого роду та узгодженню прикметників. Розуміння того, що такі дієслова як **дякувати** та **допомагати** завжди вимагають давального відмінка, допоможе вам звучати природно та уникати поширених помилок.
-
-Продовжуйте практикувати ці форми у щоденному спілкуванні, звертайте увагу на те, кому ви адресуєте свої дії, і давальний відмінок стане для вас легким та звичним інструментом!
-
-:::tip
-Always ask "кому?" (to whom?) or "чому?" (to what?) when constructing a sentence to instantly recognize if you need the dative case.
-:::
-
+You have now reviewed the essential **закінчення** *(ending (grammar))* for all genders, including the distinctly Ukrainian parallel masculine forms like **-ові** and **-еві**, and the vital consonant alternations in feminine nouns. You have practiced strict **узгодження** *(agreement (grammar))* across adjectives, possessive pronouns, and nouns. Most importantly, you understand the critical verb government for verbs like **допомагати** *(to help)*, **дякувати** *(to thank)*, and **подобатися** *(to be pleasing to, to like)*, breaking free from English syntax patterns. Recognizing these structures ensures your Ukrainian sounds natural, polite, and deeply authentic as you prepare to integrate these skills into more complex dialogues in the upcoming modules.
 </module_content>
 
 ---
@@ -286,48 +261,68 @@ version: "1.0"
 module: checkpoint-dative
 level: a2
 
+# NOTE — these are SHAPE examples. The real targets are at the top of this prompt
+# (10 total / 3–5 inline / 7–10 workbook,
+# 10+ items per activity). The shapes below are TRUNCATED for readability;
+# YOUR output MUST hit those minimums.
+
 inline:
   - id: marker-id-here        # MUST match an <!-- INJECT_ACTIVITY: ... --> marker
     type: quiz                 # activity type
     instruction: "Оберіть правильний варіант"
-    items:
+    items:                     # ← real output: ≥ 10 items
       - question: "_____ стіл"
-        options: ["мій", "моя", "моє"]
+        options: ["мій", "моя", "моє", "мої"]
         correct: 0             # 0-based index
+      - question: "Це ____ книга."
+        options: ["мій", "моя", "моє", "мої"]
+        correct: 1
+      # ... add at least 10 items total — never stop at 1-2
 
   - id: another-marker-id
     type: fill-in
     instruction: "Вставте правильне слово"
-    items:
+    items:                     # ← real output: ≥ 10 items
       - sentence: "Це ____ кімната."
         answer: "моя"
         options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ вікно."
+        answer: "моє"
+        options: ["мій", "моя", "моє"]
+      # ... ≥ 10 items total
 
 workbook:
-  - type: match-up
+  - id: match-up-vocab
+    type: match-up
     instruction: "З'єднайте пари"
-    pairs:
+    pairs:                     # ← real output: ≥ 10 pairs
       - left: "стіл"
         right: "він"
       - left: "книга"
         right: "вона"
       - left: "вікно"
         right: "воно"
+      # ... ≥ 10 pairs total
 
-  - type: group-sort
+  - id: group-sort-gender
+    type: group-sort
     instruction: "Розподіліть слова за категоріями"
     groups:
-      - label: "Category A"
-        items: ["word1", "word2"]
-      - label: "Category B"
-        items: ["word3", "word4"]
+      - label: "Чоловічий рід"
+        items: ["стіл", "олівець", "будинок"]   # ≥ 3 items per group
+      - label: "Жіночий рід"
+        items: ["книга", "ручка", "школа"]
+      - label: "Середній рід"
+        items: ["вікно", "море", "молоко"]
 
-  - type: true-false
+  - id: true-false-grammar
+    type: true-false
     instruction: "Правда чи ні?"
-    items:
-      - statement: "Statement here"
-        correct: true
-        explanation: "Why it's true"
+    items:                     # ← real output: ≥ 10 items
+      - statement: "«Книга» — це чоловічий рід."
+        correct: false
+        explanation: "Книга закінчується на -а, отже жіночий рід."
+      # ... ≥ 10 items total
 
   - type: error-correction
     instruction: "Виправте помилку"
@@ -398,7 +393,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -487,10 +482,15 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 ## Quality Rules
 
-**ITEM COUNT MINIMUMS (non-negotiable):**
-- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
-- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
-- If you can't think of enough items, add more examples from the module's vocabulary and content.
+**ACTIVITY COUNT MINIMUMS (non-negotiable, audit-enforced):**
+- **Total: 10 activities.** Inline: 3–5. Workbook: 7–10. The audit gate FAILS the module if you ship fewer.
+- **Type diversity: workbook MUST cover ≥5 distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
+- **Match the inline markers exactly.** Every `<!-- INJECT_ACTIVITY: id -->` marker in the prose needs a matching inline activity with that exact id. Skipping markers means the lesson tab is broken.
+
+**ITEM COUNT MINIMUMS (non-negotiable, per-activity):**
+- **Default minimum: 10 items per activity.** Quiz, fill-in, match-up, true-false, anagram, error-correction, translate, cloze, mark-the-words, divide-words, count-syllables, odd-one-out, group-sort categories: all ≥ 10.
+- **Lower minimums for specific types only:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items, essay-response/critical-analysis = 1 prompt.
+- If you can't think of enough items, add more examples from the module's vocabulary and content. NEVER ship a 1-item or 2-item activity unless its type cap explicitly allows it.
 - **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
 - **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
@@ -597,6 +597,27 @@ IMPORTANT: After using tools, output your COMPLETE module content as plain text.
 1. Run `verify_words` on all Ukrainian words in your exercises — every word must exist in VESUM
 2. Run `query_cefr_level` on any word you're unsure about — it must be a2-appropriate
 3. For fill-in answers and distractors, verify the exact form (case, number, gender) with `verify_lemma`
+
+---
+
+## ⚠️ MANDATORY FINAL CHECKLIST — verify before emitting YAML
+
+Walk through this checklist explicitly before you start emitting. If ANY box is unchecked, fix it FIRST.
+
+- [ ] My output has **at least 3** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
+- [ ] My output has **at least 7** workbook activities.
+- [ ] **Total ≥ 10.**
+- [ ] **Every** activity has **at least 10** items, pairs, or statements (except types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3, essay-response=1).
+- [ ] The module (inline + workbook combined) uses **at least 0 distinct activity types** (or 4+ when 0 = 0 and the workbook size allows it). I am NOT shipping a wall of quizzes.
+- [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
+- [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
+- [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+- [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+- [ ] My inline count is between 3 and 5. I did NOT create more injection markers than 5.
+- [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
+- [ ] At B1+, all instructions are in Ukrainian (no English fallback).
+
+If you cannot tick all of these, REGENERATE the activities BEFORE outputting. Shipping under-spec means the build rejects you and the heal loop has to redo your work — wasting compute.
 
 ---
 

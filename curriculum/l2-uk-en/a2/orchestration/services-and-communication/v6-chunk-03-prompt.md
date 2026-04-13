@@ -1,24 +1,22 @@
-# Section-by-Section Generation — Section 3/5
+# Section-by-Section Generation — Section 3/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 22: На пошті (A2, A2.3 [Dative Case])
-**Section to write:** Просити, дякувати, допомагати: Давальний у сфері послуг (~600 words total)
+**Section to write:** Просити, дякувати, допомагати: Давальний у сфері послуг (~600 words)
 **Word target for this section:** 600 words (aim for 660 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Просити, дякувати, допомагати: Давальний у сфері послуг (~600 words total)
-- P1 (~100 words): Requesting help and instructions — using the verb "допомагати" (to help) with the Dative case, focusing on the phrase "Допоможіть мені заповнити цей бланк" and "Покажіть мені, де писати адресу".
-- P2 (~100 words): The verb "дякувати" (to thank) — emphasizing that Ukrainian uses the Dative case (дякувати кому?), correcting the common error of using the Accusative. Examples: "Дякую вам", "Дякую листоноші за лист".
-- P3 (~100 words): Giving advice and suggestions — introducing the verb "радити" (to advise/suggest) with Dative: "Раджу вам надіслати це авіапоштою" or "Раджу тобі перевірити індекс".
-- P4 (~100 words): Imperatives in service interactions — teaching common polite commands that govern the Dative case, such as "Скажіть мені", "Поясніть нам", and "Принесіть їй".
-- P5 (~100 words): Natural scenario: Asking a neighbor for assistance — a short narrative/dialogue about asking a neighbor to help wrap a gift for a grandmother ("Це подарунок моїй бабусі. Допоможи мені загорнути його").
-- P6 (~100 words): Dative of pronouns review — a quick reference table for Dative pronouns (мені, тобі, йому, їй, нам, вам, їм) used in service contexts.
-- <!-- INJECT_ACTIVITY: match-up-service-requests --> [match-up, Match service requests to appropriate responses (Допоможіть мені → Звичайно, що вам потрібно?), 8 items]
-- <!-- INJECT_ACTIVITY: group-sort-dative-functions --> [group-sort, Sort phrases into categories — requesting (прохання), thanking (подяка), giving (давання), 8 items]
+## Просити, дякувати, допомагати: Давальний у сфері послуг (~600 words)
+- P1 (~150 words): Requesting help using Dative case pronouns and nouns. Explain that verbs like допомагати (to help), показувати (to show), and пояснювати (to explain) require the Dative for the person receiving the action. Examples: "Допоможіть мені заповнити бланк," "Покажіть йому, як це зробити," "Поясніть нам правила."
+- P2 (~150 words): Thanking and giving advice. Emphasize strongly that the verb "дякувати" strictly governs the Dative case in Ukrainian (дякую вам), directly contrasting with Russian/English object patterns. Example: "Дякую листоноші за допомогу." Giving advice: "Раджу вам надіслати бандероллю" (highlighting the Instrumental case for means: поштою, бандероллю).
+- <!-- INJECT_ACTIVITY: group-sort-service-phrases --> [group-sort, Sort phrases into categories — requesting (прохання), thanking (подяка), giving (давання), 8 items]
+- P3 (~150 words): Extended scenario — Asking a neighbor or friend to help send something. Explaining who the item is for using the Dative: "Це подарунок моїй бабусі. Допоможи мені загорнути."
+- P4 (~150 words): Review of imperative + dative. Connect imperative forms learned previously with Dative targets to build natural service interactions: "дай мені" (give me), "покажи нам" (show us), "скажіть їй" (tell her).
+- <!-- INJECT_ACTIVITY: match-up-requests-responses --> [match-up, Match service requests to appropriate responses (Допоможіть мені → Звичайно, що вам потрібно?), 8 items]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -26,7 +24,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-postal worker to give you an envelope, you say «дайте мені». The pronoun «я» *(I)* changes entirely to «мені» *(to me)* in the Dative case. Other common examples include «дати **листоноші**» *(to give to the mail carrier)* or «продати **клієнту**» *(to sell to the customer)*. The action is always directed toward a specific recipient. Тепер давайте уявимо іншу ситуацію. Ви хочете надіслати велику і важку річ родичам. > — **Клієнт:** Добрий день! Я хочу надіслати цю **посилку** *(parcel)* моєму **братові** *(to my brother)*. > — **Оператор:** Добрий день! Що знаходиться всередині? Це важливо знати. > — **Клієнт:** Там старі книги, зошити та теплий зимовий одяг. > — **Оператор:** Добре. Кому саме ви відправляєте посилку? У яке місто? > — **Клієнт:** Я відправляю її братові у місто Львів. > — **Оператор:** Будь ласка, заповніть цей **бланк** *(form)*. Напишіть адресу та номер телефону. > — **Клієнт:** Допоможіть мені, будь ласка. Де треба писати номер телефону одержувача? > — **Оператор:** Пишіть номер телефону ось тут, унизу спеціального бланка. У цій ситуації клієнт чітко пояснює, кому він надсилає свої речі. How do we correctly form the Dative case for nouns? For masculine nouns denoting people, the most common and natural endings are **-ові** and **-еві** (or **-єві**). For example, the word «брат» *(brother)* becomes **братові** *(to the brother)*. The word «друг» *(friend)* becomes **другові**. For feminine nouns, the typical and regular ending is **-і**. The word «сестра» *(sister)* becomes **сестрі** *(to the sister)*. The word «мама» *(mother)* becomes **мамі**. Note that consonant mutation frequently occurs in feminine nouns before this ending. For instance, «подруга» *(female friend)* becomes **подрузі**. These specific endings clearly show who is receiving the physical item or the result of the action. They are essential for clear communication at the post office. На пошті ми часто говоримо про наші конкретні плани та наміри. Для цього ми найчастіше використовуємо просту конструкцію «Я хочу» плюс дієслово. Наприклад: «Я хочу **надіслати** важливий лист» або «Я хочу **забрати** важку посилку». Якщо ми зовсім не знаємо, де щось зробити, ми запитуємо «Де можна» плюс дієслово. Ви можете підійти до вікна і запитати оператора: «Де можна надіслати гарну **листівку** *(postcard)*?». Або ви можете запитати на вулиці: «Де можна швидко купити марку?». Ці фрази дуже допомагають отримати інформацію. Дієслова у цих фразах завжди стоять у формі інфінітива. Вони показують результат тієї дії, яку ви плануєте зробити. Коли ми надсилаємо лист або невелику бандероль, ми завжди маємо писати адресу. На кожному конверті обов'язково є два важливі поля для заповнення. Перше поле — це **«Кому»** *(To whom / Recipient)*. Тут ми завжди використовуємо давальний відмінок. Друге поле — це **«Від кого»** *(From whom / Sender)*. Тут ми завжди використовуємо родовий відмінок (`родовий відмінок`). Від того, наскільки правильно написана адреса, залежить швидка доставка. Спочатку ви пишете: «Від кого: від Івана Петренка». Потім ви пишете внизу: «Кому: Оксані Коваленко». Далі ви уважно пишете місто, вулицю, номер будинку, номер квартири та **індекс** *(postal code)*. <!-- INJECT_ACTIVITY: fill-in, Complete post office dialogue lines with correct dative forms (Надішліть цю посилку ___), 8 items -->
+is the question "where can I?". When you do not know where to go, you can always ask the worker. For example, you say "Where can I send a postcard?". After this phrase, we also use a perfective verb.* :::info **Grammar box** Use perfective aspect verbs like **надіслати** (to send mail) and **відправити** (to dispatch a parcel) for single, complete actions at the post office. ::: Іноді нам потрібно відправити більші речі, наприклад, книги або подарунки. Для цього ми використовуємо бандеролі або посилки. Процес відправлення трохи складніший, бо треба заповнити спеціальні документи. > *Sometimes we need to dispatch larger things, for example, books or gifts. For this, we use small parcels or packages. The dispatching process is a bit more complicated because you have to fill out special documents.* > — **Відправник:** Добрий день. Допоможіть мені, будь ласка. Це бандероль для сестри в Канаду. *(Good day. Help me, please. This is a small parcel for my sister in Canada.)* > — **Працівник пошти:** Добре. Що всередині? *(Okay. What is inside?)* > — **Відправник:** Там дві українські книги. Скільки коштує відправити це до Торонто? *(There are two Ukrainian books there. How much does it cost to dispatch this to Toronto?)* > — **Працівник пошти:** Це коштує п'ятсот гривень. Але спочатку заповніть цей бланк. *(This costs five hundred hryvnias. But first, fill out this form.)* > — **Відправник:** Підкажіть мені, де писати мою адресу? *(Tell me, where should I write my address?)* > — **Працівник пошти:** Ось тут. Пам'ятайте: кому — це одержувач, а від кого — це відправник. *(Right here. Remember: "to whom" is the recipient, and "from whom" is the sender.)* > — **Відправник:** Дякую. А коли сестра зможе отримати цю бандероль? *(Thank you. And when will my sister be able to receive this small parcel?)* > — **Працівник пошти:** Приблизно через три тижні. *(In about three weeks.)* In the second dialogue, the customer uses polite request forms that naturally govern the Dative case. When you ask a service worker for assistance, you are asking them to direct their action *to* you. This is why you hear phrases like **допоможіть мені** (help me) and **підкажіть мені** (tell me). The pronoun **мені** is the Dative form of «я», functioning as the indirect object. Давальний відмінок часто звучить у сфері послуг. Ви даєте речі працівнику, а він дає квитанцію вам. Тому ми кажемо «дайте мені» або «покажіть йому». Дієслово «дякувати» також завжди вимагає давального відмінка. Ми кажемо «дякую вам» або «дякую листоноші». > *The Dative case often sounds in the service sector. You give things to the worker, and he gives a receipt to you. Therefore, we say "give me" or "show him". The verb "to thank" also always requires the Dative case. We say "thank you" or "thank the mail carrier".* The postal form also uses Dative question words. The field marked **Кому** (To whom) requires the recipient's details in the Dative case. We will explore how to change names into this case in the next section. <!-- INJECT_ACTIVITY: fill-in-dialogue-dative -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -508,7 +506,74 @@ This vocabulary is essential for A1 checkpoint dialogues.
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -527,18 +592,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] пошта (post office, mail)
+- [ ] лист (letter)
+- [ ] конверт (envelope)
+- [ ] марка (stamp)
+- [ ] посилка (parcel, package)
+- [ ] адреса (address)
+- [ ] надіслати (to send)
+- [ ] отримати (to receive)
+- [ ] відправити (to send, to dispatch)
+- [ ] листоноша (mail carrier)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Просити, дякувати, допомагати: Давальний у сфері послуг (~600 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

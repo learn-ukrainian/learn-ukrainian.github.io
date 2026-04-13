@@ -1,31 +1,34 @@
-## Мені подобається: Давальний відмінок досвідника (The Experiencer Dative with подобатися)
+## Мені подобається: Давальний відмінок досвідника (The Experiencer Dative with подобатися) (~550 words)
 
-In English, when you say "I like the book," the word "I" is the grammatical subject performing the action. The book is simply the direct object receiving your attention. In Ukrainian, expressing this feeling requires a completely different perspective. The verb **подобатися** translates closer to "to be pleasing to," which completely reverses the grammatical roles. The person who experiences the feeling is no longer the subject; instead, they are the recipient of the pleasure, placed in the Dative case. The object you like becomes the grammatical subject in the Nominative case, and it controls the verb. When you say that you like a book, you are literally saying "The book is pleasing to me." This structure is called the Experiencer Dative, and it is the most natural, authentic way to express personal preferences in the Ukrainian language.
+One of the most common ways to express that you like something in Ukrainian is using the verb **подобатися** (to be pleasing to). However, the sentence structure is completely reversed compared to English. In English, you say "I like summer," where "I" is the subject doing the action. In Ukrainian, the logic is closer to "Summer is pleasing to me." The person who experiences the feeling must be in the Dative case. Meanwhile, the thing being liked is the actual grammatical subject of the sentence and takes the Nominative case.
 
-Моїй сестрі дуже подобається цей новий ресторан у центрі міста. Мені також подобається їхня смачна піца. Але моєму братові більше подобаються традиційні українські страви. Нам усім подобаються свіжі десерти, які вони готують щодня. Важливо розуміти, що закінчення дієслова завжди залежить від предмета.
+Моїй сестрі дуже подобається нова школа. Мені подобається тепле літо і холодна зима. Тобі подобається ця українська пісня? Нашому другові не подобається працювати ввечері.
 
-> *My sister really likes this new restaurant in the city center. I also like their delicious pizza. But my brother likes traditional Ukrainian dishes more. We all like the fresh desserts that they prepare every day. It is important to understand that the verb ending always depends on the object.*
+> *My sister really likes the new school. I like warm summer and cold winter. Do you like this Ukrainian song? Our friend does not like working in the evening.*
 
-Because the thing you like is the actual subject of the sentence, the verb **подобатися** only has two forms in the present tense: **подобається** for singular subjects and **подобаються** for plural subjects. The verb never changes based on who is experiencing the feeling. Whether it is you, your friends, or your parents who like the restaurant, the verb remains exactly the same. To personalize the experience and state who is feeling the pleasure, you simply change the pronoun to its Dative form.
+Because the thing you like is the grammatical subject of the sentence, the verb **подобатися** must agree with it, not with the person. In the present tense, you will mostly use two forms: the singular **подобається** and the plural **подобаються**. If you like one thing or an action, use the singular form. If you like multiple things, use the plural form. The Dative pronoun or noun at the beginning of the sentence does not change the verb ending at all.
 
 :::info
-**The Dative Experiencer Pronouns**
-To state who is experiencing the pleasure, you must use the corresponding Dative pronoun:
-- **мені** means "to me" (I like)
-- **тобі** means "to you" (you like)
-- **йому** means "to him" (he likes)
-- **їй** means "to her" (she likes)
-- **нам** means "to us" (we like)
-- **вам** means "to you all" (you all like)
-- **їм** means "to them" (they like)
+**Grammar box** — Think of подобається as "it appeals" and подобаються as "they appeal." This mental translation helps you remember why the verb changes when the object is plural.
 :::
 
-У дитинстві мені дуже подобалася ця стара казка. Моєму другові подобався цікавий фільм про космос. Нашій мамі подобалося шоколадне морозиво. У минулому часі дієслово узгоджується з предметом, а не з людиною. Тому ми використовуємо різні закінчення для кожного роду. Нам завжди подобалися довгі літні канікули.
+Мені подобається ця цікава книжка. Тобі подобаються ці нові фільми. Їй подобається велике місто, але йому подобаються маленькі села. Нам дуже подобається читати і писати українською мовою. Їм не подобаються ці старі фотографії.
 
-> *In childhood, I really liked this old fairy tale. My friend liked an interesting film about space. Our mom liked chocolate ice cream. In the past tense, the verb agrees with the object, and not with the person. Therefore, we use different endings for each gender. We always liked long summer vacations.*
+> *I like this interesting book. You like these new movies. She likes the big city, but he likes small villages. We really like reading and writing in the Ukrainian language. They do not like these old photos.*
 
-Тобі не подобається ця нова пісня? Мені дуже подобається читати українські тексти, але мені не подобається робити граматичні вправи. Якщо дія є предметом, ми використовуємо дієслово в однині та додаємо інфінітив. Тобі подобається вивчати нову мову щодня? Що вам найбільше подобається в Україні? Багатьом іноземцям дуже подобається наша сучасна культура.
+This reversed grammatical logic continues when you speak in the past tense. Since the verb agrees with the Nominative subject, it must take the gender and number of that specific noun. The past tense forms are подобався for masculine subjects and подобалася for feminine subjects. You also use подобалося for neuter subjects and подобалися for plural subjects. Once again, it does not matter who is doing the liking; it only matters what object or person is being liked.
 
-> *Do you not like this new song? I really like reading Ukrainian texts, but I do not like doing grammar exercises. If an action is the object, we use the verb in the singular and add an infinitive. Do you like studying a new language every day? What do you like most of all in Ukraine? Many foreigners really like our modern culture.*
+У дитинстві мені подобалася ця народна казка. Моєму братові дуже подобався цей старий фільм. Нам подобалося жити біля великого лісу. Їм подобалися ті смачні яблука з нашого саду. Тобі подобався той високий хлопець?
 
-<!-- INJECT_ACTIVITY: match-up-like-syntax -->
+> *In childhood, I liked this folk tale. My brother really liked this old movie. We liked living near the big forest. They liked those delicious apples from our garden. Did you like that tall guy?*
+
+When you want to ask someone about their preferences, you must choose your question words carefully. Put the question word in the Nominative case if you are asking about the object being liked, or use the Dative case if you are asking about the person who feels the liking. Use the word «що» (what) or «хто» (who) for the grammatical subject, and «кому» (to whom) for the experiencer.
+
+> — **Анна:** Що тобі подобається робити на вихідних? *(What do you like doing on the weekends?)*
+> — **Марко:** Мені дуже подобається спати і читати. *(I really like sleeping and reading.)*
+> — **Анна:** Чи подобається їм Київ? *(Do they like Kyiv?)*
+> — **Марко:** Так, їм подобається це місто. *(Yes, they like this city.)*
+> — **Анна:** Кому подобається ця гучна музика? *(Who likes this loud music?)*
+> — **Марко:** Вона подобається моєму сусідові! *(My neighbor likes it!)*
+
+<!-- INJECT_ACTIVITY: match-up, Match подобатися sentences to their English equivalents (reversed subject mapping), 8 items -->

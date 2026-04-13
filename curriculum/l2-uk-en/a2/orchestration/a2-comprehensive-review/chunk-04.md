@@ -1,19 +1,30 @@
-## Складне речення: з'єднуємо думки
+## Складне речення: з'єднуємо думки (~400 words total)
 
-На рівні А2 ми вчимося будувати складні речення. At the A2 level, we learn to build complex sentences. Це наш міст до рівня В1. This is our bridge to the B1 level. Головні помічники для цього — **сполучники**. The main helpers for this are **conjunctions**. Найчастіше ми використовуємо «**що**». Most often we use "**that**". Наприклад, «я знаю, **що** ти тут». For example, "I know **that** you are here". Інший важливий сполучник — «**тому що**». Another important conjunction is "**because**". Він пояснює причину. It explains the reason. Наприклад, «я вчу українську, **тому що** люблю Україну». For example, "I study Ukrainian **because** I love Ukraine". Перед цими сполучниками ми завжди ставимо кому. Before these conjunctions, we always put a comma. 
+Ми вже знаємо багато слів. Тепер ми вчимося з’єднувати їх у складні думки. Складне **речення** (sentence) допомагає нам пояснити причину або деталі. Найчастіше ми використовуємо **сполучник** (conjunction) «що» або «тому що». Це базовий рівень для переходу на B1. Кожне таке речення містить **займенник** (pronoun) або **прикметник** (adjective). Ми кажемо: «Я знаю, що українська мова гарна». Або: «Я вчуся, тому що хочу розуміти друзів».
 
-В українській мові є різні стилі спілкування. In the Ukrainian language, there are different styles of communication. У розмові з друзями ми часто кажемо «**бо**». In conversation with friends, we often say "**because/for**". Це коротке і зручне слово. This is a short and convenient word. Наприклад: «Я не прийшов, **бо** захворів». For example: "I didn't come **because** I got sick". Сполучник «**тому що**» є нейтральним. The conjunction "**because**" is neutral. В офіційних текстах ми використовуємо «**через те що**». In official texts, we use "**due to the fact that**". Наприклад: «Рейс скасували **через те що** почалася буря». For example: "The flight was canceled **due to the fact that** a storm started". Вибір залежить від ситуації. The choice depends on the situation.
+> *We already know many words. Now we are learning to connect them into complex thoughts. A complex sentence helps us explain reasons or details. Most often, we use the conjunction "shcho" (that) or "tomu shcho" (because). This is the basic level for moving to B1. Every such sentence contains a pronoun or an adjective. We say: "I know that the Ukrainian language is beautiful." Or: "I am studying because I want to understand my friends."*
 
-Для умови ми беремо сполучник «**якщо**». For a condition, we take the conjunction "**if**". Він показує залежність однієї дії від іншої. It shows the dependence of one action on another. Наприклад: «**Якщо** буде сонце, ми підемо гуляти». For example: "**If** there is sun, we will go for a walk". Щоб показати мету, ми використовуємо «**щоб**». To show a goal, we use "**in order to**". Після нього ми ставимо дієслово в інфінітиві або в минулому часі. After it, we put the verb in the infinitive or in the past tense. Наприклад: «Я читаю, **щоб** знати більше». For example: "I read **in order to** know more". Або: «Я хочу, **щоб** ти прийшов». Or: "I want you to come" (literally: that you came). Минулий час тут означає бажання, а не минуле. The past tense here means a wish, not the past.
+В українській мові є різні слова для пояснення причини. Слово «бо» — це короткий варіант для розмови з друзями. Ми часто чуємо його вдома або на вулиці. Наприклад: «Я не прийшов, бо захворів». Для офіційного листа краще обрати варіант «тому що». Це нейтральне слово, яке підходить для будь-якої ситуації. Найбільш формальний варіант — це «через те що». Він вказує на логічний наслідок у текстах або новинах. Це важливо знати, щоб не зробити **помилку** (mistake) у стилі.
 
-Давайте послухаємо, як студент розповідає про свій прогрес. Let's listen to how a student talks about their progress.
-> — **Вчителька:** Марку, як твої успіхи? *(Mark, how is your progress?)*
-> — **Марко:** Я вже говорю краще, **хоча** роблю **помилки**. *(I speak better already, **although** I make **mistakes**.)*
-> — **Вчителька:** Це нормально! *(That's normal!)*
-> — **Марко:** **Коли** я починав, я знав тільки прості слова. *(**When** I started, I knew only simple words.)*
-> — **Вчителька:** А зараз ти знаєш багато правил **граматики**. *(And now you know many rules of **grammar**.)*
-> — **Марко:** Так, я вчуся, **щоб** перейти на рівень В1. *(Yes, I study **in order to** move to the B1 level.)*
-> — **Вчителька:** **Якщо** ти будеш так вчитися, у тебе все вийде! *(**If** you study like this, you will succeed!)*
-> — **Марко:** Дякую! Я впевнений, **що** це можливо. *(Thank you! I am confident **that** it is possible.)*
+:::info
+**Grammar box**
+Always put a comma before conjunctions like **тому що** (because), **бо** (because), **що** (that), and **якщо** (if) in Ukrainian. This punctuation marks the boundary between two parts of a complex sentence.
+:::
 
-<!-- INJECT_ACTIVITY: error-correction -->
+Коли ми маємо мету або умову, ми використовуємо «щоб» та «якщо». Слово «якщо» допомагає будувати плани на майбутнє. Ми кажемо: «Якщо я буду в Києві, я піду в музей». Слово «щоб» вказує на нашу ціль. Після нього ми часто використовуємо інфінітив. Наприклад: «Я читаю, щоб більше знати». Це робить наше мовлення багатшим і допомагає з’єднувати частини речення.
+
+> *When we have a goal or a condition, we use "shchob" (in order to) and "yakshcho" (if). The word "yakshcho" helps build plans for the future. We say: "If I am in Kyiv, I will go to a museum." The word "shchob" indicates our goal. After it, we often use an infinitive. For example: "I read in order to know more." This makes our speech richer and helps connect parts of the sentence.*
+
+<!-- INJECT_ACTIVITY: fill-in, complex-sentences-conjunctions -->
+
+> — **Вчитель:** Як пройшло твоє **повторення** (review)? *(How did your review go?)*
+> — **Учень:** Добре, хоча **граматика** (grammar) іноді важка. *(Good, although grammar is sometimes difficult.)*
+> — **Вчитель:** Що було найскладнішим для тебе? *(What was the most difficult for you?)*
+> — **Учень:** Я довго вчив кожен **відмінок** (case) і кожне **дієслово** (verb). *(I spent a long time learning every case and every verb.)*
+> — **Вчитель:** Чи ти вже готовий до рівня B1? *(Are you ready for the B1 level yet?)*
+> — **Учень:** Думаю, що так, якщо я буду вчити нові слова щодня. *(I think so, if I study new words every day.)*
+> — **Вчитель:** Який твій план на майбутнє? *(What is your plan for the future?)*
+> — **Учень:** Я хочу вчитися, щоб вільно говорити про культуру. *(I want to study in order to speak fluently about culture.)*
+> — **Вчитель:** Це чудовий план, успіхів тобі! *(That is a great plan, good luck to you!)*
+
+<!-- INJECT_ACTIVITY: error-correction, review-sentence-logic -->

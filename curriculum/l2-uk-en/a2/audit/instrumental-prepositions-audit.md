@@ -1,7 +1,7 @@
 # Audit Report: M28 — instrumental-prepositions.md
 **Level:** A2 | **Module:** M28 | **Phase:** A2.4 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-04-11 00:49:40
+**Generated:** 2026-04-11 13:40:09
 
 ## Configuration
 **Type:** A2-grammar
@@ -32,46 +32,29 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q1 prompt length 3 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q2 prompt length 3 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q3 prompt length 2 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q4 prompt length 4 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q5 prompt length 3 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q6 prompt length 2 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q7 prompt length 4 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q8 prompt length 2 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: множина
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
+- **[INLINE_ENGLISH_IN_PROSE]** Inline English translations in B1+ prose (3 occurrences): (Instrumental case), (Genitive case), (Instrumental case) — breaks immersion target
+  - FIX: Remove inline English translations. Use context clues, Ukrainian definitions, or move translations to vocabulary section
 
 ## Recommendation
-**📝 UPDATE** (severity 70/100)
+**📝 UPDATE** (severity 25/100)
 
-- Revision recommended (severity 70/100)
-- 9 violations (significant)
-- Immersion 23% off target (major rebalancing needed)
+- 1 violations (minor)
+- Immersion 19% off target
 
 ## Gates
-- **Words:** ✅ 2529/2000 (raw: 2724)
+- **Words:** ✅ 2968/2000 (raw: 3056)
 - **Activities:** ✅ 6/0
 - **Density:** ✅ All > 8
 - **Unique_types:** ✅ 6/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 3/3
+- **Engagement:** ❌ 2/3
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 38/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ❌ 26.9% LOW (target 50-80% (A2.2))
+- **Immersion:** ❌ 30.9% LOW (target 50-80% (A2.2))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -79,8 +62,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 702 | Included in Core |
-| **Описуємо кімнату (Describing a Room)** | ✅ | 499 | Included in Core |
-| **Перед обідом, за розкладом: Часове значення (Before Lunch, On Schedule: Temporal Meaning)** | ✅ | 520 | Included in Core |
-| **Практика: Де? Коли? (Practice: Where? When?)** | ✅ | 617 | Included in Core |
-| **Підсумок** | ✅ | 191 | Included in Core |
+| **Intro/Narrative** | ✅ | 853 | Included in Core |
+| **Описуємо кімнату (~500 words total)** | ✅ | 587 | Included in Core |
+| **Перед обідом, за розкладом: Часове значення (~450 words total)** | ✅ | 679 | Included in Core |
+| **Практика: Де? Коли? (~450 words total)** | ✅ | 558 | Included in Core |
+| **Підсумок (~150 words)** | ✅ | 291 | Included in Core |

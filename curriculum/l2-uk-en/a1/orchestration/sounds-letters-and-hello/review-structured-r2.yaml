@@ -2,48 +2,50 @@ round: 2
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 10
-  evidence: All points from the `content_outline` are fully integrated. The quotes
-    from textbooks (Заболотний, Большакова) are used seamlessly.
+  score: 7
+  evidence: All planned H2 sections are present and the textbook references are integrated,
+    but the summary says `The numbers differ because iotated letters... while the
+    soft sign (Ь) makes absolutely no sound at
 - dimension: 2
   name: Linguistic accuracy
-  score: 9
-  evidence: The text is accurate, but contains a typographical error with a double
-    stress mark on "**алфа́ві́т**".
+  score: 8
+  evidence: No Russianisms/Surzhyk found, but `The letter Ґ with its little upturned
+    tail is uniquely Ukrainian` is a factual error.
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: Fantastic explanation of the difference between sound and letter (sheet
-    music vs. played note analogy). Emphasizing the physical obstruction aspect for
-    consonants is excellent for adult learners.
+  score: 7
+  evidence: The module has examples and practice, but several sections open with long
+    English-first exposition before learner-facing examples, e.g. `When you listen
+    to someone speaking Ukrainian...` and `With the
 - dimension: 4
   name: Vocabulary coverage
   score: 9
-  evidence: Required words are all present and contextualized. However, 4 recommended
-    words (тато, дім, ніс, сон) were omitted from the prose.
+  evidence: 'All required plan vocabulary appears naturally in prose: `звук`, `літера`,
+    `голосний`, `приголосний`, `привіт`, `як справи`, `добре`, `чудово`, `мама`, `молоко`.
+    Recommended items are also used beyond'
 - dimension: 5
   name: Exercise quality
   score: 10
-  evidence: All 6 markers match the plan's `activity_hints` exactly and are injected
-    immediately following the relevant instruction block.
+  evidence: All 6 planned activity types are represented by markers, and each marker
+    follows the concept it is meant to practice.
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: Excellent teacher persona. Informative, engaging analogies, and zero generic
-    corporate filler.
+  score: 9
+  evidence: The teacher voice is energetic and concrete, especially in the dialogues
+    and sound-analysis section, without gamified/corporate filler.
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: Word count is 1716 words (exceeding 1200 target). All required H2 headings
-    are present and accurate.
+  evidence: All planned headings are present and ordered correctly, markers are intact,
+    and the deterministic word count is above target (`2096`).
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: Mention of the Soviet suppression of the letter Ґ is an excellent cultural
-    detail that adds real depth.
+  score: 8
+  evidence: The module treats Ukrainian on its own terms, but the claim that Ґ is
+    `uniquely Ukrainian` is culturally/factually inaccurate.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: The sample greeting dialogue is natural, brief, and models gender agreement
-    correctly.
+  score: 9
+  evidence: 'The module includes named, multi-turn dialogues in plausible beginner
+    contexts: classroom greeting and hallway introduction.'
 findings: []

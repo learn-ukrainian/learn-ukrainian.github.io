@@ -1,0 +1,64 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T03-40-53fa8762.json
+phase: vocab
+prompt_chars: 12197
+response_chars: 2750
+prompt_words: 1906
+response_words: 313
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.0654
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.0189
+- name: plan
+  start: 1028
+  length: 11169
+  fraction: 0.9157
+large_sections:
+- plan
+directives_total: 8
+directives_covered: 0
+directives_missed:
+- kind: must
+  text: The first part is the auxiliary helper verb **бути** (to be), which must be
+    conjugated in the future tense to match the person performing the action (I, you,
+    he, we, etc.
+  covered: false
+  coverage_note: 4/17 keywords (24%)
+- kind: must
+  text: 'You must strongly emphasize this structural rule in your mind: the main verb
+    stays completely frozen in the infinitive and never changes its endings in this
+    tense.'
+  covered: false
+  coverage_note: 2/20 keywords (10%)
+- kind: must
+  text: To solidly anchor these future actions in a realistic, everyday context, we
+    must use essential future time markers.
+  covered: false
+  coverage_note: 1/13 keywords (8%)
+- kind: must
+  text: You must absolutely remember that the main action word never drops its final
+    "-ти"; only the helper verb actively shifts its shape to match the person who
+    is performing the future action.
+  covered: false
+  coverage_note: 3/23 keywords (13%)
+- kind: must
+  text: You now firmly possess the grammatical tools required to talk about the future
+    and make extensive plans.
+  covered: false
+  coverage_note: 3/13 keywords (23%)
+- kind: inject_activity
+  text: match-pronoun-to-buty
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-analytic-future
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-tense-distinction
+  covered: false
+  coverage_note: marker missing

@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-«проте», які додають вашому мовленню особливих емоційних відтінків. Сполучник «зате» є унікальним, адже він не просто протиставляє два факти, а вводить своєрідну позитивну компенсацію за якийсь недолік у першій частині. Ми використовуємо його, коли хочемо показати, що негативний аспект повністю перекривається вагомою перевагою. Наприклад: «Цей старий автомобіль їде досить повільно, зате він ніколи не ламається в довгій дорозі». Або ще один класичний приклад: «Він дуже мало говорить на важливих зустрічах, зате завжди багато і якісно робить». Сполучник «проте» працює трохи інакше, він ближчий за значенням до сильного «але», виражаючи несподіваний поворот подій. Існує також дуже корисний сполучник **«однак»** *(however)*. Він є значно формальнішим і зазвичай використовується в офіційному діловому стилі, наукових статтях або серйозній журналістиці. Його головна роль — вводити вагомий контраргумент або серйозне застереження до попередньої думки. Наприклад: «Компанія показала хороший фінансовий результат у цьому кварталі, однак загальна економічна ситуація в країні залишається нестабільною». Використання цих сполучників робить ваше мовлення багатим і стилістично точним. Третя велика група — це розділові сполучники, до яких належать «або», «чи», «або...або», «чи...чи», «то...то» та «не то...не то». На відміну від єднальних і протиставних сполучників, вони вказують на ситуації, які ніколи не можуть відбуватися одночасно. Розділові сполучники виражають або суворе **взаємовиключення** *(mutual exclusion)* подій, або їхнє постійне чергування в часі. Взаємовиключення означає, що реалізованою може бути лише одна дія з двох запропонованих, а інша при цьому автоматично скасовується. Найчастіше для цього ми використовуємо знайомий вам сполучник «або» чи його підсилену парну форму «або...або». Цей логічний зв'язок чудово ілюструє відома українська народна приказка: «Або рибку з'їсти, або на дно сісти». Вона означає, що людина стоїть перед жорстким і безкомпромісним вибором, де неможливо отримати одразу обидва бажані варіанти. Також для вираження вибору ми часто застосовуємо сполучник «чи», який звучить трохи м'якше і менш категорично, ніж «або». Наприклад: «Сьогодні ввечері ми подивимося новий фільм удома, чи ти хочеш піти на довгу прогулянку парком?». Використання парного «чи...чи» ще більше підкреслює ситуацію невизначеності або вагання перед прийняттям остаточного рішення. Окремої уваги заслуговує значення **чергування** *(alternation)*, яке найкраще передається за допомогою красивого парного сполучника «то...то». Ця граматична конструкція описує події, які не виключають одна одну назавжди, а періодично і циклічно змінюють одна одну в часі. Це ніби маятник, який постійно розгойдується від одного стану до іншого. Наприклад: «То яскраве весняне сонце привітно усміхнеться нам крізь хмари, то холодний дощик рясно землю полива». У цьому реченні дві природні стихії по черзі домінують над пейзажем, створюючи дуже динамічну і живу картину мінливої погоди. Дуже важливо не плутати цей сполучник із парним сполучником «чи...чи». Сполучник «то...то» описує об'єктивну зміну подій у реальному світі, які відбуваються незалежно від нас. Натомість конструкція «чи...чи» завжди вказує на суб'єктивну невпевненість самого спостерігача або на складний процес вибору між двома альтернативами. Порівняйте ці два різні випадки. Перший показує зміну емоцій: «То він голосно сміявся, то раптом починав сумно плакати». Другий показує внутрішній сумнів: «Чи він справді сміявся з жарту, чи просто ввічливо посміхнувся, я так і не зрозумів». <!-- INJECT_ACTIVITY: fill-in-conjunction-choice, focus on choosing between а, але, зате, або, and то...то based on semantic links, 15 items -->
+a perceived weakness with a distinct strength. Similarly, the conjunctions «проте» and «однак» introduce a counter-argument or an unexpected result, much like "however" or "nevertheless". While «проте» is common in both spoken and written Ukrainian, «однак» tends to feel slightly more formal. It is frequently employed in academic writing, journalistic registers, or official speeches to pivot a discussion or present a contrasting viewpoint. :::info **Grammar box** You already know «та» as a copulative conjunction meaning "and". However, it can also act as an adversative conjunction meaning "but". Because the word itself does not change, you must rely entirely on the context of the sentence. If the clauses describe flowing, parallel events, «та» means "and". If they present a contrast, like in the phrase «Світить, та не гріє» *(It shines, but does not warm)*, «та» functions identically to «але». ::: The third major group of coordinating conjunctions consists of the **розділовий** (disjunctive — або, чи, то...то) conjunctions. This category includes words and pairs such as «або», «чи», «або...або», «чи...чи», «то...то», and «не то...не то». While adversative conjunctions contrast events, disjunctive conjunctions separate them. They indicate that the actions or states described in the **рівноправний** (equal, coordinate — parts of equal status) clauses cannot happen in the exact same way at the exact same time. The most straightforward semantic relationship they create is **взаємовиключення** (mutual exclusion). This means that only one of the presented options can be realized; the occurrence of one prohibits the occurrence of the other. The conjunctions «або» and «чи» are the standard tools for expressing this choice. When you want to add dramatic emphasis or absolute certainty to this mutual exclusion, you use the paired version «або...або». A classic example of this uncompromising choice is the well-known Ukrainian proverb: «Або рибку з'їсти, або на дно сісти.» *(Either eat the fish or sink to the bottom.)* You cannot have it both ways; you must choose one single path and accept the consequences. Another fascinating semantic relationship expressed by disjunctive conjunctions is **чергування** (alternation). Unlike strict mutual exclusion, alternation describes a scenario where multiple events actually happen, but they take turns in a cyclical pattern. The paired conjunction «то...то» is designed for this precise purpose, painting a vivid picture of a changing environment. For example, consider the poetic line: «То сонце усміхнеться нам крізь хмари, то дощик рясно землю полива.» *(Now the sun smiles at us through the clouds, now the rain abundantly waters the earth.)* The sun and the rain are not mutually exclusive forever; they take turns dominating the landscape, creating a beautiful rhythm of shifting events. You can contrast this dynamic alternation with the paired conjunction «чи...чи». While «то...то» describes events definitely happening in turns, «чи...чи» implies a deep sense of uncertainty strictly from the observer's perspective. It suggests that the speaker is unsure which of the two possibilities is actually occurring, leaving the situation entirely unresolved. <!-- INJECT_ACTIVITY: fill-in-conjunction-choice, focus on choosing between а, але, зате, або, and то...то based on semantic links, 15 items -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -508,7 +508,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -521,18 +588,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] складносурядне речення (compound sentence)
+- [ ] сполучник сурядності (coordinating conjunction)
+- [ ] єднальний (copulative — і, й, та)
+- [ ] протиставний (adversative — але, а, зате, проте)
+- [ ] розділовий (disjunctive — або, чи, то...то)
+- [ ] рівноправний (equal, coordinate — parts of equal status)
+- [ ] одночасність (simultaneity)
+- [ ] послідовність (sequence)
+- [ ] протиставлення (opposition/contrast)
+- [ ] зіставлення (comparison/juxtaposition)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Розділові знаки (~750 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

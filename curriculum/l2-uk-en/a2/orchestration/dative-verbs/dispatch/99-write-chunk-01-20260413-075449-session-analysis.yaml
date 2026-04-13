@@ -1,0 +1,61 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T05-54-d89ca3e8.json
+phase: write-chunk-01
+prompt_chars: 38325
+response_chars: 5301
+prompt_words: 5427
+response_words: 877
+sections:
+- name: header
+  start: 0
+  length: 461
+  fraction: 0.012
+- name: skeleton
+  start: 461
+  length: 1731
+  fraction: 0.0452
+- name: plan
+  start: 2192
+  length: 12127
+  fraction: 0.3164
+- name: wiki
+  start: 7781
+  length: 23765
+  fraction: 0.6201
+- name: output_spec
+  start: 38084
+  length: 241
+  fraction: 0.0063
+large_sections:
+- wiki
+directives_total: 13
+directives_covered: 6
+directives_missed:
+- kind: checklist
+  text: подобатися (to be pleasing to, to like (reversed syntax))
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: checklist
+  text: рік (year)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: роки (years (2-4))
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: років (years (5+))
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 3/11 keywords (27%)
+- kind: inject_activity
+  text: fill-in-dative-verbs
+  covered: false
+  coverage_note: marker missing

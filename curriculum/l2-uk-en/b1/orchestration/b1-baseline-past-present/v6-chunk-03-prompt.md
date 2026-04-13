@@ -25,7 +25,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-opens up again, and the original vowel returns. This gives us the forms **несла**, **несло**, and **несли**. Важливо пам'ятати ці особливі форми, адже вони зустрічаються дуже часто в повсякденному спілкуванні. Коли ви читаєте або слухаєте українські тексти, звертайте увагу на дієслова з основою на приголосний. З часом ви почнете інтуїтивно відчувати ці зміни голосних. Let us look back at the dialogue from the beginning of this module to see these rules in action. When Олексій talks about his summer, he says, "Я працював у видавництві." Because Олексій is male, he naturally uses the masculine form **працював**. Later, when discussing a shared experience, Дарина says, "Минулого літа ми їздили до Львова." Here, the pronoun **ми** (we) is plural, so the verb must take the plural ending **-ли**, resulting in **їздили**. Notice how the verbs seamlessly adapt to the subjects. The speakers do not even think about these endings; it is an automatic reflex. As a learner, your goal is to build this same reflex so that the gender of your subject immediately dictates the shape of your verb. Під час розмови українці автоматично узгоджують дієслова минулого часу зі своїм родом або родом співрозмовника. Коли ви розповідаєте про свої минулі вихідні, ви повинні постійно тримати в голові власний рід. Це вимагає практики, але швидко стає звичкою. One of the most common mistakes English speakers make when speaking Ukrainian is forgetting this gender agreement in the past tense. It is easy to accidentally say "Моя сестра сказав" because the English brain treats "said" as a fixed, unchanging word. However, in Ukrainian, **сестра** is a feminine noun, so the verb must reflect that femininity: **Моя сестра сказала**. Another frequent error occurs when learners try to apply present tense personal endings to past tense verbs. You must strictly separate the two systems in your mind. Present tense is about person; past tense is about gender and number. Always double-check your sentence: if the subject is "вона" or a feminine noun, your verb must end in **-ла**. :::tip **The Mirror Rule** Think of the past tense verb as a mirror. If a woman looks into the mirror, the reflection must be feminine (**-ла**). If a man looks, it must be masculine (**-в** or consonant). If a crowd looks, it must be plural (**-ли**). ::: Finally, it is crucial to understand how the past tense is actually used in narrative contexts. When you are telling a story, you will frequently alternate between describing ongoing states or backgrounds and narrating a sequence of completed events. This brings us to the concept of verbal aspect. Both imperfective verbs and perfective verbs exist in the past tense, but they serve entirely different narrative functions. You use imperfective past tense verbs to set the scene or talk about actions that were in progress. You use perfective past tense verbs to list the concrete steps that moved the story forward. We will explore this vital distinction between **робив** and **зробив** in much greater detail in the next section. <!-- INJECT_ACTIVITY: fill-in-tense-forms -->
+Дарина shares a memory about a shared trip. She says, «Минулого літа ми їздили до Львова» (Last summer we traveled to Lviv). Because the subject of her sentence is the pronoun «ми» (we), she automatically uses the plural form with the ending "-ли". In this plural context, the individual genders of the people in the group do not matter at all. The grammatical rule for the plural category overrides any gender distinctions. A very common mistake for English speakers learning Ukrainian is forgetting to align the verb with the gender of the subject. It is easy to accidentally say something like "Моя сестра сказав" (My sister said), applying the masculine form to a feminine subject. This happens because English conditions us to treat the past tense as a static, unchanging word. This error is closely related to a misunderstanding of **дієвідмінювання** (conjugation — changing verb by person and number), which functions differently here than it does in the present tense. Коли ви говорите про минулі події, ваше дієслово має бути дзеркалом підмета. Якщо ви розповідаєте про свою подругу, маму чи сестру, кожне дієслово повинно мати жіноче закінчення «-ла». Ви маєте сказати: «Моя сестра сказала, що вона ходила в кіно і бачила цікавий фільм». Якщо ви використаєте чоловічу форму для жінки, це звучатиме дуже неприродно для носіїв мови. Завжди тримайте в голові образ людини, про яку ви говорите. :::note **Quick tip** If you are unsure about the grammatical gender of a noun, simply look at its final letter. Words ending in "-а" or "-я" usually require the feminine past tense ending "-ла", while words ending in a consonant usually take the masculine "-в". ::: Finally, we must consider the meaning behind the verb forms. The past tense often intersects with the concept of aspect. When narrating a sequence of events, you will frequently use the **доконаний вид** (perfective aspect — completed action) to show that one action finished before the next began. You will also encounter the **видова пара** (aspectual pair — e.g., писати/написати) which dictates how you structure your narrative. Conversely, the **недоконаний вид** (imperfective aspect — ongoing action) is perfectly suited for describing the background or lengthy processes in the past. To talk about routine past actions or emotional states, you will also often use a **зворотний** (reflexive — verbs with -ся/-сь) verb. The form "робив" (was doing) shows a process that stretches over time, without a clear finale or result. It sets the scene and builds the atmosphere. In contrast, the form "зробив" (has done) always focuses heavily on the result, the milestone, and the complete conclusion of the action. For example, you might say you spent a long time reading a book (using the imperfective), and then finally finished it (using the perfective). The choice between these two forms depends entirely on exactly what kind of story you want to tell your listeners. Mastering this distinction is what truly helps you create vivid, engaging, and dynamic pictures of the past in your conversations. <!-- INJECT_ACTIVITY: fill-in-tense-forms -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -722,6 +722,33 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] теперішній час (present tense)
+- [ ] минулий час (past tense)
+- [ ] дієвідміна (conjugation class — I or II)
+- [ ] особа (person — 1st, 2nd, 3rd)
+- [ ] число (number — однина, множина)
+- [ ] рід (gender — чоловічий, жіночий, середній)
+- [ ] доконаний вид (perfective aspect — completed action)
+- [ ] недоконаний вид (imperfective aspect — ongoing action)
+- [ ] інфінітив (infinitive — the base form ending in -ти/-тися)
+- [ ] дієвідмінювання (conjugation — changing verb by person and number)
+- [ ] зворотний (reflexive — verbs with -ся/-сь)
+- [ ] видова пара (aspectual pair — e.g., писати/написати)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Вид дієслова: доконаний і недоконаний (~770 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

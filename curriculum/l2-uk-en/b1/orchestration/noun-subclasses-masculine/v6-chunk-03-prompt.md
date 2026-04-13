@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-працюють із деревом, каменем чи глиною, часто мають саме такі назви у своїх професіях. Також ви помітили слова «киянин» та «полтавчанин». Тут працює інший словотвірний суфікс — **-ин** (або **-янин**). Він чітко вказує на **походження** *(origin)* людини, де вона живе або до якої соціальної групи вона належить. Ці слова важливі не лише для розширення словникового запасу. Вони мають свої граматичні секрети та особливі правила **відмінювання** *(declension)*. Наприклад, вони можуть поводитися несподівано у формі **множини** *(plural)* або коли ми використовуємо **кличний відмінок** *(vocative case)* під час звертання. Сьогодні ми детально розберемо ці особливості, щоб ви могли говорити про **професії** *(professions)* та походження впевнено і без помилок. ## Суфікси -ар, -яр: хто що робить (~720 слів) Українська мова дуже логічна, коли йдеться про утворення нових слів. Якщо ми хочемо назвати людину за її професією або діяльністю, ми часто використовуємо **суфікс** *(suffix)* **-ар** або **-яр**. Цей суфікс додається до **кореня** *(root)* слова, яке означає дію або об'єкт. Наприклад, від дієслова «пекти» утворюється слово **пекар** *(baker)*. Від дієслова «лікувати» ми маємо слово **лікар** *(doctor)*. А від іменника «школа» походить слово **школяр** *(student)*. Цей механізм словотворення працює як конструктор, де ви можете легко зрозуміти значення слова, якщо знаєте його корінь. Найбільша група слів із цими суфіксами — це назви традиційних професій та ремесел. У минулому люди часто отримували свої прізвища від назви свого ремесла. Наприклад, **гончар** *(potter)* — це майстер, який робить посуд із глини. Слово **бондар** *(cooper)* походить від давнього слова «бодна», що означає велику діжку. Бондар — це майстер, який робить дерев'яні діжки. Також ви часто зустрінете слова **токар** *(turner)* та **слюсар** *(locksmith)*, які позначають спеціалістів по роботі з металом або деревом. Усі ці слова є дуже давніми та питомо українськими. Суфікси **-ар** та **-яр** можуть приєднуватися до назв інструментів. **Кобзар** *(kobza player)* — це музикант, який грає на традиційному інструменті кобзі, і це дуже важливий образ для нашої культури. Також маємо слово **пісняр** *(singer)*, тобто людина, яка створює пісні. Слово **каменяр** *(stonecutter)* позначає робітника, який видобуває камінь, а також це назва відомого вірша Івана Франка. Цей суфікс використовується і для людей, які доглядають за тваринами. Наприклад, **козар** *(goatherd)* доглядає кіз, а **вівчар** *(shepherd)* випасає овець. В українській мові є й інші суфікси для позначення професій, наприклад, **-ник** у слові **працівник** *(worker)*, **-ець** у слові **борець** *(fighter)*, або **-тель** у слові **вчитель** *(teacher)*. Чому ж ми не кажемо «пекарець» або «лікарник»? Суфікси **-ар** та **-яр** є найпродуктивнішими саме в народній мові для позначення фізичної або ремісничої праці. Суфікс **-тель** частіше зустрічається в книжній лексиці, а **-ник** часто означає належність до певної професійної групи. Розуміння цих нюансів робить вашу мову багатшою. Граматично всі ці іменники належать до **другої відміни** *(second declension)*. Але тут є важлива деталь: суфікс впливає на те, до якої групи належатиме слово — до **твердої групи** *(hard group)*, **м'якої групи** *(soft group)* чи **мішаної групи** *(mixed group)*. Це означає, що вони матимуть різні закінчення під час відмінювання. Ключ до розгадки їхньої граматичної поведінки лежить у правильному наголосі. Ми детально розберемо це правило в наступній частині нашого уроку. <!-- INJECT_ACTIVITY: match-up-professions -->
+**-ин**, it usually points to their geographic origin, nationality, or civic identity. ::: Ці маленькі частинки слова додають мові точності. Коли ви знаєте, як працюють ці суфікси, ви можете легко розуміти нові слова навіть без словника. Це відкриває перед вами справжню логіку українського словотворення. ## Суфікси -ар, -яр: хто що робить (~720 слів) The Ukrainian language has a very logical system for creating new words. When we want to name a person by their **професія** (profession) or habitual activity, we often take a base word and add a specific **суфікс** (suffix — word-formation morpheme after the root). The most productive suffixes for this purpose are *-ар* and *-яр*. This pattern is everywhere in daily life. A person who bakes bread is a **пекар** (baker — person who bakes). Someone who treats illnesses is a **лікар** (doctor). And a child who attends classes is a **школяр** (student — person who attends school). Багато традиційних ремесел мають назви, утворені за цією давньою схемою. Гончар майстерно працює з глиною, токар обробляє дерево на верстаті, а слюсар ремонтує металеві механізми. Цікаво, що слово бондар походить від старовинного слова «бодна», яке означало дерев'яну діжку. These suffixes can be added to actions, but they are also frequently attached to the names of instruments, objects, or even animals. For instance, a person who herds goats is a «козар», and someone who herds sheep is a «вівчар». Український народний музикант, який грає на кобзі, — це кобзар. Людина, яка пише тексти та мелодії, — пісняр. А робітник, який важко працює в кар'єрі та видобуває камінь, — каменяр. > *A Ukrainian folk musician who plays the kobza is a kobza player. A person who writes lyrics and melodies is a songwriter. And a worker who works hard in a quarry and extracts stone is a stonecutter.* :::tip **Did you know?** — The word **кобзар** (kobza player — traditional Ukrainian musician) is deeply symbolic. It is the title of Taras Shevchenko's most famous poetry collection. Similarly, «Каменяр» is the celebrated epithet of the writer Ivan Franko, symbolizing his hard work for the nation's cultural freedom. ::: You might wonder why we use *-ар* and *-яр* here, but different suffixes for other jobs, like the *-ник* in «працівник» (worker), the *-ець* in «борець» (fighter), or the *-тель* in «вчитель» (teacher). The *-ар* and *-яр* endings carry a specific historical flavor of physical crafts and manual artisanship. While newer or more abstract professions might use different patterns, traditional trades almost always rely on these older endings. Understanding these suffixes is vital for correct grammar. Every such word is a masculine **іменник** (noun). Depending on its exact spelling and stress, it belongs to a specific group within the second **відміна** (declension class), which determines its **відмінювання** (declension — changing a word through cases). Ці слова можуть належати до твердої, м'якої або мішаної групи. Саме від цієї групи залежить, які закінчення слово отримає в різних відмінках. Тому важливо навчитися розпізнавати основу слова ще до того, як ми почнемо його відмінювати. <!-- INJECT_ACTIVITY: match-up-professions -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -625,7 +625,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -638,18 +705,69 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] суфікс (suffix — word-formation morpheme after the root)
+- [ ] іменник (noun)
+- [ ] відміна (declension class)
+- [ ] відмінювання (declension — changing a word through cases)
+- [ ] однина (singular number)
+- [ ] множина (plural number)
+- [ ] кличний відмінок (vocative case)
+- [ ] родовий відмінок (genitive case)
+- [ ] походження (origin — where someone is from)
+- [ ] професія (profession)
+- [ ] пекар (baker — person who bakes)
+- [ ] лікар (doctor)
+- [ ] школяр (student — person who attends school)
+- [ ] кобзар (kobza player — traditional Ukrainian musician)
+- [ ] киянин (Kyivan — resident of Kyiv)
+- [ ] громадянин (citizen)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Відмінювання іменників на -ар (~820 слів)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

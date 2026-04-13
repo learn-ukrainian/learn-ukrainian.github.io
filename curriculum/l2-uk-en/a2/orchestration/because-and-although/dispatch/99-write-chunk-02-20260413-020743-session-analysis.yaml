@@ -1,0 +1,63 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T00-06-d59b43ce.json
+phase: write-chunk-02
+prompt_chars: 44985
+response_chars: 6117
+prompt_words: 6408
+response_words: 1005
+sections:
+- name: header
+  start: 0
+  length: 439
+  fraction: 0.0098
+- name: skeleton
+  start: 439
+  length: 1873
+  fraction: 0.0416
+- name: prior_summary
+  start: 2312
+  length: 3364
+  fraction: 0.0748
+- name: plan
+  start: 5676
+  length: 12040
+  fraction: 0.2676
+- name: wiki
+  start: 11208
+  length: 27060
+  fraction: 0.6015
+- name: output_spec
+  start: 44776
+  length: 209
+  fraction: 0.0046
+large_sections:
+- wiki
+directives_total: 22
+directives_covered: 16
+directives_missed:
+- kind: must
+  text: As you read these sentences, pay close attention to the mandatory comma placement
+    and the smooth rhythmic flow of the sentence structure.
+  covered: false
+  coverage_note: 5/15 keywords (33%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 3/11 keywords (27%)
+- kind: inject_activity
+  text: match-up-halves
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: unjumble-sentences
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz, Choose the correct conjunction (тому що, бо) to complete the sentences
+    based on cause and effect
+  covered: false
+  coverage_note: marker missing

@@ -2,53 +2,55 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 10
-  evidence: Perfectly covers all 4 sections from the outline, integrates all required
-    and recommended vocabulary, and successfully implements the textbook references
-    (Большакова, Вашуленко). Word count is excelle
+  score: 7
+  evidence: All four planned H2 sections are present and the required vocabulary is
+    used, but the section pacing is far off the 300-word plan (`428 / 528 / 432 /
+    285`), and the prose never integrates the cited so
 - dimension: 2
   name: Linguistic accuracy
-  score: 10
-  evidence: Flawless. Pluralization rules for nouns and adjectives are accurate. Demonstratives
-    and possessives are used correctly. Verified against VESUM.
+  score: 8
+  evidence: Most Ukrainian forms are correct and VESUM confirms key items like `стільці`,
+    `ці`, `ті`, `мої`, `речі`, but the explanation “**стілець** ... drops its final
+    vowel and soft sign” teaches the transform
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: Excellent PPP flow. Introduces plurals through a natural dialogue, clearly
-    breaks down the rules by gender, provides the consonant guideline, and finishes
-    with the simplified adjective rule.
+  score: 6
+  evidence: The module broadly follows dialogue → explanation → practice, but too
+    much of the teaching is buried in abstract English exposition, e.g. “Describing
+    groups of objects is mathematically simpler...” an
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: All required words (столи, книги, вікна, стільці, ці, ті, мої, які) and
-    recommended words are introduced naturally within the context of classrooms and
-    shopping.
+  score: 9
+  evidence: 'All required plan words appear in prose: `столи`, `книги`, `вікна`, `стільці`,
+    `ці`, `ті`, `мої`, `які`. Recommended items like `ручки`, `сумки`, `зошити`, `дзеркала`,
+    `крісла`, `речі` are also used i'
 - dimension: 5
   name: Exercise quality
-  score: 8
-  evidence: 'Deducting points for the clustering of three activity markers back-to-back,
-    and for a logical error in the self-check exercise where the prompt gives away
-    the answer (`Перекладіть: «Ці сині зошити»`).'
+  score: 9
+  evidence: 'The module includes 4 markers matching the plan’s exercise count, and
+    each marker comes after the relevant teaching block: noun plural practice after
+    `Один → багато`, adjective agreement after `Прикме'
 - dimension: 6
   name: Engagement & tone
-  score: 8
-  evidence: Generally warm and encouraging. Deducting points for mild instances of
-    generic enthusiasm and empty filler (e.g., "beautifully transforms into вікна",
-    "creates a rhythmic, melodic sound").
+  score: 7
+  evidence: The teacher voice is present, but phrases like “incredibly streamlined
+    and consistent,” “mathematically simpler,” and “highly expressive sentences” read
+    as generic intensifiers rather than concrete te
 - dimension: 7
   name: Structural integrity
-  score: 9
-  evidence: Clean markdown and excellent organization, but the prose contains one
-    redundant, repetitive sentence that restates an example just given in the preceding
-    line.
+  score: 10
+  evidence: Clean markdown, correct section order, all planned H2 headings present,
+    no stray artifacts, and the pipeline word count is 1630, which is above the 1200
+    target.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Natural references to Ukrainian Grade 2 and Grade 3 textbooks, aligning
-    with the project's authentic, decolonized pedagogical goals.
+  evidence: The module presents Ukrainian on its own terms, with no Russia-centered
+    framing and no cultural inaccuracies.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: Dialogues are natural, conversational, and highly contextualized (setting
-    up a classroom, buying supplies in a store).
+  score: 9
+  evidence: Both dialogues use named speakers and plausible A1 situations (`Вчитель
+    / Учні`, `Студент / Продавець`), and the target plural forms are embedded naturally
+    in the exchanges.
 findings: []

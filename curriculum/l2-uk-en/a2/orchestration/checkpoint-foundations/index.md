@@ -1,6 +1,6 @@
 # Build Summary: checkpoint-foundations (A2)
 
-Generated: 2026-04-11 01:53
+Generated: 2026-04-11 11:59
 
 ## Pipeline Phases
 
@@ -11,7 +11,7 @@ Generated: 2026-04-11 01:53
 | pre-verify | complete | 2026-04-07 20:52:58 |
 | write | complete | 2026-04-07 20:55:16 |
 | exercises | complete | 2026-04-07 20:55:16 |
-| activities | complete | 2026-04-10 23:52:06 |
+| activities | complete | 2026-04-11 09:57:52 |
 | verify-exercises | complete | 2026-04-07 20:56:31 |
 | annotate | complete | 2026-04-07 20:56:31 |
 | vocab | complete | 2026-04-07 21:03:03 |
@@ -19,8 +19,8 @@ Generated: 2026-04-11 01:53
 | verify | complete | 2026-04-07 21:03:03 |
 | stress | complete | 2026-04-07 21:06:47 |
 | skeleton | complete | 2026-04-08 23:22:43 |
-| publish | complete | 2026-04-10 23:53:30 |
-| audit | complete | 2026-04-10 23:53:30 |
+| publish | complete | 2026-04-11 09:59:37 |
+| audit | complete | 2026-04-11 09:59:37 |
 
 ## Reviews
 
@@ -38,8 +38,12 @@ Generated: 2026-04-11 01:53
 | skeleton | gemini (gemini-3-flash-preview) | 241s | ✅ |
 | write | gemini-tools (gemini-3.1-pro-preview) | 137s | ✅ |
 | write | gemini-tools (gemini-3.1-pro-preview) | 74s | ✅ |
+| write | gemini-tools (gemini-3.1-pro-preview) | 349s | ✅ |
+| write | gemini-tools (gemini-3.1-pro-preview) | 94s | ✅ |
 | activities | gemini-tools (gemini-3.1-pro-preview) | 75s | ✅ |
 | activities | gemini-tools (gemini-3.1-pro-preview) | 120s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 125s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 95s | ✅ |
 | vocab | gemini (auto) | 386s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 224s | ✅ |
 

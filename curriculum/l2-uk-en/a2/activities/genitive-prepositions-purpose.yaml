@@ -2,384 +2,636 @@ version: '1.0'
 module: genitive-prepositions-purpose
 level: a2
 inline:
-- id: match-up-purpose
-  type: match-up
-  instruction: З'єднайте українські фрази з англійськими
-  pairs:
-  - left: для навчання
-    right: for studying
-  - left: для відпочинку
-    right: for rest
-  - left: для здоров'я
-    right: for health
-  - left: для роботи
-    right: for work
-  - left: для допомоги
-    right: for help
-  - left: для дітей
-    right: for children
-  - left: для зустрічей
-    right: for meetings
-  - left: для щастя
-    right: for happiness
-- id: fill-in-location
-  type: fill-in
-  instruction: Вставте правильну форму іменника
+- id: quiz-choose-or-to-complete-everyday-sentences
+  type: quiz
+  instruction: Оберіть правильний прийменник для речення
   items:
-  - sentence: Наш готель знаходиться навпроти ____.
-    answer: вокзалу
+  - question: Цей новий стіл — ____ роботи.
     options:
-    - вокзал
-    - вокзалу
-    - вокзалом
-    - вокзалі
-  - sentence: Влітку ми часто відпочиваємо біля ____.
+    - для
+    - без
+    - біля
+    - навпроти
+    correct: 0
+  - question: Я завжди п'ю каву ____ молока.
+    options:
+    - без
+    - для
+    - біля
+    - навпроти
+    correct: 0
+  - question: Ми поставимо намет ____ річки.
+    options:
+    - біля
+    - для
+    - без
+    - навпроти
+    correct: 0
+  - question: Це дуже гарний подарунок ____ мами.
+    options:
+    - для
+    - без
+    - біля
+    - коло
+    correct: 0
+  - question: Він вирішив це складне завдання ____ допомоги.
+    options:
+    - без
+    - для
+    - біля
+    - навпроти
+    correct: 0
+  - question: Трамвайна зупинка знаходиться просто ____ вокзалу.
+    options:
+    - біля
+    - для
+    - без
+    - навпроти
+    correct: 0
+  - question: Вони зробили цей сюрприз спеціально ____ нас.
+    options:
+    - для
+    - без
+    - біля
+    - навпроти
+    correct: 0
+  - question: Я зовсім не можу жити ____ ранкової кави.
+    options:
+    - без
+    - для
+    - біля
+    - коло
+    correct: 0
+  title: Оберіть правильний прийменник для речення
+- id: true-false-judge-whether-preposition-noun-form-combinations-are-grammatically-correct
+  type: true-false
+  instruction: Чи правильно використано форму слова після прийменника?
+  items:
+  - statement: для відпочинку
+    correct: true
+    explanation: Прийменник «для» вимагає родового відмінка.
+  - statement: без сумнів
+    correct: false
+    explanation: 'Потрібен родовий відмінок: без сумніву.'
+  - statement: біля церква
+    correct: false
+    explanation: 'Потрібен родовий відмінок: біля церкви.'
+  - statement: навпроти будинку
+    correct: true
+    explanation: Прийменник «навпроти» вимагає родового відмінка.
+  - statement: для допомоги
+    correct: true
+    explanation: Прийменник «для» вимагає родового відмінка.
+  - statement: коло річка
+    correct: false
+    explanation: 'Потрібен родовий відмінок: коло річки.'
+  - statement: без зупинки
+    correct: true
+    explanation: Прийменник «без» вимагає родового відмінка.
+  - statement: для брата
+    correct: true
+    explanation: Прийменник «для» вимагає родового відмінка.
+  title: Чи правильно використано форму слова після прийменника?
+- id: fill-in-complete-location-descriptions-with-correct-genitive-form
+  type: fill-in
+  instruction: Вставте правильну форму слова (родовий відмінок)
+  items:
+  - sentence: Ми живемо біля ____.
     answer: річки
     options:
-    - річка
-    - річку
     - річки
-    - річкою
-  - sentence: Нова кав'ярня відкрилася навпроти ____.
+    - річку
+    - річка
+  - sentence: Аптека знаходиться навпроти ____.
     answer: лікарні
     options:
-    - лікарня
     - лікарні
-    - лікарнею
     - лікарню
-  - sentence: Я зараз стою біля ____ метро.
-    answer: станції
+    - лікарня
+  - sentence: Я чекаю тебе коло ____.
+    answer: зупинки
     options:
-    - станція
-    - станції
-    - станцією
-    - станцію
-  - sentence: У селі є старий сад коло ____.
-    answer: хати
+    - зупинки
+    - зупинку
+    - зупинка
+  - sentence: Вони зустрілися біля ____.
+    answer: вокзалу
     options:
-    - хата
-    - хати
-    - хатою
-    - хату
-  - sentence: Ми живемо в квартирі біля ____ моїх батьків.
-    answer: будинку
-    options:
-    - будинок
-    - будинку
-    - будинком
-    - будинки
-  - sentence: Головний музей міста розташований біля ____.
+    - вокзалу
+    - вокзал
+    - вокзалом
+  - sentence: Цей пам'ятник стоїть навпроти ____.
     answer: площі
     options:
-    - площа
     - площі
-    - площею
     - площу
-  - sentence: Вони зустрілися на площі навпроти ____.
-    answer: церкви
+    - площа
+  - sentence: Новий магазин відкрили коло ____.
+    answer: станції
     options:
-    - церква
-    - церкви
-    - церквою
-    - церкву
-- id: quiz-prep-choice-choose-between-and-to-complete-everyday-sentences
-  type: quiz
-  instruction: Оберіть правильний прийменник
-  items:
-  - question: Я завжди п'ю каву ____ цукру.
+    - станції
+    - станцію
+    - станція
+  - sentence: Діти граються біля ____.
+    answer: будинку
     options:
-    - без
-    - для
-    - біля
-    - навпроти
-    correct: 0
-  - question: Цей новий телефон ____ друга.
+    - будинку
+    - будинок
+    - будинком
+  - sentence: Студенти читають навпроти ____.
+    answer: бібліотеки
     options:
-    - для
-    - без
-    - коло
-    - навпроти
-    correct: 0
-  - question: Ми зустрінемося завтра ____ станції метро.
-    options:
-    - біля
-    - без
-    - для
-    - про
-    correct: 0
-  - question: Він швидко закінчив роботу ____ допомоги.
-    options:
-    - без
-    - для
-    - коло
-    - навпроти
-    correct: 0
-  - question: У нас є нові книги ____ навчання.
-    options:
-    - для
-    - без
-    - коло
-    - навпроти
-    correct: 0
-  - question: Жодна людина не живе довго ____ води.
-    options:
-    - без
-    - для
-    - біля
-    - навпроти
-    correct: 0
-  - question: Я зараз стою ____ лікарні.
-    options:
-    - навпроти
-    - для
-    - без
-    - з
-    correct: 0
-  - question: Це спеціальна кімната ____ зустрічей.
-    options:
-    - для
-    - без
-    - біля
-    - коло
-    correct: 0
-- id: true-false-grammar
-  type: true-false
-  instruction: Правильно чи ні? Оцініть граматику
-  items:
-  - statement: для брату
-    correct: false
-    explanation: 'Слово «брат» у родовому відмінку має закінчення -а: для брата.'
-  - statement: без солі
-    correct: true
-    explanation: Слово «сіль» у родовому відмінку має закінчення -і.
-  - statement: біля зупинка
-    correct: false
-    explanation: 'Після прийменника «біля» потрібен родовий відмінок: біля зупинки.'
-  - statement: навпроти лікарні
-    correct: true
-    explanation: Слово «лікарня» у родовому відмінку має закінчення -і.
-  - statement: для здоров'я
-    correct: true
-    explanation: Слово «здоров'я» (середній рід) не змінює закінчення в родовому відмінку.
-  - statement: без цукору
-    correct: false
-    explanation: 'У слові «цукор» літера «о» випадає в родовому відмінку: без цукру.'
-  - statement: біля станції
-    correct: true
-    explanation: Слово «станція» у родовому відмінку має закінчення -ії.
-  - statement: для Марія
-    correct: false
-    explanation: 'Після прийменника «для» потрібен родовий відмінок: для Марії.'
+    - бібліотеки
+    - бібліотеку
+    - бібліотека
+  title: Вставте правильну форму слова (родовий відмінок)
+- id: match-up-match-ukrainian-prepositional-phrases-to-their-english-equivalents
+  type: match-up
+  instruction: З'єднайте українські фрази з їхніми англійськими відповідниками
+  pairs:
+  - left: для відпочинку
+    right: for rest
+  - left: без сумніву
+    right: without a doubt
+  - left: біля річки
+    right: near the river
+  - left: навпроти лікарні
+    right: opposite the hospital
+  - left: для навчання
+    right: for studying
+  - left: коло зупинки
+    right: by the stop
+  - left: без допомоги
+    right: without help
+  - left: біля вокзалу
+    right: near the train station
+  title: З'єднайте українські фрази з їхніми англійськими відповідниками
 workbook:
-- type: group-sort
-  instruction: Називний чи Родовий відмінок?
-  groups:
-  - label: Називний відмінок (що?)
-    items:
-    - вода
-    - сіль
-    - комп'ютер
-    - зупинка
-    - цукор
-    - парк
-  - label: Родовий відмінок (для/без/біля чого?)
-    items:
-    - води
-    - солі
-    - комп'ютера
-    - зупинки
-    - цукру
-    - парку
-- type: error-correction
-  instruction: Знайдіть і виправте помилку у відмінку
+- id: wb-fill-in-genitive-endings
+  type: fill-in
+  instruction: Вставте правильну форму слова у родовому відмінку
   items:
+  - sentence: Цей зошит потрібен для ____.
+    answer: навчання
+    options:
+    - навчання
+    - навчанню
+    - навчанням
+  - sentence: Я не можу працювати без ____.
+    answer: комп'ютера
+    options:
+    - комп'ютера
+    - комп'ютеру
+    - комп'ютер
+  - sentence: Ми купили квитки для ____.
+    answer: друга
+    options:
+    - друга
+    - другу
+    - другом
+  - sentence: Вона любить чай без ____.
+    answer: цукру
+    options:
+    - цукру
+    - цукра
+    - цукром
+  - sentence: Це чудове місце для ____.
+    answer: відпочинку
+    options:
+    - відпочинку
+    - відпочинка
+    - відпочинком
+  - sentence: Учень прийшов без ____.
+    answer: олівця
+    options:
+    - олівця
+    - олівцю
+    - олівцем
+  - sentence: Свіже повітря корисне для ____.
+    answer: здоров'я
+    options:
+    - здоров'я
+    - здоров'ю
+    - здоров'ям
+  - sentence: Суп був зовсім без ____.
+    answer: солі
+    options:
+    - солі
+    - сілі
+    - сіллю
+  title: Вставте правильну форму слова у родовому відмінку
+- id: wb-error-correction-genitive
+  type: error-correction
+  instruction: Знайдіть і виправте помилку
+  items:
+  - sentence: Я завжди п'ю каву без молоко.
+    error: молоко
+    correction: молока
+    error_type: word
+    options:
+    - молока
+    - молоку
+    - молоком
+    explanation: 'Прийменник «без» вимагає родового відмінка: без молока.'
   - sentence: Цей подарунок для мама.
     error: мама
     correction: мами
     error_type: word
     options:
     - мами
-    - мамі
     - маму
-    - мамою
-    explanation: Після «для» потрібен родовий відмінок (для кого?).
-  - sentence: Ми живемо біля парк.
-    error: парк
-    correction: парку
+    - мамі
+    explanation: 'Прийменник «для» вимагає родового відмінка: для мами.'
+  - sentence: Ми зустрінемося біля театр.
+    error: театр
+    correction: театру
     error_type: word
     options:
-    - парку
-    - парка
-    - паркові
-    - парком
-    explanation: Після «біля» потрібен родовий відмінок (біля чого?).
-  - sentence: Я п'ю каву без цукор.
-    error: цукор
-    correction: цукру
+    - театру
+    - театра
+    - театром
+    explanation: 'Прийменник «біля» вимагає родового відмінка: біля театру.'
+  - sentence: Він вирішив це завдання без допомога.
+    error: допомога
+    correction: допомоги
     error_type: word
     options:
-    - цукру
-    - цукору
-    - цукром
-    - цукрі
-    explanation: Після «без» потрібен родовий відмінок, а «о» випадає.
-  - sentence: Вона сидить навпроти вікно.
-    error: вікно
-    correction: вікна
+    - допомоги
+    - допомогу
+    - допомогою
+    explanation: 'Прийменник «без» вимагає родового відмінка: без допомоги.'
+  - sentence: Аптека знаходиться навпроти лікарня.
+    error: лікарня
+    correction: лікарні
     error_type: word
     options:
-    - вікна
-    - вікні
-    - вікном
-    - вікну
-    explanation: Після «навпроти» потрібен родовий відмінок (навпроти чого?).
-  - sentence: Це безпечна кімната для діти.
-    error: діти
-    correction: дітей
+    - лікарні
+    - лікарню
+    - лікарнею
+    explanation: 'Прийменник «навпроти» вимагає родового відмінка: навпроти лікарні.'
+  - sentence: Ця кімната тільки для відпочинок.
+    error: відпочинок
+    correction: відпочинку
     error_type: word
     options:
-    - дітей
-    - дітям
-    - дітьми
-    - дітях
-    explanation: Після «для» потрібен родовий відмінок множини.
-  - sentence: У нас є хороші новини для друг.
-    error: друг
-    correction: друга
+    - відпочинку
+    - відпочинка
+    - відпочинком
+    explanation: 'Прийменник «для» вимагає родового відмінка: для відпочинку.'
+  - sentence: Туристи стоять біля площа.
+    error: площа
+    correction: площі
     error_type: word
     options:
-    - друга
-    - другу
-    - другом
-    - другові
-    explanation: Після «для» потрібен родовий відмінок (для кого?).
-- type: unjumble
-  instruction: Складіть речення зі слів
+    - площі
+    - площу
+    - площею
+    explanation: 'Прийменник «біля» вимагає родового відмінка: біля площі.'
+  - sentence: Я чекаю коло станція метро.
+    error: станція
+    correction: станції
+    error_type: word
+    options:
+    - станції
+    - станцію
+    - станцією
+    explanation: 'Прийменник «коло» вимагає родового відмінка: коло станції.'
+  title: Знайдіть і виправте помилку
+- id: wb-unjumble-sentences
+  type: unjumble
+  instruction: Складіть правильне речення зі слів
   items:
   - words:
+    - для
+    - Цей
+    - роботи.
+    - стіл
+    - —
+    correct_order:
+    - Цей
+    - стіл
+    - —
+    - для
+    - роботи.
+  - words:
     - каву
-    - завжди
-    - п'ю
-    - Я
     - цукру.
+    - Я
+    - п'ю
     - без
     correct_order:
     - Я
-    - завжди
     - п'ю
     - каву
     - без
     - цукру.
   - words:
-    - знаходиться
-    - Наш
+    - біля
+    - Ми
+    - зустрінемося
     - вокзалу.
-    - готель
-    - навпроти
     correct_order:
-    - Наш
-    - готель
-    - знаходиться
-    - навпроти
+    - Ми
+    - зустрінемося
+    - біля
     - вокзалу.
   - words:
-    - потрібен
-    - відпочинку.
-    - час
-    - Мені
-    - для
-    correct_order:
-    - Мені
-    - потрібен
-    - час
-    - для
-    - відпочинку.
-  - words:
-    - книга
+    - подарунок
     - Це
-    - навчання.
+    - сестри.
     - для
-    - нова
     correct_order:
     - Це
-    - нова
-    - книга
+    - подарунок
+    - для
+    - сестри.
+  - words:
+    - річки.
+    - Намет
+    - біля
+    - стоїть
+    correct_order:
+    - Намет
+    - стоїть
+    - біля
+    - річки.
+  - words:
+    - лікарні.
+    - Аптека
+    - навпроти
+    - знаходиться
+    correct_order:
+    - Аптека
+    - знаходиться
+    - навпроти
+    - лікарні.
+  - words:
+    - без
+    - Він
+    - працює
+    - відпочинку.
+    correct_order:
+    - Він
+    - працює
+    - без
+    - відпочинку.
+  - words:
+    - для
+    - потрібен
+    - Інструмент
+    - навчання.
+    correct_order:
+    - Інструмент
+    - потрібен
     - для
     - навчання.
-  - words:
-    - метро.
-    - зараз
-    - біля
-    - Я
-    - стою
-    - станції
-    correct_order:
-    - Я
-    - зараз
-    - стою
-    - біля
-    - станції
-    - метро.
-  - words:
-    - машину
-    - Вони
-    - дороги.
-    - коло
-    - зупинили
-    correct_order:
-    - Вони
-    - зупинили
-    - машину
-    - коло
-    - дороги.
-- type: translate
+  title: Складіть правильне речення зі слів
+- id: wb-translate-phrases
+  type: translate
   instruction: Оберіть правильний переклад
   items:
-  - source: I drink coffee without sugar.
+  - source: without a doubt
     options:
-    - text: Я п'ю каву без цукру.
+    - text: без сумніву
       correct: true
-    - text: Я п'ю каву для цукру.
+    - text: для сумніву
       correct: false
-    - text: Я п'ю каву без солі.
+    - text: біля сумніву
       correct: false
-  - source: This gift is for mom.
+    - text: навпроти сумніву
+      correct: false
+  - source: for studying
     options:
-    - text: Цей подарунок для мами.
+    - text: для навчання
       correct: true
-    - text: Цей подарунок без мами.
+    - text: без навчання
       correct: false
-    - text: Цей подарунок біля мами.
+    - text: біля навчання
       correct: false
-  - source: The hotel is opposite the station.
+    - text: коло навчання
+      correct: false
+  - source: near the hospital
     options:
-    - text: Готель знаходиться навпроти вокзалу.
+    - text: біля лікарні
       correct: true
-    - text: Готель знаходиться біля вокзалу.
+    - text: навпроти лікарні
       correct: false
-    - text: Готель знаходиться коло вокзалу.
+    - text: для лікарні
       correct: false
-  - source: We live near the park.
+    - text: без лікарні
+      correct: false
+  - source: opposite the square
     options:
-    - text: Ми живемо біля парку.
+    - text: навпроти площі
       correct: true
-    - text: Ми живемо без парку.
+    - text: біля площі
       correct: false
-    - text: Ми живемо для парку.
+    - text: коло площі
       correct: false
-  - source: He finished work without help.
+    - text: для площі
+      correct: false
+  - source: without help
     options:
-    - text: Він закінчив роботу без допомоги.
+    - text: без допомоги
       correct: true
-    - text: Він закінчив роботу для допомоги.
+    - text: для допомоги
       correct: false
-    - text: Він закінчив роботу біля допомоги.
+    - text: біля допомоги
       correct: false
-  - source: We bought tickets for the children.
+    - text: навпроти допомоги
+      correct: false
+  - source: for rest
     options:
-    - text: Ми купили квитки для дітей.
+    - text: для відпочинку
       correct: true
-    - text: Ми купили квитки без дітей.
+    - text: без відпочинку
       correct: false
-    - text: Ми купили квитки коло дітей.
+    - text: навпроти відпочинку
       correct: false
+    - text: біля відпочинку
+      correct: false
+  - source: near the river
+    options:
+    - text: біля річки
+      correct: true
+    - text: для річки
+      correct: false
+    - text: без річки
+      correct: false
+    - text: навпроти річки
+      correct: false
+  - source: by the stop
+    options:
+    - text: коло зупинки
+      correct: true
+    - text: без зупинки
+      correct: false
+    - text: навпроти зупинки
+      correct: false
+    - text: для зупинки
+      correct: false
+  title: Оберіть правильний переклад
+- id: wb-group-sort-endings
+  type: group-sort
+  instruction: Розподіліть іменники у родовому відмінку за їхнім закінченням
+  groups:
+  - label: Закінчення -и або -і
+    items:
+    - річки
+    - лікарні
+    - зупинки
+    - площі
+    - бібліотеки
+    - станції
+  - label: Закінчення -а, -я, -у або -ю
+    items:
+    - відпочинку
+    - сумніву
+    - будинку
+    - вокзалу
+    - призначення
+    - навчання
+  title: Розподіліть іменники у родовому відмінку за їхнім закінченням
+- id: wb-match-up-sentences
+  type: match-up
+  instruction: З'єднайте частини речень
+  pairs:
+  - left: Я п'ю каву
+    right: без цукру
+  - left: Ми поставимо намет
+    right: біля річки
+  - left: Цей подарунок
+    right: для мами
+  - left: Аптека знаходиться
+    right: навпроти лікарні
+  - left: Вони працюють весь день
+    right: без відпочинку
+  - left: Ми чекаємо тебе
+    right: коло зупинки
+  - left: Цей зошит потрібен
+    right: для навчання
+  - left: Студенти читають
+    right: біля бібліотеки
+  title: З'єднайте частини речень
+- id: wb-fill-in-prepositions
+  type: fill-in
+  instruction: Вставте правильний прийменник (для, без, біля, навпроти)
+  items:
+  - sentence: Я не можу жити ____ ранкової кави.
+    answer: без
+    options:
+    - без
+    - для
+    - біля
+    - навпроти
+  - sentence: Цей сюрприз був підготовлений спеціально ____ неї.
+    answer: для
+    options:
+    - для
+    - без
+    - біля
+    - навпроти
+  - sentence: Наш будинок стоїть ____ лісу.
+    answer: біля
+    options:
+    - біля
+    - для
+    - без
+    - навпроти
+  - sentence: Нова бібліотека працює ____ мого університету.
+    answer: навпроти
+    options:
+    - навпроти
+    - для
+    - без
+    - біля
+  - sentence: Ми вирішили піти в парк ____ курток.
+    answer: без
+    options:
+    - без
+    - для
+    - біля
+    - навпроти
+  - sentence: Свіже повітря дуже корисне ____ здоров'я.
+    answer: для
+    options:
+    - для
+    - без
+    - біля
+    - навпроти
+  - sentence: Маленька кав'ярня знаходиться ____ великої площі.
+    answer: навпроти
+    options:
+    - навпроти
+    - для
+    - без
+    - біля
+  - sentence: Діти бігали ____ швидкої річки цілий день.
+    answer: біля
+    options:
+    - біля
+    - для
+    - без
+    - навпроти
+  title: Вставте правильний прийменник (для, без, біля, навпроти)
+- id: wb-quiz-endings
+  type: quiz
+  instruction: Оберіть правильне закінчення для іменника після прийменника
+  items:
+  - question: Ми гуляємо біля річк____.
+    options:
+    - -и
+    - -а
+    - -у
+    - -ою
+    correct: 0
+  - question: Цей торт для діт____.
+    options:
+    - -ей
+    - -и
+    - -ям
+    - -ями
+    correct: 0
+  - question: Він прийшов без парасольк____.
+    options:
+    - -и
+    - -а
+    - -у
+    - -ою
+    correct: 0
+  - question: Зупинка біля вокзал____.
+    options:
+    - -у
+    - -а
+    - -ом
+    - -і
+    correct: 0
+  - question: Це місце для відпочинк____.
+    options:
+    - -у
+    - -а
+    - -ом
+    - -і
+    correct: 0
+  - question: Вони живуть навпроти лікарн____.
+    options:
+    - -і
+    - -я
+    - -ю
+    - -ею
+    correct: 0
+  - question: Студенти читають коло бібліотек____.
+    options:
+    - -и
+    - -а
+    - -у
+    - -ою
+    correct: 0
+  - question: Я п'ю чай без цукр____.
+    options:
+    - -у
+    - -а
+    - -ом
+    - -і
+    correct: 0
+  title: Оберіть правильне закінчення для іменника після прийменника

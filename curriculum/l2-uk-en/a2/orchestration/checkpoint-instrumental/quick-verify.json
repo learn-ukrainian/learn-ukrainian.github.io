@@ -2,12 +2,6 @@
   "attempt": 1,
   "passed": true,
   "errors": [],
-  "warnings": [
-    {
-      "check": "VOCABULARY",
-      "severity": "WARNING",
-      "message": "Missing 1/8 required vocab: вправа (exercise)"
-    }
-  ],
-  "timestamp": "2026-04-07T23:29:54.282068+00:00"
+  "warnings": [],
+  "timestamp": "2026-04-11T11:58:48.843041+00:00"
 }

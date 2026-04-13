@@ -1,0 +1,67 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T01-17-a083bf22.json
+phase: review
+prompt_chars: 61850
+response_chars: 5480
+prompt_words: 8363
+response_words: 767
+sections:
+- name: preamble
+  start: 0
+  length: 461
+  fraction: 0.0075
+- name: plan
+  start: 461
+  length: 58076
+  fraction: 0.939
+- name: output_spec
+  start: 58537
+  length: 3313
+  fraction: 0.0536
+large_sections:
+- plan
+directives_total: 16
+directives_covered: 6
+directives_missed:
+- kind: must
+  text: If you are not 100% certain a word/form/usage is wrong, you MUST flag it as
+    `[NEEDS RAG VERIFICATION]` instead of marking it as a definitive error.
+  covered: false
+  coverage_note: 6/17 keywords (35%)
+- kind: must
+  text: '**CRITICAL RULE: If you mention ANY error, mistake, or inaccuracy in the
+    evidence column of your scores table, you MUST also list it as a structured finding
+    below AND include it in your `<fixes>` block.'
+  covered: false
+  coverage_note: 7/22 keywords (32%)
+- kind: must
+  text: This is a language curriculum — every error you identify must be fixed.
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: inject_activity
+  text: quiz-focus-on-identifying-the-and-the-in-12-sentences
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-definitions-connect-terms-like-and-with-their-comma-rules-and-examples
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-form-insert-the-correctly-inflected-participle-into-a-phrase-based-on-the-noun-provided
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: essay-response-sentences
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: error-correction-punctuation
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: reading-comprehension
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing

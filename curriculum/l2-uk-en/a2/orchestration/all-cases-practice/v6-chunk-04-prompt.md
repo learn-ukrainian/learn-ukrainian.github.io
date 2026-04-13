@@ -3,28 +3,28 @@
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 37: Все разом (A2, A2.5 [Case Synthesis and Plurals])
-**Section to write:** Самоперевірка: Знайди помилку (~350 words total)
-**Word target for this section:** 350 words (aim for 385 to account for undershoot)
+**Section to write:** Самоперевірка: Знайди помилку (~400 words)
+**Word target for this section:** 400 words (aim for 440 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Самоперевірка: Знайди помилку (~350 words total)
-- P1 (~70 words): Identifying common pitfalls for A2 learners: direct calques like "Маю головний біль" instead of "У мене болить голова" and wrong "по" usage (Dative vs Locative).
-- P2 (~140 words): The "Case Master Cheat Sheet." A structured summary list covering:
-  - 1. Називний (Хто? Що? - Subject)
-  - 2. Родовий (Кого? Чого? - Absence, "У мене є", quantity)
-  - 3. Давальний (Кому? Чому? - Recipient, state "Мені...")
-  - 4. Знахідний (Кого? Що? - Direct object, destination)
-  - 5. Орудний (Ким? Чим? - Instrument, with someone)
-  - 6. Місцевий (На кому? На чому? - Location, surface movement)
-  - 7. Кличний (Addressing someone)
-- P3 (~100 words): Analysis of three "buggy" sentences. Example: "*Ми їхали по потягу* (Wrong case) -> *Ми їхали потягом* (Correct Instrument) or *по потягах* (Locative movement)."
-- P4 (~40 words): Strategy for self-correction: The "Verb-Preposition Check" introduced in M31.
-- <!-- INJECT_ACTIVITY: error-correction-all-cases --> [error-correction, Find and fix case ending errors in a short text about a trip to a party, 6 items]
+## Самоперевірка: Знайди помилку (~400 words)
+- P1 (~50 words): Introduction to the self-check section. Emphasize that spotting errors in context is the final step to mastering cases. Instruct learners to find the deliberate mistakes in the following short texts.
+- P2 (~100 words): Error analysis text 1 (Prepositions). Present 3-4 sentences containing deliberate errors like "Ми їхали по полям" (Russism, should be "по полях" Loc. Pl.) and "Я пішов з друзі" (missing Instr. ending, should be "з друзями"). Walk through the corrections and explain why the original was wrong.
+- P3 (~100 words): Error analysis text 2 (Objects and Quantities). Present 3-4 sentences with errors like "Я допомагаю сестру" (wrong case for recipient, should be Dat. "сестрі") and "Там було багато студенти" (missing Gen. Pl. after quantity, should be "студентів"). Walk through the corrections.
+- P4 (~150 words): The "Case Cheat Sheet" summary. A concise bulleted recap of all 7 cases for quick reference:
+  * Називний (Nom): хто/що? (Subject: Київ, друзі)
+  * Родовий (Gen): кого/чого? (Absence, quantity, 'з/до/біля': немає торта, до Львова)
+  * Давальний (Dat): кому/чому? (Recipient, age, impersonal states: друзям, мені холодно)
+  * Знахідний (Acc): кого/що? (Direct object, 'через': купити ліки, через Умань)
+  * Орудний (Instr): ким/чим? (Instrument, 'з' accompaniment: потягом, з кашлем)
+  * Місцевий (Loc): на/у кому/чому? (Location 'в/на/по': у лікарні, по Хрещатику)
+  * Кличний (Voc): (Addressing someone directly: Оксано, лікарю!)
+- <!-- INJECT_ACTIVITY: error-correction-cases --> [error-correction, Find and fix wrong case endings across all 7 cases (e.g., *допомагаю сестру → сестрі, *багато студенти → студентів), 6 items]
 
-Grand total: ~2000 words
+Grand total: ~2200 words
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -32,7 +32,7 @@ Grand total: ~2000 words
 <previous_context>
 [...previous sections truncated...]
 
-— **Тарас:** Саме так. З Одеси ми поїдемо просто до Львова. А потім я дуже хочу відпочивати в **Карпатах** *(Carpathians)*. > — **Ірина:** О, я теж мрію про Карпати! Ми можемо знайти тихий будиночок біля гірської річки. > — **Тарас:** Ідеальний план. Ми точно побачимо дуже багато гарних місць під час подорожі. In this dialogue, Taras and Iryna use different cases for destinations. When they talk about moving towards a city, they use the Genitive case with the preposition «до». For masculine cities, the ending is usually «-а» or «-у». For example, they say «до Львова» and «до Києва» (to Kyiv). When they talk about the city as a direct object, they use the Accusative case: «відвідати Одесу» (to visit Odesa). The mountains «Карпати» only exist in the plural form. When Taras talks about being inside the mountains, he uses the Locative plural with the preposition «в»: «в Карпатах». If they wanted to go *to* the mountains, they would say «в Карпати» using the Accusative case for direction. > — **Ірина:** Як саме ми будемо туди їхати? Будемо подорожувати **потягами** *(trains)* чи **машинами** *(cars)*? > — **Тарас:** Я думаю, що набагато краще їхати нашою власною машиною. Так ми матимемо більше свободи під час подорожі. > — **Ірина:** Повністю згодна. Ми зможемо зупинятися там, де тільки захочемо. > — **Тарас:** Так, адже по дорозі є дуже багато **визначних місць** *(landmarks)*. Ми обов'язково відвідаємо кілька старовинних замків. > — **Ірина:** Чудово! А ми запросимо когось із собою? Ми ж можемо поїхати з нашими **друзями** *(friends)*. > — **Тарас:** Звісно! Я сьогодні запитаю Олега та Марію. З ними завжди надзвичайно весело подорожувати. > — **Ірина:** Прекрасно. Тільки нам треба взяти з собою достатньо **грошей** *(money)* на пальне та їжу. > — **Тарас:** Не хвилюйся про це, я вже все детально порахував. Notice the Instrumental case in the plural. When Iryna asks about the method of transport, she says «потягами» or «машинами». The endings «-ами» and «-ями» are standard for the Instrumental plural. They also use this case to say *with whom* they are traveling: «з друзями». The word «гроші» is another noun that only exists in the plural. In the Genitive case, it becomes «грошей» (of money). If you need to use it in the Instrumental case (for example, to pay *with money*), you can use a unique, older ending «-ми» and say «грішми». You can also use the standard form «грошима». Both are correct and natural. > — **Ірина:** Отже, ми їдемо до Львова. Але там часто йде дощ. > — **Тарас:** Нічого страшного. Львову дуже пасує дощ. Це навіть романтично. > — **Ірина:** Можливо, ти маєш рацію. А що ми будемо там робити? > — **Тарас:** Ми будемо багато гуляти по **Хрещатику** *(Khreshchatyk)*... Ой, я переплутав! Хрещатик у Києві. > — **Ірина:** Смішно! Ми будемо гуляти по старих площах Львова, а потім підемо гуляти по горах. > — **Тарас:** Домовилися. Це буде найкраща відпустка у нашому житті! <!-- INJECT_ACTIVITY: match-up, Match sentence halves ensuring case agreement with prepositions/verbs, 8 items -->
+point always uses the preposition **з** to mean "from" with the Genitive case, as in «з Києва». The destination uses **до** to mean "to", which also requires the Genitive case, like «до Львова». However, if you are passing through a place, you use the preposition **через** (through) with the Accusative case, resulting in «через Умань». You also see the Genitive plural in action when Marko says «багато визначних місць», because quantity words always trigger the Genitive case for the following noun. > — **Тарас:** Друже! Нам треба поспішати. Квитки швидко купують. Краще поїхати **потягом** (train). *(Friend! We need to hurry. Tickets are bought quickly. It is better to travel by train.)* > — **Марко:** Тарасе, я теж так думаю. Я їду з подругою, тому нам потрібні два місця поруч. *(Taras, I think so too. I am traveling with a girlfriend, so we need two seats next to each other.)* > — **Тарас:** Чудово. Тоді ми зустрінемося у Львові на вокзалі. Що будемо робити там? *(Great. Then we will meet in Lviv at the station. What will we do there?)* > — **Марко:** Спочатку купимо сувеніри друзям у Львові. А потім повернемося і гулятимемо по Хрещатику. *(First we will buy souvenirs for friends in Lviv. And then we will return and walk along Khreshchatyk.)* > — **Тарас:** Ти забув про гори. Після Львова ми будемо **милуватися** (to admire) Карпатами. *(You forgot about the mountains. After Lviv we will admire the Carpathians.)* > — **Марко:** Точно! У 2024 році це буде наша найкраща подорож. *(Exactly! In 2024, this will be our best trip.)* Notice how the Locative and Instrumental cases serve very different purposes here. The Locative case marks a static location or time, as seen in «у Львові» and «у 2024 році». It is also used after the preposition **по** to describe movement across a surface, creating the authentic Ukrainian phrase «по Хрещатику». The Instrumental case shows the means of transport without any preposition, like «поїхати потягом». It also follows specific verbs. For example, the verb **милуватися** (to admire) always requires the Instrumental case. The noun **Карпати** (the Carpathians) is a word that only exists in the plural, so it takes the Instrumental plural ending to become «Карпатами». Українська мова має зручні фрази для планування. Ви можете пропонувати ідеї так: «Давай поїдемо...», «Може, спочатку...» або «А потім можна...». Ці конструкції часто вимагають інфінітива, наприклад, «можна поїхати». Вибрані дієслова руху потім визначають правильний відмінок для вашого напрямку. > *The Ukrainian language has convenient phrases for planning. You can suggest ideas like this: "Let's go...", "Maybe, first...", or "And then we can...". These constructions often require an infinitive, for example, "one can go". The chosen verbs of motion then determine the correct case for your destination.* :::info **Grammar box** Remember that the preposition **по** in Ukrainian requires the Locative case when describing movement along a surface (e.g., **по вулицях**, **по місту**). Do not use the Dative case here, as that is a common error borrowed from other languages. ::: <!-- INJECT_ACTIVITY: fill-in-travel-dialogue -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -512,7 +512,74 @@ A phased approach is best for internalizing plural cases.
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -531,18 +598,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (4/4).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] вечірка (party)
+- [ ] подарунок (gift, present)
+- [ ] лікар (doctor)
+- [ ] пацієнт (patient)
+- [ ] здоров'я (health)
+- [ ] ліки (medicine)
+- [ ] подорож (trip, journey)
+- [ ] потяг (train)
+- [ ] визначне місце (landmark, sight)
+- [ ] запрошувати (to invite)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Самоперевірка: Знайди помилку (~400 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

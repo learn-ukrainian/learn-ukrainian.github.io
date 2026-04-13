@@ -2,49 +2,53 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 10
-  evidence: Covers all 4 sections with required points, word count is 1390 (exceeds
-    1200 target), and uses all required and recommended vocabulary.
+  score: 6
+  evidence: 'One required dialogue situation is missing: the plan asks for “A learner
+    tells their Ukrainian friend about their plans after finishing the A1 course,”
+    but the closest text is only `Що будемо робити в'
 - dimension: 2
   name: Linguistic accuracy
-  score: 9
-  evidence: Grammatically accurate for the most part, but contains the unnatural construction
-    "Цей майдан — Незалежності" (translated literally as "This square is of Independence").
+  score: 8
+  evidence: '`Ти в місті Київ.` is incorrect; `Києві` is the locative form verified
+    in VESUM/textbook corpus. No Russian characters were found.'
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: Excellent pedagogical tone. Uses the "Day in the life" simulation perfectly
-    to review tenses naturally.
+  score: 8
+  evidence: The review flow is coherent, but the all-tenses practice marker is inserted
+    before the module completes its future-tense and mixed-tense consolidation in
+    `## Вечір`.
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: All required (`готовий`, `вітаю`, `початок`, `сувенір`, `квиток`, `зустріти`)
-    and recommended vocabulary used naturally in context.
+  score: 9
+  evidence: 'Required words appear in prose: `готовий`, `вітаю`, `початок`, `сувенір`,
+    `квиток`; recommended items such as `круасан`, `карта`, `лінія`, `фільм`, `подорожувати`,
+    `Лавра`, `готель` also appear.'
 - dimension: 5
   name: Exercise quality
-  score: 8
-  evidence: The `order-day-events` activity is placed at the end of Section 1, which
-    requires learners to sort events from the entire day before they have read about
-    the afternoon or evening.
+  score: 7
+  evidence: 'All four markers are present, but `<!-- INJECT_ACTIVITY: fill-in-tenses
+    -->` comes before `Що будемо робити ввечері?` / `Завтра я буду подорожувати.`
+    and before the reflection it is supposed to test.'
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: Very encouraging and natural teacher persona. Great motivational conclusion
-    for reaching the A1 milestone.
+  score: 6
+  evidence: '`Welcome to the culmination of your A1 journey.` and `You have built
+    a massive linguistic foundation.` are exactly the kind of self-congratulatory/generic
+    framing the rubric says to avoid.'
 - dimension: 7
   name: Structural integrity
-  score: 10
-  evidence: Clean markdown, 1390 words (exceeds target), uses expected formatting
-    like blockquotes for dialogue and callout boxes.
+  score: 9
+  evidence: All four planned H2 sections are present and ordered; 4 activity markers
+    are present; pipeline word count is 1677, above the 1200 target.
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: Authentic cultural context (Khreshchatyk, borscht, varenyky, Lavra, TSUM).
-    The note on 'сувенір' being a standalone concept without 'пам'ятний' is a great
-    cultural/linguistic insight.
+  score: 9
+  evidence: Kyiv, Khreshchatyk, the metro, vyshyvanka, and the Lavra are presented
+    on Ukrainian terms, with no Russia-centered framing.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 9
-  evidence: Dialogues are natural and fit the scenarios well. "Що ти робиш тут?" is
-    a bit literal; "Що ти тут робиш?" is more natural.
+  score: 7
+  evidence: 'Speakers are named, but the farewell dialogue is thin (`Давай писати
+    повідомлення. Ось мій номер.`), and the plan’s second dialogue situation about
+    post-course travel plans with a Ukrainian friend is '
 findings: []

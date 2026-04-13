@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-прислівник «зелено» *(greenly)*. Корінь один, але суфікси та закінчення створюють різні частини мови. Це справжня магія словотвору. Суфікси мають ще одну надзвичайно корисну функцію. Вони працюють як маркери частин мови. Деякі суфікси відразу кричать нам про категорію слова. Це чудовий інструмент для розуміння нових слів. Якщо ви бачите певний суфікс, ви відразу знаєте частину мови. Давайте розглянемо іменникові суфікси. Суфікс «-ок» часто показує маленький предмет. Наприклад, «місток» *(small bridge)* або «лісок» *(small forest)*. Суфікс «-ар» або «-яр» показує професію чи заняття людини. Наприклад, «бджоляр» *(beekeeper)*, «школяр» *(schoolboy)*, «лікар» *(doctor)*. Суфікси «-ист» або «-іст» теж вказують на особу. Наприклад, «журналіст» *(journalist)* або «піаніст» *(pianist)*. Тепер подивимося на прикметники. Вони також мають свої улюблені суфікси. Дуже популярний суфікс «-н-». Він допомагає створити прикметник від іменника. Наприклад, «осінь» *(autumn)* стає «осінній» *(autumn [adj.])* . «Смак» *(taste)* стає «смачний» *(tasty)*. Інший важливий прикметниковий суфікс — «-ськ-». Він часто показує приналежність до географічного місця або групи. Наприклад, «морський» *(marine)*, «український» *(Ukrainian)*, «львівський» *(Lviv [adj.])* . Дієслова також мають чіткі маркери. Суфікс «-ти» показує інфінітив. Це початкова форма дієслова. Наприклад, «писати» *(to write)* або «робити» *(to do)*. Суфікси «-ува-» або «-ва-» є дуже активними дієслівними суфіксами. Вони часто показують процес. Наприклад, «малювати» *(to draw)*, «зимувати» *(to winter)*, «купувати» *(to buy)*. Коли ви читаєте український текст, використовуйте цей інструмент. Аналізуйте суфікси. Вони допоможуть вам розкодувати структуру речення. Ви легко відрізните прикметник від іменника чи дієслова. Тепер ми знаємо всі значущі частини слова. Ми знаємо про закінчення, основу, корінь, префікс і суфікс. Настав час навчитися робити **розбір слова за будовою** *(morphemic analysis)*. Це процес поділу слова на всі його **морфеми** *(morphemes)*. Розбір завжди має чітку послідовність. Спочатку ми шукаємо закінчення. Для цього ми змінюємо форму слова. Візьмемо слово «перехідний» *(transitional)*. Змінюємо його: «перехідного», «перехідному». Змінюється частина «-ий». Отже, закінчення — «-ий». Все, що залишилося — це основа «перехідн-». Тепер у цій основі треба знайти корінь. Шукаємо спільнокореневі слова: «хід», «ходити», «вихід». Спільна частина — «-хід-». Це наш корінь. Тепер дивимося, що стоїть перед коренем. Це префікс «пере-». А що стоїть після кореня? Це суфікс «-н-». Розбір завершено! Іноді слова мають дуже складну будову. Вони можуть мати кілька префіксів або суфіксів. Наприклад, слово «презадовгий» *(very long)*. Тут є корінь «-довж-». Цей корінь утворився від слова «довгий» *(long)* через чергування. І тут є цілих два префікси: «пре-» та «за-». Або візьмемо іменник «висотина» *(height)*. Тут є корінь «-вис-» від слова «високий» *(high)*. І після нього йдуть два суфікси: «-от-» та «-ин-». І в кінці є закінчення «-а». Такі довгі слова виглядають страшно. Але якщо ви знаєте правила розбору, вони стають простими. Це як конструктор лего. Ви просто розбираєте його на маленькі блоки. Розуміння будови слова — це ключ до грамотності. > — **Богдан:** Це звучить як математика! Кожне слово має свою формулу. > — **Марина:** Так і є. Якщо ти розумієш ці формули, ти можеш створити будь-яке слово. > — **Богдан:** Треба просто запам'ятати найпопулярніші префікси та суфікси. > — **Марина:** Точно. Це дуже допоможе нам у майбутньому. <!-- INJECT_ACTIVITY: identify-morphemes --> <!-- INJECT_ACTIVITY: fill-in-analysis --> <!-- INJECT_ACTIVITY: error-correction-morphemes -->
+answers який? чий?), or a **дієслово** (verb — names actions, answers що робити?). Деякі суфікси чітко вказують на частину мови. Наприклад, суфікси «-ок-» або «-ар-» часто створюють іменники. Якщо ви бачите слова «місток» або «бджоляр», ви знаєте їхню роль. Вони позначають конкретні предмети або професії людей. Суфікси «-н-» та «-ськ-» є типовими для прикметників. Ми бачимо їх у словах «осінній» або «морський». А суфікси «-ти-» або «-ува-» завжди сигналізують про дієслово. Слова «писати» і «малювати» позначають активну дію. Знання цих суфіксів допомагає швидко розпізнавати нові слова. > *Some suffixes clearly indicate the part of speech. For example, the suffixes "-ок-" or "-ар-" often create nouns. If you see the words "місток" or "бджоляр", you know their role. They denote specific objects or people's professions. The suffixes "-н-" and "-ськ-" are typical for adjectives. We see them in the words "осінній" or "морський". And the suffixes "-ти-" or "-ува-" always signal a verb. The words "писати" and "малювати" denote an active action. Knowing these suffixes helps to quickly recognize new words.* :::info **Grammar box** Use suffixes as a decoding tool. Even if you don't know the exact meaning of the root, the suffix will often tell you the word's grammatical role in the sentence. ::: Now that you know all the pieces, you can perform a complete morphemic analysis, or "розбір слова за будовою". There is a strict sequence you must follow to do this correctly. The first step is to isolate the **закінчення** (ending — changeable part expressing grammatical meaning) by changing the word's form. The part that remains is the **основа** (stem — the part of a word without the ending). Next, we find the **корінь** (root — the main meaningful part of a word) by comparing a few **спільнокореневий** (cognate — words sharing the same root) examples. Only then do we mark the prefix and suffix. Щоб правильно розібрати слово за будовою, треба знати послідовність. Спочатку ми завжди шукаємо закінчення. Для цього ми просто змінюємо форму слова. Частина без закінчення називається основою. Після цього ми підбираємо спільнокореневі слова. Це допомагає нам знайти спільний корінь. Тільки тоді ми виділяємо префікс перед коренем і суфікс після нього. Одне слово може мати кілька префіксів або суфіксів. Наприклад, прикметник «презадовгий» має цілих два префікси. > *To correctly analyze a word by its structure, you need to know the sequence. First, we always look for the ending. To do this, we simply change the form of the word. The part without the ending is called the stem. After that, we select cognate words. This helps us find the shared root. Only then do we highlight the prefix before the root and the suffix after it. One word can have several prefixes or suffixes. For example, the adjective "презадовгий" has as many as two prefixes.* By breaking words apart like Lego blocks, you will realize that the vast Ukrainian vocabulary is actually built from a surprisingly small number of recurring, predictable elements. <!-- INJECT_ACTIVITY: identify-morphemes --> <!-- INJECT_ACTIVITY: fill-in-analysis --> <!-- INJECT_ACTIVITY: error-correction-morphemes -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -451,7 +451,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 6: A2 finale (A2 M51-M69)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 40%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 40% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 70-90% Ukrainian.
 LANGUAGE ROLES:
@@ -470,18 +537,69 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] морфологія (morphology — the study of word forms and parts of speech)
+- [ ] корінь (root — the main meaningful part of a word)
+- [ ] префікс (prefix — meaningful part before the root)
+- [ ] суфікс (suffix — meaningful part after the root)
+- [ ] закінчення (ending — changeable part expressing grammatical meaning)
+- [ ] основа (stem — the part of a word without the ending)
+- [ ] спільнокореневий (cognate — words sharing the same root)
+- [ ] іменник (noun — names things, answers хто? що?)
+- [ ] прикметник (adjective — names qualities, answers який? чий?)
+- [ ] дієслово (verb — names actions, answers що робити?)
+- [ ] прислівник (adverb — names circumstances, answers як? де? коли?)
+- [ ] самостійний (content/autosemantic — part of speech with independent meaning)
+- [ ] службовий (function/synsemantic — part of speech without independent meaning)
+- [ ] прийменник (preposition — links words, governs case)
+- [ ] сполучник (conjunction — connects words or clauses)
+- [ ] частка (particle — adds shades of meaning)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Самостійні частини мови (~720 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

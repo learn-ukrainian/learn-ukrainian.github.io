@@ -1,55 +1,111 @@
 ## Linguistic Scan
-1 error found:
-- "Вишиванковий день" is incorrect; the authentic term is "День вишиванки".
+No Russianisms, Surzhyk, paronym errors, or forbidden Russian letters were found in the Ukrainian text I checked.
+
+Issues found:
+- The grammar note in the `:::caution` block teaches the wrong capitalization rule: `**День Незалежності** has both words capitalized because it is a major state holiday...`. Ukrainian orthography does not use “major holiday” as the rule.
+- The cultural-history sentence `However, in 2023, Ukraine officially moved the date to December 25.` is factually inaccurate as written: it conflates the 2017 public-holiday change with the 2023 church-calendar shift.
+- The Independence Day prose presents `салют` / fireworks as a normal present-day practice in Ukraine, which is outdated for contemporary Ukraine.
 
 ## Exercise Check
-All 4 `<!-- INJECT_ACTIVITY: {id} -->` markers are present and match the plan's `activity_hints` exactly.
-- `quiz-holiday-match` is correctly placed after the Dialogues section.
-- `quiz-holiday-clues` is correctly placed after the Ukrainian Holidays section.
-- `group-sort-traditions` is correctly placed after the State Holidays section.
-- `fill-in-greetings` is correctly placed at the end of the Summary.
+Found 4 markers:
+- `quiz-which-holiday`
+- `quiz-match-date`
+- `group-sort-traditions`
+- `fill-in-greetings`
+
+Checks:
+- Marker IDs match the 4 `activity_hints` in the plan.
+- `quiz-match-date`, `group-sort-traditions`, and `fill-in-greetings` are placed after the relevant teaching.
+- `quiz-which-holiday` is misplaced: it appears before `Новий рік` is taught, but the plan’s focus explicitly gives `Різдво / Великдень / Новий рік` as the answer set.
+- Marker count is correct, but the first marker should be moved later so the learner has seen all target holidays before the quiz is injected.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 10/10 | The module follows the plan perfectly, covering all required points in `content_outline`. |
-| 2. Linguistic accuracy | 9/10 | Excellent Ukrainian overall, but uses the unnatural formulation "Вишиванковий день" (inherited from the plan) instead of the authentic "День вишиванки". |
-| 3. Pedagogical quality | 9/10 | Provides great cultural context (e.g., the difference between Великдень and паска), but the explanation of instrumental case endings incorrectly claims that only noun rules apply, ignoring the adjective ending in "З Новим роком!". |
-| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary words are integrated naturally. |
-| 5. Exercise quality | 10/10 | All activity injection markers are present, correctly spelled, and logically placed after the relevant teaching content. |
-| 6. Engagement & tone | 10/10 | Warm, encouraging teacher persona that avoids gamified filler. Culturally rich and engaging. |
-| 7. Structural integrity | 10/10 | Clean Markdown formatting. Word count (1542 words) comfortably exceeds the 1200-word target. |
-| 8. Cultural accuracy | 10/10 | Highly accurate. Correctly explains the 2023 calendar shift, the 12 dishes of Свята вечеря, and the significance of various holidays. |
-| 9. Dialogue & conversation quality | 8/10 | The dialogues are natural and use good vocabulary, but the formatting repeats the same speaker on consecutive lines instead of combining their speech into a single conversational turn. |
+| 1. Plan adherence | 6/10 | The structure follows the plan, but the Christmas Eve dialogue situation is not fully realized. The plan calls for a family + foreign guest scene explaining `кутя, борщ, вареники, риба, узвар`; in the module `узвар`, `вареники`, and `риба` do not appear at all, and the only `борщ` appears later in `борщ з м'ясом` as a grammar example. |
+| 2. Linguistic accuracy | 7/10 | No Russianisms/Surzhyk found, but the note `**День Незалежності** has both words capitalized because it is a major state holiday` teaches the wrong orthographic rule. |
+| 3. Pedagogical quality | 7/10 | The module has a usable presentation flow, but the `quiz-which-holiday` marker comes before `Новий рік` is introduced, so the learner may be tested on an option not yet taught. |
+| 4. Vocabulary coverage | 7/10 | Required vocabulary is mostly present, but the planned Christmas-dinner vocabulary is underdelivered: `узвар`, `вареники`, and `риба` are absent from the prose, and `борщ` is not taught in the holiday scene. |
+| 5. Exercise quality | 7/10 | The marker inventory matches the plan, but `<!-- INJECT_ACTIVITY: quiz-which-holiday -->` is placed before the New Year subsection even though the plan says the quiz should distinguish `Різдво / Великдень / Новий рік`. |
+| 6. Engagement & tone | 7/10 | There are useful cultural details (`Свята вечеря`, `писанки`, `вишиванка`), but the key Christmas scene is less vivid than the plan’s guest-at-table situation and reads more like explanation than lived interaction. |
+| 7. Structural integrity | 9/10 | All planned H2 sections are present and ordered correctly; markdown is clean; pipeline word count is 1713, which is above the 1200 target. |
+| 8. Cultural accuracy | 5/10 | `However, in 2023, Ukraine officially moved the date to December 25` is historically imprecise, and the present-tense Independence Day material normalizes `салют` / fireworks in a way that is outdated for contemporary Ukraine. |
+| 9. Dialogue & conversation quality | 6/10 | Named speakers help, but the strongest planned scene is missing; the Christmas material does not use the intended foreign-guest dinner setup and loses a more natural cultural conversation opportunity. |
 
 ## Findings
-[2. Linguistic accuracy] [CRITICAL]
-Location: `Державні свята: Громадянська ідентичність`
-"In the spring, Ukrainians celebrate a unique cultural event called **Вишиванковий день** (Vyshyvanka Day)."
-Issue: "Вишиванковий день" is an unnatural formulation (0 frequency in GRAC corpus). The universally accepted name for this holiday is "День вишиванки". While this error originated in the plan, it must be corrected in the content to teach the authentic term.
-Fix: Change "**Вишиванковий день**" to "**День вишиванки**".
+[PLAN ADHERENCE] [SEVERITY: major]  
+Location: `> **Олена:** Що ми готуємо на Святвечір?... > **Мама:** Звичайно, кутя — перша страва.` and `На столі стоять дванадцять страв...`  
+Issue: The plan requires a Ukrainian family + foreign guest Christmas Eve dialogue explaining the 12 dishes, with `кутя, борщ, вареники, риба, узвар`. The module uses a simpler mother-daughter exchange and omits most of the planned dish vocabulary.  
+Fix: Replace the mini-dialogue and follow-up paragraph with a guest/family exchange that explicitly names `борщ, вареники, риба, узвар` and ties them to `Свята вечеря`.
 
-[9. Dialogue & conversation quality] [MAJOR]
-Location: `Діалоги: Говоримо про свята`
-Issue: The same speaker is repeated consecutively on multiple lines instead of combining their speech into a single conversational turn. This makes the dialogue visually clunky and robotic.
-Fix: Combine the consecutive lines from the same speaker into single blocks.
+[CULTURAL ACCURACY] [SEVERITY: critical]  
+Location: `However, in 2023, Ukraine officially moved the date to December 25.`  
+Issue: This is historically inaccurate as written. December 25 became an official public holiday in 2017; 2023 refers to the major church-calendar shift and the removal of January 7 from the state-holiday list.  
+Fix: Replace the paragraph with a precise explanation that distinguishes 2017 and 2023.
 
-[3. Pedagogical quality] [MAJOR]
-Location: `Підсумок — Summary`
-"The spelling changes at the end of the words follow the exact same rules you learned for nouns."
-Issue: This claim is inaccurate because one of the primary examples directly below it is "З Новим роком!", where "Новим" is an adjective taking the instrumental adjective ending (-им). Stating that only noun rules apply is pedagogically misleading.
-Fix: Update the sentence to include adjectives: "The spelling changes at the end of the words follow the exact same rules you learned for nouns and adjectives."
+[CULTURAL ACCURACY] [SEVERITY: critical]  
+Location: `> **Сара:** Ввечері — салют і святковий вечір з друзями.` and `Увечері люди дивляться яскравий салют.`  
+Issue: The module presents fireworks as a normal present-day Independence Day practice. That is outdated for contemporary Ukraine and should not be taught as a default current custom.  
+Fix: Replace `салют` examples with concerts, walks, public celebrations, or festive programs.
+
+[LINGUISTIC ACCURACY] [SEVERITY: critical]  
+Location: `Remember that Ukrainian capitalizes the first word of holidays. For example, **День Незалежності** has both words capitalized because it is a major state holiday...`  
+Issue: This teaches the wrong rule. The reason is not “major state holiday”; Ukrainian capitalization depends on the formal naming rule for holiday names, and official names like `День Незалежності України` are a special case.  
+Fix: Replace the note with a correct orthography explanation.
+
+[EXERCISE QUALITY] [SEVERITY: major]  
+Location: `<!-- INJECT_ACTIVITY: quiz-which-holiday -->` before `## Державні свята (National Holidays)`  
+Issue: The plan’s `which holiday?` quiz includes `Новий рік`, but this marker appears before the New Year subsection is taught.  
+Fix: Move `quiz-which-holiday` to after the New Year material and before the date-matching quiz.
 
 ## Verdict: REVISE
-The module is very high quality, rich in cultural detail, and covers all required vocabulary perfectly. However, it requires a revision to fix a linguistic error ("Вишиванковий день"), correct the pedagogical explanation of adjective endings, and clean up the dialogue formatting.
+REVISE. The module is structurally usable, but it contains critical factual/orthographic issues and one major exercise-ordering problem. The problems are fixable with deterministic replacements; this is not a full-rebuild case.
 
 <fixes>
-- find: "**Вишиванковий день**"
-  replace: "**День вишиванки**"
-- find: "> **Українська родина:** У нас теж! *(We also have it then!)*\n> **Українська родина:** Раніше святкували сьомого січня. *(Earlier we celebrated on the seventh of January.)*\n> **Українська родина:** Але тепер двадцять п'ятого. *(But now on the twenty-fifth.)*"
-  replace: "> **Українська родина:** У нас теж! Раніше святкували сьомого січня, але тепер двадцять п'ятого. *(We also have it then! Earlier we celebrated on the seventh of January, but now on the twenty-fifth.)*"
-- find: "> **Оксана:** Ввечері салют. *(In the evening there are fireworks.)*\n> **Оксана:** І святковий вечір з друзями. *(And a festive evening with friends.)*"
-  replace: "> **Оксана:** Ввечері салют і святковий вечір з друзями. *(In the evening there are fireworks and a festive evening with friends.)*"
-- find: "The spelling changes at the end of the words follow the exact same rules you learned for nouns."
-  replace: "The spelling changes at the end of the words follow the exact same rules you learned for nouns and adjectives."
+- find: |-
+    The winter cycle centers around **Різдво**. Historically, under Russian and Soviet influence, many Ukrainians celebrated on January 7. However, in 2023, Ukraine officially moved the date to December 25. This decision aligns the country with Europe and the majority of the Christian world, marking a major cultural shift away from the Russian Orthodox calendar.
+  replace: |-
+    The winter cycle centers around **Різдво**. For many years, Ukrainians celebrated Christmas on both December 25 and January 7, depending on church calendar and family tradition. In 2017, December 25 became an official public holiday, and in 2023 major Ukrainian churches adopted the revised calendar for fixed feasts. This shift is part of Ukraine's broader effort to live by its own traditions and institutions.
+- find: |-
+    > **Олена:** Що ми готуємо на Святвечір? *(What are we preparing for Christmas Eve?)*
+    > **Мама:** Ми готуємо дванадцять страв. *(We are preparing twelve dishes.)*
+    > **Олена:** А кутя є? *(And is there kutia?)*
+    > **Мама:** Звичайно, кутя — перша страва. *(Of course, kutia is the first dish.)*
+  replace: |-
+    > **Іноземний гість:** Що ви готуєте на Святвечір? *(What are you preparing for Christmas Eve?)*
+    > **Українська родина:** Ми готуємо дванадцять пісних страв. *(We are preparing twelve meatless dishes.)*
+    > **Іноземний гість:** Які саме? *(Which ones exactly?)*
+    > **Українська родина:** Кутю, борщ, вареники, рибу й узвар. *(Kutia, borshch, varenyky, fish, and uzvar.)*
+    > **Іноземний гість:** Яка страва головна? *(Which dish is the main one?)*
+    > **Українська родина:** Кутя — головна страва Святого вечора. *(Kutia is the main dish of Holy Supper.)*
+- find: |-
+    На столі стоять дванадцять страв. Вони дуже смачні і традиційні. Головна страва — це кутя. Ми дуже любимо це свято.
+    > *There are twelve dishes on the table. They are very tasty and traditional. The main dish is kutia. We really love this holiday.*
+  replace: |-
+    На столі стоять дванадцять пісних страв: кутя, борщ, вареники, риба й узвар. Це традиційні страви Святого вечора, а кутя — головна страва.
+    > *There are twelve meatless dishes on the table: kutia, borshch, varenyky, fish, and uzvar. These are traditional foods of Holy Supper, and kutia is the main dish.*
+- find: |-
+    > **Сара:** Ввечері — салют і святковий вечір з друзями. *(In the evening — fireworks and a festive evening with friends.)*
+  replace: |-
+    > **Сара:** Ввечері — концерт і святковий вечір з друзями. *(In the evening — a concert and a festive evening with friends.)*
+- find: |-
+    This conversation introduces the core noun **свято** (holiday). The phrase **державне свято** means state holiday. During these events, a **парад** (parade) takes place, a **концерт** (concert) provides music, and a **салют** (fireworks) lights up the sky. The greeting **З Днем Незалежності!** is standard for August 24. It is frequently paired with the national salute **Слава Україні!** (Glory to Ukraine!).
+  replace: |-
+    This conversation introduces the core noun **свято** (holiday). The phrase **державне свято** means state holiday. During these events, a **парад** (parade) takes place, a **концерт** (concert) provides music, and people gather for festive public events in the evening. The greeting **З Днем Незалежності!** is standard for August 24. It is frequently paired with the national salute **Слава Україні!** (Glory to Ukraine!).
+- find: |-
+    У серпні ми святкуємо День Незалежності. На вулиці проходить великий парад. Ми бачимо сині і жовті прапори. Увечері люди дивляться яскравий салют. Усі гордо кажуть: «Слава Україні!». 
+    > *In August we celebrate Independence Day. A big parade takes place on the street. We see blue and yellow flags. In the evening people watch bright fireworks. Everyone proudly says: "Glory to Ukraine!".*
+  replace: |-
+    У серпні ми святкуємо День Незалежності. На вулиці проходить великий парад. Ми бачимо сині і жовті прапори. Увечері люди слухають концерт і гуляють містом. Усі гордо кажуть: «Слава Україні!». 
+    > *In August we celebrate Independence Day. A big parade takes place on the street. We see blue and yellow flags. In the evening people listen to a concert and walk around the city. Everyone proudly says: "Glory to Ukraine!".*
+- find: "<!-- INJECT_ACTIVITY: quiz-which-holiday -->"
+  replace: ""
+- find: "<!-- INJECT_ACTIVITY: quiz-match-date -->"
+  replace: |-
+    <!-- INJECT_ACTIVITY: quiz-which-holiday -->
+    <!-- INJECT_ACTIVITY: quiz-match-date -->
+- find: |-
+    Remember that Ukrainian capitalizes the first word of holidays. For example, **День Незалежності** has both words capitalized because it is a major state holiday, but **Новий рік** only has the first word capitalized. Religious holidays like **Різдво** and **Великдень** are always capitalized.
+  replace: |-
+    Remember that Ukrainian holiday names normally capitalize the first word and any proper names: **Новий рік**, **Великдень**, **Різдво**. In the official holiday names **День Незалежності України**, **День Конституції України**, and **День Соборності України**, all words are capitalized.
 </fixes>

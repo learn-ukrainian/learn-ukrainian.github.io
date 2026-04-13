@@ -1,0 +1,55 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T22-56-7b0b34b8.json
+phase: vocab
+prompt_chars: 12150
+response_chars: 2674
+prompt_words: 1917
+response_words: 302
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.0657
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.0189
+- name: plan
+  start: 1028
+  length: 11122
+  fraction: 0.9154
+large_sections:
+- plan
+directives_total: 7
+directives_covered: 0
+directives_missed:
+- kind: must
+  text: However, if you want the freshest vegetables, seasonal fruit, or a chance
+    to speak directly with the people who grow your food, you must visit a **ринок**
+    (market).
+  covered: false
+  coverage_note: 2/19 keywords (11%)
+- kind: must
+  text: You must pay close attention to the item you are asking about, as the verb
+    must agree with the noun.
+  covered: false
+  coverage_note: 1/12 keywords (8%)
+- kind: must
+  text: If you are pointing to a plural item, the verb must take the plural form **коштують**.
+  covered: false
+  coverage_note: 2/10 keywords (20%)
+- kind: inject_activity
+  text: fill-in-prices
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-currency
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-locations
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-quantities
+  covered: false
+  coverage_note: marker missing

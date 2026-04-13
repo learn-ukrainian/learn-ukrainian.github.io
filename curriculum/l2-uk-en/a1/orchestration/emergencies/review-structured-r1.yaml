@@ -3,49 +3,54 @@ scores:
 - dimension: 1
   name: Plan adherence
   score: 9
-  evidence: Covered all major points and dialogues. The phrase "Я в метро..." wasn't
-    explicitly taught as a bullet point as requested in the plan, but it was successfully
-    integrated into the police station dialog
+  evidence: 'All planned H2 sections appear in order: `Dialogues`, `Екстрені ситуації`,
+    `Допомога`, `Summary`. Core plan points are covered with concrete language such
+    as `Допоможіть! Тут аварія!`, `Мені потрібен '
 - dimension: 2
   name: Linguistic accuracy
-  score: 8
-  evidence: Falsely claims that the formal plural imperative consistently ends in
-    "-іть", ignoring "-те" ("Викличте"), which is taught immediately after. Also uses
-    "пожежна допомога" instead of the standard "поже
+  score: 10
+  evidence: No Russianisms, Surzhyk, calques, paronym errors, or bad case/gender forms
+    were found. Forms such as `загубив/загубила`, `Мені потрібен лікар`, `У мене алергія
+    на антибіотики`, and `Залишайтеся на міс
 - dimension: 3
   name: Pedagogical quality
-  score: 9
-  evidence: Excellent breakdown of the "У мене болить..." structure and strong advice
-    on learning chunks for high-stress situations. The incorrect imperative rule deducts
-    a point.
+  score: 6
+  evidence: 'The lesson spends a long English-only block before the first Ukrainian
+    example: `Emergencies happen unexpectedly in any country... Read the following
+    situations.` It also adds metalanguage beyond the '
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: All required and recommended vocabulary items are naturally integrated
-    into the dialogues and prose.
+  score: 9
+  evidence: 'Required vocabulary is well covered in context: `допоможіть`, `швидка`,
+    `поліція`, `лікарня`, `аварія`, `загубити`, `викликати`. Recommended items such
+    as `пожежа`, `паспорт`, `адреса`, `алергія`, `фо'
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: Markers match the plan and are placed logically after the sections they
-    test.
+  score: 9
+  evidence: 'Four markers are present and well placed: `order-112-call`, `quiz-emergency-phrases`,
+    `fill-in-emergency-call`, `fill-in-reporting-issue`. They align with the four
+    `activity_hints` and test the materi'
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: The tone is appropriately urgent and practical, emphasizing communication
-    speed over grammatical perfection.
+  score: 8
+  evidence: 'The module is practical and calm overall, but the opener is generic and
+    explanatory rather than teacher-direct: `Emergencies happen unexpectedly in any
+    country...` delays the first useful Ukrainian in'
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: Well-structured markdown with 1703 words (exceeding the 1200 target).
-    Callouts are used effectively.
+  evidence: All planned sections are present, marker comments are clean, and the pipeline
+    word count is `1720`, safely above the `1200` target.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: The note distinguishing modern 101, 102, 103 from Soviet lines is a great
-    cultural/safety detail. Addresses are explained correctly.
+  evidence: The module frames emergency Ukrainian on Ukrainian terms, with no Russia-centered
+    comparisons. The `112` description matches current MVS guidance that treats 112
+    as a nationwide single emergency numbe
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: The emergency call and police report dialogues are natural, direct, and
-    realistic for the situations described.
+  score: 9
+  evidence: 'The first call is a believable multi-turn emergency exchange with named
+    speakers and good sequencing: problem, location, then personal details. The second
+    dialogue is simpler but still functional and '
 findings: []

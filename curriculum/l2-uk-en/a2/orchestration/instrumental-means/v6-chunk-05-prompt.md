@@ -26,7 +26,7 @@ Grand total: ~2350 words
 <previous_context>
 [...previous sections truncated...]
 
-людиною, ця людина є вашим супутником. *(But if you are travelling together with a person, this person is your companion.)* Тоді ми говоримо: «**Він їде з другом**» *(He is travelling with a friend)*. What happens if you mix them up? Якщо ви скажете «**Я їду з автобусом**» *(I am travelling with a bus)*, це звучить кумедно. *(If you say "I am travelling with a bus", it sounds funny.)* It sounds like you are travelling alongside a bus, perhaps in a car next to it, rather than being inside it. Транспорт — це засіб, а люди — це супутники. *(Transport is a means, and people are companions.)* В українській мові є особливі дієслова. *(In the Ukrainian language, there are special verbs.)* Вони завжди вимагають Орудного відмінка без прийменника. *(They always require the Instrumental case without a preposition.)* These verbs often express the "means" or "manner" of a state. Чудовий приклад — це дієслово «**пахнути**» *(to smell of)*. Навесні парк **пахне квітами** *(In spring, the park smells of flowers)*. The flowers are the source or the means of the smell. Інший приклад — дієслово «**займатися**» *(to be engaged in, to do)*. Мій брат **займається спортом** *(My brother does sports)*. Студенти часто **цікавляться історією** *(Students are often interested in history)*. У цих фразах ми ніколи не використовуємо прийменник «з». *(In these phrases, we never use the preposition "з".)* The objects act as the logical instruments of your interest or activity. Запам'ятайте ці корисні вирази. *(Remember these useful expressions.)* Вони роблять вашу мову дуже природною. *(They make your language very natural.)* Подивімося, як це працює на практиці. *(Let's see how this works in practice.)* Прочитайте цей діалог у художній школі. *(Read this dialogue in an art school.)* Студенти обговорюють свої інструменти. *(The students are discussing their tools.)* > — **Вчитель:** Добрий день! Чим ви сьогодні малюєте? *(Good day! What are you drawing with today?)* > — **Марко:** Я малюю цим м'яким олівцем. *(I am drawing with this soft pencil.)* А також я креслю довгою лінійкою. *(And also I am drafting with a long ruler.)* > — **Ганна:** А я працюю фарбами та широким пензлем. *(And I am working with paints and a wide brush.)* > — **Вчитель:** Дуже добре. А чим ви приїхали на урок? *(Very well. And how did you arrive to the lesson?)* > — **Ганна:** Я приїхала швидким трамваєм. *(I arrived by a fast tram.)* > — **Марко:** А я прийшов пішки з великою лінійкою і з новим другом! *(And I came on foot with a big ruler and with a new friend!)* > — **Вчитель:** Це чудово, що ви цікавитеся мистецтвом. *(It is wonderful that you are interested in art.)* Як бачите, Марко використовує прийменник «з» для лінійки і друга. *(As you can see, Marko uses the preposition "з" for the ruler and the friend.)* He brought them as companions, he didn't use them as tools or transport. Але Ганна використовує трамвай як засіб. *(But Hanna uses the tram as a means.)* <!-- INJECT_ACTIVITY: quiz-companion-choice --> <!-- INJECT_ACTIVITY: group-sort-categories -->
+you use the preposition **з**. Мій брат їде на роботу автобусом, а сестра летить літаком. Автобус і літак — це їхній засіб пересування. Але мій брат їде туди з другом. Друг — це людина, яка сидить поруч. Фраза «я їду з автобусом» звучить дуже дивно. Українці подумають, що ви біжите поруч із великою машиною. Тому ми кажемо «їхати трамваєм», але «їхати з братом». > *My brother goes to work by bus (автобусом), and my sister flies by airplane (літаком). The bus and the airplane are their means of transport (засіб). But my brother is going there with a friend (з другом). The friend is the person who sits next to him. The phrase "I am traveling with a bus" (з автобусом) sounds very strange. Ukrainians will think that you are running next to a big machine. That is why we say "to travel by tram" (їхати трамваєм), but "to travel with a brother" (їхати з братом).* Beyond tools and transport, Ukrainian uses the bare Instrumental case in several common fixed expressions. These verbs naturally take the Instrumental to indicate the means, manner, or focus of an action without needing any prepositions. Мій дідусь любить цікавитися історією. Моя сестра обожнює займатися спортом щоранку. Навесні наш сад починає пахнути квітами. У цих фразах ми завжди використовуємо орудний відмінок без прийменника. Ви не можете сказати «займатися зі спортом». Ви також не можете сказати «пахнути з квітами». > *My grandfather likes to be interested in history (цікавитися історією). My sister loves to do sports (займатися спортом) every morning. In the spring, our garden begins to smell of flowers (пахнути квітами). In these phrases, we always use the instrumental case without a preposition. You cannot say "to do with sports". You also cannot say "to smell with flowers".* Let's see how these rules play out in a real conversation. In this dialogue, an art teacher is asking students about their tools and how they arrived at the studio. Pay attention to how they use the bare Instrumental for both their art supplies and their transport. > — **Вчителька:** Діти, чим ви сьогодні працюєте? *(Children, what are you working with today?)* > — **Олена:** Я малюю цим м'яким олівцем. *(I am drawing with this soft pencil.)* > — **Марко:** А я працюю фарбами та пензлем. *(And I am working with paints and a brush.)* > — **Вчителька:** Дуже добре! А як ви сьогодні дісталися до школи? *(Very good! And how did you get to school today?)* > — **Олена:** Я приїхала трамваєм, а Марко прийшов пішки з великою лінійкою. *(I arrived by tram, and Marko came on foot with a big ruler.)* > — **Вчителька:** Марку, ти прийшов пішки чи приїхав автобусом? *(Marko, did you come on foot or arrive by bus?)* > — **Марко:** Пішки! Але мій старший брат приїхав потягом. *(On foot! But my older brother arrived by train.)* <!-- INJECT_ACTIVITY: quiz, Choose between з + Instrumental (companion) and bare Instrumental (tool) --> <!-- INJECT_ACTIVITY: group-sort, Sort sentences into Tool/Means vs. Accompaniment categories -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -56,7 +56,7 @@ objectives:
   - Learner can form Instrumental plural endings for common nouns (-ами, -ями).
 dialogue_situations:
   - setting: 'Art class — discussing tools and methods: Малюю олівцем (m, pencil).
-      Фарбую пензлем (m, brush). Різаю ножицями (pl, scissors). Їду на виставку автобусом
+      Фарбую пензлем (m, brush). Ріжу ножицями (pl, scissors). Їду на виставку автобусом
       (m, bus).'
     speakers:
       - Вчитель мистецтва
@@ -494,7 +494,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -513,18 +580,64 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (5/5).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] ручка (pen)
+- [ ] олівець (pencil)
+- [ ] фарба (paint)
+- [ ] лінійка (ruler)
+- [ ] ніж (knife)
+- [ ] ложка (spoon)
+- [ ] автобус (bus)
+- [ ] потяг (train)
+- [ ] літак (airplane)
+- [ ] трамвай (tram)
+- [ ] засіб (means, tool)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Підсумок (~150 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

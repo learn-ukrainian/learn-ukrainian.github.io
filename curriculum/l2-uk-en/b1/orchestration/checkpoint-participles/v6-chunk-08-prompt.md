@@ -28,7 +28,7 @@ Grand total: ~4400 words
 <previous_context>
 [...previous sections truncated...]
 
-діяча. Такі форми надають тексту особливої категоричності та сили. Далі ми чітко бачимо **пасивний дієприкметниковий зворот** *(passive participle phrase)* «зібраний під час літньої практики». Оскільки він стоїть одразу після свого означуваного слова «матеріал», то за строгими правилами пунктуації з обох боків обов'язково виділяється комами. Нарешті, безпосередньо перед другим присудком комфортно розташувався **дієприслівниковий зворот** *(gerund phrase)* «використовуючи інноваційні методи». Він технічно показує спосіб виконання дії і логічно стосується того самого діяча (молодого науковця). Такий системний поетапний аналіз гарантовано допоможе вам ніколи не загубитися у найскладнішому академічному тексті. Проте, створюючи власні академічні тексти, варто завжди пам'ятати про одне універсальне золоте правило: абсолютно все добре в міру. Надмірне використання дієприкметникових та дієприслівникових зворотів в одному абзаці може зробити ваш текст занадто «важким», штучним і вкрай складним для нормального читацького сприйняття. Головна стилістична мета цих граматичних конструкцій — це уникнення **монотонності** *(monotony)* та нескінченного повторення однакових підрядних сполучників «який», «що» або «коли». Якщо кожне ваше речення міститиме слово «який», читач дуже швидко втомиться від такого одноманітного стилю. Ваша письмова мова має литися природно, динамічно чергуючи короткі прості речення зі складнішими багаторівневими конструкціями. Щоб краще це зрозуміти, порівняйте два варіанти одного абзацу. Перший варіант явно перевантажений однотипними сполучниками: «Дослідження, яке ми провели минулого року, показало результати, які ніхто не очікував, коли ми починали цей складний експеримент» *(The research, which we conducted last year, showed results that no one expected when we were starting this complex experiment)*. Це звучить трохи незграбно і занадто по-дитячому. Тепер погляньте на значно покращену версію з ідеальним стилістичним **потоком** *(flow)*: «Дослідження, проведене минулого року, переконливо показало результати, абсолютно неочікувані на початку нашого експерименту» *(The research conducted last year convincingly showed results absolutely unexpected at the beginning of our experiment)*. Тут ми просто технічно замінили два громіздкі підрядні речення на компактні та елегантні пасивні конструкції. Текст миттєво став значно професійнішим, динамічнішим і легшим для сприйняття, але при цьому повністю зберіг свою інформаційну прозорість. Чергуйте різні типи речень, щоб віднайти свій власний ідеальний авторський ритм. Перед тим як остаточно перевірити свої знання на практиці у фінальному завданні, зробимо останній, але надзвичайно важливий контрольний крок. Коли ви самостійно редагуєте свій написаний текст, завжди ретельно перевіряйте дві базові категорії: **відмінок** *(case)* і **вид** *(aspect)*. Завжди пам'ятайте фундаментальне правило, що дієприкметники — це своєрідні гібридні прикметники. Тому вони обов'язково і без винятків мусять граматично узгоджуватися з головним іменником у роді, числі та конкретному відмінку (`цікава стаття, написана студентом`; `у цій новій статті, написаній студентом`). Натомість дієприслівники є абсолютно незмінними формами. Їх ніколи не треба відмінювати за відмінками чи числами, але саме тут критично важливою стає часова логіка та спільний діяч. Завжди уважно перевіряйте, чи не створили ви випадково «висячий» дієприслівник, де додаткова і головна дія виконуються різними особами. Перед кожним дієприслівником запитуйте себе: ця дія відбувається одночасно з основною (`аналізуючи дані`) чи вона вже повністю завершилася до неї (`проаналізувавши дані`)? Якщо ви навчитеся автоматично контролювати ці тонкі граматичні аспекти, ваша академічна та професійна українська мова буде бездоганною і справді вражаючою. Тепер ви повністю готові застосувати всі ці знання. <!-- INJECT_ACTIVITY: integrated-cloze-assessment --> <!-- INJECT_ACTIVITY: production-essay-education -->
+варіювати структуру речень і уникати лексичної монотонності. Надмірне використання дієприкметникових та дієприслівникових зворотів робить текст занадто важким і штучним для читання, але вони чудово допомагають уникнути постійного повторення слів «який» та «коли». Порівняйте два варіанти одного абзацу. Спочатку подивіться на текст із багатьма підрядними реченнями: «Студент, який прочитав статтю, яка була опублікована вчора, дуже добре зрозумів тему, і коли він її зрозумів, написав есе». Цей варіант звучить дуже громіздко, стилістично слабо і неприродно. А тепер подивіться на значно покращений варіант: «Прочитавши статтю, опубліковану вчора, студент дуже добре зрозумів тему і одразу написав відмінне есе». Тут ми елегантно використали лише один дієприслівник для позначення попередньої дії та один пасивний дієприкметник для опису наукової статті. Завдяки цим невеликим змінам текст став набагато динамічнішим, професійнішим і значно легшим для сприйняття читачем. > *To make your academic or literary text sound natural, it is important to know how to masterfully vary sentence structure and avoid lexical monotony. Overusing participle and gerund phrases makes a text too heavy and artificial to read, but they perfectly help avoid the constant repetition of the words "which" and "when". Compare two versions of the same paragraph. First, look at the text with many subordinate clauses: "The student, who read the article, which was published yesterday, understood the topic very well, and when he understood it, he wrote an essay." This version sounds very clumsy, stylistically weak, and unnatural. Now look at the significantly improved version: "Having read the article published yesterday, the student understood the topic very well and immediately wrote an excellent essay." Here we elegantly used only one gerund to indicate a prior action and one passive participle to describe the scientific article. Thanks to these small changes, the text became much more dynamic, professional, and significantly easier for the reader to comprehend.* :::info **Grammar box** Remember that a **дієприкметниковий зворот** (participle phrase) always describes a noun and must agree with it in case, while a **дієприслівниковий зворот** (gerund phrase) modifies the main verb and is completely indeclinable. ::: As a final check before you begin the writing tasks for this **контрольна робота** (test/assessment), always take a moment to verify the aspect and case of your chosen words. Remember that a standalone **дієприкметник** (participle) acts as an adjective and must fully agree in gender, number, and case with the specific noun it modifies. If your target noun is in the instrumental case, the participle describing it must also take the corresponding instrumental ending. Conversely, a standalone **дієприслівник** (gerund/adverbial participle) is entirely indeclinable, meaning its form remains strictly frozen regardless of the surrounding grammar or the subject of the sentence. However, it must perfectly match the aspectual logic of the narrative. If the background action happens at the exact same time as the main verb, you must use an imperfective gerund to show an ongoing process. If the background action is fully completed before the main verb begins, you must select a perfective gerund to show a finished result. <!-- INJECT_ACTIVITY: integrated-cloze-assessment --> <!-- INJECT_ACTIVITY: production-essay-education -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -546,7 +546,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -559,18 +626,61 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (8/8).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] контрольна робота (test/assessment)
+- [ ] дієприкметник (participle)
+- [ ] дієприслівник (gerund/adverbial participle)
+- [ ] дієприкметниковий зворот (participle phrase)
+- [ ] дієприслівниковий зворот (gerund phrase)
+- [ ] короткий прикметник (short-form adjective)
+- [ ] одночасність (simultaneity)
+- [ ] різночасність (temporal non-simultaneity)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Підсумок та самооцінка (~420 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

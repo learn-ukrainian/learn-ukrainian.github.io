@@ -1,0 +1,46 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T16-59-e0c32a17.json
+phase: review
+prompt_chars: 64170
+response_chars: 6102
+prompt_words: 8945
+response_words: 913
+sections:
+- name: preamble
+  start: 0
+  length: 450
+  fraction: 0.007
+- name: plan
+  start: 450
+  length: 60708
+  fraction: 0.946
+- name: output_spec
+  start: 61158
+  length: 3012
+  fraction: 0.0469
+large_sections:
+- plan
+directives_total: 16
+directives_covered: 11
+directives_missed:
+- kind: must
+  text: Learners must apply the подвоєння vs no-подвоєння rule correctly.
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: must
+  text: If you are not 100% certain a word/form/usage is wrong, you MUST flag it as
+    `[NEEDS RAG VERIFICATION]` instead of marking it as a definitive error.
+  covered: false
+  coverage_note: 6/17 keywords (35%)
+- kind: must
+  text: '**Before you claim a word, symbol, notation, or plan point is MISSING from
+    the content, you MUST search for it.'
+  covered: false
+  coverage_note: 4/13 keywords (31%)
+- kind: must
+  text: This is a language curriculum — every error you identify must be fixed.
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing

@@ -2,404 +2,428 @@ version: '1.0'
 module: many-things
 level: a1
 inline:
-- id: noun-plural-formation
+- id: fill-in-make-it-plural
   type: fill-in
-  instruction: Напишіть множину (Write the plural form)
+  instruction: Form the **множина** (plural) of these nouns.
   items:
-  - sentence: стіл → _____
+  - sentence: один стіл → ____
     answer: столи
     options:
+    - стіли
     - столи
     - столі
-    - стола
-  - sentence: книга → _____
+  - sentence: одна книга → ____
     answer: книги
     options:
     - книги
-    - книг
     - книга
-  - sentence: вікно → _____
+    - книгу
+  - sentence: одне вікно → ____
     answer: вікна
     options:
-    - вікна
+    - вікни
     - вікні
-    - вікно
-  - sentence: зошит → _____
+    - вікна
+  - sentence: один зошит → ____
     answer: зошити
     options:
-    - зошити
     - зошита
     - зошиті
-  - sentence: стілець → _____
-    answer: стільці
-    options:
-    - стільці
-    - стільця
-    - стільцу
-  - sentence: ручка → _____
+    - зошити
+  - sentence: одна ручка → ____
     answer: ручки
     options:
     - ручки
-    - ручкі
     - ручка
-  - sentence: лампа → _____
-    answer: лампи
-    options:
-    - лампи
-    - лампі
-    - лампа
-  - sentence: дзеркало → _____
-    answer: дзеркала
-    options:
-    - дзеркала
-    - дзеркалі
-    - дзеркалу
-  - sentence: ліжко → _____
-    answer: ліжка
-    options:
-    - ліжка
-    - ліжкі
-    - ліжку
-  - sentence: телефон → _____
-    answer: телефони
-    options:
-    - телефони
-    - телефона
-    - телефоні
-- id: plural-choice-quiz
-  type: quiz
-  instruction: Оберіть правильну форму множини (Choose the correct plural form)
-  items:
-  - question: Один стіл, а два...
-    options:
-    - стола
-    - столи
-    - столів
-    - стіли
-    correct: 1
-  - question: Одна сумка, а дві...
-    options:
-    - сумки
-    - сумкі
-    - сумок
-    - сумка
-    correct: 0
-  - question: Одне крісло, а два...
+    - ручку
+  - sentence: одне крісло → ____
+    answer: крісла
     options:
     - крісла
     - крісли
     - кріслі
-    - крісло
-    correct: 0
-  - question: Один зошит, а три...
+  - sentence: один стілець → ____
+    answer: стільці
     options:
-    - зошита
-    - зошиті
-    - зошити
-    - зошиту
-    correct: 2
-  - question: Одне вікно, а три...
-    options:
-    - вікні
-    - вікну
-    - вікна
-    - вікни
-    correct: 2
-  - question: Одна річ, а три...
-    options:
-    - речі
-    - річи
-    - річі
-    - речей
-    correct: 0
-  - question: Один стілець, а три...
-    options:
-    - стільця
-    - стільці
     - стільци
-    - стілеці
+    - стільці
+    - стілець
+  - sentence: одна лампа → ____
+    answer: лампи
+    options:
+    - лампі
+    - лампи
+    - лампа
+- id: quiz-choose-correct-plural
+  type: quiz
+  instruction: Choose the correct **множина** (plural) form.
+  items:
+  - question: стіл
+    options:
+    - стіли
+    - столи
+    - столі
+    - стола
     correct: 1
-  - question: Одна книга, а дві...
+  - question: книга
     options:
     - книги
     - книгі
-    - книг
+    - книга
     - книгу
     correct: 0
-- id: singular-plural-sort
-  type: group-sort
-  instruction: Розподіліть слова (Sort the words)
-  groups:
-  - label: Однина (Singular)
-    items:
-    - стіл
-    - книга
-    - вікно
-    - ручка
-    - зошит
-    - дзеркало
-  - label: Множина (Plural)
-    items:
-    - столи
-    - книги
-    - вікна
-    - ручки
-    - зошити
-    - дзеркала
-- id: adjective-plural-agreement
-  type: fill-in
-  instruction: Вставте правильну форму прикметника (Insert the correct adjective form)
-  items:
-  - sentence: Тут є ____ столи.
-    answer: нові
+  - question: вікно
     options:
-    - новий
-    - нова
-    - нові
-  - sentence: Це ____ книги.
+    - вікни
+    - вікні
+    - вікна
+    - вікня
+    correct: 2
+  - question: ручка
+    options:
+    - ручкі
+    - ручки
+    - ручка
+    - ручку
+    correct: 1
+  - question: зошит
+    options:
+    - зошита
+    - зошиті
+    - зошитя
+    - зошити
+    correct: 3
+  - question: крісло
+    options:
+    - крісли
+    - крісла
+    - кріслі
+    - крісля
+    correct: 1
+  - question: стілець
+    options:
+    - стільци
+    - стільця
+    - стільці
+    - стілець
+    correct: 2
+  - question: лампа
+    options:
+    - лампі
+    - лампя
+    - лампи
+    - лампа
+    correct: 2
+- id: fill-in-adjective-agreement
+  type: fill-in
+  instruction: Insert the correct adjective form to match the plural noun.
+  items:
+  - sentence: Ці столи дуже ____.
     answer: великі
     options:
     - великий
     - велика
+    - велике
     - великі
-  - sentence: Там є ____ вікна.
+  - sentence: Мої книги ____.
+    answer: нові
+    options:
+    - новий
+    - нова
+    - нове
+    - нові
+  - sentence: Ті вікна ____.
     answer: чисті
     options:
+    - чистий
+    - чиста
     - чисте
     - чисті
-    - чиста
-  - sentence: У мене є ____ ручки.
-    answer: червоні
-    options:
-    - червона
-    - червоний
-    - червоні
-  - sentence: Я маю ____ зошити.
-    answer: сині
-    options:
-    - синій
-    - синя
-    - сині
-  - sentence: Це ____ стільці.
+  - sentence: Ці стільці ____.
     answer: старі
     options:
     - старий
     - стара
+    - старе
     - старі
-  - sentence: Там стоять ____ ліжка.
-    answer: великі
+  - sentence: Де мої ____ ручки?
+    answer: червоні
     options:
-    - велике
-    - велика
-    - великі
-  - sentence: Я бачу ____ дзеркала.
-    answer: нові
+    - червоний
+    - червона
+    - червоне
+    - червоні
+  - sentence: Тут є ____ зошити.
+    answer: сині
     options:
-    - нове
-    - нова
-    - нові
+    - синій
+    - синя
+    - синє
+    - сині
+  - sentence: Ті стіни ____.
+    answer: білі
+    options:
+    - білий
+    - біла
+    - біле
+    - білі
+  - sentence: Ці крісла ____.
+    answer: чорні
+    options:
+    - чорний
+    - чорна
+    - чорне
+    - чорні
 workbook:
-- id: plural-match-up
+- id: match-up-plural
   type: match-up
-  instruction: З'єднайте форму однини з формою множини (Match the singular form to
-    the plural form)
+  instruction: Match the **однина** (singular) with the **множина** (plural).
   pairs:
+  - left: стіл
+    right: столи
   - left: книга
     right: книги
   - left: вікно
     right: вікна
-  - left: стіл
-    right: столи
-  - left: стілець
-    right: стільці
-  - left: дзеркало
-    right: дзеркала
+  - left: крісло
+    right: крісла
+  - left: зошит
+    right: зошити
   - left: ручка
     right: ручки
-- id: true-false-plurals
-  type: true-false
-  instruction: Правда чи ні? (True or false?)
+  - left: стілець
+    right: стільці
+- id: anagram-plural
+  type: anagram
+  instruction: Rearrange the letters to make **множина** (plural) nouns.
   items:
-  - statement: Множина слова «стіл» — це «столи».
-    correct: true
-    explanation: Чоловічий рід з твердим приголосним зазвичай має закінчення -и.
-  - statement: Множина слова «книга» — це «книгі».
-    correct: false
-    explanation: Правильна форма — «книги». Після «г», «к», «х» пишемо «и».
-  - statement: Слово «вікна» — це однина.
-    correct: false
-    explanation: «Вікна» — це множина. Однина — «вікно».
-  - statement: Слово «стільці» має закінчення -і.
-    correct: true
-    explanation: Чоловічий рід з м'яким приголосним («ь») змінюється на -і.
-  - statement: Множина слова «ліжко» — це «ліжки».
-    correct: false
-    explanation: Середній рід на -о змінюється на -а. Правильно — «ліжка».
-  - statement: Прикметники у множині завжди мають закінчення -і.
-    correct: true
-    explanation: 'Усі прикметники у множині (наприклад: нові, великі) мають закінчення
-      -і.'
-- id: plural-odd-one-out
-  type: odd-one-out
-  instruction: Знайдіть зайве слово (Find the odd one out)
+  - letters:
+    - с
+    - т
+    - о
+    - л
+    - и
+    answer: столи
+    hint: tables
+  - letters:
+    - к
+    - н
+    - и
+    - г
+    - и
+    answer: книги
+    hint: books
+  - letters:
+    - в
+    - і
+    - к
+    - н
+    - а
+    answer: вікна
+    hint: windows
+  - letters:
+    - р
+    - у
+    - ч
+    - к
+    - и
+    answer: ручки
+    hint: pens
+  - letters:
+    - з
+    - о
+    - ш
+    - и
+    - т
+    - и
+    answer: зошити
+    hint: notebooks
+  - letters:
+    - л
+    - а
+    - м
+    - п
+    - и
+    answer: лампи
+    hint: lamps
+  - letters:
+    - р
+    - е
+    - ч
+    - і
+    answer: речі
+    hint: things
+- id: unjumble-sentences
+  type: unjumble
+  instruction: Put the words in the correct order to make a sentence.
   items:
   - words:
     - столи
-    - зошити
-    - книга
-    correct: 2
-    explanation: «Книга» — це однина, а «столи» і «зошити» — множина.
+    - великі.
+    - Ці
+    correct_order:
+    - Ці
+    - столи
+    - великі.
+  - words:
+    - вікна
+    - Ті
+    - чисті.
+    correct_order:
+    - Ті
+    - вікна
+    - чисті.
   - words:
     - нові
-    - велика
+    - Мої
+    - книги.
+    correct_order:
+    - Мої
+    - нові
+    - книги.
+  - words:
+    - старі.
+    - стільці
+    - Ті
+    correct_order:
+    - Ті
+    - стільці
+    - старі.
+  - words:
+    - сині?
+    - Які
+    - ручки
+    correct_order:
+    - Які
+    - ручки
+    - сині?
+  - words:
+    - зошити?
+    - мої
+    - Де
+    correct_order:
+    - Де
+    - мої
+    - зошити?
+- id: true-false-plurals
+  type: true-false
+  instruction: Are these statements about plurals **правда** (true) or **ні** (false)?
+  items:
+  - statement: Слово «столи» — це однина (singular).
+    correct: false
+    explanation: «Столи» is plural. The singular is «стіл».
+  - statement: «Книги» — це множина (plural).
+    correct: true
+    explanation: Yes, «книга» is singular, «книги» is plural.
+  - statement: The plural of «вікно» is «вікни».
+    correct: false
+    explanation: The correct plural is «вікна».
+  - statement: Plural adjectives usually end in -і (for example, великі, нові).
+    correct: true
+    explanation: Yes, for plural nouns, adjectives take the -і ending.
+  - statement: The plural of «стілець» is «стільці».
+    correct: true
+    explanation: Yes, this word takes the -і ending in the plural.
+  - statement: «Ці» means 'those' and «ті» means 'these'.
+    correct: false
+    explanation: 'The opposite: «ці» = these, «ті» = those.'
+- id: group-sort-endings
+  type: group-sort
+  instruction: 'Sort the plural nouns by their ending: **-и**, **-а**, or **-і**.'
+  groups:
+  - label: Закінчення -и
+    items:
+    - столи
+    - книги
+    - зошити
+  - label: Закінчення -а
+    items:
+    - вікна
+    - крісла
+    - ліжка
+  - label: Закінчення -і
+    items:
+    - стільці
+    - дні
+    - речі
+- id: fill-in-demonstratives
+  type: fill-in
+  instruction: 'Insert the correct word: **ці** (these) or **ті** (those).'
+  items:
+  - sentence: ____ столи тут.
+    answer: Ці
+    options:
+    - Ці
+    - Ті
+  - sentence: ____ стільці там.
+    answer: Ті
+    options:
+    - Ці
+    - Ті
+  - sentence: Я хочу ____ ручки тут.
+    answer: ці
+    options:
+    - ці
+    - ті
+  - sentence: А де ____ книги там?
+    answer: ті
+    options:
+    - ці
+    - ті
+  - sentence: ____ вікна тут чисті.
+    answer: Ці
+    options:
+    - Ці
+    - Ті
+  - sentence: ____ зошити там нові.
+    answer: Ті
+    options:
+    - Ці
+    - Ті
+- id: odd-one-out-plurals
+  type: odd-one-out
+  instruction: Find the odd word out based on singular/plural forms.
+  items:
+  - words:
+    - стіл
+    - книга
+    - вікно
+    - зошити
+    correct: 3
+    explanation: «Зошити» is plural, the other words are singular.
+  - words:
+    - великі
+    - нові
+    - чистий
     - старі
-    correct: 1
-    explanation: «Велика» — це однина (жіночий рід), а «нові» і «старі» — множина.
+    correct: 2
+    explanation: «Чистий» is singular, the other adjectives are plural.
+  - words:
+    - столи
+    - книги
+    - вікна
+    - ручка
+    correct: 3
+    explanation: «Ручка» is singular, the other words are plural.
   - words:
     - вікна
-    - ліжка
-    - стільці
-    correct: 2
-    explanation: «Стильці» мають закінчення -і (чоловічий рід), а «вікна» і «ліжка»
-      — закінчення -а (середній рід).
+    - крісла
+    - дзеркала
+    - столи
+    correct: 3
+    explanation: «Столи» has the -и ending, while the other words (neuter gender)
+      have the -а ending in the plural.
   - words:
-    - ручка
-    - лампи
-    - сумки
-    correct: 0
-    explanation: «Ручка» — однина, інші слова — множина.
+    - стільці
+    - дні
+    - речі
+    - книги
+    correct: 3
+    explanation: «Книги» has the -и ending, while the other words have the -і ending.
   - words:
     - ці
-    - той
+    - ті
     - мої
-    correct: 1
-    explanation: «Той» — однина, інші — множина.
-  - words:
-    - речі
-    - крісло
-    - дзеркало
-    correct: 0
-    explanation: «Речі» — множина, інші — однина.
-- id: plural-translate
-  type: translate
-  instruction: Оберіть правильний переклад (Choose the correct translation)
-  items:
-  - source: These tables are big.
-    options:
-    - text: Ці столи великі.
-      correct: true
-    - text: Цей столи великі.
-      correct: false
-    - text: Ці стіл великі.
-      correct: false
-    - text: Ці столи великий.
-      correct: false
-  - source: Those books are new.
-    options:
-    - text: Ті книги нові.
-      correct: true
-    - text: Ці книги нові.
-      correct: false
-    - text: Та книги нові.
-      correct: false
-    - text: Ті книга нові.
-      correct: false
-  - source: My pens are blue.
-    options:
-    - text: Мої ручки сині.
-      correct: true
-    - text: Мій ручки сині.
-      correct: false
-    - text: Мої ручка сині.
-      correct: false
-    - text: Мої ручки синя.
-      correct: false
-  - source: What kind of windows are these?
-    options:
-    - text: Які це вікна?
-      correct: true
-    - text: Яке це вікна?
-      correct: false
-    - text: Які це вікно?
-      correct: false
-    - text: Яка це вікна?
-      correct: false
-  - source: I have three notebooks.
-    options:
-    - text: Я маю три зошити.
-      correct: true
-    - text: Я маю три зошит.
-      correct: false
-    - text: Я маю три зошита.
-      correct: false
-    - text: Я маю три зошитів.
-      correct: false
-  - source: Where are the chairs?
-    options:
-    - text: Де стільці?
-      correct: true
-    - text: Де стілець?
-      correct: false
-    - text: Де стільця?
-      correct: false
-    - text: Де стільців?
-      correct: false
-- id: plural-error-correction
-  type: error-correction
-  instruction: Знайдіть і виправте помилку (Find and correct the error)
-  items:
-  - sentence: Це мої книгі.
-    error: книгі
-    correction: книги
-    error_type: word
-    options:
-    - книга
-    - книги
-    - книг
-    explanation: Після «г» у множині пишемо «и».
-  - sentence: Там стоять великі стіл.
-    error: стіл
-    correction: столи
-    error_type: word
-    options:
-    - столи
-    - стола
-    - столів
-    explanation: Прикметник «великі» у множині, тому іменник теж має бути у множині.
-  - sentence: Ці вікно дуже чисті.
-    error: вікно
-    correction: вікна
-    error_type: word
-    options:
-    - вікна
-    - вікні
-    - вікнам
-    explanation: «Ці» та «чисті» вказують на множину, тому слово «вікно» має бути
-      «вікна».
-  - sentence: Які це зошит?
-    error: зошит
-    correction: зошити
-    error_type: word
-    options:
-    - зошити
-    - зошита
-    - зошиті
-    explanation: Питальне слово «які» стоїть у множині, тому потрібно «зошити».
-  - sentence: Це червоні ручка.
-    error: ручка
-    correction: ручки
-    error_type: word
-    options:
-    - ручки
-    - ручкі
-    - ручку
-    explanation: Прикметник «червоні» у множині.
-  - sentence: Мої ліжко нові.
-    error: ліжко
-    correction: ліжка
-    error_type: word
-    options:
-    - ліжка
-    - ліжкі
-    - ліжку
-    explanation: «Мої» і «нові» — це множина, тому середній рід змінюється на -а.
+    - велика
+    correct: 3
+    explanation: «Велика» is singular, while the other words are used for plurals.

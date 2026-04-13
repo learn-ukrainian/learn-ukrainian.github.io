@@ -21,7 +21,7 @@ Grand total: ~4300 words
 <previous_context>
 [...previous sections truncated...]
 
-і це абсолютно правильно. Проте ця впевненість часто грає злий жарт, коли справа доходить до слів із суфіксами **-ач** або **-ар**, а також до слова товариш. Утворюються хибні форми на кшталт «товарише», «слухаче» чи «читаче». Це серйозна помилка, яка одразу ріже вухо носію мови. Правило тут дуже чітке і категоричне: іменники мішаної групи із зазначеними суфіксами завжди приймають закінчення **-у** у кличному відмінку. Тому ми повинні шанобливо звертатися: мій дорогий **товаришу** (comrade!), шановний **слухачу** (listener!), уважний **читачу** (reader!). Це правило допомагає уникнути фонетичної монотонності та робить мовлення більш виразним. Завжди аналізуйте структуру слова перед тим, як додати закінчення. Якщо ви бачите професійний суфікс або спілкуєтеся з побратимом, сміливо використовуйте закінчення **-у**. Це зробить ваші звертання бездоганними. Звертання — це основа ввічливої комунікації, тому правильний вибір закінчення гарантує вам повагу та прихильність співрозмовника. Третя проблема виникає через плутанину між мішаною та твердою групами під час відмінювання неістот, особливо в місцевому відмінку. Студенти іноді використовують закінчення **-у**, намагаючись сказати «у плащу» замість правильного **у плащі** (in the raincoat) або «на ножу» замість **на ножі** (on the knife). Закінчення **-у** в місцевому відмінку дійсно існує, але воно характерне переважно для іменників чоловічого роду твердої групи, які позначають абстрактні поняття, будівлі або простори (наприклад, «у саду», «у будинку»). Проте неістоти мішаної групи, такі як предмети побуту, їжа чи одяг, мають стійку перевагу до закінчення **-і**. Ми повинні казати: смачна сметана **у борщі** (in the borscht), гостре лезо на ножі, тепла підкладка у плащі. Використання правильного закінчення **-і** для цих слів робить ваше мовлення автентичним. Коли ви описуєте фізичні об'єкти з основами на шиплячий, дозвольте українській мові звучати м'яко і мелодійно. Не намагайтеся нав'язати їм жорсткі правила твердої групи там, де вони історично не прижилися. Такі деталі створюють відчуття вільного і природного володіння мовою, яке відрізняє справжнього майстра від початківця. Тому завжди перевіряйте себе, коли говорите про неживі предмети. Щоб закріпити всі ці правила в контексті, прочитайте невеликий уривок. Зверніть увагу на те, як слова мішаної групи органічно вплітаються в розповідь і змінюють свої форми залежно від граматичної ролі. Старий **сторож** (watchman) сидів біля нічного вогнища, уважно вдивляючись у темряву. Його бойові **товариші** (comrades) відпочивали після важкого і виснажливого дня. Один із них, молодий хлопець із дуже довгим і складним **прізвищем** (surname), мовчки чистив свій сталевий **ніж** (knife). Інший солдат надійно вкрився водонепроникним плащем, ховаючись від пронизливого осіннього вітру. У великому чорному казані над вогнем тихо булькав гарячий **борщ** (borscht), поширюючи неймовірний аромат. Коли хтось із солдатів звертався до командира, він завжди щиро казав: «Мій вірний товаришу!». Вони ділилися останнім шматком сухого хліба, обережно розрізаючи його одним ножем на всіх. Кожен із них точно знав, що може повністю довірити своєму товаришеві своє власне життя. Навіть у найтемнішу ніч, коли холодний дощ безжально бив по плащі, вони завжди відчували надійну підтримку і міцне **плече** (shoulder) один одного. Ця коротка історія чудово демонструє, що граматика — це не просто набір сухих правил, а живий інструмент для створення сильних і емоційних текстів. <!-- INJECT_ACTIVITY: error-correction, find and fix 6 Russicisms or case errors in a short text -->
+not anywhere else. A **плащ** (raincoat) follows this predictable pattern, just like other inanimate objects in this class. You must trust the grammar rules over the phonetic intuition that these consonants might project. To master these rules, you must observe how each **відмінок** (grammatical case) functions organically within a continuous narrative. Whether you are analyzing the **однина** (singular number) or tracking changes across the **множина** (plural number), the fundamental patterns remain stable. In the following short story, pay close attention to how everyday vocabulary interacts with the grammatical structure. We will see a variety of nouns adapting to their roles in the sentence without losing their core identity. You should try to identify the cases before reading the translation block. Давайте прочитаємо уривок під назвою «Товариші на війні», де детально розкривається використання граматичних форм у природному контексті. Два солдати сиділи біля розбитої техніки, сховавшись під одним старим плащем від осінньої зливи. Один із них мовчки мішав холодний борщ своїм бойовим ножем, згадуючи рідний дім. Сивий літній сторож підійшов до них із темряви і дружньо поклав руку на плече командира. У такі моменти однина та множина втрачали своє значення, бо всі присутні ставали єдиним цілим. Вони поділилися своїм скромним пайком зі старим чоловіком, відчуваючи дивну спорідненість душ. Кожна людина розуміє, що саме такі тихі хвилини між боями дозволяли солдатам залишатися людьми. > *Let us read the excerpt titled "Comrades in War", where the use of grammatical forms is revealed in detail in a natural context. Two soldiers were sitting near the broken equipment, hiding under one old raincoat from the autumn downpour. One of them silently stirred the cold borscht with his combat knife, remembering his native home. A gray-haired elderly watchman approached them from the darkness and amicably placed his hand on the shoulder of the commander. In such moments, singular and plural lost their meaning, because everyone present became a single whole. They shared their modest ration with the old man, feeling a strange kinship of souls. Every person understands that it was precisely such quiet minutes between battles that allowed the soldiers to remain human.* This short narrative elegantly combines multiple mixed group nouns in a very compact space. The soldiers ate their **борщ** (borscht) and used a combat **ніж** (knife) in the instrumental case, perfectly illustrating the soft ending logic. When the watchman placed his hand on the commander's **плече** (shoulder), we saw the neuter noun behaving predictably. These distinct grammatical rules work together to paint a vivid, emotionally resonant picture. Every careful **читач** (reader) will notice that the rules of the mixed group are incredibly consistent once you understand their foundation. You simply need to practice identifying the hissing stems and applying the correct hybrid endings. The more you read authentic Ukrainian texts, the more natural these specific case forms will feel. Complete the following exercise to solidify your understanding and eliminate any lingering Russian influences from your declension patterns. <!-- INJECT_ACTIVITY: error-correction, find and fix 6 Russicisms or case errors in a short text -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -620,7 +620,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -633,18 +700,69 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (7/7).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] сторож (watchman — мішана група, masculine II відміна)
+- [ ] слухач (listener — мішана група, suffix -ач)
+- [ ] товариш (companion — мішана група)
+- [ ] мішана група (mixed group — nouns with шиплячий stem)
+- [ ] шиплячий (hissing consonant — ж, ч, ш, дж)
+- [ ] закінчення (ending — grammatical suffix in a word form)
+- [ ] відмінок (grammatical case)
+- [ ] орудний відмінок (instrumental case)
+- [ ] кличний відмінок (vocative case)
+- [ ] однина (singular number)
+- [ ] множина (plural number)
+- [ ] ніж (knife — мішана група, inanimate)
+- [ ] читач (reader — мішана група, suffix -ач)
+- [ ] плече (shoulder — neuter мішана група)
+- [ ] борщ (borscht — мішана група)
+- [ ] плащ (raincoat — мішана група, inanimate)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Підсумок (~350 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

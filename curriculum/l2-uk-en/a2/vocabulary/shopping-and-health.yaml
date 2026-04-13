@@ -1,34 +1,4 @@
 vocabulary:
-- word: помідо́р
-  translation: tomato
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: не́жить
-  translation: runny nose, cold
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: алергі́я
-  translation: allergy
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: табле́тка
-  translation: pill, tablet
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: шмато́к
-  translation: piece
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
 - word: ри́нок
   translation: market
   expression: false
@@ -89,11 +59,35 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: продаве́ць
-  translation: vendor
+- word: помідо́р
+  translation: tomato
   expression: false
   pos: ім.
   gender: ч.
+  verified: true
+- word: не́жить
+  translation: runny nose, cold
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: алергі́я
+  translation: allergy
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: табле́тка
+  translation: pill, tablet
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: шмато́к
+  translation: piece
+  expression: false
+  pos: ім.
+  gender: ''
   verified: true
 - word: покупе́ць
   translation: buyer
@@ -101,47 +95,23 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: сві́жий
-  translation: fresh
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: літр
-  translation: liter
+- word: продаве́ць
+  translation: vendor
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: олі́я
-  translation: oil
-  expression: false
-  pos: ім.
-  gender: ж.
+- word: Скільки вам?
+  translation: How much for you?
+  expression: true
+  pos: ''
+  gender: ''
   verified: true
-- word: па́чка
-  translation: pack, package
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: ма́сло
-  translation: butter
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: ба́нка
-  translation: jar
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: са́ло
-  translation: salo, pork fat
-  expression: false
-  pos: ім.
-  gender: с.
+- word: З вас...
+  translation: That will be... from you
+  expression: true
+  pos: ''
+  gender: ''
   verified: true
 - word: скля́нка
   translation: glass
@@ -149,182 +119,38 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: сік
-  translation: juice
+- word: пів
+  translation: half
   expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: деся́ток
-  translation: dozen, ten
-  expression: false
-  pos: ім.
+  pos: числ.
   gender: ''
   verified: true
-- word: яйце́
-  translation: egg
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: сир
-  translation: cheese, cottage cheese
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: цу́кор
-  translation: sugar
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: чай
-  translation: tea
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: часни́к
-  translation: garlic
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: гри́вня
-  translation: hryvnia (currency)
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: де́шево
-  translation: cheaply
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: дороги́й
-  translation: expensive
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: З вас...
-  translation: You owe... / That will be...
+- word: Скільки коштують?
+  translation: How much do they cost?
   expression: true
   pos: ''
   gender: ''
-  verified: true
-- word: Смачного!
-  translation: Enjoy your meal!
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: На все добре
-  translation: All the best
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: лі́кар
-  translation: doctor
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: поліклі́ніка
-  translation: clinic
-  expression: false
-  pos: ім.
-  gender: ж.
   verified: true
 - word: Що вас турбує?
-  translation: What is bothering you?
+  translation: What troubles you?
   expression: true
   pos: ''
-  gender: ''
-  verified: true
-- word: На що скаржитесь?
-  translation: What are you complaining about?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: хворі́ти
-  translation: to be sick, to be ill
-  expression: false
-  pos: дієсл.
   gender: ''
   verified: true
 - word: болі́ти
-  translation: to hurt, to ache
+  translation: to hurt
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: голова́
-  translation: head
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: го́рло
-  translation: throat
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: живі́т
-  translation: stomach, belly
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: спи́на
-  translation: back
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
 - word: У мене болить...
-  translation: My ... hurts / I have a pain in my ...
+  translation: My ... hurts
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: кра́плі
-  translation: drops
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: сиро́п
-  translation: syrup
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: Мені погано
-  translation: I feel bad
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Мені краще
-  translation: I feel better
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Мені холодно
-  translation: I am cold
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Мені гаряче
-  translation: I am hot
+- word: У мене болять...
+  translation: My ... hurt
   expression: true
   pos: ''
   gender: ''
@@ -335,45 +161,39 @@ vocabulary:
   pos: ''
   gender: ''
   verified: true
-- word: вітамі́ни
-  translation: vitamins
+- word: пога́но
+  translation: bad
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: хо́лодно
+  translation: cold
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: біль
+  translation: pain
   expression: false
   pos: ім.
+  gender: ч.
+  verified: true
+- word: Чим я можу допомогти?
+  translation: How can I help?
+  expression: true
+  pos: ''
   gender: ''
+  verified: true
+- word: до
+  translation: before
+  expression: false
+  pos: ім.
+  gender: с.
   verified: true
 - word: пі́сля
   translation: after
   expression: false
   pos: присл.
-  gender: ''
-  verified: true
-- word: пе́ред
-  translation: before
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: ї́жа
-  translation: food, meal
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: без
-  translation: without
-  expression: false
-  pos: прийм.
-  gender: ''
-  verified: true
-- word: для
-  translation: for
-  expression: false
-  pos: прийм.
-  gender: ''
-  verified: true
-- word: Що ви порадите від...?
-  translation: What do you recommend for...?
-  expression: true
-  pos: ''
   gender: ''
   verified: true

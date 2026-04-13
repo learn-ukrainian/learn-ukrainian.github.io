@@ -16,7 +16,7 @@ module: a1-055
 level: A1
 sequence: 55
 slug: a1-finale
-version: '1.2'
+version: '1.3'
 title: A1 Finale
 subtitle: One full day in a Ukrainian city — everything you've learned
 focus: review
@@ -28,6 +28,19 @@ objectives:
 - Navigate real situations: morning routine, transport, cafe, shopping, socializing
 - Use all three tenses naturally in context
 - Demonstrate readiness for A2 through integrated communication
+dialogue_situations:
+- setting: Last day of A1 course — classmates reflect on what they learned and say
+    goodbye, exchanging contact info for staying in touch
+  speakers:
+  - Студент 1
+  - Студент 2
+  motivation: 'Farewell + reflection: Я вивчив/вивчила стільки! До зустрічі на А2!'
+- setting: A learner tells their Ukrainian friend about their plans after finishing
+    the A1 course — what they want to do in Ukraine next
+  speakers:
+  - Учень
+  - Українська подруга
+  motivation: 'Future tense + celebration: Я буду подорожувати! Я хочу побачити Карпати!'
 content_outline:
 - section: Ранок (Morning)
   words: 300
@@ -119,7 +132,7 @@ activity_hints:
   - Ввечері ми {ходили|ходимо|будемо ходити} в кіно.
   - Зараз Олена {замовляє|замовляла|замовить} борщ і салат.
   - Учора була гарна погода, і ми {гуляли|гуляємо|будемо гуляти} в парку.
-  - Я вже {готовий|початок|сувенір} до рівня А2! Вітаю!
+  - Я вже {готовий|готова|впевнений} до рівня А2! Вітаю!
 - type: match-up
   focus: Match the situation to the correct A1 survival phrase.
   items:
@@ -179,143 +192,144 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Ра́нок: Поча́ток дня у Ки́єві
+## Ранок (Morning)
 
-You love to **подорожува́ти** (travel). This is the culmination of all your hard work. You are living a day in a Ukrainian city. The past tense forms immediately root us in the reality of completed actions. 
+In this module, you will spend one full day in Ukraine. You will use the past, present, and future tenses as you travel across the city, order food, shop, and meet people. This is a full A1 review in context.
 
-**Ти проки́нувся в готе́лі.** (You woke up in a hotel, masculine).
-Or for feminine: **Ти проки́нулася в готелі.** (You woke up in a hotel).
+Сьогодні чудовий день. Ти в місті Києві. Зранку ти прокинувся в готелі. Або ти прокинулася. Ти дивишся у вікно. Сьогодні дуже тепло і сонячно. Це ідеальна погода.
+> *Today is a wonderful day. You are in the city of Kyiv. In the morning you woke up in a hotel. Or you woke up (female). You look into the window. Today it is very warm and sunny. This is perfect weather.*
 
-You look out the window of your **готе́ль** (hotel) and check the weather to start planning your day.
-- **До́брого ра́нку!** (Good morning!)
-- **Яка сього́дні пого́да?** (What is the weather today?)
-- **Сьогодні те́пло і со́нячно.** (Today it is warm and sunny.)
+This short text uses the past tense for a completed action (**прокинувся**, **прокинулася**) and the present tense for descriptions. The word **готель** (hotel) is in the locative case after **в** (in). It is time to start your day.
 
-Down in the cafe, you use your survival skills. **Ти сні́даєш у кафе́.** (You eat breakfast in a cafe).
+You are hungry, so you go to a local cafe for breakfast. Ordering food is a critical survival skill.
 
-> **Ти:** Будь ла́ска, ка́ву з молоко́м і круаса́н. *(Please, coffee with milk and a croissant.)*
-> **Бариста:** Смачно́го! *(Enjoy your meal!)*
-> **Ти:** Скі́льки ко́шту́є? *(How much does it cost?)*
-> **Бариста:** Сто два́дцять гри́вень. *(One hundred twenty hryvnias.)*
-> **Ти:** Дякую! До поба́чення! *(Thank you! Goodbye!)*
+> **Ти:** Доброго ранку! *(Good morning!)*
+> **Бариста:** Добрий день! Що ви будете? *(Good day! What will you have?)*
+> **Ти:** Будь ласка, каву з молоком і круасан. *(Please, coffee with milk and a croissant.)*
+> **Бариста:** Це все? *(Is that all?)*
+> **Ти:** Так. Скільки коштує? *(Yes. How much does it cost?)*
+> **Бариста:** Сто двадцять гривень. *(One hundred twenty hryvnias.)*
+> **Ти:** Дякую! До побачення! *(Thank you! Goodbye!)*
 
-:::tip
-The question **Скільки коштує?** (How much does it cost?) is arguably your most important A1 survival tool. Memorize it well—you will use it every single day for everything from ordering a quick snack to purchasing train tickets.
-:::
+Notice the use of **Доброго ранку** for morning greetings, while the barista replies with the standard **Добрий день**. You successfully ordered food using the word **круасан** (croissant) and handled money using numbers. The phrase **кава з молоком** uses the instrumental case for "with milk", which is a fixed chunk you learned earlier. When asking for the price, **скільки коштує** is your best friend.
 
-You step outside and need to find the city center.
+Now  You need to find the main street, Khreshchatyk. You ask a local on the street.
 
-> **Ти:** Ви́бачте, як діста́тися до Хреща́тика? *(Excuse me, how to get to Khreshchatyk?)*
-> **Перехо́жий:** Ї́дьте на метро́, ста́нція Хреща́тик. *(Go by metro, Khreshchatyk station.)*
+> **Ти:** Вибачте, як дістатися до Хрещатика? *(Excuse me, how to get to Khreshchatyk?)*
+> **Перехожий:** Їдьте на метро. Станція Хрещатик. *(Go by metro. Station Khreshchatyk.)*
+> **Ти:** Дякую дуже! *(Thank you very much!)*
 
-You listen for the imperative **їдьте** (go/drive) to follow instructions. At the station, you handle the purchase. **Ти купу́єш квито́к.** (You buy a ticket).
-**Оди́н квиток, будь ласка.** (One ticket, please). 
-Knowing how to use polite imperatives and direct requests makes navigating transit systems surprisingly manageable.
+Inside the station, you buy a **квиток** (ticket).
 
-Underground, you navigate visually. **В метро ти ди́вишся на ка́рту.** (In the metro you look at a map). You use an impersonal chunk to state a need:
-**То́бі потрі́бна зеле́на лі́нія.** (You need the green line).
-You are connecting different moments in time using your grammar skills.
-**Зра́нку я сні́дав.** (In the morning I ate breakfast).
-**За́раз я ї́ду в метро.** (Now I am riding the metro).
-This shift from the past to the present shows you are narrating your own life. 
+> **Ти:** Один квиток, будь ласка. *(One ticket, please.)*
+> **Касир:** Вісім гривень. *(Eight hryvnias.)*
 
-## День: Прогу́лянка та нові́ дру́зі
+You check the **карта** (map) on the wall. The metro system is large, but you know how to read the signs.
 
-You emerge from the underground into the bright sunlight. **Ти гуля́єш по Хреща́тику.** (You are walking along Khreshchatyk). 
-**Яка га́рна ву́лиця!** (What a beautiful street!). 
-You see the sweeping architecture and point out landmarks.
-- **Ця буді́вля — ме́рія.** (This building is the city hall.)
-- **Цей магази́н — ЦУМ.** (This store is TSUM.)
+Тобі потрібна зелена лінія. Ти чекаєш на поїзд. Ти їдеш у центр.
+> *You need the green line. You wait for the train. You ride to the center.*
 
-Using demonstratives like **цей** (this, masculine) and **ця** (this, feminine) instantly makes your speech more precise. You can evaluate the entire scene around you. 
+The word **лінія** (line) helps you navigate. The color adjective **зелена** (green) matches the feminine noun. You used a polite request: **Один квиток, будь ласка**. You are moving around the city like a local.
 
-You spot a vibrant shop. **Ти ба́чиш вели́кий магазин.** (You see a large store). **Ти захо́диш і купуєш сувені́ри.** (You enter and buy souvenirs).
+<!-- INJECT_ACTIVITY: match-up-survival-phrases -->
 
-> **Ти:** Скільки коштує ця виши́ва́нка? *(How much does this vyshyvanka cost?)*
-> **Продаве́ць:** Ти́сяча дві́сті гривень. *(One thousand two hundred hryvnias.)*
-> **Ти:** До́рого! А ця? *(Expensive! And this one?)*
-> **Продавець:** Ця — вісімсо́т. *(This one is eight hundred.)*
-> **Ти:** До́бре, я беру́! *(Good, I'll take it!)*
+## День (Daytime)
 
-:::note
-In Ukrainian, we simply say **сувені́р** (souvenir). Do not say "пам'ятний сувенір" (memorable souvenir) as you might in English, because the word itself already implies that it is a memory of a place.
-:::
+You arrive at Khreshchatyk. This is the heart of the city. You walk along the street and take in the sights. The architecture is beautiful.
 
-In a quiet place, you strike up a conversation. **В кафе ти зустріча́єш Оле́ну.** (In a cafe you meet Olena).
+Ти гуляєш по Хрещатику. Яка гарна вулиця! Тут є старі будинки. Тут є нові кафе. Ти бачиш великий магазин. Ти заходиш у магазин. Ти купуєш сувеніри.
+> *You walk along Khreshchatyk. What a beautiful street! Here there are old buildings. Here there are new cafes. You see a large store. You enter the store. You buy souvenirs.*
 
-> **Оле́на:** Приві́т! Ти зві́дки? *(Hi! Where are you from?)*
-> **Ти:** Я з Кана́ди. *(I am from Canada.)*
-> **Олена:** Що ти тут ро́биш? *(What are you doing here?)*
-> **Ти:** Я вивча́ю украї́нську! *(I am studying Ukrainian!)*
+The phrase **по Хрещатику** means "along Khreshchatyk". You are looking for a **сувенір** (souvenir) for your family. Inside the store, you see traditional embroidered shirts. You need to use demonstrative pronouns like **цей** (this - masculine), **ця** (this - feminine), and **це** (this - neuter) to identify what you want.
 
-You seamlessly use present tense verbs to explain your current state. You have moved past basic drills and are forming genuine connections with locals. Olena smiles at your impressive progress.
+> **Ти:** Скільки коштує ця вишиванка? *(How much does this vyshyvanka cost?)*
+> **Продавець:** Тисяча двісті гривень. *(One thousand two hundred hryvnias.)*
+> **Ти:** Дорого! А ця? *(Expensive! And this one?)*
+> **Продавець:** Ця — вісімсот. *(This one is eight hundred.)*
+> **Ти:** Добре, я беру! *(Good, I will take it!)*
 
-> **Олена:** Як ціка́во! Ході́мо обі́дати! *(How interesting! Let's go have lunch!)*
+Here, the pronoun **ця** perfectly matches the feminine noun **вишиванка**. The word **дорого** (expensive) is a useful adverb for shopping. You successfully contrasted two items without repeating the noun.
 
-You use the imperative **Ходімо** (Let's go) to accept the invitation. You settle at a table and order a warm meal. **Ти замовля́єш борщ і варе́ники.** (You order borscht and varenyky). **Олена замовля́є сала́т.** (Olena orders a salad).
+After shopping, you are hungry again. You go to a cafe for lunch. You share a table and **зустрічаєш** (you meet) a local named Olena. The verb **зустріти** (to meet) is an important social word. It is time to introduce yourself and make small talk.
 
-> **Ти:** Сма́чно! *(Tasty!)*
-> **Олена:** Ти добре гово́риш украї́нською! *(You speak Ukrainian well!)*
+> **Олена:** Привіт! Ти звідки? *(Hi! Where are you from?)*
+> **Ти:** Я з Канади. А ти? *(I am from Canada. And you?)*
+> **Олена:** Я з Києва. Що ти робиш тут? *(I am from Kyiv. What are you doing here?)*
+> **Ти:** Я вивчаю українську! *(I study Ukrainian!)*
+> **Олена:** Як цікаво! Ходімо обідати! *(How interesting! Let's go have lunch!)*
+
+You use the imperative form **ходімо** (let's go) to enthusiastically suggest an action. Now you order your food.
+
+Ти замовляєш борщ і вареники. Олена замовляє салат. Їжа дуже смачна. Олена сміється.
+> *You order borscht and varenyky. Olena orders a salad. The food is very tasty. Olena laughs.*
+
+> **Олена:** Смачно! Ти добре говориш українською! *(Tasty! You speak Ukrainian well!)*
 > **Ти:** Дякую! *(Thank you!)*
 
-<!-- INJECT_ACTIVITY: match-survival-phrases -->
+## Вечір (Evening)
 
-## Ве́чір: Кіно́ та рефле́ксія
+Lunch was great, and you want to spend more time with your new friend. You need to make plans for the evening using the future tense. This requires coordination.
 
-The day is winding down, but the city is still alive. You switch to the compound future tense to make plans.
-
-> **Ти:** Що бу́демо роби́ти вве́чері? *(What will we do in the evening?)*
+> **Ти:** Що будемо робити ввечері? *(What will we do in the evening?)*
 > **Олена:** Ходімо в кіно! *(Let's go to the cinema!)*
-> **Ти:** Добре! О котрі́й? *(Good! At what time?)*
-> **Олена:** О сьо́мій. *(At seven.)*
+> **Ти:** Добре! О котрій? *(Good! At what time?)*
+> **Олена:** О сьомій. *(At seven.)*
+> **Олена:** А що ти будеш робити після курсу? *(And what will you do after the course?)*
+> **Ти:** Я буду подорожувати Україною. Я хочу побачити Карпати і Лавру! *(I will travel around Ukraine. I want to see the Carpathians and the Lavra!)*
 
-You use the critical structure of **о** plus the locative case to pinpoint the exact hour for your evening entertainment.
+The phrase **що будемо робити** uses the future tense. The question **що ти будеш робити після курсу?** also keeps the focus on future plans after A1. Asking **о котрій** (at what time) is essential for scheduling.
 
-You are sitting in the dark theater, listening to the actors. **Ви ди́витеся украї́нський фільм.** (You watch a Ukrainian film). At this stage, integrated communication and getting the gist are much more important than grammatical perfection.
-- **Ти не все розумі́єш.** (You do not understand everything.)
-- **Але́ бага́то!** (But a lot!)
+You meet Olena at the cinema. You watch a local movie.
 
-You use linking words to describe the sequence of events to yourself later. **Споча́тку ми купи́ли квитки́.** (First we bought tickets). **По́тім ми диви́лися фільм.** (Then we watched a film).
+Ви дивитеся український фільм. Актори говорять швидко. Ти не все розумієш. Але ти розумієш багато слів! Це дуже приємно. Після кіно ви йдете в ресторан.
+> *You watch a Ukrainian film. The actors speak fast. You do not understand everything. But you understand many words! This is very pleasant. After the cinema you go to a restaurant.*
 
-The movie ends, and you step back onto the street. **Пі́сля кіно ви йдете́ в рестора́н.** (After the cinema you go to a restaurant). You reflect on the hours you have spent together. You express your feelings clearly using past and present forms. **Я ду́же задово́лений.** (I am very satisfied, masculine). **Я дуже задово́лена.** (I am very satisfied, feminine). It feels incredible to navigate an entire evening exclusively in Ukrainian.
+Using linking words like **але** (but) and **після** (after) makes your story flow naturally. The word **фільм** (film) is a common noun you will hear often. The restaurant is located near the cinema, so you walk there together.
 
-Back in your room, you summarize your day. **Ввечері в готелі ти ду́маєш про свій день.** (In the evening in the hotel you think about your day).
-- **Сьогодні був чудо́вий день!** (Today was a wonderful day!)
-- **Зранку я снідав у кафе.** (In the morning I ate breakfast in a cafe. — or **сні́дала** for feminine)
-- **Потім я гуля́в по мі́сту.** (Then I walked around the city. — or **гуля́ла**)
-- **Я познайо́мився з Оле́ною.** (I got acquainted with Olena. — or **познайо́милася**)
-- **Ввечері ми ходи́ли в кіно і ресторан.** (In the evening we went to the cinema and a restaurant.)
+Ви йдете прямо. Потім ви йдете направо. Ресторан там. Це близько.
+> *You go straight. Then you go to the right. The restaurant is there. It is close.*
 
-Looking ahead, you make a plan:
-- **За́втра я бу́ду ї́здити по Ки́єву.** (Tomorrow I will ride around Kyiv.)
-- **Я хо́чу поба́чити Лавру!** (I want to see the Lavra!)
+The day is over. You are back in your room. You reflect on everything that happened, mixing tenses to tell a complete story.
 
-<!-- INJECT_ACTIVITY: order-day-events -->
+Ввечері в готелі ти думаєш про свій день. Сьогодні був чудовий день! Зранку я снідав у кафе. Потім я гуляв по місту. Я познайомився з Оленою. Ввечері ми ходили в кіно. Потім ми були в ресторані.
+> *In the evening in the hotel you think about your day. Today was a wonderful day! In the morning I had breakfast in a cafe. Then I walked around the city. I got acquainted with Olena. In the evening we went to the cinema. Then we were in a restaurant.*
+
+You can also think about tomorrow. The verb **подорожувати** (to travel) describes your ultimate goal.
+
+Завтра я буду подорожувати. Я буду їздити по Києву. Я хочу побачити Лавру!
+> *Tomorrow I will travel. I will ride around Kyiv. I want to see the Lavra!*
+
+The **Лавра** (Lavra) is a famous historical monastery in Kyiv. In this reflection, you naturally transition from the past tense to describe what you did, into the future tense to describe what you will do.
+
 <!-- INJECT_ACTIVITY: fill-in-tenses -->
 
-## Підсумок: Ти гото́вий до А2!
+<!-- INJECT_ACTIVITY: order-chronological -->
 
-Take a moment to realize how far you have come. You can now greet people, introduce yourself, and proudly say where you are from (A1.1). You can describe your friends, your family, and everyday objects (A1.2). You talk easily about your daily habits, your likes, and your actions (A1.3). You know how to tell the time, discuss the weather, and name the days and months (A1.4). You can successfully navigate a major city, give directions, and use public transport (A1.5). You can order food in a restaurant, shop in a market, and handle money (A1.6). You know how to address people politely, give basic instructions, and connect ideas (A1.7). And finally, you can confidently talk about what happened in the past, handle emergencies, and make plans for the future (A1.8).
+## Підсумок: ти готовий/готова!
 
-**Віта́ю! Ти ви́вчив рі́вень А1.** (Congratulations! You learned the A1 level). Or for feminine: **Ти ви́вчила рівень А1.** (You learned the A1 level). You should be incredibly proud. But the journey continues! In A2, you will unlock the true engine of the language: **відмі́нки** (cases), which change word endings to show their role in a sentence. You will explore **доко́наний і недоко́наний вид** (perfective and imperfective aspect) to distinguish between ongoing and completed actions. You will learn the elegant synthetic future tense, like saying **прочита́ю** (I will read) instead of just using **буду чита́ти**. You will master subordinate clauses to build complex thoughts. **Це ті́льки початок!** (This is only the **початок** — beginning!). You can now truly live in a Ukrainian city.
+The course is ending. Imagine it is the last day of your A1 class. Two classmates talk about their progress.
 
-Before you turn the page, test yourself with these real-world questions:
-- Can you describe YOUR day in a Ukrainian city in 10 or more sentences?
-- Can you walk into a cafe and order a full meal without using any English?
-- Can you ask a stranger for directions to the metro and understand their answer?
+> **Студент 1:** Це наш останній урок. *(This is our last lesson.)*
+> **Студент 2:** Так. Я вивчив стільки! *(Yes. I learned so much!)*
+> **Студент 1:** Я теж. Я вже говорю українською. *(Me too. I already speak Ukrainian.)*
+> **Студент 2:** Давай писати повідомлення. Ось мій номер. *(Let's write messages. Here is my number.)*
+> **Студент 1:** Звичайно! До зустрічі на А2! *(Of course! See you at A2!)*
 
-If you can do these things, you are **готовий** (ready). You have built a solid, unbreakable foundation. Celebrate this incredible milestone. 
+Look back at your journey. You started with zero words. Now, you can greet people, introduce yourself, and say where you are from. You can describe people, objects, and your family. You can talk about your daily habits and what you like to do. You can tell the time, discuss the weather, and name the days of the week. You know how to navigate a city, give directions, and use public transport. You can confidently order food in a restaurant, shop for clothes, and handle Ukrainian money. You can make polite requests and connect your ideas. You can even narrate a story about the past and make plans for the future. You can also describe pain, ask for medicine, and call for help in an emergency. You now have a solid A1 foundation for everyday Ukrainian.
 
-:::tip
-Celebrate your progress! The phrase **Ти вже мо́жеш жи́ти в украї́нському мі́сті** (You can already live in a Ukrainian city) is not an exaggeration. The A1 level gives you all the fundamental building blocks to survive, connect, and thrive.
-:::
+What is next? The A2 level awaits. In A2, you will learn the grammatical cases (**відмінки**). You will learn verb aspect, specifically the difference between imperfective and perfective verbs (**доконаний/недоконаний вид**), which changes how you talk about completed actions. You will learn the synthetic future tense, like the word **прочитаю** (I will read). These tools will make your sentences richer and more complex. For extra review, go back to ULP Season 1, Episodes 36-40, and compare your skills with the A1 completion areas in the State Standard 2024. But right now, you must celebrate your hard work.
 
-**До зу́стрічі на рі́вні А2!** (See you at the A2 level!)
+Ти вивчив рівень А1! Вітаю! Ти вже можеш жити в українському місті. Ти готовий до нових тем. Це тільки початок!
+> *You learned level A1! Congratulations! You already can live in a Ukrainian city. You are ready for new topics. This is only the beginning!*
 
-<!-- INJECT_ACTIVITY: a1-grammar-quiz -->
+The word **вітаю** is a fixed chunk used for congratulations, and **початок** (beginning) means there is much more to come. You are now **готовий** (ready) or **готова** (ready) to move forward.
+
+Your final self-check task: Can you describe your day in a Ukrainian city in ten or more sentences? Try it now.
+
+<!-- INJECT_ACTIVITY: quiz-a1-review -->
 </generated_module_content>
 
-**PIPELINE NOTE — Word count: 1389 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
+**PIPELINE NOTE — Word count: 1756 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -491,86 +505,176 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 114 words | Not found: 101 words
+Verified: 198 words | Not found: 9 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
-  ✗ Зра — NOT IN VESUM
-  ✗ Кана — NOT IN VESUM
-  ✗ Оле — NOT IN VESUM
+  ✗ Канади — NOT IN VESUM
+  ✗ Карпати — NOT IN VESUM
+  ✗ Києва — NOT IN VESUM
+  ✗ Києву — NOT IN VESUM
   ✗ Олена — NOT IN VESUM
-  ✗ Перехо — NOT IN VESUM
-  ✗ Поча — NOT IN VESUM
-  ✗ Приві — NOT IN VESUM
-  ✗ Продаве — NOT IN VESUM
-  ✗ Скі — NOT IN VESUM
-  ✗ Сма — NOT IN VESUM
-  ✗ Споча — NOT IN VESUM
-  ✗ Хреща — NOT IN VESUM
-  ✗ бага — NOT IN VESUM
-  ✗ биш — NOT IN VESUM
-  ✗ бна — NOT IN VESUM
-  ✗ брого — NOT IN VESUM
-  ✗ вве — NOT IN VESUM
-  ✗ вень — NOT IN VESUM
-  ✗ витеся — NOT IN VESUM
-  ✗ виши — NOT IN VESUM
-  ✗ вишся — NOT IN VESUM
-  ✗ вля — NOT IN VESUM
-  ✗ вні — NOT IN VESUM
-  ✗ втра — NOT IN VESUM
-  ✗ відмі — NOT IN VESUM
-  ✗ вісімсо — NOT IN VESUM
-  ✗ гово — NOT IN VESUM
-  ✗ гото — NOT IN VESUM
-  ✗ гуля — NOT IN VESUM
-  ✗ дки — NOT IN VESUM
-  ✗ дру — NOT IN VESUM
-  ✗ дцять — NOT IN VESUM
-  ✗ дьте — NOT IN VESUM
-  ✗ діста — NOT IN VESUM
-  ✗ жеш — NOT IN VESUM
-  ✗ жий — NOT IN VESUM
-  ✗ задово — NOT IN VESUM
-  ✗ замовля — NOT IN VESUM
-  ✗ захо — NOT IN VESUM
-  ✗ зві — NOT IN VESUM
-  ✗ здити — NOT IN VESUM
-  ✗ зеле — NOT IN VESUM
-  ✗ квито — NOT IN VESUM
-  ✗ круаса — NOT IN VESUM
-  ✗ ксія — NOT IN VESUM
-  ✗ лена — NOT IN VESUM
-  ✗ лений — NOT IN VESUM
-  ✗ лися — NOT IN VESUM
-  ✗ льки — NOT IN VESUM
-  ✗ лянка — NOT IN VESUM
+  ✗ Оленою — NOT IN VESUM
+  ✗ Хрещатик — NOT IN VESUM
+  ✗ Хрещатика — NOT IN VESUM
+  ✗ Хрещатику — NOT IN VESUM
 
-All 114 other words are confirmed to exist in VESUM.
+All 198 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
-## Verification Tools (MCP)
+---
 
-You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
+## Verification Tools (Shell Commands)
 
-**Core Verification:**
-- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
-- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
+You have access to verification tools via shell commands. Use these to verify
+Ukrainian vocabulary, check grammar, and search textbook content **as you write**.
 
-**Content Quality:**
-- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+**IMPORTANT:** Run verification commands BEFORE finalizing any Ukrainian text.
+Batch multiple verifications together to minimize round-trips.
 
-**Reference:**
-- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp_rag_search_literary` — verify literary references against primary sources
-- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
+### 1. Batch-verify Ukrainian words exist in VESUM (preferred — one call for many words)
 
-**Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_words
+results = verify_words(['слово1', 'слово2', 'слово3'])
+for w, matches in results.items():
+    if matches:
+        print(f'{w}: FOUND — lemma={matches[0][\"lemma\"]}, pos={matches[0][\"pos\"]}')
+    else:
+        print(f'{w}: NOT FOUND — may not exist in standard Ukrainian')
+"
+```
+
+### 2. Verify a single Ukrainian word in VESUM (with full morphological tags)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_word
+results = verify_word('WORD_HERE')
+if results:
+    for m in results:
+        print(f'lemma={m[\"lemma\"]}, pos={m[\"pos\"]}, tags={m[\"tags\"]}')
+else:
+    print('NOT FOUND in VESUM')
+"
+```
+
+### 3. Get all inflected forms of a lemma (declension/conjugation)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_lemma
+forms = verify_lemma('LEMMA_HERE')
+for f in forms[:20]:
+    print(f'{f[\"word_form\"]:20s} {f[\"pos\"]:8s} {f[\"tags\"]}')
+print(f'... {len(forms)} forms total')
+"
+```
+
+### 4. Check CEFR level of a word (is it level-appropriate?)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import query_cefr_level
+results = query_cefr_level('WORD_HERE')
+for r in results:
+    print(f'{r[\"word\"]}: {r[\"level\"]} ({r[\"pos\"]})')
+if not results:
+    print('Not in CEFR database')
+"
+```
+
+### 5. Search textbook content (Ukrainian school textbooks, Grades 1-11)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_textbooks
+keywords = {'keyword1', 'keyword2'}
+results = search_textbooks(keywords, 5)
+for r in results:
+    title = r.get('section_title', r.get('title', ''))
+    grade = r.get('grade', '?')
+    text = r.get('text', '')[:200]
+    print(f'Grade {grade} | {title}')
+    print(f'  {text}')
+    print()
+"
+```
+
+### 6. Search style guide for calques/Russianisms (Антоненко-Давидович, 279 entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_style_guide
+results = search_style_guide('TOPIC_HERE', 3)
+for r in results:
+    print(f'--- {r.get(\"word\", \"\")} [{r.get(\"section\", \"\")}]')
+    print(r.get('text', '')[:300])
+    print()
+if not results:
+    print('No style guide entries found')
+"
+```
+
+### 7. Look up word definition in СУМ-11 (Ukrainian explanatory dictionary, 127K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_definitions
+results = search_definitions('WORD_HERE', 3)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+### 8. Search idioms (Фразеологічний словник, 25K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_idioms
+results = search_idioms('WORD_HERE', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"text\", r.get(\"definition\", \"\")))[:200]}')
+"
+```
+
+### 9. English-to-Ukrainian translation (Балла, 79K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import translate_en_uk
+results = translate_en_uk('ENGLISH_WORD', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+---
+
+**WHEN to use these tools:**
+
+1. **Before writing any Ukrainian text** — batch-verify all key vocabulary with
+   `verify_words` (tool 1). Any word that returns NOT FOUND must be replaced.
+2. **When you suspect a Russicism or calque** — search the style guide (tool 6)
+   and verify the correct Ukrainian form with `verify_word` (tool 2).
+3. **When writing for A1/A2** — check CEFR levels (tool 4) to ensure vocabulary
+   is level-appropriate.
+4. **When unsure about a case ending or conjugation** — use `verify_lemma` (tool 3)
+   to see the full paradigm.
+5. **When covering a grammar topic** — search textbooks (tool 5) to see how
+   Ukrainian school textbooks teach it.
+6. **When you need the precise Ukrainian meaning** — use СУМ-11 (tool 7).
+7. **When looking for natural Ukrainian expressions** — search idioms (tool 8).
+
+**Batching rule:** Collect all words you want to verify, then run ONE `verify_words`
+call instead of multiple `verify_word` calls. This is faster and uses fewer tokens.

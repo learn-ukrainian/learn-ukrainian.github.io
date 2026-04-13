@@ -1,22 +1,44 @@
-## Чергування в pluralia tantum
+## Чергування в pluralia tantum (~550 words)
 
-У модулі вісім ми вже детально вивчали дуже важливе фонетичне правило сучасної української мови. Ви напевно пам'ятаєте, що у закритих складах голосний звук [о] часто і закономірно змінюється на звук [і]. Це класичне історичне чергування також регулярно відбувається під час відмінювання багатьох іменників **pluralia tantum** *(plural-only nouns)*. Візьмемо для гарного прикладу добре відоме нам слово «ворота». У називному відмінку ми маємо форму «во-ро-та», де всі склади є повністю відкритими і закінчуються на дзвінкий голосний звук. Але коли ми утворюємо форму родового відмінка з нульовим закінченням, останній склад раптово стає закритим. Тому звук [о] в корені закономірно перетворюється на [і], і ми отримуємо правильну форму «воріт». Розуміння цього фонетичного процесу є надзвичайно корисним для всіх іноземних студентів. Воно допомагає легко, інтуїтивно і безпомилково передбачати форми родового відмінка для тих іменників, які мають звук [о] у своєму корені. Вам абсолютно не потрібно бездумно завчати кожне слово окремо, якщо ви чітко бачите і глибоко розумієте його внутрішню фонетичну логіку.
+When we form the **родовий відмінок** (genitive case) for pluralia tantum nouns, we often encounter the same internal stem changes that we saw in earlier modules. Do you remember the rule about open and closed syllables? When a vowel like "о" or "е" ends up in a closed syllable, it frequently changes to "і". Since many pluralia tantum nouns take a zero ending in the genitive case, their final syllable becomes closed, triggering this exact alternation.
 
-Інше надзвичайно цікаве явище в родовому відмінку з нульовим закінченням — це так звані **вставні голосні** *(fleeting vowels)* [о] або [е]. Вони автоматично з'являються між приголосними звуками в самому кінці слова для значного полегшення нашої артикуляції та вимови. Давайте уважно порівняємо кілька абсолютно різних прикладів. Візьмемо дуже популярне побутове слово «ножиці». У родовому відмінку воно має коротку форму «ножиць». Тут ми чітко бачимо нульове закінчення, але жоден новий голосний звук у корені не з'являється, бо сусідні приголосні легко вимовляються разом. А тепер подивіться на звичайний іменник жіночого роду **сукня** *(dress)*. У звичайній множині це «сукні», але в родовому відмінку ми обов'язково кажемо «суконь». Звук [о] з'являється там, щоб розбити занадто складний збіг твердих приголосних. Щодо слова «гроші», то тут відбувається зовсім інший граматичний процес. У родовому відмінку ми маємо форму «грошей». Голосний звук [е] тут не є вставним у корені, а стає повноцінною і невід'ємною частиною самого закінчення «-ей». Це класичне закінчення надійно зберігає загальну мелодійність слова і є дуже поширеним серед цієї специфічної групи незмінюваних іменників.
+Let's take the word **ворота** (gate — pluralia tantum, Р. воріт, Ор. ворітьми/воротами). In the nominative case, the syllables are open, but in the genitive case, the ending disappears. The syllable becomes closed, so the letter "o" turns into "i", creating the form "воріт". This predictable rule helps you confidently form cases for words that exist only as a **множина** (plural number).
 
-Окрему і дуже важливу лексичну групу іменників pluralia tantum становлять різноманітні географічні назви. Вони досить часто демонструють цікаві звукові чергування або несподівану зміну наголосу під час свого відмінювання. Наприклад, назва чудового західноукраїнського міста **Чернівці** *(Chernivtsi)* у родовому відмінку набуває довгої форми «Чернівців». А коли ми використовуємо місцевий відмінок, щоб точно сказати про своє поточне розташування, ми говоримо «у Чернівцях». Інше відоме і дуже красиве українське місто — **Суми** *(Sumy)*. Його коротка назва не має жодних складних звукових чергувань у своєму історичному корені. У місцевому відмінку ця географічна назва залишається максимально простою і стовідсотково передбачуваною: ми просто кажемо «у Сумах». Правильне і впевнене відмінювання відомих географічних назв є абсолютно критичною навичкою для побудови базових розмовних речень, як-от «Я зараз живу в...» або «Я із задоволенням подорожую до...».
+Another common phonological feature is the appearance or disappearance of fleeting vowels. When a noun has a zero ending in the genitive case and its stem ends in two consonants, Ukrainian often inserts an "о" or "е" between them to make pronunciation easier. However, look at a word like **ножиці** (scissors — pluralia tantum, Р. ножиць).
 
-| Називний відмінок | Місцевий відмінок |
-| :--- | :--- |
-| **Карпати** | у Карпатах |
-| **Чернівці** | у Чернівцях |
-| **Суми** | у Сумах |
-| **Черкаси** | у Черкасах |
+У родовому відмінку це слово має нульове закінчення — «ножиць». Оскільки корінь закінчується на легку для вимови комбінацію приголосних, жоден вставний голосний не з'являється.
 
-Запам'ятайте ці базові парадигми місцевого відмінка прямо зараз. Ви будете постійно і дуже активно використовувати їх під час захопливих розповідей про свої літні чи зимові мандрівки дивовижними містами та мальовничими регіонами України.
+> *In the genitive case, this word has a zero ending — "ножиць". Since the root ends in an easy-to-pronounce consonant combination, no inserted vowel appears.*
 
-Прочитайте цю коротку туристичну розповідь про літню подорож і зверніть свою пильну увагу на всі іменники, що мають тільки форму множини. 
+With the word **гроші** (money — pluralia tantum, Р. грошей, Ор. грішми/грошима), the situation is slightly different. Instead of a zero ending, it takes the specific "-ей" ending. Because the stem remains open, no fleeting vowels are needed inside the root.
 
-Минулого літа ми з друзями організували справжні ідеальні **канікули** *(vacation/holidays)* та поїхали відпочивати високо в Карпати. Погода в горах була дуже сонячною і теплою, тому я щодня носив свої улюблені темні окуляри. Ми успішно орендували старий традиційний гуцульський будинок. У ньому були масивні дерев'яні двері та дуже красиві старовинні меблі. Одного разу ввечері я раптом відчув себе трохи погано. Мені швидко довелося піти в місцеву сільську аптеку. Я заплатив чималі гроші за різні ефективні ліки від легкої застуди. Але, на моє велике щастя, я дуже швидко і повністю одужав. Ці чарівні Карпати назавжди залишили в моєму серці тільки найкращі теплі спогади та найсвітліші людські радощі.
+:::info
+**Grammar box**
+Remember that pluralia tantum nouns do not belong to any standard declension group because a declension class is determined by the **однина** (singular number) form. You must rely on the phonetic structure of the plural stem to predict how it will behave in different cases.
+:::
 
-<!-- INJECT_ACTIVITY: fill-in, cases of pluralia tantum nouns -->
+Geographical names that are pluralia tantum also follow specific patterns, especially when expressing location. For example, the city "Чернівці" takes the "-ів" ending in the genitive case, becoming "Чернівців", and in the locative case, it becomes "у Чернівцях". A city like "Суми" takes standard plural endings without complex internal changes: "із Сум" and "у Сумах". Other notable regions include the **Карпати** (Carpathians — geographical pluralia tantum).
+
+Ось таблиця географічних назв, які існують тільки у множині. Ці форми знадобляться вам для розповідей про подорожі або місце проживання.
+
+> *Here is a table of geographical names that exist only in the plural. You will need these forms for stories about traveling or your place of residence.*
+
+| Називний відмінок | Родовий відмінок | Місцевий відмінок |
+| :--- | :--- | :--- |
+| Карпати | Карпат | у Карпатах |
+| Чернівці | Чернівців | у Чернівцях |
+| Суми | Сум | у Сумах |
+| Черкаси | Черкас | у Черкасах |
+
+Notice that the locative case consistently uses the "-ах" or "-ях" endings, making it very predictable. The genitive case is where you will see the most variation, alternating between zero endings and "-ів".
+
+To see these nouns in action, read this short narrative about a vacation. It features words like **канікули** (holidays/vacation — pluralia tantum) and **окуляри** (glasses — pluralia tantum, Р. окулярів). You will also see how to talk about buying **ліки** (medicine — pluralia tantum, connects to M16) or describing **меблі** (furniture — pluralia tantum) and heavy wooden **двері** (door — pluralia tantum, Р. дверей).
+
+Мої зимові канікули пройшли чудово. Ми поїхали відпочивати в Карпати. Спочатку я забув удома сонцезахисні окуляри. Потім я застудився, тому витратив останні гроші на ліки. Ми орендували старий будинок, де були масивні двері та зручні меблі.
+
+> *My winter holidays went wonderfully. We went to relax in the Carpathians. At first, I forgot my sunglasses at home. Then I caught a cold, so I spent my last money on medicine. We rented an old house, where there was a massive door and comfortable furniture.*
+
+Can you identify the case of each pluralia tantum noun in the text above?
+
+<!-- INJECT_ACTIVITY: quiz, identify pluralia tantum nouns -->
+<!-- INJECT_ACTIVITY: fill-in, insert the correct родовий відмінок form -->

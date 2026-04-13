@@ -25,7 +25,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-звіт поліції, позбавлений атмосфери та деталей. Тому завжди обирайте недоконаний вид для опису атмосфери, стану природи або звичних занять у минулому. Він дає вам простір і час для створення ідеальної декорації для ваших головних подій. Після того, як ви створили тло, настав час переходити до самої історії. Для цього вам потрібна **послідовність подій** *(sequence of events)*. Саме тут на сцену виходить доконаний вид. Дієслова доконаного виду відповідають на питання «що зробив?» або «що зробила?». Вони позначають дії, які повністю завершилися і досягли свого результату. Найважливіше те, що ці події відбулися одна за одною. Розглянемо такий ланцюжок подій: «Він **встав** *(stood up)*, **одягнувся** *(got dressed)*, **вийшов** *(went out)* з дому і **пішов** *(went)* на роботу». У цьому складному реченні ми маємо чотири дієслова доконаного виду. Логіка їхнього використання абсолютно прозора. Кожна наступна дія не могла розпочатися, поки не завершилася попередня. Людина спочатку встала (результат досягнуто), потім одягнулася (ще один результат). Після цього вона вийшла з дому (завершена дія) і врешті пішла на роботу. Це класичний подієвий ланцюг. Доконаний вид ніби розрізає час на окремі, завершені відрізки. Якщо недоконаний вид — це плавне відео, то доконаний — це серія швидких фотографій, які змінюють одна одну. Зверніть увагу на те, як ці події контрастують із фоном. Тло є тривалим і незмінним, тоді як послідовність подій — динамічна і результативна. Дії доконаного виду часто переривають стан спокою, створений недоконаним видом. Вони рухають сюжет уперед, змушуючи читача стежити за розвитком історії крок за кроком. Без доконаного виду ваша розповідь застрягла б на місці. Вона перетворилася б на нескінченний опис без жодного розвитку чи логічного фіналу. Найцікавіше починається тоді, коли тло і події зустрічаються в одному складному реченні. У реальних текстах ми рідко використовуємо лише один вид дієслів. Набагато частіше ми комбінуємо їх. Це робиться, щоб показати, як раптова подія відбувається на фоні тривалого процесу. Це класична структура «поки відбувалося одне, трапилося інше». Проаналізуємо такий приклад: «Коли ми **снідали** *(were having breakfast)*, **зателефонувала** *(called)* бабуся». У цьому реченні ми маємо чітку взаємодію двох аспектів. Дієслово *снідали* (недоконаний вид) виконує функцію тла. Воно описує тривалий процес: родина сиділа за столом, їла, розмовляла. Цей процес уже тривав якийсь час і ще не збирався закінчуватися. Аж раптом цю ідилію перериває дієслово *зателефонувала* (доконаний вид). Це раптова, одноразова і завершена подія. Дзвінок відбувся і залишив конкретний результат. Подія доконаного виду (дзвінок бабусі) ніби «врізається» у тривалий процес недоконаного виду (сніданок). Після цього дзвінка розповідь може розвиватися далі. «Вона **сказала** *(said)*, що **приїжджає** *(is arriving)* в гості. Ми **зраділи** *(rejoiced)* і **почали** *(started)* прибирати». Зверніть увагу, як доконаний вид (*сказала*, *зраділи*, *почали*) штовхає історію вперед, створюючи новий ланцюжок результатів. Вміння ідентифікувати, яке дієслово є фоном, а яке — подією, є ключовим для правильного вибору аспекту. Коли ви будуєте власну розповідь, завжди запитуйте себе: «Ця дія просто тривала, чи вона сталася і змінила хід речей?». Ваш вибір аспекту повністю залежатиме від відповіді на це питання. <!-- INJECT_ACTIVITY: quiz, Визначте вид дієслова та поясніть аспектну функцію (тло, подія, результат, тривалість) --> <!-- INJECT_ACTIVITY: fill-in, Оберіть правильний вид дієслова у контексті минулого часу -->
+to one another. Without this imperfective background, any story would seem dry and empty, because it is exactly these verbs that allow us to feel the atmosphere before the real action begins.* :::info **Grammar box** Imperfective verbs in the past tense often act as the "canvas" of your story. They answer the question «що робив?» (what was someone doing?) and allow multiple actions to overlap perfectly in time without pushing the narrative clock forward. ::: Once the atmospheric background is firmly established on your canvas, the story needs a mechanism to move the plot forward. This is where the **послідовність подій** (sequence of events) comes into play, relying entirely on the perfective aspect. Perfective verbs focus on **результативність** (resultativity) — meaning the action was fully completed, yielding a result, and only then does the narrative step into the next sequential phase. Consider this rapid triad of actions: «Він швидко встав, тепло одягнувся і вийшов з дому» (He quickly got up, dressed warmly, and left the house). Each verb represents a finished step. Unlike imperfective verbs, perfective verbs in the past tense cannot overlap; they happen in a strict chronological chain. He could not leave the house while he was still getting up. You cannot use perfective verbs to describe an ongoing state or simultaneous background noise. They are the narrative engine that abruptly interrupts the static background and pushes the timeline from one specific milestone to the next. Найцікавіше та найскладніше для студентів відбувається тоді, коли ми поєднуємо обидва види в одному складному реченні. Кожна **видова пара** (aspectual pair) дозволяє нам філігранно показати, як раптова подія перериває тривалий процес. Розглянемо такий класичний приклад: «Коли ми спокійно снідали на кухні, несподівано зателефонувала бабуся». Дія «снідали» є нашим фоном, який повільно розгортається в часі. Ми не знаємо, коли сніданок почався чи закінчився. Натомість «зателефонувала» — це швидка, результативна подія, що раптово втручається в цей фон. Щоб правильно будувати такі розповіді, ви повинні завжди запитувати себе перед кожним дієсловом: чи ця дія є тривалою основою ситуації, чи це новий, завершений крок уперед. Тільки так ваша мова набуде справжньої глибини. > *The most interesting and difficult part for students happens when we combine both aspects in one complex sentence. Each aspectual pair allows us to masterfully show how a sudden event interrupts an ongoing process. Let's consider this classic example: "While we were quietly having breakfast in the kitchen, grandma unexpectedly called." The action "were having breakfast" is our background, which slowly unfolds in time. We do not know when the breakfast started or finished. Instead, "called" is a quick, result-oriented event that suddenly intervenes in this background. To correctly build such narratives, you must always ask yourself before every verb: is this action the continuous foundation of the situation, or is it a new, completed step forward. Only this way will your speech acquire true depth.* <!-- INJECT_ACTIVITY: quiz, Визначте вид дієслова та поясніть аспектну функцію (тло, подія, результат, тривалість) --> <!-- INJECT_ACTIVITY: fill-in, Оберіть правильний вид дієслова у контексті минулого часу -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -550,7 +550,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -563,18 +630,68 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] доконаний вид (perfective aspect — completed, result-oriented action)
+- [ ] недоконаний вид (imperfective aspect — ongoing, unbounded action)
+- [ ] видова пара (aspectual pair — e.g., писати/написати)
+- [ ] тло розповіді (narrative background — imperfective setting/scene)
+- [ ] послідовність подій (sequence of events — perfective event chain)
+- [ ] наказовий спосіб (imperative mood — commands and requests)
+- [ ] заперечення (negation — negative constructions with aspect)
+- [ ] умовний спосіб (conditional mood — hypothetical actions with би/б)
+- [ ] результативність (resultativity — focus on outcome, triggers perfective)
+- [ ] тривалість (duration — focus on process length, triggers imperfective)
+- [ ] діагностика (diagnostics — self-assessment of aspect mastery)
+- [ ] повторення (review/repetition — consolidation of learned material)
+- [ ] контрольна робота (test/assessment — formal diagnostic check)
+- [ ] минулий час (past tense — time frame for aspect practice)
+- [ ] майбутній час (future tense — time frame for aspect practice)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Вид у майбутньому та наказовому (~1000 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

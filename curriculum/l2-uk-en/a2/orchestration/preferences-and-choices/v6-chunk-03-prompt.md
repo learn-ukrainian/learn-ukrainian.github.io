@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-та обдуману позицію. Це слово часто звучить у новинах або під час серйозних дискусій. Іноді ми не зовсім впевнені у своїх словах. Тоді ми використовуємо чудову фразу **«Мені здається, що...»** *(It seems to me that...)*. Ця фраза робить нашу думку дуже м'якою. Наприклад: **«Мені здається, що завтра буде дощ»** *(It seems to me that it will rain tomorrow)*. Але якщо ми абсолютно впевнені, ми говоримо інакше. Ми використовуємо прикметник **переконаний** *(convinced)*. Зверніть увагу на закінчення. Чоловік скаже: **«Я переконаний, що...»** *(I am convinced that...)*. Жінка обов'язково скаже: **«Я переконана, що...»** *(I am convinced that...)*. Наприклад: **«Я переконана, що цей фільм дуже цікавий»** *(I am convinced that this movie is very interesting)*. Це дуже сильна позиція. Використовуйте цю фразу, коли ви готові захищати свою думку. Коли ми висловлюємо думку, ми завжди маємо пояснити причину. Для цього ми використовуємо спеціальні слова-зв'язки. Найпопулярніше слово — це **тому що** *(because)*. Воно ідеально підходить для будь-якої життєвої ситуації. Наприклад: **«Я вважаю, що це важливо, тому що це впливає на наше майбутнє»** *(I think this is important because it affects our future)*. У неформальній розмовній мові ми часто використовуємо коротке слово **бо** *(because)*. Воно звучить швидко і природно. Наприклад: **«Я обираю зелений чай, бо він гарячий»** *(I choose green tea because it is hot)*. Також є чудове слово **адже** *(since, after all)*. Воно додає більше емоцій у ваше речення. Якщо ситуація дуже офіційна, ми кажемо **оскільки** *(since, as)*. Усі ці слова з'єднують дві частини складного речення. Пам'ятайте, що перед цими словами ми завжди ставимо кому. Дієслово «вважати» має ще одну дуже цікаву граматичну конструкцію. Вона допомагає нам давати оцінку або характеристику іншим людям чи речам. Ми кажемо: **вважати когось або щось** *(to consider someone or something)* **ким або чим** *(as someone or something)*. Після дієслова ми ставимо об'єкт у **Знахідний відмінок** *(Accusative case)*. А характеристику ми ставимо в **Орудний відмінок** *(Instrumental case)*. Наприклад: **«Я вважаю його своїм найкращим другом»** *(I consider him my best friend)*. Або: **«Ми вважаємо цей проєкт успішним»** *(We consider this project successful)*. Зверніть увагу на відмінність від англійської мови. В англійській мові ми часто не використовуємо спеціальні форми слів для такої конструкції. В українській мові зміна закінчення є обов'язковою. Ми завжди використовуємо Орудний відмінок для характеристики об'єкта. Це робить ваше речення правильним і дуже природним. Ця ж сама граматична конструкція допомагає нам говорити про себе. Ми можемо описувати свій характер, свою національність або професію. Ми використовуємо фразу **вважати себе** *(to consider oneself)* і додаємо потрібне слово в Орудному відмінку. Наприклад: **«Я вважаю себе оптимістом»** *(I consider myself an optimist)*. Або інший приклад: **«Вона вважає себе українкою»** *(She considers herself a Ukrainian)*. Зверніть увагу на ще один дуже важливий момент. В українській мові ми використовуємо тільки дієслово «вважати». Слово «считаю» — це типовий **суржик** *(surzhyk, mixed language)*. Це слово походить з російської мови. Завжди правильно говорити: «Я вважаю», а не «Я считаю». Це правило допомагає вашій українській мові бути чистою, правильною та красивою. <!-- INJECT_ACTIVITY: fill-in, focus: Complete opinion sentences with correct connectors (тому що, адже) and Instrumental case endings, 8 items -->
+тому я візьму парасольку. Олена переконана, що ми встигнемо на потяг, якщо підемо зараз. Я переконаний, що ця книжка тобі дуже сподобається. Мені здається, що ми вже були в цьому кафе минулого року. Сергій переконаний, що його команда виграє цей матч. A good opinion always needs a solid reason. To connect your thoughts and explain why you think a certain way, you can use several connectors. The standard and most versatile option is **тому що** (because). In informal, fast-paced speech, Ukrainians often use the short word «бо» (because). When you want to remind someone of a known fact, use «адже» (since, after all). Finally, for more formal situations, you can use «оскільки» (since, as). Я вважаю, що це важливо, тому що це впливає на наше майбутнє. Мені подобається жити в місті, бо тут багато парків і красивих вулиць. Ми вирішили залишитися вдома, адже надворі почалася сильна гроза. Оскільки наш університет знаходиться дуже далеко, ми поїдемо туди на метро. > *I consider that this is important because it affects our future. I like living in the city because there are many parks and beautiful streets here. We decided to stay home since a strong thunderstorm started outside. As our university is located very far away, we will go there by subway.* The verb **вважати** has an advanced and very elegant usage when you want to characterize someone or something. We use the construction where the object is in the Accusative case, and the characteristic is in the Instrumental case. This is similar to the English "to consider X as Y", but in Ukrainian, the case endings do all the work without extra prepositions. :::info **Grammar box** — Remember to change the case of the characteristic to the Instrumental case. Do not leave it in the Nominative case. For example, «свій друг» becomes «своїм другом». ::: Я вважаю його своїм найкращим другом, бо ми знайомі з дитинства. Наш директор вважає цей новий проєкт дуже успішним і перспективним. Багато людей вважають Київ найкрасивішим містом в Україні. Журналісти вважають цю подію історичною. Моя мама завжди вважала мене талановитою людиною. This same structure is incredibly useful for self-identification. When discussing your identity, profession, or character traits, use «вважати себе» (to consider oneself) followed by the Instrumental case. It is a powerful way to express who you are and what values you hold. :::tip **Did you know?** — The Ukrainian verb **вважати** comes from the word «вага» (weight), implying that you have weighed your thoughts. Never use the Russian-sounding word «считаю» when speaking Ukrainian. This is a common form of Surzhyk. Always use «вважаю»! ::: Я вважаю себе великим оптимістом, тому що завжди бачу хороше. Вона вважає себе справжньою українкою і пишається цим. Мій дідусь вважав себе дуже щасливою людиною. Ми вважаємо себе відповідальними студентами. > *I consider myself a great optimist because I always see the good. She considers herself a true Ukrainian and is proud of it. My grandfather considered himself a very happy person. We consider ourselves responsible students.* <!-- INJECT_ACTIVITY: fill-in-opinion-connectors -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -478,7 +478,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 6: A2 finale (A2 M51-M69)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 40%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 40% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 70-90% Ukrainian.
 LANGUAGE ROLES:
@@ -497,18 +564,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] вважати (to think, to consider)
+- [ ] воліти (to prefer)
+- [ ] обирати (to choose)
+- [ ] думка (opinion, thought)
+- [ ] згоден (agree, m.)
+- [ ] згодна (agree, f.)
+- [ ] рація (rightness — in мати рацію)
+- [ ] тому що (because)
+- [ ] навпаки (on the contrary)
+- [ ] переконаний (convinced, m.)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Згоден чи ні? (~550 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

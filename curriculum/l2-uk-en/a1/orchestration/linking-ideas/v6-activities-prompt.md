@@ -1,4 +1,4 @@
-<!-- version: 1.1.0 | updated: 2026-03-31 -->
+<!-- version: 1.2.0 | updated: 2026-04-12 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -11,6 +11,35 @@ Generate an `activities/linking-ideas.yaml` file for module **44: Linking Ideas*
 
 ---
 
+## ⚠️ HARD COUNT TARGETS — READ TWICE
+
+These are the binding numerical contracts for THIS module. The audit will FAIL if you fall short.
+
+| Bucket | Min | Max | Notes |
+|---|---|---|---|
+| Total activities | 10 | 10+ | inline + workbook combined |
+| Inline (lesson tab) | 4 | 6 | one per `<!-- INJECT_ACTIVITY -->` marker, see below |
+| Workbook (Зошит tab) | 6 | 9 | extended practice |
+| Items per activity | 6 | — | each activity must have at least 6 items (unless its type cap is lower — see Activity Type Reference below) |
+
+**You MUST ship at least 4 inline activities AND at least 6 workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+
+**Type diversity is required.** The module (inline + workbook combined) MUST use at least **0** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level. (If `0` is `0`, the audit profile for this level does not enforce type diversity — but variety still produces a better lesson, so aim for 4+ types when the workbook allows it.)
+
+---
+
+## Allowed types for THIS level
+
+- **Inline (lesson) types:** image-to-letter, letter-grid, match-up, watch-and-repeat, quiz, true-false, fill-in, classify
+- **Inline priority (preferred):** image-to-letter, match-up, fill-in, quiz, watch-and-repeat
+- **Workbook types:** fill-in, match-up, group-sort, anagram, unjumble, quiz, true-false, classify, divide-words, count-syllables, pick-syllables, observe, phrase-table, odd-one-out
+- **Workbook priority (preferred):** fill-in, match-up, group-sort, anagram, unjumble
+- **FORBIDDEN at this level:** cloze, error-correction, mark-the-words, translate, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, highlight-morphemes, grammar-identify, select
+
+Pick from the allowed list. Lean heavily on the priority lists. Do not use any forbidden type — the build will reject it.
+
+---
+
 ## Inline vs Workbook Split
 
 Activities have two placement categories:
@@ -19,7 +48,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Rule of thumb:** inline = 2-3 quick checks after key teaching points. Workbook = 4-8 deeper practice exercises covering the full topic.
+**Rule of thumb:** inline = 4–6 quick checks after key teaching points. Workbook = 6–9 deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
 
 ---
 
@@ -27,10 +56,10 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: fill-in-conjunction-choice -->`
-- `<!-- INJECT_ACTIVITY: group-sort-categories -->`
-- `<!-- INJECT_ACTIVITY: fill-in-reason-building -->`
-- `<!-- INJECT_ACTIVITY: quiz-conjunction-matching -->`
+- `<!-- INJECT_ACTIVITY: fill-in-choose-conjunction -->`
+- `<!-- INJECT_ACTIVITY: group-sort-conjunction-roles -->`
+- `<!-- INJECT_ACTIVITY: quiz-conjunction-choice -->`
+- `<!-- INJECT_ACTIVITY: fill-in-bo-tomu-shcho -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -85,114 +114,154 @@ required:
 ## Module Content (the prose the learner reads before exercises)
 
 <module_content>
-## Діалоги (Dialogues)
+## Діало́ги (Dialogues)
 
-Two friends are deciding what to order in a local cafe after a long walk through the city. They use basic linking words to explain their choices, contrast their preferences, and make plans together. Notice how these short conjunctions connect simple ideas and give clear reasons for their decisions. Instead of just naming items, they are building a logical, connected conversation.
 
-> **Олена:** Ти хочеш каву чи чай? *(Do you want coffee or tea?)*
-> **Марко:** Каву, бо я дуже втомлений. *(Coffee, because I am very tired.)*
-> **Олена:** А я хочу чай, але без цукру. *(And I want tea, but without sugar.)*
-> **Марко:** Добре. Ходімо в кафе, і я візьму ще тістечко. *(Good. Let's go to the cafe, and I will also take a pastry.)*
-> **Олена:** Я теж хочу, але я на дієті! *(I also want one, but I am on a diet!)*
+Observe how a couple plans their vacation and decides what to eat. The short words in bold link their ideas together naturally and logically.
 
-Later that evening, two colleagues catch up on their busy day and discuss why they missed each other's messages earlier. They use linking words to organize the sequence of their actions and explain the exact reasons behind missed connections. In everyday Ukrainian communication, stringing together events and providing quick justifications is a fundamental skill.
+> **Оле́г:** Де ми проведемо́ відпу́стку? Я хо́чу в Карпа́ти, **а** ти — на мо́ре. *(Where will we spend the vacation? I want [to go to] the Carpathians, and you — to the sea.)*
+> **А́нна:** Море те́пле, **бо** лі́то. *(The sea is warm, because it is summer.)*
+> **Олег:** Го́ри га́рні, **але́** дале́ко. *(The mountains are beautiful, but far.)*
+> **Анна:** Пої́демо в Карпати, **бо** там деше́вше. *(Let's go to the Carpathians, because it is cheaper there.)*
+> **Олег:** До́бре! Пе́ред доро́гою ти хо́чеш ка́ву **чи** чай? *(Good! Before the trip, do you want coffee or tea?)*
+> **Анна:** Каву, **бо** я ду́же вто́млена. *(Coffee, because I am very tired.)*
+> **Олег:** **А** я хочу чай, **але** без цу́кру. Ході́мо в кафе́, **і** я візьму́ ще ті́стечко. *(And I want tea, but without sugar. Let's go to the cafe, and I will also take a pastry.)*
+> **Анна:** Я **теж** хочу, **але** я на діє́ті! *(I also want [one], but I am on a diet!)*
 
-> **Антон:** Що ти робив сьогодні? *(What were you doing today?)*
-> **Іван:** Я працював, а потім ходив у магазин. *(I worked, and then went to the store.)*
-> **Антон:** Я хотів зателефонувати, але ти не відповів. *(I wanted to call, but you did not answer.)*
-> **Іван:** Вибач, бо телефон був без звуку. *(Sorry, because the phone was on silent.)*
-> **Антон:** Нічого! Завтра я вільний, і ми можемо зустрітися. *(That is nothing! Tomorrow I am free, and we can meet.)*
 
-A married couple is debating where to go for their upcoming summer vacation. They use contrasting words to compare two very different destinations: the Carpathian Mountains and the seaside. This dialogue models how to use adjectives with contrasting conjunctions to weigh pros and cons. You can clearly see how adding a simple linking word changes the entire flow of the debate.
 
-> **Віктор:** Гори гарні, але далеко. *(The mountains are beautiful, but far.)*
-> **Марія:** Море тепле, бо зараз літо. *(The sea is warm, because it is summer now.)*
-> **Віктор:** Я хочу в гори, а ти — на море. *(I want to go to the mountains, and you want to go to the sea.)*
-> **Марія:** Добре. Поїдемо в Карпати, бо там дешевше. *(Fine. Let's go to the Carpathians, because it is cheaper there.)*
+> **Макси́м:** Що ти роби́в сього́дні? *(What did you do today?)*
+> **Дени́с:** Я працюва́в, **а** по́тім ходи́в у магази́н. *(I worked, and then went to the store.)*
+> **Максим:** Я хоті́в зателефонува́ти, **але** ти не відпові́в. *(I wanted to call, but you didn't answer.)*
+> **Денис:** Ви́бач, **бо** телефо́н був без зву́ку. *(Sorry, because the phone was on mute.)*
+> **Максим:** Ні́чого! За́втра я ві́льний, **і** ми мо́жемо зустрі́тися. *(It's nothing! Tomorrow I am free, and we can meet.)*
 
-## Сполучники (Conjunctions)
 
-To build natural sentences, you need a way to link your thoughts together. The Ukrainian term for this grammatical "glue" is **сполучник** (conjunction), which comes directly from the verb **сполучити** (to connect). These words connect individual items, short phrases, or whole sentences. Without them, communication sounds robotic and completely disconnected. For example, stating **Я люблю каву. Я люблю чай.** (I like coffee. I like tea.) feels very choppy. By adding a simple connecting word, you get a fluid, natural thought: **Я люблю каву і чай.** (I like coffee and tea.) Without a conjunction, you say: **Я хочу піти. Я втомлений.** (I want to go. I am tired.) With a connected thought, you say: **Я хочу піти, бо я втомлений.** (I want to go, because I am tired.)
+<!-- INJECT_ACTIVITY: fill-in-choose-conjunction -->
 
-To add information together, Ukrainian grammar uses **сполучники сурядності** (coordinating conjunctions). These are words that connect equal, balanced parts of a sentence. The most foundational word is **і** (and). Another common word for addition is **та** (and). This is a perfect synonym for **і**, frequently used in both everyday speech and formal writing for variety. When you say **мама і тато** (mom and dad) or **хліб та масло** (bread and butter), the meaning remains exactly the same. You will also see the euphony rule applied: Ukrainians often swap **і** for **й** after a vowel to maintain the melodicity of the language, such as in the phrase **вона й він** (she and he).
+## Сполу́чники (Conjunctions)
 
-* Я читаю і пишу. *(I read and write.)*
-* Це стіл і стілець. *(This is a table and a chair.)*
 
-When you want to contrast two ideas or simply switch focus, Ukrainian uses the word **а** (and/but). English speakers often default to using "and" for every situation, but in Ukrainian, if you are comparing two different subjects or highlighting a shift in action, you must use **а**. This is a soft contrast, not a direct contradiction. It smoothly marks a shift in attention. The classic example for learners is **Я люблю каву, а ти?** (I like coffee, and you?) or **Я — студент, а ти — вчитель.** (I am a student, and you are a teacher.)
+The Ukrainian grammatical term is **сполу́чник** (conjunction): it connects words, phrases, or whole sentences.
 
-* Він працює, а вона відпочиває. *(He works, and she rests.)*
-* Це не стіл, а стілець. *(This is not a table, but a chair.)*
 
-For a strong contrast, a contradiction, or an unexpected result, use the word **але** (but). This conjunction tells the listener that the second part of the sentence directly opposes the first part. While the word **та** can sometimes mean "but" in specific folk-style contexts (like the saying **малий, та вдалий** meaning small but successful), the word **але** is the absolute A1 standard you should use for clear opposition.
+* Я люблю́ каву. Я люблю чай. *(I like coffee. I like tea.)*
+* Я люблю каву **і** чай. *(I like coffee and tea.)*
 
-* Суп гарячий, але смачний. *(The soup is hot, but tasty.)*
-* Він молодий, але розумний. *(He is young, but smart.)*
-* Я хочу піти, але не можу. *(I want to go, but I cannot.)*
 
-<!-- INJECT_ACTIVITY: fill-in-conjunction-choice -->
+* Я хочу піти. Я вто́млений. *(I want to go. I am tired.)*
+* Я хочу піти, **бо** я втомлений. *(I want to go, because I am tired.)*
 
-<!-- INJECT_ACTIVITY: group-sort-categories -->
+These are **сполучники суря́дності**: **і** and **та** add information.
+
+* Це ма́ма **і** та́то. *(This is mom and dad.)*
+* Тут лежи́ть хліб **та** ма́сло. *(Here lies bread and butter.)*
+* Я чита́ю **і** пишу́. *(I read and write.)*
+* Він бага́то працю́є **та** ма́ло відпочива́є. *(He works a lot and rests a little.)*
+* Це мій брат **і** моя́ сестра́. *(This is my brother and my sister.)*
+
+
+Use **а** for a softer contrast or switch in topic.
+
+* Я люблю каву, **а** ти? *(I like coffee, and you?)*
+* Він працює, **а** вона́ відпочиває. *(He works, and she rests.)*
+* Я студе́нт, **а** мій брат — лі́кар. *(I am a student, and my brother is a doctor.)*
+* Це черво́не я́блуко, **а** це зеле́на гру́ша. *(This is a red apple, and this is a green pear.)*
+* Ми йдемо́ в парк, **а** вони́ йдуть додо́му. *(We are going to the park, and they are going home.)*
+
+Use **але** for stronger contrast.
+
+* Я хочу, **але** не мо́жу. *(I want to, but I cannot.)*
+* Він молоди́й, **але** розу́мний. *(He is young, but smart.)*
+* Цей суп гаря́чий, **але** дуже смачни́й. *(This soup is hot, but very tasty.)*
+* Я розумі́ю украї́нську, **але** говорю́ пові́льно. *(I understand Ukrainian, but I speak slowly.)*
+* День со́нячний, **але** дуже холо́дний. *(The day is sunny, but very cold.)*
+
+<!-- INJECT_ACTIVITY: group-sort-conjunction-roles -->
 
 ## Бо і тому що (Because)
 
-Giving reasons is a massive step forward in your ability to communicate. You need to explain *why* you are doing something, *why* you are late, or *why* you prefer one thing over another. Ukrainian has two primary ways to say "because": **бо** and **тому що**. The word **бо** is the absolute workhorse of spoken Ukrainian. It is short, punchy, and incredibly natural. Both are correct. Both are Ukrainian. **бо** is NOT informal or wrong; it is simply the most common way people talk. The phrase **тому що** is longer and serves as the neutral or slightly more formal counterpart, frequently seen in writing or careful speech.
+Now let us focus on reason. Ukrainian has two very common ways to say "because": **бо** and **тому що**. For this module, the key idea is simple: both conjunctions give the reason and both answer the question **Чому?** (Why?).
 
-* Я не йду, бо я хворий. *(I am not going, because I am sick.)*
-* Я не йду, тому що я хворий. *(I am not going, because I am sick.)*
+Learners sometimes think that **бо** is somehow less correct because it is shorter. It is not. **Бо** is normal, standard Ukrainian. **Тому що** is also normal, standard Ukrainian. At A1, the safest rule is practical: choose the form you remember, keep the comma, and make sure the second part really gives the reason.
 
-There is a strict, non-negotiable punctuation rule that you must memorize for writing in Ukrainian: you must always put a comma before these connecting words. English often skips the comma before "because", but Ukrainian punctuation rules require a comma before **а**, **але**, **бо**, and **тому що**. Whenever you introduce a contrast or a reason in writing, you must pause and add that comma. It is a visual signal that the sentence is shifting direction or providing an explanation.
+In everyday speech, **бо** is shorter and very common.
+* Я не йду, **бо** я хворий. *(I am not going because I am ill.)*
+* Я втомлений, **бо** багато працював. *(I am tired because I worked a lot.)*
+* Поїдемо в Карпати, **бо** там дешевше. *(Let us go to the Carpathians because it is cheaper there.)*
+* Я хочу каву, **бо** я дуже втомлений. *(I want coffee because I am very tired.)*
 
-* Ми не гуляємо, тому що йде дощ. *(We are not walking, because it is raining.)*
-* Я втомлений, бо багато працював. *(I am tired, because I worked a lot.)*
+**Тому що** means the same thing, but it is longer. Learners should recognize both forms from the start.
+* Я не йду, **тому що** я хворий. *(I am not going because I am ill.)*
+* Ми не гуляємо, **тому що** йде дощ. *(We are not walking because it is raining.)*
+* Я вчу українську, **тому що** я люблю Україну. *(I study Ukrainian because I love Ukraine.)*
+* Ми тут, **тому що** чекаємо друга. *(We are here because we are waiting for a friend.)*
 
-These conjunctions directly answer the question word **Чому?** (Why?). In English, it can sometimes feel slightly awkward to start a sentence with "Because," but in Ukrainian, this is how Ukrainians explain things. The "Why-Because" loop is the foundation of daily explanation. You hear a question starting with **Чому**, and you immediately fire back with an answer starting with **Бо** or **Тому що**.
+A useful classroom pattern is question plus reason. This turns a grammar list into real communication.
+* **Чому** ти вчиш українську? — **Бо** я люблю Україну.
+* **Чому** ти не їси? — **Тому що** я не голодний.
+* **Чому** ви тут? — **Бо** ми чекаємо друга.
+* **Чому** ви не гуляєте? — **Тому що** йде дощ.
 
-* — Чому ти вчиш українську? *(Why are you learning Ukrainian?)*
-* — Бо я люблю Україну. *(Because I love Ukraine.)*
-* — Чому ти не їси? *(Why are you not eating?)*
-* — Тому що я не голодний. *(Because I am not hungry.)*
-* — Чому ви тут? *(Why are you here?)*
-* — Бо ми чекаємо друга. *(Because we are waiting for a friend.)*
+Notice the comma. When **бо** or **тому що** links two parts of a sentence, Ukrainian normally puts a comma before the conjunction.
+* Я втомлений, **бо** багато працював.
+* Ми не гуляємо, **тому що** йде дощ.
+* Я хочу піти, **бо** я втомлений.
 
-When building these explanatory sentences, English speakers often fall into a syntax trap. They might translate "because interesting" directly into Ukrainian as **бо цікаво**. However, Ukrainian grammar requires a complete structural basis in the second half of the clause. You cannot simply drop the subject. You must provide the full idea.
+Compare the short version and the linked version:
+* Я хочу піти. Я втомлений.
+* Я хочу піти, **бо** я втомлений.
 
-* Я читаю, бо це цікаво. *(I read, because it is interesting.)*
+This is the main communicative goal of the module: instead of short, separate sentences, you can connect your ideas and sound more natural.
 
-<!-- INJECT_ACTIVITY: fill-in-reason-building -->
+<!-- INJECT_ACTIVITY: quiz-conjunction-choice -->
 
-<!-- INJECT_ACTIVITY: quiz-conjunction-matching -->
+<!-- INJECT_ACTIVITY: fill-in-bo-tomu-shcho -->
 
 ## Підсумок — Summary
 
-Connecting your thoughts transforms how you sound in Ukrainian. You move away from reciting isolated vocabulary words and begin building real, flowing communication. Reviewing the four key types of linking words makes this process clearer.
-
-For addition, use **і** or its synonym **та**. Both mean "and" and connect equal, balanced ideas without any contradiction. Remember the euphony rule: if the previous word ends in a vowel and the next word begins with a consonant, Ukrainians often swap **і** for **й** to keep the language melodious. 
-
-For soft contrast or shifting focus, use **а** (and/but). This is crucial for comparing two different subjects, like stating what you are doing versus what your friend is doing. It shows a change in direction, not a hard stop.
-
-For strong contrast or opposing ideas, use **але** (but). This introduces limitations, unexpected outcomes, or direct contradictions to what was just stated.
-
-For explaining reasons, use **бо** (the short, spoken "because") or **тому що** (the longer, neutral "because"). Both directly answer the question **Чому?** (Why?).
+Here is a quick reference for the conjunctions in this module.
 
 | Conjunction | Meaning | Example |
-| :--- | :--- | :--- |
-| **і** / **та** | and | Я їм хліб і п'ю воду. *(I am eating bread and drinking water.)* |
-| **а** | and (contrast) | Я читаю, а він пише. *(I am reading, and he is writing.)* |
-| **але** | but | Я хочу, але не можу. *(I want to, but I cannot.)* |
-| **бо** | because | Я не йду, бо хворий. *(I am not going, because I am sick.)* |
-| **тому що** | because | Я не йду, тому що хворий. *(I am not going, because I am sick.)* |
+|---|---|---|
+| **і / та** | and | Я їм хліб і п'ю воду. |
+| **а** | and / but (contrast) | Я читаю, а він пише. |
+| **але** | but | Я хочу, але не можу. |
+| **бо** | because | Я не йду, бо хворий. |
+| **тому що** | because | Я не йду, тому що хворий. |
 
-Always remember the "Always Comma" rule: in written Ukrainian, always put a comma before **а**, **але**, **бо**, and **тому що**. You only place a comma before **і** when it connects two entirely separate, full sentences.
+A simple rule helps:
+* Use **і / та** to add information.
+* Use **а** when you compare two people, two things, or switch to another idea.
+* Use **але** for a stronger contrast.
+* Use **бо / тому що** to give a reason.
 
-Here is a quick self-check. Try to mentally connect these short, choppy sentence pairs using the correct conjunction before you continue your practice. 
+You have already seen **теж** in the dialogue: Я теж хочу. Another common word is **також**: Я також хочу чай. For alternatives, use **чи** in questions and **або** for a choice: Хочеш каву чи чай? Море або гори?
 
-* Я люблю каву. Я не люблю чай. *(Try connecting this with **а** or **але**.)*
-* Він вдома. Він хворий. *(Try explaining the reason with **бо**.)*
-* Вона читає. Він пише. *(Try shifting the focus with **а**.)*
-* Сьогодні сонце. Сьогодні холодно. *(Try introducing the contrast with **але**.)*
+Look at the difference:
+* Я люблю каву, **а** ти?
+* Я люблю каву, **але** не люблю чай.
 
-Building longer, logically connected sentences is the first real step from simply "surviving" in a new language to actually "speaking" it with confidence.
+Both sentences show contrast, but they do different jobs. **А** often compares two speakers or two ideas. **Але** gives a clearer “but” meaning.
+
+Try turning short sentences into one linked sentence:
+* Я хочу чай. Я втомлений. → Я хочу чай, **бо** я втомлений.
+* Ми йдемо в парк. Вони йдуть додому. → Ми йдемо в парк, **а** вони йдуть додому.
+* Я хочу в Карпати. Море тепле. → Я хочу в Карпати, **але** море тепле.
+
+Remember the comma pattern from this module:
+* Put a comma before **а**, **але**, **бо**, and **тому що**.
+* Do not automatically put a comma before **і** when you only join words: мама і тато.
+* Do use a comma before **і** when it joins two full parts of a sentence: Завтра я вільний, **і** ми можемо зустрітися.
+
+Self-check:
+* Я люблю море, ___ гори теж гарні.
+* Я не йду, ___ я хворий.
+* Я хочу чай, ___ не хочу каву.
+* Чому ти вчиш українську?
+
+If you can answer these, you are already linking ideas more naturally in Ukrainian.
+
 
 </module_content>
 
@@ -207,48 +276,68 @@ version: "1.0"
 module: linking-ideas
 level: a1
 
+# NOTE — these are SHAPE examples. The real targets are at the top of this prompt
+# (10 total / 4–6 inline / 6–9 workbook,
+# 6+ items per activity). The shapes below are TRUNCATED for readability;
+# YOUR output MUST hit those minimums.
+
 inline:
   - id: marker-id-here        # MUST match an <!-- INJECT_ACTIVITY: ... --> marker
     type: quiz                 # activity type
     instruction: "Оберіть правильний варіант"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - question: "_____ стіл"
-        options: ["мій", "моя", "моє"]
+        options: ["мій", "моя", "моє", "мої"]
         correct: 0             # 0-based index
+      - question: "Це ____ книга."
+        options: ["мій", "моя", "моє", "мої"]
+        correct: 1
+      # ... add at least 6 items total — never stop at 1-2
 
   - id: another-marker-id
     type: fill-in
     instruction: "Вставте правильне слово"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - sentence: "Це ____ кімната."
         answer: "моя"
         options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ вікно."
+        answer: "моє"
+        options: ["мій", "моя", "моє"]
+      # ... ≥ 6 items total
 
 workbook:
-  - type: match-up
+  - id: match-up-vocab
+    type: match-up
     instruction: "З'єднайте пари"
-    pairs:
+    pairs:                     # ← real output: ≥ 6 pairs
       - left: "стіл"
         right: "він"
       - left: "книга"
         right: "вона"
       - left: "вікно"
         right: "воно"
+      # ... ≥ 6 pairs total
 
-  - type: group-sort
+  - id: group-sort-gender
+    type: group-sort
     instruction: "Розподіліть слова за категоріями"
     groups:
-      - label: "Category A"
-        items: ["word1", "word2"]
-      - label: "Category B"
-        items: ["word3", "word4"]
+      - label: "Чоловічий рід"
+        items: ["стіл", "олівець", "будинок"]   # ≥ 3 items per group
+      - label: "Жіночий рід"
+        items: ["книга", "ручка", "школа"]
+      - label: "Середній рід"
+        items: ["вікно", "море", "молоко"]
 
-  - type: true-false
+  - id: true-false-grammar
+    type: true-false
     instruction: "Правда чи ні?"
-    items:
-      - statement: "Statement here"
-        correct: true
-        explanation: "Why it's true"
+    items:                     # ← real output: ≥ 6 items
+      - statement: "«Книга» — це чоловічий рід."
+        correct: false
+        explanation: "Книга закінчується на -а, отже жіночий рід."
+      # ... ≥ 6 items total
 
   - type: error-correction
     instruction: "Виправте помилку"
@@ -319,7 +408,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -392,10 +481,15 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 ## Quality Rules
 
-**ITEM COUNT MINIMUMS (non-negotiable):**
-- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
-- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
-- If you can't think of enough items, add more examples from the module's vocabulary and content.
+**ACTIVITY COUNT MINIMUMS (non-negotiable, audit-enforced):**
+- **Total: 10 activities.** Inline: 4–6. Workbook: 6–9. The audit gate FAILS the module if you ship fewer.
+- **Type diversity: workbook MUST cover ≥5 distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
+- **Match the inline markers exactly.** Every `<!-- INJECT_ACTIVITY: id -->` marker in the prose needs a matching inline activity with that exact id. Skipping markers means the lesson tab is broken.
+
+**ITEM COUNT MINIMUMS (non-negotiable, per-activity):**
+- **Default minimum: 6 items per activity.** Quiz, fill-in, match-up, true-false, anagram, error-correction, translate, cloze, mark-the-words, divide-words, count-syllables, odd-one-out, group-sort categories: all ≥ 6.
+- **Lower minimums for specific types only:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items, essay-response/critical-analysis = 1 prompt.
+- If you can't think of enough items, add more examples from the module's vocabulary and content. NEVER ship a 1-item or 2-item activity unless its type cap explicitly allows it.
 - **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
 - **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
@@ -502,6 +596,27 @@ IMPORTANT: After using tools, output your COMPLETE module content as plain text.
 1. Run `verify_words` on all Ukrainian words in your exercises — every word must exist in VESUM
 2. Run `query_cefr_level` on any word you're unsure about — it must be a1-appropriate
 3. For fill-in answers and distractors, verify the exact form (case, number, gender) with `verify_lemma`
+
+---
+
+## ⚠️ MANDATORY FINAL CHECKLIST — verify before emitting YAML
+
+Walk through this checklist explicitly before you start emitting. If ANY box is unchecked, fix it FIRST.
+
+- [ ] My output has **at least 4** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
+- [ ] My output has **at least 6** workbook activities.
+- [ ] **Total ≥ 10.**
+- [ ] **Every** activity has **at least 6** items, pairs, or statements (except types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3, essay-response=1).
+- [ ] The module (inline + workbook combined) uses **at least 0 distinct activity types** (or 4+ when 0 = 0 and the workbook size allows it). I am NOT shipping a wall of quizzes.
+- [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
+- [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
+- [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+- [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+- [ ] My inline count is between 4 and 6. I did NOT create more injection markers than 6.
+- [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
+- [ ] At B1+, all instructions are in Ukrainian (no English fallback).
+
+If you cannot tick all of these, REGENERATE the activities BEFORE outputting. Shipping under-spec means the build rejects you and the heal loop has to redo your work — wasting compute.
 
 ---
 

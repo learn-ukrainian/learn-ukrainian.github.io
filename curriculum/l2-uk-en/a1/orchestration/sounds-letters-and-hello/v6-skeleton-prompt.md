@@ -18,7 +18,7 @@ module: a1-001
 level: A1
 sequence: 1
 slug: sounds-letters-and-hello
-version: '1.4'
+version: '1.5'
 title: Sounds, Letters, and Hello
 subtitle: 33 літери, 38 звуків, Привіт!
 focus: phonetics
@@ -31,6 +31,19 @@ objectives:
 - Know why Ukrainian has 33 letters but 38 sounds, and which letters represent multiple sounds
 - Meet the Ukrainian alphabet through Anna Ohoiko's letter videos — hear each sound, see each letter
 - Say hello and respond to a greeting
+dialogue_situations:
+- setting: First day of Ukrainian class — teacher greets students, students respond
+    and practice basic Привіт/Добрий день exchange
+  speakers:
+  - Вчитель
+  - Учні
+  motivation: 'Practice greeting chunks: Привіт! Добрий день! Як справи? Добре.'
+- setting: Two new classmates meet in the hallway before their first Ukrainian lesson
+    and introduce themselves
+  speakers:
+  - Марко
+  - Софія
+  motivation: 'Привіт! Як тебе звати? Мене звати... — first social use of sounds learned'
 content_outline:
 - section: "Звуки і літери (Sounds and Letters)"
   words: 300

@@ -2,12 +2,12 @@
   "module": "participles-active",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-11T02:54:54.683718Z",
+  "last_audit": "2026-04-11T13:34:19.348225Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-11T02:45:37.170265Z",
+    "md": "2026-04-11T13:33:24.308863Z",
     "meta": null,
-    "activities": "2026-04-11T02:53:58.452549Z",
+    "activities": "2026-04-11T13:21:57.416903Z",
     "vocabulary": "2026-04-10T00:06:25.167702Z",
     "research": null,
     "plan": "2026-04-05T19:21:47.367852Z"
@@ -20,13 +20,13 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 2,
-      "message": "4766/4000 (raw: 5037) | engagement: 0/5 | richness: 61% < 95% min (grammar) - REWRITE needed"
+      "violations": 3,
+      "message": "5973/4000 (raw: 6242) | engagement: 1/5 | immersion: 20.7% LOW (target 85-100% (B1.5-6 Vocab)) | richness: 57% < 95% min (grammar) - REWRITE needed"
     },
     "activities": {
       "status": "fail",
       "violations": 1,
-      "message": "9/0 | density: 6 < 6"
+      "message": "7/0 | density: 6 < 6"
     },
     "vocabulary": {
       "status": "pass",

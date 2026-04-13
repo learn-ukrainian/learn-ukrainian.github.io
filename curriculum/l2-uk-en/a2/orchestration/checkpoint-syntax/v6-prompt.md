@@ -228,26 +228,23 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-- Confirmed: бо, хоча, щоб, який, якщо, сполучник, підрядний, головний, кома, тому, що, складне, речення.
-- Not found: [None] (Multi-word phrases "тому що" and "складне речення" verified by components).
+- Confirmed: тому, що, бо, хоча, щоб, який, якщо, сполучник, складне (складний), речення, підрядний, головний, кома
+- Not found: 
 
 ## Grammar Rules
-- [Складне речення]: Правопис §158 (implicitly confirmed via textbook search) — "Між частинами складного речення ставимо кому". 
-- [Підрядний зв'язок]: Підрядний зв’язок передбачає нерівноправність частин речення, тобто від однієї частини до другої можна поставити питання (Grade 9, Zabolotnyi).
-- [Сполучники підрядності]: "Радіє весняне сонце, бо вишні цвітуть рясно в саду" (Example of causal connection using 'бо').
+- Кома в складному реченні: Правопис §157 — Між частинами складного речення ставиться кома (зокрема перед підрядними сполучниками що, щоб, бо, якщо, хоча, який тощо).
 
 ## Calque Warnings
-- [тому що]: OK — Standard causal conjunction.
-- [який]: OK — Relative pronoun for subordinate clauses.
-- [складне речення]: OK — Standard linguistic term.
+- тому що: OK
+- складне речення: OK
+- підрядний: OK
 
 ## CEFR Check
-- [тому що]: A1/A2 — OK
-- [бо]: A1/A2 — OK
-- [хоча]: A2 — OK
-- [щоб]: A2 — OK
-- [якщо]: A2 — OK
-- [сполучник]: A2 (Metalanguage) — OK
+- головний: A1 — OK
+- сполучник: B1 — Above target
+- складний: B1 — Above target
+- кома: B1 — Above target
+- підрядний: B2 — Above target
 </pre_verified_facts>
 
 
@@ -610,12 +607,14 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 ## Section Structure
 
-Write these sections as H2 headings, in this exact order:
+Write these sections as H2 headings, in this **exact** order:
 
 - `## Частина 1: Впізнай сполучник (Part 1: Identify the Conjunction)` (~450 words)
 - `## Частина 2: Вибери правильну форму (Part 2: Choose the Correct Form)` (~500 words)
 - `## Частина 3: Побудуй складне речення (Part 3: Build Complex Sentences)` (~550 words)
 - `## Підсумок` (~150 words)
+
+**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim** as an `## H2` line. This includes the FINAL summary/transition section (`Підсумок: ...`, `Підсумок та перехід до M...`, etc.) — the writer's most common failure is silently dropping the closing section. Do NOT skip it. Do NOT renumber. Do NOT merge headings. The post-write quick-verify check will fail your build if any heading is missing, even if the prose itself is excellent.
 
 Each section should follow the word budget specified. The total must reach 1500 words minimum.
 
@@ -623,12 +622,31 @@ Each section should follow the word budget specified. The total must reach 1500 
 
 ## Content Rules
 
-TARGET: 70-90% Ukrainian.
+TARGET: 70-90% Ukrainian. THIS IS A HARD GATE — the audit REJECTS modules outside this range.
+
 LANGUAGE ROLES:
-- PRIMARY: Ukrainian for everything.
-- ENGLISH: Only in vocabulary tables and one-line grammar notes where absolutely necessary.
-- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English.
-A2 register. Concrete everyday vocabulary. No literary language, no metaphors. Near-full Ukrainian immersion. Ukrainian sentences max 15 words. Max 2 clauses. All cases allowed. Simple subordinate clauses only. Full aspect pairs. No participles.
+- PRIMARY: Ukrainian for narrative, dialogues, examples, section intros, cultural notes, Reading Practice blocks, learning callouts.
+- METALANGUAGE: For abstract grammar terms, you may provide ONE parenthetical English translation on FIRST use only, e.g. `**доконаний вид** (perfective aspect)`. Subsequent uses must be Ukrainian only.
+- VOCABULARY TABLE: English glosses live here, not in prose.
+- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English. Never mix mid-sentence.
+
+⚠️ HARD STRUCTURAL RULES — READ THIS TWICE:
+- FORBIDDEN: long English narrative paragraphs explaining grammar. If a concept needs more than ONE sentence of English scaffolding, it goes in a `:::info` or `:::tip` callout, NOT in the main prose.
+- FORBIDDEN: mirroring a Ukrainian paragraph with an English translation paragraph. Write ONE paragraph in Ukrainian, move on.
+- FORBIDDEN: `> *English translation*` blockquotes after Ukrainian dialogues. They were required at A1 but they cap immersion below 50% — at A2-late they MUST be removed.
+
+ESCAPE HATCH (the 'Dual Ladder'):
+For genuinely abstract grammar concepts, you may use ONE `:::info` or `:::tip` callout written in English per section to clarify the concept. Because callouts are stripped from the immersion metric, this serves as on-demand scaffolding for struggling learners without penalising the immersion score. Do NOT abuse this — at most one English callout per major section.
+
+A2 register. Concrete everyday vocabulary. No literary language, no metaphors. Ukrainian sentences max 15 words. Max 2 clauses. All cases allowed. Simple subordinate clauses only (який/що/коли). Full aspect pairs. No participles.
+
+CHECKLIST (re-read before writing each section):
+- [ ] Every narrative paragraph in Ukrainian?
+- [ ] Zero `> *English translation*` blockquotes after dialogues?
+- [ ] At most ONE English `:::info` callout per major section?
+- [ ] Metalanguage terms parenthetically translated on first use only (max 2 per section)?
+- [ ] Reading Practice / Читаємо українською block in EVERY major section?
+
 
 GRAMMAR RULES:
 - Max 15 words per Ukrainian sentence
@@ -651,6 +669,25 @@ GRAMMAR RULES:
 - **Zero calques**: No приймати душ→брати душ, приймати рішення→ухвалювати рішення
 - **Zero paronyms**: тактична≠тактовна, ефектний≠ефективний — use the right word, not a similar-sounding one
 - **Natural Ukrainian**: Write how a Ukrainian teacher would explain this to a student. Not robotic, not textbook-dry, not overly casual.
+
+### FORBIDDEN WORDS — never write these (#1189)
+
+The following Russian words have leaked into past builds and broken modules. They are **hard-banned** — the post-write toxic-token scanner will fail your build the moment it sees one. Use the Ukrainian alternative every time, even in dialogues, even in casual prose, even when quoting a learner's mistake (use a `<!-- VERIFY -->` placeholder instead of typing the Russian form):
+
+| Russian (FORBIDDEN) | Ukrainian (USE THIS) |
+|---|---|
+| хорошо | добре |
+| конечно | звичайно / певна річ |
+| спасибо | дякую |
+| пожалуйста | будь ласка / прошу |
+| ничего | нічого |
+| сейчас | зараз |
+| тоже | теж / також |
+| здесь | тут |
+| кот | кіт |
+| кон | кін |
+
+This list is enforced word-for-word by `scripts/build/quick_verify.py` (SEVERE_RUSSIANISMS). If you produce any of these tokens — even inside a quoted example, even inside a dialogue line spoken by a Russian-speaking character — the build halts immediately. There is no exception.
 
 **Authority hierarchy (if uncertain about a word, check in this order):**
 VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (stress) → Антоненко-Давидович (style) → Грінченко (etymology).
@@ -749,43 +786,36 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Частина 1: Впізнай сполучник (Part 1: Identify the Conjunction) (~520 words)
-- P1 (~60 words): [Introduction to the syntax checkpoint. Explain that complex sentences are the "connective tissue" of A2 speech, moving from isolated facts to logical narratives about cause, purpose, and conditions.]
-- P2 (~80 words): [Coordinating vs Subordinating review. Explain how to spot the boundary between clauses. Name the coordinating "anchors" (і, а, але) and contrast them with subordinating "logic-links" (що, бо, щоб).]
-- P3 (~90 words): [Identifying Cause and Purpose. Contrast "тому що / бо" (looking back at why) with "щоб" (looking forward at the goal). Examples: "Я запізнився, бо був затор" vs "Я виїхав раніше, щоб не запізнитися".]
-- P4 (~90 words): [Identifying Relative and Locative clauses. Explain how "який" describes a person/thing and "де/куди" describes a place within a complex structure. Examples: "Це будинок, де я живу" and "Я бачу хлопця, який біжить".]
-- P5 (~100 words): [Identifying Condition and Concession. Explain "якщо" for real possibilities and "хоча" for surprising contradictions. Examples: "Якщо буде сонце, ми підемо в парк" vs "Хоча було холодно, ми пішли гуляти".]
-- P6 (~100 words): [Dialogue: A student presenting weekend plans to a teacher. The student uses "тому що" for staying home, "щоб" for finishing a project, "який" for the project itself, "якщо" for meeting friends, and "хоча" for being tired. ~100 words.]
-- <!-- INJECT_ACTIVITY: quiz-conjunction-id --> [quiz, identify conjunction types (причина, мета, означення, умова, допуст) in mixed sentences, 8 items]
+## Частина 1: Впізнай сполучник (~500 words)
+- P1 (~110 words): Dialogue: Two classmates checking their written homework. One points out a missing comma and a wrong conjunction in a complex sentence. Key vocabulary introduced in context: сполучник, складне речення, кома, помилка.
+- P2 (~100 words): Recap the five main types of subordinate clauses (підрядні речення) learned in A2.7: причина (тому що, бо), допуст (хоча), мета (щоб), означення (який, де), умова (якщо). Provide one short, clear example for each type to refresh memory.
+- P3 (~100 words): Explain how to identify the main clause (головне речення) and the subordinate clause (підрядне речення) by asking a question. Give examples like "Я втомився (чому?), бо..." or "Це місто (яке?), де...". Emphasize that the conjunction always belongs to the subordinate clause.
+- P4 (~100 words): Error detection 1: Missing commas and wrong conjunctions. Emphasize the absolute rule: every subordinate clause must be separated by a comma. Highlight the common English L2 error of using "якщо" (if - condition) instead of "чи" (if/whether - indirect question) in sentences like "Я не знаю, чи він прийде."
+- P5 (~90 words): Error detection 2: Form errors. Show how to spot mistakes with "який" (e.g., mismatched gender/number: "книга, якого" ❌ -> "книга, яку" ✅) and incorrect verb forms after "щоб" (using present tense instead of infinitive or past tense).
+- <!-- INJECT_ACTIVITY: group-sort-conjunctions --> [group-sort, Sort example sentences by type — причина, допуст, мета, означення, умова, 8 items]
+- <!-- INJECT_ACTIVITY: quiz-identify-types --> [quiz, Identify conjunction types in mixed complex sentences from M42-M46, 8 items]
 
-## Частина 2: Вибери правильну форму (Part 2: Choose the Correct Form) (~580 words)
-- P1 (~100 words): [The logic of choice: "тому що" vs "щоб". Explain the semantic trap of "because" vs "so that". Discuss the common L2 error of using "якщо" (if-condition) instead of "чи" (if-whether) for indirect questions: "Я не знаю, чи він прийде".]
-- P2 (~100 words): [Grammar of "який". Detailed agreement patterns. Explain that "який" must match the gender and number of the noun it replaces. Examples: "книжка, яку...", "місто, яке...", "люди, які...". Use cases with prepositions like "з яким", "у якому".]
-- P3 (~110 words): [Grammar of "щоб". Explain the subject rule: use infinitive when the subject of both clauses is the same ("Я прийшов, щоб купити"), use past tense when subjects differ ("Я хочу, щоб ти купив"). Highlight the importance of the "L" ending for "щоб він прийшов".]
-- P4 (~90 words): [Basic Reported Speech (Непряма мова). Explain the simple A2 transformation of direct speech into a "що-clause". "Він каже: 'Я втомився'" becomes "Він каже, що він втомився". No complex sequence of tenses, just logical reporting.]
-- P5 (~80 words): [Punctuation Essentials. The mandatory comma before complex sentence conjunctions (що, щоб, бо, який, якщо, хоча). Explain that the comma signals a "breath" or a logical shift for the listener.]
-- P6 (~100 words): [Dialogue: Two classmates peer-correcting homework. One classmate finds an error where "який" doesn't match a feminine noun ("книжка, який") and points out a missing comma before "тому що". ~100 words.]
-- <!-- INJECT_ACTIVITY: fill-in-conjunction-form --> [fill-in, complete complex sentences choosing correct conjunctions or verb forms (щоб + inf vs past), 8 items]
+## Частина 2: Вибери правильну форму (~550 words)
+- P1 (~110 words): Conjunction selection: Cause vs. Purpose. Contrast "тому що/бо" (explaining the reason for an action) with "щоб" (stating the goal or purpose). Example: "Я п'ю каву, бо хочу спати" (reason) vs. "Я п'ю каву, щоб не спати" (purpose).
+- P2 (~100 words): Coordination vs. Subordination. Contrast "але" (coordination) with "хоча" (subordination). Show how they flip the sentence structure: "Було холодно, але ми гуляли" vs. "Хоча було холодно, ми гуляли." Briefly note that "якщо" is for real conditions, while "якби" (unreal) will be learned in B1.
+- P3 (~120 words): Form agreement for "який". Explain how to choose the right gender and number for "який" based on the noun it describes in the main clause. Provide clear examples: "фільм, який я дивився", "пісня, яку я слухав", "міста, які ми відвідали".
+- P4 (~110 words): Choosing the correct verb form after "щоб". Review the critical rule: use the infinitive when the subject is the same ("Я йду, щоб купити") and the past tense when the subjects are different ("Я хочу, щоб ти купив").
+- P5 (~110 words): Basic reported speech. Explain how to relay statements using "що" ("Він сказав, що працює") and yes/no questions using "чи" ("Вона запитала, чи я працюю"). Remind learners that Ukrainian does not shift tenses like English sequence of tenses.
+- <!-- INJECT_ACTIVITY: fill-in-conjunctions --> [fill-in, Complete complex sentences choosing from all five conjunction types, 8 items]
 
-## Частина 3: Побудуй складне речення (Part 3: Build Complex Sentences) (~550 words)
-- P1 (~100 words): [Sentence Synthesis: Education and Work. Demonstrate how to merge two simple thoughts about career goals. Example: "Я працюю в компанії. Компанія робить софт" -> "Я працюю в компанії, яка розробляє програмне забезпечення".]
-- P2 (~100 words): [Expressing Professional Conditions. Practice using "якщо" and "хоча" in a workplace context. Examples: "Якщо я закінчу проект сьогодні, я отримаю бонус" and "Хоча в мене мало досвіду, я швидко вчуся".]
-- P3 (~90 words): [Narrative Arc: Planning a Trip. Combine purpose and reason in one story. "Ми їдемо до Львова, щоб побачити архітектуру, бо це дуже гарне місто". Show how multiple subordinates create a mature "A2+" sound.]
-- P4 (~110 words): [Sample Paragraph: "Мій ідеальний день". Write a short cohesive text using all five conjunction types: "Мій день починається з кави, яку я люблю. Я п'ю її, щоб прокинутися. Хоча я сова, я встаю рано. Якщо я маю час, я гуляю. Я гуляю, тому що це корисно".]
-- P5 (~100 words): [Preview of B1 Syntax. Briefly mention what is coming next: the "unreal" condition with "якби" (would/if), more complex conjunctions like "оскільки", and sentences with three or more parts.]
-- P6 (~50 words): [Final Encouragement. Remind the learner that mastering these five links (тому що, щоб, який, якщо, хоча) covers 90% of complex communication needs at the A2 level.]
-- <!-- INJECT_ACTIVITY: sort-conjunction-types --> [group-sort, sort sentences into categories based on conjunction function (cause, purpose, description, condition, concession), 8 items]
+## Частина 3: Побудуй складне речення (~600 words)
+- P1 (~120 words): Dialogue: A student presents their weekend plans to a teacher, smoothly integrating all five types. Example flow: "Я поїду в гори, де живе друг (означення). Я їду, щоб відпочити (мета), хоча буде сніг (допуст). Якщо буде сонце (умова), ми підемо гуляти, бо ми любимо природу (причина)."
+- P2 (~120 words): Sentence building in context. Explain how linking simple ideas makes speech sound natural and fluent. Take two simple ideas ("Я маю роботу" and "Я вчуся") and show how applying different conjunctions ("хоча", "тому що") completely changes the narrative meaning and relationship.
+- P3 (~130 words): Paragraph writing. Provide a model paragraph about education or career goals that strings together multiple complex sentences seamlessly. Highlight the flow from one idea to the next using "який", "щоб", and "якщо" to build a cohesive text.
+- P4 (~130 words): Self-assessment checklist. Present a bulleted Q&A list for the learner to review A2.7:
+  - Can I explain the cause? (Я запізнився, бо...)
+  - Can I state a purpose? (Я працюю, щоб...)
+  - Can I describe a noun? (Це фільм, який...)
+  - Can I set a condition? (Якщо буде час, я...)
+  - Can I report speech? (Він сказав, що...)
+- P5 (~100 words): Preview of B1 syntax. Briefly tease what comes next in the B1 level: unreal conditions with "якби" (If I had known...), complex sentences with multiple subordinate clauses, and new complex conjunctions. Frame it as the next exciting step in their fluency journey.
 
-## Підсумок (~150 words)
-- P1 (~150 words): [Self-assessment Checklist as per plan. 
-    * Чи можу я пояснити причину дії (тому що, бо)?
-    * Чи можу я описати предмет за допомогою слова "який"?
-    * Чи можу я висловити мету (щоб)?
-    * Чи можу я поставити умову (якщо)?
-    * Чи можу я додати зауваження (хоча)?
-    * Чи пам'ятаю я про кому перед сполучником?]
-
-Grand total: ~1800 words
+Grand total: ~1650 words
 </skeleton>
 
 ## Output Format
@@ -793,11 +823,57 @@ Grand total: ~1800 words
 Write in Markdown. Use:
 - `## Section Title` for main sections
 - `### Subsection` for subsections within a section
-- `**bold**` for Ukrainian words being taught — EVERY bold Ukrainian word MUST have an English translation on first use, either in parentheses `**слово** (translation)` or inline `**слово** means "translation"`. No exceptions.
+- `**bold**` for Ukrainian words being taught. For **A1 and A2** levels, provide an English translation on first use (e.g. `**стіл** (table)`) because learners lack the vocabulary to infer meaning. For **B1 and above**, do NOT provide inline translations for standard vocabulary — the learner will use the module's словник (vocabulary table). You may provide ONE parenthetical English translation ONLY for highly abstract grammar/linguistic terms on first use (e.g. `**видова пара** (aspectual pair)`).
 - Tables for paradigms (conjugation, declension)
 - `:::tip` / `:::caution` / `:::note` for callout boxes
 - `<!-- INJECT_ACTIVITY: {id} -->` for exercise placement (markers only — do NOT write exercise content)
 
 Do NOT write MDX component syntax, JSON, or DSL exercise blocks (:::quiz, etc.). Plain Markdown with injection markers.
+
+---
+
+## MANDATORY FINAL CHECKLIST (#1189)
+
+Before you finish writing, verify the prose against this checklist. Failing any item will fail the build.
+
+### Section headings (verbatim)
+
+Every heading from "Section Structure" above MUST appear as an `## H2` in your output, in order, **including the closing `Підсумок:` / `Підсумок та перехід до M...` summary**. The single most common writer failure across the B1 build has been silently dropping the final summary section. Re-read your output before stopping. If the last section in the plan is missing, write it now.
+
+### Required vocabulary (every word must appear)
+
+You MUST use **every word** from the list below at least once in the prose, in a natural sentence with bold + English translation. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, прагматика, діагностика, дієвідмінювання, зворотний, двовидовий, одновидовий, неозначено-кількісний, etc.) is the most frequently dropped category — actively find homes for those words even if it means adding a sentence that defines them.
+
+- [ ] тому що (because)
+- [ ] бо (because)
+- [ ] хоча (although)
+- [ ] щоб (in order to)
+- [ ] який (which, that)
+- [ ] якщо (if)
+- [ ] сполучник (conjunction)
+- [ ] складне речення (complex sentence)
+
+### Forbidden words (never produce)
+
+Do not write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use `<!-- VERIFY -->` instead). The post-write toxic-token scanner will fail the build immediately:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+### Level-specific immersion check
+
+The level-appropriate immersion rule was already injected at the top of
+this prompt as `IMMERSION RULE`. Re-read it now BEFORE you stop writing.
+If your level's rule contains a CHECKLIST block, walk through every item.
+If it doesn't, just verify your output matches the LANGUAGE ROLES and
+TARGET stated in that block.
+
+This used to hard-code a B1+ checklist that confused A1/A2 models (where
+translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+The single source of truth is now
+`scripts/pipeline/config_tables.py:IMMERSION_RULES`.
+
+---
 
 Begin writing now. Start with the first section heading.

@@ -2,52 +2,52 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 10
-  evidence: The module explicitly covers all plan points, including the specific dialogues,
-    the "бачу що? кого?" trigger, and all the inanimate accusative rules. The recommended
-    vocabulary (кашу, картоплю, сметан
+  score: 6
+  evidence: All planned grammar points and planned vocabulary are covered, but the
+    first three sections run 452 / 426 / 446 words against 300-word section budgets,
+    and the content contains 0 mentions of `ULP`, `E
 - dimension: 2
   name: Linguistic accuracy
-  score: 6
-  evidence: 'CRITICAL ERROR: The module teaches the non-standard form "їш" instead
-    of the standard Ukrainian "їси" in the first dialogue and subsequent explanations.
-    However, it accurately explains the accusative '
+  score: 10
+  evidence: 'No Russianisms, Surzhyk, calques, paronym errors, or bad case forms found.
+    VESUM-backed checks support forms such as `замовляй`, `обідня`, `картоплю`, `сметану`,
+    and the present-tense forms of `їсти` '
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: 'The PPP flow is perfectly executed. Grammatical concepts (їсти vs пити,
-    accusative case) are explained clearly and immediately followed by multiple concrete
-    examples ("Я їм суп. Ми їмо яблуко."). The '
+  score: 6
+  evidence: The PPP skeleton is present, but the module opens with 110 English words
+    before the first Ukrainian line and repeatedly front-loads explanation before
+    examples.
 - dimension: 4
   name: Vocabulary coverage
   score: 10
-  evidence: All required and recommended words (їсти, пити, каву, воду, рибу, кашу,
-    картоплю, сметану) are effectively embedded in context within the dialogues and
-    grammar examples.
+  evidence: All required items (`їсти`, `пити`, `їм`, `п'ю`, `каву`, `воду`, `рибу`)
+    and all recommended items (`кашу`, `картоплю`, `сметану`, `їсть`, `п'є`, `їдять`,
+    `п'ють`) appear in prose, not as bare lists.
 - dimension: 5
   name: Exercise quality
   score: 10
-  evidence: 4 injected activity markers correspond to the 4 hints in the plan and
-    are placed logically after the target concept is taught.
+  evidence: All four planned activities are represented by markers, placed after the
+    relevant instruction, and matched to the plan’s types and focuses.
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: The tone is warm and encouraging, using a natural teacher persona without
-    falling into gamified tropes.
+  score: 5
+  evidence: 'Too much empty filler: “Food and daily routines are universal topics
+    that connect us all.”, “Because these actions are so fundamental to human life...”,
+    and “This module establishes the foundation...”'
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: Word count is 1592 (target 1200). All plan H2 headers are present. Markdown
-    formatting is clean.
+  evidence: All H2 headings from the plan are present and ordered correctly; markdown
+    is clean; pipeline word count is 1757, which is above target.
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: High. The "Soup rule" is an authentic cultural detail, and the explicit
-    warnings against "кофе" and "творог" actively teach decolonized vocabulary.
+  score: 9
+  evidence: No inaccurate or Russian-centric framing; the meal and office examples
+    are plausible and neutral.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: The dialogues are natural and contextualized ("Lunch break at work"),
-    matching the plan's requirements exactly while demonstrating the target grammar
-    organically.
+  score: 9
+  evidence: Named speakers, multi-turn dialogue, and a concrete lunch-break setting
+    make the conversations usable for A1 practice.
 findings: []

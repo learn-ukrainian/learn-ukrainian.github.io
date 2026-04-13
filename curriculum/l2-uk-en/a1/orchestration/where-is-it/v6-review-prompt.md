@@ -126,139 +126,91 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Діало́ги — Dialogues
+## Діалоги (Dialogues)
 
-Moving to a new city means asking questions about where things are. During your first week in a new neighborhood, you quickly learn to rely on local residents. A friendly neighbor is often the best guide for practical navigation. You need to know the location of essential services like an **апте́ка** (pharmacy) for medicine, a **по́шта** (post office) for packages, and a **банк** (bank) for financial tasks. Knowing how to ask about these places and understanding the answers helps you settle into the rhythm of daily life.
+Read this rapid-fire exchange about where different family members are located. Notice how the endings of the place names change when answering the question **де?**:
 
-> **Сусі́д:** Приві́т! Ти тут живе́ш? *(Hi! Do you live here?)*  
-> **Но́вий ме́шканець:** Так, я новий сусід. *(Yes, I am a new neighbor.)*  
-> **Сусід:** Ду́же приє́мно! *(Very nice to meet you!)*  
-> **Новий мешканець:** Де Оле́на? Вона́ тут? *(Where is Olena? Is she here?)*  
-> **Сусід:** Ні, вона **в шко́лі**. *(No, she is at school.)*  
-> **Новий мешканець:** А Тара́с? *(And Taras?)*  
-> **Сусід:** Він **на робо́ті**. *(He is at work.)*  
-> **Новий мешканець:** А ді́ти де? *(And where are the children?)*  
-> **Сусід:** Вони́ **в парку**. *(They are in the park.)*  
-> **Новий мешканець:** А кі́шка? *(And the cat?)*  
-> **Сусід:** Вона **на дива́ні**! *(She is on the sofa!)*
+> **Новий мешканець:** Добрий день! Де Олена? *(Good day! Where is Olena?)*
+> **Сусід:** Вона в школі. *(She is at school.)*
+> **Новий мешканець:** А Тарас? *(And Taras?)*
+> **Сусід:** Він на роботі. *(He is at work.)*
+> **Новий мешканець:** А діти? *(And the children?)*
+> **Сусід:** Вони в парку. *(They are in the park.)*
+> **Новий мешканець:** А кішка? *(And the cat?)*
+> **Сусід:** Вона на дивані! *(She is on the sofa!)*
 
-Notice the clear contrast between the small words **в** and **на** in the dialogue above. Both translate broadly to English "in" or "at", but they sound distinct in Ukrainian and carry different spatial meanings.
+Answering the question **де?** (where?) naturally leads to using the locative case. You can see this in phrases like **в школі** (at school) and **на роботі** (at work). These phrases combine a preposition, usually **в** or **на**, with a changed noun ending. The word **школа** becomes **школі**, and the word **робота** becomes **роботі**. The preposition tells us the spatial relationship, and the ending confirms it.
 
-> **Сусід:** А де ти працю́єш? *(And where do you work?)*  
-> **Новий мешканець:** Я працю́ю **в о́фісі**. *(I work in an office.)*  
-> **Сусід:** Це дале́ко? *(Is it far?)*  
-> **Новий мешканець:** Ні. Я живу́ **в Ки́єві**, **на ву́лиці** Хреща́тик. *(No. I live in Kyiv, on Khreshchatyk street.)*  
-> **Сусід:** Це дуже бли́зько. *(That is very close.)*  
-> **Новий мешканець:** Так! О́фіс **на дру́гому по́версі**. *(Yes! The office is on the second floor.)*
+Now read a conversation about living and working:
 
-Notice the hierarchy of location used in the second dialogue. When talking about a city, we use **в** (as in **в Києві**). When narrowing down to a street, we switch to **на** (as in **на вулиці**). Finally, for a specific room or building, we use **в** or **у** again. You can also see that the ends of the nouns change: the basic word **шко́ла** becomes **в школі**, **парк** turns into **у парку**, and **робо́та** changes to **на роботі**. This predictable change is called the **Місце́вий відмі́нок** (Locative case). 
+> **Сусід:** Де ти живеш? *(Where do you live?)*
+> **Новий мешканець:** Я живу в Києві, на вулиці Хрещатик. *(I live in Kyiv, on Khreshchatyk street.)*
+> **Сусід:** А де ти працюєш? *(And where do you work?)*
+> **Новий мешканець:** В офісі, на другому поверсі. *(In an office, on the second floor.)*
 
-## Місцевий відмінок — The Locative Case
+Notice the preposition **на** is used for the street (**на вулиці**), while **в** is used for the city (**в Києві**) and the building (**в офісі**).
 
-The core function of the Locative case is to describe static location—where something is situated or where an action takes place without any movement toward a destination. It is the grammatical tool that specifically answers the question **Де?** (Where?). There is one crucial rule that makes this case unique among all Ukrainian grammatical cases: the Locative case *always* requires a preposition. You cannot use it on its own; it must be attached to **в**, **у**, or **на**.
+## Місцевий відмінок (The Locative Case)
 
-Ukrainian primary school textbooks teach a very practical method to identify and form the Locative case. In Grade 4 (Захарійчук p.74), students learn the "helper question" method for the **Місцевий відмінок**. You memorize the helper questions: **на/у ко́му? на/у чому́?** (on/in whom? on/in what?). By asking these questions, you naturally prompt the correct case ending for the noun.
-* стіл → **у чому?** → **у столі́** (in the desk)
-* стіл → **на чому?** → **на столі** (on the table)
-* мі́сто → **у чому?** → **у мі́сті** (in the city)
+Ukrainian children learn grammar using specific helper questions, which naturally link grammatical cases to their real-world function. In the fourth grade, students learn that the locative case, or **місцевий відмінок**, answers the questions **на/у кому? на/у чому?** (on/in whom? on/in what?). The locative case is used exclusively to describe a static location — where something or someone currently IS, rather than the direction where they are going. Unlike other cases, the locative case ALWAYS needs a preposition to function. You cannot use it alone; it must be paired with a preposition, most commonly **в** (or its phonetic variant **у**) and **на**.
 
-Feminine and neuter nouns form the Locative case very consistently. The dominant ending for almost all of them is **-і**. You simply replace the final vowel of the base word.
-* школа → в школі (at school)
-* робота → на роботі (at work)
-* пошта → на по́шті (at the post office)
-* ву́лиця → на вулиці (on the street)
-* місто → у місті (in the city)
-* вікно́ → на вікні́ (on the window)
-
-Some borrowed neuter nouns are indeclinable, meaning their endings never change regardless of the grammar rules. These are easy wins for learners: **кафе́** always stays **кафе**, so you just say **в кафе** (in the café).
-
-Masculine nouns are slightly more complex because they split into two groups. Many standard masculine nouns take the same **-і** ending as feminine and neuter words.
-* офіс → в офісі (in the office)
-* теа́тр → у теа́трі (in the theater)
-* стіл → на столі (on the table)
-
-However, a very common group of masculine nouns takes the **-у** ending. These are often high-frequency places and spaces that learners must memorize early on.
-* парк → у парку (in the park)
-* банк → у ба́нку (at the bank)
-* сад → у саду́ (in the orchard)
-* магази́н → у/в магази́ні (in the shop)
-
-<!-- INJECT_ACTIVITY: match-nom-loc -->
-
-<!-- INJECT_ACTIVITY: quiz-loc-form -->
-
-## В чи на? — В or На?
-
-The basic logic for choosing between **в** and **на** comes down to the physical space you are describing. **В** (or its phonetic twin **у**) is used for enclosed spaces—places that have walls, boundaries, or a clear "inside."
-* **в офісі** (in the office)
-* **у магазині** (in the store)
-* **в апте́ці** (in the pharmacy)
-* **у ліка́рні** (in the hospital)
-
-Conversely, **на** is generally used for open spaces, flat surfaces, or when something is physically "atop" something else.
-* **на вулиці** (on the street)
-* **на пло́щі** (on the square)
-* **на столі** (on the table)
-* **на дивані** (on the sofa)
-
-Beyond physical spaces, **на** is also used in a more abstract way for events and specific statuses. When you attend an activity or event, you are **на**. Furthermore, for the concept of being "at work," Ukrainian always uses **на**.
-* **на конце́рті** (at the concert)
-* **на уроці** (at the lesson)
-* **на футбо́лі** (at the football game)
-* **на роботі** (at work)
-
-:::note 
-Remember that English uses "in the office," but Ukrainian separates the physical building (**в офісі**) from the abstract status of working (**на роботі**).
+:::note
+The helper question **на/у кому? на/у чому?** is how Ukrainian native speakers identify the locative case. Memorize it to build your intuition!
 :::
 
-There are some conventional places that always use **на** regardless of whether they have walls or seem like an enclosed space. These must simply be learned as fixed phrases.
-* **на пошті** (at the post office)
-* **на вокза́лі** (at the train station)
-* **на ста́нції** (at the station)
+The most common ending for the locative case is **-і**. For feminine nouns ending in **-а** or **-я**, replace the final vowel with **-і**. For example, **лікарня** (hospital) becomes **у лікарні** (in the hospital). This same **-і** ending also applies to neuter nouns ending in **-о** or **-е**. The word **місто** (city) becomes **у місті** (in the city), and **море** (sea) becomes **на морі** (at the sea).
 
-The rule for countries and cities is very strict: always use **в** or **у**. It does not matter if a country is an island or a continent.
-* **в Украї́ні** (in Ukraine)
-* **у Києві** (in Kyiv)
-* **у Льво́ві** (in Lviv)
-* **в Оде́сі** (in Odesa)
+Masculine nouns ending in a consonant also frequently take the **-і** ending. For instance, **офіс** (office) becomes **в офісі** (in the office), and **урок** (lesson) becomes **на уроці** (at the lesson). However, many common masculine places take a different ending entirely: **-у**. There is a historical linguistic reason for this difference, but for now, learn these specific masculine words as exceptions.
 
-:::caution Decolonization Note
-You will sometimes hear Russian speakers say "на Украине" (on Ukraine). This is historically incorrect and politically offensive. Using "на" implies that Ukraine is merely a geographic territory or a region of an empire, rather than a sovereign state. A country always takes "в/у". You must always say **в Україні**.
+Instead of trying to calculate every single ending on the fly, you should focus on memorizing the most common places as fixed phrases. Learn the preposition and the noun together as a single grammatical chunk:
+
+* школа → в школі (school)
+* робота → на роботі (work)
+* банк → у банку (bank)
+* магазин → у/в магазині (shop)
+* вулиця → на вулиці (street)
+* парк → у/в парку (park)
+
+<!-- INJECT_ACTIVITY: match-up-nominative-locative -->
+
+<!-- INJECT_ACTIVITY: fill-in-answer-where -->
+
+## В чи на? (В or На?)
+
+How do you choose between the prepositions **в** and **на**? The general rule for **в** (and its euphonic alternative **у**) is that it is used for enclosed spaces or being physically "inside" a structure with walls, a ceiling, or clear boundaries. When you are inside a building, you almost always use **в/у**. For example, you say **в школі** (in the school building), **у/в магазині** (in the shop), **у банку** (inside the bank branch), and **у лікарні** (in the hospital). Note that foreign borrowed words ending in a vowel, like **кафе** (café), are indeclinable: **у/в кафе** (in the café).
+
+:::tip
+To avoid awkward consonant clusters, Ukrainian uses **у** instead of **в** before words starting with consonants (like **у банку**), and **в** after vowels (like **Вона в школі**). 
 :::
 
-<!-- INJECT_ACTIVITY: quiz-v-na -->
+The preposition **на**, on the other hand, is generally used for open spaces, flat surfaces, or events. When you are standing on a surface or attending a public gathering, you use **на**. Clear examples include **на вулиці** (on the street), **на площі** (on the square), **на концерті** (at a concert), and **на уроці** (at a lesson). However, there are conventional exceptions that must be memorized. Some institutional concepts take **на** regardless of whether they have walls. You must say **на роботі** (at work), **на пошті** (at the post office, not в пошті), and **на вокзалі** (at the train station, not в вокзалі).
 
-<!-- INJECT_ACTIVITY: fill-in-de -->
+There is a strong rule regarding countries and cities. Countries and cities normally take the preposition **в/у**. You say **в Україні** (in Ukraine), **у Києві** (in Kyiv), **у Львові** (in Lviv), and **в Одесі** (in Odesa). Contrast this with smaller local spaces like streets and squares, which typically take **на**. You say **на площі** (on the square) or **на Хрещатику** (on Khreshchatyk). Do not extend the **в/у** rule to every geographical name: some regional and historical names use **на**. For this A1 pattern, remember: countries and cities usually use **в/у**, while streets and squares often use **на**.
+
+There is a critical cultural and political note regarding the name of the country. You must NEVER say **на Україні**. It is ЗАВЖДИ (always) **в Україні**. Historically, the incorrect preposition "на" was pushed by imperial policy to frame Ukraine as a mere territory or borderland rather than a fully independent state. Using **в Україні** is not just a grammatical rule; it is a matter of profound respect and national sovereignty.
+
+:::caution
+Never say **на Україні**. Using **в Україні** affirms Ukraine's status as an independent state, not a region. 
+:::
+
+<!-- INJECT_ACTIVITY: quiz-v-or-na -->
+
+<!-- INJECT_ACTIVITY: quiz-where-is-it -->
 
 ## Підсумок — Summary
 
-The Locative case is your primary tool for expressing static location. Whenever you need to answer the question **Де?** (Where?), you will use this case. Here is a final recap of the logic:
+The locative case, or **місцевий відмінок**, is the essential grammatical tool you use to describe a static location. Whenever you are answering the core question **де?** (where?), you will need to use either **в/у** plus a locative ending or **на** plus a locative ending. Remember the Grade 4 helper phrase: **М. (на, у) — на/у кому? на/у чому?**. This case never appears on its own without a preposition.
 
-* **Question:** Де? (Where?)
-* **Prepositions:**
-  * **В/У** is for enclosed spaces, countries, and cities.
-  * **На** is for open spaces, surfaces, events, and specific concepts like work.
-* **Endings:**
-  * **-і** is the most common ending for almost all nouns (feminine, neuter, and many masculine).
-  * **-у** is used for a specific group of masculine nouns like **банк** and **парк**.
-* **Key Phrases to remember:**
-  * Я **в Україні**. (I am in Ukraine.)
-  * Я **у Києві**. (I am in Kyiv.)
-  * Я **на роботі**. (I am at work.)
+Focus your energy on learning the core vocabulary chunks as fixed phrases. If you learn these as single units, your speech will sound much more natural. And most importantly, always remember to say **в Україні** (in Ukraine).
 
-Now it is time to practice by applying these patterns to your own life. Answer the following questions about yourself, either aloud or in writing, using the Locative case:
+Can you answer these simple questions in Ukrainian?
 
-* **Де ви за́раз?** (Where are you now?)
-  * Я **в**... / Я **на**...
-* **Де ви працю́єте?** (Where do you work?)
-  * Я працюю **в**... / **на**...
-* **Де ви живете́?** (Where do you live?)
-  * Я живу **в**... **на вулиці**...
-* **Де ваш телефо́н?** (Where is your phone?)
-  * Він **на**... / Він **у**...
+*   **Де ви зараз?** (Where are you right now?) Are you **вдома** (at home), **в офісі** (in the office), or perhaps **у/в кафе** (in a café)?
+*   **Де ви працюєте?** (Where do you work?) Do you work **на роботі** (at work) or **у/в лікарні** (in a hospital)?
+*   **Де ви живете?** (Where do you live?) Do you live **у/в місті** (in a city) or **на вулиці** (on a street)?
 </generated_module_content>
 
-**PIPELINE NOTE — Word count: 1291 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
+**PIPELINE NOTE — Word count: 1133 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -434,77 +386,173 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 62 words | Not found: 41 words
+Verified: 56 words | Not found: 6 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
-  ✗ Діало — NOT IN VESUM
-  ✗ Захарійчук — NOT IN VESUM
-  ✗ Льво — NOT IN VESUM
-  ✗ Оде — NOT IN VESUM
-  ✗ Оле — NOT IN VESUM
-  ✗ Приві — NOT IN VESUM
-  ✗ Украине — NOT IN VESUM
-  ✗ Украї — NOT IN VESUM
-  ✗ Хреща — NOT IN VESUM
-  ✗ апте — NOT IN VESUM
-  ✗ бли — NOT IN VESUM
-  ✗ вокза — NOT IN VESUM
-  ✗ відмі — NOT IN VESUM
-  ✗ гому — NOT IN VESUM
-  ✗ дру — NOT IN VESUM
-  ✗ зько — NOT IN VESUM
-  ✗ конце — NOT IN VESUM
-  ✗ ліка — NOT IN VESUM
-  ✗ магази — NOT IN VESUM
-  ✗ мно — NOT IN VESUM
-  ✗ нку — NOT IN VESUM
-  ✗ нок — NOT IN VESUM
-  ✗ нції — NOT IN VESUM
-  ✗ пло — NOT IN VESUM
-  ✗ приє — NOT IN VESUM
-  ✗ рні — NOT IN VESUM
-  ✗ рті — NOT IN VESUM
-  ✗ сті — NOT IN VESUM
-  ✗ теа — NOT IN VESUM
-  ✗ телефо — NOT IN VESUM
-  ✗ трі — NOT IN VESUM
-  ✗ футбо — NOT IN VESUM
-  ✗ фіс — NOT IN VESUM
-  ✗ фісі — NOT IN VESUM
-  ✗ шка — NOT IN VESUM
-  ✗ шканець — NOT IN VESUM
-  ✗ шко — NOT IN VESUM
-  ✗ шта — NOT IN VESUM
-  ✗ шті — NOT IN VESUM
-  ✗ єві — NOT IN VESUM
-  ✗ єте — NOT IN VESUM
+  ✗ Львові — NOT IN VESUM
+  ✗ Одесі — NOT IN VESUM
+  ✗ Олена — NOT IN VESUM
+  ✗ Тарас — NOT IN VESUM
+  ✗ Хрещатик — NOT IN VESUM
+  ✗ Хрещатику — NOT IN VESUM
 
-All 62 other words are confirmed to exist in VESUM.
+All 56 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
-## Verification Tools (MCP)
+---
 
-You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
+## Verification Tools (Shell Commands)
 
-**Core Verification:**
-- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
-- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
+You have access to verification tools via shell commands. Use these to verify
+Ukrainian vocabulary, check grammar, and search textbook content **as you write**.
 
-**Content Quality:**
-- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+**IMPORTANT:** Run verification commands BEFORE finalizing any Ukrainian text.
+Batch multiple verifications together to minimize round-trips.
 
-**Reference:**
-- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp_rag_search_literary` — verify literary references against primary sources
-- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
+### 1. Batch-verify Ukrainian words exist in VESUM (preferred — one call for many words)
 
-**Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_words
+results = verify_words(['слово1', 'слово2', 'слово3'])
+for w, matches in results.items():
+    if matches:
+        print(f'{w}: FOUND — lemma={matches[0][\"lemma\"]}, pos={matches[0][\"pos\"]}')
+    else:
+        print(f'{w}: NOT FOUND — may not exist in standard Ukrainian')
+"
+```
+
+### 2. Verify a single Ukrainian word in VESUM (with full morphological tags)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_word
+results = verify_word('WORD_HERE')
+if results:
+    for m in results:
+        print(f'lemma={m[\"lemma\"]}, pos={m[\"pos\"]}, tags={m[\"tags\"]}')
+else:
+    print('NOT FOUND in VESUM')
+"
+```
+
+### 3. Get all inflected forms of a lemma (declension/conjugation)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_lemma
+forms = verify_lemma('LEMMA_HERE')
+for f in forms[:20]:
+    print(f'{f[\"word_form\"]:20s} {f[\"pos\"]:8s} {f[\"tags\"]}')
+print(f'... {len(forms)} forms total')
+"
+```
+
+### 4. Check CEFR level of a word (is it level-appropriate?)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import query_cefr_level
+results = query_cefr_level('WORD_HERE')
+for r in results:
+    print(f'{r[\"word\"]}: {r[\"level\"]} ({r[\"pos\"]})')
+if not results:
+    print('Not in CEFR database')
+"
+```
+
+### 5. Search textbook content (Ukrainian school textbooks, Grades 1-11)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_textbooks
+keywords = {'keyword1', 'keyword2'}
+results = search_textbooks(keywords, 5)
+for r in results:
+    title = r.get('section_title', r.get('title', ''))
+    grade = r.get('grade', '?')
+    text = r.get('text', '')[:200]
+    print(f'Grade {grade} | {title}')
+    print(f'  {text}')
+    print()
+"
+```
+
+### 6. Search style guide for calques/Russianisms (Антоненко-Давидович, 279 entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_style_guide
+results = search_style_guide('TOPIC_HERE', 3)
+for r in results:
+    print(f'--- {r.get(\"word\", \"\")} [{r.get(\"section\", \"\")}]')
+    print(r.get('text', '')[:300])
+    print()
+if not results:
+    print('No style guide entries found')
+"
+```
+
+### 7. Look up word definition in СУМ-11 (Ukrainian explanatory dictionary, 127K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_definitions
+results = search_definitions('WORD_HERE', 3)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+### 8. Search idioms (Фразеологічний словник, 25K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_idioms
+results = search_idioms('WORD_HERE', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"text\", r.get(\"definition\", \"\")))[:200]}')
+"
+```
+
+### 9. English-to-Ukrainian translation (Балла, 79K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import translate_en_uk
+results = translate_en_uk('ENGLISH_WORD', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+---
+
+**WHEN to use these tools:**
+
+1. **Before writing any Ukrainian text** — batch-verify all key vocabulary with
+   `verify_words` (tool 1). Any word that returns NOT FOUND must be replaced.
+2. **When you suspect a Russicism or calque** — search the style guide (tool 6)
+   and verify the correct Ukrainian form with `verify_word` (tool 2).
+3. **When writing for A1/A2** — check CEFR levels (tool 4) to ensure vocabulary
+   is level-appropriate.
+4. **When unsure about a case ending or conjugation** — use `verify_lemma` (tool 3)
+   to see the full paradigm.
+5. **When covering a grammar topic** — search textbooks (tool 5) to see how
+   Ukrainian school textbooks teach it.
+6. **When you need the precise Ukrainian meaning** — use СУМ-11 (tool 7).
+7. **When looking for natural Ukrainian expressions** — search idioms (tool 8).
+
+**Batching rule:** Collect all words you want to verify, then run ONE `verify_words`
+call instead of multiple `verify_word` calls. This is faster and uses fewer tokens.

@@ -1,4 +1,40 @@
 vocabulary:
+- word: сказа́ти
+  translation: to say
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ба́чити
+  translation: to see
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: чу́ти
+  translation: to hear
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: розумі́ти
+  translation: to understand
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: головне́
+  translation: main
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: коли́
+  translation: when
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
 - word: зна́ти
   translation: to know
   expression: false
@@ -12,140 +48,8 @@ vocabulary:
   gender: ''
   verified: true
 - word: каза́ти
-  translation: to say, to tell
+  translation: to say
   expression: false
   pos: дієсл.
   gender: ''
-  verified: true
-- word: сказа́ти
-  translation: to say (perfective)
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: чу́ти
-  translation: to hear
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: головни́й
-  translation: main
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: складне речення
-  translation: complex sentence
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: складнопідрядне речення
-  translation: complex sentence with a subordinate clause
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: сполу́чник
-  translation: conjunction
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: ко́ма
-  translation: comma
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: пло́ща
-  translation: square
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: фонта́н
-  translation: fountain
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: поверну́ти
-  translation: to turn
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: ліво́руч
-  translation: left
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: зупини́тися
-  translation: to stop
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: буди́нок
-  translation: building
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: де́рево
-  translation: tree
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: закі́нчи́ти
-  translation: to finish
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: о шостій
-  translation: at six
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: До зустрічі!
-  translation: See you!
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: саме так
-  translation: exactly
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: зачи́нений
-  translation: closed
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: гото́вий
-  translation: ready
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: приї́хати
-  translation: to arrive
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: мі́сце
-  translation: place
-  expression: false
-  pos: ім.
-  gender: с.
   verified: true

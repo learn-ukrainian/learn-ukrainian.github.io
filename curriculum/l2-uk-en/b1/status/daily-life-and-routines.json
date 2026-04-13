@@ -2,12 +2,12 @@
   "module": "daily-life-and-routines",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-11T02:56:23.644864Z",
+  "last_audit": "2026-04-11T13:48:30.509466Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-11T02:52:25.019513Z",
+    "md": "2026-04-11T13:47:34.575196Z",
     "meta": null,
-    "activities": "2026-04-11T02:55:27.041634Z",
+    "activities": "2026-04-11T13:35:22.169122Z",
     "vocabulary": "2026-04-09T03:46:46.438623Z",
     "research": null,
     "plan": "2026-04-04T21:31:33.272310Z"
@@ -20,13 +20,13 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 2,
-      "message": "4648/4000 (raw: 4701) | engagement: 0/5 | richness: 74% < 80% min (skills)"
+      "violations": 3,
+      "message": "4971/4000 (raw: 5058) | engagement: 3/5 | immersion: 32.9% LOW (target 85-100% (B1.1 Aspect)) | richness: 60% < 80% min (skills)"
     },
     "activities": {
       "status": "fail",
       "violations": 1,
-      "message": "8/0 | density: 6 < 6"
+      "message": "7/0 | density: 2 < 6"
     },
     "vocabulary": {
       "status": "pass",

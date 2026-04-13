@@ -1,20 +1,22 @@
-# Section-by-Section Generation — Section 4/5
+# Section-by-Section Generation — Section 4/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 12: Милозвучність у складних контекстах (A2, A2.2 [Genitive Case Complete])
-**Section to write:** Все разом: мелодійні речення (300 words)
-**Word target for this section:** 300 words (aim for 330 to account for undershoot)
+**Section to write:** Все разом: мелодійні речення (Putting It All Together) (~330 words)
+**Word target for this section:** 330 words (aim for 363 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Все разом: мелодійні речення (300 words)
-- P1 (Dialogue ~120 words): [**Тарас:** Оленко, поїдемо **у** Львів **із** друзями? **Оленка:** **Зі** Львова? **Із** задоволенням! Але я поїду **з** Оленою **й** Андрієм. **Тарас:** Добре, зустрінемося **в** університеті **й** усе обговоримо. (Ensure dialogue triggers all rules naturally: у/в with city, зі/із with pleasure/Lviv, і/й with names).]
-- P2 (~100 words): [The "Singing Test." Encourage learners to read their sentences aloud. If they have to "stop" or "trip" over a cluster of consonants, they have likely violated a euphony rule. Explain that Ukrainian is a language designed to be sung, not just spoken.]
-- P3 (~80 words): [Consolidation: Sum up the "Phonetic Ecology" of Ukrainian. The language self-regulates to maintain its reputation as one of the most melodic in the world. Remind learners that mastering these small changes is the key to sounding like a native, not a robot.]
-- <!-- INJECT_ACTIVITY: error-correction-euphony --> [error-correction, Find and fix errors like *в вікно, *з школи, *і усі, *й її, *в Львові, 8 items]
+## Все разом: мелодійні речення (Putting It All Together) (~330 words)
+- P1 (~110 words): Building multi-clause sentences. Analyze a complex sentence to see how the rules work together: "Ми поїхали у Львів із друзями й провели чудовий вихідний." Break down each choice: 'у Львів' (before льв), 'із друзями' (before a cluster), and 'й провели' (after vowel 'и', before consonant).
+- P2 (~110 words): Reading aloud and rhythm. Explain that euphony is a natural process ("природний процес"), not just strict rules. Encourage learners to read sentences aloud to feel the 'збіг' (collision) of sounds and naturally choose the variant that avoids a 'нагромадження звуків' (pile-up of sounds).
+- P3 (~110 words): Consolidation. Reiterate that 'у/в', 'з/із/зі', and 'і/й' all serve the singular goal of 'милозвучність'. Mastering these small connecting words is the secret to sounding like a native speaker and avoiding the clunky rhythm typical of L2 learners.
+- <!-- INJECT_ACTIVITY: quiz --> [quiz, Choose the correct euphonic variant (у/в, з/із/зі, і/й) in context, 8 items]
+
+Grand total: ~2200 words
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -22,7 +24,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-Pay attention to how the prepositions combine with the endings of the genitive case. Learn these phrases as a single phonetic block.* **Читаємо українською** Цей хлопець походить з родини лікарів. Він пішов із сім'ї багато років тому. Моя донька прийшла зі школи втомлена. Вона взяла книгу зі столу. > *This boy comes from a family of doctors. He left the family many years ago. My daughter came from school tired. She took the book from the table.* <!-- INJECT_ACTIVITY: fill-in-z-variants --> ## І чи й? У складних реченнях In Ukrainian, the choice between the conjunctions «і» and «й» depends entirely on the surrounding sounds. The letter «й» is a semi-vowel. It needs to attach itself to a full vowel that comes right before it, acting like a phonetic bridge. We use «й» between two vowels. The letter «і» is a full vowel, which we use to break up clusters of consonants. Ольга й Андрій пішли в кіно. У кімнаті були тільки син і мати. Вони купили яблука й огірки. > *Olha and Andriy went to the cinema. Only the son and mother were in the room. They bought apples and cucumbers.* When building complex sentences, punctuation changes these rules. A comma acts as a phonetic fence. Even if the word before the comma ends in a vowel, the pause breaks the fluid glide that «й» requires. Because of this natural breath, we always use the full vowel «і» after a comma. Вона гарно співала, і всі слухали. Ми купили квитки, і наша подорож почалася. > *She sang beautifully, and everyone listened. We bought tickets, and our journey began.* :::info **Grammar box** — Never use «й» immediately after a comma or a dash. The pause destroys the vowel environment. Always use «і» to start a new thought after punctuation. ::: There is one strict rule of phonetic hygiene where «й» is completely forbidden. You can never use «й» before words starting with the letters «й», «я», «ю», «є», or «ї». These letters already contain a hidden "y" sound. Placing «й» in front of them creates an ugly collision. In these cases, «і» is mandatory. Завтра прийдуть Олена і її брат. Мій маршрут — це Одеса і Ялта. > *Tomorrow Olena and her brother will come. My route is Odesa and Yalta.* If you are unsure whether to use «і» or «й», you have a completely safe alternative: the conjunction «та». It means exactly the same thing, but it never alternates. Using «та» helps avoid repetitive sounds and makes your Ukrainian sound stylish. На столі лежали хліб та масло. Мама та тато чекали на нас удома. > *Bread and butter lay on the table. Mom and dad were waiting for us at home.* Let's practice these conjunctions with compound objects in the Genitive case. Notice how the boundaries dictate the choice. У нас немає ні соку, і ні кави. Я не купив хліба й молока. > *We have neither juice, nor coffee. I didn't buy bread and milk.* <!-- INJECT_ACTIVITY: match-up-conjunctions -->
+sentence. Look at the sentence "Він прийшов, і ми поїхали." The comma resets the phonetic flow, so we automatically use «і». You might think that "Вона заспівала, й усі заплакали" is correct because the word «усі» starts with a vowel. However, this is incorrect. After a comma, the default «і» is always the safe and preferred choice. Він прийшов пізно, і ми поїхали додому. Вона заспівала, і всі глядачі заплакали. > *He arrived late, and we went home. She sang, and all the spectators cried.* :::info **Grammar box** — The choice between «і» and «й» is driven by the sounds that immediately surround the conjunction. The spelling of the words matters less than how they are pronounced in spoken Ukrainian. ::: This phonetic logic also applies perfectly when you need to list compound subjects or objects. You must **вживати** (to use, to apply) the rule to each adjacent pair of words independently. The main goal is always to maintain a melodious flow and preserve the overall **милозвучність** (euphony, melodiousness) of the sentence. In formal grammar, this concept is also called **евфонія** (euphony (technical term)). When you have a long list of items, you should look only at the two words immediately surrounding the conjunction. На сніданок я люблю хліб і масло. Моя подруга зазвичай п'є каву й молоко. Ми купуємо помідори й огірки. > *For breakfast I like bread and butter. My friend usually drinks coffee and milk. We buy tomatoes and cucumbers.* There are a few special contexts where «і» is strictly required, regardless of the surrounding vowels. You must always use «і» before words that start with the letters й, я, ю, є, or ї. These specific letters already contain a hidden "й" sound inside them, so adding another written «й» creates an awkward repetition for the tongue. Additionally, «і» is strictly used whenever you are showing contrast or comparison between two concepts. The rule of euphony is temporarily suspended here to emphasize the grammatical contrast. Влітку ми плануємо відвідати міста Одеса і Ялта. У цій книжці автор описує добро і зло. Це відомий конфлікт: батьки і діти. > *In the summer we plan to visit the cities of Odesa and Yalta. In this book, the author describes good and evil. This is a famous conflict: parents and children.* Sometimes you might feel unsure about which conjunction to choose, or you might want to avoid repeating «і» too many times in one sentence. In these situations, you can comfortably use the conjunction «та». This word is a non-alternating synonym for «і». It never changes its form based on the surrounding letters, making it a very helpful and reliable stylistic alternative. For example, instead of saying "мама й тато", you can simply say "мама та тато". У мене є собака та кіт. Вчора ми купили яблука, груші та банани. > *I have a dog and a cat. Yesterday we bought apples, pears, and bananas.* <!-- INJECT_ACTIVITY: fill-in, Complete sentences with the correct preposition or conjunction form, 8 items -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -604,6 +606,31 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (4/4).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] милозвучність (euphony, melodiousness)
+- [ ] евфонія (euphony (technical term))
+- [ ] чергування (alternation)
+- [ ] голосний (vowel)
+- [ ] приголосний (consonant)
+- [ ] збіг (cluster, collision)
+- [ ] прийменник (preposition)
+- [ ] сполучник (conjunction)
+- [ ] вживати (to use, to apply)
+- [ ] складний (complex, compound)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Все разом: мелодійні речення (Putting It All Together) (~330 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

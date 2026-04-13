@@ -1,7 +1,7 @@
 # Audit Report: M60 — nature-and-traditions.md
 **Level:** A2 | **Module:** M60 | **Phase:** A2.8 | **Pedagogy:** TBL | **Target:** 2000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-04-11 00:49:47
+**Generated:** 2026-04-11 17:42:24
 
 ## Configuration
 **Type:** A2
@@ -32,31 +32,26 @@
 - Priority types used: 7/15 (error-correction, fill-in, group-sort, match-up, quiz, translate, true-false) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: іменник, вид
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[INLINE_ENGLISH_IN_PROSE]** Inline English translations in B1+ prose (8 occurrences): (Easter bread), (Genitive case), (Imperfective aspect) — breaks immersion target
-  - FIX: Remove inline English translations. Use context clues, Ukrainian definitions, or move translations to vocabulary section
-
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 40/100)
 
-- 2 violations (minor)
+- Revision recommended (severity 40/100)
+- Immersion 28% off target (major rebalancing needed)
 
 ## Gates
-- **Words:** ✅ 2425/2000 (raw: 2474)
+- **Words:** ✅ 2847/2000 (raw: 2914)
 - **Activities:** ✅ 7/0
 - **Density:** ✅ All > 8
 - **Unique_types:** ✅ 7/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ❌ 0/3
+- **Engagement:** ❌ 2/3
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 57/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 87.7% (target 65-90% (A2.3))
+- **Immersion:** ❌ 37.3% LOW (target 65-90% (A2.3))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -64,8 +59,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 582 | Included in Core |
-| **Українські свята: від Різдва до Купала (Ukrainian Holidays)** | ✅ | 769 | Included in Core |
-| **Що ми робимо у кожну пору року? (Seasonal Activities)** | ➖ | 498 | Excluded Type |
-| **Мої традиції (My Traditions)** | ✅ | 408 | Included in Core |
-| **Підсумок** | ✅ | 168 | Included in Core |
+| **Intro/Narrative** | ✅ | 765 | Included in Core |
+| **Українські свята: від Різдва до Купала (Ukrainian Holidays)** | ✅ | 711 | Included in Core |
+| **Що ми робимо у кожну пора року? (Seasonal Activities) (~450 words total)** | ➖ | 537 | Excluded Type |
+| **Мої традиції (My Traditions) (~400 words total)** | ✅ | 642 | Included in Core |
+| **Підсумок (~150 words)** | ✅ | 192 | Included in Core |

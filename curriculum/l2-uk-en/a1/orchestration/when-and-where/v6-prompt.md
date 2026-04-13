@@ -243,26 +243,24 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-- Confirmed: що (conj/pron), де (adv/conj), коли (adv/conj), знати (verb), думати (verb), казати (verb), сказати (verb), бачити (verb), чути (verb), розуміти (verb), речення (noun), головне (adj/noun)
-- Not found: [none]
+- Confirmed: що, де, коли, знати, думати, казати, сказати, бачити, чути, розуміти, речення, головне
+- Not found: 
 
 ## Grammar Rules
-- [Кома в складному реченні]: Grade 5 textbooks (Zabolotnyi, Avramenko) — Між частинами складного речення ставимо кому. Перед сполучниками що, де, коли в ролі сполучних слів кома ставиться завжди, оскільки вони з'єднують підрядну частину з головною.
-- [Складне речення]: Grade 5 (Litvinova, 2022) — Складне речення складається з двох або більше частин, кожна з яких має свою граматичну основу.
+- Кома перед що, де, коли: Правопис §158 (у старій редакції §118) — Між головною і підрядною частинами складнопідрядного речення ставиться кома.
 
 ## Calque Warnings
-- [Я думаю, що]: OK — Standard Ukrainian phrasing for expressing an opinion (я думаю, я вважаю).
-- [Головне речення]: OK — Standard linguistic term for the main clause in a complex sentence.
-- [Казати, що]: OK — Standard usage for reported speech/subordinate clauses.
+- гарний час: OK
+- закінчити роботу: OK
+- я теж думаю: OK
+- я хочу зустрітися: OK
 
 ## CEFR Check
 - знати: A1 — OK
 - думати: A1 — OK
-- казати: A1 — OK
-- бачити: A1 — OK
+- сказати: A1 — OK
 - розуміти: A1 — OK
-- речення: A1/A2 — OK (common as metalanguage)
-- коли: A1 — OK
+- головне: A2 — Above target
 </pre_verified_facts>
 
 
@@ -565,12 +563,14 @@ The writer should model activities on these proven formats from Ukrainian textbo
 
 ## Section Structure
 
-Write these sections as H2 headings, in this exact order:
+Write these sections as H2 headings, in this **exact** order:
 
 - `## Діалоги (Dialogues)` (~300 words)
 - `## Складне речення (Complex Sentences)` (~300 words)
 - `## Що, де, коли — двоє облич (Two Faces)` (~300 words)
 - `## Підсумок — Summary` (~300 words)
+
+**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim** as an `## H2` line. This includes the FINAL summary/transition section (`Підсумок: ...`, `Підсумок та перехід до M...`, etc.) — the writer's most common failure is silently dropping the closing section. Do NOT skip it. Do NOT renumber. Do NOT merge headings. The post-write quick-verify check will fail your build if any heading is missing, even if the prose itself is excellent.
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -578,16 +578,17 @@ Each section should follow the word budget specified. The total must reach 1200 
 
 ## Content Rules
 
-TARGET: 20-35% Ukrainian.
+TARGET: 20-35% Ukrainian. ⚠️ HARD GATE — the audit REJECTS modules below 20%.
 LANGUAGE ROLES:
-- THEORY & EXPLANATION: English prose — brief and clear. Show, don't tell.
+- THEORY & EXPLANATION: English prose — brief, 2-3 sentences per concept. No long expository paragraphs. Explain once, then show Ukrainian.
+- UKRAINIAN NARRATIVE PARAGRAPHS: **REQUIRED — minimum 1 per section.** A 3-6 sentence Ukrainian paragraph demonstrating the concept in use, followed IMMEDIATELY by a `> *English translation*` blockquote. This is the PRIMARY driver of hitting the immersion target. Without these paragraphs you cannot reach 20%.
 - PARADIGM TABLES: Conjugation/declension tables with all cells Ukrainian.
-- EXAMPLE LISTS: Ukrainian sentences in bulleted lists (each: Ukrainian — English gloss).
-- DIALOGUES: Mini-dialogues in blockquotes with English gloss per line.
+- EXAMPLE LISTS: Ukrainian sentences in bulleted lists (each: Ukrainian — English gloss). Minimum 5 per rule.
+- DIALOGUES: Mini-dialogues in blockquotes with English gloss per line. At least 1 dialogue per module.
 - PATTERN BOXES: Show transformations: `читати → читай → читайте`.
 - INLINE: Ukrainian words/phrases bolded in English prose.
-- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian. Full Ukrainian sentences go in tables, bulleted lists, dialogues, or pattern boxes.
-Ukrainian sentences max 10 words. Mix container types.
+- STRUCTURAL RULE: Every section MUST contain a Ukrainian narrative paragraph (3-6 sentences, translated in blockquote) PLUS supporting tables/lists/dialogues/pattern boxes. Pure-English sections are FORBIDDEN at M35+.
+Ukrainian sentences max 12 words. Mix container types.
 
 HARD GRAMMAR RULES (audit will reject violations):
 - Max 10 words per Ukrainian sentence (STRICT — count every word)
@@ -619,6 +620,25 @@ PLAN-AWARE EXEMPTIONS: The following bans are RELAXED for this module because th
 - **Zero calques**: No приймати душ→брати душ, приймати рішення→ухвалювати рішення
 - **Zero paronyms**: тактична≠тактовна, ефектний≠ефективний — use the right word, not a similar-sounding one
 - **Natural Ukrainian**: Write how a Ukrainian teacher would explain this to a student. Not robotic, not textbook-dry, not overly casual.
+
+### FORBIDDEN WORDS — never write these (#1189)
+
+The following Russian words have leaked into past builds and broken modules. They are **hard-banned** — the post-write toxic-token scanner will fail your build the moment it sees one. Use the Ukrainian alternative every time, even in dialogues, even in casual prose, even when quoting a learner's mistake (use a `<!-- VERIFY -->` placeholder instead of typing the Russian form):
+
+| Russian (FORBIDDEN) | Ukrainian (USE THIS) |
+|---|---|
+| хорошо | добре |
+| конечно | звичайно / певна річ |
+| спасибо | дякую |
+| пожалуйста | будь ласка / прошу |
+| ничего | нічого |
+| сейчас | зараз |
+| тоже | теж / також |
+| здесь | тут |
+| кот | кіт |
+| кон | кін |
+
+This list is enforced word-for-word by `scripts/build/quick_verify.py` (SEVERE_RUSSIANISMS). If you produce any of these tokens — even inside a quoted example, even inside a dialogue line spoken by a Russian-speaking character — the build halts immediately. There is no exception.
 
 **Authority hierarchy (if uncertain about a word, check in this order):**
 VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (stress) → Антоненко-Давидович (style) → Грінченко (etymology).
@@ -729,38 +749,38 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Діалоги — Dialogues (~330 words total)
-- D1 (~110 words): [Planning to meet at a cafe. Speakers: Гість (lost) and Господар. Гість asks "Ти знаєш, де нове кафе?", Господар replies "Так, я знаю, де воно". They discuss time: "Скажи, коли ти вільний" and "Я думаю, що о шостій буде добре". Ends with confirmation: "Я теж думаю, що це гарний час". Bolded conjunctions: де, коли, що.]
-- D2 (~110 words): [Asking about a friend. Speakers: Friend A and Friend B. "Ти знаєш, що Олена вже в Києві?". Response: "Ні, я не знав! А де вона живе?". Explanation: "Я не знаю, де саме, але я знаю, що біля центру". Final instruction: "Скажи їй, коли побачиш, що я хочу зустрітися". Response: "Добре, скажу, коли побачу".]
-- P1 (~110 words): [Analysis of the dialogues. Explain that the bolded words (що, де, коли) are not asking questions here, but acting as bridges. Introduce the concept of a "connector" word that glues two pieces of information together: "I know" + "where she lives". Preview the necessity of the comma in Ukrainian which was seen in every bolded example.]
+## Діалоги (Dialogues) (~340 words total)
+- P1 (~40 words): Introduce the context of making plans and finding locations. Explain that to sound natural, we need to connect our thoughts into longer sentences just like native speakers do.
+- P2 (~110 words): Dialogue 1 (Planning to meet). Present a conversation between two friends deciding where and when to meet. Include the exact target lines: "Ти знаєш, де нове кафе?", "Так, я знаю, де воно.", "Скажи, коли ти вільний.", "Я вільний, коли закінчу роботу.", "Я думаю, що о шостій буде добре."
+- P3 (~40 words): Analyze Dialogue 1. Point out how the words `де` (where), `коли` (when), and `що` (that) link the shorter phrases together, acting as bridges between a main thought and a dependent thought.
+- P4 (~110 words): Dialogue 2 (Asking about someone). Present a conversation where someone asks for directions or updates about a friend. Include target lines: "Ти знаєш, що Олена вже в Києві?", "Ні, я не знав! А де вона живе?", "Я не знаю, де саме.", "Скажи їй, коли побачиш, що я хочу зустрітися."
+- P5 (~40 words): Analyze Dialogue 2. Note the natural conversational flow and demonstrate how a single sentence can contain multiple clauses linked by these conjunctions.
 
-## Складне речення — Complex Sentences (~330 words total)
-- P1 (~110 words): [Contrast M44 (Linking equal ideas with "і" or "але") with M45 (Connecting a main idea to a dependent one). Explain that in "Я знаю, що він тут", "Я знаю" is the boss (main clause) and "що він тут" is the extra info (subordinate clause). Use the Grade 5 term 'складнопідрядне речення' gently to describe this hierarchy.]
-- P2 (~110 words): [The Golden Rule of Punctuation. In Ukrainian, you ALWAYS place a comma before 'що', 'де', and 'коли' when they act as conjunctions. Contrast this with English where "I think that..." has no comma. Provide 3 clear side-by-side examples: "Я думаю, що це правильно", "Він не знає, де магазин", "Зателефонуй, коли прийдеш".]
-- P3 (~110 words): [The "Trigger Verbs". List and explain the verbs that naturally want a subordinate clause: знати (to know), думати (to think), казати/сказати (to say/tell), бачити (to see), чути (to hear), and розуміти (to understand). Show how they "need" a 'що', 'де', or 'коли' to finish the thought: "Я бачу, що...", "Ти чуєш, де...".]
-- <!-- INJECT_ACTIVITY: fill-in-conjunction-choice --> [Fill-in-the-blank: Choose between що, де, коли to complete the logic of the sentence. Focus: "Я знаю, ___ він тут. Я не знаю, ___ вона живе." 8 items.]
-- <!-- INJECT_ACTIVITY: quiz-comma-placement --> [Multiple choice/Quiz: Select the sentence with the correct punctuation. Focus on the mandatory comma before the conjunction. 8 items.]
+## Складне речення (Complex Sentences) (~300 words total)
+- P1 (~70 words): Explain the concept of the complex sentence (складнопідрядне речення). Contrast this with Module 44, where we connected EQUAL ideas ("Я читаю, і він пише"). Introduce the new concept: connecting a MAIN idea (головне речення) with a DEPENDENT idea.
+- P2 (~90 words): Break down the structure: Main clause + comma + `що`/`де`/`коли` + subordinate clause. Provide concrete, clear examples: "Я знаю, що він тут." (I know that he's here), "Я не знаю, де він живе." (I don't know where he lives), "Скажи мені, коли ти прийдеш." (Tell me when you'll come).
+- P3 (~80 words): Focus strictly on the golden Ukrainian comma rule. Emphasize that unlike English (where words like "that" or "when" often don't require commas), Ukrainian ALWAYS uses a comma immediately before `що`, `де`, and `коли` when they connect two parts of a sentence. 
+- P4 (~60 words): Reinforce the comma rule with more examples highlighting the punctuation: "Я думаю, що це правильно." (comma before що), "Він не знає, де магазин." (comma before де), "Зателефонуй, коли прийдеш." (comma before коли).
+- <!-- INJECT_ACTIVITY: fill-in-conjunctions --> [fill-in, 'Complete: Я знаю, ___ він тут. Я не знаю, ___ вона живе. Скажи, ___ ти прийдеш.', 8 items]
 
 ## Що, де, коли — двоє облич (Two Faces) (~330 words total)
-- P1 (~110 words): [Role 1: Question Words. Brief review of M20. In "Де ти?", "Що це?", and "Коли ти прийдеш?", the words are at the start, there is a question mark, and we are looking for information. Use 3 simple review examples to ground the learner.]
-- P2 (~110 words): [Role 2: Conjunctions. Explain that when these words move to the middle of the sentence (after a comma), they stop being questions. "Де ти?" vs "Я знаю, де ти". Crucial point: the part after the comma follows normal statement word order—no inversion or special question markers are needed because the "asking" is already finished.]
-- P3 (~110 words): [Advanced usage: 'Коли' at the start. Explain that sometimes the subordinate clause comes first for emphasis: "Коли я вдома, я відпочиваю". Explain that the comma still separates the two parts. Compare to the English "When..., ...". Use examples with 'що' and 'де' to show they usually stay in the middle, while 'коли' is the most flexible.]
-- <!-- INJECT_ACTIVITY: quiz-function-id --> [Quiz: Identify the role of the word. Is it a "Question Word" or a "Conjunction"? Compare: "Де ти живеш?" vs "Я знаю, де ти живеш." 8 items.]
-- <!-- INJECT_ACTIVITY: fill-in-sentence-builder --> [Guided sentence building: "I think that [he is at home]", "He says that [the cafe is open]". Practice using the trigger verbs with що, де, коли. 6 items.]
+- P1 (~80 words): Introduce the "Two Faces" (двоє облич) of the words `що`, `де`, and `коли`. Explain Job 1: Question words (learned in M20) used to ask for information. Give examples: "Що це?" (What is this?), "Де ти?" (Where are you?), "Коли ти прийдеш?" (When?).
+- P2 (~80 words): Explain Job 2: Conjunctions used to connect clauses. Detail how to spot the difference: question words sit at the start of a sentence that ends with a question mark. Conjunctions sit in the middle, connecting parts, and are always preceded by a comma.
+- P3 (~90 words): Detail common sentence patterns using `що` and `де` as conjunctions, specifically paired with verbs of knowing, thinking, and saying (`знати`, `думати`, `казати`): "Я знаю, що..." / "Я не знаю, що...", "Я думаю, що...", "Він каже, що...", "Я не знаю, де...".
+- P4 (~80 words): Detail patterns using `коли`. Give examples like "Скажи, коли..." and "Я не знаю, коли...". Also show the reverse structure where the dependent clause comes first: "Коли я прийду, ми поговоримо." (Point out that the comma still separates the two clauses).
+- <!-- INJECT_ACTIVITY: quiz-question-or-conjunction --> [quiz, 'Question word or conjunction? Де ти живеш? vs Я знаю, де ти живеш.', 8 items]
+- <!-- INJECT_ACTIVITY: fill-in-build-sentences --> [fill-in, 'Build complex sentences: Я думаю, що ___. Він каже, що ___.', 6 items]
+- <!-- INJECT_ACTIVITY: quiz-comma-placement --> [quiz, 'Where is the comma? Choose correct punctuation in complex sentences', 8 items]
 
-## Підсумок — Summary (~350 words total)
-- P1 (~150 words): [Detailed recap table/list. 
-  - що: that (Я знаю, що...) 
-  - де: where (Я не знаю, де...) 
-  - коли: when (Скажи, коли...) 
-  Reiterate: Comma is NON-NEGOTIABLE. Mention that 'що' (that) and 'що' (what) look the same but perform different functions based on context.]
-- P2 (~100 words): [Building "Super Sentences". Show how to combine M44 and M45. Example: "Я не йду, бо я не знаю, де це" (using 'because' + 'where'). Example: "Він каже, що прийде, коли закінчить" (two clauses!). This demonstrates how these small words unlock real-world complexity.]
-- P3 (~100 words): [Self-check checklist. 
-  1. Can you name the 3 conjunctions from this module? 
-  2. Do you remember to put a comma before them? 
-  3. Can you build 3 sentences starting with: "Я думаю, що...", "Я не знаю, де...", and "Скажи мені, коли..."?]
+## Підсумок — Summary (~300 words total)
+- P1 (~120 words): Provide a recap of the subordinating conjunctions at A1. Include a clear reference list: `що` (that) -> "Я знаю, що він тут."; `де` (where) -> "Я не знаю, де кафе."; `коли` (when) -> "Скажи, коли прийдеш.". Strongly reiterate the rule: Always place a comma before the conjunction.
+- P2 (~100 words): Show how to combine these new subordinating conjunctions with M44 coordinating conjunctions to build rich, advanced sentences. Provide examples of double-conjunction sentences: "Я не йду, бо я не знаю, де це." (two conjunctions!) and "Він каже, що прийде, коли закінчить." (two subordinate clauses!).
+- P3 (~80 words): Self-check section. Prompt the reader to actively build 3 sentences using the following frames: 
+  - Я думаю, що...
+  - Я не знаю, де...
+  - Скажи мені, коли...
 
-Grand total: ~1340 words
+Grand total: ~1270 words
 </skeleton>
 
 ## Output Format
@@ -768,11 +788,55 @@ Grand total: ~1340 words
 Write in Markdown. Use:
 - `## Section Title` for main sections
 - `### Subsection` for subsections within a section
-- `**bold**` for Ukrainian words being taught — EVERY bold Ukrainian word MUST have an English translation on first use, either in parentheses `**слово** (translation)` or inline `**слово** means "translation"`. No exceptions.
+- `**bold**` for Ukrainian words being taught. For **A1 and A2** levels, provide an English translation on first use (e.g. `**стіл** (table)`) because learners lack the vocabulary to infer meaning. For **B1 and above**, do NOT provide inline translations for standard vocabulary — the learner will use the module's словник (vocabulary table). You may provide ONE parenthetical English translation ONLY for highly abstract grammar/linguistic terms on first use (e.g. `**видова пара** (aspectual pair)`).
 - Tables for paradigms (conjugation, declension)
 - `:::tip` / `:::caution` / `:::note` for callout boxes
 - `<!-- INJECT_ACTIVITY: {id} -->` for exercise placement (markers only — do NOT write exercise content)
 
 Do NOT write MDX component syntax, JSON, or DSL exercise blocks (:::quiz, etc.). Plain Markdown with injection markers.
+
+---
+
+## MANDATORY FINAL CHECKLIST (#1189)
+
+Before you finish writing, verify the prose against this checklist. Failing any item will fail the build.
+
+### Section headings (verbatim)
+
+Every heading from "Section Structure" above MUST appear as an `## H2` in your output, in order, **including the closing `Підсумок:` / `Підсумок та перехід до M...` summary**. The single most common writer failure across the B1 build has been silently dropping the final summary section. Re-read your output before stopping. If the last section in the plan is missing, write it now.
+
+### Required vocabulary (every word must appear)
+
+You MUST use **every word** from the list below at least once in the prose, in a natural sentence with bold + English translation. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, прагматика, діагностика, дієвідмінювання, зворотний, двовидовий, одновидовий, неозначено-кількісний, etc.) is the most frequently dropped category — actively find homes for those words even if it means adding a sentence that defines them.
+
+- [ ] що (that — conjunction)
+- [ ] де (where — conjunction)
+- [ ] коли (when — conjunction)
+- [ ] знати (to know)
+- [ ] думати (to think)
+- [ ] казати (to say/tell)
+
+### Forbidden words (never produce)
+
+Do not write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use `<!-- VERIFY -->` instead). The post-write toxic-token scanner will fail the build immediately:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+### Level-specific immersion check
+
+The level-appropriate immersion rule was already injected at the top of
+this prompt as `IMMERSION RULE`. Re-read it now BEFORE you stop writing.
+If your level's rule contains a CHECKLIST block, walk through every item.
+If it doesn't, just verify your output matches the LANGUAGE ROLES and
+TARGET stated in that block.
+
+This used to hard-code a B1+ checklist that confused A1/A2 models (where
+translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+The single source of truth is now
+`scripts/pipeline/config_tables.py:IMMERSION_RULES`.
+
+---
 
 Begin writing now. Start with the first section heading.

@@ -1,0 +1,80 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T16-58-579ac17f.json
+phase: write-chunk-04
+prompt_chars: 46346
+response_chars: 3469
+prompt_words: 6529
+response_words: 561
+sections:
+- name: header
+  start: 0
+  length: 438
+  fraction: 0.0095
+- name: skeleton
+  start: 438
+  length: 818
+  fraction: 0.0176
+- name: prior_summary
+  start: 1256
+  length: 3380
+  fraction: 0.0729
+- name: plan
+  start: 4636
+  length: 11981
+  fraction: 0.2585
+- name: wiki
+  start: 10253
+  length: 29509
+  fraction: 0.6367
+- name: output_spec
+  start: 46126
+  length: 220
+  fraction: 0.0047
+large_sections:
+- wiki
+directives_total: 17
+directives_covered: 8
+directives_missed:
+- kind: must
+  text: '" The main feature of the Ukrainian language is the mandatory double negative.'
+  covered: false
+  coverage_note: 2/7 keywords (29%)
+- kind: must
+  text: '**MANDATORY — never omit.'
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 3/11 keywords (27%)
+- kind: skeleton_para
+  text: 'P1 (100w): The bridge to B1: moving from simple sentences to complex ones.
+    Reviewing ''що'' (that) and ''тому що'' (because) as the foundational connectors.'
+  covered: false
+  coverage_note: 5/16 keywords (31%)
+- kind: skeleton_para
+  text: 'P2 (100w): Register in connectors: comparing ''бо'' (informal/short) with
+    ''тому що'' (neutral) and ''через те що'' (formal/logical consequence). Examples:
+    Не прийшов, бо захворів.'
+  covered: false
+  coverage_note: 2/17 keywords (12%)
+- kind: skeleton_para
+  text: 'P3 (100w): Conditional and Purpose clauses: using ''якщо'' (if) for conditions
+    and ''щоб'' (in order to) for goals. Note on the use of past tense/infinitive
+    after ''щоб''.'
+  covered: false
+  coverage_note: 4/16 keywords (25%)
+- kind: skeleton_para
+  text: 'P4 (100w): Dialogue: A student explaining their A2 progress to a teacher.
+    They use subordinate clauses (коли, хоча, якщо) to describe their learning journey
+    and their plans for B1.'
+  covered: false
+  coverage_note: 6/18 keywords (33%)
+- kind: inject_activity
+  text: group-sort-grammar-categories
+  covered: false
+  coverage_note: marker missing

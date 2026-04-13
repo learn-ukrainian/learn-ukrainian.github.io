@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-ми повинні розгорнути зворот у повноцінне підрядне речення. Найкращий спосіб виправити цю ситуацію — використати часовий сполучник «коли» *(when)*. Правильна конструкція виглядатиме так: «Коли я готував вечерю, кіт забіг на кухню» *(When I was preparing dinner, the cat ran into the kitchen)*. Тут ми маємо дві окремі граматичні основи: я готував, а кіт забіг. Зміст передано абсолютно точно та природно. Навіть якщо ви граматично правильно будуєте речення, завжди існує небезпека стилістичного перевантаження *(stylistic overload)* тексту. Це явище часто називають терміном **канцелярит** *(bureaucratese)* — надмірно сухою, штучною та важкою для сприйняття мовою. Дієприслівникові звороти чудово ущільнюють інформацію, але їхня надмірна кількість робить розповідь неприродною. Подивіться на цей невдалий приклад: «Прокинувшись, умившись, поснідавши, швидко зібравшись, я вийшов з дому» *(Having woken up, washed, had breakfast, and packed, I left the house)*. Безперервне нагромадження зворотів створює відчуття монотонного переліку. Речення втрачає свою динаміку і стає надто громіздким. Справжня українська мова завжди любить легкість і природний рух. Щоб виправити цю стилістичну ваду, достатньо розбити довгий ланцюг на кілька коротших дій. Робіть це, використовуючи звичайні однорідні присудки *(homogeneous predicates)* або кілька простих речень. Природний український варіант звучатиме гармонійніше: «Я прокинувся, умився і поснідав. Потім швидко зібрався і вийшов з дому» *(Then I quickly packed and left the house)*. Такий текст вільно дихає, він живий і енергійний. Щоб ваша мова звучала доречно, дуже важливо розуміти стилістичні регістри *(stylistic registers)*. Дієприслівникові звороти — це насамперед потужний інструмент формальних і книжних стилів. Їхня рідна стихія — це **художній** *(literary)* стиль, де вони допомагають малювати детальні картини природи. Вони також незамінні в **науковому** *(scientific)* стилі, де потрібна максимальна точність опису. У **публіцистичному** *(journalistic)* стилі вони використовуються для швидкого ущільнення фактів у статтях. У цих текстах звороти є маркером високого рівня володіння мовою. Однак у невимушеному **розмовному** *(colloquial)* стилі, у спілкуванні з друзями, українці вживають їх рідше. Усно ми зазвичай віддаємо перевагу набагато простішим та динамічнішим конструкціям. Замість того щоб сказати «Ідучи додому, я раптом зустрів друга» *(Walking home, I suddenly met a friend)*, носій мови швидше обере інше. Він скаже: «Коли я йшов додому, я зустрів друга» *(When I was walking home, I met a friend)*. Або ж використає сполучник «і» *(and)*: «Я йшов додому і зустрів друга». Використовуйте звороти в розмові дозовано, щоб не звучати як диктор новин. Наостанок обов'язково варто зробити одне дуже важливе деколонізаційне застереження *(decolonization note)*. Надмірне використання дієприслівників у розмовній мові — це часто наслідок тривалого калькування *(calquing)* російських синтаксичних звичок. У російській мові конструкції на кшталт «я сидел, читая книгу» є нормою побутового спілкування. Натомість питомій українській мові значно більше притаманна елегантна структура «дія плюс дія» *(action plus action)*. Замість важкої конструкції з дієприслівником ми частіше обираємо два повноцінні дієслова. Вони зазвичай поєднані сурядними сполучниками *(coordinating conjunctions)*. Саме тому речення «Я сидів і читав» *(I sat and read)* звучить для українського вуха набагато органічніше. Воно стилістично правильніше, ніж громіздке «Я сидів, читаючи» *(I sat, reading)*. Відчувайте цю неповторну красу українських дієслівних пар. Вони роблять вашу мову справді живою та автентичною. <!-- INJECT_ACTIVITY: error-correction, Виправте 'звисаючі' дієприслівникові звороти, де дія не стосується підмета. -->
+off with commas) ensures clarity, stringing too many modifiers together suffocates your prose. Ukrainian literary tradition values rhythm and dynamic verbs. Прокинувшись рано вранці, швидко вмившись, нашвидкуруч поснідавши, зібравши свої речі та вийшовши з дому, я пішов на роботу. Таке речення граматично правильне і розділові знаки стоять на своїх місцях, але воно звучить надзвичайно важко. Українська мова не любить такого нагромадження. Набагато краще використати кілька простих речень. Природний варіант: я прокинувся рано вранці, швидко вмився і поснідав. Потім я зібрав свої речі та вийшов на роботу. > *Having woken up early in the morning, having quickly washed, having hastily eaten breakfast, having gathered my things and having left the house, I went to work. Such a sentence is grammatically correct and the punctuation marks are in their places, but it sounds extremely heavy. The Ukrainian language does not like such accumulation. It is much better to use a few simple sentences. The natural version: I woke up early in the morning, quickly washed, and had breakfast. Then I gathered my things and left for work.* Register awareness is crucial when deciding whether to deploy these advanced grammatical structures. Gerund phrases belong primarily to the literary, scientific, and journalistic styles of communication. In written texts, they are incredibly powerful tools; they allow writers to compress background information gracefully, depict simultaneous actions without being repetitive, and establish a highly sophisticated tone. However, in everyday colloquial speech, Ukrainians rarely speak in such complex, layered sentences. Instead, they strongly prefer straightforward coordination and simple sentence structures. You might occasionally encounter gerunds in daily life, but usually only as a fixed **фразеологічний зворот** (phraseological expression — exception to comma rule). In these idiomatic cases, people might work **не покладаючи рук** (without rest — phraseological, no commas) to finish a project, or listen to an exciting story **затамувавши подих** (holding one's breath — phraseological, no commas). Because these are set phrases, they feel natural even in casual conversations. Finally, we must address a crucial decolonization note regarding sentence structure. A legacy of Russian linguistic influence is the pervasive substitution of coordinate verbs with gerunds. In authentic Ukrainian, however, the sequence of two separate verbs is often far more natural. Коли ви хочете описати дві дії, які відбуваються одночасно, не бійтеся використовувати звичайні дієслова. Замість російської кальки «я сидів на дивані, читаючи книгу», набагато краще сказати: «я сидів на дивані і читав книгу». Ця проста конструкція з двома присудками є дуже характерною для української мови. Вона звучить мелодійно і не перевантажує ваше мовлення. > *When you want to describe two actions happening simultaneously, do not be afraid to use regular verbs. Instead of the Russian calque "I sat on the sofa, reading a book", it is much better to say: "I sat on the sofa and read a book". This simple structure with two predicates is very characteristic of the Ukrainian language. It sounds melodious and does not overload your speech.* <!-- INJECT_ACTIVITY: error-correction, focus: "Виправте 'звисаючі' дієприслівникові звороти, де дія не стосується підмета.", items: 8 -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -535,7 +535,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -548,18 +615,60 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] дієприслівниковий зворот (gerund phrase)
+- [ ] відокремлення (setting off with commas)
+- [ ] фразеологічний зворот (phraseological expression — exception to comma rule)
+- [ ] не покладаючи рук (without rest — phraseological, no commas)
+- [ ] затамувавши подих (holding one's breath — phraseological, no commas)
+- [ ] обставина (adverbial modifier — syntactic role)
+- [ ] означення (attribute — syntactic role of дієприкметниковий зворот)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Інтегрована практика (~770 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

@@ -1,7 +1,7 @@
 # Audit Report: M66 — metalanguage-syntax-cases.md
 **Level:** A2 | **Module:** M66 | **Phase:** A2.9 | **Pedagogy:** PPP | **Target:** 4000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-04-11 00:49:45
+**Generated:** 2026-04-11 18:53:50
 
 ## Configuration
 **Type:** A2
@@ -18,66 +18,61 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | quiz |  | 6 | 8 | ❌ |
-| 2 | quiz |  | 6 | 8 | ❌ |
-| 3 | quiz |  | 6 | 8 | ❌ |
-| 4 | group-sort |  | 8 | 8 | ✅ |
-| 5 | match-up |  | 7 | 8 | ❌ |
-| 6 | fill-in |  | 6 | 8 | ❌ |
-| 7 | quiz |  | 6 | 8 | ❌ |
-| 8 | true-false |  | 6 | 8 | ❌ |
+| 1 | quiz | Оберіть граматичну основу (підмет і присудок) у кожному реченні. | 6 | 8 | ❌ |
+| 2 | quiz | Яким членом речення є виділене слово? | 6 | 8 | ❌ |
+| 3 | group-sort | Розподіліть речення на прості та складні. | 8 | 8 | ✅ |
+| 4 | match-up | З'єднайте відмінок і його питання. | 6 | 8 | ❌ |
+| 5 | fill-in | Визначте відмінок виділеного слова (вставте правильну абревіатуру). | 6 | 8 | ❌ |
+| 6 | error-correction | Знайдіть і виправте помилку у відмінку. | 6 | 6 | ✅ |
+| 7 | fill-in | Вставте правильний сполучник у складне речення. | 6 | 8 | ❌ |
 
 **Summary:**
-- Total activities: 8 (target: 0-4) ❌
+- Total activities: 7 (target: 0-4) ❌
 - Unique types: 5 (minimum: 0) ✅
-- Priority types used: 5/15 (fill-in, group-sort, match-up, quiz, true-false) ✅
-- Low density activities: 7
+- Priority types used: 5/15 (error-correction, fill-in, group-sort, match-up, quiz) ✅
+- Low density activities: 5
 
 ## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY]** Sentence too long for A2: 16 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Речення уважно читаю цікаву книгу...'
-- **[COMPLEXITY]** quiz '' has 6 items (minimum: 8)
+- **[COMPLEXITY]** Sentence too long for A2: 18 words (max 15)
+  - FIX: Break into shorter sentences. First 5 words: 'Якщо ви можете вставити між...'
+- **[COMPLEXITY]** quiz 'Оберіть граматичну основу (підмет і присудок) у кожному реченні.' has 6 items (minimum: 8)
   - FIX: Add more items. A2 quiz requires at least 8 items.
-- **[COMPLEXITY]** quiz '' has 6 items (minimum: 8)
+- **[COMPLEXITY]** quiz 'Яким членом речення є виділене слово?' has 6 items (minimum: 8)
   - FIX: Add more items. A2 quiz requires at least 8 items.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q4 prompt length 3 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q5 prompt length 4 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY]** quiz '' has 6 items (minimum: 8)
-  - FIX: Add more items. A2 quiz requires at least 8 items.
-- **[COMPLEXITY]** match-up '' has 7 pairs (target: 8-14)
+- **[COMPLEXITY]** match-up 'З'єднайте відмінок і його питання.' has 6 pairs (target: 8-14)
   - FIX: Adjust number of pairs to 8-14.
-- **[COMPLEXITY]** fill-in '' has 6 items (minimum: 8)
+- **[COMPLEXITY]** fill-in 'Визначте відмінок виділеного слова (вставте правильну абревіатуру).' has 6 items (minimum: 8)
   - FIX: Add more items. A2 fill-in requires at least 8 items.
-- **[COMPLEXITY]** quiz '' has 6 items (minimum: 8)
-  - FIX: Add more items. A2 quiz requires at least 8 items.
-- **[COMPLEXITY]** true-false '' has 6 items (minimum: 8)
-  - FIX: Add more items. A2 true-false requires at least 8 items.
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: іменник
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
+- **[COMPLEXITY]** fill-in 'Вставте правильний сполучник у складне речення.' has 6 items (minimum: 8)
+  - FIX: Add more items. A2 fill-in requires at least 8 items.
+- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (86% overlap): "Наприклад: «Настала осінь, тому птахи полетіли на південь».". Shares significant keywords with sentence at index 231.
+  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
+- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'this is...'.
+  - FIX: Vary sentence structure.
+- **[RUSSICISM_DETECTED]** Found 1 Russicism(s) in content: 'давайте подивимося' → подивімося
+  - FIX: Replace Russicisms with standard Ukrainian equivalents. These are Russian calques that have standard Ukrainian forms. See Phase B prompt 'Russianisms Pre-Output Scan' table.
 
 ## Recommendation
-**📝 UPDATE** (severity 60/100)
+**🔄 REWRITE** (severity 80/100)
 
-- Revision recommended (severity 60/100)
-- 11 violations (severe - consider revision)
+- 9 violations (significant)
+- Immersion 24% off target (major rebalancing needed)
 - Activity density below minimum
 
 ## Gates
-- **Words:** ✅ 4427/4000 (raw: 4482)
-- **Activities:** ✅ 8/0
-- **Density:** ❌ 7 < 8
+- **Words:** ✅ 5335/4000 (raw: 5404)
+- **Activities:** ✅ 7/0
+- **Density:** ❌ 5 < 8
 - **Unique_types:** ✅ 5/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ❌ 0/3
+- **Engagement:** ❌ 1/3
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 26/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 89.5% (target 65-90% (A2.3))
+- **Immersion:** ❌ 40.6% LOW (target 65-90% (A2.3))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -85,22 +80,20 @@
 ## Low Density Activities
 | Activity | Type | Items | Required | Fix |
 |----------|------|-------|----------|-----|
-|  | quiz | 6 | 8 | Add 2 more items |
-|  | quiz | 6 | 8 | Add 2 more items |
-|  | quiz | 6 | 8 | Add 2 more items |
-|  | match-up | 7 | 8 | Add 1 more items |
-|  | fill-in | 6 | 8 | Add 2 more items |
-|  | quiz | 6 | 8 | Add 2 more items |
-|  | true-false | 6 | 8 | Add 2 more items |
+| Оберіть граматичну основу (підмет і присудок) у кожному реченні. | quiz | 6 | 8 | Add 2 more items |
+| Яким членом речення є виділене слово? | quiz | 6 | 8 | Add 2 more items |
+| З'єднайте відмінок і його питання. | match-up | 6 | 8 | Add 2 more items |
+| Визначте відмінок виділеного слова (вставте правильну абревіатуру). | fill-in | 6 | 8 | Add 2 more items |
+| Вставте правильний сполучник у складне речення. | fill-in | 6 | 8 | Add 2 more items |
 
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 539 | Included in Core |
-| **Словосполучення** | ✅ | 542 | Included in Core |
-| **Граматична основа: підмет і присудок** | ✅ | 664 | Included in Core |
-| **Другорядні члени речення** | ✅ | 663 | Included in Core |
-| **Складне речення** | ✅ | 654 | Included in Core |
-| **Відмінки: система і питання** | ✅ | 672 | Included in Core |
-| **Підсумок: ваш синтаксичний словник** | ✅ | 693 | Included in Core |
+| **Intro/Narrative** | ✅ | 570 | Included in Core |
+| **Словосполучення (~550 words)** | ✅ | 743 | Included in Core |
+| **Граматична основа: підмет і присудок (~650 words)** | ✅ | 839 | Included in Core |
+| **Другорядні члени речення (~700 words)** | ✅ | 1195 | Included in Core |
+| **Складне речення (~550 words)** | ✅ | 803 | Included in Core |
+| **Відмінки: система і питання (~650 words)** | ✅ | 616 | Included in Core |
+| **Підсумок: ваш синтаксичний словник** | ✅ | 569 | Included in Core |

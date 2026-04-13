@@ -1,9 +1,21 @@
 vocabulary:
+- word: чому́
+  translation: why
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
 - word: тому́
-  translation: therefore
+  translation: therefore / that is why
   expression: false
   pos: ім.
   gender: с.
+  verified: true
+- word: та́ко́ж
+  translation: also
+  expression: false
+  pos: присл.
+  gender: ''
   verified: true
 - word: або́
   translation: or
@@ -29,111 +41,15 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: вто́млений
-  translation: tired
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: без цукру
-  translation: without sugar
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: ті́стечко
-  translation: pastry
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: на дієті
-  translation: on a diet
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: зателефонува́ти
-  translation: to call
+- word: сполучи́ти
+  translation: to connect / to join
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: ви́бач
-  translation: sorry
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: без звуку
-  translation: on silent
+- word: сполучники сурядності
+  translation: coordinating conjunctions
   expression: true
   pos: ''
-  gender: ''
-  verified: true
-- word: го́ри
-  translation: mountains
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: мо́ре
-  translation: sea
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: лі́то
-  translation: summer
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: деше́вше
-  translation: cheaper
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: гаря́чий
-  translation: hot
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: смачни́й
-  translation: tasty
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: розу́мний
-  translation: smart
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: хво́рий
-  translation: sick
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: йде дощ
-  translation: it is raining
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: голо́дний
-  translation: hungry
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: ціка́во
-  translation: interesting
-  expression: false
-  pos: присл.
   gender: ''
   verified: true

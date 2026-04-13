@@ -1,23 +1,25 @@
-# Section-by-Section Generation — Section 3/4
+# Section-by-Section Generation — Section 3/3
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 15: На ринку та у лікаря (A2, A2.2 [Genitive Case Complete])
-**Section to write:** В аптеці та повсякденне здоров'я (~650 words total)
-**Word target for this section:** 650 words (aim for 715 to account for undershoot)
+**Section to write:** В аптеці та повсякденне здоров'я (~600 words total)
+**Word target for this section:** 600 words (aim for 660 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## В аптеці та повсякденне здоров'я (~650 words total)
-- P1 (~120 words): [Context: The Pharmacy (аптека). Distinguishing between needing a "рецепт" (prescription) and buying "вітаміни" or "краплі від нежиті" (drops for a runny nose) over the counter.]
-- P2 (~130 words): [Prepositions of time and lifestyle + Genitive. "Після їжі" (after a meal), "перед сном" (before sleep), "без цукру" (without sugar). Practical instructions for taking medicine and maintaining a healthy diet.]
-- P3 (~130 words): [The "Для" preposition (for) + Genitive. Phrases for wellbeing: для здоров'я (for health), для серця (for the heart), для імунітету (for immunity). Connecting market food (яблука для здоров'я) with health goals.]
-- P4 (~120 words): [Dialogue: At the Pharmacy. Asking a pharmacist for advice: "Що ви порадите від болю в горлі?". Pharmacist recommends drops and explains when to take them (двічі на день після їди).]
-- P5 (~150 words): [Final consolidation. Comparing the logic of the market and the clinic: both use Genitive to quantify (кілограм яблук / багато ліків), to show lack (без пакету / немає нежиті), and to show purpose (ніж для хліба / ліки від грипу).]
+## В аптеці та повсякденне здоров'я (~600 words total)
+- P1 (~120 words): Move the scenario to the "аптека" (pharmacy). Present a short dialogue asking for advice and medication: "Мені потрібні краплі від нежиті," and "Що ви порадите від кашлю?". 
+- P2 (~140 words): Expand on the "від + Genitive" structure, this time meaning "against" or "for" an ailment. Explain that in Ukrainian, we ask for medicine *against* the symptom. Show vital vocabulary: "ліки від кашлю" (cough medicine), "краплі від нежиті" (drops for a runny nose), "таблетки від головного болю" (headache pills). Highlight the masculine -ю Genitive endings for pain/illness: кашлю, болю.
+- P3 (~130 words): Teach other essential Genitive prepositions used in health contexts. Cover "для" (for purpose): "для здоров'я" (for health); "без" (without): "без рецепта" (without a prescription); and "після/до" (after/before) for taking medication: "після їжі" (after a meal).
+- P4 (~120 words): Connect everyday health and diet back to the quantity concepts learned at the market. Discuss healthy habits using Genitive phrases: "дбати про здоров'я", eating "мало цукру" (little sugar), drinking "багато води" (a lot of water), or choosing products "без кофеїну" (without caffeine). 
 - <!-- INJECT_ACTIVITY: match-up-remedies --> [match-up, Match health problems to their remedies (ліки від..., краплі від...), 8 items]
-- <!-- INJECT_ACTIVITY: true-false-grammar --> [true-false, Judge whether shopping and health phrases use the Genitive correctly, 8 items]
+- P5 (~90 words): Summarize the module. Remind learners that the Genitive case is the ultimate connector in everyday life—whether you are asking for a quantity at the market ("кілограм яблук"), stating you lack a symptom ("немає температури"), or buying medicine for a specific problem ("від кашлю"). 
+- <!-- INJECT_ACTIVITY: true-false-genitive-usage --> [true-false, Judge whether shopping and health phrases use the Genitive correctly, 8 items]
+
+Grand total: ~2200 words
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -25,7 +27,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-нежиті** (drops for a runny nose) - **таблетки від головного болю** (headache pills) - **сироп від болю у горлі** (syrup for a sore throat) :::note **Читаємо українською (Reading in Ukrainian)** > — **Покупець:** Добрий день. Мені потрібні ліки від алергії. *(Good day. I need medicine for allergy.)* > — **Фармацевт:** Добрий день. У вас є рецепт? *(Good day. Do you have a prescription?)* > — **Покупець:** Ні, немає. Дайте щось без рецепта. *(No, I do not. Give me something without a prescription.)* > — **Фармацевт:** Ось хороші таблетки. Вони дуже допомагають. *(Here are good pills. They help a lot.)* ::: Let us see how these phrases come together in a typical visit to the clinic. Read this dialogue between a **пацієнт** (patient) and a **лікар** (doctor). > — **Лікар:** Добрий день! Проходьте, сідайте. Що вас турбує? *(Good day! Come in, sit down. What is bothering you?)* > — **Пацієнт:** Добрий день. Я погано почуваюсь. Я застудився. *(Good day. I feel unwell. I caught a cold.)* > — **Лікар:** Розумію. У вас болить горло? *(I understand. Does your throat hurt?)* > — **Пацієнт:** Так, болить горло і дуже болить голова. *(Yes, my throat hurts and my head hurts a lot.)* > — **Лікар:** Чи є у вас температура? *(Do you have a fever?)* > — **Пацієнт:** Ні, температури немає. Але у мене сильний кашель і немає сил. *(No, there is no fever. But I have a bad cough and no energy.)* > — **Лікар:** Я випишу вам рецепт. Ось ліки від кашлю. *(I will write you a prescription. Here is cough medicine.)* > — **Пацієнт:** Дякую. Скільки разів на день їх пити? *(Thank you. How many times a day should I drink them?)* > — **Лікар:** Тричі на день. І вам треба багато відпочивати. *(Three times a day. And you need to rest a lot.)* Іноді у нас немає сильного болю, але є загальна слабкість. Мені дуже погано і холодно. Мене нудить після вечері. Sometimes you do not have a specific pain, but your overall state is bad. For these general feelings, Ukrainian uses impersonal constructions. Instead of saying "I feel cold", you say "To me it is cold". The person experiencing the feeling takes the Dative case (which we will study later, but you should learn these fixed phrases now as «**мені**» — to me). - **Мені погано.** (I feel bad.) - **Мені краще.** (I feel better.) - **Мені холодно.** (I am cold.) - **Мені гаряче.** (I am hot.) Якщо у вас проблеми зі шлунком, ви використовуєте спеціальне дієслово. If you feel sick to your stomach, you use a special verb: «**Мене нудить**» (I feel nauseous). :::tip **Читаємо українською (Reading in Ukrainian)** Учора ввечері мені було дуже погано. Я випив гарячий чай, і зараз мені краще. Відчини вікно, будь ласка, бо мені гаряче. Одягни теплий светр, якщо тобі холодно. Я не хочу їсти, бо мене нудить. ::: Combining these phrases with the Genitive vocabulary gives you a complete toolkit to explain your health to any doctor. <!-- INJECT_ACTIVITY: quiz-health-phrases -->
+quickly answer that I have no allergy. Another patient says that he has absolutely no appetite for two days already. Fortunately, my brother has no high fever.* Sometimes you just feel unwell without a specific localized pain. To describe your general physical state, Ukrainian uses impersonal constructions featuring the Dative case and an adverb. You place the pronoun in the Dative (such as **мені**, **йому**, **їй**) and follow it with a descriptive adverb like **погано** (bad) or **холодно** (cold). If you feel nauseous, there is a specific verb used with the Accusative case: **Мене нудить** (I feel nauseous). Взимку на вулиці мені часто буває дуже холодно. Коли ми довго їхали в старому автобусі, моїй мамі раптом стало погано. Вона сказала, що її трохи нудить від запаху бензину. Зараз їй вже набагато краще, і ми йдемо додому. > *In winter outside I am often very cold. When we were riding for a long time in an old bus, my mom suddenly started to feel bad. She said that she felt a little nauseous from the smell of gasoline. Now she is already much better, and we are walking home.* If you know the cause of your pain or physical state, you can explain it using the preposition **від** (from) followed by the Genitive case. This is very common when describing symptoms related to weather, such as a **кашель** (cough) from the cold. Interestingly, we also use this exact same preposition when we buy medicine *against* a specific symptom. У мене зараз сильно болить горло від холодної води. Цей жахливий кашель у мого колеги з'явився від пилу на будівництві. Моя подруга скаржиться, що у неї болить голова від гучної музики. Ввечері ми підемо купувати ефективні краплі від нежиті. > *Right now I have a very sore throat from cold water. This terrible cough of my colleague appeared from the dust at the construction site. My friend complains that her head hurts from loud music. In the evening we will go to buy effective drops for a runny nose.* At the end of your visit, the doctor will usually give you some professional advice and write out a **рецепт** (prescription). These instructions often combine simple imperative verbs with the quantity words we learned earlier, which naturally require the Genitive case. Finally, the doctor will tell you to go to the **аптека** (pharmacy) to buy your **ліки** (medicine). Лікар серйозно дивиться на брата і каже: пийте багато теплої води та більше відпочивайте. Він радить їсти багато свіжих фруктів і менше цукру. Потім він виписує рецепт і каже йти в найближчу аптеку. Там ми купимо всі необхідні ліки. > *The doctor looks seriously at my brother and says: drink a lot of warm water and rest more. He advises eating a lot of fresh fruits and less sugar. Then he writes a prescription and says to go to the nearest pharmacy. There we will buy all the necessary medicine.* <!-- INJECT_ACTIVITY: quiz, Choose the correct Genitive phrase for health complaints and remedies, 8 items -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -485,7 +487,74 @@ This section is critical for building an authentic and respectful understanding 
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 4: Mid A2 (A2 M04-M20)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–8 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 80%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 80% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 45-65% Ukrainian. THIS IS A HARD GATE — the audit REJECTS modules below 45%.
 LANGUAGE ROLES:
@@ -512,18 +581,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (3/3).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] ринок (market)
+- [ ] кілограм (kilogram)
+- [ ] пляшка (bottle)
+- [ ] здоров'я (health)
+- [ ] температура (temperature, fever)
+- [ ] рецепт (prescription, recipe)
+- [ ] аптека (pharmacy)
+- [ ] ліки (medicine)
+- [ ] кашель (cough)
+- [ ] апетит (appetite)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## В аптеці та повсякденне здоров'я (~600 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

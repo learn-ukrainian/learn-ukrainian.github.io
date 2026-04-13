@@ -1,0 +1,40 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T20-50-74e0aaf3.json
+phase: vocab
+prompt_chars: 10685
+response_chars: 836
+prompt_words: 1719
+response_words: 101
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.0747
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.0215
+- name: plan
+  start: 1028
+  length: 9657
+  fraction: 0.9038
+large_sections:
+- plan
+directives_total: 4
+directives_covered: 0
+directives_missed:
+- kind: inject_activity
+  text: quiz-this-gender
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-that-gender
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-this-vs-that
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-gender-patterns
+  covered: false
+  coverage_note: marker missing

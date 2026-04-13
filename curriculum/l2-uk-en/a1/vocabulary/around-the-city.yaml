@@ -12,7 +12,7 @@ vocabulary:
   gender: ''
   verified: true
 - word: ї́дьте
-  translation: go! (by vehicle)
+  translation: go! (by transport)
   expression: false
   pos: дієсл.
   gender: ''
@@ -36,7 +36,7 @@ vocabulary:
   gender: ж.
   verified: true
 - word: райо́н
-  translation: neighborhood / district
+  translation: neighborhood
   expression: false
   pos: ім.
   gender: ч.
@@ -45,6 +45,30 @@ vocabulary:
   translation: excuse me
   expression: false
   pos: дієсл.
+  gender: ''
+  verified: true
+- word: Де ми?
+  translation: Where are we?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Куди далі?
+  translation: Where to next?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Звідки прийшли?
+  translation: Where did we come from?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Як дістатися до...?
+  translation: How to get to...?
+  expression: true
+  pos: ''
   gender: ''
   verified: true
 - word: пря́мо
@@ -65,68 +89,110 @@ vocabulary:
   pos: присл.
   gender: ''
   verified: true
-- word: ву́лиця
-  translation: street
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: зупи́нка
-  translation: stop / bus stop
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: перехре́стя
-  translation: intersection
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: око́лиця
-  translation: outskirts
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: метро́
-  translation: metro
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: автовокза́л
-  translation: bus station
+- word: ріг
+  translation: corner
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: залізни́чний вокза́л
-  translation: railway station
+- word: дале́ко
+  translation: far
   expression: false
-  pos: ''
+  pos: присл.
   gender: ''
-  verified: false
-- word: на розі
-  translation: on the corner
+  verified: true
+- word: на метро
+  translation: by metro
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: Де ми?
-  translation: Where are we?
+- word: споча́тку
+  translation: first / initially
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: зупи́нка
+  translation: stop
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: по́тім
+  translation: then / afterwards
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: авто́бусом
+  translation: by bus
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: Куди́
+  translation: Where to?
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: Чим?
+  translation: By what means?
+  expression: false
+  pos: спол.
+  gender: ''
+  verified: true
+- word: бли́зько
+  translation: near / close
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: бі́ля
+  translation: near / by
+  expression: false
+  pos: прийм.
+  gender: ''
+  verified: true
+- word: біля мого дому
+  translation: near my home
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: Куди далі?
-  translation: Where to next?
+- word: треба їхати
+  translation: one needs to travel
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: Звідки ви прийшли?
-  translation: Where did you come from?
+- word: можна піти
+  translation: one can go
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: далеко від
+  translation: far from
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: близько від
+  translation: near from
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: у центрі міста
+  translation: in the city center
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: на околиці
+  translation: on the outskirts
   expression: true
   pos: ''
   gender: ''

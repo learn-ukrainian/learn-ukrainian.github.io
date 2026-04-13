@@ -2,49 +2,50 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 10
-  evidence: All sections, vocabulary, and objectives are met. Word count (3304) exceeds
-    the 2000-word target significantly, providing rich examples and context.
+  score: 7
+  evidence: 'All four planned sections are present and the core dative/accusative
+    contrast is covered, but the planned common predicates are not fully realized
+    in prose: exact search found `можна: 0` and `легко: 0'
 - dimension: 2
   name: Linguistic accuracy
-  score: 8
-  evidence: Generally excellent, but contains a minor calque ("Мені треба йти додому
-    прямо зараз") and a slightly unnatural phrasing ("їй це буде великий сюрприз").
-    The explanation of third-person pronouns not ta
+  score: 6
+  evidence: 'No Russian contamination found, but the module teaches a false rule in
+    the impersonal grammar box: “They always end in the letter «-о».”'
 - dimension: 3
   name: Pedagogical quality
-  score: 8
-  evidence: Excellent PPP flow and grammar explanations, but the `match-up` activity
-    marker for the pronoun paradigm is placed in Section 1, before the forms are actually
-    taught in Section 2.
+  score: 7
+  evidence: The overall flow is usable and example-rich, but section 2 opens with
+    a long English metagrammatical paragraph (“In the **давальний відмінок**... Instead,
+    you must memorize...”) before learners get th
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: All required and recommended vocabulary items from the plan are introduced
-    naturally within dialogues and example sentences.
+  score: 8
+  evidence: All required vocabulary appears naturally, and recommended `приємно`,
+    `цікаво`, `сумно`, `важко` are present. Planned common predicates `можна` and
+    `легко` are missing from the prose.
 - dimension: 5
   name: Exercise quality
-  score: 8
-  evidence: Exercises match the plan hints, but placing the paradigm match-up before
-    the teaching section is an error. Also, the quiz marker contains a prompt artifact.
+  score: 5
+  evidence: Marker placement and count are correct, but `fill-in-dative-pronouns`
+    is logically broken by ambiguous prompts (`Я дарую ____ нову книгу.`) and uniform
+    answer placement (`[0,0,0,0,0,0,0,0]`).
 - dimension: 6
   name: Engagement & tone
-  score: 9
-  evidence: Very natural and encouraging tone. Slight deduction for the cliché opening
-    ("Welcome to the dative case"), but the analogies and dialogues are engaging.
+  score: 8
+  evidence: The teacher voice is steady and classroom-like, and the cafe dialogue
+    is usable at A2.
 - dimension: 7
   name: Structural integrity
   score: 9
-  evidence: Clean Markdown structure and pacing, but a prompt instruction artifact
-    (`[quiz, Choose between...]`) was left visible in the prose.
+  evidence: All required H2s are present and ordered correctly; the four markers are
+    present; pipeline word count is 2929, above target.
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: Culturally appropriate contexts (e.g., birthday gift distribution, coffee
-    shop orders).
+  score: 9
+  evidence: No Russian-centered framing; examples stay within ordinary Ukrainian contexts.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: Conversations are highly contextual, multi-turn, and effectively demonstrate
-    the difference between Accusative and Dative cases dynamically.
+  score: 8
+  evidence: The dialogues use named speakers and multi-turn exchange, especially in
+    the cafe scene (`Мені трохи сумно... Ходімо в кафе?`).
 findings: []

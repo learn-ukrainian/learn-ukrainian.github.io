@@ -2,54 +2,52 @@ round: 2
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 10
-  evidence: The module strictly follows the plan, covering all grammatical objectives,
-    incorporating the dialogue exactly as described ("Моєму найкращому студентові
-    — десятка!"), and embedding all required vocabu
+  score: 9
+  evidence: 'All four planned H2 sections are present and in order; references are
+    cited explicitly in `Такі самі парадигми подають Заболотний (§157), Захарійчук
+    (§281) і ULP: Ukrainian Possessive Pronouns.`; all '
 - dimension: 2
   name: Linguistic accuracy
-  score: 9
-  evidence: High overall accuracy, correctly handling complex Dative government rules
-    (`радіти поїзду`, `пасує сукні`, `заздрять сусідові`). However, there is a critical
-    reflexive pronoun error (`її` instead of `
+  score: 10
+  evidence: No Russianisms, Surzhyk, calques, paronym errors, or wrong dative forms
+    confirmed. Verified forms include `моєму`, `їхньому`, `цьому`, `тій`, `одногрупникові`.
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: Outstanding pedagogical flow. The use of "grammatical echoes" to explain
-    multi-word agreement is an excellent metaphor. The module also successfully anticipates
-    learner errors (forgetting to decline t
+  score: 8
+  evidence: The module has strong coverage and many examples, but some explanation
+    is impressionistic rather than teachable, e.g. `Because the stems of these pronouns
+    end in a vowel, they require a softer, more m
 - dimension: 4
   name: Vocabulary coverage
   score: 10
-  evidence: All required and recommended words (`вказівний`, `узгодження`, `їхньому`)
-    are utilized in natural, contextual reading blocks.
+  evidence: 'Required plan vocabulary is all present in prose: `моєму`, `моїй`, `твоєму`,
+    `нашій`, `цьому`, `тому`, `новому`, `старшому`, `прикметник`, `присвійний`. Recommended
+    items also appear in usable context'
 - dimension: 5
   name: Exercise quality
   score: 10
-  evidence: All five markers from the plan are utilized and strategically placed immediately
-    after the concepts they test, ensuring learners can practice before moving on
-    to the next rule.
+  evidence: Marker inventory matches the plan exactly, markers follow the relevant
+    instruction, and none are placed before the concept is taught.
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: The tone is an encouraging, warm teacher without relying on empty filler.
-    Phrases like "This makes the Ukrainian system logical, consistent, and uniquely
-    melodic" and "Remember that його and її are yo
+  score: 8
+  evidence: The teacherly tone is generally solid, but some lines drift into low-information
+    hype, e.g. `This is a huge relief for language learners!` and similar value-added
+    phrasing where direct instruction wou
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: Clean markdown, no stray tags, and all expected headers are present. The
-    word count of 3236 words provides a robust, immersive learning experience well
-    above the 2000-word target.
+  evidence: Clean markdown structure, all planned sections present, expected inject
+    markers only, and pipeline word count is 2784, safely above the 2000 target.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Highlights standard Ukrainian gracefully without explicit comparison to
-    Russian, implicitly teaching decolonized language (e.g., the strong advice to
-    always decline `їхній` rather than using the calqu
+  evidence: No Russian-centric framing or cultural inaccuracies detected; examples
+    stay within ordinary Ukrainian classroom/family contexts.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: Dialogues are multi-turn, authentic, and purposeful. The final dialogue
-    effectively tests the learner's comprehension of cases in context.
+  score: 8
+  evidence: 'The dialogue is multi-turn and relevant, but the speaker labeling is
+    internally inconsistent: the setup says `Imagine a teacher handing back graded
+    essays to her class.`, students address `пані Олено`'
 findings: []

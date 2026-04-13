@@ -1,0 +1,212 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T16-55-2e50e0d8.json
+phase: activities
+prompt_chars: 91342
+response_chars: 19360
+prompt_words: 13536
+response_words: 2271
+sections:
+- name: preamble
+  start: 0
+  length: 2212
+  fraction: 0.0242
+- name: plan
+  start: 2212
+  length: 89022
+  fraction: 0.9746
+- name: output_spec
+  start: 91234
+  length: 108
+  fraction: 0.0012
+large_sections:
+- plan
+directives_total: 82
+directives_covered: 42
+directives_missed:
+- kind: must
+  text: '** Your very first character must be `version:`.'
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: must
+  text: Each inline activity MUST have an `id` that matches one of these markers.
+  covered: false
+  coverage_note: 2/10 keywords (20%)
+- kind: must
+  text: Each inline activity's `id` must match one of these markers exactly (lowercase,
+    hyphenated).
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: must
+  text: You MUST create activities that cover all these hints.
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: must
+  text: '**Grounding rule:** Every Ukrainian word in your exercises must appear either
+    in the prose content or in this vocabulary list.'
+  covered: false
+  coverage_note: 1/15 keywords (7%)
+- kind: must
+  text: The relative clause must stand immediately after this specific noun.
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: must
+  text: Because it functions grammatically like an adjective, it must change its form
+    to reflect gender, number, and case.
+  covered: false
+  coverage_note: 1/13 keywords (8%)
+- kind: must
+  text: If the main clause talks about a feminine singular noun, the pronoun must
+    be feminine and singular.
+  covered: false
+  coverage_note: 0/9 keywords (0%)
+- kind: must
+  text: This means you must analyze the internal logic of the subordinate clause to
+    choose the right ending.
+  covered: false
+  coverage_note: 2/12 keywords (17%)
+- kind: must
+  text: When the relative pronoun acts as the active subject performing the action
+    inside the subordinate clause, it must take the Nominative case.
+  covered: false
+  coverage_note: 3/15 keywords (20%)
+- kind: must
+  text: You must rely on the case endings to understand who is doing what.
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: must
+  text: The Genitive case is required when the relative clause expresses absence,
+    quantity, or when it features an animate direct object.
+  covered: false
+  coverage_note: 2/13 keywords (15%)
+- kind: must
+  text: The grammatically correct phrasing must be "місто, в якому я народився" to
+    properly reflect the static nature of the action within the relative clause.
+  covered: false
+  coverage_note: 5/15 keywords (33%)
+- kind: must
+  text: To fully master this construction, you must practice navigating the intersection
+    of gender, number, and case simultaneously.
+  covered: false
+  coverage_note: 2/13 keywords (15%)
+- kind: must
+  text: This independence is the core principle you must internalize.
+  covered: false
+  coverage_note: 1/7 keywords (14%)
+- kind: must
+  text: If the verb inside the subordinate clause requires a preposition, you must
+    revert to using the fully declined form of «який».
+  covered: false
+  coverage_note: 2/14 keywords (14%)
+- kind: must
+  text: This connective word behaves a bit differently from «який» because it must
+    agree with the object that is possessed inside the clause, not with the **означуване
+    слово** (antecedent) it refers back to.
+  covered: false
+  coverage_note: 6/22 keywords (27%)
+- kind: must
+  text: 'If the clause stands inside the main sentence, you must place two commas:
+    one at the beginning of the subordinate part, and another at the end.'
+  covered: false
+  coverage_note: 2/16 keywords (12%)
+- kind: must
+  text: An attributive clause must always stand immediately after the **означуване
+    слово** (antecedent — noun the clause describes) it describes.
+  covered: false
+  coverage_note: 2/12 keywords (17%)
+- kind: must
+  text: '" Because the subordinate part stands immediately after the word "shark,"
+    grammatically it turns out that this brave boy married the predatory fish! To
+    avoid such nonsense, the sentence must be built differently.'
+  covered: false
+  coverage_note: 4/25 keywords (16%)
+- kind: must
+  text: When stacking them, each distinct clause must be isolated by its own set of
+    commas.
+  covered: false
+  coverage_note: 0/12 keywords (0%)
+- kind: must
+  text: To ensure you are truly mastering the grammar, you must use **який/яка/яке/які**
+    (which/that — relative pronoun, declines) in a different **відмінок** (case —
+    determines the form of який in the clause) for each of your descriptions.
+  covered: false
+  coverage_note: 9/26 keywords (35%)
+- kind: must
+  text: To understand this short instruction, you must know these words.
+  covered: false
+  coverage_note: 2/9 keywords (22%)
+- kind: must
+  text: There are two major exceptions that you must remember for future grammatical
+    analysis.
+  covered: false
+  coverage_note: 2/12 keywords (17%)
+- kind: must
+  text: Wherever the noun goes, the attribute follows it, completely agreeing with
+    the noun in gender, number, and case! Proper **пунктуація** (punctuation — rules
+    for using punctuation marks) is usually not required between an attribute and
+    its noun.
+  covered: false
+  coverage_note: 3/21 keywords (14%)
+- kind: must
+  text: '> *You must always put a comma between the parts of a complex sentence.'
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: must
+  text: If you see a subject and predicate on the left, and a new subject and predicate
+    on the right, you MUST place a comma between them, regardless of what conjunction
+    links them.
+  covered: false
+  coverage_note: 2/16 keywords (12%)
+- kind: must
+  text: To connect all these words correctly, you must use the system of cases.
+  covered: false
+  coverage_note: 2/10 keywords (20%)
+- kind: must
+  text: '- id: marker-id-here # MUST match an <!-- INJECT_ACTIVITY: .'
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: must
+  text: '**CRITICAL RULE: EVERY single activity object MUST include an `id` field
+    (a unique string like "quiz-grammar", "match-up-vocab").'
+  covered: false
+  coverage_note: 3/16 keywords (19%)
+- kind: must
+  text: 'Required: id, instruction, items[] (array of strings), correct_order[] (TOP-LEVEL
+    array of **integers** — zero-based indices into items).'
+  covered: false
+  coverage_note: 4/13 keywords (31%)
+- kind: must
+  text: 'Required: id, syllables[], correctIndices[], category.'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: 'Required: id, letters[{upper, lower}].'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: 'Required: id, items[{video}].'
+  covered: false
+  coverage_note: 1/3 keywords (33%)
+- kind: must
+  text: '- **critical-analysis**: Required: id, prompt.'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: '**You MUST use these patterns.'
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: must
+  text: If the pattern lists divide-words, count-syllables, and odd-one-out — your
+    output MUST include all three.
+  covered: false
+  coverage_note: 1/15 keywords (7%)
+- kind: must
+  text: '**Test LANGUAGE, not trivia** — exercises must test Ukrainian language skills.'
+  covered: false
+  coverage_note: 0/8 keywords (0%)
+- kind: must
+  text: '- **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).'
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing

@@ -1,20 +1,20 @@
 ## VESUM Verification
-- Confirmed: музей, вокзал, центр, станція, площа, школа, робота, прямо, направо, наліво, автобус, метро, Київ, Львів, Україна, Канада, вибачте, ідіть, вийдіть, їдьте.
-- Not found: All words from the plan were found in VESUM.
+- Confirmed: школі, роботі, України, автобусом, метро, прямо, направо, наліво, вибачте, Канади, музей, центрі, ідіть, Хрещатик, дістатися, вийдіть, площі, дякую, їхати, Львів, вокзал, вокзальна
+- Not found: (None - all words confirmed when checked in lowercase)
 
 ## Grammar Rules
-- Euphony у/в: Правопис §23 — Use 'у' between consonants (Десь у житі), at the start of a sentence before a consonant (У лісі), or before specific clusters like 'льв' (у Львові). Use 'в' between vowels or after a vowel before a consonant (Пішла в садок).
-- Euphony і/й: Правопис §24 — Use 'і' between consonants (Він іде) or at the start of a sentence. Use 'й' between vowels (Ольга й Андрій) or between a vowel and a consonant (Вона йде).
-- Preposition з/із/зі: Правопис §25 — Use 'з' before most consonants (З лісу). Use 'зі' before clusters starting with sibilants (зі Львова, зі школи). Use 'зо' with certain numbers and 'мною'.
+- Euphony (у/в): Правопис §23 — Щоб уникнути збігу букв на позначення приголосних звуків... вживають прийменник "у" та префікс "у-" між приголосними. Прийменник "в" та префікс "в-" вживають між буквами на позначення голосних.
+- Euphony (і/й): Правопис §24 — Вживаємо "і" між приголосними та після паузи. Вживаємо "й" між голосними або між голосним і приголосним.
+- Euphony (з/із/зі): Правопис §25 — "З" уживаємо перед голосною або приголосною (крім свистячих/шиплячих). "Із" переважно перед свистячими та шиплячими (з, с, ц, ч, ш, шч). "Зі" вживаємо перед збігом приголосних із початковими з, с, ш, шч.
 
 ## Calque Warnings
-- їхати на метро: OK — While "їхати метро" (instrumental) is possible, "на метро" is widely used and acceptable for A1.
-- на право/на ліво: Calque/Error — Must be written as one word "направо" and "наліво" when used as adverbs.
-- від метро: OK — Correct use of preposition "від" with genitive for distance/origin.
+- на метро: calque — Антоненко-Давидович style guide advises "їхати чимось, а не на чомусь" (e.g. їхати автобусом). Although "метро" is indeclinable, using "метро" as instrumental (або "в метро") is preferred over the direct Russian calque "на метро".
+- дістатися від: OK — natural Ukrainian phrasing for origin of movement.
+- знаходитися: calque — instead of "де знаходиться музей?" the plan correctly uses "де тут музей?" or "музей у центрі" (Антоненко-Давидович recommends "бути, перебувати, лежати" instead of "знаходитися").
 
 ## CEFR Check
-- музей: A1 — Target level confirmed.
-- вокзал: A1 — Target level confirmed.
-- центр: A1 — Target level confirmed.
-- метро: A1 — Target level confirmed.
-- направо/наліво: A1 — Target level confirmed.
+- музей: A1 — OK
+- вокзал: A1 — OK
+- метро: A1 — OK
+- площа: A1 — OK
+- дістатися: Not found in PULS A1-C1 list — above target (may require extra context or support for A1 learners)

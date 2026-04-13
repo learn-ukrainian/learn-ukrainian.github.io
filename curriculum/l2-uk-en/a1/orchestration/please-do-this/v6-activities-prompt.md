@@ -1,4 +1,4 @@
-<!-- version: 1.1.0 | updated: 2026-03-31 -->
+<!-- version: 1.2.0 | updated: 2026-04-12 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -11,6 +11,35 @@ Generate an `activities/please-do-this.yaml` file for module **43: Please Do Thi
 
 ---
 
+## ⚠️ HARD COUNT TARGETS — READ TWICE
+
+These are the binding numerical contracts for THIS module. The audit will FAIL if you fall short.
+
+| Bucket | Min | Max | Notes |
+|---|---|---|---|
+| Total activities | 10 | 10+ | inline + workbook combined |
+| Inline (lesson tab) | 4 | 6 | one per `<!-- INJECT_ACTIVITY -->` marker, see below |
+| Workbook (Зошит tab) | 6 | 9 | extended practice |
+| Items per activity | 6 | — | each activity must have at least 6 items (unless its type cap is lower — see Activity Type Reference below) |
+
+**You MUST ship at least 4 inline activities AND at least 6 workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+
+**Type diversity is required.** The module (inline + workbook combined) MUST use at least **0** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level. (If `0` is `0`, the audit profile for this level does not enforce type diversity — but variety still produces a better lesson, so aim for 4+ types when the workbook allows it.)
+
+---
+
+## Allowed types for THIS level
+
+- **Inline (lesson) types:** image-to-letter, letter-grid, match-up, watch-and-repeat, quiz, true-false, fill-in, classify
+- **Inline priority (preferred):** image-to-letter, match-up, fill-in, quiz, watch-and-repeat
+- **Workbook types:** fill-in, match-up, group-sort, anagram, unjumble, quiz, true-false, classify, divide-words, count-syllables, pick-syllables, observe, phrase-table, odd-one-out
+- **Workbook priority (preferred):** fill-in, match-up, group-sort, anagram, unjumble
+- **FORBIDDEN at this level:** cloze, error-correction, mark-the-words, translate, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, highlight-morphemes, grammar-identify, select
+
+Pick from the allowed list. Lean heavily on the priority lists. Do not use any forbidden type — the build will reject it.
+
+---
+
 ## Inline vs Workbook Split
 
 Activities have two placement categories:
@@ -19,7 +48,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Rule of thumb:** inline = 2-3 quick checks after key teaching points. Workbook = 4-8 deeper practice exercises covering the full topic.
+**Rule of thumb:** inline = 4–6 quick checks after key teaching points. Workbook = 6–9 deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
 
 ---
 
@@ -27,10 +56,10 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: group-sort-imperative-register -->`
-- `<!-- INJECT_ACTIVITY: fill-in-imperative-formation -->`
-- `<!-- INJECT_ACTIVITY: quiz-polite-choice -->`
-- `<!-- INJECT_ACTIVITY: fill-in-contextual-names -->`
+- `<!-- INJECT_ACTIVITY: quiz-imperative-choice -->`
+- `<!-- INJECT_ACTIVITY: group-sort-forms -->`
+- `<!-- INJECT_ACTIVITY: fill-in-imperative-forms -->`
+- `<!-- INJECT_ACTIVITY: fill-in-polite-requests -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -90,126 +119,143 @@ required:
 <module_content>
 ## Діалоги (Dialogues)
 
-Every day, we ask people to do things. We ask friends for favors, teachers give instructions to students, and parents guide their children. In Ukrainian, the way you ask someone to do something depends entirely on your relationship with that person. The words you choose signal whether you are talking to a close friend or addressing a group in a formal setting.
+We use commands, requests, and instructions every single day. Whether asking a friend to **відкрити** (to open) a door, telling a dog to **сісти** (to sit down), or instructing someone to **показати** (to show) you a menu, the imperative mood is absolutely essential. At the A1 level, mastering these direct requests allows for confident and clear communication. You will hear these forms in stores, on the street, and in classrooms. By learning just a few common verbs, you can actively participate in conversations rather than just listening. Observe these two common situations where these requests happen naturally. First is a formal classroom setting where a teacher gives clear instructions to students about an exercise in a **підручник** (textbook). A student asks about a **сторінка** (page) and how to write a **речення** (sentence), and asks permission to **запитати** (to ask) a question. Second is an informal chat between two friends deciding what to do at a cafe. The verb forms change depending on who is being addressed.
 
-Imagine a typical morning in a language class. The teacher is standing at the front, addressing the entire group of students and guiding them through the lesson. Notice the specific endings on the action words the teacher uses to give instructions to the class.
-
-> **Вчитель:** Добрий ранок! **Відкрийте підручники, будь ласка. Читайте текст.** *(Good morning! Open the textbooks, please. Read the text.)*
+Dialogue 1 — In the classroom:
+> **Вчитель:** Відкрийте підручники, будь ласка. Читайте текст. *(Open the textbooks, please. Read the text.)*
 > **Студент:** Вибачте, яку сторінку? *(Excuse me, which page?)*
-> **Вчитель:** Сторінку двадцять три. Тепер **пишіть**. **Напишіть три речення.** *(Page twenty-three. Now write. Write three sentences.)*
+> **Вчитель:** Сторінку двадцять три. Тепер пишіть. Напишіть три речення. *(Page twenty-three. Now write. Write three sentences.)*
 > **Студент:** Можна запитати? *(May I ask?)*
-> **Вчитель:** Так, **запитуйте**, якщо є питання! *(Yes, ask, if there are questions!)*
+> **Вчитель:** Так, запитуйте! *(Yes, ask!)*
 
-In this classroom setting, the teacher uses forms like **відкрийте** (open), **читайте** (read), and **пишіть** (write). Because the teacher is speaking to a group of students, they must use the plural form. These forms end in **-те** or **-іть**, which always signals that you are addressing more than one person, or addressing someone formally using the respectful "you" pronoun.
+These classroom imperatives are used for a group: **відкрийте** (open), **читайте** (read), **пишіть** (write), and **напишіть** (write / complete). In this dialogue, pay attention to how the teacher addresses the entire room. The teacher uses the plural form of the verbs, which sounds formal and authoritative, yet entirely polite. The student responds using the same formal tone. 
 
-Consider a completely different situation. Two close friends are walking outside on a beautiful day, trying to decide what to do next. The tone is much more relaxed and direct because they know each other well.
+:::caution
+The phrase **відкрити підручник** (to open the textbook) is very common in spoken Ukrainian and appears in many classrooms. However, linguists often consider it a calque. The more traditional, stylistically perfect Ukrainian phrase for opening a book is **розгорнути підручник** (to unfold the textbook). You will hear both, but **розгорнути** is the gold standard!
+:::
 
-> **Олег:** **Слухай**, ходімо в кафе! *(Listen, let's go to a café!)*
-> **Максим:** Добре, **йди**, я зараз. *(Okay, go, I'll be right there.)*
-> **Олег:** **Подивись**, яка гарна погода! *(Look, what beautiful weather!)*
-> **Максим:** Так! **Сідай** тут. *(Yes! Sit down here.)*
-> **Олег:** **Дай** мені меню, будь ласка. *(Give me the menu, please.)*
-> **Максим:** Ось, **дивись**. **Скажи**, що ти хочеш? *(Here, look. Tell me, what do you want?)*
-> **Олег:** Я хочу каву. *(I want coffee.)*
+Dialogue 2 — Between friends:
+> **Максим:** Слухай, ходімо в кафе! *(Listen, let's go to a cafe!)*
+> **Анна:** Добре, йди, я зараз. *(Okay, go, I'll be there in a minute.)*
+> **Максим:** Подивись, яка гарна погода! *(Look, what beautiful weather!)*
+> **Анна:** Так! Сідай тут. Дай мені меню, будь ласка. *(Yes! Sit here. Give me the menu, please.)*
+> **Максим:** Ось, дивись. Скажи, що ти хочеш? *(Here, look. Tell me, what do you want?)*
+> **Анна:** Я хочу каву. *(I want coffee.)*
 
-Between friends, the language is quick and informal. Oleg and Maksym use words like **слухай** (listen), **подивись** (look), **дай** (give), and **скажи** (tell). There are no **-те** endings here because they are speaking to each other one-on-one using the informal "you". The grammatical goal is exactly the same as in the classroom — asking someone to act — but the register changes the shape of the verb completely.
+These informal imperatives are used between friends: **слухай** (listen), **подивись** (look), **сідай** (sit down), **дай** (give), and **скажи** (say / tell). They are directed at a single person. Here, the friends use the shortest, most direct forms of the verbs. This signals closeness and a relaxed atmosphere. 
+
+> **Сьогодні ми маємо новий урок. Уважно слухайте мене! Читайте нові слова на дошці. Пишіть їх у зошит.**
+> *(Today we have a new lesson. Listen to me carefully! Read the new words on the board. Write them in the notebook.)*
 
 ## Наказовий спосіб (The Imperative Mood)
 
-In Ukrainian grammar, this way of speaking is called the **наказовий спосіб** (imperative mood). It is the essential tool for everyday commands, requests, invitations, and warnings. For example, consider a volleyball practice where the coach gives rapid warm-up instructions to the players.
+In Ukrainian grammar, this grammatical form is the **наказовий спосіб** (imperative mood). Its primary function is giving commands, making requests, offering instructions, or extending invitations. Whenever someone needs to perform a specific action, this mood is required. It is one of the most fundamental communicative tools in the language. At the A1 level, the focus is entirely on the two most practical forms: the **ти** form and the **ви** form. The **ти** form is informal and directed at exactly one person (a friend, a family member, or a peer). The **ви** form is formal (used for someone respected, like a teacher or a stranger) or plural (used for a group of people). Choosing the correct form demonstrates an understanding of social boundaries.
 
-> **Тренер:** **Принеси м'яч! Розстав конуси!** *(Bring the ball! Set up the cones!)*
-> **Гравці:** Добре! *(Okay!)*
-> **Тренер:** **Натягни сітку! Поклади рушники на лавку! Відкрий двері!** *(Tighten the net! Put the towels on the bench! Open the doors!)*
+Direct contrast shows how it works in practice:
+*   **Читай!** (Read! — directed to a single friend, like asking a classmate to read a text message)
+*   **Читайте!** (Read! — directed to a teacher, or to a whole class of students reading from a book)
+*   **Слухай!** (Listen! — informal, used to grab a friend's attention before telling a story)
+*   **Слухайте!** (Listen! — formal or plural, used to address an audience or an elder)
 
-Whether you are instructing athletes, inviting a guest to sit, or asking a barista for a napkin, you are using this exact grammatical structure.
+Cultural perception of directness and politeness differs significantly from English. English speakers often feel that using a bare imperative sounds bossy or demanding, preferring elaborate modal verbs like "Could you possibly read this?" or "Would you mind opening the door?". In contrast, Ukrainian imperatives are normal in daily speech. They are direct but not rude. **Читай!** is simply how teachers, parents, and friends talk to each other without any negative connotation. It is honest and straightforward. To transform any direct command into a polite request, simply add the phrase **будь ласка** (please). You do not need conditional tenses or complex grammar structures to be polite in Ukraine.
+*   **Дай!** (Give! — informal) becomes **Дай, будь ласка.** (Please give.)
+*   **Дайте!** (Give! — formal/plural) becomes **Дайте, будь ласка.** (Please give.)
+*   **Відкрий!** (Open! — informal) becomes **Відкрий, будь ласка.** (Please open.)
 
-The most important rule about the **наказовий спосіб** is register awareness. Because Ukrainian distinguishes between the informal singular **ти** (you) and the formal or plural **ви** (you), your commands must match the pronoun you would naturally use for that person. If you are talking to someone you call **ти**, you use the short informal command. If you are addressing a group of people, or someone you address respectfully as **ви**, you must use the formal command form. Mixing these up can sound confusing or inappropriately overly familiar.
+The social nuance of tone and addressing people is also critical. Adding a person's name combined with a gentle tone makes an imperative sound friendly and warm rather than bossy. The vocative case works perfectly here to soften the delivery.
+*   **Олено, прочитай, будь ласка.** (Olena, please read.)
+*   **Пане Іване, дайте меню.** (Mr. Ivan, give the menu.)
+*   **Тарасе, скажи мені.** (Taras, tell me.)
 
-:::tip
-When you are unsure which form to use, think about the pronoun. If you would call the person **ви**, always use the **-те** or **-іть** ending on the verb. If you would call them **ти**, use the shorter form.
-:::
+> **Мама готує обід. Вона каже: "Максиме, дай сіль, будь ласка. Сядь за стіл. Їж суп!" Син слухає маму.**
+> *(Mom is making lunch. She says: "Maksym, give the salt, please. Sit at the table. Eat the soup!" The son listens to mom.)*
 
-Many English speakers worry that giving a direct command sounds abrupt. In Ukrainian, direct imperatives are completely normal and natural in daily speech. Saying **Читай!** (Read!) is not inherently aggressive; it is simply how teachers, parents, and friends communicate. However, if you want to ensure your request is perfectly polite, simply add the magic phrase **будь ласка** (please). Adding **будь ласка** instantly transforms any direct command into a standard, polite request.
-
-*   **Дай!** (Give!) becomes **Дай, будь ласка.** (Please give.)
-*   **Скажіть!** (Say/Tell! — formal) becomes **Скажіть, будь ласка.** (Please tell.)
-
-Another excellent way to soften a request and make it sound friendly or respectful is by using the person's name or title. When you call out to someone, you use the vocative case for their name. Combining this with the imperative mood creates a warm, natural sentence.
-
-*   **Олено, читай, будь ласка.** (Olena, please read.)
-*   **Пане Іване, читайте, будь ласка.** (Mr. Ivan, please read.)
-
-<!-- INJECT_ACTIVITY: group-sort-imperative-register -->
+<!-- INJECT_ACTIVITY: quiz-imperative-choice -->
 
 ## Як утворити? (How to Form It)
 
-To create the informal **ти** form, we look at the verb's infinitive. For many common verbs belonging to Group I that end in **-ати**, the rule is wonderfully simple. You remove the **-ти** ending to find the stem, and then you add the letter **-й**. This creates a crisp, one- or two-syllable command.
+Forming the **ти** (informal singular) imperative for Group I (-ати) verbs is highly systematic. These verbs are extremely common. Drop the infinitive ending and add the letter **-й**. The resulting word is usually very easy to pronounce.
+*   **читати** (to read) → **читай**
+*   **слухати** (to listen) → **слухай**
+*   **думати** (to think) → **думай**
+*   **знати** (to know) → **знай**
 
-*   **читати** (to read) → **читай** (read!)
-*   **слухати** (to listen) → **слухай** (listen!)
-*   **співати** (to sing) → **співай** (sing!)
-*   **писати** (to write) → **пиши** (write!)
+For verbs like **писати** (to write), there is a stem change and the ending is **-и**. The sound changes completely.
+*   **писати** (to write) → **пиши**
+*   **казати** (to say) → **кажи**
 
-For verbs in Group II, which often end in **-ити**, the process is slightly different. Instead of adding a completely new sound, you usually drop the final infinitive ending and are left with a stem ending in **-и**. The stress often plays a key role here, landing clearly on that final vowel to give the command its punchy rhythm.
+This pattern creates short, punchy, one- or two-syllable words that are very easy to use in rapid conversation. They propel the dialogue forward.
 
-*   **говорити** (to speak) → **говори** (speak!)
-*   **ходити** (to go/walk) → **ходи** (go!)
-*   **сидіти** (to sit) → **сиди** (sit!)
-*   **дивитися** (to look) → **дивись** (look!)
+The **ти** form for Group II (-ити) verbs often takes the ending **-и** or a soft sign **-ь**, depending on the stress and the final consonant. It is important to pay attention to where the stress falls.
+*   **говорити** (to speak) → **говори**
+*   **дивитися** (to look / watch) → **дивись** (the **-ся** ending shortens to **-сь**)
+*   **ходити** (to walk / go) → **ходи**
+*   **робити** (to do / make) → **роби**
 
-Because the imperative is used so frequently in real life, some of the most essential verbs have irregular or slightly shortened forms that every A1 learner needs. These are words you will hear constantly, so it is best to simply memorize them as core vocabulary items. Notice how short and direct they are.
+Some extremely high-frequency irregular verbs must simply be memorized. They appear constantly in daily life, so learning them immediately will drastically improve conversational skills:
+*   **дати** (to give) → **дай**
+*   **сказати** (to say / tell) → **скажи**
+*   **їсти** (to eat) → **їж**
+*   **іти** (to go) → **іди**
 
-*   **дати** (to give) → **дай** (give!)
-*   **сказати** (to say/tell) → **скажи** (tell!)
-*   **їсти** (to eat) → **їж** (eat!)
-*   **іти** (to go) → **іди** (go!)
-*   **відкрити** (to open) → **відкрий** (open!)
+<!-- INJECT_ACTIVITY: group-sort-forms -->
 
-:::caution
-Be careful with the word **сказати** (to say). The informal command is **скажи**, not "сказай". Many high-frequency verbs have these slight irregularities, so it is best to memorize them early.
-:::
+Forming the **ви** (formal or plural) imperative requires a brilliantly simple step. Add the ending **-те** to the established **ти** form. This is one of the most reliable rules in the language.
+*   **читай** → **читайте**
+*   **слухай** → **слухайте**
+*   **дай** → **дайте**
+*   **знай** → **знайте**
 
-Once you know the informal **ти** form, creating the formal or plural **ви** form for all verbs is incredibly easy. There is a universal rule: you simply take the **ти** form and add the suffix **-те**. If the informal form ends in the vowel **-и**, the spelling sometimes shifts slightly to **-іть** to accommodate the stress, but the concept remains exactly the same.
+A phonetic shift is required for certain verbs. When the **ти** form ends in **-и** or a consonant (like **пиши**, **сиди**, **скажи**), the **ви** form takes the ending **-іть** (instead of "-ить"), and the stress shifts to this new ending. The vowel sound becomes softer and higher.
+*   **пиши** → **пишіть**
+*   **дивись** → **дивіться** (the soft sign drops before the new ending)
+*   **скажи** → **скажіть**
+*   **іди** → **ідіть**
+*   **говори** → **говоріть**
 
-*   **читай** + **те** = **читайте** (read! — formal/plural)
-*   **говори** + **те** = **говоріть** (speak! — formal/plural)
-*   **дай** + **те** = **дайте** (give! — formal/plural)
-*   **пиши** + **те** = **пишіть** (write! — formal/plural)
+To see this in action, observe a sports scenario where a coach is giving quick, direct instructions to the team:
+> **Тренер каже: "Принеси м'яч! Розстав конуси! Натягни сітку! Поклади рушники на лавку! Відкрий двері!" Гравці швидко працюють.**
+> *(The coach says: "Bring the ball! Set up the cones! Stretch the net! Put the towels on the bench! Open the doors!" The players work quickly.)*
 
-<!-- INJECT_ACTIVITY: fill-in-imperative-formation -->
-<!-- INJECT_ACTIVITY: quiz-polite-choice -->
+<!-- INJECT_ACTIVITY: fill-in-imperative-forms -->
+<!-- INJECT_ACTIVITY: fill-in-polite-requests -->
 
 ## Підсумок — Summary
 
-Mastering the **наказовий спосіб** unlocks your ability to actively participate in Ukrainian life. You can now ask for help, offer things to friends, and follow directions in a classroom. To help you memorize the most critical patterns, here is a comprehensive table of the essential imperatives for daily life. Review these forms until they become a natural reflex.
+Essential imperatives for daily life are summarized in this comprehensive table. This includes the core vocabulary needed to interact confidently in Ukrainian. Memorizing these ten verbs will unlock hundreds of new conversational possibilities.
 
-| Infinitive | Ти | Ви | Meaning |
+| Infinitive | Ти (Informal) | Ви (Formal/Plural) | English Meaning |
 | :--- | :--- | :--- | :--- |
-| **читати** | **читай** | **читайте** | read |
-| **писати** | **пиши** | **пишіть** | write |
-| **слухати** | **слухай** | **слухайте** | listen |
-| **дивитися** | **дивись** | **дивіться** | look |
-| **говорити** | **говори** | **говоріть** | speak |
-| **іти** | **іди** | **ідіть** | go |
-| **дати** | **дай** | **дайте** | give |
-| **сказати** | **скажи** | **скажіть** | say/tell |
-| **сісти** | **сядь** | **сядьте** | sit down |
-| **відкрити** | **відкрий** | **відкрийте** | open |
+| **читати** | читай | читайте | read |
+| **писати** | пиши | пишіть | write |
+| **слухати** | слухай | слухайте | listen |
+| **дивитися** | дивись | дивіться | look / watch |
+| **говорити** | говори | говоріть | speak |
+| **іти** | іди | ідіть | go |
+| **дати** | дай | дайте | give |
+| **сказати** | скажи | скажіть | say / tell |
+| **сісти** | сядь | сядьте | sit down |
+| **відкрити** | відкрий | відкрийте | open |
 
-This table covers the most frequent actions you will need to request or instruct others to perform. Practice reading both the singular and plural forms out loud to build your confidence.
+Review this vocabulary frequently. The best way to learn these forms is to use them aloud. Imagine speaking to a friend, and then imagine speaking to a teacher. Test your understanding with this quick Q&A recap. Think about the answers before reading them.
 
-Before you move on to the next module, take a moment for a practical self-check. Imagine yourself in the following real-world situations and test your ability to apply the rules.
+**Q: How do you tell a friend to look at something?**
+A: **Дивись!**
 
-*   How do you ask a close friend to "look" at something interesting? You use the short informal form: **Дивись!**
-*   How do you instruct a group of people to "listen" to your announcement? You need the plural form: **Слухайте!**
-*   What is the single most important word that makes any direct command perfectly polite? The magic phrase is: **Будь ласка.**
-*   How do you say "Please say" or "Please tell" to your boss or a stranger? You combine the formal verb with the polite marker: **Скажіть, будь ласка.**
+**Q: How do you politely ask a teacher or a stranger to give you a menu?**
+A: **Дайте, будь ласка, меню.**
 
-Remember, the goal is not to memorize grammar rules in isolation, but to communicate effectively. Keep practicing these core verbs, always consider who you are speaking to, and never hesitate to add a polite "please" to your requests. The imperative mood is a powerful tool that will make your Ukrainian sound much more natural and engaging.
+**Q: How do you tell a group of friends to sit down?**
+A: **Сядьте!**
 
-<!-- INJECT_ACTIVITY: fill-in-contextual-names -->
+**Q: What phrase should you always add to make an imperative command sound like a polite request?**
+A: **Будь ласка.**
 
+**Q: How do you command a friend to say something?**
+A: **Скажи!**
+
+> **Вчитель каже: "Закрийте підручники. Ідіть додому. Відпочивайте! До побачення!" Студенти кажуть: "Дякуємо! До побачення!"**
+> *(The teacher says: "Close the textbooks. Go home. Rest! Goodbye!" The students say: "Thank you! Goodbye!")*
 </module_content>
 
 ---
@@ -223,48 +269,68 @@ version: "1.0"
 module: please-do-this
 level: a1
 
+# NOTE — these are SHAPE examples. The real targets are at the top of this prompt
+# (10 total / 4–6 inline / 6–9 workbook,
+# 6+ items per activity). The shapes below are TRUNCATED for readability;
+# YOUR output MUST hit those minimums.
+
 inline:
   - id: marker-id-here        # MUST match an <!-- INJECT_ACTIVITY: ... --> marker
     type: quiz                 # activity type
     instruction: "Оберіть правильний варіант"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - question: "_____ стіл"
-        options: ["мій", "моя", "моє"]
+        options: ["мій", "моя", "моє", "мої"]
         correct: 0             # 0-based index
+      - question: "Це ____ книга."
+        options: ["мій", "моя", "моє", "мої"]
+        correct: 1
+      # ... add at least 6 items total — never stop at 1-2
 
   - id: another-marker-id
     type: fill-in
     instruction: "Вставте правильне слово"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - sentence: "Це ____ кімната."
         answer: "моя"
         options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ вікно."
+        answer: "моє"
+        options: ["мій", "моя", "моє"]
+      # ... ≥ 6 items total
 
 workbook:
-  - type: match-up
+  - id: match-up-vocab
+    type: match-up
     instruction: "З'єднайте пари"
-    pairs:
+    pairs:                     # ← real output: ≥ 6 pairs
       - left: "стіл"
         right: "він"
       - left: "книга"
         right: "вона"
       - left: "вікно"
         right: "воно"
+      # ... ≥ 6 pairs total
 
-  - type: group-sort
+  - id: group-sort-gender
+    type: group-sort
     instruction: "Розподіліть слова за категоріями"
     groups:
-      - label: "Category A"
-        items: ["word1", "word2"]
-      - label: "Category B"
-        items: ["word3", "word4"]
+      - label: "Чоловічий рід"
+        items: ["стіл", "олівець", "будинок"]   # ≥ 3 items per group
+      - label: "Жіночий рід"
+        items: ["книга", "ручка", "школа"]
+      - label: "Середній рід"
+        items: ["вікно", "море", "молоко"]
 
-  - type: true-false
+  - id: true-false-grammar
+    type: true-false
     instruction: "Правда чи ні?"
-    items:
-      - statement: "Statement here"
-        correct: true
-        explanation: "Why it's true"
+    items:                     # ← real output: ≥ 6 items
+      - statement: "«Книга» — це чоловічий рід."
+        correct: false
+        explanation: "Книга закінчується на -а, отже жіночий рід."
+      # ... ≥ 6 items total
 
   - type: error-correction
     instruction: "Виправте помилку"
@@ -335,7 +401,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -408,10 +474,15 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 ## Quality Rules
 
-**ITEM COUNT MINIMUMS (non-negotiable):**
-- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
-- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
-- If you can't think of enough items, add more examples from the module's vocabulary and content.
+**ACTIVITY COUNT MINIMUMS (non-negotiable, audit-enforced):**
+- **Total: 10 activities.** Inline: 4–6. Workbook: 6–9. The audit gate FAILS the module if you ship fewer.
+- **Type diversity: workbook MUST cover ≥5 distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
+- **Match the inline markers exactly.** Every `<!-- INJECT_ACTIVITY: id -->` marker in the prose needs a matching inline activity with that exact id. Skipping markers means the lesson tab is broken.
+
+**ITEM COUNT MINIMUMS (non-negotiable, per-activity):**
+- **Default minimum: 6 items per activity.** Quiz, fill-in, match-up, true-false, anagram, error-correction, translate, cloze, mark-the-words, divide-words, count-syllables, odd-one-out, group-sort categories: all ≥ 6.
+- **Lower minimums for specific types only:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items, essay-response/critical-analysis = 1 prompt.
+- If you can't think of enough items, add more examples from the module's vocabulary and content. NEVER ship a 1-item or 2-item activity unless its type cap explicitly allows it.
 - **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
 - **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
@@ -518,6 +589,27 @@ IMPORTANT: After using tools, output your COMPLETE module content as plain text.
 1. Run `verify_words` on all Ukrainian words in your exercises — every word must exist in VESUM
 2. Run `query_cefr_level` on any word you're unsure about — it must be a1-appropriate
 3. For fill-in answers and distractors, verify the exact form (case, number, gender) with `verify_lemma`
+
+---
+
+## ⚠️ MANDATORY FINAL CHECKLIST — verify before emitting YAML
+
+Walk through this checklist explicitly before you start emitting. If ANY box is unchecked, fix it FIRST.
+
+- [ ] My output has **at least 4** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
+- [ ] My output has **at least 6** workbook activities.
+- [ ] **Total ≥ 10.**
+- [ ] **Every** activity has **at least 6** items, pairs, or statements (except types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3, essay-response=1).
+- [ ] The module (inline + workbook combined) uses **at least 0 distinct activity types** (or 4+ when 0 = 0 and the workbook size allows it). I am NOT shipping a wall of quizzes.
+- [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
+- [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
+- [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+- [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+- [ ] My inline count is between 4 and 6. I did NOT create more injection markers than 6.
+- [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
+- [ ] At B1+, all instructions are in Ukrainian (no English fallback).
+
+If you cannot tick all of these, REGENERATE the activities BEFORE outputting. Shipping under-spec means the build rejects you and the heal loop has to redo your work — wasting compute.
 
 ---
 

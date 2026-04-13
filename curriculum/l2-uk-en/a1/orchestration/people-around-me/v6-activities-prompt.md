@@ -1,4 +1,4 @@
-<!-- version: 1.1.0 | updated: 2026-03-31 -->
+<!-- version: 1.2.0 | updated: 2026-04-12 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -11,6 +11,35 @@ Generate an `activities/people-around-me.yaml` file for module **40: People Arou
 
 ---
 
+## ⚠️ HARD COUNT TARGETS — READ TWICE
+
+These are the binding numerical contracts for THIS module. The audit will FAIL if you fall short.
+
+| Bucket | Min | Max | Notes |
+|---|---|---|---|
+| Total activities | 10 | 10+ | inline + workbook combined |
+| Inline (lesson tab) | 4 | 6 | one per `<!-- INJECT_ACTIVITY -->` marker, see below |
+| Workbook (Зошит tab) | 6 | 9 | extended practice |
+| Items per activity | 6 | — | each activity must have at least 6 items (unless its type cap is lower — see Activity Type Reference below) |
+
+**You MUST ship at least 4 inline activities AND at least 6 workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+
+**Type diversity is required.** The module (inline + workbook combined) MUST use at least **0** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level. (If `0` is `0`, the audit profile for this level does not enforce type diversity — but variety still produces a better lesson, so aim for 4+ types when the workbook allows it.)
+
+---
+
+## Allowed types for THIS level
+
+- **Inline (lesson) types:** image-to-letter, letter-grid, match-up, watch-and-repeat, quiz, true-false, fill-in, classify
+- **Inline priority (preferred):** image-to-letter, match-up, fill-in, quiz, watch-and-repeat
+- **Workbook types:** fill-in, match-up, group-sort, anagram, unjumble, quiz, true-false, classify, divide-words, count-syllables, pick-syllables, observe, phrase-table, odd-one-out
+- **Workbook priority (preferred):** fill-in, match-up, group-sort, anagram, unjumble
+- **FORBIDDEN at this level:** cloze, error-correction, mark-the-words, translate, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, highlight-morphemes, grammar-identify, select
+
+Pick from the allowed list. Lean heavily on the priority lists. Do not use any forbidden type — the build will reject it.
+
+---
+
 ## Inline vs Workbook Split
 
 Activities have two placement categories:
@@ -19,7 +48,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Rule of thumb:** inline = 2-3 quick checks after key teaching points. Workbook = 4-8 deeper practice exercises covering the full topic.
+**Rule of thumb:** inline = 4–6 quick checks after key teaching points. Workbook = 6–9 deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
 
 ---
 
@@ -27,10 +56,10 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: sort-animate-inanimate -->`
-- `<!-- INJECT_ACTIVITY: fill-in-animate-transform -->`
-- `<!-- INJECT_ACTIVITY: quiz-ending-choice -->`
-- `<!-- INJECT_ACTIVITY: fill-in-dialogue-logic -->`
+- `<!-- INJECT_ACTIVITY: group-sort-animate-inanimate -->`
+- `<!-- INJECT_ACTIVITY: fill-in-accusative-forms -->`
+- `<!-- INJECT_ACTIVITY: quiz-choose-correct-accusative -->`
+- `<!-- INJECT_ACTIVITY: fill-in-dialogue-completion -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -159,146 +188,133 @@ required:
 <module_content>
 ## Діалоги (Dialogues)
 
-We have spent recent modules learning how to buy food, order drinks, and talk about objects in our daily environment. The Ukrainian language treats objects in a specific way. However, our world is mostly filled with people. We interact with family members, meet friends, and speak to professionals. When we talk about people rather than objects, Ukrainian grammar shifts its focus. The rules change because the language makes a sharp distinction between a living person and an inanimate object. We must now learn how to name the people around us when they are the target of our actions.
+We interact with people every day in our lives. When we talk about the people around us—identifying family members, mentioning a **друг** (friend, m) or **подруга** (friend, f), or interacting with professionals—we often use them as the direct object of our sentences. In Ukrainian, this means applying the accusative case for people. This module explores how to correctly refer to people when you see, know, or look for them.
 
-Read this conversation between a bride and her friend at a wedding reception. They are showing wedding photos and identifying people. Pay close attention to the word endings for people.
+«Це моя сім'я. Я дуже люблю маму і тата. У мене є брат. Ви знаєте мого брата? Він лікар. Я часто бачу брата вдома.»
+> *This is my family. I love mom and dad very much. I have a brother. Do you know my brother? He is a doctor. I often see my brother at home.*
 
-> **Друг:** Кого ти бачиш? *(Who do you see?)*
-> **Наречена:** Я бачу маму і тата. *(I see mom and dad.)*
-> **Друг:** А хто це? *(And who is this?)*
-> **Наречена:** Це мій дядько. А це тітка. *(This is my uncle. And this is the aunt.)*
-> **Друг:** Знаєш Олену? *(Do you know Olena?)*
-> **Наречена:** Так. А це мій брат. Ти знаєш мого брата? *(Yes. And this is my brother. Do you know my brother?)*
-> **Друг:** Ні, я не знаю твого брата. *(No, I do not know your brother.)*
-> **Наречена:** Ходімо! Я тебе познайомлю! *(Let's go! I will introduce you!)*
-> **Друг:** Ось наречена і наречений. *(Here is the bride and the groom.)*
+Let us look at a natural conversation. Two friends are looking at wedding photos and identifying people in them.
 
-Notice the Accusative animate forms: **маму** (feminine), **тата** (masculine), and **брата** (masculine). When the friend asks the question **Кого ти бачиш?** (Who do you see?), the bride answers with **Я бачу маму і тата** (I see mom and dad). The original dictionary words are **мама** (mom) and **тато** (dad). In previous modules, we saw that masculine objects did not change their endings. A word like **брат** (brother) is masculine. Yet, the bride asks **Ти знаєш мого брата?** (Do you know my brother?). The word **брат** changes to **брата**. The names of people change their endings because they are living beings.
+> **Наречена:** Дивись, це мої фотографії. *(Look, these are my photos.)*
+> **Друг:** Дуже гарні! **Кого ти бачиш?** *(Very beautiful! Whom do you see?)*
+> **Наречена:** **Я бачу маму і тата.** *(I see mom and dad.)*
+> **Друг:** **А хто це?** *(And who is this?)*
+> **Наречена:** **Це мій брат. Ти знаєш мого брата?** *(This is my brother. Do you know my brother?)*
+> **Друг:** **Ні, я не знаю твого брата.** *(No, I do not know your brother.)*
+> **Наречена:** **Ходімо, я тебе познайомлю!** *(Let's go, I will introduce you!)*
 
-This rule applies to all people around you, including professionals and colleagues. Read this short exchange between two colleagues at a school.
+Notice how the nouns for family members change their endings in this dialogue. In the dictionary, these nouns are **мама**, **тато**, and **брат**. However, when they become the object of the verb **бачити** (to see) or **знати** (to know), their endings must change. The noun **мама** becomes **маму**, **тато** becomes **тата**, and **брат** becomes **брата**. We call this the animate accusative form, and it is specifically used for living beings like people and animals. This is a fundamental pattern you will use when talking about your family and friends in Ukrainian.
 
-> **Колега 1:** Ти знаєш нашу вчительку? *(Do you know our teacher?)*
-> **Колега 2:** Так, я знаю Олену Петрівну. *(Yes, I know Olena Petrivna.)*
-> **Колега 1:** А нового лікаря? *(And the new doctor?)*
-> **Колега 2:** Ні, я ще не знаю лікаря. *(No, I do not know the doctor yet.)*
-> **Колега 1:** Він дуже добрий. *(He is very kind.)*
-> **Колега 1:** Я чекаю його зараз. *(I am waiting for him right now.)*
+:::note
+In Ukrainian, it is very common to refer to professionals by their titles rather than their names. Discussing a **лікар** (doctor) or **вчитель** (teacher) in the accusative case is a standard way to talk about the people who help you in your daily life.
+:::
 
-The word for a female teacher is **вчителька**. It changes to **вчительку**. The female name **Олена Петрівна** becomes **Олену Петрівну**. The masculine word for a doctor is **лікар**. It changes to **лікаря**. These animate accusative patterns occur constantly with the people around you.
+Now consider a different setting. Two colleagues at work are discussing people they know or are waiting for.
+
+> **Олена:** Привіт! **Ти знаєш нашу вчительку?** *(Hi! Do you know our teacher?)*
+> **Максим:** **Так, я знаю Олену Петрівну.** *(Yes, I know Olena Petrivna.)*
+> **Олена:** **А нового лікаря?** *(And the new doctor?)*
+> **Максим:** **Ні, я ще не знаю лікаря.** *(No, I do not know the doctor yet.)*
+> **Олена:** **Він дуже добрий. Я чекаю його зараз.** *(He is very kind. I am waiting for him now.)*
+
+In this workplace setting, we observe the same grammatical pattern applied to professions and names. The noun for a female teacher is **вчителька** (teacher, f), but here it changes to **вчительку**. The name **Олена** becomes **Олену**. The noun for a male doctor is **лікар** (doctor, m), but it transforms into **лікаря**. When the first colleague says she is waiting for him, she uses the verb **чекати** (to wait for). Just like seeing or knowing someone, waiting for a person requires this specific object form. You will use these animate accusative forms constantly when interacting with people around you, whether speaking to a **колега** (colleague, m/f), a **викладач** (lecturer, m), or a **продавець** (seller, m) in a shop.
 
 ## Кого? (Whom?)
 
-The Ukrainian language categorizes nouns into two groups based on whether they are living or not. We call these groups animate and inanimate. The Accusative case is the grammatical form we use for the direct object of an action. An object receives the action. Animate nouns represent people or animals. Inanimate nouns represent objects, concepts, or places. We learned the Accusative case for inanimate objects in Module 37.
+In the Ukrainian language, the accusative case draws a very strict boundary between inanimate objects and animate objects. Inanimate objects are lifeless things, such as food, furniture, or places. Animate objects are living beings, such as people and animals. This distinction is absolutely critical for masculine nouns. When a masculine inanimate noun is the direct object of a sentence, its ending does not change at all. For example, if you say «Я їм хліб» (I am eating bread), the masculine noun stays exactly the same as in the dictionary. However, when a masculine animate noun is the object, its ending must change. If you say «Я бачу брата» (I see a brother), the noun changes.
 
-You already know how to talk about food. You say **Я їм хліб** (I eat what? bread). For inanimate nouns, there is no change for the masculine. The masculine objects like **хліб** (bread) kept their dictionary form. Contrast those food items with a person. When you see your brother, you say **Я бачу брата** (I see whom? the brother). For animate nouns, the masculine changes! The masculine person changes, while the masculine object stays exactly the same.
+«Я йду в магазин. Я купую хліб і воду. Там я бачу сусіда. Я добре знаю сусіда. Ми часто говоримо.»
+> *I am going to the store. I am buying bread and water. There I see a neighbor. I know the neighbor well. We often talk.*
 
-To know which rule to follow, we rely on question words. The question word is the key. The word **що?** (what?) indicates inanimate things, and the masculine stays the same. When you hold an apple, you ask **Що це?** (What is this?). The word **кого?** (whom?) indicates animate people or animals, and the masculine changes. When you see your colleague, the correct question is **Кого ти бачиш?** (Whom do you see?). Your choice of question word dictates the ending of the masculine noun.
+To understand when to change the ending of a masculine noun, you must look at the question words that drive the sentence. In Ukrainian, the accusative case uses two different question words. For inanimate objects, the question word is **що?** (what?). When you ask **що?**, the inanimate masculine noun remains unchanged. For animate objects, the question word is **кого?** (whom?). This question word is the key trigger. When a verb answers the question **кого?**, it activates the animate rule. This explicitly dictates that masculine nouns will change their endings. This is why inanimate masculine nouns remain identical to their dictionary forms, while animate masculine nouns require a new grammatical suffix to show they are receiving the action.
 
-:::note
-**The Grammar Question Test**
-Ukrainian grammar is deeply connected to question words. When you learn a new grammatical case, memorize its question word. Asking **кого?** (whom?) instantly reminds your brain to apply the animate rule.
+:::tip
+A helpful mnemonic for remembering the animate question word: **Кого?** (whom?) is used for a **колега** (colleague) or a **кіт** (cat), both of which are animate. The word **Що?** (what?) is used for inanimate things.
 :::
 
-Ukrainian children learn this logic early in Grade 4. Their teachers use a specific mnemonic device based on the school approach. The children memorize the phrase: **Бачу кого? що?** (I see whom? what?). They ask both questions together. By asking these two questions simultaneously, students learn to identify the two patterns. If the noun is an object, the answer to **що?** (what?) confirms there is no change. The question **кого?** triggers the animate rule. The masculine animate in the Accusative case equals the Genitive form.
+In Ukrainian schools, children learn this grammar by memorizing the double question «Бачу кого? що?» (I see whom? what?). These two questions establish two separate patterns. The question **кого?** triggers the animate rule, which introduces a fascinating shortcut in Ukrainian grammar: for masculine animate nouns, the accusative form simply borrows the genitive case ending. You take the genitive form you already know and use it as the direct object.
 
-We have a reliable pattern for these masculine people. For a masculine person, we use the exact same ending we will later use to show possession. This is the key distinction for L2 learners. The object receives the action, and the ending marks the object as a living person. Observe how the words change:
+*   **друг** → **друга**: «Я знаю друга.» (I know a friend.)
+*   **тато** → **тата**: «Я люблю тата.» (I love dad.)
+*   **лікар** → **лікаря**: «Я чекаю лікаря.» (I am waiting for the doctor.)
+*   **сусід** (neighbor, m) → **сусіда**: «Я бачу сусіда.» (I see the neighbor.)
 
-*   **брат** → **брата** (brother)
-*   **друг** → **друга** (friend)
-*   **тато** → **тата** (dad)
-*   **лікар** → **лікаря** (doctor)
+This borrowed ending is exactly why the animate versus inanimate distinction matters so much. It forces masculine nouns representing people to change their shape, ensuring that the listener clearly understands who is receiving the action.
 
-This is why animate accusative matters — it changes masculine nouns.
-
-<!-- INJECT_ACTIVITY: sort-animate-inanimate -->
+<!-- INJECT_ACTIVITY: group-sort-animate-inanimate -->
 
 ## Знахідний відмінок — живе (Accusative Animate)
 
-Feminine animate nouns follow the same simple rule as inanimate objects. The ending **-а** changes to **-у**. The ending **-я** changes to **-ю**. There is no surprise here — it uses the same ending as Module 37, where **кава** changes to **каву**. This exact pattern applies to the women and girls in your life. The feminine animate is identical to the feminine inanimate.
+Let us first examine the rules for feminine animate nouns. There is excellent news for learners: feminine nouns follow the exact same accusative pattern regardless of whether they are animate or inanimate. Just like the inanimate word **кава** (coffee) becomes **каву**, the endings for feminine people change from **-а** to **-у** and from **-я** to **-ю**. There are no surprises or special rules here.
 
-*   **мама** → **маму** (mom)
-*   **сестра** → **сестру** (sister)
-*   **Олена** → **Олену** (Olena)
-*   **подруга** → **подругу** (female friend)
-*   **Я бачу маму.** (I see mom.)
-*   **Я знаю сестру.** (I know the sister.)
-*   **Я чекаю Олену.** (I wait for Olena.)
-*   **Я люблю подругу.** (I love the female friend.)
+*   **мама** → **маму**: «Я бачу маму.» (I see mom.)
+*   **сестра** (sister) → **сестру**: «Я знаю сестру.» (I know the sister.)
+*   **Олена** → **Олену**: «Я чекаю Олену.» (I am waiting for Olena.)
+*   **подруга** → **подругу**: «Я люблю подругу.» (I love the friend.)
 
-Masculine animate nouns introduce THE new rule. The Accusative case equals the Genitive case. The pattern dictates that masculine animate nouns in the Accusative take the genitive ending. Let us observe the pattern with high-frequency family words and social nouns. The noun **брат** (brother) becomes **брата**. The word **тато** (dad) is masculine, even though it ends in **-о**. It drops the **-о** and takes the **-а** ending to become **тата**. The noun **сусід** (male neighbor) becomes **сусіда**. Compare an inanimate object with an animate person. You say **Я бачу хліб** (I see bread). This is inanimate — no change. But you say **Я бачу брата** (I see the brother). This is animate — it changes. The living brother requires the change.
+«Я чекаю друга на вулиці. Мій друг — вчитель. Я бачу друга здалеку. Він теж чекає колегу. Ми бачимо колегу разом.»
+> *I am waiting for a friend on the street. My friend is a teacher. I see the friend from afar. He is also waiting for a colleague. We see the colleague together.*
 
-*   **брат** → **брата** (brother)
-*   **друг** → **друга** (male friend)
-*   **тато** → **тата** (dad)
-*   **сусід** → **сусіда** (male neighbor)
-*   **Я бачу брата.** (I see the brother.)
-*   **Я знаю друга.** (I know the friend.)
-*   **Я люблю тата.** (I love dad.)
-*   **Я бачу сусіда.** (I see the neighbor.)
+Now we must address the critical new rule for masculine animate nouns. As established earlier, the accusative form for masculine living beings is absolutely identical to the genitive form. Instead of remaining unchanged like inanimate objects, these masculine nouns take the **-а** or **-я** ending. Here are clear, everyday examples of this pattern in action:
+
+*   **брат** → **брата**: «Я бачу брата.» (I see a brother.)
+*   **друг** → **друга**: «Я шукаю друга.» (I am looking for a friend.)
+*   **тато** → **тата**: «Я люблю тата.» (I love dad.)
+*   **лікар** → **лікаря**: «Я чекаю лікаря.» (I am waiting for the doctor.)
+*   **вчитель** (teacher, m) → **вчителя**: «Я знаю вчителя.» (I know the teacher.)
+*   **сусід** → **сусіда**: «Я бачу сусіда.» (I see the neighbor.)
 
 :::caution
-**Don't Forget the Men!**
-English speakers easily remember to change feminine words like **мама** to **маму**. However, learners frequently forget to change masculine words because masculine objects like **телефон** do not change. Always pause and ask: "Is this masculine noun a living person?" If yes, add **-а** or **-я**.
+English speakers often forget to change the endings of masculine names and professions because English does not do this. Always pause and ask yourself: "Is this a living person?" If the answer is yes, you must use the animate accusative form (the **-а** or **-я** ending) when they are the object of the sentence.
 :::
 
-Some masculine nouns end in a soft consonant or the suffix **-ар**. These words require a soft vowel ending. They take the **-я** ending instead of the hard **-а**. Many professions fall into this category.
+To solidify this concept, let us summarize the masculine paradigm by contrasting the animate and inanimate forms side-by-side. Seeing them together makes the grammatical difference perfectly clear.
 
-*   **лікар** → **лікаря** (doctor)
-*   **вчитель** → **вчителя** (male teacher)
-*   **продавець** → **продавця** (male seller)
-*   **колега** → **колегу** (colleague)
-*   **Я чекаю лікаря.** (I wait for the doctor.)
-*   **Я знаю вчителя.** (I know the teacher.)
-*   **Я бачу продавця.** (I see the seller.)
-*   **Я знаю колегу.** (I know the colleague.)
+*   Inanimate (stays the same): «Я бачу стіл.» (I see a table.)
+*   Animate (gets the **-а** ending): «Я бачу брата.» (I see a brother.)
+*   Inanimate (stays the same): «Я бачу хліб.» (I see bread.)
+*   Animate (gets the **-а** ending): «Я бачу сусіда.» (I see a neighbor.)
 
-<!-- INJECT_ACTIVITY: fill-in-animate-transform -->
+This structural difference is absolutely essential for natural Ukrainian speech. Whenever you interact with people or talk about the individuals in your daily life, you must apply this animate accusative pattern to ensure your sentences are correct.
+
+<!-- INJECT_ACTIVITY: fill-in-accusative-forms -->
+<!-- INJECT_ACTIVITY: quiz-choose-correct-accusative -->
 
 ## Підсумок — Summary
 
-The complete picture of the Accusative case organizes these rules into a clear visual breakdown. You now have the tools to talk about objects and people. This Accusative summary provides the full picture.
+We can now construct a comprehensive summary of the accusative case for both animate and inanimate nouns. This chart presents the full picture of how word endings change depending on what you are talking about.
 
-| | Inanimate (що?) | Animate (кого?) |
+| Рід (Gender) | Inanimate (**що?**) | Animate (**кого?**) |
 | :--- | :--- | :--- |
-| **Masculine** | = nominative (**хліб**) | = genitive (**брата**) |
-| **Feminine** | **-а** → **-у** (**каву**) | **-а** → **-у** (**маму**) |
-| **Neuter** | = nominative (**молоко**) | (rare at A1) |
+| Чоловічий (Masculine) | = nominative (**хліб**) | = genitive (**брата**) |
+| Жіночий (Feminine) | **-а** → **-у** (**каву**) | **-а** → **-у** (**маму**) |
+| Середній (Neuter) | = nominative (**молоко**) | (rare at A1) |
 
-The feminine nouns always change the final vowel. They change **-а** to **-у** and **-я** to **-ю**. The masculine nouns remain unchanged for inanimate objects. They adopt the genitive ending for living people. The neuter nouns do not change.
+As the chart illustrates, the masculine inanimate noun answers the question **що?** and equals the nominative form. The masculine animate noun answers the question **кого?** and equals the genitive form. The feminine noun always changes its ending from **-а** to **-у**, regardless of animacy. Neuter animate nouns exist but are quite rare at the A1 level.
 
-Certain verbs appear constantly in social interactions. These key verbs with animate accusative require the change to identify the target of the action. You must memorize these words.
+«Це моя велика родина. Я дуже люблю дідуся і бабусю. Я часто бачу сестру. Сьогодні я чекаю брата і тата. Ми дуже любимо гостей.»
+> *This is my large family. I love grandfather and grandmother very much. I often see my sister. Today I am waiting for my brother and dad. We love guests very much.*
 
-*   **бачити** (to see)
-*   **знати** (to know)
-*   **любити** (to love)
-*   **чекати** (to wait for)
-*   **шукати** (to look for)
+There are several high-frequency verbs at the A1 level that frequently trigger this animate accusative case. When you use these verbs with people, you must apply the animate endings.
 
-These verbs connect you to the people around you. You use them daily. Note that the verb **чекати** (to wait) often uses the preposition **на** in natural speech. At the A1 level, we focus on the direct object pattern. We say **Я чекаю маму** (I wait for mom). We say **Я шукаю сусіда** (I look for the neighbor).
+*   **бачити** (to see): «Я бачу викладача.» (I see the lecturer.)
+*   **знати** (to know): «Я знаю студента.» (I know the student.)
+*   **любити** (to love): «Я люблю тата.» (I love dad.)
+*   **чекати** (to wait for): «Я чекаю лікаря.» (I am waiting for the doctor.)
+*   **шукати** (to look for): «Я шукаю подругу.» (I am looking for a friend.)
 
-You can practice these patterns with simple questions and answers. Read the questions and notice the noun endings in the responses.
+Mastering these verbs will allow you to describe your interactions with the people around you accurately. Before moving to the exercises, perform a quick self-check to ensure you understand the core concepts.
 
-*   **Кого ти любиш?** (Whom do you love?)
-    **Я люблю маму і тата.** (I love mom and dad.)
-*   **Кого ти чекаєш?** (Whom are you waiting for?)
-    **Я чекаю друга.** (I am waiting for a friend.)
-*   **Кого ти знаєш у школі?** (Whom do you know at school?)
-    **Я знаю вчителя.** (I know the teacher.)
-*   **Кого ти бачиш?** (Whom do you see?)
-    **Я бачу покупця.** (I see the buyer.)
-*   **Кого ти шукаєш?** (Whom are you looking for?)
-    **Я шукаю викладача.** (I am looking for the lecturer.)
+*   **Q: How do you say "I see mom"?**
+*   A: «Я бачу маму» (**мама** → **маму**).
+*   **Q: How do you say "I see brother"?**
+*   A: «Я бачу брата» (**брат** → **брата**).
+*   **Q: What is the question word for people in the accusative?**
+*   A: **Кого?**
 
-:::tip
-**Colleagues and Professions**
-The word **колега** (colleague) looks feminine but can describe a man or a woman. Because it ends in **-а**, you always change it to **колегу**, regardless of the person's gender.
-:::
+These simple checks confirm that you are ready to apply the animate accusative rules in practice.
 
-Check your understanding of the pattern. Let us complete this Self-check: **Я бачу ___**. For the word **мама**, the correct form is **маму**. For the word **брат**, the correct form is **брата**. Remember the core rule. If the noun is a person and it is masculine, you must add the ending. The action transfers directly to the living person.
-
-<!-- INJECT_ACTIVITY: quiz-ending-choice -->
-<!-- INJECT_ACTIVITY: fill-in-dialogue-logic -->
-
+<!-- INJECT_ACTIVITY: fill-in-dialogue-completion -->
 </module_content>
 
 ---
@@ -312,48 +328,68 @@ version: "1.0"
 module: people-around-me
 level: a1
 
+# NOTE — these are SHAPE examples. The real targets are at the top of this prompt
+# (10 total / 4–6 inline / 6–9 workbook,
+# 6+ items per activity). The shapes below are TRUNCATED for readability;
+# YOUR output MUST hit those minimums.
+
 inline:
   - id: marker-id-here        # MUST match an <!-- INJECT_ACTIVITY: ... --> marker
     type: quiz                 # activity type
     instruction: "Оберіть правильний варіант"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - question: "_____ стіл"
-        options: ["мій", "моя", "моє"]
+        options: ["мій", "моя", "моє", "мої"]
         correct: 0             # 0-based index
+      - question: "Це ____ книга."
+        options: ["мій", "моя", "моє", "мої"]
+        correct: 1
+      # ... add at least 6 items total — never stop at 1-2
 
   - id: another-marker-id
     type: fill-in
     instruction: "Вставте правильне слово"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - sentence: "Це ____ кімната."
         answer: "моя"
         options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ вікно."
+        answer: "моє"
+        options: ["мій", "моя", "моє"]
+      # ... ≥ 6 items total
 
 workbook:
-  - type: match-up
+  - id: match-up-vocab
+    type: match-up
     instruction: "З'єднайте пари"
-    pairs:
+    pairs:                     # ← real output: ≥ 6 pairs
       - left: "стіл"
         right: "він"
       - left: "книга"
         right: "вона"
       - left: "вікно"
         right: "воно"
+      # ... ≥ 6 pairs total
 
-  - type: group-sort
+  - id: group-sort-gender
+    type: group-sort
     instruction: "Розподіліть слова за категоріями"
     groups:
-      - label: "Category A"
-        items: ["word1", "word2"]
-      - label: "Category B"
-        items: ["word3", "word4"]
+      - label: "Чоловічий рід"
+        items: ["стіл", "олівець", "будинок"]   # ≥ 3 items per group
+      - label: "Жіночий рід"
+        items: ["книга", "ручка", "школа"]
+      - label: "Середній рід"
+        items: ["вікно", "море", "молоко"]
 
-  - type: true-false
+  - id: true-false-grammar
+    type: true-false
     instruction: "Правда чи ні?"
-    items:
-      - statement: "Statement here"
-        correct: true
-        explanation: "Why it's true"
+    items:                     # ← real output: ≥ 6 items
+      - statement: "«Книга» — це чоловічий рід."
+        correct: false
+        explanation: "Книга закінчується на -а, отже жіночий рід."
+      # ... ≥ 6 items total
 
   - type: error-correction
     instruction: "Виправте помилку"
@@ -424,7 +460,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -519,10 +555,15 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 ## Quality Rules
 
-**ITEM COUNT MINIMUMS (non-negotiable):**
-- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
-- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
-- If you can't think of enough items, add more examples from the module's vocabulary and content.
+**ACTIVITY COUNT MINIMUMS (non-negotiable, audit-enforced):**
+- **Total: 10 activities.** Inline: 4–6. Workbook: 6–9. The audit gate FAILS the module if you ship fewer.
+- **Type diversity: workbook MUST cover ≥5 distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
+- **Match the inline markers exactly.** Every `<!-- INJECT_ACTIVITY: id -->` marker in the prose needs a matching inline activity with that exact id. Skipping markers means the lesson tab is broken.
+
+**ITEM COUNT MINIMUMS (non-negotiable, per-activity):**
+- **Default minimum: 6 items per activity.** Quiz, fill-in, match-up, true-false, anagram, error-correction, translate, cloze, mark-the-words, divide-words, count-syllables, odd-one-out, group-sort categories: all ≥ 6.
+- **Lower minimums for specific types only:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items, essay-response/critical-analysis = 1 prompt.
+- If you can't think of enough items, add more examples from the module's vocabulary and content. NEVER ship a 1-item or 2-item activity unless its type cap explicitly allows it.
 - **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
 - **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
@@ -629,6 +670,27 @@ IMPORTANT: After using tools, output your COMPLETE module content as plain text.
 1. Run `verify_words` on all Ukrainian words in your exercises — every word must exist in VESUM
 2. Run `query_cefr_level` on any word you're unsure about — it must be a1-appropriate
 3. For fill-in answers and distractors, verify the exact form (case, number, gender) with `verify_lemma`
+
+---
+
+## ⚠️ MANDATORY FINAL CHECKLIST — verify before emitting YAML
+
+Walk through this checklist explicitly before you start emitting. If ANY box is unchecked, fix it FIRST.
+
+- [ ] My output has **at least 4** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
+- [ ] My output has **at least 6** workbook activities.
+- [ ] **Total ≥ 10.**
+- [ ] **Every** activity has **at least 6** items, pairs, or statements (except types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3, essay-response=1).
+- [ ] The module (inline + workbook combined) uses **at least 0 distinct activity types** (or 4+ when 0 = 0 and the workbook size allows it). I am NOT shipping a wall of quizzes.
+- [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
+- [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
+- [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+- [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+- [ ] My inline count is between 4 and 6. I did NOT create more injection markers than 6.
+- [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
+- [ ] At B1+, all instructions are in Ukrainian (no English fallback).
+
+If you cannot tick all of these, REGENERATE the activities BEFORE outputting. Shipping under-spec means the build rejects you and the heal loop has to redo your work — wasting compute.
 
 ---
 

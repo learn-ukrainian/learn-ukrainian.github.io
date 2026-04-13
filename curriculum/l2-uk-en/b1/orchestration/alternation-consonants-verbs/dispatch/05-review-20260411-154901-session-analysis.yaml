@@ -1,0 +1,38 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T13-46-e5245fa8.json
+phase: review
+prompt_chars: 61474
+response_chars: 7187
+prompt_words: 8744
+response_words: 1001
+sections:
+- name: preamble
+  start: 0
+  length: 464
+  fraction: 0.0075
+- name: plan
+  start: 464
+  length: 57781
+  fraction: 0.9399
+- name: output_spec
+  start: 58245
+  length: 3229
+  fraction: 0.0525
+large_sections:
+- plan
+directives_total: 15
+directives_covered: 12
+directives_missed:
+- kind: must
+  text: If you are not 100% certain a word/form/usage is wrong, you MUST flag it as
+    `[NEEDS RAG VERIFICATION]` instead of marking it as a definitive error.
+  covered: false
+  coverage_note: 5/17 keywords (29%)
+- kind: must
+  text: '**Before you claim a word, symbol, notation, or plan point is MISSING from
+    the content, you MUST search for it.'
+  covered: false
+  coverage_note: 5/13 keywords (38%)
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing

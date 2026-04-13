@@ -1,0 +1,49 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T19-46-5a2491f7.json
+phase: write-chunk-04
+prompt_chars: 43155
+response_chars: 4572
+prompt_words: 6058
+response_words: 757
+sections:
+- name: header
+  start: 0
+  length: 496
+  fraction: 0.0115
+- name: skeleton
+  start: 496
+  length: 1234
+  fraction: 0.0286
+- name: prior_summary
+  start: 1730
+  length: 3440
+  fraction: 0.0797
+- name: plan
+  start: 5170
+  length: 11321
+  fraction: 0.2623
+- name: wiki
+  start: 9636
+  length: 26402
+  fraction: 0.6118
+- name: output_spec
+  start: 42893
+  length: 262
+  fraction: 0.0061
+large_sections:
+- wiki
+directives_total: 15
+directives_covered: 12
+directives_missed:
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: EVERY word in the checklist below MUST appear at least once with a bold Ukrainian
+    form and English translation in a natural sentence.
+  covered: false
+  coverage_note: 4/15 keywords (27%)
+- kind: inject_activity
+  text: match-up-blanks
+  covered: false
+  coverage_note: marker missing

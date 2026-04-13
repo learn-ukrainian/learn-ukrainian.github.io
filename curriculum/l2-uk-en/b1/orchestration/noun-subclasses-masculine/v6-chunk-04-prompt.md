@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-мові для позначення фізичної або ремісничої праці. Суфікс **-тель** частіше зустрічається в книжній лексиці, а **-ник** часто означає належність до певної професійної групи. Розуміння цих нюансів робить вашу мову багатшою. Граматично всі ці іменники належать до **другої відміни** *(second declension)*. Але тут є важлива деталь: суфікс впливає на те, до якої групи належатиме слово — до **твердої групи** *(hard group)*, **м'якої групи** *(soft group)* чи **мішаної групи** *(mixed group)*. Це означає, що вони матимуть різні закінчення під час відмінювання. Ключ до розгадки їхньої граматичної поведінки лежить у правильному наголосі. Ми детально розберемо це правило в наступній частині нашого уроку. <!-- INJECT_ACTIVITY: match-up-professions --> ## Відмінювання іменників на -ар (~820 слів) Усі іменники на -ар належать до другої відміни, але вони діляться на тверду та м'яку групи. Як їх розрізняти? Головний секрет ховається у наголосі. Якщо наголос падає на суфікс і є нерухомим, це **тверда група** *(hard group)*. Також сюди належать запозичені слова з постійним наголосом на основі, наприклад, **санітар** *(orderly)* чи **ювіляр** *(jubilarian)*. Якщо ж наголос переходить на закінчення, як у слові **буквар** *(alphabet book)* — немає букваря, це **м'яка група** *(soft group)*. Так само до м'якої групи належать слова з ненаголошеним суфіксом, такі як лікар та пекар. Давайте подивимося на відмінювання в однині. Для твердої групи ми використовуємо стандартні закінчення: санітар, санітара, санітарові, санітаром. Але більшість українських професій на -ар мають ненаголошений суфікс, тому вони є м'якими. Візьмемо слово пекар. У **називному відмінку** *(nominative case)* це просто пекар. У **родовому відмінку** *(genitive case)* з'являється м'яке закінчення: немає пекаря (а не пекара). В **орудному відмінку** *(instrumental case)* ми кажемо: я працюю пекарем. Зверніть особливу увагу на родовий відмінок, адже закінчення -я є важливим маркером м'якості. У множині ця різниця стає ще помітнішою. Іменники твердої групи мають закінчення -и: санітари, ювіляри. Слова м'якої групи отримують закінчення -і: пекарі, лікарі, букварі. У родовому відмінку множини обидві групи мають закінчення -ів: багато санітарів, багато пекарів. Це дуже важливе правило. Українські слова чоловічого роду на приголосний у родовому відмінку множини майже завжди мають закінчення -ів, а не **нульове закінчення** *(zero ending)*. Далі відмінювання йде за правилами: давальний — пекарям, орудний — пекарями, місцевий — на пекарях. Тепер поговоримо про кличний відмінок. В українській мові це не просто стара форма, а єдиний правильний спосіб звернутися до людини. Використовувати називний відмінок для звертання — це помилка, яку ми залишаємо в минулому. Для іменників м'якої групи ми завжди додаємо закінчення -ю: пане лікарю! пане пекарю! мій кобзарю! Тут немає жодного чергування приголосних, основа залишається незмінною. Якщо ж це людина з твердої групи, ми використовуємо закінчення -е: пане ювіляре! У кожному правилі є складні випадки та винятки. Наприклад, слово **столяр** *(carpenter)*. Наголос у ньому падає на перший склад і не рухається. За базовим правилом це мала б бути тверда група. Але історично це слово належить до м'якої групи. Тому ми кажемо: я розмовляю зі столярем. Найкраща практична порада для перевірки сумнівних слів — утворити форму множини. Якщо ви чуєте столярі (а не столяри), значить, це м'яка група, і всі інші відмінки також будуть м'якими. <!-- INJECT_ACTIVITY: fill-in-ar-declension -->
+paradigm of the second **відміна** (declension class). Let us look at how the word пекар changes when there are multiple bakers. In the nominative plural, the ending is **-і**: пекарі. This is a very helpful form to memorize because it instantly confirms that the noun belongs to the soft group. When we need the genitive case in the plural, these words take the **-ів** ending: багато пекарів (many bakers). This is a crucial point for learners because it directly contrasts with the zero ending we will see later in words denoting a person's **походження** (origin — where someone is from), such as **киянин** (Kyivan — resident of Kyiv) or **громадянин** (citizen). For the remaining plural cases, the pattern is consistent: the dative is пекарям, the accusative matches the genitive (пекарів), the instrumental is пекарями, and the locative is на пекарях. Understanding this plural paradigm allows you to confidently discuss groups of people sharing the same **професія** (profession). Another vital aspect of nouns denoting people is the **кличний відмінок** (vocative case). This form is actively used every time you address someone directly, such as a doctor or a **кобзар** (kobza player — traditional Ukrainian musician). На відміну від російської мови, де ця форма зникла, в українській ви зобов'язані використовувати спеціальне закінчення під час звертання. Для іменників на -ар м'якої групи цим закінченням є -ю. Отже, якщо ви вітаєтеся зі своїм лікарем, ви повинні сказати «Добрий день, лікарю!» замість називного відмінка. Звертаючись до музиканта, ви скажете «кобзарю!», а розмовляючи з пекарем — «пекарю!». Використання правильної форми кличного відмінка є ключовим елементом ввічливої та природної української мови. > *Unlike Russian, where this form has disappeared, in Ukrainian you are obliged to use a special ending when addressing someone. For soft group nouns ending in -ар, this ending is -ю. Therefore, if you are greeting your doctor, you must say "Добрий день, лікарю!" instead of the nominative case. When addressing a musician, you would say "кобзарю!", and when speaking to a baker — "пекарю!". Using the correct vocative form is a key element of polite and natural Ukrainian.* Although the stress rules work beautifully for most words, the Ukrainian language always has a few interesting exceptions. The most famous complex case is the word столяр (carpenter). If you look at the standard pronunciation of this word, the stress falls on the root (сто́ляр). According to the basic rule, this should mean the word belongs to the hard group. However, it is an exception that declines according to the soft group, shifting its stress to the ending. Therefore, in the genitive case, we say немає столяра́, and in the instrumental case, працює столяре́м. :::tip **Practical check** — The best advice for verifying the declension of a doubtful noun is to look at its plural form. If a word forms its plural with the **-і** ending—such as столярі, лікарі, or **школяр** (student — person who attends school) changing to школярі—you can be absolutely certain that it belongs to the soft group. ::: <!-- INJECT_ACTIVITY: fill-in-ar-declension -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -624,7 +624,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -637,18 +704,69 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] суфікс (suffix — word-formation morpheme after the root)
+- [ ] іменник (noun)
+- [ ] відміна (declension class)
+- [ ] відмінювання (declension — changing a word through cases)
+- [ ] однина (singular number)
+- [ ] множина (plural number)
+- [ ] кличний відмінок (vocative case)
+- [ ] родовий відмінок (genitive case)
+- [ ] походження (origin — where someone is from)
+- [ ] професія (profession)
+- [ ] пекар (baker — person who bakes)
+- [ ] лікар (doctor)
+- [ ] школяр (student — person who attends school)
+- [ ] кобзар (kobza player — traditional Ukrainian musician)
+- [ ] киянин (Kyivan — resident of Kyiv)
+- [ ] громадянин (citizen)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Відмінювання іменників на -яр (~660 слів)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

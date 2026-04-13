@@ -1,0 +1,51 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: All planned H2 sections are present and in order, but the module promises
+    `три різні конструкції (за/від/ніж)` in `Підсумок` while the grammar explanation
+    only teaches `за` and `ніж` in `На ринку`.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 6
+  evidence: Learner-facing text contains `граматикаقيقي`, `обвно`, and the bad model
+    `щоб результат був **найякісніше** ... зроблений`.
+- dimension: 3
+  name: Pedagogical quality
+  score: 7
+  evidence: The module gives many contextualized examples, but one key comparison
+    pattern (`від`) is not actually taught before it is promised, and one grammar
+    model is itself ungrammatical.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 'Required vocabulary is integrated naturally across sections: `готівка`,
+    `чек`, `гарантія`, `розмір`, `посилка`, `обмін валют`, `курс`, `ремонт`, `бракований`.'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: The six exercise markers are spread through the module and come after
+    the material they test; placement is good and nothing is clustered at the end.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: Strong teacher voice and concrete cultural detail, e.g. `Бессарабський
+    ринок`, `Привоз`, and the bargaining paragraph in `На ринку`.
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: 'All sections are present and the pipeline word count is safely above
+    target, but visible text defects remain: `граматикаقيقي` and `обвно`.'
+- dimension: 8
+  name: Cultural accuracy
+  score: 7
+  evidence: 'The prose overstates real-world claims: `Кожен українець має ... «Дія»`
+    and return instructions say a receipt/passport are `стовідсотково` / `обов''язково`
+    required.'
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Dialogues are named, multi-turn, and functional; the market, repair, and
+    complaint exchanges feel more natural than rote textbook ping-pong.
+findings: []

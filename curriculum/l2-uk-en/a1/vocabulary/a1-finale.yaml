@@ -30,7 +30,13 @@ vocabulary:
   gender: ''
   verified: true
 - word: Ла́вра
-  translation: Lavra (Kyiv monastery)
+  translation: Lavra
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: готе́ль
+  translation: hotel
   expression: false
   pos: ім.
   gender: ч.
@@ -41,10 +47,10 @@ vocabulary:
   pos: прикм.
   gender: ''
   verified: true
-- word: віта́ю
+- word: вітаю
   translation: congratulations
-  expression: false
-  pos: дієсл.
+  expression: true
+  pos: ''
   gender: ''
   verified: true
 - word: поча́ток
@@ -71,41 +77,11 @@ vocabulary:
   pos: дієсл.
   gender: ''
   verified: true
-- word: Доброго ранку!
-  translation: Good morning!
+- word: по Хрещатику
+  translation: along Khreshchatyk
   expression: true
   pos: ''
   gender: ''
-  verified: true
-- word: тепло́
-  translation: warm
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: со́нячно
-  translation: sunny
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: До побачення!
-  translation: Goodbye!
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: як дістатися до...
-  translation: how to get to...
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: виши́ва́нка
-  translation: vyshyvanka (embroidered shirt)
-  expression: false
-  pos: ім.
-  gender: ж.
   verified: true
 - word: до́рого
   translation: expensive
@@ -113,39 +89,21 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: я беру
-  translation: I'll take [it]
+- word: ході́мо
+  translation: let's go
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: що будемо робити
+  translation: what will we do
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: О котрій?
-  translation: At what time?
+- word: о котрій
+  translation: at what time
   expression: true
   pos: ''
-  gender: ''
-  verified: true
-- word: споча́тку
-  translation: first
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: по́тім
-  translation: then
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: пі́сля
-  translation: after
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: задово́лений
-  translation: satisfied
-  expression: false
-  pos: прикм.
   gender: ''
   verified: true

@@ -1,49 +1,70 @@
 ## Linguistic Scan
-No linguistic errors found. The vocative case transformations are applied flawlessly.
+Factually overgeneralized usage claim: “When you speak to a teacher, a doctor, a manager, or any adult you do not know well, you must use formal titles alongside their name.” This is too rigid for Ukrainian usage; `пан / пані` are common respectful options, not the only obligatory pattern.
 
 ## Exercise Check
-All 4 activity markers match the plan's `activity_hints`. 
-`<!-- INJECT_ACTIVITY: dialogue-flow-practice -->` is placed well, immediately following the dialogues section. 
-`<!-- INJECT_ACTIVITY: vocative-form-practice -->`, `<!-- INJECT_ACTIVITY: vocative-choice-quiz -->`, and `<!-- INJECT_ACTIVITY: ending-sorting-activity -->` are clustered at the end of the "Закінчення кличного" section. While a bit clustered visually, this placement is logically required since all three exercises test the combined masculine and feminine rules taught immediately prior.
+4 markers are present: `fill-in-dialogue-completion`, `quiz-vocative-choice`, `group-sort-endings`, `fill-in-vocative-forms`.
+
+They correspond 1:1 to the four `activity_hints` in the plan and appear after the relevant teaching sections:
+`fill-in-dialogue-completion` after dialogues, `quiz-vocative-choice` after the vocative-case explanation, and `group-sort-endings` plus `fill-in-vocative-forms` after the endings section.
+
+No exercise-marker logic problems found in the prose-only module.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 8/10 | The text covers the outline effectively, but it completely misses the "State Standard 2024" reference from the plan and fails to mention the author "Заболотний" when referring to the Grade 4 textbook. |
-| 2. Linguistic accuracy | 10/10 | Flawless. No Russianisms or Surzhyk; correct vocative formations throughout (Олено, Тарасе, Андрію, друже, синку, бабусю). |
-| 3. Pedagogical quality | 10/10 | Excellent pedagogical flow. Drawing a clear distinction between nominative (talking ABOUT someone) and vocative (talking TO someone) is highly effective, as is introducing the "Кл. (!)" mental trigger. |
-| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary words (друг, подруга, пан, пані, синку, дочко, козак, бабуся, etc.) are included naturally in context. |
-| 5. Exercise quality | 9/10 | All 4 required markers are present. Three are clustered at the end of section 3, but this is pedagogically sound as they test mixed-gender rules. |
-| 6. Engagement & tone | 10/10 | The tone is warm and professional. Highlighting the vocative case as a "living marker of Ukrainian linguistic identity" perfectly hits the decolonized curriculum goal. |
-| 7. Structural integrity | 6/10 | The very last sentence of the module is cut off and left dangling ("If you can confidently answer these questions and apply the correct endings,"). |
-| 8. Cultural accuracy | 10/10 | Accurate cultural framing, correctly noting the survival of the vocative case in modern conversational Ukrainian compared to standard Russian. |
-| 9. Dialogue & conversation quality | 10/10 | Dialogues are highly contextual, utilizing the party scenario perfectly to demonstrate calling across a crowded room. |
+| 1. Plan adherence | 8/10 | All planned sections are present and the planned vocabulary is woven into prose, but the module never cites `State Standard 2024` or `Заболотний`, and the opening only says “At a birthday party...” without realizing the plan’s “busy birthday party” scene with people doing different things. |
+| 2. Linguistic accuracy | 8/10 | Core vocative forms are correct throughout: “Олено,” “Тарасе,” “Андрію,” “пане Іване,” “пані Оксано.” The main issue is the overgeneralized claim “you must use formal titles alongside their name.” |
+| 3. Pedagogical quality | 9/10 | Strong PPP flow: dialogues → rule explanation → endings → summary. Each major pattern gets multiple examples such as “Олена → Олено,” “Марія → Маріє,” “друг → друже,” “Андрій → Андрію.” |
+| 4. Vocabulary coverage | 10/10 | Required vocabulary appears naturally in prose: “друг,” “подруга,” “брат,” “сестра,” “пан,” “пані.” Recommended items also appear: “синку,” “дочко,” “козак,” “вчитель,” “бабуся,” “дідусь.” |
+| 5. Exercise quality | 9/10 | All 4 planned activity slots are present and placed after the relevant teaching content. No inline exercise-logic errors are visible in the prose itself. |
+| 6. Engagement & tone | 8/10 | The teacher voice is mostly natural, but phrases like “a beautiful and essential feature of the language” and “the rhythm, grammar, and respect built into Ukrainian communication” add generic uplift more than instruction. |
+| 7. Structural integrity | 10/10 | All H2 headings from the plan are present and ordered correctly. Pipeline word count is 1368, which is above the 1200 target. |
+| 8. Cultural accuracy | 8/10 | The module avoids Russian-centered framing, but it presents one respectful-address pattern as obligatory: “you must use formal titles alongside their name.” |
+| 9. Dialogue & conversation quality | 8/10 | The named-speaker format is good and Dialogue 1 is natural, but the birthday-party setup stays generic and does not realize the plan’s “dancing, eating, talking” room dynamic. |
 
 ## Findings
+[PLAN ADHERENCE] [SEVERITY: major]  
+Location: “At a birthday party, you often need to call someone across the room: **Олено! Тарасе! Мамо! Бабусю!**”  
+Issue: The plan’s dialogue situation is more specific: a busy birthday party with people doing different things. That scene-setting detail is missing, so the dialogue premise is flatter than the source-of-truth plan.  
+Fix: Rewrite the opening sentence to realize the busy party scene explicitly.
 
-[Plan adherence] [major]
-Location: Section "Підсумок — Summary", first paragraph ("Mastering the vocative case is a crucial step...")
-Issue: The plan explicitly requires referencing "State Standard 2024, §4.2.3.4", but this is entirely missing from the text.
-Fix: Add a mention of the State Standard 2024 to the summary.
+[PLAN ADHERENCE] [SEVERITY: major]  
+Location: “Ukrainian has a special grammatical case for calling someone or getting their attention...”  
+Issue: The plan lists `State Standard 2024, §4.2.3.4` and `Grade 4 textbook: Кличний відмінок (Заболотний)` as references, but neither is cited anywhere in the module.  
+Fix: Integrate both references naturally into the vocative-introduction paragraph.
 
-[Plan adherence] [minor]
-Location: Section "Кличний відмінок (The Vocative Case)", second paragraph ("In Ukrainian elementary schools, fourth-grade students...")
-Issue: The plan references the Grade 4 textbook by Заболотний, but the author's name is omitted.
-Fix: Add the author's name (Zabolotnyi) when mentioning the Grade 4 textbook.
+[LINGUISTIC ACCURACY] [SEVERITY: critical]  
+Location: “When you speak to a teacher, a doctor, a manager, or any adult you do not know well, you must use formal titles alongside their name.”  
+Issue: This is an overgeneralized claim about Ukrainian usage. `Пан / пані` are common respectful forms, but Ukrainian polite address is broader than one obligatory formula.  
+Fix: Soften this to “often use polite forms of address” and present `пан / пані` as one common option.
 
-[Structural integrity] [critical]
-Location: Section "Підсумок — Summary", very last sentence ("If you can confidently answer these questions and apply the correct endings,")
-Issue: The final sentence is cut off and left dangling, making the module structurally incomplete.
-Fix: Complete the sentence.
+[ENGAGEMENT & TONE] [SEVERITY: minor]  
+Location: “The vocative case is a beautiful and essential feature of the language...” and “By actively using these forms in your daily life, you show that you deeply understand the rhythm, grammar, and respect built into Ukrainian communication.”  
+Issue: These sentences are generic praise/filler rather than concrete teaching.  
+Fix: Replace them with tighter, more instructional summary framing.
 
 ## Verdict: REVISE
-The module contains a critical structural error (a dangling sentence at the very end) and misses mandatory plan references.
+REVISE. The module is structurally sound and the core Ukrainian forms are correct, but it has fixable quality issues: one factual overstatement about formal address, missing plan-reference citations, and some plan/tone drift. That keeps multiple dimensions below 9 and prevents PASS.
 
 <fixes>
-- find: "Mastering the vocative case is a crucial step in sounding like a natural, fluent Ukrainian speaker."
-  replace: "Mastering the vocative case is a crucial step in sounding like a natural, fluent Ukrainian speaker, aligning with the core communicative competencies of the State Standard 2024."
-- find: "In Ukrainian elementary schools, fourth-grade students learn a simple but effective trick to remember when to use this form."
-  replace: "In Ukrainian elementary schools (such as in Zabolotnyi's Grade 4 textbook), students learn a simple but effective trick to remember when to use this form."
-- find: "If you can confidently answer these questions and apply the correct endings,"
-  replace: "If you can confidently answer these questions and apply the correct endings, you are ready to use the vocative case in the real world!"
+- find: |
+    At a birthday party, you often need to call someone across the room: **Олено! Тарасе! Мамо! Бабусю!** In Ukrainian, direct address usually changes the ending of the name or family word. Listen for these forms in the dialogues below.
+  replace: |
+    At a busy birthday party, people are dancing, eating, and talking, so you often need to call someone across the room: **Олено! Тарасе! Мамо! Бабусю!** In Ukrainian, direct address usually changes the ending of the name or family word. Listen for these forms in the dialogues below.
+- find: |
+    Ukrainian has a special grammatical case for calling someone or getting their attention: the **кличний відмінок** (vocative case). In standard Ukrainian, direct address normally uses this form: **Олено, ходи сюди!** In school grammar, this case is often remembered with the helper **Кл. (!)** — the exclamation mark signals that you are calling someone, so the ending changes.
+  replace: |
+    Ukrainian has a special grammatical case for calling someone or getting their attention: the **кличний відмінок** (vocative case). This matches the **State Standard 2024** focus on common address forms at beginner level. In standard Ukrainian, direct address normally uses this form: **Олено, ходи сюди!** In school grammar, including Grade 4 textbooks such as **Заболотний**, this case is often remembered with the helper **Кл. (!)** — the exclamation mark signals that you are calling someone, so the ending changes.
+- find: |
+    The vocative case is equally important in formal and professional situations. When you speak to a teacher, a doctor, a manager, or any adult you do not know well, you must use formal titles alongside their name. In Ukrainian, the words **пан** (Mr., m) and **пані** (Mrs./Ms., f) are used to show respect. The word **пані** is a special feminine noun that does not change its ending, but the masculine noun **пан** changes to **пане** in the vocative case.
+  replace: |
+    The vocative case is equally important in formal and professional situations. When you speak to a teacher, a doctor, a manager, or any adult you do not know well, you will often use polite forms of address. In Ukrainian, the words **пан** (Mr., m) and **пані** (Mrs./Ms., f) are one common respectful option. The word **пані** is a special feminine noun that does not change its ending, but the masculine noun **пан** changes to **пане** in the vocative case.
+- find: |
+    You now know how to address people correctly and naturally in Ukrainian. The vocative case is a beautiful and essential feature of the language that instantly connects you to the person you are speaking with. Here is a quick reference summary table to help you remember the main patterns we covered today:
+  replace: |
+    You now know the main patterns for addressing people naturally in Ukrainian. Here is a quick reference summary table with the main endings we covered today:
+- find: |
+    By actively using these forms in your daily life, you show that you deeply understand the rhythm, grammar, and respect built into Ukrainian communication.
+  replace: |
+    By using these forms regularly, your greetings, family talk, and polite address will sound more natural in Ukrainian.
 </fixes>

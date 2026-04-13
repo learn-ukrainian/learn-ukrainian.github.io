@@ -1,0 +1,52 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T15-44-d764218d.json
+phase: write-chunk-06
+prompt_chars: 47966
+response_chars: 5656
+prompt_words: 6792
+response_words: 850
+sections:
+- name: header
+  start: 0
+  length: 425
+  fraction: 0.0089
+- name: skeleton
+  start: 425
+  length: 1131
+  fraction: 0.0236
+- name: prior_summary
+  start: 1556
+  length: 3532
+  fraction: 0.0736
+- name: plan
+  start: 5088
+  length: 18288
+  fraction: 0.3813
+- name: wiki
+  start: 16899
+  length: 24376
+  fraction: 0.5082
+- name: output_spec
+  start: 47752
+  length: 214
+  fraction: 0.0045
+large_sections:
+- wiki
+directives_total: 25
+directives_covered: 21
+directives_missed:
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: inject_activity
+  text: error-correction-mixed-group
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz, Identify the група (тверда/м'яка/мішана) for given nouns
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up, Match nominative forms to their орудний and кличний forms
+  covered: false
+  coverage_note: marker missing

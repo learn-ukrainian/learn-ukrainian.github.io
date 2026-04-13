@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-Для поваги ми додаємо слова **пан** *(Mr., sir)* та **пані** *(Mrs., Ms., madam)*. Отже, ми кажемо **«Пані Маріє!»** *(Ms. Mariia!)* замість просто «Маріє». Це дуже важливе правило нашої мови. Ми часто використовуємо конструкцію «пане» або «пані» плюс **професія** *(profession)*. The word **«пане»** *(sir)* is the vocative form of «пан», and it triggers the vocative case in the following noun. Both words must change. For hard-stem masculine nouns, the ending is usually **-е**. Ми кажемо: **«пане директоре»** *(Mr. director)*, **«пане професоре»** *(Mr. professor)*, **«пане міністре»** *(Mr. minister)*. For soft-stem masculine nouns, the ending is **-ю**. Тому правильно казати: **«пане лікарю»** *(Mr. doctor)*, **«пане вчителю»** *(Mr. teacher)*, **«пане водію»** *(Mr. driver)*. For women, the word «пані» is invariable (it never changes its form). However, the feminine profession takes the vocative ending **-о**. В українській мові ми активно використовуємо жіночі форми професій. Тому ми кажемо: **«пані вчителько»** *(Ms. teacher)*, **«пані директорко»** *(Ms. director)*, **«пані лікарко»** *(Ms. doctor)*. Це показує вашу повагу. Ми також можемо використовувати ці слова з прізвищами людей. When we address a man by his surname, the surname must also be in the vocative case if it is a declinable noun. Masculine surnames ending in -о or -ко typically take the **-у** ending in the vocative. Тому ми кажемо: **«пане Коваленку»** *(Mr. Kovalenko)*, **«пане Шевченку»** *(Mr. Shevchenko)*, **«пане Ковальчуку»** *(Mr. Kovalchuk)*. The grammatical rule is very different for women. As we know, «пані» does not change. In addition, feminine surnames ending in a consonant or in -о/-ко are indeclinable in Ukrainian grammar. Вони завжди мають форму називного відмінка. Тому ми кажемо: **«пані Коваленко»** *(Ms. Kovalenko)*, **«пані Шевченко»** *(Ms. Shevchenko)*, **«пані Ковальчук»** *(Ms. Kovalchuk)*. Це правило треба запам'ятати. Слова «пан» і «пані» мають глибоке історичне коріння в українській культурі. Вони існували багато століть. During the Soviet era, these traditional polite forms were actively suppressed and banned from official language. The regime replaced them with the word **«товариш»** *(comrade)* to enforce artificial equality and Russian linguistic norms. Сьогодні використання слів «пане» та «пані» — це ваш свідомий вибір. It strongly signals authentic, decolonized Ukrainian identity and respect for the listener. Це справжнє повернення до нашої рідної мови. Ви можете часто почути цю красиву форму в давніх текстах і народних піснях. Є відома різдвяна колядка: **«Добрий вечір тобі, пане господарю!»** *(Good evening to you, Mr. host!)*. В українській мові також є красиві слова **«добродій»** *(sir, gentleman)* та **«добродійка»** *(madam, lady)*. Вони теж мають спеціальні форми кличного відмінка: **«добродію»** *(sir)* та **«добродійко»** *(madam)*. These are older, highly literary alternatives to «пане» and «пані». Today, they are much less common in everyday street conversation or modern slang. However, they remain very polite, highly respected forms used in formal writing, official letters, or by the Ukrainian diaspora. В офіційному листі ви пишете: **«Шановний добродію!»** *(Honorable sir!)* або **«Вельмишановна добродійко!»** *(Highly honorable madam!)*. Це звучить дуже інтелігентно та надзвичайно **ввічливо** *(politely)*. Використовуйте ці слова для створення особливого стилю. <!-- INJECT_ACTIVITY: fill-in, focus: Form the correct vocative of professional titles and names (пане _____, пані _____), 8 items -->
+«пане водію». Для жінок ми використовуємо форму «пані вчителько» або «пані директорко». > *We often say "pane dyrektore" or "pane profesore". This is the hard group. The soft group has a different ending. We say "pane likariu" or "pane vodiiu". For women, we use the form "pani vchytelko" or "pani dyrektorko".* You will also use this structure with people's surnames. It is an **офіційний** (official, formal) way to speak with someone you do not know well, such as a client or a manager. The rules for surnames are slightly different depending on the person's gender. Masculine surnames must decline in the vocative case after the word «пане», usually taking the **-у** ending. Feminine surnames, however, remain in the nominative case after «пані». This reflects a broader grammatical rule where many feminine surnames ending in -о or -ко simply do not change their form in any case. Чоловічі прізвища змінюються. Ми кажемо «пане Коваленку» або «пане Шевченку». Жіночі прізвища не змінюються. Ми кажемо «пані Коваленко» або «пані Шевченко». Це просте правило для офіційних розмов. > *Masculine surnames change. We say "pane Kovalenku" or "pane Shevchenku". Feminine surnames do not change. We say "pani Kovalenko" or "pani Shevchenko". This is a simple rule for formal conversations.* :::info **Grammar box** Remember that the word «пані» is invariable — it never changes its ending in any case. However, the female profession or first name that follows it must still take the vocative ending, like in «пані Оксано». ::: Understanding these words involves important cultural context. Historically, "пан" and "пані" were the traditional and natural Ukrainian forms of polite address. During the Soviet era, these words were heavily suppressed and replaced with the artificial, standardized term "товариш" (comrade). Today, choosing to say «пане» or «пані» is a conscious decision to speak authentic, decolonized Ukrainian. You can even hear this deep-rooted tradition in classic Ukrainian Christmas carols, showing that these forms of address have always lived in the culture. Слово «пан» має давню історію. Люди співали про це в колядках. Класичний рядок звучить так: «Добрий вечір тобі, пане господарю!». Сьогодні українці знову активно використовують ці слова. > *The word "pan" has an ancient history. People sang about it in carols. The classic line sounds like this: "Good evening to you, master of the house!". Today, Ukrainians are actively using these words again.* There are also beautiful, high-formal alternatives that you might encounter in literature, historical texts, or when speaking with the Ukrainian diaspora: «добродію» and «добродійко». You will rarely hear these on the street among young people today, but they are still proudly used in formal letters, public speeches, or academic environments. У листах ми можемо писати «Шановний добродію!». До жінки ми пишемо «Вельмишановна добродійко!». Це дуже гарні слова. Вони показують велику повагу, хоча твій **друг** (friend) скаже просто «привіт». > *In letters, we can write "Esteemed sir!". To a woman, we write "Highly esteemed madam!". These are very beautiful words. They show great respect, although your friend will simply say "hi".* <!-- INJECT_ACTIVITY: fill-in-formal-vocative -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -530,7 +530,74 @@ The vocative case is a powerful and immediate grammatical differentiator between
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -549,18 +616,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] кличний (vocative (case))
+- [ ] звертання (address, appeal)
+- [ ] пан (Mr., sir)
+- [ ] пані (Mrs., Ms., madam)
+- [ ] лікар (doctor)
+- [ ] вчитель (teacher)
+- [ ] друг (friend)
+- [ ] ввічливий (polite)
+- [ ] офіційний (official, formal)
+- [ ] професія (profession)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Професійні звертання (Professional Vocative) (~500 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

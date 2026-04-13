@@ -1,4 +1,4 @@
-# Section-by-Section Generation — Section 1/5
+# Section-by-Section Generation — Section 1/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
@@ -11,11 +11,11 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 ## Section Skeleton (follow this exactly)
 
 ## Давальний відмінок: Кому? (The Dative Case: To Whom?) (~550 words total)
-- P1 (~120 words): Introduction to the Dative case (Давальний відмінок) through its name and origin. Explain that it comes from the verb "давати" (to give), which perfectly illustrates its primary function: the recipient of an action. Introduce the core questions "Кому?" (To whom? for people) and "Чому?" (To what? for objects/concepts).
-- P2 (~150 words): Explain the concept of the indirect object. Contrast it with the Nominative (the doer) and Accusative (the direct object affected). Use a simple foundational example: "Я (Nom) даю книгу (Acc) тобі (Dat)." Explain that the Dative marks the person who benefits or receives information.
-- P3 (~150 words): Introduce a "Starter Kit" of verbs that trigger the Dative case. Focus on high-frequency communication verbs: давати (to give), дарувати (to gift), казати/говорити (to say/tell), писати (to write), and допомагати (to help). Provide short, punchy examples for each: "Я пишу тобі листа," "Він допомагає мені."
-- P4 (~130 words): Dialogue — The Birthday Gathering. A family scene where gifts are being distributed. Use the plan's specific motivation: "Мені — книгу. Тобі — шоколад. Йому — шарф. Їй — квіти. Нам — торт!" This establishes the pronouns in a natural, repetitive "recipient" context.
-- <!-- INJECT_ACTIVITY: match-up-pronoun-forms --> [match-up, Match Nominative pronoun to its Dative form (я→мені, ти→тобі, ми→нам, ви→вам, він→йому, вона→їй, воно→йому, вони→ї їм), 8 items]
+- P1 (~120 words): Introduce the Dative case (Давальний відмінок). Explain that its name comes from the verb "давати" (to give), and it answers the questions "Кому?" (To whom?) and "Чому?" (To what?). Define its core meaning: indicating the recipient of an action—the person who receives something, is told something, or for whom something is done.
+- P2 (~120 words): Contrast the Dative case with the Genitive (Кого? Чого?) and Accusative (Кого? Що?). Emphasize that each case has a distinct function: Genitive often shows possession or absence, Accusative marks the direct object experiencing the action, while Dative marks the indirect object receiving the result.
+- P3 (~100 words): Provide simple examples showing the dative in action with familiar verbs. Focus on "давати" (to give) and "казати" (to say/tell). Illustrate the classic structure of "давати щось (Accusative) комусь (Dative)".
+- P4 (~100 words): Dialogue: A short scenario at a family gathering distributing birthday gifts. Showcases the dative pronouns in action: "Мені — книгу. Тобі — шоколад. Йому — шарф. Їй — квіти. Нам — торт!".
+- P5 (~110 words): Analyze the dialogue. Explain how the recipient of each gift is expressed using the Dative case without prepositions, setting the stage for learning the full pronoun paradigm in the next section.
 
 ---
 ## Full Plan (for reference)
@@ -619,6 +619,31 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] давальний відмінок (dative case)
+- [ ] мені (to me)
+- [ ] тобі (to you (informal))
+- [ ] йому (to him, to it)
+- [ ] їй (to her)
+- [ ] нам (to us)
+- [ ] вам (to you (formal/plural))
+- [ ] їм (to them)
+- [ ] холодно (cold (impersonal state))
+- [ ] потрібно (necessary, needed)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Давальний відмінок: Кому? (The Dative Case: To Whom?) (~550 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

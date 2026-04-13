@@ -7,13 +7,12 @@ pipeline: v6
 build_status: draft
 ---
 
-import ErrorCorrection from '@site/src/components/ErrorCorrection';
+import Anagram from '@site/src/components/Anagram';
 import FillIn from '@site/src/components/FillIn';
 import FlashcardDeck from '@site/src/components/FlashcardDeck';
 import GroupSort from '@site/src/components/GroupSort';
 import MatchUp from '@site/src/components/MatchUp';
-import Order from '@site/src/components/Order';
-import Quiz from '@site/src/components/Quiz';
+import OddOneOut from '@site/src/components/OddOneOut';
 import TrueFalse from '@site/src/components/TrueFalse';
 import Unjumble from '@site/src/components/Unjumble';
 import YouTubeVideo from '@site/src/components/YouTubeVideo';
@@ -24,162 +23,164 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ## Dialogues
 
-Being able to say what you did in the past is useful, but the real power of language comes from telling a story. Up until now, we have looked at isolated past tense sentences. Moving from a single statement to a connected narrative changes how you communicate. Compare a present tense fact like **Сього́дні я працю́ю** (Today I am working) with a past narrative like **Учо́ра я працюва́в** (Yesterday I worked). Knowing how to chain these actions together allows you to describe exactly what happened, step by step.
+To tell what happened yesterday, you need to put actions in order. In this module, you will hear short dialogues and build a simple story from morning to night using time markers and past-tense verbs.
 
-Sequencing actions is crucial when facts matter. In the situation below, a witness speaks to a police officer about a stolen bicycle. The witness uses past tense verbs to build a precise timeline of events.
+In our first dialogue, let us listen to Petro as he describes a typical workday. Notice how he uses specific time markers to signal each phase of his day.
 
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Сві́док:</span> Я припаркува́в велосипе́д бі́ля магази́ну. *(I parked the bicycle near the store.)*</div>
+<div class="dialogue-line"><span class="speaker">Коле́га:</span> Як пройшо́в твій день? *(How was your day?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Поліце́йський:</span> А по́тім? *(And then?)*</div>
+<div class="dialogue-line"><span class="speaker">Петро́:</span> До́бре! Зра́нку я **проки́нувся** (woke up) о сьо́мій і **посні́дав** (had breakfast). *(Good! In the morning I woke up at seven and had breakfast.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Свідок:</span> Потім зайшо́в у кав'я́рню. *(Then I went into the cafe.)*</div>
+<div class="dialogue-line"><span class="speaker">Колега:</span> А по́тім? *(And then?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Поліцейський:</span> Ви до́вго там були́? *(Were you there long?)*</div>
+<div class="dialogue-line"><span class="speaker">Петро:</span> Потім я **пішо́в** (went) на робо́ту. Вдень працюва́в і **обі́дав** (had lunch) з коле́гою. *(Then I went to work. In the afternoon I worked and had lunch with a colleague.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Свідок:</span> Ні. Ко́ли ви́йшов, велосипед зник. *(No. When I came out, the bicycle disappeared.)*</div>
+<div class="dialogue-line"><span class="speaker">Колега:</span> Звучи́ть продукти́вно. А вве́чері? *(Sounds productive. And in the evening?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Петро:</span> Ввечері я диви́вся фільм і ра́но **ліг** спа́ти. *(In the evening I watched a movie and went to bed early.)*</div>
+
+</div>
+
+This short conversation demonstrates how a day can be structured with time markers such as **зранку** (in the morning), **вдень** (in the afternoon), and **ввечері** (in the evening), ending with **лягти́ спати** (to go to bed). Petro is a man, so when he talks about his own actions in the past, he uses masculine forms such as **прокинувся** (I woke up), **поснідав** (I had breakfast), and **пішов** (I went). Some masculine past forms are irregular, such as **ліг** (I lay down), so do not expect every masculine form to end in **-в** or **-вся**.
+
+Here is one more real-life past-tense situation from this module's theme: a police report about a stolen bicycle.
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Поліце́йський:</span> Що ста́лося? *(What happened?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Сві́док:</span> Я припаркува́в велосипе́д бі́ля магази́ну. Потім зайшо́в у кав'я́рню. Ко́ли ви́йшов, велосипед зник. *(I parked the bicycle near the store. Then I went into the cafe. When I came out, the bicycle was gone.)*</div>
 
 <div class="dialogue-line"><span class="speaker">Поліцейський:</span> Ви ба́чили когось? *(Did you see anyone?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Свідок:</span> Ба́чив чолові́ка в ку́ртці та ке́пці. *(I saw a man in a jacket and a cap.)*</div>
+<div class="dialogue-line"><span class="speaker">Свідок:</span> Так, ба́чив чолові́ка в ку́ртці та ке́пці. *(Yes, I saw a man in a jacket and a cap.)*</div>
 
 </div>
 
-The words **велосипед** (bicycle) and **магази́н** (store) are masculine, while **кав'я́рня** (cafe) and **ку́ртка** (jacket) are feminine. The sequence of verbs — **припаркував** (parked), **зайшов** (went in), **вийшов** (came out) — creates a clear, undeniable timeline of the incident.
-
-:::note
-When the order of events matters, using clear past tense verbs in sequence is essential. In official situations, a well-structured narrative establishes the facts without confusion.
-:::
-
-Narrating a day is just as common in casual conversation. Friends frequently catch up on a typical work day and discuss their routines.
+Now, let us listen to a feminine perspective. Anna is telling her friend about her Saturday. Pay attention to how the verb endings change and how she uses "then" to keep the story moving.
 
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Оле́г:</span> Як пройшо́в твій день? *(How was your day?)*</div>
+<div class="dialogue-line"><span class="speaker">По́друга:</span> Що ти роби́ла у субо́ту? *(What did you do on Saturday?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Тара́с:</span> До́бре! Зра́нку я проки́нувся о сьо́мій. *(Good! In the morning I woke up at seven.)*</div>
+<div class="dialogue-line"><span class="speaker">А́нна:</span> О, я ма́ла чудо́вий день! *(Oh, I had a wonderful day!)*</div>
 
-<div class="dialogue-line"><span class="speaker">Олег:</span> Що ти роби́в зранку? *(What did you do in the morning?)*</div>
+<div class="dialogue-line"><span class="speaker">Подруга:</span> Розкажи́! *(Tell me!)*</div>
 
-<div class="dialogue-line"><span class="speaker">Тарас:</span> Я посні́дав і пішо́в на робо́ту. *(I had breakfast and went to work.)*</div>
+<div class="dialogue-line"><span class="speaker">Анна:</span> Зранку я **ходи́ла** (went) на ри́нок і **купи́ла** (bought) фру́кти. *(In the morning I went to the market and bought fruit.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Олег:</span> А вдень? *(And in the afternoon?)*</div>
+<div class="dialogue-line"><span class="speaker">Подруга:</span> А **потім** (then)? *(And then?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Тарас:</span> Вдень я працював і обі́дав з коле́гою. *(In the afternoon I worked and had lunch with a colleague.)*</div>
+<div class="dialogue-line"><span class="speaker">Анна:</span> **Потім** я готува́ла обід. А вдень гуля́ла в парку. *(Then I was cooking lunch. And in the afternoon I walked in the park.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Олег:</span> А вве́чері? *(And in the evening?)*</div>
+<div class="dialogue-line"><span class="speaker">Подруга:</span> А ввечері? *(And in the evening?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Тарас:</span> Ввечері я диви́вся фільм і ра́но ліг спа́ти. *(In the evening I watched a film and went to sleep early.)*</div>
+<div class="dialogue-line"><span class="speaker">Анна:</span> Ввечері ми з по́другою **ходи́ли** (went) в рестора́н. *(In the evening me and a friend went to a restaurant.)*</div>
 
-</div>
-
-And here is how someone might describe a fun weekend:
-
-<div class="dialogue">
-
-<div class="dialogue-line"><span class="speaker">Макси́м:</span> Що ти роби́ла у субо́ту? *(What did you do on Saturday?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Іри́на:</span> О, я ма́ла чудо́вий день! *(Oh, I had a wonderful day!)*</div>
-
-<div class="dialogue-line"><span class="speaker">Максим:</span> Розкажи́! *(Tell me!)*</div>
-
-<div class="dialogue-line"><span class="speaker">Ірина:</span> Зранку я ходи́ла на ри́нок і купи́ла фру́кти. *(In the morning I went to the market and bought fruit.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Максим:</span> А потім? *(And then?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Ірина:</span> Потім я готува́ла обід. А вдень гуля́ла в парку. *(Then I cooked lunch. And in the afternoon I walked in the park.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Максим:</span> А ввечері? *(And in the evening?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Ірина:</span> Ввечері ми з по́другою ходи́ли в рестора́н. *(In the evening my friend and I went to a restaurant.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Максим:</span> Як фа́йно! *(How nice!)*</div>
+<div class="dialogue-line"><span class="speaker">Подруга:</span> Як фа́йно! *(How lovely!)*</div>
 
 </div>
 
-Notice how the words **потім** (then) and the phrase **а потім** (and then) act as the glue between different verbs. They keep the story moving forward efficiently. Furthermore, in a connected story, we do not need to repeat the subject **я** (I) in every single sentence. Once the context is established, the verbs themselves carry the narrative perfectly.
+Because Anna is female, her verbs end in **-ла**: **ходила** (went), **купила** (bought), **готувала** (cooked). She also uses the word **потім** (then) several times. In Ukrainian, **потім** is a very useful "glue" word that allows you to link one event to another without repeating the time of day. You can also use **а потім** (and then) to add a bit of variety to your storytelling.
 
 ## Ро́зповідь про день (Narrating a Day)
 
-To structure any story, you need clear time anchors. The daily routine is typically divided into four main parts. We use **зранку** (in the morning) for the start of the day. As the day progresses, we use **вдень** (in the afternoon). Later, we transition to **ввечері** (in the evening), and finally **вночі́** (at night). 
+To tell a story effectively, you need a timeline. Ukrainian uses four primary adverbs to divide the day into manageable chunks. These words usually appear at the start of a sentence to establish the context immediately.
 
-:::caution
-Pay attention to the spelling of **вдень**. Written as one word, it means "in the daytime" or "in the afternoon". Do not confuse it with the two-word phrase **в день** (on the day), which is used differently, such as in **в день наро́дження** (on the birthday).
+*   **зранку** (in the morning) — used for everything from waking up to starting work.
+*   **вдень** (in the afternoon / during the day) — used for the middle of the day, typically lunchtime and work hours.
+*   **ввечері** (in the evening) — used for the time after work, dinner, and relaxation.
+*   **вночі́** (at night) — used for the late hours when the world is asleep.
+
+When you put these together, you create a natural progression. For example, a student might say:
+
+**Зранку** я чита́в кни́гу. **Вдень** я був в університе́ті. **Ввечері** я відпочива́в.
+> *In the morning I read a book. In the afternoon I was at the university. In the evening I was resting.*
+
+Once you have your time blocks, you need sequencing words to connect the dots. Without these, your story sounds like a grocery list of isolated facts. Ukrainian provides a specific set of adverbs to help you navigate through time:
+
+*   **споча́тку** (first / at first) — sets the very first scene.
+*   **потім** (then) — the most common way to move to the next event.
+*   **пі́сля цього́** (after that) — a slightly more formal way to say "after that."
+*   **наре́шті** (finally) — used to signal the last action in a sequence.
+
+Observe how these words transform separate sentences into a cohesive narrative paragraph:
+
+**Спочатку** я **поснідав**. **Потім** я **пішов** на роботу. **Після цього** я **обідав**. **Нарешті** я **поверну́вся** додо́му.
+> *First I had breakfast. Then I went to work. After that I had lunch. Finally I returned home.*
+
+The "engine" of your narrative consists of daily routine verbs. In the past tense, these verbs must match your gender. Here is a table showing the most common routine verbs in their masculine and feminine forms.
+
+| Verb (Infinitive) | Masculine Form | Feminine Form | Meaning |
+| :--- | :--- | :--- | :--- |
+| **проки́нутися** | **прокинувся** | **проки́нулася** | to wake up |
+| **посні́дати** | **поснідав** | **посні́дала** | to have breakfast |
+| **піти** | **пішов** | **пішла́** | to go / set out |
+| **обі́дати** | **обідав** | **обі́дала** | to have lunch |
+| **поверну́тися** | **повернувся** | **поверну́лася** | to return |
+| **лягти** спати | **ліг** спати | **лягла́** спати | to go to bed |
+
+:::tip
+Notice the verb **пішов** (masculine) and **пішла** (feminine). This is an irregular shift from the infinitive **піти**. It is one of the most common verbs in the past tense, so it is worth memorizing these two forms early!
 :::
 
-Using the correct time markers gives the listener a clear map of when events occurred. Beyond basic time markers, sequencing words create a chronological chain. Without them, a story is just a list of disconnected facts. Start the sequence with **споча́тку** (first). To transition to the next action, use **потім** (then). For further actions, use **пі́сля цього́** (after that). To conclude the narrative, use **наре́шті** (finally). These connectors turn separate thoughts into a fluid story.
+As the day continues, you will need verbs for the afternoon and evening activities. These follow the same gender-agreement patterns.
 
-*   **Спочатку я поснідав.** *(First I had breakfast.)*
-*   **Потім я пішов на роботу.** *(Then I went to work.)*
-*   **Після цього я обідав.** *(After that I had lunch.)*
+*   **обідати** (to have lunch) → **обідав** / **обідала**
+*   **повернутися** (to return) → **повернувся** / **повернулася**
+*   **вече́ряти** (to have dinner) → **вече́ряв** / **вече́ряла**
+*   **лягти** спати (to go to bed) → **ліг** спати / **лягла** спати
 
-This logical flow makes your Ukrainian sound much more natural and cohesive.
-
-The daily routine relies on a core set of action verbs. Because the Ukrainian past tense must agree with the grammatical gender of the speaker, males use the **-в** or **-вся** ending, while females use the **-ла** or **-лася** ending. The most frequent verbs for narrating a day follow this pattern:
-
-| Дієсло́во (Infinitive) | Чолові́чий рід (Masculine) | Жіно́чий рід (Feminine) |
-| :--- | :--- | :--- |
-| **проки́нутися** *(to wake up)* | **прокинувся** | **проки́нулася** |
-| **посні́дати** *(to have breakfast)* | **поснідав** | **посні́дала** |
-| **піти** *(to go)* | **пішов** | **пішла́** |
-| **обі́дати** *(to have lunch)* | **обідав** | **обі́дала** |
-| **поверну́тися** *(to return)* | **поверну́вся** | **поверну́лася** |
-| **лягти́ спати** *(to lie down to sleep)* | **ліг спати** | **лягла́ спати** |
-
-Notice that for the verb meaning to lie down (**лягти**), the masculine form **ліг** drops the **-в** suffix entirely, while the feminine form **лягла** keeps the standard **-ла** ending. This is a common pattern for verbs with stems ending in a consonant.
-
-<Order client:only="react" items={["Зранку я прокинувся.", "Спочатку я поснідав.", "Потім я пішов на роботу.", "Вдень я обідав з колегою.", "Ввечері я повернувся і дивився серіал.", "Нарешті я ліг спати."]} correct_order={[0, 1, 2, 3, 4, 5]} instruction={"Розставте речення в правильному порядку (Put the sentences in the correct order)"} />
+The verb **лягти** (to lie down) is particularly unique. A man says **я ліг**, while a woman says **я лягла**. This change from **і** to **я** is a common feature in some old Ukrainian verbs, but for now, just treat them as a pair of set forms for "going to bed."
 
 ## Мій учора́шній день (My Yesterday)
 
-A complete narrative relies on these structural elements. Anna describes her yesterday below. Since Anna is female, every past tense verb she uses ends in **-ла** or **-лася**. Her story chains actions logically using time markers.
+A natural story combines actions with places, food, and people. That is why the model narrative below mixes routine verbs with familiar vocabulary from earlier modules.
 
-*   **Учора був звича́йний день.** *(Yesterday was an ordinary day.)*
-*   **Зранку я прокинулася о пів на сьому.** *(In the morning I woke up at half past six.)*
-*   **Я поснідала — ї́ла ка́шу і пила́ ка́ву.** *(I had breakfast — I ate porridge and drank coffee.)*
-*   **Потім я пішла на роботу.** *(Then I went to work.)*
-*   **Вдень я обідала в кафе́ біля о́фісу.** *(In the afternoon I had lunch in a cafe near the office.)*
-*   **Я замо́вила сала́т і сік.** *(I ordered a salad and juice.)*
-*   **Після робо́ти я ходила в магазин і купила проду́кти.** *(After work I went to the store and bought groceries.)*
-*   **Ввечері я готувала вече́рю і диви́лася серіа́л.** *(In the evening I cooked dinner and watched a TV series.)*
-*   **Об одина́дцятій я лягла спати.** *(At eleven I went to sleep.)*
+Let us look at a model narrative from Anna. She is describing an **звича́йний** (ordinary) day. Pay close attention to how she weaves together her routine, her meals, and her evening relaxation.
 
-This narrative is highly structured. Starting with **звичайний день** (ordinary day) sets the context immediately. Notice the strict gender agreement between the speaker and her actions. Because Anna is speaking, every verb aligns with her feminine gender: **прокинулася** (woke up), **поснідала** (had breakfast), **пішла** (went), **обідала** (had lunch), **купила** (bought), **готувала** (cooked), and **лягла** (lay down). If a man were telling this exact same story, all of those endings would shift to the masculine forms. 
+**Учо́ра** був **звичайний** день. **Зранку** я **прокинулася** о пів на сьому. Я **поснідала** — ї́ла ка́шу і пила́ ка́ву. **Потім** я **пішла** на роботу. **Вдень** я **обідала** в кафе́ біля о́фісу. Я замо́вила сала́т і сік. Після робо́ти я **ходила** в магази́н і купила **проду́кти** (groceries). **Ввечері** я готувала вече́рю і диви́лася **серіа́л** (TV series). О одина́дцятій я **лягла** спати.
+> *Yesterday was an ordinary day. In the morning I woke up at half past six. I had breakfast — I ate porridge and drank coffee. Then I went to work. In the afternoon I had lunch in a cafe near the office. I ordered a salad and juice. After work I went to the store and bought groceries. In the evening I was cooking dinner and watching a TV series. At eleven I went to bed.*
 
-:::tip
-The pronoun **я** (I) remains the same, so the verb ending is the only indicator of the speaker's gender. Memorize the ending that matches your own gender and use it consistently.
+If we analyze Anna's story, we can see why it sounds so natural. When Anna talks about her own past actions with **я**, she uses feminine forms such as **прокинулася**, **поснідала**, **пішла**, **обідала**, **ходила**, and **лягла**. Notice, however, that past-tense verbs agree with their subject: in **Учора був звичайний день**, the verb **був** is masculine because **день** is masculine. She also grounds the story with concrete details such as **кафе**, **магазин**, **салат**, and **продукти**.
+
+:::note
+Even in a simple story, Ukrainian style prefers to avoid repetition. Anna uses **потім** (then) and **після роботи** (after work) to transition between scenes. This prevents every sentence from starting with "I did this, I did that."
 :::
 
-It is your turn to build a narrative. Use the following template to structure your thoughts:
+Now it is your turn to build your own narrative. You can use the template below as a guide. Simply choose the verb forms that match your gender and fill in the details of your own life.
 
-*   **Учора...** *(Yesterday...)*
-*   **Зранку я...** *(In the morning I...)*
-*   **Потім...** *(Then...)*
-*   **Вдень я...** *(In the afternoon I...)*
-*   **Ввечері я...** *(In the evening I...)*
+**Учора...** (**Учора був га́рний день!**)
+**Зранку я...** (Select: **прокинувся** / **прокинулася**)
+**Потім я...** (Select: **поснідав** / **поснідала**; **пив / пила** **каву / чай**; **їв / їла** **кашу**)
+**Вдень я...** (Select: **працював** / **працюва́ла** ... **в о́фісі / вдо́ма**)
+**Ввечері я...** (Select: **дивився** / **дивилася** ... **серіал / фільм**)
+**Нарешті я...** (Select: **ліг** / **лягла** ... **спати**)
 
-Combine these past-tense verbs with places you already know, such as a **кафе** (cafe), a **парк** (park), or a **магазин** (store). Add food items like **ка́ша** (porridge), **ка́ва** (coffee), or a **салат** (salad). You can also include the people you interacted with, whether it was a **друг** (friend), a **коле́га** (colleague), or a **по́друга** (female friend). Everything you learned in A1 comes together here to help you share your personal story clearly and accurately.
+Try to include at least one **колега** (colleague) or **друг** (friend) in your story to make it more social. The more you practice connecting these chunks, the faster you will move from "translating" to "thinking" in Ukrainian.
 
-<FillIn client:only="react" items={[{"sentence": "Учора ____ я прокинулася о сьомій.", "answer": "зранку", "options": ["зранку", "вдень", "потім"]}, {"sentence": "____ я поснідала.", "answer": "Спочатку", "options": ["Спочатку", "Нарешті", "Вночі"]}, {"sentence": "____ я пішла на роботу.", "answer": "Потім", "options": ["Потім", "Зранку", "Ввечері"]}, {"sentence": "Вдень я ____ в кафе.", "answer": "обідала", "options": ["обідала", "обідав", "обідали"]}, {"sentence": "____ я готувала вечерю.", "answer": "Ввечері", "options": ["Ввечері", "Вдень", "Зранку"]}, {"sentence": "О десятій я ____ спати.", "answer": "лягла", "options": ["лягла", "ліг", "лягли"]}]} instruction={"Вставте правильне слово (Insert the correct word)"} />
-<FillIn client:only="react" items={[{"sentence": "Я мала звичайний день. Я ____ рано.", "answer": "прокинулася", "options": ["прокинулася", "прокинувся"]}, {"sentence": "Потім я ____.", "answer": "поснідала", "options": ["поснідала", "поснідав"]}, {"sentence": "Після цього я ____ у магазин.", "answer": "пішла", "options": ["пішла", "пішов"]}, {"sentence": "Там я ____ продукти.", "answer": "купила", "options": ["купила", "купив"]}, {"sentence": "Ввечері я ____ вечерю.", "answer": "готувала", "options": ["готувала", "готував"]}, {"sentence": "О десятій я ____ спати.", "answer": "лягла", "options": ["лягла", "ліг"]}]} instruction={"Оберіть форму для Анни (Choose the form for Anna)"} />
+<FillIn client:only="react" items={[{"sentence": "Учора ____ я прокинулася о сьомій.", "answer": "зранку", "options": ["зранку", "вдень", "потім"]}, {"sentence": "____ я поснідала.", "answer": "Спочатку", "options": ["Спочатку", "Нарешті", "Вночі"]}, {"sentence": "____ я пішла на роботу.", "answer": "Потім", "options": ["Потім", "Зранку", "Ввечері"]}, {"sentence": "Вдень я ____ в кафе.", "answer": "обідала", "options": ["обідала", "обідав", "обідали"]}, {"sentence": "____ я готувала вечерю.", "answer": "Ввечері", "options": ["Ввечері", "Вдень", "Зранку"]}, {"sentence": "О десятій я ____ спати.", "answer": "лягла", "options": ["лягла", "ліг", "лягли"]}]} instruction={"Вставте правильне слово (Fill in the correct word)"} />
+
+<FillIn client:only="react" items={[{"sentence": "Я мала звичайний день. Я ____ рано.", "answer": "прокинулася", "options": ["прокинулася", "прокинувся", "прокинулися"]}, {"sentence": "Потім я ____.", "answer": "поснідала", "options": ["поснідала", "поснідав", "поснідали"]}, {"sentence": "Після цього я ____ у магазин.", "answer": "пішла", "options": ["пішла", "пішов", "пішли"]}, {"sentence": "Там я ____ продукти.", "answer": "купила", "options": ["купила", "купив", "купили"]}, {"sentence": "Ввечері я ____ вечерю.", "answer": "готувала", "options": ["готувала", "готував", "готували"]}, {"sentence": "Нарешті я ____ спати.", "answer": "лягла", "options": ["лягла", "ліг", "лягли"]}]} instruction={"Оберіть правильну форму для Анни (Choose the correct form for Anna)"} />
 
 ## Summary
 
-The narration toolkit contains the elements needed to describe past experiences. Telling a coherent story requires organizing verbs with time anchors and maintaining strict grammatical consistency.
+To narrate your day in Ukrainian, organize the story with time markers such as **зранку**, **вдень**, **ввечері**, and, when needed, **вночі**. Then connect the actions with sequencing words such as **спочатку**, **потім**, **після цього**, and **нарешті** so the story moves clearly from one event to the next.
 
-*   **Time structure:** **зранку** → **вдень** → **ввечері** → **вночі**.
-*   **Sequencing:** **спочатку**, **потім**, **після цього**, **нарешті**.
-*   **Daily routine past forms:** **прокинувся/-лася**, **поснідав/-ла**, **пішов/пішла**, **обідав/-ла**, **повернувся/-лася**, **ліг/лягла спати**.
-*   **Gender consistency:** male speakers use **-в/-вся** forms throughout, female speakers use **-ла/-лася** throughout.
+In this module, we have focused on a core toolkit of routine verbs that cover the vast majority of daily life. Mastering these few forms allows you to describe almost any day:
 
-Before you finish, perform a final self-check on your storytelling skills. Ask yourself these questions when building a narrative:
+*   **прокинувся/-лася** (woke up)
+*   **поснідав/-ла** (had breakfast)
+*   **пішов/пішла** (went)
+*   **обідав/-ла** (had lunch)
+*   **повернувся/-лася** (returned)
+*   **ліг/лягла** спати (went to bed)
 
-*   **Чи ви́користав я прина́ймні 5 дієслі́в у мину́лому ча́сі?** *(Did I use at least 5 verbs?)*
-*   **Чи всі дієслова́ ма́ють одна́ковий рід (чоловічий або́ жіночий)?** *(Are all verbs the same gender?)*
-*   **Чи є в мої́й ро́зповіді «спочатку» і «потім»?** *(Are there "first" and "then"?)*
+The most important rule to remember is agreement in the first person past tense. When you talk about your own actions with **я**, choose the form that matches your gender: for example, **я пішов / я пішла**, **я прокинувся / я прокинулася**. But past-tense verbs still agree with their actual subject, so **день був звичайний** stays masculine because **день** is masculine. Mixing **я пішов** and **я пішла** in the same self-narration is a common learner mistake.
 
-Tell the story of your yesterday using at least 5 verbs aloud, either to a partner or to yourself. Make absolutely sure to include what you ate for breakfast, using **поснідав** or **поснідала**, and mention when you went to sleep, using **ліг спати** or **лягла спати**. Practice this daily until the sequence feels natural and your verb endings match your gender automatically.
+As a final self-check, try to tell the story of your **учора** (yesterday) aloud right now. Use at least five of the routine verbs and three different time markers. If you can tell your story from morning to night without stopping, you have mastered the art of Ukrainian narration!
 
 </TabItem>
 <TabItem label="Словник">
@@ -188,74 +189,65 @@ Tell the story of your yesterday using at least 5 verbs aloud, either to a partn
 
 | Слово | Переклад | Частина мови | Рід |
 |-------|----------|-------------|-----|
-| **учо́ра** | yesterday | присл. |  |
-| **зра́нку** | in the morning | присл. |  |
-| **споча́тку** | first/at first | присл. |  |
-| **по́тім** | then | присл. |  |
+| **споча́тку** | first / at first | присл. |  |
 | **наре́шті** | finally | присл. |  |
-| **проки́нутися** | to wake up | дієсл. |  |
-| **посні́дати** | to have breakfast | дієсл. |  |
-| **піти** | to go | ім. | ж. |
 | **поверну́тися** | to return | дієсл. |  |
 | **лягти́** | to lie down | дієсл. |  |
 | **звича́йний** | ordinary | прикм. |  |
 | **проду́кти** | groceries | ім. |  |
 | **серіа́л** | TV series | ім. | ч. |
 | **коле́га** | colleague | ім. | ч. |
-| **велосипе́д** | bicycle | ім. | ч. |
-| **кав'я́рня** | cafe/coffee shop | ім. | ж. |
-| **зни́кнути** | to disappear | дієсл. |  |
-| **ку́ртка** | jacket | ім. | ж. |
-| **ке́пка** | cap | ім. | ж. |
-| **ри́нок** | market | ім. |  |
-| **фру́кти** | fruit | ім. |  |
-| **готува́ти** | to cook | дієсл. |  |
-| **гуля́ти** | to walk/stroll | дієсл. |  |
-| **по́друга** | female friend | ім. | ж. |
-| **ка́ша** | porridge | ім. | ж. |
-| **замо́вити** | to order | дієсл. |  |
-| **сала́т** | salad | ім. | ч. |
-| **ра́но** | early | ім. | ж. |
+| **учо́ра** | yesterday | присл. |  |
+| **зра́нку** | in the morning | присл. |  |
+| **вве́чері** | in the evening | присл. |  |
+| **по́тім** | then | присл. |  |
+| **проки́нутися** | to wake up | дієсл. |  |
+| **посні́дати** | to have breakfast | дієсл. |  |
+| **обі́дати** | to have lunch | дієсл. |  |
+| **вночі́** | at night | присл. |  |
+| **піти** | to go / set out | ім. | ж. |
+| **працюва́ти** | to work | дієсл. |  |
+| **бу́ти** | to be | дієсл. |  |
+| **вече́ряти** | to have dinner | дієсл. |  |
+| **ходи́ти** | to go / to walk | дієсл. |  |
+| **купи́ти** | to buy | дієсл. |  |
 
 ### Вирази
 
 | Вираз | Переклад |
 |-------|----------|
-| **лягти спати** | to go to sleep |
-| **Як пройшов твій день?** | How was your day? |
-| **Як файно!** | How nice! |
+| **Що ти робив зранку?** | What did you do in the morning? |
+| **Що ти робила у суботу?** | What did you do on Saturday? |
+| **О, я мала чудовий день!** | Oh, I had a wonderful day! |
+| **Розкажи!** | Tell me! |
+| **Як файно!** | How lovely! |
+| **лягти спати** | to go to bed |
 
 ### Картки — Flashcards
 
-<FlashcardDeck client:only="react" cards={[{ front: "учо́ра", back: "yesterday", subtitle: "присл." }, { front: "зра́нку", back: "in the morning", subtitle: "присл." }, { front: "споча́тку", back: "first/at first", subtitle: "присл." }, { front: "по́тім", back: "then", subtitle: "присл." }, { front: "наре́шті", back: "finally", subtitle: "присл." }, { front: "проки́нутися", back: "to wake up", subtitle: "дієсл." }, { front: "посні́дати", back: "to have breakfast", subtitle: "дієсл." }, { front: "піти", back: "to go", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "поверну́тися", back: "to return", subtitle: "дієсл." }, { front: "лягти́", back: "to lie down", subtitle: "дієсл." }, { front: "звича́йний", back: "ordinary", subtitle: "прикм." }, { front: "проду́кти", back: "groceries", subtitle: "ім." }, { front: "серіа́л", back: "TV series", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "коле́га", back: "colleague", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "велосипе́д", back: "bicycle", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "кав&#39;я́рня", back: "cafe/coffee shop", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "зни́кнути", back: "to disappear", subtitle: "дієсл." }, { front: "ку́ртка", back: "jacket", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ке́пка", back: "cap", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ри́нок", back: "market", subtitle: "ім." }, { front: "фру́кти", back: "fruit", subtitle: "ім." }, { front: "готува́ти", back: "to cook", subtitle: "дієсл." }, { front: "гуля́ти", back: "to walk/stroll", subtitle: "дієсл." }, { front: "по́друга", back: "female friend", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ка́ша", back: "porridge", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "замо́вити", back: "to order", subtitle: "дієсл." }, { front: "сала́т", back: "salad", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ра́но", back: "early", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }]} />
+<FlashcardDeck client:only="react" cards={[{ front: "споча́тку", back: "first / at first", subtitle: "присл." }, { front: "наре́шті", back: "finally", subtitle: "присл." }, { front: "поверну́тися", back: "to return", subtitle: "дієсл." }, { front: "лягти́", back: "to lie down", subtitle: "дієсл." }, { front: "звича́йний", back: "ordinary", subtitle: "прикм." }, { front: "проду́кти", back: "groceries", subtitle: "ім." }, { front: "серіа́л", back: "TV series", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "коле́га", back: "colleague", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "учо́ра", back: "yesterday", subtitle: "присл." }, { front: "зра́нку", back: "in the morning", subtitle: "присл." }, { front: "вве́чері", back: "in the evening", subtitle: "присл." }, { front: "по́тім", back: "then", subtitle: "присл." }, { front: "проки́нутися", back: "to wake up", subtitle: "дієсл." }, { front: "посні́дати", back: "to have breakfast", subtitle: "дієсл." }, { front: "обі́дати", back: "to have lunch", subtitle: "дієсл." }, { front: "вночі́", back: "at night", subtitle: "присл." }, { front: "піти", back: "to go / set out", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "працюва́ти", back: "to work", subtitle: "дієсл." }, { front: "бу́ти", back: "to be", subtitle: "дієсл." }, { front: "вече́ряти", back: "to have dinner", subtitle: "дієсл." }, { front: "ходи́ти", back: "to go / to walk", subtitle: "дієсл." }, { front: "купи́ти", back: "to buy", subtitle: "дієсл." }]} />
 
 </TabItem>
 <TabItem label="Зошит">
 
-<GroupSort client:only="react" groups={{"Чоловічий рід (Він)": ["прокинувся", "поснідав", "пішов", "обідав", "повернувся", "ліг"], "Жіночий рід (Вона)": ["прокинулася", "поснідала", "пішла", "обідала", "повернулася", "лягла"]}} instruction={"Розподіліть дієслова за родом (Sort the verbs by gender)"} />
+<MatchUp client:only="react" pairs={[{"left": "він прокинувся", "right": "вона прокинулася"}, {"left": "він поснідав", "right": "вона поснідала"}, {"left": "він пішов", "right": "вона пішла"}, {"left": "він працював", "right": "вона працювала"}, {"left": "він повернувся", "right": "вона повернулася"}, {"left": "він ліг", "right": "вона лягла"}, {"left": "він обідав", "right": "вона обідала"}]} instruction={"З'єднайте форми дієслів (Match the verb forms)"} />
 
-<Quiz client:only="react" questions={[{"question": "Що вкрав чоловік у свідка?", "options": [{"text": "велосипед", "correct": true}, {"text": "кепку", "correct": false}, {"text": "куртку", "correct": false}, {"text": "каву", "correct": false}]}, {"question": "Де свідок припаркував велосипед?", "options": [{"text": "біля магазину", "correct": true}, {"text": "в парку", "correct": false}, {"text": "біля кав'ярні", "correct": false}, {"text": "в офісі", "correct": false}]}, {"question": "Куди Тарас пішов зранку?", "options": [{"text": "на роботу", "correct": true}, {"text": "в магазин", "correct": false}, {"text": "в кав'ярню", "correct": false}, {"text": "в парк", "correct": false}]}, {"question": "З ким обідав Тарас?", "options": [{"text": "з колегою", "correct": true}, {"text": "з другом", "correct": false}, {"text": "з подругою", "correct": false}, {"text": "сам", "correct": false}]}, {"question": "Що робила Ірина зранку в суботу?", "options": [{"text": "ходила на ринок", "correct": true}, {"text": "готувала обід", "correct": false}, {"text": "гуляла в парку", "correct": false}, {"text": "дивилася серіал", "correct": false}]}, {"question": "О котрій годині Анна лягла спати?", "options": [{"text": "о одинадцятій", "correct": true}, {"text": "о десятій", "correct": false}, {"text": "о дванадцятій", "correct": false}, {"text": "о дев'ятій", "correct": false}]}]} instruction={"Оберіть правильний варіант за текстом (Choose the correct option according to the text)"} />
+<GroupSort client:only="react" groups={{"Він (Чоловічий рід)": ["прокинувся", "пішов", "поснідав", "ліг", "обідав"], "Вона (Жіночий рід)": ["прокинулася", "пішла", "поснідала", "лягла", "обідала"]}} instruction={"Розподіліть дієслова за родом (Sort the verbs by gender)"} />
 
-<MatchUp client:only="react" pairs={[{"left": "велосипед", "right": "він"}, {"left": "магазин", "right": "він"}, {"left": "кав'ярня", "right": "вона"}, {"left": "куртка", "right": "вона"}, {"left": "кепка", "right": "вона"}, {"left": "офіс", "right": "він"}]} instruction={"З'єднайте іменники з відповідними займенниками (Match the nouns with the corresponding pronouns)"} />
+<Unjumble client:only="react" items={[{"words": "я / Зранку / поснідав.", "answer": "Зранку я поснідав."}, {"words": "роботу. / пішла / на / Потім / я", "answer": "Потім я пішла на роботу."}, {"words": "колегою. / обідав / з / Вдень / я", "answer": "Вдень я обідав з колегою."}, {"words": "у / Я / магазин. / пішов", "answer": "Я пішов у магазин."}, {"words": "дивилася / Ввечері / я / серіал.", "answer": "Ввечері я дивилася серіал."}, {"words": "Нарешті / спати. / лягла / я", "answer": "Нарешті я лягла спати."}]} instruction={"Складіть правильне речення зі слів (Make a correct sentence from the words)"} />
 
-<ErrorCorrection client:only="react" items={[{"sentence": "Тарас прокинулася о сьомій.", "errorWord": "прокинулася", "correctForm": "прокинувся", "options": ["прокинувся", "прокидатися", "прокинулося"], "explanation": "Тарас — це він (чоловічий рід)."}, {"sentence": "Анна ліг спати пізно.", "errorWord": "ліг", "correctForm": "лягла", "options": ["лягла", "лягло", "лягти"], "explanation": "Анна — це вона (жіночий рід)."}, {"sentence": "Свідок сказав: Я бачила чоловіка.", "errorWord": "бачила", "correctForm": "бачив", "options": ["бачив", "бачило", "бачити"], "explanation": "Свідок (у цьому тексті) чоловік, тому вживаємо чоловічий рід."}, {"sentence": "Мій друг пішла на роботу.", "errorWord": "пішла", "correctForm": "пішов", "options": ["пішов", "пішли", "піде"], "explanation": "Друг — чоловічий рід."}, {"sentence": "Моя подруга купив продукти.", "errorWord": "купив", "correctForm": "купила", "options": ["купила", "купили", "купило"], "explanation": "Подруга — жіночий рід."}, {"sentence": "Олег обідала в кафе.", "errorWord": "обідала", "correctForm": "обідав", "options": ["обідав", "обідали", "обідати"], "explanation": "Олег — чоловічий рід."}]} instruction={"Знайдіть і виправте помилку в дієслові (Find and correct the error in the verb)"} />
+<FillIn client:only="react" items={[{"sentence": "Учора був звичайний день. Я ____ рано.", "answer": "прокинувся", "options": ["прокинувся", "прокинулася", "прокинулися"]}, {"sentence": "Спочатку я ____.", "answer": "поснідав", "options": ["поснідав", "поснідала", "поснідали"]}, {"sentence": "Потім я ____ на роботу.", "answer": "пішов", "options": ["пішов", "пішла", "пішли"]}, {"sentence": "Вдень я ____ з колегою.", "answer": "обідав", "options": ["обідав", "обідала", "обідали"]}, {"sentence": "Після цього я ____ додому.", "answer": "повернувся", "options": ["повернувся", "повернулася", "повернулися"]}, {"sentence": "Ввечері я дивився серіал і ____ спати.", "answer": "ліг", "options": ["ліг", "лягла", "лягли"]}]} instruction={"Оберіть правильну форму для Петра (Choose the correct form for Petro)"} />
 
-<TrueFalse client:only="react" items={[{"statement": "Свідок бачив чоловіка в куртці та кепці.", "isTrue": true, "explanation": "Так, свідок сказав: «Бачив чоловіка в куртці та кепці»."}, {"statement": "Тарас зранку дивився фільм.", "isTrue": false, "explanation": "Тарас дивився фільм ввечері."}, {"statement": "Ірина ходила в ресторан з подругою.", "isTrue": true, "explanation": "Так, вона сказала: «Ввечері ми з подругою ходили в ресторан»."}, {"statement": "Анна снідала салатом і соком.", "isTrue": false, "explanation": "Вона їла салат і сік на обід."}, {"statement": "Вдень Анна готувала вечерю.", "isTrue": false, "explanation": "Анна готувала вечерю ввечері."}, {"statement": "Після роботи Анна купила продукти.", "isTrue": true, "explanation": "Так, вона ходила в магазин і купила продукти."}]} instruction={"Правда чи ні? (True or false?)"} />
+<Anagram client:only="react" items={[{"scrambled": "з р а н к у", "answer": "зранку", "hint": "in the morning"}, {"scrambled": "в д е н ь", "answer": "вдень", "hint": "in the afternoon"}, {"scrambled": "в в е ч е р і", "answer": "ввечері", "hint": "in the evening"}, {"scrambled": "п о т і м", "answer": "потім", "hint": "then"}, {"scrambled": "у ч о р а", "answer": "учора", "hint": "yesterday"}, {"scrambled": "н а р е ш т і", "answer": "нарешті", "hint": "finally"}]} instruction={"Складіть слово з літер (Make a word from the letters)"} />
 
-<Unjumble client:only="react" items={[{"words": "я / Зранку / о / сьомій. / прокинувся", "answer": "Зранку я прокинувся о сьомій."}, {"words": "кафе. / обідала / я / в / Вдень", "answer": "Вдень я обідала в кафе."}, {"words": "я / Ввечері / серіал. / дивився", "answer": "Ввечері я дивився серіал."}, {"words": "пішов / на / я / Потім / роботу.", "answer": "Потім я пішов на роботу."}, {"words": "продукти. / магазин / я / і / купила / Після / роботи / пішла / в", "answer": "Після роботи я пішла в магазин і купила продукти."}, {"words": "спати. / лягла / я / Нарешті", "answer": "Нарешті я лягла спати."}]} instruction={"Складіть правильне речення зі слів (Make a correct sentence from the words)"} />
+<TrueFalse client:only="react" items={[{"statement": "Слово «зранку» ми використовуємо для вечора.", "isTrue": false, "explanation": "Зранку означає «in the morning»."}, {"statement": "Слово «потім» допомагає з'єднати події в історії.", "isTrue": true, "explanation": "Потім (then) — це дуже корисне слово."}, {"statement": "Чоловік каже «я пішла на роботу».", "isTrue": false, "explanation": "Для чоловічого роду ми використовуємо форму «пішов»."}, {"statement": "Жінка каже «я лягла спати».", "isTrue": true, "explanation": "Для жіночого роду ми використовуємо форму «лягла»."}, {"statement": "Слово «нарешті» зазвичай використовують наприкінці розповіді.", "isTrue": true, "explanation": "Нарешті означає «finally»."}, {"statement": "Дієслова минулого часу змінюються за родами (чоловічий, жіночий).", "isTrue": true, "explanation": "Наприклад: він пішов, вона пішла."}]} instruction={"Правда чи ні? (True or false?)"} />
 
-<MatchUp client:only="react" pairs={[{"left": "учора", "right": "yesterday"}, {"left": "зранку", "right": "in the morning"}, {"left": "вдень", "right": "in the afternoon"}, {"left": "ввечері", "right": "in the evening"}, {"left": "спочатку", "right": "first"}, {"left": "потім", "right": "then"}, {"left": "нарешті", "right": "finally"}]} instruction={"З'єднайте українські слова з їхнім англійським значенням (Match the Ukrainian words with their English meaning)"} />
+<OddOneOut client:only="react" items={[{"words": ["зранку", "вдень", "ввечері", "продукти"], "correct": 3, "explanation": "Продукти — це іменник (noun), а інші слова позначають час (time markers)."}, {"words": ["поснідав", "прокинувся", "лягла", "пішов"], "correct": 2, "explanation": "Лягла — це форма для жінки (she), а інші — для чоловіка (he)."}, {"words": ["повернулася", "працювала", "обідала", "ліг"], "correct": 3, "explanation": "Ліг — це форма для чоловіка (he), а інші — для жінки (she)."}, {"words": ["спочатку", "колега", "потім", "нарешті"], "correct": 1, "explanation": "Колега — це людина (person), а інші слова — це маркери часу (sequence markers)."}, {"words": ["поснідати", "обідати", "вечеряти", "звичайний"], "correct": 3, "explanation": "Звичайний — це прикметник (adjective), а інші — дієслова (verbs)."}, {"words": ["салат", "сік", "каша", "серіал"], "correct": 3, "explanation": "Серіал — це те, що ми дивимося. Інші слова — це їжа та напої (food and drinks)."}]} instruction={"Знайдіть зайве слово (Find the odd one out)"} />
 
 </TabItem>
 <TabItem label="Ресурси">
 
-## Підручники (Textbooks)
-
-- [Заболотний О. В. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrajinska-mova-zabolotnij-2018.pdf#page=134), стор. 134
-- [Заболотний О. В. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrajinska-mova-zabolotnij-2018.pdf#page=134), стор. 134
-- [Большакова І. О. — Українська мова, 2 клас (2019)](https://pidruchnyk.com.ua/uploads/book/2-klas-ukrmova-bolshakova-2019-2.pdf#page=28), стор. 28
-- [Захарійчук М. Д. — Українська мова, 4 клас ()](https://shkola.in.ua/4-klas-ukrainska-mova-zaharijchuk.html), стор. 151
-- [Літвінова І. М. — Українська мова, 5 клас (2022)](https://pidruchnyk.com.ua/uploads/book/5_ukrmova_litvinova_2022.pdf#page=177), стор. 177
+_Ресурси будуть додані пізніше._
 
 </TabItem>
 </Tabs>

@@ -2,49 +2,53 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 9
-  evidence: Missing explicit examples of holidays/birthdays in the theory section,
-    though dates are extensively practiced throughout the module.
+  score: 8
+  evidence: All planned H2 sections are present and the required vocabulary is substantially
+    covered, but the recommended plan vocabulary `числівник` and `додаток` does not
+    appear in the prose, and the `match-up-
 - dimension: 2
   name: Linguistic accuracy
-  score: 8
-  evidence: The sentence `* «Це мій двадцять один рік.»` is a direct grammatical calque
-    from English. The word `папок` is missing from VESUM and is a Russian-influenced
-    noun.
+  score: 7
+  evidence: The Ukrainian forms are mostly solid, but the counting explanation says
+    learners should “always look at the last number,” which is a wrong grammar rule
+    because `11–14` override the last-digit pattern.
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: Excellent PPP flow with strong, clear explanations of complex rules like
-    the 1, 2-4, 5+ counting hierarchy. Etymological hints ("a five of tables") are
-    very helpful.
+  score: 7
+  evidence: The module gives many examples, but the counting rule is overgeneralized
+    before the exception logic is stated, and the quantities/dates practice is not
+    placed immediately after the relevant teaching.
 - dimension: 4
   name: Vocabulary coverage
-  score: 9
-  evidence: The required word "місяць" is never explicitly presented in Ukrainian
-    in the text, although "month" is discussed in English. All other words are present.
+  score: 8
+  evidence: Required items such as `число`, `місяць`, all 12 months, and `заперечення`
+    are present, but recommended `числівник` and `додаток` are absent from the prose.
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: All 4 activity markers from the plan are present and placed logically
-    after their corresponding topics.
+  score: 8
+  evidence: The marker inventory matches the plan, but `match-up-qa-quantities-dates`
+    appears after the negation material instead of after the dates/counting material
+    it is meant to reinforce.
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: Warm, encouraging tone ("This is the biggest mental shift you need to
-    make...") without being overly colloquial or gamified.
+  score: 8
+  evidence: 'The teacher voice is mostly solid, but the counting dialogue derails
+    into an unrelated historical sentence: `Оборона старого українського аеропорту...`,
+    which feels pasted in rather than taught.'
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: Clean formatting. All sections are present and ordered correctly. The
-    word count is 3461, comfortably exceeding the 2000-word target.
+  evidence: All major sections are present and ordered correctly, markers are intact,
+    and the pipeline word count is `2979`, which is above target.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Natural and culturally appropriate context in dialogues (e.g., using hryvnias,
-    natural store interactions).
+  evidence: The module is Ukrainian-centered and uses appropriate cultural references
+    such as Independence Day and Ukrainian month-name etymology.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: Natural multi-turn conversations that seamlessly integrate the target
-    grammar in realistic settings (salon, hotel, store).
+  score: 7
+  evidence: 'The hotel dialogue works, but the later “dialogue” is not a real exchange:
+    one speaker abruptly states `Оборона старого українського аеропорту...` with no
+    conversational setup.'
 findings: []

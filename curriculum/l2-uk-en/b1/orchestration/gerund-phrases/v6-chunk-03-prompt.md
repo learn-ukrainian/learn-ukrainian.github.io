@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-ми її прибрали, базове правило негайно б повернулося. Тоді ми б написали: «Це складне завдання можна виконати, не знаючи всіх правил». Тут є один надзвичайно важливий нюанс для тих, хто вивчає українську. Потрібно завжди чітко розрізняти підсилювальну частку «і/й» та звичайний єднальний сполучник «і» в межах складного речення. Якщо «і» просто з'єднує дві частини речення, а вже після нього починається самостійний дієприслівниковий зворот, то кома обов'язково ставиться після сполучника. Порівняйте: «Ми довго йшли лісом і, знайшовши затишну галявину, вирішили перепочити» *(We walked through the forest for a long time and, having found a cozy glade, decided to rest)*. Тут кома необхідна, адже зворот розриває другу частину речення. Третя група винятків стосується виключно одиничних дієприслівників, які в процесі мовної еволюції фактично перетворилися на звичайні прислівники. Це мовознавче явище професійно називається **адвербіалізацією** *(adverbialization)*. Якщо одиничний дієприслівник стоїть одразу **після** дієслова-присудка і прямо відповідає на питання «як?» *(how?)*, він не відокремлюється комою. Він вказує лише на спосіб виконання дії, а не на окрему додаткову дію. Наприклад: «Старий дідусь довго стояв похилившись» *(The old grandfather stood leaning for a long time)*. Слово «похилившись» тут вказує виключно на фізичну позу, на стан людини. Воно відповідає на запитання «як саме він стояв?». Інші схожі та поширені випадки: «Втомлений батько сидів задумавшись» *(The tired father sat lost in thought)*. Ще один приклад — відоме медичне застереження: «Шкідливо читати лежачи» *(It is harmful to read lying down)*. У всіх цих наведених реченнях дієприслівник так тісно злився за своїм змістом із присудком, що утворює з ним абсолютно неподільне смислове ціле. Але будьте максимально уважні під час написання текстів! Щойно цей одиничний адвербіалізований дієприслівник отримає хоча б одне, навіть найменше залежне слово, він знову стає повноцінним дієприслівниковим зворотом. Тоді коми негайно повертаються на свої місця. Порівняйте два варіанти. Перший: «Шкідливо читати лежачи» (немає залежних слів, коми немає). Другий: «Шкідливо читати, зручно лежачи в ліжку» *(It is harmful to read while lying comfortably in bed)* (з'явилися залежні слова — з'явилася кома). Пунктуаційні правила ніколи не існують самі по собі. Вони завжди точно відображають живе, органічне звучання мови. В усному мовленні всі коми — це реальні, логічні **паузи** *(pauses)*. Коли ми свідомо відокремлюємо дієприслівниковий зворот комою на письмі, ми тим самим змушуємо читача зробити коротку зупинку голосом під час читання. Це трохи змінює інтонацію і додає нашому мовленню особливої плавності та ритмічності. Натомість фразеологізми чи згадані адвербіалізовані дієприслівники (ті винятки, що пишуться без ком) вимовляються на одному диханні. Вони звучать абсолютно злито з головним дієсловом речення. Спробуйте самостійно вимовити вголос: «Він сидів склавши руки» *(He sat with his hands folded)*. Ви одразу відчуєте, що природної паузи перед словом «склавши» просто немає. Для вашої щоденної зручності пропонуємо короткий підсумковий довідник. **Завжди ставимо коми:** якщо бачимо зворот у будь-якій позиції; якщо є одиничний дієприслівник додаткової дії; коли є однорідні звороти без сполучників. **Ніколи не ставимо коми:** якщо це відомі фразеологізми («затамувавши подих»); якщо бачимо підсилювальну частку «і/й» перед зворотом; коли одиничний дієприслівник способу дії стоїть одразу після присудка («читати лежачи»); коли два звороти з'єднані сполучником «і». <!-- INJECT_ACTIVITY: match-up-punctuation-terms --> <!-- INJECT_ACTIVITY: error-correction-punctuation -->
+**Did you know?** — The intensifying particle *й* is often used to show that an action is possible despite a specific limitation. If you can translate it as "even without doing X", you should drop the comma. ::: The third and final exception involves a fascinating grammatical process called adverbialization. Sometimes, a single gerund stands directly after the main verb. Over time, because it sits so close to the verb and answers the question "how?" rather than "what doing?", it fundamentally transforms from a verb form into a pure adverb of manner. When this happens, it is no longer treated as a separate action, and therefore, it is not set off by commas. **Старий чоловік стояв похилившись.** — *The old man stood leaning.* **Студент сидів задумавшись.** — *The student sat lost in thought.* **Лікарі кажуть, що шкідливо читати лежачи.** — *Doctors say that it is harmful to read lying down.* It is absolutely critical to remember that this exception ONLY applies to bare, single gerunds standing alone after the verb. The magic is instantly broken the moment you add even one dependent word. If the gerund regains its modifiers, it reverts back into a full gerund phrase, and the standard golden rule of commas applies once again! Якщо ви додасте хоча б одне залежне слово до такого дієприслівника, він одразу перетвориться на повноцінний зворот. У цей момент граматична магія зникає, і вам знову доведеться ставити кому згідно з основним правилом. Compare these two nearly identical sentences to see how fragile this exception is: **Він читав лежачи.** — *He read lying down.* (No comma: single gerund acting as an adverb). **Він читав, лежачи на старому дивані.** — *He read, lying on the old sofa.* (Comma required: gerund phrase with dependent words). Ultimately, punctuation in Ukrainian is deeply connected to the natural rhythm of speech. Commas are not just arbitrary marks on a page; they are visual representations of logical, rhythmic pauses. When you set off a phrase with commas, you are physically pausing your breath to give that secondary action its own independent weight in the narrative. Розділові знаки слугують своєрідною музичною партитурою тексту. Коли ви розмовляєте українською, ви природно робите короткі зупинки саме там, де потрібні коми. І навпаки, коли ви вимовляєте сталий вираз, ваш голос тече плавно, що ідеально відображається відсутністю ком на папері. > *Punctuation marks serve as a kind of musical score for the text. When you speak Ukrainian, you naturally make short stops exactly where commas are needed. Conversely, when you pronounce a fixed expression, your voice flows smoothly, which is perfectly reflected by the absence of commas on paper.* To master these nuances, rely on the rhythm of your reading. Let's summarize the scenarios for quick reference: - Standard gerund phrase? **Comma.** - Single gerund acting as a separate action? **Comma.** - Fixed idiom (*склавши руки*)? **No comma.** - Phrase introduced by "even" (*й не знаючи*)? **No comma.** - Single gerund meaning "how" (*стояв похилившись*)? **No comma.** <!-- INJECT_ACTIVITY: match-up-punctuation-terms --> <!-- INJECT_ACTIVITY: error-correction-punctuation -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -536,7 +536,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -549,18 +616,60 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] дієприслівниковий зворот (gerund phrase)
+- [ ] відокремлення (setting off with commas)
+- [ ] фразеологічний зворот (phraseological expression — exception to comma rule)
+- [ ] не покладаючи рук (without rest — phraseological, no commas)
+- [ ] затамувавши подих (holding one's breath — phraseological, no commas)
+- [ ] обставина (adverbial modifier — syntactic role)
+- [ ] означення (attribute — syntactic role of дієприкметниковий зворот)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Порівняння зворотів: дієприкметниковий vs дієприслівниковий (~715 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

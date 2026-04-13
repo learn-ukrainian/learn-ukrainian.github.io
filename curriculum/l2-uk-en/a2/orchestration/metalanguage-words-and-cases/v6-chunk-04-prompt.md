@@ -21,7 +21,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-in "-a" or "-ya", this is feminine gender.)* Наприклад, слова «**сестра**» *(sister)*, «родина». *(For example, the words "sister", "family".)* Якщо слово закінчується на «-о», «-е», це середній рід. *(If a word ends in "-o", "-e", this is neuter gender.)* Наприклад, слова «**вікно**» *(window)*, «море». *(For example, the words "window", "sea".)* Коли ви шукаєте нове слово у словнику, ви завжди бачите його рід. *(When you look for a new word in a dictionary, you always see its gender.)* Словник пише короткі літери: ч., ж., або с. *(The dictionary writes short letters: ч., ж., or с.)* Це допомагає вам запам'ятати слово правильно. *(This helps you remember the word correctly.)* Інша важлива категорія — це **число** *(number)*. *(Another important category is number.)* В українській мові є два числа. *(In the Ukrainian language, there are two numbers.)* Перше число — це **однина** *(singular)*. *(The first number is singular.)* Друге число — це **множина** *(plural)*. *(The second number is plural.)* Українські підручники вчать дітей дуже простому правилу. *(Ukrainian textbooks teach children a very simple rule.)* Вони кажуть: «Один — це однина, багато — множина». *(They say: "One is singular, many is plural".)* Коли ми змінюємо число, ми змінюємо закінчення слова. *(When we change the number, we change the ending of the word.)* Наприклад, ми маємо один стіл — це однина. *(For example, we have one table — this is singular.)* Але якщо їх багато, ми кажемо столи — це множина. *(But if there are many of them, we say tables — this is plural.)* Число може змінюватися, на відміну від роду. *(Number can change, unlike gender.)* Ви можете легко зробити з однини множину. *(You can easily make plural from singular.)* На рівні А2 ми вчимося робити повний аналіз слова. *(At the A2 level, we learn to do a full analysis of a word.)* Як це виглядає на практиці? *(How does this look in practice?)* Уявіть, що у нас є речення: «На столі немає книг». *(Imagine that we have a sentence: "There are no books on the table".)* Ми беремо слово «**книг**» *(books)*. *(We take the word "books".)* Як український вчитель опише це слово? *(How will a Ukrainian teacher describe this word?)* Вчитель скаже: «Книг» — це іменник, жіночий рід, множина, родовий відмінок. *(The teacher will say: "Knyh" is a noun, feminine gender, plural, genitive case.)* Це звучить як код, але це дуже логічно. *(It sounds like a code, but it is very logical.)* Ми визначили частину мови, постійну ознаку і змінні ознаки. *(We determined the part of speech, the permanent feature, and variable features.)* Цей аналіз допомагає вам бачити систему мови. *(This analysis helps you see the system of the language.)* Ви не просто вгадуєте закінчення. *(You are not just guessing the ending.)* Ви точно знаєте, чому слово має таку форму. *(You know exactly why the word has such a form.)* Це ваша головна мета на цьому етапі. *(This is your main goal at this stage.)* <!-- INJECT_ACTIVITY: quiz, Identify the part of speech and case of underlined words in simple sentences, 8 items -->
+фрази. > *In the Ukrainian language, a noun always has its gender. This characteristic is permanent. You cannot change the gender of a word. If the word "table" is masculine gender, it will always be like that. Gender helps to build phrases correctly.* You can usually identify the gender of an **іменник** (noun) by looking at its final letter in the dictionary form. Words that end in a consonant or zero ending are usually чоловічий рід. Examples include words like «брат» or «стіл». Words that end in «-а» or «-я» belong to the жіночий рід category, such as «сестра» or «кава». Finally, words ending in «-о» or «-е» represent the середній рід, like «вікно» or «море». :::note **Quick tip** — When you look up a noun in a Ukrainian dictionary, you will often see abbreviations next to it. You will see «ч.» for чоловічий рід, «ж.» for жіночий рід, and «с.» for середній рід. ::: Друга важлива категорія — це число. В українській мові є **однина** (singular) та **множина** (plural). У шкільному підручнику є просте правило для дітей. Воно звучить так: «Один — це однина, багато — множина». > *The second important category is number. In the Ukrainian language, there is singular and plural. In the school textbook, there is a simple rule for children. It sounds like this: "One is singular, many is plural."* Unlike gender, number is not a permanent feature for most words. You can change a noun from singular to plural depending on how many items you are talking about. When a word changes its number, its ending changes as well. For example, the masculine word «стіл» is singular. When you have several tables, it becomes «столи», which is plural. Now that you know the Ukrainian terms for parts of speech, cases, gender, and number, you can analyze words like a real Ukrainian teacher. This complete breakdown is called morphological analysis. Your goal at this stage is to be able to look at a word in a sentence and fully describe its grammatical properties using Ukrainian terminology. Подивимося на слово «книг» у реченні «У мене немає книг». Спочатку ми кажемо, що це іменник. Далі ми визначаємо, що це жіночий рід. Після цього ми бачимо, що це множина. Нарешті, ми знаємо, що це **родовий відмінок** (genitive case). > *Let's look at the word "books" in the sentence "I don't have books". First, we say that it is a noun. Next, we determine that it is feminine gender. After that, we see that it is plural. Finally, we know that it is the genitive case.* Being able to say «Це іменник, жіночий рід, множина, родовий відмінок» shows that you truly understand how the language works. It gives you the precise metalanguage you need to ask questions, read grammar books, and discuss your mistakes with native speakers. This is the solid foundation you will use for all advanced grammar topics. <!-- INJECT_ACTIVITY: quiz, Identify the part of speech and case of underlined words in simple sentences, 8 items -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -371,7 +371,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 6: A2 finale (A2 M51-M69)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 40%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 40% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 70-90% Ukrainian.
 LANGUAGE ROLES:
@@ -390,18 +457,65 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] іменник (noun)
+- [ ] прикметник (adjective)
+- [ ] дієслово (verb)
+- [ ] займенник (pronoun)
+- [ ] числівник (numeral)
+- [ ] прислівник (adverb)
+- [ ] прийменник (preposition)
+- [ ] сполучник (conjunction)
+- [ ] називний відмінок (nominative case)
+- [ ] родовий відмінок (genitive case)
+- [ ] рід (gender, grammatical)
+- [ ] однина (singular)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Читаємо граматику українською (~450 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

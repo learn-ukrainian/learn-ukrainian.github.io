@@ -2,51 +2,53 @@ round: 2
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 9
-  evidence: All plan points are covered and the dialogue scenarios correctly implement
-    the requested "New Year's resolutions" setting.
+  score: 6
+  evidence: 'All four planned H2 sections exist, but the fill-in marker `<!-- INJECT_ACTIVITY:
+    fill-in-complete-sentences-with-the-correct-synthetic-perfective-future-forms-based-on-context
+    -->` appears before `##'
 - dimension: 2
   name: Linguistic accuracy
-  score: 10
-  evidence: Excellent accuracy. The writer correctly detailed the consonant shifts
-    (e.g., 'б' to 'бл' in 1st person singular and 3rd person plural for 'зробити')
-    and corrected the plan's 'здасть іспит' to the nat
+  score: 4
+  evidence: '`Ukrainian grammar has two distinct ways...` and `you must use this specific
+    form` are factually wrong; later the module itself says `«прибиратиму» is another
+    standard future form`.'
 - dimension: 3
   name: Pedagogical quality
-  score: 8
-  evidence: The pedagogical flow is generally good, but the writer relies heavily
-    on repetitive sentence-by-sentence English translations in the early sections,
-    and the English translation of the erroneous hybrid
+  score: 6
+  evidence: The module gives many examples, but it teaches an over-simplified rule
+    first and only repairs it later with `«прибиратиму» is another standard future
+    form`, which is confusing for A2 learners.
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: All required vocabulary from the plan ('скажу', 'напишу', 'зроблю', 'буду',
-    'прочитаю', 'подзвоню', 'куплю') is naturally integrated into the prose and examples.
+  score: 9
+  evidence: Required items such as `сказати / скажу`, `написати / напишу`, `зробити
+    / зроблю`, `буду`, `прочитати`, `подзвонити`, and `купити` all appear in prose
+    and examples.
 - dimension: 5
   name: Exercise quality
-  score: 7
-  evidence: 'The exercise markers are completely clustered at the end of the module
-    (`<!-- INJECT_ACTIVITY: fill-in-future-forms -->`, etc.) instead of being distributed
-    after the concepts they test.'
+  score: 6
+  evidence: Marker count matches the plan, but the fill-in activity is placed before
+    learners have studied the analytical future and its ID no longer matches the plan’s
+    contrastive brief.
 - dimension: 6
   name: Engagement & tone
-  score: 8
-  evidence: The tone is encouraging ("Let's briefly compare these two forms"), but
-    the formatting of the English translations is inconsistent (sometimes using italics
-    and parentheses, sometimes plain text), makin
+  score: 9
+  evidence: The New Year frame is concrete and teacherly, e.g. `У новому році я обов'язково
+    напишу книгу!`, without gamified fluff.
 - dimension: 7
   name: Structural integrity
   score: 9
-  evidence: The markdown structure is clean, all planned H2 headings are present,
-    and the word count comfortably exceeds the target.
+  evidence: All four H2 headings are present and ordered correctly; total word count
+    is `2277`, above target, with no dangling sections.
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: The cultural context in the examples is natural and appropriate (e.g.,
-    making New Year's resolutions, planning a weekend trip to the park and cinema).
+  score: 9
+  evidence: The module treats Ukrainian on its own terms and uses a plausible local
+    situation rather than Russian comparison framing.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 9
-  evidence: The dialogues are well-constructed, using named speakers ('Марта', 'Олег')
-    and demonstrating the grammar points in realistic, multi-turn conversations.
+  score: 8
+  evidence: 'Named speakers help, but the opening exchange is mostly serial declarations:
+    `...я обов''язково напишу книгу!`, `...я вивчу іспанську мову`, `...мій брат прочитає...`
+    with limited back-and-forth.'
 findings: []

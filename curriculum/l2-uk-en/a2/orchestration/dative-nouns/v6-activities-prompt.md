@@ -1,4 +1,4 @@
-<!-- version: 1.1.0 | updated: 2026-03-31 -->
+<!-- version: 1.2.0 | updated: 2026-04-12 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -11,6 +11,35 @@ Generate an `activities/dative-nouns.yaml` file for module **18: Студент�
 
 ---
 
+## ⚠️ HARD COUNT TARGETS — READ TWICE
+
+These are the binding numerical contracts for THIS module. The audit will FAIL if you fall short.
+
+| Bucket | Min | Max | Notes |
+|---|---|---|---|
+| Total activities | 12 | 12+ | inline + workbook combined |
+| Inline (lesson tab) | 4 | 6 | one per `<!-- INJECT_ACTIVITY -->` marker, see below |
+| Workbook (Зошит tab) | 8 | 11 | extended practice |
+| Items per activity | 8 | — | each activity must have at least 8 items (unless its type cap is lower — see Activity Type Reference below) |
+
+**You MUST ship at least 4 inline activities AND at least 8 workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+
+**Type diversity is required.** The module (inline + workbook combined) MUST use at least **0** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level. (If `0` is `0`, the audit profile for this level does not enforce type diversity — but variety still produces a better lesson, so aim for 4+ types when the workbook allows it.)
+
+---
+
+## Allowed types for THIS level
+
+- **Inline (lesson) types:** quiz, true-false, fill-in, match-up, group-sort, classify, mark-the-words
+- **Inline priority (preferred):** fill-in, match-up, true-false, quiz
+- **Workbook types:** cloze, error-correction, fill-in, unjumble, translate, match-up, group-sort, odd-one-out, observe, phrase-table, quiz, true-false, mark-the-words
+- **Workbook priority (preferred):** error-correction, cloze, unjumble, translate, fill-in
+- **FORBIDDEN at this level:** anagram, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables, highlight-morphemes, grammar-identify
+
+Pick from the allowed list. Lean heavily on the priority lists. Do not use any forbidden type — the build will reject it.
+
+---
+
 ## Inline vs Workbook Split
 
 Activities have two placement categories:
@@ -19,7 +48,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Rule of thumb:** inline = 2-3 quick checks after key teaching points. Workbook = 4-8 deeper practice exercises covering the full topic.
+**Rule of thumb:** inline = 4–6 quick checks after key teaching points. Workbook = 8–11 deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
 
 ---
 
@@ -27,11 +56,11 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: fill-in -->`
-- `<!-- INJECT_ACTIVITY: group-sort -->`
-- `<!-- INJECT_ACTIVITY: quiz -->`
-- `<!-- INJECT_ACTIVITY: match-up -->`
-- `<!-- INJECT_ACTIVITY: unjumble -->`
+- `<!-- INJECT_ACTIVITY: fill-in-dative-masculine -->`
+- `<!-- INJECT_ACTIVITY: quiz-feminine-alternation -->`
+- `<!-- INJECT_ACTIVITY: group-sort-dative-gender -->`
+- `<!-- INJECT_ACTIVITY: match-up-verb-phrases -->`
+- `<!-- INJECT_ACTIVITY: unjumble-dative-syntax -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -94,161 +123,217 @@ required:
 ## Module Content (the prose the learner reads before exercises)
 
 <module_content>
-## Давальний відмінок іменників чоловічого роду (Dative of Masculine Nouns)
+## Давальний відмінок іменників чоловічого роду (~700 words total)
 
-Уявіть ситуацію: ви хочете передати лист або подарунок. Як сказати, кому саме він призначений? Відповідь дає **Давальний відмінок** (the Dative case). Сама назва цього відмінка походить від дієслова **давати** (to give). Він відповідає на питання **кому?** (to whom?) для істот та **чому?** (to what?) для неістот. 
+Welcome to the Dative case, or the **давальний відмінок** in Ukrainian. The name of this case comes from the verb meaning "to give". It answers the questions **кому?** (to whom?) and **чому?** (to what?). The primary function of the Dative case is to designate the recipient of an action. When you give something, show something, or explain something, the person receiving that action takes the Dative case. If you give a gift to a student, the student is the recipient and takes a specific ending. If you give it to a sister, she takes a different ending. In this section, we will focus entirely on masculine nouns.
 
-Ukrainian masculine nouns are incredibly rich in the Dative case because they offer choices. Unlike many other cases where you have a single strict rule, II declension masculine nouns have parallel endings: **-ові/-еві/-єві** and **-у/-ю**. Both are correct: **братові = брату**, **лікареві = лікарю**. This gives the language a special melodic quality. 
+Я даю подарунок студентові.
+Він дарує квіти сестрі.
+Вчитель пояснює правило учневі.
+Ми можемо розповісти історію братові.
 
-Let's look at the specific rules for these parallel endings based on the stem type.
+> *I give a gift to the student.*
+> *He gives flowers to the sister.*
+> *The teacher explains the rule to the pupil.*
+> *We can tell the story to the brother.*
 
-1. We use **-ові** for hard stems. For example: **студентові** (to the student), **другові** (to the friend), **батькові** (to the father).
-2. We use **-еві** for soft stems and sibilants. For example: **вчителеві** (to the teacher), **товаришеві** (to the comrade/friend).
-3. We use **-єві** after vowels. For example: **героєві** (to the hero), **Андрієві** (to Andrii).
+Let us focus on masculine nouns, which belong to the second declension. Ukrainian masculine nouns have a very special feature in the Dative case. They can take parallel endings. You have a choice between the long **-ові / -еві / -єві** group and the short **-у / -ю** group. Both options are grammatically correct and completely interchangeable in everyday speech. You can say either "братові" or "брату" (to the brother), and "лікареві" or "лікарю" (to the doctor). However, the long endings are a rich, distinctive stylistic feature of the Ukrainian language. Native speakers strongly prefer them, especially when talking about living beings like people or animals. 
 
-If you prefer the shorter forms, hard stems take **-у** (**студенту**, **другу**, **батьку**), and soft stems take **-ю** (**вчителю**, **герою**). 
+Моєму братові потрібен цей телефон.
+Я хочу подарувати книгу лікареві.
+Дідусеві дуже подобається ця пісня.
+Студентові треба написати текст.
 
-> **Читаємо українською: Кому ти даєш?**
-> — Ти пишеш лист **другові** чи **брату**? (Are you writing a letter to a friend or to a brother?)
-> — Я пишу лист **братові**. Він зараз дуже далеко. (I am writing a letter to my brother. He is very far away right now.)
-> — А що ти даси **студентові**? (And what will you give to the student?)
-> — **Студенту** я дам новий словник. (I will give the student a new dictionary.)
-> — Треба також допомогти нашому **вчителеві**. (We also need to help our teacher.)
-> — Звичайно, я з радістю допоможу **вчителю**. (Of course, I will gladly help the teacher.)
+> *My brother needs this phone.*
+> *I want to give a book to the doctor.*
+> *The grandfather really likes this song.*
+> *The student needs to write a text.*
 
-:::tip
-Both endings are equally correct and often used interchangeably. However, native speakers often prefer the **-ові/-еві/-єві** endings for people and professions, as they sound more traditionally Ukrainian and give a respectful tone.
+How do we choose between the different endings in the first group? The choice depends on the final consonant of the noun stem. If the noun ends in a hard consonant, we use the **-ові** ending. For instance, the word for friend becomes **другові**, and the word for son becomes **синові**. If the noun ends in a soft consonant or a hissing sound, we use the **-еві** ending. The word for teacher becomes **вчителеві**, and the word for comrade becomes **товаришеві**. Finally, if the noun stem ends in a vowel, we use the **-єві** ending. The name Andriy becomes **Андрієві**.
+
+:::info
+**Grammar box**
+Always look at the last letter of the dictionary form. Hard consonants get **-ові**, soft and hissing consonants get **-еві**, and vowels get **-єві**.
 :::
 
-When we look at I declension masculine nouns (Дмитро, батько): follow their declension pattern — **Дмитрові**, **батькові**. These are very common names and words, and they behave exactly like other masculine nouns of the second declension in this regard. Whether it is a formal name or a family title, the ending brings clarity to the recipient of the action.
+Максим пише повідомлення другові.
+Вона хоче відповісти вчителеві.
+Ми маємо допомогти Андрієві.
+Журналіст ставить питання читачеві.
 
-There is also a very elegant style rule from Заболотний: when multiple dative nouns appear together, alternate endings to avoid monotony — **подякувати сусідові Данилу** (to thank neighbor Danylo). By mixing the **-ові** and **-у** endings, you create a rhythmic flow instead of repeating the same sound twice. You could also say **подякувати сусіду Данилові**, which is equally beautiful.
+> *Maksym is writing a message to a friend.*
+> *She wants to answer the teacher.*
+> *We have to help Andriy.*
+> *The journalist asks the reader a question.*
 
-Let's practice with common masculine nouns learners already know from A1-A2. 
+Now let us look at the second group of endings. These are the shorter endings, and they also depend on the stem. Masculine nouns with hard stems and hissing stems take the **-у** ending. The word for student can be **студенту**, and the word for comrade can be **товаришу**. Masculine nouns with soft stems take the **-ю** ending, so the word for doctor becomes **лікарю**. While these shorter endings are perfectly valid and you will hear them often, we strongly encourage you to actively practice the longer endings. Mastering them is a key step in speaking beautiful, authentic Ukrainian.
 
-> **Читаємо українською: Стиль і милозвучність**
-> — Я хочу подякувати **братові Максиму** за допомогу. (I want to thank brother Maksym for the help.)
-> — Він завжди радий допомогти. А ти вже дзвонив **лікарю Іванові**? (He is always happy to help. And have you already called doctor Ivan?)
-> — Ні, я зателефоную **лікареві** завтра. (No, I will call the doctor tomorrow.)
-> — Передай привіт нашому **другові Сергію**. (Send greetings to our friend Serhii.)
-> — Добре, я обов'язково напишу **Сергієві**. (Okay, I will definitely write to Serhii.)
+Я даю зошит студенту.
+Син допомагає лікарю.
+Ми телефонуємо товаришу.
+Жінка хоче відповісти чоловіку.
 
-<!-- INJECT_ACTIVITY: fill-in -->
+> *I am giving the notebook to the student.*
+> *The son helps the doctor.*
+> *We are calling a comrade.*
+> *The woman wants to answer the man.*
 
-As you can see, combining a title and a name makes the alternation rule very natural. If the title takes **-ові**, the name takes **-у**, and vice versa.
+There is an elegant stylistic rule for the Dative case when you have multiple masculine nouns in a row. Imagine you want to say "to neighbor Danylo". Both words are masculine nouns. To avoid phonological monotony and repetitive sounds, Ukrainian speakers alternate the endings. Instead of using two long endings in a row, which sounds heavy, you combine them. You use the long ending for the first word and the short ending for the second word.
 
-<!-- INJECT_ACTIVITY: group-sort -->
+Я хочу подякувати сусідові Данилу.
+Студент має написати листа видавцеві Сергію.
+Ми несемо подарунок панові директору.
+Треба показати дорогу братові Максиму.
 
-## Давальний відмінок іменників жіночого роду (Dative of Feminine Nouns)
+> *I want to thank neighbor Danylo.*
+> *The student has to write a letter to publisher Serhiy.*
+> *We are carrying a gift to Mr. Director.*
+> *We need to show the way to brother Maksym.*
 
-Feminine nouns in the Dative case are highly predictable, but they have a fascinating phonetic feature: consonant alternations. When you give something to a woman, a girl, or interact with a feminine object, you usually need the **-і** ending.
+You will also encounter some common masculine nouns that end in **-о**, such as the words for father, dad, or the names Dmytro and Petro. Even though they look slightly different in their dictionary form, they reliably take the **-ові** ending in the Dative case. This aligns perfectly with the pattern for masculine words denoting people. It is a very straightforward and consistent rule.
 
-For the I declension: hard stems take **-і** (**мамі**, **подрузі**, **сестрі**), soft stems take **-і** (**землі**, **пісні**), stems in -ія take **-ії** (**станції**). The ending **-і** is a hallmark of the Ukrainian Dative case for feminine nouns, distinguishing it clearly from other Slavic languages.
+Син передає ключі татові.
+Дочка робить чай батькові.
+Ми хочемо розповісти правду Дмитрові.
+Я купую квиток Петрові.
 
-Before adding this **-і** to hard stems, we often encounter a phonetic shift. Because the sound **[і]** makes the preceding consonant soft, velar consonants at the end of the stem change their shape. These are the consonant alternations before -і: к→ц (подруга→подрузі), г→з (книга→книзі), х→с (свекруха→свекрусі). Note that for a word like **жінка** (woman), the change is **к→ц** (**жінці**), and for **подруга** (female friend), the change is **г→з** (**подрузі**).
+> *The son passes the keys to the dad.*
+> *The daughter makes tea for the father.*
+> *We want to tell the truth to Dmytro.*
+> *I am buying a ticket for Petro.*
 
-> **Читаємо українською: Кому це?**
-> — Ти вже купив подарунок **мамі**? (Have you already bought a gift for mom?)
-> — Так, і **сестрі** також. (Yes, and for sister too.)
-> — А що ти скажеш своїй **подрузі**? (And what will you say to your female friend?)
-> — Я скажу **подрузі**, що вона найкраща. (I will tell my friend that she is the best.)
-> — Ця інформація є в новій **книзі**. (This information is in the new book.)
-> — Треба написати про це в **газеті**. (We need to write about this in the newspaper.)
+Let us solidify these concepts with a few more examples. Notice how the Dative case clearly marks the person who receives the action, the object, or the information. Every single **закінчення** (ending) helps to paint a clear picture of who is interacting with whom.
 
-:::note
-The alternation rule (к→ц, г→з, х→с) might seem tricky at first, but it exists because it is physically easier to transition from a soft [ц], [з], or [с] into the vowel [і]. This makes the language flow more smoothly.
+Я щодня допомагаю братові.
+Він пише довгого листа другові.
+Ми щиро дякуємо вчителеві.
+Вони хочуть подарувати квіти акторові.
+Вона має пояснити завдання студенту.
+
+> *I help my brother every day.*
+> *He writes a long letter to a friend.*
+> *We sincerely thank the teacher.*
+> *They want to give flowers to the actor.*
+> *She has to explain the task to the student.*
+
+<!-- INJECT_ACTIVITY: fill-in-dative-masculine -->
+
+## Давальний відмінок іменників жіночого роду (~550 words total)
+
+Most feminine nouns ending in **-а** or **-я** belong to the first declension. Forming the Dative case for these words is incredibly straightforward because both hard and soft stems take the exact same **закінчення** (ending). You simply drop the final vowel and add **-і**. For example, the word for mom becomes **мамі**, the word for sister becomes **сестрі**, the word for earth becomes **землі**, and the word for song becomes **пісні**. If a word ends in **-ія**, like the words for station (**станція**) or hope (**надія**), it takes the ending **-ії**, becoming **станції** and **надії**. This consistency makes it very easy to express that you are directing an action toward someone or something.
+
+Моя мама працює в школі. Я хочу подякувати мамі. У мене є старша сестра. Ми часто допомагаємо сестрі. Ця українська пісня дуже відома. Треба дати назву цій пісні. Моя подруга Надія дуже добра. Я часто телефоную Надії.
+
+> *My mom works at a school. I want to thank mom. I have an older sister. We often help the sister. This Ukrainian song is very famous. We need to give a name to this song. My friend Nadiya is very kind. I often call Nadiya.*
+
+There is one crucial phonetic rule you must remember when forming the Dative case for feminine nouns. In Ukrainian, the consonants **г**, **к**, and **х** cannot stand directly before the vowel **-і**. When you add the **-і** ending to a stem that ends in one of these letters, the consonants undergo a mandatory, predictable shift. The consonant **г** changes to **з**, the consonant **к** changes to **ц**, and the consonant **х** changes to **с**. This is not a random exception or an annoying irregularity. It is a fundamental, natural phonological law of the Ukrainian language that makes the words flow much more smoothly and beautifully.
+
+:::info
+**Consonant alternation rule** — Before the vowel **-і**, the sounds **г**, **к**, and **х** always change to **з**, **ц**, and **с**.
 :::
 
-Not all feminine nouns end in **-а** or **-я**. We also have III declension feminine nouns: **-і** (**ночі**, **матері**, **любові**, **радості**). These are nouns that end in a consonant or a soft sign in their basic dictionary form. When we put them in the Dative case, they also comfortably take the **-і** ending. For instance, **мати** (mother) becomes **матері** (to the mother), and **ніч** (night) becomes **ночі** (to the night).
+Let us look at how this sound change happens in practice. When you have a word like **подруга** (friend), the stem ends in **г**. To say "to the friend", that sound must soften into **з**, creating the word **подрузі**. The same logic applies to words ending in **к**, like **рука** (hand) becoming **руці**, and **доріжка** (path) becoming **доріжці**. Words ending in **х**, such as **муха** (fly) and **свекруха** (mother-in-law), shift to **с**, becoming **мусі** and **свекрусі**.
 
-Let's look at some practice sentences using indirect object pattern (**подарувати квіти мамі**, **написати листа подрузі**). This pattern is the foundation of communication when you want to describe an exchange between two people.
+Моя найкраща подруга живе в Києві. Я хочу написати довгого листа подрузі. Ця нова доріжка веде до лісу. Я віддаю перевагу цій доріжці. Її свекруха живе дуже близько. Вона хоче розповісти всю правду свекрусі. Моя права рука зараз болить. Треба дати відпочинок цій руці.
 
-> **Читаємо українською: Передача інформації та речей**
-> — Тарас хоче **подарувати квіти мамі** на свято. (Taras wants to give flowers to mom for the holiday.)
-> — Це чудова ідея. А я хочу **написати листа подрузі**. (That is a wonderful idea. And I want to write a letter to a friend.)
-> — Що ти подаруєш **учительці**? (What will you give the teacher?)
-> — Я дам **учительці** гарну листівку. (I will give the teacher a nice postcard.)
-> — Ми бажаємо всім **радості** та **любові**. (We wish everyone joy and love.)
-> — Дякую! Я розповім про це моїй **сестрі**. (Thanks! I will tell my sister about this.)
+> *My best friend lives in Kyiv. I want to write a long letter to the friend. This new path leads to the forest. I prefer this path. Her mother-in-law lives very close. She wants to tell the whole truth to the mother-in-law. My right hand hurts now. I need to give rest to this hand.*
 
-<!-- INJECT_ACTIVITY: quiz -->
+Many learners who are familiar with other Slavic languages, or who simply forget the alternation rule, might try to say words like *подругі* or *книгі*. You must actively avoid making this mistake. The forms **подрузі** and **книзі** are the only correct and natural options in modern Ukrainian. Saying *подругі* sounds completely wrong to a native speaker because it violates the deep phonetic rules of the language. Always pause and check the final consonant of the stem before you add the Dative ending.
 
-As you practice, remember to listen for the soft **-і** at the end of feminine words. It is the clearest signal that someone is on the receiving end of your action.
+Not all feminine nouns end in **-а** or **-я**. A smaller but very important group of feminine words ends in a consonant. These belong to the third declension. The good news is that they also take the **-і** ending in the Dative case. The word for night (**ніч**) becomes **ночі**, and the word for mother (**мати**) becomes **матері**. Abstract concepts like love (**любов**) and joy (**радість**) follow this exact same pattern, becoming **любові** and **радості**.
 
-## Давальний відмінок іменників середнього роду (Dative of Neuter Nouns)
+Now that you know the endings and the alternation rules, you can start building more complex sentences. The Dative case perfectly marks the recipient or the indirect object in your sentences, especially when using common verbs of giving and communicating.
 
-Neuter nouns share many similarities with masculine nouns in the Dative case, but their system is slightly simpler. Since neuter nouns mostly describe inanimate objects or concepts, they answer the question **чому?** (to what?). However, there is a special group of neuter nouns that describe baby animals and human infants, which answer **кому?** (to whom?).
+Ми хочемо подарувати красиві квіти мамі. Вчитель має чітко пояснити нове правило студентові та студентці. Старший брат хоче розповісти смішну історію сестрі. Я маю терміново відповісти другові та подрузі сьогодні. Він вирішив показати ці фотографії своїй матері.
 
-For II declension neuter: **-у** for hard stems (**місту**, **слову**, **вікну**), **-ю** for soft stems (**морю**, **серцю**). This mirrors the short endings of the masculine nouns. When you direct an action toward a place or a concept, this is the pattern you will use.
+> *We want to give beautiful flowers to mom. The teacher has to clearly explain the new rule to the male student and the female student. The older brother wants to tell a funny story to the sister. I have to urgently answer the male friend and the female friend today. He decided to show these photographs to his mother.*
 
-Then we have the special IV declension (nouns in -а/-ят-): **-аті/-яті** (**немовляті**, **курчаті**). These words usually describe young beings. When they decline, a special suffix **-ят-** or **-ат-** appears before the ending **-і**. For example, a baby is **немовля**, but to give a toy to a baby is дати іграшку **немовляті**.
+<!-- INJECT_ACTIVITY: quiz-feminine-alternation -->
 
-Let's see examples with neuter nouns in real contexts (**дати назву місту**, **радіти сонцю**).
+## Давальний відмінок іменників середнього роду (~400 words total)
 
-> **Читаємо українською: Звернення до неістот та малят**
-> — Туристи завжди радіють **сонцю** і теплому **морю**. (Tourists always rejoice at the sun and the warm sea.)
-> — Люди хочуть дати нову назву цьому **місту**. (People want to give a new name to this city.)
-> — Ми поїдемо до бабусі і допоможемо **селу**. (We will go to grandma's and help the village.)
-> — Треба дати теплого молока **курчаті**. (We need to give warm milk to the chick.)
-> — Мама заспівала пісню маленькому **немовляті**. (Mom sang a song to the little baby.)
-> — Я вірю твоєму **слову**. (I believe your word.)
+Neuter nouns also have their own specific **закінчення** (ending) in the Dative case. Most neuter nouns belong to the second declension. If a neuter noun ends in a hard consonant followed by the vowel "о", it takes the **-у** ending. This makes their declension predictable and easy to learn. The word **місто** (city) becomes **місту**, and **слово** (word) becomes **слову**.
 
-As you can see, the Dative case isn't just for physical giving. We also use it with verbs that express emotional reactions, like **радіти** (to be glad / to rejoice). You rejoice *to* something in Ukrainian (**радіти життю** — to rejoice at life, **радіти сонцю** — to rejoice at the sun).
+Я хочу дати нову назву цьому місту.
+Ми маємо подякувати цьому маленькому селу.
+Дитина радіє кожному новому слову.
+Цьому великому вікну потрібні нові штори.
 
-:::tip
-Words like **сонце** (sun) and **море** (sea) are common soft and hard neuter nouns. Remember: if the dictionary form ends in **-е**, it usually takes **-ю** in Dative (**сонцю**, **морю**). If it ends in **-о**, it takes **-у** (**вікну**, **місту**).
+> *I want to give a new name to this city. We have to thank this small village. The child rejoices at every new word. This big window needs new curtains.*
+
+For neuter nouns ending in the vowels "е" or "я", the stem is usually soft. These words take the **-ю** ending in the Dative case. For example, the word **море** (sea) becomes **морю**, and **серце** (heart) becomes **серцю**. A small group of neuter nouns has stems ending in a hissing consonant, known as mixed stems. The most common word here is **плече** (shoulder). Mixed stems take the **-у** ending, so it becomes **плечу**. 
+
+Моя родина завжди радіє теплому морю.
+Ти маєш дати спокій своєму серцю.
+Лікар радить дати відпочинок моєму плечу.
+Кожному великому полю потрібен дощ.
+
+> *My family always rejoices at the warm sea. You have to give peace to your heart. The doctor advises to give rest to my shoulder. Every big field needs rain.*
+
+:::info
+**Grammar box**
+Neuter nouns denoting babies and young animals add the suffixes **-ат-** or **-ят-** before the **-і** ending in the Dative case.
 :::
 
-It is rare to give a physical gift to a window (**вікно**) or a word (**слово**), but you might "give attention" to them, or "give a name" to a city. In all these metaphorical transfers, the Dative case is your reliable tool.
+A special group of neuter words denotes babies and young animals. These words usually end in "я" or "а", such as **немовля** (infant) or **курча** (chick). In the Dative case, a suffix appears before the ending, and the final vowel becomes **-і**. The word for an infant becomes **немовляті**, and a chick becomes **курчаті**. A common exception following a similar pattern is **ім'я** (name), which becomes **імені**.
 
-## Давальний відмінок у реченні (Dative Nouns in Sentences)
+Мати дає тепле молоко немовляті.
+Дівчинка дає свіжу воду маленькому курчаті.
+Тобі треба приділити увагу цьому імені.
+Батько співає колискову своєму немовляті.
 
-Now that we know the **закінчення** (ending (grammar)) for all genders, we can start building complex, native-sounding sentences. The Dative case shines brightest when it works together with the Accusative case to show a complete transaction.
+> *The mother gives warm milk to the infant. The girl gives fresh water to the little chick. You need to pay attention to this name. The father sings a lullaby to his infant.*
 
-This is the Two-object verb pattern: Subject + Verb + Dative (recipient) + Accusative (thing). **Тетяна подарувала братові книгу.** (Tetiana gave a book to her brother). **Вчитель показав студентам карту.** (The teacher showed a map to the students). 
+Neuter nouns in the Dative case often represent inanimate objects, so they appear slightly less frequently than words for people. You will encounter them mostly in abstract contexts, fixed expressions, or when assigning an attribute. For instance, you might give a name to a city or rejoice at the sun.
 
-In these sentences, the Accusative case tells us *what* is being moved (the book, the map), and the Dative case tells us the **одержувач** (recipient) of the item.
+Студенти радіють цьому легкому завданню.
+Письменник хоче дати нове життя цьому слову.
+Ми маємо знайти місце цьому старому кріслу.
+Нашому рідному місту сьогодні двісті років.
 
-To use this pattern, you need to know the right verbs. Here are the common verbs with indirect objects: **подарувати** (to give as a gift), **показати** (to show), **дати** (to give), **розповісти** (to tell, to narrate), **написати** (to write), **пояснити** (to explain), **відповісти** (to answer, to reply). Every time you use one of these verbs, your brain should automatically prepare a Dative noun.
+> *The students rejoice at this easy task. The writer wants to give new life to this word. We have to find a place for this old armchair. Our native city is two hundred years old today.*
 
-Let's look at a dialogue practice — giving gifts, explaining things, writing to someone. We will visit a post office where people are sending items to their relatives.
+<!-- INJECT_ACTIVITY: group-sort-dative-gender -->
 
-> **(На пошті / At the post office)**
-> **Відправник:** Добрий день! Я хочу відправити ці пакунки. *(Good day! I want to send these packages.)*
-> **Працівник пошти:** Добрий день. Кому ви відправляєте? *(Good day. To whom are you sending?)*
-> **Відправник:** **Студентові Петренку** — підручник. Це для навчання. *(To the student Petrenko — a textbook. It's for studying.)*
-> **Працівник пошти:** Добре. А цей маленький пакунок? *(Okay. And this small package?)*
-> **Відправник:** **Сестрі Олені** — листівка. Вона живе у Львові. *(To sister Olena — a postcard. She lives in Lviv.)*
-> **Працівник пошти:** Зрозуміло. А третя коробка? *(Understood. And the third box?)*
-> **Відправник:** **Дитині** — іграшка. Це подарунок на день народження. *(To the child — a toy. It's a birthday gift.)*
-> **Працівник пошти:** Чудово. Я зараз **вам** усе оформлю. *(Wonderful. I will process everything for you now.)*
+## Давальний відмінок у реченні (~550 words total)
 
-<!-- INJECT_ACTIVITY: match-up -->
+In Ukrainian, many actions involve two objects: the thing being acted upon and the recipient of the action. The typical word order is Subject, Verb, Dative recipient, and Accusative object. This structure clearly shows who is doing what and to whom, allowing for flexible sentence construction without losing the meaning.
 
-In this conversation, the sender clearly identifies each **одержувач** using the Dative case: **студентові** (masculine, hard stem), **сестрі** (feminine, hard stem), and **дитині** (feminine, hard stem). Without the Dative case, the postal worker wouldn't know who receives what.
+Тетяна подарувала братові нову книгу. Вчитель показав студентам карту України. Я хочу написати другові довгий лист.
 
-It is critical to contrast with Genitive constructions (**дати братові** vs. **немає брата**) to reinforce case discrimination. The Genitive case is used for absence, possession, and quantity. The Dative case is used for direction and receiving.
+> *Tetiana gave her brother a new book as a gift. The teacher showed the students a map of Ukraine. I want to write a long letter to a friend.*
 
-> **Читаємо українською: Давальний чи Родовий?**
-> — Ти дав словник **братові**? (Did you give the dictionary to the brother?)
-> — Ні, у мене зараз немає **брата** вдома. (No, I don't have the brother at home right now.)
-> — Я хочу написати повідомлення **подрузі**. (I want to write a message to the female friend.)
-> — Але у тебе немає номера цієї **подруги**! (But you don't have the number of this friend!)
-> — Ми купили подарунок **вчителеві**. (We bought a gift for the teacher.)
-> — Це книга нашого **вчителя**. (This is the book of our teacher.)
+Several core verbs naturally require a recipient in the Dative case. When you use verbs like **дати** (to give), **подарувати** (to give as a gift), or **показати** (to show), you almost always need to specify who is receiving the item. The same applies to verbs of communication, such as **розповісти** (to tell, to narrate), **написати** (to write), **пояснити** (to explain), and **відповісти** (to answer, to reply). Learning these verbs alongside the Dative case will immediately make your conversations more detailed.
 
-<!-- INJECT_ACTIVITY: unjumble -->
+Михайло має пояснити студентові нове правило. Дідусь любить розповісти онуку цікаву історію. Ти повинен швидко відповісти сестрі на повідомлення.
 
-Notice how the ending shifts depending on the verb's requirement. **Дати братові** (to give to the brother) points toward him. **Немає брата** (there is no brother) indicates absence. Mastering this difference is what separates a beginner from a confident speaker. The Dative case gives your sentences movement, connecting people through words, gifts, and actions.
+> *Mykhailo has to explain the new rule to the student. The grandfather loves to tell his grandson an interesting story. You must quickly answer your sister's message.*
 
-## Підсумок
+Let's see how these forms are used in a real-life situation, like addressing packages at a post office. The postal worker needs to know the exact destination for each item.
 
-У цьому модулі ми вивчили **Давальний відмінок** (the Dative case) для іменників усіх трьох родів. Тепер ви знаєте, як сказати, кому ви даєте подарунок, пишете лист або пояснюєте правило. 
+> — **Відправник:** Доброго дня. Я хочу відправити ці пакунки. *(Good day. I want to send these packages.)*
+> — **Працівник пошти:** Кому вони? *(Who are they for?)*
+> — **Відправник:** Студентові Петренку — підручник. Сестрі Олені — листівка. А дитині — іграшка. *(To student Petrenko — a textbook. To sister Olena — a postcard. And to the child — a toy.)*
 
-Ви запам'ятали, що іменники чоловічого роду мають красиві паралельні закінчення **-ові/-еві/-єві** та **-у/-ю**, які можна чергувати для милозвучності. Іменники жіночого роду твердої групи приймають закінчення **-і** і часто мають **чергування** приголосних (к→ц, г→з, х→с). Іменники середнього роду використовують закінчення **-у/-ю**, а слова для малят мають особливе закінчення **-аті/-яті**. 
+It is crucial not to confuse the Dative case, which marks a destination or recipient, with the Genitive case, which indicates possession or absence. While some nouns might have similar forms, their functions in the sentence are completely different. A recipient actively receives something, whereas the Genitive case simply shows that something is missing or belongs to someone else.
 
-Завдяки дієсловам, таким як **подарувати**, **показати**, **написати** та **відповісти**, ви можете будувати розгорнуті речення і чітко розрізняти Давальний відмінок від Родового. Продовжуйте практикувати, і ці форми стануть для вас абсолютно природними!
+Я хочу дати братові свій телефон. У мене немає брата. Вона завжди допомагає мамі на кухні. У кімнаті немає мами. Зверніть увагу на граматичне закінчення кожного слова.
 
+> *I want to give my phone to my brother. I do not have a brother. She always helps her mother in the kitchen. There is no mother in the room. Pay attention to the grammatical ending of each word.*
+
+Earlier, you learned how to use Dative pronouns in impersonal constructions to express states or needs. These exact same structures apply to nouns in the Dative case. Instead of a pronoun like "мені" or "йому," you simply use the Dative form of the person experiencing the state or having the need. This is how you say that someone is cold, needs something, or is a certain age.
+
+Студентові треба багато вчитися перед іспитом. Мамі зараз дуже холодно. Моєму другові сьогодні виповнилося двадцять п'ять років. Маленькій дитині дуже подобається ця весела гра.
+
+> *The student needs to study a lot before the exam. Mom is very cold right now. My friend turned twenty-five years old today. The little child really likes this fun game.*
+
+:::info
+**Grammar box**
+When expressing someone's age, physical state, or a personal need in Ukrainian, the person experiencing it is always placed in the Dative case. 
+:::
+
+<!-- INJECT_ACTIVITY: match-up-verb-phrases -->
+<!-- INJECT_ACTIVITY: unjumble-dative-syntax -->
 </module_content>
 
 ---
@@ -262,48 +347,68 @@ version: "1.0"
 module: dative-nouns
 level: a2
 
+# NOTE — these are SHAPE examples. The real targets are at the top of this prompt
+# (12 total / 4–6 inline / 8–11 workbook,
+# 8+ items per activity). The shapes below are TRUNCATED for readability;
+# YOUR output MUST hit those minimums.
+
 inline:
   - id: marker-id-here        # MUST match an <!-- INJECT_ACTIVITY: ... --> marker
     type: quiz                 # activity type
     instruction: "Оберіть правильний варіант"
-    items:
+    items:                     # ← real output: ≥ 8 items
       - question: "_____ стіл"
-        options: ["мій", "моя", "моє"]
+        options: ["мій", "моя", "моє", "мої"]
         correct: 0             # 0-based index
+      - question: "Це ____ книга."
+        options: ["мій", "моя", "моє", "мої"]
+        correct: 1
+      # ... add at least 8 items total — never stop at 1-2
 
   - id: another-marker-id
     type: fill-in
     instruction: "Вставте правильне слово"
-    items:
+    items:                     # ← real output: ≥ 8 items
       - sentence: "Це ____ кімната."
         answer: "моя"
         options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ вікно."
+        answer: "моє"
+        options: ["мій", "моя", "моє"]
+      # ... ≥ 8 items total
 
 workbook:
-  - type: match-up
+  - id: match-up-vocab
+    type: match-up
     instruction: "З'єднайте пари"
-    pairs:
+    pairs:                     # ← real output: ≥ 8 pairs
       - left: "стіл"
         right: "він"
       - left: "книга"
         right: "вона"
       - left: "вікно"
         right: "воно"
+      # ... ≥ 8 pairs total
 
-  - type: group-sort
+  - id: group-sort-gender
+    type: group-sort
     instruction: "Розподіліть слова за категоріями"
     groups:
-      - label: "Category A"
-        items: ["word1", "word2"]
-      - label: "Category B"
-        items: ["word3", "word4"]
+      - label: "Чоловічий рід"
+        items: ["стіл", "олівець", "будинок"]   # ≥ 3 items per group
+      - label: "Жіночий рід"
+        items: ["книга", "ручка", "школа"]
+      - label: "Середній рід"
+        items: ["вікно", "море", "молоко"]
 
-  - type: true-false
+  - id: true-false-grammar
+    type: true-false
     instruction: "Правда чи ні?"
-    items:
-      - statement: "Statement here"
-        correct: true
-        explanation: "Why it's true"
+    items:                     # ← real output: ≥ 8 items
+      - statement: "«Книга» — це чоловічий рід."
+        correct: false
+        explanation: "Книга закінчується на -а, отже жіночий рід."
+      # ... ≥ 8 items total
 
   - type: error-correction
     instruction: "Виправте помилку"
@@ -374,7 +479,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -525,10 +630,15 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 ## Quality Rules
 
-**ITEM COUNT MINIMUMS (non-negotiable):**
-- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
-- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
-- If you can't think of enough items, add more examples from the module's vocabulary and content.
+**ACTIVITY COUNT MINIMUMS (non-negotiable, audit-enforced):**
+- **Total: 12 activities.** Inline: 4–6. Workbook: 8–11. The audit gate FAILS the module if you ship fewer.
+- **Type diversity: workbook MUST cover ≥5 distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
+- **Match the inline markers exactly.** Every `<!-- INJECT_ACTIVITY: id -->` marker in the prose needs a matching inline activity with that exact id. Skipping markers means the lesson tab is broken.
+
+**ITEM COUNT MINIMUMS (non-negotiable, per-activity):**
+- **Default minimum: 8 items per activity.** Quiz, fill-in, match-up, true-false, anagram, error-correction, translate, cloze, mark-the-words, divide-words, count-syllables, odd-one-out, group-sort categories: all ≥ 8.
+- **Lower minimums for specific types only:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items, essay-response/critical-analysis = 1 prompt.
+- If you can't think of enough items, add more examples from the module's vocabulary and content. NEVER ship a 1-item or 2-item activity unless its type cap explicitly allows it.
 - **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
 - **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
@@ -635,6 +745,27 @@ IMPORTANT: After using tools, output your COMPLETE module content as plain text.
 1. Run `verify_words` on all Ukrainian words in your exercises — every word must exist in VESUM
 2. Run `query_cefr_level` on any word you're unsure about — it must be a2-appropriate
 3. For fill-in answers and distractors, verify the exact form (case, number, gender) with `verify_lemma`
+
+---
+
+## ⚠️ MANDATORY FINAL CHECKLIST — verify before emitting YAML
+
+Walk through this checklist explicitly before you start emitting. If ANY box is unchecked, fix it FIRST.
+
+- [ ] My output has **at least 4** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
+- [ ] My output has **at least 8** workbook activities.
+- [ ] **Total ≥ 12.**
+- [ ] **Every** activity has **at least 8** items, pairs, or statements (except types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3, essay-response=1).
+- [ ] The module (inline + workbook combined) uses **at least 0 distinct activity types** (or 4+ when 0 = 0 and the workbook size allows it). I am NOT shipping a wall of quizzes.
+- [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
+- [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
+- [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+- [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+- [ ] My inline count is between 4 and 6. I did NOT create more injection markers than 6.
+- [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
+- [ ] At B1+, all instructions are in Ukrainian (no English fallback).
+
+If you cannot tick all of these, REGENERATE the activities BEFORE outputting. Shipping under-spec means the build rejects you and the heal loop has to redo your work — wasting compute.
 
 ---
 

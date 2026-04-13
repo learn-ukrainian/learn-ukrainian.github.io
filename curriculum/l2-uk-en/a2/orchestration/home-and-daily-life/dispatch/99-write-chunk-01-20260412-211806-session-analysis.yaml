@@ -1,0 +1,56 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T19-17-90d75aab.json
+phase: write-chunk-01
+prompt_chars: 42580
+response_chars: 5959
+prompt_words: 6159
+response_words: 1002
+sections:
+- name: header
+  start: 0
+  length: 430
+  fraction: 0.0101
+- name: skeleton
+  start: 430
+  length: 1704
+  fraction: 0.04
+- name: plan
+  start: 2134
+  length: 11720
+  fraction: 0.2752
+- name: wiki
+  start: 7351
+  length: 28518
+  fraction: 0.6698
+- name: output_spec
+  start: 42372
+  length: 208
+  fraction: 0.0049
+large_sections:
+- wiki
+directives_total: 14
+directives_covered: 8
+directives_missed:
+- kind: checklist
+  text: розпорядок дня (daily routine)
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: checklist
+  text: вставати (to get up)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: снідати (to have breakfast)
+  covered: false
+  coverage_note: 1/3 keywords (33%)
+- kind: checklist
+  text: лягати спати (to go to bed)
+  covered: false
+  coverage_note: 1/3 keywords (33%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: inject_activity
+  text: fill-in-home-description
+  covered: false
+  coverage_note: marker missing

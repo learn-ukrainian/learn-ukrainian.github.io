@@ -1,0 +1,58 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T11-53-bf716066.json
+phase: write-chunk-05
+prompt_chars: 51835
+response_chars: 4562
+prompt_words: 6856
+response_words: 681
+sections:
+- name: header
+  start: 0
+  length: 439
+  fraction: 0.0085
+- name: skeleton
+  start: 439
+  length: 1394
+  fraction: 0.0269
+- name: prior_summary
+  start: 1833
+  length: 3769
+  fraction: 0.0727
+- name: plan
+  start: 5602
+  length: 17578
+  fraction: 0.3391
+- name: wiki
+  start: 16751
+  length: 28433
+  fraction: 0.5485
+- name: output_spec
+  start: 51613
+  length: 222
+  fraction: 0.0043
+large_sections:
+- wiki
+directives_total: 18
+directives_covered: 13
+directives_missed:
+- kind: must
+  text: 'The ending must agree with the noun: прочитана книга (ж.'
+  covered: false
+  coverage_note: 0/6 keywords (0%)
+- kind: must
+  text: '**MANDATORY — never omit.'
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: inject_activity
+  text: 'quiz, Оберіть правильний варіант: лексика та граматика з розділу «Пасивні
+    дієприкметники: значення» (дієприкметник чи прикметник?)'
+  covered: false
+  coverage_note: marker missing

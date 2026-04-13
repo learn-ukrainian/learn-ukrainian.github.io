@@ -1,83 +1,77 @@
 {
-  "total_items": 88,
-  "grounded_items": 70,
+  "total_items": 130,
+  "grounded_items": 89,
   "ungrounded": [
     {
       "word": "цей",
       "exercise_type": "fill-in",
-      "context": "____ (Оксана), читай цей текст, будь ласка!",
+      "context": "____, читай цей текст, будь ласка!",
       "role": "context"
     },
     {
       "word": "текст",
       "exercise_type": "fill-in",
-      "context": "____ (Оксана), читай цей текст, будь ласка!",
-      "role": "context"
-    },
-    {
-      "word": "принести",
-      "exercise_type": "fill-in",
-      "context": "Тарасе, ____ (принести) стільці!",
-      "role": "context"
-    },
-    {
-      "word": "писати",
-      "exercise_type": "fill-in",
-      "context": "Андрію, ____ (писати) лист!",
+      "context": "____, читай цей текст, будь ласка!",
       "role": "context"
     },
     {
       "word": "мені",
       "exercise_type": "fill-in",
-      "context": "____ (Олена), дай мені квиток, будь ласка.",
+      "context": "____, дай мені книгу!",
       "role": "context"
     },
     {
-      "word": "робити",
+      "word": "сестро",
       "exercise_type": "fill-in",
-      "context": "Петре, ____ (робити) це швидко!",
-      "role": "context"
+      "context": "Сестро",
+      "role": "answer"
     },
     {
-      "word": "це",
+      "word": "подруго",
       "exercise_type": "fill-in",
-      "context": "Петре, ____ (робити) це швидко!",
-      "role": "context"
+      "context": "Подруго",
+      "role": "answer"
     },
     {
-      "word": "швидко",
+      "word": "друже",
       "exercise_type": "fill-in",
-      "context": "Петре, ____ (робити) це швидко!",
-      "role": "context"
+      "context": "Друже",
+      "role": "answer"
     },
     {
-      "word": "сюди",
+      "word": "анно",
       "exercise_type": "fill-in",
-      "context": "____ (матуся), прийди сюди!",
-      "role": "context"
+      "context": "Анно",
+      "role": "answer"
     },
     {
-      "word": "діти",
+      "word": "олександре",
       "exercise_type": "fill-in",
-      "context": "Діти, ____ (читати) текст!",
-      "role": "context"
-    },
-    {
-      "word": "читати",
-      "exercise_type": "fill-in",
-      "context": "Діти, ____ (читати) текст!",
-      "role": "context"
+      "context": "Олександре",
+      "role": "answer"
     },
     {
       "word": "йду",
-      "exercise_type": "match-up",
-      "context": "Я не йду,",
-      "role": "answer"
+      "exercise_type": "quiz",
+      "context": "Я не йду, ____ хворий.",
+      "role": "context"
     },
     {
       "word": "хворий",
       "exercise_type": "quiz",
       "context": "Я не йду, ____ хворий.",
+      "role": "context"
+    },
+    {
+      "word": "час",
+      "exercise_type": "quiz",
+      "context": "Я маю час, ____ не маю грошей.",
+      "role": "context"
+    },
+    {
+      "word": "грошей",
+      "exercise_type": "quiz",
+      "context": "Я маю час, ____ не маю грошей.",
       "role": "context"
     },
     {
@@ -87,21 +81,135 @@
       "role": "context"
     },
     {
-      "word": "тут",
-      "exercise_type": "unjumble",
-      "context": "ти тут.",
-      "role": "answer"
-    },
-    {
       "word": "прийдеш",
       "exercise_type": "fill-in",
       "context": "Скажи, ____ ти прийдеш.",
       "role": "context"
     },
     {
-      "word": "сполучники",
+      "word": "привітання",
+      "exercise_type": "quiz",
+      "context": "«З Різдвом!» — це привітання на...",
+      "role": "context"
+    },
+    {
+      "word": "на",
+      "exercise_type": "quiz",
+      "context": "«З Різдвом!» — це привітання на...",
+      "role": "context"
+    },
+    {
+      "word": "якщо",
+      "exercise_type": "quiz",
+      "context": "Якщо сьогодні 25 грудня (winter), ми кажемо...",
+      "role": "context"
+    },
+    {
+      "word": "сьогодні",
+      "exercise_type": "quiz",
+      "context": "Якщо сьогодні 25 грудня (winter), ми кажемо...",
+      "role": "context"
+    },
+    {
+      "word": "грудня",
+      "exercise_type": "quiz",
+      "context": "Якщо сьогодні 25 грудня (winter), ми кажемо...",
+      "role": "context"
+    },
+    {
+      "word": "кажемо",
+      "exercise_type": "quiz",
+      "context": "Якщо сьогодні 25 грудня (winter), ми кажемо...",
+      "role": "context"
+    },
+    {
+      "word": "січня",
+      "exercise_type": "quiz",
+      "context": "Якщо сьогодні 1 січня, ми кажемо...",
+      "role": "context"
+    },
+    {
+      "word": "друга",
+      "exercise_type": "quiz",
+      "context": "Якщо у друга сьогодні свято, ми кажемо...",
+      "role": "context"
+    },
+    {
+      "word": "свято",
       "exercise_type": "group-sort",
-      "context": "Сполучники (Conjunctions)",
+      "context": "свято",
+      "role": "answer"
+    },
+    {
+      "word": "традиційна",
+      "exercise_type": "quiz",
+      "context": "Традиційна страва «кутя» готується на...",
+      "role": "context"
+    },
+    {
+      "word": "страва",
+      "exercise_type": "quiz",
+      "context": "Традиційна страва «кутя» готується на...",
+      "role": "context"
+    },
+    {
+      "word": "готується",
+      "exercise_type": "quiz",
+      "context": "Традиційна страва «кутя» готується на...",
+      "role": "context"
+    },
+    {
+      "word": "слова",
+      "exercise_type": "quiz",
+      "context": "Слова «Зі святом тебе!» можна сказати...",
+      "role": "context"
+    },
+    {
+      "word": "можна",
+      "exercise_type": "quiz",
+      "context": "Слова «Зі святом тебе!» можна сказати...",
+      "role": "context"
+    },
+    {
+      "word": "сказати",
+      "exercise_type": "quiz",
+      "context": "Слова «Зі святом тебе!» можна сказати...",
+      "role": "context"
+    },
+    {
+      "word": "подруга",
+      "exercise_type": "match-up",
+      "context": "подруга",
+      "role": "answer"
+    },
+    {
+      "word": "олександр",
+      "exercise_type": "match-up",
+      "context": "Олександр",
+      "role": "answer"
+    },
+    {
+      "word": "анна",
+      "exercise_type": "match-up",
+      "context": "Анна",
+      "role": "answer"
+    },
+    {
+      "word": "імена",
+      "exercise_type": "group-sort",
+      "context": "Імена в кличному відмінку (Names in Vocative case)",
+      "role": "context"
+    },
+    {
+      "word": "кличному",
+      "exercise_type": "group-sort",
+      "context": "Імена в кличному відмінку (Names in Vocative case)",
+      "role": "context"
+    },
+    {
+      "word": "відмінку",
+      "exercise_type": "group-sort",
+      "context": "Імена в кличному відмінку (Names in Vocative case)",
       "role": "context"
     },
     {
@@ -109,6 +217,36 @@
       "exercise_type": "group-sort",
       "context": "Дієслова (Verbs)",
       "role": "context"
+    },
+    {
+      "word": "працюй",
+      "exercise_type": "group-sort",
+      "context": "працюй",
+      "role": "answer"
+    },
+    {
+      "word": "свята",
+      "exercise_type": "group-sort",
+      "context": "Свята (Holidays)",
+      "role": "context"
+    },
+    {
+      "word": "великдень",
+      "exercise_type": "group-sort",
+      "context": "Великдень",
+      "role": "answer"
+    },
+    {
+      "word": "рік",
+      "exercise_type": "group-sort",
+      "context": "Новий рік",
+      "role": "answer"
+    },
+    {
+      "word": "день",
+      "exercise_type": "group-sort",
+      "context": "день народження",
+      "role": "answer"
     }
   ],
   "vocab_coverage": {},

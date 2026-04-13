@@ -2,48 +2,49 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 10
-  evidence: All outline points are covered with correct pacing. Required and recommended
-    vocabulary (`ім'я`, `прізвище`) is explicitly included.
+  score: 5
+  evidence: The plan requires review of letters/sounds and stress, but the module
+    never asks `How many letters/sounds` and never mentions `наголос`; the capstone
+    also omits the plan’s goodbye and compresses the r
 - dimension: 2
   name: Linguistic accuracy
-  score: 10
-  evidence: Flawless. Proper nouns correctly declined (`з Дніпра`, `з Києва`, `з Тернополя`).
-    Vocative forms correctly applied (`Оксано`, `пані Соломіє`, `пане Богдане`).
+  score: 7
+  evidence: '`such as the soft **Г** (H) versus the hard **Ґ** (G)` teaches a wrong
+    phonetic description.'
 - dimension: 3
   name: Pedagogical quality
-  score: 9
-  evidence: Grammar section explains the zero-copula rule and fixed chunks effectively.
-    Minor deduction because an activity marker testing questions was placed before
-    the questions were reviewed.
+  score: 5
+  evidence: 'The checkpoint introduces later-scope material instead of consolidating
+    A1.1: `Я живу в Києві.` adds deferred locative/conjugation material, and the dialogue
+    explicitly teaches `Кличний відмінок` alth'
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: Recycles A1.1 vocabulary effectively without introducing uncovered grammar.
+  score: 8
+  evidence: 'Recommended checkpoint vocabulary is present and natural: `ім''я`, `прізвище`;
+    however the reading section’s `Я живу в Києві.` pulls in later-scope material.'
 - dimension: 5
   name: Exercise quality
   score: 9
-  evidence: Three markers match the plan, but one is misplaced pedagogically.
+  evidence: All three planned activity types are represented by correctly named markers
+    placed after relevant teaching sections.
 - dimension: 6
   name: Engagement & tone
-  score: 8
-  evidence: The opening paragraph uses a gamified, self-congratulatory tone ("Welcome
-    to the first major checkpoint on your Ukrainian language journey...") which violates
-    the tone guidelines.
+  score: 9
+  evidence: The prose keeps a teacherly tone and uses concrete situations such as
+    the conference coffee break with named speakers.
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: Outline exactly matches the plan. Word count is 1575 (well above 1200
-    target).
+  evidence: All planned H2 headings are present and ordered correctly, and the pipeline
+    word count is above target at 1230.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Accurately explains the cultural pattern of first name + patronymic +
-    surname.
+  evidence: The module uses Ukrainian names and places (`Богдан`, `Соломія`, `Дніпро`,
+    `Тернопіль`) without Russian-centered framing.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 9
-  evidence: The dialogue is extremely natural and models the formal `Ви` register
-    well. Minor deduction for an awkward English translation ("Mutually!" instead
-    of "Likewise!").
+  score: 6
+  evidence: The capstone exchange ends abruptly at `У вас гарна сім'я.` with no goodbye,
+    despite the plan requiring a full-cycle first meeting.
 findings: []

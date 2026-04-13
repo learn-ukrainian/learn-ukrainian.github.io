@@ -2,316 +2,368 @@ version: '1.0'
 module: where-to
 level: a1
 inline:
-- id: fill-in-accusative-places
+- id: fill-in-accusative
   type: fill-in
-  instruction: Вставте правильну форму слова (Fill in the correct form of the word)
+  instruction: Вставте правильну форму (Insert the correct form)
   items:
-  - sentence: Я йду в ____ (магазин).
-    answer: магазин
+  - sentence: Я йду в ____.
+    answer: школу
     options:
-    - магазин
-    - магазині
-    - магазину
-  - sentence: Ми йдемо у ____ (бібліотека).
+    - школа
+    - школу
+    - школі
+  - sentence: Ми йдемо на ____.
+    answer: роботу
+    options:
+    - робота
+    - роботу
+    - роботі
+  - sentence: Вона йде в ____.
     answer: бібліотеку
     options:
     - бібліотека
     - бібліотеку
     - бібліотеці
-  - sentence: Він іде на ____ (робота).
-    answer: роботу
+  - sentence: Він іде в ____.
+    answer: магазин
     options:
-    - робота
-    - роботі
-    - роботу
-  - sentence: Вони йдуть у ____ (банк).
+    - магазин
+    - магазину
+    - магазині
+  - sentence: Вони йдуть у ____.
+    answer: парк
+    options:
+    - парк
+    - парку
+    - парком
+  - sentence: Ти йдеш у ____?
     answer: банк
     options:
     - банк
     - банку
     - банком
-  - sentence: Степан іде у ____ (кафе).
-    answer: кафе
-    options:
-    - кафе
-    - кафею
-    - кафі
-  - sentence: Оксана йде в ____ (аптека).
-    answer: аптеку
-    options:
-    - аптека
-    - аптеці
-    - аптеку
-  - sentence: Вона їде в ____ (Одеса).
+  - sentence: Олена їде в ____.
     answer: Одесу
     options:
     - Одеса
     - Одесу
     - Одесі
-  - sentence: Студент іде в ____ (університет).
-    answer: університет
-    options:
-    - університет
-    - університету
-    - університеті
-  - sentence: Ми їдемо в ____ (центр).
-    answer: центр
-    options:
-    - центр
-    - центру
-    - центрі
-  - sentence: Я йду на ____ (пошта).
-    answer: пошту
-    options:
-    - пошта
-    - пошту
-    - пошті
-- id: quiz-de-vs-kudy
+- id: quiz-de-or-kudy
   type: quiz
-  instruction: Де чи Куди? Оберіть правильне запитання (Where or Where To? Choose
-    the correct question)
+  instruction: 'Оберіть правильне запитання: Де? чи Куди? (Choose the correct question:
+    Where? or Where to?)'
   items:
-  - question: ____ ти йдеш? — Я йду в банк.
+  - question: ____ ти йдеш? — У магазин.
     options:
-    - Де
     - Куди
-    - Що
-    - Хто
-    correct: 1
-  - question: ____ Оксана? — Вона в аптеці.
-    options:
     - Де
-    - Куди
-    - Що
-    - Коли
-    correct: 0
-  - question: ____ їде Степан? — Він їде у Львів.
-    options:
-    - Що
-    - Коли
-    - Де
-    - Куди
-    correct: 3
-  - question: ____ ми? — Ми у парку.
-    options:
-    - Де
-    - Куди
     - Як
     - Хто
     correct: 0
-  - question: ____ ви йдете? — Ми йдемо у ресторан.
-    options:
-    - Де
-    - Що
-    - Куди
-    - Як
-    correct: 2
-  - question: ____ Іван? — Іван вдома.
+  - question: ____ працює лікар? — У лікарні.
     options:
     - Куди
     - Де
     - Коли
     - Чому
     correct: 1
-  - question: ____ вона йде? — Вона йде додому.
+  - question: ____ вона їде? — В Одесу.
     options:
-    - Де
     - Куди
-    - Як
+    - Де
     - Що
-    correct: 1
-  - question: ____ вони? — Вони на роботі.
+    - Хто
+    correct: 0
+  - question: ____ Оксана? — На роботі.
     options:
-    - Чому
     - Куди
-    - Коли
     - Де
-    correct: 3
-- id: group-sort-locative-accusative
-  type: group-sort
-  instruction: Розподіліть фрази (Sort the phrases)
-  groups:
-  - label: Де? (Static Location)
-    items:
-    - вдома
-    - у школі
-    - на роботі
-    - у парку
-    - в аптеці
-  - label: Куди? (Direction)
-    items:
-    - додому
-    - у школу
-    - на роботу
-    - у парк
-    - в аптеку
-- id: quiz-vs
+    - Який
+    - Чий
+    correct: 1
+  - question: ____ ви йдете в суботу? — У парк.
+    options:
+    - Куди
+    - Де
+    - Як
+    - Хто
+    correct: 0
+  - question: ____ твоя мама? — Вдома.
+    options:
+    - Куди
+    - Де
+    - Звідки
+    - Коли
+    correct: 1
+  - question: ____ Степан? — У банку.
+    options:
+    - Куди
+    - Де
+    - Як
+    - Чому
+    correct: 1
+- id: quiz-yty-or-ikhaty
   type: quiz
-  instruction: Йти чи їхати? Оберіть правильне слово (To walk or to drive? Choose
-    the correct word)
+  instruction: 'Оберіть правильне дієслово: йти чи їхати? (Choose the correct verb:
+    to go on foot or by transport?)'
   items:
-  - question: Я ____ у бібліотеку. (walking)
+  - question: Я ____ в магазин (on foot).
     options:
     - йду
     - їду
-    - іде
+    - йде
     - їде
     correct: 0
-  - question: Ми ____ в Одесу. (traveling by transport)
+  - question: Вона ____ у Львів (by transport).
     options:
-    - йдемо
-    - їдемо
+    - йде
+    - їде
     - йдуть
     - їдуть
     correct: 1
-  - question: Степан ____ у парк. (walking)
+  - question: Ми ____ на роботу (by transport).
     options:
-    - йду
-    - їду
-    - іде
-    - їде
-    correct: 2
-  - question: Олена ____ у Львів. (traveling by transport)
-    options:
-    - іде
-    - їде
     - йдемо
     - їдемо
+    - йду
+    - їду
     correct: 1
-  - question: Вони ____ у кіно. (walking)
+  - question: Степан ____ в банк (on foot).
+    options:
+    - йде
+    - їде
+    - йдуть
+    - їдуть
+    correct: 0
+  - question: Вони ____ в Одесу (by transport).
     options:
     - йдуть
     - їдуть
     - йдемо
     - їдемо
-    correct: 0
-  - question: Тарас ____ у Київ. (traveling by transport)
-    options:
-    - іде
-    - їде
-    - йду
-    - їду
     correct: 1
+  - question: Ти ____ додому (on foot)?
+    options:
+    - йдеш
+    - їдеш
+    - йде
+    - їде
+    correct: 0
 workbook:
-- id: fill-in-extended
+- id: workbook-fill-in
   type: fill-in
-  instruction: Вставте правильну форму (Fill in the correct form)
+  instruction: Вставте правильне слово (Insert the correct word)
   items:
-  - sentence: Я йду в ____ (магазин).
-    answer: магазин
-  - sentence: Він іде у ____ (школа).
-    answer: школу
-  - sentence: Вона їде на ____ (робота).
+  - sentence: Я йду на ____.
     answer: роботу
-  - sentence: Ми йдемо у ____ (ресторан).
-    answer: ресторан
-  - sentence: Оксана йде в ____ (бібліотека).
-    answer: бібліотеку
-  - sentence: Степан їде в ____ (Одеса).
-    answer: Одесу
-  - sentence: Вони йдуть на ____ (пошта).
-    answer: пошту
-- id: match-up-places
-  type: match-up
-  instruction: З'єднайте місце (Де?) і напрямок (Куди?)
-  pairs:
-  - left: у школі
-    right: у школу
-  - left: в аптеці
-    right: в аптеку
-  - left: на роботі
-    right: на роботу
-  - left: на пошті
-    right: на пошту
-  - left: у бібліотеці
-    right: у бібліотеку
-  - left: вдома
-    right: додому
-- id: true-false-concepts
-  type: true-false
-  instruction: Правда чи ні? (True or False?)
-  items:
-  - statement: «Я йду в магазин» answers the question «Куди?».
-    correct: true
-    explanation: Магазин is the destination, so it answers where to (Куди).
-  - statement: «Ми у банку» means we are going to the bank.
-    correct: false
-    explanation: «Ми у банку» means we are located in the bank (Де?). To say we are
-      going, use «Ми йдемо у банк».
-  - statement: For inanimate masculine nouns like «банк» або «парк», the Accusative
-      case form is the same as the Nominative.
-    correct: true
-    explanation: Inanimate masculine and neuter nouns do not change their endings
-      in the Accusative case.
-  - statement: «Я йду вдома» is the correct way to say «I am going home».
-    correct: false
-    explanation: «Вдома» means at home (static). To say going home (dynamic), use
-      «додому».
-  - statement: If a feminine noun ends in -а, it changes to -у in the Accusative case
-      to show direction.
-    correct: true
-    explanation: 'Feminine nouns ending in -а change to -у, for example: школа → у
-      школу.'
-  - statement: «Вона їде на роботу» means she is currently at work.
-    correct: false
-    explanation: «Вона їде на роботу» means she is traveling to work. «Вона на роботі»
-      means she is at work.
-- id: error-correction-cases
-  type: error-correction
-  instruction: Виправте помилку (Fix the error)
-  items:
-  - sentence: Я йду в аптека.
-    error: аптека
-    correction: аптеку
-    error_type: word
     options:
-    - аптеку
-    - аптеці
-    - аптекою
-    explanation: Аптека is a feminine destination, so it changes to аптеку (Accusative).
-  - sentence: Він іде на роботі.
-    error: роботі
-    correction: роботу
-    error_type: word
-    options:
-    - робота
     - роботу
-    - роботою
-    explanation: 'Робота is a destination here, so we use the Accusative: на роботу.'
-  - sentence: Куди вони? Вони в ресторані.
-    error: Куди
-    correction: Де
-    error_type: word
+    - роботі
+    - робота
+  - sentence: Він зараз на ____.
+    answer: роботі
     options:
-    - Що
-    - Коли
-    - Де
-    explanation: «В ресторані» is a static location, so the question is Де? (Where?).
-  - sentence: Я їду вдома.
-    error: вдома
-    correction: додому
-    error_type: word
+    - роботу
+    - роботі
+    - робота
+  - sentence: Ми їдемо в ____.
+    answer: Одесу
     options:
-    - додому
-    - дім
-    - у дім
-    explanation: With verbs of motion, we use the directional word додому (homeward).
-  - sentence: Ми йдемо у парку.
-    error: парку
-    correction: парк
-    error_type: word
+    - Одеса
+    - Одесу
+    - Одесі
+  - sentence: Олена працює у ____.
+    answer: банку
+    options:
+    - банк
+    - банку
+    - банком
+  - sentence: Степан іде у ____.
+    answer: школу
+    options:
+    - школа
+    - школу
+    - школі
+  - sentence: Вони зараз у ____.
+    answer: парку
     options:
     - парк
+    - парку
     - парком
-    - на парк
-    explanation: 'Парк is inanimate masculine, so it does not change ending in the
-      Accusative: у парк.'
-  - sentence: Оксана йде в школі.
-    error: школі
-    correction: школу
-    error_type: word
+  - sentence: Я повертаюся ____.
+    answer: додому
     options:
-    - школу
-    - школа
-    - школою
-    explanation: Школа is a feminine destination, so it changes to школу.
+    - додому
+    - вдома
+    - дім
+- id: workbook-match-up
+  type: match-up
+  instruction: З'єднайте запитання та відповідь (Match the question and answer)
+  pairs:
+  - left: Куди ти йдеш?
+    right: Я йду в магазин.
+  - left: Де ти?
+    right: Я в магазині.
+  - left: Куди вона їде?
+    right: Вона їде в Одесу.
+  - left: Де вона?
+    right: Вона в Одесі.
+  - left: Куди ви йдете?
+    right: Ми йдемо на роботу.
+  - left: Де ви працюєте?
+    right: Ми працюємо на роботі.
+- id: workbook-true-false
+  type: true-false
+  instruction: Правда чи ні? (True or false?)
+  items:
+  - statement: Ми використовуємо запитання «Куди?», коли говоримо про напрямок руху
+      (movement).
+    correct: true
+    explanation: «Куди?» означає напрямок руху (Where to).
+  - statement: Фраза «Я йду в банк» — це відповідь на запитання «Де?».
+    correct: false
+    explanation: Це рух, тому це відповідь на запитання «Куди?».
+  - statement: Слово «вдома» означає рух додому.
+    correct: false
+    explanation: «Вдома» означає статичну позицію (Де?). Для руху ми використовуємо
+      «додому» (Куди?).
+  - statement: Ми кажемо «на роботу», коли йдемо туди.
+    correct: true
+    explanation: Це Знахідний відмінок (Accusative) для напрямку.
+  - statement: Слово «місто» змінюється на «місту» після запитання «Куди?».
+    correct: false
+    explanation: 'Слово «місто» середнього роду і не змінюється: «Я їду у місто».'
+  - statement: Дієслово «їхати» означає рухатися транспортом.
+    correct: true
+    explanation: Так, для руху пішки ми використовуємо «йти».
+- id: workbook-group-sort
+  type: group-sort
+  instruction: 'Знахідний відмінок: змінюється закінчення чи ні? (Accusative case:
+    does the ending change?)'
+  groups:
+  - label: Закінчення змінюється (Ending changes)
+    items:
+    - у школу
+    - на роботу
+    - у бібліотеку
+    - в Одесу
+  - label: Закінчення не змінюється (No change)
+    items:
+    - у банк
+    - у магазин
+    - у парк
+    - у місто
+- id: workbook-anagram
+  type: anagram
+  instruction: Складіть слово з літер (Make a word from the letters)
+  items:
+  - letters:
+    - р
+    - о
+    - б
+    - о
+    - т
+    - а
+    answer: робота
+    hint: work
+  - letters:
+    - ш
+    - к
+    - о
+    - л
+    - а
+    answer: школа
+    hint: school
+  - letters:
+    - б
+    - а
+    - н
+    - к
+    answer: банк
+    hint: bank
+  - letters:
+    - м
+    - і
+    - с
+    - т
+    - о
+    answer: місто
+    hint: city
+  - letters:
+    - д
+    - о
+    - д
+    - о
+    - м
+    - у
+    answer: додому
+    hint: homeward / to home
+  - letters:
+    - ї
+    - х
+    - а
+    - т
+    - и
+    answer: їхати
+    hint: to go by transport
+- id: workbook-unjumble
+  type: unjumble
+  instruction: Складіть правильне речення зі слів (Make a correct sentence from the
+    words)
+  items:
+  - words:
+    - в
+    - школу.
+    - йду
+    - Я
+    correct_order:
+    - Я
+    - йду
+    - в
+    - школу.
+  - words:
+    - Одесу.
+    - їде
+    - Вона
+    - в
+    correct_order:
+    - Вона
+    - їде
+    - в
+    - Одесу.
+  - words:
+    - на
+    - Ми
+    - роботі.
+    - зараз
+    correct_order:
+    - Ми
+    - зараз
+    - на
+    - роботі.
+  - words:
+    - ти
+    - Куди
+    - йдеш?
+    correct_order:
+    - Куди
+    - ти
+    - йдеш?
+  - words:
+    - банку.
+    - у
+    - працює
+    - Степан
+    correct_order:
+    - Степан
+    - працює
+    - у
+    - банку.
+  - words:
+    - Вони
+    - додому.
+    - повертаються
+    correct_order:
+    - Вони
+    - повертаються
+    - додому.

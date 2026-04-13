@@ -1,0 +1,73 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T20-14-e08de1c1.json
+phase: skeleton
+prompt_chars: 35360
+response_chars: 5528
+prompt_words: 5144
+response_words: 843
+sections:
+- name: preamble
+  start: 0
+  length: 485
+  fraction: 0.0137
+- name: plan
+  start: 485
+  length: 4308
+  fraction: 0.1218
+- name: wiki
+  start: 4740
+  length: 28227
+  fraction: 0.7983
+- name: output_spec
+  start: 33020
+  length: 2340
+  fraction: 0.0662
+large_sections:
+- wiki
+directives_total: 14
+directives_covered: 4
+directives_missed:
+- kind: must
+  text: Your skeleton must budget every word.
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: must
+  text: '* **Introduction to Cases**: The learner must know what a "case" is and that
+    Ukrainian nouns change their endings.'
+  covered: false
+  coverage_note: 4/13 keywords (31%)
+- kind: must
+  text: '**Word budgets must sum to 2000+.'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: '**Section budgets must match the plan''s `content_outline` word allocations**
+    (±10%).'
+  covered: false
+  coverage_note: 1/8 keywords (12%)
+- kind: must
+  text: '**CRITICAL: An exercise must ONLY test concepts already taught above it.'
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: must
+  text: 'Every plan `activity_hints` entry MUST have a corresponding `<!-- INJECT_ACTIVITY:
+    id -->` marker in the skeleton.'
+  covered: false
+  coverage_note: 3/10 keywords (30%)
+- kind: skeleton_para
+  text: 'P1 (150w): Follow the plan''s points for this section EXACTLY. If the plan
+    says "Self-check questions", output a bulleted Q&A list — NOT prose. If the plan
+    says "recap", write a brief recap.'
+  covered: false
+  coverage_note: 3/20 keywords (15%)
+- kind: inject_activity
+  text: activity-id
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: activity-id
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: descriptive-id
+  covered: false
+  coverage_note: marker missing

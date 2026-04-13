@@ -21,7 +21,7 @@ Grand total: ~2170 words
 <previous_context>
 [...previous sections truncated...]
 
-поговоримо про ще одну важливу частину мови в українській граматиці. Це **прислівник** *(adverb)*. Ви вже добре знаєте, що іменники, прикметники та дієслова постійно змінюють закінчення. Вони залежать від контексту. Але прислівник — це унікальне, абсолютно **незмінне слово** *(unchangeable word)*. Що це означає для вас як для студента? Це означає, що прислівник ніколи не має відмінків. Він не має родів, чисел або осіб. Він завжди залишається у своїй початковій словниковій формі. Для вивчення мови це дуже гарна новина! Вам не потрібно думати про складні закінчення. Ви просто берете прислівник і використовуєте його у своєму реченні. Наприклад, слово «добре» *(well)* завжди залишається словом «добре». Це правило діє незалежно від того, хто виконує дію. Але є один невеликий нюанс. Прислівники ніколи не змінюються. Тому іноді студентам важко зрозуміти їхню граматичну роль у тексті. Проте у будь-якому словнику ви завжди знайдете ці слова. Вони будуть мати коротку позначку **«присл.»** *(adv.)*. В українській мові всі прислівники мають свої специфічні категорії. Вони показують нам різноманітні обставини, за яких відбувається дія. Подивімося детально на три найважливіші види прислівників. Ви вже дуже добре знаєте ці слова. Ви постійно використовуєте їх на практиці. Ми просто дамо їм офіційні граматичні імена. Перша базова група — це **прислівник місця** *(adverb of place)*. Цей вид завжди відповідає на питання «де?» *(where?)* або «куди?» *(where to?)*. До цієї групи належать такі слова: «тут» *(here)*, «там» *(there)*, «далеко» *(far)*. Також сюди входять слова «близько» *(near)* та «всюди» *(everywhere)*. Друга велика і популярна група — це **прислівник часу** *(adverb of time)*. Він дає чітку відповідь на питання «коли?» *(when?)*. Це наші улюблені інструменти для щоденного планування свого життя. Сюди входять слова: «сьогодні» *(today)*, «завтра» *(tomorrow)*, «вчора» *(yesterday)*, «вранці» *(in the morning)*. Слова «завжди» *(always)* та «ніколи» *(never)* також живуть тут. Третя важлива категорія — це **прислівник способу дії** *(adverb of manner)*. Цей тип пояснює нам, «як» саме ми робимо певну дію. Наприклад: мій друг читає «швидко» *(fast)*, моя мама говорить «повільно» *(slowly)*. Наші нові студенти працюють на уроці дуже «уважно» *(attentively)*. Знання цих трьох термінів допоможе вам розуміти пояснення вчителів. Як саме утворюється більшість українських прислівників? Вони мають дуже тісний зв'язок із прикметниками. Ви вже знаєте багато різних і корисних прикметників. Тому вам буде дуже легко самостійно створити нові прислівники. Найпростіший спосіб — додати суфікс «-о» або «-е» до основи прикметника. Подивімося на це правило через дуже конкретні приклади. Візьмемо типовий прикметник «гарний» *(beautiful, good)*. Ми хочемо сказати, як саме людина співає чи малює. Тому ми робимо з нього прислівник: «гарно» *(beautifully)*. Прикметник «швидкий» *(fast, quick)* швидко перетворюється на популярний прислівник «швидко» *(fast, quickly)*. А відомий прикметник «гарячий» *(hot)* за цим правилом стає прислівником «гаряче» *(hotly)*. Коли ви шукаєте такі слова у великому словнику, ви спочатку бачите прикметник. Потім словник дає вам і форму прислівника. Ці два слова завжди мають граматичний зв'язок. Іноді ви бачите в тексті абсолютно нове слово із закінченням «-о». Можливо, це нове слово має закінчення «-е». Якщо воно відповідає на питання «як?», це точно типовий прислівник. Завжди пам'ятайте про граматичне скорочення **«присл.»**, коли читаєте словникові статті. <!-- INJECT_ACTIVITY: fill-in, fill-in-metalanguage -->
+words) У цій частині ми поговоримо про ще одну дуже важливу частину мови. Це **прислівник** (adverb). Головна особливість прислівника полягає в тому, що це абсолютно незмінне слово. Прислівники ніколи не мають закінчень, тому вони не змінюються за відмінками, числами чи особами. Це робить їх дуже простими для використання у реченні. Однак через цю незмінність їх іноді буває важко знайти у великих граматичних таблицях. > *In this part, we will talk about another very important part of speech. This is the **прислівник** (adverb). The main feature of the adverb is that it is an absolutely unchangeable word. Adverbs never have endings, so they do not change by cases, numbers, or persons. This makes them very easy to use in a sentence. However, because of this immutability, they can sometimes be hard to find in large grammatical tables.* Ukrainian grammar categorizes adverbs based on the specific questions they answer. Knowing these categories helps you structure your sentences logically and understand the function of each word. The three most common groups are adverbs of place, adverbs of time, and adverbs of manner. Перша велика група — це прислівник місця. Такі слова відповідають на питання «де?» або «куди?». До цієї групи належать добре знайомі вам слова: тут, там, далеко, близько, ліворуч, праворуч. Друга популярна категорія — це прислівник часу, який відповідає на питання «коли?». Наприклад, ви постійно використовуєте слова вчора, сьогодні, завтра, вранці, ввечері, завжди. Третя група — це прислівник способу дії. Ці слова пояснюють, як саме відбувається дія, і відповідають на питання «як?». Приклади таких слів: добре, погано, швидко, повільно, уважно. :::tip **Did you know?** In a typical Ukrainian sentence, adverbs of time and place often appear at the very beginning to set the scene, while adverbs of manner usually stay close to the verb they describe. ::: You already know a massive number of adverbs without even realizing it. This is because Ukrainian has a very simple and predictable system for creating adverbs of manner directly from adjectives. If you know the adjective, you can instantly form the adverb by replacing the adjective ending with a specific vowel suffix. Most often, you simply drop the ending and add **-о** or **-е**. Якщо прикметник закінчується на «-ий», ми зазвичай змінюємо це закінчення на «-о». Наприклад, «гарний» стає «гарно», «швидкий» перетворюється на «швидко», а «холодний» стає «холодно». Якщо основа слова м'яка або закінчується на шиплячий приголосний, ми найчастіше додаємо суфікс «-е». Тому прикметник «гарячий» утворює форму «гаряче», а «добре» походить від прикметника «добрий». Коли ви відкриваєте **словник** (dictionary), ви часто бачите ці слова зі скороченням «присл.». > *If an adjective ends in "-ий", we usually change this ending to "-о". For example, "гарний" becomes "гарно", "швидкий" turns into "швидко", and "холодний" becomes "холодно". If the word stem is soft or ends in a hissing consonant, we most often add the suffix "-е". Therefore, the adjective "гарячий" forms "гаряче", and "добре" comes from the adjective "добрий". When you open a **словник** (dictionary), you often see these words with the abbreviation "присл.".* <!-- INJECT_ACTIVITY: fill-in-metalanguage -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -511,7 +511,74 @@ Understanding the sentence is the central goal of syntax. It builds directly upo
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 6: A2 finale (A2 M51-M69)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 40%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 40% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 70-90% Ukrainian.
 LANGUAGE ROLES:
@@ -530,18 +597,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (5/5).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] дієслово (verb)
+- [ ] час (tense, time)
+- [ ] вид (aspect)
+- [ ] доконаний (perfective)
+- [ ] недоконаний (imperfective)
+- [ ] спосіб (mood, manner)
+- [ ] дієвідміна (conjugation class)
+- [ ] особа (person, grammatical)
+- [ ] прислівник (adverb)
+- [ ] словник (dictionary)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Підсумок (~150 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

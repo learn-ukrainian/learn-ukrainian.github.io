@@ -1,4 +1,4 @@
-<!-- version: 1.1.0 | updated: 2026-03-31 -->
+<!-- version: 1.2.0 | updated: 2026-04-12 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -11,6 +11,35 @@ Generate an `activities/what-is-it-like.yaml` file for module **9: What Is It Li
 
 ---
 
+## ⚠️ HARD COUNT TARGETS — READ TWICE
+
+These are the binding numerical contracts for THIS module. The audit will FAIL if you fall short.
+
+| Bucket | Min | Max | Notes |
+|---|---|---|---|
+| Total activities | 10 | 10+ | inline + workbook combined |
+| Inline (lesson tab) | 4 | 6 | one per `<!-- INJECT_ACTIVITY -->` marker, see below |
+| Workbook (Зошит tab) | 6 | 9 | extended practice |
+| Items per activity | 6 | — | each activity must have at least 6 items (unless its type cap is lower — see Activity Type Reference below) |
+
+**You MUST ship at least 4 inline activities AND at least 6 workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+
+**Type diversity is required.** The module (inline + workbook combined) MUST use at least **0** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level. (If `0` is `0`, the audit profile for this level does not enforce type diversity — but variety still produces a better lesson, so aim for 4+ types when the workbook allows it.)
+
+---
+
+## Allowed types for THIS level
+
+- **Inline (lesson) types:** image-to-letter, letter-grid, match-up, watch-and-repeat, quiz, true-false, fill-in, classify
+- **Inline priority (preferred):** image-to-letter, match-up, fill-in, quiz, watch-and-repeat
+- **Workbook types:** fill-in, match-up, group-sort, anagram, unjumble, quiz, true-false, classify, divide-words, count-syllables, pick-syllables, observe, phrase-table, odd-one-out
+- **Workbook priority (preferred):** fill-in, match-up, group-sort, anagram, unjumble
+- **FORBIDDEN at this level:** cloze, error-correction, mark-the-words, translate, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, highlight-morphemes, grammar-identify, select
+
+Pick from the allowed list. Lean heavily on the priority lists. Do not use any forbidden type — the build will reject it.
+
+---
+
 ## Inline vs Workbook Split
 
 Activities have two placement categories:
@@ -19,7 +48,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Rule of thumb:** inline = 2-3 quick checks after key teaching points. Workbook = 4-8 deeper practice exercises covering the full topic.
+**Rule of thumb:** inline = 4–6 quick checks after key teaching points. Workbook = 6–9 deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
 
 ---
 
@@ -28,9 +57,9 @@ Activities have two placement categories:
 The writer placed these markers in the module content. Your inline activities must match them:
 
 - `<!-- INJECT_ACTIVITY: quiz-question-word -->`
-- `<!-- INJECT_ACTIVITY: fill-in-adjective-endings -->`
+- `<!-- INJECT_ACTIVITY: fill-in-endings -->`
 - `<!-- INJECT_ACTIVITY: match-up-opposites -->`
-- `<!-- INJECT_ACTIVITY: fill-in-room-description -->`
+- `<!-- INJECT_ACTIVITY: fill-in-describe-room -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -90,95 +119,117 @@ required:
 <module_content>
 ## Діалоги (Dialogues)
 
-It is the weekend, and the city center is bustling with activity. We visit a local weekend book fair, a popular gathering place where vendors display an interesting assortment of printed materials, vintage goods, and cultural artifacts. People browse through the stalls, carefully looking at items like maps, books, and posters, often picking them up to appreciate the quality of the paper or the vibrancy of the ink. We join **Тарас** and **Софія** as they walk from table to table. They are examining the items on display and sharing their immediate impressions of what they see.
+Imagine spending a relaxing weekend at a vibrant local book fair. The air is filled with the scent of printed paper as people browse through endless rows of fascinating items. **Тарас** (Taras) and **Софія** (Sofia) are walking among the stalls, carefully looking at a **новий атлас** (new atlas), a **цікава книга** (interesting book), and an **старе фото** (old photo). They are taking their time, noticing the details of each object and describing exactly what they see in front of them. Pay attention to how they ask questions about the things they find.
 
-The book fair is an excellent place to practice our new descriptive skills because the objects are constantly changing. One table might have historical artifacts, while another has modern textbooks. As our friends walk, they point out specific details that catch their eye. Examine their conversation below.
+While taking a break from the book fair, the conversation shifts to their homes. Taras asks Sofia to describe her living space.
 
-As they stop at a large wooden stall, **Тарас** unrolls a massive poster while **Софія** picks up a thick, freshly printed volume and an antique photograph from a nearby stack.
-
-> **Тарас:** Який великий плакат! *(What a big poster!)*
-> **Софія:** А яка цікава книга! *(And what an interesting book!)*
-> **Тарас:** Це новий атлас? *(Is this a new atlas?)*
-> **Софія:** Так, новий атлас. А там — старе фото. *(Yes, a new atlas. And there — an old photo.)*
-> **Тарас:** І маленька листівка. *(And a small postcard.)*
-
-They are doing more than just naming objects; they are actively describing them, assigning qualities to the things they see. Notice how the ending of the describing word changes depending on whether the object is masculine, feminine, or neuter. Describing objects at a market is useful, but the most common place we describe things is in our own homes. When you invite a guest over, or when you are simply talking about your living space with a new friend, you naturally want to communicate what your environment looks like. Listen to another conversation. This time, **Софія** is describing her personal space to **Тарас**, focusing on the everyday furniture items we learned about previously. This is a classic situation found in the Вашуленко Grade 3 textbook under the topic "Моя кімната" (My room).
-
-Listen to how **Софія** provides details about the size, age, and brightness of her room and the items inside it.
-
-> **Тарас:** Яка твоя кімната? *(What is your room like?)*
+> **Тарас:** Яка твоя кімната? *(What kind is your room?)*
 > **Софія:** Моя кімната велика і світла. *(My room is big and bright.)*
 > **Тарас:** А стіл? *(And the table?)*
 > **Софія:** Стіл новий. А ліжко — старе. *(The table is new. And the bed is old.)*
 
-Here, the description feels very natural. The questions and the answers both rely on matching the describing word to the object being discussed.
+Notice how the descriptive words adapt to fit the objects they describe. When Sofia talks about her room, she uses the words **велика** (big) and **світла** (light, bright). Because the word for room is feminine, the adjectives take a feminine form. When she describes the table, she uses the masculine form **новий** (new). Finally, when she mentions the bed, the neuter word requires the neuter form **старе** (old). The agreement between the object and its description emerges naturally in conversation.
 
-## Який? Яка? Яке? (What kind?)
-
-To ask "What kind?" or "Which?" in English, you rely on fixed words that never change shape. In Ukrainian grammar, the reality is much more dynamic. A describing word is called a **прикметник** (adjective), a term that literally suggests it is a feature attached to an object. Its primary job is to tell you the qualities of a noun—its size, color, age, or value. However, you cannot simply memorize one single, unchanging word for "What kind?". Just as you learned that the word for "my" changes based on gender, strictly following the **мій**, **моя**, **моє** pattern, the question word for descriptions must also adapt to precisely match the noun it asks about. The question "What kind?" changes by gender exactly like the possessive pronouns do, acting as a mirror to the noun.
-
-When you want to describe a masculine noun, you use the specific question word **який?** (what kind?). The answer to this question will typically be an adjective ending in the letters **-ий**. For example, if you are looking at a table, you ask **Який стіл?** (What kind of table?), and the accurate answer is **Великий стіл** (A big table) or **Новий атлас** (A new atlas). For feminine nouns, the entire system shifts to accommodate the feminine gender. The question word changes to **яка?**. Consequently, the describing word will end in the letter **-а**, giving you descriptive phrases like **Нова книга** (A new book) or **Велика листівка** (A big postcard).
-
-Neuter nouns require their own specific grammatical form to maintain this harmony. To ask about a neuter object, you must use the question word **яке?**. Following the established logic, the adjective that directly answers this neuter question will end in the letter **-е**. If you point to a window, you ask **Яке вікно?** (What kind of window?), and the appropriate response is **Чисте вікно** (A clean window) or **Старе фото** (An old photo). Note that while some adjectives have soft-stem endings like **-ій**, **-я**, or **-є** (such as **синій**, which means dark blue), we will cover those exceptions in the next module about colors. For now, you must focus entirely on mastering the standard **-ий**, **-а**, **-е** pattern.
-
-Practicing this skill requires active listening. When you hear a native speaker describe an object, pay close attention to the ending of the adjective. You will notice that the ending always matches the gender of the noun it is attached to. This consistency is what makes Ukrainian grammar so logical once you grasp the foundational rules. It might seem like a lot of variations at first, but with practice, this matching process will become second nature.
-
-:::tip
-According to the Пономарова Grade 3 textbook (p.98), the fundamental rule is that an adjective has the same gender as the noun. Think of the noun as the boss, and the adjective as the loyal assistant that must put on the matching uniform!
+:::note
+In Ukrainian, adjectives do not have a fixed gender of their own. They are highly adaptable words that change their form entirely to match the noun they are describing.
 :::
 
-This means the noun dictates the gender, and the adjective obediently copies it without exception. For masculine words, you will always use **-ий** (**великий**, **новий**, **чистий**). For feminine words, you will use **-а** (**велика**, **нова**, **чиста**). For neuter words, you will use **-е** (**велике**, **нове**, **чисте**). This pattern of agreement will reappear in every single grammatical case as you continue learning the language, so you must learn it well right now to build a strong foundation for future fluency.
+After leaving the bustling book fair, Taras and Sofia take a leisurely stroll through the city center. While walking home, they frequently stop to look at the bright shop windows. They discuss the qualities of the various items they notice on display, comparing their appearance and value.
 
-<!-- INJECT_ACTIVITY: quiz-question-word -->
-
-<!-- INJECT_ACTIVITY: fill-in-adjective-endings -->
-
-## Прикметники (Common Adjectives)
-
-One of the most effective strategies for expanding your descriptive vocabulary quickly is to learn adjectives in opposite pairs. Human memory thrives on contrast, making it much easier to remember two interconnected words together than trying to memorize them in isolation. Start with the primary size and age pairs. For physical size, we have the word **великий** (big) and its direct opposite **маленький** (small). For the age of objects, we pair **новий** (new) with **старий** (old). You can immediately apply these new adjectives to the vocabulary objects you already know, creating useful combinations like **великий стіл** (a big table), **маленька ручка** (a small pen), **новий телефон** (a new phone), and **старе фото** (an old photo).
-
-Next, we expand the vocabulary set with quality and light pairs. To express whether something is visually pleasing, attractive, or generally good, use the adjective **гарний** (nice, beautiful). Its direct opposite is **поганий** (bad). For measuring physical cleanliness, pair **чистий** (clean) with **брудний** (dirty). When talking about the amount of natural or artificial light in a space, use **світлий** (light, bright) and **темний** (dark). These descriptive words are incredibly useful for everyday conversations. You might say to a friend that you have a **гарний день** (nice day), express a desire to drink **чиста вода** (clean water), or mention that you prefer to read a book in a **світла кімната** (bright room).
-
-Consider how often you make judgments about the things around you. Every time you decide whether a shirt is clean or dirty, or whether a room is too dark to read in, you are using qualitative adjectives. Applying these new words to your immediate surroundings is the fastest way to memorize them. Look at your desk right now. Is your pen new or old? Is your coffee cup big or small? By constantly labeling your environment with these opposite pairs, you actively reinforce the vocabulary in your mind.
-
-When you are out shopping or discussing the financial value of everyday items, you need a completely different set of descriptors. The word for an item that costs a significant amount of money is **дорогий** (expensive). The opposite descriptor, used for an item that is highly affordable, is **дешевий** (cheap). Imagine you are window shopping in the city center and looking closely at a storefront display filled with various goods.
+As they stand in front of a modern boutique, a display catches their attention.
 
 > **Софія:** Яка гарна сумка! *(What a beautiful bag!)*
 > **Тарас:** Так, але вона дорога. *(Yes, but it is expensive.)*
-> **Софія:** А телефон? Який він? *(And the phone? What is it like?)*
+> **Софія:** А телефон? Який він? *(And the phone? What kind is it?)*
 > **Тарас:** Він великий і дешевий. *(It is big and cheap.)*
 
-:::note
-Notice the small connecting words used to build longer sentences. We use **і** (and) when two qualities exist in parallel harmony. We use **а** (and/but) to show a contrast between two different things.
+This brief exchange highlights another common situation where descriptive language is essential. Sofia expresses her admiration using the feminine form **гарна** (nice, beautiful) to match the bag. Taras agrees but introduces a contrasting thought using the word **дорога** (expensive). When Sofia shifts her attention to an electronic device, she uses the masculine question word to ask about it. Taras answers with the masculine forms **великий** (big) and **дешевий** (cheap). Every single description is tied directly to the grammatical gender of the noun.
+
+## Який? Яка? Яке? (What kind?)
+
+When you want to know more about an object, you ask for its description. In English, you might ask "What kind of book is this?" or "What is the table like?". In Ukrainian, asking this question requires you to pay attention to the grammatical gender of the noun. The question word itself changes to match the object you are asking about. This behavior is identical to the familiar pattern you already know from possessive pronouns, where you choose between the masculine, feminine, and neuter forms.
+
+When you are asking about a masculine noun, you must use the masculine question word **який** (what kind? — m). The answer will typically feature an adjective ending in the standard masculine suffix **-ий**. This ending acts as a clear signal that the description belongs to a masculine object.
+
+* **Який стіл?** (What kind of table?) → **Великий стіл.** (A big table.)
+* **Який плакат?** (What kind of poster?) → **Новий плакат.** (A new poster.)
+
+The question and the answer mirror each other perfectly.
+
+For a feminine noun, the question word transforms into the feminine form **яка** (what kind? — f). Correspondingly, the adjective that answers this question will almost always end with the feminine suffix **-а**. This creates a rhythmic, rhyming effect between the noun and its description.
+
+* **Яка книга?** (What kind of book?) → **Нова книга.** (A new book.)
+* **Яка листівка?** (What kind of postcard?) → **Маленька листівка.** (A small postcard.)
+
+:::tip
+Use the question word as a cheat code! The ending of the question word usually tells you the exact ending you need for the adjective. If you ask **Яка?**, expect the answer to end in **-а**.
 :::
 
-When building rich descriptions with the everyday objects you learned in the previous module, these tiny structural words are absolutely essential for fluency. By combining your known vocabulary, you can proudly say **У мене є великий стіл** (I have a big table). When explicitly linking parallel ideas, use **і**: **Вікно велике і чисте** (The window is big and clean). When highlighting a clear contrast, use **а**: **Стілець старий, а ліжко — нове** (The chair is old, and/but the bed is new). Finally, you can use **але** (but) for slightly unexpected or surprising combinations: **Моя кімната маленька, але гарна** (My room is small, but nice).
+Finally, when inquiring about a neuter noun, you use the neuter question word **яке** (what kind? — n). The adjective providing the description will typically feature the neuter ending **-е**.
+
+* **Яке вікно?** (What kind of window?) → **Чисте вікно.** (A clean window.)
+* **Яке фото?** (What kind of photo?) → **Старе фото.** (An old photo.)
+
+You might occasionally encounter soft-stem adjectives that use slightly different endings, such as the forms ending in the vowel letters for soft sounds. These specific variations will be covered in detail when you explore vocabulary related to colors.
+
+The golden rule for this grammatical behavior is taught early in Ukrainian schools: **прикметник має такий рід, як іменник, з яким він зв'язаний** (an adjective has the same gender as the noun it is connected to).
+
+<!-- INJECT_ACTIVITY: quiz-question-word -->
+<!-- INJECT_ACTIVITY: fill-in-endings -->
+
+## Прикметники (Common Adjectives)
+
+Building a rich vocabulary of descriptive words is essential for expressing yourself clearly. The most effective strategy for mastering this vocabulary is to learn adjectives in opposite pairs. Memorizing opposing concepts together creates a powerful mental association. When you learn the word for large, you immediately pair it with the word for small. This interconnected approach ensures that recalling one word automatically triggers the memory of its counterpart, making your speech much more fluid.
+
+For size, use **великий** (big) and **маленький** (small). For age, use **новий** (new) and **старий** (old). For quality or appearance, the pair is **гарний** (nice, beautiful) and **поганий** (bad). Seeing these words isolated is not enough; you must observe them in context to see the agreement rules in action.
+
+* **великий стіл** (a big table)
+* **маленька кімната** (a small room)
+* **нове ліжко** (a new bed)
+* **старе фото** (an old photo)
+
+Always practice these words alongside a noun to reinforce the correct endings.
+
+Expand your descriptive abilities with another essential set of pairs. For cleanliness, use **чистий** (clean) and **брудний** (dirty). When discussing price or value, the words are **дорогий** (expensive) and **дешевий** (cheap). To describe illumination, pair **світлий** (light, bright) with **темний** (dark).
+
+* **дорога сумка** (an expensive bag)
+* **дешевий телефон** (a cheap phone)
+* **світла кімната** (a bright room)
+* **чисте вікно** (a clean window)
+
+Notice how the ending of each adjective perfectly matches the gender of the noun it modifies.
+
+You can now build complete, expressive sentences by combining these descriptions. When you want to link two similar qualities, use the conjunction **і** (and) for parallel ideas. If you need to express a contrast between two objects or qualities, use the conjunction **а** (and/but — contrast) or the word **але** (but).
+
+* **Вікно велике і чисте.** (The window is big and clean.)
+* **Стілець старий, а ліжко — нове.** (The chair is old, but the bed is new.)
+* **Моя кімната маленька, але гарна.** (My room is small, but beautiful.)
+
+:::caution
+Pay close attention to the small conjunctions. While **і** simply adds information together, **а** is used to show a direct contrast between two distinct objects. Use **але** when you are contrasting two qualities of the exact same object.
+:::
+
+These small connecting words allow you to craft complex descriptions effortlessly.
 
 <!-- INJECT_ACTIVITY: match-up-opposites -->
-
-<!-- INJECT_ACTIVITY: fill-in-room-description -->
+<!-- INJECT_ACTIVITY: fill-in-describe-room -->
 
 ## Підсумок — Summary
 
-Describing your physical environment in Ukrainian requires paying close and constant attention to the nouns you are talking about. Every single describing word must perfectly match the grammatical gender of the noun it modifies. When you want to ask about the qualities of an object, your question word changes accordingly. For a masculine noun, you must ask **який?**, and the responding adjective will end in **-ий**, as seen in **великий**. For a feminine noun, the question logically shifts to **яка?**, leading to an adjective ending in **-а**, such as **велика**. For a neuter noun, you use **яке?**, and the adjective predictably takes the **-е** ending, exactly like **велике**. Remember that learning adjectives in direct contrasting pairs, such as pairing **новий** and **старий** or grouping **чистий** and **брудний**, makes vocabulary acquisition much more efficient and natural. Finally, when constructing your full sentences, use **і** to seamlessly connect matching parallel qualities, and use the contrastive conjunction **а** to boldly highlight the differences between two distinct items in your description.
+The core lesson of this module revolves around a single, unbreakable grammatical bond. Ukrainian adjectives exist exclusively to describe nouns, and they must always agree with those nouns in gender when used in the nominative case. You cannot simply memorize a descriptive word in isolation; you must always adapt its form to match the object it modifies. The core pattern is highly consistent and easy to remember. Masculine descriptions typically end in the suffix **-ий**, feminine descriptions take the ending **-а**, and neuter descriptions use the ending **-е**. Because the adjective takes its cue directly from the noun, knowing the grammatical gender of the noun is the absolute key to using descriptive language correctly. If you know the gender of the object, you automatically know the sound that must complete the adjective.
 
-The ability to accurately describe the world around you is a major milestone in your language journey. It moves you beyond simply pointing at objects and allows you to share your unique perspective and opinions. A table is no longer just a table; it is a big, new, clean table. A room is no longer just a room; it is a small but beautiful space. This descriptive power breathes life into your conversations and helps you connect with native speakers on a deeper level.
+Review the grammatical patterns by answering the following questions aloud before checking the provided solutions. This simple self-check will solidify your understanding.
 
-Verify your understanding of these core descriptive patterns before you proceed to the next lesson. Mastery of these concepts is essential for your progression. Can you confidently answer these practical self-check questions without hesitation?
+* What ending does a masculine adjective have?
+  * The standard ending is **-ий** (and occasionally **-ій** for soft-stem words).
+* What ending does a feminine adjective have?
+  * The standard ending is **-а** (and occasionally **-я**).
+* What ending does a neuter adjective have?
+  * The standard ending is **-е** (and occasionally **-є**).
+* Can you describe your own room in three complete sentences using the adjectives you learned today?
+  * For example: **Моя кімната велика і світла.** (My room is big and bright.) **Стіл новий.** (The table is new.) **Ліжко велике.** (The bed is big.)
 
-*   Як буде "What kind of book?"
-    *   **Яка книга?** (Because the word for book is feminine).
-*   What ending does a masculine adjective have?
-    *   Masculine adjectives typically end in **-ий** (or sometimes **-ій**).
-*   What ending does a feminine adjective have?
-    *   Feminine adjectives typically end in **-а** (or **-я**).
-*   What ending does a neuter adjective have?
-    *   Neuter adjectives typically end in **-е** (or **-є**).
-*   Як сказати "The table is big, but the chair is small"?
-    *   **Стіл великий, а стілець маленький.**
-
-**Завдання** (Task): Describe your room in 3 sentences using adjectives. Look around your space and practice out loud right now. Make sure you correctly match the gender of the furniture items to the adjectives you choose.
-
+Mastering this fundamental agreement ensures your Ukrainian sounds natural and accurate.
 </module_content>
 
 ---
@@ -192,48 +243,68 @@ version: "1.0"
 module: what-is-it-like
 level: a1
 
+# NOTE — these are SHAPE examples. The real targets are at the top of this prompt
+# (10 total / 4–6 inline / 6–9 workbook,
+# 6+ items per activity). The shapes below are TRUNCATED for readability;
+# YOUR output MUST hit those minimums.
+
 inline:
   - id: marker-id-here        # MUST match an <!-- INJECT_ACTIVITY: ... --> marker
     type: quiz                 # activity type
     instruction: "Оберіть правильний варіант"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - question: "_____ стіл"
-        options: ["мій", "моя", "моє"]
+        options: ["мій", "моя", "моє", "мої"]
         correct: 0             # 0-based index
+      - question: "Це ____ книга."
+        options: ["мій", "моя", "моє", "мої"]
+        correct: 1
+      # ... add at least 6 items total — never stop at 1-2
 
   - id: another-marker-id
     type: fill-in
     instruction: "Вставте правильне слово"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - sentence: "Це ____ кімната."
         answer: "моя"
         options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ вікно."
+        answer: "моє"
+        options: ["мій", "моя", "моє"]
+      # ... ≥ 6 items total
 
 workbook:
-  - type: match-up
+  - id: match-up-vocab
+    type: match-up
     instruction: "З'єднайте пари"
-    pairs:
+    pairs:                     # ← real output: ≥ 6 pairs
       - left: "стіл"
         right: "він"
       - left: "книга"
         right: "вона"
       - left: "вікно"
         right: "воно"
+      # ... ≥ 6 pairs total
 
-  - type: group-sort
+  - id: group-sort-gender
+    type: group-sort
     instruction: "Розподіліть слова за категоріями"
     groups:
-      - label: "Category A"
-        items: ["word1", "word2"]
-      - label: "Category B"
-        items: ["word3", "word4"]
+      - label: "Чоловічий рід"
+        items: ["стіл", "олівець", "будинок"]   # ≥ 3 items per group
+      - label: "Жіночий рід"
+        items: ["книга", "ручка", "школа"]
+      - label: "Середній рід"
+        items: ["вікно", "море", "молоко"]
 
-  - type: true-false
+  - id: true-false-grammar
+    type: true-false
     instruction: "Правда чи ні?"
-    items:
-      - statement: "Statement here"
-        correct: true
-        explanation: "Why it's true"
+    items:                     # ← real output: ≥ 6 items
+      - statement: "«Книга» — це чоловічий рід."
+        correct: false
+        explanation: "Книга закінчується на -а, отже жіночий рід."
+      # ... ≥ 6 items total
 
   - type: error-correction
     instruction: "Виправте помилку"
@@ -304,7 +375,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -402,10 +473,15 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 ## Quality Rules
 
-**ITEM COUNT MINIMUMS (non-negotiable):**
-- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
-- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
-- If you can't think of enough items, add more examples from the module's vocabulary and content.
+**ACTIVITY COUNT MINIMUMS (non-negotiable, audit-enforced):**
+- **Total: 10 activities.** Inline: 4–6. Workbook: 6–9. The audit gate FAILS the module if you ship fewer.
+- **Type diversity: workbook MUST cover ≥5 distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
+- **Match the inline markers exactly.** Every `<!-- INJECT_ACTIVITY: id -->` marker in the prose needs a matching inline activity with that exact id. Skipping markers means the lesson tab is broken.
+
+**ITEM COUNT MINIMUMS (non-negotiable, per-activity):**
+- **Default minimum: 6 items per activity.** Quiz, fill-in, match-up, true-false, anagram, error-correction, translate, cloze, mark-the-words, divide-words, count-syllables, odd-one-out, group-sort categories: all ≥ 6.
+- **Lower minimums for specific types only:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items, essay-response/critical-analysis = 1 prompt.
+- If you can't think of enough items, add more examples from the module's vocabulary and content. NEVER ship a 1-item or 2-item activity unless its type cap explicitly allows it.
 - **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
 - **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
@@ -512,6 +588,27 @@ IMPORTANT: After using tools, output your COMPLETE module content as plain text.
 1. Run `verify_words` on all Ukrainian words in your exercises — every word must exist in VESUM
 2. Run `query_cefr_level` on any word you're unsure about — it must be a1-appropriate
 3. For fill-in answers and distractors, verify the exact form (case, number, gender) with `verify_lemma`
+
+---
+
+## ⚠️ MANDATORY FINAL CHECKLIST — verify before emitting YAML
+
+Walk through this checklist explicitly before you start emitting. If ANY box is unchecked, fix it FIRST.
+
+- [ ] My output has **at least 4** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
+- [ ] My output has **at least 6** workbook activities.
+- [ ] **Total ≥ 10.**
+- [ ] **Every** activity has **at least 6** items, pairs, or statements (except types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3, essay-response=1).
+- [ ] The module (inline + workbook combined) uses **at least 0 distinct activity types** (or 4+ when 0 = 0 and the workbook size allows it). I am NOT shipping a wall of quizzes.
+- [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
+- [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
+- [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+- [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+- [ ] My inline count is between 4 and 6. I did NOT create more injection markers than 6.
+- [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
+- [ ] At B1+, all instructions are in Ukrainian (no English fallback).
+
+If you cannot tick all of these, REGENERATE the activities BEFORE outputting. Shipping under-spec means the build rejects you and the heal loop has to redo your work — wasting compute.
 
 ---
 

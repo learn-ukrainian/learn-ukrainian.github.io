@@ -25,7 +25,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-зразок **працюючий** *(working)*, **бажаючий** *(wishing)* або **оточуючий** *(surrounding)* часто є звичайними штучними кальками з російської мови. Під час тривалого процесу зросійщення ці невластиві українській граматиці форми штучно насаджувалися в офіційні документи та словники. Проте справжня, жива українська мова завжди уникає таких важких та неприродних конструкцій. Замість штучного слова ми зазвичай використовуємо інші, набагато більш гармонійні альтернативи. Найчастіше це звичайне **підрядне речення** *(subordinate clause)* зі словом «який». Наприклад, замість неприродної кальки ми скажемо «людина, яка працює» або «студент, який бажає вчитися». Також ми часто можемо використати звичайний прикметник, наприклад, **робочий** *(working/work)* процес, або відповідний іменник. Видатний український мовознавець Борис Антоненко-Давидович дуже влучно і глибоко писав про це поширене явище. Він категорично зазначав: «Невластивість активних дієприкметників українській мові — це не вада її, а її особливість». Ми маємо щиро поважати цю унікальну рису і свідомо очищати своє щоденне мовлення від старих колоніальних нашарувань. Використовуючи традиційні описові конструкції, ви робите свої фрази чистими, правильними та по-справжньому автентичними. Тепер давайте ще детальніше розглянемо пасивні форми із популярним суфіксом «-ен-». Під час їхнього утворення від основи дієслова дуже часто відбувається регулярне **чергування приголосних** *(consonant alternation)*. Це надзвичайно важливе фонетичне явище робить наші слова більш милозвучними та зручними для швидкої усної вимови. Правила цих звукових змін повністю відповідають загальній закономірній логіці відмінювання українських дієслів. Наприклад, твердий звук «д» часто і передбачувано змінюється на сполучення «дж». Тому дієслово **попередити** *(to warn)* логічно перетворюється на дієприкметник **попереджений** *(warned)*. Так само знайоме вам дієслово **садити** *(to plant)* дає нам красиву пасивну форму **саджений** *(planted)*. Звук «т» абсолютно закономірно чергується зі звуком «ч»: від слова **покрутити** *(to twist)* ми швидко утворюємо форму **покручений** *(twisted)*. А дзвінкий приголосний звук «з» переходить у м'який «ж», як у дієслові **вразити** *(to impress/to strike)*, яке стає правильною формою **вражений** *(impressed)*. Ця система може здаватися дещо складною на перший погляд. Проте, якщо ви добре пам'ятаєте, як дієслова змінюються у першій особі однини теперішнього часу, ці чергування будуть для вас дуже легкими. Знайома форма «я саджу» одразу і безпомилково підказує нам правильний дієприкметник «саджений». Уявіть собі типовий серйозний академічний **семінар** *(seminar)* з глибокого літературного аналізу в сучасному українському університеті. Досвідчений професор та розумні студенти активно обговорюють класичну творчість Тараса Шевченка. Під час цієї цікавої дискусії вони природно використовують дієприкметники для максимально точного вираження своїх складних аналітичних думок: > — **Викладач літератури:** Шановні колеги, будь ласка, зверніть пильну увагу на цей ранній текст. **Написаний** *(written)* Шевченком вірш глибоко вражає своєю неймовірною психологічною глибиною та емоційною силою. > — **Студентка:** Так, пане професоре, я абсолютно згодна з вашою оцінкою. Ми добре знаємо, що **минулий** *(past)* рік був надзвичайно складним і справді трагічним для молодого поета. Це напруження чітко відчувається у кожному його ритмі. > — **Студент:** Я повністю погоджуюся з вами обома. Наприклад, подивіться на цю метафору. Ці **зів'ялі** *(withered)* квіти в його сумній поезії дуже яскраво символізують гірку втрату особистої свободи. > — **Викладач літератури:** Абсолютно точне і правильне спостереження! **Створений** *(created)* геніальним автором художній образ просто ідеально передає всі складні емоції того історичного часу. <!-- INJECT_ACTIVITY: formation-participles-drill --> <!-- INJECT_ACTIVITY: classify-and-detect-calques --> <!-- INJECT_ACTIVITY: edit-russian-calques -->
+"працююча людина", we say "людина, яка працює", and instead of "бажаючий", we use the natural construction "той, хто бажає". The prominent Ukrainian linguist Borys Antonenko-Davydovych always emphasized: the uncharacteristic nature of active participles in our language is not a flaw or a shortcoming at all, but its unique, deep natural feature.* When you form passive participles utilizing the highly common **-ен-** suffix, you must carefully navigate the consonant alternations occurring within the verb stem. These phonetic shifts perfectly mirror the general logic of Ukrainian verb conjugation, specifically matching the first-person singular present tense form. If a verb’s stem ends in a consonant that historically alternates, this identical phonetic change is meticulously preserved in the passive participle. For instance, the consonant **д** frequently changes to **дж** (попередити → попереджений, садити → саджений), the **т** reliably shifts to **ч** (покрутити → покручений), and the **з** систематично becomes **ж** (вразити → вражений). This underlying predictability means that if you can confidently conjugate a verb in its "I" form, you already possess the phonetic intuition required to produce the correct passive participle. Relying on this established conjugation logic eliminates the need for rote memorization of exceptions. :::tip **Consonant alternation shortcut** — Before writing a passive participle with **-ен-**, quickly conjugate the verb in the "я" form in your head (я попереджую, я покручу). The consonant you hear is the exact one you need! ::: To observe these sophisticated grammatical forms in a natural, elevated context, let us look at a literary analysis seminar. Here, a professor and students are passionately discussing a famous poem by Taras Shevchenko. Notice how seamlessly the participants deploy both active and passive participles to maintain a formal academic register. They weave dense descriptive information into single, elegant sentences, entirely avoiding repetitive or clunky relative clauses. This dialogue perfectly illustrates why mastering these verb forms is non-negotiable for anyone aspiring to read authentic literature, analyze historical texts, or participate in university-level discussions. > — **Викладач літератури:** Написаний Шевченком вірш глибоко вражає своєю емоційною силою. *(The poem written by Shevchenko deeply impresses with its emotional power.)* > — **Студент 1:** Це правда. Зів'ялі квіти в його поезії завжди символізують трагічну втрату і нестерпний біль. *(That is true. The withered flowers in his poetry always symbolize tragic loss and unbearable pain.)* > — **Викладач літератури:** Саме так. Минулий рік був надзвичайно складним для поета, і цей особистий досвід майстерно відображено в тексті. *(Exactly. The past year was extremely difficult for the poet, and this personal experience is masterfully reflected in the text.)* > — **Студент 2:** Уважно прочитаний нами твір яскраво доводить, що його творчий стиль ставав дедалі зрілішим. *(The work carefully read by us vividly proves that his creative style was becoming increasingly mature.)* > — **Викладач літератури:** Зверніть увагу на свідомо розбитий ритм у другій строфі. Він максимально підсилює драматичну напругу. *(Pay attention to the deliberately broken rhythm in the second stanza. It maximally amplifies the dramatic tension.)* <!-- INJECT_ACTIVITY: formation-participles-drill --> <!-- INJECT_ACTIVITY: classify-and-detect-calques --> <!-- INJECT_ACTIVITY: edit-russian-calques -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -543,7 +543,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -556,18 +623,61 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] контрольна робота (test/assessment)
+- [ ] дієприкметник (participle)
+- [ ] дієприслівник (gerund/adverbial participle)
+- [ ] дієприкметниковий зворот (participle phrase)
+- [ ] дієприслівниковий зворот (gerund phrase)
+- [ ] короткий прикметник (short-form adjective)
+- [ ] одночасність (simultaneity)
+- [ ] різночасність (temporal non-simultaneity)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Блок 2: Звороти і пунктуація (~650 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

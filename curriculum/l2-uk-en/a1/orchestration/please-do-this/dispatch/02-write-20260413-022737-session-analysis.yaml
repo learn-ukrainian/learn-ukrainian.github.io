@@ -1,0 +1,144 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T00-25-98a41d6e.json
+phase: write
+prompt_chars: 67987
+response_chars: 10707
+prompt_words: 10020
+response_words: 1722
+sections:
+- name: preamble
+  start: 0
+  length: 6400
+  fraction: 0.0941
+- name: plan
+  start: 6400
+  length: 6911
+  fraction: 0.1017
+- name: wiki
+  start: 12419
+  length: 27568
+  fraction: 0.4055
+- name: rules
+  start: 40879
+  length: 11206
+  fraction: 0.1648
+- name: skeleton
+  start: 52085
+  length: 6047
+  fraction: 0.0889
+- name: output_spec
+  start: 58132
+  length: 9855
+  fraction: 0.145
+large_sections:
+- wiki
+directives_total: 66
+directives_covered: 42
+directives_missed:
+- kind: checklist
+  text: No 'Let us...', 'In this section...', or formulaic openers
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: must
+  text: For A1 early modules, the learner cannot read Cyrillic — English must dominate.
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: must
+  text: Your output must be original teaching prose at the correct CEFR level, not
+    a rephrased version of the article.
+  covered: false
+  coverage_note: 5/13 keywords (38%)
+- kind: must
+  text: It must be embedded in relatable, personal stories.
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: must
+  text: A1 modules MUST be built around frequent, low-stakes retrieval exercises.
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: must
+  text: The curriculum must deliver immediate, real-world communicative competence.
+  covered: false
+  coverage_note: 2/8 keywords (25%)
+- kind: must
+  text: '**Structured Comfort Zone Expansion (Вихід із зони комфорту):** While A1
+    is about building foundations, learners must be gently pushed to interact with
+    simple, authentic materials.'
+  covered: false
+  coverage_note: 4/19 keywords (21%)
+- kind: must
+  text: 'The curriculum must teach pure, standard Ukrainian from the start (Source:
+    `ext-ulp_youtube-168`).'
+  covered: false
+  coverage_note: 4/11 keywords (36%)
+- kind: must
+  text: 'A1 vocabulary must be carefully vetted to exclude such Russianisms (Source:
+    `ext-ulp_youtube-168`).'
+  covered: false
+  coverage_note: 3/10 keywords (30%)
+- kind: must
+  text: '** The teaching of Ukrainian must be free from the influence of Russian linguistic
+    colonialism.'
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: must
+  text: Ukrainian phonetics and grammar must be taught on their own terms.
+  covered: false
+  coverage_note: 3/8 keywords (38%)
+- kind: must
+  text: '**Ukrainian is the Only Medium of Instruction (for the language itself):**
+    While explanations can be in English, all target language examples, dialogues,
+    and texts must be 100% Ukrainian.'
+  covered: false
+  coverage_note: 6/16 keywords (38%)
+- kind: must
+  text: '**Independent Phonetics:** The sound `[ц]` must be taught as a native Ukrainian
+    phoneme.'
+  covered: false
+  coverage_note: 3/8 keywords (38%)
+- kind: must
+  text: The learner's reference point must be Ukrainian itself.
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: must
+  text: '**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim**
+    as an `## H2` line.'
+  covered: false
+  coverage_note: 4/11 keywords (36%)
+- kind: must
+  text: '- UKRAINIAN NARRATIVE PARAGRAPHS: **REQUIRED — minimum 1 per section.'
+  covered: false
+  coverage_note: 2/7 keywords (29%)
+- kind: must
+  text: '- STRUCTURAL RULE: Every section MUST contain a Ukrainian narrative paragraph
+    (3-6 sentences, translated in blockquote) PLUS supporting tables/lists/dialogues/pattern
+    boxes.'
+  covered: false
+  coverage_note: 6/19 keywords (32%)
+- kind: must
+  text: translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: must
+  text: '- **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).'
+  covered: false
+  coverage_note: 0/9 keywords (0%)
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-sounds-vs-letters
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-sounds-vs-letters
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-false-friends
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing

@@ -1,20 +1,26 @@
-# Section-by-Section Generation — Section 4/6
+# Section-by-Section Generation — Section 4/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 18: Студентові, сестрі, дитині (A2, A2.3 [Dative Case])
-**Section to write:** Давальний відмінок іменників середнього роду (~350 words total)
-**Word target for this section:** 350 words (aim for 385 to account for undershoot)
+**Section to write:** Давальний відмінок у реченні (~550 words total)
+**Word target for this section:** 550 words (aim for 605 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Давальний відмінок іменників середнього роду (~350 words total)
-- P1 (~100 words): [II declension neuter (hard stems). Explain the ending -у. Examples: місто → місту, вікно → вікну, село → селу, слово → слову. Note the similarity to masculine -у.]
-- P2 (~100 words): [II declension neuter (soft stems). Explain the ending -ю. Examples: море → морю, серце → серцю, обличчя → обличчю, знання → знанню.]
-- P3 (~150 words): [IV declension (animals and babies ending in -а/-я with suffixes -ат-/-ят-). Explain the ending -аті/-яті. Examples: немовля → немовляті, курча → курчаті, теля → теляті, кошеня → кошеняті. This distinguishes "child-category" nouns from standard neuters.]
-- <!-- INJECT_ACTIVITY: group-sort-genders --> [group-sort, Sort dative nouns into three columns: Masculine (-ові/-у), Feminine (-і), and Neuter (-у/-ю), 8 items]
+## Давальний відмінок у реченні (~550 words total)
+- P1 (~120 words): Explain the Two-object verb pattern (Direct + Indirect Object). Break down the structure: Subject + Verb + Dative (recipient) + Accusative (thing). Provide clear examples: "Тетяна подарувала братові книгу" and "Вчитель показав студентам карту."
+- P2 (~110 words): List and define common verbs that frequently require the Dative case for a recipient. Include: подарувати (to give as a gift), показати (to show), дати (to give), розповісти (to tell/narrate), написати (to write), пояснити (to explain), відповісти (to answer).
+- P3 (~120 words): Present a dialogue situation set at a post office addressing packages to different people.
+  Відправник: Доброго дня. Я хочу відправити ці пакунки.
+  Працівник пошти: Кому вони?
+  Відправник: Студентові Петренку — підручник. Сестрі Олені — листівка. А дитині — іграшка.
+- P4 (~100 words): Contrast the Dative case with the Genitive case to prevent structural confusion. Compare "дати братові" (give to brother - Dative destination) versus "немає брата" (no brother - Genitive absence/possession).
+- P5 (~100 words): Connect to earlier knowledge by showing how impersonal constructions used with pronouns ('мені треба') apply to nouns. Provide examples: "Студентові треба вчитися", "Мамі холодно", "Другові 25 років".
+- <!-- INJECT_ACTIVITY: match-up-verb-phrases --> [match-up, Match verb + dative noun phrases to their English meanings, 8 items]
+- <!-- INJECT_ACTIVITY: unjumble-dative-syntax --> [unjumble, Reorder words to form correct dative constructions with indirect objects (e.g., подарувати братові книгу), 6 items]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -22,7 +28,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-When a feminine noun ends in **-га**, **-ка**, or **-ха**, we cannot simply add **-і**. The sounds **[г]**, **[к]**, and **[х]** are called velar consonants, and they are pronounced deep in the throat. Historically, Ukrainians found it difficult to say these sounds right before the vowel **-і**. So, the consonants change to **[з']**, **[ц']**, and **[с']**. В українській мові приголосні звуки перед закінченням «-і» обов'язково змінюються. Літера «г» стає літерою «з», літера «к» перетворюється на «ц», а літера «х» стає літерою «с». Це правило називається чергуванням приголосних, і воно робить нашу мову мелодійною. Тому ми кажемо «книзі», а не «книгі», і «руці», а не «рукі». > *In the Ukrainian language, consonant sounds before the ending "-і" necessarily change. The letter "г" becomes the letter "з", the letter "к" turns into "ц", and the letter "х" becomes the letter "с". This rule is called consonant alternation, and it makes our language melodic. Therefore, we say "книзі", not "книгі", and "руці", not "рукі".* This change affects many common words. For example: - **подруга** → **подрузі** *(friend)* - **книга** → **книзі** *(book)* - **рука** → **руці** *(hand)* - **донька** → **доньці** *(daughter)* - **муха** → **мусі** *(fly)* - **свекруха** → **свекрусі** *(mother-in-law)* Я часто допомагаю своїй подрузі з домашнім завданням. Бабуся читає цікаву казку маленькій онуці. Студент не вірить цій старій книзі. > *I often help my friend with her homework. The grandmother reads an interesting fairy tale to the little granddaughter. The student does not believe this old book.* > — **Марко:** Що ти купив своїй подрузі на свято? *(What did you buy for your friend for the holiday?)* > — **Олег:** Я подарував Оксані нову сумку. А ти? *(I gave Oksana a new bag. And you?)* > — **Марко:** А я подарував квіти мамі і гарну листівку сестрі. *(And I gave flowers to my mom and a nice postcard to my sister.)* Finally, there is a smaller group of feminine nouns that do not end in **-а** or **-я**. These are the nouns of the third declension, which end in a consonant, such as **ніч**, **любов**, **радість**, and **подорож**. The word **мати** (mother) also belongs to this group. Their Dative ending is always **-і**. Іменники третьої відміни завжди отримують закінчення «-і» в давальному відмінку. Слово «ніч» змінюється на «ночі», а слово «радість» стає «радості». Слово «мати» є особливим, тому що в ньому з'являється додатковий суфікс «-ер-». Ми кажемо «матері», коли даємо їй щось або допомагаємо. > *Nouns of the third declension always receive the ending "-і" in the Dative case. The word "ніч" changes to "ночі", and the word "радість" becomes "радості". The word "мати" is special because an additional suffix "-ер-" appears in it. We say "матері" when we give her something or help.* Діти подарували красиві квіти своїй матері. Ми дуже радіємо цій новій подорожі. Вона завжди радіє кожній тихій ночі. > *The children gave beautiful flowers to their mother. We are very happy about this new trip. She always rejoices at every quiet night.* <!-- INJECT_ACTIVITY: quiz-feminine-alternation -->
+give a beautiful new park as a gift to their native village. The teacher ordered the students to look closely at every new word. The girl approached the open window to better hear the singing of the birds.* If the neuter noun has a soft stem, it takes the **-ю** ending in the Dative case. This pattern applies to words like «море» (sea) which changes to «морю», and «серце» (heart) which becomes «серцю». If the neuter noun has a mixed stem ending in a hissing consonant, it takes the **-у** ending, just like the hard stems. For instance, «плече» (shoulder) becomes «плечу». Діти дуже зраділи теплому морю під час літніх канікул. Ми завжди довіряємо нашому щирому серцю, коли приймаємо важливі рішення. Лікар порадив дати більше спокою хворому правому плечу. Нам важко **пояснити** (to explain) цю велику любов до української природи. > *The children were very happy with the warm sea during the summer holidays. We always trust our sincere heart when making important decisions. The doctor advised to give more rest to the sick right shoulder. It is hard for us to explain this great love for Ukrainian nature.* There is a special group of neuter nouns belonging to the fourth declension. These are usually words that denote babies or young animals, and they contain the suffixes **-ат-** or **-ят-** when they decline. In the Dative case, these nouns take the endings **-аті** or **-яті**. For example, «немовля» (baby) becomes «немовляті», and «курча» (chick) becomes «курчаті». Additionally, the word «ім'я» (name) is also in this group and transforms into «імені». Батьки купили яскраву іграшку і поспішили **показати** (to show) її маленькому немовляті. Бабуся дуже любить **розповісти** (to tell, to narrate) цікаву казку цьому ж немовляті. Дівчинка кинула трохи свіжого зерна жовтому курчаті. Важко **відповісти** (to answer, to reply), чому вони надали перевагу такому довгому імені. > *The parents bought a bright toy and hurried to show it to the little baby. The grandmother really loves to tell an interesting fairy tale to this same baby. The girl threw some fresh grain to the yellow chick. It is difficult to answer why they gave preference to such a long name.* Unlike giving a book **студентові** (to the student (dat.)), **сестрі** (to the sister (dat.)), or **другові** (to the friend (dat.)), neuter nouns are frequently used in abstract contexts or locational assignments. You will often see them with verbs that express giving a trait, dedicating time, or reacting to nature. Депутати вирішили повернути історичну назву нашому старому місту. Ми звикли щиро радіти весняному сонцю після довгої зими. Мерія міста вирішила **написати** (to write) офіційного листа сусідньому селу. Туристи завжди дуже дивуються цьому глибокому і чистому озеру. > *The deputies decided to return the historical name to our old city. We are used to sincerely rejoicing at the spring sun after a long winter. The city mayor's office decided to write an official letter to the neighboring village. Tourists are always very amazed by this deep and clear lake.* <!-- INJECT_ACTIVITY: group-sort-dative-gender -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -596,6 +602,31 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (4/4).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] студентові (to the student (dat.))
+- [ ] сестрі (to the sister (dat.))
+- [ ] другові (to the friend (dat.))
+- [ ] подарувати (to give as a gift)
+- [ ] показати (to show)
+- [ ] написати (to write)
+- [ ] розповісти (to tell, to narrate)
+- [ ] пояснити (to explain)
+- [ ] відповісти (to answer, to reply)
+- [ ] закінчення (ending (grammar))
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Давальний відмінок у реченні (~550 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

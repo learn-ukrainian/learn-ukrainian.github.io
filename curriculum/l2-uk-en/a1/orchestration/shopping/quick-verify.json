@@ -6,8 +6,8 @@
     {
       "check": "VOCABULARY",
       "severity": "WARNING",
-      "message": "Missing 1/9 required vocab: купувати (to buy)"
+      "message": "Missing 1/9 required vocab: коштувати (to cost)"
     }
   ],
-  "timestamp": "2026-04-09T00:50:26.538303+00:00"
+  "timestamp": "2026-04-12T22:55:06.608527+00:00"
 }

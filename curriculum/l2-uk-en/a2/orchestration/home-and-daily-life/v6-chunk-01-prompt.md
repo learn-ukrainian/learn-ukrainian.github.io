@@ -1,23 +1,23 @@
-# Section-by-Section Generation — Section 1/5
+# Section-by-Section Generation — Section 1/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 38: Мій дім, мій день (A2, A2.5 [Case Synthesis and Plurals])
-**Section to write:** Сценарій 1: Моє помешкання (Scenario 1: My Home) (~650 words total)
-**Word target for this section:** 650 words (aim for 715 to account for undershoot)
+**Section to write:** Сценарій 1: Моє помешкання (~660 words)
+**Word target for this section:** 660 words (aim for 726 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Сценарій 1: Моє помешкання (Scenario 1: My Home) (~650 words total)
-- P1 (~100 words): [Introductory dialogue: A video tour of a new apartment. Мешканець shows the space to an online friend. Use of Nominative for naming rooms (кухня, вітальня) and Locative for stating where the host is (Я зараз у новій квартирі).]
-- P2 (~120 words): [Explaining room vocabulary (вітальня, спальня, ванна кімната, коридор, балкон) and the "Де?" question using Locative endings (-і, -у) for masculine and feminine nouns, with examples like у коридорі, у спальні, на балконі.]
-- P3 (~120 words): [Introducing furniture vocabulary (диван, крісло, шафа, ліжко, полиця, килим) and its placement. Explain the difference between "у" and "на" for furniture: на дивані vs. у шафі, using specific examples of where items are located.]
-- P4 (~110 words): [Teaching the Genitive case for absence (немає) and quantity (багато). Contrast existence with absence: "Тут є балкон" (Nom.) vs. "Тут немає гаража" (Gen.). Explain Genitive plural for "багато кімнат" and "багато вікон".]
-- P5 (~100 words): [Explaining the Accusative case for direction and placement verbs like "поставити" and "повісити". Examples: поставити крісло (m.acc = nom) біля вікна, повісити картину (f.acc -у) на стіну (f.acc -у).]
-- P6 (~100 words): [Nuances of adjective agreement in descriptions. Explain how adjectives change for gender: світла кімната (f), велике вікно (n), зручний диван (m). Provide 3-4 sentence examples combining cases and adjectives.]
-- <!-- INJECT_ACTIVITY: fill-in-home-cases --> [fill-in, Complete a description of a home with the correct case forms for room and furniture nouns, 8 items]
+## Сценарій 1: Моє помешкання (~660 words)
+- P1 (~120 words): Dialogue: A video tour of a new apartment. The host uses Nominative for listing items and Locative for location (Ось вітальня. У вітальні стоїть великий диван. Біля вікна є крісло). The guest asks questions using Genitive for quantity (А скільки у вас кімнат?).
+- P2 (~100 words): Vocabulary breakdown of rooms: помешкання (apartment/dwelling), кухня, спальня, вітальня, ванна кімната, коридор, балкон, кабінет. Emphasize "вітальня" as the standard Ukrainian term over Russianisms.
+- P3 (~100 words): Vocabulary breakdown of furniture: меблі (always plural), диван, крісло, стіл, стілець, шафа, ліжко, полиця, дзеркало, килим.
+- P4 (~120 words): Grammar focus: Locative case to answer "Де?" (Where?). Detail the prepositions "у/в" and "на". Provide specific examples from the dialogue: у квартирі, на кухні, на балконі, на вікні, у коридорі. Explain the consonant shifts (e.g., кухня -> на кухні).
+- P5 (~120 words): Grammar focus: Genitive case for absence and quantity. Explain the structure "немає + Genitive" (У квартирі немає вітальні). Introduce Nominative plurals used for counting items after numbers 2, 3, 4 (два столи, три ліжка, чотири стільці) vs Genitive plural for 5+ (п'ять кімнат).
+- P6 (~100 words): Common L2 Error focus. Explicitly contrast the incorrect direct translation "Я живу в квартира" with the correct Locative "Я живу у квартирі". Remind learners that preposition "у/в" for location mandates Locative.
+- <!-- INJECT_ACTIVITY: fill-in-home-description --> [fill-in, Complete a description of a home with the correct case forms for room and furniture nouns, 8 items]
 
 ---
 ## Full Plan (for reference)
@@ -478,7 +478,74 @@ Teaching Ukrainian grammar requires a conscious effort to separate it from Russi
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -497,18 +564,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] помешкання (dwelling, apartment)
+- [ ] кімната (room)
+- [ ] кухня (kitchen)
+- [ ] спальня (bedroom)
+- [ ] вітальня (living room)
+- [ ] меблі (furniture)
+- [ ] розпорядок дня (daily routine)
+- [ ] вставати (to get up)
+- [ ] снідати (to have breakfast)
+- [ ] лягати спати (to go to bed)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Сценарій 1: Моє помешкання (~660 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

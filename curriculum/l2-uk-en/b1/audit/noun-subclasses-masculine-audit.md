@@ -1,7 +1,7 @@
 # Audit Report: M16 — noun-subclasses-masculine.md
 **Level:** B1 | **Module:** M16 | **Phase:** B1.1 | **Pedagogy:** PPP | **Target:** 4000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-04-10 21:26:02
+**Generated:** 2026-04-11 17:23:39
 
 ## Configuration
 **Type:** B1-grammar
@@ -18,111 +18,78 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | match-up | match-up | 8 | 8 | ✅ |
-| 2 | fill-in | fill-in | 8 | 8 | ✅ |
-| 3 | group-sort | group-sort | 12 | 6 | ✅ |
-| 4 | quiz | quiz | 8 | 8 | ✅ |
-| 5 | fill-in | fill-in | 6 | 8 | ❌ |
-| 6 | error-correction | error-correction | 6 | 6 | ✅ |
-| 7 | true-false | true-false | 6 | 8 | ❌ |
-| 8 | translate | translate | 6 | 6 | ✅ |
-| 9 | unjumble | unjumble | 6 | 6 | ✅ |
+| 1 | match-up | З'єднайте слова, що позначають професії або походження, з їхніми базовими словам | 8 | 8 | ✅ |
+| 2 | fill-in | Вставте правильну форму слова в дужках (звертайте увагу на відмінок). | 8 | 8 | ✅ |
+| 3 | quiz | Оберіть правильну форму множини для іменників на -ин. | 8 | 8 | ✅ |
+| 4 | fill-in | Напишіть форму родового відмінка множини (багато кого?). | 6 | 8 | ❌ |
+| 5 | group-sort | Розподіліть іменники за суфіксами. | 12 | 6 | ✅ |
+| 6 | fill-in | Вставте правильну форму іменника в орудному або кличному відмінку. | 8 | 8 | ✅ |
+| 7 | translate | Оберіть правильний переклад для англійських словосполучень. | 6 | 6 | ✅ |
+| 8 | group-sort | До якої групи належать ці іменники? Згадайте правило про наголос та суфікси. | 12 | 6 | ✅ |
+| 9 | error-correction | Знайдіть і виправте граматичну помилку в реченнях. | 6 | 6 | ✅ |
 
 **Summary:**
 - Total activities: 9 (target: 0-4) ❌
-- Unique types: 8 (minimum: 3) ✅
+- Unique types: 6 (minimum: 3) ✅
 - Priority types used: 4/7 (error-correction, fill-in, match-up, quiz) ✅
-- Low density activities: 2
+- Low density activities: 1
 
 ## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY]** match-up '' has 8 pairs (target: 12-16)
+- **[COMPLEXITY]** match-up 'З'єднайте слова, що позначають професії або походження, з їхніми базовими словам' has 8 pairs (target: 12-16)
   - FIX: Adjust number of pairs to 12-16.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q1 prompt length 1 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q2 prompt length 1 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q3 prompt length 1 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q4 prompt length 2 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q5 prompt length 1 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q6 prompt length 1 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q7 prompt length 1 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q8 prompt length 1 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY]** fill-in '' has 6 items (minimum: 8)
+- **[COMPLEXITY]** fill-in 'Напишіть форму родового відмінка множини (багато кого?).' has 6 items (minimum: 8)
   - FIX: Add more items. B1 fill-in requires at least 8 items.
-- **[COMPLEXITY]** true-false '' has 6 items (minimum: 8)
-  - FIX: Add more items. B1 true-false requires at least 8 items.
-- **[COMPLEXITY_WORD_COUNT]** unjumble '' item 1 has 4 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble '' item 2 has 5 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble '' item 3 has 5 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble '' item 4 has 4 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble '' item 5 has 4 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble '' item 6 has 5 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[RUSSICISM_DETECTED]** Found 2 Russicism(s) in content: 'давайте подивимося' → подивімося
-  - FIX: Replace Russicisms with standard Ukrainian equivalents. These are Russian calques that have standard Ukrainian forms. See Phase B prompt 'Russianisms Pre-Output Scan' table.
-- **[LLM_FINGERPRINT_REPETITION]** Repetitive LLM rhetorical patterns (5 total): 'не просто X, а Y' x2, 'не лише X, а й Y' x3 — robotic prose
-  - FIX: Vary sentence structures. Replace formulaic 'не просто X, а Y' with diverse rhetorical devices
-- **[INLINE_ENGLISH_IN_PROSE]** Inline English translations in B1+ prose (4 occurrences): (Kharkiv resident), (Poltava resident), (Chernihiv resident) — breaks immersion target
-  - FIX: Remove inline English translations. Use context clues, Ukrainian definitions, or move translations to vocabulary section
-- **[SALAD_EXCESSIVE_INLINE_GLOSSES]** paragraph has 7 inline **term** (gloss) markers across 3 sentence(s) — too dense; move to vocabulary section or convert to UK paragraph + translation block
-  - FIX: Convert inline-gloss paragraphs to monolingual Ukrainian paragraphs followed by a blockquote + italic English translation block. See docs/best-practices/language-salad.md.
+- **[COLONIAL_FRAMING]** Line 63: Unlike-Russian comparison — "Unlike Russian" positions Russian as baseline.
+  - FIX: Present the Ukrainian feature on its own terms without Russian as baseline.
+- **[STATE_STANDARD_LOW_IMMERSION]** Module 16 has 34.2% immersion (target: 90.0%+)
+  - FIX: Add more Ukrainian content to reach 90%+ immersion for full immersion modules
 
 ## Recommendation
-**📝 UPDATE** (severity 60/100)
+**📝 UPDATE** (severity 65/100)
 
-- Revision recommended (severity 60/100)
-- 21 violations (severe - consider revision)
+- Revision recommended (severity 65/100)
+- 4 violations (moderate)
+- Immersion 51% off target (major rebalancing needed)
 - Activity density below minimum
 
 ## Gates
-- **Words:** ✅ 4129/4000 (raw: 4632)
+- **Words:** ✅ 4192/4000 (raw: 4341)
 - **Activities:** ✅ 9/0
-- **Density:** ❌ 2 < 6
-- **Unique_types:** ✅ 8/3 types
+- **Density:** ❌ 1 < 6
+- **Unique_types:** ✅ 6/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ❌ 0/5
+- **Engagement:** ❌ 4/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 80/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 94.7% (target 85-100% (B1.2 Motion))
-- **Richness:** ❌ 68% < 95% min (grammar) - REWRITE needed
+- **Immersion:** ❌ 34.2% LOW (target 85-100% (B1.2 Motion))
+- **Richness:** ❌ 57% < 95% min (grammar) - REWRITE needed
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
 
 ## Richness Details
-**Score:** 68% (minimum: 95%)
+**Score:** 57% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 30 | 24 | 100% | 20% | 20.0% |
+| examples | 18 | 24 | 75% | 20% | 15.0% |
 | engagement | 0 | 5 | 0% | 15% | 0.0% |
-| dialogues | 1 | 4 | 25% | 15% | 3.8% |
-| variety | 0.95 | - | 95% | 10% | 9.5% |
-| cultural | 8 | 3 | 100% | 10% | 10.0% |
+| dialogues | 0 | 4 | 0% | 15% | 0.0% |
+| variety | 0.93 | - | 93% | 10% | 9.3% |
+| cultural | 3 | 3 | 100% | 10% | 10.0% |
 | realworld | 20 | 3 | 100% | 10% | 10.0% |
 | visual | 0 | 3 | 0% | 5% | 0.0% |
-| questions | 27 | 5 | 100% | 5% | 5.0% |
-| tables | 5 | 2 | 100% | 4% | 4.0% |
+| questions | 11 | 5 | 100% | 5% | 5.0% |
+| tables | 1 | 2 | 50% | 4% | 2.0% |
 | paragraph_var | 1.00 | - | 100% | 3% | 3.0% |
 | proverbs | 10 | 1 | 100% | 3% | 3.0% |
-| **TOTAL** | | | | | **68.2%** |
+| **TOTAL** | | | | | **57.3%** |
 
 ### Dryness Flags & Fixes
 - ❌ **NO_ENGAGEMENT**
@@ -140,35 +107,43 @@
     > 🌍 **У реальному житті**
     >
     > [Practical scenario where this grammar is used]
-- ❌ **LOW_DIALOGUE**
+- ❌ **NO_DIALOGUE**
   - FIX:
-    Add more mini-dialogues (need 4+ total). The detector counts lines in blockquotes with bold speaker names.
+    Add 4+ mini-dialogues. The detector counts lines in blockquotes with bold speaker names.
     
-    Use this format (blockquote required):
-    > **Студент:** Як правильно сказати?
-    > **Викладач:** Вживайте форму «збігатися», а не «співпадати».
+    Use ONE of these formats (blockquote is required for detection):
     
-    Or em-dash format:
-    > — Як правильно сказати?
-    > — Вживайте «збігатися».
+    Format 1 — Bold speaker in blockquote (PREFERRED):
+    > **Студент:** Чому тут знахідний відмінок?
+    > **Викладач:** Бо дієслово «бачити» вимагає знахідного.
+    > **Студент:** А якщо це заперечення?
+    > **Викладач:** Тоді родовий: «не бачу **книжки**».
     
-    IMPORTANT: **Speaker:** lines NOT inside blockquotes (>) are ignored by the detector.
+    Format 2 — Em-dash in blockquote:
+    > — Чому тут знахідний?
+    > — Бо дієслово вимагає знахідного.
+    
+    Format 3 — Plain А:/Б: speakers:
+    А: Чому тут знахідний?
+    Б: Бо дієслово вимагає знахідного.
+    
+    IMPORTANT: Dialogues OUTSIDE blockquotes (>) using **Speaker:** format are NOT detected.
+    Place dialogues inside [!dialogue] callouts or blockquotes.
 
 ## Low Density Activities
 | Activity | Type | Items | Required | Fix |
 |----------|------|-------|----------|-----|
-| fill-in | fill-in | 6 | 8 | Add 2 more items |
-| true-false | true-false | 6 | 8 | Add 2 more items |
+| Напишіть форму родового відмінка множини (багато кого?). | fill-in | 6 | 8 | Add 2 more items |
 
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 540 | Included in Core |
-| **Суфікси -ар, -яр: хто що робить** | ✅ | 661 | Included in Core |
-| **Відмінювання іменників на -ар** | ✅ | 479 | Included in Core |
-| **Відмінювання іменників на -яр** | ✅ | 491 | Included in Core |
-| **Суфікс -ин/-янин: люди за походженням** | ✅ | 575 | Included in Core |
-| **Відмінювання іменників на -ин в однині** | ✅ | 466 | Included in Core |
-| **Культурний контекст: -ар/-яр у літературі та прізвищах** | ✅ | 537 | Included in Core |
-| **Підсумок і практика** | ✅ | 380 | Included in Core |
+| **Intro/Narrative** | ✅ | 457 | Included in Core |
+| **Суфікси -ар, -яр: хто що робить (~720 слів)** | ✅ | 443 | Included in Core |
+| **Відмінювання іменників на -ар (~820 слів)** | ✅ | 1067 | Included in Core |
+| **Відмінювання іменників на -яр (~660 слів)** | ✅ | 536 | Included in Core |
+| **Суфікс -ин/-янин: люди за походженням (~820 слів)** | ✅ | 531 | Included in Core |
+| **Відмінювання іменників на -ин в однині (~660 слів)** | ✅ | 434 | Included in Core |
+| **Культурний контекст: -ар/-яр у літературі (~380 слів)** | ✅ | 417 | Included in Core |
+| **Підсумок і практика (~340 слів)** | ✅ | 307 | Included in Core |

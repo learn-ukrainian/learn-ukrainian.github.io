@@ -1,0 +1,54 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T20-32-8fae71a9.json
+phase: vocab
+prompt_chars: 12222
+response_chars: 2603
+prompt_words: 1897
+response_words: 316
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.0653
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.0188
+- name: plan
+  start: 1028
+  length: 11194
+  fraction: 0.9159
+large_sections:
+- plan
+directives_total: 7
+directives_covered: 0
+directives_missed:
+- kind: must
+  text: When answering the question **Де ти?** (Where are you?), you must use the
+    prepositions **в/на** with the locative case, as in **Магазин на вулиці Шевченка**.
+  covered: false
+  coverage_note: 2/14 keywords (14%)
+- kind: must
+  text: Measuring distance through the required mode of transport is the most natural
+    way to explain city geography.
+  covered: false
+  coverage_note: 2/12 keywords (17%)
+- kind: must
+  text: You must contrast what is accessible with what requires a journey.
+  covered: false
+  coverage_note: 1/7 keywords (14%)
+- kind: inject_activity
+  text: fill-in-directions
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-locative-accusative
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-transport-route
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-navigation-responses
+  covered: false
+  coverage_note: marker missing

@@ -1,34 +1,34 @@
-## Підсумок
+## Підсумок (~450 words)
 
-We have reached the end of our comprehensive review of the past and present tenses. The most critical takeaway from this module is the inseparable relationship between tense and aspect. The grammatical time you can express depends entirely on whether you are describing an ongoing process or a completed result. Imperfective verbs, which focus on the action itself, naturally exist in the past, present, and future. However, perfective verbs, which focus on the absolute completion of an action, cannot exist in the present. You cannot be currently in the middle of finishing something instantaneously. Therefore, perfective verbs only have past and future forms.
+To bring everything together, remember that the basic action is always described by the **інфінітив** (infinitive — the base form ending in -ти/-тися). From this foundational word, we can derive the forms for the **теперішній час** (present tense) to describe current events, or the **минулий час** (past tense) to talk about history. 
 
-| Вид | Минулий час | Теперішній час | Майбутній час |
-| :--- | :--- | :--- | :--- |
-| **Недоконаний** | писав *(was writing)* | пишу *(am writing)* | писатиму / буду писати *(will be writing)* |
-| **Доконаний** | написав *(wrote)* | — | напишу *(will write)* |
+When forming present tense verbs, the **дієвідміна** (conjugation class — I or II) dictates the exact vowel in the endings. This entire process of **дієвідмінювання** (conjugation — changing verb by person and number) ensures the verb perfectly matches each **особа** (person — 1st, 2nd, 3rd) speaking or acting.
 
-Ця таблиця — ваш головний навігатор у системі українських дієслів. Коли ви хочете розповісти історію, ви повинні постійно перемикати увагу. Використовуйте недоконаний вид, щоб створити тло та описати тривалі процеси. Потім додавайте дієслова доконаного виду, щоб показати конкретні події та результати, які рухають сюжет уперед.
+The verb also must agree with the subject's **число** (number — однина, множина) in the present tense. In the past tense, however, the ending is instead determined by the **рід** (gender — чоловічий, жіночий, середній). If you encounter a **зворотний** (reflexive — verbs with -ся/-сь) verb, you simply apply these same rules and attach the postfix at the very end.
 
-Before we move on to new horizons, take a moment to test your understanding of the core concepts we covered. If you can confidently answer the following questions, you are fully prepared for the next level. Grab a notebook, recall the rules of conjugation, or simply answer aloud.
+Finally, every action conceptually belongs to an **видова пара** (aspectual pair — e.g., писати/написати). You will choose the **недоконаний вид** (imperfective aspect — ongoing action) for continuous processes, and you must select the **доконаний вид** (perfective aspect — completed action) for finished results.
 
-1. Провідміняйте дієслово «бачити» в усіх особах теперішнього часу. До якої дієвідміни воно належить?
-2. Утворіть усі чотири форми минулого часу для дієслова «нести» (чоловічий, жіночий, середній рід та множина).
-3. Визначте вид дієслів у цьому списку: «гуляв», «побачив», «шукала», «знайшла», «працювали». Які з них означають завершену дію?
-4. Згадайте дієслово «хотіти». Яка це дієвідміна і які закінчення воно має в множині?
+Before moving on to the next challenge, let's do a quick self-check to ensure you have mastered these core transformations.
+
+Спробуйте відповісти на ці запитання без підказок:
+1. Провідміняйте дієслово «бачити» в теперішньому часі. (Відповідь: бачу, бачиш, бачить, бачимо, бачите, бачать).
+2. Утворіть форми минулого часу дієслова «нести» для всіх родів. (Відповідь: ніс, несла, несло, несли).
+3. Визначте вид: «гуляв», «побачив», «знайшла». (Відповідь: недоконаний, доконаний, доконаний).
+4. Яка дієвідміна у дієслова «хотіти»? (Відповідь: І дієвідміна — хочуть).
+
+> *Try to answer these questions without hints:*
+> *1. Conjugate the verb "бачити" in the present tense. (Answer: бачу, бачиш, бачить, бачимо, бачите, бачать).*
+> *2. Form the past tense of the verb "нести" for all genders. (Answer: ніс, несла, несло, несли).*
+> *3. Determine the aspect: "гуляв", "побачив", "знайшла". (Answer: imperfective, perfective, perfective).*
+> *4. What conjugation class does the verb "хотіти" belong to? (Answer: 1st conjugation — хочуть).*
+
+You have successfully reviewed how to build the foundation of your sentences using past and present tenses. You now know how to set the scene, describe ongoing habits, and report completed events. But we are only halfway through the timeline. In the next module, we will explore how Ukrainians talk about the future.
+
+Ви побачите, що майбутній час в українській мові має аж три різні форми. Їхній вибір повністю залежить від виду дієслова. Ми детально навчимося використовувати просту форму для завершених дій, складену форму для процесів та унікальну українську синтетичну форму. Ваш вибір виду стане головним ключем до вільного спілкування на наступному рівні.
+
+> *You will see that the future tense in the Ukrainian language has as many as three different forms. Their choice depends entirely on the aspect of the verb. We will learn in detail how to use the simple form for completed actions, the compound form for processes, and the unique Ukrainian synthetic form. Your choice of aspect will become the main key to fluent communication at the next level.*
 
 :::info
-**Grammar box** — The verb «хотіти» is a famous exception that often catches learners off guard. Even though its infinitive looks like it belongs to the second conjugation, it actually follows the strict rules of the first conjugation, yielding «вони хочуть» (not *хотять).
+**Grammar box**
+Always think about the result when planning a future sentence. If you want to highlight that something *will be done* completely, you need the perfective aspect. If you want to focus on the *process* of doing it tomorrow, choose the imperfective. The aspect you pick dictates exactly which future tense construction you must use.
 :::
-
-Looking ahead, our next module will unlock the final piece of the time puzzle: the future tense. Just as aspect dictated our choices in the past and present, it will serve as the master key for the future. You will discover that Ukrainian actually has three different ways to form the future tense, and your choice will always depend on whether the action is a process or a definitive result.
-
-Ми детально розберемо різницю між формами «зроблю», «буду робити» та «робитиму». Ви дізнаєтеся, чому складна синтетична форма з суфіксом «-м-» є унікальною особливістю української мови, яка відрізняє її від інших слов'янських мов. Розуміння виду дієслова допоможе вам безпомилково обирати правильну конструкцію для кожної життєвої ситуації.
-
-> *We will analyze in detail the difference between the forms "зроблю", "буду робити", and "робитиму". You will learn why the compound synthetic form with the suffix "-m-" is a unique feature of the Ukrainian language that distinguishes it from other Slavic languages. Understanding the verb aspect will help you flawlessly choose the correct construction for every life situation.*
-
-<!-- INJECT_ACTIVITY: quiz, Визначте час і вид дієслова: теперішній/минулий, доконаний/недоконаний -->
-<!-- INJECT_ACTIVITY: fill-in, Поставте дієслово у правильну форму теперішнього або минулого часу -->
-<!-- INJECT_ACTIVITY: group-sort, Розподіліть дієслова: I дієвідміна vs II дієвідміна -->
-<!-- INJECT_ACTIVITY: match-up, З'єднайте видові пари: доконаний ↔ недоконаний (писати ↔ написати) -->
-<!-- INJECT_ACTIVITY: error-correction, Знайдіть і виправте помилки у вживанні виду або часу в реченнях -->
-<!-- INJECT_ACTIVITY: open-writing, Напишіть короткий текст: 'Мій вчорашній день' — чергуйте доконаний і недоконаний вид -->

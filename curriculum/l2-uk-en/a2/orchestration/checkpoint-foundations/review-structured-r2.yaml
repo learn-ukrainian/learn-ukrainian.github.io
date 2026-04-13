@@ -1,0 +1,54 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 6
+  evidence: Required/recommended vocabulary is covered, but the plan reference is
+    absent (`Заболотний` search = 0), and the production brief promised direct prompts
+    while the prose only says “You must **написати*
+- dimension: 2
+  name: Linguistic accuracy
+  score: 6
+  evidence: 'Two model sentences teach wrong agreement: “**У нашому класі стоїть два
+    великі столи.**” and “**Там на вулиці стоїть п''ять нових студентів.**”'
+- dimension: 3
+  name: Pedagogical quality
+  score: 6
+  evidence: The opening spends a long English paragraph on abstract framing (“Mastering
+    these forms moves you away from speaking in broken phrases...”) before learner
+    work starts, and Part 3 announces tasks witho
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: All required items appear in prose (`вправа`, `перевірка`, `контрольна
+    точка`, `завдання`, `текст`, `речення`, `відповідь`), and all recommended items
+    also appear (`правильний`, `варіант`, `обрати`, `
+- dimension: 5
+  name: Exercise quality
+  score: 4
+  evidence: 'The prose contains `<!-- INJECT_ACTIVITY: error-correction-mixed -->`,
+    but there is no matching inline block in the activity YAML; the quiz block is
+    also guessable because the correct option stays at '
+- dimension: 6
+  name: Engagement & tone
+  score: 6
+  evidence: Too much generic English uplift instead of concrete teaching, especially
+    in the opener and summary; the tone is more explanatory boilerplate than sharp
+    checkpoint practice.
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: 'H2 structure is complete and the pipeline word count is above target,
+    but the unresolved `<!-- INJECT_ACTIVITY: error-correction-mixed -->` marker leaves
+    a functional hole in Part 3.'
+- dimension: 8
+  name: Cultural accuracy
+  score: 9
+  evidence: No Russian-centered framing; examples stay in ordinary Ukrainian classroom/daily-life
+    contexts.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: Named speakers and a plausible study scenario fit the plan well; the dialogue
+    is mostly natural and not interrogation-shaped.
+findings: []

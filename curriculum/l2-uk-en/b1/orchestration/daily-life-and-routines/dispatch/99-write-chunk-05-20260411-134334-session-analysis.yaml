@@ -1,0 +1,101 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T11-42-d8cc5473.json
+phase: write-chunk-05
+prompt_chars: 50711
+response_chars: 6219
+prompt_words: 7300
+response_words: 881
+sections:
+- name: header
+  start: 0
+  length: 415
+  fraction: 0.0082
+- name: skeleton
+  start: 415
+  length: 1299
+  fraction: 0.0256
+- name: prior_summary
+  start: 1714
+  length: 3476
+  fraction: 0.0685
+- name: plan
+  start: 5190
+  length: 17585
+  fraction: 0.3468
+- name: wiki
+  start: 16211
+  length: 27712
+  fraction: 0.5465
+- name: output_spec
+  start: 50487
+  length: 224
+  fraction: 0.0044
+large_sections:
+- wiki
+directives_total: 31
+directives_covered: 15
+directives_missed:
+- kind: checklist
+  text: снідати / обідати / вечеряти (to have breakfast / lunch / dinner)
+  covered: false
+  coverage_note: 1/7 keywords (14%)
+- kind: checklist
+  text: прибирати (to clean up, tidy)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: пилососити (to vacuum)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: прати білизну (to do laundry — NOT *стирати)
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: checklist
+  text: прасувати (to iron)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: виносити сміття (to take out the trash)
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: checklist
+  text: готувати їжу (to cook food)
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: checklist
+  text: 'займатися (to engage in, do — reflexive: займатися спортом)'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: checklist
+  text: вихідні (weekend — pluralia tantum)
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: checklist
+  text: будильник (alarm clock)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: пошук роботи (job search)
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: checklist
+  text: робоче місце (workplace)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: колега (colleague)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 3/11 keywords (27%)
+- kind: inject_activity
+  text: sentence-builder-conditionals
+  covered: false
+  coverage_note: marker missing

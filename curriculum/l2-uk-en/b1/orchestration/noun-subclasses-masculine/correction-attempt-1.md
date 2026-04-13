@@ -2,7 +2,6 @@
 CRITICAL: Your previous attempt failed the following checks. Fix ONLY the listed errors. Keep everything else exactly as is — do not rewrite sections that are working correctly.
 
 - FIX: Missing section heading: 'Підсумок і практика'
-- FIX: Too short: 2986 words (target: 4000, minimum: 3400)
 </correction_directive>
 
 LEARNINGS FROM PAST BUILDS (same error patterns seen before):

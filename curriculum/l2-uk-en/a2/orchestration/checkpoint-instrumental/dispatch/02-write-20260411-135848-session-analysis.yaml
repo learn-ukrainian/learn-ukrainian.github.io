@@ -1,0 +1,74 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T11-56-ea0745bf.json
+phase: write
+prompt_chars: 64747
+response_chars: 15021
+prompt_words: 9235
+response_words: 2332
+sections:
+- name: preamble
+  start: 0
+  length: 6489
+  fraction: 0.1002
+- name: plan
+  start: 6489
+  length: 7496
+  fraction: 0.1158
+- name: wiki
+  start: 13004
+  length: 27338
+  fraction: 0.4222
+- name: rules
+  start: 41323
+  length: 9015
+  fraction: 0.1392
+- name: skeleton
+  start: 50338
+  length: 4831
+  fraction: 0.0746
+- name: output_spec
+  start: 55169
+  length: 9578
+  fraction: 0.1479
+large_sections:
+- wiki
+directives_total: 64
+directives_covered: 55
+directives_missed:
+- kind: checklist
+  text: 'Exercise 10: Writing prompt (8-10 sentences): "Опишіть свій типовий день.
+    Розкажіть про свою професію, як ви добираєтесь'
+  covered: false
+  coverage_note: 3/12 keywords (25%)
+- kind: checklist
+  text: No 'Let us...', 'In this section...', or formulaic openers
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: must
+  text: Your output must be original teaching prose at the correct CEFR level, not
+    a rephrased version of the article.
+  covered: false
+  coverage_note: 5/13 keywords (38%)
+- kind: must
+  text: '- **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).'
+  covered: false
+  coverage_note: 2/9 keywords (22%)
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-sounds-vs-letters
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-sounds-vs-letters
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-false-friends
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing

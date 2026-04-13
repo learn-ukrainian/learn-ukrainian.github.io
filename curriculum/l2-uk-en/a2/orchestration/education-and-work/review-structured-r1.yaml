@@ -2,50 +2,55 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 8
-  evidence: The plan mandated the first dialogue to discuss "Право (n, law), Адвокатом
-    (m, lawyer), В юридичній фірмі (f, law firm)". The text instead used "філологію",
-    "перекладачем", and "сучасна європейська лі
+  score: 7
+  evidence: All three planned H2 sections and the law/career-counseling dialogue are
+    present, but the education vocabulary point omits `залік` (0 occurrences in the
+    content), and the first section is already labe
 - dimension: 2
   name: Linguistic accuracy
-  score: 8
-  evidence: 'Found several calques and Russianisms: "знаходиться" (instead of розташований),
-    "Давайте детальніше подивимося" (imperative error), and "частковий робочий день"
-    (instead of неповний робочий день).'
+  score: 9
+  evidence: 'No Russianisms/Surzhyk/paronym errors found, and no Russian letters appear.
+    The only accuracy issue is a misleading English gloss: `they "put it together":
+    **скласти іспит**`.'
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: Follows the PPP flow efficiently. It explicitly addresses common errors
-    for learners ("здавати екзамен" is flagged as a Russianism and corrected to "складати
-    іспит"). Demonstrates good scaffolding for
+  score: 6
+  evidence: 'Example density is good, but the module repeatedly front-loads English
+    theory before practice: `After finishing our education...`; it also contradicts
+    its own later guidance by first using `Молоді люд'
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: Required words (освіта, спеціальність, досвід, etc.) and recommended words
-    are all incorporated naturally throughout the text with relevant context.
+  score: 8
+  evidence: All required plan words appear naturally, and recommended items also appear
+    (`керівник`, `співбесіда`, `магістратур-`), but `залік` from the education vocabulary
+    list is missing.
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: All 4 exercise markers are accurately represented and inserted right after
-    the relevant contextual knowledge is introduced.
+  score: 6
+  evidence: 'Coverage is close, but there are 5 markers for 4 planned activities,
+    and `<!-- INJECT_ACTIVITY: fill-in-complex-sentences -->` is an extra unplanned
+    fill-in marker.'
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: Very natural and encouraging teaching tone. Relates the topics clearly
-    to real-world communication (job interviews, parties, university counseling).
+  score: 5
+  evidence: 'The voice is functional but padded with filler and overclaiming: `Ця
+    фраза є дуже популярною в Україні.` and `Тепер ви можете вільно та впевнено розповідати
+    про свою кар''єру...`'
 - dimension: 7
   name: Structural integrity
-  score: 10
-  evidence: All required H2 headings are present. With a word count of 2411, it comfortably
-    satisfies the 2000-word target.
+  score: 8
+  evidence: All planned H2 headings are present and ordered, markdown is mostly clean,
+    and pipeline word count is 2808, but redundant metacommentary and the extra activity
+    marker weaken the structure.
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: Correctly models the Ukrainian higher educational tier system (бакалаврат,
-    магістратура, аспірантура) avoiding direct American mappings.
+  score: 7
+  evidence: The counseling dialogue fits the plan well, but `Сучасна школа часто називається
+    гімназія або ліцей.` is overgeneralized and imprecise about Ukrainian school types.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: Dialogues feel natural and demonstrate a variety of real conditional and
-    purpose clauses organically.
+  score: 7
+  evidence: Dialogues are named and situational, but the party dialogue stays close
+    to an interview script; e.g. `Ким ви працюєте?... А що ви робите на роботі?` with
+    the flat answer `Я створюю проєкти.`
 findings: []

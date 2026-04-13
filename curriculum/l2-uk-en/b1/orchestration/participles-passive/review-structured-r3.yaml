@@ -1,0 +1,54 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: Excellent coverage. All grammar points (suffixes `-н-`, `-ен-`, `-т-`),
+    consonant alternations, and the contrast with adjectives are fully explained.
+    Word counts meet the budget.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: 'Ukrainian usage is extremely strong, avoiding standard Surzhyk/calque
+    traps. However, there is a typo in explaining the spelling shift for `намальований`
+    ("змінюється на -йова-"), and a missing comma '
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: The module is exceptionally well-structured, building from simple suffix
+    addition to complex adjectivization tests. However, the dialogue contradicts the
+    lesson's own advice by actively using compound
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required vocabulary (`прочитаний`, `збудований`, `написаний`, `вишитий`,
+    `зроблений`, `принесений`, `відкритий`, `ношений`, `закручений`, `чергування`)
+    is naturally integrated into the text and ex
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Activity markers are placed precisely after their respective grammar explanations,
+    ensuring immediate practice of the newly introduced concepts.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: 'The tone is warm and engaging. Deducted 1 point for a moment of generic
+    linguistic enthusiasm: "Це яскраво показує, як логічно, математично та струнко
+    побудована українська граматика", which adds no e'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: The word count (4068) comfortably exceeds the 4000-word target. Markdown
+    is clean and headings match the plan. A minor typo exists in the table ("як Н.
+    Або Р.").
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: The dialogue setting in the Mariinskyi Palace is authentic, and cultural
+    artifacts like the `вишитий рушник` are naturally woven into the grammar examples.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: The dialogue is contextually appropriate but slightly unnatural due to
+    the overuse of the compound passive voice, as noted in Pedagogical quality.
+findings: []

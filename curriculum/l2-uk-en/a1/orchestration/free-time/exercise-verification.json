@@ -1,73 +1,7 @@
 {
-  "total_items": 97,
-  "grounded_items": 49,
+  "total_items": 84,
+  "grounded_items": 56,
   "ungrounded": [
-    {
-      "word": "завтра",
-      "exercise_type": "fill-in",
-      "context": "— _____ на концерт завтра! — Чудова ідея!",
-      "role": "context"
-    },
-    {
-      "word": "чудова",
-      "exercise_type": "fill-in",
-      "context": "— _____ на концерт завтра! — Чудова ідея!",
-      "role": "context"
-    },
-    {
-      "word": "ідея",
-      "exercise_type": "fill-in",
-      "context": "— _____ на концерт завтра! — Чудова ідея!",
-      "role": "context"
-    },
-    {
-      "word": "робите",
-      "exercise_type": "fill-in",
-      "context": "— Що ви робите _____? — Ми граємо у теніс.",
-      "role": "context"
-    },
-    {
-      "word": "граємо",
-      "exercise_type": "fill-in",
-      "context": "— Що ви робите _____? — Ми граємо у теніс.",
-      "role": "context"
-    },
-    {
-      "word": "музеї",
-      "exercise_type": "fill-in",
-      "context": "— _____ в музей! — Я не люблю музеї.",
-      "role": "context"
-    },
-    {
-      "word": "маю",
-      "exercise_type": "fill-in",
-      "context": "Я маю вільний _____, ходімо гуляти!",
-      "role": "context"
-    },
-    {
-      "word": "гуляти",
-      "exercise_type": "fill-in",
-      "context": "Я маю вільний _____, ходімо гуляти!",
-      "role": "context"
-    },
-    {
-      "word": "слухати",
-      "exercise_type": "match-up",
-      "context": "слухати",
-      "role": "answer"
-    },
-    {
-      "word": "дивитися",
-      "exercise_type": "match-up",
-      "context": "дивитися",
-      "role": "answer"
-    },
-    {
-      "word": "фільми",
-      "exercise_type": "match-up",
-      "context": "фільми",
-      "role": "context"
-    },
     {
       "word": "книгу",
       "exercise_type": "match-up",
@@ -75,135 +9,87 @@
       "role": "context"
     },
     {
-      "word": "грає",
-      "exercise_type": "error-correction",
-      "context": "не грає",
+      "word": "малювати",
+      "exercise_type": "match-up",
+      "context": "малювати",
       "role": "answer"
+    },
+    {
+      "word": "вдома",
+      "exercise_type": "match-up",
+      "context": "вдома",
+      "role": "context"
     },
     {
       "word": "хочу",
       "exercise_type": "fill-in",
-      "context": "Я хочу ходити _____ концерт.",
-      "role": "context"
-    },
-    {
-      "word": "вони",
-      "exercise_type": "fill-in",
-      "context": "Вони ходять _____ театр раз на місяць.",
-      "role": "context"
-    },
-    {
-      "word": "ходять",
-      "exercise_type": "fill-in",
-      "context": "Вони ходять _____ театр раз на місяць.",
-      "role": "context"
-    },
-    {
-      "word": "діти",
-      "exercise_type": "fill-in",
-      "context": "Діти грають _____ теніс.",
-      "role": "context"
-    },
-    {
-      "word": "грають",
-      "exercise_type": "fill-in",
-      "context": "Діти грають _____ теніс.",
-      "role": "context"
-    },
-    {
-      "word": "працюю",
-      "exercise_type": "fill-in",
-      "context": "Я _____ працюю у неділю, бо це мій вихідний.",
-      "role": "context"
-    },
-    {
-      "word": "неділю",
-      "exercise_type": "fill-in",
-      "context": "Я _____ працюю у неділю, бо це мій вихідний.",
-      "role": "context"
-    },
-    {
-      "word": "бо",
-      "exercise_type": "fill-in",
-      "context": "Я _____ працюю у неділю, бо це мій вихідний.",
-      "role": "context"
-    },
-    {
-      "word": "це",
-      "exercise_type": "fill-in",
-      "context": "Я _____ працюю у неділю, бо це мій вихідний.",
-      "role": "context"
-    },
-    {
-      "word": "мій",
-      "exercise_type": "fill-in",
-      "context": "Я _____ працюю у неділю, бо це мій вихідний.",
-      "role": "context"
-    },
-    {
-      "word": "вихідний",
-      "exercise_type": "fill-in",
-      "context": "Я _____ працюю у неділю, бо це мій вихідний.",
+      "context": "Я хочу ходити ____ концерт.",
       "role": "context"
     },
     {
       "word": "тому",
       "exercise_type": "fill-in",
-      "context": "Я люблю спорт, тому _____ граю у баскетбол.",
+      "context": "Я люблю спорт, тому ____ граю у баскетбол.",
+      "role": "context"
+    },
+    {
+      "word": "маю",
+      "exercise_type": "fill-in",
+      "context": "Я не маю часу, тому ____ читаю книги.",
       "role": "context"
     },
     {
       "word": "часу",
       "exercise_type": "fill-in",
-      "context": "Я не маю часу, тому _____ читаю книги.",
+      "context": "Я не маю часу, тому ____ читаю книги.",
       "role": "context"
     },
     {
-      "word": "слухає",
+      "word": "книги",
       "exercise_type": "fill-in",
-      "context": "Він _____ слухає таку музику.",
+      "context": "Я не маю часу, тому ____ читаю книги.",
       "role": "context"
     },
     {
-      "word": "таку",
+      "word": "відпочиваю",
       "exercise_type": "fill-in",
-      "context": "Він _____ слухає таку музику.",
-      "role": "context"
-    },
-    {
-      "word": "гуляємо",
-      "exercise_type": "fill-in",
-      "context": "Ми _____ гуляємо ввечері, якщо гарна погода.",
-      "role": "context"
-    },
-    {
-      "word": "якщо",
-      "exercise_type": "fill-in",
-      "context": "Ми _____ гуляємо ввечері, якщо гарна погода.",
-      "role": "context"
-    },
-    {
-      "word": "гарна",
-      "exercise_type": "fill-in",
-      "context": "Ми _____ гуляємо ввечері, якщо гарна погода.",
-      "role": "context"
-    },
-    {
-      "word": "погода",
-      "exercise_type": "fill-in",
-      "context": "Ми _____ гуляємо ввечері, якщо гарна погода.",
-      "role": "context"
-    },
-    {
-      "word": "музичні",
-      "exercise_type": "group-sort",
-      "context": "Музичні інструменти (грати на)",
+      "context": "— Що ти робиш у ____? — Відпочиваю.",
       "role": "context"
     },
     {
       "word": "інструменти",
       "exercise_type": "group-sort",
-      "context": "Музичні інструменти (грати на)",
+      "context": "Грати на (Інструменти)",
+      "role": "context"
+    },
+    {
+      "word": "місця",
+      "exercise_type": "group-sort",
+      "context": "Ходити в/на (Місця)",
+      "role": "context"
+    },
+    {
+      "word": "слово",
+      "exercise_type": "true-false",
+      "context": "Слово «кіно» змінює своє закінчення.",
+      "role": "context"
+    },
+    {
+      "word": "змінює",
+      "exercise_type": "true-false",
+      "context": "Слово «кіно» змінює своє закінчення.",
+      "role": "context"
+    },
+    {
+      "word": "своє",
+      "exercise_type": "true-false",
+      "context": "Слово «кіно» змінює своє закінчення.",
+      "role": "context"
+    },
+    {
+      "word": "закінчення",
+      "exercise_type": "true-false",
+      "context": "Слово «кіно» змінює своє закінчення.",
       "role": "context"
     },
     {
@@ -213,91 +99,82 @@
       "role": "context"
     },
     {
+      "word": "має",
+      "exercise_type": "true-false",
+      "context": "Слово «вихідні» завжди має форму множини.",
+      "role": "context"
+    },
+    {
+      "word": "форму",
+      "exercise_type": "true-false",
+      "context": "Слово «вихідні» завжди має форму множини.",
+      "role": "context"
+    },
+    {
+      "word": "множини",
+      "exercise_type": "true-false",
+      "context": "Слово «вихідні» завжди має форму множини.",
+      "role": "context"
+    },
+    {
       "word": "після",
       "exercise_type": "true-false",
-      "context": "Після слова «ніколи» завжди має бути частка «не».",
+      "context": "Після слова «ніколи» ми часто не використовуємо «не».",
       "role": "context"
     },
     {
       "word": "слова",
       "exercise_type": "true-false",
-      "context": "Після слова «ніколи» завжди має бути частка «не».",
+      "context": "Після слова «ніколи» ми часто не використовуємо «не».",
       "role": "context"
     },
     {
-      "word": "має",
+      "word": "використовуємо",
       "exercise_type": "true-false",
-      "context": "Після слова «ніколи» завжди має бути частка «не».",
+      "context": "Після слова «ніколи» ми часто не використовуємо «не».",
       "role": "context"
     },
     {
-      "word": "бути",
+      "word": "та",
       "exercise_type": "true-false",
-      "context": "Після слова «ніколи» завжди має бути частка «не».",
+      "context": "Слова «іноді» та «інколи» мають однакове значення.",
       "role": "context"
     },
     {
-      "word": "частка",
+      "word": "мають",
       "exercise_type": "true-false",
-      "context": "Після слова «ніколи» завжди має бути частка «не».",
+      "context": "Слова «іноді» та «інколи» мають однакове значення.",
       "role": "context"
     },
     {
-      "word": "запрошення",
+      "word": "однакове",
       "exercise_type": "true-false",
-      "context": "«Ходімо!» — це запрошення щось зробити разом.",
+      "context": "Слова «іноді» та «інколи» мають однакове значення.",
       "role": "context"
     },
     {
-      "word": "щось",
+      "word": "значення",
       "exercise_type": "true-false",
-      "context": "«Ходімо!» — це запрошення щось зробити разом.",
+      "context": "Слова «іноді» та «інколи» мають однакове значення.",
       "role": "context"
     },
     {
-      "word": "зробити",
-      "exercise_type": "true-false",
-      "context": "«Ходімо!» — це запрошення щось зробити разом.",
+      "word": "можливо",
+      "exercise_type": "fill-in",
+      "context": "Я ____ граю у футбол, можливо раз на місяць.",
       "role": "context"
     },
     {
-      "word": "разом",
-      "exercise_type": "true-false",
-      "context": "«Ходімо!» — це запрошення щось зробити разом.",
-      "role": "context"
-    },
-    {
-      "word": "щодня",
-      "exercise_type": "error-correction",
-      "context": "Я граю в гітарі щодня.",
-      "role": "context"
-    },
-    {
-      "word": "дуже",
-      "exercise_type": "error-correction",
-      "context": "Він грає у скрипці дуже гарно.",
-      "role": "context"
-    },
-    {
-      "word": "гарно",
-      "exercise_type": "error-correction",
-      "context": "Він грає у скрипці дуже гарно.",
-      "role": "context"
-    },
-    {
-      "word": "сьогодні",
-      "exercise_type": "error-correction",
-      "context": "Ходімо на кіно сьогодні!",
+      "word": "працюють",
+      "exercise_type": "fill-in",
+      "context": "Вони ніколи ____ працюють у неділю.",
       "role": "context"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 16,
-    "tested_in_exercises": 14,
-    "not_tested": [
-      "давай",
-      "іноді"
-    ]
+    "tested_in_exercises": 16,
+    "not_tested": []
   },
   "all_grounded": false
 }

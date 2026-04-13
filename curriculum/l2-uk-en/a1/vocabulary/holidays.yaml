@@ -1,4 +1,58 @@
 vocabulary:
+- word: кутя́
+  translation: kutia
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: коля́дка
+  translation: carol
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: пи́санка
+  translation: decorated Easter egg
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: па́ска
+  translation: Easter bread
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: пара́д
+  translation: parade
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: пра́пор
+  translation: flag
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: виши́ва́нка
+  translation: traditional embroidered shirt
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: незале́жність
+  translation: independence
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: салю́т
+  translation: fireworks
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
 - word: свя́то
   translation: holiday
   expression: false
@@ -9,18 +63,6 @@ vocabulary:
   translation: to celebrate
   expression: false
   pos: дієсл.
-  gender: ''
-  verified: true
-- word: віта́ти
-  translation: to congratulate/greet
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: Зі святом!
-  translation: Happy Holiday!
-  expression: true
-  pos: ''
   gender: ''
   verified: true
 - word: Різдво́
@@ -41,34 +83,10 @@ vocabulary:
   pos: ''
   gender: ''
   verified: true
-- word: кутя́
-  translation: kutia (sweet ritual Christmas porridge)
+- word: віта́ти
+  translation: to greet
   expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: коля́дка
-  translation: Christmas carol
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: коля́дники
-  translation: carolers
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: діду́х
-  translation: didukh (ritual sheaf of wheat)
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: Свята вечеря
-  translation: Holy Supper (Christmas Eve dinner)
-  expression: true
-  pos: ''
+  pos: дієсл.
   gender: ''
   verified: true
 - word: З Різдвом!
@@ -77,23 +95,71 @@ vocabulary:
   pos: ''
   gender: ''
   verified: true
-- word: пи́санка
-  translation: pysanka (decorated Easter egg)
+- word: День Незалежності
+  translation: Independence Day
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: державне свято
+  translation: state holiday
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: конце́рт
+  translation: concert
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: З Днем Незалежності!
+  translation: Happy Independence Day!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Слава Україні!
+  translation: Glory to Ukraine!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Зі святом!
+  translation: Happy Holiday!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Святве́чір
+  translation: Christmas Eve
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: стра́ва
+  translation: dish
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: па́ска
-  translation: paska (Easter bread)
-  expression: false
-  pos: ім.
-  gender: ж.
+- word: Свята вечеря
+  translation: Holy Supper
+  expression: true
+  pos: ''
+  gender: ''
   verified: true
-- word: Па́сха
-  translation: Easter
+- word: коля́дники
+  translation: carolers
   expression: false
   pos: ім.
-  gender: ж.
+  gender: ''
+  verified: true
+- word: святити кошик
+  translation: bless the basket
+  expression: true
+  pos: ''
+  gender: ''
   verified: true
 - word: Христос воскрес!
   translation: Christ is risen!
@@ -102,67 +168,7 @@ vocabulary:
   gender: ''
   verified: true
 - word: Воістину воскрес!
-  translation: Indeed risen!
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: незале́жність
-  translation: independence
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: День Незалежності
-  translation: Independence Day
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: З Днем Незалежності!
-  translation: Happy Independence Day!
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: пара́д
-  translation: parade
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: пра́пор
-  translation: flag
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: салю́т
-  translation: fireworks
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: виши́ва́нка
-  translation: vyshyvanka (embroidered shirt)
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: яли́нка
-  translation: festive tree / Christmas tree
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: подару́нки
-  translation: gifts
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: Слава Україні!
-  translation: Glory to Ukraine!
+  translation: Indeed He is risen!
   expression: true
   pos: ''
   gender: ''
@@ -173,14 +179,38 @@ vocabulary:
   pos: ''
   gender: ''
   verified: true
-- word: бажа́ти
-  translation: to wish
+- word: яли́нка
+  translation: New Year tree
   expression: false
-  pos: дієсл.
-  gender: ''
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: подару́нок
+  translation: gift
+  expression: false
+  pos: ім.
+  gender: ч.
   verified: true
 - word: З Новим роком!
   translation: Happy New Year!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Вишиванковий день
+  translation: Vyshyvanka Day
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: День Конституції
+  translation: Constitution Day
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: День захисників і захисниць
+  translation: Defenders' Day
   expression: true
   pos: ''
   gender: ''
@@ -197,32 +227,26 @@ vocabulary:
   pos: ''
   gender: ''
   verified: true
-- word: ща́стя
-  translation: happiness
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: здоро́в'я
-  translation: health
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: мир
-  translation: peace
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: гру́день
-  translation: December
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
 - word: сі́чень
   translation: January
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: весна́
+  translation: Spring
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: тра́вень
+  translation: May
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: че́рвень
+  translation: June
   expression: false
   pos: ім.
   gender: ч.
@@ -233,21 +257,15 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: державне свято
-  translation: state holiday
-  expression: true
-  pos: ''
-  gender: ''
+- word: жо́втень
+  translation: October
+  expression: false
+  pos: ім.
+  gender: ч.
   verified: true
-- word: релігійне свято
-  translation: religious holiday
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: традиційне свято
-  translation: traditional holiday
-  expression: true
-  pos: ''
-  gender: ''
+- word: гру́день
+  translation: December
+  expression: false
+  pos: ім.
+  gender: ч.
   verified: true

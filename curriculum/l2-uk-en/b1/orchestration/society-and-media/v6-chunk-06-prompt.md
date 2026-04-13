@@ -28,7 +28,7 @@ Grand total: ~4360 words
 <previous_context>
 [...previous sections truncated...]
 
-пояснюють вашу думку. Використовуйте складнопідрядні речення причини: «Я підтримую цю ідею, тому що вона сприяє розвитку демократії». Наприкінці вашого тексту має бути короткий висновок або **заклик до дії** *(call to action)*. Ви можете написати: «Тому нам усім необхідно бути більш відповідальними громадянами». Така структура робить ваш текст логічним, переконливим та професійним. Наступний важливий етап — це самостійне створення короткого новинного повідомлення. Уявіть, що ви — місцевий **кореспондент** *(correspondent)* і пишете про подію у вашій громаді. Ваша **новина** *(news item)* повинна починатися з яскравого **заголовка** *(headline)*, який одразу привертає увагу читача. Заголовок часто пишуть без дієслова, наприклад: «Новий проект, який організував місцевий **волонтер** *(volunteer)*». Далі йде перший абзац, який журналісти називають **лід** *(lead)*. Він має бути дуже коротким і давати чіткі відповіді на базові питання: хто, що зробив, де і коли. В основній частині вашого тексту ви повинні подати три або чотири конкретні факти без зайвих емоцій. Щоб текст виглядав як справжня публіцистика, обов'язково додайте кілька абревіатур, згадайте місцеві ЗМІ та процитуйте організаторів події. <!-- INJECT_ACTIVITY: essay-response, "Напишіть коротку новину про подію у вашій громаді, використовуючи заголовок, лід та абревіатури." --> Розвиваючи наше критичне мислення, ми часто проводимо **порівняльний аналіз** *(comparative analysis)*. Це означає, що ми читаємо дві різні статті про одну подію, які опублікувало різне **джерело** *(source)* інформації. Різні медіа можуть описувати ситуацію абсолютно по-різному. В одній статті журналіст використовує нейтральне дієслово **повідомити** *(to report)*, що робить текст спокійним та об'єктивним. В іншій статті автор використовує офіційне дієслово **заявити** *(to state)* або емоційне **стверджувати** *(to claim)*, яке іноді натякає на сумнів або недовіру. Порівнюючи ці тексти, ви одразу помітите, який з них є більш збалансованим, а який намагається впливати на ваші емоції. Уважно дивіться на кількість наведених фактів та частоту використання суб'єктивних оцінок. Такий аналіз ефективно захищає нас від будь-якого інформаційного **маніпулювання** *(manipulation)*. Крім письмового аналізу, ми повинні вміти обговорювати новини усно. Усне **узагальнення** *(summary)* статті має тривати близько двох хвилин. Ваша мета — передати головний зміст без зайвих деталей. Для цього ми використовуємо специфічні безособові конструкції, які дуже популярні в українському інформаційному просторі. Замість того, щоб казати «автор написав», ми кажемо «у статті **повідомляється** *(it is reported)*, що...». Щоб посилатися на факти, ми використовуємо сталий вираз «**за даними** *(according to data)* експертів». Коли ми хочемо підкреслити головну ідею журналіста, ми можемо сказати «як наголосив автор...». Регулярне використання цих професійних фраз зробить ваше усне мовлення більш формальним, впевненим та стилістично багатим. Нарешті, щоб ваш медіатекст звучав по-справжньому природно, ви повинні активно використовувати **вставні слова** *(parenthetical words)*. Це спеціальні слова або короткі фрази, які виражають ставлення автора до інформації, але не є членами речення. Наприклад, коли ми впевнені у факті, ми пишемо «**без сумніву** *(without a doubt)*». Якщо ми посилаємося на загальновідому інформацію, ми використовуємо фразу «**як відомо** *(as is known)*». Щоб передати чужу думку, ми кажемо «на думку експертів». Ці маленькі конструкції відіграють гігантську роль у публіцистиці. Вони допомагають логічно структурувати вашу аргументацію, керують увагою читача та роблять ваші соціальні коментарі значно більш переконливими та професійними. <!-- INJECT_ACTIVITY: fill-in, "Вставте правильні вставні слова та безособові конструкції у текст коментаря." -->
+ensure your text sounds authentic and professional, incorporate at least two relevant abbreviations and use formal reporting verbs. Avoiding personal pronouns will give your writing the authoritative tone characteristic of professional journalism. <!-- INJECT_ACTIVITY: writing, write a short news report about a local event using a headline, lead, and body paragraphs --> Критичне мислення найкраще розвивається під час порівняльного аналізу кількох різних текстів про одну й ту саму подію. Спробуйте прочитати дві статті про новий закон, опубліковані різними виданнями. Зверніть особливу увагу на лексику, яку обирають журналісти. Одне видання може написати, що політик «заявив» про зміни, демонструючи нейтральний та офіційний тон. Інше видання може використати слово «зізнався» або «попередив», що миттєво додає тексту емоційної напруги та створює певний підтекст. Також проаналізуйте пропорцію об'єктивних даних та авторських коментарів у кожному тексті. Якщо одна стаття містить багато цифр та цитат експертів, а інша складається переважно з яскравих прикметників та риторичних запитань, ви можете легко визначити рівень упередженості. Такий аналіз допомагає бачити приховані мотиви медіа. Summarizing a news story orally is a fantastic way to practice your active vocabulary and complex sentence structures. When presenting a summary, you must carefully distinguish between a **факт** (fact — verifiable statement) and a **думка** (opinion — personal view). Start your summary with introductory formulas like «повідомляється, що...» (it is reported that...) or «за даними...» (according to the data...). These phrases distance you from the information, showing that you are relaying news rather than sharing a personal story. As you transition between points, always mention your **джерело** (source — origin of information) to maintain credibility. Use linking phrases such as «як наголосив автор...» (as the author emphasized...) to introduce quotes smoothly. This structured approach forces you to practice the passive voice and impersonal constructions. Вставні слова відіграють ключову роль у структуруванні медійного тексту та вираженні авторського ставлення до інформації. Вони допомагають плавно з'єднувати думки і керувати увагою читача. Наприклад, конструкція «як відомо» часто використовується для того, щоб нагадати про загальновизнані факти перед введенням нової інформації. Фраза «на думку експертів» додає вашому тексту ваги та авторитетності, показуючи, що ви спираєтеся на надійні джерела. Коли журналіст хоче підкреслити свою впевненість у чомусь, він застосовує вираз «без сумніву». Ці маленькі елементи не змінюють основного змісту речення, але вони формують логічний каркас аргументації. Правильне використання вставних слів робить ваше мовлення значно природнішим, елегантнішим та професійнішим. Understanding these parenthetical structures is your best defense against subtle **маніпулювання** (manipulation — hidden influence) in the media. Recognizing when an author uses words like «безперечно» (without a doubt) to present an opinion as an absolute truth allows you to read critically. It helps you maintain your own independent judgment as a responsible **громадянин** (citizen — member of a state). By mastering these linguistic markers, you not only improve your fluency but also protect yourself from emotional bias. :::tip **Did you know?** Ukrainian media literacy programs strongly emphasize distinguishing between facts, opinions, and emotional manipulation. Learning these linguistic markers doesn't just improve your grammar; it makes you a more resilient and critical consumer of information. :::
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -570,7 +570,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -583,18 +650,66 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (6/6).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] засоби масової інформації (mass media — channels of public communication)
+- [ ] суспільство (society — organized community of people)
+- [ ] громадянин (citizen — member of a state)
+- [ ] публіцистичний стиль (publicistic style — media register)
+- [ ] новина (news item — report of a recent event)
+- [ ] заголовок (headline — title of a news article)
+- [ ] факт (fact — verifiable statement)
+- [ ] думка (opinion — personal view)
+- [ ] маніпулювання (manipulation — hidden influence)
+- [ ] волонтер (volunteer — person working without pay)
+- [ ] джерело (source — origin of information)
+- [ ] кореспондент (correspondent — reporter)
+- [ ] повідомити (to report — to convey news)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Підсумок: медіаграмотність (~450 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

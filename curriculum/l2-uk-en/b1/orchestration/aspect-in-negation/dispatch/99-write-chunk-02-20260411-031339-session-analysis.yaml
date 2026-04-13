@@ -1,0 +1,75 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T01-11-5f285948.json
+phase: write-chunk-02
+prompt_chars: 51789
+response_chars: 9738
+prompt_words: 7324
+response_words: 1417
+sections:
+- name: header
+  start: 0
+  length: 445
+  fraction: 0.0086
+- name: skeleton
+  start: 445
+  length: 2582
+  fraction: 0.0499
+- name: prior_summary
+  start: 3027
+  length: 3269
+  fraction: 0.0631
+- name: plan
+  start: 6296
+  length: 16614
+  fraction: 0.3208
+- name: wiki
+  start: 18048
+  length: 28751
+  fraction: 0.5552
+- name: output_spec
+  start: 51661
+  length: 128
+  fraction: 0.0025
+large_sections:
+- wiki
+directives_total: 10
+directives_covered: 4
+directives_missed:
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: skeleton_para
+  text: 'P1 (160w): Core Rule: The ''Neutral Fact'' pattern. Explain that ''не + недоконаний
+    вид'' is the default for stating that an action simply did not happen. Reference
+    Zabolotnyi Grade 7 (p.57) regarding ''загальне заперечення''. Use examples: ''Він
+    не вчив іспанську'' (He never studied it) and ''Ми не обговорювали це'' (The topic
+    never came up).'
+  covered: false
+  coverage_note: 10/36 keywords (28%)
+- kind: skeleton_para
+  text: 'P3 (170w): Negation in the Present Tense. Explain why present tense negation
+    is *always* imperfective. Since perfective verbs have no present tense, you cannot
+    say ''I am not finishing yet'' in a single word. Examples: ''Я не розумію'' (Ongoing
+    state of not understanding) and ''Він не працює'' (Current fact of not working).'
+  covered: false
+  coverage_note: 9/30 keywords (30%)
+- kind: skeleton_para
+  text: 'P5 (170w): The ''Neutral Stance''. Explain that ''не + impf'' protects the
+    speaker from commitment. If a teacher asks ''Ти читав книжку?'', answering ''Я
+    не читав'' is a blunt admission of fact. It doesn''t promise that you will read
+    it tomorrow. It simply closes the book on the past.'
+  covered: false
+  coverage_note: 8/31 keywords (26%)
+- kind: skeleton_para
+  text: 'P6 (170w): Factual denial in complex situations. Discussing long-term states.
+    ''Він не жив у Києві'' (He didn''t live in Kyiv—general fact) vs ''Він не переїхав
+    у Київ'' (He failed to move—specific result). Emphasize that ''не + impf'' covers
+    the entire duration of the non-event.'
+  covered: false
+  coverage_note: 11/32 keywords (34%)
+- kind: skeleton_para
+  text: 'P7 (170w): Recap of the ''Factual'' markers. List key words that often trigger
+    the imperfective: ''ніколи'' (never), ''взагалі'' (at all), ''часто'' (often -
+    negated). Example: ''Я ніколи не купував такі дорогі речі''.'
+  covered: false
+  coverage_note: 9/23 keywords (39%)

@@ -1,0 +1,56 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T01-28-182e32a1.json
+phase: write-chunk-05
+prompt_chars: 43209
+response_chars: 1711
+prompt_words: 6335
+response_words: 271
+sections:
+- name: header
+  start: 0
+  length: 409
+  fraction: 0.0095
+- name: skeleton
+  start: 409
+  length: 450
+  fraction: 0.0104
+- name: prior_summary
+  start: 859
+  length: 3366
+  fraction: 0.0779
+- name: plan
+  start: 4225
+  length: 11991
+  fraction: 0.2775
+- name: wiki
+  start: 10888
+  length: 26865
+  fraction: 0.6217
+- name: output_spec
+  start: 43081
+  length: 128
+  fraction: 0.003
+large_sections:
+- wiki
+directives_total: 9
+directives_covered: 5
+directives_missed:
+- kind: must
+  text: '` | When addressing someone using a title (`пан`, `пані`, `колега`, `лікар`)
+    and a surname, the title must be in the vocative case, while the surname remains
+    in the nominative (Source 5, 16).'
+  covered: false
+  coverage_note: 5/17 keywords (29%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: inject_activity
+  text: 'quiz, focus: Choose the correct vocative register for a given social situation,
+    8 items'
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: 'group-sort, focus: Sort vocative forms by register (formal, professional,
+    emotional), 8 items'
+  covered: false
+  coverage_note: marker missing

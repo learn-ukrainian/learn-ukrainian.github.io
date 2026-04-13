@@ -1,4 +1,4 @@
-<!-- version: 1.1.0 | updated: 2026-03-31 -->
+<!-- version: 1.2.0 | updated: 2026-04-12 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -11,6 +11,35 @@ Generate an `activities/checkpoint-syntax.yaml` file for module **53: Контр
 
 ---
 
+## ⚠️ HARD COUNT TARGETS — READ TWICE
+
+These are the binding numerical contracts for THIS module. The audit will FAIL if you fall short.
+
+| Bucket | Min | Max | Notes |
+|---|---|---|---|
+| Total activities | 10 | 10+ | inline + workbook combined |
+| Inline (lesson tab) | 3 | 5 | one per `<!-- INJECT_ACTIVITY -->` marker, see below |
+| Workbook (Зошит tab) | 7 | 10 | extended practice |
+| Items per activity | 10 | — | each activity must have at least 10 items (unless its type cap is lower — see Activity Type Reference below) |
+
+**You MUST ship at least 3 inline activities AND at least 7 workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+
+**Type diversity is required.** The module (inline + workbook combined) MUST use at least **0** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level. (If `0` is `0`, the audit profile for this level does not enforce type diversity — but variety still produces a better lesson, so aim for 4+ types when the workbook allows it.)
+
+---
+
+## Allowed types for THIS level
+
+- **Inline (lesson) types:** quiz, true-false, fill-in, match-up, group-sort, classify, mark-the-words
+- **Inline priority (preferred):** fill-in, match-up, true-false
+- **Workbook types:** cloze, error-correction, fill-in, unjumble, translate, match-up, group-sort, odd-one-out, quiz, true-false, mark-the-words, observe, phrase-table
+- **Workbook priority (preferred):** error-correction, cloze, unjumble, translate, fill-in
+- **FORBIDDEN at this level:** anagram, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables, highlight-morphemes, grammar-identify
+
+Pick from the allowed list. Lean heavily on the priority lists. Do not use any forbidden type — the build will reject it.
+
+---
+
 ## Inline vs Workbook Split
 
 Activities have two placement categories:
@@ -19,7 +48,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Rule of thumb:** inline = 2-3 quick checks after key teaching points. Workbook = 4-8 deeper practice exercises covering the full topic.
+**Rule of thumb:** inline = 3–5 quick checks after key teaching points. Workbook = 7–10 deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
 
 ---
 
@@ -27,9 +56,9 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: quiz-conjunction-id -->`
-- `<!-- INJECT_ACTIVITY: fill-in-conjunction-form -->`
-- `<!-- INJECT_ACTIVITY: sort-conjunction-types -->`
+- `<!-- INJECT_ACTIVITY: group-sort-conjunctions -->`
+- `<!-- INJECT_ACTIVITY: quiz-identify-types -->`
+- `<!-- INJECT_ACTIVITY: fill-in-conjunctions -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -82,145 +111,126 @@ required:
 <module_content>
 ## Частина 1: Впізнай сполучник (Part 1: Identify the Conjunction)
 
-Мова — це не просто набір окремих фактів. Коли ми розмовляємо, ми пояснюємо причини, ставимо умови та описуємо наші цілі. Для цього нам потрібне **складне речення** (complex sentence). Складні речення допомагають нам будувати логічні та зв'язні історії, які звучать природно. У цьому модулі ми повторимо всі типи складних речень, які ви вивчили на рівні A2. Складне речення має дві або більше частин: **головну** (main clause) і **підрядну** (subordinate clause). 
+> **Марина:** Максиме, подивися на моє **домашнє завдання** (homework).
+> **Максим:** Добре. Показуй. Ось тут у тебе **помилка** (mistake). Це ж **складне речення** (complex sentence).
+> **Марина:** Де саме?
+> **Максим:** Ось тут: «Я читаю тому що цікаво». Ти забула поставити розділовий знак. Тут потрібна **кома** (comma).
+> **Марина:** А, точно! Кома ставиться завжди, коли є **сполучник** (conjunction). Дякую, що помітив!
 
-Щоб з'єднати ці частини, ми використовуємо **сполучник** (conjunction) або сполучне слово. Існують різні типи зв'язку. Простий сурядний зв'язок поєднує абсолютно рівноправні ідеї за допомогою базових слів **і** (and), **а** (and/but) та **але** (but).
-**Сьогодні субота, і ми відпочиваємо вдома.** (Today is Saturday, and we are resting at home.)
-**Я люблю зелений чай, а моя сестра любить чорну каву.** (I like green tea, and my sister likes black coffee.)
-**Він купив квиток, але він не поїхав на концерт.** (He bought a ticket, but he didn't go to the concert.)
+Марина та Максим роблять домашнє завдання з української мови. Вони перевіряють тексти одне одного та шукають помилки. У складному реченні завжди є дві або більше частин. Ці частини часто поєднує сполучник, такий як «бо», «щоб» або «який». Дуже важливе правило: перед сполучником у таких реченних зазвичай стоїть кома. Цей маленький розділовий знак допомагає читати текст правильно та робити логічні паузи там, де це потрібно. Без коми речення виглядає незавершеним і граматично неправильним.
 
-Підрядний зв'язок — це інша логіка. Одна частина стає головною, а інша — залежною. Коли ми пояснюємо нашу мотивацію, ми дивимося або в минуле (на причину події), або в майбутнє (на нашу мету).
-Для вираження причини ми використовуємо сполучник **тому що** (because) або коротке слово **бо** (because). Слово **бо** дуже популярне в щоденній розмовній мові.
-**Я запізнився на зустріч, бо на дорозі був великий затор.** (I was late for the meeting because there was a big traffic jam on the road.)
-**Вона не прийшла в офіс, тому що була дуже зайнята.** (She didn't come to the office because she was very busy.)
+Ви вже добре вивчили п'ять головних типів **підрядних частин** (subordinate clauses) у складному реченні на рівні А2. Давайте детально згадаємо їх усі:
+1. Перший тип — це причина (cause). Вона відповідає на питання «чому?». Ми використовуємо сполучники **тому що** (because) або **бо** (because). Наприклад: *Я не йду сьогодні гуляти, бо надворі падає сильний дощ.*
+2. Другий тип — це допуст (concession). Це коли дія відбувається всупереч обставинам. Ми використовуємо сполучник **хоча** (although). Наприклад: *Хоча вчора було дуже холодно, ми грали у футбол на стадіоні.*
+3. Третій тип — це мета (purpose). Вона відповідає на питання «навіщо?». Ми використовуємо сполучник **щоб** (in order to). Наприклад: *Я щодня вчу українську мову, щоб жити і працювати в Києві.*
+4. Четвертий тип — це означення (description). Воно описує предмет і відповідає на питання «який?». Ми використовуємо слово **який** (which, that), «де», «куди» або «звідки». Наприклад: *Це велике місто, де я народився багато років тому.*
+5. П'ятий тип — це умова (condition). Вона відповідає на питання «за якої умови?». Ми використовуємо сполучник **якщо** (if). Наприклад: *Якщо завтра буде вільний час, я зателефоную своїм батькам.*
 
-Для вираження мети ми використовуємо сполучник **щоб** (in order to / so that).
-**Я виїхав з дому раніше, щоб не запізнитися.** (I left home earlier so as not to be late.)
-**Ми кожного дня вчимо українську мову, щоб вільно спілкуватися з людьми.** (We learn the Ukrainian language every day in order to communicate fluently with people.)
+Як легко знайти **головне речення** (main clause) та **підрядне речення** (subordinate clause) у довгому тексті? Це дуже просто зробити, якщо використовувати питання. Від головної частини ми завжди ставимо логічне питання. А підрядна частина дає конкретну відповідь на це питання. Найважливіше правило: сполучник завжди стоїть у підрядній частині, він починає її.
+Подивіться на цей простий приклад: *Я дуже втомився (чому?), бо багато працював учора.* Головна частина тут — «Я дуже втомився». Ми можемо поставити питання «чому?». Підрядна частина — «бо багато працював учора». Вона починається зі сполучника «бо».
+Ще один приклад для розуміння: *Це старе місто (яке?), де ми живемо зараз.* Головна частина — «Це старе місто». Від слова «місто» ми ставимо питання «яке?». Підрядна частина — «де ми живемо зараз». Вона логічно пояснює, описує головне слово «місто».
 
-Коли нам потрібно описати конкретну людину, предмет або місце всередині великого речення, ми використовуємо означальні речення.
-Для опису предмета чи людини ми беремо слово **який** (which / that / who).
-**Я бачу молодого хлопця, який швидко біжить у парк.** (I see a young boy who is running fast to the park.)
-**Це новий робочий проект, який ми успішно закінчили вчора.** (This is the new work project that we successfully finished yesterday.)
-Для опису місця ми використовуємо слова **де** (where) або **куди** (where to).
-**Це старий цегляний будинок, де я живу вже десять років.** (This is the old brick house where I have lived for ten years already.)
+:::caution
+In English, you can often drop the comma before conjunctions like "because", "if", or "that". In Ukrainian, this is absolutely forbidden! Every subordinate clause must be separated by a comma. Punctuation in complex sentences is strict, and a missing comma is considered a serious grammatical error. Always remember to pause and place a comma before your conjunction!
+:::
 
-Для гіпотетичних ситуацій та несподіваних результатів ми маємо умову та допуст.
-Реальна умова використовує слово **якщо** (if).
-**Якщо завтра буде тепле сонце, ми обов'язково підемо в парк.** (If there is warm sun tomorrow, we will definitely go to the park.)
-**Якщо ти зараз маєш вільний час, допоможи мені, будь ласка.** (If you have free time right now, help me, please.)
-Допуст показує суперечність або подолання перешкоди. Ми використовуємо слово **хоча** (although / even though).
-**Хоча вчора було дуже холодно, ми пішли гуляти.** (Although it was very cold yesterday, we went for a walk.)
-**Він купив цю велику машину, хоча вона дуже дорога.** (He bought this big car, even though it is very expensive.)
+Дуже часто студенти роблять типові помилки, коли пишуть або говорять складне речення. Перша і найчастіша помилка — це відсутня кома. Ви повинні пам'ятати: завжди ставте кому перед підрядним сполучником, щоб розділити частини речення! Друга серйозна помилка — це неправильний вибір сполучника. Наприклад, англійське слово "if" має два абсолютно різних значення. Воно може означати умову, і тоді ми використовуємо слово **якщо**. Але воно також може вводити непряме питання (indirect question). Тоді ми обов'язково повинні використовувати слово «чи».
+Неправильно: *Я не знаю, якщо він прийде сьогодні ввечері.*
+Правильно: *Я не знаю, чи він прийде сьогодні ввечері.*
+Ці два слова, «якщо» і «чи», не можна плутати!
 
-Прочитаймо діалог. Студент розповідає викладачу про свої плани на вихідні. Зверніть увагу на те, як він використовує сполучники.
+Третя поширена помилка — це неправильна граматична форма сполучного слова. Слово «який» завжди змінюється за родом, числом та відмінком, як звичайний прикметник. Воно повністю залежить від слова у головній частині, яке воно описує.
+Неправильно: *Це цікава книга, якого я зараз читаю.* (Слово «книга» — це жіночий рід, тому закінчення неправильне).
+Правильно: *Це цікава книга, яку я зараз читаю.*
 
-> **Студент:** На вихідних я залишуся вдома, **тому що** маю багато роботи. *(On the weekend I will stay home because I have a lot of work.)*
-> **Викладач:** Що саме ви будете робити цими днями? *(What exactly will you be doing these days?)*
-> **Студент:** Я буду писати довгий текст, **щоб** закінчити мій важливий проект. *(I will write a long text in order to finish my important project.)*
-> **Викладач:** Це той великий проект, **який** ви почали робити минулого тижня? *(Is that the big project that you started doing last week?)*
-> **Студент:** Так, саме він. **Хоча** я дуже втомився, я маю його здати в понеділок зранку. *(Yes, exactly that one. Although I am very tired, I have to submit it on Monday morning.)*
-> **Викладач:** А коли ви будете нормально відпочивати? *(And when will you rest normally?)*
-> **Студент:** **Якщо** я здам проект у суботу, у неділю я із задоволенням зустрінуся з друзями в кафе. *(If I submit the project on Saturday, on Sunday I will gladly meet with friends in a cafe.)*
+Четверта помилка пов'язана з дієсловами після сполучника «щоб». Це також дуже важливо пам'ятати.
+Неправильно: *Я йду в магазин, щоб я купив свіжий хліб.* (Тут один суб'єкт виконує обидві дії).
+Правильно: *Я йду в магазин, щоб купити свіжий хліб.* (Ми повинні використовувати інфінітив).
 
-Студент природно використовує причину, мету, означення, допуст та умову, щоб побудувати логічну і зрозумілу розповідь.
+<!-- INJECT_ACTIVITY: group-sort-conjunctions -->
 
-<!-- INJECT_ACTIVITY: quiz-conjunction-id -->
+<!-- INJECT_ACTIVITY: quiz-identify-types -->
 
 ## Частина 2: Вибери правильну форму (Part 2: Choose the Correct Form)
 
-Вибрати правильний сполучник означає розуміти точний сенс вашої фрази. Англомовні студенти часто плутають причину та мету через різницю в перекладі. 
-**Я йду в магазин, тому що мені потрібен свіжий хліб.** (I am going to the store because I need fresh bread.) — Це причина. Подія вже є фактом.
-**Я йду в магазин, щоб купити свіжий хліб.** (I am going to the store in order to buy fresh bread.) — Це мета. Дія ще не відбулася.
-Інша дуже типова помилка — це використання слова «якщо» (if-condition) замість «чи» (if-whether) для непрямих питань.
-**Якщо він прийде сьогодні, ми почнемо працювати.** (If he comes today, we will start working.) — Умова.
-**Я не знаю, чи він прийде сьогодні ввечері.** (I don't know if/whether he will come this evening.) — Непряме питання. В українській мові не можна казати «Я не знаю, якщо він прийде».
+Коли ми говоримо про причину і про мету нашої дії, ми часто плутаємо ці два поняття. Сполучники «тому що» і «бо» пояснюють причину дії, яка вже є або яка вже була в минулому. Вони завжди відповідають на питання «чому?».
+Наприклад: *Я п'ю гарячу каву, бо я дуже хочу спати.* (Причина: я хочу спати зараз, тому я беру каву і п'ю її).
+Але сполучник «щоб» показує зовсім інше — він показує мету нашої дії. Він завжди відповідає на питання «навіщо?».
+Наприклад: *Я п'ю гарячу каву, щоб не спати на роботі.* (Мета: я хочу бути бадьорим у майбутньому, це моя ціль).
+Перед тим, як сказати речення, завжди запитуйте себе: це причина моєї дії чи це моя мета? Від цього залежить вибір правильного сполучника.
 
-Слово **який** працює як прикметник у підрядному реченні. Воно завжди повинно ідеально відповідати роду та числу іменника, який воно замінює в головному реченні.
-**Це цікава книжка (жін. Р., одн.), яку я зараз із задоволенням читаю.** (This is an interesting book that I am now reading with pleasure.)
-**Це велике місто (сер. Р., одн.), яке мені дуже подобається.** (This is the large city that I really like.)
-**Це розумні люди (мн.), які працюють зі мною в нашому офісі.** (These are the smart people who work with me in our office.)
-Також ми часто використовуємо прийменники зі словом **який**, і тоді відмінок цього слова обов'язково змінюється.
-**Це новий комп'ютер, на якому я працюю щодня.** (This is the new computer on which I work every day.)
-**Це мій найкращий колега, з яким я роблю спільний проект.** (This is my best colleague with whom I am doing a joint project.)
+Іноді ми хочемо показати сильний контраст між двома ідеями чи ситуаціями. Для цього ми можемо використовувати слова «але» та «хоча». Вони схожі за змістом, але мають зовсім різну граматику. Сполучник «але» з'єднує дві незалежні, абсолютно рівноправні частини (coordination).
+Наприклад: *Надворі було холодно, але ми довго гуляли в парку.*
+Натомість сполучник «хоча» робить одну частину залежною, підрядною (subordination).
+Наприклад: *Хоча надворі було холодно, ми довго гуляли в парку.*
+Також завжди пам'ятайте про умову. На цьому рівні ми використовуємо слово «якщо» тільки для реальної умови (real condition). Наприклад: *Якщо завтра буде сонце, ми підемо гуляти в парк.* Про нереальну умову (unreal condition) зі словом «якби» ви будете детально говорити вже на наступному рівні В1.
 
-Сполучник **щоб** має своє суворе граматичне правило. Воно стосується форми дієслова, яке йде безпосередньо після нього. Якщо в обох частинах речення дію виконує одна й та сама особа, ми використовуємо інфінітив.
-**Я прийшов сюди, щоб купити квиток на вечірній поїзд.** (I came here in order to buy a ticket for the evening train.) — Я прийшов, і я куплю.
-Але якщо особи різні, дієслово після **щоб** обов'язково стоїть у формі минулого часу. Це правило працює навіть тоді, коли сама дія відбудеться в далекому майбутньому.
-**Я хочу, щоб ти купив квиток на вечірній поїзд.** (I want you to buy a ticket for the evening train. — Literally: I want so that you bought.) — Я хочу, а ти купиш.
-**Наш директор просить, щоб ми закінчили цю важливу роботу сьогодні.** (Our director asks that we finish this important work today.)
-Зверніть увагу на закінчення "-л-" у словах **купив**, **закінчили**. Воно є чітким маркером минулого часу, який тут вимагає граматика.
+Сполучне слово «який» — це надзвичайно корисний інструмент для опису предметів, людей або місць. Але воно вимагає великої уваги до граматики. Ви завжди повинні вибрати правильний рід, число та відмінок для цього слова. Як це зробити правильно?
+Спочатку знайдіть іменник у головній частині речення, який ви хочете описати. Визначте його рід та число. Потім подумайте, яку саме роль грає слово «який» у вашій підрядній частині (наприклад, воно може бути підметом або додатком).
+Подивіться на чіткі приклади:
+* *Це новий фільм, який я вчора дивився в кінотеатрі.* (Слово «фільм» — чоловічий рід. «Який» стоїть у знахідному відмінку для неістот).
+* *Це популярна пісня, яку я постійно слухаю.* (Слово «пісня» — жіночий рід. «Яку» — це знахідний відмінок жіночого роду).
+* *Це великі міста, які ми відвідали минулого року.* (Слово «міста» — множина. «Які» — це знахідний відмінок множини).
+Завжди узгоджуйте форму слова «який» з головним словом!
 
-Щоб передати слова іншої людини, ми використовуємо непряму мову. На рівні A2 це дуже просто: ми використовуємо сполучник **що** (that). Час дієслова ніколи не змінюється.
-Пряма мова: **Він каже: «Я дуже втомився після роботи».** (He says: "I am very tired after work.")
-Непряма мова: **Він каже, що він дуже втомився після роботи.** (He says that he is very tired after work.)
-Пряма мова: **Моя мама сказала: «Смачний обід вже повністю готовий».** (My mom said: "The delicious lunch is already completely ready.")
-Непряма мова: **Моя мама сказала, що смачний обід вже повністю готовий.** (My mom said that the delicious lunch is already completely ready.)
+Ми вже трохи згадували про вибір форми дієслова після слова «щоб». Це критичне синтаксичне правило, яке треба добре запам'ятати для правильного мовлення. В українській мові існує два різні варіанти конструкцій зі словом «щоб».
+Перший варіант: якщо головну дію і підрядну дію виконує одна й та сама особа, ми обов'язково використовуємо інфінітив.
+Приклад: *Я йду в супермаркет, щоб купити свіже молоко.* (Тут особа «я» і йде, і купує).
+Другий варіант: якщо ці дві дії виконують дві різні особи, ми завжди використовуємо дієслово в минулому часі.
+Приклад: *Я хочу, щоб ти купив свіже молоко.* (Тут особа «я» хоче, а особа «ти» купує).
+Зверніть увагу: після слова «щоб» для іншої особи ми використовуємо виключно минулий час дієслова, навіть якщо ми говоримо про плани на майбутнє!
 
-Пунктуація у складних реченнях має одне золоте правило. Ви обов'язково повинні поставити **кому** (comma) перед сполучником, який починає підрядну частину. Це правило діє для всіх підрядних слів: **що**, **щоб**, **бо**, **тому що**, **який**, **де**, **якщо**, **хоча**. Кома показує необхідну логічну паузу для вашого слухача.
-**Я точно знаю, що ти зараз тут.** (I know for sure that you are here now.)
-**Вона уважно читає цю статтю, бо їй дуже цікаво.** (She is carefully reading this article because she is very interested.)
+:::info
+**Sequence of Tenses in Ukrainian**
+When you report what someone else said (reported speech), English requires you to shift the tense back. For example, "I *am* working" becomes "He said he *was* working." Ukrainian is much simpler: there is no sequence of tenses! You simply keep the exact same tense the person used originally. If they spoke in the present tense, you report it in the present tense.
+:::
 
-Послухаймо, як два одногрупники самостійно перевіряють домашнє завдання.
+Ще одна дуже важлива граматична тема — це непряма мова (reported speech). Як правильно передати слова іншої людини комусь ще? В українській мові зробити це набагато простіше, ніж в англійській. У нас немає складного правила «узгодження часів». Ми просто додаємо сполучник «що» перед твердженням.
+Пряма мова: *Він сказав: «Я працюю в офісі щодня».*
+Непряма мова: *Він сказав, що працює в офісі щодня.* (Час дієслова залишається теперішнім, ми його не змінюємо!).
+Якщо це питання без питального слова (yes/no question), ми обов'язково використовуємо сполучник «чи».
+Пряма мова: *Вона запитала мене: «Ти працюєш сьогодні?»*
+Непряма мова: *Вона запитала мене, чи я працюю сьогодні.*
 
-> **Марко:** Послухай моє перше речення: «Це нова книжка який я купив вчора ввечері». *(Listen to my first sentence: "This is the new book which I bought yesterday evening.")*
-> **Олена:** Тут є одна помилка. Слово «книжка» — жіночого роду. Тому треба обов'язково писати «книжка, яка». *(There is one error here. The word "книжка" is feminine. Therefore, you must write "книжка, яка".)*
-> **Марко:** Я зрозумів правило. «Це нова книжка, яку я купив вчора ввечері». А як тобі тут: «Я читаю її тому що вона цікава». *(I understood the rule. "This is the new book that I bought yesterday evening." And how about here: "I am reading it because it is interesting.")*
-> **Олена:** Це майже правильно. Але де твоя **кома**? *(This is almost correct. But where is your comma?)*
-> **Марко:** Точно! Я забув. Перед «тому що» завжди стоїть кома. *(Exactly! I forgot. Before "тому що" there is always a comma.)*
-> **Олена:** Так, тепер ідеально. «Я читаю її, тому що вона цікава». *(Yes, now it is perfect. "I am reading it, because it is interesting.")*
-
-<!-- INJECT_ACTIVITY: fill-in-conjunction-form -->
+<!-- INJECT_ACTIVITY: fill-in-conjunctions -->
 
 ## Частина 3: Побудуй складне речення (Part 3: Build Complex Sentences)
 
-Тепер настав час об'єднати ваші знання. В академічному або сучасному професійному середовищі ми рідко говоримо короткими, дуже простими фактами. Ми комбінуємо їх. Це робить нашу мову дорослою, природною та переконливою.
-Подивіться уважно на дві прості ідеї:
-**Я щодня працюю у великій міжнародній компанії.** (I work every day in a large international company.)
-**Ця міжнародна компанія постійно розробляє нове програмне забезпечення.** (This international company constantly develops new software.)
-Ми можемо елегантно об'єднати їх за допомогою означального речення:
-**Я працюю у великій міжнародній компанії, яка постійно розробляє нове програмне забезпечення.** (I work in a large international company that constantly develops new software.)
+> **Викладач:** Олено, розкажи нам, будь ласка, про свої плани на ці вихідні.
+> **Олена:** Я поїду в красиві гори, які я дуже люблю.
+> **Викладач:** Це дуже чудово! А чому ти туди їдеш?
+> **Олена:** Я туди їду, **щоб відпочити** (in order to rest) від великого міста, хоча там на вихідних буде йти сніг.
+> **Викладач:** Зрозуміло. А що ви будете там робити?
+> **Олена:** Якщо вдень буде яскраве сонце, ми підемо гуляти в ліс, бо ми дуже любимо **дику природу** (wild nature).
 
-У робочому контексті ми часто говоримо про умови та складні реальні факти. Для цього ідеально підходять сполучники **якщо** та **хоча**.
-**Якщо я успішно закінчу цей великий проект сьогодні, я отримаю хороший фінансовий бонус.** (If I successfully finish this big project today, I will receive a good financial bonus.)
-**Якщо ми підпишемо цей важливий контракт завтра зранку, ми одразу почнемо роботу.** (If we sign this important contract tomorrow morning, we will immediately start the work.)
-А ось практичні приклади з допустом, коли ми маємо справу з певними перешкодами або труднощами:
-**Хоча в мене ще досить мало професійного досвіду, я дуже швидко вчуся.** (Although I still have quite a little professional experience, I learn very quickly.)
-**Хоча наш рекламний бюджет зараз невеликий, ми гарантовано зробимо дійсно якісний продукт.** (Although our advertising budget is small now, we will guaranteed make a truly quality product.)
+Олена справжня молодець! Вона легко і природно використала п'ять різних типів складних речень у короткій розмові зі своїм викладачем. Вона описала конкретне місце («які я дуже люблю»). Вона пояснила свою мету («щоб відпочити»). Вона показала допуст, тобто перешкоду («хоча там буде йти сніг»). Вона поставила логічну умову («якщо вдень буде яскраве сонце»). І нарешті, вона чітко пояснила справжню причину («бо ми дуже любимо дику природу»). Таке використання різних сполучників робить її мову дуже багатою, плавною та красивою.
 
-Коли ми плануємо подорожі, зустрічі або організовуємо події, ми будуємо наратив, який органічно поєднує мету та причину.
-**Ми їдемо до Львова на вихідні, щоб побачити красиву архітектуру, бо це дуже гарне історичне місто.** (We are going to Lviv for the weekend in order to see the beautiful architecture, because it is a very nice historical city.)
-**Я купив квитки в театр заздалегідь, щоб ми сиділи поруч, тому що там завжди дуже багато людей.** (I bought tickets to the theater in advance so that we sit next to each other, because there are always a lot of people there.)
-Використання кількох підрядних частин в одному великому реченні — це чітка ознака міцного рівня A2+.
+Коли ми завжди говоримо тільки короткими і простими реченнями, наша мова звучить дуже штучно, ніби ми роботи. Складне речення допомагає красиво об'єднати різні ідеї та показати логічний зв'язок між ними. Давайте візьмемо дві прості ідеї: «Я маю нову роботу» та «Я зараз вчуся в університеті». Ці дві ідеї можна поєднати зовсім по-різному, і загальний зміст розповіді буде кардинально змінюватися.
+Варіант перший: *Я маю нову роботу, хоча я зараз вчуся в університеті.* (Цей варіант означає, що вчитися і працювати одночасно дуже важко, це велика перешкода, але ви все одно це робите).
+Варіант другий: *Я маю нову роботу, тому що я зараз вчуся в університеті.* (Це може означати, що ви працюєте безпосередньо в самому університеті, або ваша робота прямо пов'язана з вашим навчанням).
+Всього один маленький сполучник може повністю змінити вашу історію та її значення для слухача!
 
-Прочитайте цей короткий текст. Зверніть увагу, як автор майстерно використовує всі п'ять типів сполучників, щоб створити зв'язну історію про свій звичайний день.
-
-**Мій ідеальний день**
-Мій день зазвичай починається з гарячої чорної кави, **яку** я дуже люблю пити зранку. Я п'ю її, **щоб** швидко прокинутися і мати багато необхідної енергії. **Хоча** я типова сова і люблю спати допізна, я встаю рано кожного ранку. **Якщо** я маю вільний час перед початком роботи, я довго гуляю в нашому тихому парку. Я щодня гуляю, **тому що** це дуже корисно для мого фізичного здоров'я. Мій директор на роботі завжди каже, **що** я маю чудовий настрій і заряджаю інших колег.
-
-У цьому абзаці ми бачимо конкретні цілі, об'єктивні причини, життєві умови, детальні описи та навіть непряму мову. Текст звучить максимально природно та плавно.
-
-Що чекає на вас далі в українській граматиці? На рівні B1 синтаксис стане ще багатшим і гнучкішим. Ви обов'язково вивчите нереальну умову за допомогою слова **якби** (if/would), яке дозволяє вільно говорити про гіпотетичне минуле або абсолютно неможливі речі. Також ви детально познайомитеся з новими офіційними сполучниками, такими як **оскільки** (since / because), та навчитеся самостійно будувати **складнопідрядні речення з кількома підрядними** (complex sentences with multiple subordinate clauses).
-
-Але наразі запам'ятайте найголовніше: якщо ви впевнено використовуєте ці п'ять логічних зв'язків — **тому що / бо**, **щоб**, **який**, **якщо** та **хоча**, ви вже можете успішно вирішити 90% ваших повсякденних комунікативних завдань. Ви здатні детально пояснити свої дії, описати складний світ навколо вас, поставити чіткі умови та правильно передати чужу інформацію.
-
-<!-- INJECT_ACTIVITY: sort-conjunction-types -->
+Давайте тепер подивимося, як можна органічно поєднати кілька різних складних речень у невеликий, але зв'язний текст. Уявіть ситуацію, що ви розповідаєте на співбесіді про свою кар'єру та освіту.
+*Я активно вивчаю програмування, бо хочу працювати в успішній ІТ-компанії. Це дуже складна професія, яку треба вивчати багато років. Я кожного дня читаю нові технічні статті, щоб знати останні світові новини. Хоча іноді я дуже сильно втомлююся, я все одно продовжую вчитися. Я повністю впевнений, що знайду гарну роботу, якщо буду багато практикуватися.*
+Читаємо українською: зверніть особливу увагу на те, як дуже плавно і красиво ці ідеї переходять одна в одну. Важливі слова «бо», «яку», «щоб», «хоча», «що» та «якщо» створюють єдиний, логічний і зрозумілий текст. Завдяки таким конструкціям ваша мова звучить дуже впевнено та максимально професійно для інших людей.
 
 ## Підсумок
 
-Прочитайте ці запитання для вашої самоперевірки. Якщо ви можете впевнено відповісти «так» на кожне з них, ви успішно засвоїли тему складних речень на важливому рівні A2:
+:::tip
+**Checkpoint Self-Assessment**
+You are finishing a major grammar block of the A2 level. It is time to test your knowledge! Read the questions below and try to answer them honestly. Can you comfortably build these sentence types in your daily conversations?
+:::
 
-* Чи можу я пояснити причину своєї дії, використовуючи поширені сполучники **тому що** або **бо**?
-* Чи можу я детально описати предмет чи людину за допомогою слова **який**, правильно змінюючи його закінчення (який, яка, яке, які)?
-* Чи можу я висловити точну мету моїх дій, використовуючи **щоб** та інфінітив дієслова?
-* Чи можу я поставити конкретну умову для майбутньої події за допомогою слова **якщо**?
-* Чи можу я додати зауваження або показати несподіваний результат ситуації за допомогою **хоча**?
-* Чи можу я передати слова іншої людини, використовуючи непряму мову і сполучник **що**?
-* Чи пам'ятаю я про те, що перед підрядним сполучником обов'язково має стояти **кома**?
+Час перевірити себе! Уважно прочитайте ці запитання та спробуйте дати відповіді на них:
+* Чи можу я правильно пояснити причину своєї дії? (Наприклад: *Я сьогодні запізнився на роботу, бо на дорозі були великі затори.*)
+* Чи можу я чітко назвати свою мету? (Наприклад: *Я щодня багато працюю, щоб мати гроші на подорожі.*)
+* Чи можу я описати певний предмет або знайому людину? (Наприклад: *Це старий фільм, який мені дуже подобається з дитинства.*)
+* Чи можу я поставити реальну умову? (Наприклад: *Якщо завтра буде вільний час, я обов'язково прийду в гості.*)
+* Чи можу я правильно передати слова іншої людини? (Наприклад: *Мій колега сказав, що сьогодні все буде добре.*)
 
-Якщо у вас виникають будь-які сумніви, просто поверніться до відповідної частини цього модуля та ще раз уважно перегляньте приклади. Правильне використання складних речень робить вашу українську мову дуже багатою, по-справжньому дорослою та логічною.
-```
+Якщо ви з упевненістю відповіли «так» на всі ці запитання, ви чудово засвоїли цей складний матеріал! Ви готові рухатися далі!
 
+Попереду на вас чекає рівень В1, де український синтаксис стане ще більш цікавим і глибоким! Там ми детально вивчимо нереальну умову зі словом «якби» (If I had known...). Ми навчимося будувати довгі складнопідрядні речення, які мають одразу кілька підрядних частин. Ми також познайомимося з новими, значно складнішими сполучниками. Але та міцна база, яку ви успішно заклали саме зараз, є найважливішою у вашому навчанні. Глибоке розуміння того, як працюють підрядні речення, причини, мети та умови, дозволить вам вільно і красиво говорити українською мовою на будь-які життєві теми. Продовжуйте багато практикуватися, і ваші тексти ставатимуть усе досконалішими щодня!
 </module_content>
 
 ---
@@ -234,48 +244,68 @@ version: "1.0"
 module: checkpoint-syntax
 level: a2
 
+# NOTE — these are SHAPE examples. The real targets are at the top of this prompt
+# (10 total / 3–5 inline / 7–10 workbook,
+# 10+ items per activity). The shapes below are TRUNCATED for readability;
+# YOUR output MUST hit those minimums.
+
 inline:
   - id: marker-id-here        # MUST match an <!-- INJECT_ACTIVITY: ... --> marker
     type: quiz                 # activity type
     instruction: "Оберіть правильний варіант"
-    items:
+    items:                     # ← real output: ≥ 10 items
       - question: "_____ стіл"
-        options: ["мій", "моя", "моє"]
+        options: ["мій", "моя", "моє", "мої"]
         correct: 0             # 0-based index
+      - question: "Це ____ книга."
+        options: ["мій", "моя", "моє", "мої"]
+        correct: 1
+      # ... add at least 10 items total — never stop at 1-2
 
   - id: another-marker-id
     type: fill-in
     instruction: "Вставте правильне слово"
-    items:
+    items:                     # ← real output: ≥ 10 items
       - sentence: "Це ____ кімната."
         answer: "моя"
         options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ вікно."
+        answer: "моє"
+        options: ["мій", "моя", "моє"]
+      # ... ≥ 10 items total
 
 workbook:
-  - type: match-up
+  - id: match-up-vocab
+    type: match-up
     instruction: "З'єднайте пари"
-    pairs:
+    pairs:                     # ← real output: ≥ 10 pairs
       - left: "стіл"
         right: "він"
       - left: "книга"
         right: "вона"
       - left: "вікно"
         right: "воно"
+      # ... ≥ 10 pairs total
 
-  - type: group-sort
+  - id: group-sort-gender
+    type: group-sort
     instruction: "Розподіліть слова за категоріями"
     groups:
-      - label: "Category A"
-        items: ["word1", "word2"]
-      - label: "Category B"
-        items: ["word3", "word4"]
+      - label: "Чоловічий рід"
+        items: ["стіл", "олівець", "будинок"]   # ≥ 3 items per group
+      - label: "Жіночий рід"
+        items: ["книга", "ручка", "школа"]
+      - label: "Середній рід"
+        items: ["вікно", "море", "молоко"]
 
-  - type: true-false
+  - id: true-false-grammar
+    type: true-false
     instruction: "Правда чи ні?"
-    items:
-      - statement: "Statement here"
-        correct: true
-        explanation: "Why it's true"
+    items:                     # ← real output: ≥ 10 items
+      - statement: "«Книга» — це чоловічий рід."
+        correct: false
+        explanation: "Книга закінчується на -а, отже жіночий рід."
+      # ... ≥ 10 items total
 
   - type: error-correction
     instruction: "Виправте помилку"
@@ -346,7 +376,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -426,10 +456,15 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 ## Quality Rules
 
-**ITEM COUNT MINIMUMS (non-negotiable):**
-- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
-- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
-- If you can't think of enough items, add more examples from the module's vocabulary and content.
+**ACTIVITY COUNT MINIMUMS (non-negotiable, audit-enforced):**
+- **Total: 10 activities.** Inline: 3–5. Workbook: 7–10. The audit gate FAILS the module if you ship fewer.
+- **Type diversity: workbook MUST cover ≥5 distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
+- **Match the inline markers exactly.** Every `<!-- INJECT_ACTIVITY: id -->` marker in the prose needs a matching inline activity with that exact id. Skipping markers means the lesson tab is broken.
+
+**ITEM COUNT MINIMUMS (non-negotiable, per-activity):**
+- **Default minimum: 10 items per activity.** Quiz, fill-in, match-up, true-false, anagram, error-correction, translate, cloze, mark-the-words, divide-words, count-syllables, odd-one-out, group-sort categories: all ≥ 10.
+- **Lower minimums for specific types only:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items, essay-response/critical-analysis = 1 prompt.
+- If you can't think of enough items, add more examples from the module's vocabulary and content. NEVER ship a 1-item or 2-item activity unless its type cap explicitly allows it.
 - **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
 - **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
@@ -536,6 +571,27 @@ IMPORTANT: After using tools, output your COMPLETE module content as plain text.
 1. Run `verify_words` on all Ukrainian words in your exercises — every word must exist in VESUM
 2. Run `query_cefr_level` on any word you're unsure about — it must be a2-appropriate
 3. For fill-in answers and distractors, verify the exact form (case, number, gender) with `verify_lemma`
+
+---
+
+## ⚠️ MANDATORY FINAL CHECKLIST — verify before emitting YAML
+
+Walk through this checklist explicitly before you start emitting. If ANY box is unchecked, fix it FIRST.
+
+- [ ] My output has **at least 3** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
+- [ ] My output has **at least 7** workbook activities.
+- [ ] **Total ≥ 10.**
+- [ ] **Every** activity has **at least 10** items, pairs, or statements (except types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3, essay-response=1).
+- [ ] The module (inline + workbook combined) uses **at least 0 distinct activity types** (or 4+ when 0 = 0 and the workbook size allows it). I am NOT shipping a wall of quizzes.
+- [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
+- [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
+- [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+- [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+- [ ] My inline count is between 3 and 5. I did NOT create more injection markers than 5.
+- [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
+- [ ] At B1+, all instructions are in Ukrainian (no English fallback).
+
+If you cannot tick all of these, REGENERATE the activities BEFORE outputting. Shipping under-spec means the build rejects you and the heal loop has to redo your work — wasting compute.
 
 ---
 

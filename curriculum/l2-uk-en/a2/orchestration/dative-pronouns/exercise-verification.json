@@ -1,189 +1,318 @@
 {
-  "total_items": 160,
-  "grounded_items": 131,
+  "total_items": 177,
+  "grounded_items": 126,
   "ungrounded": [
     {
-      "word": "де",
+      "word": "хто",
+      "exercise_type": "match-up",
+      "context": "хто",
+      "role": "answer"
+    },
+    {
+      "word": "пишуть",
       "exercise_type": "fill-in",
-      "context": "Де моя сестра? Я хочу дати ______ цю книгу.",
+      "context": "Вони пишуть ____ довгого листа.",
       "role": "context"
     },
     {
-      "word": "моя",
-      "exercise_type": "fill-in",
-      "context": "Де моя сестра? Я хочу дати ______ цю книгу.",
-      "role": "context"
-    },
-    {
-      "word": "сестра",
-      "exercise_type": "fill-in",
-      "context": "Де моя сестра? Я хочу дати ______ цю книгу.",
-      "role": "context"
-    },
-    {
-      "word": "дати",
-      "exercise_type": "fill-in",
-      "context": "Де моя сестра? Я хочу дати ______ цю книгу.",
-      "role": "context"
-    },
-    {
-      "word": "ваші",
-      "exercise_type": "fill-in",
-      "context": "Ми ваші найкращі друзі! Розкажіть ______ цей секрет.",
-      "role": "context"
-    },
-    {
-      "word": "найкращі",
-      "exercise_type": "fill-in",
-      "context": "Ми ваші найкращі друзі! Розкажіть ______ цей секрет.",
-      "role": "context"
-    },
-    {
-      "word": "друзі",
-      "exercise_type": "fill-in",
-      "context": "Ми ваші найкращі друзі! Розкажіть ______ цей секрет.",
-      "role": "context"
-    },
-    {
-      "word": "розкажіть",
-      "exercise_type": "fill-in",
-      "context": "Ми ваші найкращі друзі! Розкажіть ______ цей секрет.",
-      "role": "context"
-    },
-    {
-      "word": "коротке",
-      "exercise_type": "fill-in",
-      "context": "Я не знаю, де вони зараз. Напиши ______ коротке повідомлення",
-      "role": "context"
-    },
-    {
-      "word": "добра",
-      "exercise_type": "fill-in",
-      "context": "Ти дуже добра людина. Я щиро дякую ______ за допомогу.",
-      "role": "context"
-    },
-    {
-      "word": "людина",
-      "exercise_type": "fill-in",
-      "context": "Ти дуже добра людина. Я щиро дякую ______ за допомогу.",
-      "role": "context"
-    },
-    {
-      "word": "улюблений",
-      "exercise_type": "fill-in",
-      "context": "Це мій улюблений торт! Дай ______ цей великий шматок, будь л",
-      "role": "context"
-    },
-    {
-      "word": "шматок",
-      "exercise_type": "fill-in",
-      "context": "Це мій улюблений торт! Дай ______ цей великий шматок, будь л",
-      "role": "context"
-    },
-    {
-      "word": "своїх",
+      "word": "друзів",
       "exercise_type": "true-false",
-      "context": "Вона сумно без своїх друзів.",
+      "context": "Ти приємно бачити друзів.",
       "role": "context"
     },
     {
-      "word": "важкої",
-      "exercise_type": "true-false",
-      "context": "Йому варто добре відпочити після важкої роботи.",
-      "role": "context"
-    },
-    {
-      "word": "один",
-      "exercise_type": "true-false",
-      "context": "Ти можна взяти ще один теплий десерт.",
-      "role": "context"
-    },
-    {
-      "word": "слухає",
-      "exercise_type": "quiz",
-      "context": "Директор уважно слухає ______ на зустрічі.",
-      "role": "context"
-    },
-    {
-      "word": "зустрічі",
-      "exercise_type": "quiz",
-      "context": "Директор уважно слухає ______ на зустрічі.",
-      "role": "context"
-    },
-    {
-      "word": "граматичне",
-      "exercise_type": "quiz",
-      "context": "Вчитель добре пояснює ______ нове граматичне правило.",
-      "role": "context"
-    },
-    {
-      "word": "однина",
-      "exercise_type": "group-sort",
-      "context": "Однина (Singular)",
-      "role": "context"
-    },
-    {
-      "word": "множина",
-      "exercise_type": "group-sort",
-      "context": "Множина (Plural)",
-      "role": "context"
-    },
-    {
-      "word": "хочеш",
+      "word": "зима",
       "exercise_type": "fill-in",
-      "context": "Ти хочеш їсти? ______ можна взяти цей солодкий шоколад.",
+      "context": "На вулиці зима, мені дуже ____.",
       "role": "context"
     },
     {
-      "word": "удома",
+      "word": "машини",
       "exercise_type": "fill-in",
-      "context": "Він зараз один удома. ______ сумно без друзів.",
+      "context": "У мене немає машини, мені ____ купити квитки на потяг.",
       "role": "context"
     },
     {
-      "word": "люблять",
+      "word": "гарна",
       "exercise_type": "fill-in",
-      "context": "Вони не люблять кіно. ______ не цікаво дивитися цей фільм.",
+      "context": "Це дуже гарна вистава, їй ____ дивитися.",
       "role": "context"
     },
     {
-      "word": "кіно",
+      "word": "вистава",
       "exercise_type": "fill-in",
-      "context": "Вони не люблять кіно. ______ не цікаво дивитися цей фільм.",
+      "context": "Це дуже гарна вистава, їй ____ дивитися.",
       "role": "context"
     },
     {
-      "word": "проєктом",
+      "word": "дивитися",
+      "exercise_type": "fill-in",
+      "context": "Це дуже гарна вистава, їй ____ дивитися.",
+      "role": "context"
+    },
+    {
+      "word": "йдемо",
+      "exercise_type": "fill-in",
+      "context": "Йде дощ, і ми не йдемо в парк. Йому ____.",
+      "role": "context"
+    },
+    {
+      "word": "парк",
+      "exercise_type": "unjumble",
+      "context": "парк.",
+      "role": "answer"
+    },
+    {
+      "word": "робота",
+      "exercise_type": "fill-in",
+      "context": "Ця робота дуже складна, їм ____ працювати.",
+      "role": "context"
+    },
+    {
+      "word": "складна",
+      "exercise_type": "fill-in",
+      "context": "Ця робота дуже складна, їм ____ працювати.",
+      "role": "context"
+    },
+    {
+      "word": "дякую",
+      "exercise_type": "fill-in",
+      "context": "Дякую за подарунок! Мені дуже ____.",
+      "role": "context"
+    },
+    {
+      "word": "води",
+      "exercise_type": "fill-in",
+      "context": "Вдома немає води, тобі ____ піти в магазин.",
+      "role": "context"
+    },
+    {
+      "word": "магазин",
+      "exercise_type": "fill-in",
+      "context": "Вдома немає води, тобі ____ піти в магазин.",
+      "role": "context"
+    },
+    {
+      "word": "грають",
+      "exercise_type": "fill-in",
+      "context": "Вони грають у нову гру, їм дуже ____.",
+      "role": "context"
+    },
+    {
+      "word": "гру",
+      "exercise_type": "fill-in",
+      "context": "Вони грають у нову гру, їм дуже ____.",
+      "role": "context"
+    },
+    {
+      "word": "дарує",
       "exercise_type": "error-correction",
-      "context": "Я щиро дякую тебе за допомогу з проєктом.",
+      "context": "Що він дарує тебе на свято?",
+      "role": "context"
+    },
+    {
+      "word": "їх",
+      "exercise_type": "group-sort",
+      "context": "їх",
+      "role": "answer"
+    },
+    {
+      "word": "пишу",
+      "exercise_type": "error-correction",
+      "context": "Я пишу її довгого листа.",
+      "role": "context"
+    },
+    {
+      "word": "розповідають",
+      "exercise_type": "error-correction",
+      "context": "Вони розповідають вас про цю подію.",
+      "role": "context"
+    },
+    {
+      "word": "допомагає",
+      "exercise_type": "error-correction",
+      "context": "Брат допомагає мене робити завдання.",
+      "role": "context"
+    },
+    {
+      "word": "робити",
+      "exercise_type": "error-correction",
+      "context": "Брат допомагає мене робити завдання.",
+      "role": "context"
+    },
+    {
+      "word": "йти",
+      "exercise_type": "unjumble",
+      "context": "йти",
+      "role": "answer"
+    },
+    {
+      "word": "допомагаю",
+      "exercise_type": "quiz",
+      "context": "Я допомагаю ____ з домашнім завданням.",
+      "role": "context"
+    },
+    {
+      "word": "домашнім",
+      "exercise_type": "quiz",
+      "context": "Я допомагаю ____ з домашнім завданням.",
+      "role": "context"
+    },
+    {
+      "word": "завданням",
+      "exercise_type": "quiz",
+      "context": "Я допомагаю ____ з домашнім завданням.",
+      "role": "context"
+    },
+    {
+      "word": "відповідаєш",
+      "exercise_type": "quiz",
+      "context": "Ти відповідаєш ____ на лист.",
+      "role": "context"
+    },
+    {
+      "word": "лист",
+      "exercise_type": "quiz",
+      "context": "Ти відповідаєш ____ на лист.",
+      "role": "context"
+    },
+    {
+      "word": "радить",
+      "exercise_type": "quiz",
+      "context": "Брат радить ____ подивитися цей фільм.",
       "role": "context"
     },
     {
       "word": "подивитися",
-      "exercise_type": "error-correction",
-      "context": "Ми варто подивитися цей новий цікавий фільм.",
+      "exercise_type": "quiz",
+      "context": "Брат радить ____ подивитися цей фільм.",
       "role": "context"
     },
     {
-      "word": "цікавий",
-      "exercise_type": "error-correction",
-      "context": "Ми варто подивитися цей новий цікавий фільм.",
+      "word": "цей",
+      "exercise_type": "quiz",
+      "context": "Брат радить ____ подивитися цей фільм.",
       "role": "context"
     },
     {
-      "word": "слухати",
+      "word": "фільм",
+      "exercise_type": "quiz",
+      "context": "Брат радить ____ подивитися цей фільм.",
+      "role": "context"
+    },
+    {
+      "word": "розповідаємо",
+      "exercise_type": "quiz",
+      "context": "Ми розповідаємо ____ нові історії.",
+      "role": "context"
+    },
+    {
+      "word": "нові",
+      "exercise_type": "quiz",
+      "context": "Ми розповідаємо ____ нові історії.",
+      "role": "context"
+    },
+    {
+      "word": "історії",
+      "exercise_type": "quiz",
+      "context": "Ми розповідаємо ____ нові історії.",
+      "role": "context"
+    },
+    {
+      "word": "пояснює",
+      "exercise_type": "quiz",
+      "context": "Вчитель пояснює ____ нове правило.",
+      "role": "context"
+    },
+    {
+      "word": "вивчаємо",
+      "exercise_type": "match-up",
+      "context": "Ми вивчаємо традиції та культуру.",
+      "role": "answer"
+    },
+    {
+      "word": "сидить",
+      "exercise_type": "match-up",
+      "context": "Він сидить вдома сам.",
+      "role": "answer"
+    },
+    {
+      "word": "сам",
+      "exercise_type": "match-up",
+      "context": "Він сидить вдома сам.",
+      "role": "answer"
+    },
+    {
+      "word": "грає",
+      "exercise_type": "match-up",
+      "context": "Вона грає з маленьким собакою.",
+      "role": "answer"
+    },
+    {
+      "word": "стоїш",
+      "exercise_type": "match-up",
+      "context": "Ти стоїш на вулиці взимку.",
+      "role": "answer"
+    },
+    {
+      "word": "взимку",
+      "exercise_type": "match-up",
+      "context": "Ти стоїш на вулиці взимку.",
+      "role": "answer"
+    },
+    {
+      "word": "працюють",
+      "exercise_type": "match-up",
+      "context": "Вони працюють без нового комп'ютера.",
+      "role": "answer"
+    },
+    {
+      "word": "хочете",
+      "exercise_type": "match-up",
+      "context": "Ви хочете їхати на ранковому потязі.",
+      "role": "answer"
+    },
+    {
+      "word": "їхати",
+      "exercise_type": "match-up",
+      "context": "Ви хочете їхати на ранковому потязі.",
+      "role": "answer"
+    },
+    {
+      "word": "ранковому",
+      "exercise_type": "match-up",
+      "context": "Ви хочете їхати на ранковому потязі.",
+      "role": "answer"
+    },
+    {
+      "word": "потязі",
+      "exercise_type": "match-up",
+      "context": "Ви хочете їхати на ранковому потязі.",
+      "role": "answer"
+    },
+    {
+      "word": "сильний",
       "exercise_type": "error-correction",
-      "context": "Він дуже цікаво слухати цю стару історію.",
+      "context": "Він сумно, бо йде сильний дощ.",
+      "role": "context"
+    },
+    {
+      "word": "всіх",
+      "exercise_type": "error-correction",
+      "context": "Ви приємно бачити всіх нас тут.",
+      "role": "context"
+    },
+    {
+      "word": "разом",
+      "exercise_type": "error-correction",
+      "context": "Вони весело грати разом у парку.",
       "role": "context"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 15,
-    "tested_in_exercises": 13,
-    "not_tested": [
-      "відмінок",
-      "давальний"
-    ]
+    "tested_in_exercises": 15,
+    "not_tested": []
   },
   "all_grounded": false
 }

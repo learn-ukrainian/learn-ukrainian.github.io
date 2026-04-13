@@ -1,0 +1,52 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: Missed a few specific examples from the plan (e.g., `сплести — сплітати`,
+    `заберу — забирати`). However, correctly rejected the plan's requested vocabulary
+    item "біглий голосний" (a Russicism not in V
+- dimension: 2
+  name: Linguistic accuracy
+  score: 6
+  evidence: Critical factual errors regarding phonetics. Claims stress shifts to the
+    ending in "солі" ("переносимо наголос, ми отримуємо форму солі"). Claims the Ukrainian
+    `[и]` is a softening vowel ("голосний зв
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: Good use of PPP flow. The explanations are generally clear, but the phonetic
+    errors undermine the grammatical explanations of stress shift and palatalization.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: Required vocabulary integrated well. The omission of "біглий голосний"
+    was linguistically justified. Missing a couple of recommended words (`правопис`,
+    `спільнокореневий`).
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: Markers do not accurately reflect the specific focus requested in the
+    plan's `activity_hints` (e.g., `fill-in-fleeting-vowels` instead of open/closed
+    syllable focus).
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Excellent teacher persona. Engaging analogies ("справжня магія", "фонетичний
+    костюм", "випадні голосні... тікають").
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All H2 sections present. Word count is 4813 (comfortably exceeds the 4000
+    target).
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Correctly contrasts Ukrainian phonetics with Russian, highlighting the
+    uniqueness of Ukrainian vowel alternations as a defining feature of the language.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The opening teacher/student dialogue is natural, sets up the lesson effectively,
+    and perfectly mirrors the planned setting.
+findings: []

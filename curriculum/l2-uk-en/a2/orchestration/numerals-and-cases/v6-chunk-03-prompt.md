@@ -3,22 +3,21 @@
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 55: Числа у відмінках (A2, A2.8 [Refinement and Graduation])
-**Section to write:** Скільки чого? Числівник + іменник (How Many? Numeral + Noun Agreement) (~650 words total)
+**Section to write:** Скільки чого? Числівник + іменник (How Many? Numeral + Noun Agreement) (~650 words)
 **Word target for this section:** 650 words (aim for 715 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Скільки чого? Числівник + іменник (How Many? Numeral + Noun Agreement) (~650 words total)
-- P1 (~110 words): [Overview of the Ukrainian agreement cycle. Define the three tiers: 1 (Nom.Sg.), 2-4 (Nom.Pl.), and 5-20 (Gen.Pl.). Explicitly state the decolonization rule: after 2, 3, and 4, we use Nominative Plural (два столи, три крісла), NOT Genitive Singular as in Russian.]
-- P2 (~100 words): [Deep dive into the 2, 3, 4 rule. Explain that masculine/neuter use 'два' ('два брати', 'два вікна'), while feminine uses 'дві' ('дві сестри', 'дві стіни'). Note that 'три' and 'чотири' are gender-neutral.]
-- P3 (~110 words): [Deep dive into the 5-20 rule. Explain that these numerals trigger the Genitive Plural for nouns. Examples: 'п'ять студентів', 'десять гривень', 'вісім годин'. List common irregular plurals used with numbers: 'людей' (from людина), 'дітей' (from дитина).]
-- P4 (~110 words): [Compound numbers and the 'Rule of the Last Digit'. Explain that in numbers like 21, 32, or 45, only the final digit determines the case of the noun. Examples: 'двадцять один студент' (1 tier), 'тридцять три студенти' (2-4 tier), 'сорок сім студентів' (5-0 tier).]
-- P5 (~110 words): [Quantity expressions: 'багато' (many), 'мало' (few), 'кілька/декілька' (several), 'скільки' (how many). Explain that all these words function like the 5-20 group, requiring the Genitive Plural. Example: 'багато запитань' (many questions), 'кілька днів' (several days).]
-- P6 (~110 words): [Exceptions and special cases. Mention that 'пів' (half) and 'півтора' (one and a half) do not decline. Use 'півтора' with Genitive Singular: 'півтора кілограма', 'півтори години' (feminine version).]
-- <!-- INJECT_ACTIVITY: group-sort-agreement --> [group-sort, focus: Sort numerals by which noun case they require (Nom.Sg., Nom.Pl., Gen.Pl.), 8 items]
-- <!-- INJECT_ACTIVITY: quiz-noun-selection --> [quiz, focus: Choose the correct noun form after a numeral (Nom.Pl. vs Gen.Pl.), 8 items]
+## Скільки чого? Числівник + іменник (How Many? Numeral + Noun Agreement) (~650 words)
+- P1 (~100 words): Introduce the fundamental Ukrainian counting rules. Emphasize that counting in Ukrainian relies on a 3-step grammatical cycle, quite different from English. Start with the rule for 1: it takes the Nominative Singular (один студент, одна книга).
+- P2 (~150 words): Explain the 2-4 rule: numerals 2, 3, and 4 require the Nominative Plural of the noun (два студенти, три книги). Highlight the gender distinction for 2 (два брати vs дві сестри) and "both" (обидва vs обидві). Explicitly warn against the common Russian-interference error of using Genitive Singular (e.g., incorrect: "чотири брата", correct: "чотири брати").
+- P3 (~150 words): Explain the 5-20 rule: numerals 5 through 20 require the Genitive Plural of the noun (п'ять студентів, десять книг). Note that this rule covers all numbers ending in 5-9, 0, and the -teen numbers.
+- P4 (~120 words): Explain the rules for compound numbers beyond 20. Clarify that the cycle restarts based on the last digit: 21 студент (1-rule), 22 студенти (2-4 rule), 25 студентів (5-0 rule). Note the exception for 11-14, which always take Genitive Plural.
+- P5 (~130 words): Explain quantity expressions (кілька, декілька, багато, мало, скільки). Clarify that these words function like numbers 5+ and always require the Genitive Plural of the noun (багато людей, скільки кілограмів).
+- <!-- INJECT_ACTIVITY: quiz-noun-agreement --> [quiz, Choose the correct noun form after a numeral (Nom.Pl. vs Gen.Pl.), 8 items]
+- <!-- INJECT_ACTIVITY: sort-numeral-cases --> [group-sort, Sort numerals by which noun case they require (Nom.Sg., Nom.Pl., Gen.Pl.), 8 items]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -26,7 +25,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-(May 3rd). Запам'ятайте закінчення **-ого** для всіх дат у чоловічому та середньому роді. Воно допоможе вам правильно планувати зустрічі. <!-- INJECT_ACTIVITY: fill-in-ordinals --> ## Один/одна/одне у відмінках (One in All Cases) Числівник **один** (one) — це дуже особливе і важливе слово. Він зовсім не працює так, як інші числа. Він дуже схожий на звичайний твердий прикметник. Тому він змінюється для всіх трьох родів (genders). Він також має різні форми для всіх семи відмінків (cases). В українській мові ми завжди узгоджуємо це слово з іменником (noun). Наприклад, для чоловічого роду ми кажемо **один великий будинок** (one big house). Для жіночого роду ми використовуємо форму **одна нова машина** (one new car). А для середнього роду нам потрібне слово **одне зелене дерево** (one green tree). Іноді ми навіть маємо форму множини (plural) — **одні люди** (some people). Це дуже логічна граматична система. Якщо ви вже знаєте прикметники, вам буде дуже легко. Давайте спочатку подивимося на чоловічий та середній рід (masculine and neuter). Вони мають однакові форми майже у всіх непрямих відмінках. Вам треба запам'ятати кілька ключових слів. У Родовому відмінку (Genitive) це завжди буде **одного** (of one). У Давальному (Dative) ми кажемо **одному** (to one). Орудний відмінок (Instrumental) має форму **одним** (with one). Місцевий відмінок (Locative) — це **на одному** (on one) або коротко **на однім**. Знахідний відмінок (Accusative) для чоловічого роду залежить від істоти (animacy). Якщо предмет неживий (inanimate), форма не змінюється. Ми просто кажемо **бачу один стіл** (I see one table). Якщо це жива істота (animate), ми беремо форму Родового відмінка. Тоді ми кажемо **бачу одного хлопця** (I see one boy). Для середнього роду це завжди просто **одне**. Тепер перейдемо до жіночого роду (feminine). Початкова форма тут — це **одна**. Вона також повністю змінює свої закінчення у реченні. Родовий відмінок має відразу дві правильні форми: **однієї** або коротше **одної** (of one). Давальний відмінок — це форма **одній** (to one). Знахідний відмінок дуже простий і логічний, ми використовуємо слово **одну** (one, acc.). Орудний відмінок також має два популярні варіанти: **однією** або **одною** (with one). Місцевий відмінок збігається з Давальним, тому ми кажемо **на одній** (on one). Ці форми постійно звучать у реальних розмовах. Наприклад, ми дуже часто використовуємо фразу **з однієї сторони** (from one side). Або ви можете сказати: «я зараз живу в одній кімнаті» (I am living in one room now). Цікаво, що українське слово «один» не завжди означає просто математичне число. Це унікальне слово має багато інших корисних значень (meanings). Дуже часто воно означає «сам» (alone). Наприклад: «Сьогодні **я тут один**» (Today I am here alone), або «вона залишилася одна» (she stayed alone). Інколи ми використовуємо його, щоб сказати «якийсь» (a certain / some). Ви можете почути таку цікаву фразу: «**Один чоловік сказав** мені правду» (A certain man told me the truth). Також це слово часто може означати «той самий» (the same). Наприклад, ми кажемо: «**Ми з одного міста**» (We are from the same city). Або «вони щодня працюють в одному офісі» (They work in the same office every day). Ви будете чути ці фрази постійно. <!-- INJECT_ACTIVITY: match-up-numeral-meanings -->
+have a singular form. For example, we say "one door" or "one pair of glasses". This word always strictly agrees with the noun that stands next to it. It copies its gender, number, and case.* Now let's examine how this numeral changes its form across the different cases. А тепер детально подивіться на відмінювання цього числівника. Форми чоловічого та середнього роду майже однакові. У Родовому відмінку ми маємо форму «одного». Давальний відмінок завжди використовує форму «одному». Орудний відмінок має закінчення «одним». Місцевий відмінок також використовує форму «на одному» або «на однім». Наприклад, ви можете сказати: «У нас немає одного гравця». Жіночий рід має зовсім інші закінчення. У Родовому відмінку ми говоримо «однієї» або коротку форму «одної». Давальний і Місцевий відмінки завжди мають форму «одній». Орудний відмінок звучить як «однією» або «одною». Наприклад, ми кажемо: «Я часто гуляю з однією подругою». :::info **Grammar box: Declension of One** The numeral *один* declines identically to a hard-stem adjective. Masculine and neuter forms share identical endings in all indirect cases (*одного*, *одному*, *одним*). Feminine forms follow their own specific pattern (*однієї*, *одній*, *однією*). Remember that the Accusative case for masculine nouns depends on whether the noun is animate or inanimate. You will say *я бачу один стіл* (inanimate) but *я бачу одного брата* (animate). ::: The word *один* has several extended meanings in daily life beyond just counting objects. Слово «один» має кілька інших важливих значень. Дуже часто воно означає якогось невідомого чоловіка чи предмет. Наприклад: «Один чоловік розповів мені цю цікаву історію». Тут ми не рахуємо людей, а говоримо про когось конкретного, але невідомого для нас. Інше популярне значення цього слова — це самотність або відсутність компанії. Коли чоловік каже «я сьогодні один», це означає «я без друзів». Жінка скаже про себе: «Я сьогодні одна». Також це слово може означати однаковість. Якщо люди працюють у спільній компанії, вони кажуть: «Ми з одного офісу». > *The word "one" has several other important meanings. Very often it means a certain unknown man or object. For example: "A certain man told me this interesting story". Here we are not counting people, but talking about someone specific yet unknown to us. Another popular meaning of this word is loneliness or lack of company. When a man says "I am alone today", it means "I am without friends". A woman will say about herself: "I am alone today". Also, this word can mean sameness. If people work in a shared company, they say: "We are from the same office".* Here are some more examples of these alternative meanings in everyday speech contexts. Давайте прочитаємо ще кілька прикладів для кращого розуміння. «Вчора одна жінка запитала мене про дорогу до метро». «Мій малий брат зараз один удома, тому я дуже поспішаю». «Ці нові студенти навчаються на одному курсі в університеті». «Один хлопчик знайшов маленького собаку на нашій вулиці». «Моя старша сестра живе сама, вона одна у цій великій квартирі». «Ми з тобою працюємо в одному проєкті вже цілий рік». Спробуйте звертати увагу на це слово, коли ви слухаєте українське радіо.
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -388,14 +387,100 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
 
-TARGET: 70-90% Ukrainian.
+**You are in PHASE 6: A2 finale (A2 M51-M69)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 40%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 40% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
+
+TARGET: 70-90% Ukrainian. THIS IS A HARD GATE — the audit REJECTS modules outside this range.
+
 LANGUAGE ROLES:
-- PRIMARY: Ukrainian for everything.
-- ENGLISH: Only in vocabulary tables and one-line grammar notes where absolutely necessary.
-- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English.
-A2 register. Concrete everyday vocabulary. No literary language, no metaphors. Near-full Ukrainian immersion. Ukrainian sentences max 15 words. Max 2 clauses. All cases allowed. Simple subordinate clauses only. Full aspect pairs. No participles.
+- PRIMARY: Ukrainian for narrative, dialogues, examples, section intros, cultural notes, Reading Practice blocks, learning callouts.
+- METALANGUAGE: For abstract grammar terms, you may provide ONE parenthetical English translation on FIRST use only, e.g. `**доконаний вид** (perfective aspect)`. Subsequent uses must be Ukrainian only.
+- VOCABULARY TABLE: English glosses live here, not in prose.
+- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English. Never mix mid-sentence.
+
+⚠️ HARD STRUCTURAL RULES — READ THIS TWICE:
+- FORBIDDEN: long English narrative paragraphs explaining grammar. If a concept needs more than ONE sentence of English scaffolding, it goes in a `:::info` or `:::tip` callout, NOT in the main prose.
+- FORBIDDEN: mirroring a Ukrainian paragraph with an English translation paragraph. Write ONE paragraph in Ukrainian, move on.
+- FORBIDDEN: `> *English translation*` blockquotes after Ukrainian dialogues. They were required at A1 but they cap immersion below 50% — at A2-late they MUST be removed.
+
+ESCAPE HATCH (the 'Dual Ladder'):
+For genuinely abstract grammar concepts, you may use ONE `:::info` or `:::tip` callout written in English per section to clarify the concept. Because callouts are stripped from the immersion metric, this serves as on-demand scaffolding for struggling learners without penalising the immersion score. Do NOT abuse this — at most one English callout per major section.
+
+A2 register. Concrete everyday vocabulary. No literary language, no metaphors. Ukrainian sentences max 15 words. Max 2 clauses. All cases allowed. Simple subordinate clauses only (який/що/коли). Full aspect pairs. No participles.
+
+CHECKLIST (re-read before writing each section):
+- [ ] Every narrative paragraph in Ukrainian?
+- [ ] Zero `> *English translation*` blockquotes after dialogues?
+- [ ] At most ONE English `:::info` callout per major section?
+- [ ] Metalanguage terms parenthetically translated on first use only (max 2 per section)?
+- [ ] Reading Practice / Читаємо українською block in EVERY major section?
+
 
 GRAMMAR RULES:
 - Max 15 words per Ukrainian sentence
@@ -407,18 +492,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] числівник (numeral)
+- [ ] порядковий (ordinal)
+- [ ] кількісний (cardinal)
+- [ ] перший (first)
+- [ ] третій (third)
+- [ ] один (one)
+- [ ] скільки (how many)
+- [ ] кілограм (kilogram)
+- [ ] коштувати (to cost)
+- [ ] вік (age)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Скільки чого? Числівник + іменник (How Many? Numeral + Noun Agreement) (~650 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

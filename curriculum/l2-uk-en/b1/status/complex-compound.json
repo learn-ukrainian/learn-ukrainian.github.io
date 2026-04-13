@@ -2,12 +2,12 @@
   "module": "complex-compound",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-10T21:26:41.929262Z",
+  "last_audit": "2026-04-11T17:58:27.982771Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-10T04:28:26.682718Z",
+    "md": "2026-04-11T17:57:30.609048Z",
     "meta": null,
-    "activities": "2026-04-10T04:23:15.961927Z",
+    "activities": "2026-04-11T17:46:05.667627Z",
     "vocabulary": "2026-04-10T04:24:00.833422Z",
     "research": null,
     "plan": "2026-04-05T19:21:47.141734Z"
@@ -20,18 +20,27 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 2,
-      "message": "4821/4000 (raw: 4871) | engagement: 0/5 | richness: 60% < 95% min (grammar) - REWRITE needed"
+      "violations": 3,
+      "message": "5351/4000 (raw: 5462) | engagement: 3/5 | immersion: 30.3% LOW (target 85-100% (B1.7-8 Ukraine)) | richness: 60% < 95% min (grammar) - REWRITE needed"
     },
     "activities": {
       "status": "fail",
       "violations": 1,
-      "message": "10/0 | density: 6 < 6"
+      "message": "6/0 | density: 4 < 6"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
       "message": "49/25"
+    },
+    "vocab_progression": {
+      "status": "warn",
+      "violations": 0,
+      "message": "\u0394 -10 | premature=2 | gaps=0 | well-paced=0",
+      "delta": -10,
+      "premature": 2,
+      "gaps": 0,
+      "well_paced": 0
     },
     "naturalness": {
       "status": "info",

@@ -1,37 +1,52 @@
-## Підсумок
+## Підсумок (~450 words)
 
-У цьому модулі ми детально розглянули шість ключових розрядів займенників. Їхнє правильне використання дозволяє будувати складні речення, ставити точні запитання та виражати найтонші відтінки значень — від повної відсутності до абсолютної впевненості. Зворотний займенник показує, що дія спрямована на самого діяча. Неозначені вказують на невідомі об'єкти, а заперечні підкреслюють їхню відсутність. Означальні займенники виражають повноту або ідентичність. Особливу увагу варто звернути на правопис: частки можуть писатися разом, через дефіс або окремо, якщо з'являється прийменник.
+In this module, we have mastered several advanced categories of the Ukrainian **займенник** (pronoun), expanding your ability to express complex thoughts. We started with the **питально-відносний** (interrogative-relative) group, which helps us ask questions and connect clauses into fluent sentences. Then, we explored the **зворотний** (reflexive — себе) pronoun, which seamlessly directs the action back to the subject.
 
-> *In this module, we have examined six key categories of pronouns in detail. Their correct use allows you to build complex sentences, ask precise questions, and express the subtlest shades of meaning — from complete absence to absolute certainty. The reflexive pronoun shows that an action is directed at the doer. Indefinite pronouns point to unknown objects, while negative pronouns emphasize their absence. Definitive pronouns express completeness or identity. Special attention should be paid to spelling: particles can be written together, hyphenated, or separately if a preposition appears.*
+This reflexive category features the unique word **себе** (oneself — reflexive pronoun, no Н.в.), which has no Nominative form because it cannot act as the subject. We also covered the highly nuanced **неозначений** (indefinite — хтось, будь-хто) category, learning how to refer to unspecified people or things in various contexts.
 
-| Розряд (Category) | Основні займенники (Core Pronouns) | Ключові правила (Key Rules & Nuances) |
+Within that indefinite group, we learned to carefully distinguish between words like **хтось** (someone — known to speaker) and **будь-хто** (anyone — no specificity). Finally, we examined the **заперечний** (negative — ніхто, ніщо) group, mastering how to express absence and negation correctly.
+
+This negative category includes core words like **ніхто** (nobody) and **ніщо** (nothing), which require double negation in standard sentences. Alongside these, we also reviewed the definitive pronouns that allow us to make universal statements.
+
+Here is a quick reference table summarizing the core pronoun categories we have covered and their primary grammatical functions:
+
+| Category | Primary Grammatical Function | Key Examples |
 | :--- | :--- | :--- |
-| **Особові** (Personal) | я, ти, він, вона, ми, ви, вони | Require an inserted «н-» after prepositions («до нього», «з нею»). |
-| **Питально-відносні** (Interrogative-Relative) | хто, що, який, чий, котрий | Used for direct questions or to connect relative clauses. |
-| **Зворотний** (Reflexive) | себе (себе, собі, собою) | No Nominative case. Always refers back to the subject. |
-| **Неозначені** (Indefinite) | хтось, будь-хто, що-небудь, дехто | Spelling rules: «-сь», «де-» (together); «будь-», «-небудь» (hyphenated). |
-| **Заперечні** (Negative) | ніхто, ніщо, ніякий, нічий | Double negation is mandatory. Prepositions split the word («ні з ким»). |
-| **Означальні** (Definitive) | кожен, весь, сам, самий, інший | «Весь» has an irregular declension. «Сам» (alone) vs «самий» (the same). |
+| Питально-відносні | Ask direct questions or link subordinate clauses | хто, що, який, чий, котрий |
+| Зворотний | Directs the action back to the grammatical subject | себе (собі, собою, на собі) |
+| Неозначені | Refer to unspecified, hypothetical, or unknown entities | хтось, дещо, будь-хто, який-небудь |
+| Заперечні | Negate the presence, existence, or availability of an entity | ніхто, ніщо, ніякий, нічий |
+| Означальні | Make universal, collective, or definitive qualitative statements | кожен, весь, сам, самий, інший |
 
-:::info
-**Spelling Check**
-Remember the golden rules for indefinite and negative pronouns. Particles like «-сь» and «де-» are always written together (хтось, дехто). Particles like «будь-» and «-небудь» always require a hyphen (будь-який, що-небудь). However, the moment a preposition enters a negative pronoun, the structure breaks into three separate words (ні в кого, ні про що).
+You must remember the strict spelling rules for the particles attached to these pronouns, as they are a common source of errors. The particle **-сь** and the prefixes **де-** and **аби-** are always written together with the main pronoun. The prefix **будь-** and the suffix **-небудь** must always be hyphenated. For negative pronouns, the prefix **ні-** is written together with the pronoun unless a preposition intervenes.
+
+:::tip
+**Did you know?**
+The way Ukrainian prepositions split negative pronouns (like **ні з ким**) is a distinct feature of the language that differs from many other Slavic and European languages. Mastering this small structural detail instantly makes your Ukrainian sound much more natural and native-like!
 :::
 
-**Питання для самоперевірки**
+To ensure you have fully internalized these structural rules, let us review a few critical self-check questions. Think about the answers and your own understanding before reading the brief explanations provided below.
 
-**1. Чому заперечні займенники пишуться трьома словами (ні з ким)?**
+**1. Чому заперечні займенники пишуться трьома словами (наприклад, ні з ким)?**
 
-If a preposition appears between the negative particle «ні-» and the pronoun itself, it splits the word apart. Ukrainian does not allow a preposition to stand before a whole negative pronoun. Therefore, instead of the incorrect «з ніким», we always write «ні з ким», «ні в чому», or «ні до кого».
+> *Why are negative pronouns written as three words (for example, ні з ким)?*
 
-**2. Яка різниця між ніко́го і нíкого?**
+When a preposition is used in conjunction with a negative pronoun, Ukrainian syntax strictly requires the preposition to be placed exactly between the negative prefix and the pronoun root. This splits the single word into three distinct elements. For example, instead of combining them into one block, you must write **ні в чому** (in nothing) or **ні про що** (about nothing).
 
-The difference lies in the stress and the resulting meaning. The form «ніко́го» (stress on the root) indicates the physical absence of people, translating to 'nobody' (for example, «Там нікого немає»). The form «нíкого» (stress on the prefix) implies a lack of choice or an impossible action, translating to 'nobody to [verb]' (for example, «Мені нікого спитати»).
+**2. Яка різниця між двома варіантами наголосу у слові «нікого»?**
 
-**3. Чому зворотний займенник себе не має називного відмінка?**
+> *What is the difference between the two stress variants in the word «нікого»?*
 
-The reflexive pronoun «себе» can never act as the main doer (the subject) of a sentence. Its sole grammatical purpose is to reflect the action back onto the subject. Because the Nominative case is strictly reserved for subjects, «себе» exists only in the oblique cases, such as «себе», «собі», and «собою».
+The meaning of a negative pronoun changes completely depending on where the spoken stress falls. When the stress is on the root, the word indicates a complete physical absence of someone, and it requires the negative particle with the verb to form a double negation. When the stress falls on the prefix, it indicates the situational impossibility of an action, meaning there is simply nobody available to turn to, and it is used independently without the negative particle.
 
-**4. Коли ми використовуємо -небудь замість -сь?**
+**3. Чому зворотний займенник «себе» не має називного відмінка?**
 
-The suffix «-сь» (like in «хтось» or «щось») points to a specific but unknown entity that actually exists; it is used for stating facts. The suffix «-небудь» (like in «хто-небудь» or «що-небудь») expresses absolute indefiniteness or 'anyone/anything at all'. You will most often use it in questions, open requests, or hypothetical scenarios where the specific identity truly does not matter.
+> *Why does the reflexive pronoun «себе» lack a Nominative case?*
+
+The Nominative case is reserved exclusively for the grammatical subject of a sentence—the entity performing the action. Because this pronoun's entire grammatical function is to reflect an action back onto the subject rather than initiating the action itself, it can only exist as a grammatical object. Therefore, it only takes oblique cases like the Genitive, Dative, Accusative, and Instrumental.
+
+**4. Коли ми використовуємо частку «-небудь» замість «-сь»?**
+
+> *When do we use the particle «-небудь» instead of «-сь»?*
+
+The particle **-сь** implies that a specific, concrete person or thing exists and is known to the speaker, even if their exact identity remains unnamed or hidden to the listener. In contrast, the particle **-небудь** is entirely hypothetical and means absolutely anyone or anything will suffice without exception. You will typically use it in questions, conditional statements, or when offering a completely open choice to someone else.

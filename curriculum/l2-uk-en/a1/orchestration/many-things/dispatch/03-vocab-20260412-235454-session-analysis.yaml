@@ -1,0 +1,55 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T21-54-4601f01d.json
+phase: vocab
+prompt_chars: 12968
+response_chars: 2596
+prompt_words: 1995
+response_words: 286
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.0615
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.0177
+- name: plan
+  start: 1028
+  length: 11940
+  fraction: 0.9207
+large_sections:
+- plan
+directives_total: 7
+directives_covered: 0
+directives_missed:
+- kind: must
+  text: To do this effectively, they must move from talking about one item to discussing
+    entire groups of objects.
+  covered: false
+  coverage_note: 2/14 keywords (14%)
+- kind: must
+  text: In previous encounters, you learned how to identify a single object, but now
+    the group must account for multiple items at once.
+  covered: false
+  coverage_note: 3/16 keywords (19%)
+- kind: must
+  text: When a single object becomes a group, the noun must physically change its
+    form to reflect this new reality.
+  covered: false
+  coverage_note: 1/15 keywords (7%)
+- kind: inject_activity
+  text: group-sort-singular-plural
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-make-it-plural
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-choose-correct-plural
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-adjective-agreement
+  covered: false
+  coverage_note: marker missing

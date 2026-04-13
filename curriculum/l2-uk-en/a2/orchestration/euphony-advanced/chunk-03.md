@@ -1,32 +1,41 @@
-## І чи й? У складних реченнях
+## І чи й? У складних реченнях (I or Y? In Complex Sentences) (~550 words)
 
-In Ukrainian, the choice between the conjunctions «і» and «й» depends entirely on the surrounding sounds. The letter «й» is a semi-vowel. It needs to attach itself to a full vowel that comes right before it, acting like a phonetic bridge. We use «й» between two vowels. The letter «і» is a full vowel, which we use to break up clusters of consonants.
+Now that you have mastered the **прийменник** (preposition) rules, let's look at the **сполучник** (conjunction) «і». This specific **чергування** (alternation) is very common in everyday speech and follows a simple pattern.
 
-Ольга й Андрій пішли в кіно. У кімнаті були тільки син і мати. Вони купили яблука й огірки.
-> *Olha and Andriy went to the cinema. Only the son and mother were in the room. They bought apples and cucumbers.*
+We use the variant «й» between two **голосний** (vowel) sounds to create a smooth glide, as in «Ольга й Андрій». Conversely, we must use the default «і» between two **приголосний** (consonant) sounds to avoid a harsh **збіг** (cluster, collision), like in the phrase «син і мати».
 
-When building complex sentences, punctuation changes these rules. A comma acts as a phonetic fence. Even if the word before the comma ends in a vowel, the pause breaks the fluid glide that «й» requires. Because of this natural breath, we always use the full vowel «і» after a comma.
+You will use this exact same logic when connecting nouns, adjectives, or when you start building a **складний** (complex, compound) sentence with multiple independent clauses.
 
-Вона гарно співала, і всі слухали. Ми купили квитки, і наша подорож почалася.
-> *She sang beautifully, and everyone listened. We bought tickets, and our journey began.*
+Сьогодні теплий і сонячний день. Ми гуляємо в парку й слухаємо музику.
+
+> *Today is a warm and sunny day. We are walking in the park and listening to music.*
+
+When you write a complex sentence, you will often use commas to separate the different clauses. A comma acts as a natural, physical pause in your speech. Because of this pause, the phonetic context resets completely. You no longer look at the last letter of the previous word. Instead, you treat the word after the comma as if it is sitting at the beginning of a brand new sentence. Look at the sentence "Він прийшов, і ми поїхали." The comma resets the phonetic flow, so we automatically use «і». You might think that "Вона заспівала, й усі заплакали" is correct because the word «усі» starts with a vowel. However, this is incorrect. After a comma, the default «і» is always the safe and preferred choice.
+
+Він прийшов пізно, і ми поїхали додому. Вона заспівала, і всі глядачі заплакали.
+
+> *He arrived late, and we went home. She sang, and all the spectators cried.*
 
 :::info
-**Grammar box** — Never use «й» immediately after a comma or a dash. The pause destroys the vowel environment. Always use «і» to start a new thought after punctuation.
+**Grammar box** — The choice between «і» and «й» is driven by the sounds that immediately surround the conjunction. The spelling of the words matters less than how they are pronounced in spoken Ukrainian.
 :::
 
-There is one strict rule of phonetic hygiene where «й» is completely forbidden. You can never use «й» before words starting with the letters «й», «я», «ю», «є», or «ї». These letters already contain a hidden "y" sound. Placing «й» in front of them creates an ugly collision. In these cases, «і» is mandatory.
+This phonetic logic also applies perfectly when you need to list compound subjects or objects. You must **вживати** (to use, to apply) the rule to each adjacent pair of words independently. The main goal is always to maintain a melodious flow and preserve the overall **милозвучність** (euphony, melodiousness) of the sentence. In formal grammar, this concept is also called **евфонія** (euphony (technical term)). When you have a long list of items, you should look only at the two words immediately surrounding the conjunction.
 
-Завтра прийдуть Олена і її брат. Мій маршрут — це Одеса і Ялта.
-> *Tomorrow Olena and her brother will come. My route is Odesa and Yalta.*
+На сніданок я люблю хліб і масло. Моя подруга зазвичай п'є каву й молоко. Ми купуємо помідори й огірки.
 
-If you are unsure whether to use «і» or «й», you have a completely safe alternative: the conjunction «та». It means exactly the same thing, but it never alternates. Using «та» helps avoid repetitive sounds and makes your Ukrainian sound stylish.
+> *For breakfast I like bread and butter. My friend usually drinks coffee and milk. We buy tomatoes and cucumbers.*
 
-На столі лежали хліб та масло. Мама та тато чекали на нас удома.
-> *Bread and butter lay on the table. Mom and dad were waiting for us at home.*
+There are a few special contexts where «і» is strictly required, regardless of the surrounding vowels. You must always use «і» before words that start with the letters й, я, ю, є, or ї. These specific letters already contain a hidden "й" sound inside them, so adding another written «й» creates an awkward repetition for the tongue. Additionally, «і» is strictly used whenever you are showing contrast or comparison between two concepts. The rule of euphony is temporarily suspended here to emphasize the grammatical contrast.
 
-Let's practice these conjunctions with compound objects in the Genitive case. Notice how the boundaries dictate the choice.
+Влітку ми плануємо відвідати міста Одеса і Ялта. У цій книжці автор описує добро і зло. Це відомий конфлікт: батьки і діти.
 
-У нас немає ні соку, і ні кави. Я не купив хліба й молока.
-> *We have neither juice, nor coffee. I didn't buy bread and milk.*
+> *In the summer we plan to visit the cities of Odesa and Yalta. In this book, the author describes good and evil. This is a famous conflict: parents and children.*
 
-<!-- INJECT_ACTIVITY: match-up-conjunctions -->
+Sometimes you might feel unsure about which conjunction to choose, or you might want to avoid repeating «і» too many times in one sentence. In these situations, you can comfortably use the conjunction «та». This word is a non-alternating synonym for «і». It never changes its form based on the surrounding letters, making it a very helpful and reliable stylistic alternative. For example, instead of saying "мама й тато", you can simply say "мама та тато".
+
+У мене є собака та кіт. Вчора ми купили яблука, груші та банани.
+
+> *I have a dog and a cat. Yesterday we bought apples, pears, and bananas.*
+
+<!-- INJECT_ACTIVITY: fill-in, Complete sentences with the correct preposition or conjunction form, 8 items -->

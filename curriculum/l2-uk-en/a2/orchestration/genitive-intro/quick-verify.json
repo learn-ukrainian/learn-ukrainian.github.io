@@ -2,12 +2,6 @@
   "attempt": 1,
   "passed": true,
   "errors": [],
-  "warnings": [
-    {
-      "check": "VOCABULARY",
-      "severity": "WARNING",
-      "message": "Missing 2/9 required vocab: однина (singular), множина (plural)"
-    }
-  ],
-  "timestamp": "2026-04-10T23:40:20.287317+00:00"
+  "warnings": [],
+  "timestamp": "2026-04-12T20:42:32.269169+00:00"
 }

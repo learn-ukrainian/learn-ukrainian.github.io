@@ -1,0 +1,73 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T10-40-c5e37840.json
+phase: write-chunk-01
+prompt_chars: 48289
+response_chars: 6626
+prompt_words: 6809
+response_words: 1008
+sections:
+- name: header
+  start: 0
+  length: 436
+  fraction: 0.009
+- name: skeleton
+  start: 436
+  length: 2238
+  fraction: 0.0463
+- name: plan
+  start: 2674
+  length: 16709
+  fraction: 0.346
+- name: wiki
+  start: 13259
+  length: 28690
+  fraction: 0.5941
+- name: output_spec
+  start: 48073
+  length: 216
+  fraction: 0.0045
+large_sections:
+- wiki
+directives_total: 21
+directives_covered: 11
+directives_missed:
+- kind: checklist
+  text: зворотний (reflexive — себе)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: неозначений (indefinite — хтось, будь-хто)
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: checklist
+  text: заперечний (negative — ніхто, ніщо)
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: checklist
+  text: себе (oneself — reflexive pronoun, no Н.в.)
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: checklist
+  text: хтось (someone — known to speaker)
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: checklist
+  text: будь-хто (anyone — no specificity)
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: checklist
+  text: ніхто (nobody)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: ніщо (nothing)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 2/11 keywords (18%)

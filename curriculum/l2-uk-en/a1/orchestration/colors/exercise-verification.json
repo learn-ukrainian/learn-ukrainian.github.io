@@ -1,13 +1,7 @@
 {
-  "total_items": 106,
-  "grounded_items": 66,
+  "total_items": 66,
+  "grounded_items": 49,
   "ungrounded": [
-    {
-      "word": "троянда",
-      "exercise_type": "match-up",
-      "context": "троянда",
-      "role": "answer"
-    },
     {
       "word": "соняшник",
       "exercise_type": "quiz",
@@ -15,243 +9,106 @@
       "role": "context"
     },
     {
-      "word": "лілія",
+      "word": "лізи",
       "exercise_type": "quiz",
-      "context": "Якого кольору лілія?",
+      "context": "Якого кольору кімната Лізи?",
       "role": "context"
     },
     {
       "word": "який",
-      "exercise_type": "fill-in",
-      "context": "Який ____ светр!",
+      "exercise_type": "quiz",
+      "context": "Який колір має український прапор?",
       "role": "context"
     },
     {
-      "word": "коричневе",
-      "exercise_type": "fill-in",
-      "context": "коричневе",
+      "word": "має",
+      "exercise_type": "quiz",
+      "context": "Який колір має український прапор?",
+      "role": "context"
+    },
+    {
+      "word": "український",
+      "exercise_type": "quiz",
+      "context": "Який колір має український прапор?",
+      "role": "context"
+    },
+    {
+      "word": "це",
+      "exercise_type": "unjumble",
+      "context": "Це",
       "role": "answer"
-    },
-    {
-      "word": "сині",
-      "exercise_type": "group-sort",
-      "context": "сині",
-      "role": "answer"
-    },
-    {
-      "word": "яке",
-      "exercise_type": "quiz",
-      "context": "Яке небо вдень?",
-      "role": "context"
-    },
-    {
-      "word": "глибоке",
-      "exercise_type": "quiz",
-      "context": "Яке глибоке море?",
-      "role": "context"
-    },
-    {
-      "word": "верхня",
-      "exercise_type": "quiz",
-      "context": "Яка верхня смуга прапора України?",
-      "role": "context"
-    },
-    {
-      "word": "смуга",
-      "exercise_type": "quiz",
-      "context": "Яка верхня смуга прапора України?",
-      "role": "context"
-    },
-    {
-      "word": "прапора",
-      "exercise_type": "quiz",
-      "context": "Яка верхня смуга прапора України?",
-      "role": "context"
-    },
-    {
-      "word": "світлий",
-      "exercise_type": "quiz",
-      "context": "Світлий відтінок синього — це...",
-      "role": "context"
-    },
-    {
-      "word": "відтінок",
-      "exercise_type": "quiz",
-      "context": "Світлий відтінок синього — це...",
-      "role": "context"
-    },
-    {
-      "word": "синього",
-      "exercise_type": "quiz",
-      "context": "Світлий відтінок синього — це...",
-      "role": "context"
-    },
-    {
-      "word": "темний",
-      "exercise_type": "quiz",
-      "context": "Темний відтінок — це...",
-      "role": "context"
-    },
-    {
-      "word": "моя",
-      "exercise_type": "fill-in",
-      "context": "моя",
-      "role": "answer"
-    },
-    {
-      "word": "мій",
-      "exercise_type": "fill-in",
-      "context": "мій",
-      "role": "answer"
-    },
-    {
-      "word": "моє",
-      "exercise_type": "fill-in",
-      "context": "моє",
-      "role": "answer"
-    },
-    {
-      "word": "коричнева",
-      "exercise_type": "fill-in",
-      "context": "____ сумка коричнева.",
-      "role": "context"
     },
     {
       "word": "мої",
-      "exercise_type": "fill-in",
+      "exercise_type": "unjumble",
       "context": "мої",
       "role": "answer"
     },
     {
-      "word": "чорні",
+      "word": "жовте",
       "exercise_type": "fill-in",
-      "context": "____ черевики чорні.",
+      "context": "жовте",
+      "role": "answer"
+    },
+    {
+      "word": "краще",
+      "exercise_type": "quiz",
+      "context": "Який колір краще описує ясне небо вдень (clear daytime sky)?",
       "role": "context"
     },
     {
-      "word": "стоїть",
-      "exercise_type": "error-correction",
-      "context": "Тут стоїть синя стіл.",
+      "word": "описує",
+      "exercise_type": "quiz",
+      "context": "Який колір краще описує ясне небо вдень (clear daytime sky)?",
       "role": "context"
     },
     {
-      "word": "теплий",
-      "exercise_type": "error-correction",
-      "context": "Моє светр дуже теплий.",
+      "word": "ясне",
+      "exercise_type": "quiz",
+      "context": "Який колір краще описує ясне небо вдень (clear daytime sky)?",
       "role": "context"
     },
     {
-      "word": "гарне",
-      "exercise_type": "error-correction",
-      "context": "Яке гарне кімната!",
+      "word": "небо",
+      "exercise_type": "quiz",
+      "context": "Який колір краще описує ясне небо вдень (clear daytime sky)?",
       "role": "context"
     },
     {
-      "word": "червоно",
-      "exercise_type": "true-false",
-      "context": "Прапор України червоно-чорний.",
+      "word": "вдень",
+      "exercise_type": "quiz",
+      "context": "Який колір краще описує ясне небо вдень (clear daytime sky)?",
       "role": "context"
     },
     {
-      "word": "часто",
-      "exercise_type": "true-false",
-      "context": "Троянди часто бувають червоні.",
+      "word": "темне",
+      "exercise_type": "quiz",
+      "context": "Який колір краще описує темне море (deep sea)?",
       "role": "context"
     },
     {
-      "word": "бувають",
-      "exercise_type": "true-false",
-      "context": "Троянди часто бувають червоні.",
+      "word": "море",
+      "exercise_type": "quiz",
+      "context": "Який колір краще описує темне море (deep sea)?",
+      "role": "context"
+    },
+    {
+      "word": "нічне",
+      "exercise_type": "quiz",
+      "context": "Який колір краще описує нічне небо (night sky)?",
       "role": "context"
     },
     {
       "word": "слово",
       "exercise_type": "true-false",
-      "context": "Слово 'синій' — це світлий відтінок блакитного.",
-      "role": "context"
-    },
-    {
-      "word": "синій'",
-      "exercise_type": "true-false",
-      "context": "Слово 'синій' — це світлий відтінок блакитного.",
-      "role": "context"
-    },
-    {
-      "word": "блакитного",
-      "exercise_type": "true-false",
-      "context": "Слово 'синій' — це світлий відтінок блакитного.",
-      "role": "context"
-    },
-    {
-      "word": "стіл'",
-      "exercise_type": "true-false",
-      "context": "Слово 'стіл' чоловічого роду, тому ми кажемо 'синій стіл'.",
-      "role": "context"
-    },
-    {
-      "word": "чоловічого",
-      "exercise_type": "true-false",
-      "context": "Слово 'стіл' чоловічого роду, тому ми кажемо 'синій стіл'.",
-      "role": "context"
-    },
-    {
-      "word": "роду",
-      "exercise_type": "true-false",
-      "context": "Слово 'стіл' чоловічого роду, тому ми кажемо 'синій стіл'.",
-      "role": "context"
-    },
-    {
-      "word": "тому",
-      "exercise_type": "true-false",
-      "context": "Слово 'стіл' чоловічого роду, тому ми кажемо 'синій стіл'.",
-      "role": "context"
-    },
-    {
-      "word": "ми",
-      "exercise_type": "true-false",
-      "context": "Слово 'стіл' чоловічого роду, тому ми кажемо 'синій стіл'.",
-      "role": "context"
-    },
-    {
-      "word": "кажемо",
-      "exercise_type": "true-false",
-      "context": "Слово 'стіл' чоловічого роду, тому ми кажемо 'синій стіл'.",
-      "role": "context"
-    },
-    {
-      "word": "вікно'",
-      "exercise_type": "true-false",
-      "context": "'Зелена вікно' — це правильно.",
-      "role": "context"
-    },
-    {
-      "word": "правильно",
-      "exercise_type": "true-false",
-      "context": "'Зелена вікно' — це правильно.",
-      "role": "context"
-    },
-    {
-      "word": "небо'",
-      "exercise_type": "true-false",
-      "context": "Слово 'небо' середнього роду.",
-      "role": "context"
-    },
-    {
-      "word": "середнього",
-      "exercise_type": "true-false",
-      "context": "Слово 'небо' середнього роду.",
+      "context": "Слово «синій» — це тверда група (hard stem).",
       "role": "context"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 16,
-    "tested_in_exercises": 12,
-    "not_tested": [
-      "блакитний",
-      "колір",
-      "сірий",
-      "фіолетовий"
-    ]
+    "tested_in_exercises": 16,
+    "not_tested": []
   },
   "all_grounded": false
 }

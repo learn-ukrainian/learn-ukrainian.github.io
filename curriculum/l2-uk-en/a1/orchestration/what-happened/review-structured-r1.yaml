@@ -2,49 +2,53 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 9
-  evidence: 'The generated text closely follows the plan, but misses two specific
-    elements: the reference to "Grade 3-4 textbooks" in the *Минулий час* section,
-    and the exclamation "— Як смачно!" at the end of Dia'
+  score: 7
+  evidence: The four planned sections are present, but the practice point in the plan
+    asked for explicit core-verb paradigms and the module stops at `The verb **говорити**
+    (to speak) follows the exact same logic.
 - dimension: 2
   name: Linguistic accuracy
-  score: 8
-  evidence: The text incorrectly claims that the shortened reflexive suffix **-сь**
-    (as in "дивилася" -> "дивилась") is dialectal. In standard literary Ukrainian,
-    both forms are correct, and **-сь** is frequently
+  score: 6
+  evidence: The Ukrainian example sentences are fine, but the grammar explanation
+    says `You simply remove this **-ти** ending...` and `Every verb follows the same
+    predictable pattern...`, which is false for commo
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: Excellent PPP flow. Introduces past tense through realistic dialogues
-    first, then extracts the gender-based mechanical rule, contrasting it clearly
-    with present tense person-based endings.
+  score: 6
+  evidence: The module has a PPP shape, but it teaches an overgeneralized rule as
+    fact and then introduces irregular `**провів вихідні**` later with no warning,
+    which undermines the learner model it just taught.
 - dimension: 4
   name: Vocabulary coverage
   score: 10
-  evidence: All required words (учора, робити, читати, працювати, гуляти, готувати,
-    дивитися, говорити) and recommended words are included naturally in context.
+  evidence: 'All required vocabulary appears naturally in prose or inflected form:
+    `учора`, `робив/робила`, `читав`, `працювала`, `гуляв`, `готувала`, `дивився`,
+    `говорили`; recommended items like `вихідні`, `субо'
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: The three activity markers are present, correctly match the plan's hints,
-    and are placed logically after the relevant instruction.
+  score: 9
+  evidence: 'All 3 expected markers are present and aligned to the plan: `matching-pronoun-ending`,
+    `fill-in-core-verbs`, `fill-in-choose-gender`. Their placement follows the teaching
+    sequence.'
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: The tone is warm and encouraging. Differences between English ("I was
-    doing") and Ukrainian are addressed clearly.
+  score: 9
+  evidence: The office/weekend scenario and named speakers keep the module teacherly
+    and concrete, and the examples stay focused on the target grammar.
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: Word count is 1468 (target 1200). All sections are present and ordered
-    correctly.
+  evidence: '`## Dialogues`, `## Минулий час (Past Tense)`, `## Практика (Practice)`,
+    and `## Summary` are all present and ordered correctly. The pipeline word count
+    is 1626, so the module is safely above target.'
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Respectful and accurate representation.
+  evidence: The module presents Ukrainian on its own terms, with no Russian-centered
+    framing and no cultural inaccuracies in the scenarios shown.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: Dialogues are natural, correctly formatted with named speakers, and demonstrate
-    the target grammar smoothly.
+  score: 9
+  evidence: The dialogues use named speakers, a plausible Monday-morning context,
+    and multi-turn weekend sharing rather than isolated transactional lines.
 findings: []

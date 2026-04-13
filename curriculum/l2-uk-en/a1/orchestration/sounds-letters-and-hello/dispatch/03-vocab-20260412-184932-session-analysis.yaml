@@ -1,0 +1,57 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T16-48-adc0e16e.json
+phase: vocab
+prompt_chars: 14115
+response_chars: 2222
+prompt_words: 2313
+response_words: 254
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.0565
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.0163
+- name: plan
+  start: 1028
+  length: 13087
+  fraction: 0.9272
+large_sections:
+- plan
+directives_total: 8
+directives_covered: 0
+directives_missed:
+- kind: must
+  text: Because of these rules, you must be careful with your terminology.
+  covered: false
+  coverage_note: 2/8 keywords (25%)
+- kind: must
+  text: The most important rule to remember is that every single Ukrainian word must
+    have at least one vowel sound.
+  covered: false
+  coverage_note: 3/15 keywords (20%)
+- kind: inject_activity
+  text: letter-grid
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-sounds-vs-letters
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-letters-to-sounds
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: group-sort-vowels-consonants
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: watch-and-repeat-alphabet
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-greeting
+  covered: false
+  coverage_note: marker missing

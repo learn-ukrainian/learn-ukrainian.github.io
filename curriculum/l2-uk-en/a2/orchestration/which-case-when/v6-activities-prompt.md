@@ -1,4 +1,4 @@
-<!-- version: 1.1.0 | updated: 2026-03-31 -->
+<!-- version: 1.2.0 | updated: 2026-04-12 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -11,6 +11,35 @@ Generate an `activities/which-case-when.yaml` file for module **36: Компас
 
 ---
 
+## ⚠️ HARD COUNT TARGETS — READ TWICE
+
+These are the binding numerical contracts for THIS module. The audit will FAIL if you fall short.
+
+| Bucket | Min | Max | Notes |
+|---|---|---|---|
+| Total activities | 12 | 12+ | inline + workbook combined |
+| Inline (lesson tab) | 4 | 6 | one per `<!-- INJECT_ACTIVITY -->` marker, see below |
+| Workbook (Зошит tab) | 8 | 11 | extended practice |
+| Items per activity | 8 | — | each activity must have at least 8 items (unless its type cap is lower — see Activity Type Reference below) |
+
+**You MUST ship at least 4 inline activities AND at least 8 workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+
+**Type diversity is required.** The module (inline + workbook combined) MUST use at least **0** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level. (If `0` is `0`, the audit profile for this level does not enforce type diversity — but variety still produces a better lesson, so aim for 4+ types when the workbook allows it.)
+
+---
+
+## Allowed types for THIS level
+
+- **Inline (lesson) types:** quiz, true-false, fill-in, match-up, group-sort, classify, mark-the-words
+- **Inline priority (preferred):** fill-in, match-up, true-false, quiz
+- **Workbook types:** cloze, error-correction, fill-in, unjumble, translate, match-up, group-sort, odd-one-out, observe, phrase-table, quiz, true-false, mark-the-words
+- **Workbook priority (preferred):** error-correction, cloze, unjumble, translate, fill-in
+- **FORBIDDEN at this level:** anagram, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables, highlight-morphemes, grammar-identify
+
+Pick from the allowed list. Lean heavily on the priority lists. Do not use any forbidden type — the build will reject it.
+
+---
+
 ## Inline vs Workbook Split
 
 Activities have two placement categories:
@@ -19,7 +48,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Rule of thumb:** inline = 2-3 quick checks after key teaching points. Workbook = 4-8 deeper practice exercises covering the full topic.
+**Rule of thumb:** inline = 4–6 quick checks after key teaching points. Workbook = 8–11 deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
 
 ---
 
@@ -27,10 +56,10 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: quiz-verb-case -->`
-- `<!-- INJECT_ACTIVITY: group-sort-prepositions -->`
-- `<!-- INJECT_ACTIVITY: fill-in-mixed-triggers -->`
-- `<!-- INJECT_ACTIVITY: true-false-case-logic -->`
+- `<!-- INJECT_ACTIVITY: group-sort-sort-prepositions-by-which-case-s-they-govern-acc-gen-instr-loc -->`
+- `<!-- INJECT_ACTIVITY: fill-in-mixed-cases -->`
+- `<!-- INJECT_ACTIVITY: quiz-case-verb-prep -->`
+- `<!-- INJECT_ACTIVITY: true-false-case-pairs -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -91,100 +120,159 @@ required:
 ## Module Content (the prose the learner reads before exercises)
 
 <module_content>
-## Вступ: Граматичний детектив
+## Дієслово вирішує: Який відмінок після дієслова? (~600 words)
 
-> — **Вчитель:** Привіт! *(Hi!)* Сьогодні ми — граматичні детективи. *(Today we are grammar detectives.)* Ми шукаємо **відмінки** *(cases)* у текстах. *(We are looking for cases in texts.)*
-> — **Анна:** Що ми читаємо сьогодні? *(What are we reading today?)*
-> — **Вчитель:** Українську газету: «Президент зустрівся з прем'єром. Для журналістів підготували зал». *(A Ukrainian newspaper: "The President met with the Prime minister. They prepared a hall for the journalists".)* Де тут відмінки? *(Where are the cases here?)*
-> — **Анна:** Слово «Президент» *(The word "President")* — це **Називний відмінок** *(Nominative case)*. Він виконує дію. *(He performs the action.)*
-> — **Вчитель:** Точно! *(Exactly!)* А фраза «з прем'єром»? *(And the phrase "with the prime minister"?)*
-> — **Марко:** Тут є **прийменник** *(preposition)* «з». *(Here is the preposition "with".)* Це **Орудний відмінок** *(Instrumental case)*. Питання «з ким?». *(The question "with whom?".)*
-> — **Вчитель:** Дуже добре. *(Very good.)* А друге речення: «Для журналістів підготували зал»? *(And the second sentence: "They prepared a hall for the journalists"?)*
-> — **Анна:** Прийменник «для» вимагає певної форми. *(The preposition "for" requires a specific form.)* Це **Родовий відмінок** *(Genitive case)*.
-> — **Марко:** А слово «зал» *(And the word "hall")* — це **Знахідний відмінок** *(Accusative case)*. Дія спрямована на нього. *(The action is directed at it.)*
-> — **Вчитель:** Блискуче! *(Brilliant!)* Ви розпізнали чотири різні відмінки. *(You recognized four different cases.)*
+Сьогодні ми граємо в граматичних детективів. Ми читаємо українську газету і шукаємо кожен **відмінок** (grammatical case).
 
-Як обрати правильний відмінок? *(How to choose the right case?)* Cases in Ukrainian are never random. Вони мають чітку логіку. *(They have a clear logic.)* Уявіть, що у вас є **компас відмінків** *(case compass)*. Цей компас показує правильний шлях. *(This compass shows the right way.)*
+> — **Вчитель:** Читаємо перший текст. «Президент зустрівся з прем'єром. Для журналістів підготували зал». Де тут називний відмінок? *(Let's read the first text. "The president met with the prime minister. They prepared a hall for the journalists". Where is the nominative case here?)*
+> — **Студенти:** Слово «президент». Це суб'єкт, він робить дію. *(The word "president". It is the subject, he is doing the action.)*
+> — **Вчитель:** Правильно. А чому ми кажемо «з прем'єром»? *(Correct. And why do we say "with the prime minister"?)*
+> — **Студенти:** Тому що тут є **прийменник** (preposition) «з». Це орудний відмінок. *(Because there is the preposition "with" here. It is the instrumental case.)*
+> — **Вчитель:** Чудово! А слово «журналістів»? *(Great! And the word "journalists"?)*
+> — **Студенти:** Це родовий відмінок після прийменника «для». *(It is the genitive case after the preposition "for".)*
+> — **Вчитель:** А слово «зал»? *(And the word "hall"?)*
+> — **Студенти:** Це знахідний відмінок. Це об'єкт дії «підготували». *(It is the accusative case. It is the object of the action "prepared".)*
 
-In Ukrainian grammar, specific words act as anchors that govern the case of the noun. Перший якір — це **дієслово** *(verb)*. *(The first anchor is the verb.)* Verbs dictate which case must follow them to complete the meaning. Наприклад, дієслово «бачити» вимагає Знахідного відмінка. *(For example, the verb "to see" requires the Accusative case.)* 
+When an action passes directly onto an object, the Ukrainian language uses the Accusative case. Most transitive verbs require this case, and mastering them is your first big step in sentence building.
 
-Другий якір — це прийменник. *(The second anchor is the preposition.)* Prepositions are strongly linked to specific cases. Прийменник «для» завжди вимагає Родового відмінка. *(The preposition "for" always requires the Genitive case.)* 
+Коли ви хочете щось купити, знайти або прочитати, вам потрібен знахідний відмінок. Такі слова як «бачити», «знати», «любити», «читати», «купити» та «шукати» завжди вимагають об'єкта. Я читаю книгу. Ми шукаємо ключі. Вона знає цього хлопця. Кожне **дієслово** (verb) тут напряму впливає на об'єкт.
 
-When you identify the governing verb or preposition, you easily determine the correct noun ending. У цьому модулі ми вивчимо простий **алгоритм** *(algorithm)*. *(In this module we will learn a simple algorithm.)* Ви завжди будете знати правильну форму. *(You will always know the correct form.)*
+> *When you want to buy, find, or read something, you need the accusative case. Words like "to see", "to know", "to love", "to read", "to buy", and "to look for" always require an object. I am reading a book. We are looking for the keys. She knows this guy. Every verb here directly affects the object.*
 
-## Дієслово вирішує: Який відмінок після дієслова?
+Some actions are directed *towards* a recipient rather than done *to* an object. In Ukrainian, you do these actions *to* or *for* someone, which means you must use the Dative case.
 
-Уявіть, що дієслово — це магніт. *(Imagine that a verb is a magnet.)* Some verbs strongly attract the **Знахідний відмінок** *(Accusative case)*. Це дієслова, які мають прямий об'єкт. *(These verbs have a direct object.)* Найпопулярніші дієслова тут: **бачити** *(to see)*, **знати** *(to know)*, **любити** *(to love)*, **читати** *(to read)*, **шукати** *(to look for)* та **купити** *(to buy)*. 
-Наприклад: «Я **бачу друга** *(I see a friend)*», «Я **читаю книгу** *(I am reading a book)*» або «Ми **шукаємо ключі** *(We are looking for keys)*». Коли ви кажете: «Я **люблю Україну** *(I love Ukraine)*», ви використовуєте Знахідний відмінок. Те саме стосується фрази: «Я **куплю квиток** *(I will buy a ticket)*».
+Ми даємо допомогу або пораду комусь. Тому слова «допомагати», «телефонувати», «дякувати», «радити» та «заважати» вимагають давального відмінка. Я допомагаю сестрі. Ми щиро дякуємо вчителям. Він телефонує батькам. Це дуже важливе правило.
 
-Інша група дієслів вимагає **Давального відмінка** *(Dative case)*. Ці дієслова показують отримувача дії. *(These verbs show the recipient of the action.)* They focus on the person who receives help or information. Сюди належать: **допомагати** *(to help)*, **телефонувати** *(to call)*, **дякувати** *(to thank)*, **радити** *(to advise)* та **заважати** *(to disturb)*. 
-Ми кажемо: «Я **допомагаю мамі** *(I help mom)*» або «Він **телефонує сестрі** *(He calls his sister)*». Якщо ми вдячні, ми кажемо: «Ми **дякуємо вчителю** *(We thank the teacher)*». А якщо даємо пораду: «Я **раджу другу** *(I advise a friend)*», або коли хтось шумить: «Ти **заважаєш другу** *(You are disturbing a friend)*».
+> *We give help or advice to someone. Therefore, words like "to help", "to call", "to thank", "to advise", and "to bother" require the dative case. I help my sister. We sincerely thank the teachers. He calls his parents. This is a very important rule.*
 
-Третій якір — це дієслова, які дружать з **Орудним відмінком** *(Instrumental case)*. These verbs describe what we use as a tool, or what occupies our interest. Запам'ятайте ці слова: **користуватися** *(to use)*, **цікавитися** *(to be interested in)*, **займатися** *(to practice / to do)* та **керувати** *(to manage / to drive)*. 
-Наприклад: «Я **користуюсь комп'ютером** *(I use a computer)*» або «Вона **користується ручкою** *(She uses a pen)*». Коли ми говоримо про хобі, ми кажемо: «Я **цікавлюся мовою** *(I am interested in the language)*». Або: «Брат **займається спортом** *(The brother practices sports)*».
+:::info
+**Grammar box**
+Always remember: you thank *to* someone (`дякувати комусь`), help *to* someone (`допомагати комусь`), and bother *to* someone (`заважати комусь`). Using the Accusative here is a very common mistake!
+:::
 
-Тепер поговоримо про **Родовий відмінок** *(Genitive case)*. This case connects to concepts of absence or fear. Найголовніше слово тут — **немає** *(there is no)*. Після нього завжди стоїть Родовий відмінок: «У мене **немає часу** *(I have no time)*». 
-Також сюди належать дієслова **боятися** *(to be afraid)* та **потребувати** *(to need)*. Ми кажемо: «Він **боїться вовка** *(He is afraid of a wolf)*». Якщо вам потрібна підтримка, ви скажете: «Я **потребую допомоги** *(I need help)*».
+Another specific group of verbs describes what tool you use, what you manage, or what you are interested in. These concepts are expressed using the Instrumental case, completely without prepositions.
 
-Нарешті, є цікава деталь із дієсловами думки. *(Finally, there is an interesting detail with verbs of thought.)* In English, you use "about", which feels like a context. But in Ukrainian, the preposition **про** *(about)* strongly governs the Accusative case. 
-Найчастіше це дієслова **думати** *(to think)* та **мріяти** *(to dream)*. Ми кажемо: «Я **думаю про майбутнє** *(I think about the future)*». Або так: «Вона **мріє про подорож** *(She dreams about a trip)*». Your thoughts go directly to the object.
+Якщо ви хочете чимось **користуватися** (to use), вам потрібен орудний відмінок. Він користується новим комп'ютером. Вона цікавиться історією. Мій друг займається спортом. Директор керує великою компанією. Іменник показує інструмент дії або сферу вашого інтересу.
 
-<!-- INJECT_ACTIVITY: quiz-verb-case -->
+> *If you want to use something, you need the instrumental case. He uses a new computer. She is interested in history. My friend does sports. The director manages a large company. The noun shows the tool of the action or the area of your interest.*
 
-## Прийменник вирішує: Один прийменник — різні відмінки
+Verbs expressing fear, need, or a lack of something strictly require the Genitive case.
 
-Часто прийменник працює як перемикач. *(Often a preposition works like a switch.)* One preposition can require different cases depending on the meaning of the sentence. Найпопулярніші прийменники — це **на** *(on/to)* та **у/в** *(in/into)*. Вони дружать із двома відмінками: Знахідним та Місцевим. *(They are friends with two cases: Accusative and Locative.)* 
+Найпопулярніше слово для цього відмінка — «немає». У мене немає часу. Але ми також маємо дієслова. Якщо ви хочете чогось **боятися** (to be afraid) або потребувати, використовуйте родовий відмінок. Вона боїться темряви. Проєкт потребує інвестицій.
 
-The choice depends on movement versus position. Якщо ми говоримо про напрямок руху, ми запитуємо «Куди?». *(If we talk about the direction of movement, we ask "Where to?".)* This is the Accusative case. Наприклад: «Я йду **на роботу** *(I am going to work)*» або «Діти йдуть **в школу** *(The children are going to school)*». Ми рухаємося до мети. *(We are moving towards a goal.)* Але якщо ми говоримо про статичне місце, ми запитуємо «Де?». *(But if we talk about a static place, we ask "Where?".)* This requires the Locative case. Наприклад: «Я працюю **на роботі** *(I work at work)*» або «Діти сидять **у школі** *(The children sit in school)*». Дія відбувається в одному місці. *(The action happens in one place.)*
+> *The most popular word for this case is "there is no". I have no time. But we also have verbs. If you want to be afraid of something or require something, use the genitive case. She is afraid of the dark. The project requires investments.*
 
-Прийменник **з/із** *(from/with)* також має два різні значення. *(The preposition "з/із" also has two different meanings.)* Коли він означає походження або старт руху, нам потрібен Родовий відмінок. *(When it means origin or start of movement, we need the Genitive case.)* Наприклад: «Я приїхав **з Києва** *(I arrived from Kyiv)*» або «Він вийшов **із дому** *(He went out of the house)*». But when "з/із" means companionship or combination, it takes the Instrumental case. Це означає «разом». *(It means "together".)* Наприклад: «Я пішов гуляти **з другом** *(I went for a walk with a friend)*». Або коли ми п'ємо напій: «Я люблю каву **з молоком** *(I like coffee with milk)*».
+Finally, some verbs require a specific preposition, which dictates the case. A classic example is when you **думати** (to think) about something. The preposition «про» always takes the Accusative.
 
-Ще один цікавий прийменник — це **за** *(for/behind)*. *(Another interesting preposition is "за".)* We use it with the Accusative case to show exchange, price, or gratitude. Наприклад: «Я плачу **за квиток** *(I pay for the ticket)*» або «Ми дякуємо **за допомогу** *(We thank for the help)*». However, when "за" indicates a physical location behind or after something, we use the Instrumental case. Наприклад: «Ми сидимо **за столом** *(We are sitting at the table)*». Або якщо ми наздоганяємо транспорт: «Він біжить **за автобусом** *(He is running after the bus)*».
+Коли ви мрієте або думаєте про щось, ви використовуєте прийменник «про» і знахідний відмінок. Я часто думаю про майбутнє. Вони мріють про подорож. Ми думаємо про новий план.
 
-Прийменник **по** *(along/around)* найчастіше працює з Місцевим відмінком. *(The preposition "по" most often works with the Locative case.)* It describes movement along a path or across a surface. Наприклад: «Ми любимо ходити **по вулиці** *(We like to walk along the street)*». Якщо ми вдома: «Кіт бігає **по кімнаті** *(The cat runs around the room)*». Або масштабно: «Ми подорожуємо **по Україні** *(We travel around Ukraine)*».
+> *When you dream or think about something, you use the preposition "про" and the accusative case. I often think about the future. They dream about a trip. We are thinking about a new plan.*
 
-Інші популярні прийменники зазвичай мають лише один відмінок. *(Other popular prepositions usually have only one case.)* Прийменник **для** *(for)* вказує на мету і вимагає Родового відмінка: «Це подарунок **для мами** *(This is a gift for mom)*». Прийменник **біля** *(near)* також любить Родовий відмінок: «Я стою **біля вікна** *(I stand near the window)*». Прийменник **до** *(to/towards)* показує фінальну точку маршруту: «Ми їдемо **до лісу** *(We are driving to the forest)*».
+## Прийменник вирішує: Один прийменник — різні відмінки (~600 words)
 
-<!-- INJECT_ACTIVITY: group-sort-prepositions -->
+In Ukrainian, a **прийменник** (preposition) usually dictates which grammatical case must follow it. Many prepositions are strictly tied to just one specific case and never change their behavior. However, the most interesting and common prepositions in the language are dual-use. They can govern two completely different cases depending on their core meaning in the sentence. The most frequent distinction these prepositions make is between a dynamic **напрямок** (direction) of a movement and a static **місце** (place, location) where an action happens. Understanding this logical difference is the absolute key to mastering Ukrainian prepositions and avoiding basic errors.
 
-## Особливі випадки: Час, характеристика, шлях
+Прийменник «на» дуже часто вказує на напрямок або місце, і це змінює відмінок. Якщо ви активно рухаєтесь кудись, це напрямок, і вам обов'язково потрібен знахідний відмінок. Наприклад, я щоранку йду на роботу. Поклади цю нову книгу на стіл, будь ласка. Але якщо ви вже там знаходитесь і дія статична, це місце. Тоді потрібен місцевий відмінок. Я зараз на роботі і не можу говорити. Книга вже довго лежить на столі.
 
-Іноді відмінки працюють як спеціальні коди для часу. *(Sometimes cases work like special codes for time.)* Коли ми говоримо про дні тижня, ми завжди використовуємо прийменник **у/в** та Знахідний відмінок. *(When we talk about days of the week, we always use the preposition "у/в" and the Accusative case.)* Наприклад: «Я працюю **у вівторок** *(I work on Tuesday)*», «У **середу** я вдома *(On Wednesday I am at home)*» або «Ми відпочиваємо **у четвер** та **у п'ятницю** *(We rest on Thursday and Friday)*». We also use the Accusative case to say "this week" or "this year" without a preposition.
- Наприклад: «**Цю неділю** я сиджу вдома *(This Sunday I sit at home)*». Але якщо ми говоримо про минулий або майбутній час, правило змінюється. *(But if we talk about past or future time, the rule changes.)* To say "next week" or "last month", we use the Genitive case without a preposition. Наприклад: «Я поїду туди **наступного тижня** *(I will go there next week)*» або «Це було **минулого місяця** *(It was last month)*».
+> *The preposition "на" very often indicates direction or location, and this changes the case. If you are actively moving somewhere, it is a direction, and you absolutely need the accusative case. For example, I go to work every morning. Put this new book on the table, please. But if you are already located there and the action is static, it is a place. Then you need the locative case. I am at work now and cannot talk. The book has been lying on the table for a long time.*
 
-Місцевий відмінок допомагає нам говорити про роки та описувати людей. *(The Locative case helps us talk about years and describe people.)* Коли ми називаємо рік, ми використовуємо прийменник **у/в** та слово «рік» у Місцевому відмінку. *(When we name a year, we use the preposition "у/в" and the word "year" in the Locative case.)* Наприклад: «Він народився **у 2024 році** *(He was born in 2024)*», «Це було **у дитинстві** *(It was in childhood)*» або «Ми живемо **у двадцять першому столітті** *(We live in the twenty-first century)*». We also use "у/в" plus Locative to describe what someone is wearing or what they look like.
- Це дуже корисна конструкція для опису зовнішності та одягу. *(This is a very useful construction for describing appearance and clothes.)* Наприклад: «Хто цей **хлопець у синьому светрі**? *(Who is this boy in a blue sweater?)*», «Там стоїть **дівчина в окулярах** *(A girl in glasses is standing there)*» або «Це **жінка у білому пальті** *(This is a woman in a white coat)*». The clothing or accessory must always be in the Locative case.
+The preposition "у" or "в" works exactly the same way, creating a clear division between movement and static presence. When it shows the destination of a movement, you use the Accusative case.
 
-Рух у просторі також має свої спеціальні прийменники. *(Movement in space also has its special prepositions.)* Коли ми рухаємося по поверхні або гуляємо без конкретної мети, ми використовуємо прийменник **по** та Місцевий відмінок. *(When we move across a surface or walk without a specific goal, we use the preposition "по" and the Locative case.)* Це означає тривалий рух всередині певної зони. *(This means prolonged movement inside a certain area.)* Наприклад: «Ми дуже любимо **гуляти по парку** *(We really like to walk around the park)*» або «Діти весело **бігають по кімнаті** *(The children happily run around the room)*». Але якщо нам треба перетнути щось від одного краю до іншого, ми беремо прийменник **через** *(across/through)* та Знахідний відмінок. *(But if we need to cross something from one edge to another, we take the preposition "через" and the Accusative case.)* Наприклад: «Нам треба обережно **перейти через дорогу** *(We need to carefully cross the road)*» або «Ми зараз їдемо **через ліс** *(We are driving through the forest now)*».
+**Я йду в магазин.** — *I am going to the store.*
 
-Знахідний відмінок має ще кілька цікавих секретів для спілкування. *(The Accusative case has a few more interesting secrets for communication.)* Коли ми обговорюємо якусь тему, ми використовуємо прийменник **про** *(about)*. *(When we discuss some topic, we use the preposition "про".)* Цей прийменник завжди вимагає Знахідного відмінка. *(This preposition always requires the Accusative case.)* Наприклад: «Ми часто **говоримо про політику** *(We often talk about politics)*» або «Вона постійно **думає про майбутнє** *(She constantly thinks about the future)*». Another advanced use of the Accusative case is with the preposition "за" to show how long an action takes to complete. Це означає результативність дії. *(This means the result orientation of an action.)* Наприклад: «Я можу **зробити це за годину** *(I can do this in an hour)*» або «Він **прочитав книгу за день** *(He read the book in a day)*». Це гарний спосіб показати швидкість нашої роботи. *(This is a good way to show the speed of our work.)*
+This means you are currently walking towards the building. But when it describes a static location where someone or something already is, you must use the Locative case.
 
-<!-- INJECT_ACTIVITY: fill-in-mixed-triggers -->
+**Я в магазині.** — *I am in the store.*
 
-## Алгоритм вибору відмінка
+This means you are already inside the store shopping. This logical split between moving somewhere and being somewhere is very consistent across the language. Soon, we will also see how these prepositions are used to talk about **час** (time).
 
-Як обрати потрібний відмінок? *(How to choose the needed case?)* Запам'ятайте простий алгоритм із трьох кроків. *(Remember a simple three-step algorithm.)* Крок перший: шукаємо прийменник. *(Step one: we look for a preposition.)* Прийменник — це найсильніший сигнал. *(A preposition is the strongest signal.)* Якщо він є, ми використовуємо відмінок, який він вимагає. *(If it is there, we use the case it requires.)* Наприклад, після слова **без** *(without)* завжди йде Родовий відмінок. *(For example, after the word "без" always goes the Genitive case.)* Крок другий: якщо прийменника немає, дивимося на дієслово. *(Step two: if there is no preposition, we look at the verb.)* Кожне дієслово має свої правила. *(Each verb has its own rules.)* Наприклад, слово **допомагати** *(to help)* вимагає Давального відмінка. *(For example, the word "допомагати" requires the Dative case.)* Крок третій: якщо немає прийменника чи дієслова, це часто Називний відмінок для підмета *(Step three: if there is no preposition or verb, it is often the Nominative case for the subject)*. Якщо ми все ще сумніваємося, ставимо питання: кого? що? кому? чим? *(If we still doubt, we ask a question: whom? what? to whom? with what?)* Це надійний тест. *(This is a reliable test.)*
+:::info
+**Grammar box**
+Always ask yourself the core question of the sentence. If the question is «Куди?» (Where to?), use the Accusative case for your destination. If the question is «Де?» (Where?), use the Locative case for your current location. This single trick solves most preposition dilemmas.
+:::
 
-Англомовні студенти часто роблять кілька типових помилок. *(English-speaking students often make a few typical mistakes.)* Головна проблема — це прямий переклад прийменників. *(The main problem is the direct translation of prepositions.)* Ніколи не перекладайте слова "for" та "with" буквально! *(Never translate words "for" and "with" literally!)* Завжди дивіться на контекст речення. *(Always look at the context of the sentence.)* Часта помилка стосується дієслова **допомагати** *(to help)*. *(A frequent mistake concerns the verb "допомагати".)* В англійській мові ми кажемо "with the help of", тому студенти використовують Родовий відмінок. *(In English we say "with the help of", so students use the Genitive case.)* Але українською ми кажемо: «Я **допомагаю мамі** *(I am helping mom)*». Це Давальний відмінок. *(This is the Dative case.)* Також пам'ятайте про різницю між напрямком та місцем. *(Also remember about the difference between direction and place.)* Порівняйте: «Я іду **на роботу** *(I am going to work)*». Це напрямок, тому беремо Знахідний відмінок. *(This is a direction, so we take the Accusative case.)* Але: «Я сиджу **на роботі** *(I am sitting at work)*». Це місце, тому потрібен Місцевий відмінок. *(This is a place, so the Locative case is needed.)*
+Прийменник «по» в українській мові найчастіше працює з місцевим відмінком. Він показує рух по якійсь поверхні або довгий шлях. Маленькі діти дуже люблять швидко бігати по кімнаті. Ми часто ходимо по вулиці ввечері, коли маємо вільний час. Наші друзі хочуть подорожувати по Україні наступного року. Цей прийменник чудово показує широкий простір, де відбувається дія.
 
-Давайте розглянемо алгоритм на практиці. *(Let's look at the algorithm in practice.)* Проаналізуємо таке речення: «Я **дякую другу** за подарунок у коробці». *(Let's analyze such a sentence: "I thank a friend for a gift in a box".)* Чому слово **друг** *(friend)* стоїть у Давальному відмінку? *(Why is the word "друг" in the Dative case?)* Тому що дієслово **дякувати** *(to thank)* вимагає Давального відмінка. *(Because the verb "дякувати" requires the Dative case.)* Далі йде слово **подарунок** *(gift)*. *(Next goes the word "подарунок".)* Перед ним стоїть прийменник **за** *(for)*. *(Before it stands the preposition "за".)* Це подяка, тому використовуємо Знахідний відмінок. *(This is gratitude, so we use the Accusative case.)* Нарешті, бачимо слово **коробка** *(box)*. *(Finally, we see the word "коробка".)* Перед ним є прийменник **у** *(in)*, який вказує на місце. *(Before it there is a preposition "у", which indicates a place.)* Тому ми ставимо це слово у Місцевий відмінок: **у коробці** *(in a box)*. *(That's why we put this word in the Locative case: "у коробці".)* Цей аналіз допоможе вам говорити правильно. *(This analysis will help you speak correctly.)*
+Another fascinating dual-use preposition is "з" or "із". When it means "from" or "out of" a specific place, it governs the Genitive case. Both of these examples describe the origin point of a movement:
 
-<!-- INJECT_ACTIVITY: true-false-case-logic -->
+**вийти з дому** — *to go out of the house*
+**приїхати з Києва** — *to arrive from Kyiv*
 
-## Підсумок
+However, when it means "together with" a person or an object, it strictly requires the Instrumental case. The intended meaning completely shifts the grammatical rules you apply:
 
-Ми вивчили багато нових правил. *(We learned many new rules.)* Вибір відмінка — це логічний процес. *(Choosing a case is a logical process.)* Спочатку ми шукаємо прийменник. *(First, we look for a preposition.)* Якщо його немає, ми дивимося на дієслово. *(If there is none, we look at the verb.)* Перевірте ваші знання за допомогою цих запитань. *(Check your knowledge with these questions.)*
+**піти з другом** — *to go with a friend*
+**кава з молоком** — *coffee with milk*
 
-Як відрізнити **напрямок** *(direction)* від **місця** *(place)* з прийменником **на** *(on/to)*? *(How to distinguish direction from place with the preposition "на"?)* Якщо це напрямок, ми використовуємо Знахідний відмінок. *(If it is a direction, we use the Accusative case.)* Ми питаємо: куди? *(We ask: where to?)* Наприклад: «Я йду на роботу». *(For example: "I am going to work".)* Якщо це місце, ми обираємо Місцевий відмінок. *(If it is a place, we choose the Locative case.)* Ми питаємо: де? *(We ask: where?)* Наприклад: «Я сиджу на роботі». *(For example: "I am sitting at work".)*
+Прийменник «за» також має дві зовсім різні граматичні ролі. Якщо ви даєте щось в обмін або щиро дякуєте, ви використовуєте знахідний відмінок. Я хочу подякувати за допомогу. Ми завжди платимо за квитки онлайн. Але якщо щось знаходиться фізично позаду, ви використовуєте орудний відмінок. Вони зараз сидять за столом. Собака дуже швидко біжить за автобусом.
 
-Який відмінок ми використовуємо для днів тижня? *(Which case do we use for days of the week?)* Для цього потрібен Знахідний відмінок. *(For this, the Accusative case is needed.)* Наприклад: «Ми зустрінемося **у понеділок** *(on Monday)*». *(For example: "We will meet on Monday".)*
+> *The preposition "за" also has two completely different grammatical roles. If you give something in exchange or sincerely say thank you, you use the accusative case. I want to say thank you for the help. We always pay for the tickets online. But if something is physically located behind, you use the instrumental case. They are sitting at the table now. The dog is running very fast after the bus.*
 
-Яке питання ми ставимо після дієслова **допомагати** *(to help)*? *(What question do we ask after the verb "допомагати"?)* Ми завжди питаємо: кому? *(We always ask: to whom?)* Тому це дієслово вимагає Давального відмінка. *(That's why this verb requires the Dative case.)* Наприклад: «Я допомагаю другу». *(For example: "I am helping a friend".)*
+<!-- INJECT_ACTIVITY: group-sort-sort-prepositions-by-which-case-s-they-govern-acc-gen-instr-loc -->
 
-Як описати одяг людини за допомогою відмінків? *(How to describe a person's clothes using cases?)* Для цього ми використовуємо прийменник **у** *(in)* та Місцевий відмінок. *(For this we use the preposition "у" and the Locative case.)* Ми кажемо: «Дівчина **у червоній сукні** *(in a red dress)*». *(We say: "A girl in a red dress".)*
+## Особливі випадки: Час, характеристика, шлях (~550 words)
 
-Українська граматика дуже логічна. *(Ukrainian grammar is very logical.)* Використовуйте цей компас відмінків кожного дня. *(Use this compass of cases every day.)* З часом ви будете обирати правильну форму автоматично. *(Over time you will choose the correct form automatically.)*
+When we talk about **час** (time), the choice of case depends on the specific period we are describing. For days of the week and specific blocks of time, Ukrainian uses the Accusative case.
 
+Для днів тижня ми використовуємо прийменник «у» або «в» та знахідний відмінок. Наприклад, ми часто кажемо «у четвер», «у середу» або «у п'ятницю». Іноді ми можемо сказати про час навіть без прийменника. Якщо ви хочете сказати про свої плани, ви можете сказати: «Цю неділю я відпочиваю». Але для фраз зі словами «наступний» або «минулий» ми завжди обираємо родовий відмінок. Наприклад, ми кажемо «наступного тижня» або «минулого року».
+
+> *For days of the week, we use the preposition "у" or "в" and the accusative case. For example, we often say "on Thursday", "on Wednesday" or "on Friday". Sometimes we can talk about time even without a preposition. If you want to talk about your plans, you can say: "This Sunday I am resting". But for phrases with the words "next" or "last", we always choose the genitive case. For example, we say "next week" or "last year".*
+
+:::note
+**Quick tip** — Use the Accusative case for days of the week (`у понеділок`), but remember to switch to the Genitive case for phrases with "next" or "last" (`наступного вівторка`, `минулого тижня`).
+:::
+
+The Locative case has a very special and descriptive function. We use it to describe a physical **характеристика** (characteristic, description), especially what someone is wearing. The pattern is simply the noun plus "у" or "в" followed by the Locative case.
+
+Коли ми описуємо людей на вулиці, ми звертаємо увагу на їхній одяг. Для цього ми використовуємо місцевий відмінок. Наприклад, ви можете побачити, як іде хлопець у червоному светрі. Біля нього стоїть дівчина в окулярах. А поруч розмовляє по телефону жінка у білому пальті. Це дуже зручний спосіб описати зовнішність людини без складних речень.
+
+> *When we describe people on the street, we pay attention to their clothes. For this, we use the locative case. For example, you might see a guy in a red sweater walking. A girl in glasses is standing next to him. And nearby, a woman in a white coat is talking on the phone. This is a very convenient way to describe a person's appearance without complex sentences.*
+
+We also return to the Locative case when talking about years and broader contexts of time, such as life stages or centuries.
+
+Для великих періодів часу українська мова теж вимагає місцевого відмінка. Ми завжди використовуємо його, коли називаємо конкретний рік. Наприклад, багато важливих подій відбулося у 2014 році. Ми живемо у двадцять першому столітті. Також ми вживаємо цю форму для періодів життя. Часто можна почути фрази «у дитинстві» або «в юності».
+
+> *For large periods of time, the Ukrainian language also requires the locative case. We always use it when we name a specific year. For example, many important events happened in 2014. We live in the twenty-first century. We also use this form for life periods. You can often hear the phrases "in childhood" or "in youth".*
+
+Finally, let's look at how to describe movement across a **місце** (place, location) or a specific path. The preposition "по" paired with the Locative case is your best tool for this.
+
+Прийменник «по» показує рух по поверхні або в межах певної території. Він чудово описує хаотичний рух або довгий шлях. Маленькі діти люблять швидко бігати по кімнаті. У вихідні ми можемо довго гуляти по парку з собакою. А туристи часто люблять їздити по місту на автобусі. У цих реченнях дія не має кінцевої точки, це просто рух у просторі.
+
+> *The preposition "по" shows movement across a surface or within a certain territory. It perfectly describes chaotic movement or a long path. Small children like to run fast around the room. On weekends, we can walk around the park with the dog for a long time. And tourists often like to ride around the city on a bus. In these sentences, the action does not have an end point, it is just movement in space.*
+
+<!-- INJECT_ACTIVITY: fill-in-mixed-cases --> [fill-in, Complete sentences with the correct noun form — mixed cases triggered by different prepositions and verbs, including time expressions (у четвер), characteristics (у червоному светрі), and path (по кімнаті), 8 items]
+
+## Алгоритм вибору відмінка (~450 words)
+
+When you speak Ukrainian, choosing the correct **відмінок** (grammatical case) can feel overwhelming. To make it easier, we use a simple three-step algorithm. The first step is to look for a **прийменник** (preposition). If there is one, it usually dictates the case immediately. If there is no preposition, move to step two: check the **дієслово** (verb). Many verbs require a specific case for their object. Finally, step three: if you are still unsure, ask the case question, such as «кого?», «що?», «кому?», or «ким?».
+
+Цей простий алгоритм допомагає швидко знайти правильну форму слова. Спочатку ми завжди шукаємо прийменник у реченні. Якщо його немає, ми дивимося на головне дієслово. Дієслово часто керує іменником і вимагає конкретного відмінка. Якщо це не допомагає, ми ставимо питання до слова.
+
+> *This simple algorithm helps to quickly find the correct word form. First, we always look for a preposition in the sentence. If there isn't one, we look at the main verb. The verb often governs the noun and requires a specific case. If that doesn't help, we ask a question to the word.*
+
+Let's walk through this decision tree using a real sentence: "The student reads a book on the table." First, who is doing the action? The subject is always in the Nominative case. Then, we apply our algorithm to the rest of the sentence. We must determine if the preposition indicates a **місце** (place, location) or a **напрямок** (direction).
+
+Студент читає книгу на столі. Хто виконує дію? Студент. Це називний відмінок. Далі ми бачимо дієслово «читати». Воно вимагає знахідного відмінка для об'єкта, тому ми кажемо «книгу». Потім іде прийменник «на». Він вказує на локацію, а не на рух. Тому ми використовуємо місцевий відмінок і кажемо «на столі».
+
+> *The student reads a book on the table. Who performs the action? The student. This is the nominative case. Next, we see the verb "to read". It requires the accusative case for the object, so we say "a book". Then comes the preposition "on". It indicates a location, not a movement. Therefore, we use the locative case and say "on the table".*
+
+There are a few common pitfalls that learners often encounter. The biggest confusion is usually with the preposition "на" and expressions of **час** (time). Remember that we also use the Locative case when describing a physical **характеристика** (characteristic, description) of a person. Another trap involves specific verbs. For example, the verb **думати** (to think) takes "про" plus the Accusative case, not the Locative.
+
+Студенти часто плутають напрямок і статику. Вони також забувають правильні відмінки після конкретних дієслів. Багато людей помилково використовують родовий відмінок після дієслова «допомагати». Але це дієслово завжди вимагає давального відмінка. Також ми ніколи не кажемо «думати в чомусь», ми кажемо «думати про щось».
+
+> *Students often confuse direction and static location. They also forget the correct cases after specific verbs. Many people mistakenly use the genitive case after the verb "to help". But this verb always requires the dative case. Also, we never say "to think in something", we say "to think about something".*
+
+Do not let the case system intimidate you. It is normal **боятися** (to be afraid) of making mistakes at first. But by systematically applying this algorithm, you can confidently **користуватися** (to use) the correct forms. Always check your prepositions and verbs first, and memorize the specific cases they trigger.
+
+:::tip
+**Quick tip** — When learning a new verb, always memorize the preposition and case it requires as a single block. For example, learn "думати про + Acc." instead of just "думати".
+:::
+
+Спочатку ця система здається дуже складною. Але регулярна практика робить дива. З часом ви будете автоматично вибирати правильний відмінок. Ви просто запам'ятаєте, як слова працюють разом у контексті. Ваша українська мова стане природною та впевненою.
+
+> *At first, this system seems very difficult. But regular practice does miracles. Over time, you will automatically choose the correct case. You will simply remember how words work together in context. Your Ukrainian language will become natural and confident.*
+
+<!-- INJECT_ACTIVITY: quiz-case-verb-prep -->
+<!-- INJECT_ACTIVITY: true-false-case-pairs -->
 </module_content>
 
 ---
@@ -198,48 +286,68 @@ version: "1.0"
 module: which-case-when
 level: a2
 
+# NOTE — these are SHAPE examples. The real targets are at the top of this prompt
+# (12 total / 4–6 inline / 8–11 workbook,
+# 8+ items per activity). The shapes below are TRUNCATED for readability;
+# YOUR output MUST hit those minimums.
+
 inline:
   - id: marker-id-here        # MUST match an <!-- INJECT_ACTIVITY: ... --> marker
     type: quiz                 # activity type
     instruction: "Оберіть правильний варіант"
-    items:
+    items:                     # ← real output: ≥ 8 items
       - question: "_____ стіл"
-        options: ["мій", "моя", "моє"]
+        options: ["мій", "моя", "моє", "мої"]
         correct: 0             # 0-based index
+      - question: "Це ____ книга."
+        options: ["мій", "моя", "моє", "мої"]
+        correct: 1
+      # ... add at least 8 items total — never stop at 1-2
 
   - id: another-marker-id
     type: fill-in
     instruction: "Вставте правильне слово"
-    items:
+    items:                     # ← real output: ≥ 8 items
       - sentence: "Це ____ кімната."
         answer: "моя"
         options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ вікно."
+        answer: "моє"
+        options: ["мій", "моя", "моє"]
+      # ... ≥ 8 items total
 
 workbook:
-  - type: match-up
+  - id: match-up-vocab
+    type: match-up
     instruction: "З'єднайте пари"
-    pairs:
+    pairs:                     # ← real output: ≥ 8 pairs
       - left: "стіл"
         right: "він"
       - left: "книга"
         right: "вона"
       - left: "вікно"
         right: "воно"
+      # ... ≥ 8 pairs total
 
-  - type: group-sort
+  - id: group-sort-gender
+    type: group-sort
     instruction: "Розподіліть слова за категоріями"
     groups:
-      - label: "Category A"
-        items: ["word1", "word2"]
-      - label: "Category B"
-        items: ["word3", "word4"]
+      - label: "Чоловічий рід"
+        items: ["стіл", "олівець", "будинок"]   # ≥ 3 items per group
+      - label: "Жіночий рід"
+        items: ["книга", "ручка", "школа"]
+      - label: "Середній рід"
+        items: ["вікно", "море", "молоко"]
 
-  - type: true-false
+  - id: true-false-grammar
+    type: true-false
     instruction: "Правда чи ні?"
-    items:
-      - statement: "Statement here"
-        correct: true
-        explanation: "Why it's true"
+    items:                     # ← real output: ≥ 8 items
+      - statement: "«Книга» — це чоловічий рід."
+        correct: false
+        explanation: "Книга закінчується на -а, отже жіночий рід."
+      # ... ≥ 8 items total
 
   - type: error-correction
     instruction: "Виправте помилку"
@@ -310,7 +418,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -438,10 +546,15 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 ## Quality Rules
 
-**ITEM COUNT MINIMUMS (non-negotiable):**
-- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
-- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
-- If you can't think of enough items, add more examples from the module's vocabulary and content.
+**ACTIVITY COUNT MINIMUMS (non-negotiable, audit-enforced):**
+- **Total: 12 activities.** Inline: 4–6. Workbook: 8–11. The audit gate FAILS the module if you ship fewer.
+- **Type diversity: workbook MUST cover ≥5 distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
+- **Match the inline markers exactly.** Every `<!-- INJECT_ACTIVITY: id -->` marker in the prose needs a matching inline activity with that exact id. Skipping markers means the lesson tab is broken.
+
+**ITEM COUNT MINIMUMS (non-negotiable, per-activity):**
+- **Default minimum: 8 items per activity.** Quiz, fill-in, match-up, true-false, anagram, error-correction, translate, cloze, mark-the-words, divide-words, count-syllables, odd-one-out, group-sort categories: all ≥ 8.
+- **Lower minimums for specific types only:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items, essay-response/critical-analysis = 1 prompt.
+- If you can't think of enough items, add more examples from the module's vocabulary and content. NEVER ship a 1-item or 2-item activity unless its type cap explicitly allows it.
 - **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
 - **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
@@ -548,6 +661,27 @@ IMPORTANT: After using tools, output your COMPLETE module content as plain text.
 1. Run `verify_words` on all Ukrainian words in your exercises — every word must exist in VESUM
 2. Run `query_cefr_level` on any word you're unsure about — it must be a2-appropriate
 3. For fill-in answers and distractors, verify the exact form (case, number, gender) with `verify_lemma`
+
+---
+
+## ⚠️ MANDATORY FINAL CHECKLIST — verify before emitting YAML
+
+Walk through this checklist explicitly before you start emitting. If ANY box is unchecked, fix it FIRST.
+
+- [ ] My output has **at least 4** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
+- [ ] My output has **at least 8** workbook activities.
+- [ ] **Total ≥ 12.**
+- [ ] **Every** activity has **at least 8** items, pairs, or statements (except types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3, essay-response=1).
+- [ ] The module (inline + workbook combined) uses **at least 0 distinct activity types** (or 4+ when 0 = 0 and the workbook size allows it). I am NOT shipping a wall of quizzes.
+- [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
+- [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
+- [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+- [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+- [ ] My inline count is between 4 and 6. I did NOT create more injection markers than 6.
+- [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
+- [ ] At B1+, all instructions are in Ukrainian (no English fallback).
+
+If you cannot tick all of these, REGENERATE the activities BEFORE outputting. Shipping under-spec means the build rejects you and the heal loop has to redo your work — wasting compute.
 
 ---
 

@@ -237,26 +237,23 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-- Confirmed: читати, знати, працювати, слухати, гуляти, готувати, робити, вивчати, малювати, грати, вечеря, музика.
-- Not found: None.
+- Confirmed: читати, знати, працювати, слухати, гуляти, готувати, робити, вивчати, малювати, грати, вечеря, музика
+- Not found: (none)
 
 ## Grammar Rules
-- Перша дієвідміна (Group I): Правопис §114 — Дієслова І дієвідміни в усіх особах теперішнього часу (крім 1-ї особи однини та 3-ї особи множини) мають у закінченнях тематичні голосні **-е-, -є-**, а в 3-й особі множини — закінчення **-уть, -ють**.
-- Приклади: читати — чита**єш**, чита**є**, чита**ють**; малювати — малю**єш**, малю**є**, малю**ють**.
+- Правопис дієслівних суфіксів -ува- (-юва-): Правопис §34 — У багатьох дієсловах української мови пишемо суфікс -ува- (-юва-): будувати, гостювати, керувати, міркувати; лікарювати, учителювати.
 
 ## Calque Warnings
-- брати участь: OK — (Proper form, common mistake is "приймати участь" which is a Russianism).
-- вивчати українську: OK — (Use "вивчати" for systematic study of a subject/language; "учити" is also acceptable but "вивчати" is more precise for A1.3 context).
-- готувати вечерю: OK — (Standard Ukrainian phrasing).
+- готувати вечерю: OK — (no calque found)
+- вивчати українську: OK — (no calque found)
+- здійснити шкоду / здійснити злочин: stylistic error / calque — зробити шкоду (або вчинити злочин)
 
 ## CEFR Check
 - читати: A1 — OK
 - працювати: A1 — OK
 - готувати: A1 — OK
-- вивчати: A1 — OK
-- вечеря: A1 — OK
-- музика: A1 — OK
-- (All verified via textbook analysis and general CEFR A1 frequency lists as the `query_cefr_level` tool encountered a technical error).
+- грати: A1 — OK
+- вивчати: A2 — Above target
 </pre_verified_facts>
 
 
@@ -617,12 +614,14 @@ This is the core vocabulary for A1 verb practice.
 
 ## Section Structure
 
-Write these sections as H2 headings, in this exact order:
+Write these sections as H2 headings, in this **exact** order:
 
 - `## Діалоги (Dialogues)` (~300 words)
 - `## Перша дієвідміна (Group I Verbs)` (~300 words)
 - `## Я, ти, він/вона (Persons)` (~300 words)
 - `## Підсумок — Summary` (~300 words)
+
+**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim** as an `## H2` line. This includes the FINAL summary/transition section (`Підсумок: ...`, `Підсумок та перехід до M...`, etc.) — the writer's most common failure is silently dropping the closing section. Do NOT skip it. Do NOT renumber. Do NOT merge headings. The post-write quick-verify check will fail your build if any heading is missing, even if the prose itself is excellent.
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -668,6 +667,25 @@ HARD GRAMMAR RULES (audit will reject violations):
 - **Zero calques**: No приймати душ→брати душ, приймати рішення→ухвалювати рішення
 - **Zero paronyms**: тактична≠тактовна, ефектний≠ефективний — use the right word, not a similar-sounding one
 - **Natural Ukrainian**: Write how a Ukrainian teacher would explain this to a student. Not robotic, not textbook-dry, not overly casual.
+
+### FORBIDDEN WORDS — never write these (#1189)
+
+The following Russian words have leaked into past builds and broken modules. They are **hard-banned** — the post-write toxic-token scanner will fail your build the moment it sees one. Use the Ukrainian alternative every time, even in dialogues, even in casual prose, even when quoting a learner's mistake (use a `<!-- VERIFY -->` placeholder instead of typing the Russian form):
+
+| Russian (FORBIDDEN) | Ukrainian (USE THIS) |
+|---|---|
+| хорошо | добре |
+| конечно | звичайно / певна річ |
+| спасибо | дякую |
+| пожалуйста | будь ласка / прошу |
+| ничего | нічого |
+| сейчас | зараз |
+| тоже | теж / також |
+| здесь | тут |
+| кот | кіт |
+| кон | кін |
+
+This list is enforced word-for-word by `scripts/build/quick_verify.py` (SEVERE_RUSSIANISMS). If you produce any of these tokens — even inside a quoted example, even inside a dialogue line spoken by a Russian-speaking character — the build halts immediately. There is no exception.
 
 **Authority hierarchy (if uncertain about a word, check in this order):**
 VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (stress) → Антоненко-Давидович (style) → Грінченко (etymology).
@@ -779,44 +797,39 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Діалоги — Dialogues (~350 words total)
-- P1 (~70 words): Introduction to the concept of action. In Ukrainian, we don't just "be" (like "I am a student"), we "do." Setting the scene in a shared kitchen where daily life happens through verbs like *читати* (to read) and *готувати* (to cook).
-- Dialogue 1 (~100 words): In the kitchen. Сашко asks Юля: "Що ти робиш?" (What are you doing?). Юля explains she is cooking dinner (*Я готую вечерю*), while Сашко admits he is just reading (*Я читаю*). They discuss what Олена is doing (*Вона слухає музику*).
-- P2 (~80 words): Analysis of Dialogue 1. Highlighting how the endings of the verbs change based on who is speaking: *готу-ю* (I), *чита-єш* (you), *слуха-є* (she). Introducing the central question "Що ти робиш?" as the key to unlocking present tense conversations.
-- Dialogue 2 (~100 words): At work/school. A conversation about professional life and study. "Де ти працюєш?" (Where do you work?). "Я працюю в офісі." Transition to learning: "Ти знаєш українську?" (Do you know Ukrainian?). "Так, я вивчаю!" (Yes, I am learning!).
-- <!-- INJECT_ACTIVITY: match-up-person-verb --> [match-up, focus: person to verb form (я ↔ читаю, ти ↔ знаєш), 6 items]
+## Діалоги (Dialogues) (~330 words)
+- P1 (~50 words): Introduction to the module. Verbs are action words ("що робити?"). Explain that today we are learning how to talk about what we do, our daily activities, and how to ask others about theirs.
+- P2 (~100 words): Present Dialogue 1 context (In a shared kitchen). Dialogue: "— Що ти робиш? — Я читаю книгу. А ти? — Я слухаю музику. — А що робить Олена? — Вона готує вечерю." This introduces the verbs naturally in conversation.
+- P3 (~80 words): Break down Dialogue 1. Point out the verbs (робиш, читаю, слухаю, готує) and highlight how the ending of the verb changes depending on who is performing the action (я, ти, вона). 
+- P4 (~100 words): Present Dialogue 2 context (At work/school). Dialogue: "— Де ти працюєш? — Я працюю в офісі. А ти? — Я не працюю, я навчаюся. — Ти знаєш українську? — Так, я вивчаю!" Shows Group I verbs in practical, everyday contexts.
 
-## Перша дієвідміна — Group I Verbs (~350 words total)
-- P1 (~80 words): Defining "Group I" (Перша дієвідміна). Explaining the infinitive marker *-ати* (and *-увати*). Using the "They Test" from the wiki: if *вони* ends in *-уть* or *-ють* (like *читають*), it belongs to Group I.
-- P2 (~100 words): The Conjugation Table. Presenting the full paradigm for *читати*: я чита-ю, ти чита-єш, він/вона чита-є, ми чита-ємо, ви чита-єте, вони чита-ють. Focus on the characteristic vowel *-є-* that links the stem to the ending.
-- P3 (~90 words): Deep dive into the 6 essential verbs: *читати* (to read), *знати* (to know), *працювати* (to work), *слухати* (to listen), *гуляти* (to walk), and *готувати* (to cook). Note on *працювати* and *готувати*: the *-ува-* suffix shifts slightly in conjugation (*працю-ю*, *готу-ю*).
-- P4 (~80 words): Phonetic focus. Explaining that the *-є-* in *-єш* and *-є* sounds like "ye" after a vowel (like in *зна-єш*), ensuring learners don't use the Russian-style "e" sound. Emphasizing clear Ukrainian pronunciation of the endings.
-- <!-- INJECT_ACTIVITY: fill-in-conjugation-drill --> [fill-in, focus: conjugate я, ти, він for basic verbs (я чита__, ти зна__), 10 items]
+## Перша дієвідміна (Group I Verbs) (~330 words)
+- P1 (~80 words): Introduce the concept of conjugation (дієвідмінювання). Explain that Ukrainian verbs change endings depending on the person. Introduce Group I (First Conjugation) verbs, which typically have infinitives ending in -ати (like читати, слухати).
+- P2 (~100 words): Present the core Group I conjugation pattern using "читати" as the model (Reference Варзацька Grade 4 p.129). Show the full present tense table: я читаю, ти читаєш, він/вона читає, ми читаємо, ви читаєте, вони читають. Highlight the consistent pattern: stem + -ю, -єш, -є, -ємо, -єте, -ють.
+- P3 (~90 words): Introduce the 6 essential verbs for this module: читати, знати, працювати, слухати, гуляти, готувати. Show how they all follow this exact same conjugation pattern (e.g., я знаю, ти працюєш, вона слухає).
+- P4 (~60 words): Note on usage: these present tense verbs describe general habits, routines, and ongoing actions right now. 
+- <!-- INJECT_ACTIVITY: fill-in-conjugation --> [type: fill-in, focus: 'Conjugate: я чита__, ти чита__, він чита__', items: 10]
+- <!-- INJECT_ACTIVITY: match-up-person-verb --> [type: match-up, focus: 'Match person to verb form: я ↔ читаю, ти ↔ читаєш', items: 6]
 
-## Я, ти, він/вона — Persons and Sentences (~350 words total)
-- P1 (~80 words): Prioritizing the "Big Three." Explaining why *Я*, *Ти*, and *Він/Вона* forms are the 90% of beginner Ukrainian. Comparison of endings: *-ю* for the self, *-єш* for the partner, *-є* for the third person.
-- P2 (~100 words): Building your first sentences (Subject + Verb + Object). Using vocabulary from previous modules: *Я читаю нову книгу* (M08/09), *Ти знаєш цю пісню* (M12). Explaining that the object changes form (*книгу*, *пісню*) and should be learned as a chunk for now.
-- P3 (~80 words): The "No-Be" Rule (Decolonization/L2 Error focus). English speakers want to say "I am reading" (*Я є читаю*). Stressing that in Ukrainian, the verb *читаю* already contains the "am" action. *Я читаю* = "I read" and "I am reading."
-- P4 (~90 words): Plurality in action. Expanding to *Ми* (we), *Ви* (you plural/formal), and *Вони* (they). Examples of collective actions: *Ми працюємо разом* (We work together), *Ви гуляєте в парку* (You walk in the park), *Вони знають правду* (They know the truth).
-- <!-- INJECT_ACTIVITY: quiz-subject-verb-agreement --> [quiz, focus: choose correct form based on pronoun (Вона читає/читаю книгу), 8 items]
-- <!-- INJECT_ACTIVITY: fill-in-complete-sentence --> [fill-in, focus: complete the response (Що ти ___? — Я ___ музику), 6 items]
+## Я, ти, він/вона (Persons) (~330 words)
+- P1 (~90 words): Focus intensely on the three most common singular forms: я (I), ти (you, singular informal), and він/вона (he/she). Reiterate their specific endings: я takes -ю, ти takes -єш, він/вона takes -є. These three forms cover 90% of daily A1 conversations.
+- P2 (~100 words): Provide contrasting examples focusing on these three persons. E.g., "Я слухаю музику. Ти слухаєш подкаст. Вона слухає радіо." Explain that because the verb ending makes the person obvious, Ukrainians often drop the pronoun in casual speech (e.g., just saying "Працюю вдома" instead of "Я працюю вдома").
+- P3 (~90 words): Building simple sentences (Subject + Verb + Object). Introduce the question "Що ти робиш?" as a useful chunk. Show how to combine these verbs with known vocabulary: "Я читаю нову книгу" (книгу as object), "Вона готує вечерю", "Ти знаєш цю пісню?".
+- P4 (~50 words): Address common English-speaker mistakes. Warn against using the infinitive for everything ("Я читати книгу" ❌ -> "Я читаю книгу" ✅) and warn against inserting the verb "to be" in the present tense ("Він є читає" ❌ -> "Він читає" ✅).
+- <!-- INJECT_ACTIVITY: quiz-correct-form --> [type: quiz, focus: 'Choose correct form: Вона (читаю/читаєш/читає) книгу.', items: 8]
+- <!-- INJECT_ACTIVITY: fill-in-sentences --> [type: fill-in, focus: 'Complete the sentence: Що ти ___? — Я ___ музику. (слухати)', items: 6]
 
-## Підсумок — Summary (~330 words total)
-- P1 (~100 words): Final recap of the Group I pattern. The "Formula of Actions": start with the infinitive *-ати*, drop the *-ти*, and add your personal ending (*-ю, -єш, -є, -ємо, -єте, -ють*). Reminder of the 6 core verbs that will be the foundation of your daily Ukrainian.
-- P2 (~100 words): Cultural/Practical note. Encouraging learners to narrate their day using these verbs. Even simple thoughts like *Я працюю* or *Вона готує* build the habit of "Thinking in Ukrainian" instead of translating word-for-word from English.
-- P3 (~130 words): Self-Check Questions and Checklist.
-    - Can you conjugate *слухати* for *я*, *ти*, and *він/вона*?
-    - How do you ask someone "What are you doing?" (*Що ти робиш?*)
-    - Checklist of Verbs:
-        - [ ] *читати* (to read)
-        - [ ] *знати* (to know)
-        - [ ] *працювати* (to work)
-        - [ ] *слухати* (to listen)
-        - [ ] *гуляти* (to walk)
-        - [ ] *готувати* (to cook)
-    - Preview of Module 17: Moving from *-ати* verbs to the *-ити* family (Group II).
+## Підсумок — Summary (~330 words)
+- P1 (~120 words): Recap the Group I conjugation pattern for the present tense. Restate the endings: -ю, -єш, -є, -ємо, -єте, -ють. Reiterate the core vocabulary list of 6 verbs: читати, знати, працювати, слухати, гуляти, готувати, reminding the learner that they all behave exactly the same way.
+- P2 (~110 words): Recap sentence building and communication goals. Emphasize that the verb ending must always match the subject. Remind them of the key conversational phrases: asking "Що ти робиш?" (What are you doing?) and answering about one's own activities.
+- P3 (~100 words): Self-check Q&A bullet points:
+  - Як сказати "I listen"? (Я слухаю)
+  - Яке закінчення для "ти" в першій дієвідміні? (-єш, наприклад: ти працюєш)
+  - Як запитати "What are you doing?" (Що ти робиш?)
+  - Як сказати "He cooks dinner"? (Він готує вечерю)
+  - Чи можна сказати "Я є читаю"? (Ні, правильно просто "Я читаю")
 
-Grand total: ~1380 words
+Grand total: ~1320 words
 </skeleton>
 
 ## Output Format
@@ -824,11 +837,55 @@ Grand total: ~1380 words
 Write in Markdown. Use:
 - `## Section Title` for main sections
 - `### Subsection` for subsections within a section
-- `**bold**` for Ukrainian words being taught — EVERY bold Ukrainian word MUST have an English translation on first use, either in parentheses `**слово** (translation)` or inline `**слово** means "translation"`. No exceptions.
+- `**bold**` for Ukrainian words being taught. For **A1 and A2** levels, provide an English translation on first use (e.g. `**стіл** (table)`) because learners lack the vocabulary to infer meaning. For **B1 and above**, do NOT provide inline translations for standard vocabulary — the learner will use the module's словник (vocabulary table). You may provide ONE parenthetical English translation ONLY for highly abstract grammar/linguistic terms on first use (e.g. `**видова пара** (aspectual pair)`).
 - Tables for paradigms (conjugation, declension)
 - `:::tip` / `:::caution` / `:::note` for callout boxes
 - `<!-- INJECT_ACTIVITY: {id} -->` for exercise placement (markers only — do NOT write exercise content)
 
 Do NOT write MDX component syntax, JSON, or DSL exercise blocks (:::quiz, etc.). Plain Markdown with injection markers.
+
+---
+
+## MANDATORY FINAL CHECKLIST (#1189)
+
+Before you finish writing, verify the prose against this checklist. Failing any item will fail the build.
+
+### Section headings (verbatim)
+
+Every heading from "Section Structure" above MUST appear as an `## H2` in your output, in order, **including the closing `Підсумок:` / `Підсумок та перехід до M...` summary**. The single most common writer failure across the B1 build has been silently dropping the final summary section. Re-read your output before stopping. If the last section in the plan is missing, write it now.
+
+### Required vocabulary (every word must appear)
+
+You MUST use **every word** from the list below at least once in the prose, in a natural sentence with bold + English translation. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, прагматика, діагностика, дієвідмінювання, зворотний, двовидовий, одновидовий, неозначено-кількісний, etc.) is the most frequently dropped category — actively find homes for those words even if it means adding a sentence that defines them.
+
+- [ ] читати (to read)
+- [ ] знати (to know)
+- [ ] працювати (to work)
+- [ ] слухати (to listen)
+- [ ] гуляти (to walk)
+- [ ] готувати (to cook)
+
+### Forbidden words (never produce)
+
+Do not write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use `<!-- VERIFY -->` instead). The post-write toxic-token scanner will fail the build immediately:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+### Level-specific immersion check
+
+The level-appropriate immersion rule was already injected at the top of
+this prompt as `IMMERSION RULE`. Re-read it now BEFORE you stop writing.
+If your level's rule contains a CHECKLIST block, walk through every item.
+If it doesn't, just verify your output matches the LANGUAGE ROLES and
+TARGET stated in that block.
+
+This used to hard-code a B1+ checklist that confused A1/A2 models (where
+translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+The single source of truth is now
+`scripts/pipeline/config_tables.py:IMMERSION_RULES`.
+
+---
 
 Begin writing now. Start with the first section heading.

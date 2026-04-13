@@ -135,262 +135,160 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Вступ та діалог (Introduction and Dialogue)
+## Прикметники у давальному відмінку (~660 words)
 
-In previous lessons, we learned how to use the Dative case for nouns and personal pronouns. This case answers the question of who receives an action. Але що, якщо ми хочемо сказати більше? *(But what if we want to say more?)* 
+When you give something to a person, the noun phrase moves into the Dative case. The adjective must agree with the noun in gender, number, and case: **новий друг → новому другові**, **нова подруга → новій подрузі**. In Ukrainian grammar, this agreement is called **узгодження** (agreement).
 
-Instead of just giving a gift to a friend, we often want to give it to our best friend or our new teacher. Whenever we add descriptive words to a noun in the Dative case, those words must also change their endings. To do this, we need our adjectives and possessive pronouns to match the noun perfectly. Let us see how this agreement works in a real classroom situation.
+Уявіть, що ви обираєте подарунок на свято. Ви купуєте цікаву книгу новому другу. Або ви купуєте квитки в театр старому другу. Прикметник і іменник працюють разом як одна граматична команда.
 
-У класі вчитель віддає тести. *(In the classroom, the teacher is handing back tests.)* Студенти уважно слухають. *(The students listen carefully.)*
+> *Imagine that you are choosing a gift for a holiday. You buy an interesting book for a new friend. Or you buy theater tickets for an old friend. The adjective and the noun work together as one grammatical team.*
 
-> — **Вчитель:** **Моєму найкращому студентові** — десятка! *(To my best student — a ten!)*
-> — **Студенти:** Ого, вітаємо! *(Wow, congratulations!)*
-> — **Вчитель:** **Нашій новій студентці** — дев'ятка. *(To our new student — a nine.)* Дуже добре! *(Very good!)*
-> — **Нова студентка:** Дякую! *(Thank you!)* Мені дуже приємно. *(I am very pleased.)*
-> — **Вчитель:** А **цьому хлопцю** треба більше працювати. *(And this boy needs to work more.)*
-> — **Студент:** Я розумію. *(I understand.)* Дякую **нашому доброму вчителеві** за допомогу. *(Thank you to our kind teacher for the help.)*
-> — **Вчитель:** Будь ласка. *(You are welcome.)* Завтра ми пишемо новий тест. *(Tomorrow we are writing a new test.)*
+For masculine and neuter nouns, the Dative adjective ending is very consistent and easy to spot. Most adjectives belong to the hard group, meaning their stem ends in a hard consonant. These adjectives take the strong, resonant ending "-ому". For example, "новий" becomes **новому** (to the new (masc./neut. dat.)), and "старший" becomes **старшому** (to the older (masc./neut. dat.)). If an adjective belongs to the soft group, it takes the softer, but very similar ending "-ьому". For example, "синій" becomes "синьому", and "останній" becomes "останньому". Notice a beautiful phonetic feature of the Ukrainian language here: it unifies the "-ому" sound across both hard and soft groups. For learners, the useful point is practical: once you recognize the stem type, the dative ending is predictable.
 
-## Прикметники у давальному відмінку (Adjectives in the Dative Case)
+Я часто допомагаю старшому братові ремонтувати його нову машину. Цей яскравий колір дуже пасує синьому костюму. Ми завжди щиро радіємо кожному теплому дню весни.
 
-When we add an adjective to a noun, they must work as a team. This grammatical teamwork is called agreement. This means the adjective must match the noun's gender, number, and case perfectly. If the noun is in the Dative case, the adjective must also take a Dative case ending. To find the right adjective form, we ask the question **«Якому?»** *(To which? / To what kind?)* for masculine and neuter nouns, **«Якій?»** *(To which?)* for feminine nouns, and **«Яким?»** *(To which?)* for plural nouns.
+> *I often help my older brother repair his new car. This bright color really suits the blue suit. We always sincerely rejoice at every warm spring day.*
 
-> — **Студент:** **Якому** студентові вчитель дає тест? *(To which student does the teacher give the test?)*
-> — **Подруга:** Він дає тест розумному студентові. *(He gives the test to the smart student.)*
-> — **Студент:** А **якій** вчительці ви даруєте квіти? *(And to which teacher are you giving flowers?)*
-> — **Подруга:** Ми даруємо квіти нашій першій вчительці. *(We are giving flowers to our first teacher.)*
+Feminine adjectives in the Dative case are even easier to learn and remember. Both hard and soft stems take the exact same elegant ending: "-ій". So, the hard-stem adjective "нова" simply becomes "новій", "стара" becomes "старій", and the soft-stem adjective "синя" becomes "синій". There is also a special, very friendly rule for adjectives whose stems end in the harsh consonants "г", "к", or "х", such as "довга" or "тиха". Unlike feminine nouns, which often soften and change their consonant in the Dative case, adjectives stubbornly keep their original consonant. You simply add "-ій" to get "довгій" and "тихій".
 
-For masculine and neuter adjectives that have a hard stem (like **новий** - *new*, **старий** - *old*, **гарний** - *beautiful/good*), the adjective takes the ending **-ому**. Notice how the Nominative ending changes to match the Dative form. This is the most common adjective ending you will see for these genders.
+Я зараз телефоную новій колезі по роботі. Він уважно пише довге повідомлення старій знайомій. Ми повільно йдемо по дуже довгій вулиці міста.
 
-*   новий друг → **новому** другу *(to a new friend)*
-*   старе місто → **старому** місту *(to an old city)*
-*   гарний будинок → **гарному** будинку *(to a beautiful house)*
+> *I am currently calling a new colleague from work. He is carefully writing a long message to an old female acquaintance. We are walking slowly along a very long city street.*
 
-«Читаємо українською»
-Я часто допомагаю **моєму старому другові**. *(I often help my old friend.)*
-Діти дуже радіють **старому місту**. *(The children are very happy about the old city.)*
-Вони радіють **цьому гарному будинку**. *(They are happy about this beautiful house.)*
+:::note
+**Quick tip** — Remember that the noun might change its consonant in the Dative case, but the adjective before it will not. You will say "дорогій подрузі", never "дорозі подрузі".
+:::
 
-If the adjective has a soft stem (these usually end in **-ій** in the dictionary form, like **синій** - *blue*, **останній** - *last*, **вечірній** - *evening*), the masculine and neuter ending becomes **-ьому**. We use the soft sign **ь** to keep the pronunciation soft before the vowel **о**. The pattern is exactly the same as the hard group, just with an added soft sign.
+When dealing with plural nouns in the Dative case, the adjective ending becomes completely uniform across all genders. This is a huge relief for language learners! Every plural adjective, regardless of whether it describes a group of masculine, feminine, or neuter nouns, takes the exact same ending: "-им". This means that "нові" simply changes to "новим", "старі" becomes "старим", "гарні" becomes "гарним", and "сині" becomes "синім". You do not have to worry about the gender of the noun at all when you are speaking in the plural. This simplicity allows you to focus purely on the meaning of your sentence.
 
-*   синій колір → **синьому** кольору *(to the blue color)*
-*   останній день → **останньому** дню *(to the last day)*
-*   вечірній поїзд → **вечірньому** поїзду *(to the evening train)*
+Ми часто купуємо солодкі подарунки маленьким дітям на свята. Вона з великою радістю розповідає цю смішну історію новим сусідам. Я завжди намагаюся допомагати моїм старим друзям.
 
-«Читаємо українською»
-Студенти радіють **останньому дню** семестру. *(The students are happy about the last day of the semester.)*
-Ми дуже радіємо **вечірньому поїзду** додому. *(We are very happy about the evening train home.)*
-Художник додає темні тіні **синьому морю**. *(The artist adds dark shadows to the blue sea.)*
+> *We often buy sweet gifts for little children for the holidays. She tells this funny story to new neighbors with great joy. I always try to help my old friends.*
 
-For feminine nouns, the rules are much simpler. Both hard and soft stem adjectives take the exact same ending: **-ій**. This makes it very easy to remember! Also, remember that after the letters **г**, **к**, and **х**, adjectives do not change their stem consonant in the Dative case, even though nouns often do.
+Let's look at a comprehensive chart comparing the Nominative, Genitive, and Dative adjective endings. Recognizing these vertical patterns will make it much easier to choose the correct ending in fluid conversation. Notice how the Dative forms build an entirely different sound profile compared to the Genitive forms you learned previously. The Genitive often features an "-ого" or "-ої" sound, while the Dative introduces the characteristic "-ому" and "-ій" sounds.
 
-*   нова подруга → **новій** подрузі *(to a new friend)*
-*   синя сукня → **синій** сукні *(to a blue dress)*
-*   довга дорога → **довгій** дорозі *(to a long road)*
-*   тиха вулиця → **тихій** вулиці *(to a quiet street)*
+:::info
+**Adjective Endings Comparison (Hard Stem)**
+| Відмінок (Case) | Чоловічий (Masc.) / Середній (Neut.) | Жіночий (Fem.) | Множина (Plural) |
+| :--- | :--- | :--- | :--- |
+| Називний (Nom.) | новий / нове | нова | нові |
+| Родовий (Gen.) | нового | нової | нових |
+| Давальний (Dat.) | **новому** | **новій** | **новим** |
+:::
 
-«Читаємо українською»
-Я купив гарний подарунок **новій подрузі**. *(I bought a beautiful present for a new friend.)*
-Цей яскравий колір дуже пасує **синій сукні**. *(This bright color really suits the blue dress.)*
-Ми завжди радіємо **тихій вулиці** біля нашого дому. *(We are always happy about the quiet street near our house.)*
+Ця таблиця показує логіку української мови. Кожен відмінок має свій унікальний звук. Ви швидко запам'ятаєте ці нові закінчення. Такі самі парадигми подають Заболотний (§157), Захарійчук (§281) і ULP: Ukrainian Possessive Pronouns.
 
-In the plural, the adjective system becomes even simpler. All genders (masculine, feminine, and neuter) use the exact same ending pattern: **-им** for hard stems and **-ім** for soft stems.
+> *This table shows the logic of the Ukrainian language. Each case has its unique sound. You will quickly remember these new endings.*
 
-*   нові друзі → **новим** друзям *(to new friends)*
-*   сині моря → **синім** морям *(to blue seas)*
-*   гарні дівчата → **гарним** дівчатам *(to beautiful girls)*
+Now let's see these familiar A1 and A2 adjectives in action through simple, everyday situations. Read these short sentences aloud and pay close attention to how the adjective and the noun harmonize perfectly in the Dative case. The more you hear these pairs spoken together, the more natural they will feel when you need to use them in your own speech. Practice makes perfect, especially with agreement.
 
-«Читаємо українською»
-Новий вчитель пояснює граматичне правило **новим студентам**. *(The new teacher explains the grammar rule to the new students.)*
-Літнє сонце дарує тепло **синім морям**. *(The summer sun gives heat to the blue seas.)*
-Ми завжди допомагаємо **нашим гарним дівчатам**. *(We always help our beautiful girls.)*
+Я зараз телефоную новому другу. Я з радістю допомагаю новій подрузі. Вчитель дає дуже складне завдання розумним студентам.
 
-When we compare the hard and soft groups in the Dative case, we see a beautiful consistency in the Ukrainian language. While Russian differentiates masculine hard and soft endings (ому/ему), Ukrainian unifies masculine and neuter endings with the rich "o" sound: **-ому** and **-ьому**. The only difference is the soft sign, which tells us how to pronounce the consonant before it. This makes the Ukrainian system logical, consistent, and uniquely melodic.
-
-> — **Ганна:** **Якому** братові ти телефонуєш, старшому чи молодшому? *(Which brother are you calling, the older or the younger?)*
-> — **Марко:** Я зараз телефоную **моєму молодшому братові**. *(I am calling my younger brother now.)*
-> — **Ганна:** А що ти даруєш мамі на свято? *(And what are you giving to mom for the holiday?)*
-> — **Марко:** Я дарую квіти **моїй рідній мамі**. *(I am giving flowers to my dear mom.)*
+> *I am currently calling a new friend. I gladly help a new female friend. The teacher gives a very difficult task to smart students.*
 
 <!-- INJECT_ACTIVITY: group-sort-sort-dative-adjective-forms-by-gender-masculine-feminine-plural -->
 
-## Присвійні та вказівні займенники у давальному відмінку (Possessive and Demonstrative Pronouns in the Dative)
+## Присвійні та вказівні займенники у давальному відмінку (~600 words)
 
-Now that you know how to decline adjectives, possessive pronouns will be much easier to learn. The possessive pronouns for the first and second person singular (**мій** — *my*, **твій** — *your*, and the reflexive **свій** — *one's own*) change their stem slightly in the Dative case. The masculine and neuter forms take the ending **-єму** (мо**єму**, тво**єму**, сво**єму**), while the feminine forms take **-їй** (мо**їй**, тво**їй**, сво**їй**). The plural form for all genders is **-їм** (мо**їм**, тво**їм**, сво**їм**). Notice the appearance of the letters **є** and **ї** — they make the pronunciation smooth and melodic.
+In Ukrainian, a **присвійний** (possessive) pronoun or a demonstrative pronoun usually acts just like a **прикметник** (adjective) when it comes to case endings. When you want to say that you are giving a gift "to my friend" or explaining a difficult concept "to this teacher", the pronoun must agree perfectly with the noun in the Dative case. These pronouns answer the questions «чиєму?» or «чиїй?» (to whose?) and «якому?» or «якій?» (to which?). If you have already mastered the standard adjective endings from the previous section, learning how to decline these pronouns will feel very familiar and logical.
 
-* мій батько → **моєму** батькові *(to my father)*
-* твоя сестра → **твоїй** сестрі *(to your sister)*
-* свої діти → **своїм** дітям *(to one's own children)*
+Let's start with the pronouns that mean "my", "your" (informal), and "one's own": «мій», «твій», and «свій». For masculine and neuter nouns, these pronouns take the ending «-єму», giving us words like **моєму** (to my (masc./neut. dat.)) and **твоєму** (to your (masc./neut. dat.)). When addressing an older male sibling, you might use an adjective like **старшому** (to the older (masc./neut. dat.)) before the noun. For feminine nouns, they take the ending «-їй», such as **моїй** (to my (fem. dat.)). Because the stems of these pronouns end in a vowel, they require a softer, more melodic transition into the case ending compared to regular hard adjectives.
 
-«Читаємо українською»
-Я зараз телефоную **моєму батькові**. *(I am calling my father now.)*
-Допоможи **твоїй сестрі** зробити домашнє завдання. *(Help your sister do her homework.)*
-Кожна людина бажає щастя **своїй родині**. *(Every person wishes happiness to their own family.)*
-Ми завжди радіємо **моїм новим ідеям**. *(We are always happy about my new ideas.)*
+Я завжди довіряю моєму старшому братові, бо він дуже розумний. Батько купив новий телефон моїй сестрі на день народження. Твоєму другові потрібна наша допомога зараз. Кожна людина бажає щастя своєму синові.
 
-The plural possessives **наш** *(our)* and **ваш** *(your, formal/plural)* are very straightforward. They decline exactly like hard group adjectives. For masculine and neuter nouns, use the ending **-ому** (наш**ому**, ваш**ому**). For feminine nouns, use **-ій** (наш**ій**, ваш**ій**). And for the plural, it is simply **-им** (наш**им**, ваш**им**).
+> *I always trust my older brother because he is very smart. Father bought a new phone for my sister for her birthday. Your friend needs our help right now. Every person wishes happiness to their own son.*
 
-* наш вчитель → **нашому** вчителю *(to our teacher)*
-* ваша перемога → **вашій** перемозі *(to your victory)*
-* наші друзі → **нашим** друзям *(to our friends)*
+:::note
+**Quick tip** — Notice how the ending «-єму» has an «є» instead of an «о». This happens because the stem of these pronouns ends in a vowel sound, which naturally softens the following letter in Ukrainian pronunciation.
+:::
 
-«Читаємо українською»
-Студенти щиро дякують **нашому вчителю**. *(The students sincerely thank our teacher.)*
-Ми дуже раді **вашій перемозі** на конкурсі. *(We are very glad about your victory in the competition.)*
-Директор дає премію **нашим найкращим працівникам**. *(The director gives a bonus to our best workers.)*
-Я довіряю **вашому досвіду**. *(I trust your experience.)*
+The pronouns «наш» (our) and «ваш» (your formal or plural) behave exactly like standard hard-stem adjectives, similar to **новому** (to the new (masc./neut. dat.)). They take the familiar ending «-ому» for masculine and neuter nouns, and «-ій» for feminine nouns, giving us forms like **нашій** (to our (fem. dat.)). The pronoun «їхній» (their), however, acts like a soft-stem adjective. It takes the ending «-ьому» for masculine and neuter, and «-ій» for feminine.
 
-The Ukrainian word for "their" is **їхній**. This is a fully declinable pronoun that behaves exactly like a soft group adjective. In the Dative case, it takes the ending **-ьому** for masculine/neuter (їхнь**ому**), **-ій** for feminine (їхн**ій**), and **-ім** for plural (їхн**ім**). You might sometimes hear people use the short, invariable form «їх» (the Genitive form of «вони») as a possessive, but in standard, natural Ukrainian, you should always decline **їхній**. This is a beautiful feature of our language!
+Ми дуже вдячні нашій вчительці за цікаві уроки. Директор передав важливі документи вашому новому колезі. Вони часто допомагають їхньому сусідові з ремонтом квартири. Ми хочемо зробити приємний сюрприз їхній мамі.
 
-* їхній сусід → **їхньому** сусідові *(to their neighbor)*
-* їхня донька → **їхній** доньці *(to their daughter)*
-* їхні проблеми → **їхнім** проблемам *(to their problems)*
+> *We are very grateful to our teacher for the interesting lessons. The director passed the important documents to your new colleague. They often help their neighbor with apartment renovations. We want to make a pleasant surprise for their mom.*
 
-«Читаємо українською»
-Люди часто заздрять **їхньому багатому сусідові**. *(People often envy their rich neighbor.)*
-Батьки купили нову іграшку **їхній маленькій доньці**. *(The parents bought a new toy for their little daughter.)*
-Ми не можемо зарадити **їхнім проблемам**. *(We cannot help their problems.)*
-Ця музика дуже подобається **їхнім дітям**. *(Their children really like this music.)*
+There is one crucial rule you must remember about the possessive pronouns «його» (his/its) and «її» (her). When they are used to indicate possession, they never change their form, regardless of the case. A very common mistake for English-speaking learners is trying to add Dative endings to these words. If you want to give a gift to "his friend" (його друг), it simply becomes «його другові». You must never say "йогому" or "їїй" — those forms do not exist in the Ukrainian language.
 
-Here is a very important rule: the possessive pronouns **його** *(his / its)* and **її** *(her)* **never change their form**. They are invariable, regardless of the case, gender, or number of the noun they describe. This is a common trap for English speakers! Do not try to add Dative endings to them. Just leave them as they are and decline the noun.
+Я детально пояснюю це нове правило його другові. Вона телефонує її сестрі кожного вечора після роботи.
 
-* його друг → **його** другу *(to his friend)*
-* її сестра → **її** сестрі *(to her sister)*
+> *I am explaining this new rule in detail to his friend. She calls her sister every evening after work.*
 
-«Читаємо українською»
-Я повністю вірю **його другу**. *(I completely believe his friend.)*
-Лікар дав ліки **її хворій сестрі**. *(The doctor gave medicine to her sick sister.)*
-Ця машина належить **його братові**. *(This car belongs to his brother.)*
-Ми щиро радіємо **її успіхам**. *(We are sincerely happy about her successes.)*
+Now let's look at the demonstrative pronouns «цей» (this) and «той» (that), which are essential for pointing things out. The pronoun «цей» becomes **цьому** (to this (masc./neut. dat.)) for masculine and neuter nouns, and «цій» for feminine nouns. The pronoun «той» changes to **тому** (to that (masc./neut. dat.)) and «тій». In the plural, for all genders, they become «цим» and «тим». These words are extremely common when you need to specify exactly which person or object is receiving the action of your verb.
 
-Finally, let's look at demonstrative pronouns: **цей** *(this)* and **той** *(that)*. They are crucial for pointing things out. **Цей** follows a soft-like pattern, while **той** has its own unique forms. For masculine/neuter, we use **цьому** *(to this)* and **тому** *(to that)*. For feminine, we use **цій** *(to this)* and **тій** *(to that)*. The plural forms are very short: **цим** *(to these)* and **тим** *(to those)*.
+Поясни це складне завдання тому хлопцеві в синій куртці. Цьому старому будинку потрібен великий ремонт. Я хочу подарувати ці красиві квіти цій дівчині. Що ти скажеш тим людям на вулиці?
 
-* цей будинок → **цьому** будинку *(to this house)*
-* та дівчина → **тій** дівчині *(to that girl)*
-* ці студенти → **цим** студентам *(to these students)*
+> *Explain this difficult task to that boy in the blue jacket. This old building needs major repairs. I want to give these beautiful flowers to this girl. What will you say to those people on the street?*
 
-«Читаємо українською»
-Дай цю цікаву книгу **тому хлопцеві**. *(Give this interesting book to that boy.)*
-**Цьому старому будинку** потрібен капітальний ремонт. *(This old house needs a major renovation.)*
-Поясни нове правило **тій новій студентці**. *(Explain the new rule to that new student.)*
-Я зовсім не вірю **цим новинам**. *(I do not believe these news at all.)*
+:::info
+**Grammar box** — The forms «цьому» and «тому» are incredibly common in everyday Ukrainian speech. You will hear them constantly when people point things out or clarify exactly who they are talking to.
+:::
 
-> — **Олена:** Кому ти телефонуєш? *(Who are you calling?)*
-> — **Тарас:** Я телефоную **моєму новому колезі**. *(I am calling my new colleague.)*
-> — **Олена:** А що ти хочеш пояснити **цьому чоловікові**? *(And what do you want to explain to this man?)*
-> — **Тарас:** Я маю надіслати важливі документи **його відділу**. *(I have to send important documents to his department.)*
-> — **Олена:** Зрозуміло. Передай вітання **вашій команді**! *(Understood. Send greetings to your team!)*
+To summarize, possessive and demonstrative pronouns are the grammatical glue that holds your Dative noun phrases together. By accurately matching the pronoun's ending to the noun it describes, you ensure that your sentence is clear and sounds perfectly natural to a native speaker's ear. Let's practice these new patterns to build your confidence.
 
-<!-- INJECT_ACTIVITY: quiz-pronoun-forms-choose-the-correct-dative-form-of-the-possessive-pronoun-vs-vs -->
-<!-- INJECT_ACTIVITY: match-up-nom-dat-match-nominative-noun-phrases-to-their-dative-equivalents -->
+<!-- INJECT_ACTIVITY: quiz-possessive-forms -->
+<!-- INJECT_ACTIVITY: match-up-nominative-dative -->
 
-## Повні іменникові групи у давальному відмінку (Full Dative Noun Phrases)
+## Повні іменникові групи у давальному відмінку (~550 words)
 
-Now that we know how to change both adjectives and pronouns, it is time to put everything together. In Ukrainian, a full noun phrase often consists of a possessive pronoun, an adjective, and a noun. When this entire phrase acts as the indirect object — the receiver of an action — every single word in the chain must change into the Dative case. This concept is called agreement. For example, if you want to say "to my older brother", you cannot just change the noun. You must change the pronoun **мій** *(my)* to **моєму**, the adjective **старший** *(older)* to **старшому**, and the noun **брат** *(brother)* to **братові**. The result is the beautiful, harmonious phrase: **моєму старшому братові** *(to my older brother)*.
+When you want to be specific, you will often combine a possessive pronoun, an adjective, and a noun into a single phrase. This is called an іменникова група (noun phrase). The most important rule here is total agreement. The Ukrainian word for adjective is **прикметник** (adjective), and the word for possessive is **присвійний** (possessive). When building a full noun phrase, the possessive pronoun, the adjective, and the noun must all match perfectly in gender, number, and case. In our situation, that means they all need to be in the Dative case. The word order remains exactly the same as in the Nominative case: possessive first, then adjective, then the core noun.
 
-«Читаємо українською»
-Я допомагаю **моєму старшому братові**. *(I am helping my older brother.)*
-Вони вірять **цьому новому лікарю**. *(They believe this new doctor.)*
-Ми купили квіти **нашій улюбленій вчительці**. *(We bought flowers for our favorite teacher.)*
-Передай привіт **твоїй молодшій сестрі**! *(Say hello to your younger sister!)*
+Let's see this total agreement in action. Imagine a teacher handing back graded essays to her class.
 
-The good news is that the word order remains completely stable. The sequence you learned in the Nominative case — Possessive Pronoun, then Adjective, then Noun — stays exactly the same in the Dative case. You do not need to learn a new sentence structure. You only need to apply the correct endings. This makes the transition from the basic dictionary form to the Dative case much easier. 
+> — **Вчитель:** Моєму найкращому студентові — десятка! Нашій новій студентці — дев'ятка. А цьому хлопцю треба більше працювати. *(To my best student — a ten! To our new student — a nine. And this boy needs to work more.)*
+> — **Студент:** Дякую Вам, пані Олено! Ви завжди дуже чітко пояснюєте нашій групі складні теми. *(Thank you, Ms. Olena! You always explain difficult topics very clearly to our group.)*
+> — **Студентка:** А можна мені показати помилки в моєму есе? *(Could you show me the mistakes in my essay?)*
+> — **Вчитель:** Звичайно. Після уроку я все поясню тобі й твоєму одногрупникові. *(Of course. After class I’ll explain everything to you and your classmate.)*
 
-«Читаємо українською»
-Номінатив: **мій найкращий друг** *(my best friend)*
-Давальний: **моєму найкращому другові** *(to my best friend)*
-Номінатив: **наша нова сусідка** *(our new neighbor)*
-Давальний: **нашій новій сусідці** *(to our new neighbor)*
+Let's analyze the phrases from the dialogue to see how the mechanics work. In the phrase «моєму найкращому студентові», the core noun is masculine. Therefore, the pronoun takes the masculine form, which is **моєму** (to my (masc./neut. dat.)), and the adjective takes the «-ому» ending. For the feminine phrase «нашій новій студентці», everything shifts to the feminine endings. The pronoun becomes **нашій** (to our (fem. dat.)), the adjective takes «-ій», and the noun ends in «-і». Finally, «цьому хлопцю» shows how a demonstrative pronoun like **цьому** (to this (masc./neut. dat.)) perfectly matches the masculine Dative noun.
 
-One of the most common situations for using these full phrases is when giving gifts or dedicating something to someone. Verbs like **дарувати** *(to gift)*, **купувати** *(to buy)*, and **присвятити** *(to dedicate)* naturally require the Dative case. When you buy a present for someone, you are directing your action toward them. 
+These full phrases are incredibly useful in everyday situations. For example, you will use them when giving presents, such as giving a gift to a female relative using **моїй** (to my (fem. dat.)) or to a male friend using **твоєму** (to your (masc./neut. dat.)). You also need them when writing messages to family members or colleagues.
 
-«Читаємо українською»
-Я хочу подарувати цю книгу **моєму найкращому другові**. *(I want to gift this book to my best friend.)*
-Батько купив телефон **своєму молодшому синові**. *(The father bought a phone for his younger son.)*
-Вона присвятила пісню **її коханому чоловікові**. *(She dedicated a song to her beloved husband.)*
-Що ви купили **вашим маленьким дітям**? *(What did you buy for your little children?)*
+When explaining things to someone specific, you must carefully match the endings. This applies whether you are talking to a colleague using **тому** (to that (masc./neut. dat.)), a new person using **новому** (to the new (masc./neut. dat.)), or an older sibling using **старшому** (to the older (masc./neut. dat.)).
 
-Another frequent use case involves verbs of communication and assistance. When you call, write, or help someone, that person is the receiver of your action. Verbs like **телефонувати** *(to call)*, **писати** *(to write)*, and **допомагати** *(to help)* are your cues to use the Dative case for the entire noun phrase describing the person.
+Я хочу подарувати цю книгу моєму дорогому другові. Ми завтра напишемо повідомлення нашій старій бабусі. Мені потрібно пояснити це завдання тому новому студентові. Я завжди допомагаю моїй молодшій сестрі та твоєму старшому братові.
 
-> — **Остап:** Кому ти пишеш повідомлення? *(Who are you writing a message to?)*
-> — **Марта:** Я пишу **нашій новій вчительці**. *(I am writing to our new teacher.)*
-> — **Остап:** А я телефоную **цьому старому майстру**. *(And I am calling this old repairman.)*
-> — **Марта:** Він може допомогти **вашій великій родині**? *(Can he help your big family?)*
-> — **Остап:** Так, він завжди допомагає **своїм постійним клієнтам**. *(Yes, he always helps his regular clients.)*
+> *I want to give this book to my dear friend. We will write a message to our old grandmother tomorrow. I need to explain this task to that new student. I always help my younger sister and your older brother.*
 
-A very common trap for learners is to change the noun and the pronoun, but forget to change the adjective in the middle. For example, saying "моєму старий другу" is incorrect. In Ukrainian, every single word in the phrase must "signal" the Dative case. You cannot leave the adjective in its dictionary form. The endings **-ому** or **-ій** act like grammatical echoes, repeating the Dative signal across the whole phrase. Always check that your pronoun, adjective, and noun are wearing their matching Dative "uniforms."
+When building these longer phrases, a common mistake for English-speaking learners is mixing genders. You must never combine a masculine pronoun with a feminine noun, or vice versa. Phrases like «моїй другові» or «нашому вчительці» are incorrect and will sound very confusing to a native speaker. Always establish the gender of the core noun first, and then make sure your pronoun and adjective endings perfectly align with it.
 
-«Читаємо українською»
-❌ Я телефоную моєму старий друг.
-✅ Я телефоную **моєму старому другові**. *(I am calling my old friend.)*
-❌ Ми допомагаємо нашій нова сусідка.
-✅ Ми допомагаємо **нашій новій сусідці**. *(We are helping our new neighbor.)*
+:::info
+**Grammar box** — Think of the noun as the "boss" of the phrase. The noun dictates the gender, and all the descriptive words (pronouns and adjectives) must put on the correct "uniform" (endings) to match the boss in the Dative case.
+:::
 
 <!-- INJECT_ACTIVITY: fill-in-dative-phrases -->
 <!-- INJECT_ACTIVITY: error-correction-agreement -->
 
-## Порівняння відмінків (Comparing Cases So Far)
+## Порівняння відмінків (~390 words)
 
-It is very common to confuse the Genitive and Dative cases, especially for masculine and neuter words. The Genitive ending is **-ого**, while the Dative ending is **-ому**. The letter "м" in **-ому** is your unique marker for the Dative case. When you hear or write "м", you are usually directing an action to someone.
+Comparing cases is an essential step if you want to truly master the Ukrainian language and speak with confidence. As you learn more cases, the different endings can naturally start to blur together. Learners very often confuse the endings of the Nominative, Genitive, and Dative cases. This happens particularly often for feminine nouns and their modifiers. By placing these forms side-by-side, we can easily reveal the distinct patterns and avoid common conversational mistakes. Whenever you see a **прикметник** (adjective) or a **присвійний** (possessive) pronoun, its ending acts as a signal, telling you exactly what role the core noun plays in the sentence.
 
-«Читаємо українською»
-У мене немає **нового друга**. *(I do not have a new friend.)* [Родовий / Genitive]
-Я телефоную **новому другові**. *(I am calling a new friend.)* [Давальний / Dative]
-Вона не бачить **мого старшого брата**. *(She does not see my older brother.)* [Родовий / Genitive]
-Вона купує каву **моєму старшому братові**. *(She is buying coffee for my older brother.)* [Давальний / Dative]
+Let's start by comparing the masculine and neuter forms in context.
 
-For feminine words, you must contrast the Genitive ending **-ої** with the Dative ending **-ій**. Notice that the Dative **-ій** is exactly identical to the Locative form you use with the prepositions **на** *(on)* or **в** *(in)*.
+Ось називний відмінок: це мій новий друг. А це родовий відмінок: у мене немає мого нового друга. Тепер подивіться на давальний відмінок: я завжди допомагаю моєму новому другові. Ти даєш цікаву книгу твоєму старшому братові. Ми пояснюємо це складне завдання цьому новому студентові або тому хлопцю.
 
-«Читаємо українською»
-Тут немає **нашої нової вчительки**. *(Our new teacher is not here.)* [Родовий / Genitive]
-Ми даруємо квіти **нашій новій вчительці**. *(We are gifting flowers to our new teacher.)* [Давальний / Dative]
-Я не знаю **твоєї молодшої сестри**. *(I do not know your younger sister.)* [Родовий / Genitive]
-Я допомагаю **твоїй молодшій сестрі**. *(I am helping your younger sister.)* [Давальний / Dative]
+> *Here is the Nominative case: this is my new friend. And this is the Genitive case: I don't have my new friend. Now look at the Dative case: I always help my new friend. You give an interesting book to your older brother. We explain this difficult task to this new student or to that boy.*
 
-How do you know which case to choose? The verb or the preposition in your sentence is always the "driver." Prepositions like **для** *(for)* or **без** *(without)* always require the Genitive case. Verbs of giving, telling, and helping always require the Dative case. 
+Notice the clear and consistent difference in the endings. The Genitive case strictly uses **-ого** for both adjectives and pronouns. However, the Dative case relies on the **-ому** ending, as seen in words like **новому** (to the new (masc./neut. dat.)) and **цьому** (to this (masc./neut. dat.)). Sometimes you will also see the word **тому** (to that (masc./neut. dat.)) used to point out a specific person.
 
-> — **Анна:** Це подарунок для **твого найкращого друга**? *(Is this a gift for your best friend?)*
-> — **Марк:** Так, я завжди купую подарунки **моєму найкращому другові**. *(Yes, I always buy gifts for my best friend.)*
-> — **Анна:** А що ти подаруєш **твоїй дівчині**? *(And what will you gift to your girlfriend?)*
-> — **Марк:** Я ще не знаю. Я запитаю **її старшу сестру**. *(I do not know yet. I will ask her older sister.)*
-> — **Анна:** Ти часто телефонуєш **її старшій сестрі**? *(Do you often call her older sister?)*
-> — **Марк:** Так, ми дуже добре спілкуємося. *(Yes, we communicate very well.)*
+For soft stems and certain pronouns, the ending becomes **-єму**. This is why we say **моєму** (to my (masc./neut. dat.)) and **твоєму** (to your (masc./neut. dat.)). If you want to describe someone's age relative to yours, you might give a gift to an older sibling using the word **старшому** (to the older (masc./neut. dat.)). It is absolutely crucial to remember the spelling difference: hard-stem masculine and neuter adjectives take **-ому** (новому, старшому), while soft-stem adjectives take **-ьому** (синьому, останньому) in the Dative case.
 
-Here is a quick reference for common verbs that require the Dative case for your noun phrases.
+Now, let's carefully examine the feminine forms, where the distinction between Genitive and Dative is extremely important for clear communication.
 
-«Читаємо українською»
-**Дієслова для давального відмінка** *(Verbs for the dative case)*
-**давати / дати** *(to give)* → даю **цьому чоловікові** *(giving to this man)*
-**дарувати / подарувати** *(to gift)* → дарую **моїй мамі** *(gifting to my mom)*
-**телефонувати / зателефонувати** *(to call)* → телефоную **нашому лікарю** *(calling our doctor)*
-**допомагати / допомогти** *(to help)* → допомагаю **старому сусідові** *(helping the old neighbor)*
-**дякувати / подякувати** *(to thank)* → дякую **вашому синові** *(thanking your son)*
+Ось називний відмінок: це моя нова подруга. А це родовий відмінок: це гарний подарунок для моєї нової подруги. Тепер подивіться на давальний відмінок: я з радістю дарую квіти моїй новій подрузі. Ми зараз телефонуємо нашій дорогій мамі.
 
-## Підсумок (Summary)
+> *Here is the Nominative case: this is my new friend. And this is the Genitive case: this is a beautiful gift for my new friend. Now look at the Dative case: I joyfully give flowers to my new friend. We are calling our dear mother right now.*
 
-Let's review the key rules for adjectives and possessive pronouns in the Dative case. When you direct an action to someone, every word in the noun phrase must agree. 
+In the feminine paradigm, we must sharply contrast the Genitive **-ої** ending with the Dative **-ій** ending. When you encounter forms like **моїй** (to my (fem. dat.)) or **нашій** (to our (fem. dat.)), you know immediately that you are dealing with the Dative case. The ending tells you exactly who is receiving the action.
 
-For masculine and neuter words, your main ending is **-ому**. 
-For feminine words, the ending is always **-ій**. 
-For plural words, use the ending **-им** (or **-ім** for soft stems).
+Remember that prepositions and verbs dictate the required case. A preposition like «для» (for) always triggers the Genitive case, so you would say «для їхньої мами» (for their mother). Conversely, a verb like «допомагати» (to help) always triggers the Dative case without a preposition, so you must say «допомагаю їхній мамі» (I help their mother).
 
-«Читаємо українською»
-Я даю зошит **новому студенту**. *(I give a notebook to the new student.)*
-Вона допомагає **старій сусідці**. *(She helps the old neighbor.)*
-
-Possessive and demonstrative pronouns follow this exact pattern. **Мій** *(my)* becomes **моєму** or **моїй**. **Цей** *(this)* becomes **цьому** or **цій**. Remember that **його** *(his)* and **її** *(her)* are your best friends in Ukrainian grammar because they never change their form! 
-
-> — **Анна:** Що ти подаруєш **твоєму новому колезі**? *(What will you gift to your new colleague?)*
-> — **Марк:** Я куплю каву **цьому хлопцю**. *(I will buy coffee for this guy.)*
-> — **Анна:** А я подарую квіти **нашій вчительці**. *(And I will gift flowers to our teacher.)*
-
-Self-check time:
-*   Can you say "to my sister"? (**моїй сестрі**)
-*   Can you say "to this new student"? (**цьому новому студентові**)
-*   Do you remember the ending for plural? (**-им**)
+:::info
+**Grammar box** — Always look at the main verb or the preposition first! They act as traffic controllers, telling your adjectives and pronouns exactly which case endings they need to wear.
+:::
 </generated_module_content>
 
-**PIPELINE NOTE — Word count: 3236 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
+**PIPELINE NOTE — Word count: 2784 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -566,48 +464,172 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 384 words | Not found: 12 words
+Verified: 304 words | Not found: 5 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
-  ✗ Анна — NOT IN VESUM
-  ✗ Ганна — NOT IN VESUM
-  ✗ Марк — NOT IN VESUM
-  ✗ Марта — NOT IN VESUM
-  ✗ Олена — NOT IN VESUM
-  ✗ Остап — NOT IN VESUM
-  ✗ Тарас — NOT IN VESUM
-  ✗ сво — NOT IN VESUM
-  ✗ тво — NOT IN VESUM
+  ✗ Захарійчук — NOT IN VESUM
+  ✗ Олено — NOT IN VESUM
+  ✗ йогому — NOT IN VESUM
   ✗ ьому — NOT IN VESUM
-  ✗ їхн — NOT IN VESUM
-  ✗ їхнь — NOT IN VESUM
+  ✗ їїй — NOT IN VESUM
 
-All 384 other words are confirmed to exist in VESUM.
+All 304 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
-## Verification Tools (MCP)
+---
 
-You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
+## Verification Tools (Shell Commands)
 
-**Core Verification:**
-- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
-- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
+You have access to verification tools via shell commands. Use these to verify
+Ukrainian vocabulary, check grammar, and search textbook content **as you write**.
 
-**Content Quality:**
-- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+**IMPORTANT:** Run verification commands BEFORE finalizing any Ukrainian text.
+Batch multiple verifications together to minimize round-trips.
 
-**Reference:**
-- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp_rag_search_literary` — verify literary references against primary sources
-- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
+### 1. Batch-verify Ukrainian words exist in VESUM (preferred — one call for many words)
 
-**Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_words
+results = verify_words(['слово1', 'слово2', 'слово3'])
+for w, matches in results.items():
+    if matches:
+        print(f'{w}: FOUND — lemma={matches[0][\"lemma\"]}, pos={matches[0][\"pos\"]}')
+    else:
+        print(f'{w}: NOT FOUND — may not exist in standard Ukrainian')
+"
+```
+
+### 2. Verify a single Ukrainian word in VESUM (with full morphological tags)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_word
+results = verify_word('WORD_HERE')
+if results:
+    for m in results:
+        print(f'lemma={m[\"lemma\"]}, pos={m[\"pos\"]}, tags={m[\"tags\"]}')
+else:
+    print('NOT FOUND in VESUM')
+"
+```
+
+### 3. Get all inflected forms of a lemma (declension/conjugation)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_lemma
+forms = verify_lemma('LEMMA_HERE')
+for f in forms[:20]:
+    print(f'{f[\"word_form\"]:20s} {f[\"pos\"]:8s} {f[\"tags\"]}')
+print(f'... {len(forms)} forms total')
+"
+```
+
+### 4. Check CEFR level of a word (is it level-appropriate?)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import query_cefr_level
+results = query_cefr_level('WORD_HERE')
+for r in results:
+    print(f'{r[\"word\"]}: {r[\"level\"]} ({r[\"pos\"]})')
+if not results:
+    print('Not in CEFR database')
+"
+```
+
+### 5. Search textbook content (Ukrainian school textbooks, Grades 1-11)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_textbooks
+keywords = {'keyword1', 'keyword2'}
+results = search_textbooks(keywords, 5)
+for r in results:
+    title = r.get('section_title', r.get('title', ''))
+    grade = r.get('grade', '?')
+    text = r.get('text', '')[:200]
+    print(f'Grade {grade} | {title}')
+    print(f'  {text}')
+    print()
+"
+```
+
+### 6. Search style guide for calques/Russianisms (Антоненко-Давидович, 279 entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_style_guide
+results = search_style_guide('TOPIC_HERE', 3)
+for r in results:
+    print(f'--- {r.get(\"word\", \"\")} [{r.get(\"section\", \"\")}]')
+    print(r.get('text', '')[:300])
+    print()
+if not results:
+    print('No style guide entries found')
+"
+```
+
+### 7. Look up word definition in СУМ-11 (Ukrainian explanatory dictionary, 127K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_definitions
+results = search_definitions('WORD_HERE', 3)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+### 8. Search idioms (Фразеологічний словник, 25K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_idioms
+results = search_idioms('WORD_HERE', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"text\", r.get(\"definition\", \"\")))[:200]}')
+"
+```
+
+### 9. English-to-Ukrainian translation (Балла, 79K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import translate_en_uk
+results = translate_en_uk('ENGLISH_WORD', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+---
+
+**WHEN to use these tools:**
+
+1. **Before writing any Ukrainian text** — batch-verify all key vocabulary with
+   `verify_words` (tool 1). Any word that returns NOT FOUND must be replaced.
+2. **When you suspect a Russicism or calque** — search the style guide (tool 6)
+   and verify the correct Ukrainian form with `verify_word` (tool 2).
+3. **When writing for A1/A2** — check CEFR levels (tool 4) to ensure vocabulary
+   is level-appropriate.
+4. **When unsure about a case ending or conjugation** — use `verify_lemma` (tool 3)
+   to see the full paradigm.
+5. **When covering a grammar topic** — search textbooks (tool 5) to see how
+   Ukrainian school textbooks teach it.
+6. **When you need the precise Ukrainian meaning** — use СУМ-11 (tool 7).
+7. **When looking for natural Ukrainian expressions** — search idioms (tool 8).
+
+**Batching rule:** Collect all words you want to verify, then run ONE `verify_words`
+call instead of multiple `verify_word` calls. This is faster and uses fewer tokens.

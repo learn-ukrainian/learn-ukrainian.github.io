@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-до другої, значно ширшої групи винятків. Тут фонетичне спрощення чудово працює, коли ми швидко розмовляємо, але наша орфографія вимагає зберегти оригінальну літеру. Найкращим та найпопулярнішим прикладом цієї групи є наші числівники: **«шістнадцять»** *(sixteen)* та **«шістсот»** *(six hundred)*. Коли українці вимовляють ці числа у звичайному щоденному темпі, вони ніколи не намагаються артикулювати звук «т». Наш мовний апарат автоматично пропускає його, щоб зробити фразу більш плавною та динамічною. Проте, коли ми починаємо писати ці слова, ми зобов'язані згадати про їхнє походження. Обидва ці числівники утворені від базового числа **«шість»** *(six)*, де літера «т» є абсолютно невід'ємною частиною кореня. Саме тому ми зберігаємо цю літеру на письмі, щоб підтримати візуальний, історичний зв'язок з первісним словом. Це правило працює, навіть якщо ця літера є повністю німою у нашій сучасній усній вимові. Окрему увагу в цій другій групі варто приділити численним словам **іншомовного походження** *(foreign loanwords)*. Українська мова дуже обережно ставиться до запозиченої лексики і зазвичай намагається максимально зберегти її оригінальне написання. Саме тому в таких популярних словах, як **«контрастний»** *(contrasting)*, **«баластний»** *(ballast)*, **«агентство»** *(agency)* або **«туристський»** *(tourist)*, ми завжди пишемо літеру «т». Ця літера є важливою частиною іншомовного кореня, яку наш сучасний правопис не дозволяє просто так викинути. Однак, у реальному житті, коли ми використовуємо **швидке мовлення** *(fast speech)*, вимовити підряд ці складні групи приголосних звуків буває вкрай важко. Тому в усній комунікації звук «т» у таких запозичених словах майже завжди зникає. Наприклад, слово «агентство» ми зазвичай вимовляємо без звука «т». Але на письмі ця літера мусить залишатися на своєму фіксованому місці як данина поваги до мови-оригіналу. Ще один надзвичайно цікавий специфічний випадок стосується українських іменників жіночого роду, коли ми ставимо їх у давальний або місцевий відмінок. Розгляньмо такі слова, як **«невістка»** *(daughter-in-law)* або **«артистка»** *(female artist)*. Якщо ми хочемо сказати, що даємо щось цій людині, ми використовуємо форму давального відмінка: «невістці» або «артистці». Тут працює наше строге граматичне правило: ми не маємо жодного права викидати літеру «т» з кореня іменника лише через зміну його закінчення. Тому на письмі ми дуже уважно зберігаємо абсолютно всі літери. Проте, з точки зору фонетики, комбінація звуків тут стає занадто важкою для нашої звичайної артикуляції. Тому в природному усному мовленні цей складний кластер приголосних максимально спрощується. Ми не вимовляємо звук «т» взагалі, замінюючи весь цей важкий вузол на набагато м'якший та приємніший потік звуків. Але завжди пам'ятайте: це лише фонетична ілюзія, бо наша орфографія залишається повністю незмінною. Як же студенту ефективно запам'ятати, коли літера залишається на письмі, а коли зникає назавжди? Існує одна дуже корисна психологічна **стратегія запам'ятовування** *(memory strategy)*. Літера зазвичай залишається там, де ваш зв'язок із базовим кореневим словом є дуже «свіжим» та абсолютно очевидним. Наприклад, у словах «шістнадцять», «агентство» або «невістці» ми відразу ж візуально бачимо знайомі слова «шість», «агент» та «невістка». Цей початковий корінь вимагає до себе поваги та збереження всіх своїх літер. Натомість у таких словах, як «щасливий» або «чесний», словотворчий суфікс вже дуже глибоко злився з початковою основою. Тому вони тепер сприймаються як абсолютно нові, самостійні лексичні одиниці, що повністю готові до орфографічного спрощення. <!-- INJECT_ACTIVITY: quiz-keep-or-drop --> <!-- INJECT_ACTIVITY: group-sort-simplification -->
+letter remains **закріплений** (fixed) on the page. The most prominent examples are the numbers "шістнадцять" (sixteen) and "шістсот" (six hundred). Fluent speakers drop the middle letter entirely, pronouncing a word that sounds closer to «шіснадцять». The visual presence of the «т» serves as a crucial anchor to the base number "шість" (six). If we removed it, the connection to the core mathematical concept would become obscured. Your mouth takes a shortcut, but your pen must honor the history. Слова іншомовного походження також зберігають усі приголосні на письмі. Розглянемо такі слова, як «контрастний», «баластний», «агентство» та «туристський». У швидкому мовленні українці рідко вимовляють звук «т» у цих словах, тому що така артикуляція є важкою. Однак офіційна орфографія вимагає писати їх з літерою «т». Ці слова прийшли в українську мову з інших мов разом зі своїм візуальним кодом. Мова адаптує їх фонетично для комфорту мовця, але залишає оригінальну структуру літер недоторканою. Це демонструє повагу до етимології запозиченої лексики. > *Words of foreign origin also keep all consonants in writing. Let's consider words like "контрастний" (contrasting), "баластний" (ballast), "агентство" (agency), and "туристський" (tourist). In fast speech, Ukrainians rarely pronounce the "т" sound in these words because such articulation is heavy. However, the official orthography requires writing them with the letter "т". These words came into the Ukrainian language from other languages along with their visual code. The language adapts them phonetically for the speaker's comfort but leaves the original letter structure intact. This demonstrates respect for the etymology of borrowed vocabulary.* We also see this separation between spelling and speech when we decline certain nouns. When feminine nouns ending in "-стка" take the Dative or Locative case, the ending changes to "-стці". Think of familiar words like "невістка" (daughter-in-law) becoming "невістці", or "артистка" (female artist) becoming "артистці". The grammar rule strictly dictates that the «т» from the base noun must carry over into the declined form. Yet, if you listen closely, the **група приголосних** (consonant cluster) «-стц-» completely collapses into a softer sound, dropping the sharp «т» entirely. This **орфограма** (orthographic rule) ensures grammatical consistency on the page. :::info **Grammar box** Always trust the base noun when declining words. If the dictionary form has a «т» (like *студентка*), it stays firmly in the Dative and Locative forms (*студентці*), even if your ear tells you it has vanished. ::: How can you predict whether a word keeps the silent letter or drops it completely? The most effective memory strategy is to look at how strongly the derivative word feels connected to its base. In words that stubbornly keep the letter (like *шістнадцять*, *агентство*, *невістці*), the connection to the root is extremely transparent. The spelling acts as a shield that protects that obvious link. In contrast, words like *щасливий* (from *щастя*) or *чесний* (from *честь*) have evolved so deeply that the suffix has fully merged with the stem. The connection is historical, allowing the language to discard the redundant letter from the **основа** (stem) without causing confusion. <!-- INJECT_ACTIVITY: quiz-keep-or-drop --> <!-- INJECT_ACTIVITY: group-sort-simplification -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -615,7 +615,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -628,18 +695,67 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] спрощення (simplification — dropping of a consonant from a cluster)
+- [ ] група приголосних (consonant cluster — sequence of consonants)
+- [ ] милозвучність (euphony — pleasant sound quality of speech)
+- [ ] випадати (to drop out — of a sound disappearing)
+- [ ] вимова (pronunciation — how words are spoken)
+- [ ] правопис (orthography — correct spelling)
+- [ ] закріплений (fixed — reflected in standard spelling)
+- [ ] виняток (exception — case that does not follow the rule)
+- [ ] словотворення (word formation — creating new words)
+- [ ] прикметник (adjective)
+- [ ] іменник (noun)
+- [ ] основа (stem — the word minus its ending)
+- [ ] орфограма (orthographic rule — spelling pattern requiring knowledge)
+- [ ] морфонологія (morphophonology — sound changes in morphology)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Спрощення [сонце], [серце] та інші особливі випадки (~660 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

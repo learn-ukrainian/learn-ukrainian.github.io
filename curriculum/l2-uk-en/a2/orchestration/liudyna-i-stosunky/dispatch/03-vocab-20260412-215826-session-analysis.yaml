@@ -1,0 +1,58 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T19-57-49505297.json
+phase: vocab
+prompt_chars: 21246
+response_chars: 3578
+prompt_words: 3407
+response_words: 387
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.0376
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.0108
+- name: plan
+  start: 1028
+  length: 20218
+  fraction: 0.9516
+large_sections:
+- plan
+directives_total: 8
+directives_covered: 0
+directives_missed:
+- kind: must
+  text: To describe someone's height, build, and age, we use basic adjectives that
+    must agree in gender and number with the noun they describe.
+  covered: false
+  coverage_note: 1/15 keywords (7%)
+- kind: must
+  text: Because these are habitual, repeated actions, we must use verbs in the imperfective
+    aspect.
+  covered: false
+  coverage_note: 0/11 keywords (0%)
+- kind: inject_activity
+  text: fill-in-complete-sentences-describing-people-with-the-correct-adjective-form-agreement-for-gender
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: group-sort-traits
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-definitions
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-aspect-choice
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-sentence-completion-with-adjectives
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-sentence-completion-with-adjectives
+  covered: false
+  coverage_note: marker missing

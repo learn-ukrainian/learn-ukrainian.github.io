@@ -2,321 +2,380 @@ version: '1.0'
 module: checkpoint-food-shopping
 level: a1
 inline:
-- id: group-sort-accusative-type
-  type: group-sort
-  instruction: Розподіліть слова за категоріями (Sort the words into categories)
-  groups:
-  - label: Неістоти — Inanimate (що?)
-    items:
-    - борщ
-    - хліб
-    - сік
-    - чай
-    - сир
-    - кава
-  - label: Істоти — Animate (кого?)
-    items:
-    - брата
-    - лікаря
-    - сусіда
-    - друга
-    - вчителя
-    - маму
-- id: quiz-shopping-situations
-  type: quiz
-  instruction: Оберіть правильну фразу (Choose the correct phrase)
-  items:
-  - question: 'You want to order coffee:'
-    options:
-    - Мені каву, будь ласка.
-    - Скільки коштує?
-    - Тут вільно?
-    - Рахунок, будь ласка.
-    correct: 0
-  - question: 'You ask for the price:'
-    options:
-    - Скільки коштує?
-    - Можна карткою?
-    - Що ви рекомендуєте?
-    - Дорого!
-    correct: 0
-  - question: 'You want to pay with a card:'
-    options:
-    - Рахунок, будь ласка.
-    - Можна карткою?
-    - Дорого!
-    - Дешево!
-    correct: 1
-  - question: 'You ask for the bill:'
-    options:
-    - Все було дуже смачно!
-    - Мені борщ.
-    - Рахунок, будь ласка.
-    - Можна меню?
-    correct: 2
-  - question: 'You ask for 1 kg of apples:'
-    options:
-    - Дайте кілограм яблук.
-    - Скільки коштує?
-    - Можна меню?
-    - Все було дуже смачно!
-    correct: 0
-  - question: 'You think the price is high:'
-    options:
-    - Дешево!
-    - Дорого!
-    - Нормальна ціна.
-    - Скільки коштує?
-    correct: 1
-  - question: 'You ask if a seat is free:'
-    options:
-    - Рахунок, будь ласка.
-    - Можна меню?
-    - Тут вільно?
-    - Що ви рекомендуєте?
-    correct: 2
-  - question: 'You compliment the food:'
-    options:
-    - Все було дуже смачно!
-    - Можна карткою?
-    - Це гостре?
-    - Дешево!
-    correct: 0
 - id: quiz-accusative-forms
   type: quiz
-  instruction: Оберіть правильну форму (Choose the correct form)
+  instruction: Оберіть правильну форму слова (Choose the correct form)
   items:
   - question: Я їм ___.
     options:
     - салат
     - салата
     - салату
+    - салати
     correct: 0
   - question: Я бачу ___.
     options:
     - брат
     - брата
     - брату
+    - браті
     correct: 1
   - question: Я п'ю ___.
     options:
-    - воду
     - вода
     - води
-    correct: 0
+    - воду
+    - воді
+    correct: 2
   - question: Я знаю ___.
     options:
-    - Олену
     - Олена
     - Олени
-    correct: 0
+    - Олені
+    - Олену
+    correct: 3
   - question: Я люблю ___.
     options:
-    - борщ
     - борща
     - борщу
-    correct: 0
+    - борщ
+    - борщі
+    correct: 2
   - question: Я чекаю ___.
     options:
-    - друга
     - друг
     - другу
-    correct: 0
+    - другі
+    - друга
+    correct: 3
   - question: Я купую ___.
     options:
-    - хліб
     - хліба
+    - хліб
     - хлібу
-    correct: 0
+    - хліби
+    correct: 1
   - question: Я бачу ___.
     options:
-    - лікаря
     - лікар
     - лікарю
-    correct: 0
+    - лікарі
+    - лікаря
+    correct: 3
   - question: Я їм ___.
     options:
-    - піцу
     - піца
     - піци
-    correct: 0
+    - піці
+    - піцу
+    correct: 3
   - question: Я люблю ___.
     options:
-    - маму
     - мама
+    - маму
     - мами
-    correct: 0
-- id: fill-in-dialogue-completion
+    - мамі
+    correct: 1
+- id: fill-in-dialogue
   type: fill-in
-  instruction: Вставте правильне слово (Fill in the correct word)
+  instruction: Вставте правильне слово в діалог (Fill in the correct word in the dialogue)
   items:
-  - sentence: — Що ти їш на сніданок? — Я їм ___ і п'ю каву.
+  - sentence: — Що ти їш на сніданок? — Я їм ____ і п'ю каву.
     answer: кашу
     options:
-    - кашу
     - каша
+    - кашу
     - каші
-  - sentence: — Потім іду на ринок. Скільки ___ помідори?
+  - sentence: — Потім іду на ринок. Скільки ____ помідори?
     answer: коштують
     options:
     - коштують
     - коштує
     - коштувати
-  - sentence: — Тридцять ___.
+  - sentence: — Тридцять ____.
     answer: гривень
     options:
-    - гривень
-    - гривні
     - гривня
-  - sentence: — Дайте ___ яблук, будь ласка.
+    - гривні
+    - гривень
+  - sentence: — Дайте ____ яблук, будь ласка.
     answer: кілограм
     options:
     - кілограм
     - літр
     - пляшку
-  - sentence: '— Потім у кафе: ___ борщ і воду, будь ласка.'
+  - sentence: '— Потім у кафе: ____ борщ і воду, будь ласка.'
     answer: Мені
     options:
-    - Мені
     - Я
+    - Мені
     - Мене
-  - sentence: — Рахунок, будь ласка. Можна ___?
+  - sentence: — Рахунок, будь ласка. Можна ____?
     answer: карткою
     options:
-    - карткою
     - картка
     - картки
-  - sentence: — О, я бачу ___! Олено, привіт!
+    - карткою
+  - sentence: — О, я бачу ____! Олено, привіт!
     answer: Олену
     options:
-    - Олену
     - Олена
+    - Олену
     - Олени
-  - sentence: — Ти знаєш мого ___?
+  - sentence: — Ти знаєш мого ____?
     answer: брата
     options:
-    - брата
     - брат
     - братом
-workbook:
-- id: match-up-phrases
-  type: match-up
-  instruction: З'єднайте українські та англійські фрази (Match the Ukrainian and English
-    phrases)
-  pairs:
-  - left: Скільки коштує?
-    right: How much does it cost?
-  - left: Мені каву, будь ласка.
-    right: Coffee for me, please.
-  - left: Рахунок, будь ласка.
-    right: The bill, please.
-  - left: Можна карткою?
-    right: Can I pay by card?
-  - left: Дайте кілограм.
-    right: Give me a kilogram.
-  - left: Тут вільно?
-    right: Is it free here?
-- id: error-correction-cases
-  type: error-correction
-  instruction: Знайдіть і виправте помилку (Find and fix the error)
+    - брата
+  - sentence: — Так, звичайно. А що ти ____?
+    answer: п'єш
+    options:
+    - п'ю
+    - п'єш
+    - п'є
+  - sentence: — Я п'ю чай з ____.
+    answer: лимоном
+    options:
+    - лимон
+    - лимоном
+    - лимону
+- id: quiz-situational-phrases
+  type: quiz
+  instruction: Що ви скажете? Оберіть правильну фразу (What do you say? Choose the
+    correct phrase)
   items:
-  - sentence: Я їм каша на сніданок.
-    error: каша
-    correction: кашу
-    error_type: word
+  - question: 'You want to order coffee:'
     options:
-    - кашу
-    - каші
-    - кашею
-    explanation: The object of the action requires the accusative case (каша -> кашу).
-  - sentence: Я бачу Тарас.
-    error: Тарас
-    correction: Тараса
-    error_type: word
+    - Скільки коштує?
+    - Мені каву, будь ласка.
+    - Тут вільно?
+    - Рахунок, будь ласка.
+    correct: 1
+  - question: 'You ask for the price:'
     options:
-    - Тараса
-    - Тарасу
-    - Тарасом
-    explanation: Animate masculine nouns take the genitive ending (-а/-я) in the accusative
-      case.
-  - sentence: Помідори коштують тридцять гривні.
-    error: гривні
-    correction: гривень
-    error_type: word
+    - Можна карткою?
+    - Що ви рекомендуєте?
+    - Скільки коштує?
+    - Тут вільно?
+    correct: 2
+  - question: 'You want to pay with a card:'
     options:
-    - гривень
-    - гривня
-    - гривнях
-    explanation: Numbers 5 and above take the genitive plural (гривень).
-  - sentence: Я п'ю вода з лимоном.
-    error: вода
-    correction: воду
-    error_type: word
+    - Рахунок, будь ласка.
+    - Дорого!
+    - Можна карткою?
+    - Дешево!
+    correct: 2
+  - question: 'You ask for the bill:'
     options:
-    - воду
-    - води
-    - водою
-    explanation: Feminine inanimate nouns ending in -а change to -у in the accusative
-      case.
-  - sentence: Я знаю Олена.
-    error: Олена
-    correction: Олену
-    error_type: word
+    - Мені борщ.
+    - Рахунок, будь ласка.
+    - Все було дуже смачно!
+    - Можна меню?
+    correct: 1
+  - question: 'You ask for 1 kg of apples:'
     options:
-    - Олену
-    - Олени
-    - Оленою
-    explanation: Animate feminine nouns change -а to -у in the accusative case.
-  - sentence: Кава коштує три гривень.
-    error: гривень
-    correction: гривні
-    error_type: word
+    - Скільки коштує?
+    - Можна меню?
+    - Тут вільно?
+    - Дайте кілограм яблук.
+    correct: 3
+  - question: 'You think the price is high:'
     options:
-    - гривні
-    - гривня
-    - гривнях
-    explanation: Numbers 2, 3, and 4 take the nominative plural (гривні).
-- id: true-false-reading
+    - Дешево!
+    - Дорого!
+    - Нормальна ціна.
+    - Смачно!
+    correct: 1
+  - question: 'You ask if a seat is free:'
+    options:
+    - Можна меню?
+    - Рахунок, будь ласка.
+    - Тут вільно?
+    - Можна карткою?
+    correct: 2
+  - question: 'You compliment the food:'
+    options:
+    - Можна карткою?
+    - Це гостре?
+    - Дорого!
+    - Все було дуже смачно!
+    correct: 3
+  - question: 'You ask for the menu:'
+    options:
+    - Можна меню?
+    - Тут вільно?
+    - Рахунок, будь ласка.
+    - Скільки коштує?
+    correct: 0
+  - question: 'You want to buy one liter of milk:'
+    options:
+    - Дайте кілограм яблук.
+    - Дайте літр молока.
+    - Мені каву, будь ласка.
+    - Можна карткою?
+    correct: 1
+workbook:
+- id: match-up-shopping-vocab
+  type: match-up
+  instruction: З'єднайте українські слова з англійськими перекладами (Match the Ukrainian
+    words with their English translations)
+  pairs:
+  - left: ринок
+    right: market
+  - left: рахунок
+    right: bill
+  - left: кафе
+    right: cafe
+  - left: сніданок
+    right: breakfast
+  - left: м'ясо
+    right: meat
+  - left: сир
+    right: cheese
+  - left: яблуко
+    right: apple
+  - left: вода
+    right: water
+  - left: стіл
+    right: table
+  - left: картка
+    right: card
+  - left: ціна
+    right: price
+- id: unjumble-cafe-phrases
+  type: unjumble
+  instruction: Складіть правильне речення зі слів (Unjumble the words to make a sentence)
+  items:
+  - words:
+    - каву,
+    - будь
+    - Мені
+    - ласка.
+    correct_order:
+    - Мені
+    - каву,
+    - будь
+    - ласка.
+  - words:
+    - коштують
+    - Скільки
+    - помідори?
+    correct_order:
+    - Скільки
+    - коштують
+    - помідори?
+  - words:
+    - вільно?
+    - Тут
+    correct_order:
+    - Тут
+    - вільно?
+  - words:
+    - кілограм
+    - яблук.
+    - Дайте
+    correct_order:
+    - Дайте
+    - кілограм
+    - яблук.
+  - words:
+    - Можна
+    - карткою?
+    correct_order:
+    - Можна
+    - карткою?
+  - words:
+    - дуже
+    - Все
+    - смачно!
+    - було
+    correct_order:
+    - Все
+    - було
+    - дуже
+    - смачно!
+  - words:
+    - молоком.
+    - каву
+    - п'ю
+    - з
+    - Я
+    correct_order:
+    - Я
+    - п'ю
+    - каву
+    - з
+    - молоком.
+  - words:
+    - бачу
+    - Я
+    - Олену.
+    correct_order:
+    - Я
+    - бачу
+    - Олену.
+  - words:
+    - рахунок,
+    - ласка.
+    - Дайте
+    - будь
+    correct_order:
+    - Дайте
+    - рахунок,
+    - будь
+    - ласка.
+  - words:
+    - на
+    - ринок.
+    - іду
+    - Я
+    correct_order:
+    - Я
+    - іду
+    - на
+    - ринок.
+- id: true-false-accusative
   type: true-false
   instruction: Правда чи ні? (True or false?)
   items:
-  - statement: Анна купує помідори та огірки на ринку.
+  - statement: У реченні «Я бачу брата» слово «брата» — це знахідний відмінок (accusative
+      case).
     correct: true
-    explanation: She asks about the price of tomatoes and cucumbers at the market.
-  - statement: Помідори коштують сорок гривень.
+    explanation: Брат is an animate masculine noun, so it takes -а in the accusative
+      case.
+  - statement: У реченні «Я п'ю воду» слово «воду» — це називний відмінок (nominative
+      case).
     correct: false
-    explanation: Tomatoes cost 30 hryvnias. Cucumbers cost 40 hryvnias.
-  - statement: Анна п'є каву з молоком у кафе.
-    correct: false
-    explanation: She orders borsch and water with lemon.
-  - statement: Анна купує борщ і воду.
+    explanation: Вода is nominative, воду is accusative.
+  - statement: Слово «борщ» не змінюється у знахідному відмінку, тому що це неістота
+      (inanimate).
     correct: true
-    explanation: 'She says: ''Мені борщ і воду з лимоном, будь ласка.'''
-  - statement: Олена знає Тараса.
+    explanation: Inanimate masculine nouns do not change in the accusative case.
+  - statement: Правильно сказати «Я люблю мама».
     correct: false
-    explanation: 'Olena says: ''Ні, я не знаю Тараса''.'
-  - statement: Тарас — це брат Анни.
+    explanation: Мама is feminine and changes to маму in the accusative case.
+  - statement: Жіночі імена, як «Олена», змінюють закінчення на -у у знахідному відмінку
+      («Олену»).
     correct: true
-    explanation: 'Anna asks: ''Ти знаєш мого брата Тараса?'''
-- id: order-dialogue
-  type: order
-  instruction: Розставте речення в правильному порядку (Put the sentences in the correct
-    order)
-  items:
-  - — Що ви хочете?
-  - — Мені борщ і воду з лимоном, будь ласка.
-  - — Це все?
-  - — Так, дякую. Рахунок, будь ласка.
-  - — Можна карткою?
-  - — Так, звичайно.
-  correct_order:
-  - 0
-  - 1
-  - 2
-  - 3
-  - 4
-  - 5
-- id: anagram-vocab
+    explanation: Feminine nouns ending in -а change to -у in the accusative case.
+  - statement: Правильно сказати «Скільки коштує помідори?».
+    correct: false
+    explanation: 'Помідори is plural, so the verb must be plural: коштують.'
+  - statement: У реченні «Я їм піцу» слово «піцу» відповідає на питання «що?».
+    correct: true
+    explanation: Піца is an inanimate object (що?).
+  - statement: Слово «друг» у знахідному відмінку буде «друг».
+    correct: false
+    explanation: Друг is an animate noun, so it changes to друга in the accusative
+      case.
+  - statement: Щоб запитати про ціну одного яблука, ми кажемо «Скільки коштує яблуко?».
+    correct: true
+    explanation: Коштує is used for singular subjects.
+  - statement: У фразі «кава з молоком» слово «молоком» стоїть у знахідному відмінку.
+    correct: false
+    explanation: After 'з' (with), we use the instrumental case, not accusative.
+- id: anagram-food
   type: anagram
   instruction: Складіть слово з літер (Make a word from the letters)
   items:
@@ -339,17 +398,6 @@ workbook:
     answer: яблуко
     hint: apple
   - letters:
-    - к
-    - а
-    - р
-    - т
-    - о
-    - п
-    - л
-    - я
-    answer: картопля
-    hint: potato
-  - letters:
     - с
     - н
     - і
@@ -361,14 +409,39 @@ workbook:
     answer: сніданок
     hint: breakfast
   - letters:
-    - г
     - р
     - и
-    - в
     - н
-    - я
-    answer: гривня
-    hint: hryvnia
+    - о
+    - к
+    answer: ринок
+    hint: market
+  - letters:
+    - б
+    - о
+    - р
+    - щ
+    answer: борщ
+    hint: traditional soup
+  - letters:
+    - к
+    - а
+    - р
+    - т
+    - к
+    - а
+    answer: картка
+    hint: card
+  - letters:
+    - п
+    - о
+    - м
+    - і
+    - д
+    - о
+    - р
+    answer: помідор
+    hint: tomato
   - letters:
     - р
     - а
@@ -378,4 +451,83 @@ workbook:
     - о
     - к
     answer: рахунок
-    hint: bill / check
+    hint: bill
+  - letters:
+    - х
+    - л
+    - і
+    - б
+    answer: хліб
+    hint: bread
+  - letters:
+    - в
+    - о
+    - д
+    - а
+    answer: вода
+    hint: water
+- id: fill-in-cases-mix
+  type: fill-in
+  instruction: Вставте правильне закінчення слова (Fill in the correct ending of the
+    word)
+  items:
+  - sentence: Я люблю український ____.
+    answer: борщ
+    options:
+    - борща
+    - борщ
+    - борщу
+  - sentence: Дайте одну ____, будь ласка.
+    answer: каву
+    options:
+    - кава
+    - каві
+    - каву
+  - sentence: Я бачу свого ____.
+    answer: друга
+    options:
+    - друг
+    - другу
+    - друга
+  - sentence: Вона їсть ____.
+    answer: піцу
+    options:
+    - піцу
+    - піца
+    - піці
+  - sentence: Ми чекаємо ____.
+    answer: лікаря
+    options:
+    - лікаря
+    - лікар
+    - лікарю
+  - sentence: Ти п'єш ____?
+    answer: воду
+    options:
+    - вода
+    - воду
+    - воді
+  - sentence: Я знаю цю ____.
+    answer: Олену
+    options:
+    - Олена
+    - Олені
+    - Олену
+  - sentence: Я купую свіжий ____.
+    answer: хліб
+    options:
+    - хліб
+    - хліба
+    - хлібу
+  - sentence: Дайте кілограм ____.
+    answer: яблук
+    options:
+    - яблука
+    - яблукам
+    - яблук
+  - sentence: Скільки коштують ці ____?
+    answer: помідори
+    options:
+    - помідор
+    - помідори
+    - помідорів

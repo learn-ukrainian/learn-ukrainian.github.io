@@ -1,7 +1,13 @@
 {
-  "attempt": 2,
+  "attempt": 1,
   "passed": true,
   "errors": [],
-  "warnings": [],
-  "timestamp": "2026-04-08T19:21:31.162548+00:00"
+  "warnings": [
+    {
+      "check": "VOCABULARY",
+      "severity": "WARNING",
+      "message": "Missing 1/10 required vocab: розповідати / розповісти (to tell/narrate — impf./pf.)"
+    }
+  ],
+  "timestamp": "2026-04-12T22:40:13.102373+00:00"
 }

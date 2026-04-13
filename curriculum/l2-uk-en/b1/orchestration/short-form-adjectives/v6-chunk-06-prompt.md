@@ -23,7 +23,7 @@ Grand total: ~4000 words
 <previous_context>
 [...previous sections truncated...]
 
-в таких комунікативних ситуаціях робить вітання набагато більш щирим, теплим та безпосереднім, ніж використання звичайного повного прикметника «радий». <!-- INJECT_ACTIVITY: fill-in-modern --> ## Усічені прикметники — інше явище Вивчаючи українську поезію та фольклор, ви можете зустріти лінгвіністичний термін **усічені прикметники** *(truncated adjectives)*. Важливо не плутати їх зі справжніми **короткими формами** *(short forms)*, адже це абсолютно різні мовні явища. Що таке **усічення** *(truncation)*? Це суто механічне, фонетичне відкидання кінцевого голосного звука або цілого складу в слові. Поети роблять це зумисно, щоб зберегти певний ритм, мелодику або розмір віршованого рядка. Наприклад, замість архаїчної повної нестягненої форми **вечірняя** *(evening, f.)* автор може написати варіант «вечірня», відкинувши закінчення «-я» заради плавного звучання. Це свідомий поетичний прийом. Натомість коротка форма — це не «обрізане» чи скорочене слово. Це повноцінна граматична категорія, яка має глибоке історичне коріння. Згідно з сучасним Державним стандартом української мови, короткі прикметники є залишками іменної відміни, яка існувала ще в старослов’янській мові *(Old East Slavic)*. Тоді вони відмінювалися так само, як іменники. Сьогодні ж вони збереглися як застиглі релікти у народній творчості та як предикативні форми у спілкуванні. Усічення — це фонетична зміна для краси поезії, а коротка форма — це морфологічна спадщина нашої граматики. Щоб надійніше зрозуміти цю граматичну різницю, давайте порівняємо кілька слів. Візьмемо популярну форму **повен** *(full)*. Це класичний короткий прикметник. Він має граматично нульове закінчення і функціонує виключно в називному відмінку чоловічого роду. Ми фізично не можемо сказати «повена» чи «повену» — таких морфологічних форм просто не існує. А тепер поглянемо на звичне словосполучення «**тиха** *(quiet)* ніч». Деякі студенти помилково вважають слово «тиха» короткою формою, бо воно здається візуально коротшим за стандартний чоловічий варіант «тихий». Але це ілюзія. Слово «тиха» — це звичайний **повний прикметник** *(full adjective)* жіночого роду, який повноцінно змінюється за всіма відмінками: «тихої», «тихій», «тиху», «тихою». Інша плутанина виникає з нестягненими формами. У піснях ви часто чуєте такі слова, як **зеленая** *(green)*, **гарнеє** *(beautiful)* або **яснії** *(bright)*. Це автентичні **повні нестягнені форми** *(full uncontracted forms)*. Вони мають додатковий склад наприкінці, який робить їх довшими та мелодійнішими. Але вони залишаються повними прикметниками, бо вільно відмінюються. Коли автор усікає пишну форму «зеленая» до звичайної «зелена», він просто повертає її до сучасного вигляду. Але справжні історичні короткі форми, такі як поетичне **зелен** *(green)* або **ясен** *(bright, clear)*, ніколи не мали родових закінчень у чоловічому роді. Вони стоять в українській мові окремо, нагадуючи про мову наших предків. Як швидко та безпомилково перевірити, яку саме форму ви бачите в тексті? Для цього завжди використовуйте просте, але дуже ефективне правило: спробуйте змінити слово за відмінками. | Ознака | Тип граматичної форми | Приклади слів | | :--- | :--- | :--- | | Змінюється за відмінками | Повна форма (сучасна або поетична) | **зелений** *(green)*, **зеленого**; **зеленая** *(green)*, **зеленої** | | Ніколи не змінюється | Справжня коротка форма (історичний релікт) | **зелен** *(green)*, **повен** *(full)*, **потрібен** *(needed)*, **годен** *(capable)* | Якщо слово можна логічно поставити в родовий чи знахідний відмінок — це завжди повноцінна повна форма, навіть якщо вона здається усіченою. Справжня коротка форма назавжди залишається незмінною. <!-- INJECT_ACTIVITY: error-correction-forms -->
+It is important to distinguish them from a true **короткий прикметник** (short-form adjective). A short form is a distinct grammatical category with its own historical roots. Truncation, on the other hand, is simply a mechanical dropping of a final vowel or syllable to fit a specific poetic meter. For example, in traditional folk songs, you will often see uncontracted forms. A poet might take the phrase *вечірняя зоря* (evening star) and drop the extra *-я* to create *вечірня зоря* strictly for the sake of rhythm. This mechanical process of dropping sounds is known as *усічення*. Because these truncated variations often look exactly like the standard **повний прикметник** (full-form adjective), learners sometimes get confused and assume they have found a short form. True short forms, however, operate under entirely different morphological rules and are structurally unique. Історичний контекст допомагає краще зрозуміти цю різницю. Слово «повен» є справжньою морфологічною короткою формою з нульовим закінченням. Натомість слово «тиха» у словосполученні «тиха ніч» є звичайною повною формою жіночого роду, хоча іноді здається усіченим варіантом від «тихая». Короткі прикметники — це збережені залишки давньоруської іменної відміни, які вижили переважно у фольклорі. Усічені форми не мають такої глибокої історії. Нестягнені варіації, як «яснії» чи «зеленая», лише додають поетичному тексту мелодійності. Коли автор усікає їх для рими, вони просто повертаються до свого стандартного вигляду або втрачають склад. Вони ніколи не утворюють окремої граматичної категорії. Справжніми короткими формами є лише такі історичні залишки, як «ясен» або «зелен». > *The historical context helps to better understand this difference. The word "повен" is a true morphological short form with a zero ending. On the other hand, the word "тиха" in the phrase "тиха ніч" is a regular full form in the feminine gender, even though it sometimes seems like a truncated variant of "тихая". Short adjectives are preserved remnants of the Old East Slavic nominal declension that survived mostly in folklore. Truncated forms do not have such a deep history. Uncontracted variations, like "яснії" or "зеленая", merely add melody to a poetic text. When an author truncates them for rhyme, they simply return to their standard appearance or lose a syllable. They never form a separate grammatical category. True short forms are only such historical remnants as "ясен" or "зелен".* :::info **Grammatical evolution** While neighboring Slavic languages retained short forms as a highly productive category for predicates, Ukrainian largely replaced them with full forms, keeping short forms only as stylistic relics or highly specialized predicate words. ::: To avoid confusion when analyzing texts, use this simple quick-check table. True short forms like **зелен** (green — poetic short form) have rigid boundaries and cannot be modified by case endings. | Adjective Behavior | Grammatical Form | Example | | :--- | :--- | :--- | | Changes by case | **повний прикметник** | *тиха*, *зеленая* | | Exists only in Nominative | **короткий прикметник** | *повен*, **ясен** (bright, clear — poetic short form) | <!-- INJECT_ACTIVITY: error-correction, Знайдіть і виправте помилки у реченнях на тему які прикметники мають короткі форми? -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -550,7 +550,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -563,18 +630,64 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (6/6).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] короткий прикметник (short-form adjective)
+- [ ] повний прикметник (full-form adjective)
+- [ ] потрібен/потрібна/потрібне (needed — short form, predicative)
+- [ ] певен/певна (certain, sure — short form)
+- [ ] годен/годна (fit, capable — short form)
+- [ ] ладен/ладна (willing, ready — short form)
+- [ ] варт/варта (worth — short form)
+- [ ] рад/рада (glad — short form)
+- [ ] зелен (green — poetic short form)
+- [ ] ясен (bright, clear — poetic short form)
+- [ ] народнопоетичний (folk-poetic register)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Підсумок та перехід до M61 (~450 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

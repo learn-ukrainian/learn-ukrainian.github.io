@@ -1,7 +1,7 @@
 # Audit Report: M15 — simplification-consonants.md
 **Level:** B1 | **Module:** M15 | **Phase:** B1.1 | **Pedagogy:** PPP | **Target:** 4000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-04-10 21:26:01
+**Generated:** 2026-04-11 16:57:07
 
 ## Configuration
 **Type:** B1-grammar
@@ -18,92 +18,72 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | match-up | match-up | 7 | 8 | ❌ |
-| 2 | fill-in | fill-in | 6 | 8 | ❌ |
-| 3 | true-false | true-false | 6 | 8 | ❌ |
-| 4 | group-sort | group-sort | 12 | 6 | ✅ |
-| 5 | error-correction | error-correction | 6 | 6 | ✅ |
-| 6 | translate | translate | 6 | 6 | ✅ |
-| 7 | anagram | anagram | 6 | 6 | ✅ |
-| 8 | unjumble | unjumble | 6 | 6 | ✅ |
+| 1 | match-up | З'єднайте базове слово з його похідним словом, у якому відбулося спрощення | 8 | 8 | ✅ |
+| 2 | fill-in | Вставте правильну форму похідного прикметника | 8 | 8 | ✅ |
+| 3 | quiz | Оберіть правильне написання похідного слова. Чи випадає приголосний? | 8 | 8 | ✅ |
+| 4 | group-sort | Розподіліть слова у дві групи: де спрощення закріплене на письмі та винятки (де  | 12 | 6 | ✅ |
+| 5 | translate | Оберіть правильний переклад речення | 6 | 6 | ✅ |
 
 **Summary:**
-- Total activities: 8 (target: 0-4) ❌
-- Unique types: 8 (minimum: 3) ✅
-- Priority types used: 3/7 (error-correction, fill-in, match-up) ✅
-- Low density activities: 3
+- Total activities: 5 (target: 0-4) ❌
+- Unique types: 5 (minimum: 3) ✅
+- Priority types used: 3/7 (fill-in, match-up, quiz) ✅
+- Low density activities: 0
+
+## LINT ERRORS
+- ❌ Line 73: AI Contamination detected ('\bignore this\b'). Remove thinking/self-correction artifacts.
 
 ## PEDAGOGICAL VIOLATIONS
-- **[LEVEL_RESTRICTION]** Activity 'anagram' not allowed at B1
-  - FIX: Anagram is only for A1 M01-M10 (Cyrillic scaffolding). Use unjumble instead.
-- **[COMPLEXITY]** match-up '' has 7 pairs (target: 12-16)
+- **[COMPLEXITY]** match-up 'З'єднайте базове слово з його похідним словом, у якому відбулося спрощення' has 8 pairs (target: 12-16)
   - FIX: Adjust number of pairs to 12-16.
-- **[COMPLEXITY]** fill-in '' has 6 items (minimum: 8)
-  - FIX: Add more items. B1 fill-in requires at least 8 items.
-- **[COMPLEXITY]** true-false '' has 6 items (minimum: 8)
-  - FIX: Add more items. B1 true-false requires at least 8 items.
-- **[COMPLEXITY_WORD_COUNT]** unjumble '' item 1 has 4 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble '' item 2 has 4 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble '' item 3 has 4 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble '' item 4 has 5 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble '' item 5 has 4 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble '' item 6 has 5 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[HINT_IN_ACTIVITY]** anagram activity 'Untitled' has item-level hint in item 1
-  - FIX: Remove all 'hint' fields from activity items (they break activities and provide no real pedagogical value)
-- **[SALAD_EXCESSIVE_INLINE_GLOSSES]** paragraph has 4 inline **term** (gloss) markers across 4 sentence(s) — too dense; move to vocabulary section or convert to UK paragraph + translation block
-  - FIX: Convert inline-gloss paragraphs to monolingual Ukrainian paragraphs followed by a blockquote + italic English translation block. See docs/best-practices/language-salad.md.
+- **[STATE_STANDARD_LOW_IMMERSION]** Module 15 has 31.3% immersion (target: 90.0%+)
+  - FIX: Add more Ukrainian content to reach 90%+ immersion for full immersion modules
 
 ## Recommendation
-**📝 UPDATE** (severity 60/100)
+**📝 UPDATE** (severity 47/100)
 
-- Revision recommended (severity 60/100)
-- 12 violations (severe - consider revision)
-- Activity density below minimum
+- Revision recommended (severity 47/100)
+- 2 violations (minor)
+- Immersion 54% off target (major rebalancing needed)
 
 ## Gates
-- **Words:** ✅ 4672/4000 (raw: 4734)
-- **Activities:** ✅ 8/0
-- **Density:** ❌ 3 < 6
-- **Unique_types:** ✅ 8/3 types
+- **Words:** ✅ 5149/4000 (raw: 5335)
+- **Activities:** ✅ 5/0
+- **Density:** ✅ All > 6
+- **Unique_types:** ✅ 5/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ❌ 0/5
+- **Engagement:** ❌ 1/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 85/25
 - **Structure:** ✅ Valid Structure
-- **Lint:** ✅ Clean Format
+- **Lint:** ❌ 1 Format Errors
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 96.1% (target 85-100% (B1.2 Motion))
-- **Richness:** ❌ 45% < 95% min (grammar) - REWRITE needed
+- **Immersion:** ❌ 31.3% LOW (target 85-100% (B1.2 Motion))
+- **Richness:** ❌ 39% < 95% min (grammar) - REWRITE needed
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
 
 ## Richness Details
-**Score:** 45% (minimum: 95%)
+**Score:** 39% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 10 | 24 | 42% | 20% | 8.4% |
+| examples | 9 | 24 | 38% | 20% | 7.6% |
 | engagement | 0 | 5 | 0% | 15% | 0.0% |
 | dialogues | 0 | 4 | 0% | 15% | 0.0% |
 | variety | 0.95 | - | 95% | 10% | 9.5% |
-| cultural | 2 | 3 | 67% | 10% | 6.7% |
+| cultural | 0 | 3 | 0% | 10% | 0.0% |
 | realworld | 20 | 3 | 100% | 10% | 10.0% |
 | visual | 0 | 3 | 0% | 5% | 0.0% |
-| questions | 10 | 5 | 100% | 5% | 5.0% |
-| tables | 0 | 2 | 0% | 4% | 0.0% |
+| questions | 15 | 5 | 100% | 5% | 5.0% |
+| tables | 1 | 2 | 50% | 4% | 2.0% |
 | paragraph_var | 1.00 | - | 100% | 3% | 3.0% |
 | proverbs | 10 | 1 | 100% | 3% | 3.0% |
-| **TOTAL** | | | | | **45.6%** |
+| **TOTAL** | | | | | **40.1%** |
 
 ### Dryness Flags & Fixes
 - ❌ **NO_ENGAGEMENT**
@@ -146,25 +126,23 @@
 - ❌ **NO_EXAMPLES**
   - FIX:
     Add 24+ example sentences. Each grammar point needs 3-4 examples showing the pattern in context.
-- ❌ **NO_TABLES**
+- ❌ **NO_CULTURAL_ANCHOR**
   - FIX:
-    Address this issue to improve richness score
-
-## Low Density Activities
-| Activity | Type | Items | Required | Fix |
-|----------|------|-------|----------|-----|
-| match-up | match-up | 7 | 8 | Add 1 more items |
-| fill-in | fill-in | 6 | 8 | Add 2 more items |
-| true-false | true-false | 6 | 8 | Add 2 more items |
-
+    Add 3+ cultural references. Use this exact format:
+    
+    > 🇺🇦 **Культурний момент**
+    >
+    > [Reference to Ukrainian place (Київ, Львів, Одеса, Карпати), tradition, or custom]
+    > [How it connects to the grammar/vocabulary being taught]
+    > [Example sentence using the grammar with cultural context]
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 643 | Included in Core |
-| **Спрощення, закріплене на письмі** | ✅ | 999 | Included in Core |
-| **Винятки: спрощення у вимові, але не на письмі** | ✅ | 770 | Included in Core |
-| **Спрощення [сонце], [серце] та інші особливі випадки** | ✅ | 709 | Included in Core |
-| **Спрощення у дієслівних формах та прикметниках** | ✅ | 714 | Included in Core |
-| **Спрощення vs. чергування: порівняння** | ✅ | 498 | Included in Core |
-| **Підсумок і практика** | ✅ | 339 | Included in Core |
+| **Intro/Narrative** | ✅ | 878 | Included in Core |
+| **Спрощення, закріплене на письмі (~940 words total)** | ✅ | 1145 | Included in Core |
+| **Винятки: спрощення у вимові, але не на письмі (~720 words total)** | ✅ | 815 | Included in Core |
+| **Спрощення [сонце], [серце] та інші особливі випадки (~660 words total)** | ✅ | 684 | Included in Core |
+| **Спрощення у дієслівних формах та прикметниках (~660 words total)** | ✅ | 733 | Included in Core |
+| **Спрощення vs. чергування: порівняння (~450 words total)** | ✅ | 496 | Included in Core |
+| **Підсумок і практика (~310 words total)** | ✅ | 398 | Included in Core |

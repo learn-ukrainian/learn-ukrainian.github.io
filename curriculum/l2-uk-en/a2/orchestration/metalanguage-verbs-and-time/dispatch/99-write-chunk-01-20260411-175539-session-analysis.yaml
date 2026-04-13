@@ -1,0 +1,94 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T15-54-cb8911b3.json
+phase: write-chunk-01
+prompt_chars: 43934
+response_chars: 5412
+prompt_words: 6221
+response_words: 859
+sections:
+- name: header
+  start: 0
+  length: 432
+  fraction: 0.0098
+- name: skeleton
+  start: 432
+  length: 1624
+  fraction: 0.037
+- name: plan
+  start: 2056
+  length: 12262
+  fraction: 0.2791
+- name: wiki
+  start: 7904
+  length: 29404
+  fraction: 0.6693
+- name: output_spec
+  start: 43722
+  length: 212
+  fraction: 0.0048
+large_sections:
+- wiki
+directives_total: 28
+directives_covered: 15
+directives_missed:
+- kind: checklist
+  text: дієвідміна (conjugation class)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: особа (person, grammatical)
+  covered: false
+  coverage_note: 1/3 keywords (33%)
+- kind: checklist
+  text: прислівник (adverb)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: must
+  text: Ukrainian schools, starting from early grades (Grade 3), teach that for a
+    group of words to be a sentence, they must be connected logically and grammatically
+    (Source 4).
+  covered: false
+  coverage_note: 7/18 keywords (39%)
+- kind: must
+  text: '* A learner in any formal setting must master the vocabulary of education.'
+  covered: false
+  coverage_note: 3/8 keywords (38%)
+- kind: must
+  text: A content writer must be vigilant, using dictionaries like the СУМ-11 and
+    style guides to choose authentic Ukrainian vocabulary and avoid calques.
+  covered: false
+  coverage_note: 5/16 keywords (31%)
+- kind: must
+  text: Students must underline the subject (`підмет`) once and the predicate (`присудок`)
+    twice, as is standard in Ukrainian schools (Source 10).
+  covered: false
+  coverage_note: 2/13 keywords (15%)
+- kind: must
+  text: Students must label each one (`розповідне`, `питальне`, `спонукальне`) (Source
+    36).
+  covered: false
+  coverage_note: 2/9 keywords (22%)
+- kind: must
+  text: Students must transform it into a yes/no question using intonation (`?`) and
+    the particle `чи`.
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: must
+  text: '* **Дієвідмінювання (Verb Conjugation):** The predicate must agree with the
+    subject in person and number (present/future) and gender/number (past).'
+  covered: false
+  coverage_note: 5/13 keywords (38%)
+- kind: must
+  text: '* **Складні речення (Complex/Compound Sentences):** Mastery of the simple
+    sentence (`просте речення`) is required before a student can analyze or construct
+    sentences with multiple grammatical foundations (Source 3, 23).'
+  covered: false
+  coverage_note: 7/19 keywords (37%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 4/11 keywords (36%)

@@ -1,0 +1,91 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T02-35-d31fcd95.json
+phase: write
+prompt_chars: 68501
+response_chars: 11623
+prompt_words: 10124
+response_words: 1804
+sections:
+- name: preamble
+  start: 0
+  length: 6499
+  fraction: 0.0949
+- name: plan
+  start: 6499
+  length: 6669
+  fraction: 0.0974
+- name: wiki
+  start: 12196
+  length: 29927
+  fraction: 0.4369
+- name: rules
+  start: 43095
+  length: 9919
+  fraction: 0.1448
+- name: skeleton
+  start: 53014
+  length: 5052
+  fraction: 0.0738
+- name: output_spec
+  start: 58066
+  length: 10435
+  fraction: 0.1523
+large_sections:
+- wiki
+directives_total: 68
+directives_covered: 55
+directives_missed:
+- kind: checklist
+  text: 'Dialogue completion: fill in both sides of a short dialogue using appropriate
+    Genitive phrases — market scenario, asking'
+  covered: false
+  coverage_note: 5/13 keywords (38%)
+- kind: checklist
+  text: No 'Let us...', 'In this section...', or formulaic openers
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: checklist
+  text: Every exercise marker from the skeleton is placed
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: must
+  text: For A1 early modules, the learner cannot read Cyrillic — English must dominate.
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: must
+  text: '**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim**
+    as an `## H2` line.'
+  covered: false
+  coverage_note: 4/11 keywords (36%)
+- kind: must
+  text: '- **The Wall of Text:** 3+ paragraphs of English theory without a single
+    Ukrainian example — every concept must be anchored in immediate Ukrainian examples.'
+  covered: false
+  coverage_note: 5/15 keywords (33%)
+- kind: must
+  text: translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: must
+  text: '- **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).'
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-sounds-vs-letters
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-sounds-vs-letters
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-false-friends
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing

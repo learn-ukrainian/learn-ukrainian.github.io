@@ -22,7 +22,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-має закінчення «-е», але його основа закінчується на свистячий звук «ц», тому воно до цієї групи не належить. А от «плече» підходить ідеально: основа «плеч-» закінчується на шиплячий «ч», плюс фінальне закінчення «-е». Додамо сюди ще кілька цікавих слів: **кладовище** (cemetery) та **сховище** (shelter). Усі ці іменники поводяться так само, як і їхні брати чоловічого роду — тобто демонструють ознаки як твердої, так і м'якої груп. Розгляньмо повну парадигму відмінювання на прикладі слова «плече». Як зазначає авторка шкільного підручника для шостого класу Вікторія Литвінова на сторінці 153, іменники середнього роду мішаної групи в однині мають свої чіткі правила. Називний і знахідний відмінки збігаються: це моє праве плече. Родовий відмінок отримує закінчення «-а»: у мене болить частина плеча. Давальний відмінок має закінчення «-у»: я завдячую цьому сильному плечу. Але найважливішим маркером мішаної групи є орудний відмінок. Тут іменники середнього роду повністю копіюють чоловічий рід і отримують м'яке закінчення «-ем». Ми говоримо: він торкнувся моїм **плечем** (with a shoulder), вона пишається своїм відомим прізвищем, діти гріються перед гарячим вогнищем. Ніколи не кажіть «плечом» чи «прізвищом» — це типова помилка, яка виникає через вплив твердої групи. Мішана група завжди вимагає закінчення «-ем». Місцевий відмінок має закінчення «-і»: на моєму правому плечі, у його довгому прізвищі. Давайте подивимося, як ці слова працюють у реальному житті та контексті. Слово «прізвище» є абсолютно необхідним в офіційних документах та формальних розмовах. Коли ви приходите до банку, вас обов'язково запитають: «Назвіть, будь ласка, ваше ім'я, а також розпишіться під вашим прізвищем». Слово «вогнище» створює атмосферу затишку під час відпочинку на природі. Уявіть типову ситуацію: туристи поставили намети біля гірської річки і сіли грітися перед великим яскравим вогнищем. Слово «видовище» часто використовується в культурному контексті для опису чогось вражаючого. Наприклад: «Лазерне шоу на свято міста було справді незабутнім видовищем». Зверніть особливу увагу на форми давального та місцевого відмінків. Ми щиро радіємо новому грандіозному видовищу, але ми присутні на цьому чудовому видовищі. Птах безпечно сидить на моєму плечі, туристи готують смачну вечерю на відкритому вогнищі, а стара друкарська помилка знову сховалася в моєму довгому і складному прізвищі. Без цих слів важко уявити повноцінну розповідь про свої вихідні або заповнення простої анкети. Тепер перейдемо до множини, де на нас чекає один граматичний сюрприз. Як зауважує мовознавець Олександр Заболотний у підручнику для шостого класу на сторінці 104, слово «плече» має унікальну форму в орудному відмінку множини. Замість очікуваного стандарту, ми кажемо **плечима** (with shoulders). Він знизав своїми широкими плечима. Ця форма із закінченням «-има» є історичним залишком давної двоїни — спеціальної граматичної форми, яка колись використовувалася для парних предметів. Сьогодні двоїна майже зникла, але її яскраві сліди залишилися. Важливо не плутати цю унікальну форму з місцевим відмінком множини. У місцевому відмінку діє стандартне правило мішаної групи — тверде закінчення «-ах». Ми несемо важкі рюкзаки на наших втомлених **плечах** (on shoulders). Інші слова середнього роду у множині поводяться цілком передбачувано і також копіюють тверду групу. Називний відмінок: різні прізвища, яскраві вогнища. Родовий відмінок: немає цих прізвищ, багато вогнищ. Орудний відмінок: милуватися мальовничими видовищами, пишатися своїми прівищами. Як бачите, закінчення тут тверді («-а», «-ами»).
+communication, so it is important for students to know their paradigm very well.* When we decline these neuter nouns in the **однина** (singular number), their grammatical behavior perfectly mirrors the masculine pattern we have already established. The most critical form to master is the **орудний відмінок** (instrumental case). Just like their masculine counterparts, they take the soft-sounding ending `-ем`, never the hard `-ом`. You will confidently say `плечем`, `прізвищем`, and `видовищем`. The **кличний відмінок** (vocative case) is completely identical to the nominative for these inanimate objects. Ukrainian linguist Oksana Lytvynova explicitly highlights this structural symmetry in her sixth-grade textbook, deliberately placing the paradigm for `плечем` right alongside `сторожем` to visually emphasize their shared grammatical logic. Орудний відмінок традиційно залишається головним та найяскравішим маркером мішаної групи. Якщо ви підписуєте важливий офіційний документ своїм прізвищем, ви на практиці використовуєте саме це граматичне правило. Так само, коли ви щиро захоплюєтесь якимось дивовижним видовищем у театрі, закінчення завжди буде «-ем». Називний, знахідний та кличний відмінки для цих абстрактних понять і неістот завжди повністю збігаються. Слово «плече» залишається абсолютно незмінним у всіх трьох граматичних випадках. The remaining singular cases follow predictable vowel shifts across any standard **відмінок** (grammatical case). The dative case takes the ending `-у`, creating perfectly regular forms like `плечу` and `прізвищу`. However, the locative case creates a necessary contrast to prevent confusion. For neuter nouns ending in `-е`, the locative case always features the ending `-і`. If a heavy bag is physically resting on a **плече** (shoulder), you must say `на плечі`, firmly establishing the location. Літній вечір у карпатських горах майже завжди закінчується біля великого теплого вогнища. Втомлені туристи збираються навколо нього та тихо співають свої давні улюблені пісні. Завдяки цьому яскравому вогнищу люди відчувають справжній глибокий затишок серед дикої природи. Коли хтось щиро кладе руку на твоє плече, це завжди одразу сприймається як глибокий прояв справжньої дружби. Правильний відмінок постійно допомагає передати ці теплі людські емоції максимально природно. As we shift our focus to the **множина** (plural number), these neuter nouns generally follow completely expected and regular patterns. The nominative plural of the word `плече` is simply `плечі`, the dative plural takes the standard ending to become `плечам`, and the locative plural predictably transforms into `на плечах`. However, the instrumental plural of `плече` features a remarkable and culturally significant historical exception that you must memorize. :::info **Grammar box** The instrumental plural of `плече` is **плечима**, not *плечами. This unique ending `-има` is a fascinating surviving remnant of the historical dual number. Centuries ago, the dual number was a separate grammatical category used specifically for naturally paired body parts, such as eyes (*очима*) and shoulders (*плечима*). ::: Автор відомого шкільного підручника Олександр Заболотний звертає особливу увагу на цю унікальну історичну форму на сторінці 104. Слово «плечима» звучить дуже органічно та природно в українській класичній літературі. Наприклад, коли людина абсолютно нічого не знає або сумнівається, вона може просто знизати плечима у відповідь. Інші іменники середнього роду мішаної групи у множині мають цілком стандартне тверде закінчення «-ами», як-от довгими «прізвищами» або яскравими «вогнищами».
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -621,7 +621,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -634,18 +701,69 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] сторож (watchman — мішана група, masculine II відміна)
+- [ ] слухач (listener — мішана група, suffix -ач)
+- [ ] товариш (companion — мішана група)
+- [ ] мішана група (mixed group — nouns with шиплячий stem)
+- [ ] шиплячий (hissing consonant — ж, ч, ш, дж)
+- [ ] закінчення (ending — grammatical suffix in a word form)
+- [ ] відмінок (grammatical case)
+- [ ] орудний відмінок (instrumental case)
+- [ ] кличний відмінок (vocative case)
+- [ ] однина (singular number)
+- [ ] множина (plural number)
+- [ ] ніж (knife — мішана група, inanimate)
+- [ ] читач (reader — мішана група, suffix -ач)
+- [ ] плече (shoulder — neuter мішана група)
+- [ ] борщ (borscht — мішана група)
+- [ ] плащ (raincoat — мішана група, inanimate)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Чергування в мішаній групі (~650 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

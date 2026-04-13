@@ -1,0 +1,47 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T05-27-49fd3989.json
+phase: write-chunk-01
+prompt_chars: 42714
+response_chars: 4585
+prompt_words: 6348
+response_words: 763
+sections:
+- name: header
+  start: 0
+  length: 479
+  fraction: 0.0112
+- name: skeleton
+  start: 479
+  length: 1521
+  fraction: 0.0356
+- name: plan
+  start: 2000
+  length: 13583
+  fraction: 0.318
+- name: wiki
+  start: 8160
+  length: 26878
+  fraction: 0.6293
+- name: output_spec
+  start: 42461
+  length: 253
+  fraction: 0.0059
+large_sections:
+- wiki
+directives_total: 22
+directives_covered: 19
+directives_missed:
+- kind: must
+  text: '` | In a formal address consisting of a first name and patronymic, **both**
+    nouns must be in the vocative case (Source 5, 10, 16).'
+  covered: false
+  coverage_note: 3/12 keywords (25%)
+- kind: must
+  text: '` | When addressing someone using a title (`пан`, `пані`, `колега`, `лікар`)
+    and a surname, the title must be in the vocative case, while the surname remains
+    in the nominative (Source 5, 16).'
+  covered: false
+  coverage_note: 5/17 keywords (29%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)

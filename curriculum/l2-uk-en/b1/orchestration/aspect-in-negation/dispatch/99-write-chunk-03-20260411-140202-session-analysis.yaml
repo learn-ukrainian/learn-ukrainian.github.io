@@ -1,0 +1,60 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T12-00-0e85c813.json
+phase: write-chunk-03
+prompt_chars: 53389
+response_chars: 9667
+prompt_words: 7598
+response_words: 1566
+sections:
+- name: header
+  start: 0
+  length: 446
+  fraction: 0.0084
+- name: skeleton
+  start: 446
+  length: 2616
+  fraction: 0.049
+- name: prior_summary
+  start: 3062
+  length: 3526
+  fraction: 0.066
+- name: plan
+  start: 6588
+  length: 17822
+  fraction: 0.3338
+- name: wiki
+  start: 18340
+  length: 28751
+  fraction: 0.5385
+- name: output_spec
+  start: 53161
+  length: 228
+  fraction: 0.0043
+large_sections:
+- wiki
+directives_total: 32
+directives_covered: 27
+directives_missed:
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: skeleton_para
+  text: 'P6 (160w): Common pitfalls: Mixing ''ще не'' with the imperfective. Explain
+    why ''*Я ще не читав цю книжку'' sounds awkward to a native speaker (it mixes
+    ''yet'' with ''general fact''). Correcting it to either ''Я не читав'' or ''Я
+    ще не прочитав''.'
+  covered: false
+  coverage_note: 9/23 keywords (39%)
+- kind: inject_activity
+  text: fill-in-factual-denial
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: group-sort-negation-types
+  covered: false
+  coverage_note: marker missing

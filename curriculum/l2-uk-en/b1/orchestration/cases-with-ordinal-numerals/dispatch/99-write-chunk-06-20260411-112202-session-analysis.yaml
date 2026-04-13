@@ -1,0 +1,41 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T09-21-caac3b10.json
+phase: write-chunk-06
+prompt_chars: 45997
+response_chars: 3778
+prompt_words: 6335
+response_words: 568
+sections:
+- name: header
+  start: 0
+  length: 422
+  fraction: 0.0092
+- name: skeleton
+  start: 422
+  length: 900
+  fraction: 0.0196
+- name: prior_summary
+  start: 1322
+  length: 3368
+  fraction: 0.0732
+- name: plan
+  start: 4690
+  length: 14555
+  fraction: 0.3164
+- name: wiki
+  start: 14384
+  length: 26624
+  fraction: 0.5788
+- name: output_spec
+  start: 45869
+  length: 128
+  fraction: 0.0028
+large_sections:
+- wiki
+directives_total: 4
+directives_covered: 3
+directives_missed:
+- kind: inject_activity
+  text: reading, Прочитайте текст про відмінювання порядкових числівників і дайте
+    відповіді на запитання
+  covered: false
+  coverage_note: marker missing

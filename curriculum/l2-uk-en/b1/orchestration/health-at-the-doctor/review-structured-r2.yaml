@@ -1,0 +1,53 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'The plan required explaining the morphophonemic awareness of body parts:
+    "голова — головний (о→о, no alternation — stress stable)". This exact teaching
+    point was skipped in the text. All other section'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: 'There is a repeated use of the syntactic calque "давайте + дієслово"
+    (9 instances) instead of the natural Ukrainian imperative "-ймо/-імо" (e.g., "Давайте
+    подивимося" замість "Подивімося"). Also, the '
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent PPP flow. The grammatical explanations regarding case government
+    ("скаржитися на", "хворіти на", "лікуватися від") are clear, heavily contextualized,
+    and provide great contrast with common l
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary items from the plan are introduced
+    naturally within the text rather than as bare lists.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: The 5 required markers are all present, correctly formatted, and strategically
+    placed after their relevant teaching blocks.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The tone is highly encouraging, professional, and free of empty corporate
+    filler. The transition between linguistic facts and practical dialogue is smooth.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: The word count is 4865 (exceeding the 4000 target). All H2 headings match
+    the structural outline exactly.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Reflects the reality of Ukrainian healthcare interactions (polyclinic
+    visits, terminology, prices in hryvnias) without introducing foreign cultural
+    assumptions.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues are highly realistic. The shift between conversational inquiry
+    and medical imperative ("відкрийте рота", "не рухайтеся") perfectly captures a
+    doctor-patient interaction.
+findings: []

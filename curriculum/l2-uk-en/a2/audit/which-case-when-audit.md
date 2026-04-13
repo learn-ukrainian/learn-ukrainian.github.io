@@ -1,7 +1,7 @@
 # Audit Report: M36 — which-case-when.md
 **Level:** A2 | **Module:** M36 | **Phase:** A2.5 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-04-11 00:49:58
+**Generated:** 2026-04-13 10:53:35
 
 ## Configuration
 **Type:** A2-grammar
@@ -18,86 +18,49 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | quiz |  | 8 | 8 | ✅ |
-| 2 | group-sort |  | 13 | 8 | ✅ |
-| 3 | fill-in |  | 8 | 8 | ✅ |
-| 4 | true-false |  | 8 | 8 | ✅ |
-| 5 | match-up |  | 6 | 8 | ❌ |
-| 6 | fill-in |  | 6 | 8 | ❌ |
-| 7 | error-correction |  | 6 | 6 | ✅ |
+| 1 | group-sort | Розподіліть фрази за відмінками | 13 | 8 | ✅ |
+| 2 | fill-in | Вставте правильну форму слова | 8 | 8 | ✅ |
+| 3 | quiz | Оберіть правильний варіант | 8 | 8 | ✅ |
+| 4 | true-false | Правда чи ні? Чи правильно використано відмінок? | 8 | 8 | ✅ |
+| 5 | error-correction | Знайдіть і виправте помилку у реченні | 8 | 6 | ✅ |
+| 6 | translate | Оберіть правильний переклад | 8 | 6 | ✅ |
+| 7 | match-up | З'єднайте дієслово з правильною формою іменника | 8 | 8 | ✅ |
+| 8 | fill-in | Вставте правильний прийменник (на, в, з, за, по, про, для) | 8 | 8 | ✅ |
+| 9 | group-sort | Розподіліть фрази: рух (напрямок) чи статика (місце)? | 10 | 8 | ✅ |
+| 10 | error-correction | Виправте помилки у виразах часу та описі характеристик | 8 | 6 | ✅ |
+| 11 | fill-in | Застосуйте алгоритм вибору відмінка. Вставте правильне слово. | 8 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 7 (target: 0-4) ❌
-- Unique types: 6 (minimum: 0) ✅
-- Priority types used: 6/15 (error-correction, fill-in, group-sort, match-up, quiz, true-false) ✅
-- Low density activities: 2
-
-## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY]** Sentence too long for A2: 17 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Коли ми рухаємося по поверхні...'
-- **[COMPLEXITY]** Sentence too long for A2: 18 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Але якщо нам треба перетнути...'
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q1 prompt length 3 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q2 prompt length 3 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q3 prompt length 3 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q4 prompt length 3 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q5 prompt length 4 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q6 prompt length 3 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q7 prompt length 3 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q8 prompt length 4 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY]** match-up '' has 6 pairs (target: 8-14)
-  - FIX: Adjust number of pairs to 8-14.
-- **[COMPLEXITY]** fill-in '' has 6 items (minimum: 8)
-  - FIX: Add more items. A2 fill-in requires at least 8 items.
-- **[INLINE_ENGLISH_IN_PROSE]** Inline English translations in B1+ prose (29 occurrences): (Nominative case), (Instrumental case), (Genitive case) — breaks immersion target
-  - FIX: Remove inline English translations. Use context clues, Ukrainian definitions, or move translations to vocabulary section
+- Total activities: 11 (target: 0-4) ❌
+- Unique types: 7 (minimum: 0) ✅
+- Priority types used: 7/15 (error-correction, fill-in, group-sort, match-up, quiz, translate, true-false) ✅
+- Low density activities: 0
 
 ## Recommendation
-**📝 UPDATE** (severity 60/100)
+**📝 UPDATE** (severity 30/100)
 
-- Revision recommended (severity 60/100)
-- 13 violations (severe - consider revision)
-- Activity density below minimum
+- Immersion 9% off target (minor)
+- Structure issue: Missing '## Summary'
 
 ## Gates
-- **Words:** ✅ 2913/2000 (raw: 2960)
-- **Activities:** ✅ 7/0
-- **Density:** ❌ 2 < 8
-- **Unique_types:** ✅ 6/0 types
+- **Words:** ❌ 751/2000 (raw: 764)
+- **Activities:** ✅ 11/0
+- **Density:** ✅ All > 8
+- **Unique_types:** ✅ 7/0 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ❌ 0/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 51/1
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ✅ 19/1
+- **Structure:** ❌ Missing '## Summary'
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ⚠️ 47.9% (target 50-80%, within tolerance (A2.2))
+- **Immersion:** ❌ 41.1% LOW (target 50-80% (A2.2))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
 
-## Low Density Activities
-| Activity | Type | Items | Required | Fix |
-|----------|------|-------|----------|-----|
-|  | match-up | 6 | 8 | Add 2 more items |
-|  | fill-in | 6 | 8 | Add 2 more items |
-
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 402 | Included in Core |
-| **Дієслово вирішує: Який відмінок після дієслова?** | ✅ | 448 | Included in Core |
-| **Прийменник вирішує: Один прийменник — різні відмінки** | ✅ | 499 | Included in Core |
-| **Особливі випадки: Час, характеристика, шлях** | ✅ | 661 | Included in Core |
-| **Алгоритм вибору відмінка** | ✅ | 561 | Included in Core |
-| **Підсумок** | ✅ | 342 | Included in Core |
+| **Intro/Narrative** | ✅ | 751 | Included in Core |

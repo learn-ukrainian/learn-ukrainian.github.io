@@ -1,4 +1,4 @@
-# Section-by-Section Generation — Section 1/4
+# Section-by-Section Generation — Section 1/3
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
@@ -11,14 +11,14 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 ## Section Skeleton (follow this exactly)
 
 ## На ринку: скільки вам? (~800 words total)
-- P1 (~120 words): [The atmosphere of a Ukrainian food market (ринок) — cultural context of Besarabskyi or Zhytnii market in Kyiv, the direct interaction with vendors, and the expectation of quality and freshness.]
-- P2 (~130 words): [Grammar: Genitive case for quantity. Explaining the use of Genitive Singular after units of weight and volume, with examples: кілограм цукру (m), літр молока (n), пляшка олії (f).]
-- P3 (~120 words): [Container and portion words + Genitive. Detailed examples of common market purchases: пачка масла (a pack of butter), банка меду (a jar of honey), шматок сала (a piece of salo), десяток яєць (a dozen eggs).]
-- P4 (~130 words): [The Partitive Genitive (-у/-ю endings). Explaining why we say "кілограм сиру" or "трохи меду" instead of -а/-я, highlighting this as a distinct Ukrainian feature for substances and collective nouns.]
-- P5 (~120 words): [Prices and Numerals. Reviewing the rules for 1 (Nom. Sg.), 2-4 (Nom. Pl. — два кілограми, три пляшки), and 5+ (Gen. Pl. — п'ять кілограмів, десять яєць) in the context of cost and weight.]
-- P6 (~100 words): [Dialogue: At the produce stall. A natural exchange between Покупець and Продавець. Focus on asking "Скільки коштує...?", "Чи свіжі ці помідори?", and requesting specific weights using "Дайте, будь ласка..."]
-- P7 (~80 words): [Polite market language and diminutives. How vendors use forms like "картопелька" or "яблучка" to be friendly, and how to respond politely using "Дякую" and "На все добре".]
-- <!-- INJECT_ACTIVITY: fill-in-market-genitive --> [fill-in, Complete market dialogue lines with correct quantity + Genitive forms, 8 items]
+- P1 (~100 words): Set the vibrant scene of a Ukrainian "ринок" (market). Explain that buying food here isn't just about taking items off a shelf; it's an interactive experience where you must specify exactly what and how much you want, making it the perfect place to master the Genitive case.
+- P2 (~120 words): Present a natural market dialogue between a "покупець" (buyer) and a "продавець" (vendor). Include greetings, asking about freshness, and requesting items: "Дайте мені кілограм помідорів і півкіло огірків." The vendor asks: "Скільки вам?" and gives the total price.
+- P3 (~130 words): Introduce the core rule: Quantity + Genitive. Explain that whenever we specify an amount of something (a measure, a container, or a portion), the noun that follows must be in the Genitive case. Provide clear, everyday examples: "кілограм яблук" (a kilogram of apples), "літр молока" (a liter of milk), "пачка масла" (a pack of butter). 
+- P4 (~150 words): Deep dive into the Genitive endings used for food quantities. Contrast uncountable substances with countable items. For uncountable masculine nouns (substances/materials), highlight the highly productive -у/-ю ending: "кілограм сиру", "шматок цукру", "банка меду". For countable items in plural quantities, show the Genitive Plural: "кілограм помідорів", "десяток яєць".
+- P5 (~120 words): Expand on measure words and partitives. Explain how to ask for portions using words like "склянка" (glass), "шматок" (piece), and "банка" (jar). Show phrases like "склянка соку" or "шматок хліба". Explain the useful prefix "пів" (half): "пів кіло помідорів", "пів літра води".
+- P6 (~100 words): Teach how to ask for prices and be polite. Contrast singular and plural verbs: "Скільки коштує кілограм?" vs. "Скільки коштують яблука?". Introduce standard polite requests: "Дайте, будь ласка...", "Чи є у вас...?". Briefly mention that vendors often use diminutives ("картопелька", "помідорчики") to sound friendly.
+- P7 (~80 words): Briefly touch on the 5+ rule for numbers, as it is essential for paying. Remind learners that after numbers 5 and above, nouns take the Genitive Plural: "п'ять кілограмів", "двадцять гривень".
+- <!-- INJECT_ACTIVITY: fill-in-market-dialogue --> [fill-in, Complete market dialogue lines with correct quantity + Genitive forms, 8 items]
 
 ---
 ## Full Plan (for reference)
@@ -475,7 +475,74 @@ This section is critical for building an authentic and respectful understanding 
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 4: Mid A2 (A2 M04-M20)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–8 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 80%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 80% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 45-65% Ukrainian. THIS IS A HARD GATE — the audit REJECTS modules below 45%.
 LANGUAGE ROLES:
@@ -502,18 +569,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] ринок (market)
+- [ ] кілограм (kilogram)
+- [ ] пляшка (bottle)
+- [ ] здоров'я (health)
+- [ ] температура (temperature, fever)
+- [ ] рецепт (prescription, recipe)
+- [ ] аптека (pharmacy)
+- [ ] ліки (medicine)
+- [ ] кашель (cough)
+- [ ] апетит (appetite)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## На ринку: скільки вам? (~800 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

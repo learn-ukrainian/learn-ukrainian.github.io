@@ -1,0 +1,56 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: 'All planned H2 sections are present and in order. The prose covers the
+    required contrasts `Де? — Я в банку.` / `Куди? — Я йду в банк.`, the accusative
+    endings `школа → у школу`, `робота → на роботу`, '
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: The Ukrainian examples are clean, but the explanation `When traveling
+    to a city, you must use the verb **їхати**...` teaches an overgeneralized rule
+    about Ukrainian motion verbs.
+- dimension: 3
+  name: Pedagogical quality
+  score: 7
+  evidence: The module has a solid PPP skeleton, but some explanations are too theory-heavy
+    before examples, especially `In Ukrainian primary schools, Grade 4 students learn...`
+    and `To navigate the Ukrainian lan
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'Required vocabulary appears naturally in context: `куди`, `йти`, `їхати`,
+    `у школу`, `на роботу`, `у банк`. Recommended words also appear in prose: `магазин`,
+    `бібліотека`, `ресторан`, `Одеса`, `повер'
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: The marker set matches the plan exactly, and each marker comes after the
+    concept it is supposed to test. The sequence from form explanation to `de/kudy`
+    contrast to motion verbs is coherent.
+- dimension: 6
+  name: Engagement & tone
+  score: 7
+  evidence: Several lines are padded with inflated wording instead of teaching content,
+    for example `This is a highly visible, high-frequency grammatical signal that
+    native speakers expect to hear in daily conver
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: The structure is clean, all planned H2 headings are present, the marker
+    comments are intact, and the deterministic pipeline word count is 1450, which
+    is above the 1200 target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 9
+  evidence: The module stays Ukrainian-centered and avoids Russian-comparison framing.
+    The errands/public-transport note is plausible and non-exoticizing, though broad.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: The dialogues use named speakers, clear real-life settings, and multi-turn
+    exchanges such as the Saturday errand split-up and weekend travel planning. They
+    read naturally enough for A1 input.
+findings: []

@@ -1,0 +1,49 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T03-36-e376e0f4.json
+phase: write-chunk-01
+prompt_chars: 40098
+response_chars: 5153
+prompt_words: 5709
+response_words: 883
+sections:
+- name: header
+  start: 0
+  length: 450
+  fraction: 0.0112
+- name: skeleton
+  start: 450
+  length: 1444
+  fraction: 0.036
+- name: plan
+  start: 1894
+  length: 12212
+  fraction: 0.3046
+- name: wiki
+  start: 6691
+  length: 25751
+  fraction: 0.6422
+- name: output_spec
+  start: 39857
+  length: 241
+  fraction: 0.006
+large_sections:
+- wiki
+directives_total: 12
+directives_covered: 8
+directives_missed:
+- kind: checklist
+  text: холодно (cold (impersonal state))
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: checklist
+  text: потрібно (necessary, needed)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 3/11 keywords (27%)

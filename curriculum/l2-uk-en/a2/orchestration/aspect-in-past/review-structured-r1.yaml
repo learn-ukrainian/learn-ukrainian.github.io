@@ -2,51 +2,55 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 10
-  evidence: The text faithfully executes every plan point, including the specific
-    signal words ("довго", "раптом") and the overarching concept of "camera rolling
-    vs taking a photo" ("shooting a video and taking a
+  score: 7
+  evidence: 'All four planned sections are present and the main outline points are
+    covered, but the planned error-correction activity will not inject (`<!-- INJECT_ACTIVITY:
+    error-correction-aspect -->` vs YAML `i'
 - dimension: 2
   name: Linguistic accuracy
-  score: 8
-  evidence: 'Generally excellent, but contains three notable calques from Russian:
-    "відкрив вікно" (instead of відчинив), "закрив книгу" (instead of згорнув), and
-    "чисту правду" (instead of щиру).'
+  score: 7
+  evidence: No Russianisms/Surzhyk/calques found, but the lesson states `You just
+    take the infinitive, remove the «-ти»...` and later says imperfective `sounds
+    like you gave up halfway`, both of which are mislead
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: Exceptional pedagogical flow. The use of contrastive examples in the past
-    tense ("Я робив це завдання дві години, але не зробив його") perfectly illustrates
-    the concept to an English speaker.
+  score: 6
+  evidence: The module has many examples and a clear presentation-to-practice flow,
+    but it overstates aspect choice in `If you want to say that you finished a task...`
+    and turns the plan’s `ambiguous` example (`Я
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: All required and recommended vocabulary items from the plan are integrated
-    naturally into the prose (e.g., минулий час, робити/зробити, раптом, щодня).
+  score: 9
+  evidence: 'Required plan vocabulary is well represented in context: `минулий час`,
+    `процес`, `результат`, `довго`, `раптом`, and all five required verb pairs appear
+    repeatedly in prose.'
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: The exercise markers correspond exactly to the plan's activity hints and
-    are logically placed immediately after the relevant pedagogical explanations.
+  score: 4
+  evidence: One inline marker cannot resolve to YAML, all eight quiz answers are in
+    slot 0, and the match-up activity tests metalinguistic labels rather than the
+    plan’s requested signal word + example sentence pa
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: Very natural and encouraging teacher tone. The analogies used to explain
-    the aspectual differences are vivid and directly helpful for learners.
+  score: 7
+  evidence: 'The teacher voice is generally clear, but `This isn''t just a grammar
+    trick; it is a core difference in how Ukrainians categorize the world` and `Українці
+    завжди...` drift into inflated claims instead '
 - dimension: 7
   name: Structural integrity
-  score: 10
-  evidence: All H2 headings match the plan exactly. The word count (2831 words) successfully
-    meets and exceeds the 2000-word target without feeling bloated.
+  score: 8
+  evidence: 'The module has all required H2 headings and exceeds the 2000-word minimum
+    (pipeline count: 2855), but the unresolved `error-correction-aspect` marker creates
+    a publish-time structural break.'
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: Factually correct presentation of how Ukrainian morphology handles verbs.
-    Decolonized approach that explains Ukrainian on its own terms.
+  score: 7
+  evidence: The module avoids Russian-centric framing, but `a core difference in how
+    Ukrainians categorize the world` and `Українці завжди розрізняють...` essentialize
+    speakers instead of describing a grammatical
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: The opening dialogue between Olya and Taras is highly functional and natural,
-    contrasting process ("готував обід дві години") with result ("швидко приготувала...
-    вечерю").
+  score: 8
+  evidence: The dialogue has named speakers and a plausible Sunday context, but it
+    is short and mostly demonstrative rather than a fuller natural exchange.
 findings: []

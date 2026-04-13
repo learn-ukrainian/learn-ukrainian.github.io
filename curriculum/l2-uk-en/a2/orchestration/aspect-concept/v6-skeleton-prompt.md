@@ -18,7 +18,7 @@ module: a2-002
 level: A2
 sequence: 2
 slug: aspect-concept
-version: '1.1'
+version: '1.2'
 title: Зроблено чи в процесі? Вступ до виду дієслів
 subtitle: Концепція доконаного та недоконаного виду
 focus: grammar
@@ -112,8 +112,8 @@ activity_hints:
       зробив вправи → робив, *Вона довго написала листа → писала)
     items: 6
 references:
-  - title: Заболотний Grade 6, §52-54
-    notes: 'Вид дієслова: доконаний і недоконаний'
+  - title: Авраменко Grade 7, §28-30
+    notes: 'Вид дієслова: доконаний і недоконаний — aspect is taught in 7th grade curriculum'
   - title: 'ULP: Ukrainian Verb Aspect'
     url: https://www.ukrainianlessons.com/ukrainian-verb-aspect/
     notes: Imperfective vs perfective

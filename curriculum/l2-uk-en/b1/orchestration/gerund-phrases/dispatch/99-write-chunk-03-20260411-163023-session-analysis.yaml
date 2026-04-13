@@ -1,0 +1,48 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T14-29-5e4ddc82.json
+phase: write-chunk-03
+prompt_chars: 52155
+response_chars: 8050
+prompt_words: 6645
+response_words: 1251
+sections:
+- name: header
+  start: 0
+  length: 460
+  fraction: 0.0088
+- name: skeleton
+  start: 460
+  length: 1729
+  fraction: 0.0332
+- name: prior_summary
+  start: 2189
+  length: 3441
+  fraction: 0.066
+- name: plan
+  start: 5630
+  length: 10048
+  fraction: 0.1927
+- name: wiki
+  start: 15678
+  length: 36236
+  fraction: 0.6948
+- name: output_spec
+  start: 51914
+  length: 241
+  fraction: 0.0046
+large_sections:
+- wiki
+directives_total: 18
+directives_covered: 15
+directives_missed:
+- kind: inject_activity
+  text: quiz-participle-vs-gerund
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-punctuation-terms
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: error-correction-punctuation
+  covered: false
+  coverage_note: marker missing

@@ -1,0 +1,74 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T06-15-be283a76.json
+phase: write-chunk-03
+prompt_chars: 46067
+response_chars: 4537
+prompt_words: 6846
+response_words: 753
+sections:
+- name: header
+  start: 0
+  length: 435
+  fraction: 0.0094
+- name: skeleton
+  start: 435
+  length: 1568
+  fraction: 0.034
+- name: prior_summary
+  start: 2003
+  length: 3313
+  fraction: 0.0719
+- name: plan
+  start: 5316
+  length: 11789
+  fraction: 0.2559
+- name: wiki
+  start: 10613
+  length: 28725
+  fraction: 0.6235
+- name: output_spec
+  start: 45830
+  length: 237
+  fraction: 0.0051
+large_sections:
+- wiki
+directives_total: 24
+directives_covered: 16
+directives_missed:
+- kind: must
+  text: '- **Middle School (5-7 клас):** The focus shifts to the official, standardized
+    format of a postal address (`поштова адреса`) as required by Ukrposhta (`Укрпошта`).'
+  covered: false
+  coverage_note: 2/15 keywords (13%)
+- kind: must
+  text: '`) and the cases required for location.'
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: must
+  text: They must group them into pairs of synonyms (`одержувач/адресат`, `відправник/адресант`)
+    and objects (`посилка`, `лист`).
+  covered: false
+  coverage_note: 5/14 keywords (36%)
+- kind: must
+  text: '* **Fill-in-the-Blank (Aspect):** Create sentences where students must choose
+    between the imperfective and perfective verb.'
+  covered: false
+  coverage_note: 4/13 keywords (31%)
+- kind: must
+  text: '* **Understanding Bureaucracy:** Filling out forms is a key life skill in
+    any country, and this is a gentle introduction to the structured language required.'
+  covered: false
+  coverage_note: 4/16 keywords (25%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 1/11 keywords (9%)
+- kind: inject_activity
+  text: fill-in, Complete post office dialogue lines with correct dative forms (Надішліть
+    цю посилку ___), 8 items
+  covered: false
+  coverage_note: marker missing

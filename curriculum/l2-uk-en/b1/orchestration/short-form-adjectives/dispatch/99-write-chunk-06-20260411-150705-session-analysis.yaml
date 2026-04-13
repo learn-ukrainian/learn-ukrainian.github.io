@@ -1,0 +1,60 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T13-06-e9ab06cb.json
+phase: write-chunk-06
+prompt_chars: 49178
+response_chars: 4562
+prompt_words: 6768
+response_words: 663
+sections:
+- name: header
+  start: 0
+  length: 440
+  fraction: 0.0089
+- name: skeleton
+  start: 440
+  length: 896
+  fraction: 0.0182
+- name: prior_summary
+  start: 1336
+  length: 3570
+  fraction: 0.0726
+- name: plan
+  start: 4906
+  length: 16860
+  fraction: 0.3428
+- name: wiki
+  start: 15303
+  length: 27204
+  fraction: 0.5532
+- name: output_spec
+  start: 48970
+  length: 208
+  fraction: 0.0042
+large_sections:
+- wiki
+directives_total: 16
+directives_covered: 11
+directives_missed:
+- kind: must
+  text: '* **Must-know:** Суфікси `-н-` (`літній`), `-ов-` (`квітковий`), `-ськ-`
+    (`український`).'
+  covered: false
+  coverage_note: 0/7 keywords (0%)
+- kind: must
+  text: '* **Must-know:** Моделі `батьків` / `батькова` та `сестрин` / `сестрина`
+    є високочастотними.'
+  covered: false
+  coverage_note: 0/8 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: EVERY word in the checklist below MUST appear at least once with a bold Ukrainian
+    form and English translation in a natural sentence.
+  covered: false
+  coverage_note: 3/15 keywords (20%)
+- kind: inject_activity
+  text: error-correction, Знайдіть і виправте помилки у реченнях на тему які прикметники
+    мають короткі форми?
+  covered: false
+  coverage_note: marker missing

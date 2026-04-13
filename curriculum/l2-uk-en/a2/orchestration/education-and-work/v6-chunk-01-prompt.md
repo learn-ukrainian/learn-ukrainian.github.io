@@ -1,24 +1,22 @@
-# Section-by-Section Generation — Section 1/4
+# Section-by-Section Generation — Section 1/3
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 52: Навчання і робота (A2, A2.7 [Complex Sentences and Conditionals])
-**Section to write:** Про освіту: школа та університет (~720 words)
-**Word target for this section:** 720 words (aim for 792 to account for undershoot)
+**Section to write:** Про освіту: школа та університет (About Education: School and University) (~780 words)
+**Word target for this section:** 780 words (aim for 858 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Про освіту: школа та університет (~720 words)
-- P1 (~120 words): [Introduction to the educational path using aspect pairs. Explain "закінчувати/закінчити школу" (to finish school) and "вступати/вступити до університету" (to enter university). Note the Genitive case after "до" (університету, ліцею, коледжу).]
-- P2 (~120 words): [Explaining motivation with "тому що" (because). Focus on career choices: "Я вступив на юридичний факультет, тому що хочу бути адвокатом." Contrast "вчитися на + Accusative" (вчитися на програміста) for the profession vs. "вивчати + Accusative" (вивчати історію) for the subject.]
-- P3 (~120 words): [Relative clauses with "який" (which) and "де" (where) to describe academic settings. Examples: "Предмет, який мені подобався найбільше — це математика" and "Університет, де я навчаюся, знаходиться в центрі міста."]
-- P4 (~120 words): [Purpose clauses with "щоб" (in order to). Explain the structure "verb + щоб + infinitive" for goals. Examples: "Я вчуся, щоб отримати диплом" and "Він поїхав до Києва, щоб вступити до магістратури."]
-- P5 (~120 words): [Deep dive into Ukrainian education levels: бакалаврат, магістратура, аспірантура. Explain the difference between "складати іспит" (to take/be taking an exam) and "скласти іспит" (to pass an exam) using natural examples like "Я довго складав іспит і нарешті склав його."]
-- P6 (~120 words): [Dialogue 1: Career counseling session. A student explains their background and why they chose their major (філологія, економіка) using relative and purpose clauses.]
-- <!-- INJECT_ACTIVITY: fill-in-complex-education --> [fill-in, focus on connecting sentences with тому що, щоб, який, 8 items]
-- <!-- INJECT_ACTIVITY: match-up-education-scenarios --> [match-up, matching education situations to appropriate complex sentence responses, 8 items]
+## Про освіту: школа та університет (About Education: School and University) (~780 words)
+- P1 (~130 words): Introduction to talking about education. Introduce core vocabulary for educational institutions and concepts: `школа`, `гімназія`, `ліцей`, `університет`, `інститут`, `факультет`, `спеціальність`, `диплом`. Frame the narrative around describing one's background: "Я вчуся в університеті."
+- P2 (~130 words): Explaining reasons for educational choices using complex sentences with `тому що` (cause). Provide examples: "Я вступив до університету, тому що хотів стати інженером." Include a grammar note on `вступати до` + Genitive case (`до університету`) and introduce authentic cultural terms like `виш` and `абітурієнт`.
+- P3 (~130 words): Describing educational institutions and subjects using relative clauses with `який` and `де`. Explain how to link clauses. Examples: "Університет, де я навчався, знаходиться у Львові" and "Предмет, який мені найбільше подобався, — це історія."
+- P4 (~130 words): Expressing the purpose of studying using `щоб` + infinitive. Contrast `щоб` (purpose) with `тому що` (cause). Examples: "Я вчуся, щоб отримати диплом" and "Вона поїхала за кордон, щоб вивчити нову спеціальність."
+- P5 (~130 words): Deep dive into crucial Ukrainian verbs for education: `навчатися на` + Accusative (`на програміста`), `закінчити` + Accusative (`університет`), `здобути освіту`, and `скласти іспит`. Specifically address common L2 errors (e.g., avoiding "вчити для юриста" or "закінчити з університету").
+- P6 (~130 words): Natural dialogue (8-10 lines): Two new acquaintances discussing their education. Incorporate questions like "Де ти навчався?", "Яку спеціальність обрав?", and "Чому саме цю?" using `тому що`, `щоб`, and `який` naturally in context.
 
 ---
 ## Full Plan (for reference)
@@ -604,12 +602,31 @@ in this paragraph the same language?" If no, fix it.
 
 ## Other Rules
 
-TARGET: 70-90% Ukrainian.
+TARGET: 70-90% Ukrainian. THIS IS A HARD GATE — the audit REJECTS modules outside this range.
+
 LANGUAGE ROLES:
-- PRIMARY: Ukrainian for everything.
-- ENGLISH: Only in vocabulary tables and one-line grammar notes where absolutely necessary.
-- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English.
-A2 register. Concrete everyday vocabulary. No literary language, no metaphors. Near-full Ukrainian immersion. Ukrainian sentences max 15 words. Max 2 clauses. All cases allowed. Simple subordinate clauses only. Full aspect pairs. No participles.
+- PRIMARY: Ukrainian for narrative, dialogues, examples, section intros, cultural notes, Reading Practice blocks, learning callouts.
+- METALANGUAGE: For abstract grammar terms, you may provide ONE parenthetical English translation on FIRST use only, e.g. `**доконаний вид** (perfective aspect)`. Subsequent uses must be Ukrainian only.
+- VOCABULARY TABLE: English glosses live here, not in prose.
+- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English. Never mix mid-sentence.
+
+⚠️ HARD STRUCTURAL RULES — READ THIS TWICE:
+- FORBIDDEN: long English narrative paragraphs explaining grammar. If a concept needs more than ONE sentence of English scaffolding, it goes in a `:::info` or `:::tip` callout, NOT in the main prose.
+- FORBIDDEN: mirroring a Ukrainian paragraph with an English translation paragraph. Write ONE paragraph in Ukrainian, move on.
+- FORBIDDEN: `> *English translation*` blockquotes after Ukrainian dialogues. They were required at A1 but they cap immersion below 50% — at A2-late they MUST be removed.
+
+ESCAPE HATCH (the 'Dual Ladder'):
+For genuinely abstract grammar concepts, you may use ONE `:::info` or `:::tip` callout written in English per section to clarify the concept. Because callouts are stripped from the immersion metric, this serves as on-demand scaffolding for struggling learners without penalising the immersion score. Do NOT abuse this — at most one English callout per major section.
+
+A2 register. Concrete everyday vocabulary. No literary language, no metaphors. Ukrainian sentences max 15 words. Max 2 clauses. All cases allowed. Simple subordinate clauses only (який/що/коли). Full aspect pairs. No participles.
+
+CHECKLIST (re-read before writing each section):
+- [ ] Every narrative paragraph in Ukrainian?
+- [ ] Zero `> *English translation*` blockquotes after dialogues?
+- [ ] At most ONE English `:::info` callout per major section?
+- [ ] Metalanguage terms parenthetically translated on first use only (max 2 per section)?
+- [ ] Reading Practice / Читаємо українською block in EVERY major section?
+
 
 GRAMMAR RULES:
 - Max 15 words per Ukrainian sentence
@@ -653,6 +670,31 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] освіта (education)
+- [ ] навчання (studying, learning)
+- [ ] університет (university)
+- [ ] спеціальність (specialty, major)
+- [ ] професія (profession)
+- [ ] працювати (to work)
+- [ ] робота (work, job)
+- [ ] досвід (experience)
+- [ ] іспит (exam)
+- [ ] диплом (diploma, degree)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Про освіту: школа та університет (About Education: School and University) (~780 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

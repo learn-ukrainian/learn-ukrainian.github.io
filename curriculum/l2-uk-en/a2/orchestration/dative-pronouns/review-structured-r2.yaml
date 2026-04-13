@@ -2,51 +2,49 @@ round: 2
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 8
-  evidence: Deductions for missing the explicit comparison with the Genitive case
-    question (Кого? Чого?) in the opening section and omitting "легко", "важко", and
-    "нудно" from the initial list of common impersona
+  score: 7
+  evidence: 'All four planned H2 sections are present, but none of the plan references
+    is cited in the module text (`Захарійчук: 0`, `Заболотний: 0`, `ukrainianlessons.com/dative-case:
+    0`), and the match-up tests '
 - dimension: 2
   name: Linguistic accuracy
-  score: 9
-  evidence: 'Generally flawless Ukrainian grammar, but there is a case inconsistency
-    in the first dialogue. "Мені — цікаву книгу" implies an accusative transitive
-    verb, while the next lines use "є" which requires '
+  score: 8
+  evidence: No Russian contamination found, but the quiz options use `тебою`; VESUM
+    finds `тобою` and does not find `тебою`.
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: Exceptional explanations. The breakdown of "I am sad" vs "It is sad to
-    me" and the note on English speakers saying "Дай я книгу" are highly targeted
-    and effective.
+  score: 9
+  evidence: 'The module follows a clear explain -> example -> contrast -> practice
+    sequence: recipient meaning, pronoun paradigm, impersonal dative, then accusative-vs-dative
+    minimal pairs before activities.'
 - dimension: 4
   name: Vocabulary coverage
   score: 10
-  evidence: All required and recommended words (давальний відмінок, мені, тобі, йому,
-    їй, нам, вам, їм, холодно, потрібно, приємно, цікаво, сумно, важко) are incorporated
-    naturally into explanations and examples.
+  evidence: All required vocabulary appears naturally in prose, and the recommended
+    `приємно`, `цікаво`, `сумно`, `важко` are all present.
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: The 4 injected activity markers match the `activity_hints` completely
-    and are appropriately spaced.
+  score: 4
+  evidence: 'Marker count and placement are right, but `fill-in-dative-pronouns` has
+    ambiguous prompts (`Я дарую ____ нову книгу.`, `Мама купує ____ теплий шарф.`),
+    all answers sit in option 0, the match-up omits '
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: The tone is warm and encouraging. It uses clear, narrative-driven situations
-    (family birthdays, cafe orders) without reverting to empty corporate language.
+  score: 9
+  evidence: The teacher voice stays natural and concrete, using gift-distribution
+    and cafe scenes rather than generic hype.
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: The markdown is clean. Headers match the plan. The word count is robust
-    at 3281 words, providing excellent depth for an A2 grammar module.
+  evidence: All required H2s are present and ordered correctly; all four markers appear
+    exactly once; pipeline word count is 2901, above target.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Scenarios are authentic and accurate to Ukrainian interactions.
+  evidence: No Russian-centered framing or cultural distortion appears in the module.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 8
-  evidence: 'Dialogues are natural, but Dialogue 1 has a minor logical flaw. The speaker
-    says "Цей великий пакунок" (singular) but extracts a book, chocolate, a scarf,
-    flowers, and a cake from it. Pluralizing the '
+  score: 9
+  evidence: The dialogues use named speakers and multi-turn exchange (`Іменинник/Родина`,
+    `Марко/Олена`) rather than anonymous textbook prompts.
 findings: []

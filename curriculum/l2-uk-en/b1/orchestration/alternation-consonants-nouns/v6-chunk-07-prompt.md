@@ -33,7 +33,7 @@ Grand total: ~4400 words
 <previous_context>
 [...previous sections truncated...]
 
-на м'яку форму **«Ользі»** *(to Olha)*. Пестливе ім'я **«Марійка»** *(Mariika)* елегантно змінюється на **«Марійці»** *(to Mariika)*, а традиційне українське ім'я **«Одарка»** *(Odarka)* — на милозвучну форму **«Одарці»** *(to Odarka)*. Що стосується чоловічих імен, тут головною граматичною ареною для фонетичних змін виступає кличний відмінок однини. Найбільш класичний та показовий приклад — це відоме ім'я **«Олег»** *(Oleh)*. Оскільки це типова тверда група другої відміни, ми сміливо застосовуємо першу палаталізацію і отримуємо чудову форму звертання **«Олеже»** *(Oleh!)*. Сучасна академічна граматика також дозволяє використовувати паралельну форму **«Олегу»** *(Oleh!)* без чергування кореневого приголосного. Проте варіант із шиплячим звуком [ж] історично звучить набагато традиційніше, багатше та природніше для носіїв мови. Географічні назви нашої країни також дуже тісно пов'язані з цими давніми фонетичними процесами. Коли ми говоримо про своє місцезнаходження або напрямок подорожі, ми надзвичайно активно використовуємо місцевий відмінок. Відповідно, назви українських міст, містечок і сіл слухняно підкоряються суворим правилам другої палаталізації. Якщо ви подорожуєте до промислового міста **«Кременчук»** *(Kremenchuk)*, ви правильно скажете, що знаходитеся **«у Кременчуці»** *(in Kremenchuk)*. Відоме місто **«Волноваха»** *(Volnovakha)* у місцевому відмінку гармонійно перетворюється на форму **«у Волновасі»** *(in Volnovakha)*. Однак завжди важливо пам'ятати, що таке чергування відбувається виключно тоді, коли основа слова закінчується саме на задньоязиковий приголосний. Наприклад, назва південного міста **«Бердянськ»** *(Berdiansk)* закінчується на складне скупчення приголосних звуків. Тому ми просто додаємо закінчення і кажемо **«у Бердянську»** *(in Berdiansk)* без жодних додаткових фонетичних змін. Дуже цікаво спостерігати, що навіть багато відомих іноземних географічних назв повністю адаптувалися до багатої української фонетики. Наприклад, нідерландське місто **«Гаага»** *(The Hague)* у місцевому відмінку органічно звучить як **«у Гаазі»** *(in The Hague)*, яскраво демонструючи силу та красу українського граматичного чергування. Правильне та свідоме використання цих видозмінених форм є не просто сухою академічною вимогою з підручника. Це надзвичайно важливий елемент повсякденного мовного етикету та глибокої культурної ідентичності кожного мовця. Коли ви звертаєтеся до знайомої людини, використання прямого називного відмінка, як-от «Привіт, Олег!», звучить для чутливого українського вуха дещо чужо, різко і відверто штучно. Це типова мовна калька з російської або англійської мов, де повноцінний кличний відмінок зараз практично відсутній або взагалі не має таких яскравих фонетичних форм. Натомість правильна фраза **«Привіт, Олеже!»** *(Hi, Oleh!)* відразу ж недвозначно демонструє вашу глибоку персональну повагу до співрозмовника. Вона також підкреслює ваше чудове інтуїтивне відчуття справжнього духу української мови. Це справжній автентичний мовний стандарт, який яскраво показує, що ви дійсно розумієте та поважаєте унікальну мелодику нашого мовлення. Тепер давайте практично перевіримо, наскільки добре ви вмієте самостійно розпізнавати ці цікаві фонетичні зміни в реальному, живому текстовому контексті. Уявіть собі ситуацію, що ви зараз читаєте захопливий короткий текст про велику літню подорож різними куточками України. Ваше головне завдання — дуже уважно прочитати кожне речення та знайти всі власні назви людей і географічні імена міст. Звертайте увагу на кожну зміну приголосного звука в корені слова, особливо коли текст описує напрямки вашого руху, конкретні місця зупинок або прямі звертання до людей. Це справді чудова та дуже ефективна практика для фінального закріплення всього нашого складного граматичного матеріалу перед тим, як рухатися далі! <!-- INJECT_ACTIVITY: error-correction-sentences, find and fix incorrect consonant alternations in sentences, 6 items -->
+Ukrainian city, the **місцевий відмінок** (locative case) often triggers these familiar consonant shifts. You will use these forms constantly when discussing travel plans. It is important to memorize the patterns for the places you visit most often. Місто Кременчук перетворюється на «у Кременчуці», де задньоязиковий приголосний [к] закономірно змінюється на свистячий [ц']. Місто Волноваха звучить як «у Волновасі», бо звук [х] переходить у [с']. Але зверніть увагу на відоме місто Бердянськ: у місцевому відмінку ми кажемо «у Бердянську», оскільки тут немає умов для такого чергування. Цікаво, що багато іноземних географічних назв також повністю підкоряються українським фонетичним правилам. Наприклад, ми кажемо «у Гаазі», «у Ризі» або «в Америці». Це робить вимову набагато легшою та зберігає загальний мелодійний ритм нашої мови. :::note **Quick tip** — While most foreign geographic names follow Ukrainian alternation rules (Гаага — у Гаазі), some foreign personal names might resist them depending on their origin. However, native Ukrainian names and well-integrated cities almost always alternate. ::: Social etiquette in Ukraine is deeply tied to these grammatical rules. Addressing someone by their raw dictionary name instead of using a proper **звертання** (form of address — using кличний відмінок) feels abrupt, distant, and foreign to a native speaker. It is a subtle detail, but it carries immense cultural weight. Learning to address people correctly is the first step to building strong relationships. Використання називного відмінка для звертання, наприклад «Привіт, Олег!» або «Слухай, Марічка!», звучить дуже неприродно. Це часто сприймається як типовий росіянізм або пряма калька з англійської мови. Справжня українська традиція категорично вимагає використання кличного відмінка у будь-якій живій розмові. Тому завжди кажіть «Привіт, Олеже!», «Добрий день, Марічко!» або «Вітаю, мій друже!». Це відразу демонструє вашу глибоку повагу до співрозмовника і ваше чудове відчуття української мови. > *Using the nominative case for address, for example "Pryvit, Oleh!" or "Slukhai, Marichka!", sounds very unnatural. This is often perceived as a typical Russianism or a direct calque from the English language. True Ukrainian tradition categorically requires the use of the vocative case in any lively conversation. Therefore, always say "Pryvit, Olezhe!", "Dobryi den, Marichko!" or "Vitaiu, mii druzhe!". This immediately demonstrates your deep respect for the interlocutor and your excellent sense of the Ukrainian language.* Let's practice reading a short travel narrative. Pay close attention to how the names of people and places adapt to their grammatical roles through consonant alternations in the text below. Try to identify the base form of every proper noun you encounter. This exercise will help you internalize the patterns before you use them in your own speech. Минулого літа ми з Ольгою довго подорожували Україною. Спочатку ми зупинилися у Кременчуці, де радісно зустрілися з нашим давнім університетським другом. «Олеже, як ми раді тебе нарешті бачити!» — голосно вигукнула Ольга. Після цього ми поїхали до її улюблених родичів, які зараз живуть у Волновасі. У Празі та Гаазі, де ми багато працювали раніше, архітектура зовсім інша, але саме тут ми відчували себе по-справжньому як удома. Ми цілий вечір розповідали Марійці про наші неймовірні пригоди. <!-- INJECT_ACTIVITY: error-correction-sentences -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -644,7 +644,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -657,18 +724,67 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (7/7).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] чергування (alternation — systematic sound change between forms)
+- [ ] приголосний (consonant — sound made with obstruction)
+- [ ] палаталізація (palatalization — softening of a consonant)
+- [ ] кличний відмінок (vocative case — used for direct address)
+- [ ] давальний відмінок (dative case)
+- [ ] місцевий відмінок (locative case)
+- [ ] задньоязиковий (velar — consonant formed at the back of the mouth)
+- [ ] відміна (declension class — noun classification by ending pattern)
+- [ ] тверда група (hard group — nouns with hard stem-final consonant)
+- [ ] м'яка група (soft group — nouns with soft stem-final consonant)
+- [ ] мішана група (mixed group — nouns with шиплячий stem-final)
+- [ ] закінчення (ending — inflectional morpheme)
+- [ ] звертання (form of address — using кличний відмінок)
+- [ ] корінь (root — core morpheme of a word)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Підсумок: таблиця чергувань (~650 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

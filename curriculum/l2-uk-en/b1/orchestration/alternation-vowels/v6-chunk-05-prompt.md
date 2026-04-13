@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-надзвичайно важливою для загального звучання мови. Якщо ви уважно прислухаєтеся до носіїв, ви обов'язково помітите цю красиву закономірність. Найкраще зрозуміти це правило допомагає класична пара дуже схожих слів. Давайте порівняємо два популярні сільськогосподарські терміни. Це вже згадані нами слова **пшоно** *(millet)* та **пшениця** *(wheat)*. Обидва слова історично походять від одного дуже давнього спільного кореня. Але сьогодні вони звучать по-різному саме через вплив наступного складу. У слові «пшоно» після літери «н» стоїть твердий голосний звук [о]. Ця фонетична твердість ніби ретроспективно впливає на весь корінь слова. Вона безапеляційно вимагає такого ж твердого і глибокого звука [о] безпосередньо після шиплячого [ш]. У слові «пшениця» ситуація кардинально інша. Тут наступний склад має голосний звук [и], який традиційно завжди асоціюється з м'якістю. Ця фонетична м'якість також стрімко поширюється назад, акуратно пом'якшуючи весь корінь. Тому після звука [ш] ми абсолютно автоматично вимовляємо більш легкий звук [е]. Цей дивовижний механізм називається асиміляцією, або гармонійним уподібненням звуків. Саме завдяки таким надзвичайно тонким налаштуванням українська мова зберігає свою знамениту **милозвучність** *(euphony)*. Кожен склад заздалегідь готує ваш мовний апарат до вимови наступного складу, створюючи ідеальний потік звуків. Звичайно, у кожному живому граматичному правилі завжди існують певні винятки. Деякі слова зберегли свою дуже давню фонетичну форму, незважаючи на загальні закони гармонії. Ці форми є своєрідними історичними скам'янілостями, які нам зараз просто потрібно добре запам'ятати. Наприклад, ми завжди пишемо літеру «е» у таких популярних словах: охайний **чепурний** *(neat)*, тихий **шепіт** *(whisper)*, багатий **щедрий** *(generous)*, або дієслово **чекати** *(to wait)*. Зверніть увагу, що у цих словах після звука «е» стоять тверді приголосні, але ми все одно зберігаємо стару літеру. З іншого боку, існують давні слова, які вперто зберігають літеру «о» всупереч сучасному правилу. Найкращі приклади — це високе **чоло** *(forehead)* та працьовита **бджола** *(bee)*. У цих коротких словах звук «о» стоїть перед складом із твердим «о» чи «а», але історична традиція зберегла їх саме в такому незвичному для сучасного вуха вигляді. Такі винятки лише яскраво підкреслюють надзвичайно глибоку історію нашої повсякденної мови. Їх не дуже багато, тому ви швидко до них звикнете під час регулярного читання. Рекомендуємо просто виписати ці слова на окрему картку і періодично їх повторювати. Для багатьох іноземних студентів це специфічне чергування часто стає серйозним і несподіваним викликом під час навчання. Особливо це стосується тих людей, які раніше активно вивчали російську мову як іноземну. У російській мові подібні тонкі фонетичні відмінності після шиплячих звуків часто стерті, розмиті або підпорядковані зовсім іншим, менш логічним правилам. Але для свідомого українського мовця щоденний вибір між голосними [о] та [е] у цій специфічній позиції є абсолютно природним процесом. Це фундаментальне питання глибокої фонетичної чутливості до твердості або м'якості кожного наступного звука. Ми буквально відчуваємо цю тонку різницю на фізичному та артикуляційному рівні. Тому ніколи не намагайтеся просто механічно завчити всі існуючі слова з цим специфічним чергуванням. Натомість, спробуйте регулярно тренувати свій власний фонетичний слух. Прислухайтеся до мелодики слова загалом. З часом ви самі почнете чітко відчувати, який саме голосний звук найкраще підходить для конкретного оточення. Ваш артикуляційний апарат сам підкаже вам правильний і найзручніший варіант вимови під час розмови. <!-- INJECT_ACTIVITY: sort-hushing-vowels -->
+smoothing the transition between syllables. Давайте подивимося на класичну пару слів: «пшоно» та «пшениця». Обидва слова мають спільне історичне походження і починаються зі звукосполучення «пш». Однак у слові «пшоно» ми бачимо твердий приголосний звук [н] та наступний голосний [о], які створюють тверде фонетичне оточення. Тому після шиплячого ми вимовляємо і пишемо [о]. А от у слові «пшениця» наступний склад має звук [и], який історично впливав на м'якість вимови. Цей вплив ніби розливається на попередній склад, перетворюючи очікуваний [о] на м'якший звук [е]. Це не просто орфограма, яку треба завчити. Це глибока милозвучність української мови, де звуки постійно адаптуються один до одного, щоб мовлення лилося легко і природно, без різких стрибків для мовного апарату. > *Let's look at a classic pair of words: "пшоно" (millet) and "пшениця" (wheat). Both words share a common historical origin and start with the sound combination "пш". However, in the word "пшоно", we see the hard consonant sound [н] and the following vowel [о], which create a hard phonetic environment. Therefore, after the hushing consonant, we pronounce and write [о]. But in the word "пшениця", the next syllable has the sound [и], which historically influenced the softness of pronunciation. This influence seems to spill over onto the previous syllable, transforming the expected [о] into the softer sound [е]. This is not just an orthographic rule that needs to be memorized. It is the deep euphony of the Ukrainian language, where sounds constantly adapt to each other so that speech flows easily and naturally, without abrupt jumps for the vocal apparatus.* As with any natural language process that has evolved over centuries, there are historical remnants that defy the modern rule. These exceptions are frozen in time and simply need to be memorized as unique vocabulary items. For instance, we write «е» despite the following hard environment in words like «чепурний» (neat), «шепіт» (whisper), «щедрий» (generous), and «чекати» (to wait). On the other hand, we retain the broad «о» despite a following soft environment in words like «чоло» (forehead) and «бджола» (bee). :::info **Grammar box** When you encounter a new word with a **шиплячий** (hushing consonant), try applying the environment rule first. If the spelling seems to contradict the rule, you have likely found one of these ancient exceptions! Treat them as special historical artifacts in your vocabulary. ::: For learners coming from or familiar with other Slavic languages, particularly Russian, this specific vowel alternation can be a subtle trap. In those languages, the distinction between [о] and [е] after hushing consonants is often blurred or governed by entirely different historical shifts. For a Ukrainian speaker, however, this choice is never arbitrary. It is a matter of profound phonetic sensitivity. Your ear and tongue must learn to anticipate the hardness or softness of the upcoming sounds. Mastering this **орфограма** (orthographic rule) will make your Ukrainian sound significantly more authentic and connected to the true rhythm of the language. <!-- INJECT_ACTIVITY: group-sort, Sort word pairs into categories: [о]~[i] alternation, [е]~[i] alternation, fleeting vowel, no alternation, 10 items -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -441,7 +441,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -454,18 +521,67 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] чергування (alternation — systematic sound change between word forms)
+- [ ] голосний (vowel — sound produced without obstruction)
+- [ ] відкритий склад (open syllable — ending in a vowel sound)
+- [ ] закритий склад (closed syllable — ending in a consonant sound)
+- [ ] корінь (root — the core meaning-bearing part of a word)
+- [ ] наголос (stress — emphasized pronunciation of a syllable)
+- [ ] біглий голосний (fleeting vowel — vowel that disappears in some forms)
+- [ ] нуль звука (zero sound — absence of a vowel in an alternation)
+- [ ] суфікс (suffix — morpheme added after the root)
+- [ ] закінчення (ending — inflectional morpheme at the end of a word)
+- [ ] шиплячий (hushing consonant — ж, ч, ш, дж)
+- [ ] орфограма (orthographic rule — a spelling pattern requiring a rule)
+- [ ] відмінок (grammatical case)
+- [ ] форма слова (word form — a specific inflected variant of a word)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Чергування голосних у дієслівних коренях (~600 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

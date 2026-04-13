@@ -1,29 +1,63 @@
 ## Linguistic Scan
-No linguistic errors found. The Ukrainian text is completely natural, uses correct grammar (vocative and imperative), correctly explains mandatory commas before subordinating conjunctions, and contains no Russianisms, Surzhyk, or calques.
+Definite issue found: the grammar summary misclassifies `бо` as a coordinating conjunction. In the local dictionary/textbook sources, `бо` is treated as a subordinating conjunction of reason, so this is a factual grammar error.
+
+No Russianisms, Surzhyk, paronym errors, or banned Russian letters (`ы`, `э`, `ё`, `ъ`) found elsewhere in the Ukrainian text.
 
 ## Exercise Check
-All `<!-- INJECT_ACTIVITY: {id} -->` markers from the plan are present and placed logically after their corresponding grammar or vocabulary explanations:
-- `<!-- INJECT_ACTIVITY: vocative-imperative-practice -->` is placed after the grammar summary of the vocative and imperative.
-- `<!-- INJECT_ACTIVITY: conjunctions-quiz -->` is placed after the explanation of coordinating conjunctions.
-- `<!-- INJECT_ACTIVITY: complex-sentences-fill-in -->` is placed after the explanation of subordinating conjunctions.
-- `<!-- INJECT_ACTIVITY: holiday-greeting-match -->` is placed after the dialogue introducing holiday greetings.
-The number and focus of markers perfectly match the 4 activity hints in the plan.
+Inventory matches the plan: `fill-in-vocative-imperative`, `quiz-conjunctions`, `fill-in-complex-sentences`, and `quiz-holiday-match` are all present.
+
+Placement is acceptable: each marker comes after the relevant teaching block, and there are no inline DSL exercises here with answer logic to audit. No exercise-layer issues found in the visible content.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 10/10 | Covers all 5 outline sections exactly as requested. Integrates vocative, imperative, and conjunctions smoothly. Word count exceeds the 1000 target ("PIPELINE NOTE — Word count: 1111 words"). |
-| 2. Linguistic accuracy | 10/10 | No Russianisms, Surzhyk, or calques found. Correct gender and case endings. Mandatory comma rule is taught accurately: "placing a comma before **що**, **де**, **коли**, and **бо** is a strict grammatical rule." |
-| 3. Pedagogical quality | 10/10 | Excellent pedagogical pacing. Introduces the scenario in Reading Practice first, then explains the grammar clearly in Grammar Summary ("Masculine names ending in a hard consonant or -о take -е: Тара́с becomes Тарасе"). |
-| 4. Vocabulary coverage | 10/10 | All suggested nouns for the event are used naturally in context: "плака́т (poster), квито́к (ticket), напі́й (drink), and стіле́ць (chair)." |
-| 5. Exercise quality | 10/10 | The injected markers correspond perfectly to the 4 planned activity hints and appear immediately after the concepts are taught, testing exactly what was just explained. |
-| 6. Engagement & tone | 10/10 | Very natural and encouraging teacher persona. Tone is supportive and clear ("Language is a tool for connection", "Observe how these essential communication tools work together in a single, natural flow"). |
-| 7. Structural integrity | 10/10 | Clean markdown structure. All H2 headings match the plan perfectly. Total word count is 1111, comfortably achieving the module goal. No formatting artifacts. |
-| 8. Cultural accuracy | 10/10 | Correct cultural context for Ukrainian holidays and greetings ("З Різдвом!", "З Великоднем!", "З Новим роком!"). Helpful tip on responding naturally with "Навза́єм!" or "Вас та́ко́ж!". |
-| 9. Dialogue & conversation quality | 10/10 | Natural and realistic dialogue. The speakers are named, the tone is authentic, and it seamlessly integrates the grammar skills targeted for this phase (e.g. "Ході́мо до мене́! Принеси кутю́, будь ласка."). |
+| 1. Plan adherence | 10/10 | All planned sections are present in order, and the planned review targets all appear in prose: vocative (`Олено`, `Тарасе`), imperative (`Прийди`, `Принеси`, `постав`), conjunctions (`і`, `а`, `але`, `бо`), subordinate clauses (`що`, `де`, `коли`), and holiday vocabulary (`Різдво`, `кутя`, `колядки`, `З Різдвом!`). |
+| 2. Linguistic accuracy | 7/10 | The module treats `бо` as coordinating in `Coordinating conjunctions connect simple sentences... When you need to provide a reason, use **бо**` and again in `...coordinating conjunctions like **а**, **але**, and **бо**.` That is a factual grammar error. |
+| 3. Pedagogical quality | 7/10 | The checkpoint spends too much English explanation before the rule pattern, especially `When you speak directly to a person, you must change the ending of their name... If you use the standard dictionary form to call someone, it sounds abrupt.` The examples are useful, but the review pacing is heavier than it should be. |
+| 4. Vocabulary coverage | 9/10 | The planned vocabulary is used naturally in context rather than dumped as lists: `кутю`, `колядки`, `ярмарок`, `плакати`, `квитки`, `напої`, `стільці`. |
+| 5. Exercise quality | 9/10 | Four markers match the four `activity_hints`, and each marker appears after the relevant teaching chunk. No inline exercise logic problems are visible in this layer. |
+| 6. Engagement & tone | 9/10 | The tone is mostly teacherly and controlled. `Cultural Context: Kutia` adds concrete substance instead of generic praise. |
+| 7. Structural integrity | 10/10 | All planned H2 headings are present and ordered correctly, the activity markers are intact, and the pipeline word count is 1234, which is above the 1000-word target. |
+| 8. Cultural accuracy | 9/10 | No Russia-centric framing appears, and the Christmas material (`Різдво`, `кутя`, `колядки`) is culturally grounded. |
+| 9. Dialogue & conversation quality | 7/10 | The dialogue has named speakers and a real task, but the closing line `Працюймо разом і зі святом!` sounds stitched together rather than naturally spoken. |
 
 ## Findings
-No errors found.
+[LINGUISTIC ACCURACY] [SEVERITY: critical]  
+Location: `Coordinating conjunctions connect simple sentences... When you need to provide a reason, use **бо** (because).` and `...before coordinating conjunctions like **а**, **але**, and **бо**.`  
+Issue: `бо` is a subordinating conjunction of reason, not a coordinating conjunction. This teaches the wrong grammar classification.  
+Fix: Separate `бо` from the coordinating list and update the comma explanation accordingly.
 
-## Verdict: PASS
-This is an exceptionally strong, essentially perfect module. It adheres completely to the plan, is linguistically flawless, structurally sound, and pedagogically clear. Zero deductions necessary.
+[PEDAGOGICAL QUALITY] [SEVERITY: major]  
+Location: `When you speak directly to a person, you must change the ending of their name. This is the **Кличний відмінок** (Vocative case). It is a mandatory feature of polite and natural Ukrainian speech. If you use the standard dictionary form to call someone, it sounds abrupt.`  
+Issue: This is too much English meta-explanation for a checkpoint review. It slows the module before the learner even gets to the pattern and examples.  
+Fix: Compress it to a short rule summary, then move directly into the examples.
+
+[DIALOGUE & CONVERSATION QUALITY] [SEVERITY: major]  
+Location: `**Організатор:** Чудово! Працюймо разом і зі святом!`  
+Issue: The line is stilted and reads like two formulas pasted together, not like a natural utterance in context.  
+Fix: Rewrite it as a natural command plus greeting, for example `Працюймо разом, бо так усе зробимо швидше. Зі святом!`
+
+## Verdict: REVISE
+REVISE because there is one critical factual grammar error (`бо`) and two major quality issues. Multiple dimensions fall below 9, so this cannot pass as-is.
+
+<fixes>
+- find: |-
+    After getting someone's attention, you often need to explain your situation. Coordinating conjunctions connect simple sentences. Use **і** or **та** for addition. Use **а** for mild contrast and **але** for strong contrast. When you need to provide a reason, use **бо** (because).
+  replace: |-
+    After getting someone's attention, you often need to explain your situation. Coordinating conjunctions connect ideas of the same level. Use **і** or **та** for addition. Use **а** for mild contrast and **але** for strong contrast. To give a reason, use the subordinating conjunction **бо** (because).
+
+- find: |-
+    English speakers often omit commas before words like "that" or "because". In Ukrainian, punctuation is strictly grammatical. You must always place a comma before subordinating conjunctions like **що**, **де**, and **коли**, as well as before coordinating conjunctions like **а**, **але**, and **бо**.
+  replace: |-
+    English speakers often omit commas before words like "that" or "because". In Ukrainian, punctuation is strictly grammatical. You place a comma before subordinating conjunctions like **що**, **де**, **коли**, and **бо**, and before coordinating conjunctions like **а** and **але** when they join clauses.
+
+- find: |-
+    When you speak directly to a person, you must change the ending of their name. This is the **Кличний відмінок** (Vocative case). It is a mandatory feature of polite and natural Ukrainian speech. If you use the standard dictionary form to call someone, it sounds abrupt. Feminine names ending in **-а** change to **-о**. Masculine names ending in a hard consonant add **-е**, while those ending in a soft consonant take **-ю**. Once you have their attention, you can ask them to do something using the imperative form.
+  replace: |-
+    When you speak directly to a person, Ukrainian usually uses the **Кличний відмінок** (Vocative case). Feminine names ending in **-а** often change to **-о**, masculine names ending in a hard consonant often take **-е**, and names ending in **-й** often take **-ю**. After that, you can use the imperative to ask someone to do something.
+
+- find: |-
+    > **Організатор:** Чудово! Працюймо разом і зі святом! *(Excellent! Let us work together, and happy holiday!)*
+  replace: |-
+    > **Організатор:** Чудово! Працюймо разом, бо так усе зробимо швидше. Зі святом! *(Excellent! Let us work together, because that way we will do everything faster. Happy holiday!)*
+</fixes>

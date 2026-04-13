@@ -1,23 +1,25 @@
-# Section-by-Section Generation — Section 3/4
+# Section-by-Section Generation — Section 3/3
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 6: Скільки? Котра година? Яке число? (A2, A2.1 [Foundation and Aspect Introduction])
-**Section to write:** Заперечення з прямим додатком (~750 words total)
+**Section to write:** Заперечення з прямим додатком (Negation with a Direct Object) (~750 words)
 **Word target for this section:** 750 words (aim for 825 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Заперечення з прямим додатком (~750 words total)
-- P1 (~130 words): [Introduction to the Genitive of Negation. Explain that when a positive sentence with a direct object (Accusative) is turned into a negative sentence (using 'не'), the object often shifts to the Genitive. This is a hallmark of Slavic syntax. Example: 'Я маю квиток' (Acc) -> 'Я не маю квитка' (Gen).]
-- P2 (~150 words): [The nuance of emphasis. Explain that while the Accusative is sometimes used in modern speech after negation, the Genitive is the standard for total negation ('not a single one'). Use the book example from the plan: 'Я не читав книгу' (I didn't read *the* book) vs 'Я не читав книги' (I didn't read *any* book / haven't been reading).]
-- P3 (~150 words): [Practical comparison with common masculine and feminine nouns. Show the transformation: 'Я купую хліб' -> 'Я не купую хліба'. 'Він бачить машину' -> 'Він не бачить машини'. Highlight the -а/-у endings for masculine and -и/-і for feminine Genitive singular.]
-- P4 (~120 words): [The verb 'немає' (there is no). Explain that 'немає' is a dedicated Genitive-triggering word that denotes absence. Contrast it with 'не маю' (I don't have). Examples: 'Тут немає кави' (There is no coffee here) vs 'Я не маю кави' (I don't have coffee).]
-- P5 (~100 words): [Abstract vs Concrete Negation. Discuss how abstract concepts like 'час' (time) or 'гроші' (money) almost always take the Genitive in negative sentences. Examples: 'Я не маю часу', 'У мене немає грошей', 'Він не потребує допомоги'.]
-- P6 (~100 words): [Dialogue: 'In the Store'. Customer: 'Чи є у вас свіжий хліб?'. Seller: 'Ні, сьогодні немає хліба'. Customer: 'А молоко?'. Seller: 'Я не бачу молока на полиці'. Customer: 'Шкода, я не маю часу чекати'. Focus on 'немає хліба', 'не бачу молока', 'не маю часу'.]
-- <!-- INJECT_ACTIVITY: match-up-negation-shift --> [match-up, Accusative to Genitive Negation, 8 items]
+## Заперечення з прямим додатком (Negation with a Direct Object) (~750 words)
+- P1 (~150 words): Introduce the concept of negation with a direct object. Explain that when you negate a transitive verb (a verb that usually takes a direct object in the Accusative case), the object often shifts to the Genitive case. Show the transformation: "Я читаю книгу" (Accusative) -> "Я не читаю книги" (Genitive).
+- P2 (~150 words): Explain the nuance and motivation behind this shift. Using the Genitive case adds emphasis and totality to the negation. Explain the difference in meaning: using the Accusative ("Я не читав книгу") might imply "I didn't read *that specific book* (but maybe another one)", whereas the Genitive ("Я не читав книги") implies "I didn't read *any book at all*". 
+- P3 (~150 words): Provide clear examples across different noun genders to demonstrate the shift. Masculine inanimate: "Він має квиток" (Acc) -> "Він не має квитка" (Gen). Feminine: "Він купив машину" (Acc) -> "Він не купив машини" (Gen). Neuter: "Я бачу вікно" (Acc) -> "Я не бачу вікна" (Gen). 
+- P4 (~150 words): Clarify the modern conversational reality. Note that while using the Accusative in negation is possible and common in everyday spoken Ukrainian (e.g., "Я не п'ю каву"), the Genitive ("Я не п'ю кави") is the grammatically standard, traditional, and highly frequent choice, especially in writing and formal speech. 
+- P5 (~150 words): Summarize by connecting this concept to the absolute negation word "немає" (there is no), which ALWAYS requires the Genitive case, regardless of the noun. Give foundational examples: "У мене немає часу" (I have no time), "В магазині немає хліба" (There is no bread in the store). This reinforces Genitive as the true case of absence.
+- <!-- INJECT_ACTIVITY: match-up-accusative-genitive-negation --> [match-up, Accusative to Genitive Negation, 8 items]
+- <!-- INJECT_ACTIVITY: match-up-qa-quantities-dates --> [match-up, Q&A about quantities and dates, 8 items]
+
+Grand total: ~2200 words
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -25,7 +27,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-the noun at all. If you say twenty-two, the rule for two applies, meaning you use the Nominative plural. If you say twenty-five, the rule for five applies, meaning you use the Genitive plural. As you count upwards, the grammatical case alternates depending entirely on the last digit. Ми бронюємо двадцять один номер у готелі. Наша група займає двадцять чотири номери. Туристи замовили двадцять п'ять номерів. Вона прочитала двадцять дві сторінки. Студент написав тридцять п'ять слів. У цьому будинку сорок чотири квартири. > *We are booking twenty-one rooms in the hotel. Our group occupies twenty-four rooms. The tourists ordered twenty-five rooms. She read twenty-two pages. The student wrote thirty-five words. There are forty-four apartments in this house.* :::info **Grammar box** The word «гривня» follows these exact same counting rules: одна гривня, дві гривні, п'ять гривень. When you hear prices, pay attention to how the word changes based on the last digit. ::: Feminine nouns present a unique challenge because their Nominative plural form often looks identical to their Genitive singular form. When you see a phrase with a number between two and four, the noun is grammatically in the Nominative plural. While native speakers might shift the stress on the vowel to distinguish the forms, the spelling remains the same. You just need to remember the rule category. Тут стоять дві машини. Я бачу три сестри. Ми купуємо чотири книги. На парковці є дві вільні машини. У мене є три старші сестри. Вона купила чотири нові книги. > *Two cars stand here. I see three sisters. We are buying four books. There are two free cars in the parking lot. I have three older sisters. She bought four new books.* Here is a conversation at a hotel reception that demonstrates these shifting rules in action. > — **Гість:** Добрий день! Мені потрібно три номери. *(Good day! I need three rooms.)* > — **Адміністратор:** Добрий день! На скільки людей? *(Good day! For how many people?)* > — **Гість:** На п'ять гостей. *(For five guests.)* > — **Адміністратор:** Добре. У нас є два великих номери і один малий. *(Good. We have two large rooms and one small.)* > — **Гість:** Чудово. Скільки це коштує? *(Great. How much does it cost?)* > — **Адміністратор:** Це коштує дві тисячі гривень за добу. *(It costs two thousand hryvnias per day.)* > — **Гість:** Я беру ці три номери. *(I'll take these three rooms.)* ### Читаємо українською (Reading Practice) Вчора я був у магазині і купив багато речей для дому. Я взяв один великий хліб і дві пляшки свіжого молока. Потім я пішов у відділ фруктів. Я купив три кілограми червоних яблук і п'ять жовтих бананів. У магазині було дуже багато людей. Біля каси стояли чотири жінки і два чоловіки. Касир сказав, що мої покупки коштують сто двадцять одну гривню. Я дав йому двісті гривень. Він дав мені сімдесят дев'ять гривень здачі. Я сказав «дякую» і пішов додому. Я дуже люблю купувати продукти і рахувати гроші українською мовою. <!-- INJECT_ACTIVITY: fill-in-counting-rule --> <!-- INJECT_ACTIVITY: match-up-quantity-qa -->
+of beautiful parks here.* :::tip **Did you know?** — The fact that words like «багато» (many) and «скільки» (how many) require the Genitive plural is because they represent an amount "of" something, perfectly aligning with the core function of the Genitive case. ::: When applying these rules, feminine nouns require special attention. Because the Nominative plural and the Genitive singular forms of many feminine nouns look identical, learners often confuse the categories. It is vital to explicitly contrast the counting forms. For example, when you say "two sisters", you use the Nominative plural: «дві сестри». But when you say "five sisters", you must use the Genitive plural. The Genitive plural of «сестра» has a zero ending and an inserted vowel "е" to make it easier to pronounce, becoming «п'ять сестер». Similarly, compare "two books" with "five books": you say «дві книги» but «п'ять книг». Recognizing these distinct plural forms is a key milestone in mastering Ukrainian counting. У моєї подруги є дві сестри. Вони дуже схожі між собою. А в цій великій родині є п'ять сестер. На столі лежать дві книги. У бібліотеці є багато старих книг. Ці форми часто бувають складними для студентів. > *My friend has two sisters. They are very similar to each other. And in this large family there are five sisters. Two books lie on the table. There are many old books in the library. These forms are often difficult for students.* To solidify these rules, it is helpful to see them used in natural, everyday contexts. Whether you are asking a question about quantities, stating a historical fact, or discussing a specific **число** (number), the rules of agreement remain consistent. The numeral dictates the case, and the noun follows suit. Let us look at a few examples that demonstrate these patterns in action. Notice how the noun changes depending on the numeral that precedes it. > — **Олена:** Скільки студентів у твоїй групі? *(How many students are in your group?)* > — **Марко:** У нашій групі двадцять один студент. *(There are twenty-one students in our group.)* > — **Олена:** А скільки там дівчат? *(And how many girls are there?)* > — **Марко:** У нас навчається дванадцять дівчат і дев'ять хлопців. *(Twelve girls and nine boys study with us.)* > — **Олена:** Це велика група! У нас лише п'ять студентів. *(That is a large group! We have only five students.)* ### Читаємо українською (Reading Practice) Скільки учнів у твоєму класі? У нашому класі навчається двадцять п'ять учнів. Скільки кімнат у вашій квартирі? Ми маємо три великі кімнати. Оборона аеропорту тривала двісті сорок два дні. Це дуже важливий історичний факт. Скільки коштує один квиток? Один квиток коштує сто гривень. > *How many students are in your class? Twenty-five students study in our class. How many rooms are in your apartment? We have three large rooms. The defense of the airport lasted 242 days. This is a very important historical fact. How much does one ticket cost? One ticket costs one hundred hryvnias.* <!-- INJECT_ACTIVITY: fill-in-counting-objects -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -689,6 +691,36 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (3/3).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] число (дата) (date)
+- [ ] місяць (month)
+- [ ] січень (січня) (January)
+- [ ] лютий (лютого) (February)
+- [ ] березень (березня) (March)
+- [ ] квітень (квітня) (April)
+- [ ] травень (травня) (May)
+- [ ] червень (червня) (June)
+- [ ] липень (липня) (July)
+- [ ] серпень (серпня) (August)
+- [ ] вересень (вересня) (September)
+- [ ] жовтень (жовтня) (October)
+- [ ] листопад (листопада) (November)
+- [ ] грудень (грудня) (December)
+- [ ] заперечення (negation)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Заперечення з прямим додатком (Negation with a Direct Object) (~750 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

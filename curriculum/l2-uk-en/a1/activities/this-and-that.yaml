@@ -4,371 +4,270 @@ level: a1
 inline:
 - id: quiz-this-gender
   type: quiz
-  instruction: 'Choose the correct form: **цей**, **ця**, or **це**.'
+  instruction: Choose the correct demonstrative pronoun (**цей**, **ця**, **це**).
   items:
-  - question: _____ стіл
+  - question: ____ стіл
     options:
     - цей
     - ця
     - це
     correct: 0
-  - question: _____ книга
+  - question: ____ книга
     options:
     - цей
     - ця
     - це
     correct: 1
-  - question: _____ вікно
+  - question: ____ вікно
     options:
     - цей
     - ця
     - це
     correct: 2
-  - question: _____ телефон
-    options:
-    - цей
-    - ця
-    - це
-    correct: 0
-  - question: _____ сумка
+  - question: ____ сумка
     options:
     - цей
     - ця
     - це
     correct: 1
-  - question: _____ поле
+  - question: ____ рюкзак
+    options:
+    - цей
+    - ця
+    - це
+    correct: 0
+  - question: ____ ліжко
     options:
     - цей
     - ця
     - це
     correct: 2
-  - question: _____ рюкзак
-    options:
-    - цей
-    - ця
-    - це
-    correct: 0
-  - question: _____ кімната
-    options:
-    - цей
-    - ця
-    - це
-    correct: 1
-- id: match-up-this-possessive
-  type: match-up
-  instruction: Match the words that have the same gender.
-  pairs:
-  - left: цей рюкзак
-    right: мій рюкзак
-  - left: ця шафа
-    right: моя шафа
-  - left: це крісло
-    right: моє крісло
-  - left: який телефон?
-    right: цей телефон
-  - left: яка кімната?
-    right: ця кімната
-  - left: яке поле?
-    right: це поле
-- id: fill-in-near-far
-  type: fill-in
-  instruction: Fill in the blanks with **цей** / **той**, **ця** / **та**, or **це**
-    / **те**.
+- id: quiz-that-gender
+  type: quiz
+  instruction: Choose the correct demonstrative pronoun (**той**, **та**, **те**)
+    for the far object.
   items:
-  - sentence: Цей стіл новий, а ____ — старий.
-    answer: той
+  - question: ____ будинок
     options:
-    - цей
     - той
     - та
-  - sentence: ____ шафа нова, а та — стара.
-    answer: ця
+    - те
+    correct: 0
+  - question: ____ машина
     options:
-    - ця
-    - та
-    - це
-  - sentence: Ця сумка синя, а ____ — червона.
-    answer: та
-    options:
-    - ця
+    - той
     - та
     - те
-  - sentence: Це вікно велике, а ____ — маленьке.
+    correct: 1
+  - question: ____ крісло
+    options:
+    - той
+    - та
+    - те
+    correct: 2
+  - question: ____ стілець
+    options:
+    - той
+    - та
+    - те
+    correct: 0
+  - question: ____ ручка
+    options:
+    - той
+    - та
+    - те
+    correct: 1
+  - question: ____ ліжко
+    options:
+    - той
+    - та
+    - те
+    correct: 2
+- id: fill-in-this-vs-that
+  type: fill-in
+  instruction: Complete the sentence contrasting near and far objects with **той**,
+    **та**, or **те**.
+  items:
+  - sentence: Цей стілець новий, а ____ — старий.
+    answer: той
+    options:
+    - той
+    - та
+    - те
+  - sentence: Ця книга нова, а ____ — стара.
+    answer: та
+    options:
+    - той
+    - та
+    - те
+  - sentence: ____ стіл тут, а той стіл там.
+    answer: Цей
+    options:
+    - Цей
+    - Ця
+    - Це
+  - sentence: Це вікно велике, а ____ маленьке.
     answer: те
     options:
-    - це
-    - те
-    - та
-  - sentence: ____ телефон новий, а той смартфон старий.
-    answer: цей
-    options:
-    - цей
-    - ця
-    - це
-  - sentence: Ця кімната велика, а ____ — маленька.
-    answer: та
-    options:
-    - та
-    - те
     - той
-  - sentence: ____ крісло нове, а те — старе.
-    answer: це
-    options:
-    - це
+    - та
     - те
-    - цей
-  - sentence: Цей рюкзак синій, а ____ — червоний.
+  - sentence: ____ сумка червона, а та — синя.
+    answer: Ця
+    options:
+    - Цей
+    - Ця
+    - Це
+  - sentence: Цей рюкзак мій, а ____ — твій.
     answer: той
     options:
     - той
     - та
     - те
-- id: quiz-that-pointing
-  type: quiz
-  instruction: 'Choose the correct form: **той**, **та**, or **те**.'
-  items:
-  - question: _____ сумка
-    options:
-    - той
-    - та
-    - те
-    correct: 1
-  - question: _____ стілець
-    options:
-    - той
-    - та
-    - те
-    correct: 0
-  - question: _____ вікно
-    options:
-    - той
-    - та
-    - те
-    correct: 2
-  - question: _____ шафа
-    options:
-    - той
-    - та
-    - те
-    correct: 1
-  - question: _____ поле
-    options:
-    - той
-    - та
-    - те
-    correct: 2
-  - question: _____ олівець
-    options:
-    - той
-    - та
-    - те
-    correct: 0
+- id: match-up-gender-patterns
+  type: match-up
+  instruction: Match the pronouns that share the same gender.
+  pairs:
+  - left: мій
+    right: цей
+  - left: моя
+    right: ця
+  - left: моє
+    right: це
+  - left: який
+    right: той
+  - left: яка
+    right: та
+  - left: яке
+    right: те
 workbook:
-- id: group-gender
+- id: group-sort-gender
   type: group-sort
-  instruction: Sort the nouns by the word you use to point at them.
+  instruction: Sort the nouns into the correct gender category based on whether they
+    take **цей**, **ця**, or **це**.
   groups:
-  - label: Цей / Той (masculine)
+  - label: Цей (Masculine)
     items:
     - стіл
-    - телефон
     - рюкзак
-    - олівець
-    - смартфон
     - стілець
-  - label: Ця / Та (feminine)
+    - будинок
+  - label: Ця (Feminine)
     items:
-    - книга
     - сумка
-    - кімната
-    - шафа
-    - полиця
-    - жінка
-  - label: Це / Те (neuter)
+    - книга
+    - ручка
+    - машина
+  - label: Це (Neuter)
     items:
     - вікно
-    - поле
+    - ліжко
     - крісло
-- id: fill-in-adjectives
+- id: fill-in-chi
   type: fill-in
-  instruction: Fill in the blanks with the correct adjective form.
+  instruction: Fill in the blanks with the correct pointing word or **чи** (or).
   items:
-  - sentence: Ця сумка ____.
-    answer: нова
+  - sentence: Який стіл? — Цей ____ той?
+    answer: чи
     options:
-    - новий
-    - нова
-    - нове
-  - sentence: Цей рюкзак ____.
-    answer: синій
+    - чи
+    - та
+    - і
+  - sentence: Яка сумка? — Ця червона ____ та синя?
+    answer: чи
     options:
-    - синій
-    - синя
-    - синє
-  - sentence: Це крісло ____.
-    answer: старе
+    - чи
+    - та
+    - і
+  - sentence: Яке вікно? — Це велике ____ те маленьке?
+    answer: чи
     options:
-    - старий
-    - стара
-    - старе
-  - sentence: Та книга дуже ____.
-    answer: цікава
-    options:
-    - цікавий
-    - цікава
-    - цікаве
-  - sentence: Той стіл ____.
-    answer: великий
-    options:
-    - великий
-    - велика
-    - велике
-  - sentence: Те вікно ____.
-    answer: маленьке
-    options:
-    - маленький
-    - маленька
-    - маленьке
-- id: error-correction-agreement
-  type: error-correction
-  instruction: Find and correct the mistake in gender agreement.
-  items:
-  - sentence: Цей книга дуже цікава.
-    error: Цей
-    correction: Ця
-    error_type: word
-    options:
-    - Ця
-    - Це
-    - Та
-    explanation: Книга is feminine, so use ця.
-  - sentence: Це шафа нова, а та стара.
-    error: Це
-    correction: Ця
-    error_type: word
-    options:
-    - Ця
-    - Цей
-    - Те
-    explanation: Шафа is feminine, so use ця.
-  - sentence: Той крісло дуже старе.
-    error: Той
-    correction: Те
-    error_type: word
-    options:
-    - Те
-    - Та
-    - Це
-    explanation: Крісло is neuter, so use те.
-  - sentence: Ця рюкзак мій.
-    error: Ця
-    correction: Цей
-    error_type: word
+    - чи
+    - та
+    - і
+  - sentence: ____ стіл тут.
+    answer: Цей
     options:
     - Цей
-    - Це
     - Той
-    explanation: Рюкзак is masculine, so use цей.
-  - sentence: Яка гарна кімната! Цей кімната велика.
-    error: Цей
-    correction: Ця
-    error_type: word
-    options:
     - Ця
-    - Це
-    - Та
-    explanation: Кімната is feminine, so use ця.
-  - sentence: Моє вікно нове, а та вікно старе.
-    error: та
-    correction: те
-    error_type: word
+  - sentence: ____ стіл там.
+    answer: Той
     options:
+    - Цей
+    - Той
+    - Ця
+  - sentence: Ось моя книга. А де ____ книга?
+    answer: та
+    options:
+    - та
+    - ця
     - те
-    - той
-    - це
-    explanation: Вікно is neuter, so use те.
-- id: translate-this-that
-  type: translate
-  instruction: Choose the correct Ukrainian translation for the English phrase.
-  items:
-  - source: This table or that table?
-    options:
-    - text: Цей стіл чи той стіл?
-      correct: true
-    - text: Ця стіл чи та стіл?
-      correct: false
-    - text: Це стіл чи те стіл?
-      correct: false
-  - source: That blue bag
-    options:
-    - text: Та синя сумка
-      correct: true
-    - text: Ця синя сумка
-      correct: false
-    - text: Той синій сумка
-      correct: false
-  - source: This is my new room.
-    options:
-    - text: Це моя нова кімната.
-      correct: true
-    - text: Ця моя нова кімната.
-      correct: false
-    - text: Цей мій новий кімната.
-      correct: false
-  - source: This window is big, and that one is small.
-    options:
-    - text: Це вікно велике, а те — маленьке.
-      correct: true
-    - text: Ця вікно велика, а та — маленька.
-      correct: false
-    - text: Це вікно велике, а те — маленьке є.
-      correct: false
-  - source: Which backpack? This red one?
-    options:
-    - text: Який рюкзак? Цей червоний?
-      correct: true
-    - text: Яка сумка? Ця червона?
-      correct: false
-    - text: Що це? Це рюкзак?
-      correct: false
-  - source: Look! Here is that old chair.
-    options:
-    - text: Ось! Тут той старий стілець.
-      correct: true
-    - text: Там! Ось цей новий стілець.
-      correct: false
-    - text: Ось! Тут та стара шафа.
-      correct: false
-- id: reading-true-false
+- id: true-false-demonstratives
   type: true-false
-  instruction: True or False? Read the dialogue again to check.
+  instruction: Правда чи ні? (True or false?)
   items:
-  - statement: Та синя сумка коштує двісті гривень.
-    correct: true
-    explanation: 'The assistant says: «Та сумка коштує двісті гривень».'
-  - statement: Цей рюкзак коштує сто гривень.
+  - statement: «Цей книга» — це правильно.
     correct: false
-    explanation: 'He says it costs 150: «Цей — сто п''ятдесят».'
-  - statement: 'Ірина каже: «Це новий смартфон».'
-    correct: false
-    explanation: The assistant (консультант) says it.
-  - statement: Вдома в Ірини є новий стілець.
+    explanation: Книга — жіночий рід, тому правильно «ця книга».
+  - statement: «Та машина» — це правильно.
     correct: true
-    explanation: 'She says: «Цей стілець новий».'
-  - statement: Та книжкова полиця нова.
-    correct: false
-    explanation: 'She says: «та книжкова полиця стара».'
-  - statement: Вдома в Ірини є стіл і крісло.
+    explanation: Машина — жіночий рід, тому «та» — правильна форма.
+  - statement: «Це крісло» — це правильно.
     correct: true
-    explanation: 'She points to them: «Це мій стіл... Те — крісло».'
+    explanation: Крісло — середній рід, тому «це» — правильна форма.
+  - statement: «Той сумка» — це правильно.
+    correct: false
+    explanation: Сумка — жіночий рід, тому правильно «та сумка».
+  - statement: «Ця ручка» — це правильно.
+    correct: true
+    explanation: Ручка — жіночий рід, тому «ця» — правильна форма.
+  - statement: «Те стіл» — це правильно.
+    correct: false
+    explanation: Стіл — чоловічий рід, тому правильно «той стіл».
+- id: anagram-vocabulary
+  type: anagram
+  instruction: Складіть слово з літер (Make a word from the letters).
+  items:
+  - letters:
+    - ц
+    - е
+    - й
+    answer: цей
+  - letters:
+    - т
+    - о
+    - й
+    answer: той
+  - letters:
+    - о
+    - с
+    - ь
+    answer: ось
+  - letters:
+    - т
+    - у
+    - т
+    answer: тут
+  - letters:
+    - т
+    - а
+    - м
+    answer: там
+  - letters:
+    - я
+    - к
+    - и
+    - й
+    answer: який
 - id: unjumble-sentences
   type: unjumble
-  instruction: Put the words in the correct order to make a sentence.
+  instruction: Складіть правильне речення зі слів (Put the words in the correct order).
   items:
   - words:
+    - сумка?
     - коштує
     - Скільки
-    - сумка?
     - ця
     correct_order:
     - Скільки
@@ -376,70 +275,84 @@ workbook:
     - ця
     - сумка?
   - words:
-    - смартфон.
-    - новий
-    - Це
-    correct_order:
-    - Це
-    - новий
-    - смартфон.
-  - words:
-    - маленький.
-    - Цей
-    - а
-    - стіл
-    - —
-    - великий,
-    - той
-    correct_order:
-    - Цей
-    - стіл
-    - великий,
-    - а
-    - той
-    - —
-    - маленький.
-  - words:
-    - маленьке?
-    - Це
-    - велике
-    - чи
-    - те
-    correct_order:
-    - Це
-    - велике
-    - чи
-    - те
-    - маленьке?
-  - words:
-    - стара.
-    - шафа
-    - а
-    - нова,
+    - червона?
     - Ця
-    - —
+    - Яка?
+    correct_order:
+    - Яка?
+    - Ця
+    - червона?
+  - words:
+    - синя.
+    - Ні,
     - та
     correct_order:
-    - Ця
-    - шафа
-    - нова,
-    - а
+    - Ні,
     - та
-    - —
-    - стара.
+    - синя.
   - words:
-    - той
-    - олівець
-    - мій,
-    - —
-    - а
+    - новий.
+    - стілець
     - Цей
-    - твій.
     correct_order:
     - Цей
-    - олівець
-    - мій,
-    - а
+    - стілець
+    - новий.
+  - words:
+    - старий.
     - той
     - —
-    - твій.
+    - А
+    correct_order:
+    - А
+    - той
+    - —
+    - старий.
+  - words:
+    - мій
+    - Це
+    - стіл.
+    correct_order:
+    - Це
+    - мій
+    - стіл.
+- id: odd-one-out-gender
+  type: odd-one-out
+  instruction: Знайдіть зайве слово (Find the odd one out).
+  items:
+  - words:
+    - стіл
+    - рюкзак
+    - книга
+    correct: 2
+    explanation: Книга — жіночий рід (ця), інші — чоловічий рід (цей).
+  - words:
+    - сумка
+    - вікно
+    - ручка
+    correct: 1
+    explanation: Вікно — середній рід (це), інші — жіночий рід (ця).
+  - words:
+    - ліжко
+    - крісло
+    - стілець
+    correct: 2
+    explanation: Стілець — чоловічий рід (цей), інші — середній рід (це).
+  - words:
+    - цей
+    - той
+    - яка
+    correct: 2
+    explanation: Яка — жіночий рід, інші — чоловічий рід.
+  - words:
+    - ця
+    - моя
+    - те
+    correct: 2
+    explanation: Те — середній рід, інші — жіночий рід.
+  - words:
+    - це
+    - моє
+    - мій
+    correct: 2
+    explanation: Мій — чоловічий рід, інші — середній рід.

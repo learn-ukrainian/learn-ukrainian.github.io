@@ -149,135 +149,174 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Вступ: На кухні з шеф-кухарем (~120 words)
+## Хай і нехай: Наказ для третіх осіб (3rd Person Imperatives) (~600 words)
 
-> — **Шеф-кухар:** Усім добрий вечір! *(Good evening everyone!)* Сьогодні ми готуємо смачний український борщ. *(Today we are cooking delicious Ukrainian borscht.)* Друзі, **почнімо** *(let's start)*! Оксано, **наріжте** *(cut)* цибулю.
-> — **Оксана:** Добре, шефе. Я вже ріжу. *(Okay, chef. I am already cutting.)*
-> — **Шеф-кухар:** Чудово. Тепер чекаємо на бульйон. *(Great. Now we wait for the broth.)* **Хай** *(let)* вода закипить швидше. А ви, Максиме, робіть засмажку. *(And you, Maksym, make the sauté.)*
-> — **Максим:** Я додав томатну пасту. Що далі? *(I added tomato paste. What next?)*
-> — **Шеф-кухар:** **Нехай** *(let)* соус настоїться десять хвилин. Це дуже важливо для гарного смаку. *(This is very important for good taste.)* Потім ми все змішаємо. *(Then we will mix everything.)* **Помішаймо** *(let's stir)* разом! Оксано, **будь уважною** *(be attentive)*, ніж дуже гострий.
-> — **Оксана:** Дякую, я обережна. *(Thank you, I am careful.)*
-> — **Шеф-кухар:** Усі молодці! *(Everyone is doing great!)* **Хай** наш борщ буде найсмачнішим! *(May our borscht be the most delicious!)*
+> — **Шеф-кухар:** Увага, шановні учні! Наріжте цибулю дуже дрібно. *(Attention, dear students! Chop the onion very finely.)*
+> — **Максим:** Я вже нарізав. Що робити далі? *(I have already chopped it. What to do next?)*
+> — **Шеф-кухар:** Тепер хай вода закипить у великій каструлі. *(Now let the water boil in a large pot.)*
+> — **Оксана:** Вода вже кипить, шефе! *(The water is already boiling, chef!)*
+> — **Шеф-кухар:** Чудово. Помішаймо соус разом. Нехай соус настоїться рівно п'ять хвилин. *(Excellent. Let's stir the sauce together. Let the sauce infuse for exactly five minutes.)*
+> — **Учасники класу:** Так, шефе! Ми все зрозуміли. *(Yes, chef! We understood everything.)*
 
-## Хай і нехай: Наказ для третіх осіб
+Ukrainian grammar has a specific and elegant way to give indirect commands, grant permissions, or express wishes directed at a third party. While direct commands are given to the person you are currently talking to, third-person imperatives express what you want someone else or even an inanimate object to do. You form this **наказовий спосіб** (imperative mood) using the special particles **хай** (let) or **нехай** (let) followed immediately by a verb in the third person. You will use either the present tense form for ongoing actions or the future perfective form of the verb for completed results.
 
-Зазвичай ми звертаємося прямо до людини, з якою ми спілкуємося. Ми кажемо: «**Скажи** *(tell)* йому!», «**Зробіть** *(do)* це!», «**Слухай** *(listen)* уважно!». Ми використовуємо форми для «ти» або «ви». Але іноді нам потрібен наказ або побажання для іншої людини. Ми хочемо сказати про «нього», «неї» або «них». When we want to give an indirect command or express a wish for a third party, we use the third-person imperative. В українській мові ми використовуємо спеціальні слова для цього. Ми кажемо: «Хай він скаже!». Це дуже популярна конструкція в розмовній мові. We do not change the verb itself, but rather add a specific particle before it to show our intent. This is a very common structure in daily conversations and formal writing.
+Хай він читає цей довгий текст. Нехай вона прочитає його до кінця сьогодні. Хай вони працюють швидше.
 
-Як ми утворюємо цей наказ? Це дуже просто. Ми беремо слово «хай» або «нехай» і додаємо дієслово у формі третьої особи. To form the third-person imperative, use the particle "хай" or "нехай" followed by the verb in the third-person present or future tense. Слово «хай» ми часто використовуємо щодня, коли говоримо з друзями. Воно коротке і зручне. Слово «нехай» — це більш офіційний, літературний варіант. Ви часто бачите його в книгах або офіційних документах. Вони означають абсолютно одне і те ж. The verb after "хай" or "нехай" is always in its normal third-person form (he/she/it/they). You only need to know the regular present or future tense conjugation, and you can easily create these commands.
+> *Let him read this long text. Let her read it through to the end today. Let them work faster.*
 
-Наприклад:
-* «Хай він **читає** *(reads)*».
-* «Нехай вона **знає** *(knows)*».
-* «Хай вони **прийдуть** *(will come)*».
+The two particles function exactly the same way in a sentence, but they carry a slight stylistic difference that is good to know. The word **нехай** is slightly more formal and is often found in classical literature, official speeches, or older historical texts. The shorter variant **хай** is extremely common in everyday modern speech, casual conversations, and text messages between friends. Both are perfectly correct, and you can interchange them freely without changing the grammar or the core meaning of your sentence.
 
-Коли ми використовуємо ці слова? Вони мають кілька важливих функцій у нашому житті. По-перше, це **дозвіл** *(permission)*. Наприклад, ви не проти, щоб людина щось зробила.
-«Хай він **іде** *(goes)*, я не проти».
+Хай брат іде додому. Нехай брат іде додому. Хай цей день буде добрим для нас. Нехай цей день буде добрим для нас.
 
-По-друге, це непрямий **наказ** *(command)*. Ви кажете одній людині передати наказ іншій людині. Це дуже корисно на роботі або в школі.
-«Нехай вони **зачекають** *(wait)* у коридорі».
+> *Let the brother go home. Let the brother go home. May this day be good for us. May this day be good for us.*
 
-По-третє, це **побажання** *(wishes)* або тости. Це дуже важлива частина української культури. Ми часто бажаємо щось хороше іншим людям на свята.
-«Хай вам **щастить**!» *(good luck to you!)*.
-«Нехай **здійсняться** *(come true)* ваші **мрії** *(dreams)*!».
+:::info
+**Grammar box**
+The particles **хай** and **нехай** must be followed by a conjugated verb in the third person (he, she, it, they). Unlike English, which uses "let" followed by an object pronoun and an infinitive ("let him *go*"), Ukrainian never uses an infinitive in this structure.
+:::
 
-In all these cases, the grammatical structure is completely identical. The particle does the work of turning a regular statement of fact into a command, a permission, or a warm wish. This makes it a very flexible tool.
+This grammatical construction serves three main purposes in daily Ukrainian communication. First, you can use it to give an indirect command or instruction to someone who is not present in the room. For example, if you want your colleagues to call you later, you express this instruction through the person you are currently speaking with.
 
-Дієслово завжди залежить від суб'єкта. Якщо ми говоримо про одну людину, дієслово має форму однини. Якщо ми говоримо про багатьох людей, дієслово має форму множини. The verb must always agree with the subject in number, just like in any regular sentence.
+Нехай вони подзвонять мені ввечері. Хай Петро купить свіжий хліб після роботи. Нехай діти граються надворі, поки світить сонце.
 
-Наприклад, ми говоримо про одну **дитину** *(child)*:
-«Хай дитина **грається** *(plays)*».
+> *Have them call me in the evening. Let Petro buy fresh bread after work. Let the children play outside while the sun shines.*
 
-Але якщо ми говоримо про багатьох дітей, ми обов'язково змінюємо форму дієслова:
-«Хай **діти** *(children)* граються на вулиці».
-«Нехай **батьки** *(parents)* **відпочинуть** *(rest)* вдома».
+Second, these particles express permission or concession. You use this structure to indicate that you are allowing a situation to happen without interference, or that you simply do not object to someone's actions.
 
-This rule is strict and very logical. You cannot use a singular verb with a plural subject after these imperative particles. If the subject changes to plural, the verb must also change.
+Хай іде, я не проти. Нехай вона спить, сьогодні ж вихідний день. Хай вони роблять цей проєкт так, як хочуть.
 
-Ми можемо використовувати дієслова **недоконаного** *(imperfective)* або **доконаного** *(perfective)* виду. Це дуже сильно змінює нюанс нашого наказу. "Хай" with an imperfective verb in the present tense describes an ongoing, repeated, or general action. "Хай" with a perfective verb in the future tense implies a specific, completed result that we urgently want to happen.
+> *Let him go, I don't mind. Let her sleep, it's a day off after all. Let them do this project the way they want.*
 
-Порівняйте ці речення:
-* «Хай він **пише** *(writes)* **щодня** *(every day)*». Це недоконаний вид, регулярна дія.
-* «Хай він **напише** *(will write)* цей лист сьогодні». Це доконаний вид, ми хочемо конкретний результат.
-* «Нехай вона **читає** *(reads)* цю книгу довго».
-* «Хай вона **прочитає** *(will read)* цей текст зараз».
+Third, this pattern is frequently used to express a general wish, often called a **побажання** (wish, blessing), or abstract hopes for the future. The verb must always agree with its grammatical subject in person and number, even in these fixed, idiomatic phrases.
 
-This aspect distinction helps you be extremely precise about what kind of action you are commanding or wishing for. It shows whether you care about the process or the final result.
+Хай щастить вам у новій роботі! Нехай живе вільна і незалежна країна! Хай усі ваші великі мрії здійсняться!
 
-<!-- INJECT_ACTIVITY: fill-in-3rd-person-imperative -->
+> *Good luck to you in the new job! May the free and independent country live! May all your big dreams come true!*
 
-## Читаймо! Ходімо! Перша особа множини
+The choice of aspect significantly changes the nuance of your command or wish, just as it does with direct commands. An imperfective verb focuses entirely on the process, expressing a general instruction, an ongoing continuous state, or a repeated habitual action. A perfective verb, on the other hand, focuses purely on the final result, indicating a specific, one-time action that needs to be successfully completed.
 
-Коли ми хочемо щось робити разом з іншими людьми, ми використовуємо спеціальну форму. We use the first-person plural imperative to invite others to act with us. Це точний граматичний еквівалент англійського «Let's...». Щоб утворити цю форму, ми беремо дієслово для другої особи однини. Потім ми просто додаємо суфікс **-мо**. The grammatical formation is wonderfully simple: just take the familiar "you" command form and attach the "-мо" suffix to the end. Наприклад: дієслово «**читати**» *(to read)* має форму «**читай**» *(read)*. Ми додаємо суфікс і маємо «**читаймо**» *(let's read)*. Дієслово «**робити**» *(to do)* має форму «**роби**» *(do)*. Разом це буде «**робімо**» *(let's do)*. А дієслово «**бути**» *(to be)* має форму «**будь**» *(be)*, тому ми кажемо «**будьмо**» *(let's be)*. Це дуже красива, формальна і природна українська конструкція. This is the authentic, elegant way to suggest a shared action or activity in the Ukrainian language.
+Хай він пише цей звіт щодня. Хай він напише цей звіт до завтрашнього ранку. Нехай вона читає ту цікаву книгу. Нехай вона прочитає статтю і розкаже нам.
 
-У щоденному житті ми дуже часто використовуємо ці короткі слова. The absolute most common form you will hear every day is «**ходімо**!» *(let's go!)*. На жаль, на вулицях люди іноді кажуть «**пішли**» *(we went)*, коли кличуть друзів кудись іти. Але це помилка, бо «пішли» — це форма минулого часу, а не наказ. But "пішли" is grammatically the past tense, making it a colloquial error when used for an invitation. Завжди кажіть правильно: «Ходімо в кіно!» або «Ходімо додому!». Ось ще кілька дуже корисних фраз для щоденного спілкування на роботі чи вдома: «**Починаймо**!» *(Let's start!)*. «**Поговорімо** про це пізніше» *(Let's talk about it later)*. «**Зробімо** це важке завдання!» *(Let's do this hard task!)*. «**Поїдьмо** на море влітку!» *(Let's go to the sea in summer!)*. Ці слова роблять вашу мову дуже живою та природною.
+> *Let him write (be writing) this report every day. Let him finish writing this report by tomorrow morning. Let her read that interesting book. Let her read the article through and tell us.*
 
-Тепер ми обов'язково маємо поговорити про одну важливу проблему — це використання слова «**давайте**» *(let's)*. In the Russian language, it is the standard rule to say "Let's + infinitive verb" to form a group command. Через тривалий історичний вплив багато людей в Україні теж кажуть: «Давайте читати» або «Давайте працювати». Але в літературній українській мові це велика помилка і типова **калька** *(calque)*. You must explicitly avoid using "давайте" with an infinitive verb in Ukrainian. Правильно казати тільки автентичні українські форми з суфіксом: «Читаймо!» або «**Працюймо**!» *(Let's work!)*. Однак, є один допустимий компромісний варіант у повсякденній розмовній мові. However, in casual, everyday speech, you might hear "давайте" followed by the normal future tense form, like «Давайте **поїдемо**» *(Let's go)* або «Давайте купимо». This is considered a softer, slightly more colloquial suggestion. Але пам'ятайте, що найкращий, найчистіший і найправильніший варіант — це завжди український суфікс «-мо».
+<!-- INJECT_ACTIVITY: fill-in-form-the-correct-imperative-3rd-person-with-or-1st-plural-with-from-given-infinitives -->
 
-Вид дієслова також дуже важливий для цих спільних наказів і пропозицій. Aspect also matters deeply when we invite people to do things together. **Недоконаний вид** *(imperfective aspect)* означає загальну, регулярну дію або постійний процес. «Працюймо разом щодня!». «Читаймо хороші українські книги!». «**Співаймо** *(let's sing)* українські пісні кожного свята!». **Доконаний вид** *(perfective aspect)* означає один конкретний результат або одну швидку мету. «Зробімо цей важливий **проєкт** *(project)* сьогодні!». «**Купімо** *(let's buy)* ці квитки зараз!». «**Напишімо** *(let's write)* цей короткий лист!».
+## Читаймо! Ходімо! Перша особа множини (1st Person Plural Imperatives) (~500 words)
 
-Ось невелика таблиця найпопулярніших щоденних дієслів у цій корисній формі. Here is a helpful summary table of common verbs in the first-person plural imperative form for your reference:
-*   «**Пити**» *(to drink)* ➡️ «**Пиймо**!» *(Let's drink!)*
-*   «**Іти**» *(to go on foot)* ➡️ «Ходімо!» *(Let's go!)*
-*   «**Брати**» *(to take)* ➡️ «**Берімо**!» *(Let's take!)*
-*   «**Дивитися**» *(to watch)* ➡️ «**Дивімося**!» *(Let's watch!)*
+When you want to suggest doing something together with friends, English relies on the phrase "Let's". In Ukrainian, you do not need an extra word. Instead, you simply change the ending of the action verb to create the first person plural form of the **наказовий спосіб** (imperative mood). You build this single-word form directly from the base of the second person singular imperative—the basic "you" command form. If the command form for "you" ends in a vowel, such as the letter **й**, you just attach the suffix **-мо** to the end of the word.
 
-<!-- INJECT_ACTIVITY: unjumble-1st-person-plural -->
+Форма для першої особи множини завжди закінчується на суфікс «-мо». Ми беремо звичайний наказ для другої особи однини і додаємо цей суфікс. Наприклад, дієслово «читати» має форму наказу «читай». Ми додаємо «-мо» і отримуємо «читаймо». Дієслово «співати» має форму «співай», тому ми кажемо «співаймо». Це дуже просте і логічне правило.
 
-## Кличний + наказовий + орудний: Побажання (~550 words)
+> *The form for the first person plural always ends with the suffix "-mo". We take the regular command for the second person singular and add this suffix. For example, the verb "to read" has the command form "read". We add "-mo" and get "let's read". The verb "to sing" has the form "sing", so we say "let's sing". This is a very simple and logical rule.*
 
-В українській мові є дуже красива і важлива конструкція для **побажання** *(wish, blessing)*. We often use a specific rhythmic pattern for wishes, greetings, and blessings. Ми поєднуємо **кличний відмінок** *(Vocative case)*, **наказовий спосіб** *(imperative mood)* та орудний відмінок. This powerful grammatical combination uses the Vocative case to address the person directly. It uses the imperative mood to command the state. Finally, it uses the Instrumental case to define exactly what that state is. Наприклад: «**Мамо** *(Mom)*, **будь** *(be)* **щасливою** *(happy)*!». You are literally commanding someone to exist in a specific, positive state of being. Це звучить дуже тепло, емоційно і природно. Ми активно використовуємо цю граматичну форму на всі свята і кожного дня. Зрозуміти цю логіку означає зрозуміти українську душу. 
+If the base imperative form for "you" ends in a consonant instead of a vowel, the transformation process is just as straightforward. When the basic command ends in a hard consonant, the connecting vowel **-і-** naturally appears before the **-мо** suffix to make the word easier to pronounce. If the command form ends in a soft consonant, indicated by a soft sign, you keep that soft sign and attach the **-мо** ending directly after it.
 
-Щоб побажання звучало щиро і поважно, ми завжди маємо правильно кликати людину. The direct address must always be strictly in the Vocative case for the wish to sound natural. Згадаймо базові форми для популярних імен та родичів. Let's quickly review the basic Vocative forms for names and family members. Іменник жіночого роду «**Олена**» *(Olena)* має теплу форму «**Оленко**» *(Olenko)*. Слово «**тато**» *(dad)* змінюється на форму «**тату**» *(tatu)*. Слово «**друг**» *(friend)* має відому форму «**друже**» *(druzhe)*. А форма множини для слова «**друзі**» *(friends)* або «**колеги**» *(colleagues)* завжди залишається такою ж. У кличному відмінку ми просто кажемо: «друзі», «колеги». Коли ми кажемо «Оленко, будь щасливою» або «Тату, будь здоровим», ми показуємо нашу велику повагу. Using the standard Nominative case here sounds unnatural and slightly rude in Ukrainian.
+Дієслово «робити» має форму наказу «роби». Щоб сказати це разом, ми використовуємо форму «робімо». Дієслово «сказати» має наказ «скажи», тому разом ми кажемо «скажімо». Якщо основа закінчується на м'який приголосний, ми зберігаємо м'який знак. Від слова «сісти» ми утворюємо наказ «сядь», а для групи людей кажемо «сядьмо». Від слова «поїхати» ми маємо наказ «поїдь», а разом кажемо «поїдьмо».
 
-Після дієслова «будь» або «**будьте**» *(be)* ми використовуємо прикметники саме в орудному відмінку. The Instrumental case answers the question "to be what or to be who?". Для чоловічого роду ми маємо закінчення «-им». Наприклад: «будь **здоровим**» *(healthy)*, «будь **спокійним**» *(calm)*. Для жіночого роду ми використовуємо гарне закінчення «-ою». Наприклад: «будь щасливою», «будь здоровою». У множині або для ввічливої форми на «ви» ми завжди додаємо закінчення «-ими». For plural groups or polite, formal addresses, we use the ending "-ими". Ми радісно кажемо: «Друзі, будьте **успішними** *(successful)*!». Або ми можемо сказати дітям: «**Діти** *(children)*, будьте **уважними** *(attentive)*!». Ця граматична структура робить ваші слова ідеальними. It shows that you are actively wishing them a continuous state of success or health.
+> *The verb «робити» has the command form «роби», so together we say «робімо». The perfective verb «сказати» has the command form «скажи», so together we say «скажімо». From «сісти» we form «сядь» and «сядьмо». From «поїхати» we form «поїдь» and «поїдьмо».*
 
-Ці щирі побажання — це не просто граматика. Це дуже важлива частина української культури та глибоких традицій. These phrases and structures are essential social tools in Ukraine. Ми часто говоримо їх на дні народження або під час теплих зустрічей. We use them during birthdays, national holidays, or regular social gatherings. Традиційний український святковий тост звучить дуже коротко і сильно: «Будьмо!». It is a powerful one-word toast that literally means "Let us be". Інша дуже популярна щоденна фраза — це «Будьте здорові!». Люди часто кажуть це, коли хтось чхає, або коли гості йдуть додому. Також ми часто кажемо: «**Живи** *(live)* довго!». Notice that in this specific, fixed phrase "Будьте здорові", we often use the Nominative plural instead of the Instrumental. It is a frozen historical idiom. Але для нових, персональних побажань ми завжди беремо орудний відмінок.
+You will frequently hear native speakers use the word **давайте** (let's — suggestion particle) with an infinitive, such as "давайте читати", and you may also hear it with a first person plural future form, such as "давайте поїдемо". This alternative construction is widely understood and often sounds like a gentle proposal. The synthetic **-мо** forms, however, are shorter and are the core imperative pattern learners should actively master first: **поговорімо**, **ходімо**, **зробімо**.
 
-Ми також можемо поєднувати частку «**хай**» *(let)* з кличним відмінком. We can also combine the particle "хай" with Vocative addresses to create indirect blessings. У таких реченнях дія часто спрямована на людину. Тому ми додаємо займенники у давальному відмінку. We use the Dative case pronouns "тобі" or "вам" to show exactly who receives the positive action. Наприклад: «Друже, хай тобі **щастить** *(to be lucky)*!». This translates beautifully as: "May luck happen to you, my friend!". Інший дуже гарний і популярний приклад для свята: «Діти, **нехай** *(let)* **здійсняться** *(come true)* всі ваші **мрії** *(dreams)*!». Тут ми кличемо дітей. А потім ми використовуємо форму третьої особи для слова «мрії». These elegant combinations make your Ukrainian sound native, warm, and deeply respectful in any situation.
+В українській мові слово «давайте» можна вживати і з інфінітивом, і з формою майбутнього часу першої особи множини: «давайте читати», «давайте поїдемо». Це м'якша пропозиція. Проте синтетичні форми на «-мо» — «поговорімо», «ходімо», «зробімо» — коротші й типовіші для цього значення, тому їх варто добре засвоїти як основну модель спільної дії.
+
+> *In Ukrainian, **давайте** can introduce a softer suggestion, but the synthetic **-мо** forms are the main imperative pattern learners should practice first.*
+
+:::info
+**Grammar box**
+`Давай(те)` can introduce a softer suggestion, but the core pattern for shared action is the synthetic imperative: `Поговорімо`, `Ходімо`, `Зробімо`.
+:::
+
+These **-мо** forms are incredibly common in everyday Ukrainian life, serving as the standard way to initiate shared activities. You will hear them constantly at work meetings, during outings, and at home. Just like with other command forms, the aspect of the verb you choose changes the nuance. An imperfective verb suggests an ongoing, habitual action, or focuses on the general process. A perfective verb implies a specific, one-time action that you want the group to complete successfully.
+
+Найпопулярніше слово для спільної дії — це **ходімо** (let's go). Ви також часто будете чути фрази «починаймо», «зробімо це» та «поговорімо». Коли ми кажемо «ходімо до парку», ми маємо на увазі одну конкретну спільну дію, але форма **ходімо** походить від недоконаного дієслова «ходити». А коли вчитель каже «читаймо щодня», він просить робити це регулярно. Це теж недоконаний вид, який показує звичку.
+
+> *The most popular word for a shared action is "ходімо". In context it can refer to one concrete shared action, but the form itself is imperfective. By contrast, "читаймо щодня" is also imperfective and clearly shows a habitual action.*
+
+<!-- INJECT_ACTIVITY: fill-in-1st-plural-imperative-mo -->
+
+## Кличний + наказовий + орудний: Побажання (Vocative + Imperative + Instrumental: Wishes) (~600 words)
+
+In Ukrainian culture, expressing a sincere **побажання** (wish, blessing) is a deep tradition that goes far beyond a simple "happy birthday." When Ukrainians raise a glass for a toast or write a greeting card, they use a powerful and elegant grammatical formula. This construction relies on three core elements working perfectly together. First, we use the **кличний відмінок** (Vocative case) to personally address the recipient. Second, we use the **наказовий спосіб** (imperative mood) to deliver the warm command. Finally, we use the Instrumental case to describe exactly what we want them to be or become.
+
+Українці дуже люблять говорити гарні слова на свята. Ми завжди бажаємо рідним людям найкращого в житті. Наша мова має спеціальну формулу для цього. Наприклад, ми часто кажемо: «Оленко, будь щасливою!»
+
+> *Ukrainians really love to say beautiful words on holidays. We always wish our dear people the best in life. Our language has a special formula for this. For example, we often say: "Olenko, be happy!"*
+
+Let us break down the first two components of this formula. We always start with the Vocative case, which makes the wish direct. If you are speaking to your friend Olena, her name changes to «Оленко». The word for mother changes from «мама» to «мамо», and a male friend goes from «друг» to «друже». For plural addresses, the forms «діти» and «друзі» remain the same as their dictionary forms. Once you have their attention, you provide the core command using the verb «бути» (to be). You must use **будь / будьте** (be — imperative of бути) depending on how many people you are addressing.
+
+Коли ми звертаємося до людини, ми обов'язково змінюємо закінчення її імені. Мама стає «мамо», а друг стає «друже». Потім ми додаємо дієслово «бути». Для однієї людини ми кажемо «будь», а для групи людей — «будьте».
+
+> *When we address a person, we necessarily change the ending of their name. The word for mother becomes «мамо», and the word for friend becomes «друже». Then we add the verb "to be". For one person we say «будь», and for a group of people — «будьте».*
+
+The third and final component is the Instrumental case, which attaches to the adjective describing the desired state. For example, the adjective **щасливий / щасливою** (happy / happy — Instr.f.) changes its ending to match the person. The same happens with plural adjectives like **здоровий / здоровими** (healthy / healthy — Instr.pl.).
+
+You apply this same logic to any descriptive word you want to use in your blessing. For example, the word **спокійний** (calm) becomes «спокійною» for a woman, and **уважний** (attentive) becomes «уважними» for a group. The Instrumental case perfectly captures the enduring nature of the state you are wishing upon them.
+
+Мамо, будь спокійною і ніколи не хвилюйся! Діти, завжди будьте уважними на вулиці! Дорогі друзі, будьте здоровими та сильними! Це дуже класичні та правильні речення.
+
+> *Mom, be calm and never worry! Children, always be attentive on the street! Dear friends, be healthy and strong! These are very classic and correct sentences.*
+
+In casual speech, you will absolutely hear people use short forms with the Nominative case, such as «Будь щаслива!» or «Будьте здорові!». These versions are common and standard in many greetings, wishes, and everyday appeals. The Instrumental case is also an important and productive pattern in wishes, especially in examples like «Будь щасливою!» or «Будьте уважними!».
+
+:::info
+**Grammar box**
+Both patterns occur in Ukrainian wishes: ✅ «Будь здорова! / Будьте здорові!» and ✅ «Будь здоровою! / Будьте уважними!». Teach the Instrumental pattern as important, but do not treat Nominative predicative forms as errors.
+:::
+
+You can create even more poetic wishes by combining the particles **хай** (let — particle for 3rd person imperative) or **нехай** (let — formal variant) with third-person verbs. In these cases, you are wishing for an external force—like luck or destiny—to act upon the person. 
+
+For instance, you can wish for a **мрія** (dream) to **здійснитися** (to come true). You can also mix these particles with direct commands like **живи** (live — imperative) for a truly monumental blessing.
+
+Оленко, хай тобі завжди щастить у житті! Друже, нехай здійсняться всі твої мрії! Дідусю, живи довго і будь щасливим! Такі слова роблять наше життя набагато світлішим і теплішим.
+
+> *Olenko, may you always have luck in life! Friend, may all your dreams come true! Grandpa, live long and be happy! Such words make our life much brighter and warmer.*
 
 <!-- INJECT_ACTIVITY: match-up-vocative-wishes -->
 
-## Вид дієслова в наказовому способі
+## Вид дієслова в наказовому способі (Aspect in Imperatives) (~500 words)
 
-Ми знаємо, що українські дієслова мають два види: недоконаний і доконаний. We know that Ukrainian verbs have two aspects: imperfective and perfective. Ця різниця дуже важлива, коли ми використовуємо наказовий спосіб. This difference is very important when we use the imperative mood. Дієслова недоконаного виду показують процес або регулярну дію. Imperfective verbs show a process or a habitual action. Тому ми використовуємо їх для загальних порад. Therefore, we use them for general advice. Наприклад, ми кажемо: «**Читай** *(read)* більше!». Також ми використовуємо їх для постійних дій. We also use them for constant actions: «**Пишіть** *(write)* коментарі щодня!». Ще одна важлива функція — це ввічливі запрошення. Another important function is polite invitations. Коли приходять гості, ми привітно кажемо: «**Сідайте** *(sit down)*, будь ласка» або «**Проходьте** *(come in)*». Using the imperfective aspect for invitations makes the command sound softer, like a welcoming suggestion rather than a strict order.
+The **наказовий спосіб** (imperative mood) is incredibly versatile. You already know how to use **хай** (let — particle for 3rd person imperative) and **нехай** (let — formal variant) for third parties. Now, let us dive into how aspect choice drastically changes the tone of these commands.
 
-Дієслова доконаного виду мають іншу мету. Perfective verbs have a different purpose. Ми використовуємо їх, коли нам потрібен конкретний результат. We use them when we need a specific result. Perfective imperatives are used for specific, direct commands where a clear outcome is expected. Наприклад, вчитель каже студенту: «**Прочитай** *(read through)* цю статтю!». Це означає, що текст треба прочитати до кінця. This means the text must be read to the end. Або друг може сказати вам: «**Напиши** *(write)* мені СМС!». Він хоче отримати одне повідомлення. He wants to receive one message. Якщо в кімнаті холодно, ми просимо: «**Закрий** *(close)* вікно!». Це разова дія, яка дає швидкий результат. This is a one-time action that gives a quick result.
+You know to say **ходімо** (let's go) for joint actions, rather than the borrowed **давайте** (let's — suggestion particle). We will see that aspect also affects how we suggest doing things together.
 
-Коли ми хочемо заборонити щось робити, ми використовуємо слово «не». When we want to forbid doing something, we use the word "не". Загальне правило дуже просте: завжди використовуйте дієслова недоконаного виду для заборон. The general rule is very simple: always use imperfective verbs for prohibitions. Мама каже сину: «Не **відкривай** *(open)* вікно!». Подруга радить: «Не пиши йому!». We use the imperfective aspect here because we want the person to completely avoid the process. The action should never start. Чи можемо ми використовувати доконаний вид після слова «не»? Can we use the perfective aspect after the word "не"? Так, але це буває рідко. Yes, but this is rare. Using the perfective with "не" acts as a sharp warning against an accidental result. Ми кричимо дитині: «Не **впади** *(fall)*!». Ми попереджаємо про раптову небезпеку. We are warning about a sudden danger.
+You can even form a beautiful **побажання** (wish, blessing) by combining the **кличний відмінок** (Vocative case) with the verb "to be". For example, you use **будь / будьте** (be — imperative of бути) depending on who you address.
 
-Давайте підсумуємо різницю між двома видами у наказах. Let's summarize the difference between the two aspects in commands. The choice between imperfective and perfective depends on the context. Are you talking about "always" and "in general", or about "now" and "this specific thing"? 
+These wishes are completed with adjectives in the Instrumental case, such as **щасливий / щасливою** (happy / happy — Instr.f.) or **здоровий / здоровими** (healthy / healthy — Instr.pl.). Aspect plays a subtle but vital role in all these structures.
 
-| Недоконаний вид (Imperfective) | Доконаний вид (Perfective) |
-| :--- | :--- |
-| **Пиши!** *(Keep writing!)* | **Напиши!** *(Get it written!)* |
-| Процес або регулярна дія. | Конкретний результат або разова дія. |
-| Process or habitual action. | Specific result or one-time action. |
-| Загальна порада. | Чіткий наказ. |
-| General advice. | Clear command. |
-| Ввічливе запрошення. | Термінова вимога. |
-| Polite invitation. | Urgent request. |
-| Заборона (з часткою «не»). | Попередження (з часткою «не»). |
-| Prohibition (with the particle "не"). | Warning (with the particle "не"). |
+When giving direct commands, your choice between imperfective and perfective verbs drastically changes the meaning. We use the imperfective aspect for general instructions, repeated actions, or polite invitations. It focuses on the process rather than a final result.
 
-Ми кажемо: «Читай українські книги щодня». We say: "Read Ukrainian books every day". Це корисна звичка. This is a useful habit. Але ми кажемо: «Прочитай цей текст зараз». But we say: "Read this text now". Це вже конкретне завдання. This is a specific task.
+Коли ми даємо загальну пораду, ми використовуємо недоконаний вид. Наприклад, ми кажемо «Читай більше!» або «Пишіть щодня!». Це означає, що дія має бути регулярною. Також цей вид робить наші прохання дуже ввічливими. Коли приходять гості, ми кажемо: «Сідайте, будь ласка». Ми не вимагаємо миттєвого результату, ми просто запрошуємо до дії.
+
+> *When we give general advice, we use the imperfective aspect. For example, we say "Read more!" or "Write every day!". This means the action should be regular. Also, this aspect makes our requests very polite. When guests arrive, we say: "Please sit down". We do not demand an instant result, we just invite to the action.*
+
+On the other hand, the perfective imperative is used for specific, one-time commands where a concrete result is expected right away. It sounds more urgent and direct because it focuses purely on the completion of the action.
+
+Доконаний вид потрібен тоді, коли ми чекаємо на швидкий і конкретний результат. Якщо вчитель хоче, щоб ви закінчили текст, він скаже: «Прочитай цю статтю!». Якщо ви чекаєте на повідомлення, ви скажете: «Напиши мені!». А коли надворі холодно, ви даєте чіткий наказ: «Закрий двері!». Ці форми звучать більш прямолінійно і вимагають негайного виконання.
+
+> *The perfective aspect is needed when we wait for a quick and concrete result. If a teacher wants you to finish a text, he will say: "Read this article!". If you are waiting for a message, you will say: "Write to me!". And when it is cold outside, you give a clear command: "Close the door!". These forms sound more direct and demand immediate execution.*
+
+There is a strict rule for negative imperatives: negative commands almost exclusively use the imperfective aspect. Telling someone NOT to do something implies an ongoing prohibition or stopping a process that is currently happening.
+
+В українській мові негативні накази майже завжди мають недоконаний вид. Коли ми хочемо зупинити дію, ми кажемо: «Не читай це!». Ми також кажемо: «Не відкривайте вікно!». Навіть якщо дія разова, правило залишається суворим. Ми ніби кажемо людині не починати або не продовжувати цей процес. Це звучить природно і правильно для будь-якої заборони.
+
+> *In the Ukrainian language, negative commands almost always have the imperfective aspect. When we want to stop an action, we say: "Don't read this!". We also say: "Don't open the window!". Even if the action is one-time, the rule remains strict. It is as if we are telling the person not to start or not to continue this process. This sounds natural and correct for any prohibition.*
+
+There is one fascinating exception. Using the perfective aspect in a negative command creates a harsh warning or expresses fear of an accidental, sudden result. It is not a prohibition, but a strong caution about a potential danger.
+
+Єдиний виняток — це попередження про небезпеку. Якщо ми використовуємо доконаний вид із запереченням, ми боїмося раптового результату. Класичний приклад — це фраза «Не впади!». Ми не забороняємо людині падати, ми дуже просимо її бути обережною. Отже, загальні поради вимагають недоконаного виду. А конкретні завдання та попередження вимагають доконаного виду.
+
+> *The only exception is a warning about danger. If we use the perfective aspect with negation, we are afraid of a sudden result. A classic example is the phrase "Don't fall!". We are not forbidding the person to fall, we are asking them very much to be careful. Thus, general advice requires the imperfective aspect. And specific tasks and warnings require the perfective aspect.*
+
+:::info
+**Grammar box**
+Negative commands usually take the imperfective aspect: «Не відкривай двері!» (Don't open the doors — prohibition). Perfective negative commands are only for accidental dangers: «Не впади!» (Don't fall — careful!).
+:::
 
 <!-- INJECT_ACTIVITY: quiz-aspect-choice -->
-
-## Підсумок
-
-Отже, сьогодні ми вивчили багато нових корисних правил. Наказовий спосіб в українській мові — це не тільки наказ для слова «ти». The imperative mood isn't just for the second person. Ми використовуємо українські частки **«хай»** або **«нехай»** *(let)* для інших людей. Або ми додаємо коротке закінчення **«-мо»** *(let's)*, коли ми хочемо щось робити разом. Також ми тепер знаємо золоте правило для щирих українських побажань. Remember the golden rule for wishes: Address the person in the Vocative case + use "Be" in the Imperative + put the State in the Instrumental case. Наприклад: «**Оленко** *(Olenka)*, **будь** *(be)* завжди **щасливою** *(happy)*!».
-
-Тепер **перевірімо** *(let's check)* ваші нові знання. Ask yourself these three questions to see your progress:
-
-1. Can I tell someone "let's go" together without using a Russianism?
-Я точно пам'ятаю, що треба казати «**ходімо**» *(let's go)*, а не «пішли»?
-2. Do I know how to wish a friend luck using the particle "хай"?
-Я можу сміливо сказати другові: «**Хай** тобі завжди **щастить** *(good luck)*!»?
-3. Can I form kind wishes with the verb "to be" correctly?
-Я добре розумію, чому ми кажемо «будь **здоровим** *(healthy)*», а не просто «будь здоровий»?
+<!-- INJECT_ACTIVITY: unjumble-imperative-sentences -->
 </generated_module_content>
 
-**PIPELINE NOTE — Word count: 2797 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
+**PIPELINE NOTE — Word count: 2998 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -453,41 +492,169 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 634 words | Not found: 5 words
+Verified: 417 words | Not found: 2 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
   ✗ Оксана — NOT IN VESUM
-  ✗ Оксано — NOT IN VESUM
-  ✗ Олена — NOT IN VESUM
-  ✗ ими — NOT IN VESUM
-  ✗ перевірімо — NOT IN VESUM
+  ✗ Петро — NOT IN VESUM
 
-All 634 other words are confirmed to exist in VESUM.
+All 417 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
-## Verification Tools (MCP)
+---
 
-You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
+## Verification Tools (Shell Commands)
 
-**Core Verification:**
-- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
-- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
+You have access to verification tools via shell commands. Use these to verify
+Ukrainian vocabulary, check grammar, and search textbook content **as you write**.
 
-**Content Quality:**
-- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+**IMPORTANT:** Run verification commands BEFORE finalizing any Ukrainian text.
+Batch multiple verifications together to minimize round-trips.
 
-**Reference:**
-- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp_rag_search_literary` — verify literary references against primary sources
-- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
+### 1. Batch-verify Ukrainian words exist in VESUM (preferred — one call for many words)
 
-**Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_words
+results = verify_words(['слово1', 'слово2', 'слово3'])
+for w, matches in results.items():
+    if matches:
+        print(f'{w}: FOUND — lemma={matches[0][\"lemma\"]}, pos={matches[0][\"pos\"]}')
+    else:
+        print(f'{w}: NOT FOUND — may not exist in standard Ukrainian')
+"
+```
+
+### 2. Verify a single Ukrainian word in VESUM (with full morphological tags)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_word
+results = verify_word('WORD_HERE')
+if results:
+    for m in results:
+        print(f'lemma={m[\"lemma\"]}, pos={m[\"pos\"]}, tags={m[\"tags\"]}')
+else:
+    print('NOT FOUND in VESUM')
+"
+```
+
+### 3. Get all inflected forms of a lemma (declension/conjugation)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_lemma
+forms = verify_lemma('LEMMA_HERE')
+for f in forms[:20]:
+    print(f'{f[\"word_form\"]:20s} {f[\"pos\"]:8s} {f[\"tags\"]}')
+print(f'... {len(forms)} forms total')
+"
+```
+
+### 4. Check CEFR level of a word (is it level-appropriate?)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import query_cefr_level
+results = query_cefr_level('WORD_HERE')
+for r in results:
+    print(f'{r[\"word\"]}: {r[\"level\"]} ({r[\"pos\"]})')
+if not results:
+    print('Not in CEFR database')
+"
+```
+
+### 5. Search textbook content (Ukrainian school textbooks, Grades 1-11)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_textbooks
+keywords = {'keyword1', 'keyword2'}
+results = search_textbooks(keywords, 5)
+for r in results:
+    title = r.get('section_title', r.get('title', ''))
+    grade = r.get('grade', '?')
+    text = r.get('text', '')[:200]
+    print(f'Grade {grade} | {title}')
+    print(f'  {text}')
+    print()
+"
+```
+
+### 6. Search style guide for calques/Russianisms (Антоненко-Давидович, 279 entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_style_guide
+results = search_style_guide('TOPIC_HERE', 3)
+for r in results:
+    print(f'--- {r.get(\"word\", \"\")} [{r.get(\"section\", \"\")}]')
+    print(r.get('text', '')[:300])
+    print()
+if not results:
+    print('No style guide entries found')
+"
+```
+
+### 7. Look up word definition in СУМ-11 (Ukrainian explanatory dictionary, 127K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_definitions
+results = search_definitions('WORD_HERE', 3)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+### 8. Search idioms (Фразеологічний словник, 25K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_idioms
+results = search_idioms('WORD_HERE', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"text\", r.get(\"definition\", \"\")))[:200]}')
+"
+```
+
+### 9. English-to-Ukrainian translation (Балла, 79K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import translate_en_uk
+results = translate_en_uk('ENGLISH_WORD', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+---
+
+**WHEN to use these tools:**
+
+1. **Before writing any Ukrainian text** — batch-verify all key vocabulary with
+   `verify_words` (tool 1). Any word that returns NOT FOUND must be replaced.
+2. **When you suspect a Russicism or calque** — search the style guide (tool 6)
+   and verify the correct Ukrainian form with `verify_word` (tool 2).
+3. **When writing for A1/A2** — check CEFR levels (tool 4) to ensure vocabulary
+   is level-appropriate.
+4. **When unsure about a case ending or conjugation** — use `verify_lemma` (tool 3)
+   to see the full paradigm.
+5. **When covering a grammar topic** — search textbooks (tool 5) to see how
+   Ukrainian school textbooks teach it.
+6. **When you need the precise Ukrainian meaning** — use СУМ-11 (tool 7).
+7. **When looking for natural Ukrainian expressions** — search idioms (tool 8).
+
+**Batching rule:** Collect all words you want to verify, then run ONE `verify_words`
+call instead of multiple `verify_word` calls. This is faster and uses fewer tokens.

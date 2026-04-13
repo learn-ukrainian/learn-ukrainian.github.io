@@ -1,7 +1,7 @@
 # Audit Report: M14 — health-at-the-doctor.md
 **Level:** B1 | **Module:** M14 | **Phase:** B1.1 | **Pedagogy:** PPP | **Target:** 4000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-04-10 21:26:01
+**Generated:** 2026-04-11 16:34:13
 
 ## Configuration
 **Type:** B1-grammar
@@ -18,22 +18,17 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | match-up | match-up | 6 | 8 | ❌ |
-| 2 | fill-in | fill-in | 6 | 8 | ❌ |
-| 3 | quiz | quiz | 6 | 8 | ❌ |
-| 4 | unjumble | unjumble | 6 | 6 | ✅ |
-| 5 | error-correction | error-correction | 6 | 6 | ✅ |
-| 6 | match-up | match-up | 6 | 8 | ❌ |
-| 7 | fill-in | fill-in | 6 | 8 | ❌ |
-| 8 | quiz | quiz | 6 | 8 | ❌ |
-| 9 | unjumble | unjumble | 6 | 6 | ✅ |
-| 10 | error-correction | error-correction | 6 | 6 | ✅ |
+| 1 | match-up |  | 6 | 8 | ❌ |
+| 2 | fill-in |  | 6 | 8 | ❌ |
+| 3 | quiz |  | 6 | 8 | ❌ |
+| 4 | match-up |  | 6 | 8 | ❌ |
+| 5 | fill-in |  | 6 | 8 | ❌ |
 
 **Summary:**
-- Total activities: 10 (target: 0-4) ❌
-- Unique types: 5 (minimum: 3) ✅
-- Priority types used: 4/7 (error-correction, fill-in, match-up, quiz) ✅
-- Low density activities: 6
+- Total activities: 5 (target: 0-4) ❌
+- Unique types: 3 (minimum: 3) ✅
+- Priority types used: 3/7 (fill-in, match-up, quiz) ✅
+- Low density activities: 5
 
 ## PEDAGOGICAL VIOLATIONS
 - **[COMPLEXITY]** match-up '' has 6 pairs (target: 12-16)
@@ -42,70 +37,35 @@
   - FIX: Add more items. B1 fill-in requires at least 8 items.
 - **[COMPLEXITY]** quiz '' has 6 items (minimum: 8)
   - FIX: Add more items. B1 quiz requires at least 8 items.
-- **[COMPLEXITY_WORD_COUNT]** unjumble '' item 1 has 5 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble '' item 2 has 6 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble '' item 3 has 5 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble '' item 4 has 5 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble '' item 5 has 6 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble '' item 6 has 4 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
 - **[COMPLEXITY]** match-up '' has 6 pairs (target: 12-16)
   - FIX: Adjust number of pairs to 12-16.
 - **[COMPLEXITY]** fill-in '' has 6 items (minimum: 8)
   - FIX: Add more items. B1 fill-in requires at least 8 items.
-- **[COMPLEXITY]** quiz '' has 6 items (minimum: 8)
-  - FIX: Add more items. B1 quiz requires at least 8 items.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q1 prompt length 4 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** unjumble '' item 1 has 6 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble '' item 2 has 4 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble '' item 3 has 5 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble '' item 4 has 7 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble '' item 5 has 6 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble '' item 6 has 6 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[INLINE_ENGLISH_IN_PROSE]** Inline English translations in B1+ prose (6 occurrences): (Dative experiencer), (Accusative case), (Instrumental case) — breaks immersion target
-  - FIX: Remove inline English translations. Use context clues, Ukrainian definitions, or move translations to vocabulary section
-- **[SALAD_EXCESSIVE_INLINE_GLOSSES]** paragraph has 4 inline **term** (gloss) markers across 2 sentence(s) — too dense; move to vocabulary section or convert to UK paragraph + translation block
-  - FIX: Convert inline-gloss paragraphs to monolingual Ukrainian paragraphs followed by a blockquote + italic English translation block. See docs/best-practices/language-salad.md.
-- **[SALAD_EXCESSIVE_INLINE_GLOSSES]** paragraph has 4 inline **term** (gloss) markers across 4 sentence(s) — too dense; move to vocabulary section or convert to UK paragraph + translation block
-  - FIX: Convert inline-gloss paragraphs to monolingual Ukrainian paragraphs followed by a blockquote + italic English translation block. See docs/best-practices/language-salad.md.
-- **[SALAD_EXCESSIVE_INLINE_GLOSSES]** paragraph has 6 inline **term** (gloss) markers across 6 sentence(s) — too dense; move to vocabulary section or convert to UK paragraph + translation block
-  - FIX: Convert inline-gloss paragraphs to monolingual Ukrainian paragraphs followed by a blockquote + italic English translation block. See docs/best-practices/language-salad.md.
-- **[SALAD_EXCESSIVE_INLINE_GLOSSES]** paragraph has 5 inline **term** (gloss) markers across 3 sentence(s) — too dense; move to vocabulary section or convert to UK paragraph + translation block
-  - FIX: Convert inline-gloss paragraphs to monolingual Ukrainian paragraphs followed by a blockquote + italic English translation block. See docs/best-practices/language-salad.md.
+- **[STATE_STANDARD_LOW_IMMERSION]** Module 14 has 28.5% immersion (target: 90.0%+)
+  - FIX: Add more Ukrainian content to reach 90%+ immersion for full immersion modules
 
 ## Recommendation
-**📝 UPDATE** (severity 60/100)
+**📝 UPDATE** (severity 65/100)
 
-- Revision recommended (severity 60/100)
-- 24 violations (severe - consider revision)
+- Revision recommended (severity 65/100)
+- 6 violations (moderate)
+- Immersion 56% off target (major rebalancing needed)
 - Activity density below minimum
 
 ## Gates
-- **Words:** ✅ 4815/4000 (raw: 4865)
-- **Activities:** ✅ 10/0
-- **Density:** ❌ 6 < 6
-- **Unique_types:** ✅ 5/3 types
+- **Words:** ✅ 5975/4000 (raw: 6048)
+- **Activities:** ✅ 5/0
+- **Density:** ❌ 5 < 6
+- **Unique_types:** ✅ 3/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ❌ 0/5
+- **Engagement:** ❌ 1/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 69/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 93.5% (target 85-100% (B1.2 Motion))
+- **Immersion:** ❌ 28.5% LOW (target 85-100% (B1.2 Motion))
 - **Richness:** ❌ 61% < 80% min (skills)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
@@ -118,15 +78,15 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 54 | 15 | 100% | 26% | 25.5% |
+| examples | 28 | 15 | 100% | 26% | 25.5% |
 | engagement | 0 | 5 | 0% | 19% | 0.0% |
-| variety | 0.95 | - | 95% | 12% | 11.6% |
+| variety | 0.94 | - | 94% | 12% | 11.5% |
 | cultural | 0 | - | 0% | 12% | 0.0% |
 | realworld | 20 | 3 | 100% | 12% | 12.2% |
 | visual | 0 | 2 | 0% | 6% | 0.0% |
 | paragraph_var | 1.00 | - | 100% | 6% | 6.1% |
-| questions | 38 | 4 | 100% | 6% | 6.1% |
-| **TOTAL** | | | | | **61.6%** |
+| questions | 23 | 4 | 100% | 6% | 6.1% |
+| **TOTAL** | | | | | **61.5%** |
 
 ### Dryness Flags & Fixes
 - ❌ **NO_ENGAGEMENT**
@@ -148,20 +108,19 @@
 ## Low Density Activities
 | Activity | Type | Items | Required | Fix |
 |----------|------|-------|----------|-----|
-| match-up | match-up | 6 | 8 | Add 2 more items |
-| fill-in | fill-in | 6 | 8 | Add 2 more items |
-| quiz | quiz | 6 | 8 | Add 2 more items |
-| match-up | match-up | 6 | 8 | Add 2 more items |
-| fill-in | fill-in | 6 | 8 | Add 2 more items |
-| quiz | quiz | 6 | 8 | Add 2 more items |
+|  | match-up | 6 | 8 | Add 2 more items |
+|  | fill-in | 6 | 8 | Add 2 more items |
+|  | quiz | 6 | 8 | Add 2 more items |
+|  | match-up | 6 | 8 | Add 2 more items |
+|  | fill-in | 6 | 8 | Add 2 more items |
 
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 794 | Included in Core |
-| **У лікаря: діалог** | ✅ | 1113 | Included in Core |
-| **Спеціалісти та обстеження** | ✅ | 761 | Included in Core |
-| **В аптеці** | ✅ | 729 | Included in Core |
-| **Хвороби та симптоми** | ✅ | 842 | Included in Core |
-| **Підсумок: здоров'я українською** | ✅ | 576 | Included in Core |
+| **Intro/Narrative** | ✅ | 899 | Included in Core |
+| **У лікаря: діалог (~880 words total)** | ✅ | 1432 | Included in Core |
+| **Спеціалісти та обстеження (~720 words total)** | ✅ | 870 | Included in Core |
+| **В аптеці (~770 words total)** | ✅ | 981 | Included in Core |
+| **Хвороби та симптоми (~770 words total)** | ✅ | 1129 | Included in Core |
+| **Підсумок: здоров'я українською** | ✅ | 664 | Included in Core |

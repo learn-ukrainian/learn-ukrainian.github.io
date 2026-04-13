@@ -1,26 +1,28 @@
 # Build Summary: euphony (A1)
 
-Generated: 2026-04-11 01:31
+Generated: 2026-04-13 21:14
 
 ## Pipeline Phases
 
 | Phase | Status | Timestamp |
 |-------|--------|-----------|
-| check | complete | 2026-04-09 09:32:51 |
-| research | complete | 2026-04-09 09:32:52 |
-| skeleton | complete | 2026-04-09 09:33:42 |
-| pre-verify | complete | 2026-04-09 09:44:32 |
-| write | complete | 2026-04-09 09:51:55 |
-| exercises | complete | 2026-04-09 09:51:55 |
-| activities | complete | 2026-04-09 09:54:43 |
-| verify-exercises | complete | 2026-04-09 09:54:43 |
-| annotate | complete | 2026-04-09 09:54:43 |
-| vocab | complete | 2026-04-09 09:59:56 |
-| enrich | complete | 2026-04-09 09:59:56 |
-| verify | complete | 2026-04-09 09:59:57 |
-| stress | complete | 2026-04-09 10:16:26 |
-| review | complete | 2026-04-10 23:31:01 |
-| publish | complete | 2026-04-10 23:31:05 |
+| check | complete | 2026-04-12 18:48:26 |
+| research | complete | 2026-04-12 18:48:26 |
+| skeleton | complete | 2026-04-12 18:48:51 |
+| pre-verify | complete | 2026-04-12 18:50:06 |
+| write | complete | 2026-04-12 18:52:01 |
+| exercises | complete | 2026-04-12 18:52:01 |
+| activities | complete | 2026-04-12 18:54:57 |
+| verify-exercises | complete | 2026-04-12 18:54:57 |
+| annotate | complete | 2026-04-12 18:54:57 |
+| vocab | complete | 2026-04-12 18:55:37 |
+| enrich | complete | 2026-04-12 18:55:37 |
+| verify | complete | 2026-04-12 18:55:37 |
+| stress | complete | 2026-04-12 19:05:20 |
+| repair | complete | 2026-04-13 08:51:11 |
+| review | complete | 2026-04-13 09:01:32 |
+| publish | complete | 2026-04-13 19:14:59 |
+| audit | complete | 2026-04-13 19:14:59 |
 
 ## Reviews
 
@@ -29,32 +31,34 @@ Generated: 2026-04-11 01:31
 | 1 | euphony-review-r1.md |
 | 2 | euphony-review-r2.md |
 | 3 | euphony-review-r3.md |
+| 4 | euphony-review-r4.md |
 
 ## Dispatch Log
 
 | Phase | Agent | Duration | OK |
 |-------|-------|----------|----|
-| pre-verify | gemini-tools (gemini-3-flash-preview) | 246s | ❌ |
-| skeleton | gemini (gemini-3-flash-preview) | 50s | ✅ |
-| write | gemini-tools (gemini-3.1-pro-preview) | 338s | ✅ |
-| activities | gemini-tools (gemini-3.1-pro-preview) | 167s | ✅ |
-| vocab | gemini (gemini-3-flash-preview) | 302s | ✅ |
-| review | gemini-tools (gemini-3.1-pro-preview) | 614s | ✅ |
-| review | gemini-tools (gemini-3.1-pro-preview) | 366s | ✅ |
-| review | gemini-tools (gemini-3.1-pro-preview) | 115s | ✅ |
-| pre-verify-retry | gemini-tools (gemini-3-flash-preview) | 404s | ✅ |
-| write-fix | gemini-tools (gemini-3.1-pro-preview) | 105s | ✅ |
+| pre-verify | gemini-tools (gemini-3.1-pro-preview) | 74s | ✅ |
+| skeleton | gemini (gemini-3.1-pro-preview) | 25s | ✅ |
+| write | gemini-tools (gemini-3.1-pro-preview) | 114s | ✅ |
+| write | gemini-tools (gemini-3.1-pro-preview) | 90s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 175s | ✅ |
+| vocab | gemini (gemini-3.1-pro-preview) | 35s | ✅ |
+| review | codex-tools (gpt-5.4) | 305s | ✅ |
+| review | codex-tools (gpt-5.4) | 275s | ✅ |
+| review | codex-tools (gpt-5.4) | 315s | ✅ |
+| review | codex-tools (gpt-5.4) | 305s | ✅ |
 
 ## Files
 
 - `.build.lock`
-- `correction-attempt-1.md`
 - `exercise-verification.json`
+- `pacing-plan.txt`
 - `pre-verify-results.md`
 - `quick-verify.json`
 - `review-structured-r1.yaml`
 - `review-structured-r2.yaml`
 - `review-structured-r3.yaml`
+- `review-structured-r4.yaml`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

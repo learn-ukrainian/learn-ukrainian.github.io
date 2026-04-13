@@ -2,53 +2,49 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 10
-  evidence: The module strictly follows the outline, includes all required and recommended
-    vocabulary natively in the text, and easily meets the 1200-word target (1684 words).
+  score: 8
+  evidence: 'All four planned H2 sections are present and ordered correctly, but the
+    plan references are not integrated: `ULP Season 1, Episode 33` and `Заболотний`
+    both have 0 occurrences in the content, and reco'
 - dimension: 2
   name: Linguistic accuracy
-  score: 10
-  evidence: Excellent. The morphological rules for animate accusative (including common
-    pitfalls like soft endings for "лікар" and vowel changes for "тато") are presented
-    flawlessly. No Surzhyk or calques found.
+  score: 6
+  evidence: The summary row `
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: Superb PPP flow. Introducing the Grade 4 "Бачу кого? що?" mnemonic is
-    a brilliant pedagogical anchor. The distinction between masculine objects staying
-    the same vs. masculine animate changing is drill
+  score: 7
+  evidence: 'The module has many examples, but it opens with generic English exposition
+    before getting to the pattern: `We interact with people every day in our lives...`
+    instead of leading with the target form im'
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: All required words (бачити, знати, любити, чекати, шукати, друг, подруга)
-    and recommended words (сусід, колега, викладач, вчитель, лікар, продавець, покупець)
-    are integrated naturally into examples an
+  score: 8
+  evidence: Required verbs are all used in prose (`бачити`, `знати`, `любити`, `чекати`,
+    `шукати`), and most recommended nouns appear, but `покупець` is absent from the
+    prose.
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: The 4 activity markers match the plan's specifications perfectly and are
-    strategically distributed after each new conceptual chunk.
+  score: 9
+  evidence: The 4 expected markers are present and placed after relevant teaching
+    sections, especially the form-focused markers after `## Знахідний відмінок — живе`.
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: The teacher persona is warm and clarifying. The callouts (e.g., "Don't
-    Forget the Men!", "The Grammar Question Test") add high pedagogical value without
-    feeling like filler.
+  score: 7
+  evidence: Some teacher voice is fine, but filler lines like `This structural difference
+    is absolutely essential for natural Ukrainian speech.` add emphasis more than
+    information.
 - dimension: 7
   name: Structural integrity
-  score: 9
-  evidence: Markdown structure is clean, but there is a minor formatting glitch in
-    Dialogue 2 where a single speaker's turn is split across two consecutive lines
-    with repeated speaker tags.
+  score: 8
+  evidence: 'Headings are complete and the pipeline word count is above target, but
+    the module ends with a broken line: `These simple checks confirm that `.'
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: Mentioning the Ukrainian primary school approach (Grade 4 mnemonic) adds
-    a lovely layer of authentic cultural context to the grammar lesson.
+  score: 9
+  evidence: No Russia-centric framing or cultural misinformation detected.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 9
-  evidence: The dialogues are natural and effectively demonstrate the grammar in a
-    realistic context (wedding photos, school colleagues). Minor deduction for the
-    split speaker tag in the second dialogue.
+  score: 8
+  evidence: Dialogues have named speakers and plausible contexts, but the second dialogue
+    is short and mostly prompt-response (`Ти знаєш нашу вчительку? ... А нового лікаря?`).
 findings: []

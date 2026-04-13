@@ -1,0 +1,81 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T06-38-dad4dab4.json
+phase: write-chunk-02
+prompt_chars: 45698
+response_chars: 5097
+prompt_words: 6826
+response_words: 836
+sections:
+- name: header
+  start: 0
+  length: 413
+  fraction: 0.009
+- name: skeleton
+  start: 413
+  length: 1323
+  fraction: 0.029
+- name: prior_summary
+  start: 1736
+  length: 3233
+  fraction: 0.0707
+- name: plan
+  start: 4969
+  length: 11789
+  fraction: 0.258
+- name: wiki
+  start: 10266
+  length: 28725
+  fraction: 0.6286
+- name: output_spec
+  start: 45483
+  length: 215
+  fraction: 0.0047
+large_sections:
+- wiki
+directives_total: 23
+directives_covered: 13
+directives_missed:
+- kind: checklist
+  text: конверт (envelope)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: марка (stamp)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: посилка (parcel, package)
+  covered: false
+  coverage_note: 1/3 keywords (33%)
+- kind: must
+  text: '- **Middle School (5-7 клас):** The focus shifts to the official, standardized
+    format of a postal address (`поштова адреса`) as required by Ukrposhta (`Укрпошта`).'
+  covered: false
+  coverage_note: 2/15 keywords (13%)
+- kind: must
+  text: '`) and the cases required for location.'
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: must
+  text: They must group them into pairs of synonyms (`одержувач/адресат`, `відправник/адресант`)
+    and objects (`посилка`, `лист`).
+  covered: false
+  coverage_note: 4/14 keywords (29%)
+- kind: must
+  text: '* **Fill-in-the-Blank (Aspect):** Create sentences where students must choose
+    between the imperfective and perfective verb.'
+  covered: false
+  coverage_note: 5/13 keywords (38%)
+- kind: must
+  text: '* **Understanding Bureaucracy:** Filling out forms is a key life skill in
+    any country, and this is a gentle introduction to the structured language required.'
+  covered: false
+  coverage_note: 3/16 keywords (19%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 0/11 keywords (0%)

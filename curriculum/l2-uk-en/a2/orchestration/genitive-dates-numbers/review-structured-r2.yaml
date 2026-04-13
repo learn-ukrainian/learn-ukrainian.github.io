@@ -1,0 +1,50 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 7
+  evidence: The three planned H2 sections are present, but the opening scene says
+    `Imagine a common situation at a hotel reception. A guest arrives...` instead
+    of the plan’s phone-booking setting.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 6
+  evidence: '`Уявіть ситуацію на рецепції готелю.` misuses `рецепція`; dictionary
+    evidence supports a different meaning, not “hotel reception/front desk.”'
+- dimension: 3
+  name: Pedagogical quality
+  score: 7
+  evidence: The module gives many examples, but `Сьогодні перше січня. Завтра буде
+    друге лютого. Післязавтра — третє березня.` teaches date forms through an impossible
+    timeline.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 'Required and recommended plan vocabulary is used in prose: `число`, `місяць`,
+    month names, `заперечення`, `числівник`, `додаток`, `правило`.'
+- dimension: 5
+  name: Exercise quality
+  score: 5
+  evidence: Only 3 markers appear, while the plan requires 4; the missing one is the
+    `match-up` activity for `Q&A about quantities and dates`.
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: The teacherly voice is consistent, and the month-name and season notes
+    add some substance beyond pure rule listing.
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: All three planned H2 sections are present and ordered correctly; markdown
+    is clean; total word count is 2974, above target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 9
+  evidence: The module stays Ukrainian-centered, with references such as Taras Shevchenko,
+    Independence Day, and December 25 Christmas.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: The opening dialogue uses named speakers and a plausible booking context
+    with concrete questions about dates and quantities.
+findings: []

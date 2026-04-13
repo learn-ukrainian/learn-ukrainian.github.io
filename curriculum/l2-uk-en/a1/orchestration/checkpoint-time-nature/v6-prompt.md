@@ -237,27 +237,25 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-- Confirmed: понеділок, вівторок, середа, четвер, п'ятниця, субота, неділя, січень, лютий, березень, квітень, травень, червень, липень, серпень, вересень, жовтень, листопад, грудень, зима, весна, літо, осінь, взимку, навесні, влітку, восени, холодно, тепло, сонячно, дощ, сніг, спочатку, потім, нарешті, завжди, часто, іноді, рідко, ніколи, година, котра.
-- Not found: None. All planned vocabulary items are valid lemmas or forms in VESUM.
+- Confirmed: понеділок, вівторок, суботу, січні, серпні, влітку, взимку, навесні, восени, холодно, тепло, дощ, сніг, спочатку, потім, нарешті, завжди, часто, іноді, рідко, ніколи, котра, година, дев'ятої, п'ятої, десятій, ранку, працюю, вивчаю, гуляю, ходжу, подобається, кіно, парк, завтра, погода, сонячно, чудово, ходімо, добре, так
+- Not found: (None)
 
 ## Grammar Rules
-- U-V Alternation: Правопис §23 — Use 'у' before 'в', 'ф', and clusters like 'льв', 'зв', 'св', 'дв' (e.g., *у вівторок*, *у п'ятницю*). Use 'в' between vowels (*вона в Одесі*).
-- I-Y Alternation: Правопис §24 — Use 'і' between consonants (*він іде*) and at the beginning of sentences. Use 'й' between a vowel and a consonant (*вона йде*).
-- Time Interrogatives: Правопис §107 (Ordinal numerals) — Hours are expressed using ordinal numerals in the feminine form (matching *година*): *котра година?*, *о п'ятій годині*.
-- Capitalization: Days of the week and months are not capitalized in Ukrainian (unlike English), unless they start a sentence.
+- Чергування у/в (у понеділок / в суботу, у січні / в серпні): Правопис §23 — Щоб уникнути збігу букв на позначення приголосних звуків, що є важкими для вимови, та щоб досягти милозвучності, в українській мові вживають на письмі прийменник "у" [...]. Щоб уникнути збігу букв, що передають голосні, та щоб досягти милозвучності, в українській мові на письмі вживають прийменник "в".
 
 ## Calque Warnings
-- котра година: OK — This is the standard Ukrainian interrogative. Avoid Russianism "скільки годин" for "what time is it".
-- о котрій: OK — Correct prepositional phrase for "at what time". Avoid "в скільки".
-- іде дощ: OK — Idiomatic and natural Ukrainian. "Йде дощ" is also correct depending on the preceding sound (I-Y alternation).
-- приймати участь: CALQUE — Avoid in hobbies/plans. Use **брати участь**.
+- котра година: OK — Антоненко-Давидович підтверджує "котра година?" як єдину правильну форму (уникати російської кальки "скільки годин?").
+- взимку: OK
+- йти в кіно: OK
 
 ## CEFR Check
-- понеділок: A1 — OK (Found in Grade 2 and Grade 5 primary textbooks).
-- січень: A1 — OK (Basic calendar vocabulary).
-- зима: A1 — OK (Core seasonal vocabulary).
-- холодно: A1 — OK (Found in Grade 2 weather descriptions).
-- часто: A1 — OK (Core frequency adverb).
+- завжди: A1 — OK
+- спочатку: A1 — OK
+- взимку (зима): A1 — OK
+- понеділок: A1 — OK
+- кіно: A1 — OK
+- парк: A1 — OK
+- нарешті: A2 — above target
 </pre_verified_facts>
 
 
@@ -581,13 +579,15 @@ These exercises are models for the content writer, demonstrating the native Ukra
 
 ## Section Structure
 
-Write these sections as H2 headings, in this exact order:
+Write these sections as H2 headings, in this **exact** order:
 
 - `## Що ми знаємо? (What Do We Know?)` (~200 words)
 - `## Читання (Reading Practice)` (~250 words)
 - `## Граматика (Grammar Summary)` (~200 words)
 - `## Діалог (Connected Dialogue)` (~300 words)
 - `## Підсумок — Summary` (~250 words)
+
+**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim** as an `## H2` line. This includes the FINAL summary/transition section (`Підсумок: ...`, `Підсумок та перехід до M...`, etc.) — the writer's most common failure is silently dropping the closing section. Do NOT skip it. Do NOT renumber. Do NOT merge headings. The post-write quick-verify check will fail your build if any heading is missing, even if the prose itself is excellent.
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -633,6 +633,25 @@ HARD GRAMMAR RULES (audit will reject violations):
 - **Zero calques**: No приймати душ→брати душ, приймати рішення→ухвалювати рішення
 - **Zero paronyms**: тактична≠тактовна, ефектний≠ефективний — use the right word, not a similar-sounding one
 - **Natural Ukrainian**: Write how a Ukrainian teacher would explain this to a student. Not robotic, not textbook-dry, not overly casual.
+
+### FORBIDDEN WORDS — never write these (#1189)
+
+The following Russian words have leaked into past builds and broken modules. They are **hard-banned** — the post-write toxic-token scanner will fail your build the moment it sees one. Use the Ukrainian alternative every time, even in dialogues, even in casual prose, even when quoting a learner's mistake (use a `<!-- VERIFY -->` placeholder instead of typing the Russian form):
+
+| Russian (FORBIDDEN) | Ukrainian (USE THIS) |
+|---|---|
+| хорошо | добре |
+| конечно | звичайно / певна річ |
+| спасибо | дякую |
+| пожалуйста | будь ласка / прошу |
+| ничего | нічого |
+| сейчас | зараз |
+| тоже | теж / також |
+| здесь | тут |
+| кот | кіт |
+| кон | кін |
+
+This list is enforced word-for-word by `scripts/build/quick_verify.py` (SEVERE_RUSSIANISMS). If you produce any of these tokens — even inside a quoted example, even inside a dialogue line spoken by a Russian-speaking character — the build halts immediately. There is no exception.
 
 **Authority hierarchy (if uncertain about a word, check in this order):**
 VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (stress) → Антоненко-Давидович (style) → Грінченко (etymology).
@@ -742,38 +761,31 @@ The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> blo
 
 <skeleton>
 ## Що ми знаємо? (What Do We Know?) (~220 words total)
-- P1 (~50 words): [Welcome to the A1.4 Checkpoint. This section reviews everything from Modules 22 to 26: telling time, using the calendar, describing weather, and narrating your daily routine.]
-- P2 (~120 words): [Self-check questions. Ask the learner to reflect on their skills: "Can you ask 'What time is it?' (Котра година?)? Can you say 'at 5 o'clock' (о п'ятій годині)? Do you remember all seven days of the week starting from 'понеділок'? Can you describe the current weather using words like 'сонячно' or 'іде дощ'?"]
-- P3 (~50 words): [Motivation and context. Remind the learner that these tools are essential for social life—making plans with friends, understanding schedules, and simply talking about the world around them.]
+- P1 (~100 words): Welcome to the A1.4 checkpoint! Explain the goal of this module: consolidating everything learned about time, the calendar, weather, daily routines, and hobbies. This is the moment to bring these separate pieces together into coherent stories and conversations before moving on to the next phase of the Ukrainian language journey.
+- P2 (~120 words): A bulleted self-check list formulated as questions. "Can you say what time it is? (Котра година? — Десята тридцять.)", "Can you name your favorite season and month? (Моя улюблена пора року — осінь, жовтень.)", "Can you describe today's weather? (Сьогодні сонячно і тепло.)", "Can you talk about your weekend plans? (У неділю я відпочиваю і читаю.)", "Can you describe your morning routine? (Вранці я прокидаюся о сьомій.)"
 
-## Читання (Reading Practice) (~280 words total)
-- P1 (~30 words): [Introduction to the reading passage. A short narrative about a typical week in Ukraine.]
-- P2 (~150 words): [Reading Text: "Мій робочий тиждень". A 10-sentence story. Example sentences: "Сьогодні понеділок. Вранці я прокидаюся о сьомій годині. Потім я снідаю і йду на роботу. У середу ввечері я часто гуляю в парку. Зараз весна, тому на вулиці тепло і сонячно. У суботу я не працюю. Взимку я люблю дивитися кіно, а влітку ходжу на річку."]
-- P3 (~100 words): [Linguistic breakdown of the text. Explain the choice of prepositions for days (у понеділок - Accusative) versus the lack of preposition for seasons (влітку - Adverb). Point out the sequence words "спочатку" and "потім" used to order the day's events.]
+## Читання (Reading Practice) (~275 words total)
+- P1 (~60 words): Introduce the reading activity. Set the context: Oksana is talking about her typical week, her favorite seasons, and how her hobbies change depending on the weather outside. 
+- P2 (~150 words): A short Ukrainian text (8-10 sentences) synthesizing M22-M26 vocabulary. Example flow: "Привіт! Мене звати Оксана. Мій тиждень дуже активний. У понеділок і середу я працюю з дев'ятої до п'ятої. У вівторок я вивчаю українську мову. На вихідних я часто гуляю, якщо погода гарна. Я люблю осінь, тому що восени тепло. Взимку часто йде сніг і дуже холодно, тому я читаю книги вдома або йду в кіно. А що ви робите у суботу?"
+- P3 (~65 words): Follow-up reading comprehension questions in English or simple Ukrainian to prompt active recall (e.g., What are Oksana's working hours? Why does she like autumn? What does she do when it snows?).
+- <!-- INJECT_ACTIVITY: fill-in-day-description --> [fill-in, Complete the paragraph describing a day, 7 items]
 
 ## Граматика (Grammar Summary) (~220 words total)
-- P1 (~80 words): [Summary of Time. Differentiate between "Котра година?" (What time is it?) and "О котрій годині?" (At what time?). Reiterate the use of feminine ordinal numbers: перша, друга, п'ята.]
-- P2 (~70 words): [Summary of Calendar and Seasons. Remind the learner about the case endings: Accusative for days (у п'ятницю) and Locative for months (у січні). Contrast the four season adverbs: взимку, навесні, влітку, восени.]
-- P3 (~70 words): [Summary of Weather and Frequency. Review impersonal weather constructions like "холодно" or "іде сніг". Recap frequency adverbs: від "завжди" (always) до "ніколи" (never).]
-- <!-- INJECT_ACTIVITY: fill-in-mixed-review --> [fill-in, focus on mixed review of time/days/weather chunks, 6 items]
+- P1 (~40 words): Introduction to the grammar review section, reminding learners that they now have the tools to accurately locate events in time using specific prepositions and cases.
+- P2 (~60 words): Reviewing Time and Days. Contrast "Котра година?" (Nominative) with "О котрій годині?" (Locative with "о/об"). Review days of the week using "у/в" + Accusative: "у понеділок", "в суботу".
+- P3 (~60 words): Reviewing Months and Seasons. Remind learners that months take "у/в" + Locative: "у січні", "в серпні". Contrast this with seasons which act as standalone adverbs: "взимку", "навесні", "влітку", "восени".
+- P4 (~60 words): Weather, Sequence, and Frequency. Recap impersonal weather structures ("холодно", "тепло", "іде дощ"). Briefly list sequence words ("спочатку", "потім", "нарешті") and frequency adverbs ("завжди", "часто", "іноді", "ніколи").
+- <!-- INJECT_ACTIVITY: fill-in-time-weather-chunks --> [fill-in, Mixed review of time, days, and weather chunks, 6 items]
 
-## Діалог (Connected Dialogue) (~350 words total)
-- P1 (~50 words): [Scenario setup. Two friends, Олена and Марко, are planning a weekend trip to a nearby city. They need to check the weather and agree on a meeting time.]
-- P2 (~150 words): [The Dialogue: "Плани на вихідні". A multi-turn exchange. Marko: "Яка погода завтра?" Olena: "У суботу буде тепло і сонячно." Marko: "Чудово! О котрій поїдемо?" Olena: "О дев'ятій ранку. Потім підемо в музей." Marko: "Добре. А в неділю?" Olena: "В неділю іноді йде дощ, тому будемо вдома."]
-- P3 (~150 words): [Deep dive into dialogue chunks. Explain the usage of "Ходімо" (Let's go) as an invitation. Highlight the use of "ранку" (of the morning) after the time. Reinforce the decolonization point: "неділя" is Sunday, while a week is "тиждень".]
-- <!-- INJECT_ACTIVITY: match-up-logical-logic --> [match-up, focus on logical Q&A pairs for time/weather/plans, 8 items]
-- <!-- INJECT_ACTIVITY: fill-in-routine-sequence --> [fill-in, focus on paragraph completion for daily routine and sequence, 7 items]
+## Діалог (Connected Dialogue) (~330 words total)
+- P1 (~50 words): Context setting. Two friends, Andriy and Olena, are planning a weekend outing. They need to discuss the weather forecast, agree on an activity, and set a specific time to meet.
+- P2 (~150 words): The full Ukrainian dialogue. Andriy asks about tomorrow's weather ("Яка завтра погода?"). Olena says it will be warm and sunny ("Тепло і сонячно"). Andriy suggests the park ("Ходімо в парк! О котрій?"). Olena proposes 10 AM ("О десятій ранку"). Andriy agrees, noting he always walks on Saturdays ("Я часто гуляю в суботу"). Olena suggests a movie afterwards ("А потім ходімо в кіно!"). Andriy confirms the time ("О п'ятій? — Так!").
+- P3 (~130 words): Breakdown and analysis of the dialogue. Point out how naturally the speakers combined weather descriptions ("тепло і сонячно"), invitations ("Ходімо..."), time chunks ("О десятій ранку", "о п'ятій"), and frequency words ("часто", "потім") in a single, flowing conversation. Emphasize that this represents real, functional fluency at the A1 level.
+- <!-- INJECT_ACTIVITY: match-up-logical-answers --> [match-up, Match the questions to logical answers, 8 pairs]
 
-## Підсумок — Summary (~250 words total)
-- P1 (~250 words): [Follow the plan exactly. "You have reached the end of the Time and Nature phase! Here is what you can now do in Ukrainian:
-  - Tell time using hours (Котра година? Перша, друга...).
-  - Use time expressions for appointments (О котрій? О п'ятій...).
-  - Navigate the calendar: name all 7 days and 12 months with correct prepositions (у вівторок, у березні).
-  - Use seasonal adverbs (взимку, навесні...).
-  - Describe the weather and state of the environment (тепло, сонячно, іде дощ).
-  - Sequence your actions using 'спочатку', 'потім', and 'нарешті'.
-  - Describe your lifestyle with frequency words (завжди, часто, іноді).
-  Next, we move to A1.5, where you will learn to navigate the city, give directions, and use transport."]
+## Підсумок — Summary (~275 words total)
+- P1 (~125 words): Celebrate the milestone! You have successfully completed the A1.4 phase. You can now talk confidently about time, schedules, and the natural world around you. You can tell time, plan meetings, name all the days, months, and seasons, and describe the weather. You can also tell a coherent story about your typical day, discuss your hobbies, and make plans using sequence and frequency words.
+- P2 (~150 words): Looking forward to the next step: A1.5. Now that you can express *when* things happen, the final phase of A1 will focus on *where* things happen. In the upcoming modules, you will explore places in the city, learn how to give and ask for directions, and navigate public transport. Get ready to step out into the Ukrainian streets!
 
 Grand total: ~1320 words
 </skeleton>
@@ -783,11 +795,50 @@ Grand total: ~1320 words
 Write in Markdown. Use:
 - `## Section Title` for main sections
 - `### Subsection` for subsections within a section
-- `**bold**` for Ukrainian words being taught — EVERY bold Ukrainian word MUST have an English translation on first use, either in parentheses `**слово** (translation)` or inline `**слово** means "translation"`. No exceptions.
+- `**bold**` for Ukrainian words being taught. For **A1 and A2** levels, provide an English translation on first use (e.g. `**стіл** (table)`) because learners lack the vocabulary to infer meaning. For **B1 and above**, do NOT provide inline translations for standard vocabulary — the learner will use the module's словник (vocabulary table). You may provide ONE parenthetical English translation ONLY for highly abstract grammar/linguistic terms on first use (e.g. `**видова пара** (aspectual pair)`).
 - Tables for paradigms (conjugation, declension)
 - `:::tip` / `:::caution` / `:::note` for callout boxes
 - `<!-- INJECT_ACTIVITY: {id} -->` for exercise placement (markers only — do NOT write exercise content)
 
 Do NOT write MDX component syntax, JSON, or DSL exercise blocks (:::quiz, etc.). Plain Markdown with injection markers.
+
+---
+
+## MANDATORY FINAL CHECKLIST (#1189)
+
+Before you finish writing, verify the prose against this checklist. Failing any item will fail the build.
+
+### Section headings (verbatim)
+
+Every heading from "Section Structure" above MUST appear as an `## H2` in your output, in order, **including the closing `Підсумок:` / `Підсумок та перехід до M...` summary**. The single most common writer failure across the B1 build has been silently dropping the final summary section. Re-read your output before stopping. If the last section in the plan is missing, write it now.
+
+### Required vocabulary (every word must appear)
+
+You MUST use **every word** from the list below at least once in the prose, in a natural sentence with bold + English translation. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, прагматика, діагностика, дієвідмінювання, зворотний, двовидовий, одновидовий, неозначено-кількісний, etc.) is the most frequently dropped category — actively find homes for those words even if it means adding a sentence that defines them.
+
+_(no required vocabulary defined for this module)_
+
+### Forbidden words (never produce)
+
+Do not write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use `<!-- VERIFY -->` instead). The post-write toxic-token scanner will fail the build immediately:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+### Level-specific immersion check
+
+The level-appropriate immersion rule was already injected at the top of
+this prompt as `IMMERSION RULE`. Re-read it now BEFORE you stop writing.
+If your level's rule contains a CHECKLIST block, walk through every item.
+If it doesn't, just verify your output matches the LANGUAGE ROLES and
+TARGET stated in that block.
+
+This used to hard-code a B1+ checklist that confused A1/A2 models (where
+translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+The single source of truth is now
+`scripts/pipeline/config_tables.py:IMMERSION_RULES`.
+
+---
 
 Begin writing now. Start with the first section heading.

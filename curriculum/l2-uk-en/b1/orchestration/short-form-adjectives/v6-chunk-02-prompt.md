@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-дивні усічені слова в сучасній мові? Короткі прикметники — це цікаві залишки давньої іменної відміни, яка існувала ще в давньоруській мові сотні років тому. У ті давні часи прикметники відмінювалися майже так само, як іменники, і мали ці повноцінні короткі форми абсолютно у всіх відмінках. Проте протягом століть мовна система постійно розвивалася та оптимізувалася. Поступово нові **займенникові форми** *(pronominal forms)* прикметників — саме ті, що мали довгі, чіткі закінчення — почали витісняти старі короткі форми. Довгі закінчення виявилися набагато зручнішими та зрозумілішими для вираження складних граматичних зв'язків між словами у реченні. Через це короткі форми почали стрімко зникати зі щоденного вжитку українців. Сьогодні вони збереглися в мові лише як цінні історичні релікти. Вони залишилися законсервованими в текстах народних пісень, у сталих фразеологічних виразах та традиційних приказках. У сучасній живій літературній мові вижило лише кілька конкретних слів, які тепер виконують вузькоспеціалізовану роль **присудка** *(predicate)* у реченні. Це яскраво свідчить про те, що українська мова дбайливо пам'ятає свою тривалу історію, зберігаючи найдавніші форми для особливих, емоційно забарвлених стилістичних потреб. Для тих, хто вивчає українську мову як іноземну, надзвичайно важливо чітко розуміти кардинальну різницю між українськими та російськими короткими прикметниками. Це не просто дрібне питання граматики, це фундаментальне питання свідомої деколонізації вашого мовлення та уникнення небезпечної інтерференції. У російській граматичній системі короткі форми прикметників є надзвичайно активною, живою та постійно продуктивною категорією. Вони масово та дуже легко утворюються від переважної більшості якісних прикметників і є синтаксично обов'язковими для правильного вираження присудка в багатьох типових контекстах. Наприклад, російською мовою щодня стандартно кажуть: «Он сегодня болен», «Эта новая книга очень интересна», «Наш путь туда труден». В українській мові граматична ситуація є принципово інакшою та має власну логіку. Українська мова історично розвинулася як послідовна мова повних форм. **Повний прикметник** *(full-form adjective)* є єдиним і абсолютним універсальним стандартом як для звичайного опису предмета, так і для ролі присудка в будь-якому реченні. Ми завжди кажемо: «Він сьогодні хворий», «Ця нова книжка дуже цікава», «Наш шлях туди важкий». Використання повноцінної форми в ролі присудка — це єдина безперечна норма сучасної української літературної та розмовної мови. Короткі прикметники в українській мові — це суворо **закрита група** *(closed group)* слів, яка ніколи не поповнюється новими утвореннями. Ви не можете просто взяти будь-який український прикметник і самостійно відкинути його закінчення за російським зразком. Спроба штучно створити абсолютно нові короткі форми є дуже грубою граматичною помилкою. Наприклад, використання форми «цей фільм цікав» замість *цікавий*, або «день гарн» замість *гарний*, є очевидною калькою з російського синтаксису. Коли студенти будують речення типу «Цей студент розумен» або «Його текст правилен», вони несвідомо намагаються накласти чужу граматичну матрицю на український мовний ґрунт. Українською мовою предикативну функцію завжди і без жодних винятків виконує нормальна повна форма: «Цей студент розумний», «Його текст правильний». Запам'ятайте це головне правило назавжди: ми ніколи не створюємо жодних нових коротких прикметників. Ми лише дуже обережно використовуємо ту крихітну кількість історичних форм, які дивом зберегла наша мова, і робимо це виключно у чітко визначених граматичних та стилістичних межах. <!-- INJECT_ACTIVITY: reading, Прочитайте текст про повні та короткі форми прикметників і дайте відповіді на запитання -->
+or if you are generally familiar with its grammar, you might assume that Ukrainian short forms operate under the exact same rules. They absolutely do not. In Russian grammar, short adjectives are a highly productive and syntactically mandatory category for forming predicates. A Russian speaker is often required to use a short form to say "he is sick" or "the book is interesting" in standard formal speech. Attempting to force this foreign grammatical logic onto the Ukrainian language leads to severe errors and produces highly unnatural calques. В українській мові повна форма прикметника є абсолютною і універсальною нормою. Ми завжди використовуємо повну форму і для звичайного опису, і для граматичного присудка. Ми кажемо «він хворий» та «книжка цікава», і це звучить ідеально. Короткі прикметники в українській мові — це надзвичайно маленька, історично закрита група слів. Ви не можете самостійно утворювати нові короткі форми від випадкових прикметників. > *In the Ukrainian language, the full form of the adjective is the absolute and universal norm. We always use the full form both for ordinary description and for the grammatical predicate. We say "he is sick" and "the book is interesting," and it sounds perfect. Short adjectives in Ukrainian are an extremely small, historically closed group of words. You cannot independently create new short forms from random adjectives.* Many learners fall into the trap of actively trying to truncate regular Ukrainian adjectives. They mistakenly believe that chopping off the final vowel will make their speech sound more sophisticated, poetic, or advanced. This is a fundamental misunderstanding of Ukrainian morphology. Inventing words that do not exist by mirroring a neighboring language's grammar creates instant friction. Якщо студент намагається сказати «цей фільм цікав» замість «цей фільм цікавий», він робить грубу помилку. Це звучить абсолютно штучно для українського вуха, адже такої форми просто немає у словнику. Українська мова розвивалася власним шляхом, зберігши повну форму як найсильніший і найбагатший інструмент для вираження будь-якої думки. :::info **The closed group rule** Never attempt to chop off the ending of a regular Ukrainian adjective to invent your own short form. True short-form adjectives are a closed, historical list. If you invent a form like «гарн» instead of «гарний», it is a grammatical error, not a stylistic choice. ::: While the poetic remnants are strictly limited to folklore and literature, there is a small handful of short forms that survived specifically to serve as predicates in modern speech. In the next sections, we will look at this active group. You will learn to use **потрібен/потрібна/потрібне** (needed — short form, predicative) to express necessity, and **певен/певна** (certain, sure — short form) to state your confidence. We will also explore how to use **годен/годна** (fit, capable — short form) alongside **ладен/ладна** (willing, ready — short form) to describe human readiness. Finally, we will cover the evaluative forms **варт/варта** (worth — short form) and **рад/рада** (glad — short form). Before we dive into those modern predicative forms, test your understanding of the historical and stylistic boundaries of these fascinating words. <!-- INJECT_ACTIVITY: reading-short-forms -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -551,7 +551,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -564,18 +631,64 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] короткий прикметник (short-form adjective)
+- [ ] повний прикметник (full-form adjective)
+- [ ] потрібен/потрібна/потрібне (needed — short form, predicative)
+- [ ] певен/певна (certain, sure — short form)
+- [ ] годен/годна (fit, capable — short form)
+- [ ] ладен/ладна (willing, ready — short form)
+- [ ] варт/варта (worth — short form)
+- [ ] рад/рада (glad — short form)
+- [ ] зелен (green — poetic short form)
+- [ ] ясен (bright, clear — poetic short form)
+- [ ] народнопоетичний (folk-poetic register)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Які прикметники мають короткі форми? (~800 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

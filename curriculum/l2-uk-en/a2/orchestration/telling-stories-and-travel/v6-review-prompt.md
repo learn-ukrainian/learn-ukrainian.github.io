@@ -131,95 +131,187 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Сценарій 1: Що вчора трапилось?
+## Сценарій 1: Що вчора трапилось? (~600 words)
 
-**Розповідати / розповісти** (to tell/narrate) цікаві історії — це справжнє мистецтво. Коли ми говоримо про минуле, ми будуємо **розповідь** (narrative). In a Ukrainian story, we use two grammatical tools to build the scene. We use the imperfective and perfective past tenses. Think of it as the "Stage vs. Action" principle. We use the imperfective aspect to set the background scene. Це гарні декорації на вашій сцені. Ось типовий приклад: «Був теплий вечір, яскраво світило сонце, я читав цікаву книгу». The action is ongoing and continuous. Nothing has fundamentally changed yet in the story. Then, we use the perfective aspect for the main events. Ці події швидко рухають сюжет вперед. Це сама активна дія. Ось приклад: «Раптом хтось гучно постукав, і я швидко відкрив двері». The perfective verbs represent completed, punctual actions. They disrupt the calm background and drive the story forward.
+Уявіть ситуацію. Два друга, Андрій та Олена, зустрілися в місті. Андрій хоче **розповісти** цікаву історію, яка вчора сталася на вокзалі.
 
-Щоб історія була логічною та зрозумілою, нам потрібні слова-зв’язки. These connector words act as essential glue for your narrative. They help us clearly transition between background states and sudden plot twists. Ось кілька дуже важливих слів для розповіді: **спочатку** (at first), **потім** (then), **після цього** (after that), **тим часом** (meanwhile), **у цей момент** (at that moment), **раптом** (suddenly), та **нарешті** (finally). Слово «спочатку» дає ідеальний старт вашій історії. Воно готує слухача до початку подій. Слово «потім» показує чітку хронологічну послідовність дій. Слово «раптом» — це завжди великий сюрприз. Воно миттєво показує швидку зміну ситуації. It usually signals the dramatic arrival of a perfective verb. Слово «нарешті» логічно показує кінець історії або важливий фінальний результат.
+> *Imagine the situation. Two friends, Andriy and Olena, met in the city. Andriy wants to tell an interesting story that happened yesterday at the train station.*
 
-Давайте уважно подивимось на один практичний приклад. Уявіть, що ви сьогодні приїхали на **вокзал** (train station). Вокзал — це завжди дуже багато людей і постійного шуму. Ось моя маленька історія для вас. Спочатку все навколо було дуже спокійно. Люди повільно купували **квитки** (tickets), а великі **потяги** (trains) довго стояли на платформі. Я сидів у кафе і спокійно пив гарячу каву. These verbs are all imperfective, perfectly setting our busy background scene. Then, the inevitable plot twist happens. Раптом я з жахом зрозумів, що загубив свій квиток! Я швидко почав шукати його скрізь. Нарешті я знайшов його в кишені своєї куртки. Verbs like the ones for realized, lost, and found are distinct perfective events. Вони показують конкретні завершені дії, які вирішують проблему.
+> — **Андрій:** Привіт, Олено! Уявляєш, що вчора **трапилося**? *(Hi, Olena! Can you imagine what happened yesterday?)*
+> — **Олена:** Привіт! Що таке? Ти купував **квиток** на **потяг**? *(Hi! What is it? Were you buying a ticket for the train?)*
+> — **Андрій:** Так. Був теплий вечір. Я сидів на **вокзалі**, пив каву і просто чекав. *(Yes. It was a warm evening. I was sitting at the station, drinking coffee, and just waiting.)*
+> — **Олена:** І що далі? *(And what next?)*
+> — **Андрій:** Раптом мені подзвонив старий друг. Він запросив мене на вечерю! *(Suddenly my old friend called me. He invited me to dinner!)*
+> — **Олена:** Клас! Він теж планував **подорож**? *(Cool! Was he planning a trip too?)*
+> — **Андрій:** Ні, він просто гуляв поруч. Ми зустрілися і чудово провели час. *(No, he was just walking nearby. We met and had a wonderful time.)*
 
-Let's take a moment to review the grammar structure of the past tense. The Ukrainian past tense is formed using specific suffixes attached to the verb stem. They are -в, -ла, -ло, and -ли. The crucial rule here is strict gender agreement for the narrator in the singular form. Якщо розповідає чоловік, він обов'язково каже: «Я ходив, я бачив, я купив». Якщо розповідає жінка, вона має казати: «Я ходила, я бачила, я купила». For all plural subjects, we always use the -ли ending. Ми разом ходили і ми все бачили. Notice that most verbs use the **-в** sound for masculine forms. However, some verbs with consonant stems, like **міг** (could from *могти*), **ніс** (carried from *нести*), or **біг** (ran from *бігти*), do not have this suffix in the masculine form.
+Telling a good story requires a mix of verb aspects. When you set the scene, you describe a process using imperfective verbs. When the main event begins, you take perfective verbs.
 
-Як правильно запитати про цікаві події в минулому? We have two main questions depending on the specific verb aspect. Якщо ви хочете знати загальну інформацію про процес, ви питаєте: «Що відбувалося?». This specific question actively expects an imperfective answer about an ongoing, continuous situation. Але дуже часто ми хочемо знати про конкретну фінальну подію, щоб зрозуміти, що саме мало **трапитися** (to happen). Тоді ми прямо питаємо: «**Що трапилося?**» (What happened?). Ви також можете просто запитати: «Що сталося?». When you hear this direct question, you usually reply with perfective verbs to explain the result. We also frequently use specific verbs to describe our emotional reactions. Наприклад, ми дуже часто кажемо: **я злякався** (I got scared). Або, якщо це жінка: я злякалася. Ви також можете впевнено сказати: **я здивувався** (I was surprised). Усі ці емоційні слова допомагають зробити вашу історію живою та дуже цікавою.
+Для гарної розповіді нам потрібні різні дієслова. Коли ми описуємо процес, ми використовуємо дієслова недоконаного виду. Коли починається головна подія, ми беремо дієслова доконаного виду.
 
-<!-- INJECT_ACTIVITY: quiz-aspect-choice -->
+Look at Andriy's story.
 
-## Сценарій 2: Плануємо подорож
+**Був теплий вечір. Я сидів на вокзалі і пив каву.** — *It was a warm evening. I was sitting at the station and drinking coffee.*
 
-Ось ще одна типова ситуація з нашого життя. Уявіть, що ви плануєте **подорож** (trip) з друзями на вихідні. Це завжди дуже приємний процес. Давайте послухаємо коротку розмову двох друзів.
+The verbs **був**, **сидів**, and **пив** are imperfective background actions. 
 
-> — **Оксана:** Привіт, Тарасе! Куди ми поїдемо на наступні вихідні? *(Hi, Taras! Where will we go next weekend?)*
-> — **Тарас:** Привіт! Я думаю, що ми поїдемо в **Карпати** (the Carpathians). *(Hi! I think we will go to the Carpathians.)*
-> — **Оксана:** Це чудова ідея! Коли ми виїдемо з міста? *(That's a great idea! When will we depart from the city?)*
-> — **Тарас:** Ми виїдемо в п'ятницю ввечері. *(We will depart on Friday evening.)*
-> — **Оксана:** Добре. Де ми будемо жити? *(Good. Where will we live?)*
-> — **Тарас:** Я сьогодні **забронюю хатинку** (will book a cabin) в горах. *(I will book a cabin in the mountains today.)*
-> — **Оксана:** Супер! Я впевнена, що наша подорож буде цікавою. *(Super! I am sure our trip will be interesting.)*
+**Раптом подзвонив друг і запросив мене.** — *Suddenly a friend called and invited me.*
 
-Зверніть увагу на слова, які використовують друзі. Вони активно планують своє майбутнє. In Ukrainian, we have two primary ways to form the future tense depending on our focus. The first method is the compound form, which we use to describe ongoing processes or habits in the future. It consists of the conjugated auxiliary verb «бути» (to be) and the infinitive of an imperfective verb. This structure is very straightforward. You simply conjugate «бути» — я буду, ти будеш, він буде, ми будемо, ви будете, вони будуть — and add the main action. Ось гарний приклад: «У Карпатах ми **будемо гуляти** (will walk)». Ми **будемо дихати** (will breathe) свіжим повітрям і **будемо багато відпочивати** (will rest a lot). These verbs show continuous, pleasant processes without a specific final result.
+Then the verbs **подзвонив** and **запросив** act as perfective interruptions.
 
-The second method is the simple form of the future tense. We use this specifically when we want to emphasize a completed action or a one-time result in the future. This form is built using perfective verbs. Interestingly, we conjugate these perfective verbs using the exact same endings as the present tense. For instance, when Taras talks about accommodation, he says: «Я забронюю хатинку». He focuses on the successful completion of the task. Let's look at a clear contrast. Якщо ви кажете: «Я **буду купувати** (will be buying) квитки», ви описуєте довгий процес вибору. Але якщо ви кажете: «Я **куплю** (will buy) квитки сьогодні», ви гарантуєте фінальний результат. The tickets will be purchased and ready.
+To connect these actions chronologically, we use special words. They help our story flow smoothly from the beginning to the end.
 
-When we plan a trip, verbs of motion are absolutely essential. For the actual journey to your destination, we use unidirectional perfective verbs. Ви кажете: «Я **поїду** (will go by vehicle) до міста» або «Я **полечу** (will fly) за кордон». Ці слова показують конкретний рух в одному напрямку. However, for general movement around the destination once you arrive, we use the compound future with multidirectional verbs. Наприклад: «Там я **буду їздити** (will ride around) на екскурсії». We also must pay close attention to prepositions. Ми використовуємо прийменник «до» з родовим відмінком для міст та країн: до Києва, до Львова. Але ми використовуємо прийменник «на» зі знахідним відмінком для відкритих просторів чи подій. Наприклад: на море, на фестиваль, на концерт. Щоб сказати, звідки ви приїхали, використовуйте прийменник «з» або «зі» з родовим відмінком: прилетіти з Києва, повернутися зі Львова.
+Щоб історія була логічною, ми використовуємо слова для часу. Вони поєднують наші речення і роблять розповідь цікавою.
 
-Для успішної подорожі нам потрібні правильні слова. Щоб сісти в транспорт, ви повинні мати **квиток** (ticket). Please note that the authentic Ukrainian word is «квиток», which helps us avoid the common Russianism «білет». Якщо ви любите подорожувати по землі, ви обираєте **потяг** (train). Потяги їздять там, де є **залізниця** (railway). Якщо ви цінуєте свій час, ваш вибір — це **літак** (airplane). Ваш політ завжди починається там, де розташований **аеропорт** (airport). Коли ви подорожуєте Україною, вкрай важливо використовувати правильні українські назви міст. You must always say Київ, Львів, Харків, Рівне, Одеса. Using Russian versions of these names is incorrect and represents a legacy of russification. Справжня українська мова поважає власні історичні назви.
+Here are the most important connectors you will need:
+*   **спочатку** (at first)
+*   **потім** (then)
+*   **після цього** (after that)
+*   **нарешті** (finally)
+*   **тим часом** (meanwhile)
+*   **раптом** (suddenly)
+*   **у цей момент** (at that moment)
 
-<!-- INJECT_ACTIVITY: match-up-travel-verbs -->
+Let's see how these connectors and verbs work together in a short narrative about a trip.
 
-## Сценарій 3: Розкажи про поїздку!
+Минулого тижня я вирішив поїхати до Києва і **зупинитися** у друзів. **Спочатку** я купив квиток і зібрав речі. **Потім** я приїхав на вокзал. Я сидів у вагоні і читав книгу. **Тим часом** інші люди шукали місця, а діти сміялися. **Раптом** потяг рушив. Я дивився у вікно і пив чай. **Після цього** я трохи поспав. **Нарешті** ми **доїхали** до міста. Мені все дуже **сподобалося**, і залишилися чудові **враження**!
 
-Давайте послухаємо розмову двох друзів. Марко щойно повернувся з відпустки, і Олена розпитує його про подорож.
-> — **Олена:** Марку, привіт! Я тебе давно не бачила. **Де ти був** (where were you) минулого тижня? *(Marko, hi! I haven't seen you in a long time. Where were you last week?)*
-> — **Марко:** Привіт, Олено! Я був на півдні України. *(Hi, Olena! I was in the south of Ukraine.)*
-> — **Олена:** Дуже цікаво! А **куди ти їздив** (where did you go)? *(Very interesting! And where did you go?)*
-> — **Марко:** Я їздив до Одеси! Я хотів побачити Чорне море. *(I went to Odesa! I wanted to see the Black Sea.)*
-> — **Олена:** Клас! Як ви змогли туди **доїхати** (to reach by vehicle)? Це ж далеко. *(Cool! How did you reach there? It's far, after all.)*
-> — **Марко:** Ми поїхали нічним потягом. Вранці ми вже пили каву біля моря. *(We went by night train. In the morning we were already drinking coffee by the sea.)*
-> — **Олена:** Що ви робили там щодня? *(What did you do there every day?)*
-> — **Марко:** Ми багато ходили на **пляж** (beach) і просто дивилися на **море** (sea). Це був чудовий відпочинок! *(We went to the beach a lot and just looked at the sea. It was a wonderful vacation!)*
+> *Last week I decided to go to Kyiv and stay with friends. At first, I bought a ticket and packed my things. Then I arrived at the station. I was sitting in the car and reading a book. Meanwhile, other people were looking for seats, and children were laughing. Suddenly the train started moving. I was looking out the window and drinking tea. After that, I slept a little. Finally, we reached the city. I really liked everything, and wonderful impressions remain!*
 
-In this dialogue, Olena asks two different questions to understand the situation. First, she asks «Де ти був?» to find out Marko's general location in the past. Then, she specifically asks «Куди ти їздив?» to ask about his complete round-trip journey. The verb «їхати» is imperfective and means "to be going in one direction," but its partner «їздити» (imperfective, multidirectional) is uniquely used in the past tense to describe a fully completed round trip. Марко каже: «Я **їздив** (went and came back) до Одеси». Ми чітко розуміємо, що він уже повернувся додому. This is a very crucial distinction in Ukrainian. Ви можете сказати інакше: «Мій брат **поїхав** (left) до Києва». Це означає, що ваш брат покинув дім. Він усе ще перебуває в Києві. Або ви просто фокусуєтесь на факті його від'їзду. The perfective verb «поїхати» focuses entirely on the departure, not the return.
+Let's analyze this story. We start with the main sequence of events using perfective verbs. The words **купив** and **приїхав** are completed actions that move the timeline forward.
 
-When we tell a story about a past trip, we must build a clear and logical narrative sequence. We use perfective verbs for the main, sequential events of the plot, and imperfective verbs for continuous background processes. Ось гарний приклад правильної розповіді: «**Спочатку** (at first) ми **приїхали** (arrived) до нового міста. **Потім** (then) ми вирішили швидко **зупинитися** (to stay, to stop) в затишному готелі. Вдень ми дуже багато **ходили** (walked) по місту, а ввечері ми **відвідали** (visited) оперу». Pay close attention to the verb choices here. «Ходити по місту» is a long process — you walk around and explore without a specific, immediate final destination. Therefore, we use the multidirectional imperfective verb. However, «відвідати оперу» is a specific, completed event with a clear result in the past, so we use a perfective verb. Alternating these aspects makes your story dynamic and natural.
+:::info
+**Grammar box**
+Imperfective verbs create a picture, while perfective verbs advance the plot. Imagine imperfective verbs as a long line, and perfective verbs as an "X" on that line.
+:::
 
-Після детальної розповіді про події ми часто хочемо поділитися своїми позитивними емоціями. Якщо подорож змогла вам **сподобатися** (to like), як правильно сказати про це українською? Найпопулярніша та найприродніша фраза — це «Мені сподобалося» (I liked it). You use this specific construction with the dative case pronoun («мені») and the past tense verb. Якщо ви додаєте інфінітив, дієслово завжди має середній рід: «Мені сподобалося гуляти по місту». Якщо ви додаєте іменник, дієслово узгоджується з його родом: «Мені сподобалося місто» (neuter), «Мені сподобався музей» (masculine), або «Мені сподобалася вулиця» (feminine). Також Марко може емоційно сказати: «Я **отримав багато вражень**» (I got many impressions). Використовуйте такі короткі слова для загальної атмосфери: **було чудово** (it was wonderful), **було дуже весело** (it was very fun), або **було цікаво** (it was incredibly interesting).
+Then we switch to the background scene. The verbs **сидів**, **читав**, and **сміялися** are imperfective. They describe what was happening while the character was waiting. The connector **тим часом** introduces parallel ongoing actions.
 
-Завжди важливо свідомо обирати питомо українські слова для ваших мандрівок. Ніколи не використовуйте російське слово «путешествіє». Правильне і красиве українське слово — це **подорож** (journey). Ви довго подорожуєте потягом і прибуваєте на великий вокзал. Слово «вокзал» є в багатьох мовах, але українська мова має своє унікальне історичне слово — **двірець** (station). Це слово особливо популярне в західних регіонах України. Наприклад, у Львові ви приїдете саме на Головний двірець. Також обов'язково пам'ятайте різницю між місцями зупинок транспорту. Для міських автобусів або трамваїв ми завжди використовуємо слово **зупинка** (bus stop). Але для потягів та метро ми кажемо **станція** (train station). Використовуйте ці правильні слова, і ваша українська мова звучатиме природно.
+Finally, the word **раптом** brings us back to the main plot. The perfective verb **рушив** shows a sudden action. Later, we get the final completed events: the character slept (**поспав**) and reached the destination (**доїхали**). This alternation makes the story dynamic.
 
-<!-- INJECT_ACTIVITY: fill-in-travel-narrative -->
+<!-- INJECT_ACTIVITY: quiz-past-trip-comprehension -->
 
-## Мовленнєве завдання: Моя подорож
+## Сценарій 2: Плануємо подорож (~550 words)
 
-Ваше головне завдання — написати коротку розповідь про свою недавню подорож. Write a cohesive text consisting of 8 to 10 sentences about a trip you recently took. Це може бути реальна історія або ваша фантазія. Your narrative must clearly demonstrate your ability to sequence past events and describe travel. Обов'язково використайте принаймні три **слова-зв'язки** (time connectors) для логіки тексту. For example, you can use «спочатку», «потім», або «нарешті». Також вам потрібно використати мінімум два **дієслова руху** (verbs of motion) у минулому часі. Most importantly, your story must show a clear contrast between background actions using the imperfective aspect and main events using the perfective aspect. Розкажіть детально, куди саме ви їздили та як ви туди дісталися. Напишіть, що ви там робили та які позитивні враження отримали.
+> — **Марко:** Привіт! Ти вже знаєш, куди поїдемо у відпустку цього літа? *(Hi! Do you already know where we will go on vacation this summer?)*
+> — **Олена:** Привіт! Я пропоную поїхати в Карпати. Це буде чудова подорож у гори! *(Hi! I suggest going to the Carpathians. It will be a wonderful trip to the mountains!)*
+> — **Марко:** Класна ідея. А як доберемося туди? Поїдемо потягом чи полетимо літаком? *(Great idea. And how will we get there? Will we go by train or fly by airplane?)*
+> — **Олена:** Поїдемо потягом. Треба купити квиток на завтрашній рейс. *(We will go by train. We need to buy a ticket for tomorrow's trip.)*
+> — **Марко:** Добре. А де зупинимося, коли приїдемо? *(Good. And where will we stay when we arrive?)*
+> — **Олена:** Я вже знайшла гарне місце для нас і забронювала маленьку дерев'яну хатинку в лісі. *(I have already found a nice place for us and booked a small wooden cabin in the forest.)*
+> — **Марко:** Супер! А що будемо робити там цілий тиждень? *(Super! And what will we do there all week?)*
+> — **Олена:** Будемо гуляти, дихати свіжим повітрям, збирати гриби і просто відпочивати. *(We will walk, breathe fresh air, pick mushrooms, and just relax.)*
 
-Коли ви закінчите писати текст, уважно перевірте його за допомогою цього списку. This checklist will help you identify and fix common mistakes before you finalize your story. Перше: чи правильно ви узгодили дієслова минулого часу зі своїм родом? If you are female, did you remember to use the «-ла» endings for all your past tense verbs? Друге: чи правильно ви використали прийменники напрямку? Did you use the preposition «до» plus the genitive case when naming destination cities? Третє: чи логічно розвивається ваша історія? Did you successfully use words like «потім» (then) or «після цього» (after that) to show the chronological sequence of your actions? Четверте: чи описали ви свої фінальні емоції від поїздки?
+Для такої поїздки вам потрібні нові слова. Ваша **подорож** (trip) починається тоді, коли ви купуєте **квиток** (ticket). Ви можете обрати різний транспорт: швидкий **потяг** (train), сучасний **літак** (airplane) або зручний **автобус** (bus). Якщо ви подорожуєте потягом, ви їдете на **вокзал** (train station). Коли ви летите літаком, ви їдете в **аеропорт** (airport). На місці вам потрібно знайти комфортний **готель** (hotel) або хатинку. Там ви зможете **зупинитися** (to stay) на кілька днів.
 
-Ось приклад гарної розповіді, яку ви можете використати як орієнтир для вашого власного тексту. Here is a model answer annotated with grammatical explanations for the key verbs and structures. Read it carefully to see how the background states contrast with the sudden actions.
+> *For such a trip, you need new words. Your **подорож** (trip) begins when you buy a **квиток** (ticket). You can choose different transport: a fast **потяг** (train), a modern **літак** (airplane), or a comfortable **автобус** (bus). If you travel by train, you go to the **вокзал** (train station). When you fly by airplane, you go to the **аеропорт** (airport). At the location, you need to find a comfortable **готель** (hotel) or a cabin. There you will be able to **зупинитися** (to stay) for a few days.*
+
+When planning a trip, we naturally talk about the future. In Ukrainian, we use different forms of the future tense depending on the aspect of the verb. If we are talking about a specific, one-time action that will be completed, we use the perfective future tense.
+
+Наприклад, якщо ми плануємо конкретну поїздку, ми кажемо: «Ми поїдемо потягом до Львова». Слово «поїдемо» — це дієслово доконаного виду. Але якщо ми описуємо загальні плани під час відпустки, ми беремо складену форму. Ми кажемо: «Там ми будемо багато гуляти».
+
+> *For example, if we plan a specific trip, we say: "We will go by train to Lviv." The word "поїдемо" is a perfective verb. But if we describe general plans during the vacation, we take the compound form. We say: "There we will walk a lot."*
+
+This contrasts with our regular habits. When we describe repeated movement, we use imperfective verbs of motion such as **їздити**, **ходити**, and **літати**. For example: «Зазвичай ми їздимо туди щоліта», «У горах ми щодня ходимо до лісу», «Щоліта ми літаємо на море». For one specific departure, we switch to perfective forms such as **поїхати**, **піти**, or **полетіти**.
+
+:::info
+**Grammar box**
+When you use verbs of motion, you must choose the correct preposition and case to show your direction or origin. This tells the listener exactly where you are heading.
+:::
+
+To express your destination, Ukrainian uses two main prepositions. We use **до** with the Genitive case for cities, countries, and people (e.g., **до Львова**, **до друга**). We use **на** with the Accusative case for events, open areas, or public places (e.g., **на море**, **на фестиваль**, **на вокзал**). To say where you arrived from, use **з** (or **зі**, **із**) with the Genitive case (e.g., **зі Швеції**, **з Києва**).
+
+Ось кілька прикладів, як поєднувати дієслова руху, транспорт і напрямок:
+
+*   Наступного тижня ми поїдемо **автобусом** до Києва.
+*   Вони полетять **літаком** на море.
+*   Завтра я поїду **потягом** до брата.
+*   Моя сестра прилетіла **з** Лондона.
+*   Сьогодні ввечері ми поїдемо **на** вокзал.
+
+> *Here are a few examples of how to combine verbs of motion, transport, and direction:*
+> *   *Next week we will go by bus to Kyiv.*
+> *   *They will fly by airplane to the sea.*
+> *   *Tomorrow I will go by train to my brother.*
+> *   *My sister flew in from London.*
+> *   *Tonight we will go to the station.*
+
+Notice that the vehicle you use for travel is put directly into the Instrumental case (автобусом, літаком, потягом) without any prepositions. This answers the question "by what means?".
+
+<!-- INJECT_ACTIVITY: match-up-match-travel-situations-with-the-correct-motion-verb-and-preposition-combination-gen-acc -->
+
+## Сценарій 3: Розкажи про поїздку! (~600 words)
+
+When we return home, friends always ask us to **розповісти** (to tell) about our **подорож** (trip). Sharing stories and looking at photos together is a great way to practice your language skills. Let's read a short dialogue between Maksym and Olena.
+
+> — **Максим:** Привіт, Олено! Де ти була минулого тижня? *(Hi, Olena! Where were you last week?)*
+> — **Олена:** Привіт! Я їздила до Одеси. *(Hi! I went to Odesa.)*
+> — **Максим:** Клас! Як ви доїхали? *(Cool! How did you get there?)*
+> — **Олена:** Ми поїхали потягом. Це було дуже зручно. *(We went by train. It was very comfortable.)*
+> — **Максим:** Що ви там бачили? *(What did you see there?)*
+> — **Олена:** Ми ходили на пляж і дивилися на море. А ввечері ми знайшли чудовий ресторан. *(We went to the beach and looked at the sea. And in the evening we found a wonderful restaurant.)*
+> — **Максим:** Що тобі найбільше сподобалося? *(What did you like the most?)*
+> — **Олена:** Мені дуже сподобалася архітектура міста. Ось фото з пляжу, моря і ресторану. *(I really liked the architecture of the city. Here are photos from the beach, the sea, and the restaurant.)*
+> — **Максим:** Клас! Тепер я теж хочу поїхати до Одеси. *(Cool! Now I want to go to Odesa too.)*
+
+When talking about past trips, choosing the right verb of motion is crucial. The difference between **їздив** and **поїхав** is a very common point of confusion for learners. We use the imperfective verb **їздив** (went/travelled) when the trip is entirely completed. It means you went to a place and you have already returned back home. In contrast, the perfective verb **поїхав** (departed/left) focuses specifically on the moment of departure or a one-way trip.
+
+Ось два приклади, які показують цю різницю. Перший: «Я їздив до Києва». Це означає, що я був у Києві, але зараз я вже вдома. Другий: «Мій брат поїхав до Києва». Це означає, що він вирушив у дорогу, і, можливо, він досі там.
+
+> *Here are two examples that show this difference. First: "I went to Kyiv." This means that I was in Kyiv, but now I am already at home. Second: "My brother left for Kyiv." This means that he set off on the journey, and perhaps he is still there.*
+
+:::info
+**Grammar box**
+Use **їздив** for a round-trip that is over. Use **поїхав** to say someone left for a destination and might not be back yet.
+:::
+
+Now let's look at how we combine these verbs to tell a complete story. A good narrative mixes motion verbs with different aspects to show the flow of the journey. When you reach the **вокзал** (station) with your **квиток** (ticket), you usually board a **потяг** (train) or bus. By switching aspects, you can guide your listener through the timeline of events.
+
+Минулого тижня я їздив до Одеси на відпочинок. Спочатку ми поїхали потягом і **доїхали** (to reach) туди за десять годин. В Одесі ми вирішили **зупинитися** (to stay) в маленькому готелі біля моря. Там ми довго ходили по місту і фотографували старі будинки. Наступного дня ми відвідали музей, купили сувеніри для друзів і з'їли найсмачніший український борщ.
+
+> *Last week I went to Odesa for a vacation. First we got on the train. We managed to reach there in ten hours. In Odesa, we decided to stay in a small hotel near the sea. There we walked around the city for a long time and photographed old buildings. The next day we visited a museum, bought souvenirs for friends, and ate the most delicious Ukrainian borscht.*
+
+After telling the events of the story, you usually want to share your feelings and opinions. We use specific phrases to describe the overall **враження** (impression) of the experience. The most common phrase is **мені дуже сподобалось** (I really liked it). Note that **сподобатися** (to like) is a perfective verb here, because it summarizes your final opinion after the completed trip. You use it to reflect on the entire journey as one finished event.
+
+Ти можеш також сказати: «Було чудово», «Було дуже цікаво» або «Було весело». Якщо поїздка була справді гарною, люди часто додають: «Я хочу поїхати туди ще раз».
+
+> *You can also say: "It was wonderful", "It was very interesting", or "It was fun". If the trip was really good, people often add: "I want to go there again."*
+
+Let's analyze the verbs in our Odesa story to see how aspect and motion work together in practice. The story begins with the imperfective verb **їздив**. This immediately tells the listener the context: a round-trip that is already finished. Then, the perfective verbs **поїхали** and **доїхали** describe the specific milestones of the transit — the departure and the successful arrival.
+
+Під час самої поїздки ми використовуємо різні види дієслів. Слово «ходили» — це недоконаний вид, який показує загальний процес або фон. А слова «відвідали», «купили» та «з'їли» — це доконаний вид. Вони показують конкретні результати та завершені дії, які рухають сюжет нашої історії вперед. Таким чином ми можемо точно описати все, що з нами **трапилося** (happened).
+
+> *During the trip itself, we use different aspects of verbs. The word "ходили" (walked) is imperfective, which shows a general process or background. And the words "відвідали" (visited), "купили" (bought), and "з'їли" (ate) are perfective. They show specific results and completed actions that move the plot of our story forward. Thus we can accurately describe everything that happened to us.*
+
+<!-- INJECT_ACTIVITY: fill-in-complete-a-travel-narrative-by-choosing-the-correct-verb-form-aspect-and-motion-verb-type-for-each-blank -->
+
+## Мовленнєве завдання: Моя подорож (~450 words)
+
+Now it is your turn to create a story. Your task is to write a short narrative of eight to ten sentences about a real or imagined **подорож** (trip). You will need to **розповідати** (to tell) us about where you went, how you traveled, and what events occurred along the way. This is a great opportunity to practice combining motion verbs with the past tense. Remember to use different aspects to show the difference between background scenes and completed actions. Think carefully about the sequence of your actions.
+
+Перед тим як писати, перевір свій текст. Ти використав мінімум два дієслова руху? Ти змінював вид дієслова для фону і для подій? Ти використовував слова для часу, такі як «спочатку», «потім» або «раптом»? Наприкінці важливо описати своє загальне **враження** (impression) від міста.
+
+> *Before writing, check your text. Did you use at least two motion verbs? Did you change the verb aspect for background and for events? Did you use words for time, such as "at first", "then", or "suddenly"? At the end, it is important to describe your overall impression of the city.*
+
+A good story goes beyond just listing facts. It sets the scene, introduces a sequence of actions, and explains what unexpected things managed to **трапитися** (to happen) to you during the trip. 
+
+Here is a recommended flow for your text. First, start with an Introduction. Where did you go? You can say that you went to the mountains, to the sea, or to a new city. Second, describe The Journey. How did you get there? Mention buying a **квиток** (ticket) at the local **вокзал** (station) before your departure. You should also specify whether you took a bus, drove a car, or took a fast **потяг** (train). 
+
+Third, list your Activities. Tell us where you decided to **зупинитися** (to stay) and what historical places or museums you visited. Did you manage to **доїхати** (to reach) the hotel quickly, or was the road difficult? Finally, share your Impressions. What was the best part of the trip? End your story by saying what you liked using the perfective verb **сподобатися** (to like).
+
+:::tip
+**Did you know?** — When talking about past travels, Ukrainians frequently use the imperfective verb **їздити** to emphasize that they went somewhere and have already returned. It focuses on the round trip as a single, general experience.
+:::
+
+Here is an example of a completed narrative about a weekend getaway. Notice how the verbs shift between imperfective and perfective depending on the context. Use this model answer to guide your own writing, paying close attention to how different elements work together in a coherent text.
 
 > [!model-answer]
-> **Минулого літа** (Last summer) я **їздив** [Imperfective, completed round-trip] до Карпат зі своїми друзями. **Спочатку** (At first) ми дуже довго **їхали** [Imperfective, process of traveling] потягом до міста Яремче. **Потім** (Then) ми швидко **знайшли** [Perfective, completed event] наш маленький готель. Там ми **залишили** [Perfective, completed event] усі свої важкі речі. Наступного дня ми **пішли** [Perfective, one-time departure on foot] високо в гори. Погода була просто чудова, і сонце яскраво **світило** [Imperfective, background state]. Ми повільно **йшли** [Imperfective, continuous process] темним лісом. Раптом ми **побачили** [Perfective, sudden event] великого оленя біля дерева. Це було справді неймовірно! Увечері ми **повернулися** [Perfective, completed result] до нашого готелю дуже втомлені, але абсолютно щасливі. Мені дуже **сподобалася** [Perfective, final impression] ця коротка, але надзвичайно цікава подорож. Я обов'язково хочу поїхати туди ще раз наступного року.
+> Минулого літа я їздив (impf) до Львова. Це була чудова подорож. Спочатку ми купили (pf) квиток і приїхали (pf) на вокзал. Ми сіли (pf) у потяг і змогли доїхати (pf) дуже швидко. У місті ми вирішили зупинитися (pf) в маленькому готелі біля площі Ринок. Ми багато гуляли (impf) старими вулицями і слухали (impf) музику. Потім ми випили (pf) каву, коли раптом пішов (pf) сильний дощ. Ми сховалися (pf) в ресторані і з'їли (pf) смачний борщ. Увечері з нами трапилася (pf) кумедна історія, бо ми загубили (pf) карту. Але ми швидко знайшли (pf) дорогу. Мені дуже сподобалося (pf) це місто. Я хочу розповісти (pf) про нього всім друзям.
 
-Перед тим як почати свою розповідь, давайте ще раз згадаємо найчастіші помилки. Before you write, let's review the most typical pitfalls English speakers face with travel narratives. Найперша проблема стосується роду в минулому часі. If a woman says "I went to the cinema," she must say «я ходила в кіно», never «я ходив». Українські дієслова завжди показують рід того, хто говорить. The second major pitfall relates to transportation methods. When you say "I will fly by airplane," you must use the instrumental case directly. Правильно казати «летіти літаком» або «їхати потягом». You must never use the preposition «з» (with) for vehicles, so «летіти з літаком» is completely wrong. Завжди пам'ятайте про ці важливі граматичні правила.
-
-<!-- INJECT_ACTIVITY: error-correction-travel -->
-
-## Підсумок
-
-У цьому модулі ми навчилися розповідати цікаві історії та планувати **подорожі** (trips). Тепер ви знаєте, як правильно будувати **розповідь** (narrative).
-
-Ми використовуємо **недоконаний вид** (imperfective aspect) для опису фону або процесу. Наприклад: «Сонце яскраво світило». Ми використовуємо **доконаний вид** (perfective aspect) для швидких подій або результату. Наприклад: «Раптом ми побачили оленя».
-
-Також ми вивчили важливі **слова-зв'язки** (time connectors). Вони роблять історію логічною. Це слова **спочатку** (at first), **потім** (then), **після цього** (after that), **тим часом** (meanwhile), **раптом** (suddenly), **нарешті** (finally).
-
-Ви навчилися правильно використовувати дієслова руху. Слово **поїхав** (left/departed) означає рух в один бік. Слово **їздив** (went and returned) означає завершену поїздку. Ми кажемо **буду їздити** (will travel regularly) для звички. Слово **поїду** (will go) означає один конкретний план.
-
-Пам'ятайте про правильні прийменники. Ми використовуємо **до** (to) плюс **родовий відмінок** (Genitive case) для напрямку. Наприклад: «до Києва». Ми використовуємо **з** (from) або **зі** плюс родовий відмінок для старту. Наприклад: «зі Львова». Ми кажемо **на** (to/on) плюс **знахідний відмінок** (Accusative case) для подій або поверхонь. Наприклад: «на море».
-
-Ви вивчили нові слова: **квиток** (ticket), **потяг** (train), **вокзал** (station) та **враження** (impression). Тепер ви готові подорожувати!
+<!-- INJECT_ACTIVITY: error-correction-find-and-correct-grammar-errors-in-sentences -->
 </generated_module_content>
 
-**PIPELINE NOTE — Word count: 2794 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
+**PIPELINE NOTE — Word count: 2848 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -395,54 +487,177 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 667 words | Not found: 18 words
+Verified: 420 words | Not found: 10 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
-  ✗ Карпат — NOT IN VESUM
-  ✗ Карпатах — NOT IN VESUM
+  ✗ Андрій — NOT IN VESUM
   ✗ Карпати — NOT IN VESUM
   ✗ Києва — NOT IN VESUM
+  ✗ Лондона — NOT IN VESUM
   ✗ Львова — NOT IN VESUM
-  ✗ Львові — NOT IN VESUM
-  ✗ Львів — NOT IN VESUM
-  ✗ Одеса — NOT IN VESUM
   ✗ Одеси — NOT IN VESUM
-  ✗ Оксана — NOT IN VESUM
+  ✗ Одесі — NOT IN VESUM
   ✗ Олена — NOT IN VESUM
   ✗ Олено — NOT IN VESUM
-  ✗ Тарас — NOT IN VESUM
-  ✗ Тарасе — NOT IN VESUM
-  ✗ Харків — NOT IN VESUM
-  ✗ Яремче — NOT IN VESUM
-  ✗ путешествіє — NOT IN VESUM
-  ✗ язки — NOT IN VESUM
+  ✗ Швеції — NOT IN VESUM
 
-All 667 other words are confirmed to exist in VESUM.
+All 420 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
-## Verification Tools (MCP)
+---
 
-You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
+## Verification Tools (Shell Commands)
 
-**Core Verification:**
-- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
-- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
+You have access to verification tools via shell commands. Use these to verify
+Ukrainian vocabulary, check grammar, and search textbook content **as you write**.
 
-**Content Quality:**
-- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+**IMPORTANT:** Run verification commands BEFORE finalizing any Ukrainian text.
+Batch multiple verifications together to minimize round-trips.
 
-**Reference:**
-- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp_rag_search_literary` — verify literary references against primary sources
-- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
+### 1. Batch-verify Ukrainian words exist in VESUM (preferred — one call for many words)
 
-**Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_words
+results = verify_words(['слово1', 'слово2', 'слово3'])
+for w, matches in results.items():
+    if matches:
+        print(f'{w}: FOUND — lemma={matches[0][\"lemma\"]}, pos={matches[0][\"pos\"]}')
+    else:
+        print(f'{w}: NOT FOUND — may not exist in standard Ukrainian')
+"
+```
+
+### 2. Verify a single Ukrainian word in VESUM (with full morphological tags)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_word
+results = verify_word('WORD_HERE')
+if results:
+    for m in results:
+        print(f'lemma={m[\"lemma\"]}, pos={m[\"pos\"]}, tags={m[\"tags\"]}')
+else:
+    print('NOT FOUND in VESUM')
+"
+```
+
+### 3. Get all inflected forms of a lemma (declension/conjugation)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_lemma
+forms = verify_lemma('LEMMA_HERE')
+for f in forms[:20]:
+    print(f'{f[\"word_form\"]:20s} {f[\"pos\"]:8s} {f[\"tags\"]}')
+print(f'... {len(forms)} forms total')
+"
+```
+
+### 4. Check CEFR level of a word (is it level-appropriate?)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import query_cefr_level
+results = query_cefr_level('WORD_HERE')
+for r in results:
+    print(f'{r[\"word\"]}: {r[\"level\"]} ({r[\"pos\"]})')
+if not results:
+    print('Not in CEFR database')
+"
+```
+
+### 5. Search textbook content (Ukrainian school textbooks, Grades 1-11)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_textbooks
+keywords = {'keyword1', 'keyword2'}
+results = search_textbooks(keywords, 5)
+for r in results:
+    title = r.get('section_title', r.get('title', ''))
+    grade = r.get('grade', '?')
+    text = r.get('text', '')[:200]
+    print(f'Grade {grade} | {title}')
+    print(f'  {text}')
+    print()
+"
+```
+
+### 6. Search style guide for calques/Russianisms (Антоненко-Давидович, 279 entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_style_guide
+results = search_style_guide('TOPIC_HERE', 3)
+for r in results:
+    print(f'--- {r.get(\"word\", \"\")} [{r.get(\"section\", \"\")}]')
+    print(r.get('text', '')[:300])
+    print()
+if not results:
+    print('No style guide entries found')
+"
+```
+
+### 7. Look up word definition in СУМ-11 (Ukrainian explanatory dictionary, 127K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_definitions
+results = search_definitions('WORD_HERE', 3)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+### 8. Search idioms (Фразеологічний словник, 25K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_idioms
+results = search_idioms('WORD_HERE', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"text\", r.get(\"definition\", \"\")))[:200]}')
+"
+```
+
+### 9. English-to-Ukrainian translation (Балла, 79K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import translate_en_uk
+results = translate_en_uk('ENGLISH_WORD', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+---
+
+**WHEN to use these tools:**
+
+1. **Before writing any Ukrainian text** — batch-verify all key vocabulary with
+   `verify_words` (tool 1). Any word that returns NOT FOUND must be replaced.
+2. **When you suspect a Russicism or calque** — search the style guide (tool 6)
+   and verify the correct Ukrainian form with `verify_word` (tool 2).
+3. **When writing for A1/A2** — check CEFR levels (tool 4) to ensure vocabulary
+   is level-appropriate.
+4. **When unsure about a case ending or conjugation** — use `verify_lemma` (tool 3)
+   to see the full paradigm.
+5. **When covering a grammar topic** — search textbooks (tool 5) to see how
+   Ukrainian school textbooks teach it.
+6. **When you need the precise Ukrainian meaning** — use СУМ-11 (tool 7).
+7. **When looking for natural Ukrainian expressions** — search idioms (tool 8).
+
+**Batching rule:** Collect all words you want to verify, then run ONE `verify_words`
+call instead of multiple `verify_word` calls. This is faster and uses fewer tokens.

@@ -1,0 +1,127 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T10-59-d4ead5c9.json
+phase: write-chunk-05
+prompt_chars: 50057
+response_chars: 1377
+prompt_words: 6886
+response_words: 216
+sections:
+- name: header
+  start: 0
+  length: 418
+  fraction: 0.0084
+- name: skeleton
+  start: 418
+  length: 616
+  fraction: 0.0123
+- name: prior_summary
+  start: 1034
+  length: 3465
+  fraction: 0.0692
+- name: plan
+  start: 4499
+  length: 17466
+  fraction: 0.3489
+- name: wiki
+  start: 15682
+  length: 27892
+  fraction: 0.5572
+- name: output_spec
+  start: 49857
+  length: 200
+  fraction: 0.004
+large_sections:
+- wiki
+directives_total: 29
+directives_covered: 8
+directives_missed:
+- kind: checklist
+  text: видова пара
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: тривалість
+  covered: false
+  coverage_note: 0/1 keywords (0%)
+- kind: checklist
+  text: завершеність
+  covered: false
+  coverage_note: 0/1 keywords (0%)
+- kind: checklist
+  text: повторюваність
+  covered: false
+  coverage_note: 0/1 keywords (0%)
+- kind: checklist
+  text: однократність
+  covered: false
+  coverage_note: 0/1 keywords (0%)
+- kind: checklist
+  text: щоразу
+  covered: false
+  coverage_note: 0/1 keywords (0%)
+- kind: checklist
+  text: завжди
+  covered: false
+  coverage_note: 0/1 keywords (0%)
+- kind: checklist
+  text: іноді
+  covered: false
+  coverage_note: 0/1 keywords (0%)
+- kind: checklist
+  text: нарешті
+  covered: false
+  coverage_note: 0/1 keywords (0%)
+- kind: checklist
+  text: готувати
+  covered: false
+  coverage_note: 0/1 keywords (0%)
+- kind: checklist
+  text: приготувати
+  covered: false
+  coverage_note: 0/1 keywords (0%)
+- kind: checklist
+  text: вивчити
+  covered: false
+  coverage_note: 0/1 keywords (0%)
+- kind: checklist
+  text: зателефонувати
+  covered: false
+  coverage_note: 0/1 keywords (0%)
+- kind: must
+  text: If you want to proudly declare that you managed to **вивчити** (to learn thoroughly
+    (perfective of вчити)) a difficult grammar topic, or that you remembered to **зателефонувати**
+    (to call (perfective — one completed call)) an old friend, you must learn these
+    specific perfective forms as distinct and independent vocabulary items.
+  covered: false
+  coverage_note: 6/29 keywords (21%)
+- kind: must
+  text: To complete this task successfully and demonstrate your mastery of the past
+    tense, you must intentionally weave both aspects together to create a natural
+    storytelling rhythm.
+  covered: false
+  coverage_note: 5/20 keywords (25%)
+- kind: must
+  text: Finally, you must include at least one "interrupted action" to show the dynamic
+    contrast between a background process and a sudden event.
+  covered: false
+  coverage_note: 4/16 keywords (25%)
+- kind: must
+  text: differs, and learners must identify WHICH axis drives their choice.
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: EVERY word in the checklist below MUST appear at least once with a bold Ukrainian
+    form and English translation in a natural sentence.
+  covered: false
+  coverage_note: 5/15 keywords (33%)
+- kind: inject_activity
+  text: error-correction-aspect
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: open-writing-my-week
+  covered: false
+  coverage_note: marker missing

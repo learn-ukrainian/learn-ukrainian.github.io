@@ -126,7 +126,7 @@ references:
 <generated_module_content>
 ## Діало́ги (Dialogues)
 
-We meet our good friends **Тара́с** (Taras) and **Мико́ла** (Mykola) at the local gym. They are using action words to talk about physical activities and skills. Observe their conversation as they exercise together. They use entirely new action verbs to describe their fitness routine.
+We meet our good friends **Тара́с** (Taras) and **Мико́ла** (Mykola) at the local gym during a short break. They start chatting about language skills and everyday actions. Observe their conversation and notice the Group II verb forms they use. The focus here is on the verbs in the dialogue, not on detailed sports vocabulary.
 
 > **Тарас:** Ти гово́риш украї́нською? *(Do you speak Ukrainian?)*
 > **Микола:** Так, я говорю́ тро́хи. А ти? *(Yes, I speak a little. And you?)*
@@ -165,7 +165,7 @@ Here are some short sentences to show them in action:
 *   **Я говорю українською.** (I speak Ukrainian.)
 *   **Ти бачиш цей буди́нок?** (Do you see this building?)
 *   **Він робить ка́ву.** (He is making coffee.)
-*   **Вона вчить мо́ву.** (She teaches the language.)
+*   **Вона вчить мо́ву.** (She studies the language.)
 *   **Ми хо́димо у парк.** (We walk to the park.)
 *   **Ви про́сите воду́.** (You ask for water.)
 *   **Я люблю́ украї́нську мову.** (I love the Ukrainian language.)
@@ -173,7 +173,7 @@ Here are some short sentences to show them in action:
 There is a special phonetic rule for verbs whose stems end in hissing sibilant sounds like **ч**, **ш**, **ж**, and **щ**. After these hissing sounds, the **я** ending becomes **-у** (instead of **-ю**) and the **вони** ending becomes **-ать** (instead of **-ять**). We use **бачити** (to see) and **вчити** (to study) as the primary examples of this rule. You write **я бачу** and **вони ба́чать**. You write **я вчу** and **вони вчать**.
 
 :::caution
-This rule is a strict requirement for Ukrainian melody. You must never write forms like *бачять or *вчять. The hissing consonants completely block the letter **я**.
+This is a spelling pattern in these verb forms. You must never write forms like *бачять or *вчять.
 :::
 
 ## Гру́па I чи II? (Which Group?)
@@ -193,7 +193,7 @@ The key difference is in the vowels. The **ти** form uses **-єш** for Group 
 
 <!-- INJECT_ACTIVITY: quiz-verb-choice -->
 
-Ukrainian pronunciation prioritizes **милозву́чність** (euphony or melody). Because of this focus on melody, some Group II verbs change their last stem consonant. However, this consonant change happens ONLY in the **я** (I) form.
+In some Group II verbs, the final stem consonant alternates in the **я** (I) form. This is a regular consonant alternation pattern in present-tense forms, not a separate ending set.
 
 :::tip
 You can reassure yourself that the rest of the conjugation paradigm (**ти**, **він**, **ми**, **ви**, **вони**) remains perfectly regular. You only need to remember the consonant change for the first person singular.
@@ -209,17 +209,17 @@ These changes only affect the **я**-form — all other forms are regular. Don't
 
 <!-- INJECT_ACTIVITY: fill-in-translation-context -->
 
-You will frequently encounter the reflexive suffix **-ся** attached to the end of certain action words. We use this suffix with verbs like **вчи́тися** (to learn/study) and **дивитися** (to watch). This special suffix always attaches right after the conjugated personal ending. For example, **я вчу** plus **ся** becomes **я вчуся**. In the second person, **ти вчиш** plus **ся** becomes **ти вчи́шся**. Note that this suffix generally indicates an action that is directed back at the speaker or describes a continuous state of being.
+You will frequently encounter the reflexive suffix **-ся** attached to the end of certain action words. We use this suffix with verbs like **вчи́тися** (to learn/study) and **дивитися** (to watch). In the present tense, this suffix is added after the personal ending: **я вчу** + **ся** → **я вчуся**, **ти вчиш** + **ся** → **ти вчи́шся**. For now, learn these as whole forms; you will study reflexive verbs in more detail later.
 
 ## Підсумок — Summary
 
 You now know the two major verb families in the Ukrainian language. You can reinforce your memory using a simple mnemonic trick. The **вони** form is the absolute best way to double-check the group. There are two major verb groups, each with its own ending patterns. Group I verbs (usually ending in **-ати**) take the endings: **-ю**, **-єш**, **-є**, **-ємо**, **-єте**, **-ють**. Group II verbs (usually ending in **-ити**) take the endings: **-ю**/**-у**, **-иш**, **-ить**, **-имо**, **-ите**, and **-ять** or **-ать**.
 
 :::note
-If you are ever unsure which group a verb belongs to, simply test the third person plural form. If it ends in **-ють**, it is Group I. If it ends in **-ять**, it is Group II.
+If you are ever unsure which group a verb belongs to, simply test the third person plural form. If it ends in **-ють**, it is Group I. If it ends in **-ять** or **-ать**, it is Group II.
 :::
 
-Remember the important consonant shifts that occur exclusively in the **я** (I) form for certain verbs in Group II (**роблю**, **ходжу**, **прошу**). You must apply these shifts correctly to sound natural. You must also remember the sibilant rule for the third person plural, which forces you to say **вони бачать** (they see) instead of using the standard ending. Mastering these specific Group II verbs unlocks your fundamental ability to describe almost all basic daily activities and personal skills.
+Remember the important consonant shifts that occur exclusively in the **я** (I) form for certain verbs in Group II (**роблю**, **ходжу**, **прошу**). You must apply these shifts correctly to sound natural. You must also remember the sibilant rule for the third person plural, which forces you to say **вони бачать** (they see) instead of using the standard ending. Mastering these specific Group II verbs helps you describe basic daily activities and personal skills more naturally.
 
 Use this self-check question and answer list to verify your understanding of the module's core objectives. Read each question carefully and try to answer before looking at the solution.
 
@@ -233,7 +233,7 @@ Use this self-check question and answer list to verify your understanding of the
 *   **Answer:** The standard ending is **-ять**, but it changes to **-ать** after hissing sibilants.
 </generated_module_content>
 
-**PIPELINE NOTE — Word count: 1371 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
+**PIPELINE NOTE — Word count: 1364 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -409,7 +409,7 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 73 words | Not found: 43 words
+Verified: 73 words | Not found: 41 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
   ✗ Дру — NOT IN VESUM
@@ -433,7 +433,6 @@ Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dic
   ✗ ити — NOT IN VESUM
   ✗ ить — NOT IN VESUM
   ✗ крича — NOT IN VESUM
-  ✗ милозву — NOT IN VESUM
   ✗ нок — NOT IN VESUM
   ✗ нською — NOT IN VESUM
   ✗ нську — NOT IN VESUM
@@ -450,7 +449,6 @@ Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dic
   ✗ чити — NOT IN VESUM
   ✗ чить — NOT IN VESUM
   ✗ чиш — NOT IN VESUM
-  ✗ чність — NOT IN VESUM
   ✗ шся — NOT IN VESUM
   ✗ ють — NOT IN VESUM
   ✗ ємо — NOT IN VESUM
@@ -460,28 +458,159 @@ All 73 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
-## Verification Tools (MCP)
+---
 
-You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
+## Verification Tools (Shell Commands)
 
-**Core Verification:**
-- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
-- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
+You have access to verification tools via shell commands. Use these to verify
+Ukrainian vocabulary, check grammar, and search textbook content **as you write**.
 
-**Content Quality:**
-- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+**IMPORTANT:** Run verification commands BEFORE finalizing any Ukrainian text.
+Batch multiple verifications together to minimize round-trips.
 
-**Reference:**
-- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp_rag_search_literary` — verify literary references against primary sources
-- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
+### 1. Batch-verify Ukrainian words exist in VESUM (preferred — one call for many words)
 
-**Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_words
+results = verify_words(['слово1', 'слово2', 'слово3'])
+for w, matches in results.items():
+    if matches:
+        print(f'{w}: FOUND — lemma={matches[0][\"lemma\"]}, pos={matches[0][\"pos\"]}')
+    else:
+        print(f'{w}: NOT FOUND — may not exist in standard Ukrainian')
+"
+```
+
+### 2. Verify a single Ukrainian word in VESUM (with full morphological tags)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_word
+results = verify_word('WORD_HERE')
+if results:
+    for m in results:
+        print(f'lemma={m[\"lemma\"]}, pos={m[\"pos\"]}, tags={m[\"tags\"]}')
+else:
+    print('NOT FOUND in VESUM')
+"
+```
+
+### 3. Get all inflected forms of a lemma (declension/conjugation)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_lemma
+forms = verify_lemma('LEMMA_HERE')
+for f in forms[:20]:
+    print(f'{f[\"word_form\"]:20s} {f[\"pos\"]:8s} {f[\"tags\"]}')
+print(f'... {len(forms)} forms total')
+"
+```
+
+### 4. Check CEFR level of a word (is it level-appropriate?)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import query_cefr_level
+results = query_cefr_level('WORD_HERE')
+for r in results:
+    print(f'{r[\"word\"]}: {r[\"level\"]} ({r[\"pos\"]})')
+if not results:
+    print('Not in CEFR database')
+"
+```
+
+### 5. Search textbook content (Ukrainian school textbooks, Grades 1-11)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_textbooks
+keywords = {'keyword1', 'keyword2'}
+results = search_textbooks(keywords, 5)
+for r in results:
+    title = r.get('section_title', r.get('title', ''))
+    grade = r.get('grade', '?')
+    text = r.get('text', '')[:200]
+    print(f'Grade {grade} | {title}')
+    print(f'  {text}')
+    print()
+"
+```
+
+### 6. Search style guide for calques/Russianisms (Антоненко-Давидович, 279 entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_style_guide
+results = search_style_guide('TOPIC_HERE', 3)
+for r in results:
+    print(f'--- {r.get(\"word\", \"\")} [{r.get(\"section\", \"\")}]')
+    print(r.get('text', '')[:300])
+    print()
+if not results:
+    print('No style guide entries found')
+"
+```
+
+### 7. Look up word definition in СУМ-11 (Ukrainian explanatory dictionary, 127K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_definitions
+results = search_definitions('WORD_HERE', 3)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+### 8. Search idioms (Фразеологічний словник, 25K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_idioms
+results = search_idioms('WORD_HERE', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"text\", r.get(\"definition\", \"\")))[:200]}')
+"
+```
+
+### 9. English-to-Ukrainian translation (Балла, 79K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import translate_en_uk
+results = translate_en_uk('ENGLISH_WORD', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+---
+
+**WHEN to use these tools:**
+
+1. **Before writing any Ukrainian text** — batch-verify all key vocabulary with
+   `verify_words` (tool 1). Any word that returns NOT FOUND must be replaced.
+2. **When you suspect a Russicism or calque** — search the style guide (tool 6)
+   and verify the correct Ukrainian form with `verify_word` (tool 2).
+3. **When writing for A1/A2** — check CEFR levels (tool 4) to ensure vocabulary
+   is level-appropriate.
+4. **When unsure about a case ending or conjugation** — use `verify_lemma` (tool 3)
+   to see the full paradigm.
+5. **When covering a grammar topic** — search textbooks (tool 5) to see how
+   Ukrainian school textbooks teach it.
+6. **When you need the precise Ukrainian meaning** — use СУМ-11 (tool 7).
+7. **When looking for natural Ukrainian expressions** — search idioms (tool 8).
+
+**Batching rule:** Collect all words you want to verify, then run ONE `verify_words`
+call instead of multiple `verify_word` calls. This is faster and uses fewer tokens.

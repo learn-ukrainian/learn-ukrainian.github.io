@@ -25,7 +25,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-Візьмемо слово «ліс». Змінимо його відмінки: «ліс», «лісу», «лісом», «у лісі». Це не нові слова. Це одне і те ж слово. Змінюється тільки його граматична форма. Змінюється тільки його закінчення. Форми слова мають абсолютно однакове лексичне значення. Вони відрізняються тільки **граматичним значенням** *(grammatical meaning)*. Спільнокореневі слова завжди мають різні лексичні значення. Пам'ятайте про цю критичну різницю. Використовуйте цей простий тест. Якщо ви змінили тільки закінчення — це просто форма слова. Якщо ви додали інші частини основи — ви створили нове спільнокореневе слово. Іноді корінь слова може маскуватися. Він трохи змінює свій вигляд. В українській мові часто відбувається **чергування** *(alternation)* звуків у корені. Це звучить складно, але це природний процес. Деякі приголосні або голосні звуки змінюються, коли ми утворюємо нове слово. Це робить вимову слів легшою та мелодійнішою. Наприклад, подивіться на корінь слова «друг» *(friend)*. Утворимо від нього прикметник. Ми кажемо «дружний» *(friendly)*. Звук «г» тут змінився на звук «ж». Корінь «друг-» став коренем «друж-». Але це все ще той самий корінь! Це справжні спільнокореневі слова. Візьмемо слово «рік» *(year)*. Корінь тут «рік». Створимо прикметник: «річний» *(annual)*. Звук «к» змінився на «ч». Ще один гарний приклад: слово «рука» *(hand/arm)*. Прикметник від нього — «ручний» *(manual / tame)*. Знову звук «к» став звуком «ч». Не лякайтеся цих змін. Українська мова дуже любить такі красиві чергування. Корінь залишається тим самим семантичним центром слова. Він просто одягає інший звуковий капелюх. Ви швидко навчитеся впізнавати такі знайомі корені. Вони працюють дуже логічно. Чергування можуть відбуватися і з голосними звуками. Слово «школа» *(school)* має звук «о». А слово «шкільний» *(school [adj.])* має звук «і». Це також нормальна зміна в корені. Як правильно знайти корінь у слові? Це дуже практичне завдання. Для цього треба зібрати разом кілька споріднених слів. Вам потрібно порівняти їх і знайти спільну частину. Ця стабільна спільна частина і буде коренем. Візьмемо для прикладу звичайну воду. У нас є слова: «вода» *(water)*, «водний» *(watery/aquatic)*, «підводний» *(underwater)*, «водяний» *(water [adj.])* . Ми уважно дивимося на всі ці слова. Яка частина повторюється у кожному слові? Це частина «вод-». Отже, корінь у цій родині слів — це «вод». Але будьте дуже обережні під час аналізу. Іноді слова мають однакові корені, але абсолютно різні лексичні значення. Це так звані "фальшиві друзі". Подивіться на слова «вода» *(water)* і «водій» *(driver)*. Їхні корені виглядають абсолютно однаково: «вод-». Але чи мають вони спільний зміст? Звісно, ні. Слово «вода» пов'язане з рідиною. А слово «водій» походить від дієслова «водити» *(to lead / to drive)*. Вони не є родичами. Вони просто випадково схожі. Завжди перевіряйте лексичне значення слова. Спільнокореневі слова обов'язково повинні мати спільну ідею. > — **Богдан:** Давай знайдемо корінь у слові «зимовий» *(winter [adj.])*? > — **Марина:** Для цього треба згадати його родичів. Наприклад, іменник «зима» *(winter)* і дієслово «зимувати» *(to winter)*. > — **Богдан:** Я бачу спільну частину. Це частина «зим». Значить, корінь — «зим». > — **Марина:** Точно. А слова «місто» *(city)* і «міст» *(bridge)* — це родичі? > — **Богдан:** Звісно ні. Їхні корені виглядають дуже схоже. Але вони мають абсолютно різні лексичні значення! <!-- INJECT_ACTIVITY: mark-cognates -->
+forms of the same word.* :::info **Grammar box** Remember the rule: word forms change only the grammatical meaning (cases, plural/singular), while cognate words change the actual lexical meaning and often the part of speech. ::: Sometimes the root tries to hide from you when you build new words. In Ukrainian, vowels and consonants inside the root can mutate when we form new adjectives or verbs. This natural process is called **чергування звуків** (sound alternation). It happens organically to make words easier to pronounce in everyday speech. Even when a letter inside the root changes, it is still the exact same semantic unit, and the words are still related. Корінь може трохи змінювати свій вигляд, бо в українській мові часто відбувається чергування звуків. Наприклад, ми маємо слово «друг». Коли ми утворюємо прикметник, звук «г» змінюється на «ж». Ми отримуємо слово «дружний». Це досі той самий корінь, просто він адаптувався для кращого звучання. Інший приклад — це слово «рік». Коли ми говоримо про щось річне, звук «к» перетворюється на «ч». Ми маємо слово «річний». Так само слово «рука» дає нам прикметник «ручний». Ці слова залишаються спільнокореневими, незважаючи на зміну звуків. How do you reliably find the root of an unfamiliar word? You need to act like a linguistic detective and compare the word to its logical relatives. By looking at several related words side by side, you can easily identify the shared, stable part that appears in all of them. Let's do a step-by-step analysis using water as an example, while watching out for dangerous false friends. Щоб знайти корінь, треба підібрати кілька спільнокореневих слів і порівняти їх. Наприклад, візьмемо слова «вода», «водний», «підводний» та «водяний». Ми бачимо, що в усіх цих словах є спільна частина «-вод-». Ця частина не змінюється, і вона несе головне значення води. Отже, це і є корінь. Але треба бути дуже уважними, бо іноді слова мають однакову частину з абсолютно різним значенням. Наприклад, слова «вода» і «водій» звучать схоже і обидва мають частину «вод». Проте «вода» — це рідина, а «водій» — це людина за кермом автомобіля. Вони не мають спільного лексичного значення, тому це не спільнокореневі слова, а просто збіг. > *To find the root, you need to pick several cognate words and compare them. For example, let's take the words "вода", "водний", "підводний", and "водяний". We see that in all these words there is a shared part "-вод-". This part does not change, and it carries the main meaning of water. Therefore, this is the root. But you need to be very careful, because sometimes words have an identical part with a completely different meaning. For example, the words "вода" and "водій" sound similar and both have the part "вод". However, "вода" is a liquid, and "водій" is a person behind the wheel of a car. They do not have a shared lexical meaning, so these are not cognate words, but simply a coincidence.* <!-- INJECT_ACTIVITY: mark-the-words, Focus: Mark all спільнокореневі слова belonging to the same word family in a short text, 6 items -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -453,7 +453,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 6: A2 finale (A2 M51-M69)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 40%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 40% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 70-90% Ukrainian.
 LANGUAGE ROLES:
@@ -472,18 +539,69 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] морфологія (morphology — the study of word forms and parts of speech)
+- [ ] корінь (root — the main meaningful part of a word)
+- [ ] префікс (prefix — meaningful part before the root)
+- [ ] суфікс (suffix — meaningful part after the root)
+- [ ] закінчення (ending — changeable part expressing grammatical meaning)
+- [ ] основа (stem — the part of a word without the ending)
+- [ ] спільнокореневий (cognate — words sharing the same root)
+- [ ] іменник (noun — names things, answers хто? що?)
+- [ ] прикметник (adjective — names qualities, answers який? чий?)
+- [ ] дієслово (verb — names actions, answers що робити?)
+- [ ] прислівник (adverb — names circumstances, answers як? де? коли?)
+- [ ] самостійний (content/autosemantic — part of speech with independent meaning)
+- [ ] службовий (function/synsemantic — part of speech without independent meaning)
+- [ ] прийменник (preposition — links words, governs case)
+- [ ] сполучник (conjunction — connects words or clauses)
+- [ ] частка (particle — adds shades of meaning)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Префікс і суфікс (~720 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

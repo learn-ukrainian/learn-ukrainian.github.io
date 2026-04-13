@@ -2,51 +2,55 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 10
-  evidence: All elements (Dialogues, Планування, Мій тиждень, Summary) are present,
-    pacing is excellent, and all grammar/planning patterns are covered exactly as
-    specified.
+  score: 8
+  evidence: 'All planned H2 sections are present and the required vocabulary appears
+    in prose, but the planned reference `State Standard 2024, §4.2.4.1` is not cited
+    anywhere in the module (`0` matches for `State '
 - dimension: 2
   name: Linguistic accuracy
-  score: 7
-  evidence: 'Critical error: The text states: "Do not use the direct English translation
-    ''Я маю плани''". This is factually incorrect, as the verb "мати" is a fully correct
-    Ukrainian verb of possession.'
+  score: 8
+  evidence: 'No Russianisms/Surzhyk/paronym issues surfaced in the prose, but the
+    grammar note on feminine day forms is inaccurate by omission: it lists `середа`,
+    `п''ятниця`, `субота` and leaves out `неділя → неді'
 - dimension: 3
   name: Pedagogical quality
-  score: 9
-  evidence: Excellent breakdown of temporal accusative endings for days of the week
-    ("у середу") and locative time telling ("о третій"). Minor deduction for the "я
-    маю" hypercorrection.
+  score: 8
+  evidence: 'The module has many examples and follows dialogue → explanation → practice,
+    but the opening English exposition is filler-heavy: `"Arranging a weekend get-together..."`
+    delays instruction without addin'
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: All required (план, тиждень, вільний, зустріч, відпочивати, прибирати,
-    вечірка) and recommended words are seamlessly integrated.
+  score: 9
+  evidence: Required vocabulary is present in prose (`план`, `тиждень`, `вільний/вільна`,
+    `зустріч`, `відпочивати`, `прибирати`, `вечірка`), and recommended items like
+    `зустрінемося`, `з задоволенням`, `на жаль`,
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: The three exercise markers directly test what was just taught (days/time,
-    invitations, and weekly plans).
+  score: 9
+  evidence: Three markers are present and aligned to the taught material; `match-invitations`
+    is placed directly after invitation language, and `fill-in-weekly-plan` follows
+    the weekly-plan model. No visible exer
 - dimension: 6
   name: Engagement & tone
   score: 7
-  evidence: Deductions for gamified, corporate fluff at the start of sections ("As
-    we approach the end of our A1 journey, our ability to communicate moves beyond...",
-    "You now possess...").
+  evidence: 'The tone is teacherly, but several passages are generic filler, especially
+    the first paragraph under `Dialogues` and reflective lines like `"The ability
+    to structure your time and share your schedule '
 - dimension: 7
   name: Structural integrity
-  score: 9
-  evidence: Word count is 1593 (well above 1200 target). Clean formatting, but deducted
-    for a prompt artifact leaked into the prose ("asks... in the plan context").
+  score: 10
+  evidence: '`Dialogues`, `Планування (Planning)`, `Мій тиждень (My Week)`, and `Summary`
+    all appear in the planned order; the module is cleanly formatted and the pipeline
+    word count is 1705, above the 1200 target'
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: Accurately contrasts Western usage of "on the weekend" with natural Ukrainian
-    usage ("на вихідних").
+  score: 9
+  evidence: No Russian-centric framing or cultural inaccuracies. The scenarios are
+    ordinary Ukrainian-learning contexts and stay decolonized.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: The opening group chat dialogue perfectly mimics a real-world scenario
-    of friends making weekend plans.
+  score: 7
+  evidence: 'Dialogue 1 is usable, but Dialogue 2 has a speaker-turn coherence error:
+    after `Віктор: Так, багато!`, the line `Антон: У понеділок я буду працювати допізна.`
+    breaks the expected flow of Viktor listin'
 findings: []

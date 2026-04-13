@@ -1,0 +1,72 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T16-12-99d93f53.json
+phase: review
+prompt_chars: 66140
+response_chars: 6878
+prompt_words: 9335
+response_words: 1045
+sections:
+- name: preamble
+  start: 0
+  length: 463
+  fraction: 0.007
+- name: plan
+  start: 463
+  length: 62757
+  fraction: 0.9489
+- name: output_spec
+  start: 63220
+  length: 2920
+  fraction: 0.0441
+large_sections:
+- plan
+directives_total: 15
+directives_covered: 4
+directives_missed:
+- kind: must
+  text: If you are not 100% certain a word/form/usage is wrong, you MUST flag it as
+    `[NEEDS RAG VERIFICATION]` instead of marking it as a definitive error.
+  covered: false
+  coverage_note: 5/17 keywords (29%)
+- kind: must
+  text: '**Before you claim a word, symbol, notation, or plan point is MISSING from
+    the content, you MUST search for it.'
+  covered: false
+  coverage_note: 4/13 keywords (31%)
+- kind: must
+  text: '**CRITICAL RULE: If you mention ANY error, mistake, or inaccuracy in the
+    evidence column of your scores table, you MUST also list it as a structured finding
+    below AND include it in your `<fixes>` block.'
+  covered: false
+  coverage_note: 8/22 keywords (36%)
+- kind: must
+  text: This is a language curriculum — every error you identify must be fixed.
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: must
+  text: '- The `find` string MUST be an EXACT copy-paste from the module content.'
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: inject_activity
+  text: match-up
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-instrumental
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: sort-doubling-rules
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: error-fix-instrumental
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-determine-vidmina
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: sentence-builder
+  covered: false
+  coverage_note: marker missing

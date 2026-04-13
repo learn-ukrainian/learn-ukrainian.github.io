@@ -1,25 +1,7 @@
 {
-  "total_items": 59,
-  "grounded_items": 43,
+  "total_items": 73,
+  "grounded_items": 46,
   "ungrounded": [
-    {
-      "word": "воду",
-      "exercise_type": "group-sort",
-      "context": "воду",
-      "role": "answer"
-    },
-    {
-      "word": "чай",
-      "exercise_type": "group-sort",
-      "context": "чай",
-      "role": "answer"
-    },
-    {
-      "word": "борщ",
-      "exercise_type": "group-sort",
-      "context": "борщ",
-      "role": "answer"
-    },
     {
       "word": "тараса",
       "exercise_type": "fill-in",
@@ -27,22 +9,22 @@
       "role": "context"
     },
     {
-      "word": "ми",
-      "exercise_type": "error-correction",
-      "context": "Ми любимо тато.",
-      "role": "context"
+      "word": "чекаєш",
+      "exercise_type": "fill-in",
+      "context": "чекаєш",
+      "role": "answer"
     },
     {
-      "word": "любимо",
-      "exercise_type": "error-correction",
-      "context": "Ми любимо тато.",
-      "role": "context"
+      "word": "продавця",
+      "exercise_type": "fill-in",
+      "context": "продавця",
+      "role": "answer"
     },
     {
       "word": "вона",
-      "exercise_type": "error-correction",
-      "context": "Вона шукає сусід.",
-      "role": "context"
+      "exercise_type": "unjumble",
+      "context": "Вона",
+      "role": "answer"
     },
     {
       "word": "шукає",
@@ -51,63 +33,148 @@
       "role": "answer"
     },
     {
-      "word": "новий",
+      "word": "знає",
       "exercise_type": "unjumble",
-      "context": "Новий",
+      "context": "знає",
       "role": "answer"
     },
     {
-      "word": "ви",
-      "exercise_type": "error-correction",
-      "context": "Ви знаєте ця колега?",
+      "word": "правильне",
+      "exercise_type": "true-false",
+      "context": "«Я бачу брат» — це правильне речення.",
       "role": "context"
     },
     {
-      "word": "знаєте",
-      "exercise_type": "error-correction",
-      "context": "Ви знаєте ця колега?",
+      "word": "речення",
+      "exercise_type": "true-false",
+      "context": "«Я бачу брат» — це правильне речення.",
       "role": "context"
     },
     {
-      "word": "ця",
-      "exercise_type": "error-correction",
-      "context": "Ви знаєте ця колега?",
+      "word": "для",
+      "exercise_type": "true-false",
+      "context": "Для живих істот (людей) ми використовуємо питання «Кого?».",
       "role": "context"
     },
     {
-      "word": "цього",
-      "exercise_type": "unjumble",
-      "context": "цього",
-      "role": "answer"
+      "word": "живих",
+      "exercise_type": "true-false",
+      "context": "Для живих істот (людей) ми використовуємо питання «Кого?».",
+      "role": "context"
     },
     {
-      "word": "свого",
-      "exercise_type": "unjumble",
-      "context": "свого",
-      "role": "answer"
+      "word": "істот",
+      "exercise_type": "true-false",
+      "context": "Для живих істот (людей) ми використовуємо питання «Кого?».",
+      "role": "context"
     },
     {
-      "word": "нашого",
-      "exercise_type": "unjumble",
-      "context": "нашого",
-      "role": "answer"
+      "word": "людей",
+      "exercise_type": "true-false",
+      "context": "Для живих істот (людей) ми використовуємо питання «Кого?».",
+      "role": "context"
     },
     {
-      "word": "бачить",
-      "exercise_type": "unjumble",
-      "context": "бачить",
-      "role": "answer"
+      "word": "використовуємо",
+      "exercise_type": "true-false",
+      "context": "Для живих істот (людей) ми використовуємо питання «Кого?».",
+      "role": "context"
+    },
+    {
+      "word": "питання",
+      "exercise_type": "true-false",
+      "context": "Для живих істот (людей) ми використовуємо питання «Кого?».",
+      "role": "context"
+    },
+    {
+      "word": "хліба",
+      "exercise_type": "true-false",
+      "context": "«Я їм хліба» — це правильне речення.",
+      "role": "context"
+    },
+    {
+      "word": "слово",
+      "exercise_type": "true-false",
+      "context": "Слово «мама» у знахідному відмінку (Accusative) змінюється н",
+      "role": "context"
+    },
+    {
+      "word": "знахідному",
+      "exercise_type": "true-false",
+      "context": "Слово «мама» у знахідному відмінку (Accusative) змінюється н",
+      "role": "context"
+    },
+    {
+      "word": "відмінку",
+      "exercise_type": "true-false",
+      "context": "Слово «мама» у знахідному відмінку (Accusative) змінюється н",
+      "role": "context"
+    },
+    {
+      "word": "змінюється",
+      "exercise_type": "true-false",
+      "context": "Слово «мама» у знахідному відмінку (Accusative) змінюється н",
+      "role": "context"
+    },
+    {
+      "word": "чоловічі",
+      "exercise_type": "true-false",
+      "context": "Чоловічі неживі іменники у знахідному відмінку не змінюють з",
+      "role": "context"
+    },
+    {
+      "word": "неживі",
+      "exercise_type": "true-false",
+      "context": "Чоловічі неживі іменники у знахідному відмінку не змінюють з",
+      "role": "context"
+    },
+    {
+      "word": "іменники",
+      "exercise_type": "true-false",
+      "context": "Чоловічі неживі іменники у знахідному відмінку не змінюють з",
+      "role": "context"
+    },
+    {
+      "word": "змінюють",
+      "exercise_type": "true-false",
+      "context": "Чоловічі неживі іменники у знахідному відмінку не змінюють з",
+      "role": "context"
+    },
+    {
+      "word": "закінчення",
+      "exercise_type": "true-false",
+      "context": "Чоловічі неживі іменники у знахідному відмінку не змінюють з",
+      "role": "context"
+    },
+    {
+      "word": "буде",
+      "exercise_type": "true-false",
+      "context": "Слово «лікар» у знахідному відмінку буде «лікар».",
+      "role": "context"
+    },
+    {
+      "word": "п'ємо",
+      "exercise_type": "fill-in",
+      "context": "Ми п'ємо ____.",
+      "role": "context"
+    },
+    {
+      "word": "любиш",
+      "exercise_type": "fill-in",
+      "context": "Ти любиш ____?",
+      "role": "context"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 14,
-    "tested_in_exercises": 7,
+    "tested_in_exercises": 6,
     "not_tested": [
       "бачити",
-      "вчитель",
       "знати",
+      "колега",
       "любити",
       "подруга",
+      "покупець",
       "чекати",
       "шукати"
     ]

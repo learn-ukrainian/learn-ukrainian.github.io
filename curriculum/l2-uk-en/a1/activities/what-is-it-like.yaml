@@ -4,87 +4,111 @@ level: a1
 inline:
 - id: quiz-question-word
   type: quiz
-  instruction: 'Choose the correct question word: **який**, **яка**, or **яке**.'
+  instruction: 'Choose the correct question word: **який**, **яка** or **яке**'
   items:
-  - question: _____ плакат!
+  - question: ____ телефон?
     options:
     - Який
     - Яка
     - Яке
     correct: 0
-  - question: _____ книга!
+  - question: ____ книга?
     options:
     - Який
     - Яка
     - Яке
     correct: 1
-  - question: _____ вікно?
+  - question: ____ вікно?
     options:
     - Який
     - Яка
     - Яке
     correct: 2
-  - question: _____ стіл?
+  - question: ____ атлас?
     options:
     - Який
     - Яка
     - Яке
     correct: 0
-  - question: _____ ручка?
-    options:
-    - Який
-    - Яка
-    - Яке
-    correct: 1
-  - question: _____ фото?
+  - question: ____ фото?
     options:
     - Який
     - Яка
     - Яке
     correct: 2
-- id: fill-in-adjective-endings
+  - question: ____ кімната?
+    options:
+    - Який
+    - Яка
+    - Яке
+    correct: 1
+- id: fill-in-endings
   type: fill-in
-  instruction: Choose the correct **прикметник** (adjective) ending.
+  instruction: Choose the correct adjective form to match the **іменник** (noun).
   items:
-  - sentence: Це _____ стіл.
-    answer: великий
-    options:
-    - великий
-    - велика
-    - велике
-  - sentence: Це _____ книга.
+  - sentence: Це ____ книга.
     answer: нова
     options:
     - новий
     - нова
     - нове
-  - sentence: Там _____ вікно.
+  - sentence: Це ____ стіл.
+    answer: великий
+    options:
+    - великий
+    - велика
+    - велике
+  - sentence: Це ____ вікно.
     answer: чисте
     options:
     - чистий
     - чиста
     - чисте
-  - sentence: Це _____ фото.
+  - sentence: Це ____ ліжко.
     answer: старе
     options:
     - старий
     - стара
     - старе
-  - sentence: Це _____ кімната.
-    answer: світла
+  - sentence: Це ____ сумка.
+    answer: гарна
     options:
-    - світлий
-    - світла
-    - світле
-  - sentence: Це _____ телефон.
+    - гарний
+    - гарна
+    - гарне
+  - sentence: Це ____ телефон.
     answer: дорогий
     options:
     - дорогий
     - дорога
     - дороге
+  - sentence: Це ____ кімната.
+    answer: маленька
+    options:
+    - маленький
+    - маленька
+    - маленьке
+  - sentence: Це ____ фото.
+    answer: погане
+    options:
+    - поганий
+    - погана
+    - погане
+  - sentence: Це ____ листівка.
+    answer: світла
+    options:
+    - світлий
+    - світла
+    - світле
+  - sentence: Це ____ плакат.
+    answer: дешевий
+    options:
+    - дешевий
+    - дешева
+    - дешеве
 - id: match-up-opposites
   type: match-up
-  instruction: Match the **прикметники** (adjectives) with their opposites.
+  instruction: Match the adjectives with their opposites.
   pairs:
   - left: великий
     right: маленький
@@ -94,296 +118,281 @@ inline:
     right: поганий
   - left: чистий
     right: брудний
-  - left: світлий
-    right: темний
   - left: дорогий
     right: дешевий
-- id: fill-in-room-description
+  - left: світлий
+    right: темний
+- id: fill-in-describe-room
   type: fill-in
-  instruction: Choose the correct word to complete the description.
+  instruction: Complete the descriptions of the objects.
   items:
-  - sentence: Моя кімната велика _____ світла.
-    answer: і
+  - sentence: Моя ____ велика і світла.
+    answer: кімната
     options:
-    - і
-    - а
-    - але
-  - sentence: Стіл новий, _____ ліжко старе.
-    answer: а
+    - кімната
+    - стіл
+    - ліжко
+  - sentence: Мій стіл новий, а ____ — старе.
+    answer: ліжко
     options:
-    - і
-    - а
-    - але
-  - sentence: Кімната маленька, _____ гарна.
-    answer: але
-    options:
-    - і
-    - а
-    - але
-  - sentence: Вікно _____ і чисте.
+    - ліжко
+    - кімната
+    - вікно
+  - sentence: Моє вікно ____ і чисте.
     answer: велике
     options:
     - великий
     - велика
     - велике
-  - sentence: Там є _____ ліжко.
-    answer: нове
+  - sentence: Моя кімната маленька, ____ гарна.
+    answer: але
     options:
-    - новий
-    - нова
-    - нове
-  - sentence: Це мій _____ стіл.
-    answer: новий
+    - а
+    - і
+    - але
+  - sentence: Стіл чистий, ____ ліжко брудне.
+    answer: а
     options:
-    - новий
-    - нова
-    - нове
+    - але
+    - а
+    - і
+  - sentence: Він великий ____ дешевий.
+    answer: і
+    options:
+    - а
+    - але
+    - і
 workbook:
-- id: sort-adjectives-gender
+- id: wb-group-sort-gender
   type: group-sort
-  instruction: Sort the **прикметники** (adjectives) by gender.
+  instruction: 'Sort the nouns into the correct gender groups: **чоловічий** (m),
+    **жіночий** (f), and **середній** (n).'
   groups:
-  - label: Він (Masculine)
+  - label: Чоловічий рід (Який?)
     items:
-    - великий
-    - новий
-    - старий
-    - чистий
-  - label: Вона (Feminine)
+    - телефон
+    - стіл
+    - атлас
+    - плакат
+  - label: Жіночий рід (Яка?)
     items:
-    - маленька
-    - світла
-    - гарна
-    - брудна
-  - label: Воно (Neuter)
-    items:
-    - нове
-    - старе
-    - велике
-    - темне
-- id: tf-adjective-logic
-  type: true-false
-  instruction: Are these phrases grammatically correct? Choose True or False.
-  items:
-  - statement: Великий кімната.
-    correct: false
-    explanation: Кімната is feminine (вона), so it must be велика кімната.
-  - statement: Нове вікно.
-    correct: true
-    explanation: Вікно is neuter (воно), so it uses the neuter ending -е.
-  - statement: Чистий стіл.
-    correct: true
-    explanation: Стіл is masculine (він), so it uses the masculine ending -ий.
-  - statement: Старе фото.
-    correct: true
-    explanation: Фото is neuter (воно), so it uses the neuter ending -е.
-  - statement: Дорогий сумка.
-    correct: false
-    explanation: Сумка is feminine (вона), so it must be дорога сумка.
-  - statement: Гарне день.
-    correct: false
-    explanation: День is masculine (він), so it must be гарний день.
-- id: fix-adjective-errors
-  type: error-correction
-  instruction: Find and correct the gender agreement error.
-  items:
-  - sentence: Це велика стіл.
-    error: велика
-    correction: великий
-    error_type: word
-    options:
-    - великий
-    - велика
-    - велике
-    explanation: Стіл is masculine, so it should be великий.
-  - sentence: Моя кімната новий.
-    error: новий
-    correction: нова
-    error_type: word
-    options:
-    - новий
-    - нова
-    - нове
-    explanation: Кімната is feminine, so it should be нова.
-  - sentence: Це чиста вікно.
-    error: чиста
-    correction: чисте
-    error_type: word
-    options:
-    - чистий
-    - чиста
-    - чисте
-    explanation: Вікно is neuter, so it should be чисте.
-  - sentence: Мій телефон стара.
-    error: стара
-    correction: старий
-    error_type: word
-    options:
-    - старий
-    - стара
-    - старе
-    explanation: Телефон is masculine, so it should be старий.
-  - sentence: Ця книга дороге.
-    error: дороге
-    correction: дорога
-    error_type: word
-    options:
-    - дорогий
-    - дорога
-    - дороге
-    explanation: Книга is feminine, so it should be дорога.
-  - sentence: Це погана фото.
-    error: погана
-    correction: погане
-    error_type: word
-    options:
-    - поганий
-    - погана
-    - погане
-    explanation: Фото is neuter, so it should be погане.
-- id: unjumble-descriptions
-  type: unjumble
-  instruction: Make correct sentences from the words.
-  items:
-  - words:
-    - великий
-    - Це
-    - плакат.
-    correct_order:
-    - Це
-    - великий
-    - плакат.
-  - words:
     - кімната
-    - Моя
-    - світла.
-    correct_order:
-    - Моя
-    - кімната
-    - світла.
-  - words:
-    - новий
-    - Там
-    - атлас.
-    correct_order:
-    - Там
-    - новий
-    - атлас.
-  - words:
+    - сумка
+    - книга
+    - листівка
+  - label: Середній рід (Яке?)
+    items:
     - вікно
-    - чисте.
-    - Це
-    correct_order:
-    - Це
-    - чисте
-    - вікно.
-  - words:
-    - маленький
-    - Стілець
-    - і
-    - старий.
-    correct_order:
-    - Стілець
-    - маленький
-    - і
-    - старий.
-  - words:
-    - дорогий.
-    - новий
-    - і
-    - Телефон
-    correct_order:
-    - Телефон
-    - новий
-    - і
-    - дорогий.
-- id: translate-adjectives
-  type: translate
-  instruction: Choose the correct Ukrainian translation.
-  items:
-  - source: A big table
-    options:
-    - text: великий стіл
-      correct: true
-    - text: велика стіл
-      correct: false
-    - text: велике стіл
-      correct: false
-  - source: A new book
-    options:
-    - text: нова книга
-      correct: true
-    - text: новий книга
-      correct: false
-    - text: нове книга
-      correct: false
-  - source: An old photo
-    options:
-    - text: старе фото
-      correct: true
-    - text: стара фото
-      correct: false
-    - text: старий фото
-      correct: false
-  - source: A clean room
-    options:
-    - text: чиста кімната
-      correct: true
-    - text: чистий кімната
-      correct: false
-    - text: чисте кімната
-      correct: false
-  - source: A bad day
-    options:
-    - text: поганий день
-      correct: true
-    - text: погана день
-      correct: false
-    - text: погане день
-      correct: false
-  - source: A cheap pen
-    options:
-    - text: дешева ручка
-      correct: true
-    - text: дешевий ручка
-      correct: false
-    - text: дешеве ручка
-      correct: false
-- id: match-nouns-adjectives
-  type: match-up
-  instruction: Match the nouns with the correct **прикметники** (adjectives).
-  pairs:
-  - left: стіл
-    right: великий
-  - left: кімната
-    right: світла
-  - left: фото
-    right: старе
-  - left: телефон
-    right: новий
-  - left: сумка
-    right: дорога
-  - left: вікно
-    right: чисте
-- id: tf-dialogue-comprehension
+    - ліжко
+    - фото
+- id: wb-true-false-grammar
   type: true-false
-  instruction: Read the dialogues and choose True or False.
+  instruction: Read the statements about Ukrainian grammar. Are they true or false?
   items:
-  - statement: Плакат великий.
-    correct: true
-    explanation: 'Тарас says: ''Який великий плакат!'''
-  - statement: Фото нове.
+  - statement: The word «кімната» is a masculine noun.
     correct: false
-    explanation: 'Софія says: ''А там — старе фото.'''
-  - statement: Атлас новий.
+    explanation: Кімната ends in -а, so it is a feminine noun.
+  - statement: The adjective «новий» correctly matches the noun «стіл».
     correct: true
-    explanation: Тарас asks 'Це новий атлас?' and Софія says 'Так, новий атлас.'
-  - statement: Кімната Софії темна.
+    explanation: Стіл is masculine, and новий is the masculine adjective form.
+  - statement: To ask about «вікно», you should use the question word «яка».
     correct: false
-    explanation: 'She says: ''Моя кімната велика і світла.'''
-  - statement: Стіл Софії новий.
+    explanation: Вікно is a neuter noun, so you must use the neuter question word
+      «яке».
+  - statement: The adjectives «світла» and «темна» are both in the feminine form.
     correct: true
-    explanation: 'She says: ''Стіл новий.'''
-  - statement: Ліжко Софії нове.
+    explanation: They both end in -а, which is the standard feminine ending.
+  - statement: The correct question to ask about a «ліжко» is «який?».
     correct: false
-    explanation: 'She says: ''А ліжко — старе.'''
+    explanation: Ліжко is neuter, so the question word should be «яке».
+  - statement: The phrase «старе фото» is grammatically correct.
+    correct: true
+    explanation: Фото is a neuter noun, and старе is the neuter adjective form.
+- id: wb-anagram-vocab
+  type: anagram
+  instruction: Rearrange the letters to form Ukrainian adjectives.
+  items:
+  - letters:
+    - г
+    - а
+    - р
+    - н
+    - и
+    - й
+    answer: гарний
+    hint: nice, beautiful
+  - letters:
+    - в
+    - е
+    - л
+    - и
+    - к
+    - и
+    - й
+    answer: великий
+    hint: big
+  - letters:
+    - с
+    - т
+    - а
+    - р
+    - и
+    - й
+    answer: старий
+    hint: old
+  - letters:
+    - д
+    - о
+    - р
+    - о
+    - г
+    - и
+    - й
+    answer: дорогий
+    hint: expensive
+  - letters:
+    - д
+    - е
+    - ш
+    - е
+    - в
+    - и
+    - й
+    answer: дешевий
+    hint: cheap
+  - letters:
+    - ч
+    - и
+    - с
+    - т
+    - и
+    - й
+    answer: чистий
+    hint: clean
+- id: wb-unjumble-sentences
+  type: unjumble
+  instruction: Put the words in the correct order to make a sentence.
+  items:
+  - words:
+    - велика
+    - Моя
+    - кімната
+    - і
+    - світла.
+    correct_order:
+    - Моя
+    - кімната
+    - велика
+    - і
+    - світла.
+  - words:
+    - великий.
+    - новий
+    - і
+    - Стіл
+    correct_order:
+    - Стіл
+    - новий
+    - і
+    - великий.
+  - words:
+    - Яка
+    - твоя
+    - кімната?
+    correct_order:
+    - Яка
+    - твоя
+    - кімната?
+  - words:
+    - старе.
+    - ліжко
+    - А
+    - —
+    correct_order:
+    - А
+    - ліжко
+    - —
+    - старе.
+  - words:
+    - Він
+    - дешевий.
+    - великий
+    - і
+    correct_order:
+    - Він
+    - великий
+    - і
+    - дешевий.
+  - words:
+    - дорога.
+    - Так,
+    - вона
+    - але
+    correct_order:
+    - Так,
+    - але
+    - вона
+    - дорога.
+- id: wb-count-syllables
+  type: count-syllables
+  instruction: How many syllables are in these words?
+  items:
+  - word: великий
+    correct: 3
+  - word: стіл
+    correct: 1
+  - word: кімната
+    correct: 3
+  - word: новий
+    correct: 2
+  - word: гарний
+    correct: 2
+  - word: маленький
+    correct: 3
+- id: wb-odd-one-out
+  type: odd-one-out
+  instruction: Find the word that does not belong in the group.
+  items:
+  - words:
+    - великий
+    - новий
+    - кімната
+    - чистий
+    correct: 2
+    explanation: Кімната is a noun (object), while the others are adjectives (descriptions).
+  - words:
+    - стіл
+    - телефон
+    - вікно
+    - плакат
+    correct: 2
+    explanation: Вікно is a neuter noun, while the others are masculine.
+  - words:
+    - нова
+    - велике
+    - стара
+    - чиста
+    correct: 1
+    explanation: Велике is a neuter adjective, while the others are feminine.
+  - words:
+    - а
+    - і
+    - але
+    - новий
+    correct: 3
+    explanation: Новий is an adjective, while the others are small connecting words
+      (conjunctions).
+  - words:
+    - новий
+    - чистий
+    - гарний
+    - поганий
+    correct: 3
+    explanation: Поганий has a negative meaning, while the others have positive meanings.
+  - words:
+    - який
+    - яка
+    - кімната
+    - яке
+    correct: 2
+    explanation: Кімната is a noun, while the others are question words.

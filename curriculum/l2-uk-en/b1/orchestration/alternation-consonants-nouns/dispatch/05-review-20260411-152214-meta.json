@@ -1,0 +1,13 @@
+{
+  "timestamp": "2026-04-11T15:22:14.420062",
+  "phase": "review",
+  "agent": "gemini-tools (auto)",
+  "model": "auto",
+  "ok": true,
+  "returncode": 0,
+  "prompt_chars": 63753,
+  "response_chars": 4880,
+  "prompt_tokens_est": 16777,
+  "response_tokens_est": 1284,
+  "duration_s": 91.0
+}

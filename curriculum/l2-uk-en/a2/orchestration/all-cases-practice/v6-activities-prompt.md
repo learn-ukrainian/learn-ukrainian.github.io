@@ -1,4 +1,4 @@
-<!-- version: 1.1.0 | updated: 2026-03-31 -->
+<!-- version: 1.2.0 | updated: 2026-04-12 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -11,6 +11,35 @@ Generate an `activities/all-cases-practice.yaml` file for module **37: Все р
 
 ---
 
+## ⚠️ HARD COUNT TARGETS — READ TWICE
+
+These are the binding numerical contracts for THIS module. The audit will FAIL if you fall short.
+
+| Bucket | Min | Max | Notes |
+|---|---|---|---|
+| Total activities | 12 | 12+ | inline + workbook combined |
+| Inline (lesson tab) | 4 | 6 | one per `<!-- INJECT_ACTIVITY -->` marker, see below |
+| Workbook (Зошит tab) | 8 | 11 | extended practice |
+| Items per activity | 8 | — | each activity must have at least 8 items (unless its type cap is lower — see Activity Type Reference below) |
+
+**You MUST ship at least 4 inline activities AND at least 8 workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+
+**Type diversity is required.** The module (inline + workbook combined) MUST use at least **0** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level. (If `0` is `0`, the audit profile for this level does not enforce type diversity — but variety still produces a better lesson, so aim for 4+ types when the workbook allows it.)
+
+---
+
+## Allowed types for THIS level
+
+- **Inline (lesson) types:** quiz, true-false, fill-in, match-up, group-sort, classify, mark-the-words
+- **Inline priority (preferred):** fill-in, match-up, true-false, quiz
+- **Workbook types:** cloze, error-correction, fill-in, unjumble, translate, match-up, group-sort, odd-one-out, observe, phrase-table, quiz, true-false, mark-the-words
+- **Workbook priority (preferred):** error-correction, cloze, unjumble, translate, fill-in
+- **FORBIDDEN at this level:** anagram, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables, highlight-morphemes, grammar-identify
+
+Pick from the allowed list. Lean heavily on the priority lists. Do not use any forbidden type — the build will reject it.
+
+---
+
 ## Inline vs Workbook Split
 
 Activities have two placement categories:
@@ -19,7 +48,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Rule of thumb:** inline = 2-3 quick checks after key teaching points. Workbook = 4-8 deeper practice exercises covering the full topic.
+**Rule of thumb:** inline = 4–6 quick checks after key teaching points. Workbook = 8–11 deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
 
 ---
 
@@ -27,10 +56,10 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: quiz-identify-case-of-highlighted-nouns-in-the-birthday-dialogue-and-explain-the-trigger -->`
-- `<!-- INJECT_ACTIVITY: fill-in-rewrite-dialogue-sentences-changing-singular-to-plural-e-g -->`
-- `<!-- INJECT_ACTIVITY: match-up-match-sentence-halves-ensuring-case-agreement-with-prepositions-verbs -->`
-- `<!-- INJECT_ACTIVITY: error-correction-all-cases -->`
+- `<!-- INJECT_ACTIVITY: quiz-identify-which-case-a-highlighted-noun-is-in-and-explain-why-verb-or-preposition-trigger -->`
+- `<!-- INJECT_ACTIVITY: match-up-health-cases -->`
+- `<!-- INJECT_ACTIVITY: fill-in-travel-dialogue -->`
+- `<!-- INJECT_ACTIVITY: error-correction-cases -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -92,140 +121,160 @@ required:
 ## Module Content (the prose the learner reads before exercises)
 
 <module_content>
-## Діалог 1: Організовуємо день народження
+## Діалог 1: Організовуємо день народження (Dialogue 1: Organizing a Birthday Party)
 
-Сьогодні ми слухаємо цікаву розмову двох друзів. **Оксана** *(Oksana)* та **Андрій** *(Andrii)* телефонують одне одному. Вони хочуть організувати чудову **вечірку** *(party)* для своєї подруги. Її звати **Олена** *(Olena)*. Це буде великий **сюрприз** *(surprise)* на її **день народження** *(birthday)*. У цьому діалозі вони природно використовують усі сім відмінків української мови. Це чудова можливість уважно послухати та побачити, як працює українська граматика в реальному житті.
+Planning a surprise **вечірка** (party) for a friend involves a lot of details and coordination. You have to decide who to invite, what kind of food to prepare, and where the celebration will take place. When native speakers like Оксана and Андрій discuss these plans, they naturally jump between all seven grammatical cases in a single conversation. Seeing all the cases working together is the best way to understand how Ukrainian sentences are built. Let's look at how they organize a celebration for their friend Олена.
 
-> — **Оксана:** Привіт, Андрію! Ти пам'ятаєш, що завтра в Олени день народження? *(Hi, Andrii! Do you remember that tomorrow is Olena's birthday?)*
-> — **Андрій:** Привіт, Оксано! Так, пам'ятаю. Хто саме **прийде** *(will come)* на свято? *(Hi, Oksana! Yes, I remember. Who exactly will come to the holiday?)*
-> — **Оксана:** Прийдуть усі наші найкращі **друзі** *(friends)*. Але у нас є проблема: ще **немає торта** *(there is no cake)*. *(All our best friends will come. But we have a problem: there is no cake yet.)*
-> — **Андрій:** Я можу **купити торт** *(to buy a cake)*. А що ще нам треба? *(I can buy a cake. And what else do we need?)*
-> — **Оксана:** У нас буде **багато гостей** *(many guests)*, але зовсім **немає соку** *(there is no juice)*. *(We will have many guests, but there is absolutely no juice.)*
-> — **Андрій:** Добре, я куплю сік. А ти можеш **запросити друзів** *(to invite friends)*? *(Okay, I will buy juice. And can you invite the friends?)*
+This first part of their conversation focuses on the guest list and the food. It is time **запрошувати** (to invite) the guests and prepare the menu.
 
-Let's pause and look at the "birthday triggers" we just heard in the conversation. Notice how verbs and words of quantity change the endings of the nouns that follow them. 
+> — **Оксана:** Привіт, Андрію! У суботу буде вечірка для Олени. *(Hi, Andriy! On Saturday there will be a party for Olena.)*
+> — **Андрій:** Клас! А хто прийде? *(Cool! And who will come?)*
+> — **Оксана:** Буде багато гостей. Нам час запрошувати друзів. *(There will be many guests. It is time for us to invite friends.)*
+> — **Андрій:** Я можу купити великий торт. *(I can buy a large cake.)*
+> — **Оксана:** Це чудова ідея. У нас ще немає торта. *(That is a wonderful idea. We don't have a cake yet.)*
+> — **Андрій:** А що ми будемо пити? *(And what will we drink?)*
+> — **Оксана:** Я куплю сік і воду. *(I will buy juice and water.)*
+> — **Андрій:** Добре, я все зрозумів. *(Good, I understood everything.)*
 
-When Andrii says he will buy a cake, he uses the Accusative case for the direct object of his action: «купити торт». Because the word «торт» is an inanimate noun, it does not change its ending here. 
+In this first half of the dialogue, we see the Nominative, Genitive, and Accusative cases in action. The Nominative case introduces the main subjects of the sentence, such as when Andriy asks **хто** (who) will come to the celebration. The word **торт** (cake) changes its form depending on its grammatical role. When Andriy offers to buy it, it acts as a direct object and stays **торт** in the Accusative case because it is an inanimate object. However, when Oksana points out that they do not have one, the negative word **немає** (there is no) forces it into the Genitive case, making it **торта**.
 
-However, when Oksana talks about what they specifically do not have, she must use the Genitive case of absence: «немає торта», «немає соку». Words that express quantity also trigger the Genitive case, which is exactly why she says «багато гостей» instead of the Nominative plural form «багато гості».
+Ми також бачимо знахідний відмінок для живих істот. Оксана каже запрошувати друзів на свято. Оскільки друзі — це люди, ця форма збігається з формою родового відмінка.
 
-> — **Оксана:** Я вже почала **дзвонити друзям** *(to call friends)*. Вони дуже раді. *(I already started to call friends. They are very glad.)*
-> — **Андрій:** Супер. А що ми подаруємо Олені? Нам потрібен гарний **подарунок** *(gift)*. *(Super. And what will we give Olena? We need a beautiful gift.)*
-> — **Оксана:** Я думаю, ми можемо подарувати **Олені** *(to Olena)* нову книгу. *(I think we can give Olena a new book.)*
-> — **Андрій:** Це чудова ідея. Ми прийдемо **з великою компанією** *(with a large company)*. *(That is a wonderful idea. We will come with a large company.)*
-> — **Оксана:** Так, ми будемо **з друзями** *(with friends)*. Ми також можемо **прикрасити** *(to decorate)* кімнату **кульками** *(with balloons)*. *(Yes, we will be with friends. We can also decorate the room with balloons.)*
+> *We also see the Accusative case for living beings. Oksana says to invite friends to the holiday. Because friends are people, this form matches the Genitive case form.*
 
-Now we clearly see both the Dative and Instrumental cases in action. 
+Now let's look at the second part of their conversation, where they discuss the perfect **подарунок** (gift), the location, and the decorations.
 
-The Dative case identifies the "recipient" of an action. When Oksana gives a gift, she gives it directly «Олені» (to Olena). Similarly, when she makes a phone call, she speaks «друзям» (to the friends).
+> — **Андрій:** Оксано, який подарунок купимо Олені? *(Oksana, what gift will we buy for Olena?)*
+> — **Оксана:** Може, книгу? Треба написати друзям і запитати. *(Maybe a book? We need to write to the friends and ask.)*
+> — **Андрій:** Добра ідея. А де ми зустрінемося? У кафе? *(Good idea. And where will we meet? In a cafe?)*
+> — **Оксана:** Так, ми підемо туди з друзями. *(Yes, we will go there with friends.)*
+> — **Андрій:** Ми прикрасимо кімнату яскравими кульками! *(We will decorate the room with bright balloons!)*
+> — **Оксана:** Андрію, це буде чудовий сюрприз. *(Andriy, this will be a wonderful surprise.)*
+> — **Андрій:** Згоден. На вечірці буде дуже весело. *(I agree. It will be very fun at the party.)*
 
-The Instrumental case shows accompaniment or the physical means of doing something. It answers the question "with who?" or "with what?". They plan to arrive «з великою компанією» and celebrate «з друзями». Notice the difference between the singular ending in «з компанією» and the plural ending in «з друзями». They also decorate the room using balloons: «кульками».
+The second part of the conversation brings in the four remaining cases. The Vocative case is used for direct address, which is why the names change to **Оксано** and **Андрію**. The Dative case shows the recipient of an action, such as buying a gift for Olena (**Олені**) or writing a message to the friends (**друзям**). We use the Instrumental case to show accompaniment, like going with friends (**з друзями**), or to indicate the instrument used to perform an action, like decorating with balloons (**кульками**). Finally, the Locative case is used to indicate the location of an event or meeting.
 
-> — **Андрій:** Де саме ми зробимо цю вечірку? **У ресторані** *(in a restaurant)* «Дніпро»? *(Where exactly will we do this party? In the restaurant "Dnipro"?)*
-> — **Оксана:** Так, там завжди дуже гарно. Ми будемо зручно сидіти **на терасі** *(on the terrace)*. *(Yes, it is always very beautiful there. We will sit comfortably on the terrace.)*
-> — **Андрій:** Домовилися, **Оксано** *(Oksana)*! Усе буде ідеально. *(Agreed, Oksana! Everything will be perfect.)*
-> — **Оксана:** Дуже дякую за допомогу, **Андрію** *(Andrii)*! До завтра! *(Thank you very much for the help, Andrii! Until tomorrow!)*
+:::info
+**Grammar box**
+Remember that the Locative case is the only case that *never* appears without a preposition. You will always see it with words like **у/в** (in) or **на** (on/at), as seen in the phrases **у кафе** (in a cafe) and **на вечірці** (at the party).
+:::
 
-В Україні є дуже цікава традиція. Зазвичай **іменинник** *(birthday person)* сам організовує свято і щедро **частує** *(treats)* своїх гостей. Гості просто приносять подарунки, але вони не платять за ресторан. Оскільки Оксана та Андрій роблять таємний сюрприз, це приємний виняток із правил! *(In Ukraine there is a very interesting tradition. Usually the birthday person themselves organizes the holiday and generously treats their guests. Guests simply bring gifts, but they do not pay for the restaurant. Since Oksana and Andrii are making a secret surprise, this is a pleasant exception to the rules!)*
+:::tip
+**Did you know?**
+Ukrainian birthday traditions might differ from what you are used to. In some cultures, guests pool their money to pay for the birthday person's meal or drinks when they go out to celebrate. In Ukraine, the custom is the exact opposite. The birthday person, known as the іменинник (birthday boy) or іменинниця (birthday girl), is expected to **частувати** (treat) the guests to food and drinks. The guests bring gifts, but the host covers the cost of the celebration.
+:::
 
-<!-- INJECT_ACTIVITY: quiz-identify-case-of-highlighted-nouns-in-the-birthday-dialogue-and-explain-the-trigger -->
+<!-- INJECT_ACTIVITY: quiz-identify-which-case-a-highlighted-noun-is-in-and-explain-why-verb-or-preposition-trigger -->
 
-## Діалог 2: У лікарні
+## Діалог 2: У лікарні (Dialogue 2: In the Hospital)
 
-Сьогодні Петро йде до **лікарні** *(hospital)*. Він дуже погано почувається ще з самого ранку. У лікарні завжди багато хворих людей, тому Петро спочатку підходить до **реєстратури** *(reception)*. Йому потрібно точно дізнатися, де приймає його **лікар** *(doctor)*. Петро має **запис** *(appointment)* на десяту годину ранку. Він сподівається, що лікар швидко допоможе йому.
+Our next scenario takes us to the hospital, where we will observe a conversation between a doctor and a patient. This dialogue focuses on expressing physical states, describing symptoms, and giving medical advice. We will see how different case constructions are essential for communicating health concerns accurately. You will notice that talking about how you feel in Ukrainian requires a completely different sentence structure than in English.
 
-> — **Петро:** Добрий день! Я маю запис до лікаря Коваленка.
-> — **Адміністраторка:** Добрий день! Ваше прізвище, будь ласка?
-> — **Петро:** Моє прізвище — Бойко. Я записаний на десяту годину.
-> — **Адміністраторка:** Хвилинку, я перевірю. Так, бачу. Але лікар зараз зайнятий. У нього інший **пацієнт** *(patient)*.
-> — **Петро:** Зрозуміло. А де мені чекати? Мені потрібно сидіти в черзі?
-> — **Адміністраторка:** Ні, ви можете почекати біля кабінету. Кабінет лікаря Коваленка знаходиться на другому поверсі.
-> — **Петро:** А до лікарки Іванової зараз можна? Може, до неї немає черги?
-> — **Адміністраторка:** На жаль, без неї ми не можемо вас прийняти. Вона сьогодні не працює. Зачекайте біля кабінету Коваленка.
+> — **Лікар:** Добрий день! Заходьте, будь ласка. Що вас турбує сьогодні? *(Good day! Come in, please. What is bothering you today?)*
+> — **Пацієнт:** Добрий день! Мені дуже погано ще з учорашнього вечора. У мене висока температура. *(Good day! I have felt very bad since yesterday evening. I have a high temperature.)*
+> — **Лікар:** Розумію. Це може бути вірус. У вас болить голова або горло? *(I understand. This might be a virus. Does your head or throat ache?)*
+> — **Пацієнт:** Так, у мене сильно болить голова, але немає великого болю в горлі. *(Yes, my head aches badly, but there is no great pain in the throat.)*
+> — **Лікар:** Ясно. Що я можу порадити пацієнтові в такій ситуації? Звичайно, багато відпочивати. *(I see. What can I advise a patient in such a situation? Of course, to rest a lot.)*
+> — **Пацієнт:** Я згоден. Чи є гарна аптека біля лікарні? *(I agree. Is there a good pharmacy near the hospital?)*
+> — **Лікар:** Так, нова аптека знаходиться зовсім поруч, біля лікарні, праворуч від головного входу. *(Yes, the new pharmacy is located very close, near the hospital, to the right of the main entrance.)*
+> — **Пацієнт:** Дякую, мені вже трохи краще від вашої уваги та підтримки. *(Thank you, I feel a little better already from your attention and support.)*
 
-When we use personal pronouns like «він» (he), «вона» (she), or «вони» (they) after a preposition, we must add the letter «н» at the beginning of the pronoun. The receptionist says «у нього» instead of «у його». This rule applies to all indirect cases when a preposition is present. For example, if Petro asks about a female doctor, he says «до неї» (to her). If the doctor is not there, we say «без неї» (without her). If Petro talks about the doctors in plural, he might ask: «Чи є ліки для них?» (Are there medicines for them?). Without a preposition, the letter «н» is simply dropped: «Я бачу його» (I see him).
+У цій частині розмови ми чітко бачимо, як працюють називний, родовий та давальний відмінки. Коли пацієнт говорить про свої симптоми, він використовує конструкцію «у мене» з іменником у називному відмінку. Він каже: «у мене температура», «у мене болить голова». В українській мові ми не кажемо, що ми «маємо» біль або температуру.
 
-Петро піднімається на другий поверх і заходить до кабінету.
+> *In this part of the conversation, we clearly see how the Nominative, Genitive, and Dative cases work. When the patient talks about his symptoms, he uses the construction "у мене" with a noun in the Nominative case. He says: "у мене температура" (I have a temperature), "у мене болить голова" (my head aches). In Ukrainian, we do not say that we "have" pain or a temperature.*
 
-> — **Лікар:** Добрий день, пане Петре. Сідайте, будь ласка. Що вас сьогодні турбує?
-> — **Петро:** Добрий день, лікарю. Мені дуже погано.
-> — **Лікар:** Розкажіть детальніше. Що саме у вас болить?
-> — **Петро:** У мене болить голова і горло. Також я прийшов з високою температурою і страшним кашлем.
-> — **Лікар:** Яка у вас **температура** *(temperature)* зараз?
-> — **Петро:** Тридцять вісім і п'ять. Я відчуваю сильну слабкість у всьому тілі.
-> — **Лікар:** Зрозуміло. Мені потрібно вас уважно оглянути. Відкрийте рот і скажіть «А-а-а».
-> — **Петро:** А-а-а. Це дуже неприємно.
-> — **Лікар:** Так, ваше горло дуже червоне. Ви маєте класичну застуду, пане Петре. Ваші легені чисті, це добре.
+To describe a general physical or emotional state, we use the Dative case with an adverb. The patient uses this when saying «мені погано» and later «мені краще». Notice how the Genitive case appears after the preposition «біля» to indicate location, and after the negative word «немає» to show absence. Finally, the word **пацієнт** (patient) is in the Dative case because it acts as the recipient of the doctor's advice.
 
-Notice how Petro describes his health. In English, you say "I have a headache". In Ukrainian, the body part is the subject in the Nominative case, and it performs the action of hurting. The verb is «боліти» (to hurt). Petro says «у мене болить голова» (literally: "at me the head hurts"). If multiple things hurt, the verb changes to plural: «у мене болять очі» (my eyes hurt). When describing a general state, we use the Dative case with an adverb: «мені погано» (to me it is bad) or the reflexive verb «почуватися» (to feel). You can simply say «я погано почуваюся».
+> — **Пацієнт:** Пане докторе, що мені робити далі? Я хочу швидко одужати. *(Mr. Doctor, what should I do next? I want to recover quickly.)*
+> — **Лікар:** Ви прийшли до мене з сильним кашлем і температурою. Вам треба регулярно приймати ці ліки. *(You came to me with a severe cough and a temperature. You need to take this medicine regularly.)*
+> — **Пацієнт:** Я можу купити їх просто так в аптеці? *(Can I buy them just like that in the pharmacy?)*
+> — **Лікар:** Ні, це серйозні препарати. Купіть їх за рецептом. Я зараз випишу потрібний документ. *(No, these are serious medications. Buy them with a prescription. I will write out the necessary document now.)*
+> — **Пацієнт:** Лікарю, а коли мені прийти до вас знову? *(Doctor, and when should I come to you again?)*
+> — **Лікар:** Ви зараз у лікарні на першому прийомі. Чекаю вас на огляд через один тиждень. *(You are currently in the hospital at the first appointment. I am waiting for you for a check-up in one week.)*
+> — **Пацієнт:** Дякую за допомогу! Я буду дуже уважно берегти своє здоров'я. *(Thank you for the help! I will protect my health very carefully.)*
+> — **Лікар:** Це головне правило. Здоров'я — найважливіше для кожної людини. *(That is the main rule. Health is the most important thing for every person.)*
 
-> — **Лікар:** Я випишу вам **рецепт** *(prescription)*. Вам потрібно **приймати ліки** *(to take medicine)* за рецептом тричі на день після їжі. Це дуже важливо.
-> — **Петро:** Дякую. А що ще мені потрібно робити вдома?
-> — **Лікар:** Я раджу вам багато спати. Пийте гарячий чай з лимоном і медом. Ваш організм потребує відпочинку.
-> — **Петро:** Добре. Коли мені прийти на наступний **огляд** *(examination)*?
-> — **Лікар:** Приходьте до мене через п'ять днів. Якщо вам раптом стане гірше, телефонуйте одразу. Бажаю вам міцного **здоров'я** *(health)*!
-> — **Петро:** Дуже дякую вам за допомогу, пане докторе! До побачення.
+Тут ми зустрічаємо знахідний, орудний, місцевий та кличний відмінки в дії. Лікар каже «приймати ліки» і чекає пацієнта «на огляд» — це прямі об'єкти та напрямок дії у знахідному відмінку. Зверніть увагу, що слово «ліки» завжди вживається у множині, тому воно має відповідну форму.
 
-<!-- INJECT_ACTIVITY: fill-in-rewrite-dialogue-sentences-changing-singular-to-plural-e-g -->
+> *Here we meet the Accusative, Instrumental, Locative, and Vocative cases in action. The doctor says to "take medicine" and waits for the patient "for a check-up" — these are direct objects and the direction of action in the Accusative case. Note that the word "ліки" (medicine) is always used in the plural, so it has the corresponding form.*
 
-## Діалог 3: Подорож Україною
+The Instrumental case describes accompanying symptoms or conditions, as seen in the phrases «з кашлем» and «за рецептом». The Locative case pins down the exact location of the action, such as «у лікарні» and «на прийомі». Finally, direct address triggers the Vocative case, which is why the patient says «Пане докторе» and «Лікарю».
 
-Україна — дуже велика і красива країна. Тарас та Ірина планують велику **подорож** *(trip)*. Вони хочуть побачити нове **місто** *(city)* і високі **гори** *(mountains)*. Також вони мріють поїхати на південь, де тече широка **річка** *(river)*. Їхній маршрут дуже довгий. Він іде через усю країну, майже від одного **кордону** *(border)* до іншого. Давайте послухаємо їхню розмову.
+It is also important to understand how to change singular concepts to plural. For example, the phrase «один пацієнт» in the Nominative case changes completely in the Genitive plural to become «багато пацієнтів». Words that only exist in the plural, known as pluralia tantum, like **ліки** (medicine), stay the same in the Nominative and Accusative cases. However, they change to «ліків» in the Genitive case, such as when you say «багато ліків».
 
-> — **Тарас:** Ірино, куди ми поїдемо у відпустку цього літа? Київ — гарне місто, але хочеться чогось нового.
-> — **Ірина:** Тарасе, я дуже хочу поїхати до **Львова** *(Lviv)*. Я так люблю старі вулиці цього прекрасного міста.
-> — **Тарас:** Це чудова ідея! Але може спочатку ми маємо відвідати **Одесу** *(Odesa)*? Ми дуже давно там не були.
-> — **Ірина:** Добре, я згодна. А після Одеси ми поїдемо на захід країни? Ми можемо поїхати через Умань.
-> — **Тарас:** Саме так. З Одеси ми поїдемо просто до Львова. Ми будемо там у четвер. А потім я дуже хочу відпочивати в **Карпатах** *(Carpathians)*.
-> — **Ірина:** О, я теж мрію про Карпати! Ми можемо знайти тихий будиночок біля гірської річки і милуватися Карпатами.
-> — **Тарас:** Ідеальний план. Ми точно побачимо дуже багато гарних місць під час подорожі.
+:::info
+**Grammar box**
+When talking about health, avoid translating directly from English. Never use the direct translation «Я маю головний біль». Always use the natural Ukrainian structure for aches, such as **У мене болить голова** (My head aches). The word **лікар** (doctor) and the piece of paper they give you, the **рецепт** (prescription), are essential vocabulary for a successful hospital visit.
+:::
 
-In this dialogue, Taras and Iryna use different cases for destinations. When they talk about moving towards a city, they use the Genitive case with the preposition «до». For masculine cities, the ending is usually «-а» or «-у». For example, they say «до Львова» and «до Києва» (to Kyiv). When they talk about the city as a direct object, they use the Accusative case: «відвідати Одесу» (to visit Odesa). The mountains «Карпати» only exist in the plural form. When Taras talks about being inside the mountains, he uses the Locative plural with the preposition «в»: «в Карпатах». If they wanted to go *to* the mountains, they would say «в Карпати» using the Accusative case for direction.
+<!-- INJECT_ACTIVITY: match-up-health-cases -->
 
-> — **Ірина:** Як саме ми будемо туди їхати? Будемо подорожувати **потягами** *(trains)* чи **машинами** *(cars)*?
-> — **Тарас:** Я думаю, що набагато краще їхати нашою власною машиною. Так ми матимемо більше свободи під час подорожі.
-> — **Ірина:** Повністю згодна. Ми зможемо зупинятися там, де тільки захочемо.
-> — **Тарас:** Так, адже по дорозі є дуже багато **визначних місць** *(landmarks)*. Ми обов'язково відвідаємо кілька старовинних замків.
-> — **Ірина:** Чудово! А ми запросимо когось із собою? Ми ж можемо поїхати з нашими **друзями** *(friends)*.
-> — **Тарас:** Звісно! Я сьогодні запитаю Олега та Марію. З ними завжди надзвичайно весело подорожувати.
-> — **Ірина:** Прекрасно. Тільки нам треба взяти з собою достатньо **грошей** *(money)* на пальне та їжу.
-> — **Тарас:** Не хвилюйся про це, я вже все детально порахував.
+## Діалог 3: Подорож Україною (Dialogue 3: Traveling Across Ukraine)
 
-Notice the Instrumental case in the plural. When Iryna asks about the method of transport, she says «потягами» or «машинами». The endings «-ами» and «-ями» are standard for the Instrumental plural. They also use this case to say *with whom* they are traveling: «з друзями». The word «гроші» is another noun that only exists in the plural. In the Genitive case, it becomes «грошей» (of money). If you need to use it in the Instrumental case (for example, to pay *with money*), you can use a unique, older ending «-ми» and say «грішми». You can also use the standard form «грошима». Both are correct and natural.
+Третя ситуація — це велика **подорож** (trip) Україною. Двоє друзів планують свій маршрут, обговорюють транспорт та міста, які хочуть побачити. У цьому діалозі ви побачите, як працюють дієслова руху разом з різними прийменниками та відмінками.
 
-> — **Ірина:** Отже, ми їдемо до Львова. Але там часто йде дощ.
-> — **Тарас:** Нічого страшного. Львову дуже пасує дощ. Це навіть романтично.
-> — **Ірина:** Можливо, ти маєш рацію. А що ми будемо там робити?
-> — **Тарас:** Ми будемо багато гуляти по **Хрещатику** *(Khreshchatyk)*... Ой, я переплутав! Хрещатик у Києві.
-> — **Ірина:** Смішно! Ми будемо гуляти по старих площах Львова, а потім підемо гуляти по горах.
-> — **Тарас:** Домовилися. Це буде найкраща відпустка у 2024 році!
+> *The third situation is a big trip across Ukraine. Two friends are planning their route, discussing transport and the cities they want to see. In this dialogue, you will see how verbs of motion work together with different prepositions and cases.*
 
-<!-- INJECT_ACTIVITY: match-up-match-sentence-halves-ensuring-case-agreement-with-prepositions-verbs -->
+> — **Марко:** Привіт, Тарасе! Я вже планую нашу літню відпустку. Київ — гарне місто, але я хочу поїхати на захід. *(Hi, Taras! I am already planning our summer vacation. Kyiv is a beautiful city, but I want to go to the west.)*
+> — **Тарас:** Привіт! Це чудова ідея. Отже, ми їдемо з Києва. Куди саме ти хочеш поїхати? *(Hi! That is a great idea. So, we are traveling from Kyiv. Where exactly do you want to go?)*
+> — **Марко:** Я хочу купити квитки до Львова. Там є багато **визначних місць** (landmarks). *(I want to buy tickets to Lviv. There are many landmarks there.)*
+> — **Тарас:** Згоден. Але спочатку нам треба відвідати Одесу. Я давно там не був. *(Agreed. But first we need to visit Odesa. I haven't been there in a long time.)*
+> — **Марко:** Добре. Тоді ми поїдемо через Умань. Це дуже цікавий і гарний маршрут. *(Good. Then we will travel through Uman. It is a very interesting and beautiful route.)*
+> — **Тарас:** Супер. Я подивлюся, скільки коштують квитки, і ми вирішимо деталі. *(Super. I will check how much the tickets cost, and we will decide the details.)*
 
-## Самоперевірка: Знайди помилку
+When planning a route, the verbs of motion dictate the cases you use. The starting point always uses the preposition **з** to mean "from" with the Genitive case, as in «з Києва». The destination uses **до** to mean "to", which also requires the Genitive case, like «до Львова». However, if you are passing through a place, you use the preposition **через** (through) with the Accusative case, resulting in «через Умань». You also see the Genitive plural in action when Marko says «багато визначних місць», because quantity words always trigger the Genitive case for the following noun.
 
-Часто ми робимо помилки, коли перекладаємо фрази з англійської мови слово в слово. English speakers often use direct translation for common phrases. In Ukrainian, we use a completely different structure. Ми кажемо: «У мене болить голова». Інша типова помилка — це прийменник «по». In Ukrainian, when we talk about moving across a surface, we must use the Locative case. Тому ми кажемо: «Ми гуляли по горах». Ми не використовуємо давальний відмінок у цій ситуації.
+> — **Тарас:** Друже! Нам треба поспішати. Квитки швидко купують. Краще поїхати **потягом** (train). *(Friend! We need to hurry. Tickets are bought quickly. It is better to travel by train.)*
+> — **Марко:** Тарасе, я теж так думаю. Я їду з подругою, тому нам потрібні два місця поруч. *(Taras, I think so too. I am traveling with a girlfriend, so we need two seats next to each other.)*
+> — **Тарас:** Чудово. Тоді ми зустрінемося у Львові на вокзалі. Що будемо робити там? *(Great. Then we will meet in Lviv at the station. What will we do there?)*
+> — **Марко:** Спочатку купимо сувеніри друзям у Львові. А потім повернемося і гулятимемо по Хрещатику. *(First we will buy souvenirs for friends in Lviv. And then we will return and walk along Khreshchatyk.)*
+> — **Тарас:** Ти забув про гори. Після Львова ми будемо **милуватися** (to admire) Карпатами. *(You forgot about the mountains. After Lviv we will admire the Carpathians.)*
+> — **Марко:** Точно! У 2024 році це буде наша найкраща подорож. *(Exactly! In 2024, this will be our best trip.)*
 
-Ось коротка **шпаргалка** *(cheat sheet)*, яка допоможе вам швидко перевірити себе:
+Notice how the Locative and Instrumental cases serve very different purposes here. The Locative case marks a static location or time, as seen in «у Львові» and «у 2024 році». It is also used after the preposition **по** to describe movement across a surface, creating the authentic Ukrainian phrase «по Хрещатику». The Instrumental case shows the means of transport without any preposition, like «поїхати потягом». It also follows specific verbs. For example, the verb **милуватися** (to admire) always requires the Instrumental case. The noun **Карпати** (the Carpathians) is a word that only exists in the plural, so it takes the Instrumental plural ending to become «Карпатами».
 
-1. **Називний** *(Nominative)*: Хто? Що? Це головне слово в реченні. The person or thing doing the action.
-2. **Родовий** *(Genitive)*: Кого? Чого? Ми використовуємо його, коли чогось немає («немає часу») або коли ми щось маємо («у мене є»). Також він потрібен для кількості («багато друзів») або після прийменників «з», «від», «для», «без».
-3. **Давальний** *(Dative)*: Кому? Чому? Він показує напрямок дії («дати другові») або фізичний стан («мені тепло», «мені подобається»).
-4. **Знахідний** *(Accusative)*: Кого? Що? Ми вживаємо його для об'єкта дії («бачу машину»). Також він показує напрямок руху з прийменниками «в» чи «на» («їду в місто»).
-5. **Орудний** *(Instrumental)*: Ким? Чим? Використовуйте його для інструмента дії («писати ручкою») або коли робите щось разом («з друзями»).
-6. **Місцевий** *(Locative)*: На/У кому? чому? Цей відмінок завжди потребує прийменника («в», «на», «по», «при»). Він показує місце («жити в Києві») або рух по поверхні («йти по вулиці»).
-7. **Кличний** *(Vocative)*: Ми вживаємо цей відмінок, коли звертаємося до людини («Олеже!», «Маріє!»).
+Українська мова має зручні фрази для планування. Ви можете пропонувати ідеї так: «Давай поїдемо...», «Може, спочатку...» або «А потім можна...». Ці конструкції часто вимагають інфінітива, наприклад, «можна поїхати». Вибрані дієслова руху потім визначають правильний відмінок для вашого напрямку.
 
-Давайте розглянемо три типові помилки та виправимо їх. Look at these buggy sentences and how to fix them:
+> *The Ukrainian language has convenient phrases for planning. You can suggest ideas like this: "Let's go...", "Maybe, first...", or "And then we can...". These constructions often require an infinitive, for example, "one can go". The chosen verbs of motion then determine the correct case for your destination.*
 
-* *«Я допомагаю мою сестру.»* Дієслово «допомагати» завжди вимагає давального відмінка, а не знахідного. The correct version is different. Ми маємо сказати: «Я допомагаю моїй сестрі».
-* *«Ми їхали по потягу.»* Прийменник «по» з місцевим відмінком означає рух по поверхні. If you want to say by train, you need the Instrumental case without a preposition. Правильний варіант: «Ми їхали потягом». You could also use the Locative case if you mean inside the train. Тоді ми скажемо: «Ми їхали в потязі».
-* *«У театрі було багато студенти.»* Після слова «багато» ми завжди маємо використовувати родовий відмінок множини. The correct sentence is different. Правильно буде: «У театрі було багато студентів».
+:::info
+**Grammar box**
+Remember that the preposition **по** in Ukrainian requires the Locative case when describing movement along a surface (e.g., **по вулицях**, **по місту**). Do not use the Dative case here, as that is a common error borrowed from other languages.
+:::
 
-The best strategy for self-correction is the check we learned before. Завжди перевіряйте дієслово або прийменник перед іменником. They dictate the rules. Вони вирішують, який відмінок треба використати в реченні.
+<!-- INJECT_ACTIVITY: fill-in-travel-dialogue -->
 
-<!-- INJECT_ACTIVITY: error-correction-all-cases -->
+## Самоперевірка: Знайди помилку (Self-Check: Find the Error)
 
+Пошук помилок у тексті — це останній крок до розуміння граматики. Коли ви можете пояснити проблему, ви дійсно знаєте правило. Це важливо для вашого здоров'я під час навчання, щоб не мати стресу. Прочитайте ці короткі тексти та знайдіть неправильні слова.
+
+> *Finding errors in a text is the final step to understanding grammar. When you can explain the problem, you truly know the rule. This is important for your **здоров'я** (health) during your studies so you do not have stress. Read these short texts and find the incorrect words.*
+
+Учора друзі поїхали у подорож. Вони подорожували швидким потягом. Спочатку вони їхали по *полям. Потім вони пішли дивитися визначне місце з *друзі. У цьому тексті є дві помилки з прийменниками. Фраза «по полям» — неправильна. Прийменник «по» вимагає місцевого відмінка, тому треба казати «по полях». Фраза «з друзі» також неправильна. Прийменник «з» вимагає орудного відмінка, тому правильна форма — «з друзями».
+
+> *Yesterday the friends went on a **подорож** (trip, journey). They traveled by a fast **потяг** (train). First they drove across the fields (incorrect). Then they went to see a **визначне місце** (landmark, sight) with friends (incorrect). There are two mistakes with prepositions in this text. The phrase «по полям» is incorrect. The preposition «по» requires the Locative case, so you must say «по полях». The phrase «з друзі» is also incorrect. The preposition «з» requires the Instrumental case, so the correct form is «з друзями».*
+
+Пацієнт прийшов у лікарню. Він сказав: «Я допомагаю *сестру, але зараз мені потрібні ліки». Там було багато *студенти. Лікар уважно слухав його. Тут є помилки з об'єктами та кількістю. Дієслово «допомагати» завжди вимагає давального відмінка. Правильно говорити «допомагаю сестрі». Слова, які означають кількість, вимагають родового відмінка множини. Тому треба казати «багато студентів».
+
+> *The **пацієнт** (patient) came to the hospital. He said: "I am helping my sister (incorrect), but now I need **ліки** (medicine)." There were many students (incorrect) there. The **лікар** (doctor) listened to him carefully. Here there are mistakes with objects and quantity. The verb "to help" always requires the Dative case. It is correct to say «допомагаю сестрі». Words that mean quantity require the Genitive plural. Therefore, you must say «багато студентів».*
+
+Щоб не робити таких помилок, завжди пам'ятайте про сім відмінків. Ця таблиця допоможе вам правильно вибрати форму слова. Використовуйте її, коли хочете купити подарунок, запрошувати гостей або організувати вечірку.
+
+> *To avoid making such mistakes, always remember the seven cases. This table will help you correctly choose a word form. Use it when you want to buy a **подарунок** (gift, present), **запрошувати** (to invite) guests, or organize a **вечірка** (party).*
+
+:::info
+**Підказка з відмінків (Case Cheat Sheet)**
+
+*   **Називний** (Nom): хто? / що? (Subject: Київ, друзі)
+*   **Родовий** (Gen): кого? / чого? (Absence, quantity, 'з / до / біля': немає торта, до Львова)
+*   **Давальний** (Dat): кому? / чому? (Recipient, age, impersonal states: друзям, мені холодно)
+*   **Знахідний** (Acc): кого? / що? (Direct object, 'через': купити ліки, через Умань)
+*   **Орудний** (Instr): ким? / чим? (Instrument, 'з' accompaniment: потягом, з кашлем)
+*   **Місцевий** (Loc): на / у кому? / чому? (Location 'в / на / по': у лікарні, по Хрещатику)
+*   **Кличний** (Voc): (Addressing someone directly: Оксано, лікарю!)
+:::
+
+<!-- INJECT_ACTIVITY: error-correction-cases -->
 </module_content>
 
 ---
@@ -239,48 +288,68 @@ version: "1.0"
 module: all-cases-practice
 level: a2
 
+# NOTE — these are SHAPE examples. The real targets are at the top of this prompt
+# (12 total / 4–6 inline / 8–11 workbook,
+# 8+ items per activity). The shapes below are TRUNCATED for readability;
+# YOUR output MUST hit those minimums.
+
 inline:
   - id: marker-id-here        # MUST match an <!-- INJECT_ACTIVITY: ... --> marker
     type: quiz                 # activity type
     instruction: "Оберіть правильний варіант"
-    items:
+    items:                     # ← real output: ≥ 8 items
       - question: "_____ стіл"
-        options: ["мій", "моя", "моє"]
+        options: ["мій", "моя", "моє", "мої"]
         correct: 0             # 0-based index
+      - question: "Це ____ книга."
+        options: ["мій", "моя", "моє", "мої"]
+        correct: 1
+      # ... add at least 8 items total — never stop at 1-2
 
   - id: another-marker-id
     type: fill-in
     instruction: "Вставте правильне слово"
-    items:
+    items:                     # ← real output: ≥ 8 items
       - sentence: "Це ____ кімната."
         answer: "моя"
         options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ вікно."
+        answer: "моє"
+        options: ["мій", "моя", "моє"]
+      # ... ≥ 8 items total
 
 workbook:
-  - type: match-up
+  - id: match-up-vocab
+    type: match-up
     instruction: "З'єднайте пари"
-    pairs:
+    pairs:                     # ← real output: ≥ 8 pairs
       - left: "стіл"
         right: "він"
       - left: "книга"
         right: "вона"
       - left: "вікно"
         right: "воно"
+      # ... ≥ 8 pairs total
 
-  - type: group-sort
+  - id: group-sort-gender
+    type: group-sort
     instruction: "Розподіліть слова за категоріями"
     groups:
-      - label: "Category A"
-        items: ["word1", "word2"]
-      - label: "Category B"
-        items: ["word3", "word4"]
+      - label: "Чоловічий рід"
+        items: ["стіл", "олівець", "будинок"]   # ≥ 3 items per group
+      - label: "Жіночий рід"
+        items: ["книга", "ручка", "школа"]
+      - label: "Середній рід"
+        items: ["вікно", "море", "молоко"]
 
-  - type: true-false
+  - id: true-false-grammar
+    type: true-false
     instruction: "Правда чи ні?"
-    items:
-      - statement: "Statement here"
-        correct: true
-        explanation: "Why it's true"
+    items:                     # ← real output: ≥ 8 items
+      - statement: "«Книга» — це чоловічий рід."
+        correct: false
+        explanation: "Книга закінчується на -а, отже жіночий рід."
+      # ... ≥ 8 items total
 
   - type: error-correction
     instruction: "Виправте помилку"
@@ -351,7 +420,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -447,10 +516,15 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 ## Quality Rules
 
-**ITEM COUNT MINIMUMS (non-negotiable):**
-- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
-- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
-- If you can't think of enough items, add more examples from the module's vocabulary and content.
+**ACTIVITY COUNT MINIMUMS (non-negotiable, audit-enforced):**
+- **Total: 12 activities.** Inline: 4–6. Workbook: 8–11. The audit gate FAILS the module if you ship fewer.
+- **Type diversity: workbook MUST cover ≥5 distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
+- **Match the inline markers exactly.** Every `<!-- INJECT_ACTIVITY: id -->` marker in the prose needs a matching inline activity with that exact id. Skipping markers means the lesson tab is broken.
+
+**ITEM COUNT MINIMUMS (non-negotiable, per-activity):**
+- **Default minimum: 8 items per activity.** Quiz, fill-in, match-up, true-false, anagram, error-correction, translate, cloze, mark-the-words, divide-words, count-syllables, odd-one-out, group-sort categories: all ≥ 8.
+- **Lower minimums for specific types only:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items, essay-response/critical-analysis = 1 prompt.
+- If you can't think of enough items, add more examples from the module's vocabulary and content. NEVER ship a 1-item or 2-item activity unless its type cap explicitly allows it.
 - **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
 - **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
@@ -557,6 +631,27 @@ IMPORTANT: After using tools, output your COMPLETE module content as plain text.
 1. Run `verify_words` on all Ukrainian words in your exercises — every word must exist in VESUM
 2. Run `query_cefr_level` on any word you're unsure about — it must be a2-appropriate
 3. For fill-in answers and distractors, verify the exact form (case, number, gender) with `verify_lemma`
+
+---
+
+## ⚠️ MANDATORY FINAL CHECKLIST — verify before emitting YAML
+
+Walk through this checklist explicitly before you start emitting. If ANY box is unchecked, fix it FIRST.
+
+- [ ] My output has **at least 4** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
+- [ ] My output has **at least 8** workbook activities.
+- [ ] **Total ≥ 12.**
+- [ ] **Every** activity has **at least 8** items, pairs, or statements (except types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3, essay-response=1).
+- [ ] The module (inline + workbook combined) uses **at least 0 distinct activity types** (or 4+ when 0 = 0 and the workbook size allows it). I am NOT shipping a wall of quizzes.
+- [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
+- [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
+- [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+- [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+- [ ] My inline count is between 4 and 6. I did NOT create more injection markers than 6.
+- [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
+- [ ] At B1+, all instructions are in Ukrainian (no English fallback).
+
+If you cannot tick all of these, REGENERATE the activities BEFORE outputting. Shipping under-spec means the build rejects you and the heal loop has to redo your work — wasting compute.
 
 ---
 

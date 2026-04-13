@@ -25,7 +25,7 @@ Grand total: ~2290 words
 <previous_context>
 [...previous sections truncated...]
 
-ми прибираємо дієслово, фраза стає енергійною. *(When we remove the verb, the phrase becomes energetic.)* Подивіться на гасло: «**Усе найкраще — дітям!**» *(All the best [belongs] to children!)*. *(Look at the slogan: "All the best [belongs] to children!".)* Тут немає дієслова «належить» або «дається». *(There is no verb "belongs" or "is given" here.)* У письмовому тексті на місці пропущеного слова ми ставимо **тире** *(dash)*. *(In a written text, in the place of the omitted word we put a dash.)* Тире показує нам, де стояло дієслово. *(The dash shows us where the verb stood.)* Ще один приклад: «**Кожному — своє**» *(To each [his] own)*. *(Another example: "To each [his] own".)* Еліпсис робить такі фрази легкими для запам'ятовування. *(Ellipsis makes such phrases easy to remember.)* В українській мові є ще один важливий прийом. *(In the Ukrainian language there is another important device.)* Це **повтор** *(repetition)*. *(This is repetition.)* Іноді ми навмисне повторюємо одне слово. *(Sometimes we intentionally repeat one word.)* Це свідомий вибір, щоб показати інтенсивність дії. *(This is a conscious choice to show the intensity of an action.)* Наприклад, ви довго шукали рішення. *(For example, you looked for a solution for a long time.)* Ви кажете: «Ми **думали-думали**, і знайшли» *(We thought and thought, and found it)*. *(You say: "We thought and thought, and found it".)* Повтор показує, що процес був довгим. *(Repetition shows that the process was long.)* Якщо місце знаходиться неблизько, ми кажемо: «Вони живуть **далеко-далеко**» *(They live very far away)*. *(If a place is located not close, we say: "They live very far away".)* А якщо люди йшли багато годин, вони **ходили-ходили** *(walked and walked)*. *(And if people walked for many hours, they walked and walked.)* Повтор часто зустрічається в українському фольклорі. *(Repetition is often found in Ukrainian folklore.)* Він створює особливий ритм мовлення. *(It creates a special rhythm of speech.)* Відоме прислів'я каже: «Тихше їдеш — далі будеш» *(The quieter you go, the further you will be)*. *(A famous proverb says: "The quieter you go, the further you will be".)* Українці також люблять парні вирази. *(Ukrainians also love paired expressions.)* Наприклад, традиційний вираз **хліб-сіль** *(bread and salt)*. *(For example, the traditional expression bread and salt.)* Він означає гостинність і дружбу. *(It means hospitality and friendship.)* У народних казках герой довго подорожує. *(In folk tales the hero travels for a long time.)* Ми читаємо: «Ішов, ішов та й прийшов» *(He walked, walked, and finally arrived)*. *(We read: "He walked, walked, and finally arrived".)* Цей повтор підкреслює успішне завершення його великої подорожі. *(This repetition emphasizes the successful completion of his great journey.)* Такі фрази передають народну мудрість. *(Such phrases pass on folk wisdom.)* Усі ці стилістичні інструменти роблять нашу мову багатою. *(All these stylistic tools make our language rich.)* Синоніми, зменшувальні суфікси, еліпсис і повтор — це друзі слів. *(Synonyms, diminutive suffixes, ellipsis, and repetition are friends of words.)* Використовуйте їх, і ваша українська буде красивою! *(Use them, and your Ukrainian will be beautiful!)* <!-- INJECT_ACTIVITY: group-sort, Sort examples into syntactic stylistic categories (ellipsis vs repetition), 8 items -->
+will say: "He — home". We understand well that he left or drove away. This syntactic device makes our language energetic.* You will see this device everywhere in advertisements, daily slogans, and short proverbs. When a predictable verb is missing, we usually put a dash (тире) in its place in written text. This punctuation mark is your visual cue that a word was intentionally omitted to make a powerful statement. Ви часто можете побачити такі короткі фрази на вулицях. Популярний рекламний слоган звучить так: «Усе найкраще — дітям!». Тут немає дієслова «належить» або «віддаємо». Інший відомий вислів: «Кожному — своє». Ми не кажемо «Кожна людина має своє». Тире показує, де саме ми пропустили слово. Це дуже **образний** (figurative, expressive) спосіб говорити. :::note **Quick tip** When reading Ukrainian texts, always pay attention to the dash (—). It often acts as a bridge where an obvious verb like "is", "goes", or "gives" was left out. ::: Another important stylistic tool is **повтор** (repetition). While ellipsis removes words to create speed, repetition doubles them to slow things down or show intensity. We repeat a word to emphasize that an action took a very long time, or that a certain quality is incredibly strong. It is a deliberate choice, not a mistake. Якщо ви йшли дві години, ви можете сказати: «Ми ходили-ходили і нарешті прийшли». Це означає, що процес був довгим і дуже важким. Коли казка описує нове місце, вона каже: «Це було далеко-далеко». Люди довго шукали правильне рішення і «думали-думали». Такий повтор робить історію живою і цікавою. Ми ніби самі відчуваємо цей довгий час. > *If you walked for two hours, you can say: "We walked and walked and finally arrived". This means that the process was long and very difficult. When a fairy tale describes a new place, it says: "It was far, far away". People looked for the right solution for a long time and "thought and thought". Such repetition makes the story alive and interesting. It is as if we feel this long time ourselves.* This kind of repetition is deeply rooted in folk style and traditional wisdom. It creates a special musical rhythm that makes proverbs easy to remember. We also pair related words together to represent complete cultural concepts, which adds a distinct folk flavor to everyday speech. Українські прислів'я часто використовують повторення для ритму. Наприклад, ми кажемо: «Тихше їдеш — далі будеш». Це означає, що обережність завжди дає кращий результат. В українській культурі також дуже важливим є вираз «хліб-сіль». Це відомий символ гостинності. Коли герой казки довго подорожує, текст каже: «Ішов, ішов та й прийшов». Це показує успішне завершення дуже довгого і складного шляху. All these stylistic choices — the synonyms, antonyms, diminutives, ellipsis, and repetition — are the true friends of words. They work together to transform dry, textbook sentences into a living, breathing language. By using them, you will sound not just grammatically correct, but natural, expressive, and authentically Ukrainian. <!-- INJECT_ACTIVITY: group-sort, Sort examples into syntactic stylistic categories (ellipsis vs repetition), 8 items -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -471,7 +471,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 6: A2 finale (A2 M51-M69)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 40%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 40% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 70-90% Ukrainian.
 LANGUAGE ROLES:
@@ -490,18 +557,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (5/5).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] синонім (synonym)
+- [ ] антонім (antonym)
+- [ ] епітет (epithet)
+- [ ] метафора (metaphor)
+- [ ] зменшувальний (diminutive)
+- [ ] суфікс (suffix)
+- [ ] еліпсис (ellipsis)
+- [ ] повтор (repetition)
+- [ ] образний (figurative, expressive)
+- [ ] ласкавий (tender, affectionate)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Підсумок (~160 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

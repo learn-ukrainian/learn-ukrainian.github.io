@@ -47,7 +47,9 @@ import os
 import re
 import sqlite3
 import sys
+import tempfile
 import time
+from contextlib import suppress
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Literal
@@ -84,6 +86,54 @@ _RATE_LIMIT_BACKOFF_S = 300  # 5 min — long enough for Gemini quota to recover
 REVIEW_TARGET_SCORE = 9.0
 V6_PHASE_STATUS = Literal["complete", "skipped", "failed", "degraded"]
 _VALID_V6_PHASE_STATUSES = {"complete", "skipped", "failed", "degraded"}
+
+
+class V6StateError(ValueError):
+    """Raised when v6 state.json exists but cannot be read safely."""
+
+
+def _v6_state_path(level: str, slug: str) -> Path:
+    return CURRICULUM_ROOT / level / "orchestration" / slug / "state.json"
+
+
+def _read_v6_state(level: str, slug: str) -> dict:
+    """Load state.json and raise on corrupt or invalid content."""
+    state_path = _v6_state_path(level, slug)
+    try:
+        state = json.loads(state_path.read_text("utf-8"))
+    except json.JSONDecodeError as exc:
+        raise V6StateError(
+            f"Corrupt state.json for {level}/{slug}: {state_path}"
+        ) from exc
+    except OSError as exc:
+        raise V6StateError(
+            f"Could not read state.json for {level}/{slug}: {exc}"
+        ) from exc
+
+    if not isinstance(state, dict):
+        raise V6StateError(
+            f"Invalid state.json root for {level}/{slug}: expected object"
+        )
+    return state
+
+
+def _write_v6_state_atomic(state_path: Path, state: dict) -> None:
+    """Write state.json atomically via temp file + os.replace()."""
+    state_path.parent.mkdir(parents=True, exist_ok=True)
+    fd, tmp_path = tempfile.mkstemp(
+        dir=state_path.parent,
+        prefix=f".{state_path.stem}-",
+        suffix=".tmp",
+    )
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as handle:
+            json.dump(state, handle, indent=2, ensure_ascii=False)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(tmp_path, state_path)
+    except Exception:
+        Path(tmp_path).unlink(missing_ok=True)
+        raise
 
 
 def _handle_rate_limit_backoff(raw: str, attempt: int, max_attempts: int, phase: str) -> bool:
@@ -603,9 +653,6 @@ def _build_dialogue_situations(plan: dict) -> str:
     lines.append("\n  Use these settings. Do NOT substitute with a room description or generic greeting.")
     return "\n".join(lines)
 
-
-
-
 def _clean_build_artifacts(level: str, slug: str) -> None:
     """Remove previous build artifacts for a clean full rebuild.
 
@@ -684,23 +731,14 @@ def emit_event(event: str, **fields):
 
 def _save_v6_state(level: str, slug: str, step: str, status: V6_PHASE_STATUS = "complete"):
     """Write V6 pipeline state in V5-compatible format."""
-    from datetime import datetime
-
     if status not in _VALID_V6_PHASE_STATUSES:
-        raise ValueError(f"Invalid phase status for {level}/{slug} {step}: {status!r}")
-
-    orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
-    orch_dir.mkdir(parents=True, exist_ok=True)
-    state_path = orch_dir / "state.json"
+        raise V6StateError(
+            f"Invalid phase status for {level}/{slug} {step}: {status!r}"
+        )
+    state_path = _v6_state_path(level, slug)
 
     # Load existing state or create new
-    if state_path.exists():
-        try:
-            state = json.loads(state_path.read_text())
-        except Exception:
-            state = {}
-    else:
-        state = {}
+    state = _read_v6_state(level, slug) if state_path.exists() else {}
 
     # V6 uses mode "v6" — API will detect this
     state["mode"] = "v6"
@@ -715,7 +753,7 @@ def _save_v6_state(level: str, slug: str, step: str, status: V6_PHASE_STATUS = "
     }
     state["phases"] = phases
 
-    state_path.write_text(json.dumps(state, indent=2, ensure_ascii=False))
+    _write_v6_state_atomic(state_path, state)
 
 
 def _normalize_v6_phase_status(result: object, *, phase: str) -> V6_PHASE_STATUS:
@@ -726,7 +764,7 @@ def _normalize_v6_phase_status(result: object, *, phase: str) -> V6_PHASE_STATUS
         return "complete"
     if result is False or result is None:
         return "failed"
-    raise ValueError(f"Invalid result for phase {phase}: {result!r}")
+    raise V6StateError(f"Invalid result for phase {phase}: {result!r}")
 
 
 # All phases in pipeline order (used by --resume).
@@ -788,16 +826,15 @@ def _invalidate_phases(level: str, slug: str, phases_to_clear: list[str]) -> Non
     Used when an earlier step mutates artifacts (e.g., repair regenerates
     activities) and downstream work (publish, audit) is now stale.
     """
-    import json
-
-    state_path = CURRICULUM_ROOT / level / "orchestration" / slug / "state.json"
+    state_path = _v6_state_path(level, slug)
     if not state_path.exists():
         return
-    try:
-        state = json.loads(state_path.read_text())
-    except Exception:
-        return
+    state = _read_v6_state(level, slug)
     phases = state.get("phases", {})
+    if not isinstance(phases, dict):
+        raise V6StateError(
+            f"Invalid phases map in state.json for {level}/{slug}: expected object"
+        )
     touched = False
     for name in phases_to_clear:
         if name in phases:
@@ -805,7 +842,7 @@ def _invalidate_phases(level: str, slug: str, phases_to_clear: list[str]) -> Non
             touched = True
     if touched:
         state["phases"] = phases
-        state_path.write_text(json.dumps(state, indent=2, ensure_ascii=False))
+        _write_v6_state_atomic(state_path, state)
 
 
 def _ordered_invalidation_phases(phases: set[str], completed_phases: set[str]) -> tuple[str, ...]:
@@ -818,7 +855,13 @@ def _ordered_invalidation_phases(phases: set[str], completed_phases: set[str]) -
 
 
 def _resume_invalidation_plan_for_step(step: str, completed_phases: set[str]) -> list[str]:
-    """Return completed phases that must be cleared to re-run a step under --resume."""
+    """Return completed phases that must be cleared to re-run a step under --resume.
+
+    Batch mode uses this to turn "build this module again" into an explicit
+    child-process invalidation plan. Without it, the child can inherit
+    `--resume` plus a completed state file and silently skip the phase that the
+    batch runner just decided must be re-executed.
+    """
     start_phase = "stress" if step == "annotate" else step
     if start_phase == "all":
         return []
@@ -831,19 +874,18 @@ def _resume_invalidation_plan_for_step(step: str, completed_phases: set[str]) ->
 
 def _load_completed_phases(level: str, slug: str) -> set[str]:
     """Read state.json and return phase names satisfied for resume/skip logic."""
-    import json
-
-    state_path = CURRICULUM_ROOT / level / "orchestration" / slug / "state.json"
+    state_path = _v6_state_path(level, slug)
     if not state_path.exists():
         return set()
-    try:
-        state = json.loads(state_path.read_text())
-    except Exception:
-        return set()
+    state = _read_v6_state(level, slug)
     phases = state.get("phases", {})
+    if not isinstance(phases, dict):
+        raise V6StateError(
+            f"Invalid phases map in state.json for {level}/{slug}: expected object"
+        )
     return {
         name for name, info in phases.items()
-        if info.get("status") in _PHASE_SATISFIED_STATUSES
+        if isinstance(info, dict) and info.get("status") in _PHASE_SATISFIED_STATUSES
     }
 
 
@@ -1087,6 +1129,9 @@ def _build_resume_invalidation_plan(
     audit_tail = {"audit", "publish"}
     review_tail = {"review", "stress", "publish", "audit"}
 
+    # Audit-derived failures must re-run the audit/publish tail even when the
+    # requested step is `review`. Review-derived failures must similarly force
+    # the review tail even when the requested step is later (`publish`/`audit`).
     stale, stale_reason = _is_status_stale(status_path, content_path)
     if stale:
         invalidation.update(audit_tail)
@@ -3345,10 +3390,8 @@ def step_audit(content_path: Path, level: str, slug: str) -> bool:
 
             if previous_status_mtime is not None and status_mtime <= previous_status_mtime:
                 _log("  ⚠️  Audit did not produce a fresh status file (mtime did not advance)")
-                try:
+                with suppress(OSError):
                     status_path.unlink()
-                except OSError:
-                    pass
                 return False
 
             _log(f"  ✅ Status written: {status_path.name}")
@@ -4235,7 +4278,6 @@ def step_activities(
                     removed = before - len(data[section])
                     if removed:
                         _log(f"  🔧 Stripped {removed} forbidden activity type(s) from {section} (A1.1 level restriction)")
-            # Re-dump after stripping
 
         # Additional semantic checks (inline id uniqueness + existence)
         semantic_errors = _check_activity_semantics(data)
@@ -4384,9 +4426,6 @@ def _inject_abetka_activities(activities_path: Path, level: str, slug: str) -> N
             yaml.dump(data, allow_unicode=True, default_flow_style=False, sort_keys=False),
             "utf-8",
         )
-
-
-
 
 def step_verify(content_path: Path, level: str, module_num: int) -> V6_PHASE_STATUS:
     """Step 7: VESUM verification + grammar scope check + VERIFY flag resolution.
@@ -5072,9 +5111,6 @@ def _apply_review_fixes(review_text: str, content_path: Path) -> tuple[bool, int
 
     return applied > 0, applied
 
-
-
-
 def _strip_dsl_blocks(text: str) -> tuple[str, int]:
     """Strip legacy DSL exercise blocks (:::quiz, :::fill-in, etc.) from content.
 
@@ -5414,9 +5450,6 @@ def _build_pidruchnyk_section(
         return ""
 
     return "\n".join(["### Підручники", *bullets])
-
-
-
 
 def _build_slovnyk_tab(level: str, slug: str) -> str:
     """Build Словник tab content from vocabulary/{slug}.yaml or plan fallback.
@@ -6284,10 +6317,15 @@ def main():
             _phase_start = time.monotonic()
             _pre_activity_mtime = 0.0
             _activity_path = CURRICULUM_ROOT / args.level / "activities" / f"{slug}.yaml"
+            _repair_fail_msg = "Build FAILED at Step 5f (repair)"
             if _activity_path.exists():
                 _pre_activity_mtime = _activity_path.stat().st_mtime
 
             _repair_ok, needs_regen = step_repair(args.level, args.module, slug)
+            if not _repair_ok:
+                _log(f"\n❌ {_repair_fail_msg}")
+                _emit_module_failed("repair", _repair_fail_msg)
+                sys.exit(1)
             regen_fired = False
             if needs_regen:
                 _log("\n🔄 Activity count below minimum — regenerating once")
@@ -6300,6 +6338,10 @@ def main():
                     _inject_abetka_activities(activity_path, args.level, slug)
                     # Repair the fresh output too
                     _repair_ok, needs_regen = step_repair(args.level, args.module, slug)
+                    if not _repair_ok:
+                        _log(f"\n❌ {_repair_fail_msg}")
+                        _emit_module_failed("repair", _repair_fail_msg)
+                        sys.exit(1)
                     if needs_regen:
                         _log("\n⚠️  Still below minimum after regen — continuing anyway (audit will flag)")
                 else:

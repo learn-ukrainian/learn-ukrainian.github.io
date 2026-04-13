@@ -28,7 +28,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-lines, you need to set up the stage. You arrange the furniture, adjust the lighting, and perhaps add the continuous sound of rain playing quietly in the background. This stage set is your imperfective aspect. It creates the physical environment, the ongoing mood, and the context for everything else. The play only truly begins when the actors step onto the stage and start doing things. Someone enters the room, delivers a secret letter, steals a document, or dramatically faints. These specific actors' actions are your perfective aspect. They are the dynamic, finalized events that change the situation. If you use the wrong aspect, it is like having the static stage props suddenly move around on their own. Тло розповіді — це завжди недоконаний вид. Воно виконує виключно описову функцію. За допомогою тла ми показуємо статику, паралельні процеси, стан природи або емоційний стан головних героїв. Тло завжди відповідає на питання «що відбувалося в цей час?». Передній план розповіді — це завжди доконаний вид. Він має чітку динамічну функцію. Передній план показує конкретні послідовні події, які мають логічний результат і рухають сюжет уперед. Він відповідає на питання «що сталося потім?». What happens if you decide to only use one aspect for an entire story? A narrative built entirely on background verbs feels stagnant and repetitive. Imagine reading: "We were sitting. We were drinking. We were looking at the street." This is a notoriously boring story because there is no plot, only an eternal state of waiting where nothing ever resolves. On the other hand, a story built entirely on foreground verbs feels incredibly dry. Imagine reading: "I stood up. I arrived at the house. I said the words. I left the room." This sounds exactly like a formal police report. It gives the listener the raw facts in a strict chronological sequence, but it completely lacks emotion or atmosphere. The true beauty of a Ukrainian narrative lies in the sharp contrast between the two. Let us look at a logical constraint regarding aspect choices. Why do we naturally describe the evening using an imperfective verb, rather than attempting to use a perfective equivalent? **Був теплий вечір.** — *It was a warm evening.* If you force a perfective verb into a purely background description, you completely change its inherent meaning. If you somehow managed to use a perfective form to describe the presence of the evening, it would mean "A warm evening occurred, finished completely, and produced a final result." That contradicts the fundamental idea of a narrative setting. A setting surrounds the actual events; it does not happen as a sudden event itself. Therefore, atmospheric conditions and ongoing states cannot logically be perfective without turning into abrupt occurrences. :::info **The Rhythm of Storytelling** Native Ukrainian speakers switch between aspects instinctively to control the pacing of their stories. Using the imperfective aspect slows the narrative down, allowing the listener to absorb the rich details of the environment. Switching to the perfective aspect speeds the story up, delivering a rapid sequence of action. :::
+the foundation of every **спогад** (memory). Тло — це незмінні декорації вашої історії. Воно завжди використовує недоконаний вид, тому що описує тривалі процеси, стани, природу або обставини. Дії на тлі дуже часто відбуваються одночасно. Передній план — це головний двигун вашого сюжету. Він завжди використовує доконаний вид, тому що показує конкретні результати, різкі зміни та завершені кроки. Ці ключові події відбуваються чітко послідовно, одна за одною. Кожен ваш спогад спирається на цю важливу логіку. > *The background is the unchanging scenery of your story. It always uses the imperfective aspect because it describes continuous processes, states, nature, or circumstances. Actions in the background very often happen simultaneously. The foreground is the main engine of your plot. It always uses the perfective aspect because it shows specific results, sharp changes, and completed steps. These key events happen strictly sequentially, one after another. Every memory of yours relies on this important logic.* What actually happens if a learner only uses one of these grammatical layers? If an entire **оповідання** (short story, narration) consists purely of background, it feels incredibly stagnant. Imagine reading a text that only says: «Ми сиділи. Пили чай. Дивилися у вікно». It is a pleasant picture, but there is no story there. Conversely, a text built entirely of perfective foreground verbs reads like a very dry police report. Let's look at a text using sequence markers like **спочатку** (at first), **потім** (then), and **нарешті** (finally): «Спочатку я встав. Потім я прийшов. Після цього сказав. І нарешті пішов.» — *At first I stood up. Then I arrived. After that I spoke. And finally I left.* This is a pure **послідовність** (sequence) of bare facts. What happens **після цього** (after that) does not matter because the text lacks any emotion, atmosphere, or context. The true art of speaking Ukrainian lies in the perfect balance. Aspect distribution is exactly what creates the rhythm, the pacing, and the life of your text. :::info **Grammar box** Native Ukrainian speakers shift between the imperfective background and the perfective foreground instinctively, often within the exact same sentence. As a B1 learner, you need to make this choice consciously when writing or speaking until the rhythm becomes entirely automatic. ::: Let's perform a quick logical check to solidify this concept. Consider the very first sentence of our diagnostic story about a warm evening. «Був теплий вечір.» — *It was a warm evening.* In Ukrainian, this uses the imperfective verb for "to be". Why is it impossible to use a perfective equivalent here? If you somehow forced a perfective aspect into that sentence, it would bizarrely mean that a warm evening suddenly occurred, existed for a moment, and **тоді** (then) finished completely. **Тим часом** (meanwhile), the true background needs to be continuous. It would violently turn a static, atmospheric background into a sudden, jarring plot point. **Поки** (while) the background sets the stage, the perfective actions bring the drama. You cannot build a natural narrative without fundamentally understanding how aspect separates the ongoing scene from the sudden interruption.
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -689,6 +689,40 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] тло
+- [ ] передній план
+- [ ] розповідь
+- [ ] оповідання
+- [ ] оповідач
+- [ ] подія
+- [ ] опис
+- [ ] спочатку
+- [ ] потім
+- [ ] раптом
+- [ ] нарешті
+- [ ] тим часом
+- [ ] одночасно
+- [ ] послідовно
+- [ ] послідовність
+- [ ] спогад
+- [ ] поки
+- [ ] після цього
+- [ ] тоді
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Тло: недоконаний вид у наративі (~1150 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

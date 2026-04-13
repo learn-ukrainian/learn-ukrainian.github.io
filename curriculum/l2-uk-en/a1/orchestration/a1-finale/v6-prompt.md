@@ -117,7 +117,7 @@ module: a1-055
 level: A1
 sequence: 55
 slug: a1-finale
-version: '1.2'
+version: '1.3'
 title: A1 Finale
 subtitle: One full day in a Ukrainian city — everything you've learned
 focus: review
@@ -129,6 +129,19 @@ objectives:
 - Navigate real situations: morning routine, transport, cafe, shopping, socializing
 - Use all three tenses naturally in context
 - Demonstrate readiness for A2 through integrated communication
+dialogue_situations:
+- setting: Last day of A1 course — classmates reflect on what they learned and say
+    goodbye, exchanging contact info for staying in touch
+  speakers:
+  - Студент 1
+  - Студент 2
+  motivation: 'Farewell + reflection: Я вивчив/вивчила стільки! До зустрічі на А2!'
+- setting: A learner tells their Ukrainian friend about their plans after finishing
+    the A1 course — what they want to do in Ukraine next
+  speakers:
+  - Учень
+  - Українська подруга
+  motivation: 'Future tense + celebration: Я буду подорожувати! Я хочу побачити Карпати!'
 content_outline:
 - section: Ранок (Morning)
   words: 300
@@ -220,7 +233,7 @@ activity_hints:
   - Ввечері ми {ходили|ходимо|будемо ходити} в кіно.
   - Зараз Олена {замовляє|замовляла|замовить} борщ і салат.
   - Учора була гарна погода, і ми {гуляли|гуляємо|будемо гуляти} в парку.
-  - Я вже {готовий|початок|сувенір} до рівня А2! Вітаю!
+  - Я вже {готовий|готова|впевнений} до рівня А2! Вітаю!
 - type: match-up
   focus: Match the situation to the correct A1 survival phrase.
   items:
@@ -292,30 +305,30 @@ You do NOT need to call tools yourself — the facts are already verified.
 <pre_verified_facts>
 ## VESUM Verification
 - Confirmed: готовий, вітаю, початок, сувенір, квиток, зустріти, круасан, карта, лінія, фільм, познайомитися, подорожувати, Лавра, готель
-- Not found: none
+- Not found: 
 
 ## Grammar Rules
-- Past Tense (Минулий час): Grade 6, Betsa §95; Grade 4, Zaharijchuk p. 106. Forms denote actions completed before the moment of speech. Suffixes: -в (masculine: жив, снідав), -ла (feminine: жила, снідала), -ло (neuter: жило), -ли (plural: жили, снідали).
-- Future Tense (Майбутній час): Grade 10, Karaman §73; Grade 6, Betsa §97. Three forms: 
-    - Simple (Проста): Perfective verbs (напишу, зустріну).
-    - Synthetic (Складна): Imperfective infinitive + -м- (писатиму, подорожуватиму).
-    - Analytic (Складена): 'бути' + infinitive (буду писати, буду подорожувати).
-- Imperative (Наказовий спосіб): Used for invitations (Ходімо!) and polite requests (Будь ласка, каву...).
+- [Велика буква]: Правопис §45 — З великої букви пишемо: Перше слово, яким починається текст. Перше слово в реченні: після крапки; після крапок, знака оклику й знака питання.
+- [Чергування У/В]: Правопис §23 — Позиції вживання прийменників і префіксів У та В: Щоб уникнути збігу букв на позначення приголосних звуків та досягти милозвучності, вживають "у" між приголосними, а "в" — між голосними.
 
 ## Calque Warnings
-- "рахувати": OK for counting (1, 2, 3), but avoid for "to think/consider". Use "вважати" instead.
-- "приймати участь": CALQUE (from Russian). Use "брати участь".
-- "вірний": OK for "faithful/loyal", but avoid for "correct". Use "правильний" instead.
-- "говорити на українській мові": CALQUE. Use "говорити українською" or "говорити українською мовою".
+- зелена лінія: OK — зелена лінія
+- добре говориш: OK — добре говориш
+- ходити в кіно: OK — ходити в кіно
+- по Хрещатику: OK — по Хрещатику (або Хрещатиком)
 
 ## CEFR Check
-- готовий: A1 — OK
+- фільм: A1 — OK
 - початок: A1 — OK
-- квиток: A1 — OK
-- готель: A1 — OK
 - подорожувати: A1 — OK
-- круасан/сувенір/фільм: A1 (Internationalisms) — OK
-- Лавра: A1 (Cultural proper noun) — OK
+- квиток: A1 — OK
+- зустріти: A1 — OK
+- готовий: A1 — OK
+- готель: A1 — OK
+- сувенір: A2 — above target
+- лінія: A2 — above target
+- круасан: A2 — above target
+- познайомитися: B1 — above target
 </pre_verified_facts>
 
 
@@ -641,12 +654,14 @@ These exercises, adapted from Ukrainian school materials, provide a gold standar
 
 ## Section Structure
 
-Write these sections as H2 headings, in this exact order:
+Write these sections as H2 headings, in this **exact** order:
 
 - `## Ранок (Morning)` (~300 words)
 - `## День (Daytime)` (~300 words)
 - `## Вечір (Evening)` (~300 words)
 - `## Підсумок: ти готовий/готова! (You're Ready!)` (~300 words)
+
+**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim** as an `## H2` line. This includes the FINAL summary/transition section (`Підсумок: ...`, `Підсумок та перехід до M...`, etc.) — the writer's most common failure is silently dropping the closing section. Do NOT skip it. Do NOT renumber. Do NOT merge headings. The post-write quick-verify check will fail your build if any heading is missing, even if the prose itself is excellent.
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -654,16 +669,17 @@ Each section should follow the word budget specified. The total must reach 1200 
 
 ## Content Rules
 
-TARGET: 25-40% Ukrainian.
+TARGET: 25-40% Ukrainian. ⚠️ HARD GATE — the audit REJECTS modules below 25%.
 LANGUAGE ROLES:
-- THEORY & EXPLANATION: English prose — brief and clear. Show, don't tell.
+- THEORY & EXPLANATION: English prose — brief, 2-3 sentences per concept. Explain once, then show Ukrainian.
+- UKRAINIAN NARRATIVE PARAGRAPHS: **REQUIRED — minimum 2 per section.** A 4-8 sentence Ukrainian paragraph demonstrating the concept in use, followed IMMEDIATELY by a `> *English translation*` blockquote. This is the PRIMARY driver of hitting the immersion target.
 - PARADIGM TABLES: Conjugation/declension tables with all cells Ukrainian.
-- EXAMPLE LISTS: Ukrainian sentences in bulleted lists (each: Ukrainian — English gloss).
-- DIALOGUES: Mini-dialogues in blockquotes with English gloss per line.
+- EXAMPLE LISTS: Ukrainian sentences in bulleted lists (each: Ukrainian — English gloss). Minimum 5 per rule.
+- DIALOGUES: Mini-dialogues in blockquotes with English gloss per line. At least 1 dialogue per module.
 - PATTERN BOXES: Show transformations: `читати → читай → читайте`.
 - INLINE: Ukrainian words/phrases bolded in English prose.
-- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian. Full Ukrainian sentences go in tables, bulleted lists, dialogues, or pattern boxes.
-Ukrainian sentences max 10 words. Mix container types.
+- STRUCTURAL RULE: Every section MUST contain at least 2 Ukrainian narrative paragraphs (4-8 sentences each, translated in blockquote) PLUS supporting tables/lists/dialogues/pattern boxes. Pure-English sections are FORBIDDEN at M55+.
+Ukrainian sentences max 14 words. Mix container types.
 
 HARD GRAMMAR RULES (audit will reject violations):
 - Max 10 words per Ukrainian sentence (STRICT — count every word)
@@ -696,6 +712,25 @@ PLAN-AWARE EXEMPTIONS: The following bans are RELAXED for this module because th
 - **Zero paronyms**: тактична≠тактовна, ефектний≠ефективний — use the right word, not a similar-sounding one
 - **Natural Ukrainian**: Write how a Ukrainian teacher would explain this to a student. Not robotic, not textbook-dry, not overly casual.
 
+### FORBIDDEN WORDS — never write these (#1189)
+
+The following Russian words have leaked into past builds and broken modules. They are **hard-banned** — the post-write toxic-token scanner will fail your build the moment it sees one. Use the Ukrainian alternative every time, even in dialogues, even in casual prose, even when quoting a learner's mistake (use a `<!-- VERIFY -->` placeholder instead of typing the Russian form):
+
+| Russian (FORBIDDEN) | Ukrainian (USE THIS) |
+|---|---|
+| хорошо | добре |
+| конечно | звичайно / певна річ |
+| спасибо | дякую |
+| пожалуйста | будь ласка / прошу |
+| ничего | нічого |
+| сейчас | зараз |
+| тоже | теж / також |
+| здесь | тут |
+| кот | кіт |
+| кон | кін |
+
+This list is enforced word-for-word by `scripts/build/quick_verify.py` (SEVERE_RUSSIANISMS). If you produce any of these tokens — even inside a quoted example, even inside a dialogue line spoken by a Russian-speaking character — the build halts immediately. There is no exception.
+
 **Authority hierarchy (if uncertain about a word, check in this order):**
 VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (stress) → Антоненко-Давидович (style) → Грінченко (etymology).
 
@@ -727,7 +762,15 @@ Without speaker names, the reader cannot tell who is speaking. NEVER use anonymo
 
   REQUIRED: Every dialogue must have a SPECIFIC REAL-WORLD SITUATION that motivates the grammar being taught. The situation must be different from all other modules.
 
-  (No specific dialogue situations in plan — pick a unique real-world setting that motivates the grammar.)
+  **Module-specific dialogue settings (from plan):**
+  1. **Last day of A1 course — classmates reflect on what they learned and say goodbye, exchanging contact info for staying in touch**
+     Speakers: Студент 1, Студент 2
+     Why: Farewell + reflection: Я вивчив/вивчила стільки! До зустрічі на А2!
+  2. **A learner tells their Ukrainian friend about their plans after finishing the A1 course — what they want to do in Ukraine next**
+     Speakers: Учень, Українська подруга
+     Why: Future tense + celebration: Я буду подорожувати! Я хочу побачити Карпати!
+
+  Use these settings. Do NOT substitute with a room description or generic greeting.
 - **Tone: direct, clear, no filler.** State facts and teach. Don't praise the language ("beautiful", "wonderful", "unique melody"), don't praise the learner ("great job", "you've mastered"), don't narrate what you're doing ("In this section we will", "Now let's look at"). Just teach. Example:
 
   BAD: "The Ukrainian language has a wonderfully consistent and beautiful phonetic system."
@@ -798,36 +841,29 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Ранок: Початок дня у Києві (~330 words)
-- P1 (80 words): Setting the scene in a Kyiv hotel. Using the past tense to describe waking up: "Я прокинувся/прокинулася о сьомій годині." Checking the weather using M24 vocabulary: "Яка сьогодні погода? Сьогодні сонячно і тепло." Establishing the mood for the finale.
-- P2 (90 words): The breakfast scenario. A multi-turn dialogue at a cafe reviewing M36 (food) and M10 (numbers). Ordering "каву з молоком і круасан" using polite requests: "Дайте, будь ласка." Handling the price: "Сто двадцять гривень." Using "Скільки коштує?" as a key A1 survival skill.
-- P3 (80 words): Navigating transport (M34). Asking for directions to the center: "Вибачте, як дістатися до Хрещатика?" Receiving instructions: "Їдьте на метро." Buying a ticket: "Один квиток, будь ласка." Reviewing the concept of polite imperatives for instructions.
-- P4 (80 words): Inside the metro. Reviewing colors (M22) and locations: "Мені потрібна зелена лінія." Narrative transition from past to present: "Зранку я снідав, а зараз я їду в метро." Previewing the goal: reaching the heart of the city.
-- <!-- INJECT_ACTIVITY: order-day-events --> [order, Chronological events of the morning and afternoon, 8 items]
+## Ранок (Morning) (~330 words)
+- P1 (~110 words): Set the scene of waking up in Kyiv to test everything learned. Narrate the morning routine in past and present tense: "Ти прокинувся/прокинулася в готелі", check the weather: "Сьогодні тепло і сонячно."
+- P2 (~110 words): Breakfast at a cafe dialogue. Order food politely: "Будь ласка, каву з молоком і круасан." Handle the bill using numbers: "Скільки коштує? — Сто двадцять гривень." Use proper greetings and farewells: "Доброго ранку!", "Дякую! До побачення!"
+- P3 (~110 words): Navigating public transport. Ask for directions: "Вибачте, як дістатися до Хрещатика?" Receive instructions: "Їдьте на метро, станція Хрещатик." Buy a ticket: "Один квиток, будь ласка." Read the metro map using colors: "Тобі потрібна зелена лінія."
+- <!-- INJECT_ACTIVITY: match-up-survival-phrases --> [match-up, Match the situation to the correct A1 survival phrase, 7 items]
 
-## День: Прогулянка та нові друзі (~330 words)
-- P1 (80 words): Exploring Khreshchatyk. Using descriptive adjectives (M09) and city vocabulary (M30): "Яка гарна вулиця!", "Тут великі будинки." Using demonstratives from the wiki (цей/ця) to point out landmarks: "Ця будівля — мерія, а цей майдан — Незалежності."
-- P2 (90 words): Shopping for a souvenir (M37). A dialogue about the price of a "вишиванка." Reviewing large numbers: "тисяча двісті гривень" vs "вісімсот гривень." Using adjectives for evaluation: "Це дорого" or "Це гарно." Avoiding the tautology "пам’ятний сувенір" as per the pedagogy notes.
-- P3 (80 words): Meeting Olena. Reviewing introductions (M01-M06): "Привіт! Мене звати...", "Звідки ти?", "Я з Канади." Explaining the purpose of the visit: "Я вивчаю українську мову." Using present tense verbs (M16-17) for current states.
-- P4 (80 words): Lunch invitation and ordering (M43, M36). Using the imperative "Ходімо обідати!" and "Замовляйте." Vocabulary focus: "борщ," "вареники," "салат." Using impersonal expressions to describe the experience: "Це дуже смачно!" and "Мені подобається."
-- <!-- INJECT_ACTIVITY: match-survival-phrases --> [match-up, Situations to A1 survival phrases (ordering, directions, meeting), 7 items]
+## День (Daytime) (~330 words)
+- P1 (~110 words): Exploring the city and expressing admiration. "Ти гуляєш по Хрещатику. Яка гарна вулиця!" Narrate entering a large shop to buy a "сувенір".
+- P2 (~110 words): Shopping dialogue focusing on demonstrative pronouns (цей, ця, це). "Скільки коштує ця вишиванка? — Тисяча двісті гривень. Дорого!" Contrast with another item: "А ця? — Ця — вісімсот. — Добре, я беру!"
+- P3 (~110 words): Dialogue: Meeting a new friend (Олена) for lunch. Introductions: "Привіт! Ти звідки? — Я з Канади." Discussing actions: "Що ти робиш тут? — Я вивчаю українську!" Using imperatives to invite: "Ходімо обідати!" Ordering "борщ і вареники".
+- <!-- INJECT_ACTIVITY: fill-in-tenses --> [fill-in, Complete the sentences narrating the day using past, present, and future tenses, 8 items]
 
-## Вечір: Кіно та рефлексія (~330 words)
-- P1 (90 words): Planning the evening (M50, M51). Using the compound future tense: "Що ми будемо робити ввечері?" Invitations: "Ходімо в кіно!" Discussing time (M26): "О котрій годині? — О сьомій." Emphasizing the structure "о + locative" for time.
-- P2 (80 words): The cinema experience. Using linking words (M44) to describe the flow: "Спочатку ми купили квитки, потім дивилися фільм." Admitting partial understanding: "Я не все розумію, але це цікаво." Focus on integrated communication over perfection.
-- P3 (80 words): After the cinema. Directions and movement: "Ми йдемо в ресторан." Discussing the day with Olena using past and present: "Сьогодні був чудовий день," "Я дуже задоволений/задоволена." Final uses of etiquette formulas for saying goodbye: "Дякую за компанію! До побачення!"
-- P4 (80 words): Reflection at the hotel. A summary paragraph using all three tenses: "Зранку я снідав... Зараз я відпочиваю... Завтра я буду подорожувати далі." Integrating "Я хочу побачити Лавру" to show future intent and goal setting.
-- <!-- INJECT_ACTIVITY: fill-in-tenses --> [fill-in, Narrative completion using past/present/future forms, 8 items]
+## Вечір (Evening) (~330 words)
+- P1 (~110 words): Dialogue: Making evening plans with Олена. Suggesting an activity: "Що будемо робити ввечері? — Ходімо в кіно!" Setting a time: "О котрій? — О сьомій."
+- P2 (~110 words): Narrating the evening using linking words. "Ви дивитеся український фільм." Use connectors for sequences: "Після кіно ви йдете в ресторан." Give basic walking directions to the restaurant.
+- P3 (~110 words): Dialogue: Back at the hotel, chatting with a Ukrainian friend about the day and future plans. Mix tenses naturally: "Сьогодні був чудовий день! Зранку я снідав... Ввечері ми ходили в кіно." Look to tomorrow: "Завтра я буду подорожувати. Я хочу побачити Лавру!"
+- <!-- INJECT_ACTIVITY: order-chronological --> [order, Put the events of the day in chronological order, 8 items]
 
-## Підсумок: Ти готовий до А2! (~330 words)
-- P1 (120 words): The A1 Skill Checklist. Explicitly recapping the eight phases of A1. Can you: Greet and introduce (A1.1)? Describe family (A1.2)? Talk about habits (A1.3)? Tell time and weather (A1.4)? Navigate a city (A1.5)? Order food and shop (A1.6)? Use polite instructions (A1.7)? Talk about the past and future (A1.8)?
-- P2 (100 words): Motivation and A2 Preview. Acknowledging the achievement: "Вітаю! Ти вивчив рівень А1." Explaining that the journey continues with "відмінки" (cases) and "вид дієслова" (aspect). Using the wiki's advice to keep it encouraging: "Це тільки початок!"
-- P3 (110 words): Final Challenge and Self-Check. Follow the plan's requirements for a Q&A list and production task:
-    - Can you describe your day in 10 sentences?
-    - Can you order a meal without English?
-    - Can you ask for directions and understand the answer?
-    - Final sign-off: "До зустрічі на рівні А2!"
-- <!-- INJECT_ACTIVITY: a1-grammar-quiz --> [quiz, Final review of tenses, prices, time, and survival phrases, 5 items]
+## Підсумок: ти готовий/готова! (~330 words)
+- P1 (~110 words): Dialogue: The last day of the A1 course. Two classmates reflect on their progress and say goodbye. "Я вивчив/вивчила стільки! До зустрічі на А2!" Exchanging contact information to stay in touch.
+- P2 (~110 words): The A1 skills checklist. A comprehensive summary of what the learner can now do: greet (A1.1), describe people (A1.2), talk about habits (A1.3), tell time/weather (A1.4), navigate transport (A1.5), order food/shop (A1.6), make polite requests (A1.7), and narrate past/future (A1.8).
+- P3 (~110 words): What's next and celebration. Preview A2 concepts (відмінки, доконаний/недоконаний вид). Congratulate the learner: "Ти вивчив A1! Вітаю! Ти вже можеш жити в українському місті. Це тільки початок!" End with a self-check prompt asking them to describe their day in a Ukrainian city in 10+ sentences.
+- <!-- INJECT_ACTIVITY: quiz-a1-review --> [quiz, Review of key A1 grammar and survival vocabulary, 5 items]
 
 Grand total: ~1320 words
 </skeleton>
@@ -837,11 +873,55 @@ Grand total: ~1320 words
 Write in Markdown. Use:
 - `## Section Title` for main sections
 - `### Subsection` for subsections within a section
-- `**bold**` for Ukrainian words being taught — EVERY bold Ukrainian word MUST have an English translation on first use, either in parentheses `**слово** (translation)` or inline `**слово** means "translation"`. No exceptions.
+- `**bold**` for Ukrainian words being taught. For **A1 and A2** levels, provide an English translation on first use (e.g. `**стіл** (table)`) because learners lack the vocabulary to infer meaning. For **B1 and above**, do NOT provide inline translations for standard vocabulary — the learner will use the module's словник (vocabulary table). You may provide ONE parenthetical English translation ONLY for highly abstract grammar/linguistic terms on first use (e.g. `**видова пара** (aspectual pair)`).
 - Tables for paradigms (conjugation, declension)
 - `:::tip` / `:::caution` / `:::note` for callout boxes
 - `<!-- INJECT_ACTIVITY: {id} -->` for exercise placement (markers only — do NOT write exercise content)
 
 Do NOT write MDX component syntax, JSON, or DSL exercise blocks (:::quiz, etc.). Plain Markdown with injection markers.
+
+---
+
+## MANDATORY FINAL CHECKLIST (#1189)
+
+Before you finish writing, verify the prose against this checklist. Failing any item will fail the build.
+
+### Section headings (verbatim)
+
+Every heading from "Section Structure" above MUST appear as an `## H2` in your output, in order, **including the closing `Підсумок:` / `Підсумок та перехід до M...` summary**. The single most common writer failure across the B1 build has been silently dropping the final summary section. Re-read your output before stopping. If the last section in the plan is missing, write it now.
+
+### Required vocabulary (every word must appear)
+
+You MUST use **every word** from the list below at least once in the prose, in a natural sentence with bold + English translation. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, прагматика, діагностика, дієвідмінювання, зворотний, двовидовий, одновидовий, неозначено-кількісний, etc.) is the most frequently dropped category — actively find homes for those words even if it means adding a sentence that defines them.
+
+- [ ] готовий (ready, adj m)
+- [ ] вітаю (congratulations — chunk)
+- [ ] початок (beginning, m)
+- [ ] сувенір (souvenir, m)
+- [ ] квиток (ticket, m)
+- [ ] зустріти (to meet)
+
+### Forbidden words (never produce)
+
+Do not write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use `<!-- VERIFY -->` instead). The post-write toxic-token scanner will fail the build immediately:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+### Level-specific immersion check
+
+The level-appropriate immersion rule was already injected at the top of
+this prompt as `IMMERSION RULE`. Re-read it now BEFORE you stop writing.
+If your level's rule contains a CHECKLIST block, walk through every item.
+If it doesn't, just verify your output matches the LANGUAGE ROLES and
+TARGET stated in that block.
+
+This used to hard-code a B1+ checklist that confused A1/A2 models (where
+translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+The single source of truth is now
+`scripts/pipeline/config_tables.py:IMMERSION_RULES`.
+
+---
 
 Begin writing now. Start with the first section heading.

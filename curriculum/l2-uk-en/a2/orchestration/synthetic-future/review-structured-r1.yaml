@@ -3,47 +3,54 @@ scores:
 - dimension: 1
   name: Plan adherence
   score: 8
-  evidence: Required dialogue situation ("Making New Year's resolutions with friends"
-    using perfective forms) was completely omitted from the "Простий майбутній час"
-    section and replaced with a dinner planning di
+  evidence: 'All four planned H2 sections are present and the core contrasts are covered,
+    but the content adds an extra out-of-plan marker: `<!-- INJECT_ACTIVITY: fill-in-future-aspect
+    -->`.'
 - dimension: 2
   name: Linguistic accuracy
-  score: 6
-  evidence: 'CRITICAL errors: 1) Falsely claiming `побачити` undergoes a `т` -> `ч`
-    consonant shift. 2) Falsely claiming the `бл` shift in `зробити` only applies
-    to the 1st person singular and listing `вони зробля'
+  score: 4
+  evidence: The module states `imperfective verbs cannot express the future tense
+    on their own` and later says `«прибиратиму» is just a stylish, one-word variant
+    of «буду прибирати»`; both claims are factually wr
 - dimension: 3
   name: Pedagogical quality
-  score: 8
-  evidence: Excellent explanations of aspect and conditional usage. However, placing
-    exercises that test both simple and compound future forms immediately after the
-    introductory paragraph (before they are actuall
+  score: 6
+  evidence: The analytical-future section opens with a long English-first explanation
+    ending in `similar to how English uses "will be" plus an "-ing" verb` before the
+    first Ukrainian example, which is both mislea
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: All required and recommended vocabulary words are used naturally in context.
+  score: 9
+  evidence: 'Required vocabulary is integrated naturally in prose and examples: `сказати
+    / скажу`, `написати / напишу`, `зробити / зроблю`, `буду`, `прочитати`, `подзвонити`,
+    `купити`.'
 - dimension: 5
   name: Exercise quality
-  score: 8
-  evidence: Generated extra marker not in plan. Placement of markers forces the pipeline
-    to insert exercises testing concepts the student hasn't read yet.
+  score: 6
+  evidence: Marker placement is mostly sensible, but there are 5 markers for 4 planned
+    activities, including extra `fill-in-future-aspect`, and the unjumble marker has
+    stray visible text after it.
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: Tone is supportive and clear. Explanations of why the tenses exist ("perfective
-    verbs do not have a real present tense") are logical and empowering.
+  score: 6
+  evidence: 'The teacher voice exists, but filler weakens it: `These verbs are absolutely
+    essential for everyday communication and building relationships` and `This gives
+    you incredible expressive power in Ukraini'
 - dimension: 7
   name: Structural integrity
-  score: 10
-  evidence: All H2 headers from the plan are present. Word count (2982) safely exceeds
-    the 2000 target.
+  score: 7
+  evidence: 'All planned H2 headings are present and the pipeline word count is above
+    target (2308), but `<!-- INJECT_ACTIVITY: unjumble-future-sentences --> [unjumble,
+    Reorder words ...]` leaves a formatting arti'
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: The distinction between Ukrainian and English approaches to future tense
-    is explained well without relying on Russian comparisons.
+  score: 9
+  evidence: The module treats Ukrainian on its own terms and uses a plausible Ukrainian
+    context (New Year’s resolutions, exams) without Russia-centered framing.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 9
-  evidence: Dialogues are natural and clearly demonstrate the grammar in action.
+  score: 4
+  evidence: The supposed dialogue is just four isolated declarations (`Олена...`,
+    `Марко...`, `Софія...`, `Максим...`) rather than a multi-turn conversation with
+    reactions or interaction.
 findings: []

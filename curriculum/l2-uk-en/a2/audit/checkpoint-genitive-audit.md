@@ -1,7 +1,7 @@
 # Audit Report: M16 — checkpoint-genitive.md
 **Level:** A2 | **Module:** M16 | **Phase:** A2.2 | **Pedagogy:** Review | **Target:** 1500
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-04-11 02:27:15
+**Generated:** 2026-04-13 05:02:37
 
 ## Configuration
 **Type:** A2
@@ -18,48 +18,46 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | quiz |  | 8 | 8 | ✅ |
-| 2 | fill-in |  | 8 | 8 | ✅ |
-| 3 | match-up |  | 8 | 8 | ✅ |
-| 4 | group-sort |  | 12 | 8 | ✅ |
-| 5 | translate |  | 6 | 6 | ✅ |
+| 1 | quiz |  | 10 | 8 | ✅ |
+| 2 | fill-in |  | 10 | 8 | ✅ |
+| 3 | match-up |  | 10 | 8 | ✅ |
+| 4 | fill-in |  | 10 | 8 | ✅ |
+| 5 | group-sort |  | 15 | 8 | ✅ |
+| 6 | true-false |  | 10 | 8 | ✅ |
+| 7 | translate |  | 10 | 6 | ✅ |
+| 8 | match-up |  | 10 | 8 | ✅ |
+| 9 | error-correction |  | 10 | 6 | ✅ |
 
 **Summary:**
-- Total activities: 5 (target: 0-4) ❌
-- Unique types: 5 (minimum: 0) ✅
-- Priority types used: 5/15 (fill-in, group-sort, match-up, quiz, translate) ✅
+- Total activities: 9 (target: 0-4) ❌
+- Unique types: 7 (minimum: 0) ✅
+- Priority types used: 7/15 (error-correction, fill-in, group-sort, match-up, quiz, translate, true-false) ✅
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q1 prompt length 4 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q6 prompt length 4 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q7 prompt length 4 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'the preposition...'.
+- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'we use...'.
   - FIX: Vary sentence structure.
 
 ## Recommendation
-**📝 UPDATE** (severity 35/100)
+**📝 UPDATE** (severity 25/100)
 
-- 4 violations (moderate)
+- 1 violations (minor)
 - Immersion 13% off target
 
 ## Gates
-- **Words:** ✅ 2034/1500 (raw: 2082)
-- **Activities:** ✅ 5/0
+- **Words:** ✅ 1965/1500 (raw: 2013)
+- **Activities:** ✅ 9/0
 - **Density:** ✅ All > 8
-- **Unique_types:** ✅ 5/0 types
+- **Unique_types:** ✅ 7/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ❌ 1/3
+- **Engagement:** ✅ 3/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 23/1
+- **Vocab:** ✅ 41/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ❌ 27.1% LOW (target 40-70% (A2.1))
+- **Immersion:** ❌ 27.0% LOW (target 40-70% (A2.1))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -67,7 +65,7 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 535 | Included in Core |
-| **Частина 2: Вибір правильної форми (Part 2: Choosing the Correct Form)** | ✅ | 687 | Included in Core |
-| **Частина 3: Вільне вживання (Part 3: Free Production)** | ➖ | 684 | Excluded Type |
-| **Підсумок** | ✅ | 128 | Included in Core |
+| **Intro/Narrative** | ✅ | 654 | Included in Core |
+| **Частина 2: Вибір правильної форми (Part 2: Choosing the Correct Form)** | ✅ | 635 | Included in Core |
+| **Частина 3: Вільне вживання (Part 3: Free Production)** | ➖ | 528 | Excluded Type |
+| **Підсумок** | ✅ | 148 | Included in Core |

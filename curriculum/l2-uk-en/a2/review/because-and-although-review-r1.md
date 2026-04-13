@@ -1,109 +1,58 @@
 ## Linguistic Scan
-Found 2 linguistic issues:
-- "інтригуюче" is used as an adverb. This is an unnatural calqued active participle not found in VESUM. The correct adverb is "загадково".
-- "зверніть свою увагу" uses the redundant possessive pronoun "свою", which is a literal translation calque. The natural Ukrainian idiom is simply "зверніть увагу".
+- Calque: `«Хоча я прокинувся пізно, я встиг прийняти душ...»` teaches `прийняти душ`, which this repo’s own linguistic guidance treats as a calque; use `помитися під душем` or `брати душ`.
+- Factually wrong grammar claim: in the coordinating-conjunction section, `навпаки` is presented as one more conjunction-like connector (“If you want to show a very strong, direct contrast, you can use the word «навпаки»”). VESUM tags `навпаки` as `adv`, not `conj`, so this explanation misclassifies its part of speech.
 
 ## Exercise Check
-All 5 required markers are present, but their placement is flawed:
-- `quiz-cause-choice` (tests *тому що, бо, хоча, але*) is placed after Section 1, before *хоча* and *але* are taught.
-- `group-sort-conjunctions` (tests *але, проте, однак*) is placed after Section 2, before *проте* and *однак* are taught.
-- `unjumble-complex-sentences` (tests *тому що, бо, хоча*) is placed after Section 3, but is best placed after Section 2 since it only tests cause and concession.
+Five planned activity markers are present: `match-up`, `unjumble`, `group-sort`, `quiz`, `fill-in`. They cover the five `activity_hints`, and there are no inline DSL exercise blocks in the prose. No exercise-marker count mismatch found.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 9/10 | The module covers almost all points, but explicitly misses teaching the intonation pattern for cause (тому що/бо) which was requested in the plan points ("subordinate clause with тому що/бо has a slight rising tone (↗) leading into it"). |
-| 2. Linguistic accuracy | 8/10 | Found an artificial adverb "інтригуюче" (NOT IN VESUM) and a redundant calque "зверніть свою увагу". The rest of the module is highly accurate and natural. |
-| 3. Pedagogical quality | 9/10 | Excellent metaphors (the comma as a border guard) and a solid PPP flow. |
-| 4. Vocabulary coverage | 10/10 | Required and recommended vocabulary like `допуст` are used naturally in context. |
-| 5. Exercise quality | 7/10 | The markers for the quiz and group sort are misplaced before the required knowledge is taught, breaking the "can a learner complete this with knowledge taught so far" rule. |
-| 6. Engagement & tone | 10/10 | The tone is warm, supportive, and highly engaging. Excellent conversational examples. |
-| 7. Structural integrity | 10/10 | Clean markdown, word count of 2581 comfortably exceeds the 2000 target. |
-| 8. Cultural accuracy | 10/10 | Uses authentic literary quotes (В. Сосюра) and cultural examples (бджоляр Петро Прокопович). |
-| 9. Dialogue & conversation quality | 10/10 | The opening dialogue is natural and clearly establishes the target grammar. |
+| 1. Plan adherence | 8/10 | All three planned H2 sections are present and near budget, and required vocabulary is covered in prose. But the plan references are not integrated: searches for `Заболотний`, `ULP`, and `Ukrainian Lessons` in the module text return 0 occurrences. |
+| 2. Linguistic accuracy | 6/10 | Two confirmed teaching errors: `«...я встиг прийняти душ...»` uses a calque, and `«навпаки»` is taught as if it were a coordinating conjunction even though VESUM classifies it as an adverb. |
+| 3. Pedagogical quality | 8/10 | The module generally follows PPP well: dialogue, explanation, multiple examples, then practice markers. But one explanation is less precise than it should be because it teaches `навпаки` inside the conjunction set. |
+| 4. Vocabulary coverage | 8/10 | Required items such as `тому що`, `бо`, `хоча`, `але`, `причина`, `сполучник`, `складне речення`, and `тому` all appear naturally. Recommended vocabulary is also present, but `навпаки` is introduced with the wrong grammatical role. |
+| 5. Exercise quality | 9/10 | All five planned activity types are present and positioned after relevant teaching. The prose itself gives enough content to support those task types. |
+| 6. Engagement & tone | 7/10 | Several lines drift into generic booster language rather than concrete teaching, e.g. `Using these alternatives instantly elevates your spoken and written language to a higher level.` |
+| 7. Structural integrity | 10/10 | Clean three-section structure, all H2 headings present and ordered, five activity markers present, and pipeline word count is 2840, which is safely above the 2000 target. |
+| 8. Cultural accuracy | 9/10 | Ukrainian is presented on its own terms, with no Russian-centered framing; the proverb and register notes are appropriate. |
+| 9. Dialogue & conversation quality | 9/10 | The opening class-skipping exchange is short but relevant to the plan and uses the target conjunctions naturally enough for A2. |
 
 ## Findings
-[Plan adherence] [Major]
-Location: Section 1 (Чому? Тому що... / Бо...)
-Issue: The plan explicitly asks to teach intonation patterns for cause ("subordinate clause with тому що/бо has a slight rising tone (↗) leading into it"), but this is completely missing from the text.
-Fix: Add a short paragraph explaining the rising tone before the conjunction and the falling tone at the end.
+[PLAN ADHERENCE] [SEVERITY: major]  
+Location: first explanatory paragraph after the opening dialogue: `Both of them translate directly to the English word "because".`  
+Issue: The prose never cites or integrates the planned references. I verified absence by searching the module text for `Заболотний`, `ULP`, and `Ukrainian Lessons` and found 0 occurrences.  
+Fix: Add a short source note tying the explanation to `Заболотний Grade 5, §28`, `Заболотний Grade 6`, and `ULP: Ukrainian Conjunctions`.
 
-[Linguistic accuracy] [Critical]
-Location: "Ви ніби інтригуюче кажете їм: «Увага, зараз буде сюрприз!»."
-Issue: The word "інтригуюче" is an unnatural calqued participle/adverb that does not exist in VESUM.
-Fix: Replace with "загадково".
+[LINGUISTIC ACCURACY] [SEVERITY: critical]  
+Location: final section, consolidation paragraph: `«Хоча я прокинувся пізно, я встиг прийняти душ. ...»`  
+Issue: `прийняти душ` is a calque; the repo’s own linguistic guidance treats `приймати/прийняти душ` as non-standard and prefers `брати душ` or `митися/помитися під душем`.  
+Fix: Replace `прийняти душ` with `помитися під душем`.
 
-[Linguistic accuracy] [Major]
-Location: "Зверніть свою увагу, що ми маємо відразу два сполучники в одному реченні." and "Насамкінець, зверніть свою особливу увагу на правильну мелодію таких речень."
-Issue: The possessive pronoun "свою" is redundant here and acts as a literal translation calque. The natural Ukrainian phrase is simply "зверніть увагу".
-Fix: Remove the word "свою" in both instances.
+[LINGUISTIC ACCURACY] [SEVERITY: critical]  
+Location: start of the third section: `If you want to show a very strong, direct contrast, you can use the word «навпаки» (on the contrary).`  
+Issue: This teaches `навпаки` as part of the conjunction set, but VESUM classifies `навпаки` as an adverb, not a conjunction. Learners will internalize the wrong part of speech.  
+Fix: Rephrase the paragraph so `проте`, `однак`, and `зате` remain conjunctions, while `навпаки` is explicitly described as a separate adverb/discourse word used for reversal or correction.
 
-[Exercise quality] [Major]
-Location: `<!-- INJECT_ACTIVITY: quiz-cause-choice -->` placed after Section 1, and `<!-- INJECT_ACTIVITY: group-sort-conjunctions -->` placed after Section 2.
-Issue: These markers test concepts (*хоча, проте, однак*) that have not yet been introduced at their respective locations in the text.
-Fix: Move `quiz-cause-choice` and `group-sort-conjunctions` to the end of Section 3. Move `unjumble-complex-sentences` to the end of Section 2.
+[ENGAGEMENT & TONE] [SEVERITY: major]  
+Location: same third-section paragraph: `Using these alternatives instantly elevates your spoken and written language to a higher level.`  
+Issue: This is generic promotional filler. It adds hype, not instruction, and weakens precision in a grammar lesson.  
+Fix: Replace it with a concrete sentence about what learners actually gain, such as hearing differences in repetition avoidance, contrast, compensation, and reversal.
 
 ## Verdict: REVISE
-The module is very well-written and culturally rich, but it requires revision to fix the misplaced exercise markers, address the missing intonation point for causal sentences, and clean up two minor linguistic calques.
+REVISE because there are confirmed critical linguistic/grammar errors (`прийняти душ`, misclassification of `навпаки`) and multiple dimensions below 9. The structure is solid, but the module should not ship with wrong Ukrainian or wrong grammar metalanguage.
 
 <fixes>
 - find: |-
-    The rising intonation clearly signals to your conversation partner that they need to wait for a twist. Ви ніби інтригуюче кажете їм: «Увага, зараз буде сюрприз!». А потім, коли ви говорите головну частину речення, ваш голос іде різко вниз (↘).
+    When you want to explain the **причина** (reason) for an action, you need to answer the question «Чому?». In Ukrainian grammar, we use a **складне речення** (complex sentence) to connect the main action with its explanation. To link these two parts together, we use a special linking word called a **сполучник** (conjunction). The two most common causal conjunctions you will hear every day are «тому що» and «бо». Both of them translate directly to the English word "because".
   replace: |-
-    The rising intonation clearly signals to your conversation partner that they need to wait for a twist. Ви ніби загадково кажете їм: «Увага, зараз буде сюрприз!». А потім, коли ви говорите головну частину речення, ваш голос іде різко вниз (↘).
-
+    When you want to explain the **причина** (reason) for an action, you need to answer the question «Чому?». In Ukrainian grammar, we use a **складне речення** (complex sentence) to connect the main action with its explanation. To link these two parts together, we use a special linking word called a **сполучник** (conjunction). The two most common causal conjunctions you will hear every day are «тому що» and «бо». Both of them translate directly to the English word "because". This matches the school-style explanation in Заболотний Grade 5, §28 and the Grade 6 section on conjunctions, and it also aligns with ULP: Ukrainian Conjunctions.
 - find: |-
-    Зверніть свою увагу, що ми маємо відразу два сполучники в одному реченні. Англійською мовою така конструкція звучить як велика помилка.
+    You are familiar with the word «і» (and) and the contrast word **але** (but). To make your Ukrainian sound richer, you can use stylistic alternatives. The word «та» is a beautiful, traditional alternative to «і». For expressing contrast, you can use words like «проте», «однак», and «зате». If you want to show a very strong, direct contrast, you can use the word «навпаки» (on the contrary). Using these alternatives instantly elevates your spoken and written language to a higher level.
   replace: |-
-    Зверніть увагу, що ми маємо відразу два сполучники в одному реченні. Англійською мовою така конструкція звучить як велика помилка.
-
+    You are familiar with the word «і» (and) and the contrast word **але** (but). To vary your Ukrainian naturally, you can use stylistic alternatives. The word «та» is a common alternative to «і», especially when speakers want to avoid repetition. For expressing contrast, you can use conjunctions like «проте», «однак», and «зате». The word «навпаки» (on the contrary) is also useful, but it is not a coordinating conjunction: it introduces a reversed idea or correction.
 - find: |-
-    Насамкінець, зверніть свою особливу увагу на правильну мелодію таких речень. We previously discussed the dramatic rise-and-fall intonation of complex sentences that use the word "хоча".
+    «Хоча я прокинувся пізно, я встиг прийняти душ. Але я зовсім не поснідав вдома. Я побіг на роботу дуже швидко, тому що не хотів запізнитися. Проте я все одно приїхав пізно, бо на вулиці був затор».
   replace: |-
-    Насамкінець, зверніть особливу увагу на правильну мелодію таких речень. We previously discussed the dramatic rise-and-fall intonation of complex sentences that use the word "хоча".
-
-- find: |-
-    Головне — знайти правильний логічний зв'язок між ними.
-
-    <!-- INJECT_ACTIVITY: quiz-cause-choice -->
-    <!-- INJECT_ACTIVITY: fill-in-cause-clauses -->
-
-    ## Хоча... (Although...)
-  replace: |-
-    Головне — знайти правильний логічний зв'язок між ними.
-
-    Також варто пам'ятати про правильну інтонацію. У причинових реченнях голос робить легкий рух угору (↗) перед сполучниками «тому що» або «бо», щоб показати, що далі буде пояснення. А вже в кінці підрядної частини голос спокійно падає вниз (↘). Наприклад: «Я не прийшов (↗), тому що був зайнятий (↘)». Це робить вашу мову дуже природною.
-
-    <!-- INJECT_ACTIVITY: fill-in-cause-clauses -->
-
-    ## Хоча... (Although...)
-
-- find: |-
-    Правильна українська інтонація гарантовано робить вас справжнім майстром спілкування.
-
-    <!-- INJECT_ACTIVITY: match-up-cause-concession -->
-    <!-- INJECT_ACTIVITY: group-sort-conjunctions -->
-
-    ## Складносурядне речення: і, та, але (Compound Sentences)
-  replace: |-
-    Правильна українська інтонація гарантовано робить вас справжнім майстром спілкування.
-
-    <!-- INJECT_ACTIVITY: match-up-cause-concession -->
-    <!-- INJECT_ACTIVITY: unjumble-complex-sentences -->
-
-    ## Складносурядне речення: і, та, але (Compound Sentences)
-
-- find: |-
-    Завжди тренуйте цю спокійну мелодію, коли ви самостійно читаєте українські тексти вголос.
-
-    <!-- INJECT_ACTIVITY: unjumble-complex-sentences -->
-
-    ## Підсумок
-  replace: |-
-    Завжди тренуйте цю спокійну мелодію, коли ви самостійно читаєте українські тексти вголос.
-
-    <!-- INJECT_ACTIVITY: quiz-cause-choice -->
-    <!-- INJECT_ACTIVITY: group-sort-conjunctions -->
-
-    ## Підсумок
+    «Хоча я прокинувся пізно, я встиг помитися під душем. Але я зовсім не поснідав вдома. Я побіг на роботу дуже швидко, тому що не хотів запізнитися. Проте я все одно приїхав пізно, бо на вулиці був затор».
 </fixes>

@@ -1,0 +1,73 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T11-12-bd90f995.json
+phase: review
+prompt_chars: 68338
+response_chars: 11555
+prompt_words: 9869
+response_words: 1652
+sections:
+- name: preamble
+  start: 0
+  length: 459
+  fraction: 0.0067
+- name: plan
+  start: 459
+  length: 63795
+  fraction: 0.9335
+- name: output_spec
+  start: 64254
+  length: 4084
+  fraction: 0.0598
+large_sections:
+- plan
+directives_total: 30
+directives_covered: 20
+directives_missed:
+- kind: must
+  text: To form them, we must look at the verb's conjugation class, because this determines
+    the suffix we will use.
+  covered: false
+  coverage_note: 5/13 keywords (38%)
+- kind: must
+  text: You cannot just guess between the letters "у" and "а"; you must know exactly
+    how the verb behaves in the present tense.
+  covered: false
+  coverage_note: 4/14 keywords (29%)
+- kind: must
+  text: To form them, you must start with a perfective verb (дієслово доконаного виду),
+    because the inherent meaning relies on the action being definitively finished.
+  covered: false
+  coverage_note: 7/18 keywords (39%)
+- kind: must
+  text: For instance, the calque «керуючий» must be replaced with the official professional
+    title «керівник» (manager).
+  covered: false
+  coverage_note: 2/10 keywords (20%)
+- kind: must
+  text: The narrator must describe ongoing actions and permanent characteristics of
+    the environment simultaneously.
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: must
+  text: Understanding how to form and identify participles is only the first step;
+    you must also know how to integrate them structurally into your sentences.
+  covered: false
+  coverage_note: 7/18 keywords (39%)
+- kind: must
+  text: '**Before you claim a word, symbol, notation, or plan point is MISSING from
+    the content, you MUST search for it.'
+  covered: false
+  coverage_note: 5/13 keywords (38%)
+- kind: must
+  text: '**CRITICAL RULE: If you mention ANY error, mistake, or inaccuracy in the
+    evidence column of your scores table, you MUST also list it as a structured finding
+    below AND include it in your `<fixes>` block.'
+  covered: false
+  coverage_note: 8/22 keywords (36%)
+- kind: must
+  text: This is a language curriculum — every error you identify must be fixed.
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing

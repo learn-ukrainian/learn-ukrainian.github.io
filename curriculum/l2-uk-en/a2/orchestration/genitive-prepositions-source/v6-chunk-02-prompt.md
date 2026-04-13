@@ -1,43 +1,30 @@
-# Section-by-Section Generation — Section 2/5
+# Section-by-Section Generation — Section 2/3
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 9: Звідки ти? З чого це зроблено? (A2, A2.2 [Genitive Case Complete])
-**Section to write:** Звідки? З/із/зі + родовий (Where From? З/із/зі + Genitive) (~750 words total)
-**Word target for this section:** 750 words (aim for 825 to account for undershoot)
+**Section to write:** Від кого? Від + родовий (From Whom? Від + Genitive) (~620 words)
+**Word target for this section:** 620 words (aim for 682 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Звідки? З/із/зі + родовий (Where From? З/із/зі + Genitive) (~750 words total)
-- P1 (~150 words): [Core concept of origin and "from where" (звідки?). Explain that 'з' triggers the Genitive case. Examples: з України (Fem -и), з Києва (Masc city -а), з Харкова (Masc city -а), з Лондона (Masc city -а).]
-- P2 (~200 words): [The crucial rule of Euphony (Милозвучність). Explain the three variants: 'з' before vowels/single consonants (з Одеси, з університету); 'із' between two consonants or before sibilants з, с, ц, ж, ч, ш (із села, із золота); 'зі' before clusters starting with з, с, ш, щ, в, ф, л, м (зі Львова, зі школи, зі стола, зі Швеції).]
-- P3 (~150 words): [Material and composition: Explain how 'з' describes what an object is made of. Examples: стіл з дерева (neuter -а), склянка зі скла (neuter -а), сукня з шовку (masc -у), сік з яблук (plural), пиріжки з калиною (genitive usage for filling).]
-- P4 (~150 words): [Time starting point: Use 'з' to show when something began. Examples: з ранку (masc -у), з понеділка (masc -а), з дитинства (neuter -а), з канікул (plural). Contrast this with 'після' to be taught later.]
-- P5 (~100 words): [Decolonization note: Emphasize 'з України' as the only correct form, derived from 'в Україні'. Mention that euphony is a signature trait of Ukrainian that distinguishes it from neighboring Slavic systems.]
-- <!-- INJECT_ACTIVITY: quiz-euphony-variants --> [quiz, Focus: Choose correct variant з/із/зі based on the following noun, 8 items]
+## Від кого? Від + родовий (From Whom? Від + Genitive) (~620 words)
+- P1 (~120 words): Introduce "від" for people as the source. Explain that when receiving something from a person, you must use "від" + Genitive, not "з". Provide examples: лист від мами (a letter from mom), подарунок від друга (a gift from a friend), новини від сусіда (news from a neighbor).
+- P2 (~120 words): Direct contrast between "з" and "від". "з" = source/origin for a place, while "від" = from a specific person or entity. Highlight the common L2 error of translating the English "from" with "з" in all contexts. Provide contrast examples: з Києва (from Kyiv — place) vs. від Олени (from Olena — person).
+- P3 (~130 words): Distance. Explain that "від" is used with spatial adverbs to express distance from a point. Provide examples and highlight their Genitive endings: далеко від центру (far from the center), недалеко від вокзалу (not far from the station).
+- P4 (~120 words): Protection. Explain that "від" is also used for things that protect, cure, or shield from something. Provide examples: ліки від головного болю (medicine for a headache), парасолька від дощу (umbrella from rain).
+- P5 (~130 words): Briefly review Genitive endings as they apply to the nouns following "від". Remind learners of the masculine -у/-а distinction and feminine -и/-і. For example: від дощу (masc. -у), від сусіда (masc. -а).
+- <!-- INJECT_ACTIVITY: fill-in-vid-z --> [fill-in, Complete sentences with від or з + correct Genitive noun form, 8 items]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
 
 <previous_context>
-## Вступ: Вечірка в друзів
+[...previous sections truncated...]
 
-Imagine you are at an international potluck dinner with your friends. Everyone has brought something special, and naturally, people are asking where the food and drinks came from. This is the perfect situation to practice three very common Ukrainian prepositions: **з** (from a place), **від** (from a person), and **після** (after an event).
-
-> — **Марко:** Привіт усім! Який великий стіл. Що це? *(Hi everyone! What a big table. What is this?)*
-> — **Анна:** Це сир з Франції. А ці смачні оливки — з Греції. *(This is cheese from France. And these tasty olives are from Greece.)*
-> — **Марко:** Дуже добре! А звідки цей шоколад? *(Very good! And where is this chocolate from?)*
-> — **Олена:** Це шоколад від бабусі з Бельгії. *(This is chocolate from grandma from Belgium.)*
-> — **Анна:** А що ти приніс, Марку? *(And what did you bring, Marko?)*
-> — **Марко:** А це вино після подорожі Італією. *(And this is wine after a trip through Italy.)*
-> — **Олена:** Чудово! Тоді давайте вечеряти. *(Wonderful! Then let's have dinner.)*
-
-:::note
-**Quick tip**
-Notice how the prepositions **з**, **від**, and **після** change the ending of the noun that follows them. For example, *Франція* becomes *Франції*, *бабуся* becomes *бабусі*, and *подорож* becomes *подорожі*. This is the Genitive case in action!
-:::
+a comfortable gap before the heavy cluster. Mastering these three variants will instantly make your spoken Ukrainian sound much more authentic and fluid. Сьогодні мій молодший брат повернувся зі школи дуже рано. Швидкий поїзд зі Львова завжди прибуває на першу платформу. Чорний кіт несподівано стрибнув зі стола на м'який диван. Вона обережно взяла свої нові речі зі шафи. > *Today my younger brother returned from school very early. The fast train from Lviv always arrives at the first platform. The black cat unexpectedly jumped from the table onto the soft sofa. She carefully took her new things from the wardrobe.* <!-- INJECT_ACTIVITY: quiz-euphony-z-iz-zi --> Beyond geographic origin, the preposition «з» combined with the Genitive case is also used to describe the **матеріал** (material) something is made of, or its physical composition. If you want to explain what ingredients went into a dish or what fabric a piece of clothing is sewn from, you use exactly the same grammar structure as you do for cities and countries. It is as if the object "originates" from that specific material. Notice how the noun denoting the material changes its ending to the Genitive form, just like the names of cities do. Я завжди ставлю красиві квіти у велику вазу зі скла. Цей свіжий і солодкий сік повністю зроблений з червоних яблук. На велике свято вона одягнула красиву довгу сукню з шовку. Ми вчора купили новий зручний стіл з темного дерева. > *I always put beautiful flowers in a large vase made of glass. This fresh and sweet juice is completely made of red apples. For the big holiday, she wore a beautiful long dress made of silk. We bought a new comfortable table made of dark wood yesterday.* Finally, this versatile preposition is crucial for expressing time. When you pair «з» with a time expression in the Genitive case, it translates to the English word "since". It marks the starting point of an action or state that began in the past and continues onward into the present. This is incredibly useful for talking about your daily routine, your habits, or how long you have been doing something. Just remember to apply the correct Genitive ending to the time word, such as changing "ранок" (morning) to "ранку". Я активно працюю над цим складним проєктом з самого ранку. Ми серйозно вирішили почати нове життя з наступного понеділка. Мій найкращий друг глибоко цікавиться історією ще з дитинства. Вона терпляче чекає на твій важливий дзвінок з минулого тижня. > *I have been actively working on this difficult project since early morning. We seriously decided to start a new life since next Monday. My best friend has been deeply interested in history since childhood. She has been patiently waiting for your important call since last week.* :::tip **Quick tip** When talking about daily meals, you can also use this structure to describe leftovers. For example, «піца з вечері» means pizza left over from **вечеря** (dinner, supper), and «хліб зі сніданку» is bread left over from **сніданок** (breakfast). :::
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -612,6 +599,31 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] прийменник (preposition)
+- [ ] джерело (source)
+- [ ] походження (origin)
+- [ ] матеріал (material)
+- [ ] далеко (far)
+- [ ] недалеко (not far, nearby)
+- [ ] подарунок (gift)
+- [ ] сніданок (breakfast)
+- [ ] вечеря (dinner, supper)
+- [ ] канікули (vacation, holidays)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Від кого? Від + родовий (From Whom? Від + Genitive) (~620 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

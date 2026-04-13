@@ -1,0 +1,55 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 5
+  evidence: The plan’s dialogue situation says pet shop, “Use animals and pet items
+    to demonstrate він/вона/воно — not room furniture,” but the lesson opens with
+    `"це моя кімната"` and `"Що у тебе є в сумці?"`. T
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: No Russianisms, Surzhyk, calques, paronym errors, or wrong Ukrainian forms
+    found. Core nouns were VESUM-verified; no Russian-only letters appear.
+- dimension: 3
+  name: Pedagogical quality
+  score: 6
+  evidence: 'The core explanation is too abstract for A1: `"permanent grammatical
+    categories"`, `"fixed part of its identity"`, `"dictates how the word interacts..."`.
+    The lesson teaches the right facts, but too m'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required vocabulary appears naturally in prose (`стіл`, `книга`, `вікно`,
+    `кімната`, `ліжко`, `стілець`, `лампа`, `телефон`, `комп'ютер`, `він/вона/воно`),
+    and all recommended items also appear (`
+- dimension: 5
+  name: Exercise quality
+  score: 4
+  evidence: 'The 8-item pronoun quiz, 8-item possessive fill-in, and 6-item endings
+    quiz match the plan. But the planned 12-item `group-sort` is missing: the prose
+    has `<!-- INJECT_ACTIVITY: group-sort-objects -->'
+- dimension: 6
+  name: Engagement & tone
+  score: 6
+  evidence: 'The teaching voice is not wrong, but it becomes lecture-heavy: `"critical
+    pattern emerging"`, `"first direct encounter"`, `"dictates how the word interacts..."`.
+    It reads more like commentary on gramm'
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: All four H2 sections are present and ordered correctly. Pipeline word
+    count is 1274, so it clears the 1200 target. The only structural blemish is the
+    unresolved group-sort injection point.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Ukrainian is presented on its own terms, with no Russian-centered framing
+    or cultural distortion.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 6
+  evidence: Named speakers are used correctly, but the dialogues are thin and mostly
+    demonstrative. `"це моя кімната"` / `"Що у тебе є в сумці?"` are functional examples,
+    not the richer pet-shop interaction the p
+findings: []

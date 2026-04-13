@@ -2,9 +2,106 @@ version: '1.0'
 module: shopping
 level: a1
 inline:
-- id: match-up-shops
+- id: fill-in-prices
+  type: fill-in
+  instruction: Вставте правильну форму слова (Insert the correct word form)
+  items:
+  - sentence: Скільки коштує ____? — Двадцять гривень.
+    answer: хліб
+    options:
+    - хліб
+    - хліба
+  - sentence: Скільки коштує ____? — Десять гривень.
+    answer: вода
+    options:
+    - вода
+    - воду
+  - sentence: Скільки коштує ____? — Сто гривень.
+    answer: сир
+    options:
+    - сир
+    - сиру
+  - sentence: Скільки коштують ____? — Сорок гривень.
+    answer: яблука
+    options:
+    - яблука
+    - яблук
+  - sentence: Скільки коштують ____? — Тридцять гривень.
+    answer: помідори
+    options:
+    - помідори
+    - помідорів
+  - sentence: Скільки коштує ____? — П'ятдесят гривень.
+    answer: молоко
+    options:
+    - молоко
+    - молока
+  - sentence: Скільки коштує ____? — Шістдесят гривень.
+    answer: сік
+    options:
+    - сік
+    - соку
+  - sentence: Скільки коштують ____? — Сімдесят гривень.
+    answer: банани
+    options:
+    - банани
+    - бананів
+- id: quiz-currency
+  type: quiz
+  instruction: Оберіть правильний варіант (Choose the correct option)
+  items:
+  - question: 21 ____
+    options:
+    - гривня
+    - гривні
+    - гривень
+    correct: 0
+  - question: 32 ____
+    options:
+    - гривня
+    - гривні
+    - гривень
+    correct: 1
+  - question: 45 ____
+    options:
+    - гривня
+    - гривні
+    - гривень
+    correct: 2
+  - question: 100 ____
+    options:
+    - гривня
+    - гривні
+    - гривень
+    correct: 2
+  - question: 1 ____
+    options:
+    - гривня
+    - гривні
+    - гривень
+    correct: 0
+  - question: 3 ____
+    options:
+    - гривня
+    - гривні
+    - гривень
+    correct: 1
+  - question: 10 ____
+    options:
+    - гривня
+    - гривні
+    - гривень
+    correct: 2
+  - question: 54 ____
+    options:
+    - гривня
+    - гривні
+    - гривень
+    correct: 1
+- id: match-up-locations
   type: match-up
-  instruction: Де ви це купуєте? З'єднайте пари (Where do you buy it? Match the pairs)
+  instruction: З'єднайте продукт із місцем, де його можна купити (Match the product
+    to the place you can buy it)
   pairs:
   - left: помідори
     right: ринок
@@ -22,123 +119,9 @@ inline:
     right: кафе
   - left: борщ
     right: ресторан
-- id: quiz-currency-choice
-  type: quiz
-  instruction: Оберіть правильну форму слова «гривня» (Choose the correct form of
-    the word 'hryvnia')
-  items:
-  - question: 21 ___
-    options:
-    - гривня
-    - гривні
-    - гривень
-    - гривню
-    correct: 0
-  - question: 32 ___
-    options:
-    - гривня
-    - гривні
-    - гривень
-    - гривню
-    correct: 1
-  - question: 45 ___
-    options:
-    - гривня
-    - гривні
-    - гривень
-    - гривню
-    correct: 2
-  - question: 100 ___
-    options:
-    - гривня
-    - гривні
-    - гривень
-    - гривню
-    correct: 2
-  - question: 1 ___
-    options:
-    - гривня
-    - гривні
-    - гривень
-    - гривню
-    correct: 0
-  - question: 3 ___
-    options:
-    - гривня
-    - гривні
-    - гривень
-    - гривню
-    correct: 1
-  - question: 10 ___
-    options:
-    - гривня
-    - гривні
-    - гривень
-    - гривню
-    correct: 2
-  - question: 54 ___
-    options:
-    - гривня
-    - гривні
-    - гривень
-    - гривню
-    correct: 1
-- id: fill-in-prices
-  type: fill-in
-  instruction: Вставте правильну форму слова (Insert the correct form of the word)
-  items:
-  - sentence: Скільки коштує ____? — Двадцять гривень.
-    answer: хліб
-    options:
-    - хліб
-    - хліба
-    - хлібом
-  - sentence: Скільки коштує ____? — Десять гривень.
-    answer: вода
-    options:
-    - вода
-    - воду
-    - води
-  - sentence: Скільки коштує ____? — Сто гривень.
-    answer: сир
-    options:
-    - сир
-    - сиру
-    - сиром
-  - sentence: Скільки коштують ____? — Сорок гривень.
-    answer: яблука
-    options:
-    - яблука
-    - яблук
-    - яблукам
-  - sentence: Скільки коштують ____? — Тридцять гривень.
-    answer: помідори
-    options:
-    - помідори
-    - помідорів
-    - помідорам
-  - sentence: Скільки коштує ____? — П'ятдесят гривень.
-    answer: молоко
-    options:
-    - молоко
-    - молока
-    - молоком
-  - sentence: Скільки коштує ____? — Шістдесят гривень.
-    answer: сік
-    options:
-    - сік
-    - соку
-    - соком
-  - sentence: Скільки коштують ____? — Сімдесят гривень.
-    answer: банани
-    options:
-    - банани
-    - бананів
-    - бананам
 - id: fill-in-quantities
   type: fill-in
-  instruction: Оберіть правильне слово для кількості (Choose the correct word for
-    quantity)
+  instruction: Вставте правильне слово (Insert the correct word)
   items:
   - sentence: Дайте, будь ласка, ____ яблук.
     answer: кілограм
@@ -165,9 +148,9 @@ inline:
     - літр
     - пляшку
   - sentence: Дайте, будь ласка, ____ хліба.
-    answer: буханку
+    answer: буханець
     options:
-    - буханку
+    - буханець
     - літр
     - кілограм
   - sentence: Дайте, будь ласка, ____ помідорів.
@@ -177,275 +160,226 @@ inline:
     - літр
     - пляшку
 workbook:
-- id: match-numbers
-  type: match-up
-  instruction: З'єднайте цифри зі словами (Match numbers to words)
-  pairs:
-  - left: '20'
-    right: двадцять
-  - left: '35'
-    right: тридцять п'ять
-  - left: '40'
-    right: сорок
-  - left: '75'
-    right: сімдесят п'ять
-  - left: '80'
-    right: вісімдесят
-  - left: '100'
-    right: сто
-  - left: '120'
-    right: сто двадцять
-- id: quiz-numbers
-  type: quiz
-  instruction: Оберіть правильне число (Choose the correct number)
-  items:
-  - question: сорок п'ять
-    options:
-    - '45'
-    - '54'
-    - '35'
-    - '55'
-    correct: 0
-  - question: вісімдесят
-    options:
-    - '18'
-    - '80'
-    - '8'
-    - '100'
-    correct: 1
-  - question: сімдесят п'ять
-    options:
-    - '57'
-    - '70'
-    - '75'
-    - '105'
-    correct: 2
-  - question: тридцять два
-    options:
-    - '23'
-    - '13'
-    - '30'
-    - '32'
-    correct: 3
-  - question: сто двадцять
-    options:
-    - '120'
-    - '102'
-    - '12'
-    - '20'
-    correct: 0
-  - question: двадцять один
-    options:
-    - '12'
-    - '21'
-    - '20'
-    - '11'
-    correct: 1
-- id: fill-in-numbers
-  type: fill-in
-  instruction: Напишіть цифру словом (Write the number as a word)
-  items:
-  - sentence: Це коштує 40 (____) гривень.
-    answer: сорок
-  - sentence: Кілограм яблук коштує 35 (____ п'ять) гривень.
-    answer: тридцять
-  - sentence: Цей сир коштує 120 (____ двадцять) гривень.
-    answer: сто
-  - sentence: Дайте, будь ласка, 2 (____) кілограми помідорів.
-    answer: два
-  - sentence: У мене є 100 (____) гривень.
-    answer: сто
-  - sentence: Хліб коштує 21 (____ один) гривню.
-    answer: двадцять
-- id: match-pronouns
-  type: match-up
-  instruction: З'єднайте займенник із дієсловом (Match pronoun with verb)
-  pairs:
-  - left: Я
-    right: купую
-  - left: Ти
-    right: купуєш
-  - left: Він
-    right: купує
-  - left: Ми
-    right: купуємо
-  - left: Ви
-    right: купуєте
-  - left: Вони
-    right: купують
-- id: fill-in-pronouns
-  type: fill-in
-  instruction: Вставте правильний займенник (Insert the correct pronoun)
-  items:
-  - sentence: ____ йдемо в супермаркет.
-    answer: Ми
-    options:
-    - Я
-    - Ми
-    - Ви
-  - sentence: ____ хоче купити яблука.
-    answer: Вона
-    options:
-    - Вона
-    - Вони
-    - Ви
-  - sentence: ____ купуєте молоко?
-    answer: Ви
-    options:
-    - Ти
-    - Ви
-    - Ми
-  - sentence: ____ хочу купити хліб і масло.
-    answer: Я
-    options:
-    - Я
-    - Ми
-    - Вони
-  - sentence: ____ коштують сорок гривень.
-    answer: Вони
-    options:
-    - Він
-    - Воно
-    - Вони
-  - sentence: ____ купуєш сік на ринку.
-    answer: Ти
-    options:
-    - Ти
-    - Він
-    - Я
-- id: sort-pronouns
+- id: group-sort-verbs
   type: group-sort
-  instruction: Розподіліть займенники на однину та множину (Sort pronouns into singular
-    and plural)
+  instruction: Розподіліть слова за правильним дієсловом (Categorize words by the
+    correct verb)
   groups:
-  - label: Однина (Singular)
+  - label: Скільки коштує...? (Однина)
     items:
-    - Я
-    - Ти
-    - Він
-    - Вона
-    - Воно
-  - label: Множина (Plural)
+    - хліб
+    - молоко
+    - вода
+    - сир
+    - сік
+  - label: Скільки коштують...? (Множина)
     items:
-    - Ми
-    - Ви
-    - Вони
-- id: quiz-pronouns-politeness
-  type: quiz
-  instruction: Ти чи Ви? Оберіть правильну форму звертання (Informal or polite? Choose
-    the correct form of address)
-  items:
-  - question: 'До продавця на ринку:'
-    options:
-    - Ви
-    - Ти
-    - Він
-    - Вони
-    correct: 0
-  - question: 'До друга в кафе:'
-    options:
-    - Ти
-    - Ви
-    - Ми
-    - Вони
-    correct: 0
-  - question: 'До касира в супермаркеті:'
-    options:
-    - Ви
-    - Ти
-    - Він
-    - Вони
-    correct: 0
-  - question: 'До брата або сестри:'
-    options:
-    - Ти
-    - Ви
-    - Ми
-    - Вони
-    correct: 0
-  - question: 'До лікаря в аптеці:'
-    options:
-    - Ви
-    - Ти
-    - Я
-    - Вони
-    correct: 0
-  - question: 'До працівника магазину:'
-    options:
-    - Ви
-    - Ти
-    - Він
-    - Я
-    correct: 0
-- id: true-false-reading
+    - яблука
+    - помідори
+    - банани
+    - гроші
+- id: match-up-vocab
+  type: match-up
+  instruction: З'єднайте українське слово з перекладом (Match the Ukrainian word with
+    the translation)
+  pairs:
+  - left: супермаркет
+    right: supermarket
+  - left: готівка
+    right: cash
+  - left: коштувати
+    right: to cost
+  - left: купувати
+    right: to buy
+  - left: дорого
+    right: expensive
+  - left: копійка
+    right: kopeck
+  - left: знижка
+    right: discount
+  - left: ціна
+    right: price
+- id: true-false-shopping
   type: true-false
   instruction: Правда чи ні? (True or false?)
   items:
-  - statement: На традиційному ринку ціни фіксовані і не можна говорити з продавцем.
+  - statement: На ринку завжди є цінники на всіх продуктах.
     correct: false
-    explanation: На ринку ви говорите з продавцем, це місце для спілкування.
-  - statement: Супермаркет — це великий магазин самообслуговування.
+    explanation: На ринку часто немає цінників, треба питати продавця.
+  - statement: Для води ми використовуємо слова «літр» або «пляшка».
     correct: true
-    explanation: Так, супермаркет має багато відділів і там самообслуговування.
-  - statement: В Україні є спеціальний молочний відділ для сиру та молока.
-    correct: true
-    explanation: Так, у супермаркетах є молочний відділ.
-  - statement: Щоб купити воду, треба йти в м'ясний відділ.
+    explanation: Вода — це рідина, тому ми міряємо її в літрах або пляшках.
+  - statement: Правильно казати «двадцять одна гривень».
     correct: false
-    explanation: М'ясний відділ — це для м'яса та ковбаси.
-  - statement: Слово «копійка» — це історична українська назва монети.
+    explanation: Правильно казати «двадцять одна гривня».
+  - statement: М'ясо можна купити в молочному відділі.
     correct: false
-    explanation: Історична українська назва — «шаг», а копійка — це назва імперського
-      періоду.
-  - statement: Продавці на ринку часто використовують слова з пестливими суфіксами
-      (яблучка, картопелька).
+    explanation: М'ясо купують у м'ясному відділі.
+  - statement: «Крамниця» — це український синонім до слова «магазин».
     correct: true
-    explanation: Так, це виражає гостинність і дружнє ставлення.
-- id: quiz-reading
-  type: quiz
-  instruction: Оберіть правильну відповідь за текстом (Choose the correct answer based
-    on the text)
+    explanation: Крамниця — це невеликий магазин.
+  - statement: Слово «буханка» — це правильне українське слово для хліба.
+    correct: false
+    explanation: Правильно говорити «буханець» або «хлібина».
+- id: anagram-vocab
+  type: anagram
+  instruction: Складіть слово з літер (Make a word from the letters)
   items:
-  - question: Де можна купити ковбасу в супермаркеті?
+  - letters:
+    - г
+    - р
+    - и
+    - в
+    - н
+    - я
+    answer: гривня
+    hint: currency
+  - letters:
+    - ц
+    - і
+    - н
+    - а
+    answer: ціна
+    hint: price
+  - letters:
+    - р
+    - и
+    - н
+    - о
+    - к
+    answer: ринок
+    hint: market
+  - letters:
+    - г
+    - р
+    - о
+    - ш
+    - і
+    answer: гроші
+    hint: money
+  - letters:
+    - д
+    - е
+    - ш
+    - е
+    - в
+    - о
+    answer: дешево
+    hint: not expensive
+  - letters:
+    - з
+    - н
+    - и
+    - ж
+    - к
+    - а
+    answer: знижка
+    hint: discount
+- id: unjumble-sentences
+  type: unjumble
+  instruction: Складіть правильне речення зі слів (Make a correct sentence from the
+    words)
+  items:
+  - words:
+    - коштує
+    - кілограм
+    - Скільки
+    - яблук?
+    correct_order:
+    - Скільки
+    - коштує
+    - кілограм
+    - яблук?
+  - words:
+    - будь
+    - Дайте,
+    - кілограм
+    - ласка,
+    - помідорів.
+    correct_order:
+    - Дайте,
+    - будь
+    - ласка,
+    - кілограм
+    - помідорів.
+  - words:
+    - тут
+    - молочний
+    - Вибачте,
+    - відділ?
+    - де
+    correct_order:
+    - Вибачте,
+    - де
+    - тут
+    - молочний
+    - відділ?
+  - words:
+    - за
+    - Скільки
+    - все?
+    correct_order:
+    - Скільки
+    - за
+    - все?
+  - words:
+    - є
+    - дешевший?
+    - А
+    correct_order:
+    - А
+    - є
+    - дешевший?
+  - words:
+    - Можна
+    - готівка?
+    - карткою
+    - чи
+    - потрібна
+    correct_order:
+    - Можна
+    - карткою
+    - чи
+    - потрібна
+    - готівка?
+- id: fill-in-dialogue
+  type: fill-in
+  instruction: Вставте правильні слова в діалог (Insert the correct words into the
+    dialogue)
+  items:
+  - sentence: — Добрий день! ____ коштує цей сир?
+    answer: Скільки
     options:
-    - у молочному відділі
-    - у м'ясному відділі
-    - в аптеці
-    - у крамниці
-    correct: 1
-  - question: Що ви говорите, коли ціна занадто висока?
+    - Де
+    - Скільки
+    - Що
+  - sentence: — Сто двадцять ____.
+    answer: гривень
     options:
-    - Це дуже дорого!
-    - Це дешево.
-    - Є знижка?
-    - Нормальна ціна.
-    correct: 0
-  - question: Яку форму дієслова треба використовувати для слова «яблука» (множина)?
+    - гривня
+    - гривні
+    - гривень
+  - sentence: — Ого, це дуже ____!
+    answer: дорого
     options:
-    - Скільки коштує?
-    - Скільки коштують?
-    - Скільки коштуємо?
-    - Скільки коштувати?
-    correct: 1
-  - question: Як правильно і ввічливо попросити щось у продавця?
+    - дешево
+    - дорого
+    - добре
+  - sentence: — А ось цей сир — вісімдесят гривень. Нормальна ____.
+    answer: ціна
     options:
-    - Я хочу...
-    - Дайте, будь ласка...
-    - Мені треба...
-    - Де тут...
-    correct: 1
-  - question: Яке слово використовують продавці, щоб бути привітними?
+    - ціна
+    - знижка
+    - каса
+  - sentence: — Добре, ____, будь ласка, цей сир.
+    answer: дайте
     options:
-    - яблуко
-    - яблука
-    - яблучка
-    - яблуку
-    correct: 2
-  - question: Що ви запитуєте, коли хочете дізнатися, чи можна розрахуватися банківською
-      карткою?
+    - дайте
+    - візьміть
+    - купіть
+  - sentence: — Ось, будь ласка. Чи можна розрахуватися ____?
+    answer: карткою
     options:
-    - Можна готівкою?
-    - Скільки з мене?
-    - Ось ваш чек.
-    - Можна карткою?
-    correct: 3
+    - гроші
+    - готівка
+    - карткою

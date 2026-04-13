@@ -2,17 +2,6 @@
   "attempt": 1,
   "passed": true,
   "errors": [],
-  "warnings": [
-    {
-      "check": "VOCABULARY",
-      "severity": "WARNING",
-      "message": "Missing 2/10 required vocab: сполучник сурядності (coordinating conjunction), протиставний (adversative — але, а, зате, проте)"
-    },
-    {
-      "check": "EXERCISES",
-      "severity": "WARNING",
-      "message": "Plan expects 6 exercise(s) but content has 0 placeholders"
-    }
-  ],
-  "timestamp": "2026-04-10T02:19:21.622948+00:00"
+  "warnings": [],
+  "timestamp": "2026-04-11T15:57:30.596850+00:00"
 }

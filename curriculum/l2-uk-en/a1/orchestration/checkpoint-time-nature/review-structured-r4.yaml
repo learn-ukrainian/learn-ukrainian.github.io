@@ -1,0 +1,54 @@
+round: 4
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'All five planned sections are present and in the right order. The dialogue
+    covers the planned consolidation scenario with weather, schedule, and date/time
+    chunks: `Яка в суботу погода?`, `О восьмій ра'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: No confirmed Russianisms, Surzhyk, calques, or case/gender errors found.
+    Verified forms such as `подорож`, `машиною`, `їдьмо`, and `милозвучність` exist,
+    and there are no `ы/э/ё/ъ` characters.
+- dimension: 3
+  name: Pedagogical quality
+  score: 7
+  evidence: 'The grammar section explains time/days/months clearly, but sequence and
+    frequency are reduced to bare lists: `* **споча́тку** ... * **наре́шті** ...`
+    and `* **за́вжди́** ... * **ніколи** ...` with no '
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 'Core A1.4 vocabulary is recycled naturally across sections: `у понеділок`,
+    `у січні`, `взимку`, `іде дощ`, `часто`, `вранці`.'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: 'Marker count and placement match the plan exactly: 3 markers, spread
+    after Reading, Grammar, and Dialogue, aligned to fill-in / fill-in / match-up
+    review work.'
+- dimension: 6
+  name: Engagement & tone
+  score: 7
+  evidence: 'The voice slips into process commentary after the dialogue: `This dialogue
+    now integrates... It also gives the checkpoint a fuller planning situation...`
+    The summary also has generic filler: `Take a m'
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: Required H2 headings are present and ordered correctly. Pipeline word
+    count is 1227, so the module clears the 1200-word target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: No Russian-centric framing, no “like Russian” comparisons, and no cultural
+    inaccuracies found.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: 'Named speakers, a real planning situation, and multiple follow-up turns
+    make the exchange functional and coherent: `Спочатку їдемо до озера...`, `Тоді
+    в суботу, дванадцятого липня...`'
+findings: []

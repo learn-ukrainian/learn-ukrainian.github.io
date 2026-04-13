@@ -273,24 +273,28 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-- Confirmed: я, ти, він, вона, ви, ми, вони, це, звідки, друг, його, її, Україна, Канада, Німеччина, студент, студентка, вчитель, вчителька, лікар, лікарка, українець, українка, програміст, програмістка, інженер, інженерка, звати, приємно.
-- Not found: None (all provided vocabulary confirmed).
+- Confirmed: я, ти, він, вона, ви, мене, звати, як, тебе, вас, це, дуже, приємно, студент, студентка, вчитель, вчителька, лікар, лікарка, українець, українка, Україна, ми, вони, програміст, програмістка, інженер, інженерка, звідки, друг, його, її, Канада, Німеччина
+- Not found: None
 
 ## Grammar Rules
-- Тире між підметом і присудком: Правопис §158 — Тире ставиться між підметом і присудком, коли присудок виражений іменником... у називному відмінку, а дієслова-зв'язки немає (наприклад: "Я — студент").
-- Ви (форми ввічливості): Правопис §60.2 — З великої букви пишемо займенники Ви, Ваш як форму ввічливості у звертанні до однієї конкретної особи в листах, офіційних документах тощо.
+- Capitalization of formal "Ви": Правопис §60 — З великої букви пишемо займенники Ви, Ваш як форму ввічливості у звертанні до однієї конкретної особи в листах, офіційних документах тощо.
+- Dash for omitted "to be": Правопис §165 — Тире ставиться між підметом і присудком, коли вони виражені іменниками в називному відмінку, а дієслово-зв'язка пропущене.
 
 ## Calque Warnings
-- мене звати: OK — Standard Ukrainian (verified in СУМ-11: "Як вас зовуть?").
-- дуже приємно: OK — Standard greeting/response.
-- як тебе звати: OK — Standard informal greeting (verified in СУМ-11: "Як вас зовуть?").
+- мене звати: OK — No results found in Антоненко-Давидович, natural phrasing.
+- дуже приємно: OK — No results found in Антоненко-Давидович, natural phrasing.
+- приємно познайомитись: OK — No results found in Антоненко-Давидович, natural phrasing.
 
 ## CEFR Check
+- я: A1 — OK
+- ти: A1 — OK
 - студент: A1 — OK
-- вчитель: A1 — OK
+- приємно: A1 — OK
 - лікар: A1 — OK
+- інженер: A1 — OK
+- звідки: A1 — OK
+- звати: A1 — OK
 - друг: A1 — OK
-- Україна: A1 — OK
 </pre_verified_facts>
 
 
@@ -573,7 +577,7 @@ The writer should model activities directly on these proven pedagogical patterns
 
 ## Section Structure
 
-Write these sections as H2 headings, in this exact order:
+Write these sections as H2 headings, in this **exact** order:
 
 - `## Діалоги (Dialogues)` (~350 words)
 - `## Мене звати... (My name is...)` (~250 words)
@@ -582,6 +586,8 @@ Write these sections as H2 headings, in this exact order:
 - `## Я — студент (I am a student)` (~150 words)
 - `## Звідки? (Where from?)` (~200 words)
 - `## Підсумок — Summary` (~0 words)
+
+**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim** as an `## H2` line. This includes the FINAL summary/transition section (`Підсумок: ...`, `Підсумок та перехід до M...`, etc.) — the writer's most common failure is silently dropping the closing section. Do NOT skip it. Do NOT renumber. Do NOT merge headings. The post-write quick-verify check will fail your build if any heading is missing, even if the prose itself is excellent.
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -625,6 +631,25 @@ HARD GRAMMAR RULES (audit will reject violations):
 - **Zero calques**: No приймати душ→брати душ, приймати рішення→ухвалювати рішення
 - **Zero paronyms**: тактична≠тактовна, ефектний≠ефективний — use the right word, not a similar-sounding one
 - **Natural Ukrainian**: Write how a Ukrainian teacher would explain this to a student. Not robotic, not textbook-dry, not overly casual.
+
+### FORBIDDEN WORDS — never write these (#1189)
+
+The following Russian words have leaked into past builds and broken modules. They are **hard-banned** — the post-write toxic-token scanner will fail your build the moment it sees one. Use the Ukrainian alternative every time, even in dialogues, even in casual prose, even when quoting a learner's mistake (use a `<!-- VERIFY -->` placeholder instead of typing the Russian form):
+
+| Russian (FORBIDDEN) | Ukrainian (USE THIS) |
+|---|---|
+| хорошо | добре |
+| конечно | звичайно / певна річ |
+| спасибо | дякую |
+| пожалуйста | будь ласка / прошу |
+| ничего | нічого |
+| сейчас | зараз |
+| тоже | теж / також |
+| здесь | тут |
+| кот | кіт |
+| кон | кін |
+
+This list is enforced word-for-word by `scripts/build/quick_verify.py` (SEVERE_RUSSIANISMS). If you produce any of these tokens — even inside a quoted example, even inside a dialogue line spoken by a Russian-speaking character — the build halts immediately. There is no exception.
 
 **Authority hierarchy (if uncertain about a word, check in this order):**
 VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (stress) → Антоненко-Давидович (style) → Грінченко (etymology).
@@ -737,50 +762,45 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Діалоги (Dialogues) (~380 words total)
-- P1 (~100 words): [Dialogue 1: At a hostel. Marko (Canada) and Olena (Kyiv) meet. Introductions using "Привіт!", "Як тебе звати?", "Мене звати Марко", "Звідки ти?", "Я з Канади", and "Дуже приємно!".]
-- P2 (~100 words): [Dialogue 2: At a conference. Formal register. "Добрий день!", "Як вас звати?", "Мене звати Петро", "Мені також!", "Ви з України?", and "Я з Києва".]
-- P3 (~100 words): [Dialogue 3: Introducing someone else. Focusing on third person and identification. "Це Андрій. Він зі Львова. Він — інженер. А це Оксана. Вона з Одеси. Вона — лікарка."]
-- P4 (~80 words): [Analysis of the dialogues: Pointing out the differences between informal (тебе/ти) and formal (вас/ви) greetings and the lack of the verb "to be" in identity statements like "Я з Канади".]
+## Діалоги (~380 words total)
+- P1 (~30 words): Introduction to the dialogues, setting the scene for our first real conversations in Ukrainian.
+- P2 (~120 words): Dialogue 1 — At a hostel (informal). Characters: Марко (Canadian student) and Олена (from Kyiv). Focus on: "Привіт! Як тебе звати? — Мене звати Марко. А тебе? — Мене звати Олена. Звідки ти? — Я з Канади. А ти? — Я з України. — Дуже приємно!"
+- P3 (~110 words): Dialogue 2 — At a conference (formal). Characters introducing themselves. Focus on: "Добрий день! Як вас звати? — Мене звати Петро. Дуже приємно! — Мені також! Ви з України? — Так, я з Києва."
+- P4 (~120 words): Dialogue 3 — Introducing someone else. Focus on pointing out others: "Це Андрій. Він зі Львова. Він — інженер. А це Оксана. Вона з Одеси. Вона — лікарка."
+- <!-- INJECT_ACTIVITY: fill-in-dialogue --> [fill-in, Complete the dialogue with correct phrases, 6 items]
 
-## Мене звати... (My name is...) (~270 words total)
-- P1 (~70 words): [Explanation of the "Мене звати" construction. Clarify that it literally means "Me they call" and that Ukrainian does not use "My name IS" (no verb 'є' in this context). Contrast with English "My name is...".]
-- P2 (~70 words): [Asking questions: "Як тебе звати?" (informal) vs "Як вас звати?" (formal). Explain when to use each based on social context (peers vs strangers/elders).]
-- P3 (~60 words): [Talking about others: Introduce "Як його звати?" (his) and "Як її звати?" (her). Note that 'його' and 'її' remain stable here.]
-- P4 (~70 words): [Responses and etiquette: Using "Дуже приємно!" (Very pleasant) or "Приємно познайомитись!" (Pleasant to meet). Explain that these are used AFTER names are exchanged.]
-- <!-- INJECT_ACTIVITY: fill-in-self-intro --> [fill-in, focus: Complete self-introduction using "Мене звати...", "Я з...", "Я —...", 6 items]
+## Мене звати... (~270 words total)
+- P1 (~80 words): Explain the phrase "Мене звати..." as a fixed chunk literally meaning "they call me". Explicitly contrast with English "My name is" and warn against translating literally.
+- P2 (~80 words): Introduce the questions: "Як тебе звати?" (informal) and "Як вас звати?" (formal). Explain when to use which based on the audience.
+- P3 (~60 words): Explain how to ask about others: "Як його звати?" (his name) and "Як її звати?" (her name), noting that його and її don't change.
+- P4 (~50 words): Introduce the phrases used after exchanging names: "Дуже приємно!" or "Приємно познайомитись!".
+- <!-- INJECT_ACTIVITY: quiz-formal-informal --> [quiz, Formal or informal? Choose the right introduction., 6 items]
 
-## Це... (This is...) (~220 words total)
-- P1 (~70 words): [Concept of "Це" as a universal identifier for "this is / it is / these are". Emphasize that no verb "to be" is required. Examples: "Це кава", "Це Київ", "Це Андрій".]
-- P2 (~80 words): [Question formation: "Хто це?" (Who is this?) vs "Що це?" (What is this?). Emphasize word order: the question word must come first in Ukrainian.]
-- P3 (~70 words): [Practice with identification: Providing examples of identifying objects and people in the room to solidify the "Це + Noun" pattern.]
-- <!-- INJECT_ACTIVITY: quiz-register-choice --> [quiz, focus: Formal or informal? Choose the right introduction based on the scenario, 6 items]
+## Це... (~220 words total)
+- P1 (~70 words): Introduce the word "Це" meaning "this is / it is / these are". Emphasize that no verb 'to be' is needed in Ukrainian present tense sentences.
+- P2 (~70 words): Provide clear examples identifying things, places, and people using "Це" (e.g., Це кава, Це Київ, Це Андрій).
+- P3 (~80 words): Explain how to form questions: "Що це?" (What is this?) for things and "Хто це?" (Who is this?) for people. Emphasize that question words must go FIRST (Хто це? not *Це хто?).
 
-## Особові займенники (Personal Pronouns) (~120 words total)
-- P1 (~60 words): [Introduction to singular pronouns: "я" (I), "ти" (you, informal), "він" (he), "вона" (she), "воно" (it). Explain that these are the anchors for all future sentences.]
-- P2 (~60 words): [Introduction to plural and formal pronouns: "ми" (we), "ви" (you, formal/plural), "вони" (they). Highlight the orthographic rule of capitalizing "Ви" when addressing one person formally in writing.]
+## Особові займенники (~110 words total)
+- P1 (~60 words): Introduce the basic personal pronouns: я (I), ти (you, informal), він (he), вона (she), ми (we), ви (you, formal/plural), вони (they). Note these are the backbone of identity sentences.
+- P2 (~50 words): Explain the dual nature of "ви" as both formal singular and plural, and note that it is written with a capital В (Ви) in formal writing.
 
-## Я — студент (I am a student) (~170 words total)
-- P1 (~60 words): [The "Zero Copula" rule: In the present tense, Ukrainian omits the verb "is/am/are". Explain the use of the punctuation dash (—) in writing to mark the missing verb. Examples: "Я — студент", "Він — лікар".]
-- P2 (~60 words): [Gendered professions: Introducing masculine and feminine pairs for jobs. Examples: "студент/студентка", "лікар/лікарка", "вчитель/вчителька", "програміст/програмістка". Stress that feminine forms are standard.]
-- P3 (~50 words): [Nationalities: Basic nominative forms for men and women. Examples: "українець/українка", "американець/американка", "канадієць/канадка".]
-- <!-- INJECT_ACTIVITY: match-up-gendered-professions --> [match-up, focus: Match professions with male/female forms (e.g., лікар -> лікарка), 8 items]
+## Я — студент (~160 words total)
+- P1 (~60 words): Reiterate the zero copula rule (no verb "to be" in present tense). Explain the Subject — Noun structure and how the dash (—) marks where 'is/am' would go (e.g., Я — студент, Він — лікар).
+- P2 (~50 words): Introduce gendered professions, explaining that Ukrainian requires feminine forms for female subjects. Examples: студент/студентка, вчитель/вчителька, лікар/лікарка, програміст/програмістка.
+- P3 (~50 words): Introduce nationalities as nominative nouns with gendered forms: українець/українка, американець/американка, канадієць/канадка.
+- <!-- INJECT_ACTIVITY: match-up-professions --> [match-up, Match professions with male/female forms, 8 items]
 
-## Звідки? (Where from?) (~220 words total)
-- P1 (~70 words): [Asking "Звідки ти?" (informal) and "Звідки ви?" (formal). Explain that this question focuses on origin/nationality rather than current residence.]
-- P2 (~80 words): [Responding with "Я з..." (I am from...). List examples: "Я з України", "Я з Канади", "Я зі Штатів", "Я з Німеччини". Explain "з" vs "зі" for phonetic ease.]
-- P3 (~70 words): [Pedagogical note: Advise learners to treat these as "memorized chunks" for now. Briefly mention that country names change endings (Genitive) but don't introduce the grammar rules yet.]
-- <!-- INJECT_ACTIVITY: fill-in-dialogue-final --> [fill-in, focus: Complete the dialogue with correct phrases (greetings, name, origin, profession), 6 items]
+## Звідки? (~220 words total)
+- P1 (~60 words): Introduce the question "Звідки?" (Where from?) and how to ask it: "Звідки ти?" (informal) and "Звідки ви?" (formal).
+- P2 (~80 words): Show how to answer using "з/зі" + country. Provide examples: "Я з України", "Я з Канади", "Я зі Штатів", "Я з Німеччини".
+- P3 (~80 words): Explicitly state that these country endings are memorized chunks (genitive case) and that the grammar behind them will be taught in A2. Remind learners NOT to use "Де ви живете?" here.
+- <!-- INJECT_ACTIVITY: fill-in-self-intro --> [fill-in, Complete self-introduction: Мене звати..., Я з..., Я —..., 6 items]
 
-## Підсумок — Summary (~150 words)
-- P1 (~150 words): [Recap of the key "Who Am I" formulas. Self-check bulleted list: 
-  - Як вас звати? — Мене звати...
-  - Хто це? — Це мой друг.
-  - Хто ви? — Я — вчителька.
-  - Звідки ви? — Я з України.
-  - Приємно познайомитись! — Мені також!]
+## Підсумок — Summary (~30 words total)
+- P1 (~30 words): A brief concluding sentence celebrating the learner's first real conversational building blocks. Note that the self-check is folded into the dialogue practice above.
 
-Grand total: ~1530 words
+Grand total: ~1390 words
 </skeleton>
 
 ## Output Format
@@ -788,11 +808,64 @@ Grand total: ~1530 words
 Write in Markdown. Use:
 - `## Section Title` for main sections
 - `### Subsection` for subsections within a section
-- `**bold**` for Ukrainian words being taught — EVERY bold Ukrainian word MUST have an English translation on first use, either in parentheses `**слово** (translation)` or inline `**слово** means "translation"`. No exceptions.
+- `**bold**` for Ukrainian words being taught. For **A1 and A2** levels, provide an English translation on first use (e.g. `**стіл** (table)`) because learners lack the vocabulary to infer meaning. For **B1 and above**, do NOT provide inline translations for standard vocabulary — the learner will use the module's словник (vocabulary table). You may provide ONE parenthetical English translation ONLY for highly abstract grammar/linguistic terms on first use (e.g. `**видова пара** (aspectual pair)`).
 - Tables for paradigms (conjugation, declension)
 - `:::tip` / `:::caution` / `:::note` for callout boxes
 - `<!-- INJECT_ACTIVITY: {id} -->` for exercise placement (markers only — do NOT write exercise content)
 
 Do NOT write MDX component syntax, JSON, or DSL exercise blocks (:::quiz, etc.). Plain Markdown with injection markers.
+
+---
+
+## MANDATORY FINAL CHECKLIST (#1189)
+
+Before you finish writing, verify the prose against this checklist. Failing any item will fail the build.
+
+### Section headings (verbatim)
+
+Every heading from "Section Structure" above MUST appear as an `## H2` in your output, in order, **including the closing `Підсумок:` / `Підсумок та перехід до M...` summary**. The single most common writer failure across the B1 build has been silently dropping the final summary section. Re-read your output before stopping. If the last section in the plan is missing, write it now.
+
+### Required vocabulary (every word must appear)
+
+You MUST use **every word** from the list below at least once in the prose, in a natural sentence with bold + English translation. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, прагматика, діагностика, дієвідмінювання, зворотний, двовидовий, одновидовий, неозначено-кількісний, etc.) is the most frequently dropped category — actively find homes for those words even if it means adding a sentence that defines them.
+
+- [ ] я (I)
+- [ ] ти (you, informal)
+- [ ] він (he)
+- [ ] вона (she)
+- [ ] ви (you, formal/plural)
+- [ ] мене звати (my name is)
+- [ ] як тебе звати? (what's your name, informal)
+- [ ] як вас звати? (what's your name, formal)
+- [ ] це (this is / these are)
+- [ ] дуже приємно (pleased to meet you)
+- [ ] студент, студентка (student m/f)
+- [ ] вчитель, вчителька (teacher m/f)
+- [ ] лікар, лікарка (doctor m/f)
+- [ ] українець, українка (Ukrainian m/f)
+- [ ] Україна (Ukraine)
+
+### Forbidden words (never produce)
+
+Do not write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use `<!-- VERIFY -->` instead). The post-write toxic-token scanner will fail the build immediately:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+### Level-specific immersion check
+
+The level-appropriate immersion rule was already injected at the top of
+this prompt as `IMMERSION RULE`. Re-read it now BEFORE you stop writing.
+If your level's rule contains a CHECKLIST block, walk through every item.
+If it doesn't, just verify your output matches the LANGUAGE ROLES and
+TARGET stated in that block.
+
+This used to hard-code a B1+ checklist that confused A1/A2 models (where
+translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+The single source of truth is now
+`scripts/pipeline/config_tables.py:IMMERSION_RULES`.
+
+---
 
 Begin writing now. Start with the first section heading.

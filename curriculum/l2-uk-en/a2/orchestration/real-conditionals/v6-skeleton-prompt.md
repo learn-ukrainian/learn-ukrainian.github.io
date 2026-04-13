@@ -34,7 +34,7 @@ objectives:
 - Learner can apply real conditionals in practical everyday scenarios (planning, advice, warnings, promises).
 dialogue_situations:
 - setting: 'Planning a garden — if/then decisions about planting: Якщо буде сонце (n, sun), посадимо помідори
-    (pl). Якщо йтиме дощ (m, rain), польємо пізніше. Якщо ти купиш насіння (n, seeds), я підготую грядку
+    (pl). Якщо не буде дощу (m, rain), доведеться полити ввечері. Якщо ти купиш насіння (n, seeds), я підготую грядку
     (f, garden bed).'
   speakers:
   - Подружжя (на дачі)

@@ -22,7 +22,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-граматичні концепції, які ми вже добре знаємо. Але тепер ми дамо цим правилам правильні українські назви. Головна частина мови для нас сьогодні — це **дієслово** (the verb). Це справжнє серце кожного українського речення. Дієслово показує активну дію або стан людини. Ми вже добре знаємо, як ці слова працюють у тексті. Тепер ми подивимося на три великі категорії дієслова. Ці категорії логічно показують, як саме дієслово змінюється. Перша базова категорія — це **час** (tense). Друга важлива категорія — це **вид** (aspect). Третя цікава категорія — це **спосіб** (mood). Зараз ми детально розглянемо кожну з цих категорій. Перша і найпростіша категорія — це час. Він дуже логічно показує, коли саме відбувається наша дія. Українська мова має три часи, які ви вже дуже добре знаєте. **Минулий час** (past tense) показує дію, яка вже давно відбулася. Наприклад: «я працював вчора в офісі», «вона довго читала цікаву книгу». **Теперішній час** (present tense) показує дію, яка відбувається прямо зараз. Наприклад: «я працюю сьогодні вдома», «вона зараз уважно читає нову книгу». **Майбутній час** (future tense) показує дію, яка ще тільки буде завтра. Наприклад: «я буду працювати завтра» або «я попрацюю пізно ввечері». Тут є один дуже важливий нюанс для розуміння граматики. Only verbs that state real facts have tenses. Ця категорія реальності називається **дійсний спосіб** (indicative mood). Якщо дія повністю реальна, вона завжди має минулий, теперішній або майбутній час. Друга і мабуть найважливіша категорія — це вид. Це фундаментальна різниця у всіх слов'янських мовах. Вид показує, як саме протікає наша дія. **Недоконаний вид** (imperfective aspect) означає довгий процес або регулярну дію. Він завжди відповідає на питання «що робити?». Наприклад: «що робити кожного дня? — читати, писати, купувати, працювати». **Доконаний вид** (perfective aspect) означає фінальний результат або одноразову завершену дію. Він завжди відповідає на питання «що зробити?». Наприклад: «що зробити сьогодні? — прочитати, написати, купити, попрацювати». Let's closely compare two past tense verbs you already know well. Слово «купував» — це минулий час, недоконаний вид. Це означає, що ви просто ходили по магазину і дуже довго вибирали речі. Слово «купив» — це минулий час, доконаний вид. Це означає конкретний результат: ви вже дали гроші касиру і взяли свій товар. Правильний вид дуже важливий для точного спілкування з людьми. Третя граматична категорія — це спосіб. Він емоційно показує відношення дії до нашої реальності. Ми вже чудово знаємо дійсний спосіб, який описує реальні факти. Наприклад: «Сонце яскраво світить на небі». Але є ще **наказовий спосіб** (imperative mood). Ми використовуємо його кожного дня для наказів, прохань або корисних порад. Наприклад: «Слухай мене уважно!» або «Читай цей текст швидко!». Третій тип — це **умовний спосіб** (conditional mood). Він показує наші мрії або цікаві гіпотетичні ситуації. Наприклад: «Я б пішов у кіно сьогодні ввечері». Here is a critical decolonization rule for authentic Ukrainian phrasing. Never use the Russian calque "давайте" to form group commands. Українська мова має свої власні красиві та синтетичні форми для цього. Замість «давайте підемо», ми завжди кажемо коротко «ходімо». Замість «давайте працювати», ми чудово кажемо «працюймо». Це звучить дуже природно і правильно для носіїв мови. <!-- INJECT_ACTIVITY: match-up-verb-terms -->
+and say «я працював» (I was working). The **теперішній час** (present tense) describes actions happening right now or regular routines, such as «я працюю» (I work). Finally, the **майбутній час** (future tense) describes actions, plans, and promises that will happen later, like «я буду працювати» (I will be working) or «я попрацюю» (I will work for a bit). It is extremely important to note that these three tenses only exist when we are stating actual, real-world facts. If we are giving commands or talking about hypothetical situations, the concept of tense does not apply in the same way. Найважливіша і найскладніша категорія у всіх слов'янських мовах — це **вид**. Він завжди буває двох різних типів. **Недоконаний** вид показує довгий процес, звичку або регулярне повторення дії. Він завжди відповідає на питання «що робити?», наприклад, «читати» або «писати». Натомість **доконаний** вид показує конкретний результат або успішне завершення дії. Він відповідає на питання «що зробити?», наприклад, «прочитати» або «написати». Порівняйте ці два речення: «я купував каву» — це просто процес у минулому часі, а «я купив каву» — це успішний результат і фінал вашої дії. > *The most important and most difficult category in all Slavic languages is aspect. It always comes in two different types. The imperfective aspect shows a long process, a habit, or the regular repetition of an action. It always answers the question "what to do?", for example, "to read" or "to write". Instead, the perfective aspect shows a specific result or the successful completion of an action. It answers the question "what to successfully do?", for example, "to read completely" or "to write completely". Compare these two sentences: "I was buying coffee" is just a process in the past tense, while "I bought coffee" is a successful result and the finale of your action.* The final major category we will look at today is **спосіб** (mood or manner). This category tells us how the action relates to reality and what the speaker's intention is. When we state real facts that actually happen in the world, we use the indicative mood (Дійсний спосіб), like «Сонце світить» (The sun is shining). When we talk about hypothetical conditions, dreams, or make very polite requests, we use the conditional mood (Умовний спосіб), like «Я б пішов» (I would go). Finally, when we need to give direct commands, offer strong advice, or make urgent requests, we use the imperative mood (Наказовий спосіб), like «Слухай!» (Listen!). Learning to recognize these three moods will help you understand the emotional tone of any Ukrainian text. :::info **Decolonization Check** When giving commands or making suggestions to a group that includes yourself (like saying "Let's go" or "Let's work" in English), you must never use the borrowed Russian structure with "давайте". Instead, the Ukrainian language has a beautiful, built-in synthetic ending for this exact purpose: **-мо**. You should say «ходімо» (let's go) or «працюймо» (let's work). This is a hallmark of authentic, clean Ukrainian grammar and shows a high level of linguistic respect. ::: <!-- INJECT_ACTIVITY: match-up-verb-terms -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -512,7 +512,74 @@ Understanding the sentence is the central goal of syntax. It builds directly upo
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 6: A2 finale (A2 M51-M69)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 40%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 40% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 70-90% Ukrainian.
 LANGUAGE ROLES:
@@ -531,18 +598,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] дієслово (verb)
+- [ ] час (tense, time)
+- [ ] вид (aspect)
+- [ ] доконаний (perfective)
+- [ ] недоконаний (imperfective)
+- [ ] спосіб (mood, manner)
+- [ ] дієвідміна (conjugation class)
+- [ ] особа (person, grammatical)
+- [ ] прислівник (adverb)
+- [ ] словник (dictionary)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Дієвідміна та особа (~450 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

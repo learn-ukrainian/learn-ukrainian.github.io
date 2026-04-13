@@ -2,363 +2,449 @@ version: '1.0'
 module: how-many
 level: a1
 inline:
-- id: fill-in-numbers-words
+- id: fill-in-numbers
   type: fill-in
-  instruction: Напишіть цифри словами (Write the numbers in words)
+  instruction: Write the number in words (**словами**).
   items:
-  - sentence: 15 = _____
+  - sentence: 15 → ____
     answer: п'ятнадцять
-  - sentence: 47 = сорок _____
-    answer: сім
-  - sentence: 12 = _____
+    options:
+    - п'ятдесят
+    - п'ять
+    - п'ятнадцять
+  - sentence: 47 → ____
+    answer: сорок сім
+    options:
+    - чотири сім
+    - сорок сім
+    - сорок вісім
+  - sentence: 12 → ____
     answer: дванадцять
-  - sentence: 90 = _____
-    answer: дев'яносто
-  - sentence: 25 = двадцять _____
-    answer: п'ять
-  - sentence: 80 = _____
-    answer: вісімдесят
-  - sentence: 16 = _____
+    options:
+    - двадцять
+    - дванадцять
+    - два
+  - sentence: 60 → ____
+    answer: шістдесят
+    options:
+    - шістнадцять
+    - шістдесят
+    - шість
+  - sentence: 99 → ____
+    answer: дев'яносто дев'ять
+    options:
+    - дев'яносто дев'ять
+    - дев'ять дев'ять
+    - дев'яносто десять
+  - sentence: 100 → ____
+    answer: сто
+    options:
+    - нуль
+    - сто
+    - десять
+  - sentence: 21 → ____
+    answer: двадцять один
+    options:
+    - двадцять два
+    - два один
+    - двадцять один
+  - sentence: 16 → ____
     answer: шістнадцять
-  - sentence: 30 = _____
-    answer: тридцять
-  - sentence: 55 = п'ятдесят _____
-    answer: п'ять
-  - sentence: 18 = _____
-    answer: вісімнадцять
+    options:
+    - шістнадцять
+    - шістдесят
+    - шість
+  - sentence: 35 → ____
+    answer: тридцять п'ять
+    options:
+    - три п'ять
+    - тридцять п'ять
+    - тридцять п'ятдесят
+  - sentence: 83 → ____
+    answer: вісімдесят три
+    options:
+    - вісімнадцять три
+    - вісім три
+    - вісімдесят три
+  title: Write the number in words (**словами**).
 - id: quiz-prices
   type: quiz
-  instruction: Скільки коштує? Оберіть правильну ціну (How much does it cost? Choose
-    the correct price)
+  instruction: How much does it cost? (**Скільки коштує?**) Choose the correct price.
   items:
-  - question: 200 гривень
+  - question: 150 ₴
     options:
-    - двісті
-    - двасто
-    - двадцять
-    - два
-    correct: 0
-  - question: 150 гривень
-    options:
-    - сто п'ятдесят
-    - сто п'ятсот
-    - сто п'ять
-    - п'ятдесят сто
-    correct: 0
-  - question: 300 гривень
-    options:
-    - тридцять
-    - тристо
-    - триста
-    - трисот
-    correct: 2
-  - question: 40 гривень
-    options:
-    - чотириста
-    - сорок
-    - чотирнадцять
-    - чотири
+    - п'ятдесят гривень
+    - сто п'ятдесят гривень
+    - сто гривень
+    - п'ятсот гривень
     correct: 1
-  - question: 500 гривень
+  - question: 200 ₴
     options:
-    - п'ятсот
-    - п'ятдесят
-    - п'ятнадцять
-    - п'ять сто
+    - двісті гривень
+    - двадцять гривень
+    - дві гривні
+    - сто гривень
     correct: 0
-  - question: 1000 гривень
+  - question: 30 ₴
     options:
-    - одна тисяча
-    - один тисяча
-    - одне тисяча
-    - тисячі
-    correct: 0
-  - question: 70 гривень
-    options:
-    - сімнадцять
-    - сімсот
-    - сімдесят
-    - сім
+    - три гривні
+    - тринадцять гривень
+    - тридцять гривень
+    - триста гривень
     correct: 2
-  - question: 90 гривень
+  - question: 5 ₴
+    options:
+    - п'ятдесят гривень
+    - п'ятнадцять гривень
+    - п'ятсот гривень
+    - п'ять гривень
+    correct: 3
+  - question: 400 ₴
+    options:
+    - сорок гривень
+    - чотириста гривень
+    - чотири гривні
+    - чотирнадцять гривень
+    correct: 1
+  - question: 500 ₴
+    options:
+    - п'ятдесят гривень
+    - п'ять гривень
+    - п'ятсот гривень
+    - п'ятнадцять гривень
+    correct: 2
+  - question: 1000 ₴
+    options:
+    - сто гривень
+    - десять гривень
+    - двісті гривень
+    - тисяча гривень
+    correct: 3
+  - question: 70 ₴
+    options:
+    - сімдесят гривень
+    - сім гривень
+    - сімнадцять гривень
+    - сімсот гривень
+    correct: 0
+  title: How much does it cost? (**Скільки коштує?**) Choose the correct price.
+- id: quiz-ages
+  type: quiz
+  instruction: How old are they? (**Скільки років?**) Choose the correct age phrase.
+  items:
+  - question: 25 (I am...)
+    options:
+    - Мені двадцять років.
+    - Мені двадцять п'ять років.
+    - Тобі двадцять п'ять років.
+    - Їй двадцять п'ять років.
+    correct: 1
+  - question: 18 (She is...)
+    options:
+    - Мені вісімнадцять років.
+    - Тобі вісімнадцять років.
+    - Їй вісімнадцять років.
+    - Їй вісім років.
+    correct: 2
+  - question: 32 (You are...)
+    options:
+    - Тобі тридцять два роки.
+    - Мені тридцять два роки.
+    - Їй тридцять два роки.
+    - Тобі тридцять років.
+    correct: 0
+  - question: 40 (I am...)
+    options:
+    - Тобі сорок років.
+    - Їй сорок років.
+    - Мені чотирнадцять років.
+    - Мені сорок років.
+    correct: 3
+  - question: 10 (You are...)
+    options:
+    - Мені десять років.
+    - Тобі десять років.
+    - Їй десять років.
+    - Тобі один рік.
+    correct: 1
+  - question: 21 (She is...)
+    options:
+    - Мені двадцять один рік.
+    - Тобі двадцять один рік.
+    - Їй дванадцять років.
+    - Їй двадцять один рік.
+    correct: 3
+  title: How old are they? (**Скільки років?**) Choose the correct age phrase.
+- id: dictation-phone
+  type: fill-in
+  instruction: Read the phone number groupings and choose the missing number (**номер**).
+  items:
+  - sentence: 'Мій номер 0 97: нуль ____ сім.'
+    answer: дев'яносто
     options:
     - дев'яносто
     - дев'ять
     - дев'ятнадцять
-    - дев'ятсот
-    correct: 0
-- id: quiz-age-matching
-  type: quiz
-  instruction: Скільки років? Оберіть правильну форму (How old? Choose the correct
-    form)
-  items:
-  - question: Мені 21 _____.
+  - sentence: 'Три два один: три два ____.'
+    answer: один
     options:
-    - рік
-    - роки
-    - років
-    - року
-    correct: 0
-  - question: Йому 33 _____.
-    options:
-    - рік
-    - роки
-    - років
-    - року
-    correct: 1
-  - question: Їй 18 _____.
-    options:
-    - рік
-    - роки
-    - років
-    - року
-    correct: 2
-  - question: Мені 25 _____.
-    options:
-    - рік
-    - роки
-    - років
-    - року
-    correct: 2
-  - question: Брату 4 _____.
-    options:
-    - рік
-    - роки
-    - років
-    - року
-    correct: 1
-  - question: Сестрі 30 _____.
-    options:
-    - рік
-    - роки
-    - років
-    - року
-    correct: 2
-- id: fill-in-phone-numbers
-  type: fill-in
-  instruction: Доповніть номер телефону словами (Complete the phone number with words)
-  items:
-  - sentence: 097 = _____ дев'яносто сім
-    answer: нуль
-    options:
-    - нуль
     - один
-    - сто
-  - sentence: 067 = нуль шістдесят _____
-    answer: сім
+    - одинадцять
+    - нуль
+  - sentence: 'Сорок п''ять: ____ п''ять.'
+    answer: сорок
     options:
-    - сім
+    - сорок
+    - чотири
+    - чотирнадцять
+  - sentence: 'Шістдесят сім: ____ сім.'
+    answer: шістдесят
+    options:
+    - шістдесят
+    - шістнадцять
     - шість
-    - вісім
-  - sentence: 45 = сорок _____
-    answer: п'ять
-    options:
-    - п'ять
-    - п'ятдесят
-    - п'ятнадцять
-  - sentence: 050 = нуль _____
+  - sentence: 'Нуль п''ятдесят: нуль ____.'
     answer: п'ятдесят
     options:
     - п'ятдесят
+    - п'ятнадцять
     - п'ять
-    - п'ятсот
-  - sentence: 063 = нуль шістдесят _____
-    answer: три
+  - sentence: 'Вісімдесят дев''ять: ____ дев''ять.'
+    answer: вісімдесят
     options:
-    - три
-    - тридцять
-    - триста
-  - sentence: 22 = двадцять _____
-    answer: два
-    options:
-    - два
-    - дві
-    - двісті
+    - вісімдесят
+    - вісімнадцять
+    - вісім
+  title: Read the phone number groupings and choose the missing number (**номер**).
 workbook:
-- type: match-up
-  instruction: З'єднайте числа (Match the numbers)
+- id: match-up-tens
+  type: match-up
+  instruction: Match the numbers to their names (**назви**).
   pairs:
-  - left: '11'
-    right: одинадцять
-  - left: '12'
-    right: дванадцять
-  - left: '14'
-    right: чотирнадцять
-  - left: '17'
-    right: сімнадцять
-  - left: '19'
-    right: дев'ятнадцять
-  - left: '20'
-    right: двадцять
-- type: true-false
-  instruction: Правда чи ні? (True or false?)
-  items:
-  - statement: 20 + 30 = п'ятдесят
-    correct: true
-    explanation: 20 (двадцять) + 30 (тридцять) = 50 (п'ятдесят).
-  - statement: 100 - 10 = вісімдесят
-    correct: false
-    explanation: 100 (сто) - 10 (десять) = 90 (дев'яносто).
-  - statement: 50 + 50 = сто
-    correct: true
-    explanation: 50 (п'ятдесят) + 50 (п'ятдесят) = 100 (сто).
-  - statement: 300 + 200 = чотириста
-    correct: false
-    explanation: 300 (триста) + 200 (двісті) = 500 (п'ятсот).
-  - statement: 40 + 20 = шістдесят
-    correct: true
-    explanation: 40 (сорок) + 20 (двадцять) = 60 (шістдесят).
-  - statement: 1000 - 500 = триста
-    correct: false
-    explanation: 1000 (тисяча) - 500 (п'ятсот) = 500 (п'ятсот).
-- type: group-sort
-  instruction: Розподіліть числа (Sort the numbers)
+  - left: '30'
+    right: тридцять
+  - left: '40'
+    right: сорок
+  - left: '50'
+    right: п'ятдесят
+  - left: '60'
+    right: шістдесят
+  - left: '90'
+    right: дев'яносто
+  - left: '100'
+    right: сто
+  title: Match the numbers to their names (**назви**).
+- id: group-sort-currency
+  type: group-sort
+  instruction: Sort the numbers based on which form of **гривня** follows them.
   groups:
-  - label: 1 - 10
+  - label: '... гривня'
     items:
     - один
-    - чотири
-    - сім
+    - двадцять один
+    - тридцять один
+  - label: '... гривні'
+    items:
+    - два
+    - тридцять три
+    - сорок чотири
+  - label: '... гривень'
+    items:
+    - п'ять
     - десять
-  - label: 11 - 19
-    items:
-    - одинадцять
-    - п'ятнадцять
-    - вісімнадцять
-    - дев'ятнадцять
-  - label: 20 - 100
-    items:
-    - двадцять
-    - сорок
-    - дев'яносто
     - сто
-- type: error-correction
-  instruction: Знайдіть і виправте помилку (Find and fix the error)
+  title: Sort the numbers based on which form of **гривня** follows them.
+- id: anagram-numbers
+  type: anagram
+  instruction: Unscramble the letters to form numbers (**числа**).
   items:
-  - sentence: Мені потрібен один книга.
-    error: один
-    correction: одна
-    error_type: word
-    options:
-    - одна
-    - одне
-    - одні
-    explanation: Книга is feminine, so use одна.
-  - sentence: Скільки коштує два вікно?
-    error: вікно
-    correction: вікна
-    error_type: word
-    options:
-    - вікна
-    - вікон
-    - вікні
-    explanation: After два, neuter nouns usually take the nominative plural form like
-      вікна.
-  - sentence: Це коштує сто гривня.
-    error: гривня
-    correction: гривень
-    error_type: word
-    options:
+  - letters:
+    - с
+    - о
+    - р
+    - о
+    - к
+    answer: сорок
+    hint: '40'
+  - letters:
+    - т
+    - и
+    - с
+    - я
+    - ч
+    - а
+    answer: тисяча
+    hint: '1000'
+  - letters:
+    - д
+    - в
+    - і
+    - с
+    - т
+    - і
+    answer: двісті
+    hint: '200'
+  - letters:
+    - н
+    - у
+    - л
+    - ь
+    answer: нуль
+    hint: '0'
+  - letters:
+    - т
+    - р
+    - и
+    - с
+    - т
+    - а
+    answer: триста
+    hint: '300'
+  - letters:
+    - д
+    - е
+    - с
+    - я
+    - т
+    - ь
+    answer: десять
+    hint: '10'
+  title: Unscramble the letters to form numbers (**числа**).
+- id: true-false-math
+  type: true-false
+  instruction: Are these statements true or false? (**Правда чи ні?**)
+  items:
+  - statement: Сорок — це 14.
+    correct: false
+    explanation: Сорок (sorok) is 40. 14 is чотирнадцять.
+  - statement: Дев'яносто — це 90.
+    correct: true
+    explanation: Дев'яносто (dev'yanosto) is exactly 90.
+  - statement: 'Правильно: Мені двадцять один років.'
+    correct: false
+    explanation: You must say 'двадцять один рік' because it ends in 1 (один).
+  - statement: 'Ми кажемо: один стіл, два столи.'
+    correct: true
+    explanation: Numbers 2, 3, and 4 pair with a plural noun (столи).
+  - statement: 'Правильно: тридцять п''ять гривень.'
+    correct: true
+    explanation: Numbers 5 and above take the 'гривень' form.
+  - statement: П'ятнадцять — це 50.
+    correct: false
+    explanation: П'ятнадцять is 15. The number 50 is п'ятдесят.
+  title: Are these statements true or false? (**Правда чи ні?**)
+- id: odd-one-out-numbers
+  type: odd-one-out
+  instruction: Find the odd one out (**четверте зайве**).
+  items:
+  - words:
+    - сорок
+    - один
+    - два
+    - три
+    correct: 0
+    explanation: сорок (40) is a ten, the others are units 1-3.
+  - words:
+    - одинадцять
+    - тридцять
+    - дванадцять
+    - тринадцять
+    correct: 1
+    explanation: тридцять is 30, the others end in -надцять (teens).
+  - words:
+    - сто
+    - двісті
+    - нуль
+    - триста
+    correct: 2
+    explanation: нуль is 0, the others are hundreds.
+  - words:
+    - п'ятдесят
+    - шістдесят
+    - сімдесят
+    - п'ятнадцять
+    correct: 3
+    explanation: п'ятнадцять is 15, the others are tens (50, 60, 70).
+  - words:
+    - він
+    - мені
+    - тобі
+    - їй
+    correct: 0
+    explanation: він is 'he' (nominative), the others are dative pronouns used for
+      age.
+  - words:
+    - гривня
+    - коштує
     - гривні
     - гривень
-    - гривню
-    explanation: Numbers ending in 0 (like 100) require гривень.
-  - sentence: Йому сорок роки.
-    error: роки
-    correction: років
-    error_type: word
-    options:
-    - рік
-    - років
-    - року
-    explanation: Numbers ending in 0 take років.
-  - sentence: У мене є двадцять один гривні.
-    error: гривні
-    correction: гривня
-    error_type: word
-    options:
-    - гривня
-    - гривню
-    - гривень
-    explanation: Numbers ending in 1 require the singular form гривня.
-  - sentence: Це коштує двісто гривень.
-    error: двісто
-    correction: двісті
-    error_type: word
-    options:
-    - двісті
-    - двасто
-    - двасот
-    explanation: Two hundred is двісті, not двісто.
-- type: match-up
-  instruction: З'єднайте запитання та відповідь (Match the question and answer)
-  pairs:
-  - left: Скільки тобі років?
-    right: Мені двадцять років.
-  - left: Скільки коштує сумка?
-    right: Двісті гривень.
-  - left: Який твій номер?
-    right: Нуль шістдесят сім...
-  - left: Скільки коштує хліб?
-    right: Тридцять гривень.
-  - left: Скільки років сестрі?
-    right: Їй вісімнадцять.
-  - left: Скільки коштує торт?
-    right: Триста п'ятдесят.
-- type: unjumble
-  instruction: Складіть правильне речення (Form the correct sentence)
+    correct: 1
+    explanation: коштує is a verb (costs), the others are forms of the currency.
+  title: Find the odd one out (**четверте зайве**).
+- id: unjumble-sentences
+  type: unjumble
+  instruction: Put the words in the correct order to make a sentence (**речення**).
   items:
   - words:
-    - коштує
+    - маленька
     - Скільки
     - сумка?
+    - коштує
     correct_order:
     - Скільки
     - коштує
+    - маленька
     - сумка?
+    hint: How much does the small bag cost?
   - words:
-    - роки.
-    - Мені
-    - тридцять
-    - два
-    correct_order:
-    - Мені
-    - тридцять
-    - два
-    - роки.
-  - words:
-    - коштує
-    - п'ятдесят
-    - Це
-    - гривень.
-    correct_order:
-    - Це
-    - коштує
     - п'ятдесят
     - гривень.
+    - Двісті
+    correct_order:
+    - Двісті
+    - п'ятдесят
+    - гривень.
+    hint: 250 hryvnias.
   - words:
-    - тобі
     - років?
     - Скільки
+    - тобі
     correct_order:
     - Скільки
     - тобі
     - років?
+    hint: How old are you?
   - words:
-    - вісімнадцять.
-    - сестрі
-    - Моїй
+    - двадцять
+    - років.
+    - Мені
+    - п'ять
     correct_order:
-    - Моїй
-    - сестрі
-    - вісімнадцять.
+    - Мені
+    - двадцять
+    - п'ять
+    - років.
+    hint: I am 25 years old.
   - words:
-    - маленька?
-    - коштує
-    - А
-    - скільки
+    - років.
+    - Їй
+    - вісімнадцять
     correct_order:
-    - А
-    - скільки
-    - коштує
-    - маленька?
+    - Їй
+    - вісімнадцять
+    - років.
+    hint: She is 18 years old.
+  - words:
+    - нуль
+    - номер
+    - сім.
+    - Мій
+    - дев'яносто
+    correct_order:
+    - Мій
+    - номер
+    - нуль
+    - дев'яносто
+    - сім.
+    hint: My number is 0 97.
+  title: Put the words in the correct order to make a sentence (**речення**).

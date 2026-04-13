@@ -21,7 +21,7 @@ Grand total: ~2150 words
 <previous_context>
 [...previous sections truncated...]
 
-моїх **друзях** *(on friends)* є дуже гарний новий зимовий одяг. Люди зараз живуть у великих **містах** *(in cities)*. Ми чітко бачимо, що літера «м» показує напрямок дії до людини, а літера «х» показує конкретну локацію. Закінчення «-ах» і «-ях» завжди працюють виключно для місця. <!-- INJECT_ACTIVITY: quiz-preposition-case, focus: Choose the correct preposition and plural case ending to complete the sentence, 8 items --> ## Три відмінки разом: Практика (Synthesis) Завтра у нашому місті буде чудове свято. Ми активно готуємося до нього вже кілька днів. Зранку ми йдемо в магазин і купуємо різні **подарунки** *(gifts)* **дітям** *(to children)*. Вони дуже люблять сюрпризи. Потім ми разом ідемо до школи. Там ми прикрашаємо простору залу яскравими **квітами** *(with flowers)* та дитячими **малюнками** *(with drawings)*. Це дуже цікава і творча робота. Свято буде у різних **школах** *(in schools)* і дитячих **садках** *(in kindergartens)* нашого регіону. Багато людей прийдуть туди зі своїми найкращими **друзями** *(with friends)*. Ми також щиро радіємо новим **гостям** *(to guests)*. Ввечері ми всі будемо танцювати і співати українські пісні. На цих традиційних **святах** *(at holidays)* завжди дуже весело і тепло. Ми також даємо смачні солодощі всім маленьким **учасникам** *(to participants)*. Наші вчителі завжди допомагають нам з цими важливими **справами** *(with matters)*. > — **Марія:** Привіт! Ти пам'ятаєш, що завтра день народження Івана? Ми плануємо велике свято. > — **Олег:** Привіт! Так, звісно. Я пам'ятаю про це. **Кому** *(to whom)* ми ще даруємо подарунки на цьому тижні? > — **Марія:** Тільки йому і його **батькам** *(to parents)*. А **з ким** *(with whom)* ти йдеш на вечірку завтра? > — **Олег:** Я йду з моїми старшими **братами** *(with brothers)*. Вони теж хочуть привітати Івана. А ти? > — **Марія:** Я буду з нашими шкільними **подругами** *(with female friends)*. > — **Олег:** Супер! А **в яких** *(in which)* кафе ми можемо зручно сісти після свята? > — **Марія:** Ми можемо посидіти у нових **кав'ярнях** *(in cafes)* у центрі міста. > — **Олег:** Чудова ідея! Тоді до завтра! This is a perfect time to summarize these three important cases. You have seen that they are incredibly regular and predictable in the plural form. Unlike the Genitive plural, which has many complex exceptions, the Dative, Instrumental, and Locative plural cases follow very strict and simple patterns. Here is a quick reference table for you to easily remember these essential plural endings: | Відмінок | Питання | Закінчення | Приклад | | :--- | :--- | :--- | :--- | | **Давальний** (Dative) | кому? чому? | -ам, -ям | міст**ам**, друзя**м** | | **Орудний** (Instrumental) | ким? чим? | -ами, -ями | міст**ами**, друзя**ми** | | **Місцевий** (Locative) | на/у/по кому? чому? | -ах, -ях | у міст**ах**, на друзя**х** | Once you know the basic plural form of a Ukrainian noun, you can confidently add these stable endings to it. They are universally the most reliable and consistent plural endings in the entire language. <!-- INJECT_ACTIVITY: error-correction-plural, focus: Identify and fix incorrect plural case endings in a short text about a trip, 6 items -->
+Сьогодні ми з друзями готуємо велике свято. Ми купуємо гарні **подарунки** маленьким **дітям**. У школах і дитячих садках буде багато цікавих подій. Ми прикрашаємо велику залу яскравими **квітами** та кульками. Наші батьки допомагають нам з машинами. Ми їдемо автобусами по різних вулицях міста. На зупинках стоять **люди** і дивляться на нас. Ми хочемо подарувати радість усім нашим гостям. На **заняттях** ми довго малювали плакати. Тепер ми показуємо їх усім. > *Today, my friends and I are preparing a big holiday. We are buying nice gifts for the small children. There will be many interesting events in schools and kindergartens. We are decorating the large hall with bright flowers and balloons. Our parents are helping us with cars. We are riding in buses along different streets of the city. People are standing at the stops and looking at us. We want to give joy to all our guests. In classes, we drew posters for a long time. Now we are showing them to everyone.* > — **Оксана:** Привіт! З ким ти йдеш на свято до Марії? *(Hi! With whom are you going to Maria's holiday?)* > — **Степан:** Привіт! Я йду з нашими новими друзями з університету. *(Hi! I am going with our new friends from the university.)* > — **Оксана:** А кому ми даруємо ці гарні книги? *(And to whom are we giving these beautiful books?)* > — **Степан:** Ми даруємо їх маленьким дітям Марії. Вони люблять читати. *(We are giving them to Maria's small children. They love to read.)* > — **Оксана:** Зрозуміло. А в яких кав'ярнях ми можемо сісти після свята? *(Understood. And in which coffee shops can we sit after the holiday?)* > — **Степан:** Ми можемо посидіти в тих нових кав'ярнях на центральній площі. Там дуже смачна кава. *(We can sit in those new coffee shops on the central square. The coffee there is very tasty.)* Now let's review the endings for the three cases we practiced. The **давальний відмінок** (dative case) uses the endings **-ам** or **-ям**, while the **орудний відмінок** (instrumental case) uses the endings **-ами** or **-ями**. The **місцевий відмінок** (locative case) always requires a preposition and uses the endings **-ах** or **-ях**. These cases are essential when you want to **допомагати** (to help) your friends, or when you need to **дякувати** (to thank) people for their support. Ці три відмінки мають дуже прості та регулярні закінчення у множині. Якщо ви знаєте закінчення твердої та м'якої груп, ви можете легко утворити правильну форму. Головне правило — завжди звертати увагу на питання та прийменники в реченні. > *These three cases have very simple and regular endings in the plural. If you know the endings of the hard and soft groups, you can easily form the correct shape. The main rule is to always pay attention to the questions and prepositions in the sentence.* :::note **Quick tip** — Remember that the stem usually stays the same across these three cases. You only change the final letters: друзь-**ям**, друзь-**ями**, (на) друзь-**ях**. ::: <!-- INJECT_ACTIVITY: error-correction-plural -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -326,7 +326,74 @@ A phased approach is best for internalizing plural cases.
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -345,18 +412,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (5/5).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] давальний відмінок (dative case)
+- [ ] орудний відмінок (instrumental case)
+- [ ] місцевий відмінок (locative case)
+- [ ] допомагати (to help)
+- [ ] дякувати (to thank)
+- [ ] подарунок (gift)
+- [ ] квіти (flowers)
+- [ ] діти (children)
+- [ ] люди (people)
+- [ ] заняття (class, lesson)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Підсумок (~150 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

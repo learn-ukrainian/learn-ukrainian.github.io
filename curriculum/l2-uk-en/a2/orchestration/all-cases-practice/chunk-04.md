@@ -1,23 +1,31 @@
-## Самоперевірка: Знайди помилку
+## Самоперевірка: Знайди помилку (~400 words)
 
-Часто ми робимо помилки, коли перекладаємо фрази з англійської мови слово в слово. English speakers often use direct translation for common phrases. In Ukrainian, we use a completely different structure. Ми кажемо: «У мене болить голова». Інша типова помилка — це прийменник «по». In Ukrainian, when we talk about moving across a surface, we must use the Locative case. Тому ми кажемо: «Ми гуляли по горах». Ми не використовуємо давальний відмінок у цій ситуації.
+Пошук помилок у тексті — це останній крок до розуміння граматики. Коли ви можете пояснити проблему, ви дійсно знаєте правило. Це важливо для вашого здоров'я під час навчання, щоб не мати стресу. Прочитайте ці короткі тексти та знайдіть неправильні слова.
 
-Ось коротка **шпаргалка** *(cheat sheet)*, яка допоможе вам швидко перевірити себе:
+> *Finding errors in a text is the final step to understanding grammar. When you can explain the problem, you truly know the rule. This is important for your **здоров'я** (health) during your studies so you do not have stress. Read these short texts and find the incorrect words.*
 
-1. **Називний** *(Nominative)*: Хто? Що? Це головне слово в реченні. The person or thing doing the action.
-2. **Родовий** *(Genitive)*: Кого? Чого? Ми використовуємо його, коли чогось немає («немає часу») або коли ми щось маємо («у мене є»). Також він потрібен для кількості («багато друзів») або після прийменників «з», «від», «для», «без».
-3. **Давальний** *(Dative)*: Кому? Чому? Він показує напрямок дії («дати другові») або фізичний стан («мені тепло», «мені подобається»).
-4. **Знахідний** *(Accusative)*: Кого? Що? Ми вживаємо його для об'єкта дії («бачу машину»). Також він показує напрямок руху з прийменниками «в» чи «на» («їду в місто»).
-5. **Орудний** *(Instrumental)*: Ким? Чим? Використовуйте його для інструмента дії («писати ручкою») або коли робите щось разом («з друзями»).
-6. **Місцевий** *(Locative)*: На/У кому? чому? Цей відмінок завжди потребує прийменника («в», «на», «по», «при»). Він показує місце («жити в Києві») або рух по поверхні («йти по вулиці»).
-7. **Кличний** *(Vocative)*: Ми вживаємо цей відмінок, коли звертаємося до людини («Олеже!», «Маріє!»).
+Учора друзі поїхали у подорож. Вони подорожували швидким потягом. Спочатку вони їхали по *полям. Потім вони пішли дивитися визначне місце з *друзі. У цьому тексті є дві помилки з прийменниками. Фраза «по полям» — неправильна. Прийменник «по» вимагає місцевого відмінка, тому треба казати «по полях». Фраза «з друзі» також неправильна. Прийменник «з» вимагає орудного відмінка, тому правильна форма — «з друзями».
 
-Давайте розглянемо три типові помилки та виправимо їх. Look at these buggy sentences and how to fix them:
+> *Yesterday the friends went on a **подорож** (trip, journey). They traveled by a fast **потяг** (train). First they drove across the fields (incorrect). Then they went to see a **визначне місце** (landmark, sight) with friends (incorrect). There are two mistakes with prepositions in this text. The phrase «по полям» is incorrect. The preposition «по» requires the Locative case, so you must say «по полях». The phrase «з друзі» is also incorrect. The preposition «з» requires the Instrumental case, so the correct form is «з друзями».*
 
-* *«Я допомагаю мою сестру.»* Дієслово «допомагати» завжди вимагає давального відмінка, а не знахідного. The correct version is different. Ми маємо сказати: «Я допомагаю моїй сестрі».
-* *«Ми їхали по потягу.»* Прийменник «по» з місцевим відмінком означає рух по поверхні. If you want to say by train, you need the Instrumental case without a preposition. Правильний варіант: «Ми їхали потягом». You could also use the Locative case if you mean inside the train. Тоді ми скажемо: «Ми їхали в потязі».
-* *«У театрі було багато студенти.»* Після слова «багато» ми завжди маємо використовувати родовий відмінок множини. The correct sentence is different. Правильно буде: «У театрі було багато студентів».
+Пацієнт прийшов у лікарню. Він сказав: «Я допомагаю *сестру, але зараз мені потрібні ліки». Там було багато *студенти. Лікар уважно слухав його. Тут є помилки з об'єктами та кількістю. Дієслово «допомагати» завжди вимагає давального відмінка. Правильно говорити «допомагаю сестрі». Слова, які означають кількість, вимагають родового відмінка множини. Тому треба казати «багато студентів».
 
-The best strategy for self-correction is the check we learned before. Завжди перевіряйте дієслово або прийменник перед іменником. They dictate the rules. Вони вирішують, який відмінок треба використати в реченні.
+> *The **пацієнт** (patient) came to the hospital. He said: "I am helping my sister (incorrect), but now I need **ліки** (medicine)." There were many students (incorrect) there. The **лікар** (doctor) listened to him carefully. Here there are mistakes with objects and quantity. The verb "to help" always requires the Dative case. It is correct to say «допомагаю сестрі». Words that mean quantity require the Genitive plural. Therefore, you must say «багато студентів».*
 
-<!-- INJECT_ACTIVITY: error-correction-all-cases -->
+Щоб не робити таких помилок, завжди пам'ятайте про сім відмінків. Ця таблиця допоможе вам правильно вибрати форму слова. Використовуйте її, коли хочете купити подарунок, запрошувати гостей або організувати вечірку.
+
+> *To avoid making such mistakes, always remember the seven cases. This table will help you correctly choose a word form. Use it when you want to buy a **подарунок** (gift, present), **запрошувати** (to invite) guests, or organize a **вечірка** (party).*
+
+:::info
+**Підказка з відмінків (Case Cheat Sheet)**
+
+*   **Називний** (Nom): хто? / що? (Subject: Київ, друзі)
+*   **Родовий** (Gen): кого? / чого? (Absence, quantity, 'з / до / біля': немає торта, до Львова)
+*   **Давальний** (Dat): кому? / чому? (Recipient, age, impersonal states: друзям, мені холодно)
+*   **Знахідний** (Acc): кого? / що? (Direct object, 'через': купити ліки, через Умань)
+*   **Орудний** (Instr): ким? / чим? (Instrument, 'з' accompaniment: потягом, з кашлем)
+*   **Місцевий** (Loc): на / у кому? / чому? (Location 'в / на / по': у лікарні, по Хрещатику)
+*   **Кличний** (Voc): (Addressing someone directly: Оксано, лікарю!)
+:::
+
+<!-- INJECT_ACTIVITY: error-correction-cases -->

@@ -1,40 +1,49 @@
-## Прикметники у давальному відмінку
+## Присвійні та вказівні займенники у давальному відмінку (~600 words)
 
-In Ukrainian, the golden rule of grammar is agreement. Whenever a noun changes its case to indicate its role in a sentence, its loyal companions — the adjectives — must follow suit. When we use the Dative case to show the recipient of an action, the adjectives describing that recipient must also take Dative endings. To find the right adjective for masculine and neuter nouns, we ask the question «якому?». This simply means "to which" or "to what kind". The core principle is that the adjective mirrors the noun, ensuring that the listener always knows exactly who is receiving the action.
+In Ukrainian, a **присвійний** (possessive) pronoun tells us who owns something, while a demonstrative pronoun points to a specific object. Just like every **прикметник** (adjective), these pronouns must match the noun they describe in gender, number, and case. When the noun is in the dative case, the pronouns change their endings to agree perfectly with it. They answer the questions "to whose?" («чиєму?» або «чиїй?») and "to which?" («якому?» або «якій?»). Fortunately, the endings you use for these pronouns are very similar to the adjective endings you already know. The underlying logic of the dative case remains consistent across all these descriptive words, making it much easier to memorize the new forms.
 
-Ми завжди узгоджуємо прикметник з іменником у роді, числі та відмінку. Якщо ми даємо подарунок другу, ми обов'язково питаємо: якому саме другу?
+Let's start with the pronouns for "my", "your" (singular), and "one's own". The pronouns «мій», «твій», and «свій» share a specific phonetic pattern. For masculine and neuter nouns, they take the ending **-єму**. This gives us the forms **моєму** (to my (masc./neut. dat.)), **твоєму** (to your (masc./neut. dat.)), and «своєму». 
 
-> *We always agree the adjective with the noun in gender, number, and case. If we give a gift to a friend, we necessarily ask: to which friend exactly?*
+For feminine nouns, the ending is **-їй**, giving us **моїй** (to my (fem. dat.)), «твоїй», and «своїй». The plural form for all genders is simply **-їм** («моїм», «твоїм», «своїм»). You might use these forms when giving a gift to your **старшому** (to the older (masc./neut. dat.)) brother or speaking to a **новому** (to the new (masc./neut. dat.)) friend.
 
-For masculine and neuter nouns that belong to the hard group, the Dative adjective ending is **-ому**. Notice how this is very similar to the masculine and neuter Genitive ending **-ого**, but with an "m" instead of a "g". We drop the Nominative **-ий** and add **-ому** to create forms like **новому**. This unified approach means that whether you are talking about a "new friend" (masculine) or an "old city" (neuter), the adjective behaves in exactly the same predictable way.
+Я завжди довіряю моєму старшому братові. Я купив гарний подарунок моїй сестрі. Ти телефонуєш твоєму новому другу щодня? Ми часто допомагаємо своїм сусідам.
 
-Я пишу повідомлення новому другу. Ми зараз радіємо теплому літу і сонцю. Цьому старому місту дуже потрібна велика реставрація. Туристи щиро дивуються цьому гарному будинку.
+> *I always trust my older brother. I bought a beautiful present for my sister. Do you call your new friend every day? We often help our neighbors.*
 
-> *I am writing a message to a new friend. We are now rejoicing at the warm summer and the sun. This old city very much needs a major restoration. Tourists are sincerely amazed at this beautiful building.*
+Now let's look at the pronouns for "our", "your" (plural/formal), and "their". The pronouns «наш» and «ваш» decline exactly like hard-stem adjectives. For masculine and neuter nouns, they take **-ому** («нашому», «вашому»). For feminine nouns, they take **-ій**, giving us forms like **нашій** (to our (fem. dat.)) and «вашій». The plural is **-им** («нашим», «вашим»). The pronoun «їхній» acts like a soft-stem adjective. It takes **-ьому** for masculine/neuter («їхньому»), **-ій** for feminine («їхній»), and **-ім** for plural («їхнім»).
 
-If the adjective has a soft stem — usually ending in **-ій** in the Nominative, like the words **синій** or **вечірній** — we use the ending **-ьому**. The soft sign simply acts as a phonetic bridge to preserve the soft consonant sound before the "o" vowel. The fundamental logic remains identical to the hard group; we are just adding a marker to keep the pronunciation smooth. This rule applies equally to both masculine and neuter soft-stem adjectives.
+Ми дуже вдячні нашому тренеру за допомогу. Ви хочете написати листа вашій мамі? Вони купили нову ляльку їхній маленькій доньці. Нашим новим студентам подобається цей університет.
 
-Цей колір дуже пасує синьому морю. Вони щиро радіють останньому дню своєї відпустки. Ми завдячуємо цьому вечірньому поїзду за швидку та безпечну подорож додому.
+> *We are very grateful to our coach for the help. Do you want to write a letter to your mom? They bought a new doll for their little daughter. Our new students like this university.*
 
-> *This color really suits the blue sea. They sincerely rejoice at the last day of their vacation. We owe this evening train for a fast and safe journey home.*
+> — **Олена:** Кому ти купуєш ці квіти? *(Who are you buying these flowers for?)*
+> — **Марко:** Я купую їх моїй дівчині. *(I am buying them for my girlfriend.)*
+> — **Олена:** А що ти подаруєш твоєму братові? *(And what will you give to your brother?)*
+> — **Марко:** Моєму братові я подарую нову книгу. *(To my brother I will give a new book.)*
 
-For feminine nouns, the system becomes beautifully simple. Both hard and soft stem adjectives converge and take the exact same Dative ending: **-ій**. A hard adjective like **новий** becomes **новій**, and a soft adjective like **синій** simply remains **синій**. Crucially, if the adjective's stem ends in the consonants **г**, **к**, or **х** (like **довгий** or **тихий**), no consonant alternation occurs in the adjective itself, even if the noun it describes undergoes a change.
+There is one crucial rule you must remember for the third-person possessive pronouns «його» (his/its) and «її» (her). When used as possessive pronouns, these forms never change. They do not take dative endings, even when the noun they modify is in the dative case. If you want to say "to his brother", you say «його братові», not «йогому братові». The noun changes to reflect its role as the indirect object, but the pronoun «його» stays exactly the same.
 
-Я щодня допомагаю новій подрузі з домашнім завданням. Цей білий пояс ідеально пасує синій сукні. Ми всі завдячуємо цій тихій вулиці за спокійний сон. Я хочу подякувати цій довгій відпустці за хороший відпочинок.
-
-> *I help a new friend with homework every day. This white belt perfectly suits the blue dress. We all owe this quiet street for a peaceful sleep. I want to thank this long vacation for a good rest.*
-
-When you are talking about multiple recipients, the Dative case completely ignores gender. All adjectives in the plural take the unified ending **-им**. It does not matter if you are giving something to men, women, or neuter objects; the plural adjective is always the same. This significant simplification makes speaking in the plural much easier, as you only need to remember one single ending for every possible adjective.
-
-Я часто телефоную новим друзям на вихідних. Тренер дає інструкції цим гарним дівчатам перед важливим матчем. Ми завжди щиро радіємо новим зустрічам. Цим синім морям зараз потрібен захист від забруднення.
-
-> *I often call new friends on the weekends. The coach gives instructions to these beautiful girls before an important match. We always sincerely rejoice at new meetings. These blue seas now need protection from pollution.*
-
-One of the most elegant features of the Ukrainian Dative case is its internal consistency. In Ukrainian, the masculine and neuter endings always retain the "o" sound, regardless of whether the stem is hard (**-ому**) or soft (**-ьому**). This creates a smooth, rhythmic phonetic pattern that is uniquely Ukrainian. While Russian differentiates these endings completely by switching to an "e" sound for soft stems, Ukrainian unifies the system, making it far more logical and predictable for learners to master.
-
-:::note
-**Consonant harmony**
-Remember that while feminine nouns often undergo consonant alternation in the Dative case, the adjectives describing them never do. If the noun **подруга** changes to **подрузі**, the adjective remains unchanged. You say **новій подрузі**, keeping the letter "в" in **новій** completely intact.
+:::info
+**Grammar box**
+A very common mistake for learners is trying to decline «його» or «її». Remember: "to his friend" is «його другу», and "to her sister" is «її сестрі». The pronoun remains frozen.
 :::
 
-<!-- INJECT_ACTIVITY: group-sort-adj-gender -->
+Вона завжди допомагає його другу. Я хочу зателефонувати її сестрі сьогодні ввечері. Ми даємо їжу його великому собаці. Вчитель пояснює правило її синові.
+
+> *She always helps his friend. I want to call her sister tonight. We give food to his big dog. The teacher explains the rule to her son.*
+
+Finally, let's examine the demonstrative pronouns «цей» (this) and «той» (that). The pronoun «цей» becomes **цьому** (to this (masc./neut. dat.)) for masculine and neuter nouns, and «цій» for feminine nouns. The plural form is «цим». The pronoun «той» becomes **тому** (to that (masc./neut. dat.)) for masculine and neuter nouns, and «тій» for feminine nouns. The plural form is «тим». You will hear these words very often when native speakers point things out or clarify exactly which object or person they mean in a conversation.
+
+Будь ласка, поясни це завдання тому хлопцеві. Цьому старому будинку вже сто років. Я хочу подякувати цій жінці за допомогу. Що ти скажеш тим людям на вулиці?
+
+> *Please explain this task to that boy. This old building is already a hundred years old. I want to thank this woman for the help. What will you say to those people on the street?*
+
+> — **Тарас:** Якому студенту ти дав словник? *(Which student did you give the dictionary to?)*
+> — **Ірина:** Я дала словник цьому новому студенту. *(I gave the dictionary to this new student.)*
+> — **Тарас:** А тому хлопцеві ти щось дала? *(And to that boy did you give anything?)*
+> — **Ірина:** Ні, тому хлопцеві я нічого не давала. *(No, to that boy I didn't give anything.)*
+
+Mastering these pronoun patterns is an important step in building natural-sounding Ukrainian sentences. Once you know how to match your possessive and demonstrative pronouns with dative nouns, you can clearly express relationships and point out specific people or things. This is especially useful when talking about your family, giving directions, or offering help to others. You are now ready to combine all these elements into longer, more complex phrases. Take a moment to review the specific endings before moving on to the practice activities.
+
+<!-- INJECT_ACTIVITY: quiz-possessive-forms -->
+<!-- INJECT_ACTIVITY: match-up-nominative-dative -->

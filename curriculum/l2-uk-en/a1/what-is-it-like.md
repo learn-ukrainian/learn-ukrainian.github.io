@@ -1,90 +1,111 @@
 ## Діало́ги (Dialogues)
 
-It is the weekend, and the city center is bustling with activity. We visit a local weekend book fair, a popular gathering place where vendors display an interesting assortment of printed materials, vintage goods, and cultural artifacts. People browse through the stalls, carefully looking at items like maps, books, and posters, often picking them up to appreciate the quality of the paper or the vibrancy of the ink. We join **Тара́с** and **Софія** as they walk from table to table. They are examining the items on display and sharing their immediate impressions of what they see.
+Here are two short dialogues about describing things with adjectives. The first uses the familiar room-description pattern from **Вашуленко Grade 3, p.131**, and the second shows simple window-shopping questions and answers.
 
-The book fair is an excellent place to practice our new descriptive skills because the objects are constantly changing. One table might have historical artifacts, while another has modern textbooks. As our friends walk, they point out specific details that catch their eye. Examine their conversation below.
+In the first dialogue, Taras asks Sofia to describe her room.
 
-As they stop at a large wooden stall, **Тарас** unrolls a massive poster while **Софія** picks up a thick, freshly printed volume and an antique photograph from a nearby stack.
-
-> **Тарас:** Яки́й вели́кий плака́т! *(What a big poster!)*
-> **Софія:** А яка ціка́ва кни́га! *(And what an interesting book!)*
-> **Тарас:** Це нови́й атлас? *(Is this a new atlas?)*
-> **Софія:** Так, новий атлас. А там — старе́ фо́то. *(Yes, a new atlas. And there — an old photo.)*
-> **Тарас:** І мале́нька листі́вка. *(And a small postcard.)*
-
-They are doing more than just naming objects; they are actively describing them, assigning qualities to the things they see. Notice how the ending of the describing word changes depending on whether the object is masculine, feminine, or neuter. Describing objects at a market is useful, but the most common place we describe things is in our own homes. When you invite a guest over, or when you are simply talking about your living space with a new friend, you naturally want to communicate what your environment looks like. Listen to another conversation. This time, **Софія** is describing her personal space to **Тарас**, focusing on the everyday furniture items we learned about previously. This is a classic situation found in the Вашуленко Grade 3 textbook under the topic "Моя́ кімна́та" (My room).
-
-Listen to how **Софія** provides details about the size, age, and brightness of her room and the items inside it.
-
-> **Тарас:** Яка твоя́ кімната? *(What is your room like?)*
-> **Софія:** Моя кімната вели́ка і сві́тла. *(My room is big and bright.)*
+> **Тара́с:** Яка твоя́ кімна́та? *(What kind is your room?)*
+> **Софія:** Моя́ кімната вели́ка і сві́тла. *(My room is big and bright.)*
 > **Тарас:** А стіл? *(And the table?)*
-> **Софія:** Стіл новий. А лі́жко — старе. *(The table is new. And the bed is old.)*
+> **Софія:** Стіл нови́й. А лі́жко — старе́. *(The table is new. And the bed is old.)*
 
-Here, the description feels very natural. The questions and the answers both rely on matching the describing word to the object being discussed.
+In this dialogue, **кімната** is feminine, so Sofia says **велика, світла**; **стіл** is masculine, so she says **новий**; **ліжко** is neuter, so she says **старе**. This is adjective-noun agreement in action.
+
+:::note
+In Ukrainian, adjectives do not have a fixed gender of their own. They are highly adaptable words that change their form entirely to match the noun they are describing.
+:::
+
+In the second dialogue, they stop at a book fair stand and describe what they see.
+
+> **Софія:** Яка ціка́ва кни́га! *(What an interesting book!)*
+> **Тарас:** Так, а ось новий атлас. *(Yes, and here is a new atlas.)*
+> **Софія:** А плака́т? Яки́й він? *(And the poster? What kind is it?)*
+> **Тарас:** Він вели́кий. А листі́вка — мале́нька. *(It is big. And the postcard is small.)*
+
+Here **цікава** and **маленька** match the feminine nouns **книга** and **листівка**, while **новий** and **великий** match the masculine nouns **атлас** and **плакат**.
 
 ## Який? Яка? Яке́? (What kind?)
 
-To ask "What kind?" or "Which?" in English, you rely on fixed words that never change shape. In Ukrainian grammar, the reality is much more dynamic. A describing word is called a **прикме́тник** (adjective), a term that literally suggests it is a feature attached to an object. Its primary job is to tell you the qualities of a noun—its size, color, age, or value. However, you cannot simply memorize one single, unchanging word for "What kind?". Just as you learned that the word for "my" changes based on gender, strictly following the **мій**, **моя**, **моє́** pattern, the question word for descriptions must also adapt to precisely match the noun it asks about. The question "What kind?" changes by gender exactly like the possessive pronouns do, acting as a mirror to the noun.
+To ask "what kind?" in Ukrainian, match the question word to the noun’s gender: **який** for masculine, **яка** for feminine, and **яке** for neuter. As **Пономарова Grade 3, p.98** teaches, the adjective then takes the same gender as the noun.
 
-When you want to describe a masculine noun, you use the specific question word **який?** (what kind?). The answer to this question will typically be an adjective ending in the letters **-ий**. For example, if you are looking at a table, you ask **Який стіл?** (What kind of table?), and the accurate answer is **Великий стіл** (A big table) or **Новий атлас** (A new atlas). For feminine nouns, the entire system shifts to accommodate the feminine gender. The question word changes to **яка?**. Consequently, the describing word will end in the letter **-а**, giving you descriptive phrases like **Нова́ книга** (A new book) or **Велика листівка** (A big postcard).
+When you are asking about a masculine noun, you must use the masculine question word **який** (what kind? — m). The answer will typically feature an adjective ending in the standard masculine suffix **-ий**. This ending acts as a clear signal that the description belongs to a masculine object.
 
-Neuter nouns require their own specific grammatical form to maintain this harmony. To ask about a neuter object, you must use the question word **яке?**. Following the established logic, the adjective that directly answers this neuter question will end in the letter **-е**. If you point to a window, you ask **Яке вікно́?** (What kind of window?), and the appropriate response is **Чи́сте вікно** (A clean window) or **Старе фото** (An old photo). Note that while some adjectives have soft-stem endings like **-ій**, **-я**, or **-є** (such as **си́ній**, which means dark blue), we will cover those exceptions in the next module about colors. For now, you must focus entirely on mastering the standard **-ий**, **-а**, **-е** pattern.
+* **Який стіл?** (What kind of table?) → **Великий стіл.** (A big table.)
+* **Який плакат?** (What kind of poster?) → **Новий плакат.** (A new poster.)
 
-Practicing this skill requires active listening. When you hear a native speaker describe an object, pay close attention to the ending of the adjective. You will notice that the ending always matches the gender of the noun it is attached to. This consistency is what makes Ukrainian grammar so logical once you grasp the foundational rules. It might seem like a lot of variations at first, but with practice, this matching process will become second nature.
+The question and the answer mirror each other perfectly.
+
+For a feminine noun, use **яка**, and the answer usually has a feminine adjective in **-а**.
+
+* **Яка книга?** (What kind of book?) → **Нова́ книга.** (A new book.)
+* **Яка листівка?** (What kind of postcard?) → **Маленька листівка.** (A small postcard.)
 
 :::tip
-According to the Пономарова Grade 3 textbook (p.98), the fundamental rule is that an adjective has the same gender as the noun. Think of the noun as the boss, and the adjective as the loyal assistant that must put on the matching uniform!
+Use the question word as a cheat code! The ending of the question word usually tells you the exact ending you need for the adjective. If you ask **Яка?**, expect the answer to end in **-а**.
 :::
 
-This means the noun dictates the gender, and the adjective obediently copies it without exception. For masculine words, you will always use **-ий** (**великий**, **новий**, **чи́стий**). For feminine words, you will use **-а** (**велика**, **нова**, **чи́ста**). For neuter words, you will use **-е** (**вели́ке**, **нове́**, **чисте**). This pattern of agreement will reappear in every single grammatical case as you continue learning the language, so you must learn it well right now to build a strong foundation for future fluency.
+Finally, when inquiring about a neuter noun, you use the neuter question word **яке** (what kind? — n). The adjective providing the description will typically feature the neuter ending **-е**.
+
+* **Яке вікно́?** (What kind of window?) → **Чи́сте вікно.** (A clean window.)
+* **Яке фо́то?** (What kind of photo?) → **Старе фото.** (An old photo.)
+
+Soft-stem forms in **-ій/-я/-є** will be practiced in the colors module.
+
+The golden rule for this grammatical behavior is taught early in Ukrainian schools: **прикме́тник ма́є таки́й рід, як іме́нник, з яки́м він зв'я́заний** (an adjective has the same gender as the noun it is connected to).
 
 <!-- INJECT_ACTIVITY: quiz-question-word -->
-
-<!-- INJECT_ACTIVITY: fill-in-adjective-endings -->
+<!-- INJECT_ACTIVITY: fill-in-endings -->
 
 ## Прикме́тники (Common Adjectives)
 
-One of the most effective strategies for expanding your descriptive vocabulary quickly is to learn adjectives in opposite pairs. Human memory thrives on contrast, making it much easier to remember two interconnected words together than trying to memorize them in isolation. Start with the primary size and age pairs. For physical size, we have the word **великий** (big) and its direct opposite **мале́нький** (small). For the age of objects, we pair **новий** (new) with **стари́й** (old). You can immediately apply these new adjectives to the vocabulary objects you already know, creating useful combinations like **великий стіл** (a big table), **маленька ру́чка** (a small pen), **новий телефо́н** (a new phone), and **старе фото** (an old photo).
+Learn these adjectives in opposite pairs and use them with nouns from the start. This makes the meanings easier to remember and keeps the endings visible in context.
 
-Next, we expand the vocabulary set with quality and light pairs. To express whether something is visually pleasing, attractive, or generally good, use the adjective **га́рний** (nice, beautiful). Its direct opposite is **пога́ний** (bad). For measuring physical cleanliness, pair **чистий** (clean) with **брудни́й** (dirty). When talking about the amount of natural or artificial light in a space, use **сві́тлий** (light, bright) and **те́мний** (dark). These descriptive words are incredibly useful for everyday conversations. You might describe the weather as a **гарний день** (nice day), remark that the lake has **чиста вода́** (clean water), or say your office is a **світла кімната** (bright room).
+For size, use **великий** (big) and **мале́нький** (small). For age, use **новий** (new) and **стари́й** (old). For quality or appearance, the pair is **га́рний** (nice, beautiful) and **пога́ний** (bad). Seeing these words isolated is not enough; you must observe them in context to see the agreement rules in action.
 
-Consider how often you make judgments about the things around you. Every time you decide whether a shirt is clean or dirty, or whether a room is too dark to read in, you are using qualitative adjectives. Applying these new words to your immediate surroundings is the fastest way to memorize them. Look at your desk right now. Is your pen new or old? Is your coffee cup big or small? By constantly labeling your environment with these opposite pairs, you actively reinforce the vocabulary in your mind.
+* **великий стіл** (a big table)
+* **маленька кімната** (a small room)
+* **нове́ ліжко** (a new bed)
+* **старе фото** (an old photo)
 
-When you are out shopping or discussing the financial value of everyday items, you need a completely different set of descriptors. The word for an item that costs a significant amount of money is **дороги́й** (expensive). The opposite descriptor, used for an item that is highly affordable, is **деше́вий** (cheap). Imagine you are window shopping in the city center and looking closely at a storefront display filled with various goods.
+Always practice these words alongside a noun to reinforce the correct endings.
 
-> **Софія:** Яка га́рна су́мка! *(What a beautiful bag!)*
-> **Тарас:** Так, але́ вона́ дорога́. *(Yes, but it is expensive.)*
-> **Софія:** А телефон? Який він? *(And the phone? What is it like?)*
-> **Тарас:** Він великий і дешевий. *(It is big and cheap.)*
+Add three more useful pairs: **чи́стий / брудни́й**, **дороги́й / деше́вий**, and **сві́тлий / те́мний**.
 
-:::note
-Notice the small connecting words used to build longer sentences. We use **і** (and) when two qualities exist in parallel harmony. We use **а** (and/but) to show a contrast between two different things.
+* **доро́га су́мка** (an expensive bag)
+* **дешевий телефо́н** (a cheap phone)
+* **світла кімната** (a bright room)
+* **чисте вікно** (a clean window)
+
+Notice how the ending of each adjective perfectly matches the gender of the noun it modifies.
+
+You can now build complete, expressive sentences by combining these descriptions. When you want to link two similar qualities, use the conjunction **і** (and) for parallel ideas. If you need to express a contrast between two objects or qualities, use the conjunction **а** (and/but — contrast) or the word **але́** (but).
+
+* **Вікно вели́ке і чисте.** (The window is big and clean.)
+* **Стіле́ць старий, а ліжко — нове.** (The chair is old, but the bed is new.)
+* **Моя кімната маленька, але га́рна.** (My room is small, but beautiful.)
+
+:::caution
+Pay close attention to the small conjunctions. **і** simply adds information together. Both **а** and **але** can express contrast, but **а** is often milder when comparing two items, while **але** usually sounds stronger as “but.”
 :::
 
-When building rich descriptions with the everyday objects you learned in the previous module, these tiny structural words are absolutely essential for fluency. By combining your known vocabulary, you can proudly say **У ме́не є великий стіл** (I have a big table). When explicitly linking parallel ideas, use **і**: **Вікно велике і чисте** (The window is big and clean). When highlighting a clear contrast, use **а**: **Стіле́ць старий, а ліжко — нове** (The chair is old, and/but the bed is new). Finally, you can use **але** (but) for slightly unexpected or surprising combinations: **Моя кімната маленька, але гарна** (My room is small, but nice).
+These small connecting words help you join simple descriptions clearly.
 
 <!-- INJECT_ACTIVITY: match-up-opposites -->
-
-<!-- INJECT_ACTIVITY: fill-in-room-description -->
+<!-- INJECT_ACTIVITY: fill-in-describe-room -->
 
 ## Підсумок — Summary
 
-Describing your physical environment in Ukrainian requires paying close and constant attention to the nouns you are talking about. Every single describing word must perfectly match the grammatical gender of the noun it modifies. When you want to ask about the qualities of an object, your question word changes accordingly. For a masculine noun, you must ask **який?**, and the responding adjective will end in **-ий**, as seen in **великий**. For a feminine noun, the question logically shifts to **яка?**, leading to an adjective ending in **-а**, such as **велика**. For a neuter noun, you use **яке?**, and the adjective predictably takes the **-е** ending, exactly like **велике**. Remember that learning adjectives in direct contrasting pairs, such as pairing **новий** and **старий** or grouping **чистий** and **брудний**, makes vocabulary acquisition much more efficient and natural. Finally, when constructing your full sentences, use **і** to seamlessly connect matching parallel qualities, and use the contrastive conjunction **а** to boldly highlight the differences between two distinct items in your description.
+The core lesson of this module revolves around a single, unbreakable grammatical bond. Ukrainian adjectives exist exclusively to describe nouns, and they must always agree with those nouns in gender when used in the nominative case. You cannot simply memorize a descriptive word in isolation; you must always adapt its form to match the object it modifies. The core pattern is highly consistent and easy to remember. Masculine descriptions typically end in the suffix **-ий**, feminine descriptions take the ending **-а**, and neuter descriptions use the ending **-е**. Because the adjective takes its cue directly from the noun, knowing the grammatical gender of the noun is the absolute key to using descriptive language correctly. If you know the gender of the object, you automatically know the sound that must complete the adjective.
 
-The ability to accurately describe objects allows you to share your unique perspective and opinions. A table is no longer just a table; it is a big, new, clean table. A room is no longer just a room; it is a small but beautiful space.
+Review the grammatical patterns by answering the following questions aloud before checking the provided solutions. This simple self-check will solidify your understanding.
 
-Verify your understanding of these core descriptive patterns before you proceed to the next lesson. Mastery of these concepts is essential for your progression. Can you confidently answer these practical self-check questions without hesitation?
+* What ending does a masculine adjective have?
+  * The standard ending is **-ий** (and occasionally **-ій** for soft-stem words).
+* What ending does a feminine adjective have?
+  * The standard ending is **-а** (and occasionally **-я**).
+* What ending does a neuter adjective have?
+  * The standard ending is **-е** (and occasionally **-є**).
+* Can you describe your own room in three complete sentences using the adjectives you learned today?
+  * For example: **Моя кімната велика і світла.** (My room is big and bright.) **Стіл новий.** (The table is new.) **Ліжко велике.** (The bed is big.)
 
-*   Як бу́де "What kind of book?"
-    *   **Яка книга?** (Because the word for book is feminine).
-*   What ending does a masculine adjective have?
-    *   Masculine adjectives typically end in **-ий** (or sometimes **-ій**).
-*   What ending does a feminine adjective have?
-    *   Feminine adjectives typically end in **-а** (or **-я**).
-*   What ending does a neuter adjective have?
-    *   Neuter adjectives typically end in **-е** (or **-є**).
-*   Як сказа́ти "The table is big, but the chair is small"?
-    *   **Стіл великий, а стілець маленький.**
-
-**Завда́ння** (Task): Describe your room in 3 sentences using adjectives. Look around your space and practice out loud right now. Make sure you correctly match the gender of the furniture items to the adjectives you choose.
+Mastering this fundamental agreement ensures your Ukrainian sounds natural and accurate.

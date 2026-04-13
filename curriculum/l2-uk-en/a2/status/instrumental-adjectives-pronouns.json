@@ -2,12 +2,12 @@
   "module": "instrumental-adjectives-pronouns",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-04-11T00:49:38.895630Z",
+  "last_audit": "2026-04-11T13:48:12.176894Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-11T00:39:47.140965Z",
+    "md": "2026-04-11T13:48:09.052383Z",
     "meta": null,
-    "activities": "2026-04-11T00:39:47.791605Z",
+    "activities": "2026-04-11T13:42:08.626728Z",
     "vocabulary": "2026-04-08T01:05:04.363214Z",
     "research": null,
     "plan": "2026-04-04T22:04:59.970106Z"
@@ -21,17 +21,26 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "2450/2000 (raw: 2511) | engagement: 0/3"
+      "message": "2891/2000 (raw: 2992) | immersion: 28.9% LOW (target 50-80% (A2.2))"
     },
     "activities": {
       "status": "fail",
       "violations": 1,
-      "message": "6/0 | density: 1 < 8"
+      "message": "7/0 | density: 1 < 8"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
       "message": "29/1"
+    },
+    "vocab_progression": {
+      "status": "warn",
+      "violations": 0,
+      "message": "\u0394 -11 | premature=2 | gaps=1 | well-paced=0",
+      "delta": -11,
+      "premature": 2,
+      "gaps": 1,
+      "well_paced": 0
     },
     "naturalness": {
       "status": "info",

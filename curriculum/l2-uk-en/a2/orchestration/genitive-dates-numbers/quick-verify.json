@@ -2,12 +2,6 @@
   "attempt": 1,
   "passed": true,
   "errors": [],
-  "warnings": [
-    {
-      "check": "VOCABULARY",
-      "severity": "WARNING",
-      "message": "Missing 1/15 required vocab: місяць (month)"
-    }
-  ],
-  "timestamp": "2026-04-10T23:45:14.060816+00:00"
+  "warnings": [],
+  "timestamp": "2026-04-12T21:12:52.008092+00:00"
 }

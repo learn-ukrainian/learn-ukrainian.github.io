@@ -1,7 +1,7 @@
 # Audit Report: M13 — alternation-consonants-verbs.md
 **Level:** B1 | **Module:** M13 | **Phase:** B1.1 | **Pedagogy:** PPP | **Target:** 4000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-04-10 21:26:00
+**Generated:** 2026-04-11 16:08:46
 
 ## Configuration
 **Type:** B1-grammar
@@ -18,109 +18,82 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | fill-in | fill-in | 10 | 8 | ✅ |
-| 2 | match-up | match-up | 10 | 8 | ✅ |
-| 3 | quiz | quiz | 8 | 8 | ✅ |
-| 4 | group-sort | group-sort | 10 | 6 | ✅ |
-| 5 | fill-in | fill-in | 6 | 8 | ❌ |
-| 6 | error-correction | error-correction | 6 | 6 | ✅ |
-| 7 | true-false | true-false | 6 | 8 | ❌ |
-| 8 | fill-in | fill-in | 6 | 8 | ❌ |
-| 9 | unjumble | unjumble | 6 | 6 | ✅ |
+| 1 | fill-in | Вставте правильну форму дієслова (я ...) | 10 | 8 | ✅ |
+| 2 | quiz | Який тип чергування приголосних відбувається у цих дієсловах? | 8 | 8 | ✅ |
+| 3 | group-sort | Розподіліть дієслова за типом чергування в 1-й особі однини (я) | 10 | 6 | ✅ |
+| 4 | match-up | З'єднайте інфінітив із формою 1-ї особи однини (я) | 10 | 8 | ✅ |
+| 5 | fill-in | Утворіть дієслово недоконаного виду (за допомогою суфіксів -ати/-увати) | 6 | 8 | ❌ |
+| 6 | match-up | З'єднайте займенник із правильною формою дієслова (робити) | 6 | 8 | ❌ |
+| 7 | group-sort | Розподіліть форми дієслова за наявністю чи відсутністю чергування | 12 | 6 | ✅ |
+| 8 | fill-in | Вставте правильну форму дієслова за особою (зверніть увагу, чи потрібне чергуван | 6 | 8 | ❌ |
 
 **Summary:**
-- Total activities: 9 (target: 0-4) ❌
-- Unique types: 7 (minimum: 3) ✅
-- Priority types used: 4/7 (error-correction, fill-in, match-up, quiz) ✅
+- Total activities: 8 (target: 0-4) ❌
+- Unique types: 4 (minimum: 3) ✅
+- Priority types used: 3/7 (fill-in, match-up, quiz) ✅
 - Low density activities: 3
 
 ## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY]** match-up '' has 10 pairs (target: 12-16)
-  - FIX: Adjust number of pairs to 12-16.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q1 prompt length 3 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q2 prompt length 3 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q3 prompt length 3 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q4 prompt length 3 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q5 prompt length 3 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q6 prompt length 3 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q7 prompt length 3 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q8 prompt length 3 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY]** group-sort '' has 10 items (target: 12-999)
+- **[COMPLEXITY]** group-sort 'Розподіліть дієслова за типом чергування в 1-й особі однини (я)' has 10 items (target: 12-999)
   - FIX: Adjust number of items to sort to 12-999.
-- **[COMPLEXITY]** fill-in '' has 6 items (minimum: 8)
+- **[COMPLEXITY]** match-up 'З'єднайте інфінітив із формою 1-ї особи однини (я)' has 10 pairs (target: 12-16)
+  - FIX: Adjust number of pairs to 12-16.
+- **[COMPLEXITY]** fill-in 'Утворіть дієслово недоконаного виду (за допомогою суфіксів -ати/-увати)' has 6 items (minimum: 8)
   - FIX: Add more items. B1 fill-in requires at least 8 items.
-- **[COMPLEXITY]** true-false '' has 6 items (minimum: 8)
-  - FIX: Add more items. B1 true-false requires at least 8 items.
-- **[COMPLEXITY]** fill-in '' has 6 items (minimum: 8)
+- **[COMPLEXITY]** match-up 'З'єднайте займенник із правильною формою дієслова (робити)' has 6 pairs (target: 12-16)
+  - FIX: Adjust number of pairs to 12-16.
+- **[COMPLEXITY]** fill-in 'Вставте правильну форму дієслова за особою (зверніть увагу, чи потрібне чергуван' has 6 items (minimum: 8)
   - FIX: Add more items. B1 fill-in requires at least 8 items.
-- **[COMPLEXITY_WORD_COUNT]** unjumble '' item 1 has 5 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble '' item 2 has 5 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble '' item 3 has 6 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble '' item 4 has 5 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble '' item 5 has 5 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble '' item 6 has 5 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[PHASE_TRANSLATIONS_LOW]** Early B1 (B1 M01-M30) targets ~25% translated UK paragraphs — currently 0% (0/28)
-  - FIX: 
+- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (86% overlap): "We say: "ти водиш", "він водить", "ми водимо", "ви водите" and "вони водять".". Shares significant keywords with sentence at index 98.
+  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
+- **[STATE_STANDARD_LOW_IMMERSION]** Module 13 has 35.9% immersion (target: 90.0%+)
+  - FIX: Add more Ukrainian content to reach 90%+ immersion for full immersion modules
 
 ## Recommendation
-**📝 UPDATE** (severity 60/100)
+**🔄 REWRITE** (severity 80/100)
 
-- Revision recommended (severity 60/100)
-- 20 violations (severe - consider revision)
+- 7 violations (significant)
+- Immersion 49% off target (major rebalancing needed)
 - Activity density below minimum
 
 ## Gates
-- **Words:** ✅ 4551/4000 (raw: 4747)
-- **Activities:** ✅ 9/0
+- **Words:** ✅ 5344/4000 (raw: 5571)
+- **Activities:** ✅ 8/0
 - **Density:** ❌ 3 < 6
-- **Unique_types:** ✅ 7/3 types
+- **Unique_types:** ✅ 4/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ❌ 0/5
+- **Engagement:** ❌ 1/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 30/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 96.8% (target 85-100% (B1.2 Motion))
-- **Richness:** ❌ 56% < 95% min (grammar) - REWRITE needed
+- **Immersion:** ❌ 35.9% LOW (target 85-100% (B1.2 Motion))
+- **Richness:** ❌ 47% < 95% min (grammar) - REWRITE needed
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
 
 ## Richness Details
-**Score:** 56% (minimum: 95%)
+**Score:** 47% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 36 | 24 | 100% | 20% | 20.0% |
+| examples | 10 | 24 | 42% | 20% | 8.4% |
 | engagement | 0 | 5 | 0% | 15% | 0.0% |
 | dialogues | 0 | 4 | 0% | 15% | 0.0% |
-| variety | 0.97 | - | 97% | 10% | 9.7% |
-| cultural | 1 | 3 | 33% | 10% | 3.3% |
+| variety | 0.95 | - | 95% | 10% | 9.5% |
+| cultural | 2 | 3 | 67% | 10% | 6.7% |
 | realworld | 20 | 3 | 100% | 10% | 10.0% |
 | visual | 0 | 3 | 0% | 5% | 0.0% |
-| questions | 5 | 5 | 100% | 5% | 5.0% |
+| questions | 14 | 5 | 100% | 5% | 5.0% |
 | tables | 1 | 2 | 50% | 4% | 2.0% |
 | paragraph_var | 1.00 | - | 100% | 3% | 3.0% |
-| proverbs | 10 | 1 | 100% | 3% | 3.0% |
-| **TOTAL** | | | | | **56.0%** |
+| proverbs | 8 | 1 | 100% | 3% | 3.0% |
+| **TOTAL** | | | | | **47.6%** |
 
 ### Dryness Flags & Fixes
 - ❌ **NO_ENGAGEMENT**
@@ -160,28 +133,25 @@
     
     IMPORTANT: Dialogues OUTSIDE blockquotes (>) using **Speaker:** format are NOT detected.
     Place dialogues inside [!dialogue] callouts or blockquotes.
-- ❌ **LOW_CULTURAL_ANCHOR**
+- ❌ **NO_EXAMPLES**
   - FIX:
-    Add more cultural references (need 3+ total). Include:
-    - Named Ukrainian places (Поділ, Бесарабський ринок, Острозька академія)
-    - Ukrainian traditions or customs
-    - Contemporary Ukrainian life examples
+    Add 24+ example sentences. Each grammar point needs 3-4 examples showing the pattern in context.
 
 ## Low Density Activities
 | Activity | Type | Items | Required | Fix |
 |----------|------|-------|----------|-----|
-| fill-in | fill-in | 6 | 8 | Add 2 more items |
-| true-false | true-false | 6 | 8 | Add 2 more items |
-| fill-in | fill-in | 6 | 8 | Add 2 more items |
+| Утворіть дієслово недоконаного виду (за допомогою суфіксів -ати/-увати) | fill-in | 6 | 8 | Add 2 more items |
+| З'єднайте займенник із правильною формою дієслова (робити) | match-up | 6 | 8 | Add 2 more items |
+| Вставте правильну форму дієслова за особою (зверніть увагу, чи потрібне чергуван | fill-in | 6 | 8 | Add 2 more items |
 
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 561 | Included in Core |
-| **Чергування зубних і свистячих** | ✅ | 878 | Included in Core |
-| **Чергування задньоязикових у дієсловах** | ✅ | 661 | Included in Core |
-| **Чергування губних + [л]: робити — роблю** | ✅ | 634 | Included in Core |
-| **Чергування при утворенні недоконаних дієслів** | ✅ | 753 | Included in Core |
-| **Повна парадигма: від інфінітива до всіх форм** | ✅ | 689 | Included in Core |
-| **Підсумок: таблиця дієслівних чергувань** | ✅ | 375 | Included in Core |
+| **Intro/Narrative** | ✅ | 803 | Included in Core |
+| **Чергування зубних і свистячих (~850 words)** | ✅ | 1044 | Included in Core |
+| **Чергування задньоязикових у дієсловах (~650 words)** | ✅ | 848 | Included in Core |
+| **Чергування губних + [л]: робити — роблю (~650 words)** | ✅ | 657 | Included in Core |
+| **Чергування при утворенні недоконаних дієслів (~600 words)** | ✅ | 654 | Included in Core |
+| **Повна парадигма: від інфінітива до всіх форм (~600 words)** | ✅ | 683 | Included in Core |
+| **Підсумок: таблиця дієслівних чергувань (~450 words)** | ✅ | 655 | Included in Core |

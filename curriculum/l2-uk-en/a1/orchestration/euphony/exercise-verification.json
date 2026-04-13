@@ -1,228 +1,148 @@
 {
-  "total_items": 86,
-  "grounded_items": 50,
+  "total_items": 76,
+  "grounded_items": 54,
   "ungrounded": [
-    {
-      "word": "театрі",
-      "exercise_type": "quiz",
-      "context": "Вона працює _____ театрі.",
-      "role": "context"
-    },
-    {
-      "word": "граємо",
-      "exercise_type": "quiz",
-      "context": "Ми граємо _____ футбол.",
-      "role": "context"
-    },
-    {
-      "word": "живе",
-      "exercise_type": "quiz",
-      "context": "Він живе _____ Києві.",
-      "role": "context"
-    },
-    {
-      "word": "парку",
-      "exercise_type": "quiz",
-      "context": "Мама _____ парку.",
-      "role": "context"
-    },
     {
       "word": "оберіть",
       "exercise_type": "quiz",
-      "context": "Оберіть найбільш природне речення:",
+      "context": "Оберіть найкращий варіант:",
       "role": "context"
     },
     {
-      "word": "найбільш",
+      "word": "найкращий",
       "exercise_type": "quiz",
-      "context": "Оберіть найбільш природне речення:",
+      "context": "Оберіть найкращий варіант:",
       "role": "context"
     },
     {
-      "word": "природне",
+      "word": "варіант",
       "exercise_type": "quiz",
-      "context": "Оберіть найбільш природне речення:",
+      "context": "Оберіть найкращий варіант:",
       "role": "context"
     },
     {
-      "word": "речення",
-      "exercise_type": "quiz",
-      "context": "Оберіть найбільш природне речення:",
-      "role": "context"
-    },
-    {
-      "word": "ідемо",
-      "exercise_type": "match-up",
-      "context": "Ідемо зі",
-      "role": "answer"
-    },
-    {
-      "word": "починається",
+      "word": "між",
       "exercise_type": "group-sort",
-      "context": "Починається на голосний (Starts with a vowel)",
+      "context": "І (між приголосними)",
+      "role": "context"
+    },
+    {
+      "word": "приголосними",
+      "exercise_type": "group-sort",
+      "context": "І (між приголосними)",
+      "role": "context"
+    },
+    {
+      "word": "після",
+      "exercise_type": "group-sort",
+      "context": "Й (після голосного)",
+      "role": "context"
+    },
+    {
+      "word": "голосного",
+      "exercise_type": "group-sort",
+      "context": "Й (після голосного)",
+      "role": "context"
+    },
+    {
+      "word": "фраза",
+      "exercise_type": "true-false",
+      "context": "Фраза «Мама й тато» звучить природно українською.",
+      "role": "context"
+    },
+    {
+      "word": "звучить",
+      "exercise_type": "true-false",
+      "context": "Фраза «Мама й тато» звучить природно українською.",
+      "role": "context"
+    },
+    {
+      "word": "природно",
+      "exercise_type": "true-false",
+      "context": "Фраза «Мама й тато» звучить природно українською.",
+      "role": "context"
+    },
+    {
+      "word": "українською",
+      "exercise_type": "true-false",
+      "context": "Фраза «Мама й тато» звучить природно українською.",
+      "role": "context"
+    },
+    {
+      "word": "написана",
+      "exercise_type": "true-false",
+      "context": "Фраза «Тарас в Львові» написана правильно.",
+      "role": "context"
+    },
+    {
+      "word": "правильно",
+      "exercise_type": "true-false",
+      "context": "Фраза «Тарас в Львові» написана правильно.",
       "role": "context"
     },
     {
       "word": "на",
-      "exercise_type": "group-sort",
-      "context": "Починається на голосний (Starts with a vowel)",
-      "role": "context"
-    },
-    {
-      "word": "голосний",
-      "exercise_type": "group-sort",
-      "context": "Починається на голосний (Starts with a vowel)",
-      "role": "context"
-    },
-    {
-      "word": "одеса",
-      "exercise_type": "group-sort",
-      "context": "Одеса",
-      "role": "answer"
-    },
-    {
-      "word": "приголосний",
-      "exercise_type": "group-sort",
-      "context": "Починається на приголосний (Starts with a consonant)",
-      "role": "context"
-    },
-    {
-      "word": "банк",
-      "exercise_type": "group-sort",
-      "context": "банк",
-      "role": "answer"
-    },
-    {
-      "word": "завжди",
       "exercise_type": "true-false",
-      "context": "Ми завжди пишемо «у» на початку речення. (We always write «у",
-      "role": "context"
-    },
-    {
-      "word": "пишемо",
-      "exercise_type": "true-false",
-      "context": "Ми завжди пишемо «у» на початку речення. (We always write «у",
+      "context": "На початку речення завжди пишемо «У», наприклад: «У мене є б",
       "role": "context"
     },
     {
       "word": "початку",
       "exercise_type": "true-false",
-      "context": "Ми завжди пишемо «у» на початку речення. (We always write «у",
+      "context": "На початку речення завжди пишемо «У», наприклад: «У мене є б",
       "role": "context"
     },
     {
-      "word": "після",
+      "word": "речення",
       "exercise_type": "true-false",
-      "context": "Після голосного ми використовуємо «в». (After a vowel we use",
+      "context": "На початку речення завжди пишемо «У», наприклад: «У мене є б",
       "role": "context"
     },
     {
-      "word": "голосного",
+      "word": "завжди",
       "exercise_type": "true-false",
-      "context": "Після голосного ми використовуємо «в». (After a vowel we use",
+      "context": "На початку речення завжди пишемо «У», наприклад: «У мене є б",
       "role": "context"
     },
     {
-      "word": "використовуємо",
+      "word": "пишемо",
       "exercise_type": "true-false",
-      "context": "Після голосного ми використовуємо «в». (After a vowel we use",
+      "context": "На початку речення завжди пишемо «У», наприклад: «У мене є б",
       "role": "context"
     },
     {
-      "word": "слово",
+      "word": "наприклад",
       "exercise_type": "true-false",
-      "context": "Слово «Франція» вимагає прийменника «в». (The word «Франція»",
+      "context": "На початку речення завжди пишемо «У», наприклад: «У мене є б",
       "role": "context"
     },
     {
-      "word": "франція",
+      "word": "правильною",
       "exercise_type": "true-false",
-      "context": "Слово «Франція» вимагає прийменника «в». (The word «Франція»",
+      "context": "Фраза «Вона з мною» є правильною.",
       "role": "context"
     },
     {
-      "word": "вимагає",
+      "word": "краще",
       "exercise_type": "true-false",
-      "context": "Слово «Франція» вимагає прийменника «в». (The word «Франція»",
+      "context": "Фраза «Лист з Києва» звучить краще, ніж «Лист із Києва».",
       "role": "context"
     },
     {
-      "word": "прийменника",
+      "word": "ніж",
       "exercise_type": "true-false",
-      "context": "Слово «Франція» вимагає прийменника «в». (The word «Франція»",
-      "role": "context"
-    },
-    {
-      "word": "кажемо",
-      "exercise_type": "true-false",
-      "context": "Ми кажемо «зі мною». (We say «зі мною».)",
-      "role": "context"
-    },
-    {
-      "word": "літера",
-      "exercise_type": "true-false",
-      "context": "Літера «й» може бути першим словом у реченні. (The letter «й",
-      "role": "context"
-    },
-    {
-      "word": "може",
-      "exercise_type": "true-false",
-      "context": "Літера «й» може бути першим словом у реченні. (The letter «й",
-      "role": "context"
-    },
-    {
-      "word": "бути",
-      "exercise_type": "true-false",
-      "context": "Літера «й» може бути першим словом у реченні. (The letter «й",
-      "role": "context"
-    },
-    {
-      "word": "першим",
-      "exercise_type": "true-false",
-      "context": "Літера «й» може бути першим словом у реченні. (The letter «й",
-      "role": "context"
-    },
-    {
-      "word": "словом",
-      "exercise_type": "true-false",
-      "context": "Літера «й» може бути першим словом у реченні. (The letter «й",
-      "role": "context"
-    },
-    {
-      "word": "реченні",
-      "exercise_type": "true-false",
-      "context": "Літера «й» може бути першим словом у реченні. (The letter «й",
-      "role": "context"
-    },
-    {
-      "word": "допомагає",
-      "exercise_type": "true-false",
-      "context": "Милозвучність допомагає вимовляти слова легше. (Euphony help",
-      "role": "context"
-    },
-    {
-      "word": "вимовляти",
-      "exercise_type": "true-false",
-      "context": "Милозвучність допомагає вимовляти слова легше. (Euphony help",
-      "role": "context"
-    },
-    {
-      "word": "слова",
-      "exercise_type": "true-false",
-      "context": "Милозвучність допомагає вимовляти слова легше. (Euphony help",
-      "role": "context"
-    },
-    {
-      "word": "легше",
-      "exercise_type": "true-false",
-      "context": "Милозвучність допомагає вимовляти слова легше. (Euphony help",
+      "context": "Фраза «Лист з Києва» звучить краще, ніж «Лист із Києва».",
       "role": "context"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 7,
-    "tested_in_exercises": 7,
-    "not_tested": []
+    "tested_in_exercises": 4,
+    "not_tested": [
+      "київ",
+      "львів",
+      "офіс"
+    ]
   },
   "all_grounded": false
 }

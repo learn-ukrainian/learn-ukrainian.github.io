@@ -1,22 +1,24 @@
-# Section-by-Section Generation — Section 4/6
+# Section-by-Section Generation — Section 4/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 44: Хай він прочитає! (A2, A2.6 [Aspect, Tenses, and Motion])
-**Section to write:** Кличний + наказовий + орудний: Побажання (~550 words)
-**Word target for this section:** 550 words (aim for 605 to account for undershoot)
+**Section to write:** Вид дієслова в наказовому способі (Aspect in Imperatives) (~500 words)
+**Word target for this section:** 500 words (aim for 550 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Кличний + наказовий + орудний: Побажання (~550 words)
-- P1 (~100 words): [The "Wish" Construction: Vocative + Imperative + Instrumental. Explain that Ukrainian wishes often follow this rhythmic pattern. Example: "Мамо (Voc), будь (Imp) щасливою (Instr)!" (Mom, be happy!). Explain the logic of "to be [in the state of]".]
-- P2 (~110 words): [Review of the Vocative case for wishes. Focus on names and family terms: Олена -> Оленко, тато -> тату, друзі -> друзі, колеги -> колеги. Explain that the address must be in the Vocative for the wish to sound natural and respectful.]
-- P3 (~110 words): [The Instrumental Case for states of being. List common adjective/noun endings used in wishes: щасливим/щасливою (m/f), здоровим/здоровою (m/f), успішними (pl), добрим (m). Examples: Будь здоровим! Будьте успішними!]
-- P4 (~110 words): [Cultural context: Toasts and blessings. Explain the traditional toast "Будьмо!" (Let us be!) and the standard wish "Будьте здорові!". Mention that these are essential social tools in Ukraine, used at birthdays, holidays, and meetings.]
-- P5 (~120 words): [Combining "хай" with Vocative addresses for indirect blessings. Example: "Друже, хай тобі щастить!" (Friend, may you have luck!). Explain the use of the Dative "тобі/вам" in these constructions. Additional examples: "Діти, нехай здійсняться всі ваші мрії!"]
-- <!-- INJECT_ACTIVITY: match-up-vocative-wishes --> [match-up, focus: Match Vocative names with "будь/будьте" and Instrumental adjectives to create logical wishes, 8 items]
+## Вид дієслова в наказовому способі (Aspect in Imperatives) (~500 words)
+- P1 (~125 words): Dive into how aspect choice drastically changes the tone and meaning of a command. Explain that the imperfective imperative is used for general instructions, repeated actions (habits), or polite invitations. Provide examples: Читай більше! (Read more — general advice), Пишіть щодня! (Write every day — habitual), Сідайте, будь ласка (Please sit down — polite invitation).
+- P2 (~125 words): Explain the perfective imperative. Detail that it is used for specific, one-time commands where a concrete result is expected right away. Provide examples: Прочитай цю статтю! (Read this article — and finish it), Напиши мені! (Write to me — do it), Закрий двері! (Close the door — now).
+- P3 (~150 words): Detail the strict rule for negative imperatives: negative commands almost exclusively use the imperfective aspect. Explain that telling someone NOT to do something implies an ongoing prohibition. Provide examples: Не читай це! (Don't read this), Не відкривайте вікно! (Don't open the window).
+- P4 (~100 words): Explain the sole exception: using the perfective aspect in a negative command creates a harsh warning or expresses fear of an accidental, sudden result. Provide the classic example: Не впади! (Don't fall! — careful!). Conclude with a brief summary: general advice/polite/negative = imperfective; specific task/urgent warning = perfective.
+- <!-- INJECT_ACTIVITY: quiz-aspect-choice --> [quiz, Choose the correct aspect (imperfective or perfective) for imperatives in various situations, 8 items]
+- <!-- INJECT_ACTIVITY: unjumble-imperative-sentences --> [unjumble, Reorder words to form correct imperative sentences — commands, suggestions with -мо, and wishes with Vocative + будь + Instrumental, 6 items]
+
+Grand total: ~2200 words
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -24,7 +26,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-form and attach the "-мо" suffix to the end. Наприклад: дієслово «**читати**» *(to read)* має форму «**читай**» *(read)*. Ми додаємо суфікс і маємо «**читаймо**» *(let's read)*. Дієслово «**робити**» *(to do)* має форму «**роби**» *(do)*. Разом це буде «**робімо**» *(let's do)*. А дієслово «**бути**» *(to be)* має форму «**будь**» *(be)*, тому ми кажемо «**будьмо**» *(let's be)*. Це дуже красива, формальна і природна українська конструкція. This is the authentic, elegant way to suggest a shared action or activity in the Ukrainian language. У щоденному житті ми дуже часто використовуємо ці короткі слова. The absolute most common form you will hear every day is «**ходімо**!» *(let's go!)*. На жаль, на вулицях люди іноді кажуть «**пішли**» *(we went)*, коли кличуть друзів кудись іти. Але це помилка, бо «пішли» — це форма минулого часу, а не наказ. But "пішли" is grammatically the past tense, making it a colloquial error when used for an invitation. Завжди кажіть правильно: «Ходімо в кіно!» або «Ходімо додому!». Ось ще кілька дуже корисних фраз для щоденного спілкування на роботі чи вдома: «**Починаймо**!» *(Let's start!)*. «**Поговорімо** про це пізніше» *(Let's talk about it later)*. «**Зробімо** це важке завдання!» *(Let's do this hard task!)*. «**Поїдьмо** на море влітку!» *(Let's go to the sea in summer!)*. Ці слова роблять вашу мову дуже живою та природною. Тепер ми обов'язково маємо поговорити про одну важливу проблему — це використання слова «**давайте**» *(let's)*. In the Russian language, it is the standard rule to say "Let's + infinitive verb" to form a group command. Через тривалий історичний вплив багато людей в Україні теж кажуть: «Давайте читати» або «Давайте працювати». Але в літературній українській мові це велика помилка і типова **калька** *(calque)*. You must explicitly avoid using "давайте" with an infinitive verb in Ukrainian. Правильно казати тільки автентичні українські форми з суфіксом: «Читаймо!» або «**Працюймо**!» *(Let's work!)*. Однак, є один допустимий компромісний варіант у повсякденній розмовній мові. However, in casual, everyday speech, you might hear "давайте" followed by the normal future tense form, like «Давайте **поїдемо**» *(Let's go)* або «Давайте купимо». This is considered a softer, slightly more colloquial suggestion. Але пам'ятайте, що найкращий, найчистіший і найправильніший варіант — це завжди український суфікс «-мо». Вид дієслова також дуже важливий для цих спільних наказів і пропозицій. Aspect also matters deeply when we invite people to do things together. **Недоконаний вид** *(imperfective aspect)* означає загальну, регулярну дію або постійний процес. «Працюймо разом щодня!». «Читаймо хороші українські книги!». «**Співаймо** *(let's sing)* українські пісні кожного свята!». **Доконаний вид** *(perfective aspect)* означає один конкретний результат або одну швидку мету. «Зробімо цей важливий **проєкт** *(project)* сьогодні!». «**Купімо** *(let's buy)* ці квитки зараз!». «**Напишімо** *(let's write)* цей короткий лист!». Ось невелика таблиця найпопулярніших щоденних дієслів у цій корисній формі. Here is a helpful summary table of common verbs in the first-person plural imperative form for your reference: * «**Пити**» *(to drink)* ➡️ «**Пиймо**!» *(Let's drink!)* * «**Іти**» *(to go on foot)* ➡️ «Ходімо!» *(Let's go!)* * «**Брати**» *(to take)* ➡️ «**Берімо**!» *(Let's take!)* * «**Дивитися**» *(to watch)* ➡️ «**Дивімося**!» *(Let's watch!)* <!-- INJECT_ACTIVITY: unjumble-1st-person-plural -->
+person using the **кличний відмінок** (Vocative case). As a brief review, remember how common forms of address change: a name like Олена becomes Оленко, мама changes to мамо, and друг becomes друже. Plural forms like діти remain діти. After establishing who you are talking to, you need the core verb. For these wishes, we almost always use the imperative mood of the verb "to be". The standard forms are **будь** (be) when speaking to one person informally, and **будьте** (be plural) when addressing multiple people or speaking formally. The third and final component is the Instrumental case, which completes the thought by stating the desired quality. In Ukrainian, when you tell someone to "be" something, that following adjective naturally takes the Instrumental case because it describes a state of becoming or existing. For a feminine singular subject, the adjective ending is usually -ою: the word **щасливий** (happy) becomes **щасливою**. You can also use the word **спокійний** (calm), which becomes **спокійною**. For plural subjects, you use the -ими ending. For example, the word **здоровий** (healthy) becomes **здоровими**, and **уважний** (attentive) becomes **уважними**. Let's look at full sentences using all three parts. You can say «Мамо, будь спокійною!» (Mom, be calm!) or «Діти, будьте уважними!» (Children, be attentive!). A very common toast is «Друзі, будьте здоровими!» (Friends, be healthy!). У щоденних розмовах ви часто можете почути короткі побажання у називному відмінку. Люди кажуть «Будь щаслива!» або «Будьте здорові!» замість орудного відмінка. Це нормально для неформального спілкування з друзями чи рідними. Проте використання орудного відмінка робить вашу мову набагато багатшою та елегантнішою. Формула «будь щасливою» — це високий літературний стандарт. Такі фрази краще передають ідею тривалого стану або процесу. > *In daily conversations, you can often hear short wishes in the Nominative case. People say "Будь щаслива!" or "Будьте здорові!" instead of the Instrumental case. This is normal for informal communication with friends or relatives. However, using the Instrumental case makes your language much richer and more elegant. The formula "будь щасливою" is a high literary standard. Such phrases better convey the idea of a continuous state or process.* :::info **Grammar box** When you use the verb «бути» in the imperative (будь, будьте), the following adjective should ideally be in the Instrumental case. This rule applies to describing a temporary or desired state of being. ::: You can also create beautiful, extended wishes without using the verb "to be" by combining the **хай** (let) or **нехай** (let) particles with third-person verbs. When you address someone in the Vocative case and use this construction, you are asking the universe, fate, or circumstances to act in their favor. A very common everyday wish is «Хай тобі щастить!» (May you have luck!). For more formal or poetic occasions involving a **мрія** (dream), you might say «Нехай здійсняться всі мрії!» (May all dreams come true!). These phrases show how the third-person imperative easily transforms from an indirect command into a warm blessing. <!-- INJECT_ACTIVITY: match-up, Match Vocative + imperative + Instrumental combinations to create correct wishes -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -478,7 +480,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -497,18 +566,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (4/4).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] хай (let — particle for 3rd person imperative)
+- [ ] нехай (let — formal variant)
+- [ ] наказовий спосіб (imperative mood)
+- [ ] побажання (wish, blessing)
+- [ ] кличний відмінок (Vocative case)
+- [ ] будь / будьте (be — imperative of бути)
+- [ ] щасливий / щасливою (happy / happy — Instr.f.)
+- [ ] здоровий / здоровими (healthy / healthy — Instr.pl.)
+- [ ] ходімо (let's go)
+- [ ] давайте (let's — suggestion particle)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Вид дієслова в наказовому способі (Aspect in Imperatives) (~500 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

@@ -1,0 +1,81 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T16-13-fd91fce5.json
+phase: write-chunk-04
+prompt_chars: 42869
+response_chars: 6313
+prompt_words: 5845
+response_words: 1068
+sections:
+- name: header
+  start: 0
+  length: 445
+  fraction: 0.0104
+- name: skeleton
+  start: 445
+  length: 1336
+  fraction: 0.0312
+- name: prior_summary
+  start: 1781
+  length: 3373
+  fraction: 0.0787
+- name: plan
+  start: 5154
+  length: 21044
+  fraction: 0.4909
+- name: wiki
+  start: 19154
+  length: 16450
+  fraction: 0.3837
+- name: output_spec
+  start: 42648
+  length: 221
+  fraction: 0.0052
+large_sections:
+- plan
+directives_total: 27
+directives_covered: 16
+directives_missed:
+- kind: checklist
+  text: фонетика (phonetics — the study of speech sounds)
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: checklist
+  text: фонема (phoneme — abstract sound unit that distinguishes meaning)
+  covered: false
+  coverage_note: 3/8 keywords (38%)
+- kind: checklist
+  text: дзвінкий (voiced — consonant produced with voice + noise)
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: checklist
+  text: глухий (voiceless — consonant produced with noise only)
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: checklist
+  text: наголошений (stressed — syllable bearing the stress)
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: checklist
+  text: ненаголошений (unstressed — syllable without stress)
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: checklist
+  text: транскрипція (transcription — phonetic notation in square brackets)
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: inject_activity
+  text: quiz-sound-classification
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: group-sort-consonants
+  covered: false
+  coverage_note: marker missing

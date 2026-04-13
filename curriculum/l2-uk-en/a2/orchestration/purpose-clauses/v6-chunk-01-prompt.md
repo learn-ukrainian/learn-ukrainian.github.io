@@ -1,23 +1,25 @@
-# Section-by-Section Generation — Section 1/4
+# Section-by-Section Generation — Section 1/3
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 48: Щоб зрозуміти... (A2, A2.7 [Complex Sentences and Conditionals])
-**Section to write:** Щоб + інфінітив: для чого? (~750 words total)
+**Section to write:** Щоб + інфінітив: для чого? (In Order To: What For?) (~750 words)
 **Word target for this section:** 750 words (aim for 825 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Щоб + інфінітив: для чого? (~750 words total)
-- P1 (~100 words): [Introduction to the concept of intention and goals. Explaining the difference between looking back at a cause (Чому?) and looking forward at a goal (Для чого? Навіщо?). Introduction of the connector "щоб" as the primary tool for expressing "in order to."]
-- P2 (~150 words): [Same-subject construction: "щоб" + infinitive. Explaining that when the person doing the first action is the same person doing the second, we use the infinitive. Examples: "Я вчу українську, щоб розуміти друзів", "Він прийшов, щоб допомогти", "Ми поїхали в Київ, щоб побачити місто."]
-- P3 (~200 words): [Different-subject construction: "щоб" + past tense (subjunctive). Explaining that when the subjects differ, the verb after "щоб" takes a past tense form to express a wish or instruction. Gender and number agreement rules: "Я хочу, щоб він знав" (m), "Я хочу, щоб вона знала" (f), "Я хочу, щоб вони знали" (pl).]
-- P4 (~150 words): [Deep dive into "хочу, щоб...". High-frequency usage for expressing desires regarding others. Contrast with English "I want you to..." structure. Examples: "Я хочу, щоб ти був щасливий", "Ми хочемо, щоб війна закінчилася", "Тато хоче, щоб я прибрала кімнату."]
-- P5 (~150 words): [Contrast between "тому що / бо" and "щоб". Explaining that "бо" looks at the reason (I study because I want to), while "щоб" looks at the outcome (I study to understand). Examples: "Я вчу, бо мені цікаво" vs. "Я вчу, щоб знати мову."]
-- <!-- INJECT_ACTIVITY: fill-in-purpose-form --> [fill-in, focus: Complete purpose clauses with the correct form after щоб (infinitive vs. past tense form), 8 items]
-- <!-- INJECT_ACTIVITY: quiz-cause-vs-purpose --> [quiz, focus: Choose тому що or щоб to complete sentences — distinguish cause from purpose, 8 items]
+## Щоб + інфінітив: для чого? (In Order To: What For?) (~750 words)
+- P1 (~120 words): [Dialogue: A parent explaining to a child why things are done. Мама: "Ми йдемо в магазин, щоб купити хліб (m)." Дитина: "А навіщо зараз?" Мама: "Вчителька сказала, що завтра екскурсія (f), і нам потрібні бутерброди. До речі, тато попросив, щоб ти прибрав кімнату (f) після сніданку."]
+- P2 (~100 words): [Introduce the question words "Для чого?" and "Навіщо?" (What for? Why?). Explain that to express the goal, purpose, or intention of an action, Ukrainian uses the conjunction "щоб" followed by an infinitive. Give the core example: "Я вчу українську, щоб розуміти друзів."]
+- P3 (~120 words): [Explain the "same-subject rule". Detail that when the person performing the main action and the goal action is exactly the same, we simply use the "щоб + infinitive" construction. Provide clear examples: "Він прийшов, щоб допомогти", "Ми поїхали в Київ, щоб побачити місто."]
+- P4 (~140 words): [Introduce the "different-subject construction". Explain that when the subjects differ across the two clauses (e.g., "I called so that SHE would know"), we must use "щоб + past tense form". Note that this past tense form functions as a subjunctive (expressing intent/desire), not a past action. Examples: "Я зателефонував, щоб вона знала", "Вчитель пояснив, щоб учні зрозуміли."]
+- P5 (~120 words): [Address expressing desires and commands using this different-subject construction. Highlight the high-frequency phrase "Я хочу, щоб..." (I want you to...). Contrast this heavily with English: English uses the infinitive ("I want you TO come"), but Ukrainian strictly requires "щоб" and the past tense verb agreeing with the new subject: "Я хочу, щоб ти прийшов" (never "щоб ти прийти").]
+- P6 (~150 words): [Contrast "щоб" with "тому що" (бо). Explain that "тому що" answers "Чому?" (looking backward at the cause), while "щоб" answers "Для чого?" (looking forward at the purpose). Compare directly: "Я вчу українську, бо хочу розуміти друзів" vs. "Я вчу українську, щоб розуміти друзів." Address the common L2 error of using "для купити" (for to buy) instead of the correct "щоб купити".]
+- <!-- INJECT_ACTIVITY: fill-in-schob-forms --> [fill-in, Complete purpose clauses with the correct form after щоб (infinitive vs. past tense form depending on subject), 8 items]
+- <!-- INJECT_ACTIVITY: quiz-tomuscho-vs-schob --> [quiz, Choose тому що or щоб to complete sentences — distinguish cause from purpose, 8 items]
+- <!-- INJECT_ACTIVITY: unjumble-schob-clauses --> [unjumble, Reorder words to form correct щоб purpose clauses (both infinitive and different-subject constructions), 6 items]
 
 ---
 ## Full Plan (for reference)
@@ -624,6 +626,31 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] щоб (in order to, so that)
+- [ ] мета (goal, purpose)
+- [ ] сказати (to say, to tell)
+- [ ] відповісти (to answer, to reply)
+- [ ] пояснити (to explain)
+- [ ] запитати (to ask)
+- [ ] повідомлення (message)
+- [ ] зрозуміти (to understand)
+- [ ] непряма мова (indirect/reported speech)
+- [ ] додати (to add)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Щоб + інфінітив: для чого? (In Order To: What For?) (~750 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

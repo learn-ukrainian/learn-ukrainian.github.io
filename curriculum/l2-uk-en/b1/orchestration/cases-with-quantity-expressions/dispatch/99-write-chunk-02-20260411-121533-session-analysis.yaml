@@ -1,0 +1,77 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T10-14-030edd36.json
+phase: write-chunk-02
+prompt_chars: 48466
+response_chars: 2937
+prompt_words: 6657
+response_words: 453
+sections:
+- name: header
+  start: 0
+  length: 447
+  fraction: 0.0092
+- name: skeleton
+  start: 447
+  length: 1483
+  fraction: 0.0306
+- name: prior_summary
+  start: 1930
+  length: 3448
+  fraction: 0.0711
+- name: plan
+  start: 5378
+  length: 16245
+  fraction: 0.3352
+- name: wiki
+  start: 15355
+  length: 26613
+  fraction: 0.5491
+- name: output_spec
+  start: 48236
+  length: 230
+  fraction: 0.0047
+large_sections:
+- wiki
+directives_total: 14
+directives_covered: 4
+directives_missed:
+- kind: checklist
+  text: збірний числівник (collective numeral — двоє, троє, четверо)
+  covered: false
+  coverage_note: 2/7 keywords (29%)
+- kind: checklist
+  text: неозначено-кількісний (indefinite-quantitative — багато, кілька)
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: checklist
+  text: кілька (several — governs Р.в.)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: декілька (several — synonym of кілька)
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: checklist
+  text: чимало (quite a lot — governs Р.в.)
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: checklist
+  text: достатньо (enough — governs Р.в.)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: понад (more than — governs Зн.в.)
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: checklist
+  text: близько (about/approximately — governs Р.в.)
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 3/11 keywords (27%)

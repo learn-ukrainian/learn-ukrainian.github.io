@@ -1,4 +1,4 @@
-<!-- version: 1.1.0 | updated: 2026-03-31 -->
+<!-- version: 1.2.0 | updated: 2026-04-12 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -11,6 +11,35 @@ Generate an `activities/how-many.yaml` file for module **11: How Many?** (a1).
 
 ---
 
+## ⚠️ HARD COUNT TARGETS — READ TWICE
+
+These are the binding numerical contracts for THIS module. The audit will FAIL if you fall short.
+
+| Bucket | Min | Max | Notes |
+|---|---|---|---|
+| Total activities | 10 | 10+ | inline + workbook combined |
+| Inline (lesson tab) | 4 | 6 | one per `<!-- INJECT_ACTIVITY -->` marker, see below |
+| Workbook (Зошит tab) | 6 | 9 | extended practice |
+| Items per activity | 6 | — | each activity must have at least 6 items (unless its type cap is lower — see Activity Type Reference below) |
+
+**You MUST ship at least 4 inline activities AND at least 6 workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+
+**Type diversity is required.** The module (inline + workbook combined) MUST use at least **0** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level. (If `0` is `0`, the audit profile for this level does not enforce type diversity — but variety still produces a better lesson, so aim for 4+ types when the workbook allows it.)
+
+---
+
+## Allowed types for THIS level
+
+- **Inline (lesson) types:** image-to-letter, letter-grid, match-up, watch-and-repeat, quiz, true-false, fill-in, classify
+- **Inline priority (preferred):** image-to-letter, match-up, fill-in, quiz, watch-and-repeat
+- **Workbook types:** fill-in, match-up, group-sort, anagram, unjumble, quiz, true-false, classify, divide-words, count-syllables, pick-syllables, observe, phrase-table, odd-one-out
+- **Workbook priority (preferred):** fill-in, match-up, group-sort, anagram, unjumble
+- **FORBIDDEN at this level:** cloze, error-correction, mark-the-words, translate, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, highlight-morphemes, grammar-identify, select
+
+Pick from the allowed list. Lean heavily on the priority lists. Do not use any forbidden type — the build will reject it.
+
+---
+
 ## Inline vs Workbook Split
 
 Activities have two placement categories:
@@ -19,7 +48,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Rule of thumb:** inline = 2-3 quick checks after key teaching points. Workbook = 4-8 deeper practice exercises covering the full topic.
+**Rule of thumb:** inline = 4–6 quick checks after key teaching points. Workbook = 6–9 deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
 
 ---
 
@@ -27,10 +56,10 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: fill-in-numbers-words -->`
+- `<!-- INJECT_ACTIVITY: fill-in-numbers -->`
 - `<!-- INJECT_ACTIVITY: quiz-prices -->`
-- `<!-- INJECT_ACTIVITY: quiz-age-matching -->`
-- `<!-- INJECT_ACTIVITY: fill-in-phone-numbers -->`
+- `<!-- INJECT_ACTIVITY: quiz-ages -->`
+- `<!-- INJECT_ACTIVITY: dictation-phone -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -87,76 +116,126 @@ required:
 ## Module Content (the prose the learner reads before exercises)
 
 <module_content>
-## Діалоги — Dialogues
+## Діалоги (Dialogues)
 
-Numbers are the invisible architecture of our daily interactions. From the moment you wake up, you are surrounded by quantities, prices, and measurements. When you walk into a traditional Ukrainian bakery, you do not just point at items; you ask for a specific amount. You might need **один хліб** (one bread) for the family dinner, **одна булочка** (one bun) for a quick snack, or perhaps **одне тістечко** (one pastry) as a treat. You will inevitably need to ask the baker, **Скільки коштує торт? А три булочки?** (How much does a cake cost? And three buns?). If you are packing a backpack for a language class, you check your supplies by counting: **один олівець** (one pencil) for taking notes, and **дві ручки** (two pens) just in case one runs out of ink. Numbers allow us to navigate the practical realities of life, whether we are comparing prices or sharing personal details.
+Numbers are the foundation of navigating daily life in any new language. Whether you are ordering food at a local bakery, checking the price of a train ticket, or simply sharing basic information about yourself, you need to know how to count. In this module, we will explore Ukrainian numbers. We will focus on real-world contexts like shopping at a market stall and asking new friends about their age. You will notice that Ukrainian numbers behave a bit differently than English numbers. They often change the words that follow them, but we will learn these as simple, rhythmic patterns.
 
-Let us look at how numbers naturally emerge when shopping at a bustling market stall. In this scenario, a customer is looking to buy a bag and needs to ask about the **ціна** (price). Read the dialogue below to see how numbers are used in a real commercial context.
+Let us look at a typical interaction at a bustling Ukrainian market stall. A customer is asking about the price of bags. 
 
-> **Покупець:** Добрий день! **Скільки коштує сумка?** *(Good afternoon! How much does the bag cost?)*
-> **Продавець:** Добрий день! **Двісті гривень.** *(Good afternoon! Two hundred hryvnias.)*
-> **Покупець:** **А маленька?** *(And the small one?)*
-> **Продавець:** **Сто п'ятдесят.** *(One hundred fifty.)*
-> **Покупець:** **Добре, дякую!** *(Good, thank you!)*
+> **Покупець:** Добрий день! **Скільки коштує** сумка? *(Good afternoon! How much does the bag cost?)*
+> **Продавець:** **Двісті** гривень. *(Two hundred hryvnias.)*
+> **Покупець:** А **маленька**? *(And the small one?)*
+> **Продавець:** **Сто п'ятдесят**. *(One hundred fifty.)*
+> **Покупець:** Добре, **дякую**! *(Good, thank you!)*
 
-In this exchange, the customer uses the essential phrase **Скільки коштує?** (How much does it cost?) alongside the noun **сумка** (bag) and the adjective **маленька** (small). The seller responds using exact numbers: **двісті** (two hundred) and **сто п'ятдесят** (one hundred fifty).
+In this exchange, the phrase **скільки коштує** (how much does it cost) is your most important tool. The customer asks **Скільки коштує сумка?** (How much does the bag cost?). The seller responds with numbers: **двісті** (two hundred) and **сто п'ятдесят** (one hundred fifty). The numbers emerge naturally through the shopping context. You do not need complex grammar to buy things. You just need the core question and the vocabulary for the numbers.
 
-Numbers are also crucial when meeting someone new and expanding beyond basic greetings. A common follow-up question in any conversation is asking about age.
+Now, let us look at another common situation. You are meeting someone new and sharing basic personal details.
 
-> **Антон:** Привіт! **Скільки тобі років?** *(Hi! How old are you?)*
-> **Віктор:** Привіт! **Мені двадцять п'ять. А тобі?** *(Hi! I am twenty-five. And you?)*
-> **Антон:** **Мені тридцять два. А твоя сестра?** *(I am thirty-two. And your sister?)*
-> **Віктор:** **Їй вісімнадцять.** *(She is eighteen.)*
+> **Анна:** Привіт! **Скільки тобі років?** *(Hi! How old are you?)*
+> **Максим:** **Мені двадцять п'ять.** А тобі? *(I am twenty-five. And you?)*
+> **Анна:** **Мені тридцять два.** А твоя сестра? *(I am thirty-two. And your sister?)*
+> **Максим:** **Їй вісімнадцять.** *(She is eighteen.)*
 
-Here, we see the question **Скільки тобі років?** (How old are you?) and the response pattern **Мені...** (To me is...). They use the numbers **вісімнадцять** (eighteen), **двадцять п'ять** (twenty-five), and **тридцять два** (thirty-two). This formula is a fixed pattern you can memorize right now to share your own details.
+This dialogue uses a highly specific formula. To ask someone's age, you say **Скільки тобі років?** (How old are you?). The word **скільки** means how many. To reply, you do not use the verb "to have" like in some languages, and you do not use "to be" like in English. Instead, you use a fixed chunk: **мені** (to me), **тобі** (to you), or **їй** (to her) followed by the number. **Мені двадцять п'ять** literally translates as "to me is twenty-five". Treat this entire phrase as a single memorized chunk. 
 
-## Числа 1-20 — Numbers 1-20
+## Числа 1-20 (Numbers 1-20)
 
-The absolute foundation of counting relies on the numbers from one to ten. These are the building blocks you will use every single day. The sequence is **один** (one), **два** (two), **три** (three), **чотири** (four), **п'ять** (five), **шість** (six), **сім** (seven), **вісім** (eight), **дев'ять** (nine), and **десять** (ten). Pronunciation here is critical. Pay close attention to the apostrophe in the words **п'ять** and **дев'ять**. The apostrophe tells you to pronounce the preceding consonant sharply and then transition distinctly into the following vowel, creating a slight pause. Furthermore, notice the clear **і** sound in both **сім** and **вісім**. It sounds like the "ee" in "meet" and must never be relaxed into a softer sound. 
+Let us start with the core building blocks: the numbers from one to ten. Listen carefully to how they sound. 
 
-Unlike English, where numbers are static words, Ukrainian numbers must harmonize with the objects they describe. The number one has three distinct forms that match the gender of the noun. You must say **один стіл** (one table) for a masculine noun, **одна книга** (one book) for a feminine noun, and **одне вікно** (one window) for a neuter noun. The number two also changes, but it only has two forms. You use **два** for both masculine and neuter nouns, such as **два столи** (two tables) or **два вікна** (two windows). However, when counting feminine objects, you must switch to the feminine form, which is **дві**. Therefore, you say **дві книги** (two books).
+*   **один** (one)
+*   **два** (two)
+*   **три** (three)
+*   **чотири** (four)
+*   **п'ять** (five)
+*   **шість** (six)
+*   **сім** (seven)
+*   **вісім** (eight)
+*   **дев'ять** (nine)
+*   **десять** (ten)
 
-Once you have mastered the first ten numbers, learning the teens is remarkably straightforward because they follow a highly predictable pattern. You simply take the base number and add the suffix **-надцять**. The sequence is **одинадцять** (eleven), **дванадцять** (twelve), **тринадцять** (thirteen), **чотирнадцять** (fourteen), **п'ятнадцять** (fifteen), **шістнадцять** (sixteen), **сімнадцять** (seventeen), **вісімнадцять** (eighteen), and **дев'ятнадцять** (nineteen), leading up to **двадцять** (twenty). There is a crucial phonetic rule here: the stress always falls on the syllable **-на-**. You must pronounce it as **одина́дцять** and **дванадця́ть**. 
+Pronunciation requires special attention here. The words **п'ять** and **дев'ять** contain an apostrophe. This symbol acts like a tiny pause. It creates a hard consonant separation before the soft vowel sound. You must clearly separate the sounds. The number **сім** features a distinct, soft 'і' sound. It does not sound like the English word "same". 
 
-:::caution
-A common mistake for learners is trying to place the stress at the beginning of the word, similar to English. Always emphasize the **-на-** syllable in these numbers.
-:::
+Unlike English, the numbers one and two change based on the gender of the noun they describe. The number **один** is masculine. You say **один стіл** (one table). For feminine nouns, you use **одна**, like **одна книга** (one book). For neuter nouns, you use **одне**, like **одне вікно** (one window). The number two also changes. Use **два** for masculine and neuter words: **два столи** (two tables), **два вікна** (two windows). Use **дві** for feminine words: **дві книги** (two books).
 
-When we count classroom objects, the nouns change their endings based on the number. You do not need to memorize complex grammatical tables yet; simply learn these high-frequency combinations as fixed patterns. Notice how the ending shifts depending on the quantity: **один зошит** (one notebook), **два зошити** (two notebooks), and **п'ять зошитів** (five notebooks). Similarly, we say **один підручник** (one textbook), **два підручники** (two textbooks), and **десять підручників** (ten textbooks). By learning these blocks together, you internalize the rhythm of the language without analyzing the underlying rules.
+Ukrainian uses a strict counting pattern for nouns. We call this the 1, 2-4, 5+ pattern. You should memorize these as rhythmic chunks.
+*   Number 1 pairs with a singular noun: **один рік** (one year).
+*   Numbers 2, 3, and 4 pair with a plural noun: **два роки** (two years), **три студенти** (three students). 
+*   Numbers 5 and above (up to 20) require a different noun ending: **п'ять років** (five years), **десять гривень** (ten hryvnias). 
 
-<!-- INJECT_ACTIVITY: fill-in-numbers-words -->
+Now, let us expand to the numbers from eleven to twenty. 
 
-## Десятки і сотні — Tens and Hundreds
+*   **одинадцять** (eleven)
+*   **дванадцять** (twelve)
+*   **тринадцять** (thirteen)
+*   **чотирнадцять** (fourteen)
+*   **п'ятнадцять** (fifteen)
+*   **шістнадцять** (sixteen)
+*   **сімнадцять** (seventeen)
+*   **вісімнадцять** (eighteen)
+*   **дев'ятнадцять** (nineteen)
+*   **двадцять** (twenty)
 
-Larger numbers allow us to discuss broader concepts, prices, and quantities. The tens follow a fairly regular pattern, usually ending in the suffix **-дцять** or **-десят**. The sequence continues with **тридцять** (thirty), **п'ятдесят** (fifty), **шістдесят** (sixty), **сімдесят** (seventy), and **вісімдесят** (eighty). However, there are two critical irregular numbers you must memorize immediately: **сорок** (forty) and **дев'яносто** (ninety). They do not follow the standard suffix rules. To create compound numbers, you simply place the ten and the unit next to each other, exactly as you do in English. For example, you combine them to say **сорок сім** (forty-seven), **двадцять один** (twenty-one), or **дев'яносто дев'ять** (ninety-nine). 
+These numbers follow a clear pattern: a base number plus the suffix **-надцять**. This is exactly like the English "-teen". There are two crucial rules here. First, the stress always falls on the **-на-** syllable. You say **одинáдцять** and **дванáдцять**. Second, there is a spelling rule. There is no soft sign in the middle of these words. You write **п'ятнадцять**, not **п'ятьнадцять**.
 
-When it comes to purchasing high-value items or discussing large sums, you need the hundreds. The base unit is **сто** (one hundred). The subsequent hundreds are built systematically, but their spellings must be memorized: **двісті** (two hundred), **триста** (three hundred), **чотириста** (four hundred), **п'ятсот** (five hundred), and finally **тисяча** (one thousand). Notice carefully that two hundred is written and pronounced as **двісті**, using the feminine root form, and never as "двасто". These hundreds combine easily with the tens and units you already know. If you want to say three hundred and fifty, you simply say **триста п'ятдесят**. 
+## Десятки і сотні (Tens and Hundreds)
 
-:::tip
-The number **тисяча** (thousand) is a feminine noun. If you want to say "one thousand," you must use the feminine form of one: **одна тисяча**.
-:::
+Once you know the base numbers, learning the tens is mostly a matter of adding a suffix. Let us look at the tens from thirty to one hundred.
 
-These larger numbers are indispensable when dealing with money and currency. The national currency of Ukraine is the **гривня** (hryvnia). Just like the classroom objects we counted earlier, the word for currency changes depending on the exact number preceding it. You must memorize these three core patterns. For amounts ending in one, use the base form: **одна гривня** (one hryvnia). For amounts ending in two, three, or four, the word changes: **дві гривні** (two hryvnias), **три гривні** (three hryvnias), or **чотири гривні** (four hryvnias). For all numbers from five to zero, the form changes again: **п'ять гривень** (five hryvnias), **десять гривень** (ten hryvnias), or **сто гривень** (one hundred hryvnias). Combine these patterns with the essential question **Скільки це коштує?** (How much does this cost?) to handle any shopping scenario confidently.
+*   **тридцять** (thirty)
+*   **сорок** (forty)
+*   **п'ятдесят** (fifty)
+*   **шістдесят** (sixty)
+*   **сімдесят** (seventy)
+*   **вісімдесят** (eighty)
+*   **дев'яносто** (ninety)
+*   **сто** (one hundred)
+
+Pay close attention to the two historical irregulars in this list. The word for forty is **сорок**. It is completely unique and does not look like the word for four. The word for ninety is **дев'яносто**. It does not look like the other tens. You must memorize these two separately.
+
+Forming compound numbers is incredibly simple. You just combine the ten and the unit. There are no connecting words like "and". You place the words side by side. 
+*   **двадцять один** (twenty-one)
+*   **тридцять п'ять** (thirty-five)
+*   **сорок сім** (forty-seven)
+
+<!-- INJECT_ACTIVITY: fill-in-numbers -->
+
+To navigate Ukrainian markets, buy train tickets, or order coffee, you need to know the hundreds. These are essential vocabulary words.
+
+*   **сто** (one hundred)
+*   **двісті** (two hundred)
+*   **триста** (three hundred)
+*   **чотириста** (four hundred)
+*   **п'ятсот** (five hundred)
+*   **тисяча** (one thousand)
+
+Let us apply these numbers directly to prices. The national currency is the **гривня** (hryvnia). It follows the exact same 1, 2-4, 5+ counting pattern we learned earlier. 
+*   1: **одна гривня** (one hryvnia)
+*   2-4: **дві гривні** (two hryvnias)
+*   5+: **п'ять гривень** (five hryvnias)
+
+Remember the question **Скільки коштує?** (How much does it cost?). You can use this everywhere. If you are in a bakery, you might ask **Скільки коштує торт?** (How much does the cake cost?). The baker will reply with the price, perhaps **триста гривень** (three hundred hryvnias). You might also ask **Скільки коштує хліб?** (How much does the bread cost?). The answer might be **тридцять гривень** (thirty hryvnias). 
 
 <!-- INJECT_ACTIVITY: quiz-prices -->
 
+<!-- INJECT_ACTIVITY: quiz-ages -->
+
 ## Підсумок — Summary
 
-Stating your age in Ukrainian relies on a fixed formula. In Ukrainian, age is not something you "are" or "have"; rather, years are accumulated "to you." The structure **Мені... років** (To me is... years) is a fixed grammatical chunk. You use the dative pronoun **мені** (to me) followed by the number, and then the word for "years". The word for years changes based on the last digit of your age. If your age ends in one (except eleven), you use the singular form: **двадцять один рік** (twenty-one years). If your age ends in two, three, or four, you use the plural form: **тридцять три роки** (thirty-three years). For all other numbers, including zero and the teens, you use the third form: **сорок років** (forty years) or **вісімнадцять років** (eighteen years).
+Numbers have immense practical value. Let us review the three most common ways you will use them every single day. 
 
-Numbers are also essential for sharing contact information, specifically phone numbers. The word for a digit or a phone number is **номер** (number). When reciting a phone number, you will frequently use the word **нуль** (zero). Ukrainians typically read phone numbers by grouping the digits into blocks of two or three, rather than reciting them as single digits. For instance, the area code 067 is usually read as a single block: **нуль шістдесят сім** (zero sixty-seven). Alternatively, you might hear the digits separated out distinctly, such as **нуль, дев'ять, сім** (zero, nine, seven), before grouping the remaining digits into pairs like **сорок п'ять, шістдесят сім** (forty-five, sixty-seven).
+The first practical use is for prices. When you want to buy something, you use the question pattern **Скільки коштує?** (How much does it cost?). The seller will reply with a number and the word for currency. You might hear **двісті гривень** (two hundred hryvnias) or **сто п'ятдесят гривень** (one hundred fifty hryvnias). This pattern works in cafes, markets, and shops.
 
-The question word **Скільки** is highly versatile because it functions as both "how many" and "how much," depending on the context. When you ask **Скільки книг?** (How many books?), you are inquiring about the physical quantity of objects. However, when you ask **Скільки коштує книга?** (How much does the book cost?), the focus shifts entirely to the price. This single word serves as the gateway to unlocking both physical inventory and financial transactions in your daily life.
+The second practical use is for expressing age. You will often hear the question **Скільки тобі років?** (How old are you?). Remember the fixed response format. You do not use the verb "to have". You must use the dative case pronoun **мені** (to me). You reply with **мені** plus your age. For example, **мені двадцять три роки** (I am twenty-three years old) or **мені сорок років** (I am forty years old). 
 
-Before finishing this module, take a moment to perform a self-check:
-- Can you say your age? (**Мені ... років**)
-- Can you ask for a price? (**Скільки коштує ...?**)
-- Can you count to ten without looking?
-- Can you say your phone number in Ukrainian?
+The third practical use is for reading and sharing phone numbers. To do this, you need one more essential word: **нуль** (zero). When Ukrainians read phone numbers aloud, they typically group the digits into pairs or triplets. A full phone number statement sounds like this: **Мій номер — нуль дев'яносто сім, три два один, сорок п'ять, шістдесят сім** (My number is zero ninety-seven, three two one, forty-five, sixty-seven). 
 
-<!-- INJECT_ACTIVITY: quiz-age-matching -->
-<!-- INJECT_ACTIVITY: fill-in-phone-numbers -->
+<!-- INJECT_ACTIVITY: dictation-phone -->
 
+Before you finish this module, perform these quick self-check tasks:
+*   Say your own age aloud in Ukrainian using the chunk **мені ... років**.
+*   Translate the price "250 hryvnias" aloud. It should be **двісті п'ятдесят гривень**.
+*   Read a fictional phone number aloud. Try saying "050 123 45 67" using the typical Ukrainian groupings.
 </module_content>
 
 ---
@@ -170,48 +249,68 @@ version: "1.0"
 module: how-many
 level: a1
 
+# NOTE — these are SHAPE examples. The real targets are at the top of this prompt
+# (10 total / 4–6 inline / 6–9 workbook,
+# 6+ items per activity). The shapes below are TRUNCATED for readability;
+# YOUR output MUST hit those minimums.
+
 inline:
   - id: marker-id-here        # MUST match an <!-- INJECT_ACTIVITY: ... --> marker
     type: quiz                 # activity type
     instruction: "Оберіть правильний варіант"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - question: "_____ стіл"
-        options: ["мій", "моя", "моє"]
+        options: ["мій", "моя", "моє", "мої"]
         correct: 0             # 0-based index
+      - question: "Це ____ книга."
+        options: ["мій", "моя", "моє", "мої"]
+        correct: 1
+      # ... add at least 6 items total — never stop at 1-2
 
   - id: another-marker-id
     type: fill-in
     instruction: "Вставте правильне слово"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - sentence: "Це ____ кімната."
         answer: "моя"
         options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ вікно."
+        answer: "моє"
+        options: ["мій", "моя", "моє"]
+      # ... ≥ 6 items total
 
 workbook:
-  - type: match-up
+  - id: match-up-vocab
+    type: match-up
     instruction: "З'єднайте пари"
-    pairs:
+    pairs:                     # ← real output: ≥ 6 pairs
       - left: "стіл"
         right: "він"
       - left: "книга"
         right: "вона"
       - left: "вікно"
         right: "воно"
+      # ... ≥ 6 pairs total
 
-  - type: group-sort
+  - id: group-sort-gender
+    type: group-sort
     instruction: "Розподіліть слова за категоріями"
     groups:
-      - label: "Category A"
-        items: ["word1", "word2"]
-      - label: "Category B"
-        items: ["word3", "word4"]
+      - label: "Чоловічий рід"
+        items: ["стіл", "олівець", "будинок"]   # ≥ 3 items per group
+      - label: "Жіночий рід"
+        items: ["книга", "ручка", "школа"]
+      - label: "Середній рід"
+        items: ["вікно", "море", "молоко"]
 
-  - type: true-false
+  - id: true-false-grammar
+    type: true-false
     instruction: "Правда чи ні?"
-    items:
-      - statement: "Statement here"
-        correct: true
-        explanation: "Why it's true"
+    items:                     # ← real output: ≥ 6 items
+      - statement: "«Книга» — це чоловічий рід."
+        correct: false
+        explanation: "Книга закінчується на -а, отже жіночий рід."
+      # ... ≥ 6 items total
 
   - type: error-correction
     instruction: "Виправте помилку"
@@ -282,7 +381,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -374,10 +473,15 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 ## Quality Rules
 
-**ITEM COUNT MINIMUMS (non-negotiable):**
-- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
-- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
-- If you can't think of enough items, add more examples from the module's vocabulary and content.
+**ACTIVITY COUNT MINIMUMS (non-negotiable, audit-enforced):**
+- **Total: 10 activities.** Inline: 4–6. Workbook: 6–9. The audit gate FAILS the module if you ship fewer.
+- **Type diversity: workbook MUST cover ≥5 distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
+- **Match the inline markers exactly.** Every `<!-- INJECT_ACTIVITY: id -->` marker in the prose needs a matching inline activity with that exact id. Skipping markers means the lesson tab is broken.
+
+**ITEM COUNT MINIMUMS (non-negotiable, per-activity):**
+- **Default minimum: 6 items per activity.** Quiz, fill-in, match-up, true-false, anagram, error-correction, translate, cloze, mark-the-words, divide-words, count-syllables, odd-one-out, group-sort categories: all ≥ 6.
+- **Lower minimums for specific types only:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items, essay-response/critical-analysis = 1 prompt.
+- If you can't think of enough items, add more examples from the module's vocabulary and content. NEVER ship a 1-item or 2-item activity unless its type cap explicitly allows it.
 - **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
 - **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
@@ -484,6 +588,27 @@ IMPORTANT: After using tools, output your COMPLETE module content as plain text.
 1. Run `verify_words` on all Ukrainian words in your exercises — every word must exist in VESUM
 2. Run `query_cefr_level` on any word you're unsure about — it must be a1-appropriate
 3. For fill-in answers and distractors, verify the exact form (case, number, gender) with `verify_lemma`
+
+---
+
+## ⚠️ MANDATORY FINAL CHECKLIST — verify before emitting YAML
+
+Walk through this checklist explicitly before you start emitting. If ANY box is unchecked, fix it FIRST.
+
+- [ ] My output has **at least 4** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
+- [ ] My output has **at least 6** workbook activities.
+- [ ] **Total ≥ 10.**
+- [ ] **Every** activity has **at least 6** items, pairs, or statements (except types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3, essay-response=1).
+- [ ] The module (inline + workbook combined) uses **at least 0 distinct activity types** (or 4+ when 0 = 0 and the workbook size allows it). I am NOT shipping a wall of quizzes.
+- [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
+- [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
+- [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+- [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+- [ ] My inline count is between 4 and 6. I did NOT create more injection markers than 6.
+- [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
+- [ ] At B1+, all instructions are in Ukrainian (no English fallback).
+
+If you cannot tick all of these, REGENERATE the activities BEFORE outputting. Shipping under-spec means the build rejects you and the heal loop has to redo your work — wasting compute.
 
 ---
 

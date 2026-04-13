@@ -21,7 +21,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-slides right into the middle. This creates a three-word phrase that is always written separately. For instance, if you want to say "with nobody", you take «ніхто», change it to the Instrumental case «ніким», and then insert the preposition «з» into the split. The resulting phrase is «ні з ким». Writing *«нізким» as a single word is a severe grammatical error. The exact same rule applies to all prepositions and all negative pronouns. If you want to say "about nothing", it becomes «ні про що» (not *«ніпрощо»). If you want to say "in no kind of", it splits into «ні в якому». This separating behavior is a unique characteristic that distinguishes Ukrainian from many other European languages. Another fascinating layer of Ukrainian negative pronouns is how their meaning changes entirely based on where the stress falls. This is a crucial phonetic nuance, particularly important for the Genitive forms «нікого» and «нічого». If you place the stress on the root of the word—«ніко́го» or «нічо́го»—you are simply stating that someone or something is completely absent. It is a factual statement of non-existence. But if you shift the phonetic stress to the prefix—«нíкого» or «нíчого»—the meaning transforms into a lack of opportunity or possibility to do something. It implies that there is an action you want or need to perform, but no available target for that action. У кімнаті зараз ніко́го немає, тому що всі студенти вже пішли додому. Мені абсолютно нíкого спитати про правильну дорогу, бо ця вулиця зовсім порожня. Я щойно відкрив свій холодильник, але там нічо́го немає. Мені нíчого їсти сьогодні ввечері, тому доведеться йти в найближчий магазин. > *There is nobody in the room right now because all the students have already gone home. I have absolutely nobody to ask about the right way because this street is completely empty. I just opened my fridge, but there is nothing there. I have nothing to eat tonight, so I will have to go to the nearest store.* Finally, you must master the double negation rule, which is a fundamental hallmark of Slavic syntax. In English, grammar rules dictate that you use a single negative word per clause: you say either "Nobody knows" or "He knows nothing". If you translate this logic literally into Ukrainian and say *«Ніхто знає», it sounds completely incomplete and broken to a native speaker. In Ukrainian, the presence of any negative pronoun in a sentence absolutely requires the negative particle **не** to be placed directly before the verb. You must negate both the subject or object and the action itself. The correct and only way to phrase this is «Ніхто не знає» (which translates literally to "Nobody does not know"). This rule is absolute and applies across all contexts: «Я нічого не бачу» (I see nothing), «Ми ні з ким не розмовляли» (We spoke with nobody). Embracing this double negation structure is essential for building natural, fluent Ukrainian sentences and avoiding awkward interference from your native language. <!-- INJECT_ACTIVITY: fill-in, negative pronouns and prepositions -->
+чого** (from nothing), **ні на кому** (on nobody), **ні з чим** (with nothing). This three-word structure is a hallmark of Ukrainian syntax. ::: Beyond spelling, spoken Ukrainian uses word stress to convey entirely different meanings with these pronouns. This is a subtle but vital distinction. When the stress falls on the root of the word (the base pronoun, as in нік**о**го), it simply states a fact of absence: someone or something is not physically present. But when the stress shifts to the prefix «ні-» (as in н**і**кого), it expresses a hopeless situation or impossibility—there is nobody available to turn to. Наголос у заперечних займенниках може повністю змінити зміст вашого речення. Порівняйте дві різні ситуації. Якщо ви кажете «У кімнаті нікого немає», ви констатуєте факт: кімната порожня. Але якщо ви кажете «Мені нікого спитати», ви висловлюєте глибоку безвихідь: навколо немає жодної людини, яка могла б допомогти. Таке ж правило працює для слова «ніщо». Фраза «Він нічого не бачить» означає сліпоту. А емоційна фраза «Тут нічого їсти» означає, що холодильник порожній і ви залишитеся голодними. > *Stress in negative pronouns can completely change the meaning of your sentence. Compare two different situations. If you say "У кімнаті нікого немає" (There is nobody in the room), you are stating a fact: the room is empty. But if you say "Мені нікого спитати" (I have nobody to ask), you are expressing deep hopelessness: there is not a single person around who could help. The same rule works for the word "ніщо". The phrase "Він нічого не бачить" (He sees nothing) means blindness. And the emotional phrase "Тут нічого їсти" (There is nothing to eat) means that the fridge is empty and you will stay hungry.* Finally, we must address how negative pronouns fit into a complete sentence. Unlike standard English, where a double negative is considered poor grammar, Ukrainian strictly requires double negation. If your sentence contains a negative pronoun, the main verb MUST also be negated with the particle «не». Failing to negate the verb will make the sentence sound completely broken to a native speaker. Українська граматика вимагає обов'язкового подвійного заперечення. Якщо ви використовуєте слово «ніхто» або «ніщо», ви повинні додати частку «не» перед дієсловом. Наприклад, ви кажете «Ніхто не знає правду». Якщо ви скажете просто «Ніхто знає», це буде грубою помилкою. Ви можете використовувати навіть потрійне заперечення в одному реченні. Наприклад: «Ніхто ніколи нікому нічого не казав». Усі ці слова працюють разом, щоб підсилити головну думку, а дієслово завжди залишається заперечним. > *Ukrainian grammar requires mandatory double negation. If you use the word "ніхто" or "ніщо", you must add the particle "не" before the verb. For example, you say "Ніхто не знає правду" (Nobody knows the truth). If you just say "Ніхто знає", it will be a gross mistake. You can even use triple negation in one sentence. For example: "Ніхто ніколи нікому нічого не казав" (Nobody ever told anyone anything). All these words work together to reinforce the main thought, and the verb always remains negative.* <!-- INJECT_ACTIVITY: negative-pronouns -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -692,6 +692,31 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] займенник (pronoun)
+- [ ] питально-відносний (interrogative-relative)
+- [ ] зворотний (reflexive — себе)
+- [ ] неозначений (indefinite — хтось, будь-хто)
+- [ ] заперечний (negative — ніхто, ніщо)
+- [ ] себе (oneself — reflexive pronoun, no Н.в.)
+- [ ] хтось (someone — known to speaker)
+- [ ] будь-хто (anyone — no specificity)
+- [ ] ніхто (nobody)
+- [ ] ніщо (nothing)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Займенники в контексті (~650 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

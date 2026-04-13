@@ -127,109 +127,145 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Про освіту: школа та університет
+## Про освіту: школа та університет (About Education: School and University) (~780 words)
 
-Привіт! Сьогодні ми говоримо про дуже важливу тему. Це **освіта** *(education)*. Наш шлях починається, коли ми йдемо до школи. В українській мові ми використовуємо дієслова **закінчувати** *(to be finishing)* та **закінчити** *(to finish)*. Наприклад: «Я закінчив **школу** *(school)* у дві тисячі п'ятнадцятому році». Або: «Моя сестра зараз закінчує дев'ятий клас». Що ми робимо далі? Ми хочемо **вступати** *(to be entering)* або **вступити** *(to enter)* до нового закладу. Пам'ятайте важливе граматичне правило. Після прийменника «до» ми завжди використовуємо родовий відмінок. Ми кажемо: вступити до **університету** *(university)*, вступити до **ліцею** *(lyceum)*, або вступити до **коледжу** *(college)*. Це дуже природна конструкція. Якщо ви знаєте недоконаний і доконаний вид, ви можете точно описати свій досвід. «Вона вступала до університету два роки, і нарешті вступила». Цей процес вимагає багато сил та часу.
+Українська **освіта** (education) має кілька важливих етапів. Спочатку діти йдуть у школу, де вони вчаться багато років. В Україні серед закладів середньої освіти є школи, гімназії та ліцеї. Після школи починається вища освіта. Молоді люди вступають до **університету** (university) або інституту.
+ Там вони обирають факультет і починають своє **навчання** (studying, learning). Кожен студент вивчає улюблені предмети кілька років. Це може бути медицина, право, економіка або програмування. Коли студенти випускаються, вони отримують важливий документ. Зазвичай молодь каже: «Я вчуся в університеті». Це базова модель для розмови про навчання.
 
-Чому ми вибираємо певну **професію** *(profession)*? Щоб пояснити причину, ми використовуємо сполучник «тому що» *(because)*. Це робить наші речення складними та цікавими. Наприклад: «Я вступив на юридичний **факультет** *(faculty/department)*, тому що хочу бути **адвокатом** *(lawyer)*». В українській мові є дві важливі фрази про навчання. Якщо ми говоримо про майбутню професію, ми кажемо «вчитися на» плюс знахідний відмінок. Наприклад: «Мій брат вчиться на **програміста** *(programmer)*». Або: «Вона вчиться на лікарку». Але якщо ми говоримо про конкретний предмет, ми використовуємо дієслово «вивчати» плюс знахідний відмінок без прийменника. Наприклад: «Я вивчаю **історію** *(history)*», або «Ми вивчаємо вищу математику». Не плутайте ці конструкції! Вони обидві дуже корисні, коли ви говорите про свій студентський досвід. Ви можете сказати: «Я вчуся на інженера, тому що люблю вивчати фізику».
+> *Ukrainian education has several important stages. First, children go to school, where they study for many years. A modern school is often called a gymnasium or a lyceum. After school, higher education begins. Young people enter a university or an institute. There they choose a faculty and begin their studying. Each student studies their favorite subjects for several years. This can be medicine, law, economics, or programming. When students graduate, they receive an important document. Usually, young people say: "I study at a university." This phrase is very popular in Ukraine.*
 
-Коли ми розповідаємо про освіту, ми часто описуємо різні місця та предмети. Для цього нам потрібні слова «який» *(which)* та «де» *(where)*. Вони допомагають з'єднати дві прості ідеї в одне гарне складне речення. Подивіться на цей приклад: «**Предмет** *(subject)*, який мені подобався найбільше — це література». Слово «який» змінюється за родами, числами та відмінками. Якщо слово жіночого роду, ми кажемо «яка». Наприклад: «Спеціальність, яка мені дуже подобається, вимагає багато читати». А як сказати про місце? Ми використовуємо слово «де». Наприклад: «Університет, де я навчаюся, знаходиться в самому центрі міста». Або: «Школа, де він працює вчителем, дуже велика і сучасна». Ці слова роблять вашу українську мову багатою та природною. Ви можете легко описати свій улюблений предмет або свій рідний навчальний заклад.
+Коли ми говоримо про вибір професії, ми часто пояснюємо причину наших рішень. Для цього ми використовуємо сполучник «тому що». Наприклад, ви можете сказати: «Я вступив до університету, тому що хотів стати інженером». Зверніть увагу на дієслово «вступати». Ми завжди кажемо «вступати до», і після цього використовуємо родовий відмінок (genitive case). Абітурієнт — це людина, яка закінчила школу і хоче вступити до вишу. Слово «виш» — це популярний термін, який означає вищий навчальний заклад. Кожен абітурієнт ретельно обирає виш, тому що хоче здобути якісні знання. Він також хоче знайти гарну **роботу** (work, job) в майбутньому.
 
-Кожна дія в нашому житті має мету. Чому ми читаємо товсті книжки? Чому ми щодня слухаємо подкасти? Щоб відповісти на ці питання, ми використовуємо слово «щоб» *(in order to)*. Конструкція дуже проста: ми ставимо дієслово, потім кому, потім «щоб», а потім інфінітив. Це ідеальний спосіб говорити про ваші цілі та амбіції. Наприклад: «Я багато вчуся, щоб отримати **диплом** *(diploma/degree)*». Інший гарний приклад: «Він поїхав до Києва, щоб вступити до престижної магістратури». Або: «Я вивчаю українську мову, щоб жити і працювати в Україні». Зверніть увагу, що перед словом «щоб» ми завжди обов'язково ставимо кому. Ця маленька конструкція насправді дуже могутня. Вона показує вашу внутрішню мотивацію і ваші серйозні плани на майбутнє. Спробуйте подумати: що ви робите сьогодні, щоб мати успішне завтра?
+> *When we talk about choosing a profession, we often explain the reason for our decisions. For this, we use the conjunction "тому що" (because). For example, you can say: "I entered the university because I wanted to become an engineer." Pay attention to the verb "вступати" (to enter/enroll). We always say "вступати до", and after it we use the genitive case. An "абітурієнт" (applicant) is a person who has finished school and wants to enter a "виш". The word "виш" is a popular term that means a higher educational institution. Every applicant carefully chooses a university because they want to gain quality knowledge. They also want to find a good job in the future.*
 
-Давайте детальніше подивимося на рівні вищої освіти в сучасній Україні. Спочатку студенти чотири роки вчаться і закінчують **бакалаврат** *(bachelor's program)*. Це базова вища освіта. Після цього можна вступити у **магістратуру** *(master's program)* на півтора або два роки. Для тих, хто хоче серйозно займатися наукою, існує **аспірантура** *(postgraduate/PhD program)*. Щоб перейти на новий академічний рівень, треба мати гарні знання. Студенти повинні проходити через складний **іспит** *(exam)*. Тут є дуже важлива пара дієслів: «складати» та «скласти». Дієслово «складати» *(to be taking an exam)* — це тривалий процес. Дієслово «скласти» *(to pass an exam)* — це успішний фінальний результат. Деякі люди кажуть «здавати екзамен», але це русизм. Українською правильно казати «складати іспит». Наприклад: «Я довго складав іспит з математики і нарешті склав його на відмінно». Це завжди дуже радісний момент для кожного студента.
+Щоб описати свій університет або улюблений предмет, ми використовуємо складні речення. Для цього нам потрібні слова «який» та «де». Наприклад: «Університет, де я навчався, знаходиться у Львові». Слово «де» допомагає описати місце, місто або будівлю. Якщо ми хочемо описати річ, подію або людину, ми беремо слово «який». Наприклад: «Предмет, який мені найбільше подобався, — це історія». Ці слова з'єднують дві частини складного речення. Студенти часто розповідають про викладачів, які читали їм цікаві лекції. Вони також згадують свій перший **досвід** (experience), який вони отримали під час семінарів.
 
-Прочитайте цей короткий діалог. Студент прийшов на важливу консультацію. Він детально пояснює свій академічний вибір.
-> — **Консультант:** Добрий день! Розкажіть, яку **спеціальність** *(specialty/major)* ви врешті-решт обрали?
-> — **Студент:** Добрий день! Я довго думав і обрав **філологію** *(philology)*.
-> — **Консультант:** Дуже цікаво. А чому саме цю гуманітарну сферу?
-> — **Студент:** Я активно вивчаю іноземні мови, тому що хочу бути професійним перекладачем.
-> — **Консультант:** Чудово! А який предмет вам зараз подобається найбільше?
-> — **Студент:** Предмет, який я просто обожнюю — це сучасна європейська література.
-> — **Консультант:** Які у вас амбітні плани після завершення бакалаврату?
-> — **Студент:** Я хочу багато читати та писати, щоб успішно скласти іспит у магістратуру.
-> — **Консультант:** Університет, де ви зараз вчитеся, має дуже гарну магістерську програму.
-> — **Студент:** Так, я це добре знаю. Але я також серйозно думаю про **економіку** *(economics)*.
-> — **Консультант:** Якщо ви дійсно хочете вивчати економіку, вам потрібна сильна математика.
-> — **Студент:** Я чудово це розумію. Я буду багато вчитися, щоб мати різні варіанти.
+Дуже важливо розуміти різницю між причиною та метою. Причину ми завжди пояснюємо словами «тому що». Але коли ми говоримо про мету, ми використовуємо слово «щоб» та інфінітив. Наприклад: «Я вчуся, щоб отримати **диплом** (diploma, degree)». Це означає, що диплом — це наша головна мета. Інший приклад: «Вона поїхала за кордон, щоб вивчити нову **спеціальність** (specialty, major)». Ми не можемо сказати «я вчуся тому що отримати диплом». Це серйозна граматична помилка. Завжди використовуйте «щоб», коли говорите про свої плани та мрії.
 
-<!-- INJECT_ACTIVITY: fill-in-complex-education -->
-<!-- INJECT_ACTIVITY: match-up-education-scenarios -->
+> *It is very important to understand the difference between cause and purpose. We always explain the cause with the words "тому що" (because). But when we talk about purpose, we use the word "щоб" (in order to) and an infinitive. For example: "I study in order to get a diploma." This means that the diploma is our main goal. Another example: "She went abroad to study a new specialty." We cannot say "I study because to get a diploma". This is a serious grammatical mistake. Always use "щоб" when talking about your plans and dreams.*
 
-## Про роботу: ким ви працюєте?
+В українській мові є спеціальні дієслова для теми освіти. Коли ми говоримо про майбутню **професію** (profession), ми кажемо «навчатися на» плюс знахідний відмінок (accusative case). Наприклад: «Я навчаюся на програміста». Не кажіть «я вчуся для програміста» або «я вчуся на програміст». Коли ми успішно завершуємо навчання, ми використовуємо дієслово «закінчити». Наприклад: «Він закінчив університет». Ніколи не кажіть «закінчив з університету». Щоб завершити етап, студент повинен успішно скласти **іспит** (exam) або отримати **залік** (course credit). Після цього він може здобути гарну освіту та почати **працювати** (to work).
 
-Коли ми знайомимося з новими людьми, ми часто говоримо про кар'єру. В українській мові, щоб запитати про чиюсь професію, ми кажемо: «Ким ви працюєте?». Notice the Instrumental case. When we answer, we also use the Instrumental case. «Я працюю **вчителем** *(as a teacher)*». «Вона працює **менеджером** *(as a manager)*». «Він працює **інженером** *(as an engineer)*». It is important to remember the difference between two words. **Робота** *(work, job)* is a noun. **Працювати** *(to work)* is a verb. We say: «Це моя нова робота». But we say: «Я дуже люблю працювати». When we talk about the place of work, we use the Locative case. We say: «Я працюю в **офісі** *(in an office)*». We also say: «Вона працює на **фірмі** *(at a firm)*». Remember these simple rules to speak correctly.
+:::tip
+**Did you know? Common L2 Errors**
+A frequent mistake learners make is translating English structures directly. Do not say *я вчуся для юриста* (I study for a lawyer); the correct form is **навчатися на** + Accusative (**на юриста**). Similarly, graduating is transitive in Ukrainian: you just "finish" the university. Do not say *закінчити з університету*; simply say **закінчити університет**. Also, in Ukrainian you say **скласти іспит** (to pass an exam), not a literal equivalent of English "take" or "make" an exam.
+:::
 
-Now let's add more details about our work. We use the words «який», «яка», «яке» or «які» *(which/who)*. They help us describe our company or colleagues. These words must agree in gender and number with the noun. **Компанія** *(company)* is feminine. So we use «яка». «Я працюю в компанії, яка виробляє меблі». Ви також можете сказати: «Це фірма, яка швидко росте». **Проєкт** *(project)* is masculine. We use «який». «Це новий проєкт, який дуже важливий для нас». We also use these words to talk about people at work. **Колега** *(colleague)* can be masculine or feminine. «Моя колега, яка сидить поруч, допомагає мені». «Мій колега, який добре знає англійську, перекладає цей текст». This grammar makes your professional story much more interesting. You can explain exactly what your team does.
+### Читаємо українською: Моя освіта
 
-Мотивація дуже важлива для кожної людини. Why do we choose our professions? To explain the reason, we use «тому що» *(because)*. «Я люблю свою роботу, тому що вона цікава». «Він став лікарем, тому що хоче допомагати людям». But every job has some difficulties. To show contrast, we use the word **хоча** *(although/even though)*. This word helps us balance the good and bad sides. «Хоча **зарплата** *(salary)* невелика, наш колектив дуже дружній». «Хоча я працюю багато, я маю вільний час у вихідні». «Хоча мій офіс далеко, я люблю туди їздити». Notice that we always put a comma before «тому що». We also put a comma between the two parts of the sentence with «хоча». These complex sentences show your high level of Ukrainian.
+Прочитайте короткий текст про студента. Зверніть увагу на складні речення.
 
-Кожен офіс має свої власні традиції та правила. Every workplace has rules and routines. To talk about conditions, we use the construction «якщо..., то...» *(if..., then...)*. This is a real conditional. We use it for normal, everyday situations. «Якщо я закінчую проєкт вчасно, то отримую **премію** *(bonus)*». «Якщо є багато роботи, то я залишаюся в офісі довше». You can also skip the word «то». The sentence is still correct and natural. «Якщо я маю питання, я питаю свого колегу». «Якщо мій комп'ютер не працює, я дзвоню в технічну підтримку». This construction is very useful for explaining your daily professional life. It shows cause and effect clearly. Practice using it when you describe your typical working day or your office rules.
+Мене звати Максим. Я закінчив гімназію у дві тисячі п'ятнадцятому році. Потім я вступив до університету, тому що хотів стати архітектором. Університет, де я навчався, був дуже великим і сучасним. Я обрав цю професію, тому що люблю малювати. Я також люблю створювати нові будівлі. Я багато вчився, щоб успішно скласти кожен іспит. Викладачі, які працювали на нашому факультеті, були справжніми професіоналами. Зараз я вже маю диплом і шукаю роботу. Я хочу знайти компанію, де я зможу застосувати свої знання.
 
-Let's look at some important vocabulary for the workplace. Знати цю лексику дуже корисно для вашого резюме. Your official role is your **посада** *(position)*. Your working hours are your **графік** *(schedule)*. For example: «У мене дуже зручний графік роботи». Your boss or manager is your **керівник** *(manager/supervisor)*. «Мій керівник завжди допомагає нашій команді». When you want a new job, you need to go to a **співбесіда** *(job interview)*. We have two important verbs for career changes. **Шукати роботу** *(to look for a job)* is the process of finding employment. «Мій брат зараз шукає роботу в IT-сфері». **Змінювати роботу** *(to change jobs)* means leaving one job for another. «Вона вирішила змінити роботу, щоб мати кращу посаду». These words will help you discuss your career path.
+### Діалог: Нові знайомі
 
-Let's see how professionals use these words in real life. Зверніть увагу на складні речення в їхній розмові. Read this dialogue. Two people meet at a social event and discuss their careers.
+Двоє нових знайомих, Анна та Богдан, розмовляють про свою освіту та вибір професії.
 
-> — **Анна:** Привіт! Ми ще не знайомі. Ким ви працюєте?
-> — **Віктор:** Добрий день! Я працюю архітектором на будівельній фірмі. А ви?
-> — **Анна:** Я працюю менеджером у компанії, яка продає техніку.
-> — **Віктор:** Це цікаво! Вам подобається ваша посада?
-> — **Анна:** Так, я люблю свою роботу, тому що вона динамічна. Хоча графік дуже складний.
-> — **Віктор:** Я вас чудово розумію. Якщо у нас новий проєкт, я теж працюю до ночі.
-> — **Анна:** А де знаходиться офіс, де ви працюєте?
-> — **Віктор:** У центрі міста. Мій керівник, який керує нашим відділом, сидить поруч зі мною.
-> — **Анна:** Чудово! Якщо ви любите свою роботу, то це найголовніше.
+> — **Анна:** Привіт, Богдане! Розкажи, де ти навчався? *(Hi, Bohdan! Tell me, where did you study?)*
+> — **Богдан:** Привіт! Я закінчив Київський національний університет. *(Hi! I graduated from Kyiv National University.)*
+> — **Анна:** О, це відомий виш! А яку спеціальність ти обрав? *(Oh, that's a famous university! And what specialty did you choose?)*
+> — **Богдан:** Я навчався на економіста. А ти? *(I studied to be an economist. And you?)*
+> — **Анна:** Я вивчала право. Я вступила до університету, тому що завжди хотіла стати юристом. *(I studied law. I entered the university because I always wanted to become a lawyer.)*
+> — **Богдан:** Чому саме цю професію? *(Why exactly this profession?)*
+> — **Анна:** Я обрала її, щоб допомагати людям. А ти чому став економістом? *(I chose it in order to help people. And why did you become an economist?)*
+> — **Богдан:** Предмет, який мені найбільше подобався у школі, — це математика. Тому я пішов на економічний факультет. *(The subject I liked the most in school was math. That's why I went to the economics faculty.)*
+> — **Анна:** Це логічно. Тобі подобається твоя теперішня робота? *(That's logical. Do you like your current job?)*
+> — **Богдан:** Так, компанія, де я працюю, дуже сучасна. *(Yes, the company where I work is very modern.)*
 
-<!-- INJECT_ACTIVITY: quiz-complex-sentence-types -->
+<!-- INJECT_ACTIVITY: fill-in-complete-sentences-about-education-and-work-using -->
 
-## Плани на майбутнє
+## Про роботу: ким ви працюєте? (About Work: What Do You Do?)
 
-Let's talk about our plans for the future. Ми часто думаємо про нашу кар'єру та освіту. Для цього ми використовуємо конструкцію «якщо..., то...». Це допомагає нам показати майбутній результат наших дій. We use it to talk about real conditions and their future results. «Якщо я **отримаю** *(will receive)* диплом, то знайду гарну роботу». «Якщо я вивчу англійську мову, то зможу працювати в міжнародній компанії». «Якщо він складе іспит, то вступить до магістратури». Notice how the condition comes first. Умова завжди стоїть на першому місці в реченні. Результат показує наші логічні очікування від ситуації. «Якщо ми закінчимо університет з відзнакою, то матимемо більше шансів». «Якщо я знайду вільний час, то піду на курси програмування». Ця граматика дуже важлива для успішної співбесіди. Менеджери завжди хочуть чути про ваші кар'єрні плани. Вони часто запитують про ваш **розвиток** *(development)* та цілі. «Якщо ви отримаєте цю посаду, що ви будете робити?». «Якщо я стану менеджером, то зроблю нашу роботу ефективнішою». Планувати своє майбутнє дуже корисно. 
+Тепер подивімося, як українською розповідати про роботу, посаду й робоче місце.
 
-We can also use this structure to give good advice. У цьому випадку ми використовуємо наказовий спосіб дієслів. «Якщо хочеш стати директором, треба дуже багато працювати». «Якщо тобі не подобається твоя **спеціальність** *(specialty)*, зміни її зараз». «Якщо ви шукаєте нову роботу, напишіть гарне резюме». It is a very direct and helpful way to speak. Українці часто дають такі щирі поради друзям або колегам. «Якщо ти втомився від проєктів, візьми коротку відпустку». «Якщо компанія не платить премію, активно шукай іншу роботу». «Якщо вам потрібен новий досвід, знайдіть хороше стажування». Це звучить дуже природно в розмові. We do not always need the word «то» when giving advice. «Якщо хочеш змінити професію, просто почни інтенсивно вчитися». «Якщо ти любиш дітей, іди працювати у звичайну школу». Пам'ятайте, що правильний вибір професії — це важливий крок. Якщо ви маєте сумніви щодо кар'єри, запитайте поради у професіоналів. Якщо ви готові до змін у житті, дійте сьогодні.
+Моя **робота** дуже цікава. Я працюю в міжнародній компанії, яка має великий **офіс** у центрі міста. Моя **посада** називається менеджер проєктів. Кожен день я маю нові **завдання**, які треба виконати. Мій **керівник** завжди допомагає мені. Мої **колеги** — це справжні професіонали. Мені подобається мій гнучкий **графік**, тому що я можу починати працювати пізніше. Також мене влаштовує моя **зарплата**.
 
-Sometimes our career plans have difficulties or unexpected exceptions. У таких складних ситуаціях ми використовуємо слово «хоча». «Хоча я ще навчаюся на четвертому курсі, я вже маю **досвід** *(experience)* роботи». Багато амбітних студентів в Україні починають працювати дуже рано. Вони часто шукають роботу на **частковий робочий день** *(part-time)*. Це допомагає швидко отримати практику та перші власні гроші. «Хоча він працює лише на частковий робочий день, він заробляє достатньо». Коли студенти нарешті отримують диплом, вони шукають інший формат. Тоді вони хочуть знайти роботу на **повний день** *(full-time)*. Робота на повний день вимагає значно більше вашого часу та енергії. «Хоча ця нова робота важка, вона дає мені корисний досвід». «Хоча я працюю на повний день, я також вчуся на курсах». Університет дає нам базову теорію, а реальна робота дає практику. «Хоча академічна теорія дуже важлива, щоденна практика допомагає більше». Ви можете вільно використовувати всі ці складні речення разом. Це покаже, що ви впевнено володієте українською мовою на роботі.
+> *My job is very interesting. I work in an international company that has a large office in the city center. My position is called project manager. Every day I have new tasks that need to be completed. My supervisor always helps me. My colleagues are true professionals. I like my flexible schedule because I can start working later. I am also satisfied with my salary.*
 
-Let's see how a candidate uses these structures in a real situation. Прочитайте цей важливий діалог на офіційній співбесіді. Кандидат відповідає на всі запитання дуже чітко та грамотно.
-> — **Менеджер:** Добрий день! Розкажіть про університет, де ви успішно навчалися.
-> — **Кандидат:** Добрий день! Я закінчив університет у Києві, який має чудовий економічний факультет.
-> — **Менеджер:** Чому ви колись обрали саме цю складну спеціальність?
-> — **Кандидат:** Я став економістом, тому що я дуже люблю працювати з великими цифрами.
-> — **Менеджер:** Яка ваша головна професійна мета саме зараз?
-> — **Кандидат:** Я шукаю стабільну роботу, щоб отримати новий досвід у такій великій компанії.
-> — **Менеджер:** Хоча у вас поки мало практичного досвіду, ваше резюме дуже цікаве.
-> — **Кандидат:** Якщо ви дасте мені цей шанс, я буду працювати максимально старанно.
-> — **Менеджер:** Ми шукаємо відповідальну людину на повний день. Ви готові до цього?
-> — **Кандидат:** Так, якщо ваш графік зручний, я повністю готовий працювати на повний день.
-This candidate successfully answered all questions using complex sentences. Він показав свій високий рівень освіти. 
+To provide more detail about your work environment, you can use relative clauses with **який** (which/who). This pronoun agrees in gender, number, and case with the noun it describes.
 
-<!-- INJECT_ACTIVITY: true-false-structure-culture -->
+Я працюю програмістом у компанії, яка розробляє мобільні додатки. Офіс, у якому я працюю, дуже світлий і сучасний. Моя колега, яка сидить поруч, часто допомагає мені писати складний код. Проєкти, які ми робимо зараз, вимагають багато часу. Керівник, який контролює нашу роботу, завжди дає корисні поради. Люди, з якими я спілкуюся щодня, роблять мій робочий день кращим. Завдання, які я виконую, допомагають мені отримувати новий **досвід** (experience).
 
-## Підсумок
+When discussing your career choices, you can explain your reasons using **тому що** (because) for causes, and **щоб** (in order to) for goals. Remember that **щоб** is usually followed by an infinitive verb.
 
-Сьогодні ми вивчили чотири типи складних речень. Вони дуже корисні для розмови про вашу освіту та кар'єру. 
+Я став вчителем, тому що я дуже люблю працювати з дітьми. Моя сестра працює лікаркою, тому що вона завжди мріяла допомагати хворим. Багато людей змінюють професію, щоб мати кращу зарплату або гнучкий графік. Я кожного дня читаю нові статті, щоб знати останні новини. Мій друг пішов на курси, щоб вивчити нову мову програмування. Ми працюємо наполегливо, щоб наша компанія стала успішною.
 
-Перший тип — це **причина** *(cause)*. Ми використовуємо «тому що». «Я працюю, тому що мені потрібні гроші». 
+Every job has its own rules and conditional situations. To talk about these conditions, we use the structure **якщо ..., (то) ...** (if ..., then ...). In Ukrainian, the word **то** (then) is optional but very commonly used.
 
-Другий тип — це **мета** *(purpose)*. Ми використовуємо слово «щоб». «Вона вчиться, щоб знайти хорошу роботу». 
+Якщо я добре працюю, то отримую велику премію. Якщо в мене є вільний час, я ходжу на курси. Якщо наш офіс закритий, ми можемо працювати з дому. Якщо колега просить про допомогу, я завжди намагаюся пояснити завдання. Якщо ви хочете знайти нову роботу, вам потрібно написати гарне резюме. Якщо завтра буде важлива нарада, керівник обов'язково попередить нас. Робота в команді завжди легша, якщо всі розуміють свої обов'язки.
 
-Третій тип — це **означення** *(relative clause)*. Ми використовуємо слова «який» або «де». «Це компанія, де я працюю». 
+A common mistake for English speakers is translating "I work as a doctor" literally. In Ukrainian, the verb **працювати** (to work) always requires the Instrumental case for the profession.
 
-Четвертий тип — це **умова** *(condition)*. Ми використовуємо слово «якщо». «Якщо я складу іспит, я поїду відпочивати». 
+:::info
+**Grammar box** — You cannot say *Він працює лікар*. You must say **Він працює лікарем** using the Instrumental case (`ким?` — by whom?). Also, modern Ukrainian actively uses feminine forms for professions, such as **директорка** or **лікарка**.
+:::
 
-Також ми використовуємо слово «хоча» для дуже складних ситуацій та винятків.
+Мій брат працює лікарем у великій лікарні. Його дружина працює директоркою у приватній школі. Раніше я працював продавцем, але тепер я працюю менеджером. Моя мама працює викладачкою в університеті, а батько працює інженером. Коли я був студентом, я працював офіціантом. Зараз багато жінок працюють програмістками та журналістками. Якщо ви хочете працювати юристом, вам потрібна вища освіта.
 
-Тепер перевірте себе. Дайте відповіді на ці чотири запитання:
+> *My brother works as a doctor in a large hospital. His wife works as a director in a private school. Previously I worked as a seller, but now I work as a manager. My mom works as a lecturer at the university, and my father works as an engineer. When I was a student, I worked as a waiter. Now many women work as programmers and journalists. If you want to work as a lawyer, you need higher education.*
 
-1. Як сказати українською "I work as a lawyer"?
-2. Який **прийменник** *(preposition)* вживаємо зі словом «університет» у фразі «вступити ... університету»?
-3. Як поєднати дві частини речення: «Я вчуся» та «отримати диплом»? 
-4. Як правильно сказати українською "If I pass the exam, I will travel"?
+Let's see how these structures come together in a natural conversation at a party. Notice how the speakers use the Instrumental case for professions, relative clauses to describe their workplace, and conditional sentences.
 
-Якщо ви знаєте всі ці відповіді, ви повністю готові до нових граматичних тем. Ваша українська мова стає значно кращою з кожним новим уроком!
+> — **Максим:** Привіт! Ми ще не знайомі. Мене звати Максим. *(Hi! We haven't met yet. My name is Maksym.)*
+> — **Олена:** Привіт! А я Олена. Дуже приємно. *(Hi! And I am Olena. Nice to meet you.)*
+> — **Максим:** Ким ви працюєте, Олено? *(What do you do for a living, Olena?)*
+> — **Олена:** Я працюю архітекторкою в компанії, яка будує нові комплекси. А ви? *(I work as an architect in a company that builds new complexes. And you?)*
+> — **Максим:** Я працюю журналістом. Я пишу статті для порталу, який читають люди. *(I work as a journalist. I write articles for a portal that people read.)*
+> — **Олена:** Вам подобається ваша робота? *(Do you like your job?)*
+> — **Максим:** Так, я люблю свою роботу, тому що постійно спілкуюся з людьми. А що ви робите на роботі? *(Yes, I love my job because I constantly communicate with people. And what do you do at work?)*
+> — **Олена:** Я проєктую житлові комплекси й готую креслення. Якщо проєкт складний, ми працюємо командою. *(I design residential complexes and prepare drawings. If a project is complex, we work as a team.)*
+> — **Максим:** А ваш графік гнучкий? *(And is your schedule flexible?)*
+> — **Олена:** Так. Якщо я маю натхнення, я можу працювати ввечері. *(Yes. If I have inspiration, I can work in the evening.)*
+
+<!-- INJECT_ACTIVITY: true-false-culture-complex -->
+
+## Плани на майбутнє (Plans for the Future) (~640 words)
+
+Тепер подивімося, як за допомогою **якщо** говорити про майбутні плани в навчанні та роботі.
+
+Моя освіта дуже важлива для кар'єри. Я планую своє майбутнє вже сьогодні. Якщо я добре складу іспит, то обов'язково вступлю до магістратури. Магістратура дасть мені нову спеціальність та корисні знання. Якщо я матиму диплом магістра, я зможу знайти кращу посаду. Моя улюблена професія вимагає багато зусиль та відповідальності. Я також планую піти на співбесіду у міжнародну компанію. Якщо співбесіда пройде успішно, я отримаю цікавий проєкт. Мені потрібен досвід, щоб стати справжнім професіоналом.
+
+> *My education is very important for my career. I am planning my future today. If I pass the exam well, I will definitely enter a master's program. A master's program will give me a new specialty and useful knowledge. If I have a master's degree, I will be able to find a better position. My favorite profession requires a lot of effort and responsibility. I also plan to go to a job interview at an international company. If the interview goes successfully, I will get an interesting project. I need experience to become a real professional.*
+
+You can also use conditionals to give career advice. Your **спеціальність** (specialty) often defines your **професія** (profession), but you can always **працювати** (to work) in a new field.
+
+Ми часто даємо поради про роботу нашим друзям. Якщо ти хочеш знайти кращу роботу, вивчай нову іноземну мову. Якщо тобі не подобається нинішня посада, шукай іншу компанію. Якщо ти студент, шукай можливості для стажування вже зараз. Якщо у тебе скоро важлива співбесіда, підготуй детальну розповідь про свій досвід. Якщо ти не знаєш, яку спеціальність обрати, обов'язково поговори з кар'єрним консультантом. Якщо ти хочеш мати високу зарплату, розвивай свої навички щодня. Завжди пам'ятай, що справжній успіх приходить до тих, хто постійно вчиться.
+
+To express a concession, we use the word **хоча** (although). Combining **навчання** (studying) and a **робота** (job) takes time, but it gives you independence.
+
+Хоча я ще студент, я вже працюю на частковий робочий день. Мені важко поєднувати навчання і роботу, але це дає мені фінансову незалежність. Мій друг працює вчителем у звичайній школі. Хоча його зарплата невелика, ця робота дуже цікава та емоційна. Моя колега несподівано змінила професію у тридцять років. Хоча вона ніколи не мала досвіду, вона швидко навчилася програмувати. Хоча вступний іспит був дуже складним, більшість студентів отримали хороші оцінки.
+
+> *Although I am still a student, I already work part-time. It is hard for me to combine studying and work, but it gives me financial independence. My friend works as a teacher at a regular school. Although his salary is small, this job is very interesting and emotional. My colleague unexpectedly changed her profession at thirty years old. Although she never had experience, she quickly learned to program. Although the entrance exam was very difficult, most students got good grades.*
+
+:::info
+**Grammar box** — When building complex sentences, remember to always separate the clauses with a comma. Whether the sentence starts with **якщо**, **хоча**, **щоб**, or has **тому що** in the middle, the comma is mandatory in Ukrainian punctuation.
+:::
+
+<!-- INJECT_ACTIVITY: match-up-match-education-career-situations-to-appropriate-responses-using-complex-sentences -->
+
+Let's see how these sentences work in a professional setting. To get a **диплом** (diploma), you must first pass every **іспит** (exam) and gain practical **досвід** (experience). Read this conversation between a career counselor and a student.
+
+> — **Консультант:** Добрий день! Розкажіть, що ви вивчаєте в університеті? *(Good day! Tell me, what are you studying at the university?)*
+> — **Студент:** Добрий день! Я вивчаю право, тому що хочу захищати людей. *(Good day! I study law because I want to protect people.)*
+> — **Консультант:** Це чудова спеціальність. Ким ви хочете стати? *(That is a wonderful specialty. What do you want to become?)*
+> — **Студент:** Я хочу стати адвокатом. Я багато вчуся, щоб отримати диплом. *(I want to become a lawyer. I study a lot to get a diploma.)*
+> — **Консультант:** Де ви хочете працювати? *(Where do you want to work?)*
+> — **Студент:** У великій юридичній фірмі, яка має міжнародних клієнтів. *(In a large law firm that has international clients.)*
+> — **Консультант:** Хоча ви ще студент, вам потрібен досвід. Ви шукали стажування? *(Although you are still a student, you need experience. Have you looked for an internship?)*
+> — **Студент:** Якщо я складу цей іспит, я піду на співбесіду. *(If I pass this exam, I will go to an interview.)*
+> — **Консультант:** Якщо фірма запропонує роботу, ви погодитеся? *(If the firm offers a job, will you agree?)*
+> — **Студент:** Звичайно! Це моя головна мета. *(Of course! That is my main goal.)*
+
+### Читаємо українською (Reading Practice)
+
+Складні речення допомагають поєднувати прості ідеї й точніше висловлюватися про навчання та роботу.
+
+Складні речення допомагають нам дуже детально пояснювати свої думки. Ми використовуємо «тому що» для пояснення причини. Ми кажемо «щоб», коли говоримо про нашу життєву мету. Слово «який» чудово допомагає описувати компанію або нову професію. За допомогою «якщо» ми будуємо амбітні плани на майбутнє. А слово «хоча» яскраво показує контраст між фактами. Тепер ви можете точніше розповідати про навчання й кар'єру українською мовою.
+
+<!-- INJECT_ACTIVITY: quiz-choose-the-correct-complex-sentence-type-for-work-education-scenarios -->
 </generated_module_content>
 
-**PIPELINE NOTE — Word count: 2411 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
+**PIPELINE NOTE — Word count: 2765 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -405,39 +441,173 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 761 words | Not found: 3 words
+Verified: 643 words | Not found: 6 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
   ✗ Анна — NOT IN VESUM
-  ✗ Віктор — NOT IN VESUM
-  ✗ Києва — NOT IN VESUM
+  ✗ Богдан — NOT IN VESUM
+  ✗ Богдане — NOT IN VESUM
+  ✗ Львові — NOT IN VESUM
+  ✗ Олена — NOT IN VESUM
+  ✗ Олено — NOT IN VESUM
 
-All 761 other words are confirmed to exist in VESUM.
+All 643 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
-## Verification Tools (MCP)
+---
 
-You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
+## Verification Tools (Shell Commands)
 
-**Core Verification:**
-- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
-- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
+You have access to verification tools via shell commands. Use these to verify
+Ukrainian vocabulary, check grammar, and search textbook content **as you write**.
 
-**Content Quality:**
-- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+**IMPORTANT:** Run verification commands BEFORE finalizing any Ukrainian text.
+Batch multiple verifications together to minimize round-trips.
 
-**Reference:**
-- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp_rag_search_literary` — verify literary references against primary sources
-- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
+### 1. Batch-verify Ukrainian words exist in VESUM (preferred — one call for many words)
 
-**Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_words
+results = verify_words(['слово1', 'слово2', 'слово3'])
+for w, matches in results.items():
+    if matches:
+        print(f'{w}: FOUND — lemma={matches[0][\"lemma\"]}, pos={matches[0][\"pos\"]}')
+    else:
+        print(f'{w}: NOT FOUND — may not exist in standard Ukrainian')
+"
+```
+
+### 2. Verify a single Ukrainian word in VESUM (with full morphological tags)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_word
+results = verify_word('WORD_HERE')
+if results:
+    for m in results:
+        print(f'lemma={m[\"lemma\"]}, pos={m[\"pos\"]}, tags={m[\"tags\"]}')
+else:
+    print('NOT FOUND in VESUM')
+"
+```
+
+### 3. Get all inflected forms of a lemma (declension/conjugation)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_lemma
+forms = verify_lemma('LEMMA_HERE')
+for f in forms[:20]:
+    print(f'{f[\"word_form\"]:20s} {f[\"pos\"]:8s} {f[\"tags\"]}')
+print(f'... {len(forms)} forms total')
+"
+```
+
+### 4. Check CEFR level of a word (is it level-appropriate?)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import query_cefr_level
+results = query_cefr_level('WORD_HERE')
+for r in results:
+    print(f'{r[\"word\"]}: {r[\"level\"]} ({r[\"pos\"]})')
+if not results:
+    print('Not in CEFR database')
+"
+```
+
+### 5. Search textbook content (Ukrainian school textbooks, Grades 1-11)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_textbooks
+keywords = {'keyword1', 'keyword2'}
+results = search_textbooks(keywords, 5)
+for r in results:
+    title = r.get('section_title', r.get('title', ''))
+    grade = r.get('grade', '?')
+    text = r.get('text', '')[:200]
+    print(f'Grade {grade} | {title}')
+    print(f'  {text}')
+    print()
+"
+```
+
+### 6. Search style guide for calques/Russianisms (Антоненко-Давидович, 279 entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_style_guide
+results = search_style_guide('TOPIC_HERE', 3)
+for r in results:
+    print(f'--- {r.get(\"word\", \"\")} [{r.get(\"section\", \"\")}]')
+    print(r.get('text', '')[:300])
+    print()
+if not results:
+    print('No style guide entries found')
+"
+```
+
+### 7. Look up word definition in СУМ-11 (Ukrainian explanatory dictionary, 127K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_definitions
+results = search_definitions('WORD_HERE', 3)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+### 8. Search idioms (Фразеологічний словник, 25K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_idioms
+results = search_idioms('WORD_HERE', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"text\", r.get(\"definition\", \"\")))[:200]}')
+"
+```
+
+### 9. English-to-Ukrainian translation (Балла, 79K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import translate_en_uk
+results = translate_en_uk('ENGLISH_WORD', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+---
+
+**WHEN to use these tools:**
+
+1. **Before writing any Ukrainian text** — batch-verify all key vocabulary with
+   `verify_words` (tool 1). Any word that returns NOT FOUND must be replaced.
+2. **When you suspect a Russicism or calque** — search the style guide (tool 6)
+   and verify the correct Ukrainian form with `verify_word` (tool 2).
+3. **When writing for A1/A2** — check CEFR levels (tool 4) to ensure vocabulary
+   is level-appropriate.
+4. **When unsure about a case ending or conjugation** — use `verify_lemma` (tool 3)
+   to see the full paradigm.
+5. **When covering a grammar topic** — search textbooks (tool 5) to see how
+   Ukrainian school textbooks teach it.
+6. **When you need the precise Ukrainian meaning** — use СУМ-11 (tool 7).
+7. **When looking for natural Ukrainian expressions** — search idioms (tool 8).
+
+**Batching rule:** Collect all words you want to verify, then run ONE `verify_words`
+call instead of multiple `verify_word` calls. This is faster and uses fewer tokens.

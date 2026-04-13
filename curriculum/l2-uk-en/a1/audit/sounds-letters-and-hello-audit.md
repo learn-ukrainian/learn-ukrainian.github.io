@@ -1,7 +1,7 @@
 # Audit Report: M01 — sounds-letters-and-hello.md
 **Level:** A1 | **Module:** M01 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-11 00:50:07
+**Generated:** 2026-04-13 10:55:36
 
 ## Configuration
 **Type:** A1
@@ -18,64 +18,55 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | quiz | Choose the correct answer based on the golden rule of Ukrainian. | 6 | 6 | ✅ |
-| 2 | match-up | Match the Ukrainian letter to the sound it represents. Бачу... Чую... (I see...  | 6 | 6 | ✅ |
-| 3 | fill-in | Complete this basic greeting dialogue. | 4 | 6 | ❌ |
+| 1 | quiz | Choose the correct answer about sounds and letters. | 6 | 6 | ✅ |
+| 2 | match-up | Match the Ukrainian letters to the sounds they represent. | 6 | 6 | ✅ |
+| 3 | fill-in | Complete the basic greeting dialogue. | 6 | 6 | ✅ |
 | 4 | watch-and-repeat |  | 6 | 1 | ✅ |
 | 5 | watch-and-repeat |  | 7 | 1 | ✅ |
 | 6 | watch-and-repeat |  | 9 | 1 | ✅ |
 | 7 | watch-and-repeat |  | 10 | 1 | ✅ |
-| 8 | true-false | Are these statements about Ukrainian sounds and letters true or false? (Правда ч | 6 | 6 | ✅ |
-| 9 | match-up | Match the Ukrainian words to their English meanings. | 7 | 6 | ✅ |
-| 10 | quiz | Test your understanding of the basic Ukrainian greeting. | 6 | 6 | ✅ |
+| 8 | match-up | Match the Ukrainian words to their English translations. | 8 | 6 | ✅ |
+| 9 | anagram | Rearrange the letters to form the correct Ukrainian word. | 6 | 6 | ✅ |
+| 10 | true-false | Are these statements true or false? | 6 | 6 | ✅ |
 
 **Summary:**
 - Total activities: 10 (target: 0-4) ❌
-- Unique types: 5 (minimum: 0) ✅
-- Priority types used: 4/8 (fill-in, match-up, quiz, watch-and-repeat) ✅
-- Low density activities: 1
+- Unique types: 6 (minimum: 0) ✅
+- Priority types used: 5/8 (anagram, fill-in, match-up, quiz, watch-and-repeat) ✅
+- Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[GRAMMAR]** Subordinate clause marker at A1: 'і коли м'
-  - FIX: Complex sentences not allowed at A1 M1-M14. Use simple SVO sentences.
-- **[COMPLEXITY]** fill-in 'Complete this basic greeting dialogue.' has 4 items (minimum: 6)
-  - FIX: Add more items. A1 fill-in requires at least 6 items.
+- **[HINT_IN_ACTIVITY]** anagram activity 'Rearrange the letters to form the correct Ukrainian word.' has item-level hint in item 1
+  - FIX: Remove all 'hint' fields from activity items (they break activities and provide no real pedagogical value)
 
 ## Recommendation
-**📝 UPDATE** (severity 15/100)
+**📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
-- Activity density below minimum
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1669/1200 (raw: 1716)
+- **Words:** ✅ 1757/1200 (raw: 1804)
 - **Activities:** ✅ 10/0
-- **Density:** ❌ 1 < 6
-- **Unique_types:** ✅ 5/0 types
+- **Density:** ✅ All > 6
+- **Unique_types:** ✅ 6/0 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 0/0
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 24/1
+- **Vocab:** ✅ 31/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 7.1% (target 5-25% (M01))
+- **Immersion:** 🇺🇦 10.3% (target 5-25% (M01))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
 
-## Low Density Activities
-| Activity | Type | Items | Required | Fix |
-|----------|------|-------|----------|-----|
-| Complete this basic greeting dialogue. | fill-in | 4 | 6 | Add 2 more items |
-
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 468 | Included in Core |
-| **Голосні́ звуки (Vowel Sounds)** | ✅ | 349 | Included in Core |
-| **При́голосні звуки (Consonant Sounds)** | ✅ | 313 | Included in Core |
-| **Приві́т! (Hello!)** | ✅ | 384 | Included in Core |
-| **Підсумок (Summary)** | ✅ | 155 | Included in Core |
+| **Intro/Narrative** | ✅ | 446 | Included in Core |
+| **Голосні́ звуки (Vowel Sounds)** | ✅ | 326 | Included in Core |
+| **При́голосні звуки (Consonant Sounds)** | ✅ | 373 | Included in Core |
+| **Приві́т! (Hello!)** | ✅ | 434 | Included in Core |
+| **Підсумок (Summary)** | ✅ | 178 | Included in Core |

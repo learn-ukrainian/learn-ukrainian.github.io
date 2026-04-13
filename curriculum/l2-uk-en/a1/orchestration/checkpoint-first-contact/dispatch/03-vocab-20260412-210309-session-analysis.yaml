@@ -1,0 +1,47 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T19-02-d6e5848d.json
+phase: vocab
+prompt_chars: 9572
+response_chars: 162
+prompt_words: 1511
+response_words: 18
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.0834
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.024
+- name: plan
+  start: 1028
+  length: 8544
+  fraction: 0.8926
+large_sections:
+- plan
+directives_total: 5
+directives_covered: 0
+directives_missed:
+- kind: must
+  text: 'You must match the gender for your pronouns: use **мій** (my) for masculine
+    nouns like **мій тато** (my dad), and **моя** (my) for feminine nouns like **моя
+    мама** (my mom).'
+  covered: false
+  coverage_note: 0/17 keywords (0%)
+- kind: must
+  text: The Vocative case (**Кличний відмінок**) is mandatory in Ukrainian when addressing
+    someone directly.
+  covered: false
+  coverage_note: 0/10 keywords (0%)
+- kind: inject_activity
+  text: quiz-comprehensive-review
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-questions-answers
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-self-introduction
+  covered: false
+  coverage_note: marker missing

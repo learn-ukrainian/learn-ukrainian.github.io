@@ -1,46 +1,51 @@
 {
-  "total_items": 40,
-  "grounded_items": 36,
+  "total_items": 55,
+  "grounded_items": 49,
   "ungrounded": [
     {
-      "word": "звати'",
-      "exercise_type": "true-false",
-      "context": "'Мене звати' literally means 'My name is' in Ukrainian.",
+      "word": "однина",
+      "exercise_type": "group-sort",
+      "context": "Singular (Однина)",
       "role": "context"
     },
     {
-      "word": "ти'",
-      "exercise_type": "true-false",
-      "context": "You should use 'ти' (you) when talking to your professor or ",
+      "word": "множина",
+      "exercise_type": "group-sort",
+      "context": "Plural (Множина)",
       "role": "context"
     },
     {
-      "word": "студент'",
+      "word": "лікарка'",
       "exercise_type": "true-false",
-      "context": "In Ukrainian, you say 'Я — студент' without the word for 'am",
+      "context": "A female doctor refers to herself as 'лікарка'.",
       "role": "context"
     },
     {
       "word": "це'",
       "exercise_type": "true-false",
-      "context": "'Це' means 'this is' or 'these are'.",
+      "context": "The word 'це' changes form when referring to multiple items.",
+      "role": "context"
+    },
+    {
+      "word": "ти'",
+      "exercise_type": "true-false",
+      "context": "When addressing an adult stranger, you should use 'ти'.",
+      "role": "context"
+    },
+    {
+      "word": "звідки'",
+      "exercise_type": "true-false",
+      "context": "The word 'звідки' means 'where from'.",
       "role": "context"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 33,
-    "tested_in_exercises": 23,
+    "tested_in_exercises": 30,
     "not_tested": [
-      "вас",
-      "ви",
-      "вони",
-      "друг",
-      "його",
       "канада",
-      "ми",
       "німеччина",
-      "україна",
-      "її"
+      "україна"
     ]
   },
   "all_grounded": false

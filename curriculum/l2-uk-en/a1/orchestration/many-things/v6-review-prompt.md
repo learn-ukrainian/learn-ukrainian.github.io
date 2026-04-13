@@ -130,100 +130,86 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Діалоги — Dialogues
+## Діало́ги (Dialogues)
 
-When you step into a new environment, like setting up a classroom for a Ukrainian lesson, you rarely deal with just one isolated item. You need many chairs for the students, many tables to work on, and many books to read. This natural, everyday situation is the perfect place to learn how to express more than one thing. We call this grammatical concept the plural form, or **множина** (plural). Observe how teachers and students count and arrange items.
+A teacher and a few early students are preparing a classroom for a Ukrainian lesson. As they count the furniture and supplies, they have to move from singular nouns to plural nouns. Read the following conversation between the instructor and the students. It adapts the classroom inventory pattern in **Вашуленко Grade 3, pp. 114-115**.
 
-The following conversation shows a teacher asking the students to look around the room, based on the classic textbook by Vashulenko for Grade 3. Pay attention to how the students identify groups of objects.
+> **Вчи́тель:** До́брого ра́нку! Що тут є? *(Good morning! What is here?)*
+> **У́чні:** Тут є столи́, стільці́ і ві́кна. *(Here are tables, chairs, and windows.)*
+> **Вчитель:** До́бре. Які́ столи? *(Good. What kind of tables?)*
+> **Учні:** Столи вели́кі й нові́. А стільці — старі́. *(The tables are big and new. And the chairs are old.)*
+> **Вчитель:** А де на́ші кни́ги? *(And where are our books?)*
+> **Учні:** Книги там. *(The books are there.)*
 
-> **Вчитель:** Добрий день! **Що тут є?** *(Good afternoon! What is here?)*
-> **Учні:** Добрий день! Тут є **столи**, **стільці** і **вікна**. *(Good afternoon! Here are tables, chairs, and windows.)*
-> **Вчитель:** Добре. А **які столи**? *(Good. And what kind of tables?)*
-> **Учні:** **Столи великі** й **нові**. А **стільці** — **старі**. *(The tables are big and new. And the chairs are old.)*
+This first dialogue shows the core shift clearly: **стіл → столи**, **стіле́ць → стільці**, **вели́кий → великі**.
 
-Listen to the final sounds of those objects. You already know the singular words **стіл** (table), **стілець** (chair), and **вікно** (window) from previous modules. Notice how their endings transform to indicate that there are several of them in the room.
+Here is a short follow-up exchange with more classroom objects:
 
-These plural forms are essential everywhere, not just inside a classroom. Whenever you are buying supplies, asking for directions, or looking for various **речі** (things) in a local store, you must know how to ask for multiple items clearly and accurately.
+> **Вчитель:** Добре, працюємо далі. Тут один стіл, а тут столи. Тут одна дошка, а там дошки. Тут одне крісло, а там крісла.
+> **Учень 1:** А де підручники і карти?
+> **Учень 2:** Підручники тут. Карти теж тут.
+> **Вчитель:** Чудово. Тепер у нас є столи, стільці, дошки, крісла, підручники і карти.
 
-Imagine you are a student shopping for office supplies. The plural forms appear naturally when buying more than one item.
+The second dialogue moves the same grammar into a shop, where the student asks for several items, chooses a color, and gives a quantity.
 
-> **Студент:** Добрий день! **У вас є ручки?** *(Good afternoon! Do you have pens?)*
-> **Продавець:** **Так! Які ручки? Червоні чи сині?** *(Yes! What kind of pens? Red or blue?)*
-> **Студент:** **Сині**. І ще **зошити**. *(Blue. And also notebooks.)*
-> **Продавець:** **Скільки?** *(How many?)*
-> **Студент:** **Три зошити**, будь ласка. *(Three notebooks, please.)*
+> **Студе́нт:** До́брий день! У вас є ручки? *(Good afternoon! Do you have pens?)*
+> **Продаве́ць:** Так, є. Які ручки вам потрібні: червоні чи сині? *(Yes, we do. Which pens do you need: red or blue?)*
+> **Студент:** Сині, будь ласка. І ще три зошити. *(Blue ones, please. And three notebooks as well.)*
+> **Продавець:** Добре. Ось сині ручки і три зошити. Ще щось? *(All right. Here are blue pens and three notebooks. Anything else?)*
+> **Студент:** Ні, дякую. *(No, thank you.)*
+> **Продавець:** Будь ласка. *(You’re welcome.)*
 
-In this exchange, the student asks for pens and notebooks. The shopkeeper naturally responds with plural adjectives like red and blue to clarify the request. Notice how the endings changed from the basic singular forms you learned in previous modules. The secret to Ukrainian plurals lies entirely in the final letters of the words.
+This exchange gives you four useful plural models in context: **ручки**, **червоні**, **сині**, **три зошити**.
 
-## Один → багато — Singular → Plural
+## Один → бага́то (Singular → Plural)
 
-A famous Ukrainian textbook for the second grade by Bolshakova introduces plurals with a simple phrase: **один предмет → багато предметів** (one item → many items). In English, you typically add an "s" to the end of a word to make it plural. In Ukrainian, you change the "tail" or the ending of the word. There are three main plural patterns for the nominative case, depending on the noun's gender.
+This section follows **Большако́ва Grade 2, p. 18**, which starts with the contrast **один предме́т → багато предме́тів**. In the nominative plural, many masculine and feminine nouns use **-и**. You can see that in **стіл → столи**, **телефо́н → телефо́ни**, **кни́га → книги**, and **ла́мпа → ла́мпи**. After **г, к, х**, examples like **книга → книги**, **ру́чка → ручки**, and **су́мка → су́мки́** also show **-и**.
 
-The first pattern is for masculine nouns, which usually end in **-и** or **-і**. Most masculine words end in a hard consonant, and to make them plural, you simply add the letter **и**. For example, **стіл** (table) becomes **столи** (tables), **телефон** (phone) becomes **телефони** (phones), and **зошит** (notebook) becomes **зошити** (notebooks). If the masculine noun ends in a soft consonant, like the soft sign, you replace it with an **і**. This is why **стілець** (chair) becomes **стільці** (chairs).
+Another common plural ending is **-і**. This often appears after a soft stem, so learners should notice the whole pattern, not just the final letter. For example, **стілець → стільці** and **день → дні**. Here **стілець** does not lose the soft sign in the plural; instead, the pattern changes **-ець** to **-ьці**. Other masculine nouns still follow the more regular **-и** pattern, for example **зо́шит → зошити**.
 
-The second pattern belongs to feminine nouns, which also usually take **-и** or **-і**. These words typically end in **-а** or **-я**. To form the plural, you drop the final vowel and replace it with **и** or **і**. For instance, **книга** (book) becomes **книги** (books), **лампа** (lamp) becomes **лампи** (lamps), and **сумка** (bag) becomes **сумки** (bags).
+Neuter nouns often show a different plural ending. Many nouns in **-о** form the plural in **-а**: **вікно́ → вікна**, **лі́жко → лі́жка**, **крісло → крісла**, **дзе́ркало → дзерка́ла**. Later you will also meet some **-е** nouns that form plurals in **-я**. Not every noun is perfectly predictable, so it is still best to learn the singular and plural together. That is why pairs like **стіл — столи**, **книга — книги**, and **річ — ре́чі** are worth practicing aloud.
 
 :::tip
-There is a helpful guideline, though not a strict rule as exceptions exist: after the consonants **г**, **к**, and **х**, Ukrainian uses the **-и** ending. This is why **книга** (book) becomes **книги** (books) and **ручка** (pen) changes to **ручки** (pens). After most other consonants, nouns generally take **-и** or **-і** (**стіл** → **столи**, **стілець** → **стільці**).
+When memorizing new vocabulary, always practice saying the singular and plural forms together out loud. Repeating the pair **стіл — столи** helps your brain recognize the phonetic pattern naturally, rather than forcing you to calculate the ending every time you speak.
 :::
 
-The third pattern is for neuter nouns. The shift here is quite distinct: the ending changes to **-а** or **-я**. The neuter ending **-о** changes to **-а** (**вікно** → **вікна**). The neuter ending **-е** changes to **-я**, though words with this ending are not covered yet. A common example is **вікно** (window), which beautifully transforms into **вікна** (windows). Similarly, **ліжко** (bed) becomes **ліжка** (beds), **крісло** (armchair) shifts to **крісла** (armchairs), and **дзеркало** (mirror) changes to **дзеркала** (mirrors). This strong **-а** sound at the end is the signature of the neuter plural form.
+<!-- INJECT_ACTIVITY: group-sort-singular-plural -->
+<!-- INJECT_ACTIVITY: fill-in-make-it-plural -->
+<!-- INJECT_ACTIVITY: quiz-choose-correct-plural -->
 
-<!-- INJECT_ACTIVITY: noun-plural-formation -->
+## Прикме́тники у множині́ (Adjectives in Plural)
 
-<!-- INJECT_ACTIVITY: plural-choice-quiz -->
+This section follows **Большакова Grade 2, p. 42**. In the nominative plural, adjectives use one common ending: **-і**. So the question words **яки́й / яка / яке́** become **які**, and singular phrases change like this: **великий стіл → великі столи**, **нова́ книга → нові книги**, **чи́сте вікно → чи́сті вікна**.
 
-<!-- INJECT_ACTIVITY: singular-plural-sort -->
+For A1 learners, this is one of the simpler patterns in Ukrainian. Once the noun is plural, you do not have to choose among three different gender endings in this form. Instead, you use the plural adjective form: **весе́лий / весе́ла / весе́ле → весе́лі**.
 
-The table below summarizes these essential noun endings. Masculine and feminine nouns generally share the **-и** and **-і** endings, while neuter nouns stand apart with the **-а** and **-я** endings. Because there are exceptions and minor stem changes, the best strategy is to learn each plural form alongside its singular noun when you study new vocabulary.
+The same pattern works with colors: **червоні ручки**, **сині зошити**, **бі́лі сті́ни**, **чо́рні стільці**. Plural demonstratives are also simple: **ці** means "these" and **ті** means "those". Combine them directly with plural nouns and plural adjectives to make short, clear sentences:
 
-| Зміна (Change) | Однина (Singular) | Множина (Plural) |
-| :--- | :--- | :--- |
-| Чоловічий рід (Masculine) | **стіл**, **стілець** | **столи**, **стільці** |
-| Жіночий рід (Feminine) | **книга**, **ручка** | **книги**, **ручки** |
-| Середній рід (Neuter) | **вікно**, **ліжко** | **вікна**, **ліжка** |
-
-## Прикметники у множині — Adjectives in Plural
-
-The magic of plural adjectives lies in their simplicity. In the singular form, you had to memorize three different endings depending on the gender of the noun: **-ий** for masculine, **-а** for feminine, and **-е** for neuter. In the plural form, all adjectives converge to a single, universal ending: **-і**. Regardless of the noun's original gender, the adjective always takes **-і**. For example, the adjectives **який** / **яка** / **яке** (what kind) all become **які**, and **веселий** / **весела** / **веселе** (cheerful) all become **веселі**. So, **великий стіл** (big table) becomes **великі столи** (big tables), **нова книга** (new book) becomes **нові книги** (new books), and **чисте вікно** (clean window) becomes **чисті вікна** (clean windows).
-
-This universal rule applies perfectly to colors. When describing groups of objects, the color adjectives will all end in **-і**. You can have **червоні ручки** (red pens) on your desk, **сині зошити** (blue notebooks) in your bag, **білі стіни** (white walls) in your room, and **чорні стільці** (black chairs) in your kitchen. The uniform ending creates a rhythmic, melodic sound when you speak Ukrainian.
+*   **Ці столи великі.** *(These tables are big.)*
+*   **Ці книги нові.** *(These books are new.)*
+*   **Ті вікна чисті.** *(Those windows are clean.)*
+*   **Ті стільці старі.** *(Those chairs are old.)*
 
 :::note
-Demonstrative words also adapt to the plural form. When pointing out specific groups of objects, use **ці** (these) for items close by, and **ті** (those) for items located further away. Just like adjectives, they conveniently end in the **-і** sound. You can say **Ці столи великі** (These tables are big) when standing right next to them. If you are looking across the room, you would say **Ті вікна чисті** (Those windows are clean).
+The universal **-і** ending for plural adjectives is one of the most helpful rules in Ukrainian grammar. Once you know a group of items is plural, you no longer have to recall if the original noun was masculine, feminine, or neuter—the adjective ending is always the same.
 :::
 
-To talk about your personal belongings, you use the plural possessive word **мої** (my - plural). If you are carrying a stack of literature, you simply state **Це мої книги** (These are my books).
-
-<!-- INJECT_ACTIVITY: adjective-plural-agreement -->
-
-When you need to ask about the characteristics of plural objects, you use the question word **які** (what kind?). If you see an interesting stack of reading material, you ask your teacher **Які це книги?** (What kind of books are these?).
+<!-- INJECT_ACTIVITY: fill-in-adjective-agreement -->
 
 ## Підсумок — Summary
 
-The rules of plural noun formation rely on recognizing consistent patterns. Nouns change their endings based on their original gender. Masculine and feminine nouns typically take the **-и** or **-і** endings, while neuter nouns take the **-а** or **-я** endings. Always remember to learn each plural individually alongside its singular form. The core classroom triad provides perfect anchors for these patterns: **столи** (tables), **книги** (books), and **вікна** (windows).
+For a practical review, first say each noun pair out loud: **стіл → столи**, **книга → книги**, **вікно → вікна**, **крісло → крісла**. Then add an adjective: **великий стіл → великі столи**, **нова книга → нові книги**, **чисте вікно → чисті вікна**, **старе́ крісло → старі крісла**. Next practice demonstratives and possessives together: **ці столи**, **ті стільці**, **мої́ нові книги**, **мої сині зошити**. The key A1 idea is simple: noun plurals must be learned as vocabulary pairs, but plural adjectives stay regular with **-і**. If you can move from one object to many objects and keep the adjective plural at the same time, you are using the core pattern of this module correctly. Say each model once slowly and once at normal speed so the plural ending becomes automatic.
 
-The rules of agreement for describing many items are incredibly straightforward. Adjectives, demonstrative words like **ці** (these) and **ті** (those), and possessive words like **мої** (my - plural) all simplify in the plural form to use the universal **-і** ending. You always use **-і** for adjectives, such as **великі**, **нові**, **червоні**, and **сині**. This convergence makes describing multiple items significantly easier than describing just one thing, as you no longer need to match the specific gender of the noun.
+Before moving forward to the next module, take a moment to verify your practical understanding of these core plural mechanics. Try to answer the following self-check questions out loud:
 
-:::caution
-Always pay close attention to the stress marks when learning new plural forms. The stress can sometimes shift when a word becomes plural. For instance, the emphasis moves to the end in **книжки** (books), and to the beginning in **вікна** (windows). Check the vocabulary lists carefully!
-:::
+*   Can you quickly and accurately make these core vocabulary words plural: **стіл**, **книга**, and **вікно**?
+*   Look around your own room or classroom and describe the furniture you see. Answer the questions: **Які столи?** **Які стільці?** **Які вікна?**
+*   How would you correctly translate the following descriptive phrases into Ukrainian using the proper plural agreement: *these red pens*, *those old chairs*, and *my new books*?
 
-Test your understanding with this quick self-check Q&A before moving to the exercises.
-
-*   **Q:** Як буде «стіл» у множині? *(How is "table" in plural?)*
-*   **A:** **Столи**.
-*   **Q:** Яке закінчення мають прикметники у множині? *(What ending do adjectives have in plural?)*
-*   **A:** Закінчення **-і** (**великі**, **нові**).
-*   **Q:** Перекладіть: «Ці сині зошити». *(Translate: "These blue notebooks".)*
-*   **A:** **Ці сині зошити**.
-*   **Q:** Яке слово означає "those"? *(Which word means "those"?)*
-*   **A:** **Ті**.
-
- Practice these endings consistently, and they will quickly become second nature.
+If you can confidently apply the correct plural endings to both nouns and their descriptive adjectives, you are thoroughly prepared to start handling more complex environments and larger groups of objects in the upcoming lessons.
 </generated_module_content>
 
-**PIPELINE NOTE — Word count: 1314 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
+**PIPELINE NOTE — Word count: 1012 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -399,34 +385,203 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 92 words | Not found: 0 words
+Verified: 79 words | Not found: 36 words
 
-All 92 other words are confirmed to exist in VESUM.
+Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
+  ✗ Большако — NOT IN VESUM
+  ✗ Большакова — NOT IN VESUM
+  ✗ Вашуленко — NOT IN VESUM
+  ✗ Діало — NOT IN VESUM
+  ✗ Прикме — NOT IN VESUM
+  ✗ Продаве — NOT IN VESUM
+  ✗ Студе — NOT IN VESUM
+  ✗ бага — NOT IN VESUM
+  ✗ брого — NOT IN VESUM
+  ✗ весе — NOT IN VESUM
+  ✗ дзе — NOT IN VESUM
+  ✗ дзерка — NOT IN VESUM
+  ✗ ець — NOT IN VESUM
+  ✗ жка — NOT IN VESUM
+  ✗ жко — NOT IN VESUM
+  ✗ кна — NOT IN VESUM
+  ✗ кни — NOT IN VESUM
+  ✗ мка — NOT IN VESUM
+  ✗ мки — NOT IN VESUM
+  ✗ мпа — NOT IN VESUM
+  ✗ мпи — NOT IN VESUM
+  ✗ нку — NOT IN VESUM
+  ✗ предме — NOT IN VESUM
+  ✗ ркало — NOT IN VESUM
+  ✗ рні — NOT IN VESUM
+  ✗ сте — NOT IN VESUM
+  ✗ сті — NOT IN VESUM
+  ✗ стіле — NOT IN VESUM
+  ✗ телефо — NOT IN VESUM
+  ✗ тель — NOT IN VESUM
+  ✗ тники — NOT IN VESUM
+  ✗ тів — NOT IN VESUM
+  ✗ чка — NOT IN VESUM
+  ✗ чні — NOT IN VESUM
+  ✗ шит — NOT IN VESUM
+  ✗ ьці — NOT IN VESUM
+
+All 79 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
-## Verification Tools (MCP)
+---
 
-You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
+## Verification Tools (Shell Commands)
 
-**Core Verification:**
-- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
-- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
+You have access to verification tools via shell commands. Use these to verify
+Ukrainian vocabulary, check grammar, and search textbook content **as you write**.
 
-**Content Quality:**
-- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+**IMPORTANT:** Run verification commands BEFORE finalizing any Ukrainian text.
+Batch multiple verifications together to minimize round-trips.
 
-**Reference:**
-- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp_rag_search_literary` — verify literary references against primary sources
-- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
+### 1. Batch-verify Ukrainian words exist in VESUM (preferred — one call for many words)
 
-**Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_words
+results = verify_words(['слово1', 'слово2', 'слово3'])
+for w, matches in results.items():
+    if matches:
+        print(f'{w}: FOUND — lemma={matches[0][\"lemma\"]}, pos={matches[0][\"pos\"]}')
+    else:
+        print(f'{w}: NOT FOUND — may not exist in standard Ukrainian')
+"
+```
+
+### 2. Verify a single Ukrainian word in VESUM (with full morphological tags)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_word
+results = verify_word('WORD_HERE')
+if results:
+    for m in results:
+        print(f'lemma={m[\"lemma\"]}, pos={m[\"pos\"]}, tags={m[\"tags\"]}')
+else:
+    print('NOT FOUND in VESUM')
+"
+```
+
+### 3. Get all inflected forms of a lemma (declension/conjugation)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_lemma
+forms = verify_lemma('LEMMA_HERE')
+for f in forms[:20]:
+    print(f'{f[\"word_form\"]:20s} {f[\"pos\"]:8s} {f[\"tags\"]}')
+print(f'... {len(forms)} forms total')
+"
+```
+
+### 4. Check CEFR level of a word (is it level-appropriate?)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import query_cefr_level
+results = query_cefr_level('WORD_HERE')
+for r in results:
+    print(f'{r[\"word\"]}: {r[\"level\"]} ({r[\"pos\"]})')
+if not results:
+    print('Not in CEFR database')
+"
+```
+
+### 5. Search textbook content (Ukrainian school textbooks, Grades 1-11)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_textbooks
+keywords = {'keyword1', 'keyword2'}
+results = search_textbooks(keywords, 5)
+for r in results:
+    title = r.get('section_title', r.get('title', ''))
+    grade = r.get('grade', '?')
+    text = r.get('text', '')[:200]
+    print(f'Grade {grade} | {title}')
+    print(f'  {text}')
+    print()
+"
+```
+
+### 6. Search style guide for calques/Russianisms (Антоненко-Давидович, 279 entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_style_guide
+results = search_style_guide('TOPIC_HERE', 3)
+for r in results:
+    print(f'--- {r.get(\"word\", \"\")} [{r.get(\"section\", \"\")}]')
+    print(r.get('text', '')[:300])
+    print()
+if not results:
+    print('No style guide entries found')
+"
+```
+
+### 7. Look up word definition in СУМ-11 (Ukrainian explanatory dictionary, 127K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_definitions
+results = search_definitions('WORD_HERE', 3)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+### 8. Search idioms (Фразеологічний словник, 25K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_idioms
+results = search_idioms('WORD_HERE', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"text\", r.get(\"definition\", \"\")))[:200]}')
+"
+```
+
+### 9. English-to-Ukrainian translation (Балла, 79K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import translate_en_uk
+results = translate_en_uk('ENGLISH_WORD', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+---
+
+**WHEN to use these tools:**
+
+1. **Before writing any Ukrainian text** — batch-verify all key vocabulary with
+   `verify_words` (tool 1). Any word that returns NOT FOUND must be replaced.
+2. **When you suspect a Russicism or calque** — search the style guide (tool 6)
+   and verify the correct Ukrainian form with `verify_word` (tool 2).
+3. **When writing for A1/A2** — check CEFR levels (tool 4) to ensure vocabulary
+   is level-appropriate.
+4. **When unsure about a case ending or conjugation** — use `verify_lemma` (tool 3)
+   to see the full paradigm.
+5. **When covering a grammar topic** — search textbooks (tool 5) to see how
+   Ukrainian school textbooks teach it.
+6. **When you need the precise Ukrainian meaning** — use СУМ-11 (tool 7).
+7. **When looking for natural Ukrainian expressions** — search idioms (tool 8).
+
+**Batching rule:** Collect all words you want to verify, then run ONE `verify_words`
+call instead of multiple `verify_word` calls. This is faster and uses fewer tokens.

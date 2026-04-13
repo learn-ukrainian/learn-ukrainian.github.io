@@ -1,0 +1,50 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T10-09-03e91661.json
+phase: review
+prompt_chars: 67694
+response_chars: 9958
+prompt_words: 10166
+response_words: 1379
+sections:
+- name: preamble
+  start: 0
+  length: 469
+  fraction: 0.0069
+- name: plan
+  start: 469
+  length: 64121
+  fraction: 0.9472
+- name: output_spec
+  start: 64590
+  length: 3104
+  fraction: 0.0459
+large_sections:
+- plan
+directives_total: 28
+directives_covered: 23
+directives_missed:
+- kind: must
+  text: Whenever you want to assure someone that a task will be finished, or when
+    you are stating a definitive fact about a future achievement, the simple future
+    is required.
+  covered: false
+  coverage_note: 7/19 keywords (37%)
+- kind: must
+  text: You must watch out for stems that shift their final consonant when conjugated.
+  covered: false
+  coverage_note: 4/12 keywords (33%)
+- kind: must
+  text: You must always switch to an imperfective verb to talk about your current
+    actions.
+  covered: false
+  coverage_note: 4/11 keywords (36%)
+- kind: must
+  text: 'When you want to talk about the future, you must first ask yourself: "Do
+    I need to express a completed result or an ongoing process?" If your goal is to
+    highlight a completed action, a specific result, or a one-time event, you must
+    use the perfective aspect.'
+  covered: false
+  coverage_note: 10/27 keywords (37%)
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing

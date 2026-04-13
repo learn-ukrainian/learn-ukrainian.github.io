@@ -286,26 +286,28 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-- Confirmed: допомога, допоможіть (допомогти), швидка, поліція, лікарня, аварія, загубити, викликати, пожежа, порятунок, паспорт, адреса, номер, алергія, форма, будинок
-- Not found: [none]
+- Confirmed: допомога, допоможіть, швидка, поліція, лікарня, аварія, загубити, викликати, пожежа, порятунок, паспорт, адреса, номер, алергія, форма, будинок
+- Not found: none
 
 ## Grammar Rules
-- Наказовий спосіб (Imperative): Правопис § 106 — Forms like "допоможіть" are regular second-person plural imperatives (ending -іть for verbs with stressed endings or consonant clusters). Verified via VESUM: допоможіть (verb:perf:impr:p:2).
-- Написання адреси (Writing addresses): Правопис § 131 — Proper names of streets are capitalized (вулиця Хрещатик). Use of Locative case for location: "на вулиці Хрещатик", "у будинку десять".
+- Чергування у/в: Правопис §23 — Щоб уникнути збігу букв на позначення приголосних звуків, що є важкими для вимови, та щоб досягти милозвучності, в українській мові вживають на письмі прийменник у та префікс у- на початку слів у таких позиціях.
 
 ## Calque Warnings
-- адреса: OK — Verified: "адреса" is for location/postal address, while "адрес" is for a formal greeting/dedication (confirmed by textbooks and style guides).
-- викликати швидку: OK — Natural Ukrainian for "call an ambulance".
-- слухаю вас: OK — Standard polite telephone response.
-- заповнити форму: OK — "Форма" (form/blank) is acceptable, though "анкета" is often more specific for biographical data (verified via СУМ-11).
+- швидка допомога: OK — OK
+- заповнити форму: OK — OK
+- людині погано: OK — OK
 
 ## CEFR Check
-- номер телефону: A1 — Verified in Grade 2-6 textbooks.
-- допомога: A1 — Found in Grade 7 but used in very simple imperative contexts (A1-appropriate).
-- лікарня: A1 — Found in Grade 2 textbooks.
-- паспорт: A1 — Found in Grade 5/9, but a core survival word for foreigners (A1).
-- аварія: A1 — Found in Grade 4, survival vocabulary.
-- пожежа: A1 — Core survival vocabulary.
+- допомога: A1 — OK
+- лікарня: A1 — OK
+- алергія: A1 — OK
+- швидка: A2 — above target
+- поліція: A2 — above target
+- пожежа: A2 — above target
+- загубити: A2 — above target
+- викликати: A2 — above target
+- аварія: B1 — above target
+- порятунок: B2 — above target
 </pre_verified_facts>
 
 
@@ -654,12 +656,14 @@ These exercises, adapted from Ukrainian school materials, provide a gold standar
 
 ## Section Structure
 
-Write these sections as H2 headings, in this exact order:
+Write these sections as H2 headings, in this **exact** order:
 
 - `## Dialogues` (~300 words)
 - `## Екстрені ситуації (Emergencies)` (~300 words)
 - `## Допомога (Getting Help)` (~300 words)
 - `## Summary` (~300 words)
+
+**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim** as an `## H2` line. This includes the FINAL summary/transition section (`Підсумок: ...`, `Підсумок та перехід до M...`, etc.) — the writer's most common failure is silently dropping the closing section. Do NOT skip it. Do NOT renumber. Do NOT merge headings. The post-write quick-verify check will fail your build if any heading is missing, even if the prose itself is excellent.
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -667,16 +671,17 @@ Each section should follow the word budget specified. The total must reach 1200 
 
 ## Content Rules
 
-TARGET: 20-35% Ukrainian.
+TARGET: 20-35% Ukrainian. ⚠️ HARD GATE — the audit REJECTS modules below 20%.
 LANGUAGE ROLES:
-- THEORY & EXPLANATION: English prose — brief and clear. Show, don't tell.
+- THEORY & EXPLANATION: English prose — brief, 2-3 sentences per concept. No long expository paragraphs. Explain once, then show Ukrainian.
+- UKRAINIAN NARRATIVE PARAGRAPHS: **REQUIRED — minimum 1 per section.** A 3-6 sentence Ukrainian paragraph demonstrating the concept in use, followed IMMEDIATELY by a `> *English translation*` blockquote. This is the PRIMARY driver of hitting the immersion target. Without these paragraphs you cannot reach 20%.
 - PARADIGM TABLES: Conjugation/declension tables with all cells Ukrainian.
-- EXAMPLE LISTS: Ukrainian sentences in bulleted lists (each: Ukrainian — English gloss).
-- DIALOGUES: Mini-dialogues in blockquotes with English gloss per line.
+- EXAMPLE LISTS: Ukrainian sentences in bulleted lists (each: Ukrainian — English gloss). Minimum 5 per rule.
+- DIALOGUES: Mini-dialogues in blockquotes with English gloss per line. At least 1 dialogue per module.
 - PATTERN BOXES: Show transformations: `читати → читай → читайте`.
 - INLINE: Ukrainian words/phrases bolded in English prose.
-- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian. Full Ukrainian sentences go in tables, bulleted lists, dialogues, or pattern boxes.
-Ukrainian sentences max 10 words. Mix container types.
+- STRUCTURAL RULE: Every section MUST contain a Ukrainian narrative paragraph (3-6 sentences, translated in blockquote) PLUS supporting tables/lists/dialogues/pattern boxes. Pure-English sections are FORBIDDEN at M35+.
+Ukrainian sentences max 12 words. Mix container types.
 
 HARD GRAMMAR RULES (audit will reject violations):
 - Max 10 words per Ukrainian sentence (STRICT — count every word)
@@ -708,6 +713,25 @@ PLAN-AWARE EXEMPTIONS: The following bans are RELAXED for this module because th
 - **Zero calques**: No приймати душ→брати душ, приймати рішення→ухвалювати рішення
 - **Zero paronyms**: тактична≠тактовна, ефектний≠ефективний — use the right word, not a similar-sounding one
 - **Natural Ukrainian**: Write how a Ukrainian teacher would explain this to a student. Not robotic, not textbook-dry, not overly casual.
+
+### FORBIDDEN WORDS — never write these (#1189)
+
+The following Russian words have leaked into past builds and broken modules. They are **hard-banned** — the post-write toxic-token scanner will fail your build the moment it sees one. Use the Ukrainian alternative every time, even in dialogues, even in casual prose, even when quoting a learner's mistake (use a `<!-- VERIFY -->` placeholder instead of typing the Russian form):
+
+| Russian (FORBIDDEN) | Ukrainian (USE THIS) |
+|---|---|
+| хорошо | добре |
+| конечно | звичайно / певна річ |
+| спасибо | дякую |
+| пожалуйста | будь ласка / прошу |
+| ничего | нічого |
+| сейчас | зараз |
+| тоже | теж / також |
+| здесь | тут |
+| кот | кіт |
+| кон | кін |
+
+This list is enforced word-for-word by `scripts/build/quick_verify.py` (SEVERE_RUSSIANISMS). If you produce any of these tokens — even inside a quoted example, even inside a dialogue line spoken by a Russian-speaking character — the build halts immediately. There is no exception.
 
 **Authority hierarchy (if uncertain about a word, check in this order):**
 VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (stress) → Антоненко-Давидович (style) → Грінченко (etymology).
@@ -817,37 +841,35 @@ The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> blo
 
 <skeleton>
 ## Dialogues (~330 words total)
-- P1 (~40 words): Introduction to high-stress communication. Explain that in emergencies, Ukrainian shifts to short, direct functional chunks where clarity is more important than perfect grammar.
-- P2 (~120 words): Dialogue 1 — Calling 112. Adam calls from вулиця Хрещатик to report an аварія (car accident). Operator asks "Що сталося?" (What happened?) and "Де ви?" (Where are you?). Adam provides location: "біля метро Майдан Незалежності" and personal info: "Мене звати Адам. Мій номер — нуль дев'яносто три...".
-- P3 (~110 words): Dialogue 2 — Lost documents at the Поліція (Police). Adam asks for directions ("Вибачте, де тут поліція?") and reports his loss ("Я загубив паспорт"). The officer asks for his прізвище (surname) and number, then provides a форма (form) to fill out.
-- P4 (~60 words): Analysis of the communicative strategy used in both dialogues. Highlight the pattern: Alert ("Допоможіть!") -> Problem ("Тут аварія" / "Я загубив паспорт") -> Location ("Я на вулиці...") -> Personal Identity.
-- <!-- INJECT_ACTIVITY: dialogue-order --> [order, Put the dialogue with the 112 operator in the correct order, 6 items]
+- P1 (~50 words): Introduction to emergency situations in Ukraine. Emphasize that in high-stress moments, clear and direct language (using formulaic chunks) is far more important than perfect grammar.
+- P2 (~120 words): Dialogue 1 — Calling 112 for a car accident. Include the operator answering ("Служба порятунку, слухаю вас"), the driver stating the problem ("Допоможіть! Тут аварія!", "Людина не рухається!"), giving location ("Де ви?", "На вулиці Хрещатик, біля метро Майдан Незалежності"), and the operator confirming ("Зрозуміло. Швидка вже їде. Як вас звати?").
+- P3 (~120 words): Dialogue 2 — Lost documents at a police station. Include asking for directions ("Вибачте, де тут поліція?", "Прямо і наліво"), reporting the loss ("Добрий день. Я загубив паспорт.", "Де ви його загубили?", "Може, в метро"), providing personal details ("Як ваше прізвище?", "Ваш номер телефону?"), and being asked to fill a form ("Заповніть цю форму, будь ласка").
+- P4 (~40 words): Brief breakdown of the dialogue structure for emergencies: First state the problem, then your location, and finally your personal information.
+- <!-- INJECT_ACTIVITY: order-112-call --> [order, Put the dialogue with the 112 operator in the correct order, 6 items]
 
 ## Екстрені ситуації (Emergencies) (~330 words total)
-- P1 (~70 words): Emergency Numbers in Ukraine. Explain the universal number 112 (один один два) and the specific services: 101 (пожежна), 102 (поліція), and 103 (швидка). Emphasize that these are non-negotiable memorization items.
-- P2 (~80 words): The Power of the Imperative. Teach the core survival calls: "Допоможіть!" (Help!) and "Викличте швидку!" (Call an ambulance!). Note that these use the plural/formal imperative (-іть) because you are usually addressing a stranger or a service operator.
-- P3 (~90 words): Identifying the Situation. Introduce specific labels for the problem: "Тут аварія!" (There is an accident!), "Тут пожежа!" (There is a fire!), and "Людині погано!" (Someone is feeling bad!). Explain "Мені потрібна допомога!" as a general need statement.
-- P4 (~90 words): Stating your Location. Teach the address formula: Вулиця -> Будинок -> Квартира. Use phrases like "Я на вулиці Шевченка," "Я біля метро," and "Адреса: будинок номер десять." Reinforce the use of prepositions "на" and "біля" from previous modules.
-- <!-- INJECT_ACTIVITY: phrase-choice-quiz --> [quiz, Choose the correct emergency phrase for the situation, 5 items]
+- P1 (~70 words): The Ukrainian emergency numbers. Introduce 112 (один один два) as the universal number. Briefly mention the specific services: 101 (пожежна допомога), 102 (поліція), and 103 (швидка допомога). Note that these are standard in Ukraine.
+- P2 (~80 words): The Alarm phase and core chunks. Teach the formal/plural imperatives used to call for help: "Допоможіть!" (Help!), "Викличте швидку!" (Call an ambulance!), "Викличте поліцію!" (Call the police!). Emphasize learning these as fixed chunks.
+- P3 (~80 words): Stating the immediate problem using "Тут..." (Here is...). Provide critical examples: "Тут аварія!" (There's an accident here!), "Тут пожежа!" (There's a fire here!). Introduce phrases for personal distress: "Людині погано!" (Someone is feeling bad!), "Мені потрібна допомога!" (I need help!).
+- P4 (~100 words): Giving your location ("Де ви?"). Review location phrases from A1.5: "Я на вулиці Хрещатик" (I'm on Khreshchatyk street), "Я біля метро" (I'm near the metro), "Я в метро". Explain the specific formula for an address: "Моя адреса: вулиця Хрещатик, будинок десять." Warn against the false friend "адрес" (use "адреса").
+- <!-- INJECT_ACTIVITY: quiz-emergency-phrases --> [quiz, Choose the correct emergency phrase for the situation, 5 items]
 - <!-- INJECT_ACTIVITY: fill-in-emergency-call --> [fill-in, Complete the emergency phone call, 6 items]
 
 ## Допомога (Getting Help) (~330 words total)
-- P1 (~100 words): Medical Assistance. Teach "Мені потрібен лікар" (I need a doctor). Re-introduce the structure "У мене болить..." (My ... hurts) from M53 with key body parts: голова (head), живіт (stomach), горло (throat). Explain that "Мені погано" is the general way to say you feel ill.
-- P2 (~80 words): Pharmacy and Precautions. Phrases for the pharmacy: "Дайте, будь ласка, таблетки" and the critical safety phrase "У мене алергія на..." (I have an allergy to...). Contrast this with "Мені потрібні ліки" (I need medicine).
-- P3 (~90 words): Personal Data for Officials. How to provide identification: "Моє прізвище — Сміт," "Я з Америки/Канади," and "Мій паспорт у готелі." Explain the difference between ім'я (first name) and прізвище (surname) in a bureaucratic context.
-- P4 (~60 words): Overcoming the Language Barrier. Essential phrases for when you don't understand: "Я не розумію," "Повторіть, будь ласка" (Please repeat), and "Ви говорите англійською?" (Do you speak English?).
-- <!-- INJECT_ACTIVITY: report-issue-fill-in --> [fill-in, Reporting an issue at the police station or hospital, 5 items]
+- P1 (~70 words): Seeking medical help at the hospital (лікарня). Introduce the unanalyzed chunk "Мені потрібен лікар" (I need a doctor) and "Мені потрібна швидка" (I need an ambulance).
+- P2 (~90 words): Describing medical issues using the "У мене болить..." structure (review from M53). Emphasize that this is the natural Ukrainian way, contrasting it with English "I have...". Examples: "У мене болить голова / живіт". Introduce "У мене алергія на..." (I'm allergic to...).
+- P3 (~60 words): Managing communication barriers in stressful situations. Teach formal imperatives and phrases for clarification: "Я не розумію", "Повторіть, будь ласка", "Ви говорите англійською?".
+- P4 (~110 words): Providing personal details at the police station or hospital. Review formulas: "Мене звати...", "Моє прізвище...", "Мій номер телефону...", "Я з [country]". Teach reporting lost items using the past tense: "Я загубив (m) / загубила (f) паспорт" (I lost my passport). Mention the document: "Мій паспорт..." or "заповніть форму".
+- <!-- INJECT_ACTIVITY: fill-in-reporting-issue --> [fill-in, Reporting an issue at the police station or hospital, 5 items]
 
 ## Підсумок (~330 words total)
-- P1 (~80 words): Emergency Survival Recap. 112 is your main tool. Use "Допоможіть!" and "Викличте швидку!" immediately. Remember that speed and clarity in Ukrainian "chunks" beat perfect case endings in these moments.
-- P2 (~70 words): Location Recap. Always state the Street (вулиця) and Building (будинок). If you are outside, use landmarks: "біля метро," "навпроти готелю."
-- P3 (~60 words): Medical/Personal Recap. Use "У мене болить..." for pain and "Я загубив..." for lost items. Keep your прізвище and номер телефону ready.
-- P4 (~120 words): Self-check:
-    - Can you call 112 and state there is an accident? (Тут аварія!)
-    - Can you give your current address including street and building? (Вулиця..., будинок...)
-    - Can you tell a doctor what hurts? (У мене болить...)
-    - Can you report a lost passport to the police? (Я загубив паспорт. Моє прізвище...)
-    - Do you know the difference between 101, 102, and 103?
+- P1 (~180 words): Emergency survival kit recap. Reiterate 112 as the universal emergency number. Review the critical first words to shout: "Допоможіть!", "Викличте швидку / поліцію!". Recap the sequence for reporting: state the problem ("Тут пожежа / аварія"), the location ("Я на вулиці... / біля..."), and the medical need ("Мені потрібен лікар", "У мене болить..."). Remind them to be ready with personal info (ім'я, прізвище, номер телефону, адреса, країна) and how to report a lost item ("Я загубив / загубила паспорт").
+- P2 (~150 words): Self-check questions:
+  * Питання: Як викликати поліцію чи швидку? / Відповідь: Викличте поліцію! Викличте швидку!
+  * Питання: Як сказати, що сталася аварія або пожежа? / Відповідь: Тут аварія! Тут пожежа!
+  * Питання: Як сказати, що комусь погано? / Відповідь: Людині погано! Допоможіть!
+  * Питання: Як сказати про втрату документів? / Відповідь: Я загубив / загубила паспорт.
+  * Питання: Як сказати про біль і потребу в лікарі? / Відповідь: У мене болить голова. Мені потрібен лікар.
 
 Grand total: ~1320 words
 </skeleton>
@@ -857,11 +879,57 @@ Grand total: ~1320 words
 Write in Markdown. Use:
 - `## Section Title` for main sections
 - `### Subsection` for subsections within a section
-- `**bold**` for Ukrainian words being taught — EVERY bold Ukrainian word MUST have an English translation on first use, either in parentheses `**слово** (translation)` or inline `**слово** means "translation"`. No exceptions.
+- `**bold**` for Ukrainian words being taught. For **A1 and A2** levels, provide an English translation on first use (e.g. `**стіл** (table)`) because learners lack the vocabulary to infer meaning. For **B1 and above**, do NOT provide inline translations for standard vocabulary — the learner will use the module's словник (vocabulary table). You may provide ONE parenthetical English translation ONLY for highly abstract grammar/linguistic terms on first use (e.g. `**видова пара** (aspectual pair)`).
 - Tables for paradigms (conjugation, declension)
 - `:::tip` / `:::caution` / `:::note` for callout boxes
 - `<!-- INJECT_ACTIVITY: {id} -->` for exercise placement (markers only — do NOT write exercise content)
 
 Do NOT write MDX component syntax, JSON, or DSL exercise blocks (:::quiz, etc.). Plain Markdown with injection markers.
+
+---
+
+## MANDATORY FINAL CHECKLIST (#1189)
+
+Before you finish writing, verify the prose against this checklist. Failing any item will fail the build.
+
+### Section headings (verbatim)
+
+Every heading from "Section Structure" above MUST appear as an `## H2` in your output, in order, **including the closing `Підсумок:` / `Підсумок та перехід до M...` summary**. The single most common writer failure across the B1 build has been silently dropping the final summary section. Re-read your output before stopping. If the last section in the plan is missing, write it now.
+
+### Required vocabulary (every word must appear)
+
+You MUST use **every word** from the list below at least once in the prose, in a natural sentence with bold + English translation. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, прагматика, діагностика, дієвідмінювання, зворотний, двовидовий, одновидовий, неозначено-кількісний, etc.) is the most frequently dropped category — actively find homes for those words even if it means adding a sentence that defines them.
+
+- [ ] допомога (help, f)
+- [ ] допоможіть (help! — imperative)
+- [ ] швидка (ambulance, f — short for швидка допомога)
+- [ ] поліція (police, f)
+- [ ] лікарня (hospital, f)
+- [ ] аварія (accident, f)
+- [ ] загубити (to lose)
+- [ ] викликати (to call/summon)
+
+### Forbidden words (never produce)
+
+Do not write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use `<!-- VERIFY -->` instead). The post-write toxic-token scanner will fail the build immediately:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+### Level-specific immersion check
+
+The level-appropriate immersion rule was already injected at the top of
+this prompt as `IMMERSION RULE`. Re-read it now BEFORE you stop writing.
+If your level's rule contains a CHECKLIST block, walk through every item.
+If it doesn't, just verify your output matches the LANGUAGE ROLES and
+TARGET stated in that block.
+
+This used to hard-code a B1+ checklist that confused A1/A2 models (where
+translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+The single source of truth is now
+`scripts/pipeline/config_tables.py:IMMERSION_RULES`.
+
+---
 
 Begin writing now. Start with the first section heading.

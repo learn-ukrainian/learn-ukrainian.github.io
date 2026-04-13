@@ -1,0 +1,199 @@
+vocabulary:
+- word: чий
+  translation: whose
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: котри́й
+  translation: which (literary synonym of який)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: антецеде́нт
+  translation: antecedent
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: постпози́ція
+  translation: postposition
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: означальне речення
+  translation: relative clause
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: яки́й
+  translation: which / that (relative pronoun)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: відмі́нок
+  translation: grammatical case
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: си́нтаксис
+  translation: syntax
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: пунктуа́ція
+  translation: punctuation
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: при́судок
+  translation: predicate
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: дода́ток
+  translation: object (secondary sentence member)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: озна́чення
+  translation: attribute
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: обста́вина
+  translation: adverbial modifier
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: просте речення
+  translation: simple sentence
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: словосполу́чення
+  translation: word combination / phrase
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: головне слово
+  translation: main word
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: залежне слово
+  translation: dependent word
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: безсполучниковий зв'язок
+  translation: asyndetic connection
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: сполучниковий зв'язок
+  translation: syndetic connection
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: тире́
+  translation: dash
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ко́ма
+  translation: comma
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: Подивіться ліворуч
+  translation: Look to the left
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: на згадку
+  translation: as a keepsake / for memory
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Зві́сно
+  translation: Of course
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: саме так
+  translation: exactly / that's right
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: з іншого боку
+  translation: on the other hand
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: напри́клад
+  translation: for example
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: носій мови
+  translation: native speaker
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Дуже вам дякую
+  translation: Thank you very much
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: крихки́й
+  translation: fragile
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ні́жний
+  translation: delicate
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: тіни́стий
+  translation: shady
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: рі́дкісний
+  translation: rare
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true

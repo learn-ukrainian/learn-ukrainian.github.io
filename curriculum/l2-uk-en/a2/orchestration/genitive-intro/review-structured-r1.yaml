@@ -2,51 +2,52 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 9
-  evidence: 'The module covers all three major grammatical concepts from the outline
-    (absence with `немає`, singular endings `-а/-у`, plural endings with quantity).
-    However, it misses the required vocabulary word '
+  score: 8
+  evidence: 'All three planned H2 sections are present and correctly ordered, but
+    two planned items are missing from the prose: the quantity trigger `декілька`
+    is absent, and the Zabолотний note on `немає vs не ма'
 - dimension: 2
   name: Linguistic accuracy
-  score: 9
-  evidence: 'The distinction between `-а/-я` and `-у/-ю` is brilliantly explained.
-    However, the text incorrectly states: "the dominant ending is **-ів** (or **-їв**
-    after a vowel or soft sign)." After a soft sign,'
+  score: 5
+  evidence: 'Two statements teach wrong grammar: `Коли ми кажемо слово «немає», іменник
+    після нього завжди змінює своє закінчення. Це правило працює для всіх слів.` and
+    `Якщо слово закінчується на голосний або м''я'
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: Superb PPP flow. The use of "mental charts" and clear contrasts (*Тут
-    є стіл* vs *Тут немає стола*) makes a complex topic highly accessible. The explanation
-    of `немає` vs `не має` directly aligns with
+  score: 6
+  evidence: The module has many examples and a clear section flow, but pedagogy is
+    undermined by the two false generalizations above, which learners are likely to
+    memorize as rules.
 - dimension: 4
   name: Vocabulary coverage
   score: 8
-  evidence: Covers most required words (`родовий відмінок`, `немає`, `багато`, `мало`,
-    `кілька`, `скільки`, `закінчення`), but completely fails to introduce the Ukrainian
-    term `множина` in the prose, and `однина`
+  evidence: Required vocabulary is well covered in context (`родовий відмінок`, `немає`,
+    `багато`, `мало`, `кілька`, `скільки`, `закінчення`, `однина`, `множина` all appear),
+    and recommended items such as `кількі
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: All required exercise markers are present, perfectly matching the plan's
-    requested types and focuses.
+  score: 9
+  evidence: 'Marker count matches the plan exactly, and placement is sensible: quiz
+    after absence, fill-in after singular endings, and three quantity-related activities
+    after the quantity section. No visible exerc'
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: The tone is warm, encouraging, and natural ("Think of it as saying...",
-    "Let's see this in action"), devoid of corporate or gamified filler.
+  score: 9
+  evidence: The tone is teacherly and generally substantive (`Let us practice...`,
+    `Let us consolidate...`) without gamified fluff.
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: The module is well-structured, follows the plan's exact sections, and
-    the word count (3245) generously exceeds the target without rambling.
+  evidence: All planned H2 headings are present, markdown is clean, and the pipeline
+    word count is 2968, which is above the 2000 target.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Neutral, practical, and highly authentic everyday examples (apartments,
-    cafes, time, money).
+  evidence: No Russia-centric framing or cultural distortions appear; the module treats
+    Ukrainian on its own terms.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: The dialogues are contextual, realistic, and effectively isolate the target
-    grammar (e.g., discovering missing furniture in a new apartment).
+  score: 9
+  evidence: Both dialogues have named speakers and plausible situations (`new apartment`,
+    `going to the cinema`), rather than robotic prompt-response exchanges.
 findings: []

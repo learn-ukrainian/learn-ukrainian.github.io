@@ -1,0 +1,66 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T11-51-80d67257.json
+phase: write-chunk-02
+prompt_chars: 51963
+response_chars: 5008
+prompt_words: 6939
+response_words: 734
+sections:
+- name: header
+  start: 0
+  length: 432
+  fraction: 0.0083
+- name: skeleton
+  start: 432
+  length: 2039
+  fraction: 0.0392
+- name: prior_summary
+  start: 2471
+  length: 3266
+  fraction: 0.0629
+- name: plan
+  start: 5737
+  length: 17578
+  fraction: 0.3383
+- name: wiki
+  start: 16886
+  length: 28433
+  fraction: 0.5472
+- name: output_spec
+  start: 51748
+  length: 215
+  fraction: 0.0041
+large_sections:
+- wiki
+directives_total: 18
+directives_covered: 11
+directives_missed:
+- kind: must
+  text: 'The ending must agree with the noun: прочитана книга (ж.'
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: must
+  text: '**MANDATORY — never omit.'
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 3/11 keywords (27%)
+- kind: inject_activity
+  text: match-up-formation-suffixes
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: error-correction-alternations
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: 'fill-in, Вставте правильну граматичну форму у реченнях на тему пасивні дієприкметники:
+    значення'
+  covered: false
+  coverage_note: marker missing

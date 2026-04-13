@@ -2,45 +2,45 @@
   "module": "dative-nouns",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-04-11T02:36:32.905746Z",
+  "last_audit": "2026-04-13T06:29:01.242037Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-11T02:36:29.914881Z",
+    "md": "2026-04-13T06:28:57.916345Z",
     "meta": null,
-    "activities": "2026-04-08T00:46:57.304096Z",
-    "vocabulary": "2026-04-08T00:50:03.999122Z",
+    "activities": "2026-04-13T06:10:55.936092Z",
+    "vocabulary": "2026-04-13T06:12:09.808539Z",
     "research": null,
     "plan": "2026-04-04T22:04:59.940689Z"
   },
   "gates": {
     "meta": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Valid Structure"
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Summary'"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "3653/2000 (raw: 3721)"
+      "status": "fail",
+      "violations": 2,
+      "message": "3102/2000 (raw: 3157) | engagement: 0/3 | immersion: 33.7% LOW (target 40-70% (A2.1))"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "7/0"
+      "message": "10/0"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "32/1"
+      "message": "38/1"
     },
     "vocab_progression": {
       "status": "warn",
       "violations": 0,
-      "message": "\u0394 -15 | premature=5 | gaps=0 | well-paced=5",
-      "delta": -15,
-      "premature": 5,
+      "message": "\u0394 -24 | premature=6 | gaps=0 | well-paced=3",
+      "delta": -24,
+      "premature": 6,
       "gaps": 0,
-      "well_paced": 5
+      "well_paced": 3
     },
     "naturalness": {
       "status": "info",
@@ -59,10 +59,12 @@
     }
   },
   "overall": {
-    "status": "pass",
-    "blocking_issues": [],
-    "pass_count": 6,
-    "fail_count": 0,
+    "status": "fail",
+    "blocking_issues": [
+      "Structure: Missing '## Summary'"
+    ],
+    "pass_count": 4,
+    "fail_count": 2,
     "deferred_count": 0
   }
 }

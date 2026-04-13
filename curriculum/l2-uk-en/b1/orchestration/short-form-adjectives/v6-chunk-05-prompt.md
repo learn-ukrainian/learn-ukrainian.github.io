@@ -22,7 +22,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-Наприклад, чоловік скаже: «Я певен, що він прийде на зустріч вчасно» *(I am certain that he will come to the meeting on time)*. Жінка заявить: «Я абсолютно певна у своєму рішенні» *(I am absolutely certain in my decision)*. Ця коротка форма звучить рішуче, категорично та переконливо. Вона показує, що людина не має жодних сумнівів. В українській мові успішно існує також повна форма **певний** *(certain, specific)*. Однак її семантика та стилістична роль трохи відрізняються. Повний прикметник частіше виступає спокійним описовим означенням і може просто означати «деякий» або «конкретний». Наприклад: «На зустріч прийшла певна кількість зацікавлених людей» *(A certain number of interested people came to the meeting)*. У такому контексті ми не можемо використати коротку форму. Також повну форму використовують для характеристики: «Він дуже певний у собі хлопець» *(He is a very self-confident guy)*. Але коли ви хочете емоційно та твердо заявити про власну беззаперечну впевненість у факті, предикативна форма «певен» чи «певна» завжди буде найкращим вибором. Короткі форми **годен** *(fit, capable)* та **ладен** *(willing, ready)* допомагають нам висловити здатність або готовність до виконання певної дії. Ці виразні прикметники майже завжди нерозривно комбінуються з інфінітивом дієслова у реченні. Форма «годен» означає об'єктивну фізичну, моральну або інтелектуальну спроможність людини щось зробити. Наприклад: «Він годен самостійно відремонтувати цей автомобіль» *(He is capable of repairing this car by himself)*. Цікаво, що у деяких західних діалектах української мови слово «годен» також може означати «вартий» або «гідний» якоїсь винагороди. Відповідна жіноча форма — **годна** *(capable, f.)*: «Вона годна працювати над завданням весь день». Натомість форма «ладен» передає глибоку внутрішню готовність, щире бажання або відчайдушну рішучість діяти. Це швидше про психологічний стан та беззаперечну згоду. Наприклад: «Вона ладна допомогти нам у будь-яку хвилину» *(She is willing to help us at any minute)*. Рішучий чоловік скаже: «Я ладен піти на цей ризик заради нашої мети» *(I am ready to take this risk for our goal)*. Обидва ці слова активно живуть у розмовній мові та літературі, роблячи щоденне мовлення більш динамічним. Вони завжди звучать емоційніше, ніж нейтральні синоніми «здатний» чи «готовий». Нарешті, варто звернути увагу на такі популярні короткі форми, як **варт** *(worth)* та **рад** *(glad)*. Слово «варт» (або його форма середнього роду **варто** *(worth, n.)*) є одним із найпоширеніших способів порекомендувати щось іншим людям. Класична конструкція «Це варто побачити» *(This is worth seeing)* використовується постійно, коли ми говоримо про цікаві фільми чи події. Якщо ми описуємо конкретний іменник, то граматично узгоджуємо форму: «Ця вистава дійсно **варта** *(worth, f.)* вашої уваги» *(This play is really worth your attention)*. Коротка предикативна форма «рад» (для чоловіків) та **рада** *(glad, f.)* (для жінок) має дуже вузьку, але надзвичайно важливу сферу використання. Ці слова жорстко обмежуються вираженням особистих позитивних почуттів радості чи задоволення. Найчастіше ми чуємо їх у ввічливих формулах вітання та етикету. Наприклад: «Дуже рад знайомству з вами» *(Very glad to meet you)* або «Я неймовірно рада вас бачити сьогодні» *(I am incredibly glad to see you today)*. Використання короткої форми в таких комунікативних ситуаціях робить вітання набагато більш щирим, теплим та безпосереднім, ніж використання звичайного повного прикметника «радий». <!-- INJECT_ACTIVITY: fill-in-modern -->
+naturally takes this short form in the masculine singular. For feminine, neuter, and plural, it looks just like a regular full adjective: *потрібна*, *потрібне*, *потрібні*. ::: Another highly active short form is **певен/певна** (certain, sure — short form). You will frequently hear this in the construction *Я певен, що...* (I'm certain that...) or *Вона певна, що...* (She is certain that...). While you could technically use the **повний прикметник** (full-form adjective) in the same role (*Я певний*), native speakers strongly prefer the short form when expressing personal conviction or belief. It carries a distinct psychological weight, signaling that the speaker has completely made up their mind and leaves no room for doubt. Коли людина каже «я певен», її слова звучать набагато рішучіше та категоричніше. Ця коротка форма працює як сильний присудок, який передає глибоку внутрішню впевненість мовця у своїх словах чи діях. Натомість повний прикметник «певний» частіше використовується для нейтрального опису або вказує на якусь невизначеність предмета. Наприклад, ми часто використовуємо вислів «певна кількість» або «за певних умов», де немає жодної емоційної сили, а є лише проста констатація факту чи обставин. When expressing readiness or capability, Ukrainian employs the **короткий прикметник** (short-form adjective) in two common variations: **годен/годна** (fit, capable — short form) and **ладен/ладна** (willing, ready — short form). These adjectives almost exclusively combine with verbs in the infinitive to describe a person's potential to perform an action. For instance, *Він годен це зробити* means he has the strength, skill, or capacity to do it. It is a very practical, action-oriented construction that you will hear often when people are assessing whether someone is up to a challenging task. Форма «ладен» має дещо інший смисловий відтінок. Вона вказує не на фізичну здатність, а на психологічну готовність або сильне бажання діяти. Якщо ми кажемо «Вона ладна допомогти», це означає, що людина має щирий намір втрутитися в ситуацію. У деяких діалектах слово «годен» також може означати гідність або відповідність певним стандартам, хоча в літературній мові воно найчастіше поєднується саме з інфінітивом для вираження спроможності. Finally, you will encounter the short forms **варт/варта** (worth — short form) and **рад/рада** (glad — short form) in very specific, highly frequent conversational contexts. Unlike words restricted to the **народнопоетичний** (folk-poetic register), these are purely practical. The form *варт* (or its neuter equivalent *варто*) is essential for making recommendations. Saying *Це варто побачити* (It's worth seeing) or *Ця книга варта уваги* (This book is worth your attention) is the most natural way to suggest something valuable to a friend. It is much more idiomatic than trying to translate the English verb "deserves" directly. Слово «рад» зазвичай обмежене контекстом особистих почуттів і традиційних вітань. Ви не можете сказати, що якась подія є «рада», адже це почуття притаманне лише живим істотам, які здатні відчувати радість. Найчастіше ви почуєте цю форму під час знайомства або довгоочікуваної зустрічі, коли люди привітно кажуть «Рад знайомству» або «Рада вас бачити». Це робить привітання значно більш особистим і щирим, надійно закріплюючи коротку форму як невід'ємну частину сучасного повсякденного українського етикету. <!-- INJECT_ACTIVITY: fill-in-modern -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -549,7 +549,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -562,18 +629,64 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] короткий прикметник (short-form adjective)
+- [ ] повний прикметник (full-form adjective)
+- [ ] потрібен/потрібна/потрібне (needed — short form, predicative)
+- [ ] певен/певна (certain, sure — short form)
+- [ ] годен/годна (fit, capable — short form)
+- [ ] ладен/ладна (willing, ready — short form)
+- [ ] варт/варта (worth — short form)
+- [ ] рад/рада (glad — short form)
+- [ ] зелен (green — poetic short form)
+- [ ] ясен (bright, clear — poetic short form)
+- [ ] народнопоетичний (folk-poetic register)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Усічені прикметники — інше явище (~450 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

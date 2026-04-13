@@ -1,0 +1,50 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T19-04-51eb7a48.json
+phase: vocab
+prompt_chars: 20326
+response_chars: 3427
+prompt_words: 3390
+response_words: 387
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.0393
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.0113
+- name: plan
+  start: 1028
+  length: 19298
+  fraction: 0.9494
+large_sections:
+- plan
+directives_total: 6
+directives_covered: 0
+directives_missed:
+- kind: must
+  text: You must always change the ending in Ukrainian, rather than just dropping
+    the dictionary form into the sentence.
+  covered: false
+  coverage_note: 0/14 keywords (0%)
+- kind: must
+  text: However, when you say that you do something *at* a certain time, you must
+    change the case.
+  covered: false
+  coverage_note: 1/11 keywords (9%)
+- kind: inject_activity
+  text: fill-in-home-description
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-daily-routine-cases
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-routine-times
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: error-correction-cases-routine
+  covered: false
+  coverage_note: marker missing

@@ -1,0 +1,50 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T04-33-13522fce.json
+phase: write-chunk-02
+prompt_chars: 44476
+response_chars: 5192
+prompt_words: 6314
+response_words: 829
+sections:
+- name: header
+  start: 0
+  length: 456
+  fraction: 0.0103
+- name: skeleton
+  start: 456
+  length: 1857
+  fraction: 0.0418
+- name: prior_summary
+  start: 2313
+  length: 3303
+  fraction: 0.0743
+- name: plan
+  start: 5616
+  length: 12851
+  fraction: 0.2889
+- name: wiki
+  start: 10954
+  length: 25773
+  fraction: 0.5795
+- name: output_spec
+  start: 44240
+  length: 236
+  fraction: 0.0053
+large_sections:
+- wiki
+directives_total: 15
+directives_covered: 12
+directives_missed:
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 4/11 keywords (36%)
+- kind: inject_activity
+  text: group-sort, Sort dative adjective forms by gender (masculine -ому, feminine
+    -ій, plural -им), 8 items
+  covered: false
+  coverage_note: marker missing

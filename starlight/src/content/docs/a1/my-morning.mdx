@@ -7,7 +7,6 @@ pipeline: v6
 build_status: draft
 ---
 
-import Anagram from '@site/src/components/Anagram';
 import FillIn from '@site/src/components/FillIn';
 import FlashcardDeck from '@site/src/components/FlashcardDeck';
 import GroupSort from '@site/src/components/GroupSort';
@@ -15,7 +14,6 @@ import MatchUp from '@site/src/components/MatchUp';
 import OddOneOut from '@site/src/components/OddOneOut';
 import Quiz from '@site/src/components/Quiz';
 import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
 import YouTubeVideo from '@site/src/components/YouTubeVideo';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 
@@ -24,7 +22,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ## Діало́ги — Dialogues
 
-Every morning has a distinct rhythm. We use specific verbs to describe daily routines, and in Ukrainian, many of these share a special feature because they describe actions performed on ourselves. Consider a typical morning scenario. Two roommates, **Лі́на** (Lina) and **На́стя** (Nastia), are in their shared kitchen on a Tuesday morning. The time is early, and the sun is just coming up. Lina is an early bird; she is already sitting at the table and drinking her morning coffee. Nastia, however, is just starting her daily routine and walks into the kitchen looking a bit sleepy. Lina asks Nastia about her timing, wanting to know exactly when her day begins. Nastia explains her sequence clearly.
+Two roommates, **Лі́на** and **На́стя**, are talking in the kitchen before work. Ліна asks about На́стя's routine, and then they compare weekday and weekend habits.
 
 <div class="dialogue">
 
@@ -36,9 +34,11 @@ Every morning has a distinct rhythm. We use specific verbs to describe daily rou
 
 <div class="dialogue-line"><span class="speaker">Настя:</span> Вмива́юся, одяга́юся і сні́даю. *(I wash up, get dressed, and have breakfast.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Ліна:</span> А коли ти йдеш на робо́ту? *(And when do you go to work?)*</div>
+<div class="dialogue-line"><span class="speaker">Ліна:</span> А я споча́тку п'ю ка́ву, а потім збира́юся. А ти до́вго сні́даєш? *(I drink coffee first, and then I get ready. Do you spend a long time having breakfast?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Настя:</span> О во́сьмій. *(At eight.)*</div>
+<div class="dialogue-line"><span class="speaker">Настя:</span> Ні, недо́вго. А коли ти йдеш на робо́ту? *(No, not long. And when do you go to work?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Ліна:</span> О во́сьмій. *(At eight.)*</div>
 
 </div>
 
@@ -50,55 +50,55 @@ Their conversation continues as they compare this busy weekday routine to their 
 
 <div class="dialogue-line"><span class="speaker">Настя:</span> У субо́ту ти теж поспіша́єш? *(Do you also hurry on Saturday?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Ліна:</span> У суботу я не поспіша́ю. Прокидаюся пі́зно, лежу́, чита́ю нови́ни. *(On Saturday I do not hurry. I wake up late, lie down, read the news.)*</div>
+<div class="dialogue-line"><span class="speaker">Ліна:</span> У суботу я не поспіша́ю. Прокидаюся пі́зно, лежу́, чита́ю нови́ни. *(On Saturday I do not hurry. I wake up late, lie in bed, and read the news.)*</div>
 
 <div class="dialogue-line"><span class="speaker">Настя:</span> А я навча́юся вра́нці. Потім гуля́ю. *(And I study in the morning. Then I walk.)*</div>
 
 </div>
 
-In this weekend contrast, Lina uses the verb **прокидаюся** (I wake up) again, but follows it with regular, non-reflexive verbs like **лежу** (I lie down) and **читаю** (I read). Nastia mentions another verb with that special ending: **навчаюся** (I study). Mixing these different verb types is how you naturally describe your day in Ukrainian.
+In this weekend contrast, Lina uses the verb **прокидаюся** (I wake up) again, but follows it with regular, non-reflexive verbs like **лежу** (I lie / I am lying) and **читаю** (I read). Nastia mentions another verb with that special ending: **навчаюся** (I study). Mixing these different verb types is how you naturally describe your day in Ukrainian.
 
 ## Дієслова́ на -ся — Reflexive Verbs
 
-The special verbs you saw in the dialogue are called reflexive verbs. As explained in the textbook *Карама́н Grade 10 (p. 176)*, the core rule is straightforward: «Дієслова із су́фіксом -ся(-сь) означа́ють ді́ю, спрямо́вану на себе́». This means verbs with the suffix **-ся** (or **-сь**) indicate an action directed at oneself. Think of this suffix as the English equivalent of the words "oneself" or "myself." If you take a standard verb and attach this suffix, you instantly change the target of the action from an external object back to the speaker.
+The special verbs you saw in the dialogue are called reflexive verbs. As explained in the textbook *Карама́н Grade 10 (p. 176)*, the core rule is straightforward: «Дієслова із су́фіксом -ся(-сь) означа́ють ді́ю, спрямо́вану на себе́». This means verbs with the suffix **-ся** (or **-сь**) indicate an action directed at oneself. For many daily-routine verbs, this suffix is roughly similar to "oneself" or "myself." In this module, it helps you understand pairs like **вмива́ти** → **вмива́тися** and **одяга́ти** → **одяга́тися**.
 
 *   **вмива́ти** (to wash someone) → **вмива́тися** (to wash oneself)
 *   **одяга́ти** (to dress someone) → **одяга́тися** (to dress oneself)
 
-Conjugating these verbs is simple because the core mechanics do not change. You take the standard verb endings you already know from Group I and simply attach **-ся** to the very end. The reflexive suffix acts like a fixed addition hooked to the end of the conjugated form. The conjugation paradigm for the present tense demonstrates this consistent pattern.
+In the present tense, reflexive verbs keep the usual personal endings, but beginners should learn the full written forms: **вмиваюся**, **вмива́єшся**, **вмива́ється**. In writing, the 2nd-person form ends in **-шся**, and the 3rd-person form ends in **-ться / -ється**.
 
 | Займе́нник | Дієсло́во | Переклад |
 | --- | --- | --- |
-| Я | **вмива́ю-ся** | I wash myself |
-| Ти | **вмива́єш-ся** | You wash yourself |
-| Він / Вона́ | **вмива́є-ться** | He / She washes himself/herself |
+| Я | **вмива́юся** | I wash myself |
+| Ти | **вмива́єшся** | You wash yourself |
+| Він / Вона́ | **вмива́ється** | He / She washes himself/herself |
 
-Notice that the core endings (**-ю**, **-єш**, **-є**) remain perfectly regular. You just add the **-ся** (or **-ться** for "він / вона") suffix to the end.
+Notice the written pattern: **вмиваюся**, **вмиваєшся**, **вмивається**. For beginners, it is safer to memorize these full forms than to think of them as a mechanical add-on.
 
-While the spelling is perfectly regular, the pronunciation holds a secret. According to the textbook *Кравцо́ва Grade 4 (p. 113)*, there is a crucial pronunciation note you must memorize to sound natural. The letters combine to create completely new sounds, hiding the original consonants.
+While the spelling is perfectly regular, the pronunciation holds a secret. According to the textbooks *Кравцо́ва Grade 4 (p. 113)* and *Захарійчук Grade 4 (p. 162)*, there is a crucial pronunciation note you must memorize to sound natural. The letters combine to create completely new sounds, hiding the original consonants.
 
 :::caution
 *   The combination **-шся** sounds like a long, soft **[с':а]**: **вмива́єшся** is pronounced **[вмиваєс':а]**.
 *   The combination **-ться** sounds like a long, soft **[ц':а]**: **вмива́ється** is pronounced **[вмиваєц':а]**.
 :::
 
-The spelling and pronunciation differ significantly here. You must write the distinct letters precisely, but you must pronounce the merged, soft sounds. This rule is fundamental to fluent Ukrainian speech, and native children practice it extensively in primary school.
+The spelling and pronunciation differ significantly here. You must write the distinct letters precisely, but you must pronounce the merged, soft sounds. This spelling-pronunciation difference is common, so it is worth practicing aloud.
 
 It is important to know exactly when to use these reflexive forms. A reflexive verb is always intransitive, meaning it cannot take a direct object. You cannot use a reflexive verb to act upon something else. If you are getting a child ready for school, you use the non-reflexive form **одягати дити́ну** (to dress a child). But if you are getting dressed yourself, you must use the reflexive form **одягатися** (to get dressed). Understanding this distinction between acting on others and acting on yourself is the key to mastering Ukrainian morning routines.
 
-<FillIn client:only="react" items={[{"sentence": "Я ____.", "answer": "вмиваюся", "options": ["вмиваюся", "вмиваєшся", "вмивається"]}, {"sentence": "Ти ____ швидко.", "answer": "одягаєшся", "options": ["одягаюся", "одягаєшся", "одягається"]}, {"sentence": "Він ____ пізно.", "answer": "прокидається", "options": ["прокидаюся", "прокидаєшся", "прокидається"]}, {"sentence": "Вона ____ вранці.", "answer": "вмивається", "options": ["вмиваюся", "вмиваєшся", "вмивається"]}, {"sentence": "Я ____ на роботу.", "answer": "збираюся", "options": ["збираюся", "збираєшся", "збирається"]}, {"sentence": "Ти ____ рано?", "answer": "прокидаєшся", "options": ["прокидаюся", "прокидаєшся", "прокидається"]}, {"sentence": "Брат ____ додому.", "answer": "повертається", "options": ["повертаюся", "повертаєшся", "повертається"]}, {"sentence": "Я ____ на вихідних.", "answer": "навчаюся", "options": ["навчаюся", "навчаєшся", "навчається"]}, {"sentence": "Ти ____?", "answer": "збираєшся", "options": ["збираюся", "збираєшся", "збирається"]}, {"sentence": "Сестра ____.", "answer": "одягається", "options": ["одягаюся", "одягаєшся", "одягається"]}]} instruction={"Оберіть правильну форму дієслова (Choose the correct verb form)"} />
+<FillIn client:only="react" items={[{"sentence": "Я вмиваю____ вранці.", "answer": "ся", "options": ["ся", "ться"]}, {"sentence": "Ти одягаєш____ швидко.", "answer": "ся", "options": ["ся", "ться"]}, {"sentence": "Він прокидає____ пізно.", "answer": "ться", "options": ["ся", "ться"]}, {"sentence": "Вона збирає____ на роботу.", "answer": "ться", "options": ["ся", "ться"]}, {"sentence": "Я навчаю____.", "answer": "ся", "options": ["ся", "ться"]}, {"sentence": "Ти повертаєш____ додому.", "answer": "ся", "options": ["ся", "ться"]}, {"sentence": "Він одягає____.", "answer": "ться", "options": ["ся", "ться"]}, {"sentence": "Вона повертає____.", "answer": "ться", "options": ["ся", "ться"]}, {"sentence": "Я збираю____.", "answer": "ся", "options": ["ся", "ться"]}, {"sentence": "Ти прокидаєш____.", "answer": "ся", "options": ["ся", "ться"]}]} instruction={"Вставте правильне закінчення дієслова"} />
 
-<Quiz client:only="react" questions={[{"question": "Я _____.", "options": [{"text": "вмиваю", "correct": false}, {"text": "вмиваюся", "correct": true}, {"text": "вмиває", "correct": false}, {"text": "вмивається", "correct": false}]}, {"question": "Я _____ руки.", "options": [{"text": "вмиваю", "correct": true}, {"text": "вмиваюся", "correct": false}, {"text": "вмиває", "correct": false}, {"text": "вмивається", "correct": false}]}, {"question": "Вона _____ дитину.", "options": [{"text": "одягає", "correct": true}, {"text": "одягається", "correct": false}, {"text": "одягаю", "correct": false}, {"text": "одягаюся", "correct": false}]}, {"question": "Вона _____ швидко.", "options": [{"text": "одягає", "correct": false}, {"text": "одягається", "correct": true}, {"text": "одягаю", "correct": false}, {"text": "одягаюся", "correct": false}]}, {"question": "Ти _____ рано?", "options": [{"text": "прокидаєш", "correct": false}, {"text": "прокидаєшся", "correct": true}, {"text": "прокидаю", "correct": false}, {"text": "прокидаюся", "correct": false}]}, {"question": "Ти _____ сумку.", "options": [{"text": "збираєш", "correct": true}, {"text": "збираєшся", "correct": false}, {"text": "збираю", "correct": false}, {"text": "збираюся", "correct": false}]}, {"question": "Він _____.", "options": [{"text": "одягає", "correct": false}, {"text": "одягається", "correct": true}, {"text": "одягаєш", "correct": false}, {"text": "одягаєшся", "correct": false}]}, {"question": "Він _____ сина.", "options": [{"text": "одягає", "correct": true}, {"text": "одягається", "correct": false}, {"text": "одягаєш", "correct": false}, {"text": "одягаєшся", "correct": false}]}]} instruction={"Рефлексивне чи ні? Оберіть правильний варіант (Reflexive or not? Choose the correct option)"} />
+<Quiz client:only="react" questions={[{"question": "Я ______ руки.", "options": [{"text": "вмиваю", "correct": true}, {"text": "вмиваюся", "correct": false}, {"text": "вмиває", "correct": false}, {"text": "вмивається", "correct": false}]}, {"question": "Я ______ вранці.", "options": [{"text": "вмиваю", "correct": false}, {"text": "вмиваюся", "correct": true}, {"text": "вмиває", "correct": false}, {"text": "вмивається", "correct": false}]}, {"question": "Вона ______ дитину.", "options": [{"text": "одягає", "correct": true}, {"text": "одягається", "correct": false}, {"text": "одягаєш", "correct": false}, {"text": "одягаєшся", "correct": false}]}, {"question": "Вона ______ швидко.", "options": [{"text": "одягає", "correct": false}, {"text": "одягається", "correct": true}, {"text": "одягаєш", "correct": false}, {"text": "одягаєшся", "correct": false}]}, {"question": "Він ______ речі.", "options": [{"text": "збирає", "correct": true}, {"text": "збирається", "correct": false}, {"text": "збираю", "correct": false}, {"text": "збираюся", "correct": false}]}, {"question": "Він ______ на роботу.", "options": [{"text": "збирає", "correct": false}, {"text": "збирається", "correct": true}, {"text": "збираю", "correct": false}, {"text": "збираюся", "correct": false}]}, {"question": "Я ______ новини.", "options": [{"text": "читаю", "correct": true}, {"text": "читається", "correct": false}, {"text": "читає", "correct": false}, {"text": "читаюся", "correct": false}]}, {"question": "Я ______ пізно.", "options": [{"text": "прокидаю", "correct": false}, {"text": "прокидаюся", "correct": true}, {"text": "прокидає", "correct": false}, {"text": "прокидається", "correct": false}]}]} instruction={"Оберіть правильну форму дієслова"} />
 
 ## Мій ра́нок — My Morning
 
 With an understanding of how reflexive verbs work, we can build a complete morning timeline. The vocabulary for your morning routine relies heavily on these reflexive verbs, but it also includes some standard verbs for contrast.
 
-*   **прокидатися** (to wake up)
-*   **вмиватися** (to wash face/hands)
-*   **одягатися** (to get dressed)
-*   **збира́тися** (to get ready)
-*   **поверта́тися** (to return home)
+*   **прокидатися** — **Я прокидаюся о сьомій.** (I wake up at seven.)
+*   **вмиватися** — **Потім я вмиваюся.** (Then I wash up.)
+*   **одягатися** — **Пі́сля цього́ я одягаюся.** (After that I get dressed.)
+*   **збира́тися** — **Я шви́дко збира́юся на роботу.** (I get ready for work quickly.)
+*   **поверта́тися** — **Уве́чері я поверта́юся додо́му.** (In the evening I return home.)
 
 There is a conceptual difference between the first actions of the day. The verb **прокидатися** means to wake up, specifically the moment you open your eyes and become conscious. A different verb, **встава́ти**, means to physically get out of bed. Another essential daily action is **чи́стити зу́би** (to brush teeth), which is a common non-reflexive routine phrase. We also use non-reflexive verbs for consuming our morning food and drinks: **сні́дати** (to have breakfast) and **пи́ти ка́ву** (to drink coffee).
 
@@ -129,13 +129,15 @@ These sequence words act as the structural glue holding your narrative together.
 *   **Після цього снідаю.** (After this, I have breakfast.)
 *   **Нарешті йду на роботу.** (Finally, I go to work.)
 
-This simple structure is exactly how a native speaker outlines their basic routine. Practice sequencing your own actions using these identical words.
+This simple structure gives you a clear model for describing your own routine. Practice sequencing your own actions with the same words.
 
-<FillIn client:only="react" items={[{"sentence": "Спочатку я ____ о сьомій.", "answer": "прокидаюся", "options": ["прокидаюся", "вмиваюся", "йду"]}, {"sentence": "Потім я ____ і снідаю.", "answer": "одягаюся", "options": ["вмиваюся", "одягаюся", "збираюся"]}, {"sentence": "Нарешті я ____ на роботу.", "answer": "йду", "options": ["йду", "п'ю", "збираюся"]}]} instruction={"Опишіть свій ранок (Describe your morning in 3 sentences)"} />
+<FillIn client:only="react" items={[{"sentence": "____ я прокидаюся.", "answer": "Спочатку", "options": ["Спочатку", "Потім", "Нарешті"]}, {"sentence": "____ я вмиваюся.", "answer": "Потім", "options": ["Спочатку", "Потім", "Після цього"]}, {"sentence": "____ я снідаю.", "answer": "Після цього", "options": ["Після цього", "Нарешті", "Спочатку"]}, {"sentence": "____ я йду на роботу.", "answer": "Нарешті", "options": ["Нарешті", "Потім", "Спочатку"]}, {"sentence": "____ ми навчаємося.", "answer": "Спочатку", "options": ["Спочатку", "Нарешті", "Після цього"]}, {"sentence": "____ ми гуляємо.", "answer": "Потім", "options": ["Потім", "Нарешті", "Спочатку"]}]} instruction={"Вставте правильне слово"} />
+
+<FillIn client:only="react" items={[{"sentence": "Спочатку я ____.", "answer": "прокидаюся", "options": ["прокидаюся", "прокидається", "прокидаєшся"]}, {"sentence": "Потім я ____ і снідаю.", "answer": "вмиваюся", "options": ["вмивається", "вмиваюся", "вмиваєшся"]}, {"sentence": "Нарешті я ____ на роботу.", "answer": "йду", "options": ["йде", "йдеш", "йду"]}, {"sentence": "Я ____ зуби щоранку.", "answer": "чищу", "options": ["чищу", "чистиш", "чистить"]}, {"sentence": "Потім я ____ каву.", "answer": "п'ю", "options": ["п'ю", "п'єш", "п'є"]}, {"sentence": "Я ____ на автобус о восьмій.", "answer": "чекаю", "options": ["чекаю", "чекає", "чекаєш"]}]} instruction={"Доповніть речення, щоб описати ранок"} />
 
 ## Підсумок — Summary
 
-The core concepts of this module follow a clear pattern. The fundamental formula for creating reflexive verbs is simple: regular verb plus **ся** at the end. These verbs are essential because they describe actions directed at the speaker, which is exactly what a morning routine involves. The conjugation follows the standard Group I pattern with the suffix attached securely to the end.
+The core concepts of this module follow a clear pattern. The fundamental formula for creating reflexive verbs is simple: regular verb plus **ся** at the end. In this module, many of these verbs describe actions directed back toward the speaker, which is why they fit a morning routine well. The conjugation follows the standard Group I pattern with the suffix attached securely to the end.
 
 *   **я** ending: **-юся**
 *   **ти** ending: **-єшся**
@@ -144,7 +146,7 @@ The core concepts of this module follow a clear pattern. The fundamental formula
 The sequence of a standard morning routine flows logically through these verbs: **прокидатися** → **вмиватися** → **одягатися** → **снідати** → **йти**. To connect these actions into a fluent story, you must use the sequencing adverbs: **спочатку**, **потім**, **після цього**, and **нарешті**.
 
 :::tip
-Phonetics play a massive role in making your speech sound natural. The written letters and the spoken sounds are entirely different for the **ти** and **він/вона** forms of reflexive verbs. The ending **-шся** must always be pronounced as a long, soft **[с':а]**. The ending **-ється** must always be pronounced as a long, soft **[ц':а]**. Focus heavily on these soft, merged sounds to develop an authentic Ukrainian accent.
+Practice these aloud: **вмиваєшся** → **[вмиваєс':а]**, **вмивається** → **[вмиваєц':а]**. The spelling stays the same, but the sound changes in fast speech.
 :::
 
 To ensure you have mastered this material, perform a quick self-check. Try to answer the following questions mentally or aloud. Use full sentences and incorporate the sequencing words where possible.
@@ -203,17 +205,13 @@ Describe your morning in four to five sentences using the sequence words. If you
 </TabItem>
 <TabItem label="Зошит">
 
-<MatchUp client:only="react" pairs={[{"left": "прокидатися", "right": "to wake up"}, {"left": "вмиватися", "right": "to wash face/hands"}, {"left": "одягатися", "right": "to get dressed"}, {"left": "збиратися", "right": "to get ready"}, {"left": "повертатися", "right": "to return"}, {"left": "навчатися", "right": "to study"}, {"left": "поспішати", "right": "to hurry"}]} instruction={"З'єднайте українські слова з англійськими (Match the Ukrainian words with English)"} />
+<MatchUp client:only="react" pairs={[{"left": "Я", "right": "вмиваюся"}, {"left": "Ти", "right": "прокидаєшся"}, {"left": "Він", "right": "одягається"}, {"left": "Вона", "right": "збирається"}, {"left": "Ми", "right": "снідаємо"}, {"left": "Вони", "right": "йдуть"}]} instruction={"З'єднайте займенник із формою дієслова"} />
 
-<GroupSort client:only="react" groups={{"Дія на себе (Reflexive)": ["прокидатися", "вмиватися", "одягатися", "збиратися", "навчатися"], "Звичайні (Regular)": ["снідати", "йти", "поспішати", "пити", "читати"]}} instruction={"Розподіліть дієслова за типом (Sort the verbs by type)"} />
+<GroupSort client:only="react" groups={{"Зворотні (Reflexive)": ["вмиваюся", "одягаєшся", "прокидається", "збираються", "навчаєшся", "повертаюся"], "Незворотні (Non-reflexive)": ["снідаю", "читаєш", "лежу", "гуляємо", "одягаю", "вмиває"]}} instruction={"Розподіліть дієслова: зворотні чи ні?"} />
 
-<TrueFalse client:only="react" items={[{"statement": "Настя прокидається о сьомій.", "isTrue": true, "explanation": "Так, Настя прокидається о сьомій."}, {"statement": "Ліна п'є чай вранці.", "isTrue": false, "explanation": "Ліна п'є каву (coffee) вранці."}, {"statement": "Настя снідає о восьмій.", "isTrue": false, "explanation": "О восьмій вона йде на роботу."}, {"statement": "У суботу Ліна поспішає.", "isTrue": false, "explanation": "У суботу вона не поспішає."}, {"statement": "Настя навчається вранці у суботу.", "isTrue": true, "explanation": "Так, вона навчається вранці."}, {"statement": "Спочатку ми снідаємо, а потім прокидаємося.", "isTrue": false, "explanation": "Спочатку ми прокидаємося, а потім снідаємо."}]} instruction={"Правда чи ні? (True or false?)"} />
+<OddOneOut client:only="react" items={[{"words": ["прокидаюся", "одягаюся", "вмиваюся", "снідаю"], "correct": 3, "explanation": "Снідати is not a reflexive verb."}, {"words": ["спочатку", "потім", "після цього", "вранці"], "correct": 3, "explanation": "Вранці tells 'when', the others are sequence words."}, {"words": ["йду", "йдеш", "йде", "поспішаю"], "correct": 3, "explanation": "Поспішаю is a regular verb, the others are forms of the irregular verb йти."}, {"words": ["вмиваюся", "одягає", "збирає", "прокидає"], "correct": 0, "explanation": "Вмиваюся is reflexive, the others are non-reflexive."}, {"words": ["вмиваєшся", "одягаєшся", "прокидаєшся", "збирається"], "correct": 3, "explanation": "Збирається is the 'він/вона' form, the others are 'ти'."}, {"words": ["читаю", "лежу", "навчаюся", "гуляю"], "correct": 2, "explanation": "Навчаюся is reflexive, the others are not."}]} instruction={"Оберіть зайве слово"} />
 
-<Anagram client:only="react" items={[{"scrambled": "с н і д а т и", "answer": "снідати", "hint": "to have breakfast"}, {"scrambled": "н а р е ш т і", "answer": "нарешті", "hint": "finally"}, {"scrambled": "п о т і м", "answer": "потім", "hint": "then"}, {"scrambled": "п і з н о", "answer": "пізно", "hint": "late"}, {"scrambled": "в р а н ц і", "answer": "вранці", "hint": "in the morning"}, {"scrambled": "з б и р а т и с я", "answer": "збиратися", "hint": "to get ready"}]} instruction={"Складіть слова (Make the words)"} />
-
-<OddOneOut client:only="react" items={[{"words": ["прокидатися", "вмиватися", "одягатися", "снідати"], "correct": 3, "explanation": "«Снідати» — це звичайне дієслово (regular verb)."}, {"words": ["спочатку", "потім", "нарешті", "кава"], "correct": 3, "explanation": "«Кава» — це іменник (noun)."}, {"words": ["вранці", "пізно", "зуби", "швидко"], "correct": 2, "explanation": "«Зуби» — це іменник (noun)."}, {"words": ["йти", "повертатися", "руки", "поспішати"], "correct": 2, "explanation": "«Руки» — це іменник (noun)."}, {"words": ["снідати", "пити", "читати", "збиратися"], "correct": 3, "explanation": "«Збиратися» — це рефлексивне дієслово (reflexive verb)."}, {"words": ["я", "ти", "вмиваюся", "він"], "correct": 2, "explanation": "«Вмиваюся» — це дієслово (verb), інші — займенники (pronouns)."}]} instruction={"Знайдіть зайве слово (Find the odd one out)"} />
-
-<Unjumble client:only="react" items={[{"words": "одягаюся. / вмиваюся / і / Потім / я", "answer": "Потім я вмиваюся і одягаюся."}, {"words": "нарешті / на / йду / А / роботу.", "answer": "А нарешті йду на роботу."}, {"words": "сьомій. / о / прокидаюся / Я", "answer": "Я прокидаюся о сьомій."}, {"words": "не / суботу / У / поспішаю. / я", "answer": "У суботу я не поспішаю."}, {"words": "новини. / читаю / лежу, / Я", "answer": "Я лежу, читаю новини."}, {"words": "ти / на / йдеш / Коли / навчання?", "answer": "Коли ти йдеш на навчання?"}]} instruction={"Складіть правильне речення зі слів (Put the words in the correct order)"} />
+<TrueFalse client:only="react" items={[{"statement": "Дієслова із суфіксом -ся означають дію, спрямовану на себе.", "isTrue": true, "explanation": "Yes, they are reflexive verbs."}, {"statement": "Слово 'вмивається' означає 'to wash someone else'.", "isTrue": false, "explanation": "'Вмивається' means 'to wash oneself'. 'Вмиває' means 'to wash someone else'."}, {"statement": "Слово 'одягаюся' означає 'I get dressed'.", "isTrue": true, "explanation": "Yes, it is the reflexive form for 'Я'."}, {"statement": "Слово 'снідаюся' є правильним.", "isTrue": false, "explanation": "Снідати is not a reflexive verb. The correct form is 'снідаю'."}, {"statement": "Закінчення -ться вимовляється як [ц':а].", "isTrue": true, "explanation": "The ending -ється is pronounced as a long soft [ц':а]."}, {"statement": "Закінчення -шся вимовляється як [с':а].", "isTrue": true, "explanation": "The ending -єшся is pronounced as a long soft [с':а]."}]} instruction={"Правда чи ні?"} />
 
 </TabItem>
 <TabItem label="Ресурси">

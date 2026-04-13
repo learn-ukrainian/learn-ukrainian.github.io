@@ -2,50 +2,54 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 8
-  evidence: Missed the required vocabulary chunk `дивитися фільми / серіали (to watch
-    movies/series)` replacing it with `готувати`. Failed to combine "weather" in the
-    final synthesized examples.
+  score: 6
+  evidence: 'All planned H2 sections are present, and the hobby/frequency/invitation
+    content is broadly covered. But the objective “Combine all A1.4 skills: time +
+    day + weather + activities” is not realized: sear'
 - dimension: 2
   name: Linguistic accuracy
-  score: 10
-  evidence: All Ukrainian text is grammatically correct. Zero Russianisms, Surzhyk,
-    or Calques. `у/в` and `на` rules are correctly applied.
+  score: 9
+  evidence: 'The Ukrainian forms themselves are solid: `Вітю`, `ходімо`, `двічі на
+    тиждень`, `грати на гітарі`, `ходити на концерт`, `ніколи не працюю`. No Russian
+    letters or obvious Russianisms/surzhyk/calques fo'
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: Excellent breakdown of `в` (buildings) vs `на` (events), and `грати у`
-    (sports) vs `грати на` (instruments). Clear explanation of the double negative
-    rule for `ніколи`.
+  score: 6
+  evidence: There are enough examples, but too much English meta-explanation crowds
+    out the target language. The caution box says `You have to say "I never *do not*
+    work"`, which is a misleading way to explain Uk
 - dimension: 4
   name: Vocabulary coverage
   score: 10
-  evidence: All required words (`вихідні`, `спорт`, `футбол`, `кіно`, `часто`, `іноді`,
-    `рідко`, `ходімо`) and recommended words (`завжди`, `зазвичай`, `ніколи`, `театр`,
-    `концерт`, `музей`, `давай`, `раз`) are u
+  evidence: 'All required vocabulary appears naturally in prose: `вихідні`, `спорт`,
+    `футбол`, `кіно`, `часто`, `іноді`, `рідко`, `ходімо`. Recommended words are also
+    integrated: `завжди`, `зазвичай`, `ніколи`, `т'
 - dimension: 5
   name: Exercise quality
-  score: 7
-  evidence: Four markers were injected for three plan hints. The `fill-in-invitations`
-    marker was placed prematurely before frequency adverbs were taught.
+  score: 9
+  evidence: 'The marker count matches the plan exactly, and placement is sensible:
+    hobbies markers after the hobbies section, invitation/frequency marker after frequency
+    teaching. No visible mismatch between marke'
 - dimension: 6
   name: Engagement & tone
-  score: 8
-  evidence: Used the forbidden gamified phrase "You now possess..." in the summary
-    section. Otherwise, tone is encouraging and clear.
+  score: 6
+  evidence: 'The lesson repeatedly pads itself with filler/hype instead of teaching:
+    `This is the perfect moment`, `powerful invitation word`, `incredibly useful`,
+    `most natural and authentic`, `much more natural '
 - dimension: 7
   name: Structural integrity
-  score: 10
-  evidence: Word count is exactly 1257 words (exceeds 1200 target). All H2 sections
-    match the plan outline. Clean Markdown formatting.
+  score: 9
+  evidence: Clean markdown, all required H2s are present and ordered correctly, markers
+    are intact, and the pipeline word count is 1738, safely above target.
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: Decolonized approach. Accurate presentation of standard Ukrainian structures
-    (`Ходімо`) vs informal (`Давай`).
+  score: 9
+  evidence: The `Будинок культури` note is plausible and culturally grounded. The
+    module presents Ukrainian on its own terms and avoids “like Russian” framing.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: Dialogues are natural, use names, and model real communicative situations
-    effectively ("Що ти робиш у вихідні?").
+  score: 7
+  evidence: Dialogue 1 is natural and useful. Dialogue 2 is mostly an interview (`Ти
+    любиш спорт?`, `Як часто?`, `А ще?`) and does not realize the plan’s bulletin-board
+    motivation ending in a shared invitation (`
 findings: []

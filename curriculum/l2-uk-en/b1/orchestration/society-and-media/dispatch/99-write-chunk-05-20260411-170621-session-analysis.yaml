@@ -1,0 +1,62 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T15-01-d6b0d5ee.json
+phase: write-chunk-05
+prompt_chars: 51647
+response_chars: 8308
+prompt_words: 6979
+response_words: 1174
+sections:
+- name: header
+  start: 0
+  length: 432
+  fraction: 0.0084
+- name: skeleton
+  start: 432
+  length: 1486
+  fraction: 0.0288
+- name: prior_summary
+  start: 1918
+  length: 4139
+  fraction: 0.0801
+- name: plan
+  start: 6057
+  length: 19762
+  fraction: 0.3826
+- name: wiki
+  start: 19387
+  length: 25610
+  fraction: 0.4959
+- name: output_spec
+  start: 51429
+  length: 218
+  fraction: 0.0042
+large_sections:
+- wiki
+directives_total: 26
+directives_covered: 20
+directives_missed:
+- kind: checklist
+  text: суспільство (society — organized community of people)
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: checklist
+  text: волонтер (volunteer — person working without pay)
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: checklist
+  text: кореспондент (correspondent — reporter)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: skeleton_para
+  text: 'P7 (90w): The role of ''вставні слова'' (parenthetical words) in media: ''як
+    відомо'', ''на думку експертів'', ''без сумніву''. Explain their function in structuring
+    an argument.'
+  covered: false
+  coverage_note: 6/19 keywords (32%)
+- kind: inject_activity
+  text: fill-in, practice using participles like залучений and обраний in context
+  covered: false
+  coverage_note: marker missing

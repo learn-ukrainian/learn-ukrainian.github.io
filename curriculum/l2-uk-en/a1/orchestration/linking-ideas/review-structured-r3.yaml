@@ -1,0 +1,53 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 3
+  evidence: Only `## Діало́ги (Dialogues)` and `## Сполу́чники (Conjunctions)` appear.
+    The planned `## Бо і тому що (Because)` and `## Підсумок — Summary` sections are
+    missing, and `тому що` occurs 0 times in the
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: No Russianisms, Surzhyk, calques, paronym errors, or bad case/gender forms
+    found. Key forms verify in VESUM, and there are no `ы/э/ё/ъ` characters.
+- dimension: 3
+  name: Pedagogical quality
+  score: 4
+  evidence: The dialogues and example sets are usable, but the module never gives
+    the planned `бо` vs `тому що` comparison, `Чому?` answer pattern, or end-of-module
+    recap; after `Use **але** for stronger contrast
+- dimension: 4
+  name: Vocabulary coverage
+  score: 5
+  evidence: 'Required `і`, `та`, `а`, `але`, `бо` are used naturally, but required
+    `тому що` is absent. Recommended coverage is thin: `теж` and `чи` appear, but
+    the extension vocabulary is barely developed.'
+- dimension: 5
+  name: Exercise quality
+  score: 2
+  evidence: 'Only one marker exists: `<!-- INJECT_ACTIVITY: group-sort-conjunction-roles
+    -->`. The plan expects four activities, so learners do not get the promised fill-in
+    or quiz practice.'
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: The tone stays teacherly and concrete. Examples like `Я люблю каву, а
+    ти?` and the vacation/cafe dialogue avoid empty motivational filler.
+- dimension: 7
+  name: Structural integrity
+  score: 1
+  evidence: Pipeline word count is 571, far below the 1200 target. The module has
+    only 2 H2 sections instead of the planned 4 and ends without the planned summary.
+- dimension: 8
+  name: Cultural accuracy
+  score: 8
+  evidence: No Russian-centered framing appears. `Карпати`, `море`, cafe talk, and
+    everyday planning are appropriate and culturally neutral.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: The dialogues use named speakers and multiple turns, e.g. `Я хочу в Карпати,
+    а ти — на море.` and `Я хотів зателефонувати, але ти не відповів.` This is more
+    natural than isolated Q/A drills.
+findings: []

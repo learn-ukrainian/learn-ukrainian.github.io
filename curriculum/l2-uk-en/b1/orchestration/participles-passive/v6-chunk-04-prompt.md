@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-цей простий покроковий алгоритм творення. Крок 1: візьміть інфінітив, наприклад, **запросити** *(to invite)*. Крок 2: визначте основу, відкинувши «-ти» (запроси-). Крок 3: оскільки основа закінчується на «-и-», обираємо суфікс **-ен-**. Крок 4: перевіряємо чергування: перед суфіксом звук [с] переходить у [ш] (запрош-). Крок 5: додаємо закінчення прикметника і отримуємо готовий результат: **запрошений** *(invited)*. Наостанок згадаємо про правопис цих суфіксів. В українській мові пасивні дієприкметники завжди пишуться з однією літерою «н»: **сказаний** *(said)*, **зроблений** *(done)*. Це відрізняє їх від деяких прикметників, де можливе подвоєння. Також пам'ятайте, що в суфіксі **-ен-** завжди пишеться літера «е», а не «и». Форма «скошиний» є грубою помилкою, правильно лише **скошений**. ## Відмінювання пасивних дієприкметників Пасивні дієприкметники відмінюються точно так само, як прикметники твердої групи. Вони мають закінчення **-ий**, **-а**, **-е** в однині та **-і** у множині. Щоб правильно змінити слово за відмінками, вам потрібно лише згадати знайому парадигму прикметника. Розглянемо повне відмінювання на прикладі слова **прочитаний** *(read)*. | Відмінок | Чоловічий рід | Жіночий рід | Середній рід | Множина | | :--- | :--- | :--- | :--- | :--- | | **Н.** | прочитан**ий** | прочитан**а** | прочитан**е** | прочитан**і** | | **Р.** | прочитан**ого** | прочитан**ої** | прочитан**ого** | прочитан**их** | | **Д.** | прочитан**ому** | прочитан**ій** | прочитан**ому** | прочитан**им** | | **Зн.** | *як Н. або Р.* | прочитан**у** | прочитан**е** | *як Н. або Р.* | | **Ор.** | прочитан**им** | прочитан**ою** | прочитан**им** | прочитан**ими** | | **М.** | (на) прочитан**ому** / -**ім** | (на) прочитан**ій** | (на) прочитан**ому** / -**ім** | (на) прочитан**их** | Головне правило полягає у тому, що дієприкметник завжди узгоджується з іменником. Він копіює його **рід** *(gender)*, **число** *(number)* та **відмінок** *(case)*. Це працює як принцип дзеркального закінчення. У називному відмінку жіночого роду ми скажемо: **прочитана книга** *(a read book)*. У родовому відмінку чоловічого роду закінчення зміниться: текст **прочитаного листа** *(text of a read letter)*. В орудному відмінку множини ми побачимо відповідні зміни: користуватися **прочитаними повідомленнями** *(to use read messages)*. <!-- INJECT_ACTIVITY: fill-in, agreement in case --> У реченні пасивний дієприкметник найчастіше виступає **означенням** *(attribute)* і відповідає на питання «який?». Наприклад: «Я бачу **збудований** міст» *(I see the built bridge)*. Інша його синтаксична роль — іменна частина складеного **присудка** *(predicate)*. У такому випадку ми кажемо: «Міст був збудований» *(The bridge was built)*. Проте пам'ятайте, що в українській мові активні конструкції звучать значно природніше. Замість того, щоб казати «Міст був збудований інженерами», українці переважно кажуть «Інженери збудували міст» або ж використовують форму на **-но/-то**. <!-- INJECT_ACTIVITY: reading, syntax roles --> Можливо, ви чули або бачили короткі форми дієприкметників, такі як «прочитан» чи «збудован». Важливо знати, що сучасна українська літературна мова уникає їх. У минулому вони вживалися частіше, але сьогодні такі слова сприймаються як **калька** *(calque)* з російської мови. Замість коротких форм ми завжди використовуємо повну форму дієприкметника (**прочитаний**, **збудований**). Для наголошення на результаті дії ми обираємо безособові форми на **-но/-то**. Наприклад, замість «книга прочитана» краще сказати: «Книгу **прочитано**» *(The book has been read)*. А замість «міст збудован» ми кажемо: «Міст **збудовано**» *(The bridge has been built)*.
+вони послідовно змінюють свої закінчення залежно від роду, числа та відмінка іменника, до якого належать. Якщо ви знаєте, як відмінювати слово «новий» або «гарний», ви без проблем зможете відміняти будь-який пасивний дієприкметник. Давайте детально розглянемо повну парадигму відмінювання на прикладі слова **прочитаний** (read — passive participle from прочитати). > *Passive participles decline just like regular hard-group adjectives. This means they consistently change their endings depending on the gender, number, and case of the noun they belong to. If you know how to decline the word "новий" or "гарний", you will have no problem declining any passive participle. Let's look at the full declension paradigm in detail using the example of the word **прочитаний** (read).* | Відмінок | Чоловічий рід | Жіночий рід | Середній рід | Множина | | :--- | :--- | :--- | :--- | :--- | | **Н.** | прочитан**ий** | прочитан**а** | прочитан**е** | прочитан**і** | | **Р.** | прочитан**ого** | прочитан**ої** | прочитан**ого** | прочитан**их** | | **Д.** | прочитан**ому** | прочитан**ій** | прочитан**ому** | прочитан**им** | | **Зн.** | *як Н. або Р.* | прочитан**у** | прочитан**е** | *як Н. або Р.* | | **Ор.** | прочитан**им** | прочитан**ою** | прочитан**им** | прочитан**ими** | | **М.** | (на) прочитан**ому** / -**ім** | (на) прочитан**ій** | (на) прочитан**ому** / -**ім** | (на) прочитан**их** | Головне правило узгодження полягає в тому, що дієприкметник повністю копіює граматичні ознаки свого іменника. Він діє за принципом «дзеркального» закінчення. Якщо іменник стоїть у жіночому роді та називному відмінку, дієприкметник теж матиме цю форму: «прочитана книга». Коли ми змінюємо відмінок іменника, дієприкметник змінюється разом із ним. Наприклад, у родовому відмінку чоловічого роду ми скажемо «прочитаного листа», а в орудному відмінку множини — «прочитаними повідомленнями». Це правило бездоганно працює абсолютно для всіх відмінків і чисел. :::info **Grammar box** — Remember the mirror principle: the participle must perfectly reflect the noun it describes. Always check the noun's gender, number, and case before choosing the participle's ending. ::: <!-- INJECT_ACTIVITY: fill-in, Вставте правильну граматичну форму дієприкметника (узгодження з іменником) --> У реченні пасивний дієприкметник найчастіше виконує синтаксичну роль означення. Він відповідає на питання «який?», «яка?», «яке?», «які?» і стоїть безпосередньо перед іменником, який він описує. Наприклад: «Я бачу **збудований** (built) міст». Значно рідше дієприкметник може виступати іменною частиною складеного присудка, стоячи після іменника: «Міст був збудований». Проте в українській мові такі пасивні конструкції з дієсловом «бути» звучать менш природно, ніж активні речення. Замість «Дім був збудований майстрами» стилістично краще сказати «Майстри збудували дім». В українській мові історично існують повні та короткі форми дієприкметників. Повна форма завжди має закінчення (наприклад, **написаний** (written), **зроблений** (made/done)). Коротка форма закінчується на приголосний (наприклад, «написан», «зроблен»). Сучасна українська літературна мова надає беззаперечну перевагу повним формам. Короткі форми є архаїчними, звучать неприродно і часто вважаються калькою з російської мови. Якщо ж нам потрібно виразити результат дії в ролі присудка, українська мова використовує безособові форми на -но/-то («лист написано», «роботу зроблено»), рішуче уникаючи коротких пасивних дієприкметників. <!-- INJECT_ACTIVITY: quiz, Оберіть правильний варіант: лексика та граматика з розділу «Відмінювання пасивних дієприкметників» -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -558,7 +558,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -571,18 +638,64 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] пасивний дієприкметник (passive participle — subject receives the action)
+- [ ] прочитаний (read — passive participle from прочитати)
+- [ ] збудований (built — passive participle from збудувати)
+- [ ] написаний (written — passive participle from написати)
+- [ ] вишитий (embroidered — passive participle from вишити)
+- [ ] зроблений (made/done — passive participle from зробити)
+- [ ] принесений (brought — passive participle from принести)
+- [ ] відкритий (opened — passive participle from відкрити)
+- [ ] ношений (worn/carried — with [с]→[ш] alternation)
+- [ ] закручений (twisted — with [т]→[ч] alternation)
+- [ ] чергування (alternation — consonant changes in formation)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Дієприкметник чи прикметник? (~550 слів)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

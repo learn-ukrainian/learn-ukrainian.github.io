@@ -1,0 +1,142 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T01-46-3190f4ee.json
+phase: activities
+prompt_chars: 36765
+response_chars: 7890
+prompt_words: 5270
+response_words: 861
+sections:
+- name: preamble
+  start: 0
+  length: 2041
+  fraction: 0.0555
+- name: plan
+  start: 2041
+  length: 34616
+  fraction: 0.9415
+- name: output_spec
+  start: 36657
+  length: 108
+  fraction: 0.0029
+large_sections:
+- plan
+directives_total: 47
+directives_covered: 20
+directives_missed:
+- kind: must
+  text: '** Your very first character must be `version:`.'
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: must
+  text: Each inline activity MUST have an `id` that matches one of these markers.
+  covered: false
+  coverage_note: 1/10 keywords (10%)
+- kind: must
+  text: Each inline activity's `id` must match one of these markers exactly (lowercase,
+    hyphenated).
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: must
+  text: You MUST create activities that cover all these hints.
+  covered: false
+  coverage_note: 0/9 keywords (0%)
+- kind: must
+  text: '**Grounding rule:** Every Ukrainian word in your exercises must appear either
+    in the prose content or in this vocabulary list.'
+  covered: false
+  coverage_note: 1/15 keywords (7%)
+- kind: must
+  text: Adjectives must agree with their nouns.
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: must
+  text: When they follow a preposition, they require a mandatory **н-** at the beginning.
+  covered: false
+  coverage_note: 0/7 keywords (0%)
+- kind: must
+  text: When we describe a static location — answering the question **де?** (where?)
+    — we must use the **орудний відмінок** (instrumental case).
+  covered: false
+  coverage_note: 4/13 keywords (31%)
+- kind: must
+  text: Notice that **між** (between) always requires at least two nouns, and both
+    must be in the instrumental case.
+  covered: false
+  coverage_note: 2/13 keywords (15%)
+- kind: must
+  text: When speaking Ukrainian, you must avoid translating directly from other languages.
+  covered: false
+  coverage_note: 0/11 keywords (0%)
+- kind: must
+  text: Avoid common Russianisms and calques by learning the correct Ukrainian verbs
+    and their required cases.
+  covered: false
+  coverage_note: 1/11 keywords (9%)
+- kind: must
+  text: You must **визначити** (to identify) the objects and **описати** (to describe)
+    the scene using the instrumental case.
+  covered: false
+  coverage_note: 1/11 keywords (9%)
+- kind: must
+  text: '* Yes, after prepositions, third-person pronouns must start with "н", like
+    **з ними** (with them).'
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: must
+  text: '- id: marker-id-here # MUST match an <!-- INJECT_ACTIVITY: .'
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: must
+  text: '**CRITICAL RULE: EVERY single activity object MUST include an `id` field
+    (a unique string like "quiz-grammar", "match-up-vocab").'
+  covered: false
+  coverage_note: 2/16 keywords (12%)
+- kind: must
+  text: 'Required: id, instruction, items[] (array of strings), correct_order[] (TOP-LEVEL
+    array of **integers** — zero-based indices into items).'
+  covered: false
+  coverage_note: 4/13 keywords (31%)
+- kind: must
+  text: 'Required: id, syllables[], correctIndices[], category.'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: 'Required: id, letters[{upper, lower}].'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: 'Required: id, items[{video}].'
+  covered: false
+  coverage_note: 1/3 keywords (33%)
+- kind: must
+  text: '- **critical-analysis**: Required: id, prompt.'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: '- **essay-response**: Required: id, prompt.'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: '**You MUST use these patterns.'
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: must
+  text: If the pattern lists divide-words, count-syllables, and odd-one-out — your
+    output MUST include all three.
+  covered: false
+  coverage_note: 1/15 keywords (7%)
+- kind: must
+  text: '**Test LANGUAGE, not trivia** — exercises must test Ukrainian language skills.'
+  covered: false
+  coverage_note: 0/8 keywords (0%)
+- kind: must
+  text: '- **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).'
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: '...'
+  covered: false
+  coverage_note: marker missing

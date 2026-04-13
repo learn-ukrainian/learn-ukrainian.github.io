@@ -1,0 +1,70 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T12-15-139d65c6.json
+phase: write-chunk-02
+prompt_chars: 33176
+response_chars: 5083
+prompt_words: 5115
+response_words: 822
+sections:
+- name: header
+  start: 0
+  length: 463
+  fraction: 0.014
+- name: skeleton
+  start: 463
+  length: 1281
+  fraction: 0.0386
+- name: prior_summary
+  start: 1744
+  length: 3254
+  fraction: 0.0981
+- name: plan
+  start: 4998
+  length: 11054
+  fraction: 0.3332
+- name: wiki
+  start: 9548
+  length: 16886
+  fraction: 0.509
+- name: output_spec
+  start: 32938
+  length: 238
+  fraction: 0.0072
+large_sections:
+- wiki
+directives_total: 23
+directives_covered: 15
+directives_missed:
+- kind: checklist
+  text: допомагати (to help)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: дякувати (to thank)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: подарунок (gift)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: заняття (class, lesson)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: must
+  text: The noun must change to show its role in the phrase (Source 1, 35).
+  covered: false
+  coverage_note: 2/8 keywords (25%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 4/11 keywords (36%)
+- kind: inject_activity
+  text: 'match-up, focus: Match plural noun forms with the correct case labels (Nom,
+    Gen, Dat), 8 items'
+  covered: false
+  coverage_note: marker missing

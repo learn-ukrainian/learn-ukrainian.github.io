@@ -1,4 +1,4 @@
-<!-- version: 1.1.0 | updated: 2026-03-31 -->
+<!-- version: 1.2.0 | updated: 2026-04-12 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -11,6 +11,35 @@ Generate an `activities/i-eat-i-drink.yaml` file for module **37: I Eat, I Drink
 
 ---
 
+## ⚠️ HARD COUNT TARGETS — READ TWICE
+
+These are the binding numerical contracts for THIS module. The audit will FAIL if you fall short.
+
+| Bucket | Min | Max | Notes |
+|---|---|---|---|
+| Total activities | 10 | 10+ | inline + workbook combined |
+| Inline (lesson tab) | 4 | 6 | one per `<!-- INJECT_ACTIVITY -->` marker, see below |
+| Workbook (Зошит tab) | 6 | 9 | extended practice |
+| Items per activity | 6 | — | each activity must have at least 6 items (unless its type cap is lower — see Activity Type Reference below) |
+
+**You MUST ship at least 4 inline activities AND at least 6 workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+
+**Type diversity is required.** The module (inline + workbook combined) MUST use at least **0** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level. (If `0` is `0`, the audit profile for this level does not enforce type diversity — but variety still produces a better lesson, so aim for 4+ types when the workbook allows it.)
+
+---
+
+## Allowed types for THIS level
+
+- **Inline (lesson) types:** image-to-letter, letter-grid, match-up, watch-and-repeat, quiz, true-false, fill-in, classify
+- **Inline priority (preferred):** image-to-letter, match-up, fill-in, quiz, watch-and-repeat
+- **Workbook types:** fill-in, match-up, group-sort, anagram, unjumble, quiz, true-false, classify, divide-words, count-syllables, pick-syllables, observe, phrase-table, odd-one-out
+- **Workbook priority (preferred):** fill-in, match-up, group-sort, anagram, unjumble
+- **FORBIDDEN at this level:** cloze, error-correction, mark-the-words, translate, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, highlight-morphemes, grammar-identify, select
+
+Pick from the allowed list. Lean heavily on the priority lists. Do not use any forbidden type — the build will reject it.
+
+---
+
 ## Inline vs Workbook Split
 
 Activities have two placement categories:
@@ -19,7 +48,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Rule of thumb:** inline = 2-3 quick checks after key teaching points. Workbook = 4-8 deeper practice exercises covering the full topic.
+**Rule of thumb:** inline = 4–6 quick checks after key teaching points. Workbook = 6–9 deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
 
 ---
 
@@ -27,10 +56,10 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: verb-conjugation-drill -->`
-- `<!-- INJECT_ACTIVITY: accusative-form-builder -->`
-- `<!-- INJECT_ACTIVITY: noun-change-sorting -->`
-- `<!-- INJECT_ACTIVITY: accusative-choice-quiz -->`
+- `<!-- INJECT_ACTIVITY: fill-in-conjugation -->`
+- `<!-- INJECT_ACTIVITY: fill-in-accusative-endings -->`
+- `<!-- INJECT_ACTIVITY: group-sort-accusative -->`
+- `<!-- INJECT_ACTIVITY: quiz-accusative-selection -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -126,127 +155,158 @@ required:
 ## Module Content (the prose the learner reads before exercises)
 
 <module_content>
-## Діалоги
+## Діалоги (Dialogues)
 
-In Ukraine, food is not just fuel; it is the center of social life and hospitality. Asking someone **Що ти їси?** (What are you eating?) or sharing a lunch break is a primary way colleagues and friends bond during the workday. Food vocabulary is universally essential, but in Ukrainian, it also acts as the perfect introduction to how verbs and nouns interact. As you will see, Ukrainians make a strict distinction between what you "eat" and what you "drink" — even when it comes to liquid dishes like soup. This topic introduces the absolute foundation of your survival vocabulary and the crucial accusative case, which you will use every single day.
+Food and daily routines are universal topics that connect us all. When learning Ukrainian, organizing your vocabulary around daily meals is the most practical and immediate way to start speaking. In Ukraine, daily life revolves around three main meals. In the morning, people have a **сніданок** (breakfast). In the middle of the day, it is time for an **обід** (lunch), which is traditionally the largest meal and often includes soup. Finally, the day ends with a **вечеря** (dinner). To talk about these meals, we need the core verbs that describe our eating and drinking habits. The following realistic conversation shows how Ukrainians actually talk about their food in everyday situations.
 
-> **Тарас:** Привіт! Що ти їш на сніданок? *(Hi! What are you eating for breakfast?)*
-> **Ірина:** Я їм кашу і п'ю каву. *(I eat porridge and drink coffee.)*
-> **Тарас:** А Олена? *(And Olena?)*
-> **Ірина:** Вона їсть хліб з маслом і п'є чай. *(She eats bread with butter and drinks tea.)*
-> **Тарас:** А діти? *(And the children?)*
-> **Ірина:** Вони їдять яйця і п'ють молоко. *(They eat eggs and drink milk.)*
+> **Оксана і Тарас працюють разом. Зараз ранок.**
+> *Oksana and Taras work together. It is morning now.*
+> **Оксана:** Тарасе, що ти зазвичай їш на сніданок?
+> *Oksana: Taras, what do you usually eat for breakfast?*
+> **Тарас:** Я їм кашу і п'ю каву. А ти?
+> *Taras: I eat porridge and drink coffee. And you?*
+> **Оксана:** Я теж! А Олена?
+> *Oksana: Me too! And Olena?*
+> **Тарас:** Вона їсть хліб з маслом і п'є чай.
+> *Taras: She eats bread with butter and drinks tea.*
+> **Оксана:** Зрозуміло. А діти?
+> *Oksana: Understood. And the children?*
+> **Тарас:** Вони їдять яйця і п'ють молоко.
+> *Taras: They eat eggs and drink milk.*
 
-The dialogue above uses the high-frequency question **Що ти їш?** (What are you eating?) and the response **Я їм...** (I am eating...). Notice the contrast between the verbs: **їш** is highly irregular and does not look like the infinitive **їсти** (to eat), while **п'єш** follows a more recognizable pattern from its dictionary form **пити** (to drink). The distinction between singular and plural present tense forms is fundamental because you will often speak on behalf of your family or group (**ми їмо**, **вони п'ють**).
+Notice how the forms of the verbs change depending on who is performing the action. When Taras talks about himself, he says **я їм** (I eat) and **я п'ю** (I drink). When he mentions his colleague Olena, he switches to **вона їсть** (she eats) and **вона п'є** (she drinks). Finally, for the plural "children", he uses **вони їдять** (they eat) and **вони п'ють** (they drink). This demonstrates the full conjugation spectrum in a natural context.
 
-> **Колега 1:** Що ви їсте на обід? *(What are you eating for lunch?)*
-> **Колега 2:** Ми їмо суп і салат. А що п'єте? *(We eat soup and salad. And what are you drinking?)*
-> **Колега 1:** Ми п'ємо воду або сік. Я сьогодні їм бутерброд і п'ю чай. А ти? *(We drink water or juice. Today I eat a sandwich and drink tea. And you?)*
-> **Колега 2:** Я їм салат і п'ю каву. Я теж хочу суп. *(I eat a salad and drink coffee. I also want soup.)*
-> **Колега 1:** Добре, замовляй! Я ще хочу воду потім. *(Okay, order! I still want water later.)*
+Later in the day, the same colleagues might gather for their lunch break. The next dialogue illustrates how they talk about their midday meal and how they order food.
 
-## Їсти і пити
+> **Обідня перерва в офісі.**
+> *Lunch break at the office.*
+> **Оксана:** Що ви їсте на обід сьогодні?
+> *Oksana: What are you eating for lunch today?*
+> **Тарас і Олена:** Ми їмо суп і салат.
+> *Taras and Olena: We are eating soup and salad.*
+> **Оксана:** Смачно! А що п'єте?
+> *Oksana: Tasty! And what are you drinking?*
+> **Тарас:** Ми п'ємо воду або сік.
+> *Taras: We are drinking water or juice.*
+> **Оксана:** Я теж хочу суп.
+> *Oksana: I also want soup.*
+> **Олена:** Добре, замовляй!
+> *Olena: Good, order it!*
 
-The verb **їсти** (to eat) is a unique, highly irregular verb in Ukrainian grammar. It belongs to neither Group I nor Group II verb conjugations, making it a true exception. Because it is an essential daily action that you will use in almost every conversation about food, you simply need to memorize its forms. Pay close attention to the endings, as they shift noticeably between the singular and plural forms. Here is the full paradigm:
+This second dialogue reviews the verbs with plural subjects like **ми** (we) and introduces a very useful transactional verb: **хотіти** (to want). Oksana says **я хочу** (I want) to express her desire for soup. You will use these phrases constantly whether you are unpacking lunch boxes with colleagues or ordering at a cafe.
 
-| English | Ukrainian |
-|---------|-----------|
-| I eat | я **їм** |
-| You (singular) eat | ти **їси** |
-| He/she eats | він/вона **їсть** |
-| We eat | ми **їмо** |
-| You (plural/formal) eat | ви **їсте** |
-| They eat | вони **їдять** |
+## Їсти і пити (To Eat and To Drink)
+
+To actively participate in conversations about food, you must master two essential, high-frequency daily verbs: **їсти** (to eat) and **пити** (to drink). Because these actions are so fundamental to human life, the verbs describing them are very old, and they can be slightly unusual. The verb **їсти** is completely irregular. It does not follow the standard Group I or Group II conjugation patterns used for most other verbs. On the other hand, **пити** is a Group I verb, but it features a shifting stem that requires careful attention to spelling and pronunciation.
+
+The irregular verb **їсти** requires memorizing its forms individually, as they appear constantly in daily conversation.
+
+| Займенник (Pronoun) | Дієслово (Verb) | Переклад (Translation) |
+| :--- | :--- | :--- |
+| я | **їм** | I eat |
+| ти | **їси** | you eat (informal) |
+| він / вона / воно | **їсть** | he / she / it eats |
+| ми | **їмо** | we eat |
+| ви | **їсте** | you eat (formal/plural) |
+| вони | **їдять** | they eat |
+
+:::caution
+A very common mistake for learners is confusing the first-person and third-person forms. Remember that **я їм** means "I eat," while **він їсть** means "he eats." Do not mix them up!
+:::
+
+These sentences demonstrate the forms in simple contexts:
+*   **Я їм смачний суп.** (I am eating a tasty soup.)
+*   **Ти їси хліб.** (You are eating bread.)
+*   **Вона їсть м'ясо.** (She is eating meat.)
+*   **Ми їмо салат.** (We are eating a salad.)
+*   **Ви їсте борщ.** (You are eating borscht.)
+*   **Вони їдять кашу.** (They are eating porridge.)
+
+The verb **пити** (to drink) is a Group I verb, but its stem changes dramatically from the infinitive form to the present tense forms.
+
+| Займенник (Pronoun) | Дієслово (Verb) | Переклад (Translation) |
+| :--- | :--- | :--- |
+| я | **п'ю** | I drink |
+| ти | **п'єш** | you drink (informal) |
+| він / вона / воно | **п'є** | he / she / it drinks |
+| ми | **п'ємо** | we drink |
+| ви | **п'єте** | you drink (formal/plural) |
+| вони | **п'ють** | they drink |
+
+Notice the apostrophe in words like **п'ю** and **п'є**. In Ukrainian orthography, the apostrophe indicates a slight pause and signals that the following letter (ю, є, я, ї) should be pronounced as two distinct sounds (for example, й + у). Therefore, **п'ю** is pronounced as [п й у], keeping the consonant "п" hard.
+
+*   **Я п'ю гарячий чай.** (I am drinking hot tea.)
+*   **Ти п'єш каву.** (You are drinking coffee.)
+*   **Він п'є молоко.** (He is drinking milk.)
+*   **Ми п'ємо воду.** (We are drinking water.)
+*   **Ви п'єте холодний сік.** (You are drinking cold juice.)
+*   **Вони п'ють воду.** (They are drinking water.)
+
+> **Ми часто їмо разом. Я їм рибу, а мій друг їсть м'ясо. Ми п'ємо воду.**
+> *We often eat together. I eat fish, and my friend eats meat. We drink water.*
+
+<!-- INJECT_ACTIVITY: fill-in-conjugation -->
+
+## Знахідний відмінок — неживе (Accusative Inanimate)
+
+Connecting actions to the objects being consumed requires a specific grammatical structure. In Ukrainian grammar, the direct object of a sentence — the thing that is being acted upon — takes the Accusative case, known as **Знахідний відмінок** (Accusative case).
+
+In Ukrainian schools, children learn to identify this case by asking a specific pair of diagnostic questions: **Бачу що? кого?** (What/who do I see?). The verb "to see" naturally takes a direct object. Since food and drinks are inanimate objects, the relevant question is simply **що?** (what?). When stating **Я їм** (I eat) or **Я п'ю** (I drink), the immediate logical question is "what?". The noun that answers this question must be in the Accusative case.
+
+For Masculine and Neuter inanimate nouns, the rule is remarkably simple: they do not change at all. Their Accusative form is exactly the same as their Nominative (dictionary) form.
+
+These examples show the stability of masculine and neuter nouns:
+*   **хліб** (bread, masculine) → **Я їм хліб.** (I eat bread.)
+*   **сік** (juice, masculine) → **Я п'ю сік.** (I drink juice.)
+*   **суп** (soup, masculine) → **Він їсть суп.** (He eats soup.)
+*   **молоко** (milk, neuter) → **Ми п'ємо молоко.** (We drink milk.)
+*   **яйце** (egg, neuter) → **Вони їдять яйце.** (They are eating an egg.)
+*   **м'ясо** (meat, neuter) → **Вона їсть м'ясо.** (She is eating meat.)
+
+You simply take the dictionary form of a masculine or neuter food item and place it right after your verb.
+
+The critical rule at the A1 level concerns Feminine nouns. When a feminine noun serves as the direct object of a verb, its ending changes. The pattern is highly consistent: the ending **-а** changes to **-у**, and the ending **-я** changes to **-ю**.
+
+This is the most important accusative change to master. Observe how this transforms common feminine food vocabulary:
+*   **кава** (coffee) → **каву**: **Я п'ю каву.** (I drink coffee.)
+*   **вода** (water) → **воду**: **Він п'є воду.** (He drinks water.)
+*   **риба** (fish) → **рибу**: **Ми їмо рибу.** (We eat fish.)
+*   **каша** (porridge) → **кашу**: **Ти їси кашу.** (You are eating porridge.)
+*   **картопля** (potato) → **картоплю**: **Я їм картоплю.** (I am eating potatoes.)
+*   **сметана** (sour cream) → **сметану**: **Вона любить сметану.** (She loves sour cream.)
 
 :::tip
-**Pronouncing the letter Ї**
-The letter **ї** always represents two distinct sounds: the consonant **й** and the vowel **і**. You must pronounce it fully, sounding similar to the English word "yee". It is never reduced to just a single **і** sound.
+This ending shift applies to any verb that takes a direct object. Whether the sentence is **Я їм картоплю** (I eat potatoes), **Я п'ю воду** (I drink water), or **Я хочу каву** (I want coffee), the feminine ending must become **-у** or **-ю**.
 :::
 
-Here are three examples using different subjects to practice this sound:
-- **Я їм суп.** (I eat soup.)
-- **Ми їмо яблуко.** (We eat an apple.)
-- **Діти їдять банан.** (The children eat a banana.)
-- **Він їсть сир.** (He eats cheese.)
+> **Сьогодні я готую обід. Я маю картоплю і рибу. Я їм картоплю, але я не п'ю каву. Я п'ю воду.**
+> *Today I am cooking lunch. I have potatoes and fish. I am eating potatoes, but I do not drink coffee. I drink water.*
 
-The verb **пити** (to drink) is a bit friendlier for learners. It officially follows the Group I conjugation pattern, but it features a unique spelling shift in the present tense. Notice how the vowel **и** completely disappears from the stem, and the endings start with an apostrophe, resulting in the distinct sounds **'ю** or **'є**. This apostrophe indicates a brief pause before the soft vowel. Here is the complete paradigm:
-
-| English | Ukrainian |
-|---------|-----------|
-| I drink | я **п'ю** |
-| You (singular) drink | ти **п'єш** |
-| He/she drinks | він/вона **п'є** |
-| We drink | ми **п'ємо** |
-| You (plural/formal) drink | ви **п'єте** |
-| They drink | вони **п'ють** |
-
-Ukrainians use the direct verb **пити** for almost all beverages. Unlike English, where you might casually say "I am having a drink" or "I will take a coffee," in Ukrainian you must always explicitly state "I drink." It is a highly frequent verb that pairs directly with almost any liquid you can consume. Notice how the direct object immediately follows the verb:
-- **Я п'ю воду.** (I drink water.)
-- **Ти п'єш каву.** (You drink coffee.)
-- **Вони п'ють сік.** (They drink juice.)
-- **Ми п'ємо чай.** (We drink tea.)
-
-<!-- INJECT_ACTIVITY: verb-conjugation-drill -->
-
-A uniquely Ukrainian cultural quirk is the strict "Soup Rule." In Ukraine, you always "eat" (**їсти**) thick liquid dishes like soup and borscht with a spoon. You never "drink" them from a bowl, even if they are primarily liquid. Contrast this with true beverages like tea, juice, or fruit compote, which you always "drink" (**пити**). Using the wrong verb sounds immediately unnatural to a native speaker. For example: **Я їм борщ. Я п'ю чай.** (I eat borscht. I drink tea.)
-
-## Знахідний відмінок — неживе
-
-When you eat or drink something, that food item becomes the direct object of your action. In Ukrainian grammar, the direct object requires a specific form called the Accusative Case (**Знахідний відмінок**). This case is the workhorse of everyday communication because you constantly interact with objects around you.
-
-:::note
-**The "Що?" Trigger**
-The Ukrainian school system effectively teaches students to identify the accusative case by asking the mental trigger question: «Бачу що? Бачу кого?» (I see what? I see whom?). When dealing with inanimate food items, asking yourself **що?** (what?) signals that you must use the accusative form for the noun that follows: **Я їм (що?) хліб. Я п'ю (що?) каву.**
-:::
-
-There is excellent news for masculine and neuter inanimate nouns: they undergo absolutely no change in this situation. The accusative form looks exactly the same as the standard dictionary (nominative) form. Therefore, masculine words like **хліб** (bread), **суп** (soup), **бутерброд** (sandwich), and **сік** (juice), as well as neuter words like **молоко** (milk) and **яйце** (egg), remain completely identical when they become the object of your action. This makes learning the accusative case much easier for beginners, as you only need to focus on the sentence structure rather than changing the word.
-- **хліб** → **хліб**: **Я їм хліб.** (I eat bread.)
-- **суп** → **суп**: **Я їм суп.** (I eat soup.)
-- **сік** → **сік**: **Я п'ю сік.** (I drink juice.)
-- **молоко** → **молоко**: **Я п'ю молоко.** (I drink milk.)
-- **яйце** → **яйце**: **Я їм яйце.** (I eat an egg.)
-
-The primary grammatical change at the A1 level happens with feminine nouns. When a feminine noun ends in **-а**, it strictly shifts to **-у** in the accusative case. If it ends in **-я**, it shifts to **-ю**. This simple but crucial vowel change immediately signals to the listener that the noun is the direct object receiving the action. You must actively practice this transformation until it becomes a natural reflex. Notice how the endings transform in these highly common daily examples:
-- **вода** → **воду**: **Я п'ю воду.** (I drink water.)
-- **кава** → **каву**: **Я п'ю каву.** (I drink coffee.)
-- **риба** → **рибу**: **Я їм рибу.** (I eat fish.)
-- **каша** → **кашу**: **Я їм кашу.** (I eat porridge.)
-- **сметана** → **сметану**: **Я хочу сметану.** (I want sour cream.)
-- **картопля** → **картоплю**: **Я їм картоплю.** (I eat potato.)
-
-<!-- INJECT_ACTIVITY: accusative-form-builder -->
-
-<!-- INJECT_ACTIVITY: noun-change-sorting -->
-
-This foundational accusative rule applies to many other essential verbs too, particularly the verb **хотіти** (to want). When you order food at a cafe or restaurant, you will often use the polite, fixed chunk **Мені, будь ласка...** (To me, please...) followed immediately by the accusative object. Even though the main verb is implied rather than spoken out loud, the food item is still acting as the direct object receiving the action, so the accusative rules remain exactly the same.
-- **Мені, будь ласка, піцу і воду.** (To me, please, pizza and water.)
-- **Я хочу каву.** (I want coffee.)
-- **Він хоче рибу і сік.** (He wants fish and juice.)
-- **Вона хоче чай.** (She wants tea.)
-
-<!-- INJECT_ACTIVITY: accusative-choice-quiz -->
+<!-- INJECT_ACTIVITY: fill-in-accusative-endings -->
+<!-- INJECT_ACTIVITY: group-sort-accusative -->
+<!-- INJECT_ACTIVITY: quiz-accusative-selection -->
 
 ## Підсумок — Summary
 
-The core grammar of eating and drinking relies heavily on two essential verbs and one critical case change. The verb **їсти** (to eat) is completely irregular and its unique forms (**я їм, ти їси, він їсть**) must be memorized through repetition. The verb **пити** (to drink) is a Group I verb with a specific spelling shift that adds an apostrophe (**я п'ю, ти п'єш**). Most importantly, you must remember that when you eat or drink a feminine item ending in **-а**, you must actively change that ending to **-у** (**вода** → **воду**).
+This module establishes the foundation for building practical, everyday sentences. Discussing daily meals and expressing basic needs requires an understanding of how actions affect objects, which involves applying the rules of the Accusative inanimate case.
 
-:::caution
-**Watch out for Russianisms!**
-A very common mistake for beginners is using the Russian word *кофе* instead of the authentic Ukrainian noun **кава**. Always remember to order **каву**! Additionally, ensure you use the Ukrainian word **сир** for both hard cheese and cottage cheese at this level; actively avoid the Russianism *творог*.
-:::
+The Accusative inanimate rules depend entirely on the gender of the noun. When an inanimate object, such as a piece of food or a beverage, is the direct target of an action — for instance, following verbs like **їсти** (to eat), **пити** (to drink), or **хотіти** (to want) — it must take the Accusative form.
 
-To quickly recap the Accusative Inanimate rules: masculine and neuter nouns equal their dictionary nominative forms exactly, while feminine nouns take **-у** or **-ю**. You can clearly see this when you compare the masculine object **Я п'ю сік** (no change) with the feminine object **Я п'ю каву** (changed to **-у**).
+*   **Masculine and Neuter nouns do not change form.** Words like **хліб** (bread), **сік** (juice), and **молоко** (milk) stay exactly the same as they appear in the dictionary. A speaker can simply say **Я їм хліб** or **Я п'ю молоко** without any modifications to the noun.
+*   **Feminine nouns undergo a specific ending shift.** If a feminine noun ends in **-а**, that ending changes to **-у**. If it ends in **-я**, it changes to **-ю**. This is why **кава** becomes **каву**, and **картопля** becomes **картоплю**. This change is mandatory and highly frequent in spoken Ukrainian.
 
-Test your memory of these critical concepts before you finish the module:
-- Can you conjugate the irregular verb **їсти** for all pronouns from memory? (Try recalling: **Я їм**, **ти їси**, **вони їдять**)
-- Can you conjugate the verb **пити** without looking at the table? (Try recalling: **Я п'ю**, **він п'є**, **ми п'ємо**)
-- Test yourself: **Я їм ___** (**риба** → **рибу**). **Я п'ю ___** (**вода** → **воду**).
-- Say three things you eat today, ensuring you use the correct accusative form: **Я їм...** (e.g., **суп, яблуко**)
-- Say three things you drink today, using the correct accusative form: **Я п'ю...** (e.g., **чай, сік**)
-- What is the correct accusative form of the feminine noun **картопля**? (Answer: **картоплю**)
+> **Кожного дня я снідаю. Я їм кашу і п'ю чай. На обід я їм суп. Це дуже смачно!**
+> *Every day I have breakfast. I eat porridge and drink tea. For lunch I eat soup. It is very tasty!*
 
-If you can confidently answer these questions, you are ready to order your favorite meals in a Ukrainian cafe!
+The following short self-check test ensures these vital patterns are internalized. Fill in the blanks using the correct Accusative form of the word in parentheses:
 
+*   Test: Я їм ___ (**риба** → **рибу**).
+*   Test: Я п'ю ___ (**вода** → **воду**).
+*   Test: Вона їсть ___ (**хліб** → **хліб**).
+*   Test: Ми хочемо ___ (**кава** → **каву**).
+*   Test: Ти п'єш ___ (**сік** → **сік**).
+
+As an active self-check, say three things you eat and three things you drink today out loud. Pay close attention to the gender of each word, and use the correct accusative form for each item. If the word is feminine, ensure the crucial shift to the "-у" ending is made.
 </module_content>
 
 ---
@@ -260,48 +320,68 @@ version: "1.0"
 module: i-eat-i-drink
 level: a1
 
+# NOTE — these are SHAPE examples. The real targets are at the top of this prompt
+# (10 total / 4–6 inline / 6–9 workbook,
+# 6+ items per activity). The shapes below are TRUNCATED for readability;
+# YOUR output MUST hit those minimums.
+
 inline:
   - id: marker-id-here        # MUST match an <!-- INJECT_ACTIVITY: ... --> marker
     type: quiz                 # activity type
     instruction: "Оберіть правильний варіант"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - question: "_____ стіл"
-        options: ["мій", "моя", "моє"]
+        options: ["мій", "моя", "моє", "мої"]
         correct: 0             # 0-based index
+      - question: "Це ____ книга."
+        options: ["мій", "моя", "моє", "мої"]
+        correct: 1
+      # ... add at least 6 items total — never stop at 1-2
 
   - id: another-marker-id
     type: fill-in
     instruction: "Вставте правильне слово"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - sentence: "Це ____ кімната."
         answer: "моя"
         options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ вікно."
+        answer: "моє"
+        options: ["мій", "моя", "моє"]
+      # ... ≥ 6 items total
 
 workbook:
-  - type: match-up
+  - id: match-up-vocab
+    type: match-up
     instruction: "З'єднайте пари"
-    pairs:
+    pairs:                     # ← real output: ≥ 6 pairs
       - left: "стіл"
         right: "він"
       - left: "книга"
         right: "вона"
       - left: "вікно"
         right: "воно"
+      # ... ≥ 6 pairs total
 
-  - type: group-sort
+  - id: group-sort-gender
+    type: group-sort
     instruction: "Розподіліть слова за категоріями"
     groups:
-      - label: "Category A"
-        items: ["word1", "word2"]
-      - label: "Category B"
-        items: ["word3", "word4"]
+      - label: "Чоловічий рід"
+        items: ["стіл", "олівець", "будинок"]   # ≥ 3 items per group
+      - label: "Жіночий рід"
+        items: ["книга", "ручка", "школа"]
+      - label: "Середній рід"
+        items: ["вікно", "море", "молоко"]
 
-  - type: true-false
+  - id: true-false-grammar
+    type: true-false
     instruction: "Правда чи ні?"
-    items:
-      - statement: "Statement here"
-        correct: true
-        explanation: "Why it's true"
+    items:                     # ← real output: ≥ 6 items
+      - statement: "«Книга» — це чоловічий рід."
+        correct: false
+        explanation: "Книга закінчується на -а, отже жіночий рід."
+      # ... ≥ 6 items total
 
   - type: error-correction
     instruction: "Виправте помилку"
@@ -372,7 +452,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -491,10 +571,15 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 ## Quality Rules
 
-**ITEM COUNT MINIMUMS (non-negotiable):**
-- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
-- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
-- If you can't think of enough items, add more examples from the module's vocabulary and content.
+**ACTIVITY COUNT MINIMUMS (non-negotiable, audit-enforced):**
+- **Total: 10 activities.** Inline: 4–6. Workbook: 6–9. The audit gate FAILS the module if you ship fewer.
+- **Type diversity: workbook MUST cover ≥5 distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
+- **Match the inline markers exactly.** Every `<!-- INJECT_ACTIVITY: id -->` marker in the prose needs a matching inline activity with that exact id. Skipping markers means the lesson tab is broken.
+
+**ITEM COUNT MINIMUMS (non-negotiable, per-activity):**
+- **Default minimum: 6 items per activity.** Quiz, fill-in, match-up, true-false, anagram, error-correction, translate, cloze, mark-the-words, divide-words, count-syllables, odd-one-out, group-sort categories: all ≥ 6.
+- **Lower minimums for specific types only:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items, essay-response/critical-analysis = 1 prompt.
+- If you can't think of enough items, add more examples from the module's vocabulary and content. NEVER ship a 1-item or 2-item activity unless its type cap explicitly allows it.
 - **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
 - **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
@@ -601,6 +686,27 @@ IMPORTANT: After using tools, output your COMPLETE module content as plain text.
 1. Run `verify_words` on all Ukrainian words in your exercises — every word must exist in VESUM
 2. Run `query_cefr_level` on any word you're unsure about — it must be a1-appropriate
 3. For fill-in answers and distractors, verify the exact form (case, number, gender) with `verify_lemma`
+
+---
+
+## ⚠️ MANDATORY FINAL CHECKLIST — verify before emitting YAML
+
+Walk through this checklist explicitly before you start emitting. If ANY box is unchecked, fix it FIRST.
+
+- [ ] My output has **at least 4** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
+- [ ] My output has **at least 6** workbook activities.
+- [ ] **Total ≥ 10.**
+- [ ] **Every** activity has **at least 6** items, pairs, or statements (except types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3, essay-response=1).
+- [ ] The module (inline + workbook combined) uses **at least 0 distinct activity types** (or 4+ when 0 = 0 and the workbook size allows it). I am NOT shipping a wall of quizzes.
+- [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
+- [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
+- [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+- [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+- [ ] My inline count is between 4 and 6. I did NOT create more injection markers than 6.
+- [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
+- [ ] At B1+, all instructions are in Ukrainian (no English fallback).
+
+If you cannot tick all of these, REGENERATE the activities BEFORE outputting. Shipping under-spec means the build rejects you and the heal loop has to redo your work — wasting compute.
 
 ---
 

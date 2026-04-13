@@ -1,0 +1,100 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T11-37-4dae9555.json
+phase: write-chunk-02
+prompt_chars: 50889
+response_chars: 5654
+prompt_words: 7340
+response_words: 892
+sections:
+- name: header
+  start: 0
+  length: 403
+  fraction: 0.0079
+- name: skeleton
+  start: 403
+  length: 1617
+  fraction: 0.0318
+- name: prior_summary
+  start: 2020
+  length: 3360
+  fraction: 0.066
+- name: plan
+  start: 5380
+  length: 17585
+  fraction: 0.3456
+- name: wiki
+  start: 16401
+  length: 27712
+  fraction: 0.5446
+- name: output_spec
+  start: 50677
+  length: 212
+  fraction: 0.0042
+large_sections:
+- wiki
+directives_total: 33
+directives_covered: 17
+directives_missed:
+- kind: checklist
+  text: прокидатися (to wake up — reflexive)
+  covered: false
+  coverage_note: 1/3 keywords (33%)
+- kind: checklist
+  text: снідати / обідати / вечеряти (to have breakfast / lunch / dinner)
+  covered: false
+  coverage_note: 2/7 keywords (29%)
+- kind: checklist
+  text: прибирати (to clean up, tidy)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: пилососити (to vacuum)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: прати білизну (to do laundry — NOT *стирати)
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: checklist
+  text: прасувати (to iron)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: виносити сміття (to take out the trash)
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: checklist
+  text: готувати їжу (to cook food)
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: checklist
+  text: 'займатися (to engage in, do — reflexive: займатися спортом)'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: checklist
+  text: вихідні (weekend — pluralia tantum)
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: checklist
+  text: будильник (alarm clock)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: хатні справи (household chores)
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: checklist
+  text: пошук роботи (job search)
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: checklist
+  text: колега (colleague)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: inject_activity
+  text: fill-in-routine-verbs
+  covered: false
+  coverage_note: marker missing

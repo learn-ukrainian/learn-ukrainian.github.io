@@ -1,7 +1,7 @@
 # Audit Report: M10 — checkpoint-aspect.md
 **Level:** B1 | **Module:** M10 | **Phase:** B1.0 | **Pedagogy:** TTT | **Target:** 4000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-04-10 21:25:58
+**Generated:** 2026-04-11 14:44:12
 
 ## Configuration
 **Type:** B1-checkpoint
@@ -18,52 +18,41 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | quiz | quiz | 6 | 8 | ❌ |
-| 2 | fill-in | fill-in | 6 | 8 | ❌ |
-| 3 | group-sort | group-sort | 10 | 12 | ❌ |
-| 4 | error-correction | error-correction | 6 | 6 | ✅ |
-| 5 | match-up | match-up | 8 | 8 | ✅ |
-| 6 | essay-response | essay-response | 1 | 12 | ❌ |
-| 7 | true-false | true-false | 8 | 8 | ✅ |
-| 8 | fill-in | fill-in | 6 | 8 | ❌ |
-| 9 | error-correction | error-correction | 6 | 6 | ✅ |
+| 1 | quiz |  | 6 | 8 | ❌ |
+| 2 | group-sort |  | 16 | 12 | ✅ |
+| 3 | match-up |  | 6 | 8 | ❌ |
+| 4 | fill-in |  | 6 | 8 | ❌ |
+| 5 | essay-response |  | 1 | 12 | ❌ |
 
 **Summary:**
-- Total activities: 9 (target: 0-4) ❌
-- Unique types: 7 (minimum: 4) ✅
-- Priority types used: 3/3 (error-correction, fill-in, quiz) ✅
-- Low density activities: 5
+- Total activities: 5 (target: 0-4) ❌
+- Unique types: 5 (minimum: 4) ✅
+- Priority types used: 2/3 (fill-in, quiz) ✅
+- Low density activities: 4
 
 ## PEDAGOGICAL VIOLATIONS
 - **[LEVEL_RESTRICTION]** Activity 'essay-response' not allowed at B1
   - FIX: Use level-appropriate activities. 'essay-response' is introduced at A2+.
 - **[COMPLEXITY]** quiz '' has 6 items (minimum: 8)
   - FIX: Add more items. B1 quiz requires at least 8 items.
-- **[COMPLEXITY]** fill-in '' has 6 items (minimum: 8)
-  - FIX: Add more items. B1 fill-in requires at least 8 items.
-- **[COMPLEXITY]** group-sort '' has 10 items (target: 12-999)
-  - FIX: Adjust number of items to sort to 12-999.
-- **[COMPLEXITY]** match-up '' has 8 pairs (target: 12-16)
+- **[COMPLEXITY]** match-up '' has 6 pairs (target: 12-16)
   - FIX: Adjust number of pairs to 12-16.
 - **[COMPLEXITY]** fill-in '' has 6 items (minimum: 8)
   - FIX: Add more items. B1 fill-in requires at least 8 items.
-- **[RUSSICISM_DETECTED]** Found 2 Russicism(s) in content: 'давайте подивимося' → подивімося
-  - FIX: Replace Russicisms with standard Ukrainian equivalents. These are Russian calques that have standard Ukrainian forms. See Phase B prompt 'Russianisms Pre-Output Scan' table.
-- **[PHASE_TRANSLATIONS_LOW]** Early B1 (B1 M01-M30) targets ~25% translated UK paragraphs — currently 0% (0/21)
-  - FIX: 
+- **[STATE_STANDARD_LOW_IMMERSION]** Module 10 has 37.7% immersion (target: 90.0%+)
+  - FIX: Add more Ukrainian content to reach 90%+ immersion for full immersion modules
 
 ## Recommendation
-**📝 UPDATE** (severity 40/100)
+**📝 UPDATE** (severity 25/100)
 
-- Revision recommended (severity 40/100)
-- 8 violations (significant)
+- 5 violations (moderate)
 - Activity density below minimum
 
 ## Gates
-- **Words:** ✅ 4631/4000 (raw: 4681)
-- **Activities:** ✅ 9/0
-- **Density:** ❌ 5 < 12
-- **Unique_types:** ✅ 7/4 types
+- **Words:** ✅ 4605/4000 (raw: 4727)
+- **Activities:** ✅ 5/0
+- **Density:** ❌ 4 < 12
+- **Unique_types:** ✅ 5/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ❌ 0/3
 - **Audio:** ℹ️ No audio
@@ -72,27 +61,27 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 92.6% (checkpoint - no gate)
-- **Richness:** ❌ 75% < 85% min (checkpoint)
+- **Immersion:** 🇺🇦 37.7% (checkpoint - no gate)
+- **Richness:** ❌ 59% < 85% min (checkpoint)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
 
 ## Richness Details
-**Score:** 75% (minimum: 85%)
+**Score:** 59% (minimum: 85%)
 **Module Type:** checkpoint
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| activity_types | 7 | 8 | 88% | 25% | 22.0% |
-| review_sections | 5 | 3 | 100% | 20% | 20.0% |
+| activity_types | 5 | 8 | 62% | 25% | 15.5% |
+| review_sections | 4 | 3 | 100% | 20% | 20.0% |
 | variety | 0.93 | - | 93% | 15% | 14.0% |
 | engagement | 0 | 3 | 0% | 10% | 0.0% |
-| cultural | 1 | - | 100% | 10% | 10.0% |
+| cultural | 0 | - | 0% | 10% | 0.0% |
 | visual | 0 | 3 | 0% | 10% | 0.0% |
 | paragraph_var | 1.00 | - | 100% | 10% | 10.0% |
-| **TOTAL** | | | | | **76.0%** |
+| **TOTAL** | | | | | **59.5%** |
 
 ### Dryness Flags & Fixes
 - ❌ **NO_ENGAGEMENT**
@@ -114,17 +103,16 @@
 ## Low Density Activities
 | Activity | Type | Items | Required | Fix |
 |----------|------|-------|----------|-----|
-| quiz | quiz | 6 | 8 | Add 2 more items |
-| fill-in | fill-in | 6 | 8 | Add 2 more items |
-| group-sort | group-sort | 10 | 12 | Add 2 more items |
-| essay-response | essay-response | 1 | 12 | Add 11 more items |
-| fill-in | fill-in | 6 | 8 | Add 2 more items |
+|  | quiz | 6 | 8 | Add 2 more items |
+|  | match-up | 6 | 8 | Add 2 more items |
+|  | fill-in | 6 | 8 | Add 2 more items |
+|  | essay-response | 1 | 12 | Add 11 more items |
 
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 1024 | Included in Core |
-| **Вид у майбутньому та наказовому** | ✅ | 1194 | Included in Core |
-| **Вид і заперечення** | ✅ | 1318 | Included in Core |
-| **Вид в умовному способі та підсумок** | ✅ | 1095 | Included in Core |
+| **Intro/Narrative** | ✅ | 1043 | Included in Core |
+| **Вид у майбутньому та наказовому (~1000 words total)** | ✅ | 1384 | Included in Core |
+| **Вид і заперечення (~1000 words total)** | ✅ | 1171 | Included in Core |
+| **Вид в умовному способі та підсумок (~1000 words total)** | ✅ | 1007 | Included in Core |

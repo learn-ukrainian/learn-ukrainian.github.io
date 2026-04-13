@@ -1,80 +1,32 @@
 vocabulary:
+- word: приє́мно
+  translation: pleasant
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ціка́во
+  translation: interesting
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: су́мно
+  translation: sad (impersonal state)
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ва́жко
+  translation: difficult, hard
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
 - word: давальний відмінок
   translation: dative case
   expression: true
   pos: ''
-  gender: ''
-  verified: true
-- word: дава́ти
-  translation: to give
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: Кому?
-  translation: To whom?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Чому?
-  translation: To what?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: подару́нок
-  translation: gift
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: дарува́ти
-  translation: to gift
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: каза́ти
-  translation: to say
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: говори́ти
-  translation: to speak / to tell
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: допомага́ти
-  translation: to help
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: дякувати
-  translation: to thank
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: заважа́ти
-  translation: to bother / to disturb
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: пасува́ти
-  translation: to suit / to fit
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: телефонува́ти
-  translation: to call (by phone)
-  expression: false
-  pos: дієсл.
   gender: ''
   verified: true
 - word: мені́
@@ -90,7 +42,7 @@ vocabulary:
   gender: ''
   verified: true
 - word: йому
-  translation: to him / to it
+  translation: to him, to it
   expression: false
   pos: ім.
   gender: ч.
@@ -108,7 +60,7 @@ vocabulary:
   gender: ''
   verified: true
 - word: вам
-  translation: to you (plural / formal)
+  translation: to you (formal/plural)
   expression: false
   pos: ім.
   gender: ''
@@ -125,129 +77,51 @@ vocabulary:
   pos: присл.
   gender: ''
   verified: true
-- word: тепло́
-  translation: warm (impersonal state)
+- word: потрі́бно
+  translation: necessary, needed
   expression: false
   pos: присл.
   gender: ''
   verified: true
-- word: приє́мно
-  translation: pleasant (impersonal state)
-  expression: false
-  pos: присл.
+- word: Кому?
+  translation: To whom?
+  expression: true
+  pos: ''
   gender: ''
   verified: true
-- word: ціка́во
-  translation: interesting (impersonal state)
+- word: Чому?
+  translation: To what?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: дава́ти
+  translation: to give
   expression: false
-  pos: присл.
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: каза́ти
+  translation: to say, to tell
+  expression: false
+  pos: дієсл.
   gender: ''
   verified: true
 - word: ве́село
-  translation: joyful / fun (impersonal state)
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: су́мно
-  translation: sad (impersonal state)
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: ва́жко
-  translation: difficult / hard (impersonal state)
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: стра́шно
-  translation: scary (impersonal state)
+  translation: fun
   expression: false
   pos: присл.
   gender: ''
   verified: true
 - word: ну́дно
-  translation: boring (impersonal state)
+  translation: boring
   expression: false
   pos: присл.
   gender: ''
   verified: true
-- word: со́ромно
-  translation: ashamed (impersonal state)
+- word: тепло́
+  translation: warm
   expression: false
   pos: присл.
   gender: ''
-  verified: true
-- word: зру́чно
-  translation: comfortable (impersonal state)
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: потрі́бно
-  translation: necessary / needed
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: тре́ба
-  translation: need / necessary
-  expression: false
-  pos: ''
-  gender: ''
-  verified: true
-- word: мо́жна
-  translation: allowed / may
-  expression: false
-  pos: ''
-  gender: ''
-  verified: true
-- word: ва́рто
-  translation: should / worth doing
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: із радістю
-  translation: happily / with joy
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: пізно ввечері
-  translation: late in the evening
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: домашнє завдання
-  translation: homework
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: йти додому
-  translation: to go home
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: завдяки́
-  translation: thanks to
-  expression: false
-  pos: прийм.
-  gender: ''
-  verified: true
-- word: імени́нник
-  translation: birthday person / celebrant
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: паку́нок
-  translation: package / parcel
-  expression: false
-  pos: ім.
-  gender: ч.
   verified: true

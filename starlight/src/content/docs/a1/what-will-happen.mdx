@@ -7,12 +7,11 @@ pipeline: v6
 build_status: draft
 ---
 
-import ErrorCorrection from '@site/src/components/ErrorCorrection';
+import Anagram from '@site/src/components/Anagram';
 import FillIn from '@site/src/components/FillIn';
 import FlashcardDeck from '@site/src/components/FlashcardDeck';
 import GroupSort from '@site/src/components/GroupSort';
 import MatchUp from '@site/src/components/MatchUp';
-import Order from '@site/src/components/Order';
 import Quiz from '@site/src/components/Quiz';
 import TrueFalse from '@site/src/components/TrueFalse';
 import Unjumble from '@site/src/components/Unjumble';
@@ -24,150 +23,142 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ## Dialogues
 
-When we talk about our lives, we constantly shift between the past, the present, and the future. In the previous lessons, we focused heavily on what already happened. We learned to describe completed actions and past states using past tense verbs that change based on gender. We talked about yesterday, last week, and what we did during our time off. But human conversations are equally focused on what comes next. We make plans (**пла́ни**), we set goals, and we imagine future possibilities. Moving from what we did to what we will do requires a new grammatical tool. In Ukrainian, talking about the future is surprisingly straightforward, especially when we focus on ongoing plans and intentions. Observe how native speakers discuss their upcoming activities in different real-world situations.
+Imagine sitting in the cozy, sunlit kitchen of a Ukrainian village **воро́жка** (fortune teller). As she reads a client’s palm, she predicts the future with the analytic future tense: **бу́деш + infinitive**. This form is useful for planned, ongoing, or repeated actions in the future.
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Ворожка:</span> Ти будеш бага́то подорожува́ти. *(You will travel a lot.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Ворожка:</span> Будеш зустріча́ти ціка́вих люде́й. *(You will meet interesting people.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Ворожка:</span> Будеш отри́мувати подару́нки. *(You will receive gifts.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Ворожка:</span> Будеш щасли́вий! *(You will be happy!)*</div>
+
+<div class="dialogue-line"><span class="speaker">Кліє́нт:</span> Дякую! Це ду́же до́бре. *(Thank you! That is very good.)*</div>
+
+</div>
+
+The fortune teller builds her predictions with **будеш** + infinitive: **будеш подорожувати**, **будеш зустрічати**, **будеш отримувати**. The main verb stays in the infinitive, while **будеш** changes to match the person being spoken to.
 
 :::note
-The future tense is essential for making plans. Notice how the speakers in these dialogues use a special form of the verb "to be" combined with an action verb.
+The word **будеш** is the "you" form of the verb **бу́ти** (to be) in the future tense. When combined with an infinitive, it creates the analytic future tense.
 :::
 
-<div class="dialogue">
-
-<div class="dialogue-line"><span class="speaker">Воро́жка:</span> Сіда́й. Я ба́чу твоє́ майбу́тнє. *(Sit down. I see your future.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Кліє́нт:</span> Що там? Що ви ба́чите? *(What is there? What do you see?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Ворожка:</span> Ти **бу́деш** бага́то **подорожува́ти**. *(You will travel a lot.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Клієнт:</span> Це до́бре. А робо́та? *(That is good. And work?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Ворожка:</span> У тебе́ **бу́де** ціка́ва робота. Ти **будеш знахо́дити** нови́х дру́зів. *(You will have interesting work. You will find new friends.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Клієнт:</span> А гроші? *(And money?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Ворожка:</span> Ти **будеш отри́мувати** подару́нки. Ти **будеш** щасли́вий! *(You will receive gifts. You will be happy!)*</div>
-
-</div>
-
-Notice how the fortune teller uses the word **будеш** (you will) before every action. Now, observe two friends discussing a much closer future — tomorrow.
+Now, let us move from mystical predictions to two everyday planning conversations. The same pattern helps speakers talk about tomorrow and the weekend in a natural way.
 
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Макси́м:</span> Що ти **будеш роби́ти за́втра**? *(What will you do tomorrow?)*</div>
+<div class="dialogue-line"><span class="speaker">Оле́на:</span> Що ти будеш роби́ти за́втра? *(What will you do tomorrow?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Оле́г:</span> **Завтра** я **бу́ду працюва́ти**. *(Tomorrow I will work.)*</div>
+<div class="dialogue-line"><span class="speaker">Анто́н:</span> Завтра я бу́ду працюва́ти. *(Tomorrow I will work.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Максим:</span> А **вве́чері**? *(And in the evening?)*</div>
+<div class="dialogue-line"><span class="speaker">Олена:</span> А вве́чері? *(And in the evening?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Олег:</span> **Ввечері** я **буду готува́ти** вече́рю. А що **буде робити** Оле́на? *(In the evening I will prepare dinner. And what will Olena do?)*</div>
+<div class="dialogue-line"><span class="speaker">Антон:</span> Ввечері я буду готува́ти вече́рю. *(In the evening I will prepare dinner.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Максим:</span> Вона́ **буде чита́ти**. *(She will read.)*</div>
+<div class="dialogue-line"><span class="speaker">Олена:</span> А що бу́де робити твоя́ сестра́? *(And what will your sister do?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Олег:</span> А ви **бу́дете гуля́ти**? *(And will you walk?)*</div>
+<div class="dialogue-line"><span class="speaker">Антон:</span> Вона́ буде чита́ти. *(She will read.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Максим:</span> Так, ми **бу́демо гуляти** в парку! *(Yes, we will walk in the park!)*</div>
+<div class="dialogue-line"><span class="speaker">Олена:</span> А ви бу́дете гуля́ти? *(And will you go for a walk?)*</div>
 
-</div>
+<div class="dialogue-line"><span class="speaker">Антон:</span> Так, ми бу́демо гуляти в парку. *(Yes, we will walk in the park.)*</div>
 
-Finally, observe how families plan their weekends. The pattern remains consistent even when multiple people are involved.
+<div class="dialogue-line"><span class="speaker">Марі́я:</span> Що ви будете робити на вихідни́х? *(What will you do on the weekend?)*</div>
 
-<div class="dialogue">
+<div class="dialogue-line"><span class="speaker">Іри́на:</span> У субо́ту ми будемо відпочива́ти. *(On Saturday we will rest.)*</div>
 
-<div class="dialogue-line"><span class="speaker">А́нна:</span> Що ви **будете робити на вихідни́х**? *(What will you do on the weekend?)*</div>
+<div class="dialogue-line"><span class="speaker">Марія:</span> А в неді́лю? *(And on Sunday?)*</div>
 
-<div class="dialogue-line"><span class="speaker">І́гор:</span> У субо́ту ми **будемо відпочива́ти**. *(On Saturday we will rest.)*</div>
+<div class="dialogue-line"><span class="speaker">Ірина:</span> У неділю я буду готувати, а чолові́к буде гуляти з ді́тьми. *(On Sunday I will cook, and my husband will walk with the children.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Анна:</span> А в неді́лю? *(And on Sunday?)*</div>
+<div class="dialogue-line"><span class="speaker">Марія:</span> Звучи́ть добре! А я буду диви́тися футбо́л. *(That sounds good! And I will watch football.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Ігор:</span> У неділю я **буду готувати**. Чолові́к **буде гуляти** з ді́тьми. *(On Sunday I will cook. My husband will walk with the children.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Анна:</span> Звучи́ть добре! А я **буду диви́тися футбо́л**. *(Sounds good! And I will watch football.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Ігор:</span> Ти за́вжди́ **будеш дивитися футбол**! *(You will always watch football!)*</div>
+<div class="dialogue-line"><span class="speaker">Ірина:</span> Ти за́вжди́ будеш дивитися футбол! *(You will always watch football!)*</div>
 
 </div>
 
 ## Майбу́тній час (Future Tense)
 
-Grade 3-4 textbooks in Ukrainian schools introduce the concept of **майбутній час** (future tense) using a systematic approach. Ukrainian actually has two different ways to form the future tense, depending on whether you are talking about an ongoing process or a single completed result. At the A1 level, we focus exclusively on one — the analytic future form. This is the most common and accessible way to express future plans, intentions, and ongoing actions in tomorrow's schedule. If you understand how the English future tense works with the word "will," you already have a solid mental anchor for this Ukrainian structure. In English, you take the word "will" and add a base verb, like "will read" or "will work." Ukrainian does exactly the same thing, but instead of a single word like "will," we use a conjugated form of the verb **бу́ти** (to be) followed by the infinitive of your main action verb.
+When discussing your upcoming **план** (plan, m), life predictions, or scheduled events, we need to utilize the **майбутній час** (future tense). Ukrainian school grammar distinguishes several future forms, but at the A1 level we focus on one practical pattern: the analytic future, known grammatically as **скла́дений майбутній час**. This is the pattern **буду + infinitive**, as in **я буду читати**.
 
-To use this structure, you only need to memorize six forms of the verb **бути**. These forms act as your future tense helpers. Notice how their endings closely resemble the present tense endings you already know from standard first-conjugation verbs.
+The analytic future has two parts: a future form of **бути** and an infinitive. In **я буду читати**, only **буду** changes for person, while **читати** stays the same. The same pattern works in **ти будеш робити**, **вона буде готувати**, and **ми будемо гуляти**.
 
-| Займе́нник (Pronoun) | Дієсло́во бути (Verb 'to be') | Зна́чення (Meaning) |
-| :--- | :--- | :--- |
-| **я** | **буду** | I will |
-| **ти** | **будеш** | you will (informal/singular) |
-| **він / вона / воно́** | **буде** | he / she / it will |
-| **ми** | **будемо** | we will |
-| **ви** | **будете** | you will (formal/plural) |
-| **вони́** | **бу́дуть** | they will |
+To truly master this essential sentence structure, you first need to memorize the future tense conjugation of the verb **бути**. Here is the complete paradigm paired with the common verb **читати** (to read) to provide a clear, working model for how this tense operates in spoken practice:
 
-<MatchUp client:only="react" pairs={[{"left": "я", "right": "буду"}, {"left": "ти", "right": "будеш"}, {"left": "він / вона", "right": "буде"}, {"left": "ми", "right": "будемо"}, {"left": "ви", "right": "будете"}, {"left": "вони", "right": "будуть"}]} instruction={"З'єднайте займенник із формою дієслова 'бути' (Match the pronoun with the form of the verb 'to be')"} />
+* я **буду** (I will — form of бути) читати
+* ти **будеш** (you will) читати
+* він/вона/воно́ **буде** (he/she/it will) читати
+* ми **будемо** (we will) читати
+* ви **будете** (you pl. will) читати
+* вони́ **бу́дуть** (they will) читати
 
-The most important rule of the analytic future is the invariant infinitive rule. When you build a sentence using this structure, the main action verb — words like **читати** (to read), **працювати** (to work), or **відпочивати** (to rest) — never changes its ending. It stays frozen in its dictionary form. The only word that changes to match the speaker is your helper verb.
-*   Я **буду читати**. (I will read.)
-*   Ти **будеш читати**. (You will read.)
-*   Він / вона **буде читати**. (He / she will read.)
-*   Ми **будемо читати**. (We will read.)
-*   Ви **будете читати**. (You will read.)
-*   Вони **будуть читати**. (They will read.)
+:::tip
+This tense is incredibly learner-friendly! Because the main verb remains an infinitive, you completely bypass the need to remember complex present tense conjugation groups (Дієвідмі́на I or II) when making future plans.
+:::
 
-As you can see, the infinitive remains exactly the same in every sentence. Contrast this new future form with the tenses you already know. The past tense relies on gender endings, the present tense relies on person endings attached directly to the verb, and the future tense relies on **буду** plus the infinitive.
-*   Мину́лий (past): Я **чита́в** кни́жку. (I read a book. - masculine speaker)
-*   Минулий (past): Я **чита́ла** книжку. (I read a book. - feminine speaker)
-*   Тепе́рішній (present): Я **чита́ю** книжку. (I am reading a book.)
-*   Майбутній (future): Я **буду читати** книжку. (I will read a book.)
+<MatchUp client:only="react" pairs={[{"left": "я", "right": "буду"}, {"left": "ти", "right": "будеш"}, {"left": "він / вона", "right": "буде"}, {"left": "ми", "right": "будемо"}, {"left": "ви", "right": "будете"}, {"left": "вони", "right": "будуть"}]} instruction={"З'єднайте займенник із правильною формою дієслова «бути» (Match the pronoun with the correct form of 'бути')"} />
 
-Note that the simple future (like **прочита́ю**) exists in the language, but it is material for the A2 level. For now, the analytic form gives you everything you need to talk about your plans.
+We can now clearly compare the three primary time frames you have learned so far to see how the Ukrainian language handles time. The **мину́лий** (past) tense relies entirely on gendered suffixes to show who performed the action. The **тепе́рішній** (present) tense relies on specific person endings attached directly to the main verb stem. The newly learned **майбутній** (future) tense relies on the conjugated helper word plus the unchanging infinitive.
+
+Я чита́в нову́ кни́жку.
+> *I read a new book.* (Masculine past)
+
+За́раз я чита́ю нову книжку.
+> *Now I am reading a new book.* (Present)
+
+Завтра я буду читати нову книжку.
+> *Tomorrow I will read a new book.* (Future)
+
+Please note that Ukrainian also has other future forms, but they are outside the scope of this module.
 
 ## Пра́ктика (Practice)
 
-With the mechanics of the analytic future established, grouping and practicing the core A1 verbs solidifies the pattern. Because the infinitive never changes, you can take any action verb you have learned so far and instantly talk about your future plans. You simply plug the infinitive into the structure after your chosen form of **бути**. Here is how our most frequent daily verbs look in action:
-*   **читати** (to read) → я **буду читати**, ти **будеш читати**, він **буде читати**
-*   **працювати** (to work) → я **буду працювати**, ти **будеш працювати**, вона **буде працювати**
-*   **готувати** (to cook) → я **буду готувати**, ти **будеш готувати**, ми **будемо готувати**
-*   **гуляти** (to walk) → я **буду гуляти**, ти **будеш гуляти**, ви **будете гуляти**
-*   **дивитися** (to watch) → я **буду дивитися**, ти **будеш дивитися**, вони **будуть дивитися**
-*   **говори́ти** (to speak) → я **буду говорити**, ти **будеш говорити**, ми **будемо говорити**
+Now let us apply the pattern to core verbs from this module. Change only **бути**: **буду працювати**, **будеш працювати**, **буде готувати**, **будемо гуляти**, **будуть говори́ти**.
 
-To make your sentences specific, you need time markers. These are the adverbs and phrases that signal exactly when your future action will happen. These words naturally trigger the use of the future tense.
-*   **завтра** (tomorrow)
-*   **насту́пного ти́жня** (next week)
-*   **у суботу** (on Saturday)
-*   **ввечері** (in the evening)
-*   **ско́ро** (soon)
+Here are short examples with future time markers such as **завтра**, **насту́пного ти́жня**, **у суботу**, and **ввечері**:
 
-<FillIn client:only="react" items={[{"sentence": "Завтра я {буду} працювати.", "answer": "буду", "options": ["буду", "буде", "будемо"]}, {"sentence": "Що ти {будеш} робити ввечері?", "answer": "будеш", "options": ["будеш", "буду", "будете"]}, {"sentence": "Вона {буде} читати книжку.", "answer": "буде", "options": ["буде", "будуть", "будемо"]}, {"sentence": "Ми {будемо} дивитися футбол.", "answer": "будемо", "options": ["будемо", "буде", "буду"]}, {"sentence": "Ви {будете} гуляти в парку?", "answer": "будете", "options": ["будете", "будеш", "будуть"]}, {"sentence": "Вони {будуть} відпочивати.", "answer": "будуть", "options": ["будуть", "будемо", "буде"]}]} instruction={"Вставте правильну форму 'бути' (Insert the correct form of 'to be')"} />
+* **Ми будемо гуляти в парку.** (We will walk in the park.)
+* **Вона буде дивитися футбол.** (She will watch football.)
+* **Вони будуть говорити.** (They will speak.)
+* **Я буду відпочивати вдо́ма.** (I will rest at home.)
 
-When you want to know about someone else's plans, you will rely on a standard, highly frequent question format. The most common way to ask about future intentions is: **Що ти будеш робити?** (What will you do?). If you are speaking formally or addressing a group, you simply change the pronoun and the helper verb: **Що ви будете робити?** (What will you do?). The word order in Ukrainian questions is flexible, but starting with the question word **що** (what) followed by the pronoun, the helper verb, and the main verb is standard and natural.
+:::caution
+When saying "next week" in Ukrainian, we use the genitive case form **наступного тижня** (literally "of the next week"). Do not translate "in the next week" word-for-word.
+:::
 
-Building natural sentences about intentions and full-day plans requires combining time markers with the future structure. By using familiar vocabulary, you can describe a complete schedule step by step.
-*   **Завтра** я **буду працювати** з дев'я́тої до п'я́тої. (Tomorrow I will work from nine to five.)
-*   **Ввечері** ми **будемо дивитися** фільм. (In the evening we will watch a film.)
-*   **У суботу** вони **будуть гуляти** в парку. (On Saturday they will walk in the park.)
-*   Що ви **будете ї́сти** на вечерю? (What will you eat for dinner?)
-*   Вра́нці я **буду сні́дати**. (In the morning I will have breakfast.)
-*   Вдень я **буду працювати**. (In the afternoon I will work.)
-*   Ввечері ми **будемо відпочивати**. (In the evening we will rest.)
+Let us construct full, natural sentences by combining the subject, the correctly conjugated helper verb, the main infinitive action verb, and our new time markers. This is exactly how Ukrainians naturally discuss their daily schedules and weekend plans.
+
+Завтра я буду працювати з дев'я́тої до п'я́тої.
+> *Tomorrow I will work from nine to five.*
+
+Що ви будете ї́сти на вечерю?
+> *What will you eat for dinner?*
+
+У неділю вони будуть відпочивати.
+> *On Sunday they will rest.*
+
+<FillIn client:only="react" items={[{"sentence": "Завтра я ____ працювати.", "answer": "буду", "options": ["буду", "буде", "будемо"]}, {"sentence": "Що ти ____ робити ввечері?", "answer": "будеш", "options": ["будеш", "буду", "будете"]}, {"sentence": "Вона ____ читати книжку.", "answer": "буде", "options": ["буде", "будуть", "будемо"]}, {"sentence": "Ми ____ дивитися футбол.", "answer": "будемо", "options": ["будемо", "буде", "буду"]}, {"sentence": "Ви ____ гуляти в парку?", "answer": "будете", "options": ["будете", "будеш", "будуть"]}, {"sentence": "Вони ____ відпочивати.", "answer": "будуть", "options": ["будуть", "будемо", "буде"]}]} instruction={"Вставте правильну форму дієслова «бути» (Fill in the correct form of 'бути')"} />
 
 ## Summary
 
-The essential mechanics of discussing future plans rely on a simple two-part formula. The analytic future formation requires the conjugated auxiliary verb **бути** (**буду** / **будеш** / **буде** / **будемо** / **будете** / **будуть**) followed by an infinitive. The infinitive is the basic, unaltered "dictionary form" of the verb, ending in **-ти** (like **читати**, **робити**, **відпочивати**). This infinitive never changes its ending, regardless of who is speaking or how many people are involved. Only the **буду** part conjugates to match the subject. This grammatical structure is your primary tool at the A1 level for talking about processes, ongoing actions, and personal intentions that will happen tomorrow, next week, or next year.
+Let us carefully recap the core grammatical rule for constructing the analytic future tense in the Ukrainian language. This foundational tense is dependably formed by using the conjugated auxiliary verb **бути**—specifically memorizing the forms **буду**, **будеш**, **буде**, **будемо**, **будете**, and **будуть**—followed immediately by an unchanging infinitive verb. You must absolutely remember that the main action word never drops its final "-ти"; only the helper verb actively shifts its shape to match the person who is performing the future action.
 
-With the addition of this future structure, you now have a complete framework to describe any event in time. Each tense has its own unique structural marker that makes it instantly recognizable. The past tense is marked by gender endings (**-в**, **-ла**, **-ло**, **-ли**) attached to the verb stem. The present tense is marked by person endings attached directly to the verb stem, requiring you to modify the word based on the pronoun. The future tense stands apart because it uses a separate helper word (**буду**) plus the infinitive.
+It is immensely helpful to visualize the complete three-tense timeline using a single clear verb example to solidify the grammatical distinctions in your mind. Notice precisely how the endings and structures shift depending entirely on the time frame being discussed.
 
-Observe the three tenses in action with the verb **читати**:
-*   Учо́ра я **читав**. (Past — gender)
-*   За́раз я **читаю**. (Present — person)
-*   Завтра я **буду читати**. (Future — буду + infinitive)
+* **Учо́ра я читав.** (Yesterday I read. – Past tense, using a masculine ending)
+* **Зараз я читаю.** (Now I am reading. – Present tense, using a person ending)
+* **Завтра я буду читати.** (Tomorrow I will read. – Future tense, using a helper verb plus infinitive)
 
-The core question to spark any conversation about the future is: **Що ти будеш робити?** (What will you do?). To answer, you simply reply with **Я буду** plus your intended action.
+<FillIn client:only="react" items={[{"sentence": "Зараз я ____.", "answer": "читаю", "options": ["читаю", "читав", "буду читати"]}, {"sentence": "Учора він ____ у парку.", "answer": "гуляв", "options": ["гуляв", "гуляє", "буде гуляти"]}, {"sentence": "Завтра ми ____ фільм.", "answer": "будемо дивитися", "options": ["будемо дивитися", "дивилися", "дивимося"]}, {"sentence": "Минулого тижня вона ____.", "answer": "працювала", "options": ["працювала", "працює", "буде працювати"]}, {"sentence": "Сьогодні я ____ вечерю.", "answer": "готую", "options": ["готую", "готував", "буду готувати"]}, {"sentence": "У суботу вони ____.", "answer": "будуть відпочивати", "options": ["будуть відпочивати", "відпочивали", "відпочивають"]}]} instruction={"Оберіть правильний час дієслова (Choose the correct verb tense)"} />
 
-Now, perform a final self-check to ensure you can apply these rules to your own life:
-*   Що ти **будеш робити завтра** вранці? (What will you do tomorrow morning?)
-*   Що ти **будеш робити наступного тижня**? (What will you do next week?)
-*   Що **будуть робити** твої́ дру́зі ввечері? (What will your friends do in the evening?)
+You can now talk about future plans with **буду + infinitive**. The key question is: **Що ти будеш робити?** (What will you do?). Answer with **Я буду** plus an infinitive, then use the questions below to practice.
 
-<FillIn client:only="react" items={[{"sentence": "Зараз я {читаю}.", "answer": "читаю", "options": ["читаю", "читав", "буду читати"]}, {"sentence": "Учора він {гуляв} у парку.", "answer": "гуляв", "options": ["гуляв", "гуляє", "буде гуляти"]}, {"sentence": "Завтра ми {будемо дивитися} фільм.", "answer": "будемо дивитися", "options": ["будемо дивитися", "дивилися", "дивимося"]}, {"sentence": "Минулого тижня вона {працювала}.", "answer": "працювала", "options": ["працювала", "працює", "буде працювати"]}, {"sentence": "Наступного тижня вони {будуть відпочивати}.", "answer": "будуть відпочивати", "options": ["будуть відпочивати", "відпочивали", "відпочивають"]}, {"sentence": "Зараз я {готую} вечерю.", "answer": "готую", "options": ["готую", "готував", "буду готувати"]}]} instruction={"Оберіть правильний час (Choose the correct tense)"} />
+* **Що ти будеш робити завтра вра́нці?** (What will you do tomorrow morning?)
+* **Що ти будеш робити завтра ввечері?** (What will you do tomorrow evening?)
+* **Що ти будеш робити у суботу?** (What will you do on Saturday?)
+* **Що ти будеш робити у неділю?** (What will you do on Sunday?)
 
 </TabItem>
 <TabItem label="Словник">
@@ -176,66 +167,72 @@ Now, perform a final self-check to ensure you can apply these rules to your own 
 
 | Слово | Переклад | Частина мови | Рід |
 |-------|----------|-------------|-----|
+| **відпочива́ти** | to rest | дієсл. |  |
 | **насту́пний** | next | прикм. |  |
+| **ти́ждень** | week | ім. | ч. |
 | **план** | plan | ім. | ч. |
 | **звуча́ти** | to sound | дієсл. |  |
+| **футбо́л** | football | ім. | ч. |
 | **за́раз** | now | присл. |  |
-| **бу́ду** | I will (form of бути) | ім. | ж. |
+| **за́втра** | tomorrow | присл. |  |
+| **бу́ду** | I will | ім. | ж. |
 | **бу́деш** | you will | дієсл. |  |
 | **бу́де** | he/she/it will | дієсл. |  |
 | **бу́демо** | we will | дієсл. |  |
-| **бу́дете** | you will (plural/formal) | дієсл. |  |
+| **бу́дете** | you pl. will | дієсл. |  |
 | **бу́дуть** | they will | дієсл. |  |
 | **роби́ти** | to do | дієсл. |  |
-| **майбу́тнє** | future | ім. | с. |
+| **воро́жка** | fortune teller | ім. | ж. |
 | **подорожува́ти** | to travel | дієсл. |  |
-| **робо́та** | work | ім. | ч. |
-| **знахо́дити** | to find | дієсл. |  |
+| **зустріча́ти** | to meet | дієсл. |  |
 | **отри́мувати** | to receive | дієсл. |  |
-| **подару́нок** | gift | ім. | ч. |
 | **щасли́вий** | happy | прикм. |  |
+| **бу́ти** | to be | дієсл. |  |
 | **працюва́ти** | to work | дієсл. |  |
 | **готува́ти** | to cook | дієсл. |  |
-| **вече́ря** | dinner | ім. | ж. |
-| **чита́ти** | to read | дієсл. |  |
 | **гуля́ти** | to walk | дієсл. |  |
-| **субо́та** | Saturday | ім. | ж. |
-| **неді́ля** | Sunday | ім. | ж. |
-| **чолові́к** | husband | ім. | ч. |
-| **дити́на** | child | ім. | ж. |
 | **диви́тися** | to watch | дієсл. |  |
 | **говори́ти** | to speak | дієсл. |  |
-| **ско́ро** | soon | присл. |  |
-| **ї́сти** | to eat | дієсл. |  |
-| **сні́дати** | to have breakfast | дієсл. |  |
-| **учо́ра** | yesterday | присл. |  |
+| **чита́ти** | to read | дієсл. |  |
+| **майбу́тній** | future | прикм. |  |
+| **мину́лий** | past | прикм. |  |
+| **тепе́рішній** | present | прикм. |  |
+| **вве́чері** | in the evening | присл. |  |
 
 ### Вирази
 
 | Вираз | Переклад |
 |-------|----------|
+| **майбутній час** | future tense |
+| **складений майбутній час** | analytic future tense |
 | **наступного тижня** | next week |
+| **на вихідних** | on the weekend |
 | **у суботу** | on Saturday |
+| **у неділю** | on Sunday |
 | **Що ти будеш робити?** | What will you do? |
 
 ### Картки — Flashcards
 
-<FlashcardDeck client:only="react" cards={[{ front: "насту́пний", back: "next", subtitle: "прикм." }, { front: "план", back: "plan", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "звуча́ти", back: "to sound", subtitle: "дієсл." }, { front: "за́раз", back: "now", subtitle: "присл." }, { front: "бу́ду", back: "I will (form of бути)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "бу́деш", back: "you will", subtitle: "дієсл." }, { front: "бу́де", back: "he/she/it will", subtitle: "дієсл." }, { front: "бу́демо", back: "we will", subtitle: "дієсл." }, { front: "бу́дете", back: "you will (plural/formal)", subtitle: "дієсл." }, { front: "бу́дуть", back: "they will", subtitle: "дієсл." }, { front: "роби́ти", back: "to do", subtitle: "дієсл." }, { front: "майбу́тнє", back: "future", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "подорожува́ти", back: "to travel", subtitle: "дієсл." }, { front: "робо́та", back: "work", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "знахо́дити", back: "to find", subtitle: "дієсл." }, { front: "отри́мувати", back: "to receive", subtitle: "дієсл." }, { front: "подару́нок", back: "gift", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "щасли́вий", back: "happy", subtitle: "прикм." }, { front: "працюва́ти", back: "to work", subtitle: "дієсл." }, { front: "готува́ти", back: "to cook", subtitle: "дієсл." }, { front: "вече́ря", back: "dinner", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "чита́ти", back: "to read", subtitle: "дієсл." }, { front: "гуля́ти", back: "to walk", subtitle: "дієсл." }, { front: "субо́та", back: "Saturday", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "неді́ля", back: "Sunday", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "чолові́к", back: "husband", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "дити́на", back: "child", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "диви́тися", back: "to watch", subtitle: "дієсл." }, { front: "говори́ти", back: "to speak", subtitle: "дієсл." }, { front: "ско́ро", back: "soon", subtitle: "присл." }, { front: "ї́сти", back: "to eat", subtitle: "дієсл." }, { front: "сні́дати", back: "to have breakfast", subtitle: "дієсл." }, { front: "учо́ра", back: "yesterday", subtitle: "присл." }]} />
+<FlashcardDeck client:only="react" cards={[{ front: "відпочива́ти", back: "to rest", subtitle: "дієсл." }, { front: "насту́пний", back: "next", subtitle: "прикм." }, { front: "ти́ждень", back: "week", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "план", back: "plan", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "звуча́ти", back: "to sound", subtitle: "дієсл." }, { front: "футбо́л", back: "football", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "за́раз", back: "now", subtitle: "присл." }, { front: "за́втра", back: "tomorrow", subtitle: "присл." }, { front: "бу́ду", back: "I will", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "бу́деш", back: "you will", subtitle: "дієсл." }, { front: "бу́де", back: "he/she/it will", subtitle: "дієсл." }, { front: "бу́демо", back: "we will", subtitle: "дієсл." }, { front: "бу́дете", back: "you pl. will", subtitle: "дієсл." }, { front: "бу́дуть", back: "they will", subtitle: "дієсл." }, { front: "роби́ти", back: "to do", subtitle: "дієсл." }, { front: "воро́жка", back: "fortune teller", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "подорожува́ти", back: "to travel", subtitle: "дієсл." }, { front: "зустріча́ти", back: "to meet", subtitle: "дієсл." }, { front: "отри́мувати", back: "to receive", subtitle: "дієсл." }, { front: "щасли́вий", back: "happy", subtitle: "прикм." }, { front: "бу́ти", back: "to be", subtitle: "дієсл." }, { front: "працюва́ти", back: "to work", subtitle: "дієсл." }, { front: "готува́ти", back: "to cook", subtitle: "дієсл." }, { front: "гуля́ти", back: "to walk", subtitle: "дієсл." }, { front: "диви́тися", back: "to watch", subtitle: "дієсл." }, { front: "говори́ти", back: "to speak", subtitle: "дієсл." }, { front: "чита́ти", back: "to read", subtitle: "дієсл." }, { front: "майбу́тній", back: "future", subtitle: "прикм." }, { front: "мину́лий", back: "past", subtitle: "прикм." }, { front: "тепе́рішній", back: "present", subtitle: "прикм." }, { front: "вве́чері", back: "in the evening", subtitle: "присл." }]} />
 
 </TabItem>
 <TabItem label="Зошит">
 
-<GroupSort client:only="react" groups={{"Минулий час (Past)": ["учора", "минулого тижня"], "Теперішній час (Present)": ["зараз"], "Майбутній час (Future)": ["завтра", "наступного тижня", "скоро"]}} instruction={"Розподіліть слова за часом (Sort the words by tense)"} />
+<MatchUp client:only="react" pairs={[{"left": "працювати", "right": "to work"}, {"left": "відпочивати", "right": "to rest"}, {"left": "гуляти", "right": "to walk"}, {"left": "готувати", "right": "to cook"}, {"left": "дивитися", "right": "to watch"}, {"left": "робити", "right": "to do"}]} instruction={"З'єднайте українські слова з їхнім значенням (Match the Ukrainian words with their meaning)"} />
 
-<ErrorCorrection client:only="react" items={[{"sentence": "Завтра я буду читаю.", "errorWord": "читаю", "correctForm": "читати", "options": ["читати", "читав", "читає"], "explanation": "After 'буду', the main verb must be in the infinitive (читати)."}, {"sentence": "Що ти буде робити?", "errorWord": "буде", "correctForm": "будеш", "options": ["будеш", "буду", "будете"], "explanation": "The pronoun is 'ти', so the correct form of 'бути' is 'будеш'."}, {"sentence": "Ми будемо гуляли в парку.", "errorWord": "гуляли", "correctForm": "гуляти", "options": ["гуляти", "гуляємо", "гуляю"], "explanation": "The future tense requires the infinitive 'гуляти', not the past tense form 'гуляли'."}, {"sentence": "Вона будуть працювати.", "errorWord": "будуть", "correctForm": "буде", "options": ["буде", "будемо", "буду"], "explanation": "For 'вона' (she), use 'буде'."}, {"sentence": "Ви буде відпочивати?", "errorWord": "буде", "correctForm": "будете", "options": ["будете", "будеш", "будуть"], "explanation": "For 'ви' (you formal/plural), use 'будете'."}, {"sentence": "Вранці я буду снідаю.", "errorWord": "снідаю", "correctForm": "снідати", "options": ["снідати", "снідав", "снідаємо"], "explanation": "Always use the infinitive after 'буду'."}]} instruction={"Знайдіть і виправте помилку (Find and fix the error)"} />
+<GroupSort client:only="react" groups={{"Минулий час (Past)": ["читав", "гуляла", "працювали"], "Теперішній час (Present)": ["читаю", "гуляє", "працюємо"], "Майбутній час (Future)": ["буду читати", "буде гуляти", "будемо працювати"]}} instruction={"Розподіліть дієслова за часом (Sort the verbs by tense)"} />
 
-<Order client:only="react" items={["— Що ти будеш робити завтра?", "— Завтра я буду працювати. А ти?", "— Я буду відпочивати і дивитися фільм.", "— Звучить добре! А ввечері ми будемо гуляти?", "— Так, ми будемо гуляти в парку."]} correct_order={[0, 1, 2, 3, 4]} instruction={"Розставте репліки діалогу в правильному порядку (Put the dialogue lines in the correct order)"} />
+<Anagram client:only="react" items={[{"scrambled": "б у д у", "answer": "буду"}, {"scrambled": "б у д е ш", "answer": "будеш"}, {"scrambled": "б у д е м о", "answer": "будемо"}, {"scrambled": "б у д е т е", "answer": "будете"}, {"scrambled": "б у д у т ь", "answer": "будуть"}, {"scrambled": "з а в т р а", "answer": "завтра"}]} instruction={"Складіть слова з літер (Make words from the letters)"} />
 
-<Unjumble client:only="react" items={[{"words": "робити / будеш / ти / Що / завтра?", "answer": "Що ти будеш робити завтра?"}, {"words": "працювати. / я / буду / Завтра", "answer": "Завтра я буду працювати."}, {"words": "вони / вечерю. / будуть / готувати / Ввечері", "answer": "Ввечері вони будуть готувати вечерю."}, {"words": "гуляти. / ми / будемо / У / неділю", "answer": "У неділю ми будемо гуляти."}, {"words": "дивитися / Я / футбол. / буду", "answer": "Я буду дивитися футбол."}, {"words": "буде / робити / Олена? / що / А", "answer": "А що буде робити Олена?"}]} instruction={"Складіть правильне речення зі слів (Make a correct sentence from the words)"} />
+<Unjumble client:only="react" items={[{"words": "працювати. / я / Завтра / буду", "answer": "Завтра я буду працювати."}, {"words": "робити? / ти / Що / будеш", "answer": "Що ти будеш робити?"}, {"words": "відпочивати. / ми / суботу / У / будемо", "answer": "У суботу ми будемо відпочивати."}, {"words": "буде / Вона / футбол. / дивитися", "answer": "Вона буде дивитися футбол."}, {"words": "вечерю. / будуть / готувати / Вони", "answer": "Вони будуть готувати вечерю."}, {"words": "гуляти / парку. / в / будете / Ви", "answer": "Ви будете гуляти в парку."}]} instruction={"Складіть правильне речення зі слів (Make a correct sentence from the words)"} />
 
-<Quiz client:only="react" questions={[{"question": "Максим питає Олега: Що _____ робити завтра?", "options": [{"text": "ти будеш", "correct": true}, {"text": "ви будете", "correct": false}, {"text": "він буде", "correct": false}, {"text": "вони будуть", "correct": false}]}, {"question": "Максим питає Олега та Олену: А _____ гуляти?", "options": [{"text": "ви будете", "correct": true}, {"text": "ти будеш", "correct": false}, {"text": "ми будемо", "correct": false}, {"text": "вони будуть", "correct": false}]}, {"question": "Ігор говорить про себе: У неділю я _____ готувати.", "options": [{"text": "буду", "correct": true}, {"text": "буде", "correct": false}, {"text": "будеш", "correct": false}, {"text": "будемо", "correct": false}]}, {"question": "Ігор говорить про чоловіка: Чоловік _____ гуляти з дітьми.", "options": [{"text": "буде", "correct": true}, {"text": "буду", "correct": false}, {"text": "будуть", "correct": false}, {"text": "будемо", "correct": false}]}, {"question": "Анна каже про себе: Я _____ дивитися футбол.", "options": [{"text": "буду", "correct": true}, {"text": "буде", "correct": false}, {"text": "будуть", "correct": false}, {"text": "будеш", "correct": false}]}, {"question": "Ворожка каже клієнту: Ти _____ багато подорожувати.", "options": [{"text": "будеш", "correct": true}, {"text": "будете", "correct": false}, {"text": "буде", "correct": false}, {"text": "буду", "correct": false}]}]} instruction={"Оберіть правильний варіант за діалогами (Choose the correct option based on the dialogues)"} />
+<MatchUp client:only="react" pairs={[{"left": "завтра", "right": "tomorrow"}, {"left": "наступного тижня", "right": "next week"}, {"left": "ввечері", "right": "in the evening"}, {"left": "у суботу", "right": "on Saturday"}, {"left": "у неділю", "right": "on Sunday"}, {"left": "на вихідних", "right": "on the weekend"}]} instruction={"З'єднайте українські фрази з англійським перекладом (Match Ukrainian phrases with English translation)"} />
 
-<TrueFalse client:only="react" items={[{"statement": "У майбутньому часі дієслово не змінюється (наприклад: 'читати', 'гуляти').", "isTrue": true, "explanation": "The main verb is always in the infinitive."}, {"statement": "Ми кажемо: 'Я буде працювати'.", "isTrue": false, "explanation": "Для 'я' ми кажемо 'я буду'."}, {"statement": "Слово 'завтра' часто використовується з майбутнім часом.", "isTrue": true, "explanation": "'Завтра' means 'tomorrow', indicating the future tense."}, {"statement": "Форма 'будемо' використовується для займенника 'вони'.", "isTrue": false, "explanation": "Форма 'будемо' — для 'ми'. Для 'вони' — 'будуть'."}, {"statement": "'Що ти будеш робити?' — це запитання про майбутнє.", "isTrue": true, "explanation": "This is the standard way to ask 'What will you do?'"}, {"statement": "Для 'він' і 'вона' форма 'бути' різна.", "isTrue": false, "explanation": "Для 'він', 'вона', і 'воно' форма однакова — 'буде'."}]} instruction={"Правда чи ні? (True or false?)"} />
+<TrueFalse client:only="react" items={[{"statement": "«Я будеш працювати» — це правильне речення.", "isTrue": false, "explanation": "Правильно: «Я буду працювати». Форма «будеш» використовується з «ти»."}, {"statement": "У складеному майбутньому часі основне дієслово не змінюється (завжди інфінітив).", "isTrue": true, "explanation": "Так, основне дієслово завжди має форму інфінітива (наприклад, читати, робити)."}, {"statement": "«Ми будемо відпочивати» означає «We will rest».", "isTrue": true, "explanation": "«Ми» = we, «будемо відпочивати» = will rest."}, {"statement": "Слово «завтра» вказує на минулий час.", "isTrue": false, "explanation": "Слово «завтра» (tomorrow) вказує на майбутній час."}, {"statement": "«Вона буде готувати» — це майбутній час.", "isTrue": true, "explanation": "«Буде готувати» — це форма майбутнього часу для «вона»."}, {"statement": "Зі словом «вони» ми використовуємо форму «будете».", "isTrue": false, "explanation": "Зі словом «вони» використовується форма «будуть». «Будете» — для «ви»."}]} instruction={"Правда чи ні? (True or false?)"} />
+
+<FillIn client:only="react" items={[{"sentence": "Завтра я буду ____ книгу.", "answer": "читати", "options": ["читаю", "читав", "читати"]}, {"sentence": "Що ти будеш ____ завтра?", "answer": "робити", "options": ["робиш", "робив", "робити"]}, {"sentence": "У неділю ми будемо ____ в парку.", "answer": "гуляти", "options": ["гуляємо", "гуляти", "гуляли"]}, {"sentence": "Вони будуть ____ телевізор.", "answer": "дивитися", "options": ["дивитися", "дивляться", "дивилися"]}, {"sentence": "Ви будете ____ вечерю?", "answer": "готувати", "options": ["готуєте", "готували", "готувати"]}, {"sentence": "Він буде ____ на вихідних.", "answer": "відпочивати", "options": ["відпочиває", "відпочивати", "відпочивав"]}]} instruction={"Вставте правильне слово (Fill in the correct word)"} />
+
+<Quiz client:only="react" questions={[{"question": "Що означає слово «завтра»?", "options": [{"text": "yesterday", "correct": false}, {"text": "today", "correct": false}, {"text": "tomorrow", "correct": true}, {"text": "now", "correct": false}]}, {"question": "Як сказати «next week» українською?", "options": [{"text": "наступний тиждень", "correct": false}, {"text": "минулого тижня", "correct": false}, {"text": "наступного тижня", "correct": true}, {"text": "цей тиждень", "correct": false}]}, {"question": "Яке слово вказує на майбутній час?", "options": [{"text": "учора", "correct": false}, {"text": "завтра", "correct": true}, {"text": "зараз", "correct": false}, {"text": "сьогодні", "correct": false}]}, {"question": "Як перекласти «in the evening»?", "options": [{"text": "вранці", "correct": false}, {"text": "вдень", "correct": false}, {"text": "ввечері", "correct": true}, {"text": "вночі", "correct": false}]}, {"question": "Яке слово означає «weekend»?", "options": [{"text": "тиждень", "correct": false}, {"text": "вихідні", "correct": true}, {"text": "субота", "correct": false}, {"text": "неділя", "correct": false}]}, {"question": "Як перекласти «On Sunday»?", "options": [{"text": "у суботу", "correct": false}, {"text": "в неділю", "correct": true}, {"text": "наступного тижня", "correct": false}, {"text": "на вихідних", "correct": false}]}]} instruction={"Оберіть правильний варіант (Choose the correct option)"} />
 
 </TabItem>
 <TabItem label="Ресурси">
@@ -244,14 +241,6 @@ Now, perform a final self-check to ensure you can apply these rules to your own 
 
 - [ULP Season 1, Episode 28](https://www.ukrainianlessons.com/episode28/)
   _Future tense: talking about plans._
-
-## Підручники (Textbooks)
-
-- [Караман С. О. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrmova-karaman-2018.pdf#page=183), стор. 183
-- [Большакова І. О. — Українська мова, 2 клас (2019)](https://pidruchnyk.com.ua/uploads/book/2-klas-ukrmova-bolshakova-2019-2.pdf#page=56), стор. 56
-- [Вашуленко М. С. — Українська мова, 2 клас (2019)](https://pidruchnyk.com.ua/uploads/book/2-klas-ukrmova-vashulenko-2019-1.pdf#page=83), стор. 83
-- [Голуб Н. Б. — Українська мова, 5 клас (2022)](https://pidruchnyk.com.ua/uploads/book/5_ukrmova_golub_2022.pdf#page=218), стор. 218
-- [Угор О. М. — Українська мова, 5 клас (2022)](https://shkola.in.ua/5-klas-ukrainska-mova-uhor-2022.html), стор. 44
 
 **Статті — Articles**
 

@@ -22,7 +22,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-загального слова "cousin", ми завжди чітко вказуємо стать і лінію цієї людини. Син вашого дядька або тітки — це ваш **двоюрідний брат** *(first cousin, male)*. Зверніть увагу на першу частину цього цікавого словосполучення, яка буквально означає «другий рід». Дочка вашого дядька або тітки називається **двоюрідна сестра** *(first cousin, female)*. Якщо ж ви хочете розповісти про дітей ваших двоюрідних братів чи сестер, ви використовуєте слово «троюрідний» *(second cousin)*. Така детальна і точна система дозволяє українцям дуже швидко пояснити, хто саме прийшов у гості і який саме кровний зв'язок об'єднує цих людей за святковим столом. Особливої уваги та вивчення заслуговує українська термінологія для родичів з боку чоловіка або дружини після одруження. Англійська мова використовує просту, але дуже універсальну конструкцію "in-law" абсолютно для всіх цих випадків. Натомість українська мова пропонує надзвичайно точну систему історичних назв, яка яскраво відображає традиційний сімейний устрій. Мати вашого чоловіка — це **свекруха** *(husband's mother)*, а його батько — **свекор** *(husband's father)*. Водночас для чоловіка мати його дружини — це **теща** *(wife's mother)*, а батько дружини — **тесть** *(wife's father)*. В українському народному фольклорі та сучасних жартах стосунки між зятем і тещею або між невісткою та свекрухою є надзвичайно популярною темою. Чоловік дочки (або сестри) називається коротким словом **зять** *(son-in-law)*. Дружина сина (або рідного брата) — це **невістка** *(daughter-in-law)*. Цікаво знати, що слово «невістка» історично походить від давньої фрази «невідома жінка». Це пов'язано з тим, що в давнину молода дівчина завжди переходила жити в абсолютно нову для неї родину свого чоловіка. Ця максимальна точність родинних назв може здатися дуже складною на перший погляд. Проте вона є важливим ключем до глибокого розуміння української ментальності. Знання цих унікальних слів дозволить вам вільно читати українську класичну літературу без постійного заглядання у словник. Щоб правильно і природно розповідати про свою велику сім'ю, нам потрібна відповідна граматика. Коли ми описуємо різноманітні родинні зв'язки, ми найчастіше використовуємо прості конструкції родового відмінка *(Genitive case)*. Родовий відмінок ідеально відповідає на питання «кого?», логічно показуючи сімейну належність однієї людини до іншої. Наприклад, замість довгих і складних пояснень ви можете просто сказати: «Оксана — дочка мого дядька». Або ж інший приклад: «Це молода дружина мого старшого брата». Зауважте, що всі прикметники та присвійні займенники також обов'язково змінюють свою форму: «син моєї тітки», «сестра вашого чоловіка». Концепція сім'ї в українській мові та культурі має дуже глибокий філософський підтекст. Усе починається з базового слова **рід** *(lineage/clan)*, яке означає всі без винятку покоління однієї родини від минулого до далекого майбутнього. Від цього потужного і стародавнього кореня утворюється добре знайоме вам слово «родина». Цей самий корінь ми чітко бачимо у слові «народ» *(people/nation)* та у надзвичайно важливому культурному концепті **Батьківщина** *(Motherland/Homeland)*, яке історично походить від слова «батько». Таким чином, сама мова показує нам, що Україна традиційно сприймається людьми не просто як політична територія. Вона уявляється як одна велика і дружна родина, яка назавжди об'єднана спільним історичним корінням. Це чудово пояснює, чому українці так сильно цінують національну єдність та взаємопідтримку. <!-- INJECT_ACTIVITY: fill-in, Complete a portrait description by filling in missing adjectives and relationship terms in a text about a family, 12 items -->
+важлива частина нашого життя. Брат вашого батька або матері — це дядько, а їхня сестра — це тітка. Для них ви будете племінником, якщо ви хлопець, або племінницею, якщо ви дівчина. Діти вашого дядька або тітки для вас — це двоюрідний брат або двоюрідна сестра. Ми не маємо одного універсального слова для кузенів і завжди вказуємо стать. Українці часто підтримують дуже тісні стосунки зі своїми двоюрідними братами та сестрами, вважаючи їх майже такими ж близькими, як і рідних. One of the most fascinating aspects of Ukrainian kinship vocabulary is its extreme precision regarding in-laws. In English, the term "mother-in-law" is used regardless of whose mother it is. Ukrainian, however, has specific words that immediately identify the exact relationship and side of the family. Мати чоловіка називається свекруха, а його батько — це свекор. Натомість мати дружини — це теща, а її батько — тесть. Така точність існує і для інших членів великої родини. Чоловік дочки або сестри — це зять. А дружина сина або брата називається невістка. У традиційній українській культурі ці назви мали величезне соціальне значення. Історично молода дружина зазвичай переходила жити в родину свого чоловіка, де головною жінкою була свекруха. To remember these terms, think of the "с" words (свекруха, свекор) as belonging to the husband's side, and the "т" words (теща, тесть) as belonging to the wife's side. While modern living arrangements have changed, these terms remain actively used in everyday conversation and form the basis of countless traditional jokes. When you need to describe how family members are connected, you will rely heavily on the Genitive case. Instead of using possessive adjectives like "uncle's" or "brother's", Ukrainian typically uses the structure "noun + noun in Genitive". Щоб чітко пояснити родинні зв'язки, ми постійно використовуємо родовий відмінок. Наприклад, ми кажемо: «Оксана — це дочка мого дядька» або «Це машина дружини брата». У центрі всіх цих слів лежить дуже важливий український корінь «рід». Від цього кореня походять слова «родина», «родичі» та «родовід». Більше того, від нього утворилися слова загальнонаціонального значення: «народ» та «Батьківщина». Таким чином, сама мова показує, що сім'я — це найменша частинка великої української нації. > *To clearly explain family connections, we constantly use the genitive case. For example, we say: "Oksana is my uncle's daughter" or "This is the car of the brother's wife". At the center of all these words lies the very important Ukrainian root "рід". From this root come the words "family", "relatives", and "family tree". Moreover, words of national significance were formed from it: "people" and "motherland". Thus, the language itself shows that the family is the smallest particle of the great Ukrainian nation.* :::info **The Root "Рід"** The concept of "рід" (kin/lineage) is foundational to Ukrainian identity. When you learn words containing this root, you are tapping into a cultural value where family and nation are conceptually linked. "Родина" is your family, and "народ" is your people. ::: <!-- INJECT_ACTIVITY: fill-in, Complete a portrait description by filling in missing adjectives and relationship terms in a text about a family -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -634,7 +634,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -647,18 +714,69 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] зовнішність (appearance — a person's outward look)
+- [ ] характер (character — a person's inner qualities)
+- [ ] стосунки (interpersonal relationships — how people interact)
+- [ ] родичі (relatives — people connected by family)
+- [ ] знайомство (acquaintance / the act of meeting someone)
+- [ ] вродливий (beautiful/handsome — describing a person)
+- [ ] кремезний (stocky/sturdy — of strong build)
+- [ ] тендітний (slender/delicate — of light build)
+- [ ] щирий (sincere — genuine in feelings)
+- [ ] лагідний (gentle — soft in manner)
+- [ ] кмітливий (quick-witted — mentally sharp)
+- [ ] чуйний (sensitive/responsive — attentive to others)
+- [ ] подружжя (married couple — husband and wife together)
+- [ ] відрекомендуватися (to introduce oneself — formal register)
+- [ ] портретна деталь (portrait detail — one defining visual feature)
+- [ ] постава (posture/bearing — how a person holds their body)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Стосунки між людьми (~550 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

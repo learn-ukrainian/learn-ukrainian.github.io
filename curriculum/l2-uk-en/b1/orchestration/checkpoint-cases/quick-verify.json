@@ -1,13 +1,7 @@
 {
   "attempt": 1,
-  "passed": false,
-  "errors": [
-    {
-      "check": "VOCABULARY",
-      "severity": "ERROR",
-      "message": "Missing 2/4 required vocab: комплексний (comprehensive), діагностика (diagnostics)"
-    }
-  ],
+  "passed": true,
+  "errors": [],
   "warnings": [],
-  "timestamp": "2026-04-11T00:38:29.769172+00:00"
+  "timestamp": "2026-04-11T11:07:22.896321+00:00"
 }

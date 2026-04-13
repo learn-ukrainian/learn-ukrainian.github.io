@@ -2,321 +2,322 @@ version: '1.0'
 module: reading-ukrainian
 level: a1
 inline:
-- id: count-syllables-practice
-  type: count-syllables
-  instruction: How many syllables? Count the vowels!
-  items:
-  - word: молоко
-    correct: 3
-    translation: milk
-  - word: банк
-    correct: 1
-    translation: bank
-  - word: університет
-    correct: 5
-    translation: university
-  - word: каша
-    correct: 2
-    translation: porridge
-  - word: бібліотека
-    correct: 5
-    translation: library
-  - word: дім
-    correct: 1
-    translation: house
-  - word: яблуко
-    correct: 3
-    translation: apple
-  - word: тато
-    correct: 2
-    translation: father
-  title: How many syllables? Count the vowels!
-- id: divide-words-practice
-  type: divide-words
-  instruction: Divide the words into syllables by clicking between letters
-  items:
-  - word: молоко
-    answer: мо-ло-ко
-  - word: аптека
-    answer: ап-те-ка
-  - word: університет
-    answer: у-ні-вер-си-тет
-  - word: мама
-    answer: ма-ма
-  - word: людина
-    answer: лю-ди-на
-  - word: вулиця
-    answer: ву-ли-ця
-  - word: фотографія
-    answer: фо-то-гра-фі-я
-  - word: шоколад
-    answer: шо-ко-лад
-  title: Divide the words into syllables by clicking between letters
-- id: iotated-vowels-components
+- id: match-up
   type: match-up
-  instruction: Match the special letters to the sounds they make
+  instruction: Match the vowels to their sound components at the start of a word.
   pairs:
   - left: Я
-    right: '[й] + [а]'
+    right: '[йа]'
   - left: Ю
-    right: '[й] + [у]'
+    right: '[йу]'
   - left: Є
-    right: '[й] + [е]'
+    right: '[йе]'
   - left: Ї
-    right: '[й] + [і]'
-  - left: Щ
-    right: '[ш] + [ч]'
-  - left: Ь
-    right: no sound (softens consonant)
-  title: Match the special letters to the sounds they make
-- id: syllable-odd-one-out
-  type: odd-one-out
-  instruction: Which word is the odd one out by syllable count?
-  items:
-  - words:
-    - кіт
-    - ліс
-    - мама
-    correct: 2
-    explanation: мама has 2 syllables, the others have 1.
-  - words:
-    - каша
-    - тато
-    - молоко
-    correct: 2
-    explanation: молоко has 3 syllables, the others have 2.
-  - words:
-    - банк
-    - сон
-    - вода
-    correct: 2
-    explanation: вода has 2 syllables, the others have 1.
-  - words:
-    - бібліотека
-    - університет
-    - яблуко
-    correct: 2
-    explanation: яблуко has 3 syllables, the others have 5.
-  - words:
-    - Київ
-    - Львів
-    - Харків
-    correct: 1
-    explanation: Львів has 1 syllable, the others have 2.
-  - words:
-    - вулиця
-    - хліб
-    - столиця
-    correct: 1
-    explanation: хліб has 1 syllable, the others have 3.
-  title: Which word is the odd one out by syllable count?
-- id: reading-meaning-quiz
+    right: '[йі]'
+  - left: А
+    right: '[а]'
+  - left: О
+    right: '[о]'
+  title: Match the vowels to their sound components at the start of a word.
+- id: quiz
   type: quiz
-  instruction: Read the word and choose its meaning
+  instruction: Read the Ukrainian word and choose its English translation.
   items:
-  - question: мама
-    options:
-    - mother
-    - father
-    - milk
-    - apple
-    correct: 0
   - question: молоко
     options:
-    - water
     - milk
+    - water
+    - apple
     - bread
-    - chocolate
-    correct: 1
-  - question: кіт
-    options:
-    - cat
-    - whale
-    - dog
-    - house
     correct: 0
   - question: яблуко
     options:
-    - university
-    - library
-    - pharmacy
     - apple
-    correct: 3
+    - house
+    - forest
+    - song
+    correct: 0
+  - question: дім
+    options:
+    - house
+    - milk
+    - father
+    - street
+    correct: 0
   - question: вода
     options:
     - water
-    - milk
-    - forest
+    - porridge
+    - book
+    - day
+    correct: 0
+  - question: книга
+    options:
+    - book
     - street
+    - capital
+    - library
+    correct: 0
+  - question: вулиця
+    options:
+    - street
+    - university
+    - person
+    - dream
     correct: 0
   - question: хліб
     options:
     - bread
     - meat
     - salt
-    - porridge
+    - chocolate
     correct: 0
-  title: Read the word and choose its meaning
+  - question: пісня
+    options:
+    - song
+    - family
+    - horse
+    - apple
+    correct: 0
+  title: Read the Ukrainian word and choose its English translation.
 workbook:
-- id: wb-match-up-vocab
-  type: match-up
-  instruction: Match the Ukrainian words to their English meanings
-  pairs:
-  - left: університет
-    right: university
-  - left: бібліотека
-    right: library
-  - left: фотографія
-    right: photography
-  - left: шоколад
-    right: chocolate
-  - left: людина
-    right: person
-  - left: столиця
-    right: capital
-  - left: пісня
-    right: song
-  - left: аптека
-    right: pharmacy
-  title: Match the Ukrainian words to their English meanings
-- id: wb-group-syllables
+- id: syllable-sort
   type: group-sort
-  instruction: Sort the words by their number of syllables
+  instruction: Sort the words by their number of syllables.
   groups:
-  - label: 1 Syllable
+  - label: 1 syllable
     items:
-    - кіт
     - дім
-    - ліс
     - сон
-  - label: 2 Syllables
+    - ліс
+    - дуб
+  - label: 2 syllables
     items:
-    - тато
-    - каша
-    - хата
+    - мама
     - вода
-  - label: 3 Syllables
+    - рука
+    - каша
+  - label: 3 syllables
     items:
-    - аптека
     - молоко
-    - вулиця
     - яблуко
-  title: Sort the words by their number of syllables
-- id: wb-true-false-rules
+    - людина
+    - аптека
+  title: Sort the words by their number of syllables.
+- id: anagram-vocab
+  type: anagram
+  instruction: Rearrange the letters to form the Ukrainian word.
+  items:
+  - letters:
+    - м
+    - о
+    - л
+    - о
+    - к
+    - о
+    answer: молоко
+    hint: milk
+  - letters:
+    - я
+    - б
+    - л
+    - у
+    - к
+    - о
+    answer: яблуко
+    hint: apple
+  - letters:
+    - в
+    - о
+    - д
+    - а
+    answer: вода
+    hint: water
+  - letters:
+    - к
+    - н
+    - и
+    - г
+    - а
+    answer: книга
+    hint: book
+  - letters:
+    - х
+    - л
+    - і
+    - б
+    answer: хліб
+    hint: bread
+  - letters:
+    - к
+    - а
+    - ш
+    - а
+    answer: каша
+    hint: porridge
+  - letters:
+    - п
+    - і
+    - с
+    - н
+    - я
+    answer: пісня
+    hint: song
+  title: Rearrange the letters to form the Ukrainian word.
+- id: tf-reading-rules
   type: true-false
-  instruction: Are these statements about reading Ukrainian true or false?
+  instruction: 'True or False: Ukrainian reading rules.'
   items:
-  - statement: 'The letter Ї always makes two sounds: [й] + [і].'
-    correct: true
-    explanation: Unlike Я, Ю, and Є, the letter Ї never loses its double sound.
-  - statement: The word 'банк' has two syllables.
+  - statement: The letter 'О' can sometimes be silent in Ukrainian.
     correct: false
-    explanation: It has only one vowel (а), so it is exactly one syllable.
-  - statement: The letter И is pronounced at the front of your mouth, just like І.
-    correct: false
-    explanation: І is pronounced at the front, but И is pulled further back into your
-      throat.
-  - statement: The letter Ь makes no sound of its own.
+    explanation: Ukrainian has no silent vowels. Every vowel is pronounced clearly.
+  - statement: You count the syllables in a word by counting the vowel sounds.
     correct: true
-    explanation: The Soft Sign exists only to soften the consonant right before it.
-  - statement: In Ukrainian, the number of vowels in a word equals the number of syllables.
-    correct: true
-    explanation: This is the unbreakable rule for Ukrainian syllable counting.
-  - statement: The apostrophe softens the consonant right before it.
+    explanation: 'This is the golden rule: скільки голосних, стільки й складів.'
+  - statement: The letter 'Ь' (soft sign) makes an 'i' sound.
     correct: false
-    explanation: The apostrophe acts as a hard barrier, PREVENTING softening.
-  title: Are these statements about reading Ukrainian true or false?
-- id: wb-image-to-letter
-  type: image-to-letter
-  instruction: Look at the emoji. Which Ukrainian letter does the word start with?
+    explanation: The soft sign has no sound of its own; it only softens the preceding
+      consonant.
+  - statement: 'The letter ''Ї'' always makes two sounds: [йі].'
+    correct: true
+    explanation: Yes, 'Ї' is unique and always produces two sounds regardless of its
+      position.
+  - statement: The word 'Львів' has two syllables.
+    correct: false
+    explanation: It only has one vowel ('і'), so it is exactly one syllable.
+  - statement: The apostrophe separates a hard consonant from a two-sound iotated
+      vowel.
+    correct: true
+    explanation: Like in the word 'сім'я', the apostrophe acts as a wall.
+  title: 'True or False: Ukrainian reading rules.'
+- id: divide-words-workbook
+  type: divide-words
+  instruction: Divide these words and city names into syllables.
   items:
-  - image: 🍎
-    letter: Я
-    options:
-    - Я
-    - А
-    - Ю
-    - Є
-  - image: 🐈
-    letter: К
-    options:
-    - К
-    - Х
-    - С
-    - Г
-  - image: 🍫
-    letter: Ш
-    options:
-    - Ш
-    - Щ
-    - Ч
-    - Ц
-  - image: 🥛
-    letter: М
-    options:
-    - М
-    - Н
-    - Л
-    - П
-  - image: 💧
-    letter: В
-    options:
-    - В
-    - Ф
-    - Б
-    - П
-  - image: 🍞
-    letter: Х
-    options:
-    - Х
-    - К
-    - Г
-    - Ч
-  title: Look at the emoji. Which Ukrainian letter does the word start with?
-- id: wb-quiz-phonetics
+  - word: Одеса
+    answer: О-де-са
+  - word: Полтава
+    answer: Пол-та-ва
+  - word: фотографія
+    answer: фо-то-гра-фі-я
+  - word: столиця
+    answer: сто-ли-ця
+  - word: Україна
+    answer: У-кра-ї-на
+  - word: Київ
+    answer: Ки-їв
+  - word: Харків
+    answer: Хар-ків
+  - word: Дніпро
+    answer: Дні-про
+  title: Divide these words and city names into syllables.
+- id: quiz-sounds
   type: quiz
-  instruction: Choose the correct answer based on the reading rules
+  instruction: Choose the correct letter for each description.
   items:
-  - question: Which letter always represents exactly two sounds?
+  - question: Which letter always makes two sounds, [йі]?
     options:
     - Ї
     - Я
     - Ю
     - Є
     correct: 0
-  - question: Which word means 'cat'?
+  - question: Which letter makes the sound [o] as in pure, rounded 'o'?
     options:
-    - кіт
-    - кит
-    - кут
-    - кат
+    - О
+    - А
+    - У
+    - Е
     correct: 0
-  - question: Which symbol separates a consonant and an iotated vowel to stop softening?
+  - question: Which letter softens a consonant AND makes an 'a' sound (like in пісня)?
     options:
-    - Apostrophe (')
-    - Soft Sign (Ь)
-    - Hyphen (-)
-    - Comma (,)
+    - Я
+    - А
+    - Ю
+    - У
     correct: 0
-  - question: How many vowel sounds are there in the word 'університет'?
+  - question: Which letter makes a deep 'i' sound (as in кит)?
     options:
-    - Five
-    - Three
-    - Four
-    - Six
+    - И
+    - І
+    - Е
+    - А
     correct: 0
-  - question: What happens when Я, Ю, or Є come right after a consonant?
+  - question: Which symbol has NO sound of its own, but softens the consonant before
+      it?
     options:
-    - They soften the consonant and make one sound
-    - They make two sounds
-    - They harden the consonant
-    - They become silent
+    - Ь
+    - Ї
+    - Я
+    - ''''
     correct: 0
-  - question: Which letter makes a heavy, double sound [шч]?
+  - question: Which letter makes the sound [йу] at the start of a word?
     options:
-    - Щ
-    - Ш
-    - Ч
-    - Ц
+    - Ю
+    - У
+    - Я
+    - Є
     correct: 0
-  title: Choose the correct answer based on the reading rules
+  title: Choose the correct letter for each description.
+- id: matchup-vocab-workbook
+  type: match-up
+  instruction: Match the Ukrainian words to their English translation.
+  pairs:
+  - left: хліб
+    right: bread
+  - left: вода
+    right: water
+  - left: молоко
+    right: milk
+  - left: яблуко
+    right: apple
+  - left: вулиця
+    right: street
+  - left: людина
+    right: person
+  - left: аптека
+    right: pharmacy
+  - left: каша
+    right: porridge
+  title: Match the Ukrainian words to their English translation.
+- id: fill-in-vocab
+  type: fill-in
+  instruction: Complete the sentences by choosing the correct word from the options.
+  items:
+  - sentence: Київ — ____ України.
+    answer: столиця
+    options:
+    - столиця
+    - вулиця
+    - людина
+  - sentence: 'Олег: Це ____?'
+    answer: каша
+    options:
+    - каша
+    - вода
+    - ліс
+  - sentence: 'Ірина: Ні, це не каша. Це ____.'
+    answer: вода
+    options:
+    - вода
+    - молоко
+    - сон
+  - sentence: 'Марко: Де ____?'
+    answer: бібліотека
+    options:
+    - бібліотека
+    - аптека
+    - каша
+  - sentence: 'Олена: Вона там. А тут — ____.'
+    answer: університет
+    options:
+    - університет
+    - молоко
+    - хліб
+  - sentence: 'Захарійчук каже: У слові стільки ____, скільки голосних.'
+    answer: складів
+    options:
+    - складів
+    - яблук
+    - вулиць
+  title: Complete the sentences by choosing the correct word from the options.

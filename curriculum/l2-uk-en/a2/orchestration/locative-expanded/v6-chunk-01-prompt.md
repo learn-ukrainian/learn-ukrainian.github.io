@@ -3,20 +3,20 @@
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 20: Місцевий відмінок у нових контекстах (A2, A2.3 [Dative Case])
-**Section to write:** Місцевий з абстрактними іменниками (Locative with Abstract Nouns) (~550 words)
-**Word target for this section:** 550 words (aim for 605 to account for undershoot)
+**Section to write:** Місцевий з абстрактними іменниками (Locative with Abstract Nouns) (~600 words total)
+**Word target for this section:** 600 words (aim for 660 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Місцевий з абстрактними іменниками (Locative with Abstract Nouns) (~550 words)
-- P1 (~100 words): [Introduction to the conceptual expansion of the Locative case. Explain that while A1 focused on physical location (у кімнаті, на столі), A2 expands to abstract domains, fields of activity, and contexts. Compare the literal "where" of "в університеті" (the building) with the abstract "where" of "в освіті" (the field of education).]
-- P2 (~120 words): [Dialogue 1: Catching up. Maria and Ihor meet. Maria says, "Що нового у твоєму житті?" Ihor responds, "У минулому місяці я змінила роботу. Тепер працюю в освіті." They discuss talking "по телефону" with family. This dialogue serves as the anchor for the three main themes of the module.]
-- P3 (~110 words): [Focus on the "Domain" pattern: у/в + abstract noun in the locative. List and explain high-frequency combinations: у політиці (in politics), в економіці (in economics), у науці (in science), and у мистецтві (in art). Provide sentences like "Мій брат працює у політиці" to show these aren't physical places but professional spheres.]
-- P4 (~120 words): [Grammatical precision: Recapping endings for abstract feminine nouns. Explain the consonant mutation in feminine nouns ending in -ка (політика → у політиці, наука → у науці, економіка → в економіці). Mention that neuter nouns in -я (життя, навчання) keep the -і ending: у житті, у навчанні.]
-- P5 (~100 words): [The "At Work" exception. Explain that "at work" is always "на роботі," never "*у роботі." Contrast this with "at the office" (в офісі) or "in business" (у бізнесі). Explain that "на" is fixed here because work is viewed as an activity/event rather than an enclosed container.]
-- <!-- INJECT_ACTIVITY: quiz-locative-function --> [quiz, Identify the function of locative (physical, abstract, temporal, means), 8 items]
+## Місцевий з абстрактними іменниками (Locative with Abstract Nouns) (~600 words total)
+- P1 (~120 words): [Dialogue between Марія and Ігор catching up after a long time. They discuss life changes using all three new locative extensions: "Що нового у твоєму житті? — У минулому місяці я змінила роботу. Тепер працюю в освіті... Розмовляли по телефону..."]
+- P2 (~80 words): [Explain the dialogue's grammar context. Remind learners that A1 taught locative for physical location (у місті, на вулиці). Introduce the expansion to abstract domains and contexts.]
+- P3 (~100 words): [Introduce common abstract locative phrases: у житті (in life), в освіті (in education), у політиці (in politics). Explain the core pattern: у/в + abstract noun in locative translates to "in the domain/field of."]
+- P4 (~100 words): [Discuss exceptions and fixed prepositional phrases. Emphasize that 'робота' strictly takes 'на': на роботі (not *у роботі). Contrast this with other abstract nouns like в економіці, у мистецтві.]
+- P5 (~100 words): [Practice forming the locative for abstract feminine nouns ending in -а/-я. Highlight the consonant alternations: наука → у науці (к→ц), політика → у політиці, культура → у культурі.]
+- P6 (~100 words): [Provide full sentence examples to solidify the abstract domain usage: "Він багато років працює в політиці" and "У сучасному мистецтві багато нових ідей." Emphasize how the case endings shift meaning from physical location to abstract sphere.]
 
 ---
 ## Full Plan (for reference)
@@ -637,6 +637,31 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] місцевий (locative (case))
+- [ ] абстрактний (abstract)
+- [ ] минулий (past, previous)
+- [ ] місяць (month)
+- [ ] тиждень (week)
+- [ ] телефон (phone, telephone)
+- [ ] подорож (journey, trip)
+- [ ] зустріч (meeting, encounter)
+- [ ] думка (thought, opinion)
+- [ ] проблема (problem)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Місцевий з абстрактними іменниками (Locative with Abstract Nouns) (~600 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

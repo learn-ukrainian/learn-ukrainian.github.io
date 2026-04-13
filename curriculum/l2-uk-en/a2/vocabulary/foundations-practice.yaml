@@ -11,12 +11,12 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: обгово́рювати / обговори́ти
+- word: обгово́рювати
   translation: to discuss
   expression: false
-  pos: ''
+  pos: дієсл.
   gender: ''
-  verified: false
+  verified: true
 - word: замовля́ти / замо́вити
   translation: to order
   expression: false
@@ -25,6 +25,18 @@ vocabulary:
   verified: false
 - word: планува́ти / запланува́ти
   translation: to plan
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: купува́ти / купи́ти
+  translation: to buy
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: готува́ти / приготува́ти
+  translation: to cook, prepare
   expression: false
   pos: ''
   gender: ''
@@ -59,236 +71,63 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: новосі́лля
-  translation: housewarming party
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: напо́ї
-  translation: drinks
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: заку́ски
-  translation: snacks
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: прибира́ти
-  translation: to clean
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: ми́ти
-  translation: to wash
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: запро́шувати
-  translation: to invite
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: вільний час
-  translation: free time
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
 - word: нема́є
-  translation: there is no / are no
+  translation: there is no / do not have
   expression: false
   pos: ''
   gender: ''
   verified: true
 - word: бага́то
-  translation: many / much
+  translation: a lot
   expression: false
   pos: присл.
   gender: ''
   verified: true
 - word: ма́ло
-  translation: few / little
+  translation: a little
   expression: false
   pos: присл.
   gender: ''
   verified: true
-- word: свя́то
-  translation: holiday
+- word: милозву́чність
+  translation: euphony, sweet-sounding language
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: так
+  translation: 'yes'
   expression: false
   pos: присл.
   gender: ''
   verified: true
-- word: продаве́ць
-  translation: vendor
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: покупе́ць
-  translation: shopper
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: мед
-  translation: honey
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: пів кілограма
-  translation: half a kilogram
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: щось іще?
-  translation: anything else?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: це все
-  translation: that's all
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: карто́пля
-  translation: potatoes
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: мо́рква
-  translation: carrots
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: помідо́ри
-  translation: tomatoes
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: вибира́ти / ви́брати
-  translation: to choose
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: ва́жити
-  translation: to weigh
+- word: ба́чити
+  translation: to see
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: ре́шта
-  translation: change
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: ціна́
-  translation: price
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: звіт
-  translation: report
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: лист
-  translation: letter
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: зу́стріч
-  translation: meeting
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: відпочива́ти
-  translation: to rest
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: складати іспит
-  translation: to take an exam
+- word: Як пройшов твій день?
+  translation: How was your day?
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: скласти іспит
-  translation: to pass an exam
+- word: Скільки коштує?
+  translation: How much does it cost?
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: аналізува́ти / проаналізува́ти
-  translation: to analyze
-  expression: false
+- word: Що ти робив?
+  translation: What were you doing?
+  expression: true
   pos: ''
   gender: ''
-  verified: false
-- word: ра́птом
-  translation: suddenly
-  expression: false
-  pos: присл.
+  verified: true
+- word: Що ти зробив?
+  translation: What did you get done?
+  expression: true
+  pos: ''
   gender: ''
-  verified: true
-- word: гото́во
-  translation: ready
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: зни́жка
-  translation: discount
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: втоми́тися
-  translation: to get tired
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: поверну́тися
-  translation: to return
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: ра́дий
-  translation: glad
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: я́годи
-  translation: berries
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: полуни́ця
-  translation: strawberries
-  expression: false
-  pos: ім.
-  gender: ж.
   verified: true

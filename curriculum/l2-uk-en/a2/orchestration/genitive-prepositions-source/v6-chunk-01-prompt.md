@@ -1,17 +1,24 @@
-# Section-by-Section Generation — Section 1/5
+# Section-by-Section Generation — Section 1/3
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 9: Звідки ти? З чого це зроблено? (A2, A2.2 [Genitive Case Complete])
-**Section to write:** Вступ: Вечірка в друзів (~120 words total)
-**Word target for this section:** 120 words (aim for 132 to account for undershoot)
+**Section to write:** Звідки? З/із/зі + родовий (Where From? З/із/зі + Genitive) (~770 words)
+**Word target for this section:** 770 words (aim for 847 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Вступ: Вечірка в друзів (~120 words total)
-- P1 (~120 words): [Dialogue: International potluck dinner. Participants identify origin and sources: "Це вино з Італії", "Оливки з Греції", "Шоколад від бабусі", "Цей салат після подорожі". Covers з, від, and після in a natural context.]
+## Звідки? З/із/зі + родовий (Where From? З/із/зі + Genitive) (~770 words)
+- P1 (~100 words): [Dialogue] International potluck dinner setting. Participants introduce their dishes using target phrases: "Це сир з Франції", "Оливки з Греції", "Шоколад від бабусі з Бельгії", "А це вино після подорожі Італією".
+- P2 (~100 words): Introduce the concept of origin and source. Explain that the preposition "з" with the Genitive case answers "Звідки?" (Where from?). Provide core examples: з Києва, з України, зі Львова, зі Швеції. Clarify that its core meaning is 'from' a place or source.
+- P3 (~110 words): Introduce phonetic variants and the principle of euphony (милозвучність). Explain that the base form is "з", used before vowels and single consonants to make speech flow easily. Provide examples: з Одеси, з університету.
+- P4 (~110 words): Explain the "із" variant. Detail its use before single sibilants [з], [с], [ц], [ж], [ч], [ш] and when situated between two consonants. Provide examples: із золота, із села, лист із Бразилії.
+- P5 (~110 words): Explain the "зі" variant. Detail its use before consonant clusters starting with з-, с-, ш- to prevent awkward pronunciation blocks. Provide examples: зі Львова, зі школи, зі стола. Reiterate that these variants are fundamental rules of natural Ukrainian.
+- <!-- INJECT_ACTIVITY: quiz-euphony-z-iz-zi --> [quiz, Choose the correct variant з/із/зі based on the following word, 8 items]
+- P6 (~120 words): Explain material and composition. Show how "з" + Genitive is used to describe what objects are made of or composed of. Provide examples: склянка з молока (a glass of milk), сік з яблук (apple juice), сукня з шовку (a dress made of silk).
+- P7 (~120 words): Explain time starting point. Show how "з" translates to "since" when paired with time expressions in the Genitive. Provide examples: з ранку (since morning), з понеділка (since Monday), з дитинства (since childhood).
 
 ---
 ## Full Plan (for reference)
@@ -583,6 +590,31 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] прийменник (preposition)
+- [ ] джерело (source)
+- [ ] походження (origin)
+- [ ] матеріал (material)
+- [ ] далеко (far)
+- [ ] недалеко (not far, nearby)
+- [ ] подарунок (gift)
+- [ ] сніданок (breakfast)
+- [ ] вечеря (dinner, supper)
+- [ ] канікули (vacation, holidays)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Звідки? З/із/зі + родовий (Where From? З/із/зі + Genitive) (~770 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

@@ -77,11 +77,53 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
+- word: нема́
+  translation: (there) is not, (I) don't have (short form)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: true
+- word: немає часу
+  translation: no time
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: немає настрою
+  translation: no mood
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: немає сенсу
+  translation: no point
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: кварти́ра
+  translation: apartment
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: сусі́дка
+  translation: neighbor (female)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
 - word: ме́шканка
   translation: tenant (female)
   expression: false
   pos: ім.
   gender: ж.
+  verified: true
+- word: ні́чого
+  translation: nothing
+  expression: false
+  pos: ім.
+  gender: с.
   verified: true
 - word: холоди́льник
   translation: fridge
@@ -113,119 +155,77 @@ vocabulary:
   pos: ім.
   gender: ''
   verified: true
-- word: уда́ча
-  translation: luck
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: пробле́ма
-  translation: problem
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: дире́ктор
-  translation: director
+- word: брат
+  translation: brother
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: поро́жня
-  translation: empty
+- word: кімна́та
+  translation: room
   expression: false
-  pos: прикм.
-  gender: ''
+  pos: ім.
+  gender: ж.
   verified: true
-- word: лі́жко
-  translation: bed
+- word: коридо́р
+  translation: hallway
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: стіл
+  translation: table
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: зупи́нка
+  translation: bus stop
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: парк
+  translation: park
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: приро́да
+  translation: nature
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: пого́да
+  translation: weather
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: теа́тр
+  translation: theater
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: метро́
+  translation: subway
   expression: false
   pos: ім.
   gender: с.
   verified: true
-- word: ша́фа
-  translation: wardrobe
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: телеві́зор
-  translation: television
+- word: на́стрій
+  translation: mood
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: што́ра
-  translation: curtain
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: план
-  translation: plan
+- word: сенс
+  translation: sense, point
   expression: false
   pos: ім.
   gender: ч.
-  verified: true
-- word: авто́бус
-  translation: bus
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: цу́кор
-  translation: sugar
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: до́свід
-  translation: experience
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: сму́ток
-  translation: sadness
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: кни́жка
-  translation: book
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: земля́
-  translation: land, earth
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: пі́сня
-  translation: song
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: ву́лиця
-  translation: street
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: ніч
-  translation: night
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: сіль
-  translation: salt
-  expression: false
-  pos: ім.
-  gender: ж.
   verified: true
 - word: вікно́
   translation: window
@@ -245,56 +245,236 @@ vocabulary:
   pos: ім.
   gender: с.
   verified: true
-- word: сло́во
-  translation: word
+- word: маши́на
+  translation: car
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: сестра́
+  translation: sister
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: кни́га
+  translation: book
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: бібліоте́ка
+  translation: library
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: земля́
+  translation: land
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ка́рта
+  translation: map
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: пі́сня
+  translation: song
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ра́діо
+  translation: radio
   expression: false
   pos: ім.
   gender: с.
   verified: true
-- word: на́стрій
-  translation: mood
+- word: плейлист
+  translation: playlist
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: де́рево
-  translation: tree
+- word: сім'я́
+  translation: family
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: гру́ша
+  translation: pear
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: комп'ю́тер
+  translation: computer
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: мі́сто
+  translation: city
   expression: false
   pos: ім.
   gender: с.
   verified: true
-- word: парк
-  translation: park
+- word: чай
+  translation: tea
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: музе́й
-  translation: museum
+- word: цу́кор
+  translation: sugar
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: теа́тр
-  translation: theater
+- word: ка́ва
+  translation: coffee
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ві́тер
+  translation: wind
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: завда́ння
-  translation: task
+- word: прогре́с
+  translation: progress
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ніч
+  translation: night
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: сіль
+  translation: salt
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: суп
+  translation: soup
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: любо́в
+  translation: love
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: дові́ра
+  translation: trust
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ма́ти
+  translation: mother
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: шко́ла
+  translation: school
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: фотогра́фія
+  translation: photograph
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: студе́нт
+  translation: student
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: аудито́рія
+  translation: classroom
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: зо́шит
+  translation: notebook
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: буди́нок
+  translation: building
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: трамва́й
+  translation: tram
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: о́зеро
+  translation: lake
   expression: false
   pos: ім.
   gender: с.
   verified: true
-- word: дощ
-  translation: rain
+- word: пло́ща
+  translation: square
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ву́лиця
+  translation: street
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: кни́жка
+  translation: book
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: гість
+  translation: guest
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: со́нце
-  translation: sun
+- word: кінь
+  translation: horse
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: о́ко
+  translation: eye
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: кіно́
+  translation: cinema
   expression: false
   pos: ім.
   gender: с.
@@ -305,39 +485,27 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: де́кілька
-  translation: several
+- word: іде́я
+  translation: idea
   expression: false
-  pos: числ.
-  gender: ''
+  pos: ім.
+  gender: ж.
   verified: true
-- word: нема́
-  translation: there is no (short form)
+- word: працівни́к
+  translation: worker
   expression: false
-  pos: ''
-  gender: ''
+  pos: ім.
+  gender: ч.
   verified: true
-- word: Бажаю удачі!
-  translation: I wish you luck!
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Шкода.
-  translation: A pity / Too bad.
+- word: кіломе́тр
+  translation: kilometer
   expression: false
-  pos: ''
-  gender: ''
+  pos: ім.
+  gender: ч.
   verified: true
-- word: Скільки коштує?
-  translation: How much does it cost?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: нульове закінчення
-  translation: zero ending
-  expression: true
-  pos: ''
-  gender: ''
+- word: неді́ля
+  translation: Sunday
+  expression: false
+  pos: ім.
+  gender: ж.
   verified: true

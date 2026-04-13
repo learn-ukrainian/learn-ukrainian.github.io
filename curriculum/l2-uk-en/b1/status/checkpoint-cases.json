@@ -2,12 +2,12 @@
   "module": "checkpoint-cases",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-11T02:39:30.851436Z",
+  "last_audit": "2026-04-11T13:08:19.113000Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-11T02:38:29.802217Z",
+    "md": "2026-04-11T13:07:22.891618Z",
     "meta": null,
-    "activities": "2026-04-11T02:30:39.455181Z",
+    "activities": "2026-04-11T12:59:32.146816Z",
     "vocabulary": "2026-04-09T23:44:22.802079Z",
     "research": null,
     "plan": "2026-04-05T19:21:47.102046Z"
@@ -20,13 +20,13 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 2,
-      "message": "5597/4000 (raw: 5651) | immersion: 37.1% LOW (target 85-100% (B1.5-6 Vocab)) | richness: 70% < 85% min (checkpoint)"
+      "violations": 3,
+      "message": "5784/4000 (raw: 5852) | engagement: 4/5 | immersion: 31.3% LOW (target 85-100% (B1.5-6 Vocab)) | richness: 57% < 85% min (checkpoint)"
     },
     "activities": {
       "status": "fail",
       "violations": 1,
-      "message": "8/0 | density: 6 < 6"
+      "message": "6/0 | density: 6 < 6"
     },
     "vocabulary": {
       "status": "pass",

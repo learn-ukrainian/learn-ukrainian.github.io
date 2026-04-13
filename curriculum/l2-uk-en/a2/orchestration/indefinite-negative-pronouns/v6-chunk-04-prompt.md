@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-інакше. Якщо ви використовуєте заперечний займенник, дієслово також обов'язково має частку **«не»** (not). Ми кажемо: «Я нічого не бачу». Ми маємо два заперечення: «нічого» та «не». Це не помилка, це обов'язкова граматика. This is not a mistake, this is mandatory grammar. Давайте подивимося на інші приклади. Ми кажемо: «Ніхто не прийшов» (Nobody came). Ми кажемо: «Ми ніколи не здаємося» (We never give up). Або ми кажемо: «Вона нічого не знає» (She knows nothing). Ви завжди повинні ставити частку «не» перед дієсловом. If you forget "не", the sentence will be completely incorrect. Слова «ніхто» та «ніщо» постійно змінюють свою форму. Вони відмінюються так само, як слова «хто» та «що». They decline exactly like the words "who" and "what". Найважливіший відмінок тут — це родовий відмінок. The most important case here is the Genitive case. Ми використовуємо його зі словом **«немає»** (there is no) для вираження відсутності. Наприклад, ми кажемо: «Тут нікого немає» (There is nobody here). Також ми дуже часто використовуємо слово **«нічого»** (nothing - Genitive). Наприклад, ми кажемо: «Мені нічого не треба» (I don't need anything). У розмовній мові є цікава фонетична деталь. In spoken language, there is an interesting phonetic detail. Значення слова залежить від того, який склад ми виділяємо голосом. The meaning depends on which syllable we emphasize with our voice. Якщо ми робимо акцент на першому складі, це означає неможливість дії. If we emphasize the first syllable, it means the impossibility of an action. Наприклад, «нікого спитати» (there is no one to ask). Якщо акцент на другому складі, це означає відсутність. Наприклад, «нікого немає» (there is nobody). Тепер давайте детально поговоримо про прийменники. Now let's talk about prepositions in detail. Заперечні займенники мають таку ж поведінку, як і слова з часткою «будь-». Negative pronouns behave the same way as words with the "будь-" particle. Якщо ми маємо короткий прийменник, він стає всередину слова. If we have a short preposition, it stands inside the word. Прийменник повністю розриває префікс і займенник. Усі три частини пишуться абсолютно окремо. All three parts are written completely separately. Наприклад, ми кажемо **«ні з ким»** (with nobody). Ми кажемо **«ні про що»** (about nothing). Або ми кажемо **«ні в кого»** (from/at nobody). Ви ніколи не можете сказати «з ніким». Це дуже груба помилка. This is a very serious mistake. Завжди ставте прийменник між префіксом «ні» та словом. Always put the preposition between the "ні" prefix and the word. Наприклад: «Я ні з ким не говорив» (I didn't speak with anybody). «Вона ні про що не думає» (She doesn't think about anything). Давайте порівняємо ці слова для кращого розуміння. Let's compare these words for better understanding. Префікс змінює весь світ речення від існування до повної відсутності. The prefix changes the entire world of the sentence from existence to total absence. Порівняйте слово **«колись»** (once, sometime) та слово «ніколи» (never). Порівняйте слово **«десь»** (somewhere) та слово «ніде» (nowhere). Порівняйте слово **«хтось»** (someone) та слово «ніхто» (nobody). Це дуже логічна і красива система. <!-- INJECT_ACTIVITY: true-false, Identify correct double negation usage in sentences, 8 items -->
+немає. Мені нічого не треба купувати в цьому дорогому магазині. Вона нікого не бачила біля старого дерев'яного будинку. Ми нічого не знаємо про цю дивну і складну ситуацію. > *There is nobody in this large room today. I don't need to buy anything in this expensive store. She saw nobody near the old wooden house. We know nothing about this strange and difficult situation.* :::info **Grammar box** There is a subtle difference in meaning depending on which syllable is stressed in these Genitive forms. When the root is stressed (нік**о**го), it simply means "nobody is here." However, when the prefix is stressed (н**і**кого), it is used with infinitive verbs to mean "there is no one to..." as in "there is no one to ask." ::: Using these negative pronouns with prepositions introduces another unique rule that you need to practice. Just like the "any" series we discussed earlier, prepositions break the negative pronoun apart. The preposition acts like a wedge that physically splits the **ні-** prefix away from the base pronoun. When this happens, you must write all three parts as separate words in the sentence. For example, "with nobody" translates to **ні з ким**. "About nothing" becomes **ні про що**. "From nobody" or "at nobody's place" is written as **ні в кого**. This might seem unusual at first, but it follows a strict logical pattern. Ця складна проблема ні до чого не веде. Я сьогодні ні з ким не хочу говорити про мою роботу. Вона ні про що не думає після важкого дня. Вони ні в кого не просять фінансової допомоги. A very common mistake for learners is trying to keep the prefix attached to the pronoun, such as writing or saying "*з ніким". Always remember to place the preposition directly in the middle to sound natural and grammatically correct. To fully master these words, it helps to practice recognizing the clear difference between indefinite words and the **ні-** prefix. You should compare words like **колись** (once, sometime) versus **ніколи**, or **десь** (somewhere) versus **ніде**. You can also contrast **хтось** (someone) with its negative counterpart. It is equally important to understand how **щось** (something) functions differently from absolute negation. Even broader words like **дехто** (some people) or **будь-хто** (anyone) highlight the difference between a partial group and complete emptiness. Ми десь бачили цей новий фільм, але ніде не знайшли книгу. Хтось постукав у двері, але там нікого не було. Я колись жив у центрі Києва, але ніколи не був в Одесі. Я щось чув уночі, але нічого не бачив. Дехто любить читати детективи, а будь-хто може подивитися кіно. > *We saw this new movie somewhere, but we found the book nowhere. Someone knocked on the door, but there was nobody there. I once lived in the center of Kyiv, but I have never been to Odesa. I heard something at night, but I saw nothing. Some people like to read detective stories, and anyone can watch a movie.* <!-- INJECT_ACTIVITY: true-false-negation, Identify correct double negation usage in sentences -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -478,7 +478,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 6: A2 finale (A2 M51-M69)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 40%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 40% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 70-90% Ukrainian.
 LANGUAGE ROLES:
@@ -497,18 +564,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] хтось (someone)
+- [ ] щось (something)
+- [ ] ніхто (nobody)
+- [ ] ніщо (nothing)
+- [ ] ніколи (never)
+- [ ] ніде (nowhere)
+- [ ] дехто (some people)
+- [ ] будь-хто (anyone)
+- [ ] десь (somewhere)
+- [ ] колись (once, sometime)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Практика: хтось чи ніхто? (~500 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

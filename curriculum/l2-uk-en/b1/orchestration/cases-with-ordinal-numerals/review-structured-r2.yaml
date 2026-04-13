@@ -1,0 +1,54 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: The module comprehensively covers all plan points, including dates, time,
+    floors, and order. Essential examples like "Сьогодні п'яте березня" and "тисяча
+    дев'ятсот дев'яносто першого року" are thoroug
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: Identified a calque not in VESUM ("місцезнаходження"), a minor syntactic
+    agreement issue ("Більшість порядкових числівників... належать"), and a capitalization
+    error in table abbreviations ("Н. Або Р.
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Concepts are broken down effectively. The text proactively warns against
+    Surzhyk ("без десяти п'ять") and provides excellent literal translations to explain
+    the forward-looking logic of telling time i
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary words from the plan are integrated
+    naturally in context (e.g., "порядковий числівник", "століття", "о пів на", "в
+    першу чергу").
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Markers are distributed logically after each section. The 11 markers exceed
+    the 6 planned types, ensuring sufficient practice throughout the grammar progression.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The tone is highly encouraging and clear, avoiding empty fillers. The
+    "Grammar tip" and "Did you know?" callouts add an engaging, structured classroom
+    feel.
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: Found a minor artifact in the heading "## Дати (~900 words)". Otherwise,
+    headings match the plan and formatting is clean.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Contexts are culturally authentic, mentioning Kyiv's Central Railway Station,
+    Independence Day, and deliberately targeting Russian calques for correction.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The train station dialogues are completely natural, employing correct
+    prepositional cases and standard phrasing like "поїзд номер сьомий" and "третій
+    перон".
+findings: []

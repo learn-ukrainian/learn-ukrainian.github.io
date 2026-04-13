@@ -11,7 +11,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 ## Section Skeleton (follow this exactly)
 
 ## Підсумок (~150 words)
-- P1 (~150 words): [Recap the distinction between -ий and -ій ordinals. Summarize the 1-2-5 agreement cycle as the most important practical rule. Provide 4 self-check questions: 1) Як сказати "May 5th"? 2) Яка форма іменника після "три"? 3) Чим відрізняється "третій" від "перший"? 4) Як перекласти "from one city"?]
+- P1 (~150 words): A brief recap of the module's core concepts. Summarize the difference between -ий and -ій ordinals. Remind learners of the declension of "один". Finally, provide a quick bulleted summary of the 1 (Nom.Sg), 2-4 (Nom.Pl), and 5-20 (Gen.Pl) counting cycle for quick reference.
 
 Grand total: ~2350 words
 
@@ -21,7 +21,7 @@ Grand total: ~2350 words
 <previous_context>
 [...previous sections truncated...]
 
-**Продавець:** Один м'яч коштує **двісті гривень** *(two hundred hryvnias)*. Якщо берете три, буде дешевше. > — **Вчитель:** Добре. Дайте, будь ласка, **п'ять м'ячів** *(five balls)* і **два насоси** *(two pumps)*. > — **Продавець:** З вас **тисяча двісті гривень** *(one thousand two hundred hryvnias)*. > — **Вчитель:** Ось, тримайте. Дякую! Зверніть увагу, як змінюється слово «м'яч». Ми кажемо «один м'яч» у Називному відмінку однини. Потім ми кажемо «три м'ячі» у Називному відмінку множини. Нарешті, ми кажемо «п'ять м'ячів» у Родовому відмінку множини. Слово «гривня» також змінюється: «двісті гривень», «п'ятсот гривень». Це правило узгодження в дії. Числа також дуже важливі для адрес і телефонів. В Україні ми використовуємо спеціальну ієрархію для адреси. Спочатку ми називаємо **вулицю** *(street)*. Потім ми називаємо **будинок** *(building)*. Нарешті, ми називаємо **квартиру** *(apartment)*. Наприклад: «вулиця Хрещатик, будинок двадцять два, квартира п'ять». Іноді вулиці мають номери замість імен. У такому випадку ми використовуємо порядкові числівники. Наприклад: «**П'ята лінія**» *(Fifth Line)* або «**Перша вулиця**» *(First Street)*. Номери телефонів також легко читати. Ми зазвичай читаємо їх по одній цифрі або групами по дві. > — **Максим:** Який твій номер телефону? > — **Олена:** Мій номер — **нуль дев'яносто шість** *(zero ninety-six)*, **чотириста двадцять** *(four hundred twenty)*, **п'ятнадцять** *(fifteen)*, **вісімдесят один** *(eighty-one)*. Для телефонів і адрес ми використовуємо звичайні кількісні числівники. Вам просто треба знати базові числа. Як ми говоримо про **вік** *(age)* українською мовою? Ми використовуємо займенник у Давальному відмінку. Найпопулярніша фраза — «**мені ... років**» *(I am ... years old)*. Але слово **рік** *(year)* має спеціальний цикл узгодження. Якщо число закінчується на один, ми використовуємо форму однини: «Мені **двадцять один рік**» *(I am twenty-one years old)*. Якщо число закінчується на два, три або чотири, ми використовуємо форму множини: «Моєму брату **двадцять два роки**» *(My brother is twenty-two years old)*. Для чисел від п'яти до дев'яти, а також для нуля, ми використовуємо Родовий відмінок множини: «Моїй мамі **п'ятдесят п'ять років**» *(My mom is fifty-five years old)*. Ми також часто використовуємо числа для часу. Пам'ятайте, що для годин потрібні порядкові числівники у Місцевому відмінку. Ми кажемо «**о третій годині**» *(at three o'clock)* або «**о десятій ранку**» *(at ten in the morning)*. Давайте попрактикуємо читання дат. Коли ми говоримо про дати, порядковий числівник має бути в Родовому відмінку. Прочитайте цей короткий текст про українські свята. В Україні є багато важливих свят. Найголовніше свято — це День Незалежності. Ми святкуємо його **двадцять четвертого серпня** *(on the twenty-fourth of August)*. Ще одне важливе свято — це День Конституції. Воно відзначається **двадцять восьмого червня** *(on the twenty-eighth of June)*. Звісно, всі люди дуже люблять Новий рік. Ми святкуємо Новий рік **першого січня** *(on the first of January)*. Також ми маємо Різдво. Тепер Україна святкує Різдво **двадцять п'ятого грудня** *(on the twenty-fifth of December)*. Зверніть увагу, що всі дати закінчуються на «-го»: першого, двадцять п'ятого. Це вказує на день, коли щось відбувається. Назва місяця також стоїть у Родовому відмінку: серпня, червня, січня, грудня. <!-- INJECT_ACTIVITY: fill-in, decline ordinal numerals in context of dates and addresses --> <!-- INJECT_ACTIVITY: match-up, match numeral expressions to their correct form -->
+гривні» (називний відмінок множини). Для чисел від п'яти до дев'яти потрібен родовий відмінок множини. Це правило також діє для нуля і чисел від одинадцяти до чотирнадцяти. Тому ми просимо «п'ять гривень» або «сто гривень». > *When you are at the market in Ukraine, you often ask: "How much does this cost?". You want to know how much a product will cost per kilogram. Our currency changes after numerals according to general rules. If the price ends in one, we say "one hryvnia" (Nominative singular). After the numbers two, three, and four we say "two hryvnias" (Nominative plural). For numbers from five to nine, the Genitive plural is needed. This rule also applies to zero and numbers from eleven to fourteen. Therefore we ask for "five hryvnias" or "one hundred hryvnias".* :::info **Grammar box** To express **вік** (age), use the person in the Dative case followed by the numeral and the correct form of the word for "year": **рік** (1), **роки** (2-4), or **років** (5-20). For example: *Йому двадцять один рік* (He is 21), *Їй сорок два роки* (She is 42), *Їм п'ятдесят років* (They are 50). ::: ### Читаємо українською: Числа в історії та географії Україна — це велика країна, і числа допомагають нам краще її зрозуміти. Найважливіше державне свято — День Незалежності. Ми святкуємо його двадцять четвертого серпня. Тут ми використовуємо **порядковий** (ordinal) **числівник** (numeral) для дати. Відомий український поет Тарас Шевченко прожив сорок сім років. Наш **перший** (first) президент Леонід Кравчук обійняв посаду у тисяча дев'ятсот дев'яносто першому році. Інший видатний письменник, Іван Франко, знав чотирнадцять мов. Коли ми подорожуємо, числа показують нам відстань. Відстань від Києва до Львова становить п'ятсот сорок кілометрів. Поїзд їде туди приблизно п'ять або шість годин. Іноді ви можете витратити на дорогу **один** (one) цілий день. Від Києва до Харкова — чотириста вісімдесят кілометрів. Сьогодні столиця України має понад три мільйони жителів. Знати числа дуже корисно, коли ви шукаєте правильну адресу або купуєте квиток. Числа також дуже важливі для орієнтації в місті. Українська адреса має специфічний формат. Спочатку ви називаєте вулицю, потім номер будинку. А **третій** (third) елемент — це номер квартири. Наприклад, ви кажете: «вулиця Хрещатик, будинок двадцять два, квартира п'ять». Якщо хтось запитує, де ви живете, ви використовуєте прийменники «на» та «у». Ви відповідаєте: «Я живу на вулиці Хрещатик, у будинку двадцять два, у квартирі п'ять». Зверніть увагу, що слова «вулиця», «будинок» і «квартира» змінюють закінчення. Але самі **кількісні** (cardinal) числівники залишаються у звичайній початковій формі. > *Numbers are also very important for navigating the city. A Ukrainian address has a specific format. First you name the street, then the building number. And the third element is the apartment number. For example, you say: "22 Khreshchatyk Street, apartment 5". If someone asks where you live, you use the prepositions "on" and "in". You answer: "I live on Khreshchatyk Street, in building twenty-two, in apartment five". Notice that the words "street", "building", and "apartment" change their endings. But the cardinal numerals themselves remain in their regular initial form.* <!-- INJECT_ACTIVITY: match-up-expressions -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -383,14 +383,100 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
 
-TARGET: 70-90% Ukrainian.
+**You are in PHASE 6: A2 finale (A2 M51-M69)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 40%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 40% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
+
+TARGET: 70-90% Ukrainian. THIS IS A HARD GATE — the audit REJECTS modules outside this range.
+
 LANGUAGE ROLES:
-- PRIMARY: Ukrainian for everything.
-- ENGLISH: Only in vocabulary tables and one-line grammar notes where absolutely necessary.
-- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English.
-A2 register. Concrete everyday vocabulary. No literary language, no metaphors. Near-full Ukrainian immersion. Ukrainian sentences max 15 words. Max 2 clauses. All cases allowed. Simple subordinate clauses only. Full aspect pairs. No participles.
+- PRIMARY: Ukrainian for narrative, dialogues, examples, section intros, cultural notes, Reading Practice blocks, learning callouts.
+- METALANGUAGE: For abstract grammar terms, you may provide ONE parenthetical English translation on FIRST use only, e.g. `**доконаний вид** (perfective aspect)`. Subsequent uses must be Ukrainian only.
+- VOCABULARY TABLE: English glosses live here, not in prose.
+- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English. Never mix mid-sentence.
+
+⚠️ HARD STRUCTURAL RULES — READ THIS TWICE:
+- FORBIDDEN: long English narrative paragraphs explaining grammar. If a concept needs more than ONE sentence of English scaffolding, it goes in a `:::info` or `:::tip` callout, NOT in the main prose.
+- FORBIDDEN: mirroring a Ukrainian paragraph with an English translation paragraph. Write ONE paragraph in Ukrainian, move on.
+- FORBIDDEN: `> *English translation*` blockquotes after Ukrainian dialogues. They were required at A1 but they cap immersion below 50% — at A2-late they MUST be removed.
+
+ESCAPE HATCH (the 'Dual Ladder'):
+For genuinely abstract grammar concepts, you may use ONE `:::info` or `:::tip` callout written in English per section to clarify the concept. Because callouts are stripped from the immersion metric, this serves as on-demand scaffolding for struggling learners without penalising the immersion score. Do NOT abuse this — at most one English callout per major section.
+
+A2 register. Concrete everyday vocabulary. No literary language, no metaphors. Ukrainian sentences max 15 words. Max 2 clauses. All cases allowed. Simple subordinate clauses only (який/що/коли). Full aspect pairs. No participles.
+
+CHECKLIST (re-read before writing each section):
+- [ ] Every narrative paragraph in Ukrainian?
+- [ ] Zero `> *English translation*` blockquotes after dialogues?
+- [ ] At most ONE English `:::info` callout per major section?
+- [ ] Metalanguage terms parenthetically translated on first use only (max 2 per section)?
+- [ ] Reading Practice / Читаємо українською block in EVERY major section?
+
 
 GRAMMAR RULES:
 - Max 15 words per Ukrainian sentence
@@ -402,18 +488,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (5/5).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] числівник (numeral)
+- [ ] порядковий (ordinal)
+- [ ] кількісний (cardinal)
+- [ ] перший (first)
+- [ ] третій (third)
+- [ ] один (one)
+- [ ] скільки (how many)
+- [ ] кілограм (kilogram)
+- [ ] коштувати (to cost)
+- [ ] вік (age)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Підсумок (~150 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

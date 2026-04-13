@@ -1,0 +1,71 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T05-14-d702c7e0.json
+phase: vocab
+prompt_chars: 20103
+response_chars: 1808
+prompt_words: 3355
+response_words: 196
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.0397
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.0114
+- name: plan
+  start: 1028
+  length: 19075
+  fraction: 0.9489
+large_sections:
+- plan
+directives_total: 11
+directives_covered: 0
+directives_missed:
+- kind: must
+  text: There is one very important exception that you must remember when talking
+    about employment.
+  covered: false
+  coverage_note: 0/13 keywords (0%)
+- kind: must
+  text: You must contrast this with other abstract nouns that describe fields of study
+    or economy, which usually take "в" or "у".
+  covered: false
+  coverage_note: 1/15 keywords (7%)
+- kind: must
+  text: However, you must remember the consonant alternation rules that we studied
+    before.
+  covered: false
+  coverage_note: 0/10 keywords (0%)
+- kind: must
+  text: We must contrast the temporal locative with the accusative case.
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: inject_activity
+  text: quiz-identify-the-function-of-locative-in-each-sentence
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-complete-sentences-with-the-correct-locative-form
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-complete-sentences-with-the-correct-locative-form
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-locative-forms
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: error-correction-prepositions
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-locative-functions
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-expressions
+  covered: false
+  coverage_note: marker missing

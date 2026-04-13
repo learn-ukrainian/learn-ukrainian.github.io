@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-вам правильно будувати великі тексти. Як саме ми поєднуємо ці частини у великому складному реченні? Існує два головні типи такого зв'язку. Перший тип — це **сполучниковий зв'язок** *(syndetic connection)*. У цьому класичному випадку частини речення міцно об'єднуються за допомогою спеціальних коротких слів. Ці корисні слова традиційно називаються сполучниками. Наприклад, ми дуже часто використовуємо слова «і», «але» або «тому що». Речення «Я уважно читаю цікаву книгу, а мій молодший брат дивиться новий телевізор» має типовий сполучниковий зв'язок. Тут ми відразу бачимо сполучник «а». Другий тип — це **безсполучниковий зв'язок** *(asyndetic connection)*. Тут ми принципово не використовуємо жодних додаткових об'єднувальних слів. Частини речення гармонійно поєднуються тільки за допомогою правильної інтонації та необхідних розділових знаків. Наприклад: «Настала холодна осінь, перелітні птахи швидко відлетіли на теплий південь». Між цими двома частинами зовсім немає сполучника. Ми просто робимо коротку логічну паузу під час читання. На письмі ми обов'язково ставимо кому, двокрапку або довге тире. Обидва типи зв'язку є дуже популярними в сучасній українській мові. Ви можете вільно обирати той варіант, який вам більше подобається. Давайте трохи детальніше розглянемо самі **сполучники** *(conjunctions)*. Це дуже важливі та корисні службові слова. Вони буквально працюють як міцний клей для наших складних думок. В українській граматиці є кілька різних груп сполучників. Перша базова група — це єднальні сполучники. Вони просто логічно додають одну нову інформацію до іншої. Найпопулярніші з них — це «і» та «та». Друга велика група — це протиставні сполучники. Вони яскраво показують певний контраст між двома частинами вашого речення. До цієї групи належать слова «але», «а», «проте». Наприклад: «Я дуже хочу довго гуляти, але надворі йде сильний дощ». Третя важлива група — це підрядні сполучники. Вони зазвичай показують причину, час або спеціальну умову головної дії. Це такі слова, як «що», «бо», «тому що», «якщо», «коли». Наприклад: «Ми залишилися вдома, тому що на вулиці почалася страшна гроза». Знання цих маленьких слів робить вашу щоденну мову дуже природною та багатою. Вони завжди допомагають логічно і красиво пояснювати ваші ідеї та плани іншим людям. Тепер ми маємо обов'язково вивчити найважливіше правило української пунктуації. Його викладачі часто називають «золотим правилом коми». В українській мові ми майже завжди ставимо кому між усіма частинами складного речення. Це строге правило діє навіть тоді, коли там є звичайний сполучник «і». Для багатьох іноземних студентів це дуже незвично. В англійській мові загальні правила пунктуації працюють зовсім інакше. Але в українській мові межа між двома граматичними основами завжди чітко позначається комою. Порівняйте ці два різні речення. Просте речення: «Я купив свіжий хліб і холодне молоко». Тут є тільки одна основа (я купив). Ми просто поєднуємо два звичайні додатки (хліб, молоко). Кома перед «і» тут зовсім не потрібна. Складне речення: «Я швидко купив хліб, і моя мама смачно приготувала вечерю». Тут ми маємо дві повноцінні граматичні основи (я купив; мама приготувала). Тому ми обов'язково ставимо кому прямо перед сполучником «і». Запам'ятайте це золоте правило назавжди. Воно гарантовано зробить ваші українські тексти грамотними, красивими та професійними. <!-- INJECT_ACTIVITY: group-sort, sort sentences into просте vs складне categories --> <!-- INJECT_ACTIVITY: error-correction, fix missing or misplaced commas in complex sentences -->
+means of intonation and punctuation marks, without additional words. For example: "Autumn came, the birds flew south." Here there are two cores, but no words gluing them together. The second type is a syndetic connection. Here we use special words that unite the parts into a single whole. For example: "Autumn came, therefore the birds flew south."* The special words used in a syndetic connection are called conjunctions. They act as the syntactic glue that holds your complex thoughts together, showing the logical relationship between the clauses. В українській мові є різні групи таких слів. Єднальні сполучники, такі як «і» або «та», просто додають одну інформацію до іншої. Протиставні сполучники, такі як «але» або «проте», показують контраст. Існують також підрядні сполучники, наприклад «що», «бо», «тому що». Вони показують, що одна частина речення повністю залежить від іншої, пояснює причину або мету. Ви будете дуже часто використовувати ці слова, коли почнете будувати великі тексти. > *In the Ukrainian language, there are different groups of such words. Copulative conjunctions, such as "and", simply add one piece of information to another. Adversative conjunctions, such as "but" or "however", show contrast. There are also subordinating conjunctions, for example "that", "because", "for the reason that". They show that one part of the sentence completely depends on another, explaining the reason or purpose. You will use these words very often when you start building large texts.* This brings us to a crucial difference between English and Ukrainian grammar rules. In English, you often do not put a comma before "and" unless joining two independent clauses, and the rules can be quite flexible. In Ukrainian, there is a strict and almost universal "Golden Comma Rule" for complex sentences. Ви завжди повинні ставити кому між частинами складного речення. Ця кома показує межу, де закінчується перша граматична основа і починається друга. Ви ставите кому навіть тоді, коли частини з'єднані сполучником «і». Англійською мовою ми можемо написати: «I read a book and he watched a movie» без коми. Українською ми обов'язково пишемо: «Я читав книгу, і він дивився фільм». Ця кома є абсолютно необхідною для правильної пунктуації. > *You must always put a comma between the parts of a complex sentence. This comma shows the boundary where the first grammatical core ends and the second begins. You put a comma even when the parts are connected by the conjunction "and". In English, we might write: "I read a book and he watched a movie" without a comma. In Ukrainian, we obligatorily write it: "I read a book, and he watched a movie." This comma is absolutely necessary for correct punctuation.* :::info **Grammar box** This comma rule is one of the most frequent punctuation mistakes made by learners at the B1 level. Train your eye to spot the two grammatical cores. If you see a subject and predicate on the left, and a new subject and predicate on the right, you MUST place a comma between them, regardless of what conjunction links them. ::: <!-- INJECT_ACTIVITY: simple-vs-complex-sort --> <!-- INJECT_ACTIVITY: fix-complex-punctuation -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -495,7 +495,74 @@ Understanding cases is the gateway to Ukrainian syntax. It is not an isolated to
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 6: A2 finale (A2 M51-M69)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 40%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 40% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 70-90% Ukrainian.
 LANGUAGE ROLES:
@@ -514,18 +581,69 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] синтаксис (syntax — the study of sentence structure)
+- [ ] пунктуація (punctuation — rules for using punctuation marks)
+- [ ] словосполучення (word combination — two+ words linked by meaning and grammar)
+- [ ] підмет (subject — main sentence member naming who/what acts)
+- [ ] присудок (predicate — main sentence member naming the action/state)
+- [ ] додаток (object — secondary member answering indirect case questions)
+- [ ] означення (attribute — secondary member answering який? чий?)
+- [ ] обставина (adverbial — secondary member answering як? де? коли?)
+- [ ] складне речення (complex sentence — sentence with two+ grammatical cores)
+- [ ] просте речення (simple sentence — sentence with one grammatical core)
+- [ ] називний відмінок (nominative case — хто? що?)
+- [ ] родовий відмінок (genitive case — кого? чого?)
+- [ ] давальний відмінок (dative case — кому? чому?)
+- [ ] знахідний відмінок (accusative case — кого? що?)
+- [ ] орудний відмінок (instrumental case — ким? чим?)
+- [ ] місцевий відмінок (locative case — на кому? на чому?)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Відмінки: система і питання (~650 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

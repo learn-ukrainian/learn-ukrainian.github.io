@@ -1,0 +1,50 @@
+round: 4
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 3
+  evidence: 'The entire section "Опис людини: як писати портрет" (budget 600 words)
+    is completely missing. Textbook references (Заболотний, Ворон, Авраменко, Литвінова)
+    are not cited. Ukrainian proverbs about fami'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 6
+  evidence: Grammatical error (`ми називаємо її вередливий`). Unnatural phrasing (`має
+    великий зріст` instead of `високого зросту`). CRITICAL error in teaching direct
+    address using Nominative case (`Марія`, `Тетя
+- dimension: 3
+  name: Pedagogical quality
+  score: 5
+  evidence: Incorrectly teaches learners to address people using the Nominative case,
+    completely misunderstanding how the Vocative case works in Ukrainian.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: Good integration of the required and recommended B1 vocabulary for family,
+    relationships, and appearance.
+- dimension: 5
+  name: Exercise quality
+  score: 5
+  evidence: Missing the `free-write` and `role-play` markers required by the plan.
+    Existing exercises match content appropriately.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: Professional, engaging, and culturally grounded teacher tone.
+- dimension: 7
+  name: Structural integrity
+  score: 4
+  evidence: 'Word count is significantly below the 4000 target (3631 words) due to
+    a missing section. H2 heading "Опис людини: як писати портрет" is missing. Dangling
+    sentence at the end of the "Знайомство і предс'
+- dimension: 8
+  name: Cultural accuracy
+  score: 8
+  evidence: Explains kinship nuances and relationship terminology well, but missed
+    out on planned folklore proverbs.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: Included dialogue is acceptable, featuring natural situational context,
+    though slightly formal for a wedding ("Коханий, дозволь офіційно представити...").
+findings: []

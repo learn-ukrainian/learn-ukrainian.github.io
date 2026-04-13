@@ -1,7 +1,7 @@
 # Audit Report: M11 — alternation-vowels.md
 **Level:** B1 | **Module:** M11 | **Phase:** B1.1 | **Pedagogy:** PPP | **Target:** 4000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-04-10 21:25:59
+**Generated:** 2026-04-11 15:04:44
 
 ## Configuration
 **Type:** B1-grammar
@@ -18,99 +18,74 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | match-up | match-up | 8 | 8 | ✅ |
-| 2 | fill-in | fill-in | 8 | 8 | ✅ |
-| 3 | group-sort | group-sort | 10 | 6 | ✅ |
-| 4 | error-correction | error-correction | 6 | 6 | ✅ |
-| 5 | quiz | quiz | 8 | 8 | ✅ |
-| 6 | error-correction | error-correction | 6 | 6 | ✅ |
-| 7 | group-sort | group-sort | 10 | 6 | ✅ |
-| 8 | fill-in | fill-in | 8 | 8 | ✅ |
-| 9 | quiz | quiz | 6 | 8 | ❌ |
+| 1 | match-up |  | 8 | 8 | ✅ |
+| 2 | fill-in |  | 8 | 8 | ✅ |
+| 3 | group-sort |  | 12 | 6 | ✅ |
+| 4 | quiz |  | 8 | 8 | ✅ |
+| 5 | translate |  | 6 | 6 | ✅ |
 
 **Summary:**
-- Total activities: 9 (target: 0-4) ❌
+- Total activities: 5 (target: 0-4) ❌
 - Unique types: 5 (minimum: 3) ✅
-- Priority types used: 4/7 (error-correction, fill-in, match-up, quiz) ✅
-- Low density activities: 1
+- Priority types used: 3/7 (fill-in, match-up, quiz) ✅
+- Low density activities: 0
+
+## LINT ERRORS
+- ❌ Line 130: AI Contamination detected ('\bCheck this\b'). Remove thinking/self-correction artifacts.
 
 ## PEDAGOGICAL VIOLATIONS
 - **[COMPLEXITY]** match-up '' has 8 pairs (target: 12-16)
   - FIX: Adjust number of pairs to 12-16.
-- **[COMPLEXITY]** group-sort '' has 10 items (target: 12-999)
-  - FIX: Adjust number of items to sort to 12-999.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q1 prompt length 2 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q2 prompt length 2 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q3 prompt length 2 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q4 prompt length 2 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q5 prompt length 2 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q6 prompt length 2 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q7 prompt length 2 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q8 prompt length 2 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY]** group-sort '' has 10 items (target: 12-999)
-  - FIX: Adjust number of items to sort to 12-999.
-- **[COMPLEXITY]** quiz '' has 6 items (minimum: 8)
-  - FIX: Add more items. B1 quiz requires at least 8 items.
-- **[RUSSICISM_DETECTED]** Found 2 Russicism(s) in content: 'давайте подивимося' → подивімося
+- **[RUSSICISM_DETECTED]** Found 1 Russicism(s) in content: 'давайте подивимося' → подивімося
   - FIX: Replace Russicisms with standard Ukrainian equivalents. These are Russian calques that have standard Ukrainian forms. See Phase B prompt 'Russianisms Pre-Output Scan' table.
-- **[SALAD_EXCESSIVE_INLINE_GLOSSES]** paragraph has 5 inline **term** (gloss) markers across 3 sentence(s) — too dense; move to vocabulary section or convert to UK paragraph + translation block
-  - FIX: Convert inline-gloss paragraphs to monolingual Ukrainian paragraphs followed by a blockquote + italic English translation block. See docs/best-practices/language-salad.md.
-- **[SALAD_EXCESSIVE_INLINE_GLOSSES]** paragraph has 19 inline **term** (gloss) markers across 17 sentence(s) — too dense; move to vocabulary section or convert to UK paragraph + translation block
-  - FIX: Convert inline-gloss paragraphs to monolingual Ukrainian paragraphs followed by a blockquote + italic English translation block. See docs/best-practices/language-salad.md.
+- **[STATE_STANDARD_LOW_IMMERSION]** Module 11 has 28.5% immersion (target: 90.0%+)
+  - FIX: Add more Ukrainian content to reach 90%+ immersion for full immersion modules
 
 ## Recommendation
-**📝 UPDATE** (severity 60/100)
+**📝 UPDATE** (severity 47/100)
 
-- Revision recommended (severity 60/100)
-- 15 violations (severe - consider revision)
-- Activity density below minimum
+- Revision recommended (severity 47/100)
+- 3 violations (minor)
+- Immersion 57% off target (major rebalancing needed)
 
 ## Gates
-- **Words:** ✅ 4744/4000 (raw: 4813)
-- **Activities:** ✅ 9/0
-- **Density:** ❌ 1 < 6
+- **Words:** ✅ 5794/4000 (raw: 5931)
+- **Activities:** ✅ 5/0
+- **Density:** ✅ All > 6
 - **Unique_types:** ✅ 5/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ❌ 0/5
+- **Engagement:** ❌ 4/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 41/25
 - **Structure:** ✅ Valid Structure
-- **Lint:** ✅ Clean Format
+- **Lint:** ❌ 1 Format Errors
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 93.8% (target 85-100% (B1.2 Motion))
-- **Richness:** ❌ 46% < 95% min (grammar) - REWRITE needed
+- **Immersion:** ❌ 28.5% LOW (target 85-100% (B1.2 Motion))
+- **Richness:** ❌ 41% < 95% min (grammar) - REWRITE needed
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
 
 ## Richness Details
-**Score:** 46% (minimum: 95%)
+**Score:** 41% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 7 | 24 | 29% | 20% | 5.8% |
+| examples | 5 | 24 | 21% | 20% | 4.2% |
 | engagement | 0 | 5 | 0% | 15% | 0.0% |
-| dialogues | 1 | 4 | 25% | 15% | 3.8% |
-| variety | 0.96 | - | 96% | 10% | 9.6% |
+| dialogues | 0 | 4 | 0% | 15% | 0.0% |
+| variety | 0.97 | - | 97% | 10% | 9.7% |
 | cultural | 2 | 3 | 67% | 10% | 6.7% |
 | realworld | 20 | 3 | 100% | 10% | 10.0% |
 | visual | 0 | 3 | 0% | 5% | 0.0% |
-| questions | 12 | 5 | 100% | 5% | 5.0% |
+| questions | 21 | 5 | 100% | 5% | 5.0% |
 | tables | 0 | 2 | 0% | 4% | 0.0% |
 | paragraph_var | 1.00 | - | 100% | 3% | 3.0% |
-| proverbs | 5 | 1 | 100% | 3% | 3.0% |
-| **TOTAL** | | | | | **46.8%** |
+| proverbs | 9 | 1 | 100% | 3% | 3.0% |
+| **TOTAL** | | | | | **41.6%** |
 
 ### Dryness Flags & Fixes
 - ❌ **NO_ENGAGEMENT**
@@ -128,19 +103,28 @@
     > 🌍 **У реальному житті**
     >
     > [Practical scenario where this grammar is used]
-- ❌ **LOW_DIALOGUE**
+- ❌ **NO_DIALOGUE**
   - FIX:
-    Add more mini-dialogues (need 4+ total). The detector counts lines in blockquotes with bold speaker names.
+    Add 4+ mini-dialogues. The detector counts lines in blockquotes with bold speaker names.
     
-    Use this format (blockquote required):
-    > **Студент:** Як правильно сказати?
-    > **Викладач:** Вживайте форму «збігатися», а не «співпадати».
+    Use ONE of these formats (blockquote is required for detection):
     
-    Or em-dash format:
-    > — Як правильно сказати?
-    > — Вживайте «збігатися».
+    Format 1 — Bold speaker in blockquote (PREFERRED):
+    > **Студент:** Чому тут знахідний відмінок?
+    > **Викладач:** Бо дієслово «бачити» вимагає знахідного.
+    > **Студент:** А якщо це заперечення?
+    > **Викладач:** Тоді родовий: «не бачу **книжки**».
     
-    IMPORTANT: **Speaker:** lines NOT inside blockquotes (>) are ignored by the detector.
+    Format 2 — Em-dash in blockquote:
+    > — Чому тут знахідний?
+    > — Бо дієслово вимагає знахідного.
+    
+    Format 3 — Plain А:/Б: speakers:
+    А: Чому тут знахідний?
+    Б: Бо дієслово вимагає знахідного.
+    
+    IMPORTANT: Dialogues OUTSIDE blockquotes (>) using **Speaker:** format are NOT detected.
+    Place dialogues inside [!dialogue] callouts or blockquotes.
 - ❌ **NO_EXAMPLES**
   - FIX:
     Add 24+ example sentences. Each grammar point needs 3-4 examples showing the pattern in context.
@@ -148,19 +132,13 @@
   - FIX:
     Address this issue to improve richness score
 
-## Low Density Activities
-| Activity | Type | Items | Required | Fix |
-|----------|------|-------|----------|-----|
-| quiz | quiz | 6 | 8 | Add 2 more items |
-
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 633 | Included in Core |
-| **Чергування [о], [е] з [і]** | ✅ | 1083 | Included in Core |
-| **Чергування [о], [е] з нулем звука** | ✅ | 819 | Included in Core |
-| **Чергування [о] з [е] після шиплячих та [й]** | ✅ | 678 | Included in Core |
-| **Чергування голосних у дієслівних коренях** | ✅ | 546 | Included in Core |
-| **Чергування і наголос: як вони пов'язані** | ✅ | 599 | Included in Core |
-| **Підсумок: правила і практика** | ✅ | 386 | Included in Core |
+| **Intro/Narrative** | ✅ | 832 | Included in Core |
+| **Чергування [о], [е] з [і] (~950 words total)** | ✅ | 1370 | Included in Core |
+| **Чергування [о], [е] з нулем звука (~700 words total)** | ✅ | 781 | Included in Core |
+| **Чергування [о] з [е] після шиплячих та [й] (~600 words total)** | ✅ | 645 | Included in Core |
+| **Чергування голосних у дієслівних коренях (~600 words total)** | ✅ | 768 | Included in Core |
+| **Чергування і наголос: як вони пов'язані (~550 words total)** | ✅ | 609 | Included in Core |
+| **Підсумок: правила і практика (~350 words)** | ✅ | 789 | Included in Core |

@@ -107,109 +107,102 @@ references:
 <generated_module_content>
 ## Що ми знаємо? (What Do We Know?)
 
-Welcome to the first major checkpoint on your Ukrainian language journey. You have made the critical transition from learning individual phonetic elements to participating in a full, meaningful conversation. We began by deciphering an entirely new alphabet, and now you have established a solid Ukrainian linguistic foundation. This module represents a milestone where you consolidate those foundational skills before moving forward.
+Welcome to the first checkpoint. Over the past six modules, you have learned the Cyrillic alphabet, essential sounds, basic greetings, and how to talk about your family. This module consolidates that knowledge. You will review everything covered so far, ensuring complete readiness to hold a basic conversation in Ukrainian.
 
-Consider the comprehensive checklist of what you have acquired so far. You have achieved phonetic mastery of the Cyrillic alphabet. You understand the fundamental rule of Ukrainian phonetics: distinguishing between a **звук** (sound) that you hear and a **літера** (letter) that you write. You understand how the **апостроф** (apostrophe) acts as a hard boundary separating sounds, and how the **м'який знак** (soft sign), while having no sound of its own, softens the preceding consonant. You grasp the vital concept of word **наголос** (stress) and how it shapes the entire rhythm of a spoken word. You confidently use basic greetings like **Привіт** (Hi) and **Добрий день** (Good afternoon), and you recognize the essential vocabulary for family members such as **мама** (mother), **тато** (father), **брат** (brother), and **сестра** (sister).
+Start with a self-assessment on sounds and letters. Can you read Ukrainian Cyrillic words fluently? You have learned to distinguish tricky letter pairs, such as the breathy **Г** (close to H) versus the hard **Ґ** (G), and the deep **И** (Y) versus the sharp **І** (I).
+ Recall the crucial phonetic roles of the **м'який знак** (soft sign, **Ь**), which softens the preceding consonant, and the **апостроф** (apostrophe). 
 
-This module serves as a dedicated self-assessment phase. You will prove that you can read fluently and hold a basic introduction in a realistic context. We introduce no new vocabulary or new grammar rules here. Instead, the entire focus remains on consolidation, ensuring that the structures you have already learned become automatic and natural. The goal is moving from translation to direct comprehension.
+:::note
+The apostrophe acts as a hard stop. It prevents the preceding consonant from softening and ensures the following vowel sounds clear and distinct.
+:::
+
+Next, evaluate your knowledge of introductions and family vocabulary. Can you say who you are and where you are from? Can you list the members of your family? Check if you can use basic possessive pronouns correctly, matching them to the noun gender. Identify when to use **мій** (my, masculine) and when to use **моя** (my, feminine). 
 
 <!-- INJECT_ACTIVITY: quiz-comprehensive-review -->
 
 ## Читання (Reading Practice)
 
-Reading aloud is the essential bridge between recognizing individual letters on a page and producing natural speech. For this exercise, focus on your reading flow and carefully observe the stress marks provided in the text. When you read a Ukrainian sentence, read it as a single continuous thought rather than a robotic list of isolated words. Speak clearly and confidently, allowing the syllables to connect smoothly. Reading aloud engages your muscle memory. It trains your tongue and lips to produce new phonetic combinations, making it easier to speak spontaneously in real-world situations. Do not rush through the text. Pace yourself and focus on pronunciation.
+Put your reading skills to the test. The goal of this task is to read a connected Ukrainian text aloud, building your reading fluency. This text uses only familiar vocabulary from the first six modules, so there are no new words to memorize. Read the sentences slowly and clearly.
 
-Read the following passage about a woman named **Оксана Ковальчук** (Oksana Kovalchuk). Focus on understanding the meaning without translating it into English in your head.
+This is a short narrative where a person introduces themselves, talks about their family members, and states everyone's professions. Every single phrase here is a pattern you have practiced before. Read the following sentences aloud, paying attention to the sounds and the natural rhythm of the language:
 
-> **Мене звати Оксана Ковальчук.** *(My name is Oksana Kovalchuk.)*
-> **Я з Києва.** *(I am from Kyiv.)*
-> **Я — вчителька.** *(I am a teacher.)*
-> **Це — моя сім'я.** *(This is my family.)*
-> **Мій чоловік — інженер.** *(My husband is an engineer.)*
-> **Його звати Микола.** *(His name is Mykola.)*
-> **У мене є син.** *(I have a son.)*
-> **Мій син — студент.** *(My son is a student.)*
-> **Ми живемо тут.** *(We live here.)*
-> **Дуже приємно.** *(Very nice to meet you.)*
+* **Привіт!** (Hi!)
+* **Мене звати Анна.** (My name is Anna.)
+* **Я з України.** (I am from Ukraine.)
+* **Я з Києва.** (I am from Kyiv.)
+* **Це моя сім'я.** (This is my family.)
+* **Це моя мама.** (This is my mom.)
+* **Її звати Олена.** (Her name is Olena.)
+* **Вона вчителька.** (She is a teacher.)
+* **Це мій тато.** (This is my dad.)
+* **Його звати Іван.** (His name is Ivan.)
+* **Він інженер.** (He is an engineer.)
+* **Я студентка.** (I am a student.)
+* **Дуже приємно!** (Very nice to meet you!)
 
-Analyzing the name components within this text reveals important cultural patterns. The woman's personal name is **Оксана** (first name). Her family name is **Ковальчук** (surname). In formal Ukrainian culture, people also use a patronymic based on their father's name. If her father was named Mykola, her patronymic would be **Миколаївна** (Mykolaivna). Remember the strict capitalization rule: every proper noun, including a person's **ім'я** (first name) and **прізвище** (surname), must always start with a capital letter. Proper names are central to Ukrainian identity, and writing them correctly is a sign of respect.
-
-:::tip
-When reading Ukrainian texts, remember that the spelling is highly phonetic. What you see is exactly what you hear. Trust the letters, and do not try to apply English pronunciation rules to Ukrainian words.
-:::
-
-<!-- INJECT_ACTIVITY: match-up-q-and-a -->
+Assess your reading comprehension and pronunciation. Did you pronounce the vowels clearly? Notice the capitalization rule for proper nouns: names like **Анна** (Anna), **Олена** (Olena), and **Іван** (Ivan), as well as places like **Київ** (Kyiv) and **Україна** (Ukraine), always start with a capital letter just like in English. Highlight how the short, simple sentences string together to form a complete narrative. By placing one basic fact after another, you build a descriptive paragraph. You can see how these straightforward phrases work together beautifully without needing complex grammar just yet. You already know enough to tell an authentic story about your own life.
 
 ## Граматика (Grammar Summary)
 
-Expressing identity and identification in Ukrainian relies on specific structural patterns. We use the **Це** (This is) + noun structure to introduce people or objects. When stating who someone is, Ukrainian employs a zero-copula rule, meaning the verb "to be" is completely omitted in the present tense. Compare the English sentence "I am a student" with the Ukrainian equivalent **Я — студент** (I am a student). The dash explicitly replaces the missing verb, indicating a direct relationship between the subject and the noun.
+Review the structures used for identification and possession. To point things out, you use the pattern **Це** (This is) plus a noun: **Це мій брат** (This is my brother). For possession, you use the fixed phrase **У мене є** (I have) plus a noun: **У мене є сестра** (I have a sister). Remember that the "is" verb is usually omitted in the present tense. You simply state the subject and the noun: **Я — студент** (I am a student).
 
-*   **Це — мій друг.** *(This is my friend.)*
-*   **Вона — лікарка.** *(She is a doctor.)*
-*   **Він — архітектор.** *(He is an architect.)*
+Recall how to ask and answer questions about names. There is a clear difference between the informal question **Як тебе звати?** (What are you called?) and the formal version **Як вас звати?** (What are you called?). When answering, use the phrase **Мене звати Анна** (They call me Anna). This chunk uses the accusative pronoun **мене** (me), successfully avoiding the literal translation trap of the English phrase "My name is".
 
-:::caution
-A common L2 error is using the verb "to be" when stating identity. English speakers often say **Я є студент** or **Моє ім'я є Анна**, which is a direct translation error. The correct forms are **Я — студент** and **Мене звати Анна**.
+:::tip
+Remember that **Мене звати** uses the accusative **мене**. You are literally saying "They call me," placing yourself as the object of the sentence rather than the subject.
 :::
 
-A clear structural difference exists between stating possession and naming someone. We use the construction **У мене є** (I have) to express possession of objects or family relationships. To state what someone is called, we use the fixed phrase **Мене звати** (My name is, literally: they call me). Notice that these fixed chunks require the accusative pronouns **мене** (me), **тебе** (you, informal), and **вас** (you, formal). Treat these phrases as solid vocabulary blocks. 
+Finally, review your possessive pronouns and expressions of origin. You must match the gender for your pronouns: use **мій** (my) for masculine nouns like **мій тато** (my dad), and **моя** (my) for feminine nouns like **моя мама** (my mom). When talking about your origin, reiterate the fixed chunk: **Звідки ти?** (Where are you from?), and answer clearly with **Я з...** (I am from...). This establishes your background immediately.
 
-*   **У мене є брат.** *(I have a brother.)*
-*   **У мене є сестра.** *(I have a sister.)*
-*   **Як тебе звати?** *(What is your name?)*
-*   **Його звати Тарас.** *(His name is Taras.)*
-
-When expressing origin, we use the specific preposition and case ending combination. The question **Звідки ти?** (Where are you from?) is answered with **Я з...** (I am from...) followed by the city or country name with its appropriate ending, such as **Києва** (Kyiv) or **Дніпра** (Dnipro). Memorize these origin phrases as complete units.
-
-Possessive pronouns must always agree with the grammatical gender of the noun they modify. You say **мій тато** (my dad) because the word is masculine, **моя мама** (my mom) because it is feminine, and **моє ім'я** (my name) because it is neuter. Also, recall the Vocative case endings for direct address. When calling someone, the ending changes: **Анна** becomes **Анно!**, **Оксана** becomes **Оксано!**, and **Тарас** becomes **Тарасе!**.
-
-:::note
-English does not have a vocative case, but in Ukrainian, it is mandatory when addressing someone directly. Forgetting to change the name ending can sound unnatural or blunt to a native speaker.
-:::
+<!-- INJECT_ACTIVITY: match-up-questions-answers -->
 
 ## Діалог (Capstone Dialogue)
 
-Imagine the following scene at a professional conference coffee break. Two professionals, **Богдан** (Bohdan), an engineer from the city of Dnipro, and **Соломія** (Solomiia), a teacher from the city of Ternopil, meet between sessions. This realistic setting justifies a full exchange of personal information with a new acquaintance. Pay attention to how they ask questions and respond politely.
+Examine the capstone scenario. Imagine a busy coffee break at a professional conference. **Богдан** (Bohdan), an engineer from Dnipro, and **Соломія** (Solomiya), a teacher from Ternopil, meet for the very first time. They use everything you have learned to introduce themselves politely, exchange basic background information, and share a detail about their families.
+
+Read their conversation aloud:
 
 > **Богдан:** Добрий день! *(Good afternoon!)*
-> **Соломія:** Добрий день! *(Good afternoon!)*
-> **Богдан:** Мене звати Богдан. А як Вас звати? *(My name is Bohdan. And what is your name?)*
-> **Соломія:** Мене звати Соломія. Моє прізвище — Коваль. *(My name is Solomiia. My surname is Koval.)*
-> **Богдан:** Дуже приємно, пані Соломіє! Я з Дніпра. А Ви звідки? *(Very nice to meet you, Ms. Solomiia! I am from Dnipro. And where are you from?)*
-> **Соломія:** Я з Тернополя. Я — вчителька. А Ви? *(I am from Ternopil. I am a teacher. And you?)*
-> **Богдан:** Я — інженер. Дивіться, це моя сім'я на фото. *(I am an engineer. Look, this is my family in the photo.)*
-> **Соломія:** Це Ваша дружина? *(Is this your wife?)*
-> **Богдан:** Так, це моя дружина. У мене є син. *(Yes, this is my wife. I have a son.)*
-> **Соломія:** Рада знайомству, пане Богдане! *(Glad to meet you, Mr. Bohdan!)*
-> **Богдан:** Навзаєм! *(Mutually!)*
+> **Соломія:** Добрий день! Як вас звати? *(Good afternoon! What is your name?)*
+> **Богдан:** Мене звати Богдан. А вас? *(My name is Bohdan. And you?)*
+> **Соломія:** Дуже приємно. Моє **ім'я** (first name) — Соломія. Моє **прізвище** (surname) — Коваль. Звідки ви? *(Very nice to meet you. My first name is Solomiya. My surname is Koval. Where are you from?)*
+> **Богдан:** Я з Дніпра. Я інженер. А ви звідки? *(I am from Dnipro. I am an engineer. And where are you from?)*
+> **Соломія:** Я з Тернополя. Я вчителька. *(I am from Ternopil. I am a teacher.)*
+> **Богдан:** Це дуже цікаво. Це моя дружина на фото. *(This is very interesting. This is my wife in the photo.)*
+> **Соломія:** Дуже гарно! У вас гарна сім'я. *(Very nice! You have a nice family.)*
+> **Богдан:** Дякую! До побачення! *(Thank you! Goodbye!)*
+> **Соломія:** До побачення! *(Goodbye!)*
 
-Notice the register used in this exchange. Because this is a professional context, they use the formal pronoun **Ви** (you, formal). They also use the respectful titles **Пане** (Mr.) and **Пані** (Ms.). Соломія addresses him directly in the Vocative case as **Пане Богдане**, rather than just stating his basic name. This shows politeness and respect in a formal setting. The dialogue moves naturally from initial contact to sharing origins, professions, and personal details. 
+Analyze the natural features of this dialogue. Because they are meeting in a professional setting, they use the polite, formal address with the pronouns **ви** (you) and **вас** (you, accusative). This keeps the exchange respectful and matches the conference setting.
 
-When Богдан shows his photo, he uses the visual aid to transition the conversation from work to personal life. Using photos on your phone is an excellent, natural way to practice vocabulary with native speakers. The full introduction cycle is a predictable social script. Mastering this script allows you to navigate first encounters smoothly and build connections.
+:::tip
+For a first professional meeting, stay with **ви** and **вас**. These are the key A1.1 forms you need for a polite introduction.
+:::
 
-Creating your own graduation monologue is the final step. In Ukrainian primary schools, a simple text follows a strict three-part structure. First is the **Зачин** (Introduction), where you establish contact and state the topic. Second is the **Основна частина** (Main Part), where you provide the core details about your origin and profession. Third is the **Кінцівка** (Conclusion), where you offer a simple, polite closing sentence. This structure helps organize your thoughts logically.
+This dialogue serves as your model for transitioning from a back-and-forth conversation to a connected monologue. You can now string these individual answers together into your own continuous presentation. You might say: **Привіт! Мене звати Богдан. Я з Дніпра. Я українець. Я — інженер. Моя мама — вчителька. Мій тато — інженер. У мене є брат.** (Hi! My name is Bohdan. I am from Dnipro. I am Ukrainian. I am an engineer. My mother is a teacher. My father is an engineer. I have a brother.)
+ This continuous introduction is the core milestone for this level. Once you can seamlessly present these facts about yourself in one smooth speech, you have mastered the fundamentals of your first contact.
 
-Use this template to practice introducing yourself out loud:
-
-**Привіт!** *(Hi!)*
-**Мене звати...** *(My name is...)*
-**Моє прізвище...** *(My surname is...)*
-**Я з...** *(I am from...)*
-**Я — ...** *(I am a...)*
-**Це моя сім'я.** *(This is my family.)*
-**У мене є...** *(I have a...)*
-**Дуже приємно.** *(Very nice to meet you.)*
-
-<!-- INJECT_ACTIVITY: fill-in-self-intro -->
+<!-- INJECT_ACTIVITY: fill-in-self-introduction -->
 
 ## Підсумок — Summary
 
-You have reached the end of the first major phase of your language journey. Before you proceed to the next set of modules, take a moment for a final, comprehensive self-check. Can you name all 33 letters of the Ukrainian alphabet and confidently produce their corresponding sounds? Can you comfortably say hello using both formal and informal greetings depending on the specific social context? Do you clearly understand the cultural and linguistic difference between a person's **ім'я** (first name) and their **прізвище** (surname)?
+Here is your final self-check checklist. Evaluate your progress honestly.
 
-Make sure you know how to use the possessive pronouns **мій** (my, masc.) and **моя** (my, fem.) correctly when talking about your family members. Check if you can use the Vocative case to call a friend directly, changing the ending of their name appropriately so that it sounds natural to a native speaker. Can you confidently introduce yourself in five connected sentences using the specific patterns from this module? If you can answer yes to all these questions, you are fully prepared. Take pride in establishing a solid foundation.
+* Can you say how many letters and how many sounds Ukrainian has?
+* Can you place the stress correctly in common words such as **кава** and **вода**?
+* Can you read Ukrainian Cyrillic words fluently, including those utilizing the **Ь** and the apostrophe?
+* Can you say hello informally with **Привіт** (Hi) and formally with **Добрий день** (Good afternoon)?
+* Can you introduce yourself in 5 sentences?
+* Can you introduce yourself using the essential phrase **Мене звати...** (My name is...)?
+* Can you state your origin using the chunk **Я з...** (I am from...)?
+* Can you state your profession using the direct pattern **Я...** (I am...)?
+* Can you introduce your family members using the correct gendered possessives, such as **Це мій тато** (This is my dad) and **Це моя мама** (This is my mom)?
+* Can you ask someone else their name, inquire about their **прізвище** (surname), and ask where they are from?
+
+If you can confidently do all of this, you are fully prepared and ready for the next step: understanding how objects have gender in Ukrainian!
 </generated_module_content>
 
-**PIPELINE NOTE — Word count: 1575 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
+**PIPELINE NOTE — Word count: 1280 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -385,51 +378,175 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 67 words | Not found: 15 words
+Verified: 54 words | Not found: 8 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
+  ✗ Іван — NOT IN VESUM
   ✗ Анна — NOT IN VESUM
-  ✗ Анно — NOT IN VESUM
   ✗ Богдан — NOT IN VESUM
-  ✗ Богдане — NOT IN VESUM
   ✗ Дніпра — NOT IN VESUM
   ✗ Києва — NOT IN VESUM
-  ✗ Микола — NOT IN VESUM
-  ✗ Миколаївна — NOT IN VESUM
-  ✗ Оксана — NOT IN VESUM
-  ✗ Оксано — NOT IN VESUM
+  ✗ Олена — NOT IN VESUM
   ✗ Соломія — NOT IN VESUM
-  ✗ Соломіє — NOT IN VESUM
-  ✗ Тарас — NOT IN VESUM
-  ✗ Тарасе — NOT IN VESUM
   ✗ Тернополя — NOT IN VESUM
 
-All 67 other words are confirmed to exist in VESUM.
+All 54 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
-## Verification Tools (MCP)
+---
 
-You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
+## Verification Tools (Shell Commands)
 
-**Core Verification:**
-- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
-- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
+You have access to verification tools via shell commands. Use these to verify
+Ukrainian vocabulary, check grammar, and search textbook content **as you write**.
 
-**Content Quality:**
-- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+**IMPORTANT:** Run verification commands BEFORE finalizing any Ukrainian text.
+Batch multiple verifications together to minimize round-trips.
 
-**Reference:**
-- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp_rag_search_literary` — verify literary references against primary sources
-- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
+### 1. Batch-verify Ukrainian words exist in VESUM (preferred — one call for many words)
 
-**Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_words
+results = verify_words(['слово1', 'слово2', 'слово3'])
+for w, matches in results.items():
+    if matches:
+        print(f'{w}: FOUND — lemma={matches[0][\"lemma\"]}, pos={matches[0][\"pos\"]}')
+    else:
+        print(f'{w}: NOT FOUND — may not exist in standard Ukrainian')
+"
+```
+
+### 2. Verify a single Ukrainian word in VESUM (with full morphological tags)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_word
+results = verify_word('WORD_HERE')
+if results:
+    for m in results:
+        print(f'lemma={m[\"lemma\"]}, pos={m[\"pos\"]}, tags={m[\"tags\"]}')
+else:
+    print('NOT FOUND in VESUM')
+"
+```
+
+### 3. Get all inflected forms of a lemma (declension/conjugation)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_lemma
+forms = verify_lemma('LEMMA_HERE')
+for f in forms[:20]:
+    print(f'{f[\"word_form\"]:20s} {f[\"pos\"]:8s} {f[\"tags\"]}')
+print(f'... {len(forms)} forms total')
+"
+```
+
+### 4. Check CEFR level of a word (is it level-appropriate?)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import query_cefr_level
+results = query_cefr_level('WORD_HERE')
+for r in results:
+    print(f'{r[\"word\"]}: {r[\"level\"]} ({r[\"pos\"]})')
+if not results:
+    print('Not in CEFR database')
+"
+```
+
+### 5. Search textbook content (Ukrainian school textbooks, Grades 1-11)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_textbooks
+keywords = {'keyword1', 'keyword2'}
+results = search_textbooks(keywords, 5)
+for r in results:
+    title = r.get('section_title', r.get('title', ''))
+    grade = r.get('grade', '?')
+    text = r.get('text', '')[:200]
+    print(f'Grade {grade} | {title}')
+    print(f'  {text}')
+    print()
+"
+```
+
+### 6. Search style guide for calques/Russianisms (Антоненко-Давидович, 279 entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_style_guide
+results = search_style_guide('TOPIC_HERE', 3)
+for r in results:
+    print(f'--- {r.get(\"word\", \"\")} [{r.get(\"section\", \"\")}]')
+    print(r.get('text', '')[:300])
+    print()
+if not results:
+    print('No style guide entries found')
+"
+```
+
+### 7. Look up word definition in СУМ-11 (Ukrainian explanatory dictionary, 127K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_definitions
+results = search_definitions('WORD_HERE', 3)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+### 8. Search idioms (Фразеологічний словник, 25K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_idioms
+results = search_idioms('WORD_HERE', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"text\", r.get(\"definition\", \"\")))[:200]}')
+"
+```
+
+### 9. English-to-Ukrainian translation (Балла, 79K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import translate_en_uk
+results = translate_en_uk('ENGLISH_WORD', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+---
+
+**WHEN to use these tools:**
+
+1. **Before writing any Ukrainian text** — batch-verify all key vocabulary with
+   `verify_words` (tool 1). Any word that returns NOT FOUND must be replaced.
+2. **When you suspect a Russicism or calque** — search the style guide (tool 6)
+   and verify the correct Ukrainian form with `verify_word` (tool 2).
+3. **When writing for A1/A2** — check CEFR levels (tool 4) to ensure vocabulary
+   is level-appropriate.
+4. **When unsure about a case ending or conjugation** — use `verify_lemma` (tool 3)
+   to see the full paradigm.
+5. **When covering a grammar topic** — search textbooks (tool 5) to see how
+   Ukrainian school textbooks teach it.
+6. **When you need the precise Ukrainian meaning** — use СУМ-11 (tool 7).
+7. **When looking for natural Ukrainian expressions** — search idioms (tool 8).
+
+**Batching rule:** Collect all words you want to verify, then run ONE `verify_words`
+call instead of multiple `verify_word` calls. This is faster and uses fewer tokens.

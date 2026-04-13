@@ -1,23 +1,21 @@
-# Section-by-Section Generation — Section 4/6
+# Section-by-Section Generation — Section 4/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 19: Моєму другові, нашій вчительці (A2, A2.3 [Dative Case])
-**Section to write:** Повні іменникові групи у давальному відмінку (~500 words)
-**Word target for this section:** 500 words (aim for 550 to account for undershoot)
+**Section to write:** Порівняння відмінків (~390 words)
+**Word target for this section:** 390 words (aim for 429 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Повні іменникові групи у давальному відмінку (~500 words)
-- P1 (~120 words): Synthesizing full phrases: Possessive + Adjective + Noun. Emphasize that all three elements must reflect the Dative case. Example construction: моєму (pronoun) + старшому (adj) + братові (noun).
-- P2 (~80 words): Word order within the Dative noun phrase. Explain that the sequence (Possessive -> Adjective -> Noun) remains stable from the Nominative, making transition easier.
-- P3 (~100 words): Usage scenario: Giving and Dedicating. Examples: "Подарувати моєму найкращому другові," "Присвятити книгу моїй коханій дружині." Use verbs like дарувати, купувати.
-- P4 (~100 words): Usage scenario: Communication and Help. Examples: "Написати нашій новій вчительці," "Допомагати цьому старому чоловікові." Use verbs like телефонувати, писати, допомагати.
-- P5 (~100 words): Common L2 pitfalls. Explain the tendency to forget the ending on the adjective while changing the noun (e.g., *моєму старий другу). Reinforce that every word in the chain must "signal" the Dative case.
-- <!-- INJECT_ACTIVITY: fill-in-dative-phrases --> [fill-in, Complete dative noun phrases with the correct adjective/pronoun ending (мо___ друг___), 8 items]
-- <!-- INJECT_ACTIVITY: error-correction-agreement --> [error-correction, Find and fix adjective-pronoun agreement errors in dative phrases, 6 items]
+## Порівняння відмінків (~390 words)
+- P1 (~120 words): Explain why comparing cases is essential for mastery. Note that learners often confuse the endings of Nominative, Genitive, and Dative cases, particularly for feminine nouns and their modifiers, so placing them side-by-side reveals the distinct patterns.
+- P2 (~130 words): Present a comparison chart for Masculine/Neuter forms. Show Nominative ("мій новий друг"), Genitive ("мого нового друга"), and Dative ("моєму новому другу/другові"). Explicitly highlight the difference: Genitive uses `-ого`, while Dative uses `-ому` (or `-єму`). Warn learners against the false equivalence with Russian endings here.
+- P3 (~140 words): Present a comparison chart for Feminine forms. Show Nominative ("моя нова подруга"), Genitive ("моєї нової подруги"), and Dative ("моїй новій подрузі"). Contrast the Genitive `-ої` with the Dative `-ій`. Remind learners that prepositions like `для` trigger the Genitive ("для їхньої мами"), while verbs like `допомагати` trigger the Dative ("допомагаю їхній мамі").
+
+Grand total: ~2200 words
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -25,7 +23,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-::: Діти подарували гарний малюнок їхній мамі на свято. Сусіди часто скаржаться їхньому старшому синові на шум. Ми завжди готові прийти на допомогу їхній родині. Собака радісно біжить назустріч їхньому автомобілю. > *The children gave a beautiful drawing to their mom for the holiday. The neighbors often complain to their older son about the noise. We are always ready to come to the aid of their family. The dog runs joyfully towards their car.* There is an important exception to these matching rules when dealing with third-person singular possessives. The pronouns «його» (his) and «її» (her) are completely invariable, meaning they never change their shape regardless of the case, gender, or number of the noun they modify. This is a common trap for English speakers who try to add Dative endings to these words. You must never say «йогому» or «їїй»; the pronoun remains frozen, and only the noun takes the Dative ending. :::note **The frozen pronouns** Remember that «його» and «її» are permanently locked in their Genitive forms. If the noun changes, these pronouns stand still and watch. You say «його другові», not «йогому». ::: Я повністю вірю його давньому другові, бо він чесний. Вчора він з радістю допоміг її молодшій сестрі. Вона вирішила не дзвонити його керівникові. Ми подарували квитки її батькові на ювілей. > *I completely trust his old friend because he is honest. Yesterday he happily helped her younger sister. She decided not to call his manager. We gave tickets to her father for his anniversary.* Demonstrative pronouns let you point out exactly who or what you are talking about. The pronoun «цей» (this) acts somewhat like a soft-stem word, becoming «цьому» for masculine and neuter nouns, and «цій» for feminine nouns. Conversely, «той» (that) acts like a hard-stem word, becoming «тому» and «тій». When you need to point to multiple recipients in the plural, the system simplifies drastically. Both genders merge into a single form, giving us «цим» (to these) and «тим» (to those). Передай ці документи тому високому хлопцеві в коридорі. Цьому старому будинку терміново потрібен серйозний ремонт. Будь ласка, поясни нове правило цим студентам ще раз. Я не довіряю тим людям, які завжди брешуть. > *Pass these documents to that tall guy in the hallway. This old building urgently needs serious repair. Please explain the new rule to these students one more time. I do not trust those people who always lie.* > — **Оксана:** Ти вже телефонував твоєму братові? *(Have you already called your brother?)* > — **Степан:** Так, я телефонував йому вранці. *(Yes, I called him in the morning.)* > — **Оксана:** А що ти сказав їхньому батькові? *(And what did you tell their father?)* > — **Степан:** Я пояснив цю ситуацію тому чоловікові. *(I explained this situation to that man.)* > — **Оксана:** Моїй сестрі потрібна допомога з цим проєктом. *(My sister needs help with this project.)* > — **Степан:** Я з радістю допоможу вашій родині. *(I will happily help your family.)* <!-- INJECT_ACTIVITY: quiz-pronoun-forms --> <!-- INJECT_ACTIVITY: match-up-nom-dat -->
+a ten! To our new student — a nine. And this boy needs to work more.)* > — **Студенти:** Дякуємо нашій добрій вчительці! *(We thank our kind teacher!)* Let's break down the phrases from the dialogue step by step to understand how the mechanics of agreement function in practice. First, we have the masculine phrase "моєму найкращому студентові" (to my best student). The core noun "студентові" is in the masculine dative form. Therefore, the possessive pronoun takes the **моєму** (to my (masc./neut. dat.)) form, and the adjective takes the matching `-ому` ending. Next is the feminine phrase "нашій новій студентці" (to our new student). Because "студентці" is a feminine dative noun, the possessive pronoun becomes **нашій** (to our (fem. dat.)), and the adjective naturally takes the matching `-ій` ending. Finally, we see the demonstrative pronoun in "цьому хлопцю" (to this boy), where the pronoun **цьому** (to this (masc./neut. dat.)) perfectly aligns with the masculine dative noun. You will frequently use these full noun phrases in everyday situations, such as giving presents, writing messages, or offering help to someone. You will naturally practice forms like **твоєму** (to your (masc./neut. dat.)) when asking conversational questions, or using words like **новому** (to the new (masc./neut. dat.)) and **старшому** (to the older (masc./neut. dat.)) to provide more specific detail about the exact recipient of your action. Ми часто використовуємо довгі фрази, коли робимо подарунки або пояснюємо щось важливе. На свято я хочу подарувати цікаву книгу моєму дорогому другові. Завтра вранці я напишу довгий лист нашій старій бабусі. Вчителька повинна пояснити це складне правило цьому новому студентові. Що ти сьогодні подаруєш твоєму старшому братові? Мій батько завжди допомагає тому чоловікові на вулиці. Я також часто допомагаю моїй молодшій сестрі. > *We often use long phrases when we give presents or explain something important. For the holiday, I want to give an interesting book to my dear friend. Tomorrow morning I will write a long letter to our old grandmother. The teacher must explain this difficult rule to this new student. What will you give to your older brother today? My father always helps that man on the street. I also often help my younger sister.* When building these longer phrases, you must establish the correct gender of your core noun first before adding any descriptive words. A very common mistake for learners is mixing up the endings within the same phrase. For instance, using **моїй** (to my (fem. dat.)) with a masculine noun, or pointing to someone incorrectly with **тому** (to that (masc./neut. dat.)) when they are actually female, creates a noticeable grammar mismatch. :::info **Grammar box** Never mix the masculine `-ому` ending with the feminine `-ій` ending in the same noun phrase. For example, saying *моїй другові or *нашому вчительці is completely incorrect because the pronoun and the noun belong to different grammatical genders. Always identify the gender of the noun in its basic nominative form before you start changing any of the case endings! ::: <!-- INJECT_ACTIVITY: fill-in-dative-phrases --> <!-- INJECT_ACTIVITY: error-correction-agreement -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -636,6 +634,31 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (4/4).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] моєму (to my (masc./neut. dat.))
+- [ ] моїй (to my (fem. dat.))
+- [ ] твоєму (to your (masc./neut. dat.))
+- [ ] нашій (to our (fem. dat.))
+- [ ] цьому (to this (masc./neut. dat.))
+- [ ] тому (to that (masc./neut. dat.))
+- [ ] новому (to the new (masc./neut. dat.))
+- [ ] старшому (to the older (masc./neut. dat.))
+- [ ] прикметник (adjective)
+- [ ] присвійний (possessive)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Порівняння відмінків (~390 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

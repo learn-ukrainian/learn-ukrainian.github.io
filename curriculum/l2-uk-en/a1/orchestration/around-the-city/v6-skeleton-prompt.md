@@ -18,7 +18,7 @@ module: a1-033
 level: A1
 sequence: 33
 slug: around-the-city
-version: '1.2'
+version: '1.3'
 title: Around the City
 subtitle: Де/куди + directions — navigating in Ukrainian
 focus: communication
@@ -140,6 +140,9 @@ register: розмовний
 references:
 - title: Synthesis of M28-M32 skills
   notes: Applied communication — no new grammar, just integration.
+- title: Большакова Grade 2, розділ «Моє місто»
+  notes: Basic directions vocabulary (прямо, направо, наліво), neighborhood descriptions,
+    asking/giving directions at A1 level.
 
 </plan_content>
 
@@ -470,6 +473,7 @@ Guidance for the writer on what pitfalls English-speaking learners will face and
 
 ## Plan References
 
+- 
 - 
 
 </knowledge_packet>

@@ -1,23 +1,50 @@
-## Називний чи знахідний? Визначаємо за контекстом (Nominative or Accusative?)
+## Називний чи знахідний? Визначаємо за контекстом (Nominative or Accusative?) (~750 words)
 
-Українська мова має дуже логічну та прозору структуру для кожного речення. Коли ми говоримо про різні речі або людей, ми обов'язково повинні розуміти їхню роль. Who or what is performing the action in the sentence? This is your subject, and it always takes the Nominative case without any exceptions. It answers the basic questions «хто?» or «що?». Але дуже часто наші предмети або люди отримують дію від іншого суб'єкта. What is being seen, read, bought, or built? This is your direct object, and it always takes the Accusative case. It directly answers the questions «кого?» or «що?». Ми успішно використовуємо цей граматичний тест кожного дня у розмовах. Він чудово допомагає нам швидко зрозуміти, який саме відмінок потрібен у конкретному реченні. Якщо розумні **студенти** *(students)* уважно читають текст, слово «студенти» — це називний відмінок. Якщо ми бачимо цих студентів в аудиторії, слово «студентів» — це вже знахідний відмінок.
+Now that you know how to form the plural endings, you need to know exactly when to use which case. The most reliable tool you have is the "who or what" test. You must look at the role of the noun within the sentence. If the noun is the active subject, meaning it is the one doing the action, it is always in the **називний відмінок** (nominative case). However, if the noun is the direct object, meaning the action is being done to it, you must use the **знахідний відмінок** (accusative case). This is the fundamental difference between the two cases.
 
-Тут ми з вами маємо одну надзвичайно цікаву граматичну загадку. Багато українських слів виглядають абсолютно однаково у називному та знахідному відмінках множини. Це правило стосується абсолютно всіх неживих предметів. The only way to tell the difference is by carefully looking at the word order and analyzing the core meaning of the verb. Let's look at the simple word **машини** *(cars)*. Якщо ми кажемо «Машини стоять біля нашого будинку», слово «машини» самостійно робить дію. Тому це чистий називний відмінок. Якщо ми кажемо «Я щоранку бачу нові машини», дія переходить безпосередньо на предмети. Це вже знахідний відмінок, хоча візуальна форма слова зовсім не змінилася. Це правило чудово працює для слів типу **книжки** *(books)*, **телефони** *(phones)* або широкі **поля** *(fields)*. Контекст речення — це завжди наш найкращий граматичний підказник.
+Називний відмінок завжди показує головний суб'єкт дії. Цей суб'єкт активно робить щось у реченні. Знахідний відмінок показує пасивний об'єкт дії. Дія переходить на цей об'єкт від іншої особи. Це дуже важливе правило для правильного розуміння граматики.
 
-Давайте уважно подивимося, як ці два відмінки працюють разом у реальному повсякденному житті. Візьмемо для прикладу дуже просте і зрозуміле речення: «Студенти читають нові книжки». Тут живі люди активно роблять дію, а неживі предмети її отримують. Слово «студенти» стоїть у називному відмінку множини. Слово «книжки» логічно стоїть у знахідному відмінку. Це класична і дуже правильна українська структура. Але українська мова дозволяє нам вільно грати зі словами. We can completely swap the semantic roles in the sentence to see how the meaning and the grammar change. Уявіть таке метафоричне речення: «Книжки вчать цих студентів». Тепер наші предмети стали головними суб'єктами дії. Тому слово «книжки» перейшло у називний відмінок. А от слово «студентів» тепер пасивно отримує цю дію. It is an animate noun, so its Accusative form must match the Genitive case exactly.
+> *The nominative case always shows the main subject of the action. This subject actively does something in the sentence. The accusative case shows the passive object of the action. The action transfers to this object from another person. This is a very important rule for the correct understanding of grammar.*
 
-Найкраще тренувати ці граматичні правила у жвавих місцях, де завжди є багато людей і предметів. Звичайний український міський ринок ідеально підходить для такої розмовної практики.
-> — **Олена:** Дивись, який сьогодні шумний ринок! Тут працюють хороші **продавці** *(sellers)*.
-> — **Максим:** Так, і тут постійно ходять різні **покупці** *(buyers)*. Я якраз бачу знайомих продавців біля входу.
-> — **Олена:** Вони зараз продають свіжі **овочі** *(vegetables)* та солодкі **фрукти** *(fruits)*.
-> — **Максим:** Я хочу купити ці красиві овочі на вечерю. Але тут досить високі **ціни** *(prices)*.
-> — **Олена:** Ціни завжди швидко ростуть восени. Давай запитаємо тих людей про фрукти.
-> — **Максим:** Добре, я знаю цих людей, вони часто роблять приємні знижки.
+This functional distinction becomes tricky when we talk about **неживий** (inanimate) nouns like books, cars, or fields. For inanimate objects, the plural forms of the nominative and accusative cases look exactly the same. Because the word itself does not change its **закінчення** (ending), you cannot rely on morphology alone. You can only understand its grammatical role by analyzing the word order and the verb's meaning. The context is your only clue to distinguish the active subject from the passive object.
 
-У цьому діалозі ми бачимо, як називний і знахідний відмінки множини природно змінюють один одного.
+На вулиці стоять нові машини. Тут слово «машини» — це називний відмінок, бо вони самі виконують дію. Я бачу нові машини на вулиці. У цьому реченні я — це головний суб'єкт, а «машини» — це об'єкт. Тому тут потрібен знахідний відмінок. Форма слова однакова, але граматична роль різна. Такі звичайні **речі** (things) часто плутають іноземних студентів.
 
-Знахідний відмінок у множині також дуже часто працює разом зі спеціальними прийменниками. Certain prepositions always strictly demand the Accusative case when they indicate a direction, a duration of time, or the specific topic of a conversation. Прийменник **через** *(through, across)* показує активний рух: «Ми довго їдемо через високі **гори** *(mountains)*». Прийменник **на** *(onto, for)* часто показує час: «Вони планують поїздку на наступні **вихідні** *(weekend)*». Прийменник **про** *(about)* показує головну тему розмови: «Мої друзі говорять про нові українські **фільми** *(movies)*». You must constantly remember that after these specific prepositions, the plural noun is always in the Accusative case. Навіть для живих людей ми кажемо: «Ми сьогодні читаємо статтю про молодих українських студентів».
+> *New cars stand on the street. Here the word "cars" is in the nominative case, because they perform the action themselves. I see new cars on the street. In this sentence, I am the main subject, and the "cars" are the object. Therefore, the accusative case is needed here. The word form is the same, but the grammatical role is different. Such ordinary things often confuse foreign students.*
 
-Зараз ми разом прочитаємо невеликий текст про звичайний день у нашому університеті. Під час читання спробуйте самостійно знайти всі іменники у множині. Світлі просторі **аудиторії** *(classrooms)* щоранку чекають на студентів. Молоді амбітні **викладачі** *(teachers)* ретельно готують складні **завдання** *(tasks)*. Вони акуратно кладуть нові **маркери** *(markers)* на великі дерев'яні столи. Студенти швидко відкривають свої чисті **зошити** *(notebooks)* і уважно пишуть довгі **речення** *(sentences)*. Викладачі бачать розумних студентів і щиро радіють. У цьому тексті слова «аудиторії» та «викладачі» є головними підметами у чистому називному відмінку. Вони самі виконують дію. Слова «маркери» та «зошити» — це прямі додатки у знахідному відмінку, хоча їхня форма нагадує називний. Слово «студентів» тут чудово показує нам класичний знахідний відмінок для живих істот.
+Let us look at a complete sentence that uses both cases together. When a single sentence contains both a subject and a direct object, the contrast between the cases becomes clear. Let us analyze the roles in an everyday situation.
+
+Студенти читають цікаві книжки в університетській бібліотеці. Тут студенти — це суб'єкт, тому ми використовуємо називний відмінок. Вони самі роблять цю дію. Книжки — це пасивний об'єкт дії. Тому це знахідний відмінок для неживих предметів. А тепер змінимо ролі. Цікаві книжки вчать молодих студентів. Тепер книжки — це підмет, а студенти — об'єкт дії. Тому слово «студентів» має форму знахідного відмінка, бо це **живий** (animate) об'єкт.
+
+> *Students read interesting books in the university library. Here the students are the subject, so we use the nominative case. They perform this action themselves. The books are the passive object of the action. Therefore, it is the accusative case for inanimate objects. And now let us change the roles. Interesting books teach young students. Now the books are the subject, and the students are the object of the action. Therefore, the word "students" takes the form of the accusative case, because it is an animate object.*
+
+Let us see how this works in a fast-paced conversation. When you visit a busy market, you will hear people identifying groups of people and various objects. Pay attention to how the speakers switch between the nominative and accusative cases depending on what they are observing and buying.
+
+> — **Олена:** Дивись, які гарні овочі та фрукти сьогодні продають! *(Look what beautiful vegetables and fruits they are selling today!)*
+> — **Максим:** Так, я бачу ці яскраві овочі. *(Yes, I see these bright vegetables.)*
+> — **Олена:** А там стоять місцеві продавці. *(And over there stand the local sellers.)*
+> — **Максим:** Я знаю тих продавців, вони завжди продають смачні яблука. *(I know those sellers, they always sell delicious apples.)*
+> — **Олена:** Покупці швидко купують свіжі продукти. *(The buyers quickly buy the fresh produce.)*
+> — **Максим:** Я теж хочу купити такі продукти. *(I also want to buy such produce.)*
+> — **Олена:** Але тут дуже високі ціни! *(But the prices here are very high!)*
+> — **Максим:** Я не люблю високі ціни. *(I do not love high prices.)*
+> — **Олена:** Давай знайдемо інших продавців. *(Let us find other sellers.)*
+
+Beyond recognizing direct objects, the accusative case is also triggered by specific prepositions. When you talk about movement, direction, or the subject of a story, you will need to use the accusative **множина** (plural) after certain prepositions. The most common ones are «через» (through), «на» (onto or for a period of time), and «про» (about).
+
+Туристи їдуть через високі гори. Ми купуємо продукти на наступні вихідні. Студенти часто говорять про нові фільми. Маленькі **діти** (children) читають казки про лісових тварин. У всіх цих реченнях після прийменника йде знахідний відмінок. Ви повинні завжди звертати увагу на ці прийменники, коли будуєте речення.
+
+> *Tourists drive through the high mountains. We buy groceries for the next weekend. Students often talk about new films. Small children read fairy tales about forest animals. In all these sentences, the preposition is followed by the accusative case. You must always pay attention to these prepositions when you build sentences.*
+
+:::info
+**Grammar box**
+Remember that the prepositions «в» and «на» can take either the locative case (for location) or the accusative case (for direction). When you are going *to* a place or doing something *for* a period of time (e.g., «на вихідні»), use the accusative.
+:::
+
+Now it is time to practice reading these distinct cases in context. Read the following paragraph describing a typical scene. Try to identify which plural nouns act as the subjects of the sentences and which ones act as the direct objects based on the narrative logic.
+
+У великій аудиторії сидять розумні студенти. Вони уважно слухають лекцію про комп'ютерні технології. Досвідчені викладачі пояснюють складні правила та показують різні приклади. Студенти записують ці правила у зошити. На столах лежать ручки, олівці та телефони. Викладач дивиться у їхні **очі** (eyes) і розуміє їхні запитання. Після лекції друзі йдуть у кафе. Вони купують солодкі десерти та п'ють гарячу каву. Усі **люди** (people) відпочивають і обговорюють свої плани на вихідні.
+
+> *Smart students sit in a large classroom. They attentively listen to a lecture about computer technologies. Experienced instructors explain complex rules and show various examples. The students write these rules down in notebooks. Pens, pencils, and phones lie on the tables. The instructor looks into their eyes and understands their questions. After the lecture, the friends go to a cafe. They buy sweet desserts and drink hot coffee. All the people relax and discuss their plans for the weekend.*
 
 <!-- INJECT_ACTIVITY: error-correction-plural -->

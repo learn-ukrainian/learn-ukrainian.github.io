@@ -1,7 +1,7 @@
 # Audit Report: M03 — aspect-in-vocabulary.md
 **Level:** A2 | **Module:** M03 | **Phase:** A2.1 | **Pedagogy:** PPP | **Target:** 2000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-04-11 01:24:57
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-04-12 21:47:31
 
 ## Configuration
 **Type:** A2-grammar
@@ -18,79 +18,50 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | quiz |  | 8 | 8 | ✅ |
-| 2 | fill-in |  | 8 | 8 | ✅ |
-| 3 | match-up |  | 8 | 8 | ✅ |
-| 4 | fill-in |  | 8 | 8 | ✅ |
-| 5 | group-sort |  | 20 | 8 | ✅ |
-| 6 | error-correction |  | 6 | 6 | ✅ |
-| 7 | translate |  | 6 | 6 | ✅ |
-| 8 | true-false |  | 6 | 8 | ❌ |
+| 1 | quiz | Оберіть правильну пару (доконаний вид) до дієслова недоконаного виду. | 8 | 8 | ✅ |
+| 2 | match-up | З'єднайте дієслово недоконаного виду з його парою доконаного виду. | 8 | 8 | ✅ |
+| 3 | fill-in | Вставте правильне дієслово, щоб утворити пару за правилом. | 8 | 8 | ✅ |
+| 4 | fill-in | Вставте правильне дієслово (процес або результат). | 8 | 8 | ✅ |
+| 5 | group-sort | Розподіліть дієслова за видами. | 16 | 8 | ✅ |
+| 6 | true-false | Правда чи ні? Прочитайте твердження про дієслова. | 8 | 8 | ✅ |
+| 7 | error-correction | Знайдіть і виправте помилку (неправильний вид дієслова). | 8 | 6 | ✅ |
+| 8 | translate | Оберіть правильний переклад. | 8 | 6 | ✅ |
+| 9 | fill-in | Вставте правильне дієслово з пари (процес чи результат). | 8 | 8 | ✅ |
+| 10 | quiz | Оберіть правильний вид дієслова або правило для кожної ситуації. | 8 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 8 (target: 0-4) ❌
+- Total activities: 10 (target: 0-4) ❌
 - Unique types: 7 (minimum: 0) ✅
 - Priority types used: 7/15 (error-correction, fill-in, group-sort, match-up, quiz, translate, true-false) ✅
-- Low density activities: 1
-
-## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q1 prompt length 2 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q2 prompt length 2 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q3 prompt length 2 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q4 prompt length 2 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q5 prompt length 2 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q6 prompt length 2 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q7 prompt length 2 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q8 prompt length 2 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY]** true-false '' has 6 items (minimum: 8)
-  - FIX: Add more items. A2 true-false requires at least 8 items.
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: вид
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
+- Low density activities: 0
 
 ## Recommendation
-**📝 UPDATE** (severity 40/100)
+**📝 UPDATE** (severity 20/100)
 
-- Revision recommended (severity 40/100)
-- 10 violations (significant)
-- Activity density below minimum
+- Structure issue: Missing '## Summary'
 
 ## Gates
-- **Words:** ✅ 3049/2000 (raw: 3164)
-- **Activities:** ✅ 8/0
-- **Density:** ❌ 1 < 8
+- **Words:** ✅ 2857/2000 (raw: 2932)
+- **Activities:** ✅ 10/0
+- **Density:** ✅ All > 8
 - **Unique_types:** ✅ 7/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 3/3
+- **Engagement:** ❌ 2/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 44/1
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ✅ 34/1
+- **Structure:** ❌ Missing '## Summary'
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 26.8% (target 20-48% (A2.1))
+- **Immersion:** 🇺🇦 21.3% (target 20-48% (A2.1))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
 
-## Low Density Activities
-| Activity | Type | Items | Required | Fix |
-|----------|------|-------|----------|-----|
-|  | true-false | 6 | 8 | Add 2 more items |
-
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 495 | Included in Core |
-| **Спосіб 1: Додавання префікса** | ✅ | 1050 | Included in Core |
-| **Спосіб 2: Зміна в корені або суфіксі** | ✅ | 841 | Included in Core |
-| **Спосіб 3: Зовсім інші слова (суплетивізм)** | ✅ | 494 | Included in Core |
-| **Підсумок (Summary)** | ✅ | 169 | Included in Core |
+| **Intro/Narrative** | ✅ | 598 | Included in Core |
+| **Спосіб 1: Додавання префікса (Method 1: Adding a Prefix) (~650 words)** | ✅ | 808 | Included in Core |
+| **Спосіб 2: Зміна в корені або суфіксі (Method 2: Change in the Root or Suffix) (~650 words)** | ✅ | 716 | Included in Core |
+| **Спосіб 3: Зовсім інші слова (суплетивізм) (Method 3: Completely Different Words) (~550 words)** | ✅ | 735 | Included in Core |

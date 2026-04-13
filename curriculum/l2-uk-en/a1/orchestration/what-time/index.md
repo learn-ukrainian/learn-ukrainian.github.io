@@ -1,33 +1,22 @@
 # Build Summary: what-time (A1)
 
-Generated: 2026-04-11 00:57
+Generated: 2026-04-13 22:57
 
 ## Pipeline Phases
 
 | Phase | Status | Timestamp |
 |-------|--------|-----------|
-| check | complete | 2026-04-09 03:58:34 |
-| research | complete | 2026-04-09 03:58:34 |
-| skeleton | complete | 2026-04-09 04:01:05 |
-| pre-verify | complete | 2026-04-09 04:07:05 |
-| write | complete | 2026-04-09 04:10:24 |
-| exercises | complete | 2026-04-09 04:10:24 |
-| activities | complete | 2026-04-09 04:18:37 |
-| verify-exercises | complete | 2026-04-09 04:18:37 |
-| annotate | complete | 2026-04-09 04:18:37 |
-| vocab | complete | 2026-04-09 04:23:38 |
-| enrich | complete | 2026-04-09 04:23:38 |
-| verify | complete | 2026-04-09 04:23:38 |
-| review | complete | 2026-04-09 04:32:02 |
-| stress | complete | 2026-04-09 04:32:04 |
-| publish | complete | 2026-04-10 22:57:30 |
-| audit | complete | 2026-04-10 22:57:30 |
+| review | complete | 2026-04-13 20:56:57 |
+| stress | complete | 2026-04-13 20:56:57 |
+| publish | complete | 2026-04-13 20:57:01 |
 
 ## Reviews
 
 | Round | File |
 |-------|------|
 | 1 | what-time-review-r1.md |
+| 2 | what-time-review-r2.md |
+| 3 | what-time-review-r3.md |
 
 ## Dispatch Log
 
@@ -39,6 +28,8 @@ Generated: 2026-04-11 00:57
 | activities | gemini-tools (gemini-3.1-pro-preview) | 493s | ✅ |
 | vocab | gemini (gemini-3-flash-preview) | 295s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 504s | ✅ |
+| review | codex-tools (gpt-5.4) | 540s | ✅ |
+| review | codex-tools (gpt-5.4) | 295s | ✅ |
 | write-fix | gemini-tools (gemini-3.1-pro-preview) | 91s | ✅ |
 
 ## Files
@@ -49,6 +40,8 @@ Generated: 2026-04-11 00:57
 - `pre-verify-results.md`
 - `quick-verify.json`
 - `review-structured-r1.yaml`
+- `review-structured-r2.yaml`
+- `review-structured-r3.yaml`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

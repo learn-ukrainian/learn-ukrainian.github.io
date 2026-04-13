@@ -1,7 +1,7 @@
 # Audit Report: M61 — cases-with-ordinal-numerals.md
 **Level:** B1 | **Module:** M61 | **Phase:** B1.5 | **Pedagogy:** PPP | **Target:** 4000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-04-11 01:34:44
+**Generated:** 2026-04-11 12:05:36
 
 ## Configuration
 **Type:** B1-grammar
@@ -23,19 +23,15 @@
 | 3 | match-up |  | 6 | 8 | ❌ |
 | 4 | quiz |  | 6 | 8 | ❌ |
 | 5 | fill-in |  | 6 | 8 | ❌ |
-| 6 | fill-in |  | 6 | 8 | ❌ |
-| 7 | quiz |  | 6 | 8 | ❌ |
-| 8 | quiz |  | 6 | 8 | ❌ |
-| 9 | match-up |  | 6 | 8 | ❌ |
-| 10 | group-sort |  | 12 | 6 | ✅ |
-| 11 | error-correction |  | 6 | 6 | ✅ |
-| 12 | essay-response |  | 1 | 6 | ❌ |
+| 6 | match-up |  | 6 | 8 | ❌ |
+| 7 | group-sort |  | 12 | 6 | ✅ |
+| 8 | essay-response |  | 1 | 6 | ❌ |
 
 **Summary:**
-- Total activities: 12 (target: 0-4) ❌
-- Unique types: 6 (minimum: 3) ✅
-- Priority types used: 5/7 (error-correction, essay-response, fill-in, match-up, quiz) ✅
-- Low density activities: 10
+- Total activities: 8 (target: 0-4) ❌
+- Unique types: 5 (minimum: 3) ✅
+- Priority types used: 4/7 (essay-response, fill-in, match-up, quiz) ✅
+- Low density activities: 7
 
 ## PEDAGOGICAL VIOLATIONS
 - **[LEVEL_RESTRICTION]** Activity 'essay-response' not allowed at B1
@@ -44,79 +40,68 @@
   - FIX: Add more items. B1 fill-in requires at least 8 items.
 - **[COMPLEXITY]** quiz '' has 6 items (minimum: 8)
   - FIX: Add more items. B1 quiz requires at least 8 items.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q4 prompt length 4 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
 - **[COMPLEXITY]** match-up '' has 6 pairs (target: 12-16)
   - FIX: Adjust number of pairs to 12-16.
 - **[COMPLEXITY]** quiz '' has 6 items (minimum: 8)
   - FIX: Add more items. B1 quiz requires at least 8 items.
 - **[COMPLEXITY]** fill-in '' has 6 items (minimum: 8)
   - FIX: Add more items. B1 fill-in requires at least 8 items.
-- **[COMPLEXITY]** fill-in '' has 6 items (minimum: 8)
-  - FIX: Add more items. B1 fill-in requires at least 8 items.
-- **[COMPLEXITY]** quiz '' has 6 items (minimum: 8)
-  - FIX: Add more items. B1 quiz requires at least 8 items.
-- **[COMPLEXITY]** quiz '' has 6 items (minimum: 8)
-  - FIX: Add more items. B1 quiz requires at least 8 items.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q2 prompt length 4 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q6 prompt length 3 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
 - **[COMPLEXITY]** match-up '' has 6 pairs (target: 12-16)
   - FIX: Adjust number of pairs to 12-16.
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (75% overlap): "У ньому є дуже важливе речення: «Зустріч відбудеться п'ятнадцятого березня о третій годині на четвер...". Shares significant keywords with sentence at index 254.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "From which platform does it depart?)*
-> — **Касир:** Третій перон.". Shares significant keywords with sentence at index 215.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-- **[STATE_STANDARD_LOW_IMMERSION]** Module 61 has 57.2% immersion (target: 90.0%+)
+- **[GLOSSARY_LIST_IN_PROSE]** Glossary-style list (4 items) in narrative prose starting: '**Перший урок.** — *The first lesson.* (Nominative masculine)' — vocab tables belong in vocabulary YAML
+  - FIX: Move vocabulary definitions to vocabulary/{slug}.yaml or rewrite as natural prose with words introduced in context
+- **[GLOSSARY_LIST_IN_PROSE]** Glossary-style list (4 items) in narrative prose starting: '**Сто п'ятнадцята сторінка.** — *The one hundred fifteenth page.* (Nominative)' — vocab tables belong in vocabulary YAML
+  - FIX: Move vocabulary definitions to vocabulary/{slug}.yaml or rewrite as natural prose with words introduced in context
+- **[INLINE_ENGLISH_IN_PROSE]** Inline English translations in B1+ prose (4 occurrences): (Nominative masculine), (Accusative feminine), (Genitive neuter) — breaks immersion target
+  - FIX: Remove inline English translations. Use context clues, Ukrainian definitions, or move translations to vocabulary section
+- **[STATE_STANDARD_LOW_IMMERSION]** Module 61 has 34.2% immersion (target: 90.0%+)
   - FIX: Add more Ukrainian content to reach 90%+ immersion for full immersion modules
 
 ## Recommendation
 **🔄 REWRITE** (severity 100/100)
 
-- 16 violations (severe - consider revision)
-- Immersion 28% off target (major rebalancing needed)
+- 11 violations (severe - consider revision)
+- Immersion 51% off target (major rebalancing needed)
 - Activity density below minimum
 
 ## Gates
-- **Words:** ✅ 5787/4000 (raw: 6086)
-- **Activities:** ✅ 12/0
-- **Density:** ❌ 10 < 6
-- **Unique_types:** ✅ 6/3 types
+- **Words:** ✅ 6513/4000 (raw: 6628)
+- **Activities:** ✅ 8/0
+- **Density:** ❌ 7 < 6
+- **Unique_types:** ✅ 5/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ❌ 3/5
+- **Engagement:** ❌ 4/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 35/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ❌ 57.2% LOW (target 85-100% (B1.5-6 Vocab))
-- **Richness:** ❌ 54% < 95% min (grammar) - REWRITE needed
+- **Immersion:** ❌ 34.2% LOW (target 85-100% (B1.5-6 Vocab))
+- **Richness:** ❌ 60% < 95% min (grammar) - REWRITE needed
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
 
 ## Richness Details
-**Score:** 54% (minimum: 95%)
+**Score:** 60% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 100 | 24 | 100% | 20% | 20.0% |
+| examples | 70 | 24 | 100% | 20% | 20.0% |
 | engagement | 0 | 5 | 0% | 15% | 0.0% |
 | dialogues | 0 | 4 | 0% | 15% | 0.0% |
-| variety | 0.92 | - | 92% | 10% | 9.2% |
-| cultural | 0 | 3 | 0% | 10% | 0.0% |
+| variety | 0.94 | - | 94% | 10% | 9.4% |
+| cultural | 3 | 3 | 100% | 10% | 10.0% |
 | realworld | 20 | 3 | 100% | 10% | 10.0% |
 | visual | 0 | 3 | 0% | 5% | 0.0% |
-| questions | 48 | 5 | 100% | 5% | 5.0% |
-| tables | 2 | 2 | 100% | 4% | 4.0% |
+| questions | 20 | 5 | 100% | 5% | 5.0% |
+| tables | 0 | 2 | 0% | 4% | 0.0% |
 | paragraph_var | 1.00 | - | 100% | 3% | 3.0% |
 | proverbs | 10 | 1 | 100% | 3% | 3.0% |
-| **TOTAL** | | | | | **54.2%** |
+| **TOTAL** | | | | | **60.4%** |
 
 ### Dryness Flags & Fixes
 - ❌ **NO_ENGAGEMENT**
@@ -156,15 +141,9 @@
     
     IMPORTANT: Dialogues OUTSIDE blockquotes (>) using **Speaker:** format are NOT detected.
     Place dialogues inside [!dialogue] callouts or blockquotes.
-- ❌ **NO_CULTURAL_ANCHOR**
+- ❌ **NO_TABLES**
   - FIX:
-    Add 3+ cultural references. Use this exact format:
-    
-    > 🇺🇦 **Культурний момент**
-    >
-    > [Reference to Ukrainian place (Київ, Львів, Одеса, Карпати), tradition, or custom]
-    > [How it connects to the grammar/vocabulary being taught]
-    > [Example sentence using the grammar with cultural context]
+    Address this issue to improve richness score
 
 ## Low Density Activities
 | Activity | Type | Items | Required | Fix |
@@ -174,9 +153,6 @@
 |  | match-up | 6 | 8 | Add 2 more items |
 |  | quiz | 6 | 8 | Add 2 more items |
 |  | fill-in | 6 | 8 | Add 2 more items |
-|  | fill-in | 6 | 8 | Add 2 more items |
-|  | quiz | 6 | 8 | Add 2 more items |
-|  | quiz | 6 | 8 | Add 2 more items |
 |  | match-up | 6 | 8 | Add 2 more items |
 |  | essay-response | 1 | 6 | Add 5 more items |
 
@@ -184,9 +160,9 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 1069 | Included in Core |
-| **Дати (~900 words)** | ✅ | 936 | Included in Core |
-| **Час** | ✅ | 1256 | Included in Core |
-| **Поверхи, номери, порядок** | ✅ | 1044 | Included in Core |
-| **Порядкові числівники в контексті** | ✅ | 978 | Included in Core |
-| **Підсумок** | ✅ | 504 | Included in Core |
+| **Intro/Narrative** | ✅ | 1174 | Included in Core |
+| **Дати (~900 words)** | ✅ | 1292 | Included in Core |
+| **Час (~800 words)** | ✅ | 1486 | Included in Core |
+| **Поверхи, номери, порядок (~700 words)** | ✅ | 915 | Included in Core |
+| **Порядкові числівники в контексті (~800 words)** | ✅ | 1090 | Included in Core |
+| **Підсумок (~450 words)** | ✅ | 556 | Included in Core |

@@ -2,36 +2,36 @@
   "module": "euphony-advanced",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-04-11T02:14:01.361493Z",
+  "last_audit": "2026-04-13T03:03:25.417280Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-11T02:13:57.831449Z",
+    "md": "2026-04-13T03:03:22.662798Z",
     "meta": null,
-    "activities": "2026-04-11T02:10:53.365665Z",
-    "vocabulary": "2026-04-07T22:35:34.996624Z",
+    "activities": "2026-04-13T02:45:28.917694Z",
+    "vocabulary": "2026-04-13T02:46:03.020018Z",
     "research": null,
     "plan": "2026-04-04T22:08:14.297423Z"
   },
   "gates": {
     "meta": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Valid Structure"
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Summary'"
     },
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "2311/2000 (raw: 2375) | immersion: 35.9% LOW (target 40-70% (A2.1))"
+      "message": "2737/2000 (raw: 2844) | immersion: 20.8% LOW (target 40-70% (A2.1))"
     },
     "activities": {
-      "status": "fail",
-      "violations": 1,
-      "message": "6/0 | density: 4 < 8"
+      "status": "pass",
+      "violations": 0,
+      "message": "10/0"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "35/1"
+      "message": "19/1"
     },
     "vocab_progression": {
       "status": "warn",
@@ -60,7 +60,9 @@
   },
   "overall": {
     "status": "fail",
-    "blocking_issues": [],
+    "blocking_issues": [
+      "Structure: Missing '## Summary'"
+    ],
     "pass_count": 4,
     "fail_count": 2,
     "deferred_count": 0

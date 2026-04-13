@@ -1,187 +1,126 @@
 ## Діало́ги (Dialogues)
 
-Imagine you are sitting with a Ukrainian friend. Alina is drawing a map of her neighborhood in the Ukrainian capital, Kyiv. She calls this local space **мій райо́н у Ки́єві** (my neighborhood in Kyiv). Being able to define your physical space and understand where things are located is a vital survival skill in any city. 
+These dialogues teach you to ask where a place is and to describe a neighborhood on a simple map. Alina and Ihor use city vocabulary to mark places in a Kyiv neighborhood and say what is near, next to, or far from each landmark.
 
-Read how Ukrainians talk about places and ask for simple directions.
-
-> **І́гор:** Ви́бачте, будь ла́ска. Де тут апте́ка? *(Excuse me, please. Where is the pharmacy here?)*
+> **І́гор:** Ви́бачте, де тут апте́ка? *(Excuse me, where is the pharmacy here?)*
 > **А́ліна:** Аптека на ву́лиці Шевче́нка. *(The pharmacy is on Shevchenko street.)*
-> **Ігор:** Дякую. А де бібліоте́ка? *(Thank you. And where is the library?)*
-> **Аліна:** Бібліотека у це́нтрі. *(The library is in the center.)*
-> **Ігор:** Це дале́ко? *(Is this far?)*
-> **Аліна:** Ні, вона́ бі́ля парку. *(No, it is near the park.)*
-> **Ігор:** Ду́же дякую! *(Thank you very much!)*
+> **Ігор:** А бібліоте́ка? *(And the library?)*
+> **Аліна:** Бібліотека в це́нтрі, бі́ля парку. *(The library is in the center, near the park.)*
+> **Ігор:** Дякую! *(Thank you!)*
+> **Аліна:** Будь ла́ска! *(You're welcome!)*
 
-Notice the polite phrase **Вибачте, будь ласка** (Excuse me, please). This is exactly how you get a stranger's attention on the street politely. The question **Де тут...** (Where here is...) is the most efficient way to ask for directions without needing complex grammar.
+This dialogue gives a simple A1 pattern for asking about a place: **Де тут аптека?** You can answer with a short location phrase: **Аптека на вулиці Шевченка** or **Бібліотека в центрі, біля парку**.
 
-Alina describes her immediate neighborhood to Igor using the existence word **є** (there is/are) and the preposition **біля** (near/next to).
+The second dialogue follows the planned map task: two friends are drawing a Kyiv neighborhood for a pen pal and naming the places on it.
 
-> **Ігор:** Що є біля твого́ до́му? *(What is near your house?)*
-> **Аліна:** Біля дому є магази́н і кафе́. *(Near the house there is a shop and a cafe.)*
-> **Ігор:** А шко́ла? Школа бли́зько? *(And the school? Is the school near?)*
-> **Аліна:** Ні, школа далеко, у центрі мі́ста. *(No, the school is far, in the city center.)*
+> **Ігор:** Що є на твої́й ка́рті? *(What is on your map?)*
+> **Аліна:** Тут є бібліотека, музе́й і пло́ща. О́зеро біля музе́ю. *(There is a library, a museum, and a square here. The lake is near the museum.)*
+> **Ігор:** До́бре. А де зупи́нка? *(Good. And where is the bus stop?)*
+> **Аліна:** Зупинка по́руч з пло́щею, а це́рква дале́ко від о́зера. *(The bus stop is next to the square, and the church is far from the lake.)*
 
-The word **є** acts like the English "there is" or "there are". Ukrainians use it to state that a place exists in a certain location. You will use this small word frequently when describing your own city.
+This brief exchange reviews the location patterns essential for describing an environment. It also gives the learner ready-made chunks with **є**, **біля**, **поруч з**, and **далеко від**.
 
 ## Місця́ в мі́сті (City Places)
 
-To navigate a Ukrainian city, you need foundational vocabulary. We group these city places by grammatical gender to help you remember their forms. Grouping vocabulary by gender makes it easier to predict case endings later.
+Start with the core names of places you see on a city map. Read the words first, then connect them to the locative patterns and actions below.
 
-Masculine places end in a consonant:
-*   **магазин** (shop)
-*   **суперма́ркет** (supermarket)
-*   **банк** (bank)
-*   **готе́ль** (hotel)
-*   **вокза́л** (train station)
-*   **музе́й** (museum)
-*   **теа́тр** (theater)
-*   **кінотеа́тр** (cinema)
+* **аптека** (pharmacy)
+* **бібліотека** (library)
+* **ліка́рня** (hospital)
+* **магази́н** (shop)
+* **суперма́ркет** (supermarket)
+* **рестора́н** (restaurant)
+* **кафе́** (café)
+* **банк** (bank)
+* **по́шта** (post office)
+* **вокза́л** (train station)
+* **готе́ль** (hotel)
+* **музей** (museum)
+* **теа́тр** (theater)
+* **кінотеа́тр** (cinema)
+* **церква** (church)
+* **стадіо́н** (stadium)
+* **університе́т** (university)
 
-Feminine places end in -а or -я:
-*   **аптека** (pharmacy)
-*   **бібліотека** (library)
-*   **ліка́рня** (hospital)
-*   **по́шта** (post office)
-*   **це́рква** (church)
-*   **школа** (school)
+Many of these nouns, such as **ресторан** and **супермаркет**, are international words that share recognizable roots, making them straightforward to acquire. Others, like **лікарня** (hospital) and **бібліотека** (library), are deeply integrated into daily life and represent the civic infrastructure of any Ukrainian town.
 
-Neuter places end in -о, -е, or -я:
-*   **кафе** (cafe)
-*   **кіно́** (cinema)
-*   **о́зеро** (lake)
+To answer **де?**, use **в/у + locative**: **в апте́ці, у бібліоте́ці, в магази́ні**. Choose **в** or **у** for smoother pronunciation. Here are some common place phrases:
 
-When you answer the question **Де?** (Where?), you use the Locative case. For city buildings, you must choose between the prepositions **в/у** (in) and **на** (on). Use **в/у** for standard enclosed spaces. 
+* **в аптеці** (in the pharmacy)
+* **у бібліотеці** (in the library)
+* **у ліка́рні** (in the hospital)
+* **в магазині** (in the shop)
+* **у рестора́ні** (in the restaurant)
+* **у кафе** (in the café)
+* **у ба́нку** (in the bank)
+* **у готе́лі** (in the hotel)
+* **в музе́ї** (in the museum)
 
-*   **Я в апте́ці.** (I am in the pharmacy.)
-*   **Ми у ба́нку.** (We are in the bank.)
-*   **Брат в готе́лі.** (Brother is in the hotel.)
-*   **Сестра́ у музе́ї.** (Sister is in the museum.)
-*   **Студе́нти у бібліоте́ці.** (Students are in the library.)
+Many feminine place words change to **-і** in the locative: **аптека -> в аптеці**, **бібліотека -> у бібліотеці**. Some common places use **на** instead, so learn them as fixed chunks:
 
-Use the preposition **на** for open concepts, public platforms, or wide spaces. 
+* **на по́шті** (at the post office)
+* **на вокза́лі** (at the train station)
+* **на стадіо́ні** (at the stadium)
+* **на пло́щі** (on the square)
 
-*   **Я на по́шті.** (I am at the post office.)
-*   **Він на вокза́лі.** (He is at the train station.)
-*   **Ми на стадіо́ні.** (We are at the stadium.)
-*   **Лю́ди на пло́щі.** (People are on the square.)
+<!-- INJECT_ACTIVITY: quiz-v-or-na -->
 
-:::note
-**Чергува́ння** (Alternation)
-Notice how words ending in **-ка** change in the Locative case: **аптека** becomes **в аптеці**, and **бібліотека** becomes **у бібліотеці**. The consonant **к** changes to **ц** before the **-і** ending. This makes the word easier to pronounce.
-:::
+Now connect each place to a simple action. These short sentences show how to talk about daily life in the city:
 
-Combine these places with action verbs to describe what people do there. This provides practical context for your new vocabulary.
+* **Я купу́ю лі́ки в аптеці.** (I buy medicine in the pharmacy.)
+* **Я чита́ю в бібліотеці.** (I read in the library.)
+* **Я чека́ю на вокзалі.** (I wait at the train station.)
+* **Я відпочива́ю в парку.** (I relax in the park.)
+* **Я їм у ресторані.** (I eat in the restaurant.)
+* **Я п'ю ка́ву в кафе.** (I drink coffee in the café.)
 
-*   **Я купу́ю лі́ки в аптеці.** (I buy medicine in the pharmacy.)
-*   **Ми чита́ємо кни́ги у бібліотеці.** (We read books in the library.)
-*   **Вони́ ди́вляться фільм у кінотеа́трі.** (They watch a film in the cinema.)
-*   **Ма́ма купу́є проду́кти у магази́ні.** (Mom buys groceries in the shop.)
-*   **Та́то обі́дає у рестора́ні.** (Dad has lunch in the restaurant.)
-*   **Брат працю́є в о́фісі.** (Brother works in the office.)
-*   **Сестра відпочива́є у парку.** (Sister rests in the park.)
+Read the pattern aloud: **Я + verb + place**. Then make your own sentences with **аптека, бібліотека, ресторан, вокзал**.
 
-<!-- INJECT_ACTIVITY: match-place-activity -->
-
-<!-- INJECT_ACTIVITY: quiz-preposition-v-na -->
-
-Transportation hubs are critical city infrastructure. You need specific vocabulary for different types of travel. 
-
-*   **вокзал** (train station)
-*   **автовокза́л** (bus station)
-*   **аеропо́рт** (airport)
-*   **зупи́нка** (bus stop)
-
-In Ukraine, the word **вокзал** by default implies the main railway station. If you need a bus, you must specifically ask for the **автовокзал**. You wait for local city transport at a **зупинка**.
-
-*   **Авто́бус на зупи́нці.** (The bus is at the stop.)
-*   **По́їзд на вокзалі.** (The train is at the station.)
+<!-- INJECT_ACTIVITY: match-up-place-activity -->
+<!-- INJECT_ACTIVITY: quiz-where-to-go -->
 
 ## Де це? (Where Is It?)
 
-To explain where something is, you need relative distance adverbs. The most basic are **тут** (here) and **там** (there). For distance, use **близько** (near/close) and **далеко** (far). 
+Use **тут / там** for place and **далеко / бли́зько** for distance. These four words let you describe a map or neighborhood with very short sentences.
 
-Notice how Ukrainians use these words in contrastive examples.
+* **Магазин тут.** (The shop is here.)
+* **Шко́ла там.** (The school is there.)
+* **Центр близько.** (The center is close.)
+* **Вокзал далеко.** (The train station is far.)
 
-*   **Магазин тут, а школа далеко.** (The shop is here, but the school is far.)
-*   **Центр близько, а вокзал далеко.** (The center is near, but the station is far.)
-*   **Аптека там.** (The pharmacy is there.)
-*   **Готель тут.** (The hotel is here.)
+Use **біля** to say that something is near another place. After **біля**, learn the noun as a ready-made chunk: **біля парку, біля до́му, біля університе́ту**.
 
-When you want to say that something is *near something else*, use the preposition **біля** (near/next to). This preposition requires the Genitive case. For now, learn these common locations as functional chunks.
+* **біля парку** (near the park)
+* **біля дому** (near the home)
+* **біля університету** (near the university)
+* **біля магази́ну** (near the shop)
 
-*   **біля дому** (near the house)
-*   **біля парку** (near the park)
-*   **біля університе́ту** (near the university)
-*   **біля метро́** (near the metro)
+Use **поруч з** for "next to" and **далеко від** for "far from": **поруч з музе́єм**, **поруч з площею**, **далеко від озера**, **далеко від вокза́лу**. Add **у центрі** and **на ро́зі** for common city directions.
 
-You use **біля** to describe physical proximity between two objects. It acts as a bridge between the object and its location.
+* **Аптека на розі.** (The pharmacy is on the corner.)
+* **Готель у центрі.** (The hotel is in the center.)
 
-*   **Кафе біля парку.** (The cafe is near the park.)
-*   **Лікарня біля метро.** (The hospital is near the metro.)
-*   **Аптека біля банку.** (The pharmacy is near the bank.)
+Use **є** to say that a place exists in your city or neighborhood: **У моє́му місті є вели́кий парк**. This is enough for simple A1 descriptions.
 
-To describe an entire neighborhood or city, combine the existence word **є** (there is/are) with your vocabulary and numbers. 
+* **У моєму місті є великий парк і два музеї.** (In my city there is a large park and two museums.)
+* **Бібліотека біля університету.** (The library is near the university.)
+* **Магазин тут, біля дому.** (The shop is here, near the home.)
+* **У центрі є стари́й театр.** (In the center there is an old theater.)
 
-*   **У моє́му місті є вели́кий парк і два музеї.** (In my city there is a big park and two museums.)
-*   **Тут є оди́н стадіо́н.** (There is one stadium here.)
-*   **Бібліотека біля університету.** (The library is near the university.)
-*   **Магазин тут, біля дому.** (The shop is here, near the house.)
-
-This structure allows you to build complex descriptions using simple grammar. You state the location, use **є**, and then name the place.
+Now describe your own area with **є**, **тут**, **там**, **біля**, **далеко**, and **близько**.
 
 <!-- INJECT_ACTIVITY: fill-in-describe-city -->
 
-<!-- INJECT_ACTIVITY: quiz-situational-place -->
-
-Finally, here are some specific location markers for precise navigation. 
-
-*   **на ро́зі** (on the corner)
-*   **у центрі** (in the center)
-*   **по́руч** (nearby)
-
-The word **поруч** acts similarly to **близько**, but it often emphasizes immediate side-by-side proximity. You can pair it with the preposition **з** to say "next to something".
-
-*   **Аптека на розі вулиці.** (The pharmacy is on the corner of the street.)
-*   **Рестора́н у центрі міста.** (The restaurant is in the center of the city.)
-*   **Музей поруч з готе́лем.** (The museum is next to the hotel.)
-
-:::tip
-**Далеко чи близько?**
-When asking a yes/no question in Ukrainian, you do not need auxiliary words like "is it" or "do you". Just raise your intonation at the end of the sentence: **Це далеко?** (Is this far?).
-:::
-
 ## Підсумок — Summary
 
-Review the city vocabulary with their required Locative prepositions. Mastery of these patterns is essential for urban navigation.
+The essential vocabulary required to identify and discuss public buildings and urban landmarks forms the foundation of city navigation. The majority of enclosed spaces utilize **в/у**: **в аптеці**, **у бібліотеці**, **в магазині**, **у банку**, **у готелі**, **у ресторані**. A specific subset of locations requires **на**: **на пошті**, **на вокзалі**, **на стадіоні**, **на площі**. Foundational location adverbs pinpoint locations accurately: **тут** (here), **там** (there), **далеко** (far), and **близько** (close). Furthermore, the highly practical preposition **біля** (near) operates within fixed chunks like **біля дому**. Combining these lexical elements allows for accurate descriptions of urban spaces, basic directions, and confident navigation.
 
-Use **В/У** for these enclosed spaces:
-*   **в аптеці** (in the pharmacy)
-*   **у бібліотеці** (in the library)
-*   **у банку** (in the bank)
-*   **в готелі** (in the hotel)
-*   **у магазині** (in the shop)
-*   **у музеї** (in the museum)
-*   **у ресторані** (in the restaurant)
-*   **у ліка́рні** (in the hospital)
-*   **у шко́лі** (in the school)
-*   **в університе́ті** (in the university)
-*   **у кафе** (in the cafe)
+The immediate application of this new vocabulary is to describe your own environment. Answer the following questions about your immediate neighborhood, utilizing the patterns of places, prepositions, and verbs practiced.
 
-Use **НА** for these open areas and transport hubs:
-*   **на пошті** (at the post office)
-*   **на вокзалі** (at the train station)
-*   **на стадіоні** (at the stadium)
-*   **на зупинці** (at the bus stop)
-*   **на площі** (on the square)
+* **Назві́ть 5 місць біля ва́шого дому.** (Name 5 places near your home.)
+* **Де ви купу́єте проду́кти?** (Where do you buy groceries?)
+* **Що ви ро́бите в парку?** (What do you do in the park?)
+* **Вокзал далеко чи близько?** (Is the train station far or near?)
+* **У ва́шому місті є вели́ка бібліотека?** (Is there a large library in your city?)
 
-To orient yourself, use the distance words **тут** (here), **там** (there), **далеко** (far), and **близько** (near). 
-
-Remember the critical difference between **близько** and **біля**. You use the adverb **близько** to state a general fact: **Магазин близько.** (The shop is near). You use the preposition **біля** to connect two nouns and show physical proximity: **Магазин біля парку.** (The shop is near the park). Always pair **біля** with a noun in the Genitive case.
-
-Practice your new skills by answering these self-check questions aloud.
-
-*   **Де ви живете́?** (Where do you live?)
-*   **Що є біля ва́шого дому?** (What is near your house?)
-*   **Де ви купу́єте ліки?** (Where do you buy medicine?)
-*   **Центр міста далеко чи близько?** (Is the city center far or near?)
-*   **Які́ музеї є у ва́шому місті?** (What museums are in your city?)
+Answer these questions aloud or in writing. Use short sentences first, then add one more place or detail.

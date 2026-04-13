@@ -1,4 +1,4 @@
-<!-- version: 1.1.0 | updated: 2026-03-31 -->
+<!-- version: 1.2.0 | updated: 2026-04-12 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -11,6 +11,35 @@ Generate an `activities/shopping.yaml` file for module **39: Shopping** (a1).
 
 ---
 
+## ⚠️ HARD COUNT TARGETS — READ TWICE
+
+These are the binding numerical contracts for THIS module. The audit will FAIL if you fall short.
+
+| Bucket | Min | Max | Notes |
+|---|---|---|---|
+| Total activities | 10 | 10+ | inline + workbook combined |
+| Inline (lesson tab) | 4 | 6 | one per `<!-- INJECT_ACTIVITY -->` marker, see below |
+| Workbook (Зошит tab) | 6 | 9 | extended practice |
+| Items per activity | 6 | — | each activity must have at least 6 items (unless its type cap is lower — see Activity Type Reference below) |
+
+**You MUST ship at least 4 inline activities AND at least 6 workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+
+**Type diversity is required.** The module (inline + workbook combined) MUST use at least **0** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level. (If `0` is `0`, the audit profile for this level does not enforce type diversity — but variety still produces a better lesson, so aim for 4+ types when the workbook allows it.)
+
+---
+
+## Allowed types for THIS level
+
+- **Inline (lesson) types:** image-to-letter, letter-grid, match-up, watch-and-repeat, quiz, true-false, fill-in, classify
+- **Inline priority (preferred):** image-to-letter, match-up, fill-in, quiz, watch-and-repeat
+- **Workbook types:** fill-in, match-up, group-sort, anagram, unjumble, quiz, true-false, classify, divide-words, count-syllables, pick-syllables, observe, phrase-table, odd-one-out
+- **Workbook priority (preferred):** fill-in, match-up, group-sort, anagram, unjumble
+- **FORBIDDEN at this level:** cloze, error-correction, mark-the-words, translate, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, highlight-morphemes, grammar-identify, select
+
+Pick from the allowed list. Lean heavily on the priority lists. Do not use any forbidden type — the build will reject it.
+
+---
+
 ## Inline vs Workbook Split
 
 Activities have two placement categories:
@@ -19,7 +48,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Rule of thumb:** inline = 2-3 quick checks after key teaching points. Workbook = 4-8 deeper practice exercises covering the full topic.
+**Rule of thumb:** inline = 4–6 quick checks after key teaching points. Workbook = 6–9 deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
 
 ---
 
@@ -27,9 +56,9 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: match-up-shops -->`
-- `<!-- INJECT_ACTIVITY: quiz-currency-choice -->`
 - `<!-- INJECT_ACTIVITY: fill-in-prices -->`
+- `<!-- INJECT_ACTIVITY: quiz-currency -->`
+- `<!-- INJECT_ACTIVITY: match-up-locations -->`
 - `<!-- INJECT_ACTIVITY: fill-in-quantities -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
@@ -153,121 +182,136 @@ required:
 ## Module Content (the prose the learner reads before exercises)
 
 <module_content>
-## Діалоги — Dialogues
+## Діалоги (Dialogues)
 
-When you visit Ukraine, you will notice a distinct difference between traditional shopping and modern retail. A traditional market, known as a **ринок** (market) or **базар** (bazaar), is a lively, bustling place where you can find fresh, local produce directly from farmers. It is a highly communicative environment where talking to the seller is part of the experience. On the other hand, a modern **супермаркет** (supermarket) offers convenience and fixed prices. The conversations below show a mother, **Мама**, and her daughter, **Дочка**, shopping for dinner in both of these authentic Ukrainian settings.
+Shopping in Ukraine blends modern convenience with traditional culture. A large **супермаркет** (supermarket) offers everything under one roof, with clear price tags and self-checkout counters. However, if you want the freshest vegetables, seasonal fruit, or a chance to speak directly with the people who grow your food, you must visit a **ринок** (market). At the market, there are rarely printed price tags on every item; you must ask the seller directly. This makes the local market the perfect place to practice your Ukrainian communication skills. Let's see how a typical interaction unfolds when buying fresh produce.
 
 > **(На ринку / At the market)**
-> **Мама:** Добрий день! Скільки коштує кілограм яблук? *(Good day! How much does a kilogram of apples cost?)*
+> **Покупець:** Добрий день! Скільки коштує кілограм яблук? *(Good day! How much does a kilogram of apples cost?)*
 > **Продавець:** Сорок гривень. *(Forty hryvnias.)*
-> **Мама:** А помідори? *(And tomatoes?)*
+> **Покупець:** А помідори? *(And the tomatoes?)*
 > **Продавець:** Тридцять п'ять гривень за кілограм. *(Thirty-five hryvnias per kilogram.)*
-> **Мама:** Дайте, будь ласка, два кілограми помідорів і кілограм яблук. *(Give me, please, two kilograms of tomatoes and a kilogram of apples.)*
+> **Покупець:** Дайте, будь ласка, два кілограми помідорів і кілограм яблук. *(Give me, please, two kilograms of tomatoes and a kilogram of apples.)*
 > **Продавець:** Сімдесят п'ять гривень. *(Seventy-five hryvnias.)*
-> **Мама:** Ось, будь ласка. *(Here you go, please.)*
-> **Продавець:** Дякую! *(Thank you!)*
+> **Покупець:** Ось, будь ласка. *(Here you go.)*
 
-:::note
-**The Ukrainian Market Culture**
-A traditional Ukrainian **ринок** (market) is not just a place to buy food; it is a vital social hub. You will often see people chatting with their favorite sellers, asking about their families, and selecting the freshest produce straight from the garden. It is a much more personal experience than visiting a supermarket!
-:::
+Let's look at the key phrases used in this conversation. To ask for an item politely, the shopper uses the phrase **Дайте, будь ласка...** (Give me, please...). This is the standard, most natural way to request something from a seller in Ukraine. Notice how the shopper states both the quantity and the item clearly together: **кілограм яблук** (a kilogram of apples) and **два кілограми помідорів** (two kilograms of tomatoes). The prices are spoken directly as numbers followed by the currency. There is no need for complex sentences; short, clear, and direct phrases are exactly how native speakers handle transactions.
 
 > **(У супермаркеті / At the supermarket)**
 > **Мама:** Вибачте, де тут хліб? *(Excuse me, where is the bread here?)*
-> **Працівник:** Хліб у третьому ряді. *(The bread is in the third aisle.)*
-> **Дочка:** А молоко? *(And milk?)*
-> **Працівник:** Молоко в холодильнику, там. *(The milk is in the fridge, over there.)*
-> **Мама:** Скільки коштує цей сир? *(How much does this cheese cost?)*
-> **Дочка:** Сто двадцять гривень. *(One hundred twenty hryvnias.)*
-> **Мама:** Дорого! А є дешевший? *(Expensive! And is there a cheaper one?)*
-> **Дочка:** Так, ось цей — вісімдесят. *(Yes, this one here — eighty.)*
+> **Працівник:** Хліб у третьому ряду. *(The bread is in the third aisle.)*
+> **Мама:** А молоко? *(And the milk?)*
+> **Працівник:** Молоко в холодильнику, там. *(The milk is in the fridge, there.)*
+> **Дочка:** Мамо, скільки коштує цей сир? *(Mom, how much does this cheese cost?)*
+> **Мама:** Сто двадцять гривень. *(One hundred twenty hryvnias.)*
+> **Дочка:** Дорого! А є дешевший? *(Expensive! Is there a cheaper one?)*
+> **Мама:** Так, ось цей — вісімдесят. *(Yes, this one — eighty.)*
 
-The core food items that appeared in these conversations are essential vocabulary. You will hear these words every time you visit a grocery store or market: **хліб** (bread), **молоко** (milk), **сир** (cheese), **ковбаса** (sausage), and **масло** (butter). Memorize these everyday essentials before we explore how to handle numbers and money.
+In a large store, navigating is your first priority. You ask for directions using **де тут...** (where is... here). You can also naturally react to prices using adjectives: if a product costs too much money, you can exclaim **Дорого!** (Expensive!), or you can ask a worker for something **дешевший** (cheaper).
 
-<!-- INJECT_ACTIVITY: match-up-shops -->
+## Скільки коштує? (How Much?)
 
-## Скільки коштує? — How Much?
+The most important question in your shopping toolkit is **Скільки коштує...?** (How much does it cost?). You must pay close attention to the item you are asking about, as the verb must agree with the noun. If you are buying a single or uncountable item, use the singular verb form **коштує**. If you are pointing to a plural item, the verb must take the plural form **коштують**.
 
-To navigate any shop successfully, you must learn how to ask for prices. The most important verb for this situation is **коштувати** (to cost). Because Ukrainian grammar requires the verb to agree with the noun, we use two different forms depending on whether the item is singular or plural. If you are asking about one single item, such as a loaf of bread, use the singular form: **Скільки коштує...?** (How much does ... cost?). If you are asking about multiple items, like apples, use the plural form: **Скільки коштують...?** (How much do ... cost?). These examples show the pattern in action:
+*   **Скільки коштує хліб?** *(How much does the bread cost?)*
+*   **Скільки коштує молоко?** *(How much does the milk cost?)*
+*   **Скільки коштують яблука?** *(How much do the apples cost?)*
+*   **Скільки коштують помідори?** *(How much do the tomatoes cost?)*
 
-- **Скільки коштує хліб?** (How much does the bread cost?)
-- **Скільки коштує масло?** (How much does the butter cost?)
-- **Скільки коштує вода?** (How much does the water cost?)
-- **Скільки коштують яблука?** (How much do the apples cost?)
-- **Скільки коштують яйця?** (How much do the eggs cost?)
-- **Скільки коштують помідори?** (How much do the tomatoes cost?)
+The official currency of Ukraine is the **гривня** (hryvnia). When stating a **ціна** (price), the ending of the word changes depending on the specific number before it. This is a fundamental rule of noun-number agreement in Ukrainian.
 
-:::caution
-**Agreement Matters**
-Remember that **коштувати** (to cost) must match the noun it describes. A common mistake is to use the singular **коштує** for plural items like **яблука** (apples). Always check if you are buying one thing or many things before you ask the price!
-:::
+*   Ends in 1 (except 11): singular **гривня**.
+    *   **Одна гривня.** *(One hryvnia.)*
+    *   **Двадцять одна гривня.** *(Twenty-one hryvnias.)*
+*   Ends in 2, 3, or 4 (except 12-14): plural **гривні**.
+    *   **Дві гривні.** *(Two hryvnias.)*
+    *   **Тридцять чотири гривні.** *(Thirty-four hryvnias.)*
+*   Ends in 5-9, 0, or any of the teens (11-19): plural **гривень**.
+    *   **П'ять гривень.** *(Five hryvnias.)*
+    *   **Сорок гривень.** *(Forty hryvnias.)*
 
-Once you ask the price, you need to understand the answer. The national currency of Ukraine is the **гривня** (hryvnia). The word for the currency itself changes its ending depending on the exact number that comes right before it. For the number one, and any number ending in one, we use the basic dictionary form: **21 гривня** (twenty-one hryvnias). For numbers ending in two, three, or four, the word takes a plural ending: **32 гривні** (thirty-two hryvnias). For the number five and any number above it, including all the tens, we use the "many" form: **45 гривень** (forty-five hryvnias), **100 гривень** (one hundred hryvnias). You will also see prices that include smaller coins. Traditionally, the hundredth part of a hryvnia is called a **копійка** (kopeck). However, it is important to know that **копійка** is a term imposed during the Russian imperial era. The true, historical Ukrainian term for a small coin is **шаг** (shah), which Ukraine is currently working to restore to everyday use.
+The smaller unit of currency is the **копійка** (kopeck), representing one hundredth of a hryvnia. The grammar rules for its endings are identical: **одна копійка**, **дві копійки**, **п'ять копійок**. However, physical kopecks are less common today. Prices are frequently rounded to the nearest ten kopecks or whole hryvnia, so you will hear **гривня** much more often than **копійка**.
 
-When you hear the price, you might want to express your reaction to it. You can use simple adverbs to state your opinion clearly. If a price seems too high, you can use the word **дорого** (expensive). If you find a great deal, you can happily use the word **дешево** (cheap). If the price is exactly what you expected, you can confirm it with the phrase **нормальна ціна** (fair price). When shopping at a traditional market, or if you are buying many items at once, you might want to politely ask for a lower price: **Є знижка?** (Is there a discount?). Finally, when you have selected everything you need and are ready to finish the transaction, you can ask for the total amount by saying **За все** (Total) or ask the seller directly **Скільки з мене?** (How much do I owe?). Here are these reactions and questions in action:
+Let's apply numbers directly to prices. Notice how the last digit entirely determines the currency's form.
 
-- **Це дуже дорого!** (This is very expensive!)
-- **Тут дешево.** (It is cheap here.)
-- **Це нормальна ціна.** (This is a fair price.)
-- **Є знижка на яблука?** (Is there a discount on apples?)
-- **Скільки за все?** (How much for everything?)
-- **Скільки з мене?** (How much do I owe?)
+*   **Скільки коштує кава? Двадцять одна гривня.** *(How much is the coffee? Twenty-one hryvnias.)*
+*   **Скільки коштує чай? Тридцять дві гривні.** *(How much is the tea? Thirty-two hryvnias.)*
+*   **Скільки коштує торт? Сорок п'ять гривень.** *(How much is the cake? Forty-five hryvnias.)*
+*   **Скільки коштує сир? Сто гривень.** *(How much is the cheese? One hundred hryvnias.)*
 
-<!-- INJECT_ACTIVITY: quiz-currency-choice -->
 <!-- INJECT_ACTIVITY: fill-in-prices -->
 
-## Де купити? — Where to Buy
+Before handing over your **гроші** (money), you might react to the final total. If you feel it is too high, exclaim **Дорого!** (Expensive!). If it is a fantastic deal, happily say **Дешево!** (Cheap!) or **Нормальна ціна.** (Fair price.). To ask for the final sum, use **Скільки за все?** (How much for everything?). You might also politely ask **Є знижка?** (Is there a discount?).
 
-When you step out into a Ukrainian city or town, you will encounter several different types of places to buy your daily goods. A general, everyday shop is simply called a **магазин** (shop). If you are visiting a large, modern self-service store with shopping carts and long aisles, you will call it a **супермаркет** (supermarket). You will also frequently see the beautiful, traditional Ukrainian word **крамниця** (store), which is an excellent native synonym for a shop. Inside a massive supermarket, you need to know how to navigate between different product zones. For example, if you are looking for chicken or sausage, you will head to the **м'ясний відділ** (meat section). If you need to buy yogurt, butter, or cheese, you will look for the **молочний відділ** (dairy section). For medicines, you will visit an **аптека** (pharmacy). You will use these location words frequently:
+Here is a short example of calculating a total in an everyday scenario:
 
-- **Ми йдемо в магазин.** (We are going to the shop.)
-- **Цей супермаркет дуже великий.** (This supermarket is very big.)
-- **Наш ринок старий.** (Our market is old.)
-- **М'ясний відділ там.** (The meat section is there.)
-- **Молочний відділ тут.** (The dairy section is here.)
+> **Це яблуко коштує десять гривень. Вода коштує двадцять гривень. За все я плачу тридцять гривень.**
+> *(This apple costs ten hryvnias. The water costs twenty hryvnias. For everything I pay thirty hryvnias.)*
 
-When you ask for food, you rarely just ask for the item itself; you usually need a specific amount. In Ukrainian, quantity words act as a fixed grammatical chunk. The word that comes after the quantity always takes a special ending (the genitive case), which naturally includes the English meaning of the word "of". Memorize these useful combinations as complete phrases:
+<!-- INJECT_ACTIVITY: quiz-currency -->
 
-- **кілограм яблук** (a kilogram of apples)
-- **два кілограми помідорів** (two kilograms of tomatoes)
-- **літр молока** (a liter of milk)
-- **два літри соку** (two liters of juice)
-- **пачка масла** (a pack of butter)
-- **пачка чаю** (a pack of tea)
-- **пляшка води** (a bottle of water)
-- **пляшка соку** (a bottle of juice)
-- **буханка хліба** (a loaf of bread)
+## Де купити? (Where to Buy)
+
+Where exactly do you go to **купувати** (to buy) what you need? A standard shop is called a **магазин** (shop), while a very large one is a **супермаркет** (supermarket). A smaller, local shop is often called a **крамниця** (store — an authentic Ukrainian synonym for магазин). For fresh produce or homemade goods, you visit the **ринок** (market). Finally, for medicine or vitamins, you go to an **аптека** (pharmacy).
+
+Inside a large store or covered market, products are grouped into sections. If you want sausage, chicken, or pork, find the **м'ясний відділ** (meat section). For milk, butter, or cottage cheese, look for the **молочний відділ** (dairy section).
+
+*   **Вибачте, де молочний відділ?** *(Excuse me, where is the dairy section?)*
+*   **М'ясний відділ там, у другому ряду.** *(The meat section is there, in the second aisle.)*
+
+<!-- INJECT_ACTIVITY: match-up-locations -->
+
+When asking for a product, you rarely ask for just "water" or "apples"; you specify an exact quantity. In Ukrainian grammar, the item following a quantity word changes its ending. It takes a form called the genitive case, which indicates "of something" (like a liter *of* milk). At this introductory level, simply learn these combinations as fixed chunks.
+
+For solid goods and produce, the standard measurement is a **кілограм** (kilogram).
+
+*   **Дайте, будь ласка, кілограм яблук.** *(Give me, please, a kilogram of apples.)*
+*   **Я хочу купити два кілограми помідорів.** *(I want to buy two kilograms of tomatoes.)*
+
+For liquids, you use a **літр** (liter).
+
+*   **Дайте, будь ласка, літр молока.** *(Give me, please, a liter of milk.)*
+*   **Скільки коштують два літри соку?** *(How much do two liters of juice cost?)*
+
+Here is how you might describe a quick trip to the grocery store:
+
+> **Я йду в супермаркет. Я купую літр молока і два кілограми яблук. Вони дуже свіжі.**
+> *(I am going to the supermarket. I am buying a liter of milk and two kilograms of apples. They are very fresh.)*
+
+Packaged goods have specific quantity words. A standard package is a **пачка** (pack). A liquid container is a **пляшка** (bottle). For bread, you ask for a **буханець** (loaf).
+
+*   **Скільки коштує пачка масла?** *(How much does a pack of butter cost?)*
+*   **Дайте, будь ласка, пачку чаю.** *(Give me, please, a pack of tea.)*
+*   **Де тут пляшка води?** *(Where is a bottle of water here?)*
+*   **Я хочу купити буханець хліба.** *(I want to buy a loaf of bread.)*
 
 :::tip
-**The Hidden "Of"**
-When you use quantity words like **кілограм** (kilogram) or **літр** (liter), you do not need to add a separate Ukrainian word for "of". The relationship is built directly into the grammar when the second word changes its ending. **Літр молока** literally means "a liter of milk" all by itself!
+You might sometimes hear the word «буханка» used for a loaf of bread, but this is an incorrect Russian calque. The natural, authentic Ukrainian word is **буханець** or **хлібина**.
 :::
-
-When it is your turn to speak to the seller, you will use a standard, polite formula to make your request. You should always start with the imperative phrase **Дайте, будь ласка...** (Give me, please...). This is the most natural and respectful way to ask for items in Ukraine. Once the seller has gathered your items, it is time to pay. You have two main payment options: **готівка** (cash) or **картка** (card). If you prefer to pay electronically, you can politely ask the cashier **Можна карткою?** (Is it possible by card?). If you pay with physical money, the seller will hand back your change and say **Ось решта** (Here is the change). Regardless of how you pay, the transaction usually ends when the cashier hands you a small piece of paper and says **Ось ваш чек** (Here is your receipt). These are the most common phrases you will hear and use at the checkout:
-
-- **Дайте, будь ласка, літр молока.** (Give me, please, a liter of milk.)
-- **Дайте, будь ласка, кілограм сиру.** (Give me, please, a kilogram of cheese.)
-- **Я хочу купити хліб.** (I want to buy bread.)
-- **Можна карткою?** (Is it possible by card?)
-- **Можна готівкою?** (Is it possible with cash?)
-- **Ось ваша решта.** (Here is your change.)
-- **Ось ваш чек.** (Here is your receipt.)
 
 <!-- INJECT_ACTIVITY: fill-in-quantities -->
 
 ## Підсумок — Summary
 
-You now have a complete and practical toolkit for navigating any shopping scenario in Ukraine. A successful purchase always follows a predictable rhythm of four steps. First, you ask for information to locate items and check prices: **Скільки коштує?** (How much does it cost?) and **Де тут хліб?** (Where is the bread here?). Second, you confidently choose your items and state the quantities you need: **Дайте, будь ласка, кілограм яблук** (Give me, please, a kilogram of apples). Third, you react to the price to ensure it is fair: **Дорого!** (Expensive!), **Дешево!** (Cheap!), or accept it with **Добре, беру** (Good, I'll take it). Finally, you complete the transaction by asking for the total and choosing your payment method: **Скільки за все?** (How much for everything?) and **Можна карткою?** (Is it possible by card?). By practicing these exact phrases, you will be prepared for daily life.
+Let's recap your essential shopping toolkit. You now know how to navigate a store, ask for items, and handle prices. When you enter a **магазин** or approach a seller at a **ринок**, locate what you need with **Де тут...?** (Where is... here?). Then, ask the price using **Скільки коштує?** for one item or **Скільки коштують?** for many. You politely request your goods by stating **Дайте, будь ласка...** followed by a quantity like a **літр** or a **кілограм**. React to the price by saying **Дорого!** or **Дешево!**, and confirm your purchase with **Добре, беру.** (Good, I'll take it.). Finally, wrap up the transaction by asking **Скільки за все?** (How much for everything?) and checking **Можна карткою?** (Can I pay by card?) if you don't have enough **готівка** (cash).
 
-When you shop at a traditional Ukrainian market, you will quickly notice a charming cultural habit. Sellers frequently use special diminutive forms of words when speaking to customers. Instead of simply offering a standard potato, they might offer you a **картопелька** (little potato). Instead of regular apples, they will proudly show you their **яблучка** (little apples). They do not use these words because the food is physically small. In Ukrainian culture, adding these gentle, softening endings to words is a way to express warmth, hospitality, and a welcoming attitude toward the buyer. It makes the market feel like a friendly community rather than a cold business transaction. Despite this friendly atmosphere, you must always remember to maintain your own politeness by using the formal pronoun **Ви** (You) when speaking to any seller you do not know personally.
+Here is a short summary of a successful shopping trip:
 
-Before you finish this module, take a moment to test your new skills mentally. Imagine yourself in these three common situations and try to form the correct Ukrainian sentences in your head:
+> **Я на ринку. Я запитую продавця: «Скільки коштують помідори?». Це дуже хороша ціна. Я беру два кілограми.**
+> *(I am at the market. I ask the seller: "How much do the tomatoes cost?". This is a very good price. I take two kilograms.)*
 
-- You are standing at a vibrant outdoor market. How do you ask the seller for the exact price of five kilograms of fresh potatoes?
-- The seller tells you the price, but it seems much too high for your budget. How do you clearly express to the seller that two hundred hryvnias is too expensive?
-- Imagine you need to buy 3 items at a market. How do you successfully ask the price, choose a quantity for each, and pay?
-```
+Here is a quick question-and-answer review of the most important patterns from this module. Use these as a self-check before your next trip to the market.
 
+*   **Як запитати ціну на помідори?** *(How to ask the price of tomatoes?)*
+    *   **Скільки коштують помідори?** *(How much do the tomatoes cost?)*
+*   **Як попросити два кілограми яблук?** *(How to ask for two kilos of apples?)*
+    *   **Дайте, будь ласка, два кілограми яблук.** *(Give me, please, two kilograms of apples.)*
+*   **Як сказати, що ціна зависока?** *(How to say the price is too high?)*
+    *   **Це дорого!** *(This is expensive!)*
+*   **Як дізнатися загальну суму до сплати?** *(How to ask for the total sum to pay?)*
+    *   **Скільки за все?** *(How much for everything?)*
+*   **Як запитати про форму оплати?** *(How to ask about the payment method?)*
+    *   **Можна карткою чи потрібна готівка?** *(Can I pay by card or is cash needed?)*
 </module_content>
 
 ---
@@ -281,48 +325,68 @@ version: "1.0"
 module: shopping
 level: a1
 
+# NOTE — these are SHAPE examples. The real targets are at the top of this prompt
+# (10 total / 4–6 inline / 6–9 workbook,
+# 6+ items per activity). The shapes below are TRUNCATED for readability;
+# YOUR output MUST hit those minimums.
+
 inline:
   - id: marker-id-here        # MUST match an <!-- INJECT_ACTIVITY: ... --> marker
     type: quiz                 # activity type
     instruction: "Оберіть правильний варіант"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - question: "_____ стіл"
-        options: ["мій", "моя", "моє"]
+        options: ["мій", "моя", "моє", "мої"]
         correct: 0             # 0-based index
+      - question: "Це ____ книга."
+        options: ["мій", "моя", "моє", "мої"]
+        correct: 1
+      # ... add at least 6 items total — never stop at 1-2
 
   - id: another-marker-id
     type: fill-in
     instruction: "Вставте правильне слово"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - sentence: "Це ____ кімната."
         answer: "моя"
         options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ вікно."
+        answer: "моє"
+        options: ["мій", "моя", "моє"]
+      # ... ≥ 6 items total
 
 workbook:
-  - type: match-up
+  - id: match-up-vocab
+    type: match-up
     instruction: "З'єднайте пари"
-    pairs:
+    pairs:                     # ← real output: ≥ 6 pairs
       - left: "стіл"
         right: "він"
       - left: "книга"
         right: "вона"
       - left: "вікно"
         right: "воно"
+      # ... ≥ 6 pairs total
 
-  - type: group-sort
+  - id: group-sort-gender
+    type: group-sort
     instruction: "Розподіліть слова за категоріями"
     groups:
-      - label: "Category A"
-        items: ["word1", "word2"]
-      - label: "Category B"
-        items: ["word3", "word4"]
+      - label: "Чоловічий рід"
+        items: ["стіл", "олівець", "будинок"]   # ≥ 3 items per group
+      - label: "Жіночий рід"
+        items: ["книга", "ручка", "школа"]
+      - label: "Середній рід"
+        items: ["вікно", "море", "молоко"]
 
-  - type: true-false
+  - id: true-false-grammar
+    type: true-false
     instruction: "Правда чи ні?"
-    items:
-      - statement: "Statement here"
-        correct: true
-        explanation: "Why it's true"
+    items:                     # ← real output: ≥ 6 items
+      - statement: "«Книга» — це чоловічий рід."
+        correct: false
+        explanation: "Книга закінчується на -а, отже жіночий рід."
+      # ... ≥ 6 items total
 
   - type: error-correction
     instruction: "Виправте помилку"
@@ -393,7 +457,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -474,10 +538,15 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 ## Quality Rules
 
-**ITEM COUNT MINIMUMS (non-negotiable):**
-- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
-- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
-- If you can't think of enough items, add more examples from the module's vocabulary and content.
+**ACTIVITY COUNT MINIMUMS (non-negotiable, audit-enforced):**
+- **Total: 10 activities.** Inline: 4–6. Workbook: 6–9. The audit gate FAILS the module if you ship fewer.
+- **Type diversity: workbook MUST cover ≥5 distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
+- **Match the inline markers exactly.** Every `<!-- INJECT_ACTIVITY: id -->` marker in the prose needs a matching inline activity with that exact id. Skipping markers means the lesson tab is broken.
+
+**ITEM COUNT MINIMUMS (non-negotiable, per-activity):**
+- **Default minimum: 6 items per activity.** Quiz, fill-in, match-up, true-false, anagram, error-correction, translate, cloze, mark-the-words, divide-words, count-syllables, odd-one-out, group-sort categories: all ≥ 6.
+- **Lower minimums for specific types only:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items, essay-response/critical-analysis = 1 prompt.
+- If you can't think of enough items, add more examples from the module's vocabulary and content. NEVER ship a 1-item or 2-item activity unless its type cap explicitly allows it.
 - **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
 - **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
@@ -584,6 +653,27 @@ IMPORTANT: After using tools, output your COMPLETE module content as plain text.
 1. Run `verify_words` on all Ukrainian words in your exercises — every word must exist in VESUM
 2. Run `query_cefr_level` on any word you're unsure about — it must be a1-appropriate
 3. For fill-in answers and distractors, verify the exact form (case, number, gender) with `verify_lemma`
+
+---
+
+## ⚠️ MANDATORY FINAL CHECKLIST — verify before emitting YAML
+
+Walk through this checklist explicitly before you start emitting. If ANY box is unchecked, fix it FIRST.
+
+- [ ] My output has **at least 4** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
+- [ ] My output has **at least 6** workbook activities.
+- [ ] **Total ≥ 10.**
+- [ ] **Every** activity has **at least 6** items, pairs, or statements (except types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3, essay-response=1).
+- [ ] The module (inline + workbook combined) uses **at least 0 distinct activity types** (or 4+ when 0 = 0 and the workbook size allows it). I am NOT shipping a wall of quizzes.
+- [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
+- [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
+- [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+- [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+- [ ] My inline count is between 4 and 6. I did NOT create more injection markers than 6.
+- [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
+- [ ] At B1+, all instructions are in Ukrainian (no English fallback).
+
+If you cannot tick all of these, REGENERATE the activities BEFORE outputting. Shipping under-spec means the build rejects you and the heal loop has to redo your work — wasting compute.
 
 ---
 

@@ -25,7 +25,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-For instance, you would use it to explain a regular, expected morning occurrence that happens every day. «Зазвичай я снідаю гарячою кашею.» — *Usually I have hot porridge for breakfast.* However, when talking about a specific planned action with a clear, successful result, the perfective aspect is strictly required. You would use it to indicate a completed, one-time action in the near future. «Завтра я поснідаю значно раніше.» — *Tomorrow I will have breakfast much earlier.* Understanding this precise aspectual contrast is absolutely crucial for accurately planning your schedule, making promises, and discussing your daily habits with colleagues or friends. Український сніданок може бути дуже різним, і це часто залежить від того, скільки у вас є вільного часу зранку. Традиційно багато людей готують гарячу кашу з ягодами, горіхами або медом, яка дає багато енергії на весь довгий день. Якщо ж ви дуже поспішаєте і не маєте часу на приготування їжі, можна швидко зробити звичайний бутерброд із сиром, маслом або ковбасою. Звісно, невіддільною частиною сучасного міського життя є міцна чорна кава або ароматний чай. У великих містах, таких як Київ чи Львів, молодь часто купує ці напої у кав'ярнях дорогою на роботу чи навчання. :::tip **Cultural note** — While traditional breakfasts might include heartier meals, the modern urban rhythm in cities like Kyiv often shifts toward a quick coffee and a sandwich on the go. ::: Once breakfast is successfully finished, it is time to leave the house and face the day. Morning routines in a bustling modern city often involve a bit of a rush, so you will frequently hear people say that they need to hurry to avoid being late for their morning meetings. When it comes to the daily commute, Ukrainian efficiently uses the Instrumental case to describe the specific mode of transportation you choose. You do not use an extra preposition like "by" or "on" as you naturally might in English. Instead, you simply put the vehicle noun directly into the Instrumental case as you head to the office or university. «Я їду трамваєм на роботу.» — *I am going to work by tram.* «Вона їде автобусом до школи.» — *She is going to school by bus.* «Ми їдемо поїздом в інше місто.» — *We are going to another city by train.* Зазвичай мій розпорядок дня починається дуже рано, коли надворі ще досить тихо. Я прокидаюся о шостій ранку, відразу вимикаю будильник, швидко підводжуся та йду в душ. Там я довго вмиваюся прохолодною водою, щоб остаточно прокинутися, а потім ретельно чищу зуби. Після цього я повертаюся у свою кімнату, одягаюся, зачісуюся і уважно дивлюся у дзеркало. О пів на сьому я йду на кухню, де із задоволенням готую свій ранковий сніданок: варю каву та роблю великий бутерброд. Я ніколи не запізнююся на роботу, тому завжди дуже швидко збираюся. За чверть до восьмої я беру сумку і виходжу з дому. Я часто поспішаю, тому щодня їду на роботу швидкісним трамваєм. <!-- INJECT_ACTIVITY: fill-in-routine-verbs, Complete a daily routine text with correct reflexive and prefixed verb forms, 12 items -->
+get up later.)* > — **Сусід:** Якщо встанеш зараз, ми встигнемо поснідати. *(If you get up now, we will manage to have breakfast.)* > — **Влогер:** Добре, але я збираюся довше, бо ще зачісуюся. *(Fine, but I take longer to get ready because I still comb my hair.)* > — **Сусід:** Тоді не забувай снідати самостійно. *(Then don't forget to have breakfast on your own.)* > — **Влогер:** Домовилися. Завтра я встану раніше, обіцяю. *(Agreed. Tomorrow I will get up earlier, I promise.)* When discussing our mornings, aspectual contrast is a crucial grammatical tool. We use the imperfective aspect for habitual actions that repeat every day. For example, you might use the verb **снідати** (to have breakfast) to describe your regular dietary habit: **Зазвичай я снідаю кашею.** — *I usually have porridge for breakfast.* You might also add another routine action using **встигати** (to manage in time): **Я завжди намагаюся встигати на трамвай.** — *I always try to make it to the tram on time.* However, if you are talking about a specific, planned action for a single occasion, you must switch to the perfective aspect. Focus on the completion of that specific future event: **Завтра я поснідаю раніше.** — *Tomorrow I will have breakfast earlier.* Традиційний український сніданок часто буває ситним, але в сучасному місті люди зазвичай обирають щось швидке та просте. На ранковому столі найчастіше з'являється гаряча каша або звичайний бутерброд із сиром та ковбасою. Влітку до свіжої каші обов'язково додають солодкі ягоди, які купують на місцевому ринку. Деякі люди взагалі не можуть їсти відразу після сну, тому їхній сніданок — це лише одна міцна кава. Головне — мати достатньо енергії на весь довгий робочий день. :::tip **Cultural Note** — While rural traditions favored hearty breakfasts, modern urban Ukrainians often prefer a quick **бутерброд** (sandwich) or oatmeal before rushing to work. ::: After getting ready, it is time to face the city. Moving from home to the workplace involves specific verbs of motion. To describe leaving your residence, you use a specific phrase: **Виходити з дому.** — *To leave the house.* In a metropolis like Kyiv, people constantly have to **поспішати** (to hurry). When describing how you commute, Ukrainian uses the Instrumental case for the transportation mode. You state your method without needing any prepositions: **Я їду трамваєм.** — *I go by tram.* **Вона їде автобусом.** — *She goes by bus.* Зазвичай я прокидаюся о сьомій годині ранку, коли голосно дзвонить телефон. Я швидко підводжуся з ліжка і йду в душ. Там я вмиваюся, чищу зуби та обережно зачісуюся. О пів на восьму я одягаюся у свій діловий одяг. Потім я йду на кухню, де снідаю і паралельно збираюся на роботу. Я ніколи не маю багато вільного часу, тому дуже намагаюся не запізнюватися. Рівно о восьмій годині я взуваюся, беру сумку і швидко виходжу з квартири. Я поспішаю на зупинку, бо о чверть на дев'яту приїжджає мій улюблений трамвай. <!-- INJECT_ACTIVITY: fill-in-routine-verbs --> [fill-in, Complete a daily routine text with correct reflexive and prefixed verb forms, 12 items]
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -699,6 +699,42 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] розпорядок дня (daily routine/schedule)
+- [ ] прокидатися (to wake up — reflexive)
+- [ ] снідати / обідати / вечеряти (to have breakfast / lunch / dinner)
+- [ ] прибирати (to clean up, tidy)
+- [ ] пилососити (to vacuum)
+- [ ] прати білизну (to do laundry — NOT *стирати)
+- [ ] прасувати (to iron)
+- [ ] виносити сміття (to take out the trash)
+- [ ] готувати їжу (to cook food)
+- [ ] займатися (to engage in, do — reflexive: займатися спортом)
+- [ ] запізнюватися (to be late — reflexive)
+- [ ] встигати (to manage in time)
+- [ ] відкладати (to postpone)
+- [ ] вихідні (weekend — pluralia tantum)
+- [ ] будильник (alarm clock)
+- [ ] хатні справи (household chores)
+- [ ] пошук роботи (job search)
+- [ ] співбесіда (interview)
+- [ ] робоче місце (workplace)
+- [ ] колега (colleague)
+- [ ] обов'язки (duties)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Робочий день та навчання (~750 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

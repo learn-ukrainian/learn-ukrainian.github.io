@@ -1,21 +1,93 @@
 ## Перша палаталізація: [г/к/х] -> [ж/ч/ш]
 
-**Перша палаталізація** *(first palatalization)* — це історичний фонетичний процес, який перетворює тверді задньоязикові звуки [г], [к], [х] на м'якіші **шиплячі** *(hushing)* приголосні [ж], [ч], [ш]. Це перше базове правило українських чергувань, яке вам потрібно обов'язково запам'ятати. Воно завжди спрацьовує абсолютно автоматично у двох чітко визначених граматичних ситуаціях. По-перше, ця регулярна фонетична зміна є граматично необхідною під час утворення **кличного відмінка** *(vocative case)*. Це стосується великої групи іменників чоловічого роду, коли до їхньої основи додається специфічне закінчення «-е». По-друге, перша палаталізація є надзвичайно активною у сучасному **словотворенні** *(word formation)*. Коли ми створюємо нові споріднені слова за допомогою зменшувально-пестливого суфікса «-к-» або прикметникового суфікса «-н-», приголосні в кінці кореня завжди пристосовуються до них. Звукова адаптація відбувається миттєво, щойно новий суфікс приєднується до слова. Цей строгий фонетичний закон робить нашу щоденну вимову дуже плавною. Він також успішно запобігає складному накопиченню твердих звуків, які було б важко вимовляти.
+We learned about the history of palatalization. Now let's look at the first historical shift, known as the first **палаталізація** (palatalization). This specific process transformed the deep **задньоязиковий** (velar) consonants [г], [к], and [х] into the hushing sounds [ж], [ч], and [ш]. In modern Ukrainian, this **чергування** (alternation) is highly productive and predictable. It is not a random exception but a strict phonetic rule that affects any consonant in these positions. This shift is triggered by specific phonetic environments, most notably when the vowel [е] is added to a stem, or when certain suffixes are attached during word formation. You do not need to memorize every single word where this happens. Instead, you only need to recognize the grammatical triggers that force the tongue to shift these sounds forward into the hushing position.
 
-Давайте детальніше розглянемо кличний відмінок у контексті цього фонетичного правила. В українській мові іменники **другої відміни** *(second declension)* чоловічого роду майже завжди змінюють свій кінцевий приголосний перед закінченням «-е». Це суворе граматичне правило стосується виключно слів **твердої групи** *(hard group)*, основа яких історично закінчується на [г], [к] або [х]. Під час утворення правильного звертання звук [г] системно і повністю передбачувано переходить у шиплячий звук [ж]. Тому популярне слово «друг» у кличному відмінку завжди звучить виключно як «друже». Звук [к] так само регулярно та без винятків змінюється на глухий африкат [ч]. Наприклад, шанобливо звертаючись до незнайомого чоловіка, ми обов'язково говоримо «чоловіче». А коли ми звертаємося до відважного козака, ми завжди скажемо «козаче». Звук [х] за аналогічною фонетичною логікою перетворюється на глухий звук [ш]. Саме тому слово «пастух» закономірно набуває гарної форми «пастуше» у прямому звертанні. Якщо ви механічно додасте закінчення «-е» без приголосного чергування, це вважатиметься дуже серйозною граматичною помилкою. Форми на зразок «друге» або «козаке» абсолютно не існують у літературній українській мові.
+The most prominent grammatical trigger for the first palatalization is the **кличний відмінок** (vocative case). This case is used exclusively for a direct **звертання** (form of address), such as when you are calling someone by their name or title.
 
-Перша палаталізація також дуже суворо та послідовно керує всім українським словотвором. Коли ми приєднуємо до базового слова новий словотвірний **суфікс** *(suffix)*, щоб утворити нове поняття, фонетика слова швидко адаптується. Найяскравіше це правило можна побачити при утворенні зменшувальних форм. Вони зазвичай творяться за допомогою дуже популярного суфікса «-к-». Наприклад, звичайне слово «нога» миттєво перетворюється на лагідне «ніжка», де історичний звук [г] стає дзвінким шиплячим [ж]. Аналогічно, слово «рука» автоматично стає словом «ручка», де звук [к] переходить у [ч]. А просте слово середнього роду «вухо» легко зменшується до форми «вушко», де звук [х] змінюється на [ш]. Цей самий закон діє під час творення нових прикметників. Зазвичай це відбувається за допомогою ще одного продуктивного суфікса «-н-». Наприклад, іменник «книга» дає нам поширений прикметник «книжковий» через проміжну зменшувальну форму «книжка». А з базового іменника «молоко» ми дуже швидко і природно отримуємо слово «молочний».
+For masculine nouns belonging to the second **відміна** (declension class) that fall into the **тверда група** (hard group), the standard vocative **закінчення** (ending) is -е. When a noun stem ends in a velar consonant, adding this specific ending forces the first palatalization. This applies to everyday words for people and professions, smoothly changing their final sound to make pronunciation easier.
 
-Ще один важливий практичний контекст для цього чергування — це утворення прикметників від географічних назв. Це робиться за допомогою дуже характерного суфікса «-ськ-». Коли корінь оригінальної географічної назви закінчується на задньоязиковий приголосний [г], додавання нового суфікса обов'язково викликає специфічну зміну. Наприклад, столиця Чехії «Прага» перетворюється на милозвучний прикметник «празький». Тут дзвінкий звук [г] абсолютно органічно зливається із суфіксом під час швидкого мовлення. У результаті такого тісного злиття утворюється зовсім нове м'яке буквосполучення «зьк». Місто «Рига» так само легко і природно утворює прикметник «ризький». А північна країна «Норвегія» дає нам усім відоме слово «норвезький», де ми знову бачимо це чергування. Цікаво порівняти цей фонетичний процес з іншими іменниками. Слова, які не мають задньоязикових приголосних у кінці свого кореня, ніколи не зазнають таких глибоких змін. Наприклад, наше місто «Київ» дуже просто утворює прикметник «київський» без жодних суттєвих змін самої основи.
+Коли ми звертаємося до людини, ми завжди використовуємо кличний відмінок. Якщо основа слова закінчується на твердий приголосний [г], [к] або [х], додавання закінчення «-е» викликає обов'язкове чергування. Наприклад, слово «друг» стає «друже», а «чоловік» перетворюється на «чоловіче». Слово «пастух» також підпорядковується цьому правилу і має форму «пастуше».
 
-Описане чергування приголосних звуків надзвичайно глибоко вкорінене в багатій українській культурі. Його ігнорування відразу робить людське мовлення дуже штучним і неприродним. Без цих обов'язкових чергувань ваше мовлення стає схожим на іноземну **кальку** *(calque)*. Відоме старе українське прислів'я дуже мудро каже нам: «Терпи, козаче, отаманом будеш». У цьому яскравому прикладі іменник «козак» стоїть у єдино правильній формі кличного відмінка. Тут ми можемо дуже чітко почути обов'язкове чергування звука [к] на [ч]. Інший показовий приклад — це класичне шкільне повчання для молоді: «Вчися, юначе, знання — то велика сила». Тут слово «юнак» також повністю підкоряється цьому строгому фонетичному правилу. Воно абсолютно природно і гармонійно перетворюється на форму «юначе». Якщо ви спробуєте сказати слово «козаку» замість правильного літературного «козаче», це звучатиме як порушення давньої мелодики мови. Вивчення цих чергувань є необхідним для глибокого опанування української.
+:::info
+**Grammar box**
+The first palatalization always changes [г] to [ж], [к] to [ч], and [х] to [ш]. You will hear this most frequently when addressing male friends or using diminutive forms of common nouns.
+:::
 
-Давайте зараз разом уявимо типову буденну ситуацію. Ми опиняємося у відомій і затишній львівській книгарні в центрі старого міста. Тут зацікавлений покупець привітно спілкується з досвідченим продавцем книжок. У цій короткій і простій розмові ви зможете легко почути розглянуті фонетичні правила. Ви одразу помітите, як органічно звучать правила першої палаталізації в сучасному житті. Зверніть увагу на те, як плавно змінюються знайомі слова. Це добре помітно під час ввічливого звертання до незнайомої людини та використання зменшувальних форм предметів.
+Besides the vocative case, another major environment where the first palatalization occurs is word formation. When you create new words from an existing **корінь** (root), adding certain suffixes triggers the identical shift. This process of building new vocabulary is called словотвір. The diminutive suffix -к-, which is frequently added to a noun stem to indicate smallness or affection, consistently forces the final consonant of the root to soften into a hushing sound. The same rule applies when creating adjectives from nouns using specific suffixes.
 
-> — **Покупець:** Добрий день, друже! Чи є у вас нова книжка про історію України? *(Good day, friend! Do you have a new book about the history of Ukraine?)*
-> — **Книгар:** Добрий день, пане! Так, ця цікава книжка лежить на полиці праворуч. *(Good day, sir! Yes, this interesting book lies on the shelf to the right.)*
-> — **Покупець:** Дуже дякую вам, чоловіче! А де я можу знайти гарну сувенірну ручку? *(Thank you very much, man! And where can I find a nice souvenir pen?)*
-> — **Книгар:** Ваша ручка продається прямо тут на касі. Бажаєте одразу подивитися на неї? *(Your pen is sold right here at the register. Do you want to look at it right away?)*
+Коли ми додаємо суфікс «-к-» до слова «нога», звук [г] перетворюється на [ж], і ми отримуємо нове слово «ніжка». Так само слово «рука» змінюється на «ручка», а «вухо» стає «вушко». Це ж правило працює при творенні прикметників. Від слова «молоко» ми отримуємо форму «молочний», де [к] стає [ч]. А від іменника «книга» походить прикметник «книжковий», де [г] змінюється на [ж].
 
-<!-- INJECT_ACTIVITY: quiz-palatalization-type -->
-<!-- INJECT_ACTIVITY: fill-in-vocative -->
+Another environment where consonant alternation occurs during word formation is when creating adjectives from geographic names. Ukrainian often uses the suffix -ськ- to build adjectives meaning "related to" a certain city or country. When this suffix attaches to a name ending in [г], the consonant undergoes a distinct shift and merges with the suffix. This specific pattern creates the ending -зьк-. We will see other variations of this pattern when we study the **давальний відмінок** (dative case) and **місцевий відмінок** (locative case) in the next section.
+
+Якщо місто називається Прага, то прикметник від нього буде празький. Так само столиця Латвії Рига дає нам форму ризький, а від назви країни Норвегія ми утворюємо слово норвезький. Для порівняння, назви міст, які не закінчуються на задньоязиковий приголосний, зберігають стандартний суфікс без змін. Наприклад, місто Лондон утворює прикметник лондонський, а Київ стає київський.
+
+Understanding the vocative case is essential for natural Ukrainian communication. This direct form of address is deeply rooted in Ukrainian folk sayings and proverbs, which perfectly showcase the first palatalization.
+
+Відоме українське прислів'я каже: «Терпи, козаче, отаманом будеш». Тут слово «козак» стоїть у кличному відмінку з правильним чергуванням. Інший приклад — «Вчися, юначе, знання — то сила». Якщо іноземець скаже «юнаку» або «козаку» замість цих форм, це звучатиме неприродно і буде схоже на іноземну кальку. Правильне звертання показує вашу повагу до мови.
+
+> *A famous Ukrainian proverb says: "Endure, cossack, and you will become an ataman." Here, the word "козак" (cossack) is in the vocative case with the correct alternation. Another example is "Learn, youth, knowledge is power." If a foreigner says "юнаку" or "козаку" instead of these forms, it will sound unnatural and like a foreign calque. A correct form of address shows your respect for the language.*
+
+Let's see how these alternations sound in a natural conversation. In this dialogue at a Lviv bookstore, notice how the customer uses the vocative case and diminutive forms.
+
+> — **Покупець:** Добрий день, друже! *(Good afternoon, friend!)*
+> — **Книгар:** Вітаю! Чим можу допомогти? *(Greetings! How can I help?)*
+> — **Покупець:** Мені потрібна гарна книжка про історію України. *(I need a good book about the history of Ukraine.)*
+> — **Книгар:** Звісно. Подивіться на цю полицю. Ось чудова книга. *(Certainly. Look at this shelf. Here is an excellent book.)*
+> — **Покупець:** Дякую. А у вас є гарна ручка для подарунка? *(Thank you. And do you have a nice pen for a gift?)*
+> — **Книгар:** Так, маємо чудові дерев'яні ручки. *(Yes, we have excellent wooden pens.)*
+
+<!-- INJECT_ACTIVITY: quiz-palatalization-type, identify first vs second palatalization in pairs like козак-козаче vs рука-руці -->
+<!-- INJECT_ACTIVITY: fill-in-vocative, produce vocative forms for masculine nouns with [г/к/х] -->
+
+Wait, in P4, I used `[г]` instead of `[г], [к], або [х]` because `-зьк-` specifically comes from `[г] + [ськ]`. The prompt says: "Adjectives derived from geographic names using -ськ-. Show the transformation: Прага — празький, Рига — ризький, Норвегія — норвезький. Contrast with nouns that don't end in velars." So specifying `[г]` is accurate.
+
+Wait, `словотвір` in P3 is not bolded as a gloss. Let me change it to **словотвір** (word formation). But wait, P3 already has 1 bolded gloss (**корінь** (root)). So I can add **словотвір** (word formation) safely (making it 2, under the max 3 limit).
+"This process of building new vocabulary is called **словотвір** (word formation)."
+
+One final check on P6 dialog format:
+> — **Name:** Text *(English)*
+Matches requirement `> — **Name:** Text *(English)*`.
+Dialogue is exempt from monolingual rule.
+The translation blockquote uses `> *text*`.
+Everything looks solid.
+I am ready to output exactly as requested, starting with the header.
+## Перша палаталізація: [г/к/х] -> [ж/ч/ш]
+
+We learned about the history of palatalization. Now let's look at the first historical shift, known as the first **палаталізація** (palatalization). This specific process transformed the deep **задньоязиковий** (velar) consonants [г], [к], and [х] into the hushing sounds [ж], [ч], and [ш]. In modern Ukrainian, this **чергування** (alternation) is highly productive and predictable. It is not a random exception but a strict phonetic rule that affects any consonant in these positions. This shift is triggered by specific phonetic environments, most notably when the vowel [е] is added to a stem, or when certain suffixes are attached during word formation. You do not need to memorize every single word where this happens. Instead, you only need to recognize the grammatical triggers that force the tongue to shift these sounds forward into the hushing position.
+
+The most prominent grammatical trigger for the first palatalization is the **кличний відмінок** (vocative case). This case is used exclusively for a direct **звертання** (form of address), such as when you are calling someone by their name or title.
+
+For masculine nouns belonging to the second **відміна** (declension class) that fall into the **тверда група** (hard group), the standard vocative **закінчення** (ending) is -е. When a noun stem ends in a velar consonant, adding this specific ending forces the first palatalization. This applies to everyday words for people and professions, smoothly changing their final sound to make pronunciation easier.
+
+Коли ми звертаємося до людини, ми завжди використовуємо кличний відмінок. Якщо основа слова закінчується на твердий приголосний [г], [к] або [х], додавання закінчення «-е» викликає обов'язкове чергування. Наприклад, слово «друг» стає «друже», а «чоловік» перетворюється на «чоловіче». Слово «пастух» також підпорядковується цьому правилу і має форму «пастуше».
+
+:::info
+**Grammar box**
+The first palatalization always changes [г] to [ж], [к] to [ч], and [х] to [ш]. You will hear this most frequently when addressing male friends or using diminutive forms of common nouns.
+:::
+
+Besides the vocative case, another major environment where the first palatalization occurs is word formation. When you create new words from an existing **корінь** (root), adding certain suffixes triggers the identical shift. This process of building new vocabulary is called **словотвір** (word formation). The diminutive suffix -к-, which is frequently added to a noun stem to indicate smallness or affection, consistently forces the final consonant of the root to soften into a hushing sound. The same rule applies when creating adjectives from nouns using specific suffixes.
+
+Коли ми додаємо суфікс «-к-» до слова «нога», звук [г] перетворюється на [ж], і ми отримуємо нове слово «ніжка». Так само слово «рука» змінюється на «ручка», а «вухо» стає «вушко». Це ж правило працює при творенні прикметників. Від слова «молоко» ми отримуємо форму «молочний», де [к] стає [ч]. А від іменника «книга» походить прикметник «книжковий», де [г] змінюється на [ж].
+
+Another environment where consonant alternation occurs during word formation is when creating adjectives from geographic names. Ukrainian often uses the suffix -ськ- to build adjectives meaning "related to" a certain city or country. When this suffix attaches to a name ending in [г], the consonant undergoes a distinct shift and merges with the suffix. This specific pattern creates the ending -зьк-. We will see other variations of this pattern when we study the **давальний відмінок** (dative case) and **місцевий відмінок** (locative case) in the next section.
+
+Якщо місто називається Прага, то прикметник від нього буде празький. Так само столиця Латвії Рига дає нам форму ризький, а від назви країни Норвегія ми утворюємо слово норвезький. Для порівняння, назви міст, які не закінчуються на задньоязиковий приголосний, зберігають стандартний суфікс без змін. Наприклад, місто Лондон утворює прикметник лондонський, а Київ стає київський.
+
+Understanding the vocative case is essential for natural Ukrainian communication. This direct form of address is deeply rooted in Ukrainian folk sayings and proverbs, which perfectly showcase the first palatalization.
+
+Відоме українське прислів'я каже: «Терпи, козаче, отаманом будеш». Тут слово «козак» стоїть у кличному відмінку з правильним чергуванням. Інший приклад — «Вчися, юначе, знання — то сила». Якщо іноземець скаже «юнаку» або «козаку» замість цих форм, це звучатиме неприродно і буде схоже на іноземну кальку. Правильне звертання показує вашу повагу до мови.
+
+> *A famous Ukrainian proverb says: "Endure, cossack, and you will become an ataman." Here, the word "козак" (cossack) is in the vocative case with the correct alternation. Another example is "Learn, youth, knowledge is power." If a foreigner says "юнаку" or "козаку" instead of these forms, it will sound unnatural and like a foreign calque. A correct form of address shows your respect for the language.*
+
+Let's see how these alternations sound in a natural conversation. In this dialogue at a Lviv bookstore, notice how the customer uses the vocative case and diminutive forms.
+
+> — **Покупець:** Добрий день, друже! *(Good afternoon, friend!)*
+> — **Книгар:** Вітаю! Чим можу допомогти? *(Greetings! How can I help?)*
+> — **Покупець:** Мені потрібна гарна книжка про історію України. *(I need a good book about the history of Ukraine.)*
+> — **Книгар:** Звісно. Подивіться на цю полицю. Ось чудова книга. *(Certainly. Look at this shelf. Here is an excellent book.)*
+> — **Покупець:** Дякую. А у вас є гарна ручка для подарунка? *(Thank you. And do you have a nice pen for a gift?)*
+> — **Книгар:** Так, маємо чудові дерев'яні ручки. *(Yes, we have excellent wooden pens.)*
+
+<!-- INJECT_ACTIVITY: quiz-palatalization-type, identify first vs second palatalization in pairs like козак-козаче vs рука-руці -->
+<!-- INJECT_ACTIVITY: fill-in-vocative, produce vocative forms for masculine nouns with [г/к/х] -->

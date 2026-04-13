@@ -1,6 +1,6 @@
 # Build Summary: noun-subclasses-hissing (B1)
 
-Generated: 2026-04-09 20:53
+Generated: 2026-04-11 17:49
 
 ## Pipeline Phases
 
@@ -12,21 +12,24 @@ Generated: 2026-04-09 20:53
 | pre-verify | complete | 2026-04-09 09:27:20 |
 | write | complete | 2026-04-09 09:37:11 |
 | exercises | complete | 2026-04-09 09:37:11 |
-| activities | complete | 2026-04-09 09:45:41 |
+| activities | complete | 2026-04-11 15:33:53 |
 | verify-exercises | complete | 2026-04-09 09:45:41 |
 | annotate | complete | 2026-04-09 09:45:41 |
 | vocab | complete | 2026-04-09 18:45:29 |
 | enrich | complete | 2026-04-09 18:45:29 |
 | verify | complete | 2026-04-09 18:45:30 |
-| review | complete | 2026-04-09 18:53:44 |
 | stress | complete | 2026-04-09 18:53:45 |
-| publish | complete | 2026-04-09 18:53:48 |
+| repair | complete | 2026-04-11 15:25:24 |
+| review | complete | 2026-04-11 15:28:21 |
+| publish | complete | 2026-04-11 15:49:06 |
+| audit | complete | 2026-04-11 15:49:06 |
 
 ## Reviews
 
 | Round | File |
 |-------|------|
 | 1 | noun-subclasses-hissing-review-r1.md |
+| 2 | noun-subclasses-hissing-review-r2.md |
 
 ## Dispatch Log
 
@@ -36,15 +39,31 @@ Generated: 2026-04-09 20:53
 | skeleton | gemini (gemini-3-flash-preview) | 300s | ❌ |
 | skeleton | gemini (auto) | 46s | ✅ |
 | activities | gemini-tools (gemini-3.1-pro-preview) | 510s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 0s | ❌ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 0s | ❌ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 0s | ❌ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 0s | ❌ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 0s | ❌ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 95s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 205s | ✅ |
 | vocab | gemini (gemini-3-flash-preview) | 510s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 495s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 0s | ❌ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 176s | ✅ |
 | write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 65s | ✅ |
+| write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 100s | ✅ |
 | write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 104s | ✅ |
+| write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 155s | ✅ |
 | write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 69s | ✅ |
+| write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 85s | ✅ |
 | write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 69s | ✅ |
+| write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 91s | ✅ |
 | write-chunk-05 | gemini-tools (gemini-3.1-pro-preview) | 86s | ✅ |
+| write-chunk-05 | gemini-tools (gemini-3.1-pro-preview) | 101s | ✅ |
 | write-chunk-06 | gemini-tools (gemini-3.1-pro-preview) | 78s | ✅ |
+| write-chunk-06 | gemini-tools (gemini-3.1-pro-preview) | 95s | ✅ |
 | write-chunk-07 | gemini-tools (gemini-3.1-pro-preview) | 119s | ✅ |
+| write-chunk-07 | gemini-tools (gemini-3.1-pro-preview) | 140s | ✅ |
 
 ## Files
 
@@ -60,6 +79,7 @@ Generated: 2026-04-09 20:53
 - `pre-verify-results.md`
 - `quick-verify.json`
 - `review-structured-r1.yaml`
+- `review-structured-r2.yaml`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

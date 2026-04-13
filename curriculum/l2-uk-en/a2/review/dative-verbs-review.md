@@ -1,83 +1,76 @@
 ## Linguistic Scan
-2 errors found:
-1. **"досвідника"** — A hallucinated linguistic term (a calque of the English "experiencer"). VESUM confirms it does not exist. The standard phrasing is "особи".
-2. **"робити уроки"** — A known calque from the Russian "делать уроки" (confirmed via GRAC). It should be "робити/виконувати домашнє завдання".
+No linguistic errors found.
 
 ## Exercise Check
-4 exercise markers found:
-1. `<!-- INJECT_ACTIVITY: fill-in-focus-... -->`
-2. `<!-- INJECT_ACTIVITY: match-up-focus-... -->`
-3. `<!-- INJECT_ACTIVITY: true-false-focus-... -->`
-4. `<!-- INJECT_ACTIVITY: quiz-focus-... -->`
-All markers are logically placed after the specific sections they test and exactly match the required `activity_hints` in type and focus.
+4 activity markers are present: `fill-in-dative-verbs`, `match-up-podobatysia`, `true-false-age`, `quiz-dative-vs-accusative`.
+Each marker appears after the relevant teaching section, the IDs match the plan’s `activity_hints`, and the markers are distributed section-by-section rather than clustered at the end.
+No inline DSL exercises are present, so there is no exercise-logic error to audit in the prose itself.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 9/10 | Excellent coverage of grammatical points. The specific dialogue prompts (grandma carrying bags, advising new doctor) were slightly altered to different volunteering situations, but the grammar context remained. The plan explicitly asked to demonstrate the negative form "не дзвони їй", but an affirmative "Подзвони їй" was provided instead. |
-| 2. Linguistic accuracy | 8/10 | Excellent explanation of the Russian interference with "дякувати", but a hallucinated calque term ("досвідника") was invented for "experiencer" instead of a natural Ukrainian grammatical term. "робити уроки" is also a Russian calque. |
-| 3. Pedagogical quality | 8/10 | Great use of contrastive examples and the PPP flow. However, there is a minor contradiction: the text states a "strong preference" for the "-ові/-еві" endings for masculine people, but the immediate next example ("головному лікарю") uses the "-ю" ending, which confuses the rule just taught. |
-| 4. Vocabulary coverage | 9/10 | Required and recommended vocabulary is present. However, the verbs `співчувати` and `заздрити` are presented as part of a bare list without their own contextual example sentences. |
-| 5. Exercise quality | 10/10 | Exercise markers correspond exactly to the plan's requirements and are well distributed. |
-| 6. Engagement & tone | 9/10 | Very supportive and clear tone. There are minor instances of empty filler sentences that just take up space without pedagogical value ("Сьогодні ми вивчаємо дуже важливу тему української граматики."). |
-| 7. Structural integrity | 10/10 | Clean Markdown with all headers matching the outline. Word count is 3010, which provides fantastic depth well beyond the 2000 target. |
-| 8. Cultural accuracy | 10/10 | Outstanding and direct warning against using direct Russian translations ("дякую вас"), directly supporting the decolonized pedagogy. |
-| 9. Dialogue & conversation quality | 9/10 | The dialogue sounds authentic, but there is a slight logical jump where the volunteer states they are about to call Ivan, and Ivan immediately responds "Я вже тут" and hands over water without the call taking place. |
+| 1. Plan adherence | 10/10 | All four planned H2 sections are present and in the planned order; required plan vocabulary appears in prose (`допомагати`, `дякувати`, `дзвонити`, `радити`, `заважати`, `подобатися`, `відповідати`, `рік/роки/років`); all four planned activity markers are present. |
+| 2. Linguistic accuracy | 10/10 | No Russian characters found (`ы/э/ё/ъ` all 0 occurrences). Spot checks via VESUM confirmed forms such as `подобався`, `подобалися`, `дитині`, `гратися`; no Russianisms, surzhyk, calques, or wrong Ukrainian case forms were found in the Ukrainian text. |
+| 3. Pedagogical quality | 7/10 | The module has solid PPP sequencing, but several English glosses are misleading: “This noise on the street bothers mom from reading a book”, “The father answers the teacher to all his questions about school”, and the accusative explanation says “we only use the accusative case” after noting `чекати` can pattern differently. The age note “years have been given to me” is also an invented metaphor rather than a clean grammar explanation. |
+| 4. Vocabulary coverage | 10/10 | All required vocabulary from the plan is used naturally in prose and examples rather than dumped in a bare list. |
+| 5. Exercise quality | 10/10 | Marker count matches the 4 plan hints exactly, and each marker follows the section whose skill it is supposed to test. |
+| 6. Engagement & tone | 8/10 | Tone is mostly teacherly and functional, but filler like “Це дуже важливе правило в українській мові” adds words without adding instruction. |
+| 7. Structural integrity | 10/10 | Clean markdown structure, all planned H2 headings present, no dangling sections, and deterministic pipeline word count is 3066, which is above target. |
+| 8. Cultural accuracy | 10/10 | No Russia-centric framing, no cultural inaccuracies, and examples stay within ordinary Ukrainian contexts. |
+| 9. Dialogue & conversation quality | 8/10 | The age dialogue is natural enough, but the preferences dialogue has an abrupt stitched transition: “А мені подобається спорт. Чи подобається їм Київ?” |
 
 ## Findings
-[DIMENSION] Linguistic accuracy [Critical]
-Location: `## Мені подобається: Давальний відмінок досвідника (The Experiencer Dative with подобатися)`
-Issue: "досвідника" is a hallucinated calque for the English linguistic term "experiencer". The word does not exist in standard Ukrainian or VESUM. The grammatical concept should be referred to as "давальний відмінок особи".
-Fix: Replace "досвідника" with "особи".
+[PEDAGOGICAL QUALITY] [SEVERITY: major]  
+Location: first section gloss — “This noise on the street bothers mom from reading a book. The father answers the teacher to all his questions about school.”  
+Issue: The English gloss is misleading and unidiomatic for `заважати` and `відповідати`, which weakens the grammar explanation for learners using the translation as support.  
+Fix: Change the gloss to “This noise on the street keeps mom from reading a book. The father answers the teacher’s questions about school.”
 
-[DIMENSION] Linguistic accuracy [Major]
-Location: `Мій малий син допомагає старшому братові (brother) робити уроки.`
-Issue: "робити уроки" is a calque of the Russian "делать уроки". Natural Ukrainian uses "робити/виконувати домашнє завдання".
-Fix: Replace "робити уроки" with "робити домашнє завдання".
+[PEDAGOGICAL QUALITY] [SEVERITY: major]  
+Location: fourth section gloss — “For example, the verbs "to see", "to know", "to love", and "to wait" take a direct object. ... in these situations, the action is directed straight at the person, so we only use the accusative case.”  
+Issue: This overstates the rule in English and clashes with the Ukrainian prose in the same paragraph, which already says `чекати` can use other government patterns.  
+Fix: Reword the English gloss so it presents accusative as the pattern used in these examples, not as the only possible pattern.
 
-[DIMENSION] Pedagogical quality [Major]
-Location: `Ми щиро дякуємо головному лікарю (the doctor).`
-Issue: The text just established a "strong preference" for -ові/-еві endings for masculine people, but the very next example uses "-ю" (лікарю). This contradicts the rule and confuses learners.
-Fix: Change `лікарю` to `лікареві`.
+[PEDAGOGICAL QUALITY] [SEVERITY: major]  
+Location: age note — “In Ukrainian, age is not an attribute you possess, but a state of being assigned to you. Think of it as "years have been given to me".”  
+Issue: This is an invented metaphor, not a precise grammar explanation, and it risks teaching a pseudo-rule instead of the actual pattern.  
+Fix: Replace it with a neutral memory aid that states the real pattern: Dative person + number + `рік/роки/років`.
 
-[DIMENSION] Vocabulary coverage [Major]
-Location: `Інші корисні дієслова з давальним відмінком: довіряти (to trust), вибачати (to forgive), посміхатися (to smile), співчувати (to sympathize), та заздрити (to envy). Я довіряю другові (I trust my friend). Вона щиро посміхається дитині (she smiles at the child).`
-Issue: The verbs `співчувати` and `заздрити` are presented as a bare list and lack contextual example sentences.
-Fix: Add examples for them: `Ми співчуваємо колезі (we sympathize with the colleague). Вони нікому не заздрять (they do not envy anyone).`
+[ENGAGEMENT & TONE] [SEVERITY: minor]  
+Location: age section — “Це дуже важливе правило в українській мові.”  
+Issue: This is filler; it adds emphasis but no new information.  
+Fix: Remove the sentence and keep the concise structural explanation.
 
-[DIMENSION] Plan adherence [Minor]
-Location: `Подзвони їй (her) завтра вранці, будь ласка.`
-Issue: The plan explicitly requires demonstrating the negative form `не дзвони їй`, but the text provides an affirmative imperative.
-Fix: Replace `Подзвони їй` with `Не дзвони їй`.
-
-[DIMENSION] Engagement & tone [Minor]
-Location: `Сьогодні ми вивчаємо дуже важливу тему української граматики. *(Today we are studying a very important topic of Ukrainian grammar.)*` and `Дуже важливо знати і використовувати правильну граматику. *(It is very important to know and use the correct grammar.)*`
-Issue: These are empty filler sentences that add words but no pedagogical value.
-Fix: Replace them with context-specific introductions.
-
-[DIMENSION] Dialogue & conversation quality [Minor]
-Location: `— Волонтер: Добре, тоді я дзвоню другові (I call the friend) Івану. Він має принести воду.`
-Issue: The volunteer states they are going to call Ivan, but Ivan immediately speaks and hands over water, creating a disjointed flow.
-Fix: Add a realization that Ivan is approaching so the prompt makes logical sense.
+[DIALOGUE & CONVERSATION QUALITY] [SEVERITY: major]  
+Location: preferences dialogue — “А мені подобається спорт. Чи подобається їм Київ?”  
+Issue: The topic jump is abrupt, so the exchange reads like stitched example lines rather than a natural conversation.  
+Fix: Add a transition such as “До речі” to make the shift conversational.
 
 ## Verdict: REVISE
-This is a highly structured and beautifully comprehensive module that provides great depth well beyond the word count target. However, the inclusion of a hallucinated grammatical term ("досвідника"), a known Russian calque ("робити уроки"), and a pedagogical contradiction regarding the "-ові" noun ending require deterministic correction before it goes to learners.
+The Ukrainian itself is clean, so this is not a reject. It still needs revision because dimensions 3, 6, and 9 fall below 9, and the identified issues are real pedagogical/dialogue problems that should be fixed before shipping.
 
 <fixes>
-- find: "## Мені подобається: Давальний відмінок досвідника (The Experiencer Dative with подобатися)"
-  replace: "## Мені подобається: Давальний відмінок особи (The Experiencer Dative with подобатися)"
-- find: "Мій малий син допомагає старшому братові (brother) робити уроки."
-  replace: "Мій малий син допомагає старшому братові (brother) робити домашнє завдання."
-- find: "Ми щиро дякуємо головному лікарю (the doctor)."
-  replace: "Ми щиро дякуємо головному лікареві (the doctor)."
-- find: "Вона щиро посміхається дитині (she smiles at the child)."
-  replace: "Вона щиро посміхається дитині (she smiles at the child). Ми співчуваємо колезі (we sympathize with the colleague). Вони нікому не заздрять (they do not envy anyone)."
-- find: "Подзвони їй (her) завтра вранці, будь ласка."
-  replace: "Не дзвони їй (her) завтра вранці, будь ласка."
-- find: "Сьогодні ми вивчаємо дуже важливу тему української граматики. *(Today we are studying a very important topic of Ukrainian grammar.)*"
-  replace: "Ці дієслова вимагають особливої уваги. *(These verbs require special attention.)*"
-- find: "Дуже важливо знати і використовувати правильну граматику. *(It is very important to know and use the correct grammar.)*"
-  replace: "Граматика тут дуже специфічна. *(The grammar here is very specific.)*"
-- find: "— Волонтер: Добре, тоді я дзвоню другові (I call the friend) Івану. Він має принести воду."
-  replace: "— Волонтер: Добре, тоді я дзвоню другові (I call the friend) Івану. Хоча зачекай, він вже йде! Він має принести воду."
+- find: |
+    > *Every week I call my friend to discuss the latest news. We always sincerely thank our female friend for her support. The doctor advises my brother to rest more in the fresh air. This noise on the street bothers mom from reading a book. The father answers the teacher to all his questions about school.*
+  replace: |
+    > *Every week I call my friend to discuss the latest news. We always sincerely thank our female friend for her support. The doctor advises my brother to rest more in the fresh air. This noise on the street keeps mom from reading a book. The father answers the teacher's questions about school.*
+- find: |
+    > *Many common verbs in Ukrainian always require the accusative case. These are verbs that denote a direct action on a certain object. To check, we ask the questions "whom?" or "what?". For example, the verbs "to see", "to know", "to love", and "to wait" take a direct object. If you say "I see mom", the word "mom" is in the accusative case. Let's look at other typical examples. "He really loves his older brother." "We are waiting for the sister near the school." "She knows this doctor well." In these situations, the action is directed straight at the person, so we only use the accusative case.*
+  replace: |
+    > *Many common verbs in Ukrainian use the accusative case in ordinary direct-object patterns. These are verbs that denote a direct action on a certain object. To check, we ask the questions "whom?" or "what?". For example, the verbs "to see", "to know", and "to love" take a direct object, and "чекати" is also often used with the accusative in examples like these. If you say "I see mom", the word "mom" is in the accusative case. Let's look at other typical examples. "He really loves his older brother." "We are waiting for the sister near the school." "She knows this doctor well." In these examples, the action is directed straight at the person, so the accusative is the relevant case.*
+- find: |
+    :::note
+    **A matter of being** — In Ukrainian, age is not an attribute you possess, but a state of being assigned to you. Think of it as "years have been given to me".
+    :::
+  replace: |
+    :::note
+    **Memory tip** — A practical way to remember this pattern is: Dative person + number + рік/роки/років, for example, Мені двадцять п'ять років.
+    :::
+- find: |
+    Коли ми говоримо про вік, ми завжди використовуємо давальний відмінок. Це дуже важливе правило в українській мові. Ми ставимо особу в давальний відмінок, потім додаємо число, а потім кажемо слово «рік» у правильній формі.
+  replace: |
+    Коли ми говоримо про вік, ми використовуємо давальний відмінок. Ми ставимо особу в давальний відмінок, потім додаємо число, а потім кажемо слово «рік» у правильній формі.
+- find: |
+    > — **Оксана:** А мені подобається спорт. Чи подобається їм Київ? *(And I like sports. Do they like Kyiv?)*
+  replace: |
+    > — **Оксана:** А мені подобається спорт. До речі, їм подобається Київ? *(And I like sports. By the way, do they like Kyiv?)*
 </fixes>

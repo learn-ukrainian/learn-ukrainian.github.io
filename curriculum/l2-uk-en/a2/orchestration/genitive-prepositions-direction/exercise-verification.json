@@ -1,252 +1,159 @@
 {
-  "total_items": 132,
-  "grounded_items": 93,
+  "total_items": 167,
+  "grounded_items": 143,
   "ungrounded": [
     {
-      "word": "підходимо",
+      "word": "гуляє",
       "exercise_type": "fill-in",
-      "context": "Ми підходимо до ____.",
+      "context": "Вона гуляє від парку до ____.",
       "role": "context"
     },
     {
-      "word": "їхати",
-      "exercise_type": "match-up",
-      "context": "їхати до Києва",
-      "role": "answer"
-    },
-    {
-      "word": "місто",
-      "exercise_type": "match-up",
-      "context": "Напрямок (місто)",
-      "role": "context"
-    },
-    {
-      "word": "людина",
-      "exercise_type": "match-up",
-      "context": "Напрямок (людина)",
-      "role": "context"
-    },
-    {
-      "word": "проміжок",
-      "exercise_type": "match-up",
-      "context": "Час (проміжок)",
-      "role": "context"
-    },
-    {
-      "word": "дедлайн",
-      "exercise_type": "match-up",
-      "context": "Час (дедлайн)",
-      "role": "context"
-    },
-    {
-      "word": "зв'язок",
-      "exercise_type": "match-up",
-      "context": "Мета (зв'язок)",
-      "role": "context"
-    },
-    {
-      "word": "будівля",
-      "exercise_type": "match-up",
-      "context": "Напрямок (будівля)",
-      "role": "context"
-    },
-    {
-      "word": "спати",
-      "exercise_type": "match-up",
-      "context": "спати до обіду",
-      "role": "answer"
-    },
-    {
-      "word": "дії",
-      "exercise_type": "match-up",
-      "context": "Час (кінець дії)",
-      "role": "context"
-    },
-    {
-      "word": "означає",
-      "exercise_type": "quiz",
-      "context": "Що означає прийменник «до» у реченні: **Ми їдемо до Києва**?",
-      "role": "context"
-    },
-    {
-      "word": "реченні",
-      "exercise_type": "quiz",
-      "context": "Що означає прийменник «до» у реченні: **Ми їдемо до Києва**?",
-      "role": "context"
-    },
-    {
-      "word": "додайте",
-      "exercise_type": "quiz",
-      "context": "Що означає прийменник «до» у реченні: **Додайте молоко до ка",
-      "role": "context"
-    },
-    {
-      "word": "київ",
-      "exercise_type": "error-correction",
-      "context": "Ми їдемо до Київ.",
-      "role": "context"
-    },
-    {
-      "word": "додає",
-      "exercise_type": "error-correction",
-      "context": "Вона додає цукор до кава.",
-      "role": "context"
-    },
-    {
-      "word": "цукор",
-      "exercise_type": "error-correction",
-      "context": "Вона додає цукор до кава.",
-      "role": "context"
-    },
-    {
-      "word": "кава",
-      "exercise_type": "error-correction",
-      "context": "Вона додає цукор до кава.",
-      "role": "context"
-    },
-    {
-      "word": "усі",
+      "word": "їдуть",
       "exercise_type": "unjumble",
-      "context": "Усі",
+      "context": "їдуть",
       "role": "answer"
     },
     {
-      "word": "вимагає",
-      "exercise_type": "true-false",
-      "context": "Прийменник «до» завжди вимагає після себе родового відмінка ",
+      "word": "їздиш",
+      "exercise_type": "fill-in",
+      "context": "Ти часто їздиш до ____?",
       "role": "context"
     },
     {
-      "word": "себе",
-      "exercise_type": "true-false",
-      "context": "Прийменник «до» завжди вимагає після себе родового відмінка ",
+      "word": "нього",
+      "exercise_type": "unjumble",
+      "context": "нього",
+      "role": "answer"
+    },
+    {
+      "word": "зробіть",
+      "exercise_type": "quiz",
+      "context": "Зробіть це завдання до п'ятниці.",
       "role": "context"
     },
     {
-      "word": "людини",
-      "exercise_type": "true-false",
-      "context": "Коли ми йдемо до людини (наприклад, до лікаря), ми можемо ск",
+      "word": "поїхала",
+      "exercise_type": "quiz",
+      "context": "Вона поїхала в село до бабусі.",
       "role": "context"
     },
     {
-      "word": "наприклад",
-      "exercise_type": "true-false",
-      "context": "Коли ми йдемо до людини (наприклад, до лікаря), ми можемо ск",
+      "word": "кінець",
+      "exercise_type": "match-up",
+      "context": "кінець проміжку часу",
+      "role": "context"
+    },
+    {
+      "word": "проміжку",
+      "exercise_type": "match-up",
+      "context": "кінець проміжку часу",
+      "role": "context"
+    },
+    {
+      "word": "готові",
+      "exercise_type": "match-up",
+      "context": "готові до екзамену",
+      "role": "answer"
+    },
+    {
+      "word": "підготовки",
+      "exercise_type": "match-up",
+      "context": "мета підготовки",
+      "role": "context"
+    },
+    {
+      "word": "емоційний",
+      "exercise_type": "match-up",
+      "context": "емоційний зв'язок",
+      "role": "context"
+    },
+    {
+      "word": "спить",
+      "exercise_type": "fill-in",
+      "context": "Він спить до ____ в неділю.",
+      "role": "context"
+    },
+    {
+      "word": "сьома",
+      "exercise_type": "error-correction",
+      "context": "Цей магазин працює до сьома.",
+      "role": "context"
+    },
+    {
+      "word": "робота",
+      "exercise_type": "error-correction",
+      "context": "У мене гарне ставлення до робота.",
       "role": "context"
     },
     {
       "word": "можемо",
       "exercise_type": "true-false",
-      "context": "Коли ми йдемо до людини (наприклад, до лікаря), ми можемо ск",
+      "context": "Ми можемо використовувати «до» для часу, щоб сказати «until»",
       "role": "context"
     },
     {
-      "word": "фраза",
+      "word": "використовувати",
       "exercise_type": "true-false",
-      "context": "Фраза «до п'ятниці» означає дедлайн (зробити щось не пізніше",
+      "context": "Ми можемо використовувати «до» для часу, щоб сказати «until»",
       "role": "context"
     },
     {
-      "word": "щось",
+      "word": "сказати",
       "exercise_type": "true-false",
-      "context": "Фраза «до п'ятниці» означає дедлайн (зробити щось не пізніше",
+      "context": "Ми можемо використовувати «до» для часу, щоб сказати «until»",
       "role": "context"
     },
     {
-      "word": "пізніше",
+      "word": "казати",
       "exercise_type": "true-false",
-      "context": "Фраза «до п'ятниці» означає дедлайн (зробити щось не пізніше",
+      "context": "Правильно казати: «Я готовий на екзамен».",
       "role": "context"
     },
     {
-      "word": "фразі",
+      "word": "правильними",
       "exercise_type": "true-false",
-      "context": "У фразі «готовий до роботи» прийменник «до» означає час.",
+      "context": "Фрази «до магазину» і «в магазин» є правильними в українські",
       "role": "context"
     },
     {
-      "word": "позначення",
+      "word": "українській",
       "exercise_type": "true-false",
-      "context": "Для позначення часу від початку до кінця ми кажемо «з ранку ",
+      "context": "Фрази «до магазину» і «в магазин» є правильними в українські",
       "role": "context"
     },
     {
-      "word": "слово",
+      "word": "мові",
       "exercise_type": "true-false",
-      "context": "Слово «додому» складається з двох окремих слів: «до» і «дому",
+      "context": "Фрази «до магазину» і «в магазин» є правильними в українські",
       "role": "context"
     },
     {
-      "word": "складається",
-      "exercise_type": "true-false",
-      "context": "Слово «додому» складається з двох окремих слів: «до» і «дому",
+      "word": "наш",
+      "exercise_type": "quiz",
+      "context": "Наш робочий день триває ____ дев'ятої до шостої.",
       "role": "context"
     },
     {
-      "word": "двох",
-      "exercise_type": "true-false",
-      "context": "Слово «додому» складається з двох окремих слів: «до» і «дому",
+      "word": "нове",
+      "exercise_type": "quiz",
+      "context": "Додай це нове слово ____ свого списку.",
       "role": "context"
     },
     {
-      "word": "окремих",
-      "exercise_type": "true-false",
-      "context": "Слово «додому» складається з двох окремих слів: «до» і «дому",
-      "role": "context"
-    },
-    {
-      "word": "слів",
-      "exercise_type": "true-false",
-      "context": "Слово «додому» складається з двох окремих слів: «до» і «дому",
-      "role": "context"
-    },
-    {
-      "word": "закінчення",
-      "exercise_type": "group-sort",
-      "context": "Закінчення -а / -я / -у / -ю (Чоловічий та середній рід)",
-      "role": "context"
-    },
-    {
-      "word": "середній",
-      "exercise_type": "group-sort",
-      "context": "Закінчення -а / -я / -у / -ю (Чоловічий та середній рід)",
-      "role": "context"
-    },
-    {
-      "word": "працюємо",
-      "exercise_type": "fill-in",
-      "context": "Ми працюємо ____ понеділка до п'ятниці.",
-      "role": "context"
-    },
-    {
-      "word": "п'є",
-      "exercise_type": "fill-in",
-      "context": "Вона завжди п'є каву ____ ранку.",
-      "role": "context"
-    },
-    {
-      "word": "каву",
-      "exercise_type": "fill-in",
-      "context": "Вона завжди п'є каву ____ ранку.",
-      "role": "context"
-    },
-    {
-      "word": "будемо",
-      "exercise_type": "fill-in",
-      "context": "Ми будемо чекати вас ____ завтра.",
+      "word": "свого",
+      "exercise_type": "quiz",
+      "context": "Додай це нове слово ____ свого списку.",
       "role": "context"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 14,
-    "tested_in_exercises": 8,
+    "tested_in_exercises": 11,
     "not_tested": [
       "бабуся",
-      "екзамен",
-      "лікар",
       "музей",
-      "ранок",
-      "список"
+      "ранок"
     ]
   },
   "all_grounded": false

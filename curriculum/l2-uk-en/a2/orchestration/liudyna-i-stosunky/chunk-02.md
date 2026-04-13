@@ -1,39 +1,51 @@
-## Характер: яка вона людина? (Character: What Kind of Person Is She?)
+## Характер: яка вона людина? (~660 words total)
 
-When we want to know more about someone's personality, we ask about their **характер** (character). In Ukrainian, describing a person's inner qualities is just as important as talking about their appearance. To ask what kind of person someone is, we use the question «Яка вона людина?» or «Який у нього характер?». Let's start with some of the most common positive traits. A person can be **добрий** (kind), **привітний** (friendly or welcoming), and **щирий** (sincere). When you want to emphasize these qualities, you can combine the adjective with the word «людина». Notice how the adjective always matches the gender of the noun. Since «людина» is a feminine noun, we use the feminine form of the adjective, even if we are talking about a man.
+> — **Новий працівник:** Хто наш керівник? Який він? *(Who is our manager? What is he like?)*
+> — **Досвідчений колега:** Він дуже відповідальний і справедливий. *(He is very responsible and fair.)*
+> — **Новий працівник:** А інші колеги? *(And the other colleagues?)*
+> — **Досвідчений колега:** Усі привітні, особливо Оксана — вона завжди підказує новим працівникам. *(Everyone is friendly, especially Oksana — she always helps new employees.)*
 
-Мій новий сусід — дуже привітна людина. Він завжди каже «добрий ранок» і посміхається. Його дружина також дуже добра і щира. Вони приємні люди, і мені подобається з ними спілкуватися. Мій брат — теж дуже добра людина, він завжди готовий вислухати.
+When you start a new job, move to a new city, or meet new friends, you naturally want to know what kind of **людина** (person, human being) you are dealing with. In Ukrainian culture, when someone asks «який він?» or «яка вона?», they are usually asking you to **описувати** (to describe) their **характер** (character, personality) rather than just their physical appearance. It is common to focus on a person's inner qualities and how they treat others. If you want to ask specifically about personality to avoid any confusion, the best and most natural question is «яка вона людина?» or «який у нього характер?».
 
-> *My new neighbor is a very friendly person. He always says "good morning" and smiles. His wife is also very kind and sincere. They are pleasant people, and I like talking to them. My brother is also a very kind person, he is always ready to listen.*
+There is a rich variety of wonderful adjectives you can use to describe positive traits in Ukrainian. A good colleague or a close friend is usually **привітний** (friendly, welcoming), **щирий** (sincere, genuine), and **чуйний** (responsive, caring). 
 
-Beyond basic kindness, we often describe how people behave at work, in school, or when facing challenges. These qualities show a person's approach to their daily tasks and responsibilities. A person who works a lot and loves their job is **працьовитий** (hardworking). Someone you can always rely on to finish a task is **відповідальний** (responsible). When learning a language or doing difficult work, it is important to be **терплячий** (patient). And if you never give up on your goals, you are **наполегливий** (determined or persistent). These adjectives are highly valued in Ukrainian culture, as they show that a person is reliable and dedicated.
+In a professional setting or at the university, we highly value people who are **розумний** (smart), **працьовитий** (hardworking), and **відповідальний** (responsible). 
 
-Наша нова вчителька дуже відповідальна і терпляча. Вона завжди пояснює складні правила кілька разів. Мій колега Максим — дуже працьовитий хлопець. Він часто працює ввечері, щоб закінчити важливий проєкт. А моя сестра дуже наполеглива, тому вона завжди досягає своєї мети.
+When learning a new language or starting a difficult hobby, it is also very helpful if your teacher is **терплячий** (patient) and **веселий** (cheerful). To describe a strong inner drive, we say someone is **наполегливий** (persistent, determined).
 
-> *Our new teacher is very responsible and patient. She always explains difficult rules several times. My colleague Maksym is a very hardworking guy. He often works in the evening to finish an important project. And my sister is very determined, so she always achieves her goal.*
+Мій старший брат — дуже працьовитий і відповідальний. Він завжди багато працює і ніколи не забуває про свої обов'язки. Моя нова колега — дуже щира і чуйна людина, з якою приємно говорити. Наш керівник — суворий, але терплячий і наполегливий.
 
-Of course, not all character traits are entirely positive. Sometimes people can be **ледачий** (lazy) and avoid work, or they might be very **серйозний** (serious) and rarely joke. A person who doesn't talk much is **тихий** (quiet). An interesting word in Ukrainian is **впертий** (stubborn). While it can mean that someone refuses to listen to others, it frequently has a positive meaning. 
+> *My older brother is very hardworking and responsible. He always works a lot and never forgets about his duties. My new colleague is a very sincere and caring person with whom it is pleasant to talk. Our manager is strict, but patient and persistent.*
+
+Of course, not everyone is always cheerful and easygoing. Sometimes we need to describe more complex or challenging traits. A person might simply be **сумний** (sad) today, or they might be naturally **серйозний** (serious) and **тихий** (quiet) in group settings. 
+
+Sometimes people do not want to work at all, so we call them **ледачий** (lazy). You might also meet someone who refuses to change their mind, whom we call **впертий** (stubborn).
 
 :::tip
-**Did you know?** — In Ukrainian, calling someone **впертий** often means they are principled, stand their ground, and don't give up easily. It is frequently used as a compliment for someone who fights for what is right.
+**Did you know?**
+The word **впертий** (stubborn) is not always a negative trait in Ukrainian culture. While it can mean that someone refuses to listen to reason, it often means that a person is persistent, principled, and determined to achieve their goals despite obstacles. It can be a strong compliment!
 :::
 
-Мій молодший син іноді буває ледачий, коли треба прибирати кімнату. Але в школі він дуже впертий і завжди робить домашнє завдання ідеально. Мій дідусь — тихий і серйозний чоловік, але він має золоте серце.
+<!-- INJECT_ACTIVITY: group-sort-traits -->
+<!-- INJECT_ACTIVITY: match-up-definitions -->
 
-> *My younger son is sometimes lazy when he needs to clean his room. But at school, he is very stubborn and always does his homework perfectly. My grandfather is a quiet and serious man, but he has a heart of gold.*
+How do we know what kind of character a person has? We usually look at their daily actions and how they treat others over time, like how a **сусід** (neighbor) acts in your building. In Ukrainian, we often prove a character trait by describing what a person regularly does. Because these are habitual, repeated actions, we must use verbs in the imperfective aspect. The word «завжди» (always) or the phrase «кожного дня» (every day) is a great hint that we need an imperfective verb to show a permanent personality trait.
 
-When we talk about someone's character, we often describe their actions. We judge what kind of person someone is based on what they do. To describe habitual behavior or permanent character traits, we use imperfective verbs. For example, if someone is kind, we say «він завжди допомагає» (he always helps). However, if we want to give a specific example or proof of their character from a past event, we use perfective verbs. We say «вчора він мені допоміг» (yesterday he helped me).
+Мій сусід дуже привітний, тому що він завжди приємно спілкується з усіма. Мій друг щирий, бо він завжди говорить правду і ніколи не бреше. Наша колега Оксана надзвичайно чуйна — вона завжди підказує і допомагає новим працівникам у нашому офісі.
 
-Мій друг Андрій — дуже чуйна людина. Він завжди допомагає своїм друзям, коли у них є проблеми. Наприклад, минулого тижня він допоміг мені відремонтувати машину. Оксана дуже відповідальна, вона завжди купує квитки заздалегідь. Учора вона купила нам квитки на поїзд.
+> *My neighbor is very friendly because he always communicates pleasantly with everyone. My friend is sincere because he always tells the truth and never lies. Our colleague Oksana is extremely caring — she always suggests and helps new employees in our office.*
 
-> *My friend Andriy is a very responsive person. He always helps his friends when they have problems. For example, last week he helped me repair my car. Oksana is very responsible, she always buys tickets in advance. Yesterday she bought us train tickets.*
+While the imperfective aspect shows a habitual trait, we use the perfective aspect to describe a specific, one-time action that serves as a single proof of a person's character. The perfective aspect focuses on the completed result. If a colleague is generally helpful, they «завжди допомагають» (always help — imperfective). But if they helped you complete a specific, difficult project yesterday, you use the perfective aspect to highlight that completed action.
 
-Let's look at how people discuss character and personality in a workplace setting. Imagine it is someone's first day at a new office.
+Вона справді хороша людина, бо вона допомогла мені вчора з важким завданням. Мій друг дуже розумний і надійний — він підказав мені правильне рішення, коли я мав проблему.
 
-> — **Новий працівник:** Розкажи мені трохи про нашу команду. Яка наша керівниця? *(Tell me a little about our team. What is our manager like?)*
-> — **Досвідчений колега:** Вона дуже відповідальна і справедлива, але іноді буває дуже серйозна. *(She is very responsible and fair, but sometimes she is very serious.)*
-> — **Новий працівник:** А інші колеги? *(And the other colleagues?)*
-> — **Досвідчений колега:** Усі дуже привітні, особливо Максим. Він завжди підказує новим працівникам. *(Everyone is very friendly, especially Maksym. He always gives tips to new employees.)*
+> *She is a truly good person because she helped me yesterday with a difficult task. My friend is very smart and reliable — he suggested the right solution to me when I had a problem.*
 
-<!-- INJECT_ACTIVITY: match-character-traits -->
-<!-- INJECT_ACTIVITY: quiz-character-choice -->
+:::info
+**Grammar box**
+Compare the two aspects when describing people:
+**Імперфектив (Imperfective):** Вона завжди підказує. *(She always helps/suggests — a habitual trait that makes her a helpful person).*
+**Перфектив (Perfective):** Вона підказала мені вчора. *(She helped/suggested yesterday — a one-time action showing her good character).*
+:::
+
+<!-- INJECT_ACTIVITY: quiz-aspect-choice -->

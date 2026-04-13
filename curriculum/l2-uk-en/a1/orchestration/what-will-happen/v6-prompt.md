@@ -130,13 +130,13 @@ objectives:
 - Use future tense to talk about plans and intentions
 - Ask and answer "What will you do?" (Що ти будеш робити?)
 dialogue_situations:
-- setting: 'Fortune teller at a fun fair — predicting the future: Ти будеш багато
-    подорожувати. Будеш знаходити нових друзів (m). Будеш отримувати подарунки (pl).
-    Будеш щасливий/щаслива!'
+- setting: 'A village ворожка reading a client''s palm in her kitchen — predicting
+    the future with analytical imperfective future: Ти будеш багато подорожувати.
+    Будеш зустрічати цікавих людей (m). Будеш отримувати подарунки (pl). Будеш щасливий/щаслива!'
   speakers:
-  - Ворожка (fortune teller)
+  - Ворожка (village fortune teller, at home)
   - Клієнт
-  motivation: Future with робота(f), друг(m), подарунок(m)
+  motivation: 'Imperfective analytical future (буду + infinitive): подорожувати, зустрічати, отримувати — iterative/process actions across time, not single completed events.'
 content_outline:
 - section: Dialogues
   words: 300
@@ -262,26 +262,24 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-- Confirmed: завтра, буду, будеш, буде, будемо, будете, будуть, робити, відпочивати, наступний, тиждень, план, звучати, футбол, зараз.
-- Not found: None.
+- Confirmed: завтра, буду, будеш, буде, будемо, будете, будуть, робити, відпочивати, наступний, тиждень, план, звучати, футбол, зараз
+- Not found: 
 
 ## Grammar Rules
-- Майбутній час (складена форма): Правопис § 97 (згідно з підручниками) — Analytic future is formed by the conjugated forms of "бути" (буду, будеш, буде, будемо, будете, будуть) + the infinitive of the main verb (e.g., буду читати). This form is used for imperfective aspect verbs.
-- Часові прислівники: Temporal expressions like "next week" should use the Genitive case without a preposition: "наступного тижня" (not "на наступному тижні", which is often corrected as a lexical error).
+- Майбутній час (Аналітична форма): Правопис §[Не знайдено] — Офіційний «Правопис 2019» є орфографічним довідником і не містить окремого параграфа про морфологічне утворення аналітичного майбутнього часу (буду + інфінітив), оскільки воно не має орфографічних труднощів (інфінітив залишається незмінним).
 
 ## Calque Warnings
-- "звучить добре": OK — While "Це гарна ідея" is more traditional, "Це звучить добре" is widely used in modern Ukrainian to express agreement with a plan.
-- "на наступному тижні": Calque — Should be "наступного тижня" (Genitive case, no preposition).
-- "робити плани": Calque — Better to use "мати плани" or the verb "планувати".
+- звучить добре: calque — чудова думка / гарна ідея
+- на вихідних: calque — у вихідні (дні)
+- робити плани: calque — будувати / складати плани
 
 ## CEFR Check
 - завтра: A1 — OK
-- відпочивати: A1 — OK
-- наступний: A1 — OK
 - тиждень: A1 — OK
 - план: A1 — OK
+- відпочивати: A1 — OK
 - футбол: A1 — OK
-- зараз: A1 — OK
+- звучати: B1 — above target
 </pre_verified_facts>
 
 
@@ -612,12 +610,14 @@ The writer should model activities on these proven formats from Ukrainian pedago
 
 ## Section Structure
 
-Write these sections as H2 headings, in this exact order:
+Write these sections as H2 headings, in this **exact** order:
 
 - `## Dialogues` (~300 words)
 - `## Майбутній час (Future Tense)` (~300 words)
 - `## Практика (Practice)` (~300 words)
 - `## Summary` (~300 words)
+
+**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim** as an `## H2` line. This includes the FINAL summary/transition section (`Підсумок: ...`, `Підсумок та перехід до M...`, etc.) — the writer's most common failure is silently dropping the closing section. Do NOT skip it. Do NOT renumber. Do NOT merge headings. The post-write quick-verify check will fail your build if any heading is missing, even if the prose itself is excellent.
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -625,16 +625,17 @@ Each section should follow the word budget specified. The total must reach 1200 
 
 ## Content Rules
 
-TARGET: 20-35% Ukrainian.
+TARGET: 20-35% Ukrainian. ⚠️ HARD GATE — the audit REJECTS modules below 20%.
 LANGUAGE ROLES:
-- THEORY & EXPLANATION: English prose — brief and clear. Show, don't tell.
+- THEORY & EXPLANATION: English prose — brief, 2-3 sentences per concept. No long expository paragraphs. Explain once, then show Ukrainian.
+- UKRAINIAN NARRATIVE PARAGRAPHS: **REQUIRED — minimum 1 per section.** A 3-6 sentence Ukrainian paragraph demonstrating the concept in use, followed IMMEDIATELY by a `> *English translation*` blockquote. This is the PRIMARY driver of hitting the immersion target. Without these paragraphs you cannot reach 20%.
 - PARADIGM TABLES: Conjugation/declension tables with all cells Ukrainian.
-- EXAMPLE LISTS: Ukrainian sentences in bulleted lists (each: Ukrainian — English gloss).
-- DIALOGUES: Mini-dialogues in blockquotes with English gloss per line.
+- EXAMPLE LISTS: Ukrainian sentences in bulleted lists (each: Ukrainian — English gloss). Minimum 5 per rule.
+- DIALOGUES: Mini-dialogues in blockquotes with English gloss per line. At least 1 dialogue per module.
 - PATTERN BOXES: Show transformations: `читати → читай → читайте`.
 - INLINE: Ukrainian words/phrases bolded in English prose.
-- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian. Full Ukrainian sentences go in tables, bulleted lists, dialogues, or pattern boxes.
-Ukrainian sentences max 10 words. Mix container types.
+- STRUCTURAL RULE: Every section MUST contain a Ukrainian narrative paragraph (3-6 sentences, translated in blockquote) PLUS supporting tables/lists/dialogues/pattern boxes. Pure-English sections are FORBIDDEN at M35+.
+Ukrainian sentences max 12 words. Mix container types.
 
 HARD GRAMMAR RULES (audit will reject violations):
 - Max 10 words per Ukrainian sentence (STRICT — count every word)
@@ -664,6 +665,25 @@ HARD GRAMMAR RULES (audit will reject violations):
 - **Zero calques**: No приймати душ→брати душ, приймати рішення→ухвалювати рішення
 - **Zero paronyms**: тактична≠тактовна, ефектний≠ефективний — use the right word, not a similar-sounding one
 - **Natural Ukrainian**: Write how a Ukrainian teacher would explain this to a student. Not robotic, not textbook-dry, not overly casual.
+
+### FORBIDDEN WORDS — never write these (#1189)
+
+The following Russian words have leaked into past builds and broken modules. They are **hard-banned** — the post-write toxic-token scanner will fail your build the moment it sees one. Use the Ukrainian alternative every time, even in dialogues, even in casual prose, even when quoting a learner's mistake (use a `<!-- VERIFY -->` placeholder instead of typing the Russian form):
+
+| Russian (FORBIDDEN) | Ukrainian (USE THIS) |
+|---|---|
+| хорошо | добре |
+| конечно | звичайно / певна річ |
+| спасибо | дякую |
+| пожалуйста | будь ласка / прошу |
+| ничего | нічого |
+| сейчас | зараз |
+| тоже | теж / також |
+| здесь | тут |
+| кот | кіт |
+| кон | кін |
+
+This list is enforced word-for-word by `scripts/build/quick_verify.py` (SEVERE_RUSSIANISMS). If you produce any of these tokens — even inside a quoted example, even inside a dialogue line spoken by a Russian-speaking character — the build halts immediately. There is no exception.
 
 **Authority hierarchy (if uncertain about a word, check in this order):**
 VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (stress) → Антоненко-Давидович (style) → Грінченко (etymology).
@@ -697,9 +717,9 @@ Without speaker names, the reader cannot tell who is speaking. NEVER use anonymo
   REQUIRED: Every dialogue must have a SPECIFIC REAL-WORLD SITUATION that motivates the grammar being taught. The situation must be different from all other modules.
 
   **Module-specific dialogue settings (from plan):**
-  1. **Fortune teller at a fun fair — predicting the future: Ти будеш багато подорожувати. Будеш знаходити нових друзів (m). Будеш отримувати подарунки (pl). Будеш щасливий/щаслива!**
-     Speakers: Ворожка (fortune teller), Клієнт
-     Why: Future with робота(f), друг(m), подарунок(m)
+  1. **A village ворожка reading a client's palm in her kitchen — predicting the future with analytical imperfective future: Ти будеш багато подорожувати. Будеш зустрічати цікавих людей (m). Будеш отримувати подарунки (pl). Будеш щасливий/щаслива!**
+     Speakers: Ворожка (village fortune teller, at home), Клієнт
+     Why: Imperfective analytical future (буду + infinitive): подорожувати, зустрічати, отримувати — iterative/process actions across time, not single completed events.
 
   Use these settings. Do NOT substitute with a room description or generic greeting.
 - **Tone: direct, clear, no filler.** State facts and teach. Don't praise the language ("beautiful", "wonderful", "unique melody"), don't praise the learner ("great job", "you've mastered"), don't narrate what you're doing ("In this section we will", "Now let's look at"). Just teach. Example:
@@ -773,34 +793,34 @@ The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> blo
 
 <skeleton>
 ## Dialogues (~330 words total)
-- P1 (~50 words): Introduction to the concept of the future in daily life — moving from what we "did" (yesterday) to what we "will do" (tomorrow).
-- Dialogue 1 (~100 words): Fortune teller (Ворожка) at a fair. Use verbs of destiny and travel: "Ти будеш багато подорожувати," "Будеш знаходити нових друзів," "Будеш отримувати подарунки." Focus on high-frequency nouns like друг, подарунок, робота.
-- Dialogue 2 (~90 words): Plans for tomorrow between two friends. Asking "Що ти будеш робити завтра?" with answers like "Я буду працювати," "Я буду готувати вечерю," and "Вона буде читати."
-- Dialogue 3 (~90 words): Weekend planning dialogue. Using plural forms: "Що ви будете робити на вихідних?" "У суботу ми будемо відпочивати," "В неділю чоловік буде гуляти з дітьми," and the contrastive "А я буду дивитися футбол."
+- P1 (~50 words): Introduce the setting: a village ворожка (fortune teller) reading a client's palm in her kitchen. Set the context of predicting the future and introduce the concept of continuous, iterative actions in the future tense.
+- P2 (~100 words): Dialogue 1 (The Fortune Teller). Present a predictive dialogue: "Ти будеш багато подорожувати. Будеш зустрічати цікавих людей. Будеш отримувати подарунки. Будеш щасливий/щаслива!"
+- P3 (~80 words): Breakdown of Dialogue 1. Explain the fortune teller's use of "будеш" + infinitives (подорожувати, зустрічати, отримувати). Highlight how this form describes a process or repeated actions across time, rather than a single completed event.
+- P4 (~100 words): Dialogue 2 (Everyday Plans). Present a natural conversation about tomorrow and the weekend: "— Що ти будеш робити завтра? — Завтра я буду працювати. — А ввечері? — Ввечері я буду готувати вечерю. — А що буде робити Олена? — Вона буде читати. — А ви будете гуляти? — Так, ми будемо гуляти в парку!"
 
 ## Майбутній час (Future Tense) (~330 words total)
-- P1 (~80 words): Explain the concept of the "Analytic Future" (складена форма). Compare it to the English "will + verb" structure to provide a familiar mental anchor, emphasizing that in Ukrainian we use a conjugated form of "бути" (to be) plus the infinitive of the main verb.
-- P2 (~90 words): Present the conjugation table of the auxiliary verb "бути" in the future: я буду, ти будеш, він/вона буде, ми будемо, ви будете, вони будуть. Highlight that these endings are regular and similar to the present tense of first-conjugation verbs.
-- <!-- INJECT_ACTIVITY: matching-pronoun-to-be --> [matching, focus: Match pronoun to the correct form of 'бути' (future), 6 items]
-- P3 (~80 words): Explain the "Invariant Infinitive" rule — the main verb (читати, працювати, відпочивати) never changes its ending in this construction. Only the "буду" part changes. Give examples: "я буду працювати" vs "вони будуть працювати."
-- P4 (~80 words): Contrast the future with present and past tenses using a single verb like "читати." Briefly mention that while other future forms exist (synthetic), the analytic "буду" form is the primary tool for A1 learners.
+- P1 (~70 words): Introduce the concept of the future tense (майбутній час). Explain that while Ukrainian has two future tenses, at the A1 level we learn the most common and accessible one: the analytic future (складений майбутній час). Compare its structure directly to the English "will + verb".
+- P2 (~80 words): Explain the grammatical formula: the conjugated auxiliary verb "бути" (to be) plus the infinitive of the main verb. Emphasize strongly that the main verb stays in the infinitive and never changes; only "бути" conjugates to match the subject.
+- P3 (~90 words): Present the full conjugation paradigm of "бути" in the future tense: я буду, ти будеш, він/вона/воно буде, ми будемо, ви будете, вони будуть. Show these forms paired with the verb "читати" as a clear model (e.g., я буду читати, ти будеш читати).
+- <!-- INJECT_ACTIVITY: match-pronoun-to-buty --> [matching, Match pronoun to the correct form of 'бути' (future), 6 items]
+- P4 (~90 words): Compare the three tenses learned so far. Explain that the past tense relies on gender endings (Я читав/читала), the present tense relies on person endings (Я читаю), and the future relies on "буду" + infinitive (Я буду читати). Briefly note that a simple perfective future (e.g., прочитаю) exists for completed actions, but it is an A2 topic.
 
 ## Практика (Practice) (~330 words total)
-- P1 (~90 words): Grouping and practicing core A1 verbs in the future tense: "читати," "працювати," "готувати," "гуляти," "дивитися," "говорити." Show how these infinitives we already know are easily plugged into the future structure.
-- P2 (~80 words): Introducing future time markers (часові маркери): "завтра" (tomorrow), "наступного тижня" (next week), "у суботу" (on Saturday), "ввечері" (in the evening). Explain how these words signal the need for the future tense.
-- <!-- INJECT_ACTIVITY: fill-in-future-formation --> [fill-in, focus: Complete the analytic future tense (бути + infinitive), 6 items]
-- P3 (~80 words): How to ask questions about plans. Focus on the standard question "Що ти будеш робити?" and "Що ви будете робити?" Explain the word order in questions (usually SVO or putting the question word first).
-- P4 (~80 words): Building natural sentences about intentions. Provide examples of full-day plans: "Вранці я буду снідати, вдень буду працювати, а ввечері ми будемо відпочивати."
+- P1 (~70 words): Apply the future tense formula to core A1 verbs. Show how "працювати" becomes "буду працювати", "будеш працювати", etc., and how "готувати" follows the exact same pattern ("буду готувати", "буде готувати").
+- P2 (~80 words): Expand the verb list to include "гуляти", "дивитися", and "говорити". Provide short, clear sentence examples for each to build familiarity: "Ми будемо гуляти в парку," "Вона буде дивитися футбол," "Вони будуть говорити."
+- P3 (~90 words): Introduce essential future time markers to anchor the actions in a real context: завтра (tomorrow), наступного тижня (next week), у суботу (on Saturday), ввечері (in the evening). Explain how these time words frame the sentence.
+- P4 (~90 words): Construct full, natural sentences combining the subject, conjugated "бути", infinitive, and time markers. Examples: "Завтра я буду працювати з дев'ятої до п'ятої." "Що ви будете їсти на вечерю?" "У неділю вони будуть відпочивати."
+- <!-- INJECT_ACTIVITY: fill-in-analytic-future --> [fill-in, Complete the analytic future tense (бути + infinitive), 6 items]
 
-## Summary (~330 words total)
-- P1 (~150 words): Final recap of the analytic future formation: буду / будеш / буде / будемо / будете / будуть + інфінітив. Emphasize that the infinitive is the "dictionary form" of the verb. Reinforce that this form is used for processes and intentions.
-- P2 (~180 words): The "Three-Tense Matrix" comparison. Review the markers for each: Past (gender endings -в/-ла/-ло/-ли), Present (person endings), and Future (буду + infinitive). End with the planned self-check questions:
-    - Що ти будеш робити завтра вранці? (Я буду...)
-    - Що ти будеш робити наступного тижня? (Я буду...)
-    - Що будуть робити твої друзі ввечері? (Вони будуть...)
-- <!-- INJECT_ACTIVITY: fill-in-tense-distinction --> [fill-in, focus: Distinguish between past, present, and future tenses, 4 items]
-
-Grand total: ~1320 words
+## Підсумок (~330 words total)
+- P1 (~100 words): Recap the core rule for the analytic future tense: it is formed using the conjugated auxiliary verb "бути" (буду, будеш, буде, будемо, будете, будуть) followed by an unchanging infinitive verb. 
+- P2 (~90 words): Recap the three-tense timeline with a single clear verb example to solidify the distinction: Past (Учора я читав/читала), Present (Зараз я читаю), and Future (Завтра я буду читати).
+- <!-- INJECT_ACTIVITY: fill-in-tense-distinction --> [fill-in, Distinguish between past, present, and future tenses, 4 items]
+- P3 (~140 words): Present the core communicative question: "Що ти будеш робити?" (What will you do?). Provide a bulleted Q&A self-check list for the learner to answer mentally:
+  * Що ти будеш робити завтра вранці?
+  * Що ти будеш робити завтра ввечері?
+  * Що ти будеш робити у суботу?
+  * Що ти будеш робити у неділю?
 </skeleton>
 
 ## Output Format
@@ -808,11 +828,57 @@ Grand total: ~1320 words
 Write in Markdown. Use:
 - `## Section Title` for main sections
 - `### Subsection` for subsections within a section
-- `**bold**` for Ukrainian words being taught — EVERY bold Ukrainian word MUST have an English translation on first use, either in parentheses `**слово** (translation)` or inline `**слово** means "translation"`. No exceptions.
+- `**bold**` for Ukrainian words being taught. For **A1 and A2** levels, provide an English translation on first use (e.g. `**стіл** (table)`) because learners lack the vocabulary to infer meaning. For **B1 and above**, do NOT provide inline translations for standard vocabulary — the learner will use the module's словник (vocabulary table). You may provide ONE parenthetical English translation ONLY for highly abstract grammar/linguistic terms on first use (e.g. `**видова пара** (aspectual pair)`).
 - Tables for paradigms (conjugation, declension)
 - `:::tip` / `:::caution` / `:::note` for callout boxes
 - `<!-- INJECT_ACTIVITY: {id} -->` for exercise placement (markers only — do NOT write exercise content)
 
 Do NOT write MDX component syntax, JSON, or DSL exercise blocks (:::quiz, etc.). Plain Markdown with injection markers.
+
+---
+
+## MANDATORY FINAL CHECKLIST (#1189)
+
+Before you finish writing, verify the prose against this checklist. Failing any item will fail the build.
+
+### Section headings (verbatim)
+
+Every heading from "Section Structure" above MUST appear as an `## H2` in your output, in order, **including the closing `Підсумок:` / `Підсумок та перехід до M...` summary**. The single most common writer failure across the B1 build has been silently dropping the final summary section. Re-read your output before stopping. If the last section in the plan is missing, write it now.
+
+### Required vocabulary (every word must appear)
+
+You MUST use **every word** from the list below at least once in the prose, in a natural sentence with bold + English translation. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, прагматика, діагностика, дієвідмінювання, зворотний, двовидовий, одновидовий, неозначено-кількісний, etc.) is the most frequently dropped category — actively find homes for those words even if it means adding a sentence that defines them.
+
+- [ ] завтра (tomorrow)
+- [ ] буду (I will — form of бути)
+- [ ] будеш (you will)
+- [ ] буде (he/she/it will)
+- [ ] будемо (we will)
+- [ ] будете (you pl. will)
+- [ ] будуть (they will)
+- [ ] робити (to do)
+
+### Forbidden words (never produce)
+
+Do not write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use `<!-- VERIFY -->` instead). The post-write toxic-token scanner will fail the build immediately:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+### Level-specific immersion check
+
+The level-appropriate immersion rule was already injected at the top of
+this prompt as `IMMERSION RULE`. Re-read it now BEFORE you stop writing.
+If your level's rule contains a CHECKLIST block, walk through every item.
+If it doesn't, just verify your output matches the LANGUAGE ROLES and
+TARGET stated in that block.
+
+This used to hard-code a B1+ checklist that confused A1/A2 models (where
+translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+The single source of truth is now
+`scripts/pipeline/config_tables.py:IMMERSION_RULES`.
+
+---
 
 Begin writing now. Start with the first section heading.

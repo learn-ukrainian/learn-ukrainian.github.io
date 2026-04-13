@@ -1,417 +1,150 @@
 {
-  "total_items": 207,
+  "total_items": 163,
   "grounded_items": 141,
   "ungrounded": [
     {
-      "word": "справи",
+      "word": "цікаво",
       "exercise_type": "fill-in",
-      "context": "— Привіт, ____ (Андрій)! Як справи?",
+      "context": "Це цікаво ____.",
       "role": "context"
     },
     {
-      "word": "друг",
+      "word": "їй",
       "exercise_type": "fill-in",
-      "context": "— Хто прийде на свято?\n— Прийдуть усі наші ____ (друг).",
-      "role": "context"
-    },
-    {
-      "word": "святкувати",
-      "exercise_type": "fill-in",
-      "context": "— Де ми будемо святкувати?\n— Ми замовимо стіл у ____ (рестор",
-      "role": "context"
-    },
-    {
-      "word": "замовимо",
-      "exercise_type": "fill-in",
-      "context": "— Де ми будемо святкувати?\n— Ми замовимо стіл у ____ (рестор",
-      "role": "context"
-    },
-    {
-      "word": "стіл",
-      "exercise_type": "fill-in",
-      "context": "— Де ми будемо святкувати?\n— Ми замовимо стіл у ____ (рестор",
-      "role": "context"
-    },
-    {
-      "word": "книг",
-      "exercise_type": "fill-in",
-      "context": "книг",
+      "context": "їй",
       "role": "answer"
-    },
-    {
-      "word": "подаруєш",
-      "exercise_type": "fill-in",
-      "context": "— Що ти подаруєш Олені?\n— Я купив кілька цікавих ____ (книга",
-      "role": "context"
     },
     {
       "word": "купив",
-      "exercise_type": "unjumble",
-      "context": "купив",
-      "role": "answer"
-    },
-    {
-      "word": "цікавих",
       "exercise_type": "fill-in",
-      "context": "— Що ти подаруєш Олені?\n— Я купив кілька цікавих ____ (книга",
-      "role": "context"
-    },
-    {
-      "word": "книга",
-      "exercise_type": "fill-in",
-      "context": "— Що ти подаруєш Олені?\n— Я купив кілька цікавих ____ (книга",
-      "role": "context"
-    },
-    {
-      "word": "будете",
-      "exercise_type": "fill-in",
-      "context": "— Чим ви будете прикрашати кімнату?\n— Ми прикрасимо її ____ ",
-      "role": "context"
-    },
-    {
-      "word": "прикрашати",
-      "exercise_type": "fill-in",
-      "context": "— Чим ви будете прикрашати кімнату?\n— Ми прикрасимо її ____ ",
-      "role": "context"
-    },
-    {
-      "word": "прикрасимо",
-      "exercise_type": "fill-in",
-      "context": "— Чим ви будете прикрашати кімнату?\n— Ми прикрасимо її ____ ",
-      "role": "context"
-    },
-    {
-      "word": "кулька",
-      "exercise_type": "fill-in",
-      "context": "— Чим ви будете прикрашати кімнату?\n— Ми прикрасимо її ____ ",
-      "role": "context"
-    },
-    {
-      "word": "дзвониш",
-      "exercise_type": "fill-in",
-      "context": "— Кому ти зараз дзвониш?\n— Я дзвоню своїм ____ (друг).",
-      "role": "context"
-    },
-    {
-      "word": "дзвоню",
-      "exercise_type": "fill-in",
-      "context": "— Кому ти зараз дзвониш?\n— Я дзвоню своїм ____ (друг).",
-      "role": "context"
-    },
-    {
-      "word": "своїм",
-      "exercise_type": "fill-in",
-      "context": "— Кому ти зараз дзвониш?\n— Я дзвоню своїм ____ (друг).",
-      "role": "context"
-    },
-    {
-      "word": "скільки",
-      "exercise_type": "fill-in",
-      "context": "— Скільки людей буде на вечірці?\n— У нас буде багато ____ (г",
-      "role": "context"
-    },
-    {
-      "word": "вечірці",
-      "exercise_type": "group-sort",
-      "context": "вечірці",
-      "role": "answer"
-    },
-    {
-      "word": "гість",
-      "exercise_type": "fill-in",
-      "context": "— Скільки людей буде на вечірці?\n— У нас буде багато ____ (г",
-      "role": "context"
-    },
-    {
-      "word": "міст",
-      "exercise_type": "fill-in",
-      "context": "міст",
-      "role": "answer"
-    },
-    {
-      "word": "які",
-      "exercise_type": "fill-in",
-      "context": "— Які у вас плани на літо?\n— Ми хочемо відвідати багато нови",
-      "role": "context"
-    },
-    {
-      "word": "плани",
-      "exercise_type": "fill-in",
-      "context": "— Які у вас плани на літо?\n— Ми хочемо відвідати багато нови",
-      "role": "context"
-    },
-    {
-      "word": "літо",
-      "exercise_type": "fill-in",
-      "context": "— Які у вас плани на літо?\n— Ми хочемо відвідати багато нови",
-      "role": "context"
-    },
-    {
-      "word": "хочемо",
-      "exercise_type": "fill-in",
-      "context": "— Які у вас плани на літо?\n— Ми хочемо відвідати багато нови",
-      "role": "context"
-    },
-    {
-      "word": "нових",
-      "exercise_type": "fill-in",
-      "context": "— Які у вас плани на літо?\n— Ми хочемо відвідати багато нови",
-      "role": "context"
-    },
-    {
-      "word": "красивого",
-      "exercise_type": "match-up",
-      "context": "красивого Львова.",
-      "role": "context"
-    },
-    {
-      "word": "стару",
-      "exercise_type": "match-up",
-      "context": "стару Одесу.",
-      "role": "context"
-    },
-    {
-      "word": "будуть",
-      "exercise_type": "match-up",
-      "context": "Вони будуть відпочивати в",
-      "role": "answer"
-    },
-    {
-      "word": "високих",
-      "exercise_type": "match-up",
-      "context": "високих Карпатах.",
-      "role": "context"
-    },
-    {
-      "word": "вузьких",
-      "exercise_type": "match-up",
-      "context": "вузьких вулицях.",
-      "role": "context"
-    },
-    {
-      "word": "вулицях",
-      "exercise_type": "match-up",
-      "context": "вузьких вулицях.",
-      "role": "context"
-    },
-    {
-      "word": "дзвонить",
-      "exercise_type": "match-up",
-      "context": "Оксана дзвонить",
-      "role": "answer"
-    },
-    {
-      "word": "швидкими",
-      "exercise_type": "match-up",
-      "context": "швидкими потягами.",
-      "role": "context"
-    },
-    {
-      "word": "вільного",
-      "exercise_type": "match-up",
-      "context": "вільного часу.",
-      "role": "context"
-    },
-    {
-      "word": "прийшла",
-      "exercise_type": "error-correction",
-      "context": "Вона прийшла без він.",
-      "role": "context"
-    },
-    {
-      "word": "допомога",
-      "exercise_type": "error-correction",
-      "context": "Дякую за допомога.",
-      "role": "context"
-    },
-    {
-      "word": "лікарів",
-      "exercise_type": "group-sort",
-      "context": "лікарів",
-      "role": "answer"
-    },
-    {
-      "word": "рецептів",
-      "exercise_type": "group-sort",
-      "context": "рецептів",
-      "role": "answer"
-    },
-    {
-      "word": "вечірки",
-      "exercise_type": "group-sort",
-      "context": "вечірки",
-      "role": "answer"
-    },
-    {
-      "word": "лікарям",
-      "exercise_type": "group-sort",
-      "context": "лікарям",
-      "role": "answer"
-    },
-    {
-      "word": "рецептам",
-      "exercise_type": "group-sort",
-      "context": "рецептам",
-      "role": "answer"
-    },
-    {
-      "word": "випити",
-      "exercise_type": "unjumble",
-      "context": "випити",
-      "role": "answer"
-    },
-    {
-      "word": "пацієнту",
-      "exercise_type": "unjumble",
-      "context": "пацієнту.",
-      "role": "answer"
-    },
-    {
-      "word": "своєму",
-      "exercise_type": "unjumble",
-      "context": "своєму",
-      "role": "answer"
-    },
-    {
-      "word": "багато'",
-      "exercise_type": "true-false",
-      "context": "Слово 'багато' вимагає використання називного відмінка.",
-      "role": "context"
-    },
-    {
-      "word": "використання",
-      "exercise_type": "true-false",
-      "context": "Слово 'багато' вимагає використання називного відмінка.",
-      "role": "context"
-    },
-    {
-      "word": "називного",
-      "exercise_type": "true-false",
-      "context": "Слово 'багато' вимагає використання називного відмінка.",
-      "role": "context"
-    },
-    {
-      "word": "в'",
-      "exercise_type": "true-false",
-      "context": "З прийменниками 'в' або 'на' для позначення напрямку руху (к",
-      "role": "context"
-    },
-    {
-      "word": "на'",
-      "exercise_type": "true-false",
-      "context": "З прийменниками 'в' або 'на' для позначення напрямку руху (к",
-      "role": "context"
-    },
-    {
-      "word": "позначення",
-      "exercise_type": "true-false",
-      "context": "З прийменниками 'в' або 'на' для позначення напрямку руху (к",
-      "role": "context"
-    },
-    {
-      "word": "напрямку",
-      "exercise_type": "true-false",
-      "context": "З прийменниками 'в' або 'на' для позначення напрямку руху (к",
+      "context": "Я купив ____ подарунок.",
       "role": "context"
     },
     {
       "word": "використовується",
       "exercise_type": "true-false",
-      "context": "З прийменниками 'в' або 'на' для позначення напрямку руху (к",
+      "context": "Після слова «немає» завжди використовується родовий відмінок",
       "role": "context"
     },
     {
-      "word": "описуємо",
+      "word": "дієсловом",
       "exercise_type": "true-false",
-      "context": "Коли ми описуємо свій фізичний стан ('мені холодно', 'мені п",
+      "context": "З дієсловом «допомагати» ми використовуємо знахідний відміно",
       "role": "context"
     },
     {
-      "word": "свій",
+      "word": "використовуємо",
       "exercise_type": "true-false",
-      "context": "Коли ми описуємо свій фізичний стан ('мені холодно', 'мені п",
+      "context": "З дієсловом «допомагати» ми використовуємо знахідний відміно",
       "role": "context"
     },
     {
-      "word": "холодно'",
+      "word": "знахідного",
       "exercise_type": "true-false",
-      "context": "Коли ми описуємо свій фізичний стан ('мені холодно', 'мені п",
+      "context": "Прийменник «через» (наприклад, через Умань) вимагає знахідно",
       "role": "context"
     },
     {
-      "word": "погано'",
+      "word": "однині",
       "exercise_type": "true-false",
-      "context": "Коли ми описуємо свій фізичний стан ('мені холодно', 'мені п",
+      "context": "Слово «ліки» може бути в однині.",
       "role": "context"
     },
     {
-      "word": "допомагати'",
-      "exercise_type": "true-false",
-      "context": "Дієслово 'допомагати' завжди вимагає давального відмінка.",
+      "word": "львів",
+      "exercise_type": "error-correction",
+      "context": "Львів",
+      "role": "answer"
+    },
+    {
+      "word": "милуємося",
+      "exercise_type": "error-correction",
+      "context": "Ми милуємося Карпати.",
       "role": "context"
     },
     {
-      "word": "наприклад",
-      "exercise_type": "true-false",
-      "context": "Для позначення інструмента дії (наприклад, 'писати ручкою') ",
+      "word": "слові",
+      "exercise_type": "quiz",
+      "context": "Який відмінок у слові «Оксано»?",
       "role": "context"
     },
     {
-      "word": "ручкою'",
-      "exercise_type": "true-false",
-      "context": "Для позначення інструмента дії (наприклад, 'писати ручкою') ",
+      "word": "яку",
+      "exercise_type": "quiz",
+      "context": "Яку форму має слово «потяг» в орудному відмінку?",
       "role": "context"
     },
     {
-      "word": "особовий",
-      "exercise_type": "true-false",
-      "context": "Особовий займенник після прийменника отримує літеру 'н' (нап",
+      "word": "орудному",
+      "exercise_type": "quiz",
+      "context": "Яку форму має слово «потяг» в орудному відмінку?",
       "role": "context"
     },
     {
-      "word": "займенник",
-      "exercise_type": "true-false",
-      "context": "Особовий займенник після прийменника отримує літеру 'н' (нап",
+      "word": "якому",
+      "exercise_type": "quiz",
+      "context": "У якому відмінку стоїть слово «друзям» (купимо сувеніри друз",
       "role": "context"
     },
     {
-      "word": "отримує",
-      "exercise_type": "true-false",
-      "context": "Особовий займенник після прийменника отримує літеру 'н' (нап",
+      "word": "стоїть",
+      "exercise_type": "quiz",
+      "context": "У якому відмінку стоїть слово «друзям» (купимо сувеніри друз",
       "role": "context"
     },
     {
-      "word": "літеру",
-      "exercise_type": "true-false",
-      "context": "Особовий займенник після прийменника отримує літеру 'н' (нап",
+      "word": "сказати",
+      "exercise_type": "quiz",
+      "context": "Як правильно сказати: «гуляти по ...»?",
       "role": "context"
     },
     {
-      "word": "н'",
-      "exercise_type": "true-false",
-      "context": "Особовий займенник після прийменника отримує літеру 'н' (нап",
+      "word": "гуляти",
+      "exercise_type": "quiz",
+      "context": "Як правильно сказати: «гуляти по ...»?",
       "role": "context"
     },
     {
-      "word": "нього'",
-      "exercise_type": "true-false",
-      "context": "Особовий займенник після прийменника отримує літеру 'н' (нап",
+      "word": "яке",
+      "exercise_type": "quiz",
+      "context": "Яке закінчення має слово «місце» в родовому відмінку множини",
+      "role": "context"
+    },
+    {
+      "word": "закінчення",
+      "exercise_type": "quiz",
+      "context": "Яке закінчення має слово «місце» в родовому відмінку множини",
+      "role": "context"
+    },
+    {
+      "word": "родовому",
+      "exercise_type": "quiz",
+      "context": "Яке закінчення має слово «місце» в родовому відмінку множини",
+      "role": "context"
+    },
+    {
+      "word": "звернутися",
+      "exercise_type": "quiz",
+      "context": "Як правильно звернутися до лікаря?",
+      "role": "context"
+    },
+    {
+      "word": "лікаря",
+      "exercise_type": "quiz",
+      "context": "Як правильно звернутися до лікаря?",
       "role": "context"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 16,
-    "tested_in_exercises": 6,
+    "tested_in_exercises": 9,
     "not_tested": [
       "визначне",
       "запрошувати",
       "здоров'я",
-      "милуватися",
-      "місце",
-      "пацієнт",
+      "лікар",
       "подорож",
-      "потяг",
-      "температура",
+      "рецепт",
       "частувати"
     ]
   },

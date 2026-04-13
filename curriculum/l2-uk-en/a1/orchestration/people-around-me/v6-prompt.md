@@ -310,25 +310,30 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-- Confirmed: бачити, знати, любити, чекати, шукати, друг, подруга, сусід, колега, викладач, вчитель, лікар, продавець, покупець.
-- Not found: []
+- Confirmed: бачити, знати, любити, чекати, шукати, друг, подруга, сусід, колега, викладач, вчитель, лікар, продавець, покупець
+- Not found: (None)
 
 ## Grammar Rules
-- Accusative Animate Masculine: Правопис (reflected in school textbooks Grade 4) — For animate masculine nouns of the 2nd declension, the Accusative case is identical to the Genitive (кого?): "бачу брата", "знаю друга", "чекаю лікаря".
-- Accusative Feminine: First declension nouns (ending in -а, -я) change to -у, -ю for both animate and inanimate: "бачу маму", "бачу каву", "знаю подругу".
-- Common Gender Rule: Nouns like "колега" (ending in -а) follow the feminine pattern (-а -> -у) regardless of the person's sex: "Я знаю твого колегу".
+- Знахідний відмінок (живе/неживе): Правопис §[N/A] — Rule not found in Правопис 2019 (the tool and official sections 1-61 focus strictly on orthography and word-formation/suffixes like §32, while basic syntactic case governance for animate vs. inanimate nouns is a morphological textbook rule rather than an orthographic one).
 
 ## Calque Warnings
-- чекати на кого: OK — Verified in СУМ-11. Both "чекати на кого" and "чекати кого" are correct and natural in Ukrainian.
-- я тебе познайомлю: OK — Natural phrase for "I will introduce you".
+- чекати кого (as Accusative): calque/error — Антоненко-Давидович зазначає: "Дієслова ждати, дожидати керують іменником у знахідному відмінку без прийменника на... Частина дієслів керує залежним словом у родовому відмінку без прийменника або в знахідному відмінку з прийменником на: сподіватися... чекати". Тому правильно: чекати на нього (Accusative) або чекати його (Genitive). Навчати "чекати його" як знахідний відмінок без прийменника є неточним.
 
 ## CEFR Check
-- лікар: A1 — OK
-- вчитель: A1 — OK
-- сусід: A1 — OK
+- бачити: A1 — OK
+- колега: A1 — OK
+- викладач: A1 — OK
+- продавець: A1 — OK
+- покупець: A2 — above target
+- знати: A1 — OK
+- любити: A1 — OK
+- чекати: A1 — OK
+- шукати: A1 — OK
 - друг: A1 — OK
-- викладач: A1/A2 — OK (Commonly used in academic contexts, appropriate for A1.6)
-- покупець/продавець: A1 — OK (Essential for "Food and Shopping" phase A1.6)
+- подруга: A1 — OK
+- сусід: A1 — OK
+- вчитель: A1 — OK
+- лікар: A1 — OK
 </pre_verified_facts>
 
 
@@ -674,12 +679,14 @@ This topic is highly susceptible to colonial narratives, and it is imperative to
 
 ## Section Structure
 
-Write these sections as H2 headings, in this exact order:
+Write these sections as H2 headings, in this **exact** order:
 
 - `## Діалоги (Dialogues)` (~300 words)
 - `## Кого? (Whom?)` (~300 words)
 - `## Знахідний відмінок — живе (Accusative Animate)` (~300 words)
 - `## Підсумок — Summary` (~300 words)
+
+**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim** as an `## H2` line. This includes the FINAL summary/transition section (`Підсумок: ...`, `Підсумок та перехід до M...`, etc.) — the writer's most common failure is silently dropping the closing section. Do NOT skip it. Do NOT renumber. Do NOT merge headings. The post-write quick-verify check will fail your build if any heading is missing, even if the prose itself is excellent.
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -687,16 +694,17 @@ Each section should follow the word budget specified. The total must reach 1200 
 
 ## Content Rules
 
-TARGET: 20-35% Ukrainian.
+TARGET: 20-35% Ukrainian. ⚠️ HARD GATE — the audit REJECTS modules below 20%.
 LANGUAGE ROLES:
-- THEORY & EXPLANATION: English prose — brief and clear. Show, don't tell.
+- THEORY & EXPLANATION: English prose — brief, 2-3 sentences per concept. No long expository paragraphs. Explain once, then show Ukrainian.
+- UKRAINIAN NARRATIVE PARAGRAPHS: **REQUIRED — minimum 1 per section.** A 3-6 sentence Ukrainian paragraph demonstrating the concept in use, followed IMMEDIATELY by a `> *English translation*` blockquote. This is the PRIMARY driver of hitting the immersion target. Without these paragraphs you cannot reach 20%.
 - PARADIGM TABLES: Conjugation/declension tables with all cells Ukrainian.
-- EXAMPLE LISTS: Ukrainian sentences in bulleted lists (each: Ukrainian — English gloss).
-- DIALOGUES: Mini-dialogues in blockquotes with English gloss per line.
+- EXAMPLE LISTS: Ukrainian sentences in bulleted lists (each: Ukrainian — English gloss). Minimum 5 per rule.
+- DIALOGUES: Mini-dialogues in blockquotes with English gloss per line. At least 1 dialogue per module.
 - PATTERN BOXES: Show transformations: `читати → читай → читайте`.
 - INLINE: Ukrainian words/phrases bolded in English prose.
-- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian. Full Ukrainian sentences go in tables, bulleted lists, dialogues, or pattern boxes.
-Ukrainian sentences max 10 words. Mix container types.
+- STRUCTURAL RULE: Every section MUST contain a Ukrainian narrative paragraph (3-6 sentences, translated in blockquote) PLUS supporting tables/lists/dialogues/pattern boxes. Pure-English sections are FORBIDDEN at M35+.
+Ukrainian sentences max 12 words. Mix container types.
 
 HARD GRAMMAR RULES (audit will reject violations):
 - Max 10 words per Ukrainian sentence (STRICT — count every word)
@@ -726,6 +734,25 @@ HARD GRAMMAR RULES (audit will reject violations):
 - **Zero calques**: No приймати душ→брати душ, приймати рішення→ухвалювати рішення
 - **Zero paronyms**: тактична≠тактовна, ефектний≠ефективний — use the right word, not a similar-sounding one
 - **Natural Ukrainian**: Write how a Ukrainian teacher would explain this to a student. Not robotic, not textbook-dry, not overly casual.
+
+### FORBIDDEN WORDS — never write these (#1189)
+
+The following Russian words have leaked into past builds and broken modules. They are **hard-banned** — the post-write toxic-token scanner will fail your build the moment it sees one. Use the Ukrainian alternative every time, even in dialogues, even in casual prose, even when quoting a learner's mistake (use a `<!-- VERIFY -->` placeholder instead of typing the Russian form):
+
+| Russian (FORBIDDEN) | Ukrainian (USE THIS) |
+|---|---|
+| хорошо | добре |
+| конечно | звичайно / певна річ |
+| спасибо | дякую |
+| пожалуйста | будь ласка / прошу |
+| ничего | нічого |
+| сейчас | зараз |
+| тоже | теж / також |
+| здесь | тут |
+| кот | кіт |
+| кон | кін |
+
+This list is enforced word-for-word by `scripts/build/quick_verify.py` (SEVERE_RUSSIANISMS). If you produce any of these tokens — even inside a quoted example, even inside a dialogue line spoken by a Russian-speaking character — the build halts immediately. There is no exception.
 
 **Authority hierarchy (if uncertain about a word, check in this order):**
 VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (stress) → Антоненко-Давидович (style) → Грінченко (etymology).
@@ -837,37 +864,34 @@ The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> blo
 
 <skeleton>
 ## Діалоги (Dialogues) (~330 words total)
-- P1 (~50 words): Introduction to the social world of the module. We transition from talking about things (shopping, food) to the people in our lives: family, friends, and professionals.
-- P2 (Dialogue 1) (~120 words): A conversation between a bride (Наречена) and a friend looking at wedding photos. Key phrases: "Бачиш маму і тата?", "Це мій брат. Ти знаєш мого брата?", "Ні, я не знаю твого брата." This introduces the animate changes for мама (f), тато (m), and брат (m).
-- P3 (~40 words): A linguistic observation on the dialogue above. Note that when we ask "Who do you see?" (Кого ти бачиш?), the names of people change their endings, unlike the objects we studied in previous modules.
-- P4 (Dialogue 2) (~120 words): A workplace scenario between colleagues. Discussing the teacher and a new doctor. Key phrases: "Ти знаєш нашу вчительку?", "Я знаю Олену Петрівну," "А нового лікаря?", "Я чекаю його зараз." Introduces profession nouns (вчителька, лікар) and female names in the accusative.
+- P1 (~30 words): Briefly introduce the context of the module: talking about the people around us, identifying family members and friends, and introducing the concept of the accusative case for people.
+- P2 (~150 words): Dialogue 1: Two friends looking at wedding photos. Focus on identifying people using the accusative case. Include the exact lines: "Кого ти бачиш? — Я бачу маму і тата. — А хто це? — Це мій брат. Ти знаєш мого брата? — Ні, я не знаю твого брата. — Ходімо, я тебе познайомлю!" Highlight the animate accusative forms: маму, тата, брата.
+- P3 (~150 words): Dialogue 2: Colleagues at work discussing people they know or are waiting for. Include the exact lines: "Ти знаєш нашу вчительку? — Так, я знаю Олену Петрівну. — А нового лікаря? — Ні, я ще не знаю лікаря. — Він дуже добрий. Я чекаю його зараз." Highlight the animate accusative forms: вчительку, Олену, лікаря.
 
 ## Кого? (Whom?) (~330 words total)
-- P1 (~80 words): Explaining the fundamental split in the Ukrainian Accusative case: Animate (people/animals) vs. Inanimate (objects). Recall Module 37 where masculine objects like "хліб" or "чай" did not change. Contrast this with "бачу брата."
-- P2 (~80 words): The logic of the question words. Inanimate nouns answer "що?" (what?), while animate nouns answer "кого?" (whom?). This section explains that "кого?" is the trigger for the masculine change.
-- P3 (~80 words): The "Ukrainian School" mnemonic: "Бачу кого? що?". By asking both questions, students learn to identify if a noun is masculine-inanimate (no change) or masculine-animate (changes to match the genitive case).
-- P4 (~90 words): Introduction to the "Masculine Animate = Genitive" rule. Briefly explain that for a masculine person, we use the same ending we will later use to say "of the brother" (брата). This is the key distinction for L2 learners.
-- <!-- INJECT_ACTIVITY: sort-animate-inanimate --> [group-sort, focus: animate (кого?) vs inanimate (що?) — changes vs stays same for masculine, 10 items]
+- P1 (~100 words): Introduce the fundamental distinction in the accusative case between inanimate objects (things) and animate objects (people and animals). Provide a clear contrast using masculine nouns: "Я їм хліб" (inanimate, no change) versus "Я бачу брата" (animate, masculine noun changes). 
+- P2 (~110 words): Explain the core question words that drive this distinction: "що?" (what?) for inanimate objects, and "кого?" (whom?) for animate objects. State the rule explicitly: asking "Кого?" triggers the animate rule, which means masculine nouns will change their endings, unlike inanimate masculine nouns.
+- P3 (~120 words): Detail the Ukrainian school approach, which uses the double question "Бачу кого? що?" to establish the pattern. Explain that for masculine animate nouns, the accusative form borrows the genitive ending. Provide concrete examples: друг → друга, тато → тата, лікар → лікаря. Emphasize that this is why the animate distinction matters primarily for masculine nouns.
+- <!-- INJECT_ACTIVITY: group-sort-animate-inanimate --> [group-sort, Sort: animate (кого?) vs inanimate (що?) — changes vs stays same for masculine, 2 groups]
 
 ## Знахідний відмінок — живе (Accusative Animate) (~330 words total)
-- P1 (~110 words): Feminine Animate Nouns. Explain that feminine people follow the same simple rule as feminine objects (-а → -у, -я → -ю). Provide examples: мама → маму, сестра → сестру, подруга → подругу, Олена → Олену. Emphasize that this is consistent with "кава → каву."
-- P2 (~110 words): Masculine Animate Nouns (Hard Stems). Detailed explanation of the -а ending. Use high-frequency family and social nouns: брат → брата, друг → друга, тато → тата (note: тато is masculine), сусід → сусіда. Contrast "Я бачу телефон" (inanimate) with "Я бачу сусіда" (animate).
-- P3 (~110 words): Masculine Animate Nouns (Soft Stems). Explain the -я ending for professions ending in a soft consonant or -ар. Examples: лікар → лікаря, вчитель → вчителя, продавець → продавця. Mention that "колега" (m/f) follows the feminine-style ending (колегу).
-- <!-- INJECT_ACTIVITY: fill-in-animate-transform --> [fill-in, focus: Nominative to Accusative (мама → маму, брат → брата), 10 items]
+- P1 (~100 words): Explain the rules for feminine animate nouns. Reassure the learner that feminine nouns follow the exact same accusative pattern as inanimate ones (-а → -у, -я → -ю). Provide examples to prove there is no surprise here: мама → маму (Я бачу маму), сестра → сестру (Я знаю сестру), Олена → Олену, подруга → подругу.
+- P2 (~115 words): Explain the critical new rule for masculine animate nouns: the accusative form is identical to the genitive form. Provide clear, everyday examples: брат → брата (Я бачу брата), друг → друга (Я знаю друга), тато → тата (Я люблю тата), лікар → лікаря (Я чекаю лікаря), вчитель → вчителя (Я знаю вчителя), сусід → сусіда.
+- P3 (~115 words): Summarize the masculine paradigm by contrasting animate and inanimate forms side-by-side to solidify the concept. Show "Я бачу стіл/хліб" (inanimate, stays the same) directly next to "Я бачу брата/сусіда" (animate, gets the -а/-я ending). Mention that this pattern is essential for natural Ukrainian speech when interacting with people.
+- <!-- INJECT_ACTIVITY: fill-in-accusative-forms --> [fill-in, Я бачу ___ (nominative → accusative: мама → маму, брат → брата), 10 items]
+- <!-- INJECT_ACTIVITY: quiz-choose-correct-accusative --> [quiz, Choose correct: Я знаю (Олена / Олену / Олени), 8 items]
 
 ## Підсумок — Summary (~330 words total)
-- P1 (~120 words): The Complete Accusative Table recap. Provide a clear visual breakdown: 
-    - Masculine: Inanimate = Nom (хліб), Animate = Gen (брата).
-    - Feminine: Both -а → -у (каву/маму).
-    - Neuter: Always = Nom (молоко).
-- P2 (~80 words): Verbs of Social Interaction. List the 5 key verbs that require the accusative animate: бачити (to see), знати (to know), любити (to love), чекати (to wait for), шукати (to look for). Note that "чекати" (to wait) often uses the preposition "на" but at A1 we focus on the direct object "чекаю маму."
-- P3 (~130 words): Self-check and Social Practice. 
-    - Question: Кого ти любиш? Answer: Я люблю маму і тата. 
-    - Question: Кого ти чекаєш? Answer: Я чекаю друга. 
-    - Question: Кого ти знаєш у школі? Answer: Я знаю вчителя. 
-    - Recap: Remember, if it's a person and it's masculine, add the ending!
-- <!-- INJECT_ACTIVITY: quiz-ending-choice --> [quiz, focus: Choose correct animate ending (Олену, брата, подругу), 8 items]
-- <!-- INJECT_ACTIVITY: fill-in-dialogue-logic --> [fill-in, focus: Dialogue completion with verbs and people nouns, 6 items]
+- P1 (~130 words): Provide a comprehensive summary of the accusative case for both animate and inanimate nouns. Present the full picture: Masculine inanimate answers "що?" and equals the nominative (хліб). Masculine animate answers "кого?" and equals the genitive (брата). Feminine always changes -а → -у regardless of animacy (каву, маму). Briefly note that neuter animate nouns are rare at the A1 level.
+- P2 (~120 words): List and define the key A1 verbs that frequently trigger the animate accusative case: бачити (to see), знати (to know), любити (to love), чекати (to wait for), шукати (to look for). Provide one short, practical example sentence for each verb (e.g., "Я шукаю подругу", "Я люблю тата").
+- P3 (~80 words): Self-check:
+  - Q: How do you say "I see mom"?
+  - A: Я бачу маму (мама → маму).
+  - Q: How do you say "I see brother"?
+  - A: Я бачу брата (брат → брата).
+  - Q: What is the question word for people in the accusative?
+  - A: Кого?
+- <!-- INJECT_ACTIVITY: fill-in-dialogue-completion --> [fill-in, Complete: Я люблю ___, знаю ___, чекаю ___. (family/friends), 6 items]
 
 Grand total: ~1320 words
 </skeleton>
@@ -877,11 +901,56 @@ Grand total: ~1320 words
 Write in Markdown. Use:
 - `## Section Title` for main sections
 - `### Subsection` for subsections within a section
-- `**bold**` for Ukrainian words being taught — EVERY bold Ukrainian word MUST have an English translation on first use, either in parentheses `**слово** (translation)` or inline `**слово** means "translation"`. No exceptions.
+- `**bold**` for Ukrainian words being taught. For **A1 and A2** levels, provide an English translation on first use (e.g. `**стіл** (table)`) because learners lack the vocabulary to infer meaning. For **B1 and above**, do NOT provide inline translations for standard vocabulary — the learner will use the module's словник (vocabulary table). You may provide ONE parenthetical English translation ONLY for highly abstract grammar/linguistic terms on first use (e.g. `**видова пара** (aspectual pair)`).
 - Tables for paradigms (conjugation, declension)
 - `:::tip` / `:::caution` / `:::note` for callout boxes
 - `<!-- INJECT_ACTIVITY: {id} -->` for exercise placement (markers only — do NOT write exercise content)
 
 Do NOT write MDX component syntax, JSON, or DSL exercise blocks (:::quiz, etc.). Plain Markdown with injection markers.
+
+---
+
+## MANDATORY FINAL CHECKLIST (#1189)
+
+Before you finish writing, verify the prose against this checklist. Failing any item will fail the build.
+
+### Section headings (verbatim)
+
+Every heading from "Section Structure" above MUST appear as an `## H2` in your output, in order, **including the closing `Підсумок:` / `Підсумок та перехід до M...` summary**. The single most common writer failure across the B1 build has been silently dropping the final summary section. Re-read your output before stopping. If the last section in the plan is missing, write it now.
+
+### Required vocabulary (every word must appear)
+
+You MUST use **every word** from the list below at least once in the prose, in a natural sentence with bold + English translation. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, прагматика, діагностика, дієвідмінювання, зворотний, двовидовий, одновидовий, неозначено-кількісний, etc.) is the most frequently dropped category — actively find homes for those words even if it means adding a sentence that defines them.
+
+- [ ] бачити (to see)
+- [ ] знати (to know)
+- [ ] любити (to love)
+- [ ] чекати (to wait for)
+- [ ] шукати (to look for)
+- [ ] друг (friend, m)
+- [ ] подруга (friend, f)
+
+### Forbidden words (never produce)
+
+Do not write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use `<!-- VERIFY -->` instead). The post-write toxic-token scanner will fail the build immediately:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+### Level-specific immersion check
+
+The level-appropriate immersion rule was already injected at the top of
+this prompt as `IMMERSION RULE`. Re-read it now BEFORE you stop writing.
+If your level's rule contains a CHECKLIST block, walk through every item.
+If it doesn't, just verify your output matches the LANGUAGE ROLES and
+TARGET stated in that block.
+
+This used to hard-code a B1+ checklist that confused A1/A2 models (where
+translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+The single source of truth is now
+`scripts/pipeline/config_tables.py:IMMERSION_RULES`.
+
+---
 
 Begin writing now. Start with the first section heading.

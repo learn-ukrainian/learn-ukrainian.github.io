@@ -22,7 +22,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-його внутрішню фонетичну логіку. Інше надзвичайно цікаве явище в родовому відмінку з нульовим закінченням — це так звані **вставні голосні** *(fleeting vowels)* [о] або [е]. Вони автоматично з'являються між приголосними звуками в самому кінці слова для значного полегшення нашої артикуляції та вимови. Давайте уважно порівняємо кілька абсолютно різних прикладів. Візьмемо дуже популярне побутове слово «ножиці». У родовому відмінку воно має коротку форму «ножиць». Тут ми чітко бачимо нульове закінчення, але жоден новий голосний звук у корені не з'являється, бо сусідні приголосні легко вимовляються разом. А тепер подивіться на звичайний іменник жіночого роду **сукня** *(dress)*. У звичайній множині це «сукні», але в родовому відмінку ми обов'язково кажемо «суконь». Звук [о] з'являється там, щоб розбити занадто складний збіг твердих приголосних. Щодо слова «гроші», то тут відбувається зовсім інший граматичний процес. У родовому відмінку ми маємо форму «грошей». Голосний звук [е] тут не є вставним у корені, а стає повноцінною і невід'ємною частиною самого закінчення «-ей». Це класичне закінчення надійно зберігає загальну мелодійність слова і є дуже поширеним серед цієї специфічної групи незмінюваних іменників. Окрему і дуже важливу лексичну групу іменників pluralia tantum становлять різноманітні географічні назви. Вони досить часто демонструють цікаві звукові чергування або несподівану зміну наголосу під час свого відмінювання. Наприклад, назва чудового західноукраїнського міста **Чернівці** *(Chernivtsi)* у родовому відмінку набуває довгої форми «Чернівців». А коли ми використовуємо місцевий відмінок, щоб точно сказати про своє поточне розташування, ми говоримо «у Чернівцях». Інше відоме і дуже красиве українське місто — **Суми** *(Sumy)*. Його коротка назва не має жодних складних звукових чергувань у своєму історичному корені. У місцевому відмінку ця географічна назва залишається максимально простою і стовідсотково передбачуваною: ми просто кажемо «у Сумах». Правильне і впевнене відмінювання відомих географічних назв є абсолютно критичною навичкою для побудови базових розмовних речень, як-от «Я зараз живу в...» або «Я із задоволенням подорожую до...». | Називний відмінок | Місцевий відмінок | | :--- | :--- | | **Карпати** | у Карпатах | | **Чернівці** | у Чернівцях | | **Суми** | у Сумах | | **Черкаси** | у Черкасах | Запам'ятайте ці базові парадигми місцевого відмінка прямо зараз. Ви будете постійно і дуже активно використовувати їх під час захопливих розповідей про свої літні чи зимові мандрівки дивовижними містами та мальовничими регіонами України. Прочитайте цю коротку туристичну розповідь про літню подорож і зверніть свою пильну увагу на всі іменники, що мають тільки форму множини. Минулого літа ми з друзями організували справжні ідеальні **канікули** *(vacation/holidays)* та поїхали відпочивати високо в Карпати. Погода в горах була дуже сонячною і теплою, тому я щодня носив свої улюблені темні окуляри. Ми успішно орендували старий традиційний гуцульський будинок. У ньому були масивні дерев'яні двері та дуже красиві старовинні меблі. Одного разу ввечері я раптом відчув себе трохи погано. Мені швидко довелося піти в місцеву сільську аптеку. Я заплатив чималі гроші за різні ефективні ліки від легкої застуди. Але, на моє велике щастя, я дуже швидко і повністю одужав. Ці чарівні Карпати назавжди залишили в моєму серці тільки найкращі теплі спогади та найсвітліші людські радощі. <!-- INJECT_ACTIVITY: fill-in, cases of pluralia tantum nouns -->
+вимови комбінацію приголосних, жоден вставний голосний не з'являється. > *In the genitive case, this word has a zero ending — "ножиць". Since the root ends in an easy-to-pronounce consonant combination, no inserted vowel appears.* With the word **гроші** (money — pluralia tantum, Р. грошей, Ор. грішми/грошима), the situation is slightly different. Instead of a zero ending, it takes the specific "-ей" ending. Because the stem remains open, no fleeting vowels are needed inside the root. :::info **Grammar box** Remember that pluralia tantum nouns do not belong to any standard declension group because a declension class is determined by the **однина** (singular number) form. You must rely on the phonetic structure of the plural stem to predict how it will behave in different cases. ::: Geographical names that are pluralia tantum also follow specific patterns, especially when expressing location. For example, the city "Чернівці" takes the "-ів" ending in the genitive case, becoming "Чернівців", and in the locative case, it becomes "у Чернівцях". A city like "Суми" takes standard plural endings without complex internal changes: "із Сум" and "у Сумах". Other notable regions include the **Карпати** (Carpathians — geographical pluralia tantum). Ось таблиця географічних назв, які існують тільки у множині. Ці форми знадобляться вам для розповідей про подорожі або місце проживання. > *Here is a table of geographical names that exist only in the plural. You will need these forms for stories about traveling or your place of residence.* | Називний відмінок | Родовий відмінок | Місцевий відмінок | | :--- | :--- | :--- | | Карпати | Карпат | у Карпатах | | Чернівці | Чернівців | у Чернівцях | | Суми | Сум | у Сумах | | Черкаси | Черкас | у Черкасах | Notice that the locative case consistently uses the "-ах" or "-ях" endings, making it very predictable. The genitive case is where you will see the most variation, alternating between zero endings and "-ів". To see these nouns in action, read this short narrative about a vacation. It features words like **канікули** (holidays/vacation — pluralia tantum) and **окуляри** (glasses — pluralia tantum, Р. окулярів). You will also see how to talk about buying **ліки** (medicine — pluralia tantum, connects to M16) or describing **меблі** (furniture — pluralia tantum) and heavy wooden **двері** (door — pluralia tantum, Р. дверей). Мої зимові канікули пройшли чудово. Ми поїхали відпочивати в Карпати. Спочатку я забув удома сонцезахисні окуляри. Потім я застудився, тому витратив останні гроші на ліки. Ми орендували старий будинок, де були масивні двері та зручні меблі. > *My winter holidays went wonderfully. We went to relax in the Carpathians. At first, I forgot my sunglasses at home. Then I caught a cold, so I spent my last money on medicine. We rented an old house, where there was a massive door and comfortable furniture.* Can you identify the case of each pluralia tantum noun in the text above? <!-- INJECT_ACTIVITY: quiz, identify pluralia tantum nouns --> <!-- INJECT_ACTIVITY: fill-in, insert the correct родовий відмінок form -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -602,7 +602,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -615,18 +682,68 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] двері (door — pluralia tantum, Р. дверей)
+- [ ] окуляри (glasses — pluralia tantum, Р. окулярів)
+- [ ] гроші (money — pluralia tantum, Р. грошей, Ор. грішми/грошима)
+- [ ] ворота (gate — pluralia tantum, Р. воріт, Ор. ворітьми/воротами)
+- [ ] ножиці (scissors — pluralia tantum, Р. ножиць)
+- [ ] Карпати (Carpathians — geographical pluralia tantum)
+- [ ] канікули (holidays/vacation — pluralia tantum)
+- [ ] ліки (medicine — pluralia tantum, connects to M16)
+- [ ] меблі (furniture — pluralia tantum)
+- [ ] сани (sleigh — pluralia tantum, Р. саней)
+- [ ] дріжджі (yeast — pluralia tantum)
+- [ ] однина (singular number)
+- [ ] множина (plural number)
+- [ ] родовий відмінок (genitive case)
+- [ ] узгодження (agreement — grammatical concord)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Singularia tantum — протилежна група (~550 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

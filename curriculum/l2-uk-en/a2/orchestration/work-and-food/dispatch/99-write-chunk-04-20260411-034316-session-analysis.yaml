@@ -1,0 +1,54 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T01-42-83a6334e.json
+phase: write-chunk-04
+prompt_chars: 43391
+response_chars: 4085
+prompt_words: 6114
+response_words: 687
+sections:
+- name: header
+  start: 0
+  length: 484
+  fraction: 0.0112
+- name: skeleton
+  start: 484
+  length: 1193
+  fraction: 0.0275
+- name: prior_summary
+  start: 1677
+  length: 3307
+  fraction: 0.0762
+- name: plan
+  start: 4984
+  length: 10910
+  fraction: 0.2514
+- name: wiki
+  start: 10566
+  length: 27369
+  fraction: 0.6308
+- name: output_spec
+  start: 43263
+  length: 128
+  fraction: 0.0029
+large_sections:
+- wiki
+directives_total: 9
+directives_covered: 5
+directives_missed:
+- kind: must
+  text: '* **Must-know:** `склянка води/молока`, `ложка цукру/солі`, `кілограм борошна/м''яса`.'
+  covered: false
+  coverage_note: 1/11 keywords (9%)
+- kind: must
+  text: '**MANDATORY:** Українська кулінарна та професійна лексика має суттєві відмінності
+    від російської.'
+  covered: false
+  coverage_note: 0/9 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: inject_activity
+  text: true-false, Judge whether sentences about a workday use correct Instrumental
+    forms for transport and prepositions
+  covered: false
+  coverage_note: marker missing

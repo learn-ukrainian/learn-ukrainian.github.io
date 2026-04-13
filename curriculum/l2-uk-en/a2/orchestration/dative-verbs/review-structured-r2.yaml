@@ -2,53 +2,50 @@ round: 2
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 9
-  evidence: Excellent coverage of grammatical points. The specific dialogue prompts
-    (grandma carrying bags, advising new doctor) were slightly altered to different
-    volunteering situations, but the grammar context
+  score: 10
+  evidence: All four planned H2 sections are present and in the planned order; required
+    plan vocabulary appears in prose (`допомагати`, `дякувати`, `дзвонити`, `радити`,
+    `заважати`, `подобатися`, `відповідати`, `
 - dimension: 2
   name: Linguistic accuracy
-  score: 8
-  evidence: Excellent explanation of the Russian interference with "дякувати", but
-    a hallucinated calque term ("досвідника") was invented for "experiencer" instead
-    of a natural Ukrainian grammatical term. "робити
+  score: 10
+  evidence: No Russian characters found (`ы/э/ё/ъ` all 0 occurrences). Spot checks
+    via VESUM confirmed forms such as `подобався`, `подобалися`, `дитині`, `гратися`;
+    no Russianisms, surzhyk, calques, or wrong Ukra
 - dimension: 3
   name: Pedagogical quality
-  score: 8
-  evidence: 'Great use of contrastive examples and the PPP flow. However, there is
-    a minor contradiction: the text states a "strong preference" for the "-ові/-еві"
-    endings for masculine people, but the immediate n'
+  score: 7
+  evidence: 'The module has solid PPP sequencing, but several English glosses are
+    misleading: “This noise on the street bothers mom from reading a book”, “The father
+    answers the teacher to all his questions about '
 - dimension: 4
   name: Vocabulary coverage
-  score: 9
-  evidence: Required and recommended vocabulary is present. However, the verbs `співчувати`
-    and `заздрити` are presented as part of a bare list without their own contextual
-    example sentences.
+  score: 10
+  evidence: All required vocabulary from the plan is used naturally in prose and examples
+    rather than dumped in a bare list.
 - dimension: 5
   name: Exercise quality
   score: 10
-  evidence: Exercise markers correspond exactly to the plan's requirements and are
-    well distributed.
+  evidence: Marker count matches the 4 plan hints exactly, and each marker follows
+    the section whose skill it is supposed to test.
 - dimension: 6
   name: Engagement & tone
-  score: 9
-  evidence: Very supportive and clear tone. There are minor instances of empty filler
-    sentences that just take up space without pedagogical value ("Сьогодні ми вивчаємо
-    дуже важливу тему української граматики.").
+  score: 8
+  evidence: Tone is mostly teacherly and functional, but filler like “Це дуже важливе
+    правило в українській мові” adds words without adding instruction.
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: Clean Markdown with all headers matching the outline. Word count is 3010,
-    which provides fantastic depth well beyond the 2000 target.
+  evidence: Clean markdown structure, all planned H2 headings present, no dangling
+    sections, and deterministic pipeline word count is 3066, which is above target.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Outstanding and direct warning against using direct Russian translations
-    ("дякую вас"), directly supporting the decolonized pedagogy.
+  evidence: No Russia-centric framing, no cultural inaccuracies, and examples stay
+    within ordinary Ukrainian contexts.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 9
-  evidence: The dialogue sounds authentic, but there is a slight logical jump where
-    the volunteer states they are about to call Ivan, and Ivan immediately responds
-    "Я вже тут" and hands over water without the cal
+  score: 8
+  evidence: 'The age dialogue is natural enough, but the preferences dialogue has
+    an abrupt stitched transition: “А мені подобається спорт. Чи подобається їм Київ?”'
 findings: []

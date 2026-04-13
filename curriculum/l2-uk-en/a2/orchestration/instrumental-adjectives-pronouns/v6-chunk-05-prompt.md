@@ -21,7 +21,7 @@ Grand total: ~2330 words
 <previous_context>
 [...previous sections truncated...]
 
-все на світі. Ми пили каву з гарячим молоком і багато сміялися. Потім я довго гуляла великим міським парком. Я стояла за тим старим дерев'яним мостом і дивилася на воду. Там дуже красиво восени. Вечір я провела з моїм коханим чоловіком за дуже романтичною вечерею. Ми смачно їли і говорили про наші нові плани на майбутнє. Я відчуваю себе дуже щасливою людиною. Цей короткий текст показує, як ми природно використовуємо граматичні ланцюги кожного дня. «Зі своєю найкращою подругою» — це ідеальний приклад узгодження. Кожне слово стоїть в орудному відмінку жіночого роду і має типове закінчення. «З моїм коханим чоловіком» — це чоловічий рід. Усі закінчення звучать чітко і твердо. Ви можете спробувати написати такий щоденник самостійно. А тепер давайте послухаємо розмову двох хороших друзів. Вони давно не бачилися і зустрілися на вулиці. Вони запитують одне одного про останні новини. Зверніть особливу увагу на займенники **його** *(his)* та **її** *(her)* у їхній розмові. Remember that these specific possessive pronouns never change their form, even in the Instrumental case. They are invariable in Ukrainian. > — **Андрій:** Привіт, Богдане! Як твої справи? З ким ти вчора ходив у кіно? > — **Богдан:** Привіт, Андрію! Все добре. Я був з моїм новим колегою. Його звати Марко. Він щойно почав працювати з нами. > — **Андрій:** Класно. А якою машиною ви їхали в центр? Вашою новою Хондою? > — **Богдан:** Ні, ми їхали його старою Тойотою. Наша машина зараз у ремонті, тому він запропонував поїхати разом. > — **Андрій:** Зрозуміло. А де ви вечеряли перед фільмом? > — **Богдан:** За тим великим супермаркетом є дуже гарне кафе. Ми вечеряли там перед сеансом. Ви бачите різницю в цій розмові? Ми кажемо «з моїм новим колегою». Тут усі слова змінюються за правилами. Але ми кажемо «його старою Тойотою». Займенник «його» залишається абсолютно незмінним. Змінюються лише прикметник «старою» і іменник «Тойотою». Це дуже важливо пам'ятати, коли ви говорите про інших людей та їхні речі. Коли ви активно вивчаєте українську мову, дуже важливо говорити природно. Іноді студенти роблять типові помилки на початку. They often forget to change the pronoun and adjective together with the noun in the sentence. Sometimes learners use endings from other Slavic languages by mistake. In Ukrainian, the Instrumental case has very distinct, melodic, and beautiful sounds. Для чоловічого роду ми завжди використовуємо закінчення **-им** або **-ім**. Ми ніколи не кажемо «з моим новым другом». Ми кажемо тільки «з моїм новим другом». Це звучить дуже по-українськи і граматично правильно. Для жіночого роду ми маємо закінчення **-ою** або **-єю**. Ми завжди кажемо «з моєю новою сусідкою». Ніколи не використовуйте російські закінчення «-ой» або «-ей» в українській мові. Використання правильних українських закінчень показує вашу велику повагу до мови. Це справжній маркер вашої української ідентичності та культури. Ваша мова звучить автентично, коли ви чітко дотримуєтеся цих правил. Завжди перевіряйте свій граматичний ланцюг у розмові. Не поспішайте, коли будуєте нову фразу. З часом ви будете говорити швидко і без помилок. Ваші українські друзі будуть приємно здивовані вашою правильною вимовою. Практика допомагає зробити ці правила автоматичними. <!-- INJECT_ACTIVITY: error-correction-agreement -->
+diary entry below aligns perfectly with the gender of its main noun. Сьогодні був дійсно чудовий день. Вранці я снідала з **моїм** **найкращим** другом у кафе. Потім ми говорили з **нашим** **старим** викладачем. Після обіду я гуляла за **цим** **великим** мостом біля річки. Вечір я провела з **тим** **новим** **сусідом** за смачною вечерею. Це був такий **гарний** і спокійний вечір. > *Today was a truly wonderful day. In the morning, I had breakfast with my best friend in a cafe. Then we talked with our old instructor. After lunch, I walked behind this big bridge near the river. I spent the evening with that new neighbor over a tasty dinner. It was such a nice and calm evening.* In everyday conversations, the Instrumental case is essential for asking and answering questions about companionship and means of transportation. This is where you will frequently hear possessive and demonstrative pronouns in action. As you read the following dialogue, pay close attention to the agreement chains. Also, remember that the possessive pronoun **його** *(his)* remains completely invariable, even as the adjective and noun next to it shift into the Instrumental form. > — **Анна:** З ким ти вчора ходив у театр? *(Who did you go to the theater with yesterday?)* > — **Богдан:** З **моїм** **новим** колегою. *(With my new colleague.)* > — **Анна:** Чим ви туди їхали? **Вашим** **старим** автобусом? *(How did you get there? By your old bus?)* > — **Богдан:** Ні, ми їхали **його** чорною машиною. *(No, we went by his black car.)* > — **Анна:** А де ви вечеряли після вистави? *(And where did you have dinner after the performance?)* > — **Богдан:** За **тим** великим рестораном у центрі міста. *(Behind that big restaurant in the city center.)* > — **Анна:** З **твоїм** **гарним** смаком, це точно був ідеальний вечір! *(With your nice taste, it was definitely a perfect evening!)* As you practice building these long agreement chains in your own sentences, you might feel tempted to guess the endings or fall back on patterns from other Slavic languages if you have studied them previously. A very frequent and noticeable mistake among learners is using foreign-sounding endings instead of the proper Ukrainian ones. You must completely avoid this habit. In Ukrainian, masculine and neuter hard adjectives in the Instrumental case always end in the clear vowel **-им**, while all feminine adjectives take the ending **-ою**. Saying **з моїм новим другом** *(with my new friend)* with the correct Ukrainian vowels is a strong marker of your linguistic accuracy. It distinguishes your speech from mixed languages and shows deep respect for the authentic phonetic rhythm of Ukrainian. Always take a moment to verify your endings before you speak. :::tip **Did you know?** The consistent **-им** and **-ою** endings in the Instrumental case are clear phonetic markers of the Ukrainian language. Mastering these specific sounds instantly makes your speech sound more natural and authentic to native speakers. ::: <!-- INJECT_ACTIVITY: error-correction, Find and fix agreement errors in Instrumental phrases, 6 items -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -548,7 +548,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -567,18 +634,65 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (5/5).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] мій (my)
+- [ ] твій (your (informal))
+- [ ] наш (our)
+- [ ] ваш (your (formal/plural))
+- [ ] цей (this)
+- [ ] той (that)
+- [ ] новий (new)
+- [ ] старий (old)
+- [ ] великий (big, large)
+- [ ] гарний (nice, beautiful)
+- [ ] найкращий (the best)
+- [ ] сусід (neighbor (male))
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Підсумок (~130 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

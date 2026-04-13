@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-настрій, постійні стани та звички персонажів. Він не створює нових подій, а лише готує для них місце. Доконаний вид, навпаки, — це самі події. Це кроки, якими ми йдемо по лінії часу. Без доконаного виду ваша розповідь була б статичною картиною, а без недоконаного — сухим списком фактів. > *Understanding narrative structure through aspects is the key to natural speech. Linguists often call the imperfective aspect in the past tense "background," and the perfective — "foreground." The imperfective aspect describes the weather, mood, constant states, and characters' habits. It doesn't create new events but only prepares a place for them. The perfective aspect, on the other hand, is the events themselves. These are the steps we take along the timeline. Without the imperfective aspect, your story would be a static picture, and without the perfective — a dry list of facts.* Уявіть собі сценарій у Львові. Ви можете сказати: «Коли я жив у Львові, я кожного вечора ходив на прогулянку. Зазвичай я купував каву на Площі Ринок і довго дивився на перехожих». Усе це — недоконаний вид. Ви описуєте свою рутину, свій спосіб життя. Ви ніби малюєте декорації до своєї історії. Слухач розуміє, що це відбувалося багато разів. Але раптом ви додаєте: «Але минулої суботи я не пішов на прогулянку, бо зустрів старого друга. Ми зайшли в цукерню і проговорили три години». Тут ви використали доконаний вид («не пішов», «зустрів», «зайшли»), щоб виділити цей конкретний день із черги однакових субот. Ви перемістили фокус із загальної звички на конкретну пригоду. Це і є магія аспектів: ви самі керуєте увагою слухача, вказуючи, що було нормою, а що стало подією. Тепер давайте проаналізуємо складніший текст. Уявіть опис звичайного робочого тижня в офісі. «Весь тиждень Максим працював над звітом. Він щодня приходив о дев’ятій, вмикав комп’ютер і пив чай. Потім він три години писав текст і перевіряв цифри. Але в п’ятницю ситуація змінилася. Керівник несподівано зайшов у кабінет і приніс нові дані. Максим за одну годину переробив увесь звіт і нарешті відправив його замовнику». У першій частині тексту ми бачимо повторюваність: «працював», «приходив», «вмикав», «пив», «писав», «перевіряв». Це все — недоконаний вид, бо це опис звичного процесу. Навіть якщо Максим завершував пити чай щодня, ми використовуємо недоконаний вид «пив», бо наголошуємо на регулярності дії. Але у другій частині з’являється однократність і результат: «зайшов», «приніс», «переробив», «відправив». Це винятки з правила, конкретні дії, які мають чітке завершення. Це і є межа, де «повторюваність» закінчується, а «однократність» починається. :::tip **Мистецтво розповіді** Якщо ви хочете, щоб ваша історія звучала жваво, чергуйте види. Використовуйте недоконаний вид для описів і атмосфери («сонце світило», «я читав»), а доконаний — для активних дій («раптом пролунав дзвінок», «я відкрив двері»). ::: При аналізі тексту завжди шукайте причину вибору аспекту. Запитайте себе: «Чи ця дія була частиною звички? Чи це унікальний момент?». Якщо ви бачите маркер тривалості (три години) разом із повторюваністю (щодня), вибір недоконаного виду стає подвійно обґрунтованим. Українська мова дуже логічна в цьому питанні: форма дієслова завжди підпорядковується вашому бажанню виділити або процес, або результат, або звичку. <!-- INJECT_ACTIVITY: group-sort-aspect-usage -->
+technique, you must learn to consciously analyze where the routine ends and the exception to the rule begins. This requires reading not just for vocabulary, but for the underlying temporal structure of the text. Let us look at a short, complex text about a typical, stressful work week and break down the specific aspect shifts. Read the following paragraph carefully and notice exactly how the author switches grammatical gears to build a sense of relief. Мій минулий робочий тиждень був надзвичайно важким і дуже стресовим. З понеділка по четвер я щодня працював до пізнього вечора у своєму офісі. Я постійно читав довгі фінансові звіти і дуже часто пив міцну чорну каву, щоб просто не заснути за столом. Я навіть не мав вільного часу нормально готувати собі корисну їжу. Але в п'ятницю вранці сталася дуже цікава і приємна річ. Мені абсолютно несподівано зателефонував мій головний керівник. Він радісно сказав, що я просто чудово виконав цей складний проект. Я дуже швидко приготував святкову вечерю і нарешті зміг добре відпочити. Я навіть зміг вивчити кілька нових іспанських слів перед сном. > *My past work week was extremely difficult and very stressful. From Monday to Thursday I worked until late evening in my office every day. I constantly read long financial reports and very often drank strong black coffee just so as not to fall asleep at the table. I did not even have free time to normally cook useful food for myself. But on Friday morning a very interesting and pleasant thing happened. My main manager absolutely unexpectedly called me. He joyfully said that I simply perfectly completed this complex project. I very quickly prepared a festive dinner and finally could rest well. I was even able to learn a few new Spanish words before sleep.* Let us justify every single aspect shift in this paragraph using the grammatical tools we have learned. The text opens with pure, unadulterated habituality. The verbs "працював" (worked), "читав" (read), "пив" (drank), and the infinitive **готувати** (to cook) are all imperfective. Why? Because they vividly describe the repeated, exhausting routine of Monday through Thursday. The critical turning point arrives with the phrase "в п'ятницю сталася" (on Friday [it] happened). The verb **зателефонувати** (to call) is perfective here because it explicitly marks a single occurrence that broke the stressful routine. The subsequent actions—like "виконав" (completed), **приготувати** (to prepare), and **вивчити** (to learn)—are all perfective as well. They represent a rapid chain of unique, completed events with clear, satisfying results, ending with the author **нарешті** (finally) being able to rest. :::info **Grammar box** When analyzing or writing a past-tense narrative in Ukrainian, always look for the "interruption." The background scene is painted with the imperfective aspect to show routines, weather, or ongoing states of being. The main plot points that interrupt this background and create action are delivered in the perfective aspect. This sharp contrast between habituality and a single occurrence creates a highly dynamic and natural storytelling rhythm that native speakers use intuitively. ::: <!-- INJECT_ACTIVITY: group-sort-aspect-usage -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -696,6 +696,41 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] доконаний вид
+- [ ] недоконаний вид
+- [ ] видова пара
+- [ ] результат
+- [ ] процес
+- [ ] тривалість
+- [ ] завершеність
+- [ ] повторюваність
+- [ ] однократність
+- [ ] одного разу
+- [ ] щодня
+- [ ] щоразу
+- [ ] завжди
+- [ ] іноді
+- [ ] нарешті
+- [ ] раптом
+- [ ] готувати
+- [ ] приготувати
+- [ ] вивчити
+- [ ] зателефонувати
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Підсумок: вид як інструмент мислення (~1150 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

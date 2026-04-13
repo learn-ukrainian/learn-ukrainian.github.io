@@ -26,7 +26,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-Якщо слово має м'яку або мішану основу, ми використовуємо закінчення «-і» або «-ї». This makes pronunciation much smoother. Так, **земля** *(land)* becomes **землі** *(lands)*, **суддя** *(judge)* becomes **судді** *(judges)*, and **пісня** *(song)* becomes **пісні** *(songs)*. Друга відміна є найбільшою. Сюди належить багато слів чоловічого та середнього роду. Let's look at the masculine nouns first. Для слів чоловічого роду з твердою основою стандартне закінчення множини — це «-и». Наприклад, **стіл** *(table)* is **столи** *(tables)*, **завод** *(factory)* is **заводи** *(factories)*, and **телефон** *(phone)* is **телефони** *(phones)*. Якщо основа м'яка або мішана, закінчення змінюється на «-і» або «-ї». Тому **кінь** *(horse)* changes to **коні** *(horses)*, **плащ** *(cloak)* changes to **плащі** *(cloaks)*, and **герой** *(hero)* becomes **герої** *(heroes)*. A very important feature of this group is consonant alternation. Деякі популярні слова змінюють останній приголосний перед закінченням «-і». The most common example you must know is **друг** *(friend)*, which changes to **друзі** *(friends)* in the plural. Another common one is **рік** *(year)*, which becomes **роки** *(years)*. Тепер подивимося на слова середнього роду другої відміни. Neuter nouns form their plurals differently than masculine nouns in the same class. Замість закінчень «-и» та «-і», слова середнього роду зазвичай отримують закінчення «-а» або «-я». Якщо слово в однині закінчується на «-о», у множині воно матиме закінчення «-а». Наприклад, велике **місто** *(city)* changes to **міста** *(cities)*, **село** *(village)* becomes **села** *(villages)*, and **вікно** *(window)* is **вікна** *(windows)*. If the neuter noun ends in «-е» or «-я» in the singular, it takes the plural ending «-я». Тому **поле** *(field)* becomes **поля** *(fields)*, **море** *(sea)* becomes **моря** *(seas)*, and **обличчя** *(face)* is simply **обличчя** *(faces)* in plural as well. Третя відміна — це слова жіночого роду, які закінчуються на приголосний звук, а також слово «мати». This class is very consistent and easy to remember. Усі ці слова в називному відмінку множини мають закінчення «-і». Наприклад, темна **ніч** *(night)* becomes **ночі** *(nights)*, **річ** *(thing)* becomes **речі** *(things)*, **подорож** *(journey)* is **подорожі** *(journeys)*, and **сіль** *(salt)* is **солі** *(salts)*. Слово **мати** *(mother)* має особливу форму множини — **матері** *(mothers)*. Четверта відміна також дуже цікава. Вона об’єднує слова середнього роду, які часто позначають малих тварин або дітей. When forming the plural, these nouns reveal a hidden suffix «-ат-» or «-ят-» before the ending «-а». Наприклад, маленьке **курча** *(chick)* becomes **курчата** *(chicks)*. Так само **теля** *(calf)* changes to **телята** *(calves)*, **кошеня** *(kitten)* becomes **кошенята** *(kittens)*, and **лоша** *(foal)* is **лошата** *(foals)*. Ці слова часто можна почути в селі або в зоопарку. Деякі українські іменники мають унікальні форми множини. These are common irregular forms that you must memorize as complete lexical units, because they do not follow the standard declension rules. Найважливіші слова — це **людина** *(person)* та **дитина** *(child)*. У множині вони повністю змінюють форму: «людина» стає **люди** *(people)*, а «дитина» стає **діти** *(children)*. Також є слова, які позначають парні частини тіла. Вони зберегли стародавні форми множини. Наприклад, **око** *(eye)* стає **очі** *(eyes)*, **вухо** *(ear)* стає **вуха** *(ears)*, а **плече** *(shoulder)* стає **плечі** *(shoulders)*. Це дуже важливі слова для щоденного спілкування. <!-- INJECT_ACTIVITY: fill-in-nom-plural -->
+stem might change before the plural ending. The most famous example is the word "friend", which in the plural becomes "friends" (друг → друзі). Another frequent example: "year" becomes "years" (рік → роки).* Neuter nouns in the second declension also follow highly consistent patterns, making them relatively easy to learn. If a neuter noun ends in **-о** in the singular, it changes its ending to **-а** in the plural form. For instance, **місто** (city) becomes **міста**, **село** (village) becomes **села**, and **вікно** (window) becomes **вікна**. If the neuter noun ends in **-е** or **-я**, the plural ending is simply **-я**. This means that **поле** (field) becomes **поля**, **море** (sea) becomes **моря**, and a word like **обличчя** (face) remains exactly **обличчя** in its spelling, although the spoken stress often shifts to a different syllable. Третя відміна — це слова жіночого роду, які закінчуються на приголосний звук. У множині ці слова завжди мають закінчення -і. Наприклад, ніч стає ночі, а подорож — подорожі. Слово сіль перетворюється на солі. До цієї групи також належить важливе слово мати. У множині воно має форму матері. Ви часто будете бачити ці **речі** (things) у текстах. > *The third declension consists of feminine words that end in a consonant sound. In the plural, these words always have the ending -і. For example, "night" becomes "nights", and "journey" — "journeys". The word "salt" transforms into "salts". This group also includes the important word "mother". In the plural it has the form "mothers". You will often see these things in texts.* The fourth declension is a very special and narrowly defined group of neuter nouns. These nouns mostly represent young animals, human babies, or small creatures. When forming the plural, these words are unique because they take specific recognizable suffixes before the final vowel: **-ата** or **-ята**. For example, a baby chicken, known as **курча**, becomes **курчата** in the plural. A young calf, **теля**, becomes **телята**. A little kitten, **кошеня**, becomes **кошенята**, and a young foal, **лоша**, becomes **лошата**. Recognizing these suffixes instantly tells you that you are looking at a group of young animals. Деякі дуже поширені слова мають особливі форми множини. Їх потрібно просто запам'ятати. Слово людина у множині — це **люди** (people). Слово дитина стає словом **діти** (children). Парні частини тіла також мають унікальні форми. Око перетворюється на **очі** (eyes), а вухо стає вуха. Слово плече має форму плечі. > *Some very common words have special plural forms. They simply need to be memorized. The word "person" in the plural is "people" (люди). The word "child" becomes the word "children" (діти). Paired body parts also have unique forms. "Eye" turns into "eyes" (очі), and "ear" becomes "ears" (вуха). The word "shoulder" has the form "shoulders" (плечі).* :::info **Grammar box** Always learn the irregular plural forms like **люди** and **діти** as entirely new vocabulary items. Trying to apply standard declension rules to them will result in errors! ::: <!-- INJECT_ACTIVITY: fill-in, focus: Form the Nominative plural from given singular nouns across all declension classes, 8 items -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -490,7 +490,74 @@ A phased approach is best for internalizing plural cases.
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -509,18 +576,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] множина (plural)
+- [ ] називний відмінок (nominative case)
+- [ ] знахідний відмінок (accusative case)
+- [ ] живий (animate)
+- [ ] неживий (inanimate)
+- [ ] закінчення (ending (grammar))
+- [ ] люди (people)
+- [ ] діти (children)
+- [ ] речі (things)
+- [ ] очі (eyes)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Знахідний відмінок множини: Живе чи неживе? (Accusative Plural: Animate vs. Inanimate) (~650 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

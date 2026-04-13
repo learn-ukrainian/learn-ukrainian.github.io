@@ -2,55 +2,53 @@ round: 2
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 10
-  evidence: Every single bullet point from the plan is meticulously covered. The text
-    includes the exact previews of `з + instrumental` ("Вона з карими очима"), the
-    exact cultural note about "добра людина", and t
+  score: 7
+  evidence: The plan’s relationship vocabulary explicitly includes `родич`, but the
+    prose says `Люди навколо нас — це наші рідні, колеги по роботі...` and never actually
+    uses `родич` in the module body.
 - dimension: 2
   name: Linguistic accuracy
-  score: 10
-  evidence: 'Flawless Ukrainian. The use of "має вигляд", "кароока", and the proper
-    case assignments (Dative for "допомагати/довіряти", Accusative for "поважати")
-    are idiomatically and grammatically sound. Proper '
+  score: 6
+  evidence: The grammar box uses `Імперфектив / Перфектив`, and the gloss `My sister
+    always tells the truth...` mistranslates `Моя сестра добре мене знає, тому вона
+    мені довіряє.`
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: Textbook-perfect PPP (Presentation, Practice, Production) flow. Grammar
-    is never introduced as a bare list; the contrast between Imperfective (habitual
-    traits) and Perfective (one-time proof) is expla
+  score: 7
+  evidence: The module has good example density, but a grammar box that labels aspect
+    as `Імперфектив / Перфектив` and a wrong English gloss both risk teaching the
+    wrong thing.
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: All required and recommended words (описувати, зовнішність, привітний,
-    наполегливий, впертий, etc.) are integrated naturally into the prose and dialogues
-    without feeling like a forced checklist.
+  score: 8
+  evidence: Required items like `людина`, `характер`, `зовнішність`, `привітний`,
+    `щирий`, `працьовитий`, `терплячий`, `сусід`, `описувати` are used naturally,
+    but `родич` from the plan’s relationship set is abse
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: The 4 required activity markers are present and strategically placed after
-    the learner has been exposed to the relevant theory and vocabulary.
+  score: 5
+  evidence: 'The marker `<!-- INJECT_ACTIVITY: quiz-choose-the-correct-adjective-to-complete-a-description
+    -->` has no matching inline activity ID; YAML defines `quiz-aspect-choice` and
+    `fill-in-sentence-completio'
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: The tone is that of a warm, encouraging teacher. The text transitions
-    smoothly between theory and practice using natural classroom phrasing ("Let's
-    see how these words are used in a real conversation"
+  score: 8
+  evidence: 'Teacher voice is warm and mostly substantive: `Let''s look at a conversation...`,
+    `Did you know?`, and the cultural note on `добра людина` work well without corporate/gamified
+    fluff.'
 - dimension: 7
   name: Structural integrity
-  score: 10
-  evidence: The module exceeds the 2000-word target significantly (3204 words per
-    pipeline), features clean Markdown, and uses all required H2 headings exactly
-    as dictated by the plan.
+  score: 9
+  evidence: All four planned H2 sections are present and ordered correctly, and the
+    pipeline word count is above target.
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: 'The module beautifully captures the Ukrainian perspective on the word
-    "впертий" (principled/persistent rather than just stubborn) and correctly emphasizes
-    that "добра людина" is the highest praise in '
+  score: 9
+  evidence: The module treats Ukrainian on its own terms and includes useful culture-facing
+    framing such as `Calling someone a «добра людина»... is one of the highest compliments`.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: Dialogues are contextual, varied (looking at photos, meeting a new colleague),
-    and use named speakers (Олена, Марія, Антон). They model the target language naturally
-    rather than reading like robotic d
+  score: 9
+  evidence: 'Dialogues are named-speaker, multi-turn, and tied to real situations:
+    photos, workplace introductions, family descriptions.'
 findings: []

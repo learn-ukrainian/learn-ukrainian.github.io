@@ -1,24 +1,66 @@
-## Порівняння зворотів: дієприкметниковий vs дієприслівниковий
+## Порівняння зворотів: дієприкметниковий vs дієприслівниковий (~715 words)
 
-Упродовж вивчення української мови ви вже познайомилися з двома особливими конструкціями: дієприкметниковим та дієприслівниковим зворотами. На перший погляд, вони можуть здатися дуже схожими, адже обидва походять від дієслова та розширюють межі простого речення. Проте їхня справжня синтаксична функція *(syntactic function)* абсолютно різна. Дієприкметниковий зворот, який ми вивчали раніше, завжди виступає в ролі **означення** *(attribute)*. Він немовби приклеюється до предмета або особи і відповідає на запитання «який?», «яка?», «яке?» або «які?». Натомість дієприслівниковий зворот виконує роль **обставини** *(modifier)*. Його головне завдання — описати обставини, за яких відбувається основна дія. Тому він відповідає на запитання «як?», «коли?», «чому?» або «за яких умов?». Давайте розглянемо це на конкретних прикладах, щоб побачити різницю. Порівняйте: «Студент, прочитавши книгу, успішно склав складний іспит» *(The student, having read the book, successfully passed the difficult exam)*. Тут зворот «прочитавши книгу» вказує на час: коли саме він склав іспит? Після того, як прочитав книгу. А тепер інший варіант: «Книга, прочитана студентом, лежала на його робочому столі» *(The book, read by the student, lay on his desk)*. У цьому випадку зворот «прочитана студентом» просто описує предмет: яка саме книга лежала на столі? Розуміння цієї базової різниці — це ваш найважливіший крок до правильного використання обох зворотів.
+When analyzing complex Ukrainian sentences, learners often confuse the participial phrase and the gerund phrase. Both constructions look somewhat similar on the surface because they are both built around special verb forms, and they both pack a lot of descriptive information into a single sentence. However, their fundamental purpose in the sentence is completely different. The participial phrase acts as an **означення** (attribute). Its sole job is to describe a specific object or person, answering the question "which one?" or "what kind?". On the other hand, the gerund phrase functions as an **обставина** (adverbial modifier). It does not describe an object at all; instead, it describes the circumstances of the main action, answering questions like "how?", "when?", or "why?". To see this difference clearly, we need to look at how these phrases interact with the rest of the sentence.
 
-Ця синтаксична відмінність зумовлена тим, з якими саме словами в реченні зв'язуються наші звороти. Кожна з цих конструкцій має свою власну ціль для опису. Дієприкметниковий зворот завжди міцно прив'язаний до **іменника** *(noun)* або **займенника** *(pronoun)*. Його мета — дати цьому предмету чи особі додаткову, розгорнуту характеристику. А от дієприслівниковий зворот ніколи не описує предмети. Він завжди підпорядковується головному **дієслову-присудку** *(main verb)* у реченні. Його мета — уточнити, доповнити або пояснити цю основну дію. Зміна цієї цілі повністю змінює логіку та фокус усього висловлювання. Погляньмо на таку пару речень. Перше: «Лист, написаний моїм найкращим другом, дуже мене розчулив» *(The letter, written by my best friend, touched me deeply)*. Тут мішенню є іменник «лист». Зворот дає нам інформацію виключно про цей об'єкт. Друге речення: «Написавши довгого листа найкращому другу, я нарешті спокійно заснув» *(Having written a long letter to my best friend, I finally fell asleep peacefully)*. Тут мішенню є дієслово-присудок «заснув». Зворот пояснює обставини мого засинання — це сталося тільки після того, як дія написання була повністю завершена. Як бачите, фокус уваги зміщується з предмета на саму дію.
+Дієприкметниковий зворот завжди описує предмет і відповідає на питання «який?». Натомість дієприслівниковий зворот завжди описує дію і відповідає на питання «коли?» або «за яких умов?». Ви можете легко побачити цю різницю, якщо порівняєте дві схожі ситуації.
 
-Оскільки ці звороти виконують різні функції та мають різні мішені, правила їхнього виділення на письмі також відрізняються. Це ще одна ключова зона, де студенти часто припускаються помилок. Пригадайте наше «Правило позиції» *(Position Rule)* для дієприкметників: коми ставляться лише тоді, коли дієприкметниковий зворот стоїть строго після означуваного слова. Якщо ж він стоїть перед іменником, коми зазвичай зникають. Наприклад: «Написана найкращим другом книга стала справжнім бестселером» *(The book written by my best friend became a real bestseller)*. Жодної коми тут немає, адже зворот стоїть перед словом «книга». Натомість для дієприслівникових зворотів діє суворе «Абсолютне правило» *(Absolute Rule)*. Дієприслівниковий зворот завжди відокремлюється комами, незалежно від того, де саме в реченні він розташований: на початку, в середині чи в самому кінці. Його позиція щодо головного дієслова не має жодного значення для пунктуації. Наприклад: «Написавши цю дивовижну книгу, мій друг нарешті добре відпочив» *(Having written this amazing book, my friend finally rested well)*. Або: «Мій друг, написавши цю дивовижну книгу, нарешті добре відпочив». В обох варіантах коми обов'язкові. Це правило робить використання дієприслівникових зворотів значно простішим.
+> *A participial phrase always describes an object and answers the question "which one?". In contrast, a gerund phrase always describes an action and answers the question "when?" or "under what conditions?". You can easily see this difference if you compare two similar situations.*
 
-Якщо ви колись засумніваєтеся, який саме зворот перед вами, існує один надійний і простий тест. Цей метод заснований на логічній трансформації *(logical transformation)* речення. Спробуйте подумки замінити складний зворот на просте підрядне речення. Будь-який правильний дієприкметниковий зворот можна легко перетворити на означальне речення, яке починається зі слова «який» *(which/who)*, «яка», «яке» або «які». Візьмемо наш попередній приклад: конструкція «книга, написана другом» без проблем перетворюється на «книга, яку написав друг» *(the book which the friend wrote)*. Зміст при цьому залишається абсолютно ідентичним. Натомість дієприслівниковий зворот так перетворити неможливо. Він вимагає заміни на обставинне речення часу або причини, найчастіше за допомогою слова «коли» *(when)* або «після того як» *(after)*. Наш приклад «написавши книгу, друг відпочив» легко трансформується у фразу «коли друг написав книгу, він відпочив» *(when the friend wrote the book, he rested)*. Ця трансформація миттєво підкаже вам правильний тип звороту. Використовуйте цей підхід під час написання текстів, щоб уникати граматичної плутанини та обирати точний спосіб висловлення думок.
+**Студент, прочитавши книгу, написав есе.** — *The student, having read the book, wrote an essay.* (When did he write it? This is a gerund phrase).
 
-Для того щоб остаточно структурувати ці знання, пропонуємо вам підсумкову таблицю порівняння. Вона допоможе вам швидко згадати основні відмінності.
+**Книга, прочитана студентом, лежала на столі.** — *The book read by the student lay on the table.* (Which book lay there? This is a participial phrase).
 
-| Характеристика | Дієприкметниковий зворот | Дієприслівниковий зворот |
+This difference in targets fundamentally changes the logic of the sentence. When you use a participial phrase, your mental focus is on a noun. You are painting a more detailed picture of a thing. When you use a gerund phrase, your mental focus shifts to the verb. You are explaining the background events that surround the main action. It is crucial to identify what exactly the phrase is attached to.
+
+Кожен зворот має своє головне слово, до якого він кріпиться в реченні. Дієприкметниковий зворот не може існувати без іменника або займенника, який він характеризує. Дієприслівниковий зворот ніколи не описує предмети, тому його єдиним господарем є головне дієслово-присудок.
+
+> *Every phrase has its main word to which it is attached in the sentence. A participial phrase cannot exist without a noun or pronoun that it characterizes. A gerund phrase never describes objects, so its only master is the main verb-predicate.*
+
+Let's examine how this target shift changes the entire logic of a statement using the concept of a letter and a friend.
+
+**Лист, написаний другом, нарешті прийшов поштою.** — *The letter written by a friend finally arrived in the mail.* (The target is the noun "лист". The phrase describes the letter).
+
+**Написавши листа другу, він пішов на прогулянку.** — *Having written a letter to a friend, he went for a walk.* (The target is the verb "пішов". The phrase describes the circumstances of going for a walk).
+
+Another critical area where these two grammatical structures diverge is punctuation. Specifically, we are talking about **відокремлення** (setting off with commas). You might remember from our previous modules that the participial phrase follows a very strict "Position Rule". If the participial phrase comes after the noun it modifies, you must use commas. However, if you place it before the noun, the commas completely disappear. The gerund phrase operates under a much simpler "Absolute Rule". Because it describes the verb, its physical position in the sentence does not change its punctuation. A **дієприслівниковий зворот** (gerund phrase) is always set off by commas, no matter where you put it, unless it has fossilized into a **фразеологічний зворот** (phraseological expression) like **не покладаючи рук** (without rest) or **затамувавши подих** (holding one's breath).
+
+Правила пунктуації для цих двох конструкцій кардинально відрізняються, що часто плутає студентів. Якщо дієприкметник стоїть перед своїм словом, ми читаємо речення без пауз і не ставимо жодних ком. Але дієприслівник вимагає відокремлення завжди, навіть якщо він стоїть на самому початку речення.
+
+> *The punctuation rules for these two constructions differ radically, which often confuses students. If a participle stands before its word, we read the sentence without pauses and do not place any commas. But a gerund always requires setting off, even if it stands at the very beginning of the sentence.*
+
+Let's look at the same visual sequence producing two different punctuation outcomes:
+
+**Написана другом книга стала бестселером.** — *The book written by a friend became a bestseller.* (No comma: the participial phrase is before the noun "книга").
+
+**Написавши книгу, друг вирішив відпочити.** — *Having written the book, the friend decided to rest.* (Comma required: the gerund phrase is always set off).
+
+:::info
+**Quick tip** — If you are unsure whether to use a comma at the beginning of a sentence, check the last word of the introductory phrase. If it is a noun, you are likely dealing with a participial phrase without commas. If it is a gerund, you absolutely need a comma!
+:::
+
+One of the most reliable tests you can use to distinguish between these two phrases is the logical transformation test. Because they serve different functions, they map onto completely different types of subordinate clauses. A participial phrase is essentially a shortened version of an adjective clause. Therefore, you can always expand it back into a full clause using the relative pronoun «який» (which/that). Conversely, a gerund phrase is a compressed time or condition clause. You can unpack it by using conjunctions like «коли» (when) or «після того як» (after).
+
+Щоб перевірити себе, спробуйте перетворити зворот на звичайне підрядне речення. Це найкращий спосіб зрозуміти справжню логіку вашого висловлювання. Якщо ви можете підставити слово «який», це точно означення. Якщо ж туди ідеально пасує слово «коли», перед вами обставина.
+
+> *To check yourself, try transforming the phrase into a regular subordinate clause. This is the best way to understand the true logic of your statement. If you can substitute the word "which", it is definitely an attribute. But if the word "when" fits perfectly, you are looking at a modifier.*
+
+Transformation of a participial phrase:
+**Книга, написана студентом...** transforms into **Книга, яку написав студент...** — *The book that the student wrote...*
+
+Transformation of a gerund phrase:
+**Написавши книгу, студент...** transforms into **Коли студент написав книгу, він...** — *When the student wrote the book, he...*
+
+To consolidate your understanding, let's look at a summary comparison of these two grammatical powerhouses. This table highlights all the key differences you need to keep in mind when choosing how to structure your advanced Ukrainian sentences. We will use the examples of closed doors to illustrate the final points.
+
+| Feature | Дієприкметниковий зворот | Дієприслівниковий зворот |
 | :--- | :--- | :--- |
-| **Головне запитання** | Який? Яка? Яке? Які? | Як? Коли? Чому? |
-| **Частина мови** | Іменник або займенник | Дієслово-присудок |
-| **Синтаксична роль** | Означення | Обставина |
-| **Правило коми** | Залежить від позиції (після іменника) | Завжди виділяється комами |
-| **Заміна на речення** | Зі словом «який» | Зі словом «коли» або «як» |
-| **Приклад** | Зачинені студентом двері... | Зачинивши двері, студент... |
+| **Question** | Який? Яка? Яке? Які? | Як? Коли? Чому? |
+| **Modifies** | Іменник або займенник | Дієслово-присудок |
+| **Syntactic Role** | **Означення** (attribute) | **Обставина** (modifier) |
+| **Punctuation** | Depends on position | Always set off with commas |
+| **Clause Equivalent**| *який*-clause | *коли*-clause |
+| **Example** | **Зачинені вчора двері** (No comma) | **Зачинивши двері, я пішов** (Comma) |
 
-Ця шпаргалка стане вашим надійним помічником у щоденній практиці.
+Mastering the difference between these two structures will dramatically improve both your reading comprehension and your writing style. You will know exactly when to describe a noun and when to add depth to an action.
 
-<!-- INJECT_ACTIVITY: quiz-participle-vs-gerund -->
+<!-- INJECT_ACTIVITY: quiz, Оберіть правильний тип звороту для кожного речення та поясніть вибір. -->

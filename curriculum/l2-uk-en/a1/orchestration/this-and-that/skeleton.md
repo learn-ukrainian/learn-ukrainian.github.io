@@ -1,37 +1,39 @@
-## Діалоги (Dialogues) (~340 words total)
-- P1 (~30 words): Introduction setting the scene at a modern electronics store in Kyiv, where Ірина is looking for gadgets with a store consultant.
-- P2 (~130 words): Dialogue 1 — Shopping for electronics. Focus on "this" (near). Ірина asks about prices and colors using `цей телефон`, `ця камера`, and `це радіо`. Consultant uses `це` to identify items: "Це новий смартфон". Vocabulary includes colors from M10 and prices from M11.
-- P3 (~30 words): Transition to Dialogue 2, which takes place in a home office setting, contrasting items nearby and across the room.
-- P4 (~110 words): Dialogue 2 — Interior and furniture. Focus on the contrast between `цей` (near) and `той` (far). Comparison of furniture items: `цей стілець` (here) vs `той стіл` (there), `ця шафа` (new) vs `та книжкова полиця` (old).
-- P5 (~40 words): Brief linguistic observation on how Ірина uses the demonstratives to point without repeating the nouns constantly, showing natural speech flow.
+## Діалоги (Dialogues) (~330 words total)
+- P1 (~40 words): Set the scene at an electronics store. A customer (Ірина) is comparing phones, laptops, and headphones on different shelves with a shop assistant (Консультант), pointing to things near and far.
+- P2 (~130 words): Dialogue 1 — Shopping (extending M10 colors and M11 prices). Ірина asks about prices: "Скільки коштує ця сумка? — Яка? Ця червона? — Ні, та синя. — Та коштує двісті гривень. — А цей рюкзак? — Цей — сто п'ятдесят." 
+- P3 (~50 words): Brief breakdown of Dialogue 1. Explain how demonstratives emerge naturally in a shopping context: "цей/ця" refers to the item right here in your hands, while "той/та" points to the item over there on the shelf.
+- P4 (~110 words): Dialogue 2 — In a room (extending M08-09 nouns). A conversation comparing furniture: "Що це? — Це мій стіл. — А те? — Те — крісло. — Цей стілець новий, а той — старий." Contrasts near and far objects using vocabulary they already know.
 
-## Цей, ця, це (This) (~310 words total)
-- P1 (~90 words): Explanation of `Це` as the universal identifier ("This is..."). Contrast its fixed form in questions like `Що це?` with its role as a pointer for neuter nouns like `це вікно` or `це поле`. 
-- P2 (~110 words): Detailed breakdown of gendered forms for "this": `цей` (masculine), `ця` (feminine), and `це` (neuter). Explicitly linking them to the gender pronouns `він/вона/воно` and possessives `мій/моя/моє` to show the pattern (e.g., `цей мій стіл`).
-- P3 (~110 words): Word order and adjective agreement. Teaching the sequence: `Demonstrative + Adjective + Noun`. Examples: `цей великий синій рюкзак`, `ця маленька жовта ручка`. Note that the demonstrative always takes the lead, just like in English.
-- <!-- INJECT_ACTIVITY: quiz-this-gender --> [quiz, focus: Choosing the correct form of цей/ця/це based on noun gender, 8 items]
-- <!-- INJECT_ACTIVITY: match-up-this-possessive --> [match-up, focus: Matching demonstratives with corresponding possessives and question words (цей/мій/який), 6 items]
+## Цей, ця, це (This) (~330 words total)
+- P1 (~60 words): Introduce the universal identifier "це" (this is / that is). Explain that for basic identification questions like "Що це?" (What is this?), the answer is simply "Це стіл" or "Це книга." It requires zero gender knowledge and acts like "It is" in English.
+- P2 (~70 words): Introduce the gendered pointers: "цей" (m), "ця" (f), and "це" (n). Note from Заболотний Grade 6 (p. 210) that demonstrative pronouns change by gender. Show examples: "Цей стіл" (this table), "Ця книга" (this book), "Це вікно" (this window). At A1, we only use the nominative case.
+- P3 (~70 words): Explain the method of substitution and association to build a mental link for gender. For a masculine noun, the chain is: стіл → він (he) → мій (my) → цей (this). Doing this creates a grammatical reflex for correct agreement.
+- P4 (~70 words): Explain how to combine demonstratives with adjectives and colors. The word order is identical to English: demonstrative + adjective(s) + noun. Give clear examples: "Цей великий червоний стіл," "Ця нова синя сумка," "Це маленьке біле вікно."
+- P5 (~60 words): Introduce the plural pointer "ці" ("these") which is used for all genders (e.g., "ці столи", "ці книги"). Address a common L2 error: omitting the verb "to be" is standard in Ukrainian ("Цей стіл новий," not "Цей стіл є новий").
+- <!-- INJECT_ACTIVITY: quiz-this-gender --> [quiz, Цей, ця, or це? Choose the right demonstrative for each noun, 8 items]
 
-## Той, та, те (That) (~350 words total)
-- P1 (~100 words): Introduction to `той`, `та`, `те` for objects further away ("that"). Establishing the spatial link with `там` (there). Examples: `той будинок` (that building over there), `та машина`.
-- P2 (~90 words): The concept of contrast using `а` (but/and). Providing binary comparison sentences: `Цей олівець мій, а той — твій.` `Ця книга цікава, а та — нудна.` Reinforcing the near/far distinction.
-- P3 (~80 words): Clarification on the word `та`. Distinguishing the demonstrative `та` (that woman — `та жінка`) from the conjunction `та` (mom and dad — `мама та тато`). Contextual rules for disambiguation.
-- P4 (~80 words): Forming choices using `чи` (or). Practical "pointing" questions for learners: `Цей стіл чи той?` `Ця сумка чи та?` `Це вікно чи те?`
-- <!-- INJECT_ACTIVITY: fill-in-near-far --> [fill-in, focus: Completing contrastive sentences using ця/та or цей/той, 8 items]
-- <!-- INJECT_ACTIVITY: quiz-that-pointing --> [quiz, focus: Identifying the correct form of той/та/те for far objects in pictures or descriptions, 6 items]
+## Той, та, те (That) (~330 words total)
+- P1 (~70 words): Introduce the "far" pointers "той" (m), "та" (f), and "те" (n) to indicate objects farther away (that). Examples: "Той стіл," "Та книга," "Те вікно." Mention that while there is a full declension table for "той" (Літвінова Grade 6, p.273), A1 focuses strictly on the nominative.
+- P2 (~80 words): Contrast "this" vs "that" in practice by physically pointing. Show sentences that compare proximity: "Цей стілець тут, а той стілець там" (This chair is here, and that chair is there) or "Цей стілець новий, а той — старий."
+- P3 (~60 words): Provide a crucial warning: the word "та" can mean both "that" (demonstrative) and "and" (conjunction). Explain that context makes it completely clear, contrasting "мама та тато" (mom and dad) with "та книга" (that book).
+- P4 (~80 words): Demonstrate practical usage for pointing and choosing using "чи" (or). Examples: "Який стіл? — Цей чи той?" (This one or that one?), "Яка сумка? — Ця червона чи та синя?", "Яке вікно? — Це велике чи те маленьке?".
+- P5 (~40 words): Briefly introduce the plural form "ті" ("those") for all genders (e.g., "ті столи", "ті книги"), completing the near/far demonstrative set.
+- <!-- INJECT_ACTIVITY: quiz-that-gender --> [quiz, Той, та, or те? Point at the far object, 6 items]
+- <!-- INJECT_ACTIVITY: fill-in-this-vs-that --> [fill-in, Complete: ___ книга нова, а ___ — стара. (ця/та), 8 items]
 
 ## Підсумок — Summary (~330 words total)
-- P1 (~150 words): The Gender Agreement Table. A comprehensive recap aligning all A1.2 grammar markers:
-  | Gender | Pronoun | Possessive | Question | "This" | "That" |
-  | :--- | :--- | :--- | :--- | :--- | :--- |
-  | Masculine | він | мій | який? | цей | той |
-  | Feminine | вона | моя | яка? | ця | та |
-  | Neuter | воно | моє | яке? | це | те |
-  Emphasis on the consistent vowel endings (-я/а for feminine, -е for neuter).
-- P2 (~100 words): Proactive error correction checklist. Reminder: Never ask `Що цей?` for "What is this?"; always use the neutral `Що це?`. Mentioning the omission of "to be" (`є`) in descriptive sentences: `Цей стіл великий.`
-- P3 (~80 words): Practical self-check.
-  - Point at 3 things near you: `Цей...`, `Ця...`, `Це...`.
-  - Point at 3 things far away: `Той...`, `Та...`, `Те...`.
-  - Check: Does the ending match the noun's gender?
+- P1 (~80 words): Explain how demonstratives create text cohesion and help avoid repetition. Show a short native-style progression: "Марусі подарували ноутбук. Він став найкращим другом. Цей комп'ютер..." This avoids repeating the word "ноутбук" over and over.
+- P2 (~150 words): Provide the grand gender agreement table bringing together all A1.2 patterns to show Ukrainian's consistency:
+  | | m | f | n |
+  | мій | моя | моє | (M06 possessives) |
+  | який | яка | яке | (M09 questions) |
+  | цей | ця | це | (M12 this) |
+  | той | та | те | (M12 that) |
+  Explain how they all share the same logic and endings.
+- <!-- INJECT_ACTIVITY: match-up-gender-patterns --> [match-up, Match цей/ця/це with мій/моя/моє and який/яка/яке — same gender!, 6 items]
+- P3 (~100 words): 
+  - Self-check exercise (prompt format): 
+    - Look around your room. Point at 3 things near you and name them using "цей", "ця", or "це" (e.g., "цей стіл", "ця ручка"). 
+    - Now look out the window or across the room. Point at 3 things far away and name them using "той", "та", or "те" (e.g., "той будинок", "те вікно").
 
-Grand total: ~1330 words
+Grand total: ~1320 words

@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-INJECT_ACTIVITY: match-up-verb-terms --> ## Дієвідміна та особа Ми добре знаємо, що дієслово змінює свою форму. Чому воно це робить? Тому що воно показує, хто саме виконує дію. Ця граматична категорія називається **особа** *(person)*. Також дієслово завжди показує, скільки людей або предметів виконують дію. Ця категорія називається **число** *(number)*. В українській мові є **однина** *(singular)* та **множина** *(plural)*. Коли ми говоримо про себе, ми використовуємо **першу особу** *(first person)*. Це займенники «я» *(I)* та «ми» *(we)*. Коли ми говоримо з кимось прямо, це **друга особа** *(second person)*. Ми кажемо «ти» *(you, singular)* або «ви» *(you, plural/formal)*. Коли ми говоримо про інших людей або предмети, це **третя особа** *(third person)*. Це займенники «він» *(he)*, «вона» *(she)*, «воно» *(it)* та «вони» *(they)*. Ось зручна таблиця для цих граматичних термінів. | Число | 1-ша особа | 2-га особа | 3-тя особа | | :--- | :--- | :--- | :--- | | **Однина** | я | ти | він, вона, воно | | **Множина** | ми | ви | вони | Ці слова є фундаментальними для спілкування. Вони допомагають нам правильно змінювати дієслова. Тепер ми вивчимо ще один корисний термін. Ви, мабуть, помітили, що дієслова мають різні закінчення в теперішньому часі. Чому ми кажемо «ти пишеш», але при цьому кажемо «ти говориш»? Це залежить від граматичної групи дієслова. Ця група називається **дієвідміна** *(conjugation class)*. В українській мові є лише дві такі групи. **Перша дієвідміна** *(first conjugation)* має голосні літери «е» або «є» у закінченнях. Наприклад: «ти пиш-е-ш», «він чита-є», «ми зна-є-мо». **Друга дієвідміна** *(second conjugation)* має голосні літери «и» або «ї» у закінченнях. Наприклад: «ти говор-и-ш», «вона сто-ї-ть», «ми мовч-и-мо». Як перевірити дієвідміну нового слова? Є дуже простий тест. Подивіться на форму другої особи однини. Якщо там є «е» або «є» — це перша дієвідміна. Якщо там є «и» або «ї» — це друга дієвідміна. Також можна дивитися на форму третьої особи множини. Перша дієвідміна завжди закінчується на «-уть» або «-ють» (вони пишуть, вони читають). Друга дієвідміна закінчується на «-ать» або «-ять» (вони кричать, вони говорять). Цей тест працює ідеально. Тепер ми можемо зробити повний граматичний аналіз слова. В українській школі цей процес називається **морфологічний розбір** *(morphological analysis)*. Це означає, що ми беремо одне слово і знаходимо всі його граматичні категорії. Для практичного прикладу візьмемо дієслово «читаємо» з простого речення «ми зараз читаємо нову книгу». Спробуймо знайти шість ключових категорій. Крок перший: яка це **частина мови** *(part of speech)*? Це дієслово, бо воно показує дію. Крок другий: який це час? Це теперішній час, бо дія відбувається зараз. Крок третій: який це вид? Це недоконаний вид, бо це довгий процес і він відповідає на питання «що робимо?». Крок четвертий: яка це особа? Це перша особа, бо ми використовуємо займенник «ми». Крок п'ятий: яке це число? Це множина, бо людей багато. Крок шостий: яка це дієвідміна? Це перша дієвідміна, бо ми бачимо літеру «є» у слові «читаємо» і закінчення «-ють» у формі «читають». Цей аналіз показує, як логічно працює мова. Тепер ви знаєте базову граматичну термінологію. Ви можете самостійно аналізувати нові слова. <!-- INJECT_ACTIVITY: group-sort-verb-tense -->
+Ukrainian verbs and building fluent sentences. Перша особа — це завжди той, хто говорить. В однині ми використовуємо займенник «я», а в множині — «ми». Друга особа позначає нашого співрозмовника. Для цього ми маємо слова «ти» та «ви». Третя особа описує когось іншого або якийсь предмет. В однині це «він», «вона» або «воно», а в множині — «вони». Кожне дієслово змінює своє закінчення залежно від особи та числа. | Особа (Person) | Однина (Singular) | Множина (Plural) | | :--- | :--- | :--- | | 1-ша (перша) | я | ми | | 2-га (друга) | ти | ви | | 3-тя (третя) | він, вона, воно | вони | Because verb endings change based on the person and number, Ukrainian verbs are grouped into specific families. This grouping is called a **дієвідміна** (conjugation class). There are two main conjugation classes, and knowing them helps you predict the correct endings for the present and future tenses. It might seem complicated at first, but the system is actually very logical once you learn the patterns. Recognizing the conjugation class allows you to speak with confidence. Існує перша та друга дієвідміна. Щоб визначити групу, ми дивимося на голосний звук у закінченні. Якщо у другій особі однини є звук «е» або «є», це перша дієвідміна. Наприклад, ти пишеш або ти знаєш. Якщо там є звук «и» або «ї», це друга дієвідміна. Наприклад, ти говориш або ти стоїш. > *There is a first and a second conjugation class. To determine the group, we look at the vowel sound in the ending. If in the second person singular there is an "e" or "ye" sound, it is the first conjugation class. For example, you write or you know. If there is an "y" or "yi" sound there, it is the second conjugation class. For example, you speak or you stand.* :::info **The Vowel Test** You can also check the third person plural (вони) to find the conjugation class. The first conjugation has the endings **-уть** or **-ють** (вони пиш**уть**, вони зна**ють**). The second conjugation takes the endings **-ать** or **-ять** (вони сто**ять**, вони говор**ять**). This simple trick works for almost all regular verbs and saves you from memorizing long lists of endings. ::: When you look up any Ukrainian **дієслово** (verb) in a **словник** (dictionary), it helps to clearly understand its grammatical categories. This process is like dissecting the word piece by piece to understand exactly how it works within a sentence. Let us analyze the verb form «ми читаємо» (we are reading) together as a practical example. We will look for its **час** (tense), its **вид** (aspect), and whether it is **недоконаний** (imperfective). Спочатку ми визначаємо частину мови. Звісно, це дієслово. Потім ми дивимося на час, який тут є теперішнім. Далі ми перевіряємо вид. Це слово відповідає на питання «що робити?», тому це недоконаний вид. Ми також бачимо, що дію виконуємо «ми». Це означає, що це перша особа і множина. Нарешті, закінчення «-ємо» показує нам, що це перша дієвідміна. <!-- INJECT_ACTIVITY: group-sort-verb-tense -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -513,7 +513,74 @@ Understanding the sentence is the central goal of syntax. It builds directly upo
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 6: A2 finale (A2 M51-M69)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 40%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 40% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 70-90% Ukrainian.
 LANGUAGE ROLES:
@@ -532,18 +599,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] дієслово (verb)
+- [ ] час (tense, time)
+- [ ] вид (aspect)
+- [ ] доконаний (perfective)
+- [ ] недоконаний (imperfective)
+- [ ] спосіб (mood, manner)
+- [ ] дієвідміна (conjugation class)
+- [ ] особа (person, grammatical)
+- [ ] прислівник (adverb)
+- [ ] словник (dictionary)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Словникова грамотність: читаємо словник (~550 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

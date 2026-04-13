@@ -26,7 +26,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-попередню граматичну тему, де ми дуже докладно вивчали недоконаний вид. Тоді ми постійно ставили інше питання: «що роблячи?». Там нашим головним, визначальним поняттям була **одночасність** *(simultaneity)*. Це означало, що дві різні дії відбувалися цілком паралельно, в один і той самий проміжок часу. Згадайте наш типовий приклад: «Читаючи книгу, я пив каву» *(While reading a book, I drank coffee)*. Ви робили обидві речі абсолютно одночасно. Тепер ми рішуче переходимо до зовсім нової мовної концепції. Ми детально говоримо про таке явище, як **попередність** *(precedence)*. Ви зараз на власні очі побачите, що заміна лише одного слова кардинально змінює всю загальну картину часу в нашому реченні. Уважно порівняйте дві дуже схожі на перший погляд ситуації. Перша ситуація: «Відчиняючи двері, я побачив кота» *(While opening the door, I saw a cat)*. Тут ви міцно тримаєте руку на ручці, важкі двері ще повільно рухаються. Процес відчинення все ще триває, і саме в цей момент ви раптом бачите тварину. Друга ситуація: «Відчинивши двері, я побачив кота» *(Having opened the door, I saw a cat)*. У цьому другому випадку ви вже повністю відчинили ці двері навстіж. Будь-який фізичний рух уже остаточно зупинився. І тільки після цього ваш здивований погляд падає на кота. Зміна виду дієслова миттєво змінює те, як ми уявляємо собі цю картину. Щоб ще краще і глибше відчути цей строгий, формальний ритм послідовних завершених дій, давайте уявимо серйозну розмову у міському поліцейському відділку. Досвідчений детектив дуже детально звітує своєму старшому колезі про виконану роботу на місці загадкової події: > — **Детектив:** Увійшовши в кімнату, я побачив сліди. *(Having entered the room, I saw footprints.)* > — **Колега:** Оглянувши місце, ви зателефонували нам? *(Having examined the scene, did you call us?)* > — **Детектив:** Так, дізнавшись правду, ми почали діяти. *(Yes, having learned the truth, we started to act.)* Цей короткий і змістовний діалог звучить надзвичайно професійно, досить сухо і максимально чітко структуровано. Саме завдяки використанню цих специфічних дієслівних форм ми без жодних проблем розуміємо точну хронологію всіх описаних подій. Нам зовсім не потрібні якісь додаткові довгі пояснення чи надто складні речення з багатьма сполучниками. У цьому короткому, але дуже показовому діалозі ми бачимо абсолютно ідеальну, логічну послідовність важливих подій. Детектив справді майстерно використовує форми «увійшовши», «оглянувши» та **дізнавшись** *(having found out)*, щоб дуже яскраво показати сувору хронологію свого складного розслідування. Тут нам варто звернути свою особливу увагу на найважливіше синтаксичне правило, яке категорично не можна порушувати ніколи. І додаткову побічну дію, яку виражає дієприслівник, і основну головну дію, яку виражає дієслово-присудок, завжди виконує тільки одна й та сама дійова особа. Детектив увійшов у темну кімнату, і саме він же потім побачив підозрілі сліди. Цей же детектив уважно оглянув місце злочину, і він же після цього зателефонував своїм колегам по роботі. Зверніть свою увагу на цей тісний і логічний зв'язок. Цей нерозривний зв'язок є непорушним і святим законом української граматики. Ми ще обов'язково будемо говорити про нього набагато детальніше в наших наступних розділах, адже прикрі помилки серед учнів тут трапляються дуже часто. <!-- INJECT_ACTIVITY: reading, reading-temporal-logic --> <!-- INJECT_ACTIVITY: fill-in, fill-in-temporal-sequence --> <!-- INJECT_ACTIVITY: quiz, quiz-perfective-basics -->
+gerund in a sentence does not just change the grammar rules; it dramatically alters the entire timing, meaning, and logic of the scene you are trying to describe. A small suffix completely rewrites the timeline. Уявіть ситуацію біля вхідних дверей вашого будинку. Якщо ви кажете: «Відчиняючи двері, я побачив сусіда», це означає абсолютну одночасність дій. Ви були в процесі відчинення дверей, коли ваш погляд раптово впав на людину. Дві дії відбувалися паралельно. Але якщо ви скажете: «Відчинивши двері, я побачив сусіда», уся ситуація змінюється кардинально. Форма «відчинивши» показує повну завершеність першої дії. Спочатку ви повністю відчинили двері, цей процес завершився, і лише потім ви побачили сусіда. Вибір правильного виду дієприслівника змінює хронологію подій у вашій розповіді. Наприклад, **написавши** (having written — perfective gerund) листа, ви його відправляєте, а не робите це під час написання. Так само, **побачивши** (having seen — perfective gerund) старого друга, ви зупиняєтеся привітатися. Let us look at how this sequence of completed actions flows naturally in a narrative context. In this dialogue, a detective is recounting the exact sequence of his investigation to a colleague at the police station. Notice how every perfective gerund sets the stage for the next logical action. > — **Детектив:** Увійшовши в кімнату, я побачив сліди. *(Having entered the room, I saw traces.)* > — **Колега:** Оглянувши місце, ви зателефонували нам? *(Having examined the place, you called us?)* > — **Детектив:** Так, дізнавшись правду, ми почали діяти. *(Yes, having learned the truth, we began to act.)* > — **Колега:** А **повернувшись** (having returned — reflexive perfective gerund) до відділку, ви склали рапорт? *(And having returned to the station, did you compile the report?)* > — **Детектив:** Звичайно. *(Of course.)* Let us carefully analyze the grammar used in this dialogue. The detective effectively uses a series of perfective gerunds to organize his report: *увійшовши* (having entered), *оглянувши* (having examined), and *дізнавшись* (having learned). There is a critical, non-negotiable rule at play here. In every single instance, the person performing the additional action is exactly the same person performing the main action. The detective entered, and the detective saw. Дуже важливо завжди пам'ятати про правило спільного підмета для обох дій. Дієприслівник та основне дієслово-присудок завжди повинні стосуватися однієї і тієї ж особи чи предмета. Коли детектив каже «увійшовши в кімнату, я побачив», саме він особисто виконує обидві ці дії. Якщо підмети для двох дій різні, таке речення буде вважатися грубою граматичною помилкою. Наприклад, категорично не можна сказати «повернувшись додому, почався дощ». Це означатиме, що дощ спочатку сам повернувся додому, а потім почався. :::info **Grammar box** The absolute golden rule of all Ukrainian gerunds is strict subject alignment. The action described by the gerund MUST be performed by the exact same subject that performs the main verb's action. If a different person or object performs the gerund's action, you cannot use a gerund. Instead, you must use a full subordinate clause with conjunctions like «коли» (when) або «після того як» (after). ::: <!-- INJECT_ACTIVITY: reading-temporal-logic --> <!-- INJECT_ACTIVITY: fill-in-temporal-sequence --> <!-- INJECT_ACTIVITY: quiz-perfective-basics -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -533,7 +533,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -546,18 +613,62 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] дієприслівник доконаного виду (perfective gerund)
+- [ ] різночасність (temporal non-simultaneity — gerund before main action)
+- [ ] одночасність (simultaneity — imperfective gerund, review)
+- [ ] прочитавши (having read — perfective gerund)
+- [ ] дізнавшись (having found out — reflexive perfective gerund)
+- [ ] повернувшись (having returned — reflexive perfective gerund)
+- [ ] написавши (having written — perfective gerund)
+- [ ] побачивши (having seen — perfective gerund)
+- [ ] попередність (precedence — action completed before the main one)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Творення дієприслівників доконаного виду (~935 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

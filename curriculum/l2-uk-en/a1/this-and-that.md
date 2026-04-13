@@ -1,68 +1,70 @@
 ## Діало́ги (Dialogues)
 
-Imagine standing in a bright, modern electronics store in the heart of Kyiv. You want to buy a few new gadgets for your home, but the shelves are completely packed with options. To get the right item quickly, you need to point effectively and accurately. **Іри́на** (Iryna) is currently looking for a few things, including a bag for her equipment, and the **консульта́нт** (shop assistant) is actively helping her navigate the many choices on display.
+Pointing at objects is a common daily task. In a shop, you may compare things near you and farther away: **ось цей телефо́н**, **ось та ка́мера**, **ось це ра́діо**. The first dialogue shows this contrast in a shopping situation and reuses color and price language from earlier modules.
 
-> **Ірина:** До́брий день! Скі́льки ко́шту́є **ця су́мка**? *(Good afternoon! How much does this bag cost?)*
-> **Консультант:** Добрий день! **Яка? Ця черво́на?** *(Good afternoon! Which one? This red one?)*
-> **Ірина:** **Ні, та си́ня.** *(No, that blue one.)*
-> **Консультант:** **Та сумка** коштує дві́сті гри́вень. *(That bag costs two hundred hryvnias.)*
-> **Ірина:** **А цей рюкза́к?** *(And this backpack?)*
-> **Консультант:** **Цей — сто п'ятдеся́т.** *(This one is one hundred fifty.)*
-> **Ірина:** До́бре. А **цей телефо́н**? *(Good. And this phone?)*
-> **Консультант:** **Це нови́й смартфо́н**. *(This is a new smartphone.)*
+> **Іри́на:** Скі́льки ко́шту́є ця су́мка? *(How much does this bag cost?)*
+> **Консульта́нт:** Яка? Ця черво́на? *(Which one? This red one?)*
+> **Ірина:** Ні, та си́ня. *(No, that blue one.)*
+> **Консультант:** Та коштує дві́сті гри́вень. *(That one costs two hundred hryvnias.)*
+> **Ірина:** А цей рюкза́к? *(And this backpack?)*
+> **Консультант:** Цей — сто п'ятдеся́т. *(This one — one hundred fifty.)*
 
-After leaving the store, Ірина returns to her home office. The room has various pieces of furniture, some close by and some across the room. She points out her workspace to a friend.
+In this dialogue, **цей/ця** points to the nearer item and **той/та** points to the farther one.
 
-> **Друг:** **Що це?** *(What is this?)*
-> **Ірина:** **Це мій стіл.** *(This is my table.)*
-> **Друг:** **А те?** *(And that?)*
-> **Ірина:** **Те — крі́сло.** *(That is an armchair.)*
-> **Друг:** Яка га́рна кімна́та! *(What a nice room!)*
-> **Ірина:** Дякую. **Цей стіле́ць новий, а той — стари́й.** *(Thank you. This chair is new, and that one is old.)*
-> **Друг:** А **ця ша́фа**? *(And this wardrobe?)*
-> **Ірина:** **Ця шафа** нова́, а **та книжко́ва поли́ця** стара́. *(This wardrobe is new, but that bookshelf is old.)*
+The second dialogue takes place in a residential room. This conversation compares everyday furniture and uses noun vocabulary you already know from previous topics. A person identifies an object located close by, and then points to an object resting across the room. The contrast is clear.
 
-Notice how naturally Ірина identifies various objects in her environment. She does not need to repeat the names of the items constantly. By using short pointing words, she simply points to something right near her or across the room, establishing a clear physical contrast.
+> **Брат:** Що це? *(What is this?)*
+> **Сестра́:** Це мій стіл. *(This is my table.)*
+> **Брат:** А те? *(And that?)*
+> **Сестра:** Те — крі́сло. *(That is an armchair.)*
+> **Брат:** Цей стіле́ць нови́й, а той — стари́й. *(This chair is new, and that one is old.)*
+
+The conversation contrasts near and far objects. The grammar directly reflects the physical reality of the room. The speaker's position relative to the object changes the descriptive word from this to that. The difference is immediately obvious to a native speaker.
 
 ## Цей, ця, це (This)
 
-When you want to identify an object in Ukrainian, the most universal tool at your disposal is the word **це** (this is / that is). You already know this essential word from the fundamental question **Що це?** (What is this?). In this direct context, **це** acts as a fixed, unchangeable identifier. You can point at absolutely anything and state **Це стіл** (This is a table) or **Це вікно́** (This is a window) without worrying about gender. However, when you want to specifically point to a neuter object and describe it further, **це** also functions as a specific pointing word, as seen in the phrase **це вели́ке по́ле** (this large field).
+The word **це** (this is / that is) is the universal identifier in the Ukrainian language. For basic identification questions like **Що це?** (What is this?), the answer is simply **Це стіл** (This is a table) or **Це кни́га** (This is a book). This use of **це** does not require gender agreement. In identification sentences, it often means "this is" or "it is" in English. You use it to identify an object, but **це** is also the neuter demonstrative in phrases like **це вікно́**.
 
-When you point directly at an object near you to describe or select it, demonstrative pronouns follow the same gender pattern as **мій**, **моя́**, **моє́** and **яки́й**, **яка**, **яке́**. For masculine nouns, you use **цей** (this). For feminine nouns, you use **ця** (this). For neuter nouns, you use **це** (this). As noted in Ukrainian school textbooks (Заболо́тний Grade 6, p.210), these demonstrative pronouns change by gender. This pattern directly mirrors the personal pronouns **він** (he), **вона́** (she), and **воно́** (it). It perfectly aligns with the possessive words you learned earlier in your studies. For example, you say **цей стіл** (this table) for a masculine noun. You confidently say **ця кни́га** (this book) for a feminine noun. You easily identify **це вікно** (this window) for a neuter noun.
+When you point at a specific known object, you use the gendered pointers. These are **цей** (this, masculine), **ця** (this, feminine), and **це** (this, neuter). Ukrainian textbooks, such as Заболо́тний for Grade 6 (p. 210), explain that demonstrative pronouns change by gender to match the noun. For example, you say **Цей стіл** (this table), **Ця книга** (this book), and **Це вікно** (this window). At the current learning stage, we focus only on the nominative case.
 
-Ukrainian word order makes combining these pointing words with descriptive adjectives incredibly straightforward. The sequence is completely identical to English: Demonstrative + Adjective + Noun. The pointing word always takes the absolute lead position in the sentence. For a masculine item, you can say **цей вели́кий черво́ний стіл** (this big red table). For a feminine item, the pattern remains identical: **ця нова синя сумка** (this new blue bag). For a neuter item, you describe it as **це мале́ньке бі́ле вікно** (this small white window). The structure never changes, giving you a highly reliable template for building longer, more descriptive phrases as your daily vocabulary grows.
+A quick review link can help: **стіл** (table) → **він** (he) → **мій** (my) → **цей** (this), **книга** (book) → **вона́** (she) → **моя́** (my) → **ця** (this), **вікно** (window) → **воно́** (it) → **моє́** (my) → **це** (this). This lets you check gender agreement across patterns you already know.
+
+You can easily combine these demonstrative words with adjectives and colors. In the basic pattern taught here, the usual order is demonstrative + adjective(s) + noun. You say **Цей вели́кий черво́ний стіл** (This big red table). You say **Ця нова́ синя сумка** (This new blue bag). You say **Це мале́ньке бі́ле вікно** (This small white window). This is the default beginner pattern to use in this module.
+
+A common error for English speakers is adding the verb "to be" in the present tense. In Ukrainian, you usually omit it: **Цей стіл новий** (This table is new), not "Цей стіл є новий".
 
 <!-- INJECT_ACTIVITY: quiz-this-gender -->
 
-<!-- INJECT_ACTIVITY: match-up-this-possessive -->
-
 ## Той, та, те (That)
 
-Once you can point at objects right next to you, you immediately need the vocabulary to point at things further away, or things previously mentioned. In Ukrainian, you use the forms **той** (masculine), **та** (feminine), and **те** (neuter) to mean "that." These specific words establish a clear spatial link with the location word **там** (there), just as **цей** links to **тут** (here) or **ось** (here is). If a masculine object is located **там**, you point to it clearly by saying **той стіл** (that table). If a feminine object is far away, you identify it easily as **та книга** (that book). For a distant neuter object, you simply say **те вікно** (that window). This creates a highly logical distance mapping in your mind.
+The Ukrainian language uses the "far" pointers **той** (that, masculine), **та** (that, feminine), and **те** (that, neuter) to indicate objects farther away. You use these words to point at distant things across a room or a street. Examples include **Той стіл** (That table), **Та книга** (That book), and **Те вікно** (That window). While Ukrainian textbooks like Літвінова for Grade 6 (p. 273) provide a full declension table for **той**, we focus strictly on the nominative case right now.
 
-The true communicative power of these words emerges when you create direct contrast. Ukrainian relies heavily on the small conjunction **а** (but / and) to compare two different things in one breath. You can build binary comparison sentences effortlessly. For example, you might say **Цей оліве́ць мій, а той — твій.** (This pencil is mine, and that one is yours). You can also actively contrast different qualities: **Ця книга ціка́ва, а та — нудна́.** (This book is interesting, but that one is boring). This parallel structure powerfully reinforces the near and far distinction.
+You contrast "this" versus "that" in practice by physically pointing. Sentences that compare proximity highlight the grammar effectively. You can say **Цей стілець тут, а той стілець там** (This chair is here, and that chair is there). You can also say **Цей стілець новий, а той — старий** (This chair is new, and that one is old). The words **тут** (here) and **там** (there) emphasize the physical location. The location of the object defines the exact pronoun.
 
-You must be aware of a small but highly important detail regarding the exact word **та**. In Ukrainian, **та** primarily functions as the feminine pointing word "that," as seen in the phrase **та жі́нка** (that woman). However, **та** also serves as a common conjunction meaning "and," identical in daily use to the word **і** (and). For example, you might say **ма́ма та та́то** (mom and dad). Context provides all the necessary rules for instant disambiguation. If **та** appears directly before a feminine noun, it points. If it sits safely between two nouns, it connects them together.
+A crucial warning involves a potential point of confusion. The word **та** can mean both "that" as a demonstrative pointer and "and" as a conjunction. Context makes the meaning completely clear. Consider the phrase **ма́ма та та́то** (mom and dad). Compare this to the phrase **та книга** (that book). The surrounding words reveal the correct function immediately.
 
-In practical daily usage, you often need to offer or make rapid choices. To form a clear choice, you use the question word **чи** (or). This allows you to ask highly practical "pointing" questions when organizing your life. If you are arranging furniture, you might simply ask **Який стіл? — Цей чи той?** (Which table? — This one or that one?). While shopping, you can turn and ask a friend **Яка сумка? — Ця червона чи та синя?** (Which bag? — This red one or that blue one?). For a neuter object, the pattern is exactly the same: **Яке вікно? — Це велике чи те маленьке?** (Which window? — This big one or that small one?).
+You demonstrate practical usage for pointing and choosing by using the word **чи** (or). The question structure is very straightforward and mimics the English pattern. You ask **Яки́й стіл? — Цей чи той?** (Which table? — This one or that one?). You ask **Яка сумка? — Ця червона чи та синя?** (Which bag? — This red one or that blue one?). You ask **Яке́ вікно? — Це вели́ке чи те маленьке?** (Which window? — This big one or that small one?). The choices are clear.
 
-<!-- INJECT_ACTIVITY: fill-in-near-far -->
+For now, focus on singular **той/та/те** and use them in short contrasts like **Цей стілець новий, а той — старий**.
 
-<!-- INJECT_ACTIVITY: quiz-that-pointing -->
+<!-- INJECT_ACTIVITY: quiz-that-gender -->
+<!-- INJECT_ACTIVITY: fill-in-this-vs-that -->
 
 ## Підсумок — Summary
 
-You can perfectly summarize all the critical patterns you have learned into one comprehensive Gender Agreement Table. This straightforward table clearly aligns all the foundational grammar markers for masculine, feminine, and neuter nouns in the Ukrainian language.
+First, review the core contrast: **цей/ця/це** points to something near you, and **той/та/те** points to something farther away. For example: **Цей стіл тут, а той стіл там. Ця книга нова, а та стара́. Це вікно велике, а те маленьке.**
 
-| Category | Masculine | Feminine | Neuter |
-| :--- | :--- | :--- | :--- |
-| **Possessives** | **мій** | **моя** | **моє** |
-| **Questions** | **який?** | **яка?** | **яке?** |
-| **"This"** | **цей** | **ця** | **це** |
-| **"That"** | **той** | **та** | **те** |
+The grand gender agreement table brings together all patterns to show the remarkable consistency of the Ukrainian language. This chart is your roadmap for A1 grammar.
 
-Same endings, same logic — Ukrainian is highly consistent! The feminine forms overwhelmingly rely on the recognizable **-я** or **-а** vowel endings. The neuter forms consistently feature the distinct **-е** ending across all functional categories.
+| Type | Masculine | Feminine | Neuter |
+|---|---|---|---|
+| Possessives | **мій** | **моя** | **моє** |
+| Questions | **який** | **яка** | **яке** |
+| This | **цей** | **ця** | **це** |
+| That | **той** | **та** | **те** |
 
-A highly proactive approach to common conversational errors will drastically improve your speaking fluency. One of the most frequent mistakes learners make is trying to literally translate "What is this specific masculine thing?" by directly asking **Що цей?**. This is grammatically incorrect. You must never ask **Що цей?** or **Що ця?**. Always use the universal, neutral identifier for these identification questions: **Що це?** (What is this?). Furthermore, you must always remember the critical rule of description: in the present tense, you completely omit the verb "to be" (**є**). You simply say **Цей стіл великий.** (This table is big).
+All these words follow the same gender-agreement pattern, but their endings are not identical. In this table, the masculine forms often end in a consonant or **-й**, the feminine forms in **-я** or **-а**, and the neuter forms in **-е**. These structural patterns repeat systematically across different categories of words. When you memorize one pattern, you automatically understand how the other words behave. The grammatical system relies entirely on these predictable and reliable endings to build clear sentences. You do not have to guess; you simply apply the pattern.
 
-For a highly practical daily self-check, look around the room you are currently sitting in right now. Point at three distinct things near you and correctly name them aloud using **Цей**, **Ця**, or **Це**. Then, look completely across the room or out the open window. Point at three things far away and name them using **Той**, **Та**, or **Те**. Finally, systematically check yourself: does the specific ending you chose correctly match the noun's inherent gender?
+<!-- INJECT_ACTIVITY: match-up-gender-patterns -->
+
+Perform a self-check exercise to test your knowledge. Look around your room. Point at three things near you and name them using **цей**, **ця**, or **це**. For example, you can say **цей стіл** (this table), **ця ру́чка** (this pen), and **це лі́жко** (this bed). Now look out the window or across the room. Point at three things far away and name them using **той**, **та**, or **те**. For example, you can say **той буди́нок** (that building), **та маши́на** (that car), and **те вікно** (that window). Practice this physical pointing routine every single day to build an automatic reflex for these vocabulary words.

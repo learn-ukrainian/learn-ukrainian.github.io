@@ -3,20 +3,21 @@
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 20: Місцевий відмінок у нових контекстах (A2, A2.3 [Dative Case])
-**Section to write:** По телефону, по радіо: місцевий із прийменником «по» (~500 words)
-**Word target for this section:** 500 words (aim for 550 to account for undershoot)
+**Section to write:** По телефону, по радіо: місцевий із прийменником «по» (Locative with "po") (~550 words total)
+**Word target for this section:** 550 words (aim for 605 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## По телефону, по радіо: місцевий із прийменником «по» (~500 words)
-- P1 (~120 words): [The preposition "по" for channels and means. Explain that "по" + Locative indicates the medium of communication or transmission. Key examples: по телефону (by phone), по радіо (on the radio), по пошті (by mail), по телевізору (on TV). Note that for masculine nouns like "телефон," the ending is -у: по телефону.]
-- P2 (~100 words): [The "On the Way" concept. Explain "по дорозі" as a set expression for "on the way" or "along the path." Use examples like "Я зустрів друга по дорозі додому" or "Ми купили каву по дорозі на роботу," combining the means-locative with the abstract-locative.]
-- P3 (~130 words): [Semantic distinction: Means vs. Topic. Explain that "говорити по телефону" (Locative) describes the tool/channel, whereas "говорити про телефон" (Accusative) describes the subject of conversation. Reiterate the rule from the wiki: topic uses "про + Accusative" (я думаю про тебе, ми говорили про роботу).]
-- P4 (~150 words): [Usage nuances and frequency. Explain that while some modern Ukrainian speakers use the Instrumental for means (дзвонити телефоном), the construction "по + Locative" remains the most natural and standard way for A2 learners to express communication channels. Provide a list of modern "по" expressions: по імейлу, по скайпу, по інтернету.]
-- <!-- INJECT_ACTIVITY: match-up-locative-types --> [match-up, Match locative expressions with their English equivalents across all four function types, 8 items]
-- <!-- INJECT_ACTIVITY: error-correction-prepositions --> [error-correction, Fix preposition errors (*у роботі → на роботі, *у телефону → по телефону), 8 items]
+## По телефону, по радіо: місцевий із прийменником «по» (Locative with "po") (~550 words total)
+- P1 (~120 words): [Introduce the concept of topic/means of communication using 'по' + locative. Provide common examples: по телефону (by phone), по радіо (on the radio), по пошті (by mail), по дорозі (on the way).]
+- P2 (~130 words): [Explain the crucial grammatical distinction between the medium of communication and the topic. Contrast 'говорити по телефону' (the channel: по + locative) with 'говорити про телефон' (the topic: про + accusative).]
+- P3 (~120 words): [Provide clear sentence examples demonstrating the means of communication: "Я подзвоню по телефону", "Ми почули ці новини по радіо", "Він надіслав документи по пошті", "Ми зустрілися по дорозі додому."]
+- P4 (~100 words): [Add a cultural and grammatical note that 'по + locative' is the traditional, authentic Ukrainian pattern for means. Contrast this briefly with modern shifts toward 'по + dative' for distribution (по одному), reinforcing that communication means remain strictly locative.]
+- P5 (~80 words): [Summarize how the preposition 'по' transforms the locative case from a static location into an instrument, channel, or path of action.]
+- <!-- INJECT_ACTIVITY: fill-in-locative-forms --> [fill-in, Complete sentences with the correct locative form of the noun (у минулому ___, на цьому ___, по ___), 8 items]
+- <!-- INJECT_ACTIVITY: error-correction-prepositions --> [error-correction, Fix preposition errors (e.g., *у роботі → на роботі, *у телефону → по телефону, *на минулому місяці → у минулому місяці), 8 items]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -24,7 +25,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-"у тижні" or "на січні". Mixing these prepositions is a very common mistake for learners, so memorize them as fixed phrases. ::: The Locative case is also essential when talking about broader periods of your life or general historical eras. Just like with months, these life stages use the preposition **у** or **в** to pinpoint when an experience occurred. You can talk about your past using phrases like **у дитинстві**, **у молодості**, or **у старості**. You can also extend this logic to talk about time itself in a general sense, using expressions such as **у минулому** and **у майбутньому**. У дитинстві я жив у маленькому селі і дуже часто грався на вулиці. У молодості мій дідусь багато подорожував і працював у різних країнах. Я впевнений, що у майбутньому ми будемо жити краще і матимемо менше проблем. > *In childhood, I lived in a small village and played outside very often. In his youth, my grandfather traveled a lot and worked in different countries. I am sure that in the future we will live better and have fewer problems.* Let us look at a conversation where a student and a tutor discuss learning and schedules. Notice how naturally the temporal expressions blend with the abstract domains we learned in the previous section. > — **Студент:** Добрий день! На цьому тижні у мене три заняття з української мови. *(Good day! This week I have three Ukrainian language classes.)* > — **Викладач:** Це дуже добре. А що ви зазвичай робите у вільний час? *(That is very good. And what do you usually do in your free time?)* > — **Студент:** У вільний час я читаю про Україну. Зараз я читаю цікавий текст у підручнику з історії. *(In my free time I read about Ukraine. Right now I am reading an interesting text in a history textbook.)* > — **Викладач:** Це чудово. Ви раніше цікавилися нашою історією? *(That is wonderful. Were you interested in our history before?)* > — **Студент:** Ні, в дитинстві я мало знав про українську культуру. *(No, in childhood I knew little about Ukrainian culture.)* A critical distinction you must master is the difference between a specific point in time and the duration of an event. The Locative phrases we just learned, like **у січні** or **у минулому місяці**, answer the specific question of when an event occurred. However, if you want to express how long an action lasted, you must use the Accusative case without any preposition. This is a very common area of confusion for learners. For example, if an event happened at a specific moment during a month, use the Locative. If an action took up the entire month, use the Accusative. Ми вперше зустрілися у травні на концерті. Ми готували цей проект увесь травень. Важлива конференція була у січні. Мій брат відпочивав удома весь січень. > *We first met in May at a concert. We prepared this project all May. An important conference was in January. My brother rested at home all January.* <!-- INJECT_ACTIVITY: fill-in-temporal-locative -->
+the noun must agree in the locative case. The ending for masculine adjectives in the locative is typically **-ому** or **-ім**, and for the noun it is **-і**. This allows you to smoothly transition between discussing past events and future plans. У минулому місяці я багато працював і мало відпочивав. У цьому місяці я читаю нову книгу про мистецтво. А у наступному місяці ми плануємо велику зустріч із друзями. > *In the previous month I worked a lot and rested little. In this month I am reading a new book about art. And in the next month we are planning a big meeting with friends.* While months comfortably use **у** or **в**, the word **тиждень** (week) has its own special rule. It strictly requires the preposition **на**. This is a fixed combination you must memorize to sound natural. The endings follow the same pattern: the adjective takes the locative ending, and the noun **тиждень** becomes **тижні** (notice the vowel drop from the nominative form). На минулому тижні вона була у відрядженні. На цьому тижні у нас багато справ і нових проектів. На наступному тижні я нарешті поїду в гості до батьків. > *In the past week she was on a business trip. In this week we have many tasks and new projects. In the next week I will finally go visit my parents.* :::note **Quick tip** — Never say *у тижні* when indicating when something happens. It is always **на тижні** (на цьому тижні, на минулому тижні). ::: Beyond specific weeks and months, you can also use the locative case to describe broad periods of life or general timeframes. These expressions function exactly like physical locations, showing the "place in time" where an event or habit occurs. Understanding this makes your storytelling much richer. Common phrases include **у дитинстві** (in childhood) and **у молодості** (in youth). У дитинстві я часто грав на вулиці з братом. У молодості він багато подорожував Європою. У минулому люди не мали таких технологій. У майбутньому ми побачимо ще більше змін. > *In childhood I often played outside with my brother. In youth he traveled a lot around Europe. In the past people did not have such technologies. In the future we will see even more changes.* As you build more complex sentences, it is important to contrast this temporal locative with the accusative case. You use the locative to answer the question "Коли?" (When?), pointing out a specific month, week, or life period. However, if you are answering "Як довго?" (How long?) to indicate duration, or if you are specifying a day of the week, you must use the accusative case. Keeping these two functions separate is key to accurate timing. Він працював там цілий рік і багато чому навчився. У понеділок ми почали новий курс. Але у минулому місяці ми вивчали зовсім іншу тему. > *He worked there for a whole year and learned a lot. On Monday we started a new course. But in the previous month we studied a completely different topic.*
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -648,6 +649,31 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] місцевий (locative (case))
+- [ ] абстрактний (abstract)
+- [ ] минулий (past, previous)
+- [ ] місяць (month)
+- [ ] тиждень (week)
+- [ ] телефон (phone, telephone)
+- [ ] подорож (journey, trip)
+- [ ] зустріч (meeting, encounter)
+- [ ] думка (thought, opinion)
+- [ ] проблема (problem)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## По телефону, по радіо: місцевий із прийменником «по» (Locative with "po") (~550 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

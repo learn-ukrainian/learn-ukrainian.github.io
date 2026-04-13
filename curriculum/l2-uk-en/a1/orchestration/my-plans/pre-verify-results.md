@@ -1,21 +1,21 @@
 ## VESUM Verification
 - Confirmed: план, тиждень, вільний, зустріч, відпочивати, прибирати, вечірка, зустрінемося, задоволенням, жаль, допізна, звичайно, квартира, кіно, вчити
-- Not found: [] (All words verified in VESUM)
+- Not found: (None)
 
 ## Grammar Rules
-- **Prepositions У/В**: Правопис § 23 — Rules for alternation to achieve euphony (euphony/милозвучність). Use 'у' between consonants or at the start of a sentence before a consonant. Use 'в' between vowels.
-- **Time expressions (О/ОБ)**: Confirmed by usage in Grade 5 textbooks (e.g., "о шістнадцятій годині"). 'О' is used before most numbers, 'об' before vowels (e.g., об одинадцятій).
-- **Future Tense (Буду + Infinitive)**: Confirmed by Grade 3 textbook usage (e.g., "Як ви будете це робити?"). This is the standard compound future for imperfective verbs.
+- Чергування у-в: Правопис §23 — Позиції вживання прийменників і префіксів У та В. Щоб уникнути збігу букв на позначення приголосних або голосних звуків та щоб досягти милозвучності, в українській мові на письмі вживають прийменники «у» та «в» залежно від сусідніх букв (наприклад, між приголосними — «у», між голосними — «в»).
 
 ## Calque Warnings
-- **робити плани**: Calque (likely from English 'to make plans' or Russian 'делать планы') — use **мати плани** (to have plans) or **планувати** (to plan).
-- **зустріч з друзями**: OK — Standard Ukrainian phrasing for "meeting with friends."
-- **з задоволенням**: OK — Confirmed in Grade 5 textbook (Uhor, p. 94) as a natural response.
-- **на жаль**: OK — Standard phrase for "unfortunately."
+- з задоволенням: OK
+- на жаль: OK
+- плани на тиждень: OK
 
 ## CEFR Check
-- **тиждень**: A1 — OK (Found in Grade 1-4 textbooks)
-- **вільний**: A1 — OK (Found in Grade 5 "Social/Talk" sections, level-appropriate)
-- **вечірка**: A1 — OK (Found in Grade 3 textbooks, standard for early levels)
-- **квартира**: A1 — OK (Found in Grade 2 textbooks, basic housing vocabulary)
-- **відпочивати**: A1 — OK (Found in Grade 3-5, core daily activity)
+- план: A1 — OK
+- зустріч: A1 — OK
+- відпочивати: A1 — OK
+- звичайно: A1 — OK
+- кіно: A1 — OK
+- вчити: A1 — OK
+- вечірка: A2 — above target
+- прибирати: A2 — above target

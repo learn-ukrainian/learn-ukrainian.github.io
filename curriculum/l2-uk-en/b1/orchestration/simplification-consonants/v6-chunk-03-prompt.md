@@ -26,7 +26,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-«к» повністю випадає з групи [скн]. Схожа фонетична ситуація спостерігається зі словом «блиск», яке перетворюється на надзвичайно стрімке дієслово «блиснути». Абсолютно аналогічно працює це правило для дзвінкої групи [зкн]. Від базового слова «бризки» ми природно утворюємо швидку дію «бризнути», а від іменника «брязк» народжується дзвінке дієслово «брязнути». В усіх цих випадках повне зникнення звука «к» робить вимову дієслова набагато динамічнішою. Ще одна цікава група приголосних, яка безумовно заслуговує на нашу окрему детальну увагу — це комбінація звуків [слн]. На перший побіжний погляд, може здатися, що звук «л» є дуже м'яким, співучим і сонорним, тому він не повинен створювати жодних перешкод чи проблем для нашого артикуляційного апарату. Проте українська мова настільки глибоко і послідовно прагне до досконалої милозвучності, що навіть такий легкий звук може безслідно випадати, якщо він раптом опиняється затиснутим між двома іншими твердими приголосними. Найяскравішим класичним прикладом дії цього правила є простий іменник середнього роду «масло». Його коротка основа закінчується на приголосні «сл». Коли ми хочемо утворити відповідний прикметник за допомогою універсального суфікса «-н-», виникає важкувата група [слн]. Щоб повністю уникнути фонетичного дискомфорту під час розмови, звук «л» зникає, і ми отримуємо дуже гарне українське слово «масний», що означає жирний або щедро змащений маслом. Це ще раз доводить, наскільки системним є процес спрощення в нашій мові. Найголовніше практичне правило, яке ви повинні запам'ятати після вивчення цього розділу, стосується саме **орфографії** *(orthography)*. В усіх без винятку вищезгаданих випадках фонетичне спрощення є абсолютно **закріпленим** *(fixed)* на письмі. Це означає, що ми ніколи і за жодних обставин не пишемо ту літеру, яку ми більше не вимовляємо вголос. Український сучасний правопис у цих ситуаціях є повністю фонетичним: він ідеально відображає реальне живе звучання слова. Англомовні студенти дуже часто роблять прикрі типові помилки, намагаючись підсвідомо перенести логіку своєї рідної мови на український мовний ґрунт. Вони добре пам'ятають всі літери у базових кореневих словах і вперто намагаються зберегти їх у нових похідних формах. Будь ласка, будьте дуже уважними і ніколи не пишіть штучні форми на зразок *щастливий, *тиждневий або *честний. Наявність цих абсолютно зайвих літер на письмі вважається грубою орфографічною помилкою. Ваша здатність писати ці слова правильно і без зайвих приголосних демонструє високий рівень володіння українською граматикою. Як же студенту самостійно перевірити себе і точно зрозуміти, чи дійсно у певному слові відбулося фонетичне спрощення приголосних? Для цього існує надзвичайно простий та надійний **діагностичний алгоритм** *(diagnostic algorithm)*. Якщо ви уважно дивитесь на прикметник і починаєте підозрювати, що в ньому бракує якогось приголосного звука, вам потрібно просто знайти його початкове словникове слово. Найкраще шукати таку споріднену граматичну форму, де ця проблемна група приголосних буде безпечно розбита голосним звуком, або ж слово, де ця група знаходиться на самому кінці. Наприклад, ви маєте сумніви щодо написання слова «радісний». Знайдіть його первинну основу — іменник «радість». Тут ми абсолютно чітко бачимо і чуємо звук «т» перед м'яким знаком. Те саме безвідмовно стосується популярного слова «проїзний». Ми швидко шукаємо іменник «проїзд» і відразу бачимо дзвінкий звук «д» наприкінці цього слова. Цей перевірений метод порівняння є вашим надійним інструментом для перевірки власної орфографічної грамотності. <!-- INJECT_ACTIVITY: match-up-base-derivative --> <!-- INJECT_ACTIVITY: fill-in-adjectives -->
+(to press or squeeze). The noun "блиск" (shine or flash) becomes "блиснути" (to flash suddenly). Similarly, "бризки" (splashes) gives us "бризнути" (to splash), and "брязк" (clatter) gives us "брязнути" (to clatter or slam). Recognizing this pattern is a key part of Ukrainian **морфонологія** (morphophonology — sound changes in morphology), making these verbs punchy, dynamic, and easy to pronounce. One slightly less common but equally important pattern involves the cluster "-слн-". You might think that because "л" and "н" are both sonorants, they would be easy to pronounce together alongside "с". However, Ukrainian still considers three consonants too many for optimal flow. A classic example is the word "масло" (butter or oil). When we form the related adjective "масний" (greasy or fatty), the "л" completely drops out from between the "с" and the "н". Its removal ensures that the transition directly from the hissing "с" to the nasal "н" is uninterrupted. This serves as a strict **орфограма** (orthographic rule — spelling pattern requiring knowledge) that prioritizes a two-consonant limit over preserving the historical shape of the root. :::info **Grammar box** Always remember that simplification is driven by physical ease of pronunciation. Whenever your mouth struggles to articulate three consonants in a row, Ukrainian will almost always drop the middle one to help you out! ::: The most critical thing to understand about all these examples is that this simplification is **закріплений** (fixed — reflected in standard spelling) in the written language. In Ukrainian, the **вимова** (pronunciation — how words are spoken) directly dictates the **правопис** (orthography — correct spelling) in these cases. If the letter is not pronounced, it is absolutely not written. You must never write a silent consonant just because it exists in the base word. A very common error for English speakers is to write *щастливий, *тиждневий, or *честний by carrying over the "т" or "д" from the root. You must resist the urge to preserve the root visually. If the cluster simplifies in your mouth, it must simplify on your paper. Українська орфографія є переважно фонетичною, що означає дуже просте правило: ми пишемо слова так, як ми їх чуємо. Якщо звук заважає вільному потоку повітря, він фізично зникає з нашого тексту. Тому ти ніколи не побачиш зайвих літер у таких словах. How do you know if a consonant has actually dropped? The best diagnostic trick is to look for the base **іменник** (noun) where the cluster is broken up by a vowel or sits at the end of the word. Take the adjective "радісний". Look at the **основа** (stem — the word minus its ending) of its parent noun: "радість". The "т" is clearly visible. For "проїзний", look back at "проїзд". Comparing the base noun with the derived adjective reveals the missing consonant. You can safely apply this trick to almost every simplified word, though in the next section, we will look at any **виняток** (exception — case that does not follow the rule) that breaks this reliable pattern. <!-- INJECT_ACTIVITY: match-up-base-derivative --> <!-- INJECT_ACTIVITY: fill-in-adjectives -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -618,7 +618,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -631,18 +698,67 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] спрощення (simplification — dropping of a consonant from a cluster)
+- [ ] група приголосних (consonant cluster — sequence of consonants)
+- [ ] милозвучність (euphony — pleasant sound quality of speech)
+- [ ] випадати (to drop out — of a sound disappearing)
+- [ ] вимова (pronunciation — how words are spoken)
+- [ ] правопис (orthography — correct spelling)
+- [ ] закріплений (fixed — reflected in standard spelling)
+- [ ] виняток (exception — case that does not follow the rule)
+- [ ] словотворення (word formation — creating new words)
+- [ ] прикметник (adjective)
+- [ ] іменник (noun)
+- [ ] основа (stem — the word minus its ending)
+- [ ] орфограма (orthographic rule — spelling pattern requiring knowledge)
+- [ ] морфонологія (morphophonology — sound changes in morphology)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Винятки: спрощення у вимові, але не на письмі (~720 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

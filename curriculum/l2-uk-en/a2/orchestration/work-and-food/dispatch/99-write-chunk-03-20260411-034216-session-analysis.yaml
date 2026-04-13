@@ -1,0 +1,62 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T01-41-f55213f1.json
+phase: write-chunk-03
+prompt_chars: 43856
+response_chars: 3848
+prompt_words: 6158
+response_words: 640
+sections:
+- name: header
+  start: 0
+  length: 434
+  fraction: 0.0099
+- name: skeleton
+  start: 434
+  length: 1671
+  fraction: 0.0381
+- name: prior_summary
+  start: 2105
+  length: 3344
+  fraction: 0.0762
+- name: plan
+  start: 5449
+  length: 10910
+  fraction: 0.2488
+- name: wiki
+  start: 11031
+  length: 27369
+  fraction: 0.6241
+- name: output_spec
+  start: 43728
+  length: 128
+  fraction: 0.0029
+large_sections:
+- wiki
+directives_total: 10
+directives_covered: 4
+directives_missed:
+- kind: must
+  text: '* **Must-know:** `склянка води/молока`, `ложка цукру/солі`, `кілограм борошна/м''яса`.'
+  covered: false
+  coverage_note: 1/11 keywords (9%)
+- kind: must
+  text: '**MANDATORY:** Українська кулінарна та професійна лексика має суттєві відмінності
+    від російської.'
+  covered: false
+  coverage_note: 0/9 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: inject_activity
+  text: identify-instr-function
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: true-false-workday
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in, Complete a recipe description for Varenyky with correct Instrumental
+    forms for tools (ножем) and ingredients (картоплею), 8 items
+  covered: false
+  coverage_note: marker missing

@@ -2,49 +2,52 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 9
-  evidence: The module hits all required points, objectives, and vocabulary perfectly.
-    Word counts for individual sections deviate slightly from budgets (mostly slightly
-    shorter), but overall length is great.
+  score: 6
+  evidence: All four planned sections and the cooking-class dialogue are present,
+    but the plan explicitly allows `давайте читати, давайте поїдемо`, while the module
+    says `Слово «давайте» можна використовувати тіл
 - dimension: 2
   name: Linguistic accuracy
-  score: 8
-  evidence: Identified a morphological error (`перевірімо`) and inconsistent pronoun
-    register in the dialogue (Chef addresses Oksana with polite plural `наріжте`,
-    then singular `будь уважною`; addresses Maksym wi
+  score: 3
+  evidence: '`казати → скажи`, `сідати → сядь`, `їхати → поїдь` are wrong lemma-form
+    matches; `ходімо ... Це доконана дія` is false; `Діти, будьте уважні!` is wrongly
+    treated as an error.'
 - dimension: 3
   name: Pedagogical quality
-  score: 8
-  evidence: 'PPP flow is solid, but the logic explaining the `-мо` suffix for `робити`
-    is contradictory. The text says `роби` + `мо` = `робімо`, which is false (it would
-    be `робимо`). The `и` -> `і` shift must be '
+  score: 5
+  evidence: The module has a clear situation-pattern-practice flow, but it drills
+    incorrect rules in both prose and exercises, so learners would memorize false
+    generalizations.
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: Flawless. All required and recommended vocabulary items naturally integrated.
+  score: 9
+  evidence: Required vocabulary such as `хай`, `нехай`, `наказовий спосіб`, `кличний
+    відмінок`, `будь/будьте`, `ходімо`, `давайте`, `щасливою`, `здоровими` appears
+    naturally, and recommended items like `спокійний
 - dimension: 5
   name: Exercise quality
-  score: 7
-  evidence: Two markers (`fill-in` and `unjumble`) were placed pedagogically out of
-    order, testing concepts before they had been formally introduced.
+  score: 3
+  evidence: The prose duplicates a fill-in marker ID, the unjumble ID does not match
+    between prose and YAML, and the YAML contains wrong answer logic (`сідати → сядьмо`,
+    `їхати → поїдьмо`, `Давайте поговоримо` as
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: Excellent tone. "Зрозуміти цю логіку означає зрозуміти українську душу"
-    is a beautiful way to encourage learning blessings.
+  score: 8
+  evidence: The chef dialogue and the wishes/toasts material give the lesson some
+    energy and specificity instead of generic gamified filler.
 - dimension: 7
   name: Structural integrity
-  score: 8
-  evidence: Clean structure, but the writer accidentally left `(~550 words)` inside
-    the heading for the Vocative section.
+  score: 7
+  evidence: All four H2 sections are present and the pipeline word count is 3137,
+    but duplicate marker IDs and the unjumble ID mismatch create publish-time fragility.
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: Fantastic explanation of Ukrainian toasts (`Будьмо!`), everyday blessings,
-    and correct avoidance of the `давайте` + infinitive calque.
+  score: 8
+  evidence: The module stays Ukrainian-centered and uses culturally plausible material
+    like cooking-class commands and blessing formulas.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 9
-  evidence: Great contextual setting (cooking class). Deducting slightly for the register
-    inconsistencies, but the dialogue flows naturally otherwise.
+  score: 8
+  evidence: The opening exchange has named speakers and a real classroom task, though
+    it stays short and mostly teacher-led.
 findings: []

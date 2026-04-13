@@ -7,13 +7,11 @@ pipeline: v6
 build_status: draft
 ---
 
-import ErrorCorrection from '@site/src/components/ErrorCorrection';
 import FillIn from '@site/src/components/FillIn';
 import FlashcardDeck from '@site/src/components/FlashcardDeck';
 import GroupSort from '@site/src/components/GroupSort';
 import MatchUp from '@site/src/components/MatchUp';
 import Quiz from '@site/src/components/Quiz';
-import Translate from '@site/src/components/Translate';
 import TrueFalse from '@site/src/components/TrueFalse';
 import Unjumble from '@site/src/components/Unjumble';
 import YouTubeVideo from '@site/src/components/YouTubeVideo';
@@ -22,141 +20,193 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 <Tabs syncKey="module-tab">
 <TabItem label="Урок">
 
-## Вищий ступінь: порівнюємо два предмети
+## Вищий ступінь: порівнюємо два предмети (~670 words total)
 
-Сьогодні ми вчимося порівнювати два предмети. В українській мові ми використовуємо для цього **вищий ступінь порівняння** *(comparative degree)*. Але пам'ятайте одне дуже важливе правило. Ми можемо порівнювати тільки **якісні прикметники** *(qualitative adjectives)*. Це слова, які описують певну **якість** *(quality)*, що може бути більшою або меншою. Наприклад, ми можемо порівнювати **розмір** *(size)*, **швидкість** *(speed)*, температуру або **смак** *(taste)*. Ми не можемо сказати «більш дерев'яний» або «більш залізний». Але ми з радістю можемо сказати «більш солодкий» або «більш солоний». Це основа для правильного спілкування.
+In Ukrainian, when we want to evaluate two things against each other, we use the comparative degree. We call this grammatical process **порівняння** (comparison). However, it is important to know that not all adjectives can be compared. We only apply this to qualitative adjectives, which describe a physical or abstract quality that can objectively be "more" or "less". For example, an apple can be sweeter than another apple, or a modern car can be faster than a bicycle.
 
-Дуже часто ми утворюємо вищий ступінь за допомогою короткого **суфікса -ш-** *(suffix -ш-)*. Ми просто додаємо цей суфікс до основи базового слова. Але тут є один маленький **фонетичний** *(phonetic)* секрет. Якщо прикметник має суфікси **-к-**, **-ок-** або **-ек-**, вони зазвичай **зникають** *(disappear)* перед додаванням нового суфікса. Це дуже часте явище в українській мові. Подивіться на ці типові приклади.
-Слово **солодкий** *(sweet)* втрачає свій суфікс **-к-**. Воно стає новим словом **солодший** *(sweeter)*.
-Слово **тонкий** *(thin)* також швидко втрачає **-к-**. Ми отримуємо зручне слово **тонший** *(thinner)*.
-А слово **короткий** *(short)* перетворюється на **коротший** *(shorter)*.
-Це проста форма порівняння. Вона звучить дуже **природно** *(naturally)*. Українці використовують її щодня.
+Ми використовуємо вищий ступінь, коли робимо порівняння двох предметів або людей. Наприклад, ми кажемо, що один телефон дорожчий, а інший — дешевший. Але ми можемо порівнювати тільки ті якості, які можуть бути більшими або меншими. Кавун може бути **солодший**, а розмір може бути більший чи менший. Ми не можемо сказати «більш дерев'яний» стіл.
 
-Інший дуже популярний суфікс — це **-іш-**. Це найбільш **продуктивний** *(productive)* спосіб утворити вищий ступінь порівняння. Ми додаємо його до багатьох різних прикметників. Він дуже **зручний** *(convenient)* для вимови. Ось кілька типових і корисних прикладів.
-Слово **цікавий** *(interesting)* легко стає словом **цікавіший** *(more interesting)*.
-Слово **теплий** *(warm)* швидко перетворюється на **тепліший** *(warmer)*.
-Ви також можете впевнено сказати **гарніший** *(nicer)* від слова **гарний** *(nice)*. Це правильна регулярна **альтернатива** *(alternative)*.
-А слово **швидкий** *(fast)* утворює свою форму тільки за допомогою суфікса **-ш-**. Ви завжди кажете **швидший** *(faster)*. Ця коротка форма є єдиною правильною і дуже часто вживається.
+> *We use the comparative degree when we make a comparison of two objects or people. For example, we say that one phone is more expensive, and the other is cheaper. But we can only compare those qualities that can be greater or lesser. A watermelon can be sweeter, and size can be bigger or smaller. We cannot say a "more wooden" table.*
 
-Коли ми додаємо суфікс **-ш-**, дуже часто відбувається **чергування приголосних** *(consonant mutation)*. Це природний фонетичний **процес** *(process)*. Звуки просто змінюються, щоб слово було набагато легше вимовляти. Є три головні правила, які вам треба запам'ятати.
-Перше правило: звуки **г**, **ж**, **з** плюс суфікс **-ш-** завжди дають новий звук **жч**. Наприклад, слово **дорогий** *(expensive)* стає словом **дорожчий** *(more expensive)*. Слово **близький** *(close)* стає **ближчий** *(closer)*. А слово **дужий** *(strong)* стає **дужчий** *(stronger)*.
-Друге правило: звук **с** плюс **-ш-** разом дають звук **щ**. Тому слово **високий** *(tall)* стає словом **вищий** *(taller)*.
-Третє правило: звуки **ст** плюс **-ш-** також дають звук **щ**. Наприклад, слово **товстий** *(thick)* має дві правильні форми: **товстіший** або **товщий** *(thicker)*. Особливо слова «дорожчий» та «вищий» є дуже популярними у щоденних розмовах.
+The most common and natural way to form the comparative degree in Ukrainian is by modifying the word itself. We call this the simple, or synthetic, form. To build it, you take the base stem of the adjective and attach a specific suffix. The first major suffix is **-ш-**, which is then followed by the standard adjective endings like -ий, -а, -е, or -і depending on the gender and number.
 
-<FillIn client:only="react" items={[{"sentence": "Цей чай солодкий, але той чай ____.", "answer": "солодший", "options": ["солодкіший", "солодший", "більш солодкіший"]}, {"sentence": "Ця книжка цікава, але нова книжка ____.", "answer": "цікавіша", "options": ["цікавіша", "цікавша", "більш цікавіша"]}, {"sentence": "Мій светр теплий, але твій светр ____.", "answer": "тепліший", "options": ["тепліший", "тепльший", "більш теплий"]}, {"sentence": "Цей телефон дорогий, але комп'ютер ____.", "answer": "дорожчий", "options": ["дорогіший", "дорожчий", "більш дорожчий"]}, {"sentence": "Брат високий, але його друг ще ____.", "answer": "вищий", "options": ["високіший", "вищий", "високший"]}, {"sentence": "Цей будинок гарний, але той ____.", "answer": "гарніший", "options": ["гарніший", "гарнший", "більш гарніший"]}, {"sentence": "Моя дорога коротка, але твоя ще ____.", "answer": "коротша", "options": ["короткіша", "коротша", "коротча"]}, {"sentence": "Цей магазин близький, але супермаркет ще ____.", "answer": "ближчий", "options": ["близькіший", "ближчий", "близчий"]}]} instruction={"Вставте правильну форму вищого ступеня"} />
+Дуже часто ми додаємо суфікс **-ш-** до основи прикметника. Якщо прикметник має суфікси **-к-**, **-ок-** або **-ек-**, вони зазвичай зникають. Наприклад, слово «солодкий» втрачає суфікс «-к-» і стає солодший. Слово «тонкий» стає «тонший», а «короткий» стає «коротший».
 
-В українській мові також успішно існує **складена форма** *(compound form)* порівняння. Для неї ми використовуємо спеціальні слова **більш** *(more)* або **менш** *(less)*. Після них завжди йде звичайна форма прикметника. Ця форма часто звучить трохи більш **офіційно** *(formally)* або книжно. Ми зазвичай використовуємо її для тонких **нюансів** *(nuances)*. Також вона дуже потрібна для довгих або складних багатоскладових слів. Наприклад, ми часто кажемо **більш відомий** *(more famous)*. Або ми можемо сказати **менш популярний** *(less popular)*. Це дійсно дуже простий спосіб порівняння, але прості форми з суфіксами звучать більш природно.
+> *Very often we add the suffix **-ш-** to the stem of the adjective. If the adjective has the suffixes **-к-**, **-ок-**, or **-ек-**, they usually disappear. For example, the word "солодкий" loses the "-к-" suffix and becomes sweeter. The word "тонкий" becomes "тонший" (thinner), and "короткий" becomes "коротший" (shorter).*
 
-Як правильно будувати цілі речення з порівнянням? В українській мові є дві правильні синтаксичні **конструкції** *(constructions)*. Вони мають однакове значення, але зовсім різну граматику.
-Перша поширена конструкція використовує слово **ніж** *(than)* та **називний відмінок** *(Nominative case)*. Наприклад: «Цей новий телефон дорожчий, ніж той». Зверніть увагу на обов'язкову кому перед словом «ніж».
-Друга конструкція використовує прийменник **за** *(than)* та **знахідний відмінок** *(Accusative case)*. Наприклад: «Цей новий телефон дорожчий за той». Тут жодна кома не потрібна. Обидві форми дуже активно використовуються в розмовній мові. Ви можете сміливо вибирати ту конструкцію, яка вам зараз більше подобається.
+The second comparative suffix is **-іш-**. This is actually the most productive and common suffix for a vast majority of Ukrainian adjectives, especially those with longer or more complex stems. When you use this particular suffix, you do not need to drop any letters from the original stem.
 
-Прочитайте цей короткий діалог у магазині електроніки. Він добре показує, як звичайні люди щодня порівнюють різні речі в реальному житті.
+Багато інших прикметників використовують суфікс **-іш-**. Це дуже популярний спосіб утворення вищого ступеня. З цим суфіксом основа слова не втрачає літери. Наприклад, слово «цікавий» стає **цікавіший**. Слово «теплий» стає «тепліший», а «гарний» стає «гарніший».
 
-<div class="dialogue">
+> *Many other adjectives use the suffix **-іш-**. This is a very popular way of forming the comparative degree. With this suffix, the stem of the word does not lose letters. For example, the word "цікавий" becomes **цікавіший** (more interesting). The word "теплий" becomes "тепліший" (warmer), and "гарний" becomes "гарніший" (prettier).*
 
-<div class="dialogue-line"><span class="speaker">Покупець:</span> Добрий день! Я зараз шукаю новий сучасний **смартфон** *(smartphone)*.</div>
+:::note
+**Quick tip** — Some adjectives are flexible and can form the comparative degree in both ways. For instance, the word *швидкий* (fast) can be *швидший* (dropping the suffix) or *швидкіший* (keeping the stem). Both versions are absolutely correct!
+:::
 
-<div class="dialogue-line"><span class="speaker">Консультант:</span> Добрий день! Будь ласка, подивіться на ці дві популярні моделі.</div>
+There are three key transformations you need to remember for the comparative degree. First, if the stem ends in the consonants **г**, **ж**, or **з**, adding the **-ш-** suffix turns the entire consonant cluster into the sound **жч**. For example, the adjective **дорогий** (expensive) transforms into **дорожчий**. The word **близький** (close) drops its middle suffix, and the remaining root consonant changes, creating the word **ближчий**.
 
-<div class="dialogue-line"><span class="speaker">Покупець:</span> Цей екран **більший** *(bigger)*, але телефон також дуже дорогий.</div>
+Second, if the stem ends in the consonant **с**, adding the comparative suffix creates the sound **щ**. The adjective **високий** (tall, high) drops its long suffix, leaving just the root letter **с**. Then, we add the comparative marker, and the word seamlessly transforms into **вищий**.
 
-<div class="dialogue-line"><span class="speaker">Консультант:</span> Так, ви маєте рацію. Але ця чорна модель **дешевша** *(cheaper)* за ту. Вона має трохи **менший** *(smaller)* екран.</div>
+Finally, if the stem ends in the consonant cluster **ст**, adding the suffix also creates the sound **щ**. Because of this rule, the adjective **товстий** (thick or fat) transforms into **товщий**. These phonetic changes exist to help the words flow smoothly and naturally without creating harsh, unpronounceable consonant clusters.
 
-<div class="dialogue-line"><span class="speaker">Покупець:</span> Розумію. Але мені дуже потрібен телефон, який працює швидше.</div>
+In addition to the simple forms that change the word ending, Ukrainian also possesses a compound, or analytic, comparative form. You create this by simply taking the basic dictionary form of the adjective and placing the separate word **більш** (more) or **менш** (less) directly in front of it.
 
-<div class="dialogue-line"><span class="speaker">Консультант:</span> Тоді перший варіант точно **кращий** *(better)* для вас. Він значно **потужніший** *(more powerful)*, ніж цей другий варіант.</div>
+Складена форма використовує слова **більш** або **менш** разом із звичайним прикметником. Наприклад, ми можемо сказати «більш відомий» або «менш популярний». Цей варіант часто звучить офіційно і формально. Він також дуже корисний для довгих і складних слів, які важко змінити.
 
-</div>
+> *The compound form uses the words **більш** or **менш** together with a regular adjective. For example, we can say "більш відомий" (more famous) or "менш популярний" (less popular). This option often sounds official and formal. It is also very useful for long and complex words that are difficult to change.*
 
-<TrueFalse client:only="react" items={[{"statement": "Цей телефон дорожчий, ніж той.", "isTrue": true, "explanation": "Конструкція «ніж + називний відмінок» є правильною."}, {"statement": "Цей телефон дорожчий того.", "isTrue": false, "explanation": "В українській мові ми не використовуємо родовий відмінок без прийменника. Правильно: дорожчий за той або дорожчий, ніж той."}, {"statement": "Ця кімната більша за ту.", "isTrue": true, "explanation": "Конструкція «за + знахідний відмінок» є правильною."}, {"statement": "Мій брат розумніший, ніж я.", "isTrue": true, "explanation": "Конструкція «ніж + називний відмінок» (я) є правильною."}, {"statement": "Мій брат розумніший мене.", "isTrue": false, "explanation": "Це калька з російської. В українській мові треба казати «розумніший за мене» або «розумніший, ніж я»."}, {"statement": "Одеса тепліша Києва.", "isTrue": false, "explanation": "Без прийменника це русизм. Правильно: тепліша за Київ або тепліша, ніж Київ."}, {"statement": "Ця кава значно солодша за чай.", "isTrue": true, "explanation": "Конструкція з підсилювачем «значно» і прийменником «за» є абсолютно правильною."}, {"statement": "Твій комп'ютер потужніший, ніж мій.", "isTrue": true, "explanation": "Це правильна конструкція з «ніж» та називним відмінком."}]} instruction={"Чи правильна ця конструкція порівняння?"} />
+:::info
+**Grammar box** — Never mix the simple and compound forms! You can say **цікавіший** (more interesting) or **більш цікавий** (more interesting), but you can never say "більш цікавіший". This is a common mistake, but it is grammatically incorrect.
+:::
 
-## Найвищий ступінь: хто найкращий?
+Now that you know how to build the comparative adjective itself, how do you actually compare two different objects in a complete sentence? Ukrainian provides you with two excellent, interchangeable options. The first method uses the conjunction **ніж** (than) followed strictly by the Nominative case. The second method uses the preposition **за** followed strictly by the Accusative case.
 
-Іноді нам потрібно сказати, що певний предмет має **найвищий ступінь** *(the highest degree)* конкретної якості. Це означає, що він просто **найкращий** *(the best)* серед усіх інших предметів у групі. В українській мові ми утворюємо **просту форму** *(simple form)* найвищого ступеня дуже легко і швидко. Ми беремо готову форму вищого ступеня і просто додаємо префікс **най-** *(the most)*. Це дуже важливе граматичне правило. Ми завжди використовуємо основу вищого ступеня, а не початкову форму прикметника. Наприклад, слово **солодший** *(sweeter)* миттєво стає словом **найсолодший** *(the sweetest)*. Слово **цікавіший** *(more interesting)* перетворюється на **найцікавіший** *(the most interesting)*. А популярне слово **дорожчий** *(more expensive)* стає словом **найдорожчий** *(the most expensive)*. Ви просто додаєте один маленький префікс до слова. Ця форма є найбільш природною, традиційною і частотною в українській мові. Ви будете постійно чути її кожного дня.
+Перший варіант — це слово **ніж** та називний відмінок. Наприклад: «Цей телефон дорожчий, **ніж** той телефон». Другий варіант — це прийменник «за» та знахідний відмінок. Наприклад: «Цей телефон дорожчий **за** той телефон». Обидва варіанти абсолютно правильні та дуже популярні в щоденній розмові.
 
-Також в українській мові успішно існує **складена форма** *(compound form)* найвищого ступеня. Для неї ми використовуємо спеціальні окремі слова **найбільш** *(the most)* або **найменш** *(the least)*. Після цих слів завжди йде звичайна початкова форма прикметника без жодних змін. Наприклад, ми часто кажемо **найбільш популярний** *(the most popular)* актор або **найменш відомий** *(the least famous)* письменник. Ця форма звучить трохи більш офіційно і формально. Її дуже часто використовують у телевізійних новинах, офіційних документах або для довгих наукових слів. Але у звичайних щоденних розмовах українці завжди частіше вибирають просту форму з префіксом **най-**.
+> *The first option is the word **ніж** and the Nominative case. For example: "This phone is more expensive **than** that phone." The second option is the preposition "за" and the Accusative case. For example: "This phone is more expensive **than** that phone." Both options are absolutely correct and very popular in everyday conversation.*
 
-Іноді ми хочемо зробити наш найвищий ступінь ще сильнішим і виразнішим. Для цього ми використовуємо спеціальні граматичні **підсилювачі** *(intensifiers)*. Ми просто додаємо короткі частки перед нашим стандартним префіксом **най-**. У нас логічно виходять подвійні префікси **якнай-** *(as ... as possible)* та **щонай-** *(the very ...)*. Вони успішно додають нове емоційне значення: «настільки сильно, наскільки це можливо». Наприклад, слово **швидкий** *(fast)* стає словом **якнайшвидший** *(as fast as possible)*. Ми часто кажемо: «Знайдіть якнайшвидший шлях додому». А відоме слово **кращий** *(better)* перетворюється на чудову форму **щонайкращий** *(the very best)*. Ви також можете впевнено сказати **якнайтепліший** *(as warm as possible)*. Ці красиві форми роблять вашу українську мову дуже природною, багатою та глибокою.
-
-Тепер обов'язково поговоримо про одну дуже серйозну і поширену помилку. Багато людей помилково використовують слово **самий** *(the most)*, щоб утворити найвищий ступінь. Наприклад, вони часто кажуть «самий великий» або «самий новий телефон». Це велика лексична помилка і класичний **русизм** *(Russianism)* у нашій мові. Українська мова **ніколи** *(never)* не використовує слово «самий» для порівняння прикметників. Це правило є дуже строгим і принциповим. Замість цього чужого російського слова ми завжди використовуємо наш рідний префікс **най-**. Тому популярна фраза ❌ «самий кращий» є неправильною і неприродною. Ви повинні завжди говорити тільки ✅ **найкращий**. Фраза ❌ «самий розумний студент» — це теж груба помилка. Правильний український варіант — це ✅ **найрозумніший** *(the smartest)*. Будь ласка, назавжди забудьте конструкцію зі словом «самий» і завжди обирайте правильні українські форми.
-
-Давайте із задоволенням прочитаємо короткий пізнавальний текст про **українські рекорди** *(Ukrainian records)*. Він чудово показує, як ці форми працюють на реальній практиці. Україна — це надзвичайно велика та дуже цікава європейська країна. Вона має багато унікальних туристичних місць. **Найвища гора** *(the highest mountain)* в Україні — це знаменита Говерла. Вона розташована у мальовничих Карпатах. **Найбільше місто** *(the biggest city)* — це наша велична столиця, красень Київ. Тут щодня живе і працює дуже багато людей. А в історичному центрі Києва є **найглибша станція** *(the deepest station)* метро. Вона відома і називається «Арсенальна». Це не тільки найглибша станція в усій Україні, але й у цілому світі. Як бачите, наш префікс **най-** чудово допомагає нам розповідати про найкращі та найцікавіші речі.
-
-<MatchUp client:only="react" pairs={[{"left": "солодкий", "right": "найсолодший"}, {"left": "цікавий", "right": "найцікавіший"}, {"left": "дорогий", "right": "найдорожчий"}, {"left": "швидкий", "right": "найшвидший"}, {"left": "високий", "right": "найвищий"}, {"left": "гарний", "right": "найгарніший"}, {"left": "теплий", "right": "найтепліший"}, {"left": "популярний", "right": "найбільш популярний"}]} instruction={"З'єднайте прикметник з його формою найвищого ступеня"} />
-
-## Особливі форми: більший, кращий, гірший
-
-В українській мові є кілька важливих прикметників, які повністю змінюють свій корінь. Це **особливі форми** *(irregular forms)*, які треба добре запам'ятати. Слово **великий** *(big)* ніколи не стає «величіший». Воно змінюється на слово **більший** *(bigger)*. Найвищий ступінь — це **найбільший** *(the biggest)*. Це правило також працює для слова **малий** *(small)*. Його вищий ступінь — це **менший** *(smaller)*, а найвищий — **найменший** *(the smallest)*. Ви можете сказати: «Мій новий дім **більший**, ніж старий». Або: «Ця проблема значно **менша**, не хвилюйся». Ці базові форми є дуже важливим фундаментом вашого щоденного спілкування.
-
-Тепер розглянемо особливі форми для якості. Базове слово **добрий** *(good)* або **гарний** *(good, nice)* має вищий ступінь **кращий** *(better)*. Найвищий ступінь — це популярне слово **найкращий** *(the best)*. Іноді українці використовують слово **ліпший** *(better)*. Це гарний синонім, але форма **кращий** є більш універсальною для рівня А2. Для антоніма **поганий** *(bad)* ми маємо форму **гірший** *(worse)*. Її найвищий ступінь — це **найгірший** *(the worst)*. Ці слова також повністю змінюють свій вигляд. Ми часто кажемо: «Сьогодні погода **гірша**, ніж учора». Або: «Це **найкращий** день у моєму житті!». Обов'язково вивчіть ці чотири важливі слова.
-
-<Quiz client:only="react" questions={[{"question": "Цей новий телефон великий, але той екран ще _____.", "options": [{"text": "великіший", "correct": false}, {"text": "більший", "correct": true}, {"text": "найбільший", "correct": false}, {"text": "величіший", "correct": false}]}, {"question": "Ця кава добра, але в новому кафе вона _____.", "options": [{"text": "добріша", "correct": false}, {"text": "більш добра", "correct": false}, {"text": "краща", "correct": true}, {"text": "гарніша", "correct": false}]}, {"question": "Вчора погода була погана, а сьогодні вона ще _____.", "options": [{"text": "поганіша", "correct": false}, {"text": "гірша", "correct": true}, {"text": "найгірша", "correct": false}, {"text": "менша", "correct": false}]}, {"question": "Ця проблема мала, але та проблема значно _____.", "options": [{"text": "маліша", "correct": false}, {"text": "менша", "correct": true}, {"text": "найменша", "correct": false}, {"text": "краща", "correct": false}]}, {"question": "Це мій _____ друг, ми знайомі 10 років!", "options": [{"text": "найкращий", "correct": true}, {"text": "самий кращий", "correct": false}, {"text": "найдобріший", "correct": false}, {"text": "більший", "correct": false}]}, {"question": "У мене є _____ брат, йому тільки 5 років.", "options": [{"text": "менший", "correct": true}, {"text": "маліший", "correct": false}, {"text": "найменший", "correct": false}, {"text": "гірший", "correct": false}]}, {"question": "Я думаю, що старий ресторан _____, ніж новий.", "options": [{"text": "ліпший", "correct": false}, {"text": "найкращий", "correct": false}, {"text": "кращий", "correct": true}, {"text": "самий добрий", "correct": false}]}, {"question": "Це _____ день у моєму житті, я втратив роботу і ключі.", "options": [{"text": "гірший", "correct": false}, {"text": "найпоганіший", "correct": false}, {"text": "найгірший", "correct": true}, {"text": "самий поганий", "correct": false}]}]} instruction={"Оберіть правильну особливу форму (irregular form)"} />
-
-Далі ми маємо поговорити про **прислівники** *(adverbs)*. Прислівники, які утворені від якісних прикметників, також мають ступені порівняння. Вони працюють за такою ж простою логікою. Слово **добре** *(well)* стає словом **краще** *(better)*. Слово **погано** *(badly)* змінюється на **гірше** *(worse)*. Слово **багато** *(a lot)* має форму **більше** *(more)*. А слово **мало** *(a little)* перетворюється на **менше** *(less)*. Для звичайних прислівників ми використовуємо стандартний суфікс. Наприклад, слово **швидко** *(fast)* стає формою **швидше** *(faster)*. Ви можете легко порівнювати різні дії: «Він читає **швидше**, ніж я». Ці короткі слова роблять ваші розповіді більш динамічними.
-
-Зараз ми обговоримо одну типову помилку. Це так зване **подвійне порівняння** *(double comparison)*. Ми ніколи не можемо поєднувати слово **більш** *(more)* та форму вищого ступеня на -ший. Наприклад, фраза ❌ «більш кращий» — це велика помилка. Слово **кращий** вже означає «better». Якщо ви додаєте слово «більш», виходить «more better», що є неправильним. Те ж саме стосується найвищого ступеня. Фраза ❌ «найбільш найкращий» є логічно некоректною. Ви повинні обрати тільки один спосіб порівняння. Ви можете сказати складену форму ✅ **більш гарний**. Або ви можете використати просту форму ✅ **кращий**. Обидва варіанти є правильними.
-
-Давайте прочитаємо короткий діалог про вибір ресторану. Двоє друзів обговорюють, де краще пообідати сьогодні. Зверніть увагу на особливі форми.
+Let us look at how these rules work together in a realistic scenario, like choosing a new gadget in an electronics store. Pay close attention to how the speakers actively use both the simple synthetic comparative forms and the two different sentence structures for making comparisons.
 
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Марко:</span> Привіт! Підемо в нове кафе чи у старий ресторан? *(Hi! Shall we go to the new cafe or the old restaurant?)*</div>
+<div class="dialogue-line"><span class="speaker">Покупець:</span> Добрий день! Я шукаю новий смартфон. Цей екран **більший**, **ніж** мій старий. *(Good day! I am looking for a new smartphone. This screen is bigger than my old one.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Оксана:</span> Я думаю, що старий ресторан **кращий**. Там їжа значно смачніша. *(I think the old restaurant is better. The food there is much tastier.)*</div>
+<div class="dialogue-line"><span class="speaker">Консультант:</span> Так, це нова модель. Але вона також важча **за** ту модель. *(Yes, this is a new model. But it is also heavier than that model.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Марко:</span> Це правда, але ціни там **вищі**. *(That's true, but the prices there are higher.)*</div>
+<div class="dialogue-line"><span class="speaker">Покупець:</span> А який телефон **кращий** для фотографій? *(And which phone is better for photos?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Оксана:</span> Можливо, але для мене якість — це **найкращий** аргумент. *(Maybe, but for me, quality is the best argument.)*</div>
+<div class="dialogue-line"><span class="speaker">Консультант:</span> Цей чорний телефон робить кращі фотографії, але він значно дорожчий. *(This black phone takes better photos, but it is significantly more expensive.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Марко:</span> Погоджуюсь. Це справді **найкращий** варіант. *(I agree. This is indeed the best option.)*</div>
+<div class="dialogue-line"><span class="speaker">Покупець:</span> Розумію. А білий телефон **дешевший** за чорний? *(I understand. And is the white phone cheaper than the black one?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Консультант:</span> Так, він дешевший, але його процесор **гірший**. *(Yes, it is cheaper, but its processor is worse.)*</div>
 
 </div>
 
-## Порівняння у житті
+## Найвищий ступінь: хто найкращий? (~520 words total)
 
-Іноді нам потрібно показати, наскільки велика різниця між предметами чи діями. Для цього ми використовуємо спеціальні слова, які підсилюють значення. Найпопулярніші з них — це **набагато** *(much)*, **значно** *(significantly)* та **трохи** *(a bit)*. Вони завжди стоять перед формою вищого ступеня. Ви можете просто сказати: «Ця квартира більша». Але якщо різниця справді дуже велика, ви кажете: «Ця квартира набагато більша». Слово «значно» має такий самий зміст, але воно звучить трохи офіційніше. Наприклад: «Новий робочий проєкт значно **цікавіший** *(more interesting)*». Якщо ж різниця мінімальна, ми використовуємо слово «трохи». Наприклад: «Мій молодший брат трохи менший, ніж я». Іноді в неформальній розмові українці кажуть слово **куди** *(way)*. Фраза «куди краще» означає «набагато краще». Ці короткі слова роблять ваше мовлення точним і дуже природним.
+Now that you know how to compare two things, let's learn how to say that something is "the most" or "the best" in a group. This is called the superlative degree. In Ukrainian, forming the simple superlative is incredibly easy if you already know the comparative form.
 
-Давайте подивимося, як ми використовуємо ці форми щодня. Прочитайте діалог двох колег. Вони планують спільну літню відпустку і активно порівнюють два популярні українські міста. Зверніть увагу на слова-підсилювачі.
+Щоб утворити найвищий ступінь, ми просто додаємо префікс «най-» до простої форми вищого ступеня. Зверніть увагу, що ми використовуємо форму вищого ступеня, а не початкове слово. Наприклад, прикметник «солодкий» має форму вищого ступеня **солодший** (sweeter). Ми додаємо префікс і отримуємо слово «найсолодший». Інший приклад — слово «цікавий». Його форма вищого ступеня — це **цікавіший** (more interesting). З префіксом ми маємо форму «найцікавіший». Якщо слово змінює приголосний звук, префікс просто приєднується до цієї нової форми. Слово «дорогий» стає словом «дорожчий». А найвищий ступінь — це «найдорожчий».
+
+> *To form the superlative degree, we simply add the prefix "най-" to the simple form of the comparative degree. Note that we use the comparative form, not the original word. For example, the adjective "солодкий" (sweet) has the comparative form **солодший** (sweeter). We add the prefix and get the word "найсолодший" (the sweetest). Another example is the word "цікавий" (interesting). Its comparative form is **цікавіший** (more interesting). With the prefix, we have the form "найцікавіший" (the most interesting). If the word changes a consonant sound, the prefix simply attaches to this new form. The word "дорогий" (expensive) becomes "дорожчий" (more expensive). And the superlative degree is "найдорожчий" (the most expensive).*
+
+Just like the comparative, the superlative also has a compound form.
+
+Складена форма найвищого ступеня утворюється за допомогою слів «найбільш» або «найменш». Після цих слів ми ставимо звичайний прикметник у початковій формі. Наприклад, ми говоримо «найбільш популярний» або «найменш відомий». Ця форма звучить дуже офіційно. Вона часто зустрічається в новинах, документах або наукових статтях. У щоденній розмові українці значно частіше використовують просту форму з префіксом.
+
+Sometimes you want to emphasize the superlative even more, to say that something is "the very best" or "as fast as possible."
+
+Українська мова має спеціальні префікси для такого емоційного підсилення. Ми можемо додати префікси «якнай-» або «щонай-» до форми вищого ступеня. Вони означають максимальну межу якості. Наприклад, слово «якнайшвидший» означає, що щось є максимально швидким. А слово «щонайкращий» означає найкращий з усіх можливих варіантів. Ви часто можете почути ці слова у побажаннях. Наприклад, люди бажають одне одному якнайкращого здоров'я або якнайшвидшого одужання. Ці префікси роблять вашу мову дуже природною та емоційною.
+
+:::info
+**Grammar box** — Intensifiers **якнай-** and **щонай-**
+Think of these prefixes as adding "as ... as possible" or "the very ..." to your description. They are built exactly like the standard superlative, just replacing **най-** with **якнай-** or **щонай-**. They are perfectly interchangeable, though **якнай-** is slightly more common in modern speech.
+:::
+
+Now we must address one of the most common and persistent errors made by learners and even some native speakers due to historical linguistic interference.
+
+Дуже важливо запам'ятати одне строге правило. В українській мові ніколи не можна використовувати слово «самий» для порівняння. Конструкція «самий великий» чи «самий красивий» — це калька з російської мови. Це груба граматична помилка. Українська мова має свій власний, унікальний спосіб утворення найвищого ступеня. Ми завжди використовуємо префікс «най-» або слово «найбільш». Тому ми ніколи не кажемо «самий кращий». Ми завжди повинні казати **найкращий** (the best). Ми не кажемо «самий великий». Правильна форма — це **найбільший** (the biggest).
+
+> *It is very important to remember one strict rule. In the Ukrainian language, you can never use the word "самий" for comparison. The construction "самий великий" (the biggest) or "самий красивий" (the most beautiful) is a calque from the Russian language. This is a gross grammatical error. The Ukrainian language has its own, unique way of forming the superlative degree. We always use the prefix "най-" or the word "найбільш". Therefore, we never say "самий кращий". We must always say **найкращий** (the best). We do not say "самий великий". The correct form is **найбільший** (the biggest).*
+
+Let's look at how we use these superlative forms to talk about records and extreme points in Ukraine.
+
+Україна — це велика країна, яка має багато цікавих рекордів. Найвища гора в Україні називається Говерла. Вона розташована в мальовничих Карпатах. Наш **найбільший** (the biggest) мегаполіс — це місто Київ. Там живе найбільше людей. А в самому центрі Києва знаходиться найглибша станція метро у світі. Ця станція має назву Арсенальна. Її ескалатори найдовші в Україні. Якщо ви хочете побачити найбільшу площу, вам треба поїхати до Харкова. Площа Свободи там справді величезна. Усі ці місця дуже популярні серед туристів.
+
+## Особливі форми: більший, кращий, гірший (~480 words total)
+
+Some adjectives change their root completely when forming the comparative and superlative degrees. These are called suppletive forms. The two most common pairs describe size: big and small. You must memorize these because they are used constantly in everyday conversation.
+
+Слово «великий» має форму вищого ступеня «більший», а найвищого — «найбільший». Слово «малий» змінюється на «менший» та «найменший». Корінь слова повністю змінюється. Ці форми треба просто запам'ятати. Наприклад, ви можете сказати: «Мій новий дім більший за старий». Або: «Ця проблема набагато менша, ніж ми думали». Ці слова дуже часто звучать у щоденних розмовах. Ми постійно використовуємо їх для порівняння різних предметів.
+
+> *The word "великий" (big) has the comparative form "більший" (bigger), and the superlative — "найбільший" (the biggest). The word "малий" (small) changes to "менший" (smaller) and "найменший" (the smallest). The root of the word changes completely. You just need to memorize these forms. For example, you can say: "My new house is bigger than the old one". Or: "This problem is much smaller than we thought". These words sound very often in everyday conversations. We constantly use them for the comparison of different objects.*
+
+The same rule applies to the most basic adjectives of quality: good and bad. The adjective "добрий" (or "гарний") becomes "кращий" (better) and "найкращий" (the best). The adjective "поганий" becomes "гірший" (worse) and "найгірший" (the worst). 
+
+Українська мова має синоніми для слова «кращий». Іноді ви можете почути слово «ліпший». Вони мають однакове значення і є абсолютно правильними. Але ми радимо використовувати форму «кращий». Вона значно популярніша. Слово «гірший» є єдиним правильним варіантом для негативних речей. Наприклад: «Сьогодні погода гірша, ніж учора». Або: «Це найкращий торт у моєму житті».
+
+> *The Ukrainian language has synonyms for the word "кращий". Sometimes you might hear the word "ліпший" (better). They have the same meaning and are absolutely correct. But we advise using the form "кращий". It is significantly more popular. The word "гірший" is the only correct option for negative things. For example: "Today the weather is worse than yesterday". Or: "This is the best cake in my life".*
+
+The adverbs derived from these irregular qualitative adjectives follow the exact same pattern. If you know the adjective forms, you will easily recognize the adverbs.
+
+Прислівники також мають особливі форми порівняння. Слово «добре» змінюється на «краще». Слово «погано» має вищий ступінь «гірше». Слово «багато» стає формою «більше». А слово «мало» змінюється на «менше». Ви використовуєте їх так само, як звичайні прислівники. Наприклад: «Він працює найкраще з усіх». Або: «Я хочу знати більше про цю культуру».
+
+We must warn you against a very common grammatical mistake called "double comparison."
+
+:::info
+**Grammar box** — Double Comparison
+Never mix the synthetic form (ending in **-ший**) with the analytic form (using **більш**). You must choose one or the other. Saying "більш кращий" (more better) is a grammatical error. Just say "кращий".
+:::
+
+Ніколи не кажіть «більш кращий» або «найбільш найкращий». Це дуже серйозна граматична помилка. Слово «кращий» вже має значення вищого ступеня. Додавати туди ще одне слово не потрібно. Вибирайте щось одне. Правильно казати «більш гарний» або «кращий».
 
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Олена:</span> Куди ми поїдемо відпочивати влітку? До Львова чи до Одеси? *(Where will we go to rest in the summer? To Lviv or to Odesa?)*</div>
+<div class="dialogue-line"><span class="speaker">Максим:</span> Куди ми підемо на вечерю? Цей новий ресторан більший. *(Where will we go for dinner? This new restaurant is bigger.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Павло:</span> Я думаю, що Львів **старіший** *(older)* і значно цікавіший. *(I think Lviv is older and significantly more interesting.)*</div>
+<div class="dialogue-line"><span class="speaker">Олена:</span> Так, але там їжа гірша. Я знаю маленьке кафе поруч. *(Yes, but the food there is worse. I know a small cafe nearby.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Олена:</span> Так, це правда, але Одеса **тепліша** *(warmer)*. Там є Чорне море. *(Yes, that's true, but Odesa is warmer. There is the Black Sea there.)*</div>
+<div class="dialogue-line"><span class="speaker">Максим:</span> А там ціни менші чи більші? *(And are the prices there smaller or bigger?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Павло:</span> Згоден. Але дорога до Одеси значно **довша** *(longer)*. *(I agree. But the road to Odesa is significantly longer.)*</div>
+<div class="dialogue-line"><span class="speaker">Олена:</span> Ціни там значно менші, а кава — найкраща в місті! *(The prices there are significantly smaller, and the coffee is the best in the city!)*</div>
 
-<div class="dialogue-line"><span class="speaker">Олена:</span> І квитки на нічний поїзд до Одеси трохи **дорожчі** *(more expensive)*. *(And tickets for the night train to Odesa are a bit more expensive.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Павло:</span> Тоді Львів — це точно найкращий варіант для нас зараз. *(Then Lviv is definitely the best option for us now.)*</div>
+<div class="dialogue-line"><span class="speaker">Максим:</span> Добре, це найкращий варіант. Пішли туди. *(Good, that is the best option. Let's go there.)*</div>
 
 </div>
 
-Тепер прочитайте коротку розповідь. Автор порівнює своє життя зараз і в минулому. Зверніть увагу на форми прикметників і прислівників. Вони допомагають описати життєві зміни.
+## Порівняння у житті (~400 words total)
 
-«Мій ідеальний день зараз набагато **спокійніший** *(calmer)*, ніж раніше. Три роки тому я жив у Києві. Це найбільше місто в Україні. Життя там було значно швидше і дуже стресове. Раніше я прокидався **пізніше** *(later)*, бо часто працював вночі. Мій старий офіс був більший. Але дорога туди була найгіршою частиною дня.
+Sometimes, simply saying that something is bigger or better is not enough. You need to express the exact degree of difference. Is it a little bit bigger, or significantly better? For this, Ukrainian uses special adverbs before the comparative form.
 
-Зараз я живу в Тернополі. Це місто менше, але воно куди **комфортніше** *(more comfortable)* для мене. Я прокидаюся **раніше** *(earlier)* і маю вільний час для ранкової кави. Моя нова квартира трохи менша за стару. Проте вона набагато **світліша** *(brighter)* і тепліша. Найкраще в моєму новому житті — це довга вечірня прогулянка в парку. Тут повітря **чистіше** *(cleaner)*, а люди навколо гуляють **повільніше** *(slower)*. Я думаю, що такі зміни — це завжди на краще.»
+Ми часто використовуємо слова «набагато», «значно», «трохи» або «куди» для точного порівняння. Наприклад, ми кажемо «набагато кращий» або «значно цікавіший». Слово «трохи» означає маленьку різницю, як у фразі «трохи менший». Слово «куди» використовують у розмовній мові, воно робить емоцію сильнішою.
 
-## Підсумок
+> *We often use the words "набагато" (much), "значно" (significantly), "трохи" (a bit), or "куди" (way) for exact comparison. For example, we say "набагато кращий" (much better) or "значно цікавіший" (significantly more interesting). The word "трохи" means a small difference, like in the phrase "трохи менший" (a bit smaller). The word "куди" is used in spoken language, it makes the emotion stronger.*
 
-Ось і все! Тепер ви знаєте, як порівнювати різні предмети, людей та дії українською мовою. Повторімо три головні правила цього уроку. *(That's it! Now you know how to compare different objects, people, and actions in Ukrainian. Let's review the three main rules of this lesson.)*
+:::tip
+**Quick tip** — The word **куди** normally means "where to", but when placed before a comparative adjective or adverb, it means "way" or "much" (e.g., **куди краще** — way better).
+:::
 
-По-перше, прості форми вищого ступеня мають спеціальні суфікси **-ший** або **-іший** *(comparative suffixes)*. Для найвищого ступеня ми завжди додаємо префікс **най-** *(superlative prefix)* до простої форми.
+Let's see how these comparative forms work in a real conversation. Two friends are planning a vacation and comparing two popular Ukrainian cities: Lviv and Odesa. 
 
-По-друге, обов'язково пам'ятайте про зміну приголосних звуків *(consonant changes)*. Наприклад, звук «г» часто змінюється на «жч» (дорогий — дорожчий). А звук «с» змінюється на «щ» (високий — вищий).
+<div class="dialogue">
 
-По-третє, треба запам'ятати чотири дуже важливі особливі слова. Це **більший** *(bigger)*, **менший** *(smaller)*, **кращий** *(better)* та **гірший** *(worse)*. Їхні унікальні форми треба просто знати напам'ять.
+<div class="dialogue-line"><span class="speaker">Тарас:</span> Куди поїдемо у відпустку? Може, до Львова чи до Одеси? *(Where will we go for vacation? Maybe to Lviv or to Odesa?)*</div>
 
-Перевірте себе *(Check yourself)*:
-1. Як сказати "the most interesting" одним словом?
-2. Чому ми ніколи не кажемо «самий великий»? Яка українська форма є правильною?
-3. Як граматично порівняти два предмети за допомогою слова **за** *(than)*? (Наприклад, порівняйте каву і чай).
+<div class="dialogue-line"><span class="speaker">Марія:</span> Я не знаю. Львів старіший, і там дуже гарна архітектура. *(I don't know. Lviv is older, and the architecture there is very beautiful.)*</div>
 
-Якщо ви знаєте відповіді на ці запитання, ви готові до наступної теми. Ви — **найкращі** *(the best)*!
+<div class="dialogue-line"><span class="speaker">Тарас:</span> Але Одеса тепліша. Там є море, а влітку це набагато краще. *(But Odesa is warmer. There is a sea there, and in summer that is much better.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Марія:</span> Це правда. Проте дорога до Одеси значно довша, **ніж** до Львова. *(That's true. However, the road to Odesa is significantly longer than to Lviv.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Тарас:</span> Тоді беремо квитки до Львова. Там значно цікавіше гуляти. *(Then let's take tickets to Lviv. It is significantly more interesting to walk there.)*</div>
+
+</div>
+
+A clear **порівняння** (comparison) is also essential when we talk about changes in our own lives. Read this short text where the narrator compares their daily routine in the past with their life now.
+
+Раніше я прокидався пізніше і мій день був дуже швидким. Зараз я живу в меншому місті, але воно набагато спокійніше. Тут люди працюють менше, а відпочивають більше. Мій новий розклад значно кращий за старий. Я маю час на спорт і на хобі. Найкраще — це довга прогулянка ввечері. Це куди цікавіше, ніж сидіти вдома. Я думаю, що зараз моє життя набагато щасливіше.
+
+> *Earlier I used to wake up later and my day was very fast. Now I live in a smaller city, but it is much calmer. People here work less and rest more. My new schedule is significantly better than the old one. I have time for sports and for hobbies. The best thing is a long walk in the evening. This is way more interesting than sitting at home. I think that now my life is much happier.*
+
+## Підсумок (~150 words)
+
+You have now learned how to make a **порівняння** (comparison) in Ukrainian. Simple forms add suffixes to create words like **солодший** (sweeter) or **цікавіший** (more interesting). Watch out for consonant mutations, like «г» changing to «жч», or «с» changing to «щ».
+
+You must also memorize the irregular forms. These include **більший** (bigger), **менший** (smaller), and **кращий** (better). 
+
+The opposite of better is **гірший** (worse). For the superlative degree, always add the prefix «най-» to form words like **найкращий** (the best) or **найбільший** (the biggest).
+
+When comparing two things, you must use **ніж** (than) with the Nominative case, or «за» with the Accusative case.
+
+:::info
+**Grammar box** — Always use the prefix **най-** for the superlative degree. The word «самий» is a common mistake and should never be used in Ukrainian!
+:::
+
+Зараз перевірте свої знання. Як сказати українською «the most interesting»? Чому ми ніколи не кажемо «самий великий»? Як порівняти два предмети за допомогою слова «за»? Якщо ви знаєте відповіді, ви готові до нових тем!
+
+> *Now check your knowledge. How do you say "the most interesting" in Ukrainian? Why do we never say "самий великий"? How do you compare two objects using the word "за"? If you know the answers, you are ready for new topics!*
 
 </TabItem>
 <TabItem label="Словник">
@@ -265,25 +315,25 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 </TabItem>
 <TabItem label="Зошит">
 
-<Translate client:only="react" questions={[{"source": "This phone is much more expensive.", "options": [{"text": "Цей телефон набагато дорожчий.", "correct": true}, {"text": "Цей телефон набагато дорогіший.", "correct": false}, {"text": "Цей телефон більш дорожчий.", "correct": false}, {"text": "Цей телефон самий дорожчий.", "correct": false}]}, {"source": "She is older than my sister.", "options": [{"text": "Вона старша за мою сестру.", "correct": true}, {"text": "Вона старша моєї сестри.", "correct": false}, {"text": "Вона більш старіша, ніж моя сестра.", "correct": false}, {"text": "Вона сама стара, ніж моя сестра.", "correct": false}]}, {"source": "He reads faster than me.", "options": [{"text": "Він читає швидше, ніж я.", "correct": true}, {"text": "Він читає швидше мене.", "correct": false}, {"text": "Він читає більш швидше, ніж я.", "correct": false}, {"text": "Він читає самий швидкий, ніж я.", "correct": false}]}, {"source": "This is the best option.", "options": [{"text": "Це найкращий варіант.", "correct": true}, {"text": "Це самий кращий варіант.", "correct": false}, {"text": "Це найбільш кращий варіант.", "correct": false}, {"text": "Це більш кращий варіант.", "correct": false}]}, {"source": "Lviv is significantly more interesting.", "options": [{"text": "Львів значно цікавіший.", "correct": true}, {"text": "Львів значно більш цікавіший.", "correct": false}, {"text": "Львів набагато цікавше.", "correct": false}, {"text": "Львів самий цікавий.", "correct": false}]}, {"source": "Find the fastest way home.", "options": [{"text": "Знайдіть якнайшвидший шлях додому.", "correct": true}, {"text": "Знайдіть самий швидкий шлях додому.", "correct": false}, {"text": "Знайдіть найбільш швидкий шлях додому.", "correct": false}, {"text": "Знайдіть якшвидкий шлях додому.", "correct": false}]}]} instruction={"Оберіть правильний переклад"} />
+<FillIn client:only="react" items={[{"sentence": "Цей чай _____, ніж той.", "answer": "солодший"}, {"sentence": "Мій новий телефон _____, ніж старий.", "answer": "тонший"}, {"sentence": "Цей текст _____, ніж перший.", "answer": "коротший"}, {"sentence": "Ця розповідь значно _____, ніж перша.", "answer": "цікавіша"}, {"sentence": "Сьогодні день _____, ніж учора.", "answer": "тепліший"}, {"sentence": "Моя нова квартира _____, ніж стара.", "answer": "гарніша"}, {"sentence": "Цей поїзд _____, ніж той.", "answer": "швидший"}, {"sentence": "Цей екран набагато _____, ніж мій.", "answer": "дорожчий"}, {"sentence": "Ця гора _____, ніж та.", "answer": "вища"}]} instruction={"Утворіть вищий ступінь від прикметника (вставте правильне слово)"} />
 
-<Unjumble client:only="react" items={[{"words": "цей / ніж / Цей / потужніший, / телефон. / комп'ютер", "answer": "Цей комп'ютер потужніший, ніж цей телефон."}, {"words": "більша / квартира / Моя / стару. / нова / за", "answer": "Моя нова квартира більша за стару."}, {"words": "ресторан / кращий. / Я / старий / думаю, / що", "answer": "Я думаю, що старий ресторан кращий."}, {"words": "моєму / житті. / Це / день / найкращий / у", "answer": "Це найкращий день у моєму житті."}, {"words": "навпаки, / гірший, / Він / кращий. / а / не", "answer": "Він не гірший, а навпаки, кращий."}, {"words": "офіс / Мій / значно / більший. / старий / був", "answer": "Мій старий офіс був значно більший."}]} instruction={"Складіть правильне речення зі слів"} />
+<TrueFalse client:only="react" items={[{"statement": "Цей новий смартфон дорожчий, ніж той.", "isTrue": true, "explanation": "Правильна конструкція: ніж + називний відмінок."}, {"statement": "Цей новий смартфон дорожчий того.", "isTrue": false, "explanation": "В українській мові ми не використовуємо просто родовий відмінок. Треба казати: дорожчий, ніж той, або дорожчий за той."}, {"statement": "Нова квартира більша за стару.", "isTrue": true, "explanation": "Правильна конструкція: за + знахідний відмінок."}, {"statement": "Нова квартира більша старої.", "isTrue": false, "explanation": "Це калька. Правильно: більша за стару."}, {"statement": "Мій брат менший мене.", "isTrue": false, "explanation": "Це типова помилка. Правильно: менший за мене або менший, ніж я."}, {"statement": "Мій брат менший за мене.", "isTrue": true, "explanation": "Правильно використано прийменник «за»."}, {"statement": "Одеса тепліша Львова.", "isTrue": false, "explanation": "Неправильна конструкція. Треба казати: тепліша за Львів."}, {"statement": "Одеса тепліша, ніж Львів.", "isTrue": true, "explanation": "Правильно використано слово «ніж»."}]} instruction={"Правда чи ні? Визначте, чи правильно побудовано речення."} />
 
-<GroupSort client:only="react" groups={{"Звичайні форми (-ш-/-іш-)": ["солодший", "цікавіший", "дорожчий", "вищий"], "Особливі форми (змінюють корінь)": ["більший", "менший", "кращий", "гірший"]}} instruction={"Розподіліть прикметники за групами (звичайні чи особливі форми)"} />
+<MatchUp client:only="react" pairs={[{"left": "солодший", "right": "найсолодший"}, {"left": "цікавіший", "right": "найцікавіший"}, {"left": "дорожчий", "right": "найдорожчий"}, {"left": "кращий", "right": "найкращий"}, {"left": "більший", "right": "найбільший"}, {"left": "менший", "right": "найменший"}, {"left": "гірший", "right": "найгірший"}, {"left": "вищий", "right": "найвищий"}]} instruction={"З'єднайте форму вищого ступеня з формою найвищого ступеня"} />
 
-<MatchUp client:only="react" pairs={[{"left": "місто", "right": "більше"}, {"left": "будинок", "right": "вищий"}, {"left": "книга", "right": "цікавіша"}, {"left": "екран", "right": "менший"}, {"left": "кафе", "right": "краще"}, {"left": "погода", "right": "гірша"}]} instruction={"З'єднайте іменник із правильною формою прикметника"} />
+<Quiz client:only="react" questions={[{"question": "Сьогодні погода _____, ніж учора.", "options": [{"text": "гірша", "correct": true}, {"text": "поганіша", "correct": false}, {"text": "більш погана", "correct": false}, {"text": "сама погана", "correct": false}]}, {"question": "Я думаю, що старий ресторан _____. Там їжа значно смачніша.", "options": [{"text": "кращий", "correct": true}, {"text": "добріший", "correct": false}, {"text": "більш кращий", "correct": false}, {"text": "самий добрий", "correct": false}]}, {"question": "Моя нова квартира _____, ніж стара.", "options": [{"text": "більша", "correct": true}, {"text": "великіша", "correct": false}, {"text": "більш велика", "correct": false}, {"text": "сама велика", "correct": false}]}, {"question": "Ця проблема значно _____, ніж ми думали. Не хвилюйся.", "options": [{"text": "менша", "correct": true}, {"text": "маліша", "correct": false}, {"text": "більш мала", "correct": false}, {"text": "сама мала", "correct": false}]}, {"question": "Для мене якість — це _____ аргумент.", "options": [{"text": "найкращий", "correct": true}, {"text": "найдобріший", "correct": false}, {"text": "самий кращий", "correct": false}, {"text": "більш кращий", "correct": false}]}, {"question": "Ця дорога — це _____ варіант. Вона значно довша.", "options": [{"text": "найгірший", "correct": true}, {"text": "найпоганіший", "correct": false}, {"text": "самий поганий", "correct": false}, {"text": "самий гірший", "correct": false}]}, {"question": "Київ — це _____ місто в Україні.", "options": [{"text": "найбільше", "correct": true}, {"text": "найвеликіше", "correct": false}, {"text": "саме велике", "correct": false}, {"text": "більш велике", "correct": false}]}, {"question": "Вона працює _____, ніж я.", "options": [{"text": "краще", "correct": true}, {"text": "добріше", "correct": false}, {"text": "більш добре", "correct": false}, {"text": "найдобріше", "correct": false}]}]} instruction={"Оберіть правильну особливу форму (більший, менший, кращий, гірший)"} />
 
-<MatchUp client:only="react" pairs={[{"left": "я", "right": "працюю швидше"}, {"left": "ти", "right": "читаєш краще"}, {"left": "він", "right": "знає більше"}, {"left": "вона", "right": "робить гірше"}, {"left": "ми", "right": "купуємо дешевше"}, {"left": "вони", "right": "живуть комфортніше"}]} instruction={"З'єднайте займенник із дієсловом"} />
+<FillIn client:only="react" items={[{"sentence": "Він читає _____, ніж я.", "answer": "швидше", "options": ["швидше", "швидкіше", "найшвидше"]}, {"sentence": "Я зараз працюю _____, ніж раніше.", "answer": "краще", "options": ["краще", "добріше", "найкраще"]}, {"sentence": "Сьогодні я працюю _____, ніж учора.", "answer": "гірше", "options": ["гірше", "поганіше", "найгірше"]}, {"sentence": "Вона знає _____, ніж ми думали.", "answer": "більше", "options": ["більше", "багатіше", "найбільш"]}, {"sentence": "Я читаю _____, ніж мій брат.", "answer": "менше", "options": ["менше", "маліше", "найменше"]}, {"sentence": "Мій телефон працює _____, ніж старий.", "answer": "швидше", "options": ["швидше", "швидкіше", "найшвидше"]}]} instruction={"Вставте правильну форму прислівника (краще, гірше, більше, менше, швидше)"} />
 
-<FillIn client:only="react" items={[{"sentence": "Я працюю швидше, ніж ____.", "answer": "він", "options": ["він", "його", "йому"]}, {"sentence": "Вона читає краще за ____.", "answer": "мене", "options": ["мене", "я", "мені"]}, {"sentence": "Цей телефон дорожчий, ніж ____.", "answer": "мій", "options": ["мій", "мого", "моєму"]}, {"sentence": "Ми знаємо більше за ____.", "answer": "них", "options": ["вони", "їх", "них"]}, {"sentence": "Ви живете комфортніше, ніж ____.", "answer": "ми", "options": ["ми", "нас", "нам"]}, {"sentence": "Він говорить повільніше за ____.", "answer": "тебе", "options": ["тебе", "ти", "тобі"]}]} instruction={"Вставте правильний займенник у порівнянні"} />
+<MatchUp client:only="react" pairs={[{"left": "Я", "right": "думаю, що цей телефон кращий"}, {"left": "Ти", "right": "працюєш швидше, ніж брат"}, {"left": "Він", "right": "читає найцікавішу розповідь"}, {"left": "Вона", "right": "вибирає найбільший смартфон"}, {"left": "Ми", "right": "знаємо найкращий ресторан"}, {"left": "Ви", "right": "маєте рацію, це дешевше"}, {"left": "Вони", "right": "живуть значно швидше"}]} instruction={"З'єднайте особовий займенник із правильною частиною речення (зв'язок займенника з дієсловом)"} />
 
-<GroupSort client:only="react" groups={{"Однина": ["я", "ти", "він", "вона", "воно"], "Множина": ["ми", "ви", "вони"]}} instruction={"Розподіліть займенники на однину та множину"} />
+<FillIn client:only="react" items={[{"sentence": "Мій брат більший за _____.", "answer": "мене", "options": ["мене", "я", "мені"]}, {"sentence": "Одеса тепліша, ніж _____ думала.", "answer": "вона", "options": ["вона", "неї", "їй"]}, {"sentence": "Цей телефон дорожчий за _____.", "answer": "той", "options": ["той", "того", "тому"]}, {"sentence": "Ми працюємо швидше, ніж _____.", "answer": "вони", "options": ["вони", "їх", "їм"]}, {"sentence": "Твоя квартира менша за _____.", "answer": "мою", "options": ["мою", "моя", "моїй"]}, {"sentence": "Я знаю це краще за _____.", "answer": "тебе", "options": ["тебе", "ти", "тобі"]}]} instruction={"Вставте правильний займенник за контекстом речення"} />
 
-<Quiz client:only="react" questions={[{"question": "Олено Іванівно, _____ працюєте набагато швидше, ніж я.", "options": [{"text": "ви", "correct": false}, {"text": "Ви", "correct": true}, {"text": "ти", "correct": false}, {"text": "Ти", "correct": false}]}, {"question": "Друже, _____ маєш кращий телефон, ніж у мене.", "options": [{"text": "ти", "correct": true}, {"text": "Ти", "correct": false}, {"text": "Ви", "correct": false}, {"text": "ви", "correct": false}]}, {"question": "Пане директоре, чи _____ можете дати мені цікавіший проєкт?", "options": [{"text": "Ви", "correct": true}, {"text": "ви", "correct": false}, {"text": "Ти", "correct": false}, {"text": "ти", "correct": false}]}, {"question": "Оксано, _____ готуєш солодший чай, ніж моя мама.", "options": [{"text": "ти", "correct": true}, {"text": "Ти", "correct": false}, {"text": "Ви", "correct": false}, {"text": "ви", "correct": false}]}, {"question": "Шановні клієнти, _____ знайдете тут найкращі ціни.", "options": [{"text": "ви", "correct": true}, {"text": "Ви", "correct": false}, {"text": "ти", "correct": false}, {"text": "Ти", "correct": false}]}, {"question": "Мамо, _____ завжди даєш найкращі поради.", "options": [{"text": "ти", "correct": true}, {"text": "Ти", "correct": false}, {"text": "Ви", "correct": false}, {"text": "ви", "correct": false}]}]} instruction={"Оберіть правильну форму звертання (ти чи Ви)"} />
+<GroupSort client:only="react" groups={{"Однина (Singular)": ["я", "ти", "він", "вона", "воно", "цей"], "Множина (Plural)": ["ми", "ви", "вони", "ці"]}} instruction={"Розподіліть займенники на однину та множину"} />
 
-<FillIn client:only="react" items={[{"sentence": "Ця кімната _____, ніж моя стара.", "answer": "більша", "options": ["більша", "більший", "більше"]}, {"sentence": "Мій новий комп'ютер _____, ніж твій.", "answer": "швидший", "options": ["швидший", "швидша", "швидше"]}, {"sentence": "Це завдання _____, ніж я думав.", "answer": "коротше", "options": ["коротше", "коротший", "коротша"]}, {"sentence": "Ця проблема значно _____.", "answer": "менша", "options": ["менша", "менший", "менше"]}, {"sentence": "Твій проєкт _____, ніж її проєкт.", "answer": "кращий", "options": ["кращий", "краща", "краще"]}, {"sentence": "Її плаття _____, ніж моє.", "answer": "гарніше", "options": ["гарніше", "гарніший", "гарніша"]}]} instruction={"Вставте правильну форму прикметника"} />
+<Quiz client:only="react" questions={[{"question": "Марку, _____ думаєш, що цей екран кращий?", "options": [{"text": "ти", "correct": true}, {"text": "Ви", "correct": false}, {"text": "він", "correct": false}, {"text": "я", "correct": false}]}, {"question": "Пане консультанте, _____ маєте рацію, ця модель дешевша.", "options": [{"text": "Ви", "correct": true}, {"text": "ти", "correct": false}, {"text": "ми", "correct": false}, {"text": "вони", "correct": false}]}, {"question": "Олено, _____ читаєш набагато швидше.", "options": [{"text": "ти", "correct": true}, {"text": "Ви", "correct": false}, {"text": "вона", "correct": false}, {"text": "ми", "correct": false}]}, {"question": "Пані Оксано, _____ знаєте найкращий ресторан у місті?", "options": [{"text": "Ви", "correct": true}, {"text": "ти", "correct": false}, {"text": "вона", "correct": false}, {"text": "я", "correct": false}]}, {"question": "Брате, _____ завжди вибираєш найбільший варіант.", "options": [{"text": "ти", "correct": true}, {"text": "Ви", "correct": false}, {"text": "він", "correct": false}, {"text": "ми", "correct": false}]}, {"question": "Павле, _____ вважаєш, що Львів старіший?", "options": [{"text": "ти", "correct": true}, {"text": "Ви", "correct": false}, {"text": "він", "correct": false}, {"text": "вона", "correct": false}]}]} instruction={"Оберіть правильну форму звертання (ти чи Ви) у порівняннях"} />
 
-<ErrorCorrection client:only="react" items={[{"sentence": "Цей нова телефон значно швидший.", "errorWord": "нова", "correctForm": "новий", "options": ["новий", "нове", "нові"], "explanation": "Телефон — це іменник чоловічого роду, тому прикметник має закінчення -ий."}, {"sentence": "Моя старий квартира була менша.", "errorWord": "старий", "correctForm": "стара", "options": ["стара", "старе", "старі"], "explanation": "Квартира — це іменник жіночого роду."}, {"sentence": "Це найкращий рішення у моєму житті.", "errorWord": "найкращий", "correctForm": "найкраще", "options": ["найкраще", "найкраща", "найкращі"], "explanation": "Рішення — середній рід."}, {"sentence": "Нове ресторан має тепліший атмосферу.", "errorWord": "Нове", "correctForm": "Новий", "options": ["Новий", "Нова", "Нові"], "explanation": "Ресторан — чоловічий рід."}, {"sentence": "Ця екран набагато більший.", "errorWord": "Ця", "correctForm": "Цей", "options": ["Цей", "Це", "Ці"], "explanation": "Екран — чоловічий рід."}, {"sentence": "Твої комп'ютер дуже старий.", "errorWord": "Твої", "correctForm": "Твій", "options": ["Твій", "Твоя", "Твоє"], "explanation": "Комп'ютер — чоловічий рід, однина."}]} instruction={"Знайдіть помилку в узгодженні прикметника й іменника за родом/числом"} />
+<Unjumble client:only="react" items={[{"words": "телефон / ніж / дорожчий, / Цей / той.", "answer": "Цей телефон дорожчий, ніж той."}, {"words": "смачніша / Їжа / там / значно / зараз.", "answer": "Їжа там значно смачніша зараз."}, {"words": "якість / найкращий / Для / аргумент. / це / мене / —", "answer": "Для мене якість — це найкращий аргумент."}, {"words": "трохи / за / Мій / брат / менший / мене.", "answer": "Мій брат трохи менший за мене."}, {"words": "Києві / найглибша / станція / У / є / метро.", "answer": "У Києві є найглибша станція метро."}, {"words": "світліша / квартира / Моя / набагато / нова / і / тепліша.", "answer": "Моя нова квартира набагато світліша і тепліша."}]} instruction={"Складіть правильне речення зі слів"} />
 
 </TabItem>
 <TabItem label="Ресурси">
@@ -292,14 +342,6 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 - [ULP: Ukrainian Adjectives — Degrees of Comparison](https://www.ukrainianlessons.com/adjectives-comparison/)
   _Synthetic vs analytic forms explained with examples_
-
-## Підручники (Textbooks)
-
-- [Караман С. О. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrmova-karaman-2018.pdf#page=154), стор. 154
-- [Авраменко О. М. — Українська мова, 11 клас (2019)](https://pidruchnyk.com.ua/uploads/book/11-klas-ukrajinska-mova-avramenko-2019.pdf#page=29), стор. 29
-- [Глазова О. П. — Українська мова, 11 клас (2019)](https://pidruchnyk.com.ua/uploads/book/11-klas-ukrajinska-mova-glazova-2019.pdf#page=19), стор. 19
-- [Заболотний О. В. — Українська мова, 11 клас (2019)](https://shkola.in.ua/11-klas-ukrainska-mova-zabolotnyi-2019.html), стор. 34
-- [Авраменко О. М. — Українська мова, 6 клас (2023)](https://pidruchnyk.com.ua/uploads/book/6-klas-ukrmova-avramenko-2023.pdf#page=124), стор. 124
 
 **Статті — Articles**
 

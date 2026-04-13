@@ -2,13 +2,13 @@
   "module": "free-time",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-11T00:57:52.727222Z",
+  "last_audit": "2026-04-13T21:14:18.608163Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-11T00:57:52.190514Z",
+    "md": "2026-04-13T21:14:07.358075Z",
     "meta": null,
-    "activities": "2026-04-09T07:59:35.348066Z",
-    "vocabulary": "2026-04-09T08:05:46.855845Z",
+    "activities": "2026-04-12T20:08:11.427572Z",
+    "vocabulary": "2026-04-12T20:08:55.766397Z",
     "research": null,
     "plan": "2026-03-30T22:17:20.657215Z"
   },
@@ -21,17 +21,26 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1320/1200 (raw: 1356)"
+      "message": "1542/1200 (raw: 1573)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "8/0"
+      "message": "9/0"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "33/1"
+      "message": "45/1"
+    },
+    "vocab_progression": {
+      "status": "warn",
+      "violations": 0,
+      "message": "\u0394 -28 | premature=6 | gaps=0 | well-paced=1",
+      "delta": -28,
+      "premature": 6,
+      "gaps": 0,
+      "well_paced": 1
     },
     "naturalness": {
       "status": "info",

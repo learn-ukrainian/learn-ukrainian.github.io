@@ -1,102 +1,83 @@
 ## Що ми зна́ємо? (What Do We Know?)
 
-This module is the first major checkpoint in the course. You are making the transition from learning individual sounds and letters to participating in a basic conversation. We began by deciphering the Cyrillic alphabet, and now you have a foundation to build upon. This section is a dedicated review where you will consolidate those skills before moving forward.
+Welcome to the first checkpoint. Over the past six modules, you have learned the Cyrillic alphabet, essential sounds, basic greetings, and how to talk about your family. This module consolidates that knowledge. You will review everything covered so far, ensuring complete readiness to hold a basic conversation in Ukrainian.
 
-Consider the comprehensive checklist of what you have acquired so far. You have achieved phonetic mastery of the Cyrillic alphabet. You understand the fundamental rule of Ukrainian phonetics: distinguishing between a **звук** (sound) that you hear and a **лі́тера** (letter) that you write. You understand how the **апо́стро́ф** (apostrophe) acts as a hard boundary separating sounds, and how the **м'яки́й знак** (soft sign), while having no sound of its own, softens the preceding consonant. You grasp the vital concept of word **на́голос** (stress) and how it shapes the entire rhythm of a spoken word. You confidently use basic greetings like **Приві́т** (Hi) and **До́брий день** (Good afternoon), and you recognize the essential vocabulary for family members such as **ма́ма** (mother), **та́то** (father), **брат** (brother), and **сестра́** (sister).
+Start with a self-assessment on sounds and letters. Can you read Ukrainian Cyrillic words fluently? You have learned to distinguish tricky letter pairs, such as the breathy **Г** (close to H) versus the hard **Ґ** (G), and the deep **И** (Y) versus the sharp **І** (I).
+ Recall the crucial phonetic roles of the **м'яки́й знак** (soft sign, **Ь**), which softens the preceding consonant, and the **апо́стро́ф** (apostrophe). 
 
-This module serves as a dedicated self-assessment phase. You will prove that you can read fluently and hold a basic introduction in a realistic context. We introduce no new vocabulary or new grammar rules here. Instead, the entire focus remains on consolidation, ensuring that the structures you have already learned become automatic and natural. The goal is moving from translation to direct comprehension.
+:::note
+The apostrophe acts as a hard stop. It prevents the preceding consonant from softening and ensures the following vowel sounds clear and distinct.
+:::
+
+Next, evaluate your knowledge of introductions and family vocabulary. Can you say who you are and where you are from? Can you list the members of your family? Check if you can use basic possessive pronouns correctly, matching them to the noun gender. Identify when to use **мій** (my, masculine) and when to use **моя́** (my, feminine). 
 
 <!-- INJECT_ACTIVITY: quiz-comprehensive-review -->
 
 ## Чита́ння (Reading Practice)
 
-Reading aloud is the essential bridge between recognizing individual letters on a page and producing natural speech. For this exercise, focus on your reading flow and carefully observe the stress marks provided in the text. When you read a Ukrainian sentence, read it as a single continuous thought rather than a robotic list of isolated words. Speak clearly and confidently, allowing the syllables to connect smoothly. Reading aloud engages your muscle memory. It trains your tongue and lips to produce new phonetic combinations, making it easier to speak spontaneously in real-world situations. Do not rush through the text. Pace yourself and focus on pronunciation.
+Put your reading skills to the test. The goal of this task is to read a connected Ukrainian text aloud, building your reading fluency. This text uses only familiar vocabulary from the first six modules, so there are no new words to memorize. Read the sentences slowly and clearly.
 
-Read the following passage about a woman named **Окса́на Ковальчу́к** (Oksana Kovalchuk). Focus on understanding the meaning without translating it into English in your head.
+This is a short connected review text in the style of Anna's self-introduction review from ULP Season 1, Episode 10. Read it aloud once slowly, then once more smoothly.
 
-> **Ме́не зва́ти Оксана Ковальчук.** *(My name is Oksana Kovalchuk.)*
-> **Я з Ки́єва.** *(I am from Kyiv.)*
-> **Я — вчи́телька.** *(I am a teacher.)*
-> **Це — моя́ сім'я́.** *(This is my family.)*
-> **Мій чолові́к — інжене́р.** *(My husband is an engineer.)*
-> **Йо́го звати Мико́ла.** *(His name is Mykola.)*
-> **У мене є син.** *(I have a son.)*
-> **Мій син — студе́нт.** *(My son is a student.)*
-> **Ми живемо́ тут.** *(We live here.)*
-> **Ду́же приє́мно.** *(Very nice to meet you.)*
+**Приві́т! Ме́не зва́ти А́нна. Я з Ки́єва, з Украї́ни. Я студе́нтка. Це моя сім'я́. Це моя ма́ма, її звати Оле́на, вона́ вчи́телька. Це мій та́то, йо́го звати Іва́н, він інжене́р. Ду́же приє́мно!** (Hi! My name is Anna. I am from Kyiv, from Ukraine. I am a student. This is my family. This is my mother, her name is Olena, she is a teacher. This is my father, his name is Ivan, he is an engineer. Very nice to meet you!)
 
-Analyzing the name components within this text reveals important cultural patterns. The woman's personal name is **Оксана** (first name). Her family name is **Ковальчук** (surname). In formal Ukrainian culture, people also use a patronymic based on their father's name. If her father was named Mykola, her patronymic would be **Микола́ївна** (Mykolaivna). Remember the strict capitalization rule: every proper noun, including a person's **ім'я́** (first name) and **прі́звище** (surname), must always start with a capital letter. Proper names are central to Ukrainian identity, and writing them correctly is a sign of respect.
-
-:::tip
-When reading Ukrainian texts, remember that the spelling is highly phonetic. What you see is exactly what you hear. Trust the letters, and do not try to apply English pronunciation rules to Ukrainian words.
-:::
+Assess your reading comprehension and pronunciation. Did you pronounce the vowels clearly? Notice the capitalization rule for proper nouns: names like **Анна** (Anna), **Олена** (Olena), and **Іван** (Ivan), as well as places like **Ки́їв** (Kyiv) and **Украї́на** (Ukraine), always start with a capital letter just like in English. Highlight how the short, simple sentences string together to form a complete narrative. By placing one basic fact after another, you build a descriptive paragraph. You can see how these straightforward phrases work together beautifully without needing complex grammar just yet. You already know enough to tell an authentic story about your own life.
 
 ## Грама́тика (Grammar Summary)
 
-Expressing identity and identification in Ukrainian relies on specific structural patterns. We use the **Це** (This is) + noun structure to introduce people or objects. When stating who someone is, Ukrainian employs a zero-copula rule, meaning the verb "to be" is completely omitted in the present tense. Compare the English sentence "I am a student" with the Ukrainian equivalent **Я — студент** (I am a student). The dash explicitly replaces the missing verb, indicating a direct relationship between the subject and the noun.
+Review the structures used for identification and possession. To point things out, you use the pattern **Це** (This is) plus a noun: **Це мій брат** (This is my brother). For possession, you use the fixed phrase **У мене є** (I have) plus a noun: **У мене є сестра́** (I have a sister). Remember that the "is" verb is usually omitted in the present tense. You simply state the subject and the noun: **Я — студе́нт** (I am a student).
 
-*   **Це — мій друг.** *(This is my friend.)*
-*   **Вона́ — лі́карка.** *(She is a doctor.)*
-*   **Він — архіте́ктор.** *(He is an architect.)*
+Recall how to ask and answer questions about names. There is a clear difference between the informal question **Як тебе́ звати?** (What are you called?) and the formal version **Як вас звати?** (What are you called?). When answering, use the phrase **Мене звати Анна** (They call me Anna). This chunk uses the accusative pronoun **мене** (me), successfully avoiding the literal translation trap of the English phrase "My name is".
 
-:::caution
-A common L2 error is using the verb "to be" when stating identity. English speakers often say **Я є студент** or **Моє́ ім'я є А́нна**, which is a direct translation error. The correct forms are **Я — студент** and **Мене звати Анна**.
+:::tip
+Remember that **Мене звати** uses the accusative **мене**. You are literally saying "They call me," placing yourself as the object of the sentence rather than the subject.
 :::
 
-A clear structural difference exists between stating possession and naming someone. We use the construction **У мене є** (I have) to express possession of objects or family relationships. To state what someone is called, we use the fixed phrase **Мене звати** (My name is, literally: they call me). Notice that these fixed chunks require the accusative pronouns **мене** (me), **тебе́** (you, informal), and **вас** (you, formal). Treat these phrases as solid vocabulary blocks. 
+Finally, review your possessive pronouns and expressions of origin. You must match the gender for your pronouns: use **мій** (my) for masculine nouns like **мій тато** (my dad), **моя** (my) for feminine nouns like **моя мама** (my mom), and **моє́** (my) for neuter nouns like **моє ім'я́** (my name). When talking about your origin, review both chunks: **Зві́дки ти?** / **Звідки ви?** (Where are you from?) — **Я з...** (I am from...).
 
-*   **У мене є брат.** *(I have a brother.)*
-*   **У мене є сестра.** *(I have a sister.)*
-*   **Як тебе звати?** *(What is your name?)*
-*   **Його звати Тара́с.** *(His name is Taras.)*
-
-When expressing origin, we use the specific preposition and case ending combination. The question **Зві́дки ти?** (Where are you from?) is answered with **Я з...** (I am from...) followed by the city or country name with its appropriate ending, such as **Києва** (Kyiv) or **Дніпра́** (Dnipro). Memorize these origin phrases as complete units.
-
-Possessive pronouns must always agree with the grammatical gender of the noun they modify. You say **мій тато** (my dad) because the word is masculine, **моя мама** (my mom) because it is feminine, and **моє ім'я** (my name) because it is neuter. Also, recall the Vocative case endings for direct address. When calling someone, the ending changes: **Анна** becomes **А́нно!**, **Оксана** becomes **Окса́но!**, and **Тарас** becomes **Тара́се!**.
-
-:::note
-English does not have a vocative case, but in Ukrainian, it is mandatory when addressing someone directly. Forgetting to change the name ending can sound unnatural or blunt to a native speaker.
-:::
-
-<!-- INJECT_ACTIVITY: match-up-q-and-a -->
+<!-- INJECT_ACTIVITY: match-up-questions-answers -->
 
 ## Діало́г (Capstone Dialogue)
 
-Imagine the following scene at a professional conference coffee break. Two professionals, **Богдан** (Bohdan), an engineer from the city of Dnipro, and **Соломі́я** (Solomiia), a teacher from the city of Ternopil, meet between sessions. This realistic setting justifies a full exchange of personal information with a new acquaintance. Pay attention to how they ask questions and respond politely.
+Examine the capstone scenario. Imagine a busy coffee break at a professional conference. **Богдан** (Bohdan), an engineer from Dnipro, and **Соломі́я** (Solomiya), a teacher from Ternopil, meet for the very first time. They use everything you have learned to introduce themselves politely, exchange basic background information, and share a detail about their families.
 
-> **Богдан:** Добрий день! *(Good afternoon!)*
-> **Соломія:** Добрий день! *(Good afternoon!)*
-> **Богдан:** Мене звати Богдан. А як Вас звати? *(My name is Bohdan. And what is your name?)*
-> **Соломія:** Мене звати Соломія. Моє прізвище — Кова́ль. *(My name is Solomiia. My surname is Koval.)*
-> **Богдан:** Дуже приємно, па́ні Соломі́є! Я з Дніпра. А Ви звідки? *(Very nice to meet you, Ms. Solomiia! I am from Dnipro. And where are you from?)*
-> **Соломія:** Я з Терно́поля. Я — вчителька. А Ви? *(I am from Ternopil. I am a teacher. And you?)*
-> **Богдан:** Я — інженер. Диві́ться, це моя сім'я на фо́то. *(I am an engineer. Look, this is my family in the photo.)*
-> **Соломія:** Це Ва́ша дружи́на? *(Is this your wife?)*
-> **Богдан:** Так, це моя дружина. У мене є син. *(Yes, this is my wife. I have a son.)*
-> **Соломія:** Ра́да знайо́мству, па́не Богдане! *(Glad to meet you, Mr. Bohdan!)*
-> **Богдан:** Навза́єм! *(Likewise!)*
+Read their conversation aloud:
 
-Notice the register used in this exchange. Because this is a professional context, they use the formal pronoun **Ви** (you, formal). They also use the respectful titles **Пане** (Mr.) and **Пані** (Ms.). Соломія addresses him directly in the Vocative case as **Пане Богдане**, rather than just stating his basic name. This shows politeness and respect in a formal setting. The dialogue moves naturally from initial contact to sharing origins, professions, and personal details. 
+> **Богдан:** До́брий день! *(Good afternoon!)*
+> **Соломія:** Добрий день! Як вас звати? *(Good afternoon! What is your name?)*
+> **Богдан:** Мене звати Богдан. А вас? *(My name is Bohdan. And you?)*
+> **Соломія:** Дуже приємно. Моє **ім'я** (first name) — Соломія. Моє **прі́звище** (surname) — Кова́ль. Звідки ви? *(Very nice to meet you. My first name is Solomiya. My surname is Koval. Where are you from?)*
+> **Богдан:** Я з Дніпра́. Я інженер. А ви звідки? *(I am from Dnipro. I am an engineer. And where are you from?)*
+> **Соломія:** Я з Терно́поля. Я вчителька. *(I am from Ternopil. I am a teacher.)*
+> **Богдан:** Це моя дружи́на на фо́то. У мене є дружина і брат. А у вас є сім'я? *(This is my wife in the photo. I have a wife and a brother. Do you have a family?)*
+> **Соломія:** Так, у мене є мама, тато і сестра. *(Yes, I have a mother, a father, and a sister.)*
+> **Богдан:** Дякую! До поба́чення! *(Thank you! Goodbye!)*
+> **Соломія:** До побачення! *(Goodbye!)*
 
-When Богдан shows his photo, he uses the visual aid to transition the conversation from work to personal life. Using photos on your phone is an excellent, natural way to practice vocabulary with native speakers. The full introduction cycle is a predictable social script. Mastering this script allows you to navigate first encounters smoothly and build connections.
+Analyze the natural features of this dialogue. Because they are meeting in a professional setting, they use the polite, formal address with the pronouns **ви** (you) and **вас** (you, accusative). This keeps the exchange respectful and matches the conference setting.
 
-Creating your own graduation monologue is the final step. In Ukrainian primary schools, a simple text follows a strict three-part structure. First is the **За́чи́н** (Introduction), where you establish contact and state the topic. Second is the **Основна части́на** (Main Part), where you provide the core details about your origin and profession. Third is the **Кінці́вка** (Conclusion), where you offer a simple, polite closing sentence. This structure helps organize your thoughts logically.
+:::tip
+For a first professional meeting, stay with **ви** and **вас**. These are the key A1.1 forms you need for a polite introduction.
+:::
 
-Use this template to practice introducing yourself out loud:
+This dialogue serves as your model for transitioning from a back-and-forth conversation to a connected monologue. You can now string these individual answers together into your own continuous presentation. You might say: **Привіт! Мене звати Богдан. Я з Дніпра. Я украї́нець. Я — інженер. Моя мама — вчителька. Мій тато — інженер. У мене є брат.** (Hi! My name is Bohdan. I am from Dnipro. I am Ukrainian. I am an engineer. My mother is a teacher. My father is an engineer. I have a brother.)
+ This continuous introduction is the core milestone for this level. Once you can seamlessly present these facts about yourself in one smooth speech, you have mastered the fundamentals of your first contact.
 
-**Привіт!** *(Hi!)*
-**Мене звати...** *(My name is...)*
-**Моє прізвище...** *(My surname is...)*
-**Я з...** *(I am from...)*
-**Я — ...** *(I am a...)*
-**Це моя сім'я.** *(This is my family.)*
-**У мене є...** *(I have a...)*
-**Дуже приємно.** *(Very nice to meet you.)*
-
-<!-- INJECT_ACTIVITY: fill-in-self-intro -->
+<!-- INJECT_ACTIVITY: fill-in-self-introduction -->
 
 ## Підсумок — Summary
 
-You have reached the end of the first major phase of your language journey. Before you proceed to the next set of modules, take a moment for a final, comprehensive self-check. Can you name all 33 letters of the Ukrainian alphabet and confidently produce their corresponding sounds? Can you comfortably say hello using both formal and informal greetings depending on the specific social context? Do you clearly understand the cultural and linguistic difference between a person's **ім'я** (first name) and their **прізвище** (surname)?
+Here is your final self-check checklist. Evaluate your progress honestly.
 
-Make sure you know how to use the possessive pronouns **мій** (my, masc.) and **моя** (my, fem.) correctly when talking about your family members. Check if you can use the Vocative case to call a friend directly, changing the ending of their name appropriately so that it sounds natural to a native speaker. Can you confidently introduce yourself in five connected sentences using the specific patterns from this module? If you can answer yes to all these questions, you are fully prepared. Take pride in establishing a solid foundation. 
+* Can you say how many letters and how many sounds Ukrainian has?
+* Can you place the stress correctly in common words such as **ка́ва** and **вода́**?
+* Can you read Ukrainian Cyrillic words fluently, including those utilizing the **Ь** and the apostrophe?
+* Can you say hello informally with **Привіт** (Hi) and formally with **Добрий день** (Good afternoon)?
+* Can you introduce yourself in 5 sentences?
+* Can you introduce yourself using the essential phrase **Мене звати...** (My name is...)?
+* Can you state your origin using the chunk **Я з...** (I am from...)?
+* Can you state your profession using the direct pattern **Я...** (I am...)?
+* Can you introduce your family members using the correct gendered possessives, such as **Це мій тато** (This is my dad) and **Це моя мама** (This is my mom)?
+* Can you ask someone else their name, inquire about their **прізвище** (surname), and ask where they are from?
+
+If you can confidently do all of this, you are fully prepared and ready for the next step: understanding how objects have gender in Ukrainian!

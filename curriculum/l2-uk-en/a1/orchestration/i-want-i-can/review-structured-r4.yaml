@@ -1,0 +1,52 @@
+round: 4
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 7
+  evidence: All planned content points are covered and the textbook references are
+    cited, but the pipeline total is 1035/1200 and local section counts from the supplied
+    content are about 321 / 254 / 253 / 192 aga
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: No Russianisms, Surzhyk, calques, paronym misuse, Russian-only letters,
+    or wrong conjugation/case claims found; lemma checks support the `хотіти / могти
+    / мусити` paradigms used here.
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: 'PPP flow is intact and examples are plentiful, but the summary shifts
+    into long English meta-instructions: “actively try to answer the following questions
+    out loud to verify your absolute understandin'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required vocabulary appears in prose (`хотіти`, `могти`, `мусити`,
+    `кава`, `їсти`), and all recommended items are also used naturally (`шкода`, `допомогти`,
+    `борщ`, `порекомендувати`, `треба`).
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: 'The marker count matches the plan exactly, and placement follows the
+    teaching sequence: one marker after `Хоті́ти`, then three after `Могти́ і му́сити`.'
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: The voice stays teacherly and avoids gamified/corporate phrasing; the
+    module reads like instruction rather than marketing.
+- dimension: 7
+  name: Structural integrity
+  score: 5
+  evidence: The structure and headings are clean, but the pipeline note gives 1035
+    words, which is materially below the 1200-word target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: No Russia-centric framing or culturally inaccurate claims; Ukrainian is
+    presented on its own terms.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Both dialogues use named speakers and plausible everyday situations; the
+    weekend-planning exchange is especially natural and on-scope.
+findings: []

@@ -243,27 +243,24 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-- Confirmed: стіл, книга, вікно, кімната, ліжко, стілець, лампа, телефон, комп'ютер, він, вона, воно, зошит, ручка, сумка, крісло, дзеркало, ключ, фото, стіна.
-- Not found: None.
+- Confirmed: стіл, книга, вікно, кімната, ліжко, стілець, лампа, телефон, комп'ютер, він, вона, воно, зошит, ручка, сумка, крісло, дзеркало, ключ, фото, стіна
+- Not found: (None)
 
 ## Grammar Rules
-- Gender categories (Чоловічий, Жіночий, Середній рід): Правопис §48-53 — Іменники в українській мові розподіляються за трьома граматичними родами: чоловічим (§49), жіночим (§51) та середнім (§53).
-- Gender determination (Test): Grade 6 (Betsa) p.72 — Іменники чоловічого роду співвідносяться з займенником він, жіночого роду — вона, середнього роду — воно. Також використовуються слова мій, моя, моє (Grade 5, p.32).
-- Typical endings: Grade 3 (Vashulenko) p.112 — Чоловічий рід: нульове закінчення/приголосний (стіл); Жіночий рід: -а, -я (ручка, кімната); Середній рід: -о, -е (вікно, ліжко).
+- [Noun gender and endings]: Правопис § Відмінювання іменників (І та ІІ відміни) — Іменники чоловічого роду зазвичай мають нульове закінчення (на приголосний) і належать до ІІ відміни; іменники жіночого роду на -а, -я належать до І відміни; іменники середнього роду на -о, -е, -я належать до ІІ відміни. (Note: The official 2019 Pravopys details orthographic declension paradigms rather than basic semantic gender assignment rules, but the morphological principles align with this classification).
 
 ## Calque Warnings
-- У тебе є стіл?: OK — Standard pedagogical structure for A1 possession (found in Grade 6 textbooks).
-- Дивись, це моя кімната: OK — Natural conversational phrase; "дивись" is appropriate for an informal dialogue, "поглянь" is a more formal alternative.
-- стілець: OK — Standard Ukrainian term; "стуло" is a Russianism and should be avoided.
+- у мене є: OK — no issues found in style guide
+- телефон: OK — no issues found in style guide
+- фото: OK — no issues found in style guide
 
 ## CEFR Check
-- стіл: A1 — OK (found in Grade 3 textbooks)
-- книга: A1 — OK (found in Grade 3 textbooks)
-- вікно: A1 — OK (found in Grade 3 textbooks)
-- ліжко: A1 — OK (found in Grade 3 textbooks)
-- кімната: A1 — OK (found in Grade 3 textbooks)
-- фото: A1 — OK (found in Grade 6 textbooks, note: indeclinable neuter)
-- стілець: A1 — OK (found in Grade 3 textbooks)
+- стіл: A1 — OK
+- кімната: A1 — OK
+- зошит: A1 — OK
+- вікно: A1 — OK
+- книга: A2 — above target
+- дзеркало: A2 — above target
 </pre_verified_facts>
 
 
@@ -599,12 +596,14 @@ These exercise formats are adapted from Ukrainian primary school textbooks and a
 
 ## Section Structure
 
-Write these sections as H2 headings, in this exact order:
+Write these sections as H2 headings, in this **exact** order:
 
 - `## Діалоги (Dialogues)` (~300 words)
 - `## Він, вона, воно (The Gender Test)` (~300 words)
 - `## Предмети навколо (Objects Around Us)` (~300 words)
 - `## Підсумок — Summary` (~300 words)
+
+**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim** as an `## H2` line. This includes the FINAL summary/transition section (`Підсумок: ...`, `Підсумок та перехід до M...`, etc.) — the writer's most common failure is silently dropping the closing section. Do NOT skip it. Do NOT renumber. Do NOT merge headings. The post-write quick-verify check will fail your build if any heading is missing, even if the prose itself is excellent.
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -648,6 +647,25 @@ HARD GRAMMAR RULES (audit will reject violations):
 - **Zero calques**: No приймати душ→брати душ, приймати рішення→ухвалювати рішення
 - **Zero paronyms**: тактична≠тактовна, ефектний≠ефективний — use the right word, not a similar-sounding one
 - **Natural Ukrainian**: Write how a Ukrainian teacher would explain this to a student. Not robotic, not textbook-dry, not overly casual.
+
+### FORBIDDEN WORDS — never write these (#1189)
+
+The following Russian words have leaked into past builds and broken modules. They are **hard-banned** — the post-write toxic-token scanner will fail your build the moment it sees one. Use the Ukrainian alternative every time, even in dialogues, even in casual prose, even when quoting a learner's mistake (use a `<!-- VERIFY -->` placeholder instead of typing the Russian form):
+
+| Russian (FORBIDDEN) | Ukrainian (USE THIS) |
+|---|---|
+| хорошо | добре |
+| конечно | звичайно / певна річ |
+| спасибо | дякую |
+| пожалуйста | будь ласка / прошу |
+| ничего | нічого |
+| сейчас | зараз |
+| тоже | теж / також |
+| здесь | тут |
+| кот | кіт |
+| кон | кін |
+
+This list is enforced word-for-word by `scripts/build/quick_verify.py` (SEVERE_RUSSIANISMS). If you produce any of these tokens — even inside a quoted example, even inside a dialogue line spoken by a Russian-speaking character — the build halts immediately. There is no exception.
 
 **Authority hierarchy (if uncertain about a word, check in this order):**
 VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (stress) → Антоненко-Давидович (style) → Грінченко (etymology).
@@ -754,43 +772,37 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Діалоги — Dialogues (~330 words total)
-- P1 (~50 words): Introduction to the setting at a pet shop, establishing the motivation for the first dialogue where grammatical gender is naturally encountered through animals.
-- D1 (~110 words): [Dialogue: At the Pet Shop] Марія and Оленка look at pets. Марія introduces her cat (мій кіт — він) sleeping in a basket (кошик — він). Оленка shows a fish (моя рибка — вона) and a turtle (черепаха — вона). They spot a kitten (кошеня — воно) near a mirror (дзеркало — воно).
-- D2 (~90 words): [Dialogue: Video Call] A call showing a room. Identification of major furniture: стіл (m), ліжко (n), and шафа (f). Use of "Це мій стіл" and "Це моє ліжко" to show gender agreement in possessives.
-- D3 (~80 words): [Dialogue: What's in your bag?] Quick exchange using "Що у тебе є?" to list objects. Items mentioned: книга (f), телефон (m), фото (n), ручка (f), and зошит (m).
+## Діалоги (Dialogues) (~300 words total)
+- P1 (~40 words): Introduce the setting and the core concept that in Ukrainian, everyday objects have distinct grammatical genders that affect how we talk about them.
+- P2 (~110 words): Dialogue 1 — Video call showing your room. Two friends (Марія and Оленка) are on a call. "Привіт! Дивись, це моя кімната." "Класно! У тебе є стіл?" "Так, у мене є стіл і ліжко." The dialogue introduces the nouns in context with possessives (мій стіл, моя кімната, моє ліжко).
+- P3 (~40 words): Transition paragraph observing the dialogue. Point out how the word for "my" changes (мій, моя, моє) depending on whether the object is a table, a room, or a bed.
+- P4 (~110 words): Dialogue 2 — What's in your bag? "Що у тебе є в сумці?" "У мене є книга, телефон і фото." "А у мене є ручка і зошит." This dialogue expands the vocabulary (телефон, фото, ручка, зошит) and reinforces the pattern.
 
-## Він, вона, воно — The Gender Test (~330 words total)
-- P1 (~110 words): Explaining the concept that every Ukrainian noun has a fixed gender (рід). Contrast with English "it" for objects; in Ukrainian, a table is "he" (він) and a book is "she" (вона). Reference Ponomarova Grade 3 regarding the tripartite division: чоловічий, жіночий, and середній рід.
-- P2 (~110 words): The "My" test (мій, моя, моє). Associating nouns with possessives as the primary intuitive check. Examples: мій стіл (m), моя книга (f), моє вікно (n). This builds the mental link between the object and its pronoun.
-- <!-- INJECT_ACTIVITY: quiz-pronoun-choice --> [quiz, він/вона/воно choice for nouns, 8 items]
-- P3 (~110 words): Introducing the endings rule from Vashulenko Grade 3. Masculine nouns usually end in a consonant (телефон, ключ). Feminine nouns usually end in -а or -я (лампа, кімната). Neuter nouns usually end in -о or -е (вікно, ліжко).
-- <!-- INJECT_ACTIVITY: quiz-gender-endings --> [quiz, identify gender by ending, 6 items]
+## Він, вона, воно (The Gender Test) (~350 words total)
+- P1 (~100 words): Introduce the three genders: чоловічий (masculine), жіночий (feminine), and середній (neuter). Explain that gender is a permanent, unchangeable characteristic of every Ukrainian noun. Introduce the pronoun test using animals/pets as an intuitive bridge: a male cat (кіт) and an aquarium (акваріум) are "він", a fish (рибка) and a turtle (черепаха) are "вона", and a kitten (кошеня) is "воно".
+- P2 (~100 words): Explain the "My" test using the possessive pronouns: мій (he/my), моя (she/my), and моє (it/my). Show how to pair these with the room vocabulary from the dialogues: "мій стіл" confirms masculine, "моя книга" confirms feminine, and "моє вікно" confirms neuter.
+- <!-- INJECT_ACTIVITY: quiz-pronoun-test --> [quiz, він, вона, or воно? Choose for each noun, 8 items]
+- <!-- INJECT_ACTIVITY: fill-in-possessive --> [fill-in, мій/моя/моє ___ (match possessive to noun), 8 items]
+- P3 (~100 words): Teach how to identify gender by looking at word endings. Explain that masculine nouns usually end in a consonant (стіл, телефон, зошит), feminine nouns typically end in -а or -я (книга, лампа, кімната, ручка), and neuter nouns usually end in -о or -е (вікно, ліжко, місто).
+- P4 (~50 words): Briefly mention exceptions (such as words ending in the soft sign -ь), but reassure the learner that the consonant / -а / -о ending rule confidently covers about 90% of the nouns they are learning right now.
+- <!-- INJECT_ACTIVITY: quiz-gender-endings --> [quiz, What gender? Look at the ending, 6 items]
 
-## Предмети навколо — Objects Around Us (~330 words total)
-- P1 (~110 words): Comprehensive list of masculine objects found in a study or bag. Focus on pronunciation and gender identification for: стіл (table), стілець (chair), телефон (phone), комп'ютер (computer), зошит (notebook), and ключ (key).
-- P2 (~110 words): List of feminine and neuter objects. Feminine: книга (book), лампа (lamp), сумка (bag), ручка (pen), стіна (wall). Neuter: вікно (window), ліжко (bed), крісло (armchair), дзеркало (mirror), and фото (photo).
-- <!-- INJECT_ACTIVITY: group-sort-gender --> [group-sort, sort 12 objects into M/F/N categories, 12 items]
-- P3 (~110 words): Extending the "У мене є" (I have) construction from M06 to include these new objects. Explaining that the construction stays the same regardless of the object's gender (У мене є стіл / У мене є книга). Focus on building simple sentences.
-- <!-- INJECT_ACTIVITY: fill-in-possessives --> [fill-in, match мій/моя/моє to nouns, 8 items]
+## Предмети навколо (Objects Around Us) (~350 words total)
+- P1 (~100 words): Group and expand masculine room vocabulary. Introduce стілець (chair), комп'ютер (computer), and ключ (key). Emphasize their consonant endings and explicitly pair them with "він" and "мій" to reinforce the masculine category.
+- P2 (~100 words): Group and expand feminine room vocabulary. Introduce сумка (bag) and стіна (wall). Emphasize their -а endings and explicitly pair them with "вона" and "моя" to reinforce the feminine category.
+- P3 (~50 words): Group and expand neuter room vocabulary. Introduce крісло (armchair) and дзеркало (mirror). Emphasize their -о endings and explicitly pair them with "воно" and "моє".
+- <!-- INJECT_ACTIVITY: group-sort-objects --> [group-sort, Sort objects into masculine/feminine/neuter, 12 items]
+- P4 (~100 words): Connect the new vocabulary to the "У мене є" (I have) construction, which was introduced previously for family members. Explain that expressing possession of objects works exactly the same way. Provide clear examples: У мене є стіл. У мене є книга. У мене є вікно.
 
-## Підсумок — Summary (~330 words total)
-- P1 (~110 words): Detailed recap of the 3-step gender determination strategy: 1. Pronoun test (він/вона/воно), 2. "My" test (мій/моя/моє), and 3. Checking the ending.
-- P2 (~110 words): A quick-reference summary of typical gender endings:
-    - Чоловічий (M): Consonant (стіл, зошит)
-    - Жіночий (F): -а, -я (книга, сумка)
-    - Середній (N): -о, -е (вікно, ліжко)
-- P3 (~110 words): Self-check section based on the plan's requirements:
-    - Q: What gender is 'стіл'?
-    - A: Masculine (чоловічий), because it ends in a consonant and we say "мій стіл".
-    - Q: What gender is 'книга'?
-    - A: Feminine (жіночий), because it ends in -а and we say "моя книга".
-    - Q: What gender is 'вікно'?
-    - A: Neuter (середній), because it ends in -о and we say "моє вікно".
-    - Task: How do you say "I have a chair" in Ukrainian?
-    - Answer: "У мене є стілець."
+## Підсумок — Summary (~300 words total)
+- P1 (~150 words): Recap the three reliable steps for determining a noun's gender in Ukrainian: 1. Say "він", "вона", or "воно" with the noun to see what fits. 2. Look at the final letter (consonant for masculine, -а/-я for feminine, -о/-е for neuter). 3. Test it with the possessive pronoun (мій, моя, моє). Remind them that gender dictates agreement.
+- P2 (~150 words): 
+  * **What gender is "стіл"?** Masculine (він, ends in a consonant, uses "мій стіл").
+  * **What gender is "книга"?** Feminine (вона, ends in -а, uses "моя книга").
+  * **What about "вікно"?** Neuter (воно, ends in -о, uses "моє вікно").
+  * **Say "I have a chair" in Ukrainian.** У мене є стілець.
 
-Grand total: ~1320 words
+Grand total: ~1300 words
 </skeleton>
 
 ## Output Format
@@ -798,11 +810,59 @@ Grand total: ~1320 words
 Write in Markdown. Use:
 - `## Section Title` for main sections
 - `### Subsection` for subsections within a section
-- `**bold**` for Ukrainian words being taught — EVERY bold Ukrainian word MUST have an English translation on first use, either in parentheses `**слово** (translation)` or inline `**слово** means "translation"`. No exceptions.
+- `**bold**` for Ukrainian words being taught. For **A1 and A2** levels, provide an English translation on first use (e.g. `**стіл** (table)`) because learners lack the vocabulary to infer meaning. For **B1 and above**, do NOT provide inline translations for standard vocabulary — the learner will use the module's словник (vocabulary table). You may provide ONE parenthetical English translation ONLY for highly abstract grammar/linguistic terms on first use (e.g. `**видова пара** (aspectual pair)`).
 - Tables for paradigms (conjugation, declension)
 - `:::tip` / `:::caution` / `:::note` for callout boxes
 - `<!-- INJECT_ACTIVITY: {id} -->` for exercise placement (markers only — do NOT write exercise content)
 
 Do NOT write MDX component syntax, JSON, or DSL exercise blocks (:::quiz, etc.). Plain Markdown with injection markers.
+
+---
+
+## MANDATORY FINAL CHECKLIST (#1189)
+
+Before you finish writing, verify the prose against this checklist. Failing any item will fail the build.
+
+### Section headings (verbatim)
+
+Every heading from "Section Structure" above MUST appear as an `## H2` in your output, in order, **including the closing `Підсумок:` / `Підсумок та перехід до M...` summary**. The single most common writer failure across the B1 build has been silently dropping the final summary section. Re-read your output before stopping. If the last section in the plan is missing, write it now.
+
+### Required vocabulary (every word must appear)
+
+You MUST use **every word** from the list below at least once in the prose, in a natural sentence with bold + English translation. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, прагматика, діагностика, дієвідмінювання, зворотний, двовидовий, одновидовий, неозначено-кількісний, etc.) is the most frequently dropped category — actively find homes for those words even if it means adding a sentence that defines them.
+
+- [ ] стіл (table, m)
+- [ ] книга (book, f)
+- [ ] вікно (window, n)
+- [ ] кімната (room, f)
+- [ ] ліжко (bed, n)
+- [ ] стілець (chair, m)
+- [ ] лампа (lamp, f)
+- [ ] телефон (phone, m)
+- [ ] комп'ютер (computer, m)
+- [ ] він, вона, воно (he, she, it — gender test words)
+
+### Forbidden words (never produce)
+
+Do not write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use `<!-- VERIFY -->` instead). The post-write toxic-token scanner will fail the build immediately:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+### Level-specific immersion check
+
+The level-appropriate immersion rule was already injected at the top of
+this prompt as `IMMERSION RULE`. Re-read it now BEFORE you stop writing.
+If your level's rule contains a CHECKLIST block, walk through every item.
+If it doesn't, just verify your output matches the LANGUAGE ROLES and
+TARGET stated in that block.
+
+This used to hard-code a B1+ checklist that confused A1/A2 models (where
+translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+The single source of truth is now
+`scripts/pipeline/config_tables.py:IMMERSION_RULES`.
+
+---
 
 Begin writing now. Start with the first section heading.

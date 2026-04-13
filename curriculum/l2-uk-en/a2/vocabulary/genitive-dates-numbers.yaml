@@ -11,14 +11,8 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: правило
-  translation: rule
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
 - word: число́
-  translation: date / number
+  translation: date
   expression: false
   pos: ім.
   gender: с.
@@ -113,123 +107,177 @@ vocabulary:
   pos: ''
   gender: ''
   verified: true
+- word: З якого числа?
+  translation: From what date?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: До якого числа?
+  translation: Until what date?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
 - word: Якого числа?
   translation: On what date?
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: Котра година?
-  translation: What time is it?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: О котрій годині?
-  translation: At what time?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: годи́на
-  translation: hour
+- word: Ко́ли
+  translation: When?
   expression: false
   pos: ім.
-  gender: ж.
-  verified: true
-- word: пів на...
-  translation: 'half past (literally: half to)'
-  expression: true
-  pos: ''
   gender: ''
   verified: true
-- word: коли?
-  translation: when?
-  expression: true
-  pos: ''
+- word: адміністра́тор
+  translation: receptionist
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: забронюва́ти
+  translation: to book
+  expression: false
+  pos: дієсл.
   gender: ''
   verified: true
-- word: зру́чно
-  translation: convenient
+- word: зали́ши́тися
+  translation: to stay
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: но́мер
+  translation: room
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: післяза́втра
+  translation: the day after tomorrow
   expression: false
   pos: присл.
   gender: ''
   verified: true
-- word: ві́льний
-  translation: free / vacant
+- word: оди́н
+  translation: one (masculine)
   expression: false
-  pos: прикм.
+  pos: числ.
   gender: ''
   verified: true
-- word: но́мер
-  translation: room (hotel) / number
+- word: одна́
+  translation: one (feminine)
   expression: false
-  pos: ім.
-  gender: ч.
+  pos: числ.
+  gender: ''
   verified: true
-- word: гість
-  translation: guest
+- word: одне́
+  translation: one (neuter)
   expression: false
-  pos: ім.
-  gender: ч.
+  pos: числ.
+  gender: ''
   verified: true
-- word: доба́
-  translation: 24-hour period / day
+- word: два
+  translation: two (masculine/neuter)
+  expression: false
+  pos: числ.
+  gender: ''
+  verified: true
+- word: дві
+  translation: two (feminine)
+  expression: false
+  pos: числ.
+  gender: ''
+  verified: true
+- word: три
+  translation: three
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: чоти́ри
+  translation: four
+  expression: false
+  pos: числ.
+  gender: ''
+  verified: true
+- word: п'ять
+  translation: five
+  expression: false
+  pos: числ.
+  gender: ''
+  verified: true
+- word: шість
+  translation: six
+  expression: false
+  pos: числ.
+  gender: ''
+  verified: true
+- word: де́сять
+  translation: ten
+  expression: false
+  pos: числ.
+  gender: ''
+  verified: true
+- word: одина́дцять
+  translation: eleven
+  expression: false
+  pos: числ.
+  gender: ''
+  verified: true
+- word: двана́дцять
+  translation: twelve
+  expression: false
+  pos: числ.
+  gender: ''
+  verified: true
+- word: трина́дцять
+  translation: thirteen
+  expression: false
+  pos: числ.
+  gender: ''
+  verified: true
+- word: чотирна́дцять
+  translation: fourteen
+  expression: false
+  pos: числ.
+  gender: ''
+  verified: true
+- word: два́дцять
+  translation: twenty
+  expression: false
+  pos: числ.
+  gender: ''
+  verified: true
+- word: со́рок
+  translation: forty
+  expression: false
+  pos: числ.
+  gender: ''
+  verified: true
+- word: ти́сяча
+  translation: thousand
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: па́пка
-  translation: folder
+- word: бага́то
+  translation: many
   expression: false
-  pos: ''
+  pos: присл.
   gender: ''
-  verified: false
-- word: ша́фа
-  translation: cabinet / wardrobe
-  expression: false
-  pos: ім.
-  gender: ж.
   verified: true
-- word: стіле́ць
-  translation: chair
+- word: скі́льки
+  translation: how many
   expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: квито́к
-  translation: ticket
-  expression: false
-  pos: ім.
-  gender: ч.
+  pos: присл.
+  gender: ''
   verified: true
 - word: нема́є
-  translation: there is no / is not present
+  translation: there is no
   expression: false
   pos: ''
   gender: ''
-  verified: true
-- word: допомо́га
-  translation: help
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: пора́да
-  translation: advice
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: відпочи́нок
-  translation: rest / relaxation
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: на́стрій
-  translation: mood
-  expression: false
-  pos: ім.
-  gender: ч.
   verified: true

@@ -1,0 +1,45 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T22-17-c66b1a07.json
+phase: vocab
+prompt_chars: 19618
+response_chars: 1673
+prompt_words: 3169
+response_words: 185
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.0407
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.0117
+- name: plan
+  start: 1028
+  length: 18590
+  fraction: 0.9476
+large_sections:
+- plan
+directives_total: 5
+directives_covered: 0
+directives_missed:
+- kind: must
+  text: When you use verbs of motion, you must choose the correct preposition and
+    case to show your direction or origin.
+  covered: false
+  coverage_note: 0/14 keywords (0%)
+- kind: inject_activity
+  text: quiz-past-trip-comprehension
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-match-travel-situations-with-the-correct-motion-verb-and-preposition-combination-gen-acc
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-complete-a-travel-narrative-by-choosing-the-correct-verb-form-aspect-and-motion-verb-type-for-each-blank
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: error-correction-find-and-correct-grammar-errors-in-sentences
+  covered: false
+  coverage_note: marker missing

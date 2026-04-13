@@ -1,7 +1,28 @@
-## Підсумок
+## Підсумок (~150 words)
 
-Ми чудово попрацювали сьогодні! *(We worked wonderfully today!)* Тепер ви знаєте, як розповідати про професії та інтереси. *(Now you know how to talk about professions and interests.)* Let's quickly review the core rules. Для простої ідентифікації в теперішньому часі ми використовуємо тире та називний відмінок. *(For simple identification in the present tense, we use a dash and the Nominative case.)* «Він — лікар» *(He is a doctor)*. Але якщо ми говоримо про минулий час, майбутній час або зміну статусу, нам потрібен орудний відмінок. *(But if we talk about the past tense, future tense, or a change of status, we need the Instrumental case.)* Дієслова «**бути**» *(to be)* у минулому та майбутньому, а також «**стати**» *(to become)* і «**працювати**» *(to work)* завжди вимагають орудного відмінка. *(The verbs "to be" in the past and future, as well as "to become" and "to work", always require the Instrumental case.)*
+Let's review the key grammar rules and vocabulary from this module. 
 
-Remember the key endings for professions. Чоловічі професії зазвичай мають закінчення «-ом» або «-ем». *(Masculine professions usually have the ending "-om" or "-em".)* Наприклад: «інженером» *(as an engineer)*, «вчителем» *(as a teacher)*. Жіночі професії отримують закінчення «-ою» або «-ею». *(Feminine professions get the ending "-oiu" or "-eiu".)* Наприклад: «лікаркою» *(as a doctor)*, «будівельницею» *(as a builder)*.
+Кожна **професія** (profession) має граматичні правила. У теперішньому часі ми пишемо тире: «Він — **вчитель** (teacher (male))». Але інші дієслова вимагають орудного відмінка.
 
-We also learned four important verbs that express passion and activity. Ці дієслова завжди працюють з орудним відмінком. *(These verbs always work with the Instrumental case.)* Ось ця велика четвірка: «**захоплюватися**» *(to be passionate about)*, «**цікавитися**» *(to be interested in)*, «**пишатися**» *(to be proud of)* та «**займатися**» *(to be engaged in)*. Використовуйте їх, щоб робити ваші розповіді цікавими. *(Use them to make your stories interesting.)* До нових зустрічей! *(Until next time!)*
+> *Every profession has grammatical rules. In the present tense, we write a dash: "He is a teacher." But other verbs require the Instrumental case.*
+
+Ми часто використовуємо слова **працювати** (to work) або **стати** (to become). Чоловічий рід отримує закінчення «-ом» або «-ем» (**інженер** (engineer) — інженером). 
+
+> *We often use the words to work or to become. The masculine gender gets the endings "-om" or "-em" (engineer — engineer).*
+
+Жіночий рід отримує закінчення «-ою» або «-ею». Наприклад, слово **вчителька** (teacher (female)) змінюється на «вчителькою». Водночас чоловіче слово **лікар** (doctor) змінюється на «лікарем».
+
+> *The feminine gender gets the endings "-oiu" or "-eiu". For example, the word teacher changes to "teacher". At the same time, the masculine word doctor changes to "doctor".*
+
+Ваш **фах** (profession, specialty) — це не єдина тема для розмови. Ви можете **захоплюватися** (to be passionate about) мистецтвом. Або ви можете **цікавитися** (to be interested in) історією.
+
+> *Your specialty is not the only topic for conversation. You can be passionate about art. Or you can be interested in history.*
+
+Не забувайте відпочивати після роботи. Ви можете **займатися** (to be engaged in, to do (a sport/activity)) спортом. Також важливо **пишатися** (to be proud of) своїми результатами.
+
+> *Do not forget to rest after work. You can be engaged in sports. It is also important to be proud of your results.*
+
+:::info
+**Grammar box**
+Remember that the "Big Four" verbs for hobbies and interests (захоплюватися, цікавитися, пишатися, займатися) always take the Instrumental case, just like professions after *бути* and *стати*.
+:::

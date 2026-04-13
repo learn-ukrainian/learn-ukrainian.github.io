@@ -1,0 +1,69 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T15-16-561d0736.json
+phase: write-chunk-05
+prompt_chars: 47667
+response_chars: 3580
+prompt_words: 6660
+response_words: 547
+sections:
+- name: header
+  start: 0
+  length: 432
+  fraction: 0.0091
+- name: skeleton
+  start: 432
+  length: 1174
+  fraction: 0.0246
+- name: prior_summary
+  start: 1606
+  length: 3556
+  fraction: 0.0746
+- name: plan
+  start: 5162
+  length: 17906
+  fraction: 0.3756
+- name: wiki
+  start: 16678
+  length: 24381
+  fraction: 0.5115
+- name: output_spec
+  start: 47449
+  length: 218
+  fraction: 0.0046
+large_sections:
+- wiki
+directives_total: 22
+directives_covered: 14
+directives_missed:
+- kind: checklist
+  text: професія (profession)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: пекар (baker — person who bakes)
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: checklist
+  text: лікар (doctor)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: школяр (student — person who attends school)
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: checklist
+  text: кобзар (kobza player — traditional Ukrainian musician)
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 4/11 keywords (36%)
+- kind: inject_activity
+  text: group-sort-ar-yar
+  covered: false
+  coverage_note: marker missing

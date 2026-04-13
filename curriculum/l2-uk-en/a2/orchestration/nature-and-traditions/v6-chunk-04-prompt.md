@@ -22,7 +22,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-робимо у кожну пору року? (Seasonal Activities) Кожна пора року має свої особливі і дуже цікаві заняття. Навесні українська природа швидко прокидається після довгої зими, і люди проводять багато часу на вулиці. Українці дуже люблять **садити квіти** *(to plant flowers)* та **працювати в саду** *(to work in the garden)* біля свого дому. Це ідеальний час, щоб зробити свій двір красивим і зеленим. Влітку в Україні зазвичай дуже тепло і сонячно кожного дня. Це найкращий сезон, щоб **подорожувати** *(to travel)* або їздити на Чорне море. Багато людей люблять плавати в чистій воді і **засмагати** *(to sunbathe)* на гарячому пляжі. Восени світлі дні стають набагато коротшими, а погода часто буває прохолодною. Але українці мають дуже популярне осіннє хобі. Ми дуже любимо **збирати гриби та ягоди** *(to pick mushrooms and berries)*. На вихідних ми часто їдемо в ліс, щоб збирати гриби разом із сім'єю. Це неймовірно цікаво і дуже корисно для нашого здоров'я. Взимку українська природа спокійно відпочиває під холодним білим снігом. Але зимові місяці також пропонують нам багато чудових активностей. Українці дуже люблять **кататися на лижах** *(to ski)* у високих Карпатських горах. У великому місті діти і дорослі часто хочуть **піти на ковзанку** *(to go to the ice rink)* на вихідних. Це завжди дуже веселе та енергійне заняття для всієї родини. Але взимку часто буває дуже холодно і вітряно. **Коли** *(when)* на вулиці сильний **мороз** *(frost)*, люди значно менше гуляють у парках. Коли на вулиці мороз, я люблю пити теплий чай вдома. У такі дні ми читаємо цікаві книги, дивимося старі фільми та проводимо час із сім'єю. Цей приємний контраст між активним літом і дуже спокійною зимою робить наш рік по-справжньому гармонійним. Щоб розповідати про ці пори року та наші свята, нам потрібні види дієслова. Це **недоконаний вид** *(Imperfective aspect)* і **доконаний вид** *(Perfective aspect)*. Ми завжди використовуємо недоконаний вид для довгих і регулярних процесів. Наприклад, ми кажемо: «**Сніг падав** *(Snow was falling)* цілий день». Це довга дія в минулому, яка ще не має фінального результату. Але коли ми говоримо про конкретний результат дії, ми беремо доконаний вид. Ми кажемо: «Сніг нарешті **розтанув** *(melted)*». Ми часто використовуємо ці дві важливі форми, коли описуємо нашу підготовку до великих свят. Порівняйте ці дві прості фрази. «Ми **готували** *(were preparing)* кутю три години» — це дуже довгий процес напередодні Різдва. А фраза «Ми **приготували** *(have prepared)* смачну вечерю» показує фінальний результат нашої важкої роботи. Тепер давайте поєднаємо різну погоду і наші регулярні дії в одному реченні. Ми можемо легко використовувати слова **тому що** *(because)*, щоб логічно пояснити причину. Наприклад: «Минулого літа ми часто ходили до річки, тому що було дуже спекотно». Щоб розповісти про свої регулярні дії, ми беремо спеціальні слова. Це корисні прислівники **зазвичай** *(usually)*, **завжди** *(always)* та **іноді** *(sometimes)*. Взимку ми зазвичай святкуємо Різдво вдома з рідними людьми. Навесні ми іноді їздимо в гори, щоб дихати свіжим повітрям. Влітку ми завжди відпочиваємо біля води і багато плаваємо. А восени ми зазвичай збираємо багатий врожай у своєму саду. Такі короткі слова дуже допомагають нам говорити природно, красиво і граматично правильно. <!-- INJECT_ACTIVITY: fill-in-grammar-seasons -->
+to spend as much time outside as possible when the climate allows it. Навесні люди починають працювати в саду та садити квіти. Ми радіємо, коли бачимо перші зелені дерева. Влітку всі люблять подорожувати, плавати в річці або просто засмагати на сонці. Восени українці часто їдуть у ліс, щоб збирати гриби та ягоди. Це дуже популярне хобі для всієї родини. > *In spring, people start working in the garden and planting flowers. We rejoice when we see the first green trees. In summer, everyone likes to travel, swim in the river, or simply sunbathe in the sun. In autumn, Ukrainians often go to the forest to pick mushrooms and berries. This is a very popular hobby for the whole family.* Winter brings a completely different rhythm of life, balancing active outdoor sports with cozy, quiet evenings at home. While the days become much shorter, the snow creates perfect conditions for special seasonal entertainment. People dress warmly and find joy in the frosty air. Взимку діти і дорослі люблять кататися на лижах. На вихідних ми часто плануємо піти на ковзанку з друзями. Ми беремо гарячу каву і весело проводимо час. Але коли на вулиці сильний мороз, я люблю пити теплий чай удома. Зимові вечори дуже затишні та спокійні. > *In winter, children and adults like to ski. On weekends, we often plan to go to the ice rink with friends. We take hot coffee and have a fun time. But when there is a severe frost outside, I like to drink warm tea at home. Winter evenings are very cozy and peaceful.* When narrating these seasonal activities, choosing the correct verb aspect is crucial. Aspect helps you paint a clear picture of whether an action was an ongoing routine or a finished event. Use the imperfective aspect to describe ongoing weather conditions or the continuous process of preparing for a celebration. Switch to the perfective aspect to announce a completed action or a final, successful result. :::info **Grammar box** Use imperfective verbs for background descriptions or long processes: **Сніг падав цілий день** (The snow was falling all day). Use perfective verbs for single, completed events or results: **Сніг нарешті розтанув** (The snow finally melted). ::: Перед святами ми завжди багато працюємо. Наприклад, учора ми готували кутю три години. Ми довго прибирали наш дім. Це був довгий процес. Але сьогодні ми нарешті приготували смачну вечерю і все закінчили. Тепер ми можемо відпочивати і радісно святкувати. You can easily build richer stories by linking your typical activities to specific weather conditions. Using adverbs of frequency helps you explain your seasonal routines naturally. This is a great way to talk about what you usually do, what you sometimes change, and what you always avoid during different months of the year. Минулого літа ми часто ходили до річки, тому що було дуже спекотно. Зазвичай ми беремо із собою смачну їжу. Іноді погода швидко змінюється. Якщо починається сильний дощ, ми завжди швидко повертаємося додому. Ми ніколи не гуляємо, коли на вулиці погана погода. <!-- INJECT_ACTIVITY: fill-in-grammar-seasons -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -508,7 +508,74 @@ This topic is deeply intertwined with Ukrainian cultural and political identity,
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 6: A2 finale (A2 M51-M69)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 40%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 40% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 70-90% Ukrainian.
 LANGUAGE ROLES:
@@ -527,18 +594,64 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] пора року (season)
+- [ ] весна (spring)
+- [ ] літо (summer)
+- [ ] осінь (autumn)
+- [ ] зима (winter)
+- [ ] погода (weather)
+- [ ] свято (holiday)
+- [ ] Різдво (Christmas)
+- [ ] Великдень (Easter)
+- [ ] традиція (tradition)
+- [ ] писанка (decorated Easter egg)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Мої традиції (My Traditions) (~400 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

@@ -1,18 +1,18 @@
 ## VESUM Verification
 - Confirmed: звідки, з, із, зі, Україна, Київ, Львів, Канада, Одеса, Харків, США, Англія, Німеччина, Польща, додому
-- Not found: none
+- Not found: 
 
 ## Grammar Rules
-- з/із/зі/зо variants: Правопис §25 — "З" is used before vowels and most consonants. "Із" is used primarily before sibilants (з, с, ц, ч, ш, шч). "Зі" is used before consonant clusters starting with z, s, sh, shch (e.g., зі Львова, зі школи). "Зо" is used with numbers "два", "три" and the pronoun "мною".
+- з/із/зі: Правопис §25 — Позиції вживання прийменника З та його варіантів ІЗ, ЗІ (ЗО). (З уживаємо перед голосними та більшістю приголосних; ІЗ переважно перед свистячими та шиплячими з, с, ц, ч, ш, шч; ЗІ перед важкими для вимови збігами приголосних та початковими з, с, ш, шч).
 
 ## Calque Warnings
-- звідки ти: OK — standard question form.
-- місяць тому: OK — standard way to express "a month ago".
-- з роботи: OK — standard construction for "from work".
+- місяць тому: OK — OK
+- з роботи: OK — OK
+- я приїхав: OK — OK
 
 ## CEFR Check
-- звідки: A1 (Manual check) — basic interrogative.
-- Україна: A1 (Manual check) — essential proper noun.
-- робота: A1 (Manual check) — basic noun.
-- школа: A1 (Manual check) — basic noun.
-- додому: A1 (Manual check) — essential adverb of direction.
+- звідки: A1 — OK
+- додому: A1 — OK
+- місто: A1 — OK
+- країна: A1 — OK
+- Україна: N/A (Proper Noun) — OK

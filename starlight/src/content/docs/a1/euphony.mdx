@@ -7,122 +7,126 @@ pipeline: v6
 build_status: draft
 ---
 
+import Anagram from '@site/src/components/Anagram';
 import FillIn from '@site/src/components/FillIn';
 import FlashcardDeck from '@site/src/components/FlashcardDeck';
 import GroupSort from '@site/src/components/GroupSort';
-import ImageToLetter from '@site/src/components/ImageToLetter';
 import MatchUp from '@site/src/components/MatchUp';
 import Quiz from '@site/src/components/Quiz';
 import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
 import YouTubeVideo from '@site/src/components/YouTubeVideo';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 <Tabs syncKey="module-tab">
 <TabItem label="Урок">
 
-## Діало́ги — Милозву́чність у ді́ї
-Ukrainian is not just a language of strict grammatical rules and rigid structures; it is fundamentally a language of music. The central concept that governs how words fit together in a sentence is called **милозвучність** (euphony, literally "sweet-soundingness"). This principle is the absolute secret to sounding like a native speaker. The core goal of **милозвучність** is avoiding difficult "clashes" of sounds. When too many consonants or too many vowels pile up next to each other, the language naturally alters a preposition or a conjunction to keep the air flowing smoothly from your mouth.
+## Діалоги (Dialogues)
+
+Ukrainian uses **милозвучність** (euphony) to avoid awkward sound combinations. Speakers often choose between **у/в**, **і/й**, and **з/із/зі** so that a phrase is easier to pronounce aloud. These alternations are common and important, but the best test is not a rigid formula: it is whether the sentence sounds smooth when you say it.
+
+To see how this melodic system works in a practical context, imagine a student proofreading a friend's Ukrainian essay about their **город** (garden) and their hometown. They are reading the sentences aloud to spot **у/в** (in/at) and **і/й** (and) errors, listening carefully to hear the difference in phonetic flow. The essay begins by describing where people live.
 
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Студе́нт:</span> Він був в городі. *(He was in the garden.)*</div>
+<div class="dialogue-line"><span class="speaker">Студент:</span> Де ти живеш? *(Where do you live?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Друг:</span> Кра́ще сказа́ти «у городі», бо сло́во «був» закі́нчується на при́голосний. А за́мість «й я́блука» та «в шко́лі» у твоє́му те́ксті краще «і яблука» та «у школі». *(It is better to say "у городі", because "був" ends in a consonant. And instead of "й яблука" and "в школі" in your text, it's better "і яблука" and "у школі".)*</div>
+<div class="dialogue-line"><span class="speaker">Друг:</span> Я живу в Києві. А ти? *(I live in Kyiv. And you?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Студент:</span> Зрозумі́в. А як пра́вильно: «в Ки́єві» чи «у Києві»? Де ти живе́ш? *(Understood. And what is correct: "в Києві" or "у Києві"? Where do you live?)*</div>
+<div class="dialogue-line"><span class="speaker">Студент:</span> Я живу у Львові. *(I live in Lviv.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Друг:</span> Я живу́ в Києві. А ти? *(I live in Kyiv. And you?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Студент:</span> Я живу у Льво́ві. *(I live in Lviv.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Друг:</span> У Львові га́рно! *(It is beautiful in Lviv!)*</div>
+<div class="dialogue-line"><span class="speaker">Друг:</span> У Львові гарно! *(It is beautiful in Lviv!)*</div>
 
 </div>
 
-Let us carefully break down the prepositional choice from that first dialogue about a **город** (garden). When the speaker says **в Києві** (in Kyiv), the word immediately before it ends in a vowel (**живу** — I live), and the word **Києві** (Kyiv) starts with a crisp consonant (**К** — K). This creates a perfect, smooth transition. If they had said **у Києві** (in Kyiv), the two vowels (the **у** in **живу** and the preposition **у**) would collide uncomfortably. Conversely, **у Львові** (in Lviv) is used instead of **в Львові** (in Lviv) because the latter option would create a massive, unpronounceable three-consonant cluster (**в-л-ь-в**). Euphony rules make sentences flow naturally.
+Notice the alternating forms used for the locations. The friend says **в Києві** (in **Київ** / Kyiv) but the student says **у Львові** (in **Львів** / Lviv). Both **у** and **в** mean exactly the same thing. They are the same alternating preposition. The choice between them depends entirely on the specific sounds that surround the word in the sentence.
+
+Another common situation involves making plans for the weekend and listing which people are going to which specific locations.
 
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Студент:</span> Ти і Оле́на йдете́ в кіно́? *(Are you and Olena going to the cinema?)*</div>
+<div class="dialogue-line"><span class="speaker">Студент:</span> Ти й Олена йдете в кіно? *(Are you and Olena going to the cinema?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Друг:</span> Ти й Олена. Так шви́дше. А що́до кіно — ні, я і Макси́м йдемо́ в парк. *(You and Olena. It is faster this way. As for the cinema — no, I and Maksym are going to the park.)*</div>
+<div class="dialogue-line"><span class="speaker">Друг:</span> Ні, я і Максим йдемо в парк. *(No, Maksym and I are going to the park.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Студент:</span> А Олена й Тара́с? *(And Olena and Taras?)*</div>
+<div class="dialogue-line"><span class="speaker">Студент:</span> А Олена й Тарас? *(And Olena and Taras?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Друг:</span> Вони́ йдуть у теа́тр. *(They are going to the theater.)*</div>
+<div class="dialogue-line"><span class="speaker">Друг:</span> Вони йдуть у театр. *(They are going to the theater.)*</div>
 
 </div>
 
-Now, let us closely analyze the conjunction choice from this second conversation. The word for "and" can alternate to maintain a musical rhythm across the sentence. The letter **й** (y) acts as a quick glide between two distinct vowels, allowing the voice to slide smoothly from the end of **ти** (you) to the start of **Олена** (Olena). Note how **й** sits perfectly between vowels (**ти й Олена** — you and Olena). In contrast, the letter **і** (i) is a full vowel that provides a necessary physical break. While usually placed between consonants, it is also used after words ending in **я**, **ю**, **є**, or **ї** (like **я і Максим**) to maintain clarity and rhythm.
+Here, the alternating conjunction meaning "and" changes its shape. The student asks about **ти й Олена** using the short consonant glide **й**. The friend replies with **я і Максим** using the full open vowel **і**. Just like with the prepositions of location, this alternation exists solely to prevent sounds from clashing and to keep the sentence moving forward smoothly without sudden stops.
 
-## У чи В? Майсте́рність чергува́ння
-As noted in **Авра́менко Grade 5** (p.117), the alternation **у–в** ensures the euphony of the language (**чергування у–в забезпе́чує милозвучність мо́ви**). The core rule for choosing between the alternating prepositions **у** (in/at) and **в** (in/at) revolves around carefully avoiding consonant clusters. Think of it as building a comfortable "V-C-V" (vowel-consonant-vowel) sandwich in your mouth. You should use **в** after a vowel before a consonant. This simple pattern completely prevents a vowel clash. Conversely, you must use **у** after a consonant before a consonant to avoid a tongue-twisting pile-up. 
-*   **Я живу в Києві.** (I live in Kyiv.)
-*   **Я працю́ю в о́фісі.** (I work in an office.)
-*   **Тарас у Львові.** (Taras is in Lviv.)
-*   **Максим у ба́нку.** (Maksym is at the bank.)
+## У чи В? (У or В?)
 
-However, there is an important and specific exception regarding "difficult neighbors." Even if a preceding word ends neatly in a vowel, you must still use **у** if the following word starts with certain challenging consonant clusters. Specifically, use **у** before words starting with **в**, **ф**, **св**, or **льв**. This rule exists purely because these specific sounds are phonetically demanding to link directly with a **в**. 
-*   **Вона́ працю́є у Фра́нції.** (She works in France. — not **в Франції**)
-*   **Я працюю у Львові.** (I work in Lviv.)
-*   **Вони гра́ють у футбо́л.** (They play football.)
+As Авраменко Grade 5 (pp. 117-118) presents it, the core rule of the **у/в** alternation is simple: avoid awkward consonant clusters and keep pronunciation smooth. When words are placed next to each other in a spoken sentence, their ending and beginning sounds can sometimes create a phonetic traffic jam. Compare the smooth, effortless transition of **в Києві** (a vowel followed by a consonant) against the difficult, heavy cluster that would happen if one incorrectly said "в Львові" (a consonant followed by two more consonants). To ensure a smooth flow, Ukrainian uses the vowel **у** to break up consonant clusters. This rule applies to the alternating preposition **у/в** and also appears in word variants like **уже/вже** (already).
 
-Exceptions to know exist based on sentence position and natural pauses. The letter **У** is always used at the start of a sentence before a word beginning with a consonant. It provides a strong, clear start, whereas starting with **в** would sound muffled before another consonant. This exactly same logic applies immediately after a comma or a noticeable pause in your speech. 
-*   **У мене́ є бра́тик.** (I have a little brother. — **У** before a consonant)
-*   **Так, у нас є час.** (Yes, we have time. — **У** after pause)
-*   **У понеді́лок ми працю́ємо.** (On Monday we work.)
+You should always use the consonant form **в** when the preposition is placed after a word ending in a vowel and before a word starting with a consonant. Because the previous word ends in an open vowel sound, the vocal tract is perfectly positioned to pronounce the short **в** right before the next word's consonant begins. This creates a natural, unbroken bridge between the two words.
+*   Я живу **в** Києві. *(I live in Kyiv.)*
+*   Вона працює **в** **офісі** (office). *(She works in the office.)*
+*   Мама йде **в** магазин. *(Mom is going to the store.)*
+*   Ми граємо **в** **парку** (park). *(We play in the park.)*
 
-Don't overthink it — native speakers use euphony instinctively. The goal is to create sentences that SOUND smooth, not to engage in rigid rule application. This foundational principle of euphony goes far beyond just independent prepositions. It also applies to the initial letters of certain common vocabulary words. This applies to both the preposition (**в** / **у**) and the prefix (**вже** / **уже́** — already). Many Ukrainian words have twin forms that alternate their starting letter depending entirely on the previous word. For example, the word for teacher alternates freely between **учи́тель** (teacher) and **вчи́тель** (teacher).
-*   **Мій учитель чита́є текст.** (My teacher reads a text. — **у** after a consonant)
-*   **Моя́ вчи́телька читає текст.** (My teacher reads a text. — **в** after a vowel)
+On the other hand, you should use the vowel form **у** when the preposition is placed after a word ending in a consonant and before another word starting with a consonant. If you tried to use **в** in this position, you would be forcing three or more consonants together, which severely disrupts the rhythm of the sentence. The **у** provides a necessary phonetic cushion.
+*   Тарас **у** Львові. *(Taras is in Lviv.)*
+*   Максим **у** банку. *(Maksym is in the bank.)*
+*   Мій брат **у** школі. *(My brother is in school.)*
+*   Яблука **у** городі. *(Apples are in the garden.)*
 
-<Quiz client:only="react" questions={[{"question": "Вона працює _____ театрі.", "options": [{"text": "у", "correct": true}, {"text": "в", "correct": false}, {"text": "і", "correct": false}]}, {"question": "Я живу _____ Львові.", "options": [{"text": "в", "correct": false}, {"text": "у", "correct": true}, {"text": "з", "correct": false}]}, {"question": "Тарас _____ банку.", "options": [{"text": "й", "correct": false}, {"text": "в", "correct": false}, {"text": "у", "correct": true}]}, {"question": "Ми граємо _____ футбол.", "options": [{"text": "у", "correct": true}, {"text": "в", "correct": false}, {"text": "і", "correct": false}]}, {"question": "Я працюю _____ офісі.", "options": [{"text": "у", "correct": false}, {"text": "в", "correct": true}, {"text": "і", "correct": false}]}, {"question": "Він живе _____ Києві.", "options": [{"text": "у", "correct": false}, {"text": "в", "correct": true}, {"text": "з", "correct": false}]}, {"question": "_____ понеділок ми працюємо.", "options": [{"text": "В", "correct": false}, {"text": "У", "correct": true}, {"text": "І", "correct": false}]}, {"question": "Мама _____ парку.", "options": [{"text": "в", "correct": false}, {"text": "у", "correct": true}, {"text": "й", "correct": false}]}, {"question": "Так, _____ нас є час.", "options": [{"text": "у", "correct": true}, {"text": "в", "correct": false}, {"text": "з", "correct": false}]}, {"question": "Вона працює _____ Франції.", "options": [{"text": "в", "correct": false}, {"text": "із", "correct": false}, {"text": "у", "correct": true}]}]} instruction={"Оберіть правильний варіант (Choose the correct option)"} />
+There are a few key exceptions where this alternating rule is overridden by the position of the word in the sentence structure. At the very start of a sentence or after a pause, the choice still depends on the next sound. **У** is common before a consonant: **У мене є...** (I have...). **В** is common before a vowel: **В Одесі тепло.** Some clusters still strongly prefer **у**, as in **у Львові**.
+ Do not overthink these rules—native speakers use euphony instinctively because it genuinely feels better to articulate. The ultimate goal is to build sentences that sound physically smooth to say.
+
+<Quiz client:only="react" questions={[{"question": "Я живу ____ Києві.", "options": [{"text": "в", "correct": true}, {"text": "у", "correct": false}, {"text": "і", "correct": false}, {"text": "й", "correct": false}]}, {"question": "Тарас ____ Львові.", "options": [{"text": "в", "correct": false}, {"text": "у", "correct": true}, {"text": "і", "correct": false}, {"text": "й", "correct": false}]}, {"question": "Мама йде ____ магазин.", "options": [{"text": "в", "correct": true}, {"text": "у", "correct": false}, {"text": "і", "correct": false}, {"text": "й", "correct": false}]}, {"question": "Максим ____ банку.", "options": [{"text": "в", "correct": false}, {"text": "у", "correct": true}, {"text": "і", "correct": false}, {"text": "й", "correct": false}]}, {"question": "Я працюю ____ офісі.", "options": [{"text": "в", "correct": true}, {"text": "у", "correct": false}, {"text": "і", "correct": false}, {"text": "й", "correct": false}]}, {"question": "Мій брат ____ школі.", "options": [{"text": "в", "correct": false}, {"text": "у", "correct": true}, {"text": "і", "correct": false}, {"text": "й", "correct": false}]}, {"question": "____ мене є брат.", "options": [{"text": "В", "correct": false}, {"text": "У", "correct": true}, {"text": "І", "correct": false}, {"text": "Й", "correct": false}]}, {"question": "____ театрі цікаво.", "options": [{"text": "В", "correct": false}, {"text": "У", "correct": true}, {"text": "І", "correct": false}, {"text": "Й", "correct": false}]}, {"question": "Олена ____ кіно.", "options": [{"text": "в", "correct": true}, {"text": "у", "correct": false}, {"text": "і", "correct": false}, {"text": "й", "correct": false}]}, {"question": "Так, ____ нас є час.", "options": [{"text": "в", "correct": false}, {"text": "у", "correct": true}, {"text": "і", "correct": false}, {"text": "й", "correct": false}]}]} instruction={"Оберіть правильний варіант (Choose the correct option)"} />
 
 ## І чи Й? З, із, чи зі?
-According to **Літвінова Grade 5** (p.176), the **і/й** (and) alternation follows a very similar and highly intuitive logic. The letter **й** is a semivowel that creates a fast, natural glide. You use **й** after a word ending in a vowel to avoid a vowel clash. On the other hand, **і** is a full, distinct vowel used between consonants to physically separate them.
-*   **Ма́ма й та́то вдо́ма.** (Mom and dad are at home. — **Й** after a vowel)
-*   **Вона й він чита́ють.** (She and he are reading.)
-*   **Брат і сестра́ там.** (Brother and sister are there. — **І** between consonants)
-*   **Тарас і Максим там.** (Taras and Maksym are there.)
 
-Just like the strong initial **У** we studied earlier, we always use the full, robust vowel **І** at the start of a sentence or immediately after a pause. The semivowel **й** is simply too weak to start a new thought and can never be used as the first word of a sentence.
-*   **І він прийшо́в.** (And he arrived. — always **І**)
-*   **І ми працюємо там.** (And we work there.)
+As Літвінова Grade 5 (pp. 176-177) shows, the Ukrainian conjunction for "and" alternates between **і** and **й** to preserve rhythm. The rule for using the full vowel **і** is identical to the rule for using **у**: use it between two consonants to break them up. This provides a clean, clear vocalic bridge between harsh sounds that would otherwise be difficult to link. At the absolute beginning of a sentence, **і** is common before a consonant, while **й** is also possible before a vowel.
+*   Брат **і** сестра. *(Brother and sister.)*
+*   Тарас **і** Максим. *(Taras and Maksym.)*
+*   Стіл **і** стілець. *(A table and a chair.)*
+*   **І** він іде. *(And he is going.)*
 
-As highlighted in **Літвінова Grade 5** (p.177), the **з/із/зі** (with/from) alternation handles another set of consonant challenges. The preposition **з** is the standard, default form for indicating association or origin. It is a highly "sticky" consonant that naturally wants to attach itself to the following word. In most everyday situations, you will use **з** before vowels and most consonants.
-*   **Я ї́ду з Оде́си.** (I am traveling from Odesa.)
-*   **Він іде́ з дру́гом.** (He is walking with a friend.)
-*   **Вона гуля́є з бра́том.** (She is walking with a brother.)
+Conversely, **й** is common after a vowel, especially between vowels (**Олена й Андрій**) and often before a consonant (**мама й тато**, **вона й він**). This short glide keeps the phrase moving smoothly from one word to the next.
+*   Мама **й** тато. *(Mom and dad.)*
+*   Вона **й** він. *(She and he.)*
+*   Олена **й** Андрій. *(Olena and Andriy.)*
+*   Яблука **й** абрикоси. *(Apples and apricots.)*
 
-To successfully prevent the **з** from sticking to already difficult consonant clusters, Ukrainian uses the extended variants **із** and **зі**. You use **із** between consonants, or before words starting with **з**, **с**, **ш**, **щ**, to expertly avoid an uncomfortable cluster. The special, distinct form **зі** is specifically used before thick consonant clusters (especially those starting with sibilants), as well as the fixed phrase **зі мною** (with me). This is a smaller rule than **у/в**, but it is highly important for natural speech.
-*   **Він бере́ із ша́фи.** (He takes from the wardrobe.)
-*   **Максим із Семе́ном там.** (Maksym with Semen are there.)
-*   **Віта́ємо зі свя́том.** (We congratulate with the holiday.)
-*   **Вони йдуть зі шко́ли.** (They are walking from school.)
-*   **Він іде зі мною.** (He is walking with me.)
+<Quiz client:only="react" questions={[{"question": "Брат ____ сестра.", "options": [{"text": "і", "correct": true}, {"text": "й", "correct": false}, {"text": "у", "correct": false}, {"text": "в", "correct": false}]}, {"question": "Мама ____ тато.", "options": [{"text": "і", "correct": false}, {"text": "й", "correct": true}, {"text": "у", "correct": false}, {"text": "в", "correct": false}]}, {"question": "Тарас ____ Максим.", "options": [{"text": "і", "correct": true}, {"text": "й", "correct": false}, {"text": "у", "correct": false}, {"text": "в", "correct": false}]}, {"question": "Олена ____ Андрій.", "options": [{"text": "і", "correct": false}, {"text": "й", "correct": true}, {"text": "у", "correct": false}, {"text": "в", "correct": false}]}, {"question": "Стіл ____ стілець.", "options": [{"text": "і", "correct": true}, {"text": "й", "correct": false}, {"text": "у", "correct": false}, {"text": "в", "correct": false}]}, {"question": "Вона ____ він.", "options": [{"text": "і", "correct": false}, {"text": "й", "correct": true}, {"text": "у", "correct": false}, {"text": "в", "correct": false}]}, {"question": "Ти ____ Олена.", "options": [{"text": "і", "correct": false}, {"text": "й", "correct": true}, {"text": "у", "correct": false}, {"text": "в", "correct": false}]}, {"question": "____ він прийшов.", "options": [{"text": "І", "correct": true}, {"text": "Й", "correct": false}, {"text": "У", "correct": false}, {"text": "В", "correct": false}]}]} instruction={"Оберіть правильний варіант (Choose the correct option)"} />
 
-<Quiz client:only="react" questions={[{"question": "Ти _____ Олена йдете в кіно?", "options": [{"text": "і", "correct": false}, {"text": "й", "correct": true}, {"text": "в", "correct": false}]}, {"question": "Брат _____ сестра там.", "options": [{"text": "й", "correct": false}, {"text": "у", "correct": false}, {"text": "і", "correct": true}]}, {"question": "Вона _____ він читають.", "options": [{"text": "й", "correct": true}, {"text": "і", "correct": false}, {"text": "з", "correct": false}]}, {"question": "Я _____ Максим ідемо в парк.", "options": [{"text": "і", "correct": true}, {"text": "й", "correct": false}, {"text": "в", "correct": false}]}, {"question": "Олена _____ Тарас.", "options": [{"text": "і", "correct": false}, {"text": "й", "correct": true}, {"text": "у", "correct": false}]}, {"question": "_____ він прийшов.", "options": [{"text": "Й", "correct": false}, {"text": "І", "correct": true}, {"text": "В", "correct": false}]}, {"question": "Київ _____ Львів.", "options": [{"text": "й", "correct": false}, {"text": "з", "correct": false}, {"text": "і", "correct": true}]}, {"question": "_____ ми працюємо там.", "options": [{"text": "І", "correct": true}, {"text": "Й", "correct": false}, {"text": "З", "correct": false}]}]} instruction={"Оберіть правильний варіант (Choose the correct option)"} />
+The final alternating preposition is the word for "with" or "from", which can take three distinct forms: **з/із/зі**. The shortest form, **з**, is the standard default. You use it before vowels and before most single consonants. This is the most common form you will encounter in daily life and the easiest to pronounce in standard, uncomplicated sequences.
+*   Він **з** Одеси. *(He is from Odesa.)*
+*   Я йду **з** другом. *(I am walking with a friend.)*
+*   Вона говорить **з** братом. *(She is speaking with a brother.)*
+*   Кіт стрибає **з** вікна. *(A cat jumps from a window.)*
 
-<FillIn client:only="react" items={[{"sentence": "Я їду ____ Одеси.", "answer": "з", "options": ["з", "із", "зі"]}, {"sentence": "Він іде ____ другом.", "answer": "з", "options": ["з", "із", "зі"]}, {"sentence": "Максим ____ Семеном там.", "answer": "із", "options": ["з", "із", "зі"]}, {"sentence": "Він бере ____ шафи.", "answer": "із", "options": ["з", "із", "зі"]}, {"sentence": "Вітаємо ____ святом.", "answer": "зі", "options": ["з", "із", "зі"]}, {"sentence": "Вона іде ____ мною.", "answer": "зі", "options": ["з", "із", "зі"]}]} instruction={"Вставте правильне слово (Insert the correct word)"} />
+The longer variants **із** and **зі** exist specifically to rescue the speaker from impossible consonant combinations. You use **із** when the preposition is squeezed tightly between two heavy consonants to avoid a harsh cluster: **Максим із Семеном** (Maksym with Semen) or **брат із сестрою** (brother with sister). You use the longest form **зі** before particularly difficult consonant clusters, especially those that start with the hissing letters з, с, ш, щ, or the combination льв. This softens the transition significantly and prevents you from stumbling.
+*   Він іде **зі** мною. *(He is going with me.)*
+*   Вітаю **зі** святом! *(Congratulations on the holiday!)*
+*   Він іде **зі** школи. *(He is coming from school.)*
+*   Я їду **зі** Львова. *(I am riding from Lviv.)*
+
+<FillIn client:only="react" items={[{"sentence": "Він ____ Одеси.", "answer": "з", "options": ["з", "із", "зі", "в"]}, {"sentence": "Я йду ____ другом.", "answer": "з", "options": ["з", "із", "зі", "у"]}, {"sentence": "Максим ____ Семеном.", "answer": "із", "options": ["з", "із", "зі", "й"]}, {"sentence": "Лист ____ Києва.", "answer": "із", "options": ["з", "із", "зі", "в"]}, {"sentence": "Вона ____ мною.", "answer": "зі", "options": ["з", "із", "зі", "і"]}, {"sentence": "Він їде ____ Львова.", "answer": "зі", "options": ["з", "із", "зі", "у"]}]} instruction={"Вставте правильне слово (Insert the correct word)"} />
 
 ## Підсумок — Summary
-Ukrainian euphony operates like three distinct, well-oiled "gears" that keep your speech running smoothly without ever grinding the engine. First, the **у/в** alternation helps you expertly avoid consonant clusters or awkward vowel clashes, especially when discussing locations. Second, the **і/й** alternation ensures that the audible connections between your nouns remain perfectly musical and fluid. Third, the **з/із/зі** alternation cleanly handles the most difficult, "sticky" consonant clusters that would otherwise stop your speech in its tracks. Always remember that these essential rules are about making speech physically easier for the SPEAKER, not just the listener. 
 
-Here is a self-check list to review the three euphony pairs we have learned today:
-*   **Q:** What does the **у/в** pair do?
-    **A:** It helps avoid a consonant+consonant cluster. Say **у Львові** (in Lviv) or **в Києві** (in Kyiv).
-*   **Q:** What does the **і/й** pair do?
-    **A:** It helps avoid a vowel+vowel clash. Use it to cleanly link **брат і сестра** (brother and sister) or **мама й тато** (mom and dad).
-*   **Q:** When do we use the **з/із/зі** pair?
-    **A:** Use them before difficult clusters to maintain flow, such as **з другом** (with a friend), **із сестро́ю** (with a sister), or **зі мною** (with me).
-*   **Q:** Which is correct: "Я живу в Києві" or "Я живу у Києві"?
-    **A:** **Я живу в Києві.** (I live in Kyiv.)
-*   **Q:** Which is correct: "Мама і тато" or "Мама й тато"?
-    **A:** **Мама й тато.** (Mom and dad.)
+Ukrainian euphony relies on three primary pairs of alternations to maintain its signature musical flow. The first pair is **у/в**, which actively works to avoid consonant clashes that disrupt speech. The second pair is **і/й**, which prevents awkward pauses between vowel sounds. The third set is **з/із/зі**, which softens extremely difficult consonant clusters and makes challenging vocabulary words much easier to pronounce. By understanding and applying these small adjustments, your sentences will sound significantly more natural and native.
 
-Practice time: read your own sentences aloud — do they flow smoothly? If you find your tongue twisting over a pile of consonants, check if you need to shift one of these three euphonic gears to keep the melody flowing.
+The following contrasting examples demonstrate how the surrounding letters completely dictate the correct form:
+*   **у** Львові (consonant + consonant) vs **в** Києві (vowel + consonant)
+*   брат **і** сестра (consonant + consonant) vs мама **й** тато (vowel + vowel)
+*   **з** другом (default single consonant) vs Максим **із** Семеном (between consonants) vs **зі** мною (difficult cluster)
 
-<Quiz client:only="react" questions={[{"question": "Оберіть найбільш природне речення:", "options": [{"text": "Я живу в Києві.", "correct": true}, {"text": "Я живу у Києві.", "correct": false}, {"text": "Я живу й Києві.", "correct": false}]}, {"question": "Оберіть найбільш природне речення:", "options": [{"text": "Він працює із Львові.", "correct": false}, {"text": "Він працює в Львові.", "correct": false}, {"text": "Він працює у Львові.", "correct": true}]}, {"question": "Оберіть найбільш природне речення:", "options": [{"text": "Мама зі тато вдома.", "correct": false}, {"text": "Мама і тато вдома.", "correct": false}, {"text": "Мама й тато вдома.", "correct": true}]}, {"question": "Оберіть найбільш природне речення:", "options": [{"text": "Тарас й Максим там.", "correct": false}, {"text": "Тарас і Максим там.", "correct": true}, {"text": "Тарас в Максим там.", "correct": false}]}, {"question": "Оберіть найбільш природне речення:", "options": [{"text": "Він іде з братом.", "correct": true}, {"text": "Він іде із братом.", "correct": false}, {"text": "Він іде зі братом.", "correct": false}]}, {"question": "Оберіть найбільш природне речення:", "options": [{"text": "Вони йдуть з школи.", "correct": false}, {"text": "Вони йдуть із школи.", "correct": false}, {"text": "Вони йдуть зі школи.", "correct": true}]}]} instruction={"Яке речення звучить краще? (Which sentence sounds better?)"} />
+At the start of a sentence, there is no preceding word, so the choice depends on the following sound: **У мене є...** before a consonant, **В Одесі...** before a vowel, **І він...** before a consonant, and **Й учимося...** before a vowel.
+
+Read these short sentences aloud and trust your ears to find the most natural flow:
+*   Which is correct? Я живу (**в**/**у**) Києві.
+*   Which is correct? Мама (**і**/**й**) тато.
+*   Which is correct? Він іде (**зі**/**з**) школи.
+
+If you chose **в**, **й**, and **зі**, you applied the core patterns correctly. Keep reading your sentences aloud: if one version is harder to pronounce, test the alternation and choose the smoother form.
+
+<Quiz client:only="react" questions={[{"question": "Оберіть найкращий варіант:", "options": [{"text": "Я живу в Києві.", "correct": true}, {"text": "Я живу у Києві.", "correct": false}, {"text": "Я живу з Києві.", "correct": false}]}, {"question": "Оберіть найкращий варіант:", "options": [{"text": "Тарас в Львові.", "correct": false}, {"text": "Тарас у Львові.", "correct": true}, {"text": "Тарас зі Львові.", "correct": false}]}, {"question": "Оберіть найкращий варіант:", "options": [{"text": "Мама і тато.", "correct": false}, {"text": "Мама й тато.", "correct": true}, {"text": "Мама в тато.", "correct": false}]}, {"question": "Оберіть найкращий варіант:", "options": [{"text": "Брат й сестра.", "correct": false}, {"text": "Брат і сестра.", "correct": true}, {"text": "Брат із сестра.", "correct": false}]}, {"question": "Оберіть найкращий варіант:", "options": [{"text": "Вона з мною.", "correct": false}, {"text": "Вона зі мною.", "correct": true}, {"text": "Вона із мною.", "correct": false}]}, {"question": "Оберіть найкращий варіант:", "options": [{"text": "Лист з Києва.", "correct": false}, {"text": "Лист із Києва.", "correct": true}, {"text": "Лист зі Києва.", "correct": false}]}]} instruction={"Яке речення звучить природніше? (Which sentence sounds more natural?)"} />
 
 </TabItem>
 <TabItem label="Словник">
@@ -134,49 +138,49 @@ Practice time: read your own sentences aloud — do they flow smoothly? If you f
 | **Ки́їв** | Kyiv | ім. |  |
 | **о́фіс** | office | ім. | ч. |
 | **теа́тр** | theater | ім. | ч. |
-| **у / в** | in, at |  |  |
-| **і / й** | and |  |  |
-| **з / із / зі** | with, from |  |  |
+| **у/в** | in/at |  |  |
+| **і/й** | and |  |  |
+| **з/із/зі** | with/from |  |  |
 | **милозву́чність** | euphony | ім. | ж. |
-| **город** | garden | ім. | ч. |
-| **жи́ти** | to live | дієсл. |  |
-| **працюва́ти** | to work | дієсл. |  |
-| **га́рно** | beautiful, nice | присл. |  |
+| **га́рно** | beautiful | присл. |  |
 | **кіно́** | cinema | ім. | с. |
-| **Фра́нція** | France |  |  |
-| **футбо́л** | football | ім. | ч. |
-| **вже / уже́** | already |  |  |
-| **учи́тель / вчи́тель** | teacher |  |  |
-| **вчи́телька** | teacher (female) | ім. | ж. |
-| **вдо́ма** | at home | присл. |  |
-| **ма́ма** | mother, mom | ім. | ж. |
-| **та́то** | father, dad | ім. | ч. |
-| **сестра́** | sister | ім. | ж. |
-| **ша́фа** | wardrobe | ім. | ж. |
+| **вже/уже́** | already |  |  |
+| **магази́н** | store | ім. | ч. |
 | **шко́ла** | school | ім. | ж. |
+| **ціка́во** | interesting | присл. |  |
+| **час** | time | ім. | ч. |
+| **сестра́** | sister | ім. | ж. |
+| **стіле́ць** | chair | ім. | ч. |
+| **ма́ма** | mom | ім. | ж. |
+| **та́то** | dad | ім. | ч. |
+| **Оде́са** | Odesa |  |  |
+| **ді́ти** | children | ім. |  |
 
 ### Вирази
 
 | Вираз | Переклад |
 |-------|----------|
 | **Де ти живеш?** | Where do you live? |
-| **зі мною** | with me |
-| **Вітаємо зі святом** | Happy holiday |
+| **Вітаємо зі святом!** | Congratulations with the holiday! |
 
 ### Картки — Flashcards
 
-<FlashcardDeck client:only="react" cards={[{ front: "Ки́їв", back: "Kyiv", subtitle: "ім." }, { front: "о́фіс", back: "office", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "теа́тр", back: "theater", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "у / в", back: "in, at" }, { front: "і / й", back: "and" }, { front: "з / із / зі", back: "with, from" }, { front: "милозву́чність", back: "euphony", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "город", back: "garden", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "жи́ти", back: "to live", subtitle: "дієсл." }, { front: "працюва́ти", back: "to work", subtitle: "дієсл." }, { front: "га́рно", back: "beautiful, nice", subtitle: "присл." }, { front: "кіно́", back: "cinema", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "Фра́нція", back: "France" }, { front: "футбо́л", back: "football", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "вже / уже́", back: "already" }, { front: "учи́тель / вчи́тель", back: "teacher" }, { front: "вчи́телька", back: "teacher (female)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "вдо́ма", back: "at home", subtitle: "присл." }, { front: "ма́ма", back: "mother, mom", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "та́то", back: "father, dad", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "сестра́", back: "sister", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ша́фа", back: "wardrobe", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "шко́ла", back: "school", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }]} />
+<FlashcardDeck client:only="react" cards={[{ front: "Ки́їв", back: "Kyiv", subtitle: "ім." }, { front: "о́фіс", back: "office", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "теа́тр", back: "theater", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "у/в", back: "in/at" }, { front: "і/й", back: "and" }, { front: "з/із/зі", back: "with/from" }, { front: "милозву́чність", back: "euphony", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "га́рно", back: "beautiful", subtitle: "присл." }, { front: "кіно́", back: "cinema", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "вже/уже́", back: "already" }, { front: "магази́н", back: "store", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "шко́ла", back: "school", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ціка́во", back: "interesting", subtitle: "присл." }, { front: "час", back: "time", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "сестра́", back: "sister", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "стіле́ць", back: "chair", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ма́ма", back: "mom", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "та́то", back: "dad", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "Оде́са", back: "Odesa" }, { front: "ді́ти", back: "children", subtitle: "ім." }]} />
 
 </TabItem>
 <TabItem label="Зошит">
 
-<GroupSort client:only="react" groups={{"Починається на голосний (Starts with a vowel)": ["офіс", "Олена", "Одеса"], "Починається на приголосний (Starts with a consonant)": ["парк", "театр", "банк", "футбол"]}} instruction={"Розподіліть слова за першим звуком (Sort words by their first sound)"} />
+<FillIn client:only="react" items={[{"sentence": "Я йду ____ парк.", "answer": "в", "options": ["в", "у", "і", "й"]}, {"sentence": "Вони йдуть ____ театр.", "answer": "у", "options": ["в", "у", "і", "й"]}, {"sentence": "Я ____ Максим йдемо в парк.", "answer": "і", "options": ["і", "й", "в", "у"]}, {"sentence": "Вітаємо ____ святом!", "answer": "зі", "options": ["з", "із", "зі", "в"]}, {"sentence": "Діти йдуть ____ школи.", "answer": "зі", "options": ["з", "із", "зі", "у"]}, {"sentence": "Вона говорить ____ братом.", "answer": "з", "options": ["з", "із", "зі", "і"]}]} instruction={"Вставте правильне слово (Insert the correct word)"} />
 
-<MatchUp client:only="react" pairs={[{"left": "Я живу в", "right": "Києві"}, {"left": "Він працює у", "right": "Львові"}, {"left": "Мама й", "right": "Олена"}, {"left": "Максим і", "right": "Тарас"}, {"left": "Ідемо зі", "right": "школи"}, {"left": "Гуляє з", "right": "братом"}]} instruction={"З'єднайте пари для правильного звучання (Connect pairs for correct sound)"} />
+<GroupSort client:only="react" groups={{"І (між приголосними)": ["брат і сестра", "Тарас і Максим", "стіл і стілець", "він і вона"], "Й (після голосного)": ["мама й тато", "вона й він", "Олена й Андрій", "ти й Олена"]}} instruction={"Розподіліть фрази (Sort the phrases)"} />
 
-<TrueFalse client:only="react" items={[{"statement": "Ми завжди пишемо «у» на початку речення. (We always write «у» at the beginning of a sentence.)", "isTrue": true, "explanation": "«У» is used at the beginning of sentences to provide a strong, clear start."}, {"statement": "Після голосного ми використовуємо «в». (After a vowel we use «в».)", "isTrue": true, "explanation": "We use «в» after a vowel (before a consonant) to avoid a vowel clash."}, {"statement": "Слово «Франція» вимагає прийменника «в». (The word «Франція» requires the preposition «в».)", "isTrue": false, "explanation": "Words starting with ф, в, св, льв always require «у» because they are difficult consonant clusters."}, {"statement": "Ми кажемо «зі мною». (We say «зі мною».)", "isTrue": true, "explanation": "This is a fixed phrase that helps pronounce the difficult consonants together."}, {"statement": "Літера «й» може бути першим словом у реченні. (The letter «й» can be the first word in a sentence.)", "isTrue": false, "explanation": "«Й» is a weak semivowel and cannot start a sentence. We use «І» instead."}, {"statement": "Милозвучність допомагає вимовляти слова легше. (Euphony helps pronounce words more easily.)", "isTrue": true, "explanation": "Euphony rules exist to prevent difficult consonant and vowel clashes, making speech flow naturally."}]} instruction={"Правда чи ні? (True or false?)"} />
+<TrueFalse client:only="react" items={[{"statement": "Фраза «Мама й тато» звучить природно українською.", "isTrue": true, "explanation": "Слово «Мама» закінчується на голосний, тому використовуємо «й»."}, {"statement": "Фраза «Тарас в Львові» написана правильно.", "isTrue": false, "explanation": "Після приголосного перед іншим приголосним треба писати «у»: «Тарас у Львові»."}, {"statement": "На початку речення завжди пишемо «У», наприклад: «У мене є брат».", "isTrue": true, "explanation": "На початку речення перед приголосним завжди вживається «у»."}, {"statement": "Фраза «Вона з мною» є правильною.", "isTrue": false, "explanation": "Перед важким збігом приголосних «мн» краще вживати «зі»: «Вона зі мною»."}, {"statement": "Фраза «Брат і сестра» написана правильно.", "isTrue": true, "explanation": "Між приголосними використовується «і»."}, {"statement": "Фраза «Лист з Києва» звучить краще, ніж «Лист із Києва».", "isTrue": false, "explanation": "Для уникнення збігу приголосних («ст» і «к») краще вживати «із»: «Лист із Києва»."}]} instruction={"Правда чи ні? (True or false?)"} />
 
-<ImageToLetter client:only="react" items={[{"emoji": "🏦", "answer": "б", "distractors": ["б", "т", "п"]}, {"emoji": "🎭", "answer": "т", "distractors": ["т", "п", "ф"]}, {"emoji": "🌳", "answer": "п", "distractors": ["п", "ш", "о"]}, {"emoji": "🏢", "answer": "о", "distractors": ["о", "б", "ф"]}, {"emoji": "⚽", "answer": "ф", "distractors": ["ф", "т", "п"]}, {"emoji": "👗", "answer": "ш", "distractors": ["ш", "т", "б"]}]} title={"Яка перша літера у слові на картинці? (What is the first letter in the word on the picture?)"} />
+<MatchUp client:only="react" pairs={[{"left": "Я працюю в", "right": "офісі"}, {"left": "Він з", "right": "Одеси"}, {"left": "Діти йдуть зі", "right": "школи"}, {"left": "Максим із", "right": "Семеном"}, {"left": "Брат і", "right": "сестра"}, {"left": "Мама й", "right": "тато"}]} instruction={"З'єднайте частини фраз (Match the parts of the phrases)"} />
+
+<Unjumble client:only="react" items={[{"words": "Києві. / в / живу / Я", "answer": "Я живу в Києві."}, {"words": "у / брат / Мій / школі.", "answer": "Мій брат у школі."}, {"words": "кіно? / в / йдете / Олена / й / Ти", "answer": "Ти й Олена йдете в кіно?"}, {"words": "театр. / у / йдуть / Вони", "answer": "Вони йдуть у театр."}, {"words": "Львова. / зі / їде / Він", "answer": "Він їде зі Львова."}, {"words": "є / брат. / мене / У", "answer": "У мене є брат."}]} instruction={"Складіть правильне речення зі слів (Form a correct sentence from the words)"} />
+
+<Anagram client:only="react" items={[{"scrambled": "К и ї в", "answer": "Київ", "hint": "Kyiv"}, {"scrambled": "Л ь в і в", "answer": "Львів", "hint": "Lviv"}, {"scrambled": "о ф і с", "answer": "офіс", "hint": "office"}, {"scrambled": "п а р к", "answer": "парк", "hint": "park"}, {"scrambled": "т е а т р", "answer": "театр", "hint": "theater"}, {"scrambled": "м а г а з и н", "answer": "магазин", "hint": "store"}, {"scrambled": "б р а т", "answer": "брат", "hint": "brother"}]} instruction={"Складіть слово з літер (Make a word from the letters)"} />
 
 </TabItem>
 <TabItem label="Ресурси">

@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-стадіон**» (is going to the stadium). А коли матч уже йде, він каже: «Він **на стадіоні**» (is at the stadium). This pattern is essential for talking about your weekend plans accurately. Для регулярних занять і хобі ми часто використовуємо дієслова руху. The most common verb for regular visits to a place is **ходити** (to go regularly). Наприклад, ви можете сказати: «Я **ходжу в басейн** (go to the pool) щовівторка». Це означає, що плавання — це ваше постійне хобі. When you want to talk about a one-time event or a specific future plan, you use the perfective verb **піти** (to go once). Наприклад, ви кажете: «Завтра я **піду в басейн**» (will go to the pool). Ось інший приклад: «Ми часто **ходимо в кіно** (go to the movies), але сьогодні ми **підемо в театр** (will go to the theater)». Ці два дієслова допомагають дуже точно описувати ваші звички та плани. Дуже популярне хобі — це ігри та музика. Для цього ми використовуємо дієслово **грати** (to play), але воно має дві різні конструкції. When you talk about sports or games, you must use "грати в" or "грати у" followed by the Accusative case. Наприклад: мій брат любить **грати у футбол** (to play football), а я люблю **грати в теніс** (to play tennis). Увечері ми можемо **грати в шахи** (to play chess) з батьком. When you talk about playing musical instruments, you must use "грати на" followed by the Locative case. Наприклад: моя подруга чудово вміє **грати на гітарі** (to play the guitar). Її сестра любить **грати на піаніно** (to play the piano), а їхній брат вчиться **грати на скрипці** (to play the violin). Ця різниця дуже важлива для правильного українського спілкування. Ще один активний вид дозвілля — це катання. For activities that involve riding something, Ukrainian uses the construction **кататися на** (to ride / to roll on) followed by the Locative case. Цей вид відпочинку дуже залежить від сезону. Влітку або навесні люди люблять **кататися на велосипеді** (to ride a bicycle) у парку. Також влітку можна поїхати на озеро і **кататися на човні** (to ride a boat). Взимку українці обирають інші активні розваги. Коли падає сніг, діти і дорослі йдуть **кататися на лижах** (to ski) у гори. А у місті дуже популярно **кататися на ковзанах** (to ice skate) на великих ковзанках. Запам'ятайте цю конструкцію, вона дуже часто звучить у розмовах про зимовий чи літній відпочинок. Давайте послухаємо розмову двох людей, які щойно познайомилися. Вони розповідають про свої хобі. > — **Софія:** Привіт! Мене звати Софія. Я дуже **захоплююся малюванням** (am passionate about drawing). > — **Новий знайомий:** Привіт, Софійо! Дуже приємно. А я більше люблю спорт. Я часто граю у футбол. > — **Софія:** Це цікаво! А ти любиш музику? > — **Новий знайомий:** Так, звичайно. У вільний час я люблю грати на гітарі. А ти граєш на чомусь? > — **Софія:** Ні, але я іноді **ходжу на концерти** (go to concerts). Цей короткий діалог — чудовий приклад того, як можна легко розповісти про себе. <!-- INJECT_ACTIVITY: quiz-acc-loc --> <!-- INJECT_ACTIVITY: match-up-verb-govt -->
+verb is unique because it uses two different prepositions and cases. For sports and games, we use «в» or «у» followed by the Accusative case. For musical instruments, we use «на» followed by the Locative case to play beautiful **музика** (music). Мої друзі ведуть активний спосіб життя. Вони часто грають у футбол або у волейбол на стадіоні. Я не люблю спорт, тому я граю в шахи. Моя сестра обожнює музику. Вона професійно грає на скрипці. Увечері я також граю на гітарі, а мій тато грає на піаніно. Ми можемо грати на інструментах годинами. > *My friends lead an active lifestyle. They often play football or volleyball at the stadium. I do not like sports, so I play chess. My sister adores music. She plays the violin professionally. In the evening, I also play the guitar, and my dad plays the piano. We can play instruments for hours.* Another common group of activities involves riding. You might **захоплюватися** (to be passionate about) cycling or skiing. We use the verb «кататися» (to ride) with the preposition «на» and the Locative case. This applies to vehicles, winter sports equipment, and boats. Sometimes, this is more fun than going to a **виставка** (exhibition)! Українці люблять проводити час на природі. Навесні та влітку ми часто катаємося на велосипеді в парку. Деякі люди люблять кататися на човні на річці. Взимку ми їдемо в гори. Там ми катаємося на лижах або на сноуборді. У місті діти дуже люблять кататися на ковзанах. Це чудова зимова розвага для всієї родини. > *Ukrainians love to spend time in nature. In the spring and summer, we often ride a bicycle in the park. Some people like to ride a boat on the river. In the winter, we go to the mountains. There we ski or snowboard. In the city, children really love to ice skate. This is wonderful winter entertainment for the whole family.* Let's see how people discuss their interests when they meet for the first time. At a language exchange meetup, two people introduce themselves and talk about their hobbies. > — **Софія:** Привіт! Мене звати Софія. Я дуже рада бути тут. *(Hi! My name is Sofia. I am very glad to be here.)* > — **Новий знайомий:** Привіт, Софійо! А я Дмитро. Чим ти захоплюєшся у вільний час? *(Hi, Sofia! And I am Dmytro. What are you passionate about in your free time?)* > — **Софія:** Я займаюся малюванням і люблю ходити в театр. А ти? *(I do painting and love to go to the theater. And you?)* > — **Новий знайомий:** Я люблю музику й спорт. Я граю на гітарі та бігаю щоранку. *(I love music and sport. I play the guitar and run every morning.)* > — **Софія:** Як цікаво! А в які спортивні ігри ти граєш? *(How interesting! And what sports games do you play?)* > — **Новий знайомий:** Я часто граю в теніс із друзями на вихідних. *(I often play tennis with friends on the weekend.)* <!-- INJECT_ACTIVITY: quiz-acc-loc --> <!-- INJECT_ACTIVITY: match-up-verb-govt -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -530,7 +530,74 @@ This grammar topic is a hub that connects to several other key areas of Ukrainia
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -549,18 +616,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] дозвілля (leisure, free time)
+- [ ] хобі (hobby)
+- [ ] захоплюватися (to be passionate about)
+- [ ] займатися (to engage in, to do)
+- [ ] спорт (sport)
+- [ ] розвага (entertainment)
+- [ ] вільний (free)
+- [ ] плавання (swimming)
+- [ ] музика (music)
+- [ ] виставка (exhibition)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Плани на вихідні (~600 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

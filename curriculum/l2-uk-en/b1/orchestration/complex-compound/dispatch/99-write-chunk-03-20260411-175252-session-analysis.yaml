@@ -1,0 +1,50 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T15-51-93ac9efb.json
+phase: write-chunk-03
+prompt_chars: 47802
+response_chars: 6727
+prompt_words: 6265
+response_words: 973
+sections:
+- name: header
+  start: 0
+  length: 433
+  fraction: 0.0091
+- name: skeleton
+  start: 433
+  length: 1610
+  fraction: 0.0337
+- name: prior_summary
+  start: 2043
+  length: 3624
+  fraction: 0.0758
+- name: plan
+  start: 5667
+  length: 15611
+  fraction: 0.3266
+- name: wiki
+  start: 15066
+  length: 26301
+  fraction: 0.5502
+- name: output_spec
+  start: 47579
+  length: 223
+  fraction: 0.0047
+large_sections:
+- wiki
+directives_total: 19
+directives_covered: 16
+directives_missed:
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: inject_activity
+  text: essay-sentence-building, focus on building 5-8 compound sentences using copulative
+    conjunctions about daily routines, 8 items
+  covered: false
+  coverage_note: marker missing

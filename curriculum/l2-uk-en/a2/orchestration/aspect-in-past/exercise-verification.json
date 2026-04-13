@@ -1,125 +1,383 @@
 {
-  "total_items": 131,
-  "grounded_items": 112,
+  "total_items": 162,
+  "grounded_items": 100,
   "ungrounded": [
     {
+      "word": "цю",
+      "exercise_type": "quiz",
+      "context": "Я довго читав цю книгу.",
+      "role": "context"
+    },
+    {
+      "word": "відкрила",
+      "exercise_type": "quiz",
+      "context": "Вона раптом відкрила двері.",
+      "role": "context"
+    },
+    {
+      "word": "побачив",
+      "exercise_type": "quiz",
+      "context": "Одного разу я побачив ведмедя в лісі.",
+      "role": "context"
+    },
+    {
+      "word": "лісі",
+      "exercise_type": "quiz",
+      "context": "Одного разу я побачив ведмедя в лісі.",
+      "role": "context"
+    },
+    {
+      "word": "вказує",
+      "exercise_type": "match-up",
+      "context": "Вказує на регулярну дію (недоконаний вид)",
+      "role": "context"
+    },
+    {
+      "word": "регулярну",
+      "exercise_type": "match-up",
+      "context": "Вказує на регулярну дію (недоконаний вид)",
+      "role": "context"
+    },
+    {
+      "word": "досягнутий",
+      "exercise_type": "match-up",
+      "context": "Вказує на досягнутий результат (доконаний вид)",
+      "role": "context"
+    },
+    {
+      "word": "тривалий",
+      "exercise_type": "match-up",
+      "context": "Вказує на тривалий процес (недоконаний вид)",
+      "role": "context"
+    },
+    {
+      "word": "несподівану",
+      "exercise_type": "match-up",
+      "context": "Вказує на несподівану, коротку дію (доконаний вид)",
+      "role": "context"
+    },
+    {
+      "word": "коротку",
+      "exercise_type": "match-up",
+      "context": "Вказує на несподівану, коротку дію (доконаний вид)",
+      "role": "context"
+    },
+    {
+      "word": "постійну",
+      "exercise_type": "match-up",
+      "context": "Вказує на постійну звичку (недоконаний вид)",
+      "role": "context"
+    },
+    {
+      "word": "звичку",
+      "exercise_type": "match-up",
+      "context": "Вказує на постійну звичку (недоконаний вид)",
+      "role": "context"
+    },
+    {
+      "word": "конкретну",
+      "exercise_type": "match-up",
+      "context": "Вказує на конкретну подію в минулому (доконаний вид)",
+      "role": "context"
+    },
+    {
+      "word": "подію",
+      "exercise_type": "match-up",
+      "context": "Вказує на конкретну подію в минулому (доконаний вид)",
+      "role": "context"
+    },
+    {
+      "word": "минулому",
+      "exercise_type": "match-up",
+      "context": "Вказує на конкретну подію в минулому (доконаний вид)",
+      "role": "context"
+    },
+    {
+      "word": "яка",
+      "exercise_type": "match-up",
+      "context": "Вказує на дію, яка повторюється (недоконаний вид)",
+      "role": "context"
+    },
+    {
+      "word": "успішно",
+      "exercise_type": "match-up",
+      "context": "Вказує, що дія успішно завершена (доконаний вид)",
+      "role": "context"
+    },
+    {
+      "word": "завершена",
+      "exercise_type": "match-up",
+      "context": "Вказує, що дія успішно завершена (доконаний вид)",
+      "role": "context"
+    },
+    {
+      "word": "вчив",
+      "exercise_type": "group-sort",
+      "context": "вчив",
+      "role": "answer"
+    },
+    {
+      "word": "писала",
+      "exercise_type": "group-sort",
+      "context": "писала",
+      "role": "answer"
+    },
+    {
       "word": "прочитала",
-      "exercise_type": "quiz",
-      "context": "Вона прочитала нову книгу.",
-      "role": "context"
-    },
-    {
-      "word": "готували",
-      "exercise_type": "quiz",
-      "context": "Вони готували смачний обід.",
-      "role": "context"
-    },
-    {
-      "word": "студент",
-      "exercise_type": "quiz",
-      "context": "Студент нарешті написав текст.",
-      "role": "context"
-    },
-    {
-      "word": "швидка",
-      "exercise_type": "match-up",
-      "context": "Швидка дія (ДВ): Раптом він відкрив двері.",
-      "role": "context"
-    },
-    {
-      "word": "звичка",
-      "exercise_type": "match-up",
-      "context": "Звичка (НВ): Я щодня готував сніданок.",
-      "role": "context"
-    },
-    {
-      "word": "вивчили",
-      "exercise_type": "match-up",
-      "context": "Результат (ДВ): Ми нарешті вивчили ці слова.",
-      "role": "context"
-    },
-    {
-      "word": "унікальна",
-      "exercise_type": "match-up",
-      "context": "Унікальна подія (ДВ): Одного разу я побачив актора.",
-      "role": "context"
-    },
-    {
-      "word": "купувала",
-      "exercise_type": "match-up",
-      "context": "Звичка (НВ): Вона завжди купувала тут хліб.",
-      "role": "context"
-    },
-    {
-      "word": "їсти",
-      "exercise_type": "fill-in",
-      "context": "Я ____ смачну вечерю, і ми можемо їсти.",
-      "role": "context"
-    },
-    {
-      "word": "цікавий",
-      "exercise_type": "fill-in",
-      "context": "Він весь день ____ цей цікавий роман.",
-      "role": "context"
+      "exercise_type": "group-sort",
+      "context": "прочитала",
+      "role": "answer"
     },
     {
       "word": "написала",
-      "exercise_type": "fill-in",
+      "exercise_type": "group-sort",
       "context": "написала",
       "role": "answer"
     },
     {
-      "word": "бачив",
-      "exercise_type": "error-correction",
-      "context": "Одного разу він бачив відомого актора.",
-      "role": "context"
-    },
-    {
-      "word": "написали",
-      "exercise_type": "error-correction",
-      "context": "Ми весь день написали довгий лист.",
-      "role": "context"
-    },
-    {
-      "word": "брав",
-      "exercise_type": "group-sort",
-      "context": "брав",
+      "word": "вірш",
+      "exercise_type": "unjumble",
+      "context": "вірш.",
       "role": "answer"
     },
     {
-      "word": "приготував",
-      "exercise_type": "group-sort",
-      "context": "приготував",
-      "role": "answer"
-    },
-    {
-      "word": "вивчив",
-      "exercise_type": "group-sort",
-      "context": "вивчив",
-      "role": "answer"
-    },
-    {
-      "word": "взяв",
-      "exercise_type": "group-sort",
-      "context": "взяв",
-      "role": "answer"
-    },
-    {
-      "word": "відповідають",
+      "word": "слово",
       "exercise_type": "true-false",
-      "context": "Дієслова недоконаного виду відповідають на питання «що зроби",
+      "context": "Слово «щодня» завжди вимагає дієслова доконаного виду.",
       "role": "context"
     },
     {
-      "word": "раптових",
+      "word": "вимагає",
       "exercise_type": "true-false",
-      "context": "Для раптових подій у минулому ми завжди використовуємо недок",
+      "context": "Слово «щодня» завжди вимагає дієслова доконаного виду.",
+      "role": "context"
+    },
+    {
+      "word": "доконаного",
+      "exercise_type": "true-false",
+      "context": "Слово «щодня» завжди вимагає дієслова доконаного виду.",
+      "role": "context"
+    },
+    {
+      "word": "означає",
+      "exercise_type": "true-false",
+      "context": "Дієслово «прочитав» означає, що процес читання завершився ус",
+      "role": "context"
+    },
+    {
+      "word": "читання",
+      "exercise_type": "true-false",
+      "context": "Дієслово «прочитав» означає, що процес читання завершився ус",
+      "role": "context"
+    },
+    {
+      "word": "завершився",
+      "exercise_type": "true-false",
+      "context": "Дієслово «прочитав» означає, що процес читання завершився ус",
+      "role": "context"
+    },
+    {
+      "word": "хочете",
+      "exercise_type": "true-false",
+      "context": "Якщо ви хочете сказати, що дія тривала дуже довго, використо",
+      "role": "context"
+    },
+    {
+      "word": "сказати",
+      "exercise_type": "true-false",
+      "context": "Якщо ви хочете сказати, що дія тривала дуже довго, використо",
+      "role": "context"
+    },
+    {
+      "word": "тривала",
+      "exercise_type": "true-false",
+      "context": "Якщо ви хочете сказати, що дія тривала дуже довго, використо",
+      "role": "context"
+    },
+    {
+      "word": "використовуйте",
+      "exercise_type": "true-false",
+      "context": "Якщо ви хочете сказати, що дія тривала дуже довго, використо",
+      "role": "context"
+    },
+    {
+      "word": "використовується",
+      "exercise_type": "true-false",
+      "context": "Слово «раптом» (suddenly) часто використовується з дієсловам",
+      "role": "context"
+    },
+    {
+      "word": "дієсловами",
+      "exercise_type": "true-false",
+      "context": "Слово «раптом» (suddenly) часто використовується з дієсловам",
+      "role": "context"
+    },
+    {
+      "word": "фокусується",
+      "exercise_type": "true-false",
+      "context": "Дієслово «написав» фокусується на самому процесі писання, а ",
+      "role": "context"
+    },
+    {
+      "word": "самому",
+      "exercise_type": "true-false",
+      "context": "Дієслово «написав» фокусується на самому процесі писання, а ",
+      "role": "context"
+    },
+    {
+      "word": "процесі",
+      "exercise_type": "true-false",
+      "context": "Дієслово «написав» фокусується на самому процесі писання, а ",
+      "role": "context"
+    },
+    {
+      "word": "писання",
+      "exercise_type": "true-false",
+      "context": "Дієслово «написав» фокусується на самому процесі писання, а ",
+      "role": "context"
+    },
+    {
+      "word": "результаті",
+      "exercise_type": "true-false",
+      "context": "Дієслово «написав» фокусується на самому процесі писання, а ",
+      "role": "context"
+    },
+    {
+      "word": "описувати",
+      "exercise_type": "true-false",
+      "context": "Недоконаний вид може описувати дію, яка слугує фоном для інш",
+      "role": "context"
+    },
+    {
+      "word": "слугує",
+      "exercise_type": "true-false",
+      "context": "Недоконаний вид може описувати дію, яка слугує фоном для інш",
+      "role": "context"
+    },
+    {
+      "word": "фоном",
+      "exercise_type": "true-false",
+      "context": "Недоконаний вид може описувати дію, яка слугує фоном для інш",
+      "role": "context"
+    },
+    {
+      "word": "іншої",
+      "exercise_type": "true-false",
+      "context": "Недоконаний вид може описувати дію, яка слугує фоном для інш",
+      "role": "context"
+    },
+    {
+      "word": "раптової",
+      "exercise_type": "true-false",
+      "context": "Недоконаний вид може описувати дію, яка слугує фоном для інш",
+      "role": "context"
+    },
+    {
+      "word": "події",
+      "exercise_type": "true-false",
+      "context": "Недоконаний вид може описувати дію, яка слугує фоном для інш",
+      "role": "context"
+    },
+    {
+      "word": "ніколи",
+      "exercise_type": "true-false",
+      "context": "Дієслова доконаного виду ніколи не мають форм теперішнього ч",
+      "role": "context"
+    },
+    {
+      "word": "мають",
+      "exercise_type": "true-false",
+      "context": "Дієслова доконаного виду ніколи не мають форм теперішнього ч",
+      "role": "context"
+    },
+    {
+      "word": "форм",
+      "exercise_type": "true-false",
+      "context": "Дієслова доконаного виду ніколи не мають форм теперішнього ч",
+      "role": "context"
+    },
+    {
+      "word": "теперішнього",
+      "exercise_type": "true-false",
+      "context": "Дієслова доконаного виду ніколи не мають форм теперішнього ч",
+      "role": "context"
+    },
+    {
+      "word": "часу",
+      "exercise_type": "true-false",
+      "context": "Дієслова доконаного виду ніколи не мають форм теперішнього ч",
+      "role": "context"
+    },
+    {
+      "word": "сигналізує",
+      "exercise_type": "true-false",
+      "context": "Слово «нарешті» зазвичай сигналізує про процес, а не результ",
+      "role": "context"
+    },
+    {
+      "word": "уже",
+      "exercise_type": "fill-in",
+      "context": "Він уже ____ домашнє завдання з математики.",
+      "role": "context"
+    },
+    {
+      "word": "свято",
+      "exercise_type": "error-correction",
+      "context": "Одного разу він робив дуже смачний борщ на свято.",
+      "role": "context"
+    },
+    {
+      "word": "вивчили",
+      "exercise_type": "error-correction",
+      "context": "Ми весь день вивчили нові слова до екзамену.",
+      "role": "context"
+    },
+    {
+      "word": "екзамену",
+      "exercise_type": "error-correction",
+      "context": "Ми весь день вивчили нові слова до екзамену.",
+      "role": "context"
+    },
+    {
+      "word": "дзвонив",
+      "exercise_type": "error-correction",
+      "context": "Раптом він дзвонив мамі і сказав новину.",
+      "role": "context"
+    },
+    {
+      "word": "сказав",
+      "exercise_type": "error-correction",
+      "context": "Раптом він дзвонив мамі і сказав новину.",
+      "role": "context"
+    },
+    {
+      "word": "новину",
+      "exercise_type": "error-correction",
+      "context": "Раптом він дзвонив мамі і сказав новину.",
+      "role": "context"
+    },
+    {
+      "word": "мені",
+      "exercise_type": "error-correction",
+      "context": "Він часто написав мені довгі повідомлення.",
+      "role": "context"
+    },
+    {
+      "word": "довгі",
+      "exercise_type": "error-correction",
+      "context": "Він часто написав мені довгі повідомлення.",
+      "role": "context"
+    },
+    {
+      "word": "повідомлення",
+      "exercise_type": "error-correction",
+      "context": "Він часто написав мені довгі повідомлення.",
       "role": "context"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 21,
-    "tested_in_exercises": 9,
+    "tested_in_exercises": 8,
     "not_tested": [
       "вивчити",
       "вчити",
@@ -131,6 +389,7 @@
       "приготувати",
       "прочитати",
       "робити",
+      "тривалість",
       "час",
       "читати"
     ]

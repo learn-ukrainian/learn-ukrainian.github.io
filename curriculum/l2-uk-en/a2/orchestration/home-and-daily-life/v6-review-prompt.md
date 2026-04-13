@@ -123,153 +123,181 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Сценарій 1: Моє помешкання
+## Сценарій 1: Моє помешкання (~660 words)
 
-Сьогодні ми йдемо в гості онлайн.
-Наш знайомий показує своє нове **помешкання** *(apartment, dwelling)*.
-Він знімає відео для свого друга з іншого міста.
-У цьому відео ми побачимо, як називати кімнати.
-Ми також почуємо, як сказати, де саме ви перебуваєте.
+> — **Марко:** Привіт, Анно! Ось моє нове помешкання. *(Hi, Anna! Here is my new place.)*
+> — **Анна:** Привіт! Яка гарна квартира! А скільки у вас кімнат? *(Hi! What a beautiful apartment! And how many rooms do you have?)*
+> — **Марко:** У нас три кімнати: спальня, вітальня і невеликий кабінет. Ось вітальня. *(We have three rooms: a bedroom, a living room, and a small study. Here is the living room.)*
+> — **Анна:** Дуже світла! Що це там стоїть? *(Very bright! What is standing over there?)*
+> — **Марко:** У вітальні стоїть великий диван. Біля вікна є зручне крісло. На стіні висить картина. *(In the living room stands a large sofa. Near the window there is a comfortable armchair. A picture hangs on the wall.)*
+> — **Анна:** А кухня велика? *(And is the kitchen large?)*
+> — **Марко:** Так, кухня простора. На кухні є новий стіл і чотири стільці. *(Yes, the kitchen is spacious. In the kitchen there is a new table and four chairs.)*
+> — **Анна:** А де балкон? *(And where is the balcony?)*
+> — **Марко:** Балкон у спальні. На балконі стоять квіти. *(The balcony is in the bedroom. On the balcony stand flowers.)*
+> — **Анна:** Вітаю з новосіллям! *(Congratulations on the housewarming!)*
 
-> — **Мешканець:** Привіт! Ось моя нова **квартира** *(apartment)*. Я зараз у квартирі, але тут ще мало речей.
-> — **Онлайн-друг:** О, вітаю з переїздом! Це дуже цікаво. Яка це кімната?
-> — **Мешканець:** Це — довгий **коридор** *(hallway)*. А тут далі є велика **вітальня** *(living room)*.
-> — **Онлайн-друг:** Супер! А де розташована **кухня** *(kitchen)*?
-> — **Мешканець:** Я зараз на кухні. Вона дуже світла. А там праворуч є **спальня** *(bedroom)*.
-> — **Онлайн-друг:** Клас! Ти вже живеш у цій квартирі? **А скільки у вас кімнат?**
-> — **Мешканець:** Тут три кімнати. Я вже сплю у спальні, але тут ще є багато роботи.
-> — **Онлайн-друг:** **Що на балконі? Де ви поставили книжки?**
-> — **Мешканець:** На балконі поки що порожньо, а книжки я поклав у шафу.
+When describing a home, we need specific vocabulary. The word **помешкання** (dwelling, apartment) is a versatile term for where you live. Inside, you will find different spaces like a **ванна кімната** (bathroom) or a long hallway.
 
-Let's look closely at the vocabulary for rooms in a house.
-When we simply name a room, we use the Nominative case.
-Це кухня, вітальня, спальня, **ванна кімната** *(bathroom)*, коридор та **балкон** *(balcony)*.
-But when we want to say *where* we are, we must answer the question «де?» *(where?)*.
-To answer this question, we must use the Locative case.
-In the Locative case, feminine nouns usually take the ending «-і».
-For example, the noun «кімната» becomes «у кімнаті», and «спальня» becomes «у спальні».
-Masculine nouns usually take the ending «-і» or «-у».
-For example, «коридор» becomes «у коридорі», and «будинок» *(house)* becomes «у будинку».
-Pay special attention to the prepositions «у/в» *(in)* and «на» *(on/at)*.
-We say «у спальні» and «у вітальні», but we always say «на кухні» and «на балконі».
-Ми п'ємо смачну каву на кухні.
-Мій брат читає книгу на балконі.
-Ми стоїмо у темному коридорі.
+У типовій українській квартирі є кілька кімнат. Зазвичай це простора **вітальня** (living room), світла **спальня** (bedroom) та сучасна **кухня** (kitchen). Деякі люди також мають великий балкон або зручний кабінет для роботи.
 
-Now let's furnish our empty home.
-We need **меблі** *(furniture)* for every room.
-Тут є **диван** *(sofa)*, **крісло** *(armchair)*, **шафа** *(wardrobe)*, **ліжко** *(bed)*, **полиця** *(shelf)* та м'який **килим** *(carpet)*.
-When we describe where furniture is placed or where everyday objects are located, we again use the Locative case.
-It is important to choose between the prepositions «у/в» and «на» based on physical logic.
-If something is inside an enclosed space, we use «у/в».
-If something is resting on a surface, we use «на».
-Мій новий одяг висить у шафі.
-Маленький кіт солодко спить на дивані.
-Цікава книга лежить на полиці.
-Теплий килим лежить на підлозі.
-Велика подушка лежить на ліжку.
-Мій собака сидить у кріслі.
+> *In a typical Ukrainian apartment, there are several rooms. Usually, this is a spacious living room, a bright bedroom, and a modern kitchen. Some people also have a large balcony or a comfortable study for work.*
 
-We don't just describe what we already have in our home.
-Often we need to explain what is still missing.
-To express the absence of something, we use the word **немає** *(there is no / are no)*.
-The word «немає» always requires the noun to be in the Genitive case.
-Let's contrast existence with absence.
-У новій квартирі є великий балкон.
-У старій квартирі немає великого балкона.
-Тут є зручна шафа.
-Тут немає зручної шафи.
-The Genitive case is also essential when we talk about quantities.
-When we use quantity words like **багато** *(a lot, many)*, we use the Genitive plural form.
-У цьому будинку є багато кімнат.
-У нашій вітальні є багато вікон.
-На полиці стоїть багато книг.
-Ці структури дуже корисні, коли ви щойно переїхали.
+:::tip
+For "living room", use the standard noun **вітальня**. Do not use **гостинна** here as the room name.
+:::
 
-When you are actively moving things into your new home, you perform physical actions.
-You might want to **поставити** *(to put, place standing)* a chair or **повісити** *(to hang)* a beautiful picture.
-These are verbs of direction and placement, and they require the Accusative case for the specific object you are moving.
-When the object is inanimate and masculine, its Accusative form looks exactly the same as the Nominative form.
-Я хочу поставити новий диван біля вікна.
-Ми поставимо цей круглий стіл на кухні.
-When the object is feminine, the ending usually changes from «-а» or «-я» to «-у» or «-ю».
-Я хочу повісити красиву картину.
-Вони поставлять нову шафу у спальні.
+Once you know the rooms, you can talk about what is inside them. Remember that the word **меблі** (furniture) is always plural in Ukrainian.
 
-Finally, let's make our room descriptions richer with descriptive adjectives.
-Adjectives must always agree perfectly with the noun they describe in gender, number, and case.
-Це дуже **світла** *(light, bright)* кімната.
-Тут є **велике** *(large)* вікно.
-Тут стоїть **зручний** *(comfortable)* диван.
-When the grammatical case of the noun changes in a sentence, the adjective changes right along with it.
-Я сиджу у світлій кімнаті.
-Ми поставимо стіл біля великого вікна.
-Мій кіт спить на зручному дивані.
-У нас немає зручного крісла.
-Ми відпочиваємо у новій спальні.
-Я повішу цю картину на білу стіну.
-By matching the adjective perfectly with its noun, your Ukrainian will sound natural and precise.
+Мої нові меблі дуже зручні та красиві. У кімнаті стоїть великий **диван** (sofa), м'яке **крісло** (armchair) та дерев'яний стіл. Біля стола є зручний стілець, а біля стіни стоїть висока шафа. У спальні ми поставили широке ліжко. На стіні висить полиця, яскравий **килим** (rug) і дзеркало.
 
-<!-- INJECT_ACTIVITY: fill-in-home-cases -->
+> *My new furniture is very comfortable and beautiful. In the room stands a large sofa, a soft armchair, and a wooden table. Near the table there is a comfortable chair, and near the wall stands a tall wardrobe. In the bedroom we put a wide bed. On the wall hangs a shelf, a bright rug, and a mirror.*
 
-## Сценарій 2: Мій звичайний день (Scenario 2: My Typical Day)
+To say *where* something is located, use the Locative case. It answers the question «Де?» (Where?) and always follows prepositions like **у/в** (in) or **на** (on/at).
 
-Ось мій звичайний **розпорядок дня** *(daily routine)*. Кожного дня я роблю одні і ті ж речі. Вранці я **прокидаюся** *(wake up)* дуже рано. Зазвичай я прокидаюся о сьомій годині. Потім я швидко **встаю** *(get up)* з ліжка. Я йду у ванну кімнату. Там я **вмиваюся** *(wash my face)* та чищу зуби. Після цього я йду на кухню. Я готую смачну їжу і **снідаю** *(have breakfast)*. Я дуже люблю пити гарячу каву і їсти хліб з маслом. Потім я одягаюся і їду на роботу. Мій робочий день починається о дев'ятій годині. Я багато працюю в офісі до п'ятої. Після роботи я швидко їду додому. Вдома я відпочиваю на зручному дивані. Потім я готую вечерю і дивлюся цікавий фільм. Я **лягаю спати** *(go to bed)* пізно вночі.
+Для опису місця ми завжди використовуємо місцевий відмінок. Наприклад, ми кажемо, що стіл стоїть у квартирі або на кухні. Квіти стоять на балконі або на вікні. Наш кіт любить спати у коридорі або у вітальні.
 
-In Ukrainian, we use ordinal numbers to tell the time, just like saying "the seventh hour". We ask «**Котра година?**» *(What time is it?)* using the Nominative case. Зараз **сьома година** *(seven o'clock)*. Зараз **восьма година** *(eight o'clock)*. Це дуже проста структура. But when we want to say at what time something happens, we ask «**О котрій годині?**» *(At what time?)*. To answer this, we use the preposition «о» (or «об» before vowels) with the Locative case. Я встаю **о сьомій годині** *(at seven o'clock)*. Він обідає **о першій годині** *(at one o'clock)*. Вона лягає спати **об одинадцятій** *(at eleven)*. Notice that the word «година» can be omitted in everyday speech. We can also express half-hours using the preposition «на» and the Accusative case of the next hour. Я прокидаюся **о пів на восьму** *(at half past seven)*. Ми завжди снідаємо **о пів на дев'яту** *(at half past eight)*.
+Notice how the noun endings change when we show location. Most feminine nouns ending in **-а** take **-і**. This is a very consistent rule that you will use every day.
+**квартира → у квартирі** — *apartment → in the apartment*
 
-When we travel, we need to say how we get there. Ukrainian uses the Instrumental case to indicate the means of transportation. We do not use a preposition for this structure. Я їду на роботу **автобусом** *(by bus)*. Вона їде в центр великого міста **метро** *(by subway)*. Note that «метро» is a foreign word and does not change its ending. Він часто подорожує **машиною** *(by car)*. Notice the important difference between the destination and the means. Я їду **на роботу** *(to work)* uses the Accusative case for direction. Я їду автобусом uses the Instrumental case for the specific vehicle you use. We also use the Instrumental case with the preposition «**з**» *(with)* to describe accompaniment. Я снідаю **з родиною** *(with family)*. Ми смачно обідаємо **з друзями** *(with friends)*. Я йду в кіно **з братом** *(with my brother)*.
+Masculine nouns ending in a consonant usually take **-і** or **-у**. If you are ever unsure, the **-і** ending is extremely common for rooms.
+**коридор → у коридорі** — *hallway → in the hallway*
+**балкон → на балконі** — *balcony → on the balcony*
 
-To create a logical timeline, we use specific adverbs and prepositions. The adverbs **вранці** *(in the morning)*, **вдень** *(in the afternoon)*, **увечері** *(in the evening)*, and **вночі** *(at night)* are fixed forms. Вранці я п'ю солодкий чай. Вдень я інтенсивно працюю в офісі. Увечері я сиджу у кріслі і читаю книгу. Вночі я міцно сплю у спальні. We also use prepositions that require specific cases to organize our day. The preposition «**після**» *(after)* always takes the Genitive case. Я йду гуляти у парк **після обіду** *(after lunch)*. Вони швидко їдуть додому після роботи. The preposition «**перед**» *(before)* requires the Instrumental case. Я читаю новини в інтернеті **перед сном** *(before sleep)*. Ми завжди миємо руки перед сніданком. The phrase «**під час**» *(during)* also takes the Genitive case. Я ніколи не слухаю музику **під час роботи** *(during work)*. Ці короткі слова допомагають створити чіткий розпорядок дня.
+Neuter nouns often change to **-і** or **-у** as well.
+**вікно → на вікні** — *window → on the window*
+**ліжко → на ліжку** — *bed → on the bed*
 
-Our daily routine changes depending on the day of the week. We use the phrase «**у будні**» *(on weekdays)* for Monday through Friday. У будні я дуже рано встаю і їду на роботу. У будні ми завжди багато працюємо. We contrast this with «**у вихідні**» *(on weekends)*. У вихідні я прокидаюся дуже пізно. У вихідні ми довго гуляємо в зеленому парку. If you want to describe a habitual action that happens every Saturday, you can use the preposition «по» with the Locative plural form. Я ходжу в басейн **по суботах** *(on Saturdays)*. Ми їздимо в маленьке село **по неділях** *(on Sundays)*. Ця граматична форма добре показує регулярність. Я часто ходжу **на ринок** *(to the market)* по суботах. Там я купую свіжі овочі та фрукти з родиною. Після ринку ми разом обідаємо на світлій кухні. Це наш ідеальний день.
+:::note
+Pay attention to consonant shifts in the Locative case. The word **кухня** ends in a soft consonant, so it becomes **на кухні**. In English, this translates naturally as "in the kitchen".
+:::
 
-<!-- INJECT_ACTIVITY: quiz-daily-routine -->
-<!-- INJECT_ACTIVITY: match-up-activities -->
+The Genitive case is equally important for describing your home. We rely on it to talk about things we lack, using the negative word **немає** (there is no). We also use it to express quantity when asking questions or stating exactly how many rooms are in a house. Mastering this case is essential for smooth communication.
 
-## Сценарій 3: В гостях (Scenario 3: Visiting Someone)
+У моїй новій квартирі немає великого кабінету. У нас також немає старого килима на стіні. Коли друзі запитують, вони кажуть: «Скільки у вас кімнат?». Ми відповідаємо, що маємо дві просторі кімнати.
 
-Уявіть, що ви йдете в гості до українських друзів у неділю. Українці дуже **гостинні** *(hospitable)* люди, тому вони завжди чекають на гостей. Коли ви приходите, **господарі** *(hosts)* радісно зустрічають вас біля дверей. Вони завжди раді вас бачити у своєму домі. Ось типова розмова у коридорі:
-> — **Оксана:** Привіт! **Заходьте** *(come in)*, будь ласка!
-> — **Джон:** Привіт, Оксано! Дякую за запрошення. Ось маленькі **гостинці** *(gifts)* для вас.
-> — **Оксана:** О, дуже дякую! Це дуже приємно. **Роздягайтеся** *(take off your coat)* і **проходьте** *(come through)* у вітальню.
-> — **Джон:** У вас дуже гарна і простора квартира.
-> — **Оксана:** Дякую. Тут є велика вітальня, світла кухня і наша затишна спальня.
-> — **Джон:** Мені дуже подобається ваш новий килим на підлозі.
-> — **Оксана:** Ми купили його вчора в магазині. А тепер проходьте на кухню.
+> *In my new apartment, there is no large study. We also do not have an old rug on the wall. When friends ask, they say: "How many rooms do you have?". We answer that we have two spacious rooms.*
 
-Коли гості заходять у кімнату, господарі відразу запрошують їх до столу. Вони часто кажуть таку фразу: «**Сідайте за стіл**» *(Sit at the table)*. When we use the verb «сідати» to indicate movement, the preposition **за** *(behind / at)* requires the Accusative case. Після цього всі гості та господарі сидять разом. In this state of rest, the same preposition «за» takes the Instrumental case. Ми кажемо: «Ми **сидимо за столом**» *(We are sitting at the table)*. Це дуже важлива різниця в українській граматиці. Рух завжди вимагає знахідного відмінка, а позиція вимагає орудного. Гості довго сидять за великим столом у вітальні. Вони весело розмовляють, жартують і смачно вечеряють разом. Господарі завжди готують багато різних страв і радісно кажуть: «**Пригощайтеся!**» *(Help yourself!)*. Гості із задоволенням **пригощаються** *(help themselves)* смачною їжею. Усі почуваються дуже комфортно у цій приємній атмосфері.
+When counting items, pay close attention to the plural forms. For the numbers two, three, and four, we use the Nominative plural. This feels quite natural because it is similar to just making the noun plural.
+**два столи** — *two tables*
+**три ліжка** — *three beds*
+**чотири стільці** — *four chairs*
 
-На кухні господиня обов'язково пропонує теплі напої. Вона часто запитує своїх гостей: «**Хочете чаю?**» *(Do you want some tea?)* або «**Вип'ємо кави?**» *(Shall we drink some coffee?)*. Ukrainian uses the Genitive case here to express an unspecified quantity of something. Це правило називається частковий родовий відмінок. Гості можуть відповідати на ці питання по-різному. Вони використовують орудний відмінок з прийменником **з** *(with)*, щоб пояснити свої смаки. Наприклад, ви можете сказати: «Я хочу чорний чай **з лимоном**» *(with lemon)*. Або ви можете сказати господині: «Я буду пити каву **з молоком**» *(with milk)*. Деякі люди люблять солодкий чай **з цукром** *(with sugar)*. Інші друзі п'ють міцну каву без цукру. Господар також може привітно запитати: «Будете їсти смачний пиріг **з яблуками**?» *(with apples)*.
+For five and above, or with quantity words like "багато" (many), we switch to the Genitive plural.
+**п'ять кімнат** — *five rooms*
+**багато меблів** — *a lot of furniture*
 
-Під час вечері гості та господарі часто говорять про свій день. Вони цікавляться і запитують: «А о котрій годині ви встаєте вранці?». Вони також можуть спитати: «**Хто у вас готує вечерю?**» або «**Ви снідаєте вдома чи на роботі?**». Ви можете детально відповісти: «Мій день починається рано, а снідаю я зазвичай вдома». Такі спокійні розмови допомагають краще пізнати одне одного. Українці дуже люблять обговорювати свій щоденний розпорядок дня за столом. In these social situations, the Dative case expresses gratitude or personal opinions. Наприкінці довгого вечора гості завжди щиро кажуть: «Дуже **дякую господарям**» *(thank you to the hosts)*. Замість дієслова «любити» ми часто використовуємо іншу популярну конструкцію. Ми кажемо: «**Мені подобається** ваша квартира» *(I like your apartment)*. Це звучить дуже ввічливо і природно для носіїв мови. Ви також можете радісно додати: «Нам подобається ваша смачна вечеря».
+A frequent mistake for beginners is forgetting to change the noun case after a preposition of location. Since English nouns do not change form, direct translation often leads to structural errors. You must always change the ending in Ukrainian, rather than just dropping the dictionary form into the sentence. Think of the preposition and the new ending as two parts of the same tool.
 
-Спілкування в гостях гармонійно об'єднує всі ці граматичні правила. When addressing friends directly, Ukrainians use the Vocative case. Замість форми «Оксана» ми завжди кажемо «Оксано», а замість «Тарас» ми кличемо «Тарасе». Це просте правило робить розмову теплою і дружньою. Під час цікавої бесіди ми також часто використовуємо місцевий відмінок. Ми так детально розповідаємо, де ми активно працюємо чи вчимося. Наприклад, гість може серйозно розповідати: «Я зараз працюю **на фірмі**» *(at a firm)*. А господар швидко відповідає: «А моя дружина працює **у школі**» *(at a school)*. Ми плавно переходимо від теми дому до складної роботи та активного відпочинку. Наприкінці приємної зустрічі гості збираються додому. Вони одягаються в теплому коридорі, прощаються і йдуть відпочивати. Це був чудовий і веселий вечір з друзями!
+Ніколи не кажи, що ти живеш в квартира або спиш на ліжко. Українська мова вимагає зміни закінчення після прийменника. Правильно казати: я живу у квартирі, а мій кіт спить на ліжку.
 
-<!-- INJECT_ACTIVITY: error-correction-cases -->
+<!-- INJECT_ACTIVITY: fill-in-home-description -->
 
-## Мовленнєве завдання: Опишіть свій дім (Speaking Task)
+## Сценарій 2: Мій звичайний день (~660 words)
 
-Тепер ваша черга активно розповідати про себе! Напишіть короткий текст про ваше **помешкання** *(apartment / dwelling)* та ваш типовий ранок. Ваш текст повинен мати приблизно десять речень. У цьому завданні вам потрібно детально описати ваш дім. Також розкажіть, що ви зазвичай робите щодня. Обов'язково згадайте у тексті щонайменше три різні кімнати та чотири предмети **меблів** *(furniture)*. Також напишіть про ваш **розпорядок дня** *(daily routine)* і використайте мінімум три точні вказівки на час. Це завдання чудово допоможе вам практикувати нові слова у реальному життєвому контексті.
+Let's look at how to describe a typical day from morning to evening. Notice how actions follow a logical sequence.
 
-To make your daily description accurate and natural, you must use the Ukrainian case system correctly. Here is your essential grammar checklist for this speaking task. First, use the Nominative case to list the rooms and furniture that exist in your cozy home. Second, use the Genitive case to talk about things you do not have, specifically using the negative word «немає». Third, use the Accusative case to describe the direct direction of your morning movement, like going into the kitchen or traveling to work. Fourth, use the Instrumental case to explain how you commute or exactly who you eat breakfast with. Finally, use the Locative case to describe exactly where furniture items are located and to state the specific time you usually wake up.
+Мій **розпорядок дня** дуже простий, але насичений. З понеділка по п'ятницю я маю багато справ. Вранці я **встаю** о сьомій годині. Спочатку я йду у ванну кімнату. Там я вмиваюся і чищу зуби. Потім я йду на кухню. Я **снідаю** з родиною за великим столом. Ми п'ємо гарячу каву або чай. Після сніданку я швидко одягаюся. Потім я їду на роботу автобусом. Моя дорога займає близько тридцяти хвилин. Я починаю працювати о дев'ятій годині.
 
-> [!model-answer] Модель відповіді
-> Я зараз живу у великій і світлій квартирі. У моєму помешканні є простора спальня, сучасна кухня, велика вітальня та чиста ванна кімната. На жаль, у мене немає довгого балкона. У вітальні стоїть новий зручний диван, а біля нього стоїть маленький круглий стіл. У спальні є широке ліжко та висока дерев'яна шафа. Мій типовий розпорядок дня починається дуже рано. Вранці я зазвичай **встаю** *(get up)* о шостій годині і відразу йду у ванну кімнату. О сьомій годині я смачно **снідаю** *(have breakfast)* з чоловіком на нашій кухні. Ми із задоволенням п'ємо міцну чорну каву без цукру. О восьмій годині ранку я швидко їду на роботу. Я завжди їду в сучасний офіс машиною. Мені дуже подобається мій затишний дім і мій активний день!
+> *My daily routine is very simple but busy. From Monday to Friday, I have many things to do. In the morning, I get up at seven o'clock. First, I go to the bathroom. There, I wash my face and brush my teeth. Then I go to the kitchen. I have breakfast with my family at a large table. We drink hot coffee or tea. After breakfast, I quickly get dressed. Then I go to work by bus. My commute takes about thirty minutes. I start working at nine o'clock.*
 
-## Підсумок
-Сьогодні ми чудово попрацювали! Ви навчилися детально описувати своє **помешкання** *(apartment / dwelling)*. Тепер ви знаєте назви різних кімнат та популярних меблів. Ви також можете впевнено розповідати про свій щоденний **розпорядок дня** *(daily routine)*. Використання правильних відмінків робить вашу українську мову дуже природною.
+To describe a typical day, we use specific verbs for repeated actions. Because we are talking about a routine, we rely on imperfective verbs. These focus on the process or repetition of the action, rather than its completion.
 
-To make sure you remember these essential grammar rules, please answer these чотири quick self-check questions:
-1. Як правильно сказати "in the kitchen"? The correct answer is «на кухні». We use the Locative case here.
-2. Який відмінок ми завжди використовуємо після слова «немає»? The correct answer is the Genitive case. Наприклад: «У мене немає балкона».
-3. Як сказати "at 8 o'clock" українською мовою? The correct answer is «о восьмій годині». Always remember to use the preposition «о» with the Locative case for time.
-4. Який відмінок потрібен для транспорту? The correct answer is the Instrumental case. Ми кажемо: «Я їду на роботу автобусом».
+Основні дієслова для опису дня: **вставати**, вмиватися, **снідати**, обідати і вечеряти. Коли ми на роботі, ми працюємо. Після роботи ми повертаємося додому і відпочиваємо. Увечері ми можемо читати книгу або дивитися телевізор. Нарешті, ми йдемо в **спальню** і готуємося **лягати спати**. Усі ці дії ми повторюємо щодня.
 
-Спробуйте сьогодні ввечері подивитися на свою кімнату. Назвіть усі меблі українською мовою. Розкажіть собі про свої плани на завтра. Ваша щоденна практика робить дива!
+> *The main verbs for describing a day: to get up, to wash one's face, to have breakfast, to have lunch, and to have dinner. When we are at work, we work. After work, we return home and rest. In the evening, we can read a book or watch TV. Finally, we go to the bedroom and prepare to go to bed. We repeat all these actions every day.*
+
+You also need to state when things happen. Asking for the time and stating the time require different grammar forms. The question "What time is it?" is «Котра година?». It uses the Nominative case and an ordinal number. However, when you say that you do something *at* a certain time, you must change the case.
+
+Коли ми питаємо про розклад, ми кажемо: «О котрій годині?». Для відповіді ми використовуємо прийменник «о» та Місцевий відмінок. Наприклад, ми кажемо: «о сьомій годині» або «о дев'ятій годині». Ми також використовуємо загальні слова для частин дня. Ми працюємо вдень, а спимо вночі. Вранці ми п'ємо каву, а увечері вечеряємо.
+
+> *When we ask about a schedule, we say: "At what time?". To answer, we use the preposition "о" and the Locative case. For example, we say: "at seven o'clock" or "at nine o'clock". We also use general words for parts of the day. We work during the day, and we sleep at night. In the morning we drink coffee, and in the evening we have dinner.*
+
+:::info
+**Telling time** — Remember that «о» becomes «об» before vowels for better flow. So, "at eleven" is «об одинадцятій годині».
+:::
+
+Sometimes, you link activities to other events rather than specific hours. Each preposition demands a specific case. The phrase «після обіду» (after lunch) requires the Genitive case. The word «перед» (before) requires the Instrumental case, so we say «перед сном» (before sleep).
+
+Під час роботи я часто п'ю воду або чай. Прийменник «під час» завжди вимагає Родового відмінка. Після обіду я маю трохи часу для відпочинку. Увечері, перед сном, я люблю читати цікаву книгу. Ці фрази роблять нашу мову більш природною.
+
+Describing a routine means explaining where you go and how you get there. Use the Locative case to say where you are («на роботі» - at work). But when you talk about *going* somewhere, use the Accusative case for direction. Use the Instrumental case to explain your means of transport or your company.
+
+Коли я вдома, я йду у ванну кімнату. Тут ми використовуємо Знахідний відмінок для напрямку. Потім я їду на роботу автобусом. Слово «автобус» стоїть в Орудному відмінку, бо це засіб транспорту. Я завжди **снідаю** з родиною або з друзями. Прийменник «з» вимагає Орудного відмінка.
+
+Finally, routines change depending on the day. We often use the time expressions «у будні» and «у вихідні» to contrast weekdays and weekends. To say that you do something every Saturday, use a special repetitive structure.
+
+Мій розклад у будні і у вихідні дуже різний. У будні я багато працюю і мало відпочиваю. Але у вихідні я маю вільний час для себе. По суботах я часто ходжу на місцевий ринок. Там я купую свіжі фрукти та овочі. По неділях ми з друзями гуляємо в парку.
+
+> *My schedule on weekdays and on weekends is very different. On weekdays I work a lot and rest a little. But on weekends I have free time for myself. On Saturdays, I often go to the local market. There I buy fresh fruits and vegetables. On Sundays, my friends and I walk in the park.*
+
+:::tip
+**Repetitive actions** — To express doing something every week on a certain day, use «по» + Locative plural: «по суботах» (on Saturdays), «по неділях» (on Sundays).
+:::
+
+<!-- INJECT_ACTIVITY: quiz-daily-routine-cases -->
+<!-- INJECT_ACTIVITY: match-up-routine-times -->
+
+## Сценарій 3: В гостях (~550 words)
+
+> — **Олена:** Привіт, Марку! Будь ласка, заходьте! *(Hi Mark! Please, come in!)*
+> — **Марк:** Добрий вечір! Дякую за запрошення. Це вам маленькі гостинці. *(Good evening! Thank you for the invitation. These are small gifts for you.)*
+> — **Тарас:** Дуже дякуємо! Яке гарне вино. Проходьте у вітальню. *(Thank you very much! What a nice wine. Come through to the living room.)*
+> — **Олена:** Сідайте за стіл. Пригощайтеся, будь ласка! Я приготувала борщ. *(Sit down at the table. Help yourself, please! I cooked borsch.)*
+> — **Марк:** Пахне дуже смачно. У вас чудове помешкання. *(It smells very delicious. You have a wonderful home.)*
+> — **Тарас:** Дякую. Хочете чаю чи кави після вечері? *(Thank you. Do you want tea or coffee after dinner?)*
+> — **Марк:** Кави з цукром, будь ласка. *(Coffee with sugar, please.)*
+
+In Ukrainian culture, the **господар** (host) or **господиня** (hostess) takes great pride in welcoming visitors. It is customary and polite to bring **гостинці** (small gifts) when you visit someone's home. When the food is ready, the hosts will use the reflexive verb **пригощатися** (to help oneself) to warmly invite you to eat.
+
+Українці дуже люблять запрошувати гостей додому. Коли ви йдете в гості, важливо принести гостинці. Це може бути торт, цукерки або пляшка вина. Господар і господиня завжди готують багато смачної їжі. Вони ставлять страви на стіл і кажуть: «Пригощайтеся!». Це означає, що ви можете брати все, що хочете. Українська гостинність дуже щедра і тепла.
+
+> *Ukrainians really love inviting guests to their home. When you go visiting, it is important to bring gifts. This can be a cake, candies, or a bottle of wine. The host and hostess always prepare a lot of delicious food. They put the dishes on the table and say: "Help yourself!". This means that you can take whatever you want. Ukrainian hospitality is very generous and warm.*
+
+Notice how the cases change depending on whether there is movement or static location with **меблі** (furniture). When the host invites you to sit down, there is a direction of action. We use the Accusative case for the destination.
+
+Олена каже: «Сідайте за стіл». Тут ми використовуємо Знахідний відмінок, бо це напрямок. Коли ми вже сидимо і їмо, ми використовуємо Орудний відмінок. Наприклад, ми говоримо: «Ми сидимо за столом і вечеряємо». Так само ми використовуємо Знахідний відмінок, коли ставимо нові меблі в кімнату. Але коли меблі вже там стоять, ми використовуємо Місцевий або Орудний відмінки.
+
+> *Olena says: "Sit down at the table". Here we use the Accusative case because it is a direction. When we are already sitting and eating, we use the Instrumental case. For example, we say: "We are sitting at the table and having dinner". Similarly, we use the Accusative case when we put new furniture into a room. But when the furniture is already standing there, we use the Locative or Instrumental cases.*
+
+:::info
+**Direction vs. Location** — Prepositions like **за** (behind/at) and **під** (under) take the Accusative case when answering the question "where to?" (direction). They take the Instrumental case when answering the question "where?" (location).
+:::
+
+During the meal, you will also hear the Genitive case used in a special way. When offering a portion or an undefined quantity of food or drink, Ukrainians use the partitive Genitive. This means you are offering "some of" the item.
+
+Тарас запитує: «Хочете чаю чи кави?». Слова «чай» і «кава» стоять у Родовому відмінку. Це означає, що він пропонує трохи напою, а не весь чай у домі. Якщо ви хочете додати щось до напою, використовуйте Орудний відмінок. Марк просить каву з цукром і з молоком. Це дуже корисні фрази для спілкування за столом.
+
+> *Taras asks: "Do you want tea or coffee?". The words "tea" and "coffee" are in the Genitive case. This means that he is offering some of the drink, not all the tea in the house. If you want to add something to the drink, use the Instrumental case. Mark asks for coffee with sugar and with milk. These are very useful phrases for communicating at the table.*
+
+After dinner, the conversation often shifts to daily life and the **розпорядок дня** (daily routine). This is a great opportunity to synthesize everything you have learned about cases, times, and actions in a natural setting.
+
+За столом друзі часто говорять про свій розпорядок дня. Марк запитує: «А о котрій годині ви встаєте?». Олена відповідає, що вона завжди встає рано. Вона йде у ванну, а потім готує сніданок. Тарас запитує Марка: «А хто у вас готує вечерю?». Марк розповідає, що він зазвичай вечеряє на роботі. Наприкінці він дякує господарям за вечерю. У цій простій розмові ми бачимо багато відмінків разом.
+
+> *At the table, friends often talk about their daily routine. Mark asks: "And at what time do you get up?". Olena answers that she always gets up early. She goes to the bathroom, and then prepares breakfast. Taras asks Mark: "And who cooks dinner at your place?". Mark says that he usually has dinner at work. In this simple conversation, we see many cases together.*
+
+<!-- INJECT_ACTIVITY: error-correction-cases-routine -->
+
+## Мовленнєве завдання: Опишіть свій дім (~330 words)
+
+It is time to put everything together and describe your own **помешкання** (dwelling, apartment). Imagine you are sending a short voice message to a Ukrainian friend to tell them about your life. You need to write an eight to ten sentence description of your home and your typical **розпорядок дня** (daily routine). Think about what your mornings look like. Mention what time you usually have **вставати** (to get up) and what you do immediately after that.
+
+Розкажіть детально про свою квартиру чи будинок. Напишіть, яка у вас є улюблена **кімната** (room) і які там стоять **меблі** (furniture). Поясніть, де ви зазвичай любите **снідати** (to have breakfast) перед роботою.
+
+> *Tell in detail about your apartment or house. Write what your favorite room is and what furniture stands there. Explain where you usually like to have breakfast before work.*
+
+When describing your evening routine, do not forget to mention when you prefer to **лягати спати** (to go to bed). Before you write your text, review this grammar checklist to ensure you use the different cases correctly. This is a great way to practice everything you have learned.
+
+Use the Nominative case to list what exists in your home. Use the Genitive case to state what is missing or to specify quantities. Use the Dative case to show for whom you do something. Use the Accusative case to show where you go during the day. Use the Instrumental case to explain how you travel or who you spend your time with. Finally, use the Locative case to pinpoint exactly where things are, like in the **кухня** (kitchen), the **спальня** (bedroom), or the **вітальня** (living room).
+
+:::tip
+**Did you know?** — When Ukrainians describe their homes, they often count the number of living spaces, excluding the kitchen, bathroom, and hallways. A "two-room apartment" (двокімнатна квартира) typically means it has a living room and one bedroom, plus a separate kitchen! Keep this in mind when talking to native speakers.
+:::
+
+> [!model-answer]
+> Привіт! Я хочу розповісти про своє помешкання. Я живу у великій світлій квартирі. У квартирі є три кімнати: велика спальня, вітальня і маленька кухня. У вітальні стоять нові зручні меблі, але там зовсім немає телевізора. Мій розпорядок дня дуже простий. У будні я завжди встаю рано, о сьомій годині. Я йду у ванну кімнату, а потім снідаю з родиною за столом. Після сніданку я їду на роботу міським автобусом. Удень я багато працюю за комп'ютером. Увечері я повертаюся додому, вечеряю і читаю цікаву книгу на дивані. Я зазвичай лягаю спати об одинадцятій годині.
 </generated_module_content>
 
-**PIPELINE NOTE — Word count: 2673 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
+**PIPELINE NOTE — Word count: 2968 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -445,41 +473,172 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 673 words | Not found: 5 words
+Verified: 450 words | Not found: 5 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
-  ✗ Джон — NOT IN VESUM
-  ✗ Оксана — NOT IN VESUM
-  ✗ Оксано — NOT IN VESUM
+  ✗ Анна — NOT IN VESUM
+  ✗ Анно — NOT IN VESUM
+  ✗ Марк — NOT IN VESUM
+  ✗ Олена — NOT IN VESUM
   ✗ Тарас — NOT IN VESUM
-  ✗ Тарасе — NOT IN VESUM
 
-All 673 other words are confirmed to exist in VESUM.
+All 450 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
-## Verification Tools (MCP)
+---
 
-You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
+## Verification Tools (Shell Commands)
 
-**Core Verification:**
-- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
-- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
+You have access to verification tools via shell commands. Use these to verify
+Ukrainian vocabulary, check grammar, and search textbook content **as you write**.
 
-**Content Quality:**
-- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+**IMPORTANT:** Run verification commands BEFORE finalizing any Ukrainian text.
+Batch multiple verifications together to minimize round-trips.
 
-**Reference:**
-- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp_rag_search_literary` — verify literary references against primary sources
-- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
+### 1. Batch-verify Ukrainian words exist in VESUM (preferred — one call for many words)
 
-**Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_words
+results = verify_words(['слово1', 'слово2', 'слово3'])
+for w, matches in results.items():
+    if matches:
+        print(f'{w}: FOUND — lemma={matches[0][\"lemma\"]}, pos={matches[0][\"pos\"]}')
+    else:
+        print(f'{w}: NOT FOUND — may not exist in standard Ukrainian')
+"
+```
+
+### 2. Verify a single Ukrainian word in VESUM (with full morphological tags)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_word
+results = verify_word('WORD_HERE')
+if results:
+    for m in results:
+        print(f'lemma={m[\"lemma\"]}, pos={m[\"pos\"]}, tags={m[\"tags\"]}')
+else:
+    print('NOT FOUND in VESUM')
+"
+```
+
+### 3. Get all inflected forms of a lemma (declension/conjugation)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_lemma
+forms = verify_lemma('LEMMA_HERE')
+for f in forms[:20]:
+    print(f'{f[\"word_form\"]:20s} {f[\"pos\"]:8s} {f[\"tags\"]}')
+print(f'... {len(forms)} forms total')
+"
+```
+
+### 4. Check CEFR level of a word (is it level-appropriate?)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import query_cefr_level
+results = query_cefr_level('WORD_HERE')
+for r in results:
+    print(f'{r[\"word\"]}: {r[\"level\"]} ({r[\"pos\"]})')
+if not results:
+    print('Not in CEFR database')
+"
+```
+
+### 5. Search textbook content (Ukrainian school textbooks, Grades 1-11)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_textbooks
+keywords = {'keyword1', 'keyword2'}
+results = search_textbooks(keywords, 5)
+for r in results:
+    title = r.get('section_title', r.get('title', ''))
+    grade = r.get('grade', '?')
+    text = r.get('text', '')[:200]
+    print(f'Grade {grade} | {title}')
+    print(f'  {text}')
+    print()
+"
+```
+
+### 6. Search style guide for calques/Russianisms (Антоненко-Давидович, 279 entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_style_guide
+results = search_style_guide('TOPIC_HERE', 3)
+for r in results:
+    print(f'--- {r.get(\"word\", \"\")} [{r.get(\"section\", \"\")}]')
+    print(r.get('text', '')[:300])
+    print()
+if not results:
+    print('No style guide entries found')
+"
+```
+
+### 7. Look up word definition in СУМ-11 (Ukrainian explanatory dictionary, 127K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_definitions
+results = search_definitions('WORD_HERE', 3)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+### 8. Search idioms (Фразеологічний словник, 25K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_idioms
+results = search_idioms('WORD_HERE', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"text\", r.get(\"definition\", \"\")))[:200]}')
+"
+```
+
+### 9. English-to-Ukrainian translation (Балла, 79K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import translate_en_uk
+results = translate_en_uk('ENGLISH_WORD', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+---
+
+**WHEN to use these tools:**
+
+1. **Before writing any Ukrainian text** — batch-verify all key vocabulary with
+   `verify_words` (tool 1). Any word that returns NOT FOUND must be replaced.
+2. **When you suspect a Russicism or calque** — search the style guide (tool 6)
+   and verify the correct Ukrainian form with `verify_word` (tool 2).
+3. **When writing for A1/A2** — check CEFR levels (tool 4) to ensure vocabulary
+   is level-appropriate.
+4. **When unsure about a case ending or conjugation** — use `verify_lemma` (tool 3)
+   to see the full paradigm.
+5. **When covering a grammar topic** — search textbooks (tool 5) to see how
+   Ukrainian school textbooks teach it.
+6. **When you need the precise Ukrainian meaning** — use СУМ-11 (tool 7).
+7. **When looking for natural Ukrainian expressions** — search idioms (tool 8).
+
+**Batching rule:** Collect all words you want to verify, then run ONE `verify_words`
+call instead of multiple `verify_word` calls. This is faster and uses fewer tokens.

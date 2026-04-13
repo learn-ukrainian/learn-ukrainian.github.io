@@ -23,6 +23,12 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
+- word: но́мер
+  translation: number
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
 - word: алергі́я
   translation: allergy
   expression: false
@@ -65,6 +71,12 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
+- word: ліка́рня
+  translation: hospital
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
 - word: ава́рія
   translation: accident
   expression: false
@@ -78,63 +90,9 @@ vocabulary:
   gender: ''
   verified: true
 - word: викликати
-  translation: to call
+  translation: to call / summon
   expression: false
   pos: дієсл.
-  gender: ''
-  verified: true
-- word: прі́звище
-  translation: surname
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: ім'я́
-  translation: first name
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: ву́лиця
-  translation: street
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: кварти́ра
-  translation: apartment
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: табле́тки
-  translation: pills
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: лі́ки
-  translation: medicine
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: пря́мо
-  translation: straight
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: налі́во
-  translation: to the left
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: Служба порятунку
-  translation: rescue service
-  expression: true
-  pos: ''
   gender: ''
   verified: true
 - word: Викличте швидку!
@@ -161,8 +119,8 @@ vocabulary:
   pos: ''
   gender: ''
   verified: true
-- word: Людині погано!
-  translation: Someone is feeling bad!
+- word: людині погано
+  translation: someone is feeling bad
   expression: true
   pos: ''
   gender: ''
@@ -173,38 +131,92 @@ vocabulary:
   pos: ''
   gender: ''
   verified: true
-- word: У мене болить голова
-  translation: My head hurts
+- word: один один два
+  translation: one one two (112)
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: У мене болить живіт
-  translation: My stomach hurts
+- word: один нуль один
+  translation: one zero one (101)
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: У мене болить горло
-  translation: My throat hurts
+- word: один нуль два
+  translation: one zero two (102)
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: Мені погано
-  translation: I feel bad
+- word: один нуль три
+  translation: one zero three (103)
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: Я не розумію
-  translation: I do not understand
+- word: навпро́ти
+  translation: opposite
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: по́руч
+  translation: nearby
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: лі́кар
+  translation: doctor
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: мені потрібен
+  translation: I need
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: Повторіть, будь ласка
-  translation: Please repeat
+- word: мені потрібна
+  translation: I need
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: у мене болить
+  translation: my ... hurts
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: голова́
+  translation: head
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: живі́т
+  translation: stomach
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: го́рло
+  translation: throat
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: Я не розумію.
+  translation: I do not understand.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Повторіть, будь ласка.
+  translation: Repeat, please.
   expression: true
   pos: ''
   gender: ''
@@ -215,8 +227,20 @@ vocabulary:
   pos: ''
   gender: ''
   verified: true
-- word: номер телефону
-  translation: phone number
+- word: повторі́ть
+  translation: repeat
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: прі́звище
+  translation: surname
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: заповніть форму
+  translation: fill out the form
   expression: true
   pos: ''
   gender: ''

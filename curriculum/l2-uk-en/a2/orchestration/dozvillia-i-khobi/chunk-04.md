@@ -1,7 +1,28 @@
-## Що мені подобається найбільше
+## Що мені подобається найбільше (~400 words total)
 
-Коли ми плануємо вихідні, ми обираємо те, що любимо. Іноді нам подобається багато різних речей, але одна є улюбленою. To express strong preferences and rank your interests, Ukrainian has several useful phrases that go beyond basic likes. Базова фраза — це **«мені подобається»** (I like). Наприклад: «Мені подобається сучасна музика». Але якщо ви дуже любите певне заняття, скажіть **«мені найбільше подобається»** (I like most). Це показує ваш головний пріоритет серед інших справ. А для максимальної емоції ми маємо дієслово **«обожнювати»** (to adore). The phrase "я обожнюю" is a fantastic way to show true passion for an activity. Ми часто комбінуємо різні хобі в одному реченні, щоб показати контраст. Ви можете сказати: **«Я люблю читати, але найбільше обожнюю малювати»** (I love to read, but most of all I adore drawing). Або інший приклад: «Мені подобається спорт, але я обожнюю ходити в гори».
+When we talk about our interests, we often want to emphasize what we love doing the most. You already know the simple phrase **мені подобається** (I like). To express a stronger preference, use **мені найбільше подобається** (I like most) or the expressive verb **обожнювати** (to adore). These phrases help you rank your favorite pastimes and show true enthusiasm.
 
-А як українці проводять свій вільний час? Звичайно, ми любимо ходити в кіно, театри та займатися спортом. Але відпочинок на природі має особливе місце в нашій культурі. Nature holds a very special place in Ukrainian leisure activities. Дуже популярно їздити в **Карпати** (the Carpathians). Там люди гуляють у лісі, дихають свіжим повітрям і просто відпочивають. Exploring ancient castles in Western Ukraine is another favorite weekend trip for many families. Там можна побачити багато цікавої історії. Також українці мають традиційні сезонні хобі. Восени багато людей їдуть у ліс **збирати гриби** (to hunt mushrooms). Це заняття часто називають тихим полюванням. А влітку дуже популярно **збирати ягоди** (to pick berries). Ці традиції допомагають забути про стрес і швидкий міський шум. Якщо ви скажете українцям: «Я обожнюю збирати гриби», ви одразу знайдете нових друзів!
+Let's look at how people combine different activities in conversation. They might talk about a new **хобі** (hobby) they just discovered, or a favorite **спорт** (sport) they do regularly. Combining different verbs makes your speech sound much more natural and fluent.
 
-Наш вільний час показує, які ми насправді люди. Our leisure time often defines our personality and helps us connect with others. Тепер ви знаєте достатньо слів, щоб цікаво розповісти про себе. You have the vocabulary and grammar tools to describe your unique lifestyle to new Ukrainian friends. Не забувайте активно використовувати чотири головні дієслова з цього уроку. Ви можете **«займатися»** (to engage in) спортом, танцями або йогою. Ви можете сильно **«захоплюватися»** (to be passionate about) музикою чи фотографією. Ви можете **«грати в»** (to play) теніс або **«грати на»** (to play an instrument) гітарі. І, звичайно, ви можете **«ходити в»** (to go to) кіно, музей або на стадіон. Практикуйте ці конструкції, комбінуйте їх і розповідайте про свої хобі впевнено. Розкажіть світу, чим ви захоплюєтеся!
+Кожна людина має своє улюблене хобі. Мені подобається спорт і **плавання** (swimming), але найбільше я обожнюю малювати. Мій брат **захоплюється** (to be passionate about) історією, тому він часто ходить на **виставку** (exhibition). У свій вільний час я зазвичай читаю або граю на гітарі. Моя подруга слухає музику, але найбільше їй подобається танцювати.
+
+> *Every person has their favorite hobby. I like sport and swimming, but most of all I adore drawing. My brother is passionate about history, so he often goes to an exhibition. In my free time, I usually read or play the guitar. My friend listens to music, but most of all she likes to dance.*
+
+Leisure time in Ukraine often involves spending time outdoors, especially during the warmer months. Our **вільний** (free) time is precious, and traditional outdoor activities blend beautifully with modern urban pastimes. For many people, whether it is listening to **музика** (music) in a local park or exploring nature trails, getting outside is the perfect way to relax.
+
+Українці дуже люблять активне **дозвілля** (leisure, free time) на природі. Влітку та восени багато людей їздять у Карпати. Там можна гуляти в горах, збирати гриби та збирати ягоди. Це популярна **розвага** (entertainment) для всієї родини. Також ми любимо відвідувати старовинні замки на заході України або просто відпочивати біля річки.
+
+> *Ukrainians really love active leisure in nature. In summer and autumn, many people go to the Carpathians. There you can walk in the mountains, pick mushrooms, and pick berries. This is a popular entertainment for the whole family. Also, we love visiting ancient castles in the west of Ukraine or simply resting near a river.*
+
+:::tip
+**Did you know?**
+Foraging for wild mushrooms (**збирати гриби**) and berries (**збирати ягоди**) is a deeply rooted cultural tradition in Ukraine. It is considered a relaxing weekend activity that connects people with nature.
+:::
+
+How we spend our time says a lot about our personality and values. Now that you know the core verbs for hobbies, you are ready to share your own unique story. You can use verbs like **займатися** (to engage in, to do) to describe your daily activities and find common ground with new friends. Asking about someone's interests is the best icebreaker.
+
+Коли ви зустрічаєте нових друзів в Україні, розкажіть їм про свої інтереси. Розкажіть про свої улюблені заняття. Поясніть, чим ви найбільше захоплюєтеся. Також скажіть, куди ви любите ходити. Це найкращий спосіб знайти спільні теми.
+
+> *When you meet new friends in Ukraine, tell them about your interests. Tell them about your favorite activities. Explain what you are most passionate about. Also, say where you like to go. This is the best way to find common topics.*
+
+<!-- INJECT_ACTIVITY: group-sort, leisure categories -->

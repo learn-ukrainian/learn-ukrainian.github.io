@@ -1,22 +1,22 @@
-# Section-by-Section Generation — Section 3/5
+# Section-by-Section Generation — Section 3/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 4: Яка вона людина? Описуємо людей навколо нас (A2, A2.1 [Foundation and Aspect Introduction])
-**Section to write:** Люди навколо нас: родичі, друзі, знайомі (People Around Us) (~600 words total)
+**Section to write:** Люди навколо нас: родичі, друзі, знайомі (~600 words total)
 **Word target for this section:** 600 words (aim for 660 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Люди навколо нас: родичі, друзі, знайомі (People Around Us) (~600 words total)
-- P1 (~120 words): [Relationship vocabulary: friends and acquaintances. Distinction between "друг/подруга" (close friend), "товариш" (comrade/buddy), and "знайомий/знайома" (acquaintance). Phrases like "ми дружимо давно" (we've been friends for a long time).]
-- P2 (~120 words): [Neighbors and community. The word "сусід/сусідка" (neighbor). Describing life in a building or street: "Мій сусід живе поруч" (My neighbor lives nearby). Focus on the social role of neighbors in Ukraine.]
-- P3 (~120 words): [Family relations recap with A2 focus: родич (relative), двоюрідний брат (cousin), дядько (uncle), тітка (aunt). Using adjectives from previous sections to describe family members.]
-- P4 (~120 words): [Verbs of interaction and social attitude: довіряти (to trust), поважати (to respect), допомагати (to help). Previewing the Dative case for objects: "Вона мені довіряє" (She trusts me), "Він нам завжди допомагає" (He always helps us).]
-- <!-- INJECT_ACTIVITY: fill-in-adjective-agreement --> [fill-in, Complete sentences describing people with the correct adjective form (gender agreement), 8 items]
-- <!-- INJECT_ACTIVITY: group-sort-traits --> [group-sort, Sort personality adjectives into positive traits and challenging traits, 8 items]
+## Люди навколо нас: родичі, друзі, знайомі (~600 words total)
+- P1 (~90 words): Introduction to relationship vocabulary (стосунки). Frame the section around the different circles of people in our lives (Люди навколо нас).
+- P2 (~110 words): Family and relatives (родичі). Review and expand vocabulary: мати/батько, брат/сестра, дідусь/бабуся, дядько/тітка. Provide context sentences: "Це мій дядько, він дуже веселий."
+- P3 (~110 words): Friends and acquaintances (друзі та знайомі). Explain the nuanced differences між друг/подруга (close friend), товариш (mate/friend), and знайомий (acquaintance). Give examples: "Ми дружимо вже п'ять років. Вона — моя найкраща подруга."
+- P4 (~100 words): Work and neighborhood connections. Introduce колега and сусід/сусідка. Example sentence: "Він мій сусід — живе поруч, завжди привітний."
+- P5 (~110 words): Actions in relationships. Describe how people act toward each other using basic verbs with pronouns: "Вона мені довіряє" (She trusts me), "Він мене поважає" (He respects me), "Вони нам допомагають" (They help us).
+- P6 (~80 words): Natural conversational flow. Show how to respond to common conversational prompts like "А хто це?" and "Який він / яка вона?". Example flow: "Хто це? Це мій колега. Який він? Він дуже працьовитий."
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-always explains difficult rules several times. My colleague Maksym is a very hardworking guy. He often works in the evening to finish an important project. And my sister is very determined, so she always achieves her goal.* Of course, not all character traits are entirely positive. Sometimes people can be **ледачий** (lazy) and avoid work, or they might be very **серйозний** (serious) and rarely joke. A person who doesn't talk much is **тихий** (quiet). An interesting word in Ukrainian is **впертий** (stubborn). While it can mean that someone refuses to listen to others, it frequently has a positive meaning. :::tip **Did you know?** — In Ukrainian, calling someone **впертий** often means they are principled, stand their ground, and don't give up easily. It is frequently used as a compliment for someone who fights for what is right. ::: Мій молодший син іноді буває ледачий, коли треба прибирати кімнату. Але в школі він дуже впертий і завжди робить домашнє завдання ідеально. Мій дідусь — тихий і серйозний чоловік, але він має золоте серце. > *My younger son is sometimes lazy when he needs to clean his room. But at school, he is very stubborn and always does his homework perfectly. My grandfather is a quiet and serious man, but he has a heart of gold.* When we talk about someone's character, we often describe their actions. We judge what kind of person someone is based on what they do. To describe habitual behavior or permanent character traits, we use imperfective verbs. For example, if someone is kind, we say «він завжди допомагає» (he always helps). However, if we want to give a specific example or proof of their character from a past event, we use perfective verbs. We say «вчора він мені допоміг» (yesterday he helped me). Мій друг Андрій — дуже чуйна людина. Він завжди допомагає своїм друзям, коли у них є проблеми. Наприклад, минулого тижня він допоміг мені відремонтувати машину. Оксана дуже відповідальна, вона завжди купує квитки заздалегідь. Учора вона купила нам квитки на поїзд. > *My friend Andriy is a very responsive person. He always helps his friends when they have problems. For example, last week he helped me repair my car. Oksana is very responsible, she always buys tickets in advance. Yesterday she bought us train tickets.* Let's look at how people discuss character and personality in a workplace setting. Imagine it is someone's first day at a new office. > — **Новий працівник:** Розкажи мені трохи про нашу команду. Яка наша керівниця? *(Tell me a little about our team. What is our manager like?)* > — **Досвідчений колега:** Вона дуже відповідальна і справедлива, але іноді буває дуже серйозна. *(She is very responsible and fair, but sometimes she is very serious.)* > — **Новий працівник:** А інші колеги? *(And the other colleagues?)* > — **Досвідчений колега:** Усі дуже привітні, особливо Максим. Він завжди підказує новим працівникам. *(Everyone is very friendly, especially Maksym. He always gives tips to new employees.)* <!-- INJECT_ACTIVITY: match-character-traits --> <!-- INJECT_ACTIVITY: quiz-character-choice -->
+pleasant to talk. Our manager is strict, but patient and persistent.* Of course, not everyone is always cheerful and easygoing. Sometimes we need to describe more complex or challenging traits. A person might simply be **сумний** (sad) today, or they might be naturally **серйозний** (serious) and **тихий** (quiet) in group settings. Sometimes people do not want to work at all, so we call them **ледачий** (lazy). You might also meet someone who refuses to change their mind, whom we call **впертий** (stubborn). :::tip **Did you know?** The word **впертий** (stubborn) is not always a negative trait in Ukrainian culture. While it can mean that someone refuses to listen to reason, it often means that a person is persistent, principled, and determined to achieve their goals despite obstacles. It can be a strong compliment! ::: <!-- INJECT_ACTIVITY: group-sort-traits --> <!-- INJECT_ACTIVITY: match-up-definitions --> How do we know what kind of character a person has? We usually look at their daily actions and how they treat others over time, like how a **сусід** (neighbor) acts in your building. In Ukrainian, we often prove a character trait by describing what a person regularly does. Because these are habitual, repeated actions, we must use verbs in the imperfective aspect. The word «завжди» (always) or the phrase «кожного дня» (every day) is a great hint that we need an imperfective verb to show a permanent personality trait. Мій сусід дуже привітний, тому що він завжди приємно спілкується з усіма. Мій друг щирий, бо він завжди говорить правду і ніколи не бреше. Наша колега Оксана надзвичайно чуйна — вона завжди підказує і допомагає новим працівникам у нашому офісі. > *My neighbor is very friendly because he always communicates pleasantly with everyone. My friend is sincere because he always tells the truth and never lies. Our colleague Oksana is extremely caring — she always suggests and helps new employees in our office.* While the imperfective aspect shows a habitual trait, we use the perfective aspect to describe a specific, one-time action that serves as a single proof of a person's character. The perfective aspect focuses on the completed result. If a colleague is generally helpful, they «завжди допомагають» (always help — imperfective). But if they helped you complete a specific, difficult project yesterday, you use the perfective aspect to highlight that completed action. Вона справді хороша людина, бо вона допомогла мені вчора з важким завданням. Мій друг дуже розумний і надійний — він підказав мені правильне рішення, коли я мав проблему. > *She is a truly good person because she helped me yesterday with a difficult task. My friend is very smart and reliable — he suggested the right solution to me when I had a problem.* :::info **Grammar box** Compare the two aspects when describing people: **Імперфектив (Imperfective):** Вона завжди підказує. *(She always helps/suggests — a habitual trait that makes her a helpful person).* **Перфектив (Perfective):** Вона підказала мені вчора. *(She helped/suggested yesterday — a one-time action showing her good character).* ::: <!-- INJECT_ACTIVITY: quiz-aspect-choice -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -644,6 +644,31 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] людина (person, human being)
+- [ ] стосунок (relationship)
+- [ ] характер (character, personality)
+- [ ] зовнішність (appearance)
+- [ ] привітний (friendly, welcoming)
+- [ ] щирий (sincere, genuine)
+- [ ] працьовитий (hardworking)
+- [ ] терплячий (patient)
+- [ ] сусід (neighbor)
+- [ ] описувати (to describe)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Люди навколо нас: родичі, друзі, знайомі (~600 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

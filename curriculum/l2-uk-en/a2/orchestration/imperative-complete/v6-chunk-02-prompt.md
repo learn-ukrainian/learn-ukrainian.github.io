@@ -1,37 +1,29 @@
-# Section-by-Section Generation — Section 2/6
+# Section-by-Section Generation — Section 2/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 44: Хай він прочитає! (A2, A2.6 [Aspect, Tenses, and Motion])
-**Section to write:** Хай і нехай: Наказ для третіх осіб (~550 words)
-**Word target for this section:** 550 words (aim for 605 to account for undershoot)
+**Section to write:** Читаймо! Ходімо! Перша особа множини (1st Person Plural Imperatives) (~500 words)
+**Word target for this section:** 500 words (aim for 550 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Хай і нехай: Наказ для третіх осіб (~550 words)
-- P1 (~100 words): [Introduction to the 3rd person imperative. Explain that while we speak directly to "you" (ти/ви), sometimes we want to express a command or wish for "him", "her", or "them". Contrast direct commands (Скажи йому!) with indirect ones using particles (Хай він скаже!).]
-- P2 (~120 words): [Formation rules: хай/нехай + 3rd person present (imperfective) or future (perfective). Explain the stylistic difference: "хай" is common and conversational, "нехай" is more formal/literary. Examples: хай читає (let him read), нехай знає (let her know), хай прийдуть (let them come).]
-- P3 (~120 words): [Functions of the 3rd person imperative: Permission (Хай іде, я не проти), Indirect commands (Нехай вони зачекають у коридорі), and Wishes/Toasts (Хай щастить! Нехай здійсняться мрії!). Explain that the verb remains in its standard 3rd person form.]
-- P4 (~100 words): [Plural subjects and agreement. Explain that the verb must match the subject in number. Examples: Хай діти (pl) граються (pl), нехай батьки (pl) відпочинуть (pl). Contrast with singular: Хай дитина (sg) грається (sg).]
-- P5 (~110 words): [The nuance of "хай" with the future tense. Explain that "хай" + perfective future implies a specific completed result in the future. Example: Хай він напише (pf. fut) цей лист сьогодні (Let him finish/write this letter today) vs. Хай він пише (impf. pres) кожен день (Let him write every day).]
-- <!-- INJECT_ACTIVITY: fill-in-3rd-person-imperative --> [fill-in, focus: Form the correct 3rd person imperative using хай/нехай from infinitives like працювати, прийти, зателефонувати, 8 items]
+## Читаймо! Ходімо! Перша особа множини (1st Person Plural Imperatives) (~500 words)
+- P1 (~125 words): Introduce the 1st person plural imperative, the Ukrainian equivalent of "Let's...". Explain the formation rule: take the 2nd person singular imperative base and add the suffix `-мо`. Provide clear, straightforward transformations: читай → читаймо (let's read), ходи → ходімо (let's go).
+- P2 (~125 words): Explain the formation for verbs whose imperative base ends in a consonant, noting that `-і-` or `-ь-` appears before the suffix. Demonstrate with transformations: зроби → зробімо (let's do it), поїдь → поїдьмо (let's go by vehicle).
+- P3 (~150 words): Address the alternative "давайте" construction. Explain that `давайте читати` or `давайте поїдемо` is understood and often sounds softer or more suggestive. However, strictly warn against the common Russian calque `Давай(те) + 1st person plural verb`. Explicitly show that `Давайте поговоримо` is incorrect (❌), and `Поговорімо` is the correct, elegant Ukrainian form (✅).
+- P4 (~100 words): Provide a practical list of highly common everyday `-мо` forms used in daily life: Ходімо! (Let's go!), Починаймо! (Let's start!), Зробімо це! (Let's do it!), Поговорімо (Let's talk). Briefly touch upon the aspect nuance: Ходімо (perfective nuance, one trip) vs. Читаймо (imperfective, habitual).
+- <!-- INJECT_ACTIVITY: fill-in-imperatives-3rd-1st-plural --> [fill-in, Form the correct imperative — 3rd person with хай/нехай or 1st plural with -мо — from given infinitives, 8 items]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
 
 <previous_context>
-## Вступ: На кухні з шеф-кухарем (~120 words)
+[...previous sections truncated...]
 
-> — **Шеф-кухар:** Усім добрий вечір! *(Good evening everyone!)* Сьогодні ми готуємо смачний український борщ. *(Today we are cooking delicious Ukrainian borscht.)* Друзі, **почнімо** *(let's start)*! Оксано, **наріжте** *(cut)* цибулю.
-> — **Оксана:** Добре, шефе. Я вже ріжу. *(Okay, chef. I am already cutting.)*
-> — **Шеф-кухар:** Чудово. Тепер чекаємо на бульйон. *(Great. Now we wait for the broth.)* **Хай** *(let)* вода закипить швидше. А ви, Максиме, робіть засмажку. *(And you, Maksym, make the sauté.)*
-> — **Максим:** Я додав томатну пасту. Що далі? *(I added tomato paste. What next?)*
-> — **Шеф-кухар:** **Нехай** *(let)* соус настоїться десять хвилин. Це дуже важливо для гарного смаку. *(This is very important for good taste.)* Потім ми все змішаємо. *(Then we will mix everything.)* **Помішаймо** *(let's stir)* разом! Оксано, **будь уважною** *(be attentive)*, ніж дуже гострий.
-> — **Оксана:** Дякую, я обережна. *(Thank you, I am careful.)*
-> — **Шеф-кухар:** Усі молодці! *(Everyone is doing great!)* **Хай** наш борщ буде найсмачнішим! *(May our borscht be the most delicious!)*
-
+example, you can say about a friend: "Let him read." Or you can say about a colleague: "Let her read the whole document."* You might wonder about the stylistic difference between these two particles. The word **нехай** is slightly more formal and often appears in literature, official speeches, the news, or poetry. It carries a slightly elevated tone. The shorter word **хай** is commonly used in everyday speech, casual conversations, and text messages. Despite this stylistic difference, they are completely interchangeable in meaning. You can use whichever you prefer without changing the fundamental message of your sentence. Обидва варіанти абсолютно правильні в українській мові. Ти можеш сказати «Хай іде!» або «Нехай іде!». Значення завжди буде однакове. Українці дуже часто використовують коротку форму в щоденному побуті, бо це швидше. :::info **Grammar box** There is no special synthetic verb ending for the third-person imperative in Ukrainian. The verb always agrees with the subject in person and number, exactly as it does in standard present or future tense sentences. ::: There are three primary situations where this construction truly shines. First, it is used for indirect commands. If you want someone else to perform an action, you tell a third party to make it happen. For instance, if you are waiting for a phone call, "Нехай вони подзвонять" means "Have them call." Second, these particles are used to grant permission. When you want to allow an action to take place or show that you do not object, you simply use the particle with the verb. "Хай іде, я не проти" translates perfectly to "Let him go, I don't mind." Third, they are essential for expressing a general **побажання** (wish, blessing). This is deeply rooted in Ukrainian culture. You will often hear phrases like "Хай щастить!" which means "Good luck!" or "May luck be with you." Дієслово завжди узгоджується з підметом в особі та числі. Якщо підмет стоїть у множині, дієслово теж має бути у множині. Хай вони прийдуть завтра вранці. Нехай діти вільно граються в парку. > *The verb always agrees with the subject in person and number. If the subject stands in the plural, the verb must also be in the plural. Let them come tomorrow morning. Let the children play freely in the park.* Finally, you must choose the correct verb aspect for your third-person commands. Just like direct commands to a second person, the aspect changes the focus of the action. Using an imperfective verb focuses on an ongoing process, a general action, or a repeated habit. "Хай пише" means "let him write" or "let him be writing." This is useful for activities that take time. Доконаний вид показує результат або повністю завершену дію. Якщо ти хочеш побачити готовий результат, використовуй цей вид. Хай він напише цей лист сьогодні. Нехай вона прочитає цю книгу. > *The perfective aspect shows a result or a completely finished action. If you want to see a finished result, use this aspect. Let him finish writing this letter today. Let her finish reading this book.*
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -485,7 +477,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -504,18 +563,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] хай (let — particle for 3rd person imperative)
+- [ ] нехай (let — formal variant)
+- [ ] наказовий спосіб (imperative mood)
+- [ ] побажання (wish, blessing)
+- [ ] кличний відмінок (Vocative case)
+- [ ] будь / будьте (be — imperative of бути)
+- [ ] щасливий / щасливою (happy / happy — Instr.f.)
+- [ ] здоровий / здоровими (healthy / healthy — Instr.pl.)
+- [ ] ходімо (let's go)
+- [ ] давайте (let's — suggestion particle)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Читаймо! Ходімо! Перша особа множини (1st Person Plural Imperatives) (~500 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

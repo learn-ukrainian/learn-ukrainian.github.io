@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-надійно: якщо слово чоловічого роду в називному відмінку закінчується на задньоязиковий приголосний, сміливо чекайте на зміну під час прямого звертання. Але як щодо місцевого відмінка другої відміни? Тут українська мова пропонує нам надзвичайно цікавий і гнучкий граматичний вибір. Іменники чоловічого роду з основою на [г], [к], [х] можуть мати два різні закінчення у місцевому відмінку: «-і» або «-у». Якщо ми обираємо закінчення «-і», то давні історичні правила вимагають обов'язкового чергування приголосних перед цим голосним. Наприклад, від базового слова **«поріг»** *(threshold)* ми утворюємо красиву форму **«на порозі»** *(on the threshold)*. Цей класичний варіант вважається більш традиційним та літературним. Проте сучасна розмовна мова часто прагне до спрощення та уникнення складних звукових змін. Тому паралельно існує інший, більш прямий варіант: ми можемо просто додати закінчення «-у» до оригінальної основи. У цьому випадку жодного чергування не відбувається взагалі, і ми кажемо **«на порогу»** *(on the threshold)*. Обидві форми є абсолютно правильними в сучасній мові, але авторитетні літературні джерела та шкільні підручники зазвичай надають перевагу формам із закінченням «-і» та чергуванням. Ваш вибір залежить від стилю мовлення, але важливо легко впізнавати обидва варіанти під час читання українських текстів. Щоб безпомилково утворювати форми кличного відмінка, нам потрібно згадати про класичний поділ іменників на спеціальні групи: тверду, м'яку та мішану. Давайте подивимося, як закінчення безпосередньо залежать від фінального приголосного основи слова. Іменники **твердої групи** *(hard group)*, які природно закінчуються на [г], [к], [х], завжди отримують закінчення «-е» у кличному відмінку та обов'язково змінюють свій фінальний приголосний. * **«козак»** *(cossack)* — це типова тверда група, тому приголосний [к] змінюється на шиплячий [ч]: «козаче». * **«пастух»** *(shepherd)* — це також тверда група, і звук [х] логічно змінюється на [ш]: «пастуше». Але граматична ситуація кардинально змінюється, коли ми беремо іменники **мішаної групи** *(mixed group)*. Ці слова вже спочатку закінчуються на шиплячі звуки [ж], [ч], [ш]. Чудовим та дуже поширеним прикладом є слово **«товариш»** *(comrade, mate)*. Оскільки фінальний звук [ш] вже є шиплячим, йому просто нікуди більше чергуватися! Природа цього звука вже ідеально підходить для створення форми звертання. Тому такі іменники також отримують закінчення «-е», але жодних додаткових фонетичних змін у корені чи основі не відбувається. Ми просто кажемо: «Мій вірний товарише!» Це робить слова мішаної групи дуже передбачуваною та легкою категорією для вивчення. Наостанок, давайте чітко підсумуємо ще один критично важливий аспект, який іноді плутає іноземних студентів. Усі ці складні правила фонетичних чергувань — переходи на [з', ц', с'] або на [ж, ч, ш] — є переважно феноменом **однини** *(singular number)*. Коли ми логічно переходимо до утворення **множини** *(plural number)*, українська мова ніби "відпочиває" від цих постійних звукових трансформацій. Якщо ми говоримо про дві або більше кінцівок, ми використовуємо слова **«ноги»** *(legs)* або **«руки»** *(hands/arms)*. У цих базових формах називного та родового відмінків множини приголосні [г] та [к] залишаються абсолютно твердими і ніколи не змінюються на шиплячі чи свистячі звуки. Навіть у місцевому відмінку множини ми скажемо «на ногах» або «на руках» без жодного чергування. Завжди пам'ятайте це просте правило: ми активно шукаємо чергування у місцевому, давальному або кличному відмінках однини. Множина зазвичай надійно зберігає оригінальну твердість базового лексичного кореня.
+правильними. Проте відомий мовознавець Олександр Авраменко зазначає, що закінчення «-і» є більш традиційним і літературним. Закінчення «-у» частіше звучить у розмовній мові або коли ми хочемо уникнути збігу багатьох приголосних. > *You can say "on the threshold" or "on the threshold", "in motion" or "in motion". Both variants are correct. However, the famous linguist Oleksandr Avramenko notes that the "-i" ending is more traditional and literary. The "-u" ending sounds more often in spoken language or when we want to avoid a cluster of many consonants.* :::info **Grammar box** — The choice between "-і" and "-у" for the masculine locative often comes down to rhythm. If the noun has a complex cluster of consonants before the ending, speakers naturally prefer "-у" to avoid creating a difficult sound combination, saying "у мозку" (in the brain) rather than "у мозці". ::: The exact form a masculine noun takes when you call out to someone depends on its consonant group. Nouns that end in a hard consonant belong to the **тверда група** (hard group — nouns with hard stem-final consonant). When we form a **звертання** (form of address — using кличний відмінок) from these words, we add the **закінчення** (ending — inflectional morpheme) "-е". This front vowel forces the **задньоязиковий** (velar — consonant formed at the back of the mouth) sounds [г/к/х] to alternate into the hushing sounds [ж/ч/ш]. Thus, the **чергування** (alternation — systematic sound change between forms) happens naturally: "козак" becomes "козаче", "юнак" becomes "юначе", and "пастух" becomes "пастуше". However, if a noun belongs to the **мішана група** (mixed group — nouns with шиплячий stem-final), its stem already ends in a hushing consonant like [ж], [ч], or [ш]. Because the final consonant is already palatalized, the word simply takes the ending "-у". For example, "товариш" (comrade) becomes "товаришу". Similarly, a word from the **м'яка група** (soft group — nouns with soft stem-final consonant) takes the soft ending "-ю", as in "Юрію". Finally, it is crucial to remember that these consonant changes are primarily a phenomenon of the singular number. When we decline nouns in the plural, the **корінь** (root — core morpheme of a word) of the noun usually remains hard and stable across all cases. This consistency makes the plural forms much easier to predict and produce. Якщо у вас болить одна нога, ви кажете, що біль виник «у нозі», використовуючи місцевий відмінок із чергуванням. Але якщо ви говорите про обидві ноги, ви скажете «на моїх ногах». Так само ми говоримо «у моїх руках» або «на високих порогах», зберігаючи тверді приголосні без жодних змін. > *If one of your legs hurts, you say that the pain appeared "in the leg", using the locative case with alternation. But if you talk about both legs, you will say "on my legs". In the same way, we say "in my hands" or "on the high rapids", keeping the hard consonants without any changes.* <!-- INJECT_ACTIVITY: fill-in, Write the correct кличний відмінок form of masculine nouns (e.g., козак -> козач___, друг -> друж___) -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -634,7 +634,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -647,18 +714,67 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] чергування (alternation — systematic sound change between forms)
+- [ ] приголосний (consonant — sound made with obstruction)
+- [ ] палаталізація (palatalization — softening of a consonant)
+- [ ] кличний відмінок (vocative case — used for direct address)
+- [ ] давальний відмінок (dative case)
+- [ ] місцевий відмінок (locative case)
+- [ ] задньоязиковий (velar — consonant formed at the back of the mouth)
+- [ ] відміна (declension class — noun classification by ending pattern)
+- [ ] тверда група (hard group — nouns with hard stem-final consonant)
+- [ ] м'яка група (soft group — nouns with soft stem-final consonant)
+- [ ] мішана група (mixed group — nouns with шиплячий stem-final)
+- [ ] закінчення (ending — inflectional morpheme)
+- [ ] звертання (form of address — using кличний відмінок)
+- [ ] корінь (root — core morpheme of a word)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Чергування у власних назвах і географічних іменах (~500 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

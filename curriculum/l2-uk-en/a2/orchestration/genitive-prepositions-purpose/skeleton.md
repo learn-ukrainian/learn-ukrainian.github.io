@@ -1,34 +1,27 @@
-## Для кого це? Для + родовий (Who Is It For? Для + Genitive) (~650 words total)
-- P1 (~120 words): [Introduce the preposition 'для' as the primary way to express purpose or the intended recipient of an object or action. Contrast 'для' with the English 'for' and emphasize that it ALWAYS triggers the Genitive case. Examples: подарунок для мами (gift for mom), час для відпочинку (time for rest).]
-- P2 (~100 words): [Focus on the 'purpose' aspect of 'для'. Explain how it attaches to abstract nouns to show what something is intended for. Examples: фрукти для здоров'я (fruit for health), одяг для роботи (clothes for work), книги для навчання (books for studying).]
-- P3 (~100 words): [Focus on recipients with hard-stem nouns (masculine and feminine). Review the Genitive endings -а and -и. Examples: квиток для брата (ticket for brother), сюрприз для сестри (surprise for sister), вечеря для тата (dinner for dad).]
-- P4 (~100 words): [Address soft-stem and -ія nouns as recipients, highlighting the -я and -ії endings. Provide clear contrasts to avoid confusion. Examples: стілець для вчителя (chair for the teacher), квіти для Марії (flowers for Maria), іграшка для Софії (toy for Sophia).]
-- P5 (~100 words): [Cover neuter nouns and plural recipients after 'для'. Explain the -я ending for neuter nouns like 'щастя' and the -ів ending for masculine plurals. Examples: все для щастя (everything for happiness), кімната для дітей (room for children), новини для друзів (news for friends).]
-- P6 (~130 words): [Dialogue (Part 1): Igor and Marta start packing for their camping trip. Igor holds up a blanket and asks who it's for. Marta explains it's for Olena. They discuss needing items 'для комфорту' (for comfort). Includes examples: для Олени, для комфорту, для походу.]
-- <!-- INJECT_ACTIVITY: match-up-purpose --> [Match-up, focus on matching Ukrainian 'для' phrases to their English equivalents, 8 items]
+## Для кого це? Для + родовий (Who Is It For? Для + Genitive) (~700 words)
+- P1 (~120 words): [Dialogue] Ігор and Марта packing for a camping trip. Introduce the target prepositions naturally in context: "Для кого ця ковдра? Для Олени. Без ліхтарика — ніяк! Біля річки поставимо намет."
+- P2 (~100 words): [Concept Introduction] Analyze the dialogue. Highlight that *для*, *без*, and *біля* all share a core grammatical rule: they demand the Genitive case (родовий відмінок). State that this section focuses on *для* (for).
+- P3 (~120 words): [Purpose] Explain *для* for expressing Purpose. It answers "Для чого?" (For what purpose?). Provide examples: *для здоров'я* (for health), *для роботи* (for work), *для навчання* (for studying). 
+- P4 (~130 words): [Recipient] Explain *для* for expressing the Intended Recipient. It answers "Для кого?" (For whom?). Provide examples: *для мами* (for mom), *для друга* (for a friend), *для дітей* (for children).
+- P5 (~130 words): [Paradigm Practice] Detail the Genitive case endings across genders and stem types after *для*. Show hard masculine (*для брата*), soft masculine (*для вчителя*), hard feminine (*для сестри*), soft feminine (*для Марії*), and neuter (*для щастя*).
+- P6 (~100 words): [Common Phrases] Showcase high-frequency everyday phrases using *для*. Examples: *подарунок для тебе*, *час для відпочинку*, *це важливо для мене*. Note that personal pronouns also take the Genitive form (*тебе*, *мене*).
 
-## Без чого? Без + родовий (Without What? Без + Genitive) (~650 words total)
-- P1 (~120 words): [Introduce 'без' as the marker of absence or lack. Start with the most practical everyday examples: coffee and tea. Examples: кава без цукру (coffee without sugar), чай без молока (tea without milk), вода без газу (still water / water without gas).]
-- P2 (~100 words): [Explain the use of 'без' with abstract nouns to form common idioms and modifiers. Examples: без сумніву (without doubt), без проблем (without problems / no problem), без допомоги (without help), без успіху (without success).]
-- P3 (~100 words): [Detailed check on masculine nouns after 'без', focusing on the choice between -а and -у endings. Note that concrete objects usually take -а, while substances or abstract concepts often take -у. Examples: без хліба (without bread), без ножа (without a knife), без цукру (substance, -у), без шуму (abstract, -у).]
-- P4 (~100 words): [Focus on feminine and neuter nouns after 'без'. Highlight the -и/-і endings for feminine and -а/-я for neuter. Examples: без води (without water), без солі (soft stem, -і), без вікна (without a window), без моря (without the sea).]
-- P5 (~100 words): [Showcase 'без' in complete sentences to demonstrate natural syntax. Explain how 'без' often pairs with 'не можу' (I cannot). Examples: Я не можу без кави. Вона прийшла без парасольки. Ми поїхали без нього (using the pronoun form).]
-- P6 (~130 words): [Dialogue (Part 2): Igor realizes they forgot the flashlight. He stresses that without it, they can't do anything at night. Marta mentions they also shouldn't go without water. Includes examples: без ліхтарика, без води, без плану.]
-- <!-- INJECT_ACTIVITY: quiz-prep-choice --> [Quiz, focus on choosing between 'для' and 'без' to complete everyday sentences, 8 items]
+## Без чого? Без + родовий (Without What? Без + Genitive) (~650 words)
+- P1 (~120 words): [Core Meaning] Introduce *без* (without) to express absence, lack, or omission. Provide tangible, everyday examples: *кава без цукру* (coffee without sugar), *чай без молока* (tea without milk), *день без дощу* (a day without rain).
+- P2 (~130 words): [Abstract Uses] Expand to abstract and conceptual uses of *без*. Examples: *без сумніву* (without doubt), *без проблем* (no problem), *без допомоги* (without help). Explain that these are highly common conversational fillers and fixed expressions.
+- P3 (~150 words): [Hard vs. Soft Stems] Deep dive into formatting nouns after *без*, contrasting hard and soft stems. Give clear pairs. Masculine: *без хліба* (hard), *без олівця* (soft). Feminine: *без води* (hard), *без солі* (soft). Neuter: *без вікна* (hard), *без моря* (soft).
+- P4 (~130 words): [Everyday Phrases] Present common sentence structures and verbs frequently paired with *без*. Examples: *я не можу без кави* (I can't live without coffee), *вона прийшла без парасольки* (she came without an umbrella), *ми поїхали без нього* (we left without him).
+- P5 (~120 words): [Nuances of Masculine Endings] Briefly address the nuance of masculine Genitive endings (-а/-я vs. -у/-ю) after *без*. For concrete objects use -а/-я (*без комп'ютера*, *без ножа*), and for abstract concepts or substances use -у/-ю (*без шуму*, *без успіху*).
 
-## Де це? Біля, навпроти, коло + родовий (Where Is It? Біля, навпроти, коло + Genitive) (~850 words total)
-- P1 (~120 words): [Introduce 'біля' as the primary preposition for 'near' or 'next to'. Explain its spatial logic—something is close to a reference point. Examples: біля школи (near the school), біля будинку (near the house), біля вікна (by the window).]
-- P2 (~100 words): [Provide gender-specific examples for 'біля' to reinforce Genitive declension. Examples: біля парку (m), біля річки (f), біля моря (n). Mention the frequency of 'біля' in city descriptions.]
-- P3 (~110 words): [Introduce 'навпроти' for 'opposite' or 'across from'. Explain that it describes two objects facing each other, such as buildings on opposite sides of a street. Examples: навпроти банку (opposite the bank), навпроти вокзалу (opposite the train station), навпроти церкви (opposite the church).]
-- P4 (~100 words): [Introduce 'коло' as a synonym for 'біля'. Explain that while it's less common in casual urban speech, it's very frequent in literature, folk songs, and rural contexts. Examples: коло хати (by the house), коло дороги (by the road).]
-- P5 (~100 words): [Special focus on soft-stem feminine nouns (-ія and -а/-я) in the context of location. Use city infrastructure examples. Examples: біля станції (near the station), біля площі (near the square), навпроти лікарні (opposite the hospital).]
-- P6 (~120 words): [Practical orientation: how to describe a neighborhood using these prepositions. Create a mental map for the learner. Examples: Аптека біля ринку. Кафе навпроти бібліотеки. Зупинка біля станції метро.]
-- P7 (~120 words): [Dialogue (Part 3): Igor and Marta arrive at the campsite. They decide where to put the tent. Igor suggests 'біля річки' (near the river). Marta points out a spot 'навпроти дерева' (opposite the tree). Includes examples: біля річки, навпроти дерева, коло вогню.]
-- P8 (~80 words): [Briefly mention that these prepositions are part of a larger system of spatial Genitive prepositions (like 'до', 'з', 'від') which will be expanded later. Focus on the 'static' nature of біля/навпроти compared to 'до' (direction).]
-- <!-- INJECT_ACTIVITY: fill-in-location --> [Fill-in, focus on completing location descriptions with біля/навпроти/коло + correct Genitive form, 8 items]
-- <!-- INJECT_ACTIVITY: true-false-grammar --> [True-false, focus on judging whether preposition + noun combinations (для, без, біля, навпроти, коло) are grammatically correct, 8 items]
-
-## Підсумок — Summary (~150 words)
-- P1 (~150 words): [Recap the three functions covered: purpose/recipient (для), absence (без), and location (біля, навпроти, коло). Remind the learner that all these prepositions require the Genitive case. Provide a final self-check list: 1. Чи пам'ятаєте ви закінчення для ч.р. після 'біля'? 2. Як сказати 'coffee without sugar'? 3. Який прийменник краще для 'opposite'?]
-
-Grand total: ~2300 words
+## Де це? Біля, навпроти, коло + родовий (Where Is It? Біля, навпроти, коло + Genitive) (~850 words)
+- P1 (~130 words): [Location with Біля] Transition from abstract concepts to physical space. Introduce *біля* (near, next to) as the primary preposition for proximity. Examples: *біля школи*, *біля будинку*, *біля річки*. Emphasize that it answers "Де?" but strictly requires the Genitive.
+- P2 (~130 words): [Location with Навпроти] Introduce *навпроти* (opposite, across from). Explain that it describes objects facing one another. Provide examples: *навпроти парку*, *навпроти вокзалу*, *навпроти церкви*.
+- P3 (~120 words): [Location with Коло] Introduce *коло* (near, by). Explain that it is synonymous with *біля* but has a slightly more literary or folksy flavor, often found in poetry, songs, and classic literature (*коло хати*, *коло дороги*).
+- P4 (~150 words): [Practical Descriptions] Provide practical examples of describing city locations and giving directions. Examples: *Аптека біля ринку.* *Кафе навпроти бібліотеки.* *Зупинка біля станції метро.*
+- P5 (~120 words): [Complex Endings] Focus specifically on mixed group and -ія noun endings in a location context, as these are common traps. Examples: *біля станції* (soft fem. -ія), *біля площі* (mixed fem.), *навпроти лікарні* (soft fem. ending in -я).
+- P6 (~100 words): [Usage Note / Decolonization] Explicitly clarify that the preposition *возле* is a Russianism and a common error in Surzhyk. The correct, natural Ukrainian prepositions for proximity are exclusively *біля* and *коло*.
+- P7 (~70 words): [Module Conclusion] Wrap up by uniting *для*, *без*, and *біля/навпроти/коло* as the "Genitive Preposition Toolkit," essential for describing purpose, lack, and location in A2 Ukrainian.
+- <!-- INJECT_ACTIVITY: fill-in-location --> [fill-in, Complete location descriptions with біля/навпроти/коло + correct Genitive form, 8]
+- <!-- INJECT_ACTIVITY: match-up-prepositions --> [match-up, Match Ukrainian prepositional phrases to their English equivalents, 8]
+- <!-- INJECT_ACTIVITY: true-false-forms --> [true-false, Judge whether preposition + noun form combinations are grammatically correct, 8]
+- <!-- INJECT_ACTIVITY: quiz-everyday-sentences --> [quiz, Choose для, без, or біля to complete everyday sentences, 8]

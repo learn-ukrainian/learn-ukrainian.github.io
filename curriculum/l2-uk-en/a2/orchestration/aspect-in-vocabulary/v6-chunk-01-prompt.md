@@ -1,20 +1,20 @@
-# Section-by-Section Generation — Section 1/5
+# Section-by-Section Generation — Section 1/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 3: Дієслова ходять парами (A2, A2.1 [Foundation and Aspect Introduction])
-**Section to write:** Чому дієслова потрібно вчити парами? (~440 words total)
-**Word target for this section:** 440 words (aim for 484 to account for undershoot)
+**Section to write:** Чому дієслова потрібно вчити парами? (Why Verbs Must Be Learned in Pairs) (~450 words)
+**Word target for this section:** 450 words (aim for 495 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Чому дієслова потрібно вчити парами? (~440 words total)
-- P1 (~120 words): Introduction to the concept of "Aspect Pair" (видова пара). Explain that in Ukrainian, learning a verb like *писати* (to write) without its partner *написати* (to finish writing) is like buying only one shoe. Contrast the two questions: "Що ти робив?" (What were you doing? — focus on process) and "Що ти зробив?" (What have you done? — focus on result).
-- P2 (~100 words): Dialogue "Cooking Varenyky." Бабуся gives instructions to Онучка using aspect pairs. Бабуся: "Ліпи (impf) вареники, поки я грію воду." Онучка: "Я вже зліпила (pf) десять!" Бабуся: "Тепер вари (impf) їх п'ять хвилин, поки вони не спливуть. Як звариш (pf) — клич усіх до столу."
-- P3 (~120 words): The "Process vs. Result" logic. Use the example of *прибирати* (to be cleaning) vs *прибрати* (to have cleaned). Explain that the imperfective (*прибирати*) describes the effort, while the perfective (*прибрати*) describes the clean room. Mention that for A2 learners, these should be memorized as a single lexical unit "прибирати / прибрати."
-- P4 (~100 words): Navigating the dictionary. Explain how Ukrainian dictionaries list pairs: usually "недоконаний вид" comes first, followed by the perfective form (e.g., *робити, pf. зробити*). Introduce the abbreviations "нед." and "док." that students will encounter in resources like ULIF or СУМ-11.
+## Чому дієслова потрібно вчити парами? (Why Verbs Must Be Learned in Pairs) (~450 words)
+- P1 (~120 words): Dialogue: Cooking varenyky together. Бабуся instructs Онучка using different aspects: "Ліпи (impf, keep forming) вареники. Зліпи (pf, form one). Вари (impf) 10 хвилин. Звари (pf) до готовності."
+- P2 (~110 words): Analyze the dialogue. Explain that "ліпи" and "вари" focus on the ongoing process of cooking (недоконаний вид - imperfective). "Зліпи" and "звари" focus on the final, achieved result (доконаний вид - perfective).
+- P3 (~110 words): The core concept of aspectual pairs (пара). Unlike English, which uses grammar tenses (was doing vs. have done), Ukrainian uses pairs of verbs to show the difference between process and result. Learning a verb without its partner is like learning only half a word.
+- P4 (~110 words): Dictionary notation (словник). Explain how to find these pairs. Dictionaries typically list them as imperfective / perfective (e.g., робити / зробити). Introduce the term "базовий" (basic) form, which is usually the imperfective.
 
 ---
 ## Full Plan (for reference)
@@ -581,6 +581,29 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] пара (pair)
+- [ ] префікс (prefix)
+- [ ] суфікс (suffix)
+- [ ] корінь (root)
+- [ ] читати / прочитати (to read)
+- [ ] писати / написати (to write)
+- [ ] брати / взяти (to take)
+- [ ] говорити / сказати (to speak / to say)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Чому дієслова потрібно вчити парами? (Why Verbs Must Be Learned in Pairs) (~450 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

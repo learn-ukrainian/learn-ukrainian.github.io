@@ -1,0 +1,68 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T01-13-9e3ed646.json
+phase: write-chunk-03
+prompt_chars: 52389
+response_chars: 8587
+prompt_words: 7347
+response_words: 1336
+sections:
+- name: header
+  start: 0
+  length: 446
+  fraction: 0.0085
+- name: skeleton
+  start: 446
+  length: 2616
+  fraction: 0.0499
+- name: prior_summary
+  start: 3062
+  length: 3834
+  fraction: 0.0732
+- name: plan
+  start: 6896
+  length: 16614
+  fraction: 0.3171
+- name: wiki
+  start: 18648
+  length: 28751
+  fraction: 0.5488
+- name: output_spec
+  start: 52261
+  length: 128
+  fraction: 0.0024
+large_sections:
+- wiki
+directives_total: 13
+directives_covered: 7
+directives_missed:
+- kind: must
+  text: creates strong psychological pressure, as if the interlocutor had a direct
+    obligation to look for your things and now must report on the successful completion
+    of this task.
+  covered: false
+  coverage_note: 6/18 keywords (33%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: skeleton_para
+  text: 'P4 (160w): Pragmatic Contrast: ''Не писав'' vs ''Ще не написав''. Detailed
+    breakdown of a letter scenario. ''Я не писав лист'' (I didn''t sit down to write).
+    ''Я ще не написав лист'' (The draft isn''t finished; the post office is waiting).
+    Explain how ''ще не'' acknowledges the social obligation.'
+  covered: false
+  coverage_note: 8/30 keywords (27%)
+- kind: skeleton_para
+  text: 'P6 (160w): Common pitfalls: Mixing ''ще не'' with the imperfective. Explain
+    why ''*Я ще не читав цю книжку'' sounds awkward to a native speaker (it mixes
+    ''yet'' with ''general fact''). Correcting it to either ''Я не читав'' or ''Я
+    ще не прочитав''.'
+  covered: false
+  coverage_note: 7/23 keywords (30%)
+- kind: inject_activity
+  text: fill-in-factual-denial
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: group-sort-negation-types
+  covered: false
+  coverage_note: marker missing

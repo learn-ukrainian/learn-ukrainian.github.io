@@ -1,46 +1,62 @@
 ## Linguistic Scan
-No linguistic errors found. The grammar forms, prepositions, and noun genitive mappings are perfectly accurate and natural. However, one orthographic update is needed ("проєкт" instead of "проект") based on the 2019 Pravopys.
+- Critical grammar error: `Many events and abstract concepts take the **-у** or **-ю** ending. Hard masculine stems take **-у**, while soft stems take **-ю**.` This is false for `день`: VESUM confirms Genitive `дня`, not `дню`. The module itself immediately gives the correct form `після дня`, so the rule is internally contradictory.
 
 ## Exercise Check
-- `<!-- INJECT_ACTIVITY: quiz-euphony-variants -->`: Present and correctly placed after the euphony rules. Matches plan.
-- `<!-- INJECT_ACTIVITY: fill-in-focus-complete-sentences-with-or-correct-genitive-noun-form -->`: Present and placed perfectly after the `з` vs `від` explanation. Matches plan.
-- `<!-- INJECT_ACTIVITY: match-up-preposition-meanings -->`: Present at the end. Matches plan.
-- `<!-- INJECT_ACTIVITY: group-sort-preposition-usage -->`: Present at the end. Matches plan.
-All 4 placeholders are accounted for and placed logically.
+4 inline markers found:
+- `quiz-euphony-z-iz-zi` after the `з/із/зі` explanation
+- `fill-in-vid-z` after the `від` section
+- `match-up-preposition-phrases` after the `після` section
+- `group-sort-prepositions` after the `після` section
+
+The marker IDs match the 4 plan `activity_hints`, and the activity YAML provides 8 items/pairs for each. Marker placement is pedagogically sensible. No exercise logic errors confirmed.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 10/10 | Every single plan point was meticulously covered. The text successfully integrated all required distinctions (з vs від, до vs після) and seamlessly used the vocabulary hints like "походження", "джерело", and "канікули". |
-| 2. Linguistic accuracy | 9/10 | The module teaches flawless Ukrainian grammar. However, the spelling of "проект" must be updated to "проєкт" according to Pravopys 2019. |
-| 3. Pedagogical quality | 9/10 | The PPP methodology is exceptionally well-executed. The explanation of euphony (`з/із/зі`) is logically laid out. However, the text directly copies an error from the plan's outline: writing "з шовку" when "шовк" starts with a sibilant, directly contradicting the very rule it just taught to learners ("із" is required before sibilants). |
-| 4. Vocabulary coverage | 10/10 | All required (`джерело`, `далеко`, `недалеко`, etc.) and recommended (`дитинство`, `шовк`, etc.) words are integrated perfectly into the natural flow of the prose and examples. |
-| 5. Exercise quality | 10/10 | Markers are placed exactly where the targeted concepts have just been taught. |
-| 6. Engagement & tone | 10/10 | The tone is warm, encouraging, and academically solid. The specific instruction to "Embrace these phonetic variants because they make your speech sound naturally and authentically Ukrainian" is excellent motivation. |
-| 7. Structural integrity | 10/10 | 3773 words of dense, highly useful content. Markdown is pristine, and section headers perfectly match the plan outline. |
-| 8. Cultural accuracy | 10/10 | The callout regarding decolonization ("з України" derived from "в Україні") is highly relevant, culturally respectful, and accurate. |
-| 9. Dialogue & conversation quality | 9/10 | Conversations feel natural and practical ("What is this made of?", "Where are you from?"). However, one dialogue has a translation and logical flow issue where future intent ("Коли ми починаємо...") is answered with a confusing English tense mapping ("We are working since Tuesday"). |
+| 1. Plan adherence | 9/10 | All `content_outline` points are present in order: origin/euphony/material/time in section 1, person/distance/protection in section 2, and `після` plus `до` contrast in section 3. Required/recommended lexis appears in context: `прийменник`, `джерело`, `недалеко`, `з дитинства`, `з шовку`, `парасолька`, `сусіда`. |
+| 2. Linguistic accuracy | 6/10 | The section says `Hard masculine stems take **-у**, while soft stems take **-ю**`, but the same lesson gives `після дня`, and VESUM confirms Genitive `дня`, not `дню`. |
+| 3. Pedagogical quality | 7/10 | The lesson has presentation -> examples -> activity flow, but `Вона терпляче чекає на твій важливий дзвінок з минулого тижня` is an ambiguous model for time-start `з + Genitive`, and the wrong `-ю` rule misteaches case formation. |
+| 4. Vocabulary coverage | 9/10 | Plan vocabulary is well covered in prose rather than dumped in lists: `походження`, `матеріал`, `далеко`, `подарунок`, `сніданок`, `вечеря`, `канікули`; recommended items also appear naturally. |
+| 5. Exercise quality | 9/10 | The 4 planned exercise types are all present, each has 8 items/pairs, and each marker follows the relevant teaching block. |
+| 6. Engagement & tone | 8/10 | The potluck and routine contexts are concrete, but `Після басейну я маю обід з подругою` sounds stiff rather than natural teacherly Ukrainian. |
+| 7. Structural integrity | 10/10 | All planned H2 headings are present and ordered correctly; the pipeline word count is 3221, above target; formatting is clean apart from expected activity markers. |
+| 8. Cultural accuracy | 9/10 | The module explains Ukrainian on its own terms, with no Russian comparison or colonial framing. |
+| 9. Dialogue & conversation quality | 8/10 | Dialogues are named and multi-turn, but `Після басейну я маю обід з подругою` is textbook-robotic rather than natural spoken Ukrainian. |
 
 ## Findings
-[Pedagogical quality] [Critical]
-Location: `— Вона купила сукню з шовку *(from silk)*.`
-Issue: Contradicts its own euphony rule. The module correctly teaches that words starting with a sibilant (`с`, `з`, `ш`, `ж`, `ч`) take the preposition `із`. The text then uses `з` before `шовку`. (Note: The AI faithfully copied this from the plan's outline `сукня з шовку`, but must apply the phonetic rule over the plan's typo).
-Fix: Change `з` to `із`.
+[LINGUISTIC ACCURACY] [SEVERITY: critical]  
+Location: `Many events and abstract concepts take the **-у** or **-ю** ending. Hard masculine stems take **-у**, while soft stems take **-ю**.`  
+Issue: This teaches the wrong Genitive pattern. `день` has Genitive `дня`; `дню` is not Genitive.  
+Fix: Replace the rule with a correct contrast: `після екзамену` but `після дня`.
 
-[Linguistic accuracy] [Major]
-Location: 
-`> — **Максим:** Коли ми починаємо новий проект? *(When do we start the new project?)*`
-`> — **Директор:** Ми працюємо з вівторка. *(We are working since Tuesday.)*`
-`> — **Максим:** Добре, я буду готовий з ранку. *(Good, I will be ready since morning.)*`
-Issue: 1) Pravopys 2019 updated the spelling of "проект" to "проєкт". 2) The English translations "since Tuesday" and "since morning" are ungrammatical in English for future actions, creating confusion about the dialogue's timeline. Since Ukrainian present tense is being used to denote future actions ("we start working from Tuesday"), the translation should reflect "from" or "on". 
-Fix: Update to "проєкт", adjust the verb to "починаємо" to match the question's logic, and fix the English translations to accurately map to the future tense intent.
+[PEDAGOGICAL QUALITY] [SEVERITY: major]  
+Location: `Вона терпляче чекає на твій важливий дзвінок з минулого тижня.`  
+Issue: As written, `з минулого тижня` can attach to `дзвінок` (“the call from last week”), so it does not cleanly model `з + Genitive` as a starting point in time.  
+Fix: Add `ще` so the time phrase clearly modifies the waiting: `...ще з минулого тижня.`
+
+[DIALOGUE & CONVERSATION QUALITY] [SEVERITY: major]  
+Location: `> — **Анна:** Після басейну я маю обід з подругою.`  
+Issue: The line is wooden and reads like an English calque; it weakens the dialogue’s naturalness.  
+Fix: Use a natural Ukrainian verb phrase such as `йду обідати`.
 
 ## Verdict: REVISE
-The module is exceptional in scope, depth, and pedagogical flow (easily a 10/10 module overall). However, it requires two deterministic find/replace fixes to correct a phonetic contradiction and update a Pravopys 2019 spelling rule.
+REVISE. There is one critical grammar error that teaches the wrong Genitive rule, plus two major quality issues in modeling and dialogue. The module also has dimensions below 9, so it does not meet the PASS gate.
 
 <fixes>
-- find: "— Вона купила сукню з шовку *(from silk)*."
-  replace: "— Вона купила сукню із шовку *(from silk)*."
-- find: "> — **Максим:** Коли ми починаємо новий проект? *(When do we start the new project?)*\n> — **Директор:** Ми працюємо з вівторка. *(We are working since Tuesday.)*\n> — **Максим:** Добре, я буду готовий з ранку. *(Good, I will be ready since morning.)*"
-  replace: "> — **Максим:** Коли ми починаємо новий проєкт? *(When do we start the new project?)*\n> — **Директор:** Ми починаємо з вівторка. *(We start on Tuesday.)*\n> — **Максим:** Добре, я буду готовий з ранку. *(Good, I will be ready from the morning.)*"
+- find: |-
+    Many events and abstract concepts take the **-у** or **-ю** ending. Hard masculine stems take **-у**, while soft stems take **-ю**. Some specific time words act as exceptions.
+
+    **після екзамену** — *after the exam*
+
+    **після дня** — *after the day*
+  replace: |-
+    Many events and abstract concepts often take the **-у** ending. Hard masculine nouns like **екзамен** usually take **-у**, while soft masculine nouns like **день** form the Genitive with **-я**.
+
+    **після екзамену** — *after the exam*
+
+    **після дня** — *after the day*
+- find: "Вона терпляче чекає на твій важливий дзвінок з минулого тижня."
+  replace: "Вона терпляче чекає на твій важливий дзвінок ще з минулого тижня."
+- find: "> — **Анна:** Після басейну я маю обід з подругою. *(After the pool I have lunch with a friend.)*"
+  replace: "> — **Анна:** Після басейну я йду обідати з подругою. *(After the pool I am going to have lunch with a friend.)*"
 </fixes>

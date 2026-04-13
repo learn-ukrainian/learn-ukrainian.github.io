@@ -1,0 +1,68 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T19-53-72e438cc.json
+phase: write-chunk-04
+prompt_chars: 48539
+response_chars: 4595
+prompt_words: 6849
+response_words: 771
+sections:
+- name: header
+  start: 0
+  length: 465
+  fraction: 0.0096
+- name: skeleton
+  start: 465
+  length: 1045
+  fraction: 0.0215
+- name: prior_summary
+  start: 1510
+  length: 3295
+  fraction: 0.0679
+- name: plan
+  start: 4805
+  length: 13645
+  fraction: 0.2811
+- name: wiki
+  start: 10782
+  length: 29879
+  fraction: 0.6156
+- name: output_spec
+  start: 48329
+  length: 210
+  fraction: 0.0043
+large_sections:
+- wiki
+directives_total: 18
+directives_covered: 11
+directives_missed:
+- kind: must
+  text: The preposition `на` must be used for musical instruments, followed by the
+    Locative case.
+  covered: false
+  coverage_note: 0/8 keywords (0%)
+- kind: must
+  text: The verbal noun `малювання` (painting/drawing) must be used.
+  covered: false
+  coverage_note: 0/7 keywords (0%)
+- kind: must
+  text: 'The learner must produce a full sentence: `Я граю у футбол`.'
+  covered: false
+  coverage_note: 2/7 keywords (29%)
+- kind: must
+  text: '* **Verb Conjugation (Present Tense):** Learners must be comfortable conjugating
+    regular first and second-conjugation verbs to use `люблю`, `граю`, `ходжу`, `дивлюся`.'
+  covered: false
+  coverage_note: 1/17 keywords (6%)
+- kind: must
+  text: '⚠️ CRITICAL: You MUST write at least 30% Ukrainian text or the module will
+    be REJECTED.'
+  covered: false
+  coverage_note: 3/10 keywords (30%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: EVERY word in the checklist below MUST appear at least once with a bold Ukrainian
+    form and English translation in a natural sentence.
+  covered: false
+  coverage_note: 2/15 keywords (13%)

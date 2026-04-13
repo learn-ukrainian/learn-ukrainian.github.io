@@ -22,7 +22,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-alone. Наприклад, взимку люди часто відпочивають у сучасних **театрах** *(in theaters)*. Вони також багато гуляють у великих міських **парках** *(in parks)*. Важливі робочі документи завжди лежать на дерев'яних **полицях** *(on shelves)* у кабінеті. Ми часто читаємо цікаві новини у довгих електронних **листах** *(in letters)*. Студенти уважно слухають свого молодого викладача на вечірніх **заняттях** *(at classes)*. Це стабільне правило працює абсолютно для всіх українських слів. В українській мові є ще один дуже важливий прийменник для опису локації. Це популярний прийменник «по». Ми використовуємо його, коли ми активно рухаємося або довго подорожуємо різними місцями. When you talk about moving across a surface or distributing an action over multiple locations, standard Ukrainian specifically pairs the preposition «по» with the Locative plural. This is a crucial point of precision and decolonization, as Russian heavily uses the Dative case for this exact construction. In authentic Ukrainian, movement across surfaces is always expressed with the Locative. Це означає, що ми завжди і впевнено додаємо закінчення «-ах» або «-ях» після слова «по». Наприклад, ми дуже любимо **гуляти по парках** *(to walk around parks)* восени. Наші іноземні туристи часто люблять **ходити по магазинах** *(to walk around shops)* у старому центрі міста. Вони щиро мріють **подорожувати по країнах** *(to travel around countries)* Європи наступного літа. Маленькі діти дуже люблять весело бігати по глибоких калюжах після сильного дощу. Ця граматична форма завжди звучить дуже природно, традиційно і правильно. Ми також маємо деякі популярні фрази, які завжди традиційно використовують місцевий відмінок множини. Їх потрібно просто добре запам'ятати як готові блоки. Наприклад, дуже багато українців люблять активно відпочивати в **Карпатах** *(in the Carpathians)*. Це високі і дуже красиві гори на заході нашої країни. Школярі часто їздять туди на зимових **канікулах** *(on holidays)*. Також ми традиційно зустрічаємося з родиною на **вихідних** *(on weekends)*. Ми можемо прочитати про ці давні українські традиції на **сторінках** *(on the pages)* цікавих історичних книжок або у журналах. Зауважте, що всі ці важливі слова завжди мають стабільну форму місцевого відмінка множини у таких стандартних життєвих ситуаціях. Наприкінці давайте уважно порівняємо два різні відмінки, які мають дуже схожі форми. Це давальний і місцевий відмінки множини. Вони мають абсолютно однакову основу слова, але різну останню літеру. It is extremely important for your fluency to accurately distinguish between the Dative plural ending «-ам» and the Locative plural ending «-ах». They look incredibly similar on paper, but they answer completely different questions and serve entirely different grammatical purposes in a sentence. Давальний відмінок завжди відповідає на запитання «кому?». Наприклад, я часто даю гарні подарунки моїм найкращим **друзям** *(to friends)*. Ми з радістю допомагаємо українським **містам** *(to cities)*. А місцевий відмінок відповідає на запитання «на кому?» або «на чому?». Наприклад, на моїх **друзях** *(on friends)* є дуже гарний новий зимовий одяг. Люди зараз живуть у великих **містах** *(in cities)*. Ми чітко бачимо, що літера «м» показує напрямок дії до людини, а літера «х» показує конкретну локацію. Закінчення «-ах» і «-ях» завжди працюють виключно для місця. <!-- INJECT_ACTIVITY: quiz-preposition-case, focus: Choose the correct preposition and plural case ending to complete the sentence, 8 items -->
+or the distribution of an action over multiple places, you must use **по** followed by the Locative case. This is a crucial distinction because learners sometimes confuse this with other Slavic languages that use the Dative case here. In Ukrainian, when you walk *around*, *along*, or *through* places, you always use the **-ах** or **-ях** endings. На вихідних ми любимо довго гуляти по зелених парках. Моя старша сестра обожнює ходити по великих магазинах і вибирати **подарунки** (gifts). Вони планують багато подорожувати по різних країнах Європи. Маленькі **діти** (children) весело бігали по глибоких калюжах після сильного дощу. > *On weekends, we like to walk for a long time through the green parks. My older sister adores walking around large stores and choosing gifts. They plan to travel a lot across different countries of Europe. The small children ran merrily through the deep puddles after the heavy rain.* Because the Locative plural is the standard way to describe locations, it naturally appears in many common everyday phrases. Just as the **орудний відмінок** (instrumental case) is essential for describing what you do with others, the Locative is essential for setting the scene. Some words exist primarily or exclusively in the plural, so you will encounter them in these Locative forms whenever you discuss where you are or where beautiful **квіти** (flowers) grow. Memorizing these frequent, fixed expressions is highly recommended. Влітку наша велика сім'я завжди відпочиває в українських Карпатах. На зимових шкільних канікулах учні часто їздять до бабусі. На довгих вихідних ми маємо значно більше вільного часу для хобі. Цю корисну інформацію можна швидко знайти на перших сторінках. > *In summer, our large family always rests in the Ukrainian Carpathians. On winter school holidays, students often go to their grandmother's. On long weekends, we have significantly more free time for hobbies. This useful information can be quickly found on the first pages.* :::tip **Did you know?** The word «Карпати» (Carpathians) is a plural-only noun (*pluralia tantum*). Because it has no singular form, "in the Carpathians" must always be translated as «в Карпатах». ::: It is very helpful to compare the **давальний відмінок** (dative case) and Locative plural endings side-by-side. The Dative plural always ends in **-ам** or **-ям** and is used with verbs like **допомагати** (to help) and **дякувати** (to thank). The Locative plural always ends in **-ах** or **-ях** and answers the question «Де?». Notice how the stem remains identical; only the final consonant shifts from "м" to "х". This small shift completely changes the meaning of the sentence. Ми хочемо допомагати нашим друзям і дякувати їм за підтримку. Ми часто бачимо гарний новий одяг на наших близьких друзях. Різні люди купують красиві квіти своїм матерям. Влітку я часто бачу маленьких бджіл на цих яскравих квітах. > *We want to help our friends and thank them for their support. We often see nice new clothes on our close friends. Different people buy beautiful flowers for their mothers. In summer I often see small bees on these bright flowers.* <!-- INJECT_ACTIVITY: quiz-preposition-case -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -327,7 +327,74 @@ A phased approach is best for internalizing plural cases.
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -346,18 +413,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] давальний відмінок (dative case)
+- [ ] орудний відмінок (instrumental case)
+- [ ] місцевий відмінок (locative case)
+- [ ] допомагати (to help)
+- [ ] дякувати (to thank)
+- [ ] подарунок (gift)
+- [ ] квіти (flowers)
+- [ ] діти (children)
+- [ ] люди (people)
+- [ ] заняття (class, lesson)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Три відмінки разом: Практика (Synthesis) (~350 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

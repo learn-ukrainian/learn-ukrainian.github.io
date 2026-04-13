@@ -2,7 +2,6 @@
 CRITICAL: Your previous attempt failed the following checks. Fix ONLY the listed errors. Keep everything else exactly as is — do not rewrite sections that are working correctly.
 
 - FIX: Missing 3/6 required vocab: школа → у школу (to school), робота → на роботу (to work), банк → у банк (to the bank)
-- NOTE: Plan expects 4 exercise(s) but content has 3
 </correction_directive>
 
 LEARNINGS FROM PAST BUILDS (same error patterns seen before):

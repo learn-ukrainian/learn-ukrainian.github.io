@@ -36,8 +36,8 @@ fi
 # scheduled_tasks.lock is a runtime state file managed by Claude
 # Code's task scheduler — it must never be deleted by the deploy
 # script or in-flight scheduled tasks get orphaned.
-ORPHAN_PATHS_CLAUDE="scheduled_tasks.lock"
-ORPHAN_PATHS_AGENT=""
+ORPHAN_PATHS_CLAUDE="scheduled_tasks.lock worktrees"
+ORPHAN_PATHS_AGENT="wake"
 ORPHAN_PATHS_GEMINI="docs/"
 
 # Build rsync --exclude arguments from a space-separated path list.

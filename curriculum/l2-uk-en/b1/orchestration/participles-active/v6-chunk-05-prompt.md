@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-система є абсолютно самодостатньою. Вона має власну, глибоку історію розвитку і завжди обирає інші, набагато природніші та мелодійніші шляхи для вираження ваших думок. Найкраща, найпростіша і найприродніша стратегія порятунку від граматичних русизмів — це використання звичайного **описового звороту** *(descriptive clause)*. Замість того, щоб конструювати одне важке штучне слово, українці просто використовують займенник «**який**» *(which / who)* або «**що**» *(that)* разом із відповідним дієсловом. Це робить мовлення надзвичайно легким, живим і динамічним. Наприклад, ніколи не кажіть «**читаюча дівчина**» *(a reading girl)* — це пряма калька, яка звучить дуже неприродно. Правильно і гарно буде сказати: «**дівчина, яка читає**» *(the girl who is reading)*. Відчуваєте різницю в ритмі та мелодиці? Замість жахливого слова «прийшовший чоловік» ми завжди кажемо «**чоловік, який прийшов**» *(the man who came)*. Замість кальки «танцюючі діти» *(dancing children)* ми будуємо фразу «**діти, що танцюють**» *(the children who are dancing)*. Ця стратегія є абсолютно універсальною базою. Вона ідеально підходить як для нейтрального щоденного спілкування, так і для формальних текстів. Підрядні речення дають змогу дуже точно передати час дії і зберігають автентичну українську структуру речення, повністю уникаючи важких канцелярських штампів. Друга потужна стратегія деколонізації вашого мовлення — це використання влучних іменників та питомих українських прикметників. Дуже часто російська мова механічно використовує дієприкметник там, де українська має окреме, історично сформоване слово для позначення професії чи статусу. Наприклад, ніколи не називайте вашого боса «**керуючий**» *(manager — calque)*. Українська мова пропонує для цього чудове, професійне слово «**керівник**» *(manager / director)*. Так само назавжди забудьте про старий радянський термін «**завідуючий**» *(head of department — calque)* — єдиний правильний варіант це «**завідувач**» *(head / chief)*. Величезна семантична плутанина постійно виникає з калькою «**діючий**» *(acting / active)*. Якщо ви говорите про закон, договір або правило, яке є легальним сьогодні, це виключно «**чинний**» *(current / valid)* закон. Ще один дуже яскравий побутовий приклад — це рідина для миття посуду. Слово «**миючий**» *(washing — participle)* означає когось, хто миє вікно просто в цю секунду. Але продукт у магазині — це «**мийний**» *(detergent / cleaning)* засіб. Прикметник із суфіксом позначає постійне призначення предмета, а не його тимчасову дію. Насамкінець, ми маємо детально розглянути найнебезпечнішу категорію лексики. Це граматичні «**фальшиві друзі**» *(false friends)* — слова, які складаються з українських літер, але є дослівним, сліпим перекладом чужих концепцій. Ці кальки потрібно просто запам'ятати і назавжди викреслити зі свого активного словника. Наприклад, коли ви стоїте в довгій черзі, ніколи не питайте «хто **слідуючий**?» *(who is following — calque)*. Це дуже поширена помилка. Правильне, органічне слово — «**наступний**» *(next)*. Якщо ви шукаєте людей для якогось проєкту, не питайте «чи є **бажаючі**?» *(are there wishing ones — calque)*. Справжні українці використовують короткий і елегантний прикметник «**охочий**» *(willing person / volunteer)*: «чи є охочі поїхати з нами?». У контексті спорту чи сучасного бізнесу успішна компанія не буває «**лідируючою**» *(leading — calque)* — вона завжди є «**провідною**» *(leading / top)*. Коли ви свідомо замінюєте ці штучні слова на автентичні відповідники, ваше мовлення кардинально змінюється. Воно втрачає радянський канцелярський відтінок, стає повністю деколонізованим, багатим і звучить так, як говорять сьогодні найкращі українські письменники та інтелектуали. <!-- INJECT_ACTIVITY: error-correction-calques -->
+This syntactic construction consists of the pronoun "який" (which/who) or "що" (that) and a regular verb in the appropriate tense. For example, instead of the calque "читаюча дівчина" meaning a reading girl, we always say "дівчина, яка читає" meaning the girl who is reading. Instead of the erroneous "сказавший чоловік", you must say "чоловік, який сказав". This approach is absolutely normative for the neutral and conversational styles of the modern Ukrainian language. It makes your speech lively, light, and dynamic, avoiding heavy bureaucratic constructions. The Ukrainian language prefers action expressed by a full verb rather than fossilized forms. Therefore, the use of subordinate clauses is your main tool for creating authentic utterances.* Another powerful strategy for avoiding unnatural active participles is replacing them with dedicated nouns or adjectives. Many present active participles ending in **-учий** or **-ячий** have become deeply entrenched bureaucratic calques. For instance, the management word *керуючий* should always be replaced with the noun **керівник**. Similarly, instead of saying *завідуючий* for a department head, the correct Ukrainian noun is **завідувач**. When expressing the concept of something being currently in effect, you must avoid the Russian calque *діючий* and use the authentic Ukrainian adjective **чинний** (current, valid). We also see this distinction clearly in everyday household items. The word *миючий* implies the active process of washing right now, whereas **мийний** denotes the intended purpose of the item. Therefore, you buy a cleaning detergent called a **мийний засіб**, not a *миючий засіб*. By choosing precise nouns and purpose-driven adjectives over clumsy participles, your vocabulary becomes sharper and much more aligned with the natural elegance of the Ukrainian language. :::info **Grammar box** Always double-check words ending in **-учий**, **-ючий**, **-ачий**, and **-ячий**. If you can replace the word with a noun, a regular adjective, or a descriptive clause, that replacement is almost always the preferred Ukrainian standard. ::: To speak authentic Ukrainian, you must memorize a few common false friends. These are direct calques from Russian that disguise themselves as Ukrainian active participles. They are widespread in careless speech and often sound correct to beginners, but they represent severe stylistic errors. Purging these specific calques from your vocabulary is a crucial step in decolonizing your language. Using their natural replacements immediately elevates your proficiency and proves that you are learning the true literary standard. Here is a quick reference table of these common errors and their correct Ukrainian equivalents. | ❌ Суржик (Calque) | ✅ Українська норма (Standard) | English Meaning | | :--- | :--- | :--- | | *слідуючий* | **наступний** | next (in a sequence) | | *бажаючий* | **охочий** | willing, eager (person) | | *лідируючий* | **провідний** | leading | | *існуючий* | **наявний** | existing, available | | *оточуючий* | **довколишній** | surrounding | By consciously substituting clunky, bureaucratic words like *існуючий* with the elegant adjective **наявний** (existing, available), you align your speech with the natural rhythms of the language. This attention to detail shows deep respect for authentic Ukrainian morphology. <!-- INJECT_ACTIVITY: error-correction-calques -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -568,7 +568,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -581,18 +648,66 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] дієприкметник (participle — verb form expressing attribute by action)
+- [ ] активний дієприкметник (active participle — subject performs the action)
+- [ ] пасивний дієприкметник (passive participle — subject receives the action)
+- [ ] квітучий (blooming — natural active participle)
+- [ ] палаючий (blazing — natural active participle)
+- [ ] зів'ялий (wilted — past active participle)
+- [ ] розквітлий (blossomed — past active participle)
+- [ ] опалий (fallen, shed — past active participle, leaves)
+- [ ] зниклий (disappeared — past active participle)
+- [ ] посивілий (gone grey — past active participle)
+- [ ] чинний (current, valid — replaces Russian calque діючий)
+- [ ] наявний (existing, available — replaces Russian calque існуючий)
+- [ ] описовий зворот (descriptive phrase — alternative to participle)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Дієприкметник у тексті (~880 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

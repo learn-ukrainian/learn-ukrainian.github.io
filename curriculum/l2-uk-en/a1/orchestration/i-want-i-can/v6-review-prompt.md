@@ -117,109 +117,109 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Діалоги — Making Plans
+## Діало́ги — Making Plans
 
-To express your weekend plans, daily intentions, or obligations, you need to navigate between what you desire, what is actually possible, and what is required. When two friends negotiate their free time, they are constantly weighing these three factors to find an activity that works for both of them. Consider a typical conversation about making plans between **Оля** (Olya) and **Денис** (Denys). They are trying to figure out their weekend schedule.
+To express your weekend plans, daily intentions, or obligations, you need to navigate between what you desire, what is actually possible, and what is required. When two friends negotiate their free time, they are constantly weighing these three factors to find an activity that works for both of them. Consider a typical conversation about making plans between **Оля** (Olya) and **Дени́с** (Denys). They are trying to figure out their weekend schedule.
 
-> **Оля:** Що ти хочеш робити? *(What do you want to do?)*
-> **Денис:** Я хочу гуляти. А ти? *(I want to walk. And you?)*
-> **Оля:** Я не можу, я мушу працювати. *(I can't, I must work.)*
+> **Оля:** Що ти хо́чеш роби́ти? *(What do you want to do?)*
+> **Денис:** Я хо́чу гуля́ти. А ти? *(I want to walk. And you?)*
+> **Оля:** Я не мо́жу, я му́шу працюва́ти. *(I can't, I must work.)*
 > **Денис:** Шкода! *(Pity!)*
 
 In another common situation, such as ordering at a café or asking a waiter for advice, expressing a clear desire for an object is essential.
 
-> **Відвідувач:** Я хочу каву. *(I want coffee.)*
-> **Офіціант:** Велику чи маленьку? *(Large or small?)*
-> **Відвідувач:** Велику. І ще я хочу їсти. Що ви можете порекомендувати? *(Large. And also I want to eat. What can you recommend?)*
+> **Відві́дувач:** Я хочу ка́ву. *(I want coffee.)*
+> **Офіціа́нт:** Велику чи мале́ньку? *(Large or small?)*
+> **Відвідувач:** Велику. І ще я хочу ї́сти. Що ви мо́жете порекомендува́ти? *(Large. And also I want to eat. What can you recommend?)*
 > **Офіціант:** Можу порекомендувати борщ! *(I can recommend borscht!)*
 
-Breaking down the key phrases from these dialogues reveals how Ukrainian structures them. The exclamation **шкода** means "pity" or "unfortunately," and it is a very natural and highly common reaction when someone cannot join your plans. More importantly, notice how the verb "to want" behaves differently depending on what exactly follows it. You can pair it directly with a physical object, as in **я хочу каву** (I want coffee). Here, the original dictionary noun **кава** (coffee) changes its ending to **каву** because it is the grammatical object of the desire. Alternatively, you can pair the verb "to want" with another action entirely, as in **я хочу їсти** (I want to eat) or **я хочу гуляти** (I want to walk), demonstrating your intention to perform a specific activity.
+Breaking down the key phrases from these dialogues reveals how Ukrainian structures them. The exclamation **шкода** means "pity" or "unfortunately," and it is a very natural and highly common reaction when someone cannot join your plans. More importantly, notice how the verb "to want" behaves differently depending on what exactly follows it. You can pair it directly with a physical object, as in **я хочу каву** (I want coffee). Here, the original dictionary noun **ка́ва** (coffee) changes its ending to **каву** because it is the grammatical object of the desire. Alternatively, you can pair the verb "to want" with another action entirely, as in **я хочу їсти** (I want to eat) or **я хочу гуляти** (I want to walk), demonstrating your intention to perform a specific activity.
 
-## Хотіти (To Want)
+## Хоті́ти (To Want)
 
-The verb **хотіти** (to want) is one of the most frequently used words in the Ukrainian language, and it operates as a true irregular verb. Despite ending in **-іти**, which typically signals a Group II conjugation pattern, **хотіти** actually conjugates according to the specific rules of Group I. When pronouncing this word, you must ensure that you make the first vowel a clear, open Ukrainian **о**, carefully distinguishing it from the reduced sounds you might encounter in other Slavic languages. 
+The verb **хотіти** (to want) is irregular. Although it ends in **-іти́**, it conjugates as Group I. This matches the plan references: **Караман** (Grade 10, p.179) and **Літвінова** (Grade 7, p.55) both treat **хотіти** as a Group I exception. 
 
-A key morphological feature of **хотіти** is the consistent consonant shift that occurs right in its root. As you conjugate it through the present tense, the letter **т** from the dictionary form (**хот-**) changes entirely to the letter **ч** (**хоч-**) across every single grammatical person. This shift is a very common and essential phonetic pattern in Ukrainian.
+In the present tense, the stem changes from **хот-** to **хоч-** in every form.
 
 *   **я хочу** (I want)
 *   **ти хочеш** (you want)
-*   **він/вона хоче** (he/she wants)
-*   **ми хочемо** (we want)
-*   **ви хочете** (you want - formal/plural)
-*   **вони хочуть** (they want)
+*   **він/вона́ хо́че** (he/she wants)
+*   **ми хо́чемо** (we want)
+*   **ви хо́чете** (you want - formal/plural)
+*   **вони́ хо́чуть** (they want)
 
-When you express a direct desire for a physical object, you use **хотіти** followed immediately by a noun. This noun must take the Accusative case because it directly receives the action of wanting. For feminine nouns ending in **-а**, the ending changes to **-у**. Thus, **вода** (water) becomes **воду**, and **кава** (coffee) becomes **каву**. For masculine inanimate nouns, the form remains exactly the same as the dictionary form, requiring no visible change at all.
+When you express a direct desire for a physical object, you use **хотіти** followed immediately by a noun. This noun must take the Accusative case because it directly receives the action of wanting. For feminine nouns ending in **-а**, the ending changes to **-у**. Thus, **вода́** (water) becomes **воду́**, and **кава** (coffee) becomes **каву**. For masculine inanimate nouns, the form remains exactly the same as the dictionary form, requiring no visible change at all.
 
 *   **Я хочу воду.** (I want water.)
 *   **Він хоче каву.** (He wants coffee.)
 *   **Я хочу сік.** (I want juice.)
 *   **Вона хоче борщ.** (She wants borscht.)
 
-When you want to express a clear desire to perform an action, you use what is called a Compound Verbal Predicate structure. This simply means you take the conjugated modal verb (**хочу**, **хочеш**, etc.) and immediately follow it with the infinitive form of the main verb. Unlike English, which explicitly requires the particle "to" placed between the two verbs, Ukrainian simply links them directly together. To form the negative, place the particle **не** directly before the verb: **я не хочу** (I do not want), **ти не хочеш?** (do you not want?), **вона не хоче** (she does not want). While polite requests use conditional forms like **хотів би** or **хотіла би** (I would like) — which you will learn later — for now, **я хочу** is the standard, direct way to express a want.
+To talk about an action, use **хотіти + infinitive**: **Я хочу читати**, **Ти не хочеш гуляти?** For negation, put **не** before the verb: **Я не хочу спати**. Conditional requests like **хоті́в би / хоті́ла би** come later.
 
-*   **Я хочу читати.** (I want to read.)
-*   **Я не хочу спати.** (I do not want to sleep.)
+*   **Я хочу чита́ти.** (I want to read.)
+*   **Я не хочу спа́ти.** (I do not want to sleep.)
 *   **Ти не хочеш гуляти?** (Do you not want to walk?)
 
 <!-- INJECT_ACTIVITY: fill-in-khotity-conjugation -->
-<!-- INJECT_ACTIVITY: quiz-verb-patterns -->
 
-## Могти і мусити (Can and Must)
+## Могти́ і му́сити (Can and Must)
 
-The verb **могти** (can, to be able) expresses personal ability or granted permission, and it is also classified as an irregular Group I verb. Much like "to want", it features a significant consonant shift within its root structure. The original letter **г** (**мог-**) transforms into **ж** (**мож-**) consistently across all present tense forms. This predictable shift is a hallmark of Ukrainian pronunciation.
+The verb **могти** (can, to be able) is also irregular. In the present tense, the stem changes from **мог-** to **мож-**.
 
 *   **я можу** (I can)
-*   **ти можеш** (you can)
-*   **він/вона може** (he/she can)
-*   **ми можемо** (we can)
+*   **ти мо́жеш** (you can)
+*   **він/вона мо́же** (he/she can)
+*   **ми мо́жемо** (we can)
 *   **ви можете** (you can - formal/plural)
-*   **вони можуть** (they can)
+*   **вони мо́жуть** (they can)
 
-You will use **могти** primarily to talk about your internal physical abilities, to discuss newly acquired skills, or to formally ask for permission from someone else. It functions identically to **хотіти** by forming a compound structure with a following infinitive verb to create a complete thought.
+Use **могти + infinitive** for ability or possibility: **Я можу говорити українською**, **Ти можеш допомогти?**, **Він не може працювати**.
 
-*   **Я можу говорити українською.** (I can speak Ukrainian.)
-*   **Ти можеш допомогти?** (Can you help?)
+*   **Я можу говори́ти украї́нською.** (I can speak Ukrainian.)
+*   **Ти можеш допомогти́?** (Can you help?)
 *   **Він не може працювати.** (He cannot work.)
 
-In sharp contrast, the verb **мусити** (must, to have to) expresses a strong, unavoidable obligation. This verb operates as a regular Group II verb with only one minor, yet critical exception: the consonant **с** shifts to **ш** strictly in the first-person singular ("I" form). The rest of the conjugation paradigm follows the standard Group II pattern flawlessly. While **хотіти** focuses entirely on personal choice, **мусити** equals pure obligation. It is much stronger than **треба** (need to), which functions as a simpler, impersonal alternative that you will use later.
+**Мусити** expresses obligation. It follows Group II endings, with one key stem change in the **я** form: **я мушу**, but **ти мусиш, він/вона мусить, ми мусимо, ви мусите, вони мусять**. It is stronger and more personal than impersonal **треба**.
 
 *   **я мушу** (I must)
-*   **ти мусиш** (you must)
-*   **він/вона мусить** (he/she must)
-*   **ми мусимо** (we must)
-*   **ви мусите** (you must - formal/plural)
-*   **вони мусять** (they must)
+*   **ти му́сиш** (you must)
+*   **він/вона му́сить** (he/she must)
+*   **ми му́симо** (we must)
+*   **ви му́сите** (you must - formal/plural)
+*   **вони му́сять** (they must)
 
 *   **Я мушу працювати.** (I must work.)
-*   **Ти мусиш вчити слова.** (You must learn the words.)
+*   **Ти мусиш вчи́ти слова́.** (You must learn the words.)
 
-These three distinct modal verbs form the logical linguistic foundation for negotiating any daily situation. You can combine them to easily explain complex circumstances, weighing your internal desires against your actual abilities and your pressing duties. Observe how beautifully they work together in a single context: **я хочу гуляти** (I possess the internal desire to walk), **але не можу** (but I lack the physical possibility or ability to do so) — **я мушу працювати** (because I hold the strict necessity to work).
+Together, these verbs let you compare desire, ability, and obligation: **я хочу гуляти, але не можу — я мушу працювати**.
 
 :::tip
-For a slightly softer or more impersonal way to say "it is necessary" or "I need to," Ukrainians frequently use the single word **треба** (need to). It does not conjugate at all for different grammatical persons, making it very beginner-friendly for rapidly expressing everyday needs.
+For a softer impersonal meaning, Ukrainian often uses **треба**. It does not change by person.
 :::
 
-*   **Я хочу читати книгу.** (I want to read a book.)
+*   **Я хочу читати кни́гу.** (I want to read a book.)
 *   **Але я не можу читати.** (But I cannot read.)
 *   **Я мушу спати.** (I must sleep.)
 
 <!-- INJECT_ACTIVITY: quiz-modal-choice -->
 <!-- INJECT_ACTIVITY: fill-in-modal-logic -->
+<!-- INJECT_ACTIVITY: quiz-verb-patterns -->
 
 ## Підсумок — Summary
 
-You have now successfully built the grammatical foundation necessary for expressing complex thoughts using the Compound Verbal Predicate structure. By seamlessly combining a conjugated modal verb with any infinitive action, you instantly multiply the variety of sentences you can independently create. Always remember the critical consonant shifts that define the two major irregular verbs: the root of **хотіти** completely trades its **т** for a **ч** across the entire paradigm, while the root of **могти** consistently shifts its **г** to a **ж** across every single present tense form (**вони можуть**). You also learned that the verb of strict obligation, **мусити**, remains entirely regular for Group II, except for the **с** shifting to **ш** exclusively in the specific **я мушу** form.
+Remember the three core patterns: **хочу + infinitive** for desire, **можу + infinitive** for ability, and **мушу + infinitive** for obligation. The irregular stems are **хот- → хоч-** and **мог- → мож-**. **Мусити** is regular except for **я мушу**.
 
-From a strictly practical standpoint, it is incredibly important to remember the core equations of these modals: **Хочу** + infinitive expresses desire (I want to). **Можу** + infinitive expresses ability (I can). **Мушу** + infinitive expresses obligation (I must). Furthermore, **хотіти** is by far the most versatile of the three verbs discussed. It stands as the only modal verb that frequently pairs directly with a noun object to express a direct physical desire, such as **я хочу каву** (I want coffee). On the other hand, both **могти** and **мусити** almost always demand an accompanying infinitive action to make logical sense, such as **я можу працювати** (I can work). To effectively negate any of these statements, you simply place the negative particle **не** immediately before the conjugated modal verb: **я не хочу** (I do not want), **ми не можемо** (we cannot).
+**Хотіти** can also take a noun: **Я хочу каву**. **Могти** and **мусити** usually need an infinitive: **Я можу працювати**, **Я мушу працювати**. To negate them, put **не** before the modal verb: **я не хочу**, **ми не можемо**.
 
 As a final self-check to conclude this topic, actively try to answer the following questions out loud to verify your absolute understanding of these core modal concepts:
-*   Can you say exactly what you want to do right now using a full, grammatically correct sentence? (For example, **Я хочу пити чай**).
+*   Can you say exactly what you want to do right now using a full, grammatically correct sentence? (For example, **Я хочу пи́ти чай**).
 *   Can you list three distinct things you can confidently do in Ukrainian, focusing heavily on your current abilities? (For example, **Я можу читати**, **я можу говорити українською**).
 *   Can you express a mandatory duty you have scheduled for tomorrow? (For example, **Я мушу працювати**).
 *   Can you quickly conjugate the irregular verb **хотіти** for all grammatical persons out loud from memory, entirely without checking the reference table provided earlier in the module?
 </generated_module_content>
 
-**PIPELINE NOTE — Word count: 1577 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
+**PIPELINE NOTE — Word count: 1035 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -395,40 +395,196 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 68 words | Not found: 4 words
+Verified: 67 words | Not found: 29 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
+  ✗ Відві — NOT IN VESUM
+  ✗ Дени — NOT IN VESUM
   ✗ Денис — NOT IN VESUM
+  ✗ Діало — NOT IN VESUM
+  ✗ Караман — NOT IN VESUM
+  ✗ Літвінова — NOT IN VESUM
   ✗ Оля — NOT IN VESUM
+  ✗ Офіціа — NOT IN VESUM
+  ✗ гуля — NOT IN VESUM
+  ✗ дувач — NOT IN VESUM
+  ✗ жемо — NOT IN VESUM
+  ✗ жете — NOT IN VESUM
+  ✗ жеш — NOT IN VESUM
+  ✗ кни — NOT IN VESUM
   ✗ мог — NOT IN VESUM
+  ✗ нською — NOT IN VESUM
+  ✗ ньку — NOT IN VESUM
+  ✗ порекомендува — NOT IN VESUM
+  ✗ працюва — NOT IN VESUM
+  ✗ симо — NOT IN VESUM
+  ✗ сити — NOT IN VESUM
+  ✗ сиш — NOT IN VESUM
+  ✗ сти — NOT IN VESUM
+  ✗ сять — NOT IN VESUM
+  ✗ украї — NOT IN VESUM
   ✗ хот — NOT IN VESUM
+  ✗ чемо — NOT IN VESUM
+  ✗ чете — NOT IN VESUM
+  ✗ чеш — NOT IN VESUM
 
-All 68 other words are confirmed to exist in VESUM.
+All 67 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
-## Verification Tools (MCP)
+---
 
-You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
+## Verification Tools (Shell Commands)
 
-**Core Verification:**
-- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
-- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
+You have access to verification tools via shell commands. Use these to verify
+Ukrainian vocabulary, check grammar, and search textbook content **as you write**.
 
-**Content Quality:**
-- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+**IMPORTANT:** Run verification commands BEFORE finalizing any Ukrainian text.
+Batch multiple verifications together to minimize round-trips.
 
-**Reference:**
-- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp_rag_search_literary` — verify literary references against primary sources
-- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
+### 1. Batch-verify Ukrainian words exist in VESUM (preferred — one call for many words)
 
-**Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_words
+results = verify_words(['слово1', 'слово2', 'слово3'])
+for w, matches in results.items():
+    if matches:
+        print(f'{w}: FOUND — lemma={matches[0][\"lemma\"]}, pos={matches[0][\"pos\"]}')
+    else:
+        print(f'{w}: NOT FOUND — may not exist in standard Ukrainian')
+"
+```
+
+### 2. Verify a single Ukrainian word in VESUM (with full morphological tags)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_word
+results = verify_word('WORD_HERE')
+if results:
+    for m in results:
+        print(f'lemma={m[\"lemma\"]}, pos={m[\"pos\"]}, tags={m[\"tags\"]}')
+else:
+    print('NOT FOUND in VESUM')
+"
+```
+
+### 3. Get all inflected forms of a lemma (declension/conjugation)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_lemma
+forms = verify_lemma('LEMMA_HERE')
+for f in forms[:20]:
+    print(f'{f[\"word_form\"]:20s} {f[\"pos\"]:8s} {f[\"tags\"]}')
+print(f'... {len(forms)} forms total')
+"
+```
+
+### 4. Check CEFR level of a word (is it level-appropriate?)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import query_cefr_level
+results = query_cefr_level('WORD_HERE')
+for r in results:
+    print(f'{r[\"word\"]}: {r[\"level\"]} ({r[\"pos\"]})')
+if not results:
+    print('Not in CEFR database')
+"
+```
+
+### 5. Search textbook content (Ukrainian school textbooks, Grades 1-11)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_textbooks
+keywords = {'keyword1', 'keyword2'}
+results = search_textbooks(keywords, 5)
+for r in results:
+    title = r.get('section_title', r.get('title', ''))
+    grade = r.get('grade', '?')
+    text = r.get('text', '')[:200]
+    print(f'Grade {grade} | {title}')
+    print(f'  {text}')
+    print()
+"
+```
+
+### 6. Search style guide for calques/Russianisms (Антоненко-Давидович, 279 entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_style_guide
+results = search_style_guide('TOPIC_HERE', 3)
+for r in results:
+    print(f'--- {r.get(\"word\", \"\")} [{r.get(\"section\", \"\")}]')
+    print(r.get('text', '')[:300])
+    print()
+if not results:
+    print('No style guide entries found')
+"
+```
+
+### 7. Look up word definition in СУМ-11 (Ukrainian explanatory dictionary, 127K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_definitions
+results = search_definitions('WORD_HERE', 3)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+### 8. Search idioms (Фразеологічний словник, 25K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_idioms
+results = search_idioms('WORD_HERE', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"text\", r.get(\"definition\", \"\")))[:200]}')
+"
+```
+
+### 9. English-to-Ukrainian translation (Балла, 79K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import translate_en_uk
+results = translate_en_uk('ENGLISH_WORD', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+---
+
+**WHEN to use these tools:**
+
+1. **Before writing any Ukrainian text** — batch-verify all key vocabulary with
+   `verify_words` (tool 1). Any word that returns NOT FOUND must be replaced.
+2. **When you suspect a Russicism or calque** — search the style guide (tool 6)
+   and verify the correct Ukrainian form with `verify_word` (tool 2).
+3. **When writing for A1/A2** — check CEFR levels (tool 4) to ensure vocabulary
+   is level-appropriate.
+4. **When unsure about a case ending or conjugation** — use `verify_lemma` (tool 3)
+   to see the full paradigm.
+5. **When covering a grammar topic** — search textbooks (tool 5) to see how
+   Ukrainian school textbooks teach it.
+6. **When you need the precise Ukrainian meaning** — use СУМ-11 (tool 7).
+7. **When looking for natural Ukrainian expressions** — search idioms (tool 8).
+
+**Batching rule:** Collect all words you want to verify, then run ONE `verify_words`
+call instead of multiple `verify_word` calls. This is faster and uses fewer tokens.

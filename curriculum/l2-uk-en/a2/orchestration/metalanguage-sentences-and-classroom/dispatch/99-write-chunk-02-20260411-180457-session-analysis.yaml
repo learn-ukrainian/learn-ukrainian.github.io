@@ -1,0 +1,122 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T16-03-cc750dc9.json
+phase: write-chunk-02
+prompt_chars: 48000
+response_chars: 4380
+prompt_words: 6858
+response_words: 684
+sections:
+- name: header
+  start: 0
+  length: 450
+  fraction: 0.0094
+- name: skeleton
+  start: 450
+  length: 1636
+  fraction: 0.0341
+- name: prior_summary
+  start: 2086
+  length: 3361
+  fraction: 0.07
+- name: plan
+  start: 5447
+  length: 12910
+  fraction: 0.269
+- name: wiki
+  start: 11890
+  length: 29418
+  fraction: 0.6129
+- name: output_spec
+  start: 47775
+  length: 225
+  fraction: 0.0047
+large_sections:
+- wiki
+directives_total: 27
+directives_covered: 8
+directives_missed:
+- kind: checklist
+  text: підмет (subject)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: присудок (predicate)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: додаток (object)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: означення (attribute)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: обставина (adverbial modifier)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: прочитайте (read — imperative)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: запишіть (write down — imperative)
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: '* Learners must be able to identify the subject and predicate, and understand
+    how secondary members add detail.'
+  covered: false
+  coverage_note: 2/12 keywords (17%)
+- kind: must
+  text: '* A learner in any formal setting must master the vocabulary of education.'
+  covered: false
+  coverage_note: 2/8 keywords (25%)
+- kind: must
+  text: '` | The past tense verb must agree in gender and number with the subject.'
+  covered: false
+  coverage_note: 3/8 keywords (38%)
+- kind: must
+  text: A content writer must be vigilant, using dictionaries like the СУМ-11 and
+    style guides to choose authentic Ukrainian vocabulary and avoid calques.
+  covered: false
+  coverage_note: 3/16 keywords (19%)
+- kind: must
+  text: Students must underline the subject (`підмет`) once and the predicate (`присудок`)
+    twice, as is standard in Ukrainian schools (Source 10).
+  covered: false
+  coverage_note: 2/13 keywords (15%)
+- kind: must
+  text: Students must label each one (`розповідне`, `питальне`, `спонукальне`) (Source
+    36).
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: must
+  text: Students must transform it into a yes/no question using intonation (`?`) and
+    the particle `чи`.
+  covered: false
+  coverage_note: 2/9 keywords (22%)
+- kind: must
+  text: '* **Дієвідмінювання (Verb Conjugation):** The predicate must agree with the
+    subject in person and number (present/future) and gender/number (past).'
+  covered: false
+  coverage_note: 3/13 keywords (23%)
+- kind: must
+  text: '* **Складні речення (Complex/Compound Sentences):** Mastery of the simple
+    sentence (`просте речення`) is required before a student can analyze or construct
+    sentences with multiple grammatical foundations (Source 3, 23).'
+  covered: false
+  coverage_note: 5/19 keywords (26%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 3/11 keywords (27%)
+- kind: inject_activity
+  text: match-up, Match sentence member terms to their question words (хто? що?, де?
+    коли?, який? чия?, кого? кому?)
+  covered: false
+  coverage_note: marker missing

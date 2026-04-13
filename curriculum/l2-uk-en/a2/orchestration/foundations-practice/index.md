@@ -1,6 +1,6 @@
 # Build Summary: foundations-practice (A2)
 
-Generated: 2026-04-11 01:50
+Generated: 2026-04-11 11:56
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-04-11 01:50
 | enrich | complete | 2026-04-07 20:41:20 |
 | verify | complete | 2026-04-07 20:41:21 |
 | stress | complete | 2026-04-07 20:44:03 |
-| activities | complete | 2026-04-10 23:46:54 |
-| publish | complete | 2026-04-10 23:50:01 |
-| audit | complete | 2026-04-10 23:50:01 |
+| activities | complete | 2026-04-11 09:56:03 |
+| publish | complete | 2026-04-11 09:56:12 |
+| audit | complete | 2026-04-11 09:56:12 |
 
 ## Reviews
 
@@ -41,6 +41,8 @@ Generated: 2026-04-11 01:50
 | activities | gemini-tools (gemini-3.1-pro-preview) | 159s | ✅ |
 | activities | gemini-tools (gemini-3.1-pro-preview) | 138s | ✅ |
 | activities | gemini-tools (gemini-3.1-pro-preview) | 89s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 114s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 160s | ✅ |
 | vocab | gemini (auto) | 338s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 163s | ✅ |
 | write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 86s | ✅ |

@@ -1,0 +1,76 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T10-55-117a696a.json
+phase: review
+prompt_chars: 63422
+response_chars: 5744
+prompt_words: 9254
+response_words: 818
+sections:
+- name: preamble
+  start: 0
+  length: 462
+  fraction: 0.0073
+- name: plan
+  start: 462
+  length: 59725
+  fraction: 0.9417
+- name: output_spec
+  start: 60187
+  length: 3235
+  fraction: 0.051
+large_sections:
+- plan
+directives_total: 32
+directives_covered: 21
+directives_missed:
+- kind: must
+  text: If you want to emphasize that an action is completed within a specific timeframe,
+    the preposition **за** with the Accusative case is required.
+  covered: false
+  coverage_note: 4/13 keywords (31%)
+- kind: must
+  text: For positive outcomes where gratitude, success, or appreciation is implied,
+    you must use **завдяки** with the Dative case.
+  covered: false
+  coverage_note: 4/13 keywords (31%)
+- kind: must
+  text: You must instinctively apply the one-two-five rule.
+  covered: false
+  coverage_note: 3/8 keywords (38%)
+- kind: must
+  text: A unique word you must master is **півтора** for masculine or neuter nouns,
+    and its feminine equivalent **півтори**.
+  covered: false
+  coverage_note: 4/13 keywords (31%)
+- kind: must
+  text: Your review must cover interrogative pronouns like **хто** and **чий**, as
+    well as relative pronouns like **який** and **котрий**.
+  covered: false
+  coverage_note: 5/13 keywords (38%)
+- kind: must
+  text: Instead of saying that you went with nobody as "з ніким", you must say **ні
+    з ким**.
+  covered: false
+  coverage_note: 3/10 keywords (30%)
+- kind: must
+  text: You must say **дякую вам**, never **дякую вас**.
+  covered: false
+  coverage_note: 1/7 keywords (14%)
+- kind: must
+  text: You have found a suitable option online and must write a formal email to the
+    landlord, Pan Sydorenko.
+  covered: false
+  coverage_note: 3/13 keywords (23%)
+- kind: must
+  text: Because they function like adjectives, they must agree with the noun they
+    modify in gender, number, and case.
+  covered: false
+  coverage_note: 4/12 keywords (33%)
+- kind: must
+  text: '> *This stage required significant effort from you, because the Ukrainian
+    case system does not forgive inattention.'
+  covered: false
+  coverage_note: 5/15 keywords (33%)
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing

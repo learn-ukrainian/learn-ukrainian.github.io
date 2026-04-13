@@ -1,4 +1,4 @@
-<!-- version: 1.1.0 | updated: 2026-03-31 -->
+<!-- version: 1.2.0 | updated: 2026-04-12 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -11,6 +11,35 @@ Generate an `activities/where-from.yaml` file for module **34: Where From?** (a1
 
 ---
 
+## ⚠️ HARD COUNT TARGETS — READ TWICE
+
+These are the binding numerical contracts for THIS module. The audit will FAIL if you fall short.
+
+| Bucket | Min | Max | Notes |
+|---|---|---|---|
+| Total activities | 10 | 10+ | inline + workbook combined |
+| Inline (lesson tab) | 4 | 6 | one per `<!-- INJECT_ACTIVITY -->` marker, see below |
+| Workbook (Зошит tab) | 6 | 9 | extended practice |
+| Items per activity | 6 | — | each activity must have at least 6 items (unless its type cap is lower — see Activity Type Reference below) |
+
+**You MUST ship at least 4 inline activities AND at least 6 workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+
+**Type diversity is required.** The module (inline + workbook combined) MUST use at least **0** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level. (If `0` is `0`, the audit profile for this level does not enforce type diversity — but variety still produces a better lesson, so aim for 4+ types when the workbook allows it.)
+
+---
+
+## Allowed types for THIS level
+
+- **Inline (lesson) types:** image-to-letter, letter-grid, match-up, watch-and-repeat, quiz, true-false, fill-in, classify
+- **Inline priority (preferred):** image-to-letter, match-up, fill-in, quiz, watch-and-repeat
+- **Workbook types:** fill-in, match-up, group-sort, anagram, unjumble, quiz, true-false, classify, divide-words, count-syllables, pick-syllables, observe, phrase-table, odd-one-out
+- **Workbook priority (preferred):** fill-in, match-up, group-sort, anagram, unjumble
+- **FORBIDDEN at this level:** cloze, error-correction, mark-the-words, translate, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, highlight-morphemes, grammar-identify, select
+
+Pick from the allowed list. Lean heavily on the priority lists. Do not use any forbidden type — the build will reject it.
+
+---
+
 ## Inline vs Workbook Split
 
 Activities have two placement categories:
@@ -19,7 +48,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Rule of thumb:** inline = 2-3 quick checks after key teaching points. Workbook = 4-8 deeper practice exercises covering the full topic.
+**Rule of thumb:** inline = 4–6 quick checks after key teaching points. Workbook = 6–9 deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
 
 ---
 
@@ -27,10 +56,10 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: answer-zvidky -->`
-- `<!-- INJECT_ACTIVITY: location-trio-sort -->`
-- `<!-- INJECT_ACTIVITY: preposition-quiz -->`
-- `<!-- INJECT_ACTIVITY: location-contrast -->`
+- `<!-- INJECT_ACTIVITY: fill-in-where-from -->`
+- `<!-- INJECT_ACTIVITY: fill-in-contrast-location-origin -->`
+- `<!-- INJECT_ACTIVITY: group-sort-location-trio -->`
+- `<!-- INJECT_ACTIVITY: quiz-preposition-choice -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -127,116 +156,68 @@ required:
 ## Module Content (the prose the learner reads before exercises)
 
 <module_content>
-## Діалоги — Dialogues
+## Діалоги (Dialogues)
 
-An international student mixer at a university in Kyiv is the perfect place to hear a symphony of languages and accents. When people from different backgrounds gather in one room, the most natural icebreaker is finding out where everyone comes from. In Ukrainian, asking about someone's origin is a direct, essential communicative skill. You will hear the question **Звідки ти?** (Where are you from?) echoing across the room as students connect, share their stories, and learn about each other's homes. The ability to state your origin confidently is your passport to deeper conversations. 
+Imagine you are at an international student mixer at a university in **Київ** (Kyiv). People are chatting, sharing their origins, and talking about where they live now. This is the perfect setting to practice asking where someone is from. 
 
-> **Джон:** Звідки ти? *(Where are you from?)*
-> **Максим:** Я з України, з Києва. А ти? *(I am from Ukraine, from Kyiv. And you?)*
-> **Джон:** Я з Канади, із Торонто. *(I am from Canada, from Toronto.)*
-> **Максим:** Давно тут? *(Have you been here long?)*
-> **Джон:** Ні, я приїхав місяць тому. *(No, I arrived a month ago.)*
+In this situation, the most important phrase you need is **звідки ти** (where from are you). Let us listen to a conversation between two students meeting for the first time. Pay attention to the prepositions they use when naming their home countries and cities.
 
-The core interaction for stating your origin revolves around the question **Звідки ти?** (Where are you from?). Notice how the response is constructed: **Я з...** (I am from...). In Ukrainian, the present tense verb for "to be" is almost always omitted in these standard phrases. You do not need to say "I am," you simply state your pronoun, the preposition, and the place. The structure **Я з України** (I am from Ukraine) is a complete, grammatically correct sentence that you can use immediately. When talking about a specific city, you simply add it to the phrase, such as **Я з України, з Києва** (I am from Ukraine, from Kyiv).
+> **Олег:** Привіт! Я Олег. А тебе як звати? *(Hi! I am Oleh. And what is your name?)*
+> **Марк:** Мене звати Марк. *(My name is Mark.)*
+> **Олег:** Дуже приємно, Марк. **Звідки ти?** *(Very nice to meet you, Mark. Where are you from?)*
+> **Марк:** Я **з Канади** (from Canada), **із Торонто**. А ти? *(I am from Canada, from Toronto. And you?)*
+> **Олег:** Я **з України** (from Ukraine), **з Києва**. Давно тут? *(I am from Ukraine, from Kyiv. Have you been here long?)*
+> **Марк:** Ні, я приїхав місяць тому. *(No, I arrived a month ago.)*
 
-> **Анна:** Звідки ти йдеш? *(Where are you coming from?)*
-> **Марко:** Я йду з роботи. *(I am coming from work.)*
-> **Анна:** А Олена? *(And Olena?)*
-> **Марко:** Вона йде зі школи. *(She is coming from school.)*
-> **Анна:** Куди вона йде? *(Where is she going?)*
-> **Марко:** Додому. *(Home.)*
+Notice how the question is formed with one word: **звідки**. The answer begins with the preposition **з** (from) or **із**, followed by the place name. The names of the country and city change their endings to indicate origin.
 
-This second conversation highlights a shorter exchange about physical movement. We are contrasting the origin point — coming from work or from school — with the destination. You use the exact same preposition to describe walking away from a building as you do when stating the country you were born in.
+We can also ask about movement from everyday places, not just geographic origins. If you see a friend walking on the street, you might want to know where they are coming from right now. 
 
-## Звідки? — Where From?
+In this next dialogue, two friends meet outside. Listen to how they talk about their current movement and destinations.
 
-Ukrainian categorizes spatial relations and movement into three distinct, logical questions: **Де?** (Where are you?), **Куди?** (Where are you going?), and **Звідки?** (Where are you from?). Think of this as the "Location Trio." If we take a country like **Україна** (Ukraine), it changes its shape depending on which of the three questions you are answering. At this A1 level, you will learn to use these combinations as memorized chunks, while the full grammatical rules of the genitive case will be covered in A2.
+> **Ганна:** Привіт, Тарасе! **Звідки** ти йдеш? *(Hi, Taras! Where are you coming from?)*
+> **Тарас:** Привіт! Я йду **з роботи** (from work). А ти? *(Hi! I am walking from work. And you?)*
+> **Ганна:** Я йду **з магазину**. А де Олена? *(I am walking from the store. And where is Olena?)*
+> **Тарас:** Вона йде **зі школи**. *(She is walking from school.)*
+> **Ганна:** Куди вона йде? *(Where is she going?)*
+> **Тарас:** Вона йде **додому** (home). *(She is going home.)*
 
-*   **Де ти? — В Україні.** (Where are you? — In Ukraine.) This uses the locative case to show exactly where you ARE.
-*   **Куди ти їдеш? — В Україну.** (Where are you traveling to? — To Ukraine.) This uses the accusative case to show where you are GOING.
-*   **Звідки ти? — З України.** (Where are you from? — From Ukraine.) This is a genitive chunk, showing the point where you are FROM.
+Here, the pattern is exactly the same: **звідки** asks the question, and the preposition **з** or **зі** shows the starting point of the movement.
 
-To express this origin, you need a preposition. Just as you learned in Module 28, Ukrainian applies euphony rules to make speech flow smoothly. The basic preposition for "from" is **з**, and you will use it before most vowels and consonants, like **з Канади** (from Canada). If the next word starts with a sibilant sound (like s, sh, or z), you switch to **із** for easier pronunciation, as in **із США** (from the USA). For specific difficult consonant clusters, especially those starting with z, s, or sh, you use **зі**, which is why we say **зі Львова** (from Lviv).
+## Звідки? (Where From?)
 
-:::note
-You do not need to memorize complex euphony rules for **з**, **із**, and **зі** right now. Focus on learning the correct combinations as single blocks of vocabulary, like **зі США** (from the USA).
-:::
+You now have the complete trio of spatial questions in Ukrainian. These three questions form the foundation of how we talk about location and movement. We ask **Де ти?** (Where are you?) when talking about a static location, like **в Україні** (in Ukraine). We ask **Куди ти їдеш?** (Where are you going?) for a destination, like **в Україну** (to Ukraine). Finally, we ask **Звідки ти?** (Where are you from?) to find out the origin, like **з України** (from Ukraine).
 
-When you use this preposition, the noun that follows it must change its ending. Feminine nouns ending in **-а** change to **-и**: **Україна** becomes **з України**, **Канада** becomes **з Канади**, and **Одеса** becomes **з Одеси**. Feminine nouns ending in **-я** change to **-ї**: **Англія** becomes **з Англії**. Masculine place names ending in a consonant usually add an **-а**: **Київ** becomes **з Києва**, and **Харків** becomes **з Харкова**. These predictable patterns allow you to comfortably form the origin phrase for most common locations without needing to memorize a complex table.
+The question **Звідки ти?** translates to "Where are you from?", but it works differently than in English. First, it is a complete sentence all on its own. In Ukrainian, we do not need a verb like "to be" for this question. Second, the interrogative word **звідки** is a single, solid unit that cannot be split apart. You cannot put a preposition at the end of the sentence. The standard answer is simply **Я з** followed by your place of origin.
 
-:::caution
-English relies heavily on the verb "to be" to express location, but Ukrainian relies on prepositions and case endings. Never say **Я в України** to mean "I am from Ukraine" — always use **з** for your origin.
-:::
+To answer this question correctly, you use the pattern **з / із / зі** (from) followed by a specific form of the noun, which belongs to the genitive case. At this early stage, the best strategy is to memorize these common origins as fixed chunks. For cities, you will say **з Києва** (from Kyiv), **зі Львова** (from Lviv), **з Одеси** (from Odesa), or **з Харкова** (from Kharkiv). For everyday places in town, the pattern is the same: **з роботи** (from work), **зі школи** (from school), **з магазину** (from the store), or **з банку** (from the bank).
 
-<!-- INJECT_ACTIVITY: answer-zvidky -->
+You have likely noticed that the preposition changes its shape. Ukrainian uses euphony rules to make speech flow smoothly and avoid awkward clusters of sounds. The basic form **з** is used before most vowels and simple consonants, as in **з Канади** or **з України**. The variant **із** helps with pronunciation before certain letters, like **із Торонто**. Finally, we use **зі** before difficult consonant clusters or specific tricky sounds, such as **зі Львова**, **зі школи**, and **зі США**.
 
-The question **Звідки?** is used for much more than just international geography. You will use it constantly in your daily life to explain your routine movements. The same exact pattern applies to everyday locations in your city. When you finish your shift, you are walking **з роботи** (from work). After buying groceries, you are coming **з магазину** (from the store). When you finish your financial tasks, you step out **з банку** (from the bank). And when classes end, a student walks **зі школи** (from school).
+<!-- INJECT_ACTIVITY: fill-in-where-from -->
 
-<!-- INJECT_ACTIVITY: location-trio-sort -->
+## Країни і міста (Countries and Cities)
 
-## Країни і міста — Countries and Cities
+When discussing origins, it is helpful to know the names of major Ukrainian cities and how they change after the preposition. The capital is **Київ**, and someone from there says **Я з Києва**. A resident of **Львів** will say **Я зі Львова**. For the southern coastal city of **Одеса**, the origin form is **з Одеси**. A person from the eastern city of **Харків** says **Я з Харкова**. Other major centers include **Дніпро**, which becomes **з Дніпра**, and **Запоріжжя**, which takes the form **із Запоріжжя**.
 
-Major Ukrainian cities provide excellent practice for forming these origin phrases. The capital city is **Київ** (Kyiv), so you would say **з Києва** (from Kyiv). The cultural hub of the west is **Львів** (Lviv), which becomes **зі Львова** (from Lviv). The southern port is **Одеса** (Odesa), forming **з Одеси** (from Odesa). In the east, we have **Харків** (Kharkiv), which changes to **з Харкова** (from Kharkiv). The central city of **Дніпро** (Dnipro) becomes **з Дніпра** (from Dnipro), and the southeastern industrial center **Запоріжжя** (Zaporizhzhia) becomes **із Запоріжжя** (from Zaporizhzhia).
+You will also want to know how to state your home country. We have already seen **Україна**, which becomes **з України**, and **Канада**, which changes to **з Канади**. Other very common countries include **США** (USA), which uses the special form **зі США**. For European nations, **Англія** (England) becomes **з Англії**, **Німеччина** (Germany) is **з Німеччини**, and **Польща** (Poland) becomes **з Польщі**. Further away, **Франція** (France) changes to **з Франції**, **Італія** (Italy) is **з Італії**, and **Японія** (Japan) becomes **з Японії**.
 
-:::tip
-The name **Україна** historically means "land," "region," or "our country." It is not a "borderland," as Russian imperialist myths have tried to claim. And its capital, **Київ**, has always been the historical heart of this land.
-:::
+Your geographic origin is often the first step in describing your identity. This connects directly to the nationalities and languages you learned earlier. There is a logical, three-step progression when introducing yourself to a new group of people. First, you state your origin: **Я з України** (I am from Ukraine). Next, you state your nationality: **Я українець** or **Я українка** (I am Ukrainian). Finally, you state your primary language: **Я говорю українською** (I speak Ukrainian). This full sequence gives a complete picture of who you are.
 
-When interacting in international environments, you will also need to recognize common country names. If someone asks where you are from, you might need to say you are from Canada: **Канада** (Canada) becomes **з Канади** (from Canada). The United States is usually abbreviated, giving us **зі США** (from the USA) or occasionally **зі Штатів** (from the States). Other frequent European nations include **Англія** (England), which forms **з Англії** (from England), and **Німеччина** (Germany), which becomes **з Німеччини** (from Germany). You might also meet people from neighboring **Польща** (Poland), saying **з Польщі** (from Poland), or from further away like **Франція** (France), making **із Франції** (from France), **Італія** (Italy), making **з Італії** (from Italy), and **Японія** (Japan), which changes to **з Японії** (from Japan).
+People frequently move, so you will often need to contrast your current location with your origin. To do this naturally, you can join two facts together using the conjunction **але** (but). You state your current location using **в** or **на** plus the locative ending, and then state your origin using **з** plus the genitive form. For example, a student might explain: **Я живу в Києві, але я зі Львова** (I live in Kyiv, but I am from Lviv).
 
-Your origin is deeply connected to your identity and the language you speak. We can review concepts from Module 05 and link them to the new origin pattern. Notice how these phrases flow together in a logical sequence.
-
-*   **Мене звати Петро.** (My name is Petro.)
-*   **Я з України.** (I am from Ukraine.)
-*   **Я українець.** (I am a Ukrainian man.)
-*   **Я говорю українською.** (I speak Ukrainian.)
-
-We can contrast this with someone from a different background:
-
-*   **Мене звати Джон.** (My name is John.)
-*   **Я з Англії.** (I am from England.)
-*   **Я англієць.** (I am an Englishman.)
-*   **Я говорю англійською.** (I speak English.)
-
-<!-- INJECT_ACTIVITY: preposition-quiz -->
-
-Often, where you are from is not where you are right now. You can combine your origin and your current location in a single sentence to tell a richer story about yourself. To do this, use the conjunction **але** (but) and the adverb **зараз** (now). This is an excellent way to practice both the "from" pattern and the "in" pattern together. 
-
-*   **Я живу в Києві, але я зі Львова.** (I live in Kyiv, but I am from Lviv.)
-*   **Вона з Канади, але зараз вона живе в Україні.** (She is from Canada, but now she lives in Ukraine.)
-
-<!-- INJECT_ACTIVITY: location-contrast -->
+<!-- INJECT_ACTIVITY: fill-in-contrast-location-origin -->
 
 ## Підсумок — Summary
 
-You now have a complete, functional system for describing spatial relations and movement in Ukrainian. A review of the three core questions will solidify this system. 
+This module has given you the final piece of the spatial puzzle in Ukrainian. You now have a complete toolkit for talking about where things happen, where things are going, and where things come from. Remember the three fundamental questions and their grammatical pairs. When asking **Де?** (Where at?), use the prepositions **в** or **на** with the static locative case, as in **В Україні**. When asking **Куди?** (Where to?), use **в** or **на** with the accusative case to show direction, as in **В Україну**. Finally, when asking **Звідки?** (Where from?), use the prepositions **з**, **із**, or **зі** with a memorized genitive chunk, as in **З України**.
 
-When you want to express a static location, you ask **Де?** (Where?). The answer usually requires the prepositions **в** or **на** and the locative case, such as **в Україні** (in Ukraine). 
+To describe your origin, you will always rely on the prepositions **з**, **із**, or **зі**, depending on the sounds that follow them. This small change ensures that your speech remains smooth and natural. Always remember that Ukrainian spatial questions like **звідки** are single, independent words. Unlike English, where you might ask a question that ends with a dangling preposition, Ukrainian keeps the concept of origin tightly bound into one compact interrogative word.
 
-When you want to talk about a destination, you ask **Куди?** (Where to?). The answer also uses **в** or **на** but with the accusative case, such as **в Україну** (to Ukraine). 
+Before you move forward, take a moment to answer these three practical self-check questions. First, consider the question: **Звідки ти?** (Where are you from?). Think of the name of your home country and your home city, and practice saying them out loud using the correct form of **з**, **із**, or **зі**. Second, ask yourself: **Де ти зараз живеш?** (Where do you live now?). Picture your current city or town, and formulate a sentence using **в** or **на** to describe this static location. Finally, think about your immediate plans and ask: **Куди ти йдеш після цього уроку?** (Where are you going after this lesson?). Decide on your destination and express that movement using **в** or **на**, or use the single directional word **додому** if you are heading back to your house.
 
-Finally, when you are talking about an origin, you ask **Звідки?** (Where from?). The answer requires the prepositions **з**, **із**, or **зі** plus a genitive chunk, like **з України** (from Ukraine).
-
-Here is a summary of the most frequent city and country changes you learned in this module:
-*   **Україна** → **з України**
-*   **Канада** → **з Канади**
-*   **Німеччина** → **з Німеччини**
-*   **Київ** → **з Києва**
-*   **Львів** → **зі Львова**
-*   **Харків** → **з Харкова**
-
-To ensure you have mastered these concepts, try to answer the following self-check questions out loud. Use your own real-world information where possible.
-
-*   **Звідки ти?** (Where are you from?) → **Я з...**
-*   **Звідки твій друг?** (Where is your male friend from?) → **Він з...**
-*   **Звідки твоя подруга?** (Where is your female friend from?) → **Вона з...**
-*   **Ти зараз у Києві чи у Львові?** (Are you in Kyiv or in Lviv right now?) → **Я зараз у...**
-*   **Звідки ти йдеш зараз?** (Where are you coming from right now?) → **Я йду з...**
-*   **Де ти живеш?** (Where do you live now?) → **Я живу в...**
-*   **Куди ти йдеш після уроку?** (Where are you going after this lesson?) → **Я йду в/на...**
-
-By mastering the question **Звідки?**, you have unlocked the final piece of the basic location puzzle. You can now confidently describe where you are, where you are heading, and where you came from. In the next module, Checkpoint — Places, you will review and consolidate all of this spatial vocabulary before moving on to new topics.
-
+<!-- INJECT_ACTIVITY: group-sort-location-trio -->
+<!-- INJECT_ACTIVITY: quiz-preposition-choice -->
 </module_content>
 
 ---
@@ -250,48 +231,68 @@ version: "1.0"
 module: where-from
 level: a1
 
+# NOTE — these are SHAPE examples. The real targets are at the top of this prompt
+# (10 total / 4–6 inline / 6–9 workbook,
+# 6+ items per activity). The shapes below are TRUNCATED for readability;
+# YOUR output MUST hit those minimums.
+
 inline:
   - id: marker-id-here        # MUST match an <!-- INJECT_ACTIVITY: ... --> marker
     type: quiz                 # activity type
     instruction: "Оберіть правильний варіант"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - question: "_____ стіл"
-        options: ["мій", "моя", "моє"]
+        options: ["мій", "моя", "моє", "мої"]
         correct: 0             # 0-based index
+      - question: "Це ____ книга."
+        options: ["мій", "моя", "моє", "мої"]
+        correct: 1
+      # ... add at least 6 items total — never stop at 1-2
 
   - id: another-marker-id
     type: fill-in
     instruction: "Вставте правильне слово"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - sentence: "Це ____ кімната."
         answer: "моя"
         options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ вікно."
+        answer: "моє"
+        options: ["мій", "моя", "моє"]
+      # ... ≥ 6 items total
 
 workbook:
-  - type: match-up
+  - id: match-up-vocab
+    type: match-up
     instruction: "З'єднайте пари"
-    pairs:
+    pairs:                     # ← real output: ≥ 6 pairs
       - left: "стіл"
         right: "він"
       - left: "книга"
         right: "вона"
       - left: "вікно"
         right: "воно"
+      # ... ≥ 6 pairs total
 
-  - type: group-sort
+  - id: group-sort-gender
+    type: group-sort
     instruction: "Розподіліть слова за категоріями"
     groups:
-      - label: "Category A"
-        items: ["word1", "word2"]
-      - label: "Category B"
-        items: ["word3", "word4"]
+      - label: "Чоловічий рід"
+        items: ["стіл", "олівець", "будинок"]   # ≥ 3 items per group
+      - label: "Жіночий рід"
+        items: ["книга", "ручка", "школа"]
+      - label: "Середній рід"
+        items: ["вікно", "море", "молоко"]
 
-  - type: true-false
+  - id: true-false-grammar
+    type: true-false
     instruction: "Правда чи ні?"
-    items:
-      - statement: "Statement here"
-        correct: true
-        explanation: "Why it's true"
+    items:                     # ← real output: ≥ 6 items
+      - statement: "«Книга» — це чоловічий рід."
+        correct: false
+        explanation: "Книга закінчується на -а, отже жіночий рід."
+      # ... ≥ 6 items total
 
   - type: error-correction
     instruction: "Виправте помилку"
@@ -362,7 +363,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -442,10 +443,15 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 ## Quality Rules
 
-**ITEM COUNT MINIMUMS (non-negotiable):**
-- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
-- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
-- If you can't think of enough items, add more examples from the module's vocabulary and content.
+**ACTIVITY COUNT MINIMUMS (non-negotiable, audit-enforced):**
+- **Total: 10 activities.** Inline: 4–6. Workbook: 6–9. The audit gate FAILS the module if you ship fewer.
+- **Type diversity: workbook MUST cover ≥5 distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
+- **Match the inline markers exactly.** Every `<!-- INJECT_ACTIVITY: id -->` marker in the prose needs a matching inline activity with that exact id. Skipping markers means the lesson tab is broken.
+
+**ITEM COUNT MINIMUMS (non-negotiable, per-activity):**
+- **Default minimum: 6 items per activity.** Quiz, fill-in, match-up, true-false, anagram, error-correction, translate, cloze, mark-the-words, divide-words, count-syllables, odd-one-out, group-sort categories: all ≥ 6.
+- **Lower minimums for specific types only:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items, essay-response/critical-analysis = 1 prompt.
+- If you can't think of enough items, add more examples from the module's vocabulary and content. NEVER ship a 1-item or 2-item activity unless its type cap explicitly allows it.
 - **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
 - **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
@@ -552,6 +558,27 @@ IMPORTANT: After using tools, output your COMPLETE module content as plain text.
 1. Run `verify_words` on all Ukrainian words in your exercises — every word must exist in VESUM
 2. Run `query_cefr_level` on any word you're unsure about — it must be a1-appropriate
 3. For fill-in answers and distractors, verify the exact form (case, number, gender) with `verify_lemma`
+
+---
+
+## ⚠️ MANDATORY FINAL CHECKLIST — verify before emitting YAML
+
+Walk through this checklist explicitly before you start emitting. If ANY box is unchecked, fix it FIRST.
+
+- [ ] My output has **at least 4** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
+- [ ] My output has **at least 6** workbook activities.
+- [ ] **Total ≥ 10.**
+- [ ] **Every** activity has **at least 6** items, pairs, or statements (except types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3, essay-response=1).
+- [ ] The module (inline + workbook combined) uses **at least 0 distinct activity types** (or 4+ when 0 = 0 and the workbook size allows it). I am NOT shipping a wall of quizzes.
+- [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
+- [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
+- [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+- [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+- [ ] My inline count is between 4 and 6. I did NOT create more injection markers than 6.
+- [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
+- [ ] At B1+, all instructions are in Ukrainian (no English fallback).
+
+If you cannot tick all of these, REGENERATE the activities BEFORE outputting. Shipping under-spec means the build rejects you and the heal loop has to redo your work — wasting compute.
 
 ---
 

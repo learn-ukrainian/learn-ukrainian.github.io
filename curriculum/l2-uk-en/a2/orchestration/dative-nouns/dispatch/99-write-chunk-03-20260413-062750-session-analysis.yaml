@@ -1,0 +1,49 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T04-26-93616985.json
+phase: write-chunk-03
+prompt_chars: 41563
+response_chars: 4231
+prompt_words: 5889
+response_words: 675
+sections:
+- name: header
+  start: 0
+  length: 448
+  fraction: 0.0108
+- name: skeleton
+  start: 448
+  length: 1102
+  fraction: 0.0265
+- name: prior_summary
+  start: 1550
+  length: 3363
+  fraction: 0.0809
+- name: plan
+  start: 4913
+  length: 12621
+  fraction: 0.3037
+- name: wiki
+  start: 10056
+  length: 23797
+  fraction: 0.5726
+- name: output_spec
+  start: 41331
+  length: 232
+  fraction: 0.0056
+large_sections:
+- wiki
+directives_total: 14
+directives_covered: 11
+directives_missed:
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 3/11 keywords (27%)
+- kind: inject_activity
+  text: quiz-feminine-alternation
+  covered: false
+  coverage_note: marker missing

@@ -1,43 +1,52 @@
-## Магія української фонології (The Magic of Ukrainian Phonology)
+## Магія української фонології (~770 words)
 
-Ukrainian phonology is a dynamic and living system that directly affects how words are built and pronounced. One of its most defining and predictable features is vowel alternation, specifically the "closed syllable" rule. When a syllable ends in a consonant and has no following vowel in the word, the root vowels «о» and «е» frequently change into the vowel «і». However, when the word changes grammatical form and the syllable opens up due to an added vowel ending, the «і» reverts back to its original «о» or «е». This rhythmic shifting happens constantly when declining nouns or changing their number, giving the language its characteristic bounce.
+Welcome to the magic of Ukrainian sounds. As you continue your journey, you will notice that words often change slightly when they take on new grammatical roles. These changes in word stems during declension are not random exceptions designed to frustrate learners. Instead, they follow deep historical, predictable patterns that make the language flow smoothly. To master these patterns, we need to introduce the concept of **чергування** (alternation). This process involves swapping one sound for another. We will look at the predictable swapping of a **голосний** (vowel) as well as the transformation of a **приголосний** (consonant). Understanding these rules will make vocabulary acquisition much more intuitive.
 
-Мій новий стіл стоїть у світлій кімнаті. Я бачу великого стола біля вікна. Наш старий Київ дуже красивий навесні. Я живу недалеко від Києва. Це був дуже теплий і приємний вечір. Ми довго чекали до пізнього вечора.
+Українська мова має дуже логічну систему звуків. Коли ми змінюємо форму слова, ми часто змінюємо один звук на інший. Це робить нашу мову мелодійною та зручною для швидкого мовлення.
 
-> *My new table stands in the bright room. I see a large table near the window. Our old Kyiv is very beautiful in the spring. I live not far from Kyiv. It was a very warm and pleasant evening. We waited a long time until late evening.*
+> *The Ukrainian language has a very logical sound system. When we change the form of a word, we often change one sound to another. This makes our language melodic and convenient for fast speech.*
 
-Another crucial historical aspect of the sound system is the mutation of consonants, widely known as the First Palatalization. This natural phonetic process affects the hard velar consonants «г», «к», and «х», which organically transform into the softer hissing sounds «ж», «ч», and «ш» when specific suffixes are attached to the root. This mutation is extremely common when forming diminutive words, which Ukrainians use frequently in daily life to express affection, small size, or tenderness. Understanding this shift helps you recognize the root word hidden inside a complex affectionate term.
+Let us start with the most famous vowel shift in the language: the alternation of «о» or «е» with «і». This happens because of the "closed syllable" rule. A closed syllable is one that ends in a consonant. Historically, when a syllable became closed, the vowels «о» and «е» transformed into the narrower sound «і». However, when you add an ending to the word, the syllable opens up again, and the original «о» or «е» returns. This explains why dictionaries show one vowel, but sentences demand another.
 
-Моя права нога зараз дуже болить. Дивись, яка це маленька ніжка. Твоя ліва рука сьогодні дуже холодна. Ця дитяча ручка така тепла і м'яка. У цього собаки дуже велике вухо. Це таке миле маленьке вушко.
+Мій брат купив новий стіл. Цього великого стола раніше тут не було. Я дуже люблю Київ. Ми поїхали з Києва до Львова.
 
-> *My right leg hurts a lot right now. Look what a small leg this is. Your left hand is very cold today. This child's hand is so warm and soft. This dog has a very big ear. This is such a cute little ear.*
+> *My brother bought a new table. This big table was not here before. I love Kyiv very much. We went from Kyiv to Lviv.*
 
-As you continue learning grammar, you will frequently encounter the Second Palatalization, which directly impacts how you decline words in the Dative and Locative cases. When a feminine noun ending in «-а» or «-я» has a stem ending in the consonants «г», «к», or «х», these sounds soften into «з», «ц», and «с» immediately before the ending «-і». Forgetting this foundational rule is a common mistake that immediately gives away a non-native speaker. Mastering this change is essential for speaking correctly about locations and recipients.
+As you can see, the base form «стіл» has a closed syllable, so it uses «і». But when the **відмінок** (case) changes to Genitive, it becomes «стола». The syllable is now open (сто-ла), so the «о» comes back. The exact same magic happens with the capital of Ukraine: «Київ» uses «і», but «з Києва» reveals the hidden «е».
 
-:::info
-**Grammar box** — The Second Palatalization is an absolute rule in Ukrainian euphony. It ensures smooth transitions between sounds. You cannot say «подругі» or «дорогі»; you must always say «подрузі» and «дорозі».
+Now we move to consonant alternations, specifically the first palatalization. This is a crucial rule for feminine nouns ending in «-а» or «-я». When these nouns are put into the Dative or **місцевий** (locative) cases, the ending changes to «-і». But Ukrainian phonetics strongly dislikes pronouncing the hard consonants «г», «к», or «х» right before the soft vowel «і». Therefore, these consonants soften and mutate: «г» becomes «з», «к» becomes «ц», and «х» becomes «с».
+
+Моя права нога дуже болить. У мене є маленька рана на нозі. Мама тримає дитину за руку. У її руці є нова іграшка. На вікні сидить велика муха. Я бачу бруд на цій мусі.
+
+> *My right leg hurts a lot. I have a small wound on my leg. The mother holds the child by the hand. There is a new toy in her hand. A big fly is sitting on the window. I see dirt on this fly.*
+
+:::note
+**Quick tip**
+A very common mistake among learners is saying «подругі» (to a female friend) instead of the correct «подрузі». Always remember that the «г» must change to a «з» before the «і» ending in these cases!
 :::
 
-Моя нова машина стоїть на дорозі. Я зараз тримаю телефон у правій руці. На чистому вікні сидить велика муха. Я не люблю, коли мусі там так зручно.
+Another fascinating aspect of Ukrainian pronunciation is consonant assimilation. First, you should know that the letter combinations «дж» and «дз» function as single sounds, known as affricates. They are not two separate consonants smashed together, but rather one unified, buzzing sound. You will hear this in words like «джерело» (spring) or «бджола» (bee). Furthermore, Ukrainian features voicing assimilation before voiced consonants. This means that a voiceless consonant will borrow the "voice" of the consonant immediately following it.
 
-> *My new car is parked on the road. I am holding the phone in my right hand right now. A large fly is sitting on the clean window. I do not like when the fly is so comfortable there.*
+У лісі є чисте джерело. Там літає велика бджола. Наша боротьба за свободу триває. Ми довго чекали нашого друга біля вокзалу.
 
-Stress in the Ukrainian language is completely free and highly mobile, meaning it is not permanently fixed to a specific syllable like it is in French or Polish. Because of this unpredictability, stress alone has the power to change the entire meaning of a word. Words that share the exact same spelling but have different stress patterns are called homographs. Paying close attention to how native speakers stress their words is absolutely essential for avoiding confusion and ensuring clear comprehension.
+> *There is a clean spring in the forest. A big bee is flying there. Our struggle for freedom continues. We waited a long time for our friend near the station.*
 
-На високій горі стоїть дуже старий замок. Я ніяк не можу відкрити цей новий замок. Ми справді ніколи там раніше не були. Мені зараз ніколи сьогодні з тобою гуляти.
+In the word «боротьба» (struggle), the voiceless «т» stands before the voiced «б». Because of this, the «т» is pronounced as a voiced «д», making the word sound like [бород'ба]. You can also observe this in «просьба» (request), which sounds like [проз'ба]. Similarly, «вокзал» (train station) is pronounced [воґзал] because the voiceless «к» assimilates to the voiced «з» that follows it.
 
-> *A very old castle stands on the high mountain. I simply cannot open this new lock. We really have never been there before. I have no time to walk with you today right now.*
+Let us talk about the soul of a word: its **наголос** (stress (accent)). In Ukrainian, stress is not fixed to a specific syllable like it is in some other languages. It is free and mobile, which means it plays a crucial role in conveying correct meaning. Sometimes, the only difference between two completely different words is which syllable receives the emphasis. These words are called homographs. Misplacing the stress can completely change what you are trying to say.
 
-Consonant assimilation is a phonetic phenomenon that makes spoken Ukrainian flow smoothly and effortlessly. The letter combinations «дж» and «дз» are not pronounced as two separate, distinct sounds, but rather as single unified affricate consonants. Additionally, voiceless consonants automatically become voiced when they stand immediately before voiced consonants in a word. This means the written spelling of a word does not always perfectly match its phonetic output in rapid, natural speech.
+Ми дивимося на старовинний замок. Мій новий замок на дверях зламався. Я ніколи не їм м'яса. Мені зараз ніколи відпочивати.
 
-У нашому саду літає велика бджола. Я раптом чую дуже гучний шкільний дзвінок. Це була справді велика і важлива просьба. Ми довго чекаємо на головному вокзалі.
+> *We are looking at an ancient castle. My new lock on the door broke. I never eat meat. I have no time to rest right now.*
 
-> *A large bee is flying in our garden. I suddenly hear a very loud school bell. It was truly a big and important request. We are waiting for a long time at the main train station.*
+If you stress the first syllable in «замок», it means "castle". If you stress the second syllable, it means "lock". Similarly, «ніколи» means "never", but «ніколи» means "no time". Mastering stress patterns is just as important as learning the letters themselves.
 
-Finally, the mobility of stress extends deeply into noun and verb paradigms. As you decline a noun through its cases or conjugate a verb across different persons, the stressed syllable can frequently shift back and forth between the stem and the ending. Recognizing these mobile stress patterns early on helps you predict how a completely new word will sound in different grammatical contexts. This awareness ultimately makes your conversational speech much more natural, fluid, and confident.
+Finally, you will discover that stress often shifts within the exact same word depending on its grammatical role. This mobile stress in noun paradigms is a key feature of the Ukrainian rhythm. The stress shifts between the word stem and the case ending across different forms. Recognizing these shifts will help you predict the pronunciation of new nouns and speak with a natural, authentic cadence.
 
-Ця холодна гірська вода дуже смачна. Я з радістю п'ю цю холодну воду. Моя права рука сьогодні сильно болить. Підніміть ваші обидві руки високо вгору.
+Холодна вода тече з крана. Я хочу пити чисту воду. Моя права рука відпочиває. Мої дві руки дуже втомилися після роботи.
 
-> *This cold mountain water is very tasty. I gladly drink this cold water. My right hand hurts badly today. Raise both your hands high up.*
+> *Cold water flows from the tap. I want to drink clean water. My right hand is resting. My two hands are very tired after work.*
 
-<!-- INJECT_ACTIVITY: fill-in, Phonological Alternation Pairs, 8 items -->
+Notice how the stress in «вода» in the **називний** (nominative) case falls on the ending, but when it becomes the direct object «воду» in the **знахідний** (accusative) case, the stress jumps back to the stem. The word «рука» stresses the ending, but «руки» stresses the stem. You will even see changes like this in the **кличний** (vocative) case. Embracing this shifting melody will bring your Ukrainian to a whole new level.
+
+<!-- INJECT_ACTIVITY: fill-in-phonological-alternations -->

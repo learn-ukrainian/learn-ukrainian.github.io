@@ -1,7 +1,7 @@
 # Audit Report: M72 — gerund-phrases.md
 **Level:** B1 | **Module:** M72 | **Phase:** B1.6 | **Pedagogy:** PPP | **Target:** 4000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-04-10 21:26:39
+**Generated:** 2026-04-11 16:38:04
 
 ## Configuration
 **Type:** B1-grammar
@@ -18,88 +18,65 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | reading | reading | 0 | 3 | ❌ |
-| 2 | fill-in | fill-in | 6 | 8 | ❌ |
-| 3 | quiz | quiz | 6 | 8 | ❌ |
-| 4 | match-up | match-up | 6 | 8 | ❌ |
-| 5 | error-correction | error-correction | 6 | 6 | ✅ |
-| 6 | group-sort | group-sort | 6 | 6 | ✅ |
-| 7 | error-correction | error-correction | 6 | 6 | ✅ |
-| 8 | essay-response | essay-response | 1 | 6 | ❌ |
-| 9 | translate | translate | 6 | 6 | ✅ |
-| 10 | unjumble | unjumble | 6 | 6 | ✅ |
-| 11 | true-false | true-false | 6 | 8 | ❌ |
-| 12 | fill-in | fill-in | 6 | 8 | ❌ |
-| 13 | match-up | match-up | 6 | 8 | ❌ |
-| 14 | anagram | anagram | 6 | 6 | ✅ |
+| 1 | fill-in |  | 6 | 8 | ❌ |
+| 2 | quiz |  | 6 | 8 | ❌ |
+| 3 | match-up |  | 6 | 8 | ❌ |
+| 4 | quiz |  | 6 | 8 | ❌ |
+| 5 | translate |  | 6 | 6 | ✅ |
+| 6 | group-sort |  | 8 | 6 | ✅ |
+| 7 | essay-response |  | 1 | 6 | ❌ |
 
 **Summary:**
-- Total activities: 14 (target: 0-4) ❌
-- Unique types: 11 (minimum: 3) ✅
-- Priority types used: 5/7 (error-correction, essay-response, fill-in, match-up, quiz) ✅
-- Low density activities: 8
+- Total activities: 7 (target: 0-4) ❌
+- Unique types: 6 (minimum: 3) ✅
+- Priority types used: 4/7 (essay-response, fill-in, match-up, quiz) ✅
+- Low density activities: 5
 
 ## PEDAGOGICAL VIOLATIONS
 - **[LEVEL_RESTRICTION]** Activity 'essay-response' not allowed at B1
   - FIX: Use level-appropriate activities. 'essay-response' is introduced at A2+.
-- **[LEVEL_RESTRICTION]** Activity 'anagram' not allowed at B1
-  - FIX: Anagram is only for A1 M01-M10 (Cyrillic scaffolding). Use unjumble instead.
-- **[COMPLEXITY]** reading '' has 0 items (minimum: 3)
-  - FIX: Add more items. B1 reading requires at least 3 items.
 - **[COMPLEXITY]** fill-in '' has 6 items (minimum: 8)
   - FIX: Add more items. B1 fill-in requires at least 8 items.
 - **[COMPLEXITY]** quiz '' has 6 items (minimum: 8)
   - FIX: Add more items. B1 quiz requires at least 8 items.
 - **[COMPLEXITY]** match-up '' has 6 pairs (target: 12-16)
   - FIX: Adjust number of pairs to 12-16.
-- **[COMPLEXITY]** group-sort '' has 6 items (target: 12-999)
+- **[COMPLEXITY]** quiz '' has 6 items (minimum: 8)
+  - FIX: Add more items. B1 quiz requires at least 8 items.
+- **[COMPLEXITY]** group-sort '' has 8 items (target: 12-999)
   - FIX: Adjust number of items to sort to 12-999.
-- **[COMPLEXITY_WORD_COUNT]** unjumble '' item 1 has 4 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble '' item 2 has 5 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble '' item 3 has 5 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble '' item 4 has 7 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble '' item 5 has 5 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble '' item 6 has 4 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[COMPLEXITY]** true-false '' has 6 items (minimum: 8)
-  - FIX: Add more items. B1 true-false requires at least 8 items.
-- **[COMPLEXITY]** fill-in '' has 6 items (minimum: 8)
-  - FIX: Add more items. B1 fill-in requires at least 8 items.
-- **[COMPLEXITY]** match-up '' has 6 pairs (target: 12-16)
-  - FIX: Adjust number of pairs to 12-16.
-- **[INLINE_ENGLISH_IN_PROSE]** Inline English translations in B1+ prose (14 occurrences): (He worked tirelessly), (The frightened boy ran very fast), (He sat with his hands folded) — breaks immersion target
-  - FIX: Remove inline English translations. Use context clues, Ukrainian definitions, or move translations to vocabulary section
-- **[HINT_IN_ACTIVITY]** anagram activity 'Untitled' has item-level hint in item 1
-  - FIX: Remove all 'hint' fields from activity items (they break activities and provide no real pedagogical value)
-- **[STATE_STANDARD_LOW_IMMERSION]** Module 72 has 87.3% immersion (target: 90.0%+)
+- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'if yes,...'.
+  - FIX: Vary sentence structure.
+- **[GLOSSARY_LIST_IN_PROSE]** Glossary-style list (3 items) in narrative prose starting: '**Прочитавши листа, Оленка задумалася.** — *Having read the letter, Olenka fell ' — vocab tables belong in vocabulary YAML
+  - FIX: Move vocabulary definitions to vocabulary/{slug}.yaml or rewrite as natural prose with words introduced in context
+- **[GLOSSARY_LIST_IN_PROSE]** Glossary-style list (3 items) in narrative prose starting: '**Майстри працювали не покладаючи рук, щоб встигнути до свята.** — *The craftsme' — vocab tables belong in vocabulary YAML
+  - FIX: Move vocabulary definitions to vocabulary/{slug}.yaml or rewrite as natural prose with words introduced in context
+- **[GLOSSARY_LIST_IN_PROSE]** Glossary-style list (3 items) in narrative prose starting: '**Старий чоловік стояв похилившись.** — *The old man stood leaning.*' — vocab tables belong in vocabulary YAML
+  - FIX: Move vocabulary definitions to vocabulary/{slug}.yaml or rewrite as natural prose with words introduced in context
+- **[STATE_STANDARD_LOW_IMMERSION]** Module 72 has 25.5% immersion (target: 90.0%+)
   - FIX: Add more Ukrainian content to reach 90%+ immersion for full immersion modules
 
 ## Recommendation
-**📝 UPDATE** (severity 60/100)
+**🔄 REWRITE** (severity 100/100)
 
-- Revision recommended (severity 60/100)
-- 19 violations (severe - consider revision)
+- 11 violations (severe - consider revision)
+- Immersion 60% off target (major rebalancing needed)
 - Activity density below minimum
 
 ## Gates
-- **Words:** ✅ 4778/4000 (raw: 4923)
-- **Activities:** ✅ 14/0
-- **Density:** ❌ 8 < 6
-- **Unique_types:** ✅ 11/3 types
+- **Words:** ✅ 6335/4000 (raw: 6543)
+- **Activities:** ✅ 7/0
+- **Density:** ❌ 5 < 6
+- **Unique_types:** ✅ 6/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ❌ 0/5
+- **Engagement:** ❌ 3/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 27/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 3 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 87.3% (target 85-100% (B1.7-8 Ukraine))
+- **Immersion:** ❌ 25.5% LOW (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ❌ 55% < 95% min (grammar) - REWRITE needed
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
@@ -112,18 +89,18 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 87 | 24 | 100% | 20% | 20.0% |
+| examples | 44 | 24 | 100% | 20% | 20.0% |
 | engagement | 0 | 5 | 0% | 15% | 0.0% |
 | dialogues | 0 | 4 | 0% | 15% | 0.0% |
-| variety | 0.95 | - | 95% | 10% | 9.5% |
+| variety | 0.94 | - | 94% | 10% | 9.4% |
 | cultural | 1 | 3 | 33% | 10% | 3.3% |
 | realworld | 20 | 3 | 100% | 10% | 10.0% |
 | visual | 0 | 3 | 0% | 5% | 0.0% |
-| questions | 52 | 5 | 100% | 5% | 5.0% |
+| questions | 65 | 5 | 100% | 5% | 5.0% |
 | tables | 1 | 2 | 50% | 4% | 2.0% |
 | paragraph_var | 1.00 | - | 100% | 3% | 3.0% |
 | proverbs | 10 | 1 | 100% | 3% | 3.0% |
-| **TOTAL** | | | | | **55.8%** |
+| **TOTAL** | | | | | **55.7%** |
 
 ### Dryness Flags & Fixes
 - ❌ **NO_ENGAGEMENT**
@@ -173,22 +150,19 @@
 ## Low Density Activities
 | Activity | Type | Items | Required | Fix |
 |----------|------|-------|----------|-----|
-| reading | reading | 0 | 3 | Add 3 more items |
-| fill-in | fill-in | 6 | 8 | Add 2 more items |
-| quiz | quiz | 6 | 8 | Add 2 more items |
-| match-up | match-up | 6 | 8 | Add 2 more items |
-| essay-response | essay-response | 1 | 6 | Add 5 more items |
-| true-false | true-false | 6 | 8 | Add 2 more items |
-| fill-in | fill-in | 6 | 8 | Add 2 more items |
-| match-up | match-up | 6 | 8 | Add 2 more items |
+|  | fill-in | 6 | 8 | Add 2 more items |
+|  | quiz | 6 | 8 | Add 2 more items |
+|  | match-up | 6 | 8 | Add 2 more items |
+|  | quiz | 6 | 8 | Add 2 more items |
+|  | essay-response | 1 | 6 | Add 5 more items |
 
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 745 | Included in Core |
-| **Правила відокремлення** | ✅ | 1133 | Included in Core |
-| **Порівняння зворотів: дієприкметниковий vs дієприслівниковий** | ✅ | 726 | Included in Core |
-| **Помилки та стилістика** | ✅ | 770 | Included in Core |
-| **Iнтегрована практика** | ✅ | 972 | Included in Core |
-| **Підсумок та перехід до M64** | ✅ | 432 | Included in Core |
+| **Intro/Narrative** | ✅ | 1220 | Included in Core |
+| **Правила відокремлення (~990 words)** | ✅ | 1410 | Included in Core |
+| **Порівняння зворотів: дієприкметниковий vs дієприслівниковий (~715 words)** | ✅ | 1147 | Included in Core |
+| **Помилки та стилістика (~715 words)** | ✅ | 828 | Included in Core |
+| **Iнтегрована практика (~770 words)** | ✅ | 1199 | Included in Core |
+| **Підсумок та перехід до M64 (~440 words)** | ✅ | 531 | Included in Core |

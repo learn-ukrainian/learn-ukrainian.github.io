@@ -1,29 +1,39 @@
-## Підсумок — Місцевий відмінок: від місця до сенсу (Summary — Locative Case)
+## Місцевий відмінок: від місця до сенсу (From Place to Meaning) (~390 words total)
 
-You have come a long way with the Locative case. In the beginning, you used it only to locate physical objects, like a book on a table or a person in a city. Now, you can use it to describe abstract periods of your life, professional spheres, and even the modern tools you use to communicate. It is no longer just about geography; it is about context.
+Тепер ви знаєте, що цей відмінок — це не тільки про місце на карті. Він відповідає на питання «де?», «коли?» та «як?». Цей відмінок допомагає нам описати **абстрактний** (abstract) простір, де відбувається подія. Наприклад, ваша **думка** (thought, opinion) або серйозна **проблема** (problem) існують у певному контексті.
 
-Ми починали з простих речень про фізичне місце. Тепер ми знаємо, що місцевий відмінок працює у дуже різних ситуаціях. Ми говоримо про наш досвід у дитинстві та про кар'єру в науці чи в політиці. Ми також розповідаємо, як ми спілкуємося по телефону або по інтернету. Цей відмінок допомагає нам пояснити контекст нашого життя.
+> *Now you know that this case is not just about a place on a map. It answers the questions "where?", "when?", and "how?". This case helps us describe the abstract space where an event happens. For example, your thought or a serious problem exist in a certain context.*
 
-> *We started with simple sentences about physical location. Now we know that the Locative case works in very different situations. We talk about our experience in childhood and about a career in science or in politics. We also tell how we communicate by phone or by the internet. This case helps us explain the context of our life.*
+Давайте подивимося на таблицю, яка об'єднує всі чотири функції. Ви побачите, що фізичне місце, абстрактна сфера, час та засіб комунікації використовують однакові закінчення.
 
-To help you remember these different roles, here is a consolidation matrix. It shows the four main functions of the Locative case, the prepositions they require, and practical examples for each category.
+> *Let's look at the table that combines all four functions. You will see that physical location, abstract sphere, time, and means of communication use the same endings.*
 
-| Функція (Function) | Прийменник (Preposition) | Приклад (Example) |
+| Функція (Function) | Питання (Question) | Приклад (Example) |
 | :--- | :--- | :--- |
-| Місце (Physical Location) | в/у, на | у місті, на столі |
-| Час (Time and Periods) | в/у, на | у січні, на цьому тижні, у дитинстві |
-| Сфера (Abstract Domains) | в/у, на | у житті, в освіті, на роботі |
-| Засіб (Means of Communication) | по | по телефону, по радіо, по скайпу |
+| Фізичне місце (Physical Location) | Де? (Where?) | у місті (in the city) |
+| Абстрактна сфера (Abstract Domain) | У чому? (In what?) | у житті (in life) |
+| Часовий простір (Temporal Space) | Коли? (When?) | у січні (in January) |
+| Засіб (Means / Channel) | Як? (How?) | по радіо (on the radio) |
 
-Let us do a quick final check before you finish this module. Remember that the Locative case is unique because it always requires a preposition. You cannot use it alone. The core prepositions are «у», «в», «на», «по», and «при».
+Ви можете будувати складні речення, поєднуючи кілька різних функцій. Це робить вашу українську мову дуже природною. Уявіть, що у вас була цікава **подорож** (journey, trip) або довгоочікувана **зустріч** (meeting, encounter). Ви можете описати всі деталі, якщо правильно використаєте **місцевий** (locative (case)) відмінок.
 
-:::info
-**Grammar check**
-Do you remember the difference between weeks and months? We use the preposition «у» for months, like in the phrase «у минулому місяці». However, we must use «на» for weeks, giving us «на цьому тижні». Also, pay attention to feminine abstract nouns ending in «-а». The word «політика» changes to «у політиці», just like «наука» becomes «у науці».
+> *You can build complex sentences by combining several different functions. This makes your Ukrainian language very natural. Imagine you had an interesting journey or a long-awaited meeting. You can describe all the details if you correctly use the locative case.*
+
+**Минулий** (past, previous) **місяць** (month) був дуже активним. Я купив новий **телефон** (phone, telephone) і часто дзвонив друзям.
+
+> *The past month was very active. I bought a new phone and often called friends.*
+
+Кожен новий **тиждень** (week) приносить цікаві події. Учора я розмовляв по телефону з колегою у Києві.
+
+> *Every new week brings interesting events. Yesterday I talked on the phone with a colleague in Kyiv.*
+
+:::tip
+**Did you know?** — The locative case is unique because it never appears without a preposition. Whether you use «в/у», «на» or «по», the preposition is the key that unlocks the specific meaning of the ending.
 :::
 
-Your final challenge is to build complex sentences that combine two or three of these functions at the same time. This shows true mastery of the case in everyday conversations.
+Ваше розуміння цього відмінка значно еволюціонувало. Він став універсальним інструментом для вираження складних нюансів. Тепер ви можете вільно говорити про свої плани, ділитися новинами та описувати свій досвід.
 
-У минулому місяці я працював на новій роботі і часто говорив по телефону. На цьому тижні ми слухали новини по радіо у машині. У дитинстві мій брат мріяв про кар'єру в музиці.
+> *Your understanding of this case has evolved significantly. It has become a versatile tool for expressing complex nuances. Now you can freely talk about your plans, share news, and describe your experience.*
 
-> *Last month I worked at a new job and often talked on the phone. This week we listened to the news on the radio in the car. In childhood, my brother dreamed of a career in music.*
+<!-- INJECT_ACTIVITY: quiz-locative-functions -->
+<!-- INJECT_ACTIVITY: match-up-expressions -->

@@ -1,0 +1,50 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T14-23-d6c7ce38.json
+phase: write-chunk-02
+prompt_chars: 48984
+response_chars: 9193
+prompt_words: 7039
+response_words: 1443
+sections:
+- name: header
+  start: 0
+  length: 412
+  fraction: 0.0084
+- name: skeleton
+  start: 412
+  length: 1151
+  fraction: 0.0235
+- name: prior_summary
+  start: 1563
+  length: 3352
+  fraction: 0.0684
+- name: plan
+  start: 4915
+  length: 18412
+  fraction: 0.3759
+- name: wiki
+  start: 16848
+  length: 25453
+  fraction: 0.5196
+- name: output_spec
+  start: 48780
+  length: 204
+  fraction: 0.0042
+large_sections:
+- wiki
+directives_total: 23
+directives_covered: 20
+directives_missed:
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 3/11 keywords (27%)
+- kind: inject_activity
+  text: 'match-up, Match medical word families: лікар-лікувати-ліки, біль-болить-безболісний,
+    12 items'
+  covered: false
+  coverage_note: marker missing

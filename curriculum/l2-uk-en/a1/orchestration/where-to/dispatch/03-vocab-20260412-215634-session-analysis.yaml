@@ -1,0 +1,68 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T19-56-49613431.json
+phase: vocab
+prompt_chars: 11681
+response_chars: 2753
+prompt_words: 1913
+response_words: 329
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.0683
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.0197
+- name: plan
+  start: 1028
+  length: 10653
+  fraction: 0.912
+large_sections:
+- plan
+directives_total: 10
+directives_covered: 0
+directives_missed:
+- kind: must
+  text: When traveling to a city, you must use the verb **їхати** (to go by transport)
+    combined with the preposition **в** or **у** and the name of the city.
+  covered: false
+  coverage_note: 3/12 keywords (25%)
+- kind: must
+  text: We must explicitly contrast this directional use of the accusative with the
+    static locative case (**Місцевий відмінок**).
+  covered: false
+  coverage_note: 0/12 keywords (0%)
+- kind: must
+  text: To navigate the Ukrainian language successfully, you must clearly map out
+    the key question pair in your mind before speaking.
+  covered: false
+  coverage_note: 0/16 keywords (0%)
+- kind: must
+  text: You must learn to hear the difference.
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: must
+  text: You must ask **Куди ти йдеш?** to indicate movement toward a destination.
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: must
+  text: The surrounding context and the specific verb of motion dictate the correct
+    grammatical form you must select.
+  covered: false
+  coverage_note: 0/12 keywords (0%)
+- kind: inject_activity
+  text: fill-in-accusative
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-de-or-kudy
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: group-sort-de-kudy
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-yty-or-ikhaty
+  covered: false
+  coverage_note: marker missing

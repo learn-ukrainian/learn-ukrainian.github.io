@@ -1,59 +1,81 @@
 ## Linguistic Scan
-No linguistic errors found. The Ukrainian text is natural, accurately reflects spoken patterns, and correctly applies rules like euphony (`і/й`) and comma placement. 
+No linguistic errors found.
 
 ## Exercise Check
-- The `<!-- INJECT_ACTIVITY: ... -->` markers perfectly match the four `activity_hints` from the plan.
-- **Note on placement:** All markers are clustered at the end of the "Бо і тому що" section. While normally markers should be spread evenly throughout the module, this clustering is pedagogically necessary here. All planned activities (e.g., the fill-in for all four conjunctions, the quiz including `бо`, the group-sort) require knowledge of `бо` and `тому що`. Therefore, they cannot be placed earlier in the text before these causal conjunctions are taught. No deduction applied.
-- The DSL exercise logic is correctly omitted in favor of the injection markers, as expected for this pipeline step.
+Marker inventory is complete: `fill-in-because`, `quiz-conjunction-choice`, `fill-in-all-conjunctions`, and `group-sort-conjunction-roles` each appear once, matching the four `activity_hints` in type/function.
+
+Placement is not ideal. The two `Because` markers are correctly placed after `## Бо і тому що (Because)`, and the final `group-sort` works at the end, but there is no exercise marker immediately after `## Сполучники (Conjunctions)`. That delays first practice of `і / та / а / але` until after the later causal-conjunction section, so the practice is somewhat back-loaded.
+
+No inline DSL exercise blocks are present, so only marker placement and plan alignment can be reviewed here.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 8/10 | DEDUCT for missing recommended vocabulary. While the content outline is followed perfectly with all H2 headings and dialogues present, the prose fails to cover three recommended vocabulary words from the plan (`тому`, `також`, `або`). |
-| 2. Linguistic accuracy | 9/10 | DEDUCT for minor English translation awkwardness. The Ukrainian is highly accurate, but the phrase `> **Анто́н:** Ні́чого! ... *(That is nothing! ...)*` relies on an overly literal and slightly robotic English translation for a common conversational idiom. |
-| 3. Pedagogical quality | 10/10 | REWARD for excellent PPP flow and clear grammar instruction. The text doesn't just list conjunctions; it explicitly teaches the semantic difference between soft contrast (`а`) and strong contrast (`але`), and heavily emphasizes the mandatory comma rule. |
-| 4. Vocabulary coverage | 7/10 | DEDUCT for incomplete coverage. The required vocabulary is used naturally in context, but the recommended words `тому` (therefore), `також` (also), and `або` (or) are entirely absent from the text. |
-| 5. Exercise quality | 10/10 | REWARD for correctly matching the plan's activity hints and placing them safely after all prerequisite knowledge (especially `бо/тому що`) has been introduced. |
-| 6. Engagement & tone | 10/10 | REWARD for an encouraging, substantive teacher persona ("Connecting your thoughts transforms how you sound in Ukrainian") without resorting to empty gamified filler. |
-| 7. Structural integrity | 10/10 | REWARD for clean markdown, correct section ordering, and a word count (1778 words) that comfortably exceeds the 1200-word target. |
-| 8. Cultural accuracy | 10/10 | REWARD for teaching authentic spoken patterns, such as the "Why-Because loop" and the natural conversational workhorse `бо`. |
-| 9. Dialogue & conversation quality | 10/10 | REWARD for writing highly contextual, multi-turn dialogues that seamlessly integrate the target grammar (e.g., contrasting the Carpathians and the sea). |
+| 1. Plan adherence | 9/10 | All planned H2 sections are present and in order; the required conjunction set `і`, `та`, `а`, `але`, `бо`, `тому що` is all covered with examples, and the Карпати/море contrast appears in the opening dialogue. |
+| 2. Linguistic accuracy | 10/10 | No Russianisms, Surzhyk, calques, paronym errors, or wrong grammar claims found in the Ukrainian text. Spot-checks against local tools confirmed queried forms such as `відпустка`, `сполучник`, `втомлена`, `тістечко`, `надзвичайно`, and `постійно`. |
+| 3. Pedagogical quality | 8/10 | The module has strong example density, but A1 grammar practice is burdened by higher-level adverbs in core examples: `Цей суп гарячий, **але** надзвичайно смачний.` and `Він багато знає, **тому що** постійно читає.` The punctuation explanation is also repeated in the summary instead of advancing practice. |
+| 4. Vocabulary coverage | 9/10 | All required vocabulary from the plan is used naturally in prose, and recommended items such as `чому`, `чи`, and `теж` also appear. |
+| 5. Exercise quality | 8/10 | The total number of markers matches the plan, but there is no exercise marker immediately after the `Сполучники` block. Practice begins only after `Бо і тому що` and the summary, so the sequence is less tightly aligned to what was just taught. |
+| 6. Engagement & tone | 8/10 | The voice is clear and teacherly, but the prose slips into repetitive English meta-explanation: `There is a strict punctuation rule you must always follow...` is followed later by another near-duplicate punctuation reminder in the summary. |
+| 7. Structural integrity | 10/10 | All planned sections are present, markdown is clean, markers are well-formed, and the deterministic pipeline word count is 1271, which is above target. |
+| 8. Cultural accuracy | 9/10 | The module is Ukrainian-centered and avoids Russian comparison framing; the Карпати/море examples are appropriate, though cultural detail is fairly light. |
+| 9. Dialogue & conversation quality | 7/10 | The first dialogue has an abrupt scene jump: `Поїдемо в Карпати, **бо** там дешевше.` is followed immediately by `Добре! Ти хочеш каву **чи** чай?` That reads stitched together rather than like one natural conversation. |
 
 ## Findings
-[2. Linguistic accuracy] [minor]
-Location: `> **Анто́н:** Ні́чого! За́втра я ві́льний, і ми мо́жемо зустрі́тися. *(That is nothing! Tomorrow I am free, and we can meet.)*`
-Issue: The English translation "That is nothing!" is overly literal and awkward for everyday speech. "Нічого!" in this context is an idiom meaning "No worries!" or "It's nothing!".
-Fix: Change the English translation to "No worries!".
+[PEDAGOGICAL QUALITY] [SEVERITY: major]  
+Location: `* Цей суп гарячий, **але** надзвичайно смачний. *(This soup is hot, but extremely tasty.)*` and `* Він багато знає, **тому що** постійно читає. *(He knows a lot, because he reads constantly.)*`  
+Issue: `надзвичайно` and `постійно` are unnecessarily high lexical load for an A1 grammar module; the conjunction target is simple, but the support vocabulary is not.  
+Fix: Replace them with simpler A1-friendly adverbs such as `дуже` and `часто`.
 
-[4. Vocabulary coverage] [major]
-Location: `Сполу́чники (Conjunctions)` and `Бо і тому́ що (Because)` sections
-Issue: The recommended vocabulary words `тому` (therefore), `також` (also), and `або` (or) from the plan are entirely missing from the content.
-Fix: Add paragraphs explaining `також/теж` and `або/чи` in the `Сполу́чники` section, and a paragraph explaining `тому` in the `Бо і тому́ що` section.
+[DIALOGUE & CONVERSATION QUALITY] [SEVERITY: major]  
+Location: `> **Анна:** Поїдемо в Карпати, **бо** там дешевше.` / `> **Олег:** Добре! Ти хочеш каву **чи** чай?`  
+Issue: The dialogue jumps abruptly from choosing a vacation destination to ordering drinks, so the conversation feels stitched from separate prompts rather than naturally continuous.  
+Fix: Add a transition that ties the beverage question to the travel situation, e.g. `Перед дорогою ти хочеш каву чи чай?`
+
+[EXERCISE QUALITY] [SEVERITY: major]  
+Location: section boundary between `## Сполучники (Conjunctions)` and `## Бо і тому що (Because)`  
+Issue: There is no practice marker immediately after the section that teaches `і / та / а / але`; first practice is delayed until after the later causal-conjunction section.  
+Fix: Move `<!-- INJECT_ACTIVITY: fill-in-all-conjunctions -->` so it appears right after the `Сполучники` section and before `## Бо і тому що (Because)`.
+
+[ENGAGEMENT & TONE] [SEVERITY: minor]  
+Location: `There is a strict punctuation rule you must always follow when writing in Ukrainian...` and the summary paragraph beginning `Remember the strict punctuation rules whenever you are typing or writing...`  
+Issue: The punctuation explanation is repeated almost verbatim, adding English teacher-talk instead of a new example or tighter recap.  
+Fix: Compress the summary reminder to one sentence that points back to the rule instead of re-explaining it at length.
 
 ## Verdict: REVISE
-The module is very strong pedagogically and structurally, with excellent dialogues and clear grammar explanations. However, it requires a revision to incorporate three recommended vocabulary words (`тому`, `також`, `або`) that were missed, and to polish a minor awkward English translation in the dialogue.
+The module is structurally solid and linguistically clean, so this is not a reject. It still needs revision because multiple scored dimensions fall below 9 and the findings are real, fixable quality issues: level control in examples, exercise placement, duplicated explanation, and dialogue coherence.
 
 <fixes>
-- find: "> **Анто́н:** Ні́чого! За́втра я ві́льний, і ми мо́жемо зустрі́тися. *(That is nothing! Tomorrow I am free, and we can meet.)*"
-  replace: "> **Анто́н:** Ні́чого! За́втра я ві́льний, і ми мо́жемо зустрі́тися. *(No worries! Tomorrow I am free, and we can meet.)*"
-- find: "* Це стіл і стіле́ць. *(This is a table and a chair.)*"
+- find: |
+    * Цей суп гарячий, **але** надзвичайно смачний. *(This soup is hot, but extremely tasty.)*
   replace: |
-    * Це стіл і стіле́ць. *(This is a table and a chair.)*
-
-    When you want to add that something is also true, use **тако́ж** (also) or its shorter, more colloquial cousin **теж** (also). Both are incredibly common in conversation.
-
-    * Я тако́ж хочу чай. *(I also want tea.)*
-    * Він теж працює. *(He also works.)*
-
-    If you need to offer a choice, Ukrainian makes a crucial distinction that English does not: use **або́** (or) in statements, and **чи** (or) in questions.
-
-    * Я буду чай або́ ка́ву. *(I will have tea or coffee. — Statement)*
-    * Ти хо́чеш ка́ву чи чай? *(Do you want coffee or tea? — Question)*
-- find: "* Я не йду, тому що я хворий. *(I am not going, because I am sick.)*"
+    * Цей суп гарячий, **але** дуже смачний. *(This soup is hot, but very tasty.)*
+- find: |
+    * Він багато знає, **тому що** постійно читає. *(He knows a lot, because he reads constantly.)*
   replace: |
-    * Я не йду, тому що я хворий. *(I am not going, because I am sick.)*
+    * Він багато знає, **тому що** часто читає. *(He knows a lot, because he reads often.)*
+- find: |
+    > **Олег:** Добре! Ти хочеш каву **чи** чай? *(Good! Do you want coffee or tea?)*
+  replace: |
+    > **Олег:** Добре! Перед дорогою ти хочеш каву **чи** чай? *(Good! Before the trip, do you want coffee or tea?)*
+- find: |
+    * День сонячний, **але** дуже холодний. *(The day is sunny, but very cold.)*
 
-    If you want to flip the cause and effect, you can use the word **тому́** (therefore / that's why). It looks similar to **тому що**, but it introduces the result instead of the reason.
+    ## Бо і тому що (Because)
+  replace: |
+    * День сонячний, **але** дуже холодний. *(The day is sunny, but very cold.)*
 
-    * Я хво́рий, тому́ не йду. *(I am sick, therefore I am not going.)*
+    <!-- INJECT_ACTIVITY: fill-in-all-conjunctions -->
+
+    ## Бо і тому що (Because)
+- find: |
+    <!-- INJECT_ACTIVITY: fill-in-all-conjunctions -->
+
+    <!-- INJECT_ACTIVITY: group-sort-conjunction-roles -->
+  replace: |
+    <!-- INJECT_ACTIVITY: group-sort-conjunction-roles -->
+- find: |
+    Remember the strict punctuation rules whenever you are typing or writing: you must always place a comma before **а**, **але**, **бо**, and **тому що**. A comma is placed before **і** only when you are connecting two entirely full, independent sentences that have their own subjects and verbs. In almost all other everyday cases, **і** does not require a comma.
+  replace: |
+    Remember the core punctuation rule from the previous section: use a comma before **а**, **але**, **бо**, and **тому що**; with **і**, use a comma only when it links two full clauses.
 </fixes>

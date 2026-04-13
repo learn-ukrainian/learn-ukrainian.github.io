@@ -1,21 +1,23 @@
-# Section-by-Section Generation — Section 3/4
+# Section-by-Section Generation — Section 3/3
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 48: Щоб зрозуміти... (A2, A2.7 [Complex Sentences and Conditionals])
-**Section to write:** Мета і повідомлення в житті (~650 words total)
+**Section to write:** Мета і повідомлення в житті (Purpose and Messages in Daily Life) (~650 words)
 **Word target for this section:** 650 words (aim for 715 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Мета і повідомлення в житті (~650 words total)
-- Dialogue (~120 words): [Parent and child interaction. "Мама, тато сказав, щоб ти зателефонувала бабусі." "Добре, я зателефоную, щоб запитати про здоров'я." "Він також сказав, що затримається на роботі." Incorporating що, щоб + infinitive, and щоб + past tense.]
-- P1 (~150 words): [Practical application: Short messages and notes. Writing notes on the fridge or sending SMS. Examples: "Зателефонуй мамі, вона сказала, що чекає", "Купи молоко, щоб ми могли випити кави", "Він написав, що прийде пізніше."]
-- P2 (~150 words): [Conversational starters and frames. High-frequency phrases: "Мені сказали, що..." (I was told that...), "Я чув, що..." (I heard that...), "Вони попросили, щоб..." (They asked that...). Using these to initiate talk about rumors or relayed information.]
-- P3 (~130 words): [Consolidation of subordination. Comparing the three "connectors of complexity": що (fact), щоб (purpose/wish), and тому що (cause). Summary of when to use each to build natural, detailed Ukrainian sentences.]
-- <!-- INJECT_ACTIVITY: unjumble-purpose-clauses --> [unjumble, focus: Reorder words to form correct щоб purpose clauses (both infinitive and different-subject constructions), 6 items]
+## Мета і повідомлення в житті (Purpose and Messages in Daily Life) (~650 words)
+- P1 (~140 words): [Provide examples of combining purpose clauses and reported speech in real daily situations. Show how they naturally interlock in a single thought. Example: "Мама зателефонувала, щоб я купив хліб" (purpose of the call + command). "Колега сказав, що зустріч перенесли, щоб ми мали більше часу на підготовку" (reported fact + purpose clause).]
+- P2 (~130 words): [Focus on written communication: short messages, SMS, and sticky notes left on the fridge using "щоб" and "що". Provide examples of these brief formats: "Зателефонуй мамі, вона сказала, що чекає на тебе." "Я залишив гроші на столі, щоб ти купив молоко." Show the everyday utility of these structures.]
+- P3 (~130 words): [Introduce high-frequency conversational framing patterns: "Мені сказали, що...", "Я чув, що...", "Вони попросили, щоб...". Explain that these chunks are used constantly to relay information, share news, or pass on requests smoothly without taking direct responsibility for the original source.]
+- P4 (~150 words): [Consolidation paragraph. Clearly and directly distinguish the three main uses of subordination learned so far: 1) Чому? (cause: тому що / бо), 2) Для чого? (purpose: щоб), and 3) Що сказали? (reported speech: що). Summarize their distinct functions with a clear, contrasting set of examples to solidify the boundaries between them.]
+- P5 (~100 words): [Brief wrap-up encouraging learners to practice listening specifically for "що" and "щоб" in native speech and media, noting that these small connective words act as the essential glue that connects ideas, relays messages, and conveys intentions in fluent Ukrainian.]
+
+Grand total: ~2150 words
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -23,7 +25,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-я буду пити каву. *(Indirect speech: He asked if I would drink coffee.)* Зверніть увагу на структуру. *(Pay attention to the structure.)* Ми просто додаємо слово «чи» перед фактом. * «Ви знаєте це гарне місто?» -> Вона запитала, **чи** ми знаємо це гарне місто. *("Do you know this beautiful city?" -> She asked if we knew this beautiful city.)* * «Ти маєш вільний час?» -> Мій брат запитав, **чи** я маю вільний час. *("Do you have free time?" -> My brother asked if I had free time.)* * «Він працює сьогодні в офісі?» -> Я запитав, **чи** він працює сьогодні в офісі. *("Is he working in the office today?" -> I asked whether he was working in the office today.)* Тепер ми підходимо до дуже важливого і складного моменту. *(Now we come to a very important and difficult point.)* Ми маємо чітко розуміти різницю між фактами та проханнями або наказами. *(We must clearly understand the difference between facts and requests or orders.)* This is a tricky area where many students make a mistake because the English language uses completely different structures for these two things. В українській мові ми використовуємо слово «що» тільки для фактів, новин та інформації. Але ми обов'язково використовуємо слово «щоб» для наказів, прохань або строгих інструкцій. One small letter totally changes the entire meaning of your sentence from "He said that..." to "He said to...". Подивіться дуже уважно на ці два речення. Вони дуже схожі, але вони мають абсолютно різний зміст: 1. Він сказав, **що** я прийшов. *(He said that I came.)* Це просто факт. *(This is simply a fact.)* Він розповів комусь про мій прихід додому. He is reporting the objective news of my arrival. 2. Він сказав, **щоб** я прийшов. *(He told me to come.)* Це прохання або строгий наказ. *(This is a request or a strict order.)* Він хоче бачити мене зараз. He is giving an instruction for me to arrive. Пам'ятайте важливе правило з попередньої частини нашого уроку. Після слова «щоб» ми завжди ставимо дієслово у формі минулого часу. * Мама сказала, **що** вона купила свіжий хліб. *(Mom said that she bought fresh bread.)* - Fact. * Мама сказала, **щоб** я купив свіжий хліб. *(Mom said to buy fresh bread.)* - Instruction. * Мій колега написав, **що** ми маємо важливу зустріч. *(My colleague wrote that we have an important meeting.)* - Fact. * Мій колега написав, **щоб** я підготував усі документи. *(My colleague wrote that I should prepare all the documents.)* - Instruction. * Лікар сказав, **що** я п'ю мало води. *(The doctor said that I drink little water.)* - Fact. * Лікар сказав, **щоб** я пив більше води кожного дня. *(The doctor told me to drink more water every day.)* - Instruction. Будьте дуже уважні з цими маленькими словами. *(Be very careful with these small words.)* Вони роблять ваше щоденне спілкування правильним і точним. *(They make your daily communication correct and accurate.)* <!-- INJECT_ACTIVITY: match-up, Transform direct speech into reported speech — match the original quote to its indirect version -->
+answered that I am very busy with a new project right now. Then he asked when I would be free. I said that I will finish work at six o'clock in the evening.* :::info **Grammar box** Remember that indirect questions are statements about a question, not actual questions. Therefore, sentences like «Вона запитала, де працює мій брат.» always end with a period. You never use a question mark at the end of a reported speech sentence. ::: Reported speech is not just an academic exercise; it is a vital tool for everyday, practical relay scenarios. You use it constantly when you need to pass a **повідомлення** (message) from a friend to your family, or when you are explaining what someone told you on the phone. The main **мета** (goal, purpose) is to create a natural communicative context. You are summarizing real conversations to keep people informed about plans, schedule changes, or personal news. This is how native speakers manage their daily logistics and share updates with their social circle. Олена телефонувала п'ять хвилин тому і залишила повідомлення. Вона сказала, що запізниться на вечерю через великі затори. Вона також пояснила, що забула купити яблучний сік. Я відповів, що це не проблема для нас. > *Olena called five minutes ago and left a message. She said that she will be late for dinner because of big traffic jams. She also explained that she forgot to buy apple juice. I answered that it is not a problem for us.* Finally, it is critical to contrast how we report simple facts versus how we report commands or strong requests. This ties reported speech directly back to the subjunctive concept we discussed in the previous section. If you want to report a factual statement, you use **що**. For example, «Він сказав, що я прийшов» means "He said THAT I came" (he is simply confirming the fact of my arrival). However, if you are reporting a command, you must use **щоб** (in order to, so that) followed by the past tense verb. The sentence «Він сказав, щоб я прийшов» means "He said that I SHOULD come". This one small difference changes the entire meaning of the sentence from a factual report to an indirect command. Мама сказала, що мій старший брат купив свіже молоко. Це просто констатація факту. Але тато сказав, щоб брат купив свіже молоко. Це вже чіткий наказ або прохання. Різниця між цими двома реченнями дуже велика. > *Mom said that my older brother bought fresh milk. This is just a statement of fact. But dad said that brother should buy fresh milk. This is already a clear command or a request. The difference between these two sentences is very big.* :::note **Quick tip** A common mistake is using **що** when reporting a request. Always ask yourself: "Am I reporting a fact, or am I reporting what someone wants another person to do?" If it involves an action someone else must perform, use **щоб** and the past tense verb. ::: <!-- INJECT_ACTIVITY: match-up-reported-speech -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -515,7 +517,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -534,18 +603,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (3/3).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] щоб (in order to, so that)
+- [ ] мета (goal, purpose)
+- [ ] сказати (to say, to tell)
+- [ ] відповісти (to answer, to reply)
+- [ ] пояснити (to explain)
+- [ ] запитати (to ask)
+- [ ] повідомлення (message)
+- [ ] зрозуміти (to understand)
+- [ ] непряма мова (indirect/reported speech)
+- [ ] додати (to add)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Мета і повідомлення в житті (Purpose and Messages in Daily Life) (~650 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

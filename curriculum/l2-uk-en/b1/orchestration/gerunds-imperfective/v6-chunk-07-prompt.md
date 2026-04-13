@@ -27,7 +27,7 @@ Grand total: ~4200 words
 <previous_context>
 [...previous sections truncated...]
 
-загальну атмосферу, активно використовуючи дієприслівники недоконаного виду. «Літо в Карпатах завжди особливе. **Піднімаючись** *(while climbing)* на Говерлу ранком, ми постійно милувалися неймовірними гірськими краєвидами. **Роблячи** *(while making)* кожен новий важкий крок, я фізично відчував, як чисте повітря наповнює легені. Сонце повільно піднімалося над горизонтом, яскраво **освітлюючи** *(while illuminating)* зелені долини та глибокі ущелини під нами. **Ідучи** *(while walking)* вузькою кам'янистою стежкою, наша група тихо розмовляла про велич природи. Іноді ми робили короткі привали біля стрімких потоків. **Відпочиваючи** *(while resting)* біля крижаної води, ми із величезним задоволенням слухали заспокійливий шум річки. Мій найкращий друг ішов трохи попереду, захоплено **фотографуючи** *(while photographing)* високі старі смереки та рідкісні квіти. **Дивлячись** *(while looking)* на ці безкінечні вершини, я повністю забував про всі щоденні міські проблеми. Навіть сильна фізична втома в ногах здавалася зараз дуже приємною. **Спускаючись** *(while descending)* назад до нашого табору пізно ввечері, ми голосно співали традиційні народні пісні. **Слухаючи** *(while listening)* мелодійну луну наших голосів у темних горах, кожен з нас глибоко в душі відчував абсолютний спокій». Тепер давайте детально проаналізуємо цей карпатський текст. Ви, напевно, одразу помітили, що він звучить дуже плавно, мелодійно та образно. Цей яскравий художній ефект створюється у тексті саме завдяки дієприслівникам недоконаного виду. Вони діють як пензель художника, дозволяючи автору малювати живу картину словами та показуючи кілька процесів абсолютно одночасно. Розглянемо перше речення: «Піднімаючись на Говерлу ранком, ми постійно милувалися неймовірними гірськими краєвидами». Підметом тут є займенник «ми». Отже, саме «ми» милувалися природою (це головна дія) і водночас саме «ми» піднімалися на гору (це додаткова дія). Правило спільного діяча тут працює просто ідеально. Так само в реченні: «Дивлячись на ці безкінечні вершини, я повністю забував про проблеми». Виконавець обох паралельних дій — це виключно займенник «я». Усі ці дієприслівники виконують у реченнях важливу синтаксичну роль **обставин** *(adverbial modifiers)*. Більшість із них у цьому тексті — це класичні обставини часу. Наприклад, форми «піднімаючись», «ідучи», «спускаючись» та «відпочиваючи» чітко відповідають на питання «коли?». Вони показують читачу, в який саме момент часу відбувалася наша головна подія. Інші слова, такі як «освітлюючи» або «фотографуючи», більше нагадують обставини способу дії. Вони відповідають на питання «як?» або «яким чином?», деталізуючи основний процес. Чому ж автор тексту обрав саме такі складні граматичні форми? Спробуймо подумки замінити їх на звичайні прості речення зі сполучником «і». Замість «Спускаючись до нашого табору, ми співали пісні», ми могли б просто сказати: «Ми спускалися до табору і співали пісні». Або ми могли б використати підрядне речення: «Коли ми спускалися до табору, ми співали пісні». Обидва ці прості варіанти є абсолютно правильними з погляду базової української граматики. Але погодьтеся, що оригінальний варіант з дієприслівником звучить набагато глибше та поетичніше. Дієприслівник недоконаного виду автоматично робить фізичну дію «спускаючись» лише красивим фоном. Він створює ідеальну динамічну декорацію для головної події — нашого дружнього співу. Завдяки цим формам текст стає набагато більш щільним, елегантним та емоційно насиченим. Саме тому українські письменники та журналісти так сильно люблять дієприслівники. Вони чудово допомагають уникати нудної монотонності та будувати красиві тексти. <!-- INJECT_ACTIVITY: quiz, Оберіть правильний варіант: перевірка знань про творення та вживання дієприслівників недоконаного виду. -->
+and harmony with nature. Walking along narrow paths, my friend told interesting legends about this region. Communicating with local residents, we learned a lot about Hutsul traditions. Enjoying the warm evening sun, our group set up camp on a spacious alpine meadow. Dining by the fire, we shared our impressions of the eventful day. Falling asleep under the starry sky, each of us understood that we would definitely return here again. Such journeys give true freedom, clearing the mind of daily worries.* In the passage above, you can see how the author uses a **дієприслівник** (adverbial participle) of the **недоконаний вид** (imperfective aspect) to create a vivid and continuous narrative. Each gerund expresses a **додаткова дія** (secondary action) that happens at the exact same time as the main verb. For example, *піднімаючись* (while climbing) and *відпочиваючи* (while resting) describe what the characters were doing while the primary actions—admiring and enjoying—took place. This perfect matching of time is called **одночасність** (simultaneity). If we replaced these gerunds with simple clauses connected by "і" (and), the text would become repetitive and disjointed. Instead, the gerund turns the secondary action into an **обставина** (adverbial modifier) of time, reason, or manner. This syntactic compression makes the text feel more descriptive and "painterly," much like when you use **читаючи** (while reading) to describe how someone spends their evening on the couch. You will see the same stylistic elegance with verbs of communication or creation. Forms like **слухаючи** (while listening), **пишучи** (while writing), and **говорячи** (while speaking) give any paragraph a smooth, flowing rhythm. They allow the author to layer multiple background actions into a single sentence without confusing the reader about when they occurred. Notice how the **логічний підмет** (logical subject) is strictly maintained throughout the story. In the sentence about the friend (*Ідучи вузькими стежками, мій друг розповідав...*), the friend is the one walking and the one telling the stories. If the sentence had been *Ідучи вузькими стежками, мені було цікаво* (Walking along the paths, I was interested), it would be grammatically incorrect because the subject of the impersonal construction is not the person walking. :::tip **Did you know?** — Writers use imperfective gerunds to control the pacing of a story. Because an adverbial participle does not conjugate for time, it seamlessly adopts the tense of the main verb. This means you can easily use them in past, present, or future contexts without changing their form. ::: У тексті ми бачимо багато прикладів обставин, виражених дієприслівниками. Наприклад, слова «піднімаючись», «відпочиваючи», «слухаючи», «фотографуючи», «ідучи», «спілкуючись», «насолоджуючись», «вечеряючи», «засинаючи» та «очищуючи» є дієприслівниками недоконаного виду. Вони показують, що дія відбувається в той самий час, що й основна. > *In the text, we see many examples of adverbial modifiers expressed by gerunds. For instance, the words "while climbing," "while resting," "while listening," "while photographing," "while walking," "while communicating," "while enjoying," "while dining," "while falling asleep," and "clearing" are imperfective gerunds. They show that the action happens at the same time as the main one.* <!-- INJECT_ACTIVITY: quiz-b1-gerunds-final -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -565,7 +565,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -578,18 +645,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (7/7).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] дієприслівник (adverbial participle/gerund — unchangeable verb form)
+- [ ] недоконаний вид (imperfective aspect — ongoing/repeated action)
+- [ ] читаючи (while reading — imperfective gerund)
+- [ ] слухаючи (while listening — imperfective gerund)
+- [ ] пишучи (while writing — imperfective gerund)
+- [ ] говорячи (while speaking — imperfective gerund)
+- [ ] обставина (adverbial modifier — syntactic role of the gerund)
+- [ ] додаткова дія (secondary/additional action)
+- [ ] одночасність (simultaneity — actions happening at the same time)
+- [ ] логічний підмет (logical subject — must be shared)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Підсумок (~400 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

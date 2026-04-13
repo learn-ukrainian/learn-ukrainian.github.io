@@ -29,8 +29,32 @@ vocabulary:
   pos: ''
   gender: ''
   verified: true
-- word: закрива́ти / закри́ти
-  translation: to close
+- word: роби́ти / зроби́ти
+  translation: to do
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: писа́ти / написа́ти
+  translation: to write
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: чита́ти / прочита́ти
+  translation: to read
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: готува́ти / приготува́ти
+  translation: to cook, to prepare
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: вчи́ти / ви́вчити
+  translation: to study, to learn
   expression: false
   pos: ''
   gender: ''
@@ -59,44 +83,14 @@ vocabulary:
   pos: присл.
   gender: ''
   verified: true
-- word: ма́йже
-  translation: almost
+- word: ча́сто
+  translation: often
   expression: false
   pos: присл.
   gender: ''
-  verified: true
-- word: ці́лий
-  translation: whole, entire
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: шви́дко
-  translation: quickly, fast
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: пові́льно
-  translation: slowly
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: вече́ря
-  translation: dinner
-  expression: false
-  pos: ім.
-  gender: ж.
   verified: true
 - word: за́вжди́
   translation: always
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: ча́сто
-  translation: often
   expression: false
   pos: присл.
   gender: ''
@@ -105,29 +99,5 @@ vocabulary:
   translation: usually
   expression: false
   pos: присл.
-  gender: ''
-  verified: true
-- word: коли́
-  translation: when
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: весь день
-  translation: all day
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: кожного ранку
-  translation: every morning
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: чиста правда
-  translation: pure truth
-  expression: true
-  pos: ''
   gender: ''
   verified: true

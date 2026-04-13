@@ -1,22 +1,22 @@
-# Section-by-Section Generation — Section 1/4
+# Section-by-Section Generation — Section 1/3
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 6: Скільки? Котра година? Яке число? (A2, A2.1 [Foundation and Aspect Introduction])
-**Section to write:** Яке сьогодні число? Котра година? (~600 words total)
-**Word target for this section:** 600 words (aim for 660 to account for undershoot)
+**Section to write:** Яке сьогодні число? Родовий з датами (What's the Date? Genitive with Dates) (~550 words)
+**Word target for this section:** 550 words (aim for 605 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Яке сьогодні число? Котра година? (~600 words total)
-- P1 (~100 words): [Introduction to asking about dates and time. Explain the difference between 'Яке сьогодні число?' (What's the date?) and 'Якого числа?' (On what date?). Mention that 'число' in this context means 'date'. Use examples: 'Яке сьогодні число? — Сьогодні десяте березня'.]
-- P2 (~120 words): [The formula for stating the date: Ordinal numeral in neuter nominative (since it agrees with the implied word 'число') + Month in Genitive Singular. Explain that unlike English 'January 1st', Ukrainian puts the month in the 'of' case (Genitive). Examples: 'перше січня', 'друге лютого', 'двадцять четверте серпня'.]
-- P3 (~180 words): [Comprehensive guide to the 12 months and their Genitive forms. Explain the -а/-я endings for masculine months (січня, березня, квітня) and the adjectival ending for 'лютий' (лютого). Highlight the mobile -е- that disappears in months like 'січень' -> 'січня' and 'березень' -> 'березня'.]
-- P4 (~100 words): [Introduction to telling time. Explain 'Котра година?' and 'О котрій годині?'. Briefly cover the use of ordinal numerals for hours (п'ята година, о дев'ятій) and the basic 'half-past' construction 'пів на [next hour]' (пів на другу). Examples: 'Зараз друга година', 'Зустріч о дев'ятій'.]
-- P5 (~100 words): [Dialogue: 'Booking an Appointment'. A client calls a salon. Client: 'Яке сьогодні число?' Admin: 'Сьогодні п'яте травня'. Client: 'Я хочу записатися на манікюр на шосте травня'. Admin: 'Добре, о котрій годині?'. Client: 'Об одинадцятій'. Focus on the contrast between Nom. and Gen. dates.]
-- <!-- INJECT_ACTIVITY: quiz-dates-drill --> [quiz, What's the Date? (Drill), 8 items]
+## Яке сьогодні число? Родовий з датами (What's the Date? Genitive with Dates) (~550 words)
+- P1 (~120 words): Dialogue setting the scene at a hotel reception. The receptionist asks: "З якого числа?" (From what date?). The guest answers: "З п'ятого березня." (From March 5th). Receptionist: "До якого?" (Until what date?). Guest: "До десятого." (Until the 10th). Receptionist asks about quantities: "Скільки номерів?" (How many rooms?). Guest: "Два номери." (Two rooms). Receptionist: "Скільки гостей?" (How many guests?). Guest: "П'ять гостей." (Five guests).
+- P2 (~100 words): Explain how to ask the current date: "Яке сьогодні число?" (What is today's date?). Explain that to answer, the day is represented by an ordinal numeral in the neuter gender (перше, друге, третє), and the month is a noun in the Genitive singular. Give examples: "Сьогодні перше січня", "Сьогодні друге лютого".
+- P3 (~120 words): Provide the full list of all 12 months, emphasizing that they are all masculine nouns. Show their Genitive endings, mostly taking "-я": січня, березня, квітня, травня, червня, липня, серпня, вересня, жовтня, грудня. Note the exception for "листопад" which takes "-а" (листопада). Highlight that "лютий" (February) declines like an adjective, so its Genitive is "лютого".
+- P4 (~110 words): Explain how to answer the questions "Коли?" (When?) or "Якого числа?" (On what date?) for events. Contrast this with "Яке число?". Here, the day becomes an ordinal numeral in the masculine Genitive case. Show the structure: Ordinal numeral (masc, Genitive) + Month (Genitive). Examples: "першого січня", "двадцять четвертого серпня".
+- P5 (~100 words): Provide natural and cultural examples of dates in action. Example 1: "Тарас Шевченко народився дев'ятого березня." (Taras Shevchenko was born on March 9th). Example 2: "Прийнято Акт проголошення незалежності України двадцять четвертого серпня." (The Act of Declaration of Independence of Ukraine was adopted on August 24th).
+- <!-- INJECT_ACTIVITY: quiz-whats-the-date --> [quiz, What's the Date? (Drill), 8 items]
 
 ---
 ## Full Plan (for reference)
@@ -677,6 +677,36 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] число (дата) (date)
+- [ ] місяць (month)
+- [ ] січень (січня) (January)
+- [ ] лютий (лютого) (February)
+- [ ] березень (березня) (March)
+- [ ] квітень (квітня) (April)
+- [ ] травень (травня) (May)
+- [ ] червень (червня) (June)
+- [ ] липень (липня) (July)
+- [ ] серпень (серпня) (August)
+- [ ] вересень (вересня) (September)
+- [ ] жовтень (жовтня) (October)
+- [ ] листопад (листопада) (November)
+- [ ] грудень (грудня) (December)
+- [ ] заперечення (negation)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Яке сьогодні число? Родовий з датами (What's the Date? Genitive with Dates) (~550 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

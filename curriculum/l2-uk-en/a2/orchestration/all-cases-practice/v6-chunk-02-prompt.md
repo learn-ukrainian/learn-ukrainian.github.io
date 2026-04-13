@@ -3,21 +3,21 @@
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 37: Все разом (A2, A2.5 [Case Synthesis and Plurals])
-**Section to write:** Діалог 2: У лікарні (~550 words total)
-**Word target for this section:** 550 words (aim for 605 to account for undershoot)
+**Section to write:** Діалог 2: У лікарні (~600 words)
+**Word target for this section:** 600 words (aim for 660 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Діалог 2: У лікарні (~550 words total)
-- P1 (~60 words): Setting the scene at a hospital. Patient Petro arrives for an appointment. Introduces medical vocabulary (лікарня, реєстратура, запис).
-- P2 (~110 words): Dialogue Part 2A—At the Reception. Focus on Locative (В черзі, на другому поверсі) and the "n-" prefix for 3rd person pronouns (У нього є запис? До неї можна?).
-- P3 (~90 words): Linguistic focus on the "n-" prefix rule for personal pronouns after prepositions (у нього, без неї, для них) using hospital-related examples like "без нього (лікарського огляду)".
-- P4 (~120 words): Dialogue Part 2B—The Consultation. Describing symptoms using the Genitive/Dative state constructions: "У мене болить голова" (Gen.), "Мені погано" (Dat.), "З високою температурою" (Instr.).
-- P5 (~90 words): Deep dive into body parts and health grammar. Explaining the logic of "боліти" (Nom. subject: "голова болить") vs. "почуватися" (Adverb: "почуваюся добре").
-- P6 (~80 words): Dialogue Part 2C—The Prescription. Doctor gives advice using Accusative (Пити ліки, робити огляд) and Dative (Раджу вам відпочинок).
-- <!-- INJECT_ACTIVITY: fill-in-singular-plural-hospital --> [fill-in, Rewrite dialogue sentences changing singular to plural (e.g., один пацієнт → п'ять пацієнтів), 8 items]
+## Діалог 2: У лікарні (~600 words)
+- P1 (~50 words): Introduction to the second scenario: a patient visiting a doctor (лікар). Focus on expressing physical states, symptoms, and medical advice using specific case constructions.
+- P2 (~150 words): Dialogue Part 1 (Describing symptoms). A 6-8 exchange dialogue focusing on Nominative, Genitive, and Dative. Examples: "Що вас турбує?", "У мене температура" (Nom. as subject in possession), "Немає сильного болю", "Аптека біля лікарні" (Gen. after немає and біля), "Мені погано", "Що ви порадите пацієнтові?" (Dat. for impersonal state and recipient).
+- P3 (~100 words): Grammar breakdown of Part 1. Contrast the English "I have a headache" with the correct Ukrainian construction "У мене болить голова" (Nom. subject). Review the impersonal Dative construction for states: "Мені погано", "Мені краще".
+- P4 (~150 words): Dialogue Part 2 (Diagnosis and treatment). A 6-8 exchange dialogue focusing on Accusative, Instrumental, Locative, and Vocative. Examples: "Треба приймати ці ліки", "Чекаю вас на огляд" (Acc. direct object and direction), "Ви прийшли з кашлем", "Купіть за рецептом" (Instr. with "з" and "за"), "Ви зараз у лікарні", "На прийомі" (Loc. location), "Лікарю!", "Пане докторе!" (Voc.).
+- P5 (~100 words): Grammar breakdown of Part 2. Focus on plural nouns and transformations. Explain pluralia tantum words like "ліки" (Acc. plural). Show how to change singular concepts to plural: "один пацієнт" → "багато пацієнтів" (Gen. pl.), "ці ліки" (Acc. pl.).
+- P6 (~50 words): Vocabulary note integrating health terms naturally (голова, горло, рецепт, здоров'я). Explicitly warn against the calque "Я маю головний біль" and reinforce authentic phrasing.
+- <!-- INJECT_ACTIVITY: match-up-health-cases --> [match-up, Match sentence halves so that the case form in the first half agrees with the preposition/verb in the second half, 8 items]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -25,7 +25,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-word «торт» is an inanimate noun, it does not change its ending here. However, when Oksana talks about what they specifically do not have, she must use the Genitive case of absence: «немає торта», «немає соку». Words that express quantity also trigger the Genitive case, which is exactly why she says «багато гостей» instead of the Nominative plural form «багато гості». > — **Оксана:** Я вже почала **дзвонити друзям** *(to call friends)*. Вони дуже раді. *(I already started to call friends. They are very glad.)* > — **Андрій:** Супер. А що ми подаруємо Олені? Нам потрібен гарний **подарунок** *(gift)*. *(Super. And what will we give Olena? We need a beautiful gift.)* > — **Оксана:** Я думаю, ми можемо подарувати **Олені** *(to Olena)* нову книгу. *(I think we can give Olena a new book.)* > — **Андрій:** Це чудова ідея. Ми прийдемо **з великою компанією** *(with a large company)*. *(That is a wonderful idea. We will come with a large company.)* > — **Оксана:** Так, ми будемо **з друзями** *(with friends)*. Ми також можемо **прикрасити** *(to decorate)* кімнату **кульками** *(with balloons)*. *(Yes, we will be with friends. We can also decorate the room with balloons.)* Now we clearly see both the Dative and Instrumental cases in action. The Dative case identifies the "recipient" of an action. When Oksana gives a gift, she gives it directly «Олені» (to Olena). Similarly, when she makes a phone call, she speaks «друзям» (to the friends). The Instrumental case shows accompaniment or the physical means of doing something. It answers the question "with who?" or "with what?". They plan to arrive «з великою компанією» and celebrate «з друзями». Notice the difference between the singular ending in «з компанією» and the plural ending in «з друзями». They also decorate the room using balloons: «кульками». > — **Андрій:** Де саме ми зробимо цю вечірку? **У ресторані** *(in a restaurant)* «Дніпро»? *(Where exactly will we do this party? In the restaurant "Dnipro"?)* > — **Оксана:** Так, там завжди дуже гарно. Ми будемо зручно сидіти **на терасі** *(on the terrace)*. *(Yes, it is always very beautiful there. We will sit comfortably on the terrace.)* > — **Андрій:** Домовилися, **Оксано** *(Oksana)*! Усе буде ідеально. *(Agreed, Oksana! Everything will be perfect.)* > — **Оксана:** Дуже дякую за допомогу, **Андрію** *(Andrii)*! До завтра! *(Thank you very much for the help, Andrii! Until tomorrow!)* В Україні є дуже цікава традиція. Зазвичай **іменинник** *(birthday person)* сам організовує свято і щедро **частує** *(treats)* своїх гостей. Гості просто приносять подарунки, але вони не платять за ресторан. Оскільки Оксана та Андрій роблять таємний сюрприз, це приємний виняток із правил! *(In Ukraine there is a very interesting tradition. Usually the birthday person themselves organizes the holiday and generously treats their guests. Guests simply bring gifts, but they do not pay for the restaurant. Since Oksana and Andrii are making a secret surprise, this is a pleasant exception to the rules!)* <!-- INJECT_ACTIVITY: quiz, Identify case of highlighted nouns in the birthday dialogue and explain the trigger, 8 items -->
+it, it acts as a direct object and stays **торт** in the Accusative case because it is an inanimate object. However, when Oksana points out that they do not have one, the negative word **немає** (there is no) forces it into the Genitive case, making it **торта**. Ми також бачимо знахідний відмінок для живих істот. Оксана каже запрошувати друзів на свято. Оскільки друзі — це люди, ця форма збігається з формою родового відмінка. > *We also see the Accusative case for living beings. Oksana says to invite friends to the holiday. Because friends are people, this form matches the Genitive case form.* Now let's look at the second part of their conversation, where they discuss the perfect **подарунок** (gift), the location, and the decorations. > — **Андрій:** Оксано, який подарунок купимо Олені? *(Oksana, what gift will we buy for Olena?)* > — **Оксана:** Може, книгу? Треба написати друзям і запитати. *(Maybe a book? We need to write to the friends and ask.)* > — **Андрій:** Добра ідея. А де ми зустрінемося? У кафе? *(Good idea. And where will we meet? In a cafe?)* > — **Оксана:** Так, ми підемо туди з друзями. *(Yes, we will go there with friends.)* > — **Андрій:** Ми прикрасимо кімнату яскравими кульками! *(We will decorate the room with bright balloons!)* > — **Оксана:** Андрію, це буде чудовий сюрприз. *(Andriy, this will be a wonderful surprise.)* > — **Андрій:** Згоден. На вечірці буде дуже весело. *(I agree. It will be very fun at the party.)* The second part of the conversation brings in the four remaining cases. The Vocative case is used for direct address, which is why the names change to **Оксано** and **Андрію**. The Dative case shows the recipient of an action, such as buying a gift for Olena (**Олені**) or writing a message to the friends (**друзям**). We use the Instrumental case to show accompaniment, like going with friends (**з друзями**), or to indicate the instrument used to perform an action, like decorating with balloons (**кульками**). Finally, the Locative case is used to indicate the location of an event or meeting. :::info **Grammar box** Remember that the Locative case is the only case that *never* appears without a preposition. You will always see it with words like **у/в** (in) or **на** (on/at), as seen in the phrases **у кафе** (in a cafe) and **на вечірці** (at the party). ::: :::tip **Did you know?** Ukrainian birthday traditions might differ from what you are used to. In some cultures, guests pool their money to pay for the birthday person's meal or drinks when they go out to celebrate. In Ukraine, the custom is the exact opposite. The birthday person, known as the іменинник (birthday boy) or іменинниця (birthday girl), is expected to **частувати** (treat) the guests to food and drinks. The guests bring gifts, but the host covers the cost of the celebration. ::: <!-- INJECT_ACTIVITY: quiz, Identify which case a highlighted noun is in and explain why (verb or preposition trigger), 8 items -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -505,7 +505,74 @@ A phased approach is best for internalizing plural cases.
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -524,18 +591,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] вечірка (party)
+- [ ] подарунок (gift, present)
+- [ ] лікар (doctor)
+- [ ] пацієнт (patient)
+- [ ] здоров'я (health)
+- [ ] ліки (medicine)
+- [ ] подорож (trip, journey)
+- [ ] потяг (train)
+- [ ] визначне місце (landmark, sight)
+- [ ] запрошувати (to invite)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Діалог 2: У лікарні (~600 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

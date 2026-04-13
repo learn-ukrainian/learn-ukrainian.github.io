@@ -2,12 +2,12 @@
   "module": "aspect-in-negation",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-10T21:25:57.030083Z",
+  "last_audit": "2026-04-11T14:05:04.772522Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-09T04:24:40.037663Z",
+    "md": "2026-04-11T14:04:09.820571Z",
     "meta": null,
-    "activities": "2026-04-09T04:17:47.757918Z",
+    "activities": "2026-04-11T13:56:22.344035Z",
     "vocabulary": "2026-04-09T04:21:05.602082Z",
     "research": null,
     "plan": "2026-04-04T21:37:33.893255Z"
@@ -20,8 +20,8 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 2,
-      "message": "4629/4000 (raw: 4810) | engagement: 0/5 | richness: 59% < 95% min (grammar) - REWRITE needed"
+      "violations": 3,
+      "message": "6140/4000 (raw: 6200) | engagement: 2/5 | immersion: 23.7% LOW (target 85-100% (B1.1 Aspect)) | richness: 56% < 95% min (grammar) - REWRITE needed"
     },
     "activities": {
       "status": "fail",
@@ -32,6 +32,15 @@
       "status": "pass",
       "violations": 0,
       "message": "35/25"
+    },
+    "vocab_progression": {
+      "status": "warn",
+      "violations": 0,
+      "message": "\u0394 -36 | premature=2 | gaps=26 | well-paced=0",
+      "delta": -36,
+      "premature": 2,
+      "gaps": 26,
+      "well_paced": 0
     },
     "naturalness": {
       "status": "info",

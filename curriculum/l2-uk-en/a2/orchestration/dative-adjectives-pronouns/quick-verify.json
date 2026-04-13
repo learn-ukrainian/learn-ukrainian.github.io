@@ -2,12 +2,6 @@
   "attempt": 1,
   "passed": true,
   "errors": [],
-  "warnings": [
-    {
-      "check": "VOCABULARY",
-      "severity": "WARNING",
-      "message": "Missing 1/10 required vocab: присвійний (possessive)"
-    }
-  ],
-  "timestamp": "2026-04-11T00:49:10.529759+00:00"
+  "warnings": [],
+  "timestamp": "2026-04-13T05:01:04.395300+00:00"
 }

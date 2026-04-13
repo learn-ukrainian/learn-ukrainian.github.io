@@ -2,17 +2,6 @@
   "attempt": 1,
   "passed": true,
   "errors": [],
-  "warnings": [
-    {
-      "check": "VOCABULARY",
-      "severity": "WARNING",
-      "message": "Missing 3/10 required vocab: музей (museum), бабуся (grandmother), список (list)"
-    },
-    {
-      "check": "EXERCISES",
-      "severity": "WARNING",
-      "message": "Plan expects 4 exercise(s) but content has 3"
-    }
-  ],
-  "timestamp": "2026-04-11T00:09:37.469246+00:00"
+  "warnings": [],
+  "timestamp": "2026-04-12T23:38:46.898250+00:00"
 }

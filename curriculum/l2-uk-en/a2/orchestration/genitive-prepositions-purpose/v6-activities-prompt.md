@@ -1,4 +1,4 @@
-<!-- version: 1.1.0 | updated: 2026-03-31 -->
+<!-- version: 1.2.0 | updated: 2026-04-12 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -11,6 +11,35 @@ Generate an `activities/genitive-prepositions-purpose.yaml` file for module **10
 
 ---
 
+## ⚠️ HARD COUNT TARGETS — READ TWICE
+
+These are the binding numerical contracts for THIS module. The audit will FAIL if you fall short.
+
+| Bucket | Min | Max | Notes |
+|---|---|---|---|
+| Total activities | 12 | 12+ | inline + workbook combined |
+| Inline (lesson tab) | 4 | 6 | one per `<!-- INJECT_ACTIVITY -->` marker, see below |
+| Workbook (Зошит tab) | 8 | 11 | extended practice |
+| Items per activity | 8 | — | each activity must have at least 8 items (unless its type cap is lower — see Activity Type Reference below) |
+
+**You MUST ship at least 4 inline activities AND at least 8 workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+
+**Type diversity is required.** The module (inline + workbook combined) MUST use at least **0** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level. (If `0` is `0`, the audit profile for this level does not enforce type diversity — but variety still produces a better lesson, so aim for 4+ types when the workbook allows it.)
+
+---
+
+## Allowed types for THIS level
+
+- **Inline (lesson) types:** quiz, true-false, fill-in, match-up, group-sort, classify, mark-the-words
+- **Inline priority (preferred):** fill-in, match-up, true-false, quiz
+- **Workbook types:** cloze, error-correction, fill-in, unjumble, translate, match-up, group-sort, odd-one-out, observe, phrase-table, quiz, true-false, mark-the-words
+- **Workbook priority (preferred):** error-correction, cloze, unjumble, translate, fill-in
+- **FORBIDDEN at this level:** anagram, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables, highlight-morphemes, grammar-identify
+
+Pick from the allowed list. Lean heavily on the priority lists. Do not use any forbidden type — the build will reject it.
+
+---
+
 ## Inline vs Workbook Split
 
 Activities have two placement categories:
@@ -19,7 +48,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Rule of thumb:** inline = 2-3 quick checks after key teaching points. Workbook = 4-8 deeper practice exercises covering the full topic.
+**Rule of thumb:** inline = 4–6 quick checks after key teaching points. Workbook = 8–11 deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
 
 ---
 
@@ -27,10 +56,12 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: match-up-purpose -->`
-- `<!-- INJECT_ACTIVITY: fill-in-location -->`
-- `<!-- INJECT_ACTIVITY: quiz-prep-choice-choose-between-and-to-complete-everyday-sentences -->`
-- `<!-- INJECT_ACTIVITY: true-false-grammar -->`
+- `<!-- INJECT_ACTIVITY: quiz-choose-or-to-complete-everyday-sentences -->`
+- `<!-- INJECT_ACTIVITY: true-false-judge-whether-preposition-noun-form-combinations-are-grammatically-correct -->`
+- `<!-- INJECT_ACTIVITY: fill-in-complete-location-descriptions-with-correct-genitive-form -->`
+- `<!-- INJECT_ACTIVITY: match-up-match-ukrainian-prepositional-phrases-to-their-english-equivalents -->`
+- `<!-- INJECT_ACTIVITY: true-false-judge-whether-preposition-noun-form-combinations-are-grammatically-correct -->`
+- `<!-- INJECT_ACTIVITY: quiz-choose-or-to-complete-everyday-sentences -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -88,282 +119,180 @@ required:
 ## Module Content (the prose the learner reads before exercises)
 
 <module_content>
-## Для кого це? Для + родовий (Who Is It For? Для + Genitive)
+## Для кого це? Для + родовий (Who Is It For? Для + Genitive) (~700 words)
 
-In Ukrainian, we use the preposition **для** (for) to express purpose or to show the intended recipient of an object or action. While the English word "for" has many different meanings and can be used in various grammatical structures, the Ukrainian **для** is very specific. It always answers the specific questions **для кого?** (for whom?) or **для чого?** (for what?). Most importantly, the preposition **для** always triggers the Genitive case. This means the noun that follows it must change its ending according to the rules of the Genitive case.
+> — **Ігор:** Для кого ця ковдра? *(Who is this blanket for?)*
+> — **Марта:** Для Олени. Вона завжди мерзне ввечері. *(For Olena. She is always cold in the evening.)*
+> — **Ігор:** Добре. А де мій ліхтарик? Без ліхтарика — ніяк! *(Good. And where is my flashlight? Without a flashlight — no way!)*
+> — **Марта:** Він у рюкзаку. Ми поставимо намет біля **річки**. *(It is in the backpack. We will put the tent near the **river**.)*
+> — **Ігор:** Чудово! Це ідеальне місце для **відпочинку**. *(Great! This is an ideal place for **rest**.)*
 
-«Читаємо українською» (Reading in Ukrainian):
-— Це **подарунок для мами** (This is a gift for mom).
-— Мені потрібен **час для відпочинку** (I need time for rest).
-— Ця міцна кава **для тебе** (This strong coffee is for you).
-— Ми купили квитки **для дітей** (We bought tickets for the children).
+Look closely at the small words in the dialogue above: **для** (for), **без** (without), and **біля** (near). These three prepositions are incredibly common in everyday Ukrainian and form the backbone of basic communication. They all share one strict grammatical rule: they always demand the Genitive case (родовий відмінок). Whenever you use these prepositions, the noun, adjective, or pronoun that follows them must change its ending. In this section, we will focus entirely on the preposition **для**.
 
-When we want to explain the **призначення** (purpose) of something, we attach **для** to a noun. This is often an abstract noun or a noun that describes an action or process. This structure helps us talk about the specific function of everyday objects.
+The preposition **для** is primarily used to express purpose, function, or destination. When you want to explain why a specific object exists, what it is used for, or what an action is meant to achieve, you ask the question «Для чого?» (For what purpose?). The noun that follows this preposition provides the answer and must take the Genitive case. This is a fundamental structure for describing the utility of the things around you in daily life. Whether you are talking about household items, professional tools, or even abstract concepts, the grammatical rule remains the exact same.
 
-Змінюємо закінчення (Changing endings):
-«здоров'я» (health) → «для здоров'я»
-«робота» (work) → «для роботи»
-«навчання» (studying) → «для навчання»
+Цей новий стіл — для роботи, а не для ігор. Ми купили ці товсті зошити спеціально для **навчання**. Свіже повітря та щоденний спорт дуже корисні для здоров'я. Ця велика кімната має зовсім інше **призначення**.
 
-«Читаємо українською»:
-— Свіжі фрукти дуже корисні **для здоров'я** (Fresh fruit is very useful for health).
-— Я шукаю зручний одяг **для роботи** (I am looking for comfortable clothes for work).
-— У нас є нові книги **для навчання** (We have new books for studying).
-— Мені потрібен великий стіл **для комп'ютера** (I need a large desk for the computer).
-— Це спеціальна кімната **для зустрічей** (This is a special room for meetings).
+> *This new desk is for work, and not for games. We bought these thick notebooks specifically for **studying**. Fresh air and daily sports are very useful for health. This large room has a completely different **purpose**.*
 
-Now let's look at how we use **для** when giving something to a person or preparing something for them. We will start with regular hard-stem nouns. Remember the standard Genitive case endings we learned earlier: masculine nouns usually take the ending **-а**, and feminine nouns take the ending **-и**.
+It is important to remember that abstract concepts like health, work, or education are frequently paired with **для**. These combinations often translate directly to English structures, making them relatively easy to master once you know the core vocabulary and the corresponding Genitive endings.
 
-Змінюємо закінчення (Changing endings):
-«брат» (brother) → «для брата»
-«сестра» (sister) → «для сестри»
-«тато» (dad) → «для тата»
+Ця програма створена для розвитку бізнесу. Ми збираємо гроші для ремонту. Цей інструмент потрібен для точного вимірювання.
 
-«Читаємо українською»:
-— Я маю квиток на концерт **для брата** (I have a concert ticket for my brother).
-— Ми готуємо великий сюрприз **для сестри** (We are preparing a big surprise for the sister).
-— Сьогодні буде смачна вечеря **для тата** (Today there will be a tasty dinner for dad).
-— Я купив цей новий телефон **для друга** (I bought this new phone for a friend).
-— Це дуже цікава гра **для сина** (This is a very interesting game for the son).
+> *This program is created for business development. We are collecting money for repairs. This tool is needed for precise measurement.*
 
-What about soft-stem nouns and feminine nouns ending in **-ія**? They follow their own specific patterns. For soft masculine nouns, the Genitive ending is usually **-я**. For feminine nouns ending in **-ія**, the ending changes to **-ії**. Soft feminine nouns ending in **-я** take the ending **-і**.
+Another major use of **для** is to indicate the intended recipient of an object, a feeling, or an action. When you buy a gift, prepare a meal, or do a favor, you answer the question «Для кого?» (For whom?). Just like with inanimate objects, the person or animal receiving the item must be put into the Genitive case. This is how you clearly show that someone is the primary beneficiary of your actions. It is a structure you will use every time you interact with friends, family, and colleagues.
 
-Змінюємо закінчення (Changing endings):
-«вчитель» (teacher) → «для вчителя»
-«Марія» (Maria) → «для Марії»
-«Софія» (Sophia) → «для Софії»
+Це дуже гарний подарунок для мами. Я купив два квитки в театр для мого найкращого друга. Цей великий солодкий торт — для дітей. Ми зараз готуємо приємний сюрприз для нашої нової колеги.
 
-«Читаємо українською»:
-— У класі стоїть новий стілець **для вчителя** (A new chair for the teacher stands in the classroom).
-— Я несу ці красиві квіти **для Марії** (I am carrying these beautiful flowers for Maria).
-— Це м'яка іграшка **для Софії** (This is a soft toy for Sophia).
-— Ми купили ефективні ліки **для бабусі** (We bought effective medicine for grandma).
-— Це важливий лист **для лікаря** (This is an important letter for the doctor).
+> *This is a very beautiful gift for mom. I bought two tickets to the theater for my best friend. This big sweet cake is for the children. We are currently preparing a pleasant surprise for our new colleague.*
 
-Finally, let's look at neuter nouns and plural recipients after our new preposition. Many abstract neuter nouns end in double consonants plus **-я**, like **щастя** (happiness) or **життя** (life). In the Genitive case, their ending remains **-я**. For plural recipients, masculine nouns often take the ending **-ів**, while feminine and neuter nouns usually drop their final vowel entirely.
+:::note
+**Quick tip** — When translating the English word "for", you must be careful to choose the correct Ukrainian equivalent based on context. If "for" means "for the purpose of" or "intended for someone", you should use **для** + Genitive. However, if it means "going to an event" (like "going for a meeting"), Ukrainian uses **на** + Accusative.
+:::
 
-Змінюємо закінчення (Changing endings):
-«щастя» (happiness) → «для щастя»
-«діти» (children) → «для дітей»
-«друзі» (friends) → «для друзів»
+To use the preposition **для** correctly in fast-paced conversation, you need to confidently recall the Genitive case endings across all three genders and their different stem types. The preposition itself never changes, but the noun following it always transforms. Let's look closely at how the endings change when we add **для** to everyday words. Notice the distinct patterns for hard and soft stems, and pay special attention to the vowels.
 
-«Читаємо українською»:
-— Ми зробимо все можливе **для щастя** (We will do everything possible for happiness).
-— Чиста вода дуже потрібна **для життя** (Clean water is very necessary for life).
-— У нашому готелі є кімната **для дітей** (Our hotel has a room for children).
-— У мене є хороші новини **для друзів** (I have good news for friends).
-— Це весела музика **для танців** (This is fun music for dances).
+Для чоловічого роду ми найчастіше додаємо закінчення -а або -я. Наприклад, це квиток для брата, а це нова книга для вчителя. Для жіночого роду ми зазвичай використовуємо закінчення -и, -і або -ї. Ось свіжі квіти для сестри, а це гаряча кава для Марії. Для середнього роду закінчення змінюються на -а або -я. Спокій потрібен для щастя, а чиста вода необхідна для щоденного життя.
 
-Let's see these Genitive forms in action in a real conversation. Ігор (Igor) and Марта (Marta) are packing their bags for a weekend camping trip in the mountains. Pay attention to how they discuss the purpose of the items and who the specific items are for.
+> *For the masculine gender, we most often add the ending -a or -я. For example, this is a ticket for a brother, and this is a new book for a teacher. For the feminine gender, we usually use the endings -и, -і, or -ї. Here are fresh flowers for a sister, and this is hot coffee for Mariia. For the neuter gender, the endings change to -a or -я. Peace is needed for happiness, and clean water is necessary for daily life.*
 
-> — **Ігор:** Марто, ми взяли всі речі **для походу**? *(Marta, did we take all the things for the hike?)*
-> — **Марта:** Так, майже всі. Але я ще шукаю теплий одяг. *(Yes, almost all. But I am still looking for warm clothes.)*
-> — **Ігор:** Ось лежить велика ковдра. **Для кого** ця ковдра? *(Here lies a large blanket. Who is this blanket for?)*
-> — **Марта:** Вона **для Олени**. Їй завжди холодно вночі. *(It is for Olena. She is always cold at night.)*
-> — **Ігор:** Зрозумів. А навіщо нам цей великий стіл? *(Understood. And what do we need this large table for?)*
-> — **Марта:** Це **для комфорту**. Ми будемо там їсти і пити чай. *(It is for comfort. We will eat and drink tea there.)*
-> — **Ігор:** Добре, тоді я покладу його в машину. А де ліки **для бабусі**? *(Good, then I will put it in the car. And where is the medicine for grandma?)*
-> — **Марта:** Вони вже там. Я все зібрала **для подорожі**. *(They are already there. I packed everything for the trip.)*
+The endings might seem overwhelming at first, but they follow highly predictable patterns that you have already started to recognize. By regularly practicing these phrases, the correct Genitive forms will soon become second nature to you.
 
-<!-- INJECT_ACTIVITY: match-up-purpose -->
+Finally, there are many high-frequency, everyday phrases built with **для** that you will hear constantly in fluent Ukrainian speech. When using personal pronouns, remember that they also have their own special Genitive forms that you must memorize. For example, the pronoun «ти» (you) becomes «тебе», and «я» (I) becomes «мене». Mastering these set phrases will make your Ukrainian sound much more natural, polite, and grammatically precise.
+
+У мене є невеликий подарунок для тебе. Неділя — це ідеальний час для **відпочинку**. Ця нова інформація дуже важлива для мене. Мені зараз потрібна твоя **допомога** для цього складного проєкту.
+
+> *I have a small gift for you. Sunday is an ideal time for **rest**. This new information is very important to me. I need your **help** right now for this complex project.*
+
+When you want to emphasize that something is done exclusively for someone's benefit, you can combine **тільки** (only) with **для**. This creates a strong emotional resonance in your sentences.
+
+Я роблю це тільки для тебе. Цей сюрприз був підготовлений спеціально для неї. Ми організували це свято для вас.
+
+> *I am doing this only for you. This surprise was prepared specifically for her. We organized this holiday for you.*
+
+<!-- INJECT_ACTIVITY: quiz-choose-or-to-complete-everyday-sentences -->
 
 ## Без чого? Без + родовий (Without What? Без + Genitive)
 
-The preposition **без** (without) is one of the most common and useful words in Ukrainian. It always requires the Genitive case. We use it to express the absence or lack of something, or when we do things without a certain object or person. The best place to start practicing **без** is in a café or restaurant, as it is essential for customizing your food and drinks. 
+The preposition **без** means "without". You will use it constantly to express the absence or lack of something. The noun that follows **без** must always be in the Genitive case, answering the questions **кого?** or **чого?**.
 
-Змінюємо закінчення (Changing endings):
-«цукор» (sugar) → «без цукру»
-«молоко» (milk) → «без молока»
-«газ» (gas) → «без газу»
+Я завжди п'ю каву без цукру, а мій брат любить чорний чай без молока. Це був дуже довгий день без дощу. Діти пішли гуляти без курток, тому що на вулиці сьогодні дуже тепло. Ми не можемо уявити ранок без смачного сніданку.
 
-«Читаємо українською»:
-— Я завжди п'ю каву **без цукру** (I always drink coffee without sugar).
-— Дайте, будь ласка, чорний чай **без молока** (Please give me black tea without milk).
-— Ми хочемо замовити воду **без газу** (We want to order still water / water without gas).
-— Вона їсть свіжий салат **без м'яса** (She is eating a fresh salad without meat).
-— Цей гарячий суп зовсім **без солі** (This hot soup is completely without salt).
+> *I always drink coffee without sugar, and my brother likes black tea without milk. It was a very long day without rain. The children went for a walk without jackets because it is very warm outside today. We cannot imagine a morning without a tasty breakfast.*
 
-Beyond food and drinks, **без** is frequently paired with abstract nouns to form common idioms, adverbial phrases, and everyday modifiers. When you combine **без** with a concept, it describes how an action is performed or the state of a situation. These phrases are very natural and are used constantly in spoken Ukrainian.
+Beyond physical objects, **без** is heavily used with abstract concepts to form common conversational fillers. For example, you will often use words like **сумнів** (doubt), **допомога** (help, assistance), or **відпочинок** (rest, relaxation). You might also describe an object without a clear **призначення** (purpose, destination).
 
-Змінюємо закінчення (Changing endings):
-«сумнів» (doubt) → «без сумніву»
-«проблема» (problem) → «без проблем»
-«допомога» (help) → «без допомоги»
-«успіх» (success) → «без успіху»
+Цей старий інструмент лежить тут без призначення. Він вирішив це складне завдання без моєї допомоги. Цей студент, без сумніву, найкращий у нашій групі. Ми працювали весь день без відпочинку. Вона завжди робить свою роботу без проблем і без помилок.
 
-«Читаємо українською»:
-— Це найкращий варіант, **без сумніву** (This is the best option, without doubt).
-— Я зроблю це нове завдання **без проблем** (I will do this new task without problems / no problem).
-— Він швидко закінчив роботу **без допомоги** (He quickly finished the work without help).
-— Ми довго шукали ключі **без успіху** (We searched for the keys for a long time without success).
-— Вони працюють цілий день **без зупинки** (They are working all day without a stop).
+> *This old tool lies here without a purpose. He solved this complex task without my help. This student is, without a doubt, the best in our group. We worked all day without rest. She always does her work without problems and without mistakes.*
 
-When using masculine nouns after **без**, you must choose between the **-а** (or **-я**) and **-у** (or **-ю**) endings. As a general rule, concrete objects that you can easily count or touch usually take the **-а** ending. On the other hand, substances, materials, or abstract concepts often take the **-у** ending. 
+:::note
+**Quick tip** — The phrase «без сумніву» is a fantastic conversational filler to agree enthusiastically with someone.
+:::
 
-Змінюємо закінчення (Changing endings):
-«хліб» (bread) → «без хліба»
-«ніж» (knife) → «без ножа»
-«цукор» (sugar) → «без цукру»
-«шум» (noise) → «без шуму»
+To use **без** accurately, apply the correct Genitive endings based on the noun's stem. Masculine hard stems take **-а** or **-у**, while soft stems take **-я** or **-ю**. Feminine hard stems take **-и**, and soft stems take **-і**. Neuter nouns take **-а** or **-я**.
 
-«Читаємо українською»:
-— Ми ніколи не їмо борщ **без хліба** (We never eat borscht without bread).
-— Я не можу нарізати овочі **без ножа** (I cannot cut vegetables without a knife).
-— Мій старший брат п'є чай **без цукру** (My older brother drinks tea without sugar).
-— Діти спокійно гралися в кімнаті **без шуму** (The children played calmly in the room without noise).
-— Він вийшов на вулицю **без телефона** (He went outside without a phone).
+Сьогодні ми обідаємо без хліба, а учень прийшов на урок без олівця. Я не можу жити без чистої води. Цей грибний суп зовсім без солі. У кімнаті темно, бо вона без вікна. Ми не хочемо відпочивати без моря.
 
-For feminine nouns after **без**, the endings are much simpler and follow the standard rules. Hard-stem feminine nouns take **-и**, while soft-stem nouns (ending in **-я** or a soft consonant) take **-і**. Neuter nouns typically change their final **-о** to **-а**, and their final **-е** to **-я**.
+> *Today we are having lunch without bread, and the student came to the lesson without a pencil. I cannot live without clean water. This mushroom soup is completely without salt. It is dark in the room because it is without a window. We do not want to rest without the sea.*
 
-Змінюємо закінчення (Changing endings):
-«вода» (water) → «без води»
-«сіль» (salt) → «без солі»
-«вікно» (window) → «без вікна»
-«море» (sea) → «без моря»
+Specific verbs naturally pair with **без**. The verb «могти» in the negative expresses strong dependency. You will also use **без** with verbs of motion. Personal pronouns also change forms: «він» becomes «нього», «ми» becomes «нас».
 
-«Читаємо українською»:
-— Жодна людина не живе довго **без води** (No person lives long without water).
-— Ця смачна страва приготовлена **без солі** (This tasty dish is prepared without salt).
-— У цьому старому будинку є кімната **без вікна** (In this old building there is a room without a window).
-— Я дуже сумую, коли живу **без моря** (I am very sad when I live without the sea).
-— Вона пішла на роботу **без куртки** (She went to work without a jacket).
+Я зовсім не можу жити без ранкової кави. Вона прийшла на зустріч без парасольки, хоча йшов сильний дощ. Ми поїхали в подорож без нього, бо він був дуже зайнятий на роботі. Вони почали виступ без нас.
 
-In natural conversation, **без** is frequently used in complete sentences to emphasize dependence or absolute necessity. A very common structure is pairing it with the verb phrase **не можу** (I cannot) to express that something is essential for your routine. You can also use **без** with pronouns, just like you would with regular nouns.
+> *I absolutely cannot live without morning coffee. She came to the meeting without an umbrella, even though it was raining heavily. We went on the trip without him because he was very busy at work. They started the performance without us.*
 
-Змінюємо закінчення (Changing endings):
-«кава» (coffee) → «без кави»
-«парасолька» (umbrella) → «без парасольки»
-«він» (he) → «без нього»
+> — **Олена:** Ти справді п'єш каву без молока?
+> — **Марко:** Так, я завжди п'ю каву без молока і без цукру. Це дуже смачно.
+> — **Олена:** А як щодо десерту? Ти теж їси без цукру?
+> — **Марко:** Ні, звичайно. Я не можу без солодкого.
+> — **Олена:** Я теж! Без смачного торта життя не цікаве. А ти любиш чай без лимона?
+> — **Марко:** Я взагалі не п'ю чай. Тільки каву.
 
-«Читаємо українською»:
-— Вранці я просто **не можу без кави** (In the morning I simply cannot without coffee).
-— На вулиці сильний дощ, а вона прийшла **без парасольки** (There is heavy rain outside, and she arrived without an umbrella).
-— Ми поїхали на вечірній концерт **без нього** (We went to the evening concert without him).
-— Вони зовсім не можуть жити **без музики** (They absolutely cannot live without music).
-— Цей складний проєкт неможливий **без вас** (This complex project is impossible without you).
+One nuance to master is the Genitive endings for masculine nouns. Use **-а/-я** for concrete, countable objects, like a **будинок** (building, house). For abstract concepts, uncountable substances, and natural phenomena, use **-у/-ю**. You will often see this rule applied in places like a **бібліотека** (library) or a **лікарня** (hospital).
 
-Let's return to Ігор (Igor) and Марта (Marta). They are continuing to pack their bags for the camping trip. Igor suddenly realizes they forgot an essential item for the dark mountain nights. Pay attention to how they use **без** to discuss what they cannot go without.
+:::tip
+**Did you know?** — The choice between **-а** and **-у** is one of the most unique features of the Ukrainian Genitive case. It distinguishes Ukrainian from other Slavic languages and adds precision to your speech.
+:::
 
-> — **Ігор:** Марто, ми забули щось дуже важливе. *(Marta, we forgot something very important.)*
-> — **Марта:** Що саме? Я думаю, що ми взяли все. *(What exactly? I think that we took everything.)*
-> — **Ігор:** Ми не можемо їхати **без ліхтарика**. У горах дуже темно. *(We cannot go without a flashlight. It is very dark in the mountains.)*
-> — **Марта:** Ой, правда. Вночі **без нього** ми нічого не побачимо. *(Oh, right. At night without it we will see nothing.)*
-> — **Ігор:** Так. І ще нам треба більше питної води. *(Yes. And we also need more drinking water.)*
-> — **Марта:** Згодна. У такий похід не можна йти **без води**. *(Agreed. You cannot go on such a hike without water.)*
-> — **Ігор:** Добре, що ми робимо список. Подорожувати **без плану** — це погана ідея. *(Good that we are making a list. Traveling without a plan is a bad idea.)*
+Він ремонтує старий стіл без молотка і без ножа. Я не можу працювати без комп'ютера. У бібліотеці всі читають спокійно і без шуму. Цей новий будинок стоїть зовсім без світла. У лікарні пацієнти сплять без проблем.
+
+> *He is repairing the old table without a hammer and without a knife. I cannot work without a computer. In the library, everyone reads calmly and without noise. This new building stands completely without light. In the hospital, patients sleep without problems.*
+
+Сьогодні дуже теплий весняний день, тому небо чисте і зовсім без хмар. Ми вирішили піти в парк без курток і без теплих шапок. Мій друг прийшов без собаки, бо його собака зараз спить вдома. Ми гуляємо без поспіху і просто насолоджуємося чудовою погодою. Я також люблю гуляти містом без чіткої мети, без карти і без навігатора. Можна зайти в нове кафе, випити смачний чай без цукру і відпочити. Головне — це гарний настрій і вихідний день без стресу.
+
+У нашому місті є новий ресторан. Там готують дуже смачні страви. Я часто замовляю салат без м'яса і суп без сметани. Мій друг завжди бере картоплю без соусів. Вони також роблять чудові десерти без цукру. Ми можемо сидіти там весь вечір і розмовляти без пауз. Це чудове місце для відпочинку.
+
+> — **Степан:** Привіт! Ти сьогодні без машини?
+> — **Ганна:** Так, моя машина зараз у ремонті. Я їду на автобусі.
+> — **Степан:** Тоді ми можемо поїхати разом. Мій офіс біля твого.
+> — **Ганна:** Дуже дякую! Без тебе я б точно запізнилася на зустріч.
+> — **Степан:** Без проблем! Сідай, поїхали.
+
+<!-- INJECT_ACTIVITY: true-false-judge-whether-preposition-noun-form-combinations-are-grammatically-correct -->
 
 ## Де це? Біля, навпроти, коло + родовий (Where Is It? Біля, навпроти, коло + Genitive)
 
-When we want to describe where something is located in relation to another object, we often use the preposition **біля** (near, next to, by). This is the most common preposition for expressing spatial proximity in spoken Ukrainian. The logic is simple: you have a reference point, and something else is situated close to it. Because it defines a relationship of location based on a specific object, it always requires the Genitive case.
+Now that we have covered how to express purpose and absence, we can transition from abstract concepts to physical space. When you want to describe where something is located, the most common preposition for proximity is **біля** (near, next to). It is your default, go-to word whenever you need to say that one object is physically close to another. Even though it clearly answers the question "Where?", it strictly requires the noun to be in the Genitive case. This is a very common point of confusion for beginners, who often try to use the Locative case here.
 
-Змінюємо закінчення (Changing endings):
-«школа» (school) → «біля школи»
-«будинок» (building, house) → «біля будинку»
-«вікно» (window) → «біля вікна»
+Моя нова школа знаходиться біля великого парку. Щоранку я зустрічаю друзів біля входу. Ми любимо гуляти біля річки після уроків. Наш старий будинок стоїть біля лісу, тому там завжди свіже повітря. Мій брат залишив свій велосипед біля магазину. Ми часто п'ємо каву біля вікна і дивимося на вулицю. Це чудове місце для життя та відпочинку.
 
-«Читаємо українською»:
-— Моя нова робота знаходиться **біля школи** (My new job is located near the school).
-— Ми живемо в квартирі **біля будинку** моїх батьків (We live in an apartment near my parents' building).
-— Вона любить читати книгу **біля вікна** (She likes to read a book by the window).
-— Зустрінемося завтра **біля метро** (Let's meet tomorrow near the subway).
+> *My new school is located near a large park. Every morning I meet friends near the entrance. We like to walk near the river after classes. Our old house stands near the forest, so there is always fresh air there. My brother left his bicycle near the store. We often drink coffee by the window and look at the street. This is a wonderful place for living and rest.*
 
-Let's practice how different noun genders change their endings after **біля**. Remember that masculine nouns usually take **-а** or **-у**, feminine nouns take **-и** or **-і**, and neuter nouns take **-а** or **-я**. You will hear this preposition constantly when Ukrainians describe their cities, neighborhoods, or favorite places.
+Another very useful spatial preposition is **навпроти** (opposite, across from). You use it specifically when describing two objects that are facing one another, like buildings on opposite sides of a street or people sitting across a table. While **біля** just means something is nearby, **навпроти** gives a much more precise geometric relationship. Like the others we have studied in this module, it always takes the Genitive case.
 
-Змінюємо закінчення (Changing endings):
-«парк» (park) → «біля парку»
-«річка» (river) → «біля річки»
-«море» (sea) → «біля моря»
+Нова бібліотека працює навпроти мого університету. Я часто читаю там книги для навчання. Велика церква стоїть навпроти центрального вокзалу. Туристи люблять фотографувати будівлі навпроти великої площі. Мій улюблений ресторан знаходиться навпроти старого театру. Ми сиділи в кафе навпроти один одного і довго розмовляли.
 
-«Читаємо українською»:
-— Цей чудовий ресторан розташований **біля парку** (This wonderful restaurant is located near the park).
-— Влітку ми часто відпочиваємо **біля річки** (In the summer we often relax by the river).
-— Вони купили маленьку дачу **біля моря** (They bought a small summer house by the sea).
-— Діти радісно грають у футбол **біля лісу** (The children joyfully play football near the forest).
+> *The new library works opposite my university. I often read books there for studying. A large church stands opposite the central train station. Tourists like to photograph buildings opposite the large square. My favorite restaurant is located opposite the old theater. We sat in the cafe opposite one another and talked for a long time.*
 
-Another very useful spatial preposition is **навпроти** (opposite, across from). We use this word when two objects are facing each other, usually separated by a street, a corridor, or a table. Like our previous prepositions, it strictly demands the Genitive case for the noun that follows it.
+You will also encounter the preposition **коло** (near, by). It is completely synonymous with **біля** and also requires the Genitive case for the following noun. While **біля** is the standard, neutral choice in everyday spoken Ukrainian, **коло** has a slightly more literary, warm, or folksy flavor. You will often hear it in traditional folk songs, classical poetry, and historical literature. It evokes a cozy feeling of being close to home or nature.
 
-Змінюємо закінчення (Changing endings):
-«банк» (bank) → «навпроти банку»
-«вокзал» (train station) → «навпроти вокзалу»
-«церква» (church) → «навпроти церкви»
+Маленька дівчинка грається коло білої хати. Старе високе дерево росте коло дороги. Ми сиділи коло вогнища теплим літнім вечором і співали народні пісні. Діти бігали коло швидкої річки цілий день. Моя бабуся завжди садила гарні квіти коло вікна. Це було ідеальне місце для нашого табору.
 
-«Читаємо українською»:
-— Нова кав'ярня відкрилася **навпроти банку** (A new coffee shop opened opposite the bank).
-— Наш готель знаходиться прямо **навпроти вокзалу** (Our hotel is located right across from the train station).
-— Вони зустрілися на площі **навпроти церкви** (They met on the square opposite the church).
-— Я мовчки сиджу **навпроти нього** і слухаю (I silently sit opposite him and listen).
+> *A little girl is playing by the white house. An old tall tree grows by the road. We sat by the fire on a warm summer evening and sang folk songs. The children ran by the fast river all day. My grandmother always planted beautiful flowers by the window. It was an ideal place for our camp.*
 
-You will also encounter the preposition **коло** (near, by). It has exactly the same meaning as **біля** and also takes the Genitive case. While it is slightly less common in everyday urban speech, it is extremely frequent in Ukrainian literature, folk songs, and rural contexts. Knowing it will help you understand traditional stories and poetic descriptions.
+Combining these spatial prepositions allows you to give precise directions and clearly describe city locations. This is an absolutely essential skill for everyday life and navigation in any Ukrainian city. When someone asks for help finding a specific place, or when you are trying to explain where you live, you can confidently guide them using these exact patterns.
 
-Змінюємо закінчення (Changing endings):
-«хата» (house, traditional Ukrainian dwelling) → «коло хати»
-«дорога» (road) → «коло дороги»
+Без сумніву, це найкращий і найзручніший район міста. Трамвайна зупинка знаходиться просто біля станції метро. Кінцевий пункт призначення цього автобуса — старий залізничний вокзал. Якщо вам потрібна термінова допомога, відділення поліції розташоване біля центрального банку. Ця сучасна міська лікарня стоїть коло нового парку. Ми завжди зустрічаємося біля головного входу.
 
-«Читаємо українською»:
-— У селі є старий сад **коло хати** (In the village there is an old orchard by the house).
-— Вони зупинили машину **коло дороги** (They stopped the car by the road).
-— Ця красива пісня розповідає про дівчину **коло річки** (This beautiful song tells about a girl by the river).
-— Бабуся завжди сидить **коло вікна** і дивиться на вулицю (Grandmother always sits by the window and looks at the street).
+> *Without a doubt, this is the best and most convenient district of the city. The tram stop is located right near the subway station. The final destination of this bus is the old train station. If you need urgent help, the police department is situated near the central bank. This modern city hospital stands by the new park. We always meet near the main entrance.*
 
-When navigating a Ukrainian city, pay special attention to soft-stem feminine nouns, particularly those ending in **-ія**, **-я**, or a soft consonant like in **площа** (square (city)). These nouns will take the ending **-і** or **-ї** in the Genitive case. 
+> — **Марта:** Вибачте, ви не знаєте, де тут найближча аптека? *(Excuse me, do you know where the nearest pharmacy is here?)*
+> — **Ігор:** Звичайно. Вона знаходиться біля станції метро. *(Of course. It is located near the subway station.)*
+> — **Марта:** А як туди дійти пішки? *(And how do I get there on foot?)*
+> — **Ігор:** Ідіть прямо до великої площі. Аптека буде навпроти міської лікарні. *(Go straight to the large square. The pharmacy will be opposite the city hospital.)*
+> — **Марта:** Це далеко звідси? *(Is it far from here?)*
+> — **Ігор:** Ні, це дуже близько. Ви побачите її коло великого супермаркету. *(No, it is very close. You will see it by the large supermarket.)*
+> — **Марта:** Дуже дякую за допомогу! Без вас я б довго шукала. *(Thank you very much for the help! Without you I would have searched for a long time.)*
+> — **Ігор:** Без проблем! Гарного дня. *(No problem! Have a good day.)*
 
-Змінюємо закінчення (Changing endings):
-«станція» (station) → «біля станції»
-«площа» → «біля площі»
-«лікарня» (hospital) → «навпроти лікарні»
+When giving directions in a busy city, pay close attention to nouns from the mixed group and feminine nouns ending in **-ія**. These specific endings are common traps for learners because they sound slightly different, but they follow perfectly predictable Genitive patterns. Soft feminine nouns ending in **-ія** always change to **-ії**, while mixed feminine nouns change to **-і**. Mastering these will make your spoken Ukrainian sound incredibly natural and fluent.
 
-«Читаємо українською»:
-— Я зараз стою **біля станції** метро (I am standing near the subway station right now).
-— Головний музей міста розташований **біля площі** (The main museum of the city is located near the square).
-— Ми припаркували автомобіль **навпроти лікарні** (We parked the car opposite the hospital).
-— Ця довга вулиця закінчується **біля академії** (This long street ends near the academy).
+Туристи часто зустрічаються біля станції метро перед екскурсією. Маленька кав'ярня знаходиться навпроти великої площі в центрі міста. Моя старша сестра працює біля дитячої лікарні. Ми завжди купуємо свіжий хліб біля місцевої пекарні. Вони живуть навпроти нової студії танців. Студенти люблять читати біля лабораторії.
 
-Let's build a mental map to see how these prepositions work together to describe a neighborhood. When you ask for directions, locals will often use landmarks and spatial relationships rather than exact street addresses. 
+> *Tourists often meet near the subway station before an excursion. A small coffee shop is located opposite the large square in the city center. My older sister works near the children's hospital. We always buy fresh bread near the local bakery. They live opposite the new dance studio. Students like to read near the laboratory.*
 
-«Читаємо українською»:
-— Мій район дуже зручний для життя (My neighborhood is very convenient for living).
-— Велика **аптека** (pharmacy) знаходиться **біля ринку** (A large pharmacy is located near the market).
-— Якщо ви хочете випити кави, є гарне кафе **навпроти бібліотеки** (If you want to drink coffee, there is a nice cafe opposite the library).
-— Також тут є автобусна **зупинка** (stop) прямо **біля станції** метро (Also here is a bus stop right near the subway station).
-— Я часто гуляю **навпроти театру** (I often walk opposite the theater).
-— Мій дім стоїть **біля парку**, де весело співають птахи (My house stands near the park where birds sing merrily).
+:::info
+**Grammar box** — The prepositions **біля**, **навпроти**, and **коло** answer the question "Where?" and describe a location. Because of this, it is very tempting to use the Locative case. However, because they are prepositions of proximity (showing a relationship to another object), they strictly govern the Genitive case. Always ask yourself "Near what?" to trigger the correct ending.
+:::
 
-Let's rejoin Ігор (Igor) and Марта (Marta). They have finally arrived at their campsite in the mountains. Now they need to decide exactly where to pitch their tent. Notice how they use our new prepositions to discuss the best location.
+:::tip
+**Decolonization note** — When speaking Ukrainian, you must completely avoid the word **возле**. This is a Russianism and a very common error in Surzhyk. The correct, natural Ukrainian prepositions for proximity are exclusively **біля** and **коло**.
+:::
 
-> — **Ігор:** Нарешті ми приїхали. Де ми поставимо наш намет? *(Finally we arrived. Where will we put our tent?)*
-> — **Марта:** Я думаю, що найкраще місце — **біля річки**. *(I think that the best place is near the river.)*
-> — **Ігор:** Ні, **біля річки** може бути холодно вночі. *(No, near the river it can be cold at night.)*
-> — **Марта:** Тоді, можливо, там, **навпроти дерева**? *(Then maybe there, opposite the tree?)*
-> — **Ігор:** Там дуже гарно. І ми зможемо сидіти **коло вогню** ввечері. *(It is very nice there. And we will be able to sit by the fire in the evening.)*
-> — **Марта:** Чудова ідея. Я покладу наші речі **біля намету**. *(Great idea. I will put our things near the tent.)*
-> — **Ігор:** А я піду шукати сухі дрова для вогню. *(And I will go look for dry firewood for the fire.)*
+Many learners who have had previous exposure to Russian, or who hear a mixed language on the streets, might accidentally use the preposition **возле**. It is crucial to consciously filter this out of your vocabulary if you want to speak pure, beautiful Ukrainian. Using **біля** or **коло** immediately signals that you are speaking correctly.
 
-These location words are part of a larger system of spatial prepositions that use the Genitive case. Later, you will learn prepositions like **до** (to), **з** (from), and **від** (from, away from). The key difference is that **біля**, **навпроти**, and **коло** describe a static position—where something simply exists in space. Prepositions like **до**, on the other hand, will describe active direction or movement toward a destination.
+Ми ніколи не кажемо це слово. Українці завжди чекають своїх друзів біля театру або коло кінотеатру. Це просте правило є дуже важливим для чистої та правильної мови. Я залишив свою нову машину біля великого будинку. Справжня українська мова завжди звучить красиво і без помилок.
 
-<!-- INJECT_ACTIVITY: fill-in-location -->
-<!-- INJECT_ACTIVITY: quiz-prep-choice-choose-between-and-to-complete-everyday-sentences -->
-<!-- INJECT_ACTIVITY: true-false-grammar -->
+> *We never say this word. Ukrainians always wait for their friends near the theater or by the cinema. This simple rule is very important for clean and correct language. I left my new car near the large building. Real Ukrainian language always sounds beautiful and without mistakes.*
 
-## Підсумок — Summary
+To wrap up this grammar topic, you now have a highly versatile and powerful "Genitive Preposition Toolkit" at your disposal. By mastering **для** for purpose, **без** for absence, and the spatial group of **біля**, **навпроти**, and **коло** for location, you can confidently describe a wide range of everyday situations. These small words unlock a massive amount of expressive power in A2 Ukrainian and serve as the foundation for navigating the physical world around you.
 
-In this module, we explored three common functions that require the Genitive case. First, we learned how to express purpose or an intended recipient using **для** (for). Next, we discussed how to describe the absence of something using **без** (without). Finally, we looked at how to define a location using the prepositions **біля** (near), **навпроти** (opposite), and **коло** (by). 
-
-Remember that all of these prepositions always demand the Genitive case. The noun that follows them must change its ending according to its gender and stem.
-
-«Читаємо українською»:
-— Цей подарунок **для** мами. *(This gift is for mom.)*
-— Я п'ю чай **без** цукру. *(I drink tea without sugar.)*
-— Моя машина стоїть **навпроти** школи. *(My car stands opposite the school.)*
-— Ми зустрінемося **біля** театру. *(We will meet near the theater.)*
-— Кіт спить **коло** вікна. *(The cat sleeps by the window.)*
-
-Before we finish, try this quick self-check:
-1. Чи пам'ятаєте ви закінчення для чоловічого роду після «біля»? *(Do you remember the endings for masculine gender after "біля"?)*
-2. Як сказати "coffee without sugar"? *(How to say "coffee without sugar"?)*
-3. Який прийменник краще для "opposite"? *(Which preposition is better for "opposite"?)*
-
-Keep practicing these small but important words, and soon the Genitive case will feel natural.
-
+<!-- INJECT_ACTIVITY: fill-in-complete-location-descriptions-with-correct-genitive-form -->
+<!-- INJECT_ACTIVITY: match-up-match-ukrainian-prepositional-phrases-to-their-english-equivalents -->
+<!-- INJECT_ACTIVITY: true-false-judge-whether-preposition-noun-form-combinations-are-grammatically-correct -->
+<!-- INJECT_ACTIVITY: quiz-choose-or-to-complete-everyday-sentences -->
 </module_content>
 
 ---
@@ -377,48 +306,68 @@ version: "1.0"
 module: genitive-prepositions-purpose
 level: a2
 
+# NOTE — these are SHAPE examples. The real targets are at the top of this prompt
+# (12 total / 4–6 inline / 8–11 workbook,
+# 8+ items per activity). The shapes below are TRUNCATED for readability;
+# YOUR output MUST hit those minimums.
+
 inline:
   - id: marker-id-here        # MUST match an <!-- INJECT_ACTIVITY: ... --> marker
     type: quiz                 # activity type
     instruction: "Оберіть правильний варіант"
-    items:
+    items:                     # ← real output: ≥ 8 items
       - question: "_____ стіл"
-        options: ["мій", "моя", "моє"]
+        options: ["мій", "моя", "моє", "мої"]
         correct: 0             # 0-based index
+      - question: "Це ____ книга."
+        options: ["мій", "моя", "моє", "мої"]
+        correct: 1
+      # ... add at least 8 items total — never stop at 1-2
 
   - id: another-marker-id
     type: fill-in
     instruction: "Вставте правильне слово"
-    items:
+    items:                     # ← real output: ≥ 8 items
       - sentence: "Це ____ кімната."
         answer: "моя"
         options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ вікно."
+        answer: "моє"
+        options: ["мій", "моя", "моє"]
+      # ... ≥ 8 items total
 
 workbook:
-  - type: match-up
+  - id: match-up-vocab
+    type: match-up
     instruction: "З'єднайте пари"
-    pairs:
+    pairs:                     # ← real output: ≥ 8 pairs
       - left: "стіл"
         right: "він"
       - left: "книга"
         right: "вона"
       - left: "вікно"
         right: "воно"
+      # ... ≥ 8 pairs total
 
-  - type: group-sort
+  - id: group-sort-gender
+    type: group-sort
     instruction: "Розподіліть слова за категоріями"
     groups:
-      - label: "Category A"
-        items: ["word1", "word2"]
-      - label: "Category B"
-        items: ["word3", "word4"]
+      - label: "Чоловічий рід"
+        items: ["стіл", "олівець", "будинок"]   # ≥ 3 items per group
+      - label: "Жіночий рід"
+        items: ["книга", "ручка", "школа"]
+      - label: "Середній рід"
+        items: ["вікно", "море", "молоко"]
 
-  - type: true-false
+  - id: true-false-grammar
+    type: true-false
     instruction: "Правда чи ні?"
-    items:
-      - statement: "Statement here"
-        correct: true
-        explanation: "Why it's true"
+    items:                     # ← real output: ≥ 8 items
+      - statement: "«Книга» — це чоловічий рід."
+        correct: false
+        explanation: "Книга закінчується на -а, отже жіночий рід."
+      # ... ≥ 8 items total
 
   - type: error-correction
     instruction: "Виправте помилку"
@@ -489,7 +438,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -580,10 +529,15 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 ## Quality Rules
 
-**ITEM COUNT MINIMUMS (non-negotiable):**
-- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
-- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
-- If you can't think of enough items, add more examples from the module's vocabulary and content.
+**ACTIVITY COUNT MINIMUMS (non-negotiable, audit-enforced):**
+- **Total: 12 activities.** Inline: 4–6. Workbook: 8–11. The audit gate FAILS the module if you ship fewer.
+- **Type diversity: workbook MUST cover ≥5 distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
+- **Match the inline markers exactly.** Every `<!-- INJECT_ACTIVITY: id -->` marker in the prose needs a matching inline activity with that exact id. Skipping markers means the lesson tab is broken.
+
+**ITEM COUNT MINIMUMS (non-negotiable, per-activity):**
+- **Default minimum: 8 items per activity.** Quiz, fill-in, match-up, true-false, anagram, error-correction, translate, cloze, mark-the-words, divide-words, count-syllables, odd-one-out, group-sort categories: all ≥ 8.
+- **Lower minimums for specific types only:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items, essay-response/critical-analysis = 1 prompt.
+- If you can't think of enough items, add more examples from the module's vocabulary and content. NEVER ship a 1-item or 2-item activity unless its type cap explicitly allows it.
 - **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
 - **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
@@ -690,6 +644,27 @@ IMPORTANT: After using tools, output your COMPLETE module content as plain text.
 1. Run `verify_words` on all Ukrainian words in your exercises — every word must exist in VESUM
 2. Run `query_cefr_level` on any word you're unsure about — it must be a2-appropriate
 3. For fill-in answers and distractors, verify the exact form (case, number, gender) with `verify_lemma`
+
+---
+
+## ⚠️ MANDATORY FINAL CHECKLIST — verify before emitting YAML
+
+Walk through this checklist explicitly before you start emitting. If ANY box is unchecked, fix it FIRST.
+
+- [ ] My output has **at least 4** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
+- [ ] My output has **at least 8** workbook activities.
+- [ ] **Total ≥ 12.**
+- [ ] **Every** activity has **at least 8** items, pairs, or statements (except types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3, essay-response=1).
+- [ ] The module (inline + workbook combined) uses **at least 0 distinct activity types** (or 4+ when 0 = 0 and the workbook size allows it). I am NOT shipping a wall of quizzes.
+- [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
+- [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
+- [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+- [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+- [ ] My inline count is between 4 and 6. I did NOT create more injection markers than 6.
+- [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
+- [ ] At B1+, all instructions are in Ukrainian (no English fallback).
+
+If you cannot tick all of these, REGENERATE the activities BEFORE outputting. Shipping under-spec means the build rejects you and the heal loop has to redo your work — wasting compute.
 
 ---
 

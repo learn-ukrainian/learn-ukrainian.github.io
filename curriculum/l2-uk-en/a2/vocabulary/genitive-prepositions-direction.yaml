@@ -1,28 +1,4 @@
 vocabulary:
-- word: ста́влення
-  translation: attitude
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: інтере́с
-  translation: interest
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: гото́вий
-  translation: ready
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: за́втра
-  translation: tomorrow
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
 - word: на́прямок
   translation: direction
   expression: false
@@ -83,17 +59,29 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: пасажи́р
-  translation: passenger
+- word: ста́влення
+  translation: attitude
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: інтере́с
+  translation: interest
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: такси́ст
-  translation: taxi driver
+- word: гото́вий
+  translation: ready
   expression: false
-  pos: ім.
-  gender: ч.
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: за́втра
+  translation: tomorrow
+  expression: false
+  pos: присл.
+  gender: ''
   verified: true
 - word: апте́ка
   translation: pharmacy
@@ -101,154 +89,22 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: лі́ки
-  translation: medicine
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
 - word: готе́ль
   translation: hotel
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: маршру́т
-  translation: route
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: вчи́тель
-  translation: teacher
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: стомато́лог
-  translation: dentist
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: додо́му
-  translation: homeward, home
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: понеді́лок
-  translation: Monday
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: вівто́рок
-  translation: Tuesday
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: п'я́тниця
-  translation: Friday
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: обід
-  translation: lunch
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: о́фіс
-  translation: office
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: докуме́нт
-  translation: document
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: конце́рт
-  translation: concert
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: паціє́нт
-  translation: patient
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: пої́здка
-  translation: trip
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: поча́ток
-  translation: beginning, start
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: кіне́ць
-  translation: end
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: мі́сяць
-  translation: month
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: ти́ждень
-  translation: week
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: ли́пень
-  translation: July
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: проє́кт
-  translation: project
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: квито́к
-  translation: ticket
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: теа́тр
-  translation: theater
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: До завтра!
-  translation: See you tomorrow!
+- word: до якого часу?
+  translation: until when?
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: До зустрічі!
-  translation: See you!
-  expression: true
-  pos: ''
+- word: до́ки
+  translation: until when?
+  expression: false
+  pos: ім.
   gender: ''
   verified: true
 - word: до речі
@@ -257,38 +113,20 @@ vocabulary:
   pos: ''
   gender: ''
   verified: true
-- word: до побачення
-  translation: goodbye
+- word: До побачення!
+  translation: Goodbye!
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: з ранку до вечора
-  translation: from morning to evening
+- word: До завтра!
+  translation: Until tomorrow!
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: день народження
-  translation: birthday
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: після уроку
-  translation: after the lesson
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: на вихідні
-  translation: for the weekend
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: до п'ятої години
-  translation: until/by five o'clock
+- word: До зустрічі!
+  translation: Until we meet!
   expression: true
   pos: ''
   gender: ''

@@ -1,0 +1,55 @@
+round: 6
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: The overarching dialogue for the module (the wedding reception from `dialogue_situations`)
+    was correctly implemented but placed in Section 4. This left Section 4 missing
+    its required practice dialogue
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: Flawless Ukrainian. Excellent handling of semantics (стосунки/відносини/ставлення/взаємини),
+    perfect use of vocative forms, and correct grammatical case governance (довіряти
+    + давальний, поважати + зн
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Superb teaching flow. Semantic distinctions between near-synonyms (щирий
+    vs чесний, лагідний/ніжний/м'який) are explained clearly with excellent contextual
+    examples. The connection between physical de
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary items (вродливий, кремезний, тендітний,
+    щирий, лагідний, кмітливий, подружжя, відрекомендуватися, etc.) are naturally
+    integrated into the prose with clear defin
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 6 activity markers are placed correctly immediately after the relevant
+    teaching sections, perfectly matching the plan's `activity_hints`.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The tone is appropriately academic yet accessible. Strong cultural integration
+    with mentions of Lesya Ukrainka, Taras Shevchenko, and the traditional wedding
+    setting in Vinnytsia.
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: The word count is 3908 words, which is below the strict 4000-word target
+    specified in the plan.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Deeply accurate reflection of Ukrainian cultural concepts ("рід", "родина",
+    "Батьківщина") and the traditional importance of exact kinship terms (свекруха,
+    теща, зять, невістка).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: 'The wedding dialogue is excellent, featuring named speakers and natural
+    register switching (formal with the grandmother, informal with the sister). However,
+    the requested dialogue for Section 4 about '
+findings: []

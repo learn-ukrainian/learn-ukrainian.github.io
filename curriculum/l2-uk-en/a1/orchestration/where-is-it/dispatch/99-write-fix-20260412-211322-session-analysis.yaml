@@ -1,0 +1,29 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T19-12-a211657a.json
+phase: write-fix
+prompt_chars: 12243
+response_chars: 7461
+prompt_words: 1933
+response_words: 1196
+sections:
+- name: unknown
+  start: 0
+  length: 12243
+  fraction: 1.0
+large_sections:
+- unknown
+directives_total: 15
+directives_covered: 12
+directives_missed:
+- kind: must
+  text: '- [GLOBAL] Every exercise item must test something EXPLICITLY taught in the
+    preceding prose.'
+  covered: false
+  coverage_note: 3/11 keywords (27%)
+- kind: must
+  text: '- [GLOBAL] Quiz correct answers must be RANDOMIZED across positions.'
+  covered: false
+  coverage_note: 3/8 keywords (38%)
+- kind: inject_activity
+  text: '...'
+  covered: false
+  coverage_note: marker missing

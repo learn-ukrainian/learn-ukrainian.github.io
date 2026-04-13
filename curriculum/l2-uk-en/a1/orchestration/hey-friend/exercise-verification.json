@@ -1,114 +1,162 @@
 {
-  "total_items": 84,
-  "grounded_items": 66,
+  "total_items": 81,
+  "grounded_items": 55,
   "ungrounded": [
     {
-      "word": "дні",
-      "exercise_type": "true-false",
-      "context": "На дні народження Олена знайомиться з Тарасом. (At the birth",
+      "word": "до",
+      "exercise_type": "unjumble",
+      "context": "до",
+      "role": "answer"
+    },
+    {
+      "word": "побачення",
+      "exercise_type": "unjumble",
+      "context": "побачення,",
+      "role": "answer"
+    },
+    {
+      "word": "що",
+      "exercise_type": "quiz",
+      "context": "Що ти робиш, ____?",
       "role": "context"
     },
     {
-      "word": "народження",
-      "exercise_type": "true-false",
-      "context": "На дні народження Олена знайомиться з Тарасом. (At the birth",
+      "word": "робиш",
+      "exercise_type": "quiz",
+      "context": "Що ти робиш, ____?",
       "role": "context"
     },
     {
-      "word": "знайомиться",
+      "word": "дочка",
+      "exercise_type": "match-up",
+      "context": "дочка",
+      "role": "answer"
+    },
+    {
+      "word": "син",
+      "exercise_type": "match-up",
+      "context": "син",
+      "role": "answer"
+    },
+    {
+      "word": "слова",
       "exercise_type": "true-false",
-      "context": "На дні народження Олена знайомиться з Тарасом. (At the birth",
+      "context": "Кличний відмінок слова «тато» — це «тате».",
       "role": "context"
     },
     {
-      "word": "тарасом",
+      "word": "тате",
       "exercise_type": "true-false",
-      "context": "На дні народження Олена знайомиться з Тарасом. (At the birth",
+      "context": "Кличний відмінок слова «тато» — це «тате».",
       "role": "context"
     },
     {
-      "word": "сина",
+      "word": "слово",
       "exercise_type": "true-false",
-      "context": "Телефон сина лежить на столі. (The son's phone is on the tab",
+      "context": "Слово «пані» не змінюється у кличному відмінку.",
       "role": "context"
     },
     {
-      "word": "лежить",
+      "word": "змінюється",
       "exercise_type": "true-false",
-      "context": "Телефон сина лежить на столі. (The son's phone is on the tab",
+      "context": "Слово «пані» не змінюється у кличному відмінку.",
       "role": "context"
     },
     {
-      "word": "дочки",
+      "word": "кличному",
       "exercise_type": "true-false",
-      "context": "Ключі дочки в кишені у тата. (The daughter's keys are in dad",
+      "context": "Слово «пані» не змінюється у кличному відмінку.",
       "role": "context"
     },
     {
-      "word": "тата",
+      "word": "відмінку",
       "exercise_type": "true-false",
-      "context": "Ключі дочки в кишені у тата. (The daughter's keys are in dad",
+      "context": "Слово «пані» не змінюється у кличному відмінку.",
       "role": "context"
     },
     {
-      "word": "йде",
+      "word": "буде",
       "exercise_type": "true-false",
-      "context": "Бабуся йде додому. (Grandma is going home.)",
+      "context": "«Друг» у кличному відмінку буде «другу».",
       "role": "context"
     },
     {
-      "word": "українській",
+      "word": "другу",
       "exercise_type": "true-false",
-      "context": "В українській мові для звертання ми використовуємо називний ",
+      "context": "«Друг» у кличному відмінку буде «другу».",
       "role": "context"
     },
     {
-      "word": "мові",
+      "word": "жіночі",
       "exercise_type": "true-false",
-      "context": "В українській мові для звертання ми використовуємо називний ",
+      "context": "Жіночі імена на -а (Олена, Оксана) змінюються на -о (Олено, ",
       "role": "context"
     },
     {
-      "word": "для",
+      "word": "імена",
       "exercise_type": "true-false",
-      "context": "В українській мові для звертання ми використовуємо називний ",
+      "context": "Жіночі імена на -а (Олена, Оксана) змінюються на -о (Олено, ",
       "role": "context"
     },
     {
-      "word": "звертання",
+      "word": "змінюються",
       "exercise_type": "true-false",
-      "context": "В українській мові для звертання ми використовуємо називний ",
+      "context": "Жіночі імена на -а (Олена, Оксана) змінюються на -о (Олено, ",
       "role": "context"
     },
     {
-      "word": "використовуємо",
+      "word": "брату",
       "exercise_type": "true-false",
-      "context": "В українській мові для звертання ми використовуємо називний ",
+      "context": "«Брат» змінюється на «брату».",
       "role": "context"
     },
     {
-      "word": "іменинника",
-      "exercise_type": "true-false",
-      "context": "Тарас — це брат іменинника. (Taras is the birthday person's ",
+      "word": "твої",
+      "exercise_type": "fill-in",
+      "context": "Привіт, ____! Як твої справи?",
       "role": "context"
     },
     {
-      "word": "тато'",
-      "exercise_type": "true-false",
-      "context": "The word 'тато' changes to 'тате' in the vocative case.",
+      "word": "тут",
+      "exercise_type": "fill-in",
+      "context": "____, я тут!",
       "role": "context"
     },
     {
-      "word": "тате'",
-      "exercise_type": "true-false",
-      "context": "The word 'тато' changes to 'тате' in the vocative case.",
+      "word": "будь",
+      "exercise_type": "fill-in",
+      "context": "Будь обережний, ____!",
       "role": "context"
     },
     {
-      "word": "пані'",
-      "exercise_type": "true-false",
-      "context": "The title 'пані' does not change its form when addressing so",
+      "word": "обережний",
+      "exercise_type": "fill-in",
+      "context": "Будь обережний, ____!",
       "role": "context"
+    },
+    {
+      "word": "неформально",
+      "exercise_type": "group-sort",
+      "context": "Неформально (Informal)",
+      "role": "context"
+    },
+    {
+      "word": "формально",
+      "exercise_type": "group-sort",
+      "context": "Формально / Ввічливо (Formal / Polite)",
+      "role": "context"
+    },
+    {
+      "word": "ввічливо",
+      "exercise_type": "group-sort",
+      "context": "Формально / Ввічливо (Formal / Polite)",
+      "role": "context"
+    },
+    {
+      "word": "вечір",
+      "exercise_type": "group-sort",
+      "context": "Пані Оксано, добрий вечір!",
+      "role": "answer"
     }
   ],
   "vocab_coverage": {

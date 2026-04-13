@@ -1,0 +1,52 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'DEDUCT: The writer injected 6 activity markers instead of the 5 requested
+    in the plan (`activity_hints`). REWARD: Covered all major headings and grammar
+    rules excellently.'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: 'DEDUCT: CRITICAL errors in genitive forms: "звучить як **мотору**" (instead
+    of `мотора`) and "стає формою **города**" (instead of `городу`). CRITICAL error
+    claiming `камінь-каменя` has a fleeting vowe'
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: 'DEDUCT: The introductory dialogue completely fails pedagogically. It
+    uses examples where the root vowel does NOT change (`коня/коні` both have `о`),
+    yet prompts the student to say "Було [о], а стало ['
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'REWARD: Flawless integration of grammatical terminology (`морфонологія`,
+    `новозакритий склад`, `біглий голосний`).'
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: 'REWARD: The 5 core markers match the plan''s types and are placed perfectly
+    after their respective instructional sections.'
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: 'REWARD: The tone is natural and encouraging. The analogy of words "changing
+    phonetic clothes" and the "checking word" strategy are excellent for adult learners.'
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: 'DEDUCT: A stray, duplicate activity marker `<!-- INJECT_ACTIVITY: error-correction-fix-vowel-spelling-errors-in-sentences
+    -->` at the very end of the file.'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: 'REWARD: Strong, accurate emphasis on how vowel alternations distinguish
+    Ukrainian from Russian, and correctly noting the Kyiv/Kyieva dynamic.'
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 7
+  evidence: 'DEDUCT: The teacher''s initial phrasing contradicts the logical flow
+    of the lesson, presenting words with no root alternation right before asking students
+    to observe a root alternation.'
+findings: []

@@ -1,0 +1,72 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T05-06-bd3b418c.json
+phase: write-chunk-02
+prompt_chars: 45914
+response_chars: 4822
+prompt_words: 6868
+response_words: 829
+sections:
+- name: header
+  start: 0
+  length: 459
+  fraction: 0.01
+- name: skeleton
+  start: 459
+  length: 1489
+  fraction: 0.0324
+- name: prior_summary
+  start: 1948
+  length: 3272
+  fraction: 0.0713
+- name: plan
+  start: 5220
+  length: 13583
+  fraction: 0.2958
+- name: wiki
+  start: 11380
+  length: 26878
+  fraction: 0.5854
+- name: output_spec
+  start: 45681
+  length: 233
+  fraction: 0.0051
+large_sections:
+- wiki
+directives_total: 27
+directives_covered: 19
+directives_missed:
+- kind: checklist
+  text: телефон (phone, telephone)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: думка (thought, opinion)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: проблема (problem)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: must
+  text: '| `Привіт, Наталя!` | `Привіт, Наталю!` | The vocative case is mandatory
+    for direct address in Ukrainian.'
+  covered: false
+  coverage_note: 2/9 keywords (22%)
+- kind: must
+  text: '` | When addressing someone using a title (`пан`, `пані`, `колега`, `лікар`)
+    and a surname, the title must be in the vocative case, while the surname remains
+    in the nominative (Source 5, 16).'
+  covered: false
+  coverage_note: 4/17 keywords (24%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 4/11 keywords (36%)
+- kind: inject_activity
+  text: quiz, Identify the function of locative in each sentence
+  covered: false
+  coverage_note: marker missing

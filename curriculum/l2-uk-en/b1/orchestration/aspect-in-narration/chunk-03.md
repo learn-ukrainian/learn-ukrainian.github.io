@@ -1,59 +1,54 @@
-## Передній план: доконаний вид у наративі
+## Передній план: доконаний вид у наративі (~1200 words total)
 
-The foreground (**передній план**) is the engine of your narrative. While the background sets the scene, the foreground consists of the actual events that move the plot forward. The primary tool for constructing this layer is the perfective aspect (доконаний вид). When you switch to the perfective aspect, you signal that the setting phase is over and the action has begun.
+When we want a story to move forward, we must deliberately shift our focus to the **передній план** (foreground). This narrative layer is constructed almost entirely using perfective verbs. The fundamental function of the perfective aspect in a story is creating a chronological **послідовність** (sequence) of events. Each perfective verb represents a successfully completed action that permanently pushes the story's internal clock forward. You can imagine this process as building a sturdy iron chain: each link is a completed action, and you cannot attach the next link until the previous one is fully forged and closed. Without this forward-moving chain, any **розповідь** (narrative) or **оповідання** (short story) would remain stuck in a timeless loop of static descriptions. 
 
-Найважливіша функція доконаного виду в розповіді — це створення послідовного ланцюжка подій. Кожне дієслово доконаного виду працює як годинник, який рухає час уперед. Коли ви використовуєте ці дієслова, одна дія повністю завершується до початку наступної. Наприклад: «Він відчинив двері, зайшов до хати і ввімкнув світло». Тут ми маємо три окремі кроки сюжетотворення. Персонаж не міг увімкнути світло, поки не зайшов до хати. Ця послідовність створює динаміку і показує, що історія розвивається. Без доконаного виду ваша розповідь залишилася б статичною картиною.
+Коли ми використовуємо дієслова доконаного виду, ми свідомо створюємо динамічний ланцюжок подій. Кожна нова дія відбувається суворо **послідовно**, одна за одною. Уявіть таку ситуацію: головний герой повернувся ввечері додому. Він відчинив важкі двері, швидко зайшов до темної хати і одразу ввімкнув світло. Усі ці дії є завершеними фактами, які фізично не можуть відбуватися **одночасно**. Кожне наступне дієслово змінює поточний стан речей і просуває сюжет уперед.
 
-> *The most important function of the perfective aspect in a narrative is creating a sequential chain of events. Each perfective verb acts like a clock that moves time forward. When you use these verbs, one action completely finishes before the next one begins. For example: "He opened the door, walked into the house, and turned on the light." Here we have three separate steps of plot building. The character could not turn on the light until he had walked into the house. This sequence creates dynamics and shows that the story is developing. Without the perfective aspect, your narrative would remain a static picture.*
+> *When we use perfective verbs, we consciously create a dynamic chain of events. Each new action happens strictly sequentially, one after another. Imagine this situation: the main character returned home in the evening. He opened the heavy door, quickly walked into the dark house, and immediately turned on the light. All these actions are completed facts that physically cannot happen simultaneously. Each subsequent verb changes the current state of affairs and moves the plot forward.*
 
-Another critical function of the perfective aspect is introducing a turning point. This is the exact moment when the established, peaceful background is suddenly interrupted by a new, unforeseen event. A story without turning points is just a long, monotonous description of a situation. The turning point is what forces your characters into action and drives the narrative forward.
+The second major function of the perfective aspect is introducing sudden turning points into an otherwise peaceful scene. After you have established a continuous background with imperfective verbs, a perfective verb acts as a sharp interruption. It instantly shatters the static atmosphere and forces characters to react to a new reality. This narrative shift is frequently marked by the dramatic adverb **раптом** (suddenly). This word serves as an unambiguous gateway to perfective events, signaling to the reader that the waiting is over and the real action has finally begun.
 
-Часто зміна фонового опису на подію супроводжується словом «раптом». Це слово є ідеальним маркером для доконаного виду, оскільки вказує на несподівану зміну ситуації. Подивіться на цей приклад: «Ми спокійно гуляли порожнім парком, і раптом пішов сильний дощ». Перша частина речення описує тривалий процес і спокійну атмосферу. Але друга частина миттєво руйнує цей спокій. Дієслово «пішов» перетворює дощ на раптову подію, яка змушує героїв швидко реагувати і змінювати свої плани.
+Уявіть типову ситуацію: ми спокійно гуляли в зеленому парку, яскраво світило сонце, тихо грала музика. Це наше класичне, спокійне тло. І **раптом** пішов сильний дощ. Дієслово доконаного виду «пішов» миттєво руйнує всю попередню атмосферу відпочинку. Це несподівана **подія**, яка змушує нас реагувати та шукати надійне укриття. Важливо пам'ятати, що слово «раптом» майже завжди вимагає доконаного виду, оскільки воно сигналізує про різку зміну ситуації.
 
-The third major function of the foreground layer is delivering a decisive result. Perfective verbs are used to show actions that permanently alter the state of the story world. They act as the punctuation marks of your plot, confirming that a character's attempt has finally reached a conclusion. Without these conclusive actions, your story would feel unfinished.
+The third distinct function of the foreground layer focuses on decisive, permanent results. Sometimes, a chapter of a story hinges on a single, monumental change in the physical or emotional world. These pivotal actions represent a successfully completed milestone or a final decision. The grammatical focus is placed entirely on the fact that the action was successfully accomplished and its undeniable result now permanently affects the ongoing narrative reality. The perfective aspect confirms that the deed is done.
 
-Доконаний вид також фіксує результати дій, які мають критичне значення для фіналу історії. Це **точки неповернення** (points of no return) у вашому сюжеті. Наприклад: «Після довгих роздумів вона нарешті прийняла рішення залишитися». У цьому реченні немає опису тривалого процесу мислення чи **сумнівів** (doubts). Є лише остаточний факт, який назавжди змінює життя персонажа. Використання недоконаного виду («вона приймала рішення») означало б, що вона все ще вагається, і ми досі не знаємо кінцевого результату.
+Наприклад, після довгих вагань вона нарешті прийняла остаточне рішення назавжди залишитися в цьому великому місті. Її рішення — це логічний фінальний результат тривалого процесу роздумів. Це не просто щоденна дія, це надзвичайно твердий факт, який кардинально змінює її подальше життя. Доконаний вид у цьому реченні яскраво підкреслює, що шляху назад більше немає, а дія успішно досягла своєї кінцевої мети.
+
+To clearly and logically organize the elements of the foreground, an experienced **оповідач** (narrator) heavily relies on specific temporal connectors. These adverbs explicitly map out the chronological order of perfective events, carefully guiding the listener's attention through the plot. While **тим часом** (meanwhile) is strictly reserved for the continuous background, the foreground requires words that build a strict timeline. Let's look at the most common sequential connectors used to build a chain of completed actions.
+
+Щоб захоплива історія була зрозумілою для слухача, ми використовуємо спеціальні слова для правильного зв'язку подій. **Спочатку** ми обережно вводимо першу завершену дію. **Потім** ми логічно додаємо наступний важливий крок у сюжеті. **Після цього** відбувається ще одна ключова подія. І, **нарешті**, ми успішно досягаємо фінального результату історії. Ці базові часові маркери ідеально поєднуються з доконаним видом, адже вони природно вимагають чітких меж між окремими діями.
+
+Let's see how native speakers naturally divide the grammatical labor of storytelling in everyday conversation. In this collaborative dialogue, Yuliia sets the opening scene by providing a rich **опис** (description) using the imperfective background. Kateryna, eagerly listening, then jumps in to deliver the exciting perfective events that actually form the core of the story. Notice how seamlessly the two aspects work together.
+
+> — **Юлія:** Учора ввечері ми спокійно сиділи в маленькій кав'ярні, пили гарячу каву. Було так неймовірно тихо і затишно. *(Yesterday evening we were sitting quietly in a small cafe, drinking hot coffee. It was so incredibly quiet and cozy.)*
+> — **Катерина:** І **раптом** важкі двері різко відчинилися! До залу швидко зайшов Максим! *(And suddenly the heavy door opened sharply! Maksym quickly walked into the hall!)*
+> — **Юлія:** Так, він мав дуже схвильований вигляд. Він важко дихав після бігу. *(Yes, he looked very excited. He was breathing heavily after running.)*
+> — **Катерина:** Він кинув свою спортивну сумку на стіл, уважно подивився на нас і голосно сказав: «Я **нарешті** знайшов нову роботу!» *(He threw his sports bag on the table, looked at us carefully and said loudly: "I finally found a new job!")*
+
+<!-- INJECT_ACTIVITY: group-sort, sort temporal connectors into background-connectors and foreground-connectors -->
+
+A masterful story never relies exclusively on just one aspect. The true art of compelling narration lies in seamlessly weaving both grammatical layers together. By constantly alternating between the static, descriptive background and the dynamic, fast-paced foreground, you create a natural and engaging rhythm. Let's analyze how a skilled author purposefully intertwines these distinct threads to carefully build tension and then release it through concrete action.
+
+Розглянемо такий короткий абзац: Була глибока ніч. Усе велике місто міцно спало. Це ідеальне недоконане тло, яке майстерно створює атмосферу абсолютного спокою. **Раптом** хтось дуже гучно постукав у двері. Ця агресивна доконана подія миттєво перериває тихий сон. Я швидко прокинувся, встав з ліжка і обережно підійшов до вікна. Тут ми чітко бачимо класичну послідовність доконаних дій, які стрімко розвивають сюжет на тлі нічної тиші.
+
+> *Let's consider this short paragraph: It was deep night. The whole big city was sleeping soundly. This is a perfect imperfective background, which masterfully creates an atmosphere of absolute calm. Suddenly someone knocked very loudly on the door. This aggressive perfective event instantly interrupts the quiet sleep. I woke up quickly, got out of bed and walked carefully to the window. Here we clearly see a classic sequence of perfective actions that rapidly develop the plot against the background of the night silence.*
+
+The deliberate balance between the two narrative layers directly controls the overall pacing of your story. If you use too many perfective verbs in a row, the narrative feels frantic, heavily rushed, or like a dry police report. The actions fire off rapidly without giving the reader any mental space to visualize the scene. Conversely, adding strategic imperfective "padding" between your major events significantly slows the pace down, making the story feel much more natural and deeply immersive.
+
+Якщо ви просто скажете: «Я прийшов, побачив, переміг, узяв речі і пішов», це звучить надзвичайно сухо і швидко. Це просто статистичний звіт про події. Але якщо ви додасте туди трохи опису: «Я прийшов до кімнати. Там тихо грала приємна музика. Я уважно подивився на стіл, побачив старий лист і швидко сховав його», історія одразу оживає. Ваша розповідь стає значно багатшою завдяки правильному граматичному балансу видів.
+
+<!-- INJECT_ACTIVITY: fill-in, choose the correct aspect for verbs in a narrative passage -->
+
+<!-- INJECT_ACTIVITY: match-up, match narrative functions to the correct aspect/example -->
 
 :::info
-**Grammar box**
-When you use a perfective verb to show a result, you are telling the listener: "This action is completely done, and its consequences are now a permanent part of our story's reality."
+**The Rhythm of Narration**
+Think of imperfective verbs as the "brakes" and perfective verbs as the "gas pedal." Use imperfective verbs to slow down, build tension, and let the reader look around the scene. When it is time to accelerate the plot and deliver the climax, hit the perfective gas pedal.
 :::
 
-To link these foreground events smoothly and logically, you need the right temporal connectors. Since the foreground layer is entirely about sequence and progression, you must use adverbs that clearly signal the passage of time from one completed step to the next. These words act as the glue that holds your plot together.
+Sometimes, successfully revising a story simply means critically adjusting its aspectual balance. When a narrative feels flat, rushed, or its emotional climax lacks impact, the most effective solution is often to manipulate the background and foreground layers. By deliberately expanding the imperfective setting and slowing down the buildup, the perfective turning points will strike the reader with much greater force. Listen to these two friends discussing an early draft of a new story and using grammatical concepts to improve it.
 
-Граматика послідовності обов'язково вимагає спеціальних слів-зв'язок. Щоб з'єднати події переднього плану, ми використовуємо такі слова: «спочатку», «потім», «після цього» та «нарешті». Ці конектори природно поєднуються з дієсловами доконаного виду, тому що вибудовують чітку хронологію. «Спочатку я подзвонив у двері. Після цього я почекав хвилину. Потім спробував відкрити замок. І нарешті зрозумів, що вдома нікого немає». Цей ланцюжок неможливо побудувати за допомогою слів «тим часом» або «поки», які належать до фонового шару.
-
-Let's see collaborative storytelling in action. Notice how one speaker sets the scene using the imperfective aspect, while the other eagerly interrupts to deliver the main events using the perfective aspect.
-
-> — **Юлія:** Того вечора було дуже тихо. Ми сиділи в кав'ярні, пили каву і дивилися у вікно. *(That evening was very quiet. We were sitting in the cafe, drinking coffee and looking out the window.)*
-> — **Катерина:** І раптом у двері зайшов Максим! Він одразу побачив нас і підійшов до столика. *(And suddenly Maksym walked through the door! He immediately saw us and came up to the table.)*
-> — **Юлія:** Так, я пам'ятаю. Він виглядав дуже схвильованим, а його руки помітно тремтіли. *(Yes, I remember. He looked very excited, and his hands were noticeably shaking.)*
-> — **Катерина:** Він кинув сумку на стілець і голосно сказав: «Я знайшов нову роботу!». *(He threw his bag on the chair and said loudly: "I found a new job!")*
-
-<!-- INJECT_ACTIVITY: group-sort-connectors -->
-
-Now that you understand how both layers function, the real art of storytelling is weaving them together. A narrative that shifts gracefully between background descriptions and foreground events keeps the reader engaged.
-
-Справжня майстерність розповіді полягає у правильному чергуванні двох видів дієслів. Розглянемо такий абзац. «Була глибока ніч. Місто вже давно спало. Раптом хтось голосно постукав у двері. Я миттю прокинувся, встав з ліжка і підійшов до вікна». Перші два речення створюють атмосферу спокою за допомогою недоконаного виду («була», «спало»). Це наше тло. Наступні дії несподівано розбивають цю тишу. Дієслова доконаного виду («постукав», «прокинувся», «встав», «підійшов») створюють швидкий ланцюжок реакцій. Контраст між статичним фоном і динамічними подіями робить сцену напруженою.
-
-> *True storytelling mastery lies in the correct alternation of the two verb aspects. Let's look at this paragraph. "It was deep night. The city had long been sleeping. Suddenly someone knocked loudly on the door. I instantly woke up, got out of bed, and went to the window." The first two sentences create an atmosphere of calm using the imperfective aspect ("була", "спало"). This is our background. The subsequent actions unexpectedly shatter this silence. The perfective verbs ("постукав", "прокинувся", "встав", "підійшов") create a rapid chain of reactions. The contrast between the static background and the dynamic events makes the scene tense.*
-
-Your choice of aspect dictates the overall pacing and emotional rhythm of your story. Using too many perfective verbs in a row makes the narrative feel frantic, rushed, and remarkably similar to a list of facts. Adding imperfective "padding" slows things down and makes the world feel immersive, breathable, and natural.
-
-Вибір виду безпосередньо впливає на темп вашої історії. Якщо ви використаєте виключно дієслова доконаного виду («я прийшов, сів, поїв, написав лист і ліг спати»), текст звучатиме як **сухий поліцейський звіт** (dry police report). Події відбуваються занадто швидко, і читач не встигає відчути атмосферу. Щоб історія стала живою, її потрібно «уповільнити» за допомогою недоконаного виду. Додайте опис кімнати, вашого настрою чи погоди за вікном. Цей фоновий матеріал дає читачеві **простір для уяви** (room for imagination) перед наступною подією.
-
-:::tip
-**Quick tip**
-Think of imperfective verbs as breathing room for your story. They allow the listener to mentally process the scene before the perfective verbs drive the plot forward again.
-:::
-
-<!-- INJECT_ACTIVITY: fill-in-aspect-narrative -->
-<!-- INJECT_ACTIVITY: match-aspect-logic -->
-
-Let's listen to two writers discussing how to fix the pacing of a short story draft. They realize that adding more imperfective background can completely transform the emotional impact of the final events.
-
-> — **Остап:** Цей фінал звучить занадто сухо. Головний герой просто зайшов у кімнату, побачив лист і заплакав. *(This ending sounds too dry. The main character just walked into the room, saw the letter, and cried.)*
-> — **Марія:** Згодна, тут є лише голі події. Нам потрібно додати більше недоконаного виду, щоб створити емоційну напругу. *(I agree, there are only bare events here. We need to add more imperfective aspect to create emotional tension.)*
-> — **Остап:** Може, опишемо порожню кімнату? Що там відбувалося до його приходу? *(Maybe we describe the empty room? What was happening there before his arrival?)*
-> — **Марія:** Точно. Напиши, що у відкрите вікно дув вітер, а на столі самотньо горіла лампа. *(Exactly. Write that the wind was blowing into the open window, and a lamp was burning lonely on the table.)*
-> — **Остап:** Супер. Тоді його доконані дії наприкінці здаватимуться набагато драматичнішими. *(Super. Then his perfective actions at the end will seem much more dramatic.)*
+> — **Марко:** Цей старий **спогад** звучить трохи нудно. Я написав: «Ми зайшли в темний ліс, побачили великого вовка і швидко втекли». *(This old memory sounds a bit boring. I wrote: "We walked into the dark forest, saw a big wolf and ran away quickly.")*
+> — **Оксана:** Тобі дуже бракує якісного тла! Додай туди більше описів. Напиши, що холодний вітер сильно шумів, а ви дуже повільно йшли вузькою стежкою. *(You really lack quality background! Add more descriptions there. Write that the cold wind was rustling strongly, and you were walking very slowly along the narrow path.)*
+> — **Марко:** А, тепер розумію! **Поки** ми йшли, нам було дуже страшно. А **тоді** ми **раптом** побачили вовка! *(Ah, now I understand! While we were walking, we were very scared. And then we suddenly saw a wolf!)*
+> — **Оксана:** Саме так! Якщо ти гарно розшириш недоконане тло, твоя фінальна доконана подія стане набагато сильнішою та емоційнішою. *(Exactly! If you expand the imperfective background nicely, your final perfective event will become much stronger and more emotional.)*

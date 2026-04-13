@@ -1,35 +1,113 @@
 {
   "total_items": 129,
-  "grounded_items": 89,
+  "grounded_items": 107,
   "ungrounded": [
     {
-      "word": "телевізор",
-      "exercise_type": "group-sort",
-      "context": "телевізор",
-      "role": "answer"
-    },
-    {
-      "word": "інтернет",
-      "exercise_type": "group-sort",
-      "context": "інтернет",
-      "role": "answer"
-    },
-    {
-      "word": "сонце",
-      "exercise_type": "fill-in",
-      "context": "Сьогодні на вулиці немає _____ (сонце).",
+      "word": "гарне",
+      "exercise_type": "quiz",
+      "context": "У кімнаті ____ гарне дзеркало.",
       "role": "context"
     },
     {
-      "word": "шафа",
+      "word": "ще",
       "exercise_type": "fill-in",
-      "context": "У кімнаті немає _____ (шафа).",
+      "context": "У мене ще немає ____.",
       "role": "context"
     },
     {
-      "word": "земля",
+      "word": "бачу",
       "exercise_type": "fill-in",
-      "context": "Тут немає сухої _____ (земля).",
+      "context": "Я бачу кілька ____.",
+      "role": "context"
+    },
+    {
+      "word": "кілометри",
+      "exercise_type": "error-correction",
+      "context": "Скільки кілометри до міста?",
+      "role": "context"
+    },
+    {
+      "word": "маю",
+      "exercise_type": "error-correction",
+      "context": "Я маю кілька книга.",
+      "role": "context"
+    },
+    {
+      "word": "люди",
+      "exercise_type": "error-correction",
+      "context": "На вулиці мало люди.",
+      "role": "context"
+    },
+    {
+      "word": "родовому",
+      "exercise_type": "true-false",
+      "context": "Слово «вікно» в родовому відмінку однини має форму «вікну».",
+      "role": "context"
+    },
+    {
+      "word": "відмінку",
+      "exercise_type": "true-false",
+      "context": "Слово «вікно» в родовому відмінку однини має форму «вікну».",
+      "role": "context"
+    },
+    {
+      "word": "вікну",
+      "exercise_type": "true-false",
+      "context": "Слово «вікно» в родовому відмінку однини має форму «вікну».",
+      "role": "context"
+    },
+    {
+      "word": "іменники",
+      "exercise_type": "true-false",
+      "context": "Після слів «багато» і «мало» іменники завжди змінюють свою ф",
+      "role": "context"
+    },
+    {
+      "word": "змінюють",
+      "exercise_type": "true-false",
+      "context": "Після слів «багато» і «мало» іменники завжди змінюють свою ф",
+      "role": "context"
+    },
+    {
+      "word": "свою",
+      "exercise_type": "true-false",
+      "context": "Після слів «багато» і «мало» іменники завжди змінюють свою ф",
+      "role": "context"
+    },
+    {
+      "word": "метра",
+      "exercise_type": "true-false",
+      "context": "Слово «метро» змінюється на «метра» в родовому відмінку.",
+      "role": "context"
+    },
+    {
+      "word": "абстрактні",
+      "exercise_type": "true-false",
+      "context": "Абстрактні поняття чоловічого роду часто мають закінчення -у",
+      "role": "context"
+    },
+    {
+      "word": "поняття",
+      "exercise_type": "true-false",
+      "context": "Абстрактні поняття чоловічого роду часто мають закінчення -у",
+      "role": "context"
+    },
+    {
+      "word": "множині",
+      "exercise_type": "true-false",
+      "context": "Слово «машина» в множині після слова «багато» має форму «маш",
+      "role": "context"
+    },
+    {
+      "word": "правильна",
+      "exercise_type": "true-false",
+      "context": "Для слова «гроші» правильна форма родового відмінка — «гроші",
+      "role": "context"
+    },
+    {
+      "word": "грошів",
+      "exercise_type": "true-false",
+      "context": "Для слова «гроші» правильна форма родового відмінка — «гроші",
       "role": "context"
     },
     {
@@ -39,214 +117,30 @@
       "role": "answer"
     },
     {
-      "word": "річ",
-      "exercise_type": "match-up",
-      "context": "багато (річ)",
+      "word": "старшого",
+      "exercise_type": "unjumble",
+      "context": "старшого",
       "role": "answer"
     },
     {
-      "word": "яблуко",
-      "exercise_type": "match-up",
-      "context": "кілька (яблуко)",
+      "word": "неї",
+      "exercise_type": "unjumble",
+      "context": "неї",
       "role": "answer"
     },
     {
-      "word": "показує",
-      "exercise_type": "true-false",
-      "context": "Родовий відмінок часто показує відсутність (absence) або кіл",
-      "role": "context"
-    },
-    {
-      "word": "абстрактні",
-      "exercise_type": "true-false",
-      "context": "Абстрактні іменники чоловічого роду в однині (як 'час' або '",
-      "role": "context"
-    },
-    {
-      "word": "іменники",
-      "exercise_type": "true-false",
-      "context": "Абстрактні іменники чоловічого роду в однині (як 'час' або '",
-      "role": "context"
-    },
-    {
-      "word": "чоловічого",
-      "exercise_type": "true-false",
-      "context": "Абстрактні іменники чоловічого роду в однині (як 'час' або '",
-      "role": "context"
-    },
-    {
-      "word": "роду",
-      "exercise_type": "true-false",
-      "context": "Абстрактні іменники чоловічого роду в однині (як 'час' або '",
-      "role": "context"
-    },
-    {
-      "word": "однині",
-      "exercise_type": "true-false",
-      "context": "Абстрактні іменники чоловічого роду в однині (як 'час' або '",
-      "role": "context"
-    },
-    {
-      "word": "як",
-      "exercise_type": "true-false",
-      "context": "Абстрактні іменники чоловічого роду в однині (як 'час' або '",
-      "role": "context"
-    },
-    {
-      "word": "час'",
-      "exercise_type": "true-false",
-      "context": "Абстрактні іменники чоловічого роду в однині (як 'час' або '",
-      "role": "context"
-    },
-    {
-      "word": "досвід'",
-      "exercise_type": "true-false",
-      "context": "Абстрактні іменники чоловічого роду в однині (як 'час' або '",
-      "role": "context"
-    },
-    {
-      "word": "мають",
-      "exercise_type": "true-false",
-      "context": "Абстрактні іменники чоловічого роду в однині (як 'час' або '",
-      "role": "context"
-    },
-    {
-      "word": "гроші'",
-      "exercise_type": "true-false",
-      "context": "Слово 'гроші' після слова 'багато' завжди має форму 'грошей'",
-      "role": "context"
-    },
-    {
-      "word": "після",
-      "exercise_type": "true-false",
-      "context": "Слово 'гроші' після слова 'багато' завжди має форму 'грошей'",
-      "role": "context"
-    },
-    {
-      "word": "багато'",
-      "exercise_type": "true-false",
-      "context": "Слово 'гроші' після слова 'багато' завжди має форму 'грошей'",
-      "role": "context"
-    },
-    {
-      "word": "форму",
-      "exercise_type": "true-false",
-      "context": "Слово 'гроші' після слова 'багато' завжди має форму 'грошей'",
-      "role": "context"
-    },
-    {
-      "word": "грошей'",
-      "exercise_type": "true-false",
-      "context": "Слово 'гроші' після слова 'багато' завжди має форму 'грошей'",
-      "role": "context"
-    },
-    {
-      "word": "якщо",
-      "exercise_type": "true-false",
-      "context": "Якщо іменник жіночого роду закінчується на -а (кава), у родо",
-      "role": "context"
-    },
-    {
-      "word": "іменник",
-      "exercise_type": "true-false",
-      "context": "Якщо іменник жіночого роду закінчується на -а (кава), у родо",
-      "role": "context"
-    },
-    {
-      "word": "жіночого",
-      "exercise_type": "true-false",
-      "context": "Якщо іменник жіночого роду закінчується на -а (кава), у родо",
-      "role": "context"
-    },
-    {
-      "word": "закінчується",
-      "exercise_type": "true-false",
-      "context": "Якщо іменник жіночого роду закінчується на -а (кава), у родо",
-      "role": "context"
-    },
-    {
-      "word": "родовому",
-      "exercise_type": "true-false",
-      "context": "Якщо іменник жіночого роду закінчується на -а (кава), у родо",
-      "role": "context"
-    },
-    {
-      "word": "відмінку",
-      "exercise_type": "true-false",
-      "context": "Якщо іменник жіночого роду закінчується на -а (кава), у родо",
-      "role": "context"
-    },
-    {
-      "word": "та",
-      "exercise_type": "true-false",
-      "context": "Слова 'багато' та 'мало' злічуваних предметів вимагають родо",
-      "role": "context"
-    },
-    {
-      "word": "мало'",
-      "exercise_type": "true-false",
-      "context": "Слова 'багато' та 'мало' злічуваних предметів вимагають родо",
-      "role": "context"
-    },
-    {
-      "word": "злічуваних",
-      "exercise_type": "true-false",
-      "context": "Слова 'багато' та 'мало' злічуваних предметів вимагають родо",
-      "role": "context"
-    },
-    {
-      "word": "предметів",
-      "exercise_type": "true-false",
-      "context": "Слова 'багато' та 'мало' злічуваних предметів вимагають родо",
-      "role": "context"
-    },
-    {
-      "word": "вимагають",
-      "exercise_type": "true-false",
-      "context": "Слова 'багато' та 'мало' злічуваних предметів вимагають родо",
-      "role": "context"
-    },
-    {
-      "word": "множини",
-      "exercise_type": "true-false",
-      "context": "Слова 'багато' та 'мало' злічуваних предметів вимагають родо",
-      "role": "context"
-    },
-    {
-      "word": "середнього",
-      "exercise_type": "true-false",
-      "context": "Іменники середнього роду на -о (вікно) змінюють закінчення н",
-      "role": "context"
-    },
-    {
-      "word": "змінюють",
-      "exercise_type": "true-false",
-      "context": "Іменники середнього роду на -о (вікно) змінюють закінчення н",
-      "role": "context"
-    },
-    {
-      "word": "конкретні",
-      "exercise_type": "group-sort",
-      "context": "Закінчення -а / -я (конкретні об'єкти)",
-      "role": "context"
-    },
-    {
-      "word": "об'єкти",
-      "exercise_type": "group-sort",
-      "context": "Закінчення -а / -я (конкретні об'єкти)",
-      "role": "context"
-    },
-    {
-      "word": "речовини",
-      "exercise_type": "group-sort",
-      "context": "Закінчення -у / -ю (абстрактні, речовини)",
-      "role": "context"
+      "word": "ніякого",
+      "exercise_type": "unjumble",
+      "context": "ніякого",
+      "role": "answer"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 14,
-    "tested_in_exercises": 12,
+    "tested_in_exercises": 10,
     "not_tested": [
+      "відсутність",
+      "кількість",
       "множина",
       "однина"
     ]

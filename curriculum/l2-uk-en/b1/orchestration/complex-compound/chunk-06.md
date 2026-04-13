@@ -1,18 +1,40 @@
-## Підсумок та перехід до M67
+## Підсумок та перехід до M67 (~550 words total)
 
-Ось ми і підійшли до завершення нашої роботи зі складносурядними реченнями. Давайте ще раз уважно згадаємо всі ключові моменти, які ми сьогодні обговорили і закріпили на практиці. Отже, складносурядне речення завжди складається з абсолютно рівноправних і граматично незалежних частин. Для їхнього гармонійного і логічного поєднання ми використовуємо три основні групи сполучників. Перша велика група — це **єднальні** *(copulative)* сполучники («і», «й», «та», «ні...ні»). Вони ідеально підходять для детального опису подій, які відбуваються абсолютно одночасно або у чіткій, неперервній послідовності. Друга важлива група — **протиставні** *(adversative)* сполучники («але», «а», «зате», «проте»). Ми вживаємо їх саме тоді, коли нам потрібно яскраво протиставити один факт іншому або просто зіставити дві абсолютно різні життєві ситуації. Третя група — це **розділові** *(disjunctive)* сполучники («або», «чи», «то...то»). Їхня головна і найважливіша функція полягає у вираженні чергування подій або ж ситуації суворого взаємовиключення, коли можливий лише один-єдиний варіант із кількох запропонованих нами.
+Let's review the grammatical journey you have completed. A **складносурядне речення** (compound sentence) is built from parts that are absolutely **рівноправний** (equal, coordinate — parts of equal status). You connect these independent clauses using a **сполучник сурядності** (coordinating conjunction). This creates a balanced, harmonious structure where no single clause dominates the others.
 
-Щодо пунктуації, то головним і найпоширенішим правилом залишається звичайна кома. Вона ставиться майже завжди перед усіма сурядними сполучниками. Якщо ж частини вашого речення є дуже великими, далекими за своїм змістом або вони вже мають власні розділові знаки всередині, ми обов'язково використовуємо **крапку з комою** *(semicolon)*. Коли ж нам терміново потрібно показати дуже несподіваний наслідок або миттєву зміну подій, на допомогу завжди приходить виразне і драматичне **тире** *(dash)*. І, звісно, ви ніколи не повинні забувати про єдину специфічну ситуацію, коли кома категорично і суворо заборонена. Це важливе правило діє лише тоді, коли обидві частини вашого речення мають **спільний другорядний член** *(shared secondary member)* або спільне вступне слово. У таких випадках речення залишається цілісним без зайвих пауз.
+We explored three distinct groups of these versatile connectors. First, the **єднальний** (copulative — і, й, та) conjunctions are your primary tools for expressing the precise **одночасність** (simultaneity) of parallel events. They also flawlessly communicate a chronological **послідовність** (sequence) of actions occurring one after another.
 
-Щоб остаточно переконатися у власному успішному прогресі та готовності рухатися далі, я пропоную вам пройти цей невеличкий, але дуже корисний контрольний перелік для самоперевірки. Уважно прочитайте ці чотири контрольні запитання і дайте максимально чесні відповіді самому собі. Якщо ви впевнено і без вагань кажете «так» на кожен пункт, значить, ви дійсно чудово і глибоко засвоїли весь цей граматичний матеріал.
+Second, the **протиставний** (adversative — але, а, зате, проте) group allows you to articulate direct **протиставлення** (opposition/contrast) between conflicting ideas. You also rely on them for a softer **зіставлення** (comparison/juxtaposition) between two entirely different subjects performing different actions.
 
-*   Чи можу я завжди швидко, безпомилково і правильно визначити всі граматичні основи в обох частинах будь-якого складного речення?
-*   Чи розумію я тонку стилістичну різницю і чи правильно я обираю між українськими сполучниками «а» та «але» у абсолютно різних життєвих контекстах?
-*   Чи завжди я чітко пам'ятаю про цей надзвичайно важливий пунктуаційний виняток і ніколи не ставлю кому перед сполучником «і», якщо на початку фрази є спільний другорядний член?
-*   Чи вмію я ефективно, доречно і грамотно використовувати тире замість звичайної коми для створення яскравого ефекту швидкої та несподіваної зміни подій у моїй власній розповіді?
+Finally, the **розділовий** (disjunctive — або, чи, то...то) conjunctions help you present distinct choices, describe rapidly alternating actions, or establish mutually exclusive scenarios where only one outcome is possible.
 
-У цьому великому модулі ми з вами навчилися конструювати і будувати красиві, складні і граматично правильні конструкції з частин, які завжди є абсолютно рівноправними. Тобто ми бачили, що жодна частина ніколи не підпорядковувалася іншій і не залежала від неї. Але справжня і повноцінна мовна майстерність завжди вимагає від нас значно ширшого арсеналу синтаксичних інструментів. Саме тому в нашому наступному модулі ми розпочнемо цікаве знайомство з абсолютно новим і дуже важливим лінгвістичним явищем — **підрядністю** *(subordination)*. 
+Regarding punctuation, the comma is the absolute king of compound structures. You must place a comma before almost every coordinating conjunction that connects two full grammatical clauses. If the parts of the sentence are exceptionally long, overly complex, or already contain internal commas describing other elements, you should use a semicolon to separate them clearly. When the second clause describes an unexpected, sudden result or a rapid consequence of the first clause, the dash creates the perfect dramatic effect.
 
-Ми будемо детально вивчати складнопідрядні речення, де одна частина завжди є безумовно головною, а інша постійно і повністю від неї залежить. Це так звані **з'ясувальні** *(explanatory)* речення. Вони гарантовано допоможуть вам висловлювати свої думки та ідеї значно точніше і багатше. Ви швидко навчитеся будувати природні фрази на кшталт «Я точно знаю, ЩО ми будемо робити завтра ввечері» або «Вона вчора запитала, ДЕ саме знаходиться найближча затишна кав'ярня». Глибоке розуміння того, як одна частина речення може логічно доповнювати і пояснювати іншу, стане вашим дуже надійним мостом до справжньої і вільної комунікації на впевненому рівні B1.
+Єдиний виняток із цього суворого правила — це наявність спільного елемента. Якщо дві частини речення мають спільний другорядний член, який стоїть на початку, кома перед єднальними або розділовими сполучниками не ставиться.
 
-<!-- INJECT_ACTIVITY: match-up, focus on linking terms (єднальний, розділовий, спільний член) with their corresponding conjunctions and rules, 10 items -->
+> *The only exception to this strict rule is the presence of a shared element. If the two parts of the sentence share a secondary member located at the beginning, the comma is not placed before copulative or disjunctive conjunctions.*
+
+Before you move forward to the next stage of your learning, take a moment to carefully evaluate your understanding of these crucial concepts. Use this simple self-check checklist to verify your readiness for more advanced grammar.
+
+*   Чи можу я визначити граматичні основи в обох частинах? ✓/✗
+*   Чи правильно я обираю між «а» та «але»? ✓/✗
+*   Чи пам'ятаю я про виняток зі спільним другорядним членом? ✓/✗
+*   Чи вмію я використовувати тире для швидкої зміни подій? ✓/✗
+
+> * *Can I identify the grammatical subjects and predicates in both parts? ✓/✗*
+> * *Do I correctly choose between "а" and "але"? ✓/✗*
+> * *Do I remember the exception with the shared secondary member? ✓/✗*
+> * *Do I know how to use the dash for a rapid change of events? ✓/✗*
+
+If you can confidently answer yes to all these questions, you have successfully mastered the foundation of Ukrainian coordinate syntax. You now possess the tools to express complex, multi-layered thoughts with nuance and precision.
+
+:::info
+**Grammar box**
+Always remember that punctuation in Ukrainian compound sentences is largely driven by strict grammar, not just natural pauses in speech. Identifying the two independent subjects and predicates is your most reliable method for knowing exactly when to place a comma.
+:::
+
+You have spent this entire module working with clauses that are grammatically independent. In these coordinate structures, neither part dictates the rules to the other, and they could technically stand alone as separate, complete sentences. You have learned how to link them to create a flowing, natural narrative. However, the Ukrainian language possesses another, even more intricate layer of syntax that requires an entirely different approach and mindset.
+
+In Module 67, we will explore "З'ясувальні речення" (Explanatory sentences), which introduces the critical concept of dependency, formally known as підрядність. Instead of balancing equal parts, you will learn how one main clause can completely govern and require a subordinate clause. You will construct sentences where one part actively explains or completes the meaning of the other, answering questions like "what?", "who?", or "where?" (for example, "Я чітко знаю, що ти маєш на увазі"). This exciting transition from coordinating equal ideas to managing dependent clauses is the final bridge you must cross to achieve full B1 fluency in complex Ukrainian syntax.
+
+<!-- INJECT_ACTIVITY: match-up-definitions -->

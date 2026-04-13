@@ -1,23 +1,21 @@
-# Section-by-Section Generation — Section 2/4
+# Section-by-Section Generation — Section 2/3
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 10: Для кого? Без чого? Біля чого? (A2, A2.2 [Genitive Case Complete])
-**Section to write:** Без чого? Без + родовий (Without What? Без + Genitive) (~650 words total)
+**Section to write:** Без чого? Без + родовий (Without What? Без + Genitive) (~650 words)
 **Word target for this section:** 650 words (aim for 715 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Без чого? Без + родовий (Without What? Без + Genitive) (~650 words total)
-- P1 (~120 words): [Introduce 'без' as the marker of absence or lack. Start with the most practical everyday examples: coffee and tea. Examples: кава без цукру (coffee without sugar), чай без молока (tea without milk), вода без газу (still water / water without gas).]
-- P2 (~100 words): [Explain the use of 'без' with abstract nouns to form common idioms and modifiers. Examples: без сумніву (without doubt), без проблем (without problems / no problem), без допомоги (without help), без успіху (without success).]
-- P3 (~100 words): [Detailed check on masculine nouns after 'без', focusing on the choice between -а and -у endings. Note that concrete objects usually take -а, while substances or abstract concepts often take -у. Examples: без хліба (without bread), без ножа (without a knife), без цукру (substance, -у), без шуму (abstract, -у).]
-- P4 (~100 words): [Focus on feminine and neuter nouns after 'без'. Highlight the -и/-і endings for feminine and -а/-я for neuter. Examples: без води (without water), без солі (soft stem, -і), без вікна (without a window), без моря (without the sea).]
-- P5 (~100 words): [Showcase 'без' in complete sentences to demonstrate natural syntax. Explain how 'без' often pairs with 'не можу' (I cannot). Examples: Я не можу без кави. Вона прийшла без парасольки. Ми поїхали без нього (using the pronoun form).]
-- P6 (~130 words): [Dialogue (Part 2): Igor realizes they forgot the flashlight. He stresses that without it, they can't do anything at night. Marta mentions they also shouldn't go without water. Includes examples: без ліхтарика, без води, без плану.]
-- <!-- INJECT_ACTIVITY: quiz-prep-choice --> [Quiz, focus on choosing between 'для' and 'без' to complete everyday sentences, 8 items]
+## Без чого? Без + родовий (Without What? Без + Genitive) (~650 words)
+- P1 (~120 words): [Core Meaning] Introduce *без* (without) to express absence, lack, or omission. Provide tangible, everyday examples: *кава без цукру* (coffee without sugar), *чай без молока* (tea without milk), *день без дощу* (a day without rain).
+- P2 (~130 words): [Abstract Uses] Expand to abstract and conceptual uses of *без*. Examples: *без сумніву* (without doubt), *без проблем* (no problem), *без допомоги* (without help). Explain that these are highly common conversational fillers and fixed expressions.
+- P3 (~150 words): [Hard vs. Soft Stems] Deep dive into formatting nouns after *без*, contrasting hard and soft stems. Give clear pairs. Masculine: *без хліба* (hard), *без олівця* (soft). Feminine: *без води* (hard), *без солі* (soft). Neuter: *без вікна* (hard), *без моря* (soft).
+- P4 (~130 words): [Everyday Phrases] Present common sentence structures and verbs frequently paired with *без*. Examples: *я не можу без кави* (I can't live without coffee), *вона прийшла без парасольки* (she came without an umbrella), *ми поїхали без нього* (we left without him).
+- P5 (~120 words): [Nuances of Masculine Endings] Briefly address the nuance of masculine Genitive endings (-а/-я vs. -у/-ю) after *без*. For concrete objects use -а/-я (*без комп'ютера*, *без ножа*), and for abstract concepts or substances use -у/-ю (*без шуму*, *без успіху*).
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -25,7 +23,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-pleasant surprise for sister together. They are currently cooking a delicious dinner for dad. This is my new phone for son.* When dealing with soft-stem nouns or feminine nouns ending in **-ія**, we need to switch to our soft Genitive endings. Soft masculine nouns, especially professions ending in **-тель**, will take the **-я** ending instead of **-а**. Feminine nouns that end in **-ія** are very common for names, and they will change their ending to **-ії**. It is important to hear the difference between these endings. У нашому класі є зручний стілець для вчителя. Я з радістю несу ці красиві квіти для Марії. Ми вчора купили цю м'яку іграшку для Софії. Це важливий лист для лікаря. > *There is a comfortable chair for the teacher in our classroom. I am carrying these beautiful flowers for Maria with joy. We bought this soft toy for Sophia yesterday. This is an important letter for the doctor.* Finally, let's look at how neuter nouns and plural recipients behave after **для**. Many abstract neuter nouns end in **-я** (like the words for life or happiness). These will simply keep their **-я** ending in the Genitive singular. For plural recipients, masculine nouns often take the **-ів** ending. You should also pay attention to common irregular plurals, like the word for children. Нам усім дуже потрібне сонце для життя. Кожна людина робить все можливе для щастя. У цьому великому будинку є світла кімната для дітей. Я маю дуже хороші новини для друзів. > *We all really need the sun for life. Every person does everything possible for happiness. There is a bright room for children in this large house. I have very good news for friends.* Let's see these exact phrases in action in a real conversation. Igor and Marta are actively packing their bags for a weekend camping trip in the forest. Notice how they use **для** to discuss who each item belongs to and what specific purpose each piece of equipment serves. > — **Ігор:** Марто, скажи мені, для кого ця велика ковдра? *(Marta, tell me, who is this large blanket for?)* > — **Марта:** Це дуже тепла ковдра для Олени. Вона завжди швидко мерзне вночі. *(This is a very warm blanket for Olena. She always gets cold quickly at night.)* > — **Ігор:** Добре, я розумію. А де лежить мій новий ліхтарик? *(Good, I understand. And where is my new flashlight lying?)* > — **Марта:** Він уже у твоєму рюкзаку. Нам також обов'язково потрібні речі для комфорту. *(It is already in your backpack. We also definitely need things for comfort.)* > — **Ігор:** Я повністю згоден з тобою. Я беру теплий одяг для походу. *(I completely agree with you. I am taking warm clothes for the hike.)* > — **Марта:** Це просто чудово! Тепер у нас є абсолютно все для відпочинку біля річки. *(This is simply great! Now we have absolutely everything for rest near the river.)* <!-- INJECT_ACTIVITY: match-up, focus on matching Ukrainian 'для' phrases to their English equivalents, 8 items -->
+for a nice place for rest.* :::note **Quick tip** — When you want to translate the English word "for", be careful! If you are talking about the *purpose* of something or the *intended recipient*, use **для**. But if you mean "for" as a duration of time (like "for three days"), Ukrainian uses different structures. ::: The second major function of **для** is to indicate the intended recipient. In this context, it answers the question **Для кого?** (For whom?). You use this construction whenever you have a gift, a message, or a task intended for a specific person. Whether you are buying flowers for your mother, asking about the **призначення** (purpose) of a tool, or preparing a surprise without **сумнів** (doubt), the preposition **для** followed by the Genitive case is the correct structure. Я маю невеликий подарунок для мами. Цей смачний торт ми спекли спеціально для друга. У нас є багато цікавих ігор для дітей. Вона залишила коротку записку для лікаря. > *I have a small gift for mom. We baked this delicious cake especially for a friend. We have many interesting games for children. She left a short note for the doctor.* To use **для** correctly, you need to feel confident forming the Genitive case across different genders and stem types. Let's look at how the endings change. For masculine nouns, hard stems usually take **-а** (брат → для брата), while soft stems take **-я** (вчитель → для вчителя). For feminine nouns, hard stems take **-и** (сестра → для сестри), and soft stems take **-і**, such as **станція** (station) becoming для станції. Neuter nouns generally end in **-а** or **-я**. Це новий телефон для брата. Ми купили квіти для вчителя. Я маю гарну новину для сестри. Цей квиток ми купили для Марії. Усе, що ми робимо, це для щастя. > *This is a new phone for a brother. We bought flowers for the teacher. I have good news for a sister. We bought this ticket for Mariia. Everything we do is for happiness.* :::info **Grammar box** — Remember the masculine **-а/-я** vs **-у/-ю** split! Words for living beings, distinct objects, and specific places usually take **-а/-я** (для брата, для стола). Abstract concepts or substances often take **-у/-ю** (для успіху, для чаю). ::: There are many high-frequency everyday phrases using **для** that you should memorize. You will hear these expressions constantly, whether you are at a **зупинка** (stop), inside a **бібліотека** (library), or walking across a city **площа** (square). Notice that personal pronouns also change their forms in the Genitive case. For example, «ти» (you) becomes «тебе», and «я» (I) becomes «мене». Це дуже важливо для мене. У мене є чудовий подарунок для тебе. Нова зупинка біля станції зручна для пасажирів. Ця площа ідеальна для концертів. Ми купили ці книги для місцевої бібліотеки. > *This is very important for me. I have a wonderful gift for you. The new stop near the station is convenient for passengers. This square is ideal for concerts. We bought these books for the local library.*
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -602,6 +600,31 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] призначення (purpose, destination)
+- [ ] відпочинок (rest, relaxation)
+- [ ] допомога (help, assistance)
+- [ ] сумнів (doubt)
+- [ ] будинок (building, house)
+- [ ] зупинка (stop (bus/tram))
+- [ ] бібліотека (library)
+- [ ] лікарня (hospital)
+- [ ] площа (square (city))
+- [ ] станція (station)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Без чого? Без + родовий (Without What? Без + Genitive) (~650 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

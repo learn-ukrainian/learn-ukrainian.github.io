@@ -1,0 +1,25 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T15-21-bf260555.json
+phase: write-fix
+prompt_chars: 32283
+response_chars: 28075
+prompt_words: 4990
+response_words: 4341
+sections:
+- name: unknown
+  start: 0
+  length: 32283
+  fraction: 1.0
+large_sections:
+- unknown
+directives_total: 18
+directives_covered: 16
+directives_missed:
+- kind: must
+  text: '- [GLOBAL] Every exercise item must test something EXPLICITLY taught in the
+    preceding prose.'
+  covered: false
+  coverage_note: 3/11 keywords (27%)
+- kind: inject_activity
+  text: '...'
+  covered: false
+  coverage_note: marker missing

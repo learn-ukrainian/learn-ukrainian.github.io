@@ -1,82 +1,72 @@
 ## На́голос (Stress)
 
-**Заболо́тний Grade 5 p.73** teaches that the Ukrainian language has 38 distinct sounds. When you combine these sounds into words, one syllable always stands out. This emphasis is called **наголос** (stress). The **наголо́шений склад** (stressed syllable) is pronounced louder and held slightly longer than the rest of the word. A helpful technique to find the stress in a new word is to imagine you are "calling" the object from far away. If you call a turtle — **черепа́ха** (turtle) — you naturally stretch the third syllable: *черепаааха*. That stretched syllable is where the stress falls. Unlike English, where unstressed vowels often collapse into a weak "uh" sound, Ukrainian vowels keep their core phonetic shape. An unstressed **О** still sounds like **О**, just shorter and quieter.
+**Наголос** (stress) is fundamental in Ukrainian. As Заболо́тний Grade 5, p.73 notes, the language has 38 sounds, and stress shows which syllable is louder and longer. Ukrainian stress is **ві́льний** (free) and **рухо́мий** (mobile): it can fall on any syllable and shift between forms. For example, **нога́** has stress on the last syllable, but **но́ги** shifts it to the first. This differs from French, where stress is fixed on the last syllable, and Czech, where it is fixed on the first.
 
-Ukrainian stress is **ві́льний** (free). It is not locked to a specific position in the word. In French, the stress always falls on the last syllable. In Polish, it consistently falls on the penultimate syllable. In Ukrainian, it can appear anywhere. You must learn the stress pattern of each individual word. Many common words for beginners have stress on the first syllable: **ма́ма** (mother), **та́то** (father), **ра́нок** (morning), **ка́ва** (coffee), and **кни́га** (book). Others have stress firmly on the second or last syllable: **вода́** (water), **зима́** (winter), **рука́** (hand/arm), **метро́** (metro), and **кафе́** (cafe). Some have middle stress, like **столи́ця** (capital) in the phrase **Ки́їв — столиця Украї́ни** (Kyiv is the capital of Ukraine).
+Why does this matter? Stress actually changes meaning. There are minimal pairs of words that look identical but mean completely different things based on their stress alone. We call these pairs **омо́графи** (homographs). Consider real pairs you will encounter. First, look at **замок** (castle) with stress on the first syllable, versus **замок** (lock) with stress on the second syllable. Next, compare **мука** (torment) versus **мука** (flour). Another clear example is **атлас** (atlas) versus **атлас** (satin). Getting the stress wrong means you are saying a completely different word. This is not just a slight accent issue; wrong stress equals the wrong word entirely.
 
-Furthermore, Ukrainian stress is **рухо́мий** (mobile). When a word changes its form, the stress can jump to a different syllable. When you talk about one hand, you say **рука** (hand). When you talk about two hands, the stress shifts to the first syllable: **ру́ки** (hands).
+You might wonder how to know where the stress goes. In writing, stress marks (') appear in textbooks and dictionaries to help learners. You will see them often as you study. However, these marks are NOT used in everyday Ukrainian text. You will not see them on street signs, in menus, or in books. As a learner, you must memorize the stress when you learn a new word. Always check an online dictionary like goroh.pp.ua for correct stress when you are unsure.
 
-Stress is critical because it dictates meaning. In English, placing stress on the wrong syllable usually just gives you a strange accent. In Ukrainian, getting the stress wrong often means you are saying a completely different word. These pairs of words that look identical but sound different are called **омо́графи** (homographs). Consider the word for a castle. A castle is a **замок** (castle), with the stress on the first syllable. A lock for a door is a **замок** (lock), with the stress on the second syllable. If you say the wrong one, the sentence changes entirely. Another stark pair is **мука** (torment), stressed on the first syllable, versus **мука** (flour), stressed on the second syllable. This distinction also applies to adjectives. The noun **доро́га** (road) has stress on the second syllable. The adjective **дорога** (expensive) has stress on the final syllable.
-
-:::tip
-In textbooks and dictionaries, stress marks (') appear above the stressed vowel to guide learners. You will see them in your study materials. However, they do not appear in everyday Ukrainian writing. When reading a newspaper or a menu, you must know the word's stress pattern from memory. As a learner, always check *goroh.pp.ua* when you are unsure about pronunciation.
+:::caution
+**Common Mistake**
+Do not assume a word has the same stress as its English or similar-sounding equivalent in another language. Always learn the unique Ukrainian **наголос**.
 :::
 
-<!-- INJECT_ACTIVITY: quiz-stress-position -->
+There are common A1 stress patterns, but there is no magic shortcut here. Words must be learned individually. Many common words have first-syllable stress. Examples include **ма́ма** (mother), **та́то** (father), **ра́нок** (morning), **ка́ва** (coffee), and **кни́жка** (book). Notice how the first part of the word is loud and long. Contrast these with words that have last-syllable stress. Examples include **вода́** (water), **зима́** (winter), **рука́** (hand), **метро́** (metro), and **кафе́** (cafe). Listen to how the energy shifts to the end of the word.
 
 <!-- INJECT_ACTIVITY: match-stress-pairs -->
 
 ## Інтона́ція (Intonation)
 
-The melody of your voice is called **інтонація** (intonation). Ukrainian uses sentence melody to communicate the fundamental purpose of the sentence. The language classifies sentences by their goal. Declarative sentences, which state facts, are **розповідні́** (declarative). Interrogative sentences, which ask questions, are **пита́льні** (interrogative). Imperative sentences, which give commands, are **спонука́льні** (imperative). Any of these three types can also be exclamatory — **окли́чні** (exclamatory) — if spoken with strong emotion. For A1 learners, focus on the three basic punctuation patterns: the period (.) for statements, the question mark (?) for questions, and the exclamation point (!) for exclamations and commands. These marks are the visual map for your spoken melody.
+We will now discuss **інтонація** (melody). Ukrainian uses intonation to distinguish different sentence types. You can use the exact same words, but with a different melody, you convey a completely different meaning. A basic statement uses a falling intonation. It sounds like you are landing on the final thought. Look at this statement: **Це кава.** ↘ (This is coffee). The pitch goes down at the end. To make a yes/no question, you use a rising intonation on the stressed syllable. You do not change the word order at all. **Це кава?** ↗ (Is this coffee?). Finally, an exclamation uses a strong, sharp fall to express emotion. **Як га́рно!** ↘↘ (How beautiful!).
 
-The contrast between a statement and a yes/no question relies entirely on the pitch of your voice. A statement uses falling intonation. You start at a normal pitch and drop lower at the end. Look at this sentence:
+There is a critical difference between yes/no questions and questions that contain specific question words. Question words include **хто** (who), **що** (what), **де** (where), and **коли́** (when). When you use these words, the question actually has a falling intonation. The question word itself does all the work of showing that you are asking something. For example: **Що це?** ↘ (What is this?). The pitch goes down. **Де метро?** ↘ (Where is the metro?). Again, the pitch goes down. Contrast this with yes/no questions, which do not have these question words. Yes/no questions always require a rising melody. **Це метро?** ↗ (Is this the metro?).
 
-> **Окса́на:** Це кава. *(This is coffee.)*
+:::tip
+**Intonation Rule**
+Think of a question word (**хто**, **що**, **де**, **коли**) as doing the heavy lifting. Because the word itself asks the question, your melody can simply fall at the end.
+:::
 
-Your voice falls (↘) on the word **кава**. It sounds final and decisive. Same words, different melody, different meaning. Use the exact same words, but a different melody, to ask a question:
+As Авра́менко Grade 5, p.19 explains, we classify sentences by their main purpose. There are three main types. First, we have **розповідні́** (declarative) sentences, which tell you facts. Second, we have **пита́льні** (interrogative) sentences, which ask questions. Third, we have **спонука́льні** (imperative) sentences, which give commands. Any of these sentence types can also be **окли́чні** (exclamatory), which is a separate dimension that adds strong emotion. For A1 learners, focus on the three punctuation patterns: a period (.) for statements, a question mark (?) for questions, and an exclamation mark (!) for emotions or commands. Punctuation shows the sentence type, but for questions you still need to know whether the melody rises (yes/no question) or falls (question word).
 
-> **Оксана:** Це кава? *(Is this coffee?)*
-
-For a yes/no question, you must use rising intonation (↗). You raise the pitch of your voice sharply on the stressed syllable of the key word you are asking about. In this case, your voice spikes upward on the first syllable of **кава**. The rise must be distinct and obvious. If your voice stays flat or falls, a Ukrainian speaker will hear a statement, not a question.
-
-There is a major exception: questions that begin with specific question words. Words like **хто** (who), **що** (what), **де** (where), and **коли́** (when) do the grammatical work of asking the question. Because the question word already signals the intent, the sentence melody does not need to rise at the end. Instead, questions with question words usually end with a falling intonation (↘).
-
-> **Степа́н:** Що це? *(What is this?)*  
-> **Степан:** Де метро? *(Where is the metro?)*  
-
-Your voice falls at the end of both sentences because the question word does the work. This creates a direct contrast with yes/no questions, which lack question words and therefore always rise: **Це метро?** (↗).
-
-Exclamations and emotional statements use a strong falling intonation (↘↘). You place intense vocal weight on the stressed syllable of the core word, and then drop your pitch significantly. This pattern applies to enthusiastic greetings and expressions of strong feeling.
-
-> **Макси́м:** Як га́рно! *(How beautiful!)*  
-> **Максим:** Приві́т! *(Hi!)*  
-
-You can also use **логі́чний наголос** (logical stress) to shift the focus of a sentence. By emphasizing one specific word, you change the exact meaning of the statement without altering the grammar or the words themselves.
-
-<!-- INJECT_ACTIVITY: quiz-sentence-type -->
-
+<!-- INJECT_ACTIVITY: quiz-sentence-types -->
 <!-- INJECT_ACTIVITY: fill-in-punctuation -->
 
 ## Чита́ємо вго́лос (Reading Aloud)
 
-Reading multisyllable Ukrainian words correctly requires a systematic approach. Follow a simple three-step method to build muscle memory and rhythm. First, break the word into distinct syllables. Take the word for photograph: **фо-то-гра-фі-я** (photograph). Second, locate the stressed syllable. In this word, the stress falls on the third **а**: **фотогра́фія**. Third, read the word slowly, ensuring the stressed syllable is the loudest and longest. Once you have the pattern, read at natural speed. Apply this same method to the word for Ukrainian: **у-кра-їн-ська** (Ukrainian). The stress falls on the **ї**. For the word rest, the breakdown is **від-по-чи-нок** (rest), with the stress on the **и**.
+Here is the method for reading multisyllable words with the correct stress. The technique is simple but powerful. First, break the word into syllables. Second, find the stressed syllable. Finally, read the whole word at a natural speed, giving that stressed syllable extra power. We can practice this with some examples. Take the word for Ukrainian: **у-кра-їн-ська**. The stress is on the **ї**. Say it out loud. Next, look at the word for photograph: **фо-то-гра-фі-я**. The stress falls on **гра**. Say it: **фотогра́фія**. Now try the word for rest: **від-по-чи-нок**. The stress is on the **и**. Break it, find the stress, and say it smoothly.
 
-Word list practice helps you internalize different stress patterns. Read the following words aloud with correct **наголос**. First, find the stressed syllable, then read the whole word at natural speed. Read these words: **Ки-їв** (Kyiv), **мо-ло-ко** (milk), **ра-нок** (morning), **ка-ва** (coffee), **во-да** (water), **зи-ма** (winter), and **у-кра-їн-ська** (Ukrainian). Break them down mentally and push your voice heavily on the stressed vowel.
+Following the stress-drill approach in ULP Season 1, Episode 5, here is a word stress reading practice section. Read this list of words aloud. You need to deliberately exaggerate the stressed syllable to train your ear. Start with the capital of Ukraine: **Ки-їв**. The stress is on the first syllable. Remember, **Ки́їв — столи́ця Украї́ни** (Kyiv is the capital of Ukraine). Next, try milk: **мо-ло-ко** (stress on the last **о**). Now morning: **ран-ок** (stress on **а**). Coffee: **ка-ва** (stress on **а**). Water: **во-да** (stress on **а**). Winter: **зи-ма** (stress on **а**). And Ukrainian: **у-кра-їн-ська** (stress on **ї**). Find the loud part, and own it.
 
-Dialogue practice bridges the gap between single words and connected speech. Apply your knowledge of stress and intonation to a real conversation. In this interaction, two people exchange greetings and ask basic questions. Watch how the melody changes based on the punctuation and the sentence type.
+<!-- INJECT_ACTIVITY: quiz-find-stress -->
 
-> **Оксана:** Привіт! *(Hi!)*  
-> **Максим:** Привіт! Як спра́ви? *(Hi! How are you?)*  
-> **Оксана:** До́бре! А у тебе́? *(Good! And you?)*  
-> **Максим:** Добре! Це твоя́ кава? *(Good! Is this your coffee?)*  
-> **Оксана:** Так, це моя́ кава. Дякую! *(Yes, this is my coffee. Thank you!)*  
+:::note
+**Cultural Context**
+In careful pronunciation practice, say each syllable clearly and exaggerate the stressed syllable slightly. This will help you build a more natural Ukrainian rhythm.
+:::
 
-The first **Привіт!** has a strong falling exclamation (↘↘). The question **Як справи?** contains a question word (**як**), so it has a falling intonation (↘). The question **А у тебе?** lacks a direct question word, so it relies on a sharp rising intonation (↗) to signal the inquiry. The same rising pitch (↗) applies to **Це твоя кава?**. Finally, the response **Так, це моя кава.** is a simple declarative statement, ending with a standard falling intonation (↘), and **Дякую!** finishes the interaction with a strong falling exclamation (↘↘). Apply these intonation patterns to the greetings you have already learned.
+We will now practice a short dialogue. Apply intonation patterns to the greetings you learned in Module 1. Read it aloud and match your pitch to the arrows.
+
+> **А́нна:** Приві́т! ↘ *(Hi!)*
+> **Марко́:** Привіт! Як спра́ви? ↘ *(Hi! How are things?)*
+> **Анна:** До́бре! А у тебе́? ↗ *(Good! And you?)*
+> **Марко:** Теж добре! ↘ *(Also good!)*
+
+Notice the melody. The first greeting is a simple statement, so it falls. The question "How are things?" uses a question word (**як**), so it also falls. The contrastive question "And you?" has no question word, so it must rise. The final answer falls.
 
 ## Підсумок — Summary
 
-Stress and melody are the physical heartbeat of the spoken language. A single word's identity is anchored by its **наголос**. Because Ukrainian stress is free and mobile, it can fall on any syllable and can shift when a word changes form. You must memorize the stress pattern along with the word itself, because shifting the stress can completely change a word's meaning, turning a castle into a lock, or flour into torment. In written Ukrainian, punctuation marks serve as the sheet music for your voice. They tell you exactly how to manipulate your sentence melody.
+Let us recap the core concepts with a short self-check.
 
-Intonation distinguishes a statement of fact from a question of inquiry. A declarative statement always uses a falling pitch (↘). A yes/no question requires a sharp, noticeable rise (↗) on the specific word you are asking about. However, sentences that start with question words like **що** or **де** do the asking for you, and therefore use a falling pitch (↘). Always listen carefully to native speakers, whether in person, in podcasts, or in videos. Their natural sentence rhythm and melody are exactly what you are aiming to reproduce.
+*   What is **наголос**? It is the stress in a word that makes one specific syllable sound louder, longer, and clearer than the surrounding syllables. It is the rhythmic anchor of every Ukrainian word.
+*   Is Ukrainian stress fixed in one place? No, it is free (**вільний**) and mobile (**рухомий**). It can appear anywhere and can shift when a word changes form.
+*   Can stress change the meaning of a word entirely? Yes, absolutely. Remember the minimal pairs we studied. The word **замок** (castle) is a completely different object from **замок** (lock). The stress is the only phonetic feature that separates them.
+*   What intonation do you use for a yes/no question? You must use a rising intonation (↗) on the stressed syllable. Your voice goes up, waiting for an answer.
+*   What intonation do you use for a statement or a question with a question word? You use a falling intonation (↘). The question words (**хто**, **що**, **де**, **коли**) already do the asking for you, so your melody simply lands.
 
-Self-check your understanding of these core principles. Answer these questions out loud:
+Now, for your final read-aloud practice block. This is where you bring stress and melody together. Apply the correct melody and word stress to these short sentences. Read them out loud right now, exaggerating the pitch:
 
-- What is **наголос**? It is the louder, longer syllable that carries the weight of a word.
-- Can stress change a word's meaning? Yes, moving the stress can create entirely different words, such as **замок** (castle) and **замок** (lock).
-- What intonation do you use for a yes/no question? You use a rising intonation (↗) on the key word.
-- Do questions starting with **Що** or **Де** always rise? No, they usually have a falling intonation (↘).
-- Read this aloud with correct stress and melody:
-  **Це апте́ка?** *(Is this a pharmacy?)*
-  **Так, це аптека.** *(Yes, this is a pharmacy.)*
-  **Як гарно!** *(How beautiful!)*
+**Це апте́ка?** ↗ *(Is this a pharmacy?)*
+**Так, це аптека.** ↘ *(Yes, this is a pharmacy.)*
+**Як гарно!** ↘↘ *(How beautiful!)*
+
+If you can hear and produce the difference between these three distinct melodies, you have built a strong foundation. You know how to make a word loud, and you know how to make a sentence ask or tell. 

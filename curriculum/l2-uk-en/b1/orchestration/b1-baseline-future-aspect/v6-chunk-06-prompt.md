@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-grammatically impossible in Ukrainian. If you are sitting with a book in your hands and someone asks what you are doing, answering with a perfective verb sounds as if you are completely ignoring their question and suddenly declaring your future intentions to the room. The true elegance of the aspect system reveals itself when we tell stories or describe complex plans. Aspects allow us to separate the background setting from the main events that move the narrative forward. Imperfective verbs set the scene, describing the status quo, the weather, or ongoing states. Perfective verbs introduce the discrete, completed events that break that status quo and create a sequence of actions. Сонце яскраво світило, і я повільно йшов вулицею. Раптом задзвонив телефон, і я побачив повідомлення від друга. Процес прогулянки — це лише фон для головної події. > *The sun was shining brightly, and I was walking slowly down the street. Suddenly the phone rang, and I saw a message from a friend. The process of the walk is just the background for the main event.* This exact same logic applies when we project our plans into the future. We use the imperfective aspect to establish the continuous reality of what we will be doing, and the perfective aspect for the specific events that will punctuate that time. Завтра ввечері я буду чекати на тебе в кафе. Коли ти прийдеш, я замовлю нам дві кави. Моє очікування — це тривалий процес, а твій прихід і моє замовлення — це конкретні результати. > *Tomorrow evening I will be waiting for you in the cafe. When you arrive, I will order us two coffees. My waiting is a continuous process, and your arrival and my ordering are concrete results.* Another major source of interference comes from the English tendency to use the Present Continuous tense for future arrangements. In English, it is perfectly natural and extremely common to say "I am going to Berlin tomorrow" or "We are having dinner tonight." Ukrainian handles this temporal projection differently. В українській мові ми надаємо перевагу формам майбутнього часу для майбутніх подій. Ми кажемо: «Завтра я поїду до Берліна» або «Сьогодні ввечері ми будемо вечеряти». Форми теперішнього часу використовують для майбутнього дуже рідко. > *In Ukrainian, we prefer future tense forms for future events. We say: "Tomorrow I will go to Berlin" or "Tonight we will be having dinner." Present tense forms are used for the future very rarely.* While it is occasionally possible to use a present tense verb of motion for immediate and certain plans, such as saying "я їду" (I am going) for a train leaving in an hour, this is an exception rather than the rule. Relying on the present tense for future plans will often confuse your listeners, as it sounds like you are describing a current, ongoing reality that contradicts the future timeframe. You should always default to the clear boundaries of the future tense forms, choosing perfective for completed goals and imperfective for ongoing activities. <!-- INJECT_ACTIVITY: error-correction-aspect-tense -->
+книгу». However, by choosing the perfective aspect, you have automatically shifted the action into the future. A Ukrainian speaker hears a promise: "I will finish reading the book later." To describe what you are doing in this given second, you must use the imperfective present tense: «я читаю». Never use the perfective aspect to describe a current, ongoing process. :::info **Grammar box** Always remember the golden rule of the aspect-tense matrix: perfective verbs have no present tense. Their present-tense conjugation pattern creates the **проста форма** of the future tense. If you need the actual present tense, you must use the **недоконаний вид**. ::: Let's see how these aspects cooperate to build a compelling narrative. In storytelling, aspects function like camera lenses. The imperfective aspect sets the background scene and creates the atmosphere, painting the broad strokes: the sun was shining, people were walking. The perfective aspect acts as the sharp foreground action that suddenly interrupts the plot, delivering the sequence of events: someone entered, the phone rang. This cinematic logic applies perfectly when building complex sentences about the future. Уявіть ситуацію, коли ви плануєте зустріч. Ви кажете: «Я буду чекати тебе біля метро, і коли ти приїдеш, ми підемо в кіно». У цьому реченні перша дія формує тло. Процес очікування — це **складена форма** (analytic form) недоконаного виду. Друга дія перериває цей процес, тому ми використовуємо просту форму доконаного виду. > *Imagine a situation when you are planning a meeting. You say: "I will be waiting for you near the subway, and when you arrive, we will go to the movies." In this sentence, the first action forms the background. The waiting process is the analytic form of the imperfective aspect. The second action interrupts this process, so we use the simple form of the perfective aspect.* Finally, we must address structural interference from English. In English, it is incredibly common to use the Present Continuous tense to express a planned future event. You naturally say, "I am going to Berlin tomorrow," using a present tense structure to talk about the future. When speaking Ukrainian, you should resist the urge to translate this directly using the Ukrainian present tense. В українській мові ми віддаємо перевагу формам майбутнього часу для опису планів. Замість того, щоб копіювати англійську граматику, краще сказати «завтра я поїду до Берліна» або «сьогодні ми будемо вечеряти разом». Звичайно, ви іноді почуєте дієслова руху в теперішньому часі для найближчого майбутнього, наприклад «завтра я їду». Але використання граматичної категорії **майбутній час** (future tense) є набагато більш природним і універсальним правилом. > *In the Ukrainian language, we prefer future tense forms for describing plans. Instead of copying English grammar, it is better to say "tomorrow I will go to Berlin" or "today we will have dinner together". Of course, you will sometimes hear verbs of motion in the present tense for the immediate future, for example "tomorrow I am going". But using the grammatical category of future tense is a much more natural and universal rule.* <!-- INJECT_ACTIVITY: error-correction-aspect-tense -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -708,6 +708,35 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] вид дієслова (verbal aspect — grammatical category of completion)
+- [ ] доконаний вид (perfective aspect — completed, bounded action)
+- [ ] недоконаний вид (imperfective aspect — ongoing, unbounded action)
+- [ ] видова пара (aspect pair — two verbs differing only in aspect)
+- [ ] майбутній час (future tense)
+- [ ] проста форма (simple form — perfective future: напишу)
+- [ ] складна форма (synthetic/compound form — imperfective future: писатиму)
+- [ ] складена форма (analytic form — imperfective future: буду писати)
+- [ ] інфінітив (infinitive — base verb form ending in -ти/-тися)
+- [ ] дієвідміна (verb conjugation class — I or II)
+- [ ] особове закінчення (personal ending — verb suffix marking person/number)
+- [ ] дієвідмінювання (conjugation — changing verb form by person/number)
+- [ ] двовидовий (biaspectual — verb that can be either aspect: атакувати)
+- [ ] одновидовий (single-aspect — verb existing in only one aspect)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Дієвідмінювання у майбутньому часі (~605 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

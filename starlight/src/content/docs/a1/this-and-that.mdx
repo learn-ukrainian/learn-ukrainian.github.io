@@ -7,13 +7,13 @@ pipeline: v6
 build_status: draft
 ---
 
-import ErrorCorrection from '@site/src/components/ErrorCorrection';
+import Anagram from '@site/src/components/Anagram';
 import FillIn from '@site/src/components/FillIn';
 import FlashcardDeck from '@site/src/components/FlashcardDeck';
 import GroupSort from '@site/src/components/GroupSort';
 import MatchUp from '@site/src/components/MatchUp';
+import OddOneOut from '@site/src/components/OddOneOut';
 import Quiz from '@site/src/components/Quiz';
-import Translate from '@site/src/components/Translate';
 import TrueFalse from '@site/src/components/TrueFalse';
 import Unjumble from '@site/src/components/Unjumble';
 import YouTubeVideo from '@site/src/components/YouTubeVideo';
@@ -24,94 +24,91 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ## Діало́ги (Dialogues)
 
-Imagine standing in a bright, modern electronics store in the heart of Kyiv. You want to buy a few new gadgets for your home, but the shelves are completely packed with options. To get the right item quickly, you need to point effectively and accurately. **Іри́на** (Iryna) is currently looking for a few things, including a bag for her equipment, and the **консульта́нт** (shop assistant) is actively helping her navigate the many choices on display.
+Pointing at objects is a common daily task. In a shop, you may compare things near you and farther away: **ось цей телефо́н**, **ось та ка́мера**, **ось це ра́діо**. The first dialogue shows this contrast in a shopping situation and reuses color and price language from earlier modules.
 
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Ірина:</span> До́брий день! Скі́льки ко́шту́є **ця су́мка**? *(Good afternoon! How much does this bag cost?)*</div>
+<div class="dialogue-line"><span class="speaker">Іри́на:</span> Скі́льки ко́шту́є ця су́мка? *(How much does this bag cost?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Консультант:</span> Добрий день! **Яка? Ця черво́на?** *(Good afternoon! Which one? This red one?)*</div>
+<div class="dialogue-line"><span class="speaker">Консульта́нт:</span> Яка? Ця черво́на? *(Which one? This red one?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Ірина:</span> **Ні, та си́ня.** *(No, that blue one.)*</div>
+<div class="dialogue-line"><span class="speaker">Ірина:</span> Ні, та си́ня. *(No, that blue one.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Консультант:</span> **Та сумка** коштує дві́сті гри́вень. *(That bag costs two hundred hryvnias.)*</div>
+<div class="dialogue-line"><span class="speaker">Консультант:</span> Та коштує дві́сті гри́вень. *(That one costs two hundred hryvnias.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Ірина:</span> **А цей рюкза́к?** *(And this backpack?)*</div>
+<div class="dialogue-line"><span class="speaker">Ірина:</span> А цей рюкза́к? *(And this backpack?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Консультант:</span> **Цей — сто п'ятдеся́т.** *(This one is one hundred fifty.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Ірина:</span> До́бре. А **цей телефо́н**? *(Good. And this phone?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Консультант:</span> **Це нови́й смартфо́н**. *(This is a new smartphone.)*</div>
+<div class="dialogue-line"><span class="speaker">Консультант:</span> Цей — сто п'ятдеся́т. *(This one — one hundred fifty.)*</div>
 
 </div>
 
-After leaving the store, Ірина returns to her home office. The room has various pieces of furniture, some close by and some across the room. She points out her workspace to a friend.
+In this dialogue, **цей/ця** points to the nearer item and **той/та** points to the farther one.
+
+The second dialogue takes place in a residential room. This conversation compares everyday furniture and uses noun vocabulary you already know from previous topics. A person identifies an object located close by, and then points to an object resting across the room. The contrast is clear.
 
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Друг:</span> **Що це?** *(What is this?)*</div>
+<div class="dialogue-line"><span class="speaker">Брат:</span> Що це? *(What is this?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Ірина:</span> **Це мій стіл.** *(This is my table.)*</div>
+<div class="dialogue-line"><span class="speaker">Сестра́:</span> Це мій стіл. *(This is my table.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Друг:</span> **А те?** *(And that?)*</div>
+<div class="dialogue-line"><span class="speaker">Брат:</span> А те? *(And that?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Ірина:</span> **Те — крі́сло.** *(That is an armchair.)*</div>
+<div class="dialogue-line"><span class="speaker">Сестра:</span> Те — крі́сло. *(That is an armchair.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Друг:</span> Яка га́рна кімна́та! *(What a nice room!)*</div>
-
-<div class="dialogue-line"><span class="speaker">Ірина:</span> Дякую. **Цей стіле́ць новий, а той — стари́й.** *(Thank you. This chair is new, and that one is old.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Друг:</span> А **ця ша́фа**? *(And this wardrobe?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Ірина:</span> **Ця шафа** нова́, а **та книжко́ва поли́ця** стара́. *(This wardrobe is new, but that bookshelf is old.)*</div>
+<div class="dialogue-line"><span class="speaker">Брат:</span> Цей стіле́ць нови́й, а той — стари́й. *(This chair is new, and that one is old.)*</div>
 
 </div>
 
-Notice how naturally Ірина identifies various objects in her environment. She does not need to repeat the names of the items constantly. By using short pointing words, she simply points to something right near her or across the room, establishing a clear physical contrast.
+The conversation contrasts near and far objects. The grammar directly reflects the physical reality of the room. The speaker's position relative to the object changes the descriptive word from this to that. The difference is immediately obvious to a native speaker.
 
 ## Цей, ця, це (This)
 
-When you want to identify an object in Ukrainian, the most universal tool at your disposal is the word **це** (this is / that is). You already know this essential word from the fundamental question **Що це?** (What is this?). In this direct context, **це** acts as a fixed, unchangeable identifier. You can point at absolutely anything and state **Це стіл** (This is a table) or **Це вікно́** (This is a window) without worrying about gender. However, when you want to specifically point to a neuter object and describe it further, **це** also functions as a specific pointing word, as seen in the phrase **це вели́ке по́ле** (this large field).
+The word **це** (this is / that is) is the universal identifier in the Ukrainian language. For basic identification questions like **Що це?** (What is this?), the answer is simply **Це стіл** (This is a table) or **Це кни́га** (This is a book). This use of **це** does not require gender agreement. In identification sentences, it often means "this is" or "it is" in English. You use it to identify an object, but **це** is also the neuter demonstrative in phrases like **це вікно́**.
 
-When you point directly at an object near you to describe or select it, demonstrative pronouns follow the same gender pattern as **мій**, **моя́**, **моє́** and **яки́й**, **яка**, **яке́**. For masculine nouns, you use **цей** (this). For feminine nouns, you use **ця** (this). For neuter nouns, you use **це** (this). As noted in Ukrainian school textbooks (Заболо́тний Grade 6, p.210), these demonstrative pronouns change by gender. This pattern directly mirrors the personal pronouns **він** (he), **вона́** (she), and **воно́** (it). It perfectly aligns with the possessive words you learned earlier in your studies. For example, you say **цей стіл** (this table) for a masculine noun. You confidently say **ця кни́га** (this book) for a feminine noun. You easily identify **це вікно** (this window) for a neuter noun.
+When you point at a specific known object, you use the gendered pointers. These are **цей** (this, masculine), **ця** (this, feminine), and **це** (this, neuter). Ukrainian textbooks, such as Заболо́тний for Grade 6 (p. 210), explain that demonstrative pronouns change by gender to match the noun. For example, you say **Цей стіл** (this table), **Ця книга** (this book), and **Це вікно** (this window). At the current learning stage, we focus only on the nominative case.
 
-Ukrainian word order makes combining these pointing words with descriptive adjectives incredibly straightforward. The sequence is completely identical to English: Demonstrative + Adjective + Noun. The pointing word always takes the absolute lead position in the sentence. For a masculine item, you can say **цей вели́кий черво́ний стіл** (this big red table). For a feminine item, the pattern remains identical: **ця нова синя сумка** (this new blue bag). For a neuter item, you describe it as **це мале́ньке бі́ле вікно** (this small white window). The structure never changes, giving you a highly reliable template for building longer, more descriptive phrases as your daily vocabulary grows.
+A quick review link can help: **стіл** (table) → **він** (he) → **мій** (my) → **цей** (this), **книга** (book) → **вона́** (she) → **моя́** (my) → **ця** (this), **вікно** (window) → **воно́** (it) → **моє́** (my) → **це** (this). This lets you check gender agreement across patterns you already know.
 
-<Quiz client:only="react" questions={[{"question": "_____ стіл", "options": [{"text": "цей", "correct": true}, {"text": "ця", "correct": false}, {"text": "це", "correct": false}]}, {"question": "_____ книга", "options": [{"text": "цей", "correct": false}, {"text": "ця", "correct": true}, {"text": "це", "correct": false}]}, {"question": "_____ вікно", "options": [{"text": "цей", "correct": false}, {"text": "ця", "correct": false}, {"text": "це", "correct": true}]}, {"question": "_____ телефон", "options": [{"text": "цей", "correct": true}, {"text": "ця", "correct": false}, {"text": "це", "correct": false}]}, {"question": "_____ сумка", "options": [{"text": "цей", "correct": false}, {"text": "ця", "correct": true}, {"text": "це", "correct": false}]}, {"question": "_____ поле", "options": [{"text": "цей", "correct": false}, {"text": "ця", "correct": false}, {"text": "це", "correct": true}]}, {"question": "_____ рюкзак", "options": [{"text": "цей", "correct": true}, {"text": "ця", "correct": false}, {"text": "це", "correct": false}]}, {"question": "_____ кімната", "options": [{"text": "цей", "correct": false}, {"text": "ця", "correct": true}, {"text": "це", "correct": false}]}]} instruction={"Choose the correct form: **цей**, **ця**, or **це**."} />
+You can easily combine these demonstrative words with adjectives and colors. In the basic pattern taught here, the usual order is demonstrative + adjective(s) + noun. You say **Цей вели́кий черво́ний стіл** (This big red table). You say **Ця нова́ синя сумка** (This new blue bag). You say **Це мале́ньке бі́ле вікно** (This small white window). This is the default beginner pattern to use in this module.
 
-<MatchUp client:only="react" pairs={[{"left": "цей рюкзак", "right": "мій рюкзак"}, {"left": "ця шафа", "right": "моя шафа"}, {"left": "це крісло", "right": "моє крісло"}, {"left": "який телефон?", "right": "цей телефон"}, {"left": "яка кімната?", "right": "ця кімната"}, {"left": "яке поле?", "right": "це поле"}]} instruction={"Match the words that have the same gender."} />
+A common error for English speakers is adding the verb "to be" in the present tense. In Ukrainian, you usually omit it: **Цей стіл новий** (This table is new), not "Цей стіл є новий".
+
+<Quiz client:only="react" questions={[{"question": "____ стіл", "options": [{"text": "цей", "correct": true}, {"text": "ця", "correct": false}, {"text": "це", "correct": false}]}, {"question": "____ книга", "options": [{"text": "цей", "correct": false}, {"text": "ця", "correct": true}, {"text": "це", "correct": false}]}, {"question": "____ вікно", "options": [{"text": "цей", "correct": false}, {"text": "ця", "correct": false}, {"text": "це", "correct": true}]}, {"question": "____ сумка", "options": [{"text": "цей", "correct": false}, {"text": "ця", "correct": true}, {"text": "це", "correct": false}]}, {"question": "____ рюкзак", "options": [{"text": "цей", "correct": true}, {"text": "ця", "correct": false}, {"text": "це", "correct": false}]}, {"question": "____ ліжко", "options": [{"text": "цей", "correct": false}, {"text": "ця", "correct": false}, {"text": "це", "correct": true}]}]} instruction={"Choose the correct demonstrative pronoun (**цей**, **ця**, **це**)."} />
 
 ## Той, та, те (That)
 
-Once you can point at objects right next to you, you immediately need the vocabulary to point at things further away, or things previously mentioned. In Ukrainian, you use the forms **той** (masculine), **та** (feminine), and **те** (neuter) to mean "that." These specific words establish a clear spatial link with the location word **там** (there), just as **цей** links to **тут** (here) or **ось** (here is). If a masculine object is located **там**, you point to it clearly by saying **той стіл** (that table). If a feminine object is far away, you identify it easily as **та книга** (that book). For a distant neuter object, you simply say **те вікно** (that window). This creates a highly logical distance mapping in your mind.
+The Ukrainian language uses the "far" pointers **той** (that, masculine), **та** (that, feminine), and **те** (that, neuter) to indicate objects farther away. You use these words to point at distant things across a room or a street. Examples include **Той стіл** (That table), **Та книга** (That book), and **Те вікно** (That window). While Ukrainian textbooks like Літвінова for Grade 6 (p. 273) provide a full declension table for **той**, we focus strictly on the nominative case right now.
 
-The true communicative power of these words emerges when you create direct contrast. Ukrainian relies heavily on the small conjunction **а** (but / and) to compare two different things in one breath. You can build binary comparison sentences effortlessly. For example, you might say **Цей оліве́ць мій, а той — твій.** (This pencil is mine, and that one is yours). You can also actively contrast different qualities: **Ця книга ціка́ва, а та — нудна́.** (This book is interesting, but that one is boring). This parallel structure powerfully reinforces the near and far distinction.
+You contrast "this" versus "that" in practice by physically pointing. Sentences that compare proximity highlight the grammar effectively. You can say **Цей стілець тут, а той стілець там** (This chair is here, and that chair is there). You can also say **Цей стілець новий, а той — старий** (This chair is new, and that one is old). The words **тут** (here) and **там** (there) emphasize the physical location. The location of the object defines the exact pronoun.
 
-You must be aware of a small but highly important detail regarding the exact word **та**. In Ukrainian, **та** primarily functions as the feminine pointing word "that," as seen in the phrase **та жі́нка** (that woman). However, **та** also serves as a common conjunction meaning "and," identical in daily use to the word **і** (and). For example, you might say **ма́ма та та́то** (mom and dad). Context provides all the necessary rules for instant disambiguation. If **та** appears directly before a feminine noun, it points. If it sits safely between two nouns, it connects them together.
+A crucial warning involves a potential point of confusion. The word **та** can mean both "that" as a demonstrative pointer and "and" as a conjunction. Context makes the meaning completely clear. Consider the phrase **ма́ма та та́то** (mom and dad). Compare this to the phrase **та книга** (that book). The surrounding words reveal the correct function immediately.
 
-In practical daily usage, you often need to offer or make rapid choices. To form a clear choice, you use the question word **чи** (or). This allows you to ask highly practical "pointing" questions when organizing your life. If you are arranging furniture, you might simply ask **Який стіл? — Цей чи той?** (Which table? — This one or that one?). While shopping, you can turn and ask a friend **Яка сумка? — Ця червона чи та синя?** (Which bag? — This red one or that blue one?). For a neuter object, the pattern is exactly the same: **Яке вікно? — Це велике чи те маленьке?** (Which window? — This big one or that small one?).
+You demonstrate practical usage for pointing and choosing by using the word **чи** (or). The question structure is very straightforward and mimics the English pattern. You ask **Яки́й стіл? — Цей чи той?** (Which table? — This one or that one?). You ask **Яка сумка? — Ця червона чи та синя?** (Which bag? — This red one or that blue one?). You ask **Яке́ вікно? — Це вели́ке чи те маленьке?** (Which window? — This big one or that small one?). The choices are clear.
 
-<FillIn client:only="react" items={[{"sentence": "Цей стіл новий, а ____ — старий.", "answer": "той", "options": ["цей", "той", "та"]}, {"sentence": "____ шафа нова, а та — стара.", "answer": "ця", "options": ["ця", "та", "це"]}, {"sentence": "Ця сумка синя, а ____ — червона.", "answer": "та", "options": ["ця", "та", "те"]}, {"sentence": "Це вікно велике, а ____ — маленьке.", "answer": "те", "options": ["це", "те", "та"]}, {"sentence": "____ телефон новий, а той смартфон старий.", "answer": "цей", "options": ["цей", "ця", "це"]}, {"sentence": "Ця кімната велика, а ____ — маленька.", "answer": "та", "options": ["та", "те", "той"]}, {"sentence": "____ крісло нове, а те — старе.", "answer": "це", "options": ["це", "те", "цей"]}, {"sentence": "Цей рюкзак синій, а ____ — червоний.", "answer": "той", "options": ["той", "та", "те"]}]} instruction={"Fill in the blanks with **цей** / **той**, **ця** / **та**, or **це** / **те**."} />
+For now, focus on singular **той/та/те** and use them in short contrasts like **Цей стілець новий, а той — старий**.
 
-<Quiz client:only="react" questions={[{"question": "_____ сумка", "options": [{"text": "той", "correct": false}, {"text": "та", "correct": true}, {"text": "те", "correct": false}]}, {"question": "_____ стілець", "options": [{"text": "той", "correct": true}, {"text": "та", "correct": false}, {"text": "те", "correct": false}]}, {"question": "_____ вікно", "options": [{"text": "той", "correct": false}, {"text": "та", "correct": false}, {"text": "те", "correct": true}]}, {"question": "_____ шафа", "options": [{"text": "той", "correct": false}, {"text": "та", "correct": true}, {"text": "те", "correct": false}]}, {"question": "_____ поле", "options": [{"text": "той", "correct": false}, {"text": "та", "correct": false}, {"text": "те", "correct": true}]}, {"question": "_____ олівець", "options": [{"text": "той", "correct": true}, {"text": "та", "correct": false}, {"text": "те", "correct": false}]}]} instruction={"Choose the correct form: **той**, **та**, or **те**."} />
+<Quiz client:only="react" questions={[{"question": "____ будинок", "options": [{"text": "той", "correct": true}, {"text": "та", "correct": false}, {"text": "те", "correct": false}]}, {"question": "____ машина", "options": [{"text": "той", "correct": false}, {"text": "та", "correct": true}, {"text": "те", "correct": false}]}, {"question": "____ крісло", "options": [{"text": "той", "correct": false}, {"text": "та", "correct": false}, {"text": "те", "correct": true}]}, {"question": "____ стілець", "options": [{"text": "той", "correct": true}, {"text": "та", "correct": false}, {"text": "те", "correct": false}]}, {"question": "____ ручка", "options": [{"text": "той", "correct": false}, {"text": "та", "correct": true}, {"text": "те", "correct": false}]}, {"question": "____ ліжко", "options": [{"text": "той", "correct": false}, {"text": "та", "correct": false}, {"text": "те", "correct": true}]}]} instruction={"Choose the correct demonstrative pronoun (**той**, **та**, **те**) for the far object."} />
+<FillIn client:only="react" items={[{"sentence": "Цей стілець новий, а ____ — старий.", "answer": "той", "options": ["той", "та", "те"]}, {"sentence": "Ця книга нова, а ____ — стара.", "answer": "та", "options": ["той", "та", "те"]}, {"sentence": "____ стіл тут, а той стіл там.", "answer": "Цей", "options": ["Цей", "Ця", "Це"]}, {"sentence": "Це вікно велике, а ____ маленьке.", "answer": "те", "options": ["той", "та", "те"]}, {"sentence": "____ сумка червона, а та — синя.", "answer": "Ця", "options": ["Цей", "Ця", "Це"]}, {"sentence": "Цей рюкзак мій, а ____ — твій.", "answer": "той", "options": ["той", "та", "те"]}]} instruction={"Complete the sentence contrasting near and far objects with **той**, **та**, or **те**."} />
 
 ## Підсумок — Summary
 
-You can perfectly summarize all the critical patterns you have learned into one comprehensive Gender Agreement Table. This straightforward table clearly aligns all the foundational grammar markers for masculine, feminine, and neuter nouns in the Ukrainian language.
+First, review the core contrast: **цей/ця/це** points to something near you, and **той/та/те** points to something farther away. For example: **Цей стіл тут, а той стіл там. Ця книга нова, а та стара́. Це вікно велике, а те маленьке.**
 
-| Category | Masculine | Feminine | Neuter |
-| :--- | :--- | :--- | :--- |
-| **Possessives** | **мій** | **моя** | **моє** |
-| **Questions** | **який?** | **яка?** | **яке?** |
-| **"This"** | **цей** | **ця** | **це** |
-| **"That"** | **той** | **та** | **те** |
+The grand gender agreement table brings together all patterns to show the remarkable consistency of the Ukrainian language. This chart is your roadmap for A1 grammar.
 
-Same endings, same logic — Ukrainian is highly consistent! The feminine forms overwhelmingly rely on the recognizable **-я** or **-а** vowel endings. The neuter forms consistently feature the distinct **-е** ending across all functional categories.
+| Type | Masculine | Feminine | Neuter |
+|---|---|---|---|
+| Possessives | **мій** | **моя** | **моє** |
+| Questions | **який** | **яка** | **яке** |
+| This | **цей** | **ця** | **це** |
+| That | **той** | **та** | **те** |
 
-A highly proactive approach to common conversational errors will drastically improve your speaking fluency. One of the most frequent mistakes learners make is trying to literally translate "What is this specific masculine thing?" by directly asking **Що цей?**. This is grammatically incorrect. You must never ask **Що цей?** or **Що ця?**. Always use the universal, neutral identifier for these identification questions: **Що це?** (What is this?). Furthermore, you must always remember the critical rule of description: in the present tense, you completely omit the verb "to be" (**є**). You simply say **Цей стіл великий.** (This table is big).
+All these words follow the same gender-agreement pattern, but their endings are not identical. In this table, the masculine forms often end in a consonant or **-й**, the feminine forms in **-я** or **-а**, and the neuter forms in **-е**. These structural patterns repeat systematically across different categories of words. When you memorize one pattern, you automatically understand how the other words behave. The grammatical system relies entirely on these predictable and reliable endings to build clear sentences. You do not have to guess; you simply apply the pattern.
 
-For a highly practical daily self-check, look around the room you are currently sitting in right now. Point at three distinct things near you and correctly name them aloud using **Цей**, **Ця**, or **Це**. Then, look completely across the room or out the open window. Point at three things far away and name them using **Той**, **Та**, or **Те**. Finally, systematically check yourself: does the specific ending you chose correctly match the noun's inherent gender?
+<MatchUp client:only="react" pairs={[{"left": "мій", "right": "цей"}, {"left": "моя", "right": "ця"}, {"left": "моє", "right": "це"}, {"left": "який", "right": "той"}, {"left": "яка", "right": "та"}, {"left": "яке", "right": "те"}]} instruction={"Match the pronouns that share the same gender."} />
+
+Perform a self-check exercise to test your knowledge. Look around your room. Point at three things near you and name them using **цей**, **ця**, or **це**. For example, you can say **цей стіл** (this table), **ця ру́чка** (this pen), and **це лі́жко** (this bed). Now look out the window or across the room. Point at three things far away and name them using **той**, **та**, or **те**. For example, you can say **той буди́нок** (that building), **та маши́на** (that car), and **те вікно** (that window). Practice this physical pointing routine every single day to build an automatic reflex for these vocabulary words.
 
 </TabItem>
 <TabItem label="Словник">
@@ -120,76 +117,41 @@ For a highly practical daily self-check, look around the room you are currently 
 
 | Слово | Переклад | Частина мови | Рід |
 |-------|----------|-------------|-----|
-| **ось** | here is / look | част. |  |
+| **ось** | here is, look | част. |  |
 | **там** | there | присл. |  |
-| **вона́** | she | ім. | ж. |
-| **воно́** | it | ім. | с. |
-| **цей** | this (masculine) | прикм. |  |
-| **ця** | this (feminine) | прикм. |  |
-| **той** | that (masculine) | прикм. |  |
-| **та** | that (feminine) | спол. |  |
-| **те** | that (neuter) | ім. | с. |
-| **су́мка** | bag | ім. | ж. |
-| **черво́ний** | red | прикм. |  |
-| **си́ній** | blue | прикм. |  |
-| **рюкза́к** | backpack | ім. | ч. |
-| **телефо́н** | phone | ім. | ч. |
-| **смартфо́н** | smartphone | ім. | ч. |
-| **крі́сло** | armchair | ім. | с. |
-| **кімна́та** | room | ім. | ж. |
-| **га́рний** | nice / beautiful | прикм. |  |
-| **нови́й** | new | прикм. |  |
-| **стіле́ць** | chair | ім. | ч. |
-| **стари́й** | old | прикм. |  |
-| **ша́фа** | wardrobe / cupboard | ім. | ж. |
-| **вікно́** | window | ім. | с. |
-| **вели́кий** | big | прикм. |  |
-| **мале́нький** | small | прикм. |  |
-| **бі́лий** | white | прикм. |  |
-| **оліве́ць** | pencil | ім. | ч. |
-| **ціка́вий** | interesting | прикм. |  |
-| **нудни́й** | boring | прикм. |  |
-| **жі́нка** | woman | ім. | ж. |
-
-### Вирази
-
-| Вираз | Переклад |
-|-------|----------|
-| **Скільки коштує?** | How much does it cost? |
-| **Яка гарна кімната!** | What a nice room! |
-| **Добрий день!** | Good afternoon! |
-| **Дякую** | Thank you |
-| **книжкова полиця** | bookshelf |
+| **тут** | here | присл. |  |
+| **він, вона́, воно́** | he, she, it |  |  |
+| **цей, ця, це** | this |  |  |
+| **той, та, те** | that |  |  |
+| **консульта́нт** | shop assistant | ім. | ч. |
+| **ці** | these | прикм. |  |
+| **ті** | those | прикм. |  |
+| **та** | and | спол. |  |
 
 ### Картки — Flashcards
 
-<FlashcardDeck client:only="react" cards={[{ front: "ось", back: "here is / look", subtitle: "част." }, { front: "там", back: "there", subtitle: "присл." }, { front: "вона́", back: "she", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "воно́", back: "it", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "цей", back: "this (masculine)", subtitle: "прикм." }, { front: "ця", back: "this (feminine)", subtitle: "прикм." }, { front: "той", back: "that (masculine)", subtitle: "прикм." }, { front: "та", back: "that (feminine)", subtitle: "спол." }, { front: "те", back: "that (neuter)", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "су́мка", back: "bag", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "черво́ний", back: "red", subtitle: "прикм." }, { front: "си́ній", back: "blue", subtitle: "прикм." }, { front: "рюкза́к", back: "backpack", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "телефо́н", back: "phone", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "смартфо́н", back: "smartphone", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "крі́сло", back: "armchair", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "кімна́та", back: "room", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "га́рний", back: "nice / beautiful", subtitle: "прикм." }, { front: "нови́й", back: "new", subtitle: "прикм." }, { front: "стіле́ць", back: "chair", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "стари́й", back: "old", subtitle: "прикм." }, { front: "ша́фа", back: "wardrobe / cupboard", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "вікно́", back: "window", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "вели́кий", back: "big", subtitle: "прикм." }, { front: "мале́нький", back: "small", subtitle: "прикм." }, { front: "бі́лий", back: "white", subtitle: "прикм." }, { front: "оліве́ць", back: "pencil", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ціка́вий", back: "interesting", subtitle: "прикм." }, { front: "нудни́й", back: "boring", subtitle: "прикм." }, { front: "жі́нка", back: "woman", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }]} />
+<FlashcardDeck client:only="react" cards={[{ front: "ось", back: "here is, look", subtitle: "част." }, { front: "там", back: "there", subtitle: "присл." }, { front: "тут", back: "here", subtitle: "присл." }, { front: "він, вона́, воно́", back: "he, she, it" }, { front: "цей, ця, це", back: "this" }, { front: "той, та, те", back: "that" }, { front: "консульта́нт", back: "shop assistant", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ці", back: "these", subtitle: "прикм." }, { front: "ті", back: "those", subtitle: "прикм." }, { front: "та", back: "and", subtitle: "спол." }]} />
 
 </TabItem>
 <TabItem label="Зошит">
 
-<GroupSort client:only="react" groups={{"Цей / Той (masculine)": ["стіл", "телефон", "рюкзак", "олівець", "смартфон", "стілець"], "Ця / Та (feminine)": ["книга", "сумка", "кімната", "шафа", "полиця", "жінка"], "Це / Те (neuter)": ["вікно", "поле", "крісло"]}} instruction={"Sort the nouns by the word you use to point at them."} />
+<GroupSort client:only="react" groups={{"Цей (Masculine)": ["стіл", "рюкзак", "стілець", "будинок"], "Ця (Feminine)": ["сумка", "книга", "ручка", "машина"], "Це (Neuter)": ["вікно", "ліжко", "крісло"]}} instruction={"Sort the nouns into the correct gender category based on whether they take **цей**, **ця**, or **це**."} />
 
-<FillIn client:only="react" items={[{"sentence": "Ця сумка ____.", "answer": "нова", "options": ["новий", "нова", "нове"]}, {"sentence": "Цей рюкзак ____.", "answer": "синій", "options": ["синій", "синя", "синє"]}, {"sentence": "Це крісло ____.", "answer": "старе", "options": ["старий", "стара", "старе"]}, {"sentence": "Та книга дуже ____.", "answer": "цікава", "options": ["цікавий", "цікава", "цікаве"]}, {"sentence": "Той стіл ____.", "answer": "великий", "options": ["великий", "велика", "велике"]}, {"sentence": "Те вікно ____.", "answer": "маленьке", "options": ["маленький", "маленька", "маленьке"]}]} instruction={"Fill in the blanks with the correct adjective form."} />
+<FillIn client:only="react" items={[{"sentence": "Який стіл? — Цей ____ той?", "answer": "чи", "options": ["чи", "та", "і"]}, {"sentence": "Яка сумка? — Ця червона ____ та синя?", "answer": "чи", "options": ["чи", "та", "і"]}, {"sentence": "Яке вікно? — Це велике ____ те маленьке?", "answer": "чи", "options": ["чи", "та", "і"]}, {"sentence": "____ стіл тут.", "answer": "Цей", "options": ["Цей", "Той", "Ця"]}, {"sentence": "____ стіл там.", "answer": "Той", "options": ["Цей", "Той", "Ця"]}, {"sentence": "Ось моя книга. А де ____ книга?", "answer": "та", "options": ["та", "ця", "те"]}]} instruction={"Fill in the blanks with the correct pointing word or **чи** (or)."} />
 
-<ErrorCorrection client:only="react" items={[{"sentence": "Цей книга дуже цікава.", "errorWord": "Цей", "correctForm": "Ця", "options": ["Ця", "Це", "Та"], "explanation": "Книга is feminine, so use ця."}, {"sentence": "Це шафа нова, а та стара.", "errorWord": "Це", "correctForm": "Ця", "options": ["Ця", "Цей", "Те"], "explanation": "Шафа is feminine, so use ця."}, {"sentence": "Той крісло дуже старе.", "errorWord": "Той", "correctForm": "Те", "options": ["Те", "Та", "Це"], "explanation": "Крісло is neuter, so use те."}, {"sentence": "Ця рюкзак мій.", "errorWord": "Ця", "correctForm": "Цей", "options": ["Цей", "Це", "Той"], "explanation": "Рюкзак is masculine, so use цей."}, {"sentence": "Яка гарна кімната! Цей кімната велика.", "errorWord": "Цей", "correctForm": "Ця", "options": ["Ця", "Це", "Та"], "explanation": "Кімната is feminine, so use ця."}, {"sentence": "Моє вікно нове, а та вікно старе.", "errorWord": "та", "correctForm": "те", "options": ["те", "той", "це"], "explanation": "Вікно is neuter, so use те."}]} instruction={"Find and correct the mistake in gender agreement."} />
+<TrueFalse client:only="react" items={[{"statement": "«Цей книга» — це правильно.", "isTrue": false, "explanation": "Книга — жіночий рід, тому правильно «ця книга»."}, {"statement": "«Та машина» — це правильно.", "isTrue": true, "explanation": "Машина — жіночий рід, тому «та» — правильна форма."}, {"statement": "«Це крісло» — це правильно.", "isTrue": true, "explanation": "Крісло — середній рід, тому «це» — правильна форма."}, {"statement": "«Той сумка» — це правильно.", "isTrue": false, "explanation": "Сумка — жіночий рід, тому правильно «та сумка»."}, {"statement": "«Ця ручка» — це правильно.", "isTrue": true, "explanation": "Ручка — жіночий рід, тому «ця» — правильна форма."}, {"statement": "«Те стіл» — це правильно.", "isTrue": false, "explanation": "Стіл — чоловічий рід, тому правильно «той стіл»."}]} instruction={"Правда чи ні? (True or false?)"} />
 
-<Translate client:only="react" questions={[{"source": "This table or that table?", "options": [{"text": "Цей стіл чи той стіл?", "correct": true}, {"text": "Ця стіл чи та стіл?", "correct": false}, {"text": "Це стіл чи те стіл?", "correct": false}]}, {"source": "That blue bag", "options": [{"text": "Та синя сумка", "correct": true}, {"text": "Ця синя сумка", "correct": false}, {"text": "Той синій сумка", "correct": false}]}, {"source": "This is my new room.", "options": [{"text": "Це моя нова кімната.", "correct": true}, {"text": "Ця моя нова кімната.", "correct": false}, {"text": "Цей мій новий кімната.", "correct": false}]}, {"source": "This window is big, and that one is small.", "options": [{"text": "Це вікно велике, а те — маленьке.", "correct": true}, {"text": "Ця вікно велика, а та — маленька.", "correct": false}, {"text": "Це вікно велике, а те — маленьке є.", "correct": false}]}, {"source": "Which backpack? This red one?", "options": [{"text": "Який рюкзак? Цей червоний?", "correct": true}, {"text": "Яка сумка? Ця червона?", "correct": false}, {"text": "Що це? Це рюкзак?", "correct": false}]}, {"source": "Look! Here is that old chair.", "options": [{"text": "Ось! Тут той старий стілець.", "correct": true}, {"text": "Там! Ось цей новий стілець.", "correct": false}, {"text": "Ось! Тут та стара шафа.", "correct": false}]}]} instruction={"Choose the correct Ukrainian translation for the English phrase."} />
+<Anagram client:only="react" items={[{"scrambled": "ц е й", "answer": "цей"}, {"scrambled": "т о й", "answer": "той"}, {"scrambled": "о с ь", "answer": "ось"}, {"scrambled": "т у т", "answer": "тут"}, {"scrambled": "т а м", "answer": "там"}, {"scrambled": "я к и й", "answer": "який"}]} instruction={"Складіть слово з літер (Make a word from the letters)."} />
 
-<TrueFalse client:only="react" items={[{"statement": "Та синя сумка коштує двісті гривень.", "isTrue": true, "explanation": "The assistant says: «Та сумка коштує двісті гривень»."}, {"statement": "Цей рюкзак коштує сто гривень.", "isTrue": false, "explanation": "He says it costs 150: «Цей — сто п'ятдесят»."}, {"statement": "Ірина каже: «Це новий смартфон».", "isTrue": false, "explanation": "The assistant (консультант) says it."}, {"statement": "Вдома в Ірини є новий стілець.", "isTrue": true, "explanation": "She says: «Цей стілець новий»."}, {"statement": "Та книжкова полиця нова.", "isTrue": false, "explanation": "She says: «та книжкова полиця стара»."}, {"statement": "Вдома в Ірини є стіл і крісло.", "isTrue": true, "explanation": "She points to them: «Це мій стіл... Те — крісло»."}]} instruction={"True or False? Read the dialogue again to check."} />
+<Unjumble client:only="react" items={[{"words": "сумка? / коштує / Скільки / ця", "answer": "Скільки коштує ця сумка?"}, {"words": "червона? / Ця / Яка?", "answer": "Яка? Ця червона?"}, {"words": "синя. / Ні, / та", "answer": "Ні, та синя."}, {"words": "новий. / стілець / Цей", "answer": "Цей стілець новий."}, {"words": "старий. / той / — / А", "answer": "А той — старий."}, {"words": "мій / Це / стіл.", "answer": "Це мій стіл."}]} instruction={"Складіть правильне речення зі слів (Put the words in the correct order)."} />
 
-<Unjumble client:only="react" items={[{"words": "коштує / Скільки / сумка? / ця", "answer": "Скільки коштує ця сумка?"}, {"words": "смартфон. / новий / Це", "answer": "Це новий смартфон."}, {"words": "маленький. / Цей / а / стіл / — / великий, / той", "answer": "Цей стіл великий, а той — маленький."}, {"words": "маленьке? / Це / велике / чи / те", "answer": "Це велике чи те маленьке?"}, {"words": "стара. / шафа / а / нова, / Ця / — / та", "answer": "Ця шафа нова, а та — стара."}, {"words": "той / олівець / мій, / — / а / Цей / твій.", "answer": "Цей олівець мій, а той — твій."}]} instruction={"Put the words in the correct order to make a sentence."} />
+<OddOneOut client:only="react" items={[{"words": ["стіл", "рюкзак", "книга"], "correct": 2, "explanation": "Книга — жіночий рід (ця), інші — чоловічий рід (цей)."}, {"words": ["сумка", "вікно", "ручка"], "correct": 1, "explanation": "Вікно — середній рід (це), інші — жіночий рід (ця)."}, {"words": ["ліжко", "крісло", "стілець"], "correct": 2, "explanation": "Стілець — чоловічий рід (цей), інші — середній рід (це)."}, {"words": ["цей", "той", "яка"], "correct": 2, "explanation": "Яка — жіночий рід, інші — чоловічий рід."}, {"words": ["ця", "моя", "те"], "correct": 2, "explanation": "Те — середній рід, інші — жіночий рід."}, {"words": ["це", "моє", "мій"], "correct": 2, "explanation": "Мій — чоловічий рід, інші — середній рід."}]} instruction={"Знайдіть зайве слово (Find the odd one out)."} />
 
 </TabItem>
 <TabItem label="Ресурси">
 
-## Підручники (Textbooks)
-
-- [Авраменко О. М. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrajinska-mova-avramenko-2018.pdf#page=124), стор. 124
-- [Большакова І. О. — Українська мова, 2 клас (2019)](https://pidruchnyk.com.ua/uploads/book/2-klas-ukrmova-bolshakova-2019-2.pdf#page=43), стор. 43
-- [Захарійчук М. Д. — Українська мова, 4 клас ()](https://shkola.in.ua/4-klas-ukrainska-mova-zaharijchuk.html), стор. 15
-- [Угор О. М. — Українська мова, 5 клас (2022)](https://shkola.in.ua/5-klas-ukrainska-mova-uhor-2022.html), стор. 32
-- [Авраменко О. М. — Українська мова, 6 клас (2023)](https://pidruchnyk.com.ua/uploads/book/6-klas-ukrmova-avramenko-2023.pdf#page=83), стор. 83
+### Підручники
+- [Літвінова. Українська мова, 6 клас (2023)](https://pidruchnyk.com.ua/2596-ukrmova-6-klas-litvinova.html)
 
 **Статті — Articles**
 

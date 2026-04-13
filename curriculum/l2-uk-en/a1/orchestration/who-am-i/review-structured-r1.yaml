@@ -2,49 +2,52 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 10
-  evidence: Word budget exceeded (1725 words vs 1200 target). All `content_outline`
-    points covered perfectly. Dialogues match the plan exactly.
+  score: 8
+  evidence: 'All planned sections and all 4 planned activity types are present, but
+    section pacing runs long: `Діалоги` is about 389 words vs 350 planned, `Мене звати...`
+    about 312 vs 250, and `Особові займенники`'
 - dimension: 2
   name: Linguistic accuracy
   score: 8
-  evidence: The text claims the dash is "completely silent when speaking... without
-    any extra pause," which contradicts the phonetic rule that the dash represents
-    a logical pause.
+  evidence: Ukrainian text is clean overall, but `- **Вона — українка.** *(I am a
+    Ukrainian woman.)*` has a wrong gloss.
 - dimension: 3
   name: Pedagogical quality
-  score: 8
-  evidence: The module teaches that a dash is used to replace "to be" (Я — студент),
-    but then immediately presents 7 examples without dashes ("Він студент"). The summary
-    includes "Хто ви?" which was not taught an
+  score: 7
+  evidence: '`## Особові займенники` explains pronouns and register but gives no Ukrainian
+    example sentences using them, so this section reads like an inventory rather than
+    presentation-to-practice.'
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: All required vocabulary is integrated seamlessly into contextual sentences
-    and dialogues. Recommended vocabulary is also heavily utilized.
+  score: 9
+  evidence: Required items such as `мене звати`, `як тебе звати?`, `як вас звати?`,
+    `це`, `дуже приємно`, `студент/студентка`, `лікар/лікарка`, `українець/українка`,
+    and `Україна` all appear in prose or dialogue.
 - dimension: 5
   name: Exercise quality
-  score: 9
-  evidence: The `quiz-register-choice` activity is placed directly after the "Це..."
-    section, which does not cover formal/informal registers.
+  score: 10
+  evidence: Marker count matches the 4 `activity_hints`, and each marker is placed
+    after the concept it should test.
 - dimension: 6
   name: Engagement & tone
-  score: 9
-  evidence: Excellent teacher persona and cultural notes, but the conclusion uses
-    banned corporate/gamified language ("You now possess the core tools...").
+  score: 6
+  evidence: 'The prose repeatedly slips into filler/triumphal phrasing: `absolute
+    foundation of every introduction`, `must memorize exactly as it is`, `You now
+    possess the foundational building blocks...`.'
 - dimension: 7
   name: Structural integrity
-  score: 10
-  evidence: Clean markdown, clear H2 headers matching the outline exactly. Word count
-    is strong.
+  score: 8
+  evidence: 'All H2 sections are present and the pipeline word count is safely above
+    target at 1770, but the tip block contains a visible artifact: `After  You should
+    say ...`.'
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Explains the cultural context of handshakes, eye contact, and the literal
-    translation of "мене звати" effectively.
+  evidence: No Russian-centric framing, no cultural misrepresentation, and the module
+    presents Ukrainian on its own terms.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: The dialogues are contextualized beautifully (hostel vs conference) and
-    flow naturally for A1 learners.
+  score: 9
+  evidence: The dialogues use named speakers and plausible first-meeting contexts;
+    Dialogue 1 and 2 are usable A1 conversation models.
 findings: []

@@ -2,48 +2,52 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 6
-  evidence: Missing the `лист` vs `ліс` minimal pair. Violated a strict negative scope
-    constraint by including prefix apostrophe examples (з'їзд, під'їзд) in a caution
-    box. Factually miscounted the mnemonic lette
+  score: 7
+  evidence: 'All planned H2 sections are present and the required/recommended vocabulary
+    is covered, but the plan’s `[–]` / `[=]` notation is absent (search: 0 hits each),
+    `Anna Ohoiko` practice is absent (search:'
 - dimension: 2
   name: Linguistic accuracy
-  score: 7
-  evidence: Used `брать` as a minimal pair example for A1 learners, which is indistinguishable
-    from the Russian verb "to take", creating a severe conceptual Russicism for beginners.
+  score: 6
+  evidence: Critical phonetics error in `“Ukrainian consonants are strictly divided
+    into voiced and voiceless pairs.”` The plan explicitly says sonorants `В,Л,М,Н,Й,Р`
+    are neither voiced nor voiceless.
 - dimension: 3
   name: Pedagogical quality
-  score: 8
-  evidence: Misplaced exercise marker. The explanation of `м'який` is slightly confusing
-    but acceptable. Otherwise, concepts are explained beautifully with solid mechanics.
+  score: 7
+  evidence: The module has plenty of examples, but it teaches a wrong diagnostic in
+    `“hands-on-ears”` instead of the plan’s hand-on-throat vibration test, and the
+    over-absolute voicing explanation can misteach be
 - dimension: 4
   name: Vocabulary coverage
   score: 10
-  evidence: All required and recommended words are seamlessly integrated into the
-    text.
+  evidence: 'All required words appear naturally in prose: `сім''я, день, сіль, м''ясо,
+    п''ять, гарно, риба`. Recommended items also appear: `батько, учитель, дев''ять,
+    комп''ютер, м''який`.'
 - dimension: 5
   name: Exercise quality
-  score: 8
-  evidence: '`match-up-voiced-voiceless` is injected in the wrong section, testing
-    content not covered in its immediate preceding text.'
+  score: 9
+  evidence: All 7 planned markers are present and aligned to the plan. Placement is
+    appropriate for the taught material. The exercise YAML itself is not visible,
+    so only marker alignment can be checked here.
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: Excellent metaphors ("solid brick wall", "gentle instruction") and an
-    encouraging teacher persona.
+  score: 9
+  evidence: The tone is teacherly and mostly substantive, with concrete examples rather
+    than empty hype.
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: Word count (2003) far exceeds the 1200 target. Sections are well-organized
-    and correctly ordered.
+  evidence: All planned sections are present and correctly ordered. Markdown is clean,
+    and the pipeline word count is 1603, which is safely above target.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Phonetics are taught on their own terms. Excellent framing of the Ukrainian
-    Г vs Ґ distinction.
+  evidence: The module treats Ukrainian phonetics on Ukrainian terms and explicitly
+    rejects the Russian form `тварь`.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 8
-  evidence: Dialogues successfully integrate phonetic pairs, but English translations
-    are slightly robotic ("This is a father", "And is a goat there?").
+  score: 9
+  evidence: Dialogues use named speakers and support the lesson’s phonetics focus.
+    They are brief, but acceptable for an A1 pronunciation module.
 findings: []

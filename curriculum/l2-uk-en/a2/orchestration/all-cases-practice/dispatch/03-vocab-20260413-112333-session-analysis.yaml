@@ -1,0 +1,48 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T09-23-b2b8300d.json
+phase: vocab
+prompt_chars: 20897
+response_chars: 1530
+prompt_words: 3365
+response_words: 167
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.0382
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.011
+- name: plan
+  start: 1028
+  length: 19869
+  fraction: 0.9508
+large_sections:
+- plan
+directives_total: 6
+directives_covered: 0
+directives_missed:
+- kind: must
+  text: The preposition «по» requires the Locative case, so you must say «по полях».
+  covered: false
+  coverage_note: 0/8 keywords (0%)
+- kind: must
+  text: Therefore, you must say «багато студентів».
+  covered: false
+  coverage_note: 0/6 keywords (0%)
+- kind: inject_activity
+  text: quiz-identify-which-case-a-highlighted-noun-is-in-and-explain-why-verb-or-preposition-trigger
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-health-cases
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-travel-dialogue
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: error-correction-cases
+  covered: false
+  coverage_note: marker missing

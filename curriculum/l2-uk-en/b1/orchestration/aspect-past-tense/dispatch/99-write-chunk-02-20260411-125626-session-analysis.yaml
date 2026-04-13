@@ -1,0 +1,41 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T10-54-77e06e3c.json
+phase: write-chunk-02
+prompt_chars: 51165
+response_chars: 10953
+prompt_words: 7062
+response_words: 1720
+sections:
+- name: header
+  start: 0
+  length: 444
+  fraction: 0.0087
+- name: skeleton
+  start: 444
+  length: 1992
+  fraction: 0.0389
+- name: prior_summary
+  start: 2436
+  length: 3352
+  fraction: 0.0655
+- name: plan
+  start: 5788
+  length: 17261
+  fraction: 0.3374
+- name: wiki
+  start: 16971
+  length: 27892
+  fraction: 0.5451
+- name: output_spec
+  start: 50941
+  length: 224
+  fraction: 0.0044
+large_sections:
+- wiki
+directives_total: 30
+directives_covered: 29
+directives_missed:
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 4/11 keywords (36%)

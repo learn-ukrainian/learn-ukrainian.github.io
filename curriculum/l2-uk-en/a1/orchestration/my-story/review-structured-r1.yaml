@@ -2,48 +2,53 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 9
-  evidence: The text covers all major sections and vocabulary, but missed the neuter
-    past tense ending `-ло` in the summary table and the feminine form `коли я була
-    маленькою` in the signal words table, both of w
+  score: 7
+  evidence: 'All planned H2 sections are present and the core tense content is covered,
+    but the pacing is far off the plan: the pipeline word count is 2253 vs the 1200
+    target, and `## Dialogues` spends substantial'
 - dimension: 2
   name: Linguistic accuracy
   score: 10
-  evidence: Excellent Ukrainian. Correct use of locative (у Львові, в Одесі) and vocative
-    (Анно). No Surzhyk or calques found.
+  evidence: No Russian characters or clear Ukrainian grammar errors found. Core forms
+    such as “Я народився,” “Зараз я живу,” “Я буду подорожувати,” and “Я працюю вчителькою”
+    are correct.
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: Exceptional pedagogical flow. The inclusion of the Ukrainian school essay
-    structure ("Зачин", "Основна частина", "Кінцівка") is a brilliant teaching device
-    that anchors the lesson.
+  score: 6
+  evidence: Too much English meta-explanation displaces practice. The opener “To share
+    your journey, you need to navigate through time...” and later “A complete life
+    story is never stuck in just one moment of tim
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: All required and recommended vocabulary items (народитися, переїхати,
-    далі, мрія, etc.) are included and used naturally in context.
+  score: 9
+  evidence: 'Required plan vocabulary appears in prose: `народитися`, `жити`, `вчитися`,
+    `переїхати`, `зараз`, `раніше`, `далі`, `розповідати`. Recommended items like
+    `дитинство`, `університет`, `програміст`, `усп'
 - dimension: 5
   name: Exercise quality
   score: 10
-  evidence: Markers match the plan's activity hints and are distributed perfectly.
+  evidence: The four expected exercise markers are present, correctly matched to the
+    plan, and placed after the relevant teaching blocks.
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: Warm, encouraging teacher tone. "Learning a language is about connecting
-    with people..." is a great, natural opener.
+  score: 6
+  evidence: 'The teacher voice is repeatedly diluted by generic motivational prose:
+    “navigate through time,” “This structure is the key to clear storytelling,” and
+    “You now have the linguistic tools...” These line'
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: Exceeds the 1200 word target (1722 words). All headers match the plan.
-    Markdown is perfectly clean.
+  evidence: All planned H2 headings are present in the correct order, markdown is
+    clean, and the module is above the 1200-word minimum.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: References to Ukrainian cities (Lviv, Kyiv, Odesa) and diaspora locations
-    (Toronto) are culturally accurate and appropriate for an L2 curriculum.
+  evidence: No Russocentric framing or cultural inaccuracies found. The module stays
+    within ordinary Ukrainian life-story contexts.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: Dialogues are natural, multi-turn, and clearly demonstrate the grammar
-    patterns in action without sounding robotic.
+  score: 8
+  evidence: 'Named speakers and real life-story situations are strengths, but some
+    exchanges remain interview-like. In the David dialogue, “А що ти будеш робити
+    далі?” is followed by two straight answer lines and '
 findings: []

@@ -2,36 +2,45 @@
   "module": "alternation-vowels",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-10T21:25:59.052060Z",
+  "last_audit": "2026-04-11T15:04:44.057847Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-09T06:09:44.976797Z",
+    "md": "2026-04-11T15:03:48.995656Z",
     "meta": null,
-    "activities": "2026-04-09T06:01:27.437541Z",
+    "activities": "2026-04-11T14:55:07.491175Z",
     "vocabulary": "2026-04-09T06:05:46.466608Z",
     "research": null,
     "plan": "2026-04-04T21:31:33.278306Z"
   },
   "gates": {
     "meta": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Valid Structure"
+      "status": "fail",
+      "violations": 1,
+      "message": "Valid Structure | Lint: 1 Format Errors"
     },
     "lesson": {
       "status": "fail",
       "violations": 3,
-      "message": "4744/4000 (raw: 4813) | engagement: 0/5 | richness: 46% < 95% min (grammar) - REWRITE needed | salad: Phase 7 (Early B1 (B1 M01-M30)): 2 error(s) \u2014 SALAD_EXCESSIVE_INLINE_GLOSSES: paragraph has 5 inline **term** (gloss) markers across 3 sentence(s) \u2014 too dense; move to vocabulary section or convert "
+      "message": "5794/4000 (raw: 5931) | engagement: 4/5 | immersion: 28.5% LOW (target 85-100% (B1.2 Motion)) | richness: 41% < 95% min (grammar) - REWRITE needed"
     },
     "activities": {
-      "status": "fail",
-      "violations": 1,
-      "message": "9/0 | density: 1 < 6"
+      "status": "pass",
+      "violations": 0,
+      "message": "5/0"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
       "message": "41/25"
+    },
+    "vocab_progression": {
+      "status": "warn",
+      "violations": 0,
+      "message": "\u0394 +4 | premature=2 | gaps=0 | well-paced=7",
+      "delta": 4,
+      "premature": 2,
+      "gaps": 0,
+      "well_paced": 7
     },
     "naturalness": {
       "status": "info",

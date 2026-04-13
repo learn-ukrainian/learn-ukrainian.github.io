@@ -2,12 +2,12 @@
   "module": "gerunds-perfective",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-10T21:26:39.130358Z",
+  "last_audit": "2026-04-11T16:10:57.358616Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-10T02:50:04.638015Z",
+    "md": "2026-04-11T16:09:59.038374Z",
     "meta": null,
-    "activities": "2026-04-10T02:46:58.315590Z",
+    "activities": "2026-04-11T15:59:56.199236Z",
     "vocabulary": "2026-04-10T02:47:38.106781Z",
     "research": null,
     "plan": "2026-04-05T19:21:47.246446Z"
@@ -21,17 +21,26 @@
     "lesson": {
       "status": "fail",
       "violations": 3,
-      "message": "4781/4000 (raw: 4860) | engagement: 0/5 | richness: 55% < 95% min (grammar) - REWRITE needed | salad: Phase 8 (Late B1 (B1 M31+)): 1 error(s) \u2014 SALAD_EXCESSIVE_INLINE_GLOSSES: paragraph has 8 inline **term** (gloss) markers across 1 sentence(s) \u2014 too dense; move to vocabulary section or convert "
+      "message": "5397/4000 (raw: 5488) | engagement: 1/5 | immersion: 40.4% LOW (target 85-100% (B1.7-8 Ukraine)) | richness: 53% < 95% min (grammar) - REWRITE needed"
     },
     "activities": {
       "status": "fail",
       "violations": 1,
-      "message": "16/0 | density: 11 < 6"
+      "message": "8/0 | density: 6 < 6"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
       "message": "38/25"
+    },
+    "vocab_progression": {
+      "status": "warn",
+      "violations": 0,
+      "message": "\u0394 -21 | premature=5 | gaps=0 | well-paced=2",
+      "delta": -21,
+      "premature": 5,
+      "gaps": 0,
+      "well_paced": 2
     },
     "naturalness": {
       "status": "info",

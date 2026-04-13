@@ -1,0 +1,92 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T20-52-3a9a0917.json
+phase: vocab
+prompt_chars: 20990
+response_chars: 3499
+prompt_words: 3388
+response_words: 376
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.038
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.011
+- name: plan
+  start: 1028
+  length: 19962
+  fraction: 0.951
+large_sections:
+- plan
+directives_total: 17
+directives_covered: 2
+directives_missed:
+- kind: must
+  text: This happens because the numeral must grammatically agree with the hidden
+    neuter noun «число».
+  covered: false
+  coverage_note: 3/11 keywords (27%)
+- kind: must
+  text: To speak correctly, you must always look at the last number in the sequence.
+  covered: false
+  coverage_note: 0/9 keywords (0%)
+- kind: must
+  text: Whenever you use a number ending in one, the following noun must be in the
+    Nominative Singular case.
+  covered: false
+  coverage_note: 1/12 keywords (8%)
+- kind: must
+  text: However, the numeral "один" itself must change to agree with the gender of
+    the noun.
+  covered: false
+  coverage_note: 2/9 keywords (22%)
+- kind: must
+  text: Whenever your quantity ends in a two, three, or four, the following noun must
+    take the Nominative Plural form.
+  covered: false
+  coverage_note: 3/14 keywords (21%)
+- kind: must
+  text: Whenever you use these numbers, the following noun must be put into the Genitive
+    Plural case.
+  covered: false
+  coverage_note: 0/13 keywords (0%)
+- kind: must
+  text: '" Therefore, they naturally required the following noun to be in the genitive
+    case to show possession, translating to "a group of five of tables.'
+  covered: false
+  coverage_note: 1/14 keywords (7%)
+- kind: must
+  text: You must carefully pay attention to feminine nouns when applying these counting
+    rules, as their forms can cause confusion.
+  covered: false
+  coverage_note: 2/17 keywords (12%)
+- kind: must
+  text: However, when you count five or more, you must use the Genitive Plural.
+  covered: false
+  coverage_note: 2/10 keywords (20%)
+- kind: must
+  text: You must deliberately contrast these forms.
+  covered: false
+  coverage_note: 0/6 keywords (0%)
+- kind: must
+  text: We must also clarify the modern conversational reality of this grammatical
+    rule.
+  covered: false
+  coverage_note: 2/9 keywords (22%)
+- kind: inject_activity
+  text: quiz-what-s-the-date-drill
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-counting-objects-1-2-4-5-rule
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-accusative-genitive-negation
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-qa-quantities-dates
+  covered: false
+  coverage_note: marker missing

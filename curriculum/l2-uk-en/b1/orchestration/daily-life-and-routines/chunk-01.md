@@ -1,42 +1,47 @@
-## Мій день: ранок
+## Мій день: ранок (~750 words total)
 
-Welcome to a new day in Ukraine. When we talk about daily life, we are essentially talking about the concept of **щоденне життя** (daily life) and personal habits. In Ukrainian, these daily routines are powered by reflexive verbs, which are verbs that indicate an action performed on oneself. To see how these verbs work in practice, we will follow a popular and engaging concept: a Ukrainian vlog. Imagine starting the day in the bustling heart of Kyiv, narrating every single step from the exact moment the alarm rings to stepping out the apartment door. This narrative approach allows us to see how native speakers naturally weave together verbs, times, and places in their everyday speech.
+Welcome to our new module on **щоденне життя** (daily life) and the routines that shape our days. When we talk about daily habits, we are constantly describing actions we perform on ourselves. This is why reflexive verbs are the absolute engine of any morning routine in Ukrainian. To see this grammar in action, we are going to follow a "Ukrainian Vlog" concept. We will track a typical morning as a resident starts their day in the bustling heart of Kyiv, balancing their **розпорядок дня** (daily routine) and the morning commute.
 
-Зворотні дієслова є основою будь-якого ранкового розпорядку. Спочатку ми прокидаємося, коли дзвонить будильник, а потім підводимося з ліжка. Далі ми йдемо у ванну кімнату, де вмиваємося водою та зачісуємося перед дзеркалом. Усі ці дієслова закінчуються на частку «-ся», яка показує, що дія спрямована на саму людину. Якщо ми заберемо цю частку, значення кардинально зміниться: ми будемо вмивати когось іншого або зачісувати дитину.
+Кожен новий день починається з того, що гучно дзвонить будильник. Спочатку ми маємо прокидатися, а потім фізично вставати з ліжка, тобто підводитися. Далі ми йдемо у ванну кімнату, щоб вмиватися холодною водою та зачісуватися перед дзеркалом. Усі ці дієслова мають зворотну частку «-ся», тому що дія спрямована на самого суб'єкта. Якщо ми заберемо цю частку, значення зміниться: мити можна посуд, а вмиватися — тільки самому.
 
-> *Reflexive verbs are the foundation of any morning routine. First, we wake up when the alarm rings, and then we get up from bed. Next, we go to the bathroom, where we wash our face with water and comb our hair in front of the mirror. All these verbs end in the particle "-ся", which shows that the action is directed at the person themselves. If we remove this particle, the meaning will change drastically: we will be washing someone else or combing a child's hair.*
+> *Every new day begins with the alarm clock ringing loudly. First, we have to wake up, and then physically get out of bed, that is, to get up. Next, we go to the bathroom to wash ourselves with cold water and comb our hair in front of the mirror. All these verbs have the reflexive particle "-ся" because the action is directed at the subject itself. If we remove this particle, the meaning changes: you can wash the dishes, but you can only wash yourself.*
 
-> — **Влогер:** Я прокидаюся, коли сонце тільки встає, о пів на сьому. *(I wake up when the sun is just rising, at half past six.)*
-> — **Марко:** Прокидайся, вже пізно! *(Wake up, it's already late!)*
-> — **Влогер:** Я збираюся довше, бо ще зачісуюся. *(I take longer to get ready because I am still combing my hair.)*
-> — **Марко:** Не забудь поснідати! Якщо встанеш раніше, ми встигнемо разом поїсти. *(Don't forget to have breakfast! If you get up earlier, we will manage to eat together.)*
-> — **Влогер:** Добре, я вийду з ванної за п'ять хвилин. *(Okay, I will come out of the bathroom in five minutes.)*
-> — **Марко:** Давай, бо я виходжу о восьмій. *(Come on, because I am leaving at eight.)*
+Let's look at how roommates interact during a busy morning. Notice the natural use of imperatives and specific time expressions as our vlogger prepares for the day.
 
-Notice how the roommates use different verb aspects depending on their intention and the immediate context of the morning. When describing a regular daily habit, you must use the imperfective aspect because the action is seen as a continuous or repeating process without a specific end. For instance, you would use it to explain a regular, expected morning occurrence that happens every day.
+> — **Сусід:** Прокидайся, вже о пів на сьому! *(Wake up, it's already half past six!)*
+> — **Влогер:** Я зазвичай встаю пізніше. *(I usually get up later.)*
+> — **Сусід:** Якщо встанеш зараз, ми встигнемо поснідати. *(If you get up now, we will manage to have breakfast.)*
+> — **Влогер:** Добре, але я збираюся довше, бо ще зачісуюся. *(Fine, but I take longer to get ready because I still comb my hair.)*
+> — **Сусід:** Тоді не забувай снідати самостійно. *(Then don't forget to have breakfast on your own.)*
+> — **Влогер:** Домовилися. Завтра я встану раніше, обіцяю. *(Agreed. Tomorrow I will get up earlier, I promise.)*
 
-«Зазвичай я снідаю гарячою кашею.» — *Usually I have hot porridge for breakfast.*
+When discussing our mornings, aspectual contrast is a crucial grammatical tool. We use the imperfective aspect for habitual actions that repeat every day. For example, you might use the verb **снідати** (to have breakfast) to describe your regular dietary habit:
 
-However, when talking about a specific planned action with a clear, successful result, the perfective aspect is strictly required. You would use it to indicate a completed, one-time action in the near future.
+**Зазвичай я снідаю кашею.** — *I usually have porridge for breakfast.*
 
-«Завтра я поснідаю значно раніше.» — *Tomorrow I will have breakfast much earlier.*
+You might also add another routine action using **встигати** (to manage in time):
 
-Understanding this precise aspectual contrast is absolutely crucial for accurately planning your schedule, making promises, and discussing your daily habits with colleagues or friends.
+**Я завжди намагаюся встигати на трамвай.** — *I always try to make it to the tram on time.*
 
-Український сніданок може бути дуже різним, і це часто залежить від того, скільки у вас є вільного часу зранку. Традиційно багато людей готують гарячу кашу з ягодами, горіхами або медом, яка дає багато енергії на весь довгий день. Якщо ж ви дуже поспішаєте і не маєте часу на приготування їжі, можна швидко зробити звичайний бутерброд із сиром, маслом або ковбасою. Звісно, невіддільною частиною сучасного міського життя є міцна чорна кава або ароматний чай. У великих містах, таких як Київ чи Львів, молодь часто купує ці напої у кав'ярнях дорогою на роботу чи навчання.
+However, if you are talking about a specific, planned action for a single occasion, you must switch to the perfective aspect. Focus on the completion of that specific future event:
+
+**Завтра я поснідаю раніше.** — *Tomorrow I will have breakfast earlier.*
+
+Традиційний український сніданок часто буває ситним, але в сучасному місті люди зазвичай обирають щось швидке та просте. На ранковому столі найчастіше з'являється гаряча каша або звичайний бутерброд із сиром та ковбасою. Влітку до свіжої каші обов'язково додають солодкі ягоди, які купують на місцевому ринку. Деякі люди взагалі не можуть їсти відразу після сну, тому їхній сніданок — це лише одна міцна кава. Головне — мати достатньо енергії на весь довгий робочий день.
 
 :::tip
-**Cultural note** — While traditional breakfasts might include heartier meals, the modern urban rhythm in cities like Kyiv often shifts toward a quick coffee and a sandwich on the go.
+**Cultural Note** — While rural traditions favored hearty breakfasts, modern urban Ukrainians often prefer a quick **бутерброд** (sandwich) or oatmeal before rushing to work.
 :::
 
-Once breakfast is successfully finished, it is time to leave the house and face the day. Morning routines in a bustling modern city often involve a bit of a rush, so you will frequently hear people say that they need to hurry to avoid being late for their morning meetings. When it comes to the daily commute, Ukrainian efficiently uses the Instrumental case to describe the specific mode of transportation you choose. You do not use an extra preposition like "by" or "on" as you naturally might in English. Instead, you simply put the vehicle noun directly into the Instrumental case as you head to the office or university.
+After getting ready, it is time to face the city. Moving from home to the workplace involves specific verbs of motion. To describe leaving your residence, you use a specific phrase:
 
-«Я їду трамваєм на роботу.» — *I am going to work by tram.*
+**Виходити з дому.** — *To leave the house.*
 
-«Вона їде автобусом до школи.» — *She is going to school by bus.*
+In a metropolis like Kyiv, people constantly have to **поспішати** (to hurry). When describing how you commute, Ukrainian uses the Instrumental case for the transportation mode. You state your method without needing any prepositions:
 
-«Ми їдемо поїздом в інше місто.» — *We are going to another city by train.*
+**Я їду трамваєм.** — *I go by tram.*
+**Вона їде автобусом.** — *She goes by bus.*
 
-Зазвичай мій розпорядок дня починається дуже рано, коли надворі ще досить тихо. Я прокидаюся о шостій ранку, відразу вимикаю будильник, швидко підводжуся та йду в душ. Там я довго вмиваюся прохолодною водою, щоб остаточно прокинутися, а потім ретельно чищу зуби. Після цього я повертаюся у свою кімнату, одягаюся, зачісуюся і уважно дивлюся у дзеркало. О пів на сьому я йду на кухню, де із задоволенням готую свій ранковий сніданок: варю каву та роблю великий бутерброд. Я ніколи не запізнююся на роботу, тому завжди дуже швидко збираюся. За чверть до восьмої я беру сумку і виходжу з дому. Я часто поспішаю, тому щодня їду на роботу швидкісним трамваєм.
+Зазвичай я прокидаюся о сьомій годині ранку, коли голосно дзвонить телефон. Я швидко підводжуся з ліжка і йду в душ. Там я вмиваюся, чищу зуби та обережно зачісуюся. О пів на восьму я одягаюся у свій діловий одяг. Потім я йду на кухню, де снідаю і паралельно збираюся на роботу. Я ніколи не маю багато вільного часу, тому дуже намагаюся не запізнюватися. Рівно о восьмій годині я взуваюся, беру сумку і швидко виходжу з квартири. Я поспішаю на зупинку, бо о чверть на дев'яту приїжджає мій улюблений трамвай.
 
-<!-- INJECT_ACTIVITY: fill-in-routine-verbs, Complete a daily routine text with correct reflexive and prefixed verb forms, 12 items -->
+<!-- INJECT_ACTIVITY: fill-in-routine-verbs --> [fill-in, Complete a daily routine text with correct reflexive and prefixed verb forms, 12 items]

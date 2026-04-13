@@ -1,35 +1,33 @@
-## Практика: Ким бути?
+## Практика: Ким бути? (~450 words total)
 
-Зараз ми будемо практикувати нові граматичні структури. Let's do a deep dive into transformation drills. We need to practice the mental shift from stating a simple identity to describing an action or a future goal. Візьмемо для прикладу слово «**художник**» *(artist)*.
+When learning to speak about a **професія** (profession), it helps to practice changing your focus from simple identity to active roles. Let's transform short sentences step by step to see how the case changes depending on the verb we choose.
 
-Перший рівень — це проста ідентифікація в теперішньому часі. Ми використовуємо називний відмінок. 
-«Він — художник» *(He is an artist)*.
+Уявімо, що ми говоримо про друга. На першому рівні ми називаємо його рід занять: «Мій друг — художник». Тут ми використовуємо називний відмінок, бо це проста констатація факту. На другому рівні ми розказуємо про його діяльність: «Він працює художником у галереї». Це дієслово вимагає орудного відмінка. На третьому рівні ми говоримо про його плани: «Він хоче стати відомим художником».
 
-Другий рівень — це опис професійної дії. Тут ми маємо дієслово «**працювати**» *(to work)*. Воно вимагає орудного відмінка.
-«Він працює художником» *(He works as an artist)*.
+> *Let's imagine we are talking about a friend. At the first level, we name his occupation: "My friend is an artist." Here we use the Nominative case because it is a simple statement of fact. At the second level, we talk about his activity: "He works as an artist in a gallery." This verb requires the Instrumental case. At the third level, we talk about his plans: "He wants to become a famous artist."*
 
-Третій рівень — це опис амбіцій або планів на майбутнє. Тут ми використовуємо дієслова «**хотіти**» *(to want)* та «**стати**» *(to become)*. Дієслово «стати» завжди вимагає орудного відмінка.
-«Він хоче стати відомим художником» *(He wants to become a famous artist)*.
+This mental shift is a necessity for speaking Ukrainian fluently. You move from the static idea of "who someone is" to the dynamic concept of "what someone does" or "what someone will become."
 
-Ці три рівні показують, як змінюється форма слова. The grammatical trigger is always the verb. If there is no verb (or a hidden present tense "to be"), use Nominative. If you use verbs of becoming or working, use Instrumental.
+:::tip
+**Did you know?**
+When you use verbs like **працювати** (to work) or **стати** (to become), you emphasize the action or the process of acquiring a role, rather than just labeling the person. 
+:::
 
-Тепер давайте поговоримо про нашу родину та друзів. This kind of practice is very important. Narrating the lives of others helps you apply the Instrumental case to third-person descriptions. Ці описи дуже часто зустрічаються на іспитах рівня А2.
+Let's apply this exact logic to talk about other people, such as your family members. You will regularly need to connect someone's current hobbies or studies with their future career.
 
-Ось кілька гарних прикладів:
-«Моя молодша сестра цікавиться медициною, тому вона хоче стати **лікаркою**» *(My younger sister is interested in medicine, so she wants to become a doctor)*.
-«Мій старший брат займається спортом, він мріє бути **тренером**» *(My older brother does sports, he dreams of being a coach)*.
-«Мій тато захоплюється кулінарією, він працює **кухарем**» *(My dad is passionate about cooking, he works as a chef)*.
-«Моя мама любить математику, вона працює **бухгалтером**» *(My mom loves math, she works as an accountant)*.
+Моя сестра цікавиться медициною і мріє стати лікаркою. Вона багато читає і пишається своїми оцінками. Мій брат займається спортом і хоче бути тренером. Наша родина має різний фах. Моя мама працює вчителькою, а мій тато — відомий вчитель математики. Мій дядько вже багато років працює інженером. Його син працює лікарем у новій лікарні.
 
-У цих реченнях ми спочатку називаємо хобі або інтерес людини. Після цього ми пояснюємо її професію або мету. We use the verbs of interest in the first clause. Then we use the verbs of profession in the second clause.
+> *My sister is interested in medicine and dreams of becoming a doctor. She reads a lot and is proud of her grades. My brother does sports and wants to be a coach. Our family has a different profession. My mom works as a teacher, and my dad is a famous math teacher. My uncle has been working as an engineer for many years. His son works as a doctor in a new hospital.*
 
-Діти дуже часто говорять про свої мрії. Їхні бажання можуть швидко змінюватися. Давайте прочитаємо коротку розмову між мамою та її маленьким сином. Цей веселий діалог показує зв'язок між дитячим захопленням та майбутньою професією.
+Notice how the verbs **цікавитися** (to be interested in), **займатися** (to be engaged in), and **пишатися** (to be proud of) use the Instrumental case to describe the activity. Their career goals naturally follow the same pattern.
 
-> — **Дитина:** Мамо, коли я виросту, я буду **ветеринаром**! *(Mom, when I grow up, I will be a veterinarian!)*
-> — **Мама:** Це чудова ідея, синку! Але чому саме ветеринаром? *(That's a great idea, son! But why exactly a veterinarian?)*
-> — **Дитина:** Бо я дуже захоплююся тваринами. Я хочу їм допомагати. *(Because I am very passionate about animals. I want to help them.)*
-> — **Мама:** А ким хоче стати твій друг Сашко? *(And what does your friend Sashko want to become?)*
-> — **Дитина:** Сашко постійно малює. Він мріє стати **архітектором**. *(Sashko draws constantly. He dreams of becoming an architect.)*
-> — **Мама:** Які у вас серйозні плани на майбутнє! *(What serious plans for the future you have!)*
+To see how these concepts flow naturally in real life, let's read a short, playful conversation between a mother and her young child discussing future dreams.
 
-Notice how the child naturally uses the Instrumental case. The causal link between the passion and the goal makes the conversation sound authentic and logical.
+> — **Дитина:** Мамо, коли я виросту, я обов'язково буду ветеринаром! *(Mom, when I grow up, I will definitely be a veterinarian!)*
+> — **Мама:** Це цікава професія. Але чому ти хочеш стати саме ветеринаром? *(That is an interesting profession. But why do you want to become exactly a veterinarian?)*
+> — **Дитина:** Бо я захоплююся тваринами і хочу їм допомагати. *(Because I am passionate about animals and want to help them.)*
+> — **Мама:** Я розумію тебе. Твій дідусь також працював ветеринаром. *(I understand you. Your grandfather also worked as a veterinarian.)*
+
+This dialogue highlights the link between a passion, expressed with the verb **захоплюватися** (to be passionate about), and a future goal. Practice reading this dialogue aloud to get comfortable with the rhythm.
+
+<!-- INJECT_ACTIVITY: fill-in, Answer questions about professions using full Instrumental sentences -->

@@ -28,10 +28,10 @@ Activities have two placement categories:
 The writer placed these markers in the module content. Your inline activities must match them:
 
 - `<!-- INJECT_ACTIVITY: fill-in-add-correct-instrumental-adjective-endings-to-complete-noun-phrases -->`
-- `<!-- INJECT_ACTIVITY: match-up-match-nominative-phrases-to-instrumental-forms -->`
-- `<!-- INJECT_ACTIVITY: quiz-choose-the-correct-pronoun-form-vs-based-on-noun-gender -->`
-- `<!-- INJECT_ACTIVITY: fill-in-build-full-sentences-using-preposition-pronoun-adjective-noun-in-instrumental -->`
-- `<!-- INJECT_ACTIVITY: error-correction-correct-errors-in-instrumental-agreement -->`
+- `<!-- INJECT_ACTIVITY: match-up-nom-ins -->`
+- `<!-- INJECT_ACTIVITY: quiz-pronoun-gender -->`
+- `<!-- INJECT_ACTIVITY: fill-in-full-chains -->`
+- `<!-- INJECT_ACTIVITY: error-correction-find-and-fix-agreement-errors-in-instrumental-phrases -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -96,87 +96,198 @@ required:
 ## Module Content (the prose the learner reads before exercises)
 
 <module_content>
-## Прикметники в орудному відмінку (Adjectives in the Instrumental Case) (~600 words)
+## Прикметники в орудному відмінку (Adjectives in the Instrumental Case)
 
-Ми вже знаємо, як говорити про компанію або інструменти. Ми кажемо «я гуляю з другом» або «я пишу олівцем». Але часто нам потрібно додати цікаві деталі у розмову. Який це друг? Який це олівець? Коли ми додаємо **прикметник** *(adjective)*, ми створюємо повнішу картину. Наприклад, ми використовуємо слово **найкращий** *(the best)* і можемо сказати «з найкращим другом» *(with the best friend)*. Або ми кажемо «новим олівцем» *(with a new pencil)*.
-In Ukrainian grammar, adjectives must always agree with the noun they describe. This fundamental concept is called **узгодження** *(agreement)*. If the main noun is in the Instrumental case, the describing adjective must also take the Instrumental case. It must exactly match the noun's gender and number as well. This means both words change their endings together in the sentence. This is very different from English, where the adjective "new" stays the same everywhere. Understanding this agreement is the key to speaking naturally.
+When we talk about who we are with or what tools we use, the noun gives us the basic information. For example, «з другом» tells us you are with a friend. But usually, we want to add more detail. We want to say you are with your best friend, or writing with a new pen. To do this, we need adjectives in the Instrumental case. In Ukrainian, this process is called agreement («узгодження»). An adjective must always mirror its noun. If the noun is in the Instrumental case, the adjective must also take the Instrumental case. It must also match the noun's gender and number. This creates a strong, connected phrase where every word works together.
 
-Подивімося на прикметники твердої групи. Це слова з твердим приголосним звуком. Наприклад, **новий** *(new)*, **гарний** *(nice, beautiful)* або **старий** *(old)*. Для чоловічого та середнього роду ми використовуємо закінчення **-им**.
-Наприклад, словосполучення «новий друг» змінюється на «з новим другом» в орудному відмінку. Both words get a completely new ending to show their grammatical role: «нов**им** друг**ом**». In English, you only need to add the preposition "with" to the phrase "a new friend". In Ukrainian, the preposition «з» automatically triggers the Instrumental case, which structurally changes both the adjective and the noun.
-Для середнього роду правило працює так само. Ми кажемо: «Ми відпочиваємо під високим небом» *(We are resting under the high sky)*. Слово «високий» отримує закінчення «-им», як і слова чоловічого роду.
+Let's start with the most common adjectives, which belong to the Hard Group. These are adjectives whose dictionary form ends in a hard consonant sound before the ending, like «новий» (new) or «великий» (big). For masculine and neuter nouns, the Instrumental ending for these adjectives is **-им**.
 
-Тепер детально поговоримо про жіночий рід твердої групи. Тут ми маємо красиве і дуже характерне закінчення **-ою**. Воно звучить глибоко, традиційно і мелодійно. Прикметники жіночого роду, такі як **гарна** *(beautiful)* або **нова** *(new)*, змінюються на **гарною** та **новою**.
-Ми часто використовуємо це закінчення, коли говоримо про людей або предмети жіночого роду. Наприклад: «Я йду в кіно з новою подругою» *(I am going to the cinema with a new friend)*. Або: «Мій телефон лежить за великою книжкою» *(My phone is lying behind the big book)*. The ending «-ою» is a very strong and clear phonetic marker of the Instrumental case for feminine nouns and adjectives. It is very hard to confuse it with any other case in the language. Notice how the adjective and noun rhyme: «нов**ою** подруг**ою**».
+Я вчора довго розмовляв з новим другом. Ми сиділи в парку під великим деревом. Мій брат працює з тим відомим лікарем.
 
-В українській мові також є прикметники м'якої групи. Вони мають м'який приголосний звук перед закінченням. Наприклад, **синій** *(blue)*, **літній** *(summer)* або **домашній** *(domestic)*. Для цих прикметників закінчення будуть трохи іншими.
-Для чоловічого та середнього роду ми використовуємо закінчення **-ім**. Слово «синій» стає «синім». Наприклад: «Я пишу нотатки синім олівцем» *(I write notes with a blue pencil)*.
-Для жіночого роду ми маємо цікаве закінчення **-ьою**. Воно дуже схоже на тверде «-ою», але зберігає м'якість основи. Ми кажемо «синьою» або «домашньою». Наприклад: «Вона малює картину синьою ручкою» *(She is drawing a picture with a blue pen)*. The soft sign «ь» specifically shows that the consonant before it must remain soft when pronounced. This is an important distinction from the hard ending «-ою».
+> *Yesterday I talked for a long time with a new friend. We sat in the park under a big tree. My brother works with that famous doctor.*
 
-В українських школах діти вивчають ці граматичні правила у четвертому класі (як у підручнику Захарійчук, с. 92). Для тих, хто вивчає українську як іноземну, дуже важливо чітко запам'ятати ці базові патерни.
-Here is a quick structural summary of the patterns for L2 learners. For masculine and neuter adjectives, use **-им** for hard stems and **-ім** for soft stems. For feminine adjectives, use **-ою** for hard stems and **-ьою** for soft stems.
-Порівняймо ці форми на живій практиці. Ми можемо довго розмовляти «з добрим сусідом» *(with a kind neighbor)* — це тверда група. Або ми розмовляємо «з давнім знайомим» *(with an old acquaintance)* — це м'яка група. Practice these adjective and noun pairings together frequently to make them sound completely natural in your own speech.
+Notice how Ukrainian marks every word in the phrase. In English, you say "with a new friend," changing only the preposition. In Ukrainian, it is «з нов**им** друг**ом**». Both the adjective and the noun show the Instrumental case.
+
+For feminine nouns, the Hard Group adjective ending is very distinct. It takes the ending **-ою**. This creates a beautiful, echoing sound when paired with a feminine noun, which often also ends in **-ою**.
+
+Вона завжди гуляє з гарною собакою. Я люблю пити каву з холодною водою. Кіт спить за великою книжкою.
+
+> *She always walks with a beautiful dog. I like to drink coffee with cold water. The cat is sleeping behind a big book.*
+
+Forms like «гарною», «новою», and «великою» are unmistakable. When you hear that «ою» sound repeated across the phrase, like in «з нов**ою** подруг**ою**», you instantly know it is the Instrumental case. It is one of the most recognizable patterns in the language.
+
+:::info
+**Grammar box**
+Remember that the preposition «з» means "with" when it is followed by the Instrumental case. When building these phrases, make sure the adjective and the noun both use their specific Instrumental endings.
+:::
+
+Now let's look at the Soft Group. These are adjectives like «синій» (blue) or «літній» (summer). Because their stem ends in a soft consonant, their Instrumental endings shift slightly. For masculine and neuter nouns, the ending becomes **-ім**.
+
+Я малюю небо синім олівцем. Ми насолоджуємося теплим літнім вечором.
+
+> *I am drawing the sky with a blue pencil. We are enjoying a warm summer evening.*
+
+For feminine nouns, the Soft Group adjective takes the ending **-ьою**. This preserves the softness of the consonant before adding the familiar «ою» sound. So, «синя» becomes «синь**ою**», and «домашня» becomes «домашнь**ою**». Compare this to the hard ending: «з новою машиною» versus «із синьою машиною».
+
+Ukrainian students formally learn these exact adjective declension tables in the fourth grade. The core pattern they memorize is straightforward. For masculine and neuter nouns, you choose between **-им** (hard) and **-ім** (soft). For feminine nouns, you choose between **-ою** (hard) and **-ьою** (soft).
+
+Сьогодні я йду на каву з добрим сусідом. А завтра я зустрічаюся з давнім знайомим. Ми будемо говорити українською мовою.
+
+> *Today I am going for coffee with a kind neighbor. And tomorrow I am meeting with an old acquaintance. We will speak the Ukrainian language.*
+
+Notice the contrast between «з добрим сусідом» and «з давнім знайомим». The hard and soft groups simply offer two parallel tracks for making your descriptions richer and more precise.
 
 <!-- INJECT_ACTIVITY: fill-in-add-correct-instrumental-adjective-endings-to-complete-noun-phrases -->
 
 ## Присвійні та вказівні займенники (Possessive and Demonstrative Pronouns)
 
-Зараз ми поговоримо про присвійні займенники. Це такі слова, як **мій** *(my)*, **твій** *(your)* та **свій** *(one's own)*. В орудному відмінку вони мають спеціальні форми для чоловічого та середнього роду. Ми використовуємо закінчення **-їм**. Отже, ми кажемо «з моїм другом» *(with my friend)* або «з твоїм братом» *(with your brother)*. Для жіночого роду ми маємо красиве закінчення **-єю**. Ми кажемо «з моєю мамою» *(with my mom)* або «з твоєю сестрою» *(with your sister)*. These three pronouns behave very similarly to adjectives. However, they feature a unique «ї» or «є» sound right before the ending. This makes them sound very melodic. Займенник «свій» працює так само. Наприклад: «Я пишаюся своєю сестрою» *(I am proud of my sister)*. Або: «Він працює зі своїм батьком» *(He is working with his father)*. They perfectly match the gender and case of the noun they describe. Remember to always change both the pronoun and the noun together.
+Now that you know how adjectives work in the Instrumental case, let us look at possessive pronouns. The three most common ones are **мій** (my), **твій** (your), and **свій** (one's own). They behave very much like adjectives, but they have a unique «ї» or «є» sound in their stems when they change. For masculine and neuter nouns, they take the ending **-їм**: «моїм», «твоїм», «своїм». For feminine nouns, they take the ending **-єю**: «моєю», «твоєю», «своєю».
 
-Тепер розглянемо займенники **наш** *(our)* та **ваш** *(your)*. Вони поводяться як звичайні прикметники твердої групи. Для чоловічого та середнього роду ми маємо закінчення **-им**. Ми кажемо «з нашим сусідом» *(with our neighbor)* або «з вашим сином» *(with your son)*. Для жіночого роду ми використовуємо стандартне закінчення **-ою**. Наприклад: «Ми розмовляємо з вашою вчителькою» *(We are talking with your teacher)*. Або: «Вони стоять за нашою школою» *(They are standing behind our school)*. However, the pronoun **їхній** *(their)* is different. It belongs to the soft group of adjectives. Тому ми кажемо «з їхнім братом» *(with their brother)* та «з їхньою донькою» *(with their daughter)*. In Ukrainian, it is standard and grammatically correct to decline the word for "their" just like an adjective. You might sometimes hear people use the invariable form «їх» instead. This is a common mistake influenced by Russian grammar. Always use the fully declined forms like «їхнім» and «їхньою» to speak clean and natural Ukrainian.
+Я часто гуляю з моїм найкращим другом. Минулого тижня я познайомився з твоєю старшою сестрою. Я дуже пишаюся своєю сестрою. Мій брат любить подорожувати зі своєю сім'єю.
 
-В українській мові є два присвійні займенники, які ніколи не змінюються. Це слова **його** *(his)* та **її** *(her)*. When these words act as possessive pronouns, they completely ignore the case of the surrounding words. Вони залишаються однаковими в усіх відмінках. Якщо ми говоримо про друга чоловіка, ми кажемо «з його другом» *(with his friend)*. Займенник «його» не отримує жодного нового закінчення. Якщо ми говоримо про сестру жінки, ми кажемо «з її сестрою» *(with her sister)*. Слово «її» також залишається незмінним. This rule is incredibly important because it is a very frequent source of errors for learners. Many students try to invent forms like «йогом» or «їєю» by analogy with other pronouns. Це велика граматична помилка. Simply memorize that «його» and «її» are locked in their base forms. Ми завжди кажемо «за його будинком» *(behind his house)*. Або ми кажемо «під її столом» *(under her table)* без жодних змін займенника.
+> *I often walk with my best friend. Last week I met your older sister. I am very proud of my sister. My brother likes to travel with his family.*
 
-Наостанок ми вивчимо важливі вказівні займенники. Це слова **цей** *(this)* та **той** *(that)*. Вони дуже часто використовуються в орудному відмінку для вказівки на місце або час. Займенник «цей» змінюється на **цим** для чоловічого та середнього роду. Для жіночого роду він змінюється на **цією**. Наприклад, ми можемо сказати «за цим будинком» *(behind this building)*. Або ми кажемо «перед цією машиною» *(in front of this car)*. Займенник «той» має схожі форми. Він змінюється на **тим** та **тією**. Ми кажемо «під тим деревом» *(under that tree)* або «за тією ялинкою» *(behind that spruce)*. These demonstrative pronouns are also essential for common temporal expressions. We frequently use the phrase «цим вечором» *(this evening)* to describe when an event happens. Ми також часто кажемо «тим часом» *(meanwhile)* у розповідях. Завжди узгоджуйте ці займенники з іменниками, щоб ваша мова звучала правильно та природно.
+Notice how the pronoun «свій» is used here. When the subject of the sentence owns the object, Ukrainian naturally prefers «свій» over «його» or «її». 
 
-<!-- INJECT_ACTIVITY: match-up-match-nominative-phrases-to-instrumental-forms -->
-<!-- INJECT_ACTIVITY: quiz-choose-the-correct-pronoun-form-vs-based-on-noun-gender -->
+The possessive pronouns for "our" and "your" (plural/formal) are much simpler. The pronouns **наш** and **ваш** act exactly like standard hard group adjectives. For masculine and neuter nouns, you add **-им**: «нашим», «вашим». For feminine nouns, you add **-ою**: «нашою», «вашою».
+
+Ми з радістю працюємо над нашим спільним проєктом. Я дуже задоволена вашою новою ідеєю. Це допоможе нашій команді працювати краще.
+
+> *We gladly work on our joint project. I am very satisfied with your new idea. This will help our team work better.*
+
+The word for "their" is **їхній**. It acts like a soft group adjective, so it takes the endings **-ім** and **-ьою**.
+
+Я вчора розмовляв з їхнім сусідом. Вони часто гуляють із їхньою маленькою собакою.
+
+> *Yesterday I talked with their neighbor. They often walk with their little dog.*
+
+:::note
+**Decolonization Note**
+Always use the fully declinable pronoun **їхній** (their). You might hear some people use the invariable word «їх» (as in «з їх другом»), but this is a direct Russian influence. In standard Ukrainian, «їхній» changes its endings to match the noun perfectly, just like any other adjective: «з їхнім другом», «за їхньою школою».
+:::
+
+Not all pronouns change their form. The pronouns **його** (his/its) and **її** (her) are completely invariable when they show possession. This means they look exactly the same in every single case, including the Instrumental. You do not need to add any endings to them.
+
+Вона вчора ходила в кіно з його другом. Ми сиділи в кафе з її сестрою. Я хочу поговорити з його новим учителем.
+
+> *She went to the movies yesterday with his friend. We sat in the cafe with her sister. I want to talk with his new teacher.*
+
+This is a common point of confusion for learners. Because words like «моєю» and «твоєю» change so clearly, students sometimes try to invent forms like "йогом" or "їєю". These words do not exist. The pronoun stays frozen, while the adjective and noun around it still take their proper Instrumental endings: «з його **новим** друг**ом**».
+
+Finally, let us look at demonstrative pronouns: **цей** (this) and **той** (that). These words are crucial for pointing out specific people, objects, or locations in space. For «цей», the Instrumental forms are **цим** (masculine/neuter) and **цією** (feminine). For «той», the forms are **тим** and **тією**.
+
+Мій кіт любить спати за цим великим будинком. А собака часто ховається під тією старою ялинкою. Я не хочу розмовляти з тим чоловіком.
+
+> *My cat likes to sleep behind this big building. And the dog often hides under that old spruce. I do not want to talk with that man.*
+
+These pronouns are also very common in temporal expressions. When you want to say "this evening," you simply put both words in the Instrumental case: «цим вечором».
+
+Цим вечором ми йдемо в театр. Тим часом мій брат готує вечерю вдома.
+
+> *This evening we are going to the theater. Meanwhile, my brother is making dinner at home.*
+
+<!-- INJECT_ACTIVITY: match-up-nom-ins -->
+<!-- INJECT_ACTIVITY: quiz-pronoun-gender -->
 
 ## Повні словосполучення в орудному відмінку (Full Instrumental Phrases)
 
-Тепер ми можемо будувати довгі та красиві фрази. Українська мова дуже логічна. Уявіть, що ваші слова — це великий ланцюг. When we build a full phrase, we create a strict "Agreement Chain". Every single descriptive word in this chain must share the same case, gender, and number as the noun. The classic and most useful pattern has four parts: a preposition, a pronoun, an adjective, and a noun. Подивіться уважно на цю фразу: «з моїм найкращим другом» *(with my best friend)*. Спочатку ми маємо прийменник **з** *(with)*. Далі йде присвійний займенник **моїм** *(my)*. Потім ми додаємо прикметник **найкращим** *(best)*. І наприкінці стоїть іменник **другом** *(friend)*. Усі три слова (займенник, прикметник, іменник) стоять в орудному відмінку чоловічого роду. Це ідеальний граматичний ланцюг. You cannot mix cases or drop the endings for the adjectives. Every link in the chain must perfectly agree to make the sentence correct and natural.
+В українській мові слова в реченні завжди працюють разом. Коли ми будуємо повне словосполучення з прийменником, займенником, прикметником та іменником, ми створюємо граматичний ланцюжок. Кожна ланка в цьому ланцюжку повинна стояти в орудному відмінку. Стандартна модель виглядає так: прийменник + займенник + прикметник + іменник.
 
-Давайте порівняємо чоловічий та жіночий ланцюги. Вони звучать по-різному, але завжди мають однакову логіку. Чоловічий ланцюг має багато звуків «и» та «м». Наприклад: «Я розмовляю з моїм новим сусідом» *(I am talking with my new neighbor)*. Тут ми чуємо закінчення **-ім**, **-им**, **-ом**. Це звучить дуже твердо і послідовно. Жіночий ланцюг звучить зовсім інакше. Він дуже ритмічний і має багато голосних звуків «о» та «е». Ми кажемо: «Я говорю з моєю новою сусідкою» *(I speak with my new female neighbor)*. Тут ми використовуємо закінчення **-єю**, **-ою**, **-ою**. Це дуже гармонійний і мелодійний патерн. Notice how the feminine chain naturally flows because of the repeated rhythmic vowel sounds. Кожне слово в ланцюгу обов'язково змінюється. Ви ніколи не можете сказати «з мій новою сусідкою» або «з моєю новий сусідкою». Ви повинні змінити всі слова.
+> *In Ukrainian, words in a sentence always work together. When we build a full phrase with a preposition, a pronoun, an adjective, and a noun, we create a grammatical chain. Every link in this chain must stand in the Instrumental case. The standard model looks like this: preposition + pronoun + adjective + noun.*
 
-Ці граматичні ланцюги працюють для всіх функцій орудного відмінка. Ви вже знаєте, що орудний відмінок показує компанію, місце або інструмент. Правила узгодження діють усюди однаково. Якщо ми говоримо про компанію, ми використовуємо прийменник «з». Наприклад: «Я обідаю з моєю старшою сестрою» *(I have lunch with my older sister)*. Якщо ми говоримо про місце, ми часто використовуємо прийменники «за» *(behind)* або «під» *(under)*. Наприклад: «Наш собака спить за нашим великим будинком» *(Our dog sleeps behind our big house)*. The same strict agreement chain applies when we talk about instruments or tools. We simply do not use a preposition here. Ми кажемо: «Я пишу цією новою ручкою» *(I am writing with this new pen)*. Граматика завжди залишається стабільною.
+Я часто гуляю з моїм найкращим другом у нашому парку. Це мій улюблений час для відпочинку. Ми довго сидимо під старим високим деревом і розмовляємо. Я завжди ділюся з ним моїм новим планом.
 
-В українській мові є популярні сталі фрази, які використовують цей відмінок. Вони допомагають говорити більш природно та швидко. Ми часто використовуємо вказівні займенники для вираження часу. Наприклад, ми кажемо **тим часом** *(meanwhile)*, коли розповідаємо цікаву історію або новини. Або ми кажемо **цими днями** *(these days)*, коли розповідаємо про останні події. We also have standard daily collocations that use full instrumental chains. Ми виконуємо улюблену роботу **з великим задоволенням** *(with great pleasure)*. Ми завжди кажемо хорошим друзям: «Я зробив це **з вашою допомогою** *(with your help)*». Це дуже корисні фрази для щоденного та ввічливого спілкування. Memorize these common chunks, and your spoken Ukrainian will sound much more authentic and fluid.
+> *I often walk with my best friend in our park. This is my favorite time for rest. We sit for a long time under an old tall tree and talk. I always share my new plan with him.*
 
-<!-- INJECT_ACTIVITY: fill-in-build-full-sentences-using-preposition-pronoun-adjective-noun-in-instrumental -->
+Notice how every word in the phrase changes to match the noun. The preposition «з» tells us to use the Instrumental case for companionship. Thus, the pronoun becomes «моїм», the adjective becomes «найкращим», and the masculine noun becomes «другом».
+
+Звучання цього ланцюжка повністю залежить від роду головного іменника. Чоловічий та середній рід використовують закінчення «-ім», «-им» та «-ом». Жіночий рід має інший ритм, де переважають звуки «о» та «е». А тепер подивіться на типовий жіночий ланцюжок.
+
+Учора я познайомився з моєю новою сусідкою. Вона приїхала сюди зі своєю маленькою донькою. Ми довго стояли перед нашою старою школою. Потім ми пили чай з її старшою сестрою.
+
+> *Yesterday I met my new neighbor. She came here with her little daughter. We stood for a long time in front of our old school. Then we drank tea with her older sister.*
+
+The feminine chain, such as «з моєю новою сусідкою», uses a rhythmic repetition of «-єю» and «-ою». The repeated vowel sounds make these phrases incredibly easy to pronounce and remember once you catch the general pattern.
+
+:::note
+**Quick tip**
+When you speak, try to memorize the whole chain as one continuous block of sound. Do not think about the grammar of each word separately. Just practice saying «з моєю новою сусідкою» out loud until it feels natural.
+:::
+
+Це граматичне правило працює для кожної функції орудного відмінка. Неважливо, чи ви говорите про компанію, місце або інструмент. Усі слова в групі повинні мати однакову форму.
+
+Мій кіт часто спить за нашим великим будинком. А мій старший брат завжди пише цією новою ручкою. Я люблю малювати моїм синім олівцем у зошиті. Усі ці маленькі речі роблять мій день кращим.
+
+> *My cat often sleeps behind our big building. And my older brother always writes with this new pen. I like to draw with my blue pencil in the notebook. All these little things make my day better.*
+
+As you can see, the preposition «за» triggers the Instrumental case for location, giving us the full chain «за нашим великим будинком». The tool function works entirely without a preposition, so «ця нова ручка» directly becomes «цією новою ручкою».
+
+Орудний відмінок також дуже часто зустрічається в сталих виразах. Це фрази, які носії мови використовують щодня. Два дуже популярні вирази часу використовують вказівні займенники: «тим часом» та «цим разом». Їх легко запам'ятати.
+
+Тим часом ми готуємо смачну вечерю на кухні. Цим разом я зроблю все абсолютно правильно. Я роблю цю роботу з великим задоволенням. Ми швидко закінчимо проєкт з вашою допомогою.
+
+> *Meanwhile, we are preparing a tasty dinner in the kitchen. This time I will do everything absolutely right. I do this work with great pleasure. We will quickly finish the project with your help.*
+
+Phrases like «з великим задоволенням» (with great pleasure) and «з вашою допомогою» (with your help) bridge the gap between abstract grammar rules and fluent speech. You should memorize these collocations as fixed blocks of vocabulary to sound more natural.
+
+<!-- INJECT_ACTIVITY: fill-in-full-chains -->
 
 ## Практика: Опиши свій день (Practice: Describe Your Day)
 
-Сьогодні ми будемо багато практикувати. Ми будемо описувати свій день. Коли ми розповідаємо історії, ми завжди згадуємо інших людей або речі. Використовуйте повні фрази в орудному відмінку для цього. Прочитаймо сторінку зі щоденника. Дівчина описує свій ідеальний вихідний день. Вона використовує багато прикметників та займенників, щоб зробити текст цікавим. Зверніть увагу на закінчення слів. Усі слова в ланцюгу обов'язково мають однаковий відмінок. Це створює гарну гармонію в реченні.
+Сьогодні ми поєднаємо всі ці знання в одній історії. Уявіть, що ви пишете сторінку у свій щоденник про ідеальний вихідний. Зверніть увагу, як орудний відмінок допомагає описати компанію, місце та навіть атмосферу цього дня.
 
-> — **Щоденник:** Сьогодні був просто чудовий день. Я снідала зі своєю найкращою подругою в нашому улюбленому кафе. Ми розмовляли про все на світі. Ми пили каву з гарячим молоком і багато сміялися. Потім я довго гуляла великим міським парком. Я стояла за тим старим дерев'яним мостом і дивилася на воду. Там дуже красиво восени. Вечір я провела з моїм коханим чоловіком за дуже романтичною вечерею. Ми смачно їли і говорили про наші нові плани на майбутнє. Я відчуваю себе дуже щасливою людиною.
+> *Today we will combine all this knowledge in one story. Imagine you are writing a page in your diary about a perfect weekend. Notice how the Instrumental case helps describe the company, the location, and even the atmosphere of this day.*
 
-Цей короткий текст показує, як ми природно використовуємо граматичні ланцюги кожного дня. «Зі своєю найкращою подругою» — це ідеальний приклад узгодження. Кожне слово стоїть в орудному відмінку жіночого роду і має типове закінчення. «З моїм коханим чоловіком» — це чоловічий рід. Усі закінчення звучать чітко і твердо. Ви можете спробувати написати такий щоденник самостійно.
+Сьогодні був просто чудовий день. Зранку я смачно снідала зі своєю найкращою подругою в новому кафе. Ми розмовляли про все на світі з великим задоволенням. Потім я гуляла тихим парком за цим старим кам'яним мостом. Була чудова погода, і я милувалася цією ранньою весною під високим синім небом. Вечір я провела з моїм коханим чоловіком за дуже романтичною вечерею. Ми насолоджувалися нашою смачною їжею, спокійною музикою та приємною бесідою.
 
-А тепер послухаймо розмову двох хороших друзів. Вони давно не бачилися і зустрілися на вулиці. Вони запитують одне одного про останні новини. Зверніть особливу увагу на займенники **його** *(his)* та **її** *(her)* у їхній розмові. Remember that these specific possessive pronouns never change their form, even in the Instrumental case. They are invariable in Ukrainian.
+> *Today was simply a wonderful day. In the morning, I had a delicious breakfast with my best friend in a new cafe. We talked about everything in the world with great pleasure. Then I walked through the quiet park behind this old stone bridge. The weather was wonderful, and I admired this early spring under the high blue sky. I spent the evening with my beloved husband at a very romantic dinner. We enjoyed our tasty food, calm music, and pleasant conversation.*
 
-> — **Андрій:** Привіт, Богдане! Як твої справи? З ким ти вчора ходив у кіно?
-> — **Богдан:** Привіт, Андрію! Все добре. Я був з моїм новим колегою. Його звати Марко. Він щойно почав працювати з нами.
-> — **Андрій:** Класно. А якою машиною ви їхали в центр? Вашою новою Хондою?
-> — **Богдан:** Ні, ми їхали його старою Тойотою. Наша машина зараз у ремонті, тому він запропонував поїхати разом.
-> — **Андрій:** Зрозуміло. А де ви вечеряли перед фільмом?
-> — **Богдан:** За тим великим супермаркетом є дуже гарне кафе. Ми вечеряли там перед сеансом.
+У реальному житті ви будете використовувати ці ланцюжки, щоб відповідати на питання «з ким?» або «чим?». Ставити запитання в орудному відмінку так само важливо, як і відповідати на них. Тепер давайте послухаємо, як звучать ці фрази в живій розмові двох друзів. Зверніть особливу увагу на незмінний займенник «його» та узгодження прикметників.
 
-Ви бачите різницю в цій розмові? Ми кажемо «з моїм новим колегою». Тут усі слова змінюються за правилами. Але ми кажемо «його старою Тойотою». Займенник «його» залишається незмінним. Змінюються лише прикметник «старою» і іменник «Тойотою». Це дуже важливо пам'ятати, коли ви говорите про інших людей та їхні речі.
+> *In real life, you will use these chains to answer questions like "with whom?" or "with what?". Asking questions in the Instrumental case is just as important as answering them. Now let's listen to how these phrases sound in a live conversation between two friends. Pay special attention to the invariable pronoun "його" (his) and the agreement of adjectives.*
 
-Коли ви активно вивчаєте українську мову, дуже важливо говорити природно. Іноді студенти роблять типові помилки на початку. They often forget to change the pronoun and adjective together with the noun in the sentence. Sometimes learners use endings from other Slavic languages by mistake. In Ukrainian, the Instrumental case has very distinct, melodic, and beautiful sounds. Для чоловічого роду ми завжди використовуємо закінчення **-им** або **-ім**. Ми кажемо тільки «з моїм новим другом». Це звучить дуже по-українськи і граматично правильно. Для жіночого роду ми маємо закінчення **-ою** або **-єю**. Ми завжди кажемо «з моєю новою сусідкою». Використання правильних українських закінчень показує вашу велику повагу до мови. Це справжній маркер вашої української ідентичності та культури. Ваша мова звучить автентично, коли ви чітко дотримуєтеся цих правил. Завжди перевіряйте свій граматичний ланцюг у розмові. Не поспішайте, коли будуєте нову фразу. З часом ви будете говорити швидко і без помилок. Ваші українські друзі будуть приємно здивовані вашою правильною вимовою. Практика допомагає зробити ці правила автоматичними.
+> — **Андрій:** Привіт! З ким ти вчора ходив у кіно? *(Hi! Who did you go to the movies with yesterday?)*
+> — **Богдан:** Привіт. Я ходив туди з моїм новим колегою. *(Hi. I went there with my new colleague.)*
+> — **Андрій:** О, цікаво. А якою машиною ви туди їхали? *(Oh, interesting. And by what car did you go there?)*
+> — **Богдан:** Ми їхали його старою Тойотою. *(We went by his old Toyota.)*
+> — **Андрій:** Ви сиділи перед тим великим екраном? *(Did you sit in front of that big screen?)*
+> — **Богдан:** Ні, ми сиділи за їхнім останнім рядом. *(No, we sat behind their last row.)*
+> — **Андрій:** А після кіно ви гуляли містом? *(And after the movies, did you walk around the city?)*
+> — **Богдан:** Так, ми зустрілися з нашою спільною знайомою. *(Yes, we met with our mutual acquaintance.)*
+> — **Андрій:** З тією високою дівчиною? *(With that tall girl?)*
+> — **Богдан:** Саме так. Вона прийшла зі своїм маленьким сином. *(Exactly. She came with her little son.)*
 
-<!-- INJECT_ACTIVITY: error-correction-correct-errors-in-instrumental-agreement -->
+Коли ви тільки починаєте будувати такі довгі фрази, дуже легко зробити помилку. Найважливіше правило — уникати закінчень, які не існують в українській мові. Ніколи не використовуйте закінчення «-ым» для чоловічого роду або «-ой» для жіночого. Це груба помилка та ознака суржику. Пам'ятайте також, що слова «його» та «її» ніколи не змінюються, коли означають приналежність. Навіть якщо іменник стоїть в орудному відмінку, ми кажемо «з його братом», а не «з йоговим братом». А от слово «їхній» — це повноцінний прикметник, тому воно відмінюється: «з їхніми друзями».
+
+> *When you are just starting to build such long phrases, it is very easy to make a mistake. The most important rule is to avoid endings that do not exist in the Ukrainian language. Never use the "-ым" ending for the masculine gender or "-ой" for the feminine. This is a gross mistake and a sign of Surzhyk. Also remember that the words "його" (his) and "її" (her) never change when they indicate possession. Even if the noun is in the Instrumental case, we say "з його братом", not "з йоговим братом". But the word "їхній" (their) is a full-fledged adjective, so it declines: "з їхніми друзями".*
+
+:::tip
+**Did you know?**
+Proper Instrumental case endings are a strong marker of natural Ukrainian speech. Saying «з моїм новим другом» (with the clear «-им» ending) immediately sounds authentic and educated. Similarly, the feminine «-ою» ending in «з гарною дівчиною» creates a rhythmic flow that is uniquely Ukrainian.
+:::
+
+<!-- INJECT_ACTIVITY: error-correction-find-and-fix-agreement-errors-in-instrumental-phrases -->
 
 ## Підсумок
 
-Коротко повторімо головні правила, які ми сьогодні вивчили. Орудний відмінок має дуже чіткі закінчення. First, hard adjectives always take **-им** for masculine and neuter, and **-ою** for feminine (з новим, з новою). Second, soft adjectives take **-ім** and **-ьою** (з синім, із синьою). Third, possessive pronouns change too: «мій» becomes **моїм** or **моєю**, and «наш» becomes **нашим** or **нашою**. Fourth, remember the golden rule about **його** and **її**. These pronouns never change their form in the Instrumental case. Нарешті, завжди будуйте повні граматичні ланцюги. Усі слова у фразі «з моїм найкращим другом» повинні стояти в орудному відмінку. 
+Let's review the core rules for building full noun phrases in the Instrumental case.
 
-Тепер перевірте себе. Спробуйте дати відповіді на ці три запитання:
-1. How do you say "with our new neighbor (f)" in Ukrainian?
-2. Which possessive pronouns never change in the Instrumental case?
-3. What is the correct ending for a soft masculine adjective?
+1. **Hard adjectives** take the endings **-им** (masculine/neuter) and **-ою** (feminine), as in «з новим другом» or «з гарною дівчиною».
+2. **Soft adjectives** take the endings **-ім** and **-ьою**, as in «з останнім клієнтом» or «за синьою машиною».
+3. **Possessive pronouns** decline similarly to adjectives. The pronoun **мій** becomes **моїм** or **моєю**, and **наш** becomes **нашим** or **нашою**.
+4. The possessive pronouns **його** and **її** never change. You simply attach them to the declined noun: «з його братом».
+5. Always use **full chains of agreement**, where every word matches the case of the noun: «з моїм найкращим другом».
 
-Ваша українська мова стає дедалі кращою!
+Тепер ви можете легко розповідати про своїх друзів, колег та родичів. Головне — завжди пам'ятати про правильні закінчення.
 
+> *Now you can easily talk about your friends, colleagues, and relatives. The main thing is to always remember the correct endings.*
+
+:::info
+**Self-check:**
+1. How do you say "with our new neighbor (f)"?
+2. Which pronoun never changes in the Instrumental case?
+3. What is the ending for a soft masculine adjective?
+:::
 </module_content>
 
 ---

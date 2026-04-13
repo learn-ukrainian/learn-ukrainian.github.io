@@ -1,4 +1,4 @@
-<!-- version: 1.1.0 | updated: 2026-03-31 -->
+<!-- version: 1.2.0 | updated: 2026-04-12 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -11,6 +11,35 @@ Generate an `activities/many-things.yaml` file for module **13: Many Things** (a
 
 ---
 
+## ⚠️ HARD COUNT TARGETS — READ TWICE
+
+These are the binding numerical contracts for THIS module. The audit will FAIL if you fall short.
+
+| Bucket | Min | Max | Notes |
+|---|---|---|---|
+| Total activities | 10 | 10+ | inline + workbook combined |
+| Inline (lesson tab) | 4 | 6 | one per `<!-- INJECT_ACTIVITY -->` marker, see below |
+| Workbook (Зошит tab) | 6 | 9 | extended practice |
+| Items per activity | 6 | — | each activity must have at least 6 items (unless its type cap is lower — see Activity Type Reference below) |
+
+**You MUST ship at least 4 inline activities AND at least 6 workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+
+**Type diversity is required.** The module (inline + workbook combined) MUST use at least **0** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level. (If `0` is `0`, the audit profile for this level does not enforce type diversity — but variety still produces a better lesson, so aim for 4+ types when the workbook allows it.)
+
+---
+
+## Allowed types for THIS level
+
+- **Inline (lesson) types:** image-to-letter, letter-grid, match-up, watch-and-repeat, quiz, true-false, fill-in, classify
+- **Inline priority (preferred):** image-to-letter, match-up, fill-in, quiz, watch-and-repeat
+- **Workbook types:** fill-in, match-up, group-sort, anagram, unjumble, quiz, true-false, classify, divide-words, count-syllables, pick-syllables, observe, phrase-table, odd-one-out
+- **Workbook priority (preferred):** fill-in, match-up, group-sort, anagram, unjumble
+- **FORBIDDEN at this level:** cloze, error-correction, mark-the-words, translate, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, highlight-morphemes, grammar-identify, select
+
+Pick from the allowed list. Lean heavily on the priority lists. Do not use any forbidden type — the build will reject it.
+
+---
+
 ## Inline vs Workbook Split
 
 Activities have two placement categories:
@@ -19,7 +48,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Rule of thumb:** inline = 2-3 quick checks after key teaching points. Workbook = 4-8 deeper practice exercises covering the full topic.
+**Rule of thumb:** inline = 4–6 quick checks after key teaching points. Workbook = 6–9 deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
 
 ---
 
@@ -27,10 +56,10 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: noun-plural-formation -->`
-- `<!-- INJECT_ACTIVITY: plural-choice-quiz -->`
-- `<!-- INJECT_ACTIVITY: singular-plural-sort -->`
-- `<!-- INJECT_ACTIVITY: adjective-plural-agreement -->`
+- `<!-- INJECT_ACTIVITY: group-sort-singular-plural -->`
+- `<!-- INJECT_ACTIVITY: fill-in-make-it-plural -->`
+- `<!-- INJECT_ACTIVITY: quiz-choose-correct-plural -->`
+- `<!-- INJECT_ACTIVITY: fill-in-adjective-agreement -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -88,98 +117,83 @@ required:
 ## Module Content (the prose the learner reads before exercises)
 
 <module_content>
-## Діалоги — Dialogues
+## Діало́ги (Dialogues)
 
-When you step into a new environment, like setting up a classroom for a Ukrainian lesson, you rarely deal with just one isolated item. You need many chairs for the students, many tables to work on, and many books to read. This natural, everyday situation is the perfect place to learn how to express more than one thing. We call this grammatical concept the plural form, or **множина** (plural). Observe how teachers and students count and arrange items.
+A teacher and a few early students are preparing a classroom for a Ukrainian lesson. As they count the furniture and supplies, they have to move from singular nouns to plural nouns. Read the following conversation between the instructor and the students. It adapts the classroom inventory pattern in **Вашуленко Grade 3, pp. 114-115**.
 
-The following conversation shows a teacher asking the students to look around the room, based on the classic textbook by Vashulenko for Grade 3. Pay attention to how the students identify groups of objects.
+> **Вчи́тель:** До́брого ра́нку! Що тут є? *(Good morning! What is here?)*
+> **У́чні:** Тут є столи́, стільці́ і ві́кна. *(Here are tables, chairs, and windows.)*
+> **Вчитель:** До́бре. Які́ столи? *(Good. What kind of tables?)*
+> **Учні:** Столи вели́кі й нові́. А стільці — старі́. *(The tables are big and new. And the chairs are old.)*
+> **Вчитель:** А де на́ші кни́ги? *(And where are our books?)*
+> **Учні:** Книги там. *(The books are there.)*
 
-> **Вчитель:** Добрий день! **Що тут є?** *(Good afternoon! What is here?)*
-> **Учні:** Добрий день! Тут є **столи**, **стільці** і **вікна**. *(Good afternoon! Here are tables, chairs, and windows.)*
-> **Вчитель:** Добре. А **які столи**? *(Good. And what kind of tables?)*
-> **Учні:** **Столи великі** й **нові**. А **стільці** — **старі**. *(The tables are big and new. And the chairs are old.)*
+This first dialogue shows the core shift clearly: **стіл → столи**, **стіле́ць → стільці**, **вели́кий → великі**.
 
-Listen to the final sounds of those objects. You already know the singular words **стіл** (table), **стілець** (chair), and **вікно** (window) from previous modules. Notice how their endings transform to indicate that there are several of them in the room.
+Here is a short follow-up exchange with more classroom objects:
 
-These plural forms are essential everywhere, not just inside a classroom. Whenever you are buying supplies, asking for directions, or looking for various **речі** (things) in a local store, you must know how to ask for multiple items clearly and accurately.
+> **Вчитель:** Добре, працюємо далі. Тут один стіл, а тут столи. Тут одна дошка, а там дошки. Тут одне крісло, а там крісла.
+> **Учень 1:** А де підручники і карти?
+> **Учень 2:** Підручники тут. Карти теж тут.
+> **Вчитель:** Чудово. Тепер у нас є столи, стільці, дошки, крісла, підручники і карти.
 
-Imagine you are a student shopping for office supplies. The plural forms appear naturally when buying more than one item.
+The second dialogue moves the same grammar into a shop, where the student asks for several items, chooses a color, and gives a quantity.
 
-> **Студент:** Добрий день! **У вас є ручки?** *(Good afternoon! Do you have pens?)*
-> **Продавець:** **Так! Які ручки? Червоні чи сині?** *(Yes! What kind of pens? Red or blue?)*
-> **Студент:** **Сині**. І ще **зошити**. *(Blue. And also notebooks.)*
-> **Продавець:** **Скільки?** *(How many?)*
-> **Студент:** **Три зошити**, будь ласка. *(Three notebooks, please.)*
+> **Студе́нт:** До́брий день! У вас є ручки? *(Good afternoon! Do you have pens?)*
+> **Продаве́ць:** Так! Які ручки? Черво́ні чи си́ні? *(Yes! What kind of pens? Red or blue?)*
+> **Студент:** Сині. І ще зо́шити, будь ла́ска. *(Blue. And also notebooks, please.)*
+> **Продавець:** Скі́льки? *(How many?)*
+> **Студент:** Три зошити. *(Three notebooks.)*
+> **Продавець:** Ось, будь ласка. *(Here you go.)*
 
-In this exchange, the student asks for pens and notebooks. The shopkeeper naturally responds with plural adjectives like red and blue to clarify the request. Notice how the endings changed from the basic singular forms you learned in previous modules. The secret to Ukrainian plurals lies entirely in the final letters of the words.
+This exchange gives you four useful plural models in context: **ручки**, **червоні**, **сині**, **три зошити**.
 
-## Один → багато — Singular → Plural
+## Один → бага́то (Singular → Plural)
 
-A famous Ukrainian textbook for the second grade by Bolshakova introduces plurals with a simple phrase: **один предмет → багато предметів** (one item → many items). In English, you typically add an "s" to the end of a word to make it plural. In Ukrainian, you change the "tail" or the ending of the word. There are three main plural patterns for the nominative case, depending on the noun's gender.
+This section follows **Большако́ва Grade 2, p. 18**, which starts with the contrast **один предме́т → багато предме́тів**. In the nominative plural, many masculine and feminine nouns use **-и**. You can see that in **стіл → столи**, **телефо́н → телефо́ни**, **кни́га → книги**, and **ла́мпа → ла́мпи**. After **г, к, х**, examples like **книга → книги**, **ру́чка → ручки**, and **су́мка → су́мки́** also show **-и**.
 
-The first pattern is for masculine nouns, which usually end in **-и** or **-і**. Most masculine words end in a hard consonant, and to make them plural, you simply add the letter **и**. For example, **стіл** (table) becomes **столи** (tables), **телефон** (phone) becomes **телефони** (phones), and **зошит** (notebook) becomes **зошити** (notebooks). If the masculine noun ends in a soft consonant, like the soft sign, you replace it with an **і**. This is why **стілець** (chair) becomes **стільці** (chairs).
+Another common plural ending is **-і**. This often appears after a soft stem, so learners should notice the whole pattern, not just the final letter. For example, **стілець → стільці** and **день → дні**. Here **стілець** does not lose the soft sign in the plural; instead, the pattern changes **-ець** to **-ьці**. Other masculine nouns still follow the more regular **-и** pattern, for example **зо́шит → зошити**.
 
-The second pattern belongs to feminine nouns, which also usually take **-и** or **-і**. These words typically end in **-а** or **-я**. To form the plural, you drop the final vowel and replace it with **и** or **і**. For instance, **книга** (book) becomes **книги** (books), **лампа** (lamp) becomes **лампи** (lamps), and **сумка** (bag) becomes **сумки** (bags).
+Neuter nouns often show a different plural ending. Many nouns in **-о** form the plural in **-а**: **вікно́ → вікна**, **лі́жко → лі́жка**, **крісло → крісла**, **дзе́ркало → дзерка́ла**. Later you will also meet some **-е** nouns that form plurals in **-я**. Not every noun is perfectly predictable, so it is still best to learn the singular and plural together. That is why pairs like **стіл — столи**, **книга — книги**, and **річ — ре́чі** are worth practicing aloud.
 
 :::tip
-There is a helpful guideline, though not a strict rule as exceptions exist: after the consonants **г**, **к**, and **х**, Ukrainian uses the **-и** ending. This is why **книга** (book) becomes **книги** (books) and **ручка** (pen) changes to **ручки** (pens). After most other consonants, nouns generally take **-и** or **-і** (**стіл** → **столи**, **стілець** → **стільці**).
+When memorizing new vocabulary, always practice saying the singular and plural forms together out loud. Repeating the pair **стіл — столи** helps your brain recognize the phonetic pattern naturally, rather than forcing you to calculate the ending every time you speak.
 :::
 
-The third pattern is for neuter nouns. The shift here is quite distinct: the ending changes to **-а** or **-я**. The neuter ending **-о** changes to **-а** (**вікно** → **вікна**). The neuter ending **-е** changes to **-я**, though words with this ending are not covered yet. A common example is **вікно** (window), which beautifully transforms into **вікна** (windows). Similarly, **ліжко** (bed) becomes **ліжка** (beds), **крісло** (armchair) shifts to **крісла** (armchairs), and **дзеркало** (mirror) changes to **дзеркала** (mirrors). This strong **-а** sound at the end is the signature of the neuter plural form.
+<!-- INJECT_ACTIVITY: group-sort-singular-plural -->
+<!-- INJECT_ACTIVITY: fill-in-make-it-plural -->
+<!-- INJECT_ACTIVITY: quiz-choose-correct-plural -->
 
-<!-- INJECT_ACTIVITY: noun-plural-formation -->
+## Прикме́тники у множині́ (Adjectives in Plural)
 
-<!-- INJECT_ACTIVITY: plural-choice-quiz -->
+This section follows **Большакова Grade 2, p. 42**. In the nominative plural, adjectives use one common ending: **-і**. So the question words **яки́й / яка / яке́** become **які**, and singular phrases change like this: **великий стіл → великі столи**, **нова́ книга → нові книги**, **чи́сте вікно → чи́сті вікна**.
 
-<!-- INJECT_ACTIVITY: singular-plural-sort -->
+For A1 learners, this is one of the simpler patterns in Ukrainian. Once the noun is plural, you do not have to choose among three different gender endings in this form. Instead, you use the plural adjective form: **весе́лий / весе́ла / весе́ле → весе́лі**.
 
-The table below summarizes these essential noun endings. Masculine and feminine nouns generally share the **-и** and **-і** endings, while neuter nouns stand apart with the **-а** and **-я** endings. Because there are exceptions and minor stem changes, the best strategy is to learn each plural form alongside its singular noun when you study new vocabulary.
+The same pattern works with colors: **червоні ручки**, **сині зошити**, **бі́лі сті́ни**, **чо́рні стільці**. Plural demonstratives are also simple: **ці** means "these" and **ті** means "those". Combine them directly with plural nouns and plural adjectives to make short, clear sentences:
 
-| Зміна (Change) | Однина (Singular) | Множина (Plural) |
-| :--- | :--- | :--- |
-| Чоловічий рід (Masculine) | **стіл**, **стілець** | **столи**, **стільці** |
-| Жіночий рід (Feminine) | **книга**, **ручка** | **книги**, **ручки** |
-| Середній рід (Neuter) | **вікно**, **ліжко** | **вікна**, **ліжка** |
-
-## Прикметники у множині — Adjectives in Plural
-
-The magic of plural adjectives lies in their simplicity. In the singular form, you had to memorize three different endings depending on the gender of the noun: **-ий** for masculine, **-а** for feminine, and **-е** for neuter. In the plural form, all adjectives converge to a single, universal ending: **-і**. Regardless of the noun's original gender, the adjective always takes **-і**. For example, the adjectives **який** / **яка** / **яке** (what kind) all become **які**, and **веселий** / **весела** / **веселе** (cheerful) all become **веселі**. So, **великий стіл** (big table) becomes **великі столи** (big tables), **нова книга** (new book) becomes **нові книги** (new books), and **чисте вікно** (clean window) becomes **чисті вікна** (clean windows).
-
-This universal rule applies perfectly to colors. When describing groups of objects, the color adjectives will all end in **-і**. You can have **червоні ручки** (red pens) on your desk, **сині зошити** (blue notebooks) in your bag, **білі стіни** (white walls) in your room, and **чорні стільці** (black chairs) in your kitchen. The uniform ending creates a rhythmic, melodic sound when you speak Ukrainian.
+*   **Ці столи великі.** *(These tables are big.)*
+*   **Ці книги нові.** *(These books are new.)*
+*   **Ті вікна чисті.** *(Those windows are clean.)*
+*   **Ті стільці старі.** *(Those chairs are old.)*
 
 :::note
-Demonstrative words also adapt to the plural form. When pointing out specific groups of objects, use **ці** (these) for items close by, and **ті** (those) for items located further away. Just like adjectives, they conveniently end in the **-і** sound. You can say **Ці столи великі** (These tables are big) when standing right next to them. If you are looking across the room, you would say **Ті вікна чисті** (Those windows are clean).
+The universal **-і** ending for plural adjectives is one of the most helpful rules in Ukrainian grammar. Once you know a group of items is plural, you no longer have to recall if the original noun was masculine, feminine, or neuter—the adjective ending is always the same.
 :::
 
-To talk about your personal belongings, you use the plural possessive word **мої** (my - plural). If you are carrying a stack of literature, you simply state **Це мої книги** (These are my books).
-
-<!-- INJECT_ACTIVITY: adjective-plural-agreement -->
-
-When you need to ask about the characteristics of plural objects, you use the question word **які** (what kind?). If you see an interesting stack of reading material, you ask your teacher **Які це книги?** (What kind of books are these?).
+<!-- INJECT_ACTIVITY: fill-in-adjective-agreement -->
 
 ## Підсумок — Summary
 
-The rules of plural noun formation rely on recognizing consistent patterns. Nouns change their endings based on their original gender. Masculine and feminine nouns typically take the **-и** or **-і** endings, while neuter nouns take the **-а** or **-я** endings. Always remember to learn each plural individually alongside its singular form. The core classroom triad provides perfect anchors for these patterns: **столи** (tables), **книги** (books), and **вікна** (windows).
+For a practical review, first say each noun pair out loud: **стіл → столи**, **книга → книги**, **вікно → вікна**, **крісло → крісла**. Then add an adjective: **великий стіл → великі столи**, **нова книга → нові книги**, **чисте вікно → чисті вікна**, **старе́ крісло → старі крісла**. Next practice demonstratives and possessives together: **ці столи**, **ті стільці**, **мої́ нові книги**, **мої сині зошити**. The key A1 idea is simple: noun plurals must be learned as vocabulary pairs, but plural adjectives stay regular with **-і**. If you can move from one object to many objects and keep the adjective plural at the same time, you are using the core pattern of this module correctly. Say each model once slowly and once at normal speed so the plural ending becomes automatic.
 
-The rules of agreement for describing many items are incredibly straightforward. Adjectives, demonstrative words like **ці** (these) and **ті** (those), and possessive words like **мої** (my - plural) all simplify in the plural form to use the universal **-і** ending. You always use **-і** for adjectives, such as **великі**, **нові**, **червоні**, and **сині**. This convergence makes describing multiple items significantly easier than describing just one thing, as you no longer need to match the specific gender of the noun.
+Before moving forward to the next module, take a moment to verify your practical understanding of these core plural mechanics. Try to answer the following self-check questions out loud:
 
-:::caution
-Always pay close attention to the stress marks when learning new plural forms. The stress can sometimes shift when a word becomes plural. For instance, the emphasis moves to the end in **книжки** (books), and to the beginning in **вікна** (windows). Check the vocabulary lists carefully!
-:::
+*   Can you quickly and accurately make these core vocabulary words plural: **стіл**, **книга**, and **вікно**?
+*   Look around your own room or classroom and describe the furniture you see. Answer the questions: **Які столи?** **Які стільці?** **Які вікна?**
+*   How would you correctly translate the following descriptive phrases into Ukrainian using the proper plural agreement: *these red pens*, *those old chairs*, and *my new books*?
 
-Test your understanding with this quick self-check Q&A before moving to the exercises.
-
-*   **Q:** Як буде «стіл» у множині? *(How is "table" in plural?)*
-*   **A:** **Столи**.
-*   **Q:** Яке закінчення мають прикметники у множині? *(What ending do adjectives have in plural?)*
-*   **A:** Закінчення **-і** (**великі**, **нові**).
-*   **Q:** Перекладіть: «Ці сині зошити». *(Translate: "These blue notebooks".)*
-*   **A:** **Ці сині зошити**.
-*   **Q:** Яке слово означає "those"? *(Which word means "those"?)*
-*   **A:** **Ті**.
-
-By mastering these straightforward patterns for nouns and adjectives, you are fully equipped to count, describe, and interact with the many objects that fill your daily life. Practice these endings consistently, and they will quickly become second nature.
-
+If you can confidently apply the correct plural endings to both nouns and their descriptive adjectives, you are thoroughly prepared to start handling more complex environments and larger groups of objects in the upcoming lessons.
 </module_content>
 
 ---
@@ -193,48 +207,68 @@ version: "1.0"
 module: many-things
 level: a1
 
+# NOTE — these are SHAPE examples. The real targets are at the top of this prompt
+# (10 total / 4–6 inline / 6–9 workbook,
+# 6+ items per activity). The shapes below are TRUNCATED for readability;
+# YOUR output MUST hit those minimums.
+
 inline:
   - id: marker-id-here        # MUST match an <!-- INJECT_ACTIVITY: ... --> marker
     type: quiz                 # activity type
     instruction: "Оберіть правильний варіант"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - question: "_____ стіл"
-        options: ["мій", "моя", "моє"]
+        options: ["мій", "моя", "моє", "мої"]
         correct: 0             # 0-based index
+      - question: "Це ____ книга."
+        options: ["мій", "моя", "моє", "мої"]
+        correct: 1
+      # ... add at least 6 items total — never stop at 1-2
 
   - id: another-marker-id
     type: fill-in
     instruction: "Вставте правильне слово"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - sentence: "Це ____ кімната."
         answer: "моя"
         options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ вікно."
+        answer: "моє"
+        options: ["мій", "моя", "моє"]
+      # ... ≥ 6 items total
 
 workbook:
-  - type: match-up
+  - id: match-up-vocab
+    type: match-up
     instruction: "З'єднайте пари"
-    pairs:
+    pairs:                     # ← real output: ≥ 6 pairs
       - left: "стіл"
         right: "він"
       - left: "книга"
         right: "вона"
       - left: "вікно"
         right: "воно"
+      # ... ≥ 6 pairs total
 
-  - type: group-sort
+  - id: group-sort-gender
+    type: group-sort
     instruction: "Розподіліть слова за категоріями"
     groups:
-      - label: "Category A"
-        items: ["word1", "word2"]
-      - label: "Category B"
-        items: ["word3", "word4"]
+      - label: "Чоловічий рід"
+        items: ["стіл", "олівець", "будинок"]   # ≥ 3 items per group
+      - label: "Жіночий рід"
+        items: ["книга", "ручка", "школа"]
+      - label: "Середній рід"
+        items: ["вікно", "море", "молоко"]
 
-  - type: true-false
+  - id: true-false-grammar
+    type: true-false
     instruction: "Правда чи ні?"
-    items:
-      - statement: "Statement here"
-        correct: true
-        explanation: "Why it's true"
+    items:                     # ← real output: ≥ 6 items
+      - statement: "«Книга» — це чоловічий рід."
+        correct: false
+        explanation: "Книга закінчується на -а, отже жіночий рід."
+      # ... ≥ 6 items total
 
   - type: error-correction
     instruction: "Виправте помилку"
@@ -305,7 +339,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -407,10 +441,15 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 ## Quality Rules
 
-**ITEM COUNT MINIMUMS (non-negotiable):**
-- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
-- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
-- If you can't think of enough items, add more examples from the module's vocabulary and content.
+**ACTIVITY COUNT MINIMUMS (non-negotiable, audit-enforced):**
+- **Total: 10 activities.** Inline: 4–6. Workbook: 6–9. The audit gate FAILS the module if you ship fewer.
+- **Type diversity: workbook MUST cover ≥5 distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
+- **Match the inline markers exactly.** Every `<!-- INJECT_ACTIVITY: id -->` marker in the prose needs a matching inline activity with that exact id. Skipping markers means the lesson tab is broken.
+
+**ITEM COUNT MINIMUMS (non-negotiable, per-activity):**
+- **Default minimum: 6 items per activity.** Quiz, fill-in, match-up, true-false, anagram, error-correction, translate, cloze, mark-the-words, divide-words, count-syllables, odd-one-out, group-sort categories: all ≥ 6.
+- **Lower minimums for specific types only:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items, essay-response/critical-analysis = 1 prompt.
+- If you can't think of enough items, add more examples from the module's vocabulary and content. NEVER ship a 1-item or 2-item activity unless its type cap explicitly allows it.
 - **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
 - **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
@@ -517,6 +556,27 @@ IMPORTANT: After using tools, output your COMPLETE module content as plain text.
 1. Run `verify_words` on all Ukrainian words in your exercises — every word must exist in VESUM
 2. Run `query_cefr_level` on any word you're unsure about — it must be a1-appropriate
 3. For fill-in answers and distractors, verify the exact form (case, number, gender) with `verify_lemma`
+
+---
+
+## ⚠️ MANDATORY FINAL CHECKLIST — verify before emitting YAML
+
+Walk through this checklist explicitly before you start emitting. If ANY box is unchecked, fix it FIRST.
+
+- [ ] My output has **at least 4** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
+- [ ] My output has **at least 6** workbook activities.
+- [ ] **Total ≥ 10.**
+- [ ] **Every** activity has **at least 6** items, pairs, or statements (except types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3, essay-response=1).
+- [ ] The module (inline + workbook combined) uses **at least 0 distinct activity types** (or 4+ when 0 = 0 and the workbook size allows it). I am NOT shipping a wall of quizzes.
+- [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
+- [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
+- [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+- [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+- [ ] My inline count is between 4 and 6. I did NOT create more injection markers than 6.
+- [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
+- [ ] At B1+, all instructions are in Ukrainian (no English fallback).
+
+If you cannot tick all of these, REGENERATE the activities BEFORE outputting. Shipping under-spec means the build rejects you and the heal loop has to redo your work — wasting compute.
 
 ---
 

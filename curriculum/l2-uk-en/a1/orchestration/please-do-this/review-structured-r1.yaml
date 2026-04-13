@@ -2,48 +2,56 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 9
-  evidence: Covers all required points, but the recommended vocabulary word `показати`
-    is missing from the prose entirely.
+  score: 7
+  evidence: All planned H2 sections are present and the core plan verbs recur throughout,
+    but the lesson front-loads a long English paragraph starting “We use commands,
+    requests, and instructions every single day
 - dimension: 2
   name: Linguistic accuracy
-  score: 8
-  evidence: 'Contains two common calques: `Добрий ранок` (should be "Доброго ранку")
-    and `Відкрий двері` (should be "Відчини двері").'
+  score: 7
+  evidence: 'I found no Russian letters or obvious bad Ukrainian forms, and spot-checked
+    imperatives like `читайте`, `пишіть`, `дивіться`, `сідай`, `ідіть`, `скажіть`.
+    The weak point is the caution-box claim: “`ві'
 - dimension: 3
   name: Pedagogical quality
   score: 6
-  evidence: The rules for forming the imperative for Group I and II verbs are factually
-    inaccurate and contradict the examples provided. "писати" does not form "пиши"
-    by simply removing "-ти" and adding "-й". Ref
+  evidence: The lesson spends a long English paragraph before the first Ukrainian
+    dialogue, and the rule text later says “The vowel sound becomes softer and higher,”
+    which is vague phonetic theory instead of a cl
 - dimension: 4
   name: Vocabulary coverage
   score: 9
-  evidence: All required vocabulary is used naturally, but the recommended word `показати`
-    was omitted.
+  evidence: 'Required verbs from the plan are well covered: `читати`, `писати`, `слухати`,
+    `дивитися`, `говорити`, `дати`, `сказати`, `іти`. Recommended classroom vocabulary
+    like `підручник`, `сторінка`, `речення`'
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: All exercises map perfectly to the plan and are placed correctly after
-    the corresponding concepts.
+  score: 7
+  evidence: 'All four planned markers are present, but `<!-- INJECT_ACTIVITY: group-sort-forms
+    -->` comes before “Forming the **ви** (formal or plural) imperative...”, so the
+    learner is tested on a contrast before'
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: Tone is warm and encouraging, using natural classroom and daily-life situations
-    without generic filler.
+  score: 7
+  evidence: The teacher voice improves once the examples start, but the opening relies
+    on generic lines like “the imperative mood is absolutely essential” instead of
+    getting to the Ukrainian quickly.
 - dimension: 7
   name: Structural integrity
-  score: 10
-  evidence: Word count is 1525 (exceeds 1200 target). All headers and sections are
-    correctly structured.
+  score: 8
+  evidence: The planned H2 headings are present and the pipeline word count is 1666,
+    so the module clears the target. The weakness is prose-heavy front-loading before
+    practice.
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: Uses appropriate and natural Ukrainian settings, names, and communicative
-    norms.
+  score: 7
+  evidence: The module avoids Russian-centered framing, but the `відкрити підручник`
+    caution box introduces unsupported prescriptivism about what is “stylistically
+    perfect” Ukrainian.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: Dialogues are natural, correctly formatted, and effectively demonstrate
-    the difference in register (ти vs ви).
+  score: 8
+  evidence: The dialogues use named speakers and real situations, especially the classroom
+    exchange. The main issue is that the surrounding English explanation is longer
+    than it needs to be, which weakens the imm
 findings: []

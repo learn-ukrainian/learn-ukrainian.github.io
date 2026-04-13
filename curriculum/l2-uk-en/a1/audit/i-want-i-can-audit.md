@@ -1,7 +1,7 @@
 # Audit Report: M18 — i-want-i-can.md
 **Level:** A1 | **Module:** M18 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-11 00:54:28
+**Generated:** 2026-04-11 16:43:56
 
 ## Configuration
 **Type:** A1-grammar

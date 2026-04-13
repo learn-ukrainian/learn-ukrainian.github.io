@@ -2,31 +2,31 @@
   "module": "dative-verbs",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-04-11T02:55:07.412394Z",
+  "last_audit": "2026-04-13T08:01:32.109929Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-11T02:52:25.602516Z",
+    "md": "2026-04-13T08:01:29.515117Z",
     "meta": null,
-    "activities": "2026-04-11T02:55:04.388684Z",
-    "vocabulary": "2026-04-08T01:45:23.189920Z",
+    "activities": "2026-04-13T07:42:15.779318Z",
+    "vocabulary": "2026-04-13T07:42:50.502995Z",
     "research": null,
     "plan": "2026-04-04T22:04:59.947400Z"
   },
   "gates": {
     "meta": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Valid Structure"
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Summary'"
     },
     "lesson": {
       "status": "fail",
-      "violations": 1,
-      "message": "2856/2000 (raw: 2993) | engagement: 0/3"
+      "violations": 2,
+      "message": "2888/2000 (raw: 2992) | engagement: 1/3 | immersion: 29.5% LOW (target 50-80% (A2.2))"
     },
     "activities": {
-      "status": "fail",
-      "violations": 1,
-      "message": "21/0 | density: 10 < 8"
+      "status": "pass",
+      "violations": 0,
+      "message": "11/0"
     },
     "vocabulary": {
       "status": "pass",
@@ -36,10 +36,10 @@
     "vocab_progression": {
       "status": "warn",
       "violations": 0,
-      "message": "\u0394 -27 | premature=5 | gaps=2 | well-paced=0",
-      "delta": -27,
-      "premature": 5,
-      "gaps": 2,
+      "message": "\u0394 -30 | premature=6 | gaps=0 | well-paced=0",
+      "delta": -30,
+      "premature": 6,
+      "gaps": 0,
       "well_paced": 0
     },
     "naturalness": {
@@ -60,7 +60,9 @@
   },
   "overall": {
     "status": "fail",
-    "blocking_issues": [],
+    "blocking_issues": [
+      "Structure: Missing '## Summary'"
+    ],
     "pass_count": 4,
     "fail_count": 2,
     "deferred_count": 0

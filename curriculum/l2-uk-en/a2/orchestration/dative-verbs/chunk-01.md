@@ -1,52 +1,55 @@
-## Дієслова з давальним відмінком (Verbs That Take the Dative)
+## Дієслова з давальним відмінком (Verbs That Take the Dative) (~650 words)
 
-In English, when you help someone or thank someone, that person is the direct object of the action. You simply say "I help him" or "She thanks the teacher," using the exact same grammatical structure you would use for "I see him." In Ukrainian, these specific actions are viewed quite differently. You do not directly act upon the person. Instead, you direct your action, your gratitude, or your assistance *toward* them as a recipient or beneficiary. Because of this concept, the person receiving the help, the thanks, or the phone call must always be in the Dative case. The Dative case answers the questions «кому?» (to whom?) and «чому?» (to what?). Understanding this shift in logic is the absolute key to speaking natural, correct Ukrainian.
+Сьогодні у нашому місті день волонтера. Ми працюємо разом і робимо багато корисних справ. Я допомагаю різним людям вирішувати їхні проблеми. Це дуже цікаво і важливо.
 
-Let's start by focusing on the verb «допомагати», which means to help. You always direct your help to someone.
+> *Today is volunteer day in our city. We are working together and doing many useful things. I am helping various people solve their problems. It is very interesting and important.*
 
-Я часто допомагаю моїй великій родині вдома. Уранці я допомагаю мамі готувати смачний сніданок. Увечері я допомагаю старшій сестрі робити складне домашнє завдання. На вихідних я із задоволенням допомагаю татові ремонтувати нашу стару машину, а потім допомагаю молодшому братові прибирати його кімнату.
+> — **Волонтер:** Добрий день! Я допомагаю бабусі нести ці важкі сумки. *(Good day! I am helping a grandma carry these heavy bags.)*
+> — **Перехожий:** О, це чудово! Ви також знаєте, як знайти лікаря? *(Oh, that is great! Do you also know how to find a doctor?)*
+> — **Волонтер:** Так, я якраз дзвоню другові. Він працює в лікарні. *(Yes, I am just calling a friend. He works at the hospital.)*
+> — **Перехожий:** Дякую вам! Ви дуже допомагаєте нашій громаді. *(Thank you! You are helping our community a lot.)*
+> — **Волонтер:** Нема за що. Я часто раджу сусідці хорошого лікаря. Мені подобається допомагати! *(You're welcome. I often advise a good doctor to my neighbor. I like helping!)*
 
-> *I often help my big family at home. In the morning I help my mom prepare a delicious breakfast. In the evening I help my older sister do difficult homework. On the weekend I gladly help my dad fix our old car, and then I help my younger brother clean his room.*
+In English, when you help someone or thank someone, you use a direct object. You direct the action straight at the person. In Ukrainian, the logic is slightly different. We view these actions as being directed *to* or *toward* the recipient. Because of this, certain common verbs require the Dative case, answering the questions «кому?» (to whom?) or «чому?» (to what?).
 
-When talking about male persons in the Dative case, Ukrainian strongly prefers the endings «-ові» or «-еві». Therefore, we say «татові» and «братові» rather than «тату» and «брату». This special ending clearly signals the Dative case, prevents any ambiguity with other cases, and makes your sentence sound very authentic.
+Here are the most important verbs that take the Dative case:
+*   **допомагати** (to help)
+*   **дякувати** (to thank)
+*   **дзвонити** (to call, to phone) 
+*   **радити** (to advise)
+*   **заважати** (to bother, to disturb)
+*   **відповідати** (to answer (someone))
 
-Ти також можеш допомагати друзям, сусідам або колегам на роботі. Головне — завжди правильно використовувати граматичний відмінок.
+When you use these verbs, you must put the person receiving the help, thanks, or phone call into the Dative case. You cannot use the Accusative case here. This is a very common mistake for English speakers, so pay close attention to this group.
 
-The verb «дякувати» (to thank) also requires the Dative case. This rule is a crucial grammatical marker in the Ukrainian language.
-
-:::tip
-**Decolonization note** — The Russian verb for thanking («благодарить») takes the Accusative case, treating the person as a direct object. Because of this historical influence, you might sometimes hear people make the mistake of using the Accusative in Ukrainian, saying «дякую вас» instead of the correct Dative form. The phrase «дякую вас» is completely incorrect. You must always use the Dative case to express gratitude: «дякую вам», «дякую тобі», or «дякую лікарю».
+:::note
+**Quick tip** — Think of **дякувати** not as "to thank someone," but rather as "to give thanks *to* someone." This mindset will naturally lead you to use the Dative case.
 :::
 
-Ми завжди щиро дякуємо вчителеві за допомогу на уроці. Маленькі діти з радістю дякують бабусі за дуже смачний обід. Я безмежно дякую моєму другові за цю цікаву книгу. Ми дякуємо вам за вашу увагу!
+Найчастіше ми використовуємо ці дієслова з особовими займенниками. Це дуже зручно в повсякденному спілкуванні. Форми давального відмінка для займенників потрібно просто запам'ятати. Вони звучать так: мені, тобі, йому, їй, нам, вам, їм.
 
-> *We always sincerely thank the teacher for the help at the lesson. Little children joyfully thank grandma for a very delicious lunch. I endlessly thank my friend for this interesting book. We thank you for your attention!*
+> *Most often, we use these verbs with personal pronouns. This is very convenient in everyday communication. The dative case forms for pronouns just need to be memorized. They sound like this: to me, to you, to him, to her, to us, to you (plural/formal), to them.*
 
-Another common verb that works exactly this way is «дзвонити» or its more formal synonym «телефонувати» (to call). In English, you "call someone" directly. In Ukrainian, the underlying logic is that you are sending a telephone signal *to* someone.
+Let's look at how these pronouns work with our core verbs in practice. Notice how the pronoun form completely changes from the dictionary form to show who is receiving the action.
 
-Кожного вечора я обов'язково дзвоню моїй найкращій подрузі Марії. Мій чоловік дуже часто телефонує своєму колезі Андрієві, щоб обговорити важливу роботу. Ми завжди дзвонимо нашим батькам на вихідних.
+Я часто допомагаю їй робити домашнє завдання. Він завжди дякує тобі за смачну вечерю. Ми дзвонимо їм кожного тижня у неділю. Чому ти не відповідаєш мені на повідомлення? Вони ніколи не заважають нам працювати. Я раджу йому прочитати цю нову книгу.
 
-> *Every evening I definitely call my best friend Mariia. My husband very often calls his colleague Andrii to discuss important work. We always call our parents on the weekends.*
+> *I often help her do homework. He always thanks you for a delicious dinner. We call them every week on Sunday. Why are you not answering me to the message? They never bother us while working. I advise him to read this new book.*
 
-Notice carefully that we do not use the preposition «до» (to) when calling a person. You simply use the direct Dative relationship. Saying «дзвоню до мами» is sometimes heard in casual spoken language, but the standard literary form is strictly the Dative without any preposition: «дзвоню мамі».
+When you direct these actions to specific people rather than using pronouns, you need to change the noun endings. As a quick review, masculine nouns usually take the endings **-ові** or **-еві** (sometimes **-у** or **-ю**). Feminine nouns take the ending **-і**. 
 
-Let's group three more very useful verbs that govern the Dative case: «радити» (to advise), «заважати» (to bother or disturb), and «відповідати» (to answer). These verbs are extremely common when making polite commands or requests.
+:::info
+**Grammar box** — Remember that feminine nouns ending in **-га**, **-ка**, or **-ха** undergo consonant alternations before the **-і** ending. The consonants change: **г** → **з**, **к** → **ц**, **х** → **с**. For example, подруга becomes подрузі.
+:::
 
-Будь ласка, не заважай мені зараз працювати! Я дуже раджу тобі подивитися цей новий український документальний фільм. Розумний учень завжди швидко і правильно відповідає вчителеві.
+Я щодня дзвоню моєму найкращому другові. Моя сестра часто допомагає нашому братові. Ми щиро дякуємо новій подрузі за допомогу. Я раджу мамі подивитися цей цікавий фільм. Цей гучний шум дуже заважає вчительці. Директор зараз відповідає своєму колезі на важливий лист.
 
-> *Please, do not bother me while I work now! I highly advise you to watch this new Ukrainian documentary film. A smart student always answers the teacher quickly and correctly.*
+> *I call my best friend every day. My sister often helps our brother. We sincerely thank the new friend (female) for the help. I advise mom to watch this interesting movie. This loud noise really bothers the teacher (female). The director is answering his colleague to an important letter right now.*
 
-Just like with helping or thanking, the action of advising, bothering, or answering is clearly directed *toward* a person or a recipient. This inherent direction makes the Dative case the only correct grammatical choice for these verbs.
+These dative verbs are extremely common in negative sentences and commands (the imperative mood). When you tell someone to do or not do something, the Dative case rule still applies perfectly. 
 
-Батьки часто радять дітям читати хороші книги. Учителі ніколи не заважають учням думати.
+Не заважай мені, будь ласка, я зараз читаю. Не дзвони їй так пізно ввечері. Допоможи мені приготувати обід для нашої родини. Обов'язково відповідай йому, коли він тебе питає. Завжди дякуйте батькам за їхню велику любов. Порадь нам гарний ресторан у центрі міста.
 
-Let's see all these important verbs in action during a typical volunteer day scenario. Listen to how the Dative case flows naturally.
+> *Do not bother me, please, I am reading right now. Do not call her so late in the evening. Help me prepare lunch for our family. Be sure to answer him when he asks you. Always thank your parents for their great love. Advise us a good restaurant in the city center.*
 
-> — **Волонтер:** Сьогодні ми маємо дуже багато важливої роботи в нашому волонтерському центрі. *(Today we have a lot of important work in our volunteer center.)*
-> — **Координатор:** Кому ти допомагаєш сьогодні зранку? *(Who are you helping this morning?)*
-> — **Волонтер:** Спочатку я допомагаю літній сусідці Олені нести її важкі сумки. *(First, I help elderly neighbor Olena carry her heavy bags.)*
-> — **Волонтер:** Потім я дзвоню моєму другові Івану, щоб спитати про наш розклад. *(Then I call my friend Ivan to ask about our schedule.)*
-> — **Координатор:** Чудово. А я зараз телефоную нашому новому водієві. *(Great. And I am calling our new driver right now.)*
-> — **Волонтер:** Наприкінці цього довгого дня я щиро дякую йому за хорошу роботу! *(At the end of this long day, I sincerely thank him for the good work!)*
-
-<!-- INJECT_ACTIVITY: fill-in-dative-verbs -->
+<!-- INJECT_ACTIVITY: fill-in, Complete sentences with the correct dative form after dative-governing verbs, 8 items -->

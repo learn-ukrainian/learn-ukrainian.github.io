@@ -2,48 +2,51 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 10
-  evidence: Covers all grammar points and sections outlined in the plan perfectly.
-    The 2069-word narrative comfortably exceeds the 1200-word target.
+  score: 9
+  evidence: 'All planned H2 sections are present: `Діалоги`, `Кличний відмінок`, `Закінчення
+    кличного`, `Підсумок — Summary`. Required plan vocabulary is covered in prose:
+    `друг`, `подруга`, `брат`, `сестра`, `пан'
 - dimension: 2
   name: Linguistic accuracy
-  score: 8
-  evidence: Excellent explanation of vowel shifts, but contains a critical factual
-    error regarding the vocative of "син" (incorrectly claiming the `-у` ending creates
-    "синку" directly from "син").
+  score: 7
+  evidence: 'Two explanatory claims are inaccurate: `Ukrainians always use the vocative
+    case when addressing someone directly` and `You must always use the vocative case
+    for both the title and the person''s name.`'
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: Exceptional use of the Grade 4 helper word "Кл. (!)". The PPP sequence
-    from dialogues to explicit pattern breakdown is flawless.
+  score: 8
+  evidence: 'The module has clear examples, but the `Діалоги` section opens with a
+    long English scene-setter before the learner sees any Ukrainian dialogue: `Imagine
+    you are at a busy, loud birthday party... insta'
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: All required and recommended words (друг, подруга, брат, сестра, пан,
-    пані, синку, дочко, козак, вчитель, бабуся, дідусь) are used in natural contexts.
+  score: 9
+  evidence: 'Required vocabulary is used naturally, and recommended items also appear:
+    `синку`, `дочко`, `козак`, `вчитель`, `бабуся`, `дідусь`.'
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: All 4 activities from the plan are injected via markers exactly after
-    the concepts they test.
+  score: 9
+  evidence: Marker inventory is complete and correctly placed after teaching sections;
+    the module includes one marker per planned activity hint.
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: Warm, encouraging teacher tone without being overly gamified. Examples
-    like "feels as awkward as saying 'Hey, him!'" are brilliant.
+  score: 9
+  evidence: The teacher voice is warm and concrete, with usable examples like `Мамо,
+    де мій телефон?` and `Добрий день, пане Іване!`.
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: Clean markdown, precise headings, no meta-commentary. Word count (2069)
-    is well above the minimum.
+  evidence: All four planned sections are present and ordered correctly, and the pipeline
+    word count is `1536`, which is above the `1200` target.
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: Strongly frames the vocative case as a decolonized feature unique to Ukrainian
-    identity compared to standard Russian.
+  score: 9
+  evidence: The lesson presents Ukrainian on its own terms and does not frame it through
+    Russian. The only cultural-language issue is the overabsolute rule wording already
+    noted in linguistic accuracy.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: Very natural exchanges ("Мамо, де мій телефон? / На столі, синку.") grounded
-    in a relatable party scenario with named speakers.
+  score: 9
+  evidence: 'Dialogues use named speakers, real situations, and multi-turn exchanges:
+    meeting a friend, looking for a phone, asking about keys.'
 findings: []

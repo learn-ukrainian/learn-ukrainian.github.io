@@ -1,4 +1,4 @@
-<!-- version: 1.1.0 | updated: 2026-03-31 -->
+<!-- version: 1.2.0 | updated: 2026-04-12 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -11,6 +11,35 @@ Generate an `activities/around-the-city.yaml` file for module **33: Around the C
 
 ---
 
+## ⚠️ HARD COUNT TARGETS — READ TWICE
+
+These are the binding numerical contracts for THIS module. The audit will FAIL if you fall short.
+
+| Bucket | Min | Max | Notes |
+|---|---|---|---|
+| Total activities | 10 | 10+ | inline + workbook combined |
+| Inline (lesson tab) | 4 | 6 | one per `<!-- INJECT_ACTIVITY -->` marker, see below |
+| Workbook (Зошит tab) | 6 | 9 | extended practice |
+| Items per activity | 6 | — | each activity must have at least 6 items (unless its type cap is lower — see Activity Type Reference below) |
+
+**You MUST ship at least 4 inline activities AND at least 6 workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+
+**Type diversity is required.** The module (inline + workbook combined) MUST use at least **0** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level. (If `0` is `0`, the audit profile for this level does not enforce type diversity — but variety still produces a better lesson, so aim for 4+ types when the workbook allows it.)
+
+---
+
+## Allowed types for THIS level
+
+- **Inline (lesson) types:** image-to-letter, letter-grid, match-up, watch-and-repeat, quiz, true-false, fill-in, classify
+- **Inline priority (preferred):** image-to-letter, match-up, fill-in, quiz, watch-and-repeat
+- **Workbook types:** fill-in, match-up, group-sort, anagram, unjumble, quiz, true-false, classify, divide-words, count-syllables, pick-syllables, observe, phrase-table, odd-one-out
+- **Workbook priority (preferred):** fill-in, match-up, group-sort, anagram, unjumble
+- **FORBIDDEN at this level:** cloze, error-correction, mark-the-words, translate, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, highlight-morphemes, grammar-identify, select
+
+Pick from the allowed list. Lean heavily on the priority lists. Do not use any forbidden type — the build will reject it.
+
+---
+
 ## Inline vs Workbook Split
 
 Activities have two placement categories:
@@ -19,7 +48,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Rule of thumb:** inline = 2-3 quick checks after key teaching points. Workbook = 4-8 deeper practice exercises covering the full topic.
+**Rule of thumb:** inline = 4–6 quick checks after key teaching points. Workbook = 6–9 deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
 
 ---
 
@@ -27,10 +56,10 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: match-navigation-responses -->`
-- `<!-- INJECT_ACTIVITY: quiz-de-vs-kudy -->`
 - `<!-- INJECT_ACTIVITY: fill-in-directions -->`
+- `<!-- INJECT_ACTIVITY: quiz-locative-accusative -->`
 - `<!-- INJECT_ACTIVITY: fill-in-transport-route -->`
+- `<!-- INJECT_ACTIVITY: match-up-navigation-responses -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -110,99 +139,127 @@ required:
 ## Module Content (the prose the learner reads before exercises)
 
 <module_content>
-## Діалоги
+## Діалоги (Dialogues)
 
-Lviv is a beautiful, historic city in western Ukraine. Imagine you are taking a walking tour of the old town. You want to see the famous architecture, but the narrow cobblestone streets can be confusing. You need to navigate from **Площа Ринок** (Market Square) to the majestic **Оперний театр** (Opera House), and then up to **Високий замок** (High Castle). You might ask: **Де ми?** (Where are we?). The guide answers: **На площі.** (On the square). Then you ask: **Куди далі?** (Where to next?). The reply is: **В театр.** (To the theater). And if someone asks: **Звідки ви прийшли?** (Where did you come from?), you say: **З замку.** (From the castle). Navigating a city means understanding where you are, where you are going, and where you came from.
+Navigating a city requires a mix of spatial awareness and clear communication. Imagine a walking tour in the old town of Lviv. The route goes from **Площа Ринок** (Rynok Square, the main square) to the **Оперний театр** (Opera House), and finally up to the **Високий замок** (High Castle). Moving between these landmarks means you constantly need to ask where things are and where to go next. The core navigation questions form a simple cycle. **Де ми?** (Where are we?) — **На площі.** (On the square). **Куди далі?** (Where to next?) — **В театр.** (To the theater). **Звідки прийшли?** (Where did we come from?) — **З замку.** (From the castle). Mastering these distinct grammatical cases transforms random city streets into a clear, navigable map.
 
-> **Турист:** Вибачте, як дістатися до бібліотеки? *(Excuse me, how to get to the library?)*
-> **Гід:** Ідіть прямо, потім направо. Бібліотека на розі. *(Go straight, then to the right. The library is on the corner.)*
-> **Турист:** А музей? *(And the museum?)*
-> **Гід:** Музей далеко. Їдьте на метро до центру. *(The museum is far. Go by metro to the center.)*
+When asking strangers for help on the street, directness combined with polite markers is the most natural approach. The formal imperative forms **ідіть** (go! - on foot) and **їдьте** (go! - by transport) are essential for giving or receiving directions safely.
 
-This dialogue shows a typical street interaction. The tourist uses a polite greeting and asks for simple directions to local landmarks. The guide provides clear, step-by-step instructions using directional adverbs and landmarks, then suggests public transport for a longer distance. Every urban interaction relies on these basic, highly functional patterns.
+> **Турист:** **Вибачте, як дістатися до бібліотеки?** *(Excuse me, how to get to the library?)*
+> **Гід:** **Ідіть прямо, потім направо. Бібліотека на розі.** *(Go straight, then to the right. The library is on the corner.)*
+> **Турист:** **А музей?** *(And the museum?)*
+> **Гід:** **Музей далеко. Їдьте на метро до центру.** *(The museum is far. Go by metro to the center.)*
 
-> **Оксана:** Як ти дістаєшся на роботу? *(How do you get to work?)*
-> **Тарас:** Спочатку йду на зупинку. Потім їду автобусом до центру. *(First I go to the stop. Then I go by bus to the center.)*
-> **Оксана:** А потім? *(And then?)*
-> **Тарас:** Потім іду пішки п'ять хвилин. Робота в офісі на площі. *(Then I go on foot for five minutes. Work is in an office on the square.)*
-
-Here, two friends discuss their daily commute. They break down the journey into distinct, logical steps. They mention walking to a transport hub, taking a specific vehicle, and finally arriving at their destination. This structure is very common when describing regular habits and routines.
-
-The phrase **Вибачте** (Excuse me) is the most polite and natural way to get a stranger's attention in Ukrainian. When giving directions, the guide uses two different command forms. **Ідіть** (Go / Walk) is an instruction to move on foot. When suggesting public transport, the guide switches to **Їдьте** (Go / Travel by vehicle). Both verbs end in **-іть** / **-те**, marking the formal "you" (**ви**) form.
+This brief interaction combines essential movement directions, specific modes of transport, and clear city landmarks. The adverb **направо** (to the right) functions as a simple direction without requiring complex case changes. The noun phrase **на розі** (on the corner) is a fixed locative chunk. The verb **дістатися** (to get to) is the standard, natural way to ask about reaching a destination.
 
 :::tip
-This formal ending is essential for politeness. Using the informal form with strangers on the street is considered rude. Always stick to the formal commands when asking for or giving directions!
+The phrase **на розі** (on the corner) is a highly common exception. The noun **ріг** (corner) changes its root vowel from **і** to **о** in the locative case.
 :::
-
-In the second dialogue, Taras structures his route using sequence words. The word **спочатку** (first / initially) starts the explanation, and **потім** (then / afterward) connects the steps. This creates a logical narrative. We also see two ways to talk about transportation. To travel by a vehicle, Ukrainians often use the instrumental case, such as **автобусом** (by bus). Alternatively, they use the preposition **на** with the locative case, such as **на метро** (by metro). When moving under your own power, use the specific adverb **пішки** (on foot).
-
-<!-- INJECT_ACTIVITY: match-navigation-responses -->
-
-## Де і куди разом
-
-Real urban navigation requires a constant, fluid switch between two core concepts: static location and the direction of movement. When you describe your current position, you answer the question **Де?** (Where?). This requires the locative case. For example: **Я зараз у парку.** (I am in the park now.) However, when you describe your destination, you answer the question **Куди?** (Where to?). This requires the accusative case. For example: **Я йду в магазин.** (I am going to the store.) A natural Ukrainian conversation blends these forms effortlessly. You might say: **Магазин на вулиці Шевченка.** (The store is on Shevchenko street — locative). And immediately follow with: **Потім їду на роботу.** (Then I am going to work — accusative). Recognizing which case to use is the key to clear communication.
-
-The prepositional patterns for **в** (in) and **на** (on) require careful attention. The choice of preposition stays the same, but the noun ending changes based on whether you describe location or direction. Consider these contrasting examples:
-
-*   **На вулиці** (On the street — Locative: Де?) vs. **На вулицю** (Onto the street — Accusative: Куди?).
-*   **На площі** (On the square — Locative: Де?) vs. **На площу** (Onto the square — Accusative: Куди?).
-*   **В офісі** (In the office — Locative: Де?) vs. **В офіс** (Into the office — Accusative: Куди?).
-
-Feminine nouns change clearly from **-і** to **-ю** or **-у**. Masculine inanimate nouns like **офіс** show a zero-ending in the accusative direction form but take an **-і** ending for static location.
-
-:::note
-You might notice that the preposition **в** (in) frequently changes to **у** to make the sentence sound smoother (like **у парку** instead of **в парку**). The grammatical case and meaning remain exactly the same.
-:::
-
-This synthesis table categorizes the essential navigation information. It separates static locations, active movements, transportation methods, and physical distance.
-
-| Category | Question | Grammar Form | Examples |
-| :--- | :--- | :--- | :--- |
-| Location (Static) | **Де ти?** (Where are you?) | **в / на** + Locative | **В парку, на площі.** |
-| Destination (Direction) | **Куди йдеш?** (Where are you going?) | **в / на** + Accusative | **В парк, на площу.** |
-| Transport Method | **Як? / Чим?** (How? / By what?) | Instrumental OR **на** + Loc | **Автобусом, на метро.** |
-| Distance | **Далеко?** (Is it far?) | Adverbs | **Далеко, близько, пішки.** |
-
-When you combine these elements, you can give clear, formal directions to anyone. This is where the imperative mood becomes very useful. We use formal commands ending in **-іть** or **-те** to speak politely to strangers. The verb **ідіть** (go / walk) is the standard command for pedestrian movement. For example: **Ідіть прямо.** (Go straight.) If the destination requires a vehicle, you must use the verb **їхати** (to ride). Its formal command form is irregular: **їдьте** (go / travel). For example: **Їдьте на метро.** (Go by metro.) Using these formal commands ensures you sound respectful and helpful on the streets of any Ukrainian city.
-
-<!-- INJECT_ACTIVITY: quiz-de-vs-kudy -->
 
 <!-- INJECT_ACTIVITY: fill-in-directions -->
 
-## Мій район
+Not all navigation happens on foot or as a tourist. Daily routines require combining different transport methods and sequence words to describe a commute.
 
-To describe your daily life, you need vocabulary for distance and proximity. The most common adjectives for space are paired with the preposition **від** (from), requiring the genitive case. We use the chunks **далеко від** (far from) and **близько від** (near from / close to). You might say: **Школа далеко від дому.** (The school is far from home.) If a place is highly accessible, you say: **Аптека близько.** (The pharmacy is near.) You can add: **Можна піти пішки.** (It is possible to go on foot.) Another excellent word for proximity is **поруч** (nearby / next door). If you live right next to a bakery, you say: **Пекарня поруч.** (The bakery is nearby.)
+> **Оксана:** **Як ти дістаєшся на роботу?** *(How do you get to work?)*
+> **Тарас:** **Спочатку йду на зупинку. Потім їду автобусом до центру.** *(First I go to the stop. Then I go by bus to the center.)*
+> **Оксана:** **А потім?** *(And then?)*
+> **Тарас:** **Потім іду пішки п'ять хвилин. Робота в офісі на площі.** *(Then I go on foot for five minutes. Work is in an office on the square.)*
 
-Your daily life revolves around your local area. The Ukrainian word for a neighborhood or a city district is **район**. When describing your city, you usually relate locations to the **центр** (center) or the **околиця** (outskirts). Living in the center is very different from living on the outskirts. The standard way to state your address is to use the preposition **на** with the word **вулиця** (street) in the locative case. You say: **Я живу на вулиці Шевченка.** (I live on Shevchenko street.) The street name itself often takes a genitive form (like Шевченка), but simply remember the phrase as a fixed chunk.
+Describing a daily route involves sequencing actions. The adverb **спочатку** (first/initially) sets up the beginning of the journey, while **потім** (then/afterwards) links the subsequent steps. The transition from walking to taking transport is a core part of urban life, demonstrating how vocabulary adapts to the physical reality of the city.
 
-Time is a crucial part of navigation. We often measure distance in time rather than kilometers. The word for minute is **хвилина**. A very common and natural phrase is **п'ять хвилин пішки** (five minutes on foot). For example: **Супермаркет близько, п'ять хвилин пішки.** (The supermarket is near, five minutes on foot.) To navigate successfully, you must recognize physical landmarks. A **перехрестя** (intersection) is a common reference point for turning. A **зупинка** (stop) is essential for catching a bus.
+## Де і куди разом (Where and Where To Together)
 
-A cohesive text describing a personal neighborhood combines places, transport, and directions into a single narrative.
+The contrast between static location and active direction is fundamental to Ukrainian grammar. Real navigation uses both concepts together, switching back and forth depending on the verb.
 
-> **Я живу на вулиці Франка. Біля мого дому є парк і магазин. Школа далеко — треба їхати автобусом. Аптека близько, можна піти пішки. У моєму районі є кафе, ресторан і бібліотека. Бібліотека на розі. Ідіть прямо, потім направо.**
-> *(I live on Franko street. Near my house there is a park and a store. The school is far — one needs to go by bus. The pharmacy is near, it is possible to go on foot. In my neighborhood there is a cafe, a restaurant, and a library. The library is on the corner. Go straight, then to the right.)*
+*   **Я зараз у парку.** *(I am now in the park.)* — **Де?** (Where?) triggers the locative case.
+*   **Я йду в магазин.** *(I am going to the store.)* — **Куди?** (Where to?) triggers the accusative case.
+*   **Магазин на вулиці Шевченка.** *(The store is on Shevchenko street.)* — **Де?** (Where?) returns to the locative.
+*   **Потім їду на роботу.** *(Then I go to work.)* — **Куди?** (Where to?) requires the accusative.
 
-This description uses static locations, explains how to travel to distant places, and gives specific walking instructions.
+This constant switch between **де** and **куди** is a hallmark of natural Ukrainian speech. A static verb of position anchors you in a location, while a verb of motion pushes you toward a destination.
+
+:::caution
+Do not confuse **де** (where - static) with **куди** (where to - directional). In English, we often use "where" for both ("Where are you?" vs. "Where are you going?"), but Ukrainian strictly separates them. Using **де** with a verb of motion sounds unnatural.
+:::
+
+Preposition patterns synthesize these rules into a clear communication toolkit. The choice of preposition and case depends entirely on the question being answered. The destination itself does not dictate the grammar; the action dictates it.
+
+| Situation | Question | Form |
+|---|---|---|
+| Static | **Де ти?** | **в/на** + locative |
+| Direction | **Куди йдеш?** | **в/на** + accusative |
+| By transport | **Як? Чим?** | **автобусом / на метро** |
+| Distance | **Далеко?** | **далеко / близько / пішки** |
+
+When answering the question **Де ти?** (Where are you?), you must use the prepositions **в/на** with the locative case, as in **Магазин на вулиці Шевченка**. When answering **Куди йдеш?** (Where are you going to?), you must switch to **в/на** with the accusative case, as seen in the phrase **Потім їду на роботу**. The preposition remains the same, but the ending of the noun changes to reflect the movement.
+
+<!-- INJECT_ACTIVITY: quiz-locative-accusative -->
+
+Moving through the city requires specifying the mechanics of transport and distance. When answering the questions **Як?** (How?) and **Чим?** (By what means?), Ukrainian relies on distinct grammatical structures. The instrumental case is used for vehicles you ride inside, like **автобусом** (by bus). However, borrowed words like **метро** (metro/subway) do not decline, so the phrase remains **на метро** (by metro).
+
+Distance can be described relatively using the adverbs **далеко** (far) and **близько** (near/close). For shorter distances, the adverb **пішки** (on foot) indicates walking.
+
+*   **Музей далеко.** *(The museum is far.)*
+*   **Парк близько.** *(The park is near.)*
+*   **Ми йдемо пішки.** *(We are going on foot.)*
+
+These descriptors provide practical context for anyone trying to navigate an unfamiliar area. Measuring distance through the required mode of transport is the most natural way to explain city geography.
+
+## Мій район (My Neighborhood)
+
+Describing where you live requires grounding your location relative to other landmarks. The noun **район** (neighborhood/district, m) refers to a specific section of a city. The preposition **біля** (near/by) is used to establish proximity and always pairs with the genitive case.
+
+*   **Я живу на вулиці Франка.** *(I live on Franko street.)*
+*   **Біля мого дому є парк і магазин.** *(Near my house there is a park and a store.)*
+
+This simple model description establishes a home base and identifies the immediate surroundings. The phrase **біля мого дому** (near my home) is a high-frequency chunk for describing a residential area. A neighborhood is defined by what is accessible from your front door.
+
+Combining neighborhood features with transport needs reveals how a person interacts with their city. You must contrast what is accessible with what requires a journey.
+
+*   **Школа далеко. Треба їхати автобусом.** *(The school is far. One needs to go by bus.)*
+*   **Аптека близько. Можна піти пішки.** *(The pharmacy is near. One can go on foot.)*
+
+The impersonal construction **треба їхати** (one needs to travel) expresses necessity without requiring a specific subject pronoun. Conversely, **можна піти** (one can go) indicates possibility and convenience. A typical neighborhood might be described by the amenities it contains: **У моєму районі є кафе, ресторан і бібліотека.** *(In my neighborhood there is a cafe, a restaurant, and a library.)* If a location is very close, the adverb **поруч** (nearby) is often used instead of a specific measurement.
+
+Useful phrases for city life often measure distance in time rather than meters. The noun **хвилина** (minute, f) is frequently paired with walking.
+
+*   **П'ять хвилин пішки.** *(Five minutes on foot.)*
+
+Other essential location chunks include the paired concepts **далеко від** (far from) and **близько від** (near from), which both require the genitive case for the following noun. To describe the general area of a city, the phrases **у центрі міста** (in the city center) and **на околиці** (on the outskirts) are standard locative constructions.
+
+*   **Мій офіс у центрі міста.** *(My office is in the city center.)*
+*   **Я живу на околиці.** *(I live on the outskirts.)*
+
+:::note
+The word **пішки** (on foot) is an adverb, not a noun, so it never changes its form. You cannot say "на пішки" or "з пішки" — simply use the word on its own.
+:::
+
+Using these fixed phrases allows you to describe urban geography without needing complex grammatical explanations.
 
 <!-- INJECT_ACTIVITY: fill-in-transport-route -->
 
 ## Підсумок — Summary
 
-The urban communication toolkit contains everything needed for daily navigation. Asking: **Де...?** (Where...?), **Як дістатися до...?** (How to get to...?). Directions: **прямо** (straight), **направо** (to the right), **наліво** (to the left). Location: **в/на** + locative, **в/на** + accusative. Transport: **автобусом**, **на метро**, **пішки**. These linguistic tools allow you to move confidently and independently.
+The urban communication toolkit relies on clear questions and direct commands. Asking for a location starts with the static question **Де...?** (Where...?), while asking for a route uses the dynamic structure **Як дістатися до...?** (How to get to...?). When providing directions, the adverbs **прямо** (straight), **направо** (to the right), and **наліво** (to the left) form the core instructions. Using the formal imperative verbs **ідіть** (go on foot) and **їдьте** (go by transport) ensures politeness when speaking to strangers on the street. Combining these elements allows you to give and receive safe, accurate guidance.
 
-When speaking Ukrainian, cultural and linguistic precision matters. Another critical distinction involves transport hubs. In English, "station" is a generic term. In Ukraine, you must be specific. If you need a bus, you ask for the **автовокзал** (bus station). If you need a train, you ask for the **залізничний вокзал** (railway station). Mixing these up will send you to the wrong side of the city!
+Grammatical navigation structures depend on a strict distinction between location and movement. The prepositions **в** and **на** act differently based on context. Pairing them with the locative case answers the static question **Де?** (Where?), while pairing them with the accusative case answers the directional question **Куди?** (Where to?). Transport methods further refine the description, distinguishing between walking (**пішки**), taking a non-declining transport (**на метро**), or riding a standard vehicle (**автобусом**). These patterns are the foundation of practical city survival.
 
-:::caution
-Many learners try to translate the English "I apologize" directly into Ukrainian as **Вибачаюся**. This is a Russian calque and sounds unnatural because it literally means "I apologize myself." The correct, polite form is always the imperative **Вибачте** (Excuse me).
-:::
+<!-- INJECT_ACTIVITY: match-up-navigation-responses -->
 
-Perform a self-check to verify these skills. Review the questions and situations below to see if you are ready for a real Ukrainian city.
-*   Чи можете ви запитати дорогу? (Can you ask for directions?) Example: **Вибачте, де бібліотека?** (Excuse me, where is the library?)
-*   Чи можете ви сказати **направо** і **наліво**? (Can you say "to the right" and "to the left"?)
-*   Чи знаєте ви різницю між **у центрі** (де?) та **в центр** (куди?)? (Do you know the difference between "in the center" — locative, and "into the center" — accusative?)
-*   Опишіть свій шлях: Як ви дістаєтеся на роботу чи в університет? (Describe your route from home to work/school: How do you get to work or to the university?) You should be able to say: **Спочатку йду... потім їду...** (First I go... then I go...).
-Mastering these scenarios prepares you for authentic communication in any town.
+Self-check: Describe your route from home to work or school. Construct a short narrative answering these specific questions to verify your understanding.
 
+*   **Де ти живеш?** *(Where do you live?)*
+    *   **Я живу на...** *(I live on...)*
+*   **Як ти дістаєшся на роботу?** *(How do you get to work?)*
+    *   **Я їду...** *(I go by...)*
+*   **Це далеко чи близько?** *(Is it far or near?)*
+    *   **Це...** *(It is...)*
+*   **Скільки хвилин ти йдеш пішки?** *(How many minutes do you walk?)*
+    *   **Я йду пішки...** *(I walk...)*
+*   **Що є біля твого дому?** *(What is near your house?)*
+    *   **Біля мого дому є...** *(Near my house there is...)*
+
+Using these prompts builds a cohesive description of your daily interaction with the city. The ability to synthesize location, direction, and transport into a single explanation marks a significant step in conversational independence.
 </module_content>
 
 ---
@@ -216,48 +273,68 @@ version: "1.0"
 module: around-the-city
 level: a1
 
+# NOTE — these are SHAPE examples. The real targets are at the top of this prompt
+# (10 total / 4–6 inline / 6–9 workbook,
+# 6+ items per activity). The shapes below are TRUNCATED for readability;
+# YOUR output MUST hit those minimums.
+
 inline:
   - id: marker-id-here        # MUST match an <!-- INJECT_ACTIVITY: ... --> marker
     type: quiz                 # activity type
     instruction: "Оберіть правильний варіант"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - question: "_____ стіл"
-        options: ["мій", "моя", "моє"]
+        options: ["мій", "моя", "моє", "мої"]
         correct: 0             # 0-based index
+      - question: "Це ____ книга."
+        options: ["мій", "моя", "моє", "мої"]
+        correct: 1
+      # ... add at least 6 items total — never stop at 1-2
 
   - id: another-marker-id
     type: fill-in
     instruction: "Вставте правильне слово"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - sentence: "Це ____ кімната."
         answer: "моя"
         options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ вікно."
+        answer: "моє"
+        options: ["мій", "моя", "моє"]
+      # ... ≥ 6 items total
 
 workbook:
-  - type: match-up
+  - id: match-up-vocab
+    type: match-up
     instruction: "З'єднайте пари"
-    pairs:
+    pairs:                     # ← real output: ≥ 6 pairs
       - left: "стіл"
         right: "він"
       - left: "книга"
         right: "вона"
       - left: "вікно"
         right: "воно"
+      # ... ≥ 6 pairs total
 
-  - type: group-sort
+  - id: group-sort-gender
+    type: group-sort
     instruction: "Розподіліть слова за категоріями"
     groups:
-      - label: "Category A"
-        items: ["word1", "word2"]
-      - label: "Category B"
-        items: ["word3", "word4"]
+      - label: "Чоловічий рід"
+        items: ["стіл", "олівець", "будинок"]   # ≥ 3 items per group
+      - label: "Жіночий рід"
+        items: ["книга", "ручка", "школа"]
+      - label: "Середній рід"
+        items: ["вікно", "море", "молоко"]
 
-  - type: true-false
+  - id: true-false-grammar
+    type: true-false
     instruction: "Правда чи ні?"
-    items:
-      - statement: "Statement here"
-        correct: true
-        explanation: "Why it's true"
+    items:                     # ← real output: ≥ 6 items
+      - statement: "«Книга» — це чоловічий рід."
+        correct: false
+        explanation: "Книга закінчується на -а, отже жіночий рід."
+      # ... ≥ 6 items total
 
   - type: error-correction
     instruction: "Виправте помилку"
@@ -328,7 +405,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -424,10 +501,15 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 ## Quality Rules
 
-**ITEM COUNT MINIMUMS (non-negotiable):**
-- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
-- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
-- If you can't think of enough items, add more examples from the module's vocabulary and content.
+**ACTIVITY COUNT MINIMUMS (non-negotiable, audit-enforced):**
+- **Total: 10 activities.** Inline: 4–6. Workbook: 6–9. The audit gate FAILS the module if you ship fewer.
+- **Type diversity: workbook MUST cover ≥5 distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
+- **Match the inline markers exactly.** Every `<!-- INJECT_ACTIVITY: id -->` marker in the prose needs a matching inline activity with that exact id. Skipping markers means the lesson tab is broken.
+
+**ITEM COUNT MINIMUMS (non-negotiable, per-activity):**
+- **Default minimum: 6 items per activity.** Quiz, fill-in, match-up, true-false, anagram, error-correction, translate, cloze, mark-the-words, divide-words, count-syllables, odd-one-out, group-sort categories: all ≥ 6.
+- **Lower minimums for specific types only:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items, essay-response/critical-analysis = 1 prompt.
+- If you can't think of enough items, add more examples from the module's vocabulary and content. NEVER ship a 1-item or 2-item activity unless its type cap explicitly allows it.
 - **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
 - **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
@@ -534,6 +616,27 @@ IMPORTANT: After using tools, output your COMPLETE module content as plain text.
 1. Run `verify_words` on all Ukrainian words in your exercises — every word must exist in VESUM
 2. Run `query_cefr_level` on any word you're unsure about — it must be a1-appropriate
 3. For fill-in answers and distractors, verify the exact form (case, number, gender) with `verify_lemma`
+
+---
+
+## ⚠️ MANDATORY FINAL CHECKLIST — verify before emitting YAML
+
+Walk through this checklist explicitly before you start emitting. If ANY box is unchecked, fix it FIRST.
+
+- [ ] My output has **at least 4** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
+- [ ] My output has **at least 6** workbook activities.
+- [ ] **Total ≥ 10.**
+- [ ] **Every** activity has **at least 6** items, pairs, or statements (except types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3, essay-response=1).
+- [ ] The module (inline + workbook combined) uses **at least 0 distinct activity types** (or 4+ when 0 = 0 and the workbook size allows it). I am NOT shipping a wall of quizzes.
+- [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
+- [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
+- [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+- [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+- [ ] My inline count is between 4 and 6. I did NOT create more injection markers than 6.
+- [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
+- [ ] At B1+, all instructions are in Ukrainian (no English fallback).
+
+If you cannot tick all of these, REGENERATE the activities BEFORE outputting. Shipping under-spec means the build rejects you and the heal loop has to redo your work — wasting compute.
 
 ---
 

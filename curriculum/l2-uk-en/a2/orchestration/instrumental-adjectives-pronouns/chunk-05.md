@@ -1,10 +1,12 @@
-## Підсумок
+## Підсумок (~130 words)
 
-Давайте коротко повторимо головні правила, які ми сьогодні вивчили. Орудний відмінок має дуже чіткі закінчення. First, hard adjectives always take **-им** for masculine and neuter, and **-ою** for feminine (з новим, з новою). Second, soft adjectives take **-ім** and **-ьою** (з синім, із синьою). Third, possessive pronouns change too: «мій» becomes **моїм** or **моєю**, and «наш» becomes **нашим** or **нашою**. Fourth, remember the golden rule about **його** and **її**. These pronouns never change their form in the Instrumental case. Нарешті, завжди будуйте повні граматичні ланцюги. Усі слова у фразі «з моїм найкращим другом» повинні стояти в орудному відмінку. 
+:::info
+**Grammar recap**
+Let's recap the key rules for the Instrumental case. Hard adjectives end in **-им** or **-ою**, while soft adjectives end in **-ім** or **-ьою**. Possessive pronouns like **мій** (my) become **моїм** or **моєю**. However, the pronouns **його** and **її** never change. Always use full agreement chains, such as **з моїм найкращим другом** (with my best friend).
+:::
 
-Тепер перевірте себе. Спробуйте дати відповіді на ці три запитання:
-1. How do you say "with our new neighbor (f)" in Ukrainian?
-2. Which possessive pronouns never change in the Instrumental case?
-3. What is the correct ending for a soft masculine adjective?
+Початкові форми слів залишаються важливими для побудови речень. **Мій** **новий** **сусід** і **твій** **найкращий** друг часто розмовляють. **Наш** **великий** парк і **цей** **старий** театр дуже відомі. **Ваш** **гарний** офіс і **той** район виглядають сучасно.
 
-Ваша українська мова стає дедалі кращою!
+> *Initial word forms remain important for building sentences. **My** **new** **neighbor (male)** and **your (informal)** **the best** friend often talk. **Our** **big, large** park and **this** **old** theater are very famous. **Your (formal/plural)** **nice, beautiful** office and **that** district look modern.*
+
+Before finishing, try answering three self-check questions. First, how do you say "with our new neighbor (f)" in Ukrainian? Second, which pronoun never changes its form in the Instrumental case? Finally, what is the exact ending for a soft masculine adjective?

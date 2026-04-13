@@ -1,21 +1,39 @@
-## Сценарій 3: Розкажи про поїздку!
+## Сценарій 3: Розкажи про поїздку! (~600 words)
 
-Давайте послухаємо розмову двох друзів. Марко щойно повернувся з відпустки, і Олена розпитує його про подорож.
-> — **Олена:** Марку, привіт! Я тебе давно не бачила. **Де ти був** (where were you) минулого тижня? *(Marko, hi! I haven't seen you in a long time. Where were you last week?)*
-> — **Марко:** Привіт, Олено! Я був на півдні України. *(Hi, Olena! I was in the south of Ukraine.)*
-> — **Олена:** Дуже цікаво! А **куди ти їздив** (where did you go)? *(Very interesting! And where did you go?)*
-> — **Марко:** Я їздив до Одеси! Я хотів побачити Чорне море. *(I went to Odesa! I wanted to see the Black Sea.)*
-> — **Олена:** Клас! Як ви туди **доїхали** (reached)? Це ж далеко. *(Cool! How did you reach there? It's far, after all.)*
-> — **Марко:** Ми поїхали нічним потягом. Вранці ми вже пили каву біля моря. *(We went by night train. In the morning we were already drinking coffee by the sea.)*
-> — **Олена:** Що ви робили там щодня? *(What did you do there every day?)*
-> — **Марко:** Ми багато ходили на **пляж** (beach) і просто дивилися на **море** (sea). Це був чудовий відпочинок! *(We went to the beach a lot and just looked at the sea. It was a wonderful vacation!)*
+When friends return from a trip, they usually want to share their stories and show pictures. Listen to Max and Anna talking about her vacation.
 
-In this dialogue, Olena asks two different questions to understand the situation. First, she asks «Де ти був?» to find out Marko's general location in the past. Then, she specifically asks «Куди ти їздив?» to ask about his complete round-trip journey. The verb «їхати» is imperfective and means "to be going in one direction," but its partner «їздити» (imperfective, multidirectional) is uniquely used in the past tense to describe a fully completed round trip. Марко каже: «Я **їздив** (went and came back) до Одеси». Ми чітко розуміємо, що він уже повернувся додому. This is a very crucial distinction in Ukrainian. Ви можете сказати інакше: «Мій брат **поїхав** (left) до Києва». Це означає, що ваш брат покинув дім. Він усе ще перебуває в Києві. Або ви просто фокусуєтесь на факті його від'їзду. The perfective verb «поїхати» focuses entirely on the departure, not the return.
+> — **Макс:** Привіт, Анно! Радий тебе бачити. Розкажи, де ти була минулого тижня? *(Hi, Anna! Glad to see you. Tell me, where were you last week?)*
+> — **Анна:** Привіт! Я їздила до Одеси на кілька днів. Це була чудова подорож! Ось мої фотографії. *(Hi! I went to Odesa for a few days. It was a wonderful trip! Here are my photos.)*
+> — **Макс:** Клас! А куди саме ви їздили? Що бачили? *(Cool! And where exactly did you go? What did you see?)*
+> — **Анна:** Ми були на пляжі, дивилися на море, а потім ходили в ресторан. *(We were at the beach, looked at the sea, and then went to a restaurant.)*
+> — **Макс:** Як ви доїхали туди? *(How did you get there?)*
+> — **Анна:** Ми поїхали нічним потягом. *(We went by night train.)*
+> — **Макс:** Ого! І що тобі найбільше сподобалося в місті? *(Wow! And what did you like the most in the city?)*
+> — **Анна:** Мені дуже сподобалася архітектура. *(I really liked the architecture.)*
 
-When we tell a story about a past trip, we must build a clear and logical narrative sequence. We use perfective verbs for the main, sequential events of the plot, and imperfective verbs for continuous background processes. Ось гарний приклад правильної розповіді: «**Спочатку** (at first) ми **приїхали** (arrived) до нового міста. **Потім** (then) ми швидко **зупинилися** (stayed) в затишному готелі. Вдень ми дуже багато **ходили** (walked) по місту, а ввечері ми **відвідали** (visited) оперу». Pay close attention to the verb choices here. «Ходити по місту» is a long process — you walk around and explore without a specific, immediate final destination. Therefore, we use the multidirectional imperfective verb. However, «відвідати оперу» is a specific, completed event with a clear result in the past, so we use a perfective verb. Alternating these aspects makes your story dynamic and natural.
+When we talk about a finished **подорож** (trip), the choice of the motion verb is very important. There is a critical contrast between the verbs **їздив** (went by vehicle and came back) and **поїхав** (departed by vehicle). If you want to say that you visited a place and returned home, use the imperfective verb in the past tense. This shows a completed round-trip. If you use the perfective verb, it means that the person departed, perhaps from a **вокзал** (station), and might still be at their destination.
 
-Після детальної розповіді про події ми часто хочемо поділитися своїми позитивними емоціями. Як правильно сказати українською, що ваша поїздка була дійсно гарною? Найпопулярніша та найприродніша фраза — це «**Мені сподобалося**» (I liked it). You use this specific construction with the dative case pronoun («мені») and the neuter past tense form of the verb. Після цієї фрази ви можете легко додати інфінітив або звичайний іменник: «Мені сподобалося гуляти по місту» або «Мені дуже сподобалося це старе місто». Також Марко може емоційно сказати: «Я **отримав багато вражень**» (I got many impressions). Використовуйте такі короткі слова для загальної атмосфери: **було чудово** (it was wonderful), **було дуже весело** (it was very fun), або **було неймовірно цікаво** (it was incredibly interesting).
+* **Я їздив до Києва.** — *I went to Kyiv (and came back).*
+* **Він поїхав до Києва.** — *He left for Kyiv (and is still there).*
+* **Вчора ми їздили на море.** — *Yesterday we went to the sea (and returned).*
 
-Завжди важливо свідомо обирати питомо українські слова для ваших мандрівок. Ніколи не використовуйте російське слово «путешествіє». Правильне і красиве українське слово — це **подорож** (journey). Ви довго подорожуєте потягом і прибуваєте на великий вокзал. Слово «вокзал» є в багатьох мовах, але українська мова має своє унікальне історичне слово — **двірець** (station). Це слово особливо популярне в західних регіонах України. Наприклад, у Львові ви приїдете саме на Головний двірець. Також обов'язково пам'ятайте різницю між місцями зупинок транспорту. Для міських автобусів або трамваїв ми завжди використовуємо слово **зупинка** (bus stop). Але для потягів та метро ми кажемо **станція** (train station). Використовуйте ці правильні слова, і ваша українська мова звучатиме природно.
+:::info
+**Grammar box** — The verb **їздив** implies a two-way journey. You went somewhere and you came back. The verb **поїхав** implies a one-way journey so far. You left, and the return trip has not happened yet or is simply not the focus of the sentence.
+:::
+
+Минулого тижня я їздив до Одеси. Це була моя перша велика подорож цього року. Спочатку ми купили квитки, а ввечері поїхали на вокзал. Ми поїхали туди нічним потягом. Ми доїхали до міста дуже швидко, всього за десять годин. В Одесі ми вирішили зупинитися в маленькому готелі біля пляжу. Там ми довго ходили по місту і дивилися на архітектуру. Ми відвідали музей, купили сувеніри і з'їли найсмачніший борщ у ресторані. Я можу розповісти багато цікавих історій про цей час.
+
+> *Last week I went to Odesa. It was my first big trip this year. First, we bought tickets, and in the evening we went to the station. We went there by a night train. We reached the city very quickly, in just ten hours. In Odesa, we decided to stay in a small hotel near the beach. There we walked around the city for a long time and looked at the architecture. We visited a museum, bought souvenirs, and ate the most delicious borsch in a restaurant. I can tell many interesting stories about this time.*
+
+When you want to share your final thoughts about a trip, you often talk about your **враження** (impression). To express how you felt, use the perfective verb **сподобатися** (to like). Because you are summarizing a completed experience, the perfective aspect is the natural choice.
+
+* **Мені дуже сподобалось.** — *I really liked it.*
+* **Було чудово!** — *It was wonderful!*
+* **Там було цікаво і весело.** — *It was interesting and fun there.*
+* **Я хочу поїхати туди ще раз.** — *I want to go there again.*
+
+If you want to describe a specific unexpected event that occurred, you can use the verb **трапитися** (to happen). Sharing these small details makes your story much more engaging for the listener.
+
+Let's break down the Odesa narrative to see how the verbs work together. The verb **їздив** establishes the round-trip context right at the beginning. Then, the perfective verbs **поїхали** and **доїхати** (to reach by vehicle) describe the specific transit milestones of departing and arriving. Once in the city, the imperfective verb **ходили** gives the background activity, showing a process of wandering around. Finally, verbs like **відвідали**, **купили**, and **з'їли** list the specific perfective achievements that completed the journey. This mix of background processes and completed actions creates a natural and dynamic story.
 
 <!-- INJECT_ACTIVITY: fill-in-travel-narrative -->

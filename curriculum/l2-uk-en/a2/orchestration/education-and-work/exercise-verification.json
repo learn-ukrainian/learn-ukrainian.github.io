@@ -1,488 +1,276 @@
 {
-  "total_items": 246,
-  "grounded_items": 167,
+  "total_items": 309,
+  "grounded_items": 265,
   "ungrounded": [
     {
-      "word": "код",
-      "exercise_type": "fill-in",
-      "context": "Я вчуся на програміста, _____ люблю писати код.",
-      "role": "context"
-    },
-    {
-      "word": "читає",
-      "exercise_type": "fill-in",
-      "context": "Він багато читає, _____ успішно скласти іспит.",
-      "role": "context"
-    },
-    {
-      "word": "закінчу",
-      "exercise_type": "fill-in",
-      "context": "_____ я закінчу проєкт, то отримаю премію.",
-      "role": "context"
-    },
-    {
-      "word": "комп'ютери",
-      "exercise_type": "fill-in",
-      "context": "Це компанія, _____ виробляє комп'ютери.",
-      "role": "context"
-    },
-    {
-      "word": "змінила",
-      "exercise_type": "fill-in",
-      "context": "Вона змінила роботу, _____ мати кращу зарплату.",
-      "role": "context"
-    },
-    {
-      "word": "зарплату",
-      "exercise_type": "fill-in",
-      "context": "Вона змінила роботу, _____ мати кращу зарплату.",
-      "role": "context"
-    },
-    {
-      "word": "престижний",
-      "exercise_type": "error-correction",
-      "context": "престижний",
-      "role": "answer"
-    },
-    {
-      "word": "вивчаєш",
-      "exercise_type": "match-up",
-      "context": "Чому ти вивчаєш економіку?",
-      "role": "answer"
-    },
-    {
-      "word": "чого",
-      "exercise_type": "match-up",
-      "context": "Для чого ти шукаєш нову роботу?",
-      "role": "answer"
-    },
-    {
-      "word": "шукаєш",
-      "exercise_type": "match-up",
-      "context": "Для чого ти шукаєш нову роботу?",
-      "role": "answer"
-    },
-    {
-      "word": "буде",
-      "exercise_type": "match-up",
-      "context": "Що буде, якщо ти складеш іспит?",
-      "role": "answer"
-    },
-    {
-      "word": "складеш",
-      "exercise_type": "match-up",
-      "context": "Що буде, якщо ти складеш іспит?",
-      "role": "answer"
-    },
-    {
-      "word": "вступлю",
+      "word": "шукаємо",
       "exercise_type": "unjumble",
-      "context": "вступлю",
+      "context": "шукаємо",
       "role": "answer"
     },
     {
-      "word": "твій",
-      "exercise_type": "match-up",
-      "context": "Де працює твій керівник?",
-      "role": "answer"
-    },
-    {
-      "word": "будеш",
-      "exercise_type": "match-up",
-      "context": "Що ти будеш робити після бакалаврату?",
-      "role": "answer"
-    },
-    {
-      "word": "магістра",
-      "exercise_type": "match-up",
-      "context": "Я буду вчитися далі, щоб отримати диплом магістра.",
+      "word": "можна",
+      "exercise_type": "fill-in",
+      "context": "Ми шукаємо компанію, ____ можна працювати дистанційно.",
       "role": "context"
     },
     {
-      "word": "змінив",
-      "exercise_type": "match-up",
-      "context": "Чому він змінив професію?",
-      "role": "answer"
-    },
-    {
-      "word": "хотів",
-      "exercise_type": "match-up",
-      "context": "Тому що він хотів новий досвід.",
+      "word": "дистанційно",
+      "exercise_type": "fill-in",
+      "context": "Ми шукаємо компанію, ____ можна працювати дистанційно.",
       "role": "context"
     },
     {
-      "word": "школі",
-      "exercise_type": "quiz",
-      "context": "Я працюю в школі, _____ дуже велика.",
-      "role": "context"
-    },
-    {
-      "word": "вивчає",
+      "word": "любить",
       "exercise_type": "unjumble",
-      "context": "вивчає",
+      "context": "любить",
       "role": "answer"
     },
     {
-      "word": "кордоном",
-      "exercise_type": "quiz",
-      "context": "Вона вивчає англійську, _____ працювати за кордоном.",
+      "word": "математику",
+      "exercise_type": "fill-in",
+      "context": "Він пішов на економічний факультет, ____ любить математику.",
       "role": "context"
     },
     {
-      "word": "співбесіду",
-      "exercise_type": "quiz",
-      "context": "_____ я знайду час, то піду на співбесіду.",
-      "role": "context"
-    },
-    {
-      "word": "працюємо",
-      "exercise_type": "quiz",
-      "context": "Офіс, _____ ми працюємо, дуже сучасний.",
-      "role": "context"
-    },
-    {
-      "word": "сучасний",
-      "exercise_type": "quiz",
-      "context": "Офіс, _____ ми працюємо, дуже сучасний.",
-      "role": "context"
-    },
-    {
-      "word": "вступають",
+      "word": "використовуються",
       "exercise_type": "true-false",
-      "context": "Студенти вступають до магістратури, тому що не отримати дипл",
+      "context": "Професії завжди використовуються у називному відмінку після ",
       "role": "context"
     },
     {
-      "word": "складає",
+      "word": "називному",
       "exercise_type": "true-false",
-      "context": "Якщо студент успішно складає іспит, то він може вчитися далі",
+      "context": "Професії завжди використовуються у називному відмінку після ",
       "role": "context"
     },
     {
-      "word": "може",
+      "word": "відмінку",
       "exercise_type": "true-false",
-      "context": "Якщо студент успішно складає іспит, то він може вчитися далі",
+      "context": "Професії завжди використовуються у називному відмінку після ",
       "role": "context"
     },
     {
-      "word": "змінюють",
+      "word": "нашого",
       "exercise_type": "true-false",
-      "context": "Люди змінюють роботу, тому що щоб мати меншу зарплату.",
+      "context": "Якщо ми пояснюємо причину нашого рішення, ми використовуємо ",
       "role": "context"
     },
     {
-      "word": "меншу",
+      "word": "рішення",
       "exercise_type": "true-false",
-      "context": "Люди змінюють роботу, тому що щоб мати меншу зарплату.",
+      "context": "Якщо ми пояснюємо причину нашого рішення, ми використовуємо ",
       "role": "context"
     },
     {
-      "word": "зустріч",
+      "word": "українці",
       "exercise_type": "true-false",
-      "context": "Співбесіда — це зустріч, де ви розмовляєте з керівником про ",
+      "context": "Українці кажуть «скласти іспит», а не «зробити іспит».",
       "role": "context"
     },
     {
-      "word": "розмовляєте",
+      "word": "кажуть",
       "exercise_type": "true-false",
-      "context": "Співбесіда — це зустріч, де ви розмовляєте з керівником про ",
+      "context": "Українці кажуть «скласти іспит», а не «зробити іспит».",
       "role": "context"
     },
     {
-      "word": "керівником",
+      "word": "зробити",
       "exercise_type": "true-false",
-      "context": "Співбесіда — це зустріч, де ви розмовляєте з керівником про ",
+      "context": "Українці кажуть «скласти іспит», а не «зробити іспит».",
       "role": "context"
     },
     {
-      "word": "забирає",
+      "word": "узгоджується",
       "exercise_type": "true-false",
-      "context": "Хоча робота на повний день забирає багато часу, вона дає кор",
+      "context": "Слово «який» узгоджується в роді та числі з іменником, який ",
       "role": "context"
     },
     {
-      "word": "працюєш",
+      "word": "роді",
       "exercise_type": "true-false",
-      "context": "Якщо ти працюєш вчителем, щоб тобі потрібна вища освіта.",
+      "context": "Слово «який» узгоджується в роді та числі з іменником, який ",
       "role": "context"
     },
     {
-      "word": "гуманітарному",
-      "exercise_type": "fill-in",
-      "context": "гуманітарному",
-      "role": "answer"
-    },
-    {
-      "word": "факультеті",
-      "exercise_type": "fill-in",
-      "context": "Я навчаюся на _____ факультеті.",
+      "word": "числі",
+      "exercise_type": "true-false",
+      "context": "Слово «який» узгоджується в роді та числі з іменником, який ",
       "role": "context"
     },
     {
-      "word": "отримала",
-      "exercise_type": "fill-in",
-      "context": "Вона отримала _____ освіту в Києві.",
-      "role": "context"
-    },
-    {
-      "word": "престижна",
-      "exercise_type": "fill-in",
-      "context": "престижна",
-      "role": "answer"
-    },
-    {
-      "word": "вчора",
-      "exercise_type": "fill-in",
-      "context": "Ми вчора склали _____ іспит.",
-      "role": "context"
-    },
-    {
-      "word": "склали",
-      "exercise_type": "fill-in",
-      "context": "Ми вчора склали _____ іспит.",
-      "role": "context"
-    },
-    {
-      "word": "великий",
-      "exercise_type": "fill-in",
-      "context": "великий",
-      "role": "answer"
-    },
-    {
-      "word": "успішна",
-      "exercise_type": "error-correction",
-      "context": "успішна",
-      "role": "answer"
-    },
-    {
-      "word": "складають",
-      "exercise_type": "error-correction",
-      "context": "Студенти складають складну іспит.",
-      "role": "context"
-    },
-    {
-      "word": "зручна",
-      "exercise_type": "error-correction",
-      "context": "У мене дуже зручна графік.",
-      "role": "context"
-    },
-    {
-      "word": "цікавий",
-      "exercise_type": "match-up",
-      "context": "цікавий",
-      "role": "answer"
-    },
-    {
-      "word": "гуманітарна",
-      "exercise_type": "match-up",
-      "context": "гуманітарна",
-      "role": "answer"
-    },
-    {
-      "word": "вступаю",
-      "exercise_type": "match-up",
-      "context": "вступаю",
-      "role": "context"
-    },
-    {
-      "word": "вчився",
-      "exercise_type": "match-up",
-      "context": "вчився",
-      "role": "context"
-    },
-    {
-      "word": "складаєте",
-      "exercise_type": "match-up",
-      "context": "складаєте",
-      "role": "context"
-    },
-    {
-      "word": "змінили",
-      "exercise_type": "match-up",
-      "context": "змінили",
-      "role": "context"
-    },
-    {
-      "word": "вчишся",
-      "exercise_type": "fill-in",
-      "context": "Де _____ вчишся на бакалавраті?",
-      "role": "context"
-    },
-    {
-      "word": "бакалавраті",
-      "exercise_type": "fill-in",
-      "context": "Де _____ вчишся на бакалавраті?",
-      "role": "context"
-    },
-    {
-      "word": "року",
-      "exercise_type": "fill-in",
-      "context": "_____ хочемо вступити до магістратури цього року.",
-      "role": "context"
-    },
-    {
-      "word": "чи",
-      "exercise_type": "fill-in",
-      "context": "Чи працює _____ інженером чи архітектором?",
-      "role": "context"
-    },
-    {
-      "word": "однина",
-      "exercise_type": "group-sort",
-      "context": "Однина (Singular)",
+      "word": "іменником",
+      "exercise_type": "true-false",
+      "context": "Слово «який» узгоджується в роді та числі з іменником, який ",
       "role": "context"
     },
     {
       "word": "воно",
-      "exercise_type": "group-sort",
-      "context": "воно",
+      "exercise_type": "true-false",
+      "context": "Слово «який» узгоджується в роді та числі з іменником, який ",
+      "role": "context"
+    },
+    {
+      "word": "описує",
+      "exercise_type": "true-false",
+      "context": "Слово «який» узгоджується в роді та числі з іменником, який ",
+      "role": "context"
+    },
+    {
+      "word": "використовується",
+      "exercise_type": "true-false",
+      "context": "Після слова «щоб» зазвичай використовується інфінітив.",
+      "role": "context"
+    },
+    {
+      "word": "погоджуся",
+      "exercise_type": "match-up",
+      "context": "я обов'язково погоджуся.",
+      "role": "context"
+    },
+    {
+      "word": "знайду",
+      "exercise_type": "quiz",
+      "context": "____ я матиму диплом магістра, я знайду кращу посаду.",
+      "role": "context"
+    },
+    {
+      "word": "інженер",
+      "exercise_type": "error-correction",
+      "context": "Мій брат працює інженер.",
+      "role": "context"
+    },
+    {
+      "word": "навчається",
+      "exercise_type": "error-correction",
+      "context": "Сестра навчається на програміст.",
+      "role": "context"
+    },
+    {
+      "word": "економіст",
+      "exercise_type": "error-correction",
+      "context": "Я працюю економіст.",
+      "role": "context"
+    },
+    {
+      "word": "склали",
+      "exercise_type": "error-correction",
+      "context": "Ми успішно склали іспитом.",
+      "role": "context"
+    },
+    {
+      "word": "іспитом",
+      "exercise_type": "error-correction",
+      "context": "Ми успішно склали іспитом.",
+      "role": "context"
+    },
+    {
+      "word": "робити",
+      "exercise_type": "unjumble",
+      "context": "робити",
       "role": "answer"
     },
     {
-      "word": "множина",
-      "exercise_type": "group-sort",
-      "context": "Множина (Plural)",
-      "role": "context"
-    },
-    {
-      "word": "олено",
-      "exercise_type": "quiz",
-      "context": "Олено, яку спеціальність _____ обрала?",
-      "role": "context"
-    },
-    {
-      "word": "обрала",
-      "exercise_type": "quiz",
-      "context": "Олено, яку спеціальність _____ обрала?",
-      "role": "context"
-    },
-    {
-      "word": "пане",
-      "exercise_type": "quiz",
-      "context": "Пане директоре, коли _____ зможете підписати диплом?",
-      "role": "context"
-    },
-    {
-      "word": "директоре",
-      "exercise_type": "quiz",
-      "context": "Пане директоре, коли _____ зможете підписати диплом?",
-      "role": "context"
-    },
-    {
-      "word": "зможете",
-      "exercise_type": "quiz",
-      "context": "Пане директоре, коли _____ зможете підписати диплом?",
-      "role": "context"
-    },
-    {
-      "word": "підписати",
-      "exercise_type": "quiz",
-      "context": "Пане директоре, коли _____ зможете підписати диплом?",
-      "role": "context"
-    },
-    {
-      "word": "мамо",
-      "exercise_type": "quiz",
-      "context": "Мамо, ким _____ хотіла бути в дитинстві?",
-      "role": "context"
-    },
-    {
-      "word": "хотіла",
-      "exercise_type": "quiz",
-      "context": "Мамо, ким _____ хотіла бути в дитинстві?",
-      "role": "context"
-    },
-    {
-      "word": "дитинстві",
-      "exercise_type": "quiz",
-      "context": "Мамо, ким _____ хотіла бути в дитинстві?",
-      "role": "context"
-    },
-    {
-      "word": "шановний",
-      "exercise_type": "quiz",
-      "context": "Шановний керівнику, чи могли б _____ дати мені пораду?",
-      "role": "context"
-    },
-    {
-      "word": "керівнику",
-      "exercise_type": "quiz",
-      "context": "Шановний керівнику, чи могли б _____ дати мені пораду?",
-      "role": "context"
-    },
-    {
-      "word": "могли",
-      "exercise_type": "quiz",
-      "context": "Шановний керівнику, чи могли б _____ дати мені пораду?",
-      "role": "context"
-    },
-    {
-      "word": "дати",
-      "exercise_type": "quiz",
-      "context": "Шановний керівнику, чи могли б _____ дати мені пораду?",
-      "role": "context"
-    },
-    {
-      "word": "пораду",
-      "exercise_type": "quiz",
-      "context": "Шановний керівнику, чи могли б _____ дати мені пораду?",
-      "role": "context"
-    },
-    {
-      "word": "друже",
-      "exercise_type": "quiz",
-      "context": "Друже, ти багато працюєш, _____ потрібен відпочинок.",
-      "role": "context"
-    },
-    {
-      "word": "відпочинок",
-      "exercise_type": "quiz",
-      "context": "Друже, ти багато працюєш, _____ потрібен відпочинок.",
-      "role": "context"
-    },
-    {
-      "word": "пані",
-      "exercise_type": "quiz",
-      "context": "Пані вчителько, _____ дуже цікаво пояснюєте матеріал.",
-      "role": "context"
-    },
-    {
-      "word": "вчителько",
-      "exercise_type": "quiz",
-      "context": "Пані вчителько, _____ дуже цікаво пояснюєте матеріал.",
-      "role": "context"
-    },
-    {
-      "word": "пояснюєте",
-      "exercise_type": "quiz",
-      "context": "Пані вчителько, _____ дуже цікаво пояснюєте матеріал.",
-      "role": "context"
-    },
-    {
-      "word": "матеріал",
-      "exercise_type": "quiz",
-      "context": "Пані вчителько, _____ дуже цікаво пояснюєте матеріал.",
-      "role": "context"
-    },
-    {
-      "word": "успішною",
+      "word": "отримав",
       "exercise_type": "unjumble",
-      "context": "успішною.",
+      "context": "отримав",
       "role": "answer"
     },
     {
-      "word": "шукав",
+      "word": "кар'єра",
+      "exercise_type": "group-sort",
+      "context": "Робота та кар'єра",
+      "role": "context"
+    },
+    {
+      "word": "премія",
+      "exercise_type": "group-sort",
+      "context": "премія",
+      "role": "answer"
+    },
+    {
+      "word": "пройшов",
+      "exercise_type": "fill-in",
+      "context": "Я успішно пройшов ____ і отримав нову роботу.",
+      "role": "context"
+    },
+    {
+      "word": "проєктом",
+      "exercise_type": "fill-in",
+      "context": "Мій ____ завжди допомагає мені з проєктом.",
+      "role": "context"
+    },
+    {
+      "word": "гімназії",
+      "exercise_type": "fill-in",
+      "context": "Після гімназії молоді люди вступають в ____.",
+      "role": "context"
+    },
+    {
+      "word": "роботи",
+      "exercise_type": "fill-in",
+      "context": "Мені дуже подобається мій гнучкий ____ роботи.",
+      "role": "context"
+    },
+    {
+      "word": "кінці",
+      "exercise_type": "fill-in",
+      "context": "В кінці місяця я завжди отримую хорошу ____.",
+      "role": "context"
+    },
+    {
+      "word": "місяця",
+      "exercise_type": "fill-in",
+      "context": "В кінці місяця я завжди отримую хорошу ____.",
+      "role": "context"
+    },
+    {
+      "word": "хорошу",
+      "exercise_type": "fill-in",
+      "context": "В кінці місяця я завжди отримую хорошу ____.",
+      "role": "context"
+    },
+    {
+      "word": "читає",
+      "exercise_type": "error-correction",
+      "context": "Студент багато читає статті, тому що знати останні новини.",
+      "role": "context"
+    },
+    {
+      "word": "вступили",
+      "exercise_type": "error-correction",
+      "context": "Вони вступили до вишу, щоб вони хочуть здобути якісні знання",
+      "role": "context"
+    },
+    {
+      "word": "хочуть",
+      "exercise_type": "error-correction",
+      "context": "Вони вступили до вишу, щоб вони хочуть здобути якісні знання",
+      "role": "context"
+    },
+    {
+      "word": "практиці",
+      "exercise_type": "error-correction",
+      "context": "Я шукаю нову роботу, тому що застосувати свої знання на прак",
+      "role": "context"
+    },
+    {
+      "word": "змінив",
       "exercise_type": "unjumble",
-      "context": "шукав",
+      "context": "змінив",
+      "role": "answer"
+    },
+    {
+      "word": "немає",
+      "exercise_type": "unjumble",
+      "context": "немає",
       "role": "answer"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 15,
-    "tested_in_exercises": 12,
+    "tested_in_exercises": 14,
     "not_tested": [
-      "магістратура",
-      "навчання",
       "професія"
     ]
   },

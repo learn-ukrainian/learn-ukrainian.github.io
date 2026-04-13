@@ -1,4 +1,4 @@
-<!-- version: 1.1.0 | updated: 2026-03-31 -->
+<!-- version: 1.2.0 | updated: 2026-04-12 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -11,6 +11,35 @@ Generate an `activities/genitive-prepositions-direction.yaml` file for module **
 
 ---
 
+## ⚠️ HARD COUNT TARGETS — READ TWICE
+
+These are the binding numerical contracts for THIS module. The audit will FAIL if you fall short.
+
+| Bucket | Min | Max | Notes |
+|---|---|---|---|
+| Total activities | 12 | 12+ | inline + workbook combined |
+| Inline (lesson tab) | 4 | 6 | one per `<!-- INJECT_ACTIVITY -->` marker, see below |
+| Workbook (Зошит tab) | 8 | 11 | extended practice |
+| Items per activity | 8 | — | each activity must have at least 8 items (unless its type cap is lower — see Activity Type Reference below) |
+
+**You MUST ship at least 4 inline activities AND at least 8 workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+
+**Type diversity is required.** The module (inline + workbook combined) MUST use at least **0** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level. (If `0` is `0`, the audit profile for this level does not enforce type diversity — but variety still produces a better lesson, so aim for 4+ types when the workbook allows it.)
+
+---
+
+## Allowed types for THIS level
+
+- **Inline (lesson) types:** quiz, true-false, fill-in, match-up, group-sort, classify, mark-the-words
+- **Inline priority (preferred):** fill-in, match-up, true-false, quiz
+- **Workbook types:** cloze, error-correction, fill-in, unjumble, translate, match-up, group-sort, odd-one-out, observe, phrase-table, quiz, true-false, mark-the-words
+- **Workbook priority (preferred):** error-correction, cloze, unjumble, translate, fill-in
+- **FORBIDDEN at this level:** anagram, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables, highlight-morphemes, grammar-identify
+
+Pick from the allowed list. Lean heavily on the priority lists. Do not use any forbidden type — the build will reject it.
+
+---
+
 ## Inline vs Workbook Split
 
 Activities have two placement categories:
@@ -19,7 +48,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Rule of thumb:** inline = 2-3 quick checks after key teaching points. Workbook = 4-8 deeper practice exercises covering the full topic.
+**Rule of thumb:** inline = 4–6 quick checks after key teaching points. Workbook = 8–11 deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
 
 ---
 
@@ -27,10 +56,10 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: fill-in-genitive-forms -->`
+- `<!-- INJECT_ACTIVITY: fill-in-complete-sentences-with-correct-genitive-noun-form -->`
+- `<!-- INJECT_ACTIVITY: quiz-meaning-context -->`
 - `<!-- INJECT_ACTIVITY: match-up-functions -->`
 - `<!-- INJECT_ACTIVITY: group-sort-categories -->`
-- `<!-- INJECT_ACTIVITY: quiz-meaning-choice -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -87,282 +116,189 @@ required:
 ## Module Content (the prose the learner reads before exercises)
 
 <module_content>
-## Вступ та діалог
+## Куди ти йдеш? До + родовий для напрямку (~770 words)
 
-> — **Пасажир:** Добрий день! Мені потрібно до вокзалу *(to the station)*, будь ласка. Ви вільні?
-> — **Таксист:** Добрий день! Так, сідайте. Їдемо до центрального вокзалу?
-> — **Пасажир:** Так. Але спочатку, будь ласка, поїдемо до аптеки *(to the pharmacy)*. Мені дуже треба купити ліки.
-> — **Таксист:** Добре, я знаю, де є аптека. Вона біля старого парку.
-> — **Пасажир:** Дякую. Скажіть, а ви можете чекати мене там до п'ятої години *(until five o'clock)*?
-> — **Таксист:** Звичайно, я можу чекати вас до п'ятої години. Це не проблема.
-> — **Пасажир:** Чудово! А вже потім ми поїдемо до готелю *(to the hotel)* «Україна».
-> — **Таксист:** Зрозумів вас. Наш маршрут: спочатку до аптеки, чекаємо до п'ятої години, а потім їдемо до готелю. Поїхали!
+Уявіть ситуацію в таксі. Пасажир сідає в машину і називає свої плани на день.
 
-In the A1 level, we learned how to describe where something is located. Now, in A2, we are moving beyond simple location to express direction, purpose, and time limits. The key to all of these is the small but powerful preposition **до** *(to, toward, until)*. Whether you are traveling to a specific destination, setting a deadline, or going to see a person, **до** is your primary tool. It translates to "toward" when discussing movement, and "until" when discussing time.
+> *Imagine a situation in a taxi. A passenger gets into the car and names their plans for the day.*
 
-The most important rule to remember is that the preposition **до** always requires the Genitive case *(родовий відмінок)*. When you say "to the station," **вокзал** *(station)* becomes **до вокзалу**. When you say "until morning," **ранок** *(morning)* becomes **до ранку**. Let us explore how this works in practice.
+> — **Таксист:** Добрий день! Куди ми їдемо? *(Good afternoon! Where are we going?)*
+> — **Пасажир:** Добрий день! Мені потрібно до вокзалу, будь ласка. *(Good afternoon! I need to go to the station, please.)*
+> — **Таксист:** Зрозумів. До центрального вокзалу? *(Understood. To the central station?)*
+> — **Пасажир:** Так. А потім до аптеки, вона там поруч. *(Yes. And then to the pharmacy, it is nearby there.)*
+> — **Таксист:** Добре. Я зачекаю вас там. *(Okay. I will wait for you there.)*
+> — **Пасажир:** Чекайте до п'ятої години. А потім поїдемо до готелю. *(Wait until five o'clock. And then we will go to the hotel.)*
+> — **Таксист:** Без проблем. Маршрут зрозумілий. *(No problem. The route is clear.)*
 
-:::tip Читаємо українською
-Я йду до парку. *(I am going to the park.)*
-Ми їдемо до Києва. *(We are traveling to Kyiv.)*
-Він працює до вечора. *(He works until evening.)*
-Вона чекає до завтра. *(She is waiting until tomorrow.)*
+In Ukrainian grammar, expressing your destination is a fundamental skill. When you want to specify a direction or a final stop for your movement, you frequently use the preposition **до** (to, toward). This small but mighty word is your key to navigating cities and organizing your schedule. The word **напрямок** (direction) is what we are focusing on here.
+
+Щоб правильно вказати напрямок, ми використовуємо прийменник «до» та родовий відмінок. Ви можете побачити це в нашому діалозі. Кожен іменник змінює своє закінчення після цього прийменника. Наприклад, базова форма «вокзал» змінюється і стає «до вокзалу».
+
+> *To correctly indicate direction, we use the preposition "до" and the Genitive case. You can see this in our dialogue. Every noun changes its ending after this preposition. For example, the basic form "вокзал" changes and becomes "до вокзалу".*
+
+This transformation is predictable and essential. The word **аптека** (pharmacy) drops its final vowel and transforms into **до аптеки**. Similarly, the masculine noun **готель** (hotel) takes a new ending to become **до готелю**. Whenever you hear or read the preposition **до**, your brain should immediately prepare to use the Genitive case for the following noun.
+
+Using this construction is the most natural way to talk about traveling to cities, countries, or specific regions. Whether you are planning a grand vacation or a quick weekend getaway, the Genitive case will be your constant companion on the journey. 
+
+Коли ми говоримо про міста або країни, ми завжди вживаємо цю граматичну конструкцію. Цього літа ми поїхали до України. Ми довго планували цю подорож і купили квитки до Львова. Завтра ти прилетиш до Києва, і ми підемо гуляти містом. Мої друзі часто їздять до Польщі на вихідні.
+
+> *When we talk about cities or countries, we always use this grammatical construction. This summer we went to Ukraine. We planned this trip for a long time and bought tickets to Lviv. Tomorrow you will fly to Kyiv, and we will go walking around the city. My friends often travel to Poland for the weekend.*
+
+Notice how the names of the cities change: Львів becomes **до Львова**, and Київ becomes **до Києва**. The countries follow the same pattern: Україна changes to **до України**, and Польща becomes **до Польщі**. This rule applies universally to geographical names when they are your destination.
+
+Now, let's look at a crucial difference between Ukrainian and English. In English, you go "to the doctor" or "to a friend's house." In Ukrainian, when your destination is a person, you must use **до** plus the Genitive case. It literally translates as going "to the person." 
+
+Кожного разу, коли ви йдете в гості, ви йдете до людини. Сьогодні ввечері я йду до друга на вечерю. У неділю ми поїдемо в село до бабусі. Я хочу записатися на прийом до лікаря, бо я погано себе почуваю. Завтра мій брат іде до стоматолога.
+
+> *Every time you go visiting, you go to a person. Tonight I am going to a friend's for dinner. On Sunday we will go to the village to see grandmother. I want to make an appointment with the doctor because I feel unwell. Tomorrow my brother is going to the dentist.*
+
+:::tip
+**Did you know?**
+Unlike Russian, which often uses a different preposition and case for people (к + Dative, like "к маме"), Ukrainian strictly and elegantly uses **до** + Genitive for both places and people (**до мами**). Using "до" for people is a hallmark of natural, authentic Ukrainian syntax.
 :::
 
-## Куди ти йдеш? До + родовий для напрямку (Where Are You Going? До + Genitive for Direction)
+You will constantly hear phrases like **до лікаря** (to the doctor) and **до бабусі** (to grandmother). Never try to use other prepositions when a person is your destination.
 
-Коли ми плануємо подорож, ми завжди маємо **напрямок** *(direction)*. To express your destination, Ukrainian uses the preposition **до** *(to, toward)* followed by the Genitive case *(родовий відмінок)*. Let us start with geographical locations like cities and countries. For masculine cities, the Genitive ending is usually **-а** or **-я**. For feminine countries, the ending is usually **-и** or **-ії**. This is how we build the phrase "to the city" or "to the country". When talking about moving towards places, these endings are extremely consistent.
+You might be wondering about other ways to say "to." You have probably already learned to use **в** or **на** with the Accusative case to express direction. So, what is the difference between saying "я йду до магазину" and "я йду в магазин"? The good news is that both are completely standard and natural in modern Ukrainian.
 
-:::tip Читаємо українською
-— Я їду до Києва. *(I am going to Kyiv.)*
-— Завтра ми їдемо до Львова. *(Tomorrow we are traveling to Lviv.)*
-— Вони летять до Харкова. *(They are flying to Kharkiv.)*
-— Моя сестра їде до України. *(My sister is traveling to Ukraine.)*
-— Студенти їдуть до Польщі. *(The students are going to Poland.)*
-— Мій друг поїхав до Франції. *(My friend went to France.)*
+Різниця між цими фразами дуже маленька і залежить від контексту. Коли ви кажете «я йду до магазину», ви акцентуєте увагу на самому маршруті та процесі руху. Ви говорите про напрямок. Коли ви кажете «я йду в магазин», ви більше думаєте про кінцеву точку і про те, що ви будете всередині будівлі.
+
+> *The difference between these phrases is very small and depends on the context. When you say "я йду до магазину", you focus attention on the route itself and the process of movement. You are talking about the direction. When you say "я йду в магазин", you are thinking more about the final point and about the fact that you will be inside the building.*
+
+There is no strict hierarchy between these two options. You can choose whichever feels more appropriate for what you want to emphasize: the journey toward the place (**до**) or the physical entry into the destination (**в** / **на**).
+
+Finally, let's briefly review the endings for the Genitive case that you need to use after the preposition **до**. Your choice of ending depends on the gender of the noun and whether its stem is hard or soft. 
+
+Чоловічий рід має різні закінчення. Тверда група отримує закінчення «-у» або «-а», наприклад, «до будинку» або «до парку». М'яка група закінчується на «-ю» або «-я», як у слові «до музею». Жіночий рід також змінюється за правилами. Тверда група має закінчення «-и», як «до школи», а м'яка отримує «-і», як «до станції». Середній рід часто має закінчення «-я», наприклад, «до моря».
+
+> *Masculine gender has different endings. The hard group gets the ending "-у" or "-а", for example, "до будинку" or "до парку". The soft group ends in "-ю" or "-я", as in the word "до музею" (to the museum). Feminine gender also changes according to the rules. The hard group has the ending "-и", like "до школи", and the soft one gets "-і", like "до станції". Neuter gender often has the ending "-я", for example, "до моря".*
+
+Memorizing these patterns will make expressing your destination automatic and effortless.
+
+<!-- INJECT_ACTIVITY: fill-in-complete-sentences-with-correct-genitive-noun-form -->
+
+## До якого часу? До + родовий для часу (~715 words)
+
+We have seen how the preposition **до** sets the destination for a physical journey. In Ukrainian, we use the exact same logic for time. When you are moving through the day or the calendar, **до** marks the final point, the moment when an action stops. In English, this translates to "until."
+
+Ми вчимося в університеті до літа. Потім у нас будуть великі канікули. Я часто читаю цікаві книги до пізньої ночі. Мій брат любить спати до обіду в неділю. Ми гуляли в парку до самого вечора.
+
+> *We study at the university until summer. Then we will have long holidays. I often read interesting books until late at night. My brother likes to sleep until noon on Sunday. We walked in the park until the very evening.*
+
+When you want to say "until," you simply take the preposition **до** and put the time word in the Genitive case. Some of the most frequent expressions you will use to describe the **вечір** (evening) or the **ранок** (morning) are **до вечора** (until evening) and **до ранку** (until morning). You will also frequently hear days of the week, like **до понеділка** (until Monday).
+
+:::note
+**Quick tip** — To ask "until when?", you can say **до якого часу?** or simply **доки?**.
 :::
 
-> — **Олена:** Привіт! Ти куди їдеш на вихідні? *(Hi! Where are you going for the weekend?)*
-> — **Марко:** Я їду до Одеси. А ти? *(I am going to Odesa. And you?)*
-> — **Олена:** Я залишаюся тут. Але влітку я планую поїхати до Італії. *(I am staying here. But in the summer I plan to go to Italy.)*
-> — **Марко:** Чудово! Передавай вітання! *(Wonderful! Send my regards!)*
+While **до** often means "until," it also functions as "by" when setting a deadline. If you need to finish a task before a certain limit, you again use **до** followed by the Genitive case.
 
-Sometimes our destination is not a city or a building, but a person. We go "to see someone" or "to someone's place". In Ukrainian, this is always expressed using **до** plus the Genitive case of the person. You can never use the prepositions **в** *(in/into)* or **на** *(on/onto)* when the destination is a living being. This is a very common mistake for learners, who might translate directly from English and try to say «**в лікар**» *(into the doctor)*. Instead, you must always use **до лікаря** *(to the doctor)*. This rule applies to all professions, family members, and friends.
+Студенти повинні зробити це складне завдання до п'ятниці. Я планую закінчити мою роботу до вечора. Будь ласка, зателефонуй мені до восьмої. Він має написати статтю до ранку.
 
-:::tip Читаємо українською
-— Я йду до лікаря, тому що я хворий. *(I am going to the doctor because I am sick.)*
-— На вихідних ми їдемо до бабусі. *(On the weekend we are going to grandmother's.)*
-— Увечері я йду до сусіда. *(In the evening I am going to the neighbor's.)*
-— Ти йдеш до вчителя після уроку? *(Are you going to the teacher after the lesson?)*
-— Вони їдуть до друзів. *(They are going to their friends' place.)*
+> *Students must do this difficult task by Friday. I plan to finish my work by evening. Please, call me by eight o'clock. He has to write the article by morning.*
+
+Notice the phrase **до восьмої** in the example above. This is short for **до восьмої години** (by eight o'clock). In spoken Ukrainian, people frequently drop the word for "hour" when the context is clear. Whether the action takes up the entire time ("until") or must be completed before the limit ("by"), the grammar remains identical.
+
+Often, you need to express a complete time range with a starting point and an ending point. For this, Ukrainian pairs **до** with the prepositions **з** or **від** ("from"). Just as a train travels **з Києва до Варшави**, an action travels from one moment to another.
+
+Я маю працювати в офісі з понеділка до п'ятниці. Ми відпочивали на морі від початку липня до кінця серпня. Цей великий магазин працює щодня з десятої до сьомої.
+
+> *I have to work in the office from Monday to Friday. We rested at the sea from the beginning of July to the end of August. This large store works every day from ten to seven.*
+
+Both **з** and **від** are correct and natural when talking about time. You can say **з ранку до вечора** or **від ранку до вечора**. The most important rule is that both the starting point and the ending point must be in the Genitive case.
+
+Let's look at some common daily phrases and contexts where you will hear **до** used for time. You will encounter these everywhere in Ukraine, from shop signs to everyday conversations.
+
+Цей новий супермаркет відкрито до дев'ятої. Я буду чекати тебе біля метро до завтра. Нам треба прочитати цей довгий текст до початку уроку. Вони жили в цьому гарному місті ще до війни.
+
+> *This new supermarket is open until nine. I will wait for you near the subway until tomorrow. We need to read this long text before the start of the lesson. They lived in this beautiful city even before the war.*
+
+You can see that **до** is incredibly versatile. You can say "чекати до **завтра** (tomorrow)" when making plans with friends. The phrase **до війни** (before the war) is unfortunately very common in modern historical and personal discussions. When referring to events, like **до початку уроку** (until the start of the lesson), the noun "start" takes the Genitive ending.
+
+> — **Олена:** Коли ти будеш вдома сьогодні? *(When will you be at home today?)*
+> — **Марко:** Я маю працювати в офісі до шостої. *(I have to work in the office until six.)*
+> — **Олена:** Добре. А той магазин відкрито до восьмої? *(Good. And is that store open until eight?)*
+> — **Марко:** Ні, він працює тільки до сьомої. Я куплю хліб до вечора. *(No, it only works until seven. I will buy bread by evening.)*
+
+If you step back and look at the big picture, you will notice a beautiful consistency in Ukrainian grammar. The language treats space and time as the same kind of path. The grammatical structure is identical whether you are mapping a physical route or a chronological schedule.
+
+Мій швидкий поїзд їде з Харкова до Одеси. Мій робочий день триває з самого ранку до вечора.
+
+> *My fast train goes from Kharkiv to Odesa. My workday lasts from the very morning to evening.*
+
+In both sentences, you have a starting point introduced by **з** and an ending point introduced by **до**. Both prepositions demand the Genitive case. This means that once you learn how to say you are traveling to the **музей** (museum), you automatically know the grammar needed to say you will be busy until the evening. It is always about movement toward a limit.
+
+## До + родовий: решта значень та узагальнення (~715 words)
+
+We have seen that the preposition **до** indicates movement in space and time. It shows a clear **напрямок** (direction) toward a specific physical destination. But Ukrainian uses this same geometric concept for abstract ideas. When you prepare for something, your effort is moving toward a destination. When you have a feeling about something, your emotion is directed toward an object. In these cases, **до** expresses your **мета** (goal, purpose) or the relationship between two different concepts. The grammatical rule remains exactly the same. You always use the Genitive case after this preposition.
+
+Прийменник до має багато цікавих абстрактних значень. Ми часто використовуємо його, коли говоримо про наші плани, почуття або серйозну підготовку. Це завжди рух до якоїсь конкретної мети або результату. Граматика ніколи не змінюється в таких ситуаціях. Будь-яке слово після цього прийменника завжди стоїть у родовому відмінку.
+
+> *The preposition "до" has many interesting abstract meanings. We often use it when we talk about our plans, feelings, or serious preparation. It is always a movement toward some specific goal or result. The grammar never changes in such situations. Any word after this preposition always stands in the Genitive case.*
+
+One of the most frequent abstract uses of **до** is to express readiness for a future event. If you are a university student, you might say you are ready for an **екзамен** (exam). You use the adjective **готовий** (ready) followed by **до** and the correct Genitive noun.
+
+Сьогодні студенти дуже хвилюються і багато читають. Завтра буде складний тест з історії України. Мій брат довго читав товстий підручник. Зараз він повністю готовий до екзамену. Він добре знає всі важливі дати.
+
+> *Today the students are very worried and are reading a lot. Tomorrow there will be a difficult test on the history of Ukraine. My brother read a thick textbook for a long time. Now he is fully ready for the exam. He knows all the important dates well.*
+
+You will also find **до** in many fixed expressions that imply a future goal or a social interaction. For example, the common phrase for "by the way" or "to the point" is **до речі**. The word **побачення** (meeting, date) means a meeting, so the standard way to say goodbye is literally "until the meeting." 
+
+Коли ми йдемо додому, ми завжди кажемо друзям: «До побачення!». Якщо ми плануємо зустрітися знову дуже скоро, ми говоримо: «До завтра!» або «До зустрічі!». Це дуже ввічливі і природні українські фрази.
+
+> *When we go home, we always say to our friends: "Goodbye!". If we plan to meet again very soon, we say: "Until tomorrow!" or "Until we meet!". These are very polite and natural Ukrainian phrases.*
+
+Another common function of **до** is expressing addition or connection. When you link two things together, you are metaphorically moving one object toward another. If you are organizing your day, you might add a new task to your **список** (list). 
+
+Я пишу новий великий план на наступний тиждень. Мені треба додати кілька важливих справ до списку. Я хочу купити нову книгу і швидко прочитати її.
+
+> *I am writing a new big plan for next week. I need to add a few important tasks to the list. I want to buy a new book and read it quickly.*
+
+Similarly, this preposition is used to describe feelings, attitudes, or interest directed at something or someone. It shows the vector of your emotion. The word **ставлення** means attitude, and **інтерес** means interest.
+
+Мій новий колега має дуже гарне ставлення до роботи. Він завжди виконує всі складні завдання вчасно. Також він має великий інтерес до мови і вивчає нові слова щодня.
+
+> *My new colleague has a very good attitude toward work. He always completes all difficult tasks on time. Also, he has a great interest in the language and learns new words every day.*
+
+> — **Олена:** Ти вже готовий до екзамену з математики? *(Are you already ready for the math exam?)*
+> — **Марко:** Так, я додав усі формули до списку. *(Yes, I added all the formulas to the list.)*
+> — **Олена:** До речі, ти знаєш, що тест буде завтра? *(By the way, do you know the test is tomorrow?)*
+> — **Марко:** Звичайно! У мене серйозне ставлення до навчання. *(Of course! I have a serious attitude toward studying.)*
+
+:::info
+**Grammar box**
+Notice how the English translations use different prepositions like "for", "to", "toward", or "by". In Ukrainian, all these concepts share the underlying idea of a path reaching a target, which is why they all use **до** + Genitive.
 :::
 
-> — **Анна:** Ти вільний сьогодні ввечері? *(Are you free tonight?)*
-> — **Ігор:** Ні, я йду до друга. У нього день народження. *(No, I am going to a friend's place. It is his birthday.)*
-> — **Анна:** Зрозуміло. А завтра? *(Understood. And tomorrow?)*
-> — **Ігор:** Завтра зранку я маю йти до стоматолога. *(Tomorrow morning I have to go to the dentist.)*
+Now that we have explored the various meanings of this preposition, it is helpful to compare it with other prepositions you already know. In earlier modules, you learned about **від** (from) and **після** (after). All three of these prepositions require the Genitive case, but they express entirely different vectors and directions. You will often hear this with times of day, stretching from the **ранок** (morning) to the **вечір** (evening).
 
-You might remember from the A1 level that we can also use **в** or **на** with the Accusative case to show direction, for example, «**іду в магазин**» *(I am going into the store)*. So, what is the exact difference between **до магазину** *(toward the store)* and **в магазин** *(into the store)*? The preposition **до** emphasizes the journey or the movement toward the vicinity of the destination. You are heading *toward* the store. The preposition **в** emphasizes entering the destination itself. Both are grammatically correct and completely standard in Ukrainian. You can use whichever fits your focus: the journey or the final entry.
+Прийменник до показує активний рух до кінцевої точки або мети. Прийменник від показує рух від початкової точки. Прийменник після показує логічну послідовність у часі. Ці три слова допомагають нам орієнтуватися.
 
-:::tip Читаємо українською
-— Я йду до магазину. *(I am walking toward the store.)*
-— Я йду в магазин. *(I am going into the store.)*
-— Ми їдемо до університету. *(We are traveling toward the university.)*
-— Ми йдемо в університет. *(We are going inside the university.)*
-— Він іде до парку. *(He is heading to the park.)*
-:::
+> *The preposition "до" shows active movement toward an end point or goal. The preposition "від" shows movement away from a starting point. The preposition "після" shows logical sequence in time. These three words help us orient ourselves.*
 
-> — **Тарас:** Де ти зараз? *(Where are you now?)*
-> — **Марія:** Я йду до метро. *(I am walking to the subway.)*
-> — **Тарас:** Ти вже в метро? *(Are you inside the subway?)*
-> — **Марія:** Ще ні, я тільки підходжу до станції. *(Not yet, I am just approaching the station.)*
+If you understand the starting point, the ending point, and what happens later, you can describe almost any situation in your daily life. Let's see how they work together in a realistic context.
 
-To form the Genitive case correctly with **до**, pay close attention to the stem of the noun. For masculine nouns, hard stems often take **-у**, while soft stems take **-ю**. However, remember that specific objects, people, and cities usually take **-а** or **-я**. Institutions, abstract concepts, and large buildings usually take **-у** or **-ю**. For feminine nouns, hard stems take **-и**, while soft stems take **-ії** or **-і** (especially if they end in a sibilant sound like "щ", "ч", or "ш"). Knowing these patterns will help you guess the right ending for new words.
+Сьогодні ми довго йдемо від старого парку до музею. Після музею ми обов'язково підемо до ресторану. Наша цікава екскурсія триває від самого ранку до вечора.
 
-:::note Форми родового відмінка (Genitive Forms)
-**Чоловічий рід (Masculine):**
-будинок *(building)* → до будинку
-музей *(museum)* → до музею
-університет *(university)* → до університету
+> *Today we are walking for a long time from the old park to the museum. After the museum, we will definitely go to a restaurant. Our interesting excursion lasts from the very morning to the evening.*
 
-**Жіночий рід (Feminine):**
-школа *(school)* → до школи
-станція *(station)* → до станції
-площа *(square)* → до площі
+Let us summarize everything we have covered about this essential preposition. We can group its uses into five main categories: physical direction to a place like a **музей** (museum), personal direction to a person like a **лікар** (doctor) or **бабуся** (grandmother), a continuous time limit, a strict deadline, and an abstract purpose or relation. Here is a comprehensive overview of how **до** operates with the Genitive case in everyday communication.
 
-**Середній рід (Neuter):**
-море *(sea)* → до моря
-:::
-
-:::tip Читаємо українською
-— Вони йдуть до великого будинку. *(They are going to the big building.)*
-— Туристи їдуть до музею. *(The tourists are going to the museum.)*
-— Студенти поспішають до університету. *(The students are hurrying to the university.)*
-— Діти йдуть до школи. *(The children are going to school.)*
-— Машина під'їхала до станції. *(The car drove up to the station.)*
-— Ми йдемо до центральної площі. *(We are going to the central square.)*
-:::
-
-<!-- INJECT_ACTIVITY: fill-in-genitive-forms -->
-
-When you add adjectives to describe your destination, they must also match the Genitive case. For masculine and neuter adjectives, the ending is **-ого**. For feminine adjectives, the ending is **-ої**. Adjectives always follow the noun they describe in gender, number, and case. This makes the whole phrase "agree" perfectly. You will hear this matching rhythm clearly when Ukrainians speak.
-
-:::note Узгодження прикметників (Adjective Agreement)
-новий будинок *(new building)* → до нового будинку
-велика станція *(big station)* → до великої станції
-старий друг *(old friend)* → до старого друга
-:::
-
-:::tip Читаємо українською
-— Ми йдемо до нового будинку. *(We are going to the new building.)*
-— Поїзд прибуває до великої станції. *(The train is arriving at the big station.)*
-— Я їду до старого друга. *(I am traveling to an old friend.)*
-— Вона йде до гарної школи. *(She is going to a beautiful school.)*
-— Туристи їдуть до історичного музею. *(The tourists are going to the historical museum.)*
-:::
-
-There is one special word you will use every single day: **додому** *(homeward, to home)*. Historically, it comes directly from the two-word phrase **до дому** *(to the house)*. Today, it is written as one single word and acts as a fixed adverb of direction. You do not need to think about cases or endings here; just use it as a complete direction word whenever you are heading back to your own house or apartment.
-
-:::tip Читаємо українською
-— Після роботи я йду додому. *(After work I am going home.)*
-— Діти дуже втомилися і хочуть додому. *(The children are very tired and want to go home.)*
-— Коли ти поїдеш додому сьогодні? *(When will you go home today?)*
-:::
-
-## До якого часу? До + родовий для часу (Until When? До + Genitive for Time)
-
-When you want to say how long an action continues, you use **до** *(until)* plus the Genitive case. This marks the absolute boundary or the end of a time period. If you start a task in the morning and stop in the evening, you work until the evening arrives. 
-
-It is crucial to remember the endings for masculine nouns when talking about time. Specific units of time, like days of the week or months, are masculine nouns that take the **-а** or **-я** ending in the Genitive case, not **-у**. Therefore, **день** *(day)* becomes **до дня**, and **вівторок** *(Tuesday)* becomes **до вівторка**.
-
-:::note Форми часу (Time Forms)
-**вечір** *(evening)* → **до вечора** *(until evening)*
-**ранок** *(morning)* → **до ранку** *(until morning)*
-**літо** *(summer)* → **до літа** *(until summer)*
-**понеділок** *(Monday)* → **до понеділка** *(until Monday)*
-**вівторок** *(Tuesday)* → **до вівторка** *(until Tuesday)*
-:::
-
-:::tip Читаємо українською
-— Я буду читати книгу до ранку. *(I will read the book until morning.)*
-— Ми відпочиваємо на морі до літа. *(We are resting at the sea until summer.)*
-— Цей великий магазин не працює до понеділка. *(This big store is not working until Monday.)*
-— Мій старший брат зазвичай спить до обіду. *(My older brother usually sleeps until lunch.)*
-:::
-
-> — **Анна:** Ти довго вчора працював? *(Did you work long yesterday?)*
-> — **Сергій:** Так, я писав звіт до пізнього вечора. *(Yes, I was writing the report until late evening.)*
-> — **Анна:** Тобі треба більше відпочивати. *(You need to rest more.)*
-> — **Сергій:** Знаю. Але я маю дуже багато роботи. *(I know. But I have a lot of work.)*
-
-The preposition **до** also translates to "by" when you are setting a strict deadline. It shows the exact moment when a task must be finished, or when an event will definitely happen. If your teacher wants homework on Friday, you must do it by Friday.
-
-To express exact hours for a deadline, Ukrainians use ordinal numbers in the feminine form. This is because the word **година** *(hour/o'clock)* is feminine. In the Genitive case, these adjectives take the **-ої** ending. For example, "by five o'clock" is **до п'ятої години**. In everyday conversation, the word **година** is frequently dropped entirely, and you just say **до п'ятої**. When using adverbs like **завтра** *(tomorrow)*, the word does not change its form at all.
-
-:::note Дедлайни (Deadlines)
-**п'ятниця** *(Friday)* → **до п'ятниці** *(by Friday)*
-**восьма година** *(eighth hour)* → **до восьмої години** *(by eight o'clock)*
-**завтра** *(tomorrow)* → **до завтра** *(by tomorrow)*
-:::
-
-:::tip Читаємо українською
-— Будь ласка, зробіть це завдання до п'ятниці. *(Please, do this task by Friday.)*
-— Я маю прийти до офісу до восьмої. *(I have to come to the office by eight.)*
-— Підготуйте всі нові документи до завтра. *(Prepare all the new documents by tomorrow.)*
-— Цей концерт на площі триватиме до десятої. *(This concert on the square will last until ten.)*
-:::
-
-To define a complete time range, you pair **до** *(to/until)* with **з** or **від** *(from)*. This creates the very common structure «from [start time] to [end time]». It is important to know that both the starting point and the ending point must be in the Genitive case. Both **з** and **від** are correct and interchangeable here.
-
-For instance, "from morning to evening" becomes **з ранку до вечора**. When talking about hours or days of the week, the rule remains exactly the same: both words take Genitive endings to show the start and the finish of the duration.
-
-:::note Проміжки часу (Time Ranges)
-**ранок, вечір** → **з ранку до вечора** *(from morning to evening)*
-**понеділок, п'ятниця** → **з понеділка до п'ятниці** *(from Monday to Friday)*
-**дев'ята, шоста** → **з дев'ятої до шостої** *(from nine to six)*
-:::
-
-:::tip Читаємо українською
-— Наш новий офіс працює з понеділка до п'ятниці. *(Our new office works from Monday to Friday.)*
-— Я в університеті кожного дня з дев'ятої до шостої. *(I am at the university every day from nine to six.)*
-— Лікар приймає пацієнтів від другої до п'ятої години. *(The doctor sees patients from two to five o'clock.)*
-— Ми гуляли в парку з ранку до пізнього вечора. *(We walked in the park from morning to late evening.)*
-:::
-
-<!-- INJECT_ACTIVITY: match-up-functions -->
-
-You will hear **до** used in many everyday fixed phrases. The most famous one is **до завтра**, which literally means "until tomorrow" but is used as a farewell, just like "see you tomorrow".
-
-You will also see it combined with words like **початок** *(start)* and **кінець** *(end)*. To say "by the end", you use the Genitive form **до кінця**. The item that is ending also takes the Genitive case, creating a natural chain of words: **до кінця липня** *(by the end of July)* or **до кінця тижня** *(by the end of the week)*. Remember that words like **місяць** *(month)* and **тиждень** *(week)* take the soft **-я** ending in the Genitive case: **місяця**, **тижня**. Do not confuse **до** *(until/by)* with **перед** *(before, immediately prior)* or **після** *(after)*. Use **до** when describing a clear limit.
-
-:::note Сталі вирази (Fixed Expressions)
-**початок уроку** *(start of lesson)* → **до початку уроку** *(by the start of the lesson)*
-**кінець літа** *(end of summer)* → **до кінця літа** *(by the end of summer)*
-**кінець місяця** *(end of month)* → **до кінця місяця** *(by the end of the month)*
-:::
-
-> — **Олена:** Коли ти закінчиш цей складний проєкт? *(When will you finish this complicated project?)*
-> — **Максим:** Я зроблю все до кінця тижня. *(I will do everything by the end of the week.)*
-> — **Олена:** Добре. Тоді ми поговоримо про це в понеділок. *(Good. Then we will talk about it on Monday.)*
-> — **Максим:** Так, звичайно. До завтра! *(Yes, of course. See you tomorrow!)*
-> — **Олена:** До зустрічі! *(See you!)*
-
-## До + родовий: решта значень та узагальнення (До + Genitive: Other Meanings and Summary)
-
-Beyond physical movement and time, the preposition **до** *(to/for/until)* frequently expresses purpose *(мета)*, readiness, and abstract goals. When you are prepared for an event, you are "ready to" it in Ukrainian. We use the adjective **готовий** *(ready)* followed by **до** and the Genitive case. For example, **готовий до екзамену** *(ready for the exam)*, or **готовий до роботи** *(ready for work)*. This preposition also shows purpose in everyday fixed expressions. The common farewell **до побачення** *(goodbye)* literally means "until seeing". The conversational phrase **до речі** *(by the way)* translates directly to "to the point". If you buy a ticket, it is also a ticket "to" a specific destination: **квиток до Львова** *(ticket to Lviv)* or **квиток до театру** *(ticket to the theater)*.
-
-:::note Мета і готовність (Purpose and Readiness)
-**готовий до екзамену** *(ready for the exam)*
-**готовий до уроку** *(ready for the lesson)*
-**квиток до Львова** *(ticket to Lviv)*
-**до речі** *(by the way)*
-**до побачення** *(goodbye)*
-:::
-
-:::tip Читаємо українською
-— Студенти вже готові до нового уроку. *(The students are already ready for the new lesson.)*
-— Я маю два квитки до Києва на завтра. *(I have two tickets to Kyiv for tomorrow.)*
-— До речі, де мій новий словник? *(By the way, where is my new dictionary?)*
-— Ми готові до зими, ми купили теплий одяг. *(We are ready for winter, we bought warm clothes.)*
-:::
-
-You will also use **до** to show how concepts relate to one another, especially when adding something or expressing a personal attitude. If you want to include an item in a group, you "add to" the group. The verb **додати** *(to add)* pairs with **до** and the Genitive case. You might say **додати до списку** *(to add to the list)* when shopping, or **додати до чаю** *(to add to the tea)* when cooking. When expressing feelings or opinions about a subject, Ukrainian uses words like **ставлення** *(attitude)* and **інтерес** *(interest)* connected to the object with **до**. You can have an **інтерес до мови** *(interest in the language)* or a positive **ставлення до роботи** *(attitude toward work)*. These abstract connections follow the exact same grammatical rules as walking to a park. The structure remains perfectly consistent.
-
-:::note Зв'язки та ставлення (Connections and Attitude)
-**додати до списку** *(add to the list)*
-**додати до чаю** *(add to the tea)*
-**ставлення до роботи** *(attitude toward work)*
-**інтерес до історії** *(interest in history)*
-:::
-
-> — **Олег:** Ти можеш додати молоко до моєї кави? *(Can you add milk to my coffee?)*
-> — **Ганна:** Так, звичайно. До речі, ти готовий до екзамену? *(Yes, of course. By the way, are you ready for the exam?)*
-> — **Олег:** Майже. У мене великий інтерес до історії. *(Almost. I have a great interest in history.)*
-> — **Ганна:** Це чудово. Твоє ставлення до навчання дуже гарне. *(That is wonderful. Your attitude toward studying is very good.)*
-
-<!-- INJECT_ACTIVITY: group-sort-categories -->
-
-Let us consolidate what we know about the Genitive case by comparing three essential prepositions: **до** *(to/until)*, **від** *(from)*, and **після** *(after)*. All three require the following noun to take Genitive endings, but they move our focus in different directions across space and time. **Від** marks the starting point of a journey or a time period. **До** marks the destination, the limit, or the final goal. **Після** shows what happens next in a sequence. You can map a complete experience using just these three words. For example, you travel **від вокзалу** *(from the station)*, you go **до готелю** *(to the hotel)*, and you rest **після поїздки** *(after the trip)*. Understanding this triad gives you the power to describe plans simply and accurately.
-
-:::note Простір і час (Space and Time)
-**від вокзалу** *(from the station)* → **до готелю** *(to the hotel)* → **після поїздки** *(after the trip)*
-**від ранку** *(from the morning)* → **до вечора** *(until the evening)* → **після вечері** *(after dinner)*
-:::
-
-:::tip Читаємо українською
-— Я їду від університету до бібліотеки. *(I am riding from the university to the library.)*
-— Після роботи ми йдемо до нового ресторану. *(After work we are going to a new restaurant.)*
-— Від понеділка до п'ятниці я дуже зайнятий. *(From Monday to Friday I am very busy.)*
-— Після уроку студенти пішли до парку. *(After the lesson the students went to the park.)*
-:::
-
-<!-- INJECT_ACTIVITY: quiz-meaning-choice -->
-
-Finally, it is crucial to avoid a common mistake influenced by Russian syntax. In Russian, movement toward a person is expressed with "к" and the Dative case. In Ukrainian, movement toward a person always requires **до** and the Genitive case. You must say **до мами** *(to mom)*, **до лікаря** *(to the doctor)*, or **до друга** *(to a friend)*. Using "к" for direction is a calque that sounds unnatural and incorrect in modern Ukrainian. The preposition **до** is the only authentic way to express movement toward people and time limits. Embrace this preposition as a core feature of natural Ukrainian sentence structure. Using it correctly will make your speech sound significantly more fluent.
-
-## Підсумок — Summary
-
-Ми вивчили дуже важливий прийменник **до** *(to/until/by)*. He is a versatile tool in your Ukrainian vocabulary. This single preposition connects space, time, and abstract concepts, always requiring the noun to take the Genitive case. Let us summarize his three main jobs.
-
-:::note Три ролі прийменника ДО (Three Roles of ДО)
-| Функція *(Function)* | Питання *(Question)* | Приклад *(Example)* |
+| Категорія (Category) | Приклад (Example) | Переклад (Translation) |
 | :--- | :--- | :--- |
-| **1. Напрямок** *(Direction)* | Куди? *(Where to?)* | **до Києва** *(to Kyiv)*, **до мами** *(to mom)* |
-| **2. Час** *(Time limit/deadline)* | До якого часу? *(Until/by when?)* | **до вечора** *(until evening)*, **до п'ятниці** *(by Friday)* |
-| **3. Мета** *(Purpose)* | Для чого? *(What for?)* | **до побачення** *(goodbye)*, **до речі** *(by the way)* |
-:::
+| **Напрямок (Місце)** | Ми їдемо до великого музею. | *We are going to a large museum.* |
+| **Напрямок (Особа)** | Вона йде до бабусі або до лікаря. | *She is going to grandma's or to the doctor.* |
+| **Проміжок часу** | Я працюю тут від ранку до вечора. | *I work here from morning to evening.* |
+| **Дедлайн** | Будь ласка, зроби це завдання до п'ятниці! | *Please do this task by Friday!* |
+| **Мета або зв'язок** | Додай це слово до списку. До побачення! | *Add this word to the list. Goodbye!* |
 
-:::tip Читаємо українською
-— Влітку ми їдемо до Львова. *(In the summer we are riding to Lviv.)*
-— Завтра я йду до лікаря. *(Tomorrow I am going to the doctor.)*
-— Я маю працювати до вечора. *(I have to work until evening.)*
-— Мені треба зробити це до п'ятниці. *(I need to do this by Friday.)*
-:::
+Ця маленька частка української мови є надзвичайно потужною. Вона органічно поєднує простір, час та наші абстрактні ідеї в одну логічну систему.
 
-Now, a quick self-check. Як сказати "by 5 o'clock"? Remember that time limits and deadlines always use **до** plus the Genitive case. 
+> *This small particle of the Ukrainian language is incredibly powerful. It organically unites space, time, and our abstract ideas into one logical system.*
 
-Чому ми кажемо "до лікаря", а не "в лікар"? Because movement toward a person or a professional always requires **до**, never "в" or "на". Master this rule to sound much more natural in everyday conversations.
-
+<!-- INJECT_ACTIVITY: quiz-meaning-context -->
+<!-- INJECT_ACTIVITY: match-up-functions -->
+<!-- INJECT_ACTIVITY: group-sort-categories -->
 </module_content>
 
 ---
@@ -376,48 +312,68 @@ version: "1.0"
 module: genitive-prepositions-direction
 level: a2
 
+# NOTE — these are SHAPE examples. The real targets are at the top of this prompt
+# (12 total / 4–6 inline / 8–11 workbook,
+# 8+ items per activity). The shapes below are TRUNCATED for readability;
+# YOUR output MUST hit those minimums.
+
 inline:
   - id: marker-id-here        # MUST match an <!-- INJECT_ACTIVITY: ... --> marker
     type: quiz                 # activity type
     instruction: "Оберіть правильний варіант"
-    items:
+    items:                     # ← real output: ≥ 8 items
       - question: "_____ стіл"
-        options: ["мій", "моя", "моє"]
+        options: ["мій", "моя", "моє", "мої"]
         correct: 0             # 0-based index
+      - question: "Це ____ книга."
+        options: ["мій", "моя", "моє", "мої"]
+        correct: 1
+      # ... add at least 8 items total — never stop at 1-2
 
   - id: another-marker-id
     type: fill-in
     instruction: "Вставте правильне слово"
-    items:
+    items:                     # ← real output: ≥ 8 items
       - sentence: "Це ____ кімната."
         answer: "моя"
         options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ вікно."
+        answer: "моє"
+        options: ["мій", "моя", "моє"]
+      # ... ≥ 8 items total
 
 workbook:
-  - type: match-up
+  - id: match-up-vocab
+    type: match-up
     instruction: "З'єднайте пари"
-    pairs:
+    pairs:                     # ← real output: ≥ 8 pairs
       - left: "стіл"
         right: "він"
       - left: "книга"
         right: "вона"
       - left: "вікно"
         right: "воно"
+      # ... ≥ 8 pairs total
 
-  - type: group-sort
+  - id: group-sort-gender
+    type: group-sort
     instruction: "Розподіліть слова за категоріями"
     groups:
-      - label: "Category A"
-        items: ["word1", "word2"]
-      - label: "Category B"
-        items: ["word3", "word4"]
+      - label: "Чоловічий рід"
+        items: ["стіл", "олівець", "будинок"]   # ≥ 3 items per group
+      - label: "Жіночий рід"
+        items: ["книга", "ручка", "школа"]
+      - label: "Середній рід"
+        items: ["вікно", "море", "молоко"]
 
-  - type: true-false
+  - id: true-false-grammar
+    type: true-false
     instruction: "Правда чи ні?"
-    items:
-      - statement: "Statement here"
-        correct: true
-        explanation: "Why it's true"
+    items:                     # ← real output: ≥ 8 items
+      - statement: "«Книга» — це чоловічий рід."
+        correct: false
+        explanation: "Книга закінчується на -а, отже жіночий рід."
+      # ... ≥ 8 items total
 
   - type: error-correction
     instruction: "Виправте помилку"
@@ -488,7 +444,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -579,10 +535,15 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 ## Quality Rules
 
-**ITEM COUNT MINIMUMS (non-negotiable):**
-- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
-- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
-- If you can't think of enough items, add more examples from the module's vocabulary and content.
+**ACTIVITY COUNT MINIMUMS (non-negotiable, audit-enforced):**
+- **Total: 12 activities.** Inline: 4–6. Workbook: 8–11. The audit gate FAILS the module if you ship fewer.
+- **Type diversity: workbook MUST cover ≥5 distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
+- **Match the inline markers exactly.** Every `<!-- INJECT_ACTIVITY: id -->` marker in the prose needs a matching inline activity with that exact id. Skipping markers means the lesson tab is broken.
+
+**ITEM COUNT MINIMUMS (non-negotiable, per-activity):**
+- **Default minimum: 8 items per activity.** Quiz, fill-in, match-up, true-false, anagram, error-correction, translate, cloze, mark-the-words, divide-words, count-syllables, odd-one-out, group-sort categories: all ≥ 8.
+- **Lower minimums for specific types only:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items, essay-response/critical-analysis = 1 prompt.
+- If you can't think of enough items, add more examples from the module's vocabulary and content. NEVER ship a 1-item or 2-item activity unless its type cap explicitly allows it.
 - **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
 - **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
@@ -689,6 +650,27 @@ IMPORTANT: After using tools, output your COMPLETE module content as plain text.
 1. Run `verify_words` on all Ukrainian words in your exercises — every word must exist in VESUM
 2. Run `query_cefr_level` on any word you're unsure about — it must be a2-appropriate
 3. For fill-in answers and distractors, verify the exact form (case, number, gender) with `verify_lemma`
+
+---
+
+## ⚠️ MANDATORY FINAL CHECKLIST — verify before emitting YAML
+
+Walk through this checklist explicitly before you start emitting. If ANY box is unchecked, fix it FIRST.
+
+- [ ] My output has **at least 4** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
+- [ ] My output has **at least 8** workbook activities.
+- [ ] **Total ≥ 12.**
+- [ ] **Every** activity has **at least 8** items, pairs, or statements (except types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3, essay-response=1).
+- [ ] The module (inline + workbook combined) uses **at least 0 distinct activity types** (or 4+ when 0 = 0 and the workbook size allows it). I am NOT shipping a wall of quizzes.
+- [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
+- [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
+- [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+- [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+- [ ] My inline count is between 4 and 6. I did NOT create more injection markers than 6.
+- [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
+- [ ] At B1+, all instructions are in Ukrainian (no English fallback).
+
+If you cannot tick all of these, REGENERATE the activities BEFORE outputting. Shipping under-spec means the build rejects you and the heal loop has to redo your work — wasting compute.
 
 ---
 

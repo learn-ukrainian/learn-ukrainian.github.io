@@ -1,13 +1,7 @@
 {
   "attempt": 1,
-  "passed": false,
-  "errors": [
-    {
-      "check": "VOCABULARY",
-      "severity": "ERROR",
-      "message": "Missing 6/10 required vocab: абстрактний (abstract), минулий (past, previous), місяць (month), зустріч (meeting, encounter), думка (thought, opinion)"
-    }
-  ],
+  "passed": true,
+  "errors": [],
   "warnings": [],
-  "timestamp": "2026-04-11T00:52:17.281246+00:00"
+  "timestamp": "2026-04-13T05:31:30.713348+00:00"
 }

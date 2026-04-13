@@ -27,7 +27,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-та **соли**. Форма із закінченням на **-і** є більш сучасною та нейтральною для щоденного вжитку. Натомість форма на **-и** має легкий приємний відтінок вишуканої архаїчності або урочистості, повертаючи нас до історичних джерел української мови. Якщо ми уважно подивимося на знахідний відмінок *(Accusative)*, то побачимо, що він поводиться максимально передбачувано та логічно. Оскільки переважна більшість іменників третьої відміни позначають неістоти — абстрактні поняття, предмети або явища природи, — їхня граматична форма у знахідному відмінку повністю збігається з формою називного відмінка. Тобто саме слово взагалі не змінюється. Ми спокійно кажемо: я бачу темну **ніч**, я завжди відчуваю велику **радість**, я купую білу **сіль**. Єдиним винятком тут є особливе слово **мати**. Воно позначає живу істоту і має власну форму **матір** у знахідному відмінку: я люблю свою рідну **матір** *(I love my dear mother)*. Що ж стосується давального відмінка *(Dative)*, який відповідає на запитання «кому? чому?», то він завжди має своє улюблене закінчення **-і**. Наприклад: я завдячую цій **подорожі** *(journey)*, він завжди довіряє своїй **інтуїції** *(intuition)*. Якщо ми порівняємо цю ситуацію з першою відміною, де закінчення можуть змінюватися, нам стане зрозуміло, наскільки третьої відміна є стрункою та простою для швидкого засвоєння. Ще одним цікавим і важливим фонетичним явищем, яке ви обов'язково помітите під час відмінювання слів третьої відміни, є класичне чергування голосних звуків у корені слова. Ви вже добре знаєте це загальне правило: звук [і] в закритому складі часто переходить у звуки [о] або [е], коли цей склад стає відкритим. Це старовинне правило бездоганно працює і тут. Візьмемо для прикладу знайоме слово **ніч**. У називному відмінку його склад закритий приголосним звуком, тому ми маємо звук [і]. Але варто нам поставити це слово в родовий, давальний чи місцевий відмінок, як ми додаємо закінчення **-і**. Склад автоматично відкривається, і звук [і] перетворюється на [о]. Таким чином, **ніч** стає **ночі**. Подібний фонетичний процес відбувається і зі звуком [е]. Наприклад, популярне слово **піч** *(oven)* у відкритому складі змінюється на **печі** (немає гарячої **печі**, хліб печеться у **печі**). Так само часто вживане слово **річ** *(thing)* легко перетворюється на **речі** (немає цієї потрібної **речі**, шукаю в **речі**). Це глибоке внутрішнє правило фонетики робить нашу мову дуже мелодійною. Коли ви звикнете до цього природного ритму, вам не доведеться механічно завчати ці форми — ви інтуїтивно відчуватимете, як слово має звучати правильно. Щоб легко та швидко запам'ятати парадигму третьої відміни в однині, вам потрібно тримати у своїй голові лише дві дуже прості ключові речі. Перша і найголовніша — це так зване золоте правило «потрійного **-і**». Родовий, давальний та місцевий відмінки для абсолютно всіх слів цієї граматичної групи завжди закінчуються на літеру **-і** (за винятком свідомого вибору паралельної форми на **-и** для родового відмінка). Друга важлива річ — це те, що знахідний відмінок для всіх неістот завжди дорівнює називному відмінку. Фактично, з усіх основних непрямих відмінків вам залишається уважно вивчити лише один найскладніший — орудний відмінок. Він має свої власні унікальні та дуже цікаві правила правопису, про які ми надзвичайно детально поговоримо в наступному розділі нашого уроку. <!-- INJECT_ACTIVITY: match-up, focus: Match називний forms to their орудний and родовий forms, 8 items -->
+> *When you see some object, you use the accusative case without any changes: "I see the night" (я бачу ніч), "she feels pride" (вона відчуває гордість), or "he is planning a journey" (він планує подорож). Only the word "mother" (мати) has a special form, which turns into "матір" in the accusative case. In the dative case, we always add the "-і" ending, which makes this declension very symmetrical.* A critical phonetic rule to remember here is the historical alternation of vowels, specifically the shift from **[і]** back to **[о]** or **[е]**. This predictable change happens when a closed syllable becomes an open syllable as we add case endings. The vowel **[і]** feels comfortable between consonants in the base form, but it opens up into a broader vowel sound when the word physically expands, whether we are talking about an oven like a **піч** (oven), a physical **річ** (thing), or an immaterial **тінь** (shadow). Ця закономірність є дуже послідовною: літера «і» в закритому складі перетворюється на «о» або «е» у відкритому. Наприклад, слово «ніч» змінюється на «до ночі», «піч» стає «у печі», а базова «річ» перетворюється на «немає жодної речі». Але слова «тінь» та «сіль» зберігають свою літеру «і» (у тіні, без солі), оскільки вони мають іншу історію. > *This pattern is very consistent: the letter "і" in a closed syllable turns into "о" or "е" in an open one. For example, the word "night" (ніч) changes to "until the night" (до ночі), "oven" (піч) becomes "in the oven" (у печі), and the basic "thing" (річ) turns into "there is not a single thing" (немає жодної речі). But the words "shadow" (тінь) and "salt" (сіль) keep their letter "і" (in the shadow, without salt), because they have a different history.* To master this declension in the singular, you really just need to focus on a few grammatical anchors. The only complex singular case remaining is the instrumental case, which introduces a fascinating phenomenon called **подвоєння** (doubling) of consonants. We will explore that in the next section. For now, rely on the predictability of the remaining forms and let a little **мудрість** (wisdom) guide your practice. Щоб швидко пригадати правильну форму, просто пам'ятайте, що родовий, давальний та місцевий відмінки мають однакове закінчення «-і». Якщо ви знаєте базову форму слова і пам'ятаєте про чергування голосних, ви вже контролюєте половину відмінкової парадигми. Це справжня мудрість для всіх, хто вивчає українську граматику. > *To quickly recall the correct form, just remember that the genitive, dative, and locative cases have the same ending "-і". If you know the basic form of the word and remember about vowel alternation, you already control half of the case paradigm. This is true wisdom for everyone who studies Ukrainian grammar.* :::tip **The "Triple-і" Shortcut** In the singular third declension, the Genitive, Dative, and Locative cases all share the exact same **-і** ending. If you know the base word and apply the vowel alternation rule, you essentially get three cases for the price of one! ::: <!-- INJECT_ACTIVITY: match-up-cases -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -650,7 +650,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -663,18 +730,69 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] любов (love — III відміна, орудний: любов'ю)
+- [ ] осінь (autumn — III відміна, орудний: осінню)
+- [ ] радість (joy — III відміна, орудний: радістю, no подвоєння)
+- [ ] подорож (journey — III відміна, орудний: подорожжю)
+- [ ] ніч (night — III відміна, орудний: ніччю, чергування і→о)
+- [ ] піч (oven — III відміна, орудний: піччю, чергування і→е)
+- [ ] сіль (salt — III відміна, орудний: сіллю)
+- [ ] кров (blood — III відміна, орудний: кров'ю, no подвоєння)
+- [ ] мати (mother — III відміна, unique stem expansion -ер-/-ір-)
+- [ ] подвоєння (doubling — consonant doubling in орудний)
+- [ ] нульове закінчення (zero ending — no visible suffix in називний)
+- [ ] відміна (declension type — I through IV)
+- [ ] гордість (pride — abstract noun from гордий)
+- [ ] мудрість (wisdom — abstract noun from мудрий)
+- [ ] тінь (shadow — III відміна, орудний: тінню)
+- [ ] річ (thing — III відміна, чергування і→е, орудний: річчю)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Подвоєння в орудному відмінку (~900 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

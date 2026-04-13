@@ -1,127 +1,145 @@
 ## Діало́ги (Dialogues)
 
-A real-world navigation scenario often requires linking multiple facts together, such as locations and times. In the following phone conversation, a guest is trying to find an apartment and coordinate a meeting time. The bolded words act as structural links between the speaker's actions and the environment.
+In this module, **що**, **де**, and **коли́** help you link ideas about facts, places, and time.
 
-> **Гість:** А́лло! Я за́раз на пло́щі. Ти зна́єш, **де** нове́ кафе́? *(Hello! I am on the square now. Do you know where the new cafe is?)*
-> **Госпо́дар:** Так, я зна́ю, **де** воно́. **Ко́ли** поба́чиш **фонта́н** (fountain), поверни́ ліво́руч. *(Yes, I know where it is. When you see the fountain, turn left.)*
-> **Гість:** До́бре. Я йду. А **де** поба́чу **парк** (park), тре́ба зупини́тись? *(Okay. I am walking. And where I see the park, should I stop?)*
-> **Господар:** Са́ме так, зупини́сь. Вели́кий **буди́нок** (building), **що** стої́ть бі́ля де́рева — це кафе. Скажи́, **коли** ти ві́льний. *(Exactly, stop. The big building that stands near the tree is the cafe. Tell me when you are free.)*
-> **Гість:** Я вільний, **коли** закі́нчу́ робо́ту. Це сього́дні вве́чері. *(I am free when I finish work. That is tonight.)*
-> **Господар:** Добре. Я ду́маю, **що** о шо́стій бу́де добре. *(Good. I think that at six will be good.)*
-> **Гість:** Так, я теж думаю, **що** це га́рний час. До зу́стрічі! *(Yes, I also think that this is a good time. See you!)*
+Let's look at a conversation where two friends plan when and where to meet.
 
-:::note
-The imperative verbs **поверни** (turn) and **зупинись** (stop) seen in the dialogue are used for giving direct navigation instructions. They form the core action in the main clause, waiting for the subordinate clause to provide the condition (e.g., **коли побачиш...**).
-:::
+> **Госпо́дар:** Приві́т! Ти **зна́єш** (know), де нове́ кафе́?
+> *(Hi! Do you know where the new cafe is?)*
+> **Гість:** Так, я **зна́ю**, де воно́.
+> *(Yes, I know where it is.)*
+> **Господар:** Скажи́, **коли** (when) ти ві́льний.
+> *(Tell me when you are free.)*
+> **Гість:** Я вільний, коли закі́нчу́ робо́ту.
+> *(I am free when I finish work.)*
+> **Господар:** До́бре. Я **ду́маю** (think), **що** (that) о шо́стій бу́де добре.
+> *(Good. I think that at six will be good.)*
+> **Гість:** Так, я теж **думаю**, що це га́рний час.
+> *(Yes, I also think that this is a good time.)*
 
-When discussing other people and sharing information, complex sentences allow speakers to embed one fact inside another. The short bolded words connect the act of knowing or saying with the actual information being shared.
+Notice how **де**, **коли**, and **що** link a main clause with a dependent clause and make the dialogue sound more natural.
 
-> **Макси́м:** Приві́т! Ти знаєш, **що** Оле́на вже в Ки́єві? *(Hi! Do you know that Olena is already in Kyiv?)*
-> **Тара́с:** Ні, я не знав! А де вона́ живе́? *(No, I didn't know! And where does she live?)*
-> **Максим:** Я не знаю, **де** саме. Але́ я знаю, **що** біля це́нтру. *(I don't know exactly where. But I know that it is near the center.)*
-> **Тарас:** Скажи їй, **коли** побачиш, **що** я хо́чу зустрі́тися. *(Tell her, when you see her, that I want to meet.)*
-> **Максим:** Добре, скажу́, **коли** побачу. *(Okay, I will tell her when I see her.)*
+Now let's look at a second conversation about a friend in Kyiv.
 
-In these dialogues, the bolded words **що**, **де**, and **коли** are not asking questions, but rather acting as bridges. They are "connector" words that glue two separate pieces of information together into a single, flowing thought. Instead of stating two separate facts like "I know" and "Where does she live?", the speaker combines them using **де**: **Я знаю, де вона живе**. This grammatical structure elevates speech from basic phrases to natural, connected communication. A specific punctuation mark appears before every single one of these connector words. The comma is an absolute requirement here, establishing a structural boundary between the two connected actions.
+> **А́нна:** Ти **знаєш**, що Оле́на вже в Ки́єві?
+> *(Do you know that Olena is already in Kyiv?)*
+> **Макси́м:** Ні, я не знав! А де вона́ живе́?
+> *(No, I did not know! And where does she live?)*
+> **Анна:** Я не **знаю**, де са́ме. Але́ я **знаю**, що бі́ля це́нтру.
+> *(I don't know exactly where. But I know that it is near the center.)*
+> **Максим:** Скажи їй, коли **поба́чиш** (see), що я хо́чу зустрі́тися.
+> *(Tell her, when you see her, that I want to meet.)*
+> **Анна:** Добре, **скажу́** (will say), коли поба́чу.
+> *(Good, I will tell her when I see her.)*
+
+This exchange combines several linked clauses.
+
+Here is a short directions example:
+
+> **Господар:** Коли побачиш фонта́н, поверни́ ліво́руч.
+> *(When you see the fountain, turn left.)*
+> **Гість:** Добре, я шука́ю фонтан.
+> *(Good, I am looking for the fountain.)*
+> **Господар:** Там, де побачиш парк, зупини́сь. Буди́нок, що стої́ть біля де́рева, мій.
+> *(Where you see the park, stop. The building that stands near the tree is mine.)*
 
 ## Складне речення (Complex Sentences)
 
-In Module 44, you learned how to connect two equal ideas using simple words like **і** (and) or **але** (but). A sentence like **Я чита́ю, і він пи́ше** (I am reading, and he is writing) contains two independent actions carrying equal weight. Now, the focus shifts to connecting a main idea with a dependent idea. In the sentence **Я знаю, що він тут** (I know that he is here), the phrase **Я знаю** operates as the core statement—it is the **головне́ речення** (main clause). The second part, **що він тут**, provides supporting information and depends entirely on the first part to make sense. Ukrainian textbooks for the fifth grade call this hierarchical structure a **складнопідря́дне речення** (a complex sentence with a subordinate clause).
+In Module 44, you learned to connect equal ideas: "Я чита́ю, і він пи́ше." Now we connect a main clause with a dependent clause. In Ukrainian school grammar, this is a **складнопідря́дне речення**. The first part is the **головне́** clause, and the second depends on it.
 
-Ukrainian punctuation enforces a strict rule for these complex sentences. You must always place a comma before **що**, **де**, and **коли** when they act as conjunctions linking two clauses. This creates a significant contrast with English, where a sentence like "I think that it is correct" requires no punctuation boundary. In Ukrainian, that comma is a mandatory visual pause indicating the start of a dependent clause.
+Structure: main clause + comma + clause-linking word + subordinate clause. Look at these examples:
 
-*   **Я думаю, що це пра́вильно.** (I think that this is correct.)
-*   **Він не зна́є, де магази́н.** (He does not know where the store is.)
-*   **Зателефону́й, коли при́йдеш.** (Call when you arrive.)
+- Я **знаю**, що він тут. *(I know that he's here.)*
+- Я не **знаю**, де він живе. *(I don't know where he lives.)*
+- Скажи мені́, коли ти при́йдеш. *(Tell me when you'll come.)*
+- Вона **ду́має**, що це пра́вда. *(She thinks that this is true.)*
+- Ми **ба́чимо** (see), де стоїть маши́на. *(We see where the car stands.)*
 
-Every single example requires the comma before the conjunction.
+Put a comma between the clauses. If the subordinate clause comes first, put the comma after it: **Коли я прийду́, ми погово́римо.**
 
-:::caution
-English speakers often forget the comma before **що** because "I think that..." has no punctuation in English. In Ukrainian, writing **Я думаю що це так** without a comma is a grammatical error. Always insert the pause.
-:::
+Read these examples:
 
-Certain actions naturally demand a subordinate clause to finish their thought. These "trigger verbs" describe perception, thought, and communication. The most common examples are **зна́ти** (to know), **ду́мати** (to think), **каза́ти** (to say/tell), **сказа́ти** (to say — perfective), **ба́чити** (to see), **чу́ти** (to hear), and **розумі́ти** (to understand). When a speaker uses these verbs, they usually need **що**, **де**, or **коли** to complete the logical sequence. If someone says "I see," the listener immediately waits for the rest of the information. A connected clause satisfies that grammatical expectation.
+- Я **думаю**, що це пра́вильно. *(comma before що)*
+- Він не **зна́є**, де магази́н. *(comma before де)*
+- Зателефону́й, коли прийдеш. *(comma before коли)*
+- Я **розумі́ю** (understand), що ти втоми́вся. *(comma before що)*
+- Вони́ **чу́ють** (hear), коли гра́є му́зика. *(comma before коли)*
 
-*   **Я ба́чу, що ти працю́єш.** (I see that you are working.)
-*   **Ти чу́єш, де гра́є му́зика?** (Do you hear where the music is playing?)
-*   **Він розумі́є, коли треба йти.** (He understands when it is necessary to go.)
-*   **Ми зна́ємо, що це важли́во.** (We know that this is important.)
-*   **Вона ка́же, що вона вдо́ма.** (She says that she is at home.)
+Read this short paragraph:
 
-<!-- INJECT_ACTIVITY: fill-in-conjunction-choice -->
+> Я живу́ у вели́кому мі́сті. Я **знаю**, де тут гарний парк. Мій брат **ка́же** (says), що там ду́же ти́хо. Ми гуля́ємо там, коли ма́ємо вільний час. Я **думаю**, що це найкра́ще мі́сце.
+> *I live in a large city. I know where there is a beautiful park here. My brother says that it is very quiet there. We walk there when we have free time. I think that this is the best place.*
 
-<!-- INJECT_ACTIVITY: quiz-comma-placement -->
+<!-- INJECT_ACTIVITY: fill-in-conjunctions -->
 
 ## Що, де, коли — дво́є обли́ч (Two Faces)
 
-The words **що**, **де**, and **коли** serve two entirely different functions depending on their placement in a sentence. As question words, they appear at the beginning of a sentence to request information. You already know this role from Module 20. When positioned at the start, they function as interrogative markers and demand an answer.
+These three words have two jobs in Ukrainian. First, they can act as question words at the start of a sentence.
 
-*   **Що це на столі́?** (What is this on the table?)
-*   **Де ти зараз живе́ш?** (Where do you live now?)
-*   **Коли ти прийдеш додо́му?** (When will you arrive home?)
-*   **Що він ро́бить там?** (What is he doing there?)
-*   **Де працю́є твій брат?** (Where does your brother work?)
+- **Що** це? *(What is this?)*
+- **Де** ти? *(Where are you?)*
+- **Коли** ти прийдеш? *(When will you come?)*
 
-In this primary role, their function is to open a conversation and extract specific details from the listener.
+Second, they can introduce a subordinate clause. A question word forms a direct question with a question mark. A clause-linking word connects two parts of one sentence.
 
-When these exact same words move to the middle of the sentence—positioned immediately after a comma—they completely drop their interrogative function and become conjunctions. Compare the direct question **Де ти?** (Where are you?) with the complex statement **Я знаю, де ти** (I know where you are). The segment following the comma uses normal statement word order. No inversion or special question intonation applies, because the speaker is no longer asking anything. The sentence simply states a fact about a location, a time, or an event.
+Let's look at common patterns with **що** as a conjunction and **де** as a linking word in subordinate clauses. They often appear with verbs like **зна́ти** (to know), **ду́мати** (to think), and **каза́ти** (to say).
 
-*   **Я знаю, що він робить.** (I know what he is doing.)
-*   **Я не знаю, що це.** (I do not know what this is.)
-*   **Я думаю, що це правильно.** (I think that this is correct.)
-*   **Він каже, що кафе зачи́нене.** (He says that the cafe is closed.)
-*   **Я знаю, де він працює.** (I know where he works.)
-*   **Я не знаю, де мій телефо́н.** (I do not know where my phone is.)
-*   **Скажи, коли ти бу́деш гото́вий.** (Tell me when you will be ready.)
-*   **Я не знаю, коли він приї́де.** (I do not know when he will arrive.)
+- Я **знаю**, що... / Я не **знаю**, що... *(I know / don't know that...)*
+- Я **думаю**, що... *(I think that...)*
+- Він **каже**, що... *(He says that...)*
+- Вона мо́же **сказа́ти** (say), що... *(She can say that...)*
+- Я **знаю**, де... / Я не **знаю**, де... *(I know / don't know where...)*
+- Ми **бачимо**, де... *(We see where...)*
 
-:::tip
-A simple trick to identify the function of **що**: if you can replace it with "what" in English, it is a question word. If you can replace it with "that," it is a conjunction connecting two ideas.
-:::
+Here are common patterns with **коли**:
 
-A subordinate clause stating a condition or time can sometimes appear before the main action. In such cases, the dependent clause starts with **коли** and opens the sentence.
+- Скажи, коли... *(Tell me when...)*
+- Я не **знаю**, коли... *(I don't know when...)*
+- Ми **розумі́ємо**, коли... *(We understand when...)*
 
-*   **Коли я прийду́, ми погово́римо.** (When I arrive, we will talk.)
-*   **Коли я вдома, я відпочива́ю.** (When I am at home, I rest.)
-*   **Коли вона чита́є, вона не чу́є.** (When she is reading, she does not hear.)
-*   **Коли ми працю́ємо, ми не гово́римо.** (When we work, we do not talk.)
+Interestingly, you can also completely reverse the structure. The dependent clause can come first:
 
-The mandatory comma still separates the two parts, but it now sits in the middle of the sentence to introduce the main clause. While **що** and **де** almost always remain firmly in the middle of the sentence (e.g., **Я думаю, що...**, **Він каже, що...**), the word **коли** offers more flexibility and frequently jumps to the beginning to establish the context for the main action.
+- Коли я прийду, ми поговоримо. *(When I arrive, we will talk.)*
+- Коли він працю́є, він мовчи́ть. *(When he works, he is silent.)*
 
-### Пра́ктика чита́ння (Reading Practice)
+The comma still separates the two clauses.
 
-Read the following paragraph. Notice how the short conjunctions hold the narrative together. 
+Here is a short classroom situation:
 
-**Мій друг Тарас каже, що він живе біля парку. Я не знаю, де саме цей парк. Але я знаю, що він великий. Коли в Тара́са є час, він гуля́є там. Я думаю, що це га́рне мі́сце. Тарас каже, що він теж гуляє, коли я тут.** 
-*(My friend Taras says that he lives near the park. I do not know where exactly this park is. But I know that it is big. When Taras has time, he walks there. I think that this is a good place. Taras says that he also walks when I am here.)*
+> Студе́нти сидя́ть у кла́сі. Вчи́тель запи́тує, де лежи́ть кни́га. Студе́нт не **знає**, де вона. І́нший студент **каже**, що книга на столі́. Вони чита́ють, коли вчитель про́сить.
+> *The students are sitting in the class. The teacher asks where the book lies. The student does not know where it is. Another student says that the book is on the table. They read when the teacher asks.*
 
-<!-- INJECT_ACTIVITY: quiz-function-id -->
+<!-- INJECT_ACTIVITY: quiz-question-or-conjunction -->
 
-<!-- INJECT_ACTIVITY: fill-in-sentence-builder -->
+<!-- INJECT_ACTIVITY: fill-in-build-sentences -->
+
+<!-- INJECT_ACTIVITY: quiz-comma-placement -->
 
 ## Підсумок — Summary
 
-Complex sentences rely on specific connectors to link a main clause to a subordinate clause. Here is a summary of the three subordinating conjunctions from this module:
+Let's provide a concise recap of the words that introduce subordinate clauses at the A1 level.
 
-| Conjunction | Meaning | Example |
+| Word | Meaning | Example |
 | :--- | :--- | :--- |
-| **що** | that | **Я знаю, що він тут.** |
-| **де** | where | **Я не знаю, де кафе.** |
-| **коли** | when | **Скажи, коли прийдеш.** |
+| **що** | that | Я **знаю**, що він тут. *(I know that he is here.)* |
+| **де** | where | Я не **знаю**, де кафе. *(I don't know where the cafe is.)* |
+| **коли** | when | Скажи, коли прийдеш. *(Tell me when you will come.)* |
 
-The comma before these conjunctions is a strict requirement of Ukrainian punctuation. Furthermore, **що** translates to "that" when operating as a conjunction, but functions as "what" when acting as a question word. The identical spelling performs two completely different grammatical roles depending entirely on the sentence structure.
+We must reiterate the punctuation rule: place a comma between the two clauses. If the subordinate clause comes first, the comma follows it; if the main clause comes first, the comma stands before the clause-introducing word.
 
-Combining subordinating conjunctions with the basic connectors from Module 44 allows for highly detailed sentence structures. Multiple clauses can link together to describe complex situations.
+As you progress, your sentences will become much richer. You can now combine these clause-linking words and conjunctions with the coordinating conjunctions you learned in Module 44 (**і**, **а**, **але**, **бо**). Look at these examples:
 
-*   **Я не йду, бо я не знаю, де це.** (I am not going, because I do not know where it is.)
-*   **Він каже, що при́йде, коли закі́нчи́ть.** (He says that he will come when he finishes.)
-*   **Ми ду́маємо, що вона знає, де він.** (We think that she knows where he is.)
-*   **Я бачу, що ти не знаєш, що роби́ти.** (I see that you do not know what to do.)
+- Я не йду, бо я не **знаю**, де це. *(I am not going, because I do not know where it is.)* — two conjunctions!
+- Він **каже**, що при́йде, коли закі́нчи́ть. *(He says that he will come when he finishes.)* — two subordinate clauses!
+- Я **думаю**, що це добре, але я не впе́внений. *(I think that it is good, but I am not sure.)*
 
-The first example uses **бо** (because) and **де** (where) in a single thought. The second sentence contains two separate subordinate clauses, demonstrating how these small connecting words build sophisticated real-world communication.
+Now it is time for a quick self-check section. Take a moment to actively build three of your own sentences using the following sentence frames. Say them out loud or write them down:
 
-Verify your understanding by reviewing these core concepts. Can you name the three subordinating conjunctions covered in this module? Check your memory regarding the mandatory punctuation mark required before them. Finally, practice building three original sentences starting with these specific phrases:
+- Я **думаю**, що...
+- Я не **знаю**, де...
+- Скажи мені, коли...
 
-*   **Я думаю, що...**
-*   **Я не знаю, де...**
-*   **Скажи мені́, коли...**
+Read this final paragraph to see everything smoothly working together:
+
+> За́раз ве́чір. Я ще не **знаю**, де мій брат. Мій друг **думає**, що він іде́ в парк. Я не **знаю**, коли він там гуля́є. Я **думаю**, що це га́рна іде́я.
+> *It is evening now. I do not know yet where my brother is. My friend thinks that he is going to the park. I do not know when he walks there. I think that this is a good idea.*

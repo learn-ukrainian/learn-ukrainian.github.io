@@ -1,0 +1,49 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T19-14-5aaac063.json
+phase: vocab
+prompt_chars: 9005
+response_chars: 3089
+prompt_words: 1443
+response_words: 398
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.0886
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.0255
+- name: plan
+  start: 1028
+  length: 7977
+  fraction: 0.8858
+large_sections:
+- plan
+directives_total: 8
+directives_covered: 2
+directives_missed:
+- kind: must
+  text: You cannot use it alone; it must be paired with a preposition, most commonly
+    **в** (or its phonetic variant **у**) and **на**.
+  covered: false
+  coverage_note: 1/12 keywords (8%)
+- kind: must
+  text: However, there are conventional exceptions that must be memorized.
+  covered: false
+  coverage_note: 1/8 keywords (12%)
+- kind: inject_activity
+  text: match-up-nominative-locative
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-answer-where
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-v-or-na
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-where-is-it
+  covered: false
+  coverage_note: marker missing

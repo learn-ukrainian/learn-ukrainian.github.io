@@ -2,12 +2,12 @@
   "module": "work-and-food",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-04-11T00:50:00.170403Z",
+  "last_audit": "2026-04-11T13:55:06.994870Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-11T00:47:06.323137Z",
+    "md": "2026-04-11T13:55:04.196472Z",
     "meta": null,
-    "activities": "2026-04-08T01:17:56.656792Z",
+    "activities": "2026-04-11T13:49:41.394790Z",
     "vocabulary": "2026-04-08T01:19:08.500684Z",
     "research": null,
     "plan": "2026-04-04T22:04:59.973325Z"
@@ -20,18 +20,27 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 1,
-      "message": "2576/2000 (raw: 2678) | engagement: 0/3"
+      "violations": 2,
+      "message": "2899/2000 (raw: 3042) | engagement: 2/3 | immersion: 29.6% LOW (target 50-80% (A2.2))"
     },
     "activities": {
       "status": "fail",
       "violations": 1,
-      "message": "6/0 | density: 1 < 8"
+      "message": "8/0 | density: 1 < 8"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
       "message": "61/1"
+    },
+    "vocab_progression": {
+      "status": "warn",
+      "violations": 0,
+      "message": "\u0394 -21 | premature=5 | gaps=0 | well-paced=2",
+      "delta": -21,
+      "premature": 5,
+      "gaps": 0,
+      "well_paced": 2
     },
     "naturalness": {
       "status": "info",

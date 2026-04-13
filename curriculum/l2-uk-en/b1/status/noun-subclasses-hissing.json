@@ -2,12 +2,12 @@
   "module": "noun-subclasses-hissing",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-10T21:26:03.166023Z",
+  "last_audit": "2026-04-11T17:49:01.433005Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-09T20:53:44.926752Z",
+    "md": "2026-04-11T17:48:05.545237Z",
     "meta": null,
-    "activities": "2026-04-09T11:45:41.189217Z",
+    "activities": "2026-04-11T17:33:53.183613Z",
     "vocabulary": "2026-04-09T20:45:29.018866Z",
     "research": null,
     "plan": "2026-04-04T21:31:33.312307Z"
@@ -21,17 +21,26 @@
     "lesson": {
       "status": "fail",
       "violations": 3,
-      "message": "4481/4000 (raw: 4547) | engagement: 0/5 | richness: 40% < 95% min (grammar) - REWRITE needed | salad: Phase 7 (Early B1 (B1 M01-M30)): 4 error(s) \u2014 SALAD_EXCESSIVE_INLINE_GLOSSES: paragraph has 12 inline **term** (gloss) markers across 12 sentence(s) \u2014 too dense; move to vocabulary section or conver"
+      "message": "5560/4000 (raw: 5666) | engagement: 2/5 | immersion: 32.2% LOW (target 85-100% (B1.2 Motion)) | richness: 52% < 95% min (grammar) - REWRITE needed"
     },
     "activities": {
       "status": "fail",
       "violations": 1,
-      "message": "11/0 | density: 4 < 6"
+      "message": "8/0 | density: 1 < 6"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
       "message": "41/25"
+    },
+    "vocab_progression": {
+      "status": "pass",
+      "violations": 0,
+      "message": "\u0394 +0 | premature=0 | gaps=0 | well-paced=0",
+      "delta": 0,
+      "premature": 0,
+      "gaps": 0,
+      "well_paced": 0
     },
     "naturalness": {
       "status": "info",
@@ -52,7 +61,7 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [],
-    "pass_count": 4,
+    "pass_count": 5,
     "fail_count": 2,
     "deferred_count": 0
   }

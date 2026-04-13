@@ -1,0 +1,57 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T15-17-c457a51e.json
+phase: write-chunk-01
+prompt_chars: 37456
+response_chars: 3957
+prompt_words: 5444
+response_words: 639
+sections:
+- name: header
+  start: 0
+  length: 434
+  fraction: 0.0116
+- name: skeleton
+  start: 434
+  length: 1817
+  fraction: 0.0485
+- name: plan
+  start: 2251
+  length: 11439
+  fraction: 0.3054
+- name: wiki
+  start: 7323
+  length: 23548
+  fraction: 0.6287
+- name: output_spec
+  start: 37238
+  length: 218
+  fraction: 0.0058
+large_sections:
+- wiki
+directives_total: 15
+directives_covered: 9
+directives_missed:
+- kind: checklist
+  text: ніхто (nobody)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: ніщо (nothing)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: ніде (nowhere)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 3/11 keywords (27%)
+- kind: inject_activity
+  text: group-sort-pronoun-series
+  covered: false
+  coverage_note: marker missing

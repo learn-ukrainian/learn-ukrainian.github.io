@@ -1,4 +1,4 @@
-<!-- version: 1.1.0 | updated: 2026-03-31 -->
+<!-- version: 1.2.0 | updated: 2026-04-12 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -11,6 +11,35 @@ Generate an `activities/what-happened.yaml` file for module **48: What Happened?
 
 ---
 
+## ⚠️ HARD COUNT TARGETS — READ TWICE
+
+These are the binding numerical contracts for THIS module. The audit will FAIL if you fall short.
+
+| Bucket | Min | Max | Notes |
+|---|---|---|---|
+| Total activities | 10 | 10+ | inline + workbook combined |
+| Inline (lesson tab) | 4 | 6 | one per `<!-- INJECT_ACTIVITY -->` marker, see below |
+| Workbook (Зошит tab) | 6 | 9 | extended practice |
+| Items per activity | 6 | — | each activity must have at least 6 items (unless its type cap is lower — see Activity Type Reference below) |
+
+**You MUST ship at least 4 inline activities AND at least 6 workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+
+**Type diversity is required.** The module (inline + workbook combined) MUST use at least **0** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level. (If `0` is `0`, the audit profile for this level does not enforce type diversity — but variety still produces a better lesson, so aim for 4+ types when the workbook allows it.)
+
+---
+
+## Allowed types for THIS level
+
+- **Inline (lesson) types:** image-to-letter, letter-grid, match-up, watch-and-repeat, quiz, true-false, fill-in, classify
+- **Inline priority (preferred):** image-to-letter, match-up, fill-in, quiz, watch-and-repeat
+- **Workbook types:** fill-in, match-up, group-sort, anagram, unjumble, quiz, true-false, classify, divide-words, count-syllables, pick-syllables, observe, phrase-table, odd-one-out
+- **Workbook priority (preferred):** fill-in, match-up, group-sort, anagram, unjumble
+- **FORBIDDEN at this level:** cloze, error-correction, mark-the-words, translate, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, highlight-morphemes, grammar-identify, select
+
+Pick from the allowed list. Lean heavily on the priority lists. Do not use any forbidden type — the build will reject it.
+
+---
+
 ## Inline vs Workbook Split
 
 Activities have two placement categories:
@@ -19,7 +48,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Rule of thumb:** inline = 2-3 quick checks after key teaching points. Workbook = 4-8 deeper practice exercises covering the full topic.
+**Rule of thumb:** inline = 4–6 quick checks after key teaching points. Workbook = 6–9 deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
 
 ---
 
@@ -28,8 +57,8 @@ Activities have two placement categories:
 The writer placed these markers in the module content. Your inline activities must match them:
 
 - `<!-- INJECT_ACTIVITY: matching-pronoun-ending -->`
-- `<!-- INJECT_ACTIVITY: fill-in-past-tense-forms -->`
-- `<!-- INJECT_ACTIVITY: fill-in-gender-subject-agreement -->`
+- `<!-- INJECT_ACTIVITY: fill-in-core-verbs -->`
+- `<!-- INJECT_ACTIVITY: fill-in-choose-gender -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -101,106 +130,98 @@ required:
 <module_content>
 ## Dialogues
 
-Monday morning at the office is the perfect time to catch up with coworkers about their weekend activities. Listen closely to how Taras and Olena ask each other about what they did. Pay special attention to the endings of the verbs. Notice how the exact same action has a different ending depending on who performed it.
+Monday morning at the office is a universal experience. Coworkers gather around the coffee machine and share stories about their time away from work. To participate in these everyday conversations, you must be able to talk about completed actions. You need to use the past tense. When Ukrainians discuss their weekend activities, the endings of their action words reveal important grammatical information. The speakers in the conversation below are Ivan and Mariia.
 
-> **Олена:** Привіт, Тарасе! **Що ти робив учора?** *(Hi, Taras! What did you do yesterday?)*
-> **Тарас:** Привіт! **Я читав книжку. А ти?** *(Hi! I read a book. And you?)*
-> **Олена:** **Я готувала вечерю. А що робив Іван?** *(I cooked dinner. And what did Ivan do?)*
-> **Тарас:** **Він гуляв у парку. А Марія?** *(He walked in the park. And Mariia?)*
-> **Олена:** **Вона працювала.** *(She worked.)*
+> **Марія:** Привіт, Іване! Що ти **робив** **учора**? *(Hi, Ivan! What did you do yesterday?)*
+> **Іван:** Я **читав** книжку. А ти? *(I read a book. And you?)*
+> **Марія:** Я **готувала** вечерю. *(I cooked dinner.)*
+> **Іван:** А що робив Тарас? *(And what did Taras do?)*
+> **Марія:** Він **гуляв** у парку. *(He walked in the park.)*
+> **Іван:** А Олена? *(And Olena?)*
+> **Марія:** Вона **працювала**. *(She worked.)*
 
-Look at the linguistic patterns in that conversation. The core activity remains the same, but the verb ending changes based on whether **Тарас** (Taras) or **Олена** (Olena) is speaking. When Taras talks about himself, he uses the masculine ending. When Olena talks about herself, she uses the feminine ending. In Ukrainian, the past tense must agree with the gender of the person performing the action.
+Did you notice a pattern in how Ivan and Mariia ask and answer questions? When Mariia asks Ivan what he did, she says **робив**. When Ivan talks about his own actions, he says **читав**. However, when Mariia talks about her own actions, she says **готувала**. When they discuss Olena, a female colleague, they use **працювала**. The verb changes its ending based on whether the person doing the action is male or female. The exact same action word takes a different form depending on the gender of the subject.
 
-Consider another conversation. This time, two colleagues are discussing their entire weekend. Notice what happens when they talk about doing things together as a group.
+When colleagues discuss their entire weekend, the past tense forms create a natural narration of events. In the following exchange, Ivan and Mariia narrate a longer sequence of events. Watch how the speakers use different action words to describe Saturday and Sunday, maintaining the gender rules throughout the story.
 
-> **Олена:** Привіт, Тарасе! **Як ти провів вихідні?** *(Hi, Taras! How did you spend the weekend?)*
-> **Тарас:** Добре! **У суботу я гуляв у місті.** *(Good! On Saturday I walked in the city.)*
-> **Олена:** А в неділю? *(And on Sunday?)*
-> **Тарас:** **У неділю я дивився фільм. А ти?** *(On Sunday I watched a film. And you?)*
-> **Олена:** **Я ходила в кафе з подругою.** *(I went to a cafe with a friend.)* **Ми їли торт і пили каву.** *(We ate cake and drank coffee.)*
+> **Марія:** Іване, як ти провів **вихідні**? *(Ivan, how did you spend the weekend?)*
+> **Іван:** Добре! У **суботу** я гуляв у місті. *(Good! On Saturday I walked in the city.)*
+> **Марія:** А в **неділю**? *(And on Sunday?)*
+> **Іван:** У неділю я **дивився** **фільм**. А ти? *(On Sunday I watched a film. And you?)*
+> **Марія:** Я ходила в кафе з подругою. Ми їли торт і пили каву. *(I went to a cafe with a friend. We ate cake and drank coffee.)*
+> **Іван:** Як смачно! *(How tasty!)*
 
-In natural conversation, you will frequently transition from the present to the past. Compare the present tense **я зараз працюю** (I am working right now) with the past tense **учора я працював** (yesterday I worked). The rules for building these two tenses are completely different, requiring a new approach.
+Here is a short story summarizing their weekend activities. Notice how the verbs change endings for Taras (masculine), Olena (feminine), and the group (plural).
+
+У суботу Тарас гуляв у місті. Він дивився цікавий фільм. Олена працювала в офісі. Увечері вона готувала вечерю. Вони не відпочивали **разом**.
+> *On Saturday Taras walked in the city. He watched an interesting film. Olena worked in the office. In the evening she cooked dinner. They did not rest together.*
 
 ## Минулий час (Past Tense)
 
-The formal rule for forming the **минулий час** (past tense) is wonderfully simple and mechanical. First, take the infinitive form of the verb and remove the final **-ти** ending to find the core stem. Then, you simply add one of four suffixes to that stem: **-в** for masculine subjects, **-ла** for feminine subjects, **-ло** for neuter subjects, and **-ли** for plural subjects. For example, take the model verb **читати** (to read). Drop the **-ти** to get the stem **чита-**. Then add the suffix to create **читав**, **читала**, **читало**, or **читали**.
+The Ukrainian past tense, known as **минулий** час (past tense), follows a highly predictable and mechanical pattern. Grade 3 and Grade 4 school textbooks in Ukraine teach this concept by focusing on the base form of the verb. To form the past tense, you start with the infinitive form of the verb. The infinitive is the dictionary form that always ends in **-ти**, such as **читати** (to read) or **працювати** (to work). You simply remove this **-ти** ending to find the verb stem. Once you have the stem, you add a specific single-letter or two-letter suffix to create the past tense.
 
-This brings us to a crucial pedagogical shift. Unlike the present tense, which changes its ending based on the grammatical person (first, second, or third person like **я читаю**, **ти читаєш**), the past tense does not care about person at all. The past tense only cares about gender. If a man is speaking, he says **я читав** (I read). If a woman is speaking, she says **я читала** (I read). Both use the pronoun **я**, but the verb ending changes to match their gender. 
+:::tip
+The past tense in Ukrainian is incredibly systematic compared to English! There are no irregular vowel changes to memorize for regular verbs. Every verb follows the same predictable pattern based on its infinitive stem.
+:::
 
-*   **Я читав цікаву книжку.** *(I read an interesting book.)* [male speaker]
-*   **Я читала цікаву книжку.** *(I read an interesting book.)* [female speaker]
-*   **Ти добре працював.** *(You worked well.)* [to a male]
-*   **Ти добре працювала.** *(You worked well.)* [to a female]
+The suffix you add depends entirely on the subject. You add **-в** for a masculine subject (**він**), **-ла** for a feminine subject (**вона**), **-ло** for a neuter subject (**воно**), and **-ли** for plural subjects (**вони**). This reveals a key insight about the Ukrainian language: the past tense marks gender, not person. The pronouns **я** (I) and **ти** (you) will take different endings depending on who is speaking or who is being addressed. A male speaker says **я читав** (I was reading), while a female speaker says **я читала** (I was reading). The person remains the same, but the gender ending changes.
 
-The most common verb you will use in the past tense is the verb **бути** (to be). It follows the exact same pattern. The paradigms are **був** (masculine), **була** (feminine), **було** (neuter), and **були** (plural). If you want to translate the English phrase "I was," a male speaker says **я був**, and a female speaker says **я була**. 
+This system is fundamentally different from the present tense. The present tense marks the grammatical person. In the present tense, you say **я читаю**, **ти читаєш**, and **він читає**, where the ending changes for 'I', 'you', and 'he'. The past tense ignores the grammatical person and groups subjects by gender. The forms become **я читав**, **ти читав**, and **він читав** for men, versus **я читала**, **ти читала**, and **вона читала** for women. For the third person, the pattern is perfectly regular.
 
-*   **Учора він був удома.** *(Yesterday he was at home.)*
-*   **Учора вона була на роботі.** *(Yesterday she was at work.)*
-*   **У неділю ми були в кафе.** *(On Sunday we were in a cafe.)*
+| Особа (Person) | Чоловічий рід (Masculine) | Жіночий рід (Feminine) | Середній рід (Neuter) | Множина (Plural) |
+| --- | --- | --- | --- | --- |
+| 1st / 2nd / 3rd | **він працював** | **вона працювала** | **воно працювало** | **вони працювали** |
 
-Remember that the present tense word **є** (is/are) is never used when talking about the past.
+The masculine past tense ending **-в**, seen in words like **читав** and **працював**, requires special attention for pronunciation. It is not pronounced like a hard English 'v' sound. Instead, it sounds like a short, fluid 'w'. The sound smoothly finishes the word without a harsh consonant stop.
 
-The neuter and plural forms are equally straightforward. You will often use the neuter pronoun **воно** (it) and the **-ло** ending for impersonal expressions about the weather or environment, such as **було тепло** (it was warm) or **було холодно** (it was cold). The plural ending **-ли** is used for groups of people. A wonderful feature of the plural past tense is that gender distinctions completely disappear. Whether you say **ми гуляли** (we walked), **ви гуляли** (you walked), or **вони гуляли** (they walked), the ending is always exactly the same.
-
-## Практика (Practice)
-
-You must drill these core patterns using the verbs you already know. The transformation is consistent across almost all basic verbs. 
-
-*   **працювати** (to work) → **він працював**, **вона працювала**, **вони працювали**
-*   **гуляти** (to walk) → **він гуляв**, **вона гуляла**, **вони гуляли**
-*   **готувати** (to cook) → **він готував**, **вона готувала**, **вони готували**
-*   **читати** (to read) → **він читав**, **вона читала**, **вони читали**
-*   **говорити** (to speak) → **він говорив**, **вона говорила**, **вони говорили**
-
-For reflexive verbs like **дивитися** (to watch), the reflexive suffix **-ся** remains at the very end of the word, after the gender suffix. While the suffix changes to **-сь** in the feminine and plural forms in some dialects, you should focus on the standard forms: **він дивився**, **вона дивилася**, and **вони дивилися**.
-
-To ground your sentences in the past, you need time markers. The two most essential phrases at this level are **учора** (yesterday) and **минулого тижня** (last week). Notice that the adjective **минулого** (last/past) is in the genitive case, agreeing with the masculine noun **тиждень** (week). 
-
-*   **Учора я працював.** *(Yesterday I worked.)*
-*   **Минулого тижня вона готувала борщ.** *(Last week she cooked borscht.)*
-*   **Учора ввечері ми дивилися фільм.** *(Yesterday evening we watched a film.)*
-*   **У неділю вранці він читав новини.** *(On Sunday morning he read the news.)*
-*   **У суботу вони гуляли разом.** *(On Saturday they walked together.)*
+Учора я читав нову книжку. Мій брат гуляв у парку. Моя сестра готувала смачну вечерю. Ми багато **говорили** про вихідні. Увечері ми дивилися старий фільм.
+> *Yesterday I read a new book. My brother walked in the park. My sister cooked a tasty dinner. We spoke a lot about the weekend. In the evening we watched an old film.*
 
 <!-- INJECT_ACTIVITY: matching-pronoun-ending -->
 
-<!-- INJECT_ACTIVITY: fill-in-past-tense-forms -->
+## Практика (Practice)
 
-Question formation in the past tense is very direct. To ask someone "What did you do?", you must use the verb **робити** (to do). However, because the past tense requires gender agreement, the question itself reveals the gender of the person you are talking to. To ask a man, you say **Що ти робив?**. To ask a woman, you say **Що ти робила?**. The response pattern simply reverses this: start with **я**, add the verb with your own gender ending, and finish with the object. 
+You already know several core action words from earlier modules. Applying the past tense rule to these verbs creates a consistent paradigm across all four categories. For the verb **працювати**, the forms are **працював**, **працювала**, **працювало**, and **працювали**. The verb **гуляти** (to walk) becomes **гуляв**, **гуляла**, **гуляло**, and **гуляли**. For the verb **готувати** (to cook), the paradigm is **готував**, **готувала**, **готувало**, and **готували**. The verb **говорити** (to speak) follows the exact same logic.
 
-*   **Що ви робили учора?** *(What did you do yesterday?)* [plural]
-*   **Ми працювали в офісі.** *(We worked in the office.)*
-*   **Як вона провела вихідні?** *(How did she spend the weekend?)*
-*   **Вона гуляла в парку.** *(She walked in the park.)*
+*   `читати → читав / читала / читало / читали`
+*   `готувати → готував / готувала / готувало / готували`
 
-<!-- INJECT_ACTIVITY: fill-in-gender-subject-agreement -->
+Reflexive verbs, which end in **-ся** or **-сь**, require a slight adjustment. The reflexive particle always attaches to the very end of the word, after the gender suffix. For the verb **дивитися** (to watch), you build the past tense by adding the gender ending to the stem, and then appending the reflexive particle. The forms become **дивився** for masculine, **дивилася** for feminine, **дивилося** for neuter, and **дивилися** for plural. The core gender endings remain intact inside the word.
 
-English speakers often fall into a few common pitfalls when learning this system. First, avoid the direct translation of the English "I was doing." You should never say **я є був** or combine **був** with another verb. Just use the past tense of the main verb directly. Second, because English verbs do not change based on the speaker's gender, learners sometimes accidentally use the masculine **-в** form as a default for everything. If the word **я** refers to a woman, she must actively remember to say **я працювала**, not **я працював**.
+You can now build complete sentences about the past by combining these verb forms with time markers. Common time markers include **учора** (yesterday) and **минулого** (past) тижня (last week).
+
+*   **Учора я читав цікаву книжку.** (Yesterday I read an interesting book.)
+*   **Вона працювала в офісі.** (She worked in the office.)
+*   **Ми гуляли в парку.** (We walked in the park.)
+*   **Вони готували вечерю разом.** (They cooked dinner together.)
+*   **Тарас дивився фільм минулого тижня.** (Taras watched a film last week.)
+
+Notice how the plural form **-ли** is used for **ми** (we) and **вони** (they), regardless of the gender mix of the group.
+
+:::caution
+English speakers often try to translate the phrase "I was" literally when forming the past tense. Do not use the present tense verb "є" alongside a past tense verb. The phrase "Я є був" is grammatically incorrect. You simply say "Я був".
+:::
+
+When discussing weekends, Ukrainians frequently use the verb **провести** (to spend time). The common vocabulary phrase for spending the weekend is **провів вихідні** for a man, **провела вихідні** for a woman, and **провели вихідні** for a group.
+
+Минулого тижня Іван багато працював. Марія теж працювала в офісі. Вони не гуляли в парку. У неділю Іван і Марія готували обід разом. Вони добре провели вихідні.
+> *Last week Ivan worked a lot. Mariia also worked in the office. They did not walk in the park. On Sunday Ivan and Mariia cooked lunch together. They spent the weekend well.*
+
+<!-- INJECT_ACTIVITY: fill-in-core-verbs -->
+<!-- INJECT_ACTIVITY: fill-in-choose-gender -->
 
 ## Summary
 
-The Ukrainian past tense requires you to think differently than the present tense. Instead of matching the grammatical person, the verb ending must always agree with the gender of the subject. The mechanical transformation is highly consistent: you take the infinitive stem of the verb and add the appropriate gender suffix. 
+The mechanical formation of the past tense in Ukrainian is highly systematic. You take the infinitive stem of the verb and add **-в** for a masculine subject, **-ла** for a feminine subject, **-ло** for a neuter subject, and **-ли** for plural subjects. The most important rule to remember is that gender dictates the ending of the verb. The grammatical person does not change the suffix; the physical gender of the subject does.
 
-| Займенник (Pronoun) | Закінчення (Ending) | Приклад (Example: читати) |
-| :--- | :--- | :--- |
-| **Він** (He) | **-в** | **він читав** |
-| **Вона** (She) | **-ла** | **вона читала** |
-| **Воно** (It) | **-ло** | **воно читало** |
-| **Вони** (They) | **-ли** | **вони читали** |
+This gender rule has a direct impact on how you use the pronouns **я** and **ти**. A male speaker talking about his own actions always says **я читав**, while a female speaker always says **я читала**. When addressing someone directly, you must match the verb to their gender: **ти читав** to a man, and **ти читала** to a woman. Plural subjects, including **ми**, **ви**, and **вони**, always use the **-ли** ending, which erases any gender distinction for the group.
 
-Always remember this fundamental rule: the past tense shows gender. A male speaker and a female speaker will use different verb endings even though they both use the exact same pronoun **я**.
+The core communicative question for discussing past events is **Що ти робив?** when asking a man, or **Що ти робила?** when asking a woman. This translates to 'What did you do?'. The standard answer structure simply pairs the pronoun with the gender-appropriate past tense verb and the object. You respond by saying **Я читав книжку** or **Я читала книжку**, depending entirely on your own gender.
 
-Before moving on to the next module, test your understanding of these concepts. Ask yourself the following self-check questions to ensure you have internalized the core rules.
+Before moving forward, verify your understanding of these core past tense patterns. Tell your language partner what you did yesterday using three different verbs. For example, you might say "Учора я читав, гуляв і дивився фільм." Next, practice asking questions based on the gender of the listener. Ask a male classmate: **Що ти робив у неділю?** Then, ask a female classmate: **Що ти робила у суботу?** Consistent practice with these gender-specific endings will make speaking about the past feel completely natural.
 
-*   **Як ми утворюємо минулий час?** *(How do we form the past tense?)* You take the infinitive stem of the verb and add the correct gender suffix.
-*   **Яке закінчення має жіночий рід?** *(What ending does the feminine gender have?)* The feminine ending is always **-ла**.
-*   **Як запитати друга про вчорашній день?** *(How to ask a male friend about yesterday?)* You would ask him: **Що ти робив учора?**
-
-:::note
-**Your Production Task**
-Find a language partner, or simply practice speaking aloud to yourself. Tell them three things you did yesterday, making sure to use three different verbs. For example, a male learner might say: **Учора я снідав. Потім я гуляв у парку. Увечері я читав цікаву книжку.** Pay close attention to your verb endings!
-:::
-
+Учора був гарний день. Я гуляла в парку вранці. Потім я читала нову книжку. Мій друг дивився смішний фільм. Ми добре відпочивали.
+> *Yesterday was a beautiful day. I walked in the park in the morning. Then I read a new book. My friend watched a funny film. We rested well.*
 </module_content>
 
 ---
@@ -214,48 +235,68 @@ version: "1.0"
 module: what-happened
 level: a1
 
+# NOTE — these are SHAPE examples. The real targets are at the top of this prompt
+# (10 total / 4–6 inline / 6–9 workbook,
+# 6+ items per activity). The shapes below are TRUNCATED for readability;
+# YOUR output MUST hit those minimums.
+
 inline:
   - id: marker-id-here        # MUST match an <!-- INJECT_ACTIVITY: ... --> marker
     type: quiz                 # activity type
     instruction: "Оберіть правильний варіант"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - question: "_____ стіл"
-        options: ["мій", "моя", "моє"]
+        options: ["мій", "моя", "моє", "мої"]
         correct: 0             # 0-based index
+      - question: "Це ____ книга."
+        options: ["мій", "моя", "моє", "мої"]
+        correct: 1
+      # ... add at least 6 items total — never stop at 1-2
 
   - id: another-marker-id
     type: fill-in
     instruction: "Вставте правильне слово"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - sentence: "Це ____ кімната."
         answer: "моя"
         options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ вікно."
+        answer: "моє"
+        options: ["мій", "моя", "моє"]
+      # ... ≥ 6 items total
 
 workbook:
-  - type: match-up
+  - id: match-up-vocab
+    type: match-up
     instruction: "З'єднайте пари"
-    pairs:
+    pairs:                     # ← real output: ≥ 6 pairs
       - left: "стіл"
         right: "він"
       - left: "книга"
         right: "вона"
       - left: "вікно"
         right: "воно"
+      # ... ≥ 6 pairs total
 
-  - type: group-sort
+  - id: group-sort-gender
+    type: group-sort
     instruction: "Розподіліть слова за категоріями"
     groups:
-      - label: "Category A"
-        items: ["word1", "word2"]
-      - label: "Category B"
-        items: ["word3", "word4"]
+      - label: "Чоловічий рід"
+        items: ["стіл", "олівець", "будинок"]   # ≥ 3 items per group
+      - label: "Жіночий рід"
+        items: ["книга", "ручка", "школа"]
+      - label: "Середній рід"
+        items: ["вікно", "море", "молоко"]
 
-  - type: true-false
+  - id: true-false-grammar
+    type: true-false
     instruction: "Правда чи ні?"
-    items:
-      - statement: "Statement here"
-        correct: true
-        explanation: "Why it's true"
+    items:                     # ← real output: ≥ 6 items
+      - statement: "«Книга» — це чоловічий рід."
+        correct: false
+        explanation: "Книга закінчується на -а, отже жіночий рід."
+      # ... ≥ 6 items total
 
   - type: error-correction
     instruction: "Виправте помилку"
@@ -326,7 +367,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -421,10 +462,15 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 ## Quality Rules
 
-**ITEM COUNT MINIMUMS (non-negotiable):**
-- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
-- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
-- If you can't think of enough items, add more examples from the module's vocabulary and content.
+**ACTIVITY COUNT MINIMUMS (non-negotiable, audit-enforced):**
+- **Total: 10 activities.** Inline: 4–6. Workbook: 6–9. The audit gate FAILS the module if you ship fewer.
+- **Type diversity: workbook MUST cover ≥5 distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
+- **Match the inline markers exactly.** Every `<!-- INJECT_ACTIVITY: id -->` marker in the prose needs a matching inline activity with that exact id. Skipping markers means the lesson tab is broken.
+
+**ITEM COUNT MINIMUMS (non-negotiable, per-activity):**
+- **Default minimum: 6 items per activity.** Quiz, fill-in, match-up, true-false, anagram, error-correction, translate, cloze, mark-the-words, divide-words, count-syllables, odd-one-out, group-sort categories: all ≥ 6.
+- **Lower minimums for specific types only:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items, essay-response/critical-analysis = 1 prompt.
+- If you can't think of enough items, add more examples from the module's vocabulary and content. NEVER ship a 1-item or 2-item activity unless its type cap explicitly allows it.
 - **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
 - **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
@@ -531,6 +577,27 @@ IMPORTANT: After using tools, output your COMPLETE module content as plain text.
 1. Run `verify_words` on all Ukrainian words in your exercises — every word must exist in VESUM
 2. Run `query_cefr_level` on any word you're unsure about — it must be a1-appropriate
 3. For fill-in answers and distractors, verify the exact form (case, number, gender) with `verify_lemma`
+
+---
+
+## ⚠️ MANDATORY FINAL CHECKLIST — verify before emitting YAML
+
+Walk through this checklist explicitly before you start emitting. If ANY box is unchecked, fix it FIRST.
+
+- [ ] My output has **at least 4** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
+- [ ] My output has **at least 6** workbook activities.
+- [ ] **Total ≥ 10.**
+- [ ] **Every** activity has **at least 6** items, pairs, or statements (except types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3, essay-response=1).
+- [ ] The module (inline + workbook combined) uses **at least 0 distinct activity types** (or 4+ when 0 = 0 and the workbook size allows it). I am NOT shipping a wall of quizzes.
+- [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
+- [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
+- [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+- [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+- [ ] My inline count is between 4 and 6. I did NOT create more injection markers than 6.
+- [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
+- [ ] At B1+, all instructions are in Ukrainian (no English fallback).
+
+If you cannot tick all of these, REGENERATE the activities BEFORE outputting. Shipping under-spec means the build rejects you and the heal loop has to redo your work — wasting compute.
 
 ---
 

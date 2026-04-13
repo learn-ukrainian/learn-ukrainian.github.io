@@ -1,0 +1,97 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T18-44-0035c7c2.json
+phase: write-chunk-03
+prompt_chars: 47064
+response_chars: 4877
+prompt_words: 7094
+response_words: 794
+sections:
+- name: header
+  start: 0
+  length: 422
+  fraction: 0.009
+- name: skeleton
+  start: 422
+  length: 1987
+  fraction: 0.0422
+- name: prior_summary
+  start: 2409
+  length: 3296
+  fraction: 0.07
+- name: plan
+  start: 5705
+  length: 11960
+  fraction: 0.2541
+- name: wiki
+  start: 11189
+  length: 29191
+  fraction: 0.6202
+- name: output_spec
+  start: 46856
+  length: 208
+  fraction: 0.0044
+large_sections:
+- wiki
+directives_total: 19
+directives_covered: 4
+directives_missed:
+- kind: checklist
+  text: вечірка (party)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: подарунок (gift, present)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: лікар (doctor)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: пацієнт (patient)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: здоров'я (health)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: ліки (medicine)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: визначне місце (landmark, sight)
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: checklist
+  text: запрошувати (to invite)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: must
+  text: The noun must change to show its role in the phrase (Source 1, 35).
+  covered: false
+  coverage_note: 2/8 keywords (25%)
+- kind: must
+  text: The Ukrainian system must be learned from Ukrainian examples.
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: must
+  text: Students must find and highlight all plural nouns and identify their case.
+  covered: false
+  coverage_note: 3/10 keywords (30%)
+- kind: must
+  text: Students must write the correct form.
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 1/11 keywords (9%)
+- kind: inject_activity
+  text: match-up-health-cases
+  covered: false
+  coverage_note: marker missing

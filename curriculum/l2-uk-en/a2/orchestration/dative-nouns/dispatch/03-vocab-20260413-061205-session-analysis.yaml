@@ -1,0 +1,67 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T04-10-709ec91f.json
+phase: vocab
+prompt_chars: 19400
+response_chars: 2977
+prompt_words: 3167
+response_words: 327
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.0411
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.0119
+- name: plan
+  start: 1028
+  length: 18372
+  fraction: 0.947
+large_sections:
+- plan
+directives_total: 10
+directives_covered: 0
+directives_missed:
+- kind: must
+  text: There is one crucial phonetic rule you must remember when forming the Dative
+    case for feminine nouns.
+  covered: false
+  coverage_note: 2/14 keywords (14%)
+- kind: must
+  text: When you add the **-і** ending to a stem that ends in one of these letters,
+    the consonants undergo a mandatory, predictable shift.
+  covered: false
+  coverage_note: 1/15 keywords (7%)
+- kind: must
+  text: To say "to the friend", that sound must soften into **з**, creating the word
+    **подрузі**.
+  covered: false
+  coverage_note: 2/10 keywords (20%)
+- kind: must
+  text: You must actively avoid making this mistake.
+  covered: false
+  coverage_note: 0/7 keywords (0%)
+- kind: must
+  text: You must quickly answer your sister's message.
+  covered: false
+  coverage_note: 1/7 keywords (14%)
+- kind: inject_activity
+  text: fill-in-dative-masculine
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-feminine-alternation
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: group-sort-dative-gender
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-verb-phrases
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: unjumble-dative-syntax
+  covered: false
+  coverage_note: marker missing

@@ -1,22 +1,22 @@
 ## VESUM Verification
-- Confirmed: множина, кілька, багато, мало, скільки, людина, люди, стаття, завдання, питання, виняток, нульовий, закінчення, чоловічий, жіночий, середній, рід, вставний, голосний.
-- Not found: (None - all components verified)
+- Confirmed: множина, нульове, закінчення, кілька, багато, мало, скільки, людина, люди, стаття, завдання, питання, чоловічий, рід, жіночий, середній, виняток, вставний, голосний
+- Not found: (none)
 
 ## Grammar Rules
-- Родовий відмінок множини (Masculine -ів): Правопис (Grade 6 textbooks, p. 160) — Чоловічий рід: -ів/-їв (шляхів, батьків, студентів).
-- Родовий відмінок множини (Zero Ending): Правопис (Grade 6 textbooks, p. 112, 160) — Жіночий рід на -а/-я та середній рід на -о/-е/-я мають нульове закінчення (книг, вікон, завдань).
-- Родовий відмінок множини (Masculine Zero Ending): Правопис (Grade 6 textbooks, p. 160) — Іменники на -ин/-їн, що втрачають суфікс у множині (селян, болгар).
-- Родовий відмінок множини (Ending -ей): Правопис (Grade 6 textbooks, p. 112) — Винятки та III відміна (статей, гостей, очей, плечей, подорожей).
+- Genitive Plural Declensions (родовий відмінок множини): Правопис §82 (Morphology) — Rule not indexed in `query_pravopys` tool (tool is limited to §§1-61 for phonetics, orthography, and capitalization). Standard morphological rules apply: I відміна (feminine) usually takes a zero ending; II відміна (masculine) usually takes -ів.
 
 ## Calque Warnings
-- кілька / декілька: OK — Both are valid; "кілька" is more common in natural speech.
-- багато / мало + Genitive Plural: OK — Standard quantification pattern.
-- людина (sg) / люди (pl): OK — Regular suppletive plural form.
+- завдання: OK — OK
+- виняток: OK — OK
+- багато: OK — OK
+- мало: OK — OK
 
 ## CEFR Check
-- кілька: A2 — OK
-- людина: A1/A2 — OK
+- множина: A1 — OK
 - стаття: A2 — OK
-- завдання: A1/A2 — OK
-- питання: A1/A2 — OK
+- кілька: A2 — OK
+- закінчення: A2 — OK
+- виняток: A2 — OK
 - багато: A1 — OK
+- голосний: A2 — OK
+- завдання: A1 — OK

@@ -5,11 +5,23 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
+- word: ві́льний
+  translation: free
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
 - word: зу́стріч
   translation: meeting
   expression: false
   pos: ім.
   gender: ж.
+  verified: true
+- word: відпочива́ти
+  translation: to rest
+  expression: false
+  pos: дієсл.
+  gender: ''
   verified: true
 - word: прибира́ти
   translation: to clean
@@ -23,10 +35,10 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: зустрі́немося
+- word: зустрінемося
   translation: let's meet
-  expression: false
-  pos: дієсл.
+  expression: true
+  pos: ''
   gender: ''
   verified: true
 - word: з задоволенням
@@ -59,10 +71,40 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
+- word: кіно́
+  translation: cinema
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
 - word: вчи́ти
-  translation: to study / to learn
+  translation: to study
   expression: false
   pos: дієсл.
+  gender: ''
+  verified: true
+- word: зра́нку
+  translation: in the morning
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: вве́чері
+  translation: in the evening
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: У мене є плани
+  translation: I have plans
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Ти будеш?
+  translation: Will you be there?
+  expression: true
+  pos: ''
   gender: ''
   verified: true
 - word: понеді́лок
@@ -107,58 +149,34 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: на вихідних
-  translation: on the weekend
+- word: о / об
+  translation: at
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: о третій
+  translation: at three
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: зра́нку
-  translation: in the morning
-  expression: false
-  pos: присл.
+- word: об одинадцятій
+  translation: at eleven
+  expression: true
+  pos: ''
   gender: ''
   verified: true
-- word: мо́же
-  translation: maybe
-  expression: false
-  pos: дієсл.
+- word: Ходімо!
+  translation: Let's go!
+  expression: true
+  pos: ''
   gender: ''
   verified: true
-- word: пі́демо
-  translation: we will go / let's go
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: готува́ти
-  translation: to cook
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: вече́ря
-  translation: dinner
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: гуля́ти
-  translation: to walk / to stroll
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: спа́ти
-  translation: to sleep
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: до́вго
-  translation: long / a long time
-  expression: false
-  pos: присл.
+- word: Може, підемо?
+  translation: Maybe we will go?
+  expression: true
+  pos: ''
   gender: ''
   verified: true
 - word: Давай зустрінемося!
@@ -167,8 +185,14 @@ vocabulary:
   pos: ''
   gender: ''
   verified: true
-- word: не можу
-  translation: I cannot
+- word: Добре!
+  translation: Good!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: На жаль, не можу.
+  translation: Unfortunately, I cannot.
   expression: true
   pos: ''
   gender: ''

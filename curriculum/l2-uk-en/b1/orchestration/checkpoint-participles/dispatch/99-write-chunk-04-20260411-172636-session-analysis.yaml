@@ -1,0 +1,69 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T15-25-4ca4e318.json
+phase: write-chunk-04
+prompt_chars: 46816
+response_chars: 6572
+prompt_words: 6316
+response_words: 992
+sections:
+- name: header
+  start: 0
+  length: 418
+  fraction: 0.0089
+- name: skeleton
+  start: 418
+  length: 1868
+  fraction: 0.0399
+- name: prior_summary
+  start: 2286
+  length: 3556
+  fraction: 0.076
+- name: plan
+  start: 5842
+  length: 14044
+  fraction: 0.3
+- name: wiki
+  start: 13793
+  length: 26726
+  fraction: 0.5709
+- name: output_spec
+  start: 46612
+  length: 204
+  fraction: 0.0044
+large_sections:
+- wiki
+directives_total: 22
+directives_covered: 14
+directives_missed:
+- kind: checklist
+  text: контрольна робота (test/assessment)
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: checklist
+  text: дієприкметник (participle)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: короткий прикметник (short-form adjective)
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: inject_activity
+  text: punctuation-zvoroty-mastery
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: identify-and-rule-check
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: transformation-clause-to-phrase
+  covered: false
+  coverage_note: marker missing

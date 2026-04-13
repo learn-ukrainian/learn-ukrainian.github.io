@@ -1,0 +1,84 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T13-38-674849d1.json
+phase: write-chunk-06
+prompt_chars: 52617
+response_chars: 4745
+prompt_words: 7475
+response_words: 690
+sections:
+- name: header
+  start: 0
+  length: 459
+  fraction: 0.0087
+- name: skeleton
+  start: 459
+  length: 1063
+  fraction: 0.0202
+- name: prior_summary
+  start: 1522
+  length: 3347
+  fraction: 0.0636
+- name: plan
+  start: 4869
+  length: 18690
+  fraction: 0.3552
+- name: wiki
+  start: 16957
+  length: 28821
+  fraction: 0.5478
+- name: output_spec
+  start: 52380
+  length: 237
+  fraction: 0.0045
+large_sections:
+- wiki
+directives_total: 19
+directives_covered: 8
+directives_missed:
+- kind: checklist
+  text: задньоязиковий (velar — consonant formed at the back of the mouth)
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: checklist
+  text: відміна (declension class — noun classification by ending pattern)
+  covered: false
+  coverage_note: 1/7 keywords (14%)
+- kind: checklist
+  text: тверда група (hard group — nouns with hard stem-final consonant)
+  covered: false
+  coverage_note: 2/8 keywords (25%)
+- kind: checklist
+  text: м'яка група (soft group — nouns with soft stem-final consonant)
+  covered: false
+  coverage_note: 2/8 keywords (25%)
+- kind: checklist
+  text: мішана група (mixed group — nouns with шиплячий stem-final)
+  covered: false
+  coverage_note: 1/8 keywords (12%)
+- kind: checklist
+  text: закінчення (ending — inflectional morpheme)
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: checklist
+  text: корінь (root — core morpheme of a word)
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: must
+  text: '**Найвищий пріоритет (Must Know):** Чергування **`[г], [к], [х] → [з''],
+    [ц''], [с'']`** в **давальному** та **місцевому** відмінках однини **іменників
+    І відміни**.'
+  covered: false
+  coverage_note: 4/11 keywords (36%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 3/11 keywords (27%)
+- kind: inject_activity
+  text: fill-in, Write the correct кличний відмінок form of masculine nouns (e.g.,
+    козак -> козач___, друг -> друж___)
+  covered: false
+  coverage_note: marker missing

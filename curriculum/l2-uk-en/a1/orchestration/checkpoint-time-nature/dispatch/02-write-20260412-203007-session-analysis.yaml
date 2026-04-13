@@ -1,0 +1,105 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T18-28-b6d83b34.json
+phase: write
+prompt_chars: 65191
+response_chars: 10000
+prompt_words: 9381
+response_words: 1673
+sections:
+- name: preamble
+  start: 0
+  length: 6415
+  fraction: 0.0984
+- name: plan
+  start: 6415
+  length: 6981
+  fraction: 0.1071
+- name: wiki
+  start: 12460
+  length: 27091
+  fraction: 0.4156
+- name: rules
+  start: 40487
+  length: 9793
+  fraction: 0.1502
+- name: skeleton
+  start: 50280
+  length: 5456
+  fraction: 0.0837
+- name: output_spec
+  start: 55736
+  length: 9455
+  fraction: 0.145
+large_sections:
+- wiki
+directives_total: 38
+directives_covered: 22
+directives_missed:
+- kind: checklist
+  text: No 'Let us...', 'In this section...', or formulaic openers
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: must
+  text: Follow your own pacing plan — each section must hit its word budget (±10%).
+  covered: false
+  coverage_note: 3/12 keywords (25%)
+- kind: must
+  text: For A1 early modules, the learner cannot read Cyrillic — English must dominate.
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: must
+  text: '**Hit the word target** — you MUST write 1200–1800 words of actual prose.'
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: must
+  text: Your output must be original teaching prose at the correct CEFR level, not
+    a rephrased version of the article.
+  covered: false
+  coverage_note: 3/13 keywords (23%)
+- kind: must
+  text: '** This is a critical element of natural Ukrainian speech and must be introduced
+    early.'
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: must
+  text: '**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim**
+    as an `## H2` line.'
+  covered: false
+  coverage_note: 3/11 keywords (27%)
+- kind: must
+  text: The total must reach 1200 words minimum.
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: must
+  text: Every heading from "Section Structure" above MUST appear as an `## H2` in
+    your output, in order, **including the closing `Підсумок:` / `Підсумок та перехід
+    до M.
+  covered: false
+  coverage_note: 4/15 keywords (27%)
+- kind: must
+  text: translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: must
+  text: '- **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).'
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-sounds-vs-letters
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-sounds-vs-letters
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-false-friends
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing

@@ -27,7 +27,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-нові суфікси до кореня слова. Якщо поруч опиняються три приголосні звуки, нашому мовному апарату стає важко їх усі чітко вимовити. Щоб уникнути цього фонетичного напруження, середній звук у такій групі найчастіше буде **випадати** *(to drop out)*. Тобто ми артикулюємо лише перший та останній приголосні з цієї проблемної групи. Завдяки такому ефективному механізму нове слово звучить плавно і природно. Давайте уявимо звичайний урок української мови. Це простора аудиторія у місті Дніпро, де зараз відбувається диктант. Вчителька читає слова, а учні уважно слухають і аналізують їхню фонетичну будову. > — **Вчитель:** Діти, запишіть наступне слово: «серце». Зверніть увагу на його **вимову** *(pronunciation)*. Чому ми ніколи не кажемо і не пишемо «сердце» з літерою «д» всередині? > — **Студенти:** Тому що так набагато важче вимовляти! Цей звук там просто заважає нам говорити швидко. > — **Вчитель:** Правильно! А як ми можемо довести, що історично цей звук там дійсно був? Згадайте споріднені слова до цього іменника. > — **Студенти:** Наприклад, прикметник «сердечний»! Там літера «д» залишається і дуже добре чується. > — **Вчитель:** Абсолютно точно. У слові «сердечний» після приголосного одразу йде голосний звук «е», тому вимовляти його дуже легко. А у слові «серце» виникає складна група з трьох приголосних. Тому середній звук зникає задля милозвучності. Щоб краще зрозуміти цей механізм, розглянемо наочний приклад. Візьмемо іменник «проїзд». Його **основа** *(stem)* закінчується на два приголосні звуки: «з» та «д». Спробуємо утворити від нього новий **прикметник** *(adjective)* за допомогою популярного суфікса «-н-». У нас виходить теоретична комбінація «проїзд» плюс «-ний». Якщо ми спробуємо вимовити слово «проїздний», наш язик зіткнеться з перешкодою. Група приголосних «з», «д» та «н» є надзвичайно незручною для артикуляції. Звук «д» тут є абсолютно зайвим. Тому українська фонетична система автоматично спрощує цю проблемну комбінацію. Звук «д» випадає, і складна група перетворюється на легку комбінацію «з» та «н». У результаті ми отримуємо гарне і природне слово «проїзний». Тепер дуже важливо чітко розрізняти два різні фонетичні процеси. Порівняймо чергування та спрощення, оскільки вони працюють за різними правилами. Коли відбувається чергування, один конкретний звук перетворюється на інший. Наприклад, в **іменнику** *(noun)* «друг» ми маємо кінцевий приголосний «г». У кличній формі цей звук закономірно змінюється, і ми кажемо «друже», де з'являється звук «ж». Натомість спрощення працює зовсім інакше. При спрощенні звук не перетворюється на інший, він перетворюється на нуль. Наприклад, в іменнику «щастя» ми чітко чуємо звук «т». Але коли ми утворюємо прикметник «щасливий», цей звук «т» повністю зникає. Обидва ці процеси є явищами **морфонології** *(morphophonology)*, але їхня внутрішня механіка різна. Підсумовуючи, можна сказати, що спрощення — це ваш найкращий помічник у досягненні природної вимови. Більшість випадків спрощення в українській мові є **закріпленими** *(fixed)* на письмі. Це означає, що наш **правопис** *(orthography)* майже завжди відображає реальну вимову. Якщо звук випадає під час розмови і ми його більше не чуємо, ми також перестаємо писати відповідну літеру. Нам не потрібно запам'ятовувати "німі" літери у цих словах. Але кожне правило має свої **винятки** *(exceptions)*. Деякі слова є **орфограмами** *(orthographic rules)* і можуть зберігати літеру на письмі, хоча звук не вимовляється. Про ці цікаві особливості ми детальніше поговоримо у наступних розділах.
+*(There is a [d] sound there!)* > — **Вчитель:** Правильно. Історично цей звук був і в слові «серце». Але група приголосних [рдц] занадто важка. Тому звук [д] випав, щоб нам було легше говорити. *(Correct. Historically, this sound was also in the word "sertse". But the consonant cluster [rdts] is too hard. Therefore, the [d] sound dropped out to make it easier for us to speak.)* A visual demonstration using the noun «проїзд» (passage) and the suffix «-ний», which forms an **прикметник** (adjective), makes this clear. When we combine them, we get the **основа** (stem — the word minus its ending) plus the suffix: проїзд- + -ний. This creates a massive, awkward cluster of three consonants right in the middle of the word: [здн]. Try saying «проїздний» out loud. You will feel that the [д] sound blocks the smooth flow of air. Because Ukrainian prioritizes a melodic phonetic rhythm, the language naturally rejects this heavy cluster. The middle consonant [д] simply vanishes. The resulting word is «проїзний», featuring the much lighter [зн] cluster. Дуже важливо розрізняти чергування та спрощення. Це два різні процеси, які вивчає **морфонологія** (morphophonology — sound changes in morphology). Під час чергування один звук змінюється на інший, наприклад, коли ми утворюємо кличний відмінок: «друг» стає «друже». Звук [г] перетворюється на [ж], але загальна кількість звуків залишається незмінною. Натомість спрощення означає, що звук повністю зникає. Наприклад, коли **іменник** (noun) «щастя» перетворюється на прикметник «щасливий», звук [т] випадає назавжди. Обидва процеси є регулярними та передбачуваними, але вони виконують абсолютно різні граматичні функції. > *It is very important to distinguish between alternation and simplification. These are two different processes studied by morphophonology. During alternation, one sound changes into another, for example, when we form the vocative case: "druh" becomes "druzhe". The [h] sound turns into [zh], but the total number of sounds remains the same. In contrast, simplification means that a sound completely disappears. For example, when the noun "shchastia" turns into the adjective "shchaslyvyi", the [t] sound drops out forever. Both processes are regular and predictable, but they perform absolutely different grammatical functions.* :::info **Grammar box** Remember the core difference: - **Чергування** = Sound A becomes Sound B. - **Спрощення** = Sound A becomes zero. Both exist to make the language flow naturally! ::: In summary, consonant simplification is not just a lazy habit of speaking quickly; it is a strict **орфограма** (orthographic rule — spelling pattern requiring knowledge) of Ukrainian grammar. The most crucial aspect for learners is that most of this simplification is **закріплений** (fixed — reflected in standard spelling) in the written language. This means the **правопис** (orthography — correct spelling) directly matches the simplified spoken word. You do not write the missing letter as a silent character. If the consonant drops out of the spoken word, it disappears from the written word too. We write «щасливий», not «щастливий». In upcoming sections, we will explore specific patterns and the occasional **виняток** (exception — case that does not follow the rule) where the spelling retains the historical letter.
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -619,7 +619,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -632,18 +699,67 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] спрощення (simplification — dropping of a consonant from a cluster)
+- [ ] група приголосних (consonant cluster — sequence of consonants)
+- [ ] милозвучність (euphony — pleasant sound quality of speech)
+- [ ] випадати (to drop out — of a sound disappearing)
+- [ ] вимова (pronunciation — how words are spoken)
+- [ ] правопис (orthography — correct spelling)
+- [ ] закріплений (fixed — reflected in standard spelling)
+- [ ] виняток (exception — case that does not follow the rule)
+- [ ] словотворення (word formation — creating new words)
+- [ ] прикметник (adjective)
+- [ ] іменник (noun)
+- [ ] основа (stem — the word minus its ending)
+- [ ] орфограма (orthographic rule — spelling pattern requiring knowledge)
+- [ ] морфонологія (morphophonology — sound changes in morphology)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Спрощення, закріплене на письмі (~940 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

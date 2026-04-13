@@ -2,50 +2,52 @@ round: 2
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 8
-  evidence: 'The plan explicitly requested: `Text mentions: у городі/в городі, і яблука/й
-    яблука, у школі/в школі.` The generated Dialogue 1 completely omitted the `і/й
-    яблука` and `у/в школі` examples.'
+  score: 10
+  evidence: 'All four planned H2 sections are present and in order; the prose cites
+    Avramenko and Litvinova directly; required/recommended vocabulary appears naturally
+    in context: `в Києві`, `у Львові`, `в офісі`,'
 - dimension: 2
   name: Linguistic accuracy
-  score: 10
-  evidence: The phonetic rules are stated with precision. Exceptions like "у Франції"
-    (before ф), "у Львові" (before льв), and "зі школи" (before шк) are handled flawlessly.
+  score: 6
+  evidence: 'Two factual grammar claims are wrong: `вже/уже` are called “word prefixes,”
+    and `і` is called “always” sentence-initial, but school-textbook evidence allows
+    sentence-initial `й` before vowels.'
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: Excellent pedagogical flow (PPP). The analogy of building a "V-C-V sandwich"
-    helps visualize the abstract concept of euphony, breaking down the mechanical
-    reasoning behind the rules.
+  score: 7
+  evidence: 'The module has strong example density, but it teaches one key `і/й` rule
+    incorrectly as an absolute: `the conjunction **і** is always used at the very
+    beginning of a sentence`. That is harmful in a ru'
 - dimension: 4
   name: Vocabulary coverage
   score: 10
-  evidence: All required alternating prepositions/conjunctions and recommended nouns
-    (Київ, Львів, офіс, парк, театр) are used effectively in context.
+  evidence: All required forms are taught in prose (`у/в`, `і/й`, `з/із/зі`), and
+    all recommended words are used naturally (`Київ`, `Львів`, `офіс`, `парк`, `театр`).
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: The 4 injected markers perfectly match the focus and type counts specified
-    in the plan.
+  score: 9
+  evidence: The four markers match the planned quiz/fill-in progression and appear
+    after the relevant explanations. The only reason this is not a 10 is that the
+    actual injected item logic is not visible in this d
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: The tone is warm and encouraging. Phrases like "well-oiled gears" and
-    "keep the melody flowing" add excellent linguistic flavor without relying on generic/gamified
-    filler.
+  score: 9
+  evidence: The tone is mostly teacherly and practical rather than gamified; lines
+    like `Read your sentences aloud and trust your ears` support the lesson well.
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: The markdown is clean, headers perfectly match the outline, and the module
-    exceeds the word target (1655 words).
+  evidence: Clean markdown, all expected H2 headings present, no dangling sections,
+    and pipeline word count is `1565`, which is above the `1200` target.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Geography and contexts are standard and culturally appropriate.
+  evidence: The module treats Ukrainian on its own terms and makes no Russian-comparison
+    claims or cultural misstatements.
 - dimension: 9
   name: Dialogue & conversation quality
   score: 7
-  evidence: There is a critical logic error in Dialogue 2. The student asks "Ти і
-    Олена йдете в кіно?", the friend corrects the grammar, but then the *student*
-    says "Ні, я і Максим йдемо в парк" and answers for t
+  evidence: 'Dialogue 1 is usable, but Dialogue 2 contains a self-reference error:
+    `> **Максим:** Ні, я і Максим йдемо в парк.` That makes the exchange sound artificial
+    and confusing.'
 findings: []

@@ -2,53 +2,54 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 7
-  evidence: 'The plan required "готувати / приготувати" as a core example in Section
-    2, but it was skipped and only included in the table. The plan required "класти
-    / покласти" in Section 4, but it was completely '
+  score: 8
+  evidence: 'All planned H2 sections are present and required pairs like `читати /
+    прочитати`, `писати / написати`, `брати / взяти`, `говорити / сказати` appear,
+    but the plan references are not cited in the prose:'
 - dimension: 2
   name: Linguistic accuracy
-  score: 8
-  evidence: The perfective verb for "відповідати" is spelled as "відповідісти" in
-    the summary table. This is a critical grammatical error. The correct form is "відповісти".
-    All other forms and explanations are ac
+  score: 5
+  evidence: 'The Ukrainian forms are mostly fine, but the module teaches false grammar/phonetics
+    claims: `Кожне українське дієслово має свою пару`, `часто правильним і безпечним
+    варіантом буде саме «по-»`, and `th'
 - dimension: 3
   name: Pedagogical quality
-  score: 9
-  evidence: Excellent explanation of the difference between process and result. The
-    "Кафе Птах" mnemonic is taught brilliantly and contextually. Minor deduction for
-    wordy English explanations of prefixes (~90 wor
+  score: 6
+  evidence: 'The PPP shape exists, but Method 1 overgeneralizes: `This process is
+    highly predictable... recognize perfective verbs instantly` and `often the correct
+    and safe option will be exactly "по-"`. That tra'
 - dimension: 4
   name: Vocabulary coverage
-  score: 8
-  evidence: Required vocabulary words `префікс`, `суфікс`, and `корінь` are only used
-    in Ukrainian within section headings or table formatting. They are never explicitly
-    introduced to the learner as vocabulary te
+  score: 9
+  evidence: 'Required vocabulary is integrated naturally: `пара`, `префікс`, `суфікс`,
+    `корінь`, `читати / прочитати`, `писати / написати`, `брати / взяти`, `говорити
+    / сказати`. Recommended words like `словник`, '
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: All 4 activity markers are present, mapped exactly to the plan's requirements,
-    and correctly placed after the relevant grammatical concepts are taught.
+  score: 9
+  evidence: All 4 planned activity types have corresponding markers, and each comes
+    after the relevant teaching block. No inline exercise logic was available to inspect
+    for distractor quality.
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: The tone is warm, encouraging, and highly instructional. The shoe store
-    analogy effectively illustrates the concept of aspectual pairs.
+  score: 7
+  evidence: 'The teacher voice is warm, but some prose is inflated and overconfident:
+    `The absolute most universal and frequent prefix...` and `This process is highly
+    predictable...`. That reads like filler and we'
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: Word count is a robust 3027 words (exceeding the 2000 target). Markdown
-    formatting is clean, and all requested sections are present in order.
+  evidence: All four H2 sections are present and ordered correctly, markers are clean,
+    and the pipeline word count is 3132, which is above the 2000 target.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: The module appropriately integrates real Ukrainian pedagogical tools (Кафе
-    Птах) and authentic cultural practices (making varenyky with grandmother) into
-    the grammar instruction.
+  evidence: The module uses a credible Ukrainian kitchen scene with `вареники`, `Бабуся`,
+    and `Онучка`, and it does not frame Ukrainian through Russian.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: The dialogue between the grandmother and granddaughter making varenyky
-    perfectly demonstrates the functional difference between imperfective and perfective
-    commands in real life.
+  score: 9
+  evidence: The opening бабуся/онучка exchange is a natural multi-turn dialogue with
+    named speakers and a real cooking task; later examples stay contextual rather
+    than robotic.
 findings: []

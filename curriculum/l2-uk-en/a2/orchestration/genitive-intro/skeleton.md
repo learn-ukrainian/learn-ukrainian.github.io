@@ -1,37 +1,27 @@
-## Родовий відмінок: Коли чогось немає (The Genitive Case: When Something Isn't There) (~650 words total)
-- P1 (~120 words): Introduction to the Genitive case (Родовий відмінок). Explain that it answers the questions "Кого?" (Whom?) and "Чого?" (What?). Connect it to the idea of origin or possession but pivot immediately to its most common everyday use: expressing absence.
-- P2 (~100 words): The core construction "У мене є..." (I have) vs. "У мене немає..." (I don't have). Explain that while the positive construction uses the Nominative (Називний відмінок), the negative requires a shift to the Genitive. Use the example "У мене є сестра" (Nom) vs. "У мене немає сестри" (Gen).
-- P3 (~120 words): Dialogue: Moving into a new apartment. A conversation between Сусідка (neighbor) and Нова мешканка (new tenant). They look at an empty kitchen. Examples to use: "Немає холодильника" (m, fridge), "Немає плити" (f, stove), "Немає дзеркала" (n, mirror). Mention that there are "багато коробок" (many boxes).
-- P4 (~100 words): Linguistic analysis of the dialogue. Break down why "холодильник" became "холодильника" and "плита" became "плити". Emphasize that "немає" acts like a magnet that pulls nouns into the Genitive form.
-- P5 (~130 words): Practical contrast drills in prose. Compare "Тут є стіл" with "Тут немає стола". Explain that "немає" can be shortened to "нема" in casual speech, which is a distinct Ukrainian feature compared to other Slavic languages. Use "Часу нема" (No time) as an example.
-- <!-- INJECT_ACTIVITY: quiz-possession-vs-absence --> [quiz, Possession vs. Absence Drill (`Є` vs. `Немає`), 8 items]
-- P6 (~80 words): Summary of Section 1. Reiterate that whenever something is missing—be it a person, an object, or a concept—the Genitive case is mandatory.
+## Родовий відмінок: Коли чогось немає (The Genitive Case: When Something Isn't There) (~660 words)
+- P1 (~100 words): [Dialogue: "Moving into a new apartment". Сусідка and Нова мешканка discover what's missing. "Немає холодильника! Немає плити! Немає дзеркала! Є багато коробок, але мало меблів." Introduces the core concept naturally in context.]
+- P2 (~120 words): [Introduce the Genitive case (Родовий відмінок), answering 'Кого? Чого?'. Explain its first key function: expressing absence or non-existence using the construction `(У мене) немає + Genitive`. Link back to the dialogue examples: холодильник → холодильника, плита → плити, дзеркало → дзеркала.]
+- P3 (~120 words): [Contrast the Nominative case for possession with the Genitive for absence. 'У мене є брат' (Nominative) vs. 'У мене немає брата' (Genitive). Emphasize that `немає` (or colloquial `нема`) is absolute and always changes the noun's case, unlike English negation where the noun remains unchanged.]
+- P4 (~160 words): [Practice with simple transformations to build the habit. 'Тут є стіл.' -> 'Тут немає стола.', 'У саду є яблуня.' -> 'У саду немає яблуні.' Note that `немає` historically comes from Old East Slavic `не мать` ("not to have"), making this a core structural feature, not just a random rule. Provide the proverb "У природи нема поганої погоди" as a natural example.]
+- P5 (~160 words): [Focus on high-frequency abstract phrases that A2 learners should memorize immediately as fixed chunks. Examples: `немає часу` (no time), `немає настрою` (no mood), `немає сенсу` (no sense/point). This provides immediate conversational utility before diving into the full paradigm.]
+- <!-- INJECT_ACTIVITY: quiz-possession-absence --> [quiz, Possession vs. Absence Drill (`Є` vs. `Немає`), 8 items]
 
-## Закінчення родового відмінка однини (Genitive Singular Endings) (~750 words total)
-- P1 (~150 words): Masculine nouns: The -а/-я vs. -у/-ю challenge. Explain the logic of concrete vs. abstract. -а/-я is for specific, animate, or well-defined items. Examples: "брата" (brother), "стола" (table), "автобуса" (bus). Mention that units of measurement like "метра" or "кілограма" also take -а.
-- P2 (~150 words): Masculine nouns: The -у/-ю ending. Explain that this is for abstract concepts, substances (liquids/powders), and large geographic areas. Use critical A2 examples: "немає часу" (time), "немає цукру" (sugar), "немає досвіду" (experience), "немає смутку" (sadness). Mention "Києва" (city) vs. "Криму" (region) to show the specific/area distinction.
-- P3 (~120 words): Feminine nouns: The -и vs. -і split. Hard stems (ending in a hard consonant + а) take -и. Examples: "книги", "мами", "роботи". Soft stems (ending in я or a soft consonant) take -і. Examples: "землі", "пісні", "вулиці". Mention the 3rd declension (consonant ending) like "ночі" or "солі" taking -і.
-- P4 (~100 words): Neuter nouns: Simple -а for -о endings and -я for -е/-я endings. Examples: "вікна" (from вікно), "моря" (from море), "життя" (from життя). Contrast this with the Nominative to show the subtle change in sound.
-- P5 (~130 words): A comprehensive paradigm chart described in prose. Walk the learner through a mental table: Masculine (concrete -а, abstract -у), Feminine (hard -и, soft -і), Neuter (-а/-я). Use "телефон - телефона", "кава - кави", "слово - слова" as the anchor examples.
+## Закінчення родового відмінка однини (Genitive Singular Endings) (~770 words)
+- P1 (~150 words): [Begin the endings puzzle with the most straightforward group: Neuter nouns. Explain -а for stems in -о (вікно → вікна), and -я for stems in -е or -я (море → моря, життя → життя). Examples: `немає вікна`, `немає моря`.]
+- P2 (~180 words): [Explain Feminine nouns (І відміна). Break down by stem: -и for hard stems (машина → машини, сестра → сестри, книга → книги), -і/-ї for soft stems and stems in -я (земля → землі, пісня → пісні, сім'я → сім'ї), and -і for mixed (груша → груші). Provide examples like `немає сестри`, `немає води`.]
+- P3 (~220 words): [Tackle Masculine nouns (ІІ відміна) — the biggest challenge. Explain the semantic distinction between -а/-я and -у/-ю. Use -а/-я for concrete, animate, specific items (брата, стола, автобуса, комп'ютера, Києва). Use -у/-ю for abstract concepts, substances, locations (часу, цукру, вітру, прогресу). Advise learners to focus on high-frequency words now, as perfect mastery is a B1/B2 goal.]
+- P4 (~150 words): [Cover Feminine nouns ending in a consonant (ІІІ відміна). Explain they take the ending -і. Examples: ніч → ночі, сіль → солі, любов → любові. Mention the important exception: мати → матері. Examples: `Немає солі`, `Немає матері`.]
+- P5 (~70 words): [Provide a concise recap chart and summary of the singular endings across all genders to consolidate the rules before the fill-in exercise. Emphasize recognizing the patterns over perfect memorization.]
 - <!-- INJECT_ACTIVITY: fill-in-genitive-singular --> [fill-in, Genitive Singular Formation, 8 items]
-- P6 (~100 words): Common pitfalls with singular endings. Warn about the word "гроші" (money), which is always plural, but often confused in singular contexts. Remind students that "немає" is one word, not "не має" (which means "he/she doesn't possess").
 
-## Коли є багато або мало (When There Is a Lot or a Little) (~750 words total)
-- P1 (~120 words): Introduction to quantity words: "багато" (many/much), "мало" (few/little), "кілька/декілька" (a few/several). Explain that these words always govern the Genitive plural. Use the logic: "A lot OF something." Contrast with English "many cars" vs Ukrainian "багато машин".
-- P2 (~130 words): Genitive Plural: Masculine nouns. The dominant ending is -ів (-їв). Examples: "братів", "столів", "трамваїв", "друзів". Note that "друзі" (friends) is a high-frequency irregular form "друзів".
-- P3 (~150 words): Genitive Plural: Feminine and Neuter nouns. Explain the "zero ending" (нульове закінчення). Show how a vowel often drops out or a "fleeting vowel" (о/е) appears to help with pronunciation. Examples: "книжка -> книжок", "сестра -> сестер", "вікно -> вікон". This is the "crowded consonant" rule.
-- P4 (~100 words): The -ей ending group. Explain that some nouns across all genders take -ей in the Genitive plural. Critical examples: "грошей" (money), "очей" (eyes), "коней" (horses), "ночей" (nights). Emphasize "грошей" as a survival word.
-- <!-- INJECT_ACTIVITY: match-up-genitive-plural-quantity --> [match-up, Genitive Plural Formation with Quantity Words, 8 items]
-- P5 (~120 words): Practice with quantity phrases in context. Provide sentences like "У мене багато друзів" and "У магазині мало яблук". Explain how to ask "How many?" using "Скільки?". Example: "Скільки у тебе книжок?".
-- <!-- INJECT_ACTIVITY: match-up-translate-genitive --> [match-up, Translate sentences with 'a lot of...' / 'I don't have...', 8 items]
+## Коли є багато або мало (When There Is a Lot or a Little) (~770 words)
+- P1 (~120 words): [Introduce quantity words that require the Genitive plural: багато (a lot, many), мало (a little, few), кілька/декілька (a few, some), скільки (how many). Explain that these words trigger the Genitive Plural case. Give simple examples: `багато друзів`, `мало грошей`, `скільки студентів?`.]
+- P2 (~150 words): [Explain Genitive Plural Endings for Masculine nouns. The most common ending is -ів/-їв (столів, братів, трамваїв). Mention the connection to numbers: numbers 5 and up also require the Genitive Plural (п'ять братів), which is an ancient Slavic feature.]
+- P3 (~180 words): [Explain Genitive Plural Endings for Feminine and Neuter nouns. These often take a zero ending (-ø). Explain that a fleeting vowel (о or е) is sometimes inserted for pronunciation. Examples: книга → книг (or книжок), сестра → сестер, вікно → вікон. Advise learning these as vocabulary items rather than memorizing complex insertion rules.]
+- P4 (~160 words): [Explain the small group of nouns that take the -ей ending. This includes some masculine and neuter nouns (гості → гостей, коні → коней, очі → очей), plural-only nouns (гроші → грошей), and 3rd declension feminine nouns (ніч → ночей). Example: `У мене зараз немає грошей`.]
+- P5 (~160 words): [Contrast and integrate the concepts. Practice combining `немає` with quantity expressions. Examples: "У мене є кілька книжок, але немає часу їх читати." Address the common L2 error of using singular forms for plural quantities (e.g., saying `п'ять книга` instead of `п'ять книжок`). Focus on recognizing common forms over exceptions.]
+- <!-- INJECT_ACTIVITY: match-up-genitive-plural --> [match-up, Genitive Plural Formation with Quantity Words, 8 items]
+- <!-- INJECT_ACTIVITY: match-up-translations --> [match-up, Translate sentences with 'a lot of...' / 'I don't have...', 8 items]
 - <!-- INJECT_ACTIVITY: unjumble-genitive-phrases --> [unjumble, Reorder words to form correct genitive phrases with немає and quantity expressions, 6 items]
-- P6 (~130 words): Common L2 Errors and Decolonization notes. Address the mistake of saying "немає машина" (using Nominative instead of Genitive). Mention that the Ukrainian "немає" is a unique grammatical marker of existence, not just a translation of "no". Explain that masculine endings -а/-у in Ukrainian are distinct and should not be guessed based on other languages.
 
-## Підсумок — Summary (~150 words)
-- P1 (~150 words): Recap the three golden rules of this module: 1. Negation (немає) requires the Genitive. 2. Quantity (багато/мало/кілька) requires the Genitive plural. 3. Endings depend on gender and stem hardness. Provide a final bulleted self-check:
-  - Do you use -а/-я for concrete masculine objects (стола)?
-  - Do you use -у/-ю for abstract masculine concepts (часу)?
-  - Do you remember the fleeing vowel in feminine plurals (книжок)?
-  - Can you correctly say you don't have money (грошей)?
-
-Grand total: ~2300 words
+Grand total: ~2200 words

@@ -1,65 +1,71 @@
-## Сценарій 3: Як пройшов твій день? (Scenario 3: How Was Your Day?)
+## Сценарій 3: Як пройшов твій день? (Scenario 3: How Was Your Day?) (~900 words)
 
-Welcome to the biggest challenge and the most expressive tool in Ukrainian grammar: the aspect of the verb in the past tense. When you tell a story about your day, it is no longer enough to simply say "I was there" or "I worked." You must choose between describing the process of your action or the concrete result of your effort. Mastering this choice allows you to paint a vivid picture of your past experiences and answer the essential difference between "що робив?" (what were you doing?) and "що зробив?" (what did you get done?).
+Welcome to our final scenario. Today, you will learn how to describe your **день** (day) perfectly to your friends. We will explore how to **обговорювати** (to discuss) everything from daily chores to weekend events. 
 
-Опанування видів дієслова — це ваш головний ключ до вільного спілкування. Українці рідко використовують складні часові конструкції у розмовах. Але ми завжди звертаємо увагу на характер дії. Нам важливо знати процес і результат. Дія тривала довго, чи вона вже повністю завершена? Це робить нашу мову дуже точною та динамічною.
+You will see how to seamlessly **планувати / запланувати** (to plan) a large **вечірка** (party) using the correct verbal aspects. This conversation highlights the core narrative difference in Ukrainian between describing an ongoing process and reporting a completed result.
 
-> *Mastering verb aspects is your main key to fluent communication. Ukrainians rarely use complex tense structures in conversations. But we always pay attention to the character of the action. It is important for us to know the process and the result. Did the action last a long time, or is it already completely finished? This makes our language very precise and dynamic.*
+The aspect pairs we use today cover common tasks. For example, you will learn how to talk about going to the **ринок** (market) to **купувати / купити** (to buy) fresh ingredients. 
 
-Let us listen to two colleagues, Олена and Максим, talking at the end of the workday. Notice how Олена describes her day as a continuous, exhausting flow of activities, while Максим lists his achievements as clear milestones.
+You will also practice explaining how much items **коштувати** (to cost) per **кілограм** (kilogram). Finally, we will look at how you describe your efforts to **готувати / приготувати** (to cook, prepare) a delicious dinner.
 
-> — **Олена:** Привіт, Максиме. Як пройшов твій день? *(Hi, Maksym. How was your day?)*
-> — **Максим:** Привіт! Дуже добре. Я написав три листи і провів важливу зустріч. А ти? *(Hi! Very good. I wrote three letters and held an important meeting. And you?)*
-> — **Олена:** Ох, а я цілий день писала звіти і читала довгі документи. Я так втомилася! *(Oh, and I was writing reports and reading long documents all day. I am so tired!)*
-> — **Максим:** Але ти закінчила ту презентацію? *(But did you finish that presentation?)*
-> — **Олена:** Ні, я ще не закінчила. Я буду працювати завтра. *(No, I haven't finished yet. I will work tomorrow.)*
-> — **Максим:** Розумію. Тоді ходімо пити каву, ти заслужила відпочинок. *(I understand. Then let's go drink coffee, you earned a rest.)*
+> — **Максим:** Привіт, Юлю! Як пройшов твій день? *(Hi, Yulia! How was your day?)*
+> — **Юлія:** Привіт! День був дуже довгий. Вранці я довго планувала наш бюджет. *(Hi! The day was very long. In the morning I was planning our budget for a long time.)*
+> — **Максим:** О, це чудово. А я сьогодні ходив на ринок. *(Oh, that is great. And I went to the market today.)*
+> — **Юлія:** Що ти там купував? Ти зміг купити свіжі овочі? *(What were you buying there? Were you able to buy fresh vegetables?)*
+> — **Максим:** Так, я купив один кілограм помідорів і сир. Я не знав, скільки коштує сир, але він був дешевий. А вчора я довго готував український борщ. *(Yes, I bought one kilogram of tomatoes and cheese. I didn't know how much the cheese cost, but it was cheap. And yesterday I was cooking Ukrainian borsch for a long time.)*
+> — **Юлія:** Клас! А ми сьогодні обговорювали новий проєкт на роботі. Ми не могли знайти рішення вранці, але ввечері нарешті знайшли його. *(Class! And today we were discussing a new project at work. We couldn't find a solution in the morning, but in the evening we finally found it.)*
+> — **Максим:** Ви вирішили замовити піцу, щоб відсвяткувати? Наша вечірка завтра! *(Did you decide to order pizza to celebrate? Our party is tomorrow!)*
+> — **Юлія:** Так, ми замовили дві великі піци. Я вже все запланувала на завтра! *(Yes, we ordered two large pizzas. I already planned everything for tomorrow!)*
 
-When you describe an action that took a long time, was repeated, or served as the background to your day, you must use the imperfective aspect. This form focuses entirely on the process itself, ignoring whether the task was ever finished. You will often see it paired with words that signal duration, such as **довго** (long), **цілий день** (all day), or **часто** (often).
+When you tell a story about the past, you need to set the scene. You want to describe what was happening around you or what you were busy doing for a period of time. This is where the imperfective aspect shines. Imperfective verbs focus entirely on the duration, the effort, and the process of an action, completely ignoring whether it ever reached an endpoint.
 
-Я вчора дуже довго читав цікаву книгу. Ми весь вечір уважно дивилися цей фільм, але так і не побачили фінал. Моя старша сестра часто купувала свіжі яблука на цьому ринку. Коли вона жила в Києві, вона щодня гуляла в парку.
+Учора ввечері йшов дощ, а я сидів удома. Я вчора довго читав цікаву книгу і пив гарячий чай. Мій брат грав на гітарі, а мама готувала смачну вечерю. Ми відпочивали і нікуди не поспішали.
 
-> *Yesterday I read an interesting book for a very long time. We carefully watched this movie all evening, but we never saw the finale. My older sister often bought fresh apples at this market. When she lived in Kyiv, she walked in the park every day.*
+> *It was raining yesterday evening, and I was sitting at home. Yesterday I was reading an interesting book for a long time and drinking hot tea. My brother was playing the guitar, and mom was cooking a tasty dinner. We were resting and not hurrying anywhere.*
+
+Notice how none of these actions have a clear conclusion. The reading, drinking, playing, and cooking are presented as continuous states. They paint a background picture for the listener. You use the imperfective aspect when the time spent doing the activity is more important than the final result.
+
+Once the scene is set, a story needs action to move forward. To push a narrative along, you use the perfective aspect. Perfective verbs present actions as a chain of completed results, where one finished event neatly follows another. They answer the question of what was actually accomplished.
+
+Спочатку я поснідав, потім пішов на роботу, а ввечері подивився фільм. Я швидко написав звіт, надіслав його директору і закрив комп'ютер. Після цього я замовив таксі та поїхав на зустріч із друзями.
+
+> *First I had breakfast, then I went to work, and in the evening I watched a movie. I quickly wrote the report, sent it to the director, and closed the computer. After that, I ordered a taxi and went to a meeting with friends.*
+
+In this sequence, every single verb represents a closed chapter. The breakfast was finished before the person left for work. The report was fully written before it was sent. Perfective verbs act as stepping stones, advancing the plot step by step without focusing on the time it took to complete each task.
+
+One of the most powerful ways to use verbal aspects in Ukrainian is to contrast them within a single sentence. You can brilliantly illustrate how an ongoing, continuous action provides the background for a sudden, completed event. The imperfective verb creates the prolonged setting, while the perfective verb interrupts it.
+
+Я писав листа, коли ти подзвонив. Ми спокійно обговорювали наші плани, коли раптом почався сильний дощ. Вона готувала обід, коли її чоловік купив новий телевізор і приніс його додому.
+
+> *I was writing a letter when you called. We were calmly discussing our plans when suddenly heavy rain started. She was cooking lunch when her husband bought a new television and brought it home.*
+
+This grammatical structure is incredibly common in everyday storytelling. The background action was already in progress and might have continued afterward, but the interrupting event happened once and was finished immediately.
 
 :::info
-**Grammar box**
-Use the imperfective past tense to answer the question «що робив?» (what were you doing?). It acts like a continuous video recording, showing the action as it unfolds without a definitive end point.
+**The Power of "Коли"**
+The word **коли** (when) often acts as the crucial bridge in these sentences. It beautifully connects an imperfective background action with a sudden perfective interruption, creating dynamic and natural narratives.
 :::
 
-In contrast, the perfective aspect is used to state a clear result or a completed action. It answers the question "що зробив?" (what did you get done?). When you narrate a sequence of completed events, you are creating a chain of results. You build these perfective verbs by adding specific prefixes to the imperfective stem, such as **по-**, **при-**, or **з-**. For example, the process of doing is **робити**, while the result is **зробити**.
+To master past tense storytelling, you must understand the difference between two critical questions. When someone asks about the process, they use the imperfective question. When they demand a result, they use the perfective question.
 
-Спочатку я поснідав і швидко одягнувся. Потім я відразу пішов на роботу. На роботі я успішно зробив усі завдання і написав звіт. Увечері я повернувся додому і приготував вечерю. Я нарешті добре відпочив після важкого дня.
+Що ти робив учора ввечері? Я читав нову книгу про історію України. А що ти зробив сьогодні вранці? Я прочитав дві статті і написав важливий лист.
 
-> *First I had breakfast and quickly got dressed. Then I immediately went to work. At work, I successfully did all the tasks and wrote a report. In the evening I returned home and cooked dinner. I finally rested well after a hard day.*
+> *What were you doing yesterday evening? I was reading a new book about the history of Ukraine. And what did you get done this morning? I read two articles and wrote an important letter.*
 
-One of the most elegant ways to use verb aspects is the interruption pattern. You can create a rich narrative by combining both aspects in a single sentence: use the imperfective to set the ongoing background scene, and the perfective to introduce a sudden, completed event that interrupts it. Think of the imperfective verb as a continuous movie playing, while the perfective verb is a sudden snapshot.
+A very common mistake for English speakers is to use the imperfective aspect for all past actions, translating the simple past directly. If you finished reading a book, you cannot use the imperfective verb «Я читав книгу». That only means you spent time reading it, leaving the listener wondering if you ever finished. You must use the perfective verb «Я прочитав книгу» to announce the completed accomplishment.
 
-Я спокійно готував смачну вечерю, коли ти несподівано подзвонив. Ми йшли додому через парк, коли почався сильний дощ. Вона читала цікаву книгу, коли в кімнату швидко зайшов її брат.
-
-> *I was calmly cooking a tasty dinner when you unexpectedly called. We were walking home through the park when a heavy rain started. She was reading an interesting book when her brother quickly entered the room.*
-
-As you talk about your past experiences, especially related to education or work, you must be careful with the verbs for taking exams. A very common error among learners is translating "to take an exam" literally as "здавати іспит". This is a calque from Russian. In proper Ukrainian, the verb **здавати** means to hand something over, like an apartment key. To express the process of taking an academic test, you must use the verb **складати**.
-
-Мій молодший брат зараз навчається в університеті і складає складний іспит з історії. Я впевнений, що він складе його дуже добре.
-
-> *My younger brother is currently studying at the university and is taking a difficult history exam. I am sure that he will pass it very well.*
-
-:::note
-**Quick tip**
-Remember: **складати іспит** (imperfective) is the stressful process of taking the test, while **скласти іспит** (perfective) is the joyful result of successfully passing it.
+:::tip
+**The Process Trap**
+Do not let your English brain trick you into using imperfective verbs just because the action happened in the past. If there is a clear, completed result, force yourself to use the perfective partner! Always ask yourself whether you are describing your time or your achievements.
 :::
 
-Let us expand your daily routine vocabulary with some essential aspect pairs. Many professional verbs form their perfective partner simply by adding the prefix **про-** or **об-**, such as **аналізувати** (to analyze) becoming **проаналізувати**. However, some verbs undergo an internal stem change. For instance, the verb **замовляти** (to order, process) loses the letter "л" to become **замовити** (to order, result).
+### Читаємо українською (Reading Practice)
 
-Сьогодні ми довго обговорювали новий проєкт. Потім ми ретельно проаналізували всі важливі фінансові дані. Після цієї зустрічі ми вирішили замовити смачну піцу в офіс. Я часто замовляю тут їжу, тому що вони готують дуже швидко.
+Let us look at a complete narrative that brings all these rules together. Notice how the aspects shift to paint a rich, dynamic picture of a busy day.
 
-> *Today we discussed the new project for a long time. Then we carefully analyzed all the important financial data. After this meeting, we decided to order a tasty pizza to the office. I often order food here because they cook very quickly.*
+Учора був дуже довгий день. Вранці я прибирав свою кімнату і слухав улюблену музику. Потім я вирішив приготувати смачний обід. Я готував суп майже годину. Коли я нарешті приготував обід, зателефонувала моя сестра. Вона сказала, що хоче організувати свято. Ми довго обговорювали різні ідеї по телефону. Спочатку ми запланували меню, а потім я пішов у магазин. Я вибирав фрукти дуже довго, бо шукав найсвіжіші. Зрештою, я купив банани та яблука. Увечері я просто відпочивав і дивився телевізор.
 
-Choosing the right aspect is what makes your Ukrainian sound natural and decolonized. Instead of translating a sequence of English verbs ending in "-ed", you must pause and think about the nature of the action. Was it a background process, or was it a completed step that moved the story forward? When you master this rhythm, you stop translating and start truly thinking in Ukrainian.
-
-Я дуже довго вивчав українську граматику. Я читав складні правила і робив різні письмові вправи. Але саме сьогодні я нарешті добре зрозумів цю важливу тему. Тепер я можу вільно розповідати цікаві історії про своє життя.
-
-> *I studied Ukrainian grammar for a very long time. I read difficult rules and did various written exercises. But exactly today I finally understood this important topic well. Now I can freely tell interesting stories about my life.*
+> *Yesterday was a very long day. In the morning I was cleaning my room and listening to favorite music. Then I decided to cook a tasty lunch. I was cooking the soup for almost an hour. When I finally cooked the lunch, my sister called. She said that she wants to organize a holiday. We were discussing various ideas on the phone for a long time. First we planned the menu, and then I went to the store. I was choosing fruits for a very long time because I was looking for the freshest ones. Eventually, I bought bananas and apples. In the evening I was just resting and watching television.*
 
 <!-- INJECT_ACTIVITY: match-up-story-aspect -->
-<!-- INJECT_ACTIVITY: match-up-narrative-check -->
+<!-- INJECT_ACTIVITY: match-up-narrative-questions -->

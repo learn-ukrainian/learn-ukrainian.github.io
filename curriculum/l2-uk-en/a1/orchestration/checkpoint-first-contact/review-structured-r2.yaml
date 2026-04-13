@@ -1,0 +1,54 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 6
+  evidence: 'The reading section says `Read the following sentences aloud` and then
+    gives 13 bullet sentences, not the planned `short Ukrainian text (8-10 sentences)`.
+    The plan also calls for `Following Anna Ep10 '
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: No confirmed Russianisms, Surzhyk, calques, or paronym errors found. Forms
+    such as `Її звати Олена`, `Його звати Іван`, `Я з Дніпра`, and `Моє прізвище —
+    Коваль` are standard Ukrainian.
+- dimension: 3
+  name: Pedagogical quality
+  score: 6
+  evidence: The review often explains in English instead of modeling in Ukrainian.
+    The reading practice is fragmented into bullets instead of the planned connected
+    review text, and the grammar summary undercovers
+- dimension: 4
+  name: Vocabulary coverage
+  score: 7
+  evidence: The recommended words `ім'я` and `прізвище` are included, but the dialogue
+    also adds extra words in `Це дуже цікаво` and `У вас гарна сім'я` beyond the plan’s
+    recommended additions for this checkpoint
+- dimension: 5
+  name: Exercise quality
+  score: 6
+  evidence: Marker placement is good, but the generated `fill-in-self-introduction`
+    tests an untaught structure with `Я живу ____ Києві.` instead of recycling the
+    taught `Я з...` chunk.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: The tone is teacherly and calm rather than gamified or corporate. Lines
+    like `Evaluate your progress honestly` fit a checkpoint module.
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: All planned H2 sections are present and in order, the markdown is clean,
+    and the pipeline word count is 1280, above the 1200 target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 9
+  evidence: The module treats Ukrainian independently, uses Ukrainian cities and names
+    naturally, and avoids Russia-centric framing.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 7
+  evidence: 'The speakers are named and the formal register fits the conference setting,
+    but the family phase is thin: after `Це моя дружина на фото.` the conversation
+    moves almost directly to goodbye instead of d'
+findings: []

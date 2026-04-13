@@ -2,12 +2,6 @@
   "attempt": 1,
   "passed": true,
   "errors": [],
-  "warnings": [
-    {
-      "check": "VOCABULARY",
-      "severity": "WARNING",
-      "message": "Missing 1/10 required vocab: професія (profession)"
-    }
-  ],
-  "timestamp": "2026-04-08T22:38:14.349914+00:00"
+  "warnings": [],
+  "timestamp": "2026-04-13T03:44:00.204592+00:00"
 }

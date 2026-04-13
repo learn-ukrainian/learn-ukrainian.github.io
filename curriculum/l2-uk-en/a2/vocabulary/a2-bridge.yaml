@@ -1,283 +1,109 @@
 vocabulary:
-- word: вид
-  translation: aspect (grammatical category of verbs — forward reference, taught fully in M02)
+- word: милозву́чність
+  translation: euphony
   expression: false
   pos: ім.
-  gender: ч.
+  gender: ж.
   verified: true
-- word: доконаний
-  translation: perfective (verb aspect — forward reference)
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: недоконаний
-  translation: imperfective (verb aspect — forward reference)
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: милозву́чність
-  translation: euphony, melodiousness
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
 - word: о́гляд
   translation: review, overview
   expression: false
-  pos: ''
-  gender: ''
-  verified: false
+  pos: ім.
+  gender: ч.
+  verified: true
 - word: систе́ма
   translation: system
   expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: пра́вило
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: правило
   translation: rule
   expression: false
-  pos: ''
-  gender: ''
-  verified: false
+  pos: ім.
+  gender: с.
+  verified: true
 - word: відмі́нок
   translation: case
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: називни́й
-  translation: nominative
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: знахідни́й
-  translation: accusative
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: місце́вий
-  translation: locative
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: кли́чний
-  translation: vocative
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: чергува́ння
-  translation: alternation
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: голосни́й
-  translation: vowel
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: при́голосний
-  translation: consonant
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: на́голос
-  translation: stress (accent)
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: хто?
-  translation: who?
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: що?
-  translation: what?
+- word: називни́й
+  translation: nominative
   expression: false
-  pos: спол.
+  pos: прикм.
   gender: ''
   verified: true
-- word: ко́го?
-  translation: whom?
+- word: знахі́дний
+  translation: accusative
   expression: false
-  pos: ''
+  pos: прикм.
   gender: ''
-  verified: false
-- word: де?
-  translation: where?
+  verified: true
+- word: місце́вий
+  translation: locative
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: кли́чний
+  translation: vocative
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: чергува́ння
+  translation: alternation
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: голосни́й
+  translation: vowel
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: при́голосний
+  translation: consonant
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: на́голос
+  translation: stress (accent)
   expression: false
   pos: присл.
   gender: ''
   verified: true
-- word: Ласка́во про́симо!
-  translation: Welcome!
+- word: Добрий день!
+  translation: Good afternoon!
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: Як спра́ви?
-  translation: How are you?
+- word: Ласкаво просимо
+  translation: Welcome
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: Це чудо́во!
-  translation: That is wonderful!
+- word: Дуже приємно
+  translation: Nice to meet you
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: дру́же
-  translation: friend (vocative form)
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: вчи́телю
-  translation: teacher (vocative form)
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: стіл
-  translation: table
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: Ки́їв
-  translation: Kyiv
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: ве́чір
-  translation: evening
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: нога́
-  translation: leg
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: ні́жка
-  translation: little leg (diminutive)
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: рука́
-  translation: hand
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: ру́чка
-  translation: little hand (diminutive)
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: ву́хо
-  translation: ear
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: ву́шко
-  translation: little ear (diminutive)
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: доро́га
-  translation: road
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: му́ха
-  translation: fly
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: за́мок
-  translation: castle
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: замо́к
-  translation: lock
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: дзвіно́к
-  translation: bell
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: бджола́
-  translation: bee
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: про́сьба
-  translation: request
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: вокза́л
-  translation: train station
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: вода́
-  translation: water
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: зі мно́ю
-  translation: with me
+- word: Зрозуміло
+  translation: I see
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: із задово́ленням
-  translation: with pleasure
+- word: Вітаю, друже!
+  translation: Greetings, friend!
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: зі свя́том
-  translation: happy holiday
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: евфо́нія
-  translation: euphony
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false

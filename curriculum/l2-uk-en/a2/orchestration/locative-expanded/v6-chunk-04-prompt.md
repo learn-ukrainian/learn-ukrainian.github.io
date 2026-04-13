@@ -3,23 +3,22 @@
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 20: Місцевий відмінок у нових контекстах (A2, A2.3 [Dative Case])
-**Section to write:** Підсумок — Місцевий відмінок: від місця до сенсу (Summary — Locative Case) (~350 words)
-**Word target for this section:** 350 words (aim for 385 to account for undershoot)
+**Section to write:** Місцевий відмінок: від місця до сенсу (From Place to Meaning) (~390 words total)
+**Word target for this section:** 390 words (aim for 429 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Підсумок — Місцевий відмінок: від місця до сенсу (Summary — Locative Case) (~350 words)
-- P1 (~100 words): [Synthesis of the "Locative Journey." Summarize how the case has evolved for the learner from identifying physical objects (на столі) to describing life phases (у дитинстві), professional spheres (у науці), and communication tools (по телефону).]
-- P2 (~100 words): [The "Locative Matrix" Consolidation Table. Create a text-based table structure with four columns: Function (Місце, Час, Сфера, Засіб), Preposition (в/у, на, по), and Example (в офісі, у січні, у житті, по радіо). This serves as the definitive reference point for the module.]
-- P3 (~150 words): [Final self-check and summary points. Use the plan's requirements for a recap.
-  * Recap: The Locative case always requires a preposition (у, на, по, при).
-  * Check: Do you use "у" or "на" for weeks? (Answer: на).
-  * Check: What is the ending for "політика" in the locative? (Answer: у політиці).
-  * Challenge: Can you build a sentence with three functions? Example: "У минулому місяці (time) я працював на роботі (abstract) і говорив по телефону (means)."]
+## Місцевий відмінок: від місця до сенсу (From Place to Meaning) (~390 words total)
+- P1 (~100 words): [Provide a comprehensive summary of the locative case's expanded role. Emphasize that it is not just "where" but answers 'де?' (location), 'коли?' (time), and 'як?' (means/channel).]
+- P2 (~100 words): [Present a consolidation overview table comparing the four functions: physical (у місті), abstract (у житті), temporal (у січні), and means (по телефону). Show that they all share locative endings but serve fundamentally different functions.]
+- P3 (~100 words): [Demonstrate how to build complex sentences by combining 2-3 locative functions together. Example: "У минулому місяці я розмовляв по телефону з другом у Києві" or "В дитинстві ми часто зустрічалися на ярмарку."]
+- P4 (~90 words): [Final concluding paragraph summarizing the evolution of the learner's understanding of the locative case, framing it as a versatile and elegant tool for expressing nuanced relationships and contexts in Ukrainian.]
+- <!-- INJECT_ACTIVITY: quiz-locative-functions --> [quiz, Identify the function of locative in each sentence (physical location, abstract domain, temporal, or means), 8 items]
+- <!-- INJECT_ACTIVITY: match-up-expressions --> [match-up, Match locative expressions with their English equivalents across all four function types, 8 items]
 
-Grand total: ~2000 words
+Grand total: ~2190 words
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -27,7 +26,7 @@ Grand total: ~2000 words
 <previous_context>
 [...previous sections truncated...]
 
-Я зустрів старого друга по дорозі додому. Ми купили гарячу каву по дорозі на роботу. По дорозі в магазин почався сильний дощ. Вони слухають музику по дорозі в університет. По дорозі в кіно ми зустріли сестру. > *I met an old friend on the way home. We bought hot coffee on the way to work. It started raining heavily on the way to the store. They listen to music on the way to the university. On the way to the cinema we met my sister.* As you expand your vocabulary, you must clearly distinguish between the channel of communication and the topic of conversation. This is where the Locative and Accusative cases contrast directly. Using the Locative case describes the tool you use to speak, like a telephone or an application. However, if you want to talk about the object itself, you must use the preposition **про** with the Accusative case. The rule remains consistent: the topic of your thought or conversation always requires the Accusative, regardless of how the conversation happens. Сьогодні ми говорили по телефону про нову роботу. Я думаю про тебе, коли слухаю пісню по радіо. Журналісти багато говорять про новий телевізор. Ми спілкувалися по скайпу про наші плани. > *Today we talked on the phone about the new job. I think about you when I listen to a song on the radio. Journalists talk a lot about the new TV. We communicated on Skype about our plans.* Let us look at a short conversation that highlights this difference: > — **Анна:** Ти вчора говорив по телефону з братом? *(Did you talk on the phone with your brother yesterday?)* > — **Марко:** Так, ми говорили про його нову машину. *(Yes, we talked about his new car.)* > — **Анна:** А я дізналася про це по радіо. *(And I found out about it on the radio.)* In modern Ukrainian, you might sometimes hear native speakers use the Instrumental case without a preposition to express the means of communication. While this is grammatically correct and often seen in formal writing, the construction using the Locative case remains the most natural standard for everyday conversations. As a learner, you should actively use this pattern because it easily adapts to modern technology. You can seamlessly apply it to digital platforms, new loanwords, and social media. It is a highly productive grammar rule that will serve you well in any communicative situation. Завтра я відправлю тобі документи по імейлу. Мої батьки часто дзвонять мені по скайпу. Ми знайшли цю корисну інформацію по інтернету. Студенти отримали результати тесту по електронній пошті. > *Tomorrow I will send you the documents by email. My parents often call me on Skype. We found this useful information on the internet. The students received the test results by email.* :::tip **Quick tip** When using modern loanwords like **імейл** or **скайп**, treat them as standard masculine nouns. In the Locative case after the preposition **по**, they take the **-у** ending. ::: <!-- INJECT_ACTIVITY: match-up-locative-types --> <!-- INJECT_ACTIVITY: error-correction-prepositions -->
+телефон." The first structure describes *how* you are communicating, while the second describes exactly *what* you are talking about. Mixing these two patterns up can cause a real **проблема** (problem) in understanding. Учора ввечері ми довго розмовляли по телефону про наші плани на вихідні. Сьогодні на роботі ми говорили про новий телефон мого колеги, який він щойно купив. Якщо у вас є серйозна проблема, краще подзвонити по телефону. > *Yesterday evening we talked for a long time on the phone about our plans for the weekend. Today at work we talked about my colleague's new phone, which he just bought. If you have a serious problem, it is better to call by phone.* Let's look at more examples of how this communication structure works in daily life. Notice how the preposition **по** transforms the noun into a pathway or a transmitting channel. Whether it is a physical path like a street, a digital channel like the internet, or an invisible channel like radio waves, the grammatical rule remains exactly the same. Even a casual **зустріч** (meeting) on the street uses this logic. You use the locative endings you already know, such as **-у** or **-і**, depending on the noun's gender and stem. Я обов'язково подзвоню тобі по телефону ввечері, коли повернуся додому з офісу. Ми почули ці несподівані новини по радіо в автомобілі. Наш викладач надіслав усі матеріали для нового курсу по електронній пошті. Ми випадково зустрілися по дорозі в університет, і це була дуже приємна зустріч. > *I will definitely call you on the phone in the evening when I return home from the office. We heard these unexpected news on the radio in the car. Our teacher sent all the materials for the new course by email. We accidentally met on the way to the university, and it was a very pleasant meeting.* :::info **Grammar box** The combination of **по** with the locative case is the traditional and authentic Ukrainian pattern for indicating a medium, a communication channel, or a path of movement. You might occasionally hear native speakers use **по** with the dative case for distribution, such as "дати дітям по яблуку" (to give the children an apple each). However, when discussing the means of communication or the route someone takes, the locative case is the absolute standard. Always stick to established phrases like "по телефону", "по телевізору", and "по дорозі" to ensure your Ukrainian sounds natural, confident, and grammatically correct. ::: To summarize, the locative case is incredibly versatile and powerful. It moves far beyond just pointing out a static physical location on a map or indicating a specific month in the calendar. With the simple addition of the preposition **по**, it actively describes the instrument, the channel, or the path through which an action happens. Mastering this small but vital grammatical word unlocks a much more natural and expressive way to describe your daily interactions, your travel routes, and the way you share information with the world. <!-- INJECT_ACTIVITY: fill-in-locative-forms --> <!-- INJECT_ACTIVITY: error-correction-prepositions -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -651,6 +650,31 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (4/4).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] місцевий (locative (case))
+- [ ] абстрактний (abstract)
+- [ ] минулий (past, previous)
+- [ ] місяць (month)
+- [ ] тиждень (week)
+- [ ] телефон (phone, telephone)
+- [ ] подорож (journey, trip)
+- [ ] зустріч (meeting, encounter)
+- [ ] думка (thought, opinion)
+- [ ] проблема (problem)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Місцевий відмінок: від місця до сенсу (From Place to Meaning) (~390 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

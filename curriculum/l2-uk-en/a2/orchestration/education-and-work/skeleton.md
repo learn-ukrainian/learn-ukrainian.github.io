@@ -1,30 +1,28 @@
-## Про освіту: школа та університет (~720 words)
-- P1 (~120 words): [Introduction to the educational path using aspect pairs. Explain "закінчувати/закінчити школу" (to finish school) and "вступати/вступити до університету" (to enter university). Note the Genitive case after "до" (університету, ліцею, коледжу).]
-- P2 (~120 words): [Explaining motivation with "тому що" (because). Focus on career choices: "Я вступив на юридичний факультет, тому що хочу бути адвокатом." Contrast "вчитися на + Accusative" (вчитися на програміста) for the profession vs. "вивчати + Accusative" (вивчати історію) for the subject.]
-- P3 (~120 words): [Relative clauses with "який" (which) and "де" (where) to describe academic settings. Examples: "Предмет, який мені подобався найбільше — це математика" and "Університет, де я навчаюся, знаходиться в центрі міста."]
-- P4 (~120 words): [Purpose clauses with "щоб" (in order to). Explain the structure "verb + щоб + infinitive" for goals. Examples: "Я вчуся, щоб отримати диплом" and "Він поїхав до Києва, щоб вступити до магістратури."]
-- P5 (~120 words): [Deep dive into Ukrainian education levels: бакалаврат, магістратура, аспірантура. Explain the difference between "складати іспит" (to take/be taking an exam) and "скласти іспит" (to pass an exam) using natural examples like "Я довго складав іспит і нарешті склав його."]
-- P6 (~120 words): [Dialogue 1: Career counseling session. A student explains their background and why they chose their major (філологія, економіка) using relative and purpose clauses.]
-- <!-- INJECT_ACTIVITY: fill-in-complex-education --> [fill-in, focus on connecting sentences with тому що, щоб, який, 8 items]
-- <!-- INJECT_ACTIVITY: match-up-education-scenarios --> [match-up, matching education situations to appropriate complex sentence responses, 8 items]
+## Про освіту: школа та університет (About Education: School and University) (~780 words)
+- P1 (~130 words): Introduction to talking about education. Introduce core vocabulary for educational institutions and concepts: `школа`, `гімназія`, `ліцей`, `університет`, `інститут`, `факультет`, `спеціальність`, `диплом`. Frame the narrative around describing one's background: "Я вчуся в університеті."
+- P2 (~130 words): Explaining reasons for educational choices using complex sentences with `тому що` (cause). Provide examples: "Я вступив до університету, тому що хотів стати інженером." Include a grammar note on `вступати до` + Genitive case (`до університету`) and introduce authentic cultural terms like `виш` and `абітурієнт`.
+- P3 (~130 words): Describing educational institutions and subjects using relative clauses with `який` and `де`. Explain how to link clauses. Examples: "Університет, де я навчався, знаходиться у Львові" and "Предмет, який мені найбільше подобався, — це історія."
+- P4 (~130 words): Expressing the purpose of studying using `щоб` + infinitive. Contrast `щоб` (purpose) with `тому що` (cause). Examples: "Я вчуся, щоб отримати диплом" and "Вона поїхала за кордон, щоб вивчити нову спеціальність."
+- P5 (~130 words): Deep dive into crucial Ukrainian verbs for education: `навчатися на` + Accusative (`на програміста`), `закінчити` + Accusative (`університет`), `здобути освіту`, and `скласти іспит`. Specifically address common L2 errors (e.g., avoiding "вчити для юриста" or "закінчити з університету").
+- P6 (~130 words): Natural dialogue (8-10 lines): Two new acquaintances discussing their education. Incorporate questions like "Де ти навчався?", "Яку спеціальність обрав?", and "Чому саме цю?" using `тому що`, `щоб`, and `який` naturally in context.
 
-## Про роботу: ким ви працюєте? (~720 words)
-- P1 (~120 words): [Describing current employment using "працювати + Instrumental" (працювати вчителем, менеджером, інженером). Explain the difference between "робота" (noun, job/work) and "працювати" (verb, to work) with location prepositions: "працювати в офісі/на фірмі".]
-- P2 (~120 words): [Expanding work descriptions with relative clauses ("який/яка/яке"). Focus on the company and coworkers: "Компанія, яка виробляє меблі" or "Колега, яка допомагає мені з проєктом." Ensure agreement in gender and number.]
-- P3 (~120 words): [Contrasting motivation and difficulty using "тому що" and "хоча" (although). "Я люблю свою роботу, тому що вона цікава. Хоча зарплата невелика, колектив дуже дружній."]
-- P4 (~120 words): [Work conditions and real conditionals with "якщо... то...". Focus on routines and bonuses: "Якщо я закінчую проєкт вчасно, то отримую премію" and "Якщо є багато роботи, я залишаюся в офісі довше."]
-- P5 (~120 words): [Vocabulary for the workplace: посада (position), графік (schedule), співбесіда (interview), керівник (manager). Explain "шукати роботу" (to look for a job) and "змінювати роботу" (to change jobs).]
-- P6 (~120 words): [Dialogue 2: At a social event, two professionals discuss their jobs. One describes their office using "де", their tasks using "який", and their motivation using "тому що".]
-- <!-- INJECT_ACTIVITY: quiz-complex-sentence-types --> [quiz, choose the correct conjunction (тому що, щоб, який, якщо) for work scenarios, 8 items]
+## Про роботу: ким ви працюєте? (About Work: What Do You Do?) (~780 words)
+- P1 (~130 words): Transition to talking about work and careers. Introduce core workplace vocabulary: `робота`, `посада`, `компанія`, `офіс`, `колега`, `зарплата`, `графік`, `завдання`, `керівник`. Example: "Я працюю в міжнародній компанії."
+- P2 (~130 words): Describing your job, company, and colleagues using relative clauses (`який`, `яка`, `які`). Example: "Я працюю програмістом у компанії, яка розробляє додатки. Моя колега, яка сидить поруч, допомагає мені з проєктами."
+- P3 (~130 words): Explaining professional motivations using `тому що` and `щоб`. Example: "Я став вчителем, тому що люблю працювати з дітьми" and "Я хочу змінити роботу, щоб мати кращу зарплату."
+- P4 (~130 words): Introducing work conditions and rules using real conditionals with `якщо ... (то)`. Example: "Якщо я добре працюю, то отримую премію." "Якщо є вільний час, я ходжу на курси."
+- P5 (~130 words): Grammar spotlight: The verb `працювати` + Instrumental case (`ким?`). Examples: `працювати лікарем`, `працювати викладачем`, `працювати програмістом`. Emphasize avoiding the L2 error of using Nominative ("Він працює лікар"). Mention the natural use of modern feminitives like `директорка`, `лікарка`.
+- P6 (~130 words): Natural dialogue (8-10 lines): Conversation at a party. "Ким ви працюєте?", "Вам подобається ваша робота?", "Що ви робите на роботі?" Showcasing the Instrumental case and condition clauses.
+- <!-- INJECT_ACTIVITY: fill-in-complex-sentences --> [fill-in, Complete sentences about education and work using тому що, щоб, який, якщо, 8 items]
+- <!-- INJECT_ACTIVITY: true-false-culture-complex --> [true-false, Judge whether statements about Ukrainian education and work culture use correct complex sentence structures, 8 items]
 
-## Плани на майбутнє (~600 words)
-- P1 (~150 words): [Discussing career goals using "якщо... то..." with future-oriented actions. Focus on the result of education: "Якщо я отримаю диплом, то знайду гарну роботу" and "Якщо я вивчу англійську, то зможу працювати в міжнародній компанії."]
-- P2 (~150 words): [Giving career advice with conditionals. Examples: "Якщо хочеш стати директором, треба багато працювати" and "Якщо тобі не подобається спеціальність, змінити її зараз."]
-- P3 (~150 words): [Concessions and complex situations ("хоча"). Discussing the transition from study to work: "Хоча я ще навчаюся на четвертому курсі, я вже маю досвід роботи." Use "частковий робочий день" (part-time) vs "повний день" (full-time).]
-- P4 (~150 words): [Dialogue 3: A job interview simulation. The candidate uses all complex sentence types to explain their education (який, де), their motivation (тому що), their goals (щоб), and their availability (якщо).]
-- <!-- INJECT_ACTIVITY: true-false-structure-culture --> [true-false, judge correctness of complex sentence structures and Ukrainian work culture statements, 8 items]
+## Плани на майбутнє (Plans for the Future) (~640 words)
+- P1 (~130 words): Discussing future career and education goals using conditionals (`якщо`). Example: "Якщо я складу іспит, то вступлю до магістратури." Vocabulary focus: `магістратура`, `співбесіда`, `проєкт`, `досвід`.
+- P2 (~130 words): Giving and receiving career advice using conditionals combined with the imperative mood. Examples: "Якщо хочеш знайти кращу роботу, вивчай нову мову." "Якщо тобі не подобається робота, шукай іншу."
+- P3 (~130 words): Expressing concessions and contrasting ideas about work/study using `хоча` (although). Examples: "Хоча я ще студент, я вже працюю на частковий робочий день." "Хоча зарплата невелика, робота дуже цікава."
+- <!-- INJECT_ACTIVITY: match-up-career-situations --> [match-up, Match education/career situations to appropriate responses using complex sentences, 8 items]
+- P4 (~150 words): Consolidation dialogue (10-12 lines): Career counseling session at a university between a Consultant and Student. "Що ви вивчаєте?" ("Право"). "Ким хочете стати?" ("Адвокатом"). "Де хочете працювати?" ("В юридичній фірмі"). Integrates all complex sentence types naturally (причина, мета, означення, умова, допуст).
+- P5 (~100 words): Recap of complex sentences (`тому що`, `щоб`, `який`, `якщо`, `хоча`) and how they connect education and career goals to elevate basic sentences into fluent, professional communication.
+- <!-- INJECT_ACTIVITY: quiz-complex-types --> [quiz, Choose the correct complex sentence type for work/education scenarios, 8 items]
 
-## Підсумок (~150 words)
-- P1 (~150 words): [Recap of the four key complex sentence types: причина (тому що), мета (щоб), означення (який/де), and умова (якщо). Self-check questions: 1. Як сказати "I work as a lawyer"? 2. Який прийменник вживаємо зі словом "університет" (вступити ... університету)? 3. Як поєднати дві частини речення: "Я вчуся" та "отримати диплом"? 4. Як правильно сказати "If I pass the exam, I will travel"?]
-
-Grand total: ~2190 words
+Grand total: ~2200 words

@@ -120,367 +120,191 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Вступ: Вечірка в друзів
+## Звідки? З/із/зі + родовий (Where From? З/із/зі + Genitive) (~770 words)
 
-Сьогодні у нас міжнародна вечеря. *(Today we have an international dinner.)* Let's see what everyone brought.
+Imagine you are at an international potluck dinner. Everyone has brought something delicious from their home country or a recent trip. As people gather around the table, they naturally start asking where everything came from. It is a perfect opportunity to practice talking about geographical origins and the sources of various dishes.
 
-> — **Олена:** Привіт усім! Що ви принесли? *(Hi everyone! What did you bring?)*
-> — **П'єр:** Це сир **з Франції** *(from France)*.
-> — **Нікос:** А це оливки **з Греції** *(from Greece)*. Вони дуже свіжі. *(They are very fresh.)*
-> — **Анна:** Я принесла шоколад **від бабусі** *(from grandma)*. Вона живе в Бельгії. *(She lives in Belgium.)*
-> — **Олена:** Чудово! А це вино ми п'ємо **після подорожі** *(after a trip)*.
+> **Марта:** Привіт усім! Я принесла закуски. Це сир з Франції, дуже смачний. *(Hello everyone! I brought snacks. This is cheese from France, very tasty.)*
+> **Джон:** О, чудово! А я маю свіжі оливки з Греції. *(Oh, great! And I have fresh olives from Greece.)*
+> **Анна:** Який чудовий стіл! Я принесла десерт. Це шоколад від бабусі з Бельгії. *(What a wonderful table! I brought dessert. This is chocolate from my grandmother from Belgium.)*
+> **Карлос:** А це червоне вино ми привезли після подорожі Італією. *(And this red wine we brought after a trip through Italy.)*
+> **Марта:** Дякую! У нас вийшла справжня міжнародна вечеря. *(Thank you! We have a real international dinner.)*
 
-Notice how the friends describe where things come from or when things happen. They use the prepositions **з** *(from)*, **від** *(from a person)*, and **після** *(after)*. 
+When you want to talk about **походження** (origin) or the **джерело** (source) of something, you need the **прийменник** (preposition) "з" followed by the Genitive case. This combination directly answers the question «Звідки?» (Where from?). The core meaning of this structure is moving away from a place, indicating where a person or an object originated. This is how you state your home country, your city, or where a specific product was made. The Genitive case is strictly required here; you cannot simply use the Nominative dictionary form. If you want to say "from Kyiv", you must change "Київ" to "Києва".
 
-Ці маленькі слова дуже важливі для спілкування. *(These small words are very important for communication.)* In this module, you will learn how to use them to talk about origins, materials, and time.
+Мої старі друзі приїхали з України, але зараз вони живуть тут. Наш новий колега по роботі родом з Києва. Ця неймовірно смачна кава приїхала до нас аж зі Швеції. Мій найулюбленіший сучасний письменник родом зі Львова.
 
-## Звідки? З/із/зі + родовий (Where From? З/із/зі + Genitive)
+> *My old friends came from Ukraine, but now they live here. Our new colleague at work is originally from Kyiv. This incredibly delicious coffee arrived to us all the way from Sweden. My most favorite contemporary writer is originally from Lviv.*
 
-«Звідки ти?» *(Where are you from?)*
-Це дуже часте запитання. *(This is a very frequent question.)*
-Сьогодні ми вивчаємо новий прийменник. *(Today we are learning a new preposition.)*
-Цей прийменник завжди вимагає після себе родовий відмінок. *(This preposition always requires the Genitive case after it.)*
-Він показує ваше походження або джерело дії. *(It shows your origin or the source of an action.)*
-
-The core meaning of this preposition is the starting point of an action or the geographic origin of a person. When you state your origin, you take the name of the place and apply the rules for the Genitive case. It answers the fundamental question of where someone or something comes from. For feminine nouns, the ending typically changes to the feminine Genitive ending. For masculine cities, countries, and objects, the ending changes to the masculine Genitive ending. This pattern is consistent and very important for basic conversations.
-
-«Україна → з України» *(from Ukraine)*
-«Київ → з Києва» *(from Kyiv)*
-«Харків → з Харкова» *(from Kharkiv)*
-«Лондон → з Лондона» *(from London)*
-
-Читаємо українською:
-— Я **з України** *(from Ukraine)*.
-— Він приїхав **з Києва** *(from Kyiv)*.
-— Ми **з Лондона** *(from London)*.
-— Вони летять **з Харкова** *(from Kharkiv)*.
-— Мій друг повернувся **з роботи** *(from work)*.
-— Моя сестра **з Польщі** *(from Poland)*.
-— Студенти вийшли **з аудиторії** *(from the auditorium)*.
-
-> — **Марко:** Звідки ти? *(Where are you from?)*
-> — **Сара:** Я з Лондона. А ти? *(I am from London. And you?)*
-> — **Марко:** Я з Києва. *(I am from Kyiv.)*
-> — **Сара:** Це цікаво. Мій друг теж з Києва. *(That is interesting. My friend is also from Kyiv.)*
-> — **Марко:** Світ дуже тісний! *(The world is very small!)*
-
-Українська мова дуже милозвучна. *(The Ukrainian language is very euphonic.)*
-Ми любимо, коли слова легко вимовляти. *(We like when words are easy to pronounce.)*
-Тому цей прийменник має три різні форми. *(Therefore, this preposition has three different forms.)*
-Ми вибираємо форму для комфорту. *(We choose the form for comfort.)*
-
-The rule of euphony is a signature phonetic trait of the language. You must choose the form of the preposition that makes the sentence flow best. This prevents awkward consonant combinations and makes speech feel natural and effortless. You do not need to memorize this as a strict exception, but rather feel the rhythm of the words as you speak. 
-
-1. Use the basic form «з» before vowels and most single consonants. 
-2. Use the extended form «із» between two consonants or before sibilant sounds like «с», «з», «ш», «ж», «ч».
-3. Use the soft form «зі» before a heavy cluster of consonants, especially those starting with «с», «з», «ш», «л», «м».
-
-«Одеса → з Одеси» *(from Odesa)*
-«село → із села» *(from the village)*
-«золото → із золота» *(from gold)*
-«Львів → зі Львова» *(from Lviv)*
-«школа → зі школи» *(from school)*
-
-Читаємо українською:
-— Я їду **з Одеси**. *(I am going from Odesa.)*
-— Він іде **з університету**. *(He is walking from the university.)*
-— Це браслет **із золота**. *(This is a bracelet made of gold.)*
-— Жінка **із села** привезла молоко. *(The woman from the village brought milk.)*
-— Мій брат приїхав **із Житомира**. *(My brother arrived from Zhytomyr.)*
-— Я приїхав **зі Львова**. *(I arrived from Lviv.)*
-— Діти повертаються **зі школи**. *(The children are returning from school.)*
-— Я взяв книгу **зі стола**. *(I took the book from the table.)*
-— Він родом **зі Швеції**. *(He is originally from Sweden.)*
-
-> — **Анна:** Ти зі Львова? *(Are you from Lviv?)*
-> — **Тарас:** Ні, я з Одеси. *(No, I am from Odesa.)*
-> — **Анна:** А я із Сум. *(And I am from Sumy.)*
-> — **Тарас:** У нас сьогодні зустріч людей із різних міст. *(We have a meeting of people from different cities today.)*
-
-З чого це зроблено? *(What is this made of?)*
-Цей прийменник також показує матеріал. *(This preposition also shows the material.)*
-Ми описуємо речі навколо нас. *(We describe things around us.)*
-
-You can use this preposition combined with the Genitive case to describe the material an object is made from. It can also describe what a container holds, or the main ingredient of a dish. Notice how neuter and masculine nouns take the typical Genitive endings, while plural nouns often take a zero ending. This construction is incredibly useful for shopping, ordering food, or simply describing your environment.
-
-«дерево → з дерева» *(from wood)*
-«скло → зі скла» *(from glass)*
-«овочі → з овочів» *(from vegetables)*
-«яблука → з яблук» *(from apples)*
-
-Читаємо українською:
-— Це старий стіл **з дерева** *(from wood)*.
-— На столі стоїть склянка **зі скла** *(from glass)*.
-— Вона купила сукню **з шовку** *(from silk)*.
-— Я люблю пити свіжий сік **з яблук** *(from apples)*.
-— Мама приготувала салат **з помідорів** *(from tomatoes)*.
-— Ми їмо смачний суп **з овочів** *(from vegetables)*.
-
-> — **Олег:** Ця склянка зі скла? *(Is this glass made of glass?)*
-> — **Марія:** Ні, вона з пластику. *(No, it is from plastic.)*
-> — **Олег:** А цей стіл з дерева? *(And is this table from wood?)*
-> — **Марія:** Так, це дуже дороге дерево. *(Yes, it is very expensive wood.)*
-> — **Олег:** У тебе гарний смак. *(You have good taste.)*
-
-> — **Катерина:** Який смачний торт! З чого він? *(What a tasty cake! What is it from?)*
-> — **Олена:** Це торт із шоколаду. *(This is a cake from chocolate.)*
-> — **Катерина:** Я думала, що він із фруктів. *(I thought that it was from fruits.)*
-
-Коли це почалося? *(When did this start?)*
-Ми використовуємо цей прийменник для часу. *(We use this preposition for time.)*
-Він показує початок дії. *(It shows the start of an action.)*
-
-Just as this preposition shows the starting point in space, it also shows the starting point in time. When you want to say that something has been happening since a certain time or day, you use this preposition with the Genitive case. It marks the exact moment an action began and often implies it continues into the present. Later in this module, we will contrast this with the word for "after", which describes what happens following a completely finished event.
-
-«ранок → з ранку» *(since morning)*
-«понеділок → з понеділка» *(since Monday)*
-«дитинство → з дитинства» *(since childhood)*
-«канікули → з канікул» *(since vacation)*
-
-Читаємо українською:
-— Я працюю тут **з ранку** *(since morning)*.
-— Цей магазин відкритий **з понеділка** *(since Monday)*.
-— Ми знаємо одне одного **з дитинства** *(since childhood)*.
-— Вони повернулися **з канікул** *(from vacation)*.
-— Він читає цю книгу **з вечора** *(since evening)*.
-— Студенти чекають **з обіду** *(since lunch)*.
-
-> — **Ірина:** Ти давно тут чекаєш? *(Have you been waiting here long?)*
-> — **Павло:** Так, я тут з ранку. *(Yes, I have been here since morning.)*
-> — **Ірина:** Ого! А я працюю з понеділка без вихідних. *(Wow! And I am working since Monday without days off.)*
-> — **Павло:** Тобі треба відпочити. *(You need to rest.)*
-
-> — **Максим:** Коли ми починаємо новий проект? *(When do we start the new project?)*
-> — **Директор:** Ми працюємо з вівторка. *(We are working since Tuesday.)*
-> — **Максим:** Добре, я буду готовий з ранку. *(Good, I will be ready since morning.)*
-
-Говоріть правильно. *(Speak correctly.)*
-Важливо знати історію слів. *(It is important to know the history of words.)*
-
-:::tip Деколонізація (Decolonization)
-The only correct way to express origin from Ukraine is «з України». This derives directly from the correct locative form «в Україні» *(in Ukraine)*. You may sometimes hear obsolete forms that treat Ukraine as a region rather than a sovereign independent state; those are incorrect and stem from colonial influence. Furthermore, the rich system of euphony with three distinct preposition forms is a beautiful, defining phonetic feature of the language that clearly distinguishes it from neighboring Slavic systems. Embrace these phonetic variants because they make your speech sound naturally and authentically Ukrainian.
+:::info
+**Grammar box**
+Remember that the Genitive case endings for masculine cities usually take **-а** (з Києва, з Лондона), while feminine countries ending in **-а** change to **-и** (з України, з Америки).
 :::
 
-<!-- INJECT_ACTIVITY: quiz-euphony-variants -->
+Ukrainian is a highly melodic language, and it has a built-in system to prevent awkward clusters of consonants. This principle is called euphony, or «милозвучність». Because of this rule, the preposition meaning "from" has three different shapes: з, із, and зі. You choose the correct shape based entirely on the sounds that immediately follow it. The most common and basic form is a single «з». You use «з» when the next word starts with a vowel, or when it starts with a single consonant that is easy to pronounce after "z". This rule ensures that your speech does not get stuck and flows rapidly.
 
-## Від кого? Від + родовий (From Whom? Від + Genitive)
+Студенти вийшли з великої аудиторії відразу після лекції. Моя подруга повернулася з Одеси тільки вчора ввечері. Ми дуже часто беремо товсті книги з університету. Цей жовтий автобус швидко їде з центру міста.
 
-Коли ми отримуємо щось від людини, ми використовуємо прийменник «від». *(When we receive something from a person, we use the preposition "від".)* It works exactly like "from" in English when talking about a sender or a source that is a living being or an organization. After "від", the noun must be in the Genitive case. Let us review the Genitive endings for people. Most masculine nouns representing people take "-а" or "-я". Most feminine nouns take "-и" or "-і". It is very important to change the ending when you say who gave you a gift or sent you a message.
+> *The students came out of the large lecture hall immediately after the lecture. My friend returned from Odesa only yesterday evening. We very often take thick books from the university. This yellow bus drives fast from the city center.*
 
-«мама → від мами» *(from mom)*
-«друг → від друга» *(from a friend)*
-«сусід → від сусіда» *(from a neighbor)*
-«Олена → від Олени» *(from Olena)*
+Sometimes, placing a single "з" before another consonant creates a harsh hissing or buzzing sound that stops the flow of speech. To fix this problem, Ukrainian adds a vowel to make the form «із». You must use «із» before words that start with a single sibilant consonant, which includes the sounds [з], [с], [ц], [ж], [ч], and [ш]. You also use «із» when the preposition is squeezed right between two other consonants, acting as a vocalic bridge to keep the rhythm smooth and natural. 
 
-Читаємо українською:
-— Я маю новий лист **від мами** *(from mom)*.
-— Це чудовий подарунок **від друга** *(from a friend)*.
-— Ми почули гарні новини **від сусіда** *(from a neighbor)*.
-— Вона отримала великий привіт **від Олени** *(from Olena)*.
-— Це повідомлення **від директора** *(from the director)*.
-— Він чекає дзвінка **від лікаря** *(from the doctor)*.
+Ця красива і дорога каблучка зроблена із чистого золота. Вони приїхали із далекого села до міста на свята. Вчора я отримав дуже довгий лист із сонячної Бразилії. Ми швидко вийшли із шумного приміщення на тиху вулицю.
 
-> — **Анна:** Від кого цей довгий лист? *(From whom is this long letter?)*
-> — **Богдан:** Це лист від брата. *(This is a letter from brother.)*
-> — **Анна:** Що він там пише? *(What does he write there?)*
-> — **Богдан:** Він передає великий привіт від сім'ї. *(He sends a big greeting from the family.)*
+> *This beautiful and expensive ring is made of pure gold. They arrived from the distant village to the city for the holidays. Yesterday I received a very long letter from sunny Brazil. We quickly walked out of the noisy room onto the quiet street.*
 
-Very often, English speakers confuse "з" and "від" because both translate to the English word "from". However, in Ukrainian, there is a strict rule for choosing the right preposition. We use "з" (or its phonetic variants "із" and "зі") for places, geography, and materials. We use "від" exclusively for people, animals, and entities acting as a source. If you receive a package, the city it came from takes "з", but the specific person who sent it takes "від".
+The third variant, «зі», is specifically designed to handle heavy consonant clusters. When a word begins with two or more consonants grouped together—especially if that cluster starts with letters like з, с, or ш—you cannot simply attach another "з" or "із" in front of it. It would be physically difficult to say without pausing. Instead, you use «зі» to create a comfortable gap before the heavy cluster. Mastering these three variants will instantly make your spoken Ukrainian sound much more authentic and fluid.
 
-«з Києва» *(from Kyiv — place)*
-«від Олени» *(from Olena — person)*
-«з університету» *(from the university — place)*
-«від викладача» *(from the professor — person)*
+Сьогодні мій молодший брат повернувся зі школи дуже рано. Швидкий поїзд зі Львова завжди прибуває на першу платформу. Чорний кіт несподівано стрибнув зі стола на м'який диван. Вона обережно взяла свої нові речі зі шафи.
 
-Читаємо українською:
-— Я отримав важку посилку **з Одеси** *(from Odesa)*.
-— Я отримав важливу посилку **від сестри** *(from sister)*.
-— Цей красивий сувенір **з Італії** *(from Italy)*.
-— Цей невеликий сувенір **від колеги** *(from a colleague)*.
-— Він пізно повернувся **з роботи** *(from work)*.
-— Він має нове завдання **від менеджера** *(from the manager)*.
+> *Today my younger brother returned from school very early. The fast train from Lviv always arrives at the first platform. The black cat unexpectedly jumped from the table onto the soft sofa. She carefully took her new things from the wardrobe.*
 
-> — **Олег:** Звідки цей смачний торт? *(Where is this tasty cake from?)*
-> — **Марія:** Це свіжий торт з пекарні. *(This is a fresh cake from the bakery.)*
-> — **Олег:** А від кого він? *(And from whom is it?)*
-> — **Марія:** Це приємний сюрприз від друзів. *(This is a pleasant surprise from friends.)*
+<!-- INJECT_ACTIVITY: quiz-euphony-z-iz-zi -->
 
-Як далеко це розташовано? *(How far is it located?)* The preposition "від" is also used to describe how far or near something is from a reference point in space. We frequently pair it with adverbs like "далеко" (far) and "недалеко" (not far, nearby). The reference point is always in the Genitive case. For places and abstract concepts, masculine nouns often take the "-у" or "-ю" ending. Neuter nouns take "-а" or "-я".
+Beyond geographic origin, the preposition «з» combined with the Genitive case is also used to describe the **матеріал** (material) something is made of, or its physical composition. If you want to explain what ingredients went into a dish or what fabric a piece of clothing is sewn from, you use exactly the same grammar structure as you do for cities and countries. It is as if the object "originates" from that specific material. Notice how the noun denoting the material changes its ending to the Genitive form, just like the names of cities do. 
 
-«центр → далеко від центру» *(far from the center)*
-«вокзал → недалеко від вокзалу» *(not far from the station)*
-«море → далеко від моря» *(far from the sea)*
-«школа → недалеко від школи» *(not far from the school)*
+Я завжди ставлю красиві квіти у велику вазу зі скла. Цей свіжий і солодкий сік повністю зроблений з червоних яблук. На велике свято вона одягнула красиву довгу сукню з шовку. Ми вчора купили новий зручний стіл з темного дерева.
 
-Читаємо українською:
-— Мій старий дім знаходиться далеко **від центру** *(from the center)*.
-— Наш новий готель недалеко **від вокзалу** *(from the station)*.
-— Вони живуть дуже далеко **від моря** *(from the sea)*.
-— Її сучасний офіс недалеко **від метро** *(from the subway)*.
-— Цей зелений парк розташований недалеко **від річки** *(from the river)*.
-— Головний аеропорт стоїть далеко **від міста** *(from the city)*.
+> *I always put beautiful flowers in a large vase made of glass. This fresh and sweet juice is completely made of red apples. For the big holiday, she wore a beautiful long dress made of silk. We bought a new comfortable table made of dark wood yesterday.*
 
-> — **Катерина:** Ваш новий дім далеко від центру? *(Is your new house far from the center?)*
-> — **Віктор:** Ні, він зовсім недалеко від парку. *(No, it is quite not far from the park.)*
-> — **Катерина:** Це напевно дуже зручно. *(This is probably very convenient.)*
-> — **Віктор:** Так, але це далеко від роботи. *(Yes, but it is far from work.)*
+Finally, this versatile preposition is crucial for expressing time. When you pair «з» with a time expression in the Genitive case, it translates to the English word "since". It marks the starting point of an action or state that began in the past and continues onward into the present. This is incredibly useful for talking about your daily routine, your habits, or how long you have been doing something. Just remember to apply the correct Genitive ending to the time word, such as changing "ранок" (morning) to "ранку".
 
-Що нас захищає? *(What protects us?)* We use "від" to talk about things that provide protection, relief, or defense against something unpleasant. When you buy medicine or use an umbrella, you are protecting yourself "from" something. That unpleasant "something" must be in the Genitive case. 
+Я активно працюю над цим складним проєктом з самого ранку. Ми серйозно вирішили почати нове життя з наступного понеділка. Мій найкращий друг глибоко цікавиться історією ще з дитинства. Вона терпляче чекає на твій важливий дзвінок ще з минулого тижня.
 
-«головний біль → ліки від головного болю» *(medicine for a headache)*
-«дощ → парасолька від дощу» *(umbrella from the rain)*
-«сонце → захист від сонця» *(protection from the sun)*
-«стрес → відпочинок від стресу» *(rest from stress)*
-
-Читаємо українською:
-— Мені терміново потрібні ліки **від головного болю** *(for a headache)*.
-— Вона взяла велику парасольку **від дощу** *(from the rain)*.
-— Цей дорогий крем — хороший захист **від сонця** *(from the sun)*.
-— Ми завжди п'ємо таблетки **від застуди** *(for a cold)*.
-
-As a bonus, Ukrainian has a compound preposition "з-під" which means "from under". It combines the idea of origin ("from") and location ("under") into one word, and it also takes the Genitive case. This is used when you pull something out from beneath an object.
-
-«стіл → з-під стола» *(from under the table)*
-«ліжко → з-під ліжка» *(from under the bed)*
-
-Читаємо українською:
-— Сірий кіт швидко виліз **з-під ліжка** *(from under the bed)*.
-— Я обережно дістав сумку **з-під стола** *(from under the table)*.
-— Маленький собака дивиться **з-під ковдри** *(from under the blanket)*.
-
-> — **Олена:** У тебе є таблетки від головного болю? *(Do you have pills for a headache?)*
-> — **Павло:** Так, вони лежать там. *(Yes, they lie there.)*
-> — **Олена:** Де саме вони лежать? *(Where exactly do they lie?)*
-> — **Павло:** Дістань їх з-під журналу. *(Get them from under the magazine.)*
-> — **Олена:** Дякую, я вже знайшла їх. *(Thank you, I already found them.)*
-
-<!-- INJECT_ACTIVITY: fill-in-focus-complete-sentences-with-or-correct-genitive-noun-form -->
-
-## Що було потім? Після + родовий (What Happened Next? Після + Genitive)
-
-Life is a series of events happening one after another. When we want to talk about what follows an event, we use the preposition **після** *(after)*. This is an essential building block for telling stories or describing your day. Just like the prepositions we learned for origin and protection, **після** always demands the Genitive case. It acts as the key to creating logical time sequences in your narratives. Whenever you use a noun to mark a point in time, **після** tells us what happens next.
-
-«урок → після уроку» *(after the lesson)*
-«обід → після обіду» *(after lunch)*
-«робота → після роботи» *(after work)*
-«канікули → після канікул» *(after the holidays)*
-
-Читаємо українською:
-— Вони завжди п'ють каву **після уроку** *(after the lesson)*.
-— Ми зустрінемося в парку **після обіду** *(after lunch)*.
-— Він часто ходить в спортзал **після роботи** *(after work)*.
-— Студенти повертаються додому **після канікул** *(after the holidays)*.
-— Що ви зазвичай робите **після сніданку** *(after breakfast)*?
-
-> — **Анна:** Що ти робиш сьогодні **після уроку**? *(What are you doing today after the lesson?)*
-> — **Марко:** Я йду в центральну бібліотеку. *(I am going to the central library.)*
-> — **Анна:** А що ти будеш робити **після бібліотеки**? *(And what will you do after the library?)*
-> — **Марко:** **Після навчання** я планую зустрітися з друзями. *(After studying I plan to meet with friends.)*
-> — **Анна:** Можна я піду з вами **після роботи**? *(May I go with you after work?)*
-> — **Марко:** Звісно, ми завжди раді тобі. *(Of course, we are always glad to have you.)*
-> — **Анна:** Тоді я зателефоную вам **після зміни**. *(Then I will call you after the shift.)*
-
-Let's quickly review the Genitive endings, specifically focusing on the nouns we often use to measure time and events. Hard masculine nouns taking "-у" are very common in this context, but you must also pay attention to soft nouns and words ending in sibilants. Feminine words ending in "-ія" smoothly change to "-ії". Neuter words ending in "-о" change to "-а", and soft masculine words take "-я". Paying attention to these subtle changes will make your Ukrainian sound precise and educated. Remember that **після** is always followed by the Genitive case.
-
-«лекція → після лекції» *(after the lecture)*
-«свято → після свята» *(after the holiday)*
-«день → після дня» *(after the day)*
-«зустріч → після зустрічі» *(after the meeting)*
-
-Читаємо українською:
-— Вона завжди дуже втомлена **після лекції** *(after the lecture)*.
-— Нам треба прибрати в кімнаті **після свята** *(after the holiday)*.
-— Він любить гуляти містом **після важкого дня** *(after a hard day)*.
-— Директор напише звіт **після зустрічі** *(after the meeting)*.
-— Мій брат завжди повертається пізно **після зміни** *(after the shift)*.
-— Ми любимо спати довго **після подорожі** *(after the trip)*.
-
-> — **Надія:** Коли ми поїдемо в центр міста? *(When will we go to the city center?)*
-> — **Тарас:** Ми поїдемо туди **після свята**. *(We will go there after the holiday.)*
-> — **Надія:** А магазин працює **після вихідних**? *(And does the store work after the weekend?)*
-> — **Тарас:** Так, він відкриється у понеділок. *(Yes, it will open on Monday.)*
-> — **Надія:** Тоді ми купимо все **після зустрічі**. *(Then we will buy everything after the meeting.)*
-
-The preposition **після** is incredibly useful for describing your daily routine. It helps you connect your individual actions into a smooth narrative rather than reciting a list of disconnected sentences. By using this structure, your conversational Ukrainian will sound much more natural and cohesive. Look at how a simple sequence of events builds a complete and detailed picture of a normal day. Notice how the Genitive case seamlessly links the action to the time it occurs.
-
-:::note
-Notice that **після** often starts the sentence when describing a routine. This naturally shifts the focus to the timeline of your actions.
-:::
-
-«сніданок → після сніданку» *(after breakfast)*
-«вечеря → після вечері» *(after dinner)*
-«фільм → після фільму» *(after the film)*
-
-Читаємо українською:
-— **Після сніданку** я швидко йду на роботу. *(After breakfast I quickly go to work.)*
-— **Після роботи** вона завжди готує смачну вечерю. *(After work she always cooks a delicious dinner.)*
-— **Після вечері** ми зазвичай дивимося новий фільм. *(After dinner we usually watch a new film.)*
-— **Після фільму** я відразу лягаю спати. *(After the film I immediately go to sleep.)*
-— Вони читають новини **після пробудження** *(after waking up)*.
-
-> — **Марія:** Як проходить твій звичайний день? *(How does your usual day go?)*
-> — **Олег:** **Після сніданку** я відразу починаю працювати. *(After breakfast I immediately start working.)*
-> — **Марія:** Ти працюєш вдома чи в офісі? *(Do you work at home or in the office?)*
-> — **Олег:** Вдома, а **після роботи** я йду на пробіжку. *(At home, and after work I go for a jog.)*
-> — **Марія:** Що ти робиш **після довгої пробіжки**? *(What do you do after a long jog?)*
-> — **Олег:** **Після прохолодного душу** я готую легку вечерю. *(After a cool shower I cook a light dinner.)*
-> — **Марія:** А **після вечері** ти відпочиваєш? *(And after dinner do you rest?)*
-> — **Олег:** Так, **після смачної вечері** я зазвичай читаю. *(Yes, after a delicious dinner I usually read.)*
-
-To truly solidify your understanding, it is highly helpful to contrast **після** *(after)* with its exact opposite: **до** *(before)*. Both of these time prepositions strictly require the Genitive case. You can effectively think of them as a grammatical "case-pair". Whenever you learn a new event noun, practice it with both **до** and **після** to double your descriptive power immediately. This structural symmetry makes remembering the grammar rule much easier for learners. Seeing them side-by-side reinforces the pattern in your memory.
+> *I have been actively working on this difficult project since early morning. We seriously decided to start a new life since next Monday. My best friend has been deeply interested in history since childhood. She has been patiently waiting for your important call since last week.*
 
 :::tip
-Use the pair **до** and **після** together to describe a complete timeline. Since both take the Genitive case, you only need to remember one ending for the noun!
+**Quick tip**
+When talking about daily meals, you can also use this structure to describe leftovers. For example, «піца з вечері» means pizza left over from **вечеря** (dinner, supper), and «хліб зі сніданку» is bread left over from **сніданок** (breakfast).
 :::
 
-«до обіду» *(before lunch)* / «після обіду» *(after lunch)*
-«до війни» *(before the war)* / «після війни» *(after the war)*
-«до лекції» *(before the lecture)* / «після лекції» *(after the lecture)*
-«до сніданку» *(before breakfast)* / «після сніданку» *(after breakfast)*
+## Від кого? Від + родовий (From Whom? Від + Genitive) (~620 words)
 
-Читаємо українською:
-— Я маю зробити це завдання **до обіду** *(before lunch)*.
-— Ми обговоримо всі деталі **після обіду** *(after lunch)*.
-— Їхнє життя було зовсім іншим **до війни** *(before the war)*.
-— Ми обов'язково відбудуємо місто **після війни** *(after the war)*.
-— Студенти повинні прочитати текст **до лекції** *(before the lecture)*.
-— Викладач відповість на запитання **після лекції** *(after the lecture)*.
+In English, the word "from" is incredibly versatile. You can get a letter from a friend, or you can travel from a city. In Ukrainian, these two situations require completely different prepositions. When you are receiving something from a person, you must use the **прийменник** (preposition) «від» followed by the Genitive case. This word specifically points to a human sender or a living entity as the starting point of an action or an object. Whether you are getting a physical **подарунок** (gift), a digital message, or just hearing some fresh news from a **сусід** (neighbor), «від» is your go-to word.
 
-> — **Віктор:** Ти п'єш каву **до сніданку** чи **після сніданку**? *(Do you drink coffee before breakfast or after breakfast?)*
-> — **Катерина:** Я завжди п'ю каву тільки **після сніданку**. *(I always drink coffee only after breakfast.)*
-> — **Віктор:** А я люблю випити чашку ще **до роботи**. *(And I like to drink a cup even before work.)*
-> — **Катерина:** Я розумію, але я не можу пити каву **до їди**. *(I understand, but I cannot drink coffee before food.)*
-> — **Віктор:** Це логічно. А що ти робиш **після вечері**? *(This is logical. And what do you do after dinner?)*
-> — **Катерина:** **До сну** я просто читаю цікаву книгу. *(Before sleep I just read an interesting book.)*
-> — **Віктор:** А я **після фільму** відразу йду спати. *(And I immediately go to sleep after a film.)*
+Сьогодні вранці я отримав довгий електронний лист від мами. Це дуже приємний і несподіваний подарунок від найкращого друга. Ми щодня з нетерпінням чекаємо на свіжі новини від старого сусіда. Цей красивий годинник дістався мені від улюбленого дідуся.
 
-<!-- INJECT_ACTIVITY: match-up-preposition-meanings -->
-<!-- INJECT_ACTIVITY: group-sort-preposition-usage -->
+> *This morning I received a long email from mom. This is a very pleasant and unexpected gift from a best friend. We look forward to fresh news from the old neighbor every day. I got this beautiful watch from my beloved grandfather.*
 
-:::note Джерела
-Цей модуль використовує матеріали: Заболотний Grade 5, §31 та ULP: 10 Uses of Genitive Case.
+A very common mistake for English speakers is to use «з» for absolutely everything that translates to "from". It is crucial to separate the concepts of geographic **походження** (origin) and a human **джерело** (source). You use «з» when you are talking about leaving a physical place, a country, or a city. You use «від» when a specific person is giving you something or sending information. If you say «подарунок з друга», it sounds absurd—as if the friend is a location you traveled away from, or perhaps the **матеріал** (material) the gift is made of.
+
+Мій новий колега приїхав з великого Києва, і я маю важливі документи від Олени. Вона вчора повернулася з Німеччини і привезла чудові сувеніри від брата. Ми щойно отримали цікавий лист з університету від нашого професора.
+
+> *My new colleague arrived from big Kyiv, and I have important documents from Olena. She returned from Germany yesterday and brought wonderful souvenirs from her brother. We just received an interesting letter from the university from our professor.*
+
+:::info
+**Grammar box**
+Always ask yourself when translating "from": Is the starting point a place on a map (`з`) or a breathing person (`від`)?
 :::
 
-## Підсумок — Summary
+Another major function of «від» is expressing physical distance between two points in space. When you want to explain how far or close something is, you pair this preposition with spatial adverbs like **далеко** (far) or **недалеко** (not far, nearby). The point you are measuring the distance from will always take the Genitive case. This structure is absolutely essential for giving clear directions or describing where you live relative to important landmarks in a city. 
 
-You have mastered three prepositions that require the Genitive case. Let's review the main concepts.
+Наш новий просторий офіс знаходиться дуже далеко від центру міста. Я спеціально орендував світлу квартиру недалеко від залізничного вокзалу. Моя стара школа стоїть зовсім недалеко від великого зеленого парку. Цей туристичний готель розташований дуже далеко від галасливої дороги.
 
-How do we say we are "from" a city? We use **з** *(from)* plus the Genitive case: «Вона з Києва» *(She is from Kyiv)*.
+> *Our new spacious office is located very far from the city center. I specifically rented a bright apartment not far from the railway station. My old school stands quite not far from a large green park. This tourist hotel is located very far from the noisy road.*
 
-When do we use **зі** instead of **з**? We use it before a consonant cluster for easier pronunciation. For example: «Я зі Львова» *(I am from Lviv)* or «Він іде зі школи» *(He is walking from school)*.
+Beyond physical movement and measuring distance, «від» has a very specific use: protection. When you talk about things that shield, cure, or defend you against something unpleasant, you use this exact preposition. It acts as a linguistic barrier between you and the problem. The thing you are being protected against always goes into the Genitive case. Instead of saying "medicine for", Ukrainians literally say "medicine from". This applies to taking pills or simply carrying a **парасолька** (umbrella) in bad weather.
 
-What is the difference between **з** and **від**? Both mean "from", but **з** indicates a place or material, while **від** indicates a person as the source. Compare: «Лист з Америки» *(A letter from America)* versus «Лист від брата» *(A letter from a brother)*.
+В аптеці я купив ефективні ліки від сильного головного болю. У мене завжди є велика чорна парасолька від раптового дощу. Цей дорогий зимовий крем чудово захищає шкіру від сильного морозу. Влітку на пляжі ми носимо темні окуляри від яскравого сонця.
 
-Which case follows **після** *(after)*? It strictly requires the Genitive case, just like **до** *(before)*.
+> *At the pharmacy, I bought effective medicine for a severe headache. I always have a large black umbrella for sudden rain. This expensive winter cream perfectly protects the skin from severe frost. In summer on the beach, we wear dark glasses against the bright sun.*
 
-Читаємо українською:
-> — **Питання:** Як правильно: з Львова чи зі Львова? *(Question: How is it correct: з Львова or зі Львова?)*
-> — **Відповідь:** Правильно говорити «зі Львова». *(Answer: It is correct to say "зі Львова".)*
-> — **Питання:** Який відмінок після прийменника «після»? *(Question: Which case is after the preposition "після"?)*
-> — **Відповідь:** Тільки родовий відмінок. *(Answer: Only the Genitive case.)*
+As you practice these communicative structures, quickly review how the Genitive case affects the nouns that follow «від». For feminine nouns, the ending typically changes to «-и» for hard stems and «-і» for soft ones, giving us forms like «від мами». For masculine nouns, you must carefully choose between «-а» and «-у». Nouns representing concrete people take «-а» to become «від друга» or «від сусіда». Abstract concepts or natural phenomena, such as pain or rain, take «-у», giving us «від болю» and «від дощу».
+
+Сьогодні ми уважно чекаємо на важливий дзвінок від генерального директора. Я хочу швидко сховатися в теплому будинку від холодного вітру. Вона несподівано отримала це дивне повідомлення від своєї старшої сестри. Ми довго стояли на вулиці далеко від ресторану.
+
+> *Today we are attentively waiting for an important call from the general director. I want to quickly hide in the warm house from the cold wind. She unexpectedly received this strange message from her older sister. We stood on the street for a long time far from the restaurant.*
+
+<!-- INJECT_ACTIVITY: fill-in-vid-z -->
+
+## Що було потім? Після + родовий (What Happened Next? Після + Genitive) (~770 words)
+
+Ukrainian uses the **прийменник** (preposition) **після** (after) to sequence events. It strictly requires the Genitive case. You will use it often to describe what you do after long **канікули** (vacation, holidays).
+
+Сьогодні ввечері, після довгого уроку, я хочу просто відпочити вдома. Зазвичай ми п’ємо міцну каву після смачного обіду в ресторані. Мій старший брат завжди читає останні новини після важкої роботи. Вони нарешті повернулися до рідного міста після зимових канікул. Ми плануємо нову подорож після цього складного тижня. Вона завжди слухає приємну музику після довгої дороги.
+
+> *Tonight, after a long lesson, I want to rest at home. Usually, we drink strong coffee after a tasty lunch. My older brother always reads the latest news after hard work. They finally returned to their hometown after the winter holidays. We are planning a new trip after this difficult week. She always listens to pleasant music after a long road.*
+
+Many events and abstract concepts often take the **-у** ending. Hard masculine nouns like **екзамен** usually take **-у**, while soft masculine nouns like **день** form the Genitive with **-я**.
+
+**після екзамену** — *after the exam*
+
+**після дня** — *after the day*
+
+Студенти часто гучно святкують після дуже складного екзамену. Після сильного дощу повітря на вулиці стає дуже свіжим. Я дуже люблю повільно гуляти в міському парку після довгого робочого дня. Після ранкового сніданку ми одразу йдемо в наш новий офіс. Мій друг завжди п'є гарячий чай після сильного холоду. Вони хочуть спати після важкого турніру.
+
+> *Students often celebrate after a difficult exam. After heavy rain, the air outside becomes very fresh. I love walking in the city park after a long working day. After morning breakfast, we immediately go to our new office. My friend always drinks hot tea after severe cold. They want to sleep after a hard tournament.*
+
+> — **Марко:** Куди ти йдеш після лекції? *(Where are you going after the lecture?)*
+> — **Анна:** Після лекції я йду в новий басейн. *(After the lecture I am going to the new pool.)*
+> — **Марко:** О, це чудово! А що ти робиш після басейну? *(Oh, that is great! And what do you do after the pool?)*
+> — **Анна:** Після басейну я йду обідати з подругою. *(After the pool I am going to have lunch with a friend.)*
+> — **Марко:** Бажаю смачного обіду! *(Wishing you a tasty lunch!)*
+> — **Анна:** Дякую! Побачимося після вихідних! *(Thank you! See you after the weekend!)*
+
+Feminine nouns change **-а** to **-и**, or **-я** to **-і**. Hard neuter nouns smoothly change **-о** to **-а**. 
+
+**після роботи** — *after work*
+
+**після свята** — *after the holiday*
+
+Ми домовилися зустрітися в затишному кафе після цікавої лекції. Маленькі діти були дуже втомлені після великого родинного свята. Моя подруга завжди телефонує мені після роботи, щоб поговорити. Після довгої та виснажливої подорожі вони міцно спали весь наступний день. Він купив свіжі продукти після ранкової пробіжки. Ми підемо в кіно після цієї важливої презентації.
+
+> *We agreed to meet in a cozy cafe after an interesting lecture. The small children were tired after a big family holiday. My friend always calls me after work to talk. After an exhausting journey, they slept soundly the entire next day. He bought fresh groceries after his morning run. We will go to the cinema after this presentation.*
+
+This preposition explains the flow of your routine, from your morning **сніданок** (breakfast) to buying a **подарунок** (gift), until your evening **вечеря** (dinner, supper).
+
+Щоранку після сніданку я швидко йду на автобусну зупинку. Після роботи я зазвичай купую подарунок для друга або просто готую смачну вечерю для родини. Після вечері я дивлюся новий документальний фільм або читаю книгу. Це мій звичайний розклад на кожен день тижня. Моя сестра робить домашнє завдання після школи. Ми завжди відпочиваємо після важких тренувань.
+
+> *Every morning after breakfast, I quickly go to the bus stop. After work, I usually buy a gift for a friend or prepare a tasty dinner for the family. After dinner, I watch a documentary film or read a book. This is my usual schedule for every day of the week. My sister does her homework after school. We always rest after hard workouts.*
+
+> — **Віктор:** Ти маєш плани після екзамену? *(Do you have plans after the exam?)*
+> — **Максим:** Так, після екзамену я їду додому. *(Yes, after the exam I am going home.)*
+> — **Віктор:** А що ти будеш робити після дороги? *(And what will you do after the road?)*
+> — **Максим:** Після дороги я буду спати два дні! *(After the road I will sleep for two days!)*
+> — **Віктор:** Розумію тебе. Відпочинок після стресу дуже потрібен. *(I understand you. Rest after stress is very necessary.)*
+> — **Максим:** Точно. А ти що робиш після університету? *(Exactly. And what are you doing after university?)*
+> — **Віктор:** Я йду на вечірку! *(I am going to a party!)*
+
+Contrast this preposition with **до** (before) to practice the endings. Both words require the Genitive case.
+
+**до обіду** — *before lunch*
+
+**після обіду** — *after lunch*
+
+### Читаємо українською
+
+Я завжди п'ю склянку чистої води до сніданку, а гарячу каву — після сніданку. Студенти уважно читають новий текст до уроку і роблять письмові вправи після уроку. Ми маємо коротку зустріч до обіду, але ми можемо детально поговорити після обіду. Дуже важливо ретельно мити руки до вечері. Він ніколи не їсть солодке після вечері. Цей контраст допомагає нам планувати наш довгий день. Я роблю складні завдання до перерви, а легкі завдання — після перерви. Це мій улюблений секрет успіху на кожен день.
+
+:::info
+**Grammar box**
+Запам'ятайте ці корисні фрази (Remember these useful phrases):
+* Після довгого дня — *after a long day*
+* Після важкої роботи — *after hard work*
+* Після смачного обіду — *after a tasty lunch*
+* Після зимових канікул — *after the winter holidays*
+:::
+
+<!-- INJECT_ACTIVITY: match-up-preposition-phrases -->
+<!-- INJECT_ACTIVITY: group-sort-prepositions -->
+
+> — **Марія:** Привіт! Ти вільний після роботи?
+> — **Олег:** Привіт! Так, після роботи я маю багато вільного часу.
+> — **Марія:** Чудово! Ми йдемо в кіно після вечері. Ти з нами?
+> — **Олег:** Звичайно! Я дуже люблю відпочивати після довгого дня.
+> — **Марія:** Тоді зустрінемося після фільму в кафе!
+> — **Олег:** Домовилися!
+
+Let us review. The prepositions **з/із/зі** express **походження** (origin), time, and **матеріал** (material).
+
+The preposition **від** indicates the **джерело** (source) person, protection, or if a place is **далеко** (far) or **недалеко** (not far, nearby). We use **після** to sequence events.
+
+Ця важлива граматика допомагає нам набагато краще розуміти українську мову. Тепер ми добре знаємо, як детально розповісти про своє рідне місто, улюблені речі та плани на день. Продовжуйте активно практикувати ці нові слова та граматичні правила кожного дня. Ваша розмовна мова стає все більш впевненою та природною. Успіхів вам у навчанні після цього модуля!
+
+> *This grammar helps us understand the Ukrainian language better. Now we know how to talk about our hometown, favorite things, and plans for the day. Continue practicing these new words and grammar rules every day. Your spoken language is becoming increasingly confident and natural. Good luck in your studies after this module!*
 </generated_module_content>
 
-**PIPELINE NOTE — Word count: 3773 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
+**PIPELINE NOTE — Word count: 3226 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -656,66 +480,187 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 475 words | Not found: 30 words
+Verified: 520 words | Not found: 20 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
-  ✗ Ірина — NOT IN VESUM
-  ✗ Італії — NOT IN VESUM
+  ✗ Італією — NOT IN VESUM
   ✗ Америки — NOT IN VESUM
   ✗ Анна — NOT IN VESUM
   ✗ Бельгії — NOT IN VESUM
-  ✗ Богдан — NOT IN VESUM
+  ✗ Бразилії — NOT IN VESUM
   ✗ Віктор — NOT IN VESUM
   ✗ Греції — NOT IN VESUM
-  ✗ Житомира — NOT IN VESUM
-  ✗ Катерина — NOT IN VESUM
+  ✗ Джон — NOT IN VESUM
+  ✗ Карлос — NOT IN VESUM
   ✗ Києва — NOT IN VESUM
-  ✗ Лондон — NOT IN VESUM
   ✗ Лондона — NOT IN VESUM
   ✗ Львова — NOT IN VESUM
-  ✗ Львів — NOT IN VESUM
+  ✗ Марта — NOT IN VESUM
   ✗ Марія — NOT IN VESUM
-  ✗ Нікос — NOT IN VESUM
-  ✗ Одеса — NOT IN VESUM
+  ✗ Німеччини — NOT IN VESUM
   ✗ Одеси — NOT IN VESUM
   ✗ Олег — NOT IN VESUM
-  ✗ Олена — NOT IN VESUM
   ✗ Олени — NOT IN VESUM
-  ✗ П'єр — NOT IN VESUM
-  ✗ Павло — NOT IN VESUM
-  ✗ Польщі — NOT IN VESUM
-  ✗ Сара — NOT IN VESUM
-  ✗ Тарас — NOT IN VESUM
-  ✗ Харкова — NOT IN VESUM
-  ✗ Харків — NOT IN VESUM
   ✗ Швеції — NOT IN VESUM
+  ✗ ємо — NOT IN VESUM
 
-All 475 other words are confirmed to exist in VESUM.
+All 520 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
-## Verification Tools (MCP)
+---
 
-You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
+## Verification Tools (Shell Commands)
 
-**Core Verification:**
-- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
-- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
+You have access to verification tools via shell commands. Use these to verify
+Ukrainian vocabulary, check grammar, and search textbook content **as you write**.
 
-**Content Quality:**
-- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+**IMPORTANT:** Run verification commands BEFORE finalizing any Ukrainian text.
+Batch multiple verifications together to minimize round-trips.
 
-**Reference:**
-- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp_rag_search_literary` — verify literary references against primary sources
-- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
+### 1. Batch-verify Ukrainian words exist in VESUM (preferred — one call for many words)
 
-**Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_words
+results = verify_words(['слово1', 'слово2', 'слово3'])
+for w, matches in results.items():
+    if matches:
+        print(f'{w}: FOUND — lemma={matches[0][\"lemma\"]}, pos={matches[0][\"pos\"]}')
+    else:
+        print(f'{w}: NOT FOUND — may not exist in standard Ukrainian')
+"
+```
+
+### 2. Verify a single Ukrainian word in VESUM (with full morphological tags)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_word
+results = verify_word('WORD_HERE')
+if results:
+    for m in results:
+        print(f'lemma={m[\"lemma\"]}, pos={m[\"pos\"]}, tags={m[\"tags\"]}')
+else:
+    print('NOT FOUND in VESUM')
+"
+```
+
+### 3. Get all inflected forms of a lemma (declension/conjugation)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_lemma
+forms = verify_lemma('LEMMA_HERE')
+for f in forms[:20]:
+    print(f'{f[\"word_form\"]:20s} {f[\"pos\"]:8s} {f[\"tags\"]}')
+print(f'... {len(forms)} forms total')
+"
+```
+
+### 4. Check CEFR level of a word (is it level-appropriate?)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import query_cefr_level
+results = query_cefr_level('WORD_HERE')
+for r in results:
+    print(f'{r[\"word\"]}: {r[\"level\"]} ({r[\"pos\"]})')
+if not results:
+    print('Not in CEFR database')
+"
+```
+
+### 5. Search textbook content (Ukrainian school textbooks, Grades 1-11)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_textbooks
+keywords = {'keyword1', 'keyword2'}
+results = search_textbooks(keywords, 5)
+for r in results:
+    title = r.get('section_title', r.get('title', ''))
+    grade = r.get('grade', '?')
+    text = r.get('text', '')[:200]
+    print(f'Grade {grade} | {title}')
+    print(f'  {text}')
+    print()
+"
+```
+
+### 6. Search style guide for calques/Russianisms (Антоненко-Давидович, 279 entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_style_guide
+results = search_style_guide('TOPIC_HERE', 3)
+for r in results:
+    print(f'--- {r.get(\"word\", \"\")} [{r.get(\"section\", \"\")}]')
+    print(r.get('text', '')[:300])
+    print()
+if not results:
+    print('No style guide entries found')
+"
+```
+
+### 7. Look up word definition in СУМ-11 (Ukrainian explanatory dictionary, 127K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_definitions
+results = search_definitions('WORD_HERE', 3)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+### 8. Search idioms (Фразеологічний словник, 25K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_idioms
+results = search_idioms('WORD_HERE', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"text\", r.get(\"definition\", \"\")))[:200]}')
+"
+```
+
+### 9. English-to-Ukrainian translation (Балла, 79K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import translate_en_uk
+results = translate_en_uk('ENGLISH_WORD', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+---
+
+**WHEN to use these tools:**
+
+1. **Before writing any Ukrainian text** — batch-verify all key vocabulary with
+   `verify_words` (tool 1). Any word that returns NOT FOUND must be replaced.
+2. **When you suspect a Russicism or calque** — search the style guide (tool 6)
+   and verify the correct Ukrainian form with `verify_word` (tool 2).
+3. **When writing for A1/A2** — check CEFR levels (tool 4) to ensure vocabulary
+   is level-appropriate.
+4. **When unsure about a case ending or conjugation** — use `verify_lemma` (tool 3)
+   to see the full paradigm.
+5. **When covering a grammar topic** — search textbooks (tool 5) to see how
+   Ukrainian school textbooks teach it.
+6. **When you need the precise Ukrainian meaning** — use СУМ-11 (tool 7).
+7. **When looking for natural Ukrainian expressions** — search idioms (tool 8).
+
+**Batching rule:** Collect all words you want to verify, then run ONE `verify_words`
+call instead of multiple `verify_word` calls. This is faster and uses fewer tokens.

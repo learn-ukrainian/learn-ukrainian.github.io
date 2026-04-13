@@ -1,0 +1,92 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T20-05-82651373.json
+phase: skeleton
+prompt_chars: 32540
+response_chars: 4361
+prompt_words: 4624
+response_words: 654
+sections:
+- name: preamble
+  start: 0
+  length: 452
+  fraction: 0.0139
+- name: plan
+  start: 452
+  length: 3947
+  fraction: 0.1213
+- name: wiki
+  start: 4349
+  length: 25811
+  fraction: 0.7932
+- name: output_spec
+  start: 30210
+  length: 2330
+  fraction: 0.0716
+large_sections:
+- wiki
+directives_total: 17
+directives_covered: 3
+directives_missed:
+- kind: must
+  text: Your skeleton must budget every word.
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: must
+  text: The introduction of transport-related language must be carefully sequenced
+    to build from simple nouns to complex grammatical structures.
+  covered: false
+  coverage_note: 4/14 keywords (29%)
+- kind: must
+  text: The introduction must be methodical and layered, building from the simplest
+    concept to the more complex.
+  covered: false
+  coverage_note: 2/10 keywords (20%)
+- kind: must
+  text: They often incorrectly use the nominative form (`цей`) after a preposition
+    instead of the required locative (`цьому`).
+  covered: false
+  coverage_note: 2/12 keywords (17%)
+- kind: must
+  text: '**Independent Phonetics:** The sound `[ц]` must be taught as a native Ukrainian
+    phoneme.'
+  covered: false
+  coverage_note: 1/8 keywords (12%)
+- kind: must
+  text: The learner's reference point must be Ukrainian itself.
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: must
+  text: '**Word budgets must sum to 1200+.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Section budgets must match the plan''s `content_outline` word allocations**
+    (±10%).'
+  covered: false
+  coverage_note: 2/8 keywords (25%)
+- kind: must
+  text: '**CRITICAL: An exercise must ONLY test concepts already taught above it.'
+  covered: false
+  coverage_note: 0/9 keywords (0%)
+- kind: must
+  text: 'Every plan `activity_hints` entry MUST have a corresponding `<!-- INJECT_ACTIVITY:
+    id -->` marker in the skeleton.'
+  covered: false
+  coverage_note: 2/10 keywords (20%)
+- kind: skeleton_para
+  text: 'P1 (150w): Follow the plan''s points for this section EXACTLY. If the plan
+    says "Self-check questions", output a bulleted Q&A list — NOT prose. If the plan
+    says "recap", write a brief recap.'
+  covered: false
+  coverage_note: 5/20 keywords (25%)
+- kind: inject_activity
+  text: activity-id
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: activity-id
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: descriptive-id
+  covered: false
+  coverage_note: marker missing

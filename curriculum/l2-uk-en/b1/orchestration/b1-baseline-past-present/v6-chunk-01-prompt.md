@@ -712,6 +712,33 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] теперішній час (present tense)
+- [ ] минулий час (past tense)
+- [ ] дієвідміна (conjugation class — I or II)
+- [ ] особа (person — 1st, 2nd, 3rd)
+- [ ] число (number — однина, множина)
+- [ ] рід (gender — чоловічий, жіночий, середній)
+- [ ] доконаний вид (perfective aspect — completed action)
+- [ ] недоконаний вид (imperfective aspect — ongoing action)
+- [ ] інфінітив (infinitive — the base form ending in -ти/-тися)
+- [ ] дієвідмінювання (conjugation — changing verb by person and number)
+- [ ] зворотний (reflexive — verbs with -ся/-сь)
+- [ ] видова пара (aspectual pair — e.g., писати/написати)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Теперішній час: дієвідміни (~880 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

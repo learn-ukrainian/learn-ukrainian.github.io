@@ -249,28 +249,24 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-- Confirmed: вихідні, спорт, футбол, кіно, часто, іноді, рідко, ходімо, завжди, зазвичай, ніколи, театр, концерт, музей, давай, раз, ходити, грати.
-- Not found: None.
+- Confirmed: вихідні, спорт, футбол, кіно, часто, іноді, рідко, ходімо, завжди, зазвичай, ніколи, театр, концерт, музей, давай, раз
+- Not found: (All words were verified successfully)
 
 ## Grammar Rules
-- Euphony (у/в): Правопис §23 — "у" is used between consonants or at the start of a sentence before a consonant; "в" is used between vowels or after a vowel before most consonants (e.g., "у вихідні", "в кіно").
-- Double Negation: Standard rule for "ніколи" requires "не" before the verb (e.g., "Я ніколи не працюю").
-- Prepositions for Hobbies: "грати у" + Accusative for sports (футбол); "грати на" + Locative for instruments (гітарі). "ходити в" + Accusative for buildings (кіно, музей); "ходити на" + Accusative for events (концерт).
-- Frequency: Adverbs usually precede the verb ("Я часто гуляю"). Frequency expressions use "на" + Accusative ("раз на тиждень").
+- Чергування У/В (для "ходити в кіно"): Правопис §23 — Позиції вживання прийменників і префіксів У та В. Щоб уникнути збігу букв на позначення приголосних звуків, що є важкими для вимови, та щоб досягти милозвучності, в українській мові вживають на письмі прийменник у та префікс у- на початку слів у таких позиціях (між приголосними тощо). А також прийменник в для уникнення збігу голосних.
 
 ## Calque Warnings
-- приймати участь: Calque — Use "брати участь" (confirmed by Grade 10 Avramenko textbook).
-- на вихідних: Acceptable in modern speech and some textbooks, but "у вихідні" is the preferred traditional form (Standard).
-- раз в тиждень: Potential Russism — "раз на тиждень" is the standard Ukrainian construction (confirmed in Grade 2 and 8 textbooks).
+- грати у футбол: OK — No warnings found in Антоненко-Давидович.
+- грати на гітарі: OK — No warnings found in Антоненко-Давидович.
+- раз на тиждень: OK — No warnings found in Антоненко-Давидович.
 
 ## CEFR Check
 - вихідні: A1 — OK
-- зазвичай: A1 — OK
-- футбол: A1 — OK
-- кіно: A1 — OK
-- театр: A1 — OK
+- спорт: A1 — OK
+- завжди: A1 — OK
 - іноді: A1 — OK
-- ходімо: A1 — OK (Functional language)
+- зазвичай: A2 — Above target (Target: A1)
+- рідко: A2 — Above target (Target: A1)
 </pre_verified_facts>
 
 
@@ -635,12 +631,14 @@ This topic is a critical area for decolonization in language teaching, as Russia
 
 ## Section Structure
 
-Write these sections as H2 headings, in this exact order:
+Write these sections as H2 headings, in this **exact** order:
 
 - `## Діалоги (Dialogues)` (~300 words)
 - `## Хобі і спорт (Hobbies and Sports)` (~300 words)
 - `## Як часто? (How Often?)` (~300 words)
 - `## Підсумок — Summary` (~300 words)
+
+**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim** as an `## H2` line. This includes the FINAL summary/transition section (`Підсумок: ...`, `Підсумок та перехід до M...`, etc.) — the writer's most common failure is silently dropping the closing section. Do NOT skip it. Do NOT renumber. Do NOT merge headings. The post-write quick-verify check will fail your build if any heading is missing, even if the prose itself is excellent.
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -688,6 +686,25 @@ PLAN-AWARE EXEMPTIONS: The following bans are RELAXED for this module because th
 - **Zero calques**: No приймати душ→брати душ, приймати рішення→ухвалювати рішення
 - **Zero paronyms**: тактична≠тактовна, ефектний≠ефективний — use the right word, not a similar-sounding one
 - **Natural Ukrainian**: Write how a Ukrainian teacher would explain this to a student. Not robotic, not textbook-dry, not overly casual.
+
+### FORBIDDEN WORDS — never write these (#1189)
+
+The following Russian words have leaked into past builds and broken modules. They are **hard-banned** — the post-write toxic-token scanner will fail your build the moment it sees one. Use the Ukrainian alternative every time, even in dialogues, even in casual prose, even when quoting a learner's mistake (use a `<!-- VERIFY -->` placeholder instead of typing the Russian form):
+
+| Russian (FORBIDDEN) | Ukrainian (USE THIS) |
+|---|---|
+| хорошо | добре |
+| конечно | звичайно / певна річ |
+| спасибо | дякую |
+| пожалуйста | будь ласка / прошу |
+| ничего | нічого |
+| сейчас | зараз |
+| тоже | теж / також |
+| здесь | тут |
+| кот | кіт |
+| кон | кін |
+
+This list is enforced word-for-word by `scripts/build/quick_verify.py` (SEVERE_RUSSIANISMS). If you produce any of these tokens — even inside a quoted example, even inside a dialogue line spoken by a Russian-speaking character — the build halts immediately. There is no exception.
 
 **Authority hierarchy (if uncertain about a word, check in this order):**
 VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (stress) → Антоненко-Давидович (style) → Грінченко (etymology).
@@ -797,38 +814,37 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Діалоги — Розкажи про плани (~350 words total)
-- P1 (~50 words): [Introduction to discussing free time and making weekend plans. Emphasize that in Ukrainian, we often start by asking "Що ти робиш у вихідні?" (What are you doing this weekend?) to gauge availability before suggesting an activity.]
-- P2 (~120 words): [Dialogue 1: Weekend plans at a community bulletin board. Вітя and Оленка discuss their Saturday routine. Focus on the invitation pattern "Ходімо в кіно!" (Let's go to the cinema!) and specifying the time "О п'ятій" (At five). Include phrases for agreement like "Чудово!" and "Добре!".]
-- P3 (~60 words): [Linguistic note on invitations: Explaining the pure Ukrainian imperative "Ходімо!" (Let's go!) versus the informal "Давай!" (Let's). Explicitly mention that "Давай" is colloquial but "Ходімо" is the standard, grammatically correct form to prioritize.]
-- P4 (~120 words): [Dialogue 2: Talking about hobbies and frequency. Вітя asks Оленка if she likes sports. Оленка explains she plays football "двічі на тиждень" (twice a week). They discuss other interests like listening to music "слухати музику" and drawing "малювати". Focus on the question "Як часто?" (How often?).]
-- <!-- INJECT_ACTIVITY: fill-in-invitations --> [Fill-in-the-blanks, focus on completing invitations and frequency sentences using context clues from the dialogues, 6 items.]
+## Діалоги (Dialogues) (~330 words total)
+- P1 (~30 words): Introduce the setting at a community center bulletin board, where Вітя and Оленка are looking at activity sign-ups and discussing their free time.
+- P2 (~150 words): Dialogue 1 between Вітя and Оленка about weekend plans. Include phrases: "Що ти робиш у вихідні?", "Зазвичай я гуляю і читаю", "Ходімо в кіно в суботу!", "О котрій?", "О п'ятій." Introduce the invitation pattern, time, and day in context.
+- P3 (~150 words): Dialogue 2 between Вітя and Оленка about their hobbies and how often they do them. Include phrases: "Ти любиш спорт?", "Так, я граю у футбол", "Як часто?", "Двічі на тиждень, у вівторок і четвер", "Іноді слухаю музику і малюю." Show frequency adverbs and hobby vocabulary naturally.
 
-## Хобі і спорт — Що ти любиш? (~340 words total)
-- P1 (~80 words): [Introduction to hobby verbs using "любити" (to love/like) + infinitive. Explain that this is the simplest way to talk about interests. Provide common examples: читати книги (to read books), малювати вдома (to draw at home), фотографувати (to take photos), and готувати (to cook).]
-- P2 (~80 words): [The "Play" pattern for sports: "грати у + sport". Explain that games and competitive sports require the preposition "у/в". List examples: грати у футбол (football), грати у баскетбол (basketball), грати у теніс (tennis), and грати у комп'ютерні ігри (computer games).]
-- P3 (~80 words): [The "Play" pattern for music: "грати на + instrument". Contrast this with the sports pattern. Explain that musical instruments require "на" + the instrument name as a fixed chunk. Examples: грати на гітарі (guitar), грати на піаніно (piano), грати на скрипці (violin).]
-- P4 (~100 words): [Going to places of entertainment using "ходити" (to go habitually). Explain the chunks "ходити в" vs "ходити на". Provide common pairs: ходити в кіно (to the cinema), ходити в театр (to the theater), ходити в музей (to a museum), versus ходити на концерт (to a concert) or ходити на футбол (to a football match).]
-- <!-- INJECT_ACTIVITY: match-up-hobbies --> [Match-up, focus on connecting the correct verb (грати, слухати, дивитися, ходити) to the logical hobby noun or prepositional phrase, 8 pairs.]
-- <!-- INJECT_ACTIVITY: preposition-check --> [Fill-in-the-blanks, focus on choosing the correct preposition (у, на, в) for sports, instruments, and entertainment venues, 4 items.]
+## Хобі і спорт (Hobbies and Sports) (~360 words total)
+- P1 (~60 words): Introduce asking about free time ("Що ти любиш робити у вільний час?") and the basic pattern of stating hobbies using "люблю" + infinitive, extending module 15.
+- P2 (~90 words): Explain the "Play" pattern for sports: "грати у/в" + sport (e.g., грати у футбол, грати у баскетбол, грати у теніс). Emphasize that Ukrainian requires the preposition "у/в" for sports, unlike English.
+- P3 (~90 words): Explain the "Play" pattern for musical instruments: "грати на" + instrument (e.g., грати на гітарі, грати на піаніно). Highlight the difference between "у/в" for sports and "на" for instruments.
+- P4 (~60 words): Introduce other common free-time activities: слухати музику, дивитися фільми / серіали, малювати, фотографувати. Provide simple example sentences like "Я люблю слухати музику."
+- P5 (~60 words): Explain the "Go" pattern for entertainment using the verb "ходити": ходити в кіно, ходити в театр, ходити на концерт, ходити в музей. Note that these are fixed chunks for now (case grammar comes later).
+- <!-- INJECT_ACTIVITY: match-hobbies-verbs --> [match-up, Match the verb to the logical noun (hobbies), 8 pairs]
+- <!-- INJECT_ACTIVITY: fill-in-prepositions-activities --> [fill-in, Choose the correct preposition for the activity, 4 items]
 
-## Як часто? — Прислівники частоти (~330 words total)
-- P1 (~100 words): [Introduction to positive frequency adverbs: завжди (always), зазвичай (usually), часто (often), and іноді/інколи (sometimes). Explain the typical word order: the adverb usually sits right before the verb. Example: "Я часто гуляю в парку" or "Ми зазвичай читаємо ввечері".]
-- P2 (~100 words): [Negative frequency adverbs: рідко (rarely) and ніколи (never). Explain the critical rule of double negation with "ніколи": it MUST be followed by "не" + the verb. Example: "Я ніколи не граю у футбол" (I never play football). Contrast "рідко" which does not require "не".]
-- P3 (~100 words): [Expressions of frequency with numbers and "на тиждень". Explain how to say "once/twice/three times a week" using fixed phrases: раз на тиждень (once a week), двічі на тиждень (twice a week), тричі на тиждень (three times a week). Mention "кожен день" (every day) as a common alternative to "завжди".]
-- P4 (~30 words): [Brief synthesis: Combining days of the week with frequency. Example: "У понеділок я завжди займаюся спортом".]
-- <!-- INJECT_ACTIVITY: fill-in-frequency --> [Fill-in-the-blanks, focus on placing frequency adverbs in the correct position and ensuring double negation with "ніколи", 5 items.]
+## Як часто? (How Often?) (~330 words total)
+- P1 (~80 words): Introduce the question "Як часто?" (How often?) and the core frequency adverbs: завжди, зазвичай, часто, іноді / інколи, рідко, ніколи. 
+- P2 (~100 words): Explain the word order for frequency adverbs (usually placed before the verb) with examples: "Я часто гуляю", "Я іноді читаю." Crucially, explain the double negation rule required with "ніколи": "Я ніколи не працюю у неділю."
+- P3 (~80 words): Introduce frequency expressions using numbers and "на тиждень/місяць": раз на тиждень, двічі на тиждень, тричі на тиждень, кожен день. Give examples: "Я граю у футбол двічі на тиждень", "Я ходжу в кіно раз на місяць."
+- P4 (~70 words): Explain how to invite someone to an activity using "Ходімо!" (Let's go!) and "Давай!" (Let's! - informal). Provide examples combining invitations with activities, days, and times: "Ходімо в кіно у суботу!", "Давай грати у теніс."
+- <!-- INJECT_ACTIVITY: fill-in-invitations-frequency --> [fill-in, Complete the invitations and frequency sentences, 6 items]
 
-## Підсумок — Summary (~300 words total)
-- P1 (~100 words): [Recap of the module's core communication goals. Summarize the difference between "грати у" (sports) and "грати на" (instruments), the use of "Ходімо!" for invitations, and the placement of frequency adverbs.]
-- P2 (~150 words): [Self-check list for the learner. Output as a bulleted list of questions and model answers:
-  * Q: Що ви любите робити у вільний час? A: Я люблю читати і ходити в кіно.
-  * Q: Як часто ви граєте у футбол? A: Я граю у футбол двічі на тиждень.
-  * Q: Ви граєте на піаніно? A: Ні, я ніколи не граю на піаніно, але я слухаю музику.
-  * Q: Як запросити друга в театр? A: Ходімо в театр у суботу!]
-- P3 (~50 words): [Closing encouragement. Remind the learner that they can now combine time, weather, and activities to describe their perfect weekend in Ukrainian. Transition to the upcoming Checkpoint.]
+## Підсумок — Summary (~330 words total)
+- P1 (~100 words): Recap how to communicate about hobbies using the patterns "Я люблю + infinitive" and the distinct preposition chunks for playing sports and instruments ("Я граю у/в...", "Я граю на...").
+- P2 (~80 words): Recap how to make invitations using "Ходімо!" and "Давай!", emphasizing their use in making weekend plans.
+- P3 (~80 words): Recap the vocabulary for expressing frequency, including single adverbs (завжди, часто, іноді, рідко, ніколи) and numbered expressions (раз на тиждень, двічі на тиждень).
+- P4 (~70 words): 
+  - Name 3 hobbies you have. 
+  - How often do you do each one? 
+  - Invite a friend to do something this weekend using the phrase "Ходімо".
 
-Grand total: ~1320 words
+Grand total: ~1350 words
 </skeleton>
 
 ## Output Format
@@ -836,11 +852,57 @@ Grand total: ~1320 words
 Write in Markdown. Use:
 - `## Section Title` for main sections
 - `### Subsection` for subsections within a section
-- `**bold**` for Ukrainian words being taught — EVERY bold Ukrainian word MUST have an English translation on first use, either in parentheses `**слово** (translation)` or inline `**слово** means "translation"`. No exceptions.
+- `**bold**` for Ukrainian words being taught. For **A1 and A2** levels, provide an English translation on first use (e.g. `**стіл** (table)`) because learners lack the vocabulary to infer meaning. For **B1 and above**, do NOT provide inline translations for standard vocabulary — the learner will use the module's словник (vocabulary table). You may provide ONE parenthetical English translation ONLY for highly abstract grammar/linguistic terms on first use (e.g. `**видова пара** (aspectual pair)`).
 - Tables for paradigms (conjugation, declension)
 - `:::tip` / `:::caution` / `:::note` for callout boxes
 - `<!-- INJECT_ACTIVITY: {id} -->` for exercise placement (markers only — do NOT write exercise content)
 
 Do NOT write MDX component syntax, JSON, or DSL exercise blocks (:::quiz, etc.). Plain Markdown with injection markers.
+
+---
+
+## MANDATORY FINAL CHECKLIST (#1189)
+
+Before you finish writing, verify the prose against this checklist. Failing any item will fail the build.
+
+### Section headings (verbatim)
+
+Every heading from "Section Structure" above MUST appear as an `## H2` in your output, in order, **including the closing `Підсумок:` / `Підсумок та перехід до M...` summary**. The single most common writer failure across the B1 build has been silently dropping the final summary section. Re-read your output before stopping. If the last section in the plan is missing, write it now.
+
+### Required vocabulary (every word must appear)
+
+You MUST use **every word** from the list below at least once in the prose, in a natural sentence with bold + English translation. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, прагматика, діагностика, дієвідмінювання, зворотний, двовидовий, одновидовий, неозначено-кількісний, etc.) is the most frequently dropped category — actively find homes for those words even if it means adding a sentence that defines them.
+
+- [ ] вихідні (weekend, pl)
+- [ ] спорт (sport, m)
+- [ ] футбол (football, m)
+- [ ] кіно (cinema, n — indeclinable)
+- [ ] часто (often)
+- [ ] іноді (sometimes)
+- [ ] рідко (rarely)
+- [ ] ходімо (let's go!)
+
+### Forbidden words (never produce)
+
+Do not write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use `<!-- VERIFY -->` instead). The post-write toxic-token scanner will fail the build immediately:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+### Level-specific immersion check
+
+The level-appropriate immersion rule was already injected at the top of
+this prompt as `IMMERSION RULE`. Re-read it now BEFORE you stop writing.
+If your level's rule contains a CHECKLIST block, walk through every item.
+If it doesn't, just verify your output matches the LANGUAGE ROLES and
+TARGET stated in that block.
+
+This used to hard-code a B1+ checklist that confused A1/A2 models (where
+translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+The single source of truth is now
+`scripts/pipeline/config_tables.py:IMMERSION_RULES`.
+
+---
 
 Begin writing now. Start with the first section heading.

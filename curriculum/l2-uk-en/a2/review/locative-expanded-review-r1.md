@@ -1,77 +1,90 @@
 ## Linguistic Scan
-Four errors found:
-1. "Давайте прочитаємо" is a Russianism/calque (давайте + verb). The proper Ukrainian first-person plural imperative is "Прочитаймо".
-2. "по інтернету" is a Russianism. Standard Ukrainian uses "в інтернеті" (or "через інтернет").
-3. "у новій роботі" is grammatically incorrect in this context and violates the text's own pedagogical rule (it must be "на роботі").
-4. "у роботі" used incorrectly for "at work", again violating the established rule.
+- Orthography: `Це не велика проблема.` should be `Це невелика проблема.`
+- Calque / inaccurate rule: the `по` section teaches `«по пошті» (by mail)` and says `the locative case remains strictly the standard.` Repo evidence conflicts with that: `curriculum/l2-uk-en/a2/research/services-and-communication-knowledge-packet.md` classifies `відправити по пошті` as a calque and recommends `поштою`.
 
 ## Exercise Check
-Exercise markers are placed prematurely. The plan defines four exercises that test all four functions of the locative case (physical, abstract, temporal, means). However, `<!-- EXERCISE_1 -->`, `<!-- EXERCISE_2 -->`, and `<!-- EXERCISE_3 -->` are placed immediately after sections 1, 2, and 3, respectively. This means they will test learners on concepts they haven't learned yet. All four markers must be grouped at the end of the module.
+Found 7 markers:
+- `quiz-identify-the-function-of-locative-in-each-sentence`
+- `fill-in-complete-sentences-with-the-correct-locative-form` twice
+- `fill-in-locative-forms`
+- `error-correction-prepositions`
+- `quiz-locative-functions`
+- `match-up-expressions`
+
+Issues:
+- The first quiz marker appears before temporal and `по` uses are taught, so it cannot validly test “all four functions.”
+- The fill-in marker appears before the `по` section even though the plan focus includes `по ___`.
+- Marker inventory does not match the plan’s 4 activities; quiz/fill-in are duplicated under different IDs.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 9/10 | Missed the specific required practice sentence: `Practice: building sentences that use 2-3 locative functions together: У минулому місяці я розмовляв по телефону з другом у Києві.` |
-| 2. Linguistic accuracy | 8/10 | Contained Russianisms/calques ("Давайте прочитаємо", "по інтернету"). |
-| 3. Pedagogical quality | 6/10 | Writer explicitly taught that "at work" is ALWAYS "на роботі, never «у роботі»", but then violated their own rule twice in the summary section ("у новій роботі", "у роботі"). Exercises are also placed prematurely. |
-| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary items were used naturally in context. |
-| 5. Exercise quality | 7/10 | The markers are placed before the required concepts are taught. Exercise 1 tests all four locative functions, but is placed after only one function has been introduced. |
-| 6. Engagement & tone | 10/10 | Excellent, encouraging teacher tone. Clear explanations without corporate filler. |
-| 7. Structural integrity | 10/10 | All sections present, word count (2914) exceeds the target of 2000 perfectly. |
-| 8. Cultural accuracy | 10/10 | Factually correct. Uses realistic and culturally appropriate examples. |
-| 9. Dialogue & conversation quality | 10/10 | Dialogues are natural, multi-turn, and effectively demonstrate the target grammar in context. |
+| 1. Plan adherence | 8/10 | All four planned H2s are present and the planned vocab is covered, but the activity plan is not followed cleanly: the module has 7 markers for 4 planned activities, including duplicate quiz/fill-in markers. |
+| 2. Linguistic accuracy | 5/10 | `Це не велика проблема.` is orthographically wrong; the section teaches `«по пошті» (by mail)` and says `the locative case remains strictly the standard`, which conflicts with repo research preferring `поштою`. |
+| 3. Pedagogical quality | 6/10 | The module has PPP structure, but it teaches an over-absolute rule in the `по` section and places practice before the relevant material is fully taught. |
+| 4. Vocabulary coverage | 9/10 | Required vocabulary appears naturally: `місцевий`, `абстрактний`, `минулий`, `місяць`, `тиждень`, `телефон`, `подорож`, `зустріч`, `думка`, `проблема`; recommended words like `дитинство`, `молодість`, `майбутнє`, `освіта`, `мистецтво` also appear. |
+| 5. Exercise quality | 4/10 | `<!-- INJECT_ACTIVITY: quiz-identify-the-function-of-locative-in-each-sentence -->` and the first fill-in marker appear before all target functions are taught; marker duplication makes the activity set inconsistent with the plan. |
+| 6. Engagement & tone | 7/10 | Mostly teacherly, but lines like `This preserves the beautiful logic of the locative case` add filler rather than instruction. |
+| 7. Structural integrity | 8/10 | Clean H2 structure and pipeline word count is above target (`2927`), but marker clutter/duplication creates structural noise. |
+| 8. Cultural accuracy | 6/10 | Calling `по + locative` for mail `traditional, authentic Ukrainian` is too strong given the repo’s decolonization note preferring `поштою` over `по пошті`. |
+| 9. Dialogue & conversation quality | 7/10 | Dialogues are named and multi-turn, but `Добрий день! Як ваші справи на цьому тижні?` sounds stiff and translated. |
 
 ## Findings
-[Pedagogical quality] [Critical]
-Location: Section 1 ("Давайте прочитаємо діалог.")
-Issue: "Давайте" + infinitive is a Russianism/calque. The proper Ukrainian first-person plural imperative should be used.
-Fix: Replace "Давайте прочитаємо" with "Прочитаймо".
+[DIMENSION 2] [SEVERITY: critical]  
+Location: `> — **Ігор:** Не хвилюйся. Це не велика проблема.`  
+Issue: Non-contrastive `не велика` should be written together.  
+Fix: Change it to `Це невелика проблема.`
 
-[Linguistic accuracy] [Critical]
-Location: Section 3 ("Я прочитав цю цікаву статтю по інтернету.")
-Issue: "по інтернету" is a Russianism. Standard Ukrainian uses "в інтернеті".
-Fix: Replace "по інтернету" with "в інтернеті".
+[DIMENSION 2] [SEVERITY: critical]  
+Location: `Common examples include «по телефону» (by phone), «по радіо» (on the radio), «по пошті» (by mail), and «по дорозі» (on the way).` and `the locative case remains strictly the standard.`  
+Issue: The module teaches `по пошті` as standard locative usage and states the rule absolutely. Repo research (`curriculum/l2-uk-en/a2/research/services-and-communication-knowledge-packet.md`) treats `відправити по пошті` as a calque and recommends `поштою`.  
+Fix: Replace mail examples with `поштою` and narrow the rule to fixed expressions like `по телефону`, `по радіо`, `по дорозі`.
 
-[Pedagogical quality] [Critical]
-Location: Section 4 ("Ми також говоримо про абстрактні сфери життя: у новій роботі, в освіті, у політиці.")
-Issue: The writer explicitly taught that "work" takes "на" ("на роботі, never у роботі"), but then violated this rule by writing "у новій роботі".
-Fix: Change to "на новій роботі".
+[DIMENSION 5] [SEVERITY: major]  
+Location: `<!-- INJECT_ACTIVITY: quiz-identify-the-function-of-locative-in-each-sentence -->`, `<!-- INJECT_ACTIVITY: fill-in-complete-sentences-with-the-correct-locative-form -->`, `<!-- INJECT_ACTIVITY: fill-in-locative-forms -->`, `<!-- INJECT_ACTIVITY: quiz-locative-functions -->`  
+Issue: The quiz/fill-in markers are duplicated and placed too early; the first quiz appears before temporal and `по` functions are taught, and the first fill-in appears before `по ___` is taught.  
+Fix: Remove the early quiz/fill-in markers, keep one fill-in after the `по` section, and keep one quiz at the end.
 
-[Pedagogical quality] [Critical]
-Location: Section 4 ("На цьому тижні у мене немає проблем у роботі.")
-Issue: Another violation of the "на роботі" rule established earlier in the text.
-Fix: Change to "на роботі".
+[DIMENSION 9] [SEVERITY: major]  
+Location: `> — **Викладач:** Добрий день! Як ваші справи на цьому тижні?`  
+Issue: This line sounds translated and stiff.  
+Fix: Replace it with a more natural tutor prompt such as `Що у вас заплановано на цьому тижні?`
 
-[Plan adherence] [Major]
-Location: Section 4 (Practice sentences at the end)
-Issue: The plan specifically mandated the inclusion of a practice sentence: "У минулому місяці я розмовляв по телефону з другом у Києві." This was omitted.
-Fix: Insert the missing sentence into the final list of examples.
-
-[Exercise quality] [Major]
-Location: Throughout the module (`<!-- EXERCISE_1 -->`, `<!-- EXERCISE_2 -->`, `<!-- EXERCISE_3 -->`)
-Issue: The plan's exercises test all four locative functions simultaneously, but the markers are scattered after each section, meaning they will test material before it is taught.
-Fix: Move all exercise markers to the end of the module.
+[DIMENSION 6] [SEVERITY: minor]  
+Location: `This preserves the beautiful logic of the locative case showing the "where" or "how" of an action.`  
+Issue: Generic filler; it does not teach anything concrete.  
+Fix: Replace it with a precise explanation of channel/path vs. topic marking.
 
 ## Verdict: REVISE
-The module is highly comprehensive and well-written, but contains several pedagogical and linguistic blunders. The writer violated their own grammatical rule regarding "на роботі", used two Russianisms ("давайте прочитаємо", "по інтернету"), missed a required plan sentence, and placed exercise markers prematurely. These issues require a revision via the fixes block.
+Critical linguistic problems remain, and the exercise-marker logic does not match the plan. The module is salvageable with deterministic edits, so this is `REVISE`, not `REJECT`.
 
 <fixes>
-- find: "Давайте прочитаємо діалог. *(Let's read the dialogue.)*"
-  replace: "Прочитаймо діалог. *(Let's read the dialogue.)*"
-- find: "- Я прочитав цю цікаву статтю по інтернету. *(I read this interesting article on the internet.)*"
-  replace: "- Я прочитав цю цікаву статтю в інтернеті. *(I read this interesting article on the internet.)*"
-- find: "- Ми також говоримо про абстрактні сфери життя: у новій роботі, в освіті, у політиці. *(We also talk about abstract spheres of life: in a new job, in education, in politics.)*"
-  replace: "- Ми також говоримо про абстрактні сфери життя: на новій роботі, в освіті, у політиці. *(We also talk about abstract spheres of life: in a new job, in education, in politics.)*"
-- find: "- На цьому тижні у мене немає проблем у роботі. *(This week I have no problems at work.)*"
-  replace: "- На цьому тижні у мене немає проблем на роботі. *(This week I have no problems at work.)*"
-- find: "- У минулому місяці я був на цікавій зустрічі. *(Last month I was at an interesting meeting.)*\n- У дитинстві ми часто читали про подорожі. *(In childhood we often read about journeys.)*"
-  replace: "- У минулому місяці я був на цікавій зустрічі. *(Last month I was at an interesting meeting.)*\n- У минулому місяці я розмовляв по телефону з другом у Києві. *(Last month I talked by phone with a friend in Kyiv.)*\n- У дитинстві ми часто читали про подорожі. *(In childhood we often read about journeys.)*"
-- find: "<!-- EXERCISE_1 -->"
+- find: "> — **Ігор:** Не хвилюйся. Це не велика проблема. *(Don't worry. It is not a big problem.)*"
+  replace: "> — **Ігор:** Не хвилюйся. Це невелика проблема. *(Don't worry. It is not a big problem.)*"
+- find: "In Ukrainian, we use the preposition «по» with the **місцевий** (locative) case to talk about the means or channel of communication. This pattern describes how information travels from one person to another. Common examples include «по телефону» (by phone), «по радіо» (on the radio), «по пошті» (by mail), and «по дорозі» (on the way)."
+  replace: "In Ukrainian, we use several common expressions with «по» to talk about a channel or path, such as «по телефону» (by phone), «по радіо» (on the radio), and «по дорозі» (on the way). For sending something by mail, standard Ukrainian often prefers «поштою», so learners should memorize the whole expression rather than generalize «по» to every noun."
+- find: "Я часто говорю з мамою по телефону. Ми почули гарні новини по радіо. Мій брат надіслав лист по пошті. Ми зустріли друга по дорозі додому."
+  replace: "Я часто говорю з мамою по телефону. Ми почули гарні новини по радіо. Мій брат надіслав лист поштою. Ми зустріли друга по дорозі додому."
+- find: "Notice how these phrases describe the method of connection or the path something takes. The word for mail changes to «пошті», and the word **телефон** (phone, telephone) takes the special locative ending «-у» to form «по телефону»."
+  replace: "Notice how these phrases describe the method of connection or the path something takes. Because some Ukrainian forms are syncretic, it is safer to learn the full expressions: «по телефону», «по радіо», «по дорозі», but «надіслати лист поштою»."
+- find: "Mixing these up changes the meaning entirely. Always use «по» + locative for how you communicate, and «про» + accusative to share a **думка** (thought, opinion) about a specific subject, whether physical or **абстрактний** (abstract)."
+  replace: "Mixing these up changes the meaning entirely. Use «по телефону» and «по радіо» for the channel of communication, «поштою» for sending something by mail, and «про» + accusative to share a **думка** (thought, opinion) about a specific subject, whether physical or **абстрактний** (abstract)."
+- find: "Завтра я подзвоню тобі по телефону. Ми часто чуємо цікаві новини по радіо. Він надіслав важливі документи по пошті."
+  replace: "Завтра я подзвоню тобі по телефону. Ми часто чуємо цікаві новини по радіо. Він надіслав важливі документи поштою."
+- find: "> — **Марія:** Я надіслала тобі новий план по пошті. *(I sent you a new plan by mail.)*"
+  replace: "> — **Марія:** Я надіслала тобі новий план поштою. *(I sent you a new plan by mail.)*"
+- find: "**Grammar box** — The preposition «по» followed by the locative case is the traditional, authentic Ukrainian pattern for describing means or paths. In modern grammar, you might sometimes see «по» used with the dative case to express distribution, like giving things out «по одному» (one by one). However, for communication means and paths («по телефону», «по пошті», «по дорозі»), the locative case remains strictly the standard. This preserves the beautiful logic of the locative case showing the \"where\" or \"how\" of an action."
+  replace: "**Grammar box** — Fixed expressions like «по телефону», «по радіо», and «по дорозі» can mark a channel or path. But when you mean \"by mail\", standard Ukrainian often prefers the instrumental form «поштою». Do not confuse these expressions with «про» + accusative, which names the topic of conversation."
+- find: "<!-- INJECT_ACTIVITY: quiz-identify-the-function-of-locative-in-each-sentence -->"
   replace: ""
-- find: "<!-- EXERCISE_2 -->"
+- find: "<!-- INJECT_ACTIVITY: fill-in-complete-sentences-with-the-correct-locative-form -->"
   replace: ""
-- find: "<!-- EXERCISE_3 -->"
+- find: "<!-- INJECT_ACTIVITY: fill-in-complete-sentences-with-the-correct-locative-form -->"
   replace: ""
-- find: "<!-- EXERCISE_4 -->"
-  replace: "<!-- EXERCISE_1 -->\n\n<!-- EXERCISE_2 -->\n\n<!-- EXERCISE_3 -->\n\n<!-- EXERCISE_4 -->"
+- find: "<!-- INJECT_ACTIVITY: fill-in-locative-forms -->"
+  replace: "<!-- INJECT_ACTIVITY: fill-in-complete-sentences-with-the-correct-locative-form -->"
+- find: "<!-- INJECT_ACTIVITY: quiz-locative-functions -->"
+  replace: "<!-- INJECT_ACTIVITY: quiz-identify-the-function-of-locative-in-each-sentence -->"
+- find: "> — **Викладач:** Добрий день! Як ваші справи на цьому тижні? *(Good day! How are your things this week?)*"
+  replace: "> — **Викладач:** Добрий день! Що у вас заплановано на цьому тижні? *(Good day! What do you have planned for this week?)*"
 </fixes>

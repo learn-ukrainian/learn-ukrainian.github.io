@@ -1,0 +1,85 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T14-58-29cd0c52.json
+phase: write-chunk-03
+prompt_chars: 51520
+response_chars: 9243
+prompt_words: 6962
+response_words: 1323
+sections:
+- name: header
+  start: 0
+  length: 420
+  fraction: 0.0082
+- name: skeleton
+  start: 420
+  length: 1646
+  fraction: 0.0319
+- name: prior_summary
+  start: 2066
+  length: 3876
+  fraction: 0.0752
+- name: plan
+  start: 5942
+  length: 19762
+  fraction: 0.3836
+- name: wiki
+  start: 19272
+  length: 25610
+  fraction: 0.4971
+- name: output_spec
+  start: 51314
+  length: 206
+  fraction: 0.004
+large_sections:
+- wiki
+directives_total: 28
+directives_covered: 16
+directives_missed:
+- kind: checklist
+  text: суспільство (society — organized community of people)
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: checklist
+  text: громадянин (citizen — member of a state)
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: checklist
+  text: публіцистичний стиль (publicistic style — media register)
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: checklist
+  text: новина (news item — report of a recent event)
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: checklist
+  text: волонтер (volunteer — person working without pay)
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: checklist
+  text: кореспондент (correspondent — reporter)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: must
+  text: '**MANDATORY — never omit.'
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 3/11 keywords (27%)
+- kind: inject_activity
+  text: essay-news-vocab
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: error-correction-news-grammar
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-news-terms
+  covered: false
+  coverage_note: marker missing

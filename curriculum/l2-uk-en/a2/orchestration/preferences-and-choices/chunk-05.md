@@ -1,20 +1,31 @@
-## Підсумок
+## Підсумок (~150 words)
 
-Вітаємо! Ви успішно закінчили цей важливий модуль. Тепер ви знаєте, як висловлювати власну думку та робити свідомий вибір.
+In this module, you learned how to express your preferences and defend your positions. You can now confidently compare different options and state what you **воліти** (to prefer) in daily situations.
 
-Зробіть коротку перевірку. Чи можете ви сказати «так» на ці запитання?
+**Мені більше подобається кава, ніж чай.** — *I like coffee more than tea.*
 
-- Чи можу я порівнювати дві речі, використовуючи конструкцію **мені більше подобається ... ніж ...** *(I like ... more than ...)*? Наприклад: «Мені більше подобається кава, ніж чай».
-- Чи вмію я правильно використовувати дієслово **вважати** *(to consider)* з Орудним відмінком? Наприклад: «Я вважаю його **другом** *(friend)*» або «Я вважаю себе лідером».
-- Чи можу я ввічливо погоджуватися або не погоджуватися під час дискусії? Наприклад: «Ви **маєте рацію** *(are right)*» або «Я **не зовсім згоден** *(not quite agree)*».
-- Чи розумію я різницю між дієсловами **обирати** *(to choose)* та **вирішити** *(to decide)*?
+You know how to state your positions clearly. Use the verb **вважати** (to think, to consider) with the Instrumental case to express identity. When making a decision, you can explain what you **обирати** (to choose) versus what you simply decide to do.
 
-Збережіть ці ключові фрази для ваших майбутніх розмов:
+**Я вважаю себе хорошим другом.** — *I consider myself a good friend.*
 
-- **На мою думку...** *(In my opinion...)*
-- **Я вважаю, що...** *(I think that...)*
-- **Я згоден / Я згодна** *(I agree, m./f.)*
-- **Безумовно!** *(Absolutely!)*
-- **Навпаки** *(On the contrary)*
+When navigating a discussion, you can agree with someone's **думка** (opinion, thought) or politely disagree. If you share their view, you can say that you are **згоден** (agree, m.) or **згодна** (agree, f.). 
 
-Практикуйте ці слова кожного дня. Ваша думка дуже важлива. До зустрічі в наступному модулі!
+**Я не зовсім згоден з тобою.** — *I do not quite agree with you.*
+
+You can acknowledge their point by saying they have **рація** (rightness — in мати рацію). If you are a **переконаний** (convinced, m.) supporter of an idea, you can explain your reasons using **тому що** (because).
+
+**Я обираю це місто, тому що тут гарна природа.** — *I choose this city because there is beautiful nature here.*
+
+If you disagree, you can politely say **навпаки** (on the contrary) and offer a different perspective. 
+
+Here is a summary of the key phrases you have mastered:
+*   **На мою думку...** — *In my opinion...*
+*   **Я вважаю, що...** — *I think that...*
+*   **Я згоден / згодна.** — *I agree.*
+*   **Безумовно!** — *Absolutely!*
+*   **Навпаки...** — *On the contrary...*
+
+:::info
+**Grammar box**
+Remember the difference between your choices: **обирати** is used when selecting between specific options, while **вирішити** is used when deciding to take an action.
+:::

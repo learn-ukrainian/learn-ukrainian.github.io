@@ -1,21 +1,21 @@
-# Section-by-Section Generation — Section 3/5
+# Section-by-Section Generation — Section 3/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 17: Мені, тобі, йому... (A2, A2.3 [Dative Case])
-**Section to write:** Мені холодно: Безособові конструкції (Impersonal Constructions) (~550 words total)
+**Section to write:** Мені холодно: Безособові конструкції (Impersonal Constructions with Dative) (~550 words total)
 **Word target for this section:** 550 words (aim for 605 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Мені холодно: Безособові конструкції (Impersonal Constructions) (~550 words total)
-- P1 (~160 words): Introduce the concept of "Logical Subject" sentences. Explain that in Ukrainian, many physical and emotional states aren't something you "are" (like in English "I am cold"), but something that "is to you." Compare "Я (Nom) щаслива" (description of identity/long-term state) vs. "Мені (Dat) весело" (current feeling/impersonal state).
-- P2 (~140 words): List the "State Adverbs" used with Dative pronouns. Focus on: холодно (cold), тепло (warm), сумно (sad), весело (joyful), приємно (pleasant), цікаво (interesting). Provide clear pairs: "Мені холодно" vs. "Тобі цікаво?". Mention the "neutral" feel of these adverbs ending in -о.
-- P3 (~130 words): Introduce modal adverbs and necessity: треба / потрібно (need), можна (allowed), варто (should/worth). Explain that "I need" in Ukrainian is literally "To me (it is) necessary." Examples: "Мені треба йти," "Вам можна тут сидіти," "Йому варто відпочити."
-- P4 (~120 words): Dialogue — At a cafe. Characters expressing their current comfort levels. "Тобі тут тепло? Так, мені приємно тут сидіти. Мені цікаво, що ти замовиш. Мені потрібно випити кави, бо мені сумно без неї."
-- <!-- INJECT_ACTIVITY: true-false-impersonal --> [true-false, Judge whether impersonal Dative sentences (e.g., "Я холодно" vs "Мені холодно") are grammatically correct, 8 items]
+## Мені холодно: Безособові конструкції (Impersonal Constructions with Dative) (~550 words total)
+- P1 (~130 words): Introduce impersonal constructions (безособові конструкції). Explain the highly frequent pattern: Dative pronoun + adverb/predicate. Show how this structure expresses physical states, feelings, and needs without a grammatical subject (e.g., "Мені холодно" - To me it is cold).
+- P2 (~140 words): List common predicates used in this construction: states (холодно, тепло), feelings (весело, сумно, приємно, цікаво, нудно), and assessments (важко, легко, потрібно, можна, треба, варто). Provide short example sentences for each, like "Тобі сумно", "Їй весело", "Нам цікаво".
+- P3 (~140 words): Compare impersonal dative sentences with nominative subject sentences to highlight the different structure and nuance. Contrast "Я втомлена" (Nominative subject - I am tired) with "Мені важко" (Impersonal Dative - It is hard for me). Explain that English says "I need", but Ukrainian says "To me it is necessary" (Мені треба).
+- P4 (~140 words): Dialogue: Two characters discuss how they feel and what they need to do, heavily utilizing impersonal dative constructions. E.g., discussing the weather ("Мені холодно") and making plans ("Тобі потрібно працювати? Ні, мені цікаво погуляти").
+- <!-- INJECT_ACTIVITY: true-false-impersonal --> [true-false, Judge whether impersonal dative sentences (мені холодно, мені бачу) are correct, 8 items]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-to remember and use confidently. This is because they feel significantly more symmetrical and logical compared to the highly irregular singular forms. The pronoun **ми** (we) becomes **нам**, the formal or plural pronoun **ви** (you) becomes **вам**, and the pronoun **вони** (they) becomes **їм**. If you look closely at these three specific words, you will notice a clear visual and phonetic pattern: they all end in the letter 'м'. This consistent ending makes it incredibly simple to recognize them as plural recipients whenever you hear them spoken in a sentence. Наш розумний вчитель пояснює нам складне граматичне правило дуже просто. Я щиро дякую вам за вашу велику допомогу вчора у школі. Мої старі друзі зараз живуть у Києві, тому потрібно їм зателефонувати сьогодні ввечері. Ми готуємо їм смачну українську вечерю на вихідних. > *Our smart teacher explains the complex grammar rule to us very simply. I sincerely thank you for your great help yesterday at school. My old friends live in Kyiv now, so it is necessary to call them tonight. We are preparing a tasty Ukrainian dinner for them on the weekend.* :::tip **The missing letter "н"** Unlike the Genitive case (where "he" becomes "нього" after a preposition like "до"), the Dative case behaves quite differently. Because the Dative case inherently implies direction toward a recipient, it rarely requires prepositions. Even when it does occur with a preposition (such as "завдяки" — thanks to), the third-person pronouns **do not** gain an initial 'н'. They strictly remain **йому**, **їй**, and **їм**. Do not over-generalize the "initial н" rule from the Genitive case when using the Dative! ::: Let us see how these pronouns work together dynamically in a real, everyday conversation. In this dialogue, two friends are organizing a surprise party and deciding who gets to know the secret plan. Notice how the speakers shift naturally between different Dative pronouns, demonstrating how fluid and efficient the language becomes once you master these short forms. > — **Олена:** Я маю великий секрет про наше майбутнє свято! *(I have a big secret about our future holiday!)* > — **Марко:** Дуже цікаво! Кому ти розкажеш цей секрет сьогодні? *(Very interesting! To whom will you tell this secret today?)* > — **Олена:** Я скажу йому секрет зараз, бо він мій старший брат. *(I will tell him the secret now, because he is my older brother.)* > — **Марко:** А нам ти скажеш? Ми теж хочемо знати всі важливі деталі! *(And will you tell us? We also want to know all the important details!)* > — **Олена:** Вам я скажу трохи пізніше, коли ми будемо вдома самі. *(To you I will tell a little later, when we are at home alone.)* > — **Марко:** Зрозуміло. А що робити з нашими спільними друзями? *(Understood. And what to do with our mutual friends?)* > — **Олена:** А їм ми скажемо тільки завтра вранці, щоб це був справжній сюрприз. *(And to them we will tell only tomorrow morning, so it is a real surprise.)* <!-- INJECT_ACTIVITY: fill-in-dative-pronouns -->
+common verbs of giving and communicating. The typical sentence structure in these situations places the verb first, followed by the dative recipient, and then the accusative object. This word order is highly predictable and sounds very natural and polite to native speakers. Дай мені нову книгу, будь ласка. Скажи їй усю правду зараз. Покажи нам ваші старі фотографії. Напиши їм довгого листа сьогодні ввечері. > *Give me the new book, please. Tell her the whole truth now. Show us your old photographs. Write them a long letter tonight.* It is absolutely crucial to distinguish the dative forms from the accusative forms when you are building sentences. The accusative case answers the question "who is directly affected?", while the dative case answers "to whom?". A severe and very common error for English speakers is confusing these two distinct functions, or even worse, using the base dictionary form instead of a declined pronoun. Наприклад, казати «Дай я книгу» — це дуже велика граматична помилка. Слово «я» — це суб'єкт, а тут нам обов'язково потрібен отримувач. Правильно говорити «Дай мені книгу». Також носіям мови важко слухати, коли іноземці плутають форми «мене» та «мені» або «тебе» та «тобі». Ми кажемо «Я бачу тебе», але «Я даю тобі». > *For example, saying "Give I a book" is a very big grammatical mistake. The word "I" is the subject, but here we absolutely need a recipient. It is correct to say "Give me a book". It is also hard for native speakers to listen when foreigners confuse the forms "mene" and "meni" or "tebe" and "tobi". We say "I see you" (accusative), but "I give to you" (dative).* <!-- INJECT_ACTIVITY: match-up, Match nominative pronoun to its dative form (я→мені, ти→тобі, etc.), 8 items --> Let's look at a few more examples of these pronouns in everyday contexts. Notice how frequently these short, efficient words pop up whenever people interact, share things, or describe their physical state, like being **холодно** (cold (impersonal state)). They are the glue that holds conversational Ukrainian together. Master these forms early, and your speaking will immediately sound much more authentic. > — **Олег:** Привіт! Ти можеш допомогти мені? *(Hi! Can you help me?)* > — **Анна:** Так, звичайно. Що тобі потрібно? *(Yes, of course. What do you need?)* > — **Олег:** Дай мені твій словник, будь ласка. *(Give me your dictionary, please.)* > — **Анна:** Добре, я дам тобі словник. А де Петро? Я маю передати йому зошит. *(Okay, I will give you the dictionary. And where is Petro? I have to pass the notebook to him.)* > — **Олег:** Він удома. Подзвони йому. *(He is at home. Call him.)* Завдяки цим коротким словам щоденні діалоги звучать дуже динамічно. Ми постійно щось даємо, кажемо, пояснюємо або показуємо іншим людям навколо нас. > *Thanks to these short words, daily dialogues sound very dynamic. We are constantly giving, telling, explaining, or showing something to other people around us.* <!-- INJECT_ACTIVITY: fill-in, Complete sentences with the correct dative pronoun based on context, 8 items -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -630,6 +630,31 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] давальний відмінок (dative case)
+- [ ] мені (to me)
+- [ ] тобі (to you (informal))
+- [ ] йому (to him, to it)
+- [ ] їй (to her)
+- [ ] нам (to us)
+- [ ] вам (to you (formal/plural))
+- [ ] їм (to them)
+- [ ] холодно (cold (impersonal state))
+- [ ] потрібно (necessary, needed)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Мені холодно: Безособові конструкції (Impersonal Constructions with Dative) (~550 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

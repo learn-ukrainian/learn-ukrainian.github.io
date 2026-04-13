@@ -32,12 +32,11 @@ The writer placed these markers in the module content. Your inline activities mu
 - `<!-- INJECT_ACTIVITY: match-up-dates -->`
 - `<!-- INJECT_ACTIVITY: error-correction-dates -->`
 - `<!-- INJECT_ACTIVITY: essay-response-dates -->`
-- `<!-- INJECT_ACTIVITY: quiz-time -->`
-- `<!-- INJECT_ACTIVITY: fill-in-time -->`
-- `<!-- INJECT_ACTIVITY: fill-in-order -->`
-- `<!-- INJECT_ACTIVITY: quiz-order -->`
-- `<!-- INJECT_ACTIVITY: reading-ordinals -->`
 - `<!-- INJECT_ACTIVITY: quiz -->`
+- `<!-- INJECT_ACTIVITY: fill-in -->`
+- `<!-- INJECT_ACTIVITY: match-up-match-ordinals-with-their-appropriate-usage-contexts -->`
+- `<!-- INJECT_ACTIVITY: error-correction-correct-the-declension-of-ordinal-numbers-in-sentences -->`
+- `<!-- INJECT_ACTIVITY: reading -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -98,119 +97,122 @@ required:
 <module_content>
 ## Відмінювання порядкових числівників
 
-When you need to express the order of items, dates, or time, you use ordinal numerals. In Ukrainian, these are called порядкові числівники. They answer the questions «котрий?» (which one in order, masculine), «котра?» (feminine), «котре?» (neuter), or «котрі?» (plural). The most important foundational rule to remember is that ordinal numerals behave exactly like adjectives. They share the same endings and follow the same declension patterns, meaning if you know how to decline a standard adjective, you already know how to decline an ordinal numeral.
+Ordinal numerals are an essential part of the Ukrainian language, allowing you to express the order or sequence of items, people, and events. Whenever you need to answer the question about which one in a sequence you are referring to, you will use these specific numbers. They are fundamentally different from cardinal numerals, which only express the total quantity.
 
-Порядкові числівники завжди вказують на порядок предметів при лічбі. Вони повністю втрачають граматичні властивості кількісних числівників і поводяться в реченні як звичайні прикметники. Це означає, що вони мають категорію роду, числа та відмінка, які завжди залежать від іменника.
+В українській мові порядкові числівники завжди відповідають на питання «котрий?», «котра?», «котре?» або «котрі?». Вони вказують на порядок предметів при лічбі і є дуже важливими для правильного спілкування. Головне правило, яке вам потрібно запам'ятати, полягає в тому, що всі порядкові числівники поводяться абсолютно так само, як звичайні прикметники.
 
-> *Ordinal numerals always indicate the order of objects when counting. They completely lose the grammatical properties of cardinal numerals and behave in a sentence like regular adjectives. This means they have the category of gender, number, and case, which always depend on the noun.*
+> *In the Ukrainian language, ordinal numerals always answer the questions "which one?" (masculine, feminine, neuter, or plural). They indicate the order of items when counting and are very important for correct communication. As outlined in Литвінова Grade 6 (p. 237), the main rule you need to remember is that all ordinal numerals behave exactly like regular adjectives.*
 
-Більшість порядкових числівників належить до твердої групи відмінювання. Вони відмінюються точно так само, як тверді прикметники, наприклад, «новий» або «зелений». Розгляньмо числівник «п'ятий» як нашу основну модель. Цей зразок застосовується майже до всіх порядкових числівників, включаючи «перший», «другий», «четвертий» та «шостий».
+If you already know how to decline an adjective to match a noun in gender, number, and case, you already know how to decline an ordinal numeral. This architectural similarity makes them highly predictable and logical to use in everyday speech.
 
-| Відмінок | Чоловічий рід | Жіночий рід | Середній рід | Множина |
-| :--- | :--- | :--- | :--- | :--- |
-| **Н.в.** | п'ятий | п'ята | п'яте | п'яті |
-| **Р.в.** | п'ятого | п'ятої | п'ятого | п'ятих |
-| **Д.в.** | п'ятому | п'ятій | п'ятому | п'ятим |
-| **Зн.в.** | п'ятий / п'ятого | п'яту | п'яте | п'яті / п'ятих |
-| **Ор.в.** | п'ятим | п'ятою | п'ятим | п'ятими |
-| **М.в.** | (на) п'ятому / п'ятім | (на) п'ятій | (на) п'ятому / п'ятім | (на) п'ятих |
-| **Кл.в.** | п'ятий | п'ята | п'яте | п'яті |
+The vast majority of Ukrainian ordinal numerals belong to the hard group of declension. This means they take the exact same endings as hard-stem adjectives like «зелений» або «новий». When you look at words like «перший», «другий», «четвертий», «п'ятий», and «шостий», you can immediately recognize the characteristic hard endings. To demonstrate this pattern clearly, we will use the numeral «п'ятий» as our primary model.
 
-Notice that in the Accusative case for the masculine singular and the plural forms, the ending depends on whether the noun being described is animate or inanimate. If the noun is an inanimate object, the Accusative form matches the Nominative. If the noun is animate, representing a person or an animal, the Accusative form matches the Genitive. For the feminine and neuter forms, this animacy distinction does not apply. Also, observe the alternate endings in the Locative case for masculine and neuter forms; both «п'ятому» and «п'ятім» are grammatically correct and widely used in modern Ukrainian.
-
-While almost all ordinal numerals belong to the hard declension group, there is one critical exception that you must memorize: the numeral «третій» (third). This numeral, along with compound numbers ending in it like «двадцять третій», declines according to the soft group of adjectives, similar to the word «синій». This means you will see a soft sign or the soft vowel letters taking the place of the hard vowels in the endings.
+Порядковий числівник «п'ятий» має закінчення «-ий» для чоловічого роду, «-а» для жіночого, «-е» для середнього та «-і» для множини. Під час відмінювання ці закінчення змінюються за правилами твердої групи прикметників.
 
 | Відмінок | Чоловічий рід | Жіночий рід | Середній рід | Множина |
 | :--- | :--- | :--- | :--- | :--- |
-| **Н.в.** | третій | третя | третє | треті |
-| **Р.в.** | третього | третьої | третього | третіх |
-| **Д.в.** | третьому | третій | третьому | третім |
-| **Зн.в.** | третій / третього | третю | третє | треті / третіх |
-| **Ор.в.** | третім | третьою | третім | третіми |
-| **М.в.** | (на) третьому / третім | (на) третій | (на) третьому / третім | (на) третіх |
-| **Кл.в.** | третій | третя | третє | треті |
+| **Н.в.** (хто? що?) | п'ятий | п'ята | п'яте | п'яті |
+| **Р.в.** (кого? чого?) | п'ятого | п'ятої | п'ятого | п'ятих |
+| **Д.в.** (кому? чому?) | п'ятому | п'ятій | п'ятому | п'ятим |
+| **Зн.в.** (кого? що?) | п'ятий / п'ятого | п'яту | п'яте | п'яті / п'ятих |
+| **Ор.в.** (ким? чим?) | п'ятим | п'ятою | п'ятим | п'ятими |
+| **М.в.** (на кому? на чому?) | на п'ятому / п'ятім | на п'ятій | на п'ятому / п'ятім | на п'ятих |
 
-When writing forms like «третього» or «третьому», pay close attention to the spelling. The soft sign is required before the vowel «о» to maintain the soft sound of the consonant. In the feminine Accusative case, the ending is «-ю» instead of «-у», and the neuter Nominative ends in «-є» rather than «-е». Mastering this single exception is essential because the third position is incredibly common in dates, addresses, and daily scheduling.
+Notice how the masculine and neuter forms share identical endings in the genitive, dative, instrumental, and locative cases. The accusative case for masculine and plural forms depends on animacy, just as it does for regular nouns and adjectives. If the noun is animate, you use the genitive form; if it is inanimate, you use the nominative form. The locative case offers a stylistic variant for masculine and neuter forms, allowing you to choose between «на п'ятому» and the slightly more traditional «на п'ятім».
 
-Оскільки порядкові числівники функціонують як прикметники, вони повинні суворо узгоджуватися з іменником. Це узгодження відбувається одразу за трьома граматичними категоріями: родом, числом та відмінком. Ви не можете просто поставити порядковий числівник у називному відмінку поруч з іменником в іншому відмінку. Щоразу, коли іменник змінює свою форму відповідно до граматичного контексту речення, порядковий числівник також змінюється, щоб збігатися з ним.
+While the hard group covers almost everything, there is one major exception that you must memorize. The ordinal numeral «третій» belongs to the soft group of declension. This specific numeral declines exactly like a soft-stem adjective such as «синій» або «ранній». Because the stem ends in a soft consonant sound, the grammatical endings reflect this softness by using letters like «я», «є», «ю», and the soft sign «ь».
 
-Let us look at some clear examples of this synchronized agreement. If you are talking about the first lesson, which is masculine and in the Nominative case, you say «перший урок». If you are reading the first book, the feminine noun takes the Accusative case, so the numeral must also become Accusative: «першу книжку». When referring to the first of September, a neuter concept representing a date, you use the Genitive case: «першого вересня». Finally, if you are discussing the first students in a plural Genitive context, both words adapt accordingly to become «перших учнів».
+Виняток становить лише числівник «третій», який має м'яку основу і відмінюється за м'якою групою. У жіночому роді він має закінчення «-я», а в середньому — закінчення «-є».
+
+| Відмінок | Чоловічий рід | Жіночий рід | Середній рід | Множина |
+| :--- | :--- | :--- | :--- | :--- |
+| **Н.в.** (хто? що?) | третій | третя | третє | треті |
+| **Р.в.** (кого? чого?) | третього | третьої | третього | третіх |
+| **Д.в.** (кому? чому?) | третьому | третій | третьому | третім |
+| **Зн.в.** (кого? що?) | третій / третього | третю | третє | треті / третіх |
+| **Ор.в.** (ким? чим?) | третім | третьою | третім | третіми |
+| **М.в.** (на кому? на чому?) | на третьому / третім | на третій | на третьому / третім | на третіх |
+
+This soft declension paradigm is entirely consistent within itself. Pay special attention to the spelling in the genitive, dative, and locative cases for masculine and neuter forms, where the soft sign «ь» appears before the vowel «о» to preserve the soft pronunciation of the root consonant. The instrumental case «третім» and locative case «на третім» feature the letter «і» instead of the hard «и».
+
+Because ordinal numerals function as adjectives grammatically, the rules of agreement are strict and mandatory. The ordinal numeral and the noun it modifies must always agree in gender, number, and case. You cannot decline the noun without simultaneously declining the numeral attached to it. This creates a synchronized pairing where both words reflect the same grammatical state.
+
+Узгодження числівника з іменником є обов'язковою умовою правильної граматики. Якщо іменник стоїть у знахідному відмінку жіночого роду, то і числівник повинен мати таку саму форму. Це правило працює для всіх відмінків і родів без винятків.
+
+For instance, if you are talking about the "first lesson" in the nominative case, you say «перший урок» because the noun is masculine singular. If you are reading the "first book" and need the accusative case, you change both words to feminine accusative, resulting in «першу книжку». When referring to the "first of September" in the genitive case, the neuter phrase becomes «першого вересня». Finally, if you are discussing the "first students" in the plural genitive case, you must say «перших учнів».
+
+To see this synchronized noun-adjective agreement in action, let us walk through a complete practice declension of the phrase «п'ятий клас». This phrase is masculine and inanimate, which will influence our accusative case form.
+
+*   **Н.в.:** п'ятий клас
+*   **Р.в.:** п'ятого класу
+*   **Д.в.:** п'ятому класу
+*   **Зн.в.:** п'ятий клас
+*   **Ор.в.:** п'ятим класом
+*   **М.в.:** у п'ятому класі
+
+Кожен відмінок демонструє ідеальну гармонію між прикметниковим закінченням числівника та відповідним закінченням іменника.
+
+As you progress in Ukrainian, you will naturally encounter larger numbers, leading to compound ordinal numerals. These are numerals consisting of two or more words, such as twenty-third or one hundred fifteenth. According to Заболотний Grade 6 (p. 179), the grammatical rule for compound ordinal numerals is remarkably simple and elegant: ONLY the absolute last word in the sequence declines. All preceding words remain frozen in their standard nominative cardinal form.
+
+У складених порядкових числівниках відмінюється виключно останнє слово. Всі інші частини цього числа залишаються незмінними, незалежно від того, який відмінок вимагає контекст речення.
+
+Consider the nominative phrase «двадцять третій день». The first word is a cardinal numeral, and the second is our soft-group ordinal. If we want to express "of the twenty-third day" in the genitive case, we only change the final word, producing «двадцять третього дня». The word «двадцять» does not change at all.
+
+Let us decline the feminine phrase «сто п'ятнадцята сторінка» to reinforce this critical concept.
+
+*   **Н.в.:** сто п'ятнадцята сторінка
+*   **Р.в.:** сто п'ятнадцятої сторінки
+*   **Д.в.:** сто п'ятнадцятій сторінці
+*   **Зн.в.:** сто п'ятнадцяту сторінку
+*   **Ор.в.:** сто п'ятнадцятою сторінкою
+*   **М.в.:** на сто п'ятнадцятій сторінці
 
 :::info
-**Grammar box**
-Always identify the gender, number, and case of the core noun first. Once you know these three properties, apply the exact same properties to the ordinal numeral modifying it.
+**Compound declension rule**
+Always remember that compound ordinal numerals freeze all words except the very last one. You will never say «двадцятого третього дня» — the correct form is always «двадцять третього дня».
 :::
 
-To demonstrate how this noun-adjective agreement works in action, let us walk through a practice declension of the phrase «п'ятий клас» (fifth grade) across all seven cases. The noun «клас» is a masculine, inanimate object belonging to the hard declension group. Watch how the endings of both words change in harmony. Because the noun is inanimate, the Accusative case remains identical to the Nominative case for the entire phrase.
+Finally, let us discuss the pronunciation aspect of these words. Ukrainian ordinal numerals feature fixed stress patterns. Unlike some cardinal numerals or complex nouns that shift their stress from the stem to the ending depending on the case, ordinal numerals are wonderfully stable.
 
-*   **Н.в.** (хто? що?): п'ятий клас
-*   **Р.в.** (кого? чого?): п'ятого класу
-*   **Д.в.** (кому? чому?): п'ятому класу
-*   **Зн.в.** (кого? що?): п'ятий клас
-*   **Ор.в.** (ким? чим?): п'ятим класом
-*   **М.в.** (на кому? на чому?): у п'ятому класі
-*   **Кл.в.** (кличний): п'ятий класе
+Наголос у порядкових числівниках ніколи не переходить на інший склад під час відмінювання. Якщо ви вивчили правильну вимову початкової форми, ви не зробите помилки в інших відмінках.
 
-As you progress to higher numbers, you will frequently encounter compound ordinal numerals, which are known as складені числівники. These are numerals made up of two or more words, such as twenty-fifth or one hundred fifteenth. The critical rule for compound ordinal numerals in Ukrainian is that ONLY the very last word declines. All the preceding words in the number remain frozen in their Nominative case forms.
-
-У складених порядкових числівниках змінюється лише останнє слово. Це суттєва відмінність від кількісних числівників, де кожна частина складного числа може змінювати свою форму. Порівняйте називний відмінок «двадцять третій день» із родовим відмінком «двадцять третього дня». Слово «двадцять» зовсім не змінюється.
-
-Let us walk through declining the feminine phrase «сто п'ятнадцята сторінка» (the one hundred fifteenth page) through all the cases. This rule significantly simplifies the use of large dates and complex numbers, as you only need to worry about conjugating the final adjective-like word.
-
-*   **Н.в.** (хто? що?): сто п'ятнадцята сторінка
-*   **Р.в.** (кого? чого?): сто п'ятнадцятої сторінки
-*   **Д.в.** (кому? чому?): сто п'ятнадцятій сторінці
-*   **Зн.в.** (кого? що?): сто п'ятнадцяту сторінку
-*   **Ор.в.** (ким? чим?): сто п'ятнадцятою сторінкою
-*   **М.в.** (на кому? на чому?): на сто п'ятнадцятій сторінці
-*   **Кл.в.** (кличний): сто п'ятнадцята сторінко
-
-One of the most comforting aspects of learning ordinal numerals in Ukrainian is their predictable stress pattern. When you learn a cardinal number, the stress sometimes shifts to a different syllable depending on the case you are using. However, for ordinal numerals, the stress remains completely fixed on the exact same syllable throughout all grammatical cases.
-
-If the stress falls on the first syllable in the Nominative case, as in «перший», it stays there for all other forms like «першого» or «першому». The same fixed stress rule applies to «другий», «третій», «сьомий», and «десятий». This fixed stress simplifies memorization greatly. Once you learn the correct pronunciation for the dictionary form of an ordinal numeral, you can confidently apply that same stress pattern across the entire declension paradigm without any second-guessing.
+Words like «перший», «другий», «третій», «сьомий», and «десятий» keep the stress on the exact same syllable throughout their entire declension paradigms. This linguistic feature significantly simplifies memorization for language learners. Once you know the nominative stress placement, you can confidently decline the numeral through all seven cases without ever worrying about shifting vowel emphasis.
 
 <!-- INJECT_ACTIVITY: fill-in-declension -->
 <!-- INJECT_ACTIVITY: quiz-declension -->
 
 ## Дати
 
-Коли ми хочемо сказати, яке сьогодні число, ми використовуємо порядковий числівник у називному відмінку. Зверніть увагу, що числівник завжди стоїть у формі середнього роду. Це відбувається тому, що слово «число» мається на увазі, навіть якщо ми його не вимовляємо. Назва місяця завжди стоїть у родовому відмінку однини, адже це число певного місяця.
+One of the most common and practical uses of ordinal numerals is expressing the current date. When you want to state what today's date is in Ukrainian, you must use the Nominative case for the ordinal numeral and the Genitive case for the month. This construction literally translates to "today is the Nth of the Xth month". A crucial detail here is that the ordinal numeral is always in the neuter gender. You might wonder why a neuter ending like «п'яте» or «перше» is used. This happens because the neuter noun «число» (date or number) is grammatically implied, even though it is almost never spoken in natural conversation. The month that follows simply answers the question "of which month?", which naturally requires the Genitive case. For instance, to say "Today is the fifth of March," you say «Сьогодні п'яте березня». If it is the end of the year, you say «Сьогодні тридцять перше грудня».
 
-> *When we want to say what date it is today, we use an ordinal numeral in the Nominative case. Note that the numeral always takes the neuter form. This happens because the word "число" (date/number) is implied, even if we don't say it. The name of the month is always in the Genitive singular, because it is the date of a specific month.*
+Кожного дня ми використовуємо порядкові числівники, щоб сказати поточну дату. Коли ми відповідаємо на питання «яке сьогодні число?», ми завжди ставимо числівник у називний відмінок середнього роду. Назва місяця при цьому обов'язково має форму родового відмінка. Ми кажемо «сьогодні перше січня» або «сьогодні двадцять четверте серпня». Слово «число» ми просто пропускаємо, але воно керує закінченням числівника.
 
-Наприклад, якщо ви подивитеся на календар, ви можете сказати: «Сьогодні п'яте березня». Або, якщо наближається Новий рік, ви скажете: «Сьогодні тридцять перше грудня». Слово «сьогодні» починає речення, далі йде числівник середнього роду в називному відмінку, а потім місяць у родовому. Це найпростіший спосіб відповісти на запитання «Яке сьогодні число?». Уявіть, що ви читаєте новини. Журналіст часто починає ефір саме так: «Доброго ранку, сьогодні десяте жовтня».
+Now that you know how to state today's date, we must look at how to describe an event happening *on* a specific date. In English, we use the preposition "on" for this purpose. In Ukrainian, however, you do not use a preposition for dates. Instead, the entire phrase shifts into the Genitive case to answer the question «коли?» (when). This is a very strict rule in Ukrainian grammar. You must take the neuter Nominative form, like «п'яте», and change it to the neuter Genitive form, which is «п'ятого». The month remains in the Genitive case. Therefore, the phrase "on the fifth of March" translates to «п'ятого березня».
 
-Ситуація змінюється, коли ми хочемо сказати, що якась подія відбулася або відбудеться в певний день. Якщо ви відповідаєте на запитання «коли?», вам потрібно поставити сам порядковий числівник у родовий відмінок. Назва місяця, як і в попередньому випадку, також залишається в родовому відмінку. Ця конструкція є дуже поширеною, коли ви плануєте зустрічі, купуєте квитки або розповідаєте про своє життя.
-
-Розглянемо різницю. Якщо ви кажете «Сьогодні п'яте березня», це констатація факту. Але якщо ви плануєте поїздку, ви скажете: «Я їду до Києва п'ятого березня». Інший приклад: «Він народився п'ятнадцятого вересня». У цих реченнях порядковий числівник відповідає на запитання «коли?», тому він приймає форму родового відмінка середнього роду. Ви часто почуєте цю форму в новинах або під час офіційних розмов. Наприклад: «Конференція почнеться двадцятого лютого». Отже, запам'ятайте просте правило: якщо є дія, яка відбувається в певний день, числівник вимагає родового відмінка.
-
-Щоб назвати повну дату, вам потрібно додати рік. У повних датах слово «рік» завжди стоїть у родовому відмінку — «року». Сам числівник, який позначає рік, є складеним порядковим числівником. Як ви вже знаєте, головне правило для таких числівників полягає в тому, що відмінюється лише останнє слово. Всі попередні слова залишаються незмінними.
-
-Давайте подивимося, як це працює на практиці. Якщо ви хочете сказати, що подія відбулася в тисяча дев'ятсот дев'яностому році, дата звучатиме так: «тисяча дев'ятсот дев'яностого року». Слова «тисяча», «дев'ятсот» залишаються в початковій формі. Змінюється лише останнє слово «дев'яностого», приймаючи форму родового відмінка. Уявімо повну дату: «Вона народилася першого січня дві тисячі п'ятого року». Тут ми маємо день, місяць і рік — усі елементи стоять у родовому відмінку, щоб відповісти на запитання «коли?».
+Ця граматична конструкція є надзвичайно важливою для розповідей про минуле або планування майбутнього. Якщо ви хочете сказати, коли саме відбулася певна подія, ви не використовуєте жодних прийменників. Ви просто ставите порядковий числівник у форму родового відмінка. Наприклад, речення "He was born on the fifteenth of September" перекладається як «Він народився п'ятнадцятого вересня». У цьому реченні і числівник «п'ятнадцятого», і місяць «вересня» стоять у родовому відмінку.
 
 :::info
-**Grammar box**
-When stating a full date answering the question "when?", every component is in the Genitive case: the day (ordinal), the month (noun), and the year (ordinal + noun). Remember that in the compound numeral for the year, only the last word declines.
+**Date cases summary**
+To say "today is...", use the Nominative case for the numeral: «Сьогодні десяте жовтня». To say "on a specific date...", use the Genitive case for the numeral: «Концерт буде десятого жовтня». The month is always Genitive.
 :::
 
-На письмі ми часто використовуємо цифри замість того, щоб писати довгі числівники словами. Проте українська мова має чіткі правила щодо того, як правильно додавати закінчення до цифр. Якщо ви пишете порядковий числівник цифрою, вам потрібно додати буквене нарощення через дефіс. Це допомагає читачеві зрозуміти, у якому відмінку, роді та числі стоїть слово.
+When discussing historical events or biographies, dates often include the year. Expressing the year in Ukrainian requires another application of the Genitive case and a firm understanding of compound ordinal numerals. The word for year is «рік», and to say "of the year", you use its Genitive form «року». The numeral representing the year is always an ordinal numeral. Here, you must apply the compound ordinal numeral rule discussed in the previous section. In any compound ordinal numeral, only the very last word declines. All preceding numbers remain in their frozen, Nominative cardinal form.
 
-Наприклад, якщо подія відбувається п'ятнадцятого числа, ви напишете «15-го числа». Зверніть увагу на дефіс перед закінченням «-го». Це закінчення підказує нам, що слово стоїть у родовому відмінку. Якщо ви пишете про сторінку книги, це буде «1-ша сторінка» (називний відмінок, жіночий рід). Якщо ви згадуєте клас у школі, ви напишете «5-й клас» (називний відмінок, чоловічий рід). Це правило робить тексти набагато легшими для сприйняття. Завжди використовуйте дефіс перед буквеним закінченням, коли числівник записаний арабськими цифрами і позначає порядок.
+Розгляньмо цей принцип на конкретному прикладі. Якщо вам потрібно сказати "in the year nineteen ninety", ви перекладаєте це як «тисяча дев'ятсот дев'яностого року». Зверніть увагу, що слова «тисяча» та «дев'ятсот» не змінюються взагалі. Вони залишаються кількісними числівниками у називному відмінку. Відмінюється лише останнє слово «дев'яностого», яке приймає форму родового відмінка, узгоджуючись зі словом «року». Цей принцип працює для всіх складних дат, від давньої історії до нашого часу.
 
-Хоча правило дефіса є дуже поширеним, існують важливі винятки, які ви повинні знати. Ці винятки стосуються римських цифр та стандартних календарних форматів. Якщо порядковий числівник записаний римськими цифрами, ми ніколи не додаємо жодних буквених закінчень. Римські цифри часто використовуються для позначення століть, розділів у книгах або імен монархів. Також буквене нарощення ніколи не додається до дат, якщо після цифри вказано назву місяця або слово «рік» (наприклад, «15 березня», «2024 року»).
+> *Let us examine this principle using a specific example. If you need to say "in the year nineteen ninety", you translate it as «тисяча дев'ятсот дев'яностого року». Notice that the words «тисяча» and «дев'ятсот» do not change at all. They remain cardinal numerals in the Nominative case. Only the last word «дев'яностого» declines, taking the form of the Genitive case to agree with the word «року». This principle works for all complex dates, from ancient history to our time.*
 
-Наприклад, ви часто побачите напис «ХХІ століття». Ви не можете написати «ХХІ-е століття», це вважається серйозною помилкою. Ви повинні читати це як «двадцять перше століття», але на письмі залишаються лише римські цифри. Інший важливий виняток — це стандартний формат дати, де день, місяць і рік розділені крапками. Якщо ви бачите дату у форматі «15.03.2024», ви не додаєте жодних закінчень чи слів. Ви просто читаєте це як звичайну дату, підставляючи правильні відмінки самостійно під час читання вголос.
+In written Ukrainian, dates and ordinal numerals are frequently represented using digits rather than being spelled out entirely in words. When you write an ordinal numeral using Arabic numerals, you must attach a specific suffix to indicate its grammatical case, gender, and number. This suffix is connected to the digit with a hyphen. The rule for determining the correct suffix is straightforward: you take the last one or two letters of the spelled-out ordinal numeral. You never write the entire word after the digit, just the grammatical ending.
 
-:::note
-**Quick tip**
-Never attach ordinal suffixes (like "-го" or "-й") to Roman numerals. It is always "ХХ століття", never "ХХ-те століття". The same applies to dates written with dots: "15.03.2024" stands alone without any hyphenated endings.
-:::
+Правильне написання цих закінчень допомагає читачеві миттєво зрозуміти відмінок числа. Наприклад, якщо ви пишете дату «п'ятнадцятого березня» цифрами, ви повинні додати закінчення родового відмінка. Оскільки слово «п'ятнадцятого» закінчується на літери «го», ви пишете «15-го березня». Так само працює узгодження з іменниками жіночого та чоловічого роду в різних відмінках. Якщо ви згадуєте «першу сторінку» у називному відмінку, ви пишете «1-ша сторінка». Якщо ви говорите про «п'ятий клас», ви пишете «5-й клас».
 
-Тепер давайте потренуємося застосовувати всі ці правила разом, читаючи повні історичні дати. Це завдання вимагає уважності, адже вам потрібно узгодити день, місяць і рік. Почнемо з найважливішої дати для України. Як би ви прочитали «24 серпня 1991 року»?
+While the hyphen rule is widely applied, there are two major exceptions you must memorize to write flawless Ukrainian. The first exception concerns Roman numerals, which are traditionally used in Ukrainian typography to denote centuries, millennia, or the names of monarchs. When you write an ordinal numeral using Roman numerals, you must never attach a hyphen or a grammatical suffix. The Roman numeral itself inherently functions as an ordinal. Therefore, when writing about the twenty-first century, you simply write «ХХІ століття». Adding a suffix, such as «ХХІ-го», is a strict orthographic error.
 
-Спочатку беремо день. Запитання «коли?», тому нам потрібен родовий відмінок: «двадцять четвертого». Місяць залишається в родовому відмінку: «серпня». Далі йде рік: «тисяча дев'ятсот дев'яносто першого». І закінчуємо словом «року». Разом виходить: «двадцять четвертого серпня тисяча дев'ятсот дев'яносто першого року». Спробуйте подумки прочитати дату вашого народження. Спочатку переведіть число в родовий відмінок, потім додайте місяць. Після цього прочитайте рік, пам'ятаючи, що змінюється лише останнє слово. Ця практика допоможе вам почуватися впевнено під час спілкування в офіційних установах або в розмовах з друзями про минулі події.
+Другий важливий виняток стосується стандартного календарного формату запису дат. У діловому листуванні або в коротких нотатках дати часто записують лише цифрами, розділеними крапками. У такому цифровому форматі закінчення порядкових числівників ніколи не використовуються. Наприклад, якщо ви хочете записати п'ятнадцяте березня дві тисячі двадцять четвертого року, ви пишете просто «15.03.2024». Ви не додаєте жодних літер чи дефісів до цих цифр. Читач автоматично прочитає цю послідовність цифр словами у правильних відмінках, спираючись на контекст речення.
 
-Ви також можете зустріти дати без точного дня, лише з місяцем і роком. У такому випадку місяць стоїть у місцевому відмінку з прийменником «у» або «в», а рік залишається в родовому. Наприклад: «У серпні тисяча дев'ятсот дев'яносто першого року». Але для точних повних дат завжди використовуйте повністю родовий відмінок без прийменників.
+To consolidate these complex rules, let us walk through the process of translating a complete historical date into full Ukrainian words. Consider the date of Ukrainian Independence: "24 серпня 1991 року". We know this date answers the question "when?", which means the entire phrase must be in the Genitive case. We start with the day. The number twenty-four is a compound numeral, so only the word "four" becomes an ordinal in the Genitive case. Thus, "twenty-fourth" becomes «двадцять четвертого». The month "August" is already in the Genitive case as «серпня». Next, we tackle the year: one thousand nine hundred ninety-first. Again, only the absolute final word declines. "One thousand" is «тисяча», "nine hundred" is «дев'ятсот», and "ninety" is «дев'яносто». The final word "first" becomes the Genitive ordinal «першого».
+
+Тепер ми можемо об'єднати всі ці частини в єдину, граматично досконалу фразу. Повна і правильна вимова цієї історичної дати звучить так: «двадцять четвертого серпня тисяча дев'ятсот дев'яносто першого року». Це здається складним на перший погляд, але структура є абсолютно логічною. Кожне слово виконує свою конкретну функцію. Використовуйте цей покроковий метод для перекладу дат народження, історичних подій або майбутніх зустрічей, і ви завжди говоритимете правильно.
 
 <!-- INJECT_ACTIVITY: match-up-dates -->
 <!-- INJECT_ACTIVITY: error-correction-dates -->
@@ -218,129 +220,152 @@ Never attach ordinal suffixes (like "-го" or "-й") to Roman numerals. It is a
 
 ## Час
 
-Telling time in Ukrainian requires a solid understanding of ordinal numerals, as hours are almost always expressed as an order in a sequence. When someone asks «Котра година?» (What time is it?), they are literally asking "Which hour is it?". The answer uses the Nominative case of the ordinal numeral, such as «Зараз п'ята година» (It is the fifth hour). However, when you need to state *at what time* an event happens, answering the question «О котрій годині?» (At what time?), the grammar shifts. You must use the preposition «о» (or «об» before vowels) followed by the ordinal numeral in the Locative case. For feminine ordinal numerals, this means using the «-ій» ending.
+In Ukrainian, when you want to ask "At what time?" you say «О котрій годині?». As explained in Авраменко Grade 11 (p. 42), to answer this question for full hours, you must use the preposition «о» (or «об» before a vowel sound) followed by an ordinal numeral in the Locative case (Місцевий відмінок). The word for hour, «година», also takes the Locative case, becoming «годині». Because you are specifying a point in a sequence, you use ordinals like "first" or "second" rather than cardinal numbers. This means that to say "at one o'clock", you literally say "at the first hour".
 
-Якщо подія відбувається рівно о певній годині, ми завжди використовуємо прийменник «о» або «об» та місцевий відмінок. Слово «година» є іменником жіночого роду, тому порядковий числівник також приймає форму жіночого роду. Наприклад, ми кажемо «о першій годині», «о другій годині» або «о десятій годині». Якщо числівник починається з голосного звуку, для милозвучності ми використовуємо прийменник «об», як у виразі «об одинадцятій годині». Зверніть увагу, що слово «година» часто можна опустити в розмові, і фраза «зустрінемось о сьомій» буде абсолютно зрозумілою та природною.
+Українською мовою ми завжди використовуємо порядкові числівники для позначення точного часу. Якщо подія відбувається рівно о першій годині, ми кажемо «о першій годині». Коли зустріч запланована на одинадцяту, ми говоримо «об одинадцятій годині» або просто «об одинадцятій». Прийменник «об» використовується перед голосними звуками для милозвучності.
 
-> *If an event happens exactly at a certain hour, we always use the preposition "о" or "об" and the Locative case. The word "hour" is a feminine noun, so the ordinal numeral also takes the feminine form. For example, we say "at the first hour", "at the second hour", or "at the tenth hour". If the numeral starts with a vowel sound, for euphony we use the preposition "об", as in the expression "at the eleventh hour". Note that the word "hour" can often be omitted in conversation, and the phrase "let's meet at the seventh" will be perfectly understandable and natural.*
+> *In Ukrainian, we always use ordinal numerals to indicate exact time. If an event happens exactly at one o'clock, we say "at the first hour". When a meeting is scheduled for eleven, we say "at the eleventh hour" or simply "at the eleventh". The preposition "об" is used before vowel sounds for euphony.*
 
-Expressing half-hours in Ukrainian uses a unique and highly structured approach that might seem counterintuitive at first. Instead of looking back at the hour that has passed, Ukrainian looks forward to the approaching hour. The construction uses the phrase «о пів на» (literally "at half toward") followed by the ordinal numeral of the *next* hour in the Accusative case. The Accusative ending for feminine ordinal numerals is «-ю». For example, 4:30 is expressed as «о пів на п'яту». You are essentially saying that time has advanced halfway toward the fifth hour.
+Expressing half hours in Ukrainian requires a completely different logical structure compared to English. You use the phrase «о пів на» followed by the ordinal numeral of the *upcoming* hour in the Accusative case (Знахідний відмінок). The word «пів» is an indeclinable noun meaning "half", and «на» is a preposition indicating direction. Therefore, the phrase «о пів на п'яту» literally translates to "at half toward the fifth". This logic reflects the progression of time moving towards the next full hour.
 
-Конструкція з «о пів на» є дуже поширеною в повсякденному спілкуванні і вимагає уважності. Ви повинні завжди думати про наступну годину, яка ще не настала. Якщо зараз 8:30, українською мовою це звучить як «о пів на дев'яту». Використання знахідного відмінка після прийменника «на» вказує на напрямок руху часу. Ця логіка кардинально відрізняється від багатьох інших мов, де час зазвичай прив'язується до поточної години. Спочатку це може здатися незвичним, але регулярна практика швидко перетворить цю конструкцію на автоматичну навичку.
+Коли хвилинна стрілка показує рівно половину години, ми дивимося на наступну годину. Наприклад, час чотири тридцять ми називаємо «о пів на п'яту». Якщо зараз дев'ята тридцять, ми скажемо, що це «о пів на десяту». Ви повинні пам'ятати, що числівник після прийменника «на» завжди стоїть у формі знахідного відмінка жіночого роду.
 
-When expressing minutes past or to the hour, the logic of looking forward or backward dictates the prepositions used. For minutes *past* the hour (the first 30 minutes), Ukrainian uses the preposition «на» + Accusative case of the next hour, similar to the half-hour rule. For example, 4:10 is «десять хвилин на п'яту» (ten minutes toward the fifth). When expressing minutes *to* the hour (the last 30 minutes), the perspective flips. You state the minutes remaining, followed by the preposition «за» + Nominative case of the approaching hour. Thus, 4:50 becomes «за десять хвилин п'ята» (in ten minutes, the fifth).
+> *When the minute hand shows exactly half an hour, we look at the next hour. For example, we call the time four thirty "at half toward the fifth". If it is currently nine thirty, we will say that it is "at half toward the tenth". You must remember that the numeral after the preposition "на" is always in the form of the accusative case of the feminine gender.*
 
-Коли хвилинна стрілка перебуває в першій половині циферблата, ми використовуємо прийменник «на» та знахідний відмінок наступної години. Наприклад, 14:15 ми читаємо як «п'ятнадцять хвилин на третю». Якщо хвилинна стрілка перетнула позначку в тридцять хвилин, ми починаємо відраховувати час, що залишився до наступної години. У цьому випадку ми використовуємо прийменник «за», кількість хвилин у називному відмінку та саму годину в називному відмінку. Час 08:40 буде звучати як «за двадцять хвилин дев'ята», що буквально означає, що через двадцять хвилин настане дев'ята година.
+To express minutes past the hour, Ukrainian uses the preposition «на» just like with half hours. You state the number of minutes that have passed as a cardinal numeral, followed by «на» and the next hour as an ordinal numeral in the Accusative case. For example, 4:10 is expressed as «десять хвилин на п'яту» (ten minutes toward the fifth). Conversely, to express minutes to the hour, you use the preposition «за». You state the word «за», then the number of remaining minutes, followed by the upcoming hour in the Nominative case. Therefore, 4:50 becomes «за десять хвилин п'ята» (in ten minutes, the fifth). If you want to use the word for "quarter", which is «чверть», the same prepositions apply. A quarter past four is «чверть на п'яту», and a quarter to five is «за чверть п'ята».
 
 :::info
 **Grammar box**
-A common error among learners and even some native speakers is using the preposition «без» (without) + Genitive case to express minutes to the hour, such as saying *«без десяти п'ять» for 4:50. This is a direct calque (literal translation) from Russian and is considered a severe grammatical error in standard Ukrainian. The only correct traditional forms are «за десять хвилин п'ята» or «десять хвилин до п'ятої». If these constructions feel too complex in the moment, you can always rely on the simple digital reading, saying «чотири п'ятдесят».
+When saying minutes past the hour, use «на» + Accusative (Знахідний відмінок). When saying minutes to the hour, use «за» + Nominative (Називний відмінок). The word «хвилина» (minute) is often omitted in casual speech.
 :::
 
-Уникання кальок є важливим кроком до чистої та правильної української мови. Конструкція з прийменником «без» для позначення часу є яскравим прикладом російського впливу, якого слід свідомо позбуватися. Коли ви хочете сказати 11:45, ніколи не кажіть «без п'ятнадцяти дванадцять». Правильними та природними варіантами є «за п'ятнадцять хвилин дванадцята» або «за чверть дванадцята». Слово «чверть» означає п'ятнадцять хвилин і часто використовується для зручності. Якщо ви сумніваєтесь у правильності відмінків, завжди краще назвати час цифрами, ніж використовувати неправильну граматичну конструкцію з іншої мови.
+A crucial decolonization rule applies to telling time in Ukrainian. You must explicitly avoid the common, yet entirely incorrect, Russicism «*без десяти п'ять». This literal translation of a Russian time structure does not exist in standard Ukrainian grammar. The Ukrainian language has its own distinct and natural constructions for indicating approaching time, primarily using the preposition «за». Using «*без десяти» immediately identifies a speaker as using Surzhyk. To express 4:50 correctly, you have only two valid options. You can use the traditional prepositional structure «за десять хвилин п'ята», or you can simply read the digital time as «чотири п'ятдесят». Both of these native options maintain the purity of the language and ensure that your speech sounds natural to a native ear.
 
-> *Avoiding calques is an important step toward clean and correct Ukrainian. The construction with the preposition "без" for telling time is a clear example of Russian influence that should be consciously eliminated. When you want to say 11:45, never say "без п'ятнадцяти дванадцять". The correct and natural options are "за п'ятнадцять хвилин дванадцята" or "за чверть дванадцята". The word "чверть" means fifteen minutes and is often used for convenience. If you are unsure about the correct cases, it is always better to name the time using digits rather than using an incorrect grammatical construction from another language.*
+While the traditional structures with ordinal numerals are considered the standard formal register, everyday Ukrainian also embraces a simpler colloquial approach. In informal settings, you can simply read the numbers as they appear on a digital clock, using cardinal numerals for both hours and minutes. This means that while 3:15 is formally expressed as «п'ятнадцять хвилин на четверту» or «чверть на четверту», you will frequently hear people say «три п'ятнадцять». Both registers are completely acceptable and widely understood depending on the social context. The digital reading is particularly common in transportation schedules, business meetings, and situations requiring maximum brevity. Conversely, the traditional ordinal structures are preferred in literature, formal broadcasting, and elegant everyday speech.
 
-In modern Ukrainian, there is a clear distinction between the formal traditional way of telling time and the colloquial digital method. Formal time expressions rely heavily on ordinal numerals and the prepositions «на», «за», or «до» (e.g., «п'ятнадцять хвилин на четверту» for 3:15). This style is standard in literature, broadcasting, and polite conversation. However, the colloquial approach simply reads the numbers as they appear on a digital clock, using cardinal numerals. Saying «три п'ятнадцять» (three fifteen) or «п'ятнадцята тридцять» (fifteen thirty) is perfectly acceptable in everyday situations, train stations, or business meetings where clarity and brevity are prioritized.
+Let us practice translating specific times into both formal and colloquial Ukrainian formats. We will examine 3:15, 7:30, 11:45, 12:00, and 6:05. For 3:15, the formal version is «чверть на четверту» or «п'ятнадцять хвилин на четверту», while the colloquial is «три п'ятнадцять». For 7:30, the formal structure dictates «о пів на восьму», and the digital reading is «сім тридцять». To say 11:45, you formally use «за чверть дванадцята» or «за п'ятнадцять хвилин дванадцята», whereas colloquially it is «одинадцять сорок п'ять». Exactly 12:00 is simply «дванадцята година» formally, or «дванадцять нуль нуль» informally. Finally, 6:05 is formally «п'ять хвилин на сьому» and colloquially «шість нуль п'ять». By mastering both the traditional ordinal structures and the modern cardinal readings, you can confidently navigate any conversational setting or official schedule.
 
-Обидва способи називати час є правильними, але вони мають різний стилістичний відтінок. Традиційний формат з порядковими числівниками робить ваше мовлення більш вишуканим і демонструє глибоке розуміння граматики. Цифровий формат є більш прагматичним і часто використовується в офіційних розкладах транспорту або коли потрібно уникнути будь-яких непорозумінь. Вибір між цими двома стилями залежить від контексту спілкування та ваших особистих уподобань. Головне — бути послідовним і не змішувати обидві системи в одному реченні.
-
-Let's walk through a practice exercise to solidify these rules. We will take five specific times and express them in both the formal (ordinal) and colloquial (cardinal) variants. This mental drill will help bridge the gap between understanding the grammar and producing it fluently.
-
-Розглянемо час 03:15. Формальний варіант вимагає прийменника «на»: «п'ятнадцять хвилин на четверту» (або «чверть на четверту»). Розмовний варіант дуже простий: «третя п'ятнадцять». Для 07:30 традиційною формою є «о пів на восьму», тоді як цифровий еквівалент — «сьома тридцять». Час 11:45 формально звучить як «за п'ятнадцять хвилин дванадцята» (або «за чверть дванадцята»), а розмовно — «одинадцята сорок п'ять». Рівно 12:00 найкраще виражається як «дванадцята година» або просто «дванадцята». Нарешті, 06:05 перетворюється на «п'ять хвилин на сьому» в традиційній системі та на «шоста нуль п'ять» у повсякденній розмові. Регулярно перекладайте час на своєму годиннику українською, щоб швидко звикнути до цих конструкцій.
-
-<!-- INJECT_ACTIVITY: quiz-time -->
-<!-- INJECT_ACTIVITY: fill-in-time -->
+<!-- INJECT_ACTIVITY: quiz -->
+<!-- INJECT_ACTIVITY: fill-in -->
 
 ## Поверхи, номери, порядок
 
-When navigating a building, you will rely heavily on ordinal numerals to identify floors. The word for floor is «поверх», a masculine noun. Just like with any other location, the grammatical case depends entirely on whether you describe a static position or movement. To say someone is located on a specific floor, use the Locative case with the preposition «на». For instance, «на першому поверсі» means "on the first floor", and «на дев'ятому поверсі» means "on the ninth floor". However, when talking about movement, the rules change to reflect your trajectory. To express the origin of movement, like coming down from a floor, use the Genitive case with the preposition «з». An example is «з другого поверху» (from the second floor). Conversely, to indicate the destination of your movement, such as going up, you must use the Accusative case with the preposition «на». Thus, you would say «ми йдемо на п'ятий поверх» (we are going to the fifth floor). Understanding these patterns ensures accurate directions.
+When navigating buildings and describing movement between levels, ordinal numerals are essential. In Ukrainian, the case of the ordinal numeral and the noun **поверх** (floor) changes depending on whether you are describing a static location, an origin, or a destination. To say that something is located on a specific floor, you use the preposition **на** with the Locative case.
+
+**на першому поверсі** — *on the first floor*
+**на третьому поверсі** — *on the third floor*
+
+If you are describing movement originating from a floor, use the preposition **з** with the Genitive case.
+
+**з другого поверху** — *from the second floor*
+
+Conversely, when indicating movement toward a specific floor, you must use **на** with the Accusative case. Therefore, if you are taking an elevator up, you go **на п'ятий поверх** (to the fifth floor). Notice how the ordinal numeral always perfectly matches the case, gender, and number of the noun it modifies.
+
+Мій офіс знаходиться на дев'ятому поверсі великого бізнес-центру. Кожного ранку я піднімаюся на дев'ятий поверх ліфтом, а ввечері спускаюся з дев'ятого поверху сходами. Мої колеги працюють на сьомому поверсі, тому я часто ходжу до них у гості.
+
+> *My office is located on the ninth floor of a large business center. Every morning I go up to the ninth floor by elevator, and in the evening I go down from the ninth floor by the stairs. My colleagues work on the seventh floor, so I often go to visit them.*
+
+Beyond building levels, ordinal numerals frequently appear in transportation routes and physical addresses. When specifying a public transport route, it is common to use the word **номер** followed by an ordinal numeral in the Nominative case.
+
+**автобус номер сьомий** — *bus number seven*
+**тролейбус п'ятнадцятий** — *trolleybus fifteen*
+
+This structure treats the route number as a descriptive quality of the vehicle. Similarly, when giving an address or locating a specific room, ordinal numerals identify the exact sequential position of the house, apartment, or office.
+
+**будинок третій** — *house three*
+**квартира п'ята** — *apartment five*
+
+In large institutions, such as universities or corporate headquarters, rooms are often designated with compound numerals. If you need to find a specific office, you might be directed to **кабінет двісті десятий** (office two hundred ten). Remember the crucial rule for these compound ordinals: only the final word changes its form during declension, while the preceding numbers remain securely in their Nominative state.
+
+Expressing the frequency or sequence of events requires a mix of ordinal numerals and specific numerical adverbs. When you want to say that something is happening for the first time, you use the standard ordinal adjective and noun combination, such as **перший раз** (the first time). However, for subsequent occurrences, Ukrainian employs specialized adverbs ending in **-е** or **-є**.
+
+**вдруге** — *for the second time*
+**утретє** — *for the third time*
+**вчетверте** — *for the fourth time*
+
+These adverbs elegantly compress the meaning into a single word and are heavily favored in natural speech. Additionally, when prioritizing tasks or thoughts, you can use a very common idiom. The phrase **в першу чергу** (first of all) literally translates to "in the first queue" and is a staple of both conversational and professional Ukrainian.
+
+Я приїхав до Києва в першу чергу для того, щоб зустрітися з друзями. Це вже мій другий візит, але я відчуваю, ніби я тут перший раз. Сподіваюся, що коли я приїду сюди втретє, я зможу говорити українською ще краще.
+
+> *I came to Kyiv primarily to meet with friends. This is already my second visit, but I feel as if I am here for the first time. I hope that when I come here for the third time, I will be able to speak Ukrainian even better.*
+
+Historical periods and centuries are always expressed using ordinal numerals in Ukrainian, reflecting the chronological sequence of human history. The word for century is **століття**, which is a neuter noun. When stating that a historical event occurred within a specific century, you must use the preposition **у** or **в** followed by the Locative case.
+
+**у двадцять першому столітті** — *in the twenty-first century*
+
+If you are simply naming the century as the subject of a sentence, you use the Nominative case, such as **двадцяте століття** (the twentieth century). Beyond dates, when you are structuring a logical argument or presenting a list of reasons, ordinal adverbs are your best tools for organizing the information. To list your points sequentially, use **по-перше** (firstly), **по-друге** (secondly), and **по-третє** (thirdly). These adverbs are indispensable for creating a clear flow in your analytical speech.
 
 :::info
 **Grammar box**
-When navigating spaces, remember the preposition pairings: **на + Місцевий** (Locative) for static location («на першому поверсі»), **з + Родовий** (Genitive) for origin («з третього поверху»), and **на + Знахідний** (Accusative) for destination («на п'ятий поверх»).
+Remember that ordinal adverbs like **по-перше** and **по-друге** are always written with a hyphen. They are typically used as introductory words at the beginning of a sentence and must be separated from the rest of the clause by commas.
 :::
 
-Ordinal numerals are also crucial for transport routes and precise addresses. When waiting at an intersection for public transport, you will refer to routes using ordinals. You might say you are waiting for «автобус номер сьомий» (bus number seven) or «тролейбус п'ятнадцятий» (trolleybus fifteen). It is very common in spoken Ukrainian to drop the word for "number" entirely, resulting in phrases like «сьомий автобус» (the seventh bus). Beyond public transport, these numerals are naturally used for pinpointing specific locations. When reading an address, you will refer to «будинок третій» (building three). Once inside, you will look for the specific door, which could be «квартира п'ята» (apartment five) for residential spaces, or «кабінет двісті десятий» (office two hundred ten) in commercial settings. Remember that the numeral must agree with the noun in gender. Since «будинок» and «кабінет» are masculine, their accompanying ordinals are masculine, while the feminine «квартира» requires a feminine ordinal.
+Finally, as highlighted in Авраменко Grade 7 (p. 63) regarding numeral usage in the formal register, ordinal numerals are a cornerstone of the **науково-навчальний** (scientific-educational) and **офіційно-діловий** (official-business) styles. In legal documents, contracts, and academic papers, the structure of the text is meticulously numbered. Unlike casual speech where numbers might precede the noun, formal citations often place the ordinal numeral after the noun for emphasis and clarity.
 
-Порядкові числівники допомагають нам виражати послідовність дій та новий досвід. Найпростіший спосіб описати таку ситуацію — використати словосполучення «перший раз». Однак, коли ми говоримо про повторювані дії, українська мова пропонує дуже елегантні прислівники, які закінчуються на літеру «-е». Замість того, щоб казати «другий раз», ви можете просто сказати «вдруге». Ця логіка продовжується і далі: «утретє» означає дію в третій раз, а «вчетверте» — в четвертий. Ці слова роблять ваше щоденне мовлення значно більш плавним. Крім того, існує поширена фраза «в першу чергу». Хоча багато українців використовують її щодня, синоніми «насамперед» або «передусім» вважаються більш питомими та літературними. Використовуйте їх, коли хочете підкреслити найважливіше завдання.
+**стаття перша** — *article one*
+**пункт третій** — *point three*
+**параграф п'ятий** — *paragraph five*
+**розділ восьмий** — *chapter eight*
 
-> *Ordinal numerals help us express the sequence of actions and new experiences. The simplest way to describe such a situation is to use the phrase «перший раз» (for the first time). However, when we talk about repeated actions, the Ukrainian language offers very elegant adverbs ending in the letter "-е". Instead of saying «другий раз», you can simply say «вдруге» (for the second time). This logic continues further: «утретє» means an action for the third time, and «вчетверте» for the fourth. These words make your daily speech significantly smoother. Additionally, there is a widespread phrase «в першу чергу» (first of all). Although many Ukrainians use it daily, the synonyms «насамперед» or «передусім» are considered more native and literary. Use them when you want to emphasize the most important task.*
+This inverted word order sounds highly authoritative and is the standard convention for citing specific sections of any formal text.
 
-When discussing history or art, you will frequently mention centuries. The word for century is «століття», a neuter noun. To state that an event happened in a particular century, use the Locative case with the preposition «у» or «в». For example, "in the twenty-first century" translates to «у двадцять першому столітті». Notice how the compound ordinal «двадцять першому» is in Locative to agree with «столітті». If you are naming the century as the subject, use the Nominative case, as in «двадцяте століття» (the twentieth century). Another important aspect of sequence is listing points in an argument. For this, Ukrainian uses ordinal adverbs formed with the prefix «по-». When structuring your thoughts, use «по-перше» (firstly), «по-друге» (secondly), and «по-третє» (thirdly) to guide your listener through your main points.
+Згідно з правилами університету, кожен студент повинен уважно прочитати розділ восьмий навчального посібника. У цьому розділі параграф п'ятий детально пояснює процедуру складання іспитів. Якщо виникають питання, стаття перша статуту містить усі необхідні відповіді.
 
-:::tip
-**Did you know?**
-When listing points in an argument (firstly, secondly, thirdly), always use the hyphenated adverbs **по-перше**, **по-друге**, and **по-третє**. In written Ukrainian, these introductory words are always followed by a comma.
-:::
+> *According to the university rules, every student must carefully read chapter eight of the study guide. In this chapter, paragraph five explains the examination procedure in detail. If questions arise, article one of the statute contains all the necessary answers.*
 
-Finally, ordinal numerals carry significant weight in formal and official registers, such as legal documents. This style of language is known as «науково-навчальний» or «офіційно-діловий» стиль. When citing laws, contracts, or textbook structures, ordinal numerals are almost exclusively used to ensure absolute clarity. For instance, when referring to a constitution, you will say «стаття перша» (article one) instead of using a cardinal number. The same principle applies to other structural divisions within formal texts. You will regularly encounter phrases like «пункт третій» (point three), «параграф п'ятий» (paragraph five), and «розділ восьмий» (chapter eight). In these contexts, placing the noun before the ordinal numeral adds a distinct tone of authority and formality. Mastering this specific word order is essential if you plan to engage with professional environments or read official announcements.
-
-<!-- INJECT_ACTIVITY: fill-in-order -->
-<!-- INJECT_ACTIVITY: quiz-order -->
+<!-- INJECT_ACTIVITY: match-up-match-ordinals-with-their-appropriate-usage-contexts -->
+<!-- INJECT_ACTIVITY: error-correction-correct-the-declension-of-ordinal-numbers-in-sentences -->
 
 ## Порядкові числівники в контексті
 
-To truly master ordinal numerals, you must see them in action within authentic scenarios. In professional environments, formal invitations, schedules, and daily announcements rely heavily on precise dates, times, and locations. Without ordinal numerals, organizing our lives would be incredibly difficult. A single corporate announcement can contain multiple ordinal numerals, each declining differently depending on its specific grammatical role in the sentence. Imagine you have just received an official invitation to an important conference regarding a new software project. This short text demonstrates how ordinal numerals seamlessly integrate with nouns in various cases to convey exact logistical details. Pay close attention to how the endings change to agree with words like "March," "hour," "floor," and "room." Recognizing these patterns in a complete paragraph will help you build your own complex sentences.
+To truly master ordinal numerals, you must see them working together in a natural environment. In everyday professional life in Ukraine, you will constantly encounter texts that are packed with dates, times, and locations. Imagine you have just received a formal email or a printed invitation to an important business meeting at a corporate office in Kyiv. This type of text is a perfect example of the **офіційно-діловий** (official-business) style. Such messages require precision, meaning that every single number—from the day of the month to the exact room number—must be expressed using the correct case. Let us read this short invitation and observe how the ordinal numerals adapt to their specific grammatical roles within the sentence.
 
-Шановні колеги! Офіційна зустріч щодо нашого нового спільного проєкту відбудеться п'ятнадцятого березня. Реєстрація всіх учасників почнеться о другій годині дня біля головного входу. Сама наукова конференція розпочнеться рівно о третій годині. Захід проходитиме в головному офісі нашої компанії, який розташований у центрі міста. Головний конференц-зал розташований на четвертому поверсі. Якщо у вас виникнуть будь-які питання, будь ласка, звертайтеся до організаторів у кімнаті двісті двадцять п'ятій. Просимо вас не запізнюватися на відкриття. Це наша перша масштабна подія у двадцять першому столітті. Ми чекаємо на вас із великим нетерпінням!
+Шановні колеги! Офіційна зустріч щодо нового проєкту відбудеться п'ятнадцятого березня о третій годині дня. Захід проходитиме в головному офісі нашої компанії. Зверніть увагу, що конференц-зал розташований на четвертому поверсі, у кімнаті двісті двадцять п'ятій. Будь ласка, не запізнюйтеся, оскільки презентація розпочнеться рівно о пів на четверту. Для реєстрації вам потрібно підійти до адміністратора, який знаходиться на першому поверсі біля головного входу. Якщо у вас виникнуть питання, ви можете зателефонувати до нашого секретаря. Чекаємо на вас і сподіваємося на плідну співпрацю!
 
-> *Dear colleagues! The official meeting regarding our new joint project will take place on the fifteenth of March. Registration of all participants will begin at two o'clock in the afternoon near the main entrance. The scientific conference itself will start exactly at three o'clock. The event will be held in the main office of our company, which is located in the city center. The main conference hall is located on the fourth floor. If you have any questions, please contact the organizers in room two hundred and twenty-five. We ask you not to be late for the opening. This is our first large-scale event in the twenty-first century. We look forward to seeing you with great anticipation!*
+> *Dear colleagues! The official meeting regarding the new project will take place on the fifteenth of March at three o'clock in the afternoon. The event will be held in the main office of our company. Please note that the conference hall is located on the fourth floor, in room two hundred and twenty-five. Please do not be late, as the presentation will start exactly at half past three. For registration, you need to approach the receptionist, who is located on the first floor near the main entrance. If you have any questions, you can call our secretary. We look forward to seeing you and hope for fruitful cooperation!*
 
-Let us thoroughly analyze the grammar utilized in this formal invitation. The phrase «п'ятнадцятого березня» uses the Genitive case because it directly answers the question "on what date did something happen?". In Ukrainian, both the ordinal numeral and the month must be in the Genitive case to form this time expression. When indicating the exact clock time of the conference, the text uses «о третій годині» in the Locative case, directly following the preposition «о». The word for floor is a masculine noun, so saying "on the fourth floor" becomes «на четвертому поверсі». This again uses the Locative case to indicate a static physical location within a building. Finally, the compound numeral in the phrase «у кімнаті двісті двадцять п'ятій» requires a special rule: only the very last word declines. Because the noun «кімнаті» is a feminine word in the Locative case, the ordinal numeral becomes «п'ятій», while the cardinal number "two hundred twenty" remains completely unchanged in its base Nominative form.
+Let us break down the grammar in this invitation to understand why each ordinal numeral took its specific form. The text begins with the date: **п'ятнадцятого березня** (on the fifteenth of March). Because it answers the question of when a specific event occurs on the calendar, the ordinal numeral must be in the Genitive case. Next, we see the time: **о третій годині** (at three o'clock). To indicate the exact hour an event begins, Ukrainian uses the preposition **о** followed by the Locative case. The location of the hall is described as being **на четвертому поверсі** (on the fourth floor). The preposition **на** indicating a static location requires the Locative case, and the ordinal numeral perfectly agrees with the masculine noun. Finally, the specific room is **у кімнаті двісті двадцять п'ятій** (in room two hundred and twenty-five). Here, the noun is in the Locative case after the preposition **у**. Notice that in the compound numeral, the words **двісті** and **двадцять** remain in the Nominative form, and only the last word, **п'ятій**, declines to match the feminine Locative case.
 
 :::info
 **Grammar box**
-When stating that an event happened "on a date", both the ordinal numeral and the month must be in the Genitive case (e.g., **п'ятнадцятого березня**). However, when expressing that you need something "for a specific date" (like booking a ticket), you must use the preposition **на** followed by the Accusative case (e.g., **на п'яте березня**).
+When reading long compound numerals in a text, do not let them intimidate you. Remember the golden rule: no matter how many words make up the number, only the very last word changes its case ending to agree with the noun.
 :::
 
-Another extremely common situation where ordinal numerals are absolutely vital is purchasing travel tickets and navigating transportation hubs. Whether you are standing at a busy bus terminal, an airport check-in counter, or a train station, you will constantly need to specify exact dates, platforms, and seat numbers. Let us look at a typical everyday conversation at the central railway station, Київський вокзал. A passenger is trying to buy a train ticket to Lviv for a specific upcoming day. This short dialogue perfectly highlights how grammatical cases shift quickly as the conversation context changes from target dates to points of origin and physical locations within the large station complex.
+Now let us shift from formal written text to everyday spoken communication. One of the most common situations where you will need to actively produce ordinal numerals is when navigating the transportation system. Imagine you are at **Київський вокзал** (Kyiv Railway Station), preparing for a trip across the country. You approach the ticket window to speak with a **касир** (cashier) about buying a train ticket. In this fast-paced exchange, you must specify the exact date of your departure, confirm the platform number, and ask about the train car. Navigating a large railway station also requires asking for directions, which often involves floor numbers. Pay close attention to the cases used in this practical conversation.
 
-> — **Пасажир:** Добрий день! Мені потрібен квиток до Львова на п'яте березня. *(Good day! I need a ticket to Lviv for the fifth of March.)*
-> — **Касир:** Добрий день. На жаль, на ранковий експрес квитків уже немає. Але є вільні місця на вечірній потяг. *(Good day. Unfortunately, there are no tickets left for the morning express. But there are available seats on the evening train.)*
-> — **Пасажир:** Чудово, мені це підходить. А з якого вагона починається нумерація? *(Great, that suits me. And from which car does the numbering start?)*
-> — **Касир:** З першого вагона, з голови потяга. Ваш третій перон, колія номер п'ять. *(From the first car, from the head of the train. Your platform is the third platform, track number five.)*
-> — **Пасажир:** Зрозумів. А де я можу роздрукувати мій електронний квиток? *(Understood. And where can I print my electronic ticket?)*
-> — **Касир:** На другому поверсі — спеціальна каса для електронних квитків. *(On the second floor is a special ticket office for electronic tickets.)*
-> — **Пасажир:** Дуже дякую за допомогу! *(Thank you very much for the help!)*
+> — **Пасажир:** Добрий день! Мені потрібен квиток на п'яте березня до Львова. *(Good day! I need a ticket for the fifth of March to Lviv.)*
+> — **Касир:** Добрий день. Є квитки на ранковий потяг. Відправлення о восьмій годині. *(Good day. There are tickets for the morning train. Departure is at eight o'clock.)*
+> — **Пасажир:** Чудово. А звідки посадка? З якого вагона починається нумерація? *(Great. And where is the boarding? From which car does the numbering start?)*
+> — **Касир:** Нумерація починається з першого вагона. Ваш потяг прибуває на третій перон. *(The numbering starts from the first car. Your train arrives at the third platform.)*
+> — **Пасажир:** Дякую. А де я можу роздрукувати електронний квиток? *(Thank you. And where can I print an electronic ticket?)*
+> — **Касир:** На другому поверсі — каса для електронних квитків. *(On the second floor is the ticket office for electronic tickets.)*
+> — **Пасажир:** Зрозумів. На п'яте березня, третій перон. Дякую за допомогу! *(Understood. For the fifth of March, the third platform. Thank you for your help!)*
 
-In this exchange, the passenger actively asks for a ticket «на п'яте березня». Here, the preposition «на» indicates a specific target date or a deadline for a reservation. This construction always requires the Accusative case. Since the word «п'яте» acts as a neuter numeral (implying the neuter noun «число»), its Accusative form conveniently matches its Nominative form. When the cashier explains the layout and numbering of the train cars, she says «з першого вагона». The preposition «з» (meaning "from" or "out of") always demands the Genitive case to show the definitive point of origin. The phrase «третій перон» serves simply as the grammatical subject of that particular sentence, so it remains comfortably in the default Nominative case. Lastly, when explaining exactly where the passenger can print the physical ticket, the cashier uses the phrase «на другому поверсі». Just like in our previous reading passage about the conference, indicating a static location inside a building requires the Locative case. By breaking down these real-world examples, you can clearly see how ordinal numerals adapt to their surroundings.
+In this dialogue, the grammatical roles of the ordinal numerals change rapidly depending on the context. The passenger asks for a ticket **на п'яте березня** (for the fifth of March). Because the preposition **на** here indicates a target date for the ticket, the ordinal numeral takes the Accusative case, which matches the form of the implied neuter noun. When discussing the numbering of the train cars, the cashier says **з першого вагона** (from the first car). The preposition **з** denotes origin or starting point and always dictates the Genitive case. When the cashier states that the train arrives at **третій перон** (the third platform), the phrase functions as the destination of motion; since it is an inanimate masculine noun, its Accusative form is identical to the Nominative form. Finally, to explain where the ticket office is located, the cashier uses **на другому поверсі** (on the second floor), applying the Locative case to express a static position.
 
-<!-- INJECT_ACTIVITY: reading-ordinals -->
+This same flexibility applies to making professional appointments:
+
+> — **Клієнт:** Коли вам зручно? Може, двадцять першого? *(When is it convenient for you? Maybe on the twenty-first?)*
+> — **Менеджер:** О котрій годині? О пів на другу? *(At what time? At half past one?)*
+> — **Клієнт:** Добре, на якому поверсі ваш офіс? *(Good, on which floor is your office?)*
+
+For a quick self-check on historical dates, remember that Independence Day is 24 серпня 1991. Now try writing Constitution Day: 28 червня 1996 (Конституція). It is written as «двадцять восьмого червня тисяча дев'ятсот дев'яносто шостого року».
+
+<!-- INJECT_ACTIVITY: reading -->
 
 ## Підсумок
 
-The rules governing ordinal numerals in Ukrainian might seem numerous at first glance, but they follow highly predictable patterns. The most fundamental principle to remember is that ordinal numerals decline exactly like adjectives. This means they must always agree with their accompanying noun in gender, number, and case. When you encounter a compound ordinal numeral, remember that only the last word changes its form, while all preceding words remain frozen in the Nominative case. In practical usage, specific contexts demand specific cases. Dates always require the Genitive case to indicate when an event occurred. Conversely, expressing clock time requires the Locative case.
+In this module, we have explored how ordinal numerals function within the Ukrainian case system. The fundamental rule to remember is that ordinal numerals decline exactly like adjectives, agreeing with the noun they modify in gender, number, and case. Most follow the hard group pattern, while «третій» is the notable exception that follows the soft group. When dealing with compound ordinal numerals, the rule simplifies significantly: only the very last word changes its form, while all preceding words remain strictly in the Nominative case. We also examined how these numerals are applied in daily life. For expressing dates, you must use the Genitive case for both the ordinal numeral and the month when answering the question «коли?» (when). However, when stating the current date with «сьогодні», the Nominative case is required. When telling time, the Locative case is necessary to specify the exact hour an event occurs, such as «о третій годині». Finally, always remember to use the preposition «за» or «до» for approaching hours, such as «за десять хвилин п'ята», and strictly avoid the incorrect construction «*без десяти».
 
-**сьомого березня** — *on the seventh of March*
-**о третій годині** — *at three o'clock*
-
-Finally, when talking about minutes approaching the next hour, always use the proper preposition to indicate time remaining. You must completely avoid unnatural constructions borrowed from Russian.
-
-**за десять хвилин сьома** — *ten minutes to seven (never "без десяти")*
-
-Українська граматика вимагає точності у використанні числівників. Якщо ви запам'ятаєте базові правила відмінювання та керування відмінками, ви зможете впевнено говорити про час, дати та розклади.
-
-> *Ukrainian grammar requires precision in the use of numerals. If you remember the basic rules of declension and case governance, you will be able to speak confidently about time, dates, and schedules.*
-
-:::info
-**Перевірте себе**
-Now that we have covered the theory, it is time to put your knowledge into practice. Complete the following tasks to ensure you have mastered the material. You can write your answers down or say them aloud.
+:::tip
+**Did you know?** — The stress on most ordinal numerals is fixed and does not shift when the word changes cases. Once you learn the stress pattern for the Nominative form of words like «перший» or «сьомий», you can be confident it remains exactly the same throughout the entire declension paradigm.
 :::
 
-Тепер час для невеликої самоперевірки. Спробуйте виконати ці п'ять практичних завдань, щоб остаточно закріпити вивчений матеріал.
+Тепер настав час перевірити ваші знання на практиці. Виконайте ці п'ять завдань самостійно, щоб закріпити матеріал цього розділу. По-перше, провідміняйте складений числівник «двадцять п'ятий» за всіма сімома відмінками чоловічого роду. По-друге, напишіть сьогоднішню дату словами у двох різних форматах: як відповідь на запитання «яке сьогодні число?», а потім як відповідь на запитання «коли відбулася подія?». По-третє, напишіть час 3:15, 7:30 та 11:45 українською мовою, використовуючи офіційний стиль з порядковими числівниками. По-четверте, скажіть свою адресу, обов'язково вказавши правильний поверх у місцевому відмінку та номер квартири. Нарешті, назвіть три різні століття, використовуючи місцевий відмінок з прийменником «у» (наприклад, «у двадцятому столітті»).
 
-Перше завдання стосується граматики. Відміняйте складений числівник «двадцять п'ятий» за всіма відмінками. Зверніть особливу увагу на те, яке саме слово змінює своє закінчення під час відмінювання.
+> *Now it is time to test your knowledge in practice. Complete these five tasks independently to consolidate the material of this section. First, decline the compound numeral "twenty-fifth" through all seven cases of the masculine gender. Second, write today's date in words in two different formats: as an answer to the question "what is today's date?", and then as an answer to the question "when did the event occur?". Third, write the times 3:15, 7:30, and 11:45 in Ukrainian, using the formal style with ordinal numerals. Fourth, state your address, being sure to indicate the correct floor in the Locative case and the apartment number. Finally, name three different centuries, using the Locative case with the preposition "in" (for example, "in the twentieth century").*
 
-Друге завдання пов'язане з календарем. Напишіть сьогоднішню дату словами двома різними способами. Спочатку напишіть, яке сьогодні число, використовуючи правильний відмінок. Потім уявіть, що певна подія відбулася саме сьогодні, і напишіть цю дату.
-
-Третє завдання перевірить ваше вміння називати час. Напишіть час 3:15, 7:30 та 11:45 українською мовою. Спробуйте використати як офіційний, так і розмовний стилі для кожного варіанта, пам'ятаючи про прийменники.
-
-Четверте та п'яте завдання мають практичне значення. Скажіть свою адресу, обов'язково вказавши поверх і номер квартири у відповідному відмінку. Після цього назвіть три різні історичні століття у місцевому відмінку, використовуючи правильну форму порядкових числівників.
-
-In the next module, we will explore a closely related and equally important topic: quantitative expressions. While this module focused on ordinal numbers indicating sequence and order, the next one will delve into cardinal numbers. We will learn exactly how numbers like two, five, or forty interact with nouns in different cases. You will discover the unique rules of agreement between numbers and nouns, such as why the number two requires the Nominative plural, while the number five demands the Genitive plural. Understanding these quantitative rules will allow you to count objects, describe quantities, and express measurements with absolute grammatical accuracy.
-
-<!-- INJECT_ACTIVITY: quiz -->
+Looking ahead to our next topic, we will continue our deep dive into the world of numbers by exploring quantitative expressions and their interaction with the case system. While ordinal numerals elegantly align with adjective rules, cardinal numerals—the numbers used for counting quantities like "one", "two", or "five"—have their own unique and sometimes surprising demands on the nouns that follow them. You will learn the crucial difference between how the numbers "two", "three", and "four" dictate the Nominative plural, while numbers "five" and above require the Genitive plural. Understanding these foundational rules for quantitative expressions will allow you to confidently count objects, discuss amounts, and build complex sentences without hesitation.
 </module_content>
 
 ---

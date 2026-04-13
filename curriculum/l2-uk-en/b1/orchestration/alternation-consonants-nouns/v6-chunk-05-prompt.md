@@ -22,7 +22,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-твердий задньоязиковий звук [к]. Він несподівано перетворюється на твердий шиплячий звук [ч]. Ця зміна завжди відбувається перед типовим голосним закінченням «-е». Найвідоміший приклад цього правила — це популярне слово **«хлопець»** *(boy)*. Коли ми емоційно кличемо молодого юнака, ми обов'язково кажемо: «Гей, хлопче, допоможи мені!» Інше дуже поширене слово, яке ви часто будете чути, — це **«молодець»** *(well done)*. У формі прямого звертання воно звучить як «Ти справжній молодче!» Якщо ми говоримо про традиційні ремісничі професії, то базове слово **«швець»** *(shoemaker)* у кличному відмінку симетрично змінюється на форму «шевче». Цей специфічний перехід м'якого [ц'] у твердий [ч] робить українські звертання надзвичайно експресивними, чіткими та колоритними. Окрім цих регулярних та зрозумілих правил, існують також деякі **рідкісні** *(rare)* та **непродуктивні** *(unproductive)* чергування приголосних. Ці особливі випадки трапляються лише в кількох конкретних словах і не створюють нових граматичних шаблонів. Наприклад, історичний звук [з] іноді може перетворюватися на твердий шиплячий звук [ж]. Це старе фонетичне правило найкраще видно у давньому слові **«князь»** *(prince)*. Коли піддані або воїни зверталися до свого правителя, вони з глибокою повагою казали йому: «Мій великий княже!» Сьогодні ми використовуємо це красиве слово переважно під час читання історичних романів або літописів. Інший цікавий виняток — це рідкісний перехід звичайного звука [с] у м'який шиплячий звук [ш]. Він дивом зберігся у стародавній формі слова **«колесо»** *(wheel)*. У деяких класичних українських текстах або народному фольклорі ви можете знайти незвичну форму місцевого відмінка «на колішні» замість стандартного сучасного варіанта «на колесі». Ці унікальні слова є своєрідними лінгвістичними пам'ятками минулого. Вам не потрібно довго шукати тут логіку — їх варто просто запам'ятати як цілісні готові лексичні фрагменти. Чому ж м'який свистячий звук [ц'] раптом перетворюється на твердий шиплячий звук [ч]? Відповідь на це питання ховається у глибокій історії нашої давньої мови. Сам звук [ц'] колись дуже давно утворився з твердого звука [к] через складний процес м'якшення. Коли ми використовуємо кличний відмінок і додаємо закінчення «-е», наш артикуляційний апарат використовує той самий механізм руху язика вперед, що і при чергуванні [к] на [ч]. Тобто, зміна форми «хлопець» на «хлопче» є абсолютно симетричною і паралельною до зміни форми «козак» на «козаче». Це блискуче доводить, що всі ці різноманітні фонетичні явища міцно пов'язані між собою невидимими історичними нитками. Тепер давайте чітко систематизуємо всі наші нові знання про ці два важливі типи чергувань. Як нам швидко та безпомилково обрати правильний приголосний звук під час розмови? Пам'ятайте один головний і дуже простий принцип. Тверді шиплячі звуки [ж], [ч], [ш] завжди асоціюються з активною комунікацією або творенням. Ми використовуємо їх, коли безпосередньо звертаємося до людини у кличному відмінку («друже», «козаче») або коли активно створюємо абсолютно нові слова за допомогою суфіксів («ніжка», «ручка»). З іншого боку, м'які свистячі звуки [з'], [ц'], [с'] пов'язані зі стабільністю, адресатом та напрямком простору. Вони є надійними маркерами давального відмінка, коли ми комусь щось даруємо («моїй подрузі»), та місцевого відмінка, коли ми детально описуємо статичну локацію («на рівній дорозі», «у правій руці»). Цей логічний граматичний розподіл допоможе вам дуже легко та впевнено орієнтуватися у багатому світі української фонетики. <!-- INJECT_ACTIVITY: fill-in, complete the table of alternation types -->
+інші поширені слова: «молодець» стає «молодче», а «швець» перетворюється на «шевче». Ця зміна робить вимову плавною та енергійною. > *The most famous example of this rule is the word "хлопець" (boy/guy). If you are addressing a young man, you cannot say "хлопцю" because it will sound unnatural. You must change the soft consonant [ц'] to the hard hushing [ч] and add the ending "-е". Therefore, it is correct to say: "Hey, хлопче!". Other common words change the same way: "молодець" (good fellow/bravo) becomes "молодче", and "швець" (shoemaker) turns into "шевче". This change makes the pronunciation smooth and energetic.* Beyond these regular patterns, the Ukrainian language preserves a few rare or unproductive alternations. These are historical remnants that no longer apply to new words but survive in very specific, fixed forms. For instance, the consonant [з] sometimes shifts to [ж]. You will see this primarily in historical titles during direct address. The word "князь" (prince) becomes "княже" in the vocative case, rather than following the standard soft group rules. Ще один цікавий історичний приклад стосується слова «колесо». У сучасному місцевому відмінку ми зазвичай кажемо «на колесі», але в народній мові та класичній літературі ви можете зустріти стару форму «на колішні». Тут приголосний [с] змінився на [ш]. Такі рідкісні форми не потрібно використовувати в щоденному спілкуванні. Їх варто просто запам'ятати як готові лексичні блоки, щоб розуміти фольклорні тексти. You might wonder why [ц'] changes to [ч] in the first place, since it seems disconnected from the [г/к/х] group. The explanation lies in the deep history of Slavic sound changes. The soft [ц'] itself is actually the historical product of an older **палаталізація** (palatalization). Centuries ago, it evolved from the same root sounds that gave us [к] and [ч]. Therefore, shifting [ц'] to [ч] in the vocative case follows the exact same "forward-shifting" phonetic logic as changing [к] to [ч] in words like "козак" to "козаче". The sounds are essentially close linguistic cousins reacting to the same grammatical trigger. :::tip **Historical echo** — The connection between [ц'] and [ч] is so deeply ingrained in the language that they often swap places not just in the vocative, but also when creating related nouns. For example, "кінець" (end) naturally gives us "закінчення" (ending). ::: Щоб упевнено говорити українською, важливо пам'ятати головне правило розподілу цих звуків. Шиплячі приголосні [ж, ч, ш] використовуються тоді, коли ви кличете людину або утворюєте нове слово за допомогою суфіксів. Це енергійні звуки для активної дії. Натомість м'які свистячі [з', ц', с'] потрібні вам для вказівки на місце або напрямок. Ви використовуєте їх, коли будуєте **місцевий відмінок** або **давальний відмінок**. > *To speak Ukrainian confidently, it is important to remember the main rule for distributing these sounds. The hushing consonants [ж, ч, ш] are used when you are calling someone or forming a new word using suffixes. These are energetic sounds for active action. In contrast, the soft sibilants [з', ц', с'] are needed to indicate a location or direction. You use them when constructing the locative case or the dative case.*
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -633,7 +633,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -646,18 +713,67 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] чергування (alternation — systematic sound change between forms)
+- [ ] приголосний (consonant — sound made with obstruction)
+- [ ] палаталізація (palatalization — softening of a consonant)
+- [ ] кличний відмінок (vocative case — used for direct address)
+- [ ] давальний відмінок (dative case)
+- [ ] місцевий відмінок (locative case)
+- [ ] задньоязиковий (velar — consonant formed at the back of the mouth)
+- [ ] відміна (declension class — noun classification by ending pattern)
+- [ ] тверда група (hard group — nouns with hard stem-final consonant)
+- [ ] м'яка група (soft group — nouns with soft stem-final consonant)
+- [ ] мішана група (mixed group — nouns with шиплячий stem-final)
+- [ ] закінчення (ending — inflectional morpheme)
+- [ ] звертання (form of address — using кличний відмінок)
+- [ ] корінь (root — core morpheme of a word)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Чергування у відмінюванні іменників II відміни (~550 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

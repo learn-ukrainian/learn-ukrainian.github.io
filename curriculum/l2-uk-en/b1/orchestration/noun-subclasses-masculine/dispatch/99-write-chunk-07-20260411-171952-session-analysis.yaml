@@ -1,0 +1,102 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T15-18-24a51d8e.json
+phase: write-chunk-07
+prompt_chars: 47006
+response_chars: 3070
+prompt_words: 6585
+response_words: 425
+sections:
+- name: header
+  start: 0
+  length: 436
+  fraction: 0.0093
+- name: skeleton
+  start: 436
+  length: 578
+  fraction: 0.0123
+- name: prior_summary
+  start: 1014
+  length: 3483
+  fraction: 0.0741
+- name: plan
+  start: 4497
+  length: 17906
+  fraction: 0.3809
+- name: wiki
+  start: 16013
+  length: 24381
+  fraction: 0.5187
+- name: output_spec
+  start: 46784
+  length: 222
+  fraction: 0.0047
+large_sections:
+- wiki
+directives_total: 23
+directives_covered: 7
+directives_missed:
+- kind: checklist
+  text: відміна (declension class)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: відмінювання (declension — changing a word through cases)
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: checklist
+  text: однина (singular number)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: множина (plural number)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: пекар (baker — person who bakes)
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: checklist
+  text: лікар (doctor)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: школяр (student — person who attends school)
+  covered: false
+  coverage_note: 0/6 keywords (0%)
+- kind: checklist
+  text: киянин (Kyivan — resident of Kyiv)
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: checklist
+  text: громадянин (citizen)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: must
+  text: You must identify its corresponding **відміна** (declension class) to choose
+    the right endings.
+  covered: false
+  coverage_note: 1/11 keywords (9%)
+- kind: must
+  text: You must practice this contrast until it feels completely natural.
+  covered: false
+  coverage_note: 2/9 keywords (22%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 1/11 keywords (9%)
+- kind: inject_activity
+  text: quiz-plural-in
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-genitive-plural-in
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: error-correction-in
+  covered: false
+  coverage_note: marker missing

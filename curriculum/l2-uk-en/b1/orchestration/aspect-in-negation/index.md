@@ -1,6 +1,6 @@
 # Build Summary: aspect-in-negation (B1)
 
-Generated: 2026-04-09 04:24
+Generated: 2026-04-11 14:05
 
 ## Pipeline Phases
 
@@ -12,21 +12,25 @@ Generated: 2026-04-09 04:24
 | pre-verify | complete | 2026-04-09 01:56:17 |
 | write | complete | 2026-04-09 02:16:14 |
 | exercises | complete | 2026-04-09 02:16:14 |
-| activities | complete | 2026-04-09 02:17:47 |
+| activities | complete | 2026-04-11 11:56:22 |
 | verify-exercises | complete | 2026-04-09 02:17:47 |
 | annotate | complete | 2026-04-09 02:17:47 |
 | vocab | complete | 2026-04-09 02:21:05 |
 | enrich | complete | 2026-04-09 02:21:05 |
 | verify | complete | 2026-04-09 02:21:06 |
-| review | complete | 2026-04-09 02:24:40 |
 | stress | complete | 2026-04-09 02:24:40 |
-| publish | complete | 2026-04-09 02:24:42 |
+| repair | complete | 2026-04-11 11:50:11 |
+| review | complete | 2026-04-11 11:53:11 |
+| publish | complete | 2026-04-11 12:05:09 |
+| audit | complete | 2026-04-11 12:05:09 |
 
 ## Reviews
 
 | Round | File |
 |-------|------|
 | 1 | aspect-in-negation-review-r1.md |
+| 2 | aspect-in-negation-review-r2.md |
+| 3 | aspect-in-negation-review-r3.md |
 
 ## Dispatch Log
 
@@ -35,23 +39,45 @@ Generated: 2026-04-09 04:24
 | pre-verify | gemini-tools (gemini-3-flash-preview) | 296s | ✅ |
 | skeleton | gemini (gemini-3-flash-preview) | 111s | ✅ |
 | activities | gemini-tools (gemini-3.1-pro-preview) | 93s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 113s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 113s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 95s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 134s | ✅ |
 | vocab | gemini (gemini-3-flash-preview) | 191s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 214s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 143s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 180s | ✅ |
 | write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 76s | ✅ |
+| write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 48s | ✅ |
+| write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 94s | ✅ |
 | write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 168s | ✅ |
+| write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 113s | ✅ |
+| write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 94s | ✅ |
 | write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 870s | ✅ |
+| write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 153s | ✅ |
+| write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 95s | ✅ |
 | write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 83s | ✅ |
+| write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 58s | ✅ |
+| write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 127s | ✅ |
+
+## Friction
+
+- `friction.yaml` (134 bytes)
 
 ## Files
 
+- `.build.lock`
 - `chunk-01.md`
 - `chunk-02.md`
 - `chunk-03.md`
 - `chunk-04.md`
 - `exercise-verification.json`
+- `friction.yaml`
 - `pre-verify-results.md`
 - `quick-verify.json`
 - `review-structured-r1.yaml`
+- `review-structured-r2.yaml`
+- `review-structured-r3.yaml`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

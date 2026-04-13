@@ -1,0 +1,49 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T09-34-47fff7b2.json
+phase: review
+prompt_chars: 57174
+response_chars: 9420
+prompt_words: 7671
+response_words: 1255
+sections:
+- name: preamble
+  start: 0
+  length: 458
+  fraction: 0.008
+- name: plan
+  start: 458
+  length: 53470
+  fraction: 0.9352
+- name: output_spec
+  start: 53928
+  length: 3246
+  fraction: 0.0568
+large_sections:
+- plan
+directives_total: 13
+directives_covered: 7
+directives_missed:
+- kind: must
+  text: If you are not 100% certain a word/form/usage is wrong, you MUST flag it as
+    `[NEEDS RAG VERIFICATION]` instead of marking it as a definitive error.
+  covered: false
+  coverage_note: 6/17 keywords (35%)
+- kind: inject_activity
+  text: match-up-match-portrait-lexis-to-body-categories
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-character-valence-identify-character-traits-as-and-choose-the-correct-adjective-for-a-description
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-complete-a-portrait-description-by-filling-in-missing-adjectives-and-relationship-terms-in-a-text-about-a-family
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: group-sort-sort-relationship-vocabulary-into-categories
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing

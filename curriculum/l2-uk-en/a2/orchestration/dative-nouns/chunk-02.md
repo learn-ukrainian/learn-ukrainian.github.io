@@ -1,56 +1,43 @@
-## Давальний відмінок іменників чоловічого роду
+## Давальний відмінок іменників жіночого роду (~550 words total)
 
-Masculine nouns belonging to the second declension have a unique and beautiful feature in the Dative case: parallel endings. When forming this case, you can choose between two sets of endings. You can use either **-ові**, **-еві**, or **-єві** depending on the stem, or you can use the shorter **-у** or **-ю**. Both options are grammatically correct, meaning you will encounter both in everyday life, but they carry slightly different stylistic weights in modern Ukrainian.
+Feminine nouns belonging to the first declension are incredibly consistent in the Dative case. Whether the stem is hard or soft, they almost always take the "-і" ending. For example, "мама" becomes "мамі", "сестра" becomes **сестрі** (to the sister (dat.)), "земля" becomes "землі", and "пісня" becomes "пісні". If a noun ends in "-ія", it takes the "-ії" ending, so "станція" becomes "станції" and "надія" becomes "надії".
 
-Українська мова пропонує нам вибір, і це дуже зручно. Ми можемо сказати «братові» або «брату», і обидва варіанти будуть правильними. Але закінчення на «-ові», «-еві» та «-єві» звучать більш природно та традиційно. Вони роблять нашу мову багатою і підкреслюють її унікальний характер.
+Моя бабуся часто співає українські пісні моїй мамі та сестрі. Ми завжди уважно слухаємо ці старі пісні. Вони дають багато надії нашій родині.
 
-> *The Ukrainian language offers us a choice, and this is very convenient. We can say "братові" or "брату", and both options will be correct. But the endings in "-ові", "-еві", and "-єві" sound more natural and traditional. They make our language rich and emphasize its unique character.*
+> *My grandmother often sings Ukrainian songs to my mom and sister. We always listen carefully to these old songs. They give a lot of hope to our family.*
 
-Let us start with hard stems, which are the most common. For these nouns, the parallel endings are **-ові** and **-у**. The longer **-ові** ending is a deeply authentic Ukrainian feature. While **-у** is perfectly fine to use, **-ові** is highly preferred when you are talking about people, animals, or any living beings.
+There is a crucial phonetic rule you must remember when forming the Dative case for some feminine nouns. In Ukrainian, certain consonants change their sound when they appear right before the "-і" **закінчення** (ending (grammar)). Specifically, the consonants "г", "к", and "х" transform into "з", "ц", and "с". This is not a random exception, but a natural and predictable phonetic shift that makes the language flow smoothly.
 
-Коли ми даємо щось людині, ми зазвичай використовуємо закінчення «-ові». Наприклад, студент стає «студентові», а брат перетворюється на «братові». Це показує нашу повагу до людини. Ми також часто кажемо «батькові» замість «батьку», коли говоримо про тата.
+Цей фонетичний процес називається чергуванням приголосних. Він дуже давній і є важливою частиною української мови. Коли ви говорите швидко, ці звуки змінюються автоматично для милозвучності.
 
-> *When we give something to a person, we usually use the ending "-ові". For example, a student becomes "студентові", and a brother turns into "братові". This shows our respect for the person. We also often say "батькові" instead of "батьку" when we talk about a dad.*
+> *This phonetic process is called consonant alternation. It is very ancient and is an important part of the Ukrainian language. When you speak quickly, these sounds change automatically for euphony.*
+
+Let us look at clear examples of each alternation. When the stem ends in "г", it changes to "з", so "подруга" becomes "подрузі" and "книга" becomes "книзі". When the stem ends in "к", it changes to "ц", making "рука" become "руці" and "доріжка" become "доріжці". Finally, when the stem ends in "х", it changes to "с", meaning "муха" becomes "мусі" and "свекруха" becomes "свекрусі".
 
 :::info
-**Parallel endings for hard stems:**
-- студент → студент**ові** (or студент**у**)
-- брат → брат**ові** (or брат**у**)
-- пан → пан**ові** (or пан**у**)
-- батько → батьк**ові** (or батьк**у**)
+**Grammar box** — The alternation rule (г→з, к→ц, х→с) is one of the most distinctive features of Ukrainian pronunciation. It applies consistently in the Dative case for first-declension nouns.
 :::
 
-Now let us look at soft stems and stems ending in sibilant consonants like **ж**, **ч**, **ш**, or **щ**. Because these sounds require a softer transition, the ending changes from **-ові** to **-еві**. The alternative short ending here is **-ю** (or sometimes **-у** after sibilants). Just like with hard stems, the longer **-еві** ending is the gold standard when referring to people.
+Вчителька дала нове завдання своїй найкращій учениці. Після уроку дівчина допомогла своїй новій подрузі зрозуміти це правило. Вони разом читали текст у великій книзі.
 
-Учитель завжди допомагає учням, тому ми часто кажемо: «Я даю зошит учителеві». Лікар лікує пацієнтів, тому ми можемо подякувати «лікареві». Якщо ваш товариш має день народження, ви купуєте подарунок «товаришеві». А коли ми говоримо про молодого хлопця, ми використовуємо форму «хлопцеві».
+> *The teacher gave a new task to her best student. After the lesson, the girl helped her new friend understand this rule. They read the text together in a large book.*
 
-> *A teacher always helps students, so we often say: "I give the notebook to the teacher." A doctor treats patients, so we can thank the "лікареві" (doctor). If your comrade has a birthday, you buy a gift for your "товаришеві" (comrade). And when we talk about a young boy, we use the form "хлопцеві".*
+It is extremely important to apply these consonant alternations correctly. The form "подрузі" is the only correct Ukrainian form. You might sometimes hear people making errors like "подругі" due to Russian language interference, where this natural alternation was lost. In Ukrainian, failing to change the consonant before the "-і" ending sounds unnatural and incorrect.
 
-:::tip
-**Soft stems and sibilants:**
-- вчитель → учител**еві** (or учител**ю**)
-- лікар → лікар**еві** (or лікар**ю**)
-- товариш → товариш**еві** (or товариш**у**)
-- хлопець → хлопц**еві** (or хлопц**ю**)
-Notice how the letter **е** smoothly connects the soft consonant to the rest of the ending.
-:::
+Кожна людина робить помилки під час навчання, і це нормально. Але важливо знати справжні українські правила і поважати їх. Ми завжди кажемо «подрузі» та «книзі».
 
-The third variant of our parallel endings applies to masculine nouns that end in the letter **й** or a vowel. Because we need to maintain a smooth sound flow, the ending becomes **-єві**. The short alternative remains **-ю**. You will often see this pattern with traditional Ukrainian names and certain descriptive nouns.
+> *Every person makes mistakes during learning, and that is normal. But it is important to know the real Ukrainian rules and respect them. We always say "podruzi" and "knyzi".*
 
-Мій друг Сергій живе в Києві. Я часто пишу повідомлення Сергієві. Вчора я також телефонував Андрієві. У книгах ми часто читаємо про героїв. Наприклад, президент дає нагороду героєві. 
+There is another group of feminine nouns that belong to the third declension. These are feminine nouns that end in a consonant in their dictionary form. Fortunately, they also take the "-і" ending in the Dative case without any complex changes. For example, "ніч" becomes "ночі", "мати" becomes "матері", "любов" becomes "любові", and "радість" becomes "радості".
 
-> *My friend Serhii lives in Kyiv. I often write messages to Serhii. Yesterday I also called Andrii. In books, we often read about heroes. For example, the president gives an award to the hero.*
+Учні завжди бажають спокійної ночі своїй матері. У їхньому серці багато любові та великої радості.
 
-Having parallel endings is not just a grammar quirk; it is a powerful tool for style and rhythm. Ukrainian grammar values harmony and tries to avoid repetitive sounds, a concept called avoidance of monotony. When you have two masculine dative nouns side by side — such as a title and a name, or a first name and a last name — you should alternate the endings. You use the long ending for one word and the short ending for the other.
+> *The students always wish a peaceful night to their mother. In their heart there is a lot of love and great joy.*
 
-Це правило робить українську мову дуже мелодійною. Ми не кажемо «панові директорові», бо це звучить важко. Краще сказати «пану директорові» або «панові директору». Якщо ми знаємо ім'я людини, ми робимо так само. Ми можемо подякувати «сусідові Данилу» за допомогу. 
+Now let us see these feminine indirect objects in natural contexts with common verbs. You will often use the Dative case when you want **подарувати** (to give as a gift) something to someone, when you need to **написати** (to write) a message, or when you want to **розповісти** (to tell, to narrate) an interesting event.
 
-> *This rule makes the Ukrainian language very melodic. We do not say "панові директорові" because it sounds heavy. It is better to say "пану директорові" or "панові директору". If we know a person's name, we do the same. We can thank "сусідові Данилу" (neighbor Danylo) for his help.*
+Я хочу подарувати красиві червоні квіти своїй мамі. Вчора вона написала довгого листа своїй шкільній подрузі. А ввечері мій старший брат розповів дуже цікаву історію нашій маленькій сестрі.
 
-Finally, we must mention a small but important group of masculine nouns that do not belong to the second declension. Words like **Микола**, **Ілля**, or **староста** belong to the first declension because they end in **-а** or **-я**. Even though they represent men, their grammar follows the feminine pattern. Therefore, they take the ending **-і** in the Dative case.
+> *I want to give beautiful red flowers to my mom as a gift. Yesterday she wrote a long letter to her school friend. And in the evening my older brother told a very interesting story to our little sister.*
 
-Микола любить читати, тому я даю цікаву книгу Миколі. Мій брат Ілля багато працює, і я часто допомагаю Іллі. Вони мають чоловічий рід, але їхні закінчення працюють інакше. Це дуже важливо пам'ятати, коли ви пишете їм повідомлення.
-
-> *Mykola loves to read, so I give an interesting book to Mykola. My brother Illia works a lot, and I often help Illia. They have masculine gender, but their endings work differently. This is very important to remember when you write them a message.*
-
-<!-- INJECT_ACTIVITY: fill-in, Put the masculine noun in brackets into the dative case using the preferred -ові/-еві ending, 8 items -->
+<!-- INJECT_ACTIVITY: quiz-feminine-alternation -->

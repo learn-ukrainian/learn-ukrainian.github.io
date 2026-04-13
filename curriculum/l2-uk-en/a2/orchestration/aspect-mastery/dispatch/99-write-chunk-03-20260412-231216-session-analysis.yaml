@@ -1,0 +1,74 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T21-10-d49517e2.json
+phase: write-chunk-03
+prompt_chars: 36897
+response_chars: 3763
+prompt_words: 4922
+response_words: 601
+sections:
+- name: header
+  start: 0
+  length: 446
+  fraction: 0.0121
+- name: skeleton
+  start: 446
+  length: 1830
+  fraction: 0.0496
+- name: prior_summary
+  start: 2276
+  length: 3179
+  fraction: 0.0862
+- name: plan
+  start: 5455
+  length: 12574
+  fraction: 0.3408
+- name: wiki
+  start: 11413
+  length: 18655
+  fraction: 0.5056
+- name: output_spec
+  start: 36684
+  length: 213
+  fraction: 0.0058
+large_sections:
+- wiki
+directives_total: 17
+directives_covered: 8
+directives_missed:
+- kind: checklist
+  text: давати / дати (to give — impf./pf.)
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: checklist
+  text: говорити / сказати (to say — impf./pf.)
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: checklist
+  text: класти / покласти (to put — impf./pf.)
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: checklist
+  text: починати / почати (to begin — impf./pf.)
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: 'You must memorize them by heart! ::: Every action has its start and finish,
+    like **починати / почати** (to begin — impf.'
+  covered: false
+  coverage_note: 5/16 keywords (31%)
+- kind: must
+  text: You must write your own sentences every day.
+  covered: false
+  coverage_note: 3/8 keywords (38%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 3/11 keywords (27%)
+- kind: inject_activity
+  text: match-up-pairs
+  covered: false
+  coverage_note: marker missing

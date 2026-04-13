@@ -1,80 +1,106 @@
 ## Linguistic Scan
-1 error found:
-- "знаходиться" in the sense of physical location ("Вона знаходиться біля старого парку") is a calque from Russian "находится". It should be replaced with "розташована" or omitted (e.g., "Вона біля старого парку").
+No Russianisms, Surzhyk, paronym errors, or forbidden Russian characters (`ы`, `э`, `ё`, `ъ`) found.
+
+`прийом` and `доки` were checked against СУМ-11 and are valid Ukrainian.
+
+One factual grammar error found:
+- `Коли ми говоримо про міста або країни, ми завжди вживаємо цю граматичну конструкцію.` This is too absolute and is contradicted later by the module’s own explanation that `я йду до магазину` and `я йду в магазин` are both standard.
 
 ## Exercise Check
-- `<!-- INJECT_ACTIVITY: fill-in-genitive-forms -->` is correctly placed after the Genitive Forms grammar explanation. Matches the plan's `fill-in` hint.
-- `<!-- INJECT_ACTIVITY: match-up-functions -->` is correctly placed after the time ranges section. Matches the plan's `match-up` hint.
-- `<!-- INJECT_ACTIVITY: group-sort-categories -->` is correctly placed after the purpose and readiness section. Matches the plan's `group-sort` hint.
-- `<!-- INJECT_ACTIVITY: quiz-meaning-choice -->` is correctly placed after the summary comparison. Matches the plan's `quiz` hint.
-All 4 markers are present, appropriately placed, and exactly match the required types in the plan.
+All 4 planned activity markers are present, and the IDs match the intended hint types/foci:
+- `fill-in-complete-sentences-with-correct-genitive-noun-form`
+- `quiz-meaning-context`
+- `match-up-functions`
+- `group-sort-categories`
+
+Placement is uneven:
+- The fill-in marker is correctly placed after the direction section.
+- The other 3 markers are clustered at the very end, so the time section has no immediate practice after teaching `до + Genitive` for time.
+
+No inline DSL exercises are present, so there is no answer logic to audit here.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 8/10 | DEDUCT: The outline specifically required teaching neuter nouns ("до моря (soft neuter)"), but this was completely omitted from the text's grammar notes. Additionally, the English translations for two H2 headings from the plan ("Where Are You Going?..." and "Other Meanings and Summary") were dropped. |
-| 2. Linguistic accuracy | 8/10 | DEDUCT: Contains a known Russian calque for physical location ("Вона знаходиться біля старого парку"). This must be fixed to ensure learners do not pick up conversational Surzhyk/calques. The rest of the Ukrainian grammar forms and rules are flawless. |
-| 3. Pedagogical quality | 9/10 | REWARD: Excellent explanation of `до` vs `в/на` for people vs places, and a brilliant summary comparing `від`, `до`, and `після`. DEDUCT (minor): The English translation in the dialogue "I have very much work" is slightly awkward ("a lot of work" is better). |
-| 4. Vocabulary coverage | 9/10 | DEDUCT: The required word "мета" (purpose) was only included in the final summary table. It should be introduced naturally in the running prose when the concept of purpose is first taught. |
-| 5. Exercise quality | 10/10 | REWARD: All 4 injected markers are present, perfectly match the `activity_hints` from the plan, and are placed logically after the relevant instructional content. |
-| 6. Engagement & tone | 10/10 | REWARD: The tone is natural, encouraging, and structured clearly. It addresses common learner pitfalls (like using 'в лікар') gracefully and explains concepts gently. |
-| 7. Structural integrity | 9/10 | DEDUCT: The missing English text in the H2 headings slightly violates the plan's exact structural requirement for these sections. Word count is healthy (2259 words). |
-| 8. Cultural accuracy | 10/10 | REWARD: Accurately explains why the Russian "к" + Dative is incorrect in Ukrainian, explicitly reinforcing a decolonized perspective on the language and teaching authentic sentence structures. |
-| 9. Dialogue & conversation quality | 9/10 | REWARD: Dialogues feature named speakers and highly contextual, natural phrasing ("Мені дуже треба купити ліки", "Чудово! Передавай вітання!"). |
+| 1. Plan adherence | 8/10 | All three planned sections are present, in order, and on-budget; all required/recommended vocabulary appears in prose. Deduction: the place-direction explanation overstates the rule with `Коли ми говоримо про міста або країни, ми завжди вживаємо цю граматичну конструкцію`, which conflicts with the plan’s required contrast with `в/на + Accusative`. |
+| 2. Linguistic accuracy | 7/10 | No Russianisms/Surzhyk/forbidden letters found, and `прийом`/`доки` verify as valid Ukrainian. Critical issue: `ми завжди вживаємо` / `This rule applies universally` teaches a false absolute about destinations. |
+| 3. Pedagogical quality | 7/10 | The module has a PPP-like flow: taxi situation, explanation, examples, then practice markers. Deduction: it presents an absolute rule before nuance, then corrects itself later, which is bad sequencing for A2 learners. |
+| 4. Vocabulary coverage | 10/10 | Required words are all used naturally: `напрямок`, `мета`, `музей`, `лікар`, `бабуся`, `вечір`, `ранок`, `екзамен`, `побачення`, `список`. Recommended words also appear: `ставлення`, `інтерес`, `готовий`, `завтра`. |
+| 5. Exercise quality | 7/10 | The module includes all 4 planned markers, but distribution is weak: one marker appears after section 1 and three markers are grouped at the end, so section 2 gets no immediate practice. |
+| 6. Engagement & tone | 6/10 | The teacher voice is readable, but filler weakens it: `This small but mighty word is your key to navigating cities and organizing your schedule.` and `the Genitive case will be your constant companion on the journey.` add hype, not instruction. |
+| 7. Structural integrity | 10/10 | All H2 headings from the plan are present and ordered correctly. The pipeline word count is 3195, safely above the 2000 target, and the markdown structure is clean. |
+| 8. Cultural accuracy | 7/10 | The tip beginning `Unlike Russian...` frames Ukrainian through Russian and uses evaluative phrasing (`strictly and elegantly`), which is below the repo’s decolonized standard. |
+| 9. Dialogue & conversation quality | 8/10 | The taxi dialogue is multi-turn and functional, with named speakers and a plausible scenario. The later Олена/Марко exchanges are serviceable but mostly illustrative rather than vivid. |
 
 ## Findings
-[1. Linguistic accuracy] [critical]
-Location: `— **Таксист:** Добре, я знаю, де є аптека. Вона знаходиться біля старого парку.`
-Issue: Using "знаходиться" to describe physical location is a well-known calque from Russian "находится". In Ukrainian, things are "розташовані" or simply "є" / omitted entirely.
-Fix: Simplify to "Вона біля старого парку."
+[LINGUISTIC ACCURACY] [SEVERITY: critical]  
+Location: `Коли ми говоримо про міста або країни, ми завжди вживаємо цю граматичну конструкцію.`  
+Issue: This teaches a false absolute. The same module later says `до` and `в/на + Accusative` are both standard, so `завжди` is wrong here.  
+Fix: Change `завжди` to a non-absolute phrasing such as `дуже часто`.
 
-[2. Plan adherence] [major]
-Location: `**Жіночий рід (Feminine):**\nшкола *(school)* → до школи...`
-Issue: The plan explicitly required teaching neuter nouns ("до моря (soft neuter)") under the stem rules, but this was entirely left out of the prose and examples block.
-Fix: Add a "**Середній рід (Neuter):**" section with the example "море *(sea)* → до моря" to the Genitive forms note.
+[LINGUISTIC ACCURACY] [SEVERITY: critical]  
+Location: `This rule applies universally to geographical names when they are your destination.`  
+Issue: The English explanation repeats the same false absolute and directly contradicts the later contrast section.  
+Fix: Replace `applies universally` with a qualified explanation that `до + Genitive` is common, but `в/на + Accusative` is also used depending on context.
 
-[3. Structural integrity] [minor]
-Location: `## Куди ти йдеш? До + родовий для напрямку` and `## До + родовий: решта значень та узагальнення`
-Issue: The English translations specified in the plan's H2 headings were dropped.
-Fix: Append the exact English translations from the plan to the headers.
+[CULTURAL ACCURACY] [SEVERITY: major]  
+Location: `Unlike Russian, which often uses a different preposition and case for people... Ukrainian strictly and elegantly uses **до** + Genitive...`  
+Issue: This explains Ukrainian through Russian and adds value-loaded phrasing (`strictly and elegantly`, `hallmark of natural, authentic Ukrainian syntax`). That violates the decolonized standard and is unnecessary at A2.  
+Fix: Replace the tip with a neutral Ukrainian-centered note explaining that `до + Genitive` is the standard way to express going to a person.
 
-[4. Vocabulary coverage] [major]
-Location: `Beyond physical movement and time, the preposition **до** *(to/for/until)* frequently expresses purpose, readiness, and abstract goals.`
-Issue: The required vocabulary word "мета" is only shown in the summary table and is missing from the prose context.
-Fix: Add "*(мета)*" immediately after the word "purpose" to introduce the vocabulary item natively.
+[EXERCISE QUALITY] [SEVERITY: major]  
+Location: `<!-- INJECT_ACTIVITY: fill-in-complete-sentences-with-correct-genitive-noun-form -->` appears after section 1, while `<!-- INJECT_ACTIVITY: quiz-meaning-context -->`, `<!-- INJECT_ACTIVITY: match-up-functions -->`, and `<!-- INJECT_ACTIVITY: group-sort-categories -->` are all grouped at the end.  
+Issue: Exercise placement is not evenly distributed. The time section gets no immediate practice after the learner is taught `до + Genitive` for time.  
+Fix: Move `quiz-meaning-context` to the end of the time section and keep the final two markers after the summary section.
 
-[5. Pedagogical quality] [minor]
-Location: `I know. But I have very much work.`
-Issue: "Very much work" is awkward literal English. "A lot of work" is the natural phrasing.
-Fix: Replace "very much" with "a lot of".
+[ENGAGEMENT & TONE] [SEVERITY: minor]  
+Location: `This small but mighty word is your key to navigating cities and organizing your schedule.` and `the Genitive case will be your constant companion on the journey.`  
+Issue: These are filler lines. They inflate the word count without improving explanation or examples.  
+Fix: Replace them with direct instructional sentences.
 
 ## Verdict: REVISE
-The module is incredibly well-written and pedagogically sound, providing clear and robust grammar guidance. However, it contains a critical Russian calque ("знаходиться") and misses a few specific structural elements from the plan (neuter noun examples, English headers, prose integration of "мета"). Fixing these will ensure it meets the highest standards.
+REVISE because the module contains a critical grammar overstatement about destinations, plus major quality issues in cultural framing and exercise placement. The structure and vocabulary coverage are strong, but the identified errors need deterministic fixes before shipping.
 
 <fixes>
-- find: "Вона знаходиться біля старого парку."
-  replace: "Вона біля старого парку."
+- find: "Коли ми говоримо про міста або країни, ми завжди вживаємо цю граматичну конструкцію."
+  replace: "Коли ми говоримо про міста або країни, ми дуже часто вживаємо цю граматичну конструкцію."
+
+- find: "This rule applies universally to geographical names when they are your destination."
+  replace: "This pattern is very common with geographical names when they are your destination, but Ukrainian also uses **в** / **на** + Accusative depending on context."
+
 - find: |
-    **Жіночий рід (Feminine):**
-    школа *(school)* → до школи
-    станція *(station)* → до станції
-    площа *(square)* → до площі
+    :::tip
+    **Did you know?**
+    Unlike Russian, which often uses a different preposition and case for people (к + Dative, like "к маме"), Ukrainian strictly and elegantly uses **до** + Genitive for both places and people (**до мами**). Using "до" for people is a hallmark of natural, authentic Ukrainian syntax.
     :::
   replace: |
-    **Жіночий рід (Feminine):**
-    школа *(school)* → до школи
-    станція *(station)* → до станції
-    площа *(square)* → до площі
-
-    **Середній рід (Neuter):**
-    море *(sea)* → до моря
+    :::tip
+    **Did you know?**
+    In Ukrainian, **до** + Genitive is the standard way to express going to a person: **до мами**, **до лікаря**, **до друга**.
     :::
-- find: "## Куди ти йдеш? До + родовий для напрямку"
-  replace: "## Куди ти йдеш? До + родовий для напрямку (Where Are You Going? До + Genitive for Direction)"
-- find: "## До + родовий: решта значень та узагальнення"
-  replace: "## До + родовий: решта значень та узагальнення (До + Genitive: Other Meanings and Summary)"
-- find: "frequently expresses purpose, readiness, and abstract goals."
-  replace: "frequently expresses purpose *(мета)*, readiness, and abstract goals."
-- find: "I know. But I have very much work."
-  replace: "I know. But I have a lot of work."
+
+- find: |
+    It is always about movement toward a limit.
+
+    ## До + родовий: решта значень та узагальнення (~715 words)
+  replace: |
+    It is always about movement toward a limit.
+
+    <!-- INJECT_ACTIVITY: quiz-meaning-context -->
+
+    ## До + родовий: решта значень та узагальнення (~715 words)
+
+- find: |
+    <!-- INJECT_ACTIVITY: quiz-meaning-context -->
+    <!-- INJECT_ACTIVITY: match-up-functions -->
+    <!-- INJECT_ACTIVITY: group-sort-categories -->
+  replace: |
+    <!-- INJECT_ACTIVITY: match-up-functions -->
+    <!-- INJECT_ACTIVITY: group-sort-categories -->
+
+- find: "This small but mighty word is your key to navigating cities and organizing your schedule."
+  replace: "This preposition helps you talk about destinations and time limits."
+
+- find: "Whether you are planning a grand vacation or a quick weekend getaway, the Genitive case will be your constant companion on the journey."
+  replace: "You will use this pattern when talking about travel, errands, and everyday movement."
 </fixes>

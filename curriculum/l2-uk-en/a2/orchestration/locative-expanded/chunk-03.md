@@ -1,44 +1,29 @@
-## По телефону, по радіо: місцевий із прийменником «по»
+## По телефону, по радіо: місцевий із прийменником «по» (Locative with "po") (~550 words total)
 
-The Locative case has another practical function: describing the medium or channel of communication. To say that you heard something on the radio or spoke on the phone, use the preposition **по** followed by the Locative case. This pattern is essential for talking about how information travels from one person to another. Instead of focusing on the physical location inside a device, this structure highlights the method of transmission. Notice that the masculine noun for a telephone takes the **-у** ending in this context.
+We have seen how the **місцевий** (locative) case indicates physical location and time. Another essential function is describing the means, channel of communication, or path of movement. In English, we say "on the phone," "by mail," or "on the radio." In Ukrainian, we use the preposition **по** followed by the locative case to express this exact idea. This pattern is very common when talking about how information travels, how messages are sent, or the physical route of a **подорож** (journey). The word **телефон** (phone) becomes "по телефону," while "радіо" remains unchanged because it is an indeclinable foreign word. You will also frequently hear phrases like "по телевізору" (on TV), "по пошті" (by mail), and "по дорозі" (on the way).
 
-Моя мама часто говорить по телефону. Дідусь слухає новини по радіо. Ми рідко дивимося фільми по телевізору. Я отримав цей лист по пошті. Мій керівник завжди відповідає по телефону.
+Ми часто спілкуємося з родичами та друзями по телефону. Моя бабуся слухає ранкові новини по радіо на кухні. Вони швидко надіслали всі важливі документи по пошті. По дорозі на роботу я завжди слухаю музику або цікаві подкасти. Ця коротка подорож дуже цікава.
 
-> *My mom often talks on the phone. Grandpa listens to the news on the radio. We rarely watch movies on TV. I received this letter by mail. My manager always answers on the phone.*
+> *We often communicate with relatives and friends by phone. My grandmother listens to the morning news on the radio in the kitchen. They quickly sent all the important documents by mail. On the way to work I always listen to music or interesting podcasts. This short journey is very interesting.*
+
+It is crucial to understand the grammatical distinction between the medium of communication and the topic of your conversation. This is a very common area of confusion for learners. When the phone is the instrument or channel you are using to talk to someone, you must use **по** with the locative case: "говорити по телефону." However, if the phone is the actual subject you are discussing—for example, if you are planning to buy a new device and sharing your **думка** (thought, opinion) about its features—you use the preposition **про** with the accusative case: "говорити про телефон." The first structure describes *how* you are communicating, while the second describes exactly *what* you are talking about. Mixing these two patterns up can cause a real **проблема** (problem) in understanding.
+
+Учора ввечері ми довго розмовляли по телефону про наші плани на вихідні. Сьогодні на роботі ми говорили про новий телефон мого колеги, який він щойно купив. Якщо у вас є серйозна проблема, краще подзвонити по телефону.
+
+> *Yesterday evening we talked for a long time on the phone about our plans for the weekend. Today at work we talked about my colleague's new phone, which he just bought. If you have a serious problem, it is better to call by phone.*
+
+Let's look at more examples of how this communication structure works in daily life. Notice how the preposition **по** transforms the noun into a pathway or a transmitting channel. Whether it is a physical path like a street, a digital channel like the internet, or an invisible channel like radio waves, the grammatical rule remains exactly the same. Even a casual **зустріч** (meeting) on the street uses this logic. You use the locative endings you already know, such as **-у** or **-і**, depending on the noun's gender and stem.
+
+Я обов'язково подзвоню тобі по телефону ввечері, коли повернуся додому з офісу. Ми почули ці несподівані новини по радіо в автомобілі. Наш викладач надіслав усі матеріали для нового курсу по електронній пошті. Ми випадково зустрілися по дорозі в університет, і це була дуже приємна зустріч.
+
+> *I will definitely call you on the phone in the evening when I return home from the office. We heard these unexpected news on the radio in the car. Our teacher sent all the materials for the new course by email. We accidentally met on the way to the university, and it was a very pleasant meeting.*
 
 :::info
 **Grammar box**
-The preposition **по** has many meanings in Ukrainian. When paired with communication devices in the Locative case, it usually translates to "by" or "on" in English. Remember that the radio and TV are the channels of communication, not physical locations inside the devices.
+The combination of **по** with the locative case is the traditional and authentic Ukrainian pattern for indicating a medium, a communication channel, or a path of movement. You might occasionally hear native speakers use **по** with the dative case for distribution, such as "дати дітям по яблуку" (to give the children an apple each). However, when discussing the means of communication or the route someone takes, the locative case is the absolute standard. Always stick to established phrases like "по телефону", "по телевізору", and "по дорозі" to ensure your Ukrainian sounds natural, confident, and grammatically correct.
 :::
 
-Another frequent expression that uses this preposition with the Locative case is the phrase for "on the way." You will use this set phrase whenever you want to describe an action that happens while you are traveling to a specific destination. It perfectly combines the idea of a physical path with the context of a journey. Whether you are walking, driving, or taking public transport, this phrase is the most natural way to say that an event interrupted or accompanied your trip.
+To summarize, the locative case is incredibly versatile and powerful. It moves far beyond just pointing out a static physical location on a map or indicating a specific month in the calendar. With the simple addition of the preposition **по**, it actively describes the instrument, the channel, or the path through which an action happens. Mastering this small but vital grammatical word unlocks a much more natural and expressive way to describe your daily interactions, your travel routes, and the way you share information with the world.
 
-Я зустрів старого друга по дорозі додому. Ми купили гарячу каву по дорозі на роботу. По дорозі в магазин почався сильний дощ. Вони слухають музику по дорозі в університет. По дорозі в кіно ми зустріли сестру.
-
-> *I met an old friend on the way home. We bought hot coffee on the way to work. It started raining heavily on the way to the store. They listen to music on the way to the university. On the way to the cinema we met my sister.*
-
-As you expand your vocabulary, you must clearly distinguish between the channel of communication and the topic of conversation. This is where the Locative and Accusative cases contrast directly. Using the Locative case describes the tool you use to speak, like a telephone or an application. However, if you want to talk about the object itself, you must use the preposition **про** with the Accusative case. The rule remains consistent: the topic of your thought or conversation always requires the Accusative, regardless of how the conversation happens.
-
-Сьогодні ми говорили по телефону про нову роботу. Я думаю про тебе, коли слухаю пісню по радіо. Журналісти багато говорять про новий телевізор. Ми спілкувалися по скайпу про наші плани.
-
-> *Today we talked on the phone about the new job. I think about you when I listen to a song on the radio. Journalists talk a lot about the new TV. We communicated on Skype about our plans.*
-
-Let us look at a short conversation that highlights this difference:
-
-> — **Анна:** Ти вчора говорив по телефону з братом? *(Did you talk on the phone with your brother yesterday?)*
-> — **Марко:** Так, ми говорили про його нову машину. *(Yes, we talked about his new car.)*
-> — **Анна:** А я дізналася про це по радіо. *(And I found out about it on the radio.)*
-
-In modern Ukrainian, you might sometimes hear native speakers use the Instrumental case without a preposition to express the means of communication. While this is grammatically correct and often seen in formal writing, the construction using the Locative case remains the most natural standard for everyday conversations. As a learner, you should actively use this pattern because it easily adapts to modern technology. You can seamlessly apply it to digital platforms, new loanwords, and social media. It is a highly productive grammar rule that will serve you well in any communicative situation.
-
-Завтра я відправлю тобі документи по імейлу. Мої батьки часто дзвонять мені по скайпу. Ми знайшли цю корисну інформацію по інтернету. Студенти отримали результати тесту по електронній пошті.
-
-> *Tomorrow I will send you the documents by email. My parents often call me on Skype. We found this useful information on the internet. The students received the test results by email.*
-
-:::tip
-**Quick tip**
-When using modern loanwords like **імейл** or **скайп**, treat them as standard masculine nouns. In the Locative case after the preposition **по**, they take the **-у** ending.
-:::
-
-<!-- INJECT_ACTIVITY: match-up-locative-types -->
+<!-- INJECT_ACTIVITY: fill-in-locative-forms -->
 <!-- INJECT_ACTIVITY: error-correction-prepositions -->

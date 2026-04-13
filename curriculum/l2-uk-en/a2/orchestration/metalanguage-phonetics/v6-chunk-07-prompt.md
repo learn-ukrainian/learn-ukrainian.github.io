@@ -27,7 +27,7 @@ Grand total: ~4410 words
 <previous_context>
 [...previous sections truncated...]
 
-детально розкладемо їх на звуки. Наш перший простий приклад — це слово «яблуко». *Our first simple example is the word apple.* Ми відкриваємо дужки. Спочатку ми бачимо літеру «я». Вона стоїть на самому початку слова. Тому вона обов'язково позначає два окремі звуки: [й] та [а]. Звук [й] в українській мові завжди є м'яким. Ми часто ставимо біля нього рисочку м'якості для точності. Далі йдуть звичайні тверді звуки [б], [л], [у], [к], [о]. Не забуваємо поставити наголос на перший склад. Наша фінальна транскрипція виглядає так: [йа́блуко]. Другий, значно цікавіший приклад — це слово «щастя». *The second interesting example is the word happiness.* Літера «щ» завжди позначає два звуки: твердий [ш] та твердий [ч]. Тому ми пишемо [шч]. Далі йде звук [а] та звук [с]. Але зверніть особливу увагу на літеру «я» в кінці цього слова. Вона стоїть після приголосного «т». Вона не позначає два звуки тут. Вона робить попередній звук [т] м'яким [т']. Сама вона дає лише один звук [а]. Звук [с] також автоматично стає м'яким [с'] перед м'яким [т']. Транскрипція буде такою: [шча́с'т'а]. Третій складний приклад — коротке слово «джміль». *The third complex example is the short word bumblebee.* Тут є буквосполучення «дж», яке дає один єдиний звук [дж]. Далі йде звук [м']. Буква «і» завжди робить попередній приголосний м'яким. В кінці ми бачимо літеру «л» і м'який знак «ь». М'який знак ніколи не має власного звуку. Він лише показує м'якість попереднього приголосного. Тому ми пишемо [л']. Наша транскрипція: [джм'і́л']. Студенти часто роблять типові помилки, коли вперше пишуть фонетичну транскрипцію. Найголовніша і найпопулярніша помилка — це просто плутати літери і звуки. Люди часто механічно копіюють звичайні букви у квадратні дужки. Вони пишуть знак м'якшення або літеру «я» всередині дужок. Але транскрипція — це тільки те, що ми реально чуємо нашими вухами! Друга дуже популярна помилка — це забувати важливе правило. Звук [й] завжди є м'яким від природи. Третя серйозна помилка — це ігнорувати **подовжені звуки** у словах. *The third serious mistake is ignoring long sounds in words.* В українській мові деякі звуки можуть звучати довго і протяжно. На звичайному письмі ми завжди показуємо це явище двома однаковими літерами. Наприклад, ми пишемо дві літери «н» у слові «знання». *For example, we write two letters "n" in the word knowledge.* Але у фонетичній транскрипції ми показуємо довгий звук лише однією літерою. Ми використовуємо для цього спеціальний знак — двокрапку [:]. Тому правильна транскрипція цього слова буде виглядати так: [знан':а́]. Звук [н'] тут є одночасно подовженим і дуже м'яким. А літера «я» дає звук [а]. І остання, але критична типова проблема — це неправильний або пропущений наголос. Якщо ви забули поставити наголос, ваша транскрипція вважається незавершеною. Завжди пам'ятайте наше золоте правило фонетики. Ми фіксуємо на папері тільки те, що ми чуємо. Ми ніколи не пишемо те, що ми бачимо очима в тексті. Ваші вуха і ваша уважність — це ваш найкращий інструмент для вивчення фонетики. <!-- INJECT_ACTIVITY: fill-in, Complete phonetic transcription of words (fill in missing sounds/marks), 6 items --> <!-- INJECT_ACTIVITY: error-correction, Find and fix mistakes in phonetic transcriptions, 6 items -->
+стоїть на початку, вона створює два звуки: **приголосний** [й] та **голосний** [а]. Перший **склад** тут є **наголошений**, а інші — **ненаголошені**. Тому транскрипція — [йаблуко]. Зверніть увагу, як перша **літера** розпалася на два символи. Тепер розглянемо слово «щастя». Буква «щ» завжди дорівнює звукам [шч]. Перша літера «я» стоїть після приголосного. Тому вона дає один звук [а] і робить попередній **твердий** звук м'яким. Але комбінація «ст» є складною. Звук [т'] стає м'яким через фінальну «я». Він передає свою м'якість назад до звука [с]. Тому транскрипція виглядає так: [шчас'т'а]. Нарешті, подивіться на слово «джміль». Літери «д» і «ж» зливаються в один звук [дж]. М'який знак робить **сонорний** звук [л] м'яким, а [м] пом'якшується через [і]. Результат — [джм'іл']. > *Ukrainian phonetics has clear rules. Let us look at examples of how words are transformed into transcription. We will start with the word "яблуко". Because the letter "я" stands at the beginning, it creates two sounds: the consonant [й] and the vowel [а]. The first syllable here is stressed, and the others are unstressed. Therefore, the transcription is [йаблуко]. Notice how the first letter split into two symbols. Now consider the word "щастя". The letter "щ" always equals the sounds [шч]. The first letter "я" comes after a consonant. Therefore, it produces one sound [а] and makes the preceding hard sound soft. But the combination "ст" is complex. The sound [т'] becomes soft because of the final "я". It passes its softness backward to the sound [с]. Therefore, the transcription looks like this: [шчас'т'а]. Finally, look at the word "джміль". The letters "д" and "ж" merge into one sound [дж]. The soft sign makes the sonorant sound [л] soft, and [м] is softened by [і]. The result is [джм'іл'].* There are common pitfalls for learners when dealing with phonetic transcription. The most frequent mistake is simply confusing letters with sounds, failing to distinguish the written symbol from the actual **фонема** (phoneme). You must train your brain to ignore the visual spelling and trust your ears. Another trap is forgetting that the sound [й] is always soft by its very nature. Even when it stands alone, it must be pronounced softly. Learners also frequently fail to mark long consonant sounds. In words like «знання», the double «нн» merges into a single, elongated soft sound. The correct transcription is [знан':а]. Additionally, learners often forget that a **дзвінкий** (voiced) consonant in Ukrainian does not become a **глухий** (voiceless) one at the end of a word. The word «дуб» is always transcribed as [дуб], never with a [п]. Always remember the golden rule: transcription is a faithful record of what we hear, not a copy of what we see on the page. :::info **Grammar box** — Remember that the letter «щ» never exists in phonetic transcription. It is a graphic symbol that always hides two distinct hushing consonants: [ш] and [ч]. Whenever you hear a word with this letter, immediately write down both sounds in your transcription brackets. ::: <!-- INJECT_ACTIVITY: fill-in-transcription --> <!-- INJECT_ACTIVITY: error-correction-transcription -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -479,7 +479,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 6: A2 finale (A2 M51-M69)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 40%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 40% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 70-90% Ukrainian.
 LANGUAGE ROLES:
@@ -498,18 +565,69 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (7/7).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] фонетика (phonetics — the study of speech sounds)
+- [ ] звук (sound — what we hear and pronounce)
+- [ ] літера (letter — what we see and write)
+- [ ] фонема (phoneme — abstract sound unit that distinguishes meaning)
+- [ ] голосний (vowel — sound made with voice only)
+- [ ] приголосний (consonant — sound made with obstruction)
+- [ ] дзвінкий (voiced — consonant produced with voice + noise)
+- [ ] глухий (voiceless — consonant produced with noise only)
+- [ ] сонорний (sonorant — consonant where voice dominates over noise)
+- [ ] твердий (hard — non-palatalized consonant)
+- [ ] м'який (soft — palatalized consonant)
+- [ ] наголос (stress — emphasized pronunciation of a syllable)
+- [ ] наголошений (stressed — syllable bearing the stress)
+- [ ] ненаголошений (unstressed — syllable without stress)
+- [ ] транскрипція (transcription — phonetic notation in square brackets)
+- [ ] склад (syllable)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Підсумок (~330 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-довгого листа найкращому другу, я нарешті спокійно заснув» *(Having written a long letter to my best friend, I finally fell asleep peacefully)*. Тут мішенню є дієслово-присудок «заснув». Зворот пояснює обставини мого засинання — це сталося тільки після того, як дія написання була повністю завершена. Як бачите, фокус уваги зміщується з предмета на саму дію. Оскільки ці звороти виконують різні функції та мають різні мішені, правила їхнього виділення на письмі також відрізняються. Це ще одна ключова зона, де студенти часто припускаються помилок. Пригадайте наше «Правило позиції» *(Position Rule)* для дієприкметників: коми ставляться лише тоді, коли дієприкметниковий зворот стоїть строго після означуваного слова. Якщо ж він стоїть перед іменником, коми зазвичай зникають. Наприклад: «Написана найкращим другом книга стала справжнім бестселером» *(The book written by my best friend became a real bestseller)*. Жодної коми тут немає, адже зворот стоїть перед словом «книга». Натомість для дієприслівникових зворотів діє суворе «Абсолютне правило» *(Absolute Rule)*. Дієприслівниковий зворот завжди відокремлюється комами, незалежно від того, де саме в реченні він розташований: на початку, в середині чи в самому кінці. Його позиція щодо головного дієслова не має жодного значення для пунктуації. Наприклад: «Написавши цю дивовижну книгу, мій друг нарешті добре відпочив» *(Having written this amazing book, my friend finally rested well)*. Або: «Мій друг, написавши цю дивовижну книгу, нарешті добре відпочив». В обох варіантах коми обов'язкові. Це правило робить використання дієприслівникових зворотів значно простішим. Якщо ви колись засумніваєтеся, який саме зворот перед вами, існує один надійний і простий тест. Цей метод заснований на логічній трансформації *(logical transformation)* речення. Спробуйте подумки замінити складний зворот на просте підрядне речення. Будь-який правильний дієприкметниковий зворот можна легко перетворити на означальне речення, яке починається зі слова «який» *(which/who)*, «яка», «яке» або «які». Візьмемо наш попередній приклад: конструкція «книга, написана другом» без проблем перетворюється на «книга, яку написав друг» *(the book which the friend wrote)*. Зміст при цьому залишається абсолютно ідентичним. Натомість дієприслівниковий зворот так перетворити неможливо. Він вимагає заміни на обставинне речення часу або причини, найчастіше за допомогою слова «коли» *(when)* або «після того як» *(after)*. Наш приклад «написавши книгу, друг відпочив» легко трансформується у фразу «коли друг написав книгу, він відпочив» *(when the friend wrote the book, he rested)*. Ця трансформація миттєво підкаже вам правильний тип звороту. Використовуйте цей підхід під час написання текстів, щоб уникати граматичної плутанини та обирати точний спосіб висловлення думок. Для того щоб остаточно структурувати ці знання, пропонуємо вам підсумкову таблицю порівняння. Вона допоможе вам швидко згадати основні відмінності. | Характеристика | Дієприкметниковий зворот | Дієприслівниковий зворот | | :--- | :--- | :--- | | **Головне запитання** | Який? Яка? Яке? Які? | Як? Коли? Чому? | | **Частина мови** | Іменник або займенник | Дієслово-присудок | | **Синтаксична роль** | Означення | Обставина | | **Правило коми** | Залежить від позиції (після іменника) | Завжди виділяється комами | | **Заміна на речення** | Зі словом «який» | Зі словом «коли» або «як» | | **Приклад** | Зачинені студентом двері... | Зачинивши двері, студент... | Ця шпаргалка стане вашим надійним помічником у щоденній практиці. <!-- INJECT_ACTIVITY: quiz-participle-vs-gerund -->
+бестселером.** — *The book written by a friend became a bestseller.* (No comma: the participial phrase is before the noun "книга"). **Написавши книгу, друг вирішив відпочити.** — *Having written the book, the friend decided to rest.* (Comma required: the gerund phrase is always set off). :::info **Quick tip** — If you are unsure whether to use a comma at the beginning of a sentence, check the last word of the introductory phrase. If it is a noun, you are likely dealing with a participial phrase without commas. If it is a gerund, you absolutely need a comma! ::: One of the most reliable tests you can use to distinguish between these two phrases is the logical transformation test. Because they serve different functions, they map onto completely different types of subordinate clauses. A participial phrase is essentially a shortened version of an adjective clause. Therefore, you can always expand it back into a full clause using the relative pronoun «який» (which/that). Conversely, a gerund phrase is a compressed time or condition clause. You can unpack it by using conjunctions like «коли» (when) or «після того як» (after). Щоб перевірити себе, спробуйте перетворити зворот на звичайне підрядне речення. Це найкращий спосіб зрозуміти справжню логіку вашого висловлювання. Якщо ви можете підставити слово «який», це точно означення. Якщо ж туди ідеально пасує слово «коли», перед вами обставина. > *To check yourself, try transforming the phrase into a regular subordinate clause. This is the best way to understand the true logic of your statement. If you can substitute the word "which", it is definitely an attribute. But if the word "when" fits perfectly, you are looking at a modifier.* Transformation of a participial phrase: **Книга, написана студентом...** transforms into **Книга, яку написав студент...** — *The book that the student wrote...* Transformation of a gerund phrase: **Написавши книгу, студент...** transforms into **Коли студент написав книгу, він...** — *When the student wrote the book, he...* To consolidate your understanding, let's look at a summary comparison of these two grammatical powerhouses. This table highlights all the key differences you need to keep in mind when choosing how to structure your advanced Ukrainian sentences. We will use the examples of closed doors to illustrate the final points. | Feature | Дієприкметниковий зворот | Дієприслівниковий зворот | | :--- | :--- | :--- | | **Question** | Який? Яка? Яке? Які? | Як? Коли? Чому? | | **Modifies** | Іменник або займенник | Дієслово-присудок | | **Syntactic Role** | **Означення** (attribute) | **Обставина** (modifier) | | **Punctuation** | Depends on position | Always set off with commas | | **Clause Equivalent**| *який*-clause | *коли*-clause | | **Example** | **Зачинені вчора двері** (No comma) | **Зачинивши двері, я пішов** (Comma) | Mastering the difference between these two structures will dramatically improve both your reading comprehension and your writing style. You will know exactly when to describe a noun and when to add depth to an action. <!-- INJECT_ACTIVITY: quiz, Оберіть правильний тип звороту для кожного речення та поясніть вибір. -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -536,7 +536,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -549,18 +616,60 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] дієприслівниковий зворот (gerund phrase)
+- [ ] відокремлення (setting off with commas)
+- [ ] фразеологічний зворот (phraseological expression — exception to comma rule)
+- [ ] не покладаючи рук (without rest — phraseological, no commas)
+- [ ] затамувавши подих (holding one's breath — phraseological, no commas)
+- [ ] обставина (adverbial modifier — syntactic role)
+- [ ] означення (attribute — syntactic role of дієприкметниковий зворот)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Помилки та стилістика (~715 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

@@ -1,4 +1,4 @@
-<!-- version: 1.1.0 | updated: 2026-03-31 -->
+<!-- version: 1.2.0 | updated: 2026-04-12 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -11,6 +11,35 @@ Generate an `activities/where-to.yaml` file for module **31: Where To?** (a1).
 
 ---
 
+## ⚠️ HARD COUNT TARGETS — READ TWICE
+
+These are the binding numerical contracts for THIS module. The audit will FAIL if you fall short.
+
+| Bucket | Min | Max | Notes |
+|---|---|---|---|
+| Total activities | 10 | 10+ | inline + workbook combined |
+| Inline (lesson tab) | 4 | 6 | one per `<!-- INJECT_ACTIVITY -->` marker, see below |
+| Workbook (Зошит tab) | 6 | 9 | extended practice |
+| Items per activity | 6 | — | each activity must have at least 6 items (unless its type cap is lower — see Activity Type Reference below) |
+
+**You MUST ship at least 4 inline activities AND at least 6 workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+
+**Type diversity is required.** The module (inline + workbook combined) MUST use at least **0** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level. (If `0` is `0`, the audit profile for this level does not enforce type diversity — but variety still produces a better lesson, so aim for 4+ types when the workbook allows it.)
+
+---
+
+## Allowed types for THIS level
+
+- **Inline (lesson) types:** image-to-letter, letter-grid, match-up, watch-and-repeat, quiz, true-false, fill-in, classify
+- **Inline priority (preferred):** image-to-letter, match-up, fill-in, quiz, watch-and-repeat
+- **Workbook types:** fill-in, match-up, group-sort, anagram, unjumble, quiz, true-false, classify, divide-words, count-syllables, pick-syllables, observe, phrase-table, odd-one-out
+- **Workbook priority (preferred):** fill-in, match-up, group-sort, anagram, unjumble
+- **FORBIDDEN at this level:** cloze, error-correction, mark-the-words, translate, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, highlight-morphemes, grammar-identify, select
+
+Pick from the allowed list. Lean heavily on the priority lists. Do not use any forbidden type — the build will reject it.
+
+---
+
 ## Inline vs Workbook Split
 
 Activities have two placement categories:
@@ -19,7 +48,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Rule of thumb:** inline = 2-3 quick checks after key teaching points. Workbook = 4-8 deeper practice exercises covering the full topic.
+**Rule of thumb:** inline = 4–6 quick checks after key teaching points. Workbook = 6–9 deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
 
 ---
 
@@ -27,10 +56,10 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: fill-in-accusative-places -->`
-- `<!-- INJECT_ACTIVITY: quiz-de-vs-kudy -->`
-- `<!-- INJECT_ACTIVITY: group-sort-locative-accusative -->`
-- `<!-- INJECT_ACTIVITY: quiz-vs -->`
+- `<!-- INJECT_ACTIVITY: fill-in-accusative -->`
+- `<!-- INJECT_ACTIVITY: quiz-de-or-kudy -->`
+- `<!-- INJECT_ACTIVITY: group-sort-de-kudy -->`
+- `<!-- INJECT_ACTIVITY: quiz-yty-or-ikhaty -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -86,122 +115,120 @@ required:
 <module_content>
 ## Діалоги (Dialogues)
 
-It is a busy Saturday morning in the bustling city center. Oksana and Stepan are standing on the street corner, holding their lists of weekend errands. They need to visit several different places before finally meeting up later in the afternoon. In Ukrainian, when you are talking about going to a specific destination, you must answer the essential question **куди** (where to).
+It is Saturday morning in the city. Oksana and Stepan are running errands together, but they have a long list of tasks to complete. They need to split up to visit different places around town efficiently. Listen as they coordinate their plans.
 
-Listen to their conversation as they figure out their immediate plans and split up to run their respective errands. Pay close attention to how they use the specific question word **куди** (where to) and the prepositions **в** (in/to) and **на** (on/to) to indicate their direction of travel.
+> **Оксана:** **Куди** (where to) ти йдеш? *(Where are you going?)*
+> **Степан:** Я йду в банк. А ти? *(I am going to the bank. And you?)*
+> **Оксана:** Я йду на роботу. *(I am going to work.)*
+> **Степан:** А потім? *(And then?)*
+> **Оксана:** Потім іду в магазин. *(Then I am going to the shop.)*
+> **Степан:** А потім ходімо в кафе! *(And then let's go to a cafe!)*
 
-> **Степан:** Привіт! **Куди ти йдеш?** *(Hi! Where are you going?)*
-> **Оксана:** Привіт! **Я йду в банк.** А ти? *(Hi! I am going to the bank. And you?)*
-> **Степан:** **Я йду на роботу.** *(I am going to work.)*
-> **Оксана:** А потім? *(And then?)*
-> **Степан:** **Потім іду в магазин.** *(Then I am going to the store.)*
-> **Оксана:** **А потім ходімо в кафе!** *(And then let's go to a cafe!)*
-> **Степан:** Добре! **Я йду в аптеку.** *(Good! I am going to the pharmacy.)*
-> **Оксана:** **А я йду на пошту.** *(And I am going to the post office.)*
-> **Степан:** **Тоді до зустрічі!** *(Then see you later!)*
-> **Оксана:** **Бувай!** *(Bye!)*
+This dialogue introduces a fundamental concept in Ukrainian grammar: the strict separation of direction and location. Notice that Stepan specifically says **я йду в банк** to express his direction of movement. He does not say **я в банку**, which would mean he is already inside the bank standing still. Ukrainian grammar forces you to choose between moving toward a destination and resting at a location.
 
-Later that afternoon, they meet up at the local cafe and start discussing their upcoming travel plans for the next weekend. Notice how the verb changes when they talk about taking a train or bus to a different city rather than just walking around town.
+> **Степан:** Куди ти їдеш у суботу? *(Where are you going on Saturday?)*
+> **Оксана:** Я їду у Львів. *(I am going to Lviv.)*
+> **Степан:** А Олена? *(And Olena?)*
+> **Оксана:** Вона їде в Одесу. *(She is going to Odesa.)*
+> **Степан:** А коли ви будете **повертатися** (to return) **додому** (home)? *(And when will you return home?)*
+> **Оксана:** У неділю. *(On Sunday.)*
 
-> **Оксана:** **Куди ти їдеш у суботу?** *(Where are you traveling on Saturday?)*
-> **Степан:** **Я їду у Львів.** *(I am traveling to Lviv.)*
-> **Оксана:** Клас! А Олена? *(Cool! And Olena?)*
-> **Степан:** **Вона їде в Одесу.** *(She is traveling to Odesa.)*
-> **Оксана:** А я нікуди не їду. *(And I am not traveling anywhere.)*
-> **Степан:** Чому? *(Why?)*
-> **Оксана:** **Я йду в бібліотеку.** *(I am going to the library.)*
-> **Степан:** **А в неділю?** *(And on Sunday?)*
-> **Оксана:** **У неділю я йду в парк.** *(On Sunday I am going to the park.)*
+This second conversation focuses on cities as destinations. When traveling to a city, you must use the verb **їхати** (to go by transport) combined with the preposition **в** or **у** and the name of the city. Notice the subtle morphological change for Odesa: the nominative **Одеса** becomes the accusative **в Одесу** (to Odesa). However, Lviv experiences no change at all: **Львів** remains **у Львів**. This illustrates how the accusative case affects different types of nouns differently. 
 
 :::note
-**Two "Wheres"**
-Did you notice how the nouns at the end of their sentences looked slightly different than usual? When Oksana says «**Я йду на пошту**» (I am going to the post office) or «**Я йду в банк**» (I am going to the bank), she is using a specific grammatical form. In English, the word "where" covers both your current location and your future destination. Ukrainian strictly separates these concepts. Asking **куди** (where to) triggers a specific grammatical change that shows movement toward a target.
+**Cultural Note: Errands in Ukraine**
+Many Ukrainians rely heavily on public transport or walking to complete their daily errands. Because of this, specifying the exact mode of transportation (**йти** vs **їхати**) is highly natural and common in everyday conversation.
 :::
 
 ## Куди? Знахідний відмінок (Where To? Accusative)
 
-In Ukrainian primary schools, Grade 4 students learn to identify cases using "helper words" to ask the right question. For the Accusative case, known as **знахідний відмінок** (accusative case), the helper method is **бачу — кого? що?** (I see — whom? what?). When we talk about inanimate places and destinations, we use the question **що?** (what?). When combined with motion verbs and prepositions like **в/у** or **на**, the Accusative case indicates **куди** (where to) or motion toward a place.
+In Ukrainian primary schools, Grade 4 students learn to identify cases using specific helper words and questions. For the accusative case (**Знахідний відмінок**), the mental helper phrase is **бачу** (I see), and the core questions are **кого?** (whom?) and **що?** (what?). This helps native speakers remember that the accusative case typically marks the direct object of an action. However, when dealing with geography and movement, the accusative case takes on an entirely new role. To express direction—specifically, physical motion toward a destination—we use the prepositions **в/у** or **на** followed directly by a noun in the accusative case. This grammatical structure perfectly answers the question **Куди?**.
+
+We must explicitly contrast this directional use of the accusative with the static locative case (**Місцевий відмінок**). The formula **в/у** plus the locative case answers the question **Де?** (Where? = static position). English conflates these two concepts into a single interrogative word, but Ukrainian keeps them rigorously separated. Consider this clear comparison:
+* **Де ти? — Я в банку.** (Locative — you ARE there, standing inside the building.)
+* **Куди ти йдеш? — Я йду в банк.** (Accusative — you are GOING there, walking toward the building.)
+
+There is excellent news for learners when forming these directional phrases: the "No-Change" rule applies to a massive portion of the Ukrainian vocabulary. Inanimate masculine nouns and all neuter nouns look completely identical to their basic nominative forms when used in the accusative case for direction. You do not need to memorize any new endings for these categories; simply take the dictionary form and add the correct preposition.
+* **банк → у банк** (to the bank)
+* **магазин → у/в магазин** (to the shop)
+* **парк → у парк** (to the park)
+* **кафе → у кафе** (to the cafe)
+* **місто → у місто** (to the city)
+* **ресторан → у ресторан** (to the restaurant)
 
 :::tip
-**The "No-Change" Rule**
-For inanimate masculine nouns and all neuter nouns, the Accusative form is identical to the basic Nominative dictionary form. You simply add the preposition **в/у** (in/into) or **на** (on/onto) before the noun. The noun itself does not change its ending at all.
+**Mnemonic: The "No-Change" Rule**
+If a place name is masculine (ends in a consonant) or neuter (ends in **-о** or **-е**), its accusative form for direction is exactly the same as its dictionary form. You only need to worry about changing the ending if the word is feminine!
 :::
 
-*   банк → у банк (to the bank)
-*   магазин → у магазин (to the store)
-*   парк → у парк (to the park)
-*   кафе → у кафе (to the cafe)
-*   місто → у місто (to the city)
+The only noun category that demands a visible change in this directional context is feminine nouns. Feminine nouns that end in **-а** or **-я** shift their final vowel when answering the question **Куди?**. The ending **-а** consistently changes to **-у**, and the ending **-я** consistently changes to **-ю**. This is a highly visible, high-frequency grammatical signal that native speakers expect to hear in daily conversation.
+* **школа → у школу** (to school)
+* **робота → на роботу** (to work)
+* **бібліотека → у бібліотеку** (to the library)
+* **вулиця → на вулицю** (to the street)
+* **Одеса → в Одесу** (to Odesa)
 
-Feminine nouns, however, undergo a highly visible and consistent change. If a feminine noun ends in **-а** or **-я** in its dictionary form, that ending must shift to **-у** or **-ю** in the Accusative case. This small vowel shift is the most frequent signal that you are talking about a destination rather than a static location.
-
-*   школа → у школу (to school)
-*   робота → на роботу (to work)
-*   бібліотека → у бібліотеку (to the library)
-*   вулиця → на вулицю (onto the street)
-*   аптека → в аптеку (to the pharmacy)
-*   пошта → на пошту (to the post office)
-*   країна → в країну (to the country)
-*   площа → на площу (onto the square)
-
-This rule for direction applies perfectly to countries and cities as well. Inanimate masculine cities like Kyiv or Lviv will not change their form, while feminine cities will change their final vowel. You will say **в Одесу** (to Odesa). Most importantly, the sovereign nation of Ukraine is a feminine noun ending in **-а**. When expressing travel to Ukraine, you must always use the preposition **в** with the Accusative case ending: **в Україну** (to Ukraine). Never use the preposition **на** for the country of Ukraine.
-
-<!-- INJECT_ACTIVITY: fill-in-accusative-places -->
+<!-- INJECT_ACTIVITY: fill-in-accusative -->
 
 ## Де чи куди? (Where or Where To?)
 
-The most critical habit to build is separating static location from dynamic direction. English conflates these by using "where" and "in" or "at" for both situations. Ukrainian demands a strict choice depending on the intent of the verb. If your verb shows static existence, you must ask **де?** (where?) and use the Locative case. If your verb shows movement toward a goal, you must ask **куди?** (where to?) and use the Accusative case, even though the prepositions **в/у** and **на** remain exactly the same.
+To navigate the Ukrainian language successfully, you must clearly map out the key question pair in your mind before speaking. If you want to know "Where are you?" in a static sense, you ask **Де ти?**, and this question absolutely requires an answer using **в**, **у**, or **на** plus the LOCATIVE case. If you want to know "Where are you going?" in a dynamic sense, you ask **Куди ти йдеш?**, and this requires an answer using **в**, **у**, or **на** plus the ACCUSATIVE case. The table below illustrates this crucial split.
 
-Compare these two states directly. Notice how the same preposition requires a completely different noun ending based on whether you are simply existing in a place or traveling toward it.
-
-| Place | **Де?** (Static - Locative) | **Куди?** (Motion - Accusative) |
+| Place | Де? (М.в. - Static) | Куди? (Зн.в. - Dynamic) |
 | :--- | :--- | :--- |
-| **школа** (school) | **Я в школі.** (I am at school.) | **Я йду у школу.** (I am going to school.) |
-| **робота** (work) | **Він на роботі.** (He is at work.) | **Він іде на роботу.** (He is going to work.) |
-| **банк** (bank) | **Ми у банку.** (We are in the bank.) | **Ми йдемо у банк.** (We are going to the bank.) |
-| **парк** (park) | **Вона у парку.** (She is in the park.) | **Вона йде у парк.** (She is going to the park.) |
-| **кафе** (cafe) | **Степан у кафе.** (Stepan is in the cafe.) | **Степан іде у кафе.** (Stepan is going to the cafe.) |
-| **аптека** (pharmacy) | **Оксана в аптеці.** (Oksana is in the pharmacy.) | **Оксана йде в аптеку.** (Oksana is going to the pharmacy.) |
+| **школа** | **в школі** | **у школу** |
+| **робота** | **на роботі** | **на роботу** |
+| **банк** | **у банку** | **у банк** |
+| **парк** | **у парку** | **у парк** |
 
-To answer the question **куди?** (where to?), you need verbs of motion. Ukrainian distinguishes between moving under your own physical power and moving by using a vehicle. The verb **йти** means "to go on foot" or "to walk". The verb **їхати** means "to go by transport" or "to drive/ride". Both of these verbs trigger the Accusative case for the destination.
-
-*   **Я йду в магазин.** (I am walking to the store.)
-*   **Студент іде в університет.** (The student is walking to the university.)
-*   **Ми йдемо в ресторан.** (We are walking to the restaurant.)
-*   **Вони йдуть у кіно.** (They are walking to the cinema.)
-*   **Я їду на вокзал.** (I am driving to the station.)
-*   **Ми їдемо в центр.** (We are driving to the center.)
-*   **Тарас їде у Київ.** (Taras is traveling to Kyiv.)
-*   **Вона їде в аеропорт.** (She is traveling to the airport.)
+Clear sentence examples highlight how to contrast the two cases in context. It is always the verb that dictates whether the situation is static or dynamic.
+* **Лікар працює в лікарні.** (Де? — The doctor works in the hospital. The action of working is stationary.)
+* **Я йду в лікарню.** (Куди? — I am going to the hospital. The action involves physical movement toward a specific target.)
+* **Він сидить на роботі.** (Де? — He is sitting at work. The position is fixed.)
+* **Вона їде на роботу.** (Куди? — She is driving to work. The position is actively changing.)
+English merges these distinct realities into a single concept of "where," but Ukrainian strictly separates static location from dynamic direction. You must learn to hear the difference.
 
 :::caution
-**The Exception: Going Home**
-There is one very common destination that breaks the preposition rules entirely: your own home. When expressing movement homeward, Ukrainian uses a special directional adverb: **додому** (homeward / to home). This word has the direction built directly into it, so it never takes a preposition. You must contrast this with the static adverb **вдома** (at home).
+**Common L2 Mistake: "Where" vs "Where To"**
+English speakers often ask **Де ти йдеш?** when trying to say "Where are you going?". This is incorrect in Ukrainian because **Де** implies static location. You must ask **Куди ти йдеш?** to indicate movement toward a destination.
 :::
 
-*   **Де Іван? Іван вдома.** (Where is Ivan? Ivan is at home.)
-*   **Куди йде Іван? Іван іде додому.** (Where is Ivan going? Ivan is going home.)
+<!-- INJECT_ACTIVITY: quiz-de-or-kudy -->
+<!-- INJECT_ACTIVITY: group-sort-de-kudy -->
 
-<!-- INJECT_ACTIVITY: quiz-de-vs-kudy -->
-<!-- INJECT_ACTIVITY: group-sort-locative-accusative -->
-<!-- INJECT_ACTIVITY: quiz-vs -->
+When discussing direction, you need the right verbs of motion. The two most vital verbs in Ukrainian are **йти** (to go on foot) and **їхати** (to go by transport). The choice between them depends entirely on how you are getting to your destination.
+* **Я йду в магазин.** (I am walking to the local shop.)
+* **Я їду на вокзал.** (I am taking transport to the train station.)
+Both of these verbs express movement toward a target, so they both pair perfectly with **в** or **на** plus the accusative case to answer **Куди?**. You cannot use them interchangeably.
+
+There is one special directional adverb that defies the usual preposition rules: **додому** (homeward or to home). This word inherently contains the concept of direction and requires no preposition at all. The phrase **повертатися додому** (to return home) is a fixed expression that naturally pairs a verb of motion with the directional adverb. We contrast it directly with the static location adverb **вдома** (at home).
+* **Іван іде додому.** (Куди? — Ivan is walking home.)
+* **Мама вдома.** (Де? — Mom is at home.)
+
+<!-- INJECT_ACTIVITY: quiz-yty-or-ikhaty -->
 
 ## Підсумок — Summary
 
-The absolute cornerstone of Ukrainian spatial grammar is the strict two-question system. The question **де?** (where?) asks about a static location and requires the Locative case. The question **куди?** (where to?) asks about dynamic direction and requires the Accusative case. When answering **куди?** (where to?), remember the simplest rule: inanimate masculine and neuter nouns look exactly identical to their original dictionary forms. The only time you need to actively change the noun is when it is a feminine noun ending in **-а** or **-я**, which must always shift to **-у** or **-ю**.
+We can recap the fundamental difference between the two core questions and their associated cases. The question **Де?** triggers the Locative case (such as **в школі**, **на роботі**, or **у банку**) to express STATIC location. You use this when you are already physically present somewhere, sitting, standing, or working. Conversely, the question **Куди?** triggers the Accusative case (such as **у школу**, **на роботу**, or **у банк**) to express dynamic DIRECTION. You use this when you are in transit, walking, driving, or actively moving toward a specific destination. Mastering this distinction is essential for accurate communication in Ukrainian.
 
-**How do I say "I am going to the bank" and "He is going to the park"?**
-You say **Я йду у банк** and **Він іде у парк**. Because these are inanimate masculine nouns, they follow the "no-change" rule for the Accusative case. They look completely identical to the Nominative case.
+The rules for case endings for places in the Accusative case are remarkably straightforward. Masculine and neuter nouns experience absolutely no change; their nominative form is used exactly as is. For example, **банк** remains **у банк**, and **місто** remains **у місто**. Feminine nouns, however, shift their endings: the final **-а** changes to **-у**, and the final **-я** changes to **-ю**. Thus, **школа** becomes **у школу**, and **бібліотека** becomes **у бібліотеку**. The surrounding context and the specific verb of motion dictate the correct grammatical form you must select.
 
-**How do I say "We are going to the library" and "She is going to work"?**
-You say **Ми йдемо у бібліотеку** and **Вона іде на роботу**. These are feminine nouns ending in **-а**. To show direction, the **-а** must change to **-у**.
+Before moving forward, review this self-check Q&A list to guarantee you have absorbed these vital distinctions.
 
-**What is the difference between "Я вдома" and "Я йду додому"?**
-The phrase **Я вдома** (I am at home) is static; it means you are already located there. The phrase **Я йду додому** (I am going home) is dynamic; it means you are currently moving in the direction of your home.
-
-**Which case follows verbs of motion like "їхати" and "йти"?**
-Verbs of motion show direction toward a target, so they answer the question **куди?** (where to?) and must be followed by the Accusative case.
-
+* Q: Which question asks about static location?
+* A: **Де?** (Where?)
+* Q: Which question asks about the direction of movement?
+* A: **Куди?** (Where to?)
+* Q: How do you say "I am going to the bank"?
+* A: **Я йду в банк.**
+* Q: How do you say "I am at the bank"?
+* A: **Я в банку.**
+* Q: What happens to feminine place names answering "**Куди?**"
+* A: They change their ending (for example, **школа → у школу**).
+* Q: Which verb means "to go on foot"?
+* A: **Йти.**
+* Q: Which verb means "to go by transport"?
+* A: **Їхати.**
 </module_content>
 
 ---
@@ -215,48 +242,68 @@ version: "1.0"
 module: where-to
 level: a1
 
+# NOTE — these are SHAPE examples. The real targets are at the top of this prompt
+# (10 total / 4–6 inline / 6–9 workbook,
+# 6+ items per activity). The shapes below are TRUNCATED for readability;
+# YOUR output MUST hit those minimums.
+
 inline:
   - id: marker-id-here        # MUST match an <!-- INJECT_ACTIVITY: ... --> marker
     type: quiz                 # activity type
     instruction: "Оберіть правильний варіант"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - question: "_____ стіл"
-        options: ["мій", "моя", "моє"]
+        options: ["мій", "моя", "моє", "мої"]
         correct: 0             # 0-based index
+      - question: "Це ____ книга."
+        options: ["мій", "моя", "моє", "мої"]
+        correct: 1
+      # ... add at least 6 items total — never stop at 1-2
 
   - id: another-marker-id
     type: fill-in
     instruction: "Вставте правильне слово"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - sentence: "Це ____ кімната."
         answer: "моя"
         options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ вікно."
+        answer: "моє"
+        options: ["мій", "моя", "моє"]
+      # ... ≥ 6 items total
 
 workbook:
-  - type: match-up
+  - id: match-up-vocab
+    type: match-up
     instruction: "З'єднайте пари"
-    pairs:
+    pairs:                     # ← real output: ≥ 6 pairs
       - left: "стіл"
         right: "він"
       - left: "книга"
         right: "вона"
       - left: "вікно"
         right: "воно"
+      # ... ≥ 6 pairs total
 
-  - type: group-sort
+  - id: group-sort-gender
+    type: group-sort
     instruction: "Розподіліть слова за категоріями"
     groups:
-      - label: "Category A"
-        items: ["word1", "word2"]
-      - label: "Category B"
-        items: ["word3", "word4"]
+      - label: "Чоловічий рід"
+        items: ["стіл", "олівець", "будинок"]   # ≥ 3 items per group
+      - label: "Жіночий рід"
+        items: ["книга", "ручка", "школа"]
+      - label: "Середній рід"
+        items: ["вікно", "море", "молоко"]
 
-  - type: true-false
+  - id: true-false-grammar
+    type: true-false
     instruction: "Правда чи ні?"
-    items:
-      - statement: "Statement here"
-        correct: true
-        explanation: "Why it's true"
+    items:                     # ← real output: ≥ 6 items
+      - statement: "«Книга» — це чоловічий рід."
+        correct: false
+        explanation: "Книга закінчується на -а, отже жіночий рід."
+      # ... ≥ 6 items total
 
   - type: error-correction
     instruction: "Виправте помилку"
@@ -327,7 +374,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -411,10 +458,15 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 ## Quality Rules
 
-**ITEM COUNT MINIMUMS (non-negotiable):**
-- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
-- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
-- If you can't think of enough items, add more examples from the module's vocabulary and content.
+**ACTIVITY COUNT MINIMUMS (non-negotiable, audit-enforced):**
+- **Total: 10 activities.** Inline: 4–6. Workbook: 6–9. The audit gate FAILS the module if you ship fewer.
+- **Type diversity: workbook MUST cover ≥5 distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
+- **Match the inline markers exactly.** Every `<!-- INJECT_ACTIVITY: id -->` marker in the prose needs a matching inline activity with that exact id. Skipping markers means the lesson tab is broken.
+
+**ITEM COUNT MINIMUMS (non-negotiable, per-activity):**
+- **Default minimum: 6 items per activity.** Quiz, fill-in, match-up, true-false, anagram, error-correction, translate, cloze, mark-the-words, divide-words, count-syllables, odd-one-out, group-sort categories: all ≥ 6.
+- **Lower minimums for specific types only:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items, essay-response/critical-analysis = 1 prompt.
+- If you can't think of enough items, add more examples from the module's vocabulary and content. NEVER ship a 1-item or 2-item activity unless its type cap explicitly allows it.
 - **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
 - **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
@@ -521,6 +573,27 @@ IMPORTANT: After using tools, output your COMPLETE module content as plain text.
 1. Run `verify_words` on all Ukrainian words in your exercises — every word must exist in VESUM
 2. Run `query_cefr_level` on any word you're unsure about — it must be a1-appropriate
 3. For fill-in answers and distractors, verify the exact form (case, number, gender) with `verify_lemma`
+
+---
+
+## ⚠️ MANDATORY FINAL CHECKLIST — verify before emitting YAML
+
+Walk through this checklist explicitly before you start emitting. If ANY box is unchecked, fix it FIRST.
+
+- [ ] My output has **at least 4** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
+- [ ] My output has **at least 6** workbook activities.
+- [ ] **Total ≥ 10.**
+- [ ] **Every** activity has **at least 6** items, pairs, or statements (except types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3, essay-response=1).
+- [ ] The module (inline + workbook combined) uses **at least 0 distinct activity types** (or 4+ when 0 = 0 and the workbook size allows it). I am NOT shipping a wall of quizzes.
+- [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
+- [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
+- [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+- [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+- [ ] My inline count is between 4 and 6. I did NOT create more injection markers than 6.
+- [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
+- [ ] At B1+, all instructions are in Ukrainian (no English fallback).
+
+If you cannot tick all of these, REGENERATE the activities BEFORE outputting. Shipping under-spec means the build rejects you and the heal loop has to redo your work — wasting compute.
 
 ---
 

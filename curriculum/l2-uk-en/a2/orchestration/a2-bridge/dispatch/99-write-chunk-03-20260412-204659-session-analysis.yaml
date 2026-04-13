@@ -1,0 +1,72 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T18-46-99f96b5b.json
+phase: write-chunk-03
+prompt_chars: 42352
+response_chars: 3628
+prompt_words: 5888
+response_words: 585
+sections:
+- name: header
+  start: 0
+  length: 448
+  fraction: 0.0106
+- name: skeleton
+  start: 448
+  length: 1493
+  fraction: 0.0353
+- name: prior_summary
+  start: 1941
+  length: 3298
+  fraction: 0.0779
+- name: plan
+  start: 5239
+  length: 11124
+  fraction: 0.2627
+- name: wiki
+  start: 9698
+  length: 25780
+  fraction: 0.6087
+- name: output_spec
+  start: 42143
+  length: 209
+  fraction: 0.0049
+large_sections:
+- wiki
+directives_total: 15
+directives_covered: 6
+directives_missed:
+- kind: checklist
+  text: відмінок (case)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: називний (nominative)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: знахідний (accusative)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: місцевий (locative)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: кличний (vocative)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: наголос (stress (accent))
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: must
+  text: '**MANDATORY — never omit.'
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: inject_activity
+  text: fill-in-phonological-alternations
+  covered: false
+  coverage_note: marker missing

@@ -1,0 +1,290 @@
+{
+  "total_items": 147,
+  "grounded_items": 101,
+  "ungrounded": [
+    {
+      "word": "запитала",
+      "exercise_type": "fill-in",
+      "context": "Вона запитала, ____ ми купили квитки.",
+      "role": "context"
+    },
+    {
+      "word": "купили",
+      "exercise_type": "fill-in",
+      "context": "Вона запитала, ____ ми купили квитки.",
+      "role": "context"
+    },
+    {
+      "word": "правильне",
+      "exercise_type": "fill-in",
+      "context": "Ми впевнені, ____ це правильне рішення.",
+      "role": "context"
+    },
+    {
+      "word": "рішення",
+      "exercise_type": "fill-in",
+      "context": "Ми впевнені, ____ це правильне рішення.",
+      "role": "context"
+    },
+    {
+      "word": "батьки",
+      "exercise_type": "fill-in",
+      "context": "Батьки попросили, ____ ми зателефонували ввечері.",
+      "role": "context"
+    },
+    {
+      "word": "попросили",
+      "exercise_type": "fill-in",
+      "context": "Батьки попросили, ____ ми зателефонували ввечері.",
+      "role": "context"
+    },
+    {
+      "word": "зателефонували",
+      "exercise_type": "fill-in",
+      "context": "Батьки попросили, ____ ми зателефонували ввечері.",
+      "role": "context"
+    },
+    {
+      "word": "правий",
+      "exercise_type": "quiz",
+      "context": "У реченні «Я думаю, що він правий» головна частина — це:",
+      "role": "context"
+    },
+    {
+      "word": "пояснюваним",
+      "exercise_type": "quiz",
+      "context": "Яке слово зазвичай є пояснюваним у головній частині для з'яс",
+      "role": "context"
+    },
+    {
+      "word": "з'ясувального",
+      "exercise_type": "quiz",
+      "context": "Яке слово зазвичай є пояснюваним у головній частині для з'яс",
+      "role": "context"
+    },
+    {
+      "word": "питань",
+      "exercise_type": "quiz",
+      "context": "Який сполучник використовується для непрямих питань (yes/no)",
+      "role": "context"
+    },
+    {
+      "word": "особи",
+      "exercise_type": "quiz",
+      "context": "Який сполучник використовується для вираження бажання чи про",
+      "role": "context"
+    },
+    {
+      "word": "якої",
+      "exercise_type": "match-up",
+      "context": "Частина, від якої ми ставимо питання",
+      "role": "context"
+    },
+    {
+      "word": "службове",
+      "exercise_type": "match-up",
+      "context": "Службове слово, яке лише з'єднує частини (що, щоб, чи)",
+      "role": "context"
+    },
+    {
+      "word": "читає",
+      "exercise_type": "quiz",
+      "context": "Я знаю, ЩО він читає. (Слово «що» замінює об'єкт читання)",
+      "role": "context"
+    },
+    {
+      "word": "об'єкт",
+      "exercise_type": "quiz",
+      "context": "Я знаю, ЩО він читає. (Слово «що» замінює об'єкт читання)",
+      "role": "context"
+    },
+    {
+      "word": "читання",
+      "exercise_type": "quiz",
+      "context": "Я знаю, ЩО він читає. (Слово «що» замінює об'єкт читання)",
+      "role": "context"
+    },
+    {
+      "word": "погоджуюсь",
+      "exercise_type": "quiz",
+      "context": "Він запитав, ЧИ я погоджуюсь.",
+      "role": "context"
+    },
+    {
+      "word": "побачили",
+      "exercise_type": "quiz",
+      "context": "Ми побачили, ЯК сонце сідає за гори.",
+      "role": "context"
+    },
+    {
+      "word": "сонце",
+      "exercise_type": "quiz",
+      "context": "Ми побачили, ЯК сонце сідає за гори.",
+      "role": "context"
+    },
+    {
+      "word": "сідає",
+      "exercise_type": "quiz",
+      "context": "Ми побачили, ЯК сонце сідає за гори.",
+      "role": "context"
+    },
+    {
+      "word": "гори",
+      "exercise_type": "quiz",
+      "context": "Ми побачили, ЯК сонце сідає за гори.",
+      "role": "context"
+    },
+    {
+      "word": "просить",
+      "exercise_type": "quiz",
+      "context": "Вона просить, ЩОБ ми зачекали.",
+      "role": "context"
+    },
+    {
+      "word": "зачекали",
+      "exercise_type": "quiz",
+      "context": "Вона просить, ЩОБ ми зачекали.",
+      "role": "context"
+    },
+    {
+      "word": "буду",
+      "exercise_type": "fill-in",
+      "context": "чи я буду",
+      "role": "answer"
+    },
+    {
+      "word": "питає",
+      "exercise_type": "fill-in",
+      "context": "Мама питає, ____ вдома.",
+      "role": "context"
+    },
+    {
+      "word": "вдома",
+      "exercise_type": "fill-in",
+      "context": "Мама питає, ____ вдома.",
+      "role": "context"
+    },
+    {
+      "word": "нову",
+      "exercise_type": "fill-in",
+      "context": "Він сказав, ____ нову машину.",
+      "role": "context"
+    },
+    {
+      "word": "машину",
+      "exercise_type": "fill-in",
+      "context": "Він сказав, ____ нову машину.",
+      "role": "context"
+    },
+    {
+      "word": "прочитали",
+      "exercise_type": "fill-in",
+      "context": "щоб ми прочитали",
+      "role": "answer"
+    },
+    {
+      "word": "вчитель",
+      "exercise_type": "fill-in",
+      "context": "Вчитель просить, ____ текст.",
+      "role": "context"
+    },
+    {
+      "word": "текст",
+      "exercise_type": "fill-in",
+      "context": "Вчитель просить, ____ текст.",
+      "role": "context"
+    },
+    {
+      "word": "правду",
+      "exercise_type": "fill-in",
+      "context": "Не знаю, ____ правду.",
+      "role": "context"
+    },
+    {
+      "word": "вважають",
+      "exercise_type": "fill-in",
+      "context": "Вони вважають, ____ чудова ідея.",
+      "role": "context"
+    },
+    {
+      "word": "чудова",
+      "exercise_type": "fill-in",
+      "context": "Вони вважають, ____ чудова ідея.",
+      "role": "context"
+    },
+    {
+      "word": "гарна",
+      "exercise_type": "unjumble",
+      "context": "гарна",
+      "role": "answer"
+    },
+    {
+      "word": "сказала",
+      "exercise_type": "unjumble",
+      "context": "сказала,",
+      "role": "answer"
+    },
+    {
+      "word": "йдемо",
+      "exercise_type": "unjumble",
+      "context": "йдемо.",
+      "role": "answer"
+    },
+    {
+      "word": "прошу",
+      "exercise_type": "unjumble",
+      "context": "Прошу,",
+      "role": "answer"
+    },
+    {
+      "word": "сполучники",
+      "exercise_type": "match-up",
+      "context": "сполучники порівняння (as if, as though)",
+      "role": "context"
+    },
+    {
+      "word": "порівняння",
+      "exercise_type": "match-up",
+      "context": "сполучники порівняння (as if, as though)",
+      "role": "context"
+    },
+    {
+      "word": "усі",
+      "exercise_type": "match-up",
+      "context": "усі відмінки, крім називного (indirect cases)",
+      "role": "context"
+    },
+    {
+      "word": "крім",
+      "exercise_type": "match-up",
+      "context": "усі відмінки, крім називного (indirect cases)",
+      "role": "context"
+    },
+    {
+      "word": "називного",
+      "exercise_type": "match-up",
+      "context": "усі відмінки, крім називного (indirect cases)",
+      "role": "context"
+    },
+    {
+      "word": "вимагає",
+      "exercise_type": "match-up",
+      "context": "слово в головній частині, яке вимагає з'ясування (explained ",
+      "role": "context"
+    },
+    {
+      "word": "з'ясування",
+      "exercise_type": "match-up",
+      "context": "слово в головній частині, яке вимагає з'ясування (explained ",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 22,
+    "tested_in_exercises": 21,
+    "not_tested": [
+      "сполучне"
+    ]
+  },
+  "all_grounded": false
+}

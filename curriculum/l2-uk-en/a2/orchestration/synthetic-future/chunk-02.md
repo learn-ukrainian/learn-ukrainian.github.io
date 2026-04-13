@@ -1,19 +1,33 @@
-## Простий майбутній час (Perfective/Synthetic Future)
+## Простий майбутній час (~550 words)
 
-The simple future tense uses perfective verbs. Ми завжди використовуємо дієслова **доконаного виду** *(perfective aspect)*. To build this tense, we take a perfective verb and conjugate it exactly like a present-tense verb. Ми просто додаємо звичайні закінчення теперішнього часу. *(We simply add normal present-tense endings.)* Most perfective verbs are just imperfective verbs with a specific prefix added to the beginning. Наприклад, ми беремо популярний префікс **про-** і дієслово **читати** *(to read)*. *(For example, we take the popular prefix pro- and the verb to read.)* Разом ми отримуємо нове дієслово **прочитати** *(to read completely)*. This new verb belongs to the first conjugation. Ми відмінюємо його так: **я прочитаю** *(I will read)*, **ти прочитаєш** *(you will read)*, **він прочитає** *(he will read)*. У множині ми кажемо: **ми прочитаємо** *(we will read)*, **ви прочитаєте** *(you will read)*, **вони прочитають** *(they will read)*. The endings are absolutely identical to the present tense, but the prefix automatically makes the meaning future.
+The **простий** (simple, synthetic) **майбутній час** (future tense) is formed exclusively using perfective verbs. Because perfective verbs describe an action that is fully completed, they cannot physically happen "right now" in the present moment. An action is either ongoing, or it is completely finished. Therefore, perfective verbs do not have a true present tense. When you conjugate a perfective verb using the standard present-tense endings you already know, the meaning automatically shifts to the future. It points to a completed action that will happen later.
 
-The second conjugation follows the exact same structural logic. Ми беремо префікс і додаємо його до базової основи. *(We take a prefix and add it to the base stem.)* However, you must remember the specific consonant shifts that happen in the first person singular. Ці чергування приголосних звуків дуже важливі тут. *(These consonant sound shifts are very important here.)* For example, the consonant **б** changes to the cluster **бл**. Дієслово **зробити** *(to do completely)* має форму **я зроблю** *(I will do)*. Інші форми залишаються нормальними: **ти зробиш** *(you will do)*, **він зробить** *(he will do)*, **ми зробимо** *(we will do)*, **ви зробите** *(you will do)*, **вони зроблять** *(they will do)*. Another common shift is **т** to **ч**. Від дієслова **побачити** *(to see)* ми легко утворюємо форму **я побачу** *(I will see)*. You will also frequently see the shift from **д** to **дж** in verbs like **порадити** *(to advise)*, which becomes **я пораджу** *(I will advise)*.
+Ми використовуємо цей час, коли говоримо про конкретний результат у майбутньому. Ви вже чудово знаєте, як відмінювати дієслова в теперішньому часі. Тепер ви просто берете доконане дієслово і додаєте ті самі закінчення.
 
-Some perfective verbs are absolutely essential for daily communication and simple transactions. Це головні дієслова для вашого щоденного виживання. *(These are the main verbs for your daily survival.)* You will use them constantly to make firm promises or state clear decisions. Якщо ви хочете щось сказати, ви кажете: «Я **скажу**» *(I will say)*. Якщо ви плануєте покупку в магазині, ви кажете: «Я **куплю**» *(I will buy)*. Notice that the verb **купити** *(to buy)* also features the consonant shift in the first person. Для розмови по телефону ми використовуємо дієслово **подзвонити** *(to call)*. Ви кажете своїм друзям: «Я **подзвоню** вам завтра» *(I will call you tomorrow)*. Якщо ви відправляєте важливе повідомлення, ви кажете: «Я **надішлю** довгий емейл» *(I will send a long email)*.
+> *We use this tense when we talk about a concrete result in the future. You already know perfectly well how to conjugate verbs in the present tense. Now you simply take a perfective verb and add the exact same endings.*
 
-Motion verbs use specific prefixes to clearly show your concrete future travel plans. Дієслова руху дуже часто мають префікси **по-** або **при-**. *(Motion verbs very often have the prefixes po- or pry-.)* The prefix "по-" shows the active start of a trip or movement away from your current location. Якщо ви плануєте подорож машиною, ви кажете: «Я **поїду**» *(I will leave/go by vehicle)*. Якщо ви йдете кудись пішки, ви кажете: «Я **піду**» *(I will go by foot)*. The prefix "при-" always shows successful arrival at a destination. Якщо ви говорите про точний час, ви кажете: «Я **приїду** о сьомій годині» *(I will arrive at seven o'clock)*. Ці короткі слова ідеально підходять для планування маршруту. *(These short words are perfectly suited for planning a route.)*
+Let's look at the first conjugation. You simply take the stem of the perfective verb and apply the standard endings. There are no new endings to memorize here. For example, the perfective verb **прочитати** (to read through — pf.) uses these simple forms. You say: я прочитаю, ти прочитаєш, він прочитає. For multiple people: ми прочитаємо, ви прочитаєте, вони прочитають. This pattern is very reliable.
 
-Let's see how friends use these concrete promises when planning a relaxing evening together. Вони зараз планують спільну смачну вечерю. *(They are now planning a joint tasty dinner.)*
+Ще один важливий приклад — це дієслово «поїхати». Воно має такі самі знайомі закінчення. Ви кажете: я поїду, ти поїдеш, він поїде. У множині це: ми поїдемо, ви поїдете, вони поїдуть. Ця форма описує поїздку, яка точно відбудеться.
 
-> — **Анна:** Що ми будемо робити сьогодні ввечері? *(What will we do tonight?)*
-> — **Максим:** Я **куплю** червоне вино і свіжі фрукти. *(I will buy red wine and fresh fruits.)*
-> — **Анна:** Дуже добре, а я **зроблю** великий салат. *(Very good, and I will make a large salad.)*
-> — **Анна:** Також я **замовлю** гарячу піцу для нас. *(Also I will order a hot pizza for us.)*
-> — **Максим:** Чудово! А потім ми **подивимося** цікавий фільм. *(Great! And then we will watch an interesting movie.)*
+:::info
+**Grammar box** — Do not confuse the English "will" with the Ukrainian forms here. The Ukrainian synthetic future does not use an extra helper word. The future meaning is built directly into the perfective verb itself.
+:::
 
-<!-- INJECT_ACTIVITY: group-sort-future-forms -->
+Now let's examine the second conjugation perfective verbs. The rules here are also identical to the present tense, including the consonant mutations in the first person singular. For instance, the perfective verb "побачити" (to see) changes the consonant "т" to "ч": я побачу, ти побачиш, він побачить, ми побачимо, ви побачите, вони побачать. Another common example is the verb **зробити / зроблю** (to do — pf. future).
+
+З цим дієсловом ми бачимо типове додавання літери «л» після губного приголосного «б». Подивіться на ці форми. В однині ми кажемо: я зроблю, ти зробиш, він зробить. У множині: ми зробимо, ви зробите, вони зроблять. Ви вже добре знаєте це правило з дієслова «робити».
+
+> *With this verb, we see the typical addition of the letter "л" after the labial consonant "б". Look at these forms. In the singular we say: я зроблю, ти зробиш, він зробить. In the plural: ми зробимо, ви зробите, вони зроблять. You already know this rule well from the verb "робити".*
+
+You will use the **простий** future tense exclusively for a single, completed action in the future that will produce a clear result. It focuses entirely on the successful achievement of a goal, not on the process or duration. You want to emphasize that the task will be done. For example, consider the verb **написати / напишу** (to write — pf. future).
+
+Коли я кажу, що я напишу листа, це означає чудовий результат. Лист точно буде готовий. Я почну і повністю закінчу цю дію. Якщо мій брат прочитає книгу, він дочитає її до кінця.
+
+In daily life, Ukrainians constantly use specific perfective verbs to make firm plans and promises. These verbs are absolutely essential for everyday communication and building relationships. You will often hear verbs like **подзвонити** (to call — pf.), **купити** (to buy — pf.), or **сказати / скажу** (to say/tell — pf. future) when people arrange meetings, share news, or go shopping.
+
+Я обов'язково подзвоню тобі завтра вранці. Ми точно купимо свіжий хліб і молоко. Я швидко приїду на вокзал. Я скажу йому всю правду про цю ситуацію.
+
+> *I will definitely call you tomorrow morning. We will exactly buy fresh bread and milk. I will quickly arrive at the train station. I will tell him the whole truth about this situation.*
+
+<!-- INJECT_ACTIVITY: fill-in, Complete sentences with the correct synthetic perfective future forms based on context -->

@@ -2,12 +2,12 @@
   "module": "metalanguage-morphology",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-04-11T00:49:42.985558Z",
+  "last_audit": "2026-04-11T18:36:05.565338Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-11T00:41:13.483991Z",
+    "md": "2026-04-11T18:36:02.122847Z",
     "meta": null,
-    "activities": "2026-04-11T00:41:14.180917Z",
+    "activities": "2026-04-11T18:24:05.150890Z",
     "vocabulary": "2026-04-09T00:10:58.253170Z",
     "research": null,
     "plan": "2026-04-04T22:05:00.088981Z"
@@ -20,18 +20,27 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 1,
-      "message": "4892/4000 (raw: 4946) | engagement: 0/3"
+      "violations": 2,
+      "message": "5627/4000 (raw: 5733) | engagement: 2/3 | immersion: 36.9% LOW (target 65-90% (A2.3))"
     },
     "activities": {
       "status": "fail",
       "violations": 1,
-      "message": "7/0 | density: 4 < 8"
+      "message": "9/0 | density: 4 < 8"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
       "message": "34/1"
+    },
+    "vocab_progression": {
+      "status": "warn",
+      "violations": 0,
+      "message": "\u0394 -45 | premature=9 | gaps=0 | well-paced=0",
+      "delta": -45,
+      "premature": 9,
+      "gaps": 0,
+      "well_paced": 0
     },
     "naturalness": {
       "status": "info",

@@ -1,0 +1,51 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 7
+  evidence: 'The text misses explicit plan requirements: it fails to cite the requested
+    textbook references ("Литвінова Grade 6 p.237", "Заболотний Grade 6 p.179", "Авраменко
+    Grade 11 p.42", "Авраменко Grade 7 p.6'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: Grammar and declension patterns are flawlessly explained. Gender/number
+    agreement and tricky cases for ordinal compounds are factually accurate.
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent PPP flow. It uses clear tables for "п'ятий" and "третій" declensions
+    and explains *why* forms change, providing multiple contextual examples.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary words (порядковий числівник, половина,
+    складений числівник, в першу чергу, etc.) are naturally used in the prose.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: The injected markers align with the content just taught and provide the
+    exact exercise types demanded by the outline.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Warm, encouraging, and highly professional teacher persona. "Generic enthusiasm"
+    is tightly tethered to specific structural features of the language (e.g., the
+    stability of stress in ordinals).
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All H2 headings match the plan perfectly. The 5780-word length easily
+    clears the 4000-word target budget without feeling bloated.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Deeply decolonized approach. The explicit breakdown of the "*без десяти"
+    Surzhyk and the use of Independence Day anchors the module well in Ukrainian reality.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: The train ticket dialogue is realistic and correctly analyzes changing
+    grammatical cases in a fast-paced environment. The score reflects only the missing
+    secondary appointment dialogue outlined in the
+findings: []

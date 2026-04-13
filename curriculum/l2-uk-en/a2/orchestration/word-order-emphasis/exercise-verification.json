@@ -1,405 +1,348 @@
 {
-  "total_items": 207,
-  "grounded_items": 142,
+  "total_items": 165,
+  "grounded_items": 109,
   "ungrounded": [
     {
-      "word": "помила",
+      "word": "яке",
       "exercise_type": "quiz",
-      "context": "— Хто помив посуд?\n— Посуд помила Оленка. (Що тут рема?)",
+      "context": "Питання: Хто купив книгу? Відповідь: Книгу купив Тарас. Яке ",
       "role": "context"
+    },
+    {
+      "word": "школі",
+      "exercise_type": "quiz",
+      "context": "Питання: Де він працює? Відповідь: Він працює в школі. Яке с",
+      "role": "context"
+    },
+    {
+      "word": "приїхав",
+      "exercise_type": "match-up",
+      "context": "Коли приїхав Олег?",
+      "role": "answer"
+    },
+    {
+      "word": "брат",
+      "exercise_type": "fill-in",
+      "context": "брат",
+      "role": "answer"
     },
     {
       "word": "учора",
-      "exercise_type": "quiz",
-      "context": "— Де ти був учора?\n— Вчора я був удома. (Що тут рема?)",
-      "role": "context"
-    },
-    {
-      "word": "іде",
       "exercise_type": "match-up",
-      "context": "Дощ іде в Києві.",
+      "context": "Хто приїхав учора?",
+      "role": "answer"
+    },
+    {
+      "word": "який",
+      "exercise_type": "quiz",
+      "context": "Питання: Який це фільм? Відповідь: Це цікавий фільм. Яке сло",
       "role": "context"
     },
     {
-      "word": "маркований",
+      "word": "цікавий",
+      "exercise_type": "fill-in",
+      "context": "цікавий фільм",
+      "role": "answer"
+    },
+    {
+      "word": "текст",
       "exercise_type": "group-sort",
-      "context": "Емфатичний (маркований) порядок",
+      "context": "Студент читає текст.",
+      "role": "answer"
+    },
+    {
+      "word": "лежить",
+      "exercise_type": "group-sort",
+      "context": "Нова книга лежить на столі.",
+      "role": "answer"
+    },
+    {
+      "word": "столі",
+      "exercise_type": "group-sort",
+      "context": "Нова книга лежить на столі.",
+      "role": "answer"
+    },
+    {
+      "word": "написав",
+      "exercise_type": "match-up",
+      "context": "Хто написав цей текст?",
+      "role": "answer"
+    },
+    {
+      "word": "лист",
+      "exercise_type": "fill-in",
+      "context": "лист",
+      "role": "answer"
+    },
+    {
+      "word": "вдома",
+      "exercise_type": "fill-in",
+      "context": "вдома",
+      "role": "answer"
+    },
+    {
+      "word": "був",
+      "exercise_type": "fill-in",
+      "context": "— Де ти був? — Я був ____.",
+      "role": "context"
+    },
+    {
+      "word": "завтра",
+      "exercise_type": "fill-in",
+      "context": "завтра",
+      "role": "answer"
+    },
+    {
+      "word": "зустрінемося",
+      "exercise_type": "fill-in",
+      "context": "— Коли ми зустрінемося? — Ми зустрінемося ____.",
+      "role": "context"
+    },
+    {
+      "word": "зустрінеться",
+      "exercise_type": "fill-in",
+      "context": "— Хто зустрінеться завтра? — Завтра зустрінемося ____.",
+      "role": "context"
+    },
+    {
+      "word": "журнал",
+      "exercise_type": "fill-in",
+      "context": "журнал",
+      "role": "answer"
+    },
+    {
+      "word": "написала",
+      "exercise_type": "match-up",
+      "context": "Що написала Марія?",
+      "role": "answer"
+    },
+    {
+      "word": "марія",
+      "exercise_type": "match-up",
+      "context": "Що написала Марія?",
+      "role": "answer"
+    },
+    {
+      "word": "мене",
+      "exercise_type": "unjumble",
+      "context": "мене",
+      "role": "answer"
+    },
+    {
+      "word": "розуміти",
+      "exercise_type": "unjumble",
+      "context": "розуміти",
+      "role": "answer"
+    },
+    {
+      "word": "нічого",
+      "exercise_type": "true-false",
+      "context": "В українській мові порядок слів абсолютно вільний і нічого н",
+      "role": "context"
+    },
+    {
+      "word": "зазвичай",
+      "exercise_type": "true-false",
+      "context": "Нова інформація (рема) зазвичай стоїть у кінці речення.",
+      "role": "context"
+    },
+    {
+      "word": "яка",
+      "exercise_type": "true-false",
+      "context": "Тема — це відома інформація, яка зазвичай починає речення.",
+      "role": "context"
+    },
+    {
+      "word": "непрямий",
+      "exercise_type": "true-false",
+      "context": "Інверсія (непрямий порядок) використовується для емоцій та к",
+      "role": "context"
+    },
+    {
+      "word": "використовується",
+      "exercise_type": "true-false",
+      "context": "Інверсія (непрямий порядок) використовується для емоцій та к",
+      "role": "context"
+    },
+    {
+      "word": "однаковий",
+      "exercise_type": "true-false",
+      "context": "Речення «Мама любить доньку» і «Доньку любить мама» мають од",
+      "role": "context"
+    },
+    {
+      "word": "іменника",
+      "exercise_type": "true-false",
+      "context": "У прямому порядку слів прикметник стоїть після іменника (нап",
+      "role": "context"
+    },
+    {
+      "word": "сильних",
+      "exercise_type": "true-false",
+      "context": "Дієслово на початку речення часто використовується для сильн",
       "role": "context"
     },
     {
       "word": "історії",
-      "exercise_type": "error-correction",
-      "context": "Початок історії: Весна прийшла в місто.",
-      "role": "context"
-    },
-    {
-      "word": "десять",
-      "exercise_type": "fill-in",
-      "context": "десять",
-      "role": "answer"
-    },
-    {
-      "word": "років",
-      "exercise_type": "quiz",
-      "context": "Що означає фраза «років двадцять»?",
-      "role": "context"
-    },
-    {
-      "word": "двадцять",
-      "exercise_type": "quiz",
-      "context": "Що означає фраза «років двадцять»?",
-      "role": "context"
-    },
-    {
-      "word": "годин",
-      "exercise_type": "match-up",
-      "context": "сім годин",
-      "role": "answer"
-    },
-    {
-      "word": "км",
-      "exercise_type": "fill-in",
-      "context": "Це точно 5 км. До центру _____ кілометрів.",
-      "role": "context"
-    },
-    {
-      "word": "приблизно",
-      "exercise_type": "fill-in",
-      "context": "Це приблизно 5 км. До центру кілометрів _____.",
-      "role": "context"
-    },
-    {
-      "word": "вісім",
-      "exercise_type": "fill-in",
-      "context": "вісім",
-      "role": "answer"
-    },
-    {
-      "word": "працював",
-      "exercise_type": "fill-in",
-      "context": "Він працював рівно 8 годин. Він працював _____ годин.",
-      "role": "context"
-    },
-    {
-      "word": "близько",
-      "exercise_type": "fill-in",
-      "context": "Він працював близько 8 годин. Він працював годин _____.",
-      "role": "context"
-    },
-    {
-      "word": "роки",
-      "exercise_type": "match-up",
-      "context": "два роки",
-      "role": "answer"
-    },
-    {
-      "word": "сім",
-      "exercise_type": "match-up",
-      "context": "сім годин",
-      "role": "answer"
-    },
-    {
-      "word": "комусь",
-      "exercise_type": "match-up",
-      "context": "Контраст: я вірю тобі, а не комусь іншому",
-      "role": "context"
-    },
-    {
-      "word": "іншому",
-      "exercise_type": "match-up",
-      "context": "Контраст: я вірю тобі, а не комусь іншому",
-      "role": "context"
-    },
-    {
-      "word": "хтось",
-      "exercise_type": "match-up",
-      "context": "Фокус: саме Тарас, а не хтось інший",
-      "role": "context"
-    },
-    {
-      "word": "інший",
-      "exercise_type": "match-up",
-      "context": "Фокус: саме Тарас, а не хтось інший",
-      "role": "context"
-    },
-    {
-      "word": "нейтрально",
-      "exercise_type": "match-up",
-      "context": "Нейтрально: я повідомляю факт",
-      "role": "context"
-    },
-    {
-      "word": "повідомляю",
-      "exercise_type": "match-up",
-      "context": "Нейтрально: я повідомляю факт",
-      "role": "context"
-    },
-    {
-      "word": "мій",
-      "exercise_type": "match-up",
-      "context": "Фокус: саме я, а не мій брат",
-      "role": "context"
-    },
-    {
-      "word": "брат",
-      "exercise_type": "match-up",
-      "context": "Фокус: саме я, а не мій брат",
-      "role": "context"
-    },
-    {
-      "word": "читав",
-      "exercise_type": "match-up",
-      "context": "Книгу я вже читав.",
-      "role": "answer"
-    },
-    {
-      "word": "йому",
-      "exercise_type": "fill-in",
-      "context": "_____ я вірю, а йому — ні.",
-      "role": "context"
-    },
-    {
-      "word": "її",
-      "exercise_type": "fill-in",
-      "context": "її",
-      "role": "answer"
-    },
-    {
-      "word": "бачили",
-      "exercise_type": "fill-in",
-      "context": "Не _____ ми бачили, а іншу людину.",
-      "role": "context"
-    },
-    {
-      "word": "іншу",
-      "exercise_type": "fill-in",
-      "context": "Не _____ ми бачили, а іншу людину.",
-      "role": "context"
-    },
-    {
-      "word": "людину",
-      "exercise_type": "fill-in",
-      "context": "Не _____ ми бачили, а іншу людину.",
-      "role": "context"
-    },
-    {
-      "word": "вас",
-      "exercise_type": "fill-in",
-      "context": "вас",
-      "role": "answer"
-    },
-    {
-      "word": "чекали",
-      "exercise_type": "fill-in",
-      "context": "Саме _____ ми чекали цілу годину!",
-      "role": "context"
-    },
-    {
-      "word": "цілу",
-      "exercise_type": "fill-in",
-      "context": "Саме _____ ми чекали цілу годину!",
-      "role": "context"
-    },
-    {
-      "word": "годину",
-      "exercise_type": "fill-in",
-      "context": "Саме _____ ми чекали цілу годину!",
-      "role": "context"
-    },
-    {
-      "word": "їм",
-      "exercise_type": "fill-in",
-      "context": "їм",
-      "role": "answer"
-    },
-    {
-      "word": "розповів",
-      "exercise_type": "fill-in",
-      "context": "_____ я вже розповів цю історію.",
-      "role": "context"
-    },
-    {
-      "word": "однина",
-      "exercise_type": "group-sort",
-      "context": "Однина (Singular)",
-      "role": "context"
-    },
-    {
-      "word": "множина",
-      "exercise_type": "group-sort",
-      "context": "Множина (Plural)",
-      "role": "context"
-    },
-    {
-      "word": "нас",
-      "exercise_type": "group-sort",
-      "context": "нас",
-      "role": "answer"
-    },
-    {
-      "word": "пане",
-      "exercise_type": "quiz",
-      "context": "— Пане професоре, _____ я дуже поважаю!",
-      "role": "context"
-    },
-    {
-      "word": "професоре",
-      "exercise_type": "quiz",
-      "context": "— Пане професоре, _____ я дуже поважаю!",
-      "role": "context"
-    },
-    {
-      "word": "поважаю",
-      "exercise_type": "quiz",
-      "context": "— Пане професоре, _____ я дуже поважаю!",
-      "role": "context"
-    },
-    {
-      "word": "оленко",
-      "exercise_type": "quiz",
-      "context": "— Оленко, _____ я завжди вірю!",
-      "role": "context"
-    },
-    {
-      "word": "друже",
-      "exercise_type": "quiz",
-      "context": "— Друже, цю книгу я дав _____.",
-      "role": "context"
-    },
-    {
-      "word": "дав",
-      "exercise_type": "quiz",
-      "context": "— Друже, цю книгу я дав _____.",
-      "role": "context"
-    },
-    {
-      "word": "шановні",
-      "exercise_type": "quiz",
-      "context": "— Шановні гості, це _____ я сьогодні чекав.",
-      "role": "context"
-    },
-    {
-      "word": "гості",
-      "exercise_type": "quiz",
-      "context": "— Шановні гості, це _____ я сьогодні чекав.",
-      "role": "context"
-    },
-    {
-      "word": "чекав",
-      "exercise_type": "quiz",
-      "context": "— Шановні гості, це _____ я сьогодні чекав.",
-      "role": "context"
-    },
-    {
-      "word": "мамо",
-      "exercise_type": "quiz",
-      "context": "— Мамо, _____ я люблю найбільше.",
-      "role": "context"
-    },
-    {
-      "word": "люблю",
-      "exercise_type": "quiz",
-      "context": "— Мамо, _____ я люблю найбільше.",
-      "role": "context"
-    },
-    {
-      "word": "пані",
-      "exercise_type": "quiz",
-      "context": "— Пані Маріє, _____ я довіряю цей проект.",
-      "role": "context"
-    },
-    {
-      "word": "маріє",
-      "exercise_type": "quiz",
-      "context": "— Пані Маріє, _____ я довіряю цей проект.",
-      "role": "context"
-    },
-    {
-      "word": "довіряю",
-      "exercise_type": "quiz",
-      "context": "— Пані Маріє, _____ я довіряю цей проект.",
-      "role": "context"
-    },
-    {
-      "word": "проект",
-      "exercise_type": "quiz",
-      "context": "— Пані Маріє, _____ я довіряю цей проект.",
-      "role": "context"
-    },
-    {
-      "word": "вільний",
-      "exercise_type": "fill-in",
-      "context": "Українське _____ має вільний порядок слів.",
-      "role": "context"
-    },
-    {
-      "word": "створити",
-      "exercise_type": "fill-in",
-      "context": "Інверсія допомагає створити сильний _____.",
-      "role": "context"
-    },
-    {
-      "word": "фіксований",
       "exercise_type": "true-false",
-      "context": "В українській мові порядок слів завжди фіксований, як в англ",
+      "context": "Дієслово на початку речення часто використовується для сильн",
       "role": "context"
     },
     {
-      "word": "наприкінці",
-      "exercise_type": "true-false",
-      "context": "Рема (нова інформація) зазвичай стоїть наприкінці речення.",
+      "word": "реченні",
+      "exercise_type": "fill-in",
+      "context": "Останнє слово в реченні отримує логічний ____.",
       "role": "context"
     },
     {
-      "word": "відстань",
-      "exercise_type": "true-false",
-      "context": "Фраза «п'ять кілометрів» означає приблизну відстань.",
+      "word": "використовуємо",
+      "exercise_type": "fill-in",
+      "context": "Ми використовуємо інверсію, щоб створити сильний ____.",
+      "role": "context"
+    },
+    {
+      "word": "інверсію",
+      "exercise_type": "fill-in",
+      "context": "Ми використовуємо інверсію, щоб створити сильний ____.",
+      "role": "context"
+    },
+    {
+      "word": "там",
+      "exercise_type": "fill-in",
+      "context": "Там лежить ____.",
+      "role": "context"
+    },
+    {
+      "word": "теплий",
+      "exercise_type": "fill-in",
+      "context": "теплий день",
+      "role": "answer"
+    },
+    {
+      "word": "день",
+      "exercise_type": "fill-in",
+      "context": "теплий день",
+      "role": "answer"
+    },
+    {
+      "word": "сьогодні",
+      "exercise_type": "fill-in",
+      "context": "Сьогодні ____.",
+      "role": "context"
+    },
+    {
+      "word": "дивлюся",
+      "exercise_type": "fill-in",
+      "context": "Я дивлюся ____.",
+      "role": "context"
+    },
+    {
+      "word": "гарна",
+      "exercise_type": "fill-in",
+      "context": "гарна дівчина",
+      "role": "answer"
+    },
+    {
+      "word": "дівчина",
+      "exercise_type": "fill-in",
+      "context": "гарна дівчина",
+      "role": "answer"
+    },
+    {
+      "word": "розумний",
+      "exercise_type": "fill-in",
+      "context": "розумний студент",
+      "role": "answer"
+    },
+    {
+      "word": "велике",
+      "exercise_type": "fill-in",
+      "context": "велике місто",
+      "role": "answer"
+    },
+    {
+      "word": "місто",
+      "exercise_type": "fill-in",
+      "context": "велике місто",
+      "role": "answer"
+    },
+    {
+      "word": "відвідали",
+      "exercise_type": "fill-in",
+      "context": "Ми відвідали ____.",
+      "role": "context"
+    },
+    {
+      "word": "складна",
+      "exercise_type": "fill-in",
+      "context": "складна робота",
+      "role": "answer"
+    },
+    {
+      "word": "робота",
+      "exercise_type": "fill-in",
+      "context": "складна робота",
+      "role": "answer"
+    },
+    {
+      "word": "таке",
+      "exercise_type": "quiz",
+      "context": "Що таке 'тема' в українському реченні?",
+      "role": "context"
+    },
+    {
+      "word": "тема'",
+      "exercise_type": "quiz",
+      "context": "Що таке 'тема' в українському реченні?",
       "role": "context"
     },
     {
       "word": "українському",
       "exercise_type": "quiz",
-      "context": "Де зазвичай стоїть найважливіша (нова) інформація в українсь",
+      "context": "Що таке 'тема' в українському реченні?",
       "role": "context"
     },
     {
-      "word": "виділяють",
+      "word": "рема'",
       "exercise_type": "quiz",
-      "context": "Як українці виділяють слово голосом?",
+      "context": "Що таке 'рема'?",
       "role": "context"
     },
     {
-      "word": "який",
+      "word": "нейтральному",
       "exercise_type": "quiz",
-      "context": "Який порядок слів є базовим (нейтральним)?",
+      "context": "Де зазвичай стоїть рема в нейтральному реченні?",
       "role": "context"
     },
     {
-      "word": "базовим",
+      "word": "інверсія'",
       "exercise_type": "quiz",
-      "context": "Який порядок слів є базовим (нейтральним)?",
+      "context": "Що означає слово 'інверсія'?",
       "role": "context"
     },
     {
-      "word": "нейтральним",
+      "word": "це'",
       "exercise_type": "quiz",
-      "context": "Який порядок слів є базовим (нейтральним)?",
+      "context": "Що робить слово 'Це' на початку речення (наприклад: Це Тарас",
       "role": "context"
     },
     {
       "word": "найкраще",
       "exercise_type": "quiz",
-      "context": "Як найкраще представити нового героя або подію в розповіді?",
+      "context": "Як найкраще відповісти на питання «Що ти купив?»",
+      "role": "context"
+    },
+    {
+      "word": "відповісти",
+      "exercise_type": "quiz",
+      "context": "Як найкраще відповісти на питання «Що ти купив?»",
       "role": "context"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 15,
-    "tested_in_exercises": 13,
-    "not_tested": [
-      "виділяти",
-      "кінець"
-    ]
+    "tested_in_exercises": 15,
+    "not_tested": []
   },
   "all_grounded": false
 }

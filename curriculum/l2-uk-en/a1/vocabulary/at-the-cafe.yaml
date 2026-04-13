@@ -1,4 +1,10 @@
 vocabulary:
+- word: рестора́н
+  translation: restaurant
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
 - word: рекомендува́ти
   translation: to recommend
   expression: false
@@ -6,7 +12,7 @@ vocabulary:
   gender: ''
   verified: true
 - word: чайові́
-  translation: tips (gratuity)
+  translation: tips
   expression: false
   pos: ім.
   gender: ''
@@ -24,7 +30,7 @@ vocabulary:
   gender: ж.
   verified: true
 - word: го́стре
-  translation: spicy (food)
+  translation: spicy
   expression: false
   pos: ім.
   gender: с.
@@ -48,7 +54,7 @@ vocabulary:
   gender: с.
   verified: true
 - word: раху́нок
-  translation: bill (check)
+  translation: bill
   expression: false
   pos: ім.
   gender: ч.
@@ -77,104 +83,50 @@ vocabulary:
   pos: ''
   gender: ''
   verified: true
-- word: молоко́
-  translation: milk
+- word: мені́
+  translation: to/for me
   expression: false
   pos: ім.
-  gender: с.
-  verified: true
-- word: ті́стечко
-  translation: pastry (cake)
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: ви́бачте
-  translation: excuse me
-  expression: false
-  pos: дієсл.
   gender: ''
   verified: true
-- word: терміна́л
-  translation: payment terminal
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: опла́та
-  translation: payment
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: ре́шта
-  translation: change (money back)
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: пі́ца
-  translation: pizza
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: вода́
-  translation: water
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: м'я́со
-  translation: meat
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: цу́кор
-  translation: sugar
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: лимо́н
-  translation: lemon
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: сала́т
-  translation: salad
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: Можна меню?
-  translation: Can I have the menu?
+- word: з собою
+  translation: to go
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: Карткою чи готівкою?
-  translation: By card or by cash?
+- word: ві́льно
+  translation: free
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: Що ви рекомендуєте?
+  translation: What do you recommend?
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: Приходьте ще!
-  translation: Come again!
+- word: Можна мені, будь ласка, ...?
+  translation: Can I please have...?
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: Можна мені...?
-  translation: Can I have...?
+- word: Я буду...
+  translation: I will have...
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: Я буду
-  translation: I will have (ordering)
+- word: Я хочу...
+  translation: I want...
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Це гостре?
+  translation: Is it spicy?
   expression: true
   pos: ''
   gender: ''
@@ -185,14 +137,26 @@ vocabulary:
   pos: ''
   gender: ''
   verified: true
-- word: Вам тут чи з собою?
-  translation: For here or to go?
+- word: А що це?
+  translation: What is this?
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: З собою
-  translation: To go (takeaway)
+- word: Є вегетаріанське меню?
+  translation: Is there a vegetarian menu?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Можна меню, будь ласка?
+  translation: Can I have the menu, please?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Вам тут чи з собою?
+  translation: For here or to go?
   expression: true
   pos: ''
   gender: ''
@@ -203,8 +167,8 @@ vocabulary:
   pos: ''
   gender: ''
   verified: true
-- word: Смачного!
-  translation: Bon appétit!
+- word: Можна карткою?
+  translation: Can I pay by card?
   expression: true
   pos: ''
   gender: ''

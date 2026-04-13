@@ -25,7 +25,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-У теперішньому часі ми зазвичай пропускаємо слово «є». Ми просто кажемо: «Я — вчитель». Але ми не можемо ігнорувати дієслово «бути» у минулому та майбутньому часі. When we use words like «**був**» *(was)*, «**була**» *(was)*, «**буду**» *(will be)*, or «**буде**» *(will be)*, we are describing a status held over a certain period of time. Because this is an acquired role, the noun that follows must take the Instrumental case. Наприклад, ми кажемо: «Він був лікарем». Ми також кажемо: «Вона буде **програмісткою** *(programmer, female)*». Або: «Ми були студентами». You cannot say «Він був лікар». This is a very common grammatical mistake. Always remember this important rule: past and future forms of the verb «бути» require the Instrumental case for professions. Як правильно утворити орудний відмінок для жіночих професій? Сучасна українська мова дуже активно використовує фемінітиви. Це слова, які позначають професії жінок. Усі ці іменники належать до першої відміни. Feminine nouns ending in a hard consonant + -а take the ending **-ою**. Наприклад, слово «**вчителька**» *(teacher, female)* стає формою «вчителькою». Слово «**менеджерка**» *(manager, female)* стає формою «менеджеркою». Feminine nouns ending in a soft or mixed consonant + -я (or -а after soft sounds) take the ending **-ею**. Наприклад, слово «**будівельниця**» *(builder, female)* стає формою «будівельницею». Слово «**продавчиня**» *(seller/shop assistant, female)* стає формою «продавчинею». В українській мові це стандартна норма. Ми завжди кажемо: «Оксана була лікаркою». Ми не кажемо: «Оксана була лікар». Using feminine forms is the natural and grammatically correct way to speak about women's professions. Тепер давайте поговоримо про чоловічі професії. Більшість із них — це іменники чоловічого роду другої відміни. Masculine nouns ending in a hard consonant take the ending **-ом**. Наприклад, слово «інженер» стає формою «інженером». Слово «програміст» стає формою «програмістом». Masculine nouns ending in a soft consonant or a mixed consonant take the ending **-ем** or **-єм**. Наприклад, слово «**вчитель**» *(teacher, male)* стає формою «вчителем». Слово «**водій**» *(driver)* стає формою «водієм». Pay special attention to nouns ending in the letter -р. Some belong to the hard group and take -ом, while others belong to the soft or mixed group and take -ем. It is best to check a good dictionary. Наприклад, слово «**директор**» *(director)* має тверду основу. Тому правильна форма — «директором». Але слово «лікар» належить до м'якої групи. Тому ми завжди кажемо «лікарем». Найчастіше ми говоримо про професії, коли пояснюємо, ким ми працюємо зараз. Для цього ми використовуємо дієслово «**працювати**» *(to work)*. In English, you usually say "I work as a manager". Many language learners try to translate this literally into Ukrainian. They use the word «як» (as). Do not do this! The phrase "Я працюю як програміст" is incorrect and unnatural. В українській мові дієслово «працювати» з орудним відмінком автоматично означає "to work as". Вам не потрібні жодні додаткові слова. Ми просто кажемо: «Мій брат працює **архітектором** *(architect)*». Ми кажемо: «Вона працює журналісткою у великому місті». Це найприродніший спосіб розповісти про свою роботу. Просто запам'ятайте цю конструкцію: дієслово «працювати» плюс назва професії в орудному відмінку. <!-- INJECT_ACTIVITY: fill-in, Put profession nouns into Instrumental after бути/стати/працювати -->
+(is) is usually omitted completely when talking about professions. But for the past tense (*був*, *була*) or the future tense (*буду*, *буде*), the verb must be explicitly stated and requires the Instrumental case. A profession is seen as a role held over time. Similarly, the verb **стати** (to become) always takes the Instrumental case. Мій дідусь колись був **вчителем** (teacher (male)) у школі. А мій молодший брат ще вчиться, але він обов'язково буде програмістом. Коли ми використовуємо дієслово «бути» в минулому або майбутньому часі, професія стоїть в орудному відмінку. Вона багато вчиться, бо хоче стати **лікаркою** (doctor (female)). > *My grandfather was once a teacher at a school. And my younger brother is still studying, but he will definitely be a programmer. When we use the verb "to be" in the past or future tense, the profession is in the Instrumental case. She studies a lot because she wants to become a doctor.* Feminine nouns for professions belong to the first declension. In modern Ukrainian, it is the standard to use feminine forms (feminatives) when referring to women in professional roles. For nouns ending in a hard consonant plus *-а* (like *вчителька* or *менеджерка*), the Instrumental ending is *-ою*. For nouns ending in a soft or mixed consonant plus *-я* or *-а* (like *будівельниця* or *продавчиня*), the ending becomes *-ею*. Сучасна українська мова активно використовує жіночі форми для професій. Якщо основа слова тверда, ми додаємо закінчення «-ою». Наприклад, «вчителька» стає «вчителькою», а «журналістка» стає «журналісткою». Якщо основа м'яка або мішана, ми використовуємо закінчення «-ею». Тоді «продавчиня» стає «продавчинею». Masculine nouns for professions belong to the second declension. Nouns with a hard stem take the ending *-ом* (*інженер* becomes *інженером*). Nouns with a soft or mixed stem take the ending *-ем* or *-єм* (*вчитель* becomes *вчителем*). Pay special attention to nouns ending in *-р*. Some have a hard stem, while others belong to the soft group like **лікар** (doctor). You will often need to memorize them. :::info **Grammar box** Nouns ending in **-р** can be tricky in the Instrumental case. Words like **директор** and **архітектор** take **-ом** (*директором*). Words like **лікар** and **перукар** take **-ем** (*лікарем*). When in doubt, look up the word's Instrumental form! ::: When you want to say that someone works *as* a certain professional, you must use the verb **працювати** (to work) followed directly by the Instrumental case. Do not use the word *як* (as) in this context. Saying "Я працюю як програміст" is a direct translation from English and is grammatically incorrect in Ukrainian. Мій брат **працює** (to work) архітектором у Києві. Його дружина працює відомою журналісткою. Вони дуже люблять свою роботу. Завжди використовуйте орудний відмінок після цього дієслова, щоб звучати природно. Це найкращий спосіб розповісти про вашу кар'єру. > *My brother works as an architect in Kyiv. His wife works as a famous journalist. They love their work very much. Always use the Instrumental case after this verb to sound natural. This is the best way to talk about your career.* <!-- INJECT_ACTIVITY: fill-in-profession-forms -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -471,7 +471,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -490,18 +557,65 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] професія (profession)
+- [ ] фах (profession, specialty)
+- [ ] працювати (to work)
+- [ ] стати (to become)
+- [ ] захоплюватися (to be passionate about)
+- [ ] цікавитися (to be interested in)
+- [ ] пишатися (to be proud of)
+- [ ] займатися (to be engaged in, to do (a sport/activity))
+- [ ] лікар (doctor)
+- [ ] вчитель (teacher (male))
+- [ ] вчителька (teacher (female))
+- [ ] інженер (engineer)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Дієслова з орудним відмінком (~600 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

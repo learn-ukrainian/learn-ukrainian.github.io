@@ -17,182 +17,224 @@ vocabulary:
   pos: ''
   gender: ''
   verified: true
+- word: видова пара
+  translation: aspect pair
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
 - word: су́фікс
   translation: suffix
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: класти / покласти
-  translation: to put (impf./pf.)
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: починати / почати
-  translation: to begin (impf./pf.)
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: закінчувати / закінчити
-  translation: to finish (impf./pf.)
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: основа слова
-  translation: word stem
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: чергування звуків
-  translation: sound alternation
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: їсти / з'їсти
-  translation: to eat (impf./pf.)
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: пекти / спекти
-  translation: to bake (impf./pf.)
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: записувати / записати
-  translation: to note down (impf./pf.)
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: запрошувати / запросити
-  translation: to invite (impf./pf.)
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: мити / помити
-  translation: to wash (impf./pf.)
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: прасувати / випрасувати
-  translation: to iron (impf./pf.)
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: вмиватися / вмитися
-  translation: to wash one's face (impf./pf.)
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: одягатися / одягнутися
-  translation: to get dressed (impf./pf.)
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: дивитися / подивитися
-  translation: to watch / to take a look (impf./pf.)
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: пояснювати / пояснити
-  translation: to explain (impf./pf.)
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: розуміти / зрозуміти
-  translation: to understand (impf./pf.)
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: перекладати / перекласти
-  translation: to translate (impf./pf.)
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: розповідати / розповісти
-  translation: to tell / to narrate (impf./pf.)
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: відкривати / відкрити
-  translation: to open (impf./pf.)
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: закривати / закрити
-  translation: to close (impf./pf.)
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: за́вжди́
-  translation: always
+- word: бра́ти / взя́ти
+  translation: to take
   expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: ча́сто
-  translation: often
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: зазвича́й
-  translation: usually
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: вчо́ра
-  translation: yesterday
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: один раз
-  translation: one time / once
-  expression: true
   pos: ''
   gender: ''
-  verified: true
-- word: ра́птом
-  translation: suddenly
+  verified: false
+- word: говори́ти / сказа́ти
+  translation: to speak, to say
   expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: Я тільки що зробив це
-  translation: I just did this
-  expression: true
   pos: ''
   gender: ''
-  verified: true
-- word: Я ще не закінчив
-  translation: I haven't finished yet
-  expression: true
+  verified: false
+- word: кла́сти / покла́сти
+  translation: to put
+  expression: false
   pos: ''
   gender: ''
+  verified: false
+- word: почина́ти / поча́ти
+  translation: to begin
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: закі́нчувати / закі́нчи́ти
+  translation: to finish
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: допомага́ти / допомогти́
+  translation: to help
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: роби́ти / зроби́ти
+  translation: to do
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: писа́ти / написа́ти
+  translation: to write
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: чита́ти / прочита́ти
+  translation: to read
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: готува́ти / приготува́ти
+  translation: to cook, to prepare
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: ї́сти / з'ї́сти
+  translation: to eat
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: пи́ти / ви́пити
+  translation: to drink
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: вари́ти / звари́ти
+  translation: to boil, to cook
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: ми́ти / поми́ти
+  translation: to wash
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: прибира́ти / прибра́ти
+  translation: to clean, to tidy up
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: прасува́ти / ви́прасувати
+  translation: to iron
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: пита́ти / запита́ти
+  translation: to ask
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: відповіда́ти / відпові́сти́
+  translation: to answer
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: поя́снювати / поясни́ти
+  translation: to explain
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: вчи́ти / ви́вчити
+  translation: to learn, to study
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: розумі́ти / зрозумі́ти
+  translation: to understand
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: каза́ти / сказа́ти
+  translation: to tell, to say
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: розповіда́ти / розпові́сти́
+  translation: to tell, to narrate
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: запи́сувати / записа́ти
+  translation: to record, to write down
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: переклада́ти / перекла́сти
+  translation: to translate
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: відкрива́ти / відкри́ти
+  translation: to open
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: закрива́ти / закри́ти
+  translation: to close
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: купува́ти / купи́ти
+  translation: to buy
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: плати́ти / заплати́ти
+  translation: to pay
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: сфотографува́ти
+  translation: to have photographed
+  expression: false
+  pos: дієсл.
+  gender: ''
   verified: true
-- word: Давай почнемо
-  translation: Let's start
+- word: спекти́
+  translation: to have baked
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: розрізати
+  translation: to cut
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: шука́ти / знайти́
+  translation: to look for, to find
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: лови́ти / пійма́ти
+  translation: to catch
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: домашні справи
+  translation: household chores
   expression: true
   pos: ''
   gender: ''

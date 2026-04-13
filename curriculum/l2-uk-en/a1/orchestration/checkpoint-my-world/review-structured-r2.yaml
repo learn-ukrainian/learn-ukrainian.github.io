@@ -2,51 +2,55 @@ round: 2
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 9
-  evidence: 'The plan required "prices" in the Reading text (`Content: describing
-    a room — objects, colors, prices, pointing at things`), but the generated reading
-    text ("Моя кімната") omits any mention of prices.'
+  score: 6
+  evidence: The plan’s reading brief requires “ONLY vocabulary from M08-M13. No new
+    words” and includes prices; the current reading ends with `Я люблю свою кімнату.`
+    and the reading section contains no `коштує` /
 - dimension: 2
   name: Linguistic accuracy
-  score: 8
-  evidence: 'Factual error in the Grammar section: "You can always identify the gender
-    by looking at the final letter..." Ukrainian has many exceptions (e.g., words
-    ending in a soft sign or irregular nouns like "н'
+  score: 10
+  evidence: No Russianisms, Surzhyk, calques, paronym errors, forbidden Russian letters,
+    or clear Ukrainian grammar errors found in the excerpt. Verified vocabulary items
+    are valid Ukrainian forms.
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: Excellent PPP flow. Rules are introduced clearly with robust examples
-    for each gender, stem type, and demonstrative.
+  score: 6
+  evidence: 'The checkpoint grammar recap is too expansive and English-heavy for a
+    review module: it opens with `Understanding the patterns of Ukrainian grammar
+    allows you to build endless combinations of words.` '
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: Required review vocabulary from M08-M13 is integrated seamlessly into
-    the prose, reading text, and dialogue.
+  score: 7
+  evidence: The planned cultural nouns are present (`вишиванка`, `глечик`, `намисто`,
+    `писанки`), but the review scope expands with non-M08-M13 items in the prose,
+    notably `люблю`, `свою`, `беру`, and `гарні`.
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: Activity markers exactly match the plan's intent and are strategically
-    placed to test the skill that was just reviewed.
+  score: 9
+  evidence: 'In the prose itself, marker count and placement are strong: one after
+    self-check, two after grammar, one after dialogue. Nothing is clustered at the
+    end, and each marker follows the material it should'
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: Warm, natural teacher tone without gamified language. Excellent use of
-    direct, concrete examples to encourage the learner ("Imagine you are visiting
-    a friend's home...").
+  score: 9
+  evidence: The market setting and crafts are concrete and culturally specific. Tone
+    is mostly teacherly and useful without gamified fluff.
 - dimension: 7
   name: Structural integrity
-  score: 10
-  evidence: Word count is 1507 (comfortably exceeds the 1200 target). All H2 headings
-    are present and ordered exactly as planned.
+  score: 8
+  evidence: 'All planned H2 sections are present and ordered correctly, and the total
+    pipeline count is 1346 words, above target. The main structural weakness is section
+    imbalance: Reading is underbuilt while Gram'
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: The dialogue effectively and naturally incorporates the "ярмарок" setting
-    and traditional items (вишиванка, глечик, писанки).
+  score: 9
+  evidence: The module treats Ukrainian material on its own terms and uses appropriate
+    cultural objects (`вишиванка`, `глечик`, `писанки`, `ярмарок`). No decolonial
+    or factual cultural problems stood out.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 8
-  evidence: Stilted phrasing in the dialogue. To demonstrate the masculine "той",
-    Катя responds with "Той о́дяг теж гарний." Using the uncountable/general noun
-    "одяг" (clothing) to point out a single shirt is unn
+  score: 7
+  evidence: The plan says the speakers are `Іванко (tourist)` and `Катя (local friend)`,
+    but the dialogue starts with `У вас є вишиванки?` and then has Katya answer inventory
+    and prices like a seller. That muddie
 findings: []

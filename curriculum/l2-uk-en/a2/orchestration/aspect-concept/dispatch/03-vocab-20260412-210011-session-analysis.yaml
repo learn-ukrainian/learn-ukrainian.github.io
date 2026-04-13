@@ -1,0 +1,54 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T18-59-3d310469.json
+phase: vocab
+prompt_chars: 17907
+response_chars: 1974
+prompt_words: 2963
+response_words: 214
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.0446
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.0128
+- name: plan
+  start: 1028
+  length: 16879
+  fraction: 0.9426
+large_sections:
+- plan
+directives_total: 7
+directives_covered: 0
+directives_missed:
+- kind: must
+  text: When an action happens regularly, multiple times, or as a continuous habit,
+    you must use an imperfective verb.
+  covered: false
+  coverage_note: 3/13 keywords (23%)
+- kind: must
+  text: To truly understand the power of the perfective aspect, we must contrast it
+    directly with the imperfective.
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: must
+  text: However, you must be careful with the tricky word «вчора» for yesterday.
+  covered: false
+  coverage_note: 3/8 keywords (38%)
+- kind: inject_activity
+  text: quiz-aspect-sorting
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-identify-aspect
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-choose-aspect
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: error-correction-fix-aspect
+  covered: false
+  coverage_note: marker missing

@@ -1,84 +1,87 @@
 ## Linguistic Scan
-Errors found:
-1. **Typo:** "жижлиттєвому" instead of "життєвому".
-2. **Grammar fact error:** The text states that "по суботах" uses the "Dative plural form". This is incorrect; "суботах" is Locative (місцевий) plural.
-3. **Russianism (Calque):** "знаходиться" and "знаходитеся" used for physical location (a direct calque of the Russian "находиться").
+No Russianisms, Surzhyk, paronym errors, or Russian characters (`ы э ё ъ`) found.
+
+Confirmed issues:
+- `Avoid Russian-sounding words like "гостинна", which are incorrect in standard Ukrainian.`  
+  `гостинна` exists in VESUM as a valid Ukrainian word form (`гостинний`, adj.). The module’s claim is too broad and teaches a false lexical rule.
+- `Yes, in Ukrainian we say "on the kitchen" rather than "in the kitchen"!`  
+  This is factually wrong. `на кухні` translates naturally as `in the kitchen`, not `on the kitchen`.
+- `We contrast weekdays and weekends using the Locative case. "On weekdays" is «у будні», and "on weekends" is «у вихідні».`  
+  This case explanation is not defensible as stated. The forms are syncretic/ambiguous, so they should not be taught here as a clean Locative rule.
 
 ## Exercise Check
-- `<!-- INJECT_ACTIVITY: fill-in-home-cases -->` (matches `fill-in` activity in plan). Placed correctly after Scenario 1. Tests correct cases for rooms and furniture.
-- `<!-- INJECT_ACTIVITY: quiz-daily-routine -->` (matches `quiz` activity in plan). Placed correctly after Scenario 2. Tests cases in daily routines.
-- `<!-- INJECT_ACTIVITY: match-up-activities -->` (matches `match-up` activity in plan). Placed correctly after Scenario 2.
-- `<!-- INJECT_ACTIVITY: error-correction-cases -->` (matches `error-correction` activity in plan). Placed correctly after Scenario 3.
-
-All 4 expected markers are present, correctly placed after the concepts are taught, and match the plan perfectly.
+- `fill-in-home-description` appears after Scenario 1 and matches the plan’s `fill-in` hint.
+- `quiz-daily-routine-cases` and `match-up-routine-times` appear after Scenario 2 and match the `quiz` and `match-up` hints.
+- `error-correction-cases-routine` appears after Scenario 3 and matches the `error-correction` hint.
+- Total markers: 4/4. Distribution is appropriate and not clustered at the end.
+- No inline DSL exercise blocks to audit.
+- No exercise-placement issues found.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 8/10 | Missed specific guest questions from Scenario 1 ("А скільки у вас кімнат?", "Що на балконі?", "Де ви поставили книжки?"). Missed questions from Scenario 3 ("Хто у вас готує вечерю?", "Ви снідаєте вдома чи на роботі?"). |
-| 2. Linguistic accuracy | 7/10 | The text incorrectly states "the preposition «по» with the Dative plural form" for "по суботах" (it is Locative plural). Uses the calque "знаходиться/знаходитеся" for physical location. Contains a typo "жижлиттєвому". |
-| 3. Pedagogical quality | 9/10 | Excellent PPP flow. Grammar is explained with clear contrasting examples ("У новій квартирі є великий балкон. У старій квартирі немає великого балкона."). |
-| 4. Vocabulary coverage | 9/10 | All required vocabulary is used naturally. However, the recommended word "пригощатися" is completely missing from the text. |
-| 5. Exercise quality | 10/10 | All 4 activity markers are present, matching the types and focus in the plan, and are placed directly after the relevant teaching sections. |
-| 6. Engagement & tone | 10/10 | Natural teacher phrasing ("Let's look closely at the vocabulary", "Now let's furnish our empty home"). Tone is warm and engaging without corporate gamification. |
-| 7. Structural integrity | 10/10 | Clean markdown, word count of 2614 exceeds the 2000 target, all H2 headings match the plan exactly. |
-| 8. Cultural accuracy | 10/10 | Accurate representation of Ukrainian hospitality ("Господарі відразу запрошують їх до столу"). Correct explanation of culturally polite forms like "Мені подобається" instead of literal "Я люблю". |
-| 9. Dialogue & conversation quality | 9/10 | Dialogues represent realistic situations (video tour, visiting friends) with natural conversational flow, though some specific plan questions were omitted. |
+| 1. Plan adherence | 8/10 | All four planned sections are present and the required/recommended vocabulary is used naturally, but the plan explicitly calls for `Dat. (for whom)` in the speaking-task checklist and `дякую господарям (Dat.)` in Scenario 3; both are missing from the generated prose. |
+| 2. Linguistic accuracy | 6/10 | Three confirmed teaching errors: `гостинна` is called “incorrect in standard Ukrainian”; `Yes, in Ukrainian we say "on the kitchen"` is false; `We contrast weekdays and weekends using the Locative case` overstates the grammar. |
+| 3. Pedagogical quality | 7/10 | The module generally teaches through context and examples, but the incorrect `on the kitchen` note and the overconfident `Locative case` claim mis-teach core grammar, and the missing Dative scaffold weakens the final synthesis task. |
+| 4. Vocabulary coverage | 10/10 | All required items appear in prose: `помешкання`, `кімната`, `кухня`, `спальня`, `вітальня`, `меблі`, `розпорядок дня`, `вставати`, `снідати`, `лягати спати`; recommended items also appear: `балкон`, `коридор`, `килим`, `пригощатися`, `господар`. |
+| 5. Exercise quality | 10/10 | Four markers align with the four `activity_hints`, each marker follows the relevant teaching section, and the spread across the module is good. |
+| 6. Engagement & tone | 9/10 | Mostly warm and teacherly, with concrete situations like housewarming, hosting, and daily routine. The prose stays usable for learners despite one over-pushy vocabulary tip. |
+| 7. Structural integrity | 10/10 | All planned H2 sections are present and ordered correctly; the pipeline word count is 2955, which is safely above the 2000 target; expected inject markers are intact. |
+| 8. Cultural accuracy | 9/10 | The home/guesting material is Ukrainian-centered and concrete (`новосілля`, `гостинці`, `двокімнатна квартира` note). The main weakness is linguistic framing, not cultural framing. |
+| 9. Dialogue & conversation quality | 9/10 | Dialogues use named speakers, plausible home-tour and dinner contexts, and reasonable conversational moves rather than anonymous drill lines. |
 
 ## Findings
+[LINGUISTIC ACCURACY] [SEVERITY: critical]  
+Location: `Always use the beautiful Ukrainian word **вітальня** for your living room. Avoid Russian-sounding words like "гостинна", which are incorrect in standard Ukrainian.`  
+Issue: `гостинна` is a valid Ukrainian word form in VESUM. The problem here is room naming, not word existence. As written, the module falsely teaches that the word itself is non-standard.  
+Fix: Rephrase the tip to say that `вітальня` is the standard noun for “living room” and avoid calling `гостинна` categorically incorrect.
 
-[Plan adherence] [major]
-Location: Scenario 1 dialogue (`> — Онлайн-друг: Клас! Ти вже живеш у цій квартирі?`)
-Issue: Specific guest questions from the plan ("А скільки у вас кімнат?", "Що на балконі?", "Де ви поставили книжки?") are missing from the text.
-Fix: Add the missing questions into the dialogue.
+[LINGUISTIC ACCURACY] [SEVERITY: critical]  
+Location: `Yes, in Ukrainian we say "on the kitchen" rather than "in the kitchen"!`  
+Issue: This teaches a false translation. `на кухні` is naturally translated as `in the kitchen` in English.  
+Fix: Replace the sentence with an explanation about Ukrainian preposition choice without changing the English translation.
 
-[Plan adherence] [major]
-Location: Scenario 3 text (`Вони цікавляться і запитують: «А о котрій годині ви встаєте вранці?». Ви можете детально відповісти: «Мій день починається рано, а мій чоловік прокидається пізно».`)
-Issue: Missed questions from the plan for Scenario 3 ("Хто у вас готує вечерю?", "Ви снідаєте вдома чи на роботі?").
-Fix: Inject the missing questions into the explanation of table talk.
+[LINGUISTIC ACCURACY] [SEVERITY: critical]  
+Location: `We contrast weekdays and weekends using the Locative case. "On weekdays" is «у будні», and "on weekends" is «у вихідні».`  
+Issue: The case claim is overconfident and misleading. These time expressions should be taught as standard phrases here, not as a simple Locative rule.  
+Fix: Rephrase this as a time-expression note without naming the case.
 
-[Vocabulary coverage] [major]
-Location: Scenario 3 text (`Господарі завжди готують і пропонують багато різних страв. Усі почуваються дуже комфортно у цій приємній атмосфері.`)
-Issue: The recommended vocabulary word "пригощатися" is missing from the text, despite being highlighted in the plan.
-Fix: Add "Пригощайтеся!" and "пригощаються" to the description of hosts offering food.
+[PLAN ADHERENCE] [SEVERITY: major]  
+Location: `За столом друзі часто говорять про свій розпорядок дня... У цій простій розмові ми бачимо багато відмінків разом.`  
+Issue: The plan’s Scenario 3 outline explicitly includes a Dative example (`дякую господарям (Dat.)`), but the generated prose never supplies it.  
+Fix: Add a short Dative example sentence in this paragraph.
 
-[Linguistic accuracy] [critical]
-Location: `If you want to describe a habitual action that happens every Saturday, you can use the preposition «по» with the Dative plural form.`
-Issue: Factual linguistic error. The preposition "по" for repeated time actions (like "по суботах") takes the Locative (місцевий) plural, not Dative.
-Fix: Change "Dative plural" to "Locative plural".
-
-[Linguistic accuracy] [critical]
-Location: `Це завдання чудово допоможе вам практикувати нові слова у реальному жижлиттєвому контексті.`
-Issue: Typo "жижлиттєвому" creates a non-existent word.
-Fix: Change "жижлиттєвому" to "життєвому".
-
-[Linguistic accuracy] [minor]
-Location: `Ми також почуємо, як сказати, де саме ви знаходитеся.` and `Супер! А де знаходиться кухня (kitchen)?`
-Issue: "Знаходитися" used for physical location is a common Russianism/calque (находиться).
-Fix: Replace with "перебуваєте" and "розташована" respectively.
+[PLAN ADHERENCE] [SEVERITY: major]  
+Location: `Use the Nominative case to list what exists in your home. Use the Genitive case to state what is missing or to specify quantities. Use the Accusative case to show where you go during the day. Use the Instrumental case to explain how you travel or who you spend your time with. Finally, use the Locative case...`  
+Issue: The plan’s speaking-task checklist explicitly requires Dative (`Dat. (for whom)`), but the generated checklist omits it.  
+Fix: Add a Dative sentence to the checklist.
 
 ## Verdict: REVISE
-The module is structurally excellent and flows very well, hitting word counts and keeping an engaging tone. However, it contains a critical factual error regarding Ukrainian case rules (claiming "по суботах" is Dative plural instead of Locative), a critical typo ("жижлиттєвому"), and a few minor Russianisms ("знаходиться"). Several specific vocabulary items and dialogue lines from the plan were also missed. These must be fixed via deterministic replacement.
+Three critical linguistic/grammar findings make this unshippable as-is, but the module does not need a full rebuild. Small deterministic fixes will resolve the confirmed teaching errors and restore the missing Dative coverage from the plan.
 
 <fixes>
-- find: "If you want to describe a habitual action that happens every Saturday, you can use the preposition «по» with the Dative plural form."
-  replace: "If you want to describe a habitual action that happens every Saturday, you can use the preposition «по» with the Locative plural form."
-- find: "Це завдання чудово допоможе вам практикувати нові слова у реальному жижлиттєвому контексті."
-  replace: "Це завдання чудово допоможе вам практикувати нові слова у реальному життєвому контексті."
-- find: "Ми також почуємо, як сказати, де саме ви знаходитеся."
-  replace: "Ми також почуємо, як сказати, де саме ви перебуваєте."
-- find: "> — **Онлайн-друг:** Супер! А де знаходиться **кухня** *(kitchen)*?"
-  replace: "> — **Онлайн-друг:** Супер! А де розташована **кухня** *(kitchen)*?"
 - find: |
-    > — **Онлайн-друг:** Клас! Ти вже живеш у цій квартирі?
-    > — **Мешканець:** Так, я вже сплю у спальні, але тут ще є багато роботи.
+    :::tip
+    Always use the beautiful Ukrainian word **вітальня** for your living room. Avoid Russian-sounding words like "гостинна", which are incorrect in standard Ukrainian.
+    :::
   replace: |
-    > — **Онлайн-друг:** Клас! Ти вже живеш у цій квартирі? **А скільки у вас кімнат?**
-    > — **Мешканець:** Тут три кімнати. Я вже сплю у спальні, але тут ще є багато роботи.
-    > — **Онлайн-друг:** **Що на балконі? Де ви поставили книжки?**
-    > — **Мешканець:** На балконі поки що порожньо, а книжки я поклав у шафу.
-- find: "Вони цікавляться і запитують: «А о котрій годині ви встаєте вранці?». Ви можете детально відповісти: «Мій день починається рано, а мій чоловік прокидається пізно». Такі спокійні розмови допомагають краще пізнати одне одного."
-  replace: "Вони цікавляться і запитують: «А о котрій годині ви встаєте вранці?». Вони також можуть спитати: «**Хто у вас готує вечерю?**» або «**Ви снідаєте вдома чи на роботі?**». Ви можете детально відповісти: «Мій день починається рано, а снідаю я зазвичай вдома». Такі спокійні розмови допомагають краще пізнати одне одного."
-- find: "Господарі завжди готують і пропонують багато різних страв. Усі почуваються дуже комфортно у цій приємній атмосфері."
-  replace: "Господарі завжди готують багато різних страв і радісно кажуть: «**Пригощайтеся!**» *(Help yourself!)*. Гості із задоволенням **пригощаються** *(help themselves)* смачною їжею. Усі почуваються дуже комфортно у цій приємній атмосфері."
+    :::tip
+    For "living room", use the standard noun **вітальня**. Do not use **гостинна** here as the room name.
+    :::
+- find: |
+    Pay attention to consonant shifts in the Locative case. The word **кухня** ends in a soft consonant, so it becomes **на кухні** (in the kitchen). Yes, in Ukrainian we say "on the kitchen" rather than "in the kitchen"!
+  replace: |
+    Pay attention to consonant shifts in the Locative case. The word **кухня** ends in a soft consonant, so it becomes **на кухні**. In English, this translates naturally as "in the kitchen".
+- find: |
+    Finally, routines change depending on the day. We contrast weekdays and weekends using the Locative case. "On weekdays" is «у будні», and "on weekends" is «у вихідні». To say that you do something every Saturday, use a special repetitive structure.
+  replace: |
+    Finally, routines change depending on the day. We often use the time expressions «у будні» and «у вихідні» to contrast weekdays and weekends. To say that you do something every Saturday, use a special repetitive structure.
+- find: |
+    За столом друзі часто говорять про свій розпорядок дня. Марк запитує: «А о котрій годині ви встаєте?». Олена відповідає, що вона завжди встає рано. Вона йде у ванну, а потім готує сніданок. Тарас запитує Марка: «А хто у вас готує вечерю?». Марк розповідає, що він зазвичай вечеряє на роботі. У цій простій розмові ми бачимо багато відмінків разом.
+  replace: |
+    За столом друзі часто говорять про свій розпорядок дня. Марк запитує: «А о котрій годині ви встаєте?». Олена відповідає, що вона завжди встає рано. Вона йде у ванну, а потім готує сніданок. Тарас запитує Марка: «А хто у вас готує вечерю?». Марк розповідає, що він зазвичай вечеряє на роботі. Наприкінці він дякує господарям за вечерю. У цій простій розмові ми бачимо багато відмінків разом.
+- find: |
+    Use the Nominative case to list what exists in your home. Use the Genitive case to state what is missing or to specify quantities. Use the Accusative case to show where you go during the day. Use the Instrumental case to explain how you travel or who you spend your time with. Finally, use the Locative case to pinpoint exactly where things are, like in the **кухня** (kitchen), the **спальня** (bedroom), or the **вітальня** (living room).
+  replace: |
+    Use the Nominative case to list what exists in your home. Use the Genitive case to state what is missing or to specify quantities. Use the Dative case to show for whom you do something. Use the Accusative case to show where you go during the day. Use the Instrumental case to explain how you travel or who you spend your time with. Finally, use the Locative case to pinpoint exactly where things are, like in the **кухня** (kitchen), the **спальня** (bedroom), or the **вітальня** (living room).
 </fixes>

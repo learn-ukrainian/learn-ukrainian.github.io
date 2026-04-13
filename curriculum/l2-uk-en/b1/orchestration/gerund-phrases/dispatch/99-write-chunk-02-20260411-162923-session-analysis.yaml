@@ -1,0 +1,46 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T14-28-c3465694.json
+phase: write-chunk-02
+prompt_chars: 53019
+response_chars: 9276
+prompt_words: 6759
+response_words: 1424
+sections:
+- name: header
+  start: 0
+  length: 423
+  fraction: 0.008
+- name: skeleton
+  start: 423
+  length: 2479
+  fraction: 0.0468
+- name: prior_summary
+  start: 2902
+  length: 3630
+  fraction: 0.0685
+- name: plan
+  start: 6532
+  length: 10048
+  fraction: 0.1895
+- name: wiki
+  start: 16580
+  length: 36236
+  fraction: 0.6835
+- name: output_spec
+  start: 52816
+  length: 203
+  fraction: 0.0038
+large_sections:
+- wiki
+directives_total: 21
+directives_covered: 19
+directives_missed:
+- kind: inject_activity
+  text: fill-in, вставте правильну граматичну форму дієприслівник та залежні слова
+    у реченнях на тему будови звороту
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz, оберіть правильний варіант ідентифікація дієприслівникового звороту
+    та його частин
+  covered: false
+  coverage_note: marker missing

@@ -2,50 +2,56 @@ round: 2
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 8
-  evidence: 'Missing several vocabulary items explicitly listed in the plan: `кабінет`,
-    `стіл`, `стілець`, `дзеркало`. The plan explicitly required teaching "Instrumental
-    for characteristics (стіл з дерева)", but '
+  score: 7
+  evidence: The section structure and word budgets track the plan, and required/recommended
+    vocabulary is covered. But the plan calls for characteristic-description patterns,
+    and Scenario 1 gives `дерев'яний стіл
 - dimension: 2
   name: Linguistic accuracy
-  score: 9
-  evidence: Excellent grasp of case endings and prepositions, but used the Russian
-    calque "одні і ті ж" instead of "ті самі".
+  score: 6
+  evidence: 'No Russianisms found, but there are several factual grammar errors: `Для
+    опису місця ми завжди використовуємо місцевий відмінок`, `It uses the Nominative
+    case and an ordinal number`, and `Прийменник «'
 - dimension: 3
   name: Pedagogical quality
-  score: 9
-  evidence: Grammar is presented clearly with logical examples (e.g., the contrast
-    between "у/в" for enclosed spaces and "на" for surfaces). Deducted 1 point because
-    it failed to teach the Instrumental case for c
+  score: 6
+  evidence: 'The module has good example density, but key explanations overgeneralize
+    and misteach: `We also use it to express quantity ... stating exactly how many
+    rooms are in a house`, `Для опису місця ми завжд'
 - dimension: 4
   name: Vocabulary coverage
-  score: 8
-  evidence: Covered all required and recommended words, but missed some specific room
-    and furniture nouns from the plan outline (`кабінет`, `стіл`, `стілець`, `дзеркало`).
+  score: 9
+  evidence: 'All required plan vocabulary appears naturally in prose: `помешкання`,
+    `кімната`, `кухня`, `спальня`, `вітальня`, `меблі`, `розпорядок дня`, `вставати`,
+    `снідати`, `лягати спати`. Recommended items al'
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: Exercise markers are perfectly placed, matching the plan's exact requirements
-    and testing the freshly taught material.
+  score: 8
+  evidence: Marker coverage matches the plan, and placement follows the teaching sequence.
+    Actual generated exercise content is not present here, so answer logic and distractor
+    quality cannot be verified.
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: Friendly, natural, and encouraging tone. Good use of the teacher persona
-    without being overly corporate or gamified.
+  score: 8
+  evidence: The tone is mostly teacherly and useful, with concrete situations like
+    a house tour, routine description, and visiting friends. Some prose is padded
+    by generic lines such as `Mastering this case is es
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: Very solid structure. 2673 words, well above the 2000 target. Headings
-    map perfectly to the plan.
+  evidence: All planned H2 sections are present and ordered correctly. The pipeline
+    word count is 2968, well above the 2000 target, and there are no dangling sections
+    or obvious formatting artifacts.
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: Represents Ukrainian hospitality naturally (e.g., offering tea/coffee,
-    conversational dynamics in a host's home). Use of 24-hour/12-hour time concepts
-    is accurate.
+  score: 8
+  evidence: Hospitality details are solid (`гостинці`, `Пригощайтеся!`, dinner visit
+    scenario). The tip about `двокімнатна квартира` is useful, but it is undermined
+    by the model answer counting the kitchen inside
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: Dialogues are natural and contextualized, providing a realistic framework
-    for the grammatical cases being taught.
+  score: 8
+  evidence: Dialogues have named speakers and plausible home/daily-life contexts.
+    Scenario 1 is somewhat inventory-driven, but Scenario 3 feels more natural and
+    socially grounded.
 findings: []

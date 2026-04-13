@@ -2,12 +2,6 @@
   "attempt": 1,
   "passed": true,
   "errors": [],
-  "warnings": [
-    {
-      "check": "VOCABULARY",
-      "severity": "WARNING",
-      "message": "Missing 4/20 required vocab: {'word': 'видова пара', 'pos': 'noun phrase', 'translation': 'aspectual pair (e.g., писати/написати)'}, {'word': 'щоразу', 'pos': 'adv', 'translation': 'every time (imperfective marker)'}, {'word': 'іноді', 'pos': 'adv', 'translation': 'sometimes (imperfective marker)'}, {'word': 'зателефонувати', 'pos': 'verb:pf', 'translation': 'to call (perfective — one completed call)'}"
-    }
-  ],
-  "timestamp": "2026-04-11T00:18:34.604539+00:00"
+  "warnings": [],
+  "timestamp": "2026-04-11T11:01:14.505879+00:00"
 }

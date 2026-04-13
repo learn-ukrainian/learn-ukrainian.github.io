@@ -1,0 +1,50 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T19-51-fdbb3eb2.json
+phase: write-chunk-02
+prompt_chars: 43416
+response_chars: 4281
+prompt_words: 6201
+response_words: 705
+sections:
+- name: header
+  start: 0
+  length: 440
+  fraction: 0.0101
+- name: skeleton
+  start: 440
+  length: 1268
+  fraction: 0.0292
+- name: prior_summary
+  start: 1708
+  length: 3265
+  fraction: 0.0752
+- name: plan
+  start: 4973
+  length: 11834
+  fraction: 0.2726
+- name: wiki
+  start: 10215
+  length: 26399
+  fraction: 0.608
+- name: output_spec
+  start: 43206
+  length: 210
+  fraction: 0.0048
+large_sections:
+- wiki
+directives_total: 13
+directives_covered: 10
+directives_missed:
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 3/11 keywords (27%)
+- kind: inject_activity
+  text: quiz, Given a sentence, identify whether the verb is imperfective or perfective
+    and explain why, 8 items
+  covered: false
+  coverage_note: marker missing

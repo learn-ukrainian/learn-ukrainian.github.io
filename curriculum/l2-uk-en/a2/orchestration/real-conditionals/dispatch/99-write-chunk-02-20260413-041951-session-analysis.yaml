@@ -1,0 +1,112 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T02-18-c8e304cc.json
+phase: write-chunk-02
+prompt_chars: 42180
+response_chars: 5338
+prompt_words: 6349
+response_words: 826
+sections:
+- name: header
+  start: 0
+  length: 471
+  fraction: 0.0112
+- name: skeleton
+  start: 471
+  length: 1498
+  fraction: 0.0355
+- name: prior_summary
+  start: 1969
+  length: 3237
+  fraction: 0.0767
+- name: plan
+  start: 5206
+  length: 13381
+  fraction: 0.3172
+- name: wiki
+  start: 10485
+  length: 23348
+  fraction: 0.5535
+- name: output_spec
+  start: 41935
+  length: 245
+  fraction: 0.0058
+large_sections:
+- wiki
+directives_total: 30
+directives_covered: 13
+directives_missed:
+- kind: checklist
+  text: Every narrative paragraph in Ukrainian?
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: checklist
+  text: Zero `> *English translation*` blockquotes after dialogues?
+  covered: false
+  coverage_note: 0/6 keywords (0%)
+- kind: checklist
+  text: At most ONE English `:::info` callout per major section?
+  covered: false
+  coverage_note: 1/8 keywords (12%)
+- kind: checklist
+  text: Metalanguage terms parenthetically translated on first use only (max 2 per
+    section)?
+  covered: false
+  coverage_note: 2/10 keywords (20%)
+- kind: checklist
+  text: Reading Practice / Читаємо українською block in EVERY major section?
+  covered: false
+  coverage_note: 1/8 keywords (12%)
+- kind: must
+  text: :::tip **Did you know?** In Ukrainian punctuation, a comma must always separate
+    the condition clause from the result clause.
+  covered: false
+  coverage_note: 4/14 keywords (29%)
+- kind: must
+  text: '** When the `якщо` clause follows the main clause, a comma is still typically
+    required in formal writing, treating it as a standard complex sentence.'
+  covered: false
+  coverage_note: 3/15 keywords (20%)
+- kind: must
+  text: '** Even if the result clause uses the conditional mood (`б/би`), the condition
+    clause that introduces a hypothetical situation must use `якби`, not `якщо`.'
+  covered: false
+  coverage_note: 6/16 keywords (38%)
+- kind: must
+  text: While the basic logic of `Якщо А, то Б` is similar to Russian `Если А, то
+    Б`, learners must avoid assuming the languages are interchangeable.
+  covered: false
+  coverage_note: 1/14 keywords (7%)
+- kind: must
+  text: Students must identify which are real conditionals and underline the `якщо`
+    clause and the result clause.
+  covered: false
+  coverage_note: 4/11 keywords (36%)
+- kind: must
+  text: The student must conjugate it correctly based on the context.
+  covered: false
+  coverage_note: 0/6 keywords (0%)
+- kind: must
+  text: Students must combine them into one conditional sentence using `якщо`.
+  covered: false
+  coverage_note: 1/10 keywords (10%)
+- kind: must
+  text: Subsequent uses must be Ukrainian only.
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: must
+  text: They were required at A1 but they cap immersion below 50% — at A2-late they
+    MUST be removed.
+  covered: false
+  coverage_note: 0/10 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 3/11 keywords (27%)
+- kind: inject_activity
+  text: fill-in-real-conditionals
+  covered: false
+  coverage_note: marker missing

@@ -1,7 +1,7 @@
 # Audit Report: M07 — daily-life-and-routines.md
 **Level:** B1 | **Module:** M07 | **Phase:** B1.2 | **Pedagogy:** PPP | **Target:** 4000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-04-11 02:56:23
+**Generated:** 2026-04-11 13:48:30
 
 ## Configuration
 **Type:** B1-grammar
@@ -18,85 +18,71 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | fill-in |  | 6 | 8 | ❌ |
-| 2 | match-up |  | 6 | 8 | ❌ |
-| 3 | quiz |  | 6 | 8 | ❌ |
-| 4 | fill-in |  | 6 | 8 | ❌ |
-| 5 | match-up |  | 6 | 8 | ❌ |
-| 6 | error-correction |  | 6 | 6 | ✅ |
-| 7 | group-sort |  | 10 | 6 | ✅ |
-| 8 | match-up |  | 6 | 8 | ❌ |
+| 1 | fill-in | Вставте правильну форму дієслова за контекстом (звертайте увагу на зворотні част | 12 | 8 | ✅ |
+| 2 | match-up | З'єднайте хатні справи та інші дії з їхнім значенням. | 12 | 8 | ✅ |
+| 3 | quiz | Оберіть правильну граматичну структуру для кожної щоденної ситуації. | 12 | 8 | ✅ |
+| 4 | group-sort | Розподіліть дієслова щоденної рутини за видом. | 12 | 6 | ✅ |
+| 5 | fill-in | Вставте правильний займенник у конструкцію володіння, щоб розповісти про обов'яз | 6 | 8 | ❌ |
+| 6 | translate | Оберіть правильний український переклад для цих корисних фраз. | 6 | 6 | ✅ |
+| 7 | match-up | З'єднайте дієслово з префіксом та його точне значення. | 6 | 8 | ❌ |
 
 **Summary:**
-- Total activities: 8 (target: 0-4) ❌
+- Total activities: 7 (target: 0-4) ❌
 - Unique types: 5 (minimum: 3) ✅
-- Priority types used: 4/7 (error-correction, fill-in, match-up, quiz) ✅
-- Low density activities: 6
+- Priority types used: 3/7 (fill-in, match-up, quiz) ✅
+- Low density activities: 2
 
 ## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY]** Sentence too long for B1: 34 words (max 30)
-  - FIX: Break into shorter sentences. First 5 words: 'Проте сучасний швидкий ритм міського...'
-- **[COMPLEXITY]** fill-in '' has 6 items (minimum: 8)
+- **[COMPLEXITY]** fill-in 'Вставте правильний займенник у конструкцію володіння, щоб розповісти про обов'яз' has 6 items (minimum: 8)
   - FIX: Add more items. B1 fill-in requires at least 8 items.
-- **[COMPLEXITY]** match-up '' has 6 pairs (target: 12-16)
+- **[COMPLEXITY]** match-up 'З'єднайте дієслово з префіксом та його точне значення.' has 6 pairs (target: 12-16)
   - FIX: Adjust number of pairs to 12-16.
-- **[COMPLEXITY]** quiz '' has 6 items (minimum: 8)
-  - FIX: Add more items. B1 quiz requires at least 8 items.
-- **[COMPLEXITY]** fill-in '' has 6 items (minimum: 8)
-  - FIX: Add more items. B1 fill-in requires at least 8 items.
-- **[COMPLEXITY]** match-up '' has 6 pairs (target: 12-16)
-  - FIX: Adjust number of pairs to 12-16.
-- **[COMPLEXITY]** group-sort '' has 10 items (target: 12-999)
-  - FIX: Adjust number of items to sort to 12-999.
-- **[COMPLEXITY]** match-up '' has 6 pairs (target: 12-16)
-  - FIX: Adjust number of pairs to 12-16.
-- **[LLM_FINGERPRINT_REPETITION]** Repetitive LLM rhetorical patterns (5 total): 'не просто X, а Y' x3, 'не лише X, а й Y' x2 — robotic prose
-  - FIX: Vary sentence structures. Replace formulaic 'не просто X, а Y' with diverse rhetorical devices
-- **[INLINE_ENGLISH_IN_PROSE]** Inline English translations in B1+ prose (12 occurrences): (Get up), (Instrumental case), (Could you please help) — breaks immersion target
-  - FIX: Remove inline English translations. Use context clues, Ukrainian definitions, or move translations to vocabulary section
+- **[STATE_STANDARD_LOW_IMMERSION]** Module 7 has 32.9% immersion (target: 90.0%+)
+  - FIX: Add more Ukrainian content to reach 90%+ immersion for full immersion modules
 
 ## Recommendation
-**📝 UPDATE** (severity 40/100)
+**📝 UPDATE** (severity 55/100)
 
-- Revision recommended (severity 40/100)
-- 10 violations (significant)
+- Revision recommended (severity 55/100)
+- 3 violations (minor)
+- Immersion 52% off target (major rebalancing needed)
 - Activity density below minimum
 
 ## Gates
-- **Words:** ✅ 4648/4000 (raw: 4701)
-- **Activities:** ✅ 8/0
-- **Density:** ❌ 6 < 6
+- **Words:** ✅ 4971/4000 (raw: 5058)
+- **Activities:** ✅ 7/0
+- **Density:** ❌ 2 < 6
 - **Unique_types:** ✅ 5/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ❌ 0/5
+- **Engagement:** ❌ 3/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 82/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 93.1% (target 85-100% (B1.1 Aspect))
-- **Richness:** ❌ 74% < 80% min (skills)
+- **Immersion:** ❌ 32.9% LOW (target 85-100% (B1.1 Aspect))
+- **Richness:** ❌ 60% < 80% min (skills)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
 
 ## Richness Details
-**Score:** 74% (minimum: 80%)
+**Score:** 60% (minimum: 80%)
 **Module Type:** skills
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 50 | 15 | 100% | 26% | 25.5% |
+| examples | 14 | 15 | 93% | 26% | 23.7% |
 | engagement | 0 | 5 | 0% | 19% | 0.0% |
 | variety | 0.97 | - | 97% | 12% | 11.9% |
-| cultural | 3 | - | 100% | 12% | 12.2% |
+| cultural | 0 | - | 0% | 12% | 0.0% |
 | realworld | 20 | 3 | 100% | 12% | 12.2% |
 | visual | 0 | 2 | 0% | 6% | 0.0% |
 | paragraph_var | 1.00 | - | 100% | 6% | 6.1% |
-| questions | 11 | 4 | 100% | 6% | 6.1% |
-| **TOTAL** | | | | | **74.1%** |
+| questions | 20 | 4 | 100% | 6% | 6.1% |
+| **TOTAL** | | | | | **60.1%** |
 
 ### Dryness Flags & Fixes
 - ❌ **NO_ENGAGEMENT**
@@ -118,20 +104,16 @@
 ## Low Density Activities
 | Activity | Type | Items | Required | Fix |
 |----------|------|-------|----------|-----|
-|  | fill-in | 6 | 8 | Add 2 more items |
-|  | match-up | 6 | 8 | Add 2 more items |
-|  | quiz | 6 | 8 | Add 2 more items |
-|  | fill-in | 6 | 8 | Add 2 more items |
-|  | match-up | 6 | 8 | Add 2 more items |
-|  | match-up | 6 | 8 | Add 2 more items |
+| Вставте правильний займенник у конструкцію володіння, щоб розповісти про обов'яз | fill-in | 6 | 8 | Add 2 more items |
+| З'єднайте дієслово з префіксом та його точне значення. | match-up | 6 | 8 | Add 2 more items |
 
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 1138 | Included in Core |
-| **Робочий день та навчання** | ✅ | 781 | Included in Core |
-| **Хатні справи та побут** | ✅ | 681 | Included in Core |
-| **Вільний час та вихідні** | ✅ | 827 | Included in Core |
-| **Розпорядок дня: планування та поради** | ✅ | 729 | Included in Core |
-| **Підсумок фази 3 та перехід до M26** | ✅ | 492 | Included in Core |
+| **Intro/Narrative** | ✅ | 789 | Included in Core |
+| **Робочий день та навчання** | ✅ | 873 | Included in Core |
+| **Хатні справи та побут (~700 words total)** | ✅ | 828 | Included in Core |
+| **Вільний час та вихідні (~750 words total)** | ✅ | 948 | Included in Core |
+| **Розпорядок дня: планування та поради (~650 words total)** | ✅ | 859 | Included in Core |
+| **Підсумок фази 3 та перехід до M26** | ✅ | 674 | Included in Core |

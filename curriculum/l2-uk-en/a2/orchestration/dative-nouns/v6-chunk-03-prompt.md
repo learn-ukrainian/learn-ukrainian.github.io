@@ -1,21 +1,21 @@
-# Section-by-Section Generation — Section 3/6
+# Section-by-Section Generation — Section 3/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 18: Студентові, сестрі, дитині (A2, A2.3 [Dative Case])
-**Section to write:** Давальний відмінок іменників жіночого роду (~500 words total)
-**Word target for this section:** 500 words (aim for 550 to account for undershoot)
+**Section to write:** Давальний відмінок іменників середнього роду (~400 words total)
+**Word target for this section:** 400 words (aim for 440 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Давальний відмінок іменників жіночого роду (~500 words total)
-- P1 (~100 words): [I declension (hard stems). Explain the ending -і for nouns like мама, сестра, жінка. Focus on nouns that do NOT involve consonant changes first. Examples: мама → мамі, сестра → сестрі, Олена → Олені.]
-- P2 (~100 words): [I declension (soft stems). Explain the ending -і (spelled -і or -ї). Examples: земля → землі, вулиця → вулиці, надія → надії, Марія → Марії. Contrast the -ії ending for nouns in -ія with simple soft stems.]
-- P3 (~150 words): [Consonant alternations (the "G-K-Kh to Z-Ts-S" rule). This is a critical Ukrainian feature. Explain that before the ending -і, velars change: г → з, к → ц, х → с. Examples: подруга → подрузі, книга → книзі, рука → руці, донька → доньці, муха → мусі, свекруха → свекрусі.]
-- P4 (~150 words): [III declension feminine nouns (ending in a consonant + "мати"). Explain the ending -і. Examples: ніч → ночі, любов → любові, радість → радості, подорож → подорожі. Special focus on "мати" → "матері".]
-- <!-- INJECT_ACTIVITY: quiz-feminine-alternation --> [quiz, Choose the correct dative ending for feminine nouns involving consonant alternation, 8 items]
+## Давальний відмінок іменників середнього роду (~400 words total)
+- P1 (~110 words): Introduce II declension neuter nouns. Explain that hard stems take the ending -у. Provide common examples: місто → місту, слово → слову, вікно → вікну, село → селу.
+- P2 (~100 words): Explain the rules for soft and mixed neuter stems. Soft stems take -ю (море → морю, серце → серцю). Mixed stems take -у (плече → плечу).
+- P3 (~100 words): Introduce IV declension neuter nouns, specifically those denoting babies or young animals (with suffixes -ат-/-ят-). Explain they take -аті/-яті. Provide examples: немовля → немовляті, курча → курчаті. Add that "ім'я" becomes "імені".
+- P4 (~90 words): Provide contextual examples for neuter nouns. Explain that they are often used in abstract contexts or locational assignments, such as: "дати назву місту" (give a name to the city) or "радіти сонцю" (to rejoice at the sun).
+- <!-- INJECT_ACTIVITY: group-sort-dative-gender --> [group-sort, Sort dative nouns by gender (masculine -ові/-у, feminine -і, neuter -у/-ю), 8 items]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-a young boy, we use the form "хлопцеві".* :::tip **Soft stems and sibilants:** - вчитель → учител**еві** (or учител**ю**) - лікар → лікар**еві** (or лікар**ю**) - товариш → товариш**еві** (or товариш**у**) - хлопець → хлопц**еві** (or хлопц**ю**) Notice how the letter **е** smoothly connects the soft consonant to the rest of the ending. ::: The third variant of our parallel endings applies to masculine nouns that end in the letter **й** or a vowel. Because we need to maintain a smooth sound flow, the ending becomes **-єві**. The short alternative remains **-ю**. You will often see this pattern with traditional Ukrainian names and certain descriptive nouns. Мій друг Сергій живе в Києві. Я часто пишу повідомлення Сергієві. Вчора я також телефонував Андрієві. У книгах ми часто читаємо про героїв. Наприклад, президент дає нагороду героєві. > *My friend Serhii lives in Kyiv. I often write messages to Serhii. Yesterday I also called Andrii. In books, we often read about heroes. For example, the president gives an award to the hero.* Having parallel endings is not just a grammar quirk; it is a powerful tool for style and rhythm. Ukrainian grammar values harmony and tries to avoid repetitive sounds, a concept called avoidance of monotony. When you have two masculine dative nouns side by side — such as a title and a name, or a first name and a last name — you should alternate the endings. You use the long ending for one word and the short ending for the other. Це правило робить українську мову дуже мелодійною. Ми не кажемо «панові директорові», бо це звучить важко. Краще сказати «пану директорові» або «панові директору». Якщо ми знаємо ім'я людини, ми робимо так само. Ми можемо подякувати «сусідові Данилу» за допомогу. > *This rule makes the Ukrainian language very melodic. We do not say "панові директорові" because it sounds heavy. It is better to say "пану директорові" or "панові директору". If we know a person's name, we do the same. We can thank "сусідові Данилу" (neighbor Danylo) for his help.* Finally, we must mention a small but important group of masculine nouns that do not belong to the second declension. Words like **Микола**, **Ілля**, or **староста** belong to the first declension because they end in **-а** or **-я**. Even though they represent men, their grammar follows the feminine pattern. Therefore, they take the ending **-і** in the Dative case. Микола любить читати, тому я даю цікаву книгу Миколі. Мій брат Ілля багато працює, і я часто допомагаю Іллі. Вони мають чоловічий рід, але їхні закінчення працюють інакше. Це дуже важливо пам'ятати, коли ви пишете їм повідомлення. > *Mykola loves to read, so I give an interesting book to Mykola. My brother Illia works a lot, and I often help Illia. They have masculine gender, but their endings work differently. This is very important to remember when you write them a message.* <!-- INJECT_ACTIVITY: fill-in, Put the masculine noun in brackets into the dative case using the preferred -ові/-еві ending, 8 items -->
+and is an important part of the Ukrainian language. When you speak quickly, these sounds change automatically for euphony.* Let us look at clear examples of each alternation. When the stem ends in "г", it changes to "з", so "подруга" becomes "подрузі" and "книга" becomes "книзі". When the stem ends in "к", it changes to "ц", making "рука" become "руці" and "доріжка" become "доріжці". Finally, when the stem ends in "х", it changes to "с", meaning "муха" becomes "мусі" and "свекруха" becomes "свекрусі". :::info **Grammar box** — The alternation rule (г→з, к→ц, х→с) is one of the most distinctive features of Ukrainian pronunciation. It applies consistently in the Dative case for first-declension nouns. ::: Вчителька дала нове завдання своїй найкращій учениці. Після уроку дівчина допомогла своїй новій подрузі зрозуміти це правило. Вони разом читали текст у великій книзі. > *The teacher gave a new task to her best student. After the lesson, the girl helped her new friend understand this rule. They read the text together in a large book.* It is extremely important to apply these consonant alternations correctly. The form "подрузі" is the only correct Ukrainian form. You might sometimes hear people making errors like "подругі" due to Russian language interference, where this natural alternation was lost. In Ukrainian, failing to change the consonant before the "-і" ending sounds unnatural and incorrect. Кожна людина робить помилки під час навчання, і це нормально. Але важливо знати справжні українські правила і поважати їх. Ми завжди кажемо «подрузі» та «книзі». > *Every person makes mistakes during learning, and that is normal. But it is important to know the real Ukrainian rules and respect them. We always say "podruzi" and "knyzi".* There is another group of feminine nouns that belong to the third declension. These are feminine nouns that end in a consonant in their dictionary form. Fortunately, they also take the "-і" ending in the Dative case without any complex changes. For example, "ніч" becomes "ночі", "мати" becomes "матері", "любов" becomes "любові", and "радість" becomes "радості". Учні завжди бажають спокійної ночі своїй матері. У їхньому серці багато любові та великої радості. > *The students always wish a peaceful night to their mother. In their heart there is a lot of love and great joy.* Now let us see these feminine indirect objects in natural contexts with common verbs. You will often use the Dative case when you want **подарувати** (to give as a gift) something to someone, when you need to **написати** (to write) a message, or when you want to **розповісти** (to tell, to narrate) an interesting event. Я хочу подарувати красиві червоні квіти своїй мамі. Вчора вона написала довгого листа своїй шкільній подрузі. А ввечері мій старший брат розповів дуже цікаву історію нашій маленькій сестрі. > *I want to give beautiful red flowers to my mom as a gift. Yesterday she wrote a long letter to her school friend. And in the evening my older brother told a very interesting story to our little sister.* <!-- INJECT_ACTIVITY: quiz-feminine-alternation -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -597,6 +597,31 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] студентові (to the student (dat.))
+- [ ] сестрі (to the sister (dat.))
+- [ ] другові (to the friend (dat.))
+- [ ] подарувати (to give as a gift)
+- [ ] показати (to show)
+- [ ] написати (to write)
+- [ ] розповісти (to tell, to narrate)
+- [ ] пояснити (to explain)
+- [ ] відповісти (to answer, to reply)
+- [ ] закінчення (ending (grammar))
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Давальний відмінок іменників середнього роду (~400 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

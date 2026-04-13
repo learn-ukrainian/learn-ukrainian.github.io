@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-це слово «мною», тобто займенник «я» в орудному відмінку. Цей діяч негайно стає новим підметом: «я». Нарешті, наш пасивний дієприкметник «прочитана» перетворюється на звичайне активне дієслово минулого часу: «прочитав». У результаті ми отримуємо абсолютно нове, красиве і природне речення: «Книга, яку я прочитав, лежала на столі». Зверніть увагу, як елегантно пасивна конструкція перетворилася на активну. Ще один гарний приклад для закріплення: «Палац, **збудований у минулому столітті** *(built in the last century)*, зберігся до сьогодні». Тут немає конкретного виконавця дії. Тому ми використовуємо дієслово у множині без підмета. Трансформація виглядає так: «Палац, який збудували у минулому столітті, зберігся до сьогодні». Тепер ми маємо обов'язково поговорити про надзвичайно важливі **стилістичні відмінності** *(stylistic differences)* між цими двома формами. Коли саме і що краще використовувати? Дієприкметниковий зворот традиційно вважається значно більш формальною та серйозною конструкцією. Він є надзвичайно типовим саме для **писемної мови** *(written language)*. Ви дуже часто будете зустрічати такі звороти в різноманітних офіційних документах, серйозних наукових статтях або класичній українській літературі. Зворот робить текст більш щільним, лаконічним і по-справжньому академічним. З іншого боку, підрядне речення зі словом «який» звучить набагато природніше і легше в повсякденній **розмовній мові** *(spoken language)*. Коли українці спілкуються між собою на вулиці, вдома чи з друзями, вони майже завжди надають перевагу саме конструкціям з «який». Таке речення набагато легше будувати під час швидкої розмови. Його також значно легше миттєво сприймати на слух вашому співрозмовнику. Важливе правило для іноземців: якщо ви сумніваєтеся, що саме обрати під час живої розмови, завжди сміливо обирайте підрядне речення. Воно ніколи не буде звучати неправильно. Однак для високого рівня володіння українською мовою ви повинні вміти легко читати і розуміти звороти в текстах. Також ви маєте поступово вчитися використовувати їх у своєму власному діловому чи академічному листуванні. Це відразу покаже ваш високий рівень освіченості та глибоке відчуття справжнього стилю української мови. Важливо також знати про певні небезпеки, пов'язані з надмірним використанням обох цих цікавих граматичних структур. Іноді студенти починають зловживати словом «який», що робить їхній текст занадто **багатослівним** *(wordy)*. Прочитаймо такий досить важкий текст: «Студент, який написав статтю, яку опублікували в журналі, який виходить щомісяця, отримав високу премію». Тут ми бачимо аж три підрядних речення поспіль. Таке накопичення слова «який» робить стиль дуже поганим. Цей неприємний ефект іноді жартома називають «яканням». Щоб елегантно уникнути цієї стилістичної проблеми, ми повинні використати трансформацію у зворотному напрямку. Спробуймо замінити хоча б частину цих підрядних речень на компактні дієприкметникові звороти. Покращений варіант звучатиме так: «Студент, який написав статтю, **опубліковану в щомісячному журналі** *(published in a monthly magazine)*, отримав високу премію». Погодьтеся, цей варіант звучить набагато професійніше та стилістично легше. З іншого боку, накопичення багатьох зворотів робить текст занадто **важким** *(heavy)* і бюрократичним. Наприклад: «Доповідь, написана студентом, перевірена відомим професором, подана на розгляд комісії, була відмінною». Це звучить дуже сухо і цілком неприродно. Найкраще і наймудріше рішення — це завжди шукати ідеальну золоту середину. Ваша майстерність полягає в тому, щоб красиво і гармонійно комбінувати прості речення, дієприкметникові звороти та підрядні конструкції зі словом «який». Саме таке грамотне чергування створює ідеальний, живий і по-справжньому мелодійний український текст. <!-- INJECT_ACTIVITY: essay-response-sentences -->
+structures, you must understand why you would choose one over the other. The decision between a phrase and a clause is primarily a matter of stylistics and register. A phrase is inherently more formal, highly concise, and deeply characteristic of written, literary, or academic Ukrainian. It condenses complex information into a tight package, allowing the writer to maintain a sophisticated and elevated tone. You will notice that phrases in **постпозиція** (postposition — phrase after the noun) are extremely common in historical novels or scientific papers. Using them, along with proper **відокремлення** (setting off — punctuation with commas), gives the text a deliberate academic weight. On the other hand, the subordinate clause starting with «який» is much more natural and ubiquitous in everyday spoken language. In a casual conversation with friends, using a heavy phrase—especially one standing in **препозиція** (preposition — phrase before the noun)—might sound overly theatrical or excessively bureaucratic. The «який» clause breaks the information into smaller, easily digestible pieces. It provides the listener's brain with the necessary grammatical anchors, making immediate parsing much easier. Therefore, while you must be able to comprehend and construct both, you should generally favor clauses for speaking and reserve phrases for formal writing. However, even within their appropriate registers, both structures have dangerous pitfalls if overused. If you stack too many «який» clauses in a single written paragraph, the text quickly becomes wordy, repetitive, and stylistically weak. Conversely, cramming multiple participle phrases into one sentence creates a dense, impenetrable block of text that feels incredibly heavy and difficult to read. Striking the right balance is the mark of a truly advanced speaker. Let us look at a practical example of how transforming clauses into phrases can rescue a clumsy, repetitive text and elevate it to a professional standard. Розглянемо такий текст: «Проєкт, який запропонували архітектори, отримав велике фінансування. Будівля, яку збудували минулого року, стала новим символом міста. Туристи, яких вразив цей сучасний шедевр, постійно роблять фотографії». Це абсолютно граматично правильні речення, але занадто часте повторення слова «який» робить загальний стиль монотонним, важким і дещо примітивним. Таке лексичне нагромадження однакових сполучних слів заважає швидкій і плавній течії думки. Тепер застосуємо наші нові знання і перетворимо ці підрядні речення на дієприкметникові звороти. Оновлений текст звучатиме зовсім інакше: «Запропонований архітекторами проєкт отримав велике фінансування. Збудована минулого року будівля стала новим символом міста. Вражені цим сучасним шедевром туристи постійно роблять фотографії». Зверніть увагу, як текст одразу став неймовірно елегантним, лаконічним та академічно збалансованим. Ми повністю позбулися зайвих слів, ідеально зберігши при цьому весь початковий обсяг інформації. Саме такий високий рівень стилістичної майстерності очікується від вас під час написання формальних есе, офіційних професійних звітів чи серйозних публіцистичних статей. :::info **Grammar box** While transforming a clause into a participle phrase elevates the register, remember that the participle must clearly agree with its noun. Always check the gender, number, and case of the noun before locking in your participle ending! ::: <!-- INJECT_ACTIVITY: essay-response, write 5 sentences describing a recent news event using at least 3 different participle phrases -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -530,7 +530,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -543,18 +610,61 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] дієприкметниковий зворот (participle phrase)
+- [ ] означуване слово (modified word — the noun the participle refers to)
+- [ ] означення (attribute — syntactic role of the participle phrase)
+- [ ] відокремлення (setting off — punctuation with commas)
+- [ ] постпозиція (postposition — phrase after the noun)
+- [ ] препозиція (preposition — phrase before the noun)
+- [ ] підрядне речення (subordinate clause)
+- [ ] залежні слова (dependent words)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Складні випадки та помилки (~660 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

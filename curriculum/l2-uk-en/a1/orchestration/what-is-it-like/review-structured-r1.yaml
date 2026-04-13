@@ -2,49 +2,54 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 10
-  evidence: The module follows the plan perfectly. The textbook dialogues (Вашуленко,
-    Пономарова) are utilized creatively. All vocabulary and outline points are fully
-    fleshed out.
+  score: 6
+  evidence: 'All four planned H2 sections are present, but the section pacing is far
+    off the 300-word plan budgets (`Діалоги` 458 words, `Який? Яка? Яке?` 407, `Прикметники`
+    387). The opening promises a book-fair '
 - dimension: 2
   name: Linguistic accuracy
   score: 10
-  evidence: Excellent, natural Ukrainian. Exclamations like "Який великий плакат!"
-    and comparative structures ("Стілець старий, а ліжко — нове") are flawlessly written.
+  evidence: 'Ukrainian forms are correct throughout the teachable material: `Моя кімната
+    велика і світла`, `Стіл новий`, `А ліжко — старе`, `Яке фото? → Старе фото.` No
+    Russianisms/surzhyk/calques found.'
 - dimension: 3
   name: Pedagogical quality
-  score: 8
-  evidence: 'Mostly excellent, but the English prose states: "express a desire to
-    drink **чиста вода** (clean water), or mention that you prefer to read a book
-    in a **світла кімната** (bright room)." This implies '
+  score: 6
+  evidence: The grammar is correct, but the PPP flow is diluted by long English exposition
+    before examples. The `Який? Яка? Яке?` section opens with over 100 words of theory
+    before the first Ukrainian example, an
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: Every single required and recommended word from the plan is introduced
-    naturally in context before being explicitly defined.
+  score: 9
+  evidence: 'All required plan vocabulary appears in prose: `який/яка/яке`, `великий`,
+    `маленький`, `новий`, `старий`, `гарний`, `чистий`, `дорогий`, `дешевий`. Recommended
+    items such as `поганий`, `брудний`, `сві'
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: The injected markers correspond perfectly to the planned activities and
-    appear at the right pedagogical moments.
+  score: 9
+  evidence: All four planned exercise markers are present, correctly named, and placed
+    after the relevant teaching. No visible mismatch between the taught skill and
+    the injected activity slots.
 - dimension: 6
   name: Engagement & tone
-  score: 8
-  evidence: 'The tone is generally encouraging, but ends with gamified/corporate filler:
-    "major milestone in your language journey" and "breathes life into your conversations".'
+  score: 5
+  evidence: 'Large stretches are generic filler rather than teacherly substance, e.g.
+    “Imagine spending a relaxing weekend at a vibrant local book fair...” and “This
+    interconnected approach ensures that recalling '
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: Word count is 1941 (comfortably above the 1200 target). All H2s match
-    the plan exactly.
+  evidence: All planned H2 headings are present and in order, markdown is clean, and
+    the pipeline word count is 1434, above the 1200 target.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: References to native Grade 3 textbooks are well-integrated. The book fair
-    setting feels authentic.
+  evidence: No Russiacentric framing or culturally false claims. The module presents
+    Ukrainian on its own terms.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: Dialogues are realistic, conversational, and effectively demonstrate the
-    grammar points in action.
+  score: 7
+  evidence: Named speakers are used and the situations are A1-appropriate, but the
+    spoken exchanges are very short; much of the section’s word count is narrator
+    explanation rather than reusable learner dialogue.
 findings: []

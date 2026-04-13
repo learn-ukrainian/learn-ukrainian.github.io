@@ -1,7 +1,7 @@
 # Audit Report: M37 — i-eat-i-drink.md
 **Level:** A1 | **Module:** M37 | **Phase:** A1.6 | **Pedagogy:** PPP | **Target:** 1200
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-04-11 00:59:11
+**Overall Status:** ✅ PASS
+**Generated:** 2026-04-13 21:17:29
 
 ## Configuration
 **Type:** A1-grammar
@@ -20,43 +20,44 @@
 |---|------|-------|-------|-----|--------|
 | 1 | fill-in |  | 8 | 6 | ✅ |
 | 2 | fill-in |  | 8 | 6 | ✅ |
-| 3 | group-sort |  | 12 | 6 | ✅ |
-| 4 | quiz |  | 6 | 6 | ✅ |
-| 5 | match-up |  | 6 | 6 | ✅ |
-| 6 | true-false |  | 6 | 6 | ✅ |
-| 7 | error-correction |  | 6 | 6 | ✅ |
-| 8 | translate |  | 6 | 6 | ✅ |
+| 3 | quiz |  | 6 | 6 | ✅ |
+| 4 | match-up |  | 7 | 6 | ✅ |
+| 5 | true-false |  | 7 | 6 | ✅ |
+| 6 | anagram |  | 7 | 6 | ✅ |
+| 7 | group-sort |  | 12 | 6 | ✅ |
+| 8 | fill-in |  | 8 | 6 | ✅ |
 
 **Summary:**
 - Total activities: 8 (target: 0-4) ❌
-- Unique types: 7 (minimum: 0) ✅
-- Priority types used: 3/8 (fill-in, match-up, quiz) ✅
+- Unique types: 6 (minimum: 0) ✅
+- Priority types used: 4/8 (anagram, fill-in, match-up, quiz) ✅
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[INFO]** Dative case used at A1: 'Мені' (taught formally at A2)
-  - FIX: No action needed — incidental dative exposure is acceptable.
+- **[LEVEL_RESTRICTION]** Activity 'anagram' should be phased out after A1 M10 (current: M37)
+  - FIX: Anagram is for Cyrillic scaffolding only. Use unjumble for word-ordering practice.
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: займенник
+  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 ## Recommendation
-**📝 UPDATE** (severity 15/100)
+**📝 UPDATE** (severity 5/100)
 
-- 1 violations (minor)
-- Immersion 6% off target (minor)
+- 2 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1621/1200 (raw: 1752)
+- **Words:** ⚠️ 1183/1200 (raw: 1372) (17 short)
 - **Activities:** ✅ 8/0
 - **Density:** ✅ All > 6
-- **Unique_types:** ✅ 7/0 types
+- **Unique_types:** ✅ 6/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 3/0
+- **Engagement:** ✅ 2/0
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 35/1
+- **Vocab:** ✅ 64/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ❌ 13.9% LOW (target 20-40% (M37))
+- **Immersion:** 🇺🇦 24.0% (target 20-40% (M37))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -64,7 +65,7 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 376 | Included in Core |
-| **Їсти і пити** | ✅ | 400 | Included in Core |
-| **Знахі́дний відмі́нок — неживе́** | ✅ | 513 | Included in Core |
-| **Підсумок — Summary** | ✅ | 332 | Included in Core |
+| **Intro/Narrative** | ✅ | 323 | Included in Core |
+| **Їсти і пити (To Eat and To Drink)** | ✅ | 246 | Included in Core |
+| **Знахі́дний відмі́нок — неживе́ (Accusative Inanimate)** | ✅ | 335 | Included in Core |
+| **Підсумок — Summary** | ✅ | 279 | Included in Core |

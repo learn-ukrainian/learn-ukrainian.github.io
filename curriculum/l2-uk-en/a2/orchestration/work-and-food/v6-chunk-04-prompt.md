@@ -3,14 +3,14 @@
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 30: Професії та кулінарія (A2, A2.4 [Instrumental Case])
-**Section to write:** Практика: Розкажи про себе (Practice: Tell About Yourself) (~400 words total)
+**Section to write:** Підсумок — Практика: Розкажи про себе (Summary — Practice: Tell About Yourself) (~400 words total)
 **Word target for this section:** 400 words (aim for 440 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Практика: Розкажи про себе (Practice: Tell About Yourself) (~400 words total)
+## Підсумок — Практика: Розкажи про себе (Summary — Practice: Tell About Yourself) (~400 words total)
 - P1 (~150 words): [Integrated Production Task: Drafting a professional/personal profile. Guidance on how to construct 8-10 sentences using the patterns: Profession (Я працюю...), Hobbies (Я цікавлюся...), Food (Я люблю...), and Daily Routine (Я їду... перед...). Emphasize checking for gender agreement in endings.]
 - P2 (~100 words): [Peer Dialogue Simulation: A full "getting to know you" script template. A prompts B: "Ким ти працюєш?", "Чим захоплюєшся?", "Яку їжу любиш?". B provides extended answers using Instrumental constructions. Includes natural response markers like "Справді?", "Я теж!", "Цікаво".]
 - P3 (~150 words): [Підсумок: Recap of Instrumental case functions. Provide a bulleted self-check list:
@@ -28,7 +28,7 @@ Grand total: ~2000 words
 <previous_context>
 [...previous sections truncated...]
 
-формі орудного відмінка. *(We simply use the word in the correct Instrumental case form.)* Наприклад, ми часто кажемо **«їхати автобусом»** (to go by bus), **«їхати машиною»** (to go by car), або **«їхати велосипедом»** (to go by bicycle). Пам'ятайте, що популярне слово **«метро»** (subway) ніколи не змінює свою форму. The Instrumental case is also absolutely essential for describing physical locations and time using specific prepositions. These important spatial and temporal prepositions are **«перед»** (before / in front of), **«за»** (behind / at), **«між»** (between), **«над»** (above), and **«під»** (under). Ми кажемо: **«Я завжди паркуюся за офісом»** (I always park behind the office). Або ми детально описуємо кімнату: **«Мій стіл стоїть між великим вікном і дверима»** (My desk stands between the big window and the door). Ми часто ховаємо сумку **під столом** (under the table). Давайте разом подивимося короткий відеоблог про типовий день менеджера. *(Let's watch a short vlog about a manager's typical day together.)* Ця цікава розповідь чудово поєднує різні корисні функції орудного відмінка. *(This interesting story perfectly combines various useful functions of the Instrumental case.)* > — **Менеджер:** Вранці я завжди їду на роботу **трамваєм** (by tram). *(In the morning I always go to work by tram.)* > — **Менеджер:** **Перед роботою** (Before work) я купую гарячу каву з молоком. > — **Менеджер:** Мій новий офіс — **над кав'ярнею** (above the coffee shop). > — **Менеджер:** Я майже весь день працюю **за комп'ютером** (at the computer). > — **Менеджер:** О першій годині я обідаю **з колегами** (with colleagues). > — **Менеджер:** Після смачного обіду я маю важливу **нараду** (meeting) з директором. > — **Менеджер:** Ввечері я повертаюся додому машиною. *(In the evening I return home by car.)* To make our sentences more natural and descriptive, we very often add adjectives and possessive pronouns. When the main noun changes to the Instrumental case, its connected adjectives and pronouns must change too. Для чоловічого та середнього роду ми завжди використовуємо закінчення **-им**. *(For masculine and neuter genders, we always use the ending -ym.)* Наприклад, ми із задоволенням говоримо **«з моїм новим менеджером»** (with my new manager) або вішаємо лампу **«над великим столом»** (above the big table). Для жіночого роду ми використовуємо м'яке закінчення **-ою** або **-єю**. *(For the feminine gender, we use the soft ending -oyu or -yeyu.)* Наприклад, ми пишемо **«новою ручкою»** (with a new pen) або щодня працюємо **«з моєю новою директоркою»** (with my new director). | Рід (Gender) | Займенник (Pronoun) | Прикметник (Adjective) | Приклад (Example) | | :--- | :--- | :--- | :--- | | **Чоловічий / Середній** | мо**їм** | нов**им**, велик**им** | з мо**їм** нов**им** менеджером | | **Жіночий** | мо**єю** | нов**ою**, цікав**ою** | з мо**єю** нов**ою** директоркою | Ці граматичні закінчення роблять нашу українську мову красивою та дуже точною. *(These grammatical endings make our Ukrainian language beautiful and very precise.)* Тепер ви можете детально описати свій щоденний маршрут та звичайний робочий день. *(Now you can describe your daily route and regular workday in detail.)* <!-- INJECT_ACTIVITY: identify-instr-function --> <!-- INJECT_ACTIVITY: true-false-workday -->
+loan words ending in **-о**, like **метро** or **таксі** (ending in -і), do not change: «Вона їде метро» (She goes by subway). ::: The Instrumental case is also used with specific spatial prepositions to describe where things are located in relation to each other. These prepositions are **перед** (before/in front of), **за** (behind/after), **між** (between), **над** (above), and **під** (under). Я паркую свою машину за офісом. Мій робочий стіл стоїть між вікном і дверима. Наш новий офіс розташований над кав'ярнею. > *I park my car behind the office. My work desk stands between the window and the door. Our new office is located above the coffee shop.* Let's look at a vlog-style monologue of a project manager describing his typical routine. Notice how he uses the Instrumental case for transport, tools, accompaniment, and spatial locations. During lunch, you might also hear him mention food like **картопля** (potato) or eating utensils like a **виделка** (fork). Привіт! Мій робочий день завжди дуже активний. Вранці я їду на роботу трамваєм або велосипедом. Перед роботою я купую смачну каву з молоком. Майже весь день я працюю за комп'ютером. О першій годині я обідаю з колегами. Ми часто їмо м'ясо з картоплею, і я завжди користуюся ножем та виделкою. Після обіду я маю важливу нараду з директором. Наш великий офіс розташований над рестораном. Увечері я їду додому машиною. > *Hi! My workday is always very active. In the morning, I go to work by tram or by bicycle. Before work, I buy tasty coffee with milk. Almost all day I work at the computer. At one o'clock I have lunch with colleagues. We often eat meat with potatoes, and I always use a knife and fork. After lunch, I have an important meeting with the director. Our big office is located above a restaurant. In the evening, I go home by car.* Notice that when we use adjectives and pronouns with nouns in the Instrumental case, their endings must also change to match. The endings depend on the gender of the noun they describe. Для чоловічого та середнього роду ми використовуємо закінчення **-им**. Для жіночого роду ми використовуємо закінчення **-ою**. Займенники також мають свої спеціальні форми. > *For masculine and neuter genders, we use the ending **-им**. For feminine gender, we use the ending **-ою**. Pronouns also have their own special forms.* Here is a quick reference for the most common adjective and pronoun endings in the Instrumental case: | Gender | Adjective Ending | Pronoun Example | Noun Example | Phrase | | :--- | :--- | :--- | :--- | :--- | | Masculine/Neuter | **-им** | **моїм**, **цим** | **колегою**, **столом** | з моїм новим колегою, над великим столом | | Feminine | **-ою** | **моєю**, **цією** | **книжкою**, **роботою** | цікавою книжкою, перед моєю роботою | Now you can combine all these elements to describe your daily routine, the tools you use, the people you spend time with, and exactly where everything happens! <!-- INJECT_ACTIVITY: identify-instr-function --> <!-- INJECT_ACTIVITY: true-false-workday -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -563,7 +563,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -582,18 +649,65 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (4/4).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] готувати (to cook, to prepare)
+- [ ] різати (to cut)
+- [ ] мішати (to stir, to mix)
+- [ ] посипати (to sprinkle)
+- [ ] подавати (to serve)
+- [ ] вареники (varenyky, dumplings)
+- [ ] картопля (potato)
+- [ ] помідор (tomato)
+- [ ] огірок (cucumber)
+- [ ] сіль (salt)
+- [ ] олія (oil)
+- [ ] виделка (fork)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Підсумок — Практика: Розкажи про себе (Summary — Practice: Tell About Yourself) (~400 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

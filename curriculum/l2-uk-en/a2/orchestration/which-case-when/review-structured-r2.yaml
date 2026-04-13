@@ -1,0 +1,55 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 3
+  evidence: 'The module stops after `## Дієслово вирішує: Який відмінок після дієслова?
+    (~600 words)` and `<!-- INJECT_ACTIVITY: true-false-case-pairs -->`. Searches
+    on the provided content returned `## Прийменник'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: No Russianisms, surzhyk, calques, paronym errors, wrong case forms, or
+    forbidden Russian characters were found in the provided prose. The supplied VESUM
+    note says all checked words exist, and spot che
+- dimension: 3
+  name: Pedagogical quality
+  score: 5
+  evidence: The written section does give multiple examples for verb-governed cases,
+    e.g. `Я читаю книгу. Ми шукаємо ключі.` and `Я допомагаю сестрі. Ми щиро дякуємо
+    вчителям.` But the promised systematic decisio
+- dimension: 4
+  name: Vocabulary coverage
+  score: 4
+  evidence: 'Some required words are used naturally, e.g. `відмінок`, `прийменник`,
+    `дієслово`, `думати`, `боятися`, `користуватися`. But required plan vocabulary
+    is missing from the prose: searches returned `напр'
+- dimension: 5
+  name: Exercise quality
+  score: 2
+  evidence: 'Only one marker exists: `<!-- INJECT_ACTIVITY: true-false-case-pairs
+    -->`. The plan requires four activity types, and the lone true/false marker comes
+    before the module teaches the key location/direct'
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: 'The opening classroom frame is concrete and usable: `Сьогодні ми граємо
+    в граматичних детективів. Ми читаємо українську газету...` The teacher voice is
+    mostly warm and focused on the grammar task rath'
+- dimension: 7
+  name: Structural integrity
+  score: 2
+  evidence: The pipeline word count is 732, far below the 2000-word target. Structurally,
+    only one H2 section is present, while the plan specifies four core sections.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: The module treats Ukrainian grammar on its own terms and makes no decolonizing/cultural
+    errors.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: 'The dialogue has named speakers and a real instructional situation: `Президент
+    зустрівся з прем''єром. Для журналістів підготували зал`. It is short, but it
+    is still more natural than a purely transact'
+findings: []

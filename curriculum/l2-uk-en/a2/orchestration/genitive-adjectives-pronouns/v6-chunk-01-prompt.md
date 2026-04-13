@@ -1,23 +1,23 @@
-# Section-by-Section Generation — Section 1/4
+# Section-by-Section Generation — Section 1/3
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 13: Мого друга, цієї книги (A2, A2.2 [Genitive Case Complete])
-**Section to write:** Який? Якого? Прикметники в родовому (Which? Whose? Adjectives in the Genitive) (~700 words total)
-**Word target for this section:** 700 words (aim for 770 to account for undershoot)
+**Section to write:** Який? Якого? Прикметники в родовому (~770 words)
+**Word target for this section:** 770 words (aim for 847 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Який? Якого? Прикметники в родовому (Which? Whose? Adjectives in the Genitive) (~700 words total)
-- P1 (~120 words): [Dialogue: At a Lost-and-Found office. Owner (Власник) describes a lost bag using full Genitive phrases: "Я шукаю сумку мого старшого брата. Ви не бачили цієї червоної парасольки?". Worker (Працівник) checks the register: "Тут немає вашого великого чемодану, але є парасолька цієї маленької дівчини."]
-- P2 (~100 words): [Grammar Introduction: Explaining the concept of agreement (узгодження) in the Genitive case. Just as nouns change endings after prepositions like 'без', 'для', 'біля', the adjectives describing them must also shift to match the gender and case of the noun.]
-- P3 (~120 words): [Masculine and Neuter Hard Stems: Detailed look at the -ого ending. Examples include 'нового друга' (masc.), 'великого міста' (neut.), and 'старого будинку' (masc.). Contrast the Ukrainian pronunciation [-oho] with the Russian [-ovo] to emphasize decolonized phonetics.]
-- P4 (~110 words): [Masculine and Neuter Soft Stems: Explaining the -ього ending for adjectives ending in a soft sign or 'й' in the Nominative. Key examples: 'синього олівця', 'вчорашнього дня', and 'літнього моря'. Note the preservation of softness before the ending.]
-- P5 (~120 words): [Feminine Adjectives in Genitive: Introducing the -ої (hard) and -ьої/-ньої (soft) endings. Examples: 'нової книги', 'гарної дівчини' vs. 'синьої сукні', 'вечірньої школи'. Contrast with the Russian endings to prevent calques.]
-- P6 (~130 words): [Usage with Prepositions: Practical application of Genitive adjectives after 'без' (without), 'для' (for), 'біля' (near), and 'від' (from). Sentence structures: 'Я не можу жити без цієї доброї кави', 'Це подарунок для мого старого вчителя'.]
-- <!-- INJECT_ACTIVITY: fill-in-adj-noun --> [fill-in, Put the adjective and noun into the correct Genitive form, 8 items]
+## Який? Якого? Прикметники в родовому (~770 words)
+- P1 (~100 words): Dialogue at a lost-and-found office. Власник: "Це сумка мого старшого брата." Працівник: "Ви не бачили цієї червоної парасольки?" Власник: "Тут немає нашого великого чемодану." Introduce the context of describing missing objects in detail.
+- P2 (~120 words): Introduction to adjectives (прикметники) in the Genitive case. Explain the concept of grammatical agreement (узгодження): when a noun changes to the Genitive (after "немає", numbers, or prepositions), the adjective describing it must also change to answer the questions "якого?" (masc/neut) or "якої?" (fem).
+- P3 (~150 words): Masculine and Neuter Genitive adjective endings. Explain the hard stem ending `-ого` with examples: `новий → нового підручника`, `великий → великого міста`. Explain the soft stem ending `-ього` with examples: `синій → синього олівця`. Include a critical decolonization pronunciation note: `-ого` is pronounced with an `[h]` sound ([-oɦo]), not a `[v]` sound like in Russian.
+- P4 (~150 words): Feminine Genitive adjective endings. Explain the hard stem ending `-ої` with examples: `нова → нової книги`, `стара → старої церкви`. Explain the soft stem ending `-ьої` with examples: `синя → синьої сукні`. Show how feminine forms distinctly differ from masculine/neuter forms in the Genitive.
+- P5 (~150 words): Agreement in full phrases with prepositions. Demonstrate how both the adjective and the noun change together as a unit. Provide contrasting examples across genders: `без нового підручника` (masc.), `біля старої церкви` (fem.), `без синього олівця` (masc. soft).
+- P6 (~100 words): Common adjectives practiced in the Genitive. Provide a mini-reference list of frequent descriptive opposites changing to Genitive forms: `великий → великого/великої`, `маленький → маленького/маленької`, `старий → старого/старої`, `молодий → молодого/молодої`.
+- <!-- INJECT_ACTIVITY: fill-in-genitive-adjectives --> [fill-in, Put the adjective and noun into the correct Genitive form, 8 items]
 
 ---
 ## Full Plan (for reference)
@@ -681,6 +681,31 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] прикметник (adjective)
+- [ ] займенник (pronoun)
+- [ ] присвійний (possessive)
+- [ ] вказівний (demonstrative)
+- [ ] узгодження (agreement (grammatical))
+- [ ] дозвіл (permission)
+- [ ] підручник (textbook)
+- [ ] документ (document)
+- [ ] вчителька (female teacher)
+- [ ] важливий (important)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Який? Якого? Прикметники в родовому (~770 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

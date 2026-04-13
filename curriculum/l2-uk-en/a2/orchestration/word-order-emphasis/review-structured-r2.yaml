@@ -1,0 +1,51 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'All four planned H2 sections appear in order, and the references are
+    cited in the closing paragraph, but the plan point “Reading practice: identifying
+    word order shifts in a short Ukrainian text...” i'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: No Russianisms/Surzhyk/Russian letters found, and spot-checked Ukrainian
+    forms verify cleanly; however, the cleft explanation contradicts itself by saying
+    `головну **рему**` in Ukrainian and `main the
+- dimension: 3
+  name: Pedagogical quality
+  score: 7
+  evidence: The question→answer modeling is strong, but the `це` explanation reduces
+    focus marking to “author of the action,” and `Якщо ви відповісте «Каву купив я»,
+    це звучатиме вкрай дивно` overstates a marked-
+- dimension: 4
+  name: Vocabulary coverage
+  score: 8
+  evidence: 'Required vocabulary is well integrated, but recommended `виділяти` and
+    `емфатичний` do not appear in the supplied prose (search hits: 0).'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: All five planned activity types are represented by correctly placed markers,
+    and each comes after the concept it should test.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: The tone is teacherly and concrete; the chores dialogue and question-based
+    framing keep the lesson lively without fluff.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All four H2 headings are present and ordered correctly; markdown is clean;
+    total pipeline word count is 2914, above target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: The module is Ukrainian-centered throughout and avoids Russia-centered
+    comparison framing.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: The chores dialogue is natural and useful, but `А от «Номери» — це точно
+    Сенцов зняв` sounds stilted and blurs the contrast pattern being taught.
+findings: []

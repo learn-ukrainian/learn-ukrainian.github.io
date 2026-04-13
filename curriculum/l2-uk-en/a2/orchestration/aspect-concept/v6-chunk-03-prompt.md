@@ -1,22 +1,22 @@
-# Section-by-Section Generation — Section 3/5
+# Section-by-Section Generation — Section 3/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 2: Зроблено чи в процесі? Вступ до виду дієслів (A2, A2.1 [Foundation and Aspect Introduction])
-**Section to write:** Доконаний вид: Результат! (~610 words total)
-**Word target for this section:** 610 words (aim for 671 to account for undershoot)
+**Section to write:** Доконаний вид: Результат! (Perfective: The Result!) (~660 words)
+**Word target for this section:** 660 words (aim for 726 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Доконаний вид: Результат! (~610 words total)
-- P1 (~150 words): [The Power of the Result: Explain that ДВ is for "Mission Accomplished." Focus on "Я прочитав книгу" (I have finished reading the book). The book is now on the shelf, and I know the ending. Use the term "завершена дія" (completed action).]
-- P2 (~150 words): [The Future Surprise: Explain that Perfective verbs don't have a present tense. When you use a ДВ verb in a form that looks like the present, it actually refers to the future. Example: "Я зроблю" doesn't mean "I am doing," it means "I will do/get it done." This is a major concept for A2.1.]
-- P3 (~110 words): [Focus on the Past Tense: For this module, emphasize ДВ in the past. "Я купив" (I bought), "Вона прийшла" (She arrived), "Ми зробили" (We did/finished). Focus on the "click" of completion.]
-- P4 (~100 words): [Signal Words for ДВ: List result-oriented markers: нарешті (finally), вже (already), раптом (suddenly). Discuss "вчора" (yesterday) as a neutral word that depends on the speaker's focus: "Вчора я читав" (process) vs. "Вчора я прочитав" (result).]
-- P5 (~100 words): [The "Failure" Contrast: Use the classic "шукав, але не знайшов" (looked for, but didn't find) example. Explain that the search was a process (НВ), but the outcome (finding) is a result (ДВ). This highlights that ДВ is about hitting a boundary or goal.]
-- <!-- INJECT_ACTIVITY: match-up-context-aspect --> [Match-up, focus on choosing between НВ and ДВ pairs in specific sentence contexts, 8 items]
+## Доконаний вид: Результат! (Perfective: The Result!) (~660 words)
+- P1 (~130 words): Deep dive into Perfective (Доконаний вид). The absolute core meaning is a single, successfully completed action with a clear result or boundary. The result is all that matters. As a Ukrainian mother might say: "Прибирати (impf) й прибрати (pf) — різні дії!"
+- P2 (~130 words): Contrast with imperfective to highlight the result. "Я прочитав книгу" (I have read the book — it is finished, here is the result) vs. "Я читав книгу" (I was reading the book — maybe I finished it, maybe I abandoned it).
+- P3 (~150 words): The crucial rule: Perfective verbs have NO true present tense. Explain that because perfective means "completed result", you cannot do it "right now". Their "present" form actually has a future meaning ("зроблю" means "I will do", "напишу" means "I will write"). 
+- P4 (~120 words): State that for now, we will focus only on the past tense of perfective verbs: "зробив" (did/has done), "написала" (wrote/has written), "забив" (scored). These mark finished events in the past.
+- P5 (~130 words): Key signal words for Perfective: раптом (suddenly), нарешті (finally), вже (already). Discuss the tricky word "вчора" (yesterday): it works with BOTH aspects! "Вчора я читав" (impf - I spent my time reading) vs "Вчора я прочитав" (pf - I finished the book yesterday).
+- <!-- INJECT_ACTIVITY: match-up-choose-aspect --> [match-up, Choose the Correct Aspect (Context-based), 8 items]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-actions repeat continuously without a single, final endpoint, they are treated just like an ongoing process. They are open-ended loops. Another common use for imperfective verbs is stating general facts. Sometimes we just want to name the action without any reference to its duration, repetition, or completion. We use imperfective verbs for simple statements where the completion of the action is completely irrelevant to the conversation. For an A2 learner, you can think of the imperfective aspect as the default setting for describing how the world works. У школі діти читають книги та пишуть різні тексти. Птахи літають високо в небі. Люди сплять вночі, а працюють вдень. Вода кипить при ста градусах. > *At school, children read books and write various texts. Birds fly high in the sky. People sleep at night and work during the day. Water boils at one hundred degrees.* These sentences merely state what things do. There is no specific result expected, so the imperfective aspect is the only logical choice. There is a critical rule regarding verb tenses that makes choosing the correct aspect much easier for beginners. The present tense in Ukrainian is exclusively imperfective. Because an action happening right now is, by definition, an ongoing process that has not yet finished, you cannot have a completed action in the present moment. If you are doing it now, it is a process. Therefore, any verb that describes what you are currently doing will always be an imperfective verb. Зараз я сиджу за столом і пишу довгий лист своєму другу. Вона слухає музику у своїй кімнаті. > *Right now I am sitting at the table and writing a long letter to my friend. She is listening to music in her room.* :::info **Grammar box** — If you want to describe something happening right now, you must use an imperfective verb. Perfective verbs simply do not have a true present tense form. The past tense, however, can use both aspects depending on whether the action was a process or a completed result. ::: To help you identify when to use the imperfective aspect, look out for specific frequency adverbs. These signal words naturally pair with imperfective verbs because they inherently describe repetition or duration. The most common signal words are the Ukrainian equivalents for always, often, usually, regularly, every day, and for a long time. These words are «завжди», «часто», «зазвичай», «регулярно», «щодня», and «довго». Whenever you use these adverbs to say that something happens often or lasts for a significant amount of time, you almost certainly need an imperfective verb. Вона довго писала цей лист ввечері. Мій батько зазвичай п'є чорну каву без цукру. Ми регулярно ходимо в гори влітку. Ти занадто часто забуваєш свої ключі вдома. > *She was writing this letter for a long time in the evening. My father usually drinks black coffee without sugar. We regularly go to the mountains in the summer. You forget your keys at home too often.* <!-- INJECT_ACTIVITY: quiz, aspect-sorting-process-result --> <!-- INJECT_ACTIVITY: fill-in, identify-aspect-in-sentences -->
+use of the imperfective aspect is stating a general fact. Sometimes, you only want to confirm whether an action took place at all, or state a universal truth, without focusing on any specific **результат** (result). You do not care if someone managed to successfully **зробити** (to do) a task completely. In these situations, the imperfective verb acts as a simple naming device for the activity. You are asking about the sheer existence of the event in history, or making a broad statement about how things generally operate in the world, completely ignoring the concept of completion. Маленькі діти часто читають яскраві книги перед сном. Ти бачив новий український фільм у кінотеатрі? Ми вчора говорили про важливі проблеми нашої школи. > *Small children often read bright books before bed. Did you see the new Ukrainian movie at the cinema? We were talking about the important problems of our school yesterday.* Because the imperfective aspect is so strongly tied to habits and duration, it frequently pairs with specific signal words. These adverbs act as giant neon signs pointing directly to the imperfective form. When you see the following words, you almost always need to use an imperfective verb: - **завжди** (always) - **часто** (often) - **зазвичай** (usually) - **довго** (for a long time) - **щодня** (every day) These words inherently describe extended periods or recurring events. This fundamentally contradicts the idea of a single, sudden completion, making the imperfective aspect the only logical choice. :::info **Grammar box** Signal words are your best friends when choosing the **вид дієслова** (verb aspect). If a sentence contains a word that implies routine or extended time, you can confidently select the imperfective form without overthinking it. ::: Мій найкращий друг завжди допомагає мені робити складні завдання. Він щодня читає свіжі новини в інтернеті. Ми довго гуляли в парку, бо погода була чудова. > *My best friend always helps me do difficult tasks. He reads fresh news on the internet every day. We walked in the park for a long time because the weather was wonderful.* It is crucial to understand that aspect is completely separate from tense. The aspect simply describes the internal nature of the action, while the tense tells you when it happened on the calendar. You can have an imperfective process happening right now, or you can have an imperfective process that used to happen in the past. The core identity of the action remains exactly the same; only the time frame changes. This proves that focusing on the journey is a perspective you can apply across different periods of time. Зараз я уважно читаю цікаву статтю про історію. Учора я також довго читав цей журнал у бібліотеці. Завтра я буду читати нові матеріали для нашого проєкту. > *Right now I am carefully reading an interesting article about history. Yesterday I also read this magazine in the library for a long time. Tomorrow I will be reading new materials for our project.* <!-- INJECT_ACTIVITY: fill-in, Identify the Aspect in Sentences, 8 items -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -37,7 +37,7 @@ module: a2-002
 level: A2
 sequence: 2
 slug: aspect-concept
-version: '1.1'
+version: '1.2'
 title: Зроблено чи в процесі? Вступ до виду дієслів
 subtitle: Концепція доконаного та недоконаного виду
 focus: grammar
@@ -131,8 +131,8 @@ activity_hints:
       зробив вправи → робив, *Вона довго написала листа → писала)
     items: 6
 references:
-  - title: Заболотний Grade 6, §52-54
-    notes: 'Вид дієслова: доконаний і недоконаний'
+  - title: Авраменко Grade 7, §28-30
+    notes: 'Вид дієслова: доконаний і недоконаний — aspect is taught in 7th grade curriculum'
   - title: 'ULP: Ukrainian Verb Aspect'
     url: https://www.ukrainianlessons.com/ukrainian-verb-aspect/
     notes: Imperfective vs perfective
@@ -463,6 +463,29 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] вид дієслова (verb aspect)
+- [ ] недоконаний вид (imperfective aspect)
+- [ ] доконаний вид (perfective aspect)
+- [ ] процес (process)
+- [ ] результат (result)
+- [ ] дія (action)
+- [ ] повторення (repetition)
+- [ ] робити / зробити (to do)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Доконаний вид: Результат! (Perfective: The Result!) (~660 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

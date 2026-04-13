@@ -1,0 +1,50 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T21-28-6959efd6.json
+phase: vocab
+prompt_chars: 12203
+response_chars: 1146
+prompt_words: 2011
+response_words: 140
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.0654
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.0188
+- name: plan
+  start: 1028
+  length: 11175
+  fraction: 0.9158
+large_sections:
+- plan
+directives_total: 6
+directives_covered: 0
+directives_missed:
+- kind: must
+  text: You must know how to state your current location, your destination, your point
+    of origin, and your mode of transport.
+  covered: false
+  coverage_note: 1/13 keywords (8%)
+- kind: must
+  text: This means you can handle the most crucial interactions required of any traveler
+    or new resident.
+  covered: false
+  coverage_note: 0/13 keywords (0%)
+- kind: inject_activity
+  text: quiz-question-choice
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: group-sort-case-function
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-euphony-rules
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-dialogue-forms
+  covered: false
+  coverage_note: marker missing

@@ -3,23 +3,21 @@
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 14: Багато книг, мало студентів (A2, A2.2 [Genitive Case Complete])
-**Section to write:** Жіночий рід: нульове закінчення (~720 words total)
-**Word target for this section:** 720 words (aim for 792 to account for undershoot)
+**Section to write:** Жіночий рід: нульове закінчення (~770 words)
+**Word target for this section:** 770 words (aim for 847 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Жіночий рід: нульове закінчення (~720 words total)
-- P1 (~100 words): [The Main Feminine Pattern: Zero Ending. Explain that feminine nouns ending in -а in the Nominative singular usually just drop the -а. Examples: книга → книг, машина → машин, школа → шкіл (note the o→і change).]
-- P2 (~130 words): [Vowel Insertion Rule (о): Explain that if dropping the ending leaves a cluster of two consonants, we insert "о" to make it pronounceable. Examples: жінка → жінок, сумка → сумок, студентка → студенток, донька → доньок.]
-- P3 (~110 words): [Vowel Insertion Rule (е): Explain cases where "е" is inserted instead of "о", often in soft stems or specific clusters. Examples: сестра → сестер, земля → земель, вишня → вишень, пісня → пісень.]
-- P4 (~90 words): [The -ія Group: Explain how nouns like "станція" or "лекція" behave. The zero ending effectively leaves the "й" sound. Examples: станція → станцій, лекція → лекцій, мрія → мрій.]
-- P5 (~110 words): [The -ей Exception Group: Introduce the small but vital group of feminine nouns that take -ей. Examples: стаття → статей, сім'я → сімей, миша → мишей, ніч → ночей (III declension crossover).]
-- P6 (~80 words): [Mixed Group Stems (ж, ч, ш, щ): Explain that stems ending in these shibilants take a clean zero ending without vowel insertion. Examples: площа → площ, задача → задач, тиша → тиш.]
-- P7 (~100 words): [Contextual Practice: Use quantity words with feminine nouns in full sentences. Examples: "У бібліотеці кілька книг", "На площі багато жінок", "Скільки пісень ти знаєш?"]
-- <!-- INJECT_ACTIVITY: fill-in-genitive-plural --> [fill-in, Form the Genitive plural of given nouns (all three genders), 8 items]
-- <!-- INJECT_ACTIVITY: quiz-ending-choice --> [quiz, Choose the correct Genitive plural ending (-ів, -ей, zero, or -їв), 8 items]
+## Жіночий рід: нульове закінчення (~770 words)
+- P1 (~100 words): Dialogue. Setting: Inventory check at a small village shop — counting what's left. Speakers: Продавець and Помічник. The dialogue uses Genitive plural with quantity words: "Скільки пляшок води? П'ять. Скільки банок меду? Три. А булок? Немає булок!"
+- P2 (~120 words): Analyze the dialogue to introduce the main pattern for feminine nouns: the **zero ending**. Explain that to form the Genitive plural, hard-stem feminine nouns drop the final `-а` and take a zero ending. Examples: `книга` → `книг`, `жінка` → `жінок`, `сестра` → `сестер`. Point out `пляшок`, `банок`, `булок` from the dialogue.
+- P3 (~130 words): Explain the rule for **vowel insertion**. When dropping the ending leaves a difficult consonant cluster, Ukrainian inserts `о` (usually after hard consonants) or `е` (after soft/hissing) to make pronunciation easier. Examples: `студентка` → `студенток`, `зупинка` → `зупинок`, `сумка` → `сумок`.
+- P4 (~130 words): Discuss soft-stem feminine nouns (I declension). Explain they take a zero ending but leave a soft sign (`ь`) to show the soft stem. Examples: `пісня` → `пісень`, `вишня` → `вишень` (note the inserted `е`). Explain the `-ія` group drops the `я` and ends in `й`: `станція` → `станцій`, `лекція` → `лекцій`.
+- P5 (~140 words): Introduce the mixed group (stems ending in шиплячі: `ж, ч, ш, щ`). Explain that they take a zero ending without vowel insertion or a soft sign. Examples: `площа` → `площ`, `задача` → `задач`. 
+- P6 (~150 words): Discuss the **-ей** exceptions. Explain this is a small, closed group of I declension feminine nouns that take `-ей` instead of a zero ending. Examples: `стаття` → `статей`, `сім'я` → `сімей`, `миша` → `мишей`. Practice using these with common quantity expressions: `кілька книг`, `багато жінок`, `мало сестер`, `скільки пісень`, `декілька лекцій`.
+- <!-- INJECT_ACTIVITY: quiz-genitive-endings --> [quiz, Choose the correct Genitive plural ending (-ів, -ей, zero, or -їв), 8 items]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -27,7 +25,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-is very predictable. We simply add the ending "-ів" to the initial form of the word.* `стіл` → `столів` `будинок` → `будинків` `підручник` → `підручників` `студент` → `студентів` `брат` → `братів` У мого друга є п'ять великих столів. На цій вулиці побудували кілька нових будинків. У бібліотеці є багато підручників. Ми бачимо десять студентів. > *My friend has five large tables. They built several new houses on this street. The library has many textbooks. We see ten students.* Іменники чоловічого роду з м'якою основою також найчастіше отримують закінчення «-ів». Але тут треба бути уважними, бо іноді зникають голосні «е» або «о». > *Masculine nouns with a soft stem also most often receive the ending "-ів". But here you need to be careful, because sometimes the vowels "е" or "о" disappear.* `учитель` → `учителів` `олівець` → `олівців` `хлопець` → `хлопців` `день` → `днів` У школі працює багато хороших учителів. Я купив кілька кольорових олівців. У нашому класі вчиться вісім хлопців. Я чекав тебе п'ять днів. > *Many good teachers work at the school. I bought several colored pencils. Eight boys study in our class. I waited for you for five days.* Якщо основа слова закінчується на голосний звук або має апостроф, ми використовуємо закінчення «-їв» замість «-ів». > *If the stem of the word ends in a vowel sound or has an apostrophe, we use the ending "-їв" instead of "-ів".* `герой` → `героїв` `трамвай` → `трамваїв` `подвір'я` → `подвір'їв` `відкриття` → `відкриттів` У цьому фільмі є кілька головних героїв. На зупинці стоїть багато трамваїв. Учені зробили багато нових відкриттів. > *There are several main heroes in this film. There are many trams standing at the stop. Scientists have made many new discoveries.* :::info **Grammar box** Notice that words like `подвір'я` and `відкриття` are neuter nouns. Most neuter nouns have a zero ending in the plural, but these borrow the `-їв` ending. ::: Деякі іменники чоловічого роду втрачають свій суфікс у множині і мають нульове закінчення. Це слова, які означають національність або соціальну групу і закінчуються на «-ин» або «-їн». > *Some masculine nouns lose their suffix in the plural and have a zero ending. These are words that denote nationality or social group and end in "-ин" or "-їн".* `громадянин` → `громадян` `селянин` → `селян` `болгарин` → `болгар` `татарин` → `татар` На площі зібралося багато громадян. У цьому селі живе кілька працьовитих селян. Я знаю п'ять болгар. > *Many citizens gathered on the square. Several hardworking peasants live in this village. I know five Bulgarians.* Існує одне дуже важливе слово з особливим правилом. Це слово «чоловік», яке означає «людина» або «мужчина». > *There is one very important word with a special rule. This is the word "чоловік", which means "person" or "man".* When we count people generally as a unit, we use the zero ending form: `п'ять чоловік` (five people). When talking about men specifically, the regular form `багато чоловіків` (many men) is used. <!-- INJECT_ACTIVITY: match-up-masc-genitive --> [match-up, Match Nominative singular nouns to their Genitive plural forms, 8 items]
+`учитель` becomes `учителів`, `олівець` becomes `олівців`, and `лікар` becomes `лікарів`. Even though the stem ends in a soft consonant, the ending remains the familiar **-ів**. But what about the **-їв** variant? You will often see it, but true **-їв** appears only after stems ending in a vowel, a short *й*, or an apostrophe. This includes some masculine words and several common neuter words that share this plural pattern. Most soft masculine nouns take **-ів**, not **-їв**. Біля нових будинків є багато гарних подвір'їв. Цей рік приніс нам кілька великих відкриттів. У центрі міста немає трамваїв. Ми пам'ятаємо імена наших героїв. > *Near the new buildings there are many beautiful courtyards. This year brought us several great discoveries. There are no trams in the city center. We remember the names of our heroes.* As you can see, the neuter noun `подвір'я` becomes `подвір'їв`, and `відкриття` becomes `відкриттів`. The masculine noun `герой` becomes `героїв`, and `трамвай` becomes `трамваїв`. :::note **Quick tip** The letter **ї** is essentially **й** + **і**. When a word already ends in a vowel sound or an apostrophe, Ukrainian uses **ї** to maintain the clear **-ів** pronunciation. ::: When adding the **-ів** ending, watch out for fleeting vowels. Many masculine nouns have an **о** or **е** in their final syllable. When you add a new ending like **-ів**, this vowel often drops out or "flees" from the word. This happens because the stress or syllable structure shifts. It is a natural phonetic process that makes the words easier to pronounce. Ми працювали там кілька днів. У дворі грає п'ять хлопців. Я купив багато нових олівців. > *We worked there for a few days. Five boys are playing in the yard. I bought a lot of new pencils.* The word `день` loses its **е** and becomes `днів`. The word `хлопець` loses its **е** and becomes `хлопців`. This is the same fleeting vowel you saw in the Genitive singular (`хлопця`, `дня`), so the stem change should already feel familiar to you. Finally, there is a rare but important **нульове закінчення** (zero ending) for certain masculine nouns. If a masculine noun ends in the suffixes **-ин** or **-їн** to denote nationality or origin, it loses this suffix in the plural. The Genitive plural for these specific words simply has no ending at all. Additionally, the word for "person" or "husband" has a special parallel form. На конференцію приїхало багато киян і селян. У залі сидить п'ять болгар. На вулиці стоїть кілька чоловік. > *Many Kyivans and villagers came to the conference. Five Bulgarians are sitting in the hall. Several men are standing on the street.* The noun `громадянин` becomes `громадян`. The word `селянин` becomes `селян`, and `болгарин` becomes `болгар`. The word `чоловік` is unique: when counting men, you can use the zero ending `чоловік`, though the regular form `чоловіків` also exists. However, remember that for the general concept of people, the word is **люди** (people), which comes from the singular **людина** (person), and its Genitive plural is `людей`. <!-- INJECT_ACTIVITY: match-up-masculine -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -665,6 +663,31 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] множина (plural)
+- [ ] нульове закінчення (zero ending)
+- [ ] кілька (a few, several)
+- [ ] багато (a lot, many)
+- [ ] мало (a little, few)
+- [ ] скільки (how many)
+- [ ] людина (person) / люди (people)
+- [ ] стаття (article)
+- [ ] завдання (task, assignment)
+- [ ] питання (question)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Жіночий рід: нульове закінчення (~770 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

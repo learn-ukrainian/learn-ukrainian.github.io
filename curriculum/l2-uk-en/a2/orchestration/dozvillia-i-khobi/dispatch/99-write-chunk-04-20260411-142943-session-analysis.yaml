@@ -1,0 +1,67 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T12-28-7f56afb0.json
+phase: write-chunk-04
+prompt_chars: 47341
+response_chars: 3505
+prompt_words: 6730
+response_words: 555
+sections:
+- name: header
+  start: 0
+  length: 458
+  fraction: 0.0097
+- name: skeleton
+  start: 458
+  length: 836
+  fraction: 0.0177
+- name: prior_summary
+  start: 1294
+  length: 3189
+  fraction: 0.0674
+- name: plan
+  start: 4483
+  length: 12770
+  fraction: 0.2697
+- name: wiki
+  start: 10754
+  length: 29871
+  fraction: 0.631
+- name: output_spec
+  start: 47124
+  length: 217
+  fraction: 0.0046
+large_sections:
+- wiki
+directives_total: 20
+directives_covered: 13
+directives_missed:
+- kind: must
+  text: The preposition `на` must be used for musical instruments, followed by the
+    Locative case.
+  covered: false
+  coverage_note: 0/8 keywords (0%)
+- kind: must
+  text: The verbal noun `малювання` (painting/drawing) must be used.
+  covered: false
+  coverage_note: 1/7 keywords (14%)
+- kind: must
+  text: 'The learner must produce a full sentence: `Я граю у футбол`.'
+  covered: false
+  coverage_note: 1/7 keywords (14%)
+- kind: must
+  text: '* **Verb Conjugation (Present Tense):** Learners must be comfortable conjugating
+    regular first and second-conjugation verbs to use `люблю`, `граю`, `ходжу`, `дивлюся`.'
+  covered: false
+  coverage_note: 4/17 keywords (24%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 1/11 keywords (9%)
+- kind: inject_activity
+  text: error-correction-cases
+  covered: false
+  coverage_note: marker missing

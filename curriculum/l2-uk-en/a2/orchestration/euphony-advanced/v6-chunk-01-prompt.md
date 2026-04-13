@@ -1,23 +1,23 @@
-# Section-by-Section Generation — Section 1/5
+# Section-by-Section Generation — Section 1/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 12: Милозвучність у складних контекстах (A2, A2.2 [Genitive Case Complete])
-**Section to write:** У чи в? Складні випадки (600 words)
-**Word target for this section:** 300 words (aim for 330 to account for undershoot)
+**Section to write:** У чи в? Складні випадки (U or V? Complex Cases) (~660 words)
+**Word target for this section:** 660 words (aim for 726 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## У чи в? Складні випадки (600 words)
-- P1 (~100 words): [Introduction to the concept of **милозвучність** (euphony) as a core value of the Ukrainian soul and tongue. Explain that it is not just a stylistic choice but a phonetic requirement to avoid consonant clusters (**збіг приголосних**) and vowel collisions (**збіг голосних**). Introduce the idea that Ukrainian speech flows like water, adapting to the "stones" of difficult sounds.]
-- P2 (~100 words): [Review of basic A1 rules for **у/в**. Explain the default pattern: **у** between consonants (**він у домі**) and **в** between vowels (**була в Одесі**). Clarify that these are the same preposition, just two "coats" for different weather.]
-- P3 (~120 words): [Sentence and clause boundaries. Explain that at the start of a sentence or after a pause (comma, dash), the phonetic context "resets." Use examples: **У лісі багато грибів** (start + consonant) vs. **В Одесі тепло** (start + vowel). Emphasize that the first sound of the first word dictates the choice regardless of the previous sentence's ending.]
-- P4 (~130 words): [The "Forbidden Clusters" rule. Explain that **у** is mandatory before words starting with **в, ф, хв, тв, св, льв**, regardless of the preceding sound. Examples: **був у Львові** (not в Львові), **успіх у творчості**, **працював у фірмі**. This prevents the "v-v" or "v-f" stuttering effect.]
-- P5 (~100 words): [Euphony in verbs and prefixes. Discuss how initial **у-/в-** in words like **учитель/вчитель**, **уранці/вранці**, and **увійти/ввійти** follows the same alternation logic. Example: **мій учитель** vs. **наша вчителька**. Explain that choosing the wrong form makes the sentence "stumble."]
-- P6 (~100 words): [Common pitfalls for English speakers. Address the tendency to treat **у** and **в** as separate lexical items. Use a contrastive example: **Я вчуся в школі** (incorrect cluster 'в-шк') vs. **Я вчуся у школі** (correct, melodic flow).]
-- <!-- INJECT_ACTIVITY: quiz-euphony-variants --> [quiz, Focus on choosing between у and в in varied phonetic environments (starts, middle, after commas), 8 items]
+## У чи в? Складні випадки (U or V? Complex Cases) (~660 words)
+- P1 (~100 words): Introduce the concept of "милозвучність" (euphony) with a dialogue setting the scene. Olenka and Taras planning a trip: "Поїдемо в Карпати чи у Львів? — У Львів! Із задоволенням! Я поїду з Оленою й Тарасом. А ви зі Львова повернетесь у неділю?" Highlight how this natural exchange uses all three euphony types.
+- P2 (~100 words): Review the A1 basic rule for у/в: use 'у' between consonants ("він у домі") and 'в' between vowels ("була в Одесі"). Explain that euphony is a core, grammaticalized feature of Ukrainian designed to avoid vowel clashes and consonant clusters.
+- P3 (~110 words): Clause boundaries and sentence starts. Explain that "В Україні зима холодна" is correct because 'в' precedes a vowel, even at the beginning of a sentence. After a pause like a comma or dash, the phonetic context resets: "У лісі, у полі волого..." (before consonant), "Мабуть, в Одесі холодно" (before vowel).
+- P4 (~120 words): Case forms and prepositions. The surrounding sounds determine the choice, not the word's base form. Contrast "у школі" (avoids the т-в-ш cluster in "брат в школі") with "в університеті" (avoids the у-у clash).
+- P5 (~110 words): Prefixed words and alternations. Explain that words like увійти/ввійти and учитель/вчитель change their initial letter based on the previous sound. Compare "Увечері прийшов" (start of sentence before a consonant) with "Він увійшов" (between two consonants).
+- P6 (~120 words): Common mistakes and specific exceptions. Highlight the L2 error *в вікно (correct: у вікно) and the special rule for words starting with в, ф, тв, св, льв, хв. Emphasize that we always use 'у' before these to avoid doubling v-like sounds (e.g., "був у Львові", "успіх у творчості").
+- <!-- INJECT_ACTIVITY: match-up --> [match-up, Match sentence beginnings with euphonically correct continuations, 8 items]
 
 ---
 ## Full Plan (for reference)
@@ -596,6 +596,31 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] милозвучність (euphony, melodiousness)
+- [ ] евфонія (euphony (technical term))
+- [ ] чергування (alternation)
+- [ ] голосний (vowel)
+- [ ] приголосний (consonant)
+- [ ] збіг (cluster, collision)
+- [ ] прийменник (preposition)
+- [ ] сполучник (conjunction)
+- [ ] вживати (to use, to apply)
+- [ ] складний (complex, compound)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## У чи в? Складні випадки (U or V? Complex Cases) (~660 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-ми свідомо обираємо форму з суфіксом «-шись», яка вказує на чітку часову послідовність. Другий дієприслівник належить до недоконаного виду, і він виконує зовсім іншу стилістичну функцію. Він виступає як супровідний паралельний процес, який відбувається абсолютно одночасно із основною дією сніданку. Андрій їсть свою вівсянку і відразу ж читає нові листи від своїх колег. Жодна з цих двох дій не передує іншій. Таке вміле комбінування дієприслівників робить вашу розповідь набагато багатшою та динамічнішою. Тепер ми маємо дуже детально обговорити тонкі семантичні нюанси, які часто призводять до кумедних життєвих ситуацій. Якщо ви оберете абсолютно неправильний вид дієприслівника, ви можете випадково створити справжній логічний абсурд у своєму реченні. Українці часто дуже доброзичливо посміхаються, коли іноземні студенти роблять такі типові граматичні помилки. Давайте візьмемо для нашого аналізу дуже показову пару речень про звичайні ранкові гігієнічні процедури у ванній кімнаті. Уявіть, що ви кажете своїм друзям: «Щоранку **умиваючись** *(while washing up)* холодною водою, я швидко витерся своїм великим пухнастим рушником». З точки зору граматики це речення може здаватися цілком нормальним, але його логічний зміст є неможливим. Ви використали дієприслівник недоконаного виду, який завжди вимагає абсолютної одночасності двох різних фізичних дій. Виходить, що ви намагалися ретельно витерти своє обличчя сухим рушником саме тоді, коли ви ще лили на нього воду. Таке поєднання взаємовиключних фізичних процесів є просто неможливим у реальному світі. Щоб ваше речення знову стало правильним, вам потрібно розвести ці дві різні дії у часі. Ви повинні впевнено сказати: **«Умившись** *(having washed up)* прохолодною водою, я швидко витерся своїм великим рушником». Тільки в цьому варіанті ми маємо правильну і логічну послідовність подій: спочатку ви завершили вмивання, і лише потім взяли свій рушник. Завжди уважно аналізуйте реальну можливість одночасного виконання тих дій, про які ви плануєте розповісти своїм співрозмовникам. Насамкінець нашої великої теми ми маємо звернути вашу максимальну увагу на найголовніше залізне правило. Незалежно від того, який саме граматичний вид ви зараз використовуєте, додаткова дія завжди мусить належати виключно головному суб'єкту вашого речення. Це означає, що і основний дієслівний присудок, і ваш дієприслівник завжди мають описувати дії однієї і тієї ж особи. Порушення цього суворого правила є найпоширенішою синтаксичною помилкою, яку часто роблять навіть самі носії мови у щоденному спілкуванні. Давайте порівняємо два дуже схожих, але абсолютно різних за своєю правильністю речення. Коли ви кажете: **«Закінчивши** *(having finished)* свою важку роботу, я радісно пішов додому», ви будуєте ідеальне українське речення. У цьому випадку займенник «я» є тим логічним суб'єктом, який успішно завершив роботу і потім пішов відпочивати. Обидві дії логічно належать одній людині, тому граматичного конфлікту тут немає. Але уявіть ситуацію, коли ви помилково кажете: «Закінчивши свою роботу, на вулиці раптом почався сильний дощ». Це речення є просто класичним прикладом дуже грубої логічної помилки. У цій конструкції головним підметом виступає іменник «дощ», а основним присудком є дієслово «почався». Якщо ми прочитаємо це буквально, то вийде, що саме дощ спочатку успішно закінчив свою роботу, а вже потім почав падати на землю. Завжди уважно перевіряйте, чи справді ваш підмет може логічно виконувати ту додаткову дію, яку ви назвали своїм дієприслівником. <!-- INJECT_ACTIVITY: aspect-choice-quiz --> <!-- INJECT_ACTIVITY: fill-in-gerund-aspect -->
+витерся рушником». Спочатку ви завершили процес умивання, і лише після цього взяли рушник. > *Imagine a situation in the bathroom. If you say "while washing my face, I dried myself with a towel", a native Ukrainian speaker will be very surprised. This phrase means that you tried to dry yourself with a towel at the exact same moment when water was still pouring on your face. These two actions physically cannot be simultaneous. The correct version sounds like this: "having washed my face, I dried myself with a towel". First you finished the washing process, and only after that you took the towel.* Consider another common scenario involving visual perception. A learner might try to say that they waved their hand while seeing a friend, translating literally from English. But the act of spotting someone is instantaneous. If you use an imperfective gerund, you imply a prolonged, continuous stare that somehow frames the waving. Instead, you must use the word **побачивши** (having seen — perfective gerund) to indicate that the instantaneous recognition happened first. The completed visual acquisition is the trigger for the subsequent physical greeting. You cannot simultaneously be in the process of noticing someone for the first time and performing a reaction to that notice. The sequence is strictly chronological. Finally, we must reinforce the single most important syntactic rule governing all gerunds in the Ukrainian language. Regardless of whether you choose the perfective or imperfective aspect, the action described by the gerund absolutely must belong to the main subject of the sentence. The gerund does not have its own subject; it borrows the actor from the main verb. Кожна додаткова дія повинна мати того самого виконавця, що й основна дія. Це правило не має жодних винятків. Якщо ви кажете «закінчивши роботу, я пішов додому», речення побудоване ідеально. Я закінчив роботу, і я ж пішов додому. Але якщо ви скажете «закінчивши роботу, почався дощ», ви зробите класичну синтаксичну помилку. Граматично це означає, що саме дощ спочатку наполегливо працював, успішно закінчив свою роботу, а потім почався. When you construct sentences with gerunds, always perform a quick mental check. Ask yourself who is performing the main action. Then ask yourself if that exact same person or object is performing the action in the gerund clause. If the actors are different, you cannot use a gerund under any circumstances. You must instead rely on a complex sentence with a subordinate clause, using conjunctions like "when" or "after". This rigorous alignment of the logical subject ensures your speech remains clear, logical, and structurally sound. Native speakers intuitively listen for this agreement, and breaking it is one of the most noticeable errors a learner can make. :::info **Grammar box** Never mix the actors. A gerund is simply a detached action looking for an owner. It will automatically attach itself to the subject of the main clause. If the subject of your main clause cannot logically perform the gerund's action, your sentence is fundamentally broken. ::: <!-- INJECT_ACTIVITY: aspect-choice-quiz --> <!-- INJECT_ACTIVITY: fill-in-gerund-aspect -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -531,7 +531,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -544,18 +611,62 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] дієприслівник доконаного виду (perfective gerund)
+- [ ] різночасність (temporal non-simultaneity — gerund before main action)
+- [ ] одночасність (simultaneity — imperfective gerund, review)
+- [ ] прочитавши (having read — perfective gerund)
+- [ ] дізнавшись (having found out — reflexive perfective gerund)
+- [ ] повернувшись (having returned — reflexive perfective gerund)
+- [ ] написавши (having written — perfective gerund)
+- [ ] побачивши (having seen — perfective gerund)
+- [ ] попередність (precedence — action completed before the main one)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Дієприслівник vs підрядне речення (~715 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

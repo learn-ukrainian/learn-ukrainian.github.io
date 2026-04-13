@@ -3,48 +3,50 @@ scores:
 - dimension: 1
   name: Plan adherence
   score: 8
-  evidence: 'The text misses two specific plan points: 1) "Pronunciation: the stress
-    in infinitives varies" expected in the "Я люблю..." section, and 2) "Note: люблю
-    changes by person... full conjugation in M17 (G'
+  evidence: All planned H2 sections and target vocabulary are present, but the teaching
+    blocks run long because of added exposition; `Я люблю...` and especially `Мені
+    подобається...` are padded well beyond the pl
 - dimension: 2
   name: Linguistic accuracy
-  score: 10
-  evidence: No linguistic errors found. Ukrainian phrasing is natural, grammatically
-    correct, and free of Russianisms or calques.
+  score: 4
+  evidence: 'The module teaches false rules: “This structure is strictly used for
+    actions...”, “actions take **люблю**, while objects and things take **подобається**”,
+    and “an infinitive ... always ends in ... **-'
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: Excellent PPP flow. Grammar concepts are introduced logically with clear,
-    contextualized examples. The explanation of when to use `люблю` vs `подобається`
-    is highly effective.
+  score: 6
+  evidence: The PPP flow exists, but it is weakened by categorical rules that are
+    not actually true and by long English theory blocks like “The grammatical concept
+    that makes this structure work so smoothly...” i
 - dimension: 4
   name: Vocabulary coverage
   score: 10
-  evidence: All required and recommended vocabulary items from the plan are introduced
-    naturally within the prose.
+  evidence: All required verbs appear in prose/examples, and recommended `малювати`,
+    `подорожувати`, `співати`, `музика`, `фільм`, `книга` are also used in context.
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: All activity markers are present, correctly match the plan's `activity_hints`,
-    and are logically placed after the relevant teaching sections.
+  score: 9
+  evidence: All four planned markers are present and placed after the relevant teaching
+    sections; the visible marker design matches the plan well.
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: The tone is encouraging, clear, and avoids forbidden corporate or generic
-    filler language. Dialogues feel like real classroom interactions.
+  score: 6
+  evidence: The Kyiv/tea/tandem setting helps, but lines like “It is a fantastic opportunity...”
+    and “cement the absolute foundation...” add word count without adding teaching
+    value.
 - dimension: 7
   name: Structural integrity
-  score: 10
-  evidence: All required H2 headings are present. Word count (1386) comfortably exceeds
-    the 1200 target. No markdown artifacts.
+  score: 9
+  evidence: All H2 headings are present and ordered correctly, and the pipeline word
+    count is 1495, above the 1200 target.
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: Culturally appropriate references (borscht, Kyiv language exchange) are
-    included smoothly without feeling forced.
+  score: 9
+  evidence: The module is grounded in Kyiv and everyday Ukrainian context, with no
+    Russian-centric framing.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: Dialogues use named speakers, feature natural conversational turns, and
-    clearly demonstrate the grammar patterns in action.
+  score: 9
+  evidence: Dialogue 1 is a plausible first-meeting exchange with named speakers and
+    a natural follow-up question; Dialogue 2 is simple but coherent.
 findings: []

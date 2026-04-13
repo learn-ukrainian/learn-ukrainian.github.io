@@ -1,0 +1,51 @@
+round: 7
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: Covers all 7 sections meticulously. Incorporates the exact examples from
+    the plan (принести/носити, написати/писати) and accurately structures the explanations.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: Superb. Effectively isolates the prefix/suffix alterations without linguistic
+    errors. Safely avoids calques and Surzhyk.
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Exceptional pedagogy. Brilliant decision to highlight English interference
+    (e.g. "Because the perfective future looks identical to the present tense conjugation...
+    learners often try to use it to desc
+- dimension: 4
+  name: Vocabulary coverage
+  score: 7
+  evidence: The terms "дієвідміна" and "особове закінчення" were missing from the
+    text (though the English equivalents were well-explained).
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: Exercise markers match the plan, but one extra fill-in marker was hallucinated
+    which could cause downstream YAML pipeline failures.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Warm, natural teacher tone without resorting to corporate congratulations.
+    ("The analytic form is the ultimate safe harbor", "To truly understand the soul
+    of the Ukrainian verb...").
+- dimension: 7
+  name: Structural integrity
+  score: 1
+  evidence: '**CRITICAL FAILURE:** The writer leaked its internal reasoning / scratchpad
+    directly into the markdown file. A massive ~760 word block of reasoning text and
+    duplicate paragraphs is visible directly in'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Accurately characterizes the synthetic form's prevalence in poetry (Sosyura)
+    and the analytic form's prevalence in Western dialects. High-quality contextualization.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The student planning committee dialogue perfectly contrasting the simple
+    and analytic forms ("Ми будемо збирати кошти..." vs "завтра ми оголосимо дату...").
+findings: []

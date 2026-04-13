@@ -2,49 +2,51 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 10
-  evidence: All sections, vocabulary, and grammar concepts from the plan are covered
-    in detail, including reported speech using "що" and "чи", and preview of "якби".
+  score: 8
+  evidence: 'All major outline points are present, but the planned references are
+    not integrated: a direct search of the provided module text returns 0 occurrences
+    of `Заболотний`.'
 - dimension: 2
   name: Linguistic accuracy
-  score: 7
-  evidence: Found a critical case ending error ("поставити кома"), a Russianism for
-    location ("знаходишся"), and calqued imperative verbs ("давайте").
+  score: 4
+  evidence: Part 1 contains `реченних`, states `Кома ставиться завжди, коли є сполучник`,
+    and first calls `який` a conjunction before later calling it `сполучне слово`.
 - dimension: 3
   name: Pedagogical quality
-  score: 9
-  evidence: The explanations of "тому що vs щоб" and "щоб + past tense" are excellent.
-    However, the introduction of the term "блок" instead of standard "частина" or
-    "речення" ("головний і підрядний блок") was awk
+  score: 5
+  evidence: The punctuation explanation teaches a false shortcut (`...перед підрядним
+    сполучником`) instead of clause-boundary logic, so learners are being taught the
+    wrong rule.
 - dimension: 4
   name: Vocabulary coverage
   score: 10
-  evidence: All required and recommended vocabulary items (тому що, щоб, сполучник,
-    кома, etc.) are effectively introduced in context.
+  evidence: 'All required plan vocabulary appears naturally in prose: `тому що`, `бо`,
+    `хоча`, `щоб`, `який`, `якщо`, `сполучник`, `складне речення`; recommended vocabulary
+    also appears in context (`підрядних`, `г'
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: Activity markers match the plan perfectly and are placed effectively at
-    the end of each instructional block.
+  score: 9
+  evidence: The visible marker inventory matches the plan exactly and each marker
+    follows the relevant teaching section; no inline exercise content is visible here
+    to audit answer logic.
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: The tone is encouraging but highly professional. It lacks empty filler
-    and uses natural, clear explanations that treat the learner like an adult.
+  score: 9
+  evidence: The module keeps a classroom-teacher voice and generally stays encouraging
+    without gamified or corporate language.
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: Formatting is clean, all sections are present, and the word count (2371
-    words) easily clears the 1500 target.
+  evidence: All major sections are present and ordered cleanly; the pipeline word
+    count is 1937, so the module is safely above target.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Uses practical, real-world examples (Lviv weekend trip, office work, university),
-    which are culturally authentic and appropriate.
+  evidence: No Russian-centric framing or culturally misleading claims appear in the
+    provided text.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: Both dialogues (student-teacher and peer correction) are highly effective.
-    The peer correction dialogue naturally integrates the grammar lesson into realistic
-    conversation.
+  score: 9
+  evidence: Both dialogues use named speakers and match the planned scenarios; the
+    teacher/student exchange also covers all five target clause types.
 findings: []

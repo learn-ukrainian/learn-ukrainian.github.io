@@ -1,22 +1,24 @@
-# Section-by-Section Generation — Section 2/5
+# Section-by-Section Generation — Section 2/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 17: Мені, тобі, йому... (A2, A2.3 [Dative Case])
-**Section to write:** Особові займенники у давальному відмінку (Personal Pronouns in the Dative) (~750 words total)
-**Word target for this section:** 750 words (aim for 825 to account for undershoot)
+**Section to write:** Особові займенники у давальному відмінку (Personal Pronouns in the Dative) (~770 words total)
+**Word target for this section:** 770 words (aim for 847 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Особові займенники у давальному відмінку (Personal Pronouns in the Dative) (~750 words total)
-- P1 (~180 words): Focus on the 1st and 2nd person singular (я → мені, ти → тобі). Explain that these forms are "suppletive" (the word changes completely from the Nominative base). Emphasize the unique endings and warn against English-influenced errors like "Дай я книгу." Use examples of personal requests: "Скажи мені правду," "Тобі пасує ця сорочка."
-- P2 (~150 words): Present the 3rd person singular forms (він/воно → йому, вона → їй). Note that the masculine and neuter share the form "йому," while the feminine "їй" is distinct. Mention the spelling of "їй" (with 'ї'). Example sentences: "Я телефоную йому ввечері," "Ми даруємо їй квіти."
-- P3 (~140 words): Present the plural forms (ми → нам, ви → вам, вони → їм). Highlight the relative simplicity of these forms compared to the singulars, as they often feel more symmetrical to learners. Examples: "Вчитель пояснює нам правило," "Я дякую вам за допомогу," "Потрібно їм зателефонувати."
-- P4 (~160 words): Address the "Initial Н" rule for 3rd person pronouns. Explain that while the Dative is rarely used with prepositions in basic speech, when it is (e.g., завдяки — thanks to), the pronoun does NOT usually gain an 'н'. However, contrast this with other cases the learner knows (до нього, у неї) to prevent over-generalization. Stick to the rule: "йому/їй/їм" are the standard forms for the recipient.
-- P5 (~120 words): Practice dialogue — Planning a surprise. Two friends discussing what to tell others. "Я скажу йому секрет," "А нам ти скажеш?", "Вам я скажу пізніше, а їм — завтра." This reinforces plural and 3rd person shifts in a single conversation.
-- <!-- INJECT_ACTIVITY: fill-in-dative-pronouns --> [fill-in, Complete sentences with the correct Dative pronoun based on context (я/ти/він/ми provided in brackets), 8 items]
+## Особові займенники у давальному відмінку (Personal Pronouns in the Dative) (~770 words total)
+- P1 (~120 words): Introduce the full paradigm for 1st and 2nd person pronouns. Explain that these forms are unique and must be memorized as a set, as they use a different stem than the nominative: я → мені, ти → тобі, ми → нам, ви → вам.
+- P2 (~120 words): Introduce the 3rd person pronouns: він / воно → йому, вона → їй, вони → їм. Highlight the similarities in endings to adjectives if helpful, but focus on the core forms.
+- P3 (~130 words): Explain the specific rule for 3rd person pronouns after prepositions. Note that while they gain an initial "н-" in other oblique cases (like Genitive "до нього"), the Dative forms without prepositions remain "йому", "їй", "їм". Point out that Dative is rarely used with prepositions in basic structures anyway.
+- P4 (~120 words): Practice with common verbs of giving and communicating. Provide clear sentence examples: "Дай мені книгу", "Скажи їй правду", "Покажи нам фото", "Напиши їм листа". Emphasize the Verb + Dative Recipient + Accusative Object word order.
+- P5 (~140 words): Contrast accusative versus dative forms in pairs to build discrimination. Explicitly compare "мене" (Acc) vs. "мені" (Dat), and "тебе" (Acc) vs. "тобі" (Dat). Show why "Дай я книгу" is a severe error and must be "Дай мені книгу".
+- <!-- INJECT_ACTIVITY: match-up-pronouns --> [match-up, Match nominative pronoun to its dative form (я→мені, ти→тобі, etc.), 8 items]
+- P6 (~140 words): Further practice and examples of sentences using dative pronouns in everyday context, reinforcing the paradigm and demonstrating how frequently these short pronouns are used in natural Ukrainian speech.
+- <!-- INJECT_ACTIVITY: fill-in-dative-pronouns --> [fill-in, Complete sentences with the correct dative pronoun based on context, 8 items]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -24,7 +26,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-бо це активний суб'єкт. Слово «книгу» стоїть у знахідному відмінку, бо це прямий об'єкт моєї дії. А займенник «тобі» показує фінального отримувача у давальному відмінку. > *Today I give a new book to you. In this simple sentence, the pronoun "I" is in the nominative case because it is the active subject. The word "book" is in the accusative case because it is the direct object of my action. And the pronoun "to you" shows the final recipient in the dative case.* To start using the Dative case naturally and confidently, you need a solid starter kit of verbs that frequently trigger it. These are high-frequency transaction verbs that you already use every day. The most essential ones include **давати** (to give), **дарувати** (to gift), and **допомагати** (to help). You will also need verbs related to sharing information. These include **казати** (to say), **говорити** (to tell), and **писати** (to write). Whenever you use any of these verbs, the person receiving the physical item, hearing the message, or accepting the help must be placed in the Dative case. Я часто пишу тобі довгі електронні листи. Моя старша сестра завжди допомагає мені робити домашнє завдання. Мій друг завжди каже мені правду. Ми з радістю даруємо їй красиві квіти на свято. Вони дають йому гарячий чай. > *I often write long emails to you. My older sister always helps me do homework. My friend always tells me the truth. We joyfully gift her beautiful flowers for the holiday. They give him hot tea.* :::info **Grammatical direction** Notice a beautiful feature of Ukrainian grammar: we usually do not need extra prepositions like "to" or "for" when indicating the recipient. The Dative case ending itself acts as the built-in direction marker. You simply say «я даю тобі» instead of inserting an unnecessary preposition. This makes sentences highly efficient. ::: Let us look at a typical family scene where various gifts are being happily distributed at a birthday gathering. Notice how the Dative pronouns are used repeatedly in a natural way to indicate exactly who receives each specific item. > — **Іменинник:** Що ви мені подаруєте сьогодні на свято? *(What will you gift to me today for the holiday?)* > — **Родина:** Ми маємо дуже багато чудових подарунків! *(We have very many wonderful gifts!)* > — **Іменинник:** Чудово! Кому ми даємо ці корисні речі? *(Great! To whom do we give these useful things?)* > — **Родина:** Мені — нову цікаву книгу. *(To me — a new interesting book.)* > — **Іменинник:** А тобі — солодкий шоколад. *(And to you — sweet chocolate.)* > — **Родина:** Йому ми даємо теплий зимовий шарф. *(To him we give a warm winter scarf.)* > — **Іменинник:** Їй — дуже красиві весняні квіти. *(To her — very beautiful spring flowers.)* > — **Родина:** А нам усім — неймовірно смачний торт! *(And to all of us — an incredibly tasty cake!)* <!-- INJECT_ACTIVITY: match-up, Match Nominative pronoun to its Dative form (я→мені, ти→тобі, ми→нам, ви→вам, він→йому, вона→їй, воно→йому, вони→їм), 8 items -->
+has its own special role.* :::note **Quick tip** — Unlike the genitive or locative cases, the dative case is very often used *without* any prepositions. The case ending itself contains the meaning of the English word "to" or "for". ::: Let's look at the dative case in action with some familiar, everyday verbs. The most classic structure you will use is «давати щось комусь» (to give something to someone). Another extremely common verb is «казати» (to say or to tell). Мама дає синові яблуко. Батько каже доньці правду. Вчитель пояснює студентам нове правило. У кожному реченні є хтось, хто робить дію. Також є той, хто отримує результат. > *A mother gives her son an apple. A father tells his daughter the truth. A teacher explains a new rule to the students. In every sentence, there is someone doing the action. There is also someone who receives the result.* Imagine a lively family gathering. It is someone's birthday, and the relatives have brought a big pile of presents. The host is distributing the gifts to everyone in the room. Let's see how they use the dative pronouns: **мені** (to me), **тобі** (to you (informal)), **йому** (to him, to it), **їй** (to her), **нам** (to us), **вам** (to you (formal/plural)), and **їм** (to them). > — **Іменинник:** Так, давайте подивимося, що тут є. О, ця велика книга! Вона **мені**. *(Yes, let's see what is here. Oh, this big book! It is for me.)* > — **Мама:** А ця коробка шоколаду — **тобі**, сину. *(And this box of chocolate is for you, son.)* > — **Іменинник:** Дякую! А де дідусь? Цей теплий шарф — **йому**. *(Thank you! And where is grandpa? This warm scarf is for him.)* > — **Сестра:** А ці красиві квіти — **їй**, нашій бабусі. *(And these beautiful flowers are for her, our grandma.)* > — **Батько:** А цей великий і солодкий торт — **нам** усім! *(And this big and sweet cake is for all of us!)* > — **Іменинник:** Смачного **вам**! *(Bon appetit to you!)* In the dialogue above, notice how naturally the dative pronouns flow. The host did not need to use a preposition like "for" or "to" before the pronouns. The forms themselves instantly communicate the idea of a recipient. This is the beauty and efficiency of the Ukrainian case system. By changing the pronoun, you immediately know who is getting the book, the scarf, or the flowers. We also saw that the dative case often appears when we want to wish someone well, like saying "смачного" (enjoy your meal) to a group of people. Займенники у давальному відмінку короткі та дуже зручні. Вони допомагають нам швидко сказати, хто є головним адресатом. Завтра ми будемо детально вивчати всі ці форми. А поки що, спробуйте просто запам'ятати їхнє звучання. > *Pronouns in the dative case are short and very convenient. They help us quickly say who the main addressee is. Tomorrow we will study all these forms in detail. For now, try to just remember how they sound.*
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -631,6 +633,31 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] давальний відмінок (dative case)
+- [ ] мені (to me)
+- [ ] тобі (to you (informal))
+- [ ] йому (to him, to it)
+- [ ] їй (to her)
+- [ ] нам (to us)
+- [ ] вам (to you (formal/plural))
+- [ ] їм (to them)
+- [ ] холодно (cold (impersonal state))
+- [ ] потрібно (necessary, needed)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Особові займенники у давальному відмінку (Personal Pronouns in the Dative) (~770 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

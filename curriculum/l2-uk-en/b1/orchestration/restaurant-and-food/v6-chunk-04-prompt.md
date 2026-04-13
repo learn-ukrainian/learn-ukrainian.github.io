@@ -34,7 +34,7 @@ Grand total: ~4400 words
 <previous_context>
 [...previous sections truncated...]
 
-отримує закінчення «-ом». На десерт вам можуть запропонувати солодкі млинці з **вишнями** *(cherries)*, що також є формою орудного відмінка множини. Якщо ж ви хочете виключити якийсь інгредієнт зі своєї страви, ви завжди використовуєте прийменник **без** *(without)*, після якого іменник стоїть у родовому відмінку. Наприклад, ви можете замовити: кава без цукру, свіжий салат без цибулі, чорний чай без лимона. Це надзвичайно корисна граматична конструкція для людей з харчовою алергією або особливими дієтичними потребами. Знахідний відмінок є вашим найголовнішим інструментом при безпосередньому замовленні їжі. Він відповідає на питання «кого?» або «що?» і завжди вказує на прямий об'єкт вашої дії. Важливо розуміти семантичну різницю між знахідним і партитивним родовим відмінками. Коли ви кажете: «Дайте каву», ви використовуєте знахідний відмінок, щоб вказати на конкретну, вже визначену чашку кави. Якщо ж ви кажете: «Дайте кави», це родовий відмінок, який означає прохання налити вам деяку порцію цього напою. Для неістот чоловічого та середнього роду форма знахідного відмінка повністю збігається з формою називного відмінка. Тому, замовляючи страви чоловічого роду, ви сміливо використовуєте словникову форму: «Я **замовлю** *(will order)* борщ», «Принесіть **салат** *(salad)*», «Візьму теплий **бульйон** *(broth)*». Це правило значно спрощує процес замовлення українських страв. Вам не потрібно змінювати закінчення слів чоловічого роду, які позначають неживі предмети. Слово «вареники» у множині також повністю зберігає форму називного відмінка: «Я замовлю вареники». Цей зручний збіг форм дозволяє швидше будувати правильні речення під час спілкування з офіціантом. Для іменників жіночого роду, які закінчуються на «-а» або «-я», правило знахідного відмінка вимагає зміни закінчення. Коли такі слова стають прямим об'єктом вашого замовлення, закінчення «-а» завжди змінюється на «-у», а закінчення «-я» змінюється на «-ю». Наприклад, називний відмінок — це смачна кава, але ви кажете офіціанту: «Принесіть, будь ласка, каву». Слово сметана перетворюється на «сметану» у такому реченні: «Додайте сметану до борщу». Якщо ви хочете замовити рибний суп, ви просите принести **юшку** *(fish soup)*. Замовляючи перед основною стравою легку **закуску** *(appetizer)*, ви кажете: «Ми візьмемо цю закуску». Якщо ви хочете пити, ви замовляєте просту мінеральну **воду** *(water)*. Щоб ефективно практикувати ці форми, дуже корисно використовувати дієслово **замовляти** *(to order - imperfective)* або його доконану форму **замовити** *(to order - perfective)*. Ви можете сказати: «Я хочу замовити велику порцію вареників». Тут слово «порція» змінює закінчення «-я» на «-ю». Регулярна практика допоможе вам автоматично змінювати ці закінчення при читанні меню. У сучасних українських ресторанах ви дуже часто зустрінете слова іншомовного походження, які не змінюють своїх закінчень у жодному відмінку. Такі іменники називаються невідмінюваними. До цієї групи належать такі поширені слова, як **меню** *(menu)*, **кафе** *(cafe)*, **тирамісу** *(tiramisu)*, **суші** *(sushi)*, куряче **філе** *(fillet)*, овочеве **рагу** *(ragout)*, картопляне **пюре** *(purée)*. Як би ви не використовували ці слова у своєму реченні — у родовому, знахідному чи орудному відмінку — їхня форма завжди залишається незмінною. Наприклад, ви кажете: «Я читаю меню», «Ми сидимо в кафе», «Я замовив картопляне пюре». Більшість невідмінюваних неістот належать до середнього роду. Тому ми використовуємо разом з ними прикметники середнього роду: нове меню, затишне кафе, ніжне філе. Це дуже зручне правило, яке полегшує замовлення популярних міжнародних страв. <!-- INJECT_ACTIVITY: quiz-genitive-partitive --> <!-- INJECT_ACTIVITY: group-sort-categories -->
+a direct, actionable request to the serving staff, the Accusative case is your primary grammatical tool for establishing the direct object of your active verb. But there is a very subtle, culturally rich distinction in the Ukrainian language between absolute specificity and general partitivity when requesting drinks or side dishes. `**Дайте каву.**` — *Give me the specific cup of coffee (Accusative).* `**Дайте кави.**` — *Give me some coffee (Genitive Partitive).* Both common phrases are perfectly grammatically correct, but they carry slightly different conversational nuances and levels of specificity. For masculine inanimate nouns, you have a distinct advantage: the Accusative form is completely identical to the standard Nominative form, meaning you do not have to change the word ending at all when enthusiastically ordering items like traditional borscht or a fresh garden salad. Ця тонка різниця між знахідним і родовим відмінками дозволяє українцям говорити неймовірно точно в повсякденних ситуаціях. Коли ви кажете, що хочете купити каву, ви маєте на увазі одну конкретну порцію. Але якщо ви просто просите налити вам трохи гарячої кави з чайника, родовий відмінок звучить набагато природніше. Feminine nouns require a very clear, predictable, and consistent grammatical transformation when they actively become the direct object of your restaurant order. The standard Nominative endings change systematically and reliably in the Accusative case. When directly interacting with the friendly **офіціант** (waiter), you will typically use the verb to order followed immediately by these properly modified feminine nouns. `**Замовити юшку.**` — *To order fish soup.* `**Принести закуску.**` — *To bring an appetizer or starter (**закуска**).* The exact same grammatical logic applies seamlessly to asking for mineral water or any other feminine beverage; the modified grammatical ending perfectly reflects the direct action of your polite request. Щоб ваше замовлення завжди звучало абсолютно бездоганно, постійно пам'ятайте про цю зміну закінчень для всіх слів жіночого роду. Офіціант відразу зрозуміє вас, коли ви з посмішкою скажете, що готові замовити смачну холодну закуску або велику порцію овочевого салату. Finally, after you enjoy your meal and ask for the **рахунок** (bill or check), you might take a moment to reflect on the foreign loanwords that stubbornly refuse to participate in the Ukrainian case system. The diverse national **кухня** (cuisine) actively incorporates many of these fascinating indeclinable nouns that never change their standard endings, regardless of their specific grammatical role or position in the sentence. `**Смачне пюре.**` — *Tasty puree.* `**Нове меню.**` — *New menu.* Whether you are actively looking at the physical menu or politely asking the restaurant host to bring it to your table, the word remains perfectly static and unchanged. Grammatically, most of these inanimate foreign loanwords are automatically assigned to the neuter gender by default, so any attached descriptive adjectives must agree accordingly to ensure proper sentence structure. :::tip **Did you know?** — Even though indeclinable foreign words never change their endings across different cases, the Ukrainian adjectives attached to them still must agree in gender, which is almost always neuter for these inanimate objects. ::: <!-- INJECT_ACTIVITY: quiz-genitive-partitive --> <!-- INJECT_ACTIVITY: group-sort-categories -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -676,7 +676,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -689,18 +756,68 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (4/4).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] страва (dish/course — a prepared food item)
+- [ ] борщ (borscht — quintessential Ukrainian beet soup)
+- [ ] вареники (varenyky — filled dumplings, pl of вареник)
+- [ ] деруни (potato pancakes — pl of дерун)
+- [ ] пампушки (garlic bread rolls — served with борщ, pl of пампушка)
+- [ ] сало (cured pork fat — iconic Ukrainian product)
+- [ ] узвар (dried fruit compote — traditional Ukrainian drink)
+- [ ] меню (menu — невідмінюване noun)
+- [ ] замовлення (order — the act of ordering food)
+- [ ] офіціант (waiter — masc; fem: офіціантка)
+- [ ] рахунок (bill/check — restaurant bill)
+- [ ] гарнір (side dish — served with a main course)
+- [ ] закуска (appetizer/starter — first course before soup)
+- [ ] кухня (cuisine/kitchen — both meanings in Ukrainian)
+- [ ] порція (portion — a serving of food)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Підсумок: їжа і мова (~1100 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

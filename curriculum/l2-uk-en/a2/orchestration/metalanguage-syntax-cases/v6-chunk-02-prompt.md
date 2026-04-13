@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-тексті. Це означає, що на практиці ви вже давно використовуєте **синтаксис** *(syntax)*. Але досі ми не називали ці граматичні структури їхніми справжніми іменами. Ми говорили про них англійською мовою. Ми казали «subject», «object» або «complex sentence». Тепер настав час це назавжди змінити. Щоб іти далі, нам потрібна справжня українська мова граматики. Нам потрібно знати, що «subject» — це **підмет** *(subject)*. А «object» — це **додаток** *(object)*. Ми також почнемо уважніше дивитися на **пунктуацію** *(punctuation)*. Це дуже важливий місток у вашому навчанні. Ми переходимо від простого копіювання до глибокого та свідомого розуміння структури мови. Це допоможе вам бачити логіку в кожному новому реченні. Що саме означає цей термін у мовознавстві? Українські школярі традиційно вчать це правило у п'ятому класі. Слово «синтаксис» походить від давньогрецького слова «syntaxis». Воно означає «побудова», «порядок» або «поєднання». Отже, синтаксис — це великий розділ науки. Він ретельно вивчає **словосполучення** *(word combinations)* і **речення** *(sentences)*. Це головні будівельні блоки будь-якої нашої думки. Окремі слова у великому словнику — це просто маленькі цеглини. Вони мають власне значення, але вони не розказують історію. Але коли ми правильно поєднуємо ці цеглини, ми будуємо міцний дім. Ми спочатку будуємо прості словосполучення, наприклад, «осіння погода» або «швидко читати». А потім ми будуємо повноцінні речення. Наприклад: «Молодий студент швидко читає нову книгу». Синтаксис показує нам, як ці слова тримаються разом. Він показує, як вони утворюють повну та зрозумілу думку. Це справжня архітектура української мови. Разом із синтаксисом ми майже завжди паралельно вивчаємо пунктуацію. Слово «пунктуація» походить від старого латинського слова «punctum». У прямому перекладі це слово означає «крапка». Пунктуація — це спеціальний розділ мовознавства. Він вивчає чіткі правила вживання **розділових знаків** *(punctuation marks)* у текстах. Чому ці дві великі теми завжди йдуть разом у шкільних підручниках? Тому що вони є абсолютно нероздільними на письмі. Синтаксис створює невидимий граматичний скелет нашого речення. А пунктуація дає нам яскраві та видимі дорожні знаки. Ці графічні знаки допомагають читачеві орієнтуватися в тексті без жодної плутанини. Це **коми** *(commas)*, **крапки** *(periods)*, **тире** *(dashes)* та знаки питання. Вони чітко показують нам, де треба зробити коротку паузу. Вони показують, де закінчується одна частина думки і починається інша. Без правильних розділових знаків архітектура речення стає невидимою. Таке речення є дуже незрозумілим для вашого читача. Чому цей місток із нових граматичних термінів такий критично важливий для вас? Ви поступово закінчуєте рівень A2 і активно готуєтеся до рівня B1. Відтепер ми будемо пояснювати усі нові граматичні правила виключно українською мовою. Наприклад, нове правило в підручнику каже таку фразу: «Після цього дієслова завжди потрібен додаток у родовому відмінку». Ви повинні миттєво і точно розуміти ці слова. Ви повинні чітко знати, що таке додаток. Також ви повинні знати, що таке **родовий відмінок** *(genitive case)*. Без цього базового словника ви просто не зможете читати оригінальні граматичні довідники. Ваша особиста словникова грамотність також повністю залежить від цих стандартних назв. Ви відкриваєте справжній український словник. І ви всюди бачите там короткі скорочення про відмінки, числа та роди. Цей поточний модуль — це ваші надійні ключі від світу української граматики. Ви нарешті вчите слова, якими мова щодня описує саму себе.
+та "object" англійською мовою. Тепер ми будемо використовувати українські терміни: **підмет** (subject) та **додаток** (object). Ви дізнаєтеся, як називається **просте речення** (simple sentence) і **складне речення** (complex sentence). Ми також вивчимо два нові слова: **синтаксис** (syntax) і **пунктуація** (punctuation). > *We are changing our approach to grammar. Previously, we talked about "subject" and "object" in English. Now we will use the Ukrainian terms: subject and object. You will learn what a simple sentence and a complex sentence are called. We will also learn two new words: syntax and punctuation.* Let's start with the first term, which comes from the Greek word "syntaxis". This ancient word means "building" or "connection". In linguistics, it is the study of how individual words connect to build complex, meaningful thoughts rather than just random lists of isolated vocabulary. Синтаксис — це великий розділ мовознавства. Він вивчає **словосполучення** (word combination) і речення. Це не просто випадковий набір слів. Це справжні будівельні блоки нашої думки. Словосполучення показує граматичний зв'язок між двома словами. Речення завжди виражає закінчену та повністю зрозумілу думку. While syntax provides the invisible structural skeleton of a sentence, the second term provides the visible road signs. The word "punctuation" comes from the Latin "punctum", meaning "a point". Without it, readers would easily get lost in long sentences and misunderstand your tone. Пунктуація — це важливий розділ науки про мову. Вона вивчає правила вживання розділових знаків. Коли ви пишете текст, ви ставите крапки, коми, знаки питання або тире. Ці знаки допомагають читачу правильно розуміти вашу інтонацію та логіку. Без пунктуації синтаксичний скелет речення може бути абсолютно незрозумілим. Наприклад, одна маленька кома може повністю змінити значення фрази. :::info **Граматична гармонія** Синтаксис і пунктуація завжди працюють разом. Синтаксис будує невидиму структуру речення, а пунктуація показує цю структуру на письмі. ::: Why is this "metalanguage bridge" so vital for your progress right now? From the B1 level onwards, your learning materials will shift towards full Ukrainian immersion. Grammar rules, textbook explanations, and dictionary entries will be written entirely in Ukrainian, using native linguistic terminology. Dictionary literacy depends entirely on your ability to read and process these syntactic labels. Українські словники завжди використовують спеціальну граматичну термінологію. Наприклад, нове правило може казати: "після цього дієслова потрібен додаток у родовому відмінку". Щоб зрозуміти цю коротку інструкцію, ви повинні знати ці слова. Ви маєте знати ці два терміни: додаток і **родовий відмінок** (genitive case). Це ваша базова словникова грамотність. > *Ukrainian dictionaries always use special grammatical terminology. For example, a new rule might say: "after this verb, an object in the genitive case is needed". To understand this short instruction, you must know these words. You must know these two terms: object and genitive case. This is your basic dictionary literacy.* Цей модуль — ваш надійний ключ до української граматики. Тут ми детально систематизуємо всі ваші практичні знання. Ви вивчите українські назви для всіх граматичних структур, які ви вже вмієте самостійно будувати. Наступні рівні обов'язково вимагають цього професійного словника. Ми будемо часто аналізувати тексти разом. Ви вже повністю готові до цього важливого кроку.
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -494,7 +494,74 @@ Understanding cases is the gateway to Ukrainian syntax. It is not an isolated to
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 6: A2 finale (A2 M51-M69)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 40%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 40% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 70-90% Ukrainian.
 LANGUAGE ROLES:
@@ -513,18 +580,69 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] синтаксис (syntax — the study of sentence structure)
+- [ ] пунктуація (punctuation — rules for using punctuation marks)
+- [ ] словосполучення (word combination — two+ words linked by meaning and grammar)
+- [ ] підмет (subject — main sentence member naming who/what acts)
+- [ ] присудок (predicate — main sentence member naming the action/state)
+- [ ] додаток (object — secondary member answering indirect case questions)
+- [ ] означення (attribute — secondary member answering який? чий?)
+- [ ] обставина (adverbial — secondary member answering як? де? коли?)
+- [ ] складне речення (complex sentence — sentence with two+ grammatical cores)
+- [ ] просте речення (simple sentence — sentence with one grammatical core)
+- [ ] називний відмінок (nominative case — хто? що?)
+- [ ] родовий відмінок (genitive case — кого? чого?)
+- [ ] давальний відмінок (dative case — кому? чому?)
+- [ ] знахідний відмінок (accusative case — кого? що?)
+- [ ] орудний відмінок (instrumental case — ким? чим?)
+- [ ] місцевий відмінок (locative case — на кому? на чому?)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Словосполучення (~550 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

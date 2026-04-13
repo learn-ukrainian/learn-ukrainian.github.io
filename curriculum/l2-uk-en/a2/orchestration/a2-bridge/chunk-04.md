@@ -1,26 +1,21 @@
-## Що нас чекає на рівні А2? (Summary & Roadmap)
+## Що нас чекає на рівні А2? (~330 words)
 
-You have successfully reviewed the core grammatical structures from your previous studies. We have verified the four essential noun cases, fixed common phonological mistakes, and tuned the melody of your sentences using euphonic rules. Your linguistic foundation is now solid, and you are ready to build the A2 skyscraper.
+Welcome to the A2 level, where your Ukrainian journey shifts from making simple statements to expressing complex ideas and building true narrative ability. In our previous lessons, you established a solid core by learning how to identify the subject using the **називний** (nominative) case and the direct object using the **знахідний** (accusative) case. 
 
-Ми повторили базові правила української мови. Тепер ви добре знаєте чотири відмінки, розумієте чергування звуків і можете говорити милозвучно. Ваш фундамент готовий, і ми можемо будувати новий рівень разом.
+You also learned to describe locations using the **місцевий** (locative) case and how to politely address people with the **кличний** (vocative) case. Now, you will build on this essential framework to achieve true functional fluency. You will soon be able to tell detailed stories, clearly explain your reasoning, and participate comfortably in natural conversations.
 
-> *We have reviewed the basic rules of the Ukrainian language. Now you know the four cases well, understand the alternation of sounds, and can speak euphoniously. Your foundation is ready, and we can build a new level together.*
+The comprehensive roadmap for A2 contains several exciting grammatical milestones that will transform how you speak. First, we will complete our map of the noun **відмінок** (case) system by mastering the Genitive, Dative, and Instrumental cases. Next, you will discover the most significant milestone of Ukrainian verbs: verbal aspect, which elegantly distinguishes between ongoing processes and completed results.
 
-What exactly awaits us on this new level? The A2 roadmap introduces some of the most fascinating concepts in Slavic languages. You will explore the perfective and imperfective verbal aspects, which represent the true heart of Ukrainian verbs. We will also master specific verbs of motion, learning the critical difference between moving by foot and moving by vehicle.
+As we learn new verb conjugation patterns and dynamic verbs of motion, you will notice frequent stem changes. This often involves predictable **чергування** (alternation) to make the word flow better. You will learn how a specific **голосний** (vowel) or **приголосний** (consonant) shifts depending on its environment. 
 
-На цьому рівні ми будемо вивчати нові граматичні теми. Ви дізнаєтеся про доконаний і недоконаний вид дієслова. Ми також вивчимо дієслова руху і зрозуміємо різницю між словами «іти» та «їхати». Крім того, ми опануємо ще три нові відмінки.
-
-> *At this level, we will study new grammatical topics. You will learn about the perfective and imperfective aspect of the verb. We will also learn verbs of motion and understand the difference between the words "іти" and "їхати". In addition, we will master three new cases.*
-
-Finally, we will complete your knowledge of the noun system by introducing the Genitive, Dative, and Instrumental cases. Once you master all seven cases, you will be able to express complex ideas with absolute precision and confidence.
+We will also pay close attention to correct **наголос** (stress (accent)), because shifting the emphasis can sometimes change a word's entire meaning. While the framework of rules might initially seem challenging to remember, mastering this foundation is incredibly rewarding and unlocks true fluency.
 
 :::tip
-**Did you know?**
-The concept of verbal aspect (Perfective vs. Imperfective) might seem unfamiliar at first. However, it is the most powerful tool for expressing nuance, completion, and repetition in Ukrainian. Mastering it will completely transform how you speak.
+**Did you know?** — The concept of verbal aspect is often considered the heart of Slavic languages. Mastering the difference between a process and a result will completely change how you express time in Ukrainian!
 :::
 
-Before we move forward, let us do a quick self-check. Read the following questions and try to answer them aloud. If you can answer them confidently, you are fully prepared for the upcoming modules.
+Українська система іноді може здаватися дуже складною. Але кожне нове правило робить вашу мову більш красивою. Не бійтеся помилятися, коли ви активно говорите з людьми. Щоденна практика допомагає нам краще розуміти українську мову.
 
-Які чотири відмінки ви вже знаєте? Пам'ятайте про називний, знахідний, місцевий та кличний. Що таке чергування «о» та «і»? Це зміна голосних у закритому складі. Коли ми використовуємо прийменник «зі»? Ми використовуємо його перед збігом приголосних, наприклад, «зі мною».
+> *The Ukrainian system can sometimes seem very complex. But every new rule makes your language more beautiful. Do not be afraid to make mistakes when you actively speak with people. Daily practice helps us understand the Ukrainian language better.*
 
-> *Which four cases do you already know? Remember the nominative, accusative, locative, and vocative. What is the alternation of "о" and "і"? It is the change of vowels in a closed syllable. When do we use the preposition "зі"? We use it before a cluster of consonants, for example, "зі мною".*
+Every new ending you apply correctly brings you one step closer to thinking directly in Ukrainian. Embrace your inevitable mistakes as a vital, helpful part of the learning journey. Commit to active, joyful practice every day, and your progress will be remarkable.

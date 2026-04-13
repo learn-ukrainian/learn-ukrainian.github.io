@@ -1,78 +1,39 @@
 {
-  "total_items": 58,
-  "grounded_items": 48,
+  "total_items": 41,
+  "grounded_items": 37,
   "ungrounded": [
     {
-      "word": "велика",
+      "word": "стара",
       "exercise_type": "fill-in",
-      "context": "Ця кімната велика, а ____ — маленька.",
+      "context": "Ця книга нова, а ____ — стара.",
       "role": "context"
     },
     {
-      "word": "маленька",
+      "word": "твій",
       "exercise_type": "fill-in",
-      "context": "Ця кімната велика, а ____ — маленька.",
+      "context": "Цей рюкзак мій, а ____ — твій.",
       "role": "context"
     },
     {
-      "word": "нове",
+      "word": "де",
       "exercise_type": "fill-in",
-      "context": "____ крісло нове, а те — старе.",
+      "context": "Ось моя книга. А де ____ книга?",
       "role": "context"
     },
     {
-      "word": "старе",
-      "exercise_type": "fill-in",
-      "context": "старе",
-      "role": "answer"
-    },
-    {
-      "word": "синій",
-      "exercise_type": "fill-in",
-      "context": "синій",
-      "role": "answer"
-    },
-    {
-      "word": "дуже",
-      "exercise_type": "fill-in",
-      "context": "Та книга дуже ____.",
-      "role": "context"
-    },
-    {
-      "word": "каже",
+      "word": "правильно",
       "exercise_type": "true-false",
-      "context": "Ірина каже: «Це новий смартфон».",
+      "context": "«Цей книга» — це правильно.",
       "role": "context"
-    },
-    {
-      "word": "вдома",
-      "exercise_type": "true-false",
-      "context": "Вдома в Ірини є новий стілець.",
-      "role": "context"
-    },
-    {
-      "word": "ірини",
-      "exercise_type": "true-false",
-      "context": "Вдома в Ірини є новий стілець.",
-      "role": "context"
-    },
-    {
-      "word": "маленький",
-      "exercise_type": "unjumble",
-      "context": "маленький.",
-      "role": "answer"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 13,
-    "tested_in_exercises": 7,
+    "tested_in_exercises": 10,
     "not_tested": [
       "вона",
       "воно",
-      "він",
-      "ось",
-      "там",
-      "тут"
+      "він"
     ]
   },
   "all_grounded": false

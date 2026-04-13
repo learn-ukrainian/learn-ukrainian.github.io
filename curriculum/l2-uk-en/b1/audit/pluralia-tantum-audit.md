@@ -1,7 +1,7 @@
 # Audit Report: M20 — pluralia-tantum.md
 **Level:** B1 | **Module:** M20 | **Phase:** B1.1 | **Pedagogy:** PPP | **Target:** 4000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-04-10 21:26:05
+**Generated:** 2026-04-11 18:57:33
 
 ## Configuration
 **Type:** B1-grammar
@@ -18,68 +18,36 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | quiz | Оберіть іменник, який має лише форму множини (pluralia tantum). | 8 | 8 | ✅ |
-| 2 | group-sort | Розподіліть іменники pluralia tantum за семантичними групами. | 15 | 6 | ✅ |
-| 3 | fill-in | Вставте правильну форму родового відмінка (Кого? Чого немає?). | 8 | 8 | ✅ |
-| 4 | match-up | З'єднайте іменник із його правильними формами в родовому (немає чого?) та орудно | 8 | 8 | ✅ |
-| 5 | fill-in | Вставте правильну відмінкову форму слова з дужок. | 6 | 8 | ❌ |
-| 6 | group-sort | Розподіліть слова на три групи за їхньою здатністю змінювати граматичне число. | 12 | 6 | ✅ |
-| 7 | error-correction | Виправте граматичні помилки в узгодженні або використанні числівників. | 6 | 6 | ✅ |
-| 8 | match-up | З'єднайте українське слово pluralia tantum з його англійським перекладом. | 8 | 8 | ✅ |
-| 9 | fill-in | Вставте правильну форму прикметника. Пам'ятайте, що слова pluralia tantum завжди | 6 | 8 | ❌ |
-| 10 | error-correction | Знайдіть і виправте помилку у відмінковому закінченні. | 7 | 6 | ✅ |
-| 11 | translate | Оберіть правильний переклад речення українською мовою. | 6 | 6 | ✅ |
-| 12 | quiz | Оберіть правильний лінгвістичний термін. | 6 | 8 | ❌ |
-| 13 | unjumble | Складіть правильне речення зі слів. Зверніть особливу увагу на узгодження! | 6 | 6 | ✅ |
+| 1 | quiz |  | 8 | 8 | ✅ |
+| 2 | fill-in |  | 8 | 8 | ✅ |
+| 3 | match-up |  | 8 | 8 | ✅ |
+| 4 | group-sort |  | 12 | 6 | ✅ |
+| 5 | translate |  | 6 | 6 | ✅ |
 
 **Summary:**
-- Total activities: 13 (target: 0-4) ❌
-- Unique types: 7 (minimum: 3) ✅
-- Priority types used: 4/7 (error-correction, fill-in, match-up, quiz) ✅
-- Low density activities: 3
+- Total activities: 5 (target: 0-4) ❌
+- Unique types: 5 (minimum: 3) ✅
+- Priority types used: 3/7 (fill-in, match-up, quiz) ✅
+- Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Оберіть іменник, який має лише форму множини (pluralia tantum).' Q6 prompt length 4 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY]** match-up 'З'єднайте іменник із його правильними формами в родовому (немає чого?) та орудно' has 8 pairs (target: 12-16)
+- **[COMPLEXITY]** match-up '' has 8 pairs (target: 12-16)
   - FIX: Adjust number of pairs to 12-16.
-- **[COMPLEXITY]** fill-in 'Вставте правильну відмінкову форму слова з дужок.' has 6 items (minimum: 8)
-  - FIX: Add more items. B1 fill-in requires at least 8 items.
-- **[COMPLEXITY]** match-up 'З'єднайте українське слово pluralia tantum з його англійським перекладом.' has 8 pairs (target: 12-16)
-  - FIX: Adjust number of pairs to 12-16.
-- **[COMPLEXITY]** fill-in 'Вставте правильну форму прикметника. Пам'ятайте, що слова pluralia tantum завжди' has 6 items (minimum: 8)
-  - FIX: Add more items. B1 fill-in requires at least 8 items.
-- **[COMPLEXITY]** quiz 'Оберіть правильний лінгвістичний термін.' has 6 items (minimum: 8)
-  - FIX: Add more items. B1 quiz requires at least 8 items.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть правильне речення зі слів. Зверніть особливу увагу на узгодження!' item 1 has 4 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть правильне речення зі слів. Зверніть особливу увагу на узгодження!' item 2 has 4 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть правильне речення зі слів. Зверніть особливу увагу на узгодження!' item 3 has 5 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть правильне речення зі слів. Зверніть особливу увагу на узгодження!' item 4 has 5 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть правильне речення зі слів. Зверніть особливу увагу на узгодження!' item 5 has 5 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть правильне речення зі слів. Зверніть особливу увагу на узгодження!' item 6 has 5 words (target: 9-16)
-  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-- **[RUSSICISM_DETECTED]** Found 1 Russicism(s) in content: 'давайте подивимося' → подивімося
-  - FIX: Replace Russicisms with standard Ukrainian equivalents. These are Russian calques that have standard Ukrainian forms. See Phase B prompt 'Russianisms Pre-Output Scan' table.
-- **[SALAD_EXCESSIVE_INLINE_GLOSSES]** paragraph has 8 inline **term** (gloss) markers across 8 sentence(s) — too dense; move to vocabulary section or convert to UK paragraph + translation block
-  - FIX: Convert inline-gloss paragraphs to monolingual Ukrainian paragraphs followed by a blockquote + italic English translation block. See docs/best-practices/language-salad.md.
+- **[STATE_STANDARD_LOW_IMMERSION]** Module 20 has 34.2% immersion (target: 90.0%+)
+  - FIX: Add more Ukrainian content to reach 90%+ immersion for full immersion modules
 
 ## Recommendation
-**📝 UPDATE** (severity 60/100)
+**📝 UPDATE** (severity 45/100)
 
-- Revision recommended (severity 60/100)
-- 14 violations (severe - consider revision)
-- Activity density below minimum
+- Revision recommended (severity 45/100)
+- 2 violations (minor)
+- Immersion 51% off target (major rebalancing needed)
 
 ## Gates
-- **Words:** ✅ 4272/4000 (raw: 4360)
-- **Activities:** ✅ 13/0
-- **Density:** ❌ 3 < 6
-- **Unique_types:** ✅ 7/3 types
+- **Words:** ✅ 5482/4000 (raw: 5677)
+- **Activities:** ✅ 5/0
+- **Density:** ✅ All > 6
+- **Unique_types:** ✅ 5/3 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ❌ 0/5
 - **Audio:** ℹ️ No audio
@@ -88,7 +56,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 93.3% (target 85-100% (B1.2 Motion))
+- **Immersion:** ❌ 34.2% LOW (target 85-100% (B1.2 Motion))
 - **Richness:** ❌ 62% < 95% min (grammar) - REWRITE needed
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
@@ -101,18 +69,18 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 25 | 24 | 100% | 20% | 20.0% |
+| examples | 40 | 24 | 100% | 20% | 20.0% |
 | engagement | 0 | 5 | 0% | 15% | 0.0% |
 | dialogues | 0 | 4 | 0% | 15% | 0.0% |
-| variety | 0.97 | - | 97% | 10% | 9.7% |
-| cultural | 6 | 3 | 100% | 10% | 10.0% |
+| variety | 0.94 | - | 94% | 10% | 9.4% |
+| cultural | 5 | 3 | 100% | 10% | 10.0% |
 | realworld | 20 | 3 | 100% | 10% | 10.0% |
 | visual | 0 | 3 | 0% | 5% | 0.0% |
 | questions | 19 | 5 | 100% | 5% | 5.0% |
 | tables | 1 | 2 | 50% | 4% | 2.0% |
 | paragraph_var | 1.00 | - | 100% | 3% | 3.0% |
 | proverbs | 10 | 1 | 100% | 3% | 3.0% |
-| **TOTAL** | | | | | **62.7%** |
+| **TOTAL** | | | | | **62.4%** |
 
 ### Dryness Flags & Fixes
 - ❌ **NO_ENGAGEMENT**
@@ -153,21 +121,13 @@
     IMPORTANT: Dialogues OUTSIDE blockquotes (>) using **Speaker:** format are NOT detected.
     Place dialogues inside [!dialogue] callouts or blockquotes.
 
-## Low Density Activities
-| Activity | Type | Items | Required | Fix |
-|----------|------|-------|----------|-----|
-| Вставте правильну відмінкову форму слова з дужок. | fill-in | 6 | 8 | Add 2 more items |
-| Вставте правильну форму прикметника. Пам'ятайте, що слова pluralia tantum завжди | fill-in | 6 | 8 | Add 2 more items |
-| Оберіть правильний лінгвістичний термін. | quiz | 6 | 8 | Add 2 more items |
-
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 681 | Included in Core |
-| **Семантичні групи** | ✅ | 759 | Included in Core |
-| **Відмінювання** | ✅ | 689 | Included in Core |
-| **Чергування в pluralia tantum** | ✅ | 602 | Included in Core |
-| **Singularia tantum — протилежна група** | ✅ | 599 | Included in Core |
-| **Узгодження з pluralia tantum** | ✅ | 487 | Included in Core |
-| **Підсумок** | ✅ | 455 | Included in Core |
+| **Intro/Narrative** | ✅ | 743 | Included in Core |
+| **Семантичні групи (~700 words)** | ✅ | 1132 | Included in Core |
+| **Відмінювання (~700 words)** | ✅ | 821 | Included in Core |
+| **Чергування в pluralia tantum (~550 words)** | ✅ | 643 | Included in Core |
+| **Singularia tantum — протилежна група (~550 words)** | ✅ | 701 | Included in Core |
+| **Узгодження з pluralia tantum (~450 words)** | ✅ | 722 | Included in Core |
+| **Підсумок (~450 words)** | ✅ | 720 | Included in Core |

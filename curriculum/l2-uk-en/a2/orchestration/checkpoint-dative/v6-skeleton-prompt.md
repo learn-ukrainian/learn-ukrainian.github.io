@@ -18,7 +18,7 @@ module: a2-023
 level: A2
 sequence: 23
 slug: checkpoint-dative
-version: '1.0'
+version: '1.1'
 title: Контрольна робота — давальний відмінок
 subtitle: Перевірка засвоєння давального відмінка (М15-М19)
 focus: review
@@ -33,7 +33,7 @@ objectives:
   recall).
 dialogue_situations:
 - setting: 'Secret Santa at the office — matching gifts to people: Що подарувати Олексієві (m)? Книгу!
-    А Наталці (f)? Шоколад! Новому колезі (m) — кружку (f, mug). Шефу (m) — вино.'
+    А Наталці (f)? Шоколад! Новому колезі (m) — чашку (f, cup). Шефу (m) — вино.'
   speakers:
   - Організатор
   - Колеги

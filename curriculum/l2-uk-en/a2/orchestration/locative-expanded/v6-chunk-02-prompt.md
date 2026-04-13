@@ -3,20 +3,20 @@
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 20: Місцевий відмінок у нових контекстах (A2, A2.3 [Dative Case])
-**Section to write:** Часовий місцевий відмінок (Temporal Locative) (~600 words)
-**Word target for this section:** 600 words (aim for 660 to account for undershoot)
+**Section to write:** Часовий місцевий відмінок (Temporal Locative) (~650 words total)
+**Word target for this section:** 650 words (aim for 715 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Часовий місцевий відмінок (Temporal Locative) (~600 words)
-- P1 (~110 words): [Months of the year. Explain that all months use the "у/в + Locative" construction to answer "When?". List examples like "у січні," "у березні," and "у жовтні." Specifically highlight the -ень to -ні mutation for masculine months (січень → у січні, травень → у травні, серпень → у серпні).]
-- P2 (~120 words): [The "Week" construction. Contrast months (у) with weeks (на). Explain "на цьому тижні" (this week), "на минулому тижні" (last week), and "на наступному тижні" (next week). Emphasize that "тиждень" is a masculine noun that behaves like "на роботі"—it requires the preposition "на" for time points.]
-- P3 (~120 words): [Life periods and history. Explain how to talk about stages of life using "у": у дитинстві (in childhood), у молодості (in youth), у старості (in old age). Extend this to historical time: у минулому (in the past) and у майбутньому (in the future). Use the example: "У дитинстві я жив у селі."]
-- P4 (~100 words): [Dialogue 2: Student and Tutor. A student discusses their schedule: "На цьому тижні у мене три заняття. У вільний час я читаю про Україну — у підручнику з історії. В дитинстві я мало знав про українську культуру." Focus on the natural mix of temporal and abstract locative.]
-- P5 (~150 words): [Critical contrast: Time Point (Locative) vs. Duration (Accusative). Explain that "у січні" (Locative) answers "When?", while "увесь січень" (Accusative) answers "How long?". Provide parallel examples: "Ми зустрілися у травні" (point) vs. "Ми працювали весь травень" (duration). Warn against using "на" for months or "у" for weeks.]
-- <!-- INJECT_ACTIVITY: fill-in-temporal-locative --> [fill-in, Complete sentences with the correct locative form (months, weeks, life periods), 8 items]
+## Часовий місцевий відмінок (Temporal Locative) (~650 words total)
+- P1 (~120 words): [Dialogue between Студент and Викладач discussing schedules and interests. They use temporal locative and abstract domains: "На цьому тижні у мене три заняття... В дитинстві я мало знав... у підручнику з історії."]
+- P2 (~110 words): [Explain the rule for months using у/в + locative. Provide examples: у січні, у лютому, у березні. Specifically note masculine months ending in -ень dropping the vowel: січень → у січні.]
+- P3 (~110 words): [Explain temporal expressions using the word 'місяць' combined with adjectives: у минулому місяці (last month), у наступному місяці (next month). Show how the adjective agrees in the locative case.]
+- P4 (~110 words): [Explain the rule for weeks, highlighting the use of 'на' instead of 'у/в'. Provide examples: на цьому тижні, на минулому тижні, на наступному тижні. Emphasize that 'тиждень' strictly uses 'на'.]
+- P5 (~100 words): [Introduce locative usage for major life periods. Provide examples: у дитинстві (in childhood), у молодості (in youth), у старості (in old age), у минулому (in the past), у майбутньому (in the future).]
+- P6 (~100 words): [Contrast temporal locative with accusative case used for duration. Compare 'у понеділок' (on Monday, acc.) with 'у минулому місяці' (last month, loc.). Introduce the question test: "Коли?" triggers temporal locative, while "Як довго?" triggers accusative.]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-When we talk about a profession, a broad field of activity, or an academic discipline, we almost always use the prepositions **у** or **в** together with the Locative case. This grammatical pattern creates the meaning of being "in the domain" or "in the field" of something. These are not physical places you can walk into through a door, but rather professional or abstract spheres where people spend their time and energy. Мій старший брат уже десять років успішно працює в економіці. Його дружина ніколи не цікавилася фінансами, бо вона завжди була у мистецтві. Наша мама часто каже, що у сучасній науці працювати дуже важко, але надзвичайно цікаво. Мій новий знайомий хоче зробити велику кар'єру у політиці. > *My older brother has been successfully working in economics for ten years already. His wife was never interested in finance, because she was always in art. Our mom often says that working in modern science is very difficult, but extremely interesting. My new acquaintance wants to make a big career in politics.* These abstract nouns follow the exact same ending rules as the concrete nouns you already know in the Locative case. You simply need to apply the familiar patterns to new vocabulary. Remember that feminine nouns ending in **-ка** will still have the mandatory consonant mutation where the letter **к** changes to **ц**. Neuter nouns ending in **-я** consistently keep the **-і** ending. Слово «політика» змінюється абсолютно так само, як і слово «аптека». Тому ми завжди кажемо «у політиці», а також «в економіці» та «у науці». Слова середнього роду «життя» та «навчання» мають стандартне закінчення «-і», тому ми отримуємо такі фрази, як «у житті» та «у навчанні». > *The word "politics" changes absolutely the same way as the word "pharmacy". That is why we always say "in politics", and also "in economics" and "in science". Neuter words "life" and "studies" have the standard "-i" ending, so we get phrases like "in life" and "in studies".* While most abstract domains use **у** or **в**, the word for work is a very important and frequent exception to this pattern. We never say that we are physically "in" work. Instead, we conceptualize work as an ongoing event or an active process rather than an enclosed container or a broad field. :::info **Grammar box** Always use the preposition **на** with the word **робота**. You must say **на роботі** (at work), never «у роботі». However, you can still use **в/у** for the physical location of your job, like **в офісі** (at the office) or the general field, like **у бізнесі** (in business). ::: Моя сестра цілий день була на роботі і дуже втомилася. Вони випадково познайомилися на новій роботі минулого року. Мій офіс знаходиться в центрі міста, але саме зараз я не на роботі. > *My sister was at work all day and got very tired. They accidentally met at a new job last year. My office is located in the center of the city, but right now I am not at work.* <!-- INJECT_ACTIVITY: quiz-locative-function -->
+life or about a profession.* When you want to say that something happens "in the field of" or "in the domain of", you use the prepositions **у** or **в** with the noun in the locative case. This pattern is essential for daily and professional conversations, such as during a **зустріч** (meeting, encounter) with colleagues or on the **телефон** (phone, telephone). You will use this constantly to describe careers and interests. Моя сестра працює в медицині, а мій брат будує кар'єру в політиці. Багато людей успішно працюють у мистецтві або в науці. У моєму житті зараз відбувається багато приємних змін. > *My sister works in medicine, and my brother is building a career in politics. Many people work successfully in art or in science. In my life, many pleasant changes are happening right now.* While most abstract domains use the prepositions **у** or **в**, there are fixed expressions that require **на**. The most common exception is the word for work. You must always use **на** with it, just as you do for public events or a **подорож** (journey, trip). It is helpful to memorize this phrase as a single block. :::info **Grammar box** — The word **робота** (work) always takes the preposition **на** in the locative case: **на роботі** (at work). Never say *у роботі* when referring to your workplace. ::: Сьогодні я весь день на роботі, тому не можу відповісти. Мій чоловік також зараз на роботі. Але в економіці ми бачимо складну ситуацію. > *Today I am at work all day, so I cannot answer. My husband is also at work right now. But in the economy, we see a difficult situation.* When forming the locative case for feminine nouns ending in **-а** or **-я**, remember the mandatory consonant alternations. If the noun stem ends in **-к**, it changes to **-ц** before the **-і** ending. For example, **наука** (science) becomes **у науці**. Expressing a **думка** (thought, opinion) or discussing a **проблема** (problem) often requires you to apply this spelling rule. Кожна нова ідея в науці має велике значення для нас. Зараз вона активно працює в політиці. Ця ситуація існує в сучасній культурі. > *Every new idea in science has great meaning for us. Right now she works actively in politics. This situation exists in modern culture.* Notice how the case endings shift the meaning from a simple physical location to a broader abstract sphere. It shows that you are deeply involved in a subject over a **місяць** (month) or even a **тиждень** (week). The **минулий** (past, previous) context is also frequently expressed with locative phrases. У минулому році він працював у бізнесі, а тепер він у політиці. У сучасному мистецтві є багато цікавих напрямків. Ми часто обговорюємо це в нашому суспільстві. > *In the previous year he worked in business, and now he is in politics. In modern art, there are many interesting directions. We often discuss this in our society.* <!-- INJECT_ACTIVITY: quiz, Identify the function of locative in each sentence (physical location, abstract domain, temporal, or means) -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -648,6 +648,31 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] місцевий (locative (case))
+- [ ] абстрактний (abstract)
+- [ ] минулий (past, previous)
+- [ ] місяць (month)
+- [ ] тиждень (week)
+- [ ] телефон (phone, telephone)
+- [ ] подорож (journey, trip)
+- [ ] зустріч (meeting, encounter)
+- [ ] думка (thought, opinion)
+- [ ] проблема (problem)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Часовий місцевий відмінок (Temporal Locative) (~650 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

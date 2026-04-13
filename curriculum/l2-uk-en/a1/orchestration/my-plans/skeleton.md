@@ -1,27 +1,22 @@
-## Dialogues (~350 words total)
-- P1 (~60 words): Intro to the communicative setting. Explain that as we reach the end of the A1.8 phase, planning for the future (weekend, week, and graduation) becomes the primary social goal. Set up the context of a "Group Chat" where friends organize their leisure time.
-- P2 (~140 words): Dialogue 1 — Weekend Planning in a Group Chat. Speakers: Оля, Максим, Іра. Focus on future intentions: "У суботу я буду прибирати квартиру", "А я буду бігати в парку". Introduction of invitations: "Може, підемо в кіно?", "Ходімо!", "О котрій?".
-- P3 (~150 words): Dialogue 2 — The Weekly Grind. Speakers: Марія and Петро. Focus on a busy schedule: "У понеділок я буду працювати", "У вівторок буду вчитися", "У четвер буду готувати". Reinforce the "false friend" distinction between *тиждень* (week) and *неділя* (Sunday) in context.
+## Dialogues (~330 words total)
+- P1 (~165 words): Dialogue 1 — Making plans. Present a conversation about the weekend using future tense and time expressions. "— Що ти будеш робити у суботу? — Зранку я буду прибирати квартиру. — А вдень? — Вдень я буду ходити в магазин. А ти? — Я буду відпочивати! Може, підемо в кафе ввечері? — Добре! О котрій? — О шостій. Добре? — Чудово! До зустрічі у суботу!"
+- P2 (~165 words): Dialogue 2 — A busy week. Present a conversation outlining a full week schedule. "— У тебе є плани на тиждень? — Так, багато! — У понеділок я буду працювати допізна. — У вівторок буду вчитися. У середу — зустріч з друзями. — А у четвер? — У четвер я буду готувати на вечірку. — А в п'ятницю? — В п'ятницю — вечірка! Ти будеш? — Звичайно буду!"
 
-## Планування (Planning) (~330 words total)
-- P1 (~110 words): Grammatical breakdown of days of the week with the preposition *у/в* (temporal Accusative). Explain the non-negotiable ending change for feminine days: *у середу*, *у п'ятницю*, *у суботу*, versus masculine/neuter forms: *у понеділок*, *у вівторок*, *у четвер*, *в неділю*. Use the wiki tip to emphasize *на вихідних* for "on the weekend."
-- P2 (~110 words): Telling time for scheduling using the question "О котрій годині?". Explain the response pattern *о* + ordinal number in the Locative case: *о третій*, *о шостій*, *о дев'ятій*. Mention the phonetic variant *об* before vowels: *об одинадцятій*. Warn against English-like mappings (using *в* instead of *о*).
-- P3 (~110 words): Communicative chunks for invitations and responses. Introduce the patterns: "Ходімо в...!", "Може, підемо...?", and "Давай зустрінемося!". Provide natural responses for acceptance ("З задоволенням!", "Домовились!") and polite refusal ("На жаль, не можу", "Я зайнятий/зайнята").
-- <!-- INJECT_ACTIVITY: fill-in-days-time --> [fill-in, focus: combining days of the week, time prepositions, and future tense, 5 items]
-- <!-- INJECT_ACTIVITY: matching-invitations --> [matching, focus: pairing specific invitations with culturally natural responses, 4 pairs]
+## Планування (~330 words total)
+- P1 (~85 words): Explain how to state the day of the week for an event. Introduce the temporal pattern "У/В + Accusative". List all days in context: у понеділок, у вівторок, у середу, у четвер, у п'ятницю, у суботу, в неділю. Highlight the -у/-ю ending change for feminine days (середу, п'ятницю, суботу).
+- P2 (~85 words): Explain how to specify the exact time. Teach the pattern "О/Об + Locative ordinal number" for the hour: о третій, о шостій, о дев'ятій, об одинадцятій. Combine these with parts of the day: зранку, вдень, ввечері (e.g., "У суботу ввечері").
+- P3 (~80 words): Demonstrate the compound future tense for planning: "я буду / ти будеш" + imperfective infinitive. Provide the full structural formula: "У [day] о [time] я буду [verb]". Example: "У суботу ввечері я буду дивитися фільм".
+- P4 (~80 words): Introduce functional chunks for invitations and responses. Making an invitation: "Ходімо в кафе!", "Може, підемо в кіно?", "Ти будеш вільний/вільна у суботу?", "Давай зустрінемося о п'ятій!". Responding: "Добре!", "Чудово!", "З задоволенням!", "На жаль, не можу."
+- <!-- INJECT_ACTIVITY: fill-in-schedule-time --> [type: fill-in, focus: Combine days of the week, time, and future tense, 5 items]
+- <!-- INJECT_ACTIVITY: match-invitations --> [type: matching, focus: Match invitations to natural responses, 4 pairs]
 
-## Мій тиждень (My Week) (~320 words total)
-- P1 (~160 words): The Narrative Model: "Taras’s Busy Week". A cohesive story illustrating a full schedule. Taras describes his plans: "У понеділок я буду працювати, а потім буду вчити українську", "У середу я буду дивитися футбол", "У неділю я буду відпочивати". Demonstrate how to anchor activities to specific times and places using A1 vocabulary.
-- P2 (~160 words): Guided Writing Workshop. Instruct the learner to use the "My Week" template to create their own schedule. Provide a framework: "У [день] я буду [що робити]". Encourage adding layers of detail: "О котрій?" (at what time?), "Де?" (where?), "З ким?" (with whom?). Remind them to use "У мене є плани" instead of the calque "Я маю плани."
-- <!-- INJECT_ACTIVITY: fill-in-weekly-plan --> [fill-in, focus: choosing the correct future tense form (буду/будемо) and activity in context, 3 items]
+## Мій тиждень (~330 words total)
+- P1 (~165 words): Present a structured model monologue about a weekly plan (Taras's week). Focus on stringing sentences together chronologically. "У понеділок я буду працювати. Після роботи буду вчити українську. У вівторок я буду обідати з другом у кафе. У середу ввечері я буду дивитися футбол. У четвер я буду готувати вечерю для родини. У п'ятницю я буду відпочивати — піду в кіно. У суботу зранку буду прибирати, а вдень гуляти в парку. В неділю я буду спати довго!"
+- P2 (~165 words): Provide a guide for learners to create their own weekly plan. Show them how to use the template "У [day] я буду [activity]" and expand it with details: "о котрій?" (at what time), "де?" (where), "з ким?" (with whom). Example: "У суботу о десятій я буду гуляти в парку з другом." Prompt them to use A1 vocabulary for places (кіно, квартира, кафе) and activities (прибирати, вчити, відпочивати).
+- <!-- INJECT_ACTIVITY: fill-in-weekly-plan --> [type: fill-in, focus: Complete a scheduled plan for the week, 3 items]
 
-## Підсумок (~300 words total)
-- P1 (~100 words): Recap of the "Planning Toolkit." A concise summary of the module's grammar: the compound future construction (*бути* + infinitive) and the prepositions *у/в* for days and *о/об* for hours.
-- P2 (~100 words): Final Review of Days. List the days of the week one last time (понеділок, вівторок, середа, четвер, п'ятниця, субота, неділя) to ensure the learner can differentiate between the masculine and feminine forms and their respective endings in temporal phrases.
-- P3 (~100 words): Self-Check: A bulleted list for the learner to verify their skills:
-    * Can you say "On Wednesday at six I will be cleaning"? (У середу о шостій я буду прибирати).
-    * Can you invite a friend to a cafe? (Може, підемо в кафе?).
-    * Can you politely decline an invitation? (На жаль, я не можу).
-    * Can you plan your ideal weekend (Saturday and Sunday)?
+## Summary (~330 words total)
+- P1 (~165 words): Recap the core grammatical structure for scheduling: Day + time + буду + infinitive. Emphasize that this is the primary way to express future plans in A1. Reiterate a clear example: "У суботу о третій я буду готувати обід." Briefly review the invitation chunks ("Ходімо!", "Може, підемо?", "Давай зустрінемося!") and the acceptable responses ("Добре!", "З задоволенням!", "На жаль, не можу.").
+- P2 (~165 words): Review the days of the week to ensure retention: понеділок, вівторок, середа, четвер, п'ятниця, субота, неділя. Present a self-check task: ask the learner to mentally plan their ideal weekend using the newly learned structures. Pose the questions: "Що ти будеш робити у суботу? А в неділю? З ким ти будеш зустрічатися?".
 
-Grand total: ~1300 words
+Grand total: ~1320 words

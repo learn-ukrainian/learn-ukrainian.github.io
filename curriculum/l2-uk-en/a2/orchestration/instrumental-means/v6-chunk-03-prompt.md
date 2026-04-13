@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-плутають два відмінки. *(Students often confuse two cases.)* It is very important to understand the conceptual difference between the Locative case and the Instrumental case when talking about transport. The Locative case describes location or position. For example, «**в автобусі**» *(in the bus)* means you are physically sitting or standing inside the vehicle. The Instrumental case describes the method of your travel. «Автобусом» means the bus is the tool that moves you from place to place. Порівняйте ці два речення. *(Compare these two sentences.)* Я сиджу в автобусі і читаю книгу *(I am sitting in the bus and reading a book)*. Я їду на роботу автобусом *(I travel to work by bus)*. У першому реченні важливе місце. *(In the first sentence, the place is important.)* У другому реченні важливий метод подорожі. *(In the second sentence, the method of travel is important.)* Послухайте розмову двох колег. *(Listen to a conversation between two colleagues.)* Вони обговорюють свій ранковий маршрут. *(They are discussing their morning route.)* > — **Олена:** Привіт! Чим ти їдеш на роботу? *(Hi! How do you travel to work?)* > — **Марко:** Я їду на роботу автобусом, а потім **метро** *(subway)*. *(I travel to work by bus, and then by subway.)* > — **Олена:** А я зазвичай їду власною машиною. *(And I usually travel by my own car.)* > — **Марко:** Ти ніколи не береш **таксі** *(taxi)*? *(Do you never take a taxi?)* > — **Олена:** Ні, це занадто дорого. *(No, it is too expensive.)* Notice the words «метро» and «таксі» in the dialogue. These borrowed words are indeclinable in Ukrainian. Вони ніколи не змінюють своє закінчення. *(They never change their ending.)* However, grammatically, they still function exactly like nouns in the Instrumental case here. Є один важливий виняток із цього правила. *(There is one important exception to this rule.)* When you travel on foot, you are using your own body, not an external tool or vehicle. Because of this, Ukrainian uses a specific adverb instead of a noun in the Instrumental case. Ми говоримо «**іти пішки**» *(to go on foot)*. The word «пішки» is an adverb, so it never changes its form. Він їде потягом, а я йду пішки *(He travels by train, and I walk on foot)*. Вони їдуть трамваєм, а ми йдемо пішки *(They travel by tram, and we walk on foot)*. Як правильно сказати, що транспорт починає рух? *(How to correctly say that transport starts moving?)* Many learners use the Russianism «відправлятися» *(to depart)*. Це лексична помилка в українській мові. *(This is a lexical error in the Ukrainian language.)* Instead, you should use authentic Ukrainian verbs to describe departure. Автобус **відбуває** *(departs)* з Києва вранці. Поїзд **рушає** *(starts moving)* дуже швидко. Ми **вирушаємо** *(set off)* літаком о восьмій годині. These verbs sound natural and pair perfectly with the transport nouns in the Instrumental case. Ми вирушаємо машиною на вихідних *(We set off by car on the weekend)*. Потяг рушає, а ми махаємо руками *(The train starts moving, and we wave our hands)*. <!-- INJECT_ACTIVITY: match-up-transport -->
+:::info **Grammar box** — Use **в/у + Locative** to describe your physical location inside a vehicle (Where are you?). Use the bare **Instrumental** to describe the vehicle as a method of travel (How are you getting there?). ::: Some foreign words for transport in Ukrainian do not change their endings. Words like **метро** (subway) and **таксі** (taxi) are indeclinable. They still act as the Instrumental case in the sentence, but their form remains exactly the same. Notice how they are used in this conversation between two colleagues. > — **Олена:** Привіт! Чим ти зазвичай їдеш на роботу? *(Hi! How do you usually get to work?)* > — **Максим:** Я їду на роботу автобусом, а потім метро. А ти? *(I go to work by bus, and then by subway. And you?)* > — **Олена:** А я зазвичай їду власною машиною, або беру таксі. *(And I usually go by my own car, or take a taxi.)* > — **Максим:** Таксі — це дуже зручно, але дорого. *(A taxi is very convenient, but expensive.)* Є один важливий виняток із цього правила. Коли ми не використовуємо транспорт, ми йдемо своїми ногами. Українською мовою ми кажемо «іти пішки». Хоча це слово відповідає на питання «як?», воно є прислівником, а не іменником. Тому воно не має закінчення орудного відмінка. > *There is one important exception to this rule. When we do not use transport, we walk with our own legs. In Ukrainian, we say "to go on foot" (іти пішки). Even though this word answers the question "how?", it is an adverb, not a noun. Therefore, it does not have an instrumental case ending.* You cannot put the word for "legs" in the Instrumental case to mean walking. You must always use the special adverb. **Він їде потягом, а я йду пішки.** — *He goes by train, and I go on foot.* When talking about transport schedules, learners sometimes use the Russian-influenced word "відправлятися". This does not sound natural in Ukrainian. Instead, Ukrainian has specific, authentic verbs for when a vehicle starts its journey. Ми використовуємо гарні українські дієслова для різних ситуацій. Якщо автобус їде за розкладом, ми кажемо: «Автобус відбуває». Коли транспорт починає рухатися прямо зараз, ми говоримо: «Поїзд рушає». А коли ми говоримо про наш власний старт подорожі, ми кажемо: «Ми вирушаємо». Ви можете поєднати ці слова з транспортом: «Ми вирушаємо літаком о восьмій». > *We use beautiful Ukrainian verbs for different situations. If a bus leaves according to a schedule, we say: "The bus departs". When transport starts moving right now, we say: "The train starts moving". And when we talk about our own start of a journey, we say: "We are setting off". You can combine these words with transport: "We are setting off by airplane at eight."* :::tip **Did you know?** — The verb **рушати** literally means to start making a movement, while **вирушати** means to set off on a journey. Both are excellent, natural alternatives to Russian-influenced vocabulary. ::: <!-- INJECT_ACTIVITY: match-up, Match transport nouns to their Instrumental forms -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -54,7 +54,7 @@ objectives:
   - Learner can form Instrumental plural endings for common nouns (-ами, -ями).
 dialogue_situations:
   - setting: 'Art class — discussing tools and methods: Малюю олівцем (m, pencil).
-      Фарбую пензлем (m, brush). Різаю ножицями (pl, scissors). Їду на виставку автобусом
+      Фарбую пензлем (m, brush). Ріжу ножицями (pl, scissors). Їду на виставку автобусом
       (m, bus).'
     speakers:
       - Вчитель мистецтва
@@ -492,7 +492,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -511,18 +578,64 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] ручка (pen)
+- [ ] олівець (pencil)
+- [ ] фарба (paint)
+- [ ] лінійка (ruler)
+- [ ] ніж (knife)
+- [ ] ложка (spoon)
+- [ ] автобус (bus)
+- [ ] потяг (train)
+- [ ] літак (airplane)
+- [ ] трамвай (tram)
+- [ ] засіб (means, tool)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Орудний відмінок множини (Instrumental Plural) (~550 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

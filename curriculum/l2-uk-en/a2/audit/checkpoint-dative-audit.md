@@ -1,7 +1,7 @@
 # Audit Report: M23 — checkpoint-dative.md
 **Level:** A2 | **Module:** M23 | **Phase:** A2.3 | **Pedagogy:** Review | **Target:** 1500
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-04-11 00:49:21
+**Generated:** 2026-04-13 09:41:23
 
 ## Configuration
 **Type:** A2
@@ -18,81 +18,56 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | quiz |  | 8 | 8 | ✅ |
-| 2 | fill-in |  | 8 | 8 | ✅ |
-| 3 | match-up |  | 8 | 8 | ✅ |
-| 4 | group-sort |  | 12 | 8 | ✅ |
-| 5 | match-up |  | 6 | 8 | ❌ |
-| 6 | fill-in |  | 6 | 8 | ❌ |
-| 7 | true-false |  | 6 | 8 | ❌ |
-| 8 | translate |  | 6 | 6 | ✅ |
+| 1 | quiz | Оберіть правильний варіант у давальному відмінку (кому? чому?). | 10 | 8 | ✅ |
+| 2 | fill-in | Вставте правильне закінчення або слово. | 10 | 8 | ✅ |
+| 3 | match-up | З'єднайте речення, звертаючи увагу на дієслова, що вимагають давального відмінка | 10 | 8 | ✅ |
+| 4 | true-false | Правда чи ні? Перевірте свої знання правил давального відмінка. | 10 | 8 | ✅ |
+| 5 | group-sort | Розподіліть слова у давальному відмінку за родами (чоловічий, жіночий, середній) | 12 | 8 | ✅ |
+| 6 | translate | Оберіть правильний переклад речення. | 10 | 6 | ✅ |
+| 7 | fill-in | Вставте правильний особовий займенник у давальному відмінку. | 10 | 8 | ✅ |
+| 8 | fill-in | Доповніть текст правильними словами у давальному відмінку. | 10 | 8 | ✅ |
+| 9 | error-correction | Виправте помилки в узгодженні прикметників і займенників. | 10 | 6 | ✅ |
 
 **Summary:**
-- Total activities: 8 (target: 0-4) ❌
-- Unique types: 6 (minimum: 0) ✅
-- Priority types used: 6/15 (fill-in, group-sort, match-up, quiz, translate, true-false) ✅
-- Low density activities: 3
+- Total activities: 9 (target: 0-4) ❌
+- Unique types: 7 (minimum: 0) ✅
+- Priority types used: 7/15 (error-correction, fill-in, group-sort, match-up, quiz, translate, true-false) ✅
+- Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY]** Sentence too long for A2: 21 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Розуміння того що такі дієслова...'
-- **[COMPLEXITY]** Sentence too long for A2: 24 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Продовжуйте практикувати ці форми щоденному...'
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q3 prompt length 4 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q5 prompt length 4 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q6 prompt length 4 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY]** match-up '' has 6 pairs (target: 8-14)
-  - FIX: Adjust number of pairs to 8-14.
-- **[COMPLEXITY]** fill-in '' has 6 items (minimum: 8)
-  - FIX: Add more items. A2 fill-in requires at least 8 items.
-- **[COMPLEXITY]** true-false '' has 6 items (minimum: 8)
-  - FIX: Add more items. A2 true-false requires at least 8 items.
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: прикметник, займенник
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[INLINE_ENGLISH_IN_PROSE]** Inline English translations in B1+ prose (3 occurrences): (To dear mom), (To a dear friend), (It is cold to me) — breaks immersion target
-  - FIX: Remove inline English translations. Use context clues, Ukrainian definitions, or move translations to vocabulary section
+- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'this is...'.
+  - FIX: Vary sentence structure.
 
 ## Recommendation
-**📝 UPDATE** (severity 40/100)
+**📝 UPDATE** (severity 45/100)
 
-- Revision recommended (severity 40/100)
-- 10 violations (significant)
-- Activity density below minimum
+- Revision recommended (severity 45/100)
+- 1 violations (minor)
+- Immersion 27% off target (major rebalancing needed)
 
 ## Gates
-- **Words:** ✅ 1637/1500 (raw: 1764)
-- **Activities:** ✅ 8/0
-- **Density:** ❌ 3 < 8
-- **Unique_types:** ✅ 6/0 types
+- **Words:** ✅ 1546/1500 (raw: 1673)
+- **Activities:** ✅ 9/0
+- **Density:** ✅ All > 8
+- **Unique_types:** ✅ 7/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 3/3
+- **Engagement:** ❌ 1/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 22/1
+- **Vocab:** ✅ 16/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 60.3% (target 50-80% (A2.2))
+- **Immersion:** ❌ 22.6% LOW (target 50-80% (A2.2))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
 
-## Low Density Activities
-| Activity | Type | Items | Required | Fix |
-|----------|------|-------|----------|-----|
-|  | match-up | 6 | 8 | Add 2 more items |
-|  | fill-in | 6 | 8 | Add 2 more items |
-|  | true-false | 6 | 8 | Add 2 more items |
-
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 368 | Included in Core |
-| **Частина 2: Вибір форми (Part 2: Choosing the Correct Form)** | ✅ | 583 | Included in Core |
-| **Частина 3: Продукування (Part 3: Production)** | ➖ | 361 | Excluded Type |
-| **Огляд помилок та порівняння відмінків (Error Review and Case Comparison)** | ✅ | 206 | Included in Core |
-| **Підсумок** | ✅ | 119 | Included in Core |
+| **Intro/Narrative** | ✅ | 492 | Included in Core |
+| **Частина 2: Вибір форми (Part 2: Choosing the Correct Form)** | ✅ | 439 | Included in Core |
+| **Частина 3: Продукування (Part 3: Production)** | ➖ | 326 | Excluded Type |
+| **Огляд помилок та порівняння відмінків (Error Review and Case Comparison)** | ✅ | 147 | Included in Core |
+| **Підсумок** | ✅ | 142 | Included in Core |

@@ -304,25 +304,26 @@ You do NOT need to call tools yourself — the facts are already verified.
 <pre_verified_facts>
 ## VESUM Verification
 - Confirmed: коштувати, скільки, гривня, ціна, магазин, ринок, купувати, дорого, дешево, копійка, кілограм, літр, пляшка, пачка, знижка, супермаркет, гроші, готівка.
-- Not found: All words verified and present in VESUM.
+- Not found: None. (All 18 words were successfully verified in the VESUM morphological dictionary).
 
 ## Grammar Rules
-- **Numerals with Currency**: 1 гривня (nom. sg.), 2-4 гривні (nom. pl.), 5+ гривень (gen. pl.). This follows the standard rule for feminine soft-declension nouns after numerals. (Pravopys §82, §93).
-- **Quantities with Genitive**: Quantity words like кілограм, літр, пляшка, пачка govern the Genitive case. For mass nouns: кілограм цукру (gen. sg.), літр молока (gen. sg.). For countable items: кілограм яблук (gen. pl.). (Pravopys §101).
-- **Sincere Agreement**: "Скільки коштує" (sg.) and "Скільки коштують" (pl.) are both correct depending on whether the subject is singular or plural. (Verified in Grade 6 Avramenko textbook).
+- Відмінювання іменників із числівниками (гривня, гривні, гривень): Правопис §144 (Відмінювання числівників) — Після числівників *два, три, чотири* іменники стоять у формі називного відмінка множини (дві гри́вні), але часто зберігають наголос родовому відмінку однини. Після числівників *п'ять і більше* іменники стоять у формі родовому відмінку множини (п'ять гри́вень).
 
 ## Calque Warnings
-- **скільки коштує**: OK — Standard Ukrainian phrase for asking prices, extensively used in textbooks (Grades 3, 5, 6).
-- **готівка**: OK — Correct term for cash. Avoid the Russianism "налічка". Used in Grade 4 (Ponomarova) and Grade 8 (Zabolotnyi) textbooks.
-- **магазин**: OK — Correct term for shop. While "крамниця" is a synonymous stylistic alternative, "магазин" is ubiquitous in modern Ukrainian.
+- буханка хліба: Calque / Russianism — Correct form: "буханець хліба", "хлібина" або "паляниця".
+- у третьому ряді: Calque (Semantic error) — Correct form: "у третьому ряду" (Локативний відмінок іменника "ряд" у значенні фізичного ряду має закінчення -у. Форма "у ряді" вживається лише у значенні "у низці/у кількох").
+- м'ясний відділ: OK.
+- за все (Скільки за все?): OK.
 
 ## CEFR Check
-- **гроші**: A1 — OK
-- **магазин**: A1 — OK
-- **ринок**: A1 — OK
-- **гривня**: A1 — OK (Vital for local context)
-- **коштувати**: A1 — OK
-- **готівка**: A2/B1 — Above target (Usually introduced later, but acceptable as a functional chunk for the "Shopping" theme in A1).
+- коштувати: A1 — OK
+- ціна: A1 — OK
+- магазин: A1 — OK
+- копійка: A1 — OK
+- ринок: A2 — Above target
+- пляшка: A2 — Above target
+- знижка: A2 — Above target
+- готівка: A2 — Above target
 </pre_verified_facts>
 
 
@@ -631,12 +632,14 @@ This section is critical for building an authentic and respectful understanding 
 
 ## Section Structure
 
-Write these sections as H2 headings, in this exact order:
+Write these sections as H2 headings, in this **exact** order:
 
 - `## Діалоги (Dialogues)` (~300 words)
 - `## Скільки коштує? (How Much?)` (~300 words)
 - `## Де купити? (Where to Buy)` (~300 words)
 - `## Підсумок — Summary` (~300 words)
+
+**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim** as an `## H2` line. This includes the FINAL summary/transition section (`Підсумок: ...`, `Підсумок та перехід до M...`, etc.) — the writer's most common failure is silently dropping the closing section. Do NOT skip it. Do NOT renumber. Do NOT merge headings. The post-write quick-verify check will fail your build if any heading is missing, even if the prose itself is excellent.
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -644,16 +647,17 @@ Each section should follow the word budget specified. The total must reach 1200 
 
 ## Content Rules
 
-TARGET: 20-35% Ukrainian.
+TARGET: 20-35% Ukrainian. ⚠️ HARD GATE — the audit REJECTS modules below 20%.
 LANGUAGE ROLES:
-- THEORY & EXPLANATION: English prose — brief and clear. Show, don't tell.
+- THEORY & EXPLANATION: English prose — brief, 2-3 sentences per concept. No long expository paragraphs. Explain once, then show Ukrainian.
+- UKRAINIAN NARRATIVE PARAGRAPHS: **REQUIRED — minimum 1 per section.** A 3-6 sentence Ukrainian paragraph demonstrating the concept in use, followed IMMEDIATELY by a `> *English translation*` blockquote. This is the PRIMARY driver of hitting the immersion target. Without these paragraphs you cannot reach 20%.
 - PARADIGM TABLES: Conjugation/declension tables with all cells Ukrainian.
-- EXAMPLE LISTS: Ukrainian sentences in bulleted lists (each: Ukrainian — English gloss).
-- DIALOGUES: Mini-dialogues in blockquotes with English gloss per line.
+- EXAMPLE LISTS: Ukrainian sentences in bulleted lists (each: Ukrainian — English gloss). Minimum 5 per rule.
+- DIALOGUES: Mini-dialogues in blockquotes with English gloss per line. At least 1 dialogue per module.
 - PATTERN BOXES: Show transformations: `читати → читай → читайте`.
 - INLINE: Ukrainian words/phrases bolded in English prose.
-- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian. Full Ukrainian sentences go in tables, bulleted lists, dialogues, or pattern boxes.
-Ukrainian sentences max 10 words. Mix container types.
+- STRUCTURAL RULE: Every section MUST contain a Ukrainian narrative paragraph (3-6 sentences, translated in blockquote) PLUS supporting tables/lists/dialogues/pattern boxes. Pure-English sections are FORBIDDEN at M35+.
+Ukrainian sentences max 12 words. Mix container types.
 
 HARD GRAMMAR RULES (audit will reject violations):
 - Max 10 words per Ukrainian sentence (STRICT — count every word)
@@ -683,6 +687,25 @@ HARD GRAMMAR RULES (audit will reject violations):
 - **Zero calques**: No приймати душ→брати душ, приймати рішення→ухвалювати рішення
 - **Zero paronyms**: тактична≠тактовна, ефектний≠ефективний — use the right word, not a similar-sounding one
 - **Natural Ukrainian**: Write how a Ukrainian teacher would explain this to a student. Not robotic, not textbook-dry, not overly casual.
+
+### FORBIDDEN WORDS — never write these (#1189)
+
+The following Russian words have leaked into past builds and broken modules. They are **hard-banned** — the post-write toxic-token scanner will fail your build the moment it sees one. Use the Ukrainian alternative every time, even in dialogues, even in casual prose, even when quoting a learner's mistake (use a `<!-- VERIFY -->` placeholder instead of typing the Russian form):
+
+| Russian (FORBIDDEN) | Ukrainian (USE THIS) |
+|---|---|
+| хорошо | добре |
+| конечно | звичайно / певна річ |
+| спасибо | дякую |
+| пожалуйста | будь ласка / прошу |
+| ничего | нічого |
+| сейчас | зараз |
+| тоже | теж / також |
+| здесь | тут |
+| кот | кіт |
+| кон | кін |
+
+This list is enforced word-for-word by `scripts/build/quick_verify.py` (SEVERE_RUSSIANISMS). If you produce any of these tokens — even inside a quoted example, even inside a dialogue line spoken by a Russian-speaking character — the build halts immediately. There is no exception.
 
 **Authority hierarchy (if uncertain about a word, check in this order):**
 VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (stress) → Антоненко-Давидович (style) → Грінченко (etymology).
@@ -793,35 +816,44 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Діалоги — Dialogues (~330 words total)
-- P1 (~60 words): Context setting — contrast the atmosphere of a traditional Ukrainian market (ринок, базар) with a modern supermarket. Introduce the characters: Мама and Дочка shopping for dinner, setting a friendly, communicative tone.
-- D1 (~120 words): Dialogue 1 — At the market. Buying produce from a friendly seller. Key phrases: "Скільки коштує кілограм яблук?", "Дайте, будь ласка, два кілограми помідорів". Focus on price exchange: "Сорок гривень", "Сімдесят п'ять гривень".
-- D2 (~110 words): Dialogue 2 — At the supermarket. Navigation and comparing prices. Phrases: "Вибачте, де тут хліб?", "Молоко в холодильнику". Comparing items: "Скільки коштує цей сир? — Сто двадцять гривень. — Дорого! А є дешевший?".
-- P2 (~40 words): Brief vocabulary summary of common food items used in the dialogues: хліб (bread), молоко (milk), сир (cheese), ковбаса (sausage), and масло (butter).
-- <!-- INJECT_ACTIVITY: match-up-shops --> [match-up, Focus: Where do you buy it? Match item to shop type (ринок, м'ясний відділ, аптека), 8 items]
+## Діалоги (Dialogues) (~350 words total)
+- P1 (~60 words): Setting the scene for shopping in Ukraine — contrasting the modern `супермаркет` (supermarket) with the traditional `ринок` (market), highlighting that the market is where you buy fresh produce and use direct communication.
+- P2 (~100 words): Dialogue 1 — At the market. A conversation buying apples and tomatoes: "— Скільки коштує кілограм яблук? — Сорок гривень. — А помідори? — Тридцять п'ять гривень за кілограм. — Дайте, будь ласка, два кілограми помідорів і кілограм яблук. — Сімдесят п'ять гривень. — Ось, будь ласка."
+- P3 (~70 words): Analysis of Dialogue 1. Highlighting the polite request pattern `Дайте, будь ласка...` (Give me, please...) and how prices and quantities are stated naturally at the market.
+- P4 (~80 words): Dialogue 2 — At the supermarket. A conversation navigating the store and comparing prices: "— Вибачте, де тут хліб? — Хліб у третьому ряді. — А молоко? — Молоко в холодильнику, там. — Скільки коштує цей сир? — Сто двадцять гривень. — Дорого! А є дешевший? — Так, ось цей — вісімдесят."
+- P5 (~40 words): Analysis of Dialogue 2. Focusing on phrases for navigation (`де тут...`) and reacting to prices with adjectives (`дорого`, `дешевший`).
 
-## Скільки коштує? — How Much? (~340 words total)
-- P1 (~100 words): Explaining the verb "коштувати" (to cost). Focus on the crucial A1 distinction: "Скільки коштує...?" for singular (хліб, молоко, масло) and "Скільки коштують...?" for plural (яблука, помідори, яйця). Provide 4 clear sentence pairs.
-- P2 (~120 words): The "Гривня" paradigm for prices. Explain the 1/2-4/5+ rule as a pattern: 1 гривня (21, 31), 2-3-4 гривні (22, 33, 44), and 5-20/tens гривень (10, 25, 100). Mention "копійка" and the historical "шаг" as a decolonization note.
-- P3 (~120 words): Expressing price reactions and status. Using adverbs: "дорого" (expensive), "дешево" (cheap), "нормальна ціна" (fair price). Useful transaction phrases: "є знижка?" (is there a discount?), "за все" (total amount), and "скільки з мене?" (how much do I owe?).
-- <!-- INJECT_ACTIVITY: quiz-currency-choice --> [quiz, Focus: Choose correct: 23 (гривня / гривні / гривень), 8 items]
-- <!-- INJECT_ACTIVITY: fill-in-prices --> [fill-in, Focus: Скільки коштує/коштують [item]? — [number] гривень, 8 items]
+## Скільки коштує? (How Much?) (~350 words total)
+- P1 (~70 words): The core question: `Скільки коштує...?` Explain the singular vs. plural verb agreement. Contrast `Скільки коштує хліб?` (singular noun, singular verb) with `Скільки коштують яблука?` (plural noun, plural verb).
+- P2 (~80 words): Ukrainian currency rules. Introduce the `гривня` and explain how its ending changes depending on the number preceding it: 1 `гривня`, 2-4 `гривні`, and 5+ `гривень`.
+- P3 (~60 words): Brief cultural context on `копійка` (kopeck) as the smaller unit (1/100th of a hryvnia). Note that physical kopecks are less common now and prices are often rounded.
+- P4 (~70 words): Numbers review applied to prices. Demonstrate the currency rules with larger numbers: 21 `гривня`, 32 `гривні`, 45 `гривень`, 100 `гривень`.
+- P5 (~70 words): Reacting to prices and asking for the total. Introduce essential conversational phrases: `Дорого!` (Expensive!), `Дешево!` (Cheap!), `Нормальна ціна.` (Fair price.), `Є знижка?` (Is there a discount?), and `За все` (For everything / Total).
+- <!-- INJECT_ACTIVITY: fill-in-prices --> [fill-in, match items with prices using proper agreement, 8 items]
+- <!-- INJECT_ACTIVITY: quiz-currency --> [quiz, choose correct form of hryvnia with numbers, 8 items]
 
-## Де купити? — Where to Buy (~330 words total)
-- P1 (~90 words): Vocabulary for shopping locations. Difference between "магазин" (general shop), "супермаркет", and "крамниця" (store). Introduce specific sections within a large store: "м'ясний відділ" (meat section) and "молочний відділ" (dairy section).
-- P2 (~120 words): Quantity words as chunks (pre-genitive introduction). Teach students to use these as fixed units: "кілограм яблук", "літр молока", "пачка масла", "пляшка води", and "буханка хліба". Explicitly state that "of" is included in the ending of the second word.
-- P3 (~120 words): Politeness and Payment at the counter. The request formula "Дайте, будь ласка...". Payment methods: "готівка" (cash) and "картка" (card). The final question: "Можна карткою?" and the seller's response: "Ось решта" (Here is the change) or "Ось ваш чек" (Here is your receipt).
-- <!-- INJECT_ACTIVITY: fill-in-quantities --> [fill-in, Focus: At the market: Дайте ___ (кілограм/літр/пляшку) ___, 6 items]
+## Де купити? (Where to Buy) (~320 words total)
+- P1 (~70 words): Shopping locations. Introduce vocabulary for where to buy things: `магазин` (general shop), `супермаркет` (supermarket), `ринок` (market), `аптека` (pharmacy), and `крамниця` (a Ukrainian synonym for store).
+- P2 (~60 words): Navigating sections inside a shop. Introduce specific departments: `м'ясний відділ` (meat section) for sausage and meat, and `молочний відділ` (dairy section) for milk, cheese, and butter.
+- <!-- INJECT_ACTIVITY: match-up-locations --> [match-up, Match item to shop type, 8 items]
+- P3 (~60 words): Expressing quantities. Explain that liquids and loose items require specific quantity words. Introduce the concept that the item following the quantity takes a special form (genitive), which will be learned as fixed chunks at this level.
+- P4 (~70 words): Essential quantity words part 1. Introduce `кілограм` (kilogram) with examples: `кілограм яблук`, `два кілограми помідорів`. Introduce `літр` (liter) with examples: `літр молока`, `два літри соку`.
+- P5 (~60 words): Essential quantity words part 2. Introduce `пачка` (pack) for `пачка масла` or `пачка чаю`. Introduce `пляшка` (bottle) for `пляшка води`. Introduce `буханка` (loaf) for `буханка хліба`.
+- <!-- INJECT_ACTIVITY: fill-in-quantities --> [fill-in, choosing кілограм/літр/пляшка, 6 items]
 
 ## Підсумок — Summary (~300 words total)
-- P1 (~100 words): Recap of the "Shopping Toolkit". A concise summary of the steps to a successful purchase: Ask (Скільки коштує?), Choose (Дайте, будь ласка), React (Дорого/Дешево), and Pay (Можна карткою?).
-- P2 (~100 words): Cultural/Authentic speech note. Explain why market sellers use diminutives like "картопелька" (little potato) or "яблучка" (little apples) — it’s not just about size, but about being welcoming and friendly. Remind students to use "Ви" with sellers.
-- P3 (~100 words): Self-check scenarios. Provide a bulleted list for the student to practice mentally:
-    - How do you ask for the price of 5 kilograms of potatoes at the market?
-    - How do you tell the seller that 200 hryvnias is too expensive?
-    - How do you politely ask for a bottle of water and a pack of tea in a shop?
+- P1 (~150 words): Recap of the shopping toolkit. Summarize the core functions: how to ask for prices and locations (`Скільки коштує?`, `Де тут [item]?`), how to request items politely (`Дайте, будь ласка, [quantity] [item]`), how to react to prices (`Дорого!`, `Дешево!`, `Добре, беру.`), and how to finalize the payment (`Скільки за все?`, `Можна карткою?`).
+- P2 (~150 words): 
+  * Q: Як запитати ціну на помідори? (How to ask the price of tomatoes?)
+  * A: Скільки коштують помідори?
+  * Q: Як попросити два кілограми яблук? (How to ask for two kilos of apples?)
+  * A: Дайте, будь ласка, два кілограми яблук.
+  * Q: Як сказати, що ціна зависока? (How to say the price is too high?)
+  * A: Це дорого!
+  * Q: Як дізнатися загальну суму до сплати? (How to ask for the total sum to pay?)
+  * A: Скільки за все?
 
-Grand total: ~1300 words
+Grand total: ~1320 words
 </skeleton>
 
 ## Output Format
@@ -829,11 +861,58 @@ Grand total: ~1300 words
 Write in Markdown. Use:
 - `## Section Title` for main sections
 - `### Subsection` for subsections within a section
-- `**bold**` for Ukrainian words being taught — EVERY bold Ukrainian word MUST have an English translation on first use, either in parentheses `**слово** (translation)` or inline `**слово** means "translation"`. No exceptions.
+- `**bold**` for Ukrainian words being taught. For **A1 and A2** levels, provide an English translation on first use (e.g. `**стіл** (table)`) because learners lack the vocabulary to infer meaning. For **B1 and above**, do NOT provide inline translations for standard vocabulary — the learner will use the module's словник (vocabulary table). You may provide ONE parenthetical English translation ONLY for highly abstract grammar/linguistic terms on first use (e.g. `**видова пара** (aspectual pair)`).
 - Tables for paradigms (conjugation, declension)
 - `:::tip` / `:::caution` / `:::note` for callout boxes
 - `<!-- INJECT_ACTIVITY: {id} -->` for exercise placement (markers only — do NOT write exercise content)
 
 Do NOT write MDX component syntax, JSON, or DSL exercise blocks (:::quiz, etc.). Plain Markdown with injection markers.
+
+---
+
+## MANDATORY FINAL CHECKLIST (#1189)
+
+Before you finish writing, verify the prose against this checklist. Failing any item will fail the build.
+
+### Section headings (verbatim)
+
+Every heading from "Section Structure" above MUST appear as an `## H2` in your output, in order, **including the closing `Підсумок:` / `Підсумок та перехід до M...` summary**. The single most common writer failure across the B1 build has been silently dropping the final summary section. Re-read your output before stopping. If the last section in the plan is missing, write it now.
+
+### Required vocabulary (every word must appear)
+
+You MUST use **every word** from the list below at least once in the prose, in a natural sentence with bold + English translation. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, прагматика, діагностика, дієвідмінювання, зворотний, двовидовий, одновидовий, неозначено-кількісний, etc.) is the most frequently dropped category — actively find homes for those words even if it means adding a sentence that defines them.
+
+- [ ] коштувати (to cost)
+- [ ] скільки (how much/many)
+- [ ] гривня (hryvnia, f)
+- [ ] ціна (price, f)
+- [ ] магазин (shop, m)
+- [ ] ринок (market, m)
+- [ ] купувати (to buy)
+- [ ] дорого (expensive — adverb)
+- [ ] дешево (cheap — adverb)
+
+### Forbidden words (never produce)
+
+Do not write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use `<!-- VERIFY -->` instead). The post-write toxic-token scanner will fail the build immediately:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+### Level-specific immersion check
+
+The level-appropriate immersion rule was already injected at the top of
+this prompt as `IMMERSION RULE`. Re-read it now BEFORE you stop writing.
+If your level's rule contains a CHECKLIST block, walk through every item.
+If it doesn't, just verify your output matches the LANGUAGE ROLES and
+TARGET stated in that block.
+
+This used to hard-code a B1+ checklist that confused A1/A2 models (where
+translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+The single source of truth is now
+`scripts/pipeline/config_tables.py:IMMERSION_RULES`.
+
+---
 
 Begin writing now. Start with the first section heading.

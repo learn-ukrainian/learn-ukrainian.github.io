@@ -264,25 +264,25 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-- Confirmed: музей, вокзал, центр, станція, площа, школа, робота, прямо, направо, наліво, автобус, метро, Київ, Львів, Україна, Канада, вибачте, ідіть, вийдіть, їдьте.
-- Not found: All words from the plan were found in VESUM.
+- Confirmed: школі, роботі, України, автобусом, метро, прямо, направо, наліво, вибачте, Канади, музей, центрі, ідіть, Хрещатик, дістатися, вийдіть, площі, дякую, їхати, Львів, вокзал, вокзальна
+- Not found: (None - all words confirmed when checked in lowercase)
 
 ## Grammar Rules
-- Euphony у/в: Правопис §23 — Use 'у' between consonants (Десь у житі), at the start of a sentence before a consonant (У лісі), or before specific clusters like 'льв' (у Львові). Use 'в' between vowels or after a vowel before a consonant (Пішла в садок).
-- Euphony і/й: Правопис §24 — Use 'і' between consonants (Він іде) or at the start of a sentence. Use 'й' between vowels (Ольга й Андрій) or between a vowel and a consonant (Вона йде).
-- Preposition з/із/зі: Правопис §25 — Use 'з' before most consonants (З лісу). Use 'зі' before clusters starting with sibilants (зі Львова, зі школи). Use 'зо' with certain numbers and 'мною'.
+- Euphony (у/в): Правопис §23 — Щоб уникнути збігу букв на позначення приголосних звуків... вживають прийменник "у" та префікс "у-" між приголосними. Прийменник "в" та префікс "в-" вживають між буквами на позначення голосних.
+- Euphony (і/й): Правопис §24 — Вживаємо "і" між приголосними та після паузи. Вживаємо "й" між голосними або між голосним і приголосним.
+- Euphony (з/із/зі): Правопис §25 — "З" уживаємо перед голосною або приголосною (крім свистячих/шиплячих). "Із" переважно перед свистячими та шиплячими (з, с, ц, ч, ш, шч). "Зі" вживаємо перед збігом приголосних із початковими з, с, ш, шч.
 
 ## Calque Warnings
-- їхати на метро: OK — While "їхати метро" (instrumental) is possible, "на метро" is widely used and acceptable for A1.
-- на право/на ліво: Calque/Error — Must be written as one word "направо" and "наліво" when used as adverbs.
-- від метро: OK — Correct use of preposition "від" with genitive for distance/origin.
+- на метро: calque — Антоненко-Давидович style guide advises "їхати чимось, а не на чомусь" (e.g. їхати автобусом). Although "метро" is indeclinable, using "метро" as instrumental (або "в метро") is preferred over the direct Russian calque "на метро".
+- дістатися від: OK — natural Ukrainian phrasing for origin of movement.
+- знаходитися: calque — instead of "де знаходиться музей?" the plan correctly uses "де тут музей?" or "музей у центрі" (Антоненко-Давидович recommends "бути, перебувати, лежати" instead of "знаходитися").
 
 ## CEFR Check
-- музей: A1 — Target level confirmed.
-- вокзал: A1 — Target level confirmed.
-- центр: A1 — Target level confirmed.
-- метро: A1 — Target level confirmed.
-- направо/наліво: A1 — Target level confirmed.
+- музей: A1 — OK
+- вокзал: A1 — OK
+- метро: A1 — OK
+- площа: A1 — OK
+- дістатися: Not found in PULS A1-C1 list — above target (may require extra context or support for A1 learners)
 </pre_verified_facts>
 
 
@@ -578,7 +578,7 @@ These exercises are models for the content writer, demonstrating the native Ukra
 
 ## Section Structure
 
-Write these sections as H2 headings, in this exact order:
+Write these sections as H2 headings, in this **exact** order:
 
 - `## Що ми знаємо? (What Do We Know?)` (~200 words)
 - `## Читання (Reading Practice)` (~250 words)
@@ -586,22 +586,25 @@ Write these sections as H2 headings, in this exact order:
 - `## Діалог (Connected Dialogue)` (~300 words)
 - `## Підсумок — Summary` (~250 words)
 
+**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim** as an `## H2` line. This includes the FINAL summary/transition section (`Підсумок: ...`, `Підсумок та перехід до M...`, etc.) — the writer's most common failure is silently dropping the closing section. Do NOT skip it. Do NOT renumber. Do NOT merge headings. The post-write quick-verify check will fail your build if any heading is missing, even if the prose itself is excellent.
+
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
 ---
 
 ## Content Rules
 
-TARGET: 20-35% Ukrainian.
+TARGET: 20-35% Ukrainian. ⚠️ HARD GATE — the audit REJECTS modules below 20%.
 LANGUAGE ROLES:
-- THEORY & EXPLANATION: English prose — brief and clear. Show, don't tell.
+- THEORY & EXPLANATION: English prose — brief, 2-3 sentences per concept. No long expository paragraphs. Explain once, then show Ukrainian.
+- UKRAINIAN NARRATIVE PARAGRAPHS: **REQUIRED — minimum 1 per section.** A 3-6 sentence Ukrainian paragraph demonstrating the concept in use, followed IMMEDIATELY by a `> *English translation*` blockquote. This is the PRIMARY driver of hitting the immersion target. Without these paragraphs you cannot reach 20%.
 - PARADIGM TABLES: Conjugation/declension tables with all cells Ukrainian.
-- EXAMPLE LISTS: Ukrainian sentences in bulleted lists (each: Ukrainian — English gloss).
-- DIALOGUES: Mini-dialogues in blockquotes with English gloss per line.
+- EXAMPLE LISTS: Ukrainian sentences in bulleted lists (each: Ukrainian — English gloss). Minimum 5 per rule.
+- DIALOGUES: Mini-dialogues in blockquotes with English gloss per line. At least 1 dialogue per module.
 - PATTERN BOXES: Show transformations: `читати → читай → читайте`.
 - INLINE: Ukrainian words/phrases bolded in English prose.
-- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian. Full Ukrainian sentences go in tables, bulleted lists, dialogues, or pattern boxes.
-Ukrainian sentences max 10 words. Mix container types.
+- STRUCTURAL RULE: Every section MUST contain a Ukrainian narrative paragraph (3-6 sentences, translated in blockquote) PLUS supporting tables/lists/dialogues/pattern boxes. Pure-English sections are FORBIDDEN at M35+.
+Ukrainian sentences max 12 words. Mix container types.
 
 HARD GRAMMAR RULES (audit will reject violations):
 - Max 10 words per Ukrainian sentence (STRICT — count every word)
@@ -631,6 +634,25 @@ HARD GRAMMAR RULES (audit will reject violations):
 - **Zero calques**: No приймати душ→брати душ, приймати рішення→ухвалювати рішення
 - **Zero paronyms**: тактична≠тактовна, ефектний≠ефективний — use the right word, not a similar-sounding one
 - **Natural Ukrainian**: Write how a Ukrainian teacher would explain this to a student. Not robotic, not textbook-dry, not overly casual.
+
+### FORBIDDEN WORDS — never write these (#1189)
+
+The following Russian words have leaked into past builds and broken modules. They are **hard-banned** — the post-write toxic-token scanner will fail your build the moment it sees one. Use the Ukrainian alternative every time, even in dialogues, even in casual prose, even when quoting a learner's mistake (use a `<!-- VERIFY -->` placeholder instead of typing the Russian form):
+
+| Russian (FORBIDDEN) | Ukrainian (USE THIS) |
+|---|---|
+| хорошо | добре |
+| конечно | звичайно / певна річ |
+| спасибо | дякую |
+| пожалуйста | будь ласка / прошу |
+| ничего | нічого |
+| сейчас | зараз |
+| тоже | теж / також |
+| здесь | тут |
+| кот | кіт |
+| кон | кін |
+
+This list is enforced word-for-word by `scripts/build/quick_verify.py` (SEVERE_RUSSIANISMS). If you produce any of these tokens — even inside a quoted example, even inside a dialogue line spoken by a Russian-speaking character — the build halts immediately. There is no exception.
 
 **Authority hierarchy (if uncertain about a word, check in this order):**
 VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (stress) → Антоненко-Давидович (style) → Грінченко (etymology).
@@ -740,30 +762,36 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Що ми знаємо? (~220 words total)
-- P1 (~100 words): [Introduction to the A1.5 "Places" checkpoint. Motivation on why being able to navigate a city is the first real "survival" skill. Mentioning the transition from single words to connected urban navigation using examples like "у центрі" and "на метро".]
-- P2 (~120 words): [A structured self-check list covering M28-M34. Questions: "Чи можу я вибрати між 'у' та 'в'?" (Euphony), "Чи знаю я, як сказати, де я?" (Locative), "Чи можу я запитати дорогу?" (Directions), "Чи можу я сказати, звідки я приїхав?" (Genitive chunks).]
-- <!-- INJECT_ACTIVITY: quiz-question-choice --> [quiz, focus: Choose the correct question: Де? Куди? Звідки?, 8 items]
+## Що ми знаємо? (What Do We Know?) (~220 words total)
+- P1 (~50 words): Introduction to the checkpoint. Congratulate the learner on reaching the end of the A1.5 Places phase. Emphasize that navigating a city requires combining several skills: stating location, direction, origin, and mode of transport.
+- P2 (~70 words): Brief overview of the spatial triad that anchors Ukrainian navigation: *Де?* (static location), *Куди?* (dynamic destination), and *Звідки?* (point of origin). Explain how mastering these three questions unlocks basic urban mobility.
+- P3 (~100 words): A bulleted self-check checklist based on M28-M34. Ask: Can you apply euphony (у/в)? Can you say where things are (*Я в парку*)? Can you say where you're going (*Я йду в магазин*)? Can you use transport (*на метро*)? Can you give directions (*направо*)? Can you say where you're from (*з України*)?
+- <!-- INJECT_ACTIVITY: quiz-question-choice --> [quiz, Choose the correct question: Де? Куди? Звідки?, 8 items]
 
-## Читання (~270 words total)
-- P1 (~120 words): [Contextual introduction to the reading text. We follow a traveler named Марк who arrives in Kyiv. Explain the logic of the narrative: arriving at the station (вокзал), looking for a hotel (готель), and navigating to a famous landmark (Золоті ворота).]
-- P2 (~150 words): [The reading text itself. Narrative prose incorporating: "Я зараз у Києві. Я з Польщі. Мій готель у центрі. Я йду пішки...". Use of "на метро", "направо", and "біля музею" to demonstrate integrated A1.5 vocabulary and grammar.]
+## Читання (Reading Practice) (~275 words total)
+- P1 (~40 words): Introduction to the reading text. Set the scene: A tourist is navigating Kyiv, asking for directions, using public transport, and figuring out where places are located.
+- P2 (~150 words): The reading text. A continuous narrative of a tourist's journey: "Привіт! Я турист з Канади..." The text must heavily feature A1.5 vocabulary and grammar: taking the metro (*на метро*), going to the center (*у центр*), finding a museum on the square (*музей на площі*), and explaining where they are from (*я зі США*).
+- P3 (~85 words): Comprehension breakdown. Briefly point out how the text seamlessly switches between answering *Звідки?* (*з Канади*), *Куди?* (*у центр*), and *Де?* (*на площі*), demonstrating the practical application of the previous modules.
 
-## Граматика (~240 words total)
-- P1 (~110 words): [Euphony synthesis. Summary of у/в, і/й, and з/із/зі. Provide clear binary examples: "Він у Львові" vs "Вона в Одесі", "брат і сестра" vs "тато й мама", "зі школи" vs "з роботи". Focus on the sound flow as a signature of Ukrainian.]
-- P2 (~130 words): [Tri-directional case comparison. Explaining the semantic difference between "Де?" (Locative: в аптеці), "Куди?" (Accusative: в аптеку), and "Звідки?" (Genitive: з аптеки). Contrast "на роботі" (location) with "на роботу" (direction) to clarify the preposition "на" usage for events/open spaces.]
-- <!-- INJECT_ACTIVITY: group-sort-cases --> [group-sort, focus: Sort phrases by case/function (Locative, Accusative, Genitive chunks), 9 items]
-- <!-- INJECT_ACTIVITY: quiz-euphony-check --> [quiz, focus: Euphony rules check: у/в, і/й, з/із/зі, 8 items]
+## Граматика (Grammar Summary) (~250 words total)
+- P1 (~60 words): Summary of the core spatial patterns. Reiterate the triad with clear examples: *Де?* requires в/на + Locative (*в школі, на роботі*). *Куди?* requires в/на + Accusative (*у школу, на роботу*). *Звідки?* requires з/із/зі + Genitive (*зі школи, з роботи*).
+- P2 (~70 words): Summary of euphony rules (M28). Remind learners that Ukrainian prioritizes a smooth flow of sounds, alternating vowels and consonants using *у/в*, *і/й*, and *з/із/зі*. Provide examples: *Вона живе у Львові* vs. *Він живе в Києві*.
+- P3 (~60 words): Summary of transport and directions. Remind that transport uses the Instrumental case (*автобусом*) or *на* + Locative (*на метро*). Give examples of basic adverbs of direction: *прямо*, *направо*, *наліво*.
+- P4 (~60 words): Synthesis. Show how these grammatical chunks combine into long, natural sentences: "Я їду з роботи на метро в центр."
+- <!-- INJECT_ACTIVITY: group-sort-case-function --> [group-sort, Sort phrases by case/function (Locative, Accusative, Genitive chunks), 9 items]
+- <!-- INJECT_ACTIVITY: quiz-euphony-rules --> [quiz, Euphony rules check: у/в, і/й, з/із/зі, 8 items]
 
-## Діалог (~320 words total)
-- P1 (~100 words): [Setting the scene for the interaction. A tourist from Canada arrives at a Kyiv metro station and asks a local for directions to a museum and then to the train station (вокзал). Emphasize the polite register using "Вибачте" and "Скажіть, будь ласка".]
-- P2 (~140 words): [Multi-turn connected dialogue. Tourist: "Вибачте, я з Канади. Де тут музей?". Local: "Музей у центрі. Ідіть на метро...". Incorporation of "направо", "наліво", "станція Хрещатик", and "у Львів".]
-- P3 (~80 words): [Functional language note on "дістатися" (to get to) vs "йти/їхати". Explain how to use "від метро" (from the metro) and "до вокзалу" (to the station) in real-world requests.]
-- <!-- INJECT_ACTIVITY: fill-in-dialogue-forms --> [fill-in, focus: Complete the connected dialogue with correct forms, 6 items]
+## Діалог (Connected Dialogue) (~320 words total)
+- P1 (~40 words): Setup for the dialogue scenario. You are in Kyiv and need help. You ask a local for directions to a museum, and then figure out how to get to the train station to travel to Lviv.
+- P2 (~120 words): The dialogue script itself. Must exactly follow the plan's outline: "— Вибачте, я з Канади. Де тут музей? — Музей у центрі..." Include the directions (*направо*), transport (*на метро*), and destinations (*у Львів*).
+- P3 (~80 words): Analysis of the first half of the dialogue. Focus on the initial exchange. Highlight how the tourist states their origin (*з Канади*), asks for a location (*Де тут музей?*), and receives a route (*на метро*, *від метро*).
+- P4 (~80 words): Analysis of the second half. Focus on the transition to a new destination. Point out the use of the Accusative for the next city (*у Львів*) and the use of adverbs to navigate from the station (*направо*).
+- <!-- INJECT_ACTIVITY: fill-in-dialogue-forms --> [fill-in, Complete the connected dialogue with correct forms, 6 items]
 
-## Підсумок (~270 words total)
-- P1 (~150 words): [A1.5 Phase achievement summary. A bulleted "Я тепер можу..." (I can now...) list: 1. Use euphony (у/в, і/й) for natural speech. 2. State my location (Де? — в готелі). 3. Indicate my direction (Куди? — у парк). 4. Use city transport (на автобусі, на метро). 5. Give and follow directions (направо, прямо). 6. State my origin (Звідки? — з України).]
-- P2 (~120 words): [Transition to A1.6. Explain that now that we can find our way to a shop or restaurant, we need the language to act inside them. Teaser for "Food and Shopping" (M36+), focusing on ordering, buying, and the Accusative case for direct objects (Я хочу каву).]
+## Підсумок — Summary (~255 words total)
+- P1 (~80 words): Summary of A1.5 achievements. Validate the learner's progress: you can now successfully navigate a Ukrainian city, ask for and understand directions, and explain your movements and origins.
+- P2 (~80 words): Recap of the technical tools acquired: euphony rules for natural pronunciation, the Locative case for static location (*Де?*), the Accusative case for dynamic direction (*Куди?*), and Genitive chunks for origin (*Звідки?*).
+- P3 (~95 words): Looking ahead to A1.6. Explain that the next phase (Food and Shopping) will build directly on these skills. The Accusative case, currently used for destinations (*Куди?*), will expand to cover direct objects (ordering a coffee, buying a ticket). Keep the momentum high.
 
 Grand total: ~1320 words
 </skeleton>
@@ -773,11 +801,50 @@ Grand total: ~1320 words
 Write in Markdown. Use:
 - `## Section Title` for main sections
 - `### Subsection` for subsections within a section
-- `**bold**` for Ukrainian words being taught — EVERY bold Ukrainian word MUST have an English translation on first use, either in parentheses `**слово** (translation)` or inline `**слово** means "translation"`. No exceptions.
+- `**bold**` for Ukrainian words being taught. For **A1 and A2** levels, provide an English translation on first use (e.g. `**стіл** (table)`) because learners lack the vocabulary to infer meaning. For **B1 and above**, do NOT provide inline translations for standard vocabulary — the learner will use the module's словник (vocabulary table). You may provide ONE parenthetical English translation ONLY for highly abstract grammar/linguistic terms on first use (e.g. `**видова пара** (aspectual pair)`).
 - Tables for paradigms (conjugation, declension)
 - `:::tip` / `:::caution` / `:::note` for callout boxes
 - `<!-- INJECT_ACTIVITY: {id} -->` for exercise placement (markers only — do NOT write exercise content)
 
 Do NOT write MDX component syntax, JSON, or DSL exercise blocks (:::quiz, etc.). Plain Markdown with injection markers.
+
+---
+
+## MANDATORY FINAL CHECKLIST (#1189)
+
+Before you finish writing, verify the prose against this checklist. Failing any item will fail the build.
+
+### Section headings (verbatim)
+
+Every heading from "Section Structure" above MUST appear as an `## H2` in your output, in order, **including the closing `Підсумок:` / `Підсумок та перехід до M...` summary**. The single most common writer failure across the B1 build has been silently dropping the final summary section. Re-read your output before stopping. If the last section in the plan is missing, write it now.
+
+### Required vocabulary (every word must appear)
+
+You MUST use **every word** from the list below at least once in the prose, in a natural sentence with bold + English translation. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, прагматика, діагностика, дієвідмінювання, зворотний, двовидовий, одновидовий, неозначено-кількісний, etc.) is the most frequently dropped category — actively find homes for those words even if it means adding a sentence that defines them.
+
+_(no required vocabulary defined for this module)_
+
+### Forbidden words (never produce)
+
+Do not write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use `<!-- VERIFY -->` instead). The post-write toxic-token scanner will fail the build immediately:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+### Level-specific immersion check
+
+The level-appropriate immersion rule was already injected at the top of
+this prompt as `IMMERSION RULE`. Re-read it now BEFORE you stop writing.
+If your level's rule contains a CHECKLIST block, walk through every item.
+If it doesn't, just verify your output matches the LANGUAGE ROLES and
+TARGET stated in that block.
+
+This used to hard-code a B1+ checklist that confused A1/A2 models (where
+translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+The single source of truth is now
+`scripts/pipeline/config_tables.py:IMMERSION_RULES`.
+
+---
 
 Begin writing now. Start with the first section heading.

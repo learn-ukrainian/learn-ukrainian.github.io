@@ -2,48 +2,51 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 10
-  evidence: The text follows the outline precisely, allocating word counts appropriately.
-    It incorporates the "movie vs The End" analogy and all required outline points
-    perfectly.
+  score: 7
+  evidence: All planned H2 sections and all 4 activity markers are present, but the
+    prose never cites the plan references (`Авраменко`, `ULP`, `Ukrainian Lessons`
+    = 0 hits in the provided content), and all recomm
 - dimension: 2
   name: Linguistic accuracy
-  score: 9
-  evidence: Excellent Ukrainian grammar and natural phrasing. Only a minor inconsistency
-    with the accusative of "лист" (using "писала листа" earlier but "писав лист" later).
+  score: 7
+  evidence: 'Grammar claim is wrong in the perfective section: `"guaranteed results
+    in the future"` and `"promise a future result"` misstate what perfective future
+    means.'
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: Extremely strong pedagogy. Uses clear question hacks («Що робити?» vs
-    «Що зробити?»), visual analogies, and contrasts process vs result effectively.
+  score: 8
+  evidence: The module has strong contrasts and many examples, but the perfective
+    section spends a substantial chunk on future forms right after saying `"For now,
+    we will focus exclusively on the past tense"`, wh
 - dimension: 4
   name: Vocabulary coverage
-  score: 9
-  evidence: Integrates all required vocabulary seamlessly into the prose (вид дієслова,
-    процес, результат, тощо).
+  score: 7
+  evidence: Required vocab is used naturally throughout, but the recommended plan
+    vocabulary is completely missing from the prose (`завершений`, `тривалий`, `одноразовий`,
+    `концепція` = 0 hits).
 - dimension: 5
   name: Exercise quality
   score: 10
-  evidence: Activity markers are placed exactly where learners need to test the newly
-    introduced concepts, and IDs match the plan hints exactly.
+  evidence: 'The marker sequence matches the plan exactly: quiz after the intro, fill-in
+    after imperfective, match-up after perfective, error-correction after pair comparison.'
 - dimension: 6
   name: Engagement & tone
-  score: 9
-  evidence: Warm and encouraging teacher persona, though it includes a "Welcome to..."
-    opener which the guidelines identify as an empty opener.
+  score: 8
+  evidence: The teacher voice is warm and concrete, but `"Українські мами часто пояснюють..."`
+    is generic framing rather than a necessary teaching move.
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: Clean markdown, logical flow, and at 2489 words, it comfortably exceeds
-    the 2000-word target.
+  evidence: All planned sections are present and ordered correctly, markers are clean,
+    and the pipeline word count is 2580, which is above the 2000 target.
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: Accurate and decolonized explanations, using natural cultural touchpoints
-    like eating borsch.
+  score: 8
+  evidence: No Russia-centric framing appears, but `"Українські мами часто пояснюють..."`
+    makes an unsupported cultural generalization.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: The football dialogue is a great contextual demonstration of aspect in
-    real-time observation.
+  score: 9
+  evidence: The opening football dialogue has named speakers, a real context, and
+    a clear aspect contrast (`він біжить` vs `він забив гол`).
 findings: []

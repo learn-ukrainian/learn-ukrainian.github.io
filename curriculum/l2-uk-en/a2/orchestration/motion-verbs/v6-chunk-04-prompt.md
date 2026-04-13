@@ -1,22 +1,23 @@
-# Section-by-Section Generation — Section 4/5
+# Section-by-Section Generation — Section 4/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 43: Іду, їду, лечу (A2, A2.6 [Aspect, Tenses, and Motion])
-**Section to write:** Рух + прийменники + відмінки (~500 words total)
+**Section to write:** Рух + прийменники + відмінки (~500 words)
 **Word target for this section:** 500 words (aim for 550 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Рух + прийменники + відмінки (~500 words total)
-- P1 (~140 words): [Expressing direction TO (Куди?). Explain the three main prepositions: до + Genitive (до школи, до друга), на + Accusative (на роботу, на пошту), and в/у + Accusative (в Україну, у місто). Include the decolonization note: strictly "в Україні", never "на Україні".]
-- P2 (~120 words): [Expressing direction FROM (Звідки?). Pair the "TO" prepositions with their "FROM" counterparts: до → від + Genitive (від друга), на → з/зі + Genitive (з роботи, зі школи), в → з + Genitive (з України).]
-- P3 (~110 words): [Movement THROUGH or ALONG. Use "через" + Accusative for crossing (через парк, через дорогу) and "по" + Locative for moving along a surface (по вулиці, по місту). Contrast "іду в парк" (destination) with "ходжу по парку" (wandering inside).]
-- P4 (~130 words): [Dialogue: Airport Chaos. A frantic exchange at the terminal involving multiple people moving in different directions. "Куди ви летите? — Ми летимо до Києва. А він куди їде? — Він їде на таксі в готель. Поїхали!"]
-- <!-- INJECT_ACTIVITY: match-up-prepositions --> [match-up, Match motion verbs with the correct preposition and case for direction (до + Gen., на + Acc., з + Gen.), 8 items]
-- <!-- INJECT_ACTIVITY: unjumble-directional-sentences --> [unjumble, Reorder words to form correct directional sentences with motion verbs and prepositions, 6 items]
+## Рух + прийменники + відмінки (~500 words)
+- P1 (~120 words): [Explain how to express Direction TO a destination. Introduce `до` + Genitive ("до школи", "до друга"), `на` + Accusative ("на роботу", "на пошту"), and `в/у` + Accusative ("в Україну", "у місто"). Explain that motion requires directional case usage.]
+- P2 (~120 words): [Explain how to express Direction FROM an origin. Introduce `з/із` + Genitive ("зі школи", "з роботи") and `від` + Genitive used for people ("від друга"). Connect the conceptual pairs: в → з, на → з, до → від.]
+- P3 (~100 words): [Explain how to express motion Through or Along a space. Introduce `через` + Accusative ("через парк") and `по` + Locative ("по вулиці").]
+- P4 (~100 words): [Practical dialogue demonstrating the prepositions and cases. "Куди ти їдеш? — Їду на роботу." "Звідки ти йдеш? — Іду з магазину." "Як ти їдеш? — Автобусом." Explain the use of the Instrumental case for the means of transport ("автобусом").]
+- P5 (~60 words): [Summary rule: Always ask yourself if the motion is "to" (Куди?), "from" (Звідки?), or "where at" (Де?) to choose the correct preposition and case combination.]
+- <!-- INJECT_ACTIVITY: match-up-prepositions-cases --> [match-up, Match motion verbs with the correct preposition and case for direction (до + Gen., на + Acc., з + Gen.), 8 items]
+- <!-- INJECT_ACTIVITY: unjumble-directional-sentences --> [unjumble, Reorder words to form correct directional sentences with motion verbs and prepositions (іду до школи, їду на роботу), 6 items]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -24,7 +25,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-**пишуть** *(they write)*. This structural rule also applies directly to perfective verbs in the simple future tense. The perfective partner **сказати** *(to say — pf.)* conjugates exactly the same way to show completed future actions. Завтра я **скажу** всю правду. *(Tomorrow I will tell the whole truth.)* > — **Марія:** Що ти зараз кажеш? *(What are you saying right now?)* > — **Іван:** Я кажу, що я пишу нову статтю. *(I am saying that I am writing a new article.)* Друга важлива модель — це коротка основа з апострофом. *(The second important model is a short stem with an apostrophe.)* Дієслово **пити** *(to drink)* має дуже коротку форму в теперішньому часі. *(The verb "пити" has a very short form in the present tense.)* Ми часто використовуємо його щодня. *(We often use it every day.)* The verbal stem drastically reduces here. Because of this reduction, we must use an apostrophe before adding the standard endings «-ю», «-єш», or «-є». The apostrophe visually and phonetically shows that the consonant and the vowel are pronounced entirely separately. Я **п'ю** *(I drink)*. Ти **п'єш** *(you drink)*. Вона **п'є** *(she drinks)*. Ми **п'ємо** *(we drink)*. Ви **п'єте** *(you drink)*. Вони **п'ють** *(they drink)*. Several other short verbs share this specific contraction pattern perfectly. For instance, the verb **бити** *(to hit/beat)* conjugates simply as я **б'ю** *(I hit)*, ти **б'єш** *(you hit)*. Інше схоже дієслово — це **лити** *(to pour)*. *(Another similar verb is "лити".)* Але тут ми маємо подвійний м'який звук «л». *(But here we have a double soft "л" sound.)* Я **ллю** *(I pour)*. Ти **ллєш** *(you pour)*. Вони **ллють** *(they pour)*. > — **Олег:** Що ти п'єш зранку? *(What do you drink in the morning?)* > — **Анна:** Зазвичай я п'ю чорну каву. *(Usually I drink black coffee.)* Третя цікава модель — це дієслова на **-отися** *(verbs ending in -отися)*. Дієслово **боротися** *(to fight/struggle)* має дві головні особливості під час відмінювання. *(The verb "боротися" has two main features during conjugation.)* First, the structural stem changes from «от» to «ор» in all present tense forms. Second, we must keep the reflexive particle securely attached to the very end of the conjugated word. We use **-ся** after consonants and **-сь** after vowels. Я **борюся** *(I struggle)*. Ти **борешся** *(you struggle)*. Він **бореться** *(he struggles)*. Ми **боремося** *(we struggle)*. Ви **боретеся** *(you struggle)*. Вони **борються** *(they struggle)*. Pay extremely close attention to the third person forms ending in «-ться». This cluster is always pronounced together as a soft, prolonged "ts:a" sound, not exactly as it is written. Ми щодня боремося за нашу свободу. *(We fight for our freedom every day.)* Вони мужньо борються зі складними проблемами. *(They bravely struggle with complex problems.)* > — **Журналіст:** За що зараз бореться ваша організація? *(What is your organization fighting for now?)* > — **Активіст:** Ми боремося за рівні права людей. *(We are fighting for equal human rights.)* <!-- INJECT_ACTIVITY: quiz, Conjugate казати, пити, and боротися — choose the correct form for the given person and number, 8 items -->
+consonant **з** changes to **ж** in every single form. Let's look at the full paradigm: **я кажу**, **ти кажеш**, **він каже**, **ми кажемо**, **ви кажете**, **вони кажуть**. Ти часто використовуєш дієслово казати у розмовах з друзями. Ця зміна літер зберігається у всіх особах. Інші слова також працюють за цією моделлю. Наприклад, дієслово «писати» має зміну літери «с» на «ш». Тому ми говоримо «я пишу» і «ти пишеш». Доконане дієслово «сказати» працює так само: «я скажу», «ти скажеш». > *You often use the verb "to say" in conversations with friends. This letter change is preserved in all persons. Other words also work according to this model. For example, the verb "to write" has a change of the letter "с" to "ш". Therefore, we say "I write" and "you write". The perfective verb "to tell" works the same way: "I will tell", "you will tell".* The second model is an irregular contraction, which you can see in the verb **пити** (to drink). For these verbs, the stem reduces to a single consonant and takes contracted endings that begin with an apostrophe or a double consonant. The forms are: **я п'ю**, **ти п'єш**, **він п'є**, **ми п'ємо**, **ви п'єте**, **вони п'ють**. Ця модель виглядає незвично, але вона дуже коротка. Українці часто вживають ці форми щодня. Слово пити є базовим для життя. Інші схожі дієслова — це «бити» та «лити». Вони також мають короткі форми: «я б'ю» та «я ллю». > *This model looks unusual, but it is very short. Ukrainians often use these forms every day. The word "to drink" is basic for life. Other similar verbs are "to hit" and "to pour". They also have short forms: "I hit" and "I pour".* Our third model involves reflexive verbs ending in **-отися**, such as **боротися** (to fight, to struggle). Here, the stem changes from **от** to **ор**. Furthermore, the reflexive particle **-ся** or **-сь** attaches directly to the conjugated endings. The full paradigm is: **я борюся**, **ти борешся**, **він бореться**, **ми боремося**, **ви боретеся**, **вони борються**. :::info **Pronunciation note** When pronouncing reflexive verbs, remember that the ending **-ться** (in the he/she/it and they forms) is pronounced like a long, soft "ts", similar to saying «цця». The ending **-шся** (in the you form) is pronounced like a long, soft "s", sounding like «сся». ::: Дієслово боротися показує сильний характер людини. Ми завжди повинні захищати свої права та свободу. Українці добре знають значення цього важливого слова. > *The verb "to struggle" shows a person's strong character. We must always protect our rights and freedom. Ukrainians know the meaning of this important word well.* Mastering these three specific irregularities is a crucial stepping stone for your progress. Once you know how to conjugate **казати**, **пити**, and **боротися**, you have the foundation to understand dozens of similar verbs that follow the exact same patterns. This will make your transition to the B1 level much smoother. <!-- INJECT_ACTIVITY: quiz, Conjugate казати, пити, and боротися — choose the correct form for the given person and number, 8 items -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -524,7 +525,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -543,18 +611,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (4/4).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] іти / ходити (to go on foot — unidirectional/multidirectional)
+- [ ] їхати / їздити (to go by vehicle — unidirectional/multidirectional)
+- [ ] летіти / літати (to fly — unidirectional/multidirectional)
+- [ ] піти (to leave on foot — pf.)
+- [ ] поїхати (to leave by vehicle — pf.)
+- [ ] казати / кажу (to say — stem change model)
+- [ ] пити / п'ю (to drink — irregular model)
+- [ ] боротися / борюся (to fight/struggle — reflexive model)
+- [ ] напрямок (direction)
+- [ ] рух (movement, motion)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Рух + прийменники + відмінки (~500 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

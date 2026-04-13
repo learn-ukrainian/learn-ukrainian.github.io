@@ -1,36 +1,32 @@
-## Пригадуємо відмінки (Reviewing Cases) (~650 words total)
-- P1 (~60 words): [Welcome to A2. Setting the scene for the "bridge" module. Motivation: before we build a skyscraper (complex Ukrainian), we must check the foundation (A1 grammar).]
-- P2 (~120 words): [Dialogue: Arrival at a Kyiv language school. Student and Teacher. Use specific phrases: "Я — новий студент (Nom)", "Я вивчаю українську мову (Acc)", "Я живу в Києві (Loc)", "Привіт, Оксано! (Voc)".]
-- P3 (~90 words): [Review of the Nominative (Називний) case. The "who/what" (хто? що?) dictionary form. Explain its role as the subject. Examples: "Урок починається", "Книга лежить".]
-- P4 (~100 words): [Review of the Accusative (Знахідний) case. Direct objects (кого? що?). Focus on feminine nouns in -у/-ю (каву, книжку) and masculine inanimate nouns staying the same (стіл, урок).]
-- P5 (~90 words): [Review of the Locative (Місцевий) case. Location (де?). Mandatory use of prepositions "у/в" or "на". Examples: "у школі", "в Ужгороді", "на заводі".]
-- P6 (~100 words): [Review of the Vocative (Кличний) case. Addressing people. Decolonization point: why it is a living marker of Ukrainian vs. Russian. Examples: "друже", "Олю", "вчителю".]
-- P7 (~90 words): [The Big Picture: Mapping all seven cases. Briefly list the three missing pieces for A2: Genitive (відсутність), Dative (адресат), and Instrumental (інструмент).]
-- <!-- INJECT_ACTIVITY: quiz-case-id --> [quiz, Case Identification Drill, 8 items]
+## Пригадуємо відмінки (~660 words)
+- P1 (~120 words): Dialogue: 'Arrival at a Kyiv language school on the first day of A2'. Characters: Новий студент, Викладач. Examples of A1 cases in action: "Я — студент" (Nominative), "Я вивчаю українську мову" (Accusative), "Я живу в Києві" (Locative), "Привіт, Оксано!" (Vocative).
+- P2 (~100 words): Welcome to A2 and an introduction to the concept of cases (відмінки). Explain how nouns change their endings (відмінювання) based on their grammatical role in the sentence, distinguishing between the direct subject and various types of objects.
+- P3 (~120 words): Deep dive into the Nominative (Називний) and Vocative (Кличний) cases. Explain the Nominative as the dictionary form answering Хто? Що? (the subject). Contrast this with the Vocative case, emphasizing it has no question and is mandatory for natural Ukrainian address (Оксанко, друже, тату). Include a decolonization note: Vocative is a living, essential feature of Ukrainian, unlike in Russian.
+- P4 (~120 words): Deep dive into the Accusative (Знахідний) and Locative (Місцевий) cases. Explain Accusative for direct objects answering Кого? Що? (e.g., Я бачу друга, читаю книгу). Explain Locative for location answering Де? На кому? На чому? (e.g., у школі, в Україні), highlighting that it *always* requires a preposition.
+- P5 (~100 words): Introduce the full case system map. List all 7 cases (Н., Р., Д., Зн., Ор., М., Кл.) and their primary functions. Mention a mnemonic phrase to remember the order: "Нашого Ромчика Дивує Зебра — Оця Маленька Красуня".
+- P6 (~100 words): Highlight the three new cases waiting in A2: Genitive (Родовий - absence/possession), Dative (Давальний - recipient), and Instrumental (Орудний - instrument/companion). Provide a brief preview of their usage, assuring learners they will master them soon.
+- <!-- INJECT_ACTIVITY: quiz-case-identification --> [quiz, Case Identification Drill, 8 items]
 
-## Магія української фонології (The Magic of Ukrainian Phonology) (~750 words total)
-- P1 (~140 words): [Vowel alternations: The "closed syllable" rule (о/і, е/і). Explain how vowels change when the syllable closes or opens during declension. Examples: стіл/стола, Київ/Києва, вечір/вечора.]
-- P2 (~120 words): [Consonant mutations (First Palatalization). Historic changes (г/ж, к/ч, х/ш) in stems. Use diminutive examples to illustrate: нога/ніжка, рука/ручка, вухо/вушко.]
-- P3 (~130 words): [Consonant mutations in cases (Second Palatalization). Specific focus on г/з, к/ц, х/с before the ending -і in the Dative/Locative. Examples: на дорозі, в руці, мусі.]
-- P4 (~120 words): [Stress patterns and Homographs. Using stress to distinguish meaning. Examples: замок (castle) vs. замок (lock). Note that stress in Ukrainian is free and mobile.]
-- P5 (~120 words): [Consonant assimilation. Explaining дз and дж as single affricate sounds (бджола, дзвінок). Briefly cover voicing assimilation: просьба pronounced as [проз'ба], вокзал as [воґзал].]
-- P6 (~120 words): [Mobile stress in noun paradigms. Show how stress shifts between stem and ending across cases (вода vs. воду, рука vs. руки). This predicts correct pronunciation in conversation.]
-- <!-- INJECT_ACTIVITY: fill-in-phonology --> [fill-in, Phonological Alternation Pairs, 8 items]
+## Магія української фонології (~770 words)
+- P1 (~100 words): Introduction to Ukrainian phonology. Emphasize that changes in word stems during declension are not random exceptions but follow historical, predictable patterns. Introduce the concept of alternations (чергування) of vowels (голосні) and consonants (приголосні).
+- P2 (~130 words): Vowel alternations: о/і, е/і. Explain the "closed syllable" rule. Provide clear examples showing how 'і' appears when a syllable ends in a consonant (closed), and changes to 'о' or 'е' when a vowel ending is added (open): стіл → стола, Київ → Києва.
+- P3 (~140 words): Consonant alternations (the first palatalization). Explain how г, к, х change to з', ц', с' before the vowel 'і' in the Dative and Locative cases of feminine nouns. Give explicit examples: нога → нозі, рука → руці, муха → мусі. Emphasize avoiding the common mistake of saying "подругі" instead of the correct "подрузі".
+- P4 (~120 words): Consonant assimilation. Explain that 'дж' and 'дз' function as single sounds (affricates), not two separate consonants (e.g., джерело, бджола). Discuss voicing assimilation before voiced consonants with examples: просьба → [проз'ба], вокзал → [воґзал].
+- P5 (~130 words): Introduction to stress (наголос). Explain its crucial role in conveying correct meaning and how it can disambiguate words (homographs). Provide examples: за́мок (castle) vs. замо́к (lock), ні́коли (no time) vs. ніко́ли (never).
+- P6 (~150 words): Mobile stress in noun paradigms. Explain how stress often shifts between the stem and the ending across different cases, which is a key feature of Ukrainian rhythm. Provide examples showing this shift: вода́ (Н.в.) / во́ду (Зн.в.), рука́ (Н.в.) / ру́ки (Р.в. однини / Н.в. множини). Explain how recognizing these patterns helps predict pronunciation.
+- <!-- INJECT_ACTIVITY: fill-in-phonological-alternations --> [fill-in, Phonological Alternation Pairs, 8 items]
 
-## Милозвучність мови: евфонія (The Melody of Language: Euphony) (~450 words total)
-- P1 (~90 words): [The Law of Euphony. Explain that Ukrainian aesthetics require a balance of vowels and consonants. It’s not just "correct," it’s "melodious" (милозвучність).]
-- P2 (~110 words): [Rules for у/в alternation. When to use "у" (between consonants) vs "в" (between vowels or after a vowel). Examples: "був у школі" vs "була в школі".]
-- P3 (~110 words): [Rules for і/й alternation. Examples of connecting words fluidly: "я і ти" vs "ти й я". Explain how this prevents the "staccato" feel of clustered sounds.]
-- P4 (~140 words): [The "Protective" particles: з/зі/із. When to use "зі" before difficult clusters like "мн" or "св". Examples: "зі мною", "із задоволенням". Practice sentences provided.]
-- <!-- INJECT_ACTIVITY: match-up-euphony --> [match-up, Euphony Choice Exercise, 8 items]
+## Милозвучність мови: евфонія (~440 words)
+- P1 (~100 words): Introduce the concept of euphony (милозвучність). Explain that the Ukrainian language actively avoids awkward consonant or vowel clusters to maintain a melodic flow. Include a decolonization note: these euphonic alternations are strict phonetic laws, not just optional stylistic choices, unlike in Russian (e.g., Ukrainian "був у школі" avoids three consonants, unlike Russian "был в школе").
+- P2 (~120 words): Formalize the rules for у/в alternation. Explain using 'у' between consonants (Він був у школі) or at the beginning of a sentence before a consonant. Explain using 'в' between vowels (Вона пішла в аптеку) or after a vowel before a consonant.
+- P3 (~120 words): Formalize the rules for і/й alternation. Apply similar logic: use 'і' between consonants (брат і сестра) or after a pause, and use 'й' between vowels (Оксана й Андрій) or after a vowel before a consonant to maintain flow.
+- P4 (~100 words): Explain the rules for the prepositions з/зі/із. Use 'з' before single consonants, 'зі' before difficult consonant clusters (especially those starting with sibilants like с, ш, з: зі мною, зі школи), and 'із' between specific consonant groups for rhythmic balance.
+- <!-- INJECT_ACTIVITY: match-up-euphony-choice --> [match-up, Euphony Choice Exercise, 8 items]
 - <!-- INJECT_ACTIVITY: error-correction-euphony --> [error-correction, Euphony Error Correction, 6 items]
 
-## Що нас чекає на рівні А2? (Summary & Roadmap) (~350 words total)
-- P1 (~100 words): [Recap of the bridge: We've verified the cases, fixed the phonology, and tuned the melody. The foundation is ready for the A2 "skyscraper".]
-- P2 (~130 words): [The A2 Roadmap. Previewing upcoming challenges: Perfective vs. Imperfective aspect (the heart of Ukrainian verbs), Motion verbs (їхати vs. іти), and the remaining three cases.]
-- P3 (~120 words): [Self-check questions: 
-  - Які чотири відмінки ви вже знаєте? (Н.в., Зн.в., М.в., Кл.в.)
-  - Що таке чергування о/і? (Зміна голосних у закритому складі)
-  - Коли ми використовуємо "зі"? (Перед збігом приголосних, напр. "зі мною")]
+## Що нас чекає на рівні А2? (~330 words)
+- P1 (~100 words): A clear roadmap of the A2 curriculum. Set the expectation that A2 transitions learners from making simple statements to expressing complex ideas, building true functional fluency and narrative ability.
+- P2 (~120 words): Detail the key grammatical milestones awaiting in A2. Highlight mastering the remaining noun cases (Genitive, Dative, Instrumental). Introduce the concept of verbal aspect (доконаний/недоконаний вид) as the most significant milestone, alongside verb conjugation patterns and verbs of motion.
+- P3 (~110 words): Final encouragement. Remind learners that while the system (система) and rules (правило) might seem complex, mastering this foundation will make their Ukrainian sound natural and beautiful. Encourage active practice and embracing mistakes as part of the learning journey.
 
 Grand total: ~2200 words

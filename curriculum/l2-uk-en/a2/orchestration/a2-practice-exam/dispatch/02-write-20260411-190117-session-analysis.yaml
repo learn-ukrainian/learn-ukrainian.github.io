@@ -1,0 +1,206 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T17-00-e82dfc39.json
+phase: write
+prompt_chars: 62905
+response_chars: 10074
+prompt_words: 8997
+response_words: 1452
+sections:
+- name: preamble
+  start: 0
+  length: 6474
+  fraction: 0.1029
+- name: plan
+  start: 6474
+  length: 7040
+  fraction: 0.1119
+- name: wiki
+  start: 12501
+  length: 25996
+  fraction: 0.4133
+- name: rules
+  start: 39510
+  length: 8850
+  fraction: 0.1407
+- name: skeleton
+  start: 48360
+  length: 4973
+  fraction: 0.0791
+- name: output_spec
+  start: 53333
+  length: 9572
+  fraction: 0.1522
+large_sections:
+- wiki
+directives_total: 50
+directives_covered: 13
+directives_missed:
+- kind: checklist
+  text: 'Text A: a short informational text (advertisement, schedule, or announcement
+    — 80-100 words) with 3-4 comprehension ques'
+  covered: false
+  coverage_note: 2/9 keywords (22%)
+- kind: checklist
+  text: 'Text B: a personal message or email (100-120 words) where a Ukrainian friend
+    describes their plans, asks questions, shar'
+  covered: false
+  coverage_note: 0/14 keywords (0%)
+- kind: checklist
+  text: 'Text C: a short narrative or blog post (120-150 words) about a Ukrainian
+    tradition or travel experience. 4-5 questions t'
+  covered: false
+  coverage_note: 0/12 keywords (0%)
+- kind: checklist
+  text: 'Section A: Case selection (6 items) — choose the correct case form in sentences
+    with various triggers (verbs, prepositio'
+  covered: false
+  coverage_note: 1/12 keywords (8%)
+- kind: checklist
+  text: 'Section B: Verb form (6 items) — select the correct tense, aspect, or mood
+    for the context.'
+  covered: false
+  coverage_note: 2/10 keywords (20%)
+- kind: checklist
+  text: 'Section C: Mixed grammar (6 items) — comparatives, pronouns (свій, себе,
+    indefinite/negative), conjunctions, numeral agr'
+  covered: false
+  coverage_note: 4/13 keywords (31%)
+- kind: checklist
+  text: 'Task A: Dialogue completion — fill in 6 blanks in a natural conversation
+    (at a cafe, on the phone, planning a trip).'
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: checklist
+  text: 'Task B: Guided writing — write a short text (80-100 words) on one of three
+    topics: (1) Describe your favorite season and'
+  covered: false
+  coverage_note: 2/14 keywords (14%)
+- kind: checklist
+  text: 'Scoring rubric: grammar accuracy (cases, aspect, agreement), vocabulary range,
+    coherence, task completion.'
+  covered: false
+  coverage_note: 4/12 keywords (33%)
+- kind: checklist
+  text: 'Self-assessment grid: Strong / Developing / Needs Work for each A2 skill
+    area (cases, aspect, comparison, complex senten'
+  covered: false
+  coverage_note: 3/15 keywords (20%)
+- kind: checklist
+  text: 'Recommendations: which modules to revisit before starting B1. Encouragement:
+    passing 70% means ready for B1.'
+  covered: false
+  coverage_note: 0/10 keywords (0%)
+- kind: checklist
+  text: Word count is 1500–2250 words
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: No 'Let us...', 'In this section...', or formulaic openers
+  covered: false
+  coverage_note: 0/6 keywords (0%)
+- kind: checklist
+  text: Every exercise marker from the skeleton is placed
+  covered: false
+  coverage_note: 0/6 keywords (0%)
+- kind: must
+  text: Follow your own pacing plan — each section must hit its word budget (±10%).
+  covered: false
+  coverage_note: 1/12 keywords (8%)
+- kind: must
+  text: For A1 early modules, the learner cannot read Cyrillic — English must dominate.
+  covered: false
+  coverage_note: 0/9 keywords (0%)
+- kind: must
+  text: '**EVERY plan point MUST appear in your output.'
+  covered: false
+  coverage_note: 0/7 keywords (0%)
+- kind: must
+  text: You MUST cover ALL of them — every textbook reference, every notation, every
+    example.
+  covered: false
+  coverage_note: 1/10 keywords (10%)
+- kind: must
+  text: '**Hit the word target** — you MUST write 1500–2250 words of actual prose.'
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: must
+  text: '**EVERY module MUST end with `## Підсумок`** — this is the last H2 section
+    before the file ends.'
+  covered: false
+  coverage_note: 1/11 keywords (9%)
+- kind: must
+  text: Your output must be original teaching prose at the correct CEFR level, not
+    a rephrased version of the article.
+  covered: false
+  coverage_note: 1/13 keywords (8%)
+- kind: must
+  text: '**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim**
+    as an `## H2` line.'
+  covered: false
+  coverage_note: 0/11 keywords (0%)
+- kind: must
+  text: The total must reach 1500 words minimum.
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: must
+  text: '- **Dialogues must sound like real people talking.'
+  covered: false
+  coverage_note: 0/7 keywords (0%)
+- kind: must
+  text: '** Each module MUST have DIFFERENT dialogue situations from other modules.'
+  covered: false
+  coverage_note: 0/10 keywords (0%)
+- kind: must
+  text: 'REQUIRED: Every dialogue must have a SPECIFIC REAL-WORLD SITUATION that motivates
+    the grammar being taught.'
+  covered: false
+  coverage_note: 1/14 keywords (7%)
+- kind: must
+  text: '- **The Wall of Text:** 3+ paragraphs of English theory without a single
+    Ukrainian example — every concept must be anchored in immediate Ukrainian examples.'
+  covered: false
+  coverage_note: 1/15 keywords (7%)
+- kind: must
+  text: Every sentence must teach something.
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: must
+  text: '- `**bold**` for Ukrainian words being taught — EVERY bold Ukrainian word
+    MUST have an English translation on first use, either in parentheses `**слово**
+    (translation)` or inline `**слово** means "translation"`.'
+  covered: false
+  coverage_note: 2/18 keywords (11%)
+- kind: must
+  text: Every heading from "Section Structure" above MUST appear as an `## H2` in
+    your output, in order, **including the closing `Підсумок:` / `Підсумок та перехід
+    до M.
+  covered: false
+  coverage_note: 1/15 keywords (7%)
+- kind: must
+  text: You MUST use **every word** from the list below at least once in the prose,
+    in a natural sentence with bold + English translation.
+  covered: false
+  coverage_note: 1/16 keywords (6%)
+- kind: must
+  text: '- **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).'
+  covered: false
+  coverage_note: 0/9 keywords (0%)
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-sounds-vs-letters
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-sounds-vs-letters
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-false-friends
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing

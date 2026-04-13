@@ -1,0 +1,57 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T20-24-1cdc977d.json
+phase: vocab
+prompt_chars: 20590
+response_chars: 5855
+prompt_words: 3435
+response_words: 633
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.0388
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.0112
+- name: plan
+  start: 1028
+  length: 19562
+  fraction: 0.9501
+large_sections:
+- plan
+directives_total: 8
+directives_covered: 0
+directives_missed:
+- kind: must
+  text: When that thing is absent, you must shift to the Genitive case.
+  covered: false
+  coverage_note: 2/9 keywords (22%)
+- kind: must
+  text: Whenever you want to express that there is a large or small amount of something,
+    you must use a new form.
+  covered: false
+  coverage_note: 2/14 keywords (14%)
+- kind: must
+  text: If you say "багато" (a lot), the noun must change.
+  covered: false
+  coverage_note: 2/7 keywords (29%)
+- kind: inject_activity
+  text: quiz-possession-vs-absence-drill-vs
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-genitive-singular-formation
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-genitive-plural
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-translations
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: unjumble-genitive-phrases
+  covered: false
+  coverage_note: marker missing

@@ -1,0 +1,145 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T10-05-ee08ea22.json
+phase: activities
+prompt_chars: 52370
+response_chars: 11804
+prompt_words: 7350
+response_words: 1328
+sections:
+- name: preamble
+  start: 0
+  length: 1897
+  fraction: 0.0362
+- name: plan
+  start: 1897
+  length: 50365
+  fraction: 0.9617
+- name: output_spec
+  start: 52262
+  length: 108
+  fraction: 0.0021
+large_sections:
+- plan
+directives_total: 51
+directives_covered: 24
+directives_missed:
+- kind: must
+  text: '** Your very first character must be `version:`.'
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: must
+  text: Each inline activity MUST have an `id` that matches one of these markers.
+  covered: false
+  coverage_note: 2/10 keywords (20%)
+- kind: must
+  text: Each inline activity's `id` must match one of these markers exactly (lowercase,
+    hyphenated).
+  covered: false
+  coverage_note: 3/11 keywords (27%)
+- kind: must
+  text: You MUST create activities that cover all these hints.
+  covered: false
+  coverage_note: 0/9 keywords (0%)
+- kind: must
+  text: '**Grounding rule:** Every Ukrainian word in your exercises must appear either
+    in the prose content or in this vocabulary list.'
+  covered: false
+  coverage_note: 1/15 keywords (7%)
+- kind: must
+  text: Unlike English, where numbers never change form, Ukrainian numerals must agree
+    with their surrounding context in oblique cases.
+  covered: false
+  coverage_note: 1/16 keywords (6%)
+- kind: must
+  text: 'For example: there are not two notebooks on the table; we must help four
+    friends.'
+  covered: false
+  coverage_note: 0/11 keywords (0%)
+- kind: must
+  text: You must apply the declension patterns you just learned to the entire numerical
+    phrase.
+  covered: false
+  coverage_note: 1/10 keywords (10%)
+- kind: must
+  text: They are also mandatory when talking about children or young animals.
+  covered: false
+  coverage_note: 0/10 keywords (0%)
+- kind: must
+  text: Therefore, you must use phrases like **двоє ножиць** (two pairs of scissors)
+    or **троє дверей** (three doors) to express these quantities correctly.
+  covered: false
+  coverage_note: 3/19 keywords (16%)
+- kind: must
+  text: But if the noun belongs to the feminine gender, you must use the form "півтори".
+  covered: false
+  coverage_note: 1/10 keywords (10%)
+- kind: must
+  text: While "грам" is very common in informal speech, "грамів" is the correct standard
+    form required in written recipes and official documents.
+  covered: false
+  coverage_note: 1/15 keywords (7%)
+- kind: must
+  text: To speak fluently about prices, time, recipes, or statistics, these rules
+    must become automatic for you.
+  covered: false
+  coverage_note: 0/13 keywords (0%)
+- kind: must
+  text: How do you decline the phrase "три студенти" in the instrumental case? In
+    oblique cases, the numeral and the noun must agree, so the correct form is "трьома
+    студентами".
+  covered: false
+  coverage_note: 7/18 keywords (39%)
+- kind: must
+  text: '- id: marker-id-here # MUST match an <!-- INJECT_ACTIVITY: .'
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: must
+  text: '**CRITICAL RULE: EVERY single activity object MUST include an `id` field
+    (a unique string like "quiz-grammar", "match-up-vocab").'
+  covered: false
+  coverage_note: 2/16 keywords (12%)
+- kind: must
+  text: 'Required: id, instruction, items[] (array of strings), correct_order[] (TOP-LEVEL
+    array of **integers** — zero-based indices into items).'
+  covered: false
+  coverage_note: 4/13 keywords (31%)
+- kind: must
+  text: 'Required: id, syllables[], correctIndices[], category.'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: 'Required: id, letters[{upper, lower}].'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: 'Required: id, items[{video}].'
+  covered: false
+  coverage_note: 1/3 keywords (33%)
+- kind: must
+  text: '- **critical-analysis**: Required: id, prompt.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**You MUST use these patterns.'
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: must
+  text: If the pattern lists divide-words, count-syllables, and odd-one-out — your
+    output MUST include all three.
+  covered: false
+  coverage_note: 4/15 keywords (27%)
+- kind: must
+  text: '**Test LANGUAGE, not trivia** — exercises must test Ukrainian language skills.'
+  covered: false
+  coverage_note: 0/8 keywords (0%)
+- kind: must
+  text: '- **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).'
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: '...'
+  covered: false
+  coverage_note: marker missing

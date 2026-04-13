@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-літі», тому що це звучить неприродно. Запам'ятайте ці чотири важливі слова, щоб розмовляти правильно. Після довгої та холодної зими завжди приходить весна. Навесні природа повільно прокидається. Світить яскраве сонце, і на вулиці з кожним днем **стає тепліше** *(it gets warmer)*. У парках і лісах **все розквітає** *(everything blossoms)*: зелені дерева, великі кущі та перші квіти. З теплих країв **птахи повертаються** *(birds return)* додому. Після весни починається літо. Влітку часто буває дуже **спекотно** *(hot)*. Це улюблений час для багатьох українців. Літо — це найкращий **час відпочивати** *(time to rest)*. Люди часто їдуть на природу, до річки або до моря. Там вони можуть засмагати на сонці та **купатися** *(to swim)* у теплій воді. Літня погода буває різна. День може бути **сонячний** *(sunny)*, іноді — **хмарний** *(cloudy)* або навіть **вітряний** *(windy)*. Але зазвичай влітку завжди тепло і дуже приємно. Після спекотного літа настає красива золота осінь. Восени дні стають коротшими, а ночі — довшими. На вулиці вже досить **прохолодно** *(chilly)*. Жовте, червоне та коричневе **листя падає** *(leaves fall)* з дерев на мокру землю. Восени небо часто буває сіре, і **часто дощить** *(it rains often)*. Тому люди одягають теплі куртки, пальта та беруть парасольки. Після осені приходить біла зима. Взимку вся природа спить. Часто **йде сніг** *(it snows)*, і вся земля стає **біла** *(white)* і чиста. На вулиці справжній **мороз** *(frost)*. У таку погоду ми часто кажемо: «Сьогодні **на вулиці морозно** *(it is frosty outside)*». Або ми просто кажемо: «**Мені холодно** *(I am cold)*». Але взимку також дуже весело. Діти можуть грати в сніжки або безпечно кататися на ковзанці. Усі пори року дуже різні, і ми можемо їх легко порівнювати. Для цього ми використовуємо українські прикметники вищого ступеня. Наприклад, ми знаємо, що **літо тепліше за весну** *(summer is warmer than spring)*. Осінь холодніша за літо, але це ідеальна пора для гарячого чаю. **Зима — найхолодніша пора року** *(winter is the coldest season of the year)*. Якщо ми говоримо про українську погоду, ми також бачимо велику різницю. **Восени більше дощів, ніж влітку** *(in autumn there is more rain than in summer)*. Сонце світить набагато менше. **Взимку дні коротші** *(in winter the days are shorter)*, а ночі стають найдовшими у році. Але кожна людина має свою власну улюблену пору року. Давайте послухаємо коротку розмову двох друзів про їхні улюблені сезони. Вони використовують фрази «мені подобається» та «тому що». > — **Олена:** Привіт, Максиме! Скажи, яка твоя улюблена пора року? *(Hi, Maksym! Tell me, what is your favorite season?)* > — **Максим:** Привіт, Олено! Я обожнюю літо, тому що можна поїхати до моря. *(Hi, Olena! I adore summer because one can go to the sea.)* > — **Олена:** А мені найбільше подобається золота осінь. *(And I like golden autumn the most.)* > — **Максим:** Цікаво. А чому ти так любиш осінь? *(Interesting. And why do you like autumn so much?)* > — **Олена:** Тому що я люблю гуляти в парку, коли тихо падає жовте листя. *(Because I like to walk in the park when yellow leaves fall quietly.)* <!-- INJECT_ACTIVITY: match-up-seasons, Match seasonal vocabulary and activities -->
+дуже спекотно, тому люди люблять купатися в річці або в морі. Це ідеальний час, щоб відпочивати на природі. > *In spring, everything around blossoms, and the birds return home after a long winter. With each passing day, it gets significantly warmer and sunnier. Then comes summer — the warmest season. In summer, it is often very hot, so people like to swim in the river or in the sea. This is the perfect time to relax in nature.* The **погода** (weather) during these months is usually very pleasant and invites you to go outside. You will often hear people describe the days using adjectives like сонячний, вітряний, or хмарний. As the year progresses, the hot days fade away, and the landscape changes its colors completely. The temperature drops, and people prepare their warm clothes for the cold months ahead. Восени дні стають коротшими, а жовте листя падає з дерев. Надворі вже прохолодно і дуже часто дощить. Зима приносить багато снігу та сильний мороз. Земля стає повністю білою, і діти радісно граються на вулиці. Взимку нам часто буває холодно, але ми все одно любимо цю пору. > *In autumn, the days become shorter, and the yellow leaves fall from the trees. Outside, it is already chilly, and it rains very often. Winter brings a lot of snow and severe frost. The ground becomes completely white, and children joyfully play in the street. In winter, we are often cold, but we still love this season.* When you want to express your preferences, you can use the comparative and superlative forms of adjectives you already know. This allows you to explain exactly why one part of the year appeals to you more than another. Літо завжди тепліше за весну, а зима — це найхолодніша пора року в Україні. Восени випадає більше дощів, ніж влітку, тому ми частіше сидимо вдома і читаємо книги. Взимку дні набагато коротші, але довгі вечори бувають дуже затишні. Кожна людина має свою улюблену пору року. > *Summer is always warmer than spring, and winter is the coldest season in Ukraine. In autumn, more rain falls than in summer, so we sit at home more often and read books. In winter, the days are much shorter, but the long evenings are often very cozy. Every person has their own favorite season.* Let's see how two friends talk about their preferences. Notice how they use phrases like «мені подобається» and «тому що» to explain their choices naturally. > — **Олена:** Яка твоя улюблена пора року? *(What is your favorite season?)* > — **Марко:** Я обожнюю літо, тому що можна поїхати до моря. *(I adore summer because one can go to the sea.)* > — **Олена:** А мені найбільше подобається зима. *(And I like winter the most.)* > — **Марко:** Чому ти так сильно любиш зиму? *(Why do you like winter so much?)* > — **Олена:** Тому що я люблю, коли йде сніг і на вулиці морозно. *(Because I love it when it snows and it's frosty outside.)* <!-- INJECT_ACTIVITY: match-up-seasons -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -510,7 +510,74 @@ This topic is deeply intertwined with Ukrainian cultural and political identity,
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 6: A2 finale (A2 M51-M69)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 40%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 40% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 70-90% Ukrainian.
 LANGUAGE ROLES:
@@ -529,18 +596,64 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] пора року (season)
+- [ ] весна (spring)
+- [ ] літо (summer)
+- [ ] осінь (autumn)
+- [ ] зима (winter)
+- [ ] погода (weather)
+- [ ] свято (holiday)
+- [ ] Різдво (Christmas)
+- [ ] Великдень (Easter)
+- [ ] традиція (tradition)
+- [ ] писанка (decorated Easter egg)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Українські свята: від Різдва до Купала (Ukrainian Holidays) (~600 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

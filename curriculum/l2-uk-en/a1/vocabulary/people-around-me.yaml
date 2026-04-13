@@ -1,45 +1,63 @@
 vocabulary:
 - word: сусі́д
-  translation: neighbor
+  translation: neighbor, m
   expression: false
   pos: ім.
   gender: ч.
   verified: true
 - word: коле́га
-  translation: colleague
+  translation: colleague, m/f
   expression: false
   pos: ім.
   gender: ч.
   verified: true
 - word: виклада́ч
-  translation: lecturer
+  translation: lecturer, m
   expression: false
   pos: ім.
   gender: ч.
   verified: true
 - word: вчи́тель
-  translation: teacher (male)
+  translation: teacher, m
   expression: false
   pos: ім.
   gender: ч.
   verified: true
 - word: лі́кар
-  translation: doctor
+  translation: doctor, m
   expression: false
   pos: ім.
   gender: ч.
   verified: true
 - word: продаве́ць
-  translation: seller
+  translation: seller, m
   expression: false
   pos: ім.
   gender: ч.
   verified: true
 - word: покупе́ць
-  translation: buyer
+  translation: buyer, m
   expression: false
   pos: ім.
   gender: ч.
+  verified: true
+- word: ба́чити
+  translation: to see
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: зна́ти
+  translation: to know
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: люби́ти
+  translation: to love
+  expression: false
+  pos: дієсл.
+  gender: ''
   verified: true
 - word: чека́ти
   translation: to wait for
@@ -54,19 +72,19 @@ vocabulary:
   gender: ''
   verified: true
 - word: по́друга
-  translation: friend (female)
+  translation: friend, f
   expression: false
   pos: ім.
   gender: ж.
   verified: true
 - word: ма́ма
-  translation: mother
+  translation: mom
   expression: false
   pos: ім.
   gender: ж.
   verified: true
 - word: та́то
-  translation: father
+  translation: dad
   expression: false
   pos: ім.
   gender: ч.
@@ -77,63 +95,39 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: дя́дько
-  translation: uncle
+- word: діду́сь
+  translation: grandfather
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: ті́тка
-  translation: aunt
+- word: бабу́ся
+  translation: grandmother
   expression: false
   pos: ім.
   gender: ж.
-  verified: true
-- word: нарече́на
-  translation: bride
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: нарече́ний
-  translation: groom
-  expression: false
-  pos: прикм.
-  gender: ''
   verified: true
 - word: вчи́телька
-  translation: teacher (female)
+  translation: teacher, f
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: Кого ти бачиш?
-  translation: Whom do you see?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Ходімо!
-  translation: Let's go!
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Я тебе познайомлю!
-  translation: I will introduce you!
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: кого?
-  translation: whom?
+- word: ка́ва
+  translation: coffee
   expression: false
   pos: ім.
-  gender: ч.
+  gender: ж.
   verified: true
-- word: що?
-  translation: what?
+- word: молоко́
+  translation: milk
   expression: false
-  pos: спол.
+  pos: ім.
+  gender: с.
+  verified: true
+- word: Ходімо, я тебе познайомлю!
+  translation: Let's go, I will introduce you!
+  expression: true
+  pos: ''
   gender: ''
   verified: true

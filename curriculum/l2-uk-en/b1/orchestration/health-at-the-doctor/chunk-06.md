@@ -1,29 +1,39 @@
-## Підсумок — Здоров'я українською
+## Підсумок — Здоров'я українською (~550 words)
 
-Ось ми і завершили цю надзвичайно важливу тему. Здоров'я — це найвища цінність, і вміння говорити про нього українською мовою дає вам велику впевненість. Тепер ви знаєте, як правильно пояснити свій стан, якщо ви раптом захворіли. Ви можете звернутися до реєстратури, пояснити свої симптоми та зрозуміти діагноз лікаря. Ви також знаєте, як купити необхідні препарати в аптеці та прочитати інструкцію до них. Це не просто нові слова, це ваші інструменти для комфортного та безпечного життя.
+In this module, we have covered the essential vocabulary for discussing your **здоров'я** (health) with medical professionals. You are now fully prepared to visit a **лікар** (doctor) and accurately describe any **хвороба** (disease) you might be facing. Knowing these foundational terms is the first step toward effective communication in any clinical setting.
 
-У цьому модулі ми поєднали нову медичну лексику з тими граматичними правилами, які ви вже добре знаєте. Ми побачили, як працює наша фонетична система на практиці. Наприклад, ви згадали про чергування голосних і приголосних звуків. Це допомагає вам розуміти, чому слова змінюють свою форму. Ми також закріпили знання про роди іменників та дієслівне керування. Українська медична мова має свої унікальні риси, які відрізняють її від інших слов'янських мов.
+When you experience severe physical discomfort, such as a sharp **біль** (pain), or when your body reacts with a high **температура** (temperature), you know exactly how to express this. You can also report a persistent **кашель** (cough) without struggling to find the right morphological forms.
 
-Згадайте наш головний діалог у кабінеті терапевта. Ви побачили, як важливо не лише правильно називати частини тіла, але й будувати повні речення. Лікар ставить вам запитання, слухає ваші відповіді, а потім призначає лікування. Використовуючи правильні відмінки, ви уникаєте непорозумінь. Це особливо важливо, коли йдеться про дозування ліків або періодичність їх прийому. Ваша точність тут є запорукою швидкого одужання.
+If a seasonal cold leaves you with a frustrating **нежить** (runny nose), you can explain your condition clearly using the correct masculine agreements. You also understand that you must eventually obtain specific **ліки** (medicine) to alleviate these issues, often requiring a formal **рецепт** (prescription) from the clinic.
+
+With your paperwork in hand, you can confidently navigate an **аптека** (pharmacy) to purchase your required treatments. The pharmacists there will provide the right dosage based on the official **діагноз** (diagnosis) that was determined during your medical consultation.
+
+You are now equipped to detail every single **симптом** (symptom) when you need to formally **скаржитися** (to complain) about your physical condition to a specialist. This precision allows the medical staff to figure out exactly how to best **лікувати** (to treat) you and manage your recovery process.
+
+Ultimately, following their professional advice and taking the medication on schedule will help you **одужати** (to recover) completely and regain your strength. Remember that only a qualified medical professional can safely **призначити** (to prescribe) the most effective course of action for your specific health needs.
+
+Окрім нової лексики, ми також повторили важливі граматичні правила. Ви побачили, як працює давальний відмінок, коли ми описуємо свій фізичний стан. Конструкції типу «мені холодно» або «мені боляче» є дуже природними для української мови. Також ми звернули увагу на керування дієслів, наприклад, необхідність використовувати знахідний відмінок після прийменника «на», коли ми говоримо про свої скарги.
+
+> *Besides new vocabulary, we also reviewed important grammar rules. You saw how the Dative case works when we describe our physical condition. Constructions like "I am cold" or "I am in pain" are very natural for the Ukrainian language. We also paid attention to verb government, for example, the necessity to use the Accusative case after the preposition "на" when we talk about our complaints.*
+
+Не менш важливою частиною цього модуля було повторення морфологічних явищ. Ви помітили, що багато медичних термінів підпорядковуються правилам чергування голосних і приголосних звуків. Знання цих фонетичних закономірностей допомагає інтуїтивно розуміти, як змінюється слово в різних відмінках. Це робить ваше мовлення не лише граматично правильним, але й фонетично милозвучним, що є характерною рисою справжньої української мови.
+
+> *An equally important part of this module was the review of morphological phenomena. You noticed that many medical terms are subject to the rules of vowel and consonant alternations. Knowing these phonetic patterns helps you intuitively understand how a word changes in different cases. This makes your speech not only grammatically correct but also phonetically melodious, which is a characteristic feature of the authentic Ukrainian language.*
+
+:::tip
+**Did you know?** — The way you talk about your symptoms can reveal your level of language mastery. Using the correct gender for tricky nouns like pain and runny nose instantly signals that you have moved beyond beginner translation habits.
+:::
 
 ### Перевірте себе:
-
-Перед тим, як рухатися далі, давайте зробимо коротку паузу. Прочитайте ці запитання і чесно дайте собі відповідь. Якщо ви можете легко відповісти на них, ви чудово засвоїли матеріал!
-
-*   **Чи можете ви описати свої симптоми лікарю?** Наприклад: «У мене **болить горло** *(my throat hurts)* і **висока температура** *(high temperature)*». Ви повинні вміти використовувати базові конструкції для опису фізичного стану. Пам'ятайте, що дієслово має узгоджуватися з частиною тіла. Якщо болить одна нога — ми кажемо «болить», якщо дві — «болять».
-*   **Чи розумієте ви призначення в аптеці?** Наприклад: «Приймайте ці таблетки **двічі на день** *(twice a day)* після їди». Лікар виписує вам **рецепт** *(prescription)*, з яким ви йдете до аптеки. Там вам потрібно зрозуміти правила прийому препаратів. Ви маєте розуміти наказовий спосіб дієслів: приймайте, пийте, не забувайте.
-*   **Чи пам'ятаєте ви про чергування?** Це дуже важлива частина нашої фонетики. Пам'ятайте про зміну звуків: **біль** *(pain)* перетворюється на **болить** *(hurts)*, **ніс** *(nose)* стає формою **носа** *(of the nose)*, а **вухо** *(ear)* змінюється на **у вусі** *(in the ear)*.
-*   **Чи знаєте ви рід слів «біль» та «нежить»?** Обидва — чоловічого роду! Запам'ятайте це назавжди. Це найчастіша помилка серед іноземців. Тому ми кажемо тільки так: сильний біль, жахливий нежить, різкий біль. Також не забувайте, що слово **ліки** *(medicine)* завжди має форму множини і не має однини.
+* **Чи можете ви описати свої симптоми лікарю?** (Наприклад: "У мене болить горло і висока температура").
+* **Чи розумієте ви призначення в аптеці?** (Наприклад: "Приймайте ці таблетки двічі на день після їди").
+* **Чи пам'ятаєте ви про чергування?** (біль — болить, ніс — носа, вухо — у вусі).
+* **Чи знаєте ви рід слів "біль" та "нежить"?** (Обидва — чоловічого роду!).
 
 ### Дайте відповіді українською:
+1. На що ви зазвичай скаржитеся, коли застуджені?
+2. Які спеціалісти працюють у поліклініці?
+3. Що ви кажете аптекарю, коли даєте рецепт?
+4. Утворіть три слова від кореня "здоров-".
 
-Тепер спробуйте використати ваші нові знання на практиці. Візьміть аркуш паперу або відкрийте нотатки. Напишіть повні відповіді на ці чотири запитання. Використовуйте якомога більше нових слів та конструкцій!
-
-1. На що ви зазвичай скаржитеся, коли застуджені? Які симптоми у вас з'являються найпершими? Розкажіть детально про своє самопочуття.
-2. Які спеціалісти працюють у поліклініці? До кого ви підете, якщо у вас проблеми з зубами, а до кого — якщо потрібна загальна консультація?
-3. Що ви кажете аптекарю, коли даєте рецепт? Як ви запитаєте про правильне дозування препарату та його вартість?
-4. Утворіть три слова від кореня «здоров-». Спробуйте пригадати іменник, прикметник та дієслово з цим коренем, які ми вивчали.
-
-Ви виконали колосальну роботу в цьому модулі. Ви навчилися говорити про складні і дуже важливі речі. Пишайтеся своїм прогресом і продовжуйте впевнено вивчати українську мову!
-
-**Наступна тема:** M17 — Контрольна робота №2. Ми повторимо все, що вивчили в Модулях 08–16! Це буде чудова нагода перевірити ваші знання та підготуватися до нових, ще цікавіших граматичних тем.
+**Наступна тема:** M17 — Контрольна робота №2. Ми повторимо все, що вивчили в Модулях 08–16!

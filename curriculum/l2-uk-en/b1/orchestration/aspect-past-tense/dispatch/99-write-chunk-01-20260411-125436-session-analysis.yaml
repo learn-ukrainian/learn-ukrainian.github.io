@@ -1,0 +1,44 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T10-53-b4d6ccb4.json
+phase: write-chunk-01
+prompt_chars: 47503
+response_chars: 8169
+prompt_words: 6496
+response_words: 1336
+sections:
+- name: header
+  start: 0
+  length: 445
+  fraction: 0.0094
+- name: skeleton
+  start: 445
+  length: 1678
+  fraction: 0.0353
+- name: plan
+  start: 2123
+  length: 17261
+  fraction: 0.3634
+- name: wiki
+  start: 13306
+  length: 27892
+  fraction: 0.5872
+- name: output_spec
+  start: 47276
+  length: 227
+  fraction: 0.0048
+large_sections:
+- wiki
+directives_total: 29
+directives_covered: 26
+directives_missed:
+- kind: must
+  text: differs, and learners must identify WHICH axis drives their choice.
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: inject_activity
+  text: quiz-aspect-intuition
+  covered: false
+  coverage_note: marker missing

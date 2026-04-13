@@ -1,4 +1,4 @@
-<!-- version: 1.1.0 | updated: 2026-03-31 -->
+<!-- version: 1.2.0 | updated: 2026-04-12 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -11,6 +11,35 @@ Generate an `activities/emergencies.yaml` file for module **54: Emergencies** (a
 
 ---
 
+## ⚠️ HARD COUNT TARGETS — READ TWICE
+
+These are the binding numerical contracts for THIS module. The audit will FAIL if you fall short.
+
+| Bucket | Min | Max | Notes |
+|---|---|---|---|
+| Total activities | 10 | 10+ | inline + workbook combined |
+| Inline (lesson tab) | 4 | 6 | one per `<!-- INJECT_ACTIVITY -->` marker, see below |
+| Workbook (Зошит tab) | 6 | 9 | extended practice |
+| Items per activity | 6 | — | each activity must have at least 6 items (unless its type cap is lower — see Activity Type Reference below) |
+
+**You MUST ship at least 4 inline activities AND at least 6 workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+
+**Type diversity is required.** The module (inline + workbook combined) MUST use at least **0** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level. (If `0` is `0`, the audit profile for this level does not enforce type diversity — but variety still produces a better lesson, so aim for 4+ types when the workbook allows it.)
+
+---
+
+## Allowed types for THIS level
+
+- **Inline (lesson) types:** image-to-letter, letter-grid, match-up, watch-and-repeat, quiz, true-false, fill-in, classify
+- **Inline priority (preferred):** image-to-letter, match-up, fill-in, quiz, watch-and-repeat
+- **Workbook types:** fill-in, match-up, group-sort, anagram, unjumble, quiz, true-false, classify, divide-words, count-syllables, pick-syllables, observe, phrase-table, odd-one-out
+- **Workbook priority (preferred):** fill-in, match-up, group-sort, anagram, unjumble
+- **FORBIDDEN at this level:** cloze, error-correction, mark-the-words, translate, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, highlight-morphemes, grammar-identify, select
+
+Pick from the allowed list. Lean heavily on the priority lists. Do not use any forbidden type — the build will reject it.
+
+---
+
 ## Inline vs Workbook Split
 
 Activities have two placement categories:
@@ -19,7 +48,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Rule of thumb:** inline = 2-3 quick checks after key teaching points. Workbook = 4-8 deeper practice exercises covering the full topic.
+**Rule of thumb:** inline = 4–6 quick checks after key teaching points. Workbook = 6–9 deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
 
 ---
 
@@ -27,10 +56,10 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: dialogue-order -->`
-- `<!-- INJECT_ACTIVITY: phrase-choice-quiz -->`
+- `<!-- INJECT_ACTIVITY: order-112-call -->`
+- `<!-- INJECT_ACTIVITY: quiz-emergency-phrases -->`
 - `<!-- INJECT_ACTIVITY: fill-in-emergency-call -->`
-- `<!-- INJECT_ACTIVITY: report-issue-fill-in -->`
+- `<!-- INJECT_ACTIVITY: fill-in-reporting-issue -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -133,26 +162,23 @@ required:
 <module_content>
 ## Dialogues
 
-When you face a high-stress situation in a foreign country, communication needs to be extremely fast and direct. In emergencies, Ukrainian shifts to short, functional chunks of information. Clarity is significantly more important than perfect grammar or vocabulary. You simply need to convey exactly what happened and precisely where you are. Memorizing these simple, direct phrases allows you to deploy them automatically without overthinking the grammatical rules.
+Emergencies happen unexpectedly in any country. In high-stress moments, clear and direct communication is your most valuable tool. You do not need perfect grammar or complex sentences during a crisis. You only need to know specific, formulaic phrases to get immediate assistance. Ukrainian emergency operators are trained to ask simple questions. Your goal is to provide fast, accurate answers without hesitation. We focus on the essential vocabulary for survival in Ukraine. You will learn to state the problem clearly, give your exact location, and provide your personal details. Read the following situations.
 
-Consider a critical situation where timing is everything. Adam witnesses a minor car crash on **вулиця Хрещатик** (Khreshchatyk street) and immediately calls the emergency number. He needs to report the **аварія** (accident) and forcefully request a **швидка** (ambulance). The emergency operator asks for the incident details and his exact location to dispatch help. Adam provides his precise location near the metro station and clearly states his personal information to the operator.
+> **Оператор:** Служба порятунку, слухаю вас. *(Rescue service, I am listening to you.)*
+> **Водій:** Допоможіть! Тут аварія! Людина не рухається! *(Help! There is an accident here! A person is not moving!)*
+> **Оператор:** Де ви? *(Where are you?)*
+> **Водій:** На вулиці Хрещатик, біля метро Майдан Незалежності. *(On Khreshchatyk street, near the Maidan Nezalezhnosti metro.)*
+> **Оператор:** Зрозуміло. Швидка вже їде. Як вас звати? *(Understood. The ambulance is already on its way. What is your name?)*
+> **Водій:** Мене звати Адам. Мій номер — нуль дев'яносто три... *(My name is Adam. My number is zero ninety-three...)*
+> **Оператор:** Дякую. Залишайтеся на місці. *(Thank you. Stay in place.)*
 
-> **Оператор 103:** Служба порятунку, слухаю вас. *(Rescue service, I am listening to you.)*
-> **Адам:** Допоможіть! Тут аварія! *(Help! There is an accident here!)*
-> **Адам:** Людина не рухається! *(A person is not moving!)*
-> **Оператор 103:** Де ви? *(Where are you?)*
-> **Адам:** На вулиці Хрещатик, біля метро Майдан Незалежності. *(On Khreshchatyk street, near the Independence Square metro.)*
-> **Оператор 103:** Зрозуміло. Швидка вже їде. *(Understood. An ambulance is already coming.)*
-> **Оператор 103:** Як вас звати? *(What is your name?)*
-> **Адам:** Мене звати Адам. Мій номер — нуль дев'яносто три... *(My name is Adam. My number is zero ninety-three...)*
-> **Оператор 103:** Дякую. Залишайтеся на місці. *(Thank you. Stay in place.)*
-
-Not every emergency involves a life-threatening medical issue. Sometimes you face an incredibly frustrating administrative crisis, like losing your travel documents in a busy city. In this dialogue, Adam visits the **поліція** (police) for help. First, he asks a helpful passerby for directions to the nearest station. Once inside the station, he clearly reports his loss to the duty officer. The police officer asks for his **прізвище** (surname) and his mobile phone number. Finally, the officer gives him a **форма** (form) to complete for the official record.
+This dialogue shows a critical situation on the road. The driver uses short, urgent sentences. **Аварія** (accident) immediately tells the operator the nature of the event. The driver then gives the exact location and answers simple questions. The operator confirms that a **швидка** (ambulance) is coming.
 
 > **Адам:** Вибачте, де тут поліція? *(Excuse me, where is the police here?)*
 > **Перехожий:** Поліція? Прямо і наліво. *(Police? Straight and to the left.)*
 > **Адам:** Дякую! *(Thank you!)*
-> *(У відділку поліції / At the police station)*
+>
+> *(У відділку / At the station)*
 > **Адам:** Добрий день. Я загубив паспорт. *(Good day. I lost my passport.)*
 > **Офіцер:** Де ви його загубили? *(Where did you lose it?)*
 > **Адам:** Я не знаю. Може, в метро. *(I do not know. Maybe in the metro.)*
@@ -162,97 +188,125 @@ Not every emergency involves a life-threatening medical issue. Sometimes you fac
 > **Адам:** Нуль дев'яносто три, п'ятсот двадцять один... *(Zero ninety-three, five hundred twenty-one...)*
 > **Офіцер:** Добре. Заповніть цю форму, будь ласка. *(Good. Fill out this form, please.)*
 
-Both of these dialogues share a highly effective communicative strategy. Notice the reliable, repeatable pattern: first, give the urgent alert for help to get immediate attention. Second, state the core problem clearly and concisely. Third, provide your exact location using simple prepositions of place. Finally, state your personal identity and contact details so the responding officials can follow up with you later.
+Losing documents is stressful but common. Adam first asks a passerby where the **поліція** (police) is located. Inside the station, he uses the past tense verb **загубив** (lost) to report the missing item. The officer asks standard identification questions. Adam provides his details and receives a **форма** (form) to complete.
 
-<!-- INJECT_ACTIVITY: dialogue-order -->
+Every emergency conversation follows a strict logical structure. You must first state the specific problem so they know who to send. Next, you must give your exact location. Finally, you provide your personal information for their official records.
+
+<!-- INJECT_ACTIVITY: order-112-call -->
 
 ## Екстрені ситуації (Emergencies)
 
-The universal emergency number in Ukraine is **112** (один один два). This number works absolutely everywhere in the country and connects you directly to a central dispatcher who can route your call. However, you must also know the specific direct numbers for specialized services. The number **101** connects directly to the **пожежна допомога** (fire service). The number **102** is the direct line for the **поліція** (police). Finally, **103** calls the **швидка допомога** (ambulance). These three numbers are non-negotiable memorization items for your personal safety in Ukraine.
+Ukraine has a centralized system for emergencies. The universal emergency number is **один один два** (112). This number works everywhere in the country from any mobile phone, even without a SIM card. You can also dial specific services directly if you know exactly what you need. The direct number for the fire service is **один нуль один** (101). The direct number for the police is **один нуль два** (102). The direct number for an ambulance is **один нуль три** (103). These three numbers are standard across Ukraine. Memorize them completely.
+
+When disaster strikes, you must alert people immediately. Use the formal, plural **наказовий спосіб** (imperative mood) to call for help. Do not worry about grammar rules here; simply memorize these phrases as unchangeable chunks.
+
+*   **Допоможіть!** — Help!
+*   **Викличте швидку!** — Call an ambulance!
+*   **Викличте поліцію!** — Call the police!
+
+Shouting **Допоможіть** (help) is your first line of defense. **Викликати** (to call/summon) is used specifically for ordering emergency services or a taxi. You command others to summon the ambulance or police.
+
+After grabbing attention, state the problem clearly. Use the simple word **тут** (here) followed by the noun.
+
+*   **Тут аварія!** — There is an accident here!
+*   **Тут пожежа!** — There is a fire here!
+
+If someone is experiencing a medical crisis, use the fixed expression **людині погано**. This literally means "to a person it is bad". If you are the one in danger, ask for **допомога** (help) directly.
+
+*   **Людині погано!** — Someone is feeling bad!
+*   **Мені потрібна допомога!** — I need help!
+
+> Марк на вулиці. Він бачить густий дим. Це велика пожежа. Марк телефонує один один два. Він просить про допомогу.
+> *Mark is on the street. He sees thick smoke. It is a big fire. Mark calls one one two. He asks for help.*
+
+The operator will always ask **Де ви?** (Where are you?). You must provide your location accurately. Review the location phrases you already know. Use **я на вулиці** (I am on the street), **я біля** (I am near), **навпроти** (opposite), or **поруч** (nearby).
+
+*   **Я на вулиці Хрещатик.** — I am on Khreshchatyk street.
+*   **Я біля метро.** — I am near the metro.
+*   **Я в метро.** — I am in the metro.
+*   **Аптека навпроти.** — The pharmacy is opposite.
+
+When giving a specific **адреса** (address), provide the street name and the building number. A building is a **будинок**.
+
+*   **Моя адреса: вулиця Хрещатик, будинок десять.** — My address is: Khreshchatyk street, building 10.
 
 :::caution
-**Important distinction:** The numbers **101**, **102**, and **103** are the modern Ukrainian emergency lines. Never confuse these with the old Soviet lines.
+Beware of the false friend "адрес". In Ukrainian, a physical location is always **адреса** (feminine). The word "адрес" is a formal written tribute, which you will likely never use.
 :::
 
-When you need immediate, life-saving action, you rely entirely on the power of the imperative mood. Because you are addressing an emergency operator or a random stranger on the street, you consistently use the formal plural imperative ending in **-іть**. Learn these core survival calls as complete, unbreakable chunks of language. Do not worry about grammatical analysis or verb conjugation right now; just memorize the sound and meaning so you can produce them automatically under intense pressure. For example, use the verb **викликати** (to call/summon):
-
-*   **Допоможіть!** (Help!)
-*   **Викличте швидку!** (Call an ambulance!)
-*   **Викличте поліцію!** (Call the police!)
-
-After successfully getting someone's attention, you must rapidly identify the specific situation. Introduce the exact problem using short, distinct labels. The word **тут** (here) is an incredibly useful tool for pointing out an active crisis happening right next to you. If you see someone collapse, shouting your medical alert instantly signals a severe emergency to nearby bystanders. For a more general statement of need, you can always state that you require immediate help.
-
-*   **Тут аварія!** (There is an accident here!)
-*   **Тут пожежа!** (There is a fire here!)
-*   **Людині погано!** (Someone is feeling bad!)
-*   **Мені потрібна допомога!** (I need help!)
-
-The emergency operator will inevitably ask for your exact location. You must state your current address quickly and accurately. The standard Ukrainian address formula starts with the largest element and gets progressively smaller: **вулиця** (street), then **будинок** (building), and finally **квартира** (apartment). Reinforce this vital skill with the location vocabulary you learned from previous modules. Prepositions like **на** (on) and **біля** (near) become absolutely critical tools when you need to guide a speeding ambulance to your exact location.
-
-*   **Я на вулиці Шевченка.** (I am on Shevchenko street.)
-*   **Я біля метро.** (I am near the metro.)
-*   **Адреса: вулиця Хрещатик, будинок десять.** (Address: Khreshchatyk street, building ten.)
-
-<!-- INJECT_ACTIVITY: phrase-choice-quiz -->
+<!-- INJECT_ACTIVITY: quiz-emergency-phrases -->
 <!-- INJECT_ACTIVITY: fill-in-emergency-call -->
 
 ## Допомога (Getting Help)
 
-When seeking medical assistance at a local **лікарня** (hospital), always start with the direct request for a doctor. To explain your specific physical symptoms, use the standard structure for expressing pain. This unique structure literally translates to "At me aches". You just attach the necessary body part that is causing the discomfort. If you do not have a specific, localized pain but feel generally unwell, simply use the standard everyday expression for feeling ill.
+Medical emergencies require specific vocabulary. If you arrive at a **лікарня** (hospital) or a clinic, state your primary need immediately. Use the fixed chunk **мені потрібен** (I need) for a masculine noun, or **мені потрібна** for a feminine noun.
 
-*   **Мені потрібен лікар.** (I need a doctor.)
-*   **У мене болить голова.** (My head hurts.)
-*   **У мене болить живіт.** (My stomach hurts.)
-*   **У мене болить горло.** (My throat hurts.)
-*   **Мені погано.** (I feel bad.)
+*   **Мені потрібен лікар.** — I need a doctor.
+*   **Мені потрібна швидка.** — I need an ambulance.
 
-:::tip
-The word **швидка** literally means "fast one" and is the natural, everyday word Ukrainians use for an ambulance. You do not need to say the full phrase.
-:::
+**Лікарня** refers to the physical hospital building, while a **лікар** is the doctor who treats you. Keep your statements brief and direct.
 
-If you need to visit a local pharmacy for minor medical issues, use clear and polite requests for your medicine. However, the absolute most critical safety phrase you must learn involves medical precautions. You have to communicate your specific medical restrictions and severe allergies clearly before accepting any treatment. This ensures you do not receive medication that could cause a secondary emergency.
+To describe pain, Ukrainian uses a completely different structure than English. You do not say "I have a headache". Instead, you use the fixed structure **у мене болить** (at me it aches), followed by the body part in the **називний відмінок** (nominative case).
 
-*   **Дайте, будь ласка, таблетки.** (Give me the pills, please.)
-*   **Мені потрібні ліки.** (I need medicine.)
-*   **У мене алергія на антибіотики.** (I am allergic to antibiotics.)
-*   **У мене алергія на ці таблетки.** (I am allergic to these pills.)
+*   **У мене болить голова.** — My head hurts.
+*   **У мене болить живіт.** — My stomach hurts.
+*   **У мене болить горло.** — My throat hurts.
 
-Bureaucratic situations require you to provide your personal data to government officials clearly and accurately. Whether at a city hospital or a local police station, they will inevitably ask for your identity documents. Remember the critical difference between your **ім'я** (first name) and your **прізвище** (surname). If you lose something valuable, always use the past tense verb **загубити** (to lose) matched to your specific gender.
+If you have a medical reaction to food or medicine, state this clearly. An allergy is an **алергія**.
 
-*   **Моє прізвище — Сміт.** (My surname is Smith.)
-*   **Я з Канади.** (I am from Canada.)
-*   **Мій паспорт у готелі.** (My passport is in the hotel.)
-*   **Я загубив паспорт.** (I lost my passport. — masculine)
-*   **Я загубила телефон.** (I lost my phone. — feminine)
+*   **У мене алергія на антибіотики.** — I am allergic to antibiotics.
 
-:::note
-In official contexts, your **прізвище** (surname) is much more important than your **ім'я** (first name). Always provide your surname first when speaking to police or hospital staff.
-:::
+Stressful situations make understanding a foreign language much harder. If you do not comprehend the doctor or the police officer, do not pretend that you do. Ask them to clarify.
 
-During a high-stress conversation with authorities, you might simply fail to understand what the Ukrainian official is rapidly telling you. You must communicate your language barrier directly and honestly rather than just guessing what they said. Use these essential survival phrases to slow the entire exchange down and clarify the exact meaning before proceeding.
+*   **Я не розумію.** — I do not understand.
+*   **Повторіть, будь ласка.** — Repeat, please.
+*   **Ви говорите англійською?** — Do you speak English?
 
-*   **Я не розумію.** (I do not understand.)
-*   **Повторіть, будь ласка.** (Please repeat.)
-*   **Ви говорите англійською?** (Do you speak English?)
+Using the formal imperative **повторіть** ensures they know you need to hear the information again.
 
-<!-- INJECT_ACTIVITY: report-issue-fill-in -->
+Whether you are at a hospital or a police station, authorities require your personal data. They will ask for your name, phone number, and country of origin.
+
+*   **Мене звати Девід.** — My name is David.
+*   **Моє прізвище Сміт.** — My surname is Smith.
+*   **Мій номер телефону...** — My phone number is...
+*   **Я з Канади.** — I am from Canada.
+*   **Мій готель — Турист.** — My hotel is Tourist.
+
+If you are at the police station because you lost a document, use the past tense. Remember that the verb **загубити** (to lose) changes its ending based on your grammatical gender.
+
+*   **Я загубив паспорт.** — I lost my passport. (masculine speaker)
+*   **Я загубила паспорт.** — I lost my passport. (feminine speaker)
+
+The officer will likely give you a piece of paper and say **заповніть форму** (fill out the form).
+
+> Анна в поліції. Вона дуже сумна. Анна загубила сумку. Там був паспорт. Анна бере форму.
+> *Anna is at the police station. She is very sad. Anna lost her bag. The passport was there. Anna takes a form.*
+
+<!-- INJECT_ACTIVITY: fill-in-reporting-issue -->
 
 ## Summary
 
-Your emergency survival kit revolves entirely around a few core verbal actions. The number **112** is your absolute primary tool for any crisis. If you are in physical danger, shout the imperative for help immediately to draw massive public attention. Follow this quickly with loud requests for an ambulance or the police. Remember that sheer speed and absolute clarity in Ukrainian chunks always beat perfect grammatical case endings in these critical moments. A fast, incredibly clear alert provides all the context anyone needs.
+Navigating an emergency abroad is a daunting experience. Your survival kit relies on knowing exactly what to say without thinking about complex grammar. Remember that **один один два** (112) is your universal lifeline in Ukraine. When you face immediate danger, shout your first commands clearly: **Допоможіть!** (Help!), **Викличте швидку!** (Call an ambulance!), or **Викличте поліцію!** (Call the police!).
 
-Knowing your precise location is completely useless if you cannot express it clearly to the emergency operator. Always be ready to state your physical address using the strict logical order of street followed by building. If you are outside and feel slightly disoriented, rely heavily on large visible landmarks. Stating that you are near the metro station or directly opposite a large hotel gives the emergency services an immediate and tight search radius.
+When the operator answers, state the problem using the word "тут". Tell them **Тут пожежа!** (There is a fire here!) or **Тут аварія!** (There is an accident here!). Immediately follow this with your location: **Я на вулиці...** (I am on ... street), **Я біля...** (I am near...), or provide your full **адреса** (address).
 
-Medical and personal emergencies require highly specific vocabulary. Use the dedicated pain structure to describe your physical issues to a responding doctor. For frustrating administrative disasters, state that you lost your documents using the correct gendered past tense verb form. Always keep your official surname and mobile phone number ready for the inevitable official forms.
+At a medical facility, be direct about your needs. Say **Мені потрібен лікар** (I need a doctor) and describe your symptoms with **У мене болить...** (My ... hurts). Always have your personal information ready. You must be able to state your name, surname, phone number, address, and country. Finally, if you lose something important, report it clearly: **Я загубив паспорт** or **Я загубила паспорт** (I lost my passport). As a final self-check, practice a simulated 112 call aloud: state the specific problem, give your exact location, and give your name.
 
-Before moving on to the next learning module, perform this final rigorous self-check to ensure you are truly ready for unexpected situations. Read these questions carefully and try to answer them aloud in clear Ukrainian. These phrases are your ultimate linguistic safety net. Practice them until they feel completely automatic, so you never have to search your memory for words when you truly need them the most.
+Review these critical questions to test your readiness for an emergency in Ukraine. Read the question and answer aloud.
 
-*   Can you call 112 and state there is an accident? (**Тут аварія!**)
-*   Can you give your current address including street and building? (**Вулиця..., будинок...**)
-*   Can you tell a doctor what hurts? (**У мене болить...**)
-*   Can you report a lost passport to the police? (**Я загубив паспорт. Моє прізвище...**)
-*   Do you know the difference between 101, 102, and 103?
+*   **Питання:** Як викликати поліцію чи швидку? *(How to call the police or ambulance?)*
+    **Відповідь:** Викличте поліцію! Викличте швидку!
+*   **Питання:** Як сказати, що сталася аварія або пожежа? *(How to say that an accident or fire happened?)*
+    **Відповідь:** Тут аварія! Тут пожежа!
+*   **Питання:** Як сказати, що комусь погано? *(How to say that someone is feeling bad?)*
+    **Відповідь:** Людині погано! Допоможіть!
+*   **Питання:** Як сказати про втрату документів? *(How to tell about the loss of documents?)*
+    **Відповідь:** Я загубив паспорт. Я загубила паспорт.
+*   **Питання:** Як сказати про біль і потребу в лікарі? *(How to tell about pain and the need for a doctor?)*
+    **Відповідь:** У мене болить голова. Мені потрібен лікар.
 
+> Це екстрена ситуація. Антон телефонує один нуль два. Він швидко дає свою адресу. Офіцер слухає уважно. Поліція вже їде.
+> *This is an emergency situation. Anton calls one zero two. He quickly gives his address. The officer listens carefully. The police are already on their way.*
 </module_content>
 
 ---
@@ -266,48 +320,68 @@ version: "1.0"
 module: emergencies
 level: a1
 
+# NOTE — these are SHAPE examples. The real targets are at the top of this prompt
+# (10 total / 4–6 inline / 6–9 workbook,
+# 6+ items per activity). The shapes below are TRUNCATED for readability;
+# YOUR output MUST hit those minimums.
+
 inline:
   - id: marker-id-here        # MUST match an <!-- INJECT_ACTIVITY: ... --> marker
     type: quiz                 # activity type
     instruction: "Оберіть правильний варіант"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - question: "_____ стіл"
-        options: ["мій", "моя", "моє"]
+        options: ["мій", "моя", "моє", "мої"]
         correct: 0             # 0-based index
+      - question: "Це ____ книга."
+        options: ["мій", "моя", "моє", "мої"]
+        correct: 1
+      # ... add at least 6 items total — never stop at 1-2
 
   - id: another-marker-id
     type: fill-in
     instruction: "Вставте правильне слово"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - sentence: "Це ____ кімната."
         answer: "моя"
         options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ вікно."
+        answer: "моє"
+        options: ["мій", "моя", "моє"]
+      # ... ≥ 6 items total
 
 workbook:
-  - type: match-up
+  - id: match-up-vocab
+    type: match-up
     instruction: "З'єднайте пари"
-    pairs:
+    pairs:                     # ← real output: ≥ 6 pairs
       - left: "стіл"
         right: "він"
       - left: "книга"
         right: "вона"
       - left: "вікно"
         right: "воно"
+      # ... ≥ 6 pairs total
 
-  - type: group-sort
+  - id: group-sort-gender
+    type: group-sort
     instruction: "Розподіліть слова за категоріями"
     groups:
-      - label: "Category A"
-        items: ["word1", "word2"]
-      - label: "Category B"
-        items: ["word3", "word4"]
+      - label: "Чоловічий рід"
+        items: ["стіл", "олівець", "будинок"]   # ≥ 3 items per group
+      - label: "Жіночий рід"
+        items: ["книга", "ручка", "школа"]
+      - label: "Середній рід"
+        items: ["вікно", "море", "молоко"]
 
-  - type: true-false
+  - id: true-false-grammar
+    type: true-false
     instruction: "Правда чи ні?"
-    items:
-      - statement: "Statement here"
-        correct: true
-        explanation: "Why it's true"
+    items:                     # ← real output: ≥ 6 items
+      - statement: "«Книга» — це чоловічий рід."
+        correct: false
+        explanation: "Книга закінчується на -а, отже жіночий рід."
+      # ... ≥ 6 items total
 
   - type: error-correction
     instruction: "Виправте помилку"
@@ -378,7 +452,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -439,10 +513,15 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 ## Quality Rules
 
-**ITEM COUNT MINIMUMS (non-negotiable):**
-- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
-- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
-- If you can't think of enough items, add more examples from the module's vocabulary and content.
+**ACTIVITY COUNT MINIMUMS (non-negotiable, audit-enforced):**
+- **Total: 10 activities.** Inline: 4–6. Workbook: 6–9. The audit gate FAILS the module if you ship fewer.
+- **Type diversity: workbook MUST cover ≥5 distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
+- **Match the inline markers exactly.** Every `<!-- INJECT_ACTIVITY: id -->` marker in the prose needs a matching inline activity with that exact id. Skipping markers means the lesson tab is broken.
+
+**ITEM COUNT MINIMUMS (non-negotiable, per-activity):**
+- **Default minimum: 6 items per activity.** Quiz, fill-in, match-up, true-false, anagram, error-correction, translate, cloze, mark-the-words, divide-words, count-syllables, odd-one-out, group-sort categories: all ≥ 6.
+- **Lower minimums for specific types only:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items, essay-response/critical-analysis = 1 prompt.
+- If you can't think of enough items, add more examples from the module's vocabulary and content. NEVER ship a 1-item or 2-item activity unless its type cap explicitly allows it.
 - **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
 - **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
@@ -549,6 +628,27 @@ IMPORTANT: After using tools, output your COMPLETE module content as plain text.
 1. Run `verify_words` on all Ukrainian words in your exercises — every word must exist in VESUM
 2. Run `query_cefr_level` on any word you're unsure about — it must be a1-appropriate
 3. For fill-in answers and distractors, verify the exact form (case, number, gender) with `verify_lemma`
+
+---
+
+## ⚠️ MANDATORY FINAL CHECKLIST — verify before emitting YAML
+
+Walk through this checklist explicitly before you start emitting. If ANY box is unchecked, fix it FIRST.
+
+- [ ] My output has **at least 4** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
+- [ ] My output has **at least 6** workbook activities.
+- [ ] **Total ≥ 10.**
+- [ ] **Every** activity has **at least 6** items, pairs, or statements (except types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3, essay-response=1).
+- [ ] The module (inline + workbook combined) uses **at least 0 distinct activity types** (or 4+ when 0 = 0 and the workbook size allows it). I am NOT shipping a wall of quizzes.
+- [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
+- [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
+- [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+- [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+- [ ] My inline count is between 4 and 6. I did NOT create more injection markers than 6.
+- [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
+- [ ] At B1+, all instructions are in Ukrainian (no English fallback).
+
+If you cannot tick all of these, REGENERATE the activities BEFORE outputting. Shipping under-spec means the build rejects you and the heal loop has to redo your work — wasting compute.
 
 ---
 

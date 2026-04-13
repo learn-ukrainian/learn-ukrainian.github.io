@@ -1,139 +1,117 @@
 {
-  "total_items": 44,
-  "grounded_items": 23,
+  "total_items": 42,
+  "grounded_items": 25,
   "ungrounded": [
     {
-      "word": "ясо",
+      "word": "добрий",
       "exercise_type": "fill-in",
-      "context": "Тут є м_ясо.",
+      "context": "Добрий ____!",
       "role": "context"
     },
     {
-      "word": "мій",
+      "word": "біла",
       "exercise_type": "fill-in",
-      "context": "Це мій комп_ютер.",
+      "context": "Це біла ____.",
       "role": "context"
     },
     {
-      "word": "комп",
+      "word": "свіже",
       "exercise_type": "fill-in",
-      "context": "Це мій комп_ютер.",
+      "context": "Це свіже ____.",
       "role": "context"
     },
     {
-      "word": "ютер",
-      "exercise_type": "fill-in",
-      "context": "Це мій комп_ютер.",
-      "role": "context"
-    },
-    {
-      "word": "батьк",
-      "exercise_type": "fill-in",
-      "context": "Це батьк_о.",
-      "role": "context"
-    },
-    {
-      "word": "учител",
-      "exercise_type": "fill-in",
-      "context": "Там учител_.",
-      "role": "context"
-    },
-    {
-      "word": "маю",
-      "exercise_type": "fill-in",
-      "context": "Я маю п_ять.",
-      "role": "context"
-    },
-    {
-      "word": "ять",
-      "exercise_type": "fill-in",
-      "context": "Я маю п_ять.",
-      "role": "context"
-    },
-    {
-      "word": "легко'",
+      "word": "дуб'",
       "exercise_type": "true-false",
-      "context": "The word 'легко' is pronounced with a hard, deep 'г' sound.",
-      "role": "context"
-    },
-    {
-      "word": "г'",
-      "exercise_type": "true-false",
-      "context": "The word 'легко' is pronounced with a hard, deep 'г' sound.",
-      "role": "context"
-    },
-    {
-      "word": "балка'",
-      "exercise_type": "true-false",
-      "context": "The words 'балка' and 'палка' sound exactly the same.",
-      "role": "context"
-    },
-    {
-      "word": "палка'",
-      "exercise_type": "true-false",
-      "context": "The words 'балка' and 'палка' sound exactly the same.",
+      "context": "In Ukrainian, a voiced consonant at the end of a word (like ",
       "role": "context"
     },
     {
       "word": "мороз'",
       "exercise_type": "true-false",
-      "context": "The word 'мороз' loses its vibration at the end and sounds l",
+      "context": "The word 'мороз' is pronounced with a clear [з] at the end.",
       "role": "context"
     },
     {
-      "word": "с'",
+      "word": "легко'",
       "exercise_type": "true-false",
-      "context": "The word 'мороз' loses its vibration at the end and sounds l",
-      "role": "context"
-    },
-    {
-      "word": "анок",
-      "exercise_type": "quiz",
-      "context": "___анок (porch)",
-      "role": "context"
-    },
-    {
-      "word": "удзик",
-      "exercise_type": "quiz",
-      "context": "___удзик (button)",
+      "context": "The word 'легко' is a rare exception and is pronounced with ",
       "role": "context"
     },
     {
       "word": "арно",
       "exercise_type": "quiz",
-      "context": "___арно (nicely)",
+      "context": "Which letter completes the word: ____арно (nicely)?",
+      "role": "context"
+    },
+    {
+      "word": "удзик",
+      "exercise_type": "quiz",
+      "context": "Which letter completes the word: ____удзик (button)?",
+      "role": "context"
+    },
+    {
+      "word": "анок",
+      "exercise_type": "quiz",
+      "context": "Which letter completes the word: ____анок (porch)?",
       "role": "context"
     },
     {
       "word": "ора",
       "exercise_type": "quiz",
-      "context": "___ора (mountain)",
+      "context": "Which letter completes the word: ____ора (mountain)?",
       "role": "context"
     },
     {
       "word": "олова",
       "exercise_type": "quiz",
-      "context": "___олова (head)",
+      "context": "Which letter completes the word: ____олова (head)?",
       "role": "context"
     },
     {
       "word": "ле",
       "exercise_type": "quiz",
-      "context": "ле___ко (easily)",
+      "context": "Which letter completes the word: легко (pronounced ле____ко)",
       "role": "context"
     },
     {
       "word": "ко",
       "exercise_type": "quiz",
-      "context": "ле___ко (easily)",
+      "context": "Which letter completes the word: легко (pronounced ле____ко)",
+      "role": "context"
+    },
+    {
+      "word": "великий",
+      "exercise_type": "fill-in",
+      "context": "Великий ____.",
+      "role": "context"
+    },
+    {
+      "word": "сірий",
+      "exercise_type": "fill-in",
+      "context": "Сірий ____.",
+      "role": "context"
+    },
+    {
+      "word": "мій",
+      "exercise_type": "fill-in",
+      "context": "Мій ____.",
+      "role": "context"
+    },
+    {
+      "word": "лівий",
+      "exercise_type": "fill-in",
+      "context": "Лівий ____.",
       "role": "context"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 12,
-    "tested_in_exercises": 11,
+    "tested_in_exercises": 9,
     "not_tested": [
-      "гарно"
+      "гарно",
+      "дев'ять",
+      "м'який"
     ]
   },
   "all_grounded": false

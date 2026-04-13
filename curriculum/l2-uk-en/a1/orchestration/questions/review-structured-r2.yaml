@@ -1,0 +1,51 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: All planned sections and all 4 activity markers are present, but the plan
+    references are not cited anywhere in the prose (`Варзацька`, `ULP`, `Episode 35`
+    = 0 hits), and the final self-check drops the
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: 'In `Пита́льні слова́`, the module says: `"The word **що** only asks for
+    identification."` That is false; S.U.M.-11 defines **що** as asking about a thing,
+    phenomenon, or action.'
+- dimension: 3
+  name: Pedagogical quality
+  score: 7
+  evidence: The section first says `"these question words take the very first position"`
+    but later teaches `"Ти де живеш?"` as acceptable, so the rule is presented too
+    rigidly and then immediately softened.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required plan words are present in context, and recommended items
+    such as `ніхто`, `нічого`, `ніколи`, `жити`, `розуміти`, and `тому що` are also
+    represented naturally.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: The marker inventory matches the plan exactly, and each marker comes after
+    the concept it is meant to test.
+- dimension: 6
+  name: Engagement & tone
+  score: 7
+  evidence: '`"You now possess a complete set of question words..."` slips into the
+    gamified/corporate tone the rubric explicitly warns against.'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All planned H2 sections are present and ordered correctly, and the pipeline
+    word count is 1630, safely above target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: No Russian-comparison framing or cultural inaccuracies found.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 7
+  evidence: 'The Marco/Anna dialogue is one-sided: Marco asks 4 questions and Anna
+    asks 0, so it reads like an interview rather than a natural exchange.'
+findings: []

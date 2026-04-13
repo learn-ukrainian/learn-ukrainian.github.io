@@ -1,105 +1,78 @@
 ## Linguistic Scan
-No linguistic errors found in terms of Russianisms, Surzhyk, or calques. All vocabulary is perfectly attested in Ukrainian. However, there is a critical phonetic/orthographic error regarding the dash rule, which is documented in the findings below.
+No Russianisms, Surzhyk, calques, paronyms, or forbidden Russian characters found in the Ukrainian text.
+
+One factual language-teaching error is present:
+- In `## Я — студент`, `**Вона — українка.**` is glossed as `*(I am a Ukrainian woman.)*`; that English gloss is wrong and should be third person.
 
 ## Exercise Check
-- `<!-- INJECT_ACTIVITY: fill-in-self-intro -->`: Placed correctly after "Мене звати...".
-- `<!-- INJECT_ACTIVITY: quiz-register-choice -->`: Placed incorrectly after "Це...". The "Це..." section focuses on "What is this/Who is this" and does not teach registers. It should be moved after the "Особові займенники" section, which actually teaches formal vs. informal pronouns.
-- `<!-- INJECT_ACTIVITY: match-up-gendered-professions -->`: Placed correctly after "Я — студент".
-- `<!-- INJECT_ACTIVITY: fill-in-dialogue-final -->`: Placed correctly after "Звідки?".
-- Total markers: 4 (matches plan exactly).
+Four activity markers are present and correctly sequenced: `fill-in-dialogue`, `quiz-formal-informal`, `match-up-professions`, `fill-in-self-intro`. They appear after the relevant teaching sections and are spread through the module rather than clustered at the end. No inline DSL exercise blocks were provided, so there is no exercise logic to audit beyond marker placement.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 10/10 | Word budget exceeded (1725 words vs 1200 target). All `content_outline` points covered perfectly. Dialogues match the plan exactly. |
-| 2. Linguistic accuracy | 8/10 | The text claims the dash is "completely silent when speaking... without any extra pause," which contradicts the phonetic rule that the dash represents a logical pause. |
-| 3. Pedagogical quality | 8/10 | The module teaches that a dash is used to replace "to be" (Я — студент), but then immediately presents 7 examples without dashes ("Він студент"). The summary includes "Хто ви?" which was not taught and is pragmatically abrupt. |
-| 4. Vocabulary coverage | 10/10 | All required vocabulary is integrated seamlessly into contextual sentences and dialogues. Recommended vocabulary is also heavily utilized. |
-| 5. Exercise quality | 9/10 | The `quiz-register-choice` activity is placed directly after the "Це..." section, which does not cover formal/informal registers. |
-| 6. Engagement & tone | 9/10 | Excellent teacher persona and cultural notes, but the conclusion uses banned corporate/gamified language ("You now possess the core tools..."). |
-| 7. Structural integrity | 10/10 | Clean markdown, clear H2 headers matching the outline exactly. Word count is strong. |
-| 8. Cultural accuracy | 10/10 | Explains the cultural context of handshakes, eye contact, and the literal translation of "мене звати" effectively. |
-| 9. Dialogue & conversation quality | 10/10 | The dialogues are contextualized beautifully (hostel vs conference) and flow naturally for A1 learners. |
+| 1. Plan adherence | 8/10 | All planned sections and all 4 planned activity types are present, but section pacing runs long: `Діалоги` is about 389 words vs 350 planned, `Мене звати...` about 312 vs 250, and `Особові займенники` about 162 vs 100. |
+| 2. Linguistic accuracy | 8/10 | Ukrainian text is clean overall, but `- **Вона — українка.** *(I am a Ukrainian woman.)*` has a wrong gloss. |
+| 3. Pedagogical quality | 7/10 | `## Особові займенники` explains pronouns and register but gives no Ukrainian example sentences using them, so this section reads like an inventory rather than presentation-to-practice. |
+| 4. Vocabulary coverage | 9/10 | Required items such as `мене звати`, `як тебе звати?`, `як вас звати?`, `це`, `дуже приємно`, `студент/студентка`, `лікар/лікарка`, `українець/українка`, and `Україна` all appear in prose or dialogue. |
+| 5. Exercise quality | 10/10 | Marker count matches the 4 `activity_hints`, and each marker is placed after the concept it should test. |
+| 6. Engagement & tone | 6/10 | The prose repeatedly slips into filler/triumphal phrasing: `absolute foundation of every introduction`, `must memorize exactly as it is`, `You now possess the foundational building blocks...`. |
+| 7. Structural integrity | 8/10 | All H2 sections are present and the pipeline word count is safely above target at 1770, but the tip block contains a visible artifact: `After  You should say ...`. |
+| 8. Cultural accuracy | 10/10 | No Russian-centric framing, no cultural misrepresentation, and the module presents Ukrainian on its own terms. |
+| 9. Dialogue & conversation quality | 9/10 | The dialogues use named speakers and plausible first-meeting contexts; Dialogue 1 and 2 are usable A1 conversation models. |
 
 ## Findings
+[LINGUISTIC ACCURACY] [SEVERITY: critical]  
+Location: `## Я — студент` — `- **Вона — українка.** *(I am a Ukrainian woman.)*`  
+Issue: The English gloss mismatches the Ukrainian subject `Вона` and teaches the wrong person mapping.  
+Fix: Change the gloss to `*(She is a Ukrainian woman.)*`.
 
-[Linguistic accuracy] [Critical]
-Location: Section "Я — студент (I am a student)" — `The dash (—) replaces the missing verb "to be" in writing, but it is completely silent when speaking. When reading the sentence **Я — лікар** out loud, simply say the two words naturally without any extra pause.`
-Issue: The text provides a factually incorrect phonetic rule. In Ukrainian, a dash between a subject and a nominal predicate explicitly represents a logical intonational pause. Instructing learners to "simply say the two words naturally without any extra pause" contradicts the orthographic reason for the dash's existence.
-Fix: Update the tip to explain that a slight pause can be made where the dash is.
+[PEDAGOGICAL QUALITY] [SEVERITY: major]  
+Location: `## Особові займенники` — `The singular pronouns are...` through `If you meet an adult stranger, always begin with **ви**.`  
+Issue: The section presents pronouns as a rule block without showing them in actual A1 sentences.  
+Fix: Replace those paragraphs with a shorter paragraph that includes example sentences such as `Я — студент.`, `Вона з України.`, and `Вони з Канади.`
 
-[Pedagogical quality] [Major]
-Location: Section "Я — студент (I am a student)" — `**Він студент.** (He is a student.) vs **Вона студентка.**`
-Issue: The text establishes the rule that a long dash marks the spot of the missing verb, but then lists 7 consecutive examples of professions and nationalities without the dash, directly contradicting its own stated rule and confusing learners.
-Fix: Add the dash to all profession and nationality examples to maintain consistency with the section's rule.
+[PLAN ADHERENCE] [SEVERITY: major]  
+Location: `## Діалоги` opening paragraph, `## Мене звати...` opening paragraph, and `## Підсумок — Summary`  
+Issue: Repetitive English setup/filler pushes sections past their planned budgets and slows the module’s pace.  
+Fix: Trim those paragraphs to concise, example-led wording.
 
-[Exercise quality] [Major]
-Location: Section "Це... (This is...)" — `<!-- INJECT_ACTIVITY: quiz-register-choice -->`
-Issue: The activity `quiz-register-choice` tests formal vs informal register, but it is placed after a section about pointing at objects/people ("Who is this/What is this"), which has nothing to do with registers.
-Fix: Move the activity marker to immediately after the "Особові займенники" section, where formal and informal pronouns (ти vs ви) are actually taught.
-
-[Pedagogical quality] [Major]
-Location: Section "Підсумок — Summary" — `- **Хто ви? — Я — вчителька.** (Who are you? — I am a teacher.)`
-Issue: The summary includes the question "Хто ви?", which was never taught in the module. Furthermore, asking "Хто ви?" as a standalone question to find out someone's profession is pragmatically abrupt ("Who are you?") in Ukrainian.
-Fix: Replace the question with a simple declarative statement taught in the text.
-
-[Engagement & tone] [Minor]
-Location: Section "Підсумок — Summary" — `You now possess the core tools to introduce yourself...`
-Issue: The text uses banned corporate/gamified language ("You now possess...").
-Fix: Reword to a more natural teacher phrase ("You are now ready to...").
+[STRUCTURAL INTEGRITY] [SEVERITY: minor]  
+Location: `## Мене звати...` tip block — `After  You should say ...`  
+Issue: Visible formatting artifact / malformed sentence.  
+Fix: Remove the stray `After` and keep the note concise.
 
 ## Verdict: REVISE
-The module is incredibly strong, exceeding word counts and integrating cultural notes effectively. However, the contradiction regarding the dash rule (teaching it, then ignoring it in 7 examples) and the factually incorrect phonetic claim about the dash must be fixed. There are also minor structural fixes required for exercise placement.
+REVISE. There is a critical teaching error in one gloss, plus major pedagogy and pacing/tone issues. Findings are present, and multiple dimensions are below 9, so this does not meet the PASS gate.
 
 <fixes>
-- find: |-
-    The dash (—) replaces the missing verb "to be" in writing, but it is completely silent when speaking. When reading the sentence **Я — лікар** out loud, simply say the two words naturally without any extra pause.
-  replace: |-
-    The dash (—) replaces the missing verb "to be" in writing. When reading the sentence **Я — лікар** out loud, you can either say the two words naturally or make a very slight pause where the dash is.
-- find: |-
-    **Він студент.** (He is a student.) vs **Вона студентка.** (She is a student.)
-    **Він лікар.** (He is a doctor.) vs **Вона лікарка.** (She is a doctor.)
-    **Він вчитель.** (He is a teacher.) vs **Вона вчителька.** (She is a teacher.)
-    **Він програміст.** (He is a programmer.) vs **Вона програмістка.** (She is a programmer.)
-  replace: |-
-    **Він — студент.** (He is a student.) vs **Вона — студентка.** (She is a student.)
-    **Він — лікар.** (He is a doctor.) vs **Вона — лікарка.** (She is a doctor.)
-    **Він — вчитель.** (He is a teacher.) vs **Вона — вчителька.** (She is a teacher.)
-    **Він — програміст.** (He is a programmer.) vs **Вона — програмістка.** (She is a programmer.)
-- find: |-
-    **Він українець.** (He is a Ukrainian.) vs **Вона українка.** (She is a Ukrainian.)
-    **Він американець.** (He is an American.) vs **Вона американка.** (She is an American.)
-    **Він канадієць.** (He is a Canadian.) vs **Вона канадка.** (She is a Canadian.)
-  replace: |-
-    **Він — українець.** (He is a Ukrainian.) vs **Вона — українка.** (She is a Ukrainian.)
-    **Він — американець.** (He is an American.) vs **Вона — американка.** (She is an American.)
-    **Він — канадієць.** (He is a Canadian.) vs **Вона — канадка.** (She is a Canadian.)
-- find: |-
-    This construction is the fastest way to build your vocabulary. You point, you ask, you identify.
+- find: |
+    - **Вона — українка.** *(I am a Ukrainian woman.)*
+  replace: |
+    - **Вона — українка.** *(She is a Ukrainian woman.)*
+- find: |
+    :::tip
+    After  You should say **дуже приємно!** (pleased to meet you!) or **приємно познайомитись!** (pleased to get acquainted!). These polite phrases are always said after the names have been shared, never before.
+    :::
+  replace: |
+    :::tip
+    You should say **дуже приємно!** (pleased to meet you!) or **приємно познайомитись!** (pleased to get acquainted!). These polite phrases are said after the names have been shared, not before.
+    :::
+- find: |
+    The vocabulary and phrases you learn here are the absolute foundation of every introduction in the Ukrainian language. Whether you are traveling through the country, meeting a new colleague, or making friends, you will use these patterns constantly. Below are three common situations where people meet for the first time. Read them carefully and pay attention to the natural flow of the questions and answers.
+  replace: |
+    These dialogues show simple first-meeting situations. Read them and notice how Ukrainian speakers ask for a name, say where they are from, and respond politely.
+- find: |
+    When you want to state your name, you use the phrase **мене звати** (my name is). This is a fixed chunk of language that you must memorize exactly as it is. If you translate it literally into English, it actually means "they call me". The Ukrainian language does not use the exact equivalent of the English phrase "My name is". You do not need a verb "to be" to state your name here. Resist the urge to translate from English word for word. Always use **мене звати** followed by your name.
+  replace: |
+    To state your name, use **мене звати** followed by your name. Literally, it means something like "they call me", so do not translate English "My name is" word for word.
+- find: |
+    The singular pronouns are **я** (I), **ти** (you, informal), **він** (he), and **вона** (she). The plural pronouns are **ми** (we), **ви** (you, formal or plural), and **вони** (they). The pronoun **він** is used for men and male figures, while **вона** is used for women and female figures. When referring to a mixed group of people, always use **вони**.
 
-    <!-- INJECT_ACTIVITY: quiz-register-choice -->
-
-    ## Особові займенники (Personal Pronouns)
-  replace: |-
-    This construction is the fastest way to build your vocabulary. You point, you ask, you identify.
-
-    ## Особові займенники (Personal Pronouns)
-- find: |-
-    When writing a formal letter or email to one specific person, you capitalize it as **Ви** to show high respect. These pronouns drive the rest of the sentence.
-
-    ## Я — студент (I am a student)
-  replace: |-
-    When writing a formal letter or email to one specific person, you capitalize it as **Ви** to show high respect. These pronouns drive the rest of the sentence.
-
-    <!-- INJECT_ACTIVITY: quiz-register-choice -->
-
-    ## Я — студент (I am a student)
-- find: |-
-    You now possess the core tools to introduce yourself, identify the world around you, and engage in a first conversation. You can navigate formal and informal encounters with confidence. Use this checklist to verify your understanding of the foundational patterns:
-  replace: |-
-    You are now ready to introduce yourself, identify the world around you, and engage in a first conversation. You can navigate formal and informal encounters with confidence. Use this checklist to verify your understanding of the foundational patterns:
-- find: |-
-    - **Хто ви? — Я — вчителька.** (Who are you? — I am a teacher.)
-  replace: |-
-    - **Вона — вчителька.** (She is a teacher.)
+    The pronoun **ви** has a dual nature. You use it when speaking to a group of people (plural "you"). You also use it when speaking respectfully to one adult person (formal singular "you"). In formal written correspondence, this respectful singular form is capitalized as **Ви**. Mastering the difference between **ти** and **ви** is essential for polite communication. If you meet an adult stranger, always begin with **ви**.
+  replace: |
+    The basic pronouns are **я** (I), **ти** (you, informal), **він** (he), **вона** (she), **ми** (we), **ви** (you, formal or plural), and **вони** (they). Use them in short A1 sentences: **Я — студент.** **Вона з України.** **Вони з Канади.** Use **ти** with friends and peers. Use **ви** for a group or for one person in a formal situation; in formal writing, this singular form is capitalized as **Ви**.
+- find: |
+    You now possess the foundational building blocks for a real conversation in the Ukrainian language. You can introduce yourself, state your profession, and ask others about their origins with confidence. The self-check for this module is folded directly into the dialogue practice above. Review the dialogues one more time before moving on to the next set of activities.
+  replace: |
+    You can now introduce yourself, say where you are from, and give a basic profession or nationality. Review the dialogues once more before moving to the activities.
 </fixes>

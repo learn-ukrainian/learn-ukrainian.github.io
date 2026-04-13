@@ -3,53 +3,55 @@ scores:
 - dimension: 1
   name: Plan adherence
   score: 10
-  evidence: The module perfectly follows the `content_outline`. All dialogue points,
-    grammar concepts (accusative inanimate, conjugations), and `vocabulary_hints`
-    are included. The Summary matches the plan's exac
+  evidence: Covers the planned dialogue content with `"Я їм кашу і п'ю каву... Вона
+    їсть хліб з маслом і п'є чай... Вони їдять яйця і п'ють молоко"` and `"Ми їмо
+    суп і салат... Ми п'ємо воду або сік"`; the textbo
 - dimension: 2
   name: Linguistic accuracy
-  score: 8
-  evidence: 'The text inaccurately claims: "This apostrophe indicates a brief pause
-    before the soft vowel." Ukrainian does not have "soft vowels", and the apostrophe
-    indicates separate pronunciation (hard consonan'
+  score: 10
+  evidence: 'Accusative examples are correct throughout: `"кава → каву"`, `"вода →
+    воду"`, `"риба → рибу"`, `"картопля → картоплю"`; no Russianisms, Surzhyk, calques,
+    paronym misuse, or forbidden Russian character'
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: Excellent progression from dialogues to specific verb paradigms, and then
-    to the accusative rule. The mental trigger question *Що?* is explained effectively,
-    and the "Soup Rule" is a fantastic pedagog
+  score: 9
+  evidence: 'Strong PPP flow: presentation in dialogues, then conjugation tables,
+    then rule explanation, then practice markers. The prose explicitly guides noticing:
+    `"Notice the forms in context"` before moving t'
 - dimension: 4
   name: Vocabulary coverage
   score: 10
-  evidence: All required and recommended words from the plan (*їсти*, *пити*, *каву*,
-    *рибу*, *кашу*, *сметану*, etc.) are introduced naturally and with sufficient
-    context.
+  evidence: 'All required plan vocabulary appears naturally in prose: `їсти`, `пити`,
+    `їм`, `п''ю`, `каву`, `воду`, `рибу`; recommended items also appear, including
+    `кашу`, `картоплю`, `сметану`, `їсть`, `п''є`, `їд'
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: The four activity markers are placed logically to test immediate recall
-    and application of the taught concepts, adhering to the plan's hint types and
-    focuses.
+  score: 9
+  evidence: The module contains the expected 4 exercise injections, each after the
+    relevant teaching block, and the summary self-check directly tests the target
+    forms with `"риба → рибу"`, `"вода → воду"`, `"хліб
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: The tone is warm and engaging without being corporate. Phrases like "In
-    Ukraine, food is not just fuel; it is the center of social life" set a welcoming
-    and culturally grounded tone.
+  score: 9
+  evidence: 'The tone is teacherly and concrete rather than gamified: `"Start with
+    the dialogue and notice what each person eats and drinks"` and `"As an active
+    self-check, say three things you eat and three thing'
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: All required sections are present with correct headings. The word count
-    is 1592 (well above the 1200 target). The markdown formatting is clean.
+  evidence: 'All planned H2 headings are present and ordered correctly: `## Діалоги`,
+    `## Їсти і пити`, `## Знахідний відмінок — неживе`, `## Підсумок`; markdown is
+    clean, and the pipeline word count is 1294, abov'
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Accurate cultural details are provided, such as the strict "Soup Rule"
-    and the explicit warning against using Russianisms like "кофе" and "творог".
+  evidence: The explanation frames Ukrainian on its own terms, especially in `"A school-style
+    way to check it is Бачу що? кого?"`; there is no Russia-centered comparison or
+    cultural distortion.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: Dialogues represent realistic situations (lunch break, asking what someone
-    eats for breakfast) and use the target grammar naturally within the strict A1
-    constraints.
+  score: 9
+  evidence: 'The dialogues use named speakers and believable settings: `"Оксана і
+    Тарас працюють разом. Зараз ранок."` and `"Обідня перерва в офісі."` The exchanges
+    are multi-turn and functional without collapsing'
 findings: []

@@ -25,7 +25,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-це відбувається. Завдяки цій формі наше мовлення стає багатим, динамічним та економним. Адже ми уникаємо постійного повторення одних і тих самих займенників та сполучників. Сама назва «дієприслівник» підказує нам його унікальну подвійну природу. Ця форма дуже гармонійно поєднує в собі ознаки дієслова та прислівника. Від дієслова вона успадкувала **вид** *(aspect)* — у нашому випадку **недоконаний вид** *(imperfective aspect)*. Цей вид завжди вказує на тривалу або паралельну дію в момент мовлення. Також дієприслівник зберігає здатність мати при собі різноманітні залежні слова. Наприклад, ми кажемо «**читаючи книгу**» *(while reading a book)*. Тут слово «книгу» безпосередньо залежить від дії «читаючи», що є типовою дієслівною ознакою. З іншого боку, дієприслівник має дуже сильну спорідненість із прислівником. Найголовніше правило: він є абсолютно **незмінюваним** *(invariable)*. Він не має закінчень, не відмінюється за відмінками, родами чи числами. У реченні дієприслівник завжди виконує синтаксичну роль **обставини** *(adverbial modifier)*. Коли ми кажемо «Читаючи, він радісно усміхався», слово «читаючи» працює як повноцінна обставина. Воно показує нам, як саме або під час чого він усміхався. Студенти, які вивчають українську мову, досить часто плутають дієприслівник із дієприкметником. Це цілком природно, оскільки обидва ці граматичні терміни звучать дуже схоже. Проте між ними є фундаментальна і дуже важлива різниця у функції та поведінці. Дієприкметник — це форма, яка описує певний предмет за його дією. Тому вона завжди поводиться в реченні як звичайний прикметник. Дієприкметник завжди залежить від іменника і відповідає на питання «який? яка? яке? які?». Розгляньмо приклад: «**читаюча дівчина**» *(the reading girl)*. Тут слово «читаюча» описує саму дівчину і змінюється разом з іменником. Натомість дієприслівник завжди залежить тільки від дієслова-присудка і описує саму дію. Він поводиться як прислівник і відповідає на питання «як?», «коли?» або «чому?». Наприклад: «Дівчина радісно усміхалася, читаючи цікаву книгу». Слово «читаючи» описує процес усмішки, а не характеристику самої дівчини. Порівняймо ще один класичний приклад для кращого розуміння. Якщо ми хочемо описати очі щасливої людини, ми скажемо «**сяючі очі**» *(shining eyes)*. Це дієприкметник, який узгоджується з іменником у називному відмінку множини. Але якщо ми описуємо дію людини, ми скажемо: «Вона йшла, **сяючи** *(shining / while shining)* від щастя». Тут незмінюваний дієприслівник на кінці має літеру «и» і пояснює, як саме вона йшла. Найважливіше граматичне правило, яке ви повинні обов'язково запам'ятати для правильного використання цієї форми. Дієприслівник і основне дієслово-присудок завжди повинні мати спільний **логічний підмет** *(logical subject)*. Це означає, що одна й та сама людина або предмет виконує і головну, і додаткову дію. Розгляньмо правильний приклад: «Марія, слухаючи музику, готувала смачний обід». Хто готував обід? Марія. Хто слухав музику? Також Марія. Обидві дії виконує один суб'єкт, і вони відбуваються **одночасно** *(simultaneously)*. Це абсолютно правильне та ідеальне використання дієприслівника в українській мові. Якщо ж додаткову дію виконує одна особа, а головну — інша, виникає серйозна граматична помилка. Її часто називають «висячим дієприслівником». Наприклад, категорично не можна сказати: «Йдучи по вулиці, почався сильний дощ». Виходить, що сильний дощ спочатку йшов по вулиці, а потім раптово почався. У наступних розділах ми детально розберемо цю типову помилку та навчимося її уникати. Поки що головне — запам'ятати правило спільного виконавця дії. <!-- INJECT_ACTIVITY: reading-identifying-gerunds -->
+the sentence "I drink hot coffee while reading the morning news", the main action is drinking coffee. And the word "while reading" clearly shows that the additional action happens at exactly the same time.* To truly understand how these unique verb forms work in everyday Ukrainian, we need to carefully look at their fascinating hybrid nature. The **дієприслівник** *(adverbial participle/gerund)* elegantly combines the core grammatical features of two completely different parts of speech, making it a very versatile and powerful tool for building complex, flowing sentences. It bridges the gap between dynamic verbal actions and static descriptive adverbs, allowing native speakers to efficiently express multiple simultaneous events without awkwardly repeating the main subject or using too many basic conjunctions. З одного боку, він зберігає багато характерних рис дієслова. Він завжди має **недоконаний вид** *(imperfective aspect)*, може бути перехідним і здатний мати при собі залежні слова. Наприклад, у словосполученні «**пишучи** *(while writing)* довгого листа» ми чітко бачимо перехідність, адже дія спрямована на об'єкт. З іншого боку, ця форма надзвичайно схожа на звичайний прислівник. Це абсолютно незмінюване слово у будь-якому контексті. У реченні він завжди виконує важливу синтаксичну роль, яка традиційно називається **обставина** *(adverbial modifier)*. Наприклад, у реченні «Він приязно усміхався, розмовляючи зі мною» це слово працює як обставина способу дії. :::note **Quick tip** — The linguistic term дієприслівник literally translates as "verb-adverb" (дієслово + прислівник). This perfectly describes its unique hybrid nature in Ukrainian grammar, as it successfully borrows the sense of action from the verb and the invariable descriptive role from the adverb. ::: Студенти часто плутають цю граматичну форму з дієприкметником, але між ними існує глибока різниця. Дієприкметник завжди описує постійну або тимчасову ознаку предмета і працює в реченні виключно як означення. Він повністю залежить від іменника і слухняно відповідає на питання «який?». Натомість дієприслівник описує виключно саму дію і яскраво підкреслює паралельну **одночасність** *(simultaneity)* процесів. Він відповідає на запитання «як?», «коли?» або «чому?». Візьмемо для прикладу популярне словосполучення «сяючі очі». Тут слово «сяючі» — це класичний дієприкметник. А тепер поглянемо на інше речення: «Вона захоплено розповідала про свою подорож, **говорячи** *(while speaking)* дуже емоційно». У цьому випадку останнє слово — це типовий дієприслівник, який детально пояснює, як саме відбувалася **додаткова дія** *(secondary/additional action)*. Найважливіше правило використання цієї граматичної форми безпосередньо стосується підмета в реченні. Основна дія, яку виражає присудок, та супровідна додаткова дія обов'язково повинні мати один спільний **логічний підмет** *(logical subject)*. Це золоте правило синтаксису означає, що абсолютно та сама особа або предмет має виконувати обидві дії. Розглянемо простий і правильний приклад: «Марія, **слухаючи** *(while listening)* ритмічну музику, швидко готувала смачний обід». У цьому реченні Марія виконує головну дію — вона готує обід. Водночас саме Марія виконує додаткову дію, **читаючи** *(while reading)* кулінарний рецепт або підспівуючи виконавцю. Обидві дії гармонійно узгоджені і логічно належать одному діячу. Якщо ж ці дві дії виконують різні об'єкти, речення миттєво втрачає логіку і стає дуже комічним, наприклад: «Йдучи по темній вулиці, з мене раптово злетів мій теплий капелюх». Завжди уважно пам'ятайте про це базове правило спільного підмета. <!-- INJECT_ACTIVITY: reading-identifying-gerunds -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -563,7 +563,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -576,18 +643,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] дієприслівник (adverbial participle/gerund — unchangeable verb form)
+- [ ] недоконаний вид (imperfective aspect — ongoing/repeated action)
+- [ ] читаючи (while reading — imperfective gerund)
+- [ ] слухаючи (while listening — imperfective gerund)
+- [ ] пишучи (while writing — imperfective gerund)
+- [ ] говорячи (while speaking — imperfective gerund)
+- [ ] обставина (adverbial modifier — syntactic role of the gerund)
+- [ ] додаткова дія (secondary/additional action)
+- [ ] одночасність (simultaneity — actions happening at the same time)
+- [ ] логічний підмет (logical subject — must be shared)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Творення дієприслівників недоконаного виду (~750 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

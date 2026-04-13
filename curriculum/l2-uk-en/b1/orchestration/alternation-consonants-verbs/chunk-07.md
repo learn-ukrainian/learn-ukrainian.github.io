@@ -1,31 +1,48 @@
-## Підсумок: таблиця дієслівних чергувань
+## Підсумок: таблиця дієслівних чергувань (~450 words)
 
-Отже, ми дуже детально розглянули основні фонетичні процеси у сучасних дієсловах. Тепер важливо назавжди запам'ятати головну ідею цього модуля. Чергування приголосних звуків — це зовсім не хаотичний набір випадкових винятків, які треба механічно зазубрити. Навпаки, це справжній **фонетичний почерк** *(phonetic signature)* української дієслівної системи. Це надзвичайно струнка, логічна та історична закономірність нашої мови. Вона робить наше щоденне мовлення набагато милозвучнішим та плавнішим. 
+We have explored how **чергування** (alternation — systematic sound change) is not a random set of exceptions, but a beautiful phonetic signature of the Ukrainian **дієслово** (verb). This historical **палаталізація** (palatalization — softening of consonant) creates a predictable system that you can easily master once you see the underlying logic.
 
-Протягом цього уроку ми з вами чітко виділили три фундаментальні групи таких звукових змін. Перша група — це зміна зубних та свистячих приголосних звуків. Вони послідовно перетворюються на шиплячі звуки або на складні **африкати** *(affricates)*. Друга велика група охоплює знайомі нам задньоязикові приголосні звуки. Вони також закономірно стають м'якими шиплячими звуками. Третя, мабуть, найунікальніша група — це губні приголосні. Вони ніколи повністю не зникають і не перетворюються на інші звуки. Натомість вони завжди запрошують до себе нового м'якого партнера — сонорний звук «л». Розуміння цих базових механізмів дає вам повний контроль над граматикою. Ви більше ніколи не будете сумніватися, як правильно сказати нове слово в першій особі однини. Ви також зможете безпомилково утворювати дієслова недоконаного виду.
+Чергування приголосних робить українську мову милозвучною та зручною для вимови. Замість складних комбінацій звуків ми маємо плавні переходи, які природно виникають під час спілкування. Коли ви розумієте ці закономірності, ви перестаєте вгадувати форми слів і починаєте відчувати ритм мови.
 
-Щоб уся ця критично важлива інформація завжди була у вас під рукою, ми створили зведену таблицю. Це ваш надійний **довідник** *(reference guide)* для правильного дієвідмінювання у теперішньому часі. Ми радимо використовувати цю таблицю під час виконання письмових завдань або для швидкої самоперевірки. Зверніть увагу на те, як системно згруповані всі ці приголосні звуки.
+> *Consonant alternation makes the Ukrainian language melodious and comfortable to pronounce. Instead of complex combinations of sounds, we have smooth transitions that arise naturally during communication. When you understand these regularities, you stop guessing word forms and begin to feel the rhythm of the language.*
 
-| Базовий приголосний | Чергування | Приклади дієслів |
+By identifying the **інфінітив** (infinitive — base verb form) and the **дієвідміна** (conjugation class — verb classification), you can anticipate exactly how the word will behave. This structural awareness allows you to build a complete **парадигма** (paradigm — full set of inflected forms) independently, without needing to memorize every single variation as a separate vocabulary item.
+
+We categorized these shifts into three main groups based on the final consonant of the root. The first group includes a **зубний** (dental — consonant formed at the teeth: д, т) or a **свистячий** (sibilant — whistling consonant: з, с, ц, дз) consonant, which transforms into a hushed sound or an affricate like `[дж]`. The second group features a **задньоязиковий** (velar — consonant formed at back of mouth: г, к, х) consonant, which also softens into a hushed equivalent.
+
+Finally, the third group involves a **губний** (labial — consonant formed with lips: б, п, в, м, ф) consonant that receives an extra `[л']` sound rather than changing entirely. Remember that these changes are triggered in the **теперішній час** (present tense) by a specific **особа** (grammatical person — я/ти/він), primarily the first person singular.
+
+You will also see these exact same consonant shifts when creating a new **недоконаний вид** (imperfective aspect) verb from an existing **доконаний вид** (perfective aspect) stem. This means the phonetic rules you just learned for present tense conjugation directly empower your vocabulary building.
+
+Let us consolidate everything into a single reference table. Keep this summary handy as you practice speaking and writing.
+
+| Базовий приголосний | Змінений звук | Приклади дієслів |
 | :--- | :--- | :--- |
-| [д] | [дж] | водити — воджу, сидіти — сиджу |
-| [т] | [ч] | крутити — кручу, летіти — лечу |
-| [з] | [ж] | возити — вожу, морозити — морожу |
-| [с] | [ш] | носити — ношу, просити — прошу |
-| [зд] | [ждж] | їздити — їжджу |
-| [ст] | [щ] | мостити — мощу, простити — прощу |
-| [б] | [бл] | робити — роблю, любити — люблю |
-| [п] | [пл] | купити — куплю, ліпити — ліплю |
-| [в] | [вл] | ловити — ловлю, ставити — ставлю |
-| [м] | [мл] | ломити — ломлю |
+| **`[д]`** | **`[дж]`** | ходити — ходжу, сидіти — сиджу |
+| **`[т]`** | **`[ч]`** | крутити — кручу, летіти — лечу |
+| **`[з]`** | **`[ж]`** | возити — вожу, морозити — морожу |
+| **`[с]`** | **`[ш]`** | носити — ношу, просити — прошу |
+| **`[зд]`** | **`[ждж]`** | їздити — їжджу |
+| **`[ст]`** | **`[щ]`** | мостити — мощу, чистити — чищу |
+| **`[б]`** | **`[бл']`** | робити — роблю, любити — люблю |
+| **`[п]`** | **`[пл']`** | купити — куплю, ліпити — ліплю |
+| **`[в]`** | **`[вл']`** | ловити — ловлю, ставити — ставлю |
+| **`[м]`** | **`[мл']`** | ломити — ломлю |
 
-Ця компактна таблиця наочно демонструє бездоганну математичну точність української граматики. Вам потрібно лише запам'ятати ці базові звукові пари, щоб говорити вільно та максимально впевнено.
+:::info
+**Grammar box**
+Remember that for verbs of the second conjugation, this consonant change only happens in the first person singular ("я"). For all other persons ("ти", "він", "ми", "ви", "вони"), the base consonant remains exactly as it is in the infinitive stem.
+:::
 
-Тепер настав ідеальний час для фінальної перевірки ваших нових знань. Спробуйте самостійно та обов'язково вголос дати розгорнуті відповіді на ці чотири контрольні запитання. Це чудово допоможе вам закріпити пройдений матеріал.
+Зараз настав час перевірити свої знання. Спробуйте відповісти на ці чотири запитання, щоб закріпити матеріал перед виконанням практичних вправ.
 
-1. Чому ми граматично правильно кажемо «я сиджу», але при цьому обов'язково кажемо «ти сидиш»?
-2. Який саме звук з'являється у дієсловах типу «любити» чи «робити» виключно у формі першої особи однини?
-3. Повністю провідмінюйте дієслово «просити» в теперішньому часі та знайдіть ту єдину форму, де відбувається чергування.
-4. Як правильно утворити нове дієслово недоконаного виду від дієслова «скоротити»?
+1. Чому ми кажемо «я сиджу», але «ти сидиш»? Поясніть правило дієвідмінювання для цієї групи слів.
+2. Який додатковий звук обов'язково з'являється у дієсловах типу «любити», «робити» чи «купити» у формі першої особи однини?
+3. Провідмінюйте дієслово «просити» в усіх можливих особах теперішнього часу та чітко вкажіть єдину граматичну форму, де відбувається чергування приголосного.
+4. Як правильно утворити нове дієслово тривалої дії від форми «скоротити», використовуючи типовий суфікс «-увати»?
 
-Якщо ви змогли легко і без вагань відповісти на ці питання, ми вас щиро вітаємо! Ви успішно опанували цю надзвичайно важливу граматичну тему. Тепер ви готові впевнено рухатися далі до нових мовних відкриттів!
+> *Now it is time to check your knowledge. Try to answer these four questions to consolidate the material before doing the practical exercises. 1. Why do we say "я сиджу" but "ти сидиш"? Explain the conjugation rule for this group of words. 2. What additional sound necessarily appears in verbs like "любити", "робити", or "купити" in the first person singular form? 3. Conjugate the verb "просити" in all possible persons of the present tense and clearly indicate the single grammatical form where consonant alternation occurs. 4. How do you correctly form a new continuous action verb from the form "скоротити" using the typical suffix "-увати"?*
+
+Mastering these phonetic shifts will profoundly improve your speaking confidence. You will no longer stumble over how to pronounce conjugated verbs, and your Ukrainian will sound much more natural and fluid.
+
+<!-- INJECT_ACTIVITY: fill-in -->

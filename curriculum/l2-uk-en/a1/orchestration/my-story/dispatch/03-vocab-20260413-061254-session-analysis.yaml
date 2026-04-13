@@ -1,0 +1,45 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T04-12-75a4922e.json
+phase: vocab
+prompt_chars: 14922
+response_chars: 1349
+prompt_words: 2486
+response_words: 144
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.0535
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.0154
+- name: plan
+  start: 1028
+  length: 13894
+  fraction: 0.9311
+large_sections:
+- plan
+directives_total: 5
+directives_covered: 0
+directives_missed:
+- kind: must
+  text: A male speaker must use the masculine ending **-в**, while a female speaker
+    must use the feminine ending **-ла**.
+  covered: false
+  coverage_note: 0/9 keywords (0%)
+- kind: inject_activity
+  text: matching-tense
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-signal-words
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: ordering-chronological
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-biography
+  covered: false
+  coverage_note: marker missing

@@ -34,8 +34,8 @@ objectives:
     speech.
 dialogue_situations:
   - setting: 'Family argument about whose things are whose: Це мій светр (m)! Ні,
-      це свій — я його купив собі! Вона взяла свою сумку (f), а не твою. Він дивиться
-      на себе у дзеркало (n).'
+      він мій — я купив його собі сам! Вона взяла свою сумку (f), а не твою. Він
+      дивиться на себе у дзеркало (n).'
     speakers:
       - Брат
       - Сестра
@@ -132,106 +132,112 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Свій: чий саме? (Свій: Whose Exactly?)
+## Свій: чий саме? (Свій: Whose Exactly?) (~660 words)
 
-Уявіть звичайну щоденну ситуацію. Ваш друг читає нову книгу. В англійській мові ми просто кажемо: «He is reading his book». Але давайте подумаємо: чия це книга насправді? Це його власна книга чи, можливо, книга іншого хлопця? Англійська мова тут не дає точної та однозначної відповіді. Ми маємо вгадувати з контексту. В українській мові ми маємо спеціальне слово для таких цікавих ситуацій. Це **присвійний займенник** *(possessive pronoun)* **свій** *(one's own)*. Він завжди допомагає нам бути дуже точними. Головне правило української граматики тут дуже просте та логічне. Ми використовуємо слово «свій», коли власник певного предмета — це також підмет у цьому реченні. Тобто, якщо ваш друг читає свою власну книгу, ми кажемо: «Він читає свою книгу».
+While English uses possessive pronouns like "my" or "his" to show ownership, Ukrainian features a unique, universal possessive pronoun, **свій** (one's own), which changes its meaning depending on who is performing the action in the sentence.
 
-Найбільша та найважливіша різниця між англійською та українською мовами існує саме в третій особі. Це слова **він** *(he)*, **вона** *(she)* та **вони** *(they)*. Уважно подивіться на цей класичний приклад: «Він дуже любить свою дружину». Це означає, що він любить свою власну дружину. Все добре і правильно. А тепер подивіться на інше схоже речення: «Він дуже любить його дружину». Це вже справжній скандал! Чому це так звучить? Тому що слова **його** *(his)*, **її** *(her)* та **їхній** *(their)* завжди вказують на іншу людину. Вони чітко показують, що людина належить комусь іншому, а не головному підмету. Тому «його дружина» — це дружина іншого чоловіка. Завжди пам’ятайте це важливе правило, коли говорите про інших людей українською.
+Українська мова має особливе слово для позначення власності. Цей цікавий займенник є унікальним. Він ніколи не прив'язаний до однієї конкретної граматичної особи. Він динамічно змінює своє значення залежно від виконавця головної дії. Ми використовуємо його спеціально. Так ми чітко показуємо, що людина також є справжнім власником цього предмета. Коли я особисто роблю якусь дію, я обов'язково використовую це коротке слово. Наприклад, я зараз сиджу вдома на зручному дивані. Я із задоволенням читаю дуже цікаву книгу. Це моя власна книга, яку я купив учора у великому книжковому магазині. Тому я дуже впевнено кажу: «Я читаю свою книгу». У цьому простому реченні слово «свій» чітко показує співрозмовнику єдиного власника. Цей власник предмета — це саме я. Це звучить дуже природно і є золотим стандартом для сучасної української мови.
 
-А як працює це правило для першої та другої особи? Це такі популярні слова як **я** *(I)*, **ти** *(you)*, **ми** *(we)* та **ви** *(you plural/polite)*. Тут граматичне правило стає трохи іншим і гнучкішим. Для цих осіб ми можемо вільно використовувати обидва варіанти. Ви можете сказати друзям: «Я дуже люблю мою маму» або «Я дуже люблю свою маму». Обидва ці речення абсолютно граматично правильні. Але українці у щоденному житті частіше кажуть «свою». Це просто звучить більш природно та тепло. Це завжди означає «мою власну». Те саме правило стосується інших слів. Ви можете сказати: «Ти знову забув твій телефон вдома» або «Ти знову забув свій телефон». Ми можемо сказати: «Ми щиро любимо наше чудове місто» або «Ми щиро любимо своє місто». Українці дуже люблять слово «свій», тому ви будете чути його постійно.
+:::info
+**Grammar box**
+The core grammatical rule of **свій** is strict: it replaces the regular possessive pronouns ONLY when the possessor of the object is also the grammatical subject of the sentence. If the owner is NOT the subject, you must use regular pronouns (**його**, **її**, etc.) instead.
+:::
 
-Як саме працює слово «свій» у структурі речення? Воно працює точно так само, як будь-який звичайний прикметник. Воно завжди граматично узгоджується з предметом, який комусь належить. Це дуже важливо: воно зовсім не залежить від власника. Що це правило означає на практиці? Слово «свій» має різні форми для чоловічого, жіночого та середнього роду. Воно також змінює свою форму в множині. І, звичайно, воно постійно змінюється за всіма відмінками. Наприклад, подивіться на ці два речення. «Він бачить свою малу сестру». Слово **сестра** *(sister)* — це іменник жіночого роду, тут це знахідний відмінок. Тому ми кажемо «свою». Нам абсолютно не важливо, що підмет «він» — це чоловічий рід. А тепер подивимося навпаки: «Вона бачить свого старшого брата». Слово **брат** *(brother)* — це іменник чоловічого роду, знахідний відмінок. Тому ми кажемо «свого». Знову ж таки, нам не важливо, що власник «вона» — це жіночий рід.
+Наша мова має надзвичайно чітке та дуже строге правило для цього важливого займенника. Ми завжди вживаємо слово «свій», коли фактичний власник предмета виступає як підмет. Підмет — це завжди найголовніша особа, яка активно і самостійно виконує дію. Давайте дуже уважно подивимося на велику різницю між двома схожими життєвими ситуаціями. Молодий хлопець сидить у тихій бібліотеці і зосереджено читає власну книгу. Він приніс цю книгу з дому. Тоді ми впевнено кажемо: «Він читає свою книгу». Тут він одночасно є і активним читачем, і повноправним власником. Але іноді він несподівано бере і читає книгу свого найкращого друга. Тоді ми повинні сказати зовсім інакше: «Він читає його книгу». Тут діяч і справжній власник — це дві різні людини.
 
-Давайте разом подивимося, як це правило працює в реальному житті. Уявіть типову ранкову сімейну сварку про особисті речі.
+Чому це граматичне правило таке неймовірно важливе для правильного розуміння? Тому що в третій особі це маленьке слово допомагає нам уникати дуже серйозної плутанини. Українська мова завжди вимагає від нас максимальної точності у повсякденному спілкуванні. Давайте детально розглянемо класичний і дуже яскравий приклад із реального життя. Речення «Він любить свою дружину» має дуже добрий і світлий зміст. Воно прямо означає, що цей чоловік щиро кохає власну законну дружину. Це дуже правильно і цілком логічно для кожної щасливої сім'ї. А от інше речення «Він любить його дружину» має величезну проблему. Воно означає, що він палко кохає дружину якогось іншого, чужого чоловіка! Як ви можете легко побачити, це вже зовсім інша, скандальна історія. Тільки одне маленьке слово повністю і назавжди змінює весь сенс вашої короткої фрази.
 
-> — **Брат:** Це мій улюблений **светр** *(sweater)*! Швидко віддай його мені!
-> — **Сестра:** Ні, це свій! Я купила його **собі** *(for myself)* вчора в магазині!
-> — **Мама:** Діти, будь ласка, припиніть цю сварку! Олено, ти взяла свою чорну сумку, а не його светр. А ти, Максиме, знайди свій старий светр у шафі.
+Отже, для першої та другої особи наше золоте правило насправді не таке суворе. Воно дозволяє нам мати певну приємну свободу у виборі правильних слів. Ви маєте повне право впевнено сказати «я читаю мою улюблену книгу». Або ви можете сказати «я читаю свою улюблену книгу». Обидва ці варіанти правильні. Але саме другий варіант завжди звучить набагато більш природно і красиво для носіїв мови. Те саме просте правило стосується коротких слів «ти», «ми» і «ви». Ви можете вільно обирати те, що вам зараз найбільше подобається. Але для займенників «він», «вона», «воно» і «вони» цей граматичний вибір дуже строгий. Ви просто зобов'язані завжди вживати слово «свій», якщо якась річ належить підмету. Це надійна базова норма нашої мови, яку ніколи не можна свідомо порушувати.
 
-Як ви добре бачите, мудра мама ефективно використовує слово «свій», щоб швидко зупинити цю сварку. Вона чітко показує, хто є справжнім власником кожної речі. Вона каже дочці про її власну сумку («свою сумку»). А синові вона нагадує про його власний светр («свій светр»).
+### Читаємо українською (Reading Practice)
 
-<!-- INJECT_ACTIVITY: quiz-possessive-choice -->
+Спробуйте зараз яскраво **уявити** (to imagine) типовий, дуже галасливий ранок у великій родині. Коли вдома збирається такий шалений хаос, буває неймовірно важко **почувати себе** (to feel) дійсно спокійно. Маленькі діти часто дуже сильно поспішають до своєї школи. Вони зовсім не вміють **вести себе** (to behave) тихо в такий ранній час доби. 
 
-## Свій у відмінках (Свій in All Cases)
+Старший брат і молодша сестра постійно не можуть швидко поділити свій щоденний теплий одяг. Вони сваряться через великі шкільні сумки та навіть таку річ, як сімейна **парасолька** (umbrella). Звісно, я дуже сильно **горджуся** (I am proud) своєю великою родиною. Я пишаюся **собою** (oneself, instrumental), коли мені вдається всіх швидко і мирно помирити. Але іноді ми досить гучно сваримося через звичайні щоденні побутові дрібниці. У цій складній ситуації дуже важливо щодня чітко розуміти, де саме чия річ зараз лежить. Мама зазвичай намагається їх дуже швидко заспокоїти і зупинити цей конфлікт.
 
-Тепер ви добре знаєте головне правило, коли саме ми використовуємо слово «свій». Але це слово також має багато різних форм. Воно **відмінюється** *(declines)* точно так само, як слова «мій» або «твій». Давайте спочатку подивимося на **чоловічий** *(masculine)* та **середній рід** *(neuter)*. У **називному відмінку** *(Nominative case)* ми маємо базові форми «свій» та «своє». Наприклад: «Кожен директор має свій власний **кабінет** *(office)*». У **родовому відмінку** *(Genitive case)* ця форма буде звучати як «свого». Наприклад: «Я довго чекаю свого старого друга» або «Він ніколи не мав свого автомобіля». Також зверніть увагу на **знахідний відмінок** *(Accusative case)*. Для живих істот ми використовуємо форму «свого» («Я щиро люблю свого пса»), а для неживих предметів ми кажемо «свій» («Він знову забув свій пароль»). В **орудному відмінку** *(Instrumental case)* ми завжди кажемо «своїм». Наприклад: «Я дуже горджуся своїм сином». 
+> — **Брат:** Це мій новий теплий светр! Негайно віддай його мені зараз! *(This is my new warm sweater! Give it back to me immediately now!)*
+> — **Сестра:** Ні, він точно мій! Я особисто купила його **собі** (oneself, dative) сама вчора у великому магазині! *(No, it's definitely mine! I personally bought it for myself yesterday at the big store!)*
+> — **Мама:** Будь ласка, заспокойтеся! Вона взяла свою власну сумку, а зовсім не твою. А він взагалі нас не слухає і просто мовчки дивиться на **себе** (oneself, accusative) у велике **дзеркало** (mirror). *(Please, calm down! She took her own bag, not yours at all. And he isn't listening to us at all and is just silently looking at himself in the large mirror.)*
 
-А як щодо **жіночого роду** *(feminine)* та **множини** *(plural)*? Тут граматичні правила теж дуже схожі на слово «моя». У називному відмінку ми кажемо «своя» (для жіночого роду) та «свої» (для множини). У родовому відмінку жіночого роду з'являється цікаве закінчення «-єї». Тому ми завжди кажемо «своєї». Наприклад: «Вона швидко вийшла зі своєї кімнати». У множині форма буде «своїх»: «Вони з радістю чекають своїх нових гостей». Орудний відмінок має форми «своєю» та «своїми». Ви можете сказати: «Він приїхав за своєю дружиною» або «Ми дивилися на цю красу своїми **очима** *(eyes)*». І, звичайно, **давальний відмінок** *(Dative case)* має форму «своїй» для жінки та «своїм» для множини. Наприклад: «Вона часто допомагає своїй мамі». 
+<!-- INJECT_ACTIVITY: quiz-sviy-vs-possessive -->
 
-Давайте подивимося, як ці всі форми працюють на практиці. Українці дуже часто використовують ці присвійні займенники у щоденних розмовах, щоб зробити мову точнішою. Відмінок слова «свій» завжди залежить від дієслова або прийменника, які ви обираєте. Якщо ви використовуєте дієслово «пишатися» або «гордитися», вам потрібен орудний відмінок. Наприклад: «Я щиро **горджуся** *(am proud)* своїм рідним містом». Якщо ви хочете розповісти цікаву історію, ви будете використовувати прийменник «про» та знахідний або місцевий відмінок. Можна сказати так: «Вчора він дуже довго розповідав про свою велику родину». А коли ви робите щось добре для когось, ви використовуєте давальний відмінок. Наприклад: «Щовихідних вона із задоволенням допомагає своїй молодшій сестрі». 
+## Свій у відмінках (Свій in All Cases) (~500 words)
 
-Українська мова має багато цікавих виразів. Слово «свій» настільки популярне, що воно є важливою частиною багатьох сталих фраз та **ідіом** *(idioms)*. Їх варто просто запам'ятати. Коли українці кажуть про щось, що обов'язково має статися в майбутньому, вони часто говорять: «Усе буде у свій час» *(Everything in its own time)*. Також дуже важливо «мати свою думку» *(to have one's own opinion)* про різні життєві події. Іноді люди можуть сказати комусь досить агресивно: «Ти повинен знати своє місце!» *(You must know your place!)*. Але найкраща і найтепліша фраза — це «свої люди». Це означає, що ви з кимось маєте спільні інтереси, ви **однодумці** *(kindred spirits)*.
+The pronoun **свій** behaves grammatically just like a regular adjective in the Ukrainian language. This means it must constantly adapt its form to match the noun it describes. It declines exactly like the possessive pronouns **мій** and **твій**, sharing the very same pattern of endings. The most critical rule to remember is that **свій** always agrees in gender, number, and case with the object that is possessed, absolutely never with the person who actually owns it. If a man is reading his own book, the pronoun must match the feminine noun for book, completely ignoring the masculine subject of the sentence. This agreement system guarantees that your sentences remain grammatically connected and clear.
 
-<!-- INJECT_ACTIVITY: true-false-sviy-grammar -->
+Чоловічий та середній роди мають дуже схожі форми у багатьох відмінках. Називний відмінок чоловічого роду — це завжди слово «свій», а середнього — слово «своє». У родовому відмінку обидва ці роди мають однакову форму «свого». Давальний відмінок також є спільним і має єдину форму «своєму». Знахідний відмінок для чоловічого роду може бути «свій» або «свого», залежно від того, чи є цей об'єкт живим. Для середнього роду це завжди форма «своє». Орудний відмінок для обох родів використовує однакову форму «своїм». У місцевому відмінку ми зазвичай кажемо «на своєму» або просто «на своїм». Наприклад, я щиро горджуся своїм рідним містом і його довгою історією. Він часто думає про свого молодшого брата, коли працює далеко від дому.
 
-## Себе: зворотний займенник (Себе: The Reflexive Pronoun)
+Жіночий рід та множина мають свої власні дуже чіткі закінчення, які варто добре запам'ятати. Називний відмінок жіночого роду — це завжди форма «своя». У родовому відмінку ми використовуємо красиве слово «своєї». Давальний відмінок вимагає форми «своїй». Знахідний відмінок дуже легко впізнати за типовим закінченням у слові «свою». Орудний відмінок використовує форму «своєю», а місцевий відмінок знову повертається до форми «на своїй». Множина для всіх без винятку родів починається зі слова «свої». Далі йдуть форми «своїх» для родового відмінка, «своїм» для давального відмінка, «своїми» для орудного відмінка та «на своїх» для місцевого відмінка. Вона завжди охоче допомагає своїй молодшій сестрі робити складні завдання. Він з великим задоволенням розповів усім про свою нову родину.
 
-Українська мова має ще один дуже важливий займенник. Це слово «себе». Воно називається **зворотним займенником** *(reflexive pronoun)*. Цей займенник є справді унікальним. Він ніколи не має називного відмінка. Чому так відбувається? Тому що слово «себе» ніколи не може бути головним підметом у вашому реченні. Воно завжди показує, що дія повністю повертається до того, хто її робить. Тобто об'єкт і суб'єкт — це одна й та сама особа. Також цей займенник зовсім не має роду та числа. Одна коротка форма чудово працює для всіх: для «я», «ти», «вона», «ми» або «вони». Наприклад, ви кажете: «Я часто бачу себе у великому **дзеркалі** *(mirror)*». І так само ви скажете про інших людей: «Вони часто бачать себе у великому дзеркалі». Форма слова ніколи не змінюється, хто б не виконував цю дію. Це робить правило дуже простим.
+> *The feminine gender and plural have their own very clear endings that are worth remembering well. The nominative case of the feminine gender is always the form "своя". In the genitive case, we use the beautiful word "своєї". The dative case requires the form "своїй". The accusative case is very easy to recognize by the typical ending in the word "свою". The instrumental case uses the form "своєю", and the locative case returns again to the form "на своїй". The plural for all genders without exception begins with the word "свої". Then come the forms "своїх" for the genitive case, "своїм" for the dative case, "своїми" for the instrumental case, and "на своїх" for the locative case. She always willingly helps her younger sister do difficult tasks. He talked to everyone with great pleasure about his new family.*
 
-Як і слово «свій», займенник «себе» має кілька різних форм. Він завжди змінюється за відмінками. У родовому та знахідному відмінках ми використовуємо базову форму «себе». Наприклад: «Він дуже любить тільки себе і нікого більше». У давальному та місцевому відмінках форма змінюється на коротке слово «собі». Наприклад: «Я завжди бажаю собі великого успіху перед складним іспитом». Або: «Вона несе цей важкий рюкзак на собі». В орудному відмінку ми завжди використовуємо красиву форму «собою». Наприклад: «Він склав дуже складний іспит і тепер справді задоволений собою». Або: «Я завжди ношу цю стару фотографію із собою в гаманці». Як бачите, ці закінчення дуже схожі на відмінювання інших знайомих вам займенників або прикметників. Їх потрібно просто запам'ятати і часто використовувати під час розмов.
+Українська мова має багато цікавих сталих виразів, де це коротке слово відіграє дуже важливу роль. Ми часто впевнено кажемо, що кожна подія обов'язково відбудеться **у свій час**, коли ми просто чекаємо правильного моменту. Кожна доросла людина повинна завжди мати **свою думку** про важливі події у світі. Дуже важливо колись успішно **знайти своє місце** у цьому великому суспільстві і бути дійсно корисним. Коли ми зустрічаємо старих надійних друзів, ми радісно кажемо, що це **свої люди**. Ці популярні фрази роблять нашу щоденну розмову набагато багатшою, красивішою та значно більш природною для всіх слухачів.
 
-Займенник «себе» дуже часто працює разом із певними дієсловами. Найпопулярніші з них — це «почувати себе» та «вести себе». Коли ви хочете сказати, як ви фізично або морально почуваєтеся, ви використовуєте цю конструкцію. Але тут є одна надзвичайно важлива деталь. Англомовні студенти часто роблять одну типову помилку. Вони просто кажуть: «Я почуваю себе...» і відразу ставлять крапку. В українській мові так говорити не можна. Після фрази «почувати себе» ви обов'язково повинні додати конкретний **прислівник** *(adverb)*. Ви повинні чітко відповісти на запитання «як?». Наприклад: «Сьогодні я почуваю себе дуже добре». Або: «Вчора він почував себе трохи погано після довгої роботи». Це правило також працює для дієслова «вести себе». Ви маєте сказати: «Ця маленька дитина веде себе дуже погано в школі».
+:::info
+**Grammar box** — Always remember the golden rule: the noun that is possessed entirely dictates the ending of **свій**. You must carefully check the gender, number, and case of that noun before you decline the pronoun. The gender or identity of the owner is completely irrelevant to how this pronoun changes its form.
+:::
 
-Форма «собі» також має своє власне спеціальне значення в українських розмовах. Українці дуже часто використовують її, коли вони говорять про **самостійні** *(independent)* дії або якусь особисту вигоду. Вона чітко показує, що людина робить щось саме для себе, а не для когось іншого. Наприклад: «Завтра я хочу купити собі нову **парасольку** *(umbrella)* на ринку». Тут «собі» означає те саме, що «для мене». Інший популярний приклад — це ваші внутрішні процеси. Ми часто кажемо друзям: «Ти взагалі можеш **уявити** *(to imagine)* собі цю ситуацію?». У таких фразах форма «собі» робить речення набагато більш емоційним та особистим. Вона показує ваш внутрішній світ. Або коли людина живе тихо і спокійно, ми часто кажемо про неї: «Він живе сам по собі».
+<!-- INJECT_ACTIVITY: true-false-sviy-cases -->
 
-Ви вже точно знаєте багато українських дієслів, які закінчуються на суфікс «-ся». Наприклад: «називатися», «вчитися», «сміятися». Але чи знаєте ви, звідки взагалі з'явився цей суфікс? Насправді суфікс «-ся» — це дуже стара і максимально коротка форма займенника «себе». Колись дуже давно люди говорили довгими фразами: «Я мию себе зранку». Але жива мова завжди шукає простіші і коротші форми. Тому з часом фраза «мити себе» логічно перетворилася на одне коротке слово «митися». Фраза «одягати себе» швидко стала словом «одягатися». Такі зворотні дієслова показують, що дія завжди повертається назад на самого суб'єкта. Розуміння історії слова «себе» дійсно допомагає набагато краще зрозуміти всю українську граматику. Ви починаєте бачити логіку мови.
+## Себе: зворотний займенник (Себе: The Reflexive Pronoun) (~600 words)
 
-<!-- INJECT_ACTIVITY: fill-in-sebe-cases -->
+In the beautiful structure of the Ukrainian language, we have a highly useful word that acts exactly like a grammatical mirror. The reflexive pronoun **себе** (oneself, accusative/genitive) reflects an action directly back to the subject of the sentence. Its absolute defining grammatical feature is that it completely lacks a Nominative form. It can never be the main actor of a sentence. Instead, it only exists to show that the doer and the receiver of the action are the exact same person. You will see it very often when someone looks into a **дзеркало** (mirror). This small, powerful word completely replaces the need to say "myself", "yourself", "himself", or "themselves". It adapts effortlessly to whoever is currently speaking.
 
-<!-- INJECT_ACTIVITY: match-up-sebe-idioms -->
+Цей зворотний займенник має одну дуже приємну особливість для всіх студентів. Він ніколи не змінює свою форму для різних осіб, родів чи чисел. Це коротке слово залишається однаковим, коли ми говоримо про мене, тебе чи них. У родовому та знахідному відмінках ми використовуємо форму «себе». Давальний та місцевий відмінки завжди вимагають дуже м'якої форми «собі». Орудний відмінок має свою єдину незмінну форму «собою». Тобі більше не потрібно вчити довгі таблиці закінчень для кожної окремої особи.
 
-## Свій та себе у мовленні
+> *This reflexive pronoun has one very pleasant feature for all students. It never changes its form for different persons, genders, or numbers. This short word remains absolutely the same when we talk about me, you, or them. In the genitive and accusative cases, we use the form "sebe". The dative and locative cases always require the very soft form "sobi". The instrumental case has its single unchangeable form "sobou". You no longer need to learn long tables of endings for each individual person.*
 
-Давайте подивимося, як ці важливі слова працюють у реальній розмові. Прочитайте цей короткий діалог між двома друзями. Вони зустрілися на вулиці і говорять про свої щоденні **звички** *(habits)* та плани на день. Зверніть увагу, як часто вони використовують форми «свій» та «себе».
+Let's look much closer at how the Genitive and Accusative forms operate in everyday Ukrainian speech. Because these two cases share the exact same identical form, you will hear it constantly in direct object situations. If you want to say "I see myself", you simply use the Accusative case directly after the active verb. It clearly shows who is receiving the action. When you decide to buy a necessary item for your own benefit, you will frequently use the Genitive case. This is almost always paired with the common preposition "для".
 
-> — **Олег:** Привіт, Анно! Ти сьогодні маєш чудовий вигляд. Як твої справи?
-> — **Анна:** Привіт! Дякую. Я нарешті дуже добре виспалася у своєму новому ліжку. Тому я почуваю себе чудово. А ти як?
-> — **Олег:** Я теж почуваю себе дуже добре. Сьогодні вранці я купив собі новий великий телефон. Тепер я можу зручно читати новини у своєму улюбленому кріслі.
-> — **Анна:** Це чудово! Я завжди купую собі щось приємне після важкого тижня. А ти часто робиш собі такі подарунки?
-> — **Олег:** Не дуже часто. Зазвичай я просто беру із собою каву і гуляю у своєму районі. Я почуваю себе спокійно, коли багато ходжу пішки.
-> — **Анна:** Я теж люблю гуляти. Але сьогодні я забула свою **парасольку** *(umbrella)* вдома, а небо сіре. Тому я зараз швидко йду до своєї машини.
-> — **Олег:** Тоді гарного дня! Бережи себе.
+:::info
+**Grammar box** — The reflexive pronoun is universally identical for all possible subjects in a sentence. "Я бачу себе" (I see myself), "Ти бачиш себе" (You see yourself), and "Він бачить себе" (He sees himself) all use the exact same word without any modifications.
+:::
 
-Тепер прочитайте невелику розповідь. Цей короткий текст називається «Мій ранок». Він чудово показує, як одне правило працює в кожному реченні. Коли ви виконуєте дію, ви використовуєте «свій» для своїх речей. А коли дія направлена на вас, ви кажете «себе» або «собі».
+Давальний відмінок звучить як «собі». Ми дуже часто використовуємо це слово, коли робимо щось корисне для власної вигоди. Наприклад, мій старший брат вчора купив собі велику чашку смачної кави. Також ми можемо просто взяти цей новий зошит собі для цікавої роботи. Орудний відмінок звучить як «собою». Моя найкраща подруга завжди радіє і дуже пишається собою після складного іспиту. Це дуже природний і традиційний спосіб щиро говорити про власні емоції щодня.
 
-«Зазвичай я прокидаюся дуже рано у своєму світлому ліжку. Я йду у ванну кімнату і довго дивлюся на себе у велике **дзеркало** *(mirror)*. Потім я йду на свою чисту кухню. Там я готую собі дуже міцну каву. Я ніколи не п'ю чай вранці. Я завжди роблю собі смачний сніданок зі свіжих продуктів. Під час сніданку я читаю цікаву книгу. Я люблю брати свою улюблену книгу із собою за стіл. Після сніданку я одягаю свій теплий **светр** *(sweater)*. Потім я беру свою важку сумку і виходжу на вулицю. Я сідаю у свою стару машину. Я вмикаю свою улюблену музику і їду на свою роботу. Я завжди почуваю себе бадьоро вранці, тому що я люблю свою роботу».
+> *The dative case sounds like "sobi". We very often use this word when we do something useful for our own benefit. For example, my older brother bought himself a large cup of delicious coffee yesterday. Also, we can simply take this new notebook for ourselves for interesting work. The instrumental case sounds like "sobou". My best friend always rejoices and is very proud of herself after a difficult exam. This is a very natural and traditional way to sincerely talk about one's own emotions every day.*
 
-Наприкінці ми маємо поговорити про типові помилки. Студенти часто роблять кілька класичних помилок, коли вчать ці слова.
+To truly master natural Ukrainian, you must learn several fixed expressions that rely on these reflexive forms. The dative form is **собі** (oneself, dative), and the instrumental form is **собою** (oneself, instrumental). For instance, to ask how someone is physically doing, we use the phrase **почувати себе** (to feel). When teachers talk about children, they often discuss how well they **вести себе** (to behave). If you do well on a test, you might say **горджуся** (I am proud) to express satisfaction with yourself. Sometimes you just need to **уявити** (to imagine) a situation, which typically takes the dative reflexive form. Also, don't forget to take your **парасолька** (umbrella) with you when it rains! Interestingly, the common reflexive verb suffix "-ся" historically evolved directly from this exact pronoun. Words ending in "-ся" literally mean the action is directed right back at the speaker.
 
-Перша помилка — це використання слова «його» або «її» замість «свій». Наприклад, студент каже: «Він любить його дружину». Українці зрозуміють це так, що цей чоловік любить дружину іншого чоловіка! Це дуже небезпечна помилка. Ви обов'язково повинні сказати: «Він любить свою дружину». Тоді все буде зрозуміло і правильно.
+<!-- INJECT_ACTIVITY: fill-in-insert-the-correct-case-form-of -->
+<!-- INJECT_ACTIVITY: match-up-match-expressions-with-to-their-meanings -->
 
-Друга типова помилка пов'язана з дієсловом «почувати себе». Англомовні люди часто кажуть просто: «Я почуваю себе», і роблять тут паузу. В українській мові це речення не має сенсу. Ви завжди маєте додати слово, яке відповідає на запитання «як?». Скажіть: «Я почуваю себе добре» або «Я почуваю себе погано».
+## Свій та себе у мовленні (Свій and Себе in Speech) (~440 words)
 
-Третя проблема — це прямий переклад фрази «to behave oneself». Студенти часто кажуть: «Вона добре себе поводить». Українці теж так кажуть, і ви можете це почути. Але набагато краще і правильніше сказати: «Вона добре поводиться». Дієслово вже має короткий суфікс «-ся», який означає «себе». Тому вам не потрібно додавати окреме слово «себе».
+Using reflexive and possessive pronouns correctly is the secret to sounding natural and idiomatic in daily storytelling. The base possessive form **свій** (one's own) helps you connect actions directly to yourself without sounding repetitive. Let's look at a short reading text about a typical morning routine. This will show you exactly how these pronouns operate in a continuous, realistic context before you look into a **дзеркало** (mirror) and start your day.
 
-<!-- INJECT_ACTIVITY: error-correction-sviy-sebe -->
+Я прокидаюся рано і відразу готую собі смачний сніданок. Потім я швидко збираю свої речі. Я завжди беру свою парасольку, бо погода мінлива. Я йду на свою роботу пішки, бо люблю гуляти. Я почуваю себе добре, коли все йде за планом. Я дивлюся на себе у велике дзеркало перед виходом. Я горджуся собою, коли встигаю зробити всі важливі справи.
 
-## Підсумок
+> *I wake up early and immediately prepare a delicious breakfast for myself. Then I quickly gather my things. I always take my umbrella because the weather is changeable. I walk to my job because I love walking. I feel good when everything goes according to plan. I look at myself in the large mirror before leaving. I am proud of myself when I manage to do all important tasks.*
 
-Сьогодні ми вивчили дві дуже важливі граматичні теми. Давайте коротко повторимо головні правила.
+Now we need to address typical direct-translation mistakes. English speakers often make predictable errors when translating phrases word-for-word into Ukrainian. First, remember the strict rule about possession and the direct object form **себе** (oneself, accusative/genitive).
 
-Перше правило стосується слова «свій». Ми завжди використовуємо «свій», коли предмет належить підмету речення. Наприклад, ми кажемо: «Я читаю свою книгу» або «Він любить свою роботу». 
+Якщо ви кажете «він любить його дружину», це має інше значення. Це означає, що він любить дружину іншого чоловіка. Правильно казати «він любить свою дружину». Також ми не можемо просто сказати «я почуваю себе». Це речення є неповним. Нам потрібен прислівник, щоб показати стан. Можна сказати «я почуваю себе добре» або «погано».
 
-Друге правило стосується зворотного слова «себе». Ми використовуємо «себе», коли дія повертається прямо до підмета. Наприклад: «Я часто бачу себе у дзеркалі». Пам'ятайте, що це слово ніколи не має називного відмінка.
+> *If you say "he loves his wife" (using "yogo"), it has a different meaning. It means that he loves another man's wife. It is correct to say "he loves his own wife". Also, we cannot simply say "I feel myself". This sentence is incomplete. We need an adverb to show the state. You can say "I feel good" or "bad".*
 
-А тепер перевірте свої знання. Спробуйте відповісти на ці прості запитання:
+The third common mistake involves the English word "myself" when it implies doing something without help. In Ukrainian, you cannot use the reflexive pronoun for this specific meaning. 
 
-1. Чому речення «Він любить його книгу» є незрозумілим або дивним?
-*(Тому що слово «його» тут означає книгу іншого чоловіка, а не підмета).*
+Неправильно казати «я зробив це себе». Чоловік повинен сказати «я зробив це сам». Жінка повинна сказати «я зробила це сама». Діти також часто кажуть батькам, що хочуть вести себе добре. Вони хочуть робити всі складні речі самі. Завжди важливо розуміти цей контекст.
 
-2. Чому ми категорично не можемо сказати «Себе бачить мене»?
-*(Тому що займенник «себе» ніколи не може бути головним підметом у реченні).*
+> *It is incorrect to say "I did this myself" (using "sebe"). A man must say "I did this myself" (using "sam"). A woman must say "I did this myself" (using "sama"). Children also often tell their parents that they want to behave well. They want to do all difficult things themselves. It is always important to understand this context.*
 
-3. Який це відмінок у формі «собою»?
-*(Це орудний відмінок. Наприклад, ми кажемо: «Вона дуже пишається собою»).*
+:::info
+**Grammar box** — Do not confuse the reflexive pronoun with the word **сам** (oneself / alone). Use the reflexive pronoun when an action reflects back to you, like looking in a mirror. Use **сам** or **сама** when you do something independently without any help.
+:::
 
-4. Як правильно перекласти англійську фразу "I feel good" українською мовою?
-*(Вам обов'язково треба додати слово «добре» або «погано»: «Я почуваю себе добре»).*
+Finally, let's see a conversational dialogue demonstrating how these pronouns flow between two friends discussing their habits.
 
-Ви чудово попрацювали сьогодні! Ці маленькі слова роблять вашу українську мову дуже природною та красивою.
+> — **Олена:** Я завжди беру з собою парасольку. А ти? *(I always take an umbrella with me. And you?)*
+> — **Тарас:** А я довіряю своїй інтуїції і почуваю себе чудово. *(And I trust my intuition and feel great.)*
+> — **Олена:** Я теж завжди намагаюся вести себе добре. *(I also always try to behave well.)*
+> — **Тарас:** Я дивлюся на себе у дзеркало і горджуся собою. *(I look at myself in the mirror and I am proud of myself.)*
+> — **Олена:** Чи можеш ти уявити собі такий ідеальний день? *(Can you imagine such a perfect day?)*
+
+<!-- INJECT_ACTIVITY: error-correction-find-and-fix-incorrect-usage-of-and -->
 </generated_module_content>
 
-**PIPELINE NOTE — Word count: 2391 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
+**PIPELINE NOTE — Word count: 2682 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -407,42 +413,169 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 840 words | Not found: 6 words
+Verified: 660 words | Not found: 2 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
-  ✗ Анна — NOT IN VESUM
-  ✗ Анно — NOT IN VESUM
-  ✗ Олег — NOT IN VESUM
-  ✗ Олено — NOT IN VESUM
-  ✗ пам — NOT IN VESUM
-  ✗ ятайте — NOT IN VESUM
+  ✗ Олена — NOT IN VESUM
+  ✗ Тарас — NOT IN VESUM
 
-All 840 other words are confirmed to exist in VESUM.
+All 660 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
-## Verification Tools (MCP)
+---
 
-You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
+## Verification Tools (Shell Commands)
 
-**Core Verification:**
-- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
-- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
+You have access to verification tools via shell commands. Use these to verify
+Ukrainian vocabulary, check grammar, and search textbook content **as you write**.
 
-**Content Quality:**
-- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+**IMPORTANT:** Run verification commands BEFORE finalizing any Ukrainian text.
+Batch multiple verifications together to minimize round-trips.
 
-**Reference:**
-- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp_rag_search_literary` — verify literary references against primary sources
-- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
+### 1. Batch-verify Ukrainian words exist in VESUM (preferred — one call for many words)
 
-**Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_words
+results = verify_words(['слово1', 'слово2', 'слово3'])
+for w, matches in results.items():
+    if matches:
+        print(f'{w}: FOUND — lemma={matches[0][\"lemma\"]}, pos={matches[0][\"pos\"]}')
+    else:
+        print(f'{w}: NOT FOUND — may not exist in standard Ukrainian')
+"
+```
+
+### 2. Verify a single Ukrainian word in VESUM (with full morphological tags)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_word
+results = verify_word('WORD_HERE')
+if results:
+    for m in results:
+        print(f'lemma={m[\"lemma\"]}, pos={m[\"pos\"]}, tags={m[\"tags\"]}')
+else:
+    print('NOT FOUND in VESUM')
+"
+```
+
+### 3. Get all inflected forms of a lemma (declension/conjugation)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_lemma
+forms = verify_lemma('LEMMA_HERE')
+for f in forms[:20]:
+    print(f'{f[\"word_form\"]:20s} {f[\"pos\"]:8s} {f[\"tags\"]}')
+print(f'... {len(forms)} forms total')
+"
+```
+
+### 4. Check CEFR level of a word (is it level-appropriate?)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import query_cefr_level
+results = query_cefr_level('WORD_HERE')
+for r in results:
+    print(f'{r[\"word\"]}: {r[\"level\"]} ({r[\"pos\"]})')
+if not results:
+    print('Not in CEFR database')
+"
+```
+
+### 5. Search textbook content (Ukrainian school textbooks, Grades 1-11)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_textbooks
+keywords = {'keyword1', 'keyword2'}
+results = search_textbooks(keywords, 5)
+for r in results:
+    title = r.get('section_title', r.get('title', ''))
+    grade = r.get('grade', '?')
+    text = r.get('text', '')[:200]
+    print(f'Grade {grade} | {title}')
+    print(f'  {text}')
+    print()
+"
+```
+
+### 6. Search style guide for calques/Russianisms (Антоненко-Давидович, 279 entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_style_guide
+results = search_style_guide('TOPIC_HERE', 3)
+for r in results:
+    print(f'--- {r.get(\"word\", \"\")} [{r.get(\"section\", \"\")}]')
+    print(r.get('text', '')[:300])
+    print()
+if not results:
+    print('No style guide entries found')
+"
+```
+
+### 7. Look up word definition in СУМ-11 (Ukrainian explanatory dictionary, 127K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_definitions
+results = search_definitions('WORD_HERE', 3)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+### 8. Search idioms (Фразеологічний словник, 25K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_idioms
+results = search_idioms('WORD_HERE', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"text\", r.get(\"definition\", \"\")))[:200]}')
+"
+```
+
+### 9. English-to-Ukrainian translation (Балла, 79K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import translate_en_uk
+results = translate_en_uk('ENGLISH_WORD', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+---
+
+**WHEN to use these tools:**
+
+1. **Before writing any Ukrainian text** — batch-verify all key vocabulary with
+   `verify_words` (tool 1). Any word that returns NOT FOUND must be replaced.
+2. **When you suspect a Russicism or calque** — search the style guide (tool 6)
+   and verify the correct Ukrainian form with `verify_word` (tool 2).
+3. **When writing for A1/A2** — check CEFR levels (tool 4) to ensure vocabulary
+   is level-appropriate.
+4. **When unsure about a case ending or conjugation** — use `verify_lemma` (tool 3)
+   to see the full paradigm.
+5. **When covering a grammar topic** — search textbooks (tool 5) to see how
+   Ukrainian school textbooks teach it.
+6. **When you need the precise Ukrainian meaning** — use СУМ-11 (tool 7).
+7. **When looking for natural Ukrainian expressions** — search idioms (tool 8).
+
+**Batching rule:** Collect all words you want to verify, then run ONE `verify_words`
+call instead of multiple `verify_word` calls. This is faster and uses fewer tokens.

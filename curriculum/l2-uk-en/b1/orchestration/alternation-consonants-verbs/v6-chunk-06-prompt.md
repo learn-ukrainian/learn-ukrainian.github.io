@@ -22,7 +22,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-український текст, дивитеся фільм або слухаєте телевізійні новини, ви обов'язково зустрінете багато нових, абсолютно невідомих вам дієслів недоконаного виду. Якщо таке нове слово має всередині специфічні звуки «ж», «ч», «ш» або складні комбінації «дж», «щ», ви відтепер можете діяти як справжній мовний детектив. Ви можете подумки **скасувати** *(to reverse/cancel)* це фонетичне чергування і дуже швидко знайти оригінальний корінь слова. Уявіть ситуацію, що ви вперше бачите дієслово «прощати». Ви вже точно знаєте, що звук «щ» (який фонетично складається з двох окремих звуків «ш» та «ч») найчастіше походить від комбінації приголосних «ст». Якщо ми подумки замінимо складний звук «щ» на просту комбінацію «ст», ми миттєво отримаємо базове дієслово доконаного виду — «простити». А це коротке слово вже цілком може бути вам знайомим з попередніх уроків! Точно такий самий аналітичний метод ідеально працює з дієсловом «прикрашати». Ми чітко бачимо безпосередньо перед суфіксом шиплячий звук «ш». Одразу згадуємо наше золоте граматичне правило: звук «ш» майже завжди утворюється від базового свистячого звука «с». Ми робимо швидку зворотну заміну у своїй голові і легко знаходимо оригінальне дієслово «прикрасити». Ця унікальна здатність бачити прихований зв'язок між різними граматичними формами значно прискорює ваше загальне вивчення нової лексики. Вам більше ніколи не потрібно механічно запам'ятовувати видові пари як два абсолютно різні, не пов'язані між собою слова. Ви поступово починаєте бачити їхню глибоку структурну спорідненість та спільну історію. Ця мовна інтуїція є яскравою ознакою дуже впевненого володіння українською мовою на твердому рівні B1. Щоб максимально надійно закріпити цю корисну навичку, давайте зараз детально розглянемо список найпопулярніших видових пар, де постійно відбувається таке класичне фонетичне чергування. Тут критично важливо пам'ятати одну річ: коли ми утворюємо абсолютно нове слово за допомогою цих суфіксів, ця зміна приголосного стає **постійною** *(permanent)* для нового дієслова. Вона стабільно зберігається в усіх його можливих формах: і в початковому інфінітиві, і в минулому часі, і в абсолютно всіх особах теперішнього часу. Почнемо наш огляд зі звука «т», який регулярно переходить у звук «ч». Від доконаного дієслова «скоротити» ми легко утворюємо форму «скорочувати», а від слова «збагатити» ми автоматично отримуємо форму «збагачувати». Далі йде звук «з», який завжди і без винятків змінюється на м'якший звук «ж». Відповідно, доконане дієслово «знизити» перетворюється на недоконане «знижувати», а слово «заморозити» логічно стає словом «заморожувати». Традиційний свистячий звук «с» передбачувано дає нам шиплячий «ш». Наприклад, від відомого дієслова «погасити» ми формуємо пару «погашати» або популярний варіант «погашувати». А стандартний зубний звук «д» завжди логічно трансформується у складний звук «дж». Від базового слова «зарядити» ми утворюємо нове тривале дієслово «заряджати», а від слова «засудити» — відповідне слово «засуджувати». Також ніколи не забувайте про наші специфічні губні звуки, які обов'язково отримують додатковий м'який звук «л» при додаванні суфіксів. Від доконаного дієслова «уявити» ми без проблем утворюємо форму «уявляти», а від слова «замовити» — необхідне недоконане дієслово «замовляти». Як ви можете чітко бачити на цих прикладах, вся ця складна фонетична система насправді працює як надзвичайно надійний годинник. Уважно вивчивши ці базові моделі чергувань лише один раз, ви зможете самостійно, легко і без помилок розпізнавати та створювати тисячі нових українських слів у майбутньому. <!-- INJECT_ACTIVITY: fill-in-imperfective -->
+learners. When you encounter a long, unfamiliar imperfective verb containing sounds like [ж], [ч], [ш], or [дж] right before the suffix, you can reverse-engineer it to find the perfective root. Instead of treating these as entirely unrelated vocabulary items, you can use your knowledge of palatalization (**палаталізація**) to guess the meaning. Уявіть, що ви читаєте текст і бачите невідоме дієслово «прощати». Ви знаєте, що звук [щ] часто виникає з комбінації [ст]. Якщо ви заміните [щ] на [ст] і додасте суфікс інфінітива, ви отримаєте знайоме дієслово доконаного виду «простити». Ця стратегія декодування дозволяє швидко розширювати словниковий запас без словника. Ви просто скасовуєте палаталізацію і знаходите базовий інфінітив. Ця навичка формує справжню мовну інтуїцію. > *Imagine you are reading a text and see the unknown verb "прощати" (to forgive). You know that the sound [shch] often arises from the combination [st]. If you replace [shch] with [st] and add the infinitive suffix, you will get the familiar perfective verb "простити". This decoding strategy allows you to quickly expand your vocabulary without a dictionary. You simply reverse the palatalization and find the base infinitive. This skill builds true linguistic intuition.* Let's look at a practical list of common aspectual pairs where this permanent change occurs. When the verb **скоротити** (to shorten) becomes imperfective, the dental consonant [т] shifts to [ч], giving us **скорочувати**. The verb **знизити** (to lower) changes its sibilant [з] to [ж], creating **знижувати**. To extinguish a fire or pay off a debt is **погасити**, which predictably becomes **погашати** when describing an ongoing action. The verb **пригостити** (to treat someone) transforms into **пригощати** through the [ст] to [щ] alternation. And **зарядити** (to charge) turns into the imperfective form **заряджати**. The **губний** (labial) consonants also participate in this process. For example, the verb **уявити** (to imagine) receives the inserted [л] sound and becomes **уявляти**. The exact same rule applies to the word **замовити** (to order), which transforms into the imperfective verb **замовляти**. Знання цих закономірностей допомагає не вчити два окремі слова, а бачити єдину систему українського словотворення. Дуже корисно звертати увагу на ці пари під час читання. Наприклад, ви бачите в тексті речення про те, як компанія планує збагачувати свій асортимент. Виділивши суфікс і згадавши перехід [т] у [ч], ви зрозумієте, що початкове дієслово — це «збагатити». It is crucial to understand that unlike the conjugation shifts we studied earlier, these changes in word formation are permanent structural features of the new verb. In the verb **заряджати**, the affricate [дж] will appear in the infinitive (**інфінітив**), the past tense, the imperative mood, and all persons of the present tense. You are no longer alternating sounds within a grammatical paradigm (**парадигма**); you have built an entirely new lexical item that has its own complete set of endings. :::info **Grammar box** When forming an imperfective verb from a perfective root, the alternation is locked into the new stem. For example, the verb **заряджати** keeps the **[дж]** sound in every single form: *я заряджаю, ти заряджаєш, він заряджав, ми заряджатимемо*. ::: <!-- INJECT_ACTIVITY: fill-in-imperfective -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -635,7 +635,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -648,18 +715,67 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] чергування (alternation — systematic sound change)
+- [ ] дієслово (verb)
+- [ ] дієвідміна (conjugation class — verb classification)
+- [ ] особа (grammatical person — я/ти/він)
+- [ ] теперішній час (present tense)
+- [ ] інфінітив (infinitive — base verb form)
+- [ ] зубний (dental — consonant formed at the teeth: д, т)
+- [ ] свистячий (sibilant — whistling consonant: з, с, ц, дз)
+- [ ] губний (labial — consonant formed with lips: б, п, в, м, ф)
+- [ ] задньоязиковий (velar — consonant formed at back of mouth: г, к, х)
+- [ ] доконаний вид (perfective aspect)
+- [ ] недоконаний вид (imperfective aspect)
+- [ ] парадигма (paradigm — full set of inflected forms)
+- [ ] палаталізація (palatalization — softening of consonant)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Повна парадигма: від інфінітива до всіх форм (~600 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

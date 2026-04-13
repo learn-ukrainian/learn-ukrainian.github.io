@@ -1,7 +1,7 @@
 # Audit Report: M39 — shopping.md
 **Level:** A1 | **Module:** M39 | **Phase:** A1.6 | **Pedagogy:** PPP | **Target:** 1200
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-04-11 00:59:26
+**Overall Status:** ✅ PASS
+**Generated:** 2026-04-13 21:18:03
 
 ## Configuration
 **Type:** A1
@@ -18,40 +18,47 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | match-up |  | 8 | 6 | ✅ |
+| 1 | fill-in |  | 8 | 6 | ✅ |
 | 2 | quiz |  | 8 | 6 | ✅ |
-| 3 | fill-in |  | 8 | 6 | ✅ |
+| 3 | match-up |  | 8 | 6 | ✅ |
 | 4 | fill-in |  | 6 | 6 | ✅ |
-| 5 | match-up |  | 7 | 6 | ✅ |
-| 6 | quiz |  | 6 | 6 | ✅ |
-| 7 | fill-in |  | 6 | 6 | ✅ |
-| 8 | match-up |  | 6 | 6 | ✅ |
+| 5 | group-sort |  | 9 | 6 | ✅ |
+| 6 | match-up |  | 8 | 6 | ✅ |
+| 7 | true-false |  | 6 | 6 | ✅ |
+| 8 | anagram |  | 6 | 6 | ✅ |
 | 9 | fill-in |  | 6 | 6 | ✅ |
-| 10 | group-sort |  | 8 | 6 | ✅ |
-| 11 | quiz |  | 6 | 6 | ✅ |
-| 12 | true-false |  | 6 | 6 | ✅ |
-| 13 | quiz |  | 6 | 6 | ✅ |
 
 **Summary:**
-- Total activities: 13 (target: 0-4) ❌
-- Unique types: 5 (minimum: 0) ✅
-- Priority types used: 3/8 (fill-in, match-up, quiz) ✅
+- Total activities: 9 (target: 0-4) ❌
+- Unique types: 6 (minimum: 0) ✅
+- Priority types used: 4/8 (anagram, fill-in, match-up, quiz) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[LEVEL_RESTRICTION]** Activity 'anagram' should be phased out after A1 M10 (current: M39)
+  - FIX: Anagram is for Cyrillic scaffolding only. Use unjumble for word-ordering practice.
+- **[HINT_IN_ACTIVITY]** anagram activity 'Untitled' has item-level hint in item 1
+  - FIX: Remove all 'hint' fields from activity items (they break activities and provide no real pedagogical value)
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 2 violations (minor)
+
 ## Gates
-- **Words:** ✅ 1990/1200 (raw: 2027)
-- **Activities:** ✅ 13/0
+- **Words:** ✅ 1226/1200 (raw: 1260)
+- **Activities:** ✅ 9/0
 - **Density:** ✅ All > 6
-- **Unique_types:** ✅ 5/0 types
+- **Unique_types:** ✅ 6/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 3/0
+- **Engagement:** ✅ 0/0
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 35/1
+- **Vocab:** ✅ 33/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ❌ 15.6% LOW (target 20-40% (M39))
+- **Immersion:** 🇺🇦 35.7% (target 20-40% (M39))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -59,7 +66,7 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 400 | Included in Core |
-| **Скільки коштує? — How Much?** | ✅ | 590 | Included in Core |
-| **Де купи́ти? — Where to Buy** | ✅ | 605 | Included in Core |
-| **Підсумок — Summary** | ✅ | 395 | Included in Core |
+| **Intro/Narrative** | ✅ | 299 | Included in Core |
+| **Скільки коштує? (How Much?)** | ✅ | 334 | Included in Core |
+| **Де купи́ти? (Where to Buy)** | ✅ | 270 | Included in Core |
+| **Підсумок — Summary** | ✅ | 323 | Included in Core |

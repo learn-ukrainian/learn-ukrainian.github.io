@@ -1,49 +1,75 @@
 ## Linguistic Scan
-Scan completed. Found a critical English calque used to express age («Це мій двадцять один рік.») and one non-VESUM noun («папок»), which is a Russian-influenced word and should be replaced with the authentic Ukrainian equivalent «тек». No other linguistic errors, Surzhyk, or incorrect stress found in the prose. 
+- **Grammar-rule error:** In the counting section, the claim `"To speak correctly, you must always look at the last number in the sequence. It is this final digit that strictly determines the grammatical ending of the following noun."` is inaccurate. Ukrainian counting also requires checking whether the number ends in `11–14`, which overrides the last-digit pattern.
 
 ## Exercise Check
-- `<!-- INJECT_ACTIVITY: quiz-what-s-the-date-drill -->`: Present and correctly placed after the dates section. Matches plan.
-- `<!-- INJECT_ACTIVITY: fill-in-counting-objects-1-2-4-5-rule -->`: Present and correctly placed after the counting rules section. Matches plan.
-- `<!-- INJECT_ACTIVITY: match-up-q-a-about-quantities-and-dates -->`: Present and placed logically. Matches plan.
-- `<!-- INJECT_ACTIVITY: match-up-accusative-to-genitive-negation -->`: Present and placed after the negation section. Matches plan.
+- All 4 planned markers are present:
+  - `quiz-what-s-the-date-drill`
+  - `fill-in-counting-objects-1-2-4-5-rule`
+  - `match-up-accusative-genitive-negation`
+  - `match-up-qa-quantities-dates`
+- Marker types broadly match the plan’s `activity_hints`.
+- Placement issue: `match-up-qa-quantities-dates` is clustered at the very end, after the negation section, even though it tests dates/quantities and should come right after the dates/counting teaching.
+- No inline exercise-logic errors were visible because only markers, not generated YAML items, are present here.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 9/10 | Missing explicit examples of holidays/birthdays in the theory section, though dates are extensively practiced throughout the module. |
-| 2. Linguistic accuracy | 8/10 | The sentence `* «Це мій двадцять один рік.»` is a direct grammatical calque from English. The word `папок` is missing from VESUM and is a Russian-influenced noun. |
-| 3. Pedagogical quality | 10/10 | Excellent PPP flow with strong, clear explanations of complex rules like the 1, 2-4, 5+ counting hierarchy. Etymological hints ("a five of tables") are very helpful. |
-| 4. Vocabulary coverage | 9/10 | The required word "місяць" is never explicitly presented in Ukrainian in the text, although "month" is discussed in English. All other words are present. |
-| 5. Exercise quality | 10/10 | All 4 activity markers from the plan are present and placed logically after their corresponding topics. |
-| 6. Engagement & tone | 10/10 | Warm, encouraging tone ("This is the biggest mental shift you need to make...") without being overly colloquial or gamified. |
-| 7. Structural integrity | 10/10 | Clean formatting. All sections are present and ordered correctly. The word count is 3461, comfortably exceeding the 2000-word target. |
-| 8. Cultural accuracy | 10/10 | Natural and culturally appropriate context in dialogues (e.g., using hryvnias, natural store interactions). |
-| 9. Dialogue & conversation quality | 10/10 | Natural multi-turn conversations that seamlessly integrate the target grammar in realistic settings (salon, hotel, store). |
+| 1. Plan adherence | 8/10 | All planned H2 sections are present and the required vocabulary is substantially covered, but the recommended plan vocabulary `числівник` and `додаток` does not appear in the prose, and the `match-up-qa-quantities-dates` marker is misplaced at the end. |
+| 2. Linguistic accuracy | 7/10 | The Ukrainian forms are mostly solid, but the counting explanation says learners should “always look at the last number,” which is a wrong grammar rule because `11–14` override the last-digit pattern. |
+| 3. Pedagogical quality | 7/10 | The module gives many examples, but the counting rule is overgeneralized before the exception logic is stated, and the quantities/dates practice is not placed immediately after the relevant teaching. |
+| 4. Vocabulary coverage | 8/10 | Required items such as `число`, `місяць`, all 12 months, and `заперечення` are present, but recommended `числівник` and `додаток` are absent from the prose. |
+| 5. Exercise quality | 8/10 | The marker inventory matches the plan, but `match-up-qa-quantities-dates` appears after the negation material instead of after the dates/counting material it is meant to reinforce. |
+| 6. Engagement & tone | 8/10 | The teacher voice is mostly solid, but the counting dialogue derails into an unrelated historical sentence: `Оборона старого українського аеропорту...`, which feels pasted in rather than taught. |
+| 7. Structural integrity | 10/10 | All major sections are present and ordered correctly, markers are intact, and the pipeline word count is `2979`, which is above target. |
+| 8. Cultural accuracy | 10/10 | The module is Ukrainian-centered and uses appropriate cultural references such as Independence Day and Ukrainian month-name etymology. |
+| 9. Dialogue & conversation quality | 7/10 | The hotel dialogue works, but the later “dialogue” is not a real exchange: one speaker abruptly states `Оборона старого українського аеропорту...` with no conversational setup. |
 
 ## Findings
-[Linguistic accuracy] [Critical]
-Location: `* «Це мій двадцять один рік.» (This is my twenty-one year. / *Meaning: I am 21 years old.*)`
-Issue: This phrase is a grammatical calque from English ("This is my 21st year") and is not how age is expressed in Ukrainian. It incorrectly uses a cardinal number ("один" instead of ordinal "перший") to mimic an English idiom. Ukrainian uses the Dative subject for age.
-Fix: Replace with `* «Мені двадцять один рік.» (I am twenty-one years old.)`
+[LINGUISTIC ACCURACY] [SEVERITY: critical]  
+Location: Counting section — `"To speak correctly, you must always look at the last number in the sequence. It is this final digit that strictly determines the grammatical ending of the following noun."`  
+Issue: This teaches a wrong rule. In Ukrainian, learners must also check whether the number ends in `11–14`; those endings override the last-digit pattern.  
+Fix: Replace the rule with wording that explicitly says to check both the final digit and whether the number ends in `11–14`.
 
-[Linguistic accuracy] [Major]
-Location: `У шафі стоять десять папок.`
-Issue: "папок" is not in VESUM and is a Russian-influenced word for folder. The authentic Ukrainian word is "тека" (Genitive plural: "тек").
-Fix: Replace with `У шафі стоять десять тек.`
+[PLAN ADHERENCE] [SEVERITY: major]  
+Location: Date explanation and negation explanation; search evidence: `числівник` = 0 occurrences, `додаток` = 0 occurrences.  
+Issue: Two recommended grammar terms from the plan are missing from the prose.  
+Fix: Introduce `числівник` in the date explanation and `додаток` in the negation explanation.
 
-[Vocabulary coverage] [Major]
-Location: `To master dates, you need to know the twelve months and their Genitive forms.`
-Issue: The required vocabulary word "місяць" (month) is missing; it is only discussed in English.
-Fix: Replace with `To master dates, you need to know the twelve months (місяці) and their Genitive forms.`
+[EXERCISE QUALITY] [SEVERITY: major]  
+Location: End of module — `<!-- INJECT_ACTIVITY: match-up-qa-quantities-dates -->`  
+Issue: The quantities/dates match-up is placed after the negation section, so it is not testing what was just taught.  
+Fix: Move this marker to immediately after the counting section marker.
+
+[DIALOGUE & CONVERSATION QUALITY] [SEVERITY: major]  
+Location: Counting dialogue — `> — **Олена:** Оборона старого українського аеропорту безперервно тривала двісті сорок два дні.`  
+Issue: This line is disconnected from the surrounding classroom-style quantity dialogue and makes the exchange sound stitched together rather than natural.  
+Fix: Replace it with a quantity question that the next line directly answers.
 
 ## Verdict: REVISE
-The module is structurally and pedagogically excellent, but it contains a critical English calque for expressing age that must be corrected so learners don't memorize wrong grammar. It also needs minor polish for vocabulary injection and removing a Russianism.
+The module is not a reject, but it cannot pass as-is. It contains one critical grammar-rule error, plus major issues with plan vocabulary coverage, exercise placement, and dialogue coherence. Several dimensions are below 9 with concrete fixable problems.
 
 <fixes>
-- find: "* «Це мій двадцять один рік.» (This is my twenty-one year. / *Meaning: I am 21 years old.*)"
-  replace: "* «Мені двадцять один рік.» (I am twenty-one years old.)"
-- find: "У шафі стоять десять папок."
-  replace: "У шафі стоять десять тек."
-- find: "To master dates, you need to know the twelve months and their Genitive forms."
-  replace: "To master dates, you need to know the twelve months (місяці) and their Genitive forms."
+- find: "To speak correctly, you must always look at the last number in the sequence. It is this final digit that strictly determines the grammatical ending of the following noun."
+  replace: "To speak correctly, you usually look at the final digit, but you must also check whether the number ends in 11-14. These teen endings override the usual pattern and determine the grammatical form of the following noun."
+
+- find: "First, the day is expressed as an ordinal numeral in the neuter gender, such as the Ukrainian words for first, second, or third."
+  replace: "First, the day is expressed as an ordinal **числівник** in the neuter gender, such as the Ukrainian words for first, second, or third."
+
+- find: "When you negate a transitive verb — a verb that normally takes a direct object in the Accusative case — the object often shifts into the Genitive case."
+  replace: "When you negate a transitive verb — a verb that normally takes a direct **додаток** (object) in the Accusative case — the object often shifts into the Genitive case."
+
+- insert_after: "<!-- INJECT_ACTIVITY: fill-in-counting-objects-1-2-4-5-rule -->"
+  content: "<!-- INJECT_ACTIVITY: match-up-qa-quantities-dates -->"
+
+- find: |
+    <!-- INJECT_ACTIVITY: match-up-accusative-genitive-negation -->
+    <!-- INJECT_ACTIVITY: match-up-qa-quantities-dates -->
+  replace: "<!-- INJECT_ACTIVITY: match-up-accusative-genitive-negation -->"
+
+- find: |
+    > — **Олена:** Оборона старого українського аеропорту безперервно тривала двісті сорок два дні. *(The defense of the old Ukrainian airport lasted continuously for two hundred and forty-two days.)*
+    > — **Марко:** Ми швидко купили чотири квитки на поїзд. *(We quickly bought four train tickets.)*
+  replace: |
+    > — **Олена:** А скільки квитків ви купили на поїзд? *(And how many train tickets did you buy?)*
+    > — **Марко:** Ми швидко купили чотири квитки на поїзд. *(We quickly bought four train tickets.)*
 </fixes>

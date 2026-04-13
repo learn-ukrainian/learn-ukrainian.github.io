@@ -1,21 +1,22 @@
-# Section-by-Section Generation — Section 2/5
+# Section-by-Section Generation — Section 2/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 3: Дієслова ходять парами (A2, A2.1 [Foundation and Aspect Introduction])
-**Section to write:** Спосіб 1: Додавання префікса (~660 words total)
-**Word target for this section:** 660 words (aim for 726 to account for undershoot)
+**Section to write:** Спосіб 1: Додавання префікса (Method 1: Adding a Prefix) (~650 words)
+**Word target for this section:** 650 words (aim for 715 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Спосіб 1: Додавання префікса (~660 words total)
-- P1 (~120 words): Prefixation as the most productive formation tool. Explain that adding a prefix to a basic "process" verb usually turns it into a "result" verb. Use *читати* (to read) -> *прочитати* (to read through/finish).
-- P2 (~130 words): The "Universal" prefix *по-*. Explain its high frequency and how it often marks the completion of a standard action. Examples: *бачити / побачити* (to see), *чути / почути* (to hear), *снідати / поснідати* (to have breakfast), *дякувати / подякувати* (to thank).
-- P3 (~130 words): Task-specific prefixes: *на-* and *про-*. Focus on creative and communicative tasks. Examples: *писати / написати* (to write), *малювати / намалювати* (to draw/paint). Contrast *жити* (to live) with *прожити* (to live through a period of time).
-- P4 (~130 words): The phonetic rule for *з-* vs. *с-*. Explain the "Кафе Птах" rule (K, P, T, F, Kh). Use *робити / зробити* (to do/make) as the default *з-*, and contrast it with *казати / сказати* (to say) or *фотографувати / сфотографувати* (to photograph) where the prefix changes to *с-* because of the following voiceless consonant.
-- P5 (~150 words): Prefixes of consumption and mastery: *ви-* and *за-*. Use *пити / випити* (to drink / to drink up) and *вчити / вивчити* (to study / to master/memorize). Explain that *вчити* describes the time spent with a book, while *вивчити* means the information is now in your head. Introduce *платити / заплатити* (to pay) as a common "за-" pair.
+## Спосіб 1: Додавання префікса (Method 1: Adding a Prefix) (~650 words)
+- P1 (~100 words): Introduce the first and most common method to form (утворювати) pairs: adding a prefix (префікс) to the imperfective base.
+- P2 (~110 words): The universal prefix "по-". Explain that it often makes an action perfective without changing its core meaning. Examples: думати / подумати, снідати / поснідати, бачити / побачити. 
+- P3 (~120 words): The prefix "з- / с-". Show the basic pair робити / зробити. Briefly explain the phonetic rule where "з-" becomes "с-" before certain consonants (к, п, т, ф, х), with examples: фотографувати / сфотографувати, казати / сказати.
+- P4 (~110 words): The prefixes "про-" and "на-", which often signal the completion of a text-based or creative process. Examples: читати / прочитати, писати / написати, малювати / намалювати.
+- P5 (~110 words): The prefixes "при-" and "ви-", signaling preparation or consumption. Examples: готувати / приготувати, пити / випити, вчити / вивчити.
+- P6 (~100 words): Summary of Method 1. Emphasize that while prefixes can add slight nuances, their primary job here is to flip the verb from "process" to "result".
 - <!-- INJECT_ACTIVITY: quiz-find-partner --> [quiz, Find the Partner (Verb Matching), 8 items]
 
 ---
@@ -24,7 +25,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-Чому дієслова потрібно вчити парами? In Ukrainian, learning a new verb is a unique experience because you are rarely learning just a single word. Instead, you are learning an aspect pair (**видова пара**). Imagine trying to buy shoes, but you only buy the left one. It is useful, but you cannot walk far without its partner! When you learn the verb for writing, you must learn the word for the ongoing process alongside the word for the completed result. You need both halves to answer two completely different questions. **Що ти робив?** — *What were you doing?* **Що ти зробив?** — *What have you done?* В українській мові ми завжди вчимо дієслова парами. Кожна дія має дві різні форми. Одна форма описує довгий процес, а інша — готовий результат. > *In the Ukrainian language, we always learn verbs in pairs. Every action has two different forms. One form describes a long process, and the other describes a finished result.* Let us look at how this works in a cooking scenario. > — **Бабуся:** Ліпи вареники, поки я грію воду. *(Keep forming the varenyky while I heat the water.)* > — **Онучка:** Я вже зліпила десять штук! *(I have already formed ten of them!)* > — **Бабуся:** Тепер вари їх п'ять хвилин, поки вони не спливуть. *(Now boil them for five minutes until they float.)* > — **Онучка:** А що робити потім? *(And what to do after?)* > — **Бабуся:** Як звариш, клич усіх до столу! *(Once you have boiled them, call everyone to the table!)* The logic behind these pairs is the contrast between process and result. The imperfective aspect describes the effort you put into an action, while the perfective aspect describes the final outcome. For example, the imperfective verb for cleaning emphasizes the physical act of working with a broom and a cloth. The perfective verb means the room is completely clean and the job is done. You should memorize these two forms as a single lexical unit, treating them like two halves of the same concept. Недоконаний вид показує довгий процес і твою роботу. Доконаний вид показує успішний результат цієї роботи. Наприклад, ти можеш прибирати кімнату цілий день, але так і не прибрати її. > *The imperfective aspect shows a long process and your work. The perfective aspect shows the successful result of this work. For example, you can be cleaning a room all day, but still not have cleaned it.* Because these pairs are fundamental, dictionaries are designed to help you find both forms. When you look up a new action, you usually see the imperfective verb listed first, followed by its perfective partner. You will often see standard abbreviations like **нед.** (imperfective) and **док.** (perfective) in official resources. Getting comfortable with these dictionary entries makes expanding your vocabulary much easier. :::note **Quick tip** Always write down new verbs as a pair in your notebook, like **робити / зробити**. If a dictionary only gives you one form, take a moment to search for its partner! :::
+one beautiful varenyk and show me.)* > — **Онучка:** Ось, я зліпила його. *(Here, I have formed it.)* > — **Бабуся:** Дуже добре. Тепер вари їх у воді десять хвилин. *(Very good. Now boil them in water for ten minutes.)* > — **Онучка:** Добре, я розумію. *(Okay, I understand.)* > — **Бабуся:** Звари їх до готовності, щоб ми могли швидко пообідати. *(Boil them until they are fully cooked, so we can have lunch quickly.)* Let us carefully analyze this kitchen conversation. The grandmother uses the verbs «ліпи» (form) and «вари» (boil) when she wants her granddaughter to focus entirely on the ongoing, continuous process of cooking. In Ukrainian grammar, this focus on the duration or repetition of an action is called the imperfective aspect, or «недоконаний вид». However, the moment she wants to see a single, successfully completed action or a specific final achievement, she switches her verbs to «зліпи» and «звари». This focus on the achieved destination or a one-time completed result is the perfective aspect, or «доконаний вид». The verb changes because the intention behind the action has changed from a continuous effort to a final outcome. This distinction brings us to the most fundamental concept of the Ukrainian verb system: almost every action naturally exists as a **пара** (pair). English primarily relies on complex grammar tenses, like "was doing" versus "have done", to communicate the exact status of an action. Ukrainian, however, takes a completely different approach by using two distinct verbs to show the fundamental difference between trying and succeeding. One verb in the pair will always describe the journey or the process, while its dedicated partner will always describe the final destination or the result. Українці завжди думають про дію як про процес або як про результат. Якщо ти знаєш тільки одне дієслово з пари, ти не можеш вільно говорити про свої дії. > *Ukrainians always think about an action as a process or as a result. If you only know one verb from a pair, you cannot speak freely about your actions.* Because these two verbs are so deeply connected in meaning, you must make it a habit to learn them together from the very beginning of your studies. When you look up a new action in a dictionary or a vocabulary list, you will usually see them listed side by side. The imperfective verb, which describes the ongoing action, is typically presented as the basic, default form. It is immediately followed by its perfective partner. For example, you will commonly see essential entries like «робити / зробити» (to do / to have done), «**читати / прочитати**» (to read), and «**писати / написати**» (to write). :::note **Quick tip** Always write new verbs down together in your vocabulary notebook. If you learn the word **брати** (to take as a process), immediately find and write down its partner **взяти** (to take as a result). If you learn **говорити** (to speak), learn **сказати** (to say). This ensures you always have the complete picture of that action. :::
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -594,6 +595,29 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] пара (pair)
+- [ ] префікс (prefix)
+- [ ] суфікс (suffix)
+- [ ] корінь (root)
+- [ ] читати / прочитати (to read)
+- [ ] писати / написати (to write)
+- [ ] брати / взяти (to take)
+- [ ] говорити / сказати (to speak / to say)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Спосіб 1: Додавання префікса (Method 1: Adding a Prefix) (~650 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

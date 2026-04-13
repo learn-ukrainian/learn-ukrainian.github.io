@@ -1,48 +1,29 @@
-# Section-by-Section Generation — Section 2/5
+# Section-by-Section Generation — Section 2/3
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 11: Куди? До якого часу? (A2, A2.2 [Genitive Case Complete])
-**Section to write:** Куди ти йдеш? До + родовий для напрямку (~750 words)
-**Word target for this section:** 750 words (aim for 825 to account for undershoot)
+**Section to write:** До якого часу? До + родовий для часу (~715 words)
+**Word target for this section:** 715 words (aim for 786 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Куди ти йдеш? До + родовий для напрямку (~750 words)
-- P1 (~140 words): [Destinations as places: cities and countries. Explain the rule for masculine city endings (-а/-я) with examples: до Києва, до Львова, до Харкова, and feminine countries (-и/-ії): до України, до Польщі, до Франції.]
-- P2 (~140 words): [Destinations as people: 'to see someone' or 'to someone's place'. Explain that Ukrainian uses 'до' + person where English uses "to" or "to's". Examples: іду до лікаря, до бабусі, до сусіда. Highlight the common error of using 'в' with people (e.g., *в лікар).]
-- P3 (~150 words): [Contrast 'до' vs. 'в/на' + Accusative. Use the nuance from the Knowledge Packet: 'до' emphasizes the journey/direction toward the perimeter/vicinity, while 'в/на' emphasizes entry/destination. Examples: іду до магазину (toward it) vs. іду в магазин (into it).]
-- P4 (~140 words): [Morphological drill: Hard and soft stems in the Genitive. Masculine: до будинку (hard -у), до музею (soft -ю), до університету (institution -у). Feminine: до школи (hard -и), до станції (soft -ії), до площі (sibilant -і).]
-- <!-- INJECT_ACTIVITY: fill-in-genitive-forms --> [fill-in, focus: Complete sentences with 'до' + correct noun forms for direction, 8 items]
-- P5 (~130 words): [Adjective agreement with 'до' phrases. Show how adjectives follow the Genitive pattern: до нового будинку, до великої станції, до старого друга.]
-- P6 (~50 words): [The adverb 'додому'. Explain its origin as 'до дому' and its unique status as a fixed direction word.]
+## До якого часу? До + родовий для часу (~715 words)
+- P1 (~130 words): Introduce the concept of a time limit. Explain that just as `до` shows the end point of a physical journey, it shows the end point of time ("until"). Provide core examples: `до вечора` (until evening), `до ранку` (until morning), `до понеділка` (until Monday), `до літа` (until summer).
+- P2 (~140 words): Discuss `до` as a deadline ("by" a certain time). Give examples of completing actions before a limit: `зробити до п'ятниці` (finish by Friday), `прийти до восьмої` (come by eight o'clock). Note that `до восьмої` is short for `до восьмої години`.
+- P3 (~150 words): Explain how `до` is paired with `від` or `з` to express time ranges ("from X to Y"). Give examples: `від ранку до вечора` (from morning to evening), `з понеділка до п'ятниці` (from Monday to Friday). Provide natural sentences like "Я маю вчитися з ранку до вечора."
+- P4 (~150 words): List common daily phrases and contexts using `до` for time. Include: `працювати до шостої` (work until six), `чекати до завтра` (wait until tomorrow), `відкрито до дев'ятої` (open until nine), `до початку уроку` (until the start of the lesson), and `до війни` (before the war).
+- P5 (~145 words): Synthesize the connection between space and time. Show how the grammatical structure is identical whether you are mapping a physical route (`з Києва до Варшави`) or a chronological schedule (`з ранку до вечора`). It is always about a starting point (`з/від`) and an ending point (`до`).
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
 
 <previous_context>
-## Вступ та діалог
+[...previous sections truncated...]
 
-> — **Пасажир:** Добрий день! Мені потрібно до вокзалу, будь ласка. *(Good afternoon! I need to go to the station, please.)*
-> — **Таксист:** Добрий день! Сідайте. До центрального вокзалу? *(Good afternoon! Have a seat. To the central station?)*
-> — **Пасажир:** Так. А потім ми поїдемо до аптеки. *(Yes. And then we will go to the pharmacy.)*
-> — **Таксист:** Добре. Яка адреса аптеки? *(Okay. What is the address of the pharmacy?)*
-> — **Пасажир:** Вулиця Шевченка. Мені треба купити ліки до п'ятої години. *(Shevchenko street. I need to buy medicine by five o'clock.)*
-> — **Таксист:** Ми встигнемо. А після аптеки куди? *(We will make it. And after the pharmacy, where to?)*
-> — **Пасажир:** Після аптеки поїдемо до готелю. *(After the pharmacy, we will go to the hotel.)*
-> — **Таксист:** Зрозумів. Поїхали! *(Understood. Let's go!)*
-
-In earlier lessons, you learned how to say where you are located using the Locative case. Now, we are moving beyond simple location to talk about direction, movement, and time limits. When you want to express that you are moving *toward* a destination or doing something *until* a certain deadline, you need the preposition **до**. This is a powerful word that connects movement in space with movement in time, and it always requires the Genitive case.
-
-У цьому уроці ми вивчаємо напрямок і час. Ви вже знаєте, як сказати, де ви знаходитеся. Тепер ми будемо говорити, куди ми йдемо або їдемо. Прийменник «до» завжди вимагає родового відмінка.
-
-> *In this lesson, we study direction and time. You already know how to say where you are located. Now we will talk about where we are walking or driving. The preposition "до" always requires the Genitive case.*
-
-:::tip
-**Direction and Time** — Whether you are heading to the pharmacy, visiting a doctor, or waiting until evening, **до** is your guide. It is the most common way to express your goal or your deadline.
-:::
+feel unwell. Tomorrow my brother is going to the dentist.* :::tip **Did you know?** Unlike Russian, which often uses a different preposition and case for people (к + Dative, like "к маме"), Ukrainian strictly and elegantly uses **до** + Genitive for both places and people (**до мами**). Using "до" for people is a hallmark of natural, authentic Ukrainian syntax. ::: You will constantly hear phrases like **до лікаря** (to the doctor) and **до бабусі** (to grandmother). Never try to use other prepositions when a person is your destination. You might be wondering about other ways to say "to." You have probably already learned to use **в** or **на** with the Accusative case to express direction. So, what is the difference between saying "я йду до магазину" and "я йду в магазин"? The good news is that both are completely standard and natural in modern Ukrainian. Різниця між цими фразами дуже маленька і залежить від контексту. Коли ви кажете «я йду до магазину», ви акцентуєте увагу на самому маршруті та процесі руху. Ви говорите про напрямок. Коли ви кажете «я йду в магазин», ви більше думаєте про кінцеву точку і про те, що ви будете всередині будівлі. > *The difference between these phrases is very small and depends on the context. When you say "я йду до магазину", you focus attention on the route itself and the process of movement. You are talking about the direction. When you say "я йду в магазин", you are thinking more about the final point and about the fact that you will be inside the building.* There is no strict hierarchy between these two options. You can choose whichever feels more appropriate for what you want to emphasize: the journey toward the place (**до**) or the physical entry into the destination (**в** / **на**). Finally, let's briefly review the endings for the Genitive case that you need to use after the preposition **до**. Your choice of ending depends on the gender of the noun and whether its stem is hard or soft. Чоловічий рід має різні закінчення. Тверда група отримує закінчення «-у» або «-а», наприклад, «до будинку» або «до парку». М'яка група закінчується на «-ю» або «-я», як у слові «до музею». Жіночий рід також змінюється за правилами. Тверда група має закінчення «-и», як «до школи», а м'яка отримує «-і», як «до станції». Середній рід часто має закінчення «-я», наприклад, «до моря». > *Masculine gender has different endings. The hard group gets the ending "-у" or "-а", for example, "до будинку" or "до парку". The soft group ends in "-ю" or "-я", as in the word "до музею" (to the museum). Feminine gender also changes according to the rules. The hard group has the ending "-и", like "до школи", and the soft one gets "-і", like "до станції". Neuter gender often has the ending "-я", for example, "до моря".* Memorizing these patterns will make expressing your destination automatic and effortless. <!-- INJECT_ACTIVITY: fill-in, Complete sentences with до + correct Genitive noun form, 8 items -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -622,6 +603,31 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] напрямок (direction)
+- [ ] мета (goal, purpose)
+- [ ] музей (museum)
+- [ ] лікар (doctor)
+- [ ] бабуся (grandmother)
+- [ ] вечір (evening)
+- [ ] ранок (morning)
+- [ ] екзамен (exam)
+- [ ] побачення (meeting, date; goodbye in 'до побачення')
+- [ ] список (list)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## До якого часу? До + родовий для часу (~715 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

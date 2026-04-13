@@ -1,19 +1,18 @@
 ## VESUM Verification
 - Confirmed: учора, робити, читати, працювати, гуляти, готувати, дивитися, говорити, минулий, вихідні, субота, неділя, разом, фільм, провести
-- Not found: None
+- Not found: 
 
 ## Grammar Rules
-- Past Tense Formation (Минулий час): Textbook Grade 5 (Uhor) / Grade 6 (Betsa) — Formed from the infinitive stem + suffixes: -в (masculine singular), -ла (feminine singular), -ло (neuter singular), -ли (plural).
-- Gender vs Person: Unlike the present tense, the past tense reflects the gender of the subject, not the person. (e.g., "я читав" for a male speaker, "я читала" for a female speaker).
+- Past tense formation (-в, -ла, -ло, -ли): Правопис §N/A — Not covered in the digitized orthography sections (1-61) of Pravopys 2019 (morphology section is incomplete in source). Rule confirmed by textbook references.
 
 ## Calque Warnings
-- проводити час: OK/Acceptable — While "проводити час" is common, "проводити" is the standard verb for spending time/weekends (проводити вихідні).
-- минулого тижня: OK — Standard genitive construction for time expressions.
-- дивитися фільм: OK — Basic A1 verb for "to watch".
+- провести вихідні: OK
+- готувати вечерю: OK
+- ходити в кафе: OK
 
 ## CEFR Check
 - учора: A1 — OK
-- вихідні: A1 — OK
-- минулий: A1 — OK
-- разом: A1 — OK
-- фільм: A1 — OK
+- субота: A1 — OK
+- вихідні (вихідний): A1 — OK
+- минулий: A2 — Above target
+- провести: A2 — Above target

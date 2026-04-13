@@ -2,47 +2,53 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 9
-  evidence: The plan requires "автобусом" for transport, but the module uses the calqued
-    phrase "на автобусі". All other points covered.
+  score: 5
+  evidence: 'All planned H2 sections are present, but the plan’s Odesa checkpoint
+    setup is missing: no `Дерибасівська`, `Потьомкінські`, `порт`, `пляж`, or `сходи`,
+    while the prose instead centers on `Kyiv`. Secti'
 - dimension: 2
   name: Linguistic accuracy
   score: 7
-  evidence: The imperative "Ідіть" (to walk) is incorrectly translated as "Go by subway"
-    in the dialogue. Ukrainian requires "Їдьте" for vehicular transport. Also uses
-    colloquial "на автобусі".
+  evidence: Most Ukrainian examples are clean (`Вона живе у Львові.`, `Я родом з України.`),
+    but the note claiming `в метро` is more authentic than `на метро` teaches the
+    wrong usage distinction.
 - dimension: 3
   name: Pedagogical quality
-  score: 9
-  evidence: Good progression and clear summaries, though the "strictly used" claim
-    about в/на is slightly simplified.
+  score: 6
+  evidence: 'There are many examples, but the checkpoint keeps slipping into long
+    English lecture prose: `Notice how this narrative effortlessly switches...` and
+    `You already possess all the grammatical tools need'
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: All review vocabulary from the plan is naturally integrated into the text
-    and dialogue.
+  score: 5
+  evidence: Core city/navigation words are present (`музей`, `вокзал`, `метро`, `площа`),
+    but the plan’s motivating checkpoint vocabulary tied to Odesa landmarks is not
+    used in the prose.
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: Four exercise markers correctly placed after their respective grammar/reading
-    blocks.
+  score: 9
+  evidence: 'Marker count matches the 4 `activity_hints`, and placement is sensible:
+    question-choice after the review triad, case sort and euphony quiz after grammar,
+    fill-in after dialogue.'
 - dimension: 6
   name: Engagement & tone
-  score: 8
-  evidence: 'Violates the prompt''s tone rule by including a self-congratulatory opener:
-    "Congratulations on reaching the end of the A1.5 phase!".'
+  score: 5
+  evidence: 'Tone drifts into inflated, generic phrasing: `You already possess all
+    the grammatical tools needed`, `You have acquired several powerful technical tools`,
+    `You have the momentum...`. That reads like A'
 - dimension: 7
   name: Structural integrity
-  score: 10
-  evidence: Word count is 1636 (comfortably over the 1200 target). All required headings
-    are present.
+  score: 7
+  evidence: 'The module has all required H2 headings and exceeds the 1200-word minimum,
+    but it ends with a stray code fence: ````` after the final paragraph.'
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: Contextually rich scenarios (tourist in Kyiv, polite register, Odesa landmarks).
+  score: 8
+  evidence: Nothing is overtly inaccurate or Russocentric, but the planned Odesa local-color
+    checkpoint is largely absent despite being the module’s stated motivating situation.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 8
-  evidence: Good transactional scenario but contains the critical linguistic error
-    ("Ідіть" vs "Їдьте") which disrupts the reality of the exchange.
+  score: 9
+  evidence: The dialogue is speaker-labeled, multi-turn, and based on a real navigation
+    task (`Де тут музей? ... Де вокзал?`). It is functional and usable.
 findings: []

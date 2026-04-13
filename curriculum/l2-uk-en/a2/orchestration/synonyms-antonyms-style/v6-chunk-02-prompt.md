@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-свій унікальний відтінок. *(Every new word has its unique shade.)* Синоніми допомагають нам точно передати наші думки та емоції. *(Synonyms help us accurately convey our thoughts and emotions.)* Ми завжди вибираємо слово залежно від конкретної ситуації. *(We always choose a word depending on the specific situation.)* Дуже часто ми використовуємо базові прикметники. *(Very often we use basic adjectives.)* Наприклад, звичайні слова «гарний» *(nice)* або «хороший» *(good)*. Але українська мова пропонує набагато більше кольорів. *(But the Ukrainian language offers much more colors.)* Коли ми говоримо про зовнішність людини, краще сказати **вродливий** *(handsome/beautiful)*. Коли ми описуємо якийсь предмет або пейзаж, ідеально підходить слово **красивий** *(beautiful)*. А якщо ми маємо приємний досвід або сильну емоцію, ми кажемо **чудовий** *(wonderful)*. Чому це так важливо? *(Why is this so important?)* Бо постійне повторення одного слова — це **тавтологія** *(tautology)*. Тавтологія робить ваш текст бідним і нецікавим. *(Tautology makes your text poor and uninteresting.)* Якщо ви уникаєте повторів, ваша українська мова звучить набагато природніше та професійніше. *(If you avoid repetitions, your Ukrainian language sounds much more natural and professional.)* Коли ви пишете лист або розповідаєте цікаву історію, шукайте нові варіанти. *(When you write a letter or tell an interesting story, look for new options.)* Використовуйте різні синоніми, щоб малювати словами. *(Use different synonyms to paint with words.)* Це показує ваш високий рівень володіння мовою. *(This shows your high level of language proficiency.)* Слова мають не лише друзів, але й ворогів. *(Words have not only friends, but also enemies.)* Це **антоніми** *(antonyms)* — слова з абсолютно протилежним значенням. *(words with an absolutely opposite meaning.)* Вони створюють дуже сильний контраст у вашому реченні. *(They create a very strong contrast in your sentence.)* Ми постійно використовуємо їх у нашому повсякденному житті. *(We constantly use them in our everyday life.)* Наприклад: «день» *(day)* і «ніч» *(night)*, «гарячий» *(hot)* і «холодний» *(cold)*, «початок» *(beginning)* і «кінець» *(end)*. Антоніми також є дуже важливими для українського фольклору. *(Antonyms are also very important for Ukrainian folklore.)* Вони часто є основою для багатьох українських прислів'їв. *(They are often the foundation for many Ukrainian proverbs.)* Одне популярне українське прислів'я мудро каже: «Не знаючи лиха, не пізнаєш і добра» *(Without knowing trouble, you won't know good either)*. Тут слова «лихо» *(trouble)* і «добро» *(good)* стоять поруч, щоб показати нам важливий життєвий урок. *(Here the words "trouble" and "good" stand next to each other to show us an important life lesson.)* Антоніми роблять наші думки глибокими та виразними. *(Antonyms make our thoughts deep and expressive.)* <!-- INJECT_ACTIVITY: match-up, Match synonyms (e.g., шлях-дорога) and antonyms (e.g., радість-сум) in pairs, 8 items --> Ваше головне завдання — постійно розширювати свій словниковий запас. *(Your main task is to constantly expand your vocabulary.)* Завжди використовуйте **словник синонімів** *(dictionary of synonyms)* під час навчання. *(Always use a dictionary of synonyms during your studies.)* Він швидко допоможе вам знайти ідеальне слово для будь-якого контексту. *(It will quickly help you find the perfect word for any context.)* Ці слова-друзі завжди готові зробити вашу мову яскравішою! *(These word-friends are always ready to make your language brighter!)*
+what will be the antonym?)* > — **Студент:** Може, «теплий вечір»? *(Maybe "a warm evening"?)* > — **Викладач:** Блискуче! Ваша історія вже оживає. *(Brilliant! Your story is already coming to life.)* Українська мова дуже багата на **синоніми (synonyms)**. Це слова, які мають однакове або дуже схоже лексичне значення, але звучать по-різному. Вони допомагають нам точніше висловлювати думки та передавати різні відтінки настрою. Наприклад, ми можемо просто «говорити» або «казати». Але коли ми хочемо поділитися історією, ми будемо «розповідати». А якщо ми сидимо з друзями за кавою, то ми будемо просто «балакати». Кожне слово має свій унікальний характер. > *The Ukrainian language is very rich in synonyms. These are words that have the same or very similar lexical meaning but sound differently. They help us express our thoughts more precisely and convey different shades of mood. For example, we can simply "говорити" (speak) or "казати" (say). But when we want to share a story, we will "розповідати" (tell/narrate). And if we are sitting with friends over coffee, we will simply "балакати" (chat). Each word has its own unique character.* When describing people, objects, or experiences, learners often overuse basic adjectives like «гарний» or «хороший». While these are perfectly correct, using a wider range of descriptive synonyms makes your Ukrainian sound much more natural and professional. It also helps you avoid tautology (тавтологія), which is the awkward repetition of the exact same word in a short text or conversation. Finding the perfect synonym shows that you truly feel the language. :::tip **Choosing the right compliment** Instead of calling everything «гарний» (beautiful/nice), try these specialized synonyms: - **Вродливий** — used specifically for a handsome or beautiful person. - **Красивий** — used for aesthetically pleasing objects, places, or people. - **Чудовий** — used for wonderful experiences, weather, or moods. ::: З іншого боку, ми маємо антоніми. Це слова з протилежним лексичним значенням. Вони створюють сильний контраст і роблять наше мовлення виразним. Ми постійно використовуємо їх у повсякденному житті: «день» і «ніч», «гарячий» і «холодний», «початок» і «кінець». Антоніми також є основою багатьох українських прислів'їв. Наприклад, народна мудрість каже: «Не знаючи лиха, не пізнаєш і добра». Цей контраст допомагає нам краще зрозуміти суть речей. > *On the other hand, we have antonyms. These are words with opposite lexical meanings. They create a strong contrast and make our speech expressive. We constantly use them in everyday life: "day" and "night", "hot" and "cold", "beginning" and "end". Antonyms are also the foundation of many Ukrainian proverbs. For example, folk wisdom says: "Without knowing trouble, you will not know good." This contrast helps us better understand the essence of things.* <!-- INJECT_ACTIVITY: match-up, Match synonyms and antonyms in pairs --> Building a rich vocabulary takes time, but it is a highly rewarding process. Whenever you learn a new Ukrainian word, try to actively find its "word-friends" (synonyms) and "word-enemies" (antonyms). Using a dedicated dictionary of synonyms (словник синонімів) is a fantastic habit for language learners. It will quickly elevate your speaking and writing skills to the next level.
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -469,7 +469,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 6: A2 finale (A2 M51-M69)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 40%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 40% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 70-90% Ukrainian.
 LANGUAGE ROLES:
@@ -488,18 +555,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] синонім (synonym)
+- [ ] антонім (antonym)
+- [ ] епітет (epithet)
+- [ ] метафора (metaphor)
+- [ ] зменшувальний (diminutive)
+- [ ] суфікс (suffix)
+- [ ] еліпсис (ellipsis)
+- [ ] повтор (repetition)
+- [ ] образний (figurative, expressive)
+- [ ] ласкавий (tender, affectionate)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Епітети та метафори: мова, що малює (~480 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

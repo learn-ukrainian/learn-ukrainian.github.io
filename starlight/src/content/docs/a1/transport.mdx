@@ -7,14 +7,12 @@ pipeline: v6
 build_status: draft
 ---
 
-import ErrorCorrection from '@site/src/components/ErrorCorrection';
+import Anagram from '@site/src/components/Anagram';
 import FillIn from '@site/src/components/FillIn';
 import FlashcardDeck from '@site/src/components/FlashcardDeck';
 import GroupSort from '@site/src/components/GroupSort';
 import MatchUp from '@site/src/components/MatchUp';
-import Order from '@site/src/components/Order';
 import Quiz from '@site/src/components/Quiz';
-import Translate from '@site/src/components/Translate';
 import TrueFalse from '@site/src/components/TrueFalse';
 import Unjumble from '@site/src/components/Unjumble';
 import YouTubeVideo from '@site/src/components/YouTubeVideo';
@@ -25,112 +23,124 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ## Діало́ги (Dialogues)
 
-Navigating a new city always starts with understanding the local transit system and learning how to ask the right questions. When arriving at the **Бори́спіль** (Boryspil) airport outside of the capital city of Kyiv, the immediate practical challenge is reaching the city center. Travelers have a wide variety of choices depending on their budget, luggage, and final destination: they might take a regular public bus, board a fast express train, call a private taxi, or eventually transfer to the vast underground metro network.
+Imagine you have just arrived at Boryspil airport outside Kyiv and need to get to your hotel in the city center. In Ukrainian, you need a few core skills: ask **як діста́тися до готе́лю?** (how to get to the hotel), find the stop, and choose transport such as **авто́бусом**, **на метро́**, or **на таксі́**.
+ 
+
+Consider this practical scenario: a visitor needs to get to the main railway station.
 
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Приї́жджий:</span> Ви́бачте, як діста́тися до вокза́лу? *(Excuse me, how do I get to the train station?)*</div>
+<div class="dialogue-line"><span class="speaker">Приї́жджий:</span> Як дістатися до вокза́лу? *(How do I get to the train station?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Друг:</span> Ї́дьте авто́бусом або́ на метро́. *(Go by bus or by metro.)*</div>
+<div class="dialogue-line"><span class="speaker">Друг:</span> Ї́дьте автобусом або́ на метро. *(Take a bus or the metro.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Приїжджий:</span> Яки́й авто́бус? А мо́жна на метро? *(Which bus? Can I take the metro?)*</div>
+<div class="dialogue-line"><span class="speaker">Приїжджий:</span> Яки́й авто́бус? *(Which bus?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Друг:</span> Но́мер сім. Зупи́нка ось там. Споча́тку тре́ба ї́хати автобусом до метро «Харківська». *(Number seven. The stop is right there. First you must take a bus to the "Kharkivska" metro.)*</div>
+<div class="dialogue-line"><span class="speaker">Друг:</span> Но́мер сім. Зупи́нка ось там. *(Number seven. The stop is over there.)*</div>
 
 <div class="dialogue-line"><span class="speaker">Приїжджий:</span> Дякую! *(Thank you!)*</div>
 
-<div class="dialogue-line"><span class="speaker">Друг:</span> На здоро́в'я! *(You are welcome!)*</div>
+<div class="dialogue-line"><span class="speaker">Друг:</span> Будь ла́ска! *(You are welcome!)*</div>
 
 </div>
 
-The key phrase in the first exchange is **як дістатися до...** (how to get to...), which is the most natural and common way to ask for directions to a specific place. This grammatical structure is always followed by a noun in the genitive case to indicate the destination, as seen in the word forms **до вокзалу** (to the station) and **до ста́нції** (to the station). If a local resident helps you with directions and you thank them, a polite native response you will often hear is **На здоров'я!** (You are welcome!).
+This short exchange introduces several vital pieces of information. The phrase **як дістатися до** (how to get to) is your primary and most natural tool for asking directions. Notice the response: the speaker uses **їдьте** (go / ride) followed by **автобусом** (by bus) or **на метро** (by metro). Finally, locating the **зупинка** (stop) is the necessary last step before boarding the vehicle.
+
+Once you arrive at the train or bus station, you will often need to interact with a cashier at the ticket window. Purchasing a ticket for an intercity trip involves specific conversational patterns.
 
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Пасажи́р:</span> До́брий день! Оди́н квито́к до Льво́ва, будь ла́ска. *(Good day! One ticket to Lviv, please.)*</div>
+<div class="dialogue-line"><span class="speaker">Приїжджий:</span> Оди́н квито́к до Льво́ва, будь ласка. *(One ticket to Lviv, please.)*</div>
 
 <div class="dialogue-line"><span class="speaker">Каси́р:</span> В один бік чи туди́ й наза́д? *(One way or round trip?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Пасажир:</span> Туди й назад. Скі́льки ко́шту́є? *(Round trip. How much does it cost?)*</div>
+<div class="dialogue-line"><span class="speaker">Приїжджий:</span> Туди й назад. Скі́льки ко́шту́є? *(Round trip. How much does it cost?)*</div>
 
 <div class="dialogue-line"><span class="speaker">Касир:</span> П'ятсо́т гри́вень. *(Five hundred hryvnias.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Пасажир:</span> Дякую. О котрі́й відпра́влення? *(Thank you. At what time is the departure?)*</div>
+<div class="dialogue-line"><span class="speaker">Приїжджий:</span> Ко́ли по́тяг до Львова? *(When is the train to Lviv?)*</div>
 
 <div class="dialogue-line"><span class="speaker">Касир:</span> О дев'я́тій ра́нку. *(At nine in the morning.)*</div>
 
 </div>
 
-When buying tickets at a terminal or speaking with a conductor, the clerk will routinely ask if your journey is **в один бік** (one way) or **туди й назад** (round trip, literally "there and back"). This everyday interaction naturally integrates expressions of time like **о дев'ятій** (at nine) and simple numbers such as **п'ятсот** (five hundred) to quickly confirm the departure schedule and the final price. Knowing these set phrases makes traveling across Ukraine much smoother and reduces confusion at the ticket counter.
-
-<FillIn client:only="react" items={[{"sentence": "Один ______ до Львова, будь ласка.", "answer": "квиток", "options": ["квиток", "потяг", "автобус"]}, {"sentence": "В один ______ чи туди й назад?", "answer": "бік", "options": ["бік", "назад", "квиток"]}, {"sentence": "Туди й ______. Скільки коштує?", "answer": "назад", "options": ["назад", "бік", "прямо"]}, {"sentence": "Скільки ______ квиток?", "answer": "коштує", "options": ["коштує", "їде", "рушає"]}, {"sentence": "Є потяг ______ дев'ятій ранку.", "answer": "о", "options": ["о", "на", "в"]}, {"sentence": "О котрій ______ він рушає?", "answer": "годині", "options": ["годині", "зупинці", "станції"]}]} instruction={"Вставте правильне слово (Insert the correct word)"} />
+In this transaction, you are combining your new knowledge of transport with previously learned numbers and time expressions. Asking **скільки коштує** (how much does it cost) is a universal skill. You also just learned the highly useful phrases **в один бік** (one way) and **туди й назад** (round trip).
 
 ## Транспорт (Transport Types)
 
-Every major Ukrainian city relies on a robust and heavily utilized network of **громадський транспорт** (public transport). The core of this system typically consists of the "big four" modes of transit. You will frequently see an **автобус** (bus, masculine), a **троле́йбус** (trolleybus, masculine), and a **трамва́й** (tram, masculine) operating above ground, while larger metropolitan areas like Kyiv and Kharkiv feature a fast underground **метро** (metro, neuter). Grammatically, the words **метро** (metro) and **таксі́** (taxi, neuter) are special cases in the language. They are nouns of foreign origin and are completely indeclinable, meaning their word endings never change regardless of their role in a sentence.
+Common city transport includes **автобус** (bus, masculine), **троле́йбус** (trolleybus, masculine), **трамва́й** (tram, masculine), **маршру́тка** (minibus, feminine), **метро** (metro, neuter), and **таксі** (taxi, neuter). The nouns **метро** and **таксі** are indeclinable, so their forms do not change. For longer trips, common options are **потяг** (train, masculine), intercity **автобус** (bus), and **літа́к** (plane, masculine).
 
-For longer journeys stretching between cities, travelers rely heavily on intercity options like a passenger **по́тяг** (train, masculine) or a commercial **літа́к** (plane, masculine). In daily conversation, the word **потяг** (train) is often used interchangeably with **по́їзд** (train). Within city limits and for commuting between nearby towns, you will undoubtedly encounter the ubiquitous **маршру́тка** (minibus, feminine), which operates on fixed municipal routes but traditionally stops on passenger demand. Personal transit is usually done by **маши́на** (car, feminine). To catch any of these transport types, you need to know the right location: you must head to a **вокза́л** (station) for trains, navigate to an **аеропо́рт** (airport) for flights, or simply wait patiently at a local neighborhood **зупинка** (stop).
+<Quiz client:only="react" questions={[{"question": "Я їду до Львова. Це міжміський транспорт (intercity transport).", "options": [{"text": "потяг", "correct": true}, {"text": "метро", "correct": false}, {"text": "тролейбус", "correct": false}, {"text": "трамвай", "correct": false}]}, {"question": "Це міжнародний рейс (international flight).", "options": [{"text": "автобус", "correct": false}, {"text": "маршрутка", "correct": false}, {"text": "літак", "correct": true}, {"text": "трамвай", "correct": false}]}, {"question": "Ви викликаєте цю машину (you call this car).", "options": [{"text": "маршрутка", "correct": false}, {"text": "таксі", "correct": true}, {"text": "літак", "correct": false}, {"text": "потяг", "correct": false}]}, {"question": "Це великий громадський транспорт (public transport).", "options": [{"text": "автобус", "correct": true}, {"text": "літак", "correct": false}, {"text": "метро", "correct": false}, {"text": "потяг", "correct": false}]}, {"question": "Це транспорт під землею (subway).", "options": [{"text": "метро", "correct": true}, {"text": "тролейбус", "correct": false}, {"text": "маршрутка", "correct": false}, {"text": "літак", "correct": false}]}, {"question": "Це невеликий приватний автобус (private minibus).", "options": [{"text": "потяг", "correct": false}, {"text": "метро", "correct": false}, {"text": "тролейбус", "correct": false}, {"text": "маршрутка", "correct": true}]}, {"question": "Цей транспорт їздить на рейках (on tracks) у місті.", "options": [{"text": "метро", "correct": false}, {"text": "автобус", "correct": false}, {"text": "трамвай", "correct": true}, {"text": "потяг", "correct": false}]}, {"question": "Він використовує електрику (electricity) і їде по дорозі.", "options": [{"text": "маршрутка", "correct": false}, {"text": "тролейбус", "correct": true}, {"text": "таксі", "correct": false}, {"text": "літак", "correct": false}]}]} instruction={"Оберіть правильний транспорт (Choose the correct transport)"} />
 
-When stating exactly how you are traveling, the Ukrainian language makes a strict grammatical distinction between moving on foot and moving by a vehicle. While you say **іти́ пі́шки** (to go on foot), traveling by any type of machine requires the motion verb **їхати** (to go by transport). For standard declinable nouns, you indicate the means of transportation by putting the noun directly into the instrumental case without any added preposition. This form clearly shows the instrument or tool you use to travel.
-*   «Я ї́ду **автобусом**.» *(I am going by bus.)*
-*   «Він ї́де **по́тягом**.» *(He is going by train.)*
-*   «Ми ї́демо **трамва́єм**.» *(We are going by tram.)*
-*   «Вони́ ї́дуть **троле́йбусом**.» *(They are going by trolleybus.)*
+Ukrainian distinguishes walking from transport. Use **іти́** (to go on foot) when you walk, and use **ї́хати** (to go by vehicle) when you travel by transport. Then learn the transport phrase as a chunk. The first common pattern uses the instrumental case:
 
-A fundamentally different grammatical pattern applies to indeclinable nouns and certain specific vehicles. Instead of using the bare instrumental case, you must use the preposition **на** (on/at) followed immediately by the locative case. Since words like **метро** (metro) and **таксі** (taxi) do not decline, their forms remain identical, while words like **машина** (car) take standard locative endings. Both patterns simply mean "by" a certain transport, but they are grammatically distinct.
-*   «Я їду **на метро**.» *(I am going by metro.)*
-*   «Він їде **на таксі**.» *(He is going by taxi.)*
-*   «Ми їдемо **на маши́ні**.» *(We are going by car.)*
+*   **їхати автобусом** — to go by bus
+*   **їхати троле́йбусом** — to go by trolleybus
+*   **їхати трамва́єм** — to go by tram
+*   **їхати по́тягом** — to go by train
 
-:::caution
-Never mix these two grammatical patterns together. A common learner mistake is saying «на автобусом» — this structure is strictly incorrect. While the locative form «на авто́бусі» (on the bus) is grammatically possible and occasionally heard, using the pure instrumental form **автобусом** (by bus) is far more idiomatic and natural for native speakers. You should learn each transport type with its preferred prepositional or non-prepositional pattern from the beginning.
-:::
+The second common pattern uses the preposition **на** followed by the locative chunk. In this module, learn it with indeclinable nouns such as **метро** and **таксі**, and with **маши́на**. For standard neutral Ukrainian, transport as a means is often expressed with the instrumental, so treat these combinations as fixed chunks.
 
-<Quiz client:only="react" questions={[{"question": "Я їду ______.", "options": [{"text": "автобусом", "correct": true}, {"text": "на автобусом", "correct": false}, {"text": "автобус", "correct": false}]}, {"question": "Ми їдемо ______.", "options": [{"text": "на метро", "correct": true}, {"text": "метром", "correct": false}, {"text": "у метро", "correct": false}]}, {"question": "Він подорожує ______.", "options": [{"text": "потягом", "correct": true}, {"text": "на потягом", "correct": false}, {"text": "поїзд", "correct": false}]}, {"question": "Вона їде ______.", "options": [{"text": "на таксі", "correct": true}, {"text": "таксієм", "correct": false}, {"text": "в таксію", "correct": false}]}, {"question": "Вони їдуть ______.", "options": [{"text": "трамваєм", "correct": true}, {"text": "на трамваєм", "correct": false}, {"text": "трамвай", "correct": false}]}, {"question": "Ти їдеш ______.", "options": [{"text": "маршруткою", "correct": true}, {"text": "на маршруткою", "correct": false}, {"text": "маршрутка", "correct": false}]}]} instruction={"Оберіть правильний варіант (Choose the correct option)"} />
-<Quiz client:only="react" questions={[{"question": "Ви йдете в аеропорт. Ваш транспорт — це...", "options": [{"text": "літак", "correct": true}, {"text": "метро", "correct": false}, {"text": "трамвай", "correct": false}, {"text": "тролейбус", "correct": false}]}, {"question": "Ви йдете на вокзал. Ваш транспорт — це...", "options": [{"text": "потяг", "correct": true}, {"text": "літак", "correct": false}, {"text": "маршрутка", "correct": false}, {"text": "таксі", "correct": false}]}, {"question": "Ви стоїте на зупинці. Ваш транспорт — це...", "options": [{"text": "автобус", "correct": true}, {"text": "літак", "correct": false}, {"text": "потяг", "correct": false}, {"text": "метро", "correct": false}]}, {"question": "Ви їдете в інше місто (city). Це...", "options": [{"text": "потяг", "correct": true}, {"text": "трамвай", "correct": false}, {"text": "метро", "correct": false}, {"text": "зупинка", "correct": false}]}, {"question": "Ви їдете прямо в центр містом. Це...", "options": [{"text": "тролейбус", "correct": true}, {"text": "літак", "correct": false}, {"text": "потяг", "correct": false}, {"text": "аеропорт", "correct": false}]}, {"question": "Ви їдете на...", "options": [{"text": "метро", "correct": true}, {"text": "автобусом", "correct": false}, {"text": "маршруткою", "correct": false}, {"text": "трамваєм", "correct": false}]}, {"question": "Ви їдете...", "options": [{"text": "потягом", "correct": true}, {"text": "на потягом", "correct": false}, {"text": "на потягу", "correct": false}, {"text": "в потягу", "correct": false}]}, {"question": "Цей транспорт не змінює закінчення:", "options": [{"text": "таксі", "correct": true}, {"text": "автобус", "correct": false}, {"text": "машина", "correct": false}, {"text": "маршрутка", "correct": false}]}]} instruction={"Оберіть правильний транспорт для кожної ситуації (Choose the right transport for each situation)"} />
+*   **їхати на метро** — to go by metro
+*   **їхати на таксі** — to go by taxi
+*   **їхати на маши́ні** — to go by car
+
+Note that both of these patterns translate identically to "by [transport]" in English. You simply need to memorize which vehicle uses which grammatical pattern.
+
+<Quiz client:only="react" questions={[{"question": "Йдіть прямо, або їдьте ____. (Go straight, or ride by bus.)", "options": [{"text": "автобусом", "correct": true}, {"text": "на автобусі", "correct": false}, {"text": "автобусу", "correct": false}, {"text": "автобус", "correct": false}]}, {"question": "Як дістатися до центру міста? Їдьте ____.", "options": [{"text": "метром", "correct": false}, {"text": "на метро", "correct": true}, {"text": "метро", "correct": false}, {"text": "метру", "correct": false}]}, {"question": "Я їду до аеропорту ____.", "options": [{"text": "таксі", "correct": false}, {"text": "на таксі", "correct": true}, {"text": "таксією", "correct": false}, {"text": "таксію", "correct": false}]}, {"question": "Я їду до Львова ____.", "options": [{"text": "на потязі", "correct": false}, {"text": "потягу", "correct": false}, {"text": "потягом", "correct": true}, {"text": "потяг", "correct": false}]}, {"question": "Ми їдемо прямо ____.", "options": [{"text": "на трамваї", "correct": false}, {"text": "трамваєм", "correct": true}, {"text": "трамваю", "correct": false}, {"text": "трамвай", "correct": false}]}, {"question": "Я їду на роботу ____.", "options": [{"text": "машином", "correct": false}, {"text": "на машині", "correct": true}, {"text": "машину", "correct": false}, {"text": "машина", "correct": false}]}]} instruction={"Оберіть правильний варіант (Choose the correct option)"} />
 
 ## Ко́ри́сні фра́зи (Useful Phrases)
 
-When navigating unfamiliar city streets or crowded transit hubs, a few precise questions will help you find the correct transit option without getting lost. If you are looking for a place to wait for a ride, simply ask a friendly passerby **Де зупинка авто́буса?** (Where is the bus stop?) or **Де найбли́жча ста́нція метро?** (Where is the nearest metro station?). Once you locate the physical stop, you must ensure you board the vehicle going in the right direction. Use these straightforward phrases to identify the correct route:
-*   «**Який автобус їде в центр?**» *(Which bus goes to the center?)*
-*   «**Вам потрі́бен номер п'ять.**» *(You need number five.)*
+Start with a few core questions: where the **зупинка** is, how much a **квиток** costs, and how to get to a place.
 
-If you need to check the schedule or fare while standing at the terminal, you can confidently ask **Ко́ли насту́пний потяг?** (When is the next train?) or **Скільки коштує квиток?** (How much is a ticket?) to gather the necessary details.
+*   **Де зупинка авто́буса?** — Where is the bus stop?
+*   **Де ста́нція метро?** — Where is the metro station?
 
-Once you board a vehicle, communicating effectively with other passengers becomes highly important, especially during the morning or evening rush hour. If you are unsure of your current location along the route, you can simply ask **Яка це зупинка?** (What stop is this?). Ukrainian public transport can get quite crowded during peak times. If someone is blocking your path to the exit doors, the standard, polite way to ask them to let you pass is **Вибачте, ви виходите?** (Excuse me, are you getting off?). If they are not stepping out, they will generally move aside. When the vehicle doors finally open, you can ask **Ме́ні виходити тут?** (Do I get off here?) to confirm your destination, or firmly announce that you are leaving.
+Once you arrive there, you will likely need a **квиток** (ticket). To purchase one at a kiosk, simply state the quantity and your destination:
 
-When asking the bus driver or a local resident to guide you to a location, you will frequently hear basic directional vocabulary. We now revisit the core movement words: **пря́мо** (straight), **напра́во** (right), and **налі́во** (left). These spatial adverbs combine seamlessly with transport instructions to create clear routes. If you need help finding a specific landmark, you can ask **Вибачте, як дістатися до...?** (Excuse me, how do I get to...?).
-*   «Іді́ть **прямо** до вокзалу.» *(Go straight to the station.)*
-*   «Пої́дьте **прямо**, а по́тім поверні́ть **направо** на зупи́нці.» *(Drive straight, and then turn right at the stop.)*
-*   «Станція метро **наліво**.» *(The metro station is to the left.)*
-Recognizing these three distinct directions ensures you can properly follow instructions whether you are walking to a transit platform or directing a taxi driver to your hotel.
+*   **Один квиток, будь ласка.** — One ticket, please.
+*   **Скільки коштує квиток?** — How much does the ticket cost?
 
-Discussing schedules and timetables requires using accurate verbs of departure. While you will frequently see the formal noun **відправлення** (departure) or the verb **відправля́тися** (to depart) on printed tickets and official schedules, conversational Ukrainian often prefers native verbs that describe motion accurately based on the type of vehicle. For heavy transit vehicles like trains starting to move along a track, use the verb **руша́ти** (to depart / to set in motion). For scheduled vehicles like buses leaving a large station, use **відбува́ти** (to depart) or **виїжджа́ти** (to drive out / to leave).
-*   «**Потяг руша́є о во́сьмій.**» *(The train departs at eight.)*
-*   «**Автобус виїжджа́є з автовокза́лу.**» *(The bus leaves from the bus station.)*
+If you are waiting on the platform for a train to arrive, you might ask someone nearby:
 
-<FillIn client:only="react" items={[{"sentence": "Вибачте, як ______ до вокзалу?", "answer": "дістатися", "options": ["дістатися", "їхати", "іти"]}, {"sentence": "Ідіть ______ до зупинки.", "answer": "прямо", "options": ["прямо", "наліво", "направо"]}, {"sentence": "Поїдьте прямо, а потім поверніть ______.", "answer": "направо", "options": ["направо", "наліво", "прямо"]}, {"sentence": "Станція метро ______.", "answer": "наліво", "options": ["наліво", "направо", "прямо"]}, {"sentence": "______ зупинка автобуса?", "answer": "Де", "options": ["Де", "Куди", "Як"]}, {"sentence": "Який автобус їде в ______?", "answer": "центр", "options": ["центр", "зупинка", "метро"]}]} instruction={"Доповніть фрази (Complete the phrases)"} />
+*   **Коли насту́пний потяг?** — When is the next train?
+
+<FillIn client:only="react" items={[{"sentence": "Один ____ до Львова, будь ласка.", "answer": "квиток", "options": ["квиток", "автобус", "вокзал"]}, {"sentence": "Один квиток ____ Львова, будь ласка.", "answer": "до", "options": ["до", "на", "в"]}, {"sentence": "В один бік чи туди й ____?", "answer": "назад", "options": ["прямо", "назад", "туди"]}, {"sentence": "В один ____, будь ласка.", "answer": "бік", "options": ["зупинка", "бік", "квиток"]}, {"sentence": "Скільки ____ квиток?", "answer": "коштує", "options": ["коштує", "рушає", "їде"]}, {"sentence": "О ____ відправлення?", "answer": "котрій", "options": ["скільки", "котрій", "коли"]}]} instruction={"Вставте правильне слово (Insert the correct word)"} />
+
+Sometimes you need clear directions to a specific landmark or a distant station. The most natural and polite way to ask someone for this information is by using the phrase **як дістатися до** (how to get to).
+
+*   **Ви́бачте, як дістатися до аеропо́рту?** — Excuse me, how do I get to the airport?
+*   **Як дістатися до це́нтру мі́ста?** — How do I get to the city center?
+*   **Як дістатися до вокзалу?** — How do I get to the train station?
+
+Locals may reply with the direction words you learned in earlier modules, for example: **Йдіть пря́мо, по́тім налі́во** (Go straight, then left) or **Поверні́ть напра́во** (Turn right).
+
+Once you are safely on board your chosen vehicle, you may still need to interact with fellow passengers to ensure you are on the right track. If you are unsure of your current location, you can politely ask:
+
+*   **Яка це зупинка?** — What stop is this?
+
+If you think it is your time to leave the vehicle, you can politely ask someone who is blocking the door:
+
+*   **Ме́ні виходити тут?** — Do I get off here?
+*   **Ви виходите?** — Are you getting off?
+
+<FillIn client:only="react" items={[{"sentence": "Вибачте, ____ дістатися до аеропорту?", "answer": "як", "options": ["як", "де", "скільки"]}, {"sentence": "Як дістатися ____ вокзалу?", "answer": "до", "options": ["до", "на", "в"]}, {"sentence": "Де ____ автобуса?", "answer": "зупинка", "options": ["квиток", "зупинка", "вокзал"]}, {"sentence": "Йдіть прямо, потім ____.", "answer": "наліво", "options": ["зупинка", "наліво", "прямо"]}, {"sentence": "Поверніть ____.", "answer": "направо", "options": ["наліво", "направо", "потяг"]}, {"sentence": "Мені ____ тут?", "answer": "виходити", "options": ["виходити", "дістатися", "їхати"]}]} instruction={"Вставте правильне слово (Insert the correct word)"} />
 
 ## Підсумок — Summary
 
-Navigating a bustling Ukrainian city is remarkably straightforward once you master the core transport vocabulary and foundational grammatical patterns. In this module, we have learned to correctly identify the main types of transit vehicles, including the **автобус** (bus), **потяг** (train), **таксі** (taxi), and **метро** (metro). You now know exactly how to describe your specific method of travel using two distinct linguistic structures: the direct instrumental case pattern for declinable nouns like **автобусом** (by bus), and the locative construction with a preposition for indeclinable nouns like **на метро** (by metro). We also covered highly practical daily scenarios, such as buying a train ticket at a station window by asking for **один квиток** (one ticket) and inquiring about transit schedules using precise phrases like **о котрій відправлення** (at what time is the departure) and authentic Ukrainian motion verbs like **рушати** (to depart). Mastering these fundamental elements allows you to travel across the country with much greater confidence.
+In this module, you have acquired the essential vocabulary needed to effectively navigate urban and intercity environments in Ukraine. We explored common city transport options such as the **автобус** (bus), **трамвай** (tram), and the very useful indeclinable nouns **метро** (metro) and **таксі** (taxi). For much longer journeys, you now know the word **потяг** (train) and **літак** (plane). Crucially, you learned to distinguish between walking (**іти**) and riding (**їхати**). When expressing exactly how you travel, you must remember the two distinct grammatical patterns. The first pattern uses the instrumental chunk directly, such as **автобусом** (by bus) or **потягом** (by train). The second pattern in this module uses **на** with fixed chunks such as **на метро** (by metro), **на таксі** (by taxi), or **на машині** (by car). You also practiced finding the **зупинка** (stop) and asking **як дістатися до** (how to get to) a specific destination.
 
-Review the following questions to verify your personal understanding of this module's key phrases. Cover the provided answers and test yourself aloud before moving forward to the next lesson.
+Review these practical examples to build your confidence and solidify your new skills. Practice saying them aloud multiple times until they feel completely natural to you.
 
-**How do you say "I am going to work by bus"?**
-> «Я їду на робо́ту автобусом.»
+*   How do you get to work? — **Я ї́ду на робо́ту автобусом.** (I go to work by bus.)
+*   Or by metro: — **Я їду на роботу на метро.** (I go to work by metro.)
+*   Buy a train ticket to Lviv. — **Один квиток до Львова, будь ласка.** (One ticket to Lviv, please.)
+*   Ask where the bus stop is. — **Вибачте, де зупинка автобуса?** (Excuse me, where is the bus stop?)
+*   Ask how to get to the station. — **Як дістатися до вокзалу?** (How do I get to the train station?)
+*   Ask the price of a ticket. — **Скільки коштує квиток?** (How much does the ticket cost?)
+*   Check if you need to get off at this stop. — **Мені виходити тут?** (Do I get off here?)
 
-**How do you ask "Where is the train station?"**
-> «Де вокзал?»
-
-**How do you buy a train ticket to Lviv (round trip)?**
-> «Один квиток до Львова туди й назад, будь ласка.»
-
-**How do you ask "What stop is this?"**
-> «Яка це зупинка?»
-
-**How do you say "Go straight and then left"?**
-> «Ідіть прямо, а потім наліво.»
+You are now fully ready to confidently travel across the city or across the country!
 
 </TabItem>
 <TabItem label="Словник">
@@ -147,64 +157,65 @@ Review the following questions to verify your personal understanding of this mod
 | **пря́мо** | straight | присл. |  |
 | **діста́тися** | to get to | дієсл. |  |
 | **авто́бус** | bus | ім. | ч. |
+| **метро́** | metro | ім. | с. |
 | **таксі́** | taxi | ім. | ж. |
 | **по́тяг** | train | ім. | ч. |
 | **квито́к** | ticket | ім. | ч. |
 | **зупи́нка** | stop | ім. | ж. |
+| **вокза́л** | train station | ім. | ч. |
+| **ї́дьте** | go / ride | дієсл. |  |
+| **но́мер** | number | ім. | ч. |
+| **відпра́влення** | departure | ім. | с. |
 | **троле́йбус** | trolleybus | ім. | ч. |
-| **аеропо́рт** | airport | ім. | ч. |
+| **іти́** | to go on foot | дієсл. |  |
+| **ї́хати** | to go by vehicle | дієсл. |  |
 | **маши́на** | car | ім. | ж. |
-| **руша́ти** | to depart | дієсл. |  |
+| **аеропо́рт** | airport | ім. | ч. |
+| **руша́ти** | to depart / to start moving | дієсл. |  |
+| **відбува́ти** | to depart | дієсл. |  |
+| **виїжджа́ти** | to depart | дієсл. |  |
+| **ста́нція** | station | ім. | ж. |
 
 ### Вирази
 
 | Вираз | Переклад |
 |-------|----------|
-| **громадський транспорт** | public transport |
-| **як дістатися до...?** | how to get to...? |
-| **На здоров'я!** | You are welcome! |
+| **як дістатися до** | how to get to |
+| **ось там** | over there |
 | **в один бік** | one way |
 | **туди й назад** | round trip |
-| **Скільки коштує?** | How much does it cost? |
-| **о котрій годині?** | at what time? |
-| **іти пішки** | to go on foot |
-| **Де зупинка...?** | Where is the ... stop? |
+| **скільки коштує** | how much does it cost |
+| **громадський транспорт** | public transport |
+| **міжміський транспорт** | intercity transport |
+| **Де зупинка автобуса?** | Where is the bus stop? |
+| **Де станція метро?** | Where is the metro station? |
+| **Коли наступний потяг?** | When is the next train? |
+| **центр міста** | city center |
 | **Яка це зупинка?** | What stop is this? |
+| **Мені виходити тут?** | Do I get off here? |
 | **Ви виходите?** | Are you getting off? |
 
 ### Картки — Flashcards
 
-<FlashcardDeck client:only="react" cards={[{ front: "трамва́й", back: "tram", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "маршру́тка", back: "minibus", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "літа́к", back: "plane", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "напра́во", back: "right", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "налі́во", back: "left", subtitle: "присл." }, { front: "пря́мо", back: "straight", subtitle: "присл." }, { front: "діста́тися", back: "to get to", subtitle: "дієсл." }, { front: "авто́бус", back: "bus", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "таксі́", back: "taxi", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "по́тяг", back: "train", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "квито́к", back: "ticket", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "зупи́нка", back: "stop", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "троле́йбус", back: "trolleybus", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "аеропо́рт", back: "airport", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "маши́на", back: "car", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "руша́ти", back: "to depart", subtitle: "дієсл." }]} />
+<FlashcardDeck client:only="react" cards={[{ front: "трамва́й", back: "tram", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "маршру́тка", back: "minibus", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "літа́к", back: "plane", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "напра́во", back: "right", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "налі́во", back: "left", subtitle: "присл." }, { front: "пря́мо", back: "straight", subtitle: "присл." }, { front: "діста́тися", back: "to get to", subtitle: "дієсл." }, { front: "авто́бус", back: "bus", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "метро́", back: "metro", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "таксі́", back: "taxi", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "по́тяг", back: "train", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "квито́к", back: "ticket", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "зупи́нка", back: "stop", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "вокза́л", back: "train station", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ї́дьте", back: "go / ride", subtitle: "дієсл." }, { front: "но́мер", back: "number", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "відпра́влення", back: "departure", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "троле́йбус", back: "trolleybus", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "іти́", back: "to go on foot", subtitle: "дієсл." }, { front: "ї́хати", back: "to go by vehicle", subtitle: "дієсл." }, { front: "маши́на", back: "car", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "аеропо́рт", back: "airport", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "руша́ти", back: "to depart / to start moving", subtitle: "дієсл." }, { front: "відбува́ти", back: "to depart", subtitle: "дієсл." }, { front: "виїжджа́ти", back: "to depart", subtitle: "дієсл." }, { front: "ста́нція", back: "station", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }]} />
 
 </TabItem>
 <TabItem label="Зошит">
 
-<GroupSort client:only="react" groups={{"Орудний (автобусом)": ["потяг", "маршрутка", "трамвай", "тролейбус"], "на + Місцевий (на метро)": ["метро", "таксі", "машина"]}} instruction={"Як правильно: Орудний відмінок чи Місцевий з «на»? (How is it correct: Instrumental or Locative with «на»?)"} />
+<MatchUp client:only="react" pairs={[{"left": "літак", "right": "plane"}, {"left": "маршрутка", "right": "minibus"}, {"left": "потяг", "right": "train"}, {"left": "зупинка", "right": "stop"}, {"left": "квиток", "right": "ticket"}, {"left": "метро", "right": "subway"}, {"left": "вокзал", "right": "train station"}, {"left": "відправлення", "right": "departure"}]} instruction={"З'єднайте слова з їхнім значенням (Match the words with their meaning)"} />
 
-<TrueFalse client:only="react" items={[{"statement": "Слова «метро» та «таксі» ніколи не змінюють закінчення.", "isTrue": true, "explanation": "Вони не змінюються. Ми завжди кажемо: на метро, на таксі."}, {"statement": "Правильно говорити: «Я їду на автобусом».", "isTrue": false, "explanation": "Правильно: «автобусом» або «на машині». Міксувати не можна."}, {"statement": "Для потяга ми кажемо: «Він рушає».", "isTrue": true, "explanation": "Дієслово «рушати» дуже добре підходить для потяга."}, {"statement": "Ми купуємо квиток «до Львова», а не «в Львів».", "isTrue": true, "explanation": "Так, після слова «квиток» ми використовуємо прийменник «до»."}, {"statement": "Дієслово «відправлятися» — це найкращий вибір для транспорту.", "isTrue": false, "explanation": "Це калька. Краще казати «рушає» або «виїжджає»."}, {"statement": "Ми чекаємо потяг на зупинці.", "isTrue": false, "explanation": "Потяг ми чекаємо на вокзалі."}]} instruction={"Правда чи ні? (True or false?)"} />
+<GroupSort client:only="react" groups={{"Орудний відмінок (Instrumental -ом, -ем)": ["автобусом", "потягом", "трамваєм", "тролейбусом"], "Прийменник 'на' (Preposition 'на')": ["на метро", "на таксі", "на машині"]}} instruction={"Розподіліть транспорт за граматичною конструкцією (Sort the transport by grammatical construction)"} />
 
-<MatchUp client:only="react" pairs={[{"left": "літак", "right": "аеропорт"}, {"left": "потяг", "right": "вокзал"}, {"left": "автобус", "right": "зупинка"}, {"left": "метро", "right": "станція"}, {"left": "рушає", "right": "потяг починає їхати"}, {"left": "іти пішки", "right": "йти ногами, не машиною"}]} instruction={"З'єднайте транспорт та місце (Match the transport and the place)"} />
+<Anagram client:only="react" items={[{"scrambled": "м е т р о", "answer": "метро", "hint": "subway"}, {"scrambled": "к в и т о к", "answer": "квиток", "hint": "ticket"}, {"scrambled": "п о т я г", "answer": "потяг", "hint": "train"}, {"scrambled": "л і т а к", "answer": "літак", "hint": "plane"}, {"scrambled": "п р я м о", "answer": "прямо", "hint": "straight"}, {"scrambled": "т а к с і", "answer": "таксі", "hint": "taxi"}, {"scrambled": "з у п и н к а", "answer": "зупинка", "hint": "stop"}]} instruction={"Складіть слово з літер (Make a word from the letters)"} />
 
-<Unjumble client:only="react" items={[{"words": "вокзалу? / Як / до / дістатися", "answer": "Як дістатися до вокзалу?"}, {"words": "один / В / чи / бік / й / назад? / туди", "answer": "В один бік чи туди й назад?"}, {"words": "зупинка? / Яка / це", "answer": "Яка це зупинка?"}, {"words": "наступний / потяг? / Коли", "answer": "Коли наступний потяг?"}, {"words": "ви / Вибачте, / виходите?", "answer": "Вибачте, ви виходите?"}, {"words": "їду / Я / на / метро.", "answer": "Я їду на метро."}]} instruction={"Складіть правильне речення зі слів (Make a correct sentence from the words)"} />
+<Unjumble client:only="react" items={[{"words": "дістатися / Як / вокзалу? / до", "answer": "Як дістатися до вокзалу?", "hint": "How do I get to the train station?"}, {"words": "до / Один / Львова. / квиток", "answer": "Один квиток до Львова.", "hint": "One ticket to Lviv."}, {"words": "коштує / Скільки / квиток? / цей", "answer": "Скільки коштує цей квиток?", "hint": "How much does this ticket cost?"}, {"words": "тут? / виходити / Мені", "answer": "Мені виходити тут?", "hint": "Do I get off here?"}, {"words": "автобуса? / зупинка / де / Вибачте,", "answer": "Вибачте, де зупинка автобуса?", "hint": "Excuse me, where is the bus stop?"}, {"words": "потім / Йдіть / наліво. / прямо,", "answer": "Йдіть прямо, потім наліво.", "hint": "Go straight, then left."}]} instruction={"Складіть правильне речення зі слів (Make a correct sentence from the words)"} />
 
-<ErrorCorrection client:only="react" items={[{"sentence": "Я їду на автобусом.", "errorWord": "на автобусом", "correctForm": "автобусом", "options": ["автобусом", "на автобусу", "автобусі"], "explanation": "Правильно: «автобусом» або «на автобусі». Міксувати не можна."}, {"sentence": "Він їде метром.", "errorWord": "метром", "correctForm": "на метро", "options": ["на метро", "у метро", "в метрі"], "explanation": "Слово «метро» не змінюється. Правильно: «на метро»."}, {"sentence": "Один квиток в Київ, будь ласка.", "errorWord": "в Київ", "correctForm": "до Києва", "options": ["до Києва", "у Київ", "на Київ"], "explanation": "Завжди кажемо: квиток «до» (куди?). До Києва."}, {"sentence": "Як дістати до вокзалу?", "errorWord": "дістати", "correctForm": "дістатися", "options": ["дістатися", "доїхати", "йти"], "explanation": "Правильне дієслово — «дістатися» (to get to)."}, {"sentence": "Потяг відправляється о восьмій.", "errorWord": "відправляється", "correctForm": "рушає", "options": ["рушає", "йде", "їде"], "explanation": "«Відправляється» — це калька. Українською краще: «рушає»."}, {"sentence": "Ми їдемо таксієм.", "errorWord": "таксієм", "correctForm": "на таксі", "options": ["на таксі", "таксію", "на таксієм"], "explanation": "Слово «таксі» не змінюється. Правильно: «на таксі»."}]} instruction={"Знайдіть і виправте помилку (Find and correct the mistake)"} />
+<TrueFalse client:only="react" items={[{"statement": "«Метро» та «таксі» — це слова, які не змінюють закінчення (indeclinable nouns).", "isTrue": true, "explanation": "«Метро» та «таксі» ніколи не змінюють закінчення."}, {"statement": "Ми кажемо «їхати на автобусі».", "isTrue": false, "explanation": "Правильно казати «їхати автобусом» (орудний відмінок / instrumental case)."}, {"statement": "Для транспорту ми використовуємо дієслово «іти».", "isTrue": false, "explanation": "Для транспорту ми використовуємо дієслово «їхати» (to ride / to go by vehicle)."}, {"statement": "«Туди й назад» означає квиток в один бік (one way).", "isTrue": false, "explanation": "«Туди й назад» означає round trip. В один бік — це one way."}, {"statement": "Після слова «до» ми використовуємо родовий відмінок (Як дістатися до аеропорту?).", "isTrue": true, "explanation": "Прийменник «до» завжди вимагає родового відмінка (genitive case)."}, {"statement": "Слово «рушати» ми використовуємо для потяга (Потяг рушає).", "isTrue": true, "explanation": "Так, для потяга ми використовуємо дієслово «рушати»."}]} instruction={"Правда чи ні? (True or false?)"} />
 
-<Translate client:only="react" questions={[{"source": "How to get to the station?", "options": [{"text": "Як дістатися до вокзалу?", "correct": true}, {"text": "Як дістати до вокзалу?", "correct": false}]}, {"source": "One ticket to Lviv, please.", "options": [{"text": "Один квиток до Львова, будь ласка.", "correct": true}, {"text": "Один квиток у Львів, будь ласка.", "correct": false}]}, {"source": "I am going by bus.", "options": [{"text": "Я їду автобусом.", "correct": true}, {"text": "Я їду на автобусом.", "correct": false}]}, {"source": "We are going by metro.", "options": [{"text": "Ми їдемо на метро.", "correct": true}, {"text": "Ми їдемо метром.", "correct": false}]}, {"source": "When is the next train?", "options": [{"text": "Коли наступний потяг?", "correct": true}, {"text": "Коли інший потяг?", "correct": false}]}, {"source": "Excuse me, are you getting off?", "options": [{"text": "Вибачте, ви виходите?", "correct": true}, {"text": "Вибачте, ви йдете?", "correct": false}]}]} instruction={"Оберіть правильний переклад (Choose the correct translation)"} />
-
-<Order client:only="react" items={["— Дякую. О котрій годині він рушає?", "— Туди й назад. Скільки коштує?", "— Добрий день! Один квиток до Львова, будь ласка.", "— П'ятсот гривень. Є потяг о дев'ятій ранку.", "— В один бік чи туди й назад?", "— О дев'ятій рівно."]} correct_order={[2, 4, 1, 3, 0, 5]} instruction={"Розставте репліки в правильному порядку (Put the lines in the correct order)"} />
-
-<Quiz client:only="react" questions={[{"question": "Де ми чекаємо потяг?", "options": [{"text": "На вокзалі", "correct": true}, {"text": "В аеропорту", "correct": false}, {"text": "На зупинці", "correct": false}, {"text": "У центрі", "correct": false}]}, {"question": "Як правильно запитати дорогу?", "options": [{"text": "Як дістатися до...", "correct": true}, {"text": "Як дістати до...", "correct": false}, {"text": "Де дістати до...", "correct": false}, {"text": "Куди дістатися до...", "correct": false}]}, {"question": "Який транспорт їде під землею?", "options": [{"text": "Метро", "correct": true}, {"text": "Автобус", "correct": false}, {"text": "Трамвай", "correct": false}, {"text": "Машина", "correct": false}]}, {"question": "Що каже касир, коли продає квиток?", "options": [{"text": "В один бік чи туди й назад?", "correct": true}, {"text": "Ви виходите?", "correct": false}, {"text": "Яка це зупинка?", "correct": false}, {"text": "Як дістатися?", "correct": false}]}, {"question": "Як ми відповідаємо, якщо хтось каже «Дякую!»?", "options": [{"text": "На здоров'я!", "correct": true}, {"text": "Будь ласка", "correct": false}, {"text": "Вибачте", "correct": false}, {"text": "Прямо", "correct": false}]}, {"question": "Як правильно сказати, що ви їдете автомобілем?", "options": [{"text": "Я їду на машині.", "correct": true}, {"text": "Я їду на машиною.", "correct": false}, {"text": "Я їду машиною на.", "correct": false}, {"text": "Я їду в машині.", "correct": false}]}]} instruction={"Відповідь на запитання (Answer the questions)"} />
+<FillIn client:only="react" items={[{"sentence": "Де ____ автобуса?", "answer": "зупинка", "options": ["зупинка", "квиток", "літак"]}, {"sentence": "Коли наступний ____?", "answer": "потяг", "options": ["квиток", "потяг", "зупинка"]}, {"sentence": "Скільки ____ квиток?", "answer": "коштує", "options": ["коштує", "рушає", "дістатися"]}, {"sentence": "Вибачте, ____ дістатися до аеропорту?", "answer": "як", "options": ["як", "де", "куди"]}, {"sentence": "Яка це ____?", "answer": "зупинка", "options": ["направо", "зупинка", "маршрутка"]}, {"sentence": "Потяг ____ о дев'ятій ранку.", "answer": "рушає", "options": ["коштує", "рушає", "виходить"]}]} instruction={"Вставте правильне слово (Insert the correct word)"} />
 
 </TabItem>
 <TabItem label="Ресурси">
-
-## Підручники (Textbooks)
-
-- [Авраменко О. М. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrajinska-mova-avramenko-2018.pdf#page=154), стор. 154
-- [Заболотний О. В. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrajinska-mova-zabolotnij-2018.pdf#page=134), стор. 134
-- [Караман С. О. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrmova-karaman-2018.pdf#page=188), стор. 188
-- [Заболотний О. В. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrajinska-mova-zabolotnij-2018.pdf#page=134), стор. 134
-- [Глазова О. П. — Українська мова, 11 клас (2019)](https://pidruchnyk.com.ua/uploads/book/11-klas-ukrajinska-mova-glazova-2019.pdf#page=74), стор. 74
 
 **Статті — Articles**
 

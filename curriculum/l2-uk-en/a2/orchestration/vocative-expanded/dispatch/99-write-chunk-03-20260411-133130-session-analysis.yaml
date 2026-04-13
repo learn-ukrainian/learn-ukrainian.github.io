@@ -1,0 +1,40 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T11-30-471e5270.json
+phase: write-chunk-03
+prompt_chars: 45917
+response_chars: 39126
+prompt_words: 6769
+response_words: 6178
+sections:
+- name: header
+  start: 0
+  length: 460
+  fraction: 0.01
+- name: skeleton
+  start: 460
+  length: 1791
+  fraction: 0.039
+- name: prior_summary
+  start: 2251
+  length: 3412
+  fraction: 0.0743
+- name: plan
+  start: 5663
+  length: 13148
+  fraction: 0.2863
+- name: wiki
+  start: 12326
+  length: 26865
+  fraction: 0.5851
+- name: output_spec
+  start: 45676
+  length: 241
+  fraction: 0.0052
+large_sections:
+- wiki
+directives_total: 23
+directives_covered: 22
+directives_missed:
+- kind: inject_activity
+  text: match-professions-vocative
+  covered: false
+  coverage_note: marker missing

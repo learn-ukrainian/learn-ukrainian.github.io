@@ -1,0 +1,58 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T21-45-ec1c902c.json
+phase: write-chunk-03
+prompt_chars: 43339
+response_chars: 4848
+prompt_words: 6165
+response_words: 779
+sections:
+- name: header
+  start: 0
+  length: 491
+  fraction: 0.0113
+- name: skeleton
+  start: 491
+  length: 1883
+  fraction: 0.0434
+- name: prior_summary
+  start: 2374
+  length: 3325
+  fraction: 0.0767
+- name: plan
+  start: 5699
+  length: 13361
+  fraction: 0.3083
+- name: wiki
+  start: 12421
+  length: 24010
+  fraction: 0.554
+- name: output_spec
+  start: 43070
+  length: 269
+  fraction: 0.0062
+large_sections:
+- wiki
+directives_total: 16
+directives_covered: 11
+directives_missed:
+- kind: checklist
+  text: ходімо (let's go)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: давайте (let's — suggestion particle)
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: inject_activity
+  text: fill-in, Form the correct imperative — 3rd person with хай/нехай or 1st plural
+    with -мо — from given infinitives
+  covered: false
+  coverage_note: marker missing

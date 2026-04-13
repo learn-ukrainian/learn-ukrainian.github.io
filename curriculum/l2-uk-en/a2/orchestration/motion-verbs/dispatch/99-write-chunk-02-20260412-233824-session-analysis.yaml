@@ -1,0 +1,57 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T21-37-09de59a6.json
+phase: write-chunk-02
+prompt_chars: 42928
+response_chars: 4286
+prompt_words: 6249
+response_words: 657
+sections:
+- name: header
+  start: 0
+  length: 428
+  fraction: 0.01
+- name: skeleton
+  start: 428
+  length: 1606
+  fraction: 0.0374
+- name: prior_summary
+  start: 2034
+  length: 3188
+  fraction: 0.0743
+- name: plan
+  start: 5222
+  length: 13267
+  fraction: 0.3091
+- name: wiki
+  start: 11778
+  length: 24230
+  fraction: 0.5644
+- name: output_spec
+  start: 42719
+  length: 209
+  fraction: 0.0049
+large_sections:
+- wiki
+directives_total: 19
+directives_covered: 14
+directives_missed:
+- kind: checklist
+  text: пити / п'ю (to drink — irregular model)
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: checklist
+  text: боротися / борюся (to fight/struggle — reflexive model)
+  covered: false
+  coverage_note: 0/6 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 1/11 keywords (9%)
+- kind: inject_activity
+  text: group-sort-motion-verbs
+  covered: false
+  coverage_note: marker missing

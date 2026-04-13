@@ -127,193 +127,135 @@ references:
 <generated_module_content>
 ## Діалоги (Dialogues)
 
-Imagine you are sitting with a Ukrainian friend. Alina is drawing a map of her neighborhood in the Ukrainian capital, Kyiv. She calls this local space **мій район у Києві** (my neighborhood in Kyiv). Being able to define your physical space and understand where things are located is a vital survival skill in any city. 
+These dialogues teach you to ask where a place is and to describe a neighborhood on a simple map. Alina and Ihor use city vocabulary to mark places in a Kyiv neighborhood and say what is near, next to, or far from each landmark.
 
-Read how Ukrainians talk about places and ask for simple directions.
-
-> **Ігор:** Вибачте, будь ласка. Де тут аптека? *(Excuse me, please. Where is the pharmacy here?)*
+> **Ігор:** Вибачте, де тут аптека? *(Excuse me, where is the pharmacy here?)*
 > **Аліна:** Аптека на вулиці Шевченка. *(The pharmacy is on Shevchenko street.)*
-> **Ігор:** Дякую. А де бібліотека? *(Thank you. And where is the library?)*
-> **Аліна:** Бібліотека у центрі. *(The library is in the center.)*
-> **Ігор:** Це далеко? *(Is this far?)*
-> **Аліна:** Ні, вона біля парку. *(No, it is near the park.)*
-> **Ігор:** Дуже дякую! *(Thank you very much!)*
+> **Ігор:** А бібліотека? *(And the library?)*
+> **Аліна:** Бібліотека в центрі, біля парку. *(The library is in the center, near the park.)*
+> **Ігор:** Дякую! *(Thank you!)*
+> **Аліна:** Будь ласка! *(You're welcome!)*
 
-Notice the polite phrase **Вибачте, будь ласка** (Excuse me, please). This is exactly how you get a stranger's attention on the street politely. The question **Де тут...** (Where here is...) is the most efficient way to ask for directions without needing complex grammar.
+This conversation demonstrates a highly efficient pattern. To ask for a location, the speaker simply uses the question word **де** (where) paired with the desired place. There is no need to insert a "to be" verb in the present tense, a common mistake for English speakers who naturally want to translate "where is" word-for-word. The response is equally direct, utilizing the locative phrase **на вулиці** (on the street) to specify the location. The exchange closes with standard polite phrases, ensuring a respectful interaction with a stranger in a new environment.
 
-Alina describes her immediate neighborhood to Igor using the existence word **є** (there is/are) and the preposition **біля** (near/next to).
+The second dialogue follows the planned map task: two friends are drawing a Kyiv neighborhood for a pen pal and naming the places on it.
 
-> **Ігор:** Що є біля твого дому? *(What is near your house?)*
-> **Аліна:** Біля дому є магазин і кафе. *(Near the house there is a shop and a cafe.)*
-> **Ігор:** А школа? Школа близько? *(And the school? Is the school near?)*
-> **Аліна:** Ні, школа далеко, у центрі міста. *(No, the school is far, in the city center.)*
+> **Ігор:** Що є на твоїй карті? *(What is on your map?)*
+> **Аліна:** Тут є бібліотека, музей і площа. *(There is a library, a museum, and a square here.)*
+> **Ігор:** А де озеро? *(And where is the lake?)*
+> **Аліна:** Озеро біля музею, а зупинка поруч з площею. *(The lake is near the museum, and the bus stop is next to the square.)*
+> **Ігор:** А церква? *(And the church?)*
+> **Аліна:** Церква далеко від озера, але біля бібліотеки. *(The church is far from the lake, but near the library.)*
 
-The word **є** acts like the English "there is" or "there are". Ukrainians use it to state that a place exists in a certain location. You will use this small word frequently when describing your own city.
+This brief exchange reviews the location patterns essential for describing an environment. It also gives the learner ready-made chunks with **є**, **біля**, **поруч з**, and **далеко від**.
 
 ## Місця в місті (City Places)
 
-To navigate a Ukrainian city, you need foundational vocabulary. We group these city places by grammatical gender to help you remember their forms. Grouping vocabulary by gender makes it easier to predict case endings later.
+Start with the core names of places you see on a city map. Read the words first, then connect them to the locative patterns and actions below.
 
-Masculine places end in a consonant:
-*   **магазин** (shop)
-*   **супермаркет** (supermarket)
-*   **банк** (bank)
-*   **готель** (hotel)
-*   **вокзал** (train station)
-*   **музей** (museum)
-*   **театр** (theater)
+* **аптека** (pharmacy)
+* **бібліотека** (library)
+* **лікарня** (hospital)
+* **магазин** (shop)
+* **супермаркет** (supermarket)
+* **ресторан** (restaurant)
+* **кафе** (café)
+* **банк** (bank)
+* **пошта** (post office)
+* **вокзал** (train station)
+* **готель** (hotel)
+* **музей** (museum)
+* **театр** (theater)
+* **кінотеатр** (cinema)
+* **церква** (church)
+* **стадіон** (stadium)
+* **університет** (university)
 
-Feminine places end in -а or -я:
-*   **аптека** (pharmacy)
-*   **бібліотека** (library)
-*   **лікарня** (hospital)
-*   **пошта** (post office)
-*   **церква** (church)
-*   **школа** (school)
+Many of these nouns, such as **ресторан** and **супермаркет**, are international words that share recognizable roots, making them straightforward to acquire. Others, like **лікарня** (hospital) and **бібліотека** (library), are deeply integrated into daily life and represent the civic infrastructure of any Ukrainian town.
 
-Neuter places end in -о, -е, or -я:
-*   **кафе** (cafe)
-*   **кінотеатр** / **кіно** (cinema)
-*   **озеро** (lake)
+Identifying the noun is the first step; expressing that you are *at* or *in* that location requires the locative case. As established in Module 29, the locative case answers the question **де?** (where?). The majority of enclosed buildings take the prepositions **в** or **у** (in). Ukrainian alternates between **в** and **у** strictly for euphony, ensuring the language flows smoothly without harsh consonant clusters. Here is how common places appear with **в/у**:
 
-When you answer the question **Де?** (Where?), you use the Locative case. For city buildings, you must choose between the prepositions **в/у** (in) and **на** (on). Use **в/у** for standard enclosed spaces. 
+* **в аптеці** (in the pharmacy)
+* **у бібліотеці** (in the library)
+* **у лікарні** (in the hospital)
+* **в магазині** (in the shop)
+* **у ресторані** (in the restaurant)
+* **у кафе** (in the café)
+* **у банку** (in the bank)
+* **у готелі** (in the hotel)
+* **в музеї** (in the museum)
 
-*   **Я в аптеці.** (I am in the pharmacy.)
-*   **Ми у банку.** (We are in the bank.)
-*   **Брат в готелі.** (Brother is in the hotel.)
-*   **Сестра у музеї.** (Sister is in the museum.)
-*   **Студенти у бібліотеці.** (Students are in the library.)
+Notice that many feminine nouns ending in **-а** or **-я**, such as **аптека** and **бібліотека**, change their ending to **-і** in the locative case (**в аптеці**, **у бібліотеці**). However, a specific group of public spaces historically pairs with the preposition **на** (on/at) instead of **в/у**. These often refer to open areas, transport hubs, or certain types of institutions. You must memorize these specific pairings as they appear frequently in daily routines:
 
-Use the preposition **на** for open concepts, public platforms, or wide spaces. 
+* **на пошті** (at the post office)
+* **на вокзалі** (at the train station)
+* **на стадіоні** (at the stadium)
+* **на площі** (on the square)
 
-*   **Я на пошті.** (I am at the post office.)
-*   **Він на вокзалі.** (He is at the train station.)
-*   **Ми на стадіоні.** (We are at the stadium.)
-*   **Люди на площі.** (People are on the square.)
+<!-- INJECT_ACTIVITY: quiz-v-or-na -->
 
-:::note
-**Чергування** (Alternation)
-Notice how words ending in **-ка** change in the Locative case: **аптека** becomes **в аптеці**, and **бібліотека** becomes **у бібліотеці**. The consonant **к** changes to **ц** before the **-і** ending. This makes the word easier to pronounce.
-:::
+Naming locations is useful, but true communication happens when you connect these places to actions. By combining the fundamental verbs with locative phrases, you can generate practical sentences describing daily routines. You are no longer merely listing buildings; you are detailing your activities and schedules. Observe how these everyday actions link to specific city locations:
 
-Combine these places with action verbs to describe what people do there. This provides practical context for your new vocabulary.
+* **Я купую ліки в аптеці.** (I buy medicine in the pharmacy.)
+* **Я читаю в бібліотеці.** (I read in the library.)
+* **Я працюю в офісі.** (I work in the office.)
+* **Я відпочиваю в парку.** (I relax in the park.)
+* **Я їм у ресторані.** (I eat in the restaurant.)
+* **Я п'ю каву в кафе.** (I drink coffee in the café.)
 
-*   **Я купую ліки в аптеці.** (I buy medicine in the pharmacy.)
-*   **Ми читаємо книги у бібліотеці.** (We read books in the library.)
-*   **Вони дивляться фільм у кінотеатрі.** (They watch a film in the cinema.)
-*   **Мама купує продукти у магазині.** (Mom buys groceries in the shop.)
-*   **Тато обідає у ресторані.** (Dad has lunch in the restaurant.)
-*   **Брат працює в офісі.** (Brother works in the office.)
-*   **Сестра відпочиває у парку.** (Sister rests in the park.)
+This structural pattern is highly consistent: subject + verb + preposition + locative noun. By substituting different subjects and verbs, you can construct dozens of unique statements about what people do around town. A student might read in the library, while a professional works in the office. Practicing this pattern builds conversational fluency rapidly.
 
-<!-- INJECT_ACTIVITY: match-place-activity -->
-
-<!-- INJECT_ACTIVITY: quiz-preposition-v-na -->
-
-Transportation hubs are critical city infrastructure. You need specific vocabulary for different types of travel. 
-
-*   **вокзал** (train station)
-*   **автовокзал** (bus station)
-*   **аеропорт** (airport)
-*   **зупинка** (bus stop)
-
-In Ukraine, the word **вокзал** by default implies the main railway station. If you need a bus, you must specifically ask for the **автовокзал**. You wait for local city transport at a **зупинка**.
-
-*   **Автобус на зупинці.** (The bus is at the stop.)
-*   **Поїзд на вокзалі.** (The train is at the station.)
+<!-- INJECT_ACTIVITY: match-up-place-activity -->
+<!-- INJECT_ACTIVITY: quiz-where-to-go -->
 
 ## Де це? (Where Is It?)
 
-To explain where something is, you need relative distance adverbs. The most basic are **тут** (here) and **там** (there). For distance, use **близько** (near/close) and **далеко** (far). 
+Describing a location frequently requires indicating relative distance and physical position. The most fundamental location adverbs are **тут** (here) and **там** (there). These are essential when referencing a map, indicating a direction visually, or confirming a meeting spot. To express distance, Ukrainian uses **далеко** (far) and **близько** (near / close). These contrasting adverbs clarify spatial relationships efficiently without needing complex grammar.
 
-Notice how Ukrainians use these words in contrastive examples.
+* **Магазин тут.** (The shop is here.)
+* **Школа там.** (The school is there.)
+* **Центр близько.** (The center is close.)
+* **Вокзал далеко.** (The train station is far.)
 
-*   **Магазин тут, а школа далеко.** (The shop is here, but the school is far.)
-*   **Центр близько, а вокзал далеко.** (The center is near, but the station is far.)
-*   **Аптека там.** (The pharmacy is there.)
-*   **Готель тут.** (The hotel is here.)
+When specifying that an object is "near" a particular landmark, the preposition **біля** (near) is used. This preposition is highly frequent in everyday communication. Grammatically, **біля** demands that the following noun take the genitive case, indicating spatial proximity. At this stage, rather than memorizing full genitive declension tables, it is far more practical to learn **біля** within fixed, ready-to-use chunks. This prevents grammatical overload while allowing you to use the preposition immediately.
 
-When you want to say that something is *near something else*, use the preposition **біля** (near/next to). This preposition requires the Genitive case. For now, learn these common locations as functional chunks.
+* **біля парку** (near the park)
+* **біля дому** (near the home)
+* **біля університету** (near the university)
+* **біля магазину** (near the shop)
 
-*   **біля дому** (near the house)
-*   **біля парку** (near the park)
-*   **біля університету** (near the university)
-*   **біля метро** (near the metro)
+Additionally, the chunks **поруч з** (next to) and **далеко від** (far from) help you describe distance more precisely. Learn them as ready-made patterns: **поруч з музеєм**, **поруч з площею**, **далеко від озера**, **далеко від вокзалу**. The established locative phrases **у центрі** (in the center) and **на розі** (on the corner) are vital for describing key intersections and central areas in any city.
 
-You use **біля** to describe physical proximity between two objects. It acts as a bridge between the object and its location.
+* **Аптека на розі.** (The pharmacy is on the corner.)
+* **Готель у центрі.** (The hotel is in the center.)
 
-*   **Кафе біля парку.** (The cafe is near the park.)
-*   **Лікарня біля метро.** (The hospital is near the metro.)
-*   **Аптека біля банку.** (The pharmacy is near the bank.)
+To provide a comprehensive description of an urban environment, the word **є** (there is / there are) is highly effective. While previously used to indicate possession, **є** is equally capable of affirming the existence of places within a physical space. Combining **є** with city vocabulary and location adverbs yields clear, descriptive paragraphs about any neighborhood.
 
-To describe an entire neighborhood or city, combine the existence word **є** (there is/are) with your vocabulary and numbers. 
+* **У моєму місті є великий парк і два музеї.** (In my city there is a large park and two museums.)
+* **Бібліотека біля університету.** (The library is near the university.)
+* **Магазин тут, біля дому.** (The shop is here, near the home.)
+* **У центрі є старий театр.** (In the center there is an old theater.)
 
-*   **У моєму місті є великий парк і два музеї.** (In my city there is a big park and two museums.)
-*   **Тут є один стадіон.** (There is one stadium here.)
-*   **Бібліотека біля університету.** (The library is near the university.)
-*   **Магазин тут, біля дому.** (The shop is here, near the house.)
-
-This structure allows you to build complex descriptions using simple grammar. You state the location, use **є**, and then name the place.
+This structure equips you to build informative descriptions of the area where you live, establishing a core conversational skill for social interactions. By integrating **є** with your new vocabulary, you can confidently explain what makes your city unique.
 
 <!-- INJECT_ACTIVITY: fill-in-describe-city -->
 
-<!-- INJECT_ACTIVITY: quiz-situational-place -->
-
-Finally, here are some specific location markers for precise navigation. 
-
-*   **на розі** (on the corner)
-*   **у центрі** (in the center)
-*   **поруч** (nearby)
-
-The word **поруч** acts similarly to **близько**, but it often emphasizes immediate side-by-side proximity. You can pair it with the preposition **з** to say "next to something".
-
-*   **Аптека на розі вулиці.** (The pharmacy is on the corner of the street.)
-*   **Ресторан у центрі міста.** (The restaurant is in the center of the city.)
-*   **Музей поруч з готелем.** (The museum is next to the hotel.)
-
-:::tip
-**Далеко чи близько?**
-When asking a yes/no question in Ukrainian, you do not need auxiliary words like "is it" or "do you". Just raise your intonation at the end of the sentence: **Це далеко?** (Is this far?).
-:::
-
 ## Підсумок — Summary
 
-Review the city vocabulary with their required Locative prepositions. Mastery of these patterns is essential for urban navigation.
+The essential vocabulary required to identify and discuss public buildings and urban landmarks forms the foundation of city navigation. The majority of enclosed spaces utilize **в/у**: **в аптеці**, **у бібліотеці**, **в магазині**, **у банку**, **у готелі**, **у ресторані**. A specific subset of locations requires **на**: **на пошті**, **на вокзалі**, **на стадіоні**, **на площі**. Foundational location adverbs pinpoint locations accurately: **тут** (here), **там** (there), **далеко** (far), and **близько** (close). Furthermore, the highly practical preposition **біля** (near) operates within fixed chunks like **біля дому**. Combining these lexical elements allows for accurate descriptions of urban spaces, basic directions, and confident navigation.
 
-Use **В/У** for these enclosed spaces:
-*   **в аптеці** (in the pharmacy)
-*   **у бібліотеці** (in the library)
-*   **у банку** (in the bank)
-*   **в готелі** (in the hotel)
-*   **у магазині** (in the shop)
-*   **у музеї** (in the museum)
-*   **у ресторані** (in the restaurant)
-*   **у лікарні** (in the hospital)
-*   **у школі** (in the school)
-*   **в університеті** (in the university)
-*   **у кафе** (in the cafe)
+The immediate application of this new vocabulary is to describe your own environment. Answer the following questions about your immediate neighborhood, utilizing the patterns of places, prepositions, and verbs practiced.
 
-Use **НА** for these open areas and transport hubs:
-*   **на пошті** (at the post office)
-*   **на вокзалі** (at the train station)
-*   **на стадіоні** (at the stadium)
-*   **на зупинці** (at the bus stop)
-*   **на площі** (on the square)
+* **Назвіть 5 місць біля вашого дому.** (Name 5 places near your home.)
+* **Де ви купуєте продукти?** (Where do you buy groceries?)
+* **Що ви робите в парку?** (What do you do in the park?)
+* **Вокзал далеко чи близько?** (Is the train station far or near?)
+* **У вашому місті є велика бібліотека?** (Is there a large library in your city?)
 
-To orient yourself, use the distance words **тут** (here), **там** (there), **далеко** (far), and **близько** (near). 
-
-Remember the critical difference between **близько** and **біля**. You use the adverb **близько** to state a general fact: **Магазин близько.** (The shop is near). You use the preposition **біля** to connect two nouns and show physical proximity: **Магазин біля парку.** (The shop is near the park). Always pair **біля** with a noun in the Genitive case.
-
-Practice your new skills by answering these self-check questions aloud.
-
-*   **Де ви живете?** (Where do you live?)
-*   **Що є біля вашого дому?** (What is near your house?)
-*   **Де ви купуєте ліки?** (Where do you buy medicine?)
-*   **Центр міста далеко чи близько?** (Is the city center far or near?)
-*   **Які музеї є у вашому місті?** (What museums are in your city?)
+Formulating answers to these questions reinforces the ability to communicate about the practical, daily realities of your physical surroundings. Engaging with these prompts will solidify your understanding of how to locate and discuss the places that matter most to you.
 </generated_module_content>
 
-**PIPELINE NOTE — Word count: 1400 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
+**PIPELINE NOTE — Word count: 1539 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -489,38 +431,169 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 114 words | Not found: 2 words
+Verified: 95 words | Not found: 2 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
   ✗ Аліна — NOT IN VESUM
   ✗ Шевченка — NOT IN VESUM
 
-All 114 other words are confirmed to exist in VESUM.
+All 95 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
-## Verification Tools (MCP)
+---
 
-You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
+## Verification Tools (Shell Commands)
 
-**Core Verification:**
-- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
-- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
+You have access to verification tools via shell commands. Use these to verify
+Ukrainian vocabulary, check grammar, and search textbook content **as you write**.
 
-**Content Quality:**
-- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+**IMPORTANT:** Run verification commands BEFORE finalizing any Ukrainian text.
+Batch multiple verifications together to minimize round-trips.
 
-**Reference:**
-- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp_rag_search_literary` — verify literary references against primary sources
-- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
+### 1. Batch-verify Ukrainian words exist in VESUM (preferred — one call for many words)
 
-**Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_words
+results = verify_words(['слово1', 'слово2', 'слово3'])
+for w, matches in results.items():
+    if matches:
+        print(f'{w}: FOUND — lemma={matches[0][\"lemma\"]}, pos={matches[0][\"pos\"]}')
+    else:
+        print(f'{w}: NOT FOUND — may not exist in standard Ukrainian')
+"
+```
+
+### 2. Verify a single Ukrainian word in VESUM (with full morphological tags)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_word
+results = verify_word('WORD_HERE')
+if results:
+    for m in results:
+        print(f'lemma={m[\"lemma\"]}, pos={m[\"pos\"]}, tags={m[\"tags\"]}')
+else:
+    print('NOT FOUND in VESUM')
+"
+```
+
+### 3. Get all inflected forms of a lemma (declension/conjugation)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_lemma
+forms = verify_lemma('LEMMA_HERE')
+for f in forms[:20]:
+    print(f'{f[\"word_form\"]:20s} {f[\"pos\"]:8s} {f[\"tags\"]}')
+print(f'... {len(forms)} forms total')
+"
+```
+
+### 4. Check CEFR level of a word (is it level-appropriate?)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import query_cefr_level
+results = query_cefr_level('WORD_HERE')
+for r in results:
+    print(f'{r[\"word\"]}: {r[\"level\"]} ({r[\"pos\"]})')
+if not results:
+    print('Not in CEFR database')
+"
+```
+
+### 5. Search textbook content (Ukrainian school textbooks, Grades 1-11)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_textbooks
+keywords = {'keyword1', 'keyword2'}
+results = search_textbooks(keywords, 5)
+for r in results:
+    title = r.get('section_title', r.get('title', ''))
+    grade = r.get('grade', '?')
+    text = r.get('text', '')[:200]
+    print(f'Grade {grade} | {title}')
+    print(f'  {text}')
+    print()
+"
+```
+
+### 6. Search style guide for calques/Russianisms (Антоненко-Давидович, 279 entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_style_guide
+results = search_style_guide('TOPIC_HERE', 3)
+for r in results:
+    print(f'--- {r.get(\"word\", \"\")} [{r.get(\"section\", \"\")}]')
+    print(r.get('text', '')[:300])
+    print()
+if not results:
+    print('No style guide entries found')
+"
+```
+
+### 7. Look up word definition in СУМ-11 (Ukrainian explanatory dictionary, 127K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_definitions
+results = search_definitions('WORD_HERE', 3)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+### 8. Search idioms (Фразеологічний словник, 25K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_idioms
+results = search_idioms('WORD_HERE', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"text\", r.get(\"definition\", \"\")))[:200]}')
+"
+```
+
+### 9. English-to-Ukrainian translation (Балла, 79K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import translate_en_uk
+results = translate_en_uk('ENGLISH_WORD', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+---
+
+**WHEN to use these tools:**
+
+1. **Before writing any Ukrainian text** — batch-verify all key vocabulary with
+   `verify_words` (tool 1). Any word that returns NOT FOUND must be replaced.
+2. **When you suspect a Russicism or calque** — search the style guide (tool 6)
+   and verify the correct Ukrainian form with `verify_word` (tool 2).
+3. **When writing for A1/A2** — check CEFR levels (tool 4) to ensure vocabulary
+   is level-appropriate.
+4. **When unsure about a case ending or conjugation** — use `verify_lemma` (tool 3)
+   to see the full paradigm.
+5. **When covering a grammar topic** — search textbooks (tool 5) to see how
+   Ukrainian school textbooks teach it.
+6. **When you need the precise Ukrainian meaning** — use СУМ-11 (tool 7).
+7. **When looking for natural Ukrainian expressions** — search idioms (tool 8).
+
+**Batching rule:** Collect all words you want to verify, then run ONE `verify_words`
+call instead of multiple `verify_word` calls. This is faster and uses fewer tokens.

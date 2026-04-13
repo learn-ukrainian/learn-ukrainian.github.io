@@ -6,338 +6,586 @@ inline:
   type: quiz
   instruction: Оберіть правильне запитання (Choose the correct question)
   items:
-  - question: _____ ти живеш? — У Києві.
+  - question: ____ ти живеш? — У Києві.
     options:
     - Де
     - Куди
     - Звідки
+    - Хто
     correct: 0
-  - question: _____ ти йдеш? — У магазин.
+  - question: ____ ти йдеш? — У магазин.
     options:
-    - Де
     - Куди
-    - Звідки
-    correct: 1
-  - question: _____ ви? — Ми з Канади.
-    options:
     - Де
-    - Куди
     - Звідки
-    correct: 2
-  - question: _____ музей? — У центрі.
-    options:
-    - Де
-    - Куди
-    - Звідки
+    - Що
     correct: 0
-  - question: _____ їде автобус? — На вокзал.
+  - question: ____ ви? — Ми з Канади.
     options:
+    - Звідки
     - Де
     - Куди
-    - Звідки
-    correct: 1
-  - question: _____ ти їдеш? — З роботи.
-    options:
-    - Де
-    - Куди
-    - Звідки
-    correct: 2
-  - question: _____ аптека? — Направо.
-    options:
-    - Де
-    - Куди
-    - Звідки
+    - Як
     correct: 0
-  - question: _____ вони? — Зі США.
+  - question: ____ музей? — У центрі.
     options:
     - Де
     - Куди
     - Звідки
-    correct: 2
-- id: group-sort-cases
-  type: group-sort
-  instruction: Розподіліть фрази за категоріями (Sort the phrases by category)
-  groups:
-  - label: Локація (Де?)
-    items:
-    - у школі
-    - на площі
-    - в центрі
-  - label: Напрямок (Куди?)
-    items:
-    - на роботу
-    - у Львів
-    - в Канаду
-  - label: Походження (Звідки?)
-    items:
-    - з України
-    - зі США
-    - з роботи
-- id: quiz-euphony-check
+    - Коли
+    correct: 0
+  - question: ____ їде автобус? — На вокзал.
+    options:
+    - Куди
+    - Де
+    - Звідки
+    - Чому
+    correct: 0
+  - question: ____ ти їдеш? — З роботи.
+    options:
+    - Звідки
+    - Куди
+    - Де
+    - Хто
+    correct: 0
+  - question: ____ аптека? — Направо.
+    options:
+    - Де
+    - Куди
+    - Звідки
+    - Як
+    correct: 0
+  - question: ____ вони? — Зі США.
+    options:
+    - Звідки
+    - Де
+    - Куди
+    - Що
+    correct: 0
+  - question: ____ він живе? — В Одесі.
+    options:
+    - Де
+    - Куди
+    - Звідки
+    - Коли
+    correct: 0
+  - question: ____ вона йде? — У театр.
+    options:
+    - Куди
+    - Де
+    - Звідки
+    - Як
+    correct: 0
+- id: quiz-euphony-rules
   type: quiz
-  instruction: Оберіть правильний варіант для милозвучності (Choose the correct option
-    for euphony)
+  instruction: Оберіть правильний варіант (Choose the correct option)
   items:
-  - question: Брат _____ сестра
+  - question: Брат ____ сестра йдуть.
     options:
     - і
     - й
     - та
+    - а
     correct: 0
-  - question: Вона живе _____ Львові
+  - question: Вона живе ____ Львові.
     options:
     - у
     - в
     - на
+    - до
     correct: 0
-  - question: Я йду _____ школи
+  - question: Студент іде ____ школи.
     options:
     - зі
     - з
     - із
+    - від
     correct: 0
-  - question: Він _____ Києві
+  - question: Він живе ____ Києві.
     options:
-    - у
     - в
+    - у
     - на
+    - із
     correct: 0
-  - question: Мама _____ тато
+  - question: Мама ____ тато вдома.
     options:
     - й
     - і
-    - та
+    - а
+    - але
     correct: 0
-  - question: Ми _____ України
+  - question: Я родом ____ України.
     options:
     - з
     - із
     - зі
+    - від
     correct: 0
-  - question: Я _____ кімнаті
+  - question: Я зараз ____ центрі.
     options:
-    - в
     - у
+    - в
     - на
+    - до
     correct: 0
-  - question: Вона _____ США
+  - question: Вона ____ США.
     options:
     - зі
     - з
     - із
+    - від
+    correct: 0
+  - question: Студент іде ____ школу.
+    options:
+    - у
+    - в
+    - на
+    - до
+    correct: 0
+  - question: Турист іде ____ готелю.
+    options:
+    - з
+    - із
+    - зі
+    - від
     correct: 0
 - id: fill-in-dialogue-forms
   type: fill-in
-  instruction: Вставте правильні фрази в діалог (Complete the dialogue with the correct
-    phrases)
+  instruction: Вставте правильні слова в діалог (Fill in the correct words in the
+    dialogue)
   items:
-  - sentence: Вибачте, я _____. Де тут музей?
-    answer: з Канади
+  - sentence: Вибачте, я ____ Канади. Де тут музей?
+    answer: з
     options:
-    - з Канади
-    - в Канаді
-    - в Канаду
-  - sentence: Музей _____. Ідіть на метро.
-    answer: у центрі
+    - з
+    - у
+    - на
+  - sentence: Музей ____ центрі.
+    answer: у
     options:
-    - у центрі
-    - в центр
-    - з центру
-  - sentence: А як дістатися _____?
-    answer: від метро
+    - у
+    - в
+    - на
+  - sentence: Ідіть ____ метро до станції Хрещатик.
+    answer: на
     options:
-    - від метро
-    - на метро
-    - в метро
-  - sentence: Вийдіть і йдіть _____. Музей на площі.
+    - на
+    - в
+    - у
+  - sentence: А як дістатися ____ метро?
+    answer: від
+    options:
+    - від
+    - з
+    - до
+  - sentence: Вийдіть і йдіть ____.
     answer: направо
     options:
     - направо
-    - направі
-    - справа
-  - sentence: Я хочу їхати _____. Де вокзал?
-    answer: у Львів
+    - прямо
+    - далеко
+  - sentence: Музей на великій ____.
+    answer: площі
     options:
-    - у Львів
-    - у Львові
-    - зі Львова
-  - sentence: Вокзал далеко, їдьте _____.
-    answer: на метро
+    - площі
+    - площа
+    - площу
+  - sentence: Я хочу їхати ____ Львів.
+    answer: у
     options:
-    - на метро
-    - в метро
-    - з метро
+    - у
+    - в
+    - на
+  - sentence: Вокзал ____, їдьте на метро.
+    answer: далеко
+    options:
+    - далеко
+    - прямо
+    - направо
+  - sentence: Їдьте на метро до ____ Вокзальна.
+    answer: станції
+    options:
+    - станції
+    - станція
+    - станцію
+  - sentence: Де тут ____?
+    answer: музей
+    options:
+    - музей
+    - музею
+    - музеї
 workbook:
-- id: true-false-reading
-  type: true-false
-  instruction: Правда чи ні? (True or false?)
-  items:
-  - statement: Марк зараз у Польщі.
-    correct: false
-    explanation: Він з Польщі, але зараз у Києві.
-  - statement: Його готель у центрі.
-    correct: true
-    explanation: Так, його готель у центрі міста.
-  - statement: Марк іде на вокзал пішки.
-    correct: false
-    explanation: Вокзал далеко, він їде на метро.
-  - statement: Золоті ворота близько.
-    correct: true
-    explanation: Так, Золоті ворота близько, він вже біля музею.
-  - statement: Музей на площі.
-    correct: true
-    explanation: Так, музей знаходиться на площі.
-  - statement: Марк іде наліво до музею.
-    correct: false
-    explanation: Він іде направо.
-- id: error-correction-cases
-  type: error-correction
-  instruction: Знайдіть і виправте помилку (Find and correct the mistake)
-  items:
-  - sentence: Я живу в Київ.
-    error: в Київ
-    correction: у Києві
-    error_type: word
-    options:
-    - у Києві
-    - з Києва
-    - на Києві
-    explanation: 'For location (Де?), use the Locative case: у Києві.'
-  - sentence: Вона йде на школі.
-    error: на школі
-    correction: у школу
-    error_type: word
-    options:
-    - у школу
-    - у школі
-    - зі школи
-    explanation: 'For direction (Куди?), use the Accusative case: у школу.'
-  - sentence: Ми їдемо з автобусі.
-    error: з автобусі
-    correction: на автобусі
-    error_type: word
-    options:
-    - на автобусі
-    - в автобус
-    - автобусом
-    explanation: 'For transport, use на + Locative: на автобусі.'
-  - sentence: Я з Канаді.
-    error: з Канаді
-    correction: з Канади
-    error_type: word
-    options:
-    - з Канади
-    - в Канаді
-    - в Канаду
-    explanation: 'For origin (Звідки?), use з + Genitive: з Канади.'
-  - sentence: Музей в площі.
-    error: в площі
-    correction: на площі
-    error_type: word
-    options:
-    - на площі
-    - на площу
-    - з площі
-    explanation: 'For open spaces like a square, use на: на площі.'
-  - sentence: Він працює в роботі.
-    error: в роботі
-    correction: на роботі
-    error_type: word
-    options:
-    - на роботі
-    - на роботу
-    - з роботи
-    explanation: 'For abstract locations or events like work, use на: на роботі.'
 - id: match-up-questions
   type: match-up
-  instruction: З'єднайте запитання та логічну відповідь (Match the question with the
-    logical answer)
+  instruction: З'єднайте запитання з відповіддю (Match the question with the answer)
   pairs:
   - left: Де ти живеш?
     right: У Києві.
   - left: Куди ти йдеш?
     right: У магазин.
-  - left: Звідки ти?
+  - left: Звідки ви?
     right: З Канади.
-  - left: Де вокзал?
-    right: Прямо і направо.
-  - left: Як дістатися?
-    right: Їдьте на метро.
+  - left: Де музей?
+    right: У центрі.
+  - left: Куди їде автобус?
+    right: На вокзал.
+  - left: Звідки ти їдеш?
+    right: З роботи.
   - left: Де аптека?
-    right: Близько, на площі.
-- id: unjumble-sentences
+    right: Направо.
+  - left: Звідки вони?
+    right: Зі США.
+  - left: Куди вона йде?
+    right: На роботу.
+  - left: Де зараз студент?
+    right: У школі.
+- id: true-false-locations
+  type: true-false
+  instruction: Правда чи ні? (True or False?)
+  items:
+  - statement: Фраза «у школі» відповідає на запитання Де? (Where?)
+    correct: true
+    explanation: Це локація (статичне місце).
+  - statement: Фраза «на роботу» відповідає на запитання Звідки? (From where?)
+    correct: false
+    explanation: «На роботу» — це напрямок, відповідає на запитання Куди? (To where?).
+  - statement: Фраза «з Канади» відповідає на запитання Звідки? (From where?)
+    correct: true
+    explanation: Це походження або початкова точка.
+  - statement: Фраза «у Львів» відповідає на запитання Де? (Where?)
+    correct: false
+    explanation: «У Львів» — це напрямок руху, відповідає на запитання Куди? (To where?).
+  - statement: Фраза «в центрі» відповідає на запитання Де? (Where?)
+    correct: true
+    explanation: Це статичне місце.
+  - statement: Фраза «зі школи» відповідає на запитання Куди? (To where?)
+    correct: false
+    explanation: «Зі школи» — це початкова точка, відповідає на запитання Звідки?
+      (From where?).
+  - statement: Фраза «на площі» відповідає на запитання Де? (Where?)
+    correct: true
+    explanation: Це локація (статичне місце).
+  - statement: Фраза «в театр» відповідає на запитання Куди? (To where?)
+    correct: true
+    explanation: Це напрямок руху.
+  - statement: Фраза «з роботи» відповідає на запитання Де? (Where?)
+    correct: false
+    explanation: «З роботи» відповідає на запитання Звідки? (From where?).
+  - statement: Фраза «в Україну» відповідає на запитання Куди? (To where?)
+    correct: true
+    explanation: Це напрямок (Accusative case).
+- id: unjumble-directions
   type: unjumble
   instruction: Складіть правильне речення зі слів (Put the words in the correct order)
   items:
   - words:
+    - живе
+    - Вона
+    - Львові.
     - у
-    - Я
-    - Києві.
-    - зараз
     correct_order:
-    - Я
-    - зараз
+    - Вона
+    - живе
     - у
-    - Києві.
+    - Львові.
   - words:
-    - метро.
-    - Ідіть
-    - на
+    - йдемо
+    - Ми
+    - парк.
+    - в
     correct_order:
-    - Ідіть
-    - на
-    - метро.
+    - Ми
+    - йдемо
+    - в
+    - парк.
   - words:
-    - Канади.
+    - родом
+    - Я
+    - України.
     - з
-    - я
-    - Вибачте,
     correct_order:
-    - Вибачте,
-    - я
+    - Я
+    - родом
     - з
-    - Канади.
+    - України.
   - words:
-    - площі.
-    - Музей
+    - їдемо
+    - автобусом.
+    - Ми
+    correct_order:
+    - Ми
+    - їдемо
+    - автобусом.
+  - words:
+    - прямо
+    - направо.
+    - Ідіть
+    - і
+    correct_order:
+    - Ідіть
+    - прямо
+    - і
+    - направо.
+  - words:
+    - зараз
+    - парку.
+    - Я
+    - у
+    correct_order:
+    - Я
+    - зараз
+    - у
+    - парку.
+  - words:
+    - їде
+    - Вона
+    - роботу.
     - на
     correct_order:
-    - Музей
+    - Вона
+    - їде
     - на
-    - площі.
+    - роботу.
   - words:
-    - у
-    - хочу
-    - їхати
-    - Я
-    - Львів.
+    - іде
+    - Він
+    - школи.
+    - зі
     correct_order:
-    - Я
-    - хочу
-    - їхати
-    - у
-    - Львів.
+    - Він
+    - іде
+    - зі
+    - школи.
   - words:
-    - тут
-    - Де
-    - музей?
+    - їдуть
+    - метро.
+    - Вони
+    - на
     correct_order:
-    - Де
-    - тут
-    - музей?
-- id: order-dialogue
-  type: order
-  instruction: Розставте репліки діалогу в правильному порядку (Put the dialogue lines
-    in the correct order)
+    - Вони
+    - їдуть
+    - на
+    - метро.
+  - words:
+    - стоїть
+    - Аптека
+    - направо.
+    correct_order:
+    - Аптека
+    - стоїть
+    - направо.
+- id: anagram-places
+  type: anagram
+  instruction: Складіть слово з літер (Make a word from the letters)
   items:
-  - — Вибачте, я з Канади. Де тут музей?
-  - — Музей у центрі. Ідіть на метро.
-  - — А як дістатися від метро?
-  - — Вийдіть і йдіть направо.
-  - — Дякую!
-  correct_order:
-  - 0
-  - 1
-  - 2
-  - 3
-  - 4
+  - letters:
+    - м
+    - у
+    - з
+    - е
+    - й
+    answer: музей
+    hint: museum
+  - letters:
+    - м
+    - е
+    - т
+    - р
+    - о
+    answer: метро
+    hint: metro
+  - letters:
+    - в
+    - о
+    - к
+    - з
+    - а
+    - л
+    answer: вокзал
+    hint: train station
+  - letters:
+    - ц
+    - е
+    - н
+    - т
+    - р
+    answer: центр
+    hint: center
+  - letters:
+    - п
+    - л
+    - о
+    - щ
+    - а
+    answer: площа
+    hint: square
+  - letters:
+    - ш
+    - к
+    - о
+    - л
+    - а
+    answer: школа
+    hint: school
+  - letters:
+    - п
+    - а
+    - р
+    - к
+    answer: парк
+    hint: park
+  - letters:
+    - р
+    - о
+    - б
+    - о
+    - т
+    - а
+    answer: робота
+    hint: work
+  - letters:
+    - г
+    - о
+    - т
+    - е
+    - л
+    - ь
+    answer: готель
+    hint: hotel
+  - letters:
+    - т
+    - е
+    - а
+    - т
+    - р
+    answer: театр
+    hint: theater
+- id: fill-in-prepositions
+  type: fill-in
+  instruction: Вставте правильний прийменник (Fill in the correct preposition)
+  items:
+  - sentence: Я живу ____ Києві.
+    answer: в
+    options:
+    - в
+    - у
+    - на
+  - sentence: Вона живе ____ Львові.
+    answer: у
+    options:
+    - у
+    - в
+    - на
+  - sentence: Ми зараз ____ центрі.
+    answer: у
+    options:
+    - у
+    - в
+    - на
+  - sentence: Я йду ____ магазин.
+    answer: в
+    options:
+    - в
+    - у
+    - на
+  - sentence: Вона йде ____ роботу.
+    answer: на
+    options:
+    - на
+    - в
+    - у
+  - sentence: Він іде ____ школи.
+    answer: зі
+    options:
+    - зі
+    - з
+    - із
+  - sentence: Турист іде ____ готелю.
+    answer: з
+    options:
+    - з
+    - із
+    - зі
+  - sentence: Вони їдуть ____ метро.
+    answer: на
+    options:
+    - на
+    - в
+    - у
+  - sentence: Музей стоїть ____ площі.
+    answer: на
+    options:
+    - на
+    - в
+    - у
+  - sentence: Студент іде ____ школу.
+    answer: у
+    options:
+    - у
+    - в
+    - на
+- id: odd-one-out-cases
+  type: odd-one-out
+  instruction: Знайдіть зайву фразу (Find the odd one out)
+  items:
+  - words:
+    - у школі
+    - в центрі
+    - на роботу
+    correct: 2
+    explanation: «на роботу» відповідає на запитання Куди?
+  - words:
+    - у Львів
+    - в Канаду
+    - в центрі
+    correct: 2
+    explanation: «в центрі» відповідає на запитання Де?
+  - words:
+    - з України
+    - зі США
+    - в театр
+    correct: 2
+    explanation: «в театр» відповідає на запитання Куди?
+  - words:
+    - у парку
+    - на площі
+    - у парк
+    correct: 2
+    explanation: «у парк» відповідає на запитання Куди?
+  - words:
+    - зі школи
+    - у школу
+    - з роботи
+    correct: 1
+    explanation: «у школу» відповідає на запитання Куди?
+  - words:
+    - на роботу
+    - в театр
+    - на роботі
+    correct: 2
+    explanation: «на роботі» відповідає на запитання Де?
+  - words:
+    - з готелю
+    - у готель
+    - зі США
+    correct: 1
+    explanation: «у готель» відповідає на запитання Куди?
+  - words:
+    - в центрі
+    - у центрі
+    - в центр
+    correct: 2
+    explanation: «в центр» відповідає на запитання Куди?
+  - words:
+    - з Канади
+    - з парку
+    - в парку
+    correct: 2
+    explanation: «в парку» відповідає на запитання Де?
+  - words:
+    - у Львові
+    - у Києві
+    - у Львів
+    correct: 2
+    explanation: «у Львів» відповідає на запитання Куди?

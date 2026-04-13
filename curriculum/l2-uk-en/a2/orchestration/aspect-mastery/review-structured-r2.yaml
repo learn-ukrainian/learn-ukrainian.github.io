@@ -3,46 +3,48 @@ scores:
 - dimension: 1
   name: Plan adherence
   score: 7
-  evidence: Failed to provide minimal contrast sentences for all 30 pairs as required
-    ("Each pair shown in a minimal contrast sentence"), defaulting to bare lists for
-    24 of them. Omitted the required textbook ref
+  evidence: Group B duplicates `**казати / сказати**` and therefore the promised “30
+    pairs” list contains only 29 distinct pairs in the visible prose.
 - dimension: 2
   name: Linguistic accuracy
-  score: 10
-  evidence: Flawless. Correct use of aspect, natural verb pairs, accurate explanation
-    of "Кафе Птах", and correct identification of true suppletive verbs.
+  score: 6
+  evidence: The module misclassifies `**казати / сказати**` as suppletive, treats
+    `шукати ... знайти` as an aspect pair, and calls `**класти / покласти**` a stem-change
+    pair.
 - dimension: 3
   name: Pedagogical quality
-  score: 8
-  evidence: The PPP structure is excellent, but presenting 30 core vocabulary items
-    primarily as three dense bulleted lists of 10 without immediate contextual sentences
-    violates the mandate against "bare vocabula
+  score: 7
+  evidence: The core morphology lesson teaches wrong pattern labels in the presentation
+    stage, e.g. `verbs with stem changes, like **класти / покласти**`; that directly
+    undermines the lesson objective.
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: All required vocabulary pairs (`брати / взяти`, `говорити / сказати`,
-    etc.) are naturally integrated.
+  score: 8
+  evidence: The plan’s communication list is not fully realized in prose because `**казати
+    / сказати**` appears twice in Group B instead of two distinct pairs.
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: Markers perfectly match the plan's `activity_hints` IDs and are placed
-    effectively after the relevant teaching blocks.
+  score: 9
+  evidence: The 4 markers match the 4 `activity_hints` and each comes after the section
+    it should test.
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: Encouraging, teacher-like tone. ("Вибір виду дієслова — це питання вашого
-    мислення").
+  score: 9
+  evidence: The tone is teacherly and clear, with concrete framing such as `The parent
+    asks about the result, while the student emphasizes the unfinished process.`
 - dimension: 7
   name: Structural integrity
-  score: 10
-  evidence: 3058 words is well above the target. All H2 headings match the plan exactly.
+  score: 9
+  evidence: All planned H2 sections are present and ordered correctly, markers are
+    clean, and the pipeline word count is 2100, which is above target.
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: Accurate and respectful presentation of Ukrainian linguistic patterns.
+  score: 9
+  evidence: The module explains Ukrainian on its own terms and avoids Russian-centered
+    framing.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: Dialogues are highly realistic, clearly contrasting the intent/process
-    (often from the child or planner) vs result/completion (from the parent or executioner).
+  score: 9
+  evidence: The dialogues use named/role-based speakers and natural aspect contrasts
+    in realistic contexts like homework and workplace planning.
 findings: []

@@ -28,7 +28,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-Узвар має насичений смак і є обов'язковим атрибутом на Святвечір перед Різдвом. Він символізує очищення. Популярним повсякденним напоєм є **компот** *(fruit drink)*. На відміну від узвару, компот варять зі свіжих фруктів або ягід. Він є чудовим варіантом для літнього освіження. Специфічним, але традиційним напоєм є **кисіль** *(starchy fruit drink)*. Це густий напій на основі фруктового відвару з додаванням крохмалю. Завдяки крохмалю кисіль має желеподібну консистенцію і часто подається як десерт. Серед ферментованих напоїв почесне місце займає **квас** *(fermented bread drink)*. Це освіжаючий, злегка газований напій, який роблять із житнього хліба, води та цукру. Квас чудово втамовує спрагу влітку. Щоб добре орієнтуватися в українській гастрономії, потрібно знати базові категорії продуктів. Українська кухня багата на **м'ясо** *(meat)*. Найчастіше використовують свинину, з якої роблять ковбаси, печеню та сало. Популярними є **яловичина** *(beef)* та **курка** *(chicken)*. У регіонах біля річок і морів часто готують таку категорію продуктів, як **риба** *(fish)*. Основою багатьох страв є **овочі** *(vegetables)*. Неможливо уявити українську кухню без таких інгредієнтів, як **буряк** *(beetroot)*, **капуста** *(cabbage)*, **морква** *(carrot)*, **цибуля** *(onion)* та часник. Ці овочі є базою для борщів і салатів. Влітку та восени столи переповнені свіжими плодами, адже **фрукти** *(fruit)* ростуть майже в кожному саду. Важливою категорією є **крупи** *(grains/cereals)*, з яких варять каші. Окремої уваги заслуговують **молочні продукти** *(dairy products)*. Українці споживають багато молочного: свіже молоко, кисломолочний сир та **кефір** *(kefir)*. Усі ці свіжі продукти формують неповторну палітру українських смаків. Описуючи їжу, українці використовують багату лексику для передачі смаку та текстури. Коли страва приготована добре, ми кажемо, що вона **смачна** *(tasty/delicious)*. Смаки часто утворюють антонімічні пари. Наприклад, страва може бути **гостра** *(spicy/sharp)*, якщо в ній багато перцю. Ми розрізняємо **солоний** *(salty)* смак, як у сала чи солоних огірків, та **солодкий** *(sweet)*, як у десертів чи узвару. Їжа може бути **кисла** *(sour)*, як зелений борщ зі щавлем, або ж **гірка** *(bitter)*, як чорна кава. Окрім смаку, дуже важливою є текстура продуктів. М'ясо або тісто має бути **ніжне** *(tender/delicate)*, щоб воно тануло в роті. Овочі в салаті чи свіжий хліб цінуються, коли вони **хрусткі** *(crunchy/crispy)*. І, звичайно, найголовніша характеристика для будь-якого інгредієнта — він має бути **свіжий** *(fresh)*. Це гарантує найкращий смак та високу якість страви. В українській мові спосіб приготування часто стає частиною назви страви. Він виступає в ролі прикметника чи дієприкметника. Завдяки цьому ви відразу розумієте, як саме була оброблена їжа. Наприклад, якщо продукт варили у воді, він називається **варений** *(boiled)*. Ми часто їмо варені яйця на сніданок або варимо картоплю. Якщо їжу готували на сковороді з додаванням олії, вона стає **смажена** *(fried)*. Класичний приклад — це смажена картопля або смажена риба. Страви, які довго готували в духовці, називаються **запечені** *(baked)*. Запечене м'ясо чи яблука з медом мають неймовірний аромат. Якщо ж м'ясо або овочі повільно готували в посуді з невеликою кількістю рідини, це **тушкований** *(stewed)* продукт. Популярною стравою є тушкована капуста. Продукти, які обробляли димом для збереження смаку, — це **копчений** *(smoked)* продукт. Копчене сало чи ковбаса — це традиційні делікатеси на святковому столі. <!-- INJECT_ACTIVITY: match-dishes-descriptions --> [match-up, Match Ukrainian dishes with their ingredients and preparation descriptions, 10 items]
+загущують за допомогою картопляного крохмалю. Його часто подають холодним після ситного обіду. While modern restaurants serve standard international beverages, trying traditional drinks offers a genuine taste of local history. The famous **узвар** (dried fruit compote) carries a deep cultural resonance, connecting modern diners to generations of ancestors who preserved the summer fruit harvest for the long, cold winters. Understanding the difference between a clear, thirst-quenching kompot and a thick, dessert-like kysil will also help you make the right choice. No matter what you order, a good **закуска** (appetizer/starter) paired with a local beverage sets the perfect mood for the meal. Systematically understanding the main categories of food will significantly help you navigate local farmers' markets and read recipes. The primary food categories include meat, encompassing pork, beef, and chicken, as well as fresh fish sourced from local rivers and the sea. Vegetables are arguably the most crucial component, with hearty root vegetables like beetroot, cabbage, carrots, and onions forming the essential base of countless traditional recipes. The iconic **сало** (cured pork fat) is in a category of its own, deeply revered by locals. You will also encounter a magnificent, wide variety of seasonal fruits and nutritious grains in everyday cooking. Dairy products are absolutely essential to the flavor profile of the cuisine, particularly thick sour cream, tangy fermented kefir, and a specific type of fresh, crumbly farmers' cheese simply called «сир». Щоб влучно описати їжу або розповісти про свої кулінарні вподобання, вам знадобляться прикметники смаку та текстури. Страва може бути надзвичайно смачна, надто гостра від перцю або трохи солона. Традиційні десерти зазвичай дуже солодкі, тоді як лимон чи недозріле яблуко — завжди кислий. Деякі лікувальні трави чи міцна чорна кава можуть бути гіркими на смак. Текстура продуктів також має велике значення. Свіжоспечений хліб обов'язково має бути хрустким, свіжі овочі — соковитими, а добре приготоване, якісне м'ясо — м'яким та дуже ніжним. In Ukrainian grammar, the specific method of culinary preparation often acts as a descriptive adjective that directly modifies the food item. Understanding these terms is crucial for knowing exactly what you are choosing for your **замовлення** (order). Food can be boiled (варений), pan-fried (смажений), oven-baked (запечений), slowly stewed (тушкований), or naturally smoked (копчений) over wood. For example, when reading a restaurant **меню** (menu), you might see «смажена картопля» (fried potatoes), a simple breakfast of «варені яйця» (boiled eggs), or a hearty dinner of «запечене м'ясо» (baked meat). When you are ready to eat, you simply flag down the **офіціант** (waiter) to make your requests known. It is important to remember that these descriptive adjectives for cooking methods must always agree in gender, number, and case with the noun they describe, ensuring your sentences sound perfectly natural and grammatically correct. Finally, when the meal is over and you ask for the **рахунок** (bill/check), you will appreciate knowing exactly what you just enjoyed. Exploring these terms will make every dining experience an engaging linguistic adventure. <!-- INJECT_ACTIVITY: match-dishes-descriptions --> [match-up, Match Ukrainian dishes with their ingredients and preparation descriptions, 10 items]
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -670,7 +670,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -683,18 +750,68 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] страва (dish/course — a prepared food item)
+- [ ] борщ (borscht — quintessential Ukrainian beet soup)
+- [ ] вареники (varenyky — filled dumplings, pl of вареник)
+- [ ] деруни (potato pancakes — pl of дерун)
+- [ ] пампушки (garlic bread rolls — served with борщ, pl of пампушка)
+- [ ] сало (cured pork fat — iconic Ukrainian product)
+- [ ] узвар (dried fruit compote — traditional Ukrainian drink)
+- [ ] меню (menu — невідмінюване noun)
+- [ ] замовлення (order — the act of ordering food)
+- [ ] офіціант (waiter — masc; fem: офіціантка)
+- [ ] рахунок (bill/check — restaurant bill)
+- [ ] гарнір (side dish — served with a main course)
+- [ ] закуска (appetizer/starter — first course before soup)
+- [ ] кухня (cuisine/kitchen — both meanings in Ukrainian)
+- [ ] порція (portion — a serving of food)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## У ресторані: замовлення і спілкування (~1100 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

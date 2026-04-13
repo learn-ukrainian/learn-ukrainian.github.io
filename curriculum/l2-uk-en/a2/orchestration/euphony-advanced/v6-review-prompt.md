@@ -139,211 +139,180 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## У чи в? Складні випадки (U or V? Complex Cases)
+## У чи в? Складні випадки (U or V? Complex Cases) (~660 words)
 
-Українська мова — дуже мелодійна. *(The Ukrainian language is very melodious.)* Це **милозвучність** *(euphony)*, або науковою мовою — **евфонія** *(euphony (technical term))*. We actively avoid a **збіг приголосних** *(consonant cluster)* and a **збіг голосних** *(vowel collision)*. In Ukrainian, a **голосний** *(vowel)* flows smoothly, while a **приголосний** *(consonant)* creates friction. Ukrainian speech adapts to difficult sounds.
+When native speakers talk fast, the language flows like a beautiful song. This natural rhythm is called **милозвучність** (euphony, melodiousness). It is not just a style preference; it is an important pronunciation norm in standard Ukrainian, but speakers still choose the variant that sounds smoother in context. Let's listen to Olenka and Taras planning a weekend trip. Notice the small prepositions and the **сполучник** (conjunction) they use to connect words.
 
-:::tip Милозвучність (Euphony)
-Ми говоримо так, щоб було легко і красиво. *(We speak so it is easy and beautiful.)*
+> — **Оленка:** Поїдемо в Карпати чи у Львів? *(Shall we go to the Carpathians or to Lviv?)*
+> — **Тарас:** У Львів! Із задоволенням! *(To Lviv! With pleasure!)*
+> — **Оленка:** Я поїду з Оленою й Тарасом. *(I will go with Olena and Taras.)*
+> — **Тарас:** А ви зі Львова повернетесь у неділю? *(And will you return from Lviv on Sunday?)*
+
+In just four lines, they changed the little connecting words multiple times. Olenka said «в Карпати» but «у Львів». Taras used «із» and «зі» instead of just «з». This is **евфонія** (euphony (technical term)) in action. The language actively changes its shape to sound better.
+
+To understand how this works, we must review the basic rule for the **прийменник** (preposition) «у» or «в». You already know that the choice depends on the sounds around the word. A **голосний** (vowel) loves to sit next to a **приголосний** (consonant). 
+
+Мій брат зараз у домі. Він працює там щодня. А моя сестра була в Одесі. Вона там відпочивала.
+
+> *My brother is currently in the house. He works there every day. And my sister was in Odesa. She rested there.*
+
+In the first sentence, we use «у» because it sits between two consonants. In the second sentence, we use «в» because it sits between two vowels. We want to avoid a **збіг** (cluster, collision) of identical sound types. This **чергування** (alternation) makes speaking much easier for everyone.
+
+However, real speech is a **складний** (complex, compound) flow of words. What happens at the beginning of a sentence? At the start of a sentence, speakers usually choose the variant that sounds smoother with the next word. Before a vowel, «в» is common: «В Україні». Before a consonant, «у» is common: «У лісі». These are strong preferences, not a mechanical rule for every context.
+
+В Україні зима часто буває холодна. У лісі зараз дуже багато снігу.
+
+> *In Ukraine, winter is often cold. In the forest, there is a lot of snow right now.*
+
+Punctuation marks act like a hard reset. A comma, a period, or a dash creates a pause in your speech. After this pause, the phonetic environment starts over completely. You must apply the rule as if it is the beginning of a brand new sentence.
+
+Мабуть, в Одесі зараз тепло. У лісі, у полі волого й тихо.
+
+> *Probably, it is warm in Odesa right now. In the forest, in the field, it is damp and quiet.*
+
+Learners often memorize a preposition together with a specific noun, like the phrase «у школі» (at school). But the preposition does not belong to the noun at all. The surrounding sounds determine the choice, not the word's base form. We must **вживати** (to use, to apply) the correct variant based on the whole phrase in the sentence.
+
+Мій молодший брат зараз у школі. Але мій старший брат вчиться в університеті.
+
+> *My younger brother is currently at school. But my older brother studies at the university.*
+
+Why do we say «у школі» here? Because «брат в школі» creates a terrible cluster of three consonants. The language fixes this by using «у». Why do we say «в університеті»? Because «вчиться у університеті» creates a clash of three vowels. The letter «в» breaks up this vowel collision perfectly.
+
+:::info
+**Grammar box**
+Always look at the last letter of the previous word and the first letter of the next word. The preposition is just a phonetic bridge between them.
 :::
 
-Basic rule: **у** *(in/at)* and **в** *(in/at)* are the same **прийменник** *(preposition)*. It is important to know when to **вживати** *(to use, to apply)* each form. Use **у** between consonants, and **в** between vowels.
+This rule is so strong that it even changes the first letter of some words. Many common verbs and nouns have two forms. You will see words like «увійти» and «ввійти» (to enter), or «учитель» and «вчитель» (teacher). The choice follows the exact same phonetic logic. The word itself changes to protect the natural rhythm of the sentence.
 
-«Читаємо українською» (Reading in Ukrainian):
-> — **Олена:** Де зараз Максим? Він у школі? *(Where is Maksym now? Is he at school?)*
-> — **Тарас:** Ні, він був у парку. *(No, he was in the park.)*
-> — **Олена:** А Анна? Вона була в Одесі? *(And Anna? Was she in Odesa?)*
-> — **Тарас:** Так, вона жила в Італії. *(Yes, she lived in Italy.)*
-> — **Олена:** А її брат працює в Одесі? *(Her brother works in Odesa?)*
-> — **Тарас:** Ні, він працював у Києві. *(No, he worked in Kyiv.)*
+Наш новий учитель дуже цікаво розповідає. Наша нова вчителька теж чудова. Увечері він прийшов додому. Він швидко увійшов до кімнати.
 
-Sentence starts and commas reset the phonetic context. Look only at the first sound of the next word.
+> *Our new teacher explains things very interestingly. Our new female teacher is also wonderful. In the evening, he came home. He quickly entered the room.*
 
-«Читаємо українською»:
-* У лісі багато грибів. *(Many mushrooms in the forest.)*
-* В Одесі дуже тепло. *(Very warm in Odesa.)*
-* Було холодно, у парку не було людей. *(Cold, no people in the park.)*
-* Вона читала, в аудиторії було тихо. *(She read, the auditorium was quiet.)*
+After a consonant, we use the form starting with «у», like «новий учитель» or «швидко увійшов». After a vowel, we switch to the form starting with «в», like «нова вчителька». Even at the beginning of a sentence before a consonant, we write «Увечері».
 
-The preposition **у** is mandatory before words starting with **в**, **ф**, **хв**, **тв**, **св**, or **льв**. This avoids a stuttering sound.
+There is one special exception you must memorize. It concerns words that begin with the letters В or Ф, or consonant clusters like ТВ, СВ, ЛЬВ, and ХВ. Before these words, we ALWAYS use «у», no matter what comes before them. We do this to avoid repeating the «V» or «F» sound, which is very hard to say twice in a row.
 
-«Читаємо українською»:
-> — **Ігор:** Твій брат завжди був у Львові? *(Was your brother always in Lviv?)*
-> — **Марія:** Так, він працює у великій фірмі. *(Yes, he works at a big firm.)*
-> — **Ігор:** А Максим був у твоєму дворі. *(But Maksym was in your yard.)*
-> — **Марія:** Це не він. Мій брат має успіх у творчості. *(Not him. My brother has success in creativity.)*
-> — **Ігор:** Він малює картини чи грає у фільмах? *(Draws pictures or plays in films?)*
-> — **Марія:** Він музикант, він був у філармонії. *(He's a musician, he was in the philharmonic.)*
+Я вчора був у Львові. Мій друг працює у великій компанії. Вона має успіх у творчості. Ми дивилися у вікно.
 
-Euphony also changes the first letter of nouns, verbs, and adverbs starting with **у-** or **в-**. 
+> *Yesterday I was in Lviv. My friend works in a large company. She has success in creativity. We looked into the window.*
 
-:::note Чергування (Alternation)
-* мій **у**читель *(my teacher)* → наша **в**чителька *(our teacher)*
-* він **у**війшов *(he entered)* → вона **в**війшла *(she entered)*
-* пив **у**ранці *(drank in the morning)* → читала **в**ранці *(read in the morning)*
+A very common mistake for learners is to say «в вікно» or «в Львові». This forces you to stutter on the consonant. In standard usage, «у вікно» and «у Львові» sound more natural and are easier to pronounce clearly.
+
+:::tip
+**Quick tip**
+If the next word starts with «в» or «ф», don't even look at the previous word. Just use «у».
 :::
 
-«Читаємо українською»:
-* Він увійшов до кімнати. *(He entered the room.)*
-* Вона ввійшла до кабінету. *(She entered the office.)*
-* Це мій новий учитель. *(My new teacher.)*
-* Це наша нова вчителька. *(Our new teacher.)*
+<!-- INJECT_ACTIVITY: match-up-match-sentence-beginnings-with-euphonically-correct-continuations -->
 
-English speakers often treat **у** and **в** as separate words. Do not say «Я вчуся в школі» — the «в шк» cluster is heavy. Say «Я вчуся у школі».
+## З, із чи зі? Правила перед збігами приголосних (Z, Iz, or Zi?) (~660 words)
 
-«Читаємо українською»:
-> — **Оксана:** Ти працюєш у школі чи в університеті? *(School or university?)*
-> — **Степан:** Я працюю в університеті. А ти? *(University. And you?)*
-> — **Оксана:** А я вчуся у школі. Я ще студентка. *(I study at school. I'm a student.)*
-> — **Степан:** Ти була у Франції минулого року? *(France last year?)*
-> — **Оксана:** Ні, я була в Іспанії. *(No, Spain.)*
-> — **Степан:** Це чудово! Іспанія — гарна країна. *(That's great! Spain is a beautiful country.)*
+The **прийменник** (preposition) meaning "with" or "from" has three forms to maintain **милозвучність** (euphony, melodiousness). The default form is «з». We use it most of the time when there is no **збіг** (cluster, collision) of difficult sounds.
 
-<!-- INJECT_ACTIVITY: quiz-euphony-variants -->
+Прийменник «з» — це основний варіант. Ми найчастіше вибираємо цю коротку форму. Вона чудово звучить перед голосним та перед багатьма приголосними звуками. Наприклад, ми кажемо «з братом» або «з Оленою». Але українська мова любить мелодійність і уникає важких звуків. Якщо наступне слово має складний початок, ми змінюємо прийменник. Це особливо важливо перед шиплячими та свистячими приголосними, як-от «ш», «щ», «з» або «с».
 
-## З, із чи зі? Правила перед збігами приголосних
+> *The preposition «з» is the main variant. We most often choose this short form. It sounds wonderful before a vowel and before many consonant sounds. For example, we say "with a brother" or "with Olena". But the Ukrainian language loves melodiousness and avoids heavy sounds. If the next word has a complex beginning, we change the preposition. This is especially important before hissing and sibilant consonants, such as «ш», «щ», «з», or «с».*
 
-Українська мова дуже мелодійна. Ми уникаємо складних збігів приголосних. *(The Ukrainian language is very melodious. We avoid difficult consonant clusters.)* The preposition **з** *(from/with)* has three forms. We use them to maintain a smooth rhythm.
+When we have a collision of consonants, we often need a longer phonetic bridge. The variant «із» adds a **голосний** (vowel) sound to create space.
 
-:::tip Правило (Rule)
-**Форма «з»** *(Default)*:
-* перед голосними *(before vowels)*
-* перед простими приголосними *(before simple consonants)*
+Ми **вживаємо** (to use, to apply) варіант «із» між групами приголосних. Наприклад, ми скажемо «лист із Бразилії», щоб зробити паузу для дихання. Також ми обираємо «із» перед словами, які починаються на «з», «с», «ц», «ш», «ч» або «ж». Мій сусід учора повернувся із села. Вона отримала довгий лист із Запоріжжя. Цей голосний звук допомагає нашому язику підготуватися до наступного приголосного.
 
-**Форма «із»** *(Vowel bridge)*:
-* між групами приголосних *(between consonant clusters)*
-* перед шиплячими: з, с, ц, ш, ч, ж *(before sibilants)*
+> *We use the variant «із» between groups of consonants. For example, we will say "a letter from Brazil" to take a breath. We also choose «із» before words that start with «з», «с», «ц», «ш», «ч», or «ж». My neighbor returned from the village yesterday. She received a long letter from Zaporizhzhia. This vowel sound helps our tongue prepare for the next consonant.*
 
-**Форма «зі»** *(Strong buffer)*:
-* перед важкими збігами: з, с, ш, щ *(before heavy clusters)*
-* слова-винятки: зі мною, зі Львова *(exceptions: with me, from Lviv)*
+:::note
+**Quick tip**
+Think of «із» as a soft cushion. It prevents two hard consonants from crashing into each other, keeping the sentence flowing smoothly and naturally.
 :::
 
-«Читаємо українською»:
-* Він швидко вийшов **з кімнати**. *(He quickly walked from the room.)*
-* Це нова студентка **із Франції**. *(This is a new student from France.)*
-* Вона забрала речі **зі столу**. *(She took things from the table.)*
+Sometimes, the beginning of the next word is so **складний** (complex, compound) that even «із» isn't enough. For the hardest clusters, we use «зі». This is a strict **чергування** (alternation) rule.
 
-The default form is **з**, used when there is no phonetic friction.
+Форма «зі» працює перед найважчими збігами приголосних на початку слова. Вона обов'язкова, коли ці збіги починаються на «з», «с», «ш» або «щ». Діти радісно бігли зі школи додому. Мій колега приїхав зі Львова на конференцію. Також існує рідкісне чергування з формою «зо». Ми вживаємо його лише з числівниками «два» та «три». Ми чекали на нього зо два дні.
 
-«Читаємо українською»:
-> — **Оксана:** Ваш брат повернувся **з Америки**? *(Did your brother return from America?)*
-> — **Степан:** Так, він приїхав **з Європи**. *(Yes, he arrived from Europe.)*
-> — **Оксана:** Ти сьогодні гуляєш **з Оленою**? *(Are you walking with Olena today?)*
-> — **Степан:** Ні, я зараз гуляю **з мамою**. *(No, I'm walking with mom now.)*
+> *The form «зі» works before the hardest consonant clusters at the beginning of a word. It is mandatory when these clusters start with «з», «с», «ш», or «щ». The children happily ran from school towards home. My colleague arrived from Lviv for a conference. There is also a rare alternation with the form «зо». We use it only with the numerals "two" and "three". We waited for him for about two days.*
 
-The form **із** connects two consonants, or appears before hissing sounds.
+In the Genitive case, you will apply these rules constantly to say where someone is from or what group they belong to. Let's see how they affect families and places.
 
-«Читаємо українською»:
-> — **Ігор:** Це старий лист **із Бразилії**? *(Is this an old letter from Brazil?)*
-> — **Марія:** Ні, це лист **із Житомира**. *(No, this is a letter from Zhytomyr.)*
-> — **Ігор:** Ти підеш у кіно **із сестрою**? *(Will you go to the cinema with sister?)*
-> — **Марія:** Так, я працюю **із задоволенням**. *(Yes, I work with pleasure.)*
+Він походить з великої родини. Цей студент приїхав із сім'ї лікарів. Вони щойно повернулися зі школи. Ці правила також впливають на займенники. Скупчення звуків «мн» дуже незручне. Тому ми завжди кажемо «зі мною». Але інші займенники не мають таких проблем. Ми спокійно кажемо «з ним» або «з нею», бо приголосний «н» звучить легко.
 
-The form **зі** softens heavy consonant combinations (**з**, **с**, **ш**, **щ**) and fixed phrases. Never say «з школи».
+> *He comes from a large family. This student came from a family of doctors. They just returned from school. These rules also affect pronouns. The cluster of sounds «мн» is very uncomfortable. Therefore, we always say "with me". But other pronouns do not have such problems. We calmly say "with him" or "with her" because the consonant «н» sounds easy.*
 
-«Читаємо українською»:
-> — **Тарас:** Ви приїхали **зі Львова**? *(Did you arrive from Lviv?)*
-> — **Олена:** Так, ми їхали **зі своїми** друзями. *(Yes, we traveled with our friends.)*
-> — **Тарас:** Ти зараз ідеш **зі школи**? *(Are you walking from school now?)*
-> — **Олена:** Ні, я йду **зі старого** парку. *(No, I'm walking from the old park.)*
-> — **Тарас:** Поїдеш завтра **зі мною**? *(Will you go with me tomorrow?)*
-> — **Олена:** Звісно, поїдемо **зі студентами**. *(Of course, we will go with the students.)*
+Learners often force unnatural combinations by sticking only to the default form «з» or over-applying the exception «зі». True **евфонія** (euphony (technical term)) requires paying attention to the sounds that follow.
 
-In the Genitive case, the preposition and noun form a single melodic unit. Pronounce them together.
+Іноземці часто роблять помилку і кажуть «з школи». Це створює дуже різкий збіг «з-шк», який звучить дуже погано. Правильно казати «зі школи». Інша популярна помилка — «з мною». Це важко вимовити швидко, тому завжди кажіть «зі мною». Іноді студенти додають зайві голосні. Вони кажуть «зі ним», але тут немає складного збігу приголосних. Правильний варіант — «з ним».
 
-<!-- INJECT_ACTIVITY: fill-in-z-variants -->
+> *Foreigners often make a mistake and say «з школи». This creates a very harsh cluster «з-шк», which sounds very bad. It is correct to say «зі школи». Another popular mistake is «з мною». This is hard to pronounce quickly, so always say «зі мною». Sometimes students add unnecessary vowels. They say «зі ним», but there is no complex consonant cluster here. The correct variant is «з ним».*
 
-## І чи й? У складних реченнях
+<!-- INJECT_ACTIVITY: error-correction-find-euphony-errors-in-sentences-e-g-and-correct-them -->
 
-Українська мова має два варіанти сполучника «and». *(The Ukrainian language has two variants of the conjunction "and".)* The conjunctions **і** and **й** mean exactly the same thing. We choose between them based on the surrounding sounds. The letter **й** is a glide, a semi-vowel. It needs a full vowel right before it to "anchor" it smoothly. We use **й** between vowels, and after a vowel before a consonant. 
+## І чи й? У складних реченнях (I or Y? In Complex Sentences) (~550 words)
 
-«Читаємо українською»:
-* **Ольга й Андрій** ідуть у кіно. *(Olha and Andrii are going to the cinema.)*
-* Надворі **тепло й затишно**. *(It is warm and cozy outside.)*
+The rules for the **сполучник** (conjunction) "and" follow the same principles. We choose between «і» and «й» depending on whether we connect a **голосний** (vowel) or a **приголосний** (consonant). 
 
-The letter **і** is a full vowel. We use it to break up hard consonant clusters. We use **і** between consonants, and after a consonant before a vowel.
+Ми завжди обираємо «й» між двома голосними звуками: «Ольга й Андрій». Але якщо слова закінчуються і починаються на приголосний, ми повинні вживати «і»: «син і мати». Ці самі правила працюють у складних реченнях.
 
-«Читаємо українською»:
-* Її **син і мати** живуть тут. *(Her son and mother live here.)*
-* Її **брат іде** додому. *(Her brother is going home.)*
+> *We always choose «й» between two vowel sounds: "Olha and Andriy". But if the words end and begin with a consonant, we must use «і»: "son and mother". These same rules work in complex sentences.*
 
-When we build complex sentences, punctuation marks change the rules. A comma acts as a phonetic "fence" or boundary. Even if the word before the comma ends in a vowel, the pause breaks the glide. After a comma, we start a new phonetic context. Because of this pause, the full vowel **і** is usually preferred to introduce the new clause.
+When building complex sentences, pay close attention to commas. A comma creates a pause, so the choice after it is often guided by what sounds smoother in the next phrase, not by a rigid ban on one form.
 
-«Читаємо українською»:
-> — **Тарас:** Де всі студенти? *(Where are all the students?)*
-> — **Олена:** **Вона співала, і всі слухали.** *(She sang, and everyone listened.)*
-> — **Тарас:** А потім? *(And then?)*
-> — **Олена:** **Ми закінчили, і концерт завершився.** *(We finished, and the concert ended.)*
+Після коми ми робимо паузу, тому попередній звук часто відступає на другий план. Після паузи дуже часто вживають «і»: «Він прийшов, і ми поїхали». Але форма «й» перед голосним теж можлива, якщо вона звучить природно: «Вона заспівала, й усі заплакали». Обидва варіанти трапляються в нормативному мовленні, тож тут важливо не перетворювати милозвучність на жорстку механічну схему.
 
-Notice we say «...співала, і всі...», not «й всі». The comma always resets the rhythm.
+> *After a comma we make a pause, so the previous sound is often less important. After a pause, «і» is very common: "He arrived, and we left". But «й» before a vowel is also possible if it sounds natural: "She started singing, and everyone started crying". Both forms occur in standard usage, so euphony should not be turned into a rigid mechanical rule.*
 
-There is one absolute rule for phonetic hygiene: the "forbidden collision." The glide **й** is never used before words starting with the sounds **й**, **я**, **ю**, **є**, **ї**. These letters already contain a hidden "y" sound. Adding **й** before them would create an ugly "double-y" stutter. We always use **і** before these letters, regardless of the previous word.
+When listing multiple items, analyze each pair of words independently to keep the sentence melodious.
 
-«Читаємо українською»:
-* Це **Олена і її** брат. *(This is Olena and her brother.)*
-* Це **Одеса і Ялта**. *(This is Odesa and Yalta.)*
-* Тут є **кава і яблука**. *(There is coffee and apples here.)*
+Ми дивимося на кожну пару слів окремо. Ми купуємо хліб і масло, бо тут є приголосні. Потім ми беремо каву й молоко, бо тут є голосні. Якщо ми хочемо зробити салат, ми купуємо помідори й огірки. Кожен сполучник вимагає нового аналізу.
 
-Sometimes you might feel unsure about the phonetic rules, or you want to avoid a repetitive "i-i-i" sound in a sentence. Ukrainian has a safe, stylish alternative: the conjunction **та** *(and)*. Unlike **і/й**, **та** does not alternate. It is a stable word that works perfectly in any phonetic environment.
+> *We look at each pair of words separately. We buy bread and butter (і), because there are consonants here. Then we take coffee and milk (й), because there are vowels here. If we want to make a salad, we buy tomatoes and cucumbers (й). Each conjunction requires a new analysis.*
 
-«Читаємо українською»:
-> — **Ігор:** Хто там стоїть? *(Who is standing there?)*
-> — **Марія:** Там стоять **мама та тато**. *(Mom and dad are standing there.)*
-> — **Ігор:** Що вони купили? *(What did they buy?)*
-> — **Марія:** Вони купили **хліб та молоко**. *(They bought bread and milk.)*
+There are two special situations where «і» is mandatory. First, always use «і» before words starting with й, я, ю, є, or ї. Second, «і» is required when contrasting two concepts, because a slight pause emphasizes the contrast.
 
-Let's practice this with compound objects in the Genitive case. This case often groups words together, so euphony is very noticeable. Pay attention to the endings and the conjunctions between them.
+Ми ніколи не ставимо «й» перед словами, які вже мають цей звук на початку. Ми завжди кажемо «Одеса і Ялта». Також ми зберігаємо «і» для філософських або контрастних понять. Ми читаємо про батьків і дітей, думаємо про добро і зло. Тут граматика важливіша за милозвучність.
 
-«Читаємо українською»:
-* У нас **немає сиру й молока**. *(We have no cheese and milk.)*
-* У нас **немає яблук і бананів**. *(We have no apples and bananas.)*
+> *We never put «й» before words that already have this sound at the beginning. We always say "Odesa and Yalta". We also keep «і» for philosophical or contrasting concepts. We read about fathers and children, think about good and evil. Here grammar is more important than euphony.*
 
-<!-- INJECT_ACTIVITY: match-up-conjunctions -->
+If these rules feel overwhelming, there is a convenient alternative: the conjunction «та». It means the same thing, but it never alternates and works between any sounds.
 
-## Все разом: мелодійні речення
+Сполучник «та» — це чудовий помічник. Він ніколи не змінює свою форму. Ви можете вільно казати «мама та тато» замість «мама й тато». Це допомагає уникати повторень у довгих реченнях. Коли ви вже використали багато «і» та «й», просто додайте «та» для різноманітності.
 
-> — **Тарас:** Оленко, поїдемо **у Львів із друзями** на вихідні? *(Olenka, shall we go to Lviv with friends for the weekend?)*
-> — **Оленка:** **У Львів**? *(To Lviv?)* **Із задоволенням**! *(With pleasure!)* Але я поїду туди **з Оленою й Андрієм**. *(But I will go there with Olena and Andrii.)* Вони вже купили квитки. *(They have already bought tickets.)*
-> — **Тарас:** Чудова ідея. *(Great idea.)* А коли ви повернетеся **зі Львова**? *(And when will you return from Lviv?)*
-> — **Оленка:** Ми повернемося **в понеділок** уранці. *(We will return on Monday morning.)* А ти поїдеш **зі мною**? *(And will you go with me?)*
-> — **Тарас:** Ні, я залишуся **в Києві**. *(No, I will stay in Kyiv.)* Буду читати книжку **й відпочивати**. *(I will read a book and rest.)*
-> — **Оленка:** Добре, зустрінемося **в університеті й усе** обговоримо. *(Good, we will meet at the university and discuss everything.)*
-> — **Тарас:** Так, мій брат **і я** чекатимемо на тебе. *(Yes, my brother and I will wait for you.)*
+> *The conjunction «та» is a great helper. It never changes its form. You can freely say "mom and dad" (with та) instead of "mom and dad" (with й). This helps to avoid repetitions in long sentences. When you have already used a lot of «і» and «й», simply add «та» for variety.*
 
-Have you ever noticed how smoothly Ukrainian flows? This is not an accident. Read the dialogue above aloud. Now, try saying «в Львові» or «з мною». You will immediately feel your tongue stop or trip over the **збіг** *(cluster)* of consonants. Ukrainian is often described as a language designed to be sung, not just spoken. If you have to pause awkwardly or push forcefully through a phrase, you have likely violated a rule of **милозвучність** *(euphony)*. Your ears and your mouth are your best teachers here. When a sentence is phonetically correct, it glides without effort.
+:::tip
+**Quick tip** — When connecting nouns in a list, «та» simply means "and". However, in other contexts it can sometimes mean "but" (like «Він обіцяв, та не прийшов»), so pay attention to the flow of the sentence.
+:::
 
-«Читаємо українською»:
-* Ця українська пісня дуже **мелодійна й гарна**. *(This Ukrainian song is very melodious and beautiful.)*
-* Ми любимо співати **в Україні**. *(We love to sing in Ukraine.)*
-* Він завжди говорить **із задоволенням**. *(He always speaks with pleasure.)*
+<!-- INJECT_ACTIVITY: fill-in-complete-sentences-with-the-correct-preposition-or-conjunction-form -->
 
-Think of these rules as the "phonetic ecology" of Ukrainian. The language actively self-regulates to maintain its rhythm and its reputation as one of the most melodic in the world. It actively avoids harsh collisions of consonants and awkward vowel gaps at word boundaries. Mastering these small alternations—choosing between **у** and **в**, **з**, **із**, and **зі**, or **і** and **й**—is the real secret to fluency. It is the key to sounding like a natural, living speaker, rather than a robot reading from a dictionary.
+## Все разом: мелодійні речення (Putting It All Together) (~330 words)
 
-«Читаємо українською»:
-* Моя сестра живе **у Львові, і я** часто їжджу туди. *(My sister lives in Lviv, and I often travel there.)*
-* Вони вийшли **зі школи й пішли в парк**. *(They left the school and went to the park.)*
-* Це складне **правило**, але воно дуже важливе. *(This is a complex rule, but it is very important.)*
+Now we can build multi-clause sentences and see how these rules interact. The ultimate goal is **милозвучність** (euphony, melodiousness). To achieve this natural flow, we rely on **чергування** (alternation). We do this to prevent an awkward **збіг** (cluster, collision) of sounds.
 
-<!-- INJECT_ACTIVITY: error-correction -->
+Ми поїхали у Львів із друзями й провели чудовий вихідний. Ми ставимо «у» перед словом «Львів», бо воно починається на специфічну групу приголосних. Далі ми вибираємо «із», бо слово «друзями» має два приголосні звуки на початку. Нарешті, ми використовуємо «й» після голосного «и» перед приголосним «п». Це робить речення плавним.
 
-## Підсумок — Summary
+> *We went to Lviv with friends and spent a wonderful weekend. We put "у" before the word "Львів" because it starts with a specific group of consonants. Next, we choose "із" because the word "друзями" has two consonant sounds at the beginning. Finally, we use "й" after the vowel "и" before the consonant "п". This makes the sentence smooth.*
 
-Let's review the core rules of **милозвучність** *(euphony)* with a quick Q&A:
+Ukrainian euphony is a natural process, not a rigid mathematical formula. Linguists formally call this concept **евфонія** (euphony (technical term)). We must always analyze whether a word ends in a **голосний** (vowel) or a **приголосний** (consonant) to maintain the spoken rhythm.
 
-*   **Q:** When do I use **у** *(in/at)* before a word starting with a vowel?
-    **A:** Never. You must always use **в** *(in/at)* between two vowels, or after a consonant before a vowel. «Вона живе **в О**десі.» *(She lives in Odesa.)* «Він був **в а**удиторії.» *(He was in the classroom.)*
-*   **Q:** Why can't I say **з мною** *(with me)*?
-    **A:** The consonant cluster **з-мн** is simply too heavy to pronounce smoothly. The variant **зі** *(with)* provides the necessary vowel bridge. «Ти підеш **зі мн**ою?» *(Will you go with me?)*
-*   **Q:** Is **й** *(and)* okay at the start of a sentence?
-    **A:** It is only acceptable if the previous sentence ended in a vowel and you speak without a pause. However, **і** *(and)* is always the standard, safer choice for sentence starts. «**І** ми пішли додому.» *(And we went home.)*
-*   **Q:** What is the "Forbidden Five" for **в**?
-    **A:** Words starting with **в**, **ф**, **хв**, **св**, and **льв**. You must always use **у** before them to avoid a phonetic collision! «Мій брат **у Льв**ові.» *(My brother is in Lviv.)* «Ми стояли **у ф**оє.» *(We stood in the foyer.)*
+Читайте українські тексти вголос кожного дня. Ви швидко відчуєте, як працює справжня милозвучність. Ваш язик сам хоче уникати нагромадження звуків. Якщо фраза звучить занадто важко, ви інтуїтивно знайдете правильне слово. Секрет полягає в тому, щоб слухати мелодію мови.
 
-«Пам'ятайте: українська мова дуже мелодійна.» *(Remember: the Ukrainian language is very melodious.)* «Слухайте уважно, і ви говоритимете правильно.» *(Listen carefully, and you will speak correctly.)*
+> *Read Ukrainian texts aloud every day. You will quickly feel how true euphony works. Your tongue itself wants to avoid a pile-up of sounds. If a phrase sounds too heavy, you will intuitively find the correct word. The secret is to listen to the melody of the language.*
+
+Mastering these small connecting words is the secret to sounding like a native speaker. The surrounding sounds tell us which **прийменник** (preposition) or **сполучник** (conjunction) we need to **вживати** (to use, to apply) when linking ideas together. The rules for "у/в", "з/із/зі", and "і/й" all serve the same phonetic purpose.
+
+Маленькі слова будують велику гармонію. Коли ви говорите плавно, українці чують, що ви поважаєте їхню мову. Ви більше не робите пауз між словами, а поєднуєте їх. Це робить вашу вимову дуже природною.
+
+> *Small words build great harmony. When you speak smoothly, Ukrainians hear that you respect their language. You no longer make pauses between words, but connect them. This makes your pronunciation very natural.*
+
+These principles are essential, especially when building a **складний** (complex, compound) sentence. While an L2 learner might produce a clunky rhythm, a speaker who understands euphony will connect their thoughts effortlessly.
+
+:::tip
+**Quick tip** — Don't overthink the rules when speaking. If you stumble over a cluster of sounds, you probably picked the wrong connecting word. Trust your ear and let the language flow naturally!
+:::
+
+<!-- INJECT_ACTIVITY: quiz -->
 </generated_module_content>
 
-**PIPELINE NOTE — Word count: 2121 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
+**PIPELINE NOTE — Word count: 2801 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -519,67 +488,181 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 243 words | Not found: 31 words
+Verified: 385 words | Not found: 14 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
-  ✗ Іспанія — NOT IN VESUM
-  ✗ Іспанії — NOT IN VESUM
-  ✗ Італії — NOT IN VESUM
-  ✗ Америки — NOT IN VESUM
   ✗ Андрій — NOT IN VESUM
-  ✗ Андрієм — NOT IN VESUM
-  ✗ Анна — NOT IN VESUM
   ✗ Бразилії — NOT IN VESUM
-  ✗ Житомира — NOT IN VESUM
-  ✗ Льв — NOT IN VESUM
+  ✗ Запоріжжя — NOT IN VESUM
+  ✗ Карпати — NOT IN VESUM
   ✗ Львова — NOT IN VESUM
   ✗ Львові — NOT IN VESUM
   ✗ Львів — NOT IN VESUM
-  ✗ Марія — NOT IN VESUM
   ✗ Одеса — NOT IN VESUM
   ✗ Одесі — NOT IN VESUM
-  ✗ Оксана — NOT IN VESUM
-  ✗ Олена — NOT IN VESUM
   ✗ Оленою — NOT IN VESUM
   ✗ Ольга — NOT IN VESUM
-  ✗ Степан — NOT IN VESUM
   ✗ Тарас — NOT IN VESUM
+  ✗ Тарасом — NOT IN VESUM
   ✗ Ялта — NOT IN VESUM
-  ✗ війшла — NOT IN VESUM
-  ✗ війшов — NOT IN VESUM
-  ✗ десі — NOT IN VESUM
-  ✗ льв — NOT IN VESUM
-  ✗ ові — NOT IN VESUM
-  ✗ удиторії — NOT IN VESUM
-  ✗ читель — NOT IN VESUM
-  ✗ чителька — NOT IN VESUM
 
-All 243 other words are confirmed to exist in VESUM.
+All 385 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
-## Verification Tools (MCP)
+---
 
-You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
+## Verification Tools (Shell Commands)
 
-**Core Verification:**
-- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
-- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
+You have access to verification tools via shell commands. Use these to verify
+Ukrainian vocabulary, check grammar, and search textbook content **as you write**.
 
-**Content Quality:**
-- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+**IMPORTANT:** Run verification commands BEFORE finalizing any Ukrainian text.
+Batch multiple verifications together to minimize round-trips.
 
-**Reference:**
-- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp_rag_search_literary` — verify literary references against primary sources
-- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
+### 1. Batch-verify Ukrainian words exist in VESUM (preferred — one call for many words)
 
-**Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_words
+results = verify_words(['слово1', 'слово2', 'слово3'])
+for w, matches in results.items():
+    if matches:
+        print(f'{w}: FOUND — lemma={matches[0][\"lemma\"]}, pos={matches[0][\"pos\"]}')
+    else:
+        print(f'{w}: NOT FOUND — may not exist in standard Ukrainian')
+"
+```
+
+### 2. Verify a single Ukrainian word in VESUM (with full morphological tags)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_word
+results = verify_word('WORD_HERE')
+if results:
+    for m in results:
+        print(f'lemma={m[\"lemma\"]}, pos={m[\"pos\"]}, tags={m[\"tags\"]}')
+else:
+    print('NOT FOUND in VESUM')
+"
+```
+
+### 3. Get all inflected forms of a lemma (declension/conjugation)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_lemma
+forms = verify_lemma('LEMMA_HERE')
+for f in forms[:20]:
+    print(f'{f[\"word_form\"]:20s} {f[\"pos\"]:8s} {f[\"tags\"]}')
+print(f'... {len(forms)} forms total')
+"
+```
+
+### 4. Check CEFR level of a word (is it level-appropriate?)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import query_cefr_level
+results = query_cefr_level('WORD_HERE')
+for r in results:
+    print(f'{r[\"word\"]}: {r[\"level\"]} ({r[\"pos\"]})')
+if not results:
+    print('Not in CEFR database')
+"
+```
+
+### 5. Search textbook content (Ukrainian school textbooks, Grades 1-11)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_textbooks
+keywords = {'keyword1', 'keyword2'}
+results = search_textbooks(keywords, 5)
+for r in results:
+    title = r.get('section_title', r.get('title', ''))
+    grade = r.get('grade', '?')
+    text = r.get('text', '')[:200]
+    print(f'Grade {grade} | {title}')
+    print(f'  {text}')
+    print()
+"
+```
+
+### 6. Search style guide for calques/Russianisms (Антоненко-Давидович, 279 entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_style_guide
+results = search_style_guide('TOPIC_HERE', 3)
+for r in results:
+    print(f'--- {r.get(\"word\", \"\")} [{r.get(\"section\", \"\")}]')
+    print(r.get('text', '')[:300])
+    print()
+if not results:
+    print('No style guide entries found')
+"
+```
+
+### 7. Look up word definition in СУМ-11 (Ukrainian explanatory dictionary, 127K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_definitions
+results = search_definitions('WORD_HERE', 3)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+### 8. Search idioms (Фразеологічний словник, 25K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_idioms
+results = search_idioms('WORD_HERE', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"text\", r.get(\"definition\", \"\")))[:200]}')
+"
+```
+
+### 9. English-to-Ukrainian translation (Балла, 79K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import translate_en_uk
+results = translate_en_uk('ENGLISH_WORD', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+---
+
+**WHEN to use these tools:**
+
+1. **Before writing any Ukrainian text** — batch-verify all key vocabulary with
+   `verify_words` (tool 1). Any word that returns NOT FOUND must be replaced.
+2. **When you suspect a Russicism or calque** — search the style guide (tool 6)
+   and verify the correct Ukrainian form with `verify_word` (tool 2).
+3. **When writing for A1/A2** — check CEFR levels (tool 4) to ensure vocabulary
+   is level-appropriate.
+4. **When unsure about a case ending or conjugation** — use `verify_lemma` (tool 3)
+   to see the full paradigm.
+5. **When covering a grammar topic** — search textbooks (tool 5) to see how
+   Ukrainian school textbooks teach it.
+6. **When you need the precise Ukrainian meaning** — use СУМ-11 (tool 7).
+7. **When looking for natural Ukrainian expressions** — search idioms (tool 8).
+
+**Batching rule:** Collect all words you want to verify, then run ONE `verify_words`
+call instead of multiple `verify_word` calls. This is faster and uses fewer tokens.

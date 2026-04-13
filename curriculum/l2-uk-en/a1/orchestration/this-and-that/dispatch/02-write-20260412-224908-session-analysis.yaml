@@ -1,0 +1,149 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T20-47-db22b2aa.json
+phase: write
+prompt_chars: 66487
+response_chars: 9304
+prompt_words: 9923
+response_words: 1503
+sections:
+- name: preamble
+  start: 0
+  length: 6404
+  fraction: 0.0963
+- name: plan
+  start: 6404
+  length: 6540
+  fraction: 0.0984
+- name: wiki
+  start: 12083
+  length: 27566
+  fraction: 0.4146
+- name: rules
+  start: 40510
+  length: 10606
+  fraction: 0.1595
+- name: skeleton
+  start: 51116
+  length: 5618
+  fraction: 0.0845
+- name: output_spec
+  start: 56734
+  length: 9753
+  fraction: 0.1467
+large_sections:
+- wiki
+directives_total: 56
+directives_covered: 30
+directives_missed:
+- kind: checklist
+  text: No 'Let us...', 'In this section...', or formulaic openers
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: must
+  text: Follow your own pacing plan — each section must hit its word budget (±10%).
+  covered: false
+  coverage_note: 3/12 keywords (25%)
+- kind: must
+  text: For A1 early modules, the learner cannot read Cyrillic — English must dominate.
+  covered: false
+  coverage_note: 2/9 keywords (22%)
+- kind: must
+  text: '**Hit the word target** — you MUST write 1200–1800 words of actual prose.'
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: must
+  text: Your output must be original teaching prose at the correct CEFR level, not
+    a rephrased version of the article.
+  covered: false
+  coverage_note: 4/13 keywords (31%)
+- kind: must
+  text: The introduction must be methodical and layered, building from the simplest
+    concept to the more complex.
+  covered: false
+  coverage_note: 2/10 keywords (20%)
+- kind: must
+  text: '**Independent Phonetics:** The sound `[ц]` must be taught as a native Ukrainian
+    phoneme.'
+  covered: false
+  coverage_note: 2/8 keywords (25%)
+- kind: must
+  text: The learner's reference point must be Ukrainian itself.
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: must
+  text: It must be embedded in relatable, personal stories.
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: must
+  text: A1 modules MUST be built around frequent, low-stakes retrieval exercises.
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: must
+  text: The content must serve these goals.
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: must
+  text: The curriculum must deliver immediate, real-world communicative competence.
+  covered: false
+  coverage_note: 2/8 keywords (25%)
+- kind: must
+  text: '**Structured Comfort Zone Expansion (Вихід із зони комфорту):** While A1
+    is about building foundations, learners must be gently pushed to interact with
+    simple, authentic materials.'
+  covered: false
+  coverage_note: 4/19 keywords (21%)
+- kind: must
+  text: 'The curriculum must teach pure, standard Ukrainian from the start (Source:
+    `ext-ulp_youtube-168`).'
+  covered: false
+  coverage_note: 3/11 keywords (27%)
+- kind: must
+  text: 'A1 vocabulary must be carefully vetted to exclude such Russianisms (Source:
+    `ext-ulp_youtube-168`).'
+  covered: false
+  coverage_note: 2/10 keywords (20%)
+- kind: must
+  text: '** The teaching of Ukrainian must be free from the influence of Russian linguistic
+    colonialism.'
+  covered: false
+  coverage_note: 2/9 keywords (22%)
+- kind: must
+  text: Ukrainian phonetics and grammar must be taught on their own terms.
+  covered: false
+  coverage_note: 2/8 keywords (25%)
+- kind: must
+  text: '**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim**
+    as an `## H2` line.'
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: must
+  text: The total must reach 1200 words minimum.
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: must
+  text: translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: must
+  text: '- **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).'
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-sounds-vs-letters
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-sounds-vs-letters
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-false-friends
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing

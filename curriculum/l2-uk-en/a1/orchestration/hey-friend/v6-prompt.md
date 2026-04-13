@@ -313,25 +313,31 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-- Confirmed: друг, подруга, брат, сестра, пан, пані, синку, дочко, козак, вчитель, бабуся, дідусь, друже, козаче, Маріє, Олено, Тарасе, Андрію, мамо, тату, вчителю, бабусю, дідусю
-- Not found: []
+- Confirmed: друг, подруга, брат, сестра, пан, пані, синку, дочко, козак, вчитель, бабуся, дідусь
+- Not found: (всі слова знайдені)
 
 ## Grammar Rules
-- Кличний відмінок іменників: Правопис § 87, 98 (confirmed via Grade 6 & 10 textbooks) — Іменники I відміни твердої групи мають закінчення -о (мамо, Олено), м’якої — -е/-є (воле, Маріє) або -ю (пестливі: бабусю). Іменники II відміни твердої групи мають закінчення -е (брате, друже, пане, Тарасе), але іменники із суфіксами -к-, -ок-, -ик- та деякі інші мають -у (синку, тату, діду). М’яка група II відміни має -ю (Андрію, вчителю, дідусю).
+- Кличний відмінок (І та ІІ відміни): Правопис §74, §87 — Іменники першої відміни в кличному відмінку однини мають закінчення -о (тверда група: Олено, мамо), -е, -є. Іменники другої відміни мають закінчення -у (тату), -ю (Андрію, дідусю), -е (Тарасе, брате). *(Note: The `query_pravopys` tool only covers sections 1-61, therefore it could not fetch the exact noun declension tables from Chapter 3).*
+- Чергування приголосних (г/ж, к/ч): Правопис §16 — Чергування задньоязикових звуків із шиплячими відбувається при утворенні кличного відмінка (друг → друже, козак → козаче).
 
 ## Calque Warnings
-- Як справи?: OK — Common standard greeting, though alternatives like "Як ся маєш?" exist, "Як справи?" is widely accepted and verified in usage contexts.
-- Ходи сюди: OK — Standard imperative form of "ходити" (to come/walk).
-- Будьте обережні: OK — Standard Ukrainian expression for "be careful".
+- як справи: OK — (не виявлено в словнику кальок)
+- будьте обережні: OK — (не виявлено в словнику кальок)
+- ходи сюди: OK — (не виявлено в словнику кальок)
 
 ## CEFR Check
 - друг: A1 — OK
+- подруга: A1 — OK
 - брат: A1 — OK
 - сестра: A1 — OK
+- пан: A1 — OK
+- пані: A1 — OK
+- син: A1 — OK
+- дочка: A1 — OK
 - вчитель: A1 — OK
-- бабуся: A1 — OK
-- дідусь: A1 — OK
-- пан/пані: A1 — OK (Essential for polite address)
+- козак: B1 — Above target
+- бабуся: A2 — Above target
+- дідусь: A2 — Above target
 </pre_verified_facts>
 
 
@@ -630,12 +636,14 @@ These exercises, adapted from Ukrainian school materials, provide a gold standar
 
 ## Section Structure
 
-Write these sections as H2 headings, in this exact order:
+Write these sections as H2 headings, in this **exact** order:
 
 - `## Діалоги (Dialogues)` (~300 words)
 - `## Кличний відмінок (The Vocative Case)` (~300 words)
 - `## Закінчення кличного (Vocative Endings)` (~300 words)
 - `## Підсумок — Summary` (~300 words)
+
+**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim** as an `## H2` line. This includes the FINAL summary/transition section (`Підсумок: ...`, `Підсумок та перехід до M...`, etc.) — the writer's most common failure is silently dropping the closing section. Do NOT skip it. Do NOT renumber. Do NOT merge headings. The post-write quick-verify check will fail your build if any heading is missing, even if the prose itself is excellent.
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -643,16 +651,17 @@ Each section should follow the word budget specified. The total must reach 1200 
 
 ## Content Rules
 
-TARGET: 20-35% Ukrainian.
+TARGET: 20-35% Ukrainian. ⚠️ HARD GATE — the audit REJECTS modules below 20%.
 LANGUAGE ROLES:
-- THEORY & EXPLANATION: English prose — brief and clear. Show, don't tell.
+- THEORY & EXPLANATION: English prose — brief, 2-3 sentences per concept. No long expository paragraphs. Explain once, then show Ukrainian.
+- UKRAINIAN NARRATIVE PARAGRAPHS: **REQUIRED — minimum 1 per section.** A 3-6 sentence Ukrainian paragraph demonstrating the concept in use, followed IMMEDIATELY by a `> *English translation*` blockquote. This is the PRIMARY driver of hitting the immersion target. Without these paragraphs you cannot reach 20%.
 - PARADIGM TABLES: Conjugation/declension tables with all cells Ukrainian.
-- EXAMPLE LISTS: Ukrainian sentences in bulleted lists (each: Ukrainian — English gloss).
-- DIALOGUES: Mini-dialogues in blockquotes with English gloss per line.
+- EXAMPLE LISTS: Ukrainian sentences in bulleted lists (each: Ukrainian — English gloss). Minimum 5 per rule.
+- DIALOGUES: Mini-dialogues in blockquotes with English gloss per line. At least 1 dialogue per module.
 - PATTERN BOXES: Show transformations: `читати → читай → читайте`.
 - INLINE: Ukrainian words/phrases bolded in English prose.
-- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian. Full Ukrainian sentences go in tables, bulleted lists, dialogues, or pattern boxes.
-Ukrainian sentences max 10 words. Mix container types.
+- STRUCTURAL RULE: Every section MUST contain a Ukrainian narrative paragraph (3-6 sentences, translated in blockquote) PLUS supporting tables/lists/dialogues/pattern boxes. Pure-English sections are FORBIDDEN at M35+.
+Ukrainian sentences max 12 words. Mix container types.
 
 HARD GRAMMAR RULES (audit will reject violations):
 - Max 10 words per Ukrainian sentence (STRICT — count every word)
@@ -682,6 +691,25 @@ HARD GRAMMAR RULES (audit will reject violations):
 - **Zero calques**: No приймати душ→брати душ, приймати рішення→ухвалювати рішення
 - **Zero paronyms**: тактична≠тактовна, ефектний≠ефективний — use the right word, not a similar-sounding one
 - **Natural Ukrainian**: Write how a Ukrainian teacher would explain this to a student. Not robotic, not textbook-dry, not overly casual.
+
+### FORBIDDEN WORDS — never write these (#1189)
+
+The following Russian words have leaked into past builds and broken modules. They are **hard-banned** — the post-write toxic-token scanner will fail your build the moment it sees one. Use the Ukrainian alternative every time, even in dialogues, even in casual prose, even when quoting a learner's mistake (use a `<!-- VERIFY -->` placeholder instead of typing the Russian form):
+
+| Russian (FORBIDDEN) | Ukrainian (USE THIS) |
+|---|---|
+| хорошо | добре |
+| конечно | звичайно / певна річ |
+| спасибо | дякую |
+| пожалуйста | будь ласка / прошу |
+| ничего | нічого |
+| сейчас | зараз |
+| тоже | теж / також |
+| здесь | тут |
+| кот | кіт |
+| кон | кін |
+
+This list is enforced word-for-word by `scripts/build/quick_verify.py` (SEVERE_RUSSIANISMS). If you produce any of these tokens — even inside a quoted example, even inside a dialogue line spoken by a Russian-speaking character — the build halts immediately. There is no exception.
 
 **Authority hierarchy (if uncertain about a word, check in this order):**
 VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (stress) → Антоненко-Давидович (style) → Грінченко (etymology).
@@ -792,45 +820,32 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Діалоги — Dialogues (~330 words total)
-- P1 (~60 words): [Introduction to the scene — setting the context of a birthday party in Ukraine, explaining that calling people across a room requires a specific grammatical shift.]
-- P2 (~100 words): [Dialogue 1: Meeting a friend. Interaction between Іменинник, Олена, and Тарас. Examples: "Олено, привіт!", "Дякую, Тарасе!", "Андрію, ходи сюди!". Focus on natural greeting flow.]
-- P3 (~100 words): [Dialogue 2: Family interactions at the party. Examples: "Мамо, де мій телефон?", "На столі, синку.", "Бабусю, ми йдемо!", "Добре, Андрію!". Focus on high-frequency family vocative forms.]
-- P4 (~70 words): [Observations on the dialogues: pointing out that "Олена" became "Олено" and "Тарас" became "Тарасе", and asking the student if they noticed the pattern of direct address.]
-- <!-- INJECT_ACTIVITY: dialogue-flow-practice --> [fill-in, focus on completing dialogue phrases with vocative forms (e.g., — {Олено}, привіт!), 6 items]
+## Діалоги (~330 words total)
+- P1 (~50 words): Introduce the setting — a busy birthday party where people are calling each other across the room. Establish the need to get someone's attention.
+- P2 (~100 words): Dialogue 1 — Meeting a friend. Include specific lines: "Олено, привіт! Як справи?", "Добре, дякую, Тарасе!", and introducing people: "Андрію, ходи сюди! Це Олена. Олено, це Андрій."
+- P3 (~100 words): Dialogue 2 — At home. Focus on family terms: "Мамо, де мій телефон?", "На столі, синку.", "Тату, а де ключі?", "У кишені, дочко.", "Бабусю, ми йдемо!".
+- P4 (~80 words): Point out the pattern. Notice how names ("Олена" → "Олено", "Тарас" → "Тарасе") and family words ("мама" → "мамо") changed their endings when the person was addressed directly.
+- <!-- INJECT_ACTIVITY: fill-in-dialogue-completion --> [fill-in, Complete dialogue: ___, привіт! (name → vocative), 6 items]
 
-## Кличний відмінок — The Vocative Case (~330 words total)
-- P1 (~80 words): [Defining the "Vocative Case" (кличний відмінок). Explaining that Ukrainian has seven cases, and this one is unique because it is used strictly for calling or addressing someone, unlike English where the name remains static.]
-- P2 (~80 words): [The Grade 4 helper word "Кл.(!)". Explain the mnemonic device used in Ukrainian schools where the exclamation mark reminds learners that they are "shouting" or "calling," triggering the ending change.]
-- P3 (~90 words): [Nominative vs. Vocative contrast. Example: "Олена прийшла" (Talking ABOUT Olena - Nominative) vs. "Олено, ходи сюди!" (Talking TO Olena - Vocative). Explain that using the nominative to address someone is a common L2 error that sounds like saying "Hey, him!" instead of "Hey, you!".]
-- P4 (~80 words): [Decolonization and Identity note: Explain that the vocative case is a living marker of Ukrainian linguistic identity that distinguishes it from Russian (where it has mostly disappeared). Using it correctly is an act of speaking authentic, decolonized Ukrainian.]
+## Кличний відмінок (~330 words total)
+- P1 (~110 words): Explain the concept of Кличний відмінок (Vocative case). Contrast English ("Olena, come here!") with Ukrainian ("Олено, ходи сюди!"), noting that the noun must change. Introduce the Grade 4 textbook helper word: "Кл. (!)", where the exclamation mark reminds you that you are calling someone.
+- P2 (~110 words): Explain why using the Vocative case matters. Contrast the Nominative case (talking ABOUT someone: "Олена прийшла.") with the Vocative case (talking TO someone: "Олено, ходи сюди!"). Emphasize that using Nominative to address someone sounds unnatural, like saying "Hey, him!" instead of "Hey, you!".
+- P3 (~110 words): Briefly introduce formal address using titles. Show that words like "пан" and "пані" are used for formal respect (e.g., "Добрий день, пане Іване!" or "пані Оксано"). Emphasize that "пан" also changes its ending to "пане".
+- <!-- INJECT_ACTIVITY: quiz-vocative-choice --> [quiz, Choose correct vocative: (Олена / Олено / Оленю), привіт!, 8 items]
 
-## Закінчення кличного — Vocative Endings (~340 words total)
-- P1 (~80 words): [Feminine Nouns in -а. Explain the shift -а → -о. Examples: Олена → Олено, мама → мамо, сестра → сестро, Оксана → Оксано. Mention names ending in -ка: Наталка → Наталко.]
-- P2 (~70 words): [Feminine Nouns in -я/ -ія. Explain the shift -ія → -іє (Марія → Маріє) and the shift for soft/diminutive endings -ся → -сю (бабуся → бабусю, Галя → Галю, Наталя → Наталю).]
-- P3 (~70 words): [Masculine Hard Consonants. Explain the shift to -е. Examples: Тарас → Тарасе, Іван → Іване, брат → брате, пан → пане. Explain that a vowel is added to the consonant ending.]
-- P4 (~60 words): [Masculine Soft/-й Endings. Explain the shift to -ю. Examples: Андрій → Андрію, дідусь → дідусю, вчитель → вчителю, Сергій → Сергію.]
-- P5 (~60 words): [Special Cases and Alternations. Explain the irregular -у for "тато → тату" and "син → синку". Briefly introduce the consonant change for "друг → друже" (г → ж) and "козак → козаче" (к → ч).]
-- <!-- INJECT_ACTIVITY: vocative-form-practice --> [fill-in, focus on writing the vocative form from a nominative prompt (e.g., Іван → {Іване}), 10 items]
-- <!-- INJECT_ACTIVITY: vocative-choice-quiz --> [quiz, focus on choosing the correct vocative form in a sentence context (e.g., ___, привіт! [Олено/Олена/Оленю]), 8 items]
-- <!-- INJECT_ACTIVITY: ending-sorting-activity --> [group-sort, sorting names and nouns into -о (feminine), -е (masculine hard), and -ю (soft) categories, 10 items]
+## Закінчення кличного (~340 words total)
+- P1 (~90 words): Explain feminine endings changing to -о. Show that feminine names and nouns ending in -а change to -о. Provide examples: Олена → Олено, мама → мамо, сестра → сестро, подруга → подруго. Mention names ending in -ка (Наталка → Наталко).
+- P2 (~80 words): Explain other feminine endings: -ія and -ся. Show that nouns ending in -ія change to -іє (Марія → Маріє), and nouns ending in -ся change to -сю (бабуся → бабусю).
+- P3 (~90 words): Explain masculine nouns with hard consonants. Show that they take -е. Provide examples: Тарас → Тарасе, Іван → Іване, брат → брате, пан → пане. Introduce the consonant alternations: г → ж (друг → друже), к → ч (козак → козаче).
+- P4 (~80 words): Explain masculine nouns with soft consonants or -й. Show that they take -ю. Provide examples: Андрій → Андрію, дідусь → дідусю, вчитель → вчителю. Mention the special exception for father: тато → тату (students must memorize this -у ending).
+- <!-- INJECT_ACTIVITY: group-sort-endings --> [group-sort, Sort vocative endings: -о (feminine) vs -е (masculine hard) vs -ю (masculine soft), 3 groups]
+- <!-- INJECT_ACTIVITY: fill-in-vocative-forms --> [fill-in, Write vocative: Олена → Олено, Тарас → Тарасе, мама → мамо, 10 items]
 
-## Підсумок — Summary (~300 words total)
-- P1 (~100 words): [Quick recap of the main patterns: -а becomes -о, hard consonants add -е, soft consonants/-й add -ю. Emphasize that vocative is essential for natural-sounding Ukrainian conversation.]
-- P2 (~120 words): [Reference Table:
-| Nominative | Vocative | Pattern |
-| :--- | :--- | :--- |
-| Олена | Олено | -а → -о |
-| Марія | Маріє | -ія → -іє |
-| Тарас | Тарасе | hard + -е |
-| Андрій | Андрію | soft + -ю |
-| тато | тату | special |]
-- P3 (~80 words): [Self-check checklist: 
-- Can you call your mom (мама)? 
-- Can you greet your friend Taras? 
-- Do you know the difference between "Марія прийшла" and "Маріє, ходи сюди!"?]
+## Підсумок — Summary (~320 words total)
+- P1 (~160 words): Provide a Vocative quick reference summary table. Show the patterns: Feminine -а → -о (Олена/мама), Feminine -ія → -іє (Марія), Feminine -ся → -сю (бабуся), Masculine hard + -е (Тарас/брат), Masculine soft/-й + -ю (Андрій/вчитель), and the Special consonant shift г→ж/к→ч + -е (друг → друже).
+- P2 (~160 words): Self-check questions. Provide a bulleted Q&A list for self-assessment: How do you call your mom? (мамо!), How do you call your dad? (тату!), How do you call your brother? (брате!), How do you call your friend Taras? (Тарасе!), How do you call your grandmother? (бабусю!).
 
-Grand total: ~1300 words
+Grand total: ~1320 words
 </skeleton>
 
 ## Output Format
@@ -838,11 +853,55 @@ Grand total: ~1300 words
 Write in Markdown. Use:
 - `## Section Title` for main sections
 - `### Subsection` for subsections within a section
-- `**bold**` for Ukrainian words being taught — EVERY bold Ukrainian word MUST have an English translation on first use, either in parentheses `**слово** (translation)` or inline `**слово** means "translation"`. No exceptions.
+- `**bold**` for Ukrainian words being taught. For **A1 and A2** levels, provide an English translation on first use (e.g. `**стіл** (table)`) because learners lack the vocabulary to infer meaning. For **B1 and above**, do NOT provide inline translations for standard vocabulary — the learner will use the module's словник (vocabulary table). You may provide ONE parenthetical English translation ONLY for highly abstract grammar/linguistic terms on first use (e.g. `**видова пара** (aspectual pair)`).
 - Tables for paradigms (conjugation, declension)
 - `:::tip` / `:::caution` / `:::note` for callout boxes
 - `<!-- INJECT_ACTIVITY: {id} -->` for exercise placement (markers only — do NOT write exercise content)
 
 Do NOT write MDX component syntax, JSON, or DSL exercise blocks (:::quiz, etc.). Plain Markdown with injection markers.
+
+---
+
+## MANDATORY FINAL CHECKLIST (#1189)
+
+Before you finish writing, verify the prose against this checklist. Failing any item will fail the build.
+
+### Section headings (verbatim)
+
+Every heading from "Section Structure" above MUST appear as an `## H2` in your output, in order, **including the closing `Підсумок:` / `Підсумок та перехід до M...` summary**. The single most common writer failure across the B1 build has been silently dropping the final summary section. Re-read your output before stopping. If the last section in the plan is missing, write it now.
+
+### Required vocabulary (every word must appear)
+
+You MUST use **every word** from the list below at least once in the prose, in a natural sentence with bold + English translation. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, прагматика, діагностика, дієвідмінювання, зворотний, двовидовий, одновидовий, неозначено-кількісний, etc.) is the most frequently dropped category — actively find homes for those words even if it means adding a sentence that defines them.
+
+- [ ] друг (friend, m)
+- [ ] подруга (friend, f)
+- [ ] брат (brother, m)
+- [ ] сестра (sister, f)
+- [ ] пан (Mr., m)
+- [ ] пані (Mrs./Ms., f)
+
+### Forbidden words (never produce)
+
+Do not write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use `<!-- VERIFY -->` instead). The post-write toxic-token scanner will fail the build immediately:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+### Level-specific immersion check
+
+The level-appropriate immersion rule was already injected at the top of
+this prompt as `IMMERSION RULE`. Re-read it now BEFORE you stop writing.
+If your level's rule contains a CHECKLIST block, walk through every item.
+If it doesn't, just verify your output matches the LANGUAGE ROLES and
+TARGET stated in that block.
+
+This used to hard-code a B1+ checklist that confused A1/A2 models (where
+translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+The single source of truth is now
+`scripts/pipeline/config_tables.py:IMMERSION_RULES`.
+
+---
 
 Begin writing now. Start with the first section heading.

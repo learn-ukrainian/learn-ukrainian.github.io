@@ -111,89 +111,83 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Що ми зна́ємо? (What Do We Know?)
+## Що ми знаємо? (What Do We Know?)
 
-By completing this phase of the course, you have built the foundational skills needed to describe your immediate environment. You started by simply recognizing and naming isolated objects, and now you have the vocabulary and grammar to talk about everything from the furniture in your room to the items at a local marketplace. You can confidently identify what things are, what color they are, how many of them there are, and where they are in relation to you. This is the critical difference between knowing a few scattered words and actually building coherent descriptions in a new language. 
+You have reached the checkpoint for the "My World" phase. The pedagogical goal of this module is to help you transition from the simple recognition of individual words to actively describing the objects and people around us in Ukrainian. Up to this point, you have been building a mental catalog of nouns, adjectives, numbers, and basic structures. Now, it is time to bring those pieces together. Stepping back and reviewing what you have learned solidifies your foundation before moving forward.
 
-Before we test these skills in a real-world situation, let's make sure your vocabulary backpack is neatly organized. Ask yourself these specific questions to verify your progress:
-- Can you name twenty or more common objects around you right now?
-- Can you determine the grammatical gender of a word like **стіл** (table), **кни́га** (book), or **вікно́** (window) just by looking at the ending?
-- Can you differentiate between the two distinct Ukrainian blues, **си́ній** (dark blue) and **блаки́тний** (light blue)?
-- Can you count from one to one hundred and ask for prices in **гри́вні** (hryvnias)?
-- Can you use demonstrative words like "this" and "that" to point at specific items accurately?
+Test your intuition with a few self-check questions covering your vocabulary and grammar. Can you determine noun gender with confidence? Apply the **він** (he), **вона** (she), and **воно** (it) test for words like **дім** (house), **книга** (book), and **вікно** (window). For many basic nouns at this level, the final letter usually reveals the answer.
+ Can you describe things with adjectives? You must match the adjective endings to the noun, creating harmonious pairs like **новий стіл** (new table) or **велика лампа** (big lamp). Can you name colors, including the distinction between the two blues? Recall the difference between **синій** (dark blue) and **блакитний** (light blue).
 
-If you answered yes to these questions, you are doing great! To truly consolidate this knowledge, we need to sort the words you already know into logical categories. Think about how an adjective like **зеле́ний** (green) functions differently in a sentence from a number like **де́сять** (ten) or a noun like **ла́мпа** (lamp). Grouping these words mentally will help your brain access them much faster when you need to speak in a real conversation.
+:::tip
+**Visualizing Gender**
+When learning a new noun, always memorize it with a matching adjective. Do not just learn **дім**; learn **великий дім**. This builds a natural intuition for gender without relying on rule memorization.
+:::
 
-<!-- INJECT_ACTIVITY: group-sort-categories -->
+Consider the practical side of your knowledge. Can you count and say prices? You should feel comfortable using numbers like **двадцять** (twenty) or **сто гривень** (one hundred hryvnias). Can you say "this" and "that" when pointing at objects? Practice distinguishing between **цей глечик** (this jug) and **та вишиванка** (that embroidered shirt). Can you make things plural? You know how to change singular items into groups, transforming them into **столи** (tables) and **вікна** (windows).
 
-## Чита́ння (Reading Practice)
+<!-- INJECT_ACTIVITY: group-sort-vocabulary -->
 
-Imagine you are visiting a friend's home in Ukraine for the very first time. When you step inside, you immediately notice the objects in their living space, the vibrant colors on the walls, and the arrangement of the furniture. Describing a physical space requires you to combine nouns, adjectives, and plural forms into a smooth, continuous flow of information. Reading a complete text aloud is the best way to practice this flow and internalize the natural rhythm of Ukrainian sentences. Focus on how the descriptive words match the objects they describe, and pay attention to how the endings change.
+## Читання (Reading Practice)
 
-Read this short text titled **Моя́ кімна́та** (My room). Every single word in this description uses vocabulary you have already practiced in previous modules. There are no new surprises here. Read it aloud, slowly and clearly, to train your pronunciation and build muscle memory for these sentence structures:
+Read this short room description aloud. It reviews familiar A1.2 vocabulary and lets you focus on possessives, adjective agreement, demonstratives, numbers, and plurals.
 
-- **Це моя кімната.** (This is my room.)
-- **Вона́ вели́ка і сві́тла.** (It is big and bright.)
-- **Ось мій стіл, він нови́й.** (Here is my table, it is new.)
-- **Тут є три си́ні кни́ги і одна́ жо́вта лампа.** (Here are three dark blue books and one yellow lamp.)
-- **Це вікно вели́ке, а те вікно мале́.** (This window is big, and that window is small.)
-- **Мої́ сті́ни бі́лі.** (My walls are white.)
-- **У мене́ є два стільці́.** (I have two chairs.)
-- **Вони́ старі́, але́ зру́чні.** (They are old but comfortable.)
+**Це моя кімната. Мій стіл великий і новий. Ця лампа біла, а та — жовта. У мене є три книги. Ці книги нові. Стіни білі. Це вікно велике, а те вікно мале. Той килим червоний. Я люблю свою кімнату.**
 
-Notice how the description naturally shifts between singular items and groups of objects. Recognizing when to use a singular form versus a plural form is critical when talking about your environment, as it completely changes the endings of the words around the noun.
+*(This is my room. My table is big and new. This lamp is white, and that one is yellow. I have three books. These books are new. The walls are white. This window is big, and that window is small. That carpet is red. I love my room.)*
 
-<!-- INJECT_ACTIVITY: transform-plural-sentences -->
+Read the text again and notice how it reviews A1.2 patterns. **моя кімната** shows a possessive, **великий і новий** shows adjective agreement, **ця/та/це/те** review demonstratives, and **три книги** plus **ці книги** review numbers and plurals. Use the text as a model and describe your own room in 4-5 short sentences.
 
-## Грама́тика (Grammar Summary)
+## Граматика (Grammar Summary)
 
-The absolute core of describing your world relies on determining the grammatical gender of a noun. In Ukrainian, every object is categorized as masculine, feminine, or neuter. You can always identify the gender by looking at the final letter of the dictionary form of the word. Masculine nouns usually end in a consonant, like **стіл** (table). Feminine nouns typically end in **-а** or **-я**, like **ру́чка** (pen). Neuter nouns end in **-о** or **-е**, like **дзе́ркало** (mirror). The personal pronouns **він** (he/it), **вона** (she/it), and **воно́** (it) are the essential keys that unlock the rest of the grammar patterns in a sentence.
+Understanding the patterns of Ukrainian grammar allows you to build endless combinations of words. The first core pattern is noun gender. The gender of a Ukrainian noun dictates the shape of the words around it. You can identify masculine words by their consonant endings, such as **брат** (brother) or **стіл** (table). Feminine words typically end in **-а** or **-я**, like **сестра** (sister) and **книга** (book). Neuter words almost always end in **-о** or **-е**, as seen in **вікно** (window) and **море** (sea).
 
-Once you know a noun's gender, you must make sure any adjective describing it agrees with that gender. Adjectives change their endings to match the noun perfectly. For a masculine noun, you use a masculine adjective, as in **га́рний день** (beautiful day). A feminine noun requires a feminine adjective, like **га́рна пі́сня** (beautiful song). A neuter noun takes a neuter adjective, such as **га́рне фо́то** (beautiful photo). Remember that adjectives can have a hard stem, taking the ending **-ий** like **черво́ний** (red), or a soft stem, taking the ending **-ій** like **синій** (dark blue). 
+The second pattern is adjective agreement. Adjectives must change their endings to match the gender of the noun they describe. You must also pay attention to hard stems and soft stems. Hard-stem adjectives use the endings **-ий**, **-а**, and **-е**. This creates combinations like **великий стіл** (big table) and **велика книга** (big book). Soft-stem adjectives, which are less common, use the endings **-ій**, **-я**, and **-є**. A classic example is **синій зошит** (dark blue notebook) or **синя лампа** (dark blue lamp).
 
-When you want to point at a specific object, you use demonstrative pronouns. Just like adjectives, these pointing words must agree with the noun's gender. You use **цей**, **ця**, or **це** to say "this" for masculine, feminine, and neuter nouns respectively. To say "that", you use **той**, **та**, or **те**. When you are talking about multiple items, the rules become much simpler. In the plural form, the gender distinction entirely disappears. Both demonstrative pronouns and adjectives take the exact same plural ending. You will always use **ці** (these) and **ті** (those), and plural adjectives will always end in **-і**, such as **га́рні** (beautiful) or **вели́кі** (big).
+The third pattern involves demonstratives. When you want to point at objects, you contrast proximity using the words for "this" (here) versus "that" (there). Use **цей** (this masculine), **ця** (this feminine), or **це** (this neuter) for nearby objects. Use **той** (that masculine), **та** (that feminine), or **те** (that neuter) for objects farther away. If you are pointing at items on a table, you might contrast **цей глечик** (this jug) with **та вишиванка** (that embroidered shirt).
 
-Finally, counting objects and discussing prices involves using numbers as fixed vocabulary chunks. For now, you do not need to worry about complex case changes for the numbers themselves. You simply combine the number with the currency, such as **п'ятдеся́т гри́вень** (fifty hryvnias) or **сто гривень** (one hundred hryvnias). Recognizing these basic combinations allows you to handle simple transactions confidently in shops or markets.
+The final pattern is forming plurals. You have learned the nominative plural endings for basic nouns, such as turning **стіл** into **столи** (tables), **книга** into **книги** (books), and **вікно** into **вікна** (windows). There is a golden rule for adjectives when describing groups: in the plural, adjectives always take the **-і** ending, regardless of gender. This makes plural agreement incredibly simple, resulting in phrases like **великі столи** (big tables) and **нові книги** (new books).
 
-<!-- INJECT_ACTIVITY: quiz-agreement-pairs -->
+<!-- INJECT_ACTIVITY: quiz-gender-agreement -->
+<!-- INJECT_ACTIVITY: quiz-singular-plural -->
 
-## Діало́г (Connected Dialogue)
+## Діалог (Connected Dialogue)
 
-A traditional Ukrainian street market, known as a **я́рмарок** (market/fair), is the perfect place to practice describing objects, asking for prices, and pointing at things you want to buy. These markets are full of authentic cultural crafts and are a vibrant part of Ukrainian life. You will see items like a **виши́ва́нка** (embroidered shirt), a traditional clay **гле́чик** (jug), a beautiful **нами́сто** (necklace), and colorfully decorated **писанки́** (Easter eggs). Shopping for these items requires you to use every skill you have learned in this phase simultaneously: identifying gender, making adjectives agree, using demonstratives, and understanding numbers.
+A real-world situation requires you to combine multiple skills at once. Imagine you are walking through a bustling Ukrainian street market, known as a **ярмарок** (market). A tourist named Іванко and a local friend named Катя are browsing traditional handmade crafts. They stop to look at a **вишиванка** (embroidered shirt), a **глечик** (jug), a **намисто** (necklace), and several **писанки** (decorated eggs).
+ This scenario forces them to describe objects, count them, point at specific items, and negotiate a purchase.
 
-Read the conversation between Іва́нко, a tourist, and his local friend Катя́ as they browse the craft stalls at a bustling market. Pay attention to how they point at specific items and describe them before asking the vendor for the price.
+> **Іванко:** Добрий день! У вас є вишиванки? *(Good afternoon! Do you have embroidered shirts?)*
+> **Катя:** Так! Ця червона чи та синя? *(Yes! This red one or that blue one?)*
+> **Іванко:** Та синя. Скільки вона коштує? *(That blue one. How much does it cost?)*
+> **Катя:** Двісті гривень. *(Two hundred hryvnias.)*
+> **Іванко:** Добре. А ці писанки? Скільки коштує одна писанка? *(Good. And these decorated eggs? How much does one decorated egg cost?)*
+> **Катя:** П'ятдесят гривень. Ці нові, дуже гарні. *(Fifty hryvnias. These are new, very beautiful.)*
+> **Іванко:** Я беру три. А той глечик? *(I will take three. And that jug?)*
+> **Катя:** Сто гривень. *(One hundred hryvnias.)*
+> **Іванко:** Дуже дякую! *(Thank you very much!)*
 
-> **Іванко:** Подиви́сь! Це вишиванка? *(Look! Is this an embroidered shirt?)*
-> **Катя:** Так, це гарна бі́ла вишиванка. *(Yes, this is a beautiful white embroidered shirt.)*
-> **Іванко:** А та си́ня? *(And that dark blue one?)*
-> **Катя:** Той о́дяг теж гарний. *(That clothing is also beautiful.)*
-> **Катя:** А ось ці писанки — ду́же краси́ві! *(And these decorated eggs — very beautiful!)*
+This conversation seamlessly integrates multiple foundational skills into a single interaction, proving that you do not need complex grammar to communicate effectively. Notice how the dialogue uses the phrase **Скільки коштує...?** (How much does it cost?) to ask for prices directly. The speakers constantly clarify their choices by pointing at specific items, using demonstratives like **ця** (this feminine), **та** (that feminine), **ці** (these plural), and **той** (that masculine).
 
-After choosing what they like, they need to find out how much the items cost to complete their purchase. Notice how the numbers and prices are stated directly and clearly.
+:::caution
+**Pointing with Precision**
+Remember that **цей** (this) and **той** (that) must match the noun's gender. Using **ця** for a masculine object sounds just as incorrect to a Ukrainian ear as using "he" for a woman does in English. Always check the noun first!
+:::
 
-> **Іванко:** Скі́льки ко́шту́є цей глечик? *(How much does this jug cost?)*
-> **Катя:** Він коштує сто гривень. *(It costs one hundred hryvnias.)*
-> **Іванко:** А ці нами́ста? *(And these necklaces?)*
-> **Катя:** Одне́ намисто — дві́сті гривень. *(One necklace — two hundred hryvnias.)*
-> **Катя:** У мене є три́ста гривень. Купу́ємо! *(I have three hundred hryvnias. We are buying!)*
+They use numbers purely as vocabulary to state prices, smoothly dropping in **двісті** (two hundred), **п'ятдесят** (fifty), **три** (three), and **сто** (one hundred). Finally, the conversation naturally employs plurals for the items being discussed in bulk, referring to **вишиванки** and **писанки**. This is what active language production looks like when all the individual grammar pieces work together in harmony.
 
-<!-- INJECT_ACTIVITY: fill-in-market-dialogue -->
+<!-- INJECT_ACTIVITY: fill-in-shopping-dialogue -->
 
 ## Підсумок — Summary
 
- At the beginning of this phase, you could only name isolated objects and recognize basic letters. Now, you have the grammatical structure to identify exactly what things are, detail precisely what they look like in terms of size and color, specify how many there are, and pinpoint exactly where they are located relative to you. You are no longer just memorizing a static list of nouns; you are building complete, accurate descriptions. This ability to smoothly link nouns, adjectives, demonstratives, and numbers is the absolute core of practical communication.
+You can now successfully describe your world in Ukrainian. You recognize the genders of over twenty everyday objects and can accurately match them with descriptive adjectives. When you see a masculine, feminine, or neuter noun, you immediately know whether to pair it with **великий** (big masculine), **новий** (new masculine), **червона** (red feminine), or **синє** (dark blue neuter). This ability to automatically align endings means you are no longer translating word-by-word; you are beginning to feel the structural logic of the language.
 
-Review this checklist to confirm your progress and ensure you are ready before moving to the next level:
-- I can easily identify the gender of any A1 noun based on its final letter.
-- I can describe an object's color and size using the correct matching adjective ending.
-- I can accurately use "this" and "that" to point at specific things near or far from me.
-- I can correctly make nouns plural and describe groups of objects.
-- I can count items up to one hundred and ask for prices in a shop or market.
+Beyond abstract grammar, you have acquired highly practical functional skills that are useful in any Ukrainian city. You can confidently count objects and ask for prices at a market. You can point at specific things using the correct forms of "this" and "that," ensuring your listener knows exactly which object you mean without having to touch it. You can also talk about groups of things using the plural form, often changing the noun ending and then matching it with a plural adjective.
+ These tools allow you to navigate basic daily scenarios with confidence and clarity.
 
-In the next module, your language skills will become much more dynamic and active. We will move away from simply describing what things are, and begin exploring what people actually do. Get ready for Phase A1.3, where we will introduce action verbs, common hobbies, and how to talk about what you like to do!
+Now that you can name and describe the "things" in your world, the next step is A1.3 — Actions, where you learn how to talk about what you do. The upcoming module phase will introduce you to verbs.
+ You will discover how to express what you do every day, explain your daily routines, and talk about what you genuinely like or dislike. Describing your world was the first major milestone; interacting with it actively is the next.
 </generated_module_content>
 
-**PIPELINE NOTE — Word count: 1507 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
+**PIPELINE NOTE — Word count: 1346 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -369,75 +363,169 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 60 words | Not found: 39 words
+Verified: 77 words | Not found: 2 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
-  ✗ Іва — NOT IN VESUM
   ✗ Іванко — NOT IN VESUM
-  ✗ Діало — NOT IN VESUM
   ✗ Катя — NOT IN VESUM
-  ✗ Скі — NOT IN VESUM
-  ✗ блаки — NOT IN VESUM
-  ✗ вень — NOT IN VESUM
-  ✗ виши — NOT IN VESUM
-  ✗ вні — NOT IN VESUM
-  ✗ вта — NOT IN VESUM
-  ✗ гле — NOT IN VESUM
-  ✗ дзе — NOT IN VESUM
-  ✗ дяг — NOT IN VESUM
-  ✗ зеле — NOT IN VESUM
-  ✗ зру — NOT IN VESUM
-  ✗ кни — NOT IN VESUM
-  ✗ кімна — NOT IN VESUM
-  ✗ льки — NOT IN VESUM
-  ✗ мпа — NOT IN VESUM
-  ✗ нка — NOT IN VESUM
-  ✗ нко — NOT IN VESUM
-  ✗ ння — NOT IN VESUM
-  ✗ нови — NOT IN VESUM
-  ✗ п'ятдеся — NOT IN VESUM
-  ✗ ркало — NOT IN VESUM
-  ✗ рмарок — NOT IN VESUM
-  ✗ рна — NOT IN VESUM
-  ✗ рне — NOT IN VESUM
-  ✗ рний — NOT IN VESUM
-  ✗ рні — NOT IN VESUM
-  ✗ сві — NOT IN VESUM
-  ✗ сня — NOT IN VESUM
-  ✗ сті — NOT IN VESUM
-  ✗ сять — NOT IN VESUM
-  ✗ тний — NOT IN VESUM
-  ✗ чка — NOT IN VESUM
-  ✗ чні — NOT IN VESUM
-  ✗ шту — NOT IN VESUM
-  ✗ ємо — NOT IN VESUM
 
-All 60 other words are confirmed to exist in VESUM.
+All 77 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
-## Verification Tools (MCP)
+---
 
-You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
+## Verification Tools (Shell Commands)
 
-**Core Verification:**
-- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
-- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
+You have access to verification tools via shell commands. Use these to verify
+Ukrainian vocabulary, check grammar, and search textbook content **as you write**.
 
-**Content Quality:**
-- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+**IMPORTANT:** Run verification commands BEFORE finalizing any Ukrainian text.
+Batch multiple verifications together to minimize round-trips.
 
-**Reference:**
-- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp_rag_search_literary` — verify literary references against primary sources
-- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
+### 1. Batch-verify Ukrainian words exist in VESUM (preferred — one call for many words)
 
-**Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_words
+results = verify_words(['слово1', 'слово2', 'слово3'])
+for w, matches in results.items():
+    if matches:
+        print(f'{w}: FOUND — lemma={matches[0][\"lemma\"]}, pos={matches[0][\"pos\"]}')
+    else:
+        print(f'{w}: NOT FOUND — may not exist in standard Ukrainian')
+"
+```
+
+### 2. Verify a single Ukrainian word in VESUM (with full morphological tags)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_word
+results = verify_word('WORD_HERE')
+if results:
+    for m in results:
+        print(f'lemma={m[\"lemma\"]}, pos={m[\"pos\"]}, tags={m[\"tags\"]}')
+else:
+    print('NOT FOUND in VESUM')
+"
+```
+
+### 3. Get all inflected forms of a lemma (declension/conjugation)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_lemma
+forms = verify_lemma('LEMMA_HERE')
+for f in forms[:20]:
+    print(f'{f[\"word_form\"]:20s} {f[\"pos\"]:8s} {f[\"tags\"]}')
+print(f'... {len(forms)} forms total')
+"
+```
+
+### 4. Check CEFR level of a word (is it level-appropriate?)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import query_cefr_level
+results = query_cefr_level('WORD_HERE')
+for r in results:
+    print(f'{r[\"word\"]}: {r[\"level\"]} ({r[\"pos\"]})')
+if not results:
+    print('Not in CEFR database')
+"
+```
+
+### 5. Search textbook content (Ukrainian school textbooks, Grades 1-11)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_textbooks
+keywords = {'keyword1', 'keyword2'}
+results = search_textbooks(keywords, 5)
+for r in results:
+    title = r.get('section_title', r.get('title', ''))
+    grade = r.get('grade', '?')
+    text = r.get('text', '')[:200]
+    print(f'Grade {grade} | {title}')
+    print(f'  {text}')
+    print()
+"
+```
+
+### 6. Search style guide for calques/Russianisms (Антоненко-Давидович, 279 entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_style_guide
+results = search_style_guide('TOPIC_HERE', 3)
+for r in results:
+    print(f'--- {r.get(\"word\", \"\")} [{r.get(\"section\", \"\")}]')
+    print(r.get('text', '')[:300])
+    print()
+if not results:
+    print('No style guide entries found')
+"
+```
+
+### 7. Look up word definition in СУМ-11 (Ukrainian explanatory dictionary, 127K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_definitions
+results = search_definitions('WORD_HERE', 3)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+### 8. Search idioms (Фразеологічний словник, 25K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_idioms
+results = search_idioms('WORD_HERE', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"text\", r.get(\"definition\", \"\")))[:200]}')
+"
+```
+
+### 9. English-to-Ukrainian translation (Балла, 79K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import translate_en_uk
+results = translate_en_uk('ENGLISH_WORD', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+---
+
+**WHEN to use these tools:**
+
+1. **Before writing any Ukrainian text** — batch-verify all key vocabulary with
+   `verify_words` (tool 1). Any word that returns NOT FOUND must be replaced.
+2. **When you suspect a Russicism or calque** — search the style guide (tool 6)
+   and verify the correct Ukrainian form with `verify_word` (tool 2).
+3. **When writing for A1/A2** — check CEFR levels (tool 4) to ensure vocabulary
+   is level-appropriate.
+4. **When unsure about a case ending or conjugation** — use `verify_lemma` (tool 3)
+   to see the full paradigm.
+5. **When covering a grammar topic** — search textbooks (tool 5) to see how
+   Ukrainian school textbooks teach it.
+6. **When you need the precise Ukrainian meaning** — use СУМ-11 (tool 7).
+7. **When looking for natural Ukrainian expressions** — search idioms (tool 8).
+
+**Batching rule:** Collect all words you want to verify, then run ONE `verify_words`
+call instead of multiple `verify_word` calls. This is faster and uses fewer tokens.

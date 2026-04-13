@@ -1,55 +1,69 @@
 ## Linguistic Scan
-1 critical error found: Incorrect stress placement on the name Катя (written as Катя́, should be Ка́тя).
+No linguistic errors found.
 
 ## Exercise Check
-- `<!-- INJECT_ACTIVITY: match-family -->` placed correctly after the "Сім'я" section. Matches the `match-up` activity in the plan.
-- `<!-- INJECT_ACTIVITY: quiz-possession -->` placed correctly after the "У мене є" section. Matches the `quiz` activity in the plan.
-- `<!-- INJECT_ACTIVITY: fill-in-possessives -->` placed correctly after the "Мій, моя, моє" section. Matches the `fill-in` activity for possessives in the plan.
-- `<!-- INJECT_ACTIVITY: fill-in-dialogue -->` placed correctly after the "Підсумок" section. Matches the dialogue `fill-in` activity in the plan.
-All 4 placeholders are present, evenly distributed, test what was just taught, and match the plan's specifications exactly.
+- All 4 planned inline markers are present: `match-up-family-vocab`, `quiz-u-tebe-ie`, `fill-in-possessives`, `fill-in-dialogue-intro`.
+- Each marker appears after the relevant teaching block, and the IDs align with the 4 `activity_hints` in the plan.
+- No inline DSL exercise blocks appear in the module prose.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 9/10 | Covered almost all points perfectly, but missed the shorter vocabulary variants `баба` and `дід` which were explicitly specified in the outline: "Extended: бабуся/баба, дідусь/дід". |
-| 2. Linguistic accuracy | 9/10 | Highly accurate text, except for the stress mark on Катя́ (should be Ка́тя). The rest of the vocabulary, phrasing, and structures are correct. |
-| 3. Pedagogical quality | 10/10 | Excellent PPP flow. Perfectly follows the constraint to avoid introducing the genitive negative prematurely ("У мене немає") and teaches possession as memorized chunks instead. |
-| 4. Vocabulary coverage | 9/10 | All required and recommended words are present. Missed the informal/shorter variants `баба` and `дід` for grandparents from the section outline. |
-| 5. Exercise quality | 10/10 | Markers are placed optimally after each target concept and align perfectly with the plan's activity hints. |
-| 6. Engagement & tone | 10/10 | Friendly, natural tone. Great cultural context about showing photos and the nature of small talk in Ukraine. |
-| 7. Structural integrity | 9/10 | Word count is strong (1456 words). Deducted slightly for an awkward repetition of the speaker tag `> **Оля:**` three times consecutively for a single conversational turn. |
-| 8. Cultural accuracy | 10/10 | Correctly emphasizes that there is no single word for "grandparents" in Ukrainian, a great decolonized insight that prevents learners from mapping English directly onto Ukrainian. |
-| 9. Dialogue & conversation quality | 9/10 | Dialogues are natural and fit the scenarios perfectly, though the line-by-line formatting of Olya's monologue was slightly robotic. |
+| 1. Plan adherence | 8/10 | The planned H2 sections are present and the core outline points are covered, but search confirmed 0 occurrences of `Ukrainian Lessons`, `ULP`, `Episode 6`, `Episode 7`, or `Episode 10` in the module, so the cited references were not integrated into the prose. |
+| 2. Linguistic accuracy | 10/10 | No Russianisms, Surzhyk, calques, paronym misuse, bad case endings, or Russian-only characters were found. Verified forms such as `родина`, `батько`, `дочка`, `донька`, `чоловік`, `дружина`, `вчителька`, `інженер`, `класно`, and `дивись` exist in VESUM. |
+| 3. Pedagogical quality | 8/10 | The module keeps a usable PPP flow, but the vocabulary section is still largely glossary-style exposition: `The most essential pairs are **мама** ... **тато** ... **брат** ... **сестра** ... **син** ... **дочка**.` It needs more sentence-level contextualization before the activity. |
+| 4. Vocabulary coverage | 9/10 | Required and recommended plan vocabulary is well covered in prose, including `родина`, `батько`, `син`, `дочка`, `батьки`, `дядько`, `тітка`, `чоловік`, `дружина`, `у вас є`, `його`, `її`, `один`, `одна`, `два`, `дві`, `чи`, and `тільки`. |
+| 5. Exercise quality | 9/10 | Marker count matches the plan exactly, the IDs match the hinted activity types, and the markers are distributed across the relevant sections rather than dumped only at the end. |
+| 6. Engagement & tone | 9/10 | The tone is teacherly and calm, without gamified fluff or self-congratulation. |
+| 7. Structural integrity | 6/10 | The H2 structure is clean and ordered correctly, but the deterministic pipeline count is 1112 words, below the 1200 target. |
+| 8. Cultural accuracy | 10/10 | The module presents Ukrainian on its own terms and avoids Russian-centered framing. |
+| 9. Dialogue & conversation quality | 7/10 | The situations fit the plan, but Dialogue 1 is still mostly drill-like: `У тебе є брати чи сестри? ... Так ... У мене тільки один брат. ... Коля.` It functions, but it does not yet sound like a natural photo-sharing exchange. |
 
 ## Findings
-[Linguistic accuracy] [Critical]
-Location: `> **Оля:** Це моя сестра Катя́ і мої́ брати — Іва́н і Дени́с. *(This is my sister Katya and my brothers — Ivan and Denys.)*`
-Issue: Incorrect stress placement on the name Катя. It should be stressed on the first syllable (Ка́тя), not the second (Катя́).
-Fix: Fix the stress mark, and combine this with the dialogue formatting fix below.
+[PLAN ADHERENCE] [SEVERITY: major]  
+Location: whole module; search found 0 occurrences of `Ukrainian Lessons`, `ULP`, `Episode 6`, `Episode 7`, `Episode 10`  
+Issue: The plan cites three specific source references, but the prose never acknowledges or integrates them.  
+Fix: Add a brief source note after the dialogue section tying the patterns to ULP Episodes 6, 7, and 10.
 
-[Structural integrity] [Minor]
-Location: 
-> **Оля:** Це моя ма́ма Мари́на. *(This is my mom Maryna.)*
-> **Оля:** Це мій та́то Євге́н. *(This is my dad Yevhen.)*
-> **Оля:** Це моя сестра Катя́ і мої́ брати — Іва́н і Дени́с. *(This is my sister Katya and my brothers — Ivan and Denys.)*
-Issue: Unnatural repetition of the speaker tag `> **Оля:**` for three consecutive sentences in the same conversational turn.
-Fix: Combine into a single paragraph with one speaker tag.
+[PEDAGOGICAL QUALITY] [SEVERITY: major]  
+Location: `The most essential pairs are **мама** (mother) or **мати**, and **тато** (father) or **батько**...`  
+Issue: This section teaches too much as an English glossary list instead of moving quickly into reusable A1 sentence frames.  
+Fix: Insert 2-3 tiny Ukrainian model sentences using `Це моя...` and `У мене є...` before the activity marker.
 
-[Plan adherence] [Major]
-Location: `A grandmother is a **бабуся**, and a grandfather is a **діду́сь**.`
-Issue: The plan explicitly required teaching `бабуся/баба` and `дідусь/дід` under extended family vocabulary. The shorter forms `баба` and `дід` are missing from the prose.
-Fix: Add `ба́ба` and `дід` as alternatives.
+[STRUCTURAL INTEGRITY] [SEVERITY: major]  
+Location: module as a whole; pipeline note says `Word count: 1112 words`  
+Issue: The module is below the required 1200-word target.  
+Fix: Expand the possessives section with one short nominative-only drill and the vocabulary section with a few contextualized examples.
+
+[DIALOGUE & CONVERSATION QUALITY] [SEVERITY: major]  
+Location:  
+`> **Оля:** Ого! У мене тільки один брат. *(Wow! I have only one brother.)*`  
+`> **Марк:** Як його звати? *(What is his name?)*`  
+`> **Оля:** Коля. *(Kolya.)*`  
+Issue: The exchange is correct but thin and abrupt; it reads like a drill, not like a teen conversation about photos.  
+Fix: Replace the ending with a fuller response that keeps the same grammar but adds a natural follow-up.
 
 ## Verdict: REVISE
-The module is excellent overall but requires a critical fix for the stress mark on Катя, the addition of the missing 'баба/дід' vocabulary from the plan, and a minor formatting cleanup in the dialogue block.
+No linguistic errors were found, but the module misses explicit source integration, stays under the 1200-word target, and needs more natural dialogue plus more contextualized teaching in the vocabulary block. With findings present and multiple dimensions below 9, this is `REVISE`.
 
 <fixes>
+- insert_after: |
+    This short monologue combines your name, family words, and **У мене є** in one simple introduction.
+  content: |
+    These dialogue patterns come directly from Ukrainian Lessons Podcast Season 1, Episodes 6, 7, and 10: family vocabulary, **у мене є**, and simple possessives in connected speech.
+- insert_after: |
+    Note that **чоловік** can mean both "man" and "husband" depending on the context, while **дружина** specifically means "wife".
+  content: |
+    Before the activity, turn the word list into tiny sentences: **Це моя родина. Це моя мама і мій тато. У мене є брат і сестра.** You can also compare the two family words in context: **Це моя сім'я. Це моя родина.** These short models help you hear the vocabulary in sentences instead of only as isolated labels.
+- insert_after: |
+    The informal word for "your" follows the exact same pattern: **твій** (your — m), **твоя** (your — f), **твоє** (your — n), and **твої** (your — pl). You use these exactly like the "my" forms. For third-person possession, Ukrainian uses **його** (his) and **її** (her). Unlike the other pronouns, **його** and **її** never change their form, regardless of the noun's gender. You will use all these forms in the nominative case with the identification construction: **Це моя мама** (This is my mom), **Це твій тато** (This is your dad), or **Це його сестра** (This is his sister).
+  content: |
+    One more short drill makes the pattern clearer: **Це мій брат. Це моя сестра. Це мої батьки.** Now ask and answer with photos: **Це твій тато? — Так, це мій тато. А це твоя мама? — Так, це моя мама.** Keep the pattern in the nominative only and repeat it aloud before the exercise.
 - find: |
-    > **Оля:** Це моя ма́ма Мари́на. *(This is my mom Maryna.)*
-    > **Оля:** Це мій та́то Євге́н. *(This is my dad Yevhen.)*
-    > **Оля:** Це моя сестра Катя́ і мої́ брати — Іва́н і Дени́с. *(This is my sister Katya and my brothers — Ivan and Denys.)*
+    > **Оля:** Ого! У мене тільки один брат. *(Wow! I have only one brother.)*
+    > **Марк:** Як його звати? *(What is his name?)*
+    > **Оля:** Коля. *(Kolya.)*
   replace: |
-    > **Оля:** Це моя ма́ма Мари́на. Це мій та́то Євге́н. Це моя сестра Ка́тя і мої́ брати — Іва́н і Дени́с. *(This is my mom Maryna. This is my dad Yevhen. This is my sister Katya and my brothers — Ivan and Denys.)*
-- find: "A grandmother is a **бабуся**, and a grandfather is a **діду́сь**."
-  replace: "A grandmother is a **бабуся** (or **ба́ба**), and a grandfather is a **діду́сь** (or **дід**)."
+    > **Оля:** Ого! У мене тільки один брат. Його звати Коля. *(Wow! I have only one brother. His name is Kolya.)*
+    > **Марк:** Класно! У мене є два брати — Іван і Денис, а сестра — Марія. *(Cool! I have two brothers, Ivan and Denys, and a sister, Mariia.)*
 </fixes>

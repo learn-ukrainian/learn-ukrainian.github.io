@@ -1,0 +1,55 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T01-33-35399e37.json
+phase: write-chunk-03
+prompt_chars: 48156
+response_chars: 10623
+prompt_words: 6562
+response_words: 1547
+sections:
+- name: header
+  start: 0
+  length: 440
+  fraction: 0.0091
+- name: skeleton
+  start: 440
+  length: 2134
+  fraction: 0.0443
+- name: prior_summary
+  start: 2574
+  length: 3565
+  fraction: 0.074
+- name: plan
+  start: 6139
+  length: 15674
+  fraction: 0.3255
+- name: wiki
+  start: 16948
+  length: 26215
+  fraction: 0.5444
+- name: output_spec
+  start: 48028
+  length: 128
+  fraction: 0.0027
+large_sections:
+- wiki
+directives_total: 12
+directives_covered: 8
+directives_missed:
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: skeleton_para
+  text: 'P6 (120w): Dialogue: Two colleagues at lunch discussing career plans. Semi-formal
+    register. Focus on planned actions: ''Хочу подати (pf) на підвищення''. ''Думаю
+    змінити (pf) роботу''. Using present tense for current state: ''Вже п''ять років
+    працюю (impf) тут''.'
+  covered: false
+  coverage_note: 11/31 keywords (35%)
+- kind: inject_activity
+  text: fill-in-aspect-work
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-aspect-logic
+  covered: false
+  coverage_note: marker missing

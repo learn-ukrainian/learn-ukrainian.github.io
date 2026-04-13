@@ -1,21 +1,22 @@
-# Section-by-Section Generation — Section 2/5
+# Section-by-Section Generation — Section 2/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 43: Іду, їду, лечу (A2, A2.6 [Aspect, Tenses, and Motion])
-**Section to write:** Дієвідміна та доконаний вид (~550 words total)
+**Section to write:** Дієвідміна та доконаний вид (~550 words)
 **Word target for this section:** 550 words (aim for 605 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Дієвідміна та доконаний вид (~550 words total)
-- P1 (~130 words): [Present tense conjugation of "іти" (ід-у, -еш, -е) and "ходити". Focus on the д → дж alternation in the 1st person singular: "Я ходжу", but "Ти ходиш". Explain that "ходити" is a 2nd conjugation verb (-ять ending).]
-- P2 (~130 words): [Conjugation of "їхати" (їд-у, -еш, -е) and "їздити". Highlight the complex зд → ждж alternation in "Я їжджу". Provide the full paradigm for "їздити": їжджу, їздиш, їздить, їздимо, їздите, їздять.]
-- P3 (~130 words): [Conjugation of "летіти" (2nd conjugation) and "літати" (1st conjugation). Explain the т → ч change in "Я лечу" (but "Ти летиш") and the standard -ю, -єш endings for "літати" (літаю, літаєш, літають).]
-- P4 (~160 words): [The Perfective Aspect with the prefix по-. Explain that "піти", "поїхати", and "полетіти" mean "to set off" or "to leave". Focus on the irregular past tense of "піти": пішов (m), пішла (f), пішло (n), пішли (pl). Example: "Він уже пішов геть" (He has already left).]
-- <!-- INJECT_ACTIVITY: fill-in-motion-aspect --> [fill-in, Complete sentences with the correct motion verb form based on whether the action is one-way/now or habitual/round-trip, 8 items]
+## Дієвідміна та доконаний вид (~550 words)
+- P1 (~120 words): [Explain the present tense conjugation for the "on foot" pair. `іти` (I conjugation): іду, ідеш, іде, ідемо, ідете, ідуть. `ходити` (II conjugation): ходжу, ходиш, ходить, ходимо, ходите, ходять. Highlight the д → дж alternation in the 1st person singular "ходжу".]
+- P2 (~120 words): [Explain the present tense conjugation for the "vehicle" pair. `їхати` (I conjugation): їду, їдеш, їде, їдемо, їдете, їдуть. `їздити` (II conjugation): їжджу, їздиш, їздить, їздимо, їздите, їздять. Highlight the irregular зд → ждж alternation in "їжджу".]
+- P3 (~120 words): [Explain the present tense conjugation for the "air" pair. `летіти` (II conjugation): лечу, летиш, летить, летимо, летите, летять (note т → ч). `літати` (I conjugation): літаю, літаєш, літає, літаємо, літаєте, літають.]
+- P4 (~140 words): [Introduce the perfective forms using the prefix `по-`. Explain that adding `по-` to the unidirectional verbs means "to leave/set off". `піти` (to leave on foot), `поїхати` (to leave by vehicle), `полетіти` (to fly off). Provide examples: "Він пішов додому" (He left for home), "Вона поїхала на роботу" (She left for work), "Літак полетів" (The plane took off).]
+- P5 (~50 words): [Brief summary contrasting the ongoing present action (іду, їду) with the completed past action of leaving (пішов, поїхав).]
+- <!-- INJECT_ACTIVITY: fill-in-motion-context --> [fill-in, Complete sentences with the correct motion verb form based on whether the action is one-way/now or habitual/round-trip, 8 items]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -23,7 +24,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-for movement on foot: **іти** *(to go, walk, unidirectional)* and **ходити** *(to go, walk, multidirectional)*. Дієслово «іти» означає, що ви йдете кудись саме зараз. The verb "іти" shows that you are walking somewhere right now, in one specific direction. > — **Оксана:** Куди ти йдеш? *(Where are you going?)* > — **Марко:** Я йду до парку. *(I am walking to the park.)* Дієслово «ходити» означає регулярну дію або рух туди й назад. The verb "ходити" is for regular habits, repeated actions, or completed round trips. > — **Оксана:** Ти часто ходиш у цей парк? *(Do you often go to this park?)* > — **Марко:** Так, я ходжу сюди щодня. *(Yes, I go here every day.)* In the past tense, a completed trip (going to a place and coming back) is also a round trip, so we use the multidirectional verb "ходити". Вчора я ходив у кіно. *(Yesterday I went to the cinema.)* I went there, watched the movie, and came back. Це закритий цикл. *(This is a closed loop.)* Друга пара — це рух транспортом. The second pair is for movement by vehicle: **їхати** *(to go by transport, ride, unidirectional)* and **їздити** *(to go by transport, ride, multidirectional)*. Якщо ви використовуєте автобус, поїзд, машину або велосипед, вам потрібні ці дієслова. If you use a bus, train, car, or bicycle, you must use these verbs. You cannot use "іти" or "ходити" if you are in a vehicle. Дієслово «їхати» описує рух зараз. "Їхати" is one-way motion right now or a planned one-way trip. > — **Мама:** Ви вже їдете додому? *(Are you driving home already?)* > — **Син:** Так, ми їдемо. *(Yes, we are driving.)* Дієслово «їздити» — це регулярні поїздки. "Їздити" describes habitual or regular trips by transport, or going back and forth multiple times. > — **Анна:** Ви їздите на море щоліта? *(Do you go to the sea every summer?)* > — **Ігор:** Ні, ми їздимо туди рідко. *(No, we go there rarely.)* Третя пара — це рух у повітрі. The third pair is for movement through the air: **летіти** *(to fly, unidirectional)* and **літати** *(to fly, multidirectional)*. Дієслово «летіти» описує політ зараз або конкретний запланований рейс. The verb "летіти" describes a flight happening right now, or one specific scheduled flight to a destination. > — **Тарас:** Де зараз твій брат? *(Where is your brother right now?)* > — **Олена:** Він летить до Києва. *(He is flying to Kyiv.)* Дієслово «літати» означає регулярні польоти або загальну здатність істоти літати. The verb "літати" means regular flights, round-trip flights over time, or the general ability to fly. > — **Тарас:** Твій брат часто літає? *(Does your brother fly often?)* > — **Олена:** Так, він часто літає у справах. *(Yes, he often flies for business.)* Птахи літають високо в небі. *(Birds fly high in the sky.)* Це їхня природна здатність. *(This is their natural ability.)* They are not just flying to one destination right now; they fly in general. <!-- INJECT_ACTIVITY: group-sort, Sort motion verb forms into unidirectional vs. multidirectional categories -->
+the movement is happening right now and has one specific direction. For example, "я іду до магазину" means I am outside right now and my path lies toward the store. In contrast, "ходити" means a regular action, a habit, or a round trip. Therefore, we say "я ходжу до магазину щодня", because this repeats constantly.* Коли ми хочемо сказати про початок руху або про те, що ми залишили якесь місце пішки, ми використовуємо дієслово доконаного виду «піти». Це дуже корисне слово для щоденних розмов. Наприклад, «він пішов додому» означає, що він завершив свої справи тут і почав свій шлях додому. > *When we want to talk about the start of movement or that we left some place on foot, we use the perfective verb **піти** (to leave on foot). This is a very useful word for daily conversations. For example, "він пішов додому" means that he finished his business here and started his journey home.* :::tip **Did you know?** When Ukrainians talk about rain or snow, they use the verb **іти**. We say «іде дощ» (it is raining) or «іде сніг» (it is snowing), literally meaning the rain or snow is walking down to earth right now. ::: Друга пара описує рух будь-яким транспортом. Це дієслова «їхати» та «їздити». Це може бути автомобіль, автобус, поїзд або велосипед. Дієслово «їхати» описує рух в один бік прямо зараз. Наприклад, «ми їдемо до Львова» означає, що ми зараз сидимо в поїзді чи машині і рухаємося до цього міста. Дієслово «їздити» ми використовуємо для регулярних поїздок: «ми їздимо до Львова щоліта». > *The second pair describes movement by any transport. These are the verbs **їхати** and **їздити** (to go by vehicle). This can be a car, bus, train, or bicycle. The verb "їхати" describes motion in one direction right now. For example, "ми їдемо до Львова" means we are currently sitting in a train or car and moving toward this city. We use the verb "їздити" for regular trips: "ми їздимо до Львова щоліта".* Для початку подорожі ми маємо дієслово доконаного виду «поїхати». Воно показує результат — ви вже не тут, ви в дорозі. Коли ви кажете «вона поїхала на роботу», це означає, що вона сіла в транспорт і вирушила в дорогу. The third pair of verbs is specifically for traveling through the air: **летіти** and **літати** (to fly). Like the previous pairs, "летіти" is used for unidirectional motion happening at the moment of speech or a specific planned trip. If you are watching an airplane in the sky right now, or discussing a confirmed flight for tomorrow, you can say: «Літак летить до Києва» (The plane is flying to Kyiv). The second verb, "літати", is multidirectional and habitual. You use it to describe someone's general ability to fly, the nature of birds, or a recurring flight routine. You would say «Він часто літає до Києва» (He often flies to Kyiv) if it is a regular business trip, or «Птахи літають високо» (Birds fly high) to state a general fact. <!-- INJECT_ACTIVITY: group-sort-motion-verbs -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -523,7 +524,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -542,18 +610,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] іти / ходити (to go on foot — unidirectional/multidirectional)
+- [ ] їхати / їздити (to go by vehicle — unidirectional/multidirectional)
+- [ ] летіти / літати (to fly — unidirectional/multidirectional)
+- [ ] піти (to leave on foot — pf.)
+- [ ] поїхати (to leave by vehicle — pf.)
+- [ ] казати / кажу (to say — stem change model)
+- [ ] пити / п'ю (to drink — irregular model)
+- [ ] боротися / борюся (to fight/struggle — reflexive model)
+- [ ] напрямок (direction)
+- [ ] рух (movement, motion)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Дієвідміна та доконаний вид (~550 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

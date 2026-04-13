@@ -1,18 +1,55 @@
 {
   "total_items": 31,
-  "grounded_items": 30,
+  "grounded_items": 24,
   "ungrounded": [
     {
-      "word": "книгу",
-      "exercise_type": "fill-in",
-      "context": "Я люблю ____ книгу.",
+      "word": "дії",
+      "exercise_type": "group-sort",
+      "context": "Actions (Дії)",
+      "role": "context"
+    },
+    {
+      "word": "речі",
+      "exercise_type": "group-sort",
+      "context": "Things (Речі)",
+      "role": "context"
+    },
+    {
+      "word": "люблю'",
+      "exercise_type": "true-false",
+      "context": "We use 'я люблю' with actions like 'читати'.",
+      "role": "context"
+    },
+    {
+      "word": "читати'",
+      "exercise_type": "true-false",
+      "context": "We use 'я люблю' with actions like 'читати'.",
+      "role": "context"
+    },
+    {
+      "word": "подобається'",
+      "exercise_type": "true-false",
+      "context": "We use 'мені подобається' with things like 'книга'.",
+      "role": "context"
+    },
+    {
+      "word": "книга'",
+      "exercise_type": "true-false",
+      "context": "We use 'мені подобається' with things like 'книга'.",
+      "role": "context"
+    },
+    {
+      "word": "не'",
+      "exercise_type": "true-false",
+      "context": "The word 'не' is placed directly before the verb to make it ",
       "role": "context"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 14,
-    "tested_in_exercises": 13,
+    "tested_in_exercises": 12,
     "not_tested": [
+      "любити",
       "подобатися"
     ]
   },

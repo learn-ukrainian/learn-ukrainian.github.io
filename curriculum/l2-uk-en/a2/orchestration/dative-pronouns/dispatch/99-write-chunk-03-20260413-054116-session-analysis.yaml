@@ -1,0 +1,55 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T03-38-e8c08b04.json
+phase: write-chunk-03
+prompt_chars: 43507
+response_chars: 4821
+prompt_words: 6225
+response_words: 824
+sections:
+- name: header
+  start: 0
+  length: 472
+  fraction: 0.0108
+- name: skeleton
+  start: 472
+  length: 1497
+  fraction: 0.0344
+- name: prior_summary
+  start: 1969
+  length: 3312
+  fraction: 0.0761
+- name: plan
+  start: 5281
+  length: 12212
+  fraction: 0.2807
+- name: wiki
+  start: 10078
+  length: 25751
+  fraction: 0.5919
+- name: output_spec
+  start: 43244
+  length: 263
+  fraction: 0.006
+large_sections:
+- wiki
+directives_total: 15
+directives_covered: 11
+directives_missed:
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 1/11 keywords (9%)
+- kind: inject_activity
+  text: match-up, Match nominative pronoun to its dative form (я→мені, ти→тобі, etc.),
+    8 items
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in, Complete sentences with the correct dative pronoun based on context,
+    8 items
+  covered: false
+  coverage_note: marker missing

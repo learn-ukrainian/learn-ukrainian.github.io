@@ -2,12 +2,12 @@
   "module": "b1-baseline-future-aspect",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-11T01:47:17.896350Z",
+  "last_audit": "2026-04-11T12:25:00.425886Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-11T01:45:53.408209Z",
+    "md": "2026-04-11T12:24:01.602183Z",
     "meta": null,
-    "activities": "2026-04-11T01:37:53.748775Z",
+    "activities": "2026-04-11T12:15:59.379494Z",
     "vocabulary": "2026-04-09T01:58:49.444558Z",
     "research": null,
     "plan": "2026-04-04T21:31:33.259996Z"
@@ -20,8 +20,8 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 2,
-      "message": "6598/4000 (raw: 6721) | immersion: 27.5% LOW (target 75-100% (B1.0 Bridge)) | richness: 71% < 85% min (checkpoint) - REWRITE needed"
+      "violations": 3,
+      "message": "5454/4000 (raw: 5536) | engagement: 1/5 | immersion: 29.2% LOW (target 75-100% (B1.0 Bridge)) | richness: 72% < 85% min (checkpoint)"
     },
     "activities": {
       "status": "fail",
@@ -60,9 +60,7 @@
   },
   "overall": {
     "status": "fail",
-    "blocking_issues": [
-      "1 Outline Compliance Errors"
-    ],
+    "blocking_issues": [],
     "pass_count": 4,
     "fail_count": 2,
     "deferred_count": 0

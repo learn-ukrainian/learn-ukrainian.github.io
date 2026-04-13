@@ -13,6 +13,8 @@ import FlashcardDeck from '@site/src/components/FlashcardDeck';
 import GroupSort from '@site/src/components/GroupSort';
 import MatchUp from '@site/src/components/MatchUp';
 import Quiz from '@site/src/components/Quiz';
+import Translate from '@site/src/components/Translate';
+import TrueFalse from '@site/src/components/TrueFalse';
 import Unjumble from '@site/src/components/Unjumble';
 import YouTubeVideo from '@site/src/components/YouTubeVideo';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
@@ -20,145 +22,173 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 <Tabs syncKey="module-tab">
 <TabItem label="Урок">
 
-## Порядкові числівники: -ий та -ій (Ordinal Numerals: -ий and -ій)
+## Порядкові числівники: -ий та -ій (Ordinal Numerals: -ий and -ій) (~600 words total)
 
-Ми часто рахуємо різні предмети. Наприклад, ми кажемо: **один квиток** (one ticket), **два квитки** (two tickets), **три квитки** (three tickets). Це кількісні числівники (cardinal numerals). Вони просто показують загальну кількість предметів.
-Але іноді нам важливо знати порядок предметів або людей у черзі. Для цього ми використовуємо **порядкові числівники** (ordinal numerals). Вони відповідають на питання «який?» (which one?), «яка?», «яке?» або «котрий?» (which in order?).
-Порядкові числівники працюють як звичайні прикметники (adjectives). Вони мають рід (gender), число (number) та відмінок (case). Вони завжди узгоджуються з іменником, який стоїть поруч.
-Порівняйте ці дві ситуації. Ми маємо **два квитки** (two tickets). Але я хочу взяти саме **другий квиток** (the second ticket). Кількісний числівник «два» просто рахує квитки. А порядковий числівник «другий» описує конкретний квиток.
+When we talk about numbers in everyday life, we usually think about quantity, like how many items we have. These standard counting words are called cardinal numerals. However, when we need to describe the specific order of things in a sequence or list, we use ordinal numerals. In Ukrainian, an ordinal numeral behaves exactly like a descriptive adjective. It describes a noun and must strictly agree with it in gender, number, and case. This means the ending of the numeral will change depending on the specific noun it is attached to in the sentence.
 
-Більшість порядкових числівників мають тверде закінчення **-ий** (hard ending -ий). Вони відмінюються (decline) як звичайні тверді прикметники, наприклад, слово «новий» (new).
-Ось найчастіші порядкові числівники з твердим закінченням:
-- **перший** (first)
-- **другий** (second)
-- **четвертий** (fourth)
-- **п'ятий** (fifth)
-- **десятий** (tenth)
+Звичайний **кількісний** (cardinal) **числівник** (numeral) завжди показує точну кількість предметів. Наприклад, ми кажемо «два квитки», коли купуємо їх у театральній касі. Але **порядковий** (ordinal) числівник показує місце предмета у певному ряду. Ми кажемо «другий квиток», коли шукаємо своє місце в театрі.
 
-Подивімося, як змінюється числівник «п'ятий» у чоловічому роді (masculine singular). Він має такі ж закінчення, як прикметник:
-- Називний (Nominative): **п'ятий поверх** (fifth floor)
-- Родовий (Genitive): від **п'ятого поверху** (from the fifth floor)
-- Давальний (Dative): по **п'ятому поверху** (along the fifth floor)
-- Знахідний (Accusative): через **п'ятий поверх** (through the fifth floor)
-- Орудний (Instrumental): перед **п'ятим поверхом** (in front of the fifth floor)
-- Місцевий (Locative): на **п'ятому** / **п'ятім поверсі** (on the fifth floor)
+> *A regular cardinal numeral always shows the exact quantity of objects. For example, we say "two tickets" when we buy them at the theater box office. But an ordinal numeral shows the position of an object in a certain row. We say "the second ticket" when we look for our seat in the theater.*
 
-Як бачите, це знайомі вам правила. Якщо ви знаєте закінчення прикметників, ви вже вмієте відмінювати ці числівники.
+Most ordinal numerals in the Ukrainian language belong to the hard declension group. This means their standard dictionary form ends in -ий for masculine nouns. Some of the most common and useful examples include **перший** (first), другий (second), четвертий (fourth), п'ятий (fifth), and десятий (tenth). Since they act just like regular adjectives, they follow the standard hard adjective declension pattern across all seven grammatical cases. Let's look closely at how the word for "fifth" changes its ending when it is used with a masculine noun in different situations.
 
-Існує також м'який тип відмінювання (soft declension pattern). Головний числівник у цій групі — це **третій** (third). Він має закінчення **-ій**, тому відмінюється як м'який прикметник, наприклад «синій» (blue).
-Коли ми змінюємо слово «третій», ми використовуємо м'який знак, щоб зберегти правильний звук. Ось як це виглядає у чоловічому роді:
-- Називний (Nominative): **третій поверх** (third floor)
-- Родовий (Genitive): від **третього поверху** (from the third floor)
-- Давальний (Dative): по **третьому поверху** (along the third floor)
-- Знахідний (Accusative): через **третій поверх** (through the third floor)
-- Орудний (Instrumental): перед **третім поверхом** (in front of the third floor)
-- Місцевий (Locative): на **третьому** / **третім поверсі** (on the third floor)
+| Відмінок (Case) | П'ятий (Fifth) |
+| :--- | :--- |
+| Називний (Nom) | п'ятий |
+| Родовий (Gen) | п'ятого |
+| Давальний (Dat) | п'ятому |
+| Знахідний (Acc) | п'ятий / п'ятого |
+| Орудний (Ins) | п'ятим |
+| Місцевий (Loc) | (на) п'ятому / п'ятім |
 
-Зауважте, що слово «перший» історично мало інші форми. Але сьогодні на рівні А2 ми вважаємо його звичайним твердим прикметником.
+Мій найкращий друг живе на п'ятому поверсі у великому новому будинку. Я часто ходжу до п'ятого поверху пішки, бо старий ліфт не працює. Сьогодні я зустрів нового сусіда перед п'ятим поверхом на сходах. Він також не любить довго чекати на ліфт зранку. Ми разом піднімалися до п'ятого поверху і розмовляли про погоду.
 
-Порядкові числівники також постійно змінюють закінчення для жіночого та середнього роду. Вони повністю копіюють поведінку прикметників у реченні. Жіночий рід (feminine) зазвичай має закінчення **-а** або **-я**. Середній рід (neuter) має закінчення **-е** або **-є**. Усі слова у множині (plural) завжди мають закінчення **-і**.
-Подивіться на ці дуже прості приклади узгодження:
-- Чоловічий рід: **перший поверх** (1st floor), **другий урок** (2nd lesson).
-- Жіночий рід: **перша зупинка** (1st stop), **друга вправа** (2nd exercise).
-- Середній рід: **перше вікно** (1st window), **друге місто** (2nd city).
-- Множина: **перші дні** (first days), **другі місця** (second places).
+There is a small but important group of ordinal numerals that follow the soft declension pattern, ending in -ій. For the A2 level, you only need to focus your attention on one primary example from this group: **третій** (third). Its endings will feature soft vowels or the soft sign in various cases. Historically, the word for "first" had a mixed and complex pattern, but in modern everyday Ukrainian, we treat it just like a standard hard adjective to keep things simple. Let's see how the soft endings look for the masculine form of "third".
 
-Пам'ятайте, що м'який числівник «третій» (third) у жіночому роді має форму **третя** (third, f.). А в середньому роді він має форму **третє** (third, n.). Множина буде **треті** (third, pl.).
+Минулого року мій старший брат навчався на третьому курсі. Він завжди готувався до третього іспиту дуже довго. Він дуже пишався своїм третім успішним проектом у цьому семестрі. Університет активно допомагав йому на третьому курсі.
 
-Ми дуже часто використовуємо порядкові числівники для дат (dates). В українській мові є одне залізне правило. Коли ми називаємо число місяця, порядковий числівник завжди стоїть у Родовому відмінку (Genitive case). Слово «місяць» або його назва також стоїть у Родовому відмінку.
-Чому так відбувається? Тому що ми скорочуємо фразу. Повна фраза звучить як «день двадцять першого числа березня» (the day of the twenty-first date of March).
-Ось кілька дуже корисних прикладів:
-- Коли твій день народження? **Двадцять першого березня** (March 21st).
-- Ми зустрінемося **десятого квітня** (April 10th).
-- Новий рік починається **першого січня** (January 1st).
-- Свято буде **третього травня** (May 3rd).
+> *Last year my older brother studied in his third year. He always prepared for the third exam for a very long time. He was very proud of his third successful project this semester. The university actively helped him in his third year.*
 
-Запам'ятайте закінчення **-ого** для всіх дат у чоловічому та середньому роді. Воно допоможе вам правильно планувати зустрічі.
+:::info
+**Grammar box**
+Notice the soft sign (ь) appearing in the forms: третього, третьому. The instrumental case is третім, and the locative is (на) третьому or третім.
+:::
+
+Because ordinal numerals function perfectly as adjectives, they must change their endings to seamlessly match the gender of the noun they describe. For masculine nouns, we use the standard dictionary forms like перший or третій. For feminine nouns, the hard endings change to -а, and the soft endings change to -я. For neuter nouns, the hard endings become -е, and the soft endings become -є. They also possess a specific plural form for when they describe multiple items at once.
+
+У нашому будинку є перший поверх, перша зупинка і перше вікно. Перший поверх завжди дуже галасливий. Перша зупинка автобуса знаходиться біля мого дому. Перше вікно квартири дивиться на парк. Це мої перші дні у новій школі.
+
+One of the most important and common practical uses for ordinal numerals in the Ukrainian language is stating dates. When you want to say that a specific event happens on a particular day of the month, you must put the ordinal numeral into the Genitive case. You do not use any preposition for this specific grammatical construction. You simply say the ordinal number in the Genitive case, immediately followed by the name of the month, which is also in the Genitive case.
+
+Мій день народження двадцять першого березня. Мій молодший брат народився десятого квітня. Новий рік завжди починається першого січня. Ми святкуємо Різдво двадцять п'ятого грудня. Наше літо починається першого червня.
 
 ## Один/одна/одне у відмінках (One in All Cases)
 
-Числівник **один** (one) — це дуже особливе і важливе слово. Він зовсім не працює так, як інші числа. Він дуже схожий на звичайний твердий прикметник. Тому він змінюється для всіх трьох родів (genders). Він також має різні форми для всіх семи відмінків (cases). В українській мові ми завжди узгоджуємо це слово з іменником (noun). Наприклад, для чоловічого роду ми кажемо **один великий будинок** (one big house). Для жіночого роду ми використовуємо форму **одна нова машина** (one new car). А для середнього роду нам потрібне слово **одне зелене дерево** (one green tree). Іноді ми навіть маємо форму множини (plural) — **одні люди** (some people). Це дуже логічна граматична система. Якщо ви вже знаєте прикметники, вам буде дуже легко.
+The **кількісний** (cardinal) numeral **один** (one) is unique in the Ukrainian language. Unlike most other numbers, which typically only change their endings based on the grammatical case, this specific numeral changes for all three genders and all seven cases. It essentially mimics the behavior of standard hard adjectives. Because it behaves so much like an adjective, it must perfectly match the gender, number, and case of the noun it describes. For instance, you will say «один будинок» (one house) for masculine nouns, «одна машина» (one car) for feminine nouns, and «одне дерево» (one tree) for neuter nouns. If the noun happens to be in the plural form, the numeral also takes a plural form, such as «одні окуляри» (one pair of glasses). This flexibility makes it an incredibly important word to master early on.
 
-Подивімося спочатку на чоловічий та середній рід (masculine and neuter). Вони мають однакові форми майже у всіх непрямих відмінках. Вам треба запам'ятати кілька ключових слів. У Родовому відмінку (Genitive) це завжди буде **одного** (of one). У Давальному (Dative) ми кажемо **одному** (to one). Орудний відмінок (Instrumental) має форму **одним** (with one). Місцевий відмінок (Locative) — це **на одному** (on one) або коротко **на однім**. Знахідний відмінок (Accusative) для чоловічого роду залежить від істоти (animacy). Якщо предмет неживий (inanimate), форма не змінюється. Ми просто кажемо **бачу один стіл** (I see one table). Якщо це жива істота (animate), ми беремо форму Родового відмінка. Тоді ми кажемо **бачу одного хлопця** (I see one boy). Для середнього роду це завжди просто **одне**.
+Мій брат має тільки одного справжнього друга. Він завжди допомагає цьому одному другу в складних ситуаціях. Учора я бачив одного хлопця біля нашого будинку, але я бачив тільки один стіл у кімнаті. Ми часто розмовляємо з одним викладачем після лекції. На одному столі лежать усі наші зошити та книги. Цей числівник дуже схожий на звичайний прикметник, коли ми змінюємо його форму.
 
-Тепер перейдемо до жіночого роду (feminine). Початкова форма тут — це **одна**. Вона також повністю змінює свої закінчення у реченні. Родовий відмінок має відразу дві правильні форми: **однієї** або коротше **одної** (of one). Давальний відмінок — це форма **одній** (to one). Знахідний відмінок дуже простий і логічний, ми використовуємо слово **одну** (one, acc.). Орудний відмінок також має два популярні варіанти: **однією** або **одною** (with one). Місцевий відмінок збігається з Давальним, тому ми кажемо **на одній** (on one). Ці форми постійно звучать у реальних розмовах. Наприклад, ми дуже часто використовуємо фразу **з однієї сторони** (from one side). Або ви можете сказати: «я зараз живу в одній кімнаті» (I am living in one room now).
+> *My brother has only one true friend. He always helps this one friend in difficult situations. Yesterday I saw one boy near our house, but I saw only one table in the room. We often talk with one teacher after the lecture. All our notebooks and books are lying on one table. This numeral is very similar to a regular adjective when we change its form.*
 
-Цікаво, що українське слово «один» не завжди означає просто математичне число. Це унікальне слово має багато інших корисних значень (meanings). Дуже часто воно означає «сам» (alone). Наприклад: «Сьогодні **я тут один**» (Today I am here alone), або «вона залишилася одна» (she stayed alone). Інколи ми використовуємо його, щоб сказати «якийсь» (a certain / some). Ви можете почути таку цікаву фразу: «**Один чоловік сказав** мені правду» (A certain man told me the truth). Також це слово часто може означати «той самий» (the same). Наприклад, ми кажемо: «**Ми з одного міста**» (We are from the same city). Або «вони щодня працюють в одному офісі» (They work in the same office every day). Ви будете чути ці фрази постійно.
+:::info
+**Grammar box**
+Notice that the Accusative case for masculine nouns depends heavily on animacy. For inanimate objects, it remains exactly like the Nominative case: **один стіл** (one table). For animate beings, however, it changes to match the Genitive case: **одного хлопця** (one boy).
+:::
 
-## Скільки чого? Числівник + іменник (How Many? Numeral + Noun Agreement)
+When dealing with feminine nouns, the declension of **одна** presents a slightly different pattern. You need to pay close attention to the vowels in the specific case endings. In the Genitive case, you can use either the full classical form «однієї» or the shorter, more colloquial form «одної». The Dative and Locative cases both share the exact same ending, which is «одній». The Accusative case takes the standard «-у» ending, becoming simply «одну». For the Instrumental case, you again have two valid stylistic options: the full «однією» or the shorter «одною». Both variants are perfectly acceptable in modern spoken and written Ukrainian.
 
-Як ми рахуємо предмети в українській мові? Це дуже цікава граматична система. У нас є три головні групи чисел. Кожна група вимагає свій відмінок для іменника. Перша група — це число **один** (one). Вона працює з Називним відмінком однини (Nominative Singular). Друга група — це числа **два, три, чотири** (two, three, four). Після них ми використовуємо **Називний відмінок множини** (Nominative Plural). Це дуже важливе правило. Українська мова тут має власну давню логіку. Ми кажемо **два столи** (two tables) або **три крісла** (three armchairs). Ми ніколи не використовуємо Родовий відмінок однини (Genitive Singular) після цих чисел. Третя група — це числа від п'яти до двадцяти. Вони вимагають Родового відмінка множини (Genitive Plural). Якщо ви запам'ятаєте ці три правила, ви зможете правильно рахувати будь-які предмети.
+Моя сестра зараз живе одна у великому місті. Один чоловік мого віку сказав мені, що ця вулиця дуже стара. Ми з моєю подругою приїхали з одного міста на півдні країни. Учора я допоміг одній студентці знайти потрібну аудиторію. Ми довго говорили з однією жінкою про цю важливу проблему. Я хочу прочитати ще одну нову статтю ввечері.
 
-Подивімося на другу групу уважніше. Це числа два, три та чотири. Тут є один важливий нюанс для числа «два». Воно має дві форми. Для чоловічого та середнього роду ми кажемо **два** (two, m./n.). Наприклад: **два брати** (two brothers), **два вікна** (two windows). Для жіночого роду ми маємо спеціальну форму **дві** (two, f.). Ми кажемо **дві сестри** (two sisters) або **дві стіни** (two walls). Так само працює слово **обидва** (both). Ми кажемо **обидва брати** (both brothers), але **обидві сестри** (both sisters). Це дуже красива граматична особливість. А от числа **три** (three) та **чотири** (four) не змінюються. Вони однакові для всіх родів. Ми просто додаємо іменник у Називному відмінку множини: **три дні** (three days), **чотири машини** (four cars). Вам просто треба знати базову форму множини.
+> *My sister currently lives alone in a large city. A certain man of my age told me that this street is very old. My friend and I came from the same city in the south of the country. Yesterday I helped one female student find the right classroom. We talked for a long time with a certain woman about this important problem. I want to read one more new article in the evening.*
 
-Тепер перейдемо до третьої великої групи. Це числа від п'яти до двадцяти. У цій групі правило завжди однакове. Ми повинні використовувати **Родовий відмінок множини** (Genitive Plural). Якщо ви бачите число **п'ять** (five), іменник змінює свою форму. Ми кажемо **п'ять студентів** (five students). Якщо ми маємо число **десять** (ten), ми кажемо **десять гривень** (ten hryvnias). Для числа **вісім** (eight) ми використовуємо фразу **вісім годин** (eight hours). Це правило працює стабільно і допомагає нам щодня. Зверніть увагу на спеціальні слова. Деякі іменники мають унікальні форми у множині. Наприклад, слово **людина** (person) перетворюється на **людей** (people). Ми кажемо **шість людей** (six people). Слово **дитина** (child) стає словом **дітей** (children). Ми кажемо **сім дітей** (seven children).
+:::tip
+**Did you know?**
+The numeral **один** is extremely versatile in everyday conversation. Beyond simply counting items, it can also mean "alone" (я один), "a certain / some" (один чоловік), or even "the same" (з одного міста).
+:::
 
-Що робити, коли ми маємо великі або складені числа? Наприклад, двадцять один або сорок п'ять? В українській мові діє правило останньої цифри. Тільки останнє слово у числі вирішує, який відмінок нам потрібен. Наприклад, число **двадцять один** (twenty-one) закінчується на «один». Тому ми використовуємо правило першої групи. Ми кажемо **двадцять один студент** (twenty-one students). Число **тридцять три** (thirty-three) закінчується на «три». Отже, це друга група. Ми кажемо **тридцять три студенти** (thirty-three students) у Називному відмінку множини. А число **сорок сім** (forty-seven) закінчується на «сім». Це вже третя група. Ми повинні сказати **сорок сім студентів** (forty-seven students). Це правило завжди працює для всіх великих чисел. Спробуйте самі побудувати кілька таких фраз усно.
+## Скільки чого? Числівник + іменник (How Many? Numeral + Noun Agreement) (~650 words total)
 
-Ми також часто використовуємо слова, які позначають кількість без точних цифр. Наприклад, ми часто питаємо **скільки?** (how many? / how much?). Або ми використовуємо такі корисні слова, як **багато** (many / much) та **мало** (few / little). Також ми часто кажемо **кілька** або **декілька** (several). Всі ці слова працюють як числа від п'яти до двадцяти. Вони завжди вимагають Родового відмінка множини для предметів, які ми можемо порахувати. Тому ми кажемо **багато запитань** (many questions). Ми можемо сказати **мало проблем** (few problems). Або ми скажемо **кілька днів** (several days) та **декілька друзів** (several friends). Також ми часто використовуємо слово **десяток** (a ten / a dozen), наприклад, **десяток яєць** (ten eggs). Коли ми йдемо на базар чи в магазин, ці слова стають нашими найкращими помічниками. Це дуже полегшує вивчення нових тем.
+When you start counting objects in Ukrainian, you enter a unique grammatical cycle. The agreement between a **кількісний** (cardinal) **числівник** (numeral) and a noun depends entirely on the number itself. We divide this into three main tiers. The first tier is for the number **один** (one), taking the Nominative Singular. The second tier covers two, three, and four. The third tier includes numbers from five to twenty. Here is a critical rule: after two, three, and four, we obligatorily use the Nominative Plural case for the noun. You must say «два столи» or «три крісла», never using the Genitive Singular like in Russian.
 
-Нарешті, ми маємо поговорити про винятки та спеціальні слова. Найпопулярніші з них — це **пів** (half) та **півтора** (one and a half). Ці цікаві слова ніколи не відмінюються. Вони взагалі не змінюють свою форму. Але вони вимагають після себе **Родового відмінка однини** (Genitive Singular). Це дуже важливо запам'ятати. Наприклад, ми кажемо **півтора кілограма** (one and a half kilograms). Ми також кажемо **півтора місяця** (one and a half months). Для жіночого роду ми маємо спеціальну форму **півтори** (one and a half, f.). Ми дуже часто використовуємо її для часу. Наприклад, ми кажемо **півтори години** (one and a half hours). Це дуже типова українська фраза. Тепер ви знаєте всі секрети українських числівників.
+Коли ми рахуємо предмети, ми використовуємо кількісний числівник. Після цифри один іменник стоїть у називному відмінку однини. Після два, три і чотири ми завжди використовуємо називний відмінок множини. Після цифр від п'яти до двадцяти іменник змінює форму на родовий відмінок множини.
 
-<GroupSort client:only="react" groups={{"Називний однини (Nom. Sg.)": ["один", "двадцять один", "сорок один"], "Називний множини (Nom. Pl.)": ["два", "три", "тридцять чотири"], "Родовий множини (Gen. Pl.)": ["п'ять", "десять", "шістдесят"], "Родовий однини (Gen. Sg.)": ["півтора", "півтори", "пів"]}} instruction={"Розподіліть числівники за відмінком іменника, який вони вимагають."} />
-<Quiz client:only="react" questions={[{"question": "У мене є два _____.", "options": [{"text": "брати", "correct": true}, {"text": "братів", "correct": false}, {"text": "брата", "correct": false}, {"text": "брат", "correct": false}]}, {"question": "Це коштує п'ятсот _____.", "options": [{"text": "гривні", "correct": false}, {"text": "гривню", "correct": false}, {"text": "гривень", "correct": true}, {"text": "гривня", "correct": false}]}, {"question": "Там стоять три _____.", "options": [{"text": "машин", "correct": false}, {"text": "машина", "correct": false}, {"text": "машину", "correct": false}, {"text": "машини", "correct": true}]}, {"question": "У класі сорок один _____.", "options": [{"text": "студенти", "correct": false}, {"text": "студента", "correct": false}, {"text": "студент", "correct": true}, {"text": "студентів", "correct": false}]}, {"question": "Мені потрібно кілька _____.", "options": [{"text": "день", "correct": false}, {"text": "днів", "correct": true}, {"text": "дні", "correct": false}, {"text": "дню", "correct": false}]}, {"question": "На вулиці шість _____.", "options": [{"text": "людина", "correct": false}, {"text": "люди", "correct": false}, {"text": "людину", "correct": false}, {"text": "людей", "correct": true}]}]} instruction={"Оберіть правильну форму іменника після числівника."} />
+> *When we count objects, we use a cardinal numeral. After the number one, the noun stands in the nominative case singular. After two, three, and four, we always use the nominative case plural. After the numbers from five to twenty, the noun changes form to the genitive case plural.*
 
-## Числа навколо нас (Numbers Around Us)
+Let us look closer at the second tier. The number two has two different forms depending on the noun's gender. For masculine and neuter nouns, use «два». For feminine nouns, use «дві». The numbers three and four are gender-neutral. Remember that the noun following these numbers must be in the Nominative Plural.
 
-Подивіться, як числа працюють у реальному житті. Уявіть ситуацію на спортивному ринку. Вчитель фізкультури та учні купують інвентар і планують свято.
+Брат має два великі будинки. У кімнаті є два вікна і дві білі стіни. На столі лежать три книги і чотири зошити. Моя подруга має дві сестри. Усі ці слова стоять у формі множини.
+
+:::info
+**Grammar box**
+Always remember the golden rule for 2, 3, and 4 in Ukrainian: they demand the Nominative Plural. It is «два брати» (two brothers), not «два брата». This is a hallmark of natural Ukrainian speech.
+:::
+
+The third tier introduces the Genitive Plural. Any number from five to twenty requires the following noun to be in the Genitive Plural case. You will often see nouns drop their endings or take suffixes like "-ів" or "-ей". Also, memorize two common irregular plurals: «людина» (person) becomes «людей», and «дитина» (child) becomes «дітей». You will use this case often when discussing how much items **коштувати** (to cost).
+
+Сьогодні прийшли п'ять нових студентів. Ця книга коштує вісімдесят гривень. Ми чекали майже вісім годин. На вулиці ми побачили десять людей. У класі навчаються п'ятнадцять дітей.
+
+What happens with a compound number like twenty-one or forty-five? Ukrainian uses the "Rule of the Last Digit" to determine the case. You only look at the final word. If it ends in one, use the Nominative Singular. If it ends in two, three, or four, use the Nominative Plural. If it ends in five through nine or zero, use the Genitive Plural. This applies to everything, including weights like a **кілограм** (kilogram) or a person's **вік** (age).
+
+Наш університет має двадцять один факультет. В аудиторії сидять тридцять три студенти. Фермер продав сорок сім кілограмів яблук. Мій дідусь має поважний вік. Йому вісімдесят чотири роки.
+
+> *Our university has twenty-one faculties. Thirty-three students are sitting in the lecture hall. The farmer sold forty-seven kilograms of apples. My grandfather has a respectable age. He is eighty-four years old.*
+
+The rules for five through twenty also apply to quantity words. To ask **скільки** (how many) or express concepts like "many," "few," or "several," you use the exact same Genitive Plural structure. The words «багато» (many), «мало» (few), and «кілька» (several) all require the following noun to take the Genitive Plural.
+
+Скільки студентів є в аудиторії? У мене є дуже багато запитань. Ми маємо тільки кілька вільних днів. На столі лежить мало яблук. Декілька дівчат співають пісню.
+
+Finally, special words for halves do not follow standard counting rules. The word «пів» means "half" and is used with the Genitive Singular. To say "one and a half," we use «півтора» for masculine and neuter nouns, and «півтори» for feminine nouns. These words never decline, always requiring the Genitive Singular case.
+
+Я купив півтора кілограма яблук на базарі. Зустріч тривала півтори години. Минуло вже півтора року після школи. Я з'їв пів яблука на сніданок. Ці слова не змінюють форму.
+
+> *I bought one and a half kilograms of apples at the market. The meeting lasted one and a half hours. A year and a half has already passed since school. I ate half an apple for breakfast. These words do not change form.*
+
+<GroupSort client:only="react" groups={{"Називний однини (Nominative Sg.)": ["один", "одна", "одне", "двадцять один"], "Називний множини (Nominative Pl.)": ["два", "дві", "три", "чотири", "обидва", "обидві", "тридцять три"], "Родовий множини (Genitive Pl.)": ["п'ять", "десять", "вісім", "багато", "кілька", "скільки"]}} instruction={"Розподіліть числа за відмінком іменника, який вони вимагають"} />
+<Quiz client:only="react" questions={[{"question": "У нас є два _____.", "options": [{"text": "квитки", "correct": true}, {"text": "квитків", "correct": false}, {"text": "квиток", "correct": false}, {"text": "квитком", "correct": false}]}, {"question": "Вона отримала п'ять _____.", "options": [{"text": "медалей", "correct": true}, {"text": "медалі", "correct": false}, {"text": "медаль", "correct": false}, {"text": "медалям", "correct": false}]}, {"question": "Скільки _____ коштує цей словник?", "options": [{"text": "гривень", "correct": true}, {"text": "гривні", "correct": false}, {"text": "гривня", "correct": false}, {"text": "гривням", "correct": false}]}, {"question": "Мені потрібні три _____.", "options": [{"text": "дні", "correct": true}, {"text": "днів", "correct": false}, {"text": "день", "correct": false}, {"text": "дням", "correct": false}]}, {"question": "На зупинці стоїть двадцять один _____.", "options": [{"text": "студент", "correct": true}, {"text": "студентів", "correct": false}, {"text": "студенти", "correct": false}, {"text": "студентом", "correct": false}]}, {"question": "У цій кімнаті є чотири _____.", "options": [{"text": "крісла", "correct": true}, {"text": "крісел", "correct": false}, {"text": "крісло", "correct": false}, {"text": "кріслах", "correct": false}]}, {"question": "Я чекаю вже кілька _____.", "options": [{"text": "годин", "correct": true}, {"text": "години", "correct": false}, {"text": "година", "correct": false}, {"text": "годині", "correct": false}]}, {"question": "Там грають обидві _____.", "options": [{"text": "сестри", "correct": true}, {"text": "сестер", "correct": false}, {"text": "сестра", "correct": false}, {"text": "сестрою", "correct": false}]}]} instruction={"Оберіть правильну форму іменника після числа"} />
+
+## Числа навколо нас (Numbers Around Us) (~500 words total)
+
+Let's see how numbers work in real life. Imagine a teacher and students at a local market buying equipment for a school sports day. Notice how the **кількісний** (cardinal) numbers interact with nouns, and how the words **скільки** (how many) and **коштувати** (to cost) dictate the flow of the conversation.
 
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Вчитель фізкультури:</span> Добрий день! Скільки **коштують** *(cost)* ці м'ячі? Нам **одного м'яча** *(one ball)* не вистачає для гри.</div>
+<div class="dialogue-line"><span class="speaker">Вчитель:</span> Добрий день! Скільки коштують ці три м'ячі? *(Good day! How much do these three balls cost?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Продавець:</span> Доброго дня! Один коштує **двісті гривень** *(two hundred hryvnias)*. А якщо візьмете **три кілограми** *(three kilograms)* крейди для поля, зроблю знижку.</div>
+<div class="dialogue-line"><span class="speaker">Продавець:</span> Добрий день! Вони коштують п'ятсот гривень. *(Good day! They cost five hundred hryvnias.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Учень:</span> А ще нам потрібні призи! У нас **перша команда** *(first team)* — це десять учнів.</div>
+<div class="dialogue-line"><span class="speaker">Вчитель:</span> Добре. Дайте, будь ласка, п'ять м'ячів і два насоси. *(Good. Please give me five balls and two pumps.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Вчитель фізкультури:</span> Добре, дайте, будь ласка, ще **п'ять медалей** *(five medals)*. **Другий забіг** *(second race)* вже о десятій, треба поспішати.</div>
+<div class="dialogue-line"><span class="speaker">Продавець:</span> Ось ваші п'ять м'ячів. А насоси коштують сто гривень за один. *(Here are your five balls. And the pumps cost one hundred hryvnias for one.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Продавець:</span> З вас **тисяча двісті гривень** *(one thousand two hundred hryvnias)*.</div>
+<div class="dialogue-line"><span class="speaker">Учень:</span> У нас є тільки двісті гривень на насоси. *(We only have two hundred hryvnias for pumps.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Вчитель фізкультури:</span> Ось, тримайте. Дякую!</div>
-
-</div>
-
-Зверніть увагу на фрази: «одного м'яча» (Родовий відмінок), «три кілограми» (Називний відмінок множини), «перша команда» та «другий забіг» (узгодження порядкових числівників), «п'ять медалей» (Родовий відмінок множини після «п'ять»). Це правило узгодження в дії.
-
-Числа також дуже важливі для адрес і телефонів. В Україні ми використовуємо спеціальну ієрархію для адреси. Спочатку ми називаємо **вулицю** *(street)*. Потім ми називаємо **будинок** *(building)*. Нарешті, ми називаємо **квартиру** *(apartment)*. Наприклад: «вулиця Хрещатик, будинок двадцять два, квартира п'ять». Іноді вулиці мають номери замість імен. У такому випадку ми використовуємо порядкові числівники. Наприклад: «**П'ята лінія**» *(Fifth Line)* або «**Перша вулиця**» *(First Street)*. Номери телефонів також легко читати. Ми зазвичай читаємо їх по одній цифрі або групами по дві.
-
-<div class="dialogue">
-
-<div class="dialogue-line"><span class="speaker">Максим:</span> Який твій номер телефону?</div>
-
-<div class="dialogue-line"><span class="speaker">Олена:</span> Мій номер — **нуль дев'яносто шість** *(zero ninety-six)*, **чотириста двадцять** *(four hundred twenty)*, **п'ятнадцять** *(fifteen)*, **вісімдесят один** *(eighty-one)*.</div>
+<div class="dialogue-line"><span class="speaker">Продавець:</span> Цього достатньо. Ось ваші два насоси. *(That is enough. Here are your two pumps.)*</div>
 
 </div>
 
-Для телефонів і адрес ми використовуємо звичайні кількісні числівники. Вам просто треба знати базові числа.
+Numbers are also essential when sharing contact information. In Ukraine, the standard hierarchy for addresses is street, building, and then apartment. If a street is named after a number, we use a **порядковий числівник** (ordinal numeral). 
 
-Як ми говоримо про **вік** *(age)* українською мовою? Ми використовуємо займенник у Давальному відмінку. Найпопулярніша фраза — «**мені ... років**» *(I am ... years old)*. Але слово **рік** *(year)* має спеціальний цикл узгодження. Якщо число закінчується на один, ми використовуємо форму однини: «Мені **двадцять один рік**» *(I am twenty-one years old)*. Якщо число закінчується на два, три або чотири, ми використовуємо форму множини: «Моєму брату **двадцять два роки**» *(My brother is twenty-two years old)*. Для чисел від п'яти до дев'яти, а також для нуля, ми використовуємо Родовий відмінок множини: «Моїй мамі **п'ятдесят п'ять років**» *(My mom is fifty-five years old)*. Ми також часто використовуємо числа для часу. Пам'ятайте, що для годин потрібні порядкові числівники у Місцевому відмінку. Ми кажемо «**о третій годині**» *(at three o'clock)* або «**о десятій ранку**» *(at ten in the morning)*.
+В Україні ми пишемо адресу так: вулиця, потім будинок, а потім квартира. Наприклад, я живу на вулиці Хрещатик, будинок двадцять два, квартира п'ять. Якщо вулиця має числову назву, ми використовуємо порядковий числівник. Мій брат живе на вулиці П'ята лінія, а моя сестра — на вулиці Перша садова. Коли ми диктуємо номер телефону, ми називаємо кожну цифру окремо або парами. Мій номер — нуль дев'яносто шість, сімсот двадцять п'ять, сорок три, одинадцять.
 
-Попрактикуймо читання дат. Коли ми говоримо про дати, порядковий числівник має бути в Родовому відмінку. Прочитайте цей короткий текст про українські свята.
-В Україні є багато важливих свят. Найголовніше свято — це День Незалежності. Ми святкуємо його **двадцять четвертого серпня** *(on the twenty-fourth of August)*. Ще одне важливе свято — це День Конституції. Воно відзначається **двадцять восьмого червня** *(on the twenty-eighth of June)*. Звісно, всі люди дуже люблять Новий рік. Ми святкуємо Новий рік **першого січня** *(on the first of January)*. Також ми маємо Різдво. Тепер Україна святкує Різдво **двадцять п'ятого грудня** *(on the twenty-fifth of December)*.
+> *In Ukraine, we write the address like this: street, then building, and then apartment. For example, I live on Khreshchatyk Street, building twenty-two, apartment five. If a street has a numerical name, we use an ordinal numeral. My brother lives on Fifth Line Street, and my sister lives on First Garden Street. When we dictate a phone number, we name each digit separately or in pairs. My number is zero ninety-six, seven hundred twenty-five, forty-three, eleven.*
 
-Зверніть увагу, що всі дати закінчуються на «-го»: першого, двадцять п'ятого. Це вказує на день, коли щось відбувається. Назва місяця також стоїть у Родовому відмінку: серпня, червня, січня, грудня. Також у текстах ви часто зустрінете відстані та вік. Наприклад: «Відстань між Києвом та Львовом — близько п'ятисот кілометрів (about five hundred kilometers)». Або про історичних осіб: «Тарас Шевченко прожив сорок сім років (forty-seven years), а Іван Франко — сорок один рік (forty-one years)». 
+When talking about a person's **вік** (age), the word for "year" follows the exact same agreement cycle we discussed earlier. You start with the phrase "мені..." (to me is...). The word "рік" (year) changes depending on the last digit of the number.
 
-<FillIn client:only="react" items={[{"sentence": "Мій день народження двадцять _____ серпня.", "answer": "четвертого", "options": ["четвертого", "четвертий", "четвертому"]}, {"sentence": "Ми зустрінемося _____ квітня.", "answer": "десятого", "options": ["десятого", "десятий", "десятому"]}, {"sentence": "Я живу на _____ вулиці.", "answer": "Першій", "options": ["Першій", "Перша", "Першу"]}, {"sentence": "Свято буде _____ травня.", "answer": "третього", "options": ["третього", "третій", "третя"]}, {"sentence": "Це будинок на _____ лінії.", "answer": "Другій", "options": ["Другій", "Друга", "Другу"]}, {"sentence": "Новий рік _____ січня.", "answer": "першого", "options": ["першого", "перший", "першому"]}]} instruction={"Вставте правильну форму порядкового числівника для дати або адреси."} />
-<MatchUp client:only="react" pairs={[{"left": "twenty-one years old", "right": "двадцять один рік"}, {"left": "twenty-two years old", "right": "двадцять два роки"}, {"left": "twenty-five years old", "right": "двадцять п'ять років"}, {"left": "one and a half hours", "right": "півтори години"}, {"left": "one and a half kilograms", "right": "півтора кілограма"}, {"left": "at three o'clock", "right": "о третій годині"}]} instruction={"З'єднайте фразу з її правильним перекладом."} />
+Моєму братові двадцять один рік. Моїй сестрі двадцять два роки. А мені вже двадцять п'ять років. Моєму дідусеві шістдесят три роки, а бабусі шістдесят вісім років. Наша родина велика, і ми часто плануємо спільні зустрічі. Ми завжди зустрічаємося о третій годині дня. Мій дідусь любить приходити о першій годині, щоб допомогти.
 
-## Підсумок
+> *My brother is twenty-one years old. My sister is twenty-two years old. And I am already twenty-five years old. My grandfather is sixty-three years old, and my grandmother is sixty-eight years old. Our family is large, and we often plan joint meetings. We always meet at three o'clock in the afternoon. My grandfather likes to arrive at one o'clock to help.*
 
-Сьогодні ми вивчили багато нових правил про **числівники** *(numerals)*. Пам'ятайте, що **порядкові числівники** *(ordinal numerals)* мають дві групи. Більшість закінчується на твердий звук: «**п'ятий**» *(fifth)*, «**десятий**» *(tenth)*. Але слово «**третій**» *(third)* має м'який звук. Тому ми кажемо «**третього**» *(of the third)*, а не «третого». Слово «**перший**» *(first)* має твердий звук і відмінюється стандартно.
+:::tip
+**Time uses ordinals!** Remember that in Ukrainian, we use ordinal numbers in the Locative case to express when something happens. "At three o'clock" is literally "at the third hour" — **о третій годині**.
+:::
 
-Також ми вивчили дуже важливий **цикл узгодження** *(agreement cycle)*. Це правило «один-два-п'ять». Після числа один ми використовуємо Називний відмінок однини. Наприклад: «один брат». Після чисел два, три і чотири потрібен Називний відмінок множини: «два брати». А після чисел від п'яти до двадцяти ми використовуємо Родовий відмінок множини: «п'ять братів». Це базовий ритм української мови.
+Finally, let's look at how we read dates. In Ukrainian, dates always use the ordinal numeral in the Genitive case. During summer holidays, you might visit a market and buy a **кілограм** (kilogram) of fresh fruit for a picnic.
 
-Тепер перевірте себе. Дайте відповіді на ці чотири питання:
-1. Як сказати "May 5th" українською мовою?
-2. Яка форма іменника стоїть після слова «три»?
-3. Чим відрізняється слово «третій» від слова «перший»?
-4. Як правильно перекласти фразу "from one city"?
+Україна має багато важливих свят. Ми святкуємо Новий рік першого січня. День Конституції України ми відзначаємо двадцять восьмого червня. А найголовніше державне свято — це День Незалежності. Україна святкує його двадцять четвертого серпня. Кожного року на ці свята до Києва приїжджає багато людей. Люди гуляють, співають пісні та купують смачну їжу на ярмарку. Я часто купую там один кілограм яблук або два кілограми персиків.
 
-Якщо ви знаєте відповіді, ви чудово засвоїли цю складну тему!
+> *Ukraine has many important holidays. We celebrate New Year on the first of January. We observe Constitution Day of Ukraine on the twenty-eighth of June. And the most important state holiday is Independence Day. Ukraine celebrates it on the twenty-fourth of August. Every year, many people come to Kyiv for these holidays. People walk, sing songs, and buy delicious food at the fair. I often buy one kilogram of apples or two kilograms of peaches there.*
+
+## Підсумок (~150 words)
+
+У цьому модулі ми детально вивчили український **числівник** (numeral). Ви тепер знаєте, чим відрізняється **кількісний** (cardinal) числівник та **порядковий** (ordinal) числівник.
+
+> *In this module, we studied the Ukrainian numeral in detail. You now know how a cardinal numeral and an ordinal numeral differ.*
+
+Кількісні слова завжди відповідають на запитання **скільки** (how many). Ми практикували діалоги в магазині. Ми вчилися запитувати, скільки може **коштувати** (to cost) товар. Ви також знаєте, як купити один **кілограм** (kilogram) фруктів.
+
+> *Cardinal words always answer the question "how many". We practiced dialogues in the store. We learned to ask how much an item might cost. You also know how to buy one kilogram of fruit.*
+
+Найголовніше практичне правило — це цикл узгодження 1-2-5. Число **один** (one) завжди узгоджується з іменником у всіх категоріях. Цифри два, три і чотири вимагають називного відмінка множини. А числа від п'яти вимагають родового відмінка множини. Коли ми описуємо **вік** (age) людини, слово «рік» також працює за цим циклом.
+
+> *The most important practical rule is the 1-2-5 agreement cycle. The number "one" always agrees with the noun in all categories. The numbers two, three, and four require the nominative plural. And numbers from five require the genitive plural. When we describe a person's age, the word "year" also works according to this cycle.*
+
+Більшість порядкових слів мають тверде закінчення «-ий», як-от **перший** (first). Проте слово **третій** (third) має специфічне м'яке закінчення «-ій». Тепер перевірте себе і дайте відповідь на чотири запитання. 1) Як сказати "May 5th"? 2) Яка форма іменника стоїть після слова «три»? 3) Чим відрізняється слово «третій» від «перший»? 4) Як перекласти фразу "from one city"?
+
+> *Most ordinal words have a hard "-ий" ending, like "first". However, the word "third" has a specific soft "-ій" ending. Now check yourself and answer four questions. 1) How do you say "May 5th"? 2) What form of the noun stands after the word "three"? 3) How does the word "third" differ from "first"? 4) How do you translate the phrase "from one city"?*
+
+:::info
+**Grammar box** — Numbers can seem intimidating, but they follow highly logical patterns. Once you memorize the 1-2-5 rule and the difference between hard and soft ordinals, counting in Ukrainian becomes second nature!
+:::
 
 </TabItem>
 <TabItem label="Словник">
@@ -230,20 +260,23 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 </TabItem>
 <TabItem label="Зошит">
 
-<FillIn client:only="react" items={[{"sentence": "Це _____ поверх.", "answer": "п'ятий", "options": ["п'ятий", "п'ята", "п'яте"]}, {"sentence": "Ми живемо на _____ поверсі.", "answer": "десятому", "options": ["десятому", "десятий", "десятого"]}, {"sentence": "Він зайняв _____ місце.", "answer": "друге", "options": ["друге", "другий", "другому"]}, {"sentence": "Я читаю _____ книгу.", "answer": "третю", "options": ["третю", "третя", "третє"]}, {"sentence": "Це наша _____ зупинка.", "answer": "перша", "options": ["перша", "перший", "першу"]}, {"sentence": "Сьогодні мій _____ день на роботі.", "answer": "перший", "options": ["перший", "перша", "перше"]}]} instruction={"Вставте правильну форму порядкового числівника."} />
+<FillIn client:only="react" items={[{"sentence": "Ми зустрінемося _____ квітня.", "answer": "десятого", "options": ["десятий", "десятого", "десятому"]}, {"sentence": "Я живу на _____ поверсі.", "answer": "п'ятому", "options": ["п'ятий", "п'ятого", "п'ятому"]}, {"sentence": "Коли твій день народження? _____ березня.", "answer": "двадцять першого", "options": ["двадцять перше", "двадцять перший", "двадцять першого"]}, {"sentence": "Це наша _____ зупинка.", "answer": "третя", "options": ["третій", "третя", "третє"]}, {"sentence": "Мій офіс знаходиться на _____ вулиці.", "answer": "першій", "options": ["перша", "першій", "першу"]}, {"sentence": "Новий рік починається _____ січня.", "answer": "першого", "options": ["перше", "перший", "першого"]}, {"sentence": "Він прийшов _____ числа.", "answer": "третього", "options": ["третє", "третій", "третього"]}, {"sentence": "Це _____ будинок зліва.", "answer": "другий", "options": ["другий", "другого", "другому"]}]} instruction={"Вставте правильну форму порядкового числівника"} />
 
-<MatchUp client:only="react" pairs={[{"left": "один чоловік сказав", "right": "a certain man said"}, {"left": "ми з одного міста", "right": "we are from the same city"}, {"left": "сьогодні я тут один", "right": "today I am here alone"}, {"left": "один великий будинок", "right": "one big house"}, {"left": "з однієї сторони", "right": "from one side (on one hand)"}, {"left": "я живу в одній кімнаті", "right": "I live in one room"}]} instruction={"З'єднайте фразу з її правильним значенням англійською."} />
+<MatchUp client:only="react" pairs={[{"left": "March 21st", "right": "двадцять першого березня"}, {"left": "second floor", "right": "другий поверх"}, {"left": "from the third room", "right": "з третьої кімнати"}, {"left": "three kilograms", "right": "три кілограми"}, {"left": "one and a half hours", "right": "півтори години"}, {"left": "twenty-two years old", "right": "двадцять два роки"}, {"left": "on the first street", "right": "на першій вулиці"}, {"left": "both brothers", "right": "обидва брати"}]} instruction={"З'єднайте англійські фрази з українськими"} />
 
-<ErrorCorrection client:only="react" items={[{"sentence": "Я маю два брата.", "errorWord": "брата", "correctForm": "брати", "options": ["брати", "братів", "брат"], "explanation": "Після слова «два» ми використовуємо Називний відмінок множини: два брати."}, {"sentence": "Свято буде перше січня.", "errorWord": "перше", "correctForm": "першого", "options": ["першого", "перший", "першому"], "explanation": "Коли ми називаємо дату, порядковий числівник завжди стоїть у Родовому відмінку (Genitive): першого січня."}, {"sentence": "Вона купила п'ять квитки.", "errorWord": "квитки", "correctForm": "квитків", "options": ["квитків", "квитка", "квитку"], "explanation": "Після числа «п'ять» ми використовуємо Родовий відмінок множини: п'ять квитків."}, {"sentence": "Ми живемо на п'ятий поверсі.", "errorWord": "п'ятий", "correctForm": "п'ятому", "options": ["п'ятому", "п'ятого", "п'ятим"], "explanation": "Прийменник «на» тут вимагає Місцевого відмінка (Locative): на п'ятому поверсі."}, {"sentence": "Це коштує двісті гривні.", "errorWord": "гривні", "correctForm": "гривень", "options": ["гривень", "гривню", "гривня"], "explanation": "Сотні (200, 300, 500) вимагають Родового відмінка множини: двісті гривень."}, {"sentence": "Мені двадцять один роки.", "errorWord": "роки", "correctForm": "рік", "options": ["рік", "років", "року"], "explanation": "Якщо число закінчується на «один», ми використовуємо форму однини: двадцять один рік."}]} instruction={"Знайдіть і виправте помилку в узгодженні числівника та іменника."} />
+<ErrorCorrection client:only="react" items={[{"sentence": "Мені двадцять один років.", "errorWord": "років", "correctForm": "рік", "options": ["рік", "роки", "року"], "explanation": "Після числа 1 (і складених чисел на 1) використовуємо форму однини «рік»."}, {"sentence": "Я купив два квитків.", "errorWord": "квитків", "correctForm": "квитки", "options": ["квитки", "квиток", "квитка"], "explanation": "Після числа 2 використовуємо Називний відмінок множини."}, {"sentence": "Тут працює п'ять людина.", "errorWord": "людина", "correctForm": "людей", "options": ["людей", "люди", "людині"], "explanation": "Після числа 5 використовуємо Родовий відмінок множини (у слова «людина» це «людей»)."}, {"sentence": "Він чекає півтора години.", "errorWord": "півтора", "correctForm": "півтори", "options": ["півтори", "пів", "одна"], "explanation": "Слово «година» — жіночого роду, тому використовуємо форму «півтори»."}, {"sentence": "Свято буде третє травня.", "errorWord": "третє", "correctForm": "третього", "options": ["третього", "третій", "третьому"], "explanation": "У датах порядковий числівник має бути в Родовому відмінку (-ого)."}, {"sentence": "На столі лежить обидва книги.", "errorWord": "обидва", "correctForm": "обидві", "options": ["обидві", "обидве", "одна"], "explanation": "Слово «книга» — жіночого роду, тому потрібна форма «обидві»."}]} instruction={"Знайдіть і виправте помилку в узгодженні"} />
 
-<Unjumble client:only="react" items={[{"words": "нуль / Мій / дев'яносто / номер / телефону / шість. / —", "answer": "Мій номер телефону — нуль дев'яносто шість."}, {"words": "коштують / ці / Скільки / три / м'ячі?", "answer": "Скільки коштують ці три м'ячі?"}, {"words": "один / Мені / до / потрібен / Києва. / квиток", "answer": "Мені потрібен один квиток до Києва."}, {"words": "одного / Ми / міста. / з", "answer": "Ми з одного міста."}, {"words": "поверсі. / Вона / живе / третьому / на", "answer": "Вона живе на третьому поверсі."}, {"words": "буде / двадцять / Свято / серпня. / четвертого", "answer": "Свято буде двадцять четвертого серпня."}]} instruction={"Складіть правильне речення зі слів."} />
+<Translate client:only="react" questions={[{"source": "We are from the same city.", "options": [{"text": "Ми з одного міста.", "correct": true}, {"text": "Ми з одне місто.", "correct": false}]}, {"source": "I see one boy.", "options": [{"text": "Я бачу одного хлопця.", "correct": true}, {"text": "Я бачу один хлопець.", "correct": false}]}, {"source": "From one side.", "options": [{"text": "З однієї сторони.", "correct": true}, {"text": "З одній сторони.", "correct": false}]}, {"source": "They work in one office.", "options": [{"text": "Вони працюють в одному офісі.", "correct": true}, {"text": "Вони працюють в один офіс.", "correct": false}]}, {"source": "She stayed alone.", "options": [{"text": "Вона залишилася одна.", "correct": true}, {"text": "Вона залишилася однією.", "correct": false}]}, {"source": "With one ticket.", "options": [{"text": "З одним квитком.", "correct": true}, {"text": "З одним квиток.", "correct": false}]}, {"source": "A certain man told me.", "options": [{"text": "Один чоловік сказав мені.", "correct": true}, {"text": "Одного чоловік сказав мені.", "correct": false}]}, {"source": "I am here alone.", "options": [{"text": "Я тут один.", "correct": true}, {"text": "Я тут одного.", "correct": false}]}]} instruction={"Оберіть правильний переклад фраз зі словом «один»"} />
 
-<FillIn client:only="react" items={[{"sentence": "Мені потрібно _____ кілограма.", "answer": "півтора", "options": ["півтора", "півтори", "пів"]}, {"sentence": "Урок триває _____ години.", "answer": "півтори", "options": ["півтори", "півтора", "пів"]}, {"sentence": "Моїй мамі п'ятдесят _____.", "answer": "п'ять років", "options": ["п'ять років", "п'ять роки", "п'ять рік"]}, {"sentence": "Моєму другові двадцять _____.", "answer": "один рік", "options": ["один рік", "один роки", "один років"]}, {"sentence": "Цьому місту триста _____.", "answer": "років", "options": ["років", "роки", "рік"]}, {"sentence": "Моєму брату двадцять _____.", "answer": "два роки", "options": ["два роки", "два років", "два рік"]}]} instruction={"Вставте правильну форму слова."} />
+<Unjumble client:only="react" items={[{"words": "зустрінемося / квітня. / десятого / Ми", "answer": "Ми зустрінемося десятого квітня."}, {"words": "двісті / коштує / Один / гривень.", "answer": "Один коштує двісті гривень."}, {"words": "третьому / офіс / поверсі. / Мій / на", "answer": "Мій офіс на третьому поверсі."}, {"words": "два / роки. / Мені / двадцять", "answer": "Мені двадцять два роки."}, {"words": "перша / Це / зупинка.", "answer": "Це перша зупинка."}, {"words": "м'ячі? / коштують / ці / Скільки", "answer": "Скільки коштують ці м'ячі?"}]} instruction={"Складіть правильне речення зі слів"} />
 
-<MatchUp client:only="react" pairs={[{"left": "обидва", "right": "both (masculine/neuter)"}, {"left": "обидві", "right": "both (feminine)"}, {"left": "пів", "right": "half"}, {"left": "півтора", "right": "one and a half (masculine/neuter)"}, {"left": "півтори", "right": "one and a half (feminine)"}, {"left": "десяток", "right": "a ten / a dozen"}]} instruction={"З'єднайте слова з їхнім перекладом."} />
+<TrueFalse client:only="react" items={[{"statement": "Слово «один» не відмінюється за родами.", "isTrue": false, "explanation": "Слово «один» змінюється за родами: один (чоловічий), одна (жіночий), одне (середній)."}, {"statement": "Після слова «три» іменник стоїть у Називному відмінку множини.", "isTrue": true, "explanation": "Після чисел 2, 3 і 4 використовується Називний відмінок множини (наприклад, три квитки)."}, {"statement": "У датах порядковий числівник завжди стоїть у Родовому відмінку.", "isTrue": true, "explanation": "Наприклад: першого січня, п'ятого травня."}, {"statement": "Слово «півтора» використовується з іменниками жіночого роду.", "isTrue": false, "explanation": "Для жіночого роду ми використовуємо спеціальну форму «півтори» (наприклад, півтори години)."}, {"statement": "Числа від 5 до 20 вимагають Родового відмінка множини.", "isTrue": true, "explanation": "Наприклад: п'ять студентів, десять гривень."}, {"statement": "Порядковий числівник «третій» відмінюється як твердий прикметник.", "isTrue": false, "explanation": "Слово «третій» відмінюється як м'який прикметник (наприклад, третього, третьому)."}]} instruction={"Правда чи ні? Перевірте свої знання правил"} />
 
 </TabItem>
 <TabItem label="Ресурси">
+
+### Підручники
+- [Авраменко. Українська мова, 6 клас (2023)](https://pidruchnyk.com.ua/2592-ukrmova-6-klas-avramenko.html)
 
 **Статті — Articles**
 

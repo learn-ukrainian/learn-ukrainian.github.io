@@ -1,43 +1,7 @@
 {
-  "total_items": 148,
-  "grounded_items": 58,
+  "total_items": 102,
+  "grounded_items": 71,
   "ungrounded": [
-    {
-      "word": "м'ясо",
-      "exercise_type": "match-up",
-      "context": "м'ясо",
-      "role": "answer"
-    },
-    {
-      "word": "кава",
-      "exercise_type": "match-up",
-      "context": "кава",
-      "role": "answer"
-    },
-    {
-      "word": "кафе",
-      "exercise_type": "match-up",
-      "context": "кафе",
-      "role": "context"
-    },
-    {
-      "word": "борщ",
-      "exercise_type": "match-up",
-      "context": "борщ",
-      "role": "answer"
-    },
-    {
-      "word": "ресторан",
-      "exercise_type": "match-up",
-      "context": "ресторан",
-      "role": "context"
-    },
-    {
-      "word": "десять",
-      "exercise_type": "fill-in",
-      "context": "Скільки коштує ____? — Десять гривень.",
-      "role": "context"
-    },
     {
       "word": "п'ятдесят",
       "exercise_type": "fill-in",
@@ -63,500 +27,175 @@
       "role": "answer"
     },
     {
+      "word": "м'ясо",
+      "exercise_type": "match-up",
+      "context": "м'ясо",
+      "role": "answer"
+    },
+    {
+      "word": "кафе",
+      "exercise_type": "match-up",
+      "context": "кафе",
+      "role": "context"
+    },
+    {
+      "word": "борщ",
+      "exercise_type": "match-up",
+      "context": "борщ",
+      "role": "answer"
+    },
+    {
+      "word": "ресторан",
+      "exercise_type": "match-up",
+      "context": "ресторан",
+      "role": "context"
+    },
+    {
       "word": "пляшку",
       "exercise_type": "fill-in",
       "context": "пляшку",
       "role": "answer"
     },
     {
-      "word": "пачку",
-      "exercise_type": "fill-in",
-      "context": "пачку",
-      "role": "answer"
-    },
-    {
-      "word": "буханку",
-      "exercise_type": "fill-in",
-      "context": "буханку",
-      "role": "answer"
-    },
-    {
-      "word": "один",
-      "exercise_type": "quiz",
-      "context": "двадцять один",
-      "role": "context"
-    },
-    {
-      "word": "гривню",
-      "exercise_type": "fill-in",
-      "context": "Хліб коштує 21 (____ один) гривню.",
-      "role": "context"
-    },
-    {
-      "word": "купую",
-      "exercise_type": "match-up",
-      "context": "купую",
-      "role": "context"
-    },
-    {
-      "word": "ти",
-      "exercise_type": "match-up",
-      "context": "Ти",
-      "role": "answer"
-    },
-    {
-      "word": "купуєш",
-      "exercise_type": "match-up",
-      "context": "купуєш",
-      "role": "context"
-    },
-    {
-      "word": "він",
-      "exercise_type": "match-up",
-      "context": "Він",
-      "role": "answer"
-    },
-    {
-      "word": "купує",
-      "exercise_type": "match-up",
-      "context": "купує",
-      "role": "context"
-    },
-    {
-      "word": "купуємо",
-      "exercise_type": "match-up",
-      "context": "купуємо",
-      "role": "context"
-    },
-    {
-      "word": "купуєте",
-      "exercise_type": "match-up",
-      "context": "купуєте",
-      "role": "context"
-    },
-    {
-      "word": "вони",
-      "exercise_type": "match-up",
-      "context": "Вони",
-      "role": "answer"
-    },
-    {
-      "word": "купують",
-      "exercise_type": "match-up",
-      "context": "купують",
-      "role": "context"
-    },
-    {
-      "word": "вона",
-      "exercise_type": "fill-in",
-      "context": "Вона",
-      "role": "answer"
-    },
-    {
-      "word": "хоче",
-      "exercise_type": "fill-in",
-      "context": "____ хоче купити яблука.",
-      "role": "context"
-    },
-    {
       "word": "однина",
       "exercise_type": "group-sort",
-      "context": "Однина (Singular)",
+      "context": "Скільки коштує...? (Однина)",
       "role": "context"
-    },
-    {
-      "word": "воно",
-      "exercise_type": "group-sort",
-      "context": "Воно",
-      "role": "answer"
     },
     {
       "word": "множина",
       "exercise_type": "group-sort",
-      "context": "Множина (Plural)",
+      "context": "Скільки коштують...? (Множина)",
       "role": "context"
     },
     {
-      "word": "до",
-      "exercise_type": "quiz",
-      "context": "До продавця на ринку:",
-      "role": "context"
-    },
-    {
-      "word": "продавця",
-      "exercise_type": "quiz",
-      "context": "До продавця на ринку:",
-      "role": "context"
-    },
-    {
-      "word": "друга",
-      "exercise_type": "quiz",
-      "context": "До друга в кафе:",
-      "role": "context"
-    },
-    {
-      "word": "касира",
-      "exercise_type": "quiz",
-      "context": "До касира в супермаркеті:",
-      "role": "context"
-    },
-    {
-      "word": "брата",
-      "exercise_type": "quiz",
-      "context": "До брата або сестри:",
-      "role": "context"
-    },
-    {
-      "word": "або",
-      "exercise_type": "quiz",
-      "context": "До брата або сестри:",
-      "role": "context"
-    },
-    {
-      "word": "сестри",
-      "exercise_type": "quiz",
-      "context": "До брата або сестри:",
-      "role": "context"
-    },
-    {
-      "word": "лікаря",
-      "exercise_type": "quiz",
-      "context": "До лікаря в аптеці:",
-      "role": "context"
-    },
-    {
-      "word": "аптеці",
-      "exercise_type": "quiz",
-      "context": "До лікаря в аптеці:",
-      "role": "context"
-    },
-    {
-      "word": "працівника",
-      "exercise_type": "quiz",
-      "context": "До працівника магазину:",
-      "role": "context"
-    },
-    {
-      "word": "магазину",
-      "exercise_type": "quiz",
-      "context": "До працівника магазину:",
-      "role": "context"
-    },
-    {
-      "word": "традиційному",
+      "word": "завжди",
       "exercise_type": "true-false",
-      "context": "На традиційному ринку ціни фіксовані і не можна говорити з п",
+      "context": "На ринку завжди є цінники на всіх продуктах.",
       "role": "context"
     },
     {
-      "word": "ціни",
+      "word": "цінники",
       "exercise_type": "true-false",
-      "context": "На традиційному ринку ціни фіксовані і не можна говорити з п",
+      "context": "На ринку завжди є цінники на всіх продуктах.",
       "role": "context"
     },
     {
-      "word": "фіксовані",
+      "word": "всіх",
       "exercise_type": "true-false",
-      "context": "На традиційному ринку ціни фіксовані і не можна говорити з п",
+      "context": "На ринку завжди є цінники на всіх продуктах.",
       "role": "context"
     },
     {
-      "word": "не",
+      "word": "продуктах",
       "exercise_type": "true-false",
-      "context": "На традиційному ринку ціни фіксовані і не можна говорити з п",
-      "role": "context"
-    },
-    {
-      "word": "говорити",
-      "exercise_type": "true-false",
-      "context": "На традиційному ринку ціни фіксовані і не можна говорити з п",
-      "role": "context"
-    },
-    {
-      "word": "продавцем",
-      "exercise_type": "true-false",
-      "context": "На традиційному ринку ціни фіксовані і не можна говорити з п",
-      "role": "context"
-    },
-    {
-      "word": "самообслуговування",
-      "exercise_type": "true-false",
-      "context": "Супермаркет — це великий магазин самообслуговування.",
-      "role": "context"
-    },
-    {
-      "word": "україні",
-      "exercise_type": "true-false",
-      "context": "В Україні є спеціальний молочний відділ для сиру та молока.",
-      "role": "context"
-    },
-    {
-      "word": "спеціальний",
-      "exercise_type": "true-false",
-      "context": "В Україні є спеціальний молочний відділ для сиру та молока.",
+      "context": "На ринку завжди є цінники на всіх продуктах.",
       "role": "context"
     },
     {
       "word": "для",
       "exercise_type": "true-false",
-      "context": "В Україні є спеціальний молочний відділ для сиру та молока.",
+      "context": "Для води ми використовуємо слова «літр» або «пляшка».",
       "role": "context"
     },
     {
-      "word": "та",
+      "word": "ми",
       "exercise_type": "true-false",
-      "context": "В Україні є спеціальний молочний відділ для сиру та молока.",
+      "context": "Для води ми використовуємо слова «літр» або «пляшка».",
       "role": "context"
     },
     {
-      "word": "щоб",
+      "word": "використовуємо",
       "exercise_type": "true-false",
-      "context": "Щоб купити воду, треба йти в м'ясний відділ.",
-      "role": "context"
-    },
-    {
-      "word": "воду",
-      "exercise_type": "true-false",
-      "context": "Щоб купити воду, треба йти в м'ясний відділ.",
-      "role": "context"
-    },
-    {
-      "word": "треба",
-      "exercise_type": "true-false",
-      "context": "Щоб купити воду, треба йти в м'ясний відділ.",
-      "role": "context"
-    },
-    {
-      "word": "йти",
-      "exercise_type": "true-false",
-      "context": "Щоб купити воду, треба йти в м'ясний відділ.",
-      "role": "context"
-    },
-    {
-      "word": "слово",
-      "exercise_type": "true-false",
-      "context": "Слово «копійка» — це історична українська назва монети.",
-      "role": "context"
-    },
-    {
-      "word": "історична",
-      "exercise_type": "true-false",
-      "context": "Слово «копійка» — це історична українська назва монети.",
-      "role": "context"
-    },
-    {
-      "word": "українська",
-      "exercise_type": "true-false",
-      "context": "Слово «копійка» — це історична українська назва монети.",
-      "role": "context"
-    },
-    {
-      "word": "назва",
-      "exercise_type": "true-false",
-      "context": "Слово «копійка» — це історична українська назва монети.",
-      "role": "context"
-    },
-    {
-      "word": "монети",
-      "exercise_type": "true-false",
-      "context": "Слово «копійка» — це історична українська назва монети.",
-      "role": "context"
-    },
-    {
-      "word": "продавці",
-      "exercise_type": "true-false",
-      "context": "Продавці на ринку часто використовують слова з пестливими су",
-      "role": "context"
-    },
-    {
-      "word": "часто",
-      "exercise_type": "true-false",
-      "context": "Продавці на ринку часто використовують слова з пестливими су",
-      "role": "context"
-    },
-    {
-      "word": "використовують",
-      "exercise_type": "true-false",
-      "context": "Продавці на ринку часто використовують слова з пестливими су",
+      "context": "Для води ми використовуємо слова «літр» або «пляшка».",
       "role": "context"
     },
     {
       "word": "слова",
       "exercise_type": "true-false",
-      "context": "Продавці на ринку часто використовують слова з пестливими су",
+      "context": "Для води ми використовуємо слова «літр» або «пляшка».",
       "role": "context"
     },
     {
-      "word": "пестливими",
+      "word": "або",
       "exercise_type": "true-false",
-      "context": "Продавці на ринку часто використовують слова з пестливими су",
-      "role": "context"
-    },
-    {
-      "word": "суфіксами",
-      "exercise_type": "true-false",
-      "context": "Продавці на ринку часто використовують слова з пестливими су",
-      "role": "context"
-    },
-    {
-      "word": "ковбасу",
-      "exercise_type": "quiz",
-      "context": "Де можна купити ковбасу в супермаркеті?",
-      "role": "context"
-    },
-    {
-      "word": "що",
-      "exercise_type": "quiz",
-      "context": "Що ви говорите, коли ціна занадто висока?",
-      "role": "context"
-    },
-    {
-      "word": "говорите",
-      "exercise_type": "quiz",
-      "context": "Що ви говорите, коли ціна занадто висока?",
-      "role": "context"
-    },
-    {
-      "word": "коли",
-      "exercise_type": "quiz",
-      "context": "Що ви говорите, коли ціна занадто висока?",
-      "role": "context"
-    },
-    {
-      "word": "занадто",
-      "exercise_type": "quiz",
-      "context": "Що ви говорите, коли ціна занадто висока?",
-      "role": "context"
-    },
-    {
-      "word": "висока",
-      "exercise_type": "quiz",
-      "context": "Що ви говорите, коли ціна занадто висока?",
-      "role": "context"
-    },
-    {
-      "word": "яку",
-      "exercise_type": "quiz",
-      "context": "Яку форму дієслова треба використовувати для слова «яблука» ",
-      "role": "context"
-    },
-    {
-      "word": "форму",
-      "exercise_type": "quiz",
-      "context": "Яку форму дієслова треба використовувати для слова «яблука» ",
-      "role": "context"
-    },
-    {
-      "word": "дієслова",
-      "exercise_type": "quiz",
-      "context": "Яку форму дієслова треба використовувати для слова «яблука» ",
-      "role": "context"
-    },
-    {
-      "word": "використовувати",
-      "exercise_type": "quiz",
-      "context": "Яку форму дієслова треба використовувати для слова «яблука» ",
-      "role": "context"
-    },
-    {
-      "word": "як",
-      "exercise_type": "quiz",
-      "context": "Як правильно і ввічливо попросити щось у продавця?",
+      "context": "Для води ми використовуємо слова «літр» або «пляшка».",
       "role": "context"
     },
     {
       "word": "правильно",
-      "exercise_type": "quiz",
-      "context": "Як правильно і ввічливо попросити щось у продавця?",
+      "exercise_type": "true-false",
+      "context": "Правильно казати «двадцять одна гривень».",
       "role": "context"
     },
     {
-      "word": "ввічливо",
-      "exercise_type": "quiz",
-      "context": "Як правильно і ввічливо попросити щось у продавця?",
+      "word": "казати",
+      "exercise_type": "true-false",
+      "context": "Правильно казати «двадцять одна гривень».",
       "role": "context"
     },
     {
-      "word": "попросити",
-      "exercise_type": "quiz",
-      "context": "Як правильно і ввічливо попросити щось у продавця?",
+      "word": "молочному",
+      "exercise_type": "true-false",
+      "context": "М'ясо можна купити в молочному відділі.",
       "role": "context"
     },
     {
-      "word": "щось",
-      "exercise_type": "quiz",
-      "context": "Як правильно і ввічливо попросити щось у продавця?",
+      "word": "відділі",
+      "exercise_type": "true-false",
+      "context": "М'ясо можна купити в молочному відділі.",
       "role": "context"
     },
     {
-      "word": "яке",
-      "exercise_type": "quiz",
-      "context": "Яке слово використовують продавці, щоб бути привітними?",
+      "word": "український",
+      "exercise_type": "true-false",
+      "context": "«Крамниця» — це український синонім до слова «магазин».",
       "role": "context"
     },
     {
-      "word": "бути",
-      "exercise_type": "quiz",
-      "context": "Яке слово використовують продавці, щоб бути привітними?",
+      "word": "синонім",
+      "exercise_type": "true-false",
+      "context": "«Крамниця» — це український синонім до слова «магазин».",
       "role": "context"
     },
     {
-      "word": "привітними",
-      "exercise_type": "quiz",
-      "context": "Яке слово використовують продавці, щоб бути привітними?",
+      "word": "слово",
+      "exercise_type": "true-false",
+      "context": "Слово «буханка» — це правильне українське слово для хліба.",
       "role": "context"
     },
     {
-      "word": "запитуєте",
-      "exercise_type": "quiz",
-      "context": "Що ви запитуєте, коли хочете дізнатися, чи можна розрахувати",
+      "word": "правильне",
+      "exercise_type": "true-false",
+      "context": "Слово «буханка» — це правильне українське слово для хліба.",
       "role": "context"
     },
     {
-      "word": "хочете",
-      "exercise_type": "quiz",
-      "context": "Що ви запитуєте, коли хочете дізнатися, чи можна розрахувати",
+      "word": "українське",
+      "exercise_type": "true-false",
+      "context": "Слово «буханка» — це правильне українське слово для хліба.",
       "role": "context"
     },
     {
-      "word": "дізнатися",
-      "exercise_type": "quiz",
-      "context": "Що ви запитуєте, коли хочете дізнатися, чи можна розрахувати",
-      "role": "context"
-    },
-    {
-      "word": "чи",
-      "exercise_type": "quiz",
-      "context": "Що ви запитуєте, коли хочете дізнатися, чи можна розрахувати",
+      "word": "ого",
+      "exercise_type": "fill-in",
+      "context": "— Ого, це дуже ____!",
       "role": "context"
     },
     {
       "word": "розрахуватися",
-      "exercise_type": "quiz",
-      "context": "Що ви запитуєте, коли хочете дізнатися, чи можна розрахувати",
-      "role": "context"
-    },
-    {
-      "word": "банківською",
-      "exercise_type": "quiz",
-      "context": "Що ви запитуєте, коли хочете дізнатися, чи можна розрахувати",
+      "exercise_type": "fill-in",
+      "context": "— Ось, будь ласка. Чи можна розрахуватися ____?",
       "role": "context"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 18,
-    "tested_in_exercises": 8,
+    "tested_in_exercises": 15,
     "not_tested": [
-      "готівка",
       "гривня",
-      "гроші",
       "дешево",
-      "дорого",
-      "знижка",
-      "коштувати",
-      "купувати",
-      "пачка",
-      "пляшка"
+      "пачка"
     ]
   },
   "all_grounded": false

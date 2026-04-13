@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-визначається виключно за формою називного відмінка однини та родом іменника. Оскільки слова на кшталт «двері» чи «окуляри» взагалі не мають початкової форми однини, ми фізично не можемо визначити їхній рід. Відповідно, вони назавжди залишаються повністю «поза системою» традиційних чотирьох відмін. Як зазначають українські підручники, до жодної відміни не належать незмінювані запозичені слова, як-от **таксі** *(taxi)*, а також питомі українські іменники, що мають форму тільки множини. Ця граматична ізоляція робить їх справді особливими. Коли ми відмінюємо звичайне слово, ми автоматично спираємося на його приналежність до певної групи. Натомість слова *pluralia tantum* мають власні, цілком автономні парадигми відмінювання. Вони вимагають від мовця окремої, прискіпливої уваги, особливо у родовому та орудному відмінках, адже їхні закінчення не завжди підкоряються звичним загальним правилам. Тож, запам'ятайте це головне правило: якщо слово не має однини, воно ніколи не належатиме до жодної з класичних відмін. Вони є незалежними гравцями у багатій системі української морфології. Чому ж взагалі історично виникли та існують такі слова? Яка глибока семантична логіка стоїть за цією постійною граматичною множинністю? Відповідь зазвичай ховається у самій природі та фізичній будові предметів чи явищ, які вони позначають. Найчастіше *pluralia tantum* називають парні або складені предмети, які конструктивно складаються з двох однакових частин. Чудовими, наочними прикладами є **ножиці** *(scissors)* або традиційні зимові **сани** *(sleigh)*. Їхня симетрична структура буквально диктує мові множинну форму. Інша велика та важлива група — це назви тривалих дій, колективних станів або довгих часових періодів, які складаються з багатьох дрібних, неподільних моментів. Наприклад, улюблені всіма школярами та студентами **канікули** *(holidays)*. Це не один короткий день, а ціла сукупність вільних від важкого навчання днів, що абсолютно логічно виражається саме множиною. Хоча феномен таких слів існує в багатьох мовах світу, українська мова має свої унікальні прояви. Наші специфічні лексичні одиниці далеко не завжди збігаються з англійськими чи іншими європейськими відповідниками. Розуміння цієї глибокої внутрішньої логіки суттєво допомагає студентам не просто механічно зазубрювати нові слова, а тонко відчувати, як саме українці сприймають та класифікують навколишній світ. Окрім звичайних побутових предметів та різноманітних абстрактних понять, існує ще одна надзвичайно важлива категорія слів без однини. Це власні географічні **назви** *(names)*, які ви дуже часто зустрічатимете на сучасній мапі України. Багато українських міст та цілих регіонів історично є граматично множинними. Найвідоміший, мабуть, приклад для туристів — це мальовничі гори **Карпати** *(Carpathians)*. Серед великих обласних центрів також яскраво виділяються **Черкаси** *(Cherkasy)*, **Суми** *(Sumy)* та прекрасні західні **Чернівці** *(Chernivtsi)*. Звісно, ця цікава просторова особливість зовсім не є унікальною суто для нашої території. Ви можете легко знайти подібні міжнародні паралелі по всьому світу, як-от античні **Афіни** *(Athens)* чи величні, засніжені **Гімалаї** *(Himalayas)*. У повсякденних реченнях такі географічні назви граматично поводяться абсолютно так само, як звичайні слова «ножиці» чи «окуляри». Вони завжди суворо вимагають дієслів та прикметників виключно у формі множини. Якщо ви хочете емоційно розповісти про свою нещодавню подорож, ви скажете: «Суми стали моїм улюбленим містом», використовуючи дієслово у множині, навіть якщо йдеться про один єдиний конкретний населений пункт. Знання цих географічних назв є критично важливим для вашої правильної, природної комунікації. <!-- INJECT_ACTIVITY: quiz, Identify pluralia tantum: which nouns exist only in множина? -->
+different cases. However, these declension groups are strictly defined by the noun's gender and its ending in the singular nominative case. Since *pluralia tantum* nouns do not have a singular form, it is impossible to assign them a gender, and therefore, they do not belong to any declension group at all. They stand completely outside the standard system. Just as indeclinable foreign words like "таксі" sit outside the declension system, plural-only nouns are also excluded, but for a different reason. Згідно з правилами української граматики, до жодної відміни не належать незмінювані іменники та іменники, що мають форму тільки множини. Оскільки відміна визначається за початковою формою слова в однині, ми просто не можемо визначити відміну для таких слів. > *According to the rules of Ukrainian grammar, indeclinable nouns and nouns that have only a plural form do not belong to any declension. Since the declension is determined by the initial form of the word in the singular, we simply cannot determine the declension for such words.* You might wonder why a single physical object is treated grammatically as multiple things. The logic behind *pluralia tantum* often relates to the physical structure of the object. Many of these nouns refer to paired or composite objects made up of two or more identical parts functioning together. For instance, **ножиці** (scissors) consist of two blades, and **сани** (sleigh) have two runners. Other *pluralia tantum* nouns represent collective states or extended actions. A perfect example is **канікули** (holidays), which describes a continuous period of rest. While this phenomenon exists in many languages, the specific words that fall into this category in Ukrainian are unique and must be memorized. :::info **Grammar box** When learning *pluralia tantum* nouns, you must treat them syntactically as plural in every context. Any adjectives modifying them and any verbs agreeing with them must also be in the plural form. You cannot use the number "один" with them directly to count a single item. ::: Beyond household items and abstract concepts, this grammatical feature extends to geography. A surprising number of Ukrainian geographical names are *pluralia tantum*. The most famous example is the **Карпати** (Carpathians) mountain range. It also applies to major Ukrainian cities like Черкаси, Суми, and Чернівці. When you talk about these places, you must use plural verb forms and case endings. We see international parallels with names like Афіни or Гімалаї, which also function as plural nouns in Ukrainian sentences. Understanding this structural quirk is essential for navigating maps and discussing travel. Географічні назви дуже часто мають форму тільки множини. Коли ми говоримо про Карпати або Суми, ми завжди використовуємо закінчення множини в усіх відмінках. Ці назви завжди вимагають узгодження у множині для прикметників та дієслів. > *Geographical names very often have the form of only the plural. When we talk about the Carpathians or Sumy, we always use plural endings in all cases. These names always require plural agreement for adjectives and verbs.* <!-- INJECT_ACTIVITY: quiz, Identify pluralia tantum: which nouns exist only in множина?, 8 items -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -603,7 +603,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -616,18 +683,68 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] двері (door — pluralia tantum, Р. дверей)
+- [ ] окуляри (glasses — pluralia tantum, Р. окулярів)
+- [ ] гроші (money — pluralia tantum, Р. грошей, Ор. грішми/грошима)
+- [ ] ворота (gate — pluralia tantum, Р. воріт, Ор. ворітьми/воротами)
+- [ ] ножиці (scissors — pluralia tantum, Р. ножиць)
+- [ ] Карпати (Carpathians — geographical pluralia tantum)
+- [ ] канікули (holidays/vacation — pluralia tantum)
+- [ ] ліки (medicine — pluralia tantum, connects to M16)
+- [ ] меблі (furniture — pluralia tantum)
+- [ ] сани (sleigh — pluralia tantum, Р. саней)
+- [ ] дріжджі (yeast — pluralia tantum)
+- [ ] однина (singular number)
+- [ ] множина (plural number)
+- [ ] родовий відмінок (genitive case)
+- [ ] узгодження (agreement — grammatical concord)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Семантичні групи (~700 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

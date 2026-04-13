@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-і тільки десь-не-десь виблискувала кригою калюжа». Як ви можете помітити, перша частина цього речення вже має власну кому перед порівняльним словом «ніби». Щоб головна межа між двома великими блоками речення не загубилася серед інших дрібніших ком, автор свідомо використовує крапку з комою перед сполучником «і». Якщо ви хочете додати своєму тексту несподіваної динаміки та драматизму, вам обов'язково знадобиться **тире** *(dash)*. У складносурядному реченні воно ставиться замість звичайної коми тоді, коли друга частина виражає дуже різке протиставлення, раптову зміну подій або несподіваний результат. Тире створює особливу, інтригуючу паузу, яка змушує читача на мить затримати подих перед фінальною розв'язкою. Воно ніби графічно передає блискавичну швидкість розвитку дії. Класичний приклад з української народної творчості чудово та лаконічно це ілюструє: «Один стріл — і заєць ліг». Тут немає повільного та поступового розвитку сюжету. Ми бачимо миттєву дію в першій частині та її негайний, надзвичайно різкий наслідок у другій. Так само ефектно тире працює і в динамічних описах природи: «Дмухнув холодний вітер понад ставом — і сліду від ранкового туману миттєво не стало». Майстерне використання тире робить ваше письмо надзвичайно виразним, живим, емоційним та глибоко експресивним. Тепер ми маємо детально поговорити про найважливіший **виняток** *(exception)* із загального пунктуаційного правила. Існує одна специфічна та дуже поширена ситуація, коли кома перед сполучниками «і», «й», «та», «або», «чи» категорично не ставиться. Це відбувається тоді, коли обидві незалежні частини речення мають **спільний другорядний член** *(shared secondary member)*. Найчастіше це обставина часу або місця, яка стоїть на самому початку речення і логічно стосується обох дій одночасно. Розглянемо такий приклад: «Уночі вітер стих і дощ перестав». Слова «вітер стих» і «дощ перестав» — це дві повноцінні та незалежні граматичні основи. Але слово «уночі» стосується їх обох. Коли саме вітер стих? Уночі. Коли дощ перестав? Також уночі. Оскільки це слово є спільною власністю обох частин, воно міцно зв'язує їх разом у єдине ціле, і кома перед сполучником «і» стає абсолютно непотрібною. Якщо ж ми приберемо це спільне слово, кома негайно повернеться на своє законне місце: «Вітер стих, і дощ перестав». Англомовні студенти дуже часто припускаються прикрих помилок у пунктуації українських складносурядних речень через сильний вплив своєї рідної мови. В англійській мові використання коми перед сполучником *and*, який з'єднує дві незалежні частини, часто є просто стилістичним вибором або залежить від необов'язкового правила так званої «оксфордської коми». Натомість українська синтаксична система є значно суворішою, точнішою та більш математичною. Якщо ви маєте дві повноцінні граматичні основи, які поєднані сполучником «і», ви **зобов'язані** *(must)* поставити між ними кому. Написання речення «Я пішов у магазин і я купив молоко» без коми є грубою граматичною помилкою в сучасній українській мові. Правильний та єдино можливий варіант: «Я пішов у магазин, і я купив молоко». Єдиний випадок, коли ви маєте законне право проігнорувати цю кому — це наявність уже згаданого спільного другорядного члена на початку вашого речення. Завжди пам'ятайте: українська пунктуація базується на чіткій граматичній структурі речення, а не на довільній інтонації чи особистих стилістичних уподобаннях автора. <!-- INJECT_ACTIVITY: error-correction-punctuation, focus on identifying where commas are needed vs. where they must be removed due to shared members, 12 items -->
+you would use for a simple **зіставлення** (comparison/juxtaposition) of two ordinary facts. The dash introduces a dramatic, breathless pause in the natural rhythm of speech. It actively builds anticipation and heavily emphasizes the rapid speed or the surprising nature of the action that immediately follows. Використання тире створює ефект раптовості та динаміки в тексті. Порівняйте звичайне повідомлення та драматичну подію. Коли ми кажемо «Один стріл — і заєць ліг», тире передає миттєвий результат дії. Це не просто опис подій, а швидка і несподівана зміна ситуації. Despite the strictness of the general comma rule, there is one critical exception that every language learner must memorize. You must completely drop the comma before an **єднальний** (copulative — і, й, та) conjunction if the two clauses share a specific grammatical element. This element is called a **спільний другорядний член** (shared secondary member). Most commonly, this shared member is an adverbial of time or place positioned at the very beginning of the sentence. This rule often applies when two actions happen in perfect **одночасність** (simultaneity) at the exact same location, binding the clauses so tightly that a pause is forbidden. Якщо обставина часу або місця стосується обох частин речення одночасно, ми не ставимо кому перед сполучником. Наприклад, у реченні «Уночі вітер стих і дощ перестав» слово «уночі» є спільним. Вітер стих уночі, і дощ перестав також уночі. Оскільки цей спільний другорядний член об'єднує обидві події, пунктуаційна пауза між ними зникає. > *If an adverbial of time or place applies to both parts of the sentence simultaneously, we do not put a comma before the conjunction. For example, in the sentence "At night the wind died down and the rain stopped," the word "at night" is shared. The wind died down at night, and the rain also stopped at night. Since this shared secondary member unites both events, the punctuation pause between them disappears.* For English speakers, mastering Ukrainian punctuation requires a deliberate shift in perspective. In English, placing a comma before "and" when joining two independent clauses is often treated as an optional stylistic choice, or it depends heavily on the sentence's overall length. However, Ukrainian punctuation rules are rigid and structurally driven. When a **протиставний** (adversative — але, а, зате, проте) or copulative conjunction connects two independent clauses, the comma is absolutely mandatory. Each part acts as a **рівноправний** (equal, coordinate — parts of equal status) core with its own subject and predicate. You cannot skip the comma just because the sentence feels short or the ideas seem closely connected. :::tip **Quick tip** Always count your grammatical cores (subject plus verb combinations) before you place your punctuation. If you find two distinct subjects performing two distinct actions joined by «і», you automatically need a comma, unless a shared word at the beginning overrides the rule. ::: Українська пунктуація базується на граматичній структурі, а не на інтонації чи стилі. Тому ви повинні свідомо аналізувати кожне речення під час письма. Звичка ставити кому між незалежними основами допоможе вам уникнути найпоширеніших помилок. <!-- INJECT_ACTIVITY: error-correction-punctuation -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -508,7 +508,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -521,18 +588,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] складносурядне речення (compound sentence)
+- [ ] сполучник сурядності (coordinating conjunction)
+- [ ] єднальний (copulative — і, й, та)
+- [ ] протиставний (adversative — але, а, зате, проте)
+- [ ] розділовий (disjunctive — або, чи, то...то)
+- [ ] рівноправний (equal, coordinate — parts of equal status)
+- [ ] одночасність (simultaneity)
+- [ ] послідовність (sequence)
+- [ ] протиставлення (opposition/contrast)
+- [ ] зіставлення (comparison/juxtaposition)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Побудова складносурядних речень (~750 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

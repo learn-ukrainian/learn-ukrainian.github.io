@@ -1,0 +1,58 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T19-49-c71d08f9.json
+phase: write-chunk-01
+prompt_chars: 45716
+response_chars: 4489
+prompt_words: 6372
+response_words: 734
+sections:
+- name: header
+  start: 0
+  length: 475
+  fraction: 0.0104
+- name: skeleton
+  start: 475
+  length: 1702
+  fraction: 0.0372
+- name: plan
+  start: 2177
+  length: 13440
+  fraction: 0.294
+- name: wiki
+  start: 8154
+  length: 29879
+  fraction: 0.6536
+- name: output_spec
+  start: 45496
+  length: 220
+  fraction: 0.0048
+large_sections:
+- wiki
+directives_total: 18
+directives_covered: 12
+directives_missed:
+- kind: must
+  text: The verbal noun `малювання` (painting/drawing) must be used.
+  covered: false
+  coverage_note: 2/7 keywords (29%)
+- kind: must
+  text: 'The learner must produce a full sentence: `Я граю у футбол`.'
+  covered: false
+  coverage_note: 2/7 keywords (29%)
+- kind: must
+  text: '* **Verb Conjugation (Present Tense):** Learners must be comfortable conjugating
+    regular first and second-conjugation verbs to use `люблю`, `граю`, `ходжу`, `дивлюся`.'
+  covered: false
+  coverage_note: 3/17 keywords (18%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: inject_activity
+  text: fill-in-agreement
+  covered: false
+  coverage_note: marker missing

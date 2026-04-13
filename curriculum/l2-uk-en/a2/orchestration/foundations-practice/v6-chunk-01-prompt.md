@@ -1,24 +1,22 @@
-# Section-by-Section Generation — Section 1/4
+# Section-by-Section Generation — Section 1/3
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 7: Перші кроки в А2 (A2, A2.1 [Foundation and Aspect Introduction])
-**Section to write:** Сценарій 1: Плануємо вечірку (Scenario 1: Planning a Party) (~660 words)
-**Word target for this section:** 660 words (aim for 726 to account for undershoot)
+**Section to write:** Сценарій 1: Плануємо вечірку (Scenario 1: Planning a Party) (~650 words)
+**Word target for this section:** 650 words (aim for 715 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Сценарій 1: Плануємо вечірку (Scenario 1: Planning a Party) (~660 words)
-- P1 (~80 words): Intro to A2 "First Steps." Transitioning from basic phrases to realistic communication. Setting the scene: planning a housewarming party (новосілля) and why this requires shifting between future plans and concrete results.
-- P2 (~120 words): Dialogue between friends (Максим and Олена) planning a party. Focus on using the future tense with imperfective for "ongoing" planning: "Ми будемо обговорювати меню," "Я буду купувати напої," "Що ми будемо готувати?"
-- P3 (~100 words): Explanation of Imperfective Future (буду + infinitive) for processes and plans. Contrast with the concept of a "target" using the Perfective (e.g., "Я приготую салат" vs. "Я буду готувати"). Use examples like планувати/запланувати and готувати/приготувати.
-- P4 (~90 words): Introduction to the Genitive case for absence using "немає." Explain how "немає" triggers the Genitive. Specific examples from the scenario: "У нас немає музики," "Немає торта," "Немає великого столу."
-- P5 (~90 words): Using Genitive with quantity words like "багато" (much/many) and "мало" (little/few). Explain the plural forms for common party items: "багато фруктів," "багато напоїв," "мало серветок."
-- P6 (~100 words): Dialogue continuation: Confirming what is already done (Perfective Past). "Я вже купив торт," "Ми замовили піцу." Note on the "result" vs. the "process" of buying/ordering.
-- P7 (~80 words): Cultural/Linguistic note on Diminutives at a party. Explain how words like "тортик," "салатик," and "винишко" (slang/informal) add a friendly, hospitable tone to Ukrainian invitations.
-- <!-- INJECT_ACTIVITY: quiz-party-aspect --> [quiz, Role-play: Planning a Party (aspect in future tense), 8 items]
+## Сценарій 1: Плануємо вечірку (Scenario 1: Planning a Party) (~650 words)
+- P1 (~50 words): Introduction to the scenario. Introduce two friends planning a housewarming party (вечірка). Set the context that they need to discuss future plans, allocate tasks, and figure out what is missing.
+- P2 (~120 words): Dialogue. The friends discuss buying a cake (торт), drinks (напої), and napkins (серветки) for ten guests. Include vocabulary like "планувати", "купувати", and "готувати".
+- P3 (~150 words): Analysis of Imperfective for future plans. Explain how to form the compound future tense for processes using "бути + imperfective infinitive". Use examples from the dialogue: "Ми будемо купувати напої" and "Я буду готувати салат". Contrast this with the English continuous tense.
+- P4 (~180 words): Analysis of the Genitive case with "немає" and quantity words. Explain that expressing absence or a specific volume requires the Genitive. Provide examples: "У нас немає музики!" (absence) and "Треба купити багато фруктів" (quantity).
+- P5 (~150 words): Analysis of Perfective for confirming completed tasks. Explain how the perfective past acts like the English present perfect to state a result. Contrast the process "купувати" with the result "купити". Examples: "Я вже приготувала салат" and "Ми купили два торти".
+- <!-- INJECT_ACTIVITY: quiz-planning-party --> [quiz, Role-play: Planning a Party (aspect in future tense), 8 items]
 
 ---
 ## Full Plan (for reference)
@@ -583,6 +581,29 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] планувати / запланувати (to plan)
+- [ ] купувати / купити (to buy)
+- [ ] готувати / приготувати (to cook, prepare)
+- [ ] ринок (market)
+- [ ] коштувати (to cost)
+- [ ] кілограм (kilogram)
+- [ ] вечірка (party)
+- [ ] день (day)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Сценарій 1: Плануємо вечірку (Scenario 1: Planning a Party) (~650 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

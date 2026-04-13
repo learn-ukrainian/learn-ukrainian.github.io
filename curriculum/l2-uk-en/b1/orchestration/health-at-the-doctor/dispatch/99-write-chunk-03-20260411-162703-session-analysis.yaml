@@ -1,0 +1,81 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T14-25-7edb79e8.json
+phase: write-chunk-03
+prompt_chars: 49023
+response_chars: 5801
+prompt_words: 7019
+response_words: 881
+sections:
+- name: header
+  start: 0
+  length: 421
+  fraction: 0.0086
+- name: skeleton
+  start: 421
+  length: 1037
+  fraction: 0.0212
+- name: prior_summary
+  start: 1458
+  length: 3487
+  fraction: 0.0711
+- name: plan
+  start: 4945
+  length: 18412
+  fraction: 0.3756
+- name: wiki
+  start: 16878
+  length: 25453
+  fraction: 0.5192
+- name: output_spec
+  start: 48810
+  length: 213
+  fraction: 0.0043
+large_sections:
+- wiki
+directives_total: 27
+directives_covered: 16
+directives_missed:
+- kind: checklist
+  text: 'біль (pain — II відміна masculine, чергування: біль-болить)'
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: checklist
+  text: температура (temperature — I відміна)
+  covered: false
+  coverage_note: 1/3 keywords (33%)
+- kind: checklist
+  text: кашель (cough — II відміна masculine, м'яка група)
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: checklist
+  text: скаржитися (to complain — на + Зн.)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: лікувати (to treat — imperfective)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: одужати (to recover — perfective)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: призначити (to prescribe — perfective)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: must
+  text: You must always treat it grammatically as a plural entity.
+  covered: false
+  coverage_note: 2/7 keywords (29%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 4/11 keywords (36%)
+- kind: inject_activity
+  text: fill-in-medical-cases
+  covered: false
+  coverage_note: marker missing

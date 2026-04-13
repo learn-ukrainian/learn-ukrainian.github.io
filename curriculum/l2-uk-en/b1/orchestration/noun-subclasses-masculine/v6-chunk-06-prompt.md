@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-у своїх підручниках чітко пояснює логіку: загальні іменники мішаної групи з основою на **-р** (як-от школяр, тесляр, пісняр) завжди отримують закінчення **-е**. Це дуже логічно, адже мішана група зазвичай вимагає саме цього закінчення в кличному відмінку (порівняйте: пане стороже). Отже, попри спокусу сказати «школярю» за аналогією до «лікарю», правильною формою є тільки «школяре». Нарешті, поглянемо на синтаксичну роль цих іменників у реченні. Коли ми говоримо про чиюсь професію, ідентичність або рід занять, українська мова найчастіше використовує орудний відмінок. Це дуже схоже на англійську конструкцію з прийменником "as a...". Наприклад, якщо ви хочете сказати "My father worked as a stonecutter", українською це буде: «Мій батько працював каменярем». Нам не потрібні жодні додаткові прийменники, сам відмінок передає цю ідею. Інший приклад: «Він був старанним школярем» *(He was a diligent student)*. Орудний відмінок після дієслів «бути» або «працювати» — це золотий стандарт української граматики для опису професій. Знаючи це правило і пам'ятаючи про мішану групу, ви зможете розповідати про заняття людей природно і граматично бездоганно. <!-- INJECT_ACTIVITY: group-sort-ar-yar --> ## Суфікс -ин/-янин: люди за походженням Українська мова має специфічні суфікси для позначення людей за їхнім місцем проживання або приналежністю до певної групи. Найпоширенішими є суфікси **-ин**, **-їн** та **-янин**. За допомогою них ми утворюємо слова, що позначають мешканців міст: **киянин** *(Kyiv resident)*, **львів'янин** *(Lviv resident)*. Ці ж суфікси використовують для соціальних та національних груп: **громадянин** *(citizen)*, **селянин** *(villager, peasant)*, **болгарин** *(Bulgarian)*. Усі ці слова належать до твердої групи другої відміни. Проте найважливіша граматична особливість цих іменників проявляється у множині. Олександр Авраменко у своїх підручниках наголошує на критичному правилі: у множині суфікс **-ин-** просто випадає. Тому правильна форма від слова **киянин** — це **кияни** *(Kyivans)*, а не «киянини». Так само ми утворюємо інші форми: **громадянин** стає **громадяни**, **селянин** змінюється на **селяни**, а **болгарин** — на **болгари**. Це фундаментальне правило, яке дозволяє уникати дуже поширених помилок серед іноземців. Оскільки ці слова втрачають суфікс у множині, вони мають ще одну унікальну рису: родовий відмінок множини отримує нульове закінчення. Якщо ви хочете перекласти англійську фразу "a lot of citizens", правильно буде: багато **громадян** (не «громадянів»). Так само ми скажемо: на вулиці багато **киян** *(many Kyivans)*, у селі багато **селян** *(many villagers)*, приїхало багато **болгар**. Форми із закінченням **-ів** для цих слів є грубою граматичною помилкою. Але кожне правило має свої винятки. В українському правописі є назви народів, які зберігають закінчення **-ів** у родовому відмінку множини. Найвідоміші з них — це **грузинів** *(of Georgians)* та **осетинів** *(of Ossetians)*. Чому так відбувається? Називний відмінок множини від цих слів звучить як **грузини** та **осетини**. Суфікс **-ин-** у них не випадає, він є частиною основи слова. Тому вони отримують стандартне закінчення **-ів**. Варто також пам'ятати, що не всі назви мешканців утворюються за допомогою цих суфіксів. Наприклад, мешканець Одеси — це **одесит** *(Odesan)*, а житель Полтави — **полтавець** *(Poltava resident)*. Ці слова утворюють множину за звичайними правилами: **одесити** (родовий — багато **одеситів**) та **полтавці** (родовий — багато **полтавців**). Саме тому важливо розпізнавати слова із суфіксом **-ин** — щоб не зробити помилку в їхній множині. <!-- INJECT_ACTIVITY: quiz-plural-in --> <!-- INJECT_ACTIVITY: fill-in-genitive-plural-in -->
+word-formation pattern is used to indicate a person's **походження** (origin — where someone is from), nationality, or group membership. If you want to talk about a **киянин** (Kyivan — resident of Kyiv), a citizen, or a villager, you need to understand how this pattern behaves. Коли ми говоримо про одну людину, ці слова належать до другої відміни твердої групи. Слово зберігає цей суфікс у всіх граматичних формах, якщо це **однина** (singular number). Наприклад, ми часто кажемо «я бачу киянина» або «я розмовляю з громадянином». Цей елемент слова чітко показує приналежність людини до певного міста або великої суспільної групи. > *When we talk about one person, these words belong to the second declension of the hard group. The word keeps this suffix in all grammatical forms if it is the singular number. For example, we often say "I see a Kyivan" or "I am talking with a citizen". This word element clearly shows a person's belonging to a certain city or large social group.* The most critical rule for these words appears when we form the **множина** (plural number). According to Ukrainian grammatical norms, the `-ин-` ending completely drops in the plural. Therefore, one Kyivan is `киянин`, but many are `кияни` (never *киянини*). Similarly, one citizen is a **громадянин** (citizen), but citizens are `громадяни`, and a Bulgarian is `болгарин`, but Bulgarians are `болгари`. This dropping mechanism affects every single plural case. :::info **Grammar box** — The dropping of `-ин` in the plural is a strict rule for words denoting origin or group membership. Always remove `-ин` before adding plural endings. ::: Найбільше помилок виникає, коли студенти утворюють **родовий відмінок** (genitive case) множини. Для цих слів діє суворе правило нульового закінчення. Оскільки суфікс випадає, ми ніколи не додаємо стандартне закінчення «-ів». Правильно казати: на площі було багато киян, ми захищаємо права громадян, це стосується життя селян. Форми «киянів» або «громадянів» є грубою граматичною помилкою, якої треба уникати. > *The most mistakes occur when students form the genitive case of the plural. For these words, the strict rule of the zero ending applies. Since the suffix drops, we never add the standard "-ів" ending. It is correct to say: there were many Kyivans on the square, we protect the rights of citizens, this concerns the life of villagers. The forms "киянів" or "громадянів" are a gross grammatical error that should be avoided.* There are a few notable exceptions to the genitive plural rule, specifically with some nationalities like `грузин` (Georgian) and `осетин` (Ossetian). While they still drop the `-ин` in the nominative plural (`грузини`, `осетини`), their genitive plural keeps the `-ів` ending according to the official orthography: `багато грузинів`, `багато осетинів`. It is also important to note that not all city residents use this suffix, such as an `одесит` (Odesan) or a `полтавець` (Poltavan). Proper **відмінювання** (declension — changing a word through cases) requires recognizing which exact suffix an **іменник** (noun) has. You must identify its corresponding **відміна** (declension class) to choose the right endings. <!-- INJECT_ACTIVITY: quiz-plural-in --> <!-- INJECT_ACTIVITY: fill-in-genitive-plural-in -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -624,7 +624,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -637,18 +704,69 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] суфікс (suffix — word-formation morpheme after the root)
+- [ ] іменник (noun)
+- [ ] відміна (declension class)
+- [ ] відмінювання (declension — changing a word through cases)
+- [ ] однина (singular number)
+- [ ] множина (plural number)
+- [ ] кличний відмінок (vocative case)
+- [ ] родовий відмінок (genitive case)
+- [ ] походження (origin — where someone is from)
+- [ ] професія (profession)
+- [ ] пекар (baker — person who bakes)
+- [ ] лікар (doctor)
+- [ ] школяр (student — person who attends school)
+- [ ] кобзар (kobza player — traditional Ukrainian musician)
+- [ ] киянин (Kyivan — resident of Kyiv)
+- [ ] громадянин (citizen)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Відмінювання іменників на -ин в однині (~660 слів)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

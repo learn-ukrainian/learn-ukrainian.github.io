@@ -1,0 +1,66 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T13-35-4619345e.json
+phase: write-chunk-03
+prompt_chars: 53340
+response_chars: 5128
+prompt_words: 7566
+response_words: 829
+sections:
+- name: header
+  start: 0
+  length: 452
+  fraction: 0.0085
+- name: skeleton
+  start: 452
+  length: 1610
+  fraction: 0.0302
+- name: prior_summary
+  start: 2062
+  length: 3537
+  fraction: 0.0663
+- name: plan
+  start: 5599
+  length: 18690
+  fraction: 0.3504
+- name: wiki
+  start: 17687
+  length: 28821
+  fraction: 0.5403
+- name: output_spec
+  start: 53110
+  length: 230
+  fraction: 0.0043
+large_sections:
+- wiki
+directives_total: 22
+directives_covered: 15
+directives_missed:
+- kind: checklist
+  text: кличний відмінок (vocative case — used for direct address)
+  covered: false
+  coverage_note: 2/7 keywords (29%)
+- kind: checklist
+  text: мішана група (mixed group — nouns with шиплячий stem-final)
+  covered: false
+  coverage_note: 2/8 keywords (25%)
+- kind: checklist
+  text: звертання (form of address — using кличний відмінок)
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 3/11 keywords (27%)
+- kind: inject_activity
+  text: quiz-palatalization-type, identify first vs second palatalization in pairs
+    like козак-козаче vs рука-руці
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-vocative, produce vocative forms for masculine nouns with [г/к/х]
+  covered: false
+  coverage_note: marker missing

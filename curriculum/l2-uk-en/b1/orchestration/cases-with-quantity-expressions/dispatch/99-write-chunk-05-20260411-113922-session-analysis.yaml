@@ -1,0 +1,49 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T09-38-25c8ea0b.json
+phase: write-chunk-05
+prompt_chars: 46538
+response_chars: 3621
+prompt_words: 6286
+response_words: 545
+sections:
+- name: header
+  start: 0
+  length: 426
+  fraction: 0.0092
+- name: skeleton
+  start: 426
+  length: 807
+  fraction: 0.0173
+- name: prior_summary
+  start: 1233
+  length: 3726
+  fraction: 0.0801
+- name: plan
+  start: 4959
+  length: 14838
+  fraction: 0.3188
+- name: wiki
+  start: 14936
+  length: 26613
+  fraction: 0.5719
+- name: output_spec
+  start: 46410
+  length: 128
+  fraction: 0.0028
+large_sections:
+- wiki
+directives_total: 5
+directives_covered: 2
+directives_missed:
+- kind: must
+  text: Therefore, you must use phrases like **двоє ножиць** (two pairs of scissors)
+    or **троє дверей** (three doors) to express these quantities correctly.
+  covered: false
+  coverage_note: 7/19 keywords (37%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: inject_activity
+  text: match-up-collective-usage
+  covered: false
+  coverage_note: marker missing

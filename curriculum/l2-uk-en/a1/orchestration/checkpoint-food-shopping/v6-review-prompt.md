@@ -220,114 +220,112 @@ references:
 <generated_module_content>
 ## Що ми знаємо? (What Do We Know?)
 
-The Food and Shopping phase combines vocabulary and grammar for practical use. Over the last five modules, you learned how to identify everyday foods, order a meal at a cafe, and navigate a local market. You also learned how to introduce the people around you. The primary goal of this checkpoint is to integrate talking about food, buying things, and interacting with people into a single, natural flow of communication.
+This checkpoint brings together the key material from A1.6. In this module, you review food vocabulary, practical shopping phrases, and the accusative case for both things and people in realistic, everyday scenarios.
 
-First, review your core vocabulary foundation. You should comfortably recognize general categories like **їжа** (food) and **напої** (drinks), as well as ten essential food items: **хліб** (bread), **сир** (cheese), **молоко** (milk), **яблуко** (apple), **помідор** (tomato), **картопля** (potato), **яйце** (egg), **м'ясо** (meat), **риба** (fish), and **цукор** (sugar). You also need to know five basic drinks: **вода** (water), **сік** (juice), **чай** (tea), **кава** (coffee), and **пиво** (beer). These words are the building blocks you need before we change their endings.
+This is your opportunity to step back and check what you can already do. Look at the self-check questionnaire below.
 
-In practical situations, you rely heavily on fixed functional phrases. At a cafe, the most important pattern is **Мені каву, будь ласка** (Coffee for me, please) when ordering your drink. At a market, your essential question is **Скільки коштує...?** (How much does ... cost?) when checking prices. When paying, always remember that the national currency of Ukraine is the **гривня** (hryvnia).
-
-:::tip
-The word **гривня** behaves like a regular feminine noun. It changes its ending based on numbers, which is an essential grammar rule for shopping!
-:::
-
-Evaluate your own progress. Can you confidently answer "yes" to these questions?
-* Can you name 10 foods and 5 drinks in Ukrainian?
-* Can you say what you eat and drink using the accusative case?
-* Can you order a meal and a drink at a cafe?
-* Can you ask for prices and buy products at a market?
-* Can you introduce a person using the correct accusative form?
-
-<!-- INJECT_ACTIVITY: group-sort-accusative-type -->
+*   **Їжа й напої (Food and Drink):** Can you name 10 foods and 5 drinks?
+*   **Знахідний відмінок (Accusative):** Can you say what you eat or drink (for example, **Я їм кашу. Я п'ю воду.**)?
+*   **Кафе (Cafe):** Can you order a meal at a cafe (for example, **Мені борщ, будь ласка.**)?
+*   **Ринок (Market):** Can you ask for prices and buy things at the market (for example, **Скільки коштують помідори? Дайте кілограм яблук, будь ласка.**)?
+*   **Люди (People):** Can you use the accusative case to talk about people (for example, **Я бачу брата. Я знаю Олену.**)?
 
 ## Читання (Reading Practice)
 
-Read the following text to put your skills into context. Meet Anna. She is a university student living in Kyiv. On a typical Saturday morning, she follows a classic routine: she goes to the local market to buy fresh food, stops by a small cafe for lunch, and then meets a friend. This short story tests every single skill you learned in this phase.
+Let us put these new skills into practice with a short reading text. Anna is having a very busy day running errands around the city. First, she goes to the local market (**ринок**) to buy some fresh groceries for dinner. After finishing her shopping, she relaxes at a nearby cafe (**кафе**). Notice how she uses the accusative case and common shopping chunks throughout her day.
 
-First, Anna goes to the market to buy some vegetables. She talks to the seller (**продавець**).
-> **Анна:** Скільки коштують ці помідори? *(How much do these tomatoes cost?)*
-> **Продавець:** Тридцять гривень. *(Thirty hryvnias.)*
-> **Анна:** Це дуже дешево. Дайте кілограм, будь ласка. *(This is very cheap. Give me a kilogram, please.)*
-> **Анна:** А скільки коштують огірки? *(And how much do the cucumbers cost?)*
-> **Продавець:** Сорок гривень. *(Forty hryvnias.)*
-> **Анна:** Добре, дайте кілограм. *(Good, give me a kilogram.)*
+> **Анна йде на ринок. Вона бачить помідори і яблука.**
+> *(Anna goes to the market. She sees tomatoes and apples.)*
+> **— Скільки коштують помідори?**
+> *(— How much do the tomatoes cost?)*
+> **— Тридцять гривень.**
+> *(— Thirty hryvnias.)*
+> **— Добре. Дайте кілограм, будь ласка.**
+> *(— Good. Give me a kilogram, please.)*
+> **Потім Анна йде у кафе. Вона бачить стіл.**
+> *(Then Anna goes to a cafe. She sees a table.)*
+> **— Тут вільно?**
+> *(— Is it free here?)*
+> **— Так, звичайно.**
+> *(— Yes, of course.)*
+> **— Мені борщ і каву з молоком, будь ласка.**
+> *(— Borscht and coffee with milk for me, please.)*
+> **Анна їсть борщ і п'є каву. Потім вона просить рахунок.**
+> *(Anna eats borscht and drinks coffee. Then she asks for the bill.)*
+> **— Рахунок, будь ласка. Можна карткою?**
+> *(— The bill, please. Can I pay by card?)*
+> **— Так, будь ласка.**
+> *(— Yes, please.)*
+> **Раптом вона бачить Олену.**
+> *(Suddenly she sees Olena.)*
+> **— Олено, привіт! Ти знаєш мого брата?**
+> *(— Olena, hi! Do you know my brother?)*
 
-After finishing her shopping, Anna transitions to a small cafe called «Смачно». She finds a free table.
-> **Продавець:** Що ви хочете? *(What do you want?)*
-> **Анна:** Мені борщ і воду з лимоном, будь ласка. *(Borsch and water with lemon for me, please.)*
-> **Продавець:** Це все? *(Is that all?)*
-> **Анна:** Так, дякую. Рахунок, будь ласка. *(Yes, thank you. The bill, please.)*
-> **Анна:** Можна карткою? *(Is it possible by card?)*
-> **Продавець:** Так, звичайно. *(Yes, of course.)*
-
-:::note
-Notice the use of **звичайно** (of course). It is a very common, polite way to agree or accept a request in conversational Ukrainian.
-:::
-
-Finally, Anna sees her friend Olena and introduces her brother Taras.
-> **Анна:** Олено, привіт! *(Olena, hi!)*
-> **Олена:** Привіт, Анно! Як справи? *(Hi, Anna! How are things?)*
-> **Анна:** Добре. Олено, ти знаєш мого брата Тараса? *(Good. Olena, do you know my brother Taras?)*
-> **Олена:** Ні, я не знаю Тараса. Дуже приємно! *(No, I do not know Taras. Very nice to meet you!)*
-
-<!-- INJECT_ACTIVITY: quiz-shopping-situations -->
+This short text seamlessly combines functional shopping chunks (like **Рахунок, будь ласка.**) with the accusative case. Notice the accusative for inanimate objects when Anna orders food (**борщ**, **каву**), and the accusative for animate objects when she sees a friend (**Олену**) or mentions family (**брата**). You already know enough vocabulary and grammar to understand a full day of real-world activities in Ukrainian!
 
 ## Граматика (Grammar Summary)
 
-To describe your daily routine, use the nouns **їжа** (food) and **напої** (drinks), along with specific meals: **сніданок** (breakfast), **обід** (lunch), and **вечеря** (dinner). When you eat or buy something, the object is the direct target of your action, requiring the accusative case. Masculine and neuter inanimate nouns do not change their endings: you buy **борщ** (borsch), **сік** (juice), or **яблуко** (apple). Feminine nouns ending in **-а** or **-я** change to **-у** or **-ю**. Therefore, **кава** becomes **каву**, and **вода** becomes **воду**.
+To succeed in everyday interactions, you need a strong grasp of essential food and drink vocabulary (**їжа**, **напої**). Crucial combinations often use the preposition **з** (with), creating useful chunks like **кава з молоком** (coffee with milk) or **чай з лимоном** (tea with lemon). These are the fundamental building blocks of any market or cafe conversation in Ukraine, helping you sound more natural.
 
-The grammar rules shift slightly when the target of your action is a person. For animate nouns, feminine words follow the exact same pattern as objects: the ending **-а** changes to **-у**. You see **маму** (mom) and you know **Олену** (Olena). However, masculine animate nouns take the genitive ending **-а** or **-я**. You see **брата** (brother) or wait for **друга** (friend).
+When we talk about the objects of our actions, we must use the accusative case. Remember the important difference between inanimate things (**що?** (what?)) and animate people (**кого?** (whom?)).
+For inanimate objects, masculine nouns stay the same (**Я їм борщ.**, **Я купую хліб.**), while feminine nouns change their ending from **-а** to **-у** (**Я п'ю воду.**, **Я їм піцу.**).
+For animate objects, the feminine rule is exactly the same (**Я бачу Олену.**, **Я люблю маму.**). However, masculine animate nouns take the genitive ending **-а** or **-я** (**Я бачу брата.**, **Я чекаю лікаря.**, **Я знаю друга.**).
 
-When asking about prices, use the question **Скільки коштує?** (How much does it cost?). The form of the currency **гривня** changes depending on the number. For the number one, it is **одна гривня** (one hryvnia). For two, three, and four, the form is **дві гривні**, **три гривні**, **чотири гривні**. For five or more, it changes to **п'ять гривень**, **десять гривень**, **двадцять гривень**. 
+Finally, always remember the specific patterns for asking prices. Use **Скільки коштує?** (How much does it cost?) for a single item, and **Скільки коштують?** (How much do they cost?) for plural items. Keep the currency agreement in mind: **одна гривня** (one hryvnia), **дві гривні** (two hryvnias), but **п'ять гривень** (five hryvnias).
 
-Finally, remember that some phrases are best learned as complete chunks. When you order, say **Мені каву, будь ласка** (Coffee for me, please). Use the instrumental preposition **з** (with) for combinations like **кава з молоком** (coffee with milk). For quantities, use chunks like **кілограм яблук** (a kilogram of apples). Learn them as single vocabulary items right now without worrying about the underlying case rules.
+### Швидке сортування (Quick Sort)
+
+Sort these forms into two groups.
+
+*   **Inanimate (що?):** борщ, хліб, сік, чай, сир
+*   **Animate (кого?):** брата, лікаря, сусіда, друга, вчителя
 
 <!-- INJECT_ACTIVITY: quiz-accusative-forms -->
 
 ## Діалог (Connected Dialogue)
 
-Consider a complete, realistic scenario: hosting a dinner party (**вечеря**) at your home. This situation involves the full cycle of preparation. You start with your morning breakfast, go to the local market to buy fresh ingredients, stop at a cafe for a quick break, and interact with a friend.
+This dialogue models a complete, realistic day of food and shopping. It combines talking about breakfast at home, buying fresh produce at the market, and ordering lunch at a cafe. Watch how the speakers use fixed phrases to get what they want smoothly and efficiently.
 
-Read this connected sequence of conversations. A host (**Господиня**) interacts with different people throughout the day.
+> **Олег:** Що ти їси на сніданок?
+> *(What do you eat for breakfast?)*
+> **Марія:** Я їм кашу і п'ю каву з молоком. Потім іду на ринок купувати продукти на вечерю.
+> *(I eat porridge and drink coffee with milk. Then I go to the market to buy groceries for dinner.)*
+> **Продавчиня:** Що вам?
+> *(What would you like?)*
+> **Марія:** Скільки коштують помідори?
+> *(How much do the tomatoes cost?)*
+> **Продавчиня:** Тридцять гривень.
+> *(Thirty hryvnias.)*
+> **Марія:** Добре. Дайте кілограм помідорів, будь ласка. Я готую вареники і салат.
+> *(Good. Give me a kilogram of tomatoes, please. I am making varenyky and salad.)*
+> **Олег:** А вдома все готово?
+> *(Is everything ready at home?)*
+> **Марія:** Так. Я ставлю тарілки і склянки на стіл для гостей.
+> *(Yes. I am putting plates and glasses on the table for the guests.)*
+> **Марія:** Після ринку я заходжу в кафе: Мені борщ і воду, будь ласка. Рахунок, будь ласка. Можна карткою?
+> *(After the market I stop at a cafe: Borscht and water for me, please. The bill, please. Can I pay by card?)*
+> **Марія:** А потім я бачу Олену. Олено, привіт! Ти знаєш мого брата?
+> *(And then I see Olena. Olena, hi! Do you know my brother?)*
 
-First, she talks to a friend (**Друг**) at breakfast:
-> **Друг:** Що ти їш на сніданок? *(What do you eat for breakfast?)*
-> **Господиня:** Я їм кашу. І п'ю каву з молоком. *(I eat porridge. And I drink coffee with milk.)*
+Phrases like **Мені...** (For me...), **Дайте...** (Give me...), **Тут вільно?** (Is it free here?), and **Можна карткою?** (Can I pay by card?) are fixed communicative chunks. You do not need to analyze their deep grammar right now. Treat them as reliable tools: memorize them as complete units, and use them to communicate naturally in a Ukrainian market or cafe without hesitation.
 
-Then, she talks to a seller (**Продавець**) at the market:
-> **Господиня:** Потім іду на ринок. Скільки коштують помідори? *(Then I go to the market. How much do the tomatoes cost?)*
-> **Продавець:** Тридцять гривень. *(Thirty hryvnias.)*
-> **Господиня:** Дайте кілограм, будь ласка. *(Give me a kilogram, please.)*
+<!-- INJECT_ACTIVITY: fill-in-dialogue -->
 
-Later, ordering at a cafe:
-> **Господиня:** Потім у кафе. Мені борщ і воду, будь ласка. *(Then in the cafe. Borsch and water for me, please.)*
-
-Finally, she meets her friend Olena:
-> **Господиня:** О, я бачу Олену! Олено, привіт! Ти знаєш мого брата? *(Oh, I see Olena! Olena, hi! Do you know my brother?)*
-
-:::caution
-Do not translate the English phrase "I will have...". Instead, use the direct request **Дайте, будь ласка** (Give me, please) or state your desire with **Я хочу** (I want). This is the authentic way to communicate in a store or cafe.
-:::
-
-Notice how the dialogue focuses on concrete statements. Using verbs like **хотіти** (to want) and **давати** (to give) makes your speech clear and direct.
-
-<!-- INJECT_ACTIVITY: fill-in-dialogue-completion -->
+<!-- INJECT_ACTIVITY: quiz-situational-phrases -->
 
 ## Підсумок — Summary
 
-The Food and Shopping phase covers essential daily interactions. You started by identifying simple foods, and you can now navigate a busy market, order a full meal at a cafe, pay your bill correctly, and introduce your friends to each other. You have built functional communicative competence.
+Here is a summary of what you can now do in Ukrainian:
 
-Verify that you can confidently do the following:
-* You can talk about common food and drinks.
-* You can use the accusative case correctly for inanimate objects.
-* You can use the accusative case correctly for people.
-* You can order food at a cafe and ask for the bill.
-* You can shop at a market and ask for prices.
-* You can pay for things using the correct form of the currency.
+*   You can talk confidently about everyday food and drinks, describing exactly what you eat for breakfast, lunch, or dinner.
+*   You can order a delicious meal at a cafe, check if a seat is free, and politely ask for the bill when you finish.
+*   You can shop at a market, accurately ask for prices, understand quantities, and handle amounts in **гривні**.
+*   You can correctly use the accusative case to talk about both inanimate things (like eating pizza or drinking water) AND animate people (like seeing a brother or waiting for a friend).
 
-Next: A1.7 — Communication. You will learn how to make phone calls, write simple emails, and make plans with your friends.
+You are building a strong foundation for real-world communication. Next, in A1.7, you will focus on Communication—learning how to make phone calls, write emails, and make exciting plans with friends!
 </generated_module_content>
 
-**PIPELINE NOTE — Word count: 1255 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
+**PIPELINE NOTE — Word count: 1196 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -503,42 +501,172 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 92 words | Not found: 6 words
+Verified: 106 words | Not found: 5 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
   ✗ Анна — NOT IN VESUM
-  ✗ Анно — NOT IN VESUM
-  ✗ Олена — NOT IN VESUM
+  ✗ Марія — NOT IN VESUM
+  ✗ Олег — NOT IN VESUM
   ✗ Олено — NOT IN VESUM
   ✗ Олену — NOT IN VESUM
-  ✗ Тараса — NOT IN VESUM
 
-All 92 other words are confirmed to exist in VESUM.
+All 106 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
-## Verification Tools (MCP)
+---
 
-You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
+## Verification Tools (Shell Commands)
 
-**Core Verification:**
-- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
-- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
+You have access to verification tools via shell commands. Use these to verify
+Ukrainian vocabulary, check grammar, and search textbook content **as you write**.
 
-**Content Quality:**
-- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+**IMPORTANT:** Run verification commands BEFORE finalizing any Ukrainian text.
+Batch multiple verifications together to minimize round-trips.
 
-**Reference:**
-- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp_rag_search_literary` — verify literary references against primary sources
-- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
+### 1. Batch-verify Ukrainian words exist in VESUM (preferred — one call for many words)
 
-**Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_words
+results = verify_words(['слово1', 'слово2', 'слово3'])
+for w, matches in results.items():
+    if matches:
+        print(f'{w}: FOUND — lemma={matches[0][\"lemma\"]}, pos={matches[0][\"pos\"]}')
+    else:
+        print(f'{w}: NOT FOUND — may not exist in standard Ukrainian')
+"
+```
+
+### 2. Verify a single Ukrainian word in VESUM (with full morphological tags)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_word
+results = verify_word('WORD_HERE')
+if results:
+    for m in results:
+        print(f'lemma={m[\"lemma\"]}, pos={m[\"pos\"]}, tags={m[\"tags\"]}')
+else:
+    print('NOT FOUND in VESUM')
+"
+```
+
+### 3. Get all inflected forms of a lemma (declension/conjugation)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_lemma
+forms = verify_lemma('LEMMA_HERE')
+for f in forms[:20]:
+    print(f'{f[\"word_form\"]:20s} {f[\"pos\"]:8s} {f[\"tags\"]}')
+print(f'... {len(forms)} forms total')
+"
+```
+
+### 4. Check CEFR level of a word (is it level-appropriate?)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import query_cefr_level
+results = query_cefr_level('WORD_HERE')
+for r in results:
+    print(f'{r[\"word\"]}: {r[\"level\"]} ({r[\"pos\"]})')
+if not results:
+    print('Not in CEFR database')
+"
+```
+
+### 5. Search textbook content (Ukrainian school textbooks, Grades 1-11)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_textbooks
+keywords = {'keyword1', 'keyword2'}
+results = search_textbooks(keywords, 5)
+for r in results:
+    title = r.get('section_title', r.get('title', ''))
+    grade = r.get('grade', '?')
+    text = r.get('text', '')[:200]
+    print(f'Grade {grade} | {title}')
+    print(f'  {text}')
+    print()
+"
+```
+
+### 6. Search style guide for calques/Russianisms (Антоненко-Давидович, 279 entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_style_guide
+results = search_style_guide('TOPIC_HERE', 3)
+for r in results:
+    print(f'--- {r.get(\"word\", \"\")} [{r.get(\"section\", \"\")}]')
+    print(r.get('text', '')[:300])
+    print()
+if not results:
+    print('No style guide entries found')
+"
+```
+
+### 7. Look up word definition in СУМ-11 (Ukrainian explanatory dictionary, 127K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_definitions
+results = search_definitions('WORD_HERE', 3)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+### 8. Search idioms (Фразеологічний словник, 25K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_idioms
+results = search_idioms('WORD_HERE', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"text\", r.get(\"definition\", \"\")))[:200]}')
+"
+```
+
+### 9. English-to-Ukrainian translation (Балла, 79K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import translate_en_uk
+results = translate_en_uk('ENGLISH_WORD', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+---
+
+**WHEN to use these tools:**
+
+1. **Before writing any Ukrainian text** — batch-verify all key vocabulary with
+   `verify_words` (tool 1). Any word that returns NOT FOUND must be replaced.
+2. **When you suspect a Russicism or calque** — search the style guide (tool 6)
+   and verify the correct Ukrainian form with `verify_word` (tool 2).
+3. **When writing for A1/A2** — check CEFR levels (tool 4) to ensure vocabulary
+   is level-appropriate.
+4. **When unsure about a case ending or conjugation** — use `verify_lemma` (tool 3)
+   to see the full paradigm.
+5. **When covering a grammar topic** — search textbooks (tool 5) to see how
+   Ukrainian school textbooks teach it.
+6. **When you need the precise Ukrainian meaning** — use СУМ-11 (tool 7).
+7. **When looking for natural Ukrainian expressions** — search idioms (tool 8).
+
+**Batching rule:** Collect all words you want to verify, then run ONE `verify_words`
+call instead of multiple `verify_word` calls. This is faster and uses fewer tokens.

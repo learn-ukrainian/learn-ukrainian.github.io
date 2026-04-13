@@ -1,23 +1,22 @@
-# Section-by-Section Generation — Section 1/5
+# Section-by-Section Generation — Section 1/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 21: Допомагати, дякувати, дзвонити (A2, A2.3 [Dative Case])
-**Section to write:** Дієслова з давальним відмінком (Verbs That Take the Dative) (~660 words)
-**Word target for this section:** 660 words (aim for 726 to account for undershoot)
+**Section to write:** Дієслова з давальним відмінком (Verbs That Take the Dative) (~650 words)
+**Word target for this section:** 650 words (aim for 715 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Дієслова з давальним відмінком (Verbs That Take the Dative) (~660 words)
-- P1 (~100 words): [Introduction to the concept of 'indirect' action in Ukrainian. Explain that while English 'helps someone' or 'thanks someone' treats the person as a direct object, Ukrainian treats them as a recipient or beneficiary using the Dative case (питання: кому? чому?).]
-- P2 (~120 words): [Focus on **допомагати** (to help). Provide examples with family members to practice noun endings: допомагати мамі (f), татові (m), сестрі (f), братові (m). Explain the preference for -ові/-еві for male persons to clearly signal the Dative case.]
-- P3 (~140 words): [Focus on **дякувати** (to thank). **CRITICAL DECOLONIZATION POINT:** Contrast with the Russian 'благодарить' (which takes Accusative). Explicitly warn against 'дякую вас' (incorrect) and mandate 'дякую вам/тобі/лікарю'. Provide examples of gratitude: 'дякую вчителеві за допомогу', 'дякуємо друзям за подарунок'.]
-- P4 (~120 words): [Focus on **дзвонити / телефонувати** (to call). Practice the 'direction' logic. Examples: 'Я дзвоню подрузі Марії', 'Він телефонує Андрієві'. Mention that the preposition 'до' is not used here for people; it is a direct Dative relationship.]
-- P5 (~100 words): [Group remaining verbs: **радити** (to advise), **заважати** (to disturb), **відповідати** (to answer). Provide polite command/request forms: 'не заважай мені' (don't bother me), 'я раджу тобі цей фільм' (I advise you this film), 'відповідай учителеві' (answer the teacher).]
-- P6 (~80 words): [Dialogue: Volunteer Day scenario. A volunteer (Волонтер) describes their day using multiple Dative verbs: 'Сьогодні я допомагаю сусідці Олені. Потім я дзвоню другові Івану. Я дякую йому за книгу.']
-- <!-- INJECT_ACTIVITY: fill-in-dative-verbs --> [fill-in, focus: completing sentences with correct dative noun/pronoun forms after help/thank/call, 8 items]
+## Дієслова з давальним відмінком (Verbs That Take the Dative) (~650 words)
+- P1 (~120 words): Introductory dialogue set during a community volunteer day. A volunteer helps various people: "Допомагаю бабусі нести сумки. Дзвоню другові. Раджу сусідці нового лікаря. Мені подобається допомагати!". Introduces verbs in natural context.
+- P2 (~120 words): Introduce the core concept: some common verbs in Ukrainian require the Dative case (кому? чому?), whereas in English they take a direct object. List the core verbs: допомагати (to help), дякувати (to thank), дзвонити/телефонувати (to call), радити (to advise), заважати (to bother), відповідати (to answer). Emphasize that you are directing the action *to* the recipient.
+- P3 (~130 words): Focus on personal pronouns with these verbs. Present the Dative pronoun paradigm: мені, тобі, йому, їй, нам, вам, їм. Provide examples: "Я допомагаю їй", "Він дякує тобі", "Ми дзвонимо їм".
+- P4 (~150 words): Focus on nouns with these verbs. Briefly recap Dative endings for masculine (-ові/-еві, -у/-ю) and feminine (-і). Highlight the crucial consonant alternations in feminine nouns (г→з, к→ц, х→с), using examples: подруга → подрузі, мама → мамі, брат → братові, друг → другові. E.g., "Я дзвоню другові", "Ми дякуємо подрузі".
+- P5 (~130 words): Cover negative forms and imperative moods with these verbs, which are highly common. Examples: "не заважай мені" (don't bother me), "не дзвони їй" (don't call her), "допоможи мені, будь ласка" (help me, please), "відповідай йому" (answer him).
+- <!-- INJECT_ACTIVITY: fill-in-dative-verbs --> [fill-in, Complete sentences with the correct dative form after dative-governing verbs, 8 items]
 
 ---
 ## Full Plan (for reference)
@@ -613,6 +612,31 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] допомагати (to help)
+- [ ] дякувати (to thank)
+- [ ] дзвонити (to call, to phone)
+- [ ] радити (to advise)
+- [ ] заважати (to bother, to disturb)
+- [ ] подобатися (to be pleasing to, to like (reversed syntax))
+- [ ] відповідати (to answer (someone))
+- [ ] рік (year)
+- [ ] роки (years (2-4))
+- [ ] років (years (5+))
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Дієслова з давальним відмінком (Verbs That Take the Dative) (~650 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

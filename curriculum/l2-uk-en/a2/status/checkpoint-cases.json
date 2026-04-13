@@ -2,13 +2,13 @@
   "module": "checkpoint-cases",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-04-11T00:49:20.807437Z",
+  "last_audit": "2026-04-12T21:47:19.132625Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-11T00:40:01.976569Z",
+    "md": "2026-04-12T21:47:16.546334Z",
     "meta": null,
-    "activities": "2026-04-11T00:40:02.602434Z",
-    "vocabulary": "2026-04-08T04:57:53.144901Z",
+    "activities": "2026-04-12T21:33:07.831588Z",
+    "vocabulary": "2026-04-12T21:33:52.419796Z",
     "research": null,
     "plan": "2026-04-04T22:04:59.998162Z"
   },
@@ -20,18 +20,27 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 2,
-      "message": "2082/1500 (raw: 2150) | engagement: 0/3 | immersion: 30.9% LOW (target 50-80% (A2.2))"
+      "violations": 1,
+      "message": "1766/1500 (raw: 1811) | immersion: 89.9% HIGH (target 50-80% (A2.2))"
     },
     "activities": {
-      "status": "fail",
-      "violations": 1,
-      "message": "11/0 | density: 7 < 8"
+      "status": "pass",
+      "violations": 0,
+      "message": "9/0"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "28/1"
+      "message": "27/1"
+    },
+    "vocab_progression": {
+      "status": "warn",
+      "violations": 0,
+      "message": "\u0394 -15 | premature=3 | gaps=0 | well-paced=0",
+      "delta": -15,
+      "premature": 3,
+      "gaps": 0,
+      "well_paced": 0
     },
     "naturalness": {
       "status": "info",
@@ -52,8 +61,8 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [],
-    "pass_count": 4,
-    "fail_count": 2,
+    "pass_count": 5,
+    "fail_count": 1,
     "deferred_count": 0
   }
 }

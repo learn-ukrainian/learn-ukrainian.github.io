@@ -1,4 +1,4 @@
-<!-- version: 1.1.0 | updated: 2026-03-31 -->
+<!-- version: 1.2.0 | updated: 2026-04-12 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -11,6 +11,35 @@ Generate an `activities/this-and-that.yaml` file for module **12: This and That*
 
 ---
 
+## ⚠️ HARD COUNT TARGETS — READ TWICE
+
+These are the binding numerical contracts for THIS module. The audit will FAIL if you fall short.
+
+| Bucket | Min | Max | Notes |
+|---|---|---|---|
+| Total activities | 10 | 10+ | inline + workbook combined |
+| Inline (lesson tab) | 4 | 6 | one per `<!-- INJECT_ACTIVITY -->` marker, see below |
+| Workbook (Зошит tab) | 6 | 9 | extended practice |
+| Items per activity | 6 | — | each activity must have at least 6 items (unless its type cap is lower — see Activity Type Reference below) |
+
+**You MUST ship at least 4 inline activities AND at least 6 workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+
+**Type diversity is required.** The module (inline + workbook combined) MUST use at least **0** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level. (If `0` is `0`, the audit profile for this level does not enforce type diversity — but variety still produces a better lesson, so aim for 4+ types when the workbook allows it.)
+
+---
+
+## Allowed types for THIS level
+
+- **Inline (lesson) types:** image-to-letter, letter-grid, match-up, watch-and-repeat, quiz, true-false, fill-in, classify
+- **Inline priority (preferred):** image-to-letter, match-up, fill-in, quiz, watch-and-repeat
+- **Workbook types:** fill-in, match-up, group-sort, anagram, unjumble, quiz, true-false, classify, divide-words, count-syllables, pick-syllables, observe, phrase-table, odd-one-out
+- **Workbook priority (preferred):** fill-in, match-up, group-sort, anagram, unjumble
+- **FORBIDDEN at this level:** cloze, error-correction, mark-the-words, translate, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, highlight-morphemes, grammar-identify, select
+
+Pick from the allowed list. Lean heavily on the priority lists. Do not use any forbidden type — the build will reject it.
+
+---
+
 ## Inline vs Workbook Split
 
 Activities have two placement categories:
@@ -19,7 +48,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Rule of thumb:** inline = 2-3 quick checks after key teaching points. Workbook = 4-8 deeper practice exercises covering the full topic.
+**Rule of thumb:** inline = 4–6 quick checks after key teaching points. Workbook = 6–9 deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
 
 ---
 
@@ -28,9 +57,9 @@ Activities have two placement categories:
 The writer placed these markers in the module content. Your inline activities must match them:
 
 - `<!-- INJECT_ACTIVITY: quiz-this-gender -->`
-- `<!-- INJECT_ACTIVITY: match-up-this-possessive -->`
-- `<!-- INJECT_ACTIVITY: fill-in-near-far -->`
-- `<!-- INJECT_ACTIVITY: quiz-that-pointing -->`
+- `<!-- INJECT_ACTIVITY: quiz-that-gender -->`
+- `<!-- INJECT_ACTIVITY: fill-in-this-vs-that -->`
+- `<!-- INJECT_ACTIVITY: match-up-gender-patterns -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -82,73 +111,82 @@ required:
 <module_content>
 ## Діалоги (Dialogues)
 
-Imagine standing in a bright, modern electronics store in the heart of Kyiv. You want to buy a few new gadgets for your home, but the shelves are completely packed with options. To get the right item quickly, you need to point effectively and accurately. **Ірина** (Iryna) is currently looking for a few things, including a bag for her equipment, and the **консультант** (shop assistant) is actively helping her navigate the many choices on display.
+A common daily situation involves pointing at things you want to buy. Imagine standing in a busy, crowded electronics store. A customer, **Ірина**, is comparing modern phones, laptops, and headphones on different shelves. She is talking with a helpful shop assistant, a **Консультант** (shop assistant). She physically points to things located near her body, and she points to other objects located far away across the aisle. This simple action requires specific vocabulary to ensure the assistant knows exactly what she means.
 
-> **Ірина:** Добрий день! Скільки коштує **ця сумка**? *(Good afternoon! How much does this bag cost?)*
-> **Консультант:** Добрий день! **Яка? Ця червона?** *(Good afternoon! Which one? This red one?)*
-> **Ірина:** **Ні, та синя.** *(No, that blue one.)*
-> **Консультант:** **Та сумка** коштує двісті гривень. *(That bag costs two hundred hryvnias.)*
-> **Ірина:** **А цей рюкзак?** *(And this backpack?)*
-> **Консультант:** **Цей — сто п'ятдесят.** *(This one is one hundred fifty.)*
-> **Ірина:** Добре. А **цей телефон**? *(Good. And this phone?)*
-> **Консультант:** **Це новий смартфон**. *(This is a new smartphone.)*
+The first dialogue takes place during a shopping trip. This conversation extends the colors and prices you already know. The customer asks about the price of an item right in front of her. The assistant needs clarification, so the customer points to a different item farther away on a high shelf.
 
-After leaving the store, Ірина returns to her home office. The room has various pieces of furniture, some close by and some across the room. She points out her workspace to a friend.
+> **Ірина:** Скільки коштує ця сумка? *(How much does this bag cost?)*
+> **Консультант:** Яка? Ця червона? *(Which one? This red one?)*
+> **Ірина:** Ні, та синя. *(No, that blue one.)*
+> **Консультант:** Та коштує двісті гривень. *(That one costs two hundred hryvnias.)*
+> **Ірина:** А цей рюкзак? *(And this backpack?)*
+> **Консультант:** Цей — сто п'ятдесят. *(This one — one hundred fifty.)*
 
-> **Друг:** **Що це?** *(What is this?)*
-> **Ірина:** **Це мій стіл.** *(This is my table.)*
-> **Друг:** **А те?** *(And that?)*
-> **Ірина:** **Те — крісло.** *(That is an armchair.)*
-> **Друг:** Яка гарна кімната! *(What a nice room!)*
-> **Ірина:** Дякую. **Цей стілець новий, а той — старий.** *(Thank you. This chair is new, and that one is old.)*
-> **Друг:** А **ця шафа**? *(And this wardrobe?)*
-> **Ірина:** **Ця шафа** нова, а **та книжкова полиця** стара. *(This wardrobe is new, but that bookshelf is old.)*
+This brief breakdown of the shopping dialogue shows how demonstrative pronouns emerge naturally in a real context. The word **цей** or **ця** refers directly to the item located right here in your hands. The word **той** or **та** points to the item sitting over there on the distant shelf. The physical distance dictates the exact vocabulary choice. The pointing words change based entirely on the location of the object. You cannot mix them up.
 
-Notice how naturally Ірина identifies various objects in her environment. She does not need to repeat the heavy names of the items constantly in every single sentence. By using short pointing words, she makes her everyday speech flow incredibly smoothly. She simply points to something right near her or across the large room, establishing a clear physical contrast while easily maintaining a natural, authentic conversation rhythm.
+The second dialogue takes place in a residential room. This conversation compares everyday furniture and uses noun vocabulary you already know from previous topics. A person identifies an object located close by, and then points to an object resting across the room. The contrast is clear.
+
+> **Брат:** Що це? *(What is this?)*
+> **Сестра:** Це мій стіл. *(This is my table.)*
+> **Брат:** А те? *(And that?)*
+> **Сестра:** Те — крісло. *(That is an armchair.)*
+> **Брат:** Цей стілець новий, а той — старий. *(This chair is new, and that one is old.)*
+
+The conversation contrasts near and far objects. The grammar directly reflects the physical reality of the room. The speaker's position relative to the object changes the descriptive word from this to that. The difference is immediately obvious to a native speaker.
 
 ## Цей, ця, це (This)
 
-When you want to identify an object in Ukrainian, the most universal tool at your disposal is the word **це** (this is / that is). You already know this essential word from the fundamental question **Що це?** (What is this?). In this direct context, **це** acts as a fixed, unchangeable identifier. You can point at absolutely anything and state **Це стіл** (This is a table) or **Це вікно** (This is a window) without worrying about gender. However, when you want to specifically point to a neuter object and describe it further, **це** also functions as a specific pointing word, as seen in the phrase **це велике поле** (this large field).
+The word **це** (this is / that is) is the universal identifier in the Ukrainian language. For basic identification questions like **Що це?** (What is this?), the answer is simply **Це стіл** (This is a table) or **Це книга** (This is a book). This specific word requires zero gender knowledge. It acts exactly like the phrase "It is" in English. You use it to identify an object for the very first time.
 
-When you point directly at an object near you to describe or select it, demonstrative pronouns follow the same gender pattern as **мій**, **моя**, **моє** and **який**, **яка**, **яке**. For masculine nouns, you use **цей** (this). For feminine nouns, you use **ця** (this). For neuter nouns, you use **це** (this). This pattern directly mirrors the personal pronouns **він** (he), **вона** (she), and **воно** (it). It perfectly aligns with the possessive words you learned earlier in your studies. For example, you say **цей стіл** (this table) for a masculine noun. You confidently say **ця книга** (this book) for a feminine noun. You easily identify **це вікно** (this window) for a neuter noun.
+When you point at a specific known object, you use the gendered pointers. These are **цей** (this, masculine), **ця** (this, feminine), and **це** (this, neuter). Ukrainian textbooks, such as Заболотний for Grade 6 (p. 210), explain that demonstrative pronouns change by gender to match the noun. For example, you say **Цей стіл** (this table), **Ця книга** (this book), and **Це вікно** (this window). At the current learning stage, we focus only on the nominative case.
 
-Ukrainian word order makes combining these pointing words with descriptive adjectives incredibly straightforward. The sequence is completely identical to English: Demonstrative + Adjective + Noun. The pointing word always takes the absolute lead position in the sentence. For a masculine item, you can say **цей великий червоний стіл** (this big red table). For a feminine item, the pattern remains identical: **ця нова синя сумка** (this new blue bag). For a neuter item, you describe it as **це маленьке біле вікно** (this small white window). The structure never changes, giving you a highly reliable template for building longer, more descriptive phrases as your daily vocabulary grows.
+A highly effective method to build a mental link for gender involves substitution and association. You connect the noun to its personal pronoun, its possessive word, and its demonstrative word. For a masculine noun, the training chain is: **стіл** (table) → **він** (he) → **мій** (my) → **цей** (this). Doing this creates a strong grammatical reflex. You automatically select the correct agreement for the noun. Repeating this sequence helps your brain map the grammatical categories naturally.
+
+You can easily combine these demonstrative words with adjectives and colors. The word order is identical to English. You place the demonstrative first, then the adjectives, and finally the noun. You say **Цей великий червоний стіл** (This big red table). You say **Ця нова синя сумка** (This new blue bag). You say **Це маленьке біле вікно** (This small white window). The sentence structure remains completely consistent.
+
+The plural pointer is **ці** (these). This single word is used for all genders in the plural form. You say **ці столи** (these tables) and **ці книги** (these books). A common error for English speakers is adding the verb "to be" after the pointer. Omitting this verb is standard in Ukrainian. You say **Цей стіл новий** (This table is new), not "Цей стіл є новий".
 
 <!-- INJECT_ACTIVITY: quiz-this-gender -->
 
-<!-- INJECT_ACTIVITY: match-up-this-possessive -->
-
 ## Той, та, те (That)
 
-Once you can point at objects right next to you, you immediately need the vocabulary to point at things further away, or things previously mentioned. In Ukrainian, you use the forms **той** (masculine), **та** (feminine), and **те** (neuter) to mean "that." These specific words establish a clear spatial link with the location word **там** (there). If a masculine object is located **там**, you point to it clearly by saying **той стіл** (that table). If a feminine object is far away, you identify it easily as **та книга** (that book). For a distant neuter object, you simply say **те вікно** (that window). This creates a highly logical distance mapping in your mind.
+The Ukrainian language uses the "far" pointers **той** (that, masculine), **та** (that, feminine), and **те** (that, neuter) to indicate objects farther away. You use these words to point at distant things across a room or a street. Examples include **Той стіл** (That table), **Та книга** (That book), and **Те вікно** (That window). While Ukrainian textbooks like Літвінова for Grade 6 (p. 273) provide a full declension table for **той**, we focus strictly on the nominative case right now.
 
-The true communicative power of these words emerges when you create direct contrast. Ukrainian relies heavily on the small conjunction **а** (but / and) to compare two different things in one breath. You can build binary comparison sentences effortlessly. For example, you might say **Цей олівець мій, а той — твій.** (This pencil is mine, and that one is yours). You can also actively contrast different qualities: **Ця книга цікава, а та — нудна.** (This book is interesting, but that one is boring). This parallel structure powerfully reinforces the near and far distinction.
+You contrast "this" versus "that" in practice by physically pointing. Sentences that compare proximity highlight the grammar effectively. You can say **Цей стілець тут, а той стілець там** (This chair is here, and that chair is there). You can also say **Цей стілець новий, а той — старий** (This chair is new, and that one is old). The words **тут** (here) and **там** (there) emphasize the physical location. The location of the object defines the exact pronoun.
 
-You must be aware of a small but highly important detail regarding the exact word **та**. In Ukrainian, **та** primarily functions as the feminine pointing word "that," as seen in the phrase **та жінка** (that woman). However, **та** also serves as a common conjunction meaning "and," identical in daily use to the word **і** (and). For example, you might say **мама та тато** (mom and dad). Context provides all the necessary rules for instant disambiguation. If **та** appears directly before a feminine noun, it points. If it sits safely between two nouns, it connects them together.
+A crucial warning involves a potential point of confusion. The word **та** can mean both "that" as a demonstrative pointer and "and" as a conjunction. Context makes the meaning completely clear. Consider the phrase **мама та тато** (mom and dad). Compare this to the phrase **та книга** (that book). The surrounding words reveal the correct function immediately.
 
-In practical daily usage, you often need to offer or make rapid choices. To form a clear choice, you use the question word **чи** (or). This allows you to ask highly practical "pointing" questions when organizing your life. If you are arranging furniture, you might simply ask **Який стіл? — Цей чи той?** (Which table? — This one or that one?). While shopping, you can turn and ask a friend **Яка сумка? — Ця червона чи та синя?** (Which bag? — This red one or that blue one?). For a neuter object, the pattern is exactly the same: **Яке вікно? — Це велике чи те маленьке?** (Which window? — This big one or that small one?).
+You demonstrate practical usage for pointing and choosing by using the word **чи** (or). The question structure is very straightforward and mimics the English pattern. You ask **Який стіл? — Цей чи той?** (Which table? — This one or that one?). You ask **Яка сумка? — Ця червона чи та синя?** (Which bag? — This red one or that blue one?). You ask **Яке вікно? — Це велике чи те маленьке?** (Which window? — This big one or that small one?). The choices are clear.
 
-<!-- INJECT_ACTIVITY: fill-in-near-far -->
+The plural form for all far objects is **ті** (those). This single short word is used for all genders. You say **ті столи** (those tables) and **ті книги** (those books). This completes the entire near and far demonstrative set. You now have the complete vocabulary toolset for pointing at any object in the world around you.
 
-<!-- INJECT_ACTIVITY: quiz-that-pointing -->
+<!-- INJECT_ACTIVITY: quiz-that-gender -->
+<!-- INJECT_ACTIVITY: fill-in-this-vs-that -->
 
 ## Підсумок — Summary
 
-At this stage in your learning journey, you possess a highly complete set of grammatical tools for identifying and describing the world around you. You can perfectly summarize all the critical patterns you have learned into one comprehensive Gender Agreement Table. This straightforward table clearly aligns all the foundational grammar markers for masculine, feminine, and neuter nouns in the Ukrainian language.
+Demonstrative pronouns create text cohesion and help avoid annoying repetition. They connect individual sentences together smoothly. Consider a short native-style progression from a Ukrainian story:
 
-| Category | Masculine | Feminine | Neuter |
-| :--- | :--- | :--- | :--- |
-| **Possessives** | **мій** | **моя** | **моє** |
-| **Questions** | **який?** | **яка?** | **яке?** |
-| **"This"** | **цей** | **ця** | **це** |
-| **"That"** | **той** | **та** | **те** |
+* **Марусі подарували ноутбук.** (Marusia was given a laptop.)
+* **Він став найкращим другом.** (It became a best friend.)
+* **Цей комп'ютер...** (This computer...)
 
-Same endings, same logic — Ukrainian is highly consistent! The feminine forms overwhelmingly rely on the recognizable **-я** or **-а** vowel endings. The neuter forms consistently feature the distinct **-е** ending across all functional categories.
+The personal pronoun **він** (he/it) and the demonstrative phrase **цей комп'ютер** (this computer) refer back to the original laptop. This natural writing strategy avoids repeating the noun **ноутбук** over and over again. The text flows much better when you substitute nouns with these pointers.
 
-A highly proactive approach to common conversational errors will drastically improve your speaking fluency. One of the most frequent mistakes learners make is trying to literally translate "What is this specific masculine thing?" by directly asking **Що цей?**. This is grammatically incorrect. You must never ask **Що цей?** or **Що ця?**. Always use the universal, neutral identifier for these identification questions: **Що це?** (What is this?). Furthermore, you must always remember the critical rule of description: in the present tense, you completely omit the verb "to be" (**є**). You simply say **Цей стіл великий.** (This table is big).
+The grand gender agreement table brings together all patterns to show the remarkable consistency of the Ukrainian language. This chart is your roadmap for A1 grammar.
 
-For a highly practical daily self-check, look around the room you are currently sitting in right now. Point at three distinct things near you and correctly name them aloud using **Цей**, **Ця**, or **Це**. Then, look completely across the room or out the open window. Point at three things far away and name them using **Той**, **Та**, or **Те**. Finally, systematically check yourself: does the specific ending you chose correctly match the noun's inherent gender?
+| Type | Masculine | Feminine | Neuter |
+|---|---|---|---|
+| Possessives | **мій** | **моя** | **моє** |
+| Questions | **який** | **яка** | **яке** |
+| This | **цей** | **ця** | **це** |
+| That | **той** | **та** | **те** |
 
+All these words share the identical logic and the exact same endings based on gender. The masculine column ends in a consonant or **-й**. The feminine column ends in the vowel **-я** or **-а**. The neuter column ends in the vowel **-е**. These structural patterns repeat systematically across different categories of words. When you memorize one pattern, you automatically understand how the other words behave. The grammatical system relies entirely on these predictable and reliable endings to build clear sentences. You do not have to guess; you simply apply the pattern.
+
+<!-- INJECT_ACTIVITY: match-up-gender-patterns -->
+
+Perform a self-check exercise to test your knowledge. Look around your room. Point at three things near you and name them using **цей**, **ця**, or **це**. For example, you can say **цей стіл** (this table), **ця ручка** (this pen), and **це ліжко** (this bed). Now look out the window or across the room. Point at three things far away and name them using **той**, **та**, or **те**. For example, you can say **той будинок** (that building), **та машина** (that car), and **те вікно** (that window). Practice this physical pointing routine every single day to build an automatic reflex for these vocabulary words.
 </module_content>
 
 ---
@@ -162,48 +200,68 @@ version: "1.0"
 module: this-and-that
 level: a1
 
+# NOTE — these are SHAPE examples. The real targets are at the top of this prompt
+# (10 total / 4–6 inline / 6–9 workbook,
+# 6+ items per activity). The shapes below are TRUNCATED for readability;
+# YOUR output MUST hit those minimums.
+
 inline:
   - id: marker-id-here        # MUST match an <!-- INJECT_ACTIVITY: ... --> marker
     type: quiz                 # activity type
     instruction: "Оберіть правильний варіант"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - question: "_____ стіл"
-        options: ["мій", "моя", "моє"]
+        options: ["мій", "моя", "моє", "мої"]
         correct: 0             # 0-based index
+      - question: "Це ____ книга."
+        options: ["мій", "моя", "моє", "мої"]
+        correct: 1
+      # ... add at least 6 items total — never stop at 1-2
 
   - id: another-marker-id
     type: fill-in
     instruction: "Вставте правильне слово"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - sentence: "Це ____ кімната."
         answer: "моя"
         options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ вікно."
+        answer: "моє"
+        options: ["мій", "моя", "моє"]
+      # ... ≥ 6 items total
 
 workbook:
-  - type: match-up
+  - id: match-up-vocab
+    type: match-up
     instruction: "З'єднайте пари"
-    pairs:
+    pairs:                     # ← real output: ≥ 6 pairs
       - left: "стіл"
         right: "він"
       - left: "книга"
         right: "вона"
       - left: "вікно"
         right: "воно"
+      # ... ≥ 6 pairs total
 
-  - type: group-sort
+  - id: group-sort-gender
+    type: group-sort
     instruction: "Розподіліть слова за категоріями"
     groups:
-      - label: "Category A"
-        items: ["word1", "word2"]
-      - label: "Category B"
-        items: ["word3", "word4"]
+      - label: "Чоловічий рід"
+        items: ["стіл", "олівець", "будинок"]   # ≥ 3 items per group
+      - label: "Жіночий рід"
+        items: ["книга", "ручка", "школа"]
+      - label: "Середній рід"
+        items: ["вікно", "море", "молоко"]
 
-  - type: true-false
+  - id: true-false-grammar
+    type: true-false
     instruction: "Правда чи ні?"
-    items:
-      - statement: "Statement here"
-        correct: true
-        explanation: "Why it's true"
+    items:                     # ← real output: ≥ 6 items
+      - statement: "«Книга» — це чоловічий рід."
+        correct: false
+        explanation: "Книга закінчується на -а, отже жіночий рід."
+      # ... ≥ 6 items total
 
   - type: error-correction
     instruction: "Виправте помилку"
@@ -274,7 +332,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -382,10 +440,15 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 ## Quality Rules
 
-**ITEM COUNT MINIMUMS (non-negotiable):**
-- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
-- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
-- If you can't think of enough items, add more examples from the module's vocabulary and content.
+**ACTIVITY COUNT MINIMUMS (non-negotiable, audit-enforced):**
+- **Total: 10 activities.** Inline: 4–6. Workbook: 6–9. The audit gate FAILS the module if you ship fewer.
+- **Type diversity: workbook MUST cover ≥5 distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
+- **Match the inline markers exactly.** Every `<!-- INJECT_ACTIVITY: id -->` marker in the prose needs a matching inline activity with that exact id. Skipping markers means the lesson tab is broken.
+
+**ITEM COUNT MINIMUMS (non-negotiable, per-activity):**
+- **Default minimum: 6 items per activity.** Quiz, fill-in, match-up, true-false, anagram, error-correction, translate, cloze, mark-the-words, divide-words, count-syllables, odd-one-out, group-sort categories: all ≥ 6.
+- **Lower minimums for specific types only:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items, essay-response/critical-analysis = 1 prompt.
+- If you can't think of enough items, add more examples from the module's vocabulary and content. NEVER ship a 1-item or 2-item activity unless its type cap explicitly allows it.
 - **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
 - **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
@@ -492,6 +555,27 @@ IMPORTANT: After using tools, output your COMPLETE module content as plain text.
 1. Run `verify_words` on all Ukrainian words in your exercises — every word must exist in VESUM
 2. Run `query_cefr_level` on any word you're unsure about — it must be a1-appropriate
 3. For fill-in answers and distractors, verify the exact form (case, number, gender) with `verify_lemma`
+
+---
+
+## ⚠️ MANDATORY FINAL CHECKLIST — verify before emitting YAML
+
+Walk through this checklist explicitly before you start emitting. If ANY box is unchecked, fix it FIRST.
+
+- [ ] My output has **at least 4** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
+- [ ] My output has **at least 6** workbook activities.
+- [ ] **Total ≥ 10.**
+- [ ] **Every** activity has **at least 6** items, pairs, or statements (except types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3, essay-response=1).
+- [ ] The module (inline + workbook combined) uses **at least 0 distinct activity types** (or 4+ when 0 = 0 and the workbook size allows it). I am NOT shipping a wall of quizzes.
+- [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
+- [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
+- [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+- [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+- [ ] My inline count is between 4 and 6. I did NOT create more injection markers than 6.
+- [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
+- [ ] At B1+, all instructions are in Ukrainian (no English fallback).
+
+If you cannot tick all of these, REGENERATE the activities BEFORE outputting. Shipping under-spec means the build rejects you and the heal loop has to redo your work — wasting compute.
 
 ---
 

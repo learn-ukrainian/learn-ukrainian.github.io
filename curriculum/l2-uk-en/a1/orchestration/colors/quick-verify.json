@@ -2,12 +2,6 @@
   "attempt": 1,
   "passed": true,
   "errors": [],
-  "warnings": [
-    {
-      "check": "VOCABULARY",
-      "severity": "WARNING",
-      "message": "Missing 2/10 required vocab: колір (color, m), якого кольору? (what color?)"
-    }
-  ],
-  "timestamp": "2026-04-09T00:39:07.071087+00:00"
+  "warnings": [],
+  "timestamp": "2026-04-12T20:05:26.448192+00:00"
 }

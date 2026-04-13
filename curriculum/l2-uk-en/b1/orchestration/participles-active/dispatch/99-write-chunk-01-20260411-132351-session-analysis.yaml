@@ -1,0 +1,61 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T11-22-03ccd518.json
+phase: write-chunk-01
+prompt_chars: 50469
+response_chars: 4782
+prompt_words: 6358
+response_words: 742
+sections:
+- name: header
+  start: 0
+  length: 427
+  fraction: 0.0085
+- name: skeleton
+  start: 427
+  length: 1383
+  fraction: 0.0274
+- name: plan
+  start: 1810
+  length: 18971
+  fraction: 0.3759
+- name: wiki
+  start: 14213
+  length: 29478
+  fraction: 0.5841
+- name: output_spec
+  start: 50259
+  length: 210
+  fraction: 0.0042
+large_sections:
+- wiki
+directives_total: 22
+directives_covered: 15
+directives_missed:
+- kind: checklist
+  text: опалий (fallen, shed — past active participle, leaves)
+  covered: false
+  coverage_note: 2/7 keywords (29%)
+- kind: checklist
+  text: посивілий (gone grey — past active participle)
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: checklist
+  text: чинний (current, valid — replaces Russian calque діючий)
+  covered: false
+  coverage_note: 0/7 keywords (0%)
+- kind: checklist
+  text: наявний (existing, available — replaces Russian calque існуючий)
+  covered: false
+  coverage_note: 0/7 keywords (0%)
+- kind: checklist
+  text: описовий зворот (descriptive phrase — alternative to participle)
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: must
+  text: '**MANDATORY — never omit.'
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 4/11 keywords (36%)

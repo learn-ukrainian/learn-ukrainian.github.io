@@ -24,7 +24,7 @@ vocabulary:
   gender: ''
   verified: true
 - word: яки́й
-  translation: which, that, who
+  translation: which, that
   expression: false
   pos: прикм.
   gender: ''
@@ -41,26 +41,26 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: куди́
-  translation: where to
+- word: домашнє завдання
+  translation: homework
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: по́ми́лка
+  translation: mistake
   expression: false
-  pos: присл.
-  gender: ''
+  pos: ім.
+  gender: ж.
   verified: true
-- word: сполучне слово
-  translation: conjunctive word
+- word: підрядна частина
+  translation: subordinate clause
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: означальне речення
-  translation: relative clause
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: умо́ва
-  translation: condition
+- word: причи́на
+  translation: cause
   expression: false
   pos: ім.
   gender: ж.
@@ -71,20 +71,50 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: причи́на
-  translation: reason
+- word: озна́чення
+  translation: description
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: умо́ва
+  translation: condition
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: сурядний зв'язок
-  translation: coordinating connection
+- word: головне речення
+  translation: main clause
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: підрядний зв'язок
-  translation: subordinating connection
+- word: підрядне речення
+  translation: subordinate clause
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: непряме питання
+  translation: indirect question
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: що
+  translation: that
+  expression: false
+  pos: спол.
+  gender: ''
+  verified: true
+- word: відпочи́ти
+  translation: to rest
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: дика природа
+  translation: wild nature
   expression: true
   pos: ''
   gender: ''

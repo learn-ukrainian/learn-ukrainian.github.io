@@ -2,49 +2,54 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 10
-  evidence: Covers all required points including quotes from Большакова, Захарійчук,
-    and Літвінова, successfully integrating the core phonetic theory.
+  score: 7
+  evidence: All planned H2 sections are present and the textbook references are integrated,
+    but the plan’s `У-ля (one [у])` example is replaced by `**око**`, and `А у тебе?`
+    is absent from the greeting teaching e
 - dimension: 2
   name: Linguistic accuracy
-  score: 10
-  evidence: No Russianisms or calques. Accurate descriptions of Ukrainian phonetics,
-    including hard/soft distinctions and sound-to-letter counts.
+  score: 8
+  evidence: No Russianisms/Surzhyk/banned letters found, but `what you see is almost
+    always exactly what you hear` and `uniquely Slavic phonetic feature` are factual
+    overstatements.
 - dimension: 3
   name: Pedagogical quality
-  score: 9
-  evidence: Excellent textbook-style instruction. Uses poems and rules from real Ukrainian
-    grade schools. Deducting 1 point because some exercises testing consonants were
-    placed before the consonant section.
+  score: 7
+  evidence: The module gives examples and moves into dialogue practice, but it drops
+    the planned `[у]` listening example and fails to teach the reciprocal chunk `А
+    у тебе?` where learners would need it.
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: Seamlessly integrates required vocabulary (звук, літера, привіт, як справи,
-    добре, чудово) and contextualizes examples (мама, молоко, око).
+  score: 9
+  evidence: 'Required vocabulary is covered in prose: `звук`, `літера`, `голосний`,
+    `приголосний`, `привіт`, `як справи`, `добре`, `чудово`, `мама`, `молоко`; recommended
+    items such as `тато`, `око`, `дім`, `ніс`,'
 - dimension: 5
   name: Exercise quality
-  score: 8
-  evidence: The activities themselves follow the plan, but `group-sort-sounds` and
-    `match-up-letters` are placed prematurely at the end of the "Vowels" section.
-    They test consonants, which are not introduced unti
+  score: 7
+  evidence: Marker count matches the 6 planned activities, but `match-up-letters-to-sounds`
+    is placed before consonants are taught even though the planned item set includes
+    `М`, `К`, `Н`.
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: Professional yet encouraging teacher tone. Uses clear, concrete explanations
-    (e.g., comparing letters to sheet music and sounds to physical notes).
+  score: 8
+  evidence: Named speakers and classroom framing work, but phrases like `absolute
+    foundation` and `absolutely any Ukrainian word` push the tone toward lecture-like
+    absolutism.
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: Follows the exact H2 heading structure. Clean formatting. Word count of
-    1716 comfortably exceeds the 1200 target.
+  evidence: All planned H2 headings are present and in order; markdown is clean; pipeline
+    word count `2086` is safely above the target.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Accurate cultural notes, particularly regarding the letter Ґ and its historical
-    suppression, framing it as a symbol of linguistic identity.
+  evidence: The module presents Ukrainian on its own terms, uses Ukrainian-school
+    references, and avoids Russian-centered framing.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: The dialogue is brief but natural, appropriately demonstrating gendered
-    responses ("Рада/Радий тебе бачити") alongside standard greetings.
+  score: 8
+  evidence: The dialogues use named speakers and plausible A1 situations, but the
+    greeting exchange stops at `Добре, дякую!` instead of modeling the planned reciprocal
+    `А у тебе?`.
 findings: []

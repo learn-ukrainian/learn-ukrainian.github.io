@@ -2,18 +2,12 @@ version: '1.0'
 module: what-i-like
 level: a1
 inline:
-- id: match-up-infinitives
+- id: match-infinitives
   type: match-up
-  instruction: Match the Ukrainian verbs to their English meanings
+  instruction: Match the Ukrainian verbs to their English meaning.
   pairs:
   - left: читати
     right: to read
-  - left: малювати
-    right: to draw
-  - left: подорожувати
-    right: to travel
-  - left: співати
-    right: to sing
   - left: гуляти
     right: to walk
   - left: готувати
@@ -22,352 +16,353 @@ inline:
     right: to listen
   - left: дивитися
     right: to watch
-- id: fill-in-hobbies
+  - left: грати
+    right: to play
+  - left: малювати
+    right: to draw
+  - left: подорожувати
+    right: to travel
+  - left: співати
+    right: to sing
+- id: fill-in-activities
   type: fill-in
-  instruction: Choose the correct verb to complete the sentence
+  instruction: Complete the sentence with the correct verb for the activity.
   items:
-  - sentence: Я люблю ____ музику.
-    answer: слухати
-    options:
-    - читати
-    - слухати
-    - малювати
   - sentence: Я люблю ____ борщ.
     answer: готувати
     options:
-    - співати
     - готувати
-    - дивитися
-  - sentence: Я люблю ____ у футбол.
-    answer: грати
-    options:
-    - грати
     - подорожувати
-    - гуляти
-  - sentence: Я люблю ____ книгу.
-    answer: читати
-    options:
-    - читати
     - малювати
+  - sentence: Я люблю ____.
+    answer: подорожувати
+    options:
+    - подорожувати
+    - читати
+    - готувати
+  - sentence: Я люблю ____ музику.
+    answer: слухати
+    options:
     - слухати
-  - sentence: Я люблю ____ фільм.
-    answer: дивитися
+    - малювати
+    - гуляти
+  - sentence: Я люблю ____.
+    answer: малювати
+    options:
+    - малювати
+    - готувати
+    - читати
+  - sentence: Я люблю ____.
+    answer: співати
+    options:
+    - співати
+    - слухати
+    - гуляти
+  - sentence: Я люблю ____.
+    answer: гуляти
     options:
     - гуляти
-    - співати
-    - дивитися
-  - sentence: Я люблю ____ на гітарі.
-    answer: грати
-    options:
-    - грати
+    - малювати
     - готувати
-    - подорожувати
-- id: quiz-like-choice
+- id: quiz-like-structure
   type: quiz
-  instruction: Choose **люблю** for actions or **мені подобається** for things
+  instruction: Choose between **любити** and **подобатися**.
   items:
-  - question: Я ____ малювати.
-    options:
-    - люблю
-    - мені подобається
-    - любити
-    correct: 0
-  - question: ____ ця музика.
-    options:
-    - Я люблю
-    - Мені подобається
-    - Люблю
-    correct: 1
   - question: Я ____ читати.
     options:
     - люблю
+    - любиш
     - подобається
-    - мені подобається
     correct: 0
-  - question: ____ Київ.
+  - question: Мені ____ ця книга.
     options:
-    - Я люблю
-    - Мені подобається
-    - Люблю
-    correct: 1
-  - question: Я ____ подорожувати.
-    options:
-    - подобається
     - люблю
-    - мені подобається
-    correct: 1
-  - question: ____ цей фільм.
+    - любиш
+    - подобається
+    correct: 2
+  - question: Ти ____ готувати борщ?
     options:
-    - Я люблю
-    - Мені подобається
-    - Люблю
+    - люблю
+    - любиш
+    - подобається
     correct: 1
-- id: fill-in-negatives
+  - question: Мені ____ Київ.
+    options:
+    - люблю
+    - любиш
+    - подобається
+    correct: 2
+  - question: Я ____ слухати музику.
+    options:
+    - люблю
+    - любиш
+    - подобається
+    correct: 0
+  - question: Тобі ____ цей фільм?
+    options:
+    - люблю
+    - любиш
+    - подобається
+    correct: 2
+- id: fill-in-negative
   type: fill-in
-  instruction: Make the sentence negative by choosing the correct word
+  instruction: Make the statement negative using **не**.
   items:
   - sentence: Я ____ люблю співати.
     answer: не
     options:
     - не
     - ні
-    - нет
+    - так
+  - sentence: Мені ____ подобається ця музика.
+    answer: не
+    options:
+    - не
+    - ні
+    - так
+  - sentence: Я ____ люблю читати.
+    answer: не
+    options:
+    - не
+    - ні
+    - так
   - sentence: Мені ____ подобається цей фільм.
     answer: не
     options:
     - не
     - ні
-    - нет
+    - так
   - sentence: Я ____ люблю готувати борщ.
     answer: не
     options:
     - не
     - ні
-    - нет
+    - так
   - sentence: Мені ____ подобається ця книга.
     answer: не
     options:
     - не
     - ні
-    - нет
-  - sentence: Я ____ люблю грати у футбол.
-    answer: не
-    options:
-    - не
-    - ні
-    - нет
-  - sentence: Мені ____ подобається музика.
-    answer: не
-    options:
-    - не
-    - ні
-    - нет
+    - так
 workbook:
-- id: wb-pronoun-match
-  type: match-up
-  instruction: Match the pronoun to the correct phrase
-  pairs:
-  - left: Я
-    right: люблю читати
-  - left: Мені
-    right: подобається фільм
-  - left: Ти
-    right: любиш малювати
-  - left: Тобі
-    right: подобається музика
-  - left: Я не
-    right: люблю готувати
-  - left: Мені не
-    right: подобається Київ
-- id: wb-sort-like
+- id: group-sort-activities-things
   type: group-sort
-  instruction: Sort the words based on which phrase you should use with them
+  instruction: Sort the words into actions (**дії**) and things (**речі**).
   groups:
-  - label: Я люблю...
+  - label: Actions (Дії)
     items:
     - читати
-    - малювати
-    - гуляти
-    - співати
     - готувати
-  - label: Мені подобається...
+    - гуляти
+    - малювати
+    - співати
+  - label: Things (Речі)
     items:
+    - книга
+    - фільм
+    - музика
+    - Київ
+    - борщ
+- id: true-false-rules
+  type: true-false
+  instruction: Read the rules for expressing likes. Is the statement true or false?
+  items:
+  - statement: We use 'я люблю' with actions like 'читати'.
+    correct: true
+    explanation: Я люблю is used with infinitive verbs for actions.
+  - statement: We use 'мені подобається' with things like 'книга'.
+    correct: true
+    explanation: Мені подобається is used with nouns for things we like.
+  - statement: We use 'мені подобається' with actions ending in -ти.
+    correct: false
+    explanation: Actions use 'я люблю'. Things use 'мені подобається'.
+  - statement: The word 'не' is placed directly before the verb to make it negative.
+    correct: true
+    explanation: 'For example: я не люблю, мені не подобається.'
+  - statement: The infinitive verb always ends in -ти.
+    correct: true
+    explanation: This is the dictionary form of the verb, like читати or гуляти.
+  - statement: To ask a friend what they like doing, we use 'Ти любиш...?'
+    correct: true
+    explanation: Ти любиш is the form for 'you like' (informal).
+- id: anagram-infinitives
+  type: anagram
+  instruction: Unscramble the letters to form the correct verb.
+  items:
+  - letters:
+    - г
+    - у
+    - л
+    - я
+    - т
+    - и
+    answer: гуляти
+    hint: to walk
+  - letters:
+    - ч
+    - и
+    - т
+    - а
+    - т
+    - и
+    answer: читати
+    hint: to read
+  - letters:
+    - г
+    - р
+    - а
+    - т
+    - и
+    answer: грати
+    hint: to play
+  - letters:
+    - с
+    - п
+    - і
+    - в
+    - а
+    - т
+    - и
+    answer: співати
+    hint: to sing
+  - letters:
+    - с
+    - л
+    - у
+    - х
+    - а
+    - т
+    - и
+    answer: слухати
+    hint: to listen
+  - letters:
+    - г
+    - о
+    - т
+    - у
+    - в
+    - а
+    - т
+    - и
+    answer: готувати
+    hint: to cook
+- id: unjumble-likes
+  type: unjumble
+  instruction: Put the words in the correct order to form a sentence.
+  items:
+  - words:
+    - люблю
+    - Я
+    - читати.
+    correct_order:
+    - Я
+    - люблю
+    - читати.
+  - words:
+    - подобається
+    - музика.
+    - Мені
+    correct_order:
+    - Мені
+    - подобається
+    - музика.
+  - words:
+    - не
+    - Я
+    - малювати.
+    - люблю
+    correct_order:
+    - Я
+    - не
+    - люблю
+    - малювати.
+  - words:
+    - подобається
+    - цей
+    - Тобі
+    - фільм?
+    correct_order:
+    - Тобі
+    - подобається
+    - цей
+    - фільм?
+  - words:
+    - готувати
+    - Ти
+    - борщ?
+    - любиш
+    correct_order:
+    - Ти
+    - любиш
+    - готувати
+    - борщ?
+  - words:
+    - не
+    - ця
+    - Мені
+    - книга.
+    - подобається
+    correct_order:
+    - Мені
+    - не
+    - подобається
+    - ця
+    - книга.
+- id: odd-one-out-categories
+  type: odd-one-out
+  instruction: Find the word that does not belong.
+  items:
+  - words:
+    - читати
+    - малювати
+    - книга
+    correct: 2
+    explanation: «Книга» is a thing (noun). The others are actions (verbs).
+  - words:
     - музика
     - фільм
+    - гуляти
+    correct: 2
+    explanation: «Гуляти» is an action (verb). The others are things (nouns).
+  - words:
     - Київ
-    - книга
     - борщ
-- id: wb-true-false-meaning
-  type: true-false
-  instruction: Are these sentences grammatically correct? (True = Correct, False =
-    Incorrect)
-  items:
-  - statement: Я люблю музика.
-    correct: false
-    explanation: Use 'Мені подобається' with things like 'музика'.
-  - statement: Мені подобається читати.
-    correct: false
-    explanation: Use 'Я люблю' with action verbs like 'читати'.
-  - statement: Я люблю грати на гітарі.
-    correct: true
-    explanation: Correct! 'Я люблю' is used with infinitive verbs.
-  - statement: Я подобаюся футбол.
-    correct: false
-    explanation: Incorrect literal translation. Say 'Мені подобається футбол'.
-  - statement: Тобі подобається цей фільм?
-    correct: true
-    explanation: Correct! 'Тобі подобається' is used to ask if you like a thing.
-  - statement: Я не люблю готувати.
-    correct: true
-    explanation: Correct! 'не' goes before 'люблю'.
-- id: wb-unjumble-sentences
-  type: unjumble
-  instruction: Unjumble the words to make correct sentences
-  items:
-  - words:
-    - люблю
-    - Я
-    - читати.
-    correct_order:
-    - Я
-    - люблю
-    - читати.
-  - words:
-    - подобається
-    - музика.
-    - Мені
-    correct_order:
-    - Мені
-    - подобається
-    - музика.
-  - words:
-    - не
-    - Я
-    - малювати.
-    - люблю
-    correct_order:
-    - Я
-    - не
-    - люблю
-    - малювати.
-  - words:
-    - цей
-    - подобається
-    - Тобі
-    - фільм?
-    correct_order:
-    - Тобі
-    - подобається
-    - цей
-    - фільм?
-  - words:
-    - любиш
-    - Ти
-    - гуляти?
-    correct_order:
-    - Ти
-    - любиш
-    - гуляти?
+    - співати
+    correct: 2
+    explanation: «Співати» is an action (verb). The others are things (nouns).
   - words:
     - грати
-    - люблю
-    - у
-    - Я
-    - футбол.
-    correct_order:
-    - Я
-    - люблю
-    - грати
-    - у
-    - футбол.
-- id: wb-order-dialogue
-  type: order
-  instruction: Put the dialogue in the correct order
+    - дивитися
+    - чай
+    correct: 2
+    explanation: «Чай» is a thing (noun). The others are actions (verbs).
+  - words:
+    - Віктор
+    - Анна
+    - подорожувати
+    correct: 2
+    explanation: «Подорожувати» is an action (verb). The others are names.
+  - words:
+    - слухати
+    - готувати
+    - фільм
+    correct: 2
+    explanation: «Фільм» is a thing (noun). The others are actions (verbs).
+- id: divide-words-syllables
+  type: divide-words
+  instruction: Divide the words into syllables.
   items:
-  - — Привіт! Що ти любиш робити?
-  - — Привіт! Я люблю читати.
-  - — Цікаво! Тобі подобається ця книга?
-  - — Так, мені подобається.
-  correct_order:
-  - 0
-  - 1
-  - 2
-  - 3
-- id: wb-translate-phrases
-  type: translate
-  instruction: Choose the correct Ukrainian translation
-  items:
-  - source: I like to travel.
-    options:
-    - text: Я люблю подорожувати.
-      correct: true
-    - text: Мені подобається подорожувати.
-      correct: false
-  - source: I do not like to cook.
-    options:
-    - text: Я не люблю готувати.
-      correct: true
-    - text: Я люблю не готувати.
-      correct: false
-  - source: Do you like this film?
-    options:
-    - text: Тобі подобається цей фільм?
-      correct: true
-    - text: Ти любиш цей фільм?
-      correct: false
-  - source: I like music.
-    options:
-    - text: Мені подобається музика.
-      correct: true
-    - text: Я люблю музика.
-      correct: false
-  - source: Do you like to walk?
-    options:
-    - text: Ти любиш гуляти?
-      correct: true
-    - text: Тобі подобається гуляти?
-      correct: false
-  - source: I don't like this book.
-    options:
-    - text: Мені не подобається ця книга.
-      correct: true
-    - text: Я не люблю ця книга.
-      correct: false
-- id: wb-error-correction
-  type: error-correction
-  instruction: Find and correct the mistake in the sentence
-  items:
-  - sentence: Мені подобається малювати.
-    error: подобається
-    correction: люблю
-    error_type: word
-    options:
-    - люблю
-    - любиш
-    - любити
-    explanation: Use 'Я люблю' for action verbs.
-  - sentence: Я люблю музика.
-    error: люблю
-    correction: Мені подобається
-    error_type: phrase
-    options:
-    - Мені подобається
-    - Я подобаюся
-    - Тобі подобається
-    explanation: Use 'Мені подобається' for objects and things.
-  - sentence: Я не любити готувати.
-    error: любити
-    correction: люблю
-    error_type: word
-    options:
-    - люблю
-    - любиш
-    - подобається
-    explanation: The verb must be conjugated for 'Я' (люблю).
-  - sentence: Я подобаюся футбол.
-    error: Я подобаюся
-    correction: Мені подобається
-    error_type: phrase
-    options:
-    - Мені подобається
-    - Я люблю
-    - Тобі подобається
-    explanation: Literal translation mistake. Use 'Мені подобається'.
-  - sentence: Мені ні подобається Київ.
-    error: ні
-    correction: не
-    error_type: word
-    options:
-    - не
-    - нет
-    - без
-    explanation: Use 'не' to make verbs negative.
-  - sentence: Тобі любиш читати?
-    error: Тобі
-    correction: Ти
-    error_type: word
-    options:
-    - Ти
-    - Я
-    - Ви
-    explanation: Use 'Ти' with 'любиш'.
+  - word: читати
+    answer: чи-та-ти
+  - word: гуляти
+    answer: гу-ля-ти
+  - word: грати
+    answer: гра-ти
+  - word: любити
+    answer: лю-би-ти
+  - word: музика
+    answer: му-зи-ка
+  - word: книга
+    answer: кни-га
+  - word: співати
+    answer: спі-ва-ти

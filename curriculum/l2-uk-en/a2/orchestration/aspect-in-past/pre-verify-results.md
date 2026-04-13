@@ -1,19 +1,22 @@
 ## VESUM Verification
-- Confirmed: минулий, час, робити, зробити, писати, написати, читати, прочитати, готувати, приготувати, вчити, вивчити, процес, результат, довго, раптом, щодня, нарешті, тривалість, один, раз.
-- Not found: None (Note: "одного разу" is a phrase, both components "один" and "раз" are verified).
+- Confirmed: минулий, час, робити, зробити, писати, написати, читати, прочитати, готувати, приготувати, вчити, вивчити, процес, результат, довго, раптом, щодня, нарешті, одного, разу, тривалість
+- Not found: (none)
 
 ## Grammar Rules
-- Past Tense Formation: Pravopys §104 (referenced in textbooks as §29 Grade 7 / §95 Grade 6) — Past tense verbs change by number (однина/множина) and in singular by gender (ч., ж., с. рід). They denote actions completed before the moment of speech.
-- Verb Aspect: Pravopys §105 (referenced as §25 Grade 7 / §93 Grade 6) — Imperfective (недоконаний) indicates an unfinished/ongoing action (що робити?), while Perfective (доконаний) indicates a completed result (що зробити?). Aspectual pairs are often formed by prefixes (робити -> зробити) or suffixes.
+- Правопис префікса з- (для утворення доконаного виду дієслів, напр. зробити): Правопис §31 — Префікс з- перед буквами на позначення глухих приголосних к, п, т, ф, х переходить у с- (сфотографувати). Перед усіма іншими буквами пишемо з (зробити).
+- Правопис дієслівних суфіксів (для утворення недоконаного виду дієслів, напр. готувати): Правопис §34 — У багатьох дієсловах української мови пишемо суфікс -ува- (-юва-): готувати, міркувати.
 
 ## Calque Warnings
-- приймати участь: Calque — Correct form is **брати участь**.
-- робити вправи: OK — Standard Ukrainian (though "виконувати вправи" is also common).
-- одного разу: OK — Standard idiomatic phrase for "once/one time".
+- одного разу: OK — (Не є калькою за Антоненком-Давидовичем; хоча варто пам'ятати про можливі альтернативи, як-от «якось»)
+- минулий час: OK — (Офіційний граматичний термін)
+- вчити слова: OK — (Допустиме нормативне словосполучення)
 
 ## CEFR Check
-- процес: A2 — OK (Internationalism).
-- результат: A2 — OK (Internationalism).
-- тривалість: B1 — Above target (Technical term, use "як довго" for A2 explanation).
-- раптом: A2 — OK.
-- нарешті: A2 — OK.
+- робити: A1 — OK
+- процес: A2 — OK
+- результат: A1 — OK
+- раптом: A2 — OK
+- щодня: A2 — OK
+- минулий: A2 — OK
+- вивчити: A2 — OK
+- тривалість: Not Found — Above target (можливо, рівень B1+, оскільки не фіксується в базі PULS для A1-A2)

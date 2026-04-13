@@ -1,0 +1,62 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T12-13-3a8f69da.json
+phase: write-chunk-01
+prompt_chars: 30136
+response_chars: 5105
+prompt_words: 4625
+response_words: 834
+sections:
+- name: header
+  start: 0
+  length: 463
+  fraction: 0.0154
+- name: skeleton
+  start: 463
+  length: 1495
+  fraction: 0.0496
+- name: plan
+  start: 1958
+  length: 11054
+  fraction: 0.3668
+- name: wiki
+  start: 6508
+  length: 16886
+  fraction: 0.5603
+- name: output_spec
+  start: 29898
+  length: 238
+  fraction: 0.0079
+large_sections:
+- wiki
+directives_total: 23
+directives_covered: 16
+directives_missed:
+- kind: checklist
+  text: подарунок (gift)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: заняття (class, lesson)
+  covered: false
+  coverage_note: 1/3 keywords (33%)
+- kind: must
+  text: The Locative case (`-ах`/`-ях`) is mandatory after prepositions of location
+    like `в` and `на` (Source 3, 37).
+  covered: false
+  coverage_note: 2/8 keywords (25%)
+- kind: must
+  text: The noun must change to show its role in the phrase (Source 1, 35).
+  covered: false
+  coverage_note: 2/8 keywords (25%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 4/11 keywords (36%)
+- kind: inject_activity
+  text: match-up-plural-cases
+  covered: false
+  coverage_note: marker missing

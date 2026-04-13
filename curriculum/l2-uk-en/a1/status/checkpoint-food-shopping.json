@@ -2,13 +2,13 @@
   "module": "checkpoint-food-shopping",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-11T00:59:43.005747Z",
+  "last_audit": "2026-04-13T21:18:36.499490Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-11T00:59:42.320638Z",
+    "md": "2026-04-13T21:18:25.296350Z",
     "meta": null,
-    "activities": "2026-04-09T03:27:29.604047Z",
-    "vocabulary": "2026-04-09T03:28:20.617128Z",
+    "activities": "2026-04-13T01:45:18.623972Z",
+    "vocabulary": "2026-04-13T01:45:57.832612Z",
     "research": null,
     "plan": "2026-03-30T22:17:20.653351Z"
   },
@@ -21,17 +21,26 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1292/1000 (raw: 1332)"
+      "message": "1185/1000 (raw: 1226)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "8/0"
+      "message": "7/0"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "29/1"
+      "message": "13/1"
+    },
+    "vocab_progression": {
+      "status": "warn",
+      "violations": 0,
+      "message": "\u0394 -5 | premature=1 | gaps=0 | well-paced=0",
+      "delta": -5,
+      "premature": 1,
+      "gaps": 0,
+      "well_paced": 0
     },
     "naturalness": {
       "status": "info",

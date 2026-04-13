@@ -1,42 +1,79 @@
 ## Linguistic Scan
-One critical linguistic error found:
-- **Reflexive possessive mismatch:** `Вона присвятила пісню її коханому чоловікові.` In standard Ukrainian, when a third-person subject acts upon their own possession/relative, the reflexive possessive `свій` (`своєму`) must be used. Using `її` here means she dedicated a song to *another* woman's husband. 
+No linguistic errors found.
 
-No Russianisms, Surzhyk, or calques were detected. The usage of cases (e.g., `заздрять сусідові`, `пасує сукні`, `зарадити проблемам`) and explanations of nuanced Ukrainian rules (e.g., declining `їхній` instead of using the invariable `їх`) are exceptionally accurate and natural.
+Key dative forms cited in the module (`моєму`, `твоєму`, `своєму`, `їхньому`, `цьому`, `тій`, `одногрупникові`) verify in VESUM, and the supplied text contains no Russian-only characters `ы`, `э`, `ё`, `ъ`.
 
 ## Exercise Check
-All 5 expected exercise markers are present and correctly placed:
-1. `<!-- INJECT_ACTIVITY: group-sort-sort-dative-adjective-forms-by-gender-masculine-feminine-plural -->` (Placed perfectly after the explanation of hard/soft endings for all genders).
-2. `<!-- INJECT_ACTIVITY: quiz-pronoun-forms-choose-the-correct-dative-form-of-the-possessive-pronoun-vs-vs -->` (Placed after possessive pronouns).
-3. `<!-- INJECT_ACTIVITY: match-up-nom-dat-match-nominative-noun-phrases-to-their-dative-equivalents -->` (Placed logically alongside the quiz).
-4. `<!-- INJECT_ACTIVITY: fill-in-dative-phrases -->` (Placed after the multi-word noun phrase section).
-5. `<!-- INJECT_ACTIVITY: error-correction-agreement -->` (Placed immediately after the explanation of the "trap" where learners forget to change the adjective).
+5/5 planned activity markers are present, and all appear after the relevant teaching material:
 
-The markers perfectly align with the plan's `activity_hints`. 
+- `group-sort-sort-dative-adjective-forms-by-gender-masculine-feminine-plural` after the adjective-endings section
+- `quiz-possessive-forms` after the possessive/demonstrative section
+- `match-up-nominative-dative` after the possessive/demonstrative section
+- `fill-in-dative-phrases` after the full noun-phrase section
+- `error-correction-agreement` after the full noun-phrase section
+
+The marker IDs match the plan’s `activity_hints` in type and focus. No inline DSL exercise logic was present to audit.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 10/10 | The module strictly follows the plan, covering all grammatical objectives, incorporating the dialogue exactly as described ("Моєму найкращому студентові — десятка!"), and embedding all required vocabulary naturally into the text. |
-| 2. Linguistic accuracy | 9/10 | High overall accuracy, correctly handling complex Dative government rules (`радіти поїзду`, `пасує сукні`, `заздрять сусідові`). However, there is a critical reflexive pronoun error (`її` instead of `своєму` for a 3rd person subject's own husband). |
-| 3. Pedagogical quality | 10/10 | Outstanding pedagogical flow. The use of "grammatical echoes" to explain multi-word agreement is an excellent metaphor. The module also successfully anticipates learner errors (forgetting to decline the adjective) and provides side-by-side Genitive/Dative comparisons to solidify understanding. |
-| 4. Vocabulary coverage | 10/10 | All required and recommended words (`вказівний`, `узгодження`, `їхньому`) are utilized in natural, contextual reading blocks. |
-| 5. Exercise quality | 10/10 | All five markers from the plan are utilized and strategically placed immediately after the concepts they test, ensuring learners can practice before moving on to the next rule. |
-| 6. Engagement & tone | 10/10 | The tone is an encouraging, warm teacher without relying on empty filler. Phrases like "This makes the Ukrainian system logical, consistent, and uniquely melodic" and "Remember that його and її are your best friends" are delightful and motivating. |
-| 7. Structural integrity | 10/10 | Clean markdown, no stray tags, and all expected headers are present. The word count of 3236 words provides a robust, immersive learning experience well above the 2000-word target. |
-| 8. Cultural accuracy | 10/10 | Highlights standard Ukrainian gracefully without explicit comparison to Russian, implicitly teaching decolonized language (e.g., the strong advice to always decline `їхній` rather than using the calqued `їх`). |
-| 9. Dialogue & conversation quality | 10/10 | Dialogues are multi-turn, authentic, and purposeful. The final dialogue effectively tests the learner's comprehension of cases in context. |
+| 1. Plan adherence | 9/10 | All four planned H2 sections are present and in order; references are cited explicitly in `Такі самі парадигми подають Заболотний (§157), Захарійчук (§281) і ULP: Ukrainian Possessive Pronouns.`; all 5 planned activity types have markers. Deduction: the final section is `~390 words` against the plan’s 350-word budget, over the rubric’s `>10%` threshold. |
+| 2. Linguistic accuracy | 10/10 | No Russianisms, Surzhyk, calques, paronym errors, or wrong dative forms confirmed. Verified forms include `моєму`, `їхньому`, `цьому`, `тій`, `одногрупникові`. |
+| 3. Pedagogical quality | 8/10 | The module has strong coverage and many examples, but some explanation is impressionistic rather than teachable, e.g. `Because the stems of these pronouns end in a vowel, they require a softer, more melodic transition into the case ending compared to regular hard adjectives.` That wording is less useful than a direct declension rule. |
+| 4. Vocabulary coverage | 10/10 | Required plan vocabulary is all present in prose: `моєму`, `моїй`, `твоєму`, `нашій`, `цьому`, `тому`, `новому`, `старшому`, `прикметник`, `присвійний`. Recommended items also appear in usable context, including `узгодження`, `іменникова група`, and `їхньому`. |
+| 5. Exercise quality | 10/10 | Marker inventory matches the plan exactly, markers follow the relevant instruction, and none are placed before the concept is taught. |
+| 6. Engagement & tone | 8/10 | The teacherly tone is generally solid, but some lines drift into low-information hype, e.g. `This is a huge relief for language learners!` and similar value-added phrasing where direct instruction would be stronger. |
+| 7. Structural integrity | 10/10 | Clean markdown structure, all planned sections present, expected inject markers only, and pipeline word count is 2784, safely above the 2000 target. |
+| 8. Cultural accuracy | 10/10 | No Russian-centric framing or cultural inaccuracies detected; examples stay within ordinary Ukrainian classroom/family contexts. |
+| 9. Dialogue & conversation quality | 8/10 | The dialogue is multi-turn and relevant, but the speaker labeling is internally inconsistent: the setup says `Imagine a teacher handing back graded essays to her class.`, students address `пані Олено`, yet the speaker label remains `**Вчитель:**`. |
 
 ## Findings
-[2. Linguistic accuracy] [Critical]
-Location: Section "Повні іменникові групи у давальному відмінку", «Читаємо українською» block.
-Issue: Reflexive pronoun mismatch. The sentence `Вона присвятила пісню її коханому чоловікові` literally means she dedicated a song to *another* woman's husband. In Ukrainian, a third-person subject acting upon their own relative/possession must use the reflexive possessive (`своєму`).
-Fix: Change `її` to `своєму`.
+[PLAN ADHERENCE] [SEVERITY: minor]  
+Location: `## Порівняння відмінків (~390 words)` opening paragraph: `Comparing cases is an essential step if you want to truly master the Ukrainian language...`  
+Issue: This section runs about 390 words against the plan’s 350-word budget, exceeding the rubric’s `>10%` tolerance. The opening paragraph is also more expansive than necessary before the actual case comparison starts.  
+Fix: Compress the opening paragraph to 2-3 direct instructional sentences.
+
+[PEDAGOGICAL QUALITY] [SEVERITY: major]  
+Location: `## Присвійні та вказівні займенники у давальному відмінку` paragraph beginning `Let's start with the pronouns...`  
+Issue: The explanation `Because the stems of these pronouns end in a vowel, they require a softer, more melodic transition...` is too impressionistic and does not teach a clean morphological rule learners can apply.  
+Fix: Replace it with a direct rule stating that these pronouns take `-єму` in masculine/neuter and `-їй` in feminine.
+
+[ENGAGEMENT & TONE] [SEVERITY: minor]  
+Location: `## Прикметники у давальному відмінку` plural paragraph: `This is a huge relief for language learners!`  
+Issue: This is filler rather than instruction. The surrounding paragraph already explains the useful point clearly.  
+Fix: Replace it with neutral, information-carrying wording.
+
+[DIALOGUE & CONVERSATION QUALITY] [SEVERITY: major]  
+Location: `## Повні іменникові групи у давальному відмінку` dialogue block: `Imagine a teacher handing back graded essays to her class.` / `пані Олено` / `**Вчитель:**`  
+Issue: The scene establishes a female teacher, but both teacher turns are labeled with masculine `Вчитель`, which makes the dialogue internally inconsistent.  
+Fix: Change both teacher labels to `**Вчителька:**`.
 
 ## Verdict: REVISE
-The module is exceptional in depth, pedagogy, and tone. However, the misuse of the 3rd person reflexive possessive is a critical grammatical error that teaches an incorrect pattern. It must be revised to fix this single sentence. 
+REVISE because the module has fixable but real quality issues: one overlong section, one vague grammar explanation, one filler-heavy sentence, and one dialogue-label inconsistency. The linguistic content is solid, but dimensions 3, 6, and 9 fall below the PASS threshold.
 
 <fixes>
-- find: "Вона присвятила пісню її коханому чоловікові."
-  replace: "Вона присвятила пісню своєму коханому чоловікові."
+- find: |
+    Comparing cases is an essential step if you want to truly master the Ukrainian language and speak with confidence. As you learn more cases, the different endings can naturally start to blur together. Learners very often confuse the endings of the Nominative, Genitive, and Dative cases. This happens particularly often for feminine nouns and their modifiers. By placing these forms side-by-side, we can easily reveal the distinct patterns and avoid common conversational mistakes. Whenever you see a **прикметник** (adjective) or a **присвійний** (possessive) pronoun, its ending acts as a signal, telling you exactly what role the core noun plays in the sentence.
+  replace: |
+    Comparing cases helps learners keep similar endings apart. In this section, we place the Nominative, Genitive, and Dative forms side by side so you can see the patterns clearly. Whenever you see a **прикметник** (adjective) or a **присвійний** (possessive) pronoun, its ending signals the role of the noun in the sentence.
+
+- find: |
+    Because the stems of these pronouns end in a vowel, they require a softer, more melodic transition into the case ending compared to regular hard adjectives.
+  replace: |
+    These pronouns follow their own dative pattern: masculine and neuter forms end in «-єму», and feminine forms end in «-їй».
+
+- find: |
+    This is a huge relief for language learners!
+  replace: |
+    This simplifies the pattern for learners.
+
+- find: |
+    > — **Вчитель:** Моєму найкращому студентові — десятка! Нашій новій студентці — дев'ятка. А цьому хлопцю треба більше працювати. *(To my best student — a ten! To our new student — a nine. And this boy needs to work more.)*
+  replace: |
+    > — **Вчителька:** Моєму найкращому студентові — десятка! Нашій новій студентці — дев'ятка. А цьому хлопцю треба більше працювати. *(To my best student — a ten! To our new student — a nine. And this boy needs to work more.)*
+
+- find: |
+    > — **Вчитель:** Звичайно. Після уроку я все поясню тобі й твоєму одногрупникові. *(Of course. After class I’ll explain everything to you and your classmate.)*
+  replace: |
+    > — **Вчителька:** Звичайно. Після уроку я все поясню тобі й твоєму одногрупникові. *(Of course. After class I’ll explain everything to you and your classmate.)*
 </fixes>

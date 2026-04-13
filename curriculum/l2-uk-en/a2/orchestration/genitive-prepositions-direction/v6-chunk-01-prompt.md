@@ -1,18 +1,23 @@
-# Section-by-Section Generation — Section 1/5
+# Section-by-Section Generation — Section 1/3
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 11: Куди? До якого часу? (A2, A2.2 [Genitive Case Complete])
-**Section to write:** Вступ та діалог (~200 words)
-**Word target for this section:** 200 words (aim for 220 to account for undershoot)
+**Section to write:** Куди ти йдеш? До + родовий для напрямку (~770 words)
+**Word target for this section:** 770 words (aim for 847 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Вступ та діалог (~200 words)
-- P1 (~100 words): [Dialogue: A passenger gives directions to a taxi driver using a sequence of destinations. Speakers: Пасажир and Таксист. Focus: До вокзалу (m), до аптеки (f), до п’ятої години (time), до готелю (m).]
-- P2 (~100 words): [Introduction to the preposition 'до'. Explain that in A2 we move beyond simple location to direction, purpose, and time limits. Contrast 'до' as the "toward" or "until" preposition that always requires the Genitive case.]
+## Куди ти йдеш? До + родовий для напрямку (~770 words)
+- P1 (~110 words): Dialogue setting the scene. A passenger gives directions to a taxi driver: "До вокзалу, будь ласка. Потім до аптеки. Чекайте до п'ятої години. А потім до готелю."
+- P2 (~120 words): Break down the dialogue. Explain that the preposition `до` requires the Genitive case to express the concept of "to" or "toward" a destination (`напрямок`). Show the transformations from the dialogue: `вокзал` → `до вокзалу`, `аптека` → `до аптеки`, `готель` → `до готелю`.
+- P3 (~140 words): Explain destination as a place. Provide examples with cities and countries: `до Львова`, `до Києва`, `до України`, `до Польщі`. Include natural sentences like "Цього літа ми поїхали до України" and "Завтра ти прилетиш до Києва."
+- P4 (~150 words): Explain destination as a person. Emphasize that going to see someone is ALWAYS `до` + Genitive. Give examples: `до друга` (to a friend's place), `до бабусі` (to grandma's), `до лікаря` (to the doctor). Provide the example "Я хочу записатися на прийом до лікаря." Include a decolonization note: unlike Russian (`к маме`), Ukrainian strictly uses `до` (`до мами`).
+- P5 (~150 words): Contrast `до` + Genitive with `в/на` + Accusative. Explain that "Іду до магазину" emphasizes the journey or direction, while "Іду в магазин" emphasizes the destination itself or going inside. State clearly that both are equally standard and natural in Ukrainian, with no strict hierarchy. 
+- P6 (~100 words): Briefly review hard and soft stems for Genitive nouns following `до`. Provide a quick reference list: `до будинку` (hard masculine), `до музею` (soft masculine), `до школи` (hard feminine), `до станції` (soft feminine), `до моря` (soft neuter).
+- <!-- INJECT_ACTIVITY: fill-in-genitive-direction --> [fill-in, Complete sentences with до + correct Genitive noun form, 8 items]
 
 ---
 ## Full Plan (for reference)
@@ -589,6 +594,31 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] напрямок (direction)
+- [ ] мета (goal, purpose)
+- [ ] музей (museum)
+- [ ] лікар (doctor)
+- [ ] бабуся (grandmother)
+- [ ] вечір (evening)
+- [ ] ранок (morning)
+- [ ] екзамен (exam)
+- [ ] побачення (meeting, date; goodbye in 'до побачення')
+- [ ] список (list)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Куди ти йдеш? До + родовий для напрямку (~770 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

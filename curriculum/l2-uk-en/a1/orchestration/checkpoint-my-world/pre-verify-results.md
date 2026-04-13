@@ -1,21 +1,24 @@
 ## VESUM Verification
-- Confirmed: кімната, стіл, великий, новий, лампа, білий, жовтий, книга, стіна, цей, той, сумка, червоний, синій, скільки, коштувати, двісті, гривня, добре, зошит, один, двадцять
-- Not found: none (all words verified after correcting typos)
+- Confirmed: кімната, стіл, великий, новий, лампа, біла, жовта, три, книги, нові, стіни, білі, він, вона, воно, велика, вікно, велике, червоний, синій, цей, ця, це, той, та, те, столи, вікна, сумки, червона, синя, гривень, зошити, один, зошит, двадцять
+- Not found: (None)
 
 ## Grammar Rules
-- Adjective Agreement: Pravopys (referenced via Grade 3 textbook) — Adjectives in the singular change by gender: masculine ends in -ий, -ій; feminine in -а, -я; neuter in -о, -е.
-- Plurals: Pravopys (referenced via Grade 3 textbook) — In the plural, adjectives do not change by gender and always have the ending -і.
-- Noun Gender: Standard Ukrainian grammar (M/F/N) — Masculine: consonant/zero ending; Feminine: -а, -я; Neuter: -о, -е.
+- [Adjective endings / Hard vs soft stem]: Правопис §33 — За допомогою суфікса -н-(ий) від іменникових і дієслівних основ утворено основний склад якісних і відносних прикметників. Суфікс -н-(ій) ужитий порівняно в небагатьох прикметниках, переважно відносних.
+- [Noun endings]: Правопис §32 — Правопис іменникових суфіксів (general declension paradigm tables are not explicitly indexed in sections 1-61).
 
 ## Calque Warnings
-- Добрий день: OK — Recommended literary form. Note: "Доброго дня" is identified as an "unwanted" (небажана) or non-literary variant in school textbooks (Avramenko, Grade 7/11).
-- Скільки коштує: OK — Standard phrase used extensively in Ukrainian school textbooks (Grade 3, 5, 6).
-- Це моя кімната: OK — Natural phrasing confirmed in Grade 6 textbooks.
+- [у мене є]: OK — (No results in Антоненко-Давидович)
+- [у вас є]: OK — (No results in Антоненко-Давидович)
+- [скільки коштує]: OK — (No results in Антоненко-Давидович)
 
 ## CEFR Check
-- кімната: A1 — Found in Grade 6 (Topic: My House).
-- стіл: A1 — Found in Grade 1/3/4 (Basic objects).
-- великий: A1 — Found in Grade 3/5 (Basic descriptions).
-- червоний: A1 — Found in Grade 5/6 (Colors).
-- двадцять: A1 — Found in Grade 4 (Numbers).
-- зошит: A1 — Found in Grade 4 (School supplies).
+- кімната: A1 — OK
+- стіл: A1 — OK
+- великий: A1 — OK
+- новий: A1 — OK
+- лампа: A1 — OK
+- червоний: A1 — OK
+- синій: A1 — OK
+- зошит: A1 — OK
+- гривня: A1 — OK
+- двадцять: A1 — OK

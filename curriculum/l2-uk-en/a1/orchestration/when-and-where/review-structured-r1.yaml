@@ -2,49 +2,53 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 10
-  evidence: Covered all 4 sections exactly as specified. Included the summary table
-    and the self-check. All required vocabulary is present.
+  score: 6
+  evidence: 'All planned H2 sections and all 4 activity markers are present, but section
+    budgets are badly off plan: Dialogues `526` vs planned `300`, Complex `422`, Two
+    Faces `403`, Summary `332`. Also, proof-of-'
 - dimension: 2
   name: Linguistic accuracy
-  score: 10
-  evidence: No Russianisms, Surzhyk, or calques. Punctuation around subordinate clauses
-    is flawless, adhering to Ukrainian orthography rules.
+  score: 4
+  evidence: 'The module teaches two false grammar rules: comma placement is overstated
+    as “always before” `що/де/коли`, and the question-word vs conjunction test fails
+    on the module’s own `Коли я прийду, ми погово'
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: Excellent breakdown of the "Two Faces" concept. The explicit warning about
-    the English comma difference ("I think that...") is highly effective for English
-    learners.
+  score: 5
+  evidence: The PPP skeleton exists, but the opening spends well over 100 English
+    words before the first Ukrainian example, and the core rule/diagnostic taught
+    in the grammar sections is inaccurate.
 - dimension: 4
   name: Vocabulary coverage
   score: 9
-  evidence: Included all required vocabulary. However, it missed incorporating the
-    recommended Ukrainian term "головне речення" directly into the text, relying only
-    on the English "main clause".
+  evidence: Required items `що, де, коли, знати, думати, казати` are covered; recommended
+    items such as `сказати`, `бачити`, `чути`, `розуміти`, `речення`, `головне` also
+    appear.
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: 4 exercise markers perfectly match the plan's `activity_hints` in both
-    type and focus. Placed logically after relevant theory.
+  score: 8
+  evidence: Marker count and sequencing match the plan, and each marker follows the
+    relevant teaching. The generated YAML exercise logic is not visible here, so only
+    placement can be assessed.
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: Clear, professional, and encouraging teacher tone without any corporate
-    filler or overly gamified language.
+  score: 5
+  evidence: 'Teacher warmth is present, but the module is padded with generic hype
+    and filler: “absolute golden rule,” “essential building blocks of fluency,” “highly
+    advanced, expressive sentences.”'
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: Word count is 1753, well above the 1200 target. All H2 headings perfectly
-    match the `content_outline`. Clean markdown.
+  evidence: All planned H2 headings are present and ordered correctly; no stray artifacts;
+    pipeline word count is `1810`, above the `1200` target.
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: Natural interactions and culturally appropriate use of names in the dialogues.
+  score: 9
+  evidence: No Russiacentric framing or cultural inaccuracies found.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 6
-  evidence: 'Critical error in Dialogue 1: The guest uses the 2nd-person imperative
-    "зупинись?" to ask about their own future action, which is a grammatical and logical
-    impossibility.'
+  score: 7
+  evidence: Named speakers and real situations are good, but the lesson spends too
+    much time explaining the dialogues in English instead of letting the Ukrainian
+    carry the teaching load.
 findings: []

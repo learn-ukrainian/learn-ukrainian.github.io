@@ -1,22 +1,22 @@
-# Section-by-Section Generation — Section 3/5
+# Section-by-Section Generation — Section 3/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 41: Я напишу! (A2, A2.6 [Aspect, Tenses, and Motion])
-**Section to write:** Складений майбутній час (Imperfective/Analytical Future) (~550 words)
+**Section to write:** Складений майбутній час (~550 words)
 **Word target for this section:** 550 words (aim for 605 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Складений майбутній час (Imperfective/Analytical Future) (~550 words)
-- P1 (~130 words): [Formation of the auxiliary "бути" in the future tense. Provide the full paradigm: я буду, ти будеш, він буде, ми будемо, ви будете, вони будуть. Emphasize that the following verb MUST be an imperfective infinitive (e.g., буду працювати).]
-- P2 (~120 words): [Usage for duration and processes. Explain how to describe an action that will take time or occupy a specific period. Example: "Завтра я буду працювати весь день" (Tomorrow I will be working all day) vs. "Я буду читати книгу ввечері."]
-- P3 (~100 words): [Usage for repeated or habitual future actions. Explain that if an action happens "every day" or "often" in the future, the compound form is required. Example: "Я буду дзвонити тобі щодня" (I will be calling you every day).]
-- P4 (~100 words): [Critical error warning: The "Forbidden Hybrid." Explain that "буду + perfective infinitive" (like "буду написати") is a major grammar error. Contrast the correct "напишу" (result) and "буду писати" (process).]
-- P5 (~100 words): [Dialogue: "New Year's Resolutions." Friends discussing habits. Speaker A: "Що ти будеш робити в новому році?" Speaker B: "Я буду щодня бігати в парку і буду вчити українську кожну суботу."]
-- <!-- INJECT_ACTIVITY: fill-in-compound-future --> [fill-in, Complete sentences by conjugating 'бути' + provided imperfective infinitive, 8 items]
+## Складений майбутній час (~550 words)
+- P1 (~100 words): Detail the formation of the compound/analytical future (складений майбутній час). Explain that imperfective verbs need a helper to express future meaning, so we combine the future tense of the verb "бути" with the imperfective infinitive.
+- P2 (~120 words): Provide the full conjugation of the auxiliary verb "бути": я буду, ти будеш, він/вона буде, ми будемо, ви будете, вони будуть. Emphasize that the main verb remains in the infinitive and does not change.
+- P3 (~110 words): Provide clear examples of this structure in action: "Я буду читати" (I will be reading), "Ми будемо працювати" (We will be working), "Вони будуть вивчати українську" (They will be studying Ukrainian).
+- P4 (~120 words): Explain when to use the compound future: for ongoing, repeated, or general actions in the future where the duration or process is important, not the completion. Give examples: "Завтра я буду працювати весь день" (Tomorrow I will be working all day) and "Влітку вони будуть подорожувати" (In summer they will be traveling).
+- P5 (~100 words): Draw a direct contrast between the two formations using the same root: "Я напишу листа" (I will write it — done) versus "Я буду писати листа" (I will be writing it — focusing on the process, maybe not finishing it).
+- <!-- INJECT_ACTIVITY: unjumble-future-sentences --> [unjumble, Reorder words to form correct future tense sentences using both synthetic (напишу) and analytical (буду писати) forms, 6 items]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-and add it to the base stem.)* However, you must remember the specific consonant shifts that happen in the first person singular. Ці чергування приголосних звуків дуже важливі тут. *(These consonant sound shifts are very important here.)* For example, the consonant **б** changes to the cluster **бл**. Дієслово **зробити** *(to do completely)* має форму **я зроблю** *(I will do)*. Інші форми залишаються нормальними: **ти зробиш** *(you will do)*, **він зробить** *(he will do)*, **ми зробимо** *(we will do)*, **ви зробите** *(you will do)*, **вони зроблять** *(they will do)*. Another common shift is **т** to **ч**. Від дієслова **побачити** *(to see)* ми легко утворюємо форму **я побачу** *(I will see)*. You will also frequently see the shift from **д** to **дж** in verbs like **порадити** *(to advise)*, which becomes **я пораджу** *(I will advise)*. Some perfective verbs are absolutely essential for daily communication and simple transactions. Це головні дієслова для вашого щоденного виживання. *(These are the main verbs for your daily survival.)* You will use them constantly to make firm promises or state clear decisions. Якщо ви хочете щось сказати, ви кажете: «Я **скажу**» *(I will say)*. Якщо ви плануєте покупку в магазині, ви кажете: «Я **куплю**» *(I will buy)*. Notice that the verb **купити** *(to buy)* also features the consonant shift in the first person. Для розмови по телефону ми використовуємо дієслово **подзвонити** *(to call)*. Ви кажете своїм друзям: «Я **подзвоню** вам завтра» *(I will call you tomorrow)*. Якщо ви відправляєте важливе повідомлення, ви кажете: «Я **надішлю** довгий емейл» *(I will send a long email)*. Motion verbs use specific prefixes to clearly show your concrete future travel plans. Дієслова руху дуже часто мають префікси **по-** або **при-**. *(Motion verbs very often have the prefixes po- or pry-.)* The prefix "по-" shows the active start of a trip or movement away from your current location. Якщо ви плануєте подорож машиною, ви кажете: «Я **поїду**» *(I will leave/go by vehicle)*. Якщо ви йдете кудись пішки, ви кажете: «Я **піду**» *(I will go by foot)*. The prefix "при-" always shows successful arrival at a destination. Якщо ви говорите про точний час, ви кажете: «Я **приїду** о сьомій годині» *(I will arrive at seven o'clock)*. Ці короткі слова ідеально підходять для планування маршруту. *(These short words are perfectly suited for planning a route.)* Let's see how friends use these concrete promises when planning a relaxing evening together. Вони зараз планують спільну смачну вечерю. *(They are now planning a joint tasty dinner.)* > — **Анна:** Що ми будемо робити сьогодні ввечері? *(What will we do tonight?)* > — **Максим:** Я **куплю** червоне вино і свіжі фрукти. *(I will buy red wine and fresh fruits.)* > — **Анна:** Дуже добре, а я **зроблю** великий салат. *(Very good, and I will make a large salad.)* > — **Анна:** Також я **замовлю** гарячу піцу для нас. *(Also I will order a hot pizza for us.)* > — **Максим:** Чудово! А потім ми **подивимося** цікавий фільм. *(Great! And then we will watch an interesting movie.)* <!-- INJECT_ACTIVITY: group-sort-future-forms -->
+**прочитати** (to read through — pf.) uses these simple forms. You say: я прочитаю, ти прочитаєш, він прочитає. For multiple people: ми прочитаємо, ви прочитаєте, вони прочитають. This pattern is very reliable. Ще один важливий приклад — це дієслово «поїхати». Воно має такі самі знайомі закінчення. Ви кажете: я поїду, ти поїдеш, він поїде. У множині це: ми поїдемо, ви поїдете, вони поїдуть. Ця форма описує поїздку, яка точно відбудеться. :::info **Grammar box** — Do not confuse the English "will" with the Ukrainian forms here. The Ukrainian synthetic future does not use an extra helper word. The future meaning is built directly into the perfective verb itself. ::: Now let's examine the second conjugation perfective verbs. The rules here are also identical to the present tense, including the consonant mutations in the first person singular. For instance, the perfective verb "побачити" (to see) changes the consonant "т" to "ч": я побачу, ти побачиш, він побачить, ми побачимо, ви побачите, вони побачать. Another common example is the verb **зробити / зроблю** (to do — pf. future). З цим дієсловом ми бачимо типове додавання літери «л» після губного приголосного «б». Подивіться на ці форми. В однині ми кажемо: я зроблю, ти зробиш, він зробить. У множині: ми зробимо, ви зробите, вони зроблять. Ви вже добре знаєте це правило з дієслова «робити». > *With this verb, we see the typical addition of the letter "л" after the labial consonant "б". Look at these forms. In the singular we say: я зроблю, ти зробиш, він зробить. In the plural: ми зробимо, ви зробите, вони зроблять. You already know this rule well from the verb "робити".* You will use the **простий** future tense exclusively for a single, completed action in the future that will produce a clear result. It focuses entirely on the successful achievement of a goal, not on the process or duration. You want to emphasize that the task will be done. For example, consider the verb **написати / напишу** (to write — pf. future). Коли я кажу, що я напишу листа, це означає чудовий результат. Лист точно буде готовий. Я почну і повністю закінчу цю дію. Якщо мій брат прочитає книгу, він дочитає її до кінця. In daily life, Ukrainians constantly use specific perfective verbs to make firm plans and promises. These verbs are absolutely essential for everyday communication and building relationships. You will often hear verbs like **подзвонити** (to call — pf.), **купити** (to buy — pf.), or **сказати / скажу** (to say/tell — pf. future) when people arrange meetings, share news, or go shopping. Я обов'язково подзвоню тобі завтра вранці. Ми точно купимо свіжий хліб і молоко. Я швидко приїду на вокзал. Я скажу йому всю правду про цю ситуацію. > *I will definitely call you tomorrow morning. We will exactly buy fresh bread and milk. I will quickly arrive at the train station. I will tell him the whole truth about this situation.* <!-- INJECT_ACTIVITY: fill-in, Complete sentences with the correct synthetic perfective future forms based on context -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -58,10 +58,11 @@ objectives:
     process (imperfective).
 dialogue_situations:
   - setting: Making New Year's resolutions with friends — Я напишу книгу (f)! Я 
-      вивчу іспанську (f)! Він прочитає 50 книг! Вона здасть іспит (m, exam)!
+      вивчу іспанську (f)! Він прочитає 50 книг! Вона складе іспит (m, exam)!
     speakers:
       - Група друзів на Новий рік
-    motivation: 'Perfective future: написати→напишу, вивчити→вивчу, здати→здам'
+    motivation: 'Perfective future: написати→напишу, вивчити→вивчу, скласти→складу.
+      Note: Ukrainian says складати/скласти іспит (not the Russianism "здавати іспит").'
 content_outline:
   - section: Два майбутніх часи (Two Futures in Ukrainian)
     words: 450
@@ -478,7 +479,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -497,18 +565,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] майбутній час (future tense)
+- [ ] простий (simple, synthetic)
+- [ ] складений (compound, analytical)
+- [ ] сказати / скажу (to say/tell — pf. future)
+- [ ] написати / напишу (to write — pf. future)
+- [ ] зробити / зроблю (to do — pf. future)
+- [ ] буду (I will — auxiliary)
+- [ ] прочитати (to read through — pf.)
+- [ ] подзвонити (to call — pf.)
+- [ ] купити (to buy — pf.)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Складений майбутній час (~550 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

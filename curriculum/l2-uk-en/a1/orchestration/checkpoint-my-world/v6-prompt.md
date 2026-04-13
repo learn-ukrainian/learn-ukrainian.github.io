@@ -223,26 +223,29 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-- Confirmed: кімната, стіл, великий, новий, лампа, білий, жовтий, книга, стіна, цей, той, сумка, червоний, синій, скільки, коштувати, двісті, гривня, добре, зошит, один, двадцять
-- Not found: none (all words verified after correcting typos)
+- Confirmed: кімната, стіл, великий, новий, лампа, біла, жовта, три, книги, нові, стіни, білі, він, вона, воно, велика, вікно, велике, червоний, синій, цей, ця, це, той, та, те, столи, вікна, сумки, червона, синя, гривень, зошити, один, зошит, двадцять
+- Not found: (None)
 
 ## Grammar Rules
-- Adjective Agreement: Pravopys (referenced via Grade 3 textbook) — Adjectives in the singular change by gender: masculine ends in -ий, -ій; feminine in -а, -я; neuter in -о, -е.
-- Plurals: Pravopys (referenced via Grade 3 textbook) — In the plural, adjectives do not change by gender and always have the ending -і.
-- Noun Gender: Standard Ukrainian grammar (M/F/N) — Masculine: consonant/zero ending; Feminine: -а, -я; Neuter: -о, -е.
+- [Adjective endings / Hard vs soft stem]: Правопис §33 — За допомогою суфікса -н-(ий) від іменникових і дієслівних основ утворено основний склад якісних і відносних прикметників. Суфікс -н-(ій) ужитий порівняно в небагатьох прикметниках, переважно відносних.
+- [Noun endings]: Правопис §32 — Правопис іменникових суфіксів (general declension paradigm tables are not explicitly indexed in sections 1-61).
 
 ## Calque Warnings
-- Добрий день: OK — Recommended literary form. Note: "Доброго дня" is identified as an "unwanted" (небажана) or non-literary variant in school textbooks (Avramenko, Grade 7/11).
-- Скільки коштує: OK — Standard phrase used extensively in Ukrainian school textbooks (Grade 3, 5, 6).
-- Це моя кімната: OK — Natural phrasing confirmed in Grade 6 textbooks.
+- [у мене є]: OK — (No results in Антоненко-Давидович)
+- [у вас є]: OK — (No results in Антоненко-Давидович)
+- [скільки коштує]: OK — (No results in Антоненко-Давидович)
 
 ## CEFR Check
-- кімната: A1 — Found in Grade 6 (Topic: My House).
-- стіл: A1 — Found in Grade 1/3/4 (Basic objects).
-- великий: A1 — Found in Grade 3/5 (Basic descriptions).
-- червоний: A1 — Found in Grade 5/6 (Colors).
-- двадцять: A1 — Found in Grade 4 (Numbers).
-- зошит: A1 — Found in Grade 4 (School supplies).
+- кімната: A1 — OK
+- стіл: A1 — OK
+- великий: A1 — OK
+- новий: A1 — OK
+- лампа: A1 — OK
+- червоний: A1 — OK
+- синій: A1 — OK
+- зошит: A1 — OK
+- гривня: A1 — OK
+- двадцять: A1 — OK
 </pre_verified_facts>
 
 
@@ -551,13 +554,15 @@ These exercises are models for the content writer, demonstrating the native Ukra
 
 ## Section Structure
 
-Write these sections as H2 headings, in this exact order:
+Write these sections as H2 headings, in this **exact** order:
 
 - `## Що ми знаємо? (What Do We Know?)` (~200 words)
 - `## Читання (Reading Practice)` (~250 words)
 - `## Граматика (Grammar Summary)` (~200 words)
 - `## Діалог (Connected Dialogue)` (~300 words)
 - `## Підсумок — Summary` (~250 words)
+
+**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim** as an `## H2` line. This includes the FINAL summary/transition section (`Підсумок: ...`, `Підсумок та перехід до M...`, etc.) — the writer's most common failure is silently dropping the closing section. Do NOT skip it. Do NOT renumber. Do NOT merge headings. The post-write quick-verify check will fail your build if any heading is missing, even if the prose itself is excellent.
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -601,6 +606,25 @@ HARD GRAMMAR RULES (audit will reject violations):
 - **Zero calques**: No приймати душ→брати душ, приймати рішення→ухвалювати рішення
 - **Zero paronyms**: тактична≠тактовна, ефектний≠ефективний — use the right word, not a similar-sounding one
 - **Natural Ukrainian**: Write how a Ukrainian teacher would explain this to a student. Not robotic, not textbook-dry, not overly casual.
+
+### FORBIDDEN WORDS — never write these (#1189)
+
+The following Russian words have leaked into past builds and broken modules. They are **hard-banned** — the post-write toxic-token scanner will fail your build the moment it sees one. Use the Ukrainian alternative every time, even in dialogues, even in casual prose, even when quoting a learner's mistake (use a `<!-- VERIFY -->` placeholder instead of typing the Russian form):
+
+| Russian (FORBIDDEN) | Ukrainian (USE THIS) |
+|---|---|
+| хорошо | добре |
+| конечно | звичайно / певна річ |
+| спасибо | дякую |
+| пожалуйста | будь ласка / прошу |
+| ничего | нічого |
+| сейчас | зараз |
+| тоже | теж / також |
+| здесь | тут |
+| кот | кіт |
+| кон | кін |
+
+This list is enforced word-for-word by `scripts/build/quick_verify.py` (SEVERE_RUSSIANISMS). If you produce any of these tokens — even inside a quoted example, even inside a dialogue line spoken by a Russian-speaking character — the build halts immediately. There is no exception.
 
 **Authority hierarchy (if uncertain about a word, check in this order):**
 VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (stress) → Антоненко-Давидович (style) → Грінченко (etymology).
@@ -706,39 +730,44 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Що ми знаємо? (~220 words total)
-- P1 (~60 words): [Introduction to the checkpoint — celebrating the completion of Phase A1.2. Encouraging the learner that they have built the foundation to describe their immediate environment, from their room to a marketplace.]
-- P2 (~100 words): [Self-check checklist covering M08-M13. Bullet points: Can you name 20+ objects? Can you find the gender of "стіл" or "книга"? Can you differentiate "синій" and "блакитний"? Can you count to 100 and say prices in "гривні"? Can you say "these" vs "those"?]
-- P3 (~60 words): [Transition to the review activities. Explaining that before we go to the market, we need to make sure our "vocabulary backpack" is organized.]
-- <!-- INJECT_ACTIVITY: group-sort-categories --> [group-sort, Sort vocabulary from M08-M13 by category: objects (стіл, вікно), colors (зелений, жовтий), and numbers (десять, сто), 12 items]
+## Що ми знаємо? (What Do We Know?) (~220 words)
+- P1 (~60 words): Welcome to the checkpoint for the "My World" phase. Explain the pedagogical goal: transitioning from simple recognition to actively describing the objects and people around us in Ukrainian.
+- P2 (~80 words): Self-check questions part 1. "Can you determine noun gender?" (using the він/вона/воно test for words like дім, книга, вікно). "Can you describe things with adjectives?" (matching endings like новий стіл, велика лампа). "Can you name colors, including the two blues?" (синій vs. блакитний).
+- P3 (~80 words): Self-check questions part 2. "Can you count and say prices?" (using numbers like двадцять, сто гривень). "Can you say 'this' and 'that'?" (цей глечик, та вишиванка). "Can you make things plural?" (столи, вікна).
+- <!-- INJECT_ACTIVITY: group-sort-vocabulary --> [group-sort, Sort vocabulary from M08-M13 by category: objects, colors, numbers, 12 items]
 
-## Читання (~270 words total)
-- P1 (~100 words): [Setting the scene for the reading text. We are visiting a friend's home. Intro to the context of describing space using adjectives, colors, and plurals. Encouraging reading aloud to practice the flow of "accented" A1 prose.]
-- P2 (~170 words): [A short reading text (10 sentences) titled "Моя кімната". Sentences use only known vocabulary: "Це моя кімната. Вона велика і світла. Ось мій стіл, він новий. Тут є три сині книги і одна жовта лампа. Це вікно велике, а те вікно мале. Мої стіни білі. У мене є два стільці. Вони старі, але зручні."]
-- <!-- INJECT_ACTIVITY: transform-plural-sentences --> [quiz, Singular or plural? Transform sentences from the reading text from singular to plural (e.g., "Ця книга нова" -> "Ці книги нові"), 8 items]
+## Читання (Reading Practice) (~280 words)
+- P1 (~50 words): Introduce the reading task. Emphasize the shift from dialogue to monologue. The learner will read a short text describing a room, utilizing only known vocabulary from previous modules without any new words.
+- P2 (~150 words): The reading text (10-12 sentences). A first-person narrative describing a room: "Це моя кімната. Мій стіл великий і новий. Ця лампа біла, а та — жовта. У мене є три книги. Ці книги нові. Стіни білі. Це вікно велике, а те вікно мале. Той килим червоний. Я люблю свою кімнату."
+- P3 (~80 words): Breakdown of the text's structure. Explain the Ukrainian school model of simple narrative: Зачин (Introduction: "Це моя кімната"), Основна частина (Main body: listing objects, colors, and demonstratives), and Кінцівка (Conclusion: "Я люблю свою кімнату").
 
-## Граматика (~220 words total)
-- P1 (~55 words): [Gender Recap — summarizing the endings for m/f/n nouns using "стіл", "ручка", and "дзеркало". Explaining how "він", "вона", "воно" are the keys to everything else.]
-- P2 (~55 words): [Agreement Recap — showing how adjectives change to match the noun. Examples: "гарний день" (m), "гарна пісня" (f), "гарне фото" (n). Highlighting the hard-stem vs soft-stem endings like "червоний" vs "синій".]
-- P3 (~55 words): [Demonstratives and Plurals — quick review of "цей/ця/це" and "той/та/те". Reminder that in plural, both demonstratives ("ці", "ті") and adjectives ("гарні", "великі") always end in -і.]
-- P4 (~55 words): [Numbers and Prices — review of numbers as vocabulary chunks. Identifying prices like "п'ятдесят гривень" or "сто гривень" without worrying about case changes for now.]
-- <!-- INJECT_ACTIVITY: quiz-agreement-pairs --> [quiz, Mixed gender/agreement review: choose the correct adjective form (m/f/n/pl) for given noun pairs (e.g., "_____ зошит (білий/біла)"), 10 items]
+## Граматика (Grammar Summary) (~250 words)
+- P1 (~60 words): Recap 1: Noun Gender. Quick reminder of the core rules: consonant endings for masculine (брат, стіл), -а/-я for feminine (сестра, книга), and -о/-е for neuter (вікно, море).
+- P2 (~70 words): Recap 2: Adjective Agreement. Contrast hard stems (-ий, -а, -е: великий стіл, велика книга) with soft stems (-ій, -я, -є: синій зошит, синя лампа).
+- P3 (~60 words): Recap 3: Demonstratives. Contrast proximity using цей/ця/це (this here) versus той/та/те (that there). Provide examples: цей глечик (this jug), та вишиванка (that shirt).
+- P4 (~60 words): Recap 4: Plurals. Review nominative plural endings (столи, книги, вікна) and emphasize the golden rule for adjectives: in the plural, they always take the -і ending (великі столи, нові книги).
+- <!-- INJECT_ACTIVITY: quiz-gender-agreement --> [quiz, Mixed gender/agreement review: choose correct form for noun+adjective pairs, 10 items]
+- <!-- INJECT_ACTIVITY: quiz-singular-plural --> [quiz, Singular or plural? Transform sentences from singular to plural, 8 items]
 
-## Діалог (~330 words total)
-- P1 (~100 words): [Cultural context for the market scene (ярмарок). Introducing traditional Ukrainian items: "вишиванка" (embroidered shirt), "глечик" (clay jug), "намисто" (necklace), and "писанки" (Easter eggs). Explaining that we will use all our skills to shop for these.]
-- P2 (~130 words): [Dialogue Part 1: Pointing and choosing. Іванко and Катя at the stall. Іванко: "Подивись! Це вишиванка?" Катя: "Так, це гарна біла вишиванка." Іванко: "А та синя?" Катя: "Той одяг теж гарний. А ось ці писанки — дуже красиві!"]
-- P3 (~100 words): [Dialogue Part 2: Counting and pricing. Іванко: "Скільки коштує цей глечик?" Катя: "Він коштує сто гривень." Іванко: "А ці намиста?" Катя: "Одне намисто — двісті гривень. У мене є триста гривень. Купуємо!"]
-- <!-- INJECT_ACTIVITY: fill-in-market-dialogue --> [fill-in, Complete the shopping dialogue with correct demonstratives (ця/цей), adjectives (червона/синій), and numbers (десять/сто), 8 items]
+## Діалог (Connected Dialogue) (~320 words)
+- P1 (~60 words): Set the scene for the dialogue. A tourist (Іванко) and a local friend (Катя) are walking through a Ukrainian street market (ярмарок), looking at traditional handmade crafts like a вишиванка, a глечик, and писанки.
+- P2 (~180 words): The dialogue script.
+  Іванко: Добрий день! У вас є вишиванки?
+  Катя: Так! Ця червона чи та синя?
+  Іванко: Та синя. Скільки вона коштує?
+  Катя: Двісті гривень.
+  Іванко: Добре. А ці писанки? Скільки коштує одна писанка?
+  Катя: П'ятдесят гривень. Ці нові, дуже гарні.
+  Іванко: Я беру три. А той глечик?
+  Катя: Сто гривень.
+  Іванко: Дуже дякую!
+- P3 (~80 words): Post-dialogue analysis. Highlight how the conversation seamlessly integrates multiple A1.2 skills: asking for prices (Скільки коштує...?), pointing at specific items (ця, та, ці, той), using numbers as vocabulary (двісті, п'ятдесят, три, сто), and employing plurals (вишиванки, писанки).
+- <!-- INJECT_ACTIVITY: fill-in-shopping-dialogue --> [fill-in, Complete the shopping dialogue with correct demonstratives, adjectives, and numbers, 8 items]
 
-## Підсумок — Summary (~280 words)
-- P1 (~130 words): [Recap of A1.2 achievements. You have mastered the "static world" — identifying what things are, what they look like, how many there are, and where they are in relation to you. You are no longer just naming words; you are building descriptions.]
-- P2 (~150 words): [Self-check summary list:
-    - I can identify the gender of any A1 noun.
-    - I can describe an object's color and size with the correct ending.
-    - I can use "this" and "that" to point at things.
-    - I can make nouns plural and describe groups.
-    - I can count and ask for prices in a shop.
-    Next Module: We move from "being" to "doing". Get ready for A1.3: What I Like (Verbs and Actions)!]
+## Підсумок — Summary (~250 words)
+- P1 (~100 words): A1.2 achievement summary. Congratulate the learner: you can now successfully describe your world in Ukrainian! You recognize the genders of over 20 everyday objects and can accurately match them with descriptive adjectives (великий, новий, червоний, синій).
+- P2 (~80 words): Recap of practical functional skills acquired. You can confidently count objects, ask for prices, point at specific things using "this" and "that," and talk about groups of things using the plural form. 
+- P3 (~70 words): Look ahead to the next phase (A1.3). Now that you can name and describe the "things" in your world, the next step is learning how to talk about "actions"—discovering verbs, expressing what you do every day, and talking about what you like.
 
 Grand total: ~1320 words
 </skeleton>
@@ -748,11 +777,50 @@ Grand total: ~1320 words
 Write in Markdown. Use:
 - `## Section Title` for main sections
 - `### Subsection` for subsections within a section
-- `**bold**` for Ukrainian words being taught — EVERY bold Ukrainian word MUST have an English translation on first use, either in parentheses `**слово** (translation)` or inline `**слово** means "translation"`. No exceptions.
+- `**bold**` for Ukrainian words being taught. For **A1 and A2** levels, provide an English translation on first use (e.g. `**стіл** (table)`) because learners lack the vocabulary to infer meaning. For **B1 and above**, do NOT provide inline translations for standard vocabulary — the learner will use the module's словник (vocabulary table). You may provide ONE parenthetical English translation ONLY for highly abstract grammar/linguistic terms on first use (e.g. `**видова пара** (aspectual pair)`).
 - Tables for paradigms (conjugation, declension)
 - `:::tip` / `:::caution` / `:::note` for callout boxes
 - `<!-- INJECT_ACTIVITY: {id} -->` for exercise placement (markers only — do NOT write exercise content)
 
 Do NOT write MDX component syntax, JSON, or DSL exercise blocks (:::quiz, etc.). Plain Markdown with injection markers.
+
+---
+
+## MANDATORY FINAL CHECKLIST (#1189)
+
+Before you finish writing, verify the prose against this checklist. Failing any item will fail the build.
+
+### Section headings (verbatim)
+
+Every heading from "Section Structure" above MUST appear as an `## H2` in your output, in order, **including the closing `Підсумок:` / `Підсумок та перехід до M...` summary**. The single most common writer failure across the B1 build has been silently dropping the final summary section. Re-read your output before stopping. If the last section in the plan is missing, write it now.
+
+### Required vocabulary (every word must appear)
+
+You MUST use **every word** from the list below at least once in the prose, in a natural sentence with bold + English translation. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, прагматика, діагностика, дієвідмінювання, зворотний, двовидовий, одновидовий, неозначено-кількісний, etc.) is the most frequently dropped category — actively find homes for those words even if it means adding a sentence that defines them.
+
+_(no required vocabulary defined for this module)_
+
+### Forbidden words (never produce)
+
+Do not write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use `<!-- VERIFY -->` instead). The post-write toxic-token scanner will fail the build immediately:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+### Level-specific immersion check
+
+The level-appropriate immersion rule was already injected at the top of
+this prompt as `IMMERSION RULE`. Re-read it now BEFORE you stop writing.
+If your level's rule contains a CHECKLIST block, walk through every item.
+If it doesn't, just verify your output matches the LANGUAGE ROLES and
+TARGET stated in that block.
+
+This used to hard-code a B1+ checklist that confused A1/A2 models (where
+translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+The single source of truth is now
+`scripts/pipeline/config_tables.py:IMMERSION_RULES`.
+
+---
 
 Begin writing now. Start with the first section heading.

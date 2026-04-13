@@ -1,64 +1,162 @@
 {
-  "total_items": 124,
-  "grounded_items": 117,
+  "total_items": 148,
+  "grounded_items": 123,
   "ungrounded": [
     {
-      "word": "брату",
-      "exercise_type": "true-false",
-      "context": "для брату",
+      "word": "зробили",
+      "exercise_type": "quiz",
+      "context": "Вони зробили цей сюрприз спеціально ____ нас.",
       "role": "context"
     },
     {
-      "word": "тату",
+      "word": "зупинки",
+      "exercise_type": "fill-in",
+      "context": "зупинки",
+      "role": "answer"
+    },
+    {
+      "word": "живемо",
+      "exercise_type": "fill-in",
+      "context": "Ми живемо біля ____.",
+      "role": "context"
+    },
+    {
+      "word": "чекаю",
+      "exercise_type": "fill-in",
+      "context": "Я чекаю тебе коло ____.",
+      "role": "context"
+    },
+    {
+      "word": "зустрілися",
+      "exercise_type": "fill-in",
+      "context": "Вони зустрілися біля ____.",
+      "role": "context"
+    },
+    {
+      "word": "пам'ятник",
+      "exercise_type": "fill-in",
+      "context": "Цей пам'ятник стоїть навпроти ____.",
+      "role": "context"
+    },
+    {
+      "word": "магазин",
+      "exercise_type": "fill-in",
+      "context": "Новий магазин відкрили коло ____.",
+      "role": "context"
+    },
+    {
+      "word": "відкрили",
+      "exercise_type": "fill-in",
+      "context": "Новий магазин відкрили коло ____.",
+      "role": "context"
+    },
+    {
+      "word": "граються",
+      "exercise_type": "fill-in",
+      "context": "Діти граються біля ____.",
+      "role": "context"
+    },
+    {
+      "word": "бібліотеки",
+      "exercise_type": "fill-in",
+      "context": "бібліотеки",
+      "role": "answer"
+    },
+    {
+      "word": "зошит",
+      "exercise_type": "match-up",
+      "context": "Цей зошит потрібен",
+      "role": "answer"
+    },
+    {
+      "word": "корисне",
+      "exercise_type": "fill-in",
+      "context": "Свіже повітря корисне для ____.",
+      "role": "context"
+    },
+    {
+      "word": "молоко",
       "exercise_type": "error-correction",
-      "context": "Сьогодні буде смачна вечеря для тату.",
+      "context": "Я завжди п'ю каву без молоко.",
       "role": "context"
     },
     {
-      "word": "відсутність",
-      "exercise_type": "group-sort",
-      "context": "Відсутність (без чого?)",
+      "word": "мама",
+      "exercise_type": "error-correction",
+      "context": "Цей подарунок для мама.",
       "role": "context"
     },
     {
-      "word": "місцезнаходження",
-      "exercise_type": "group-sort",
-      "context": "Місцезнаходження (біля/навпроти/коло)",
+      "word": "зустрінемося",
+      "exercise_type": "unjumble",
+      "context": "зустрінемося",
+      "role": "answer"
+    },
+    {
+      "word": "стоять",
+      "exercise_type": "error-correction",
+      "context": "Туристи стоять біля площа.",
       "role": "context"
     },
     {
-      "word": "ти",
+      "word": "працюють",
       "exercise_type": "match-up",
-      "context": "Без чого ти п'єш каву?",
+      "context": "Вони працюють весь день",
       "role": "answer"
     },
     {
-      "word": "п'єш",
+      "word": "чекаємо",
       "exercise_type": "match-up",
-      "context": "Без чого ти п'єш каву?",
+      "context": "Ми чекаємо тебе",
       "role": "answer"
     },
     {
-      "word": "відкрилося",
-      "exercise_type": "match-up",
-      "context": "Що відкрилося навпроти банку?",
-      "role": "answer"
+      "word": "річк",
+      "exercise_type": "quiz",
+      "context": "Ми гуляємо біля річк____.",
+      "role": "context"
+    },
+    {
+      "word": "діт",
+      "exercise_type": "quiz",
+      "context": "Цей торт для діт____.",
+      "role": "context"
+    },
+    {
+      "word": "парасольк",
+      "exercise_type": "quiz",
+      "context": "Він прийшов без парасольк____.",
+      "role": "context"
+    },
+    {
+      "word": "відпочинк",
+      "exercise_type": "quiz",
+      "context": "Це місце для відпочинк____.",
+      "role": "context"
+    },
+    {
+      "word": "лікарн",
+      "exercise_type": "quiz",
+      "context": "Вони живуть навпроти лікарн____.",
+      "role": "context"
+    },
+    {
+      "word": "бібліотек",
+      "exercise_type": "quiz",
+      "context": "Студенти читають коло бібліотек____.",
+      "role": "context"
+    },
+    {
+      "word": "цукр",
+      "exercise_type": "quiz",
+      "context": "Я п'ю чай без цукр____.",
+      "role": "context"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 14,
-    "tested_in_exercises": 5,
-    "not_tested": [
-      "будинок",
-      "бібліотека",
-      "вокзал",
-      "допомога",
-      "лікарня",
-      "площа",
-      "річка",
-      "станція",
-      "сумнів"
-    ]
+    "tested_in_exercises": 14,
+    "not_tested": []
   },
   "all_grounded": false
 }

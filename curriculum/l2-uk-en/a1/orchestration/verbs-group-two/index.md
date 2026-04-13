@@ -1,27 +1,14 @@
 # Build Summary: verbs-group-two (A1)
 
-Generated: 2026-04-11 01:26
+Generated: 2026-04-13 21:41
 
 ## Pipeline Phases
 
 | Phase | Status | Timestamp |
 |-------|--------|-----------|
-| check | complete | 2026-04-09 02:21:20 |
-| research | complete | 2026-04-09 02:21:20 |
-| skeleton | complete | 2026-04-09 02:23:24 |
-| pre-verify | complete | 2026-04-09 02:32:29 |
-| write | complete | 2026-04-09 02:35:20 |
-| exercises | complete | 2026-04-09 02:35:20 |
-| activities | complete | 2026-04-09 02:38:06 |
-| verify-exercises | complete | 2026-04-09 02:38:06 |
-| annotate | complete | 2026-04-09 02:38:06 |
-| vocab | complete | 2026-04-09 02:40:46 |
-| enrich | complete | 2026-04-09 02:40:46 |
-| verify | complete | 2026-04-09 02:40:46 |
-| stress | complete | 2026-04-09 02:44:54 |
-| publish | complete | 2026-04-10 22:54:27 |
-| audit | complete | 2026-04-10 22:54:27 |
-| review | complete | 2026-04-10 23:26:49 |
+| review | complete | 2026-04-13 19:41:49 |
+| stress | complete | 2026-04-13 19:41:53 |
+| publish | complete | 2026-04-13 19:41:55 |
 
 ## Reviews
 
@@ -30,6 +17,8 @@ Generated: 2026-04-11 01:26
 | 1 | verbs-group-two-review-r1.md |
 | 2 | verbs-group-two-review-r2.md |
 | 3 | verbs-group-two-review-r3.md |
+| 4 | verbs-group-two-review-r4.md |
+| 5 | verbs-group-two-review-r5.md |
 
 ## Dispatch Log
 
@@ -43,6 +32,8 @@ Generated: 2026-04-11 01:26
 | review | gemini-tools (gemini-3.1-pro-preview) | 127s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 118s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 155s | ✅ |
+| review | codex-tools (gpt-5.4) | 445s | ✅ |
+| review | codex-tools (gpt-5.4) | 526s | ✅ |
 
 ## Files
 
@@ -53,6 +44,8 @@ Generated: 2026-04-11 01:26
 - `review-structured-r1.yaml`
 - `review-structured-r2.yaml`
 - `review-structured-r3.yaml`
+- `review-structured-r4.yaml`
+- `review-structured-r5.yaml`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

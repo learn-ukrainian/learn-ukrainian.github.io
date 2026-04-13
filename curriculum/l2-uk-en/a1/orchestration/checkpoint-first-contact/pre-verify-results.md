@@ -1,20 +1,20 @@
 ## VESUM Verification
-- Confirmed: ім'я, прізвище, студент, мама, тато, привіт, звати, звідки, мене, тебе, вас, мій, моя, моє, є
-- Not found: All planned vocabulary confirmed.
+- Confirmed: ім'я, прізвище, студент, мама, тато, сім'я, звати, звідки
+- Not found: none
 
 ## Grammar Rules
-- **Апостроф (ім'я)**: Правопис §7.1 — Апостроф пишемо перед я, ю, є, ї після букв на позначення губних приголосних б, п, в, м, ф (ім'я).
-- **Тире між підметом і присудком (я — студент)**: Confirmed in Grade 5 textbooks (Syntax section) for cases where the predicate is a noun in the nominative case and the copula "є" is omitted. (Example: "Я — Оксана", "Я — учень").
-- **Конструкція "У мене є"**: Confirmed in Grade 2 school textbooks (Bolshakova 2019, p. 54) as a standard way to express possession (Example: "У мене русяве волосся").
+- Ь (Soft sign): Правопис §26 — Буквою ь позначаємо на письмі м’якість приголосних звуків.
+- Apostrophe (апостроф): Правопис §7 — Роздільність вимови я, ю, є, ї та попереднього твердого приголосного на письмі позначаємо апострофом.
 
 ## Calque Warnings
-- **Мене звати**: OK — Found in Grade 1 and Grade 5 textbooks as the primary way to introduce oneself. Not flagged by style guides.
-- **Як справи**: OK — Found as a common greeting/inquiry in A1-level dialogues (Grade 5).
-- **Прізвище vs Ім'я**: OK — Clear distinction maintained in all textbooks: прізвище (surname), ім'я (first name), по батькові (patronymic).
+- Як тебе звати: OK — no calque detected
+- У мене є: OK — no calque detected
+- Мене звати: OK — no calque detected
 
 ## CEFR Check
-- **ім'я**: A1 — Found in Grade 1/2 textbooks (Bukvar).
-- **прізвище**: A1 — Found in Grade 2 textbooks.
-- **студент**: A1 — Standard introductory noun.
-- **мама / тато**: A1 — Found in Grade 1 textbooks.
-- **привіт**: A1 — Standard greeting in Grade 1 textbooks.
+- ім'я: A1 — OK
+- прізвище: A1 — OK
+- студент: A1 — OK
+- мама: A1 — OK
+- тато: A1 — OK
+- сім'я: A1 — OK

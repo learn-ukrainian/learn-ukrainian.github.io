@@ -1,20 +1,19 @@
 ## VESUM Verification
-- Confirmed: свято, святкувати, різдво (Різдво), великдень (Великдень), новий (Новий), рік (рік), вітати, кутя, колядка, писанка, паска, парад, прапор, вишиванка, незалежність, салют.
-- Not found: None (all plan words verified as existing in standard Ukrainian forms).
+- Confirmed: свято, святкувати, Різдво, Великдень, Новий рік, вітати, кутя, колядка, писанка, паска, парад, прапор, вишиванка, незалежність, салют
+- Not found: None
 
 ## Grammar Rules
-- **Holiday Capitalization**: Правопис §52 — In names of holidays, the first word is capitalized: *Новий рік*, *День учителя*. 
-- **National Holidays**: Правопис §52, Примітка 1 — In the names *День Незалежності України*, *День Соборності України*, *День Конституції України*, all words are capitalized.
-- **Greetings Pattern**: Greetings use the preposition *З* + the name of the holiday in the Instrumental case: *З Різдвом!*, *З Новим роком!*, *З Днем Незалежності!*.
+- Capitalization of secular holidays (Новий рік): Правопис §52.1 — У назвах історичних подій, епох, календарних періодів і свят з великої букви пишемо перше (або єдине) слово і власні назви.
+- Capitalization of national holidays (День Незалежності): Правопис §52 (Примітка 1) — У назвах свят День Незалежності України, День Соборності України, День Конституції України з великої букви пишемо всі слова.
+- Capitalization of religious holidays (Різдво, Великдень): Правопис §53.3 — З великої букви пишемо назви релігійних свят і постів, а також окремих днів, що стосуються цих періодів: Благовіщення, Великдень... Покрова, Різдво.
 
 ## Calque Warnings
-- **приймати участь**: Calque from Russian — The correct Ukrainian form is **брати участь**.
-- **наступаюче свято**: Calque from Russian — Use **прийдешнє свято** or simply **наближення свята**.
-- **салют**: OK, but **феєрверк** is often preferred for festive displays.
+- святкувати: OK — (no warnings found)
+- державне свято: OK — (no warnings found)
+- привітати з (святом): OK — (no warnings found)
 
 ## CEFR Check
-- **свято**: A1 — OK
-- **Різдво**: A1 — OK
-- **Великдень**: A1 — OK
-- **прапор**: A1 — OK
-- **незалежність**: A1 (Contextual) — OK for a module on national holidays.
+- свято: A1 — OK
+- святкувати: A1 — OK
+- парад: B1 — Above target
+- кутя: B1 — Above target

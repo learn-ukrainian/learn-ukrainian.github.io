@@ -2,50 +2,52 @@ round: 2
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 10
-  evidence: Covers all sections, vocabulary requirements, and grammar rules from the
-    plan.
+  score: 7
+  evidence: Core objectives are covered, and all required verbs appear, but the wedding-photo
+    outline drops planned nouns (`дядько`, `тітка`, `наречений` search = 0 in the
+    generated content), and the listed refer
 - dimension: 2
   name: Linguistic accuracy
   score: 10
-  evidence: Noun declensions are accurate. Forms like "Олену Петрівну", "сусіда",
-    and "колегу" are correct in the Accusative animate context.
+  evidence: No Russianisms, Surzhyk, calques, bad case endings, or factual grammar
+    errors found in the Ukrainian text.
 - dimension: 3
   name: Pedagogical quality
   score: 7
-  evidence: DEDUCT for grouping "колега -> колегу" under the rule for masculine nouns
-    ending in soft consonants or -ар that take the -я ending (Section 3). This contradicts
-    the rule just stated and will confuse t
+  evidence: The lesson has a usable presentation-to-explanation-to-practice flow,
+    but it spends too many words on English metalanguage; e.g. the paragraph beginning
+    “Notice how the nouns for family members change
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: All required (бачити, знати, любити, чекати, шукати, друг, подруга) and
-    recommended vocabulary included naturally in context.
+  score: 9
+  evidence: All required verbs from the plan appear in prose (`бачити`, `знати`, `любити`,
+    `чекати`, `шукати`), and recommended items such as `сусід`, `колега`, `викладач`,
+    `вчитель`, `лікар`, `продавець`, `покуп
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: All 4 activity markers are present, in the correct sequence, and placed
-    logically after the relevant concepts are taught.
+  score: 9
+  evidence: 'Four markers appear and align with the four `activity_hints`: group sort
+    after `Кого?`, fill-in and quiz after `Знахідний відмінок — живе`, and dialogue
+    completion after `Підсумок`.'
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: Excellent teacher persona. Tone is encouraging and grounded in reality
-    (e.g., "The Ukrainian language treats objects in a specific way. However, our
-    world is mostly filled with people.").
+  score: 7
+  evidence: The teacher voice is steady, but some sentences are generic filler rather
+    than instruction, e.g. “This is a fundamental pattern you will use...” and “Seeing
+    them together makes the grammatical differe
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: Word count is 1681, well above the 1200 target. Headings perfectly match
-    the plan outline.
+  evidence: All planned H2 headings are present and ordered correctly, markdown is
+    clean, and the pipeline word count is 1734, safely above the 1200 target.
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: Excellent integration of the Ukrainian Grade 4 school logic (Кого? Що?)
-    and natural use of name-and-patronymic (Олена Петрівна).
+  score: 9
+  evidence: The module presents Ukrainian on its own terms and avoids Russian-centered
+    framing.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: Dialogues flow naturally, named characters have distinct voices, and the
-    contexts are highly realistic (showing wedding photos, colleagues chatting at
-    school).
+  score: 8
+  evidence: Named speakers and concrete situations help, especially the wedding-photo
+    setup, but the exchanges are brief and heavily form-driven.
 findings: []

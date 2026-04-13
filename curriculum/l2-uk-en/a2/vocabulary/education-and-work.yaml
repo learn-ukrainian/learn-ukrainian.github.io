@@ -1,4 +1,34 @@
 vocabulary:
+- word: факульте́т
+  translation: faculty, department
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: зарпла́та
+  translation: salary
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: співбе́сіда
+  translation: job interview
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: керівни́к
+  translation: manager, supervisor
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: магістрату́ра
+  translation: master's program
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
 - word: осві́та
   translation: education
   expression: false
@@ -59,80 +89,38 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: факульте́т
-  translation: faculty, department
+- word: гімна́зія
+  translation: gymnasium
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ліце́й
+  translation: lyceum
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: зарпла́та
-  translation: salary
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: співбе́сіда
-  translation: job interview
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: керівни́к
-  translation: manager, supervisor
+- word: інститу́т
+  translation: institute
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: магістрату́ра
-  translation: master's program
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: закі́нчувати
-  translation: to be finishing
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: закі́нчи́ти
-  translation: to finish/graduate
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: вступа́ти
-  translation: to be entering (an institution)
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: вступи́ти
+- word: вступати до
   translation: to enter/enroll
-  expression: false
-  pos: дієсл.
+  expression: true
+  pos: ''
   gender: ''
   verified: true
-- word: адвока́т
-  translation: lawyer
+- word: абітуріє́нт
+  translation: applicant
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: програмі́ст
-  translation: programmer
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: вивча́ти
-  translation: to study (a subject)
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: предме́т
-  translation: subject
+- word: виш
+  translation: higher educational institution
   expression: false
   pos: ім.
   gender: ч.
@@ -143,32 +131,20 @@ vocabulary:
   pos: прикм.
   gender: ''
   verified: true
-- word: бакалавра́т
-  translation: bachelor's program
-  expression: false
-  pos: ім.
-  gender: ч.
+- word: навчатися на
+  translation: to study to be
+  expression: true
+  pos: ''
+  gender: ''
   verified: true
-- word: аспіранту́ра
-  translation: postgraduate/PhD program
+- word: закі́нчи́ти
+  translation: to finish, graduate
   expression: false
-  pos: ім.
-  gender: ж.
+  pos: дієсл.
+  gender: ''
   verified: true
-- word: філоло́гія
-  translation: philology
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: еконо́міка
-  translation: economics
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: Ким ви працюєте?
-  translation: What do you do for a living?
+- word: скласти іспит
+  translation: to pass an exam
   expression: true
   pos: ''
   gender: ''
@@ -179,17 +155,17 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: фі́рма
-  translation: firm, company
+- word: поса́да
+  translation: position
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: проє́кт
-  translation: project
+- word: завда́ння
+  translation: task
   expression: false
   pos: ім.
-  gender: ч.
+  gender: с.
   verified: true
 - word: коле́га
   translation: colleague
@@ -197,69 +173,27 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: хоча́
-  translation: although
-  expression: false
-  pos: спол.
-  gender: ''
-  verified: true
-- word: якщо..., то...
-  translation: if..., then...
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: пре́мія
-  translation: bonus
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: поса́да
-  translation: position
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
 - word: гра́фік
   translation: schedule
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: шукати роботу
-  translation: to look for a job
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: змінювати роботу
-  translation: to change jobs
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: отри́мати
-  translation: to receive, get
+- word: якщо́
+  translation: if
   expression: false
-  pos: дієсл.
+  pos: спол.
   gender: ''
   verified: true
-- word: ро́звиток
-  translation: development
+- word: то
+  translation: then
   expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: частковий робочий день
-  translation: part-time
-  expression: true
-  pos: ''
+  pos: спол.
   gender: ''
   verified: true
-- word: повний день
-  translation: full-time
-  expression: true
-  pos: ''
+- word: хоча́
+  translation: although
+  expression: false
+  pos: спол.
   gender: ''
   verified: true

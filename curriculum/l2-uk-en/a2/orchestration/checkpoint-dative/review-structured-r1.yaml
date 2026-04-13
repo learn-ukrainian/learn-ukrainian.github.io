@@ -2,48 +2,51 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 9
-  evidence: Covered almost all points, but failed to perfectly align the activity
-    injections with the lesson pacing.
+  score: 7
+  evidence: 'Most objectives are covered, but Part 1 was supposed to “distinguish
+    dative from genitive, accusative, and locative”; the Part 1 prose explicitly contrasts
+    only locative (`"A common challenge... with '
 - dimension: 2
   name: Linguistic accuracy
-  score: 7
-  evidence: 'Critical hallucination regarding phonetic rules ("change **к** to **ц**
-    in **подрузі**" instead of **г** to **з**). Rule for age omits "роки" in the text
-    description: "числа, та слова рік або років." '
+  score: 6
+  evidence: 'Critical grammar-teaching error: `"formal greetings in letters, or email
+    salutations"` are assigned to dative, but Ukrainian salutations use vocative.'
 - dimension: 3
   name: Pedagogical quality
-  score: 8
-  evidence: Excellent PPP flow and clear English explanations, but teaching an incomplete
-    age rule ("рік або років") creates a gap for learners who then see "три роки"
-    in the examples.
+  score: 7
+  evidence: Example density is good, but the salutation rule teaches a bad production
+    habit, and the Part 1 recognition section does not fully deliver the promised
+    genitive/accusative contrasts before the quiz ma
 - dimension: 4
   name: Vocabulary coverage
   score: 10
-  evidence: All required and recommended words from the plan were integrated naturally.
+  evidence: 'All required hints appear in prose: `давальний відмінок`, `допомагати`,
+    `дякувати`, `подобатися`, `подарувати`, `надіслати`, `потрібно`, `холодно`; recommended
+    `закінчення`, `чергування`, `узгодження`'
 - dimension: 5
   name: Exercise quality
-  score: 7
-  evidence: The `match-verbs-to-case` activity is injected before the concept (dative-governing
-    verbs) is explicitly taught in Part 3.
+  score: 9
+  evidence: Marker count matches the four planned activities, and each marker comes
+    after the relevant teaching block. No inline exercise content is available to
+    audit for distractor logic.
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: Good teacher persona without generic, corporate-style enthusiasm. Encouraging
-    and structured.
+  score: 9
+  evidence: Concrete teacherly framing (`Secret Santa`, post office) keeps the review
+    readable without heavy fluff.
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: Clean markdown, target word count met (1647 words > 1500 target), all
-    sections present.
+  evidence: All main planned H2 sections are present and ordered cleanly; markdown
+    is clean; pipeline word count is 2009, above target.
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: Secret Santa situation is culturally familiar in modern Ukrainian offices,
-    and envelope addressing follows authentic Ukrainian norms.
+  score: 8
+  evidence: The module is decentered and Ukrainian-focused, but the claim about dative
+    in letter/email greetings misstates a real Ukrainian writing convention.
 - dimension: 9
   name: Dialogue & conversation quality
   score: 9
-  evidence: Office dialogue is natural and demonstrates multiple Dative usages, though
-    it relied on the sub-optimal word "кружка".
+  evidence: Dialogues use named speakers and plausible situations rather than anonymous
+    drill lines.
 findings: []

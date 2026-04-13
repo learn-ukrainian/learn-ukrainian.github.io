@@ -260,23 +260,22 @@ You do NOT need to call tools yourself — the facts are already verified.
 <pre_verified_facts>
 ## VESUM Verification
 - Confirmed: учора, робити, читати, працювати, гуляти, готувати, дивитися, говорити, минулий, вихідні, субота, неділя, разом, фільм, провести
-- Not found: None
+- Not found: 
 
 ## Grammar Rules
-- Past Tense Formation (Минулий час): Textbook Grade 5 (Uhor) / Grade 6 (Betsa) — Formed from the infinitive stem + suffixes: -в (masculine singular), -ла (feminine singular), -ло (neuter singular), -ли (plural).
-- Gender vs Person: Unlike the present tense, the past tense reflects the gender of the subject, not the person. (e.g., "я читав" for a male speaker, "я читала" for a female speaker).
+- Past tense formation (-в, -ла, -ло, -ли): Правопис §N/A — Not covered in the digitized orthography sections (1-61) of Pravopys 2019 (morphology section is incomplete in source). Rule confirmed by textbook references.
 
 ## Calque Warnings
-- проводити час: OK/Acceptable — While "проводити час" is common, "проводити" is the standard verb for spending time/weekends (проводити вихідні).
-- минулого тижня: OK — Standard genitive construction for time expressions.
-- дивитися фільм: OK — Basic A1 verb for "to watch".
+- провести вихідні: OK
+- готувати вечерю: OK
+- ходити в кафе: OK
 
 ## CEFR Check
 - учора: A1 — OK
-- вихідні: A1 — OK
-- минулий: A1 — OK
-- разом: A1 — OK
-- фільм: A1 — OK
+- субота: A1 — OK
+- вихідні (вихідний): A1 — OK
+- минулий: A2 — Above target
+- провести: A2 — Above target
 </pre_verified_facts>
 
 
@@ -625,12 +624,14 @@ This topic is a critical area for decolonization in language teaching, as Russia
 
 ## Section Structure
 
-Write these sections as H2 headings, in this exact order:
+Write these sections as H2 headings, in this **exact** order:
 
 - `## Dialogues` (~300 words)
 - `## Минулий час (Past Tense)` (~300 words)
 - `## Практика (Practice)` (~300 words)
 - `## Summary` (~300 words)
+
+**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim** as an `## H2` line. This includes the FINAL summary/transition section (`Підсумок: ...`, `Підсумок та перехід до M...`, etc.) — the writer's most common failure is silently dropping the closing section. Do NOT skip it. Do NOT renumber. Do NOT merge headings. The post-write quick-verify check will fail your build if any heading is missing, even if the prose itself is excellent.
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -638,16 +639,17 @@ Each section should follow the word budget specified. The total must reach 1200 
 
 ## Content Rules
 
-TARGET: 20-35% Ukrainian.
+TARGET: 20-35% Ukrainian. ⚠️ HARD GATE — the audit REJECTS modules below 20%.
 LANGUAGE ROLES:
-- THEORY & EXPLANATION: English prose — brief and clear. Show, don't tell.
+- THEORY & EXPLANATION: English prose — brief, 2-3 sentences per concept. No long expository paragraphs. Explain once, then show Ukrainian.
+- UKRAINIAN NARRATIVE PARAGRAPHS: **REQUIRED — minimum 1 per section.** A 3-6 sentence Ukrainian paragraph demonstrating the concept in use, followed IMMEDIATELY by a `> *English translation*` blockquote. This is the PRIMARY driver of hitting the immersion target. Without these paragraphs you cannot reach 20%.
 - PARADIGM TABLES: Conjugation/declension tables with all cells Ukrainian.
-- EXAMPLE LISTS: Ukrainian sentences in bulleted lists (each: Ukrainian — English gloss).
-- DIALOGUES: Mini-dialogues in blockquotes with English gloss per line.
+- EXAMPLE LISTS: Ukrainian sentences in bulleted lists (each: Ukrainian — English gloss). Minimum 5 per rule.
+- DIALOGUES: Mini-dialogues in blockquotes with English gloss per line. At least 1 dialogue per module.
 - PATTERN BOXES: Show transformations: `читати → читай → читайте`.
 - INLINE: Ukrainian words/phrases bolded in English prose.
-- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian. Full Ukrainian sentences go in tables, bulleted lists, dialogues, or pattern boxes.
-Ukrainian sentences max 10 words. Mix container types.
+- STRUCTURAL RULE: Every section MUST contain a Ukrainian narrative paragraph (3-6 sentences, translated in blockquote) PLUS supporting tables/lists/dialogues/pattern boxes. Pure-English sections are FORBIDDEN at M35+.
+Ukrainian sentences max 12 words. Mix container types.
 
 HARD GRAMMAR RULES (audit will reject violations):
 - Max 10 words per Ukrainian sentence (STRICT — count every word)
@@ -677,6 +679,25 @@ HARD GRAMMAR RULES (audit will reject violations):
 - **Zero calques**: No приймати душ→брати душ, приймати рішення→ухвалювати рішення
 - **Zero paronyms**: тактична≠тактовна, ефектний≠ефективний — use the right word, not a similar-sounding one
 - **Natural Ukrainian**: Write how a Ukrainian teacher would explain this to a student. Not robotic, not textbook-dry, not overly casual.
+
+### FORBIDDEN WORDS — never write these (#1189)
+
+The following Russian words have leaked into past builds and broken modules. They are **hard-banned** — the post-write toxic-token scanner will fail your build the moment it sees one. Use the Ukrainian alternative every time, even in dialogues, even in casual prose, even when quoting a learner's mistake (use a `<!-- VERIFY -->` placeholder instead of typing the Russian form):
+
+| Russian (FORBIDDEN) | Ukrainian (USE THIS) |
+|---|---|
+| хорошо | добре |
+| конечно | звичайно / певна річ |
+| спасибо | дякую |
+| пожалуйста | будь ласка / прошу |
+| ничего | нічого |
+| сейчас | зараз |
+| тоже | теж / також |
+| здесь | тут |
+| кот | кіт |
+| кон | кін |
+
+This list is enforced word-for-word by `scripts/build/quick_verify.py` (SEVERE_RUSSIANISMS). If you produce any of these tokens — even inside a quoted example, even inside a dialogue line spoken by a Russian-speaking character — the build halts immediately. There is no exception.
 
 **Authority hierarchy (if uncertain about a word, check in this order):**
 VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (stress) → Антоненко-Давидович (style) → Грінченко (etymology).
@@ -785,34 +806,35 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Dialogues (~330 words)
-- P1 (~120 words): [Dialogue 1: Monday morning catch-up between coworkers. Taras asks Olena what she did yesterday. Focus: Gender-specific verb forms in questions and answers. Examples: "Що ти робив учора?" (to Taras), "Я читав книжку", "Я готувала вечерю" (from Olena), "Він гуляв у парку".]
-- P2 (~60 words): [Linguistic analysis of Dialogue 1. Explanation of how the same activity (reading, cooking) changes ending based on whether Taras or Olena is speaking. Highlight names (Тарас, Олена) and their gender agreement with the verbs.]
-- P3 (~100 words): [Dialogue 2: Weekend recap. Focus on narrative flow and plural forms. Examples: "Як ти провів вихідні?", "Я гуляв у місті", "Я ходила в кафе", "Ми їли торт і пили каву". Introduces "ми" and "вони" plural endings.]
-- P4 (~50 words): [Brief note on the natural transition from present to past in conversation. Contrast "Я зараз працюю" (present) with "Вчора я працював" (past) to set the stage for formal grammar rules.]
+## Dialogues (~330 words total)
+- P1 (~40 words): Introduce the setting: Monday morning at the office, coworkers sharing what they did over the weekend. Set up the focus on completed actions in the past.
+- P2 (~130 words): Dialogue 1 - "Що ти робив учора?". A conversation between a male and female colleague. "Я читав книжку. А ти? Я готувала вечерю." They ask about others: "А що робив Тарас? Він гуляв у парку. А Олена? Вона працювала."
+- P3 (~60 words): Break down Dialogue 1. Highlight the gender difference: "робив" for a male speaker/subject, "робила" for a female speaker/subject. Explain that the same verb "робити" gets a different ending depending on gender.
+- P4 (~100 words): Dialogue 2 - "Як ти провів вихідні?". A deeper conversation narrating the weekend. "У суботу я гуляв у місті. У неділю я дивився фільм." The female responds: "Я ходила в кафе з подругою. Ми їли торт." Showcase natural past tense narration.
 
-## Минулий час (Past Tense) (~350 words)
-- P1 (~90 words): [Formal rule for past tense formation. Removing the infinitive suffix -ти to get the stem. Adding suffixes: -в (masculine), -ла (feminine), -ло (neuter), -ли (plural). Model verb: читати (чита- + в/ла/ло/ли).]
-- P2 (~100 words): [The "Gender, Not Person" insight. Crucial pedagogical shift: explaining that unlike the present tense (я читаю, ти читаєш), the past tense doesn't care about person (1st, 2nd, 3rd) but only about gender. Examples: "Я читав" (male), "Ти читав" (male), "Він читав" (male) vs "Я читала" (female), "Ти читала" (female), "Вона читала" (female).]
-- P3 (~80 words): [The verb "бути" (to be) in the past. This is the most common past tense verb. Paradigms: був, була, було, були. Comparison with English: "I was" (m) -> я був, "I was" (f) -> я була. Note that "є" (present) is never used in the past.]
-- P4 (~80 words): [The neuter and plural forms. Use of "воно" for impersonal weather (Було тепло, було холодно) and "вони" for groups. Emphasis that in the plural (-ли), gender distinctions disappear (ми гуляли, ви гуляли, вони гуляли).]
+## Минулий час (Past Tense) (~330 words total)
+- P1 (~80 words): Introduce the grammatical rule for past tense (минулий час). Explain that it is formed by taking the infinitive (e.g., читати, працювати), removing the -ти ending, and adding a specific suffix to the stem.
+- P2 (~110 words): Present the four gender/number endings: -в (він), -ла (вона), -ло (воно), -ли (вони). Emphasize the KEY INSIGHT: Ukrainian past tense marks GENDER, not person. Show that "я" and "ти" change based on who is speaking: "Я читав" (male) vs. "Я читала" (female).
+- P3 (~90 words): Contrast this directly with the present tense. Present tense marks person (я читаю, ти читаєш, він читає). Past tense groups by gender (я/ти/він читав vs. я/ти/вона читала). Show 3rd person examples: Він працював. Вона працювала. Воно працювало. Вони працювали.
+- P4 (~50 words): Pronunciation note: Explain that the masculine `-в` ending (e.g., in `читав`, `працював`) is pronounced like a short [w], not a hard English 'v'. It sounds fluid, not sharp.
+- <!-- INJECT_ACTIVITY: matching-pronoun-ending --> [matching, Match pronoun to the correct past tense ending, 6 pairs]
 
-## Практика (Practice) (~350 words)
-- P1 (~90 words): [Drilling core A1 verbs in the past. Providing a text-based table for working (працював/ла), walking (гуляв/ла), and cooking (готував/ла). Special focus on reflexive verbs like "дивитися": explain the suffix -ся remains but changes to -сь in feminine/plural in some dialects, but focus on the standard "дивився", "дивилася", "дивилися".]
-- P2 (~80 words): [Time markers for the past. Introducing "учора" (yesterday) and "минулого тижня" (last week). Explain that "минулого" agrees with the masculine noun "тиждень". Example sentences: "Учора я працював", "Минулого тижня вона готувала борщ".]
-- <!-- INJECT_ACTIVITY: matching-pronoun-ending --> [matching, focus: Match pronoun to the correct past tense ending (він, вона, воно, вони), 6 items]
-- <!-- INJECT_ACTIVITY: fill-in-past-tense-forms --> [fill-in, focus: Form past tense (він / вона / вони) for core verbs (читати, готувати, гуляти), 6 items]
-- P3 (~90 words): [Question formation and conversational response. How to ask "What did you do?". Masculine: "Що ти робив?". Feminine: "Що ти робила?". Explain that the question itself reveals who you are talking to. Response pattern: "Я + [verb with gender ending] + [object]".]
-- <!-- INJECT_ACTIVITY: fill-in-gender-subject-agreement --> [fill-in, focus: Choose correct gender based on the subject (Марія, Мій брат, Вони), 3 items]
-- P4 (~90 words): [Common L2 pitfalls for English speakers. Warning against the "є був" error (I was) and the habit of using masculine as a "default" for everything. Remind learners that if "я" is a woman, she MUST say "я працювала".]
+## Практика (Practice) (~330 words total)
+- P1 (~90 words): Apply the rule to core A1 verbs. List the full past tense paradigms (він, вона, воно, вони) for regular verbs: працювати (працював/працювала/працювали), гуляти (гуляв/гуляла/гуляли), готувати (готував/готувала/готували), говорити.
+- P2 (~80 words): Explain how reflexive verbs work in the past tense using `дивитися` (to watch). Show that the reflexive particle comes after the gender ending: дивився (m), дивилася (f), дивилося (n), дивилися (pl).
+- P3 (~90 words): Build complete sentences using past tense verbs and time markers. Introduce `учора` (yesterday) and `минулого тижня` (last week). Examples: "Учора я читав цікаву книжку." "Вона працювала в офісі." "Ми гуляли в парку." "Вони готували вечерю разом."
+- P4 (~70 words): Address a common English L2 error: Do not use the present tense "є" in the past. It is never "Я є був"; it is simply "Я був". Mention "провести" (провів/провела/провели вихідні) as a common vocabulary phrase for weekends.
+- <!-- INJECT_ACTIVITY: fill-in-core-verbs --> [fill-in, Form past tense (він / вона / вони) for all core verbs, 6 items]
+- <!-- INJECT_ACTIVITY: fill-in-choose-gender --> [fill-in, Choose correct gender based on the subject, 3 items]
 
-## Підсумок (~290 words)
-- P1 (~120 words): [Recap of the past tense suffixes: -в, -ла, -ло, -ли. Summary table in text form. Focus on the transformation: infinitive -> past stem -> gender ending. Reminder: Past tense shows GENDER.]
-- P2 (~170 words): [Self-check questions and production task.
-  - Як ми утворюємо минулий час? (Infinitive stem + suffix)
-  - Яке закінчення має жіночий рід? (-ла)
-  - Як запитати друга про вчорашній день? (Що ти робив учора?)
-  - Task: Tell your partner 3 things you did yesterday using different verbs (Я снідав, я гуляв, я читав).]
+## Summary (~330 words total)
+- P1 (~80 words): Recap the mechanical formation of the past tense: Infinitive stem + `-в` (masculine), `-ла` (feminine), `-ло` (neuter), `-ли` (plural). Reiterate that gender dictates the ending.
+- P2 (~80 words): Reiterate the impact of speaker gender on "я" and "ти". A male always says "Я читав", a female always says "Я читала". Plural subjects (ми, ви, вони) always use the `-ли` ending, erasing gender distinction.
+- P3 (~80 words): Highlight the core communicative question for this module: "Що ти робив/робила?" (What did you do?) and the standard answer structure: "Я читав/читала книжку."
+- P4 (~90 words): Self-check:
+  * Tell your partner what you did yesterday using 3 different verbs (e.g., "Учора я читав, гуляв і дивився фільм").
+  * Ask a male classmate: "Що ти робив у неділю?"
+  * Ask a female classmate: "Що ти робила у суботу?"
 
 Grand total: ~1320 words
 </skeleton>
@@ -822,11 +844,57 @@ Grand total: ~1320 words
 Write in Markdown. Use:
 - `## Section Title` for main sections
 - `### Subsection` for subsections within a section
-- `**bold**` for Ukrainian words being taught — EVERY bold Ukrainian word MUST have an English translation on first use, either in parentheses `**слово** (translation)` or inline `**слово** means "translation"`. No exceptions.
+- `**bold**` for Ukrainian words being taught. For **A1 and A2** levels, provide an English translation on first use (e.g. `**стіл** (table)`) because learners lack the vocabulary to infer meaning. For **B1 and above**, do NOT provide inline translations for standard vocabulary — the learner will use the module's словник (vocabulary table). You may provide ONE parenthetical English translation ONLY for highly abstract grammar/linguistic terms on first use (e.g. `**видова пара** (aspectual pair)`).
 - Tables for paradigms (conjugation, declension)
 - `:::tip` / `:::caution` / `:::note` for callout boxes
 - `<!-- INJECT_ACTIVITY: {id} -->` for exercise placement (markers only — do NOT write exercise content)
 
 Do NOT write MDX component syntax, JSON, or DSL exercise blocks (:::quiz, etc.). Plain Markdown with injection markers.
+
+---
+
+## MANDATORY FINAL CHECKLIST (#1189)
+
+Before you finish writing, verify the prose against this checklist. Failing any item will fail the build.
+
+### Section headings (verbatim)
+
+Every heading from "Section Structure" above MUST appear as an `## H2` in your output, in order, **including the closing `Підсумок:` / `Підсумок та перехід до M...` summary**. The single most common writer failure across the B1 build has been silently dropping the final summary section. Re-read your output before stopping. If the last section in the plan is missing, write it now.
+
+### Required vocabulary (every word must appear)
+
+You MUST use **every word** from the list below at least once in the prose, in a natural sentence with bold + English translation. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, прагматика, діагностика, дієвідмінювання, зворотний, двовидовий, одновидовий, неозначено-кількісний, etc.) is the most frequently dropped category — actively find homes for those words even if it means adding a sentence that defines them.
+
+- [ ] учора (yesterday)
+- [ ] робити (to do)
+- [ ] читати (to read)
+- [ ] працювати (to work)
+- [ ] гуляти (to walk)
+- [ ] готувати (to cook)
+- [ ] дивитися (to watch)
+- [ ] говорити (to speak)
+
+### Forbidden words (never produce)
+
+Do not write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use `<!-- VERIFY -->` instead). The post-write toxic-token scanner will fail the build immediately:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+### Level-specific immersion check
+
+The level-appropriate immersion rule was already injected at the top of
+this prompt as `IMMERSION RULE`. Re-read it now BEFORE you stop writing.
+If your level's rule contains a CHECKLIST block, walk through every item.
+If it doesn't, just verify your output matches the LANGUAGE ROLES and
+TARGET stated in that block.
+
+This used to hard-code a B1+ checklist that confused A1/A2 models (where
+translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+The single source of truth is now
+`scripts/pipeline/config_tables.py:IMMERSION_RULES`.
+
+---
 
 Begin writing now. Start with the first section heading.

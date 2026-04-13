@@ -117,7 +117,7 @@ module: a1-006
 level: A1
 sequence: 6
 slug: my-family
-version: '1.2'
+version: '1.3'
 title: My Family
 subtitle: У мене є брат — Showing photos
 focus: vocabulary
@@ -135,12 +135,12 @@ dialogue_situations:
   - Оля
   - Марк
   motivation: У мене є + family members, possessives мій/моя with photos
-- setting: Filling out a visa application together — helping each other with family
-    questions
+- setting: Showing family photos to a new Ukrainian friend at school — describing
+    who everyone is, asking about each other's families
   speakers:
-  - Даша (applicant)
-  - Андрій (friend helping)
-  motivation: Family vocabulary, У тебе є брати? in practical context
+  - Даша
+  - Андрій
+  motivation: Family vocabulary, У тебе є брати? Це мій/моя... in natural teen context
 content_outline:
 - section: Діалоги (Dialogues)
   words: 400
@@ -280,26 +280,25 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-- Confirmed: сім'я, мама, тато, брат, сестра, бабуся, дідусь, мій, моя, моє, мої, твій, твоя, твоє, батьки, дядько, тітка, дочка, син, дружина, чоловік, його, її, один, одна, два, дві, чи, тільки.
-- Not found: None (All planned vocabulary is confirmed in VESUM).
+- Confirmed: сім'я, мама, тато, брат, сестра, бабуся, дідусь, мій, моя, моє, мої, твій, твоя, твоє, у, мене, є, тебе, батьки, дядько, тітка, дочка, син, дружина, чоловік, його, її, один, одна, два, дві, чи, тільки
+- Not found: (None)
 
 ## Grammar Rules
-- **Apostrophe in "сім'я"**: Правопис §7.1 — The apostrophe is used after labial consonants (б, п, в, м, ф) before я, ю, є, ї. In "сім'я," the apostrophe follows the labial 'м' before 'я'.
-- **Possessive Pronouns Agreement**: Verified "мій" (m), "моя" (f), "моє" (n), "мої" (pl) as forms of the same lemma in VESUM, confirming they follow the gender/number of the possessed noun.
-- **Numbers Agreement**: Verified "один" (m) / "одна" (f) and "два" (m/n) / "дві" (f) in VESUM.
+- Апостроф: Правопис §7 — Роздільність вимови я, ю, є, ї та попереднього твердого приголосного на письмі позначаємо апострофом.
 
 ## Calque Warnings
-- **сім'я vs родина**: OK — Both are valid; "родина" is often used for the broader family/kin, while "сім'я" is standard for the nuclear family. СУМ-11 defines "родина" as synonymous with "сім’я".
-- **у мене є**: OK — This is the standard Ukrainian construction for possession ("at me there is"). While "мати" (to have) exists, "у мене є" is more natural for basic A1 contexts.
-- **чоловік**: OK — Functions as both "man" and "husband" depending on context. For A1, context in the photo dialogue makes the "husband" meaning clear.
+- у мене є: OK
+- його звати: OK
+- на фотографії: OK
 
 ## CEFR Check
-- **сім'я**: A1 — OK.
-- **батьки**: A1 — OK.
-- **бабуся**: A1 — OK.
-- **дідусь**: A1 — OK.
-- **дружина**: A1 — OK.
-- **брат / сестра**: A1 — OK.
+- сім'я: A1 — OK
+- батьки: A1 — OK
+- дружина: A1 — OK
+- чоловік: A1 — OK
+- дядько: A1 — OK
+- тітка: A1 — OK
+- дочка: A1 — OK
 </pre_verified_facts>
 
 
@@ -615,13 +614,15 @@ The module should use activity formats that are common in Ukrainian primary and 
 
 ## Section Structure
 
-Write these sections as H2 headings, in this exact order:
+Write these sections as H2 headings, in this **exact** order:
 
 - `## Діалоги (Dialogues)` (~400 words)
 - `## Сім'я (Family Vocabulary)` (~200 words)
 - `## У мене є (I have)` (~250 words)
 - `## Мій, моя, моє (Possessive Pronouns)` (~200 words)
 - `## Підсумок — Summary` (~150 words)
+
+**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim** as an `## H2` line. This includes the FINAL summary/transition section (`Підсумок: ...`, `Підсумок та перехід до M...`, etc.) — the writer's most common failure is silently dropping the closing section. Do NOT skip it. Do NOT renumber. Do NOT merge headings. The post-write quick-verify check will fail your build if any heading is missing, even if the prose itself is excellent.
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -666,6 +667,25 @@ HARD GRAMMAR RULES (audit will reject violations):
 - **Zero paronyms**: тактична≠тактовна, ефектний≠ефективний — use the right word, not a similar-sounding one
 - **Natural Ukrainian**: Write how a Ukrainian teacher would explain this to a student. Not robotic, not textbook-dry, not overly casual.
 
+### FORBIDDEN WORDS — never write these (#1189)
+
+The following Russian words have leaked into past builds and broken modules. They are **hard-banned** — the post-write toxic-token scanner will fail your build the moment it sees one. Use the Ukrainian alternative every time, even in dialogues, even in casual prose, even when quoting a learner's mistake (use a `<!-- VERIFY -->` placeholder instead of typing the Russian form):
+
+| Russian (FORBIDDEN) | Ukrainian (USE THIS) |
+|---|---|
+| хорошо | добре |
+| конечно | звичайно / певна річ |
+| спасибо | дякую |
+| пожалуйста | будь ласка / прошу |
+| ничего | нічого |
+| сейчас | зараз |
+| тоже | теж / також |
+| здесь | тут |
+| кот | кіт |
+| кон | кін |
+
+This list is enforced word-for-word by `scripts/build/quick_verify.py` (SEVERE_RUSSIANISMS). If you produce any of these tokens — even inside a quoted example, even inside a dialogue line spoken by a Russian-speaking character — the build halts immediately. There is no exception.
+
 **Authority hierarchy (if uncertain about a word, check in this order):**
 VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (stress) → Антоненко-Давидович (style) → Грінченко (etymology).
 
@@ -701,9 +721,9 @@ Without speaker names, the reader cannot tell who is speaking. NEVER use anonymo
   1. **Video call showing phone photos to a new friend**
      Speakers: Оля, Марк
      Why: У мене є + family members, possessives мій/моя with photos
-  2. **Filling out a visa application together — helping each other with family questions**
-     Speakers: Даша (applicant), Андрій (friend helping)
-     Why: Family vocabulary, У тебе є брати? in practical context
+  2. **Showing family photos to a new Ukrainian friend at school — describing who everyone is, asking about each other's families**
+     Speakers: Даша, Андрій
+     Why: Family vocabulary, У тебе є брати? Це мій/моя... in natural teen context
 
   Use these settings. Do NOT substitute with a room description or generic greeting.
 - **Tone: direct, clear, no filler.** State facts and teach. Don't praise the language ("beautiful", "wonderful", "unique melody"), don't praise the learner ("great job", "you've mastered"), don't narrate what you're doing ("In this section we will", "Now let's look at"). Just teach. Example:
@@ -777,37 +797,38 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Діалоги — Dialogues (~400 words total)
-- P1 (~50 words): Setting the communicative scene: looking at phone photos during a break. Explain that in Ukraine, family (сім'я) is the most common topic for small talk with new acquaintances. Introduce the idea of showing "моя сім'я" (my family).
-- P2 (~120 words): Dialogue 1: Showing phone photos. Focus on the core question "У тебе є брати чи сестри?" (Do you have brothers or sisters?). Include the response "Так, у мене є два брати і одна сестра" and the reaction "Ого! У мене тільки один брат." Introduce the name question "Як його звати?" and the answer "Коля."
-- P3 (~130 words): Dialogue 2: Family in a photo. Focus on the "Це + possessive" pattern. Examples: "Це моя сім'я на фотографії," "Це моя мама Марина," "Це мій тато Євген," "Це моя сестра Катя і мої брати — Іван і Денис." Mention the extended family question "А це твоя бабуся?" and the name identification "Її звати Тетяна."
-- P4 (~100 words): Dialogue 3 (Monologue Model): A connected self-introduction. A model for the learner to synthesize all A1.1 skills: "Привіт! Мене звати... Я з Лондона. Моя мама — вчителька. Мій тато — інженер. У мене є один брат." This demonstrates how family vocabulary anchors personal identity.
-- <!-- INJECT_ACTIVITY: fill-in-dialogue --> [fill-in, complete a family introduction dialogue with blanks, 4 items]
+## Діалоги (Dialogues) (~450 words total)
+- P1 (~40 words): Introduction to the module's theme: talking about your family and showing photos to friends, a common way to connect with people.
+- P2 (~110 words): Dialogue 1 (Video call showing phone photos to a new friend). Characters: Оля and Марк. Focus on "У тебе є брати чи сестри?" and answering with "Так, у мене є два брати і одна сестра" and "У мене тільки один брат. Як його звати? — Коля." Include English translation.
+- P3 (~150 words): Dialogue 2 (Showing family photos to a new Ukrainian friend at school). Characters: Даша and Андрій. Focus on identifying people with "Це моя сім'я..." and "Хто це?". Introduce family vocabulary: "Це моя мама Марина. Це мій тато Євген. Це моя сестра Катя і мої брати — Іван і Денис." and questions like "А це твоя бабуся? — Так, її звати Тетяна." Include English translation.
+- P4 (~150 words): Dialogue 3 (Connected speech/monologue). A short self-introduction combining all A1.1 skills. "Привіт! Мене звати... Моя мама — вчителька. Мій тато — інженер. У мене є один брат." This models how learners will eventually introduce their own families. Include English translation.
 
-## Сім'я — Family Vocabulary (~220 words total)
-- P1 (~110 words): Distinguishing the two words for family: "сім'я" (the apostrophe word) and "родина" (kin/extended family). Introduce core nuclear family terms: "мати" (formal) vs "мама" (informal), "батько" (formal) vs "тато" (informal), "брат," "сестра," "син," and "дочка/донька." Explain that both "дочка" and "донька" are common.
-- P2 (~110 words): Extended family members and the "grandparents" gap. Introduce "бабуся" (grandmother), "дідусь" (grandfather), "тітка" (aunt), and "дядько" (uncle). Explicitly note that Ukrainian has no single word like "grandparents" — one must say "бабуся і дідусь" or "мої дідусь і бабуся."
-- <!-- INJECT_ACTIVITY: match-family --> [match-up, English family words to Ukrainian (parents, uncle, aunt, grandfather, etc.), 8 items]
+## Сім'я (Family Vocabulary) (~230 words total)
+- P1 (~100 words): Introduce the two main words for family: «сім'я» and «родина». Present the core nuclear family members: «мама» (or «мати»), «тато» (or «батько»), «брат», «сестра», «син», «дочка» (or «донька»). Mention that «мама» and «тато» are the most natural terms in everyday conversation.
+- P2 (~130 words): Expand to the extended family and important pairs: «бабуся» (grandmother), «дідусь» (grandfather), «тітка» (aunt), «дядько» (uncle), and «батьки» (parents). Add «чоловік» (husband) and «дружина» (wife). Explicitly warn that Ukrainian has no single word for 'grandparents' — you must always say «бабуся і дідусь».
+- <!-- INJECT_ACTIVITY: match-up-family-vocab --> [match-up, Match English family words to Ukrainian, 8 items]
 
-## У мене є — "I Have" (~280 words total)
-- P1 (~140 words): Expressing possession with the "At me there-is" construction. Explain that Ukrainian avoids the verb "мати" for simple possession at this level. Teach the fixed chunks: "у мене є" (I have), "у тебе є" (you have - informal), and "у вас є" (you have - formal/plural). Contrast this with the English "I have a brother" vs Ukrainian "У мене є брат" (At me there-is a brother).
-- P2 (~140 words): Questions, Negation, and Numbers. Explain that questions use rising intonation: "У тебе є сестра? ↗". For A1, teach learners to answer "Ні" or "Ні, у мене тільки один брат" to avoid the complex genitive "немає" structure. Introduce gender agreement for numbers: "один брат" (m) vs "одна сестра" (f), and "два брати" (m) vs "дві сестри" (f).
-- <!-- INJECT_ACTIVITY: quiz-possession --> [quiz, Answer Tak/Ni to "У тебе є...?" questions using memorized chunks, 6 items]
+## У мене є (I have) (~280 words total)
+- P1 (~100 words): Explain that Ukrainian expresses possession ("I have") differently than English. Instead of a verb like "to have," it uses the structure "At me there-is": «У мене є». Teach this as a fixed, memorized chunk. Introduce the three forms needed for A1: «у мене є» (I have), «у тебе є» (you have, informal), and «у вас є» (you have, formal). Provide examples like «У мене є брат».
+- P2 (~100 words): Explain how to form questions using rising intonation: «У тебе є сестра? ↗». Teach how to answer negatively at this stage: simply say «Ні.» or «Ні, у мене тільки один брат.» Explicitly advise learners NOT to say "У мене немає брат", as negation requires the genitive case, which is an A2 topic.
+- P3 (~80 words): Introduce a preview of numbers 1 and 2, explaining that they change based on the gender of the noun they count. Give clear examples: «один брат» (m) vs. «одна сестра» (f), and «два брати» (m) vs. «дві сестри» (f).
+- <!-- INJECT_ACTIVITY: quiz-u-tebe-ie --> [quiz, 'У тебе є...?' answer Так/Ні, 6 items]
 
-## Мій, моя, моє — Possessive Pronouns (~220 words total)
-- P1 (~110 words): Gender agreement of "my." Explain that "мій" must match the gender of the family member: "мій тато" (m), "моя мама" (f), "моє місто" (n), and "мої батьки" (pl). Emphasize that "батьки" (parents) is always plural "мої." Use clear contrastive examples: "мій син" vs "моя донька."
-- P2 (~110 words): Informal "your" and the non-changing "his/her." Introduce "твій, твоя, твоє, твої" following the same gender pattern. Contrast this with "його" (his) and "її" (her), explaining that these forms are "static" and do not change based on the noun: "його мама," "його тато," "її брат," "її сестра."
-- <!-- INJECT_ACTIVITY: fill-in-possessives --> [fill-in, choose correct possessive pronoun (мій/моя/моє/мої or твій/твоя/твоє/твої) based on noun gender, 8 items]
+## Мій, моя, моє (Possessive Pronouns) (~220 words total)
+- P1 (~120 words): Explain that possessive pronouns (my, your) must agree with the grammatical gender of the person or thing possessed, not the owner. Introduce the forms of "my": «мій» (masculine), «моя» (feminine), «моє» (neuter), «мої» (plural). Use clear contrasting examples: «мій брат» vs. «моя сестра», «моє місто», «мої батьки».
+- P2 (~100 words): Introduce the informal "your": «твій», «твоя», «твоє», «твої». Then, introduce "his" («його») and "her" («її»), emphasizing that unlike «мій» and «твій», «його» and «її» NEVER change their form, regardless of the noun's gender. Reiterate that these forms are used in the nominative case with the «Це...» construction, like «Це моя мама».
+- <!-- INJECT_ACTIVITY: fill-in-possessives --> [fill-in, Choose correct possessive pronoun, 8 items]
+- <!-- INJECT_ACTIVITY: fill-in-dialogue-intro --> [fill-in, Complete a family introduction dialogue with blanks, 4 items]
 
-## Підсумок — Summary (~150 words)
-- P1 (~150 words): Recap of the module objectives:
-    * Self-check: Can you name 5 family members in Ukrainian? (мама, тато, брат, сестра, бабуся).
-    * Can you say "I have a sister" using "у мене є"?
-    * What is the difference between "мій" and "моя"? (Gender agreement: мій брат vs моя сестра).
-    * Can you use "його" and "її" correctly? (They don't change).
-    * Mini-challenge: Introduce your family in 4 sentences using the "Це моя/мій..." and "У мене є..." patterns.
+## Підсумок — Summary (~160 words total)
+- P1 (~160 words): Self-check questions (Bulleted Q&A list):
+  - Can you name 5 family members in Ukrainian?
+  - How do you say "I have a sister" in Ukrainian? (Answer: У мене є сестра.)
+  - What is the difference between «мій» and «моя»? Provide an example for each. (Answer: «мій» is for masculine nouns like «мій тато», «моя» is for feminine nouns like «моя мама».)
+  - How do you say "grandparents" in Ukrainian? (Answer: бабуся і дідусь.)
+  - Introduce your family in 4-5 sentences using the phrases «Це...» and «У мене є...».
 
-Grand total: ~1270 words
+Grand total: ~1340 words
 </skeleton>
 
 ## Output Format
@@ -815,11 +836,60 @@ Grand total: ~1270 words
 Write in Markdown. Use:
 - `## Section Title` for main sections
 - `### Subsection` for subsections within a section
-- `**bold**` for Ukrainian words being taught — EVERY bold Ukrainian word MUST have an English translation on first use, either in parentheses `**слово** (translation)` or inline `**слово** means "translation"`. No exceptions.
+- `**bold**` for Ukrainian words being taught. For **A1 and A2** levels, provide an English translation on first use (e.g. `**стіл** (table)`) because learners lack the vocabulary to infer meaning. For **B1 and above**, do NOT provide inline translations for standard vocabulary — the learner will use the module's словник (vocabulary table). You may provide ONE parenthetical English translation ONLY for highly abstract grammar/linguistic terms on first use (e.g. `**видова пара** (aspectual pair)`).
 - Tables for paradigms (conjugation, declension)
 - `:::tip` / `:::caution` / `:::note` for callout boxes
 - `<!-- INJECT_ACTIVITY: {id} -->` for exercise placement (markers only — do NOT write exercise content)
 
 Do NOT write MDX component syntax, JSON, or DSL exercise blocks (:::quiz, etc.). Plain Markdown with injection markers.
+
+---
+
+## MANDATORY FINAL CHECKLIST (#1189)
+
+Before you finish writing, verify the prose against this checklist. Failing any item will fail the build.
+
+### Section headings (verbatim)
+
+Every heading from "Section Structure" above MUST appear as an `## H2` in your output, in order, **including the closing `Підсумок:` / `Підсумок та перехід до M...` summary**. The single most common writer failure across the B1 build has been silently dropping the final summary section. Re-read your output before stopping. If the last section in the plan is missing, write it now.
+
+### Required vocabulary (every word must appear)
+
+You MUST use **every word** from the list below at least once in the prose, in a natural sentence with bold + English translation. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, прагматика, діагностика, дієвідмінювання, зворотний, двовидовий, одновидовий, неозначено-кількісний, etc.) is the most frequently dropped category — actively find homes for those words even if it means adding a sentence that defines them.
+
+- [ ] сім'я (family) — apostrophe word
+- [ ] мама (mother)
+- [ ] тато (father)
+- [ ] брат (brother)
+- [ ] сестра (sister)
+- [ ] бабуся (grandmother)
+- [ ] дідусь (grandfather)
+- [ ] мій, моя, моє, мої (my — m/f/n/pl)
+- [ ] твій, твоя, твоє (your — m/f/n, informal)
+- [ ] у мене є (I have)
+- [ ] у тебе є (you have, informal)
+
+### Forbidden words (never produce)
+
+Do not write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use `<!-- VERIFY -->` instead). The post-write toxic-token scanner will fail the build immediately:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+### Level-specific immersion check
+
+The level-appropriate immersion rule was already injected at the top of
+this prompt as `IMMERSION RULE`. Re-read it now BEFORE you stop writing.
+If your level's rule contains a CHECKLIST block, walk through every item.
+If it doesn't, just verify your output matches the LANGUAGE ROLES and
+TARGET stated in that block.
+
+This used to hard-code a B1+ checklist that confused A1/A2 models (where
+translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+The single source of truth is now
+`scripts/pipeline/config_tables.py:IMMERSION_RULES`.
+
+---
 
 Begin writing now. Start with the first section heading.

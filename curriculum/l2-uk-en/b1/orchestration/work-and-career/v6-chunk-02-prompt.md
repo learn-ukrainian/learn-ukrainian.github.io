@@ -26,7 +26,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-переходимо до дуже важливої теми, яка яскраво відображає сучасну українську культуру. Це використання спеціальних жіночих форм для назв професій — **фемінітивів** *(feminine forms)*. Новий український правопис 2019 року офіційно закріпив і суттєво розширив правила їх творення. Українська мова історично завжди мала природну тенденцію до використання жіночих форм, але в радянські часи перевагу штучно і примусово надавали виключно чоловічим формам. Сьогодні постійне використання фемінітивів — це абсолютна норма грамотного та сучасного українського спілкування. Найпопулярніший та найчастіший суфікс для творення жіночих форм — це **-к(а)**. Від базового слова «вчитель» ми утворюємо слово «вчителька», від слова «лікар» — «лікарка», від слова «директор» — «директорка», а від популярного слова «журналіст» утворюється «журналістка». Наприклад: «Головна лікарка нашої міської лікарні дуже досвідчена та розумна жінка». Другий дуже продуктивний суфікс — це **-ин(я)**. Він досить часто додається до слів іншомовного походження, які закінчуються на твердий приголосний. Саме так в українській мові з'являються гарні слова «хореографиня», «фотографиня» або «філософиня». Третій важливий суфікс — це **-иц(я)**. Він активно використовується, коли чоловіча форма слова закінчується на суфікси «-ик» або «-ник». Відповідно, слово «письменник» легко стає словом «письменниця», а слово «працівник» перетворюється на «працівниця». Для тих слів, які мають закінчення на «-ець», ми використовуємо спеціальне закінчення **-чиня**. Наприклад, від поширеного слова «продавець» ми правильно утворюємо жіночу форму «продавчиня». Використовуючи лише чоловічі форми для жінок *(❌ «Вона дуже хороший лікар»)*, ви несвідомо наслідуєте застарілу та неактуальну радянську традицію. Щоб звучати максимально сучасно, природно та поважливо, завжди свідомо обирайте фемінітиви: ✅ «Вона дуже хороша лікарка». Ви можете регулярно чути жіночі форми професій на українському телебаченні, прочитати їх у відомих журналах та знайти в офіційних державних документах. На завершення цієї лексичної частини ми маємо обов'язково виправити одну дуже поширену помилку. Її часто роблять студенти, що вивчають українську мову як іноземну. В англійській мові ми завжди використовуємо прийменник «as» для опису нашої професійної ролі: «I work as a doctor». Багато студентів автоматично перекладають цю фразу буквально і кажуть: ❌ «Він працює як лікар» або ❌ «Я працюю як менеджер». Запам'ятайте, що в українській мові це дуже груба граматична помилка! Дієслова «працювати» та «бути» завжди вимагають використання **Орудного відмінка** *(Instrumental case)* для правильного позначення професії чи ролі. Вам абсолютно не потрібні жодні додаткові прийменники, важливе лише правильне закінчення самого іменника. Правильна та природна граматична конструкція виглядає так: ✅ «Він працює лікарем». Ось кілька додаткових гарних прикладів, які допоможуть вам назавжди запам'ятати це фундаментальне правило: «Після закінчення університету він дуже швидко став менеджером у великому міжнародному проєкті». «Моя старша сестра майже два роки працювала перекладачкою в сонячній Іспанії». «Я хочу стати дуже хорошим програмістом, тому я щодня багато та наполегливо навчаюся». «Наша знайома Олена успішно працює директоркою цієї школи вже понад п'ять років». Завжди пам'ятайте про правило Орудного відмінка, коли ви говорите про те, ким ви працюєте. Це одразу зробить вашу українську мову набагато природнішою, впевненішою та професійнішою. Використовуйте цей відмінок впевнено кожного дня, і ви швидко помітите, як суттєво покращиться ваша розмовна українська мова. <!-- INJECT_ACTIVITY: match-up, match definitions for професія, фах, посада, спеціальність --> <!-- INJECT_ACTIVITY: group-sort, categorize terms into people, places, processes, documents -->
+**керівник** (manager/supervisor) plays a huge role in both of these outcomes. A crucial aspect of modern Ukrainian professional vocabulary is the active use of feminine forms for professions, known as фемінітиви. Based on the official 2019 Ukrainian Pravopys (Orthography), using feminine suffixes to denote a woman's profession is the standard, natural, and respectful way to speak and write. This contrasts sharply with the older, Soviet-style preference for masculine forms, which often applied masculine nouns to female professionals to sound "more serious". Today, using masculine forms for women sounds outdated and unnatural in Ukrainian. Українська мова має багату традицію творення жіночих форм. Найпоширеніший суфікс — це «-к(а)». Наприклад, якщо чоловік — вчитель, то жінка — вчителька. Від слова «лікар» утворюється слово лікарка, від «директор» — директорка, а від «журналіст» — журналістка. Other productive suffixes include "-ин(я)" and "-иц(я)". For instance, a female choreographer is a **хореографиня** (female choreographer). The word for a male seller is **продавець** (seller), and its feminine counterpart is **продавчиня** (female seller). When a woman writes her resume or introduces herself at an interview, she should confidently use these feminine forms. Використання фемінітивів є важливою частиною сучасної мовної культури. Вони роблять жінок видимими в усіх професійних сферах і відображають природний розвиток української мови. Тому не бійтеся використовувати ці слова у своєму щоденному спілкуванні. > *The use of feminine forms is an important part of modern language culture. They make women visible in all professional spheres and reflect the natural development of the Ukrainian language. Therefore, do not be afraid to use these words in your daily communication.* Finally, we must address one of the most persistent errors made by English speakers when discussing professions. In English, you naturally say "He works as a doctor" or "She works as a manager". If you translate this directly into Ukrainian, you might be tempted to say "Він працює як лікар". This is a grammatical error caused by English influence. :::tip **Did you know?** In Ukrainian, roles, functions, and professions used with the verbs працювати (to work) and бути (to be) require the Instrumental case (Орудний відмінок). You do not need the word «як» (as). ::: The correct Ukrainian norm is to use the verb and immediately follow it with the profession in the Instrumental case. So, instead of the incorrect phrase using "as", you must use the Instrumental ending. **Він працює лікарем.** — *He works as a doctor.* **Вона працює менеджеркою.** — *She works as a manager.* Це правило працює для будь-якої професії чи посади. Якщо ваш друг змінив роботу і отримав нову посаду, ви скажете: «Він став менеджером». Якщо ваша знайома розповідає про свій минулий досвід, вона скаже: «Я багато років працювала перекладачкою». Запам'ятайте цю конструкцію, адже вона звучить дуже природно і відразу показує ваше добре розуміння української граматики. By mastering the Instrumental case for professions, using correct feminine forms, and choosing the precise word for your specialty and position, you will be fully prepared to navigate any professional conversation in Ukrainian. <!-- INJECT_ACTIVITY: match-up-work-terms --> <!-- INJECT_ACTIVITY: group-sort-categories -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -595,7 +595,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -608,18 +675,68 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] робота (work/job — general term for employment)
+- [ ] професія (profession — a trained occupation)
+- [ ] фах (specialty/field — area of expertise)
+- [ ] посада (position/role — specific job title in a company)
+- [ ] вакансія (vacancy — an open job position)
+- [ ] співбесіда (job interview — formal meeting with employer)
+- [ ] працевлаштування (employment — the process of getting hired)
+- [ ] резюме (CV/resume — невідмінюване, written job application)
+- [ ] обов'язок (duty/responsibility — pl. обов'язки)
+- [ ] досвід (experience — professional background)
+- [ ] підвищення (promotion/raise — career advancement)
+- [ ] зарплата (salary — розм. form of заробітна плата)
+- [ ] колега (colleague — спільного роду: мій/моя колега)
+- [ ] керівник (manager/supervisor — head of a team or department)
+- [ ] звільнення (dismissal/resignation — leaving a job)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Вид дієслова у розповіді про роботу (~1100 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

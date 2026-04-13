@@ -2,53 +2,52 @@ round: 2
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 10
-  evidence: The module strictly follows the `content_outline`. It covers ordinals,
-    the declension of "один", the 1-2-5 agreement cycle, and real-world usage (prices,
-    dates, addresses, age). Word count is a robust
+  score: 7
+  evidence: 'All planned H2 sections are present, but `Числівник «один» відмінюється
+    за всіма сімома відмінками` is not fully delivered: in that section `знахідний`
+    has 0 occurrences, and recommended plan words `д'
 - dimension: 2
   name: Linguistic accuracy
-  score: 10
-  evidence: Perfect explanation of cases following numbers. Natural phrasing ("одного
-    м'яча не вистачає", "півтора кілограма", "о третій годині"). No Surzhyk or Russianisms.
-    Correct forms for Dates ("двадцять пер
+  score: 6
+  evidence: 'Core grammar is misstated as `використовуємо виключно називний відмінок
+    множини` and `Never use the Genitive Singular... after 2, 3, or 4`, although textbook
+    evidence includes `два громадянина`, `два '
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: Excellent step-by-step introduction. Starts with clear distinctions between
-    cardinal and ordinal numerals. Uses comparison ("два квитки" vs "другий квиток").
-    Demonstrates the 1-2-5 agreement rules wit
+  score: 6
+  evidence: 'PPP structure exists, but central rules are taught with false absolutes
+    and incomplete paradigms: the `один` section promises all cases yet does not explicitly
+    teach the accusative, and the age box sa'
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: All required and recommended words are included in natural contexts ("скільки
-    коштують ці м'ячі", "обидва брати", "десяток яєць", "півтора кілограма", "вік").
+  score: 8
+  evidence: Required vocabulary is integrated naturally, but recommended `десяток`
+    and `пів` never appear in the prose.
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: Activity markers accurately reflect the plan's intent and are injected
-    precisely after the relevant theoretical blocks, allowing learners to test their
-    immediate understanding.
+  score: 9
+  evidence: '`fill-in-ordinals`, `quiz-noun-agreement`, `sort-numeral-cases`, and
+    `match-up-expressions` all follow the relevant teaching sections; extra `fill-in-decline-in-context`
+    also fits the preceding `один`'
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: Warm, conversational, and encouraging tone ("Це дуже красива граматична
-    особливість", "Тепер ви знаєте всі секрети українських числівників").
+  score: 9
+  evidence: Sports day, market, history, geography, and address examples keep the
+    topic concrete and teacherly without gamified fluff.
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: Flawless markdown structure. All H2 headings match the plan directly.
-    Text is well-paced and transitions smoothly between theory and dialogues.
+  evidence: All expected sections are present and ordered; pipeline word count is
+    2878, above target; formatting is clean aside from expected activity markers and
+    admonitions.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: 'Uses authentic Ukrainian cultural references: addresses (вулиця Хрещатик),
-    distances (Київ–Львів), holidays (День Незалежності 24 серпня), and historical
-    figures (Тарас Шевченко, Іван Франко).'
+  evidence: The module stays Ukrainian-centered with examples like `День Незалежності`,
+    `Тарас Шевченко`, `Хрещатик`, and no Russian-centric framing.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: The sports market dialogue and the phone number exchange are both highly
-    realistic, multi-turn conversations that successfully contextualize the target
-    grammar.
+  score: 9
+  evidence: The dialogues are multi-turn, situational, and numerically coherent; the
+    market exchange is especially functional.
 findings: []

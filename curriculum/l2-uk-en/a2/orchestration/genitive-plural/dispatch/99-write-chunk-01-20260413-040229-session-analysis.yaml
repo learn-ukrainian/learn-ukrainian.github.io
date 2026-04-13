@@ -1,0 +1,49 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T02-01-1e3937cd.json
+phase: write-chunk-01
+prompt_chars: 44899
+response_chars: 6799
+prompt_words: 6714
+response_words: 1099
+sections:
+- name: header
+  start: 0
+  length: 450
+  fraction: 0.01
+- name: skeleton
+  start: 450
+  length: 2044
+  fraction: 0.0455
+- name: plan
+  start: 2494
+  length: 12696
+  fraction: 0.2828
+- name: wiki
+  start: 7768
+  length: 29487
+  fraction: 0.6567
+- name: output_spec
+  start: 44677
+  length: 222
+  fraction: 0.0049
+large_sections:
+- wiki
+directives_total: 23
+directives_covered: 19
+directives_missed:
+- kind: checklist
+  text: стаття (article)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: завдання (task, assignment)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: must
+  text: Learners must use the standard cardinal numeral (`три`) instead.
+  covered: false
+  coverage_note: 3/8 keywords (38%)
+- kind: must
+  text: '* **Cases (Відмінки):** The student must understand the concept of the Nominative
+    and Genitive cases (Source 14, 40).'
+  covered: false
+  coverage_note: 3/9 keywords (33%)

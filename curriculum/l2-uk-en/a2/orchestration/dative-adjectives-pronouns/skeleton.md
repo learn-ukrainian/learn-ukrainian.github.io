@@ -1,48 +1,36 @@
-## Вступ та діалог (~150 words)
-- P1 (~50 words): Introduction to the importance of describing who we are giving to or helping; setting the stage for Dative adjectives and pronouns using the "to whom" logic.
-- P2 (~100 words): Dialogue: Teacher handing back graded essays. "Вчитель: Моєму найкращому студентові — десятка! Нашій новій студентці — дев'ятка. Цьому хлопцю треба більше працювати. Студент: Дякую нашому доброму вчителеві!" Focus on high-frequency dative phrases: моєму студентові, нашій студентці, цьому хлопцю.
+## Прикметники у давальному відмінку (~660 words)
+- P1 (~120 words): Introduce the concept of agreement (узгодження) in the dative case. Explain that adjectives must match the noun's gender, number, and case. Hook the learner with a simple scenario: giving a gift to a "new friend" (новому другу/другові) versus an "old friend" (старому другу).
+- P2 (~120 words): Detail the masculine and neuter dative adjective endings. Explain that hard stems take `-ому` (новий → новому, старий → старому, гарний → гарному) and soft stems take `-ьому` (синій → синьому, останній → останньому). Note that Ukrainian unifies the `-ому` ending sound across both groups, unlike Russian.
+- P3 (~120 words): Explain the feminine dative adjective endings. Show that both hard and soft stems take `-ій` (нова → новій, стара → старій, синя → синій). Point out the special rule for stems ending in г, к, х: they take `-ій` without consonant alternation in the adjective (довга → довгій, тиха → тихій), unlike the noun (подруга → подрузі).
+- P4 (~100 words): Cover the plural dative adjective endings. State that all genders take `-им` in the plural (нові → новим, старі → старим, гарні → гарним, сині → синім).
+- P5 (~120 words): Present a comprehensive chart comparing Nominative, Genitive, and Dative adjective endings for pattern recognition. Highlight how the dative forms build on the noun's grammatical case.
+- P6 (~80 words): Provide practice examples using familiar A1-A2 adjectives in short sentences, such as "Я телефоную новому другу" and "Я допомагаю новій подрузі".
+- <!-- INJECT_ACTIVITY: group-sort-adjectives --> [group-sort, Sort dative adjective forms by gender (masculine -ому, feminine -ій, plural -им), 8 items]
 
-## Прикметники у давальному відмінку (~600 words)
-- P1 (~100 words): Explanation of the fundamental principle of agreement: adjectives must match their noun's gender, number, and case. Introduction to the question "Якому?" (To which/what kind?).
-- P2 (~100 words): Masculine and Neuter hard stem endings (-ому). Provide examples with common adjectives: новому другу, старому місту, гарному будинку. Contrast with Nominative "новий".
-- P3 (~100 words): Masculine and Neuter soft stem endings (-ьому). Explain the spelling rule and provide examples: синьому морю, останньому дню, вечірньому поїзду.
-- P4 (~100 words): Feminine endings (-ій). Explain that both hard and soft stems converge here. Provide examples: новій подрузі, синій сукні. Specifically mention that after г, к, х there is no alternation in the adjective: довгій, тихій.
-- P5 (~100 words): Plural endings for all genders (-им). Explain the unification of forms in the plural. Examples: новим друзям, синім морям, гарним дівчатам.
-- P6 (~100 words): A comparative look at the "hard vs. soft" distinction in the Dative. Explain that while Russian differentiates Masc. hard/soft (ому/ему), Ukrainian unifies Masc./Neut. endings with -ому/-ьому (both containing the 'o' sound), making the system more consistent.
-- <!-- INJECT_ACTIVITY: group-sort-adj-gender --> [group-sort, Sort dative adjective forms by gender (masculine -ому, feminine -ій, plural -им), 8 items]
+## Присвійні та вказівні займенники у давальному відмінку (~600 words)
+- P1 (~100 words): Introduce possessive and demonstrative pronouns in the dative case. Explain that they generally follow the same pattern as adjectives, answering questions like "to whose?" (чиєму?/чиїй?) and "to which?" (якому?/якій?).
+- P2 (~120 words): Explain the declension paradigm for `мій`, `твій`, and `свій`. Show that masculine/neuter takes `-єму` (моєму, твоєму, своєму) and feminine takes `-їй` (моїй, твоїй, своїй). Provide examples: "Я довіряю моєму братові" and "Я купив подарунок моїй сестрі".
+- P3 (~120 words): Explain the declension for `наш`, `ваш`, and `їхній`. Show that `наш` and `ваш` act like hard adjectives (нашому, вашому; нашій, вашій), while `їхній` acts like a soft adjective (їхньому, їхній). Give an example: "Ми вдячні нашому тренеру".
+- P4 (~90 words): Address the crucial rule for `його` and `її`. Emphasize that these forms NEVER change when used as possessives. For instance, giving something to "його брат" becomes "його братові" (not *йогому). Highlight this as a common L2 error.
+- P5 (~120 words): Detail the demonstrative pronouns `цей` and `той`. Provide their forms: `цей` becomes `цьому` (masc/neut) and `цій` (fem), with plural `цим`; `той` becomes `тому` and `тій`, with plural `тим`. Use examples: "Поясни це тому хлопцеві" and "Цьому будинку сто років".
+- P6 (~50 words): Briefly summarize the pronoun patterns to solidify the rules before moving to the practice activities.
+- <!-- INJECT_ACTIVITY: quiz-possessive-forms --> [quiz, Choose the correct dative form of the possessive pronoun (моєму vs. моїй vs. моїм), 8 items]
+- <!-- INJECT_ACTIVITY: match-up-nominative-dative --> [match-up, Match nominative noun phrases to their dative equivalents (мій друг → моєму другові), 8 items]
 
-## Присвійні та вказівні займенники у давальному відмінку (~550 words)
-- P1 (~120 words): Declension of first and second person possessives (мій, твій, свій). Explain the shift from Nominative base to Dative stems: моєму/моїй, твоєму/твоїй, своєму/своїй. Examples: "Я телефоную моєму батькові," "Допоможи моїй сестрі."
-- P2 (~100 words): Declension of plural possessives (наш, ваш). Explain that they follow the hard adjective pattern: нашому/нашій, вашому/вашій. Examples: "Дякуємо нашому вчителю," "Ми раді вашій перемозі."
-- P3 (~110 words): The possessive "їхній" (their). Explain its soft-group behavior: їхньому/їхній. Contrast this with the invariable "їх" (the Genitive-based possessive), explaining that "їхньому сусідові" is the standard declinable form to learn.
-- P4 (~100 words): Invariable possessives: його and її. Crucial explanation that these never change regardless of the noun's case. Examples: "Я вірю його другу" (not йогому), "Він допоміг її сестрі."
-- P5 (~120 words): Demonstrative pronouns: цей (this) and той (that). Paradigm: цьому/цій vs. тому/тій. Plural forms: цим/тим. Examples: "Дай цю книгу тому хлопцеві," "Цьому будинку потрібен ремонт."
-- <!-- INJECT_ACTIVITY: quiz-pronoun-forms --> [quiz, Choose the correct dative form of the possessive pronoun (моєму vs. моїй vs. моїм), 8 items]
-- <!-- INJECT_ACTIVITY: match-up-nom-dat --> [match-up, Match nominative noun phrases to their dative equivalents (мій друг → моєму другові), 8 items]
-
-## Повні іменникові групи у давальному відмінку (~500 words)
-- P1 (~120 words): Synthesizing full phrases: Possessive + Adjective + Noun. Emphasize that all three elements must reflect the Dative case. Example construction: моєму (pronoun) + старшому (adj) + братові (noun).
-- P2 (~80 words): Word order within the Dative noun phrase. Explain that the sequence (Possessive -> Adjective -> Noun) remains stable from the Nominative, making transition easier.
-- P3 (~100 words): Usage scenario: Giving and Dedicating. Examples: "Подарувати моєму найкращому другові," "Присвятити книгу моїй коханій дружині." Use verbs like дарувати, купувати.
-- P4 (~100 words): Usage scenario: Communication and Help. Examples: "Написати нашій новій вчительці," "Допомагати цьому старому чоловікові." Use verbs like телефонувати, писати, допомагати.
-- P5 (~100 words): Common L2 pitfalls. Explain the tendency to forget the ending on the adjective while changing the noun (e.g., *моєму старий другу). Reinforce that every word in the chain must "signal" the Dative case.
+## Повні іменникові групи у давальному відмінку (~550 words)
+- P1 (~100 words): Introduce the concept of building full, multi-word dative noun phrases. Explain the rule of total agreement: the possessive, adjective, and noun must all match in the dative case. Note that the word order (possessive + adjective + noun) remains exactly the same as in the nominative.
+- P2 (~120 words): Present a short dialogue scenario: A teacher handing back graded essays. 
+  - Вчитель: "Моєму найкращому студентові — десятка! Нашій новій студентці — дев'ятка. А цьому хлопцю треба більше працювати."
+  - Студенти: "Дякуємо нашій добрій вчительці!"
+- P3 (~120 words): Break down the phrases from the dialogue to show the mechanics. Analyze "моєму найкращому студентові" (masculine, `-єму` + `-ому` + `-ові`), "нашій новій студентці" (feminine, `-ій` + `-ій` + `-і`), and "цьому хлопцю" (masculine demonstrative).
+- P4 (~120 words): Provide examples of full noun phrases in real-life scenarios. Group 1: Giving presents ("подарувати моєму дорогому другові"). Group 2: Writing to someone ("написати нашій старій бабусі"). Group 3: Explaining ("пояснити цьому новому студентові").
+- P5 (~90 words): Warn against common L2 mistakes in these long phrases. Emphasize not mixing masculine `-ому` with feminine `-ій` (e.g., pointing out that *моїй другові and *нашому вчительці are incorrect). Remind learners to establish the gender of the core noun first.
 - <!-- INJECT_ACTIVITY: fill-in-dative-phrases --> [fill-in, Complete dative noun phrases with the correct adjective/pronoun ending (мо___ друг___), 8 items]
-- <!-- INJECT_ACTIVITY: error-correction-agreement --> [error-correction, Find and fix adjective-pronoun agreement errors in dative phrases, 6 items]
+- <!-- INJECT_ACTIVITY: error-correction-agreement --> [error-correction, Find and fix adjective-pronoun agreement errors in dative phrases (e.g., *моїй другові → моєму другові, *нашому вчительці → нашій вчительці), 6 items]
 
-## Порівняння відмінків (~350 words)
-- P1 (~120 words): Comparing Genitive and Dative descriptors. Contrast masculine Genitive (-ого) with Dative (-ому). Example: "немає нового друга" (Gen) vs "телефоную новому другу" (Dat). Explain the 'm' in -ому as the unique marker of Dative.
-- P2 (~100 words): Feminine Genitive vs. Dative. Contrast Genitive (-ої) with Dative (-ій). Example: "немає нової подруги" (Gen) vs "допомагаю новій подрузі" (Dat). Note that the Dative -ій is identical to the Locative form.
-- P3 (~130 words): Strategy for choosing the correct case. Explain that the verb is the "driver" (e.g., дякувати + Dat, для + Gen). Provide a small chart of common A2 verbs and their required case for descriptors.
+## Порівняння відмінків (~390 words)
+- P1 (~120 words): Explain why comparing cases is essential for mastery. Note that learners often confuse the endings of Nominative, Genitive, and Dative cases, particularly for feminine nouns and their modifiers, so placing them side-by-side reveals the distinct patterns.
+- P2 (~130 words): Present a comparison chart for Masculine/Neuter forms. Show Nominative ("мій новий друг"), Genitive ("мого нового друга"), and Dative ("моєму новому другу/другові"). Explicitly highlight the difference: Genitive uses `-ого`, while Dative uses `-ому` (or `-єму`). Warn learners against the false equivalence with Russian endings here.
+- P3 (~140 words): Present a comparison chart for Feminine forms. Show Nominative ("моя нова подруга"), Genitive ("моєї нової подруги"), and Dative ("моїй новій подрузі"). Contrast the Genitive `-ої` with the Dative `-ій`. Remind learners that prepositions like `для` trigger the Genitive ("для їхньої мами"), while verbs like `допомагати` trigger the Dative ("допомагаю їхній мамі").
 
-## Підсумок (~150 words)
-- P1 (~150 words): Recap of the module's key points.
-  - Adjectives take -ому (M/N) or -ій (F).
-  - Possessives like "мій" become "моєму/моїй".
-  - "Його" and "її" are your best friends because they never change.
-  - Full phrases require consistent agreement: моєму новому другу.
-  - Self-check:
-    - Can you say "to my sister"? (моїй сестрі)
-    - Can you say "to this new student"? (цьому новому студентові)
-    - Do you remember the ending for plural? (-им)
-
-Grand total: ~2250 words
+Grand total: ~2200 words

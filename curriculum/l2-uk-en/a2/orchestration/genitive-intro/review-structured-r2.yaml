@@ -1,0 +1,56 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: The three planned sections are present and paced close to budget (`~660`,
+    `~770`, `~770`), and the core objectives are covered with examples like `У мене
+    є старший брат ... у нього немає брата` and `б
+- dimension: 2
+  name: Linguistic accuracy
+  score: 6
+  evidence: 'Core Ukrainian forms are valid in VESUM (`стола`, `Києва`, `матері`,
+    `ночі`, `грошей`), but the module contains false grammar claims: `This rule works
+    for all words`, `commands this grammatical change'
+- dimension: 3
+  name: Pedagogical quality
+  score: 6
+  evidence: 'The module follows a PPP-like flow, but several explanations teach contradictory
+    or overgeneralized rules, especially the universal statements about `немає` and
+    the incorrect Genitive-plural rule `If '
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 'All required plan vocabulary appears in prose: `родовий відмінок`, `немає`,
+    `багато`, `мало`, `кілька`, `скільки`, `закінчення`, `однина`, `множина`; recommended
+    `кількість` and `відсутність` also app'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: Marker inventory is complete and ordered correctly relative to the teaching
+    sections. Actual answer logic cannot be checked because only injection markers
+    are shown, not the generated YAML exercises.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: The voice is teacherly and clear, with concrete situations (apartment,
+    cinema, classroom) and useful chunks like `немає часу` and `немає сенсу`.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean three-part structure, all section headings present, 5 activity markers
+    present, no stray formatting damage, and pipeline word count is 2993, comfortably
+    above the 2000 target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 7
+  evidence: 'The module avoids “Ukrainian via Russian” framing, but it labels `У природи
+    нема поганої погоди` as something found in `famous Ukrainian proverbs`; that claim
+    is unsupported by the local idiom search '
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Both dialogues use named speakers and plausible situations; the opening
+    apartment dialogue directly motivates `немає + Genitive`, and the cinema dialogue
+    introduces `немає грошей` naturally.
+findings: []

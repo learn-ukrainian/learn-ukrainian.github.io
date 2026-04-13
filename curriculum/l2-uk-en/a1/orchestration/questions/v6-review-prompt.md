@@ -126,51 +126,50 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Діалоги (Dialogues)
+## Діало́ги (Dialogues)
 
 Asking for information is the foundation of any conversation. When you travel, meet new people, or simply try to find a missing object, you need to know how to ask about locations, identities, and reasons. The dialogues below demonstrate how Ukrainians ask and answer questions in everyday situations.
 
-> **Турист:** Вибачте, де центр? *(Excuse me, where is the center?)*
-> **Перехожий:** Центр там. *(The center is there.)*
-> **Турист:** Дякую! Куди іде цей автобус? *(Thanks! Where does this bus go?)*
+> **Тури́ст:** Ви́бачте, де центр? *(Excuse me, where is the center?)*
+> **Перехо́жий:** Центр там. *(The center is there.)*
+> **Турист:** Дякую! Куди́ іде́ цей авто́бус? *(Thanks! Where does this bus go?)*
 > **Перехожий:** Цей автобус іде в парк. *(This bus goes to the park.)*
-> **Турист:** Добре. Як пройти до парку? *(Good. How to get to the park?)*
-> **Перехожий:** Прямо і направо. *(Straight and to the right.)*
+> **Турист:** До́бре. Як пройти́ до парку? *(Good. How to get to the park?)*
+> **Перехожий:** Пря́мо і напра́во. *(Straight and to the right.)*
 
 When arriving in a new city, finding your way relies heavily on your ability to use question words. The tourist uses **де** (where) to locate a static place, **куди** (where to) to ask about the direction of the bus, and **як** (how) to request instructions for reaching a destination.
 
-> **Марко:** Хто ти? *(Who are you?)*
-> **Анна:** Я студент. *(I am a student.)*
-> **Марко:** Що ти вивчаєш? *(What do you study?)*
-> **Анна:** Я вивчаю українську. *(I study Ukrainian.)*
-> **Марко:** Де ти живеш? *(Where do you live?)*
-> **Анна:** Я живу в Києві. *(I live in Kyiv.)*
-> **Марко:** Коли ти працюєш? *(When do you work?)*
-> **Анна:** Вранці. *(In the morning.)*
+> **Марко́:** Хто ти? *(Who are you?)*
+> **А́нна:** Я А́нна, студе́нтка. А ти? *(I am Anna, a student. And you?)*
+> **Марко:** Я Марко. Що ти вивча́єш? *(I am Marko. What do you study?)*
+> **Анна:** Я вивча́ю украї́нську. А де ти живе́ш? *(I study Ukrainian. And where do you live?)*
+> **Марко:** Я живу́ в Ки́єві. А ти? *(I live in Kyiv. And you?)*
+> **Анна:** Теж у Ки́єві. Ко́ли ти працю́єш? *(Also in Kyiv. When do you work?)*
+> **Марко:** Вра́нці. *(In the morning.)*
 
 When you meet someone new, you naturally want to expand the conversation beyond basic greetings. Notice how each question targets a specific detail. The word **хто** (who) asks about a person's identity, **що** (what) targets an action or object, and **коли** (when) establishes a timeframe.
 
-> **Олег:** Де моя книга? *(Where is my book?)*
-> **Ірина:** Я не знаю. *(I don't know.)*
-> **Олег:** А хто знає? *(And who knows?)*
-> **Ірина:** Мама знає. *(Mom knows.)*
-> **Олег:** Чому мама? *(Why mom?)*
-> **Ірина:** Тому що вона все знає! *(Because she knows everything!)*
-> **Олег:** Чому ти не бачиш її? *(Why don't you see it?)*
-> **Ірина:** Тому що я нічого не бачу без окулярів. *(Because I see nothing without glasses.)*
+> **Оле́г:** Де моя́ кни́га? *(Where is my book?)*
+> **Іри́на:** Я не зна́ю. *(I don't know.)*
+> **Олег:** А хто зна́є? *(And who knows?)*
+> **Ірина:** Ма́ма знає. *(Mom knows.)*
+> **Олег:** Чо́му мама? *(Why mom?)*
+> **Ірина:** Тому́ що вона́ все знає! *(Because she knows everything!)*
+> **Олег:** А чому ти не зна́єш? *(And why don't you know?)*
+> **Ірина:** Тому що я ні́чого не ба́чу без окуля́рів. *(Because I see nothing without glasses.)*
 
 A typical domestic scene often involves missing items and a lack of information. This conversation introduces the word **чому** (why) alongside its natural response **тому що** (because). It also demonstrates how to express negation using **не** (not) and how to indicate the total absence of something using **нічого** (nothing).
 
-## Питальні слова (Question Words)
+## Пита́льні слова́ (Question Words)
 
-To gather information effectively, you need a core set of linguistic tools. Ukrainian relies on seven essential question words: **хто** (who), **що** (what), **де** (where), **куди** (where to), **коли** (when), **чому** (why), and **як** (how). In a typical sentence, these question words take the very first position.
+To gather information effectively, you need a core set of linguistic tools. Ukrainian relies on seven essential question words: **хто** (who), **що** (what), **де** (where), **куди** (where to), **коли** (when), **чому** (why), and **як** (how). In neutral questions, these words usually come first.
 
 *   **Хто це?** (Who is this?)
-*   **Хто говорить?** (Who speaks?)
+*   **Хто гово́рить?** (Who speaks?)
 *   **Що це?** (What is this?)
-*   **Що ти робиш?** (What are you doing?)
+*   **Що ти ро́биш?** (What are you doing?)
 
-The distinction between **хто** (who) and **що** (what) is strictly tied to animacy. You must use **хто** when asking about people or animals, and **що** when asking about inanimate objects or abstract concepts. English speakers frequently use "what" to ask for a description or specification, such as "What color is it?" or "What kind of car is it?". You cannot do this in Ukrainian. The word **що** only asks for identification. If you point to a vehicle and ask **Що це?** (What is this?), the answer is simply "A car." To ask for a description, you must use the word **який** (what kind / which). This clear separation prevents confusion and guarantees that you receive the specific information you want.
+The distinction between **хто** (who) and **що** (what) is important, but **що** does more than ask for identification. Use **хто** for a person or another animate being. Use **що** for a thing, an event, or an action: **Що це?** (What is this?) and **Що ти ро́биш?** (What are you doing?). When you ask about a quality or type, Ukrainian usually uses **яки́й**: **Яки́й це колір?** (What color is it?) or **Яка це маши́на?** (What kind of car is it?).
 
 Understanding location and movement requires mastering a spatial and temporal triplet: **де** (where), **куди** (where to), and **коли** (when). English often uses "where" for both a static location and a destination. Ukrainian separates these two concepts entirely. You use **де** when a person or object is resting in one place. You use **куди** strictly when there is physical motion directed toward a destination.
 
@@ -181,9 +180,9 @@ Understanding location and movement requires mastering a spatial and temporal tr
 
 Manner and reason use the question words **як** (how) and **чому** (why). You already know **як** from basic greetings, but it also asks for instructions or methods. The word **чому** almost always prompts an answer that starts with the conjunction **тому що** (because).
 
-*   **Як справи?** (How are things?)
+*   **Як спра́ви?** (How are things?)
 *   **Чому ти не працюєш?** (Why don't you work?)
-*   **Тому що я хочу спати.** (Because I want to sleep.)
+*   **Тому що я хо́чу спа́ти.** (Because I want to sleep.)
 
 :::tip
 The phrase **тому що** consists of two separate words. When answering a **чому** question, always use both words together to provide a natural, complete reason.
@@ -193,7 +192,7 @@ Not every inquiry requires a specific question word. Many questions simply ask f
 
 *   **Ти знаєш.** (You know. — flat statement intonation)
 *   **Ти знаєш? ↑** (Do you know? — rising pitch on the last word)
-*   **Ти говориш українською? ↑** (Do you speak Ukrainian?)
+*   **Ти гово́риш украї́нською? ↑** (Do you speak Ukrainian?)
 
 You can also use the particle **чи** (whether / if) at the beginning of the sentence to act as a formal marker for a yes/no question. Even with this addition, the word order remains exactly the same as a regular statement.
 
@@ -211,26 +210,26 @@ Both variations mean exactly the same thing. The first option, with the question
 
 <!-- INJECT_ACTIVITY: match-question-answer -->
 
-## Заперечення (Negation)
+## Запере́чення (Negation)
 
 Stating what is not happening or what you do not know is just as crucial as asking questions. The primary tool for negation in Ukrainian is the particle **не** (not). In English, you often need helper verbs like "do" or "does" to make a sentence negative. Ukrainian makes this process much simpler. You just place **не** directly before the main verb.
 
 *   **Я не знаю.** (I do not know.)
-*   **Ми не розуміємо.** (We do not understand.)
-*   **Він не хоче.** (He does not want.)
-*   **Він не працює.** (He does not work.)
+*   **Ми не розумі́ємо.** (We do not understand.)
+*   **Він не хо́че.** (He does not want.)
+*   **Він не працю́є.** (He does not work.)
 
 The particle **не** forms a very tight unit with the verb that immediately follows it. You must never separate them with other words. 
 
 When you need to answer a question negatively without providing a full sentence, you use the standalone word **ні** (no).
 
-*   **Ти студент? — Ні.** (Are you a student? — No.)
+*   **Ти студе́нт? — Ні.** (Are you a student? — No.)
 *   **Ні, дякую.** (No, thank you.)
 *   **Ні, я не знаю.** (No, I don't know.)
 
 The word **ні** also serves as a prefix for creating negative pronouns and adverbs. By attaching **ні-** to question words, you generate vocabulary that represents the absolute absence of something.
 
-*   **ніхто** (nobody)
+*   **ніхто́** (nobody)
 *   **нічого** (nothing)
 *   **ніколи** (never)
 *   **ніде** (nowhere)
@@ -239,8 +238,8 @@ When you use these absolute negative words in a sentence, Ukrainian grammar requ
 
 *   **Я нічого не знаю.** (I know nothing. / Literally: I nothing do not know.)
 *   **Ніхто не говорить.** (Nobody speaks. / Literally: Nobody does not speak.)
-*   **Ніхто не прийшов.** (Nobody came.)
-*   **Ми ніколи не відпочиваємо.** (We never rest.)
+*   **Ніхто не прийшо́в.** (Nobody came.)
+*   **Ми ніколи не відпочива́ємо.** (We never rest.)
 
 :::caution
 Applying English logic to Ukrainian negation leads directly to grammatical errors. A sentence like "Я бачу нічого" (I see nothing) sounds broken to a native speaker. The presence of **нічого** absolutely demands the presence of **не** before the verb. You must say: **Я нічого не бачу**.
@@ -252,7 +251,7 @@ Applying English logic to Ukrainian negation leads directly to grammatical error
 
 ## Підсумок — Summary
 
-This module provided the essential tools for extracting information and expressing negative statements. You now possess a complete set of question words to navigate daily situations, gather facts, and build relationships.
+This module introduced the main question words and the basic negation patterns you need for everyday A1 communication.
 
 *   **Хто?** (Who?)
 *   **Що?** (What?)
@@ -266,7 +265,7 @@ You learned that yes/no questions rely almost entirely on raising your intonatio
 
 Negation in Ukrainian follows strict but simple patterns. The particle **не** always stands directly before the verb. When expressing absolute absence, Ukrainian demands double negation. 
 
-| Структура (Structure) | Приклад (Example) | Переклад (Translation) |
+| Структу́ра (Structure) | Приклад (Example) | Переклад (Translation) |
 | :--- | :--- | :--- |
 | **Не + Verb** | **Я не знаю.** | I do not know. |
 | **Ні- word + Не + Verb** | **Я нічого не знаю.** | I know nothing. |
@@ -274,13 +273,13 @@ Negation in Ukrainian follows strict but simple patterns. The particle **не** 
 
 To verify your progress, respond to the following prompts. These practical tasks test your ability to apply the patterns you just read to real situations.
 
-1.  Ask three questions about a friend's life using **де** (where), **що** (what), and **коли** (when). For example: **Де живе твій друг?** (Where does your friend live?)
-2.  Change the positive statement "Я бачу все" (I see everything) into a negative statement meaning "I see nothing" using the double negation rule.
+1.  Ask three questions about a friend's life using **де** (where), **що** (what), and **коли** (when). For example: **Де живе́ твій друг?** (Where does your friend live?)
+2.  Write two negative sentences: one with **не** (**Я не знаю.**) and one with **Ніхто не...** (**Ніхто не знає.**).
 3.  Form a question from the statement **Ти говориш українською** (You speak Ukrainian) using only your intonation.
 4.  Explain the grammatical difference between asking **Де ти?** (Where are you?) and **Куди ти йдеш?** (Where are you going?).
 </generated_module_content>
 
-**PIPELINE NOTE — Word count: 1630 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
+**PIPELINE NOTE — Word count: 1588 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -456,39 +455,197 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 82 words | Not found: 3 words
+Verified: 76 words | Not found: 30 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
+  ✗ Іри — NOT IN VESUM
   ✗ Ірина — NOT IN VESUM
   ✗ Анна — NOT IN VESUM
+  ✗ Вра — NOT IN VESUM
+  ✗ Діало — NOT IN VESUM
+  ✗ Оле — NOT IN VESUM
   ✗ Олег — NOT IN VESUM
+  ✗ Перехо — NOT IN VESUM
+  ✗ Структу — NOT IN VESUM
+  ✗ биш — NOT IN VESUM
+  ✗ гово — NOT IN VESUM
+  ✗ жий — NOT IN VESUM
+  ✗ кни — NOT IN VESUM
+  ✗ льні — NOT IN VESUM
+  ✗ маши — NOT IN VESUM
+  ✗ напра — NOT IN VESUM
+  ✗ нна — NOT IN VESUM
+  ✗ нською — NOT IN VESUM
+  ✗ нську — NOT IN VESUM
+  ✗ нтка — NOT IN VESUM
+  ✗ нці — NOT IN VESUM
+  ✗ окуля — NOT IN VESUM
+  ✗ прийшо — NOT IN VESUM
+  ✗ риш — NOT IN VESUM
+  ✗ спра — NOT IN VESUM
+  ✗ студе — NOT IN VESUM
+  ✗ украї — NOT IN VESUM
+  ✗ чення — NOT IN VESUM
+  ✗ єві — NOT IN VESUM
+  ✗ ємо — NOT IN VESUM
 
-All 82 other words are confirmed to exist in VESUM.
+All 76 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
-## Verification Tools (MCP)
+---
 
-You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
+## Verification Tools (Shell Commands)
 
-**Core Verification:**
-- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
-- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
+You have access to verification tools via shell commands. Use these to verify
+Ukrainian vocabulary, check grammar, and search textbook content **as you write**.
 
-**Content Quality:**
-- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+**IMPORTANT:** Run verification commands BEFORE finalizing any Ukrainian text.
+Batch multiple verifications together to minimize round-trips.
 
-**Reference:**
-- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp_rag_search_literary` — verify literary references against primary sources
-- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
+### 1. Batch-verify Ukrainian words exist in VESUM (preferred — one call for many words)
 
-**Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_words
+results = verify_words(['слово1', 'слово2', 'слово3'])
+for w, matches in results.items():
+    if matches:
+        print(f'{w}: FOUND — lemma={matches[0][\"lemma\"]}, pos={matches[0][\"pos\"]}')
+    else:
+        print(f'{w}: NOT FOUND — may not exist in standard Ukrainian')
+"
+```
+
+### 2. Verify a single Ukrainian word in VESUM (with full morphological tags)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_word
+results = verify_word('WORD_HERE')
+if results:
+    for m in results:
+        print(f'lemma={m[\"lemma\"]}, pos={m[\"pos\"]}, tags={m[\"tags\"]}')
+else:
+    print('NOT FOUND in VESUM')
+"
+```
+
+### 3. Get all inflected forms of a lemma (declension/conjugation)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_lemma
+forms = verify_lemma('LEMMA_HERE')
+for f in forms[:20]:
+    print(f'{f[\"word_form\"]:20s} {f[\"pos\"]:8s} {f[\"tags\"]}')
+print(f'... {len(forms)} forms total')
+"
+```
+
+### 4. Check CEFR level of a word (is it level-appropriate?)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import query_cefr_level
+results = query_cefr_level('WORD_HERE')
+for r in results:
+    print(f'{r[\"word\"]}: {r[\"level\"]} ({r[\"pos\"]})')
+if not results:
+    print('Not in CEFR database')
+"
+```
+
+### 5. Search textbook content (Ukrainian school textbooks, Grades 1-11)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_textbooks
+keywords = {'keyword1', 'keyword2'}
+results = search_textbooks(keywords, 5)
+for r in results:
+    title = r.get('section_title', r.get('title', ''))
+    grade = r.get('grade', '?')
+    text = r.get('text', '')[:200]
+    print(f'Grade {grade} | {title}')
+    print(f'  {text}')
+    print()
+"
+```
+
+### 6. Search style guide for calques/Russianisms (Антоненко-Давидович, 279 entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_style_guide
+results = search_style_guide('TOPIC_HERE', 3)
+for r in results:
+    print(f'--- {r.get(\"word\", \"\")} [{r.get(\"section\", \"\")}]')
+    print(r.get('text', '')[:300])
+    print()
+if not results:
+    print('No style guide entries found')
+"
+```
+
+### 7. Look up word definition in СУМ-11 (Ukrainian explanatory dictionary, 127K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_definitions
+results = search_definitions('WORD_HERE', 3)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+### 8. Search idioms (Фразеологічний словник, 25K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_idioms
+results = search_idioms('WORD_HERE', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"text\", r.get(\"definition\", \"\")))[:200]}')
+"
+```
+
+### 9. English-to-Ukrainian translation (Балла, 79K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import translate_en_uk
+results = translate_en_uk('ENGLISH_WORD', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+---
+
+**WHEN to use these tools:**
+
+1. **Before writing any Ukrainian text** — batch-verify all key vocabulary with
+   `verify_words` (tool 1). Any word that returns NOT FOUND must be replaced.
+2. **When you suspect a Russicism or calque** — search the style guide (tool 6)
+   and verify the correct Ukrainian form with `verify_word` (tool 2).
+3. **When writing for A1/A2** — check CEFR levels (tool 4) to ensure vocabulary
+   is level-appropriate.
+4. **When unsure about a case ending or conjugation** — use `verify_lemma` (tool 3)
+   to see the full paradigm.
+5. **When covering a grammar topic** — search textbooks (tool 5) to see how
+   Ukrainian school textbooks teach it.
+6. **When you need the precise Ukrainian meaning** — use СУМ-11 (tool 7).
+7. **When looking for natural Ukrainian expressions** — search idioms (tool 8).
+
+**Batching rule:** Collect all words you want to verify, then run ONE `verify_words`
+call instead of multiple `verify_word` calls. This is faster and uses fewer tokens.

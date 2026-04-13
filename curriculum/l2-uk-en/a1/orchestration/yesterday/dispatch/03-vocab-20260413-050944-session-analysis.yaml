@@ -1,0 +1,45 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T03-08-ff8c0355.json
+phase: vocab
+prompt_chars: 13163
+response_chars: 2458
+prompt_words: 2176
+response_words: 304
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.0606
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.0175
+- name: plan
+  start: 1028
+  length: 12135
+  fraction: 0.9219
+large_sections:
+- plan
+directives_total: 5
+directives_covered: 0
+directives_missed:
+- kind: must
+  text: In the past tense, these verbs must match your gender.
+  covered: false
+  coverage_note: 1/8 keywords (12%)
+- kind: must
+  text: A man must strictly use the **-в** or **-вся** forms throughout his story,
+    while a woman must strictly use the **-ла** or **-лася** forms.
+  covered: false
+  coverage_note: 0/12 keywords (0%)
+- kind: inject_activity
+  text: order-daily-routine
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-time-markers
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-gender-consistency
+  covered: false
+  coverage_note: marker missing

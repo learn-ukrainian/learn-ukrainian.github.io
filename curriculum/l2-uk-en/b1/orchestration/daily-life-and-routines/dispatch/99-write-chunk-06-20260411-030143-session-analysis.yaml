@@ -1,0 +1,48 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T01-01-84bc22d4.json
+phase: write-chunk-06
+prompt_chars: 48714
+response_chars: 3270
+prompt_words: 6947
+response_words: 506
+sections:
+- name: header
+  start: 0
+  length: 391
+  fraction: 0.008
+- name: skeleton
+  start: 391
+  length: 1125
+  fraction: 0.0231
+- name: prior_summary
+  start: 1516
+  length: 3472
+  fraction: 0.0713
+- name: plan
+  start: 4988
+  length: 15886
+  fraction: 0.3261
+- name: wiki
+  start: 16009
+  length: 27712
+  fraction: 0.5689
+- name: output_spec
+  start: 48586
+  length: 128
+  fraction: 0.0026
+large_sections:
+- wiki
+directives_total: 5
+directives_covered: 2
+directives_missed:
+- kind: must
+  text: '| Adjectives must agree in gender with the noun they describe.'
+  covered: false
+  coverage_note: 1/7 keywords (14%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: inject_activity
+  text: quiz-grammar-choice
+  covered: false
+  coverage_note: marker missing

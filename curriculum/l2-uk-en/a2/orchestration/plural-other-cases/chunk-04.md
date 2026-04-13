@@ -1,24 +1,26 @@
-## Три відмінки разом: Практика (Synthesis)
+## Три відмінки разом: Практика (Synthesis) (~350 words total)
 
-Завтра у нашому місті буде чудове свято. Ми активно готуємося до нього вже кілька днів. Зранку ми йдемо в магазин і купуємо різні **подарунки** *(gifts)* **дітям** *(to children)*. Вони дуже люблять сюрпризи. Потім ми разом ідемо до школи. Там ми прикрашаємо простору залу яскравими **квітами** *(with flowers)* та дитячими **малюнками** *(with drawings)*. Це дуже цікава і творча робота. Свято буде у різних **школах** *(in schools)* і дитячих **садках** *(in kindergartens)* нашого регіону. Багато людей прийдуть туди зі своїми найкращими **друзями** *(with friends)*. Ми також щиро радіємо новим **гостям** *(to guests)*. Ввечері ми всі будемо танцювати і співати українські пісні. На цих традиційних **святах** *(at holidays)* завжди дуже весело і тепло. Ми також даємо смачні солодощі всім маленьким **учасникам** *(to participants)*. Наші вчителі завжди допомагають нам з цими важливими **справами** *(with matters)*.
+Сьогодні ми з друзями готуємо велике свято. Ми купуємо гарні **подарунки** маленьким **дітям**. У школах і дитячих садках буде багато цікавих подій. Ми прикрашаємо велику залу яскравими **квітами** та кульками. Наші батьки допомагають нам з машинами. Ми їдемо автобусами по різних вулицях міста. На зупинках стоять **люди** і дивляться на нас. Ми хочемо подарувати радість усім нашим гостям. На **заняттях** ми довго малювали плакати. Тепер ми показуємо їх усім.
 
-> — **Марія:** Привіт! Ти пам'ятаєш, що завтра день народження Івана? Ми плануємо велике свято.
-> — **Олег:** Привіт! Так, звісно. Я пам'ятаю про це. **Кому** *(to whom)* ми ще даруємо подарунки на цьому тижні?
-> — **Марія:** Тільки йому і його **батькам** *(to parents)*. А **з ким** *(with whom)* ти йдеш на вечірку завтра?
-> — **Олег:** Я йду з моїми старшими **братами** *(with brothers)*. Вони теж хочуть привітати Івана. А ти?
-> — **Марія:** Я буду з нашими шкільними **подругами** *(with female friends)*.
-> — **Олег:** Супер! А **в яких** *(in which)* кафе ми можемо зручно сісти після свята?
-> — **Марія:** Ми можемо посидіти у нових **кав'ярнях** *(in cafes)* у центрі міста.
-> — **Олег:** Чудова ідея! Тоді до завтра!
+> *Today, my friends and I are preparing a big holiday. We are buying nice gifts for the small children. There will be many interesting events in schools and kindergartens. We are decorating the large hall with bright flowers and balloons. Our parents are helping us with cars. We are riding in buses along different streets of the city. People are standing at the stops and looking at us. We want to give joy to all our guests. In classes, we drew posters for a long time. Now we are showing them to everyone.*
 
-This is a perfect time to summarize these three important cases. You have seen that they are incredibly regular and predictable in the plural form. Unlike the Genitive plural, which has many complex exceptions, the Dative, Instrumental, and Locative plural cases follow very strict and simple patterns. Here is a quick reference table for you to easily remember these essential plural endings:
+> — **Оксана:** Привіт! З ким ти йдеш на свято до Марії? *(Hi! With whom are you going to Maria's holiday?)*
+> — **Степан:** Привіт! Я йду з нашими новими друзями з університету. *(Hi! I am going with our new friends from the university.)*
+> — **Оксана:** А кому ми даруємо ці гарні книги? *(And to whom are we giving these beautiful books?)*
+> — **Степан:** Ми даруємо їх маленьким дітям Марії. Вони люблять читати. *(We are giving them to Maria's small children. They love to read.)*
+> — **Оксана:** Зрозуміло. А в яких кав'ярнях ми можемо сісти після свята? *(Understood. And in which coffee shops can we sit after the holiday?)*
+> — **Степан:** Ми можемо посидіти в тих нових кав'ярнях на центральній площі. Там дуже смачна кава. *(We can sit in those new coffee shops on the central square. The coffee there is very tasty.)*
 
-| Відмінок | Питання | Закінчення | Приклад |
-| :--- | :--- | :--- | :--- |
-| **Давальний** (Dative) | кому? чому? | -ам, -ям | міст**ам**, друзя**м** |
-| **Орудний** (Instrumental) | ким? чим? | -ами, -ями | міст**ами**, друзя**ми** |
-| **Місцевий** (Locative) | на/у/по кому? чому? | -ах, -ях | у міст**ах**, на друзя**х** |
+Now let's review the endings for the three cases we practiced. The **давальний відмінок** (dative case) uses the endings **-ам** or **-ям**, while the **орудний відмінок** (instrumental case) uses the endings **-ами** or **-ями**.
 
-Once you know the basic plural form of a Ukrainian noun, you can confidently add these stable endings to it. They are universally the most reliable and consistent plural endings in the entire language. 
+The **місцевий відмінок** (locative case) always requires a preposition and uses the endings **-ах** or **-ях**. These cases are essential when you want to **допомагати** (to help) your friends, or when you need to **дякувати** (to thank) people for their support.
 
-<!-- INJECT_ACTIVITY: error-correction-plural, focus: Identify and fix incorrect plural case endings in a short text about a trip, 6 items -->
+Ці три відмінки мають дуже прості та регулярні закінчення у множині. Якщо ви знаєте закінчення твердої та м'якої груп, ви можете легко утворити правильну форму. Головне правило — завжди звертати увагу на питання та прийменники в реченні.
+
+> *These three cases have very simple and regular endings in the plural. If you know the endings of the hard and soft groups, you can easily form the correct shape. The main rule is to always pay attention to the questions and prepositions in the sentence.*
+
+:::note
+**Quick tip** — Remember that the stem usually stays the same across these three cases. You only change the final letters: друзь-**ям**, друзь-**ями**, (на) друзь-**ях**.
+:::
+
+<!-- INJECT_ACTIVITY: error-correction-plural -->

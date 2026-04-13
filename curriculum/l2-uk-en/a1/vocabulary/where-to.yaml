@@ -1,18 +1,18 @@
 vocabulary:
+- word: куди́
+  translation: where to
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
 - word: ї́хати
-  translation: to go (by transport)
+  translation: to go by transport
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: шко́ла
-  translation: school
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: у школу
-  translation: to school
+- word: у банк
+  translation: to the bank
   expression: true
   pos: ''
   gender: ''
@@ -29,23 +29,47 @@ vocabulary:
   pos: ''
   gender: ''
   verified: true
-- word: у банк
-  translation: to the bank
+- word: шко́ла
+  translation: school
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: у школу
+  translation: to school
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: у магазин
+- word: магази́н
+  translation: shop
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: у/в магазин
   translation: to the shop
   expression: true
   pos: ''
   gender: ''
+  verified: true
+- word: бібліоте́ка
+  translation: library
+  expression: false
+  pos: ім.
+  gender: ж.
   verified: true
 - word: у бібліотеку
   translation: to the library
   expression: true
   pos: ''
   gender: ''
+  verified: true
+- word: рестора́н
+  translation: restaurant
+  expression: false
+  pos: ім.
+  gender: ч.
   verified: true
 - word: у ресторан
   translation: to the restaurant
@@ -65,20 +89,26 @@ vocabulary:
   pos: ''
   gender: ''
   verified: true
-- word: йти додому
-  translation: to return home / to go home
+- word: поверта́тися
+  translation: to return
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: додо́му
+  translation: home
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: повертатися додому
+  translation: to return home
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: в аптеку
-  translation: to the pharmacy
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: на пошту
-  translation: to the post office
+- word: у парк
+  translation: to the park
   expression: true
   pos: ''
   gender: ''
@@ -89,11 +119,23 @@ vocabulary:
   pos: ім.
   gender: с.
   verified: true
+- word: у кафе
+  translation: to the cafe
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
 - word: мі́сто
   translation: city
   expression: false
   pos: ім.
   gender: с.
+  verified: true
+- word: у місто
+  translation: to the city
+  expression: true
+  pos: ''
+  gender: ''
   verified: true
 - word: ву́лиця
   translation: street
@@ -101,40 +143,40 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: пло́ща
-  translation: square
+- word: на вулицю
+  translation: to the street
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: у Львів
+  translation: to Lviv
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ліка́рня
+  translation: hospital
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: краї́на
-  translation: country
-  expression: false
-  pos: ім.
-  gender: ж.
+- word: в лікарню
+  translation: to the hospital
+  expression: true
+  pos: ''
+  gender: ''
   verified: true
-- word: університе́т
-  translation: university
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: центр
-  translation: center
+- word: вокза́л
+  translation: train station
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: аеропо́рт
-  translation: airport
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: додо́му
-  translation: home / homeward
-  expression: false
-  pos: присл.
+- word: на вокзал
+  translation: to the train station
+  expression: true
+  pos: ''
   gender: ''
   verified: true
 - word: вдо́ма
@@ -143,45 +185,15 @@ vocabulary:
   pos: присл.
   gender: ''
   verified: true
-- word: субо́та
-  translation: Saturday
+- word: ба́чу
+  translation: I see
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: кого
+  translation: whom
   expression: false
   pos: ім.
-  gender: ж.
-  verified: true
-- word: неді́ля
-  translation: Sunday
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: нікуди
-  translation: nowhere
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: Тоді до зустрічі!
-  translation: Then see you later!
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Бувай!
-  translation: Bye!
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Клас!
-  translation: Cool! / Great!
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: знахідний відмінок
-  translation: Accusative case
-  expression: true
-  pos: ''
-  gender: ''
+  gender: ч.
   verified: true

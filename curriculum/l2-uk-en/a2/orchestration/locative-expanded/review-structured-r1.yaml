@@ -2,46 +2,51 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 9
-  evidence: 'Missed the specific required practice sentence: `Practice: building sentences
-    that use 2-3 locative functions together: У минулому місяці я розмовляв по телефону
-    з другом у Києві.`'
+  score: 8
+  evidence: 'All four planned H2s are present and the planned vocab is covered, but
+    the activity plan is not followed cleanly: the module has 7 markers for 4 planned
+    activities, including duplicate quiz/fill-in ma'
 - dimension: 2
   name: Linguistic accuracy
-  score: 8
-  evidence: Contained Russianisms/calques ("Давайте прочитаємо", "по інтернету").
+  score: 5
+  evidence: '`Це не велика проблема.` is orthographically wrong; the section teaches
+    `«по пошті» (by mail)` and says `the locative case remains strictly the standard`,
+    which conflicts with repo research preferring'
 - dimension: 3
   name: Pedagogical quality
   score: 6
-  evidence: Writer explicitly taught that "at work" is ALWAYS "на роботі, never «у
-    роботі»", but then violated their own rule twice in the summary section ("у новій
-    роботі", "у роботі"). Exercises are also placed
+  evidence: The module has PPP structure, but it teaches an over-absolute rule in
+    the `по` section and places practice before the relevant material is fully taught.
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: All required and recommended vocabulary items were used naturally in context.
+  score: 9
+  evidence: 'Required vocabulary appears naturally: `місцевий`, `абстрактний`, `минулий`,
+    `місяць`, `тиждень`, `телефон`, `подорож`, `зустріч`, `думка`, `проблема`; recommended
+    words like `дитинство`, `молодість`,'
 - dimension: 5
   name: Exercise quality
-  score: 7
-  evidence: The markers are placed before the required concepts are taught. Exercise
-    1 tests all four locative functions, but is placed after only one function has
-    been introduced.
+  score: 4
+  evidence: '`<!-- INJECT_ACTIVITY: quiz-identify-the-function-of-locative-in-each-sentence
+    -->` and the first fill-in marker appear before all target functions are taught;
+    marker duplication makes the activity se'
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: Excellent, encouraging teacher tone. Clear explanations without corporate
-    filler.
+  score: 7
+  evidence: Mostly teacherly, but lines like `This preserves the beautiful logic of
+    the locative case` add filler rather than instruction.
 - dimension: 7
   name: Structural integrity
-  score: 10
-  evidence: All sections present, word count (2914) exceeds the target of 2000 perfectly.
+  score: 8
+  evidence: Clean H2 structure and pipeline word count is above target (`2927`), but
+    marker clutter/duplication creates structural noise.
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: Factually correct. Uses realistic and culturally appropriate examples.
+  score: 6
+  evidence: Calling `по + locative` for mail `traditional, authentic Ukrainian` is
+    too strong given the repo’s decolonization note preferring `поштою` over `по пошті`.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: Dialogues are natural, multi-turn, and effectively demonstrate the target
-    grammar in context.
+  score: 7
+  evidence: Dialogues are named and multi-turn, but `Добрий день! Як ваші справи на
+    цьому тижні?` sounds stiff and translated.
 findings: []

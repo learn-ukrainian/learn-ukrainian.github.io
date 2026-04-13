@@ -25,7 +25,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-Ми дуже любимо ці великі **міста** *(cities)*. Вони будують сучасні **заводи** *(factories)* біля річки. Наші студенти читають довгі **тексти** *(texts)* на уроці. Зверніть увагу, як ці слова діють як прямий додаток у реченні. Це дуже просте і зручне правило для повсякденного спілкування. Because these nouns are not alive, their Accusative form is perfectly identical to their Nominative form. А тепер поговоримо про живих істот. Це всі люди, тварини, птахи та риби. When the direct object is animate, the Accusative plural borrows its entire form from the Genitive plural. This means you will see completely different endings compared to the subject form. For many masculine nouns, you will add the ending «-ів» or «-їв». For many feminine and neuter nouns, you will often use a zero-ending, which sometimes causes a new vowel to appear inside the word. Я щодня бачу **студентів** *(students)* біля нашого університету. Ми вчора зустріли моїх **сестер** *(sisters)* у центральному парку. Він кожного ранку годує **птахів** *(birds)* біля дому. Олег добре знає цих **лікарів** *(doctors)*. Моя сусідка дуже любить своїх **котів** *(cats)*. Слово «студентів» має типове закінчення «-ів» для чоловічого роду. Слово «сестер» має нульове закінчення, де з'явилася літера «е». This grammatical rule creates a very common trap for English speakers. In English, we say "I see the tables" and "I see the students" using the exact same plural pattern. Because of this structural similarity, it is highly tempting to say «*Я бачу студенти» in Ukrainian. Це дуже типова помилка. You must actively split the concepts of living and non-living things in your mind. Because "students" are alive, they require the Genitive-matching form. You must say «Я бачу студентів». Ця різниця є дуже важливим маркером природної української мови. Завжди пам'ятайте про це правило, коли говорите про людей! Давайте уважно подивимося на українські дієслова, які часто вимагають знахідного відмінка. Є спеціальні перехідні дієслова, які ми використовуємо кожного дня. Вони автоматично вимагають цього правила для знахідного відмінка. Вам варто активно практикувати ці популярні дієслова: * Дієслово **бачити** *(to see)*: Я бачу високі дерева і маленьких птахів. * Дієслово **знати** *(to know)*: Вона добре знає ці правила і цих людей. * Дієслово **любити** *(to love)*: Ми любимо гори і своїх розумних собак. * Дієслово **зустрічати** *(to meet)*: Вони часто зустрічають своїх колег біля метро. * Дієслово **шукати** *(to look for)*: Він зараз шукає свої ключі та старих друзів. Найкращий спосіб тренуватися — це будувати змішані контрастні речення. Вони чітко показують різницю між підметом і додатком. На столі лежать нові **підручники** *(textbooks)*. Тут слово «підручники» є підметом у реченні. Але я бачу в аудиторії тільки студентів. Тут слово «студентів» є прямим додатком. Старі **книги** *(books)* стоять на високій полиці. Я беру ці старі книги і йду читати. Мої найкращі **друзі** *(friends)* чекають мене на вулиці. Я дуже радий сьогодні бачити своїх друзів. In these paired examples, you can clearly see how inanimate nouns stay the exact same whether they perform the action or receive the action. However, the animate nouns change their form completely. <!-- INJECT_ACTIVITY: sort-animate-inanimate --> <!-- INJECT_ACTIVITY: quiz-acc-plural-choice -->
+all declensions. You simply take the regular plural form.* However, things change dramatically when we talk about a **живий** (animate) being. For animate nouns, the accusative plural perfectly matches the genitive plural. You will often see the **закінчення** (ending) -ів for masculine nouns. For feminine and neuter nouns, you will frequently see a zero ending, which means the final vowel is simply dropped. Let us look at some examples. Я бачу розумних студентів в аудиторії. Ми вчора зустріли наших сестер. Він щодня годує маленьких птахів. Учитель знає всіх учнів у школі. Я люблю своїх братів. Ви бачите, що всі ці слова змінили закінчення. Це правило працює для чоловіків, жінок і тварин. > *I see smart students in the classroom. We met our sisters yesterday. He feeds the small birds every day. The teacher knows all the students in the school. I love my brothers. You can see that all these words have changed their endings. This rule works for men, women, and animals.* This creates a very common trap for English speakers. In English, sentences like "I see the tables" and "I see the students" use the exact same plural logic. But in Ukrainian, you cannot simply say "Я бачу студенти." Because students are living beings, you must use the genitive-matching form: «Я бачу студентів». The same logic applies to all animals and people. If it breathes, it takes the animate ending in the accusative case. :::info **Grammar box** Remember that the words **люди** (people) and **діти** (children) are animate. Their accusative plural forms are «людей» and «дітей». ::: You already know many verbs that naturally take a direct object. When you use these common action verbs with plural nouns, you must always remember to apply the animate or inanimate rules. Let us see how these verbs work in context without a translation block. Try to understand the meaning from the words you already know. Найпопулярніші дієслова — це «бачити», «знати», «любити», «зустрічати» та «шукати». Наприклад, я шукаю старі ключі. Вона шукає своїх друзів. Ми часто зустрічаємо іноземних туристів на вулиці. Мама завжди зустрічає дітей після школи. Вони знають ці правила дуже добре. In natural conversation, you will often use both animate and inanimate plural nouns in the exact same sentence. You will also frequently use common plural-only words like **речі** (things) and **очі** (eyes). This is the moment where you really need to pay attention to the difference in forms. Notice how the endings change based on what is alive. На столі лежать нові підручники, але я бачу тільки студентів. Ми купили квитки і чекаємо наших друзів. Вона любить красиві речі, але вона більше любить свою родину. Я бачу ваші очі, коли ви дивитесь на ці картини. > *There are new textbooks lying on the table, but I only see the students. We bought tickets and are waiting for our friends. She loves beautiful things, but she loves her family more. I see your eyes when you look at these paintings.* <!-- INJECT_ACTIVITY: sort-animate-inanimate --> <!-- INJECT_ACTIVITY: quiz-acc-plural-choice -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -489,7 +489,74 @@ A phased approach is best for internalizing plural cases.
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -508,18 +575,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] множина (plural)
+- [ ] називний відмінок (nominative case)
+- [ ] знахідний відмінок (accusative case)
+- [ ] живий (animate)
+- [ ] неживий (inanimate)
+- [ ] закінчення (ending (grammar))
+- [ ] люди (people)
+- [ ] діти (children)
+- [ ] речі (things)
+- [ ] очі (eyes)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Називний чи знахідний? Визначаємо за контекстом (Nominative or Accusative?) (~750 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

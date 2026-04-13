@@ -2,36 +2,45 @@
   "module": "people-and-relationships",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-10T21:25:53.609712Z",
+  "last_audit": "2026-04-11T12:41:54.774290Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-09T02:30:44.439899Z",
+    "md": "2026-04-11T12:40:59.532314Z",
     "meta": null,
-    "activities": "2026-04-09T02:21:02.200322Z",
+    "activities": "2026-04-11T12:33:11.507994Z",
     "vocabulary": "2026-04-09T02:28:06.679351Z",
     "research": null,
     "plan": "2026-04-04T21:31:33.266485Z"
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Summary'"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
       "status": "fail",
-      "violations": 3,
-      "message": "3589/4000 (raw: 3628) (411 short) | engagement: 0/5 | richness: 70% < 80% min (skills) | salad: Phase 7 (Early B1 (B1 M01-M30)): 2 error(s) \u2014 SALAD_EXCESSIVE_INLINE_GLOSSES: paragraph has 10 inline **term** (gloss) markers across 10 sentence(s) \u2014 too dense; move to vocabulary section or conver"
+      "violations": 2,
+      "message": "5544/4000 (raw: 5705) | immersion: 37.1% LOW (target 75-100% (B1.0 Bridge)) | richness: 71% < 80% min (skills)"
     },
     "activities": {
       "status": "fail",
       "violations": 1,
-      "message": "12/0 | density: 7 < 6"
+      "message": "13/0 | density: 8 < 6"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
       "message": "87/25"
+    },
+    "vocab_progression": {
+      "status": "warn",
+      "violations": 0,
+      "message": "\u0394 -30 | premature=6 | gaps=0 | well-paced=0",
+      "delta": -30,
+      "premature": 6,
+      "gaps": 0,
+      "well_paced": 0
     },
     "naturalness": {
       "status": "info",
@@ -51,12 +60,9 @@
   },
   "overall": {
     "status": "fail",
-    "blocking_issues": [
-      "2 Outline Compliance Errors",
-      "Structure: Missing '## Summary'"
-    ],
-    "pass_count": 3,
-    "fail_count": 3,
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 2,
     "deferred_count": 0
   }
 }

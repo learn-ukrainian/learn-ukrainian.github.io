@@ -25,7 +25,7 @@ Grand total: ~4400 words
 <previous_context>
 [...previous sections truncated...]
 
-для опису ваших робочих функцій. Це спеціальний вираз «відповідати за» *(to be responsible for)*. Дуже важливо запам'ятати, що після цього дієслова та прийменника «за» ми завжди повинні використовувати тільки Знахідний відмінок *(Accusative case)*, а не Орудний. Це досить часта помилка серед іноземних студентів, які намагаються перекласти цю фразу буквально зі своєї рідної мови. Логіка української граматики тут інакша: ви несете свою професійну відповідальність (за кого? за що?), ніби спрямовуючи свою увагу на конкретний об'єкт чи людину. Наприклад, на співбесіді ви можете гордо сказати: «У цій великій компанії я персонально відповідала за успішний інноваційний проєкт». Зверніть увагу: слово «проєкт» стоїть у Знахідному відмінку як неістота чоловічого роду. Інші чудові приклади: «Наш новий менеджер тепер відповідає за глобальні міжнародні продажі» або «Я як лідер завжди відповідаю за свою талановиту команду». Використання цієї потужної конструкції одразу показує ваш високий рівень професіоналізму, вашу готовність брати на себе ініціативу та вирішувати серйозні бізнес-завдання. Звісно, розмови про роботу відбуваються не лише в кабінеті суворого директора. Давайте послухаємо дуже типовий діалог двох колег, які обідають разом у корпоративному кафе. Їхній стиль спілкування — це розмовно-діловий регістр, який є менш формальним, ніж на співбесіді, але все ще залишається професійним. > — **Олександр:** Слухай, Тетяно, я вже п'ять довгих років стабільно працюю тут в одному відділі. > — **Тетяна:** Це дійсно дуже великий термін! І що ти тепер плануєш робити далі? > — **Олександр:** Я дуже хочу нарешті подати офіційну заяву на **підвищення** *(promotion)*. Мені потрібен новий виклик. > — **Тетяна:** Це чудова ідея. А ти зовсім не думаєш просто змінити компанію і знайти іншу роботу? > — **Олександр:** Поки що ні. Я спробую отримати вищу посаду саме тут. У цьому живому діалозі Олександр використовує дієслово недоконаного виду теперішнього часу «працюю», щоб показати свій поточний, неперервний стан. Але коли він говорить про свої конкретні майбутні плани та амбіції, він одразу перемикається на дієслова доконаного виду в інфінітиві: «подати» заяву, «змінити» компанію, «отримати» посаду. Остання, але дуже важлива частина будь-якої співбесіди — це момент, коли роботодавець пропонує вам поставити власні запитання. Це ваша найкраща можливість дізнатися всі необхідні деталі про майбутні умови праці. Не соромтеся активно запитувати про речі, які є критично важливими для вашого комфорту та фінансової стабільності. По-перше, ви обов'язково повинні запитати про **графік роботи** *(work schedule)*. Наприклад: «Скажіть, будь ласка, який у вас стандартний графік роботи: з дев'ятої до шостої чи він гнучкий?». По-друге, важливо обговорити ваш майбутній **соціальний пакет** *(benefits package)*. Це поняття включає всі додаткові бонуси, які підприємство надає своїм працівникам. Ви можете ввічливо поцікавитися: «Що саме входить у ваш корпоративний соціальний пакет?». Крім того, ви маєте повне право запитати про оплачувану **відпустку** *(vacation)*, щоб знати, скільки днів на рік ви зможете відпочивати. Також варто уточнити, як компанія оплачує **лікарняний** *(sick leave)*, якщо ви серйозно захворієте. Наприкінці зустрічі зазвичай обговорюються ваші фінансові або **зарплатні очікування** *(salary expectations)*. Роботодавець може запитати: «Які ваші зарплатні очікування на цій посаді?». Будьте готові назвати адекватну суму, адже ваша **зарплата** *(salary)* — це справедлива винагорода за ваш професійний досвід та важку працю. <!-- INJECT_ACTIVITY: role-play-interview --> <!-- INJECT_ACTIVITY: open-writing-bio -->
+**Тетяна:** Привіт, Олександре! Все досить добре, але я вже п'ять років працюю тут. Думаю змінити роботу найближчим часом. *(Hi, Oleksandr! Everything is quite good, but I have been working here for five years already. I am thinking about changing jobs in the near future.)* > **Олександр:** Справді? Це сміливе рішення. А я навпаки хочу подати на підвищення в цьому місяці. *(Really? That is a brave decision. And I, on the contrary, want to apply for a promotion this month.)* > **Тетяна:** Це чудова ідея! Твій керівник точно високо оцінить твій багаторічний досвід. *(That is a great idea! Your manager will definitely highly appreciate your multi-year experience.)* > **Олександр:** Дуже на це сподіваюся. А ти вже активно шукала нові цікаві вакансії? *(I really hope so. Have you already actively looked for new interesting vacancies?)* > **Тетяна:** Ще ні, я тільки детально планую оновити своє старе резюме. *(Not yet, I am just planning in detail to update my old resume.)* Під час співбесіди кожен хороший кандидат також повинен активно ставити власні запитання про майбутні умови праці. Це не лише демонструє вашу глибоку зацікавленість посадою, але й підкреслює ваш високий професіоналізм. Найчастіше кандидати запитують про точний графік роботи, щоб чітко розуміти, коли саме починається і закінчується стандартний робочий день. Дуже важливо також детально дізнатися про соціальний пакет, який офіційно пропонує компанія своїм працівникам. Зазвичай розумні кандидати цікавляться, скільки робочих днів триває оплачувана щорічна відпустка та чи повністю оплачується лікарняний, якщо людина раптом хворіє. Важливо також спитати про умови контракту, щоб розуміти правила, за якими відбувається можливе звільнення або перехід на іншу посаду в майбутньому. На самому прикінці ділової розмови ваш майбутній керівник або рекрутер обов'язково прямо запитає про ваші актуальні очікування. Ви завжди повинні бути психологічно готові спокійно та чітко назвати конкретну суму, яка складатиме вашу майбутню зарплату, яку ви справедливо хочете отримувати щомісяця за свою сумлінну роботу. > *During an interview, every good candidate must also actively ask their own questions about future working conditions. This not only demonstrates your deep interest in the position, but also emphasizes your high professionalism. Most often, candidates ask about the exact work schedule to clearly understand exactly when the standard workday begins and ends. It is also very important to find out in detail about the benefits package that the company officially offers its employees. Usually, smart candidates are interested in how many workdays the paid annual vacation lasts and whether sick leave is fully paid if a person suddenly falls ill. It is also important to ask about the terms of the contract to understand the rules under which a possible dismissal or transfer to another position in the future takes place. At the very end of the business conversation, your future manager or recruiter will definitely ask directly about your current expectations. You must always be psychologically ready to calmly and clearly state the specific amount that will make up your future salary, which you fairly want to receive every month for your diligent work.* <!-- INJECT_ACTIVITY: role-play-interview --> <!-- INJECT_ACTIVITY: open-writing-bio -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -594,7 +594,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -607,18 +674,68 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (4/4).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] робота (work/job — general term for employment)
+- [ ] професія (profession — a trained occupation)
+- [ ] фах (specialty/field — area of expertise)
+- [ ] посада (position/role — specific job title in a company)
+- [ ] вакансія (vacancy — an open job position)
+- [ ] співбесіда (job interview — formal meeting with employer)
+- [ ] працевлаштування (employment — the process of getting hired)
+- [ ] резюме (CV/resume — невідмінюване, written job application)
+- [ ] обов'язок (duty/responsibility — pl. обов'язки)
+- [ ] досвід (experience — professional background)
+- [ ] підвищення (promotion/raise — career advancement)
+- [ ] зарплата (salary — розм. form of заробітна плата)
+- [ ] колега (colleague — спільного роду: мій/моя колега)
+- [ ] керівник (manager/supervisor — head of a team or department)
+- [ ] звільнення (dismissal/resignation — leaving a job)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Підсумок — Summary (~1100 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

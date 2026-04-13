@@ -285,25 +285,26 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-- Confirmed: голова, горло, живіт, рука, нога, болить, лікар, аптека, спина, око, вухо, зуб, ніс, температура, кашель, нежить, таблетка, хворий.
-- Not found: All words from the plan are confirmed in VESUM.
+- Confirmed: голова, горло, живіт, рука, нога, болить, лікар, аптека, спина, око, вухо, зуб, ніс, температура, кашель, нежить, таблетка, хворий
+- Not found: (None)
 
 ## Grammar Rules
-- **Gender of "нежить"**: Masculine (II declension). Genitive case: **нежитю**. The plan's "від нежиті" is a common error (treating it as feminine III declension); the correct form is **від нежитю**.
-- **Agreement of "боліти"**: Singular **болить** for singular body parts (голова болить), plural **болять** for plural (зуби болять). Confirmed by Grade 11 Avramenko examples.
-- **Symptom construction**: "Хворий на + [Accusative]" (e.g., хворий на грип). Правопис §108/Grade 11 Avramenko confirms this specific prepositional government.
+- [Genitive case endings / Adjective agreement]: No relevant orthography rule found in Правопис 2019 (§1-61) via `query_pravopys` as the tool scope covers orthography rather than core morphology. *Correction Note:* VESUM confirms that «нежить» is strictly masculine (`noun:inanim:m`). Therefore, the plan's classification of "нежить, f" and the genitive form "від нежиті" are incorrect. The correct masculine genitive form is "від нежитю".
 
 ## Calque Warnings
-- **нежить**: Often incorrectly treated as feminine. Must be masculine (e.g., "сильний нежить", "від нежитю").
-- **приймати ліки**: While common, "приймати" in the sense of "take" (decisions/medicine) is often a calque of the Russian "принимать". For medicine, **вживати ліки** or **пити таблетки** is more idiomatic Ukrainian. "Приймати рішення" is a known calque for **ухвалювати рішення**.
-- **болить голова**: Confirmed as a natural Ukrainian construction (Grade 11 Avramenko: "Від малих дітей болить голова").
+- у мене болить: OK
+- головна біль: calque — головний біль (the plan correctly uses the masculine "головного болю")
+- насморк: calque — нежить (the plan correctly uses "нежить")
+- від нежиті: OK (not a calque, but uses an incorrect feminine inflection for a masculine noun)
 
 ## CEFR Check
-- **голова**: Grade 1 — OK (A1)
-- **лікар**: Grade 2 — OK (A1)
-- **аптека**: Grade 1 — OK (A1)
-- **хворий**: Grade 2/5 — OK (A1)
-- **температура**: Found in Grade 3/4 contexts — OK (A1)
+- голова: A1 — OK
+- лікар: A1 — OK
+- живіт: A1 — OK
+- температура: A1 — OK
+- нежить: A2 — Above target
+- кашель: A2 — Above target
+- таблетка: A2 — Above target
 </pre_verified_facts>
 
 
@@ -623,12 +624,14 @@ These exercises, adapted from Ukrainian school materials, provide a gold standar
 
 ## Section Structure
 
-Write these sections as H2 headings, in this exact order:
+Write these sections as H2 headings, in this **exact** order:
 
 - `## Dialogues` (~300 words)
 - `## Тіло (The Body)` (~300 words)
 - `## У мене болить... (It Hurts...)` (~300 words)
 - `## Summary` (~300 words)
+
+**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim** as an `## H2` line. This includes the FINAL summary/transition section (`Підсумок: ...`, `Підсумок та перехід до M...`, etc.) — the writer's most common failure is silently dropping the closing section. Do NOT skip it. Do NOT renumber. Do NOT merge headings. The post-write quick-verify check will fail your build if any heading is missing, even if the prose itself is excellent.
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -636,16 +639,17 @@ Each section should follow the word budget specified. The total must reach 1200 
 
 ## Content Rules
 
-TARGET: 20-35% Ukrainian.
+TARGET: 20-35% Ukrainian. ⚠️ HARD GATE — the audit REJECTS modules below 20%.
 LANGUAGE ROLES:
-- THEORY & EXPLANATION: English prose — brief and clear. Show, don't tell.
+- THEORY & EXPLANATION: English prose — brief, 2-3 sentences per concept. No long expository paragraphs. Explain once, then show Ukrainian.
+- UKRAINIAN NARRATIVE PARAGRAPHS: **REQUIRED — minimum 1 per section.** A 3-6 sentence Ukrainian paragraph demonstrating the concept in use, followed IMMEDIATELY by a `> *English translation*` blockquote. This is the PRIMARY driver of hitting the immersion target. Without these paragraphs you cannot reach 20%.
 - PARADIGM TABLES: Conjugation/declension tables with all cells Ukrainian.
-- EXAMPLE LISTS: Ukrainian sentences in bulleted lists (each: Ukrainian — English gloss).
-- DIALOGUES: Mini-dialogues in blockquotes with English gloss per line.
+- EXAMPLE LISTS: Ukrainian sentences in bulleted lists (each: Ukrainian — English gloss). Minimum 5 per rule.
+- DIALOGUES: Mini-dialogues in blockquotes with English gloss per line. At least 1 dialogue per module.
 - PATTERN BOXES: Show transformations: `читати → читай → читайте`.
 - INLINE: Ukrainian words/phrases bolded in English prose.
-- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian. Full Ukrainian sentences go in tables, bulleted lists, dialogues, or pattern boxes.
-Ukrainian sentences max 10 words. Mix container types.
+- STRUCTURAL RULE: Every section MUST contain a Ukrainian narrative paragraph (3-6 sentences, translated in blockquote) PLUS supporting tables/lists/dialogues/pattern boxes. Pure-English sections are FORBIDDEN at M35+.
+Ukrainian sentences max 12 words. Mix container types.
 
 HARD GRAMMAR RULES (audit will reject violations):
 - Max 10 words per Ukrainian sentence (STRICT — count every word)
@@ -675,6 +679,25 @@ HARD GRAMMAR RULES (audit will reject violations):
 - **Zero calques**: No приймати душ→брати душ, приймати рішення→ухвалювати рішення
 - **Zero paronyms**: тактична≠тактовна, ефектний≠ефективний — use the right word, not a similar-sounding one
 - **Natural Ukrainian**: Write how a Ukrainian teacher would explain this to a student. Not robotic, not textbook-dry, not overly casual.
+
+### FORBIDDEN WORDS — never write these (#1189)
+
+The following Russian words have leaked into past builds and broken modules. They are **hard-banned** — the post-write toxic-token scanner will fail your build the moment it sees one. Use the Ukrainian alternative every time, even in dialogues, even in casual prose, even when quoting a learner's mistake (use a `<!-- VERIFY -->` placeholder instead of typing the Russian form):
+
+| Russian (FORBIDDEN) | Ukrainian (USE THIS) |
+|---|---|
+| хорошо | добре |
+| конечно | звичайно / певна річ |
+| спасибо | дякую |
+| пожалуйста | будь ласка / прошу |
+| ничего | нічого |
+| сейчас | зараз |
+| тоже | теж / також |
+| здесь | тут |
+| кот | кіт |
+| кон | кін |
+
+This list is enforced word-for-word by `scripts/build/quick_verify.py` (SEVERE_RUSSIANISMS). If you produce any of these tokens — even inside a quoted example, even inside a dialogue line spoken by a Russian-speaking character — the build halts immediately. There is no exception.
 
 **Authority hierarchy (if uncertain about a word, check in this order):**
 VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (stress) → Антоненко-Давидович (style) → Грінченко (etymology).
@@ -784,34 +807,34 @@ The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> blo
 
 <skeleton>
 ## Dialogues (~330 words total)
-- P1 (~100 words): [Contextualizing the doctor's visit — explaining the standard opening phrase "Що у вас болить?" (What hurts?) and the cultural expectation of describing symptoms directly. Introducing the role of the "терапевт" (GP) and the "аптекар" (pharmacist).]
-- D1 (~120 words): [Dialogue at the doctor's office between Пацієнт and Лікар. Patient describes a combination of "болить голова і горло," "температура," "кашель," and "нежить." Doctor diagnoses "застуда" (a cold) and advises "відпочивайте" and "я випишу ліки" (I will prescribe medicine).]
-- D2 (~110 words): [Dialogue at the pharmacy. The patient uses polite forms "Дайте, будь ласка" to ask for "таблетки від головного болю" and "краплі від нежиті." Ending with the essential practical question "Скільки це коштує?" (How much does it cost?).]
-- <!-- INJECT_ACTIVITY: quiz-medical-responses --> [quiz, logical responses to health problems (e.g., matching a headache to headache pills), 4 items]
+- P1 (~60 words): Introduce the context of the module: falling ill is a part of life, and you need to know how to explain what hurts in Ukrainian. Introduce the two essential locations for this: the doctor's office (лікар) and the pharmacy (аптека).
+- P2 (~120 words): Dialogue 1 — At the doctor's. Present a practical conversation between Пацієнт and Лікар. The doctor asks "Що у вас болить?". The patient responds "У мене болить голова і горло." Incorporate follow-up symptoms like "температура", "кашель", and "нежить", ending with the doctor's diagnosis "Це застуда" and advice to rest. 
+- P3 (~50 words): Briefly analyze Dialogue 1. Highlight the core question "Що у вас болить?" and the most common response structure "У мене болить...". Note how the dialogue introduces symptoms like "температура" and "нежить".
+- P4 (~100 words): Dialogue 2 — At the pharmacy. Present a conversation buying medicine. The patient says "Добрий день! У мене болить голова. Дайте, будь ласка, таблетки." The pharmacist clarifies "Від головного болю?". The patient also asks for medicine for a cough ("від кашлю") and runny nose ("від нежиті").
+- <!-- INJECT_ACTIVITY: fill-in-dialogues --> [fill-in, At the pharmacy or doctor - using target chunks, 5 items]
 
 ## Тіло (The Body) (~330 words total)
-- P1 (~110 words): [Introducing core body parts essential for medical complaints: "голова" (head, f), "горло" (throat, n), "спина" (back, f), and "живіт" (stomach, m). Highlighting the grammatical gender of each to prepare for adjective agreement (e.g., "хвора спина").]
-- P2 (~130 words): [Extending to limbs and sensory organs: "рука" (arm/hand), "нога" (leg/foot), "око" (eye), "вухо" (ear), "зуб" (tooth), and "ніс" (nose). Crucial clarification: in Ukrainian "рука" refers to the whole limb from shoulder to fingertips, and "нога" from hip to toes, unlike the English distinction between hand/arm and foot/leg.]
-- P3 (~90 words): [A1-level recognition of adjective agreement with body parts. Using examples like "великий ніс" (masc), "велика рука" (fem), and "велике око" (neut). Emphasizing that while noun recognition is primary, noticing the endings helps build the grammatical reflex.]
-- <!-- INJECT_ACTIVITY: match-body-vocabulary --> [match-up, matching Ukrainian body parts to English translations, 8 items]
+- P1 (~80 words): Transition to breaking down the vocabulary from the dialogues. Before we can explain what hurts, we must know the names of our body parts (частини тіла). First, introduce the head and face: голова (head, f), око (eye, n), вухо (ear, n), зуб (tooth, m), ніс (nose, m), and горло (throat, n).
+- P2 (~70 words): Introduce the torso and limbs: спина (back, f), живіт (stomach, m), рука (hand/arm, f), and нога (leg/foot, f). Specifically explain that in Ukrainian, "рука" means the entire arm including the hand, and "нога" means the entire leg including the foot.
+- P3 (~100 words): Remind learners about noun gender (masculine, feminine, neuter), a concept from previous modules. Explain that body part gender dictates adjective agreement. Provide clear examples: велика голова (feminine), велике око (neuter), великий живіт (masculine). This helps reinforce the grammatical reflex.
+- P4 (~80 words): Reassure learners that at the A1 level, the main focus is simply recognizing these body parts so they can be paired with the word "болить", rather than building complex descriptive anatomical sentences. 
+- <!-- INJECT_ACTIVITY: match-up-body-parts --> [match-up, Match body parts to their English translations, 8 items]
 
 ## У мене болить... (It Hurts...) (~330 words total)
-- P1 (~110 words): [Teaching the core construction "У мене болить" + Nominative noun. Explaining that this is a fixed chunk (literally: "At me hurts..."). Providing examples: "У мене болить голова," "У мене болить живіт." Explicitly warning against direct English translation like "Моя голова болить".]
-- P2 (~90 words): [Introducing the plural form "болять" for parts that come in pairs or groups: "У мене болять очі" (eyes), "У мене болять вуха" (ears), "У мене болять зуби" (teeth). Explaining the simple switch from -ить to -ять agreement.]
-- P3 (~130 words): [Describing symptoms and states that don't use the verb "боліти." Phrases for fever and respiratory issues: "У мене температура," "У мене кашель," "У мене нежить." Describing one's state: "Я хворий / Я хвора" and the general feeling "Мені погано" (I feel bad) or "Мені холодно" (I'm cold).]
-- <!-- INJECT_ACTIVITY: fill-in-symptoms-logic --> [fill-in, completing sentences with correct symptoms based on context (e.g., 'I want to sleep' -> 'headache'), 6 items]
-- <!-- INJECT_ACTIVITY: fill-in-medical-chunks --> [fill-in, using target chunks like 'будь ласка', 'болить', 'температура' in doctor/pharmacy settings, 5 items]
+- P1 (~80 words): Explicitly teach the magic chunk for expressing pain: "У мене болить..." (I have a pain in... / My ... hurts). Explain that this literally translates to "at me hurts", and instruct learners to memorize it as a fixed phrase without analyzing the grammar cases just yet.
+- P2 (~90 words): Show how to combine this chunk with the newly learned body parts (in the nominative case). Provide examples: У мене болить голова. У мене болить живіт. У мене болить горло. У мене болить спина. У мене болить зуб. Briefly note the plural form "У мене болять зуби" for recognition purposes.
+- P3 (~80 words): Introduce other common symptoms that act as chunks: "У мене температура" (I have a fever), "У мене кашель" (I have a cough), and "У мене нежить" (I have a runny nose). Explain that these describe conditions rather than localized pain.
+- P4 (~80 words): Teach general states of feeling unwell. Introduce the phrases: "Мені холодно" (I'm cold), "Мені погано" (I feel bad), and "Я хворий / Я хвора" (I'm sick), pointing out the masculine and feminine adjective agreement for the latter.
+- <!-- INJECT_ACTIVITY: fill-in-symptoms --> [fill-in, Complete the sentence with the correct symptom or body part, 6 items]
 
-## Підсумок (~330 words)
-- P1 (~100 words): [Recap of the "Health Toolkit": listing the 10 core body parts (голова, горло, живіт, спина, рука, нога, око, вухо, зуб, ніс) and the primary symptoms (температура, кашель, нежить).]
-- P2 (~100 words): [Review of the functional structures: The "magic phrase" У мене болить/болять, the state descriptions (Мені погано, Я хворий), and the pharmacy request "Дайте таблетки від...".]
-- P3 (~130 words): [Self-check questions and model answers:
-  * Q: How do you tell a doctor your throat hurts?
-  * A: У мене болить горло.
-  * Q: How do you ask for headache pills?
-  * A: Дайте, будь ласка, таблетки від головного болю.
-  * Q: How do you say "My eyes hurt and I have a fever"?
-  * A: У мене болять очі і є температура.]
+## Підсумок (~330 words total)
+- P1 (~150 words): Recap the entire "Health toolkit" by grouping the vocabulary into practical categories. Body parts: голова, горло, живіт, спина, рука, нога, око, вухо, зуб, ніс. Symptoms: У мене болить [body part], У мене температура, У мене кашель, У мене нежить. General states of being: Я хворий/хвора, Мені погано. 
+- P2 (~100 words): Recap the most critical phrases for interacting at the doctor's office or pharmacy. Remind them of the doctor's question: "Що у вас болить?". Remind them how to ask for specific medicine: "Дайте таблетки від [symptom], будь ласка", noting the specific forms "від головного болю", "від кашлю", and "від нежиті".
+- P3 (~80 words): Self-check questions:
+  * How do you say "My throat hurts and I have a fever"? (У мене болить горло і є температура.)
+  * How do you ask for headache pills at the pharmacy? (Дайте, будь ласка, таблетки від головного болю.)
+  * How do you say "I feel bad"? (Мені погано.)
+- <!-- INJECT_ACTIVITY: quiz-logical-response --> [quiz, Choose the logical response to the health problem, 4 items]
 
 Grand total: ~1320 words
 </skeleton>
@@ -821,11 +844,57 @@ Grand total: ~1320 words
 Write in Markdown. Use:
 - `## Section Title` for main sections
 - `### Subsection` for subsections within a section
-- `**bold**` for Ukrainian words being taught — EVERY bold Ukrainian word MUST have an English translation on first use, either in parentheses `**слово** (translation)` or inline `**слово** means "translation"`. No exceptions.
+- `**bold**` for Ukrainian words being taught. For **A1 and A2** levels, provide an English translation on first use (e.g. `**стіл** (table)`) because learners lack the vocabulary to infer meaning. For **B1 and above**, do NOT provide inline translations for standard vocabulary — the learner will use the module's словник (vocabulary table). You may provide ONE parenthetical English translation ONLY for highly abstract grammar/linguistic terms on first use (e.g. `**видова пара** (aspectual pair)`).
 - Tables for paradigms (conjugation, declension)
 - `:::tip` / `:::caution` / `:::note` for callout boxes
 - `<!-- INJECT_ACTIVITY: {id} -->` for exercise placement (markers only — do NOT write exercise content)
 
 Do NOT write MDX component syntax, JSON, or DSL exercise blocks (:::quiz, etc.). Plain Markdown with injection markers.
+
+---
+
+## MANDATORY FINAL CHECKLIST (#1189)
+
+Before you finish writing, verify the prose against this checklist. Failing any item will fail the build.
+
+### Section headings (verbatim)
+
+Every heading from "Section Structure" above MUST appear as an `## H2` in your output, in order, **including the closing `Підсумок:` / `Підсумок та перехід до M...` summary**. The single most common writer failure across the B1 build has been silently dropping the final summary section. Re-read your output before stopping. If the last section in the plan is missing, write it now.
+
+### Required vocabulary (every word must appear)
+
+You MUST use **every word** from the list below at least once in the prose, in a natural sentence with bold + English translation. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, прагматика, діагностика, дієвідмінювання, зворотний, двовидовий, одновидовий, неозначено-кількісний, etc.) is the most frequently dropped category — actively find homes for those words even if it means adding a sentence that defines them.
+
+- [ ] голова (head, f)
+- [ ] горло (throat, n)
+- [ ] живіт (stomach, m)
+- [ ] рука (hand/arm, f)
+- [ ] нога (leg/foot, f)
+- [ ] {'болить (hurts — chunk': 'у мене болить)'}
+- [ ] лікар (doctor, m)
+- [ ] аптека (pharmacy, f)
+
+### Forbidden words (never produce)
+
+Do not write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use `<!-- VERIFY -->` instead). The post-write toxic-token scanner will fail the build immediately:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+### Level-specific immersion check
+
+The level-appropriate immersion rule was already injected at the top of
+this prompt as `IMMERSION RULE`. Re-read it now BEFORE you stop writing.
+If your level's rule contains a CHECKLIST block, walk through every item.
+If it doesn't, just verify your output matches the LANGUAGE ROLES and
+TARGET stated in that block.
+
+This used to hard-code a B1+ checklist that confused A1/A2 models (where
+translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+The single source of truth is now
+`scripts/pipeline/config_tables.py:IMMERSION_RULES`.
+
+---
 
 Begin writing now. Start with the first section heading.

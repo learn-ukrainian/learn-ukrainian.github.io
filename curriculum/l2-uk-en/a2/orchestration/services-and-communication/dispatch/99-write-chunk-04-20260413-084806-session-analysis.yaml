@@ -1,0 +1,85 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T06-47-b9635dae.json
+phase: write-chunk-04
+prompt_chars: 45910
+response_chars: 4421
+prompt_words: 6845
+response_words: 709
+sections:
+- name: header
+  start: 0
+  length: 419
+  fraction: 0.0091
+- name: skeleton
+  start: 419
+  length: 1357
+  fraction: 0.0296
+- name: prior_summary
+  start: 1776
+  length: 3194
+  fraction: 0.0696
+- name: plan
+  start: 4970
+  length: 11994
+  fraction: 0.2613
+- name: wiki
+  start: 10267
+  length: 28725
+  fraction: 0.6257
+- name: output_spec
+  start: 45689
+  length: 221
+  fraction: 0.0048
+large_sections:
+- wiki
+directives_total: 24
+directives_covered: 13
+directives_missed:
+- kind: checklist
+  text: посилка (parcel, package)
+  covered: false
+  coverage_note: 1/3 keywords (33%)
+- kind: must
+  text: '- **Middle School (5-7 клас):** The focus shifts to the official, standardized
+    format of a postal address (`поштова адреса`) as required by Ukrposhta (`Укрпошта`).'
+  covered: false
+  coverage_note: 4/15 keywords (27%)
+- kind: must
+  text: '`) and the cases required for location.'
+  covered: false
+  coverage_note: 1/3 keywords (33%)
+- kind: must
+  text: They must group them into pairs of synonyms (`одержувач/адресат`, `відправник/адресант`)
+    and objects (`посилка`, `лист`).
+  covered: false
+  coverage_note: 3/14 keywords (21%)
+- kind: must
+  text: '* **Fill-in-the-Blank (Aspect):** Create sentences where students must choose
+    between the imperfective and perfective verb.'
+  covered: false
+  coverage_note: 3/13 keywords (23%)
+- kind: must
+  text: '* **Understanding Bureaucracy:** Filling out forms is a key life skill in
+    any country, and this is a gentle introduction to the structured language required.'
+  covered: false
+  coverage_note: 2/16 keywords (12%)
+- kind: must
+  text: '` | `Привіт, Оксано!` | The **Vocative case** (`кличний відмінок`) is mandatory
+    for direct address in Ukrainian.'
+  covered: false
+  coverage_note: 3/10 keywords (30%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: inject_activity
+  text: quiz-dative-address-forms
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: group-sort-service-phrases
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-requests-responses
+  covered: false
+  coverage_note: marker missing

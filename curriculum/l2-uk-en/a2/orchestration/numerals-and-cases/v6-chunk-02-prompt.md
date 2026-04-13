@@ -3,19 +3,18 @@
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 55: Числа у відмінках (A2, A2.8 [Refinement and Graduation])
-**Section to write:** Один/одна/одне у відмінках (One in All Cases) (~450 words total)
+**Section to write:** Один/одна/одне у відмінках (One in All Cases) (~450 words)
 **Word target for this section:** 450 words (aim for 495 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Один/одна/одне у відмінках (One in All Cases) (~450 words total)
-- P1 (~110 words): [Introduction to the unique nature of the numeral 'один' (one). Unlike most numbers, it changes for all three genders and all seven cases, mimicking the behavior of hard adjectives. Example: 'один будинок' (one house), 'одна машина' (one car), 'одне дерево' (one tree).]
-- P2 (~110 words): [Full declension of 'один' (masculine/neuter). Key forms to memorize: одного (Gen), одному (Dat), одним (Ins), (на) одному/однім (Loc). Explain that Accusative depends on animacy: 'бачу один стіл' (inanimate) vs 'бачу одного хлопця' (animate).]
-- P3 (~110 words): [Full declension of 'одна' (feminine). Contrast the forms: однієї/одної (Gen), одній (Dat), одну (Acc), однією/одною (Ins), (на) одній (Loc). Use the example 'з однієї сторони' (from one side).]
-- P4 (~120 words): [Idiomatic meanings of 'один'. Explain how it can mean 'alone' ('я тут один'), 'a certain/some' ('один чоловік сказав'), or 'the same' ('ми з одного міста'). Provide sentences for each to show usage in different cases.]
-- <!-- INJECT_ACTIVITY: match-up-numeral-meanings --> [match-up, focus: Match numeral expressions (alone, certain, same) to their correct Ukrainian form, 8 items]
+## Один/одна/одне у відмінках (One in All Cases) (~450 words)
+- P1 (~100 words): Introduce the numeral "один" (one). Explain that unlike other numbers, it has full gender forms (один, одна, одне/одно) and a plural form (одні), behaving morphologically like an adjective.
+- P2 (~150 words): Present the full declension paradigm for "один" across all seven cases for all genders. Highlight the key indirect forms: одного, одному, одним (m./n.); однієї/одної, одній, однією (f.). Provide short examples (без одного м'яча, з однією сестрою, на одному місці).
+- P3 (~120 words): Discuss the extended usage of "один" beyond just counting. Explain its alternative meanings: "a certain" (один чоловік сказав...), "alone" (я один/одна), and "the same" (ми з одного міста). 
+- P4 (~80 words): Provide a few sentence-level examples demonstrating these alternative meanings of "один" in practical, everyday speech contexts to reinforce comprehension.
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -23,7 +22,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-звичайні тверді прикметники, наприклад, слово «новий» (new). Ось найчастіші порядкові числівники з твердим закінченням: - **перший** (first) - **другий** (second) - **четвертий** (fourth) - **п'ятий** (fifth) - **десятий** (tenth) Давайте подивимося, як змінюється числівник «п'ятий» у чоловічому роді (masculine singular). Він має такі ж закінчення, як прикметник: - Називний (Nominative): **п'ятий поверх** (fifth floor) - Родовий (Genitive): від **п'ятого поверху** (from the fifth floor) - Давальний (Dative): по **п'ятому поверху** (along the fifth floor) - Знахідний (Accusative): через **п'ятий поверх** (through the fifth floor) - Орудний (Instrumental): перед **п'ятим поверхом** (in front of the fifth floor) - Місцевий (Locative): на **п'ятому** / **п'ятім поверсі** (on the fifth floor) Як бачите, це знайомі вам правила. Якщо ви знаєте закінчення прикметників, ви вже вмієте відмінювати ці числівники. Існує також м'який тип відмінювання (soft declension pattern). Головний числівник у цій групі — це **третій** (third). Він має закінчення **-ій**, тому відмінюється як м'який прикметник, наприклад «синій» (blue). Коли ми змінюємо слово «третій», ми використовуємо м'який знак, щоб зберегти правильний звук. Ось як це виглядає у чоловічому роді: - Називний (Nominative): **третій поверх** (third floor) - Родовий (Genitive): від **третього поверху** (from the third floor) - Давальний (Dative): по **третьому поверху** (along the third floor) - Знахідний (Accusative): через **третій поверх** (through the third floor) - Орудний (Instrumental): перед **третім поверхом** (in front of the third floor) - Місцевий (Locative): на **третьому** / **третім поверсі** (on the third floor) Зауважте, що слово «перший» історично мало інші форми. Але сьогодні на рівні А2 ми вважаємо його звичайним твердим прикметником. Порядкові числівники також постійно змінюють закінчення для жіночого та середнього роду. Вони повністю копіюють поведінку прикметників у реченні. Жіночий рід (feminine) зазвичай має закінчення **-а** або **-я**. Середній рід (neuter) має закінчення **-е** або **-є**. Усі слова у множині (plural) завжди мають закінчення **-і**. Подивіться на ці дуже прості приклади узгодження: - Чоловічий рід: **перший поверх** (1st floor), **другий урок** (2nd lesson). - Жіночий рід: **перша зупинка** (1st stop), **друга вправа** (2nd exercise). - Середній рід: **перше вікно** (1st window), **друге місто** (2nd city). - Множина: **перші дні** (first days), **другі місця** (second places). Пам'ятайте, що м'який числівник «третій» (third) у жіночому роді має форму **третя** (third, f.). А в середньому роді він має форму **третє** (third, n.). Множина буде **треті** (third, pl.). Ми дуже часто використовуємо порядкові числівники для дат (dates). В українській мові є одне залізне правило. Коли ми називаємо число місяця, порядковий числівник завжди стоїть у Родовому відмінку (Genitive case). Слово «місяць» або його назва також стоїть у Родовому відмінку. Чому так відбувається? Тому що ми скорочуємо фразу. Повна фраза звучить як «день двадцять першого числа березня» (the day of the twenty-first date of March). Ось кілька дуже корисних прикладів: - Коли твій день народження? **Двадцять першого березня** (March 21st). - Ми зустрінемося **десятого квітня** (April 10th). - Новий рік починається **першого січня** (January 1st). - Свято буде **третього травня** (May 3rd). Запам'ятайте закінчення **-ого** для всіх дат у чоловічому та середньому роді. Воно допоможе вам правильно планувати зустрічі. <!-- INJECT_ACTIVITY: fill-in-ordinals -->
+перше місце! *(I hope to take first place!)* У цьому діалозі ви бачите слова «перша», «другий», «десятій». Це **порядкові** (ordinal) **числівники** (numerals). Вони показують порядок предметів під час лічби. На відміну від **кількісних** (cardinal) числівників, порядкові відповідають на питання «який?» або «котрий?». Їхня головна особливість — вони працюють у реченні як звичайні прикметники. Це означає, що порядковий числівник завжди узгоджується з іменником. Він змінює форму залежно від роду, числа та відмінка іменника. Якщо іменник чоловічого роду, числівник теж має таку форму. Наприклад: перший день, другий поверх, п'ятий клас. Для жіночого роду ми кажемо: перша зустріч, друга команда. Для середнього роду: перше враження, друге завдання. А у множині ми використовуємо форму: перші переможці, другі змагання. В українській мові більшість порядкових числівників мають тверде закінчення. У словнику вони закінчуються на «-ий». Наприклад: другий, п'ятий, десятий, двадцятий. Ці числівники відмінюються точно як прикметники твердої групи. Подивіться, як змінюється числівник «п'ятий» з іменником чоловічого роду. Називний відмінок — це базова форма: п'ятий урок. Родовий відмінок показує відсутність або приналежність: немає п'ятого уроку. Давальний відмінок: я радію п'ятому уроку. Знахідний відмінок часто збігається з Називним: я бачу п'ятий урок. Орудний відмінок показує засіб або сумісність: перед п'ятим уроком. Місцевий відмінок завжди використовується з прийменником: на п'ятому уроці. Ці закінчення є типовими для українських прикметників. :::info **Grammar box: Ordinals as Adjectives** Ordinal numerals (first, second, fifth, etc.) behave identically to adjectives. They take the same endings and must agree with their noun in gender, number, and case. If you know how to decline a regular hard adjective like *новий* (new), you already know how to decline most ordinal numerals like *п'ятий* (fifth). ::: Але серед порядкових числівників є один важливий виняток. Це числівник **третій** (third). Він має м'яке закінчення і відмінюється як прикметник м'якої групи. У чоловічому роді він має закінчення «-ій»: третій. У жіночому роді з'являється м'який знак: третя. У середньому роді: третє. У множині: треті. Його відмінювання також має м'які закінчення. У Родовому відмінку ми говоримо «третього» (з м'яким знаком). У Давальному — «третьому», в Орудному — «третім». Наприклад: я живу на третьому поверсі, ми чекаємо третього учасника. Також варто згадати числівник **перший** (first). Він формально належить до мішаної групи прикметників. Його корінь закінчується на шиплячий звук «ш». Проте його закінчення майже повністю збігаються з твердою групою. Ви будете говорити: першого, першому, першим. Єдина помітна відмінність є в Орудному відмінку жіночого роду. Ми кажемо «першою» (а не «першею»). Порядкові числівники надзвичайно важливі у повсякденному житті. Ми часто використовуємо їх, коли говоримо про час та дати. Щоб сказати повну дату, потрібен порядковий числівник у Родовому відмінку. Наприклад: «Я народився двадцять першого березня». Інші приклади: свято відбудеться другого квітня, зустріч п'ятнадцятого серпня. Коли ми маємо справу зі складними числами, правило дуже просте. Складні числа складаються з кількох слів (наприклад, 145). Під час відмінювання змінює свою форму лише останнє слово. Усі попередні слова залишаються у базовій формі. Називний відмінок: сто сорок п'ятий кілометр. Родовий відмінок: сто сорок п'ятого кілометра. Орудний відмінок: сто сорок п'ятим кілометром. Це правило робить використання великих чисел набагато простішим. <!-- INJECT_ACTIVITY: fill-in-ordinals -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -385,14 +384,100 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
 
-TARGET: 70-90% Ukrainian.
+**You are in PHASE 6: A2 finale (A2 M51-M69)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 40%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 40% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
+
+TARGET: 70-90% Ukrainian. THIS IS A HARD GATE — the audit REJECTS modules outside this range.
+
 LANGUAGE ROLES:
-- PRIMARY: Ukrainian for everything.
-- ENGLISH: Only in vocabulary tables and one-line grammar notes where absolutely necessary.
-- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English.
-A2 register. Concrete everyday vocabulary. No literary language, no metaphors. Near-full Ukrainian immersion. Ukrainian sentences max 15 words. Max 2 clauses. All cases allowed. Simple subordinate clauses only. Full aspect pairs. No participles.
+- PRIMARY: Ukrainian for narrative, dialogues, examples, section intros, cultural notes, Reading Practice blocks, learning callouts.
+- METALANGUAGE: For abstract grammar terms, you may provide ONE parenthetical English translation on FIRST use only, e.g. `**доконаний вид** (perfective aspect)`. Subsequent uses must be Ukrainian only.
+- VOCABULARY TABLE: English glosses live here, not in prose.
+- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English. Never mix mid-sentence.
+
+⚠️ HARD STRUCTURAL RULES — READ THIS TWICE:
+- FORBIDDEN: long English narrative paragraphs explaining grammar. If a concept needs more than ONE sentence of English scaffolding, it goes in a `:::info` or `:::tip` callout, NOT in the main prose.
+- FORBIDDEN: mirroring a Ukrainian paragraph with an English translation paragraph. Write ONE paragraph in Ukrainian, move on.
+- FORBIDDEN: `> *English translation*` blockquotes after Ukrainian dialogues. They were required at A1 but they cap immersion below 50% — at A2-late they MUST be removed.
+
+ESCAPE HATCH (the 'Dual Ladder'):
+For genuinely abstract grammar concepts, you may use ONE `:::info` or `:::tip` callout written in English per section to clarify the concept. Because callouts are stripped from the immersion metric, this serves as on-demand scaffolding for struggling learners without penalising the immersion score. Do NOT abuse this — at most one English callout per major section.
+
+A2 register. Concrete everyday vocabulary. No literary language, no metaphors. Ukrainian sentences max 15 words. Max 2 clauses. All cases allowed. Simple subordinate clauses only (який/що/коли). Full aspect pairs. No participles.
+
+CHECKLIST (re-read before writing each section):
+- [ ] Every narrative paragraph in Ukrainian?
+- [ ] Zero `> *English translation*` blockquotes after dialogues?
+- [ ] At most ONE English `:::info` callout per major section?
+- [ ] Metalanguage terms parenthetically translated on first use only (max 2 per section)?
+- [ ] Reading Practice / Читаємо українською block in EVERY major section?
+
 
 GRAMMAR RULES:
 - Max 15 words per Ukrainian sentence
@@ -404,18 +489,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] числівник (numeral)
+- [ ] порядковий (ordinal)
+- [ ] кількісний (cardinal)
+- [ ] перший (first)
+- [ ] третій (third)
+- [ ] один (one)
+- [ ] скільки (how many)
+- [ ] кілограм (kilogram)
+- [ ] коштувати (to cost)
+- [ ] вік (age)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Один/одна/одне у відмінках (One in All Cases) (~450 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

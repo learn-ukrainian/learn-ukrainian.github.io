@@ -1,0 +1,73 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T17-13-55300586.json
+phase: vocab
+prompt_chars: 11316
+response_chars: 4361
+prompt_words: 1800
+response_words: 494
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.0705
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.0203
+- name: plan
+  start: 1028
+  length: 10288
+  fraction: 0.9092
+large_sections:
+- plan
+directives_total: 11
+directives_covered: 0
+directives_missed:
+- kind: must
+  text: When you encounter an unfamiliar word, you must use a structured technique
+    called **звуковий аналіз слова** (sound analysis), as outlined in *Большакова
+    Grade 1*, page 29.
+  covered: false
+  coverage_note: 6/19 keywords (32%)
+- kind: must
+  text: 'First, you must master the six simple vowel letters: **А** [а], **О** [о],
+    **У** [у], **Е** [е], **И** [и], and **І** [і].'
+  covered: false
+  coverage_note: 1/8 keywords (12%)
+- kind: must
+  text: You must pay special attention to the critical minimal pairs that contrast
+    **И** and **І**.
+  covered: false
+  coverage_note: 0/10 keywords (0%)
+- kind: must
+  text: Finally, you must meet the letter **Ї**.
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: must
+  text: To read fluently, you must apply the syllable chains and sound analysis steps
+    directly to real text.
+  covered: false
+  coverage_note: 3/13 keywords (23%)
+- kind: must
+  text: You must never do this.
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: inject_activity
+  text: count-syllables
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: odd-one-out
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: divide-words
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz
+  covered: false
+  coverage_note: marker missing

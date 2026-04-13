@@ -1,0 +1,59 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T13-01-82373655.json
+phase: write-chunk-02
+prompt_chars: 49656
+response_chars: 5853
+prompt_words: 6832
+response_words: 893
+sections:
+- name: header
+  start: 0
+  length: 450
+  fraction: 0.0091
+- name: skeleton
+  start: 450
+  length: 1556
+  fraction: 0.0313
+- name: prior_summary
+  start: 2006
+  length: 3573
+  fraction: 0.072
+- name: plan
+  start: 5579
+  length: 16655
+  fraction: 0.3354
+- name: wiki
+  start: 15976
+  length: 27204
+  fraction: 0.5478
+- name: output_spec
+  start: 49438
+  length: 218
+  fraction: 0.0044
+large_sections:
+- wiki
+directives_total: 19
+directives_covered: 14
+directives_missed:
+- kind: must
+  text: '* **Must-know:** Суфікси `-н-` (`літній`), `-ов-` (`квітковий`), `-ськ-`
+    (`український`).'
+  covered: false
+  coverage_note: 1/7 keywords (14%)
+- kind: must
+  text: '* **Must-know:** Моделі `батьків` / `батькова` та `сестрин` / `сестрина`
+    є високочастотними.'
+  covered: false
+  coverage_note: 1/8 keywords (12%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 3/11 keywords (27%)
+- kind: inject_activity
+  text: reading-short-forms
+  covered: false
+  coverage_note: marker missing

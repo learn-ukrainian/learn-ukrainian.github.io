@@ -1,0 +1,37 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T22-42-e07dd289.json
+phase: pre-verify
+prompt_chars: 4380
+response_chars: 947
+prompt_words: 688
+response_words: 146
+sections:
+- name: preamble
+  start: 0
+  length: 558
+  fraction: 0.1274
+- name: plan
+  start: 558
+  length: 3441
+  fraction: 0.7856
+- name: output_spec
+  start: 3999
+  length: 381
+  fraction: 0.087
+large_sections:
+- plan
+directives_total: 3
+directives_covered: 0
+directives_missed:
+- kind: must
+  text: You MUST verify linguistic facts using the tools below BEFORE writing begins.
+  covered: false
+  coverage_note: 0/11 keywords (0%)
+- kind: must
+  text: 'Must include: past tense aspect (both), motion verbs (at least 2 pairs),
+    one imperative (suggestion to a friend), one wish (Vocative + imperative + Instrumental).'
+  covered: false
+  coverage_note: 0/17 keywords (0%)
+- kind: must
+  text: Each task MUST include at least one tool call.
+  covered: false
+  coverage_note: 0/8 keywords (0%)

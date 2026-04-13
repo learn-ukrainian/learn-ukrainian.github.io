@@ -1,53 +1,47 @@
 ## Сценарій 1: Плануємо вечірку (Scenario 1: Planning a Party)
 
-Welcome to your first steps in the A2 level! You are now moving from simply memorizing basic phrases to engaging in realistic, dynamic communication. Imagine you are organizing a large housewarming party, which we call **новосілля** in Ukrainian. Planning such an important event requires a significant shift in how you talk about actions. You will need to learn how to discuss ongoing future plans, figure out exactly what is missing from your apartment, and confidently confirm concrete results when your tasks are finally finished. Let us look at how two friends handle this complex process.
+Organizing a successful **вечірка** (party) requires clear communication about what needs to be done, who is doing what, and what is still missing. Let's imagine you and your friend are organizing a housewarming celebration and expecting many guests. We will look at how to effectively discuss these future plans and confirm completed tasks.
 
-> — **Максим:** Привіт, Олено! Давай планувати наше новосілля. *(Hi Olena! Let's plan our housewarming party.)*
-> — **Олена:** Привіт! Звісно. Ми будемо обговорювати меню сьогодні ввечері? *(Hi! Sure. Are we going to discuss the menu tonight?)*
-> — **Максим:** Так, нам обов'язково треба скласти довгий список. Що ми будемо готувати для друзів? *(Yes, we definitely need to make a long list. What are we going to cook for the friends?)*
-> — **Олена:** Я буду готувати великий святковий салат і запікати м'ясо. *(I will be cooking a big festive salad and roasting meat.)*
-> — **Максим:** Дуже добре, а я буду купувати всі необхідні напої та солодкі десерти. *(Very good, and I will be buying all the necessary drinks and sweet desserts.)*
-> — **Олена:** Чудово! А хто буде запрошувати наших гостей? *(Great! And who is going to invite our guests?)*
-> — **Максим:** Я думаю, ми будемо робити це разом у п'ятницю після роботи. *(I think we will be doing this together on Friday after work.)*
+> — **Оксана:** Привіт, Тарасе! Завтра наша **вечірка**. Треба все **планувати** дуже уважно. *(Hi, Taras! Our party is tomorrow. We need to plan everything very carefully.)*
+> — **Тарас:** Привіт! Так, я пам'ятаю. У нас буде десять гостей. Що ми будемо **купувати** сьогодні? *(Hi! Yes, I remember. We will have ten guests. What will we be buying today?)*
+> — **Оксана:** Я буду **готувати** салати та м'ясо, тому мені потрібні свіжі овочі. *(I will be preparing salads and meat, so I need fresh vegetables.)*
+> — **Тарас:** Добре. А я піду в супермаркет. Треба купити великий торт і напої. *(Good. And I will go to the supermarket. We need to buy a large cake and drinks.)*
+> — **Оксана:** Ой, у нас зовсім немає серветок! Купи, будь ласка, паперові серветки. *(Oh, we have absolutely no napkins! Buy paper napkins, please.)*
+> — **Тарас:** Без проблем, я все зроблю. Ти вже приготувала список? *(No problem, I will do everything. Have you already prepared a list?)*
+> — **Оксана:** Так, я вже все написала і надіслала тобі. *(Yes, I have already written everything and sent it to you.)*
 
-When Ukrainians discuss the continuous process of planning or an ongoing future action, they use the imperfective future tense. This compound tense is formed by combining the correct conjugated form of the verb **бути** (to be) with the infinitive of an imperfective verb. 
+When discussing tasks in progress or general plans for the future, Ukrainian uses the imperfective aspect. To form the future tense for a continuous process or repeated action, we combine the conjugated future forms of the verb «бути» (to be) with the imperfective infinitive. 
 
-Ми часто використовуємо недоконаний вид дієслова, коли дія є довгою, регулярною або рутинною. Якщо ми говоримо про успішний результат або швидку одноразову подію, ми завжди обираємо доконаний вид.
+Ми будемо купувати напої та свіжі фрукти. Ти будеш готувати велику вечерю, а я буду прибирати кімнату. Вони будуть планувати свято цілий вечір.
 
-> *We often use the imperfective aspect of a verb when an action is long, regular, or routine. If we are talking about a successful result or a quick one-time event, we always choose the perfective aspect.*
+> *We will be buying drinks and fresh fruits. You will be preparing a big dinner, and I will be cleaning the room. They will be planning the holiday all evening.*
 
-The aspect pair **готувати** (to be cooking) and **приготувати** (to finish cooking) perfectly highlights this difference in focus. The same logic applies when choosing between the verbs for planning as an ongoing process versus successfully completing a plan.
+This compound future tense is somewhat similar to the English continuous tense ("will be doing"). It emphasizes the duration or the fact that the action will take place, without focusing on its final result. It simply states that the process will occupy some time in the future.
 
-As you carefully check your party list, you will inevitably find that some crucial things are missing. To express absence or lack in Ukrainian, we rely on the word **немає** (there is no). This word is a powerful trigger for the Genitive case.
-
-Коли ми кажемо «немає», наступне слово завжди стоїть у родовому відмінку. Це суворе граматичне правило чудово працює для живих людей, фізичних предметів та абстрактних понять.
-
-> *When we say "немає", the next word is always in the Genitive case. This strict grammatical rule works perfectly for living people, physical objects, and abstract concepts.*
-
-You can use this structure to complain about an empty new apartment or missing items:
-**У нас немає музики.** — *We have no music.*
-**Немає торта.** — *There is no cake.*
-**Немає великого столу.** — *There is no big table.*
-
-The Genitive case is also absolutely essential when you are talking about quantities for your event. Words like **багато** (many) and **мало** (few) strictly require the noun that follows them to take the Genitive form. For countable party items, this is usually the Genitive plural.
-
-Для гарної вечірки господарям треба купити багато свіжих фруктів і багато холодних напоїв. Якщо у вас дуже мало паперових серветок, гості будуть незадоволені.
-
-> *For a good party, the hosts need to buy a lot of fresh fruits and a lot of cold drinks. If you have very few paper napkins, the guests will be unsatisfied.*
-
-Remembering these specific plural endings will help you accurately describe the exact scale of your exciting preparations.
-
-Let us rejoin our friends a few days later to see their actual progress. Now, they are completely focusing on their completed results, which requires switching to the perfective past tense.
-
-> — **Максим:** Олено, як наші справи? Ти вже приготувала салат? *(Olena, how are our things? Have you already prepared the salad?)*
-> — **Олена:** Так, я все успішно зробила. А ти купив напої? *(Yes, I successfully did everything. And did you buy the drinks?)*
-> — **Максим:** Я вже купив торт і газовану воду, але зовсім забув про яблучний сік. *(I already bought the cake and sparkling water, but I completely forgot about the apple juice.)*
-> — **Олена:** Нічого страшного, ми замовили велику піцу, а кур'єр може привезти сік. *(No worries, we ordered a big pizza, and the courier can bring juice.)*
-> — **Максим:** Чудово! Я також успішно запланував музику для нашого вечора. *(Great! I also successfully planned the music for our evening.)*
-
-:::tip
-**Did you know?**
-Ukrainians absolutely love using diminutive suffixes in everyday speech, especially when talking about delicious food and warm hospitality. Calling a standard cake a **тортик** instead of «торт» or a fresh salad a **салатик** instead of «салат» makes the invitation sound much warmer and more welcoming. You might even hear informal slang like **винишко** or the more traditional Ukrainian diminutive **винце** for wine among very close friends. These small changes in word endings actively show deep affection and help create a beautifully cozy, relaxed atmosphere for your happy guests.
+:::info
+**Future tense construction**
+To talk about future processes, use the conjugated forms of **бути** (буду, будеш, буде, будемо, будете, будуть) plus the **imperfective infinitive**.
+Example: *Я буду готувати* (I will be cooking).
 :::
 
-<!-- INJECT_ACTIVITY: quiz-party-aspect -->
+As you finalize the shopping list, you inevitably notice what is missing. In Ukrainian, expressing the absence of something always requires the Genitive case. The word «немає» (there is no / we don't have) is a powerful trigger for this case, forcing the noun that follows it to change its form.
+
+На жаль, у нас немає музики. У магазині немає свіжих серветок і солодкого соку. Я бачу, що вдома немає торта.
+
+> *Unfortunately, we have no music. The store has no fresh napkins and sweet juice. I see that there is no cake at home.*
+
+Similarly, when you talk about quantities or volumes, you must use the Genitive case. Words indicating a large or small amount, or exact numbers (five and above), govern the Genitive plural. This is essential when planning a feast for multiple guests.
+
+Нам треба купити багато фруктів і кілька пляшок води. На столі лежить десять яблук. Ми купили мало овочів.
+
+> *We need to buy a lot of fruits and several bottles of water. There are ten apples lying on the table. We bought few vegetables.*
+
+Finally, as the party approaches, you need to check if the planned tasks are actually completed. For this, we switch to the perfective aspect in the past tense. The perfective past acts much like the English present perfect — it states a current result achieved by a past action. 
+
+Я вже приготувала салат, тому ми можемо сідати за стіл. Ми купили два торти і всі необхідні напої. Тарас запланував цікаві ігри.
+
+> *I have already prepared the salad, so we can sit at the table. We bought two cakes and all the necessary drinks. Taras has planned interesting games.*
+
+Compare the process «купувати» (to be buying) with the result «купити» (to have bought). You use the imperfective to describe the shopping trip itself, but the perfective to proudly announce that the items are now in your kitchen.
+
+<!-- INJECT_ACTIVITY: quiz, Role-play: Planning a Party (aspect in future tense), 8 items -->

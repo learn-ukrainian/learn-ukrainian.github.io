@@ -4,13 +4,13 @@ In Ukrainian, we talk about time using two main questions. We use one to ask for
 
 > **Мари́на:** Приві́т, Олексі́ю! **Котра́ годи́на**? *(Hi, Oleksiy! What time is it?)*
 > **Олексі́й:** Привіт! **Деся́та**. *(Hi! Ten o'clock.)*
-> **Марина:** **О котрі́й** ти **працю́єш**? *(At what time do you work?)*
+> **Марина:** До́бре. **О котрі́й** ти сього́дні **працю́єш**? *(Okay. At what time are you working today?)*
 > **Олексій:** **О дев'я́тій**. А ти? *(At nine. And you?)*
 > **Марина:** Я працю́ю **о деся́тій**. *(I work at ten.)*
-> **Олексій:** **До́бре**, **тоді́** **о пе́ршій**? *(Good, then at one?)*
-> **Марина:** Так! *(Yes!)*
+> **Олексій:** **До́бре**, **тоді́** зустрі́немося **о пе́ршій**? *(Good, then shall we meet at one?)*
+> **Марина:** Так! До зустрі́чі! *(Yes! See you!)*
 
-The specific communicative functions of these questions show a clear division. The phrase **котра година** identifies the current time on the clock, much like asking for a name in an ordered sequence. Marina wants to know the exact hour right now. On the other hand, the question **о котрій** asks for a specific point on a timeline. Speakers use this when scheduling an event or an action. You should contrast the English phrases "At what time?" versus "What time is it?". While English uses the noun "time" for both concepts, Ukrainian relies on two distinct structures to differentiate between identifying the current moment and setting an appointment.
+Use **Котра година?** to ask about the time now: **Котра година? — Десята.** Use **О котрій?** to ask about a planned time: **О котрій ти працюєш? — О дев'ятій.** This is the main contrast you need in this module.
 
 A discussion about daily schedules between two university students shows how time phrases work with familiar verbs. This scenario integrates verbs from your previous vocabulary, such as **сні́дати** (to eat breakfast), **обі́дати** (to eat lunch), **вече́ряти** (to eat dinner), and **відпочива́ти** (to rest), directly with these new time chunks.
 
@@ -19,7 +19,7 @@ A discussion about daily schedules between two university students shows how tim
 > **Студент А:** А обі́даєш? *(And eat lunch?)*
 > **Студент Б:** **О першій**. Вече́ряю **о сьо́мій**. *(At one. I eat dinner at seven.)*
 
-Here, the students use the question word **коли** (when) interchangeably with scheduling questions. The answers form neat, fixed chunks that specify exactly when each routine action takes place during the day.
+Here, the students use the broader question word **коли** (when), while the answers still use the same **о + time** chunks you need for scheduling. The answers form neat, fixed chunks that specify exactly when each routine action takes place during the day.
 
 ## Котра година?
 
@@ -29,14 +29,14 @@ To answer this question for the full hours from one to twelve, we use feminine o
 
 Telling half-hours in Ukrainian relies on a specific structural pattern using the word **пів** (half). We use the phrase **пів на** (half towards) followed by the ordinal number for the next hour. The ordinal number takes the accusative case, ending in a "у" or "ю" sound. You must focus on the mental concept of moving "half towards the next hour". For example, 1:30 is **пів на дру́гу** (literally "half to the second"), 6:30 is **пів на сьому** (half to the seventh), and 11:30 is **пів на двана́дцяту** (half to the twelfth). You should remember that saying something like "пів во́сьмої" is a direct mistake.
 
-For now, you only need to recognize quarters, using the word **чверть** (quarter). You will hear **чверть на** (a quarter past) and **за чверть** (a quarter to). For example, 2:15 is **чверть на тре́тю** (a quarter onto the third) and 2:45 is **за чверть третя** (in a quarter, the third). You must avoid using the word "без" (without) for time, which is a common Russianism and incorrect in standard Ukrainian.
+For now, you only need to recognize quarters, using the word **чверть** (quarter). You will hear **чверть на** (a quarter past) and **за чверть** (a quarter to). For example, 2:15 is **чверть на тре́тю** (a quarter onto the third) and 2:45 is **за чверть третя** (in a quarter, the third). For this module, you only need to recognize **чверть на** and **за чверть**. Do not add extra minute patterns yet.
 
 <!-- INJECT_ACTIVITY: quiz-clock-matching -->
 <!-- INJECT_ACTIVITY: match-up-digits -->
 
 ## О котрій?
 
-When you need to talk about scheduling an event, you ask **О котрій годи́ні?**. This introduces the preposition **о** or **об** (at). The rule for choosing between them is simple: use **об** before vowels to make the pronunciation smooth, like in the phrase **об одина́дцятій**, and use **о** before consonants. You must never use the prepositions "в" or "у" for time expressions, as this is a very common Russianism that Ukrainian speakers avoid.
+When you need to talk about scheduling an event, you ask **О котрій годи́ні?**. This introduces the preposition **о** or **об** (at). The rule for choosing between them is simple: use **об** before vowels to make the pronunciation smooth, like in the phrase **об одина́дцятій**, and use **о** before consonants. In this module, focus on the beginner pattern **о/об + hour chunk** for scheduling: **о першій**, **об одинадцятій**. More complex time expressions can use other patterns, but you do not need them yet.
 
 The answers to this scheduling question are locative time chunks. You should learn to treat these as fixed vocabulary units right now. They combine the preposition with the locative case ending for the hour. The complete list of chunks is: **о першій**, **о дру́гій**, **о тре́тій**, **о четве́ртій**, **о п'я́тій**, **о шо́стій**, **о сьомій**, **о восьмій**, **о дев'ятій**, **о десятій**, **об одинадцятій**, and **о двана́дцятій**. Memorizing these phrases as whole pieces will make speaking about your daily plans much easier and much more natural in conversation without needing to think about complex grammar rules.
 
@@ -58,7 +58,7 @@ This summary table helps you contrast the question structures and the correct an
 | **Котра година?** | **Пів на другу.** | What time? — 1:30. |
 | **О котрій годині?** | **О пів на другу.** | At what time? — At 1:30. |
 
-Remember the common pitfalls: there is no "без" for minutes, there is no "в" for scheduling hours, and you must never use basic cardinal numbers to identify the hour.
+Remember the core beginner pattern in this module: use ordinal forms for the hour (**Десята.**, **О десятій.**) and keep **пів на** as a chunk for half-hours.
 
 Use this self-check checklist to verify your understanding of the material before you move on to the next module. Read each point carefully and try to answer out loud.
 

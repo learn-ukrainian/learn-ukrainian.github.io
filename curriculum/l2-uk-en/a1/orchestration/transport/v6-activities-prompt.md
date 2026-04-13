@@ -1,4 +1,4 @@
-<!-- version: 1.1.0 | updated: 2026-03-31 -->
+<!-- version: 1.2.0 | updated: 2026-04-12 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -11,6 +11,35 @@ Generate an `activities/transport.yaml` file for module **32: Transport** (a1).
 
 ---
 
+## ⚠️ HARD COUNT TARGETS — READ TWICE
+
+These are the binding numerical contracts for THIS module. The audit will FAIL if you fall short.
+
+| Bucket | Min | Max | Notes |
+|---|---|---|---|
+| Total activities | 10 | 10+ | inline + workbook combined |
+| Inline (lesson tab) | 4 | 6 | one per `<!-- INJECT_ACTIVITY -->` marker, see below |
+| Workbook (Зошит tab) | 6 | 9 | extended practice |
+| Items per activity | 6 | — | each activity must have at least 6 items (unless its type cap is lower — see Activity Type Reference below) |
+
+**You MUST ship at least 4 inline activities AND at least 6 workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+
+**Type diversity is required.** The module (inline + workbook combined) MUST use at least **0** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level. (If `0` is `0`, the audit profile for this level does not enforce type diversity — but variety still produces a better lesson, so aim for 4+ types when the workbook allows it.)
+
+---
+
+## Allowed types for THIS level
+
+- **Inline (lesson) types:** image-to-letter, letter-grid, match-up, watch-and-repeat, quiz, true-false, fill-in, classify
+- **Inline priority (preferred):** image-to-letter, match-up, fill-in, quiz, watch-and-repeat
+- **Workbook types:** fill-in, match-up, group-sort, anagram, unjumble, quiz, true-false, classify, divide-words, count-syllables, pick-syllables, observe, phrase-table, odd-one-out
+- **Workbook priority (preferred):** fill-in, match-up, group-sort, anagram, unjumble
+- **FORBIDDEN at this level:** cloze, error-correction, mark-the-words, translate, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, highlight-morphemes, grammar-identify, select
+
+Pick from the allowed list. Lean heavily on the priority lists. Do not use any forbidden type — the build will reject it.
+
+---
+
 ## Inline vs Workbook Split
 
 Activities have two placement categories:
@@ -19,7 +48,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Rule of thumb:** inline = 2-3 quick checks after key teaching points. Workbook = 4-8 deeper practice exercises covering the full topic.
+**Rule of thumb:** inline = 4–6 quick checks after key teaching points. Workbook = 6–9 deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
 
 ---
 
@@ -27,10 +56,10 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: fill-in-ticket-buying -->`
-- `<!-- INJECT_ACTIVITY: quiz-transport-patterns -->`
-- `<!-- INJECT_ACTIVITY: quiz-match-situation -->`
-- `<!-- INJECT_ACTIVITY: fill-in-directions -->`
+- `<!-- INJECT_ACTIVITY: quiz-which-transport -->`
+- `<!-- INJECT_ACTIVITY: quiz-instrumental-or-locative -->`
+- `<!-- INJECT_ACTIVITY: fill-in-buy-ticket -->`
+- `<!-- INJECT_ACTIVITY: fill-in-ask-directions -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -88,95 +117,111 @@ required:
 <module_content>
 ## Діалоги (Dialogues)
 
-Navigating a new city always starts with understanding the local transit system and learning how to ask the right questions. When arriving at the **Бориспіль** (Boryspil) airport outside of the capital city of Kyiv, the immediate practical challenge is reaching the city center. Travelers have a wide variety of choices depending on their budget, luggage, and final destination: they might take a regular public bus, board a fast express train, call a private taxi, or eventually transfer to the vast underground metro network.
+Imagine you have just arrived at the Boryspil airport outside of Kyiv, and you need to navigate to your hotel in the city center. Or perhaps you want to visit a friend across town. In any modern city, knowing how to navigate the public transport network is a completely essential survival skill. Moving around efficiently requires much more than simply memorizing the names of vehicles; you need to know how to ask for directions, find the correct stop, and purchase the right ticket. This module covers the vocabulary and grammar patterns you need to confidently ride a bus, take the metro, or catch a train anywhere in Ukraine. 
 
-> **Приїжджий:** Вибачте, як дістатися до вокзалу? *(Excuse me, how to get to the train station?)*
-> **Друг:** Їдьте автобусом або на метро. *(Take a bus or by metro.)*
-> **Приїжджий:** Який автобус? А можна на метро? *(Which bus? And is it possible by metro?)*
-> **Друг:** Номер сім. Зупинка ось там. Спочатку треба їхати автобусом до метро «Харківська». *(Number seven. The stop is right there. First you must take a bus to the "Kharkivska" metro.)*
+Consider a practical scenario. A visitor has arrived in a new city and needs to find the main railway station.
+
+> **Приїжджий:** Як дістатися до вокзалу? *(How do I get to the train station?)*
+> **Друг:** Їдьте автобусом або на метро. *(Take a bus or the metro.)*
+> **Приїжджий:** Який автобус? *(Which bus?)*
+> **Друг:** Номер сім. Зупинка ось там. *(Number seven. The stop is over there.)*
 > **Приїжджий:** Дякую! *(Thank you!)*
 > **Друг:** На здоров'я! *(You are welcome!)*
 
-The key phrase in the first exchange is **як дістатися до...** (how to get to...), which is the most natural and common way to ask for directions to a specific place. This grammatical structure is always followed by a noun in the genitive case to indicate the destination, as seen in the word forms **до вокзалу** (to the station) and **до станції** (to the station). If a local resident helps you with directions and you thank them, a polite native response you will often hear is **На здоров'я!** (You are welcome!).
+This short exchange introduces several vital pieces of information. The phrase **як дістатися до** (how to get to) is your primary and most natural tool for asking directions. Notice the response: the speaker uses **їдьте** (go / ride) followed by **автобусом** (by bus) or **на метро** (by metro). Finally, locating the **зупинка** (stop) is the necessary last step before boarding the vehicle.
 
-> **Пасажир:** Добрий день! Один квиток до Львова, будь ласка. *(Good day! One ticket to Lviv, please.)*
+Once you arrive at the train or bus station, you will often need to interact with a cashier at the ticket window. Purchasing a ticket for an intercity trip involves specific conversational patterns.
+
+> **Приїжджий:** Один квиток до Львова, будь ласка. *(One ticket to Lviv, please.)*
 > **Касир:** В один бік чи туди й назад? *(One way or round trip?)*
-> **Пасажир:** Туди й назад. Скільки коштує? *(Round trip. How much does it cost?)*
-> **Касир:** П'ятсот гривень. Є потяг о дев'ятій ранку. *(Five hundred hryvnias. There is a train at nine in the morning.)*
-> **Пасажир:** Дякую. О котрій годині він рушає? *(Thank you. At what time does it depart?)*
-> **Касир:** О дев'ятій рівно. *(At nine exactly.)*
+> **Приїжджий:** Туди й назад. Скільки коштує? *(Round trip. How much does it cost?)*
+> **Касир:** П'ятсот гривень. *(Five hundred hryvnias.)*
+> **Приїжджий:** О котрій відправлення? *(At what time is the departure?)*
+> **Касир:** О дев'ятій ранку. *(At nine in the morning.)*
 
-When buying tickets at a terminal or speaking with a conductor, the clerk will routinely ask if your journey is **в один бік** (one way) or **туди й назад** (round trip, literally "there and back"). This everyday interaction naturally integrates expressions of time like **о дев'ятій** (at nine) and simple numbers such as **п'ятсот** (five hundred) to quickly confirm the departure schedule and the final price. Knowing these set phrases makes traveling across Ukraine much smoother and reduces confusion at the ticket counter.
-
-<!-- INJECT_ACTIVITY: fill-in-ticket-buying -->
+In this transaction, you are combining your new knowledge of transport with previously learned numbers and time expressions. Asking **скільки коштує** (how much does it cost) is a universal skill. You also just learned the highly useful phrases **в один бік** (one way) and **туди й назад** (round trip).
 
 ## Транспорт (Transport Types)
 
-Every major Ukrainian city relies on a robust and heavily utilized network of **громадський транспорт** (public transport). The core of this system typically consists of the "big four" modes of transit. You will frequently see an **автобус** (bus, masculine), a **тролейбус** (trolleybus, masculine), and a **трамвай** (tram, masculine) operating above ground, while larger metropolitan areas like Kyiv and Kharkiv feature a fast underground **метро** (metro, neuter). Grammatically, the words **метро** (metro) and **таксі** (taxi, neuter) are special cases in the language. They are nouns of foreign origin and are completely indeclinable, meaning their word endings never change regardless of their role in a sentence.
+City transport, known as **громадський транспорт** (public transport), forms the absolute backbone of urban life in Ukraine. The single most common vehicle you will see is the **автобус** (bus, masculine). Many large cities also operate a **тролейбус** (trolleybus, masculine), which runs quietly on electricity from overhead wires, and a **трамвай** (tram, masculine), which runs on metal tracks through the streets. Another ubiquitous option is the **маршрутка** (minibus, feminine), a smaller private bus that follows a specific, fixed route. You will also frequently encounter two highly useful indeclinable nouns of foreign origin: **метро** (metro / subway, neuter) and **таксі** (taxi, neuter). Because they are indeclinable, their endings never change, regardless of their grammatical role in the sentence.
 
-For longer journeys stretching between cities, travelers rely heavily on intercity options like a passenger **потяг** (train, masculine) or a commercial **літак** (plane, masculine). In daily conversation, the word **потяг** (train) is often used interchangeably with **поїзд** (train). Within city limits and for commuting between nearby towns, you will undoubtedly encounter the ubiquitous **маршрутка** (minibus, feminine), which operates on fixed municipal routes but traditionally stops on passenger demand. Personal transit is usually done by **машина** (car, feminine). To catch any of these transport types, you need to know the right location: you must head to a **вокзал** (station) for trains, navigate to an **аеропорт** (airport) for flights, or simply wait patiently at a local neighborhood **зупинка** (stop).
+When you need to travel between different cities or countries, you will switch to using **міжміський транспорт** (intercity transport). For comfortable, long-distance journeys across the vast territory of Ukraine, the most popular and reliable option is the **потяг** (train, masculine). You can also take an intercity **автобус** (bus) for shorter regional trips between neighboring towns. For international flights or rapid cross-country travel, you would instead use a **літак** (plane, masculine).
 
-When stating exactly how you are traveling, the Ukrainian language makes a strict grammatical distinction between moving on foot and moving by a vehicle. While you say **іти пішки** (to go on foot), traveling by any type of machine requires the motion verb **їхати** (to go by transport). For standard declinable nouns, you indicate the means of transportation by putting the noun directly into the instrumental case without any added preposition. This form clearly shows the instrument or tool you use to travel.
-*   «Я їду **автобусом**.» *(I am going by bus.)*
-*   «Він їде **потягом**.» *(He is going by train.)*
-*   «Ми їдемо **трамваєм**.» *(We are going by tram.)*
-*   «Вони їдуть **тролейбусом**.» *(They are going by trolleybus.)*
+<!-- INJECT_ACTIVITY: quiz-which-transport -->
 
-A fundamentally different grammatical pattern applies to indeclinable nouns and certain specific vehicles. Instead of using the bare instrumental case, you must use the preposition **на** (on/at) followed immediately by the locative case. Since words like **метро** (metro) and **таксі** (taxi) do not decline, their forms remain identical, while words like **машина** (car) take standard locative endings. Both patterns simply mean "by" a certain transport, but they are grammatically distinct.
-*   «Я їду **на метро**.» *(I am going by metro.)*
-*   «Він їде **на таксі**.» *(He is going by taxi.)*
-*   «Ми їдемо **на машині**.» *(We are going by car.)*
+In the Ukrainian language, verbs of motion are highly specific and descriptive. While English uses the general verb "to go" for almost everything, Ukrainian strictly separates walking from riding. You must use the verb **іти** (to go on foot) when walking, but you must use the verb **їхати** (to go by vehicle) whenever you use any form of transport. When stating the exact method of transport, Ukrainian uses two distinct patterns. The first pattern uses the instrumental case chunk, which simply changes the ending of the noun to mean "by means of."
 
-:::caution
-Never mix these two grammatical patterns together. A common learner mistake is saying «на автобусом» — this structure is strictly incorrect. While the locative form «на автобусі» (on the bus) is grammatically possible and occasionally heard, using the pure instrumental form **автобусом** (by bus) is far more idiomatic and natural for native speakers. You should learn each transport type with its preferred prepositional or non-prepositional pattern from the beginning.
-:::
+*   **їхати автобусом** — to go by bus
+*   **їхати тролейбусом** — to go by trolleybus
+*   **їхати трамваєм** — to go by tram
+*   **їхати потягом** — to go by train
 
-<!-- INJECT_ACTIVITY: quiz-transport-patterns -->
-<!-- INJECT_ACTIVITY: quiz-match-situation -->
+The second pattern uses the preposition **на** (on / at) followed by the locative case chunk. This prepositional pattern is strictly used for indeclinable nouns and for the word for car. Because indeclinable nouns cannot change their endings, they simply follow the preposition without any modification.
+
+*   **їхати на метро** — to go by metro
+*   **їхати на таксі** — to go by taxi
+*   **їхати на машині** — to go by car
+
+Note that both of these patterns translate identically to "by [transport]" in English. You simply need to memorize which vehicle uses which grammatical pattern.
+
+<!-- INJECT_ACTIVITY: quiz-instrumental-or-locative -->
 
 ## Корисні фрази (Useful Phrases)
 
-When navigating unfamiliar city streets or crowded transit hubs, a few precise questions will help you find the correct transit option without getting lost. If you are looking for a place to wait for a ride, simply ask a friendly passerby **Де зупинка автобуса?** (Where is the bus stop?) or **Де найближча станція метро?** (Where is the nearest metro station?). Once you locate the physical stop, you must ensure you board the vehicle going in the right direction. Use these straightforward phrases to identify the correct route:
-*   «**Який автобус їде в центр?**» *(Which bus goes to the center?)*
-*   «**Вам потрібен номер п'ять.**» *(You need number five.)*
+Navigating complex transport networks requires mastering a few core phrases. Before you can even ride, you must locate the correct **зупинка** (stop or station). If you are specifically looking for a bus, you would ask a passerby:
 
-If you need to check the schedule or fare while standing at the terminal, you can confidently ask **Коли наступний потяг?** (When is the next train?) or **Скільки коштує квиток?** (How much is a ticket?) to gather the necessary details.
+*   **Де зупинка автобуса?** — Where is the bus stop?
+*   **Де станція метро?** — Where is the metro station?
 
-Once you board a vehicle, communicating effectively with other passengers becomes highly important, especially during the morning or evening rush hour. If you are unsure of your current location along the route, you can simply ask **Яка це зупинка?** (What stop is this?). Ukrainian public transport can get quite crowded during peak times. If someone is blocking your path to the exit doors, the standard, polite way to ask them to let you pass is **Вибачте, ви виходите?** (Excuse me, are you getting off?). If they are not stepping out, they will generally move aside. When the vehicle doors finally open, you can ask **Мені виходити тут?** (Do I get off here?) to confirm your destination, or firmly announce that you are leaving.
+Once you arrive there, you will likely need a **квиток** (ticket). To purchase one at a kiosk, simply state the quantity and your destination:
 
-When asking the bus driver or a local resident to guide you to a location, you will frequently hear basic directional vocabulary. We now revisit the core movement words: **прямо** (straight), **направо** (right), and **наліво** (left). These spatial adverbs combine seamlessly with transport instructions to create clear routes. If you need help finding a specific landmark, you can ask **Вибачте, як дістатися до...?** (Excuse me, how do I get to...?).
-*   «Ідіть **прямо** до вокзалу.» *(Go straight to the station.)*
-*   «Поїдьте **прямо**, а потім поверніть **направо** на зупинці.» *(Drive straight, and then turn right at the stop.)*
-*   «Станція метро **наліво**.» *(The metro station is to the left.)*
-Recognizing these three distinct directions ensures you can properly follow instructions whether you are walking to a transit platform or directing a taxi driver to your hotel.
+*   **Один квиток, будь ласка.** — One ticket, please.
+*   **Скільки коштує квиток?** — How much does the ticket cost?
 
-Discussing schedules and timetables requires using accurate verbs of departure. Many learners mistakenly use the word «відправлятися» (to depart), but this is a direct phonetic calque from Russian and sounds unnatural in standard conversational Ukrainian. Instead, you must use native verbs that describe motion accurately based on the type of vehicle. For heavy transit vehicles like trains starting to move along a track, use the verb **рушати** (to depart / to set in motion). For scheduled vehicles like buses leaving a large station, use **відбувати** (to depart) or **виїжджати** (to drive out / to leave).
-*   «**Потяг рушає о восьмій.**» *(The train departs at eight.)*
-*   «**Автобус виїжджає з автовокзалу.**» *(The bus leaves from the bus station.)*
+If you are waiting on the platform for a train to arrive, you might ask someone nearby:
 
-<!-- INJECT_ACTIVITY: fill-in-directions -->
+*   **Коли наступний потяг?** — When is the next train?
+
+<!-- INJECT_ACTIVITY: fill-in-buy-ticket -->
+
+Sometimes you need clear directions to a specific landmark or a distant station. The most natural and polite way to ask someone for this information is by using the phrase **як дістатися до** (how to get to).
+
+*   **Вибачте, як дістатися до аеропорту?** — Excuse me, how do I get to the airport?
+*   **Як дістатися до центру міста?** — How do I get to the city center?
+*   **Як дістатися до вокзалу?** — How do I get to the train station?
+
+Locals will often reply by combining transport modes with the basic directional words you have already learned in previous modules. For example, they might say: **Йдіть прямо, потім наліво** (Go straight, then left) or **Поверніть направо** (Turn right). They might also tell you: **Їдьте прямо автобусом** (Ride straight by bus).
+
+Once you are safely on board your chosen vehicle, you may still need to interact with fellow passengers to ensure you are on the right track. If you are unsure of your current location, you can politely ask:
+
+*   **Яка це зупинка?** — What stop is this?
+
+If you think it is your time to leave the vehicle, you can politely ask someone who is blocking the door:
+
+*   **Мені виходити тут?** — Do I get off here?
+*   **Ви виходите?** — Are you getting off?
+
+:::tip
+When talking about a train or a bus leaving its station, native Ukrainian speakers use the verb **рушати** (to depart / to start moving) for trains, and **відбувати** or **виїжджати** for buses. It is best to use these authentic verbs instead of the direct translation `<!-- VERIFY -->`, which is a very common error among language learners. For instance, you should say **Потяг рушає** (The train is departing).
+:::
+
+<!-- INJECT_ACTIVITY: fill-in-ask-directions -->
 
 ## Підсумок — Summary
 
-Navigating a bustling Ukrainian city is remarkably straightforward once you master the core transport vocabulary and foundational grammatical patterns. In this module, we have learned to correctly identify the main types of transit vehicles, including the **автобус** (bus), **потяг** (train), **таксі** (taxi), and **метро** (metro). You now know exactly how to describe your specific method of travel using two distinct linguistic structures: the direct instrumental case pattern for declinable nouns like **автобусом** (by bus), and the locative construction with a preposition for indeclinable nouns like **на метро** (by metro). We also covered highly practical daily scenarios, such as buying a train ticket at a station window by asking for **один квиток** (one ticket) and inquiring about transit schedules using precise phrases like **о котрій годині** (at what time) and the authentic Ukrainian motion verb **рушати** (to depart). Mastering these fundamental elements allows you to travel across the country with much greater confidence.
+In this module, you have acquired the essential vocabulary needed to effectively navigate urban and intercity environments in Ukraine. We explored common city transport options such as the **автобус** (bus), **трамвай** (tram), and the very useful indeclinable nouns **метро** (metro) and **таксі** (taxi). For much longer journeys, you now know the word **потяг** (train) and **літак** (plane). Crucially, you learned to distinguish between walking (**іти**) and riding (**їхати**). When expressing exactly how you travel, you must remember the two distinct grammatical patterns. The first pattern uses the instrumental chunk directly, such as **автобусом** (by bus) or **потягом** (by train). The second pattern requires the preposition **на** for indeclinable nouns and cars, resulting in phrases like **на метро** (by metro) or **на машині** (by car). You also practiced finding the **зупинка** (stop) and asking **як дістатися до** (how to get to) a specific destination.
 
-Review the following questions to verify your personal understanding of this module's key phrases. Cover the provided answers and test yourself aloud before moving forward to the next lesson.
+Review these practical examples to build your confidence and solidify your new skills. Practice saying them aloud multiple times until they feel completely natural to you.
 
-**How do you say "I am going to work by bus"?**
-> «Я їду на роботу автобусом.»
+*   How do you get to work? — **Я їду на роботу автобусом.** (I go to work by bus.)
+*   Or by metro: — **Я їду на роботу на метро.** (I go to work by metro.)
+*   Buy a train ticket to Lviv. — **Один квиток до Львова, будь ласка.** (One ticket to Lviv, please.)
+*   Ask where the bus stop is. — **Вибачте, де зупинка автобуса?** (Excuse me, where is the bus stop?)
+*   Ask how to get to the station. — **Як дістатися до вокзалу?** (How do I get to the train station?)
+*   Ask the price of a ticket. — **Скільки коштує квиток?** (How much does the ticket cost?)
+*   Check if you need to get off at this stop. — **Мені виходити тут?** (Do I get off here?)
 
-**How do you ask "Where is the train station?"**
-> «Де залізничний вокзал?»
-
-**How do you buy a train ticket to Lviv (round trip)?**
-> «Один квиток до Львова туди й назад, будь ласка.»
-
-**How do you ask "What stop is this?"**
-> «Яка це зупинка?»
-
-**How do you say "Go straight and then left"?**
-> «Ідіть прямо, а потім наліво.»
-
+You are now fully ready to confidently travel across the city or across the country!
 </module_content>
 
 ---
@@ -190,48 +235,68 @@ version: "1.0"
 module: transport
 level: a1
 
+# NOTE — these are SHAPE examples. The real targets are at the top of this prompt
+# (10 total / 4–6 inline / 6–9 workbook,
+# 6+ items per activity). The shapes below are TRUNCATED for readability;
+# YOUR output MUST hit those minimums.
+
 inline:
   - id: marker-id-here        # MUST match an <!-- INJECT_ACTIVITY: ... --> marker
     type: quiz                 # activity type
     instruction: "Оберіть правильний варіант"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - question: "_____ стіл"
-        options: ["мій", "моя", "моє"]
+        options: ["мій", "моя", "моє", "мої"]
         correct: 0             # 0-based index
+      - question: "Це ____ книга."
+        options: ["мій", "моя", "моє", "мої"]
+        correct: 1
+      # ... add at least 6 items total — never stop at 1-2
 
   - id: another-marker-id
     type: fill-in
     instruction: "Вставте правильне слово"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - sentence: "Це ____ кімната."
         answer: "моя"
         options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ вікно."
+        answer: "моє"
+        options: ["мій", "моя", "моє"]
+      # ... ≥ 6 items total
 
 workbook:
-  - type: match-up
+  - id: match-up-vocab
+    type: match-up
     instruction: "З'єднайте пари"
-    pairs:
+    pairs:                     # ← real output: ≥ 6 pairs
       - left: "стіл"
         right: "він"
       - left: "книга"
         right: "вона"
       - left: "вікно"
         right: "воно"
+      # ... ≥ 6 pairs total
 
-  - type: group-sort
+  - id: group-sort-gender
+    type: group-sort
     instruction: "Розподіліть слова за категоріями"
     groups:
-      - label: "Category A"
-        items: ["word1", "word2"]
-      - label: "Category B"
-        items: ["word3", "word4"]
+      - label: "Чоловічий рід"
+        items: ["стіл", "олівець", "будинок"]   # ≥ 3 items per group
+      - label: "Жіночий рід"
+        items: ["книга", "ручка", "школа"]
+      - label: "Середній рід"
+        items: ["вікно", "море", "молоко"]
 
-  - type: true-false
+  - id: true-false-grammar
+    type: true-false
     instruction: "Правда чи ні?"
-    items:
-      - statement: "Statement here"
-        correct: true
-        explanation: "Why it's true"
+    items:                     # ← real output: ≥ 6 items
+      - statement: "«Книга» — це чоловічий рід."
+        correct: false
+        explanation: "Книга закінчується на -а, отже жіночий рід."
+      # ... ≥ 6 items total
 
   - type: error-correction
     instruction: "Виправте помилку"
@@ -302,7 +367,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -375,10 +440,15 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 ## Quality Rules
 
-**ITEM COUNT MINIMUMS (non-negotiable):**
-- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
-- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
-- If you can't think of enough items, add more examples from the module's vocabulary and content.
+**ACTIVITY COUNT MINIMUMS (non-negotiable, audit-enforced):**
+- **Total: 10 activities.** Inline: 4–6. Workbook: 6–9. The audit gate FAILS the module if you ship fewer.
+- **Type diversity: workbook MUST cover ≥5 distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
+- **Match the inline markers exactly.** Every `<!-- INJECT_ACTIVITY: id -->` marker in the prose needs a matching inline activity with that exact id. Skipping markers means the lesson tab is broken.
+
+**ITEM COUNT MINIMUMS (non-negotiable, per-activity):**
+- **Default minimum: 6 items per activity.** Quiz, fill-in, match-up, true-false, anagram, error-correction, translate, cloze, mark-the-words, divide-words, count-syllables, odd-one-out, group-sort categories: all ≥ 6.
+- **Lower minimums for specific types only:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items, essay-response/critical-analysis = 1 prompt.
+- If you can't think of enough items, add more examples from the module's vocabulary and content. NEVER ship a 1-item or 2-item activity unless its type cap explicitly allows it.
 - **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
 - **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
@@ -485,6 +555,27 @@ IMPORTANT: After using tools, output your COMPLETE module content as plain text.
 1. Run `verify_words` on all Ukrainian words in your exercises — every word must exist in VESUM
 2. Run `query_cefr_level` on any word you're unsure about — it must be a1-appropriate
 3. For fill-in answers and distractors, verify the exact form (case, number, gender) with `verify_lemma`
+
+---
+
+## ⚠️ MANDATORY FINAL CHECKLIST — verify before emitting YAML
+
+Walk through this checklist explicitly before you start emitting. If ANY box is unchecked, fix it FIRST.
+
+- [ ] My output has **at least 4** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
+- [ ] My output has **at least 6** workbook activities.
+- [ ] **Total ≥ 10.**
+- [ ] **Every** activity has **at least 6** items, pairs, or statements (except types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3, essay-response=1).
+- [ ] The module (inline + workbook combined) uses **at least 0 distinct activity types** (or 4+ when 0 = 0 and the workbook size allows it). I am NOT shipping a wall of quizzes.
+- [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
+- [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
+- [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+- [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+- [ ] My inline count is between 4 and 6. I did NOT create more injection markers than 6.
+- [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
+- [ ] At B1+, all instructions are in Ukrainian (no English fallback).
+
+If you cannot tick all of these, REGENERATE the activities BEFORE outputting. Shipping under-spec means the build rejects you and the heal loop has to redo your work — wasting compute.
 
 ---
 

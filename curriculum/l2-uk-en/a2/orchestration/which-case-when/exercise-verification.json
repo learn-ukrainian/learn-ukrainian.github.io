@@ -1,205 +1,364 @@
 {
-  "total_items": 128,
-  "grounded_items": 97,
+  "total_items": 222,
+  "grounded_items": 164,
   "ungrounded": [
     {
-      "word": "користуємося",
+      "word": "покласти",
+      "exercise_type": "group-sort",
+      "context": "покласти на стіл",
+      "role": "answer"
+    },
+    {
+      "word": "йти",
+      "exercise_type": "group-sort",
+      "context": "йти в магазин",
+      "role": "answer"
+    },
+    {
+      "word": "сидіти",
+      "exercise_type": "group-sort",
+      "context": "сидіти за столом",
+      "role": "answer"
+    },
+    {
+      "word": "лежати",
+      "exercise_type": "group-sort",
+      "context": "лежати на столі",
+      "role": "answer"
+    },
+    {
+      "word": "бути",
+      "exercise_type": "group-sort",
+      "context": "бути в магазині",
+      "role": "answer"
+    },
+    {
+      "word": "відпочиваємо",
+      "exercise_type": "fill-in",
+      "context": "У ____ ми відпочиваємо.",
+      "role": "context"
+    },
+    {
+      "word": "бігають",
+      "exercise_type": "fill-in",
+      "context": "Діти бігають по ____.",
+      "role": "context"
+    },
+    {
+      "word": "їздять",
       "exercise_type": "quiz",
-      "context": "Ми користуємося _____",
+      "context": "Туристи їздять по ____.",
       "role": "context"
     },
     {
-      "word": "цікавиться",
+      "word": "розумію",
       "exercise_type": "quiz",
-      "context": "Брат цікавиться _____",
+      "context": "Я розумію цей ____.",
       "role": "context"
     },
     {
-      "word": "чого",
-      "exercise_type": "group-sort",
-      "context": "Вимагає Родового відмінка (Кого? Чого?)",
-      "role": "context"
-    },
-    {
-      "word": "місцевого",
-      "exercise_type": "group-sort",
-      "context": "Вимагає Місцевого відмінка (Де? По чому?)",
-      "role": "context"
-    },
-    {
-      "word": "ціна",
-      "exercise_type": "group-sort",
-      "context": "за (ціна)",
-      "role": "answer"
-    },
-    {
-      "word": "орудного",
-      "exercise_type": "group-sort",
-      "context": "Вимагає Орудного відмінка (Ким? Чим?)",
-      "role": "context"
-    },
-    {
-      "word": "позаду",
-      "exercise_type": "group-sort",
-      "context": "за (позаду)",
-      "role": "answer"
-    },
-    {
-      "word": "народилася",
-      "exercise_type": "fill-in",
-      "context": "Вона народилася у 2024 _____.",
-      "role": "context"
-    },
-    {
-      "word": "ця",
-      "exercise_type": "fill-in",
-      "context": "Хто ця дівчина в _____?",
-      "role": "context"
-    },
-    {
-      "word": "зроблю",
-      "exercise_type": "fill-in",
-      "context": "Я зроблю це за _____.",
-      "role": "context"
-    },
-    {
-      "word": "кімната",
+      "word": "використовується",
       "exercise_type": "true-false",
-      "context": "Кіт бігає по кімната.",
+      "context": "«Я йду на роботу» — це напрямок, тому використовується знахі",
       "role": "context"
     },
     {
-      "word": "маму",
+      "word": "столу",
       "exercise_type": "true-false",
-      "context": "Я дякую маму.",
+      "context": "«Книга лежить на столу» — це правильна фраза для місця.",
       "role": "context"
     },
     {
-      "word": "собаку",
+      "word": "правильна",
       "exercise_type": "true-false",
-      "context": "Він боїться собаку.",
+      "context": "«Книга лежить на столу» — це правильна фраза для місця.",
       "role": "context"
     },
     {
-      "word": "брата",
+      "word": "фраза",
       "exercise_type": "true-false",
-      "context": "Це подарунок для брата.",
+      "context": "«Книга лежить на столу» — це правильна фраза для місця.",
       "role": "context"
     },
     {
-      "word": "музикою",
+      "word": "місця",
       "exercise_type": "true-false",
-      "context": "Вона цікавиться музикою.",
-      "role": "context"
-    },
-    {
-      "word": "політиці",
-      "exercise_type": "true-false",
-      "context": "Ми говоримо про політиці.",
-      "role": "context"
-    },
-    {
-      "word": "сестра",
-      "exercise_type": "fill-in",
-      "context": "Він телефонує (сестра) _____.",
-      "role": "context"
-    },
-    {
-      "word": "історією",
-      "exercise_type": "fill-in",
-      "context": "історією",
-      "role": "answer"
-    },
-    {
-      "word": "цікавимося",
-      "exercise_type": "fill-in",
-      "context": "Ми цікавимося (історія) _____.",
-      "role": "context"
-    },
-    {
-      "word": "історія",
-      "exercise_type": "fill-in",
-      "context": "Ми цікавимося (історія) _____.",
-      "role": "context"
-    },
-    {
-      "word": "школа",
-      "exercise_type": "fill-in",
-      "context": "Діти йдуть в (школа) _____.",
-      "role": "context"
-    },
-    {
-      "word": "робота",
-      "exercise_type": "fill-in",
-      "context": "Я працюю на (робота) _____.",
-      "role": "context"
-    },
-    {
-      "word": "ручка",
-      "exercise_type": "error-correction",
-      "context": "Він користується ручка.",
-      "role": "context"
-    },
-    {
-      "word": "вчителя",
-      "exercise_type": "error-correction",
-      "context": "Ми дякуємо вчителя.",
-      "role": "context"
-    },
-    {
-      "word": "кімнату",
-      "exercise_type": "error-correction",
-      "context": "Кіт бігає по кімнату.",
+      "context": "«Книга лежить на столу» — це правильна фраза для місця.",
       "role": "context"
     },
     {
       "word": "майбутньому",
-      "exercise_type": "error-correction",
-      "context": "Я думаю про майбутньому.",
+      "exercise_type": "true-false",
+      "context": "Ми кажемо «думати в майбутньому», використовуючи місцевий ві",
       "role": "context"
     },
     {
-      "word": "мама",
-      "exercise_type": "error-correction",
-      "context": "Це подарунок для мама.",
+      "word": "використовуючи",
+      "exercise_type": "true-false",
+      "context": "Ми кажемо «думати в майбутньому», використовуючи місцевий ві",
       "role": "context"
     },
     {
-      "word": "собаки",
-      "exercise_type": "unjumble",
-      "context": "собаки.",
+      "word": "середа",
+      "exercise_type": "true-false",
+      "context": "Для днів тижня (наприклад, середа) ми кажемо «у середі».",
+      "role": "context"
+    },
+    {
+      "word": "середі",
+      "exercise_type": "true-false",
+      "context": "Для днів тижня (наприклад, середа) ми кажемо «у середі».",
+      "role": "context"
+    },
+    {
+      "word": "орудного",
+      "exercise_type": "true-false",
+      "context": "«Кава з молоком» вимагає орудного відмінка.",
+      "role": "context"
+    },
+    {
+      "word": "сестру",
+      "exercise_type": "error-correction",
+      "context": "Я допомагаю сестру.",
+      "role": "context"
+    },
+    {
+      "word": "комп'ютер",
+      "exercise_type": "error-correction",
+      "context": "Він користується новим комп'ютер.",
+      "role": "context"
+    },
+    {
+      "word": "темрява",
+      "exercise_type": "error-correction",
+      "context": "Вона боїться темрява.",
+      "role": "context"
+    },
+    {
+      "word": "вчителів",
+      "exercise_type": "error-correction",
+      "context": "Ми щиро дякуємо вчителів.",
+      "role": "context"
+    },
+    {
+      "word": "велику",
+      "exercise_type": "error-correction",
+      "context": "Директор керує велику компанію.",
+      "role": "context"
+    },
+    {
+      "word": "компанію",
+      "exercise_type": "error-correction",
+      "context": "Директор керує велику компанію.",
+      "role": "context"
+    },
+    {
+      "word": "інвестиції",
+      "exercise_type": "error-correction",
+      "context": "Проєкт потребує інвестиції.",
+      "role": "context"
+    },
+    {
+      "word": "батьки",
+      "exercise_type": "error-correction",
+      "context": "Він телефонує батьки.",
+      "role": "context"
+    },
+    {
+      "word": "чим",
+      "exercise_type": "match-up",
+      "context": "користуватися (чим?)",
       "role": "answer"
     },
     {
-      "word": "великої",
-      "exercise_type": "unjumble",
-      "context": "великої",
+      "word": "алгоритмом",
+      "exercise_type": "match-up",
+      "context": "алгоритмом",
+      "role": "context"
+    },
+    {
+      "word": "чого",
+      "exercise_type": "match-up",
+      "context": "боятися (чого?)",
       "role": "answer"
     },
     {
-      "word": "новим",
-      "exercise_type": "unjumble",
-      "context": "новим",
+      "word": "платити",
+      "exercise_type": "match-up",
+      "context": "платити (за що?)",
       "role": "answer"
     },
     {
-      "word": "сидить",
-      "exercise_type": "unjumble",
-      "context": "сидить",
+      "word": "брату",
+      "exercise_type": "match-up",
+      "context": "брату",
+      "role": "context"
+    },
+    {
+      "word": "смачна",
+      "exercise_type": "fill-in",
+      "context": "Це смачна кава ____ молоком.",
+      "role": "context"
+    },
+    {
+      "word": "приїхав",
+      "exercise_type": "fill-in",
+      "context": "Мій друг приїхав ____ Києва.",
+      "role": "context"
+    },
+    {
+      "word": "їхати",
+      "exercise_type": "group-sort",
+      "context": "їхати в магазин",
       "role": "answer"
+    },
+    {
+      "word": "поїхати",
+      "exercise_type": "group-sort",
+      "context": "поїхати в Київ",
+      "role": "answer"
+    },
+    {
+      "word": "київ",
+      "exercise_type": "group-sort",
+      "context": "поїхати в Київ",
+      "role": "answer"
+    },
+    {
+      "word": "кімнату",
+      "exercise_type": "group-sort",
+      "context": "йти в кімнату",
+      "role": "answer"
+    },
+    {
+      "word": "купувати",
+      "exercise_type": "group-sort",
+      "context": "купувати в магазині",
+      "role": "answer"
+    },
+    {
+      "word": "жити",
+      "exercise_type": "group-sort",
+      "context": "жити в Києві",
+      "role": "answer"
+    },
+    {
+      "word": "києві",
+      "exercise_type": "group-sort",
+      "context": "жити в Києві",
+      "role": "answer"
+    },
+    {
+      "word": "стояти",
+      "exercise_type": "group-sort",
+      "context": "стояти в кімнаті",
+      "role": "answer"
+    },
+    {
+      "word": "зустрінемося",
+      "exercise_type": "error-correction",
+      "context": "Ми зустрінемося у наступного тижня.",
+      "role": "context"
+    },
+    {
+      "word": "був",
+      "exercise_type": "error-correction",
+      "context": "Я був там минулий рік.",
+      "role": "context"
+    },
+    {
+      "word": "йдемо",
+      "exercise_type": "error-correction",
+      "context": "Ми йдемо в кіно у середі.",
+      "role": "context"
+    },
+    {
+      "word": "кіно",
+      "exercise_type": "error-correction",
+      "context": "Ми йдемо в кіно у середі.",
+      "role": "context"
+    },
+    {
+      "word": "червоного",
+      "exercise_type": "error-correction",
+      "context": "Там стоїть хлопець у червоного светра.",
+      "role": "context"
+    },
+    {
+      "word": "светра",
+      "exercise_type": "error-correction",
+      "context": "Там стоїть хлопець у червоного светра.",
+      "role": "context"
+    },
+    {
+      "word": "сталося",
+      "exercise_type": "error-correction",
+      "context": "Це сталося в 2014 рік.",
+      "role": "context"
+    },
+    {
+      "word": "неділі",
+      "exercise_type": "error-correction",
+      "context": "Цю неділі я відпочиваю.",
+      "role": "context"
+    },
+    {
+      "word": "пальто",
+      "exercise_type": "error-correction",
+      "context": "Поруч розмовляє жінка в білому пальто.",
+      "role": "context"
+    },
+    {
+      "word": "любив",
+      "exercise_type": "error-correction",
+      "context": "Я любив грати у футбол у дитинство.",
+      "role": "context"
+    },
+    {
+      "word": "грати",
+      "exercise_type": "error-correction",
+      "context": "Я любив грати у футбол у дитинство.",
+      "role": "context"
+    },
+    {
+      "word": "футбол",
+      "exercise_type": "error-correction",
+      "context": "Я любив грати у футбол у дитинство.",
+      "role": "context"
+    },
+    {
+      "word": "дитинство",
+      "exercise_type": "error-correction",
+      "context": "Я любив грати у футбол у дитинство.",
+      "role": "context"
+    },
+    {
+      "word": "опису",
+      "exercise_type": "fill-in",
+      "context": "Тоді для опису статики вам потрібен ____ відмінок.",
+      "role": "context"
+    },
+    {
+      "word": "статики",
+      "exercise_type": "fill-in",
+      "context": "Тоді для опису статики вам потрібен ____ відмінок.",
+      "role": "context"
+    },
+    {
+      "word": "одягу",
+      "exercise_type": "fill-in",
+      "context": "Для опису одягу людини ми використовуємо ____ відмінок.",
+      "role": "context"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 14,
-    "tested_in_exercises": 7,
+    "tested_in_exercises": 10,
     "not_tested": [
       "алгоритм",
-      "відмінок",
-      "дієслово",
-      "керувати",
       "контекст",
-      "прийменник",
-      "характеристика"
+      "характеристика",
+      "час"
     ]
   },
   "all_grounded": false

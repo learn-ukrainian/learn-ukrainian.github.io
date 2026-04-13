@@ -1,38 +1,34 @@
-## Свій: чий саме? (Свій: Whose Exactly?) (~650 words total)
-- P1 (~120 words): [Introduction to the concept of possession in Ukrainian. Contrast English ambiguity where "he is reading his book" could mean his own or someone else's, with the Ukrainian requirement for precision using `свій`. Introduce the primary rule: `свій` reflects the subject of the sentence.]
-- P2 (~130 words): [Detailed explanation of the 3rd person distinction. Use the "wife" example from the wiki: `Він любить свою дружину` (his own) vs. `Він любить його дружину` (another man's wife). Explain how `його/її/їхній` always points to someone *outside* the subject role in that clause.]
-- P3 (~130 words): [Usage in 1st and 2nd person. Explain that for `я`, `ти`, `ми`, `ви`, both the personal possessive (`мій`, `твій`, etc.) and `свій` are grammatically correct, but `свій` is often more natural for expressing "my own." Examples: `Я люблю свою маму` vs. `Я люблю мою маму`.]
-- P4 (~150 words): [Grammatical agreement. Explain that `свій` behaves like an adjective, matching the gender, number, and case of the *object possessed*, not the possessor. Contrast: `Він бачить свою сестру` (feminine object) vs. `Вона бачить свого брата` (masculine object).]
-- P5 (~120 words): [Short dialogue between a Brother, Sister, and Mom regarding misplaced items. Examples: `Це мій светр! Ні, це свій — я його купив собі! Вона взяла свою сумку, а не твою.` Mom uses `свій` to settle the ownership based on who the subject of the action is.]
-- <!-- INJECT_ACTIVITY: quiz-possessive-choice --> [Quiz, Choose свій or мій/його/її based on sentence context, 8 items]
+## Свій: чий саме? (Свій: Whose Exactly?) (~660 words)
+- P1 (~100 words): Introduce the concept of possessive pronouns and contrast English "my/his/her" with the unique Ukrainian pronoun "свій". Provide the first key example to set the stage: "Я читаю свою книгу." (I am reading my own book).
+- P2 (~120 words): Explain the core grammatical rule of "свій": it replaces мій/твій/його/її/їхній ONLY when the possessor is the subject of the sentence performing the action. Clearly contrast two sentences: "Він читає свою книгу" (his own book) versus "Він читає його книгу" (someone else's book).
+- P3 (~120 words): Explain the critical importance of "свій" in the 3rd person to avoid ambiguity. Point out that while English uses "his" for both situations, Ukrainian demands precision. Use the classic, high-stakes example: "Він любить свою дружину" (his own wife) vs. "Він любить його дружину" (another man's wife).
+- P4 (~120 words): Discuss the optional versus mandatory use of "свій". Clarify that in 1st and 2nd person (я, ти, ми, ви), using "мій" or "твій" is acceptable ("Я люблю мою маму" or "Я люблю свою маму" are both fine, though "свою" is more idiomatic). In the 3rd person (він, вона, вони), "свій" is strictly mandatory to mean "own".
+- P5 (~100 words): Set up the dialogue scenario: A family argument about whose things are whose, demonstrating the practical difference between мій/твій and свій in everyday life.
+- P6 (~100 words): Dialogue between Брат, Сестра, and Мама. Брат: "Це мій светр(m)!" Сестра: "Ні, він мій — я купив його собі сам!" Мама (розводить руками): "Вона взяла свою сумку(f), а не твою. А він дивиться на себе у дзеркало(n)."
+- <!-- INJECT_ACTIVITY: quiz-sviy-vs-possessive --> [quiz, Choose свій or мій/його/її based on sentence context, 8 items]
 
-## Свій у відмінках (Свій in All Cases) (~480 words total)
-- P1 (~120 words): [Declension patterns for Masculine and Neuter. Show the parallels to `мій/твій`. Focus on the Genitive (`свого`), Accusative (animate vs. inanimate), and Instrumental (`своїм`). Examples: `свій телефон`, `свого друга`, `своїм життям`.]
-- P2 (~120 words): [Declension for Feminine and Plural. Focus on the tricky `-єї` endings in Genitive (`своєї`) and the plural forms (`свої`, `своїх`, `своїми`). Examples: `своєї хати`, `свою ідею`, `своїми очима`.]
-- P3 (~140 words): [Practical application in sentences. Focus on high-frequency verbs and cases: `Я горджуся своїм містом` (Instrumental), `Він розповів про свою родину` (Accusative/Prepositional), `Вона допомагає своїй сестрі` (Dative).]
-- P4 (~100 words): [Fixed collocations and idioms with `свій`. Explain expressions like `у свій час` (in its own time), `мати свою думку` (to have one's own opinion), `знати своє місце` (to know one's place), and `свої люди` (our people/kindred spirits).]
-- <!-- INJECT_ACTIVITY: true-false-sviy-grammar --> [True-False, Identify whether свій is used correctly in terms of case agreement and logic, 8 items]
+## Свій у відмінках (Свій in All Cases) (~500 words)
+- P1 (~100 words): Explain that "свій" behaves grammatically like an adjective. It declines exactly like "мій" and "твій", agreeing in gender, number, and case with the object possessed, not the possessor.
+- P2 (~120 words): Detail the masculine and neuter declension paradigm for "свій" (свій/своє, свого, своєму, свій/свого/своє, своїм, на своєму/своїм). Provide concrete examples: "Я горджуся своїм містом" (Instrumental neuter) and "Він думає про свого кота" (Genitive/Accusative masculine).
+- P3 (~120 words): Detail the feminine and plural declension paradigm for "свій" (своя, своєї, своїй, свою, своєю, на своїй; свої, своїх, своїм, своїми, на своїх). Provide concrete examples: "Вона допомагає своїй сестрі" (Dative feminine) and "Він розповів про свою родину" (Accusative feminine).
+- P4 (~100 words): Introduce common collocations and set phrases using "свій". Focus on expressions like "у свій час" (in its own time), "своя думка" (one's own opinion), "знайти своє місце" (to find one's place), and "свої люди" (our people).
+- P5 (~60 words): Give a brief summary emphasizing that the noun dictates the ending of "свій", ensuring learners always check the noun's case and gender before declining the pronoun.
+- <!-- INJECT_ACTIVITY: true-false-sviy-cases --> [true-false, Identify whether свій is used correctly in each sentence, 8 items]
 
-## Себе: зворотний займенник (Себе: The Reflexive Pronoun) (~580 words total)
-- P1 (~130 words): [The unique nature of `себе`. Explain that it has no Nominative form because it always represents the object receiving the action from the subject. It is "genderless" and "numberless"—the same form works for `я`, `вона`, and `вони`. Example: `Я бачу себе`, `Вони бачать себе`.]
-- P2 (~120 words): [Declension of `себе`. List the cases: Genitive/Accusative (`себе`), Dative/Locative (`собі`), Instrumental (`собою`). Provide clear examples for each: `бажаю собі успіху`, `задоволений собою`.]
-- P3 (~120 words): [Common verbal constructions. Focus on `почувати себе` (to feel) and `вести себе` (to behave). Provide a warning about the common mistake: `Я почуваю себе...` must be followed by an adverb like `добре` or `погано`.]
-- P4 (~110 words): [Mental and physical reflexive actions. Using `собі` for "to/for oneself": `купити собі`, `уявити собі`. Explain that `собі` often adds a sense of personal benefit or internal process. Example: `Він купив собі нову парасольку`.]
-- P5 (~100 words): [The connection to the `-ся` suffix. Briefly explain that `-ся` is a shortened form of `себе` (reflexivity). Compare `мити себе` with `митися`. This helps learners understand why reflexive verbs exist in Ukrainian.]
-- <!-- INJECT_ACTIVITY: fill-in-sebe-cases --> [Fill-in, Insert the correct case form of себе (себе, собі, собою), 8 items]
-- <!-- INJECT_ACTIVITY: match-up-sebe-idioms --> [Match-up, Match expressions with себе to their meanings (e.g., "сам по собі", "ціну собі знати"), 8 items]
+## Себе: зворотний займенник (Себе: The Reflexive Pronoun) (~600 words)
+- P1 (~120 words): Introduce the reflexive pronoun "себе" (oneself). Explain its defining grammatical feature: it has no Nominative form because it can never be the subject of a sentence. It only reflects an action back to the subject. Example: "Він бачить себе у дзеркалі" (He sees himself in the mirror).
+- P2 (~120 words): Explain the declension of "себе". Highlight that it has no gender or number forms—the forms are exactly the same whether the subject is я, ти, він, вона, or вони. Present the cases: Genitive/Accusative (себе), Dative/Locative (собі), Instrumental (собою).
+- P3 (~120 words): Detail the usage of the Accusative and Genitive forms (себе). Give examples: "Я бачу себе" (Accusative as direct object), and "Він купив це для себе" (Genitive with the preposition 'для').
+- P4 (~120 words): Detail the usage of Dative (собі) and Instrumental (собою). Emphasize "собі" for actions done for one's own benefit: "Він купив собі каву" (He bought himself a coffee) or "взяти собі" (to take for oneself). For "собою": "Вона пишається собою" (She is proud of herself).
+- P5 (~120 words): Connect "себе" to common expressions and "-ся" verbs. Teach essential phrases: "почувати себе" (to feel), "вести себе" (to behave), "уявити собі" (to imagine), and "сам по собі" (by oneself). Explain that the reflexive verb suffix "-ся" historically comes from "себе" (e.g., милувати себе = милуватися).
+- <!-- INJECT_ACTIVITY: fill-in-sebe-cases --> [fill-in, Insert the correct case form of себе (себе, собі, собою), 8 items]
+- <!-- INJECT_ACTIVITY: match-up-sebe-expressions --> [match-up, Match expressions with себе to their meanings, 8 items]
 
-## Свій та себе у мовленні (Свій and Себе in Speech) (~440 words total)
-- P1 (~140 words): [Dialogue between friends discussing daily routines and habits. Use `свій` and `себе` in a natural flow. Example: `Я завжди беру з собою парасольку. А ти? Я почуваю себе добре у своєму місті, тому рідко кудись їду. Але я купив собі нову машину, щоб їздити до своєї бабусі.`]
-- P2 (~150 words): [Short reading passage: "Мій ранок". A narrative describing a typical morning: `Я прокидаюся у своєму ліжку, дивлюся на себе у дзеркало, готую собі каву і починаю свою роботу.` This reinforces the "subject = owner/recipient" logic in a connected text.]
-- P3 (~150 words): [Troubleshooting common errors. Address the L2 trap of using `його` when `свій` is needed, and the omission of adverbs after `почувати себе`. Use the wiki warning: `Вона добре себе поводить` is often better as `Вона добре поводиться`—explain why both might be heard but one is more idiomatic.]
-- <!-- INJECT_ACTIVITY: error-correction-sviy-sebe --> [Error-correction, Find and fix incorrect usage of свій and себе in a short paragraph, 6 items]
+## Свій та себе у мовленні (Свій and Себе in Speech) (~440 words)
+- P1 (~100 words): Explain how to use "свій" and "себе" to sound natural and idiomatic in daily storytelling. Introduce a short reading text about a daily routine to show these pronouns in a continuous, realistic context.
+- P2 (~120 words): Short reading practice text. A narrator describes their morning independence: "Я прокидаюся і готую собі сніданок. Беру свою парасольку і йду на свою роботу. Я почуваю себе добре, коли все йде за моїм планом."
+- P3 (~120 words): Address typical L2 direct-translation mistakes. Highlight and correct three specific errors: *Він любить його дружину (must be свою to mean his own), *Я почуваю себе (must have an adverb like добре/погано, "почувати себе" alone is incomplete), and translating English "myself" with "себе" instead of "сам" when meaning "without help" (*Я зробив це себе -> Я зробив це сам).
+- P4 (~100 words): Conversational dialogue demonstrating natural conversational flow between two friends discussing habits: "Я завжди беру з собою парасольку. А ти?" - "А я довіряю своїй інтуїції і почуваю себе чудово."
+- <!-- INJECT_ACTIVITY: error-correction-sviy-sebe --> [error-correction, Find and fix incorrect usage of свій and себе, 6 items]
 
-## Підсумок (~150 words)
-- P1 (~150 words): [Recap the two main rules: 1) `Свій` is for the subject's possessions. 2) `Себе` is for actions directed back at the subject. Self-check questions: 
-  - Why is `Він любить його книгу` confusing? 
-  - Why can't we say `*Себе бачить мене`? 
-  - What case is `собою`? 
-  - How do you say "I feel good" correctly in Ukrainian?]
-
-Grand total: ~2300 words
+Grand total: ~2200 words

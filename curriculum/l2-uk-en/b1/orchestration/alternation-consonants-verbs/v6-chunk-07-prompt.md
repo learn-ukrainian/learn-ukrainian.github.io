@@ -33,7 +33,7 @@ Grand total: ~4350 words
 <previous_context>
 [...previous sections truncated...]
 
-природнішим і значно ближчим до автентичного мовлення носіїв української мови. Ще один надзвичайно цікавий і граматично важливий контраст ми можемо яскраво спостерігати, коли детально розглядаємо **наказовий спосіб** *(imperative mood)*. Багато іноземних студентів часто роблять дуже логічну, але граматично неправильну **аналогію** *(analogy)* між формою першої особи однини та формами прямого наказу. Ми вже точно знаємо, що від поширеного дієслова «просити» форма «я» завжди звучить як «прошу», де з'являється чіткий шиплячий звук «ш». Проте, коли ви хочете віддати комусь наказ або зробити максимально ввічливе прохання, ви повинні негайно повернутися до оригінального свистячого приголосного звука. Правильні форми наказового способу беззаперечно звучать як «проси!» для звертання до однієї людини та «просіть!» для великої групи людей або для формального, ввічливого спілкування. Ви ніколи не повинні говорити помилкові форми на кшталт «прош!» чи «прошіть!». Інший яскравий класичний приклад — це дієслово «сидіти». У формі першої особи ми дуже впевнено кажемо «я сиджу», використовуючи новий складний звук «дж». Але в наказовому способі ми обов'язково кажемо коротке «сидь!» або шанобливе «сидіть!». Це дуже наочно доводить нам усім, що фонетичне чергування приголосних у дієсловах — це зовсім не якась постійна чи абсолютно незворотна зміна самого кореня слова. Це виключно тонкий **морфологічний** *(morphological)* інструмент, який бездоганно спрацьовує тільки за певних суворих умов. Це ніби спеціальний прихований механізм. Він автоматично вмикається тільки тоді, коли ми додаємо конкретні особові закінчення теперішнього часу. Потім він так само миттєво вимикається, коли ми різко переходимо до інших складних граматичних категорій нашого мовлення. Щоб ви могли максимально швидко і безпомилково приймати правильні граматичні рішення в умовах реального, спонтанного спілкування, пропонуємо вам запам'ятати зручний логічний покроковий **алгоритм** *(flowchart)*. Крок перший: завжди спочатку визначте **дієвідміну** *(conjugation class)* вашого дієслова. Якщо це перша дієвідміна (як слово «могти»), чергування може стосуватися всіх осіб. Якщо це друга дієвідміна (як слово «сидіти») — будьте максимально уважні тільки з унікальною формою «я». Крок другий: подивіться на кінцевий приголосний звук основи. Ви маєте знайти там знайомі вам звуки: зубні, свистячі, губні або задньоязикові приголосні. Крок третій: запитайте себе, яку саме конкретну граматичну форму ви зараз намагаєтеся побудувати. Якщо це перша особа однини в теперішньому часі або ви активно формуєте новий **недоконаний вид** *(imperfective aspect)* від знайомого доконаного дієслова, тоді цей алгоритм миттєво дає вам зелене світло. Крок четвертий: сміливо і впевнено застосуйте відповідну звукову зміну. Давайте разом детально перевіримо цей аналітичний метод на дієслові «сидіти». Ми знаємо, що це друга дієвідміна. Її основа закінчується на звук «д». Ми хочемо сказати слово «я» в теперішньому часі. Наш алгоритм підказує нам перетворити звук «д» на африкат «дж», і ми успішно отримуємо ідеальне слово «сиджу». Тепер візьмемо для контрасту інше слово — «могти». Це типова перша дієвідміна. Приголосний основи тут — задньоязиковий звук «г». Ми формуємо дієвідмінювання теперішнього часу абсолютно для всіх осіб. Наш надійний алгоритм легко змінює звук «г» на шиплячий «ж», відразу даючи нам правильні форми «можу», «можеш», «можуть». Цей дуже простий, але неймовірно ефективний логічний шлях гарантовано допоможе вам назавжди позбутися будь-яких сумнівів під час розмови чи написання текстів українською мовою. <!-- INJECT_ACTIVITY: error-correction, Find and fix conjugation errors in sentences, 6 items -->
+to giving commands or making requests. When you form the imperative mood, you might initially be tempted to use the altered consonant, especially if you are highly accustomed to the first-person singular form. However, the imperative mood is built directly from the present tense stem without the specific historical soft vowel trigger that caused the alternation in the first place. Коли ви просите або безпосередньо наказуєте комусь щось зробити, ви використовуєте наказовий спосіб. Хоча ми впевнено кажемо «я прошу» зі звуком [ш], форма наказового способу зберігає чистий і твердий звук [с]. Тому граматично правильно казати «проси!» або «просіть!», а не «прош!». Так само дієслово «сидіти» має форму «я сиджу», але наказ завжди звучить як «сиди!» або «сидіть!». Дієслово «водити» дає нам форму «я воджу», проте ми кажемо «води!». Це доводить, що чергування у цих дієсловах — це не постійна зміна кореня, а лише граматична реакція на те, яка **особа** (grammatical person — я/ти/він) виконує дію. > *When you ask or directly order someone to do something, you use the imperative mood. Although we confidently say "я прошу" (I ask) with the [sh] sound, the imperative form keeps the clear and hard [s] sound. Therefore, it is grammatically correct to say "проси!" or "просіть!" (ask!), not "прош!". Similarly, the verb "сидіти" (to sit) has the form "я сиджу" (I sit), but the command always sounds like "сиди!" or "сидіть!" (sit!). The verb "водити" (to lead) gives us the form "я воджу", yet we say "води!". This proves that the alternation in these verbs is not a permanent change to the root, but only a grammatical reaction to which person performs the action.* :::info **Grammar box** Always use the base consonant of the infinitive stem when forming the imperative mood for verbs of the second conjugation. The alternation to a sibilant or affricate is strictly reserved for the first person singular (я) in the present or simple future tense. ::: To navigate these linguistic rules confidently in real-time conversation, you can use a simple mental flowchart. The first step is to definitively determine the **дієвідміна** (conjugation class — verb classification) of the verb. This initial classification dictates exactly how broadly the phonetic rule applies across the paradigm. By asking yourself a short series of logical questions, you will always know whether to keep the base consonant or apply a phonetic shift. Перший крок — перевірити дієвідміну вашого нового дієслова. Якщо це перша дієвідміна (як «могти»), чергування `[г]` на `[ж]` відбуватиметься абсолютно в усіх особах: «я можу», «ти можеш», «він може». Другий крок стосується другої дієвідміни: якщо це дієслово типу «сидіти», уважно знайдіть кінцевий приголосний його основи. Третій крок — перевірте граматичну форму. Ви говорите виключно про себе у формі, яка позначає **теперішній час** (present tense)? Якщо так, сміливо змінюйте звук `[д]` на `[дж]`: «я сиджу». Ви утворюєте новий **недоконаний вид** (imperfective aspect) від дієслова, яке вже має **доконаний вид** (perfective aspect)? Якщо так, зміна також є необхідною. В усіх інших можливих випадках просто залишайте базовий приголосний без змін. <!-- INJECT_ACTIVITY: error-correction-conjugation -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -646,7 +646,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -659,18 +726,67 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (7/7).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] чергування (alternation — systematic sound change)
+- [ ] дієслово (verb)
+- [ ] дієвідміна (conjugation class — verb classification)
+- [ ] особа (grammatical person — я/ти/він)
+- [ ] теперішній час (present tense)
+- [ ] інфінітив (infinitive — base verb form)
+- [ ] зубний (dental — consonant formed at the teeth: д, т)
+- [ ] свистячий (sibilant — whistling consonant: з, с, ц, дз)
+- [ ] губний (labial — consonant formed with lips: б, п, в, м, ф)
+- [ ] задньоязиковий (velar — consonant formed at back of mouth: г, к, х)
+- [ ] доконаний вид (perfective aspect)
+- [ ] недоконаний вид (imperfective aspect)
+- [ ] парадигма (paradigm — full set of inflected forms)
+- [ ] палаталізація (palatalization — softening of consonant)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Підсумок: таблиця дієслівних чергувань (~450 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

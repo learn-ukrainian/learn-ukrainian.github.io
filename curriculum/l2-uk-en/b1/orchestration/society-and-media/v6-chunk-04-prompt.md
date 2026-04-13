@@ -25,7 +25,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-в тих питаннях, де вони зовсім не є фахівцями. Давайте порівняємо два різні газетні заголовки. Звичайний нейтральний заголовок звучить так: «Міська рада сьогодні розглядає новий проект бюджету на наступний рік». А ось типовий маніпулятивний варіант із використанням агресивних ярликів: «Корумповані місцеві чиновники знову планують таємно вкрасти наші гроші!». В українському контексті вміння швидко розпізнавати ці небезпечні прийоми має життєво важливе значення. Сьогодні ворожа російська пропаганда масовано використовує абсолютно всі описані вище методи проти нашої незалежної держави. Це вже не просто класичне медіаманіпулювання, а справжня, дуже потужна інформаційна зброя. Наприклад, російські державні медіа системно використовують підміну понять, коли називають жорстоку війну вигаданим терміном «спеціальна військова операція». Вони також щодня активно застосовують емоційний вплив, щоб постійно залякувати українців та громадян інших європейських країн. Саме тому критичне читання українською мовою сьогодні — це зовсім не просто корисна мовна навичка. Це справжня і надзвичайно ефективна **культурна самооборона** *(cultural self-defense)*. Читаючи новини, ви завжди повинні чітко розуміти, як саме ворог намагається викривити об'єктивну реальність і нав'язати вам свої токсичні наративи. Щоб успішно і впевнено протидіяти такій небезпечній брехні, вам обов'язково знадобиться спеціальна лексика. Головне правило будь-якого розумного читача — завжди потрібно ретельно **перевірити** *(to verify)* підозрілу інформацію. Ви повинні самостійно знайти надійне і справді **достовірне** *(reliable)* офіційне джерело. Якщо ж поширена інформація виявилася повністю вигаданою, ми називаємо її словом **фейк** *(fake)*. В Україні зараз дуже активно працюють професійні організації, які щодня спростовують різноманітну брехню. Серед найвідоміших проектів можна назвати ініціативи StopFake та VoxCheck. Їхній щоденний процес перевірки дуже простий і логічний. Спочатку вони критично запитують: яке саме першоджерело опублікувало цю інформацію? Далі фахові експерти шукають відповідь на ключове питання: чи взагалі існують реальні докази для цього надзвичайно гучного твердження? Ви також можете самостійно аналізувати сумнівні медіатексти. Для цього завжди використовуйте простий контрольний список для критичного читання. Кожного разу запитуйте себе: «Хто є справжнім автором цього тексту?», «Яка його реальна мета?» та «Чи є тут занадто сильні емоційні слова?». Давайте разом проаналізуємо типовий маніпулятивний **клікбейт** *(clickbait)*. Уявіть яскравий заголовок: «Шок! Учені знайшли таємний дешевий засіб від усіх існуючих хвороб!». Тут ми одразу бачимо сильний емоційний вплив (слово «шок»), відсутність конкретики щодо назви засобу, нереальну обіцянку медичного дива та активне використання окличних знаків. Важливо розуміти, що цей заголовок створений виключно для того, щоб змусити вас швидко натиснути на посилання, а зовсім не для чесного інформування. Для більш глибокого та професійного аналізу маніпулятивних текстів ми дуже часто використовуємо українські дієприслівники. Вони чудово допомагають стисло описати дві одночасні дії журналіста-маніпулятора. Наприклад: «**Маніпулюючи** *(manipulating)* сильними емоціями довірливих читачів, цей невідомий автор намагається посіяти паніку в нашому суспільстві». Або ось ще один гарний приклад: «**Використовуючи** *(using)* образливі ярлики, сумнівні засоби масової інформації швидко і непомітно змінюють громадську думку». Дієприслівники роблять вашу аналітичну мову значно більш професійною, точною та стилістично елегантною. Вони дозволяють вам дуже чітко пояснити механізм того, як саме працює небезпечна пропаганда в сучасному глобальному інформаційному світі. <!-- INJECT_ACTIVITY: reading, "Прочитайте текст та знайдіть маркери маніпулювання (емоційний вплив, ярлики, підміна фактів)." --> <!-- INJECT_ACTIVITY: short-answer, "Перевірте 3 твердження за допомогою алгоритму фактчекінгу: хто автор, яке джерело, чи є докази." -->
+should always ask what the actual **джерело** (source) is and whether there is tangible proof. :::note **Quick tip** When checking a source, look closely at the URL. Many fake news sites use domains that look almost identical to real news outlets but contain slight misspellings or unusual domain extensions. ::: Процес перевірки фактів вимагає часу, але він є абсолютно необхідним у сучасному світі. Якщо ви бачите сенсаційну новину, спершу знайдіть її першоджерело і переконайтеся, що воно є достовірним. Надійні українські організації щодня аналізують тисячі повідомлень, щоб знайти маніпуляції та спростувати брехню. Вони вчать нас ставити правильні запитання: звідки взялася ця інформація і хто несе відповідальність за її правдивість? When you encounter a new media text, you should employ a mental checklist to evaluate its integrity. Always start by asking "Who is the author?" and "What is the primary goal of this publication?" Let us walk through a typical clickbait headline: "Doctors are shocked! This simple root will cure all diseases in three days!" This immediately fails the checklist because it uses an unnamed authority, extreme emotional appeal, and promises an unrealistic miracle without citing any verifiable scientific study. Критичне мислення починається з простих запитань, які ви ставите тексту під час читання. Хто написав цю статтю і чому вона з'явилася саме зараз? Чи намагається автор викликати у вас сильний гнів або надзвичайну радість? Якщо стаття містить забагато емоційних слів і не надає жодних посилань на офіційні документи, це майже напевно маніпулятивний матеріал. > *Critical thinking begins with simple questions that you ask the text while reading. Who wrote this article and why did it appear exactly now? Is the author trying to cause you strong anger or extreme joy? If the article contains too many emotional words and does not provide any links to official documents, it is almost certainly manipulative material.* Describing these manipulative strategies is an excellent opportunity to practice using gerunds in your own writing. Gerunds allow you to express exactly how an action is performed by modifying the main verb in the sentence. For example, you can effectively analyze a text by stating that the author attempts to persuade the reader by manipulating their deep-seated emotions. Similarly, you might explain that by using simplistic and offensive labels, the mass media change public opinion without ever presenting logical arguments. This syntactic structure is extremely common in advanced analytical writing. Маніпулюючи людськими емоціями, недобросовісний автор намагається приховати відсутність реальних доказів. Використовуючи образливі ярлики, певні засоби масової інформації змінюють ставлення суспільства до важливих проблем. Підмінюючи факти суб'єктивними думками, пропагандисти створюють ілюзію правдивості своїх сумнівних тверджень. Аналізуючи такі тексти, ми вчимося бачити приховані наміри. :::info **Grammar box** When analyzing media, gerunds (дієприслівники) ending in **-чи** or **-ши** are incredibly useful for explaining *how* an author achieves their goal. They describe an action performed simultaneously with the main verb by the same subject. Example: **Використовуючи** (Using) фейки, вони поширюють паніку. ::: <!-- INJECT_ACTIVITY: match-up, manipulation techniques --> <!-- INJECT_ACTIVITY: reading, evaluate text for manipulation markers --> <!-- INJECT_ACTIVITY: fill-in, fact-checking process -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -567,7 +567,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -580,18 +647,66 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] засоби масової інформації (mass media — channels of public communication)
+- [ ] суспільство (society — organized community of people)
+- [ ] громадянин (citizen — member of a state)
+- [ ] публіцистичний стиль (publicistic style — media register)
+- [ ] новина (news item — report of a recent event)
+- [ ] заголовок (headline — title of a news article)
+- [ ] факт (fact — verifiable statement)
+- [ ] думка (opinion — personal view)
+- [ ] маніпулювання (manipulation — hidden influence)
+- [ ] волонтер (volunteer — person working without pay)
+- [ ] джерело (source — origin of information)
+- [ ] кореспондент (correspondent — reporter)
+- [ ] повідомити (to report — to convey news)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Суспільне життя (~770 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

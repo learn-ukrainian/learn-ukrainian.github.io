@@ -1,57 +1,67 @@
 ## Linguistic Scan
-No major linguistic errors in terminology or vocabulary choice (no Russianisms, Surzhyk, or Calques found). However, there is a clear categorization error in the grammatical explanation: the noun `магазин` is incorrectly listed as taking the `-у` ending in the Locative case, even though it takes an `-і` ending (`у магазині`). This is flagged as a critical pedagogical error.
+[Critical] `## Місцевий відмінок (The Locative Case)`: “For feminine nouns ending in **-а** or **-я**, replace the final vowel with **-і**.” This overgeneralizes locative formation and teaches unsafe morphology. VESUM-backed locatives such as `аптека → аптеці` and `рука → руці` show stem changes; the stated rule would produce nonexistent forms like `бібліотекі`.
 
 ## Exercise Check
-All 4 activity markers are present, correctly placed after their respective teaching sections, and aligned with the plan's `activity_hints`:
-- `<!-- INJECT_ACTIVITY: match-nom-loc -->` (matches `match-up` focus: nominative to locative)
-- `<!-- INJECT_ACTIVITY: quiz-loc-form -->` (matches `quiz` focus: locative forms)
-Both are placed correctly after the "Місцевий відмінок" section.
-- `<!-- INJECT_ACTIVITY: quiz-v-na -->` (matches `quiz` focus: В or на?)
-- `<!-- INJECT_ACTIVITY: fill-in-de -->` (matches `fill-in` focus: Answer Де?)
-Both are placed correctly after the "В чи на?" section.
-There are no missing exercises and counts align with the plan.
+4/4 planned markers are present: `match-up-nominative-locative`, `fill-in-answer-where`, `quiz-v-or-na`, `quiz-where-is-it`.
+
+Placement is coherent:
+- `match-up-nominative-locative` and `fill-in-answer-where` come after the locative-form explanation.
+- `quiz-v-or-na` and `quiz-where-is-it` come after the `В чи на?` section.
+
+No inline DSL exercise blocks are present, so only marker coverage/placement could be audited here.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 10/10 | Covers all outline points, dialogues, grammatical rules, and the decolonization note. |
-| 2. Linguistic accuracy | 9/10 | Vocabulary and forms are correct, but `магазин` is incorrectly categorized under the `-у` ending group. |
-| 3. Pedagogical quality | 8/10 | The explanation lists `* магази́н → у/в магази́ні` as an example of masculine nouns that take the `-у` ending, despite the word having an `-і` ending. This is highly confusing for learners trying to observe patterns. |
-| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary from the plan is included naturally in the text. |
-| 5. Exercise quality | 10/10 | Exercises are logically placed and align perfectly with the plan's activity hints. |
-| 6. Engagement & tone | 10/10 | Warm, encouraging teacher tone without excessive filler. Excellent use of dialogue framing. |
-| 7. Structural integrity | 10/10 | Word count (1291) is comfortably above the 1200 target. H2 headers map correctly to the plan outline. |
-| 8. Cultural accuracy | 10/10 | The Decolonization Note regarding "в Україні" vs "на Україні" is precise, historically accurate, and extremely well-phrased. |
-| 9. Dialogue & conversation quality | 10/10 | Dialogues are natural, multi-turn, formatted with named speakers, and provide solid contextual examples of the grammar. |
+| 1. Plan adherence | 8/10 | The four planned H2 sections are present and most outline points are covered, but the plan’s newcomer-neighbor place-finding setup is underdelivered: `аптека` never appears in the prose, even though the source-of-truth scenario explicitly includes it. |
+| 2. Linguistic accuracy | 6/10 | The sentence “For feminine nouns ending in **-а** or **-я**, replace the final vowel with **-і**.” is factually unsafe; verified locatives such as `аптека → аптеці` and `рука → руці` contradict that blanket rule. |
+| 3. Pedagogical quality | 7/10 | The module follows a dialogue → explanation → practice flow, but it teaches the overgeneralized feminine-locative rule as a rule, not as a limited pattern, which risks learners producing wrong forms. |
+| 4. Vocabulary coverage | 9/10 | Required vocabulary is contextualized naturally: `в школі`, `на роботі`, `у банку`, `у/в магазині`, `на вулиці`, `у місті`; recommended items like `у лікарні`, `у/в кафе`, `на площі`, `на вокзалі`, `на пошті`, `в парку` also appear. |
+| 5. Exercise quality | 9/10 | All four marker IDs from `activity_hints` are present and each follows the relevant teaching section, so the exercise scaffolding is aligned even though the generated YAML content is not shown here. |
+| 6. Engagement & tone | 9/10 | The tone stays teacherly and concrete, e.g. “Learn the preposition and the noun together as a single grammatical chunk,” without drifting into gamified filler. |
+| 7. Structural integrity | 6/10 | The pipeline note gives `Word count: 1133 words`, which is below the 1200 target. H2 structure and ordering are otherwise clean. |
+| 8. Cultural accuracy | 9/10 | “Never say **на Україні**” and the sovereignty framing are culturally aligned and avoid Russian-centered framing. |
+| 9. Dialogue & conversation quality | 7/10 | Named speakers help, but the opener “Добрий день! Де Олена? … А Тарас? … А діти?” reads like an unexplained interrogation rather than a natural social exchange. |
 
 ## Findings
-[Pedagogical quality] [Critical]
-Location: Section `Місцевий відмінок — The Locative Case` -> "However, a very common group of masculine nouns takes the **-у** ending..."
-Issue: The noun `магазин` correctly takes the `-і` ending in the locative case (`в магазині`), but it is incorrectly listed here as an example of a masculine noun taking the `-у` ending.
-Fix: Move `* магази́н → у/в магази́ні (in the shop)` up to the preceding list of masculine nouns that take the `-і` ending.
+[LINGUISTIC ACCURACY] [SEVERITY: critical]  
+Location: `## Місцевий відмінок (The Locative Case)` — “For feminine nouns ending in **-а** or **-я**, replace the final vowel with **-і**.”  
+Issue: This is a false blanket rule. Common locatives such as `аптека → аптеці` and `рука → руці` require stem changes, so the wording teaches learners to generate wrong forms.  
+Fix: Replace the sentence with a safer A1 formulation: many feminine nouns have `-і` in the locative, sometimes with a stem change, so learners should memorize high-frequency place phrases.
+
+[PLAN ADHERENCE] [SEVERITY: major]  
+Location: `## Діалоги (Dialogues)` — the prose includes `в школі`, `на роботі`, `в Києві`, `в офісі`, but not the plan’s explicit newcomer-neighbor place-finding setup; `аптека` has 0 occurrences in the module text.  
+Issue: The source-of-truth scenario calls for asking where to find places such as `аптека`, `банк`, `пошта`, `кафе`, `лікарня`, `парк`, but the module never realizes that situation directly.  
+Fix: Insert a short additional dialogue about finding places in a new city using locative answers such as `в аптеці`, `у банку`, `на пошті`, `у кафе`, `у лікарні`, `в парку`.
+
+[STRUCTURAL INTEGRITY] [SEVERITY: major]  
+Location: Pipeline note — `Word count: 1133 words`  
+Issue: The module is below the 1200-word target.  
+Fix: Add a compact extra dialogue/example block; the place-finding dialogue above is the cleanest way to satisfy both the plan gap and the word-count requirement.
+
+[DIALOGUE & CONVERSATION QUALITY] [SEVERITY: major]  
+Location: opening dialogue — “**Новий мешканець:** Добрий день! Де Олена?”  
+Issue: The newcomer immediately asks about unexplained third parties, which makes the exchange feel artificial and interrogative.  
+Fix: Add one contextualizing clause to the opening line so the learner understands why these questions are being asked.
 
 ## Verdict: REVISE
-The module is exceptionally strong in tone, structure, and cultural context. However, categorizing an `-і` ending word as an example of an `-у` ending pattern is a critical pedagogical error that must be fixed to avoid teaching learners contradictory rules.
+REVISE — there is a confirmed critical grammar error, the module is under the target word count, and the opening dialogue plus missing place-finding scenario weaken plan execution. Multiple dimensions fall below 9 and require fixes.
 
 <fixes>
-- find: |
-    * офіс → в офісі (in the office)
-    * теа́тр → у теа́трі (in the theater)
-    * стіл → на столі (on the table)
+- find: "For feminine nouns ending in **-а** or **-я**, replace the final vowel with **-і**."
+  replace: "Many feminine nouns ending in **-а** or **-я** have **-і** in the locative, sometimes with a stem change, so learn the most common place words as fixed phrases."
 
-    However, a very common group of masculine nouns takes the **-у** ending. These are often high-frequency places and spaces that learners must memorize early on.
-    * парк → у парку (in the park)
-    * банк → у ба́нку (at the bank)
-    * сад → у саду́ (in the orchard)
-    * магази́н → у/в магази́ні (in the shop)
-  replace: |
-    * офіс → в офісі (in the office)
-    * теа́тр → у теа́трі (in the theater)
-    * стіл → на столі (on the table)
-    * магази́н → у/в магази́ні (in the shop)
+- find: "> **Новий мешканець:** Добрий день! Де Олена? *(Good day! Where is Olena?)*"
+  replace: "> **Новий мешканець:** Добрий день! Я ще нікого тут не знаю. Де зараз Олена? *(Good day! I do not know anyone here yet. Where is Olena now?)*"
 
-    However, a very common group of masculine nouns takes the **-у** ending. These are often high-frequency places and spaces that learners must memorize early on.
-    * парк → у парку (in the park)
-    * банк → у ба́нку (at the bank)
-    * сад → у саду́ (in the orchard)
+- insert_after: "The preposition tells us the spatial relationship, and the ending confirms it."
+  content: |
+    One more everyday situation from this module is asking where to find places in a new city:
+
+    > **Новий мешканець:** Скажіть, будь ласка, де можна купити ліки? *(Excuse me, where can I buy medicine?)*
+    > **Сусід:** В аптеці, на цій вулиці. *(At the pharmacy, on this street.)*
+    > **Новий мешканець:** А де зняти гроші або відправити листа? *(And where can I withdraw money or mail a letter?)*
+    > **Сусід:** У банку й на пошті, вони біля площі. *(At the bank and at the post office; they are by the square.)*
+    > **Новий мешканець:** А де випити каву або знайти лікаря? *(And where can I have coffee or find a doctor?)*
+    > **Сусід:** У кафе біля парку, а лікар у лікарні недалеко. *(In the café by the park, and the doctor is in the hospital nearby.)*
 </fixes>

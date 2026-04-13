@@ -26,7 +26,7 @@ Grand total: ~2350 words
 <previous_context>
 [...previous sections truncated...]
 
-будинку. Вони грають у настільну гру, але раптом чують дивний звук. Зверніть увагу на те, як вони використовують неозначені та заперечні займенники. > — **Олена:** Ти чув цей звук? **Щось** (something) важке впало на кухні! > — **Максим:** Це дуже дивно. **Ніхто** (nobody) не міг туди зайти зараз. > — **Олена:** Але я точно чула гучний звук. Може, **хтось** (someone) пішов туди і шукає воду або їжу? > — **Максим:** Ні, я впевнений. **Будь-хто** (anyone) з наших гостей зараз сидить у залі. Ми всі тут. > — **Олена:** Але **десь** (somewhere) у цьому будинку має бути кіт. Може, це він стрибнув на стіл? > — **Максим:** Я **нікого** (nobody) не бачив сьогодні. Кота тут немає. > — **Олена:** Все одно треба **кому-небудь** (to anyone) піти на кухню і подивитися, що там сталося. > — **Максим:** Добре, я піду і перевірю. Я **нічого** (nothing) не боюся у цьому будинку. А тепер прочитайте коротку історію про дивний вечір. Спробуйте знайти всі неозначені та заперечні слова. Був пізній і темний вечір. Один чоловік повільно йшов додому через старий міський парк. Раптом він чітко почув тихі кроки позаду себе. Він подумав, що **хтось** (someone) іде за ним. Він швидко зупинився і уважно подивився назад. Але там **нікого** (nobody) не було. На вулиці була абсолютна тиша. **Ніхто** (nobody) не гуляв у цей пізній час. Чоловік пішов далі, але трохи швидше. Раптом він відчув, що він **щось** (something) загубив. Він зупинився знову і швидко перевірив усі свої кишені. Але там **нічого** (nothing) не було, крім старих ключів. Він хотів запитати **кого-небудь** (anyone) про час, щоб заспокоїтися. Але вулиця була абсолютно порожня. Він **ніде** (nowhere) не бачив інших людей чи машин. Раптом він різко прокинувся. Він лежав у своєму теплому ліжку вдома. Чоловік згадав, що **колись** (once) у дитинстві він уже бачив цей дивний сон. Це був просто поганий сон. Насправді **нічого** (nothing) страшного не сталося. Давайте коротко повторимо типові помилки. Студенти часто роблять їх, коли вивчають ці займенники. По-перше, ніколи не забувайте про заперечну частку «не». В українській мові завжди є подвійне заперечення. Ви не можете просто сказати «Ніхто знає». Це велика помилка. Ви завжди повинні сказати «Ніхто **не** знає». Або ви можете сказати «Я **нічого** не бачу». По-друге, ніколи не використовуйте російську частку «-то». В українській мові немає слів «хто-то» або «що-то». Це суржик. Ми завжди використовуємо питому українську частку «-сь». Правильно казати **хтось** (someone) та **щось** (something). По-третє, будьте дуже уважні з прийменниками. Якщо ви маєте прийменник, він стає всередину слова. Це стосується слів із часткою «будь-» або префіксом «ні-». Наприклад, ми не кажемо «з будь-ким». Правильно казати **будь з ким** (with anyone). Також ми ніколи не кажемо «з ніким». Правильно казати **ні з ким** (with nobody). Усі три слова пишуться окремо. Ці маленькі слова дуже важливі для щоденного спілкування. Коли ви використовуєте їх правильно, ваша українська мова звучить набагато природніше. Ви можете легко говорити про невідомі речі. Також ви можете правильно будувати заперечення. Практикуйтеся щодня, і ви будете говорити впевнено і красиво. Ви будете говорити як справжній носій мови! <!-- INJECT_ACTIVITY: quiz-pronoun-context -->
+will buy a new one.)* Ця коротка історія допоможе вам побачити нові займенники в дії. Ви побачите, як усі ці слова працюють разом у природному контексті. Автор використовує різні форми та відмінки для створення атмосфери. Зверніть особливу увагу на подвійне заперечення в реченнях. > *This short story will help you see the new pronouns in action. You will see how all these words work together in a natural context. The author uses different forms and cases to create an atmosphere. Pay special attention to the double negation in the sentences.* Був пізній вечір. Чоловік ішов додому через старий парк. Раптом він почув, що **хтось** іде за ним. Він зупинився і подивився назад, але там **нікого** не було. На вулиці було абсолютно тихо. **Ніхто** не гуляв у такий час. Чоловік подумав, що він **щось** загубив. > *It was a late evening. A man was walking home through an old park. Suddenly he heard that someone was walking behind him. He stopped and looked back, but there was nobody there. It was absolutely quiet on the street. Nobody was walking at such a time. The man thought that he had lost something.* Він перевірив свої кишені, але там нічого не бракувало. Він хотів запитати **кого-небудь** на вулиці, котра година, але навколо не було людей. Він **ніде** не бачив світла у вікнах. **Дехто** боїться темряви, і він також відчув страх. Раптом він згадав, що **колись** уже бачив такий сон. Це був просто поганий сон, і він **ні про що** не хвилювався. > *He checked his pockets, but nothing was missing. He wanted to ask anyone on the street what time it was, but there were no people around. He saw no light in the windows anywhere. Some people are afraid of the dark, and he also felt fear. Suddenly he remembered that he had once already seen such a dream. It was just a bad dream, and he worried about nothing.* As you practice these pronouns, keep in mind the three most frequent errors that learners make. First, never forget the particle **не** when using double negation. A sentence like *"Ніхто знає"* is impossible in Ukrainian; you must always say **Ніхто не знає** (Nobody knows). Second, avoid using incorrect suffixes. Always use the Ukrainian **-сь** for specific unknown things, such as **хтось** or **щось**. Third, pay close attention to prepositions. They must break the negative and indefinite pronouns apart, sitting directly in the middle. :::note **Quick tip** Never write *"з будь-ким"* or *"про ніщо"*. Always split the words: **будь з ким** (with anyone) and **ні про що** (about nothing). This structure is mandatory for all pronouns with prefixes like **ні-** and **будь-**. ::: Mastering these indefinite and negative pronouns makes your speech sound much more natural and precise. You can now handle uncertainty, describe vague situations, and use absolute negation exactly like a native speaker. Without these words, your ability to express complex thoughts is **ніщо** (nothing). Keep practicing these small details, and your Ukrainian will become incredibly fluent. <!-- INJECT_ACTIVITY: quiz-pronoun-context -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -481,7 +481,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 6: A2 finale (A2 M51-M69)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 40%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 40% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 70-90% Ukrainian.
 LANGUAGE ROLES:
@@ -500,18 +567,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (5/5).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] хтось (someone)
+- [ ] щось (something)
+- [ ] ніхто (nobody)
+- [ ] ніщо (nothing)
+- [ ] ніколи (never)
+- [ ] ніде (nowhere)
+- [ ] дехто (some people)
+- [ ] будь-хто (anyone)
+- [ ] десь (somewhere)
+- [ ] колись (once, sometime)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Підсумок (~150 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

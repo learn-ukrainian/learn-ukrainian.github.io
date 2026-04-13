@@ -1,36 +1,86 @@
-## Професія і фах: базова лексика
+## Професія і фах: базова лексика (~1100 words total)
 
-Вітаю! На рівні А2 ви вже навчилися говорити базові речі про свою роботу. Ви можете впевнено сказати: «Я працюю лікарем» або «Моя робота дуже цікава та корисна». Але для вільного спілкування на рівні В1 цього недостатньо. У сучасній українській культурі робота — це не лише джерело доходу, але й дуже важлива частина соціальної ідентичності людини. Коли українці знайомляться, вони часто запитують не тільки про те, ким працює людина, але й про її кар'єрний шлях, обов'язки та професійні інтереси. Тому нам потрібно суттєво розширити ваш словниковий запас у цій темі. Ми навчимося говорити про вашу кар'єру детально, точно і професійно. Ви зможете розповісти про свою спеціальність, пояснити, за що ви відповідаєте на роботі, та обговорити процес пошуку нової посади. Це дозволить вам почуватися впевнено під час співбесіди, спілкування з новими колегами або на професійних конференціях. Робота займає велику частину нашого життя, тому важливо вміти розповідати про неї красиво та грамотно українською мовою. Вивчення цих нюансів також допоможе вам краще розуміти українські новини, статті про бізнес та професійні подкасти.
+In the early stages of learning Ukrainian, you probably learned to describe your job using simple phrases like "I am a manager" or "I work in an office". Now that you are at the B1 level, it is time to move beyond these basic structures and develop a nuanced, precise vocabulary to describe your professional life. Work is a central part of social identity in Ukrainian culture. How you speak about your career often reflects your education, ambitions, and place in society. When Ukrainians meet for the first time, asking about work is a standard way to establish common ground. Therefore, having a rich vocabulary to discuss your employment is essential for building meaningful relationships and navigating formal environments.
 
-Для початку давайте розберемося з чотирма ключовими словами, які часто плутають: **професія** *(profession)*, **фах** *(specialty/field of expertise)*, **спеціальність** *(qualification/specialty)* та **посада** *(position/job title)*. Слово «професія» означає широкий рід занять, який вимагає спеціальної підготовки та навчання. Наприклад, ми кажемо: професія лікаря, професія вчителя або професія інженера. Слово «фах» — це більш вузька сфера вашої практичної експертизи. Це те, на чому ви дуже добре розумієтеся. Наприклад: «За фахом він талановитий програміст, але зараз має власний бізнес». Слово «спеціальність» найчастіше безпосередньо пов'язане з вашою освітою та університетським дипломом. Це офіційна кваліфікація, яку ви здобули після завершення навчання. Наприклад: «Моя основна спеціальність — прикладна математика». Слово «посада» позначає конкретне місце, яке ви займаєте в компанії в даний момент. Це ваша поточна офіційна роль, яка записана в робочих документах. Подивіться на цей приклад, який логічно об'єднує всі ці поняття: «За фахом я філолог, маю спеціальність перекладача, але зараз працюю на посаді контент-менеджера у великій міжнародній компанії». Таке детальне розрізнення робить вашу розповідь дуже точною і професійною. Розуміння цих відмінностей також надзвичайно важливе, коли ви читаєте оголошення про нову роботу.
+Для багатьох українців робота — це не просто спосіб заробляти гроші, а важлива частина життя та соціальної самореалізації. У професійному середовищі високо цінують якісну освіту, прагнення до нових знань та вміння розповідати про свої кар'єрні досягнення. Коли ви вмієте точно описати свій професійний шлях, ви показуєте повагу до співрозмовника та демонструєте високий рівень володіння українською мовою.
 
-Тепер детальніше поговоримо про те, де саме ми працюємо. Найзагальніше та найпоширеніше слово — це **компанія** *(company)*. Це може бути як малий місцевий бізнес, так і велика міжнародна корпорація з офісами по всьому світу. Якщо ми говоримо про великий завод або фабрику, де щось фізично виробляють, ми використовуємо слово **підприємство** *(enterprise)*. У великій компанії чи на підприємстві завжди є різні **відділи** *(departments)*. Наприклад, ви можете працювати у відділі маркетингу, відділі продажу або у фінансовому відділі. Більшість людей, які щодня працюють з документами чи комп'ютерами, регулярно приходять в **офіс** *(office)*. Люди, з якими ви працюєте разом і вирішуєте спільні завдання, — це ваші **колеги** *(colleagues)*. Цікаво, що слово «колега» в українській мові є іменником **спільного роду** *(common gender)*. Це означає, що форма самого слова не змінюється залежно від того, чи це чоловік, чи жінка. Ми завжди визначаємо стать людини за допомогою займенників або прикметників, які стоять поруч.
-Наприклад:
-«Це мій новий колега Андрій. Він працює у фінансовому відділі».
-«Це моя хороша колега Марія. Вона дуже допомагає мені з новим проєктом».
-«Наші старші колеги організували чудову презентацію для важливих клієнтів».
-Зверніть увагу, що саме закінчення слова «колега» залишається незмінним: буква «а» в кінці зберігається для обох статей. Якщо ваша компанія має багато різних відділів, ви можете не знати всіх своїх колег особисто.
+> *For many Ukrainians, work is not just a way to earn money, but an important part of life and social self-realization. In the professional environment, quality education, a desire for new knowledge, and the ability to talk about your career achievements are highly valued. When you can accurately describe your professional path, you show respect for your interlocutor and demonstrate a high level of Ukrainian language proficiency.*
 
-Процес пошуку нової роботи також має свою специфічну та дуже важливу лексику. Коли компанія активно шукає нового працівника, вона відкриває **вакансію** *(vacancy/open position)*. Щоб успішно податися на таку вакансію, вам обов'язково потрібно надіслати своє **резюме** *(CV/resume)*. Важливо пам'ятати, що слово «резюме» є абсолютно **невідмінюваним** *(indeclinable)*. Його форма ніколи не змінюється, незалежно від відмінка чи числа у реченні. Наприклад: «Я написав усю необхідну інформацію у моєму резюме», «Мені потрібно терміново оновити своє резюме», «Наш менеджер переглянув сотні нових резюме». Після того, як ви надіслали всі документи, вас можуть запросити на **співбесіду** *(job interview)*. Це офіційна ділова розмова з роботодавцем, де ви розповідаєте про свій попередній досвід і відповідаєте на різноманітні запитання. Якщо співбесіда пройшла успішно, компанія може відразу запропонувати вам **випробувальний термін** *(probation period)*. Це спеціальний час, зазвичай кілька місяців, коли компанія перевіряє ваші практичні навички. Для студентів або людей без досвіду компанії дуже часто пропонують **стажування** *(internship)*. Це чудова можливість швидко здобути перші практичні навички та краще зрозуміти, як працює обрана сфера зсередини. Усі ці важливі етапи разом формують єдиний процес, який називається працевлаштуванням. Цей процес може бути досить стресовим, але знання правильної професійної лексики обов'язково додасть вам впевненості.
+One of the most common challenges for learners is understanding the subtle semantic distinctions between core concepts related to employment. English often uses the word "job" or "profession" interchangeably, but Ukrainian has specific terms that divide this semantic field. The word **робота** (work/job) is the most general term for employment or any physical or mental effort. However, when talking about your official qualifications and specific roles, you need to use more precise vocabulary.
 
-Коли ви вже успішно працюєте, ви починаєте активно будувати свою кар'єру. З часом ви здобуваєте дуже цінний професійний **досвід** *(experience/professional background)*. Ваш досвід показує, скільки років ви активно працювали в певній сфері та які складні завдання ви успішно вирішували. На кожній новій посаді ви маєте певні конкретні **обов'язки** *(duties/responsibilities)*. Ми найчастіше вживаємо це слово саме у формі множини, коли детально розповідаємо, що саме ми робимо щодня. Наприклад: «Мої головні щоденні обов'язки — це спілкування з клієнтами та регулярна підготовка фінансових звітів». За вашу сумлінну працю ви регулярно отримуєте гроші. У повсякденній розмовній мові ми дуже часто кажемо **зарплата** *(salary)*, але в офіційних державних документах та договорах завжди використовується більш формальний термін — **заробітна плата** *(formal salary)*. Якщо ви працюєте старанно та постійно показуєте хороші результати, ви обов'язково можете отримати **підвищення** *(promotion)*. Це приємна подія означає, що вам дають вищу посаду та більшу заробітну плату. З іншого боку, якщо ви вирішили змінити компанію або роботодавець вирішив припинити з вами співпрацю, відбувається **звільнення** *(dismissal/resignation)*. Це абсолютно природний процес у сучасному світі, який дозволяє вам рухатися далі та шукати нові, кращі можливості для свого професійного розвитку. Кожен новий важливий крок у вашій кар'єрі вимагає нових знань та постійного самовдосконалення.
+The word **професія** (profession) refers to a broad vocation or occupation that usually requires special training or formal education, such as a doctor or a teacher. In contrast, **фах** (specialty/field) denotes your specific area of expertise. Closely related to this is **спеціальність** (qualification), which is the exact qualification written on your university diploma.
 
-Тепер ми переходимо до дуже важливої теми, яка яскраво відображає сучасну українську культуру. Це використання спеціальних жіночих форм для назв професій — **фемінітивів** *(feminine forms)*. Новий український правопис 2019 року офіційно закріпив і суттєво розширив правила їх творення. Українська мова історично завжди мала природну тенденцію до використання жіночих форм, але в радянські часи перевагу штучно і примусово надавали виключно чоловічим формам. Сьогодні постійне використання фемінітивів — це абсолютна норма грамотного та сучасного українського спілкування.
-Найпопулярніший та найчастіший суфікс для творення жіночих форм — це **-к(а)**. Від базового слова «вчитель» ми утворюємо слово «вчителька», від слова «лікар» — «лікарка», від слова «директор» — «директорка», а від популярного слова «журналіст» утворюється «журналістка». Наприклад: «Головна лікарка нашої міської лікарні дуже досвідчена та розумна жінка».
-Другий дуже продуктивний суфікс — це **-ин(я)**. Він досить часто додається до слів іншомовного походження, які закінчуються на твердий приголосний. Саме так в українській мові з'являються гарні слова «хореографиня», «фотографиня» або «філософиня».
-Третій важливий суфікс — це **-иц(я)**. Він активно використовується, коли чоловіча форма слова закінчується на суфікси «-ик» або «-ник». Відповідно, слово «письменник» легко стає словом «письменниця», а слово «працівник» перетворюється на «працівниця».
-Для тих слів, які мають закінчення на «-ець», ми використовуємо спеціальне закінчення **-чиня**. Наприклад, від поширеного слова «продавець» ми правильно утворюємо жіночу форму «продавчиня».
-Використовуючи лише чоловічі форми для жінок *(❌ «Вона дуже хороший лікар»)*, ви несвідомо наслідуєте застарілу та неактуальну радянську традицію. Щоб звучати максимально сучасно, природно та поважливо, завжди свідомо обирайте фемінітиви: ✅ «Вона дуже хороша лікарка». Ви можете регулярно чути жіночі форми професій на українському телебаченні, прочитати їх у відомих журналах та знайти в офіційних державних документах.
+Finally, your **посада** (position/role) is your specific job title within a given company at this exact moment. Understanding these differences allows you to present yourself accurately. You might have the profession of an engineer, your specialty might be software development, and your current position could be a senior developer. 
 
-На завершення цієї лексичної частини ми маємо обов'язково виправити одну дуже поширену помилку. Її часто роблять студенти, що вивчають українську мову як іноземну. В англійській мові ми завжди використовуємо прийменник «as» для опису нашої професійної ролі: «I work as a doctor». Багато студентів автоматично перекладають цю фразу буквально і кажуть: ❌ «Він працює як лікар» або ❌ «Я працюю як менеджер». Запам'ятайте, що в українській мові це дуже груба граматична помилка!
-Дієслова «працювати» та «бути» завжди вимагають використання **Орудного відмінка** *(Instrumental case)* для правильного позначення професії чи ролі. Вам абсолютно не потрібні жодні додаткові прийменники, важливе лише правильне закінчення самого іменника.
-Правильна та природна граматична конструкція виглядає так: ✅ «Він працює лікарем».
-Ось кілька додаткових гарних прикладів, які допоможуть вам назавжди запам'ятати це фундаментальне правило:
-«Після закінчення університету він дуже швидко став менеджером у великому міжнародному проєкті».
-«Моя старша сестра майже два роки працювала перекладачкою в сонячній Іспанії».
-«Я хочу стати дуже хорошим програмістом, тому я щодня багато та наполегливо навчаюся».
-«Наша знайома Олена успішно працює директоркою цієї школи вже понад п'ять років».
-Завжди пам'ятайте про правило Орудного відмінка, коли ви говорите про те, ким ви працюєте. Це одразу зробить вашу українську мову набагато природнішою, впевненішою та професійнішою. Використовуйте цей відмінок впевнено кожного дня, і ви швидко помітите, як суттєво покращиться ваша розмовна українська мова.
+Дуже часто люди мають одну спеціальність за дипломом, але працюють зовсім в іншій сфері економіки. Наприклад, на співбесіді людина може сказати: «За фахом я філолог, але зараз моя посада — контент-менеджер у великій компанії». Це абсолютно нормальна ситуація для сучасного українського ринку праці, де гнучкість та вміння вчитися цінуються більше, ніж перша професія.
 
-<!-- INJECT_ACTIVITY: match-up, match definitions for професія, фах, посада, спеціальність -->
-<!-- INJECT_ACTIVITY: group-sort, categorize terms into people, places, processes, documents -->
+When describing where you work, you will encounter several essential terms that specify the type of organization or the physical space. A formal, often large-scale industrial or commercial organization is called a **підприємство** (enterprise). If you work in the corporate sector, IT, or services, you will more frequently use the word **компанія** (company).
+
+Within that company, you likely belong to a specific **відділ** (department), such as the marketing department or the human resources department. And, of course, the physical place where administrative work happens is the **офіс** (office).
+
+У кожному офісі чи на підприємстві формується свій унікальний колектив, де люди спілкуються, обмінюються ідеями та вирішують складні робочі завдання. Важливо вміти правильно звертатися до людей, з якими ви проводите значну частину часу.
+
+> *In every office or enterprise, a unique team is formed where people communicate, exchange ideas, and solve complex work tasks. It is important to know how to properly address the people with whom you spend a significant part of your time.*
+
+The people you work with directly are your colleagues. The Ukrainian word for this is **колега** (colleague). Grammatically, this word is fascinating because it belongs to a category called common gender (спільний рід). This means that the word itself always ends in "-а", but it takes masculine or feminine modifiers depending on the biological gender of the person you are referring to.
+
+Якщо ви говорите про чоловіка, ви кажете «мій новий колега». Якщо про жінку — «моя нова колега». У множині форма однакова для всіх: «мої чудові колеги». Ось кілька прикладів: «Мій колега Ігор допоміг мені з проєктом», «Моя колега Олена найкраще знає англійську мову», «Усі колеги зібралися у залі для наради».
+
+The journey of finding and starting a new job, known as **працевлаштування** (employment), follows a predictable lifecycle, and each stage has its own specific vocabulary. This process usually begins when a company announces a **вакансія** (vacancy), meaning an open position is officially available. To apply for this role, you need to submit your **резюме** (CV/resume).
+
+:::info
+**Grammar box**
+The word **резюме** is an indeclinable noun (невідмінюваний іменник) of neuter gender. This means its ending never changes, regardless of the grammatical case it is in. For example:
+
+**У моєму резюме є помилка.** — *There is a mistake in my resume.* (Locative case)
+
+**Я хочу надіслати резюме.** — *I want to send a resume.* (Accusative case)
+
+**Він прийшов без резюме.** — *He came without a resume.* (Genitive case)
+:::
+
+If your resume is successful, you will be invited for a **співбесіда** (job interview). This is a formal meeting with the employer where you discuss your skills and background. Once you pass the interview and get hired, especially if you are young or changing fields, you might start with a **стажування** (internship/training period). Even for experienced professionals, the first few months usually constitute a **випробувальний термін** (probation period) to ensure a good fit between the employee and the company.
+
+Процес працевлаштування може бути довгим і емоційно складним. Кандидати часто хвилюються перед кожною співбесідою, готують відповіді на популярні запитання та уважно вивчають інформацію про компанію. Успішне проходження всіх етапів вимагає впевненості у своїх силах.
+
+Once you are established in your role, you begin to build your professional trajectory. The foundation of your career is your **досвід** (experience). When employers review your background, they look at the duration and quality of your experience in a specific field. In your daily work, you are responsible for a specific set of tasks, which are your duties.
+
+While the singular form is **обов'язок** (duty/responsibility), in professional contexts we almost exclusively focus on the plural form, which is **обов'язки** (duties). You will often see and use these words in common workplace phrases.
+
+For their work, every employee receives financial compensation. In informal or daily communication, people most often use the word **зарплата** (salary). However, in official documents, contracts, and news, you will always see the full formal term, which is **заробітна плата** (formal wage).
+
+За свою працю кожен працівник отримує фінансову винагороду. У неформальному спілкуванні колеги часто обговорюють, якою буде їхня наступна зарплата. Проте підписуючи контракт, ви завжди звертаєте увагу на розмір заробітної плати.
+
+> *For their work, every employee receives financial compensation. In informal communication, colleagues often discuss what their next salary will be. However, when signing a contract, you always pay attention to the size of the formal wage.*
+
+As you gain experience and fulfill your duties effectively, you may receive a **підвищення** (promotion/raise). This signifies upward movement in your career, either through a better position or a higher salary. Conversely, leaving a job, whether voluntarily or not, is called **звільнення** (dismissal/resignation). Your relationship with your **керівник** (manager/supervisor) plays a huge role in both of these outcomes.
+
+A crucial aspect of modern Ukrainian professional vocabulary is the active use of feminine forms for professions, known as фемінітиви. Based on the official 2019 Ukrainian Pravopys (Orthography), using feminine suffixes to denote a woman's profession is the standard, natural, and respectful way to speak and write. This contrasts sharply with the older, Soviet-style preference for masculine forms, which often applied masculine nouns to female professionals to sound "more serious". Today, using masculine forms for women sounds outdated and unnatural in Ukrainian.
+
+Українська мова має багату традицію творення жіночих форм. Найпоширеніший суфікс — це «-к(а)». Наприклад, якщо чоловік — вчитель, то жінка — вчителька. Від слова «лікар» утворюється слово лікарка, від «директор» — директорка, а від «журналіст» — журналістка.
+
+Other productive suffixes include "-ин(я)" and "-иц(я)". For instance, a female choreographer is a **хореографиня** (female choreographer). The word for a male seller is **продавець** (seller), and its feminine counterpart is **продавчиня** (female seller). When a woman writes her resume or introduces herself at an interview, she should confidently use these feminine forms.
+
+Використання фемінітивів є важливою частиною сучасної мовної культури. Вони роблять жінок видимими в усіх професійних сферах і відображають природний розвиток української мови. Тому не бійтеся використовувати ці слова у своєму щоденному спілкуванні.
+
+> *The use of feminine forms is an important part of modern language culture. They make women visible in all professional spheres and reflect the natural development of the Ukrainian language. Therefore, do not be afraid to use these words in your daily communication.*
+
+Finally, we must address one of the most persistent errors made by English speakers when discussing professions. In English, you naturally say "He works as a doctor" or "She works as a manager". If you translate this directly into Ukrainian, you might be tempted to say "Він працює як лікар". This is a grammatical error caused by English influence.
+
+:::tip
+**Did you know?**
+In Ukrainian, roles, functions, and professions used with the verbs працювати (to work) and бути (to be) require the Instrumental case (Орудний відмінок). You do not need the word «як» (as).
+:::
+
+The correct Ukrainian norm is to use the verb and immediately follow it with the profession in the Instrumental case. So, instead of the incorrect phrase using "as", you must use the Instrumental ending.
+
+**Він працює лікарем.** — *He works as a doctor.*
+
+**Вона працює менеджеркою.** — *She works as a manager.*
+
+Це правило працює для будь-якої професії чи посади. Якщо ваш друг змінив роботу і отримав нову посаду, ви скажете: «Він став менеджером». Якщо ваша знайома розповідає про свій минулий досвід, вона скаже: «Я багато років працювала перекладачкою». Запам'ятайте цю конструкцію, адже вона звучить дуже природно і відразу показує ваше добре розуміння української граматики.
+
+By mastering the Instrumental case for professions, using correct feminine forms, and choosing the precise word for your specialty and position, you will be fully prepared to navigate any professional conversation in Ukrainian.
+
+<!-- INJECT_ACTIVITY: match-up-work-terms -->
+<!-- INJECT_ACTIVITY: group-sort-categories -->

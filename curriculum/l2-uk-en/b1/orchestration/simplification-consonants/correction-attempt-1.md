@@ -2,8 +2,6 @@
 CRITICAL: Your previous attempt failed the following checks. Fix ONLY the listed errors. Keep everything else exactly as is — do not rewrite sections that are working correctly.
 
 - FIX: Missing section heading: 'Підсумок і практика'
-- NOTE: Missing 3/14 required vocab: вимова (pronunciation — how words are spoken), закріплений (fixed — reflected in standard spelling), морфонологія (morphophonology — sound changes in morphology)
-- NOTE: Plan expects 5 exercise(s) but content has 4
 </correction_directive>
 
 LEARNINGS FROM PAST BUILDS (same error patterns seen before):

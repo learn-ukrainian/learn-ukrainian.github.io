@@ -1,216 +1,210 @@
 vocabulary:
-- word: ліка́рня
-  translation: hospital
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: кафе́
-  translation: café
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: пло́ща
-  translation: square
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: вокза́л
-  translation: train station
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: по́шта
-  translation: post office
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: шко́ла
+- word: шко́ла → в шко́лі
   translation: school
   expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: робо́та
+  pos: ''
+  gender: ''
+  verified: false
+- word: робо́та → на робо́ті
   translation: work
   expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: магази́н
+  pos: ''
+  gender: ''
+  verified: false
+- word: банк → у ба́нку
+  translation: bank
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: магази́н → у/в магази́ні
   translation: shop
   expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: ву́лиця
+  pos: ''
+  gender: ''
+  verified: false
+- word: ву́лиця → на ву́лиці
   translation: street
   expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: мі́сто
+  pos: ''
+  gender: ''
+  verified: false
+- word: мі́сто → у/в мі́сті
   translation: city
   expression: false
-  pos: ім.
-  gender: с.
+  pos: ''
+  gender: ''
+  verified: false
+- word: парк → у/в парку
+  translation: park
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: ліка́рня → у/в ліка́рні
+  translation: hospital
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: кафе́ → у/в кафе
+  translation: café
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: пло́ща → на пло́щі
+  translation: square
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: вокза́л → на вокза́лі
+  translation: train station
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: по́шта → на по́шті
+  translation: post office
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: де?
+  translation: where?
+  expression: false
+  pos: присл.
+  gender: ''
   verified: true
-- word: апте́ка
-  translation: pharmacy
+- word: ді́ти
+  translation: children
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: кі́шка
+  translation: cat
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: о́фіс
-  translation: office
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: теа́тр
-  translation: theater
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: сад
-  translation: orchard
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: дива́н
+- word: дива́н → на дива́ні
   translation: sofa
   expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: вікно́
-  translation: window
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: конце́рт
-  translation: concert
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: уро́к
-  translation: lesson
-  expression: false
-  pos: ім.
+  pos: ''
   gender: ''
-  verified: true
-- word: футбо́л
-  translation: football game
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: ста́нція
-  translation: station
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: Украї́на
-  translation: Ukraine
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: Ки́їв
+  verified: false
+- word: Ки́їв → у Ки́єві
   translation: Kyiv
   expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: сусі́д
-  translation: neighbor
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: нови́й
-  translation: new
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: ме́шканець
-  translation: resident
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: дале́ко
-  translation: far
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: бли́зько
-  translation: close
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: дру́гий
-  translation: second
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: пове́рх
-  translation: floor
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: за́раз
-  translation: now
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: телефо́н
-  translation: phone
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: Дуже приємно!
-  translation: Very nice to meet you!
-  expression: true
   pos: ''
   gender: ''
-  verified: true
-- word: в Україні
-  translation: in Ukraine
-  expression: true
+  verified: false
+- word: о́фіс → в о́фісі
+  translation: office
+  expression: false
   pos: ''
   gender: ''
-  verified: true
-- word: на роботі
-  translation: at work
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
+  verified: false
 - word: на другому поверсі
   translation: on the second floor
   expression: true
   pos: ''
   gender: ''
   verified: true
+- word: місцевий відмінок
+  translation: locative case
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: на/у кому? на/у чому?
+  translation: on/in whom? on/in what?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: в / у
+  translation: in
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: мо́ре → на мо́рі
+  translation: sea
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: уро́к → на уроці
+  translation: lesson
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: конце́рт → на конце́рті
+  translation: concert
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: Украї́на → в Украї́ні
+  translation: Ukraine
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: Львів → у Льво́ві
+  translation: Lviv
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: Оде́са → в Оде́сі
+  translation: Odesa
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: Хреща́тик → на Хреща́тику
+  translation: Khreshchatyk
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: за́вжди́
+  translation: always
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
 - word: Де ви зараз?
-  translation: Where are you now?
+  translation: Where are you right now?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: за́раз
+  translation: right now
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: вдо́ма
+  translation: at home
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: Де ви працюєте?
+  translation: Where do you work?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Де ви живете?
+  translation: Where do you live?
   expression: true
   pos: ''
   gender: ''

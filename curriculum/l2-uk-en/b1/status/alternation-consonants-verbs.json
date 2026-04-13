@@ -2,12 +2,12 @@
   "module": "alternation-consonants-verbs",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-10T21:26:00.422739Z",
+  "last_audit": "2026-04-11T16:08:46.148881Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-09T06:56:37.451394Z",
+    "md": "2026-04-11T16:07:33.453607Z",
     "meta": null,
-    "activities": "2026-04-09T06:48:24.436134Z",
+    "activities": "2026-04-11T15:52:21.435623Z",
     "vocabulary": "2026-04-09T06:49:27.193361Z",
     "research": null,
     "plan": "2026-04-04T21:31:33.289709Z"
@@ -20,18 +20,27 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 2,
-      "message": "4551/4000 (raw: 4747) | engagement: 0/5 | richness: 56% < 95% min (grammar) - REWRITE needed"
+      "violations": 3,
+      "message": "5344/4000 (raw: 5571) | engagement: 1/5 | immersion: 35.9% LOW (target 85-100% (B1.2 Motion)) | richness: 47% < 95% min (grammar) - REWRITE needed"
     },
     "activities": {
       "status": "fail",
       "violations": 1,
-      "message": "9/0 | density: 3 < 6"
+      "message": "8/0 | density: 3 < 6"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
       "message": "30/25"
+    },
+    "vocab_progression": {
+      "status": "warn",
+      "violations": 0,
+      "message": "\u0394 -28 | premature=6 | gaps=0 | well-paced=1",
+      "delta": -28,
+      "premature": 6,
+      "gaps": 0,
+      "well_paced": 1
     },
     "naturalness": {
       "status": "info",

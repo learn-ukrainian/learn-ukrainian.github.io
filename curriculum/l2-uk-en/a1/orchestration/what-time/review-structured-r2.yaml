@@ -1,0 +1,54 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'All planned H2 sections are present, and the prose covers the planned
+    core content: `Десята.`, `Пів на другу`, `о першій/об одинадцятій`, `ранку/дня/вечора`,
+    `опівдні`. Deduction: the module adds unsu'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 4
+  evidence: 'Critical factual errors: `You must avoid using the word "без"... incorrect
+    in standard Ukrainian.` and `You must never use the prepositions "в" or "у"...`.
+    Both contradict textbook evidence in the rep'
+- dimension: 3
+  name: Pedagogical quality
+  score: 6
+  evidence: The lesson has a PPP skeleton, but it blurs a key distinction with `Here,
+    the students use the question word **коли** (when) interchangeably with scheduling
+    questions.` That weakens the contrast the m
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 'Required plan vocabulary is used in prose: `година`, `котра`, `перша/друга/третя`,
+    `ранку`, `дня`, `вечора`, `ночі`; recommended items `пів`, `чверть`, `опівдні`
+    are also included.'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: 'All 4 planned activities have markers, and each appears after the relevant
+    teaching block: `quiz-clock-matching`, `match-up-digits`, `fill-in-o-kotrii`,
+    `quiz-time-of-day`.'
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: No gamified or corporate filler; the voice stays teacherly and concrete,
+    with useful modeled chunks like `О восьмій ранку` and `Я вечеряю о восьмій вечора.`
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All planned H2 headings are present and ordered correctly, markers are
+    clean, and the pipeline word count is `1436`, above the `1200` target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 7
+  evidence: 'The module is not Russocentric in framing, but it wrongly labels standard
+    Ukrainian patterns as Russianisms: `без` and the blanket ban on `в/у`.'
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 5
+  evidence: 'The first dialogue is stitched rather than natural: `Котра година? ...
+    О котрій ти працюєш? ... тоді о першій?` never clearly names the meeting, so the
+    planned scheduling situation feels under-motivat'
+findings: []

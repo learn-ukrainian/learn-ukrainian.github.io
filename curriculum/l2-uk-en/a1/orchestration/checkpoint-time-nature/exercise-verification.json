@@ -1,120 +1,18 @@
 {
-  "total_items": 121,
-  "grounded_items": 56,
+  "total_items": 106,
+  "grounded_items": 71,
   "ungrounded": [
     {
-      "word": "йдемо",
+      "word": "снідаю",
       "exercise_type": "fill-in",
-      "context": "Ми йдемо в кіно ____.",
+      "context": "____ я прокидаюся і снідаю.",
       "role": "context"
     },
     {
-      "word": "десята",
-      "exercise_type": "match-up",
-      "context": "Десята тридцять.",
-      "role": "context"
-    },
-    {
-      "word": "тридцять",
-      "exercise_type": "match-up",
-      "context": "Десята тридцять.",
-      "role": "context"
-    },
-    {
-      "word": "першій",
-      "exercise_type": "match-up",
-      "context": "О першій.",
-      "role": "context"
-    },
-    {
-      "word": "коли",
-      "exercise_type": "match-up",
-      "context": "Коли твій день народження?",
+      "word": "роботу",
+      "exercise_type": "unjumble",
+      "context": "роботу.",
       "role": "answer"
-    },
-    {
-      "word": "твій",
-      "exercise_type": "match-up",
-      "context": "Коли твій день народження?",
-      "role": "answer"
-    },
-    {
-      "word": "жовтні",
-      "exercise_type": "match-up",
-      "context": "У жовтні.",
-      "role": "context"
-    },
-    {
-      "word": "ти",
-      "exercise_type": "match-up",
-      "context": "Що ти робиш у суботу?",
-      "role": "answer"
-    },
-    {
-      "word": "робиш",
-      "exercise_type": "match-up",
-      "context": "Що ти робиш у суботу?",
-      "role": "answer"
-    },
-    {
-      "word": "граю",
-      "exercise_type": "match-up",
-      "context": "Граю у футбол.",
-      "role": "context"
-    },
-    {
-      "word": "футбол",
-      "exercise_type": "match-up",
-      "context": "Граю у футбол.",
-      "role": "context"
-    },
-    {
-      "word": "як",
-      "exercise_type": "match-up",
-      "context": "Як часто ти читаєш?",
-      "role": "answer"
-    },
-    {
-      "word": "читаєш",
-      "exercise_type": "match-up",
-      "context": "Як часто ти читаєш?",
-      "role": "answer"
-    },
-    {
-      "word": "кожен",
-      "exercise_type": "match-up",
-      "context": "Кожен день ввечері.",
-      "role": "context"
-    },
-    {
-      "word": "парк",
-      "exercise_type": "match-up",
-      "context": "Ходімо в парк!",
-      "role": "answer"
-    },
-    {
-      "word": "будеш",
-      "exercise_type": "match-up",
-      "context": "Що ти будеш робити завтра?",
-      "role": "answer"
-    },
-    {
-      "word": "робити",
-      "exercise_type": "match-up",
-      "context": "Що ти будеш робити завтра?",
-      "role": "answer"
-    },
-    {
-      "word": "буду",
-      "exercise_type": "match-up",
-      "context": "Буду працювати.",
-      "role": "context"
-    },
-    {
-      "word": "працювати",
-      "exercise_type": "match-up",
-      "context": "Буду працювати.",
-      "role": "context"
     },
     {
       "word": "після",
@@ -129,10 +27,22 @@
       "role": "answer"
     },
     {
+      "word": "парку",
+      "exercise_type": "fill-in",
+      "context": "в парку",
+      "role": "answer"
+    },
+    {
       "word": "тому",
       "exercise_type": "fill-in",
       "context": "Я гуляю, тому що сьогодні ____ і сонячно.",
       "role": "context"
+    },
+    {
+      "word": "ввечері",
+      "exercise_type": "fill-in",
+      "context": "Ввечері",
+      "role": "answer"
     },
     {
       "word": "вечеряю",
@@ -171,225 +81,135 @@
       "role": "context"
     },
     {
-      "word": "яке",
-      "exercise_type": "quiz",
-      "context": "Яке запитання правильне? (It is now one o'clock.)",
+      "word": "зустріч",
+      "exercise_type": "match-up",
+      "context": "О котрій зустріч?",
+      "role": "answer"
+    },
+    {
+      "word": "йдемо",
+      "exercise_type": "fill-in",
+      "context": "Ми йдемо в кіно ____.",
       "role": "context"
     },
     {
-      "word": "запитання",
-      "exercise_type": "quiz",
-      "context": "Яке запитання правильне? (It is now one o'clock.)",
+      "word": "коли",
+      "exercise_type": "match-up",
+      "context": "Коли твій день народження?",
+      "role": "answer"
+    },
+    {
+      "word": "твій",
+      "exercise_type": "match-up",
+      "context": "Коли твій день народження?",
+      "role": "answer"
+    },
+    {
+      "word": "жовтні",
+      "exercise_type": "match-up",
+      "context": "У жовтні.",
       "role": "context"
     },
     {
-      "word": "правильне",
-      "exercise_type": "quiz",
-      "context": "Яке запитання правильне? (It is now one o'clock.)",
+      "word": "граю",
+      "exercise_type": "match-up",
+      "context": "Граю у футбол.",
       "role": "context"
     },
     {
-      "word": "форма",
-      "exercise_type": "quiz",
-      "context": "Яка форма правильна? (The meeting is at five o'clock.)",
+      "word": "футбол",
+      "exercise_type": "match-up",
+      "context": "Граю у футбол.",
       "role": "context"
     },
     {
-      "word": "правильна",
-      "exercise_type": "quiz",
-      "context": "Яка форма правильна? (The meeting is at five o'clock.)",
+      "word": "як",
+      "exercise_type": "match-up",
+      "context": "Як часто ти читаєш?",
+      "role": "answer"
+    },
+    {
+      "word": "читаєш",
+      "exercise_type": "match-up",
+      "context": "Як часто ти читаєш?",
+      "role": "answer"
+    },
+    {
+      "word": "кожен",
+      "exercise_type": "match-up",
+      "context": "Кожен день ввечері.",
       "role": "context"
     },
     {
-      "word": "який",
-      "exercise_type": "quiz",
-      "context": "Який прийменник правильний? (in winter)",
+      "word": "будеш",
+      "exercise_type": "match-up",
+      "context": "Що ти будеш робити завтра?",
+      "role": "answer"
+    },
+    {
+      "word": "робити",
+      "exercise_type": "match-up",
+      "context": "Що ти будеш робити завтра?",
+      "role": "answer"
+    },
+    {
+      "word": "буду",
+      "exercise_type": "match-up",
+      "context": "Буду працювати.",
       "role": "context"
     },
     {
-      "word": "прийменник",
-      "exercise_type": "quiz",
-      "context": "Який прийменник правильний? (in winter)",
+      "word": "працювати",
+      "exercise_type": "match-up",
+      "context": "Буду працювати.",
       "role": "context"
     },
     {
-      "word": "правильний",
-      "exercise_type": "quiz",
-      "context": "Який прийменник правильний? (in winter)",
-      "role": "context"
+      "word": "де",
+      "exercise_type": "match-up",
+      "context": "Де ти працюєш?",
+      "role": "answer"
     },
     {
-      "word": "правильно",
-      "exercise_type": "quiz",
-      "context": "Як правильно сказати? (on Friday)",
-      "role": "context"
-    },
-    {
-      "word": "сказати",
-      "exercise_type": "quiz",
-      "context": "Як правильно сказати? (on Friday)",
-      "role": "context"
-    },
-    {
-      "word": "означає",
-      "exercise_type": "quiz",
-      "context": "Що означає «робочий тиждень»?",
-      "role": "context"
-    },
-    {
-      "word": "слово",
-      "exercise_type": "quiz",
-      "context": "Яке слово зайве? (Which word is the odd one out?)",
-      "role": "context"
-    },
-    {
-      "word": "зайве",
-      "exercise_type": "quiz",
-      "context": "Яке слово зайве? (Which word is the odd one out?)",
-      "role": "context"
+      "word": "працюєш",
+      "exercise_type": "match-up",
+      "context": "Де ти працюєш?",
+      "role": "answer"
     },
     {
       "word": "час",
       "exercise_type": "group-sort",
-      "context": "Час (Time)",
+      "context": "Час і дні (Time and days)",
       "role": "context"
     },
     {
       "word": "дні",
       "exercise_type": "group-sort",
-      "context": "Дні (Days)",
+      "context": "Час і дні (Time and days)",
       "role": "context"
     },
     {
-      "word": "субота",
+      "word": "сезони",
       "exercise_type": "group-sort",
-      "context": "субота",
-      "role": "answer"
+      "context": "Сезони та місяці (Seasons and months)",
+      "role": "context"
     },
     {
-      "word": "середа",
+      "word": "та",
       "exercise_type": "group-sort",
-      "context": "середа",
-      "role": "answer"
-    },
-    {
-      "word": "англійською",
-      "exercise_type": "true-false",
-      "context": "Слово «неділя» означає «week» англійською.",
+      "context": "Сезони та місяці (Seasons and months)",
       "role": "context"
     },
     {
-      "word": "використовуємо",
-      "exercise_type": "true-false",
-      "context": "Ми використовуємо «о» або «об», коли говоримо про конкретний",
+      "word": "місяці",
+      "exercise_type": "group-sort",
+      "context": "Сезони та місяці (Seasons and months)",
       "role": "context"
     },
     {
-      "word": "або",
-      "exercise_type": "true-false",
-      "context": "Ми використовуємо «о» або «об», коли говоримо про конкретний",
-      "role": "context"
-    },
-    {
-      "word": "об",
-      "exercise_type": "true-false",
-      "context": "Ми використовуємо «о» або «об», коли говоримо про конкретний",
-      "role": "context"
-    },
-    {
-      "word": "говоримо",
-      "exercise_type": "true-false",
-      "context": "Ми використовуємо «о» або «об», коли говоримо про конкретний",
-      "role": "context"
-    },
-    {
-      "word": "про",
-      "exercise_type": "true-false",
-      "context": "Ми використовуємо «о» або «об», коли говоримо про конкретний",
-      "role": "context"
-    },
-    {
-      "word": "конкретний",
-      "exercise_type": "true-false",
-      "context": "Ми використовуємо «о» або «об», коли говоримо про конкретний",
-      "role": "context"
-    },
-    {
-      "word": "потребує",
-      "exercise_type": "true-false",
-      "context": "Слово «влітку» (in summer) не потребує додаткового прийменни",
-      "role": "context"
-    },
-    {
-      "word": "додаткового",
-      "exercise_type": "true-false",
-      "context": "Слово «влітку» (in summer) не потребує додаткового прийменни",
-      "role": "context"
-    },
-    {
-      "word": "прийменника",
-      "exercise_type": "true-false",
-      "context": "Слово «влітку» (in summer) не потребує додаткового прийменни",
-      "role": "context"
-    },
-    {
-      "word": "говорити",
-      "exercise_type": "true-false",
-      "context": "Правильно говорити «на середу» замість «у середу».",
-      "role": "context"
-    },
-    {
-      "word": "замість",
-      "exercise_type": "true-false",
-      "context": "Правильно говорити «на середу» замість «у середу».",
-      "role": "context"
-    },
-    {
-      "word": "використовується",
-      "exercise_type": "true-false",
-      "context": "Запитання «Котра година?» використовується для подій у майбу",
-      "role": "context"
-    },
-    {
-      "word": "для",
-      "exercise_type": "true-false",
-      "context": "Запитання «Котра година?» використовується для подій у майбу",
-      "role": "context"
-    },
-    {
-      "word": "подій",
-      "exercise_type": "true-false",
-      "context": "Запитання «Котра година?» використовується для подій у майбу",
-      "role": "context"
-    },
-    {
-      "word": "майбутньому",
-      "exercise_type": "true-false",
-      "context": "Запитання «Котра година?» використовується для подій у майбу",
-      "role": "context"
-    },
-    {
-      "word": "слова",
-      "exercise_type": "true-false",
-      "context": "Слова «спочатку», «потім», «нарешті» показують послідовність",
-      "role": "context"
-    },
-    {
-      "word": "показують",
-      "exercise_type": "true-false",
-      "context": "Слова «спочатку», «потім», «нарешті» показують послідовність",
-      "role": "context"
-    },
-    {
-      "word": "послідовність",
-      "exercise_type": "true-false",
-      "context": "Слова «спочатку», «потім», «нарешті» показують послідовність",
-      "role": "context"
-    },
-    {
-      "word": "дій",
-      "exercise_type": "true-false",
-      "context": "Слова «спочатку», «потім», «нарешті» показують послідовність",
+      "word": "гуляємо",
+      "exercise_type": "quiz",
+      "context": "Ми гуляємо ____ суботу.",
       "role": "context"
     }
   ],

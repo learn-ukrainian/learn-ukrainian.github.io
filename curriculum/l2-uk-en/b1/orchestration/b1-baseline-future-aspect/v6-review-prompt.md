@@ -252,241 +252,238 @@ references:
 <generated_module_content>
 ## Що таке вид дієслова?
 
-The concept of **вид дієслова** (verbal aspect) is often considered the very soul of the Ukrainian verb system. For learners coming from English, the fundamental mindset shift requires moving away from simply asking "when did it happen?" to a more nuanced question: "is the action in progress, or is it a completed result?" This binary nature of completion is the core of aspect. You are no longer just choosing a tense; you are choosing how to frame the action itself. The Ukrainian verb system forces you to declare your intention: are you describing an ongoing process, a repeated habit, or a finished, bounded event that produced a clear result?
+As highlighted in standard textbooks like Литвінова Grade 7, the concept of verbal aspect is the soul of the Ukrainian verb within the дійсний спосіб (indicative mood), which states facts across all tenses. For an English speaker, the most important question about an action is usually "when did it happen?" You map events onto a timeline: past, present, or future. In Ukrainian, the fundamental question is "is the action in progress, or is it done?" This binary nature of completion dictates how verbs behave. You must shift your mindset from focusing solely on the timeline to focusing on the result. Every time you use a verb, you decide if you are describing an ongoing process or a completed fact.
 
-Як зазначають автори шкільних підручників (зокрема О. Литвінова та О. Авраменко), в українській мові дієслова мають категорію виду. Недоконаний вид позначає тривалу, повторювану або незавершену дію. Натомість доконаний вид, від слова «доконати» (здійснити що-небудь до кінця), позначає завершену, обмежену в часі дію. Це означає, що ви фокусуєтеся на результаті, а не на процесі.
+У граматиці ця категорія називається вид дієслова. Підручники часто дають таке правило: недоконаний вид позначає тривалу, повторювану або незавершену дію. Натомість доконаний вид позначає завершену, обмежену в часі дію. Від слова «доконати» — тобто здійснити що-небудь, виконати до кінця.
 
-How do we practically distinguish between these two aspects? The most reliable method is the "Infinitive Question" test. In Ukrainian grammar, we identify the aspect by asking a specific question to the **інфінітив** (infinitive) form of the verb. If the verb answers the question «що робити?» (what to do?), it belongs to the **недоконаний вид** (imperfective aspect). If it answers the question «що зробити?» (what to get done?), it belongs to the **доконаний вид** (perfective aspect). Notice how the prefix «з-» in the question «що зробити?» immediately signals the search for a result or a completed state.
+> *In grammar, this category is called verbal aspect. Textbooks often give the following rule: the imperfective aspect denotes a continuous, repeated, or unfinished action. In contrast, the perfective aspect denotes a completed action, limited in time. From the word "доконати" — that is, to accomplish something, to fulfill it to the end.*
 
-Щоб краще це зрозуміти, подивіться на типові видові пари. Більшість дієслів існують саме в таких парах, де одне слово описує процес, а інше — результат. Порівняйте ці пари: писати і написати, читати і прочитати, робити і зробити, малювати і намалювати, їсти і поїсти. Перше слово завжди відповідає на питання «що робити?», а друге — «що зробити?».
+If you focus on the effort, the habit, or the duration of an event, you use the imperfective aspect. If you focus on the finish line, the outcome, or the one-time achievement, you use the perfective aspect. 
 
-Now let us look at the formation patterns of these **видові пари** (aspect pairs). While many verbs exist in these pairs, they do not all form their perfective partners in the exact same way. The most common pattern is prefixation, where you add a prefix like **на-**, **про-**, or **з-** to the imperfective base. For example, the verb «писати» becomes «написати», and «робити» becomes «зробити». This is the simplest way to transform an action into a result. Another method is changing the suffix inside the word, such as alternating «-а-» and «-и-». Thus, «відповідати» becomes «відповісти», and «записувати» turns into «записати». Finally, the most distinct method is suppletion, where words use entirely different roots to express the same action in different aspects, like «говорити» and «сказати», or «брати» and «взяти».
+How do you know which aspect a verb belongs to? The classic school method is the "Infinitive Question" test. You simply ask a question to the dictionary form of the verb. If the question is «Що робити?» (What to do?), the verb is imperfective. If the question is «Що зробити?» (What to have done?), the verb is perfective.
 
-Although the vast majority of Ukrainian verbs exist in neat aspectual pairs, there are two special categories of "lonely" verbs that break this rule. First, we have **двовидові дієслова** (biaspectual verbs). These are verbs that have only one form, and their aspect is determined entirely by the context of the sentence. Words like «атакувати» (to attack) or «телеграфувати» (to telegraph) can act as either imperfective or perfective depending on how you use them. On the other end of the spectrum are **одновидові дієслова** (single-aspect verbs). These verbs simply do not have a partner. For instance, «сподіватися» (to hope) exists only in the imperfective aspect because hoping is inherently an ongoing state. Conversely, «схаменутися» (to suddenly come to one's senses) exists only in the perfective aspect because it describes an instantaneous, irreversible realization.
+Зверніть увагу на префікс «з-» у другому питанні. Він є ключем до розуміння. Префікс «з-» у питанні «що зробити?» сигналізує, що ми шукаємо результат. Ми питаємо не про процес роботи, а про її завершення.
 
-:::note
-**Quick tip**
-When learning new verbs, always memorize them as an aspectual pair, such as **читати / прочитати**. It will save you a massive amount of time and confusion when forming future and past tenses later.
+This simple trick helps categorize almost any verb. Here are five essential pairs to illustrate the difference between the ongoing process and the completed result:
+
+- писати (to write, process) — написати (to write, result)
+- читати (to read, process) — прочитати (to read, result)
+- робити (to do/make, process) — зробити (to do/make, result)
+- малювати (to draw, process) — намалювати (to draw, result)
+- їсти (to eat, process) — поїсти (to eat, result)
+
+:::info
+**The Aspect Rule of Thumb**
+Always learn Ukrainian verbs in pairs. If you only memorize the imperfective form, you will not be able to say "I have read this book" or "I will finish this chapter tomorrow." You need both halves of the pair to express yourself fully.
 :::
 
-Let us observe how this theoretical concept dictates real meaning in a practical scenario. Read the following narrative snippet about a student's Saturday plans in Kharkiv. Pay close attention to how the choice of aspect completely changes the nature of the scheduled activities.
+Most Ukrainian verbs exist in these "married" pairs, connected by meaning but differing in completeness. How do these pairs form? There are three main patterns. The most common pattern is prefixation, where you add a short prefix like «на-», «про-», or «з-» to the imperfective verb to make it perfective. We saw this in the previous examples.
 
-У суботу вранці студент Харківського університету буде читати новий підручник з історії. Він дуже любить цей процес. Але до обіду він обов'язково прочитає третій розділ, бо в понеділок буде важливий семінар. Ввечері він буде малювати афішу для благодійного концерту і сподівається, що намалює її до півночі.
+Другий спосіб — це зміна суфікса всередині слова. У таких парах дієслова часто чергують суфікси «-а-», «-и-» або «-ва-». Наприклад: відповідати та відповісти, записувати та записати, показувати та показати. Третій спосіб — це суплетивізм, коли дієслова утворюють пару з абсолютно різних коренів.
 
-> *On Saturday morning, a student of Kharkiv University will be reading a new history textbook. He really loves this process. But by noon he will definitely read (finish reading) the third chapter, because there is an important seminar on Monday. In the evening he will be drawing a poster for a charity concert and hopes that he will draw (finish drawing) it by midnight.*
+> *The second method is changing the suffix inside the word. In such pairs, verbs often alternate the suffixes "-a-", "-и-", or "-ва-". For example: to answer (imperfective) and to have answered (perfective), to write down (imperfective) and to have written down (perfective), to show (imperfective) and to have shown (perfective). The third method is suppletion, when verbs form a pair from completely different roots.*
 
-Here, the phrase «буде читати» indicates the ongoing process of reading, while «прочитає» emphasizes the completed result of finishing the chapter. Similarly, «буде малювати» is the creative process, but «намалює» is the final product ready for the concert. This precision is the true power of the Ukrainian aspect system.
+Suppletive pairs are the trickiest because they look nothing alike. The classic examples are говорити (to speak) matching with сказати (to have said), or брати (to take) matching with взяти (to have taken), or класти (to put) matching with покласти (to have put). You must memorize these exact matches.
+
+While most verbs enjoy a partnered life, there are special categories of verbs that break the mold. First, there are biaspectual verbs (двовидові дієслова). These verbs look exactly the same regardless of whether the action is completed or ongoing; only the surrounding context tells you the aspect. Common examples are loan words like атакувати (to attack) or телеграфувати (to telegraph), as well as native verbs like веліти (to command) and женити (to marry).
+
+Також існують одновидові дієслова. Вони мають лише одну форму і ніколи не утворюють пари. Деякі з них існують тільки в недоконаному виді, як-от «сподіватися» або «потріскувати». Інші існують виключно в доконаному виді, наприклад, «схаменутися» або «придбати».
+
+:::note
+**Why are they single-aspect?**
+Some actions inherently cannot be completed (like hoping or crackling), while others happen so instantaneously (like coming to one's senses) that they cannot be a prolonged process. Their very meaning restricts them to a single aspect.
+:::
+
+Let's look at how the choice of aspect completely changes the meaning of a schedule. Read this short narrative about a student's Saturday plans in Kharkiv. Pay close attention to whether the student is describing an ongoing activity or a committed goal.
+
+У суботу вранці я буду читати новий роман Жадана. Я прочитаю перший розділ до обіду. Потім я писатиму есе для університету. Я сподіваюся, що я напишу його швидко, бо ввечері ми з друзями підемо гуляти містом.
+
+> *On Saturday morning I will be reading a new novel by Zhadan. I will have read the first chapter by noon. Then I will be writing an essay for the university. I hope that I will write it quickly, because in the evening my friends and I will go for a walk around the city.*
+
+Notice the difference? The phrase «буду читати» means the student will spend time in the process of reading, but it does not guarantee they will finish the book. However, «прочитаю» is a firm commitment to a result: the first chapter will be done. Similarly, «писатиму» indicates the effort of working on the essay, while «напишу» focuses on finishing the task. Aspect isn't just a grammar rule; it's how you communicate your intentions.
 
 <!-- INJECT_ACTIVITY: quiz-aspect-identification -->
 <!-- INJECT_ACTIVITY: match-up-aspect-pairs -->
 
 ## Проста форма майбутнього часу
 
-The Ukrainian language has three distinct forms to express the future tense. The first and most critical one is the **проста форма** (simple form). This form is entirely unique because it belongs exclusively to verbs of the **доконаний вид** (perfective aspect). To understand how it works, we must revisit the core definition of the perfective aspect: it describes an action that is fully completed, a finalized result. Because an action cannot be completely finished right "now" in the present moment—it is either already done or will be done—perfective verbs simply do not possess a present tense. Therefore, when you take a perfective verb and conjugate it using standard present-tense endings, it automatically projects the completed action into the future. It is a brilliant mathematical logic: a completed result plus present conjugation equals a future achievement.
+Following the curriculum of Литвінова Grade 7, we are now ready to build the first of the three future tense forms: the simple form. The simple future, known in Ukrainian as **проста форма**, is unique because it belongs exclusively to perfective verbs (доконаний вид). Remember that perfective verbs describe completed actions, results, or reached goals. Because an action that is definitively completed cannot be happening right now in the present moment, perfective verbs do not have a present tense. When you take a perfective verb and conjugate it using the standard present-tense endings you learned in the A2 level, you automatically create the future tense.
 
-Українська мова використовує просту форму майбутнього часу, щоб говорити про конкретні результати, які ми отримаємо згодом. Коли ви берете дієслово доконаного виду і додаєте до нього звичайні особові закінчення, ви автоматично створюєте майбутній час. Це відбувається тому, що завершена дія фізично не може відбуватися просто зараз.
+Дієслова доконаного виду ніколи не мають форми теперішнього часу, оскільки дія вже завершена або буде завершена. Якщо ви візьмете дієслово недоконаного виду, наприклад «писати», і додасте до нього префікс «на-», ви отримаєте нове слово «написати». Коли ви відмінюєте це нове слово за правилами теперішнього часу, ви автоматично говорите про майбутнє. Форма «я пишу» означає процес зараз, а форма «я напишу» означає результат, який ви отримаєте згодом.
 
-> *The Ukrainian language uses the simple form of the future tense to talk about concrete results that we will obtain later. When you take a perfective verb and add regular personal endings to it, you automatically create the future tense. This happens because a completed action physically cannot happen right now.*
+> *Perfective verbs never have a present tense form, because the action is already completed or will be completed. If you take an imperfective verb, for example "to write", and add the prefix "на-" to it, you get the new word "to have written". When you conjugate this new word according to the rules of the present tense, you are automatically talking about the future. The form "I am writing" means a process right now, while the form "I will write" means a result that you will get later.*
 
-The conjugation mechanics for the simple future are identical to the present tense you mastered in the A2 level. You must determine whether the verb belongs to the first conjugation (typically taking **-е-** or **-є-**) or the second conjugation (taking **-и-** or **-ї-**). Let us look at the first conjugation using the perfective verb «написати» (to write/finish writing). The forms are: **я напишу**, **ти напишеш**, **він напише**, **ми напишемо**, **ви напишете**, and **вони напишуть**. Now, consider the second conjugation with the perfective verb «зробити» (to do/finish doing). The forms are: **я зроблю**, **ти зробиш**, **він зробить**, **ми зробимо**, **ви зробите**, and **вони зроблять**. The only difference between these forms and the present tense is the presence of the perfective prefix, such as **на-** or **з-**, which shifts the entire time signature from an ongoing present process to a future completion.
+The mechanics of conjugation for the simple future are identical to the present tense. You still need to identify whether the verb belongs to the first conjugation or the second conjugation. Let's look at the first conjugation using the perfective verb **написати**. The endings are exactly what you expect: я напишу, ти напишеш, він/вона напише, ми напишемо, ви напишете, вони напишуть. Now let's take a second conjugation perfective verb, such as **зробити**. The pattern holds perfectly: я зроблю, ти зробиш, він/вона зробить, ми зробимо, ви зробите, вони зроблять. The endings have not changed at all; only the aspect has changed the time signature of the word.
 
 :::info
-**Grammar box**
-The key insight here is that the perfective future looks exactly like present tense conjugation, but because it uses a perfective verb, it automatically means the future. Compare «я пишу» (I am writing) with «я напишу» (I will finish writing).
+**The Time Machine Prefix**
+When you see a verb with a prefix like **по-**, **на-**, **з-**, or **про-**, always pause and ask yourself if it is a perfective verb. If it is, and it looks like it is conjugated in the present tense, it is actually the simple future tense. The prefix is your primary visual clue that the action belongs to the future.
 :::
 
-When should you use this simple future form? It is your primary tool for expressing results and promises. You use it when you want to state a one-time completed action, confirm that a specific goal will be reached, or make a firm commitment. For instance, if you promise to be somewhere, you say «Я прийду вчасно» (I will arrive on time). If you are confident about a sports game, you declare «Ми виграємо матч» (We will win the match). It is crucial to contrast this with the English phrase "I will do it." In English, "will" plus a verb can mean either an ongoing process or a finished result, depending entirely on the context. In Ukrainian, if you mean "I will get it done," you must use the simple future form of the perfective aspect, like «Я зроблю це».
+When should you use the simple future tense? This form is your go-to tool for expressing results, promises, and specific commitments. Whenever you want to assure someone that a task will be finished, or when you are stating a definitive fact about a future achievement, the simple future is required. Think of it as the equivalent of saying "I will definitely get this done" rather than just "I will spend time doing this."
 
-Ми використовуємо цю форму, коли даємо обіцянки або плануємо досягти конкретної мети. Вона ідеально підходить для ситуацій, де важливий фінальний результат, а не сам процес. Наприклад, студент каже: «Я прочитаю цей підручник до п'ятниці». Це означає, що в п'ятницю книга буде повністю прочитана.
+Проста форма майбутнього часу ідеально підходить для обіцянок та гарантій. Якщо ваш друг чекає на вас, ви кажете: «Я прийду вчасно». Це означає, що ви точно досягнете мети. Якщо ваша улюблена команда грає у фіналі, ви з упевненістю кажете: «Ми обов'язково виграємо цей матч». В обох випадках дія є одноразовою і має конкретний результат.
 
-> *We use this form when we make promises or plan to achieve a specific goal. It is perfectly suited for situations where the final result is important, and not the process itself. For example, a student says: "I will read (finish reading) this textbook by Friday." This means that on Friday the book will be completely read.*
+> *The simple form of the future tense is perfectly suited for promises and guarantees. If your friend is waiting for you, you say: "I will arrive on time." This means that you will definitely reach the goal. If your favorite team is playing in the final, you confidently say: "We will definitely win this match." In both cases, the action is a one-time event and has a specific result.*
 
-Finally, because the simple future uses present-tense conjugation rules, it also inherits all the consonant alternations that occur in the present tense. For example, the verb «сказати» changes its stem consonant: it becomes **я скажу**, not *сказаю*. The verb «попросити» undergoes a similar mutation to become **я попрошу**. Two particularly important verbs have slightly irregular forms: «відповісти» (to answer) and «дати» (to give). For «відповісти», the forms are **я відповім** and **ти відповіси**. For «дати», they are **я дам** and **ти даси**. Though they look strange, these specific forms are incredibly common when making plans and commitments.
+It is important to contrast this with the English "will" future. In English, "I will write a letter" can sometimes state a general intention, but in Ukrainian, choosing **я напишу листа** means the letter will exist as a finished product. If you just plan to spend your evening working on a letter without necessarily finishing it, you cannot use this form.
+
+Because the simple future uses the exact same mechanics as the present tense, all the consonant alternations you learned previously apply here as well. You must watch out for stems that shift their final consonant when conjugated. The perfective verb **сказати** alternates just like its imperfective partner: it becomes я скажу, ти скажеш (not *сказаю*). Similarly, **попросити** shifts the consonant for the first person singular: я попрошу, ти попросиш. Other common perfective forms include побачити (побачу, побачиш) and приїхати (приїду, приїдеш).
+
+Окрім звичайних чергувань, існують також дієслова з особливими формами, які потрібно просто запам'ятати. Наприклад, дієслово «відповісти» має такі форми: я відповім, ти відповіси, він відповість, ми відповімо, ви відповісте, вони дадуть відповідь. Так само відмінюється дієслово «дати»: я дам, ти даси, він дасть, ми дамо, ви дасте, вони дадуть. Ці короткі слова дуже часто використовуються в щоденних розмовах, тому їх варто вивчити напам'ять.
+
+> *Besides the usual alternations, there are also verbs with special forms that you just need to memorize. For example, the verb "to answer" has the following forms: I will answer, you will answer, he will answer, we will answer, you will answer, they will answer. The verb "to give" is conjugated in the same way: I will give, you will give, he will give, we will give, you will give, they will give. These short words are used very often in daily conversations, so it is worth learning them by heart.*
+
+Let's observe a short interaction using these specific forms to see how natural they sound in context.
+
+> — **Студент:** Коли ви дасте нам результати тесту? *(When will you give us the test results?)*
+> — **Викладач:** Я відповім на всі запитання завтра. *(I will answer all questions tomorrow.)*
+> — **Студент:** Добре, я почекаю. *(Good, I will wait.)*
+
+By mastering the simple future, you unlock the ability to make plans with certainty and communicate your intentions with absolute clarity.
 
 ## Складна (синтетична) форма майбутнього часу
 
-In Ukrainian, there is a unique, one-word future tense specifically designed for imperfective verbs. This is called the synthetic or compound future (складна форма). Unlike the simple future, which is built exclusively on perfective verbs to show completion and results, the synthetic future describes ongoing, repetitive, or incomplete actions. This specific grammatical structure is a distinctive and highly celebrated feature of the Ukrainian language, setting it completely apart from its linguistic neighbors. If you want to sound incredibly natural and authentic in your everyday conversations, mastering this specific form is a wonderful step forward.
+The Ukrainian language possesses a distinct feature: the synthetic, or compound, form of the future tense. Known as the **складна форма**, this structure allows you to express ongoing or repetitive future actions using a single word, such as **писатиму** (I will be writing). Unlike Russian, which relies solely on a two-word analytic construction for the imperfective future, Ukrainian retains this one-word alternative. Understanding its historical roots makes it much easier to learn. Centuries ago, speakers used the infinitive of a verb followed by a conjugated form of the archaic verb **имати** (to have). For example, to say that you have to write, you would say «писати иму». Over time, these two words naturally merged into one, creating the modern ending. The infinitive fused with the auxiliary verb, resulting directly in the word **писатиму**. This linguistic history explains why the full infinitive remains perfectly visible inside the modern conjugation.
 
-Історично ця форма утворилася від злиття інфінітива дієслова та стародавніх форм допоміжного дієслова «мати». Наші предки говорили «писати иму», що буквально означало «я маю писати». З часом, у процесі природного розвитку мови, ці два слова міцно об'єдналися в одне, і виникла сучасна форма «писатиму». Це дуже елегантне граматичне рішення, яке дозволяє висловити тривалу дію в майбутньому лише одним словом.
+Щоб утворити складну форму майбутнього часу, вам потрібно взяти повний інфінітив дієслова недоконаного виду і додати до нього спеціальні закінчення. Ці закінчення завжди однакові для всіх дієслів, незалежно від їхньої дієвідміни. Ви просто додаєте суфікс «-м-» та особове закінчення: я працюватиму, ти працюватимеш, він працюватиме, ми працюватимемо, ви працюватимете, вони працюватимуть. Зверніть особливу увагу на те, що уся основа інфінітива (infinitive stem), включаючи «ти», завжди зберігається всередині слова. Навіть дуже коротке дієслово «жити» легко відмінюється за цим правилом: я житиму, ти житимеш, вона житиме, ми житимемо, ви житимете, вони житимуть. Це правило працює ідеально і без жодних винятків для всіх дієслів недоконаного виду.
 
-> *Historically, this form evolved from the merging of a verb's infinitive and the ancient forms of the auxiliary verb "to have." Our ancestors used to say "писати иму", which literally meant "I have to write." Over time, in the process of natural language development, these two words firmly merged into one, and the modern form "писатиму" emerged. This is a very elegant grammatical solution that allows you to express an ongoing action in the future with just one word.*
-
-To build the synthetic future tense, you always start with the full, unaltered infinitive of an imperfective verb. You absolutely do not drop the **-ти** or **-тися** ending. Instead, you attach a specific set of personal suffixes directly to the end of that infinitive. These suffixes are **-му**, **-меш**, **-ме**, **-мемо**, **-мете**, and **-муть**. Because you are adding these endings to the already complete infinitive, the resulting words can sometimes look quite long, but they are incredibly regular and entirely predictable. Let us look at exactly how this works with two very common verbs: «працювати» (to work) and «жити» (to live).
-
-Для дієслова «працювати» формуються такі слова: я працюватиму, ти працюватимеш, він працюватиме, ми працюватимемо, ви працюватимете, вони працюватимуть. Зверніть увагу на те, що вся основа слова разом з інфінітивним закінченням залишається незмінною. Точно так само відмінюється дієслово «жити»: я житиму, ти житимеш, вона житиме, ми житимемо, ви житимете, вони житимуть. Ця неймовірна стабільність робить складну форму майбутнього часу дуже легкою для вивчення та безпомилкового використання на практиці.
+> *To form the synthetic future tense, you need to take the full infinitive of an imperfective verb and add special endings to it. These endings are always the same for all verbs, regardless of their conjugation class. You simply add the suffix "-m-" and the personal ending: I will be working, you will be working, he will be working, we will be working, you will be working, they will be working. Pay special attention to the fact that the part "ty" from the infinitive is always preserved inside the word. Even a very short verb like "to live" is easily conjugated according to this rule: I will be living, you will be living, she will be living, we will be living, you will be living, they will be living. This rule works perfectly and without any exceptions for all imperfective verbs.*
 
 :::info
-**Grammar box**
-The letter **-м-** is the critical visual indicator of the synthetic future. Whenever you see a verb ending in **-тиму**, **-тимеш**, or **-тиме**, you know immediately that it describes an ongoing or repeated action in the future.
+**The Synthetic Future Endings**
+Just remember to attach these endings directly to the infinitive:
+- я **-тиму**
+- ти **-тимеш**
+- він/вона/воно **-тиме**
+- ми **-тимемо**
+- ви **-тимете**
+- вони **-тимуть**
 :::
 
-Grammatically speaking, the synthetic future tense and the analytic future tense, which we will cover in the next section, are entirely synonymous. They both mean the exact same thing: an imperfective, ongoing action taking place in the future. However, there is a very important and subtle stylistic difference between the two. The synthetic form often sounds slightly more literary, poetic, or elevated to native speakers. It is frequently used in high-quality literature, poetry, and formal public speeches to give the language a beautiful, melodic rhythm and a deeply traditional feel.
+You might be wondering when to use this synthetic one-word form instead of the two-word analytic form like **буду працювати**. Grammatically, both forms are absolutely identical in meaning. They both express an imperfective future action, meaning an action that will be ongoing, continuous, or repeated without a focus on completion. However, there is a subtle and beautiful nuance in register and tone. The synthetic form often sounds slightly more literary, elegant, or poetic to native speakers. Famous Ukrainian writers and poets frequently chose forms like **кохатиму** (I will love) or **шукатиме** (he will search) because of their melodic rhythm and distinctively Ukrainian character. While you will hear the two-word form very often in casual, everyday speech, using the synthetic form elevates your language. It shows that you have a deep grasp of Ukrainian morphology and a strong sense of stylistic variety. For a learner at this level, confidently dropping a word like **робитиму** into a conversation is an excellent way to sound more authentic and natural. It demonstrates that you are actually thinking within the structures of the Ukrainian language.
 
-Відомі українські письменники та поети завжди дуже любили використовувати цю форму у своїх класичних творах. Наприклад, видатний поет Володимир Сосюра часто обирав саме складну форму, щоб надати своїм віршам особливої плавності та ліричності. Для студентів рівня B1 використання складної форми в повсякденних розмовах — це чудовий спосіб збагатити своє мовлення. Коли ви кажете «я читатиму» замість «я буду читати», ви демонструєте глибоке розуміння мелодики української мови.
+Ця форма майбутнього часу є надзвичайно стабільною і передбачуваною у використанні. На відміну від простої форми доконаного виду або теперішнього часу, тут ніколи не відбувається чергування приголосних в основі слова. Якщо інфінітив звучить як «малювати», то майбутній час завжди буде «малюватиму», і ви ніколи не скажете «малютиму». Якщо інфінітив — це «сидіти», форма буде «сидітиму», без жодних змін приголосних, які ми зазвичай бачимо у формі «сиджу». Ця граматична стабільність робить форму дуже зручною та легкою для запам'ятовування. Важливо лише пам'ятати, що це форма недоконаного виду, тобто вона описує виключно процес дії. Якщо ви скажете «я ходитиму до школи», це означає регулярний процес або звичку. Але якщо ви хочете повідомити про одноразовий результат, ви повинні обов'язково використати просту доконану форму: «я прийду до школи». Вибір правильної форми майбутнього часу завжди залежить від того, чи важливий для вас процес дії, чи її конкретний фінальний результат.
 
-One of the greatest practical advantages of the synthetic future tense is its absolute grammatical stability. Unlike the present tense or the perfective simple future, where you constantly have to watch out for unexpected consonant shifts and changing vowels, the synthetic future never changes the original verb stem. If you simply know the infinitive form of the verb, you can construct the future tense flawlessly every single time without having to memorize complex irregularities.
+> *This form of the future tense is extremely stable and predictable in use. Unlike the simple perfective form or the present tense, consonant alternations in the stem of the word never occur here. If the infinitive sounds like "to draw," the future tense will always be "I will be drawing," and you will never say "malyuyumu." If the infinitive is "to sit," the form will be "I will be sitting," without any of the consonant changes we usually see in the form "I sit." This grammatical stability makes the form very convenient and easy to remember. It is only important to remember that this is an imperfective form, meaning it exclusively describes the process of an action. If you say "I will be walking to school," it means a regular process or habit. But if you want to report a one-time result, you must definitely use the simple perfective form: "I will arrive at school." Choosing the correct future tense form always depends on whether the process of the action or its specific final result is important to you.*
 
-Наприклад, у теперішньому часі дієслово «малювати» повністю змінює свою основу і перетворюється на форму «я малюю». Але у складній формі майбутнього часу ми просто беремо оригінальний інфінітив і додаємо відповідне закінчення: «я малюватиму». Жодних несподіваних змін приголосних чи голосних звуків тут не відбувається. Так само поширене дієслово «ходити» в теперішньому часі має нестандартну форму «я ходжу», але в майбутньому це буде просте і зрозуміле «я ходитиму».
-
-This wonderful stability makes the synthetic future a highly reliable tool when you are speaking quickly and do not have time to process complex grammar rules. However, you must always remember to carefully contrast this ongoing, imperfective form with the perfective simple future. If you say the phrase «я ходитиму до школи», meaning you will be going to school, you are explicitly describing a repeated, habitual action over a period of time. If you want to confidently state that you will arrive at a specific destination once and achieve a result, you must switch aspects and use the perfective simple future, such as «я прийду».
+<!-- INJECT_ACTIVITY: group-sort-future-forms --> [Group-sort: Categorize verb forms into Проста, Складна, and Складена groups, 10 items]
 
 ## Складена (аналітична) форма майбутнього часу
 
-The third and final way to express the future tense in Ukrainian is the analytic, or compound, form. This form is incredibly popular and very easy to master. When you are speaking quickly and need to express a future plan, this structure will often be the first one that comes to your mind. 
+We have reached the third and final way to talk about the future in Ukrainian: the analytic, or compound, form of the imperfective future tense. In Ukrainian, it is called the «складена форма». This structure is incredibly familiar and intuitive for English speakers. It is a two-part construction consisting of the auxiliary verb «бути» (to be) and the infinitive of the main verb. The beauty of this form lies in its absolute simplicity. The main verb never changes; it stays frozen in its dictionary infinitive form. The only word you conjugate is the short auxiliary verb «бути», which takes on the job of showing the person and the number. Because it is built from an imperfective infinitive, this form exclusively describes ongoing, continuous, or repeated actions in the future, never one-time completed results.
 
-Складена форма майбутнього часу використовується виключно з дієсловами недоконаного виду. Вона завжди позначає тривалу або повторювану дію, яка відбуватиметься в майбутньому. Для її утворення вам знадобляться лише два елементи: допоміжне дієслово «бути» у відповідній формі та незмінний інфінітив основного дієслова.
+Дієслово «бути» в українській мові є унікальним. У майбутньому часі воно має власну, особливу систему відмінювання, яку потрібно просто запам'ятати. Це дієслово не підпорядковується загальним правилам виду, і його наголос (stress) залишається стабільним, тому воно функціонує як універсальний допоміжний інструмент. Щоб утворити складену форму, ви берете особову форму дієслова «бути» і додаєте до неї будь-який інфінітив недоконаного виду. Ось повна парадигма відмінювання: я буду, ти будеш, він/вона/воно буде, ми будемо, ви будете, вони будуть.
 
-> *The compound future tense is used exclusively with verbs of the imperfective aspect. It always denotes a continuous or repeated action that will take place in the future. To form it, you only need two elements: the auxiliary verb "to be" in the appropriate form and the unchanged infinitive of the main verb.*
+> *The verb "to be" in the Ukrainian language is unique. In the future tense, it has its own special conjugation system that you just need to memorize. This verb does not follow the general rules of aspect, so it functions as a universal auxiliary tool. To form the compound form, you take the personal form of the verb "to be" and add any imperfective infinitive to it. Here is the full conjugation paradigm: I will, you will, he/she/it will, we will, you will, they will.*
 
-This two-part construction is highly reliable. The main semantic verb—the one carrying the actual meaning of the action—remains locked in its dictionary infinitive form. You never have to worry about consonant alternations, shifting stress marks, or complex endings for the main action. The only word that changes to reflect the person and number is the short auxiliary verb. This grammatical division of labor makes the analytic future the ultimate safe harbor for language learners. If you know how to conjugate just one verb—«бути»—you instantly know how to express any ongoing future action.
-
-The auxiliary verb «бути» is unique in the Ukrainian language. It acts as an irregular future verb that does not follow standard aspect rules when used in this specific grammatical role. 
-
-Дієслово «бути» не має доконаного відповідника для утворення майбутнього часу, тому воно самостійно бере на себе функцію граматичного маркера. Давайте подивимося на його відмінювання.
-
-> *The verb "to be" does not have a perfective counterpart for forming the future tense, so it independently takes on the role of a grammatical marker. Let's look at its conjugation.*
-
-The conjugation table is beautifully regular across the different persons. You will notice that it closely resembles the present tense endings you already know, just applied to a new base:
-
-*   я буду
-*   ти будеш
-*   він, вона, воно буде
-*   ми будемо
-*   ви будете
-*   вони будуть
-
-To create the analytic future tense, you simply place the appropriate form of «бути» directly before your chosen imperfective infinitive. For instance, if you want to say "I will be reading," you combine «я буду» with «читати», resulting in «я буду читати». If the subject is "we," it becomes «ми будемо читати». The infinitive «читати» never drops a single letter.
-
-Let's see how all three future forms work together in a real-life context. Imagine a planning committee at a university in Kharkiv. The characters are organizing a charity concert and must carefully choose their aspects to distinguish between long processes and concrete results.
+Let's see how native speakers mix all three future forms in a real conversation. Imagine a planning committee at a Kharkiv university (Харківський університет) organizing a charity concert.
 
 > — **Голова комітету:** Ми будемо збирати кошти цілий тиждень. *(We will be collecting funds all week.)*
-> — **Волонтер 1:** А коли ми точно скажемо студентам про концерт? *(And when will we tell the students exactly about the concert?)*
-> — **Голова комітету:** Ми оголосимо дату завтра вранці. *(We will announce the date tomorrow morning.)*
-> — **Волонтер 2:** Добре, тоді я напишу красиву афішу сьогодні ввечері. *(Good, then I will write a beautiful poster tonight.)*
-> — **Волонтер 1:** А я буду допомагати тобі з дизайном. *(And I will be helping you with the design.)*
+> — **Волонтер 1:** А коли ми оголосимо дату концерту? *(And when will we announce the date of the concert?)*
+> — **Голова комітету:** Оголосимо дату завтра вранці. *(We will announce the date tomorrow morning.)*
+> — **Волонтер 2:** Добре, тоді я сьогодні ввечері напишу афішу. *(Good, then I will write the poster tonight.)*
+> — **Волонтер 1:** А я буду поширювати інформацію в соціальних мережах. *(And I will be spreading the information on social networks.)*
 
-Notice the clear division of labor. The committee head uses «будемо збирати» because collecting funds is an ongoing process that will take an entire week. However, announcing the date («оголосимо») and creating the final poster («напишу») are single, completed actions that require the perfective simple future.
+In this short exchange, «будемо збирати» and «буду поширювати» are analytic imperfective forms describing continuous processes. Meanwhile, «оголосимо» and «напишу» are simple perfective forms indicating specific, completed results. 
 
-Складена форма майбутнього часу є надзвичайно поширеною в розмовній українській мові. Вона особливо часто звучить у західних діалектах, хоча є нормативною для всієї території України. Багато людей обирають саме її під час швидкого спілкування, оскільки вона не вимагає складних граматичних трансформацій у голові.
+For many learners, the analytic form becomes a grammatical safe harbor. When you are speaking quickly and cannot immediately remember the complex consonant alternations of a perfective verb, or if you are unsure about the synthetic endings, you can always rely on «буду» plus the infinitive. It is structurally foolproof. However, it is not just a learner's shortcut; it is a highly natural and frequent feature of the language.
 
-You might wonder how to choose between the analytic form («буду працювати») and the synthetic form («працюватиму») since both describe an imperfective future action. The truth is that they are completely interchangeable in meaning. The analytic form is highly frequent, neutral, and universally understood. It feels slightly more casual and is often the default choice in spontaneous dialogue. The synthetic form carries a slightly more elegant, literary, and poetic tone. Both forms are excellent tools for your vocabulary, and you will hear native speakers switch between them constantly without even thinking about it. Using the analytic form gives your brain a brief resting period because you only need to conjugate the auxiliary verb, allowing you to focus on the vocabulary itself.
+Ця форма є надзвичайно поширеною в сучасному розмовному мовленні, особливо в західних регіонах України. Ви постійно чутимете конструкції на кшталт «я буду працювати» або «ми будемо чекати». Важливо розуміти, що складена форма («буду працювати») і складна форма («працюватиму») є абсолютно рівноцінними та взаємозамінними. Обидві форми є стовідсотково правильними. Різниця полягає лише в тонких стилістичних відтінках. Форма «працюватиму» звучить трохи більш літературно та має традиційно українське звучання, тоді як «буду працювати» є цілком нейтральною та повсякденною. Вибір між ними залежить виключно від вашого смаку.
 
-:::info
-**Grammar box**
-Never mix the two systems! A very common mistake is trying to combine the auxiliary verb «бути» with a perfective verb. The verb «бути» strictly requires an imperfective infinitive. If you want a result, drop «бути» entirely and just use the simple perfective future.
-:::
-
-Коли ви пишете офіційний лист або виступаєте з промовою, ви можете обрати синтетичну форму для більшої милозвучності. Але коли ви просто розмовляєте з друзями за кавою, аналітична форма «буду робити» звучатиме природно. Головне правило — ніколи не боятися використовувати обидві форми. Вони роблять вашу українську мову багатою та виразною.
+> *This form is extremely widespread in modern spoken language, especially in the western regions of Ukraine. You will constantly hear constructions like "I will be working" or "we will be waiting." It is important to understand that the analytic form ("I will work" [two words]) and the synthetic form ("I will work" [one word]) are absolutely equivalent and interchangeable. Both forms are one hundred percent correct. The difference lies only in subtle stylistic nuances. The form "працюватиму" sounds a bit more literary and traditionally Ukrainian, while "буду працювати" is completely neutral and everyday. The choice between them depends exclusively on your taste.*
 
 :::tip
 **Did you know?**
-While English relies heavily on the Present Continuous ("I am going tomorrow") for immediate future plans, Ukrainian strongly prefers using actual future tense forms. It is much more natural to say «я буду йти» or «я піду» than to use a present-tense verb for a future event.
+While both imperfective future forms are interchangeable, Ukrainian writers often prefer the synthetic «-тиму» form in poetry and literature because it has a beautiful, flowing rhythm and feels deeply authentic to the language's historical roots. However, in a casual chat with friends, «буду» is always a perfect choice.
 :::
 
-<!-- INJECT_ACTIVITY: group-sort-future-forms -->
-<!-- INJECT_ACTIVITY: fill-in-future-choice -->
+<!-- INJECT_ACTIVITY: fill-in-future-choice --> [Fill-in: Complete sentences with the correct future form (проста, складна, складена) based on context, 8 items]
 
 ## Вид і час — як вони працюють разом
 
-The relationship between aspect and tense in Ukrainian is highly logical and almost mathematical. Once you understand this matrix, you will never struggle with tense formation again. The core rule is delightfully simple: imperfective verbs have three tenses, while perfective verbs have only two. An imperfective verb can exist in the past («я читав»), the present («я читаю»), or the future («я буду читати» or «я читатиму»). A perfective verb, however, only exists in the past («я прочитав») and the future («я прочитаю»).
+Using the aspect-tense matrix from Авраменко Grade 7, it is time to look at the entire system. How do aspect and tense interact in Ukrainian? The system is strictly logical if you remember one core principle: aspect dictates which tenses a verb can have.
 
-Дієслова доконаного виду принципово не можуть мати форми теперішнього часу. Це логічно випливає з самої природи доконаного виду, який позначає фінальний результат, межу або повністю завершену дію. Теперішній час — це завжди динамічний процес, який відбувається саме зараз, у момент мовлення. Ви просто не можете перебувати всередині завершеного результату в дану секунду.
+В українській мові дієслова недоконаного виду мають усі три часи: минулий, теперішній і майбутній. Ви можете сказати «я читав» учора, «я читаю» зараз і «я буду читати» завтра. Натомість дієслова доконаного виду мають лише два часи: минулий і майбутній. Вони позначають результат дії, а результат — це завжди конкретна точка на шкалі часу. Як тільки ви опиняєтеся всередині цієї точки, дія автоматично перетворюється на процес, тобто стає недоконаною. Якщо результат уже є, це минулий час («я прочитав»). Якщо результату ще немає, але він очікується, це майбутній час («я прочитаю»).
 
-> *Perfective verbs fundamentally cannot have a present tense form. This logically follows from the very nature of the perfective aspect, which denotes a final result, a boundary, or a completely finished action. The present tense is always a dynamic process happening right now, at the moment of speech. You simply cannot be inside a completed result at this given second.*
+> *In the Ukrainian language, imperfective verbs have all three tenses: past, present, and future. You can say "I was reading" yesterday, "I am reading" now, and "I will be reading" tomorrow. In contrast, perfective verbs have only two tenses: past and future. They denote the result of an action, and a result is always a specific point on the timeline. As soon as you find yourself inside this point, the action automatically turns into a process, meaning it becomes imperfective. If the result already exists, it is the past tense ("I have read"). If the result does not exist yet, but is expected, it is the future tense ("I will read").*
 
-As soon as a result is achieved, it instantly belongs to the past. While you are still actively working towards achieving that result, it remains entirely in the future. The present moment is a flowing stream, and only imperfective verbs can swim in it. Therefore, if you need to describe anything that is happening right now, you must use an imperfective verb. This is a strict rule with absolutely no exceptions, and internalizing it is a major milestone for mastering Ukrainian.
+This means that a perfective verb simply cannot exist in the present tense. The present tense describes what is happening right now, in this exact moment. A result cannot happen "right now" without immediately becoming a continuous process. Therefore, perfective verbs like **написати** or **зробити** are strictly locked out of the present tense.
 
-This brings us to a very common trap for learners. Because the perfective future («я прочитаю», «я зроблю») is formed using the exact same endings as the imperfective present («я читаю», «я роблю»), it is incredibly tempting to use perfective verbs to talk about the present. Many learners try to say something like "Я зараз прочитаю книгу" to mean "I am reading a book right now." However, to a Ukrainian speaker, this sounds like a contradiction. Because «прочитаю» is perfective, it automatically projects the action into the future. The listener hears: "Right now, I will finish reading a book later."
+This logical rule leads us directly into one of the most common traps for learners: the false present tense. Because the simple future form of a perfective verb looks exactly like a present tense conjugation, learners often use it by mistake to describe what they are doing right now. This can lead to significant misunderstandings in everyday conversations.
 
-Коли ви кажете «я прочитаю», носій української мови чує обіцянку на майбутнє. Це означає, що ви візьмете книгу пізніше і обов'язково дочитаєте її до кінця. Якщо ж ви сидите з книгою в руках прямо зараз, єдиний правильний варіант — сказати «я читаю».
+Уявіть ситуацію: ви сидите в кафе і читаєте дуже цікаву статтю. Вам телефонує друг і запитує, що ви робите. Якщо ви відповісте «я прочитаю статтю», співрозмовник почує це як обіцянку завершити дію пізніше. Це звучить так, ніби ви взагалі не відповідаєте на запитання про поточний момент. Щоб правильно описати вашу поточну дію, ви повинні завжди використовувати дієслово недоконаного виду в теперішньому часі: «я читаю статтю».
+
+Remember that if a verb has a perfective prefix, such as the prefix in **прочитаю** (I will read) or **зроблю** (I will do), it automatically throws the action into the future. It can never mean that you are doing it right now, no matter how much the conjugation endings look like the present tense. You must always switch to an imperfective verb to talk about your current actions.
+
+Understanding how aspect and tense work together is crucial for storytelling and planning. In any narrative, whether you are talking about yesterday or tomorrow, the imperfective aspect sets the scene. It provides the background, the ongoing states, and the continuous processes. The perfective aspect, on the other hand, introduces the foreground events. These are the completed actions that break the status quo and move the story forward. We can apply this exact same logic to our future plans.
+
+Коли ми плануємо майбутні події, ми часто комбінуємо обидва види дієслова, щоб створити чітку картину. Недоконаний вид створює фон або загальний контекст для нашої історії. Наприклад, ви можете сказати: «Завтра ввечері я буду чекати тебе біля кінотеатру». Це ваш тривалий процес, ваш фоновий стан. Далі ви додаєте доконаний вид, щоб показати конкретну подію, яка змінить цей стан: «Коли ти прийдеш, я куплю нам квитки». Ваш процес очікування переривається новими результативними діями: прибуттям друга та купівлею квитків.
 
 :::info
 **Grammar box**
-Always look at the prefix or the aspect pair. If the verb is perfective (like **написати** or **зробити**), its simplest conjugation (**напишу**, **зроблю**) is ALWAYS the future tense. It can never be present.
+In complex sentences describing the future, imperfective verbs often describe the continuous condition (the "while" or "background"), and perfective verbs describe the sudden interruption or sequential steps (the "when" and "then").
 :::
 
-Let's look at how these aspects work together in a narrative, especially when talking about future plans. Think of your story as a stage play. Imperfective verbs create the background scenery, setting the stage with ongoing processes, like "the sun was shining" or "I was walking." Perfective verbs are the actors entering the stage to perform specific, completed actions that move the plot forward, like "I saw" or "the phone rang." This dynamic applies perfectly to the future tense. You will often combine both aspects in a single sentence to show how a sudden event interrupts or follows an ongoing process.
+Finally, we must address a very strong linguistic habit that comes from English: the continuous future. In English, you frequently use the present continuous tense to talk about fixed future plans, such as saying that you are going to Berlin tomorrow or that you are meeting a friend at five o'clock. This often tempts learners to use the Ukrainian present tense to express their future intentions, which can cause confusion in conversation.
 
-Уявіть таку ситуацію: завтра я буду чекати тебе біля кінотеатру, і коли ти приїдеш, я куплю нам квитки. У цьому реченні процес очікування створює тло. Це типовий недоконаний вид, який показує тривалу дію. А слова «приїдеш» та «куплю» — це доконаний вид, який позначає конкретні події на цьому тлі.
-
-The verbs «приїдеш» (you will arrive) and «куплю» (I will buy) represent the concrete events that will happen on that stage. By mixing «буду чекати» with «приїдеш», you create a rich, realistic picture of tomorrow's timeline, smoothly blending ongoing states with definitive actions.
-
-Let's analyze a short retelling of a Ukrainian folk tale to see these rules in a broader narrative. Уявіть, що ми розповідаємо казку про майбутнє: У темному лісі буде жити (недок., ongoing) хитрий лис. Кожного дня він шукатиме (недок., repeated) здобич. Але одного разу він обов'язково зустріне (док., completion) чарівного птаха. Лис захоче (док., completion) його спіймати, але птах швидко полетить (док., completion) у небо. The ongoing states (буде жити, шукатиме) build the world, while the perfective verbs (зустріне, захоче, полетить) drive the plot to its specific results.
-
-A final hurdle for English speakers is the tendency to use the present tense for future plans. In English, it is perfectly natural to use the Present Continuous to say, "I am going to Berlin tomorrow" or "We are having dinner tonight." This structure does not transfer well to Ukrainian. While you might occasionally hear a present-tense verb used for very immediate and certain plans, especially with verbs of motion, it is not the standard way to express the future.
-
-В українській мові ми віддаємо перевагу справжнім формам майбутнього часу. Замість того, щоб використовувати теперішній час для опису планів, ми скажемо «завтра я поїду до Берліна» або «завтра я буду їхати до Берліна». Це звучить набагато природніше.
-
-Relying on the present tense for future events will make your Ukrainian sound unnatural and confusing. Embrace the three future forms you have learned. Whether you need to emphasize a completed goal with the perfective aspect or an ongoing process with the imperfective aspect, using the dedicated future tense ensures your communication is clear and authentically Ukrainian.
-
-:::tip
-**Did you know?**
-English uses words like "will" or "going to" to force verbs into the future. Ukrainian builds the future directly into the verb's meaning, either through its perfective nature or by combining it with the auxiliary verb.
-:::
+Хоча в українській розмовній мові іноді можна почути теперішній час для дуже близьких і гарантованих планів («завтра я їду до моря»), це швидше виняток. Зазвичай українці віддають перевагу саме формам майбутнього часу, коли говорять про завтрашній день або наступний тиждень. Якщо ви маєте квитки до Берліна, набагато природніше використовувати форми майбутнього часу. Ви можете сказати «завтра я поїду до Берліна» або «завтра я буду їхати до Берліна». Перший варіант підкреслює результат, а другий варіант робить акцент на самому процесі подорожі. Використання правильного майбутнього часу замість теперішнього робить ваше мовлення набагато чіткішим та зрозумілішим для носіїв мови. Тому завжди намагайтеся уникати прямого перекладу англійських граматичних звичок.
 
 <!-- INJECT_ACTIVITY: error-correction-aspect-tense -->
 
 ## Дієвідмінювання у майбутньому часі
 
-Now that you understand the mechanics of the three future forms, let us put them side-by-side. Comparing verbs that share the same root is the most effective way to see how aspect and tense interact. The root dictates the core meaning, but the grammatical form tells the listener exactly how that action will unfold.
+Let us examine how these three distinct future structures operate side-by-side when we use verbs built on the exact same core root. The Ukrainian verb for "to carry" or "to wear" is the imperfective **носити**, while its perfective partner, which typically means "to bring", is **принести**. When you need to communicate your intentions, these aspect partners provide you with powerful tools. The structure you choose completely alters the listener's expectations regarding the timeline and the final outcome of your action.
 
-Давайте розглянемо дієслова з коренем «нес» або «нос». Якщо це разова, результативна дія, ми використовуємо доконаний вид: «я принесу каву». Якщо це тривалий процес, ми обираємо недоконаний вид. Ви можете сказати «я носитиму цей светр усю зиму» або «я буду носити цей светр усю зиму». Ці дві форми однакові за значенням.
+Якщо ви обіцяєте доставити річ один раз і досягти результату, ви обираєте просту форму доконаного виду. Ви кажете: «Я принесу тобі цю книгу завтра». Дія буде повністю завершена. Якщо ж ви хочете описати тривалий процес, наприклад, регулярне носіння теплого светра, вам обов'язково знадобляться форми недоконаного виду.
 
-Notice the distinct shift in meaning. The perfective verb **принести** (to bring) combined with its simple future form **принесу** (I will bring) guarantees a completed result. The imperfective verb **носити** (to wear) focuses entirely on the ongoing state. Whether you use the synthetic **носитиму** or the analytic **буду носити**, you describe an uninterrupted action without a specific endpoint.
+For that ongoing process, you have two completely interchangeable options. You can use the elegant synthetic structure by saying **я носитиму цей светр щодня**, or you can opt for the straightforward analytic structure by saying **я буду носити цей светр щодня**. Both sentences mean "I will be wearing this sweater every day." The real boundary in the language is never between the two imperfective forms, but rather between both of them and the perfective **принесу**, which immediately shifts the narrative to a finalized achievement.
 
-You might remember that certain verbs undergo consonant alternations in the present tense. Because the perfective future uses the exact same conjugation patterns, these phonetic shifts apply here as well. If you have mastered the first and second conjugation patterns, forming the perfective future is simply a matter of adding a prefix.
+When you conjugate verbs in the simple perfective future, familiar spelling changes occur. Because this form uses the exact same personal endings as the present tense, all the consonant alternations you learned previously apply here. Creating the perfective future is often just a matter of adding a prefix to a base you already know.
 
-Українська фонетика вимагає змін приголосних у першій особі однини для багатьох дієслів другої дієвідміни. Наприклад, від дієслова «сидіти» утворюється форма «я посиджу». Від дієслова «летіти» ми утворюємо форму «я полечу». Так само поводиться дієслово «запросити»: ви кажете «я запрошу тебе на свято», але «ти запросиш мене».
-
-These alternations exist naturally to make the words fluid to pronounce. The shift usually affects only the **я** (I) form. Once you move to **ти** (you) or **ми** (we), the original consonant returns, as seen in the contrast between **попрошу** (I will ask) and **попросиш** (you will ask).
-
-Reflexive verbs follow strict placement rules in the future tense. The particle **-ся** or **-сь** is permanently attached to the main verb, but its exact position depends entirely on which of the three future forms you are building.
-
-У простій формі частка приєднується безпосередньо до кінця слова: «я повернуся додому». У складній формі вона також стоїть у самому кінці, після суфікса та закінчення: «я повертатимуся пізно». В аналітичній формі частка залишається разом з інфінітивом: «я буду повертатися». Частка ніколи не розриває дієслівну конструкцію.
+У теперішньому часі деякі приголосні звуки в корені слова змінюються. Дієслово «сидіти» перетворюється на «я сиджу», а «летіти» отримує форму «я лечу». Ці самі фонетичні правила ідеально працюють і для простої форми майбутнього часу. Коли ви додаєте префікс, щоб зробити дієслово доконаним, звук змінюється за знайомим вам зразком.
 
 :::info
 **Grammar box**
-When using the analytic future form (**буду** + infinitive) with a reflexive verb, the particle **-ся** must stay glued to the infinitive. It is incorrect to attach it to the auxiliary verb. You cannot say **я будуся повертати**. The only correct structure is **я буду повертатися**.
+The consonant alternations from the first and second conjugations carry over perfectly into the simple future. If the base verb alters its stem consonant for the "I" form in the present tense, the prefixed perfective verb will do the exact same thing in the future tense.
 :::
 
-To truly master the future tense, you must learn to weave these aspects naturally into connected speech. A professional setting, such as drafting a business email, provides a perfect backdrop for seeing how perfective results and imperfective processes work together.
+For instance, if you take the imperfective verb **просити** (to ask) and make it perfective by adding a prefix to form **запросити** (to invite), the consonant alternation remains identical. You say **я запрошу** for the first person singular, but for the second person you revert to the base consonant and say **ти запросиш**. The transition to the perfective future is completely seamless.
 
-Завтра ми проведемо важливу зустріч. Ми будемо обговорювати новий проєкт та його фінансування. Я сподіваюся, що ми знайдемо ефективне рішення. Після цього я обов'язково надішлю всім детальний звіт.
+Another important detail to observe is how the reflexive particle behaves across the three different future forms. Reflexive verbs, which end in **-ся** or **-сь**, follow strict placement rules depending on whether you are using a simple, synthetic, or analytic future structure. The simple perfective future acts exactly like the present tense, so the reflexive particle simply attaches to the very end of the conjugated verb. You form the word **повернуся** (I will return) by adding the particle directly after the personal ending.
 
-> *Tomorrow we will hold an important meeting. We will be discussing the new project and its financing. I hope that we will find an effective solution. After that, I will definitely send everyone a detailed report.*
+Складна форма майбутнього часу недоконаного виду працює за подібним принципом. Коли ви берете інфінітив «повертатися» і додаєте суфікс та особове закінчення, зворотна частка повинна відступити в самий кінець цього нового слова. У результаті ви отримуєте форму «я повертатимуся». Незалежно від довжини дієслова, частка завжди стоїть на фінальній позиції.
 
-In this short email, the perfective verbs **проведемо** (we will hold), **знайдемо** (we will find), and **надішлю** (I will send) act as definitive milestones. They are the concrete accomplishments the sender is promising to deliver. Meanwhile, the analytic imperfective form **будемо обговорювати** (we will be discussing) sets the ongoing agenda for the meeting itself. By mixing these forms purposefully, the email sounds authoritative and naturally Ukrainian.
+The analytic future form requires a completely different approach because it consists of two separate words. When you say **буду повертатися** (I will be returning), the reflexive particle stays firmly attached to the infinitive. A common mistake among learners is trying to attach the particle to the auxiliary verb **бути**, which sounds highly unnatural. The reflexive particle never moves between the words in the analytic construction; it always belongs to the main verb.
 
-:::tip
-**Did you know?**
-When making promises or setting deadlines, native speakers almost exclusively rely on the perfective future. Using the imperfective future in a business context can sometimes sound evasive, as if you plan to work on a task but cannot guarantee you will finish it!
-:::
+To see how these concepts naturally weave together in professional communication, imagine drafting a brief business email to your colleagues. You need to outline both the scheduled activities and the specific goals you intend to achieve.
+
+Шановні колеги! Завтра вранці ми проведемо важливу зустріч нашої команди. Ми будемо обговорювати новий проект та аналізувати поточні ризики протягом двох годин. Я дуже сподіваюся, що після нашої плідної дискусії ми знайдемо правильне рішення.
+
+> *Dear colleagues! Tomorrow morning we will hold an important meeting of our team. We will be discussing the new project and analyzing current risks for two hours. I really hope that after our fruitful discussion we will find the right solution.*
+
+Notice how the email strategically combines the aspects to set clear expectations. The perfective verbs **проведемо** and **знайдемо** establish the concrete milestones that must be reached by the end of the meeting. In contrast, the analytic imperfective construction **будемо обговорювати** highlights the dedicated time and continuous effort that the team will spend working through the details. By mixing the aspects appropriately, you create a dynamic and highly professional text.
 
 <!-- INJECT_ACTIVITY: free-write-future-plans -->
 
 ## Підсумок: вид і майбутнє у дії
 
-Choosing the right future tense in Ukrainian can feel like a challenge, but it all comes down to a simple decision tree. The very first question you must ask yourself is: "Do I need a result, or am I describing a process?" If your goal is to emphasize a completed action or a specific guaranteed result, you must choose a perfective verb. Perfective verbs offer only one path to the future, which is the simple form. You build it by adding personal endings to the verb stem, creating words like **я напишу** or **ми подивимося**. It is crucial to remember that this perfective future form looks exactly like a present tense conjugation, but it always acts as the future because a finalized result cannot exist in the immediate present moment.
-
-Якщо ж ви описуєте процес, тривалу дію або звичку в майбутньому, вам потрібне дієслово недоконаного виду. Тут у вас є два шляхи. Якщо ви хочете звучати стандартно і нейтрально, обирайте аналітичну складену форму з допоміжним дієсловом: **я буду працювати**. Якщо ж ви хочете надати своєму мовленню трохи більше елегантності, використовуйте синтетичну складну форму: **я працюватиму**. Обидва варіанти правильні, тому вибір залежить лише від вашого стилю в конкретній ситуації.
-
-> *If you are describing a process, an ongoing action, or a habit in the future, you need an imperfective verb. Here you have two paths. If you want to sound standard and neutral, choose the analytic compound form with an auxiliary verb: **я буду працювати**. But if you want to give your speech a bit more elegance, use the synthetic compound form: **я працюватиму**. Both options are absolutely correct, so the choice depends entirely on your style in a specific situation.*
-
-Now that you have explored the mechanics of aspect and time, it is time to verify your understanding. Take a moment to review these essential questions. You should be able to explain these rules clearly, as they form the foundation of everything you will learn in the upcoming modules.
-
-Спробуйте самостійно відповісти на ці контрольні запитання. По-перше, які три форми майбутнього часу існують в українській мові? Це проста, складна та складена форми. По-друге, чому дієслова доконаного виду ніколи не мають теперішнього часу? Тому що завершений результат просто не може тривати в момент мовлення. По-третє, як правильно утворити складну форму від дієслова «читати»? Ви додаєте суфікс до інфінітива, щоб отримати слово «читатиму». І нарешті, яке допоміжне дієслово завжди потрібне для аналітичної форми? Це дієслово «бути».
-
-To sum up, mastering the future tense in Ukrainian is fundamentally about mastering the "What to do?" question before you even start speaking. You must clearly envision whether your action is a journey or a destination. Once you make that choice between an imperfective process and a perfective result, the grammatical forms will naturally fall into place.
-
-У наступному модулі «Людина і стосунки» (M06) ми будемо застосовувати майбутній час на практиці, описуючи людей та взаємини. Ви навчитеся будувати фрази на зразок «Я познайомлю тебе з моєю подругою» або «Ми будемо зустрічатися щотижня», поєднуючи нову лексику з точним відчуттям часу.
+Choosing the correct часова форма (tense form) for the future in Ukrainian might seem complex at first, but it all comes down to a simple decision tree based on your intention. When you want to talk about the future, you must first ask yourself: "Do I need to express a completed result or an ongoing process?" If your goal is to highlight a completed action, a specific result, or a one-time event, you must use the perfective aspect. This leads you directly to the simple future form, or **проста форма**. Remember the golden rule: the perfective future looks exactly like the present tense conjugation, but because perfective verbs cannot happen in the "now," it always feels like and represents the future. On the other hand, if your goal is to describe a process, a repeated action, or a continuous state, you must choose the imperfective aspect. Once you are in the imperfective branch of the tree, you have another choice: do you want to sound standard and neutral, or do you want to add a touch of poetic elegance? For a standard, everyday approach, use the analytic future, or **складена форма**, which simply pairs the auxiliary verb with your infinitive. For a more sophisticated and uniquely Ukrainian sound, opt for the synthetic future, or **складна форма**, by attaching the special suffixes directly to the infinitive stem.
 
 :::note
 **Quick tip**
-Whenever you hesitate about which future form to use, ask yourself the core question: «Що робити?» or «Що зробити?». If your answer starts with the prefix **з-** (meaning a result), immediately use the simple future form.
+The most common mistake learners make is trying to combine the auxiliary verb **бути** with a perfective verb. Always remember that **буду** only ever pairs with the imperfective infinitive.
 :::
+
+Завершуючи цю тему, варто перевірити своє розуміння ключових правил. Спробуйте відповісти на кілька запитань. По-перше, які три форми майбутнього часу є в українській мові? Ви маєте згадати просту, складну та складену форми. По-друге, поміркуйте, чому дієслова доконаного виду не мають теперішнього часу. Відповідь криється в самій природі результату: бо результат не може тривати в момент мовлення. По-третє, як утворити складну форму від дієслова «читати»? Правильна відповідь — «читатиму». І нарешті, яке допоміжне дієслово потрібне для аналітичної форми? Звісно, це дієслово «бути». Опанування майбутнього часу — це насамперед уміння ставити правильне питання до дії. Якщо ви чітко знаєте, чи хочете ви просто «робити» щось, чи остаточно це «зробити», правильна граматична форма з'явиться природно.
+
+> *Wrapping up this topic, it is worth checking your understanding of the key rules. Try to answer a few questions. First, what are the three forms of the future tense in the Ukrainian language? You should recall the simple, synthetic, and analytic forms. Second, consider why verbs of the perfective aspect do not have a present tense. The answer lies in the very nature of a result: because a result cannot last at the moment of speech. Third, how do you form the synthetic form from the verb "to read"? The correct answer is "читатиму" (I will read). And finally, what auxiliary verb is needed for the analytic form? Of course, it is the verb "to be". Mastering the future tense is primarily about the ability to ask the right question about the action. If you clearly know whether you want to simply "do" something or finally "get it done," the correct grammatical form will appear naturally.*
+
+**Preview of next module: Людина і стосунки (M06)**
+In the next module, we will describe people and relationships, applying the future tense in context: «Я познайомлю тебе з моєю подругою» (I will introduce you to my friend), «Ми будемо зустрічатися щотижня» (We will be meeting every week).
 </generated_module_content>
 
-**PIPELINE NOTE — Word count: 5134 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
+**PIPELINE NOTE — Word count: 5693 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -662,28 +659,25 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 706 words | Not found: 17 words
+Verified: 760 words | Not found: 14 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
   ✗ Авраменко — NOT IN VESUM
   ✗ Берліна — NOT IN VESUM
   ✗ Литвінова — NOT IN VESUM
-  ✗ Сосюра — NOT IN VESUM
-  ✗ будуся — NOT IN VESUM
+  ✗ имати — NOT IN VESUM
   ✗ иму — NOT IN VESUM
-  ✗ мемо — NOT IN VESUM
-  ✗ меш — NOT IN VESUM
+  ✗ малютиму — NOT IN VESUM
   ✗ небудь — NOT IN VESUM
-  ✗ недок — NOT IN VESUM
-  ✗ нес — NOT IN VESUM
-  ✗ нос — NOT IN VESUM
   ✗ сказаю — NOT IN VESUM
   ✗ тиме — NOT IN VESUM
+  ✗ тимемо — NOT IN VESUM
+  ✗ тимете — NOT IN VESUM
   ✗ тимеш — NOT IN VESUM
   ✗ тиму — NOT IN VESUM
-  ✗ тися — NOT IN VESUM
+  ✗ тимуть — NOT IN VESUM
 
-All 706 other words are confirmed to exist in VESUM.
+All 760 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 

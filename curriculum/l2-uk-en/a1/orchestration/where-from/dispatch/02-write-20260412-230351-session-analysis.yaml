@@ -1,0 +1,151 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T21-02-2ddbf8ac.json
+phase: write
+prompt_chars: 63376
+response_chars: 8496
+prompt_words: 9591
+response_words: 1380
+sections:
+- name: preamble
+  start: 0
+  length: 6390
+  fraction: 0.1008
+- name: plan
+  start: 6390
+  length: 7035
+  fraction: 0.111
+- name: wiki
+  start: 12545
+  length: 25224
+  fraction: 0.398
+- name: rules
+  start: 38649
+  length: 10171
+  fraction: 0.1605
+- name: skeleton
+  start: 48820
+  length: 4749
+  fraction: 0.0749
+- name: output_spec
+  start: 53569
+  length: 9807
+  fraction: 0.1547
+large_sections: []
+directives_total: 53
+directives_covered: 27
+directives_missed:
+- kind: checklist
+  text: No 'Let us...', 'In this section...', or formulaic openers
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: checklist
+  text: Every exercise marker from the skeleton is placed
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: must
+  text: For A1 early modules, the learner cannot read Cyrillic — English must dominate.
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: must
+  text: '**EVERY plan point MUST appear in your output.'
+  covered: false
+  coverage_note: 2/7 keywords (29%)
+- kind: must
+  text: '**Hit the word target** — you MUST write 1200–1800 words of actual prose.'
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: must
+  text: Your output must be original teaching prose at the correct CEFR level, not
+    a rephrased version of the article.
+  covered: false
+  coverage_note: 3/13 keywords (23%)
+- kind: must
+  text: The introduction must be gradual, building from a set phrase to a flexible
+    pattern.
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: must
+  text: Teaching Ukrainian must be done on its own terms, free from Russian linguistic
+    and historical influence.
+  covered: false
+  coverage_note: 4/13 keywords (31%)
+- kind: must
+  text: Learners must build a new, independent Ukrainian phonetic system from scratch,
+    guided by audio from native Ukrainian speakers.
+  covered: false
+  coverage_note: 4/14 keywords (29%)
+- kind: must
+  text: This vocabulary is the A1 minimum required for this topic.
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: must
+  text: '` | Learners often master the `-і` ending but forget the mandatory consonant
+    mutation for feminine nouns ending in `-г`, `-к`, `-х`.'
+  covered: false
+  coverage_note: 4/11 keywords (36%)
+- kind: must
+  text: It must be taught as **`Київ` (Kyiv)**, not the Russian-derived `Киев` (Kiev).
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: must
+  text: Learners must build a Ukrainian mental model from scratch, not by adapting
+    a Russian one.
+  covered: false
+  coverage_note: 4/12 keywords (33%)
+- kind: must
+  text: The curriculum must be based on contemporary Ukrainian sources, like the provided
+    podcasts and textbooks, not on bilingual dictionaries that may contain outdated
+    or Russian-influenced vocabulary.
+  covered: false
+  coverage_note: 4/20 keywords (20%)
+- kind: must
+  text: '**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim**
+    as an `## H2` line.'
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: must
+  text: The total must reach 1200 words minimum.
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: must
+  text: 'REQUIRED: Every dialogue must have a SPECIFIC REAL-WORLD SITUATION that motivates
+    the grammar being taught.'
+  covered: false
+  coverage_note: 5/14 keywords (36%)
+- kind: must
+  text: Every sentence must teach something.
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: must
+  text: Every heading from "Section Structure" above MUST appear as an `## H2` in
+    your output, in order, **including the closing `Підсумок:` / `Підсумок та перехід
+    до M.
+  covered: false
+  coverage_note: 4/15 keywords (27%)
+- kind: must
+  text: translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: must
+  text: '- **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).'
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-sounds-vs-letters
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-sounds-vs-letters
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-false-friends
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing

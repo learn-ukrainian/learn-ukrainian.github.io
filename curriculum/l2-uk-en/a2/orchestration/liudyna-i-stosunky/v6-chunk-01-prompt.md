@@ -1,21 +1,23 @@
-# Section-by-Section Generation — Section 1/5
+# Section-by-Section Generation — Section 1/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 4: Яка вона людина? Описуємо людей навколо нас (A2, A2.1 [Foundation and Aspect Introduction])
-**Section to write:** Зовнішність: як виглядає людина? (Appearance: What Does a Person Look Like?) (~550 words total)
+**Section to write:** Зовнішність: як виглядає людина? (~550 words total)
 **Word target for this section:** 550 words (aim for 605 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Зовнішність: як виглядає людина? (Appearance: What Does a Person Look Like?) (~550 words total)
-- P1 (~100 words): [Introduction to the importance of describing people in daily life. Introduction of the verb "описувати" (to describe) and the noun "зовнішність" (appearance). Focus on the question: "Як він/вона виглядає?"]
-- P2 (~120 words): [Basic physical traits: height and build. Contrast pairs: високий (tall) vs. низький (short), худий (thin) vs. повний (stout/full). Adding age categories: молодий (young), старий (old), and середнього віку (middle-aged).]
-- P3 (~120 words): [Describing the face and eyes. Common patterns: "У неї карі очі" (She has brown eyes) vs. "Вона кароока" (She is brown-eyed). Mentioning eye colors: сині, зелені, сірі. Facial features: кругле обличчя (round face), прямий ніс (straight nose).]
-- P4 (~110 words): [Hair descriptions. Color: темне (dark), світле (light/fair), русяве (light brown), руде (red), сиве (grey). Length and style: коротке, довге, хвилясте (wavy), пряме (straight). Use of the word "зачіска" (haircut/hairstyle).]
-- P5 (~100 words): [Dialogue 1: Two friends looking at photos on a phone. "Це моя сестра Олена. Вона дуже висока, має довге русяве волосся і великі зелені очі." Comparison with a neighbor: "А це мій сусід, він уже старий, але дуже ставний."]
+## Зовнішність: як виглядає людина? (~550 words total)
+- P1 (~80 words): Introduction to describing appearance. State the goal of the section and introduce the basic questions used to ask about appearance: "Який він на вигляд?" or "Яка її зовнішність?".
+- P2 (~120 words): Dialogue 1: Two friends looking at photos on a phone. "Це моя сестра. Вона висока, темноволоса. Дуже весела і щира людина. А це мій сусід — він завжди допомагає. Учора допоміг мені з валізою." (Introduces appearance, character, and previews aspect contrast).
+- P3 (~90 words): Core adjectives for height, build, and age. Introduce and contrast opposites: високий/низький, худий/повний, молодий/старий. Show gender agreement with examples: високий чоловік, висока жінка.
+- P4 (~90 words): Adjectives for hair and eyes. Introduce compound adjectives: темноволосий/світловолосий, кароокий/блакитноокий. Give examples of describing someone's features directly: У нього темне волосся, у неї сині очі.
+- P5 (~90 words): Grammatical constructions for features. Explain using "мати" + Accusative (Вона має карі очі) and preview the natural "з" + Instrumental construction (Вона з карими очима), noting that Instrumental will be fully taught later.
+- P6 (~80 words): Common L2 error warnings (Decolonization and literal translation). Explain why "Вона виглядає гарно" is a poor literal translation (use "Вона гарна" or "Вона має гарний вигляд"). Also warn against the Russian calque "самий високий", showing the correct "найвищий".
+- <!-- INJECT_ACTIVITY: fill-in-agreement --> [fill-in, Complete sentences describing people with the correct adjective form (agreement for gender), 8 items]
 
 ---
 ## Full Plan (for reference)
@@ -632,6 +634,31 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] людина (person, human being)
+- [ ] стосунок (relationship)
+- [ ] характер (character, personality)
+- [ ] зовнішність (appearance)
+- [ ] привітний (friendly, welcoming)
+- [ ] щирий (sincere, genuine)
+- [ ] працьовитий (hardworking)
+- [ ] терплячий (patient)
+- [ ] сусід (neighbor)
+- [ ] описувати (to describe)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Зовнішність: як виглядає людина? (~550 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

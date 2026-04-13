@@ -1,36 +1,27 @@
-## Вступ та діалог (~150 words)
-- D1 (~100 words): [Dialogue between Student 1 and Student 2. Student 1 wants to skip a lecture (лекція) because they are tired. Student 2 argues they must go because there is a test (контрольна) tomorrow. Use: "Я не піду, бо втомився", "Тобі треба, тому що завтра контрольна", "Хоча я теж втомився, я все одно піду."]
-- P1 (~50 words): [Setting the pedagogical stage: why simple sentences are no longer enough at A2. We need to explain reasons (причина) and make concessions (допуст) to sound like a natural speaker.]
+## Чому? Тому що... / Бо... (Why? Because...) (~770 words total)
+- P1 (~100 words): [Dialogue setting: Two students debate whether to skip class. "Я не піду, бо хворію. Але тобі треба, тому що завтра контрольна! Хоча я втомився, я все одно піду." Contextualize the use of causal and concessive conjunctions with vocabulary like 'контрольна' and 'лекція'.]
+- P2 (~120 words): [Introduce subordinate clauses of cause (причина). Explain that they answer the question "Чому?" (Why?). Introduce the conjunctions 'тому що' and 'бо' as the primary ways to say "because", linking an action to its reason.]
+- P3 (~120 words): [Compare the register of 'тому що' and 'бо'. Explain that 'тому що' is neutral and formal (used in both writing and speaking), while 'бо' is a native, highly frequent Ukrainian word used primarily in conversational, everyday speech. Dispel the myth that 'бо' is a Russianism or uneducated.]
+- P4 (~130 words): [Explain word order and comma placement. Show that both conjunctions connect a dependent clause to a main clause, and a comma must be placed *before* the conjunction (e.g., "Я відпочиваю, тому що я втомився"). Note that a sentence can start with 'Тому що' when directly answering a question, but 'бо' almost always appears mid-sentence.]
+- P5 (~150 words): [Provide natural, everyday examples demonstrating usage. "Я не прийшов, тому що був зайнятий." "Вона вивчає українську, бо хоче розуміти друзів." Include an authentic example like "Держімося землі, бо земля держить нас" to show cultural resonance.]
+- P6 (~150 words): [Practice transformations. Show how to combine two simple sentences into one. "Погода була погана. Ми залишилися вдома." -> "Ми залишилися вдома, тому що погода була погана." Introduce the conjunction 'тому' (therefore, that is why) to show the reverse relationship (Result): "Погода була погана, тому ми залишилися вдома."]
 
-## Чому? Тому що... / Бо... (Why? Because...) (~700 words)
-- P1 (~100 words): [Defining the "причина" (cause) relationship. Introducing the question "Чому?" and the two primary answers: "тому що" and "бо". Example: "Я вдома, бо сьогодні дощ."]
-- P2 (~120 words): [Register and usage differences. "Бо" as the workhorse of spoken Ukrainian—short, direct, and slightly informal. "Тому що" as the neutral, universal choice for both speech and writing. Compare: "Я поспішаю, бо запізнююся" vs. "Земля прекрасна, тому що на ній живуть люди."]
-- P3 (~120 words): [Word order rules. Explaining that "тому що" can start a sentence when giving a direct answer to a question, whereas "бо" is strictly a connector that sits between clauses. Example: "— Чому ти не прийшов? — Тому що був зайнятий."]
-- P4 (~100 words): [The "Because-What" trap. Warning English speakers against adding "що" to "бо" (a common calque error). Explain that "бо" is a complete conjunction on its own. Example: "Я вчу мову, бо (not бо що) мені подобається."]
-- P5 (~130 words): [Punctuation focus. The comma is the "border guard" between the main clause and the cause clause. Always place a comma before "тому що" and "бо". Use examples: "Вона вивчає українську, бо хоче розуміти друзів."]
-- P6 (~130 words): [Syntactic transformation. How to turn two facts into a logical argument. Fact A: "Петро винайшов вулик." Fact B: "Він відомий бджоляр." Result: "Петро — найвідоміший бджоляр, тому що він винайшов вулик."]
-- <!-- INJECT_ACTIVITY: quiz-cause-choice --> [Quiz: Choose between "тому що" and "бо" based on context and sentence position, 8 items]
-- <!-- INJECT_ACTIVITY: fill-in-cause-clauses --> [Fill-in: Complete compound sentences by adding a logical reason clause after "бо", 8 items]
+## Хоча... (Although...) (~660 words total)
+- P1 (~120 words): [Introduce concessive clauses (допуст) with 'хоча' (although, even though). Explain that it expresses a contrast between an expectation and the actual reality. Example: "Хоча надворі холодно, ми пішли гуляти."]
+- P2 (~130 words): [Distinguish 'хоча' (concession) from 'але' (simple contrast). Compare "Хоча він втомився, він продовжив працювати" (focusing on the unexpected outcome) with "Він втомився, але продовжив працювати" (stating a simple sequence of contrasting facts). Warn learners against redundantly combining them as "Хоча..., але..." for A2 level simplicity.]
+- P3 (~140 words): [Discuss position flexibility. The 'хоча' clause can be placed either first or second in the sentence. Compare: "Ми пішли на прогулянку, хоча йшов дощ" vs. "Хоча йшов дощ, ми пішли на прогулянку." Reiterate the rule of using a comma to separate the two clauses.]
+- P4 (~150 words): [Provide natural examples and introduce 'хоч' as a slightly shorter, more conversational variant of 'хоча'. Example: "Хоча я вчу українську недовго, я вже розумію багато." Briefly mention the formal phrase 'незважаючи на те що' (despite the fact that) for passive recognition in reading.]
+- P5 (~120 words): [Common L2 error warning: Anglophones often translate the English "..., though" by placing 'хоча' at the end of a sentence. Clarify that in Ukrainian, 'хоча' MUST introduce the dependent clause and stand at its beginning. "Радянська пропаганда так казала, хоча насправді це не було правдою."]
+- <!-- INJECT_ACTIVITY: match-up-halves --> [match-up, Match two halves of sentences — причина with наслідок, допуст with результат, 8 items]
+- <!-- INJECT_ACTIVITY: unjumble-sentences --> [unjumble, Reorder words to form correct compound sentences with тому що, бо, and хоча, 6 items]
 
-## Хоча... (Although...) (~600 words)
-- P1 (~120 words): [Introduction to "допуст" (concession). Explaining that "хоча" expresses an action happening despite an obstacle. Example: "Хоча надворі холодно, ми пішли гуляти."]
-- P2 (~120 words): [Position flexibility. Unlike cause conjunctions, the "хоча" clause can come first or second. Note the comma placement in both cases. Examples: "Хоча було тільки надвечір’я, присмерки вже згусли" and "Я вчуся, хоча втомився."]
-- P3 (~120 words): [Contrast: Concession vs. Opposition. Comparing "хоча" with "але". "Хоча він втомлений, він працює" (concession) vs. "Він втомлений, але працює" (contrast). "Хоча" adds more nuance to the effort involved.]
-- P4 (~120 words): [The "Double Conjunction" feature. Explaining that when "хоча" starts a sentence, the main clause often gains an emphatic "а" or "але" to boost the contrast. Example: "Хоч і тепло ще, а осінь вже підходить крадькома."]
-- P5 (~120 words): [Intonation of concession. Rising tone (↗) on the "хоча" clause to signal "wait for the twist," followed by a falling tone (↘) on the main clause to deliver the result. Practice with: "Хоч земля вся укрита снігами, моє серце в цвіту."]
-- <!-- INJECT_ACTIVITY: match-up-cause-concession --> [Match-up: Match "причина" (cause) with "наслідок" (result) or "допуст" (concession) with "результат", 8 items]
-- <!-- INJECT_ACTIVITY: group-sort-conjunctions --> [Group Sort: Sort conjunctions into "причина" (тому що, бо) vs. "допуст" (хоча) vs. "протиставлення" (але), 8 items]
-
-## Складносурядне речення: і, та, але (Compound Sentences) (~700 words)
-- P1 (~120 words): [Expanding from A1 basics. Moving from joining words (bread and milk) to joining full thoughts. Review of "і", "та", and "але" as coordinating conjunctions. Note that "та" can be a synonym for "і" to avoid repetition.]
-- P2 (~120 words): [Defining the "equal relationship" (складносурядне). Two independent clauses connected by a bridge. Example: "Я прийшов додому, і ми разом повечеряли." Contrast this with the "main-dependent" relationship of "тому що".]
-- P3 (~120 words): [Introduction of A2 vocabulary upgrades: "проте" and "однак". These act as more sophisticated synonyms for "але". Example: "Сергій хотів піти в кіно, але не мав часу" vs. "Сергій хотів піти в кіно, проте не мав часу."]
-- P4 (~120 words): [Punctuation in compound sentences. Re-emphasizing that in Ukrainian, a comma is mandatory before "і/та" if they join two separate clauses. Always a comma before "але/проте/однак".]
-- P5 (~110 words): [Narrative flow. Demonstrating how these conjunctions act as "connective tissue" to turn a list of facts into a story. From: "Він працював. Він втомився. Він закінчив проект." To: "Він працював і втомився, проте закінчив проект."]
-- P6 (~110 words): [Intonation of equality. Unlike the rise-fall of complex sentences, compound sentences with "і" or "але" typically feature two similar falling patterns. Example: "Ми пішли в парк (↘), і ми там гуляли (↘)."]
-- <!-- INJECT_ACTIVITY: unjumble-complex-sentences --> [Unjumble: Reorder words to form correct compound and complex sentences with "тому що", "бо", and "хоча", 6 items]
-
-## Підсумок (~150 words)
-- P1 (~150 words): [Final recap of logical links: 1. Причина (Cause) answers "Чому?" using "тому що/бо". 2. Допуст (Concession) answers "Незважаючи на що?" using "хоча". 3. Зв'язок (Coordination) joins equal ideas with "і/але". Self-check: Can you explain why you are learning Ukrainian? Can you say something you do even when you are tired?]
-
-Grand total: ~2200 words
+## Складносурядне речення: і, та, але (Compound Sentences: and, but) (~770 words total)
+- P1 (~120 words): [Review and expand on A1 coordinating conjunctions (сполучники) used in complex sentences (складні речення). Introduce 'і / та' (and) and 'але / проте / однак / зате' (but, however, on the other hand). Explain that 'та' is a stylistic alternative to 'і', while 'проте' and 'однак' provide variety for 'але'. Mention 'навпаки' (on the contrary) for strong contrast.]
+- P2 (~130 words): [Demonstrate building longer compound sentences. Show how these conjunctions link equal, independent clauses. Examples: "Я прийшов додому, і ми разом повечеряли." "Сергій хотів піти в кіно, але не мав часу." "Хоч вітри ідуть супроти, та незламні наші крила."]
+- P3 (~130 words): [Contrast coordinating conjunctions ('і', 'та', 'але' — linking equal clauses) with subordinating conjunctions ('тому що', 'бо', 'хоча' — linking a main clause to a dependent one). Explain how to logically identify the main clause in a sentence.]
+- <!-- INJECT_ACTIVITY: group-sort-conjunctions --> [group-sort, Sort conjunctions into причина (тому що, бо) vs. допуст (хоча) vs. протиставлення (але, проте, однак), 8 items]
+- P4 (~120 words): [Explain comma rules for compound sentences. Emphasize that a comma is ALWAYS required before 'але', 'проте', and 'однак'. Clarify that a comma is used before 'і' or 'та' when they join two full independent clauses (subject + verb), not just when joining two words in a list.]
+- P5 (~140 words): [Describe intonation patterns. Explain that in causal sentences (причинові), the main clause carries a falling tone (↘) and the subordinate clause with 'тому що/бо' has a slight rise (↗). In concessive sentences (допустові), the 'хоча' clause rises (↗) to signal the concession, followed by a falling tone (↘) in the main clause.]
+- P6 (~130 words): [Consolidation exercise walkthrough. Show a short, choppy paragraph composed of simple sentences, and then rewrite it into natural, connected prose using a mix of cause, concession, and coordination to demonstrate flow and stylistic maturity.]
+- <!-- INJECT_ACTIVITY: quiz-conjunction-choice --> [quiz, Choose the correct conjunction (тому що, бо, хоча, але) to complete sentences, 8 items]
+- <!-- INJECT_ACTIVITY: fill-in-compound --> [fill-in, Complete compound sentences by adding the missing clause after the conjunction, 8 items]

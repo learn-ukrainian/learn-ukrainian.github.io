@@ -140,94 +140,78 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Діалоги — Dialogues
+## Діалоги (Dialogues)
 
-Colors bring the world to life. From the vibrant streets to the quiet corners of your home, the ability to describe hues is essential for expressing yourself in Ukrainian. Today, the scene is a bustling outdoor flower market in Kyiv, where Natalka is choosing the perfect gift. Notice how the colors naturally flow as adjectives describing the beautiful items on display.
+You have learned how to identify objects and describe their general qualities. Now, it is time to add color to your world. Colors are some of the most frequently used adjectives in any language, and mastering them quickly improves your ability to describe your surroundings. Imagine **Наталка** at a bustling outdoor flower market on a sunny morning. She is looking for the perfect bouquet and is talking to a flower seller, the **продавець**, about buying a gift for a close friend. They discuss the vibrant colors of the different vases and the fresh flowers on display. This pleasant conversation establishes the natural context for using basic color adjectives in everyday life.
 
-Natalka approaches the flower seller to buy a bouquet and a gift bag.
+> **Наталка:** Яка гарна ваза! Якого вона кольору? *(What a beautiful vase! What color is it?)*
+> **Продавець:** Червона. А є ще синя і зелена. *(Red. And there is also dark blue and green.)*
+> **Наталка:** Мені подобається синя. А ці троянди якого кольору? *(I like the dark blue one. And these roses, what color are they?)*
+> **Продавець:** Червоні. Є також білі лілії, жовті соняшники й зелене листя. *(Red. There are also white lilies, yellow sunflowers, and green leaves.)*
+> **Наталка:** Чудово! *(Wonderful!)*
 
-> **Наталка:** Доброго ранку! Якого кольору ці квіти? *(Good morning! What color are these flowers?)*
-> **Продавець:** Це **червоні троянди**, **білі лілії** і **жовті соняшники**. *(These are red roses, white lilies, and yellow sunflowers.)*
-> **Наталка:** Дуже гарні. А ця ваза? *(Very beautiful. And this vase?)*
-> **Продавець:** Це **синя ваза**. Тут є **зелене листя**. *(This is a blue vase. Here are green leaves.)*
-> **Наталка:** **Яка гарна сумка! Якого вона кольору?** *(What a beautiful bag! What color is it?)*
-> **Продавець:** **Червона. А є ще синя і зелена.** *(Red. And there is also a blue and a green one.)*
-> **Наталка:** **Мені подобається синя.** *(I like the blue one.)*
-> **Продавець:** **А мені — жовта!** *(And I like the yellow one!)*
+Let's break down this conversation. Notice the very useful phrase **Мені подобається** (I like). This is a memorized chunk that you can use anytime to express a preference without worrying about complex grammar right now. The core question introduced here is **Якого кольору?** (What color?). When **Наталка** asks this about the vase, she uses the feminine pronoun **вона**. Because the word **ваза** (vase) is feminine, the seller naturally answers with the feminine adjectives **червона** (red), **синя** (dark blue), and **зелена** (green) to ensure proper grammatical agreement. The conversation flows smoothly because the adjective endings perfectly match the noun.
 
-:::tip
-**Мені подобається** is a very useful fixed phrase meaning "I like." You can memorize it as a single chunk for now, and we will explore its grammatical structure in a later module.
-:::
+Let's look at another common, everyday situation that involves describing objects. **Дмитро** and **Ліза** are getting ready for a party and are picking out their clothes from a wardrobe. They are extending their descriptive skills from previous modules by discussing the colors of the room's furniture as well as the specific clothing items they want to wear tonight. This scenario shows exactly how color adjectives work with a wide variety of nouns.
 
-Describing personal belongings and the immediate environment brings these new words into your home. As you build your vocabulary, detailing your room and your clothing becomes a practical daily activity.
+> **Дмитро:** Якого кольору твоя кімната? *(What color is your room?)*
+> **Ліза:** Біла. А стіл — коричневий, крісло — сіре. *(White. And the table is brown, the armchair is grey.)*
+> **Дмитро:** Гарно. А де мій білий светр, сіре пальто і коричневі черевики? *(Nice. And where are my white sweater, grey coat, and brown shoes?)*
+> **Ліза:** Там, де моя чорна сукня. *(There, where my black dress is.)*
 
-Dmytro is visiting Liza. They are choosing outfits for an upcoming party, looking through her wardrobe and observing her room.
+The grammatical rules for gender agreement that you already know apply perfectly in this dialogue without any unexpected exceptions. The feminine noun **кімната** (room) naturally takes the feminine adjective **біла** (white). The masculine noun **стіл** (table) pairs perfectly with the masculine form **коричневий** (brown). The neuter noun **крісло** (armchair) takes the neuter ending in **сіре** (grey). Finally, the plural noun **черевики** (shoes) requires the plural adjective form **коричневі** (brown). Everything connects seamlessly.
 
-> **Дмитро:** **Якого кольору твоя кімната?** *(What color is your room?)*
-> **Ліза:** **Біла.** *(White.)*
-> **Дмитро:** **А стіл?** *(And the table?)*
-> **Ліза:** **Стіл коричневий. А крісло — сіре.** *(The table is brown. And the armchair is grey.)*
-> **Дмитро:** Добре. Де твоя **чорна сукня**? *(Good. Where is your black dress?)*
-> **Ліза:** Вона там. А де твій **білий светр**? *(It is there. And where is your white sweater?)*
-> **Дмитро:** Тут. У мене є **сіре пальто** і **коричневі черевики**. *(Here. I have a grey coat and brown shoes.)*
+## Кольори (Colors)
 
-## Кольори — Colors
+The Ukrainian word for color is **колір**. Just like any other descriptive adjectives you have studied so far, colors must match the gender of the noun they are describing. The vast majority of Ukrainian colors belong to what we call the **тверда група** (hard-stem group). They follow the exact same `-ий` for masculine, `-а` for feminine, `-е` for neuter, and `-і` for plural pattern that you learned in Module 09. This consistency makes learning most colors very straightforward and predictable for new learners.
 
-Color adjectives are your primary tool for describing physical objects. In Ukrainian, these words follow the same adjective patterns you learned previously. They must agree in gender with the noun they describe. The majority of Ukrainian colors belong to what is called the hard-stem group, meaning they take the standard endings: **-ий** for masculine, **-а** for feminine, and **-е** for neuter.
+Let's look at a detailed breakdown of the most common hard-stem colors. A red object is described as **червоний**, while a yellow object is **жовтий**. A green object is **зелений**. For the fundamental shades of dark and light, you will use **чорний** (black) and **білий** (white). A grey object is **сірий**. Because these words follow the standard pattern, you already know how to use them with familiar nouns. For example, you say **червоний борщ** (red borsch) because the soup is masculine. You say **зелена трава** (green grass) and **чорна кава** (black coffee) because those words are feminine. Finally, you would describe winter weather with **білий сніг** (white snow), another masculine noun.
 
-The "Hard-Stem Rainbow" contains our most common colors. Think of the natural world: we see the **червоне сонце** (red sun), the **жовте жито** (yellow rye), and the **зелена трава** (green grass). Here are the basic hard-stem colors, presented with their masculine, feminine, and neuter forms:
-* **чорний / чорна / чорне** (black)
-* **білий / біла / біле** (white)
-* **сірий / сіра / сіре** (grey)
-* **червоний / червона / червоне** (red)
-* **жовтий / жовта / жовте** (yellow)
-* **зелений / зелена / зелене** (green)
+However, there is one critical exception among the basic colors that you must be aware of right away. Adjectives that end in a soft sound belong to the **м'яка група** (soft-stem group). The only basic color in this specific group is **синій** (dark blue). Because its stem ends softly, its endings are `-ій`, `-я`, `-є`, and `-і`. You must memorize this word as a special grammatical case right now, as it will appear frequently in your reading and listening.
 
-<!-- INJECT_ACTIVITY: quiz-color-match -->
+Let's do a detailed comparison of how hard and soft stems agree with nouns so that we can see the contrast clearly. For a masculine noun like **стіл** (table), a standard hard stem is **великий стіл** (big table), while a soft stem is **синій стіл** (dark blue table). For a feminine noun like **книга** (book), the hard stem is **велика книга** versus the soft stem **синя книга**. For a neuter noun like **вікно** (window), it is **велике вікно** versus **синє вікно**. Notice exactly how the endings differ: the hard `а` becomes the soft `я`, and the hard `е` becomes the soft `є`.
 
-<!-- INJECT_ACTIVITY: fill-in-gender-agreement -->
+Here is a full vocabulary summary of these initial basic colors in their masculine dictionary forms. These words are the foundation of your descriptive vocabulary. Whenever someone asks you the question **Якого кольору...?**, you can confidently choose from this vibrant palette to provide your answer.
 
-While the hard-stem pattern covers most colors, there is an important exception. Among the basic colors, only **синій** (dark blue) follows the soft-stem pattern. As explained in textbooks like Vashulenko Grade 3 (p.130), adjectives divide into **тверда група** (hard group, ending in **-ий**) and **м'яка група** (soft group, ending in **-ій**). Notice the morphological shift in the soft group endings: masculine takes **-ій**, feminine takes **-я**, and neuter takes **-є**. Compare a standard hard adjective with our soft color: **новий стіл** (new table) versus **синій стіл** (dark blue table).
+*   **червоний** (red)
+*   **жовтий** (yellow)
+*   **зелений** (green)
+*   **чорний** (black)
+*   **білий** (white)
+*   **сірий** (grey)
+*   **синій** (dark blue)
 
-:::caution
-Pay close attention to **синій** (dark blue). It is the only basic color that uses the soft-stem endings (**-ій**, **-я**, **-є**). Do not accidentally write **синий** or **сина** using the hard-stem pattern!
-:::
+<!-- INJECT_ACTIVITY: quiz-color-matching -->
 
-The **синій** paradigm requires careful memorization because it sounds and looks distinct from the hard-stem words. Look at these explicit examples: a **синій олівець** (dark blue pencil) for masculine, a **синя ручка** (dark blue pen) for feminine, and a **синє вікно** (dark blue window) for neuter. Contrast this with a hard-stem adjective you know, like **великий** (big): the feminine form **велика** has an **-а**, while the feminine dark blue is **синя** with a **-я**.
+<!-- INJECT_ACTIVITY: fill-in-color-agreement -->
 
-<!-- INJECT_ACTIVITY: group-sort-hard-soft -->
+<!-- INJECT_ACTIVITY: group-sort-hard-soft-stem -->
 
-## Синій ≠ блакитний — Blue ≠ Blue
+## Синій ≠ блакитний (Blue ≠ Blue)
 
-Ukrainian has a unique distinction that English lacks: there are TWO distinct words for "blue," and they are not interchangeable. The word **синій** refers exclusively to dark, deep shades of blue. Think of the ink in your pen, the deep ocean (**синє море**), or the night sky (**синє небо вночі**). On the other hand, **блакитний** refers to light blue or sky blue, like a clear daytime sky (**блакитне небо вдень**). 
+The most important and fascinating difference between the English and Ukrainian color palettes involves the color blue. Ukrainian commonly distinguishes two shades of blue in everyday vocabulary, and this distinction is very useful to understand and use. The word **синій** means a dark, deep blue—like the deep sea, dark blue ink, or the night sky. On the other hand, the word **блакитний** means a light, sky blue—like a clear daytime sky or baby blue. While English comfortably uses the single word "blue" for both shades, Ukrainian treats them as two completely separate and unrelated colors.
 
-:::note
-You might occasionally hear the word **голубий** used for light blue in everyday speech, but this is a Russian-influenced word. Authentic Ukrainian strongly prefers **блакитний** for the color of the clear sky.
-:::
+The cultural context of the Ukrainian flag perfectly illustrates this important visual distinction. The flag is officially described as **синьо-жовтий** (blue and yellow). The **синій** stripe represents the deep, peaceful sky stretching over the country, while the **жовтий** stripe represents the vast, golden fields of wheat, known as **жито**. You might occasionally hear someone use the word **голубий** for light blue. This word also exists in Ukrainian, but for this module it is clearer to teach **блакитний** as the main beginner term for light blue.
 
-This distinction is beautifully illustrated by the colors of the Ukrainian flag (**прапор**). The flag is officially described as **синьо-жовтий** (blue-and-yellow). The textbook Kravtsova Grade 2 gives us a poetic memory aid: «**Синьо-жовтий прапор маєм: синє — небо, жовте — жито.**» (We have a blue-and-yellow flag: blue is the sky, yellow is the rye). Even though modern flags often use a lighter shade, the traditional word **синій** is preserved to symbolize the vast, deep, infinite nature of the sky above the golden fields.
+Let's expand your color palette with four more highly descriptive hard-stem adjectives. A brown object is called **коричневий**. A pink object is **рожевий**. An orange object is **помаранчевий**, and a purple object is **фіолетовий**. All of these new vocabulary words use the standard, familiar endings you already know so well. For example, you can describe an outfit using **коричневі черевики** (brown shoes), talk about a **рожева квітка** (pink flower) in the garden, or mention a beautiful **фіолетова сукня** (purple dress).
 
-<!-- INJECT_ACTIVITY: quiz-blue-shade -->
+Finally, you can create a wide variety of compound colors by simply using the descriptive prefixes **темно-** (dark) and **світло-** (light). You combine them with the base color using a simple hyphen. For example, **темно-зелений** is dark green, and **світло-синій** is a light blue-ish shade. This vocabulary is very useful when discussing the **вишиванка** (embroidered shirt). This iconic traditional cultural garment typically features beautiful **червоний і чорний** (red and black) threads in the northern Polissya region, or **червоний і синій** (red and dark blue) threads in the central Poltava region.
 
-A broader palette allows for richer descriptions. You will often need other common colors, which all conveniently follow the standard hard-stem pattern. These include **коричневий** (brown), **рожевий** (pink), **помаранчевий** (orange), and **фіолетовий** (purple). You can easily associate them with everyday objects: a **рожева квітка** (pink flower) or a **фіолетова фіалка** (purple violet).
-
-Sometimes you need a specific shade. You can create compound colors using the modifiers **темно-** (dark-) and **світло-** (light-). The grammar rule is simple: these prefixes are always joined to the color with a hyphen. For example, you can say **темно-зелений** (dark green) or **світло-синій** (light blue).
+<!-- INJECT_ACTIVITY: quiz-blue-shades -->
 
 ## Підсумок — Summary
 
-The essential rules for color agreement are straightforward. Just like the adjectives you learned in Module 09, colors must agree with the gender of the noun they describe. Comparing the two paradigms side-by-side reveals the pattern. The hard-stem pattern gives us **червоний стіл** (red table), **червона книга** (red book), and **червоне вікно** (red window). The soft-stem pattern gives us **синій стіл**, **синя книга** (dark blue book), and **синє вікно**. These rules also apply to plurals. In the plural, the ending is **-і** for all genders, so you would say **зелені дерева** (green trees) or **червоні яблука** (red apples).
+Let's review the core grammatical rules and essential vocabulary concepts from this module. First and foremost, remember that color adjective agreement strictly follows the gender of the noun it modifies. This operates exactly like the general descriptive adjectives you learned previously. However, you must always remember the crucial difference between the standard hard-stem endings and the unique soft-stem endings. The word **червоний** belongs to the hard group, seamlessly giving you the familiar patterns of **червоний стіл**, **червона книга**, and **червоне вікно**. The word **синій**, however, belongs to the soft group, giving you the softened patterns of **синій стіл**, **синя книга**, and **синє вікно**. Additionally, remember the usual distinction between the two Ukrainian blues: **синій** most often refers to a darker blue, while **блакитний** usually refers to a lighter, sky-blue shade. You can also quickly specify the exact shade of any color by using the helpful prefixes **темно-** and **світло-**.
 
-Colors carry deep meaning in Ukrainian culture. Consider the traditional embroidered shirt, the **вишиванка**. The classic colors of the Polissia region are **червоний і чорний** (red and black), immortalized in the famous song «Два кольори» where red symbolizes love and black symbolizes sorrow. However, regional styles vary, and the embroidery of the Poltava region often features **червоний і синій** (red and blue).
+Now, take a moment to carefully test your knowledge with these self-check questions to ensure you have thoroughly mastered the material:
 
-A quick self-check ensures you have mastered these concepts:
-*   **Якого кольору прапор України?** (What color is the flag of Ukraine?) — **Синьо-жовтий: синє — небо, жовте — жито.**
-*   What is the difference between **синій** and **блакитний**? — **Синій** is dark or deep blue; **блакитний** is light or sky blue.
-*   What ending does the word **синій** take in the feminine gender? — It takes the ending **-я**: **синя**.
-*   How do you say "dark green" in Ukrainian? — **Темно-зелений**.
-*   Name three objects in your room and their colors. — For example: **біла шафа** (white wardrobe), **коричневий стіл**, **сіре крісло**.
+*   What color is the Ukrainian flag, or **прапор**? (**синьо-жовтий**)
+*   Describe three different things in your room right now using color adjectives. Ensure that the endings of your colors perfectly match the gender of the objects you are describing.
+*   What is the specific difference between the colors **синій** and **блакитний**, and why is this distinction so important in Ukrainian?
+*   How do you properly ask the question "What color is it?" in Ukrainian?
 </generated_module_content>
 
-**PIPELINE NOTE — Word count: 1197 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
+**PIPELINE NOTE — Word count: 1576 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -403,40 +387,170 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 110 words | Not found: 4 words
+Verified: 83 words | Not found: 3 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
   ✗ Дмитро — NOT IN VESUM
   ✗ Ліза — NOT IN VESUM
   ✗ Наталка — NOT IN VESUM
-  ✗ синий — NOT IN VESUM
 
-All 110 other words are confirmed to exist in VESUM.
+All 83 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
-## Verification Tools (MCP)
+---
 
-You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
+## Verification Tools (Shell Commands)
 
-**Core Verification:**
-- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
-- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
+You have access to verification tools via shell commands. Use these to verify
+Ukrainian vocabulary, check grammar, and search textbook content **as you write**.
 
-**Content Quality:**
-- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+**IMPORTANT:** Run verification commands BEFORE finalizing any Ukrainian text.
+Batch multiple verifications together to minimize round-trips.
 
-**Reference:**
-- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp_rag_search_literary` — verify literary references against primary sources
-- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
+### 1. Batch-verify Ukrainian words exist in VESUM (preferred — one call for many words)
 
-**Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_words
+results = verify_words(['слово1', 'слово2', 'слово3'])
+for w, matches in results.items():
+    if matches:
+        print(f'{w}: FOUND — lemma={matches[0][\"lemma\"]}, pos={matches[0][\"pos\"]}')
+    else:
+        print(f'{w}: NOT FOUND — may not exist in standard Ukrainian')
+"
+```
+
+### 2. Verify a single Ukrainian word in VESUM (with full morphological tags)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_word
+results = verify_word('WORD_HERE')
+if results:
+    for m in results:
+        print(f'lemma={m[\"lemma\"]}, pos={m[\"pos\"]}, tags={m[\"tags\"]}')
+else:
+    print('NOT FOUND in VESUM')
+"
+```
+
+### 3. Get all inflected forms of a lemma (declension/conjugation)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_lemma
+forms = verify_lemma('LEMMA_HERE')
+for f in forms[:20]:
+    print(f'{f[\"word_form\"]:20s} {f[\"pos\"]:8s} {f[\"tags\"]}')
+print(f'... {len(forms)} forms total')
+"
+```
+
+### 4. Check CEFR level of a word (is it level-appropriate?)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import query_cefr_level
+results = query_cefr_level('WORD_HERE')
+for r in results:
+    print(f'{r[\"word\"]}: {r[\"level\"]} ({r[\"pos\"]})')
+if not results:
+    print('Not in CEFR database')
+"
+```
+
+### 5. Search textbook content (Ukrainian school textbooks, Grades 1-11)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_textbooks
+keywords = {'keyword1', 'keyword2'}
+results = search_textbooks(keywords, 5)
+for r in results:
+    title = r.get('section_title', r.get('title', ''))
+    grade = r.get('grade', '?')
+    text = r.get('text', '')[:200]
+    print(f'Grade {grade} | {title}')
+    print(f'  {text}')
+    print()
+"
+```
+
+### 6. Search style guide for calques/Russianisms (Антоненко-Давидович, 279 entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_style_guide
+results = search_style_guide('TOPIC_HERE', 3)
+for r in results:
+    print(f'--- {r.get(\"word\", \"\")} [{r.get(\"section\", \"\")}]')
+    print(r.get('text', '')[:300])
+    print()
+if not results:
+    print('No style guide entries found')
+"
+```
+
+### 7. Look up word definition in СУМ-11 (Ukrainian explanatory dictionary, 127K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_definitions
+results = search_definitions('WORD_HERE', 3)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+### 8. Search idioms (Фразеологічний словник, 25K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_idioms
+results = search_idioms('WORD_HERE', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"text\", r.get(\"definition\", \"\")))[:200]}')
+"
+```
+
+### 9. English-to-Ukrainian translation (Балла, 79K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import translate_en_uk
+results = translate_en_uk('ENGLISH_WORD', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+---
+
+**WHEN to use these tools:**
+
+1. **Before writing any Ukrainian text** — batch-verify all key vocabulary with
+   `verify_words` (tool 1). Any word that returns NOT FOUND must be replaced.
+2. **When you suspect a Russicism or calque** — search the style guide (tool 6)
+   and verify the correct Ukrainian form with `verify_word` (tool 2).
+3. **When writing for A1/A2** — check CEFR levels (tool 4) to ensure vocabulary
+   is level-appropriate.
+4. **When unsure about a case ending or conjugation** — use `verify_lemma` (tool 3)
+   to see the full paradigm.
+5. **When covering a grammar topic** — search textbooks (tool 5) to see how
+   Ukrainian school textbooks teach it.
+6. **When you need the precise Ukrainian meaning** — use СУМ-11 (tool 7).
+7. **When looking for natural Ukrainian expressions** — search idioms (tool 8).
+
+**Batching rule:** Collect all words you want to verify, then run ONE `verify_words`
+call instead of multiple `verify_word` calls. This is faster and uses fewer tokens.

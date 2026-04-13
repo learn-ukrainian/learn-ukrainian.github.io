@@ -1,24 +1,23 @@
-# Section-by-Section Generation — Section 3/4
+# Section-by-Section Generation — Section 3/3
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 13: Мого друга, цієї книги (A2, A2.2 [Genitive Case Complete])
-**Section to write:** Цього, того: вказівні займенники та повні фрази (Demonstratives and Full Phrases) (~650 words total)
-**Word target for this section:** 650 words (aim for 715 to account for undershoot)
+**Section to write:** Цього, того: вказівні займенники та повні фрази (~715 words)
+**Word target for this section:** 715 words (aim for 786 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Цього, того: вказівні займенники та повні фрази (Demonstratives and Full Phrases) (~650 words total)
-- P1 (~110 words): [Demonstrative Basics: Introducing 'цього' (this) and 'того' (that) for masculine and neuter nouns. Contrasting proximity: 'біля цього будинку' (near this one) vs. 'біля того парку' (near that one).]
-- P2 (~110 words): [Feminine Demonstratives: 'Цієї' and 'тієї'. Note on the variant 'тої' as a natural, more conversational alternative often found in literature and speech. Examples: 'без цієї книги', 'навпроти тієї школи'.]
-- P3 (~130 words): [Building the Full Noun Phrase: Logic of word order in Ukrainian. Demonstrative + Possessive/Adjective + Noun. Step-by-step assembly: 'сестра' -> 'старша сестра' -> 'моя старша сестра' -> 'для моєї старшої сестри'.]
-- P4 (~120 words): [Complex Agreement Drill: Handling multiple modifiers. 'Від цього нового вчителя', 'після того важливого документа'. Focus on ensuring every element in the chain matches the Genitive case requirements.]
-- P5 (~180 words): [Consolidation Narrative: A short text describing a student's backpack and its contents using multiple Genitive modifiers: 'В моєму рюкзаку немає цього синього олівця, але є багато моїх нових підручників. Я не можу знайти своєї старої карти'.]
-- <!-- INJECT_ACTIVITY: match-up-nom-gen --> [match-up, Match Nominative noun phrases to their Genitive equivalents, 8 items]
-- <!-- INJECT_ACTIVITY: fill-in-complex-phrases --> [fill-in, Build complete Genitive phrases with demonstrative + adjective + noun, 8 items]
-- <!-- INJECT_ACTIVITY: error-correction-agreement --> [error-correction, Find and fix adjective-noun agreement errors in Genitive phrases, 6 items]
+## Цього, того: вказівні займенники та повні фрази (~715 words)
+- P1 (~120 words): Introduction to demonstrative pronouns (вказівні займенники) in the Genitive. Explain how `цей` (this) and `той` (that) change in the Genitive to specify exactly which object is missing or involved in a spatial relationship. 
+- P2 (~150 words): Masculine and Neuter Genitive demonstratives. Detail the forms: `цей → цього`, `той → того`. Provide examples showing spatial and temporal context: `біля цього будинку`, `після того дня`, `від цього вчителя`.
+- P3 (~150 words): Feminine Genitive demonstratives. Detail the forms: `ця → цієї`, `та → тієї`. Mention that the shortened form `тої` is also a correct, slightly more conversational alternative to `тієї`. Provide examples: `для цієї дівчини`, `навпроти тієї школи`, `без тієї книги`.
+- P4 (~150 words): Full noun phrases with multiple modifiers. Explain the natural Ukrainian word order when combining all these elements: Demonstrative + Possessive/Adjective + Noun. Provide robust examples: `біля цього нового ринку`, `для моєї старшої сестри`, `без того важливого документа`.
+- P5 (~145 words): Consolidation drill logic — building phrases step by step. Demystify complex phrases by showing the progression: 1. Noun alone (`друга`) → 2. Adjective + Noun (`нового друга`) → 3. Demonstrative + Adj + Noun (`цього нового друга`) → 4. Preposition + Full Phrase (`для цього нового друга`).
+- <!-- INJECT_ACTIVITY: fill-in-demonstratives-full-phrases --> [fill-in, Build complete Genitive phrases with demonstrative + adjective + noun, 8 items]
+- <!-- INJECT_ACTIVITY: error-correction-genitive-agreement --> [error-correction, Find and fix adjective-noun agreement errors in Genitive phrases (e.g., *нової друга → нового друга, *цієї будинку → цього будинку), 6 items]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -26,7 +25,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-very characteristic of the language. These forms are essential when talking about female family members or professionals, such as a **вчителька** (female teacher), in the Genitive case. Я отримав повідомлення від моєї старшої сестри. Цей красивий подарунок ми купили для твоєї нової вчительки. Вона вийшла з магазину без своєї теплої куртки. Ключі лежать біля моєї великої сумки. > *I received a message from my older sister. We bought this beautiful gift for your new teacher. She left the store without her warm jacket. The keys are lying near my large bag.* The pronouns «наш» (our) and «ваш» (your, formal/plural) are even easier to decline because they behave exactly like a hard-group **прикметник** (adjective). You simply treat them as if they were regular descriptive words. For masculine and neuter nouns, add **-ого** to get **нашого** and **вашого**. For feminine nouns, add **-ої** to get **нашої** and **вашої**. These forms are incredibly common in everyday situations, especially when giving directions. Сьогодні ми їдемо до нашої нової лікарні. Вони вчора повернулися з вашого великого міста. Діти грають у футбол біля нашої школи. Я не можу працювати без вашої допомоги. > *Today we are going to our new hospital. They returned from your large city yesterday. The children are playing football near our school. I cannot work without your help.* When discussing possession for the third person plural ("their"), Ukrainian offers a fully declinable possessive adjective: **їхній** (their). Because it is a soft-group word, it declines exactly like «синій» (blue). In the Genitive, it becomes **їхнього** for masculine/neuter and **їхньої** for feminine nouns. :::tip **Decolonize your Ukrainian** — Using the unchangeable personal pronoun «їх» to indicate possession (e.g., saying «біля їх дому» instead of «біля їхнього дому») is a direct Russianism. Always use the proper, declinable forms **їхнього** and **їхньої** for true Ukrainian phrasing. ::: Вони завжди паркують машину біля їхнього нового офісу. Я ще не бачив їхньої маленької доньки. Ми довго гуляли навколо їхнього гарного озера. Ми приготували цей сюрприз для їхньої мами. > *They always park the car near their new office. I have not yet seen their little daughter. We walked around their beautiful lake for a long time. We prepared this surprise for their mom.* Finally, we have the third-person singular possessives: **його** (his/its) and **її** (her). These words are unique because they are completely frozen. They never change their form, regardless of the case, gender, or number of the noun they modify. This means you do not need to worry about matching endings for these two words; they remain exactly the same whether they are in the Nominative or the Genitive case. Кіт спокійно спить біля його робочого столу. Я вчора говорив з мамою її молодшої сестри. Ми стояли навпроти його великого будинку. Вона прийшла на вечірку без її нового хлопця. > *The cat is sleeping peacefully near his desk. I spoke with the mom of her younger sister yesterday. We stood opposite his large house. She came to the party without her new boyfriend.* <!-- INJECT_ACTIVITY: quiz-possessive-choice -->
+waiting near our university. I cannot take this without your permission.* When you are talking about feminine nouns, the possessive pronouns take endings that resemble feminine adjectives. The pronouns "моя" and "твоя" shift to **моєї** and **твоєї**, using the soft "-еї" sound. The pronouns "наша" and "ваша" take the hard "-ої" ending to become **нашої** and **вашої**. Remember, if the noun is feminine and in the Genitive case, the pronoun must match it perfectly. Я отримав листа від моєї старшої сестри. Ми купили квіти для нашої нової **вчительки** (female teacher). Вони живуть недалеко від вашої школи. Тут немає твоєї чорної сумки. > *I received a letter from my older sister. We bought flowers for our new teacher. They live not far from your school. Your black bag is not here.* There is a very important exception to this rule of agreement. The possessive pronouns for "his" (**його**) and "her" (**її**) are completely unchanging. They do not decline. Whether the noun is masculine, feminine, plural, Nominative, or Genitive, you just use "його" or "її". For example, "його книга" (his book) becomes "його книги" in the Genitive. However, the word for "their" (**їхній**) is a normal, fully declinable adjective. It declines exactly like a soft-group adjective: **їхнього** for masculine and neuter, and **їхньої** for feminine. :::info **Decolonization Note** A very common error, heavily influenced by Russian, is using the unchanging personal pronoun "їх" (them) to mean "their". In standard Ukrainian, you must use the proper possessive adjective **їхній** and decline it: "їхні проблеми" (their problems), "без їхнього друга" (without their friend). ::: Я не маю його нового **підручника** (textbook). Ми знайшли це біля її машини. Вони не можуть працювати без їхнього **важливого** (important) **документа** (document). Ми не знаємо адреси їхньої нової школи. > *I do not have his new textbook. We found this near her car. They cannot work without their important document. We do not know the address of their new school.* Let us consolidate this knowledge by combining possessive pronouns with the spatial and logical prepositions you learned in previous modules. The Genitive case is the engine that drives prepositions of origin like "з" (from) and "від" (from a person), prepositions of absence like "без" (without), prepositions for beneficiaries like "для" (for), and prepositions of destination like "до" (to). When you use a possessive pronoun with these prepositions, it acts as an anchor for the whole phrase, clearly defining whose space, whose destination, or whose absence is being discussed. This makes your sentences much more specific. Він приїхав з мого рідного міста. Я не хочу йти туди без твоєї допомоги. Вона підготувала цей звіт для нашого головного менеджера. Швидка допомога швидко їде до вашої центральної лікарні. Ми отримали повідомлення від моєї тітки. > *He arrived from my hometown. I do not want to go there without your help. She prepared this report for our main manager. The ambulance is driving quickly to your central hospital. We received a message from my aunt.* <!-- INJECT_ACTIVITY: quiz-possessive-pronouns --> <!-- INJECT_ACTIVITY: match-up-nom-to-gen -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -693,6 +692,31 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (3/3).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] прикметник (adjective)
+- [ ] займенник (pronoun)
+- [ ] присвійний (possessive)
+- [ ] вказівний (demonstrative)
+- [ ] узгодження (agreement (grammatical))
+- [ ] дозвіл (permission)
+- [ ] підручник (textbook)
+- [ ] документ (document)
+- [ ] вчителька (female teacher)
+- [ ] важливий (important)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Цього, того: вказівні займенники та повні фрази (~715 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

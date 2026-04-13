@@ -1,0 +1,50 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T14-06-40b471c5.json
+phase: write-chunk-07
+prompt_chars: 52767
+response_chars: 5144
+prompt_words: 7461
+response_words: 797
+sections:
+- name: header
+  start: 0
+  length: 442
+  fraction: 0.0084
+- name: skeleton
+  start: 442
+  length: 918
+  fraction: 0.0174
+- name: prior_summary
+  start: 1360
+  length: 3494
+  fraction: 0.0662
+- name: plan
+  start: 4854
+  length: 18872
+  fraction: 0.3576
+- name: wiki
+  start: 17039
+  length: 28821
+  fraction: 0.5462
+- name: output_spec
+  start: 52547
+  length: 220
+  fraction: 0.0042
+large_sections:
+- wiki
+directives_total: 18
+directives_covered: 15
+directives_missed:
+- kind: must
+  text: '**Найвищий пріоритет (Must Know):** Чергування **`[г], [к], [х] → [з''],
+    [ц''], [с'']`** в **давальному** та **місцевому** відмінках однини **іменників
+    І відміни**.'
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: inject_activity
+  text: error-correction-conjugation
+  covered: false
+  coverage_note: marker missing

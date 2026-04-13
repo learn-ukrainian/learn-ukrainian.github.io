@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-купимо їм гарні сувеніри. Потім ми щиро подякуємо **водіям** *(to drivers)* за велику допомогу в дорозі. The Dative case in the plural is incredibly regular. You use this specific case to indicate the recipient of an action, answering the question «кому?» (to whom?) or «чому?» (to what?). Unlike the singular forms, plural nouns do not care about grammatical gender here. Masculine, feminine, and neuter nouns all follow the exact same universal pattern. Якщо слово має твердий приголосний звук в кінці основи, ми завжди додаємо закінчення **-ам** *(-am)*. Наприклад, це такі відомі слова як «студент», «місто» та «книжка». У множині вони мають прості форми **студентам** *(to students)*, **містам** *(to cities)*, та **книжкам** *(to books)*. Якщо слово має м'який приголосний звук, ми тоді використовуємо закінчення **-ям** *(-yam)*. Подивіться на популярні слова «друг», «море» та «пісня». У давальному відмінку множини це будуть форми **друзям** *(to friends)*, **морям** *(to seas)*, та **пісням** *(to songs)*. Слово «діти» є маленьким винятком. Ми кажемо **дітям** *(to children)*. Слово «люди» також має м'яке закінчення. Ми завжди кажемо **людям** *(to people)*. Why is this specific grammar case so pleasant and easy to learn? Let us closely compare the Dative plural with the Genitive plural that you already know. The Genitive case in the plural has many complex and sometimes unpredictable rules. It uses completely different endings like «-ів» or «-ей», and sometimes it drops the ending entirely, creating a tricky zero ending. This immense complexity can be very frustrating for language learners. Давальний відмінок множини є дуже простим і надзвичайно логічним. Одне коротке універсальне правило чудово працює майже для всіх можливих слів в українській мові. Ви просто уважно дивитеся на останній звук основи іменника. Це робить давальний відмінок найлегшим для швидкого і легкого вивчення у множині. Вам зовсім не потрібно запам'ятовувати довгі і складні таблиці винятків. We frequently use the Dative plural with specific communicative verbs to express human interaction. Ці важливі дієслова завжди вимагають давального відмінка після себе. Запам'ятайте такі корисні дієслова: **давати** *(to give)*, **допомагати** *(to help)*, **дякувати** *(to thank)*, **телефонувати** *(to call)*, та **пояснювати** *(to explain)*. Ось кілька хороших практичних прикладів для вас. Я даю гарні подарунки моїм друзям. Вчитель чітко пояснює нові правила студентам. Хороші батьки часто допомагають малим дітям робити складне домашнє завдання. Я регулярно телефоную моїм **колегам** *(to colleagues)* кожного робочого ранку. Ми всі щиро дякуємо **лікарям** *(to doctors)* за їхню важку щоденну роботу. Також ми досить часто використовуємо дієслово **радити** *(to advise)*. Я завжди раджу іноземним **туристам** *(to tourists)* відвідати центр міста. Some nouns in the Ukrainian language exist exclusively in the plural form. Fortunately, these interesting words strictly follow the exact same predictable Dative plural rule. Ми просто і легко додаємо знайомі закінчення «-ам» або «-ям» до їхньої базової основи. Подивіться уважно на ці популярні слова в контексті. Цим гарним **окулярам** *(to glasses)* вже багато років. Я ніколи в житті не довіряю великим **грошам** *(to money)*. Цим старим синім **штанам** *(to pants)* потрібен терміновий ремонт сьогодні. Іноземні туристи зазвичай радіють українським **Карпатам** *(rejoice at the Carpathians)* влітку. <!-- INJECT_ACTIVITY: match-up-plural-cases -->
+радіємо «теплим морям» і даруємо **квіти** «вчителям». > *If a word has a soft consonant or ends in a vowel sound, we add the ending **-ям**. We write letters "to the friends", rejoice at the "warm seas" and give flowers "to the teachers".* :::info **Grammar box** To form the Dative plural, drop the Nominative plural ending (-и, -і, -ї, -а, -я) and look at the stem. Hard stem ➔ **-ам** (студент ➔ студентам, місто ➔ містам). Soft/mixed stem ➔ **-ям** (друг ➔ друзям, море ➔ морям). ::: You might remember that the Genitive plural (which we use to say "a lot of" or "none of") is quite complex. It has zero endings, -ів, and -ей, often with unexpected vowel changes inside the root of the word. You had to memorize whether a feminine noun drops its ending entirely or adds something else. Давальний відмінок у множині дуже простий і логічний. Тобі абсолютно не потрібно думати про рід слова або шукати складні винятки. Ти просто запам'ятовуєш ці два закінчення і використовуєш їх щодня. Це робить його одним із найлегших відмінків для вивчення. > *The Dative case in the plural is very simple and logical. You absolutely do not need to think about the gender of the word or look for complex exceptions. You simply memorize these two endings and use them every day. This makes it one of the easiest cases to learn.* Certain high-frequency verbs naturally require the Dative case because their action is inherently directed *to* someone or something. You already know these verbs from the singular, and they work exactly the same way in the plural. The most common verbs in this category are **допомагати** (to help), **дякувати** (to thank), давати (to give), телефонувати (to call), and пояснювати (to explain). Notice how Ukrainian requires the Dative where English might just use a direct object. Вчитель завжди пояснює нові правила студентам. Батьки часто **допомагають** маленьким **дітям** робити домашнє завдання. Я щодня телефоную своїм хорошим друзям. Ми **дякуємо** лікарям за їхню важку роботу. > *The teacher always explains new rules to the students. Parents often help small children do their homework. I call my good friends every day. We thank the doctors for their hard work.* Finally, let's look at nouns that only exist in the plural (pluralia tantum). These words have no singular form, but they still follow our simple Dative plural rule. You will often see them with the preposition «завдяки» (thanks to) or verbs like довіряти (to trust) and радіти (to rejoice at). Завдяки новим окулярам бабуся тепер добре бачить. Я зовсім не довіряю цим великим грошам. Ми радіємо зимовим канікулам у школі. Навіть такі слова мають типові закінчення **-ам** або **-ям**. > *Thanks to new glasses, grandmother now sees well. I do not trust this big money at all. We rejoice at the winter holidays in school. Even such words have the typical endings **-ам** or **-ям**.* <!-- INJECT_ACTIVITY: match-up, focus: Match plural noun forms with the correct case labels (Nom, Gen, Dat), 8 items -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -328,7 +328,74 @@ A phased approach is best for internalizing plural cases.
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -347,18 +414,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] давальний відмінок (dative case)
+- [ ] орудний відмінок (instrumental case)
+- [ ] місцевий відмінок (locative case)
+- [ ] допомагати (to help)
+- [ ] дякувати (to thank)
+- [ ] подарунок (gift)
+- [ ] квіти (flowers)
+- [ ] діти (children)
+- [ ] люди (people)
+- [ ] заняття (class, lesson)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Орудний множини: З ким? Чим? (Instrumental Plural) (~600 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

@@ -1,0 +1,50 @@
+round: 4
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: The module follows the outline, but uncritically implemented flawed examples
+    requested by the plan ("падаючий водоспад", "палаючий вогонь").
+- dimension: 2
+  name: Linguistic accuracy
+  score: 6
+  evidence: 'CRITICAL errors: The text presents "палаючий" and "падаючий" as "natural
+    adjective-like participles" and "stylistically flawless", even though VESUM confirms
+    they do not exist in Ukrainian. It uses ot'
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Excellent breakdown of the "nu-drop" rule (`зів'ялий`). Good comparison
+    of adjective vs. verb vs. participle to build understanding.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required vocabulary (`дієприкметник`, `активний`, `пасивний`, `квітучий`,
+    `зів'ялий`, `розквітлий`, `опалий`, `зниклий`, `посивілий`, `чинний`, `наявний`,
+    `описовий зворот`) is included and explai
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Exercises are placed accurately right after the concept is taught. Appropriate
+    coverage of reading, writing, and analytical skills.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Excellent teacher persona. "Imagine a word that combines the dynamics
+    of a live action..." is an engaging, substantive hook.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Length is substantial (5482 words). All sections are correctly formatted
+    with necessary H2 headers and formatting blocks.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Strong decolonized stance on the `-вш-` / `-ш-` suffixes, explicitly referring
+    to the legacy of Russian grammatical influence and Surzhyk.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: The documentary script effectively models the grammar (using descriptive
+    clauses for moving animals vs. adjectives for static landscape features).
+findings: []

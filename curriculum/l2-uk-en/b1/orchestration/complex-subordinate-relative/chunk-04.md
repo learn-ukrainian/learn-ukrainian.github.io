@@ -1,0 +1,26 @@
+## Пунктуація та позиція (~660 words total)
+
+Ukrainian punctuation has one very clear and unbreakable rule for attributive subordinate clauses. Regardless of where this clause stands, how long it is, or what words it contains, it is always separated by commas. If the clause stands inside the main sentence, you must place two commas: one at the beginning of the subordinate part, and another at the end. If it completes the thought at the end, only one comma is needed. Unlike a participial phrase, where position affects commas, an **означальне речення** (attributive clause) always requires them.
+
+Це правило є обов'язковим і не має жодних винятків у сучасній літературній мові. Погляньмо на типовий приклад: «Місто, яке я відвідав, мене вразило». Тут головне речення — це «Місто мене вразило», а підрядна частина вставлена прямо всередину, тому ми ставимо дві коми. Якщо ж ми змінимо порядок слів, пунктуація залишиться такою ж суворою: «Мене вразило місто, яке я відвідав». Кома перед сполучним словом завжди сигналізує про початок нової граматичної основи.
+
+While punctuation is straightforward, the physical position of the clause within the sentence requires careful attention. An attributive clause must always stand immediately after the **означуване слово** (antecedent — noun the clause describes) it describes. If you place other words between them, you risk creating a "dangling modifier" — a sentence that is logically confusing or even accidentally funny.
+
+Розгляньмо класичну помилку, яку часто роблять студенти, коли забувають про правильну позицію підрядної частини. Уявіть таке речення: «Хлопець урятував дівчину від акули, з якою згодом одружився». Через те, що підрядна частина стоїть одразу після слова «акули», граматично виходить, що цей сміливий хлопець одружився саме з хижою рибою! Щоб уникнути такої нісенітниці, речення потрібно будувати інакше. Правильний варіант звучатиме так: «Хлопець, який урятував дівчину від акули, згодом із нею одружився».
+
+> *Let's look at a classic mistake students often make when they forget about the correct position of the subordinate part. Imagine this sentence: "The boy saved the girl from the shark, whom he later married." Because the subordinate part stands immediately after the word "shark," grammatically it turns out that this brave boy married the predatory fish! To avoid such nonsense, the sentence must be built differently. The correct version will sound like this: "The boy, who saved the girl from the shark, later married her."*
+
+As you become more comfortable with complex syntax, you will start building sentences that contain multiple subordinate clauses. Sometimes, one attributive clause will be nested inside another, creating a chain of descriptions. This happens when a word inside the first subordinate clause becomes the antecedent for a second subordinate clause. When stacking them, each distinct clause must be isolated by its own set of commas.
+
+Складання таких синтаксичних ланцюжків нагадує традиційну матрьошку, де одна частина ховається в іншій. Погляньте на цей приклад: «Студент, який вивчає мову, яку я викладаю, отримав стипендію». Тут ми маємо дві різні підрядні частини, які виконують однакову функцію. Перша — «який вивчає мову» — пояснює слово «студент». Друга — «яку я викладаю» — пояснює слово «мову» і знаходиться всередині першої. Ми відокремлюємо комами кожну з них. Хоча такі конструкції є абсолютно правильними, намагайтеся не зловживати ними в усному мовленні, щоб не перевантажувати співрозмовника.
+
+:::info
+**Grammar box**
+When stacking multiple attributive clauses, pay close attention to gender and number agreement. In the phrase «Студент, який вивчає мову, яку я викладаю», the relative pronoun **який/яка/яке/які** (which/that — relative pronoun, declines) appears twice in different forms. The first one is masculine singular to match «студент». The second one is feminine singular in the accusative case, matching «мову». The **відмінок** (case — determines the form of який in the clause) always depends on the word's function inside its own specific clause.
+:::
+
+Finally, there is a special type of construction called a pronoun-relative clause. In these sentences, the main clause does not contain a specific noun. Instead, the antecedent is a demonstrative or definitive pronoun such as «той» (that one) or «такий» (such). The clause is attached using a **сполучне слово** (connective word — який, що, де, куди, коли), and it very often stands before the main clause.
+
+Ця структура створює особливий поетичний ритм, який ви часто почуєте в українських прислів'ях та класичній літературі. Наприклад, відомий вислів звучить так: «Хто не знає свого минулого, той не вартий свого майбутнього». Тут підрядна частина починається словом «хто» і повністю розкриває значення загального займенника «той» у другій частині. Інший гарний приклад: «Щасливий той чоловік, що немарно прожив свій вік». Зверніть увагу, що як сполучне слово тут виступає не тільки «який», а й «хто» або «що». Це дуже потужний інструмент для висловлення глибоких філософських думок.
+
+<!-- INJECT_ACTIVITY: error-correction, Виправте пунктуаційні помилки та неправильну позицію в означальних реченнях. -->

@@ -1,0 +1,188 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T19-01-1b6e4499.json
+phase: activities
+prompt_chars: 48387
+response_chars: 16536
+prompt_words: 7260
+response_words: 1860
+sections:
+- name: preamble
+  start: 0
+  length: 4170
+  fraction: 0.0862
+- name: plan
+  start: 4170
+  length: 44109
+  fraction: 0.9116
+- name: output_spec
+  start: 48279
+  length: 108
+  fraction: 0.0022
+large_sections:
+- plan
+directives_total: 58
+directives_covered: 21
+directives_missed:
+- kind: checklist
+  text: My output has **at least 4** inline activities (one per `<!-- INJECT_ACTIVITY
+    -->` marker).
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: checklist
+  text: My output has **at least 8** workbook activities.
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: checklist
+  text: '**Total ≥ 12.**'
+  covered: false
+  coverage_note: 0/1 keywords (0%)
+- kind: checklist
+  text: '**Every** activity has **at least 8** items, pairs, or statements (except
+    types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3,
+    essay-response=1).'
+  covered: false
+  coverage_note: 2/20 keywords (10%)
+- kind: checklist
+  text: The module (inline + workbook combined) uses **at least 0 distinct activity
+    types** (or 4+ when 0 = 0 and the workbook size allows it). I am NOT shipping
+    a wall of quizzes.
+  covered: false
+  coverage_note: 3/16 keywords (19%)
+- kind: checklist
+  text: Quiz + true-false combined are roughly ≤25% of the workbook (quality target
+    — lean on `WORKBOOK_PRIORITY_TYPES` instead).
+  covered: false
+  coverage_note: 4/12 keywords (33%)
+- kind: checklist
+  text: I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats),
+    not just easy-to-write quizzes.
+  covered: false
+  coverage_note: 0/12 keywords (0%)
+- kind: checklist
+  text: I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: checklist
+  text: All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+  covered: false
+  coverage_note: 4/11 keywords (36%)
+- kind: checklist
+  text: My inline count is between 4 and 6. I did NOT create more injection markers
+    than 6.
+  covered: false
+  coverage_note: 1/10 keywords (10%)
+- kind: checklist
+  text: Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
+  covered: false
+  coverage_note: 2/7 keywords (29%)
+- kind: checklist
+  text: At B1+, all instructions are in Ukrainian (no English fallback).
+  covered: false
+  coverage_note: 0/6 keywords (0%)
+- kind: must
+  text: '** Your very first character must be `version:`.'
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: must
+  text: '**Type diversity is required.'
+  covered: false
+  coverage_note: 1/3 keywords (33%)
+- kind: must
+  text: Each inline activity MUST have an `id` that matches one of these markers.
+  covered: false
+  coverage_note: 2/10 keywords (20%)
+- kind: must
+  text: '**Every inline marker in the prose MUST have a matching inline activity**
+    — that is what determines `INLINE_MIN`, so do NOT skip markers.'
+  covered: false
+  coverage_note: 2/15 keywords (13%)
+- kind: must
+  text: Each inline activity's `id` must match one of these markers exactly (lowercase,
+    hyphenated).
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: must
+  text: You MUST create activities that cover all these hints.
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: must
+  text: '**Grounding rule:** Every Ukrainian word in your exercises must appear either
+    in the prose content or in this vocabulary list.'
+  covered: false
+  coverage_note: 1/15 keywords (7%)
+- kind: must
+  text: You must always change the ending in Ukrainian, rather than just dropping
+    the dictionary form into the sentence.
+  covered: false
+  coverage_note: 2/14 keywords (14%)
+- kind: must
+  text: However, when you say that you do something *at* a certain time, you must
+    change the case.
+  covered: false
+  coverage_note: 1/11 keywords (9%)
+- kind: must
+  text: '# YOUR output MUST hit those minimums.'
+  covered: false
+  coverage_note: 0/6 keywords (0%)
+- kind: must
+  text: '- id: marker-id-here # MUST match an <!-- INJECT_ACTIVITY: .'
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: must
+  text: '**CRITICAL RULE: EVERY single activity object MUST include an `id` field
+    (a unique string like "quiz-grammar", "match-up-vocab").'
+  covered: false
+  coverage_note: 3/16 keywords (19%)
+- kind: must
+  text: 'Required: id, instruction, items[] (array of strings), correct_order[] (TOP-LEVEL
+    array of **integers** — zero-based indices into items).'
+  covered: false
+  coverage_note: 4/13 keywords (31%)
+- kind: must
+  text: 'Required: id, syllables[], correctIndices[], category.'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: 'Required: id, letters[{upper, lower}].'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: 'Required: id, items[{video}].'
+  covered: false
+  coverage_note: 1/3 keywords (33%)
+- kind: must
+  text: '- **critical-analysis**: Required: id, prompt.'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: '- **essay-response**: Required: id, prompt.'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: '**You MUST use these patterns.'
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: must
+  text: If the pattern lists divide-words, count-syllables, and odd-one-out — your
+    output MUST include all three.
+  covered: false
+  coverage_note: 2/15 keywords (13%)
+- kind: must
+  text: '- **Type diversity: workbook MUST cover ≥5 distinct activity types.'
+  covered: false
+  coverage_note: 2/8 keywords (25%)
+- kind: must
+  text: '**Test LANGUAGE, not trivia** — exercises must test Ukrainian language skills.'
+  covered: false
+  coverage_note: 0/8 keywords (0%)
+- kind: must
+  text: '- **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).'
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: '...'
+  covered: false
+  coverage_note: marker missing

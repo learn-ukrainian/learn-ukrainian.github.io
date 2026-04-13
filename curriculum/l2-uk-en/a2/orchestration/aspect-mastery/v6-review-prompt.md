@@ -140,189 +140,181 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Як утворюються видові пари
+## Як утворюються видові пари (~550 words)
 
-В українській мові дієслова мають дуже важливу характеристику. Це **вид дієслова** *(verb aspect)*. English uses continuous tenses to show a process and simple or perfect tenses to show a completed action. Українська мова працює інакше. We use two different but related verbs to express these differences. Ці два дієслова — це **видова пара** *(aspect pair)*. Перша частина пари — це **недоконаний вид** *(imperfective aspect)*. Він означає незавершену дію, процес або регулярну звичку. Дієслова недоконаного виду відповідають на питання «**що робити?**» *(what to do?)*. Друга частина пари — це **доконаний вид** *(perfective aspect)*. Він означає завершену дію, яка досягла своєї межі, або конкретний результат. Дієслова доконаного виду відповідають на питання «**що зробити?**» *(what to do completely?)*. It is important to understand that these are two separate lexical items in the dictionary. Коли ви вчите нове українське дієслово, ви повинні запам'ятати обидві форми. This might seem difficult at first, but Ukrainian verbs follow specific, logical patterns to form these pairs.
+In Ukrainian, aspect is part of verb **морфологія**. We create a **видова пара** (aspect pair) by changing the verb itself: the imperfective form shows process, habit, or repetition, while the perfective form highlights completion or a single result.
 
-Найпоширеніший спосіб творення доконаного виду — це додавання префікса. A prefix is added to the beginning of the imperfective verb. Цей **префікс** *(prefix)* додає ідею завершеності, але не змінює базове значення слова. Ось кілька дуже важливих прикладів. Ми маємо пару **писати** *(to write, process)* та **написати** *(to write, result)*. Ми читаємо книгу: **читати** *(to read)* та **прочитати** *(to read completely)*. Ми робимо завдання: **робити** *(to do)* та **зробити** *(to do, to get done)*. Ми їмо обід: **їсти** *(to eat)* та **з'їсти** *(to eat up)*. The prefix you need to add is unpredictable, so you just have to memorize it with the verb. Часто ми використовуємо префікс «с-». В українській мові є спеціальне фонетичне правило, яке називається «Кафе Птах» *(Cafe Ptakh)*. If the verb root starts with the letters к, п, т, ф, or х, we must use the prefix «с-» instead of «з-». Наприклад, ми кажемо **сфотографувати** *(to take a photo)*, а не «зфотографувати». Інші приклади включають **казати** *(to say)* та **сказати** *(to tell)*, або **пекти** *(to bake)* та **спекти** *(to bake completely)*. This phonetic rule makes pronunciation much easier and more natural.
+The most common way to form the perfective aspect is by adding a **префікс** (prefix) to the imperfective verb. Let us look at how this works in practice.
 
-Другий спосіб творення видових пар — це зміна суфікса. Often, the perfective verb already exists, and we make it imperfective to show a process. Ми змінюємо короткий **суфікс** *(suffix)* доконаного виду на довший суфікс недоконаного виду. Дуже часто ми змінюємо суфікси «-ити» або «-нути» на «-увати» чи «-ати». Наприклад, ми беремо пару **вирішувати** *(to decide, process)* та **вирішити** *(to decide, result)*. Ми маємо дієслова **записувати** *(to note down)* та **записати** *(to write down completely)*. Ми чуємо звук: **стукати** *(to knock, repeatedly)* та **стукнути** *(to knock, once)*. Третій спосіб — це зміна самої основи слова або чергування звуків. Sometimes, the vowels or consonants inside the root of the verb change when the aspect changes. Один із найчастіших прикладів — це зміна голосних у корені слова (наприклад, «о» на «а»). Так працює пара **допомагати** *(to help, regularly)* та **допомогти** *(to help, once)*.
- Інший приклад показує зміну приголосних у корені слова. Ми використовуємо **відповідати** *(to answer, process)* та **відповісти** *(to answer, result)*. Ми бачимо це у парі **запрошувати** *(to invite, process)* та **запросити** *(to invite, result)*. These internal changes might look complex, but they follow consistent historical sound shifts in Ukrainian. З часом ви навчитеся легко розпізнавати ці типові суфікси та чергування.
+Це дуже популярний спосіб утворення. Ми кажемо «писати», коли дія триває. Але ми кажемо «написати», коли текст готовий. Інші пари працюють так само. Слово «читати» стає «прочитати». Слово «робити» стає «зробити». Також «їсти» стає «з'їсти», а «варити» стає «зварити». Перед літерами «к», «п», «т», «ф» та «х» ми використовуємо префікс «с-». Тому ми кажемо «сфотографувати», «сказати» та «спекти».
 
-Четвертий спосіб — це використання абсолютно різних слів. These are called suppletive pairs, and they have completely different roots for the imperfective and perfective forms. Хоча таких пар небагато, вони є найбільш вживаними словами в мові. You absolutely must memorize them as unique vocabulary items because you cannot guess the pair. Ось найголовніші приклади для вас. Дієслова **брати / взяти** *(to take — impf./pf.)* є дуже популярними. Ми постійно використовуємо **говорити / сказати** *(to say — impf./pf.)*. Ми маємо дієслова **ловити** *(to catch, process)* та **піймати** *(to catch, result)*. Ми постійно використовуємо **шукати** *(to look for)* та **знайти** *(to find)*. Ці слова не мають спільного кореня, але означають одну і ту ж дію. Коли ви шукаєте ключі, ви кажете: «Я шукаю ключі». Коли ви бачите свої ключі, ви кажете: «Я знайшов ключі!». It is crucial to practice these specific pairs daily because they appear in almost every conversation. Наприклад, ми часто питаємо: «Що ти говориш?», але «Що ти сказав?». Without knowing these distinct pairs, expressing basic ideas about finding, taking, or speaking becomes impossible.
+> *This pattern usually marks completion: писати → написати, читати → прочитати, робити → зробити.*
 
-<!-- INJECT_ACTIVITY: group-sort-sort-aspect-pairs-by-formation-pattern-prefix-suffix-stem-change-suppletive -->
+The second pattern works in reverse. We take a perfective verb and make it imperfective by changing or adding a **суфікс** (suffix). Imperfective suffixes are usually longer, reflecting the ongoing process. A great example is the pair **записувати / записати** (to write down — impf./pf.).
+
+Ми часто додаємо суфікси «-ува-», «-а-» або «-я-». Наприклад, доконане дієслово «записати» стає «записувати». Слово «розповісти» стає «розповідати», а «пояснити» стає «пояснювати». Іноді змінюються не тільки суфікси, але й приголосні звуки в корені слова.
+
+> *We often add the suffixes "-uva-", "-a-", or "-ya-". For example, the perfective verb "to have recorded" becomes "to record". The word "to have told" becomes "to tell", and "to have explained" becomes "to explain". Sometimes not only the suffixes change, but also the consonant sounds in the root of the word.*
+
+Третій спосіб — це зміна основи або наголосу. Іноді корінь змінюється помітно. Наприклад, дієслово «відповідати» має форму доконаного виду «відповісти». В інших випадках змінюється тільки наголос. Слово «розрізати» може бути недоконаного або доконаного виду. Все залежить від наголосу.
+
+> *The third method is a change of the stem or stress. Sometimes the root changes noticeably. For example, the verb "to answer" has the perfective form "to have answered". In other cases, only the stress changes. The word "to cut" can be of imperfective or perfective aspect. It all depends on the stress.*
+
+:::info
+**Grammar box** — Remember that adding a prefix usually creates a perfective verb, while adding a longer suffix usually creates an imperfective verb. These two patterns cover the vast majority of verbs you will encounter!
+:::
+
+Finally, the fourth pattern includes verbs that use different roots in the imperfective and perfective. These suppletive pairs must be memorized. The most crucial examples for daily communication are **брати / взяти** (to take — impf./pf.) and **казати / сказати** (to say — impf./pf.).
+
+Ці слова виглядають по-різному. Ви не можете утворити їх за правилами. Якщо ви довго шукаєте ключі, ви кажете «шукати». Коли процес завершено, ви кажете «знайти». Те саме працює для дієслів «ловити» та «піймати». Їх треба вивчити напам'ять.
+
+> *These words look different. You cannot form them by rules. If you look for keys for a long time, you say "to look for". When the process is finished, you say "to have found". The same works for the verbs "to catch" (process) and "to catch" (result). You need to learn them by heart.*
+
+<!-- INJECT_ACTIVITY: group-sort-formation -->
 
 ## 30 пар: Список і приклади
 
-Зараз ми вивчимо найважливіші слова для щоденного життя. Це перша група дієслів. Вона описує нашу ранкову рутину та домашні справи. Ці слова ви будете використовувати кожного дня.
+Below are thirty high-frequency aspect pairs grouped by topic. Learn each verb together with its partner, not as an isolated word.
 
-Here are the first ten essential aspect pairs for your daily routine and housework. You need to memorize both the imperfective and perfective forms.
+The first group covers everyday actions at home and in the kitchen. Most pairs here are prefix-based: the imperfective shows the process, and the perfective shows the finished result.
 
-* **готувати** / **приготувати** *(to cook / to finish cooking)*
-* **їсти** / **з'їсти** *(to eat / to eat up)*
-* **пити** / **випити** *(to drink / to drink up)*
-* **варити** / **зварити** *(to boil / to finish boiling)*
-* **мити** / **помити** *(to wash / to wash clean)*
-* **прибирати** / **прибрати** *(to clean / to finish cleaning)*
-* **прасувати** / **випрасувати** *(to iron / to finish ironing)*
-* **робити** / **зробити** *(to do / to finish doing)*
-* **писати** / **написати** *(to write / to finish writing)*
-* **читати** / **прочитати** *(to read / to finish reading)*
+**робити / зробити** — *to do*
+**писати / написати** — *to write*
+**читати / прочитати** — *to read*
+**готувати / приготувати** — *to cook, to prepare*
+**їсти / з'їсти** — *to eat*
+**пити / випити** — *to drink*
+**варити / зварити** — *to boil, to cook*
+**мити / помити** — *to wash*
+**прибирати / прибрати** — *to clean, to tidy up*
+**прасувати / випрасувати** — *to iron*
 
-Let's look at how they work. The imperfective verb focuses on the duration or process. The perfective verb focuses entirely on the final result.
+**Я варив суп.** — *I was cooking soup (process).*
+**Я зварив суп.** — *I cooked the soup (result is ready).*
 
-Я варив борщ годину. *(I was cooking borsch for an hour.)*
-Я зварив борщ. *(I cooked the borsch.)*
+Учора я довго варив суп на обід. Нарешті я зварив його. Моя сестра прибирала кімнату цілий ранок. Коли вона прибрала кімнату, стало дуже чисто. Ми робимо всі домашні справи в суботу.
 
-In the first sentence, we care about the time spent. In the second sentence, the borsch is ready, and we can eat it.
+> *Yesterday I cooked soup for lunch for a long time. Finally I cooked it. My sister was cleaning the room all morning. When she finished cleaning the room, it became very clean. We do all the household chores on Saturday.*
 
-Друга група слів стосується спілкування та навчання. Ми постійно говоримо, слухаємо та читаємо інформацію. Ці дієслова допоможуть вам ефективно спілкуватися.
+The second group contains verbs related to communication, studying, and processing new information. In this category, you will see many pairs where the imperfective verb has a longer suffix, while the perfective partner is shorter. Pay close attention to the pair **казати / сказати** (to say — impf./pf.), which is a true aspect pair used constantly in everyday speech.
 
-Communication and learning require precision. You need to know if someone is still explaining something, or if they have finally made it clear. Here are ten crucial pairs for cognition and interaction.
+**казати / сказати** — *to say, to tell*
+**питати / запитати** — *to ask*
+**відповідати / відповісти** — *to answer*
+**пояснювати / пояснити** — *to explain*
+**вчити / вивчити** — *to learn, to study*
+**розуміти / зрозуміти** — *to understand*
+**казати / сказати** — *to tell, to say*
+**розповідати / розповісти** — *to tell, to narrate*
+**записувати / записати** — *to record, to write down*
+**перекладати / перекласти** — *to translate*
 
-* **говорити / сказати** *(to say — impf./pf.)*
-* **відповідати** / **відповісти** *(to answer / to give an answer)*
-* **питати** / **запитати** *(to ask / to ask a question)*
-* **пояснювати** / **пояснити** *(to explain / to make clear)*
-* **вчити** / **вивчити** *(to learn / to memorize completely)*
-* **розуміти** / **зрозуміти** *(to understand / to grasp)*
-* **перекладати** / **перекласти** *(to translate / to finish translating)*
-* **казати** / **сказати** *(to tell / to finish telling)*
-* **записувати** / **записати** *(to note down / to finish writing down)*
-* **розповідати** / **розповісти** *(to tell / to tell a complete story)*
+**Вчитель довго пояснював правило.** — *The teacher was explaining the rule for a long time (process).*
+**Нарешті він пояснив правило.** — *Finally he explained the rule (completed fact).*
 
-We often use the imperfective aspect to set a background scene, and the perfective aspect to highlight a successful action.
+Сьогодні на уроці ми вчили нові слова. Учитель довго пояснював граматику. Ми слухали, але не розуміли. Потім він пояснив усе ще раз і навів гарний приклад. Тоді кожен студент зрозумів цю тему. Усі швидко записали нові приклади в зошит.
 
-Вчитель пояснював правило. *(The teacher was explaining the rule.)*
-Він нарешті пояснив правило. *(He finally explained the rule.)*
+> *Today in the lesson we were learning new words. The teacher was explaining the grammar for a long time. We listened, but did not understand. Then he explained everything one more time and gave a good example. Then every student understood this topic. Everyone quickly wrote down the new examples in the notebook.*
 
-The imperfective form «пояснював» shows the ongoing effort. The perfective form «пояснив» shows that the students now understand it. Achieving success is a perfective concept.
+Group C deals with movement, physical interaction with objects, and the structure of activities. You will find verbs that define the temporal boundaries of an action, like **починати / почати** (to begin — impf./pf.) and **закінчувати / закінчити** (to finish — impf./pf.). Another crucial verb in this category is **допомагати / допомогти** (to help — impf./pf.).
 
-Третя важлива група — це соціальна взаємодія та рух. Ми щодня щось купуємо, беремо або починаємо. Без цих слів важко жити в місті.
+This group also includes highly irregular pairs that you simply must memorize, such as **брати / взяти** (to take — impf./pf.) and **давати / дати** (to give — impf./pf.). You must also pay attention to verbs with stem changes, like **класти / покласти** (to put — impf./pf.). 
 
-Social interactions often involve the transfer of objects or money. These pairs are crucial for navigating everyday situations like shopping or working.
+**брати / взяти** — *to take*
+**давати / дати** — *to give*
+**класти / покласти** — *to put*
+**відкривати / відкрити** — *to open*
+**закривати / закрити** — *to close*
+**починати / почати** — *to begin*
+**закінчувати / закінчити** — *to finish*
+**допомагати / допомогти** — *to help*
+**купувати / купити** — *to buy*
+**платити / заплатити** — *to pay*
 
-* **брати / взяти** *(to take — impf./pf.)*
-* **давати / дати** *(to give — impf./pf.)*
-* **класти / покласти** *(to put — impf./pf.)*
-* **купувати** / **купити** *(to buy / to purchase)*
-* **платити** / **заплатити** *(to pay / to pay off)*
-* **допомагати** / **допомогти** *(to help / to provide help)*
-* **відкривати** / **відкрити** *(to open / to get open)*
-* **закривати** / **закрити** *(to close / to get closed)*
-* **починати** / **почати** *(to begin / to start)*
-* **закінчувати** / **закінчити** *(to finish / to complete)*
+:::tip
+**Did you know?** — The suppletive pairs **брати / взяти** and **давати / дати** are completely irregular because they evolved from very old, distinct roots. They are used in countless idioms and everyday phrases.
+:::
 
-Sometimes, the imperfective verb shows the attempt, while the perfective verb confirms actual possession or a finalized transaction.
+**Я брав книгу.** — *I was taking the book (process).*
+**Я взяв книгу.** — *I took the book (completed fact).*
 
-Ми купували квитки. *(We were buying tickets.)*
-Ми купили квитки. *(We bought the tickets.)*
+Кожного ранку я відкриваю магазин. Учора було свято, тому я закрив його рано. Мій брат часто просить мене допомогти з математикою. Я радий, коли можу допомогти йому закінчити завдання. Ми кладемо зошити на стіл і починаємо працювати.
 
-If you say «купували», you are describing the process, and maybe you failed. If you say «купили», the transaction is done and the tickets are yours.
+> *Every morning I open the store. Yesterday was a holiday, so I closed it early. My brother often asks me to help with math. I am glad when I can help him finish the task. We put the notebooks on the table and begin to work.*
 
-Тепер давайте порівняємо ці слова. Ви чітко побачите різницю між процесом та результатом.
+<!-- INJECT_ACTIVITY: match-up-pairs -->
 
-Let's analyze some minimal contrast drills to solidify your understanding. These short pairs of sentences illustrate the semantic difference between the two aspects.
+## Вибір виду в складних ситуаціях (~550 words)
 
-Вона пила каву. *(She was drinking coffee.)*
-Вона випила каву. *(She drank the coffee.)*
+Now let us see how aspect works in real context. The four key situations below show when Ukrainian chooses process and when it chooses result.
 
-The first sentence implies she was sitting, sipping, and enjoying the process. The second sentence implies her cup is completely empty.
+The first scenario is a sequence of completed events. When you are telling a story or describing a chronological chain of actions, you must use perfective verbs for every single step. One action finishes completely, and only then does the next one begin. This creates a fast-paced narrative where the plot moves forward step by step. You might use verbs like **починати / почати** (to begin — impf./pf.) or **закінчувати / закінчити** (to finish — impf./pf.) to frame these steps. If you use an imperfective verb here, it sounds like the actions were happening at the same time, which breaks the sequence.
 
-Ми починали о дев'ятій. *(We used to start at nine.)*
-Ми почали о дев'ятій. *(We started at nine.)*
+Учора вранці мій брат дуже швидко зібрався. Він встав, вмився, поснідав і пішов на роботу. Він зробив усе це за двадцять хвилин і нічого не забув.
 
-The imperfective verb here shows a habitual, repeating action in the past. It was a regular routine. The perfective verb points to one specific event, like yesterday morning.
+> *Yesterday morning my brother got ready very quickly. He got up, washed, had breakfast, and left for work. He did all this in twenty minutes and did not forget anything.*
 
-Він читав книгу. *(He was reading a book.)*
-Він прочитав книгу. *(He read the book.)*
+The second scenario is interruption: a long background action is imperfective, and the sudden interrupting event is perfective. Verbs of speech, such as **казати / сказати** (to say — impf./pf.), often appear in this contrast.
 
-In the first case, he spent time with the book, but he might still be reading. In the second case, he has reached the final page. The perfective aspect always implies a boundary that has been reached.
+Увечері я була вдома і спокійно відпочивала. Коли я готувала вечерю, раптом подзвонила подруга. Ми говорили дуже довго, тому моя вечеря згоріла.
 
-<!-- INJECT_ACTIVITY: match-up-match-imperfective-verbs-with-their-perfective-partners-from-the-30-pairs -->
+> *In the evening I was at home and resting calmly. While I was cooking dinner, a friend suddenly called. We talked for a very long time, so my dinner burned.*
 
-## Вибір виду в складних ситуаціях
+:::info
+**Grammar box** — Think of the imperfective verb as the stage setting, and the perfective verb as the main event that suddenly happens on that stage. The word «коли» (when/while) often connects these two contrasting actions.
+:::
 
-Часто ми розповідаємо про кілька подій у минулому. *(Often we talk about several events in the past.)* When you describe a chain of completed actions, one after another, you must use only perfective verbs. Це дуже логічно і просто для розуміння. *(This is very logical and simple to understand.)* Each verb acts as a link in a chronological chain of results.
+The third scenario contrasts habit with a single result: repeated actions take the imperfective, while one specific achievement takes the perfective. This is clear with **допомагати / допомогти** (to help — impf./pf.) and **давати / дати** (to give — impf./pf.).
 
-Я **встав** *(got up)*, **вмився** *(washed)*, **поснідав** *(had breakfast)* і **пішов** *(left)* на роботу. *(I got up, washed, had breakfast, and left for work.)* Усі ці дієслова мають доконаний вид. *(All these verbs have perfective aspect.)* Але що відбувається, коли одна дія перериває іншу? *(But what happens when one action interrupts another?)* Here we must mix the aspects. Ми використовуємо недоконаний вид для довгої фонової дії. *(We use the imperfective aspect for a long background action.)* А для раптової події ми беремо доконаний вид. *(And for a sudden event we take the perfective aspect.)* The imperfective sets the scene, and the perfective "cuts" it.
+Моя сестра дуже добра людина. Вона завжди допомагала сусідам, коли мала вільний час. Але вона допомогла сусідці вчора ввечері, тому що та була дуже хвора.
 
-Я **читав** *(was reading)* книгу, коли мама **зайшла** *(entered)* в кімнату. *(I was reading a book when mom entered the room.)* «Читав» — це ваш тривалий процес. *(«Was reading» is your continuous process.)* «Зайшла» — це швидка результативна дія. *(«Entered» is a quick resultative action.)* Вона перервала мій процес читання. *(She interrupted my reading process.)*
+> *My sister is a very kind person. She always helped the neighbors when she had free time. But she helped the neighbor yesterday evening because she was very sick.*
 
-Інша складна ситуація — це різниця між звичкою та одноразовим результатом. *(Another complex situation is the difference between a habit and a one-time result.)* If an action repeats regularly, it is a habit. Для щоденних звичок ми завжди використовуємо недоконаний вид. *(For daily habits we always use the imperfective aspect.)* There are special signal words that help you choose the imperfective aspect correctly. Це такі слова, як **завжди** *(always)*, **часто** *(often)*, або **зазвичай** *(usually)*.
+The final scenario is negation. With the imperfective, «не» usually means the action did not happen at all or is true in general; with the perfective, it often means the speaker did not reach the result.
 
-Він завжди **допомагав** *(helped)* своїм сусідам. *(He always helped his neighbors.)* Це регулярна і повторювана дія в минулому. *(This is a regular and repeated action in the past.)* But if you want to highlight one specific, successful action, you switch to the perfective aspect. Look for specific time markers like **вчора** *(yesterday)*, **один раз** *(one time)*, або **раптом** *(suddenly)*.
+Я взагалі не читав цю книгу, тому не знаю її сюжету. Мій друг купив її минулого тижня. Я почав читати, але я не прочитав цю книгу до кінця, бо вона нудна.
 
-Він **допоміг** *(helped)* сусідці вчора вранці. *(He helped the neighbor yesterday morning.)* Це одна конкретна і завершена дія. *(This is one specific and completed action.)* Вона має чіткий і корисний результат зараз. *(It has a clear and useful result now.)* Завжди звертайте увагу на контекст і слова-маркери. *(Always pay attention to the context and marker words.)*
+> *I have not read this book at all, so I do not know its plot. My friend bought it last week. I started reading, but I did not finish reading this book because it is boring.*
 
-Заперечення також може суттєво змінювати значення виду дієслова. *(Negation can also significantly change the meaning of the verb aspect.)* What happens when you add **не** *(not)* before a verb in the past tense? The difference between «не робив» and «не зробив» is very important for clear communication. Коли ви кажете «я не робив», ви повністю заперечуєте сам процес. *(When you say "I didn't do", you completely deny the process itself.)* This means you never started the action, or you never even touched the task.
+<!-- INJECT_ACTIVITY: fill-in-context -->
 
-Я не **читав** *(did not read)* цю нову книгу. *(I haven't read this new book.)* Я навіть ніколи не відкривав її. *(I never even opened it.)* Але коли ви використовуєте доконаний вид, значення зовсім інше. *(But when you use the perfective aspect, the meaning is completely different.)* «Я не зробив» means you tried or intended to do it, but you failed to achieve the final result.
+## Практика у діалогах (~440 words)
 
-Я читав, але не **прочитав** *(did not finish reading)* цю книгу. *(I was reading, but I didn't finish reading this book.)* Я почав процес читання, але не закінчив його. *(I started the reading process, but didn't finish it.)*
+In conversation, speakers switch aspect depending on whether they ask about a process or check a result. Watch the contrast between **брати / взяти**, **давати / дати**, **казати / сказати**, **класти / покласти**, **починати / почати**, **закінчувати / закінчити**, and **допомагати / допомогти** in the dialogues below.
 
-Нарешті, давайте ще раз згадаємо про майбутній час. *(Finally, let's remember once again about the future tense.)* Aspect is just as crucial in the future as it is in the past tense. Недоконаний вид утворює майбутній час за допомогою допоміжного дієслова **бути** *(to be)*. *(The imperfective aspect forms the future tense with the help of the auxiliary verb "to be".)*
+> — **Мама:** Ти вже написав домашнє завдання? *(Have you already written your homework?)*
+> — **Школяр:** Ні, я ще пишу. *(No, I am still writing.)*
+> — **Мама:** Прочитай цей абзац. *(Read this paragraph.)*
+> — **Школяр:** Я читаю вже годину! *(I have been reading for an hour already!)*
 
-Я **буду писати** *(will be writing)* довгого листа завтра. *(I will be writing a long letter tomorrow.)* Це ваш робочий процес, який триватиме певний час. *(This is your work process that will last some time.)* Але доконаний вид має просту коротку форму майбутнього часу. *(But the perfective aspect has a simple short form of the future tense.)*
+The parent asks about the result, while the student emphasizes the unfinished process.
 
-Я **напишу** *(will write)* цього листа завтра. *(I will write this letter tomorrow.)* Це означає, що завтра лист буде повністю готовий. *(This means tomorrow the letter will be completely ready.)* Remember one absolute and unbreakable rule in Ukrainian grammar. Ви ніколи не можете використовувати слово «бути» з доконаним видом. *(You can never use the word "to be" with the perfective aspect.)* Saying «я буду прочитати» is a major grammatical error. Завжди впевнено кажіть «я прочитаю»! *(Always confidently say "I will read"!)*
+Другий діалог показує різницю між переліком результатів та звичайним вечірнім відпочинком. Запитання про те, що людина зробила сьогодні, вимагає чіткого переліку повністю виконаних завдань. Натомість запитання про вечірні справи фокусується на тривалому, розслабленому процесі, який не обов'язково має фінальний результат.
 
-<!-- INJECT_ACTIVITY: fill-in-complete-sentences-by-choosing-the-correct-aspect-based-on-context-sequence-interruption-habit-single-event -->
+> *The second dialogue shows the difference between a list of results and normal evening relaxation. A question about what a person has done today requires a clear list of fully completed tasks. Instead, a question about evening activities focuses on a long, relaxed process that does not necessarily have a final result.*
+
+> — **Олена:** Що ти зробив сьогодні? *(What did you get done today?)*
+> — **Андрій:** Я написав звіт, купив хліб і поклав гроші в банк. *(I wrote a report, bought bread, and put money in the bank.)*
+> — **Олена:** А що ти робив увечері? *(And what were you doing in the evening?)*
+> — **Андрій:** Я дивився фільм і готував вечерю. *(I was watching a movie and cooking dinner.)*
+
+Нарешті, зверніть увагу на майбутній час: недоконаний вид описує запланований процес, а доконаний — очікуваний результат.
+
+> *In the future, the imperfective describes the planned process, while the perfective highlights the expected result.*
+
+> — **Керівник:** Що ти будеш робити завтра? *(What will you be doing tomorrow?)*
+> — **Співробітник:** Я буду писати звіт. *(I will be writing the report.)*
+> — **Керівник:** Що ти зробиш до п'ятниці? *(What will you get done by Friday?)*
+> — **Співробітник:** Я закінчу проект. *(I will finish the project.)*
+
+:::info
+**Grammar box** — The imperfective future uses the verb «бути» plus the infinitive, focusing on the process. The perfective future uses a single word, focusing on the final result.
+:::
+
 <!-- INJECT_ACTIVITY: quiz-read-a-mini-situation-and-choose-the-correct-aspect-form-with-justification -->
-
-## Практика у діалогах
-
-Найкращий приклад — це розмова про домашнє завдання. *(The best example is a conversation about homework.)* Батьки хочуть бачити результат, а діти говорять про процес. *(Parents want to see the result, and children talk about the process.)*
-
-> — **Мама:** Сину, ти вже **зробив** *(have done)* уроки?
-> — **Син:** Ні, я ще **роблю** *(am doing)*. Я зараз **пишу** *(am writing)* твір з історії.
-> — **Мама:** Але ти **писав** *(were writing)* його вчора! Ти ще не **написав** *(finished writing)* його?
-> — **Син:** Я **написав** *(wrote)* половину. Ще треба **вивчити** *(to learn)* слова.
-> — **Мама:** А ти їх **вчив** *(were learning)* учора?
-> — **Син:** Так, я **вчив** *(was learning)*, але не **вивчив** *(memorized)* усі.
-
-Тут мама постійно використовує доконаний вид. *(Here the mother constantly uses the perfective aspect.)* Їй потрібен готовий результат. *(She needs the finished result.)* Син використовує недоконаний вид, бо він у процесі роботи. *(The son uses the imperfective aspect because he is in the process of working.)*
-
-Двоє друзів обговорюють плани на вихідні. *(Two friends are discussing plans for the weekend.)* Ми бачимо контраст між намірами та результатами. *(We see the contrast between intentions and results.)*
-
-> — **Олег:** Що ти **будеш робити** *(will be doing)* завтра?
-> — **Анна:** Завтра я **буду відпочивати**. А що ти **зробиш** *(will get done)* до п'ятниці?
-> — **Олег:** До п'ятниці я **напишу** *(will finish writing)* статтю. А на вихідних я **буду дивитися** *(will be watching)* новий серіал. Я **почав** *(started)* його вчора.
-> — **Анна:** Ти вже **подивився** *(have watched)* перший сезон?
-> — **Олег:** Ні, я ще **дивлюся** *(am watching)*. Я **дивився** *(was watching)* три години, але не **додивився** *(finished watching)*.
-> — **Анна:** Зрозуміло. Вчора я **купувала** *(was buying)* продукти, але забула **купити** *(to buy)* каву.
-> — **Олег:** Тоді ми можемо **випити** *(to drink)* каву разом!
-
-Анна говорить про свої плани як про результати. *(Anna talks about her plans as results.)* Олег описує свій процес відпочинку. *(Oleg describes his process of resting.)*
-
-У розмовах українці часто використовують певні фрази з видовими парами. *(In conversations, Ukrainians often use specific phrases with aspect pairs.)*
-Коли ви щойно завершили дію, ви кажете: «Я **тільки що** *(just now)* **зробив** *(did)* це». *(When you have just completed an action, you say: "I just did this".)*
-Якщо процес ще триває, скажіть: «Я ще не **закінчив** *(finished)*» або «Я ще **роблю** *(am doing)*». *(If the process is still ongoing, say: "I haven't finished yet" or "I am still doing".)*
-Щоб запропонувати почати дію, використовуйте доконаний вид: «**Давай почнемо** *(let's start)*». *(To propose starting an action, use the perfective aspect: "Let's start".)*
-
-Вибір виду дієслова — це питання вашого мислення. *(The choice of verb aspect is a question of your mindset.)* Always ask yourself about the main thing before choosing the verb aspect. Is the action done? Is there a final result? Якщо так, вибирайте доконаний вид. *(If yes, choose the perfective aspect.)* Is the action happening right now? Is it repeating regularly? Якщо так, вам потрібен недоконаний вид. *(If yes, you need the imperfective aspect.)* Цей аналіз допоможе вам говорити українською природно. *(This analysis will help you speak Ukrainian naturally.)*
-
-## Підсумок
-
-Час перевірити ваші знання. *(It is time to check your knowledge.)* Дайте відповіді на ці запитання. *(Answer these questions.)*
-
-Які чотири основні способи творення видових пар ви знаєте? *(What four main ways of forming aspect pairs do you know?)* 
-Це префікси, суфікси, чергування та різні основи. *(These are prefixes, suffixes, stem changes, and different roots.)*
-
-Назвіть видову пару до дієслова «**брати**» *(to take)* та «**говорити**» *(to speak)*. 
-Доконаний вид — це «**взяти**» *(to take)* і «**сказати**» *(to say)*. Вони мають різні основи. *(They have different roots.)*
-
-Який вид дієслова потрібен для послідовності завершених дій? *(Which verb aspect is needed for a sequence of completed actions?)* 
-Вам потрібен доконаний вид. *(You need the perfective aspect.)*
-
-У чому різниця між фразами «Я не **читав**» *(I did not read)* і «Я не **прочитав**» *(I did not finish reading)*? 
-Перша фраза показує відсутність процесу. *(The first phrase shows the absence of a process.)* Друга фраза означає, що ви не досягли результату. *(The second phrase means you did not reach the result.)*
-
-Вид дієслова — це логіка. *(The verb aspect is logic.)* Головне — завжди думати про результат. *(The main thing is to always think about the result.)*
 </generated_module_content>
 
-**PIPELINE NOTE — Word count: 3058 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
+**PIPELINE NOTE — Word count: 2100 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -498,43 +490,170 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 568 words | Not found: 7 words
+Verified: 357 words | Not found: 3 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
-  ✗ Анна — NOT IN VESUM
-  ✗ Олег — NOT IN VESUM
-  ✗ ати — NOT IN VESUM
-  ✗ зфотографувати — NOT IN VESUM
-  ✗ ити — NOT IN VESUM
-  ✗ нути — NOT IN VESUM
-  ✗ увати — NOT IN VESUM
+  ✗ Андрій — NOT IN VESUM
+  ✗ Олена — NOT IN VESUM
+  ✗ ува — NOT IN VESUM
 
-All 568 other words are confirmed to exist in VESUM.
+All 357 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
-## Verification Tools (MCP)
+---
 
-You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
+## Verification Tools (Shell Commands)
 
-**Core Verification:**
-- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
-- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
+You have access to verification tools via shell commands. Use these to verify
+Ukrainian vocabulary, check grammar, and search textbook content **as you write**.
 
-**Content Quality:**
-- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+**IMPORTANT:** Run verification commands BEFORE finalizing any Ukrainian text.
+Batch multiple verifications together to minimize round-trips.
 
-**Reference:**
-- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp_rag_search_literary` — verify literary references against primary sources
-- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
+### 1. Batch-verify Ukrainian words exist in VESUM (preferred — one call for many words)
 
-**Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_words
+results = verify_words(['слово1', 'слово2', 'слово3'])
+for w, matches in results.items():
+    if matches:
+        print(f'{w}: FOUND — lemma={matches[0][\"lemma\"]}, pos={matches[0][\"pos\"]}')
+    else:
+        print(f'{w}: NOT FOUND — may not exist in standard Ukrainian')
+"
+```
+
+### 2. Verify a single Ukrainian word in VESUM (with full morphological tags)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_word
+results = verify_word('WORD_HERE')
+if results:
+    for m in results:
+        print(f'lemma={m[\"lemma\"]}, pos={m[\"pos\"]}, tags={m[\"tags\"]}')
+else:
+    print('NOT FOUND in VESUM')
+"
+```
+
+### 3. Get all inflected forms of a lemma (declension/conjugation)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_lemma
+forms = verify_lemma('LEMMA_HERE')
+for f in forms[:20]:
+    print(f'{f[\"word_form\"]:20s} {f[\"pos\"]:8s} {f[\"tags\"]}')
+print(f'... {len(forms)} forms total')
+"
+```
+
+### 4. Check CEFR level of a word (is it level-appropriate?)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import query_cefr_level
+results = query_cefr_level('WORD_HERE')
+for r in results:
+    print(f'{r[\"word\"]}: {r[\"level\"]} ({r[\"pos\"]})')
+if not results:
+    print('Not in CEFR database')
+"
+```
+
+### 5. Search textbook content (Ukrainian school textbooks, Grades 1-11)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_textbooks
+keywords = {'keyword1', 'keyword2'}
+results = search_textbooks(keywords, 5)
+for r in results:
+    title = r.get('section_title', r.get('title', ''))
+    grade = r.get('grade', '?')
+    text = r.get('text', '')[:200]
+    print(f'Grade {grade} | {title}')
+    print(f'  {text}')
+    print()
+"
+```
+
+### 6. Search style guide for calques/Russianisms (Антоненко-Давидович, 279 entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_style_guide
+results = search_style_guide('TOPIC_HERE', 3)
+for r in results:
+    print(f'--- {r.get(\"word\", \"\")} [{r.get(\"section\", \"\")}]')
+    print(r.get('text', '')[:300])
+    print()
+if not results:
+    print('No style guide entries found')
+"
+```
+
+### 7. Look up word definition in СУМ-11 (Ukrainian explanatory dictionary, 127K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_definitions
+results = search_definitions('WORD_HERE', 3)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+### 8. Search idioms (Фразеологічний словник, 25K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_idioms
+results = search_idioms('WORD_HERE', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"text\", r.get(\"definition\", \"\")))[:200]}')
+"
+```
+
+### 9. English-to-Ukrainian translation (Балла, 79K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import translate_en_uk
+results = translate_en_uk('ENGLISH_WORD', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+---
+
+**WHEN to use these tools:**
+
+1. **Before writing any Ukrainian text** — batch-verify all key vocabulary with
+   `verify_words` (tool 1). Any word that returns NOT FOUND must be replaced.
+2. **When you suspect a Russicism or calque** — search the style guide (tool 6)
+   and verify the correct Ukrainian form with `verify_word` (tool 2).
+3. **When writing for A1/A2** — check CEFR levels (tool 4) to ensure vocabulary
+   is level-appropriate.
+4. **When unsure about a case ending or conjugation** — use `verify_lemma` (tool 3)
+   to see the full paradigm.
+5. **When covering a grammar topic** — search textbooks (tool 5) to see how
+   Ukrainian school textbooks teach it.
+6. **When you need the precise Ukrainian meaning** — use СУМ-11 (tool 7).
+7. **When looking for natural Ukrainian expressions** — search idioms (tool 8).
+
+**Batching rule:** Collect all words you want to verify, then run ONE `verify_words`
+call instead of multiple `verify_word` calls. This is faster and uses fewer tokens.

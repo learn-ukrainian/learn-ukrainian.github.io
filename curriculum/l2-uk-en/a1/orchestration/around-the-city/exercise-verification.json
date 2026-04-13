@@ -1,30 +1,24 @@
 {
-  "total_items": 95,
-  "grounded_items": 63,
+  "total_items": 79,
+  "grounded_items": 52,
   "ungrounded": [
     {
-      "word": "він",
-      "exercise_type": "match-up",
-      "context": "Він у центрі.",
+      "word": "музею",
+      "exercise_type": "fill-in",
+      "context": "Вибачте, як дістатися до музею? — Ідіть ____.",
       "role": "context"
     },
     {
-      "word": "ні",
-      "exercise_type": "match-up",
-      "context": "Ні, близько. П'ять хвилин пішки.",
+      "word": "там",
+      "exercise_type": "fill-in",
+      "context": "Потім ідіть ____, школа там.",
       "role": "context"
     },
     {
-      "word": "йдете",
-      "exercise_type": "match-up",
-      "context": "Куди ви йдете?",
-      "role": "answer"
-    },
-    {
-      "word": "живеш",
-      "exercise_type": "match-up",
-      "context": "Де ти живеш?",
-      "role": "answer"
+      "word": "йдіть",
+      "exercise_type": "fill-in",
+      "context": "Йдіть ____, а потім наліво.",
+      "role": "context"
     },
     {
       "word": "вона",
@@ -39,168 +33,145 @@
       "role": "context"
     },
     {
-      "word": "музею",
-      "exercise_type": "unjumble",
-      "context": "музею?",
-      "role": "answer"
-    },
-    {
-      "word": "там",
-      "exercise_type": "fill-in",
-      "context": "Потім ідіть _____, школа там.",
-      "role": "context"
-    },
-    {
-      "word": "йдіть",
-      "exercise_type": "fill-in",
-      "context": "Йдіть прямо, а потім _____.",
-      "role": "context"
-    },
-    {
       "word": "їде",
       "exercise_type": "fill-in",
-      "context": "Вона їде на роботу _____.",
-      "role": "context"
-    },
-    {
-      "word": "йдемо",
-      "exercise_type": "fill-in",
-      "context": "Парк близько, ми йдемо _____.",
+      "context": "Вона їде на роботу ____.",
       "role": "context"
     },
     {
       "word": "їдемо",
       "exercise_type": "fill-in",
-      "context": "Ми їдемо в ресторан _____.",
+      "context": "Ми їдемо в ресторан ____.",
       "role": "context"
     },
     {
-      "word": "магазині",
-      "exercise_type": "error-correction",
-      "context": "Я йду в магазині.",
+      "word": "він",
+      "exercise_type": "match-up",
+      "context": "Він у центрі.",
       "role": "context"
     },
     {
-      "word": "працює",
-      "exercise_type": "error-correction",
-      "context": "Вона працює в офіс.",
+      "word": "ні",
+      "exercise_type": "match-up",
+      "context": "Ні, близько. П'ять хвилин пішки.",
       "role": "context"
     },
     {
-      "word": "роботі",
-      "exercise_type": "error-correction",
-      "context": "Потім їду на роботі.",
+      "word": "ви",
+      "exercise_type": "match-up",
+      "context": "Куди ви йдете?",
+      "role": "answer"
+    },
+    {
+      "word": "йдете",
+      "exercise_type": "match-up",
+      "context": "Куди ви йдете?",
+      "role": "answer"
+    },
+    {
+      "word": "вулицю",
+      "exercise_type": "group-sort",
+      "context": "на вулицю",
+      "role": "answer"
+    },
+    {
+      "word": "кажемо",
+      "exercise_type": "true-false",
+      "context": "Ми кажемо «на пішки».",
       "role": "context"
     },
     {
-      "word": "зупинці",
-      "exercise_type": "fill-in",
-      "context": "Я зараз _____ зупинці.",
+      "word": "питання",
+      "exercise_type": "true-false",
+      "context": "Питання «Де?» вимагає місцевого відмінка (locative).",
       "role": "context"
     },
     {
-      "word": "знаходиться",
-      "exercise_type": "fill-in",
-      "context": "Театр знаходиться _____ площі.",
+      "word": "вимагає",
+      "exercise_type": "true-false",
+      "context": "Питання «Де?» вимагає місцевого відмінка (locative).",
       "role": "context"
     },
     {
-      "word": "вони",
-      "exercise_type": "fill-in",
-      "context": "Вони йдуть _____ метро.",
+      "word": "місцевого",
+      "exercise_type": "true-false",
+      "context": "Питання «Де?» вимагає місцевого відмінка (locative).",
       "role": "context"
     },
     {
-      "word": "йдуть",
-      "exercise_type": "fill-in",
-      "context": "Вони йдуть _____ метро.",
+      "word": "відмінка",
+      "exercise_type": "true-false",
+      "context": "Питання «Де?» вимагає місцевого відмінка (locative).",
       "role": "context"
     },
     {
       "word": "слово",
       "exercise_type": "true-false",
-      "context": "Слово 'ідіть' — це для 'пішки'.",
+      "context": "Слово «метро» змінюється: метро, метром, на метрі.",
       "role": "context"
     },
     {
-      "word": "ідіть'",
+      "word": "змінюється",
       "exercise_type": "true-false",
-      "context": "Слово 'ідіть' — це для 'пішки'.",
+      "context": "Слово «метро» змінюється: метро, метром, на метрі.",
       "role": "context"
     },
     {
-      "word": "це",
+      "word": "метром",
       "exercise_type": "true-false",
-      "context": "Слово 'ідіть' — це для 'пішки'.",
+      "context": "Слово «метро» змінюється: метро, метром, на метрі.",
       "role": "context"
     },
     {
-      "word": "для",
+      "word": "метрі",
       "exercise_type": "true-false",
-      "context": "Слово 'ідіть' — це для 'пішки'.",
+      "context": "Слово «метро» змінюється: метро, метром, на метрі.",
       "role": "context"
     },
     {
-      "word": "пішки'",
+      "word": "відповідає",
       "exercise_type": "true-false",
-      "context": "Слово 'ідіть' — це для 'пішки'.",
+      "context": "Слово «направо» відповідає на питання «Куди?».",
       "role": "context"
     },
     {
-      "word": "їдьте'",
+      "word": "фраза",
       "exercise_type": "true-false",
-      "context": "Слово 'їдьте' — це для 'пішки'.",
+      "context": "Фраза «на розі» — це виняток.",
       "role": "context"
     },
     {
-      "word": "форма",
+      "word": "виняток",
       "exercise_type": "true-false",
-      "context": "'Де?' — це форма 'в парку'.",
+      "context": "Фраза «на розі» — це виняток.",
       "role": "context"
     },
     {
-      "word": "парку'",
-      "exercise_type": "true-false",
-      "context": "'Де?' — це форма 'в парку'.",
+      "word": "моя",
+      "exercise_type": "fill-in",
+      "context": "Моя школа ____ центрі.",
       "role": "context"
     },
     {
-      "word": "площі'",
-      "exercise_type": "true-false",
-      "context": "'Куди?' — це форма 'на площі'.",
+      "word": "автобус",
+      "exercise_type": "fill-in",
+      "context": "Автобус їде ____ площу.",
       "role": "context"
     },
     {
-      "word": "означає",
-      "exercise_type": "true-false",
-      "context": "'П'ять хвилин пішки' означає 'далеко'.",
-      "role": "context"
-    },
-    {
-      "word": "далеко'",
-      "exercise_type": "true-false",
-      "context": "'П'ять хвилин пішки' означає 'далеко'.",
-      "role": "context"
-    },
-    {
-      "word": "одне",
-      "exercise_type": "true-false",
-      "context": "Автовокзал і залізничний вокзал — це одне місце.",
-      "role": "context"
-    },
-    {
-      "word": "місце",
-      "exercise_type": "true-false",
-      "context": "Автовокзал і залізничний вокзал — це одне місце.",
+      "word": "площу",
+      "exercise_type": "fill-in",
+      "context": "Автобус їде ____ площу.",
       "role": "context"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 9,
-    "tested_in_exercises": 7,
+    "tested_in_exercises": 6,
     "not_tested": [
       "район",
-      "хвилина"
+      "хвилина",
+      "їдьте"
     ]
   },
   "all_grounded": false

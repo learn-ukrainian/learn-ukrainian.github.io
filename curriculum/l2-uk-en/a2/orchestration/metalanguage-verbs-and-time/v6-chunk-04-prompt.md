@@ -22,7 +22,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-*(The word "дієсл." means verb. And "недок." means imperfective aspect. When you independently read a dictionary, you must understand this code.)* Анатомія словникової статті має свої чіткі правила. Коли ви відкриваєте словник, перше велике слово — це **заголовне слово** *(headword)*. Воно завжди стоїть у початковій формі. Для дієслова це інфінітив, а для іменника — це називний відмінок однини. Друга дуже важлива річ у словнику — це **наголос** *(stress mark)*. Наголос показує нам, як правильно вимовляти нове слово. Це перше, що ви повинні уважно перевірити. Український наголос часто може змінювати значення слова. Наприклад, порівняйте слова «замок» *(castle)* і «замок» *(lock)*. Одразу після наголосу йде граматичний блок. Саме там живуть наші короткі граматичні скорочення. Вони дають вам точну інструкцію, як правильно використовувати це слово в реченні. Якщо ви розумієте цей граматичний блок, ви автоматично уникнете багатьох серйозних помилок у майбутньому. Ось велика таблиця базових скорочень, які ви дуже часто будете бачити. Цей список допоможе вам читати майже будь-який український словник без проблем. | Скорочення | Повне слово | Переклад | | :--- | :--- | :--- | | **ім.** | іменник | *noun* | | **прикм.** | прикметник | *adjective* | | **дієсл.** | дієслово | *verb* | | **займ.** | займенник | *pronoun* | | **присл.** | прислівник | *adverb* | | **ч. р.** | чоловічий рід | *masculine gender* | | **ж. р.** | жіночий рід | *feminine gender* | | **с. р.** | середній рід | *neuter gender* | | **одн.** | однина | *singular* | | **мн.** | множина | *plural* | | **док.** | доконаний вид | *perfective aspect* | | **недок.** | недоконаний вид | *imperfective aspect* | Вивчіть ці скорочення напам'ять. Вони — ваш надійний ключ до успішного самостійного навчання. Коли ви знаєте, що нове слово має позначку «ж. р.», ви точно знаєте, що треба сказати «гарна», а не «гарний». Якщо ви бачите позначку «мн.», це чітко означає, що слово використовується тільки у множині. Хороші приклади таких слів — це «окуляри» *(glasses)*, «гроші» *(money)* або «ножиці» *(scissors)*. Давайте разом попрактикуємося читати ці коди. Візьмемо два реальні приклади з популярного онлайн-словника. Перший приклад — це слово «книга». У словнику ми бачимо такий запис: **книга** (ім., ж. р., одн.). Що це означає для нас? Ми відразу розуміємо, що це іменник жіночого роду в однині. Тому ми можемо правильно сказати «моя нова книга» і використовувати її як підмет у реченні. Ми знаємо, які закінчення треба обрати. Другий приклад — це слово «зробити». Словник каже нам: **зробити** (дієсл., док.). Цей короткий код дає студенту надзвичайно важливу інформацію! Це дієслово доконаного виду. Що це означає на практиці для іноземця? Це означає, що дія має фінальний результат. Але найголовніше правило — ми знаємо, що це дієслово ніколи не має форм теперішнього часу! Ви абсолютно не можете сказати «я зроблю це зараз», якщо ви маєте на увазі процес, який зараз триває. Форма «я зроблю» — це вже проста форма майбутнього часу. Тому цей маленький граматичний блок допомагає вам обрати правильний час для вашого речення і говорити природно. <!-- INJECT_ACTIVITY: quiz, quiz-dictionary-literacy -->
+stress mark shows us how to pronounce a new word correctly. This is the very first thing you must check in the dictionary. Ukrainian words often change their meaning if you place the stress on a different syllable. After the stress mark, the dictionary always provides a special grammatical block. There you will find all the necessary information about gender, number, and other important categories. Only after this comes the explanation of the word's meaning.* :::note **Quick tip** Always look at the grammatical block before you read the actual definition. Knowing the exact part of speech helps you understand how the word functions in a sentence and prevents embarrassing grammatical errors. ::: To decode this grammatical block quickly and efficiently, you need to memorize the standard abbreviations. Every good dictionary uses exactly the same system to save valuable space on the page or screen. Once you know these common codes, you will never feel lost or confused when looking up new vocabulary. Here is a comprehensive list of the abbreviations you will encounter every single day. * **ім.** — іменник (noun) * **прикм.** — прикметник (adjective) * **дієсл.** — **дієслово** (verb) * **присл.** — **прислівник** (adverb) * **займ.** — займенник (pronoun) When you look up a noun, the dictionary will immediately specify its gender and its number. * **ч. р.** — чоловічий рід (masculine gender) * **ж. р.** — жіночий рід (feminine gender) * **с. р.** — середній рід (neuter gender) * **одн.** — однина (singular) * **мн.** — множина (plural) For verbs, the dictionary tells you the aspect, the **час** (tense), and sometimes the **дієвідміна** (conjugation class) or the **особа** (person). You will definitely see: * **док.** — **доконаний** (perfective) **вид** (aspect) * **недок.** — **недоконаний** (imperfective) **вид** (aspect) * **спос.** — **спосіб** (mood) Let us practice decoding two real dictionary entries using our newly acquired knowledge. Imagine you search for the common word «книга». The grammatical block immediately says: **ім., ж. р., одн.** This code tells you instantly that «книга» is a noun, it has a feminine gender, and it is currently in the singular form. You now know exactly how to decline it. Тепер ми шукаємо популярне слово «зробити». Словник показує нам таке коротке скорочення: **дієсл., док. вид**. Ми відразу розуміємо, що це дієслово. Скорочення «док.» чітко говорить нам, що це доконаний вид. Ми вже знаємо, що такі дієслова завжди позначають завершену дію або результат. Ми також знаємо, що цей вид ніколи не має форми теперішнього часу. Цей маленький граматичний код дає нам усю необхідну картину. > *Now we look up the popular word "зробити". The dictionary shows us this short abbreviation: **дієсл., док. вид**. We immediately understand that it is a verb. The abbreviation "док." clearly tells us that it is the perfective aspect. We already know that such verbs always denote a completed action or a result. We also know that this aspect never has a form of the present tense. This little grammatical code gives us the whole necessary picture.* <!-- INJECT_ACTIVITY: quiz-dictionary-literacy -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -512,7 +512,74 @@ Understanding the sentence is the central goal of syntax. It builds directly upo
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 6: A2 finale (A2 M51-M69)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 40%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 40% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 70-90% Ukrainian.
 LANGUAGE ROLES:
@@ -531,18 +598,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] дієслово (verb)
+- [ ] час (tense, time)
+- [ ] вид (aspect)
+- [ ] доконаний (perfective)
+- [ ] недоконаний (imperfective)
+- [ ] спосіб (mood, manner)
+- [ ] дієвідміна (conjugation class)
+- [ ] особа (person, grammatical)
+- [ ] прислівник (adverb)
+- [ ] словник (dictionary)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Прислівник: види та приклади (~400 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

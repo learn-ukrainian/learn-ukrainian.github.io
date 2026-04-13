@@ -267,26 +267,29 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-- Confirmed: сім'я, день, сіль, м'ясо, п'ять, гарно, риба, батько, учитель, дев'ять, комп'ютер, м'який.
-- Not found: None.
+- Confirmed: сім'я, день, сіль, м'ясо, п'ять, гарно, риба, батько, учитель, дев'ять, комп'ютер, м'який
+- Not found: None
 
 ## Grammar Rules
-- Апостроф (The Apostrophe): Правопис § 7 — Апостроф пишемо перед я, ю, є, ї після букв на позначення губних приголосних б, п, в, м, ф (п'ять, м'ясо, сім'я) та р (бур'ян). Він вказує на роздільну вимову твердого приголосного та наступного йотованого голосного.
-- М'який знак (The Soft Sign): Правопис § 26 — Буквою ь позначаємо на письмі м'якість приголосних звуків д, т, з, с, дз, ц, л, н у кінці слова (день, сіль, учитель) та складу (батько).
+- Апостроф: Правопис §7 — Роздільність вимови я, ю, є, ї та попереднього твердого приголосного на письмі позначаємо апострофом.
+- М'який знак: Правопис §26 — Буквою ь позначаємо на письмі м’якість приголосних звуків.
 
 ## Calque Warnings
-- сім'я: OK — Found in Grade 1 textbooks (Zaharijchuk p.8) alongside "родина". Both are natural, with "сім'я" often used for the nuclear family.
-- учитель: OK — Standard term for a school teacher in all primary textbooks (Vashulenko, Savchuk). "Викладач" is reserved for higher education.
-- батько: OK — Standard formal/neutral term for father; "тато" is also common and used in A1 contexts.
+- учитель: OK — No issues found in style guide
+- сім'я: OK — No issues found in style guide
+- батько: OK — No issues found in style guide
+- гарно: OK — No issues found in style guide
 
 ## CEFR Check
-- сім'я: A1 — Found in Grade 1 Bukvar (Zaharijchuk).
-- день: A1 — Found in Grade 1 Bukvar and Grade 2 Ukrainian language books.
-- п'ять: A1 — Basic numeral, introduced early in Grade 1/2.
-- учитель: A1 — Key classroom vocabulary found in Grade 1.
-- батько: A1 — Core family vocabulary found in Grade 1.
-- гарно: A1 — Common adverb found in Grade 2.
-- риба: A1 — Common noun used for phonetic practice (Р, И) in Grade 1.
+- сім'я: A1 — OK
+- день: A1 — OK
+- сіль: A1 — OK
+- м'ясо: A1 — OK
+- п'ять: A1 — OK
+- гарно: A1 — OK
+- риба: A1 — OK
+- батько: A1 — OK
+- комп'ютер: A1 — OK
 </pre_verified_facts>
 
 
@@ -593,13 +596,15 @@ These exercises, adapted from Ukrainian school materials, provide a gold standar
 
 ## Section Structure
 
-Write these sections as H2 headings, in this exact order:
+Write these sections as H2 headings, in this **exact** order:
 
 - `## М'який знак (The Soft Sign — Ь)` (~250 words)
 - `## Апостроф (The Apostrophe)` (~250 words)
 - `## Дзвінкі і глухі (Voiced and Voiceless)` (~250 words)
 - `## Вимова українських звуків (Pronouncing Ukrainian Sounds)` (~250 words)
 - `## Підсумок — Summary` (~200 words)
+
+**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim** as an `## H2` line. This includes the FINAL summary/transition section (`Підсумок: ...`, `Підсумок та перехід до M...`, etc.) — the writer's most common failure is silently dropping the closing section. Do NOT skip it. Do NOT renumber. Do NOT merge headings. The post-write quick-verify check will fail your build if any heading is missing, even if the prose itself is excellent.
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -643,6 +648,25 @@ HARD GRAMMAR RULES (audit will reject violations):
 - **Zero calques**: No приймати душ→брати душ, приймати рішення→ухвалювати рішення
 - **Zero paronyms**: тактична≠тактовна, ефектний≠ефективний — use the right word, not a similar-sounding one
 - **Natural Ukrainian**: Write how a Ukrainian teacher would explain this to a student. Not robotic, not textbook-dry, not overly casual.
+
+### FORBIDDEN WORDS — never write these (#1189)
+
+The following Russian words have leaked into past builds and broken modules. They are **hard-banned** — the post-write toxic-token scanner will fail your build the moment it sees one. Use the Ukrainian alternative every time, even in dialogues, even in casual prose, even when quoting a learner's mistake (use a `<!-- VERIFY -->` placeholder instead of typing the Russian form):
+
+| Russian (FORBIDDEN) | Ukrainian (USE THIS) |
+|---|---|
+| хорошо | добре |
+| конечно | звичайно / певна річ |
+| спасибо | дякую |
+| пожалуйста | будь ласка / прошу |
+| ничего | нічого |
+| сейчас | зараз |
+| тоже | теж / також |
+| здесь | тут |
+| кот | кіт |
+| кон | кін |
+
+This list is enforced word-for-word by `scripts/build/quick_verify.py` (SEVERE_RUSSIANISMS). If you produce any of these tokens — even inside a quoted example, even inside a dialogue line spoken by a Russian-speaking character — the build halts immediately. There is no exception.
 
 **Authority hierarchy (if uncertain about a word, check in this order):**
 VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (stress) → Антоненко-Давидович (style) → Грінченко (etymology).
@@ -757,44 +781,40 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## М'який знак (The Soft Sign — Ь) (~275 words total)
-- P1 (~70 words): Introduce the soft sign (ь) as a silent instruction to the tongue. Explain that it has no sound of its own but changes the quality of the consonant before it. Use the word "день" (day) and "сіль" (salt) to demonstrate the softening of [н] and [л].
-- P2 (~80 words): Explain the "mnemonic" rule for consonants that can be softened: "ДЗіДЗьо, Де Ти З’їСи Ці ЛиНи" (д, т, з, с, ц, л, н, р, дз). Introduce the notation for hard consonants [–] and soft consonants [=] used in Ukrainian textbooks like Захарійчук Grade 1.
-- P3 (~70 words): Detail the placement of the soft sign in the middle of words. Provide examples such as "батько" (father), "учитель" (teacher), and "маленький" (small). Explain that the letter "й" is inherently soft and never needs a soft sign.
-- P4 (~55 words): Contrastive phonetic practice using minimal pairs to show how meaning changes. Compare "брат" (brother, hard [т]) vs. "брать" (to take, soft [т']). Emphasize the physical tongue position for palatalization.
-- <!-- INJECT_ACTIVITY: odd-one-out-softening --> [type: odd-one-out, focus: identifying consonants that cannot be softened by Ь (e.g., labials or sibilants), 6 items]
+## М'який знак (The Soft Sign — Ь) (~280 words)
+- P1 (~90 words): Introduce the soft sign (м'який знак — Ь). Explain that it has no sound of its own, acting solely as a modifier to soften (palatalize) the preceding consonant. Introduce the three-way distinction in Ukrainian consonants: truly soft (м'які), partially softened (пом'якшені — lips, hissing, back-tongue sounds), and hard (тверді).
+- P2 (~100 words): Detail the 9 consonants that can be truly softened by Ь: Д, Т, З, С, Ц, Л, Н, Р, ДЗ. Introduce the classic Ukrainian school mnemonic to remember them: «ДЗіДЗьо, Де Ти З'їСи Ці ЛиНи». Contrast the physical feeling of hard vs. soft consonants (tongue position).
+- P3 (~90 words): Showcase common word-final patterns where Ь is used. Give clear examples for -нь (день, кінь, осінь), -ль (сіль, біль), -ть (мить), and -зь (мазь). Include broader practice words to read aloud: учитель, батько, маленький.
+- <!-- INJECT_ACTIVITY: odd-one-out-soft-sign --> [odd-one-out, Which consonant does NOT have a soft pair? (Ь can't soften it), 6 items]
 
-## Апостроф (The Apostrophe) (~275 words total)
-- P1 (~70 words): Introduce the apostrophe (’) as the "wall" or separator. Explain its opposite function to the soft sign: it keeps the preceding consonant hard and forces the following vowel to be pronounced as two distinct sounds [й + vowel].
-- P2 (~75 words): Detail the "Lip Consonant" rule (б, п, в, м, ф) and "р" before the vowels я, ю, є, ї. Use the example "сім'я" (family) to show the separation [сім-йа]. Explicitly state that the consonant must remain hard.
-- P3 (~70 words): Provide high-frequency vocabulary for reading practice. Focus on "м'ясо" (meat), "п'ять" (five), and "дев'ять" (nine). Guide the learner through the pronunciation of [м-йасо] versus the common error of softening the [м].
-- P4 (~60 words): Address the use of apostrophes in modern loanwords and international vocabulary. Use "комп'ютер" (computer) and "об'єкт" (object) as familiar anchors. Note that this rule is consistent across the language.
-- <!-- INJECT_ACTIVITY: fill-in-special-signs --> [type: fill-in, focus: choosing between Ь and apostrophe in words like сім_я, ден_, п_ять, 6 items]
-- <!-- INJECT_ACTIVITY: error-correction-apostrophe --> [type: error-correction, focus: identifying and fixing missing apostrophes in words like м'ясо, сім'я, п'ять, 6 items]
-- <!-- INJECT_ACTIVITY: group-sort-signs --> [type: group-sort, focus: sorting words into categories: has Ь, has apostrophe, or neither, 18 items]
+## Апостроф (The Apostrophe) (~280 words)
+- P1 (~100 words): Introduce the apostrophe (') as the "anti-soft-sign" or a structural "wall". Explain its function: it keeps the preceding consonant strictly hard and forces the following iotated vowel (я, ю, є, ї) to split into two distinct sounds ([й] + vowel). Contrast a softened word like пісня (soft Н) with a separated word like сім'я (hard М + [йа]).
+- P2 (~100 words): Teach the core spelling rule: the apostrophe appears after the labial (lip) consonants б, п, в, м, ф and the trill р, right before the vowels я, ю, є, ї. Emphasize that it is a unique Ukrainian phonetic separator, not related to the Russian hard sign.
+- P3 (~80 words): Provide essential reading practice using high-frequency apostrophe words: п'ять, дев'ять, м'який, м'яч, м'ясо, об'єкт. Explicitly note that Ukrainian uses тварина for "animal", avoiding the Russian cognate "тварь".
+- <!-- INJECT_ACTIVITY: fill-in-missing-sign --> [fill-in, Add the missing Ь or apostrophe: сім_я, ден_, п_ять, 6 items]
+- <!-- INJECT_ACTIVITY: error-correction-apostrophe --> [error-correction, Find missing apostrophes in words like м'ясо, сім'я, п'ять, 6 items]
+- <!-- INJECT_ACTIVITY: group-sort-signs --> [group-sort, Sort words into: has Ь / has apostrophe / neither, 18 items]
 
-## Дзвінкі і глухі (Voiced and Voiceless) (~275 words total)
-- P1 (~70 words): Introduce the concept of "voiced" (дзвінкі) and "voiceless" (глухі) consonants. Use the "hand on throat" test to explain vibration. Use the simplest pair [б] and [п] to illustrate the difference.
-- P2 (~80 words): List the eight main voiced-voiceless pairs: Б-П, Д-Т, Г-Х, Ґ-К, З-С, Ж-Ш, ДЗ-Ц, ДЖ-Ч. Explain that сонорні (sonorants) like в, л, м, н, й, р do not have voiceless pairs in Ukrainian.
-- P3 (~85 words): Explain the "Resilience Rule" of Ukrainian phonetics: voiced consonants stay voiced even at the end of words. Contrast this with other languages. Use "дуб" [дуб] and "мороз" [мороз] as primary examples. Introduce the sole common exception: "легко" [лехко].
-- P4 (~40 words): Meaning changes through voicing. Present minimal pairs for ear training: "балка" (beam) vs. "палка" (stick) and "коза" (goat) vs. "коса" (braid).
-- <!-- INJECT_ACTIVITY: match-up-voiced-voiceless --> [type: match-up, focus: matching voiced consonants with their voiceless partners (Б↔П, Д↔Т, etc.), 8 items]
-- <!-- INJECT_ACTIVITY: true-false-devoicing --> [type: true-false, focus: checking understanding of final consonant pronunciation and the "легко" exception, 6 items]
+## Дзвінкі і глухі (Voiced and Voiceless) (~280 words)
+- P1 (~90 words): Explain the physical concept of voiced vs. voiceless consonants using the "hand on throat" vibration test. List the 8 primary voiced-voiceless pairs: Б-П, Д-Т, Г-Х, Ґ-К, З-С, Ж-Ш, ДЗ-Ц, ДЖ-Ч.
+- P2 (~100 words): Introduce a defining feature of Ukrainian phonetics: non-devoicing. Explain that voiced consonants mostly keep their full voiced sound at the end of a word or before voiceless consonants. Use examples: дуб is pronounced [дуб], and мороз is [мороз]. Mention the rare exception: легко (pronounced [лехко]).
+- P3 (~90 words): Provide minimal pairs for ear training to demonstrate why voicing is critical for meaning. Contrast балка (beam) vs. палка (stick), and коза (goat) vs. коса (braid).
+- <!-- INJECT_ACTIVITY: match-up-voiced-voiceless --> [match-up, Match voiced-voiceless pairs: Б↔П, Д↔Т, Г↔Х, Ґ↔К, etc., 8 items]
+- <!-- INJECT_ACTIVITY: true-false-voicing --> [true-false, Statements about voiced/voiceless rules and non-devoicing, 6 items]
 
-## Вимова українських звуків (Pronouncing Ukrainian Sounds) (~275 words total)
-- P1 (~100 words): Focus on the vowel И [и]. Explain it as a distinct sound, not a variation of І [і]. Use minimal pairs to train the ear: "бик" (bull) vs. "бік" (side), "дим" (smoke) vs. "дім" (house), and "кит" (whale) vs. "кіт" (cat).
-- P2 (~100 words): Contrast Г [ɦ] and Ґ [g]. Describe Г as a "voiced fricative" (like a heavy breath with voice) and Ґ as a "hard stop" (like English 'g' in 'goat'). Use "гарно" (nicely) and "гора" (mountain) vs. "ґанок" (porch) and "ґудзик" (button).
-- P3 (~75 words): Introduce the Ukrainian trilled Р [р]. Provide tips for tongue placement at the alveolar ridge. Use practice words that build rhythm: "риба" (fish), "ранок" (morning), "робота" (work), and "рука" (hand).
-- <!-- INJECT_ACTIVITY: quiz-g-vs-ge --> [type: quiz, focus: choosing the correct letter (Г or Ґ) for specific words based on sound, 6 items]
+## Вимова українських звуків (Pronouncing Ukrainian Sounds) (~280 words)
+- P1 (~90 words): Focus on the unique Ukrainian vowel И [и]. Emphasize that it is entirely distinct from І [і]. Provide minimal pairs to train the ear: бик (bull) vs. бік (side), дим (smoke) vs. дім (house), лист (leaf/letter) vs. ліс (forest), кит (whale) vs. кіт (cat).
+- P2 (~100 words): Contrast the letters Г and Ґ. Explain that Г [ɦ] is a voiced fricative (air flows continuously through the throat, like in гарно, гора, голова) and is the voiced partner of Х. Clarify that Ґ [g] is a voiced stop (like in ґанок, ґудзик) and is the partner of К. Explicitly state that Г is never called "soft" (м'який means palatalized).
+- P3 (~90 words): Introduce the Ukrainian rolled/trilled Р [р]. Provide practice words: рука, робота, ранок, риба. Reassure learners that while getting the trill is great, an imperfect Р will always be understood.
+- <!-- INJECT_ACTIVITY: quiz-g-vs-g --> [quiz, Г vs Ґ: choose the correct letter for each word, 6 items]
 
-## Підсумок — Summary (~220 words)
-- P1 (~220 words): Recap the module with a self-check list.
-  - What does the soft sign (Ь) do? (It softens the previous consonant, has no sound).
-  - Which consonants can be followed by Ь? (Д, Т, З, С, Ц, Л, Н, Р, ДЗ).
-  - When do we use an apostrophe? (After б, п, в, м, ф, р before я, ю, є, ї).
-  - Does a voiced consonant like "б" change at the end of a word? (No, it stays voiced).
-  - What is the difference between Г and Ґ? (Г is a fricative/breathy sound, Ґ is a hard stop).
-  - Read these challenge words aloud: сім'я, день, п'ять, гарно, риба, м'ясо.
+## Підсумок — Summary (~200 words)
+- P1 (~200 words): 
+  * What does Ь do? (It softens the preceding consonant but makes no sound itself).
+  * After which letters does the apostrophe appear? (After б, п, в, м, ф, р before я, ю, є, ї).
+  * Name 3 voiced-voiceless pairs. (Examples: Б-П, Д-Т, З-С).
+  * How is Ukrainian Г different from Ґ? (Г is a continuous voiced fricative, while Ґ is a hard voiced stop).
+  * Read these words out loud, paying attention to the signs and sounds: сім'я, день, п'ять, гарно, риба.
 
 Grand total: ~1320 words
 </skeleton>
@@ -804,11 +824,56 @@ Grand total: ~1320 words
 Write in Markdown. Use:
 - `## Section Title` for main sections
 - `### Subsection` for subsections within a section
-- `**bold**` for Ukrainian words being taught — EVERY bold Ukrainian word MUST have an English translation on first use, either in parentheses `**слово** (translation)` or inline `**слово** means "translation"`. No exceptions.
+- `**bold**` for Ukrainian words being taught. For **A1 and A2** levels, provide an English translation on first use (e.g. `**стіл** (table)`) because learners lack the vocabulary to infer meaning. For **B1 and above**, do NOT provide inline translations for standard vocabulary — the learner will use the module's словник (vocabulary table). You may provide ONE parenthetical English translation ONLY for highly abstract grammar/linguistic terms on first use (e.g. `**видова пара** (aspectual pair)`).
 - Tables for paradigms (conjugation, declension)
 - `:::tip` / `:::caution` / `:::note` for callout boxes
 - `<!-- INJECT_ACTIVITY: {id} -->` for exercise placement (markers only — do NOT write exercise content)
 
 Do NOT write MDX component syntax, JSON, or DSL exercise blocks (:::quiz, etc.). Plain Markdown with injection markers.
+
+---
+
+## MANDATORY FINAL CHECKLIST (#1189)
+
+Before you finish writing, verify the prose against this checklist. Failing any item will fail the build.
+
+### Section headings (verbatim)
+
+Every heading from "Section Structure" above MUST appear as an `## H2` in your output, in order, **including the closing `Підсумок:` / `Підсумок та перехід до M...` summary**. The single most common writer failure across the B1 build has been silently dropping the final summary section. Re-read your output before stopping. If the last section in the plan is missing, write it now.
+
+### Required vocabulary (every word must appear)
+
+You MUST use **every word** from the list below at least once in the prose, in a natural sentence with bold + English translation. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, прагматика, діагностика, дієвідмінювання, зворотний, двовидовий, одновидовий, неозначено-кількісний, etc.) is the most frequently dropped category — actively find homes for those words even if it means adding a sentence that defines them.
+
+- [ ] сім'я (family) — apostrophe word
+- [ ] день (day) — soft sign after Н
+- [ ] сіль (salt) — soft sign after Л
+- [ ] м'ясо (meat) — apostrophe after М
+- [ ] п'ять (five) — apostrophe after П
+- [ ] гарно (nicely, beautifully) — Г [ɦ] practice
+- [ ] риба (fish) — Р and И practice
+
+### Forbidden words (never produce)
+
+Do not write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use `<!-- VERIFY -->` instead). The post-write toxic-token scanner will fail the build immediately:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+### Level-specific immersion check
+
+The level-appropriate immersion rule was already injected at the top of
+this prompt as `IMMERSION RULE`. Re-read it now BEFORE you stop writing.
+If your level's rule contains a CHECKLIST block, walk through every item.
+If it doesn't, just verify your output matches the LANGUAGE ROLES and
+TARGET stated in that block.
+
+This used to hard-code a B1+ checklist that confused A1/A2 models (where
+translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+The single source of truth is now
+`scripts/pipeline/config_tables.py:IMMERSION_RULES`.
+
+---
 
 Begin writing now. Start with the first section heading.

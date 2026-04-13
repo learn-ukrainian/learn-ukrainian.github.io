@@ -1,0 +1,73 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T09-57-9b1a11c3.json
+phase: write-chunk-01
+prompt_chars: 45064
+response_chars: 8636
+prompt_words: 6184
+response_words: 1217
+sections:
+- name: header
+  start: 0
+  length: 449
+  fraction: 0.01
+- name: skeleton
+  start: 449
+  length: 2037
+  fraction: 0.0452
+- name: plan
+  start: 2486
+  length: 15737
+  fraction: 0.3492
+- name: wiki
+  start: 12180
+  length: 26624
+  fraction: 0.5908
+- name: output_spec
+  start: 44847
+  length: 217
+  fraction: 0.0048
+large_sections:
+- wiki
+directives_total: 14
+directives_covered: 4
+directives_missed:
+- kind: checklist
+  text: дата (date — uses ordinal in Р.в.)
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: checklist
+  text: котра година (what time is it)
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: checklist
+  text: поверх (floor/storey)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: століття (century)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: половина (half — о пів на п'яту)
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: checklist
+  text: хвилина (minute)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: рік (year — року in Р.в.)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 3/11 keywords (27%)
+- kind: inject_activity
+  text: fill-in-declension
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-declension
+  covered: false
+  coverage_note: marker missing

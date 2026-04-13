@@ -1,47 +1,32 @@
-# Section-by-Section Generation — Section 2/6
+# Section-by-Section Generation — Section 2/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 19: Моєму другові, нашій вчительці (A2, A2.3 [Dative Case])
-**Section to write:** Прикметники у давальному відмінку (~600 words)
+**Section to write:** Присвійні та вказівні займенники у давальному відмінку (~600 words)
 **Word target for this section:** 600 words (aim for 660 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Прикметники у давальному відмінку (~600 words)
-- P1 (~100 words): Explanation of the fundamental principle of agreement: adjectives must match their noun's gender, number, and case. Introduction to the question "Якому?" (To which/what kind?).
-- P2 (~100 words): Masculine and Neuter hard stem endings (-ому). Provide examples with common adjectives: новому другу, старому місту, гарному будинку. Contrast with Nominative "новий".
-- P3 (~100 words): Masculine and Neuter soft stem endings (-ьому). Explain the spelling rule and provide examples: синьому морю, останньому дню, вечірньому поїзду.
-- P4 (~100 words): Feminine endings (-ій). Explain that both hard and soft stems converge here. Provide examples: новій подрузі, синій сукні. Specifically mention that after г, к, х there is no alternation in the adjective: довгій, тихій.
-- P5 (~100 words): Plural endings for all genders (-им). Explain the unification of forms in the plural. Examples: новим друзям, синім морям, гарним дівчатам.
-- P6 (~100 words): A comparative look at the "hard vs. soft" distinction in the Dative. Explain that while Russian differentiates Masc. hard/soft (ому/ему), Ukrainian unifies Masc./Neut. endings with -ому/-ьому (both containing the 'o' sound), making the system more consistent.
-- <!-- INJECT_ACTIVITY: group-sort-adj-gender --> [group-sort, Sort dative adjective forms by gender (masculine -ому, feminine -ій, plural -им), 8 items]
+## Присвійні та вказівні займенники у давальному відмінку (~600 words)
+- P1 (~100 words): Introduce possessive and demonstrative pronouns in the dative case. Explain that they generally follow the same pattern as adjectives, answering questions like "to whose?" (чиєму?/чиїй?) and "to which?" (якому?/якій?).
+- P2 (~120 words): Explain the declension paradigm for `мій`, `твій`, and `свій`. Show that masculine/neuter takes `-єму` (моєму, твоєму, своєму) and feminine takes `-їй` (моїй, твоїй, своїй). Provide examples: "Я довіряю моєму братові" and "Я купив подарунок моїй сестрі".
+- P3 (~120 words): Explain the declension for `наш`, `ваш`, and `їхній`. Show that `наш` and `ваш` act like hard adjectives (нашому, вашому; нашій, вашій), while `їхній` acts like a soft adjective (їхньому, їхній). Give an example: "Ми вдячні нашому тренеру".
+- P4 (~90 words): Address the crucial rule for `його` and `її`. Emphasize that these forms NEVER change when used as possessives. For instance, giving something to "його брат" becomes "його братові" (not *йогому). Highlight this as a common L2 error.
+- P5 (~120 words): Detail the demonstrative pronouns `цей` and `той`. Provide their forms: `цей` becomes `цьому` (masc/neut) and `цій` (fem), with plural `цим`; `той` becomes `тому` and `тій`, with plural `тим`. Use examples: "Поясни це тому хлопцеві" and "Цьому будинку сто років".
+- P6 (~50 words): Briefly summarize the pronoun patterns to solidify the rules before moving to the practice activities.
+- <!-- INJECT_ACTIVITY: quiz-possessive-forms --> [quiz, Choose the correct dative form of the possessive pronoun (моєму vs. моїй vs. моїм), 8 items]
+- <!-- INJECT_ACTIVITY: match-up-nominative-dative --> [match-up, Match nominative noun phrases to their dative equivalents (мій друг → моєму другові), 8 items]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
 
 <previous_context>
-## Вступ та діалог
+[...previous sections truncated...]
 
-In our daily lives, we often give things to people, write messages to our friends, or help our colleagues. To describe *who* is receiving our action, we use the Dative case. So far, you know how to change the noun itself to answer the question **кому?** (to whom?).
-
-Але ми рідко говоримо просто про друга чи сестру. Ми говоримо про нашого старого друга або мою молодшу сестру. Тому прикметники та займенники також повинні змінитися, щоб підтримати іменник у реченні.
-
-> *But we rarely talk just about a friend or a sister. We talk about our old friend or my younger sister. Therefore, adjectives and pronouns must also change to support the noun in the sentence.*
-
-:::note
-**The concept of agreement**
-In Ukrainian, adjectives and possessive pronouns are loyal companions to the noun. Whatever gender, number, or case the main noun takes, the adjective and the pronoun will match it perfectly.
-:::
-
-> — **Вчитель:** Доброго ранку! Сьогодні я віддаю ваші есе. Моєму найкращому студентові — десятка! *(Good morning! Today I am handing back your essays. To my best student — a ten!)*
-> — **Студенти:** Вітаємо! *(Congratulations!)*
-> — **Вчитель:** Нашій новій студентці — дев'ятка. Це гарна робота. *(To our new student — a nine. This is good work.)*
-> — **Нова студентка:** Дякую вам! *(Thank you!)*
-> — **Вчитель:** А ось цьому хлопцю треба більше працювати. *(And as for this boy, he needs to work more.)*
-> — **Студент:** Я розумію. Дякую нашому доброму вчителеві за поради! *(I understand. Thank you to our kind teacher for the advice!)*
+to remember. In the dative case, all plural adjectives take the simple ending **-им**. It does not matter if the original noun was masculine, feminine, or neuter. You just use **-им** for everything in the plural. "Нові" becomes "новим", "старі" becomes "старим", "гарні" becomes "гарним", and "сині" becomes "синім". :::tip **Quick tip** Plural adjectives are the ultimate shortcut. Whether the nouns are masculine, feminine, or neuter, the plural dative adjective ending is always **-им**. ::: **Читаємо українською:** Увечері я читаю цікаві казки моїм малим дітям. Ми завжди з великою радістю готуємо вечерю і радіємо новим гостям. Вчитель дуже терпляче пояснює нове правило цим розумним студентам. Я завжди довіряю моїм старим друзям. Ми даємо свіжу їжу цим голодним собакам. > *In the evening I read interesting fairy tales to my little children. We always prepare dinner with great joy and welcome new guests. The teacher very patiently explains the new rule to these smart students. I always trust my old friends. We give fresh food to these hungry dogs.* > — **Анна:** Кому ти несеш ці великі пакунки? *(Who are you carrying these big packages for?)* > — **Богдан:** Я несу їх нашим новим сусідам. *(I am carrying them to our new neighbors.)* > — **Анна:** Ти дуже добрий. Це сильно допоможе цим молодим студентам! *(You are very kind. This will help these young students a lot!)* > — **Богдан:** Звичайно. Ми завжди маємо допомагати бідним людям. *(Of course. We must always help poor people.)* Pattern recognition is a great way to memorize these new endings. Let's compare the Nominative, Genitive, and Dative cases. You will notice that the dative forms often build upon the sounds you already know. For masculine and neuter words, compare the genitive "-ого" with the dative "-ому". For feminine words, compare "-ої" with "-ій". | Рід (Gender) | Називний (Nom.) | Родовий (Gen.) | Давальний (Dat.) | | :--- | :--- | :--- | :--- | | Чоловічий (Hard) | новий | нового | новому | | Чоловічий (Soft) | синій | синього | синьому | | Жіночий (Hard) | нова | нової | новій | | Жіночий (Soft) | синя | синьої | синій | | Множина (Plural) | нові | нових | новим | Now you have all the tools you need to build complete noun phrases. Let's look at a few more examples of adjectives and nouns working together in the dative case. **Читаємо українською:** Завтра вранці я буду телефонувати новому другу. Після обіду я маю намір допомагати новій подрузі. Ми часто купуємо і даруємо яскраві квіти нашій найкращій вчительці. Мій старший брат завжди дуже щиро радіє гарним новинам з дому. > *Tomorrow morning I will be calling a new friend. In the afternoon I intend to help a new friend. We often buy and give bright flowers to our best teacher. My older brother is always very sincerely happy with good news from home.* <!-- INJECT_ACTIVITY: group-sort, Sort dative adjective forms by gender (masculine -ому, feminine -ій, plural -им), 8 items -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -652,6 +637,31 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] моєму (to my (masc./neut. dat.))
+- [ ] моїй (to my (fem. dat.))
+- [ ] твоєму (to your (masc./neut. dat.))
+- [ ] нашій (to our (fem. dat.))
+- [ ] цьому (to this (masc./neut. dat.))
+- [ ] тому (to that (masc./neut. dat.))
+- [ ] новому (to the new (masc./neut. dat.))
+- [ ] старшому (to the older (masc./neut. dat.))
+- [ ] прикметник (adjective)
+- [ ] присвійний (possessive)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Присвійні та вказівні займенники у давальному відмінку (~600 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

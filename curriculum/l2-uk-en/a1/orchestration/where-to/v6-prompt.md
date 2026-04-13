@@ -238,20 +238,25 @@ You do NOT need to call tools yourself — the facts are already verified.
 - Not found: None
 
 ## Grammar Rules
-- Euphony (у/в): Правопис §23 — "в" between vowels (побувала в Одесі), "у" between consonants (зайти у банк), "у" at start before consonant (У лісі...).
-- Accusative for Direction: Syntactic rule — motion verbs (йти, їхати) with prepositions в/на require Accusative case to show destination (Куди? — У школу). Masculine inanimate/neuter endings match Nominative (банк, магазин); Feminine -а/-я changes to -у/-ю (школу, роботу).
+- Чергування у/в: Правопис §23 — Позиції вживання прийменників і префіксів У та В: "у" вживається між приголосними, на початку речення перед приголосним, після паузи; "в" вживається між голосними, на початку речення перед голосним, та після голосного перед більшістю приголосних.
 
 ## Calque Warnings
-- йти в банк: OK — Common usage for destination/building.
-- на роботу: OK — Standard phrase for "to work".
-- повертатися додому: OK — Standard adverbial usage.
+- йти в банк: OK — no issues found in style guide
+- на роботу: OK — no issues found in style guide
+- у школу: OK — no issues found in style guide
 
 ## CEFR Check
-- куди: A1 — OK (High frequency, Grade 1 textbooks)
-- йти: A1 — OK (Core verb)
-- їхати: A1 — OK (Core verb)
-- бібліотека: A1 — OK (Found in early grade textbooks)
-- ресторан: A1 — OK (Found in early grade textbooks)
+- куди: A1 — OK
+- їхати: A1 — OK
+- школа: A1 — OK
+- робота: A1 — OK
+- банк: A1 — OK
+- магазин: A1 — OK
+- бібліотека: A1 — OK
+- ресторан: A1 — OK
+- додому: A1 — OK
+- повертатися: A2 — above target
+- йти: Not found — (N/A)
 </pre_verified_facts>
 
 
@@ -553,12 +558,14 @@ The writer should model activities on these proven formats from Ukrainian textbo
 
 ## Section Structure
 
-Write these sections as H2 headings, in this exact order:
+Write these sections as H2 headings, in this **exact** order:
 
 - `## Діалоги (Dialogues)` (~300 words)
 - `## Куди? Знахідний відмінок (Where To? Accusative)` (~300 words)
 - `## Де чи куди? (Where or Where To?)` (~300 words)
 - `## Підсумок — Summary` (~300 words)
+
+**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim** as an `## H2` line. This includes the FINAL summary/transition section (`Підсумок: ...`, `Підсумок та перехід до M...`, etc.) — the writer's most common failure is silently dropping the closing section. Do NOT skip it. Do NOT renumber. Do NOT merge headings. The post-write quick-verify check will fail your build if any heading is missing, even if the prose itself is excellent.
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -604,6 +611,25 @@ HARD GRAMMAR RULES (audit will reject violations):
 - **Zero calques**: No приймати душ→брати душ, приймати рішення→ухвалювати рішення
 - **Zero paronyms**: тактична≠тактовна, ефектний≠ефективний — use the right word, not a similar-sounding one
 - **Natural Ukrainian**: Write how a Ukrainian teacher would explain this to a student. Not robotic, not textbook-dry, not overly casual.
+
+### FORBIDDEN WORDS — never write these (#1189)
+
+The following Russian words have leaked into past builds and broken modules. They are **hard-banned** — the post-write toxic-token scanner will fail your build the moment it sees one. Use the Ukrainian alternative every time, even in dialogues, even in casual prose, even when quoting a learner's mistake (use a `<!-- VERIFY -->` placeholder instead of typing the Russian form):
+
+| Russian (FORBIDDEN) | Ukrainian (USE THIS) |
+|---|---|
+| хорошо | добре |
+| конечно | звичайно / певна річ |
+| спасибо | дякую |
+| пожалуйста | будь ласка / прошу |
+| ничего | нічого |
+| сейчас | зараз |
+| тоже | теж / також |
+| здесь | тут |
+| кот | кіт |
+| кон | кін |
+
+This list is enforced word-for-word by `scripts/build/quick_verify.py` (SEVERE_RUSSIANISMS). If you produce any of these tokens — even inside a quoted example, even inside a dialogue line spoken by a Russian-speaking character — the build halts immediately. There is no exception.
 
 **Authority hierarchy (if uncertain about a word, check in this order):**
 VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (stress) → Антоненко-Давидович (style) → Грінченко (etymology).
@@ -714,36 +740,43 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Діалоги — Saturday Errands (~330 words total)
-- P1 (~60 words): [Setting the scene of a busy Saturday morning where Oksana and Stepan are planning their errands in the city center, focusing on the question "Куди?" (Where to?).]
-- P2 (~110 words): [Dialogue 1: Oksana and Stepan discuss their immediate destinations. Examples: "Куди ти йдеш?" — "Я йду в банк (m), а потім на пошту (f)." "Я йду в аптеку (f), а потім в магазин (m)."]
-- P3 (~110 words): [Dialogue 2: Planning a trip for the upcoming weekend. Focus on cities as destinations. Examples: "Куди ти їдеш у суботу?" — "Я їду у Львів (m)." "А Олена?" — "Вона їде в Одесу (f)."]
-- P4 (~50 words): [Brief linguistic observation of the dialogue, highlighting that "Куди?" triggers a different noun ending than "Де?", preparing the learner for the grammar explanation.]
+## Діалоги (Dialogues) (~330 words)
+- P1 (~30 words): Introduce the scenario: Оксана and Степан are running Saturday errands together but need to split up to visit different places.
+- P2 (~100 words): Dialogue 1 — Where are you going? (ULP Ep18). Оксана asks Степан: "Куди ти йдеш?" Степан answers: "Я йду в банк. А ти?" Оксана: "Я йду на роботу." Степан: "А потім?" Оксана: "Потім іду в магазин." Степан: "А потім ходімо в кафе!"
+- P3 (~60 words): Explain Dialogue 1. Highlight the core concept of direction vs location: notice that Степан says "іду В банк" (direction) rather than "я В банку" (location).
+- P4 (~80 words): Dialogue 2 — Planning a trip. "Куди ти їдеш у суботу? — Я їду у Львів. — А Олена? — Вона їде в Одесу."
+- P5 (~60 words): Explain Dialogue 2. Focus on cities as destinations using "їхати в/у + city", noting the change for Одеса (в Одесу) but no change for Львів (у Львів).
 
-## Куди? Знахідний відмінок — Where To? Accusative (~330 words total)
-- P1 (~70 words): [Introduction to the Accusative case (Знахідний відмінок) for direction. Explain the "Helper word" method used in Ukrainian schools: "Знахідний (бачу) — кого? що?". Focus on "що?" for places.]
-- P2 (~90 words): [Explain the "No-change" rule for inanimate masculine and all neuter nouns in the Accusative. Provide concrete examples: банк → у банк, магазин → у магазин, парк → у парк, кафе → у кафе, місто → у місто.]
-- P3 (~90 words): [Explain the highly visible change for feminine nouns (-а → -у, -я → -ю). Provide examples: школа → у школу, робота → на роботу, бібліотека → у бібліотеку, вулиця → на вулицю.]
-- P4 (~80 words): [Directional usage with countries and cities, emphasizing the sovereign "в Україну" (not "на") and "в Одесу".]
-- <!-- INJECT_ACTIVITY: fill-in-accusative-places --> [fill-in, focus on choosing the correct Accusative ending for place nouns, 10 items]
+## Куди? Знахідний відмінок (Where To? Accusative) (~330 words)
+- P1 (~80 words): Introduce the Grade 4 case helper: Зн. (бачу) — кого? що? Explain that to express direction (motion toward a destination), we use the prepositions в/у or на + the Accusative case to answer the question "WHERE TO" (Куди?).
+- P2 (~80 words): Explicitly contrast this with the Locative case. Explain that в/у + Locative answers "WHERE" (Де? = static position). Provide a clear example: "Де ти? — Я в банку." (Locative — you ARE there) versus "Куди ти йдеш? — Я йду в банк." (Accusative — you are GOING there).
+- P3 (~90 words): Teach the "No-Change" rule for Accusative place endings. Explain that inanimate masculine and neuter nouns look identical to their Nominative forms: банк → в банк, магазин → у магазин, парк → у парк, кафе → у кафе, місто → у місто.
+- P4 (~80 words): Teach the feminine Accusative endings. Explain that feminine nouns ending in -а/-я change to -у/-ю: школа → у школу, робота → на роботу, бібліотека → у бібліотеку.
+- <!-- INJECT_ACTIVITY: fill-in-accusative --> [fill-in, Complete: Я йду ___ (школа). Він у ___ (банк)., 10 items]
 
-## Де чи куди? — Where or Where To? (~330 words total)
-- P1 (~80 words): [Contrast the "Static Location" (Де? + Locative) with "Dynamic Direction" (Куди? + Accusative). Explain that the same preposition (в/на) requires different cases depending on the verb's intent.]
-- P2 (~90 words): [Detailed comparison table walkthrough in prose. Compare "Я в школі" (Locative) vs "Я йду у школу" (Accusative), and "Він на роботі" (Locative) vs "Він іде на роботу" (Accusative).]
-- P3 (~80 words): [Introduction to motion verbs: "йти" (to go on foot) vs "їхати" (to go by transport). Explain that both verbs trigger the Accusative case when answering "Куди?". Examples: "Я йду в парк" vs "Я їду на вокзал".]
-- P4 (~80 words): [The special directional adverb "додому" (homeward/to home) vs "вдома" (at home). Explicitly state that "додому" never takes a preposition. Example: "Іван іде додому."]
-- <!-- INJECT_ACTIVITY: quiz-de-vs-kudy --> [quiz, focus on distinguishing between Де? and Куди? based on sentence context, 8 items]
-- <!-- INJECT_ACTIVITY: group-sort-locative-accusative --> [group-sort, sort phrases into Locative (Static) and Accusative (Direction) categories, 10 items]
-- <!-- INJECT_ACTIVITY: quiz-йти-vs-їхати --> [quiz, choose between йти and їхати based on distance or mentioned transport, 6 items]
+## Де чи куди? (Where or Where To?) (~330 words)
+- P1 (~100 words): Map out the key question pair: Де ти? (Where are you?) → requires в/у/на + LOCATIVE case. Куди ти йдеш? (Where are you going?) → requires в/у/на + ACCUSATIVE case. Provide a comparison table with four rows: школа (в школі / у школу), робота (на роботі / на роботу), банк (у банку / у банк), парк (у парку / у парк).
+- P2 (~80 words): Provide clear sentence examples contrasting the two in context. "Лікар працює в лікарні (Де?)." vs "Я йду в лікарню (Куди?)." Reinforce that English conflates these into "Where", but Ukrainian strictly separates static location from dynamic direction.
+- <!-- INJECT_ACTIVITY: quiz-de-or-kudy --> [quiz, Де or Куди? Choose the right question for each sentence., 8 items]
+- <!-- INJECT_ACTIVITY: group-sort-de-kudy --> [group-sort, Sort phrases: Де? (locative) vs Куди? (accusative), 10 items]
+- P3 (~90 words): Introduce the verbs of motion: йти (to go on foot) vs їхати (to go by transport). Explain the difference: "Я йду в магазин" (walking to the local shop) versus "Я їду на вокзал" (taking transport to the station). Both verbs pair with в/на + accusative for direction.
+- P4 (~60 words): Teach the special directional adverb "додому" (homeward/to home). Explain that it requires no preposition. Contrast it with the static location adverb "вдома": Іван іде додому (Куди?) vs Мама вдома (Де?).
+- <!-- INJECT_ACTIVITY: quiz-yty-or-ikhaty --> [quiz, Йти or їхати? Choose based on distance/transport., 6 items]
 
-## Підсумок — Summary (~330 words total)
-- P1 (~100 words): [Comprehensive recap of the two-question system: Де? triggers the Locative case (static), while Куди? triggers the Accusative case (motion). Remind the learner that only feminine nouns change their appearance significantly in this context.]
-- P2 (~180 words): [Detailed Self-Check section with a Q&A format.
-    - Q: How do I say "to the bank"? A: "У банк" (no change).
-    - Q: How do I say "to the library"? A: "У бібліотеку" (-а becomes -у).
-    - Q: What is the difference between "вдома" and "додому"? A: "Вдома" is where you are; "додому" is where you are going.
-    - Q: Which case follows "їхати"? A: The Accusative case.]
-- P3 (~50 words): [Final encouraging note about mastering the first major "case switch" in Ukrainian, pointing toward the next module on Transport.]
+## Підсумок — Summary (~330 words)
+- P1 (~100 words): Recap the fundamental difference between the two questions and cases: Де? triggers the Locative case (в школі, на роботі) to express STATIC location. Куди? triggers the Accusative case (у школу, на роботу) to express dynamic DIRECTION.
+- P2 (~100 words): Summarize the case ending rules for places in the Accusative. Masculine and neuter nouns experience no change (nominative form is used). Feminine nouns shift their endings: -а changes to -у, and -я changes to -ю (школа→школу, бібліотека→бібліотеку). The context dictates the correct grammatical form.
+- P3 (~130 words): Self-check Q&A list.
+  - Q: Which question asks about static location?
+  - A: Де? (Where?)
+  - Q: Which question asks about the direction of movement?
+  - A: Куди? (Where to?)
+  - Q: How do you say "I am going to the bank"?
+  - A: Я йду в банк.
+  - Q: How do you say "I am at the bank"?
+  - A: Я в банку.
+  - Q: What happens to feminine place names answering "Куди?"
+  - A: They change their ending (e.g., школа → у школу).
 
 Grand total: ~1320 words
 </skeleton>
@@ -753,11 +786,55 @@ Grand total: ~1320 words
 Write in Markdown. Use:
 - `## Section Title` for main sections
 - `### Subsection` for subsections within a section
-- `**bold**` for Ukrainian words being taught — EVERY bold Ukrainian word MUST have an English translation on first use, either in parentheses `**слово** (translation)` or inline `**слово** means "translation"`. No exceptions.
+- `**bold**` for Ukrainian words being taught. For **A1 and A2** levels, provide an English translation on first use (e.g. `**стіл** (table)`) because learners lack the vocabulary to infer meaning. For **B1 and above**, do NOT provide inline translations for standard vocabulary — the learner will use the module's словник (vocabulary table). You may provide ONE parenthetical English translation ONLY for highly abstract grammar/linguistic terms on first use (e.g. `**видова пара** (aspectual pair)`).
 - Tables for paradigms (conjugation, declension)
 - `:::tip` / `:::caution` / `:::note` for callout boxes
 - `<!-- INJECT_ACTIVITY: {id} -->` for exercise placement (markers only — do NOT write exercise content)
 
 Do NOT write MDX component syntax, JSON, or DSL exercise blocks (:::quiz, etc.). Plain Markdown with injection markers.
+
+---
+
+## MANDATORY FINAL CHECKLIST (#1189)
+
+Before you finish writing, verify the prose against this checklist. Failing any item will fail the build.
+
+### Section headings (verbatim)
+
+Every heading from "Section Structure" above MUST appear as an `## H2` in your output, in order, **including the closing `Підсумок:` / `Підсумок та перехід до M...` summary**. The single most common writer failure across the B1 build has been silently dropping the final summary section. Re-read your output before stopping. If the last section in the plan is missing, write it now.
+
+### Required vocabulary (every word must appear)
+
+You MUST use **every word** from the list below at least once in the prose, in a natural sentence with bold + English translation. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, прагматика, діагностика, дієвідмінювання, зворотний, двовидовий, одновидовий, неозначено-кількісний, etc.) is the most frequently dropped category — actively find homes for those words even if it means adding a sentence that defines them.
+
+- [ ] куди (where to)
+- [ ] йти (to go on foot)
+- [ ] їхати (to go by transport)
+- [ ] школа → у школу (to school)
+- [ ] робота → на роботу (to work)
+- [ ] банк → у банк (to the bank)
+
+### Forbidden words (never produce)
+
+Do not write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use `<!-- VERIFY -->` instead). The post-write toxic-token scanner will fail the build immediately:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+### Level-specific immersion check
+
+The level-appropriate immersion rule was already injected at the top of
+this prompt as `IMMERSION RULE`. Re-read it now BEFORE you stop writing.
+If your level's rule contains a CHECKLIST block, walk through every item.
+If it doesn't, just verify your output matches the LANGUAGE ROLES and
+TARGET stated in that block.
+
+This used to hard-code a B1+ checklist that confused A1/A2 models (where
+translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+The single source of truth is now
+`scripts/pipeline/config_tables.py:IMMERSION_RULES`.
+
+---
 
 Begin writing now. Start with the first section heading.

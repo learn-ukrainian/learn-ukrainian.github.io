@@ -31,7 +31,7 @@ Grand total: ~4000 words
 <previous_context>
 [...previous sections truncated...]
 
-buy)* цей телефон». Усі ці фрази є стандартними проханнями або правилами поведінки. Вони звучать абсолютно природно і не несуть жодної агресії. Але що станеться, якщо ми використаємо доконаний вид із запереченням у наказовому способі? Фраза «Не відчиніть вікно!» існує, але вона має зовсім інше значення. Вона перетворюється на стурбоване **попередження** *(warning)* про можливу випадковість. Ви не забороняєте людині відчиняти вікно свідомо. Ви боїтеся, що вона може випадково спертися на нього і вікно відчиниться саме по собі. Доконаний вид у негативному імперативі сигналізує про небезпеку або небажаний випадковий результат. Це дуже специфічна емоційна ситуація, яка рідко використовується як звичайна інструкція. Тому золоте правило для іноземців звучить так: якщо ви хочете сказати «Don't do it», завжди автоматично обирайте дієслово недоконаного виду. Це збереже вас від багатьох непорозумінь. > — **Охоронник:** Будь ласка, не фотографуйте картини у цьому залі. *(Please, don't photograph the paintings in this hall.)* > — **Відвідувач:** Вибачте, я не знав цього правила. *(Sorry, I didn't know this rule.)* > — **Охоронник:** Нічого страшного, просто не робіть цього більше. *(No worries, just don't do this anymore.)* Давайте детальніше розберемо цю різницю між стандартною забороною та емоційним попередженням. Цей нюанс робить вашу українську мову справді глибокою та автентичною. Коли ви кажете маленькій дитині «**Не падай** *(don't fall)*!», використовуючи недоконаний вид, це звучить трохи дивно. Ви ніби даєте їй загальну філософську пораду на все життя: «Намагайся завжди тримати баланс і ніколи не падати». Але діти падають випадково, вони не планують цей процес. Тому в реальній ситуації, коли дитина біжить по слизькій підлозі, мама крикне: «Обережно, **не впади** *(don't accidentally fall)*!». Тут доконаний вид ідеально передає страх перед миттєвим, випадковим і дуже неприємним результатом. Ви не забороняєте дитині падати (бо вона і так не хоче), ви попереджаєте її про небезпеку. Інший чудовий приклад — це пара «забувати» і «забути». Якщо ви даєте другові корисну пораду для його кар'єри, ви скажете: «**Не забувай** *(don't forget / always remember)* про відпочинок». Це недоконаний вид, який формує загальне правило, корисну звичку. Ви просите його постійно пам'ятати про своє здоров'я. Але якщо ваш друг виходить з дому і залишає на столі свої ключі, ви швидко скажете: «**Не забудь** *(don't forget right now)* свої ключі!». Тут доконаний вид концентрує увагу на одному конкретному, випадковому результаті в цей самий момент. Це не життєва філософія, це термінове попередження. Зверніть увагу на те, як вид дієслова змінює емоційний тон вашої фрази. Недоконаний вид звучить як спокійна порада, інструкція або дружнє прохання. Він ідеальний для створення правил. Доконаний вид звучить як тривога, турбота або різка реакція на небезпеку. Тому завжди запитуйте себе: «Я хочу встановити правило чи я боюся випадковості?». Якщо це правило — використовуйте недоконаний вид. Якщо це страх перед випадковістю — обирайте доконаний вид. Це розуміння допоможе вам відчувати мову так, як її відчувають самі українці. > — **Мама:** Надворі дуже холодно. Не забудь одягнути шапку! *(It is very cold outside. Don't forget to put on a hat!)* > — **Син:** Добре, мамо. Я ніколи не забуваю теплі речі. *(Okay, mom. I never forget warm clothes.)* <!-- INJECT_ACTIVITY: match-up-negation-meaning -->
+window," you must say «Не відчиняйте вікно!». This is the standard, polite, and grammatically correct way to establish a boundary or a rule. Коли ви використовуєте недоконаний вид для заборони, ви просто просите людину утриматися від певної дії або припинити процес, який уже триває. Ви кажете: "Не робіть цього взагалі". Форми на кшталт «Не кричіть!», «Не бігайте!» або «Не торкайтеся!» є абсолютно нормативними в українській мові. Вони звучать природно в школі, на роботі або вдома. Ви блокуєте саму можливість дії, незалежно від того, чи має вона якийсь конкретний результат. The trap opens when English speakers translate "Don't open" directly into a **доконаний вид** (perfective aspect) verb, creating phrases like «Не відчиніть вікно!». To a Ukrainian ear, this does not sound like a standard prohibition. Instead, the perfective negative imperative carries a highly specific, almost dramatic meaning. It implies that the action might happen accidentally, against the person's will, and you are warning them about this potential mishap. It sounds less like "It is forbidden to open this" and more like "Watch out, you might accidentally push the lever and the window will burst open!" This brings us to the crucial distinction between a prohibition and a warning. A prohibition is a rule: "Do not do X." A warning is a precaution: "Be careful not to accidentally do X." Ukrainian separates these two concepts entirely through aspect. If you are giving a general piece of advice about maintaining balance in life, you might say «Не падай!». It means "Don't be a person who falls; keep your footing." But if you see your friend slipping on an icy sidewalk, you will shout «Не впади!». You are warning them about a specific, immediate, and unintentional event that is about to reach a disastrous conclusion. The popular **видова пара** (aspectual pair) of "to forget" works the same way. Так само працює і популярна пара «не забувай» та «не забудь». Коли ви кажете другові «Не забувай мене!», ви використовуєте недоконаний вид, щоб дати загальну, тривалу пораду. Ви просите його підтримувати пам'ять про вас як постійний процес. Але якщо ви нагадуєте йому взяти ключі перед виходом з дому, ви скажете «Не забудь ключі!». Це доконаний вид, який діє як попередження про конкретну, одноразову помилку. Ви фокусуєтеся на небезпеці одного небажаного результату. :::info **Граматика заперечення** У стандартній українській мові заперечні накази майже завжди вимагають недоконаного виду («Не пишіть!»). Доконаний вид у заперечному наказі («Не напишіть!») використовується рідко і лише як попередження про випадкову помилку. ::: By mastering these distinctions, your Ukrainian will transform from mechanically correct to profoundly expressive. You will be able to apologize for incomplete work without sounding defiant, refuse tasks gracefully, establish firm rules, and warn your friends of danger—all simply by choosing the right aspectual path before adding the word «не». This kind of awareness is the ultimate **діагностика** (diagnostics) of your language skills, serving as excellent **повторення** (review/repetition) before your next major **контрольна робота** (test/assessment). <!-- INJECT_ACTIVITY: match-up, focus: "З'єднайте речення з їхнім значенням: загальне заперечення vs нереалізований результат", 8 items -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -556,7 +556,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -569,18 +636,68 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (4/4).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] доконаний вид (perfective aspect — completed, result-oriented action)
+- [ ] недоконаний вид (imperfective aspect — ongoing, unbounded action)
+- [ ] видова пара (aspectual pair — e.g., писати/написати)
+- [ ] тло розповіді (narrative background — imperfective setting/scene)
+- [ ] послідовність подій (sequence of events — perfective event chain)
+- [ ] наказовий спосіб (imperative mood — commands and requests)
+- [ ] заперечення (negation — negative constructions with aspect)
+- [ ] умовний спосіб (conditional mood — hypothetical actions with би/б)
+- [ ] результативність (resultativity — focus on outcome, triggers perfective)
+- [ ] тривалість (duration — focus on process length, triggers imperfective)
+- [ ] діагностика (diagnostics — self-assessment of aspect mastery)
+- [ ] повторення (review/repetition — consolidation of learned material)
+- [ ] контрольна робота (test/assessment — formal diagnostic check)
+- [ ] минулий час (past tense — time frame for aspect practice)
+- [ ] майбутній час (future tense — time frame for aspect practice)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Вид в умовному способі та підсумок (~1000 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

@@ -1,35 +1,51 @@
 ## Словникова грамотність: читаємо словник (~550 words)
 
-> — **Марк:** Вибачте, я зараз дивлюся у **словник** *(dictionary)* Goroh.pp.ua. Тут є нове слово «бачити». Але що означають ці маленькі букви поруч: «недок.» і «дієсл.»? *(Excuse me, I am looking in the dictionary Goroh.pp.ua right now. Here is the new word "бачити". But what do these small letters nearby mean: "недок." and "дієсл."?)*
-> — **Вчителька:** Це дуже гарне і важливе питання! *(This is a very good and important question!)* Це спеціальні граматичні **скорочення** *(abbreviations)*. Словники завжди використовують такий короткий код, щоб зекономити місце. *(Dictionaries always use such a short code to save space.)*
-> — **Марк:** Тобто це граматика? *(So this is grammar?)*
-> — **Вчителька:** Так, це ключова граматична інформація. *(Yes, this is key grammatical information.)* Слово «дієсл.» означає дієслово. А «недок.» означає недоконаний вид. Коли ви самостійно читаєте словник, ви повинні розуміти цей код. *(The word "дієсл." means verb. And "недок." means imperfective aspect. When you independently read a dictionary, you must understand this code.)*
+To become an independent and confident language learner, you must know how to read a Ukrainian **словник** (dictionary). Online resources and traditional paper books provide an incredible amount of grammatical information alongside the definitions. However, this crucial information is usually written in a special shorthand code that can confuse beginners. Let us listen to a student who is trying to understand these abbreviations during a language lesson.
 
-Анатомія словникової статті має свої чіткі правила. Коли ви відкриваєте словник, перше велике слово — це **заголовне слово** *(headword)*. Воно завжди стоїть у початковій формі. Для дієслова це інфінітив, а для іменника — це називний відмінок однини. Друга дуже важлива річ у словнику — це **наголос** *(stress mark)*. Наголос показує нам, як правильно вимовляти нове слово. Це перше, що ви повинні уважно перевірити. Український наголос часто може змінювати значення слова. Наприклад, порівняйте слова «замок» *(castle)* і «замок» *(lock)*. Одразу після наголосу йде граматичний блок. Саме там живуть наші короткі граматичні скорочення. Вони дають вам точну інструкцію, як правильно використовувати це слово в реченні. Якщо ви розумієте цей граматичний блок, ви автоматично уникнете багатьох серйозних помилок у майбутньому.
+> — **Студент:** Вибачте, що це за скорочення? Я нічого не розумію. *(Excuse me, what is this abbreviation? I do not understand anything.)*
+> — **Вчитель:** Покажи, де саме ти це бачиш? *(Show me, where exactly do you see it?)*
+> — **Студент:** Я шукаю нове слово «бачити». Тут поруч написано «недок.» і «дієсл.». *(I am looking up the new word "бачити". Right next to it, it says "недок." and "дієсл.".)*
+> — **Вчитель:** Це стандартний граматичний код. Слово «бачити» — це **дієслово** (verb). Тому ми бачимо скорочення «дієсл.». *(This is a standard grammatical code. The word "бачити" is a verb. That is why we see the abbreviation "дієсл.".)*
+> — **Студент:** Добре, я зрозумів. А що тоді означає «недок.»? *(Good, I understand. And what does "недок." mean then?)*
+> — **Вчитель:** Це означає **недоконаний** (imperfective) **вид** (aspect). Це дуже важлива інформація для правильного використання слова. *(It means imperfective aspect. This is very important information for the correct use of the word.)*
 
-Ось велика таблиця базових скорочень, які ви дуже часто будете бачити. Цей список допоможе вам читати майже будь-який український словник без проблем.
+When you open an entry in any comprehensive Ukrainian dictionary, the first thing you see is the headword. This word is always presented in its most basic, neutral grammatical form. For a noun or an adjective, this is the nominative case. For a verb, it is always the infinitive form. Right next to the headword, or directly on top of its main vowels, you will find the crucial stress mark.
 
-| Скорочення | Повне слово | Переклад |
-| :--- | :--- | :--- |
-| **ім.** | іменник | *noun* |
-| **прикм.** | прикметник | *adjective* |
-| **дієсл.** | дієслово | *verb* |
-| **займ.** | займенник | *pronoun* |
-| **присл.** | прислівник | *adverb* |
-| **ч. р.** | чоловічий рід | *masculine gender* |
-| **ж. р.** | жіночий рід | *feminine gender* |
-| **с. р.** | середній рід | *neuter gender* |
-| **одн.** | однина | *singular* |
-| **мн.** | множина | *plural* |
-| **док.** | доконаний вид | *perfective aspect* |
-| **недок.** | недоконаний вид | *imperfective aspect* |
+Наголос показує нам, як правильно вимовляти нове слово. Це найперше, що ти повинен перевірити у словнику. Українські слова часто змінюють своє значення, якщо ти ставиш наголос на інший склад. Після наголосу словник завжди подає спеціальний граматичний блок. Там ти знайдеш усю потрібну інформацію про рід, число та інші важливі категорії. Тільки після цього йде пояснення значення слова.
 
-Вивчіть ці скорочення напам'ять. Вони — ваш надійний ключ до успішного самостійного навчання. Коли ви знаєте, що нове слово має позначку «ж. р.», ви точно знаєте, що треба сказати «гарна», а не «гарний». Якщо ви бачите позначку «мн.», це чітко означає, що слово використовується тільки у множині. Хороші приклади таких слів — це «окуляри» *(glasses)*, «гроші» *(money)* або «ножиці» *(scissors)*.
+> *The stress mark shows us how to pronounce a new word correctly. This is the very first thing you must check in the dictionary. Ukrainian words often change their meaning if you place the stress on a different syllable. After the stress mark, the dictionary always provides a special grammatical block. There you will find all the necessary information about gender, number, and other important categories. Only after this comes the explanation of the word's meaning.*
 
-Давайте разом попрактикуємося читати ці коди. Візьмемо два реальні приклади з популярного онлайн-словника.
+:::note
+**Quick tip**
+Always look at the grammatical block before you read the actual definition. Knowing the exact part of speech helps you understand how the word functions in a sentence and prevents embarrassing grammatical errors.
+:::
 
-Перший приклад — це слово «книга». У словнику ми бачимо такий запис: **книга** (ім., ж. р., одн.). Що це означає для нас? Ми відразу розуміємо, що це іменник жіночого роду в однині. Тому ми можемо правильно сказати «моя нова книга» і використовувати її як підмет у реченні. Ми знаємо, які закінчення треба обрати.
+To decode this grammatical block quickly and efficiently, you need to memorize the standard abbreviations. Every good dictionary uses exactly the same system to save valuable space on the page or screen. Once you know these common codes, you will never feel lost or confused when looking up new vocabulary. Here is a comprehensive list of the abbreviations you will encounter every single day.
 
-Другий приклад — це слово «зробити». Словник каже нам: **зробити** (дієсл., док.). Цей короткий код дає студенту надзвичайно важливу інформацію! Це дієслово доконаного виду. Що це означає на практиці для іноземця? Це означає, що дія має фінальний результат. Але найголовніше правило — ми знаємо, що це дієслово ніколи не має форм теперішнього часу! Ви абсолютно не можете сказати «я зроблю це зараз», якщо ви маєте на увазі процес, який зараз триває. Форма «я зроблю» — це вже проста форма майбутнього часу. Тому цей маленький граматичний блок допомагає вам обрати правильний час для вашого речення і говорити природно.
+*   **ім.** — іменник (noun)
+*   **прикм.** — прикметник (adjective)
+*   **дієсл.** — **дієслово** (verb)
+*   **присл.** — **прислівник** (adverb)
+*   **займ.** — займенник (pronoun)
 
-<!-- INJECT_ACTIVITY: quiz, quiz-dictionary-literacy -->
+When you look up a noun, the dictionary will immediately specify its gender and its number.
+
+*   **ч. р.** — чоловічий рід (masculine gender)
+*   **ж. р.** — жіночий рід (feminine gender)
+*   **с. р.** — середній рід (neuter gender)
+*   **одн.** — однина (singular)
+*   **мн.** — множина (plural)
+
+For verbs, the dictionary tells you the aspect, the **час** (tense), and sometimes the **дієвідміна** (conjugation class) or the **особа** (person). You will definitely see:
+
+*   **док.** — **доконаний** (perfective) **вид** (aspect)
+*   **недок.** — **недоконаний** (imperfective) **вид** (aspect)
+*   **спос.** — **спосіб** (mood)
+
+Let us practice decoding two real dictionary entries using our newly acquired knowledge. Imagine you search for the common word «книга». The grammatical block immediately says: **ім., ж. р., одн.** This code tells you instantly that «книга» is a noun, it has a feminine gender, and it is currently in the singular form. You now know exactly how to decline it.
+
+Тепер ми шукаємо популярне слово «зробити». Словник показує нам таке коротке скорочення: **дієсл., док. вид**. Ми відразу розуміємо, що це дієслово. Скорочення «док.» чітко говорить нам, що це доконаний вид. Ми вже знаємо, що такі дієслова завжди позначають завершену дію або результат. Ми також знаємо, що цей вид ніколи не має форми теперішнього часу. Цей маленький граматичний код дає нам усю необхідну картину.
+
+> *Now we look up the popular word "зробити". The dictionary shows us this short abbreviation: **дієсл., док. вид**. We immediately understand that it is a verb. The abbreviation "док." clearly tells us that it is the perfective aspect. We already know that such verbs always denote a completed action or a result. We also know that this aspect never has a form of the present tense. This little grammatical code gives us the whole necessary picture.*
+
+<!-- INJECT_ACTIVITY: quiz-dictionary-literacy -->

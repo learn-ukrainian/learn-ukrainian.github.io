@@ -2,10 +2,10 @@ version: '1.0'
 module: what-will-happen
 level: a1
 inline:
-- id: matching-pronoun-to-be
+- id: match-pronoun-to-buty
   type: match-up
-  instruction: З'єднайте займенник із формою дієслова 'бути' (Match the pronoun with
-    the form of the verb 'to be')
+  instruction: З'єднайте займенник із правильною формою дієслова «бути» (Match the
+    pronoun with the correct form of 'бути')
   pairs:
   - left: я
     right: буду
@@ -19,41 +19,42 @@ inline:
     right: будете
   - left: вони
     right: будуть
-- id: fill-in-future-formation
+- id: fill-in-analytic-future
   type: fill-in
-  instruction: Вставте правильну форму 'бути' (Insert the correct form of 'to be')
+  instruction: Вставте правильну форму дієслова «бути» (Fill in the correct form of
+    'бути')
   items:
-  - sentence: Завтра я {буду} працювати.
+  - sentence: Завтра я ____ працювати.
     answer: буду
     options:
     - буду
     - буде
     - будемо
-  - sentence: Що ти {будеш} робити ввечері?
+  - sentence: Що ти ____ робити ввечері?
     answer: будеш
     options:
     - будеш
     - буду
     - будете
-  - sentence: Вона {буде} читати книжку.
+  - sentence: Вона ____ читати книжку.
     answer: буде
     options:
     - буде
     - будуть
     - будемо
-  - sentence: Ми {будемо} дивитися футбол.
+  - sentence: Ми ____ дивитися футбол.
     answer: будемо
     options:
     - будемо
     - буде
     - буду
-  - sentence: Ви {будете} гуляти в парку?
+  - sentence: Ви ____ гуляти в парку?
     answer: будете
     options:
     - будете
     - будеш
     - будуть
-  - sentence: Вони {будуть} відпочивати.
+  - sentence: Вони ____ відпочивати.
     answer: будуть
     options:
     - будуть
@@ -61,276 +62,325 @@ inline:
     - буде
 - id: fill-in-tense-distinction
   type: fill-in
-  instruction: Оберіть правильний час (Choose the correct tense)
+  instruction: Оберіть правильний час дієслова (Choose the correct verb tense)
   items:
-  - sentence: Зараз я {читаю}.
+  - sentence: Зараз я ____.
     answer: читаю
     options:
     - читаю
     - читав
     - буду читати
-  - sentence: Учора він {гуляв} у парку.
+  - sentence: Учора він ____ у парку.
     answer: гуляв
     options:
     - гуляв
     - гуляє
     - буде гуляти
-  - sentence: Завтра ми {будемо дивитися} фільм.
+  - sentence: Завтра ми ____ фільм.
     answer: будемо дивитися
     options:
     - будемо дивитися
     - дивилися
     - дивимося
-  - sentence: Минулого тижня вона {працювала}.
+  - sentence: Минулого тижня вона ____.
     answer: працювала
     options:
     - працювала
     - працює
     - буде працювати
-  - sentence: Наступного тижня вони {будуть відпочивати}.
-    answer: будуть відпочивати
-    options:
-    - будуть відпочивати
-    - відпочивали
-    - відпочивають
-  - sentence: Зараз я {готую} вечерю.
+  - sentence: Сьогодні я ____ вечерю.
     answer: готую
     options:
     - готую
     - готував
     - буду готувати
+  - sentence: У суботу вони ____.
+    answer: будуть відпочивати
+    options:
+    - будуть відпочивати
+    - відпочивали
+    - відпочивають
+- id: vocab-future-verbs
+  type: match-up
+  instruction: З'єднайте українські слова з їхнім значенням (Match the Ukrainian words
+    with their meaning)
+  pairs:
+  - left: працювати
+    right: to work
+  - left: відпочивати
+    right: to rest
+  - left: гуляти
+    right: to walk
+  - left: готувати
+    right: to cook
+  - left: дивитися
+    right: to watch
+  - left: робити
+    right: to do
 workbook:
-- id: group-sort-tenses
+- id: sort-tenses
   type: group-sort
-  instruction: Розподіліть слова за часом (Sort the words by tense)
+  instruction: Розподіліть дієслова за часом (Sort the verbs by tense)
   groups:
   - label: Минулий час (Past)
     items:
-    - учора
-    - минулого тижня
+    - читав
+    - гуляла
+    - працювали
   - label: Теперішній час (Present)
     items:
-    - зараз
+    - читаю
+    - гуляє
+    - працюємо
   - label: Майбутній час (Future)
     items:
-    - завтра
-    - наступного тижня
-    - скоро
-- id: error-correction-future
-  type: error-correction
-  instruction: Знайдіть і виправте помилку (Find and fix the error)
+    - буду читати
+    - буде гуляти
+    - будемо працювати
+- id: future-verbs-anagram
+  type: anagram
+  instruction: Складіть слова з літер (Make words from the letters)
   items:
-  - sentence: Завтра я буду читаю.
-    error: читаю
-    correction: читати
-    error_type: word
-    options:
-    - читати
-    - читав
-    - читає
-    explanation: After 'буду', the main verb must be in the infinitive (читати).
-  - sentence: Що ти буде робити?
-    error: буде
-    correction: будеш
-    error_type: word
-    options:
-    - будеш
-    - буду
-    - будете
-    explanation: The pronoun is 'ти', so the correct form of 'бути' is 'будеш'.
-  - sentence: Ми будемо гуляли в парку.
-    error: гуляли
-    correction: гуляти
-    error_type: word
-    options:
-    - гуляти
-    - гуляємо
-    - гуляю
-    explanation: The future tense requires the infinitive 'гуляти', not the past tense
-      form 'гуляли'.
-  - sentence: Вона будуть працювати.
-    error: будуть
-    correction: буде
-    error_type: word
-    options:
-    - буде
-    - будемо
-    - буду
-    explanation: For 'вона' (she), use 'буде'.
-  - sentence: Ви буде відпочивати?
-    error: буде
-    correction: будете
-    error_type: word
-    options:
-    - будете
-    - будеш
-    - будуть
-    explanation: For 'ви' (you formal/plural), use 'будете'.
-  - sentence: Вранці я буду снідаю.
-    error: снідаю
-    correction: снідати
-    error_type: word
-    options:
-    - снідати
-    - снідав
-    - снідаємо
-    explanation: Always use the infinitive after 'буду'.
-- id: order-dialogue
-  type: order
-  instruction: Розставте репліки діалогу в правильному порядку (Put the dialogue lines
-    in the correct order)
-  items:
-  - — Що ти будеш робити завтра?
-  - — Завтра я буду працювати. А ти?
-  - — Я буду відпочивати і дивитися фільм.
-  - — Звучить добре! А ввечері ми будемо гуляти?
-  - — Так, ми будемо гуляти в парку.
-  correct_order:
-  - 0
-  - 1
-  - 2
-  - 3
-  - 4
-- id: unjumble-plans
+  - letters:
+    - б
+    - у
+    - д
+    - у
+    answer: буду
+  - letters:
+    - б
+    - у
+    - д
+    - е
+    - ш
+    answer: будеш
+  - letters:
+    - б
+    - у
+    - д
+    - е
+    - м
+    - о
+    answer: будемо
+  - letters:
+    - б
+    - у
+    - д
+    - е
+    - т
+    - е
+    answer: будете
+  - letters:
+    - б
+    - у
+    - д
+    - у
+    - т
+    - ь
+    answer: будуть
+  - letters:
+    - з
+    - а
+    - в
+    - т
+    - р
+    - а
+    answer: завтра
+- id: sentence-unjumble-future
   type: unjumble
   instruction: Складіть правильне речення зі слів (Make a correct sentence from the
     words)
   items:
   - words:
-    - робити
-    - будеш
-    - ти
-    - Що
-    - завтра?
-    correct_order:
-    - Що
-    - ти
-    - будеш
-    - робити
-    - завтра?
-  - words:
     - працювати.
     - я
-    - буду
     - Завтра
+    - буду
     correct_order:
     - Завтра
     - я
     - буду
     - працювати.
   - words:
-    - вони
-    - вечерю.
-    - будуть
-    - готувати
-    - Ввечері
+    - робити?
+    - ти
+    - Що
+    - будеш
     correct_order:
-    - Ввечері
-    - вони
-    - будуть
-    - готувати
-    - вечерю.
+    - Що
+    - ти
+    - будеш
+    - робити?
   - words:
-    - гуляти.
+    - відпочивати.
     - ми
-    - будемо
+    - суботу
     - У
-    - неділю
+    - будемо
     correct_order:
     - У
-    - неділю
+    - суботу
     - ми
     - будемо
-    - гуляти.
+    - відпочивати.
   - words:
-    - дивитися
-    - Я
+    - буде
+    - Вона
     - футбол.
-    - буду
+    - дивитися
     correct_order:
-    - Я
-    - буду
+    - Вона
+    - буде
     - дивитися
     - футбол.
   - words:
-    - буде
-    - робити
-    - Олена?
-    - що
-    - А
+    - вечерю.
+    - будуть
+    - готувати
+    - Вони
     correct_order:
-    - А
-    - що
-    - буде
-    - робити
-    - Олена?
-- id: quiz-dialogue-comprehension
-  type: quiz
-  instruction: Оберіть правильний варіант за діалогами (Choose the correct option
-    based on the dialogues)
-  items:
-  - question: 'Максим питає Олега: Що _____ робити завтра?'
-    options:
-    - ти будеш
-    - ви будете
-    - він буде
-    - вони будуть
-    correct: 0
-  - question: 'Максим питає Олега та Олену: А _____ гуляти?'
-    options:
-    - ви будете
-    - ти будеш
-    - ми будемо
-    - вони будуть
-    correct: 0
-  - question: 'Ігор говорить про себе: У неділю я _____ готувати.'
-    options:
-    - буду
-    - буде
-    - будеш
-    - будемо
-    correct: 0
-  - question: 'Ігор говорить про чоловіка: Чоловік _____ гуляти з дітьми.'
-    options:
-    - буде
-    - буду
+    - Вони
     - будуть
-    - будемо
-    correct: 0
-  - question: 'Анна каже про себе: Я _____ дивитися футбол.'
-    options:
-    - буду
-    - буде
-    - будуть
-    - будеш
-    correct: 0
-  - question: 'Ворожка каже клієнту: Ти _____ багато подорожувати.'
-    options:
-    - будеш
+    - готувати
+    - вечерю.
+  - words:
+    - гуляти
+    - парку.
+    - в
     - будете
-    - буде
-    - буду
-    correct: 0
-- id: true-false-grammar
+    - Ви
+    correct_order:
+    - Ви
+    - будете
+    - гуляти
+    - в
+    - парку.
+- id: match-up-time
+  type: match-up
+  instruction: З'єднайте українські фрази з англійським перекладом (Match Ukrainian
+    phrases with English translation)
+  pairs:
+  - left: завтра
+    right: tomorrow
+  - left: наступного тижня
+    right: next week
+  - left: ввечері
+    right: in the evening
+  - left: у суботу
+    right: on Saturday
+  - left: у неділю
+    right: on Sunday
+  - left: на вихідних
+    right: on the weekend
+- id: true-false-future-grammar
   type: true-false
   instruction: Правда чи ні? (True or false?)
   items:
-  - statement: 'У майбутньому часі дієслово не змінюється (наприклад: ''читати'',
-      ''гуляти'').'
-    correct: true
-    explanation: The main verb is always in the infinitive.
-  - statement: 'Ми кажемо: ''Я буде працювати''.'
+  - statement: «Я будеш працювати» — це правильне речення.
     correct: false
-    explanation: Для 'я' ми кажемо 'я буду'.
-  - statement: Слово 'завтра' часто використовується з майбутнім часом.
+    explanation: 'Правильно: «Я буду працювати». Форма «будеш» використовується з
+      «ти».'
+  - statement: У складеному майбутньому часі основне дієслово не змінюється (завжди
+      інфінітив).
     correct: true
-    explanation: '''Завтра'' means ''tomorrow'', indicating the future tense.'
-  - statement: Форма 'будемо' використовується для займенника 'вони'.
-    correct: false
-    explanation: Форма 'будемо' — для 'ми'. Для 'вони' — 'будуть'.
-  - statement: '''Що ти будеш робити?'' — це запитання про майбутнє.'
+    explanation: Так, основне дієслово завжди має форму інфінітива (наприклад, читати,
+      робити).
+  - statement: «Ми будемо відпочивати» означає «We will rest».
     correct: true
-    explanation: This is the standard way to ask 'What will you do?'
-  - statement: Для 'він' і 'вона' форма 'бути' різна.
+    explanation: «Ми» = we, «будемо відпочивати» = will rest.
+  - statement: Слово «завтра» вказує на минулий час.
     correct: false
-    explanation: Для 'він', 'вона', і 'воно' форма однакова — 'буде'.
+    explanation: Слово «завтра» (tomorrow) вказує на майбутній час.
+  - statement: «Вона буде готувати» — це майбутній час.
+    correct: true
+    explanation: «Буде готувати» — це форма майбутнього часу для «вона».
+  - statement: Зі словом «вони» ми використовуємо форму «будете».
+    correct: false
+    explanation: Зі словом «вони» використовується форма «будуть». «Будете» — для
+      «ви».
+- id: fill-in-workbook-practice
+  type: fill-in
+  instruction: Вставте правильне слово (Fill in the correct word)
+  items:
+  - sentence: Завтра я буду ____ книгу.
+    answer: читати
+    options:
+    - читаю
+    - читав
+    - читати
+  - sentence: Що ти будеш ____ завтра?
+    answer: робити
+    options:
+    - робиш
+    - робив
+    - робити
+  - sentence: У неділю ми будемо ____ в парку.
+    answer: гуляти
+    options:
+    - гуляємо
+    - гуляти
+    - гуляли
+  - sentence: Вони будуть ____ телевізор.
+    answer: дивитися
+    options:
+    - дивитися
+    - дивляться
+    - дивилися
+  - sentence: Ви будете ____ вечерю?
+    answer: готувати
+    options:
+    - готуєте
+    - готували
+    - готувати
+  - sentence: Він буде ____ на вихідних.
+    answer: відпочивати
+    options:
+    - відпочиває
+    - відпочивати
+    - відпочивав
+- id: quiz-time-markers
+  type: quiz
+  instruction: Оберіть правильний варіант (Choose the correct option)
+  items:
+  - question: Що означає слово «завтра»?
+    options:
+    - yesterday
+    - today
+    - tomorrow
+    - now
+    correct: 2
+  - question: Як сказати «next week» українською?
+    options:
+    - наступний тиждень
+    - минулого тижня
+    - наступного тижня
+    - цей тиждень
+    correct: 2
+  - question: Яке слово вказує на майбутній час?
+    options:
+    - учора
+    - завтра
+    - зараз
+    - сьогодні
+    correct: 1
+  - question: Як перекласти «in the evening»?
+    options:
+    - вранці
+    - вдень
+    - ввечері
+    - вночі
+    correct: 2
+  - question: Яке слово означає «weekend»?
+    options:
+    - тиждень
+    - вихідні
+    - субота
+    - неділя
+    correct: 1
+  - question: Як перекласти «On Sunday»?
+    options:
+    - у суботу
+    - в неділю
+    - наступного тижня
+    - на вихідних
+    correct: 1

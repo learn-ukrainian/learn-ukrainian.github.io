@@ -1,0 +1,73 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T05-36-a4764726.json
+phase: write-chunk-03
+prompt_chars: 41222
+response_chars: 4960
+prompt_words: 5898
+response_words: 838
+sections:
+- name: header
+  start: 0
+  length: 467
+  fraction: 0.0113
+- name: skeleton
+  start: 467
+  length: 1288
+  fraction: 0.0312
+- name: prior_summary
+  start: 1755
+  length: 3328
+  fraction: 0.0807
+- name: plan
+  start: 5083
+  length: 12127
+  fraction: 0.2942
+- name: wiki
+  start: 10672
+  length: 23765
+  fraction: 0.5765
+- name: output_spec
+  start: 40975
+  length: 247
+  fraction: 0.006
+large_sections:
+- wiki
+directives_total: 16
+directives_covered: 7
+directives_missed:
+- kind: checklist
+  text: допомагати (to help)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: дякувати (to thank)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: дзвонити (to call, to phone)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: радити (to advise)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: заважати (to bother, to disturb)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: відповідати (to answer (someone))
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 4/11 keywords (36%)
+- kind: inject_activity
+  text: match-up-podobatysia
+  covered: false
+  coverage_note: marker missing

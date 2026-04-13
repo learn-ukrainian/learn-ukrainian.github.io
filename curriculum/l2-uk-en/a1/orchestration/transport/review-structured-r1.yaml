@@ -2,49 +2,53 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 8
-  evidence: The writer deliberately avoided the target phrase from the plan's Dialogue
-    2 ("О котрій відправлення?") because of a hallucinated linguistic rule. All other
-    points were hit perfectly.
+  score: 6
+  evidence: 'All planned H2 sections are present and the four activity markers match
+    the plan, but the planned 300-word pacing is badly overshot in the first three
+    sections: `Діалоги` 387 words, `Транспорт` 395, `'
 - dimension: 2
   name: Linguistic accuracy
-  score: 7
-  evidence: The text contains a critical hallucination, falsely claiming that "відправлятися"
-    is a "direct phonetic calque from Russian" when it is actually a standard Ukrainian
-    word. The rest of the Ukrainian te
+  score: 9
+  evidence: No confirmed Ukrainian-form errors found in the learner-facing Ukrainian.
+    Verified forms in use include `їхати автобусом`, `на метро`, `на таксі`, `Потяг
+    рушає`; no Russian letters (`ы`, `э`, `ё`, `ъ`
 - dimension: 3
   name: Pedagogical quality
-  score: 9
-  evidence: Excellent explanation of instrumental vs prepositional transport patterns,
-    including a great caution box. Minor deduction for literal English translations
-    in the dialogue ("how to get to the train sta
+  score: 7
+  evidence: The core A1 chunks are useful, but long English exposition delays practice,
+    e.g. “Moving around efficiently requires much more than simply memorizing the
+    names of vehicles...” The advanced `:::tip` on
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: All required and recommended vocabulary included naturally.
+  score: 9
+  evidence: 'All required vocabulary appears in prose: `автобус`, `метро`, `таксі`,
+    `потяг`, `квиток`, `зупинка`. Recommended items also appear: `трамвай`, `маршрутка`,
+    `літак`, `направо`, `наліво`, `прямо`, `діст'
 - dimension: 5
   name: Exercise quality
   score: 10
-  evidence: The markers match the plan's required activities perfectly and are placed
-    effectively.
+  evidence: 'Marker count matches the plan exactly, and each marker follows the relevant
+    teaching block: transport types, pattern choice, buying a ticket, asking directions.'
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: Natural, encouraging, and culturally embedded.
+  score: 7
+  evidence: The teacher voice is mostly neutral, but some phrasing is inflated rather
+    than instructive, e.g. “completely essential survival skill” and “absolute backbone
+    of urban life in Ukraine.”
 - dimension: 7
   name: Structural integrity
-  score: 10
-  evidence: All sections present, word count (1690) comfortably exceeds the target
-    (1200).
+  score: 7
+  evidence: 'Headings are complete and ordered correctly, and the module is above
+    the 1200-word target, but a learner-facing placeholder remains: `the direct translation
+    \`<!-- VERIFY -->\``.'
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: References to Boryspil, Kyiv Metro, marshrutkas, and crowded transport
-    etiquette are spot on.
+  score: 9
+  evidence: No Russian-centered framing; examples stay in Ukrainian settings and transport
+    reality (Kyiv/Boryspil, Lviv, metro, маршрутка).
 - dimension: 9
   name: Dialogue & conversation quality
   score: 9
-  evidence: Dialogues are natural, though Dialogue 2 had a redundant turn inserted
-    by the writer ("Є потяг о дев'ятій ранку" followed by "О котрій годині він рушає?")
-    to avoid using the word "відправлення".
+  evidence: 'Two named-speaker dialogues cover realistic situations: asking how to
+    get somewhere and buying a ticket. They are useful and not robotic.'
 findings: []

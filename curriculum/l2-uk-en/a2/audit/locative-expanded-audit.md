@@ -1,7 +1,7 @@
 # Audit Report: M20 — locative-expanded.md
 **Level:** A2 | **Module:** M20 | **Phase:** A2.3 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-04-11 02:52:20
+**Generated:** 2026-04-13 07:31:33
 
 ## Configuration
 **Type:** A2-grammar
@@ -20,44 +20,48 @@
 |---|------|-------|-------|-----|--------|
 | 1 | quiz |  | 8 | 8 | ✅ |
 | 2 | fill-in |  | 8 | 8 | ✅ |
-| 3 | match-up |  | 8 | 8 | ✅ |
-| 4 | error-correction |  | 8 | 6 | ✅ |
-| 5 | group-sort |  | 12 | 8 | ✅ |
+| 3 | fill-in |  | 8 | 8 | ✅ |
+| 4 | quiz |  | 8 | 8 | ✅ |
+| 5 | match-up |  | 8 | 8 | ✅ |
+| 6 | translate |  | 8 | 6 | ✅ |
+| 7 | group-sort |  | 12 | 8 | ✅ |
+| 8 | true-false |  | 8 | 8 | ✅ |
+| 9 | fill-in |  | 8 | 8 | ✅ |
+| 10 | error-correction |  | 8 | 6 | ✅ |
+| 11 | quiz |  | 8 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 5 (target: 0-4) ❌
-- Unique types: 5 (minimum: 0) ✅
-- Priority types used: 5/15 (error-correction, fill-in, group-sort, match-up, quiz) ✅
+- Total activities: 11 (target: 0-4) ❌
+- Unique types: 7 (minimum: 0) ✅
+- Priority types used: 7/15 (error-correction, fill-in, group-sort, match-up, quiz, translate, true-false) ✅
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY]** Sentence too long for A2: 18 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Слова середнього роду життя та...'
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q3 prompt length 4 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q4 prompt length 4 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
+- **[RUSSICISM_DETECTED]** Found 1 Russicism(s) in content: 'давайте подивимося' → подивімося
+  - FIX: Replace Russicisms with standard Ukrainian equivalents. These are Russian calques that have standard Ukrainian forms. See Phase B prompt 'Russianisms Pre-Output Scan' table.
 
 ## Recommendation
-**📝 UPDATE** (severity 25/100)
+**📝 UPDATE** (severity 45/100)
 
-- 3 violations (minor)
-- Immersion 13% off target
+- Revision recommended (severity 45/100)
+- 1 violations (minor)
+- Immersion 11% off target
+- Structure issue: Missing '## Summary'
 
 ## Gates
-- **Words:** ✅ 2907/2000 (raw: 3037)
-- **Activities:** ✅ 5/0
+- **Words:** ✅ 2731/2000 (raw: 2893)
+- **Activities:** ✅ 11/0
 - **Density:** ✅ All > 8
-- **Unique_types:** ✅ 5/0 types
+- **Unique_types:** ✅ 7/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ❌ 1/3
+- **Engagement:** ❌ 2/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 46/1
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ✅ 25/1
+- **Structure:** ❌ Missing '## Summary'
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ❌ 27.0% LOW (target 40-70% (A2.1))
+- **Immersion:** ❌ 28.8% LOW (target 40-70% (A2.1))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -65,7 +69,7 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 825 | Included in Core |
-| **Часовий місцевий відмінок (Temporal Locative)** | ✅ | 900 | Included in Core |
-| **По телефону, по радіо: місцевий із прийменником «по»** | ✅ | 769 | Included in Core |
-| **Підсумок — Місцевий відмінок: від місця до сенсу (Summary — Locative Case)** | ✅ | 413 | Included in Core |
+| **Intro/Narrative** | ✅ | 732 | Included in Core |
+| **Часовий місцевий відмінок (Temporal Locative) (~650 words total)** | ✅ | 804 | Included in Core |
+| **По телефону, по радіо: місцевий із прийменником «по» (Locative with "po") (~550 words total)** | ✅ | 799 | Included in Core |
+| **Місцевий відмінок: від місця до сенсу (From Place to Meaning) (~390 words total)** | ✅ | 396 | Included in Core |

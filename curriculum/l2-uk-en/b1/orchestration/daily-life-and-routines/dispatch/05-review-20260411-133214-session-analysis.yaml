@@ -1,0 +1,78 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T11-28-238894e0.json
+phase: review
+prompt_chars: 60312
+response_chars: 6482
+prompt_words: 9087
+response_words: 900
+sections:
+- name: preamble
+  start: 0
+  length: 433
+  fraction: 0.0072
+- name: plan
+  start: 433
+  length: 56837
+  fraction: 0.9424
+- name: output_spec
+  start: 57270
+  length: 3042
+  fraction: 0.0504
+large_sections:
+- plan
+directives_total: 21
+directives_covered: 10
+directives_missed:
+- kind: must
+  text: When describing a regular daily habit, you must use the imperfective aspect
+    because the action is seen as a continuous or repeating process without a specific
+    end.
+  covered: false
+  coverage_note: 3/19 keywords (16%)
+- kind: must
+  text: However, when talking about a specific planned action with a clear, successful
+    result, the perfective aspect is strictly required.
+  covered: false
+  coverage_note: 3/14 keywords (21%)
+- kind: must
+  text: Additionally, when addressing your colleagues, especially in a formal or polite
+    setting, you must always use the Vocative case to show respect and professionalism.
+  covered: false
+  coverage_note: 3/18 keywords (17%)
+- kind: must
+  text: When families or roommates share a living space, they must negotiate who does
+    what.
+  covered: false
+  coverage_note: 0/12 keywords (0%)
+- kind: must
+  text: To turn your weekend plans into reality, you must know how to invite others.
+  covered: false
+  coverage_note: 3/12 keywords (25%)
+- kind: must
+  text: If you do not want to be constantly rushing to appointments, you must develop
+    the habit of planning.
+  covered: false
+  coverage_note: 0/10 keywords (0%)
+- kind: must
+  text: If you are not 100% certain a word/form/usage is wrong, you MUST flag it as
+    `[NEEDS RAG VERIFICATION]` instead of marking it as a definitive error.
+  covered: false
+  coverage_note: 5/17 keywords (29%)
+- kind: must
+  text: '**Before you claim a word, symbol, notation, or plan point is MISSING from
+    the content, you MUST search for it.'
+  covered: false
+  coverage_note: 5/13 keywords (38%)
+- kind: must
+  text: '**CRITICAL RULE: If you mention ANY error, mistake, or inaccuracy in the
+    evidence column of your scores table, you MUST also list it as a structured finding
+    below AND include it in your `<fixes>` block.'
+  covered: false
+  coverage_note: 5/22 keywords (23%)
+- kind: must
+  text: This is a language curriculum — every error you identify must be fixed.
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing

@@ -25,7 +25,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-сухий безособовий стиль такий популярний і поширений у публіцистичному стилі? Головна причина полягає в тому, що він дозволяє журналісту максимально сфокусувати увагу читача саме на кінцевому результаті важливої дії, а не на тому, хто конкретно її виконав. Це робить медіатекст більш коротким, об'єктивним, стриманим та офіційним. Спробуймо разом прочитати і розібрати типову адаптовану українську новину для нашого рівня. «Сьогодні рано вранці в центрі Києва відбулася велика і дуже важлива **прес-конференція** *(press conference)*. Наш спеціальний **кореспондент** *(correspondent)* з місця подій повідомив, що в столиці вже незабаром відкриють новий інноваційний культурний центр для прогресивної молоді. Згідно з останніми офіційними даними уряду, масштабне будівництво повністю завершиться вже наступного року. Офіційні представники мерії вирішили максимально швидко **спростувати** *(to deny)* поширені в інтернеті чутки про те, що вхід у центр буде платним. Вони окремо наголосили: всі освітні програми, лекції та творчі гуртки залишаться абсолютно безкоштовними для місцевих школярів та усіх студентів. Очікується, що цей новий простір швидко стане головним осередком розвитку сучасного українського візуального мистецтва». Читаючи такі насичені тексти, завжди звертайте увагу на їхню логічну структуру. Заголовок для цієї новини міг би звучати дуже лаконічно: «Новий культурний простір у Києві: повністю безкоштовна освіта для талановитої молоді». Сьогодні сучасні українці щоденно споживають гарячі новини не лише з традиційних газет чи новинних сайтів, але й безпосередньо із соціальних мереж. Величезну популярність у країні зараз мають такі відомі платформи, як Telegram та Twitter. Там мільйони людей надзвичайно швидко читають короткі новини через свій улюблений **канал** *(channel)* або через спеціальний автоматизований **чат-бот** *(chatbot)*. Це справді дуже зручно, адже важлива інформація поширюється буквально миттєво. Однак така шалена швидкість завжди має свою високу ціну: у соціальних мережах значно частіше зустрічається небезпечний **фейк** *(fake)*. Це повністю неправдива або викривлена інформація, яка була спеціально створена для хитрої маніпуляції емоціями довірливих читачів. Тому, швидко гортаючи стрічку новин у популярних Telegram-каналах, завжди критично запитуйте себе: «Яке саме першоджерело цієї сумнівної інформації?». Традиційні офіційні ЗМІ обов'язково витрачають дорогоцінний час на ретельну перевірку фактів. Натомість сумнівні анонімні канали часто безвідповідально жертвують надійністю заради швидкості та отримання яскравих емоційних реакцій від своїх підписників. Давайте наостанок детально проаналізуємо класичний лід із реального тексту про важливе урядове рішення. Ось текст нашої новини: «Вчора пізно ввечері український уряд виділив кошти на відновлення лікарень у східних регіонах країни, щоб забезпечити медичну допомогу постраждалим громадянам». Тепер проведемо уважний аналіз структури цього інформаційного повідомлення. Хто? — український уряд. Що зробив? — виділив кошти. Коли? — вчора пізно ввечері. Де? — у східних регіонах країни. Чому? — щоб забезпечити медичну допомогу постраждалим громадянам. Цей невеликий абзац є просто ідеальним прикладом правильного ліду, адже він одразу і дуже зрозуміло дає читачеві всю ключову інформацію в одному короткому, але змістовному реченні. Коли ви почнете писати власні українські новини або пости, завжди намагайтеся суворо дотримуватися цього золотого правила світової журналістики. <!-- INJECT_ACTIVITY: essay-response, "Напишіть 5 речень, використовуючи нову лексику з розділу «Читання новин» (подія, джерело, повідомити)." --> <!-- INJECT_ACTIVITY: error-correction, "Знайдіть і виправте помилки у реченнях на тему читання новин (стилістичні та граматичні помилки)." --> <!-- INJECT_ACTIVITY: match-up, "З'єднайте терміни з розділу «Читання новин» з їхніми визначеннями." -->
+professional. :::info **Grammar box** Passive participles ending in **-но** and **-то** act as impersonal predicates. They do not change for gender or number and are perfect for focusing entirely on the outcome of an event. Example: Будівлю зруйновано. (The building has been destroyed.) ::: Учора в Києві відбулася велика прес-конференція, присвячена відкриттю культурного центру. Наш спеціальний кореспондент відвідав цей захід і поспілкувався з організаторами. Ініціатори проєкту змогли спростувати чутки про нестачу фінансування. Вони підтвердили, що кожен волонтер зробив величезний внесок у будівництво. Цей простір стане важливим місцем для розвитку сучасного мистецтва. За словами експертів, такі ініціативи значно покращують життя міста. > *Yesterday a large press conference took place in Kyiv, dedicated to the opening of a cultural center. Our special correspondent attended this event and spoke with the organizers. The initiators of the project were able to deny the rumors about a lack of funding. They confirmed that every volunteer made a huge contribution to the construction. This space will become an important venue for the development of modern art. According to experts, such initiatives significantly improve the life of the city.* Reading texts like this helps you internalize how a **кореспондент** (correspondent) or a dedicated **волонтер** (volunteer) might describe real-world events. Notice how the text balances factual reporting with attributed opinions from experts, providing a well-rounded view of the situation while employing standard media terminology. Today, traditional **засоби масової інформації** (mass media) are heavily supplemented by digital platforms. This shift is fundamentally changing how a modern **громадянин** (citizen) consumes daily updates. In modern Ukrainian **суспільство** (society), platforms like Telegram and Twitter have become the primary sources for immediate alerts. Users subscribe to a specific «канал» (channel) to receive notifications, or interact with a «чат-бот» (chatbot) to report incidents. While this ecosystem allows information to travel at unprecedented speeds, it presents significant challenges regarding reliability. The rapid spread of a «фейк» (fake) can cause unnecessary panic. Therefore, reading news on social media demands critical thinking, requiring users to cross-reference rapid online updates with professional journalistic sources. To solidify your skills, let us perform a model analysis of a news lead to extract its core elements and check for potential **маніпулювання** (manipulation). Consider this short paragraph: «Сьогодні вранці уряд несподівано ухвалив рішення про підвищення податків для малого бізнесу, щоб стабілізувати економіку». We must dissect this sentence by asking our fundamental questions. **Хто?** — *уряд* (the government). **Що?** — *ухвалив рішення про підвищення податків* (made a decision to raise taxes). **Коли?** — *сьогодні вранці* (this morning). **Чому?** — *щоб стабілізувати економіку* (to stabilize the economy). Furthermore, the word «несподівано» (unexpectedly) introduces a subtle emotional coloring, hinting that the journalist is trying to influence your perception rather than just stating the facts. :::note **Quick tip** Always ask «Чому?» (Why?) when reading a news lead. Understanding the motivation or the cause of an event is often the most crucial piece of the puzzle and helps you identify the author's underlying angle. ::: <!-- INJECT_ACTIVITY: essay-news-vocab --> <!-- INJECT_ACTIVITY: error-correction-news-grammar --> <!-- INJECT_ACTIVITY: match-up-news-terms -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -567,7 +567,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -580,18 +647,66 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] засоби масової інформації (mass media — channels of public communication)
+- [ ] суспільство (society — organized community of people)
+- [ ] громадянин (citizen — member of a state)
+- [ ] публіцистичний стиль (publicistic style — media register)
+- [ ] новина (news item — report of a recent event)
+- [ ] заголовок (headline — title of a news article)
+- [ ] факт (fact — verifiable statement)
+- [ ] думка (opinion — personal view)
+- [ ] маніпулювання (manipulation — hidden influence)
+- [ ] волонтер (volunteer — person working without pay)
+- [ ] джерело (source — origin of information)
+- [ ] кореспондент (correspondent — reporter)
+- [ ] повідомити (to report — to convey news)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Медіаманіпулювання (~770 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

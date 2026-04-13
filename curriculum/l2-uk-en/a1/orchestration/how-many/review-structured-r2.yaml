@@ -1,0 +1,55 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 6
+  evidence: 'The first dialogue is `"at a bustling Ukrainian market stall"` about
+    `**сумка**`, not the planned bakery/family-gathering context. The planned school-counting
+    lexicon is also absent from the teaching '
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: No Russianisms, Surzhyk, calques, paronym errors, or Russian-only characters
+    found. Key forms such as `п'ятнадцять`, `сорок`, `дев'яносто`, `рік/роки/років`
+    are correct.
+- dimension: 3
+  name: Pedagogical quality
+  score: 6
+  evidence: 'The module breaks its own scope by analyzing grammar instead of teaching
+    chunks: `"You must use the dative case pronoun **мені**"` and `"**Мені двадцять
+    п''ять** literally translates as \"to me is twen'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 8
+  evidence: Required vocabulary like `скільки`, `коштує`, `гривня`, `рік/роки/років`,
+    `номер`, `нуль` is covered, and most recommended tens/hundreds appear. Coverage
+    drops because the planned school-supply set is
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: Marker count matches the plan exactly, and each marker follows the relevant
+    teaching section. No visible mismatch between marker type/focus and the plan hints.
+- dimension: 6
+  name: Engagement & tone
+  score: 6
+  evidence: 'The opening leans on generic filler: `"Numbers are the foundation of
+    navigating daily life in any new language."` This spends words on broad claims
+    instead of moving directly into Ukrainian-specific p'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All planned H2 sections are present and ordered correctly, markers are
+    clean, and the pipeline word count is 1304, which is above target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: The module treats Ukrainian on its own terms and uses Ukrainian-specific
+    realia like `гривня` and Ukrainian phone-number formatting without Russian comparison
+    framing.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 6
+  evidence: Dialogue 1 is a short transaction, and Dialogue 2 is mostly interrogation.
+    It also under-reinforces the target age chunk with replies like `**Мені двадцять
+    п'ять.**` and `**Їй вісімнадцять.**` instead
+findings: []

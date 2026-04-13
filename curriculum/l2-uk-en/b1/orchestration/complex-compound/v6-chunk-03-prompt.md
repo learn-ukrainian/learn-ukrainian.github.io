@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-розташування граматичних частин чітко та послідовно відображає реальний хронологічний плин часу. Одна конкретна дія повністю логічно завершується, і тільки відразу після неї починається наступна нова дія. Наприклад: «Пролунав гучний шкільний дзвінок, і втомлені учні швидко вийшли з просторого класу». Крім простої лінійної послідовності, такі речення дуже часто надійно передають **причиново-наслідкові зв'язки** *(cause-effect)*. У цьому випадку друга дія є прямим логічним наслідком того, що відбулося в першій частині. Наприклад: «Вночі пройшов дуже сильний літній дощ, і зараз усі міські дерева яскраво заясніли під вранішнім сонцем». Дерева радісно заясніли саме через те, що на них впав дощ. Але дуже важливо міцно запам'ятати одне ключове правило синтаксису: навіть якщо друга частина речення є очевидним наслідком першої, між ними все одно зберігається рівноправний сурядний зв'язок. Саме тому ми обов'язково ставимо кому перед єднальним сполучником «і» у таких послідовних реченнях. Українська літературна мова завжди славиться своєю винятковою милозвучністю, і це фундаментальне фонетичне правило прямо впливає на наш щоденний вибір. Зокрема, воно чітко визначає, коли ми маємо використовувати варіант «і», а коли — «й» у довгих складносурядних реченнях. Щоб успішно уникнути важкого, незручного збігу кількох приголосних звуків підряд, ми традиційно використовуємо повноцінний сполучник «і». Він постійно діє як м'яка звукова подушка, яка дуже легко розбиває цей скупчений фонетичний блок. Натомість після попереднього слова, яке завжди закінчується на голосний звук, ми переважно використовуємо короткий приголосний сполучник «й». Це робиться виключно для того, щоб наше усне мовлення лилося максимально плавно і без жодних різких зупинок чи пауз. Порівняйте, будь ласка, ці три показові пари речень, щоб відчути різницю: «Рання весна несподівано прийшла, і весь білий сніг швидко розтанув» — «Весняне сонце тепло сяє, й маленькі пташки дуже весело співають». Або: «Молодий хлопець голосно сміявся, і всім гостям стало радісно» — «Вона щиро посміхнулася, й напружена атмосфера в кімнаті миттєво потеплішала». І ще один гарний приклад: «Літній дощ нарешті закінчився, і на небі з'явилася веселка» — «Темна хмара швидко відступила, й небо стало абсолютно чистим». Для створення особливо сильного емоційного акценту багата українська мова часто використовує спеціальні парні єднальні сполучники, такі як «ні...ні» та «як...так і». Вони створюють ідеальний граматичний паралелізм у тексті, дуже яскраво підкреслюючи абсолютну повну рівноправність обох з'єднаних частин. Парний сполучник «ні...ні» використовується для посиленого подвійного заперечення, створюючи цілком завершений, глибокий негативний образ. Наприклад: «Ні холодний осінній вітер не шумить, ні швидка хвиля на річці не плюскоче». Корисно порівняти цю українську конструкцію з англійською формою «neither...nor» *(ні...ні)*, щоб краще запам'ятати її. Як і в англійській мові, в українській ви обов'язково повинні використовувати обидва елементи цього парного сполучника. Англомовні студенти іноді роблять типову помилку і випадково опускають перше «ні», використовуючи звичайне коротке «і». Будь ласка, ніколи не кажіть: «Він сьогодні не прийшов, і вона також не прийшла». Натомість завжди сміливо використовуйте таку красиву подвійну українську конструкцію: «Ні він сьогодні не прийшов, ні вона не з'явилася на заплановану зустріч». З іншого боку, чудовий парний сполучник «як...так і» потужно працює на сильне емоційне посилення позитивного ствердження обох фактів у вашому реченні. <!-- INJECT_ACTIVITY: essay-sentence-building, focus on building 5-8 compound sentences using copulative conjunctions about daily routines, 8 items -->
+parts of equal status). Коли ми описуємо послідовність подій, порядок частин у реченні чітко відображає реальний плин часу. Наприклад: «Пройшов дощ, і дерева заясніли під сонцем». Друга дія є логічним наслідком першої, але граматично вони залишаються рівноправними. Важливо пам'ятати правило пунктуації: кома перед сполучниками «і», «й» або «та» зберігається завжди, навіть якщо між подіями існує причиново-наслідковий зв'язок. > *When we describe a sequence of events, the order of parts in the sentence clearly reflects the real flow of time. For example: "The rain passed, and the trees shone brightly under the sun." The second action is a logical consequence of the first, but grammatically they remain equal. It is important to remember the punctuation rule: the comma before the conjunctions "і", "й", or "та" is always kept, even if there is a cause-and-effect relationship between the events.* Because «і» and «й» mean the exact same thing, how do you choose between them? The answer lies in euphony, or *милозвучність*. Ukrainian avoids harsh consonant clusters or awkward gaps between vowels. To maintain this melody, you select the conjunction based on the surrounding sounds. You use «й» after a vowel to avoid a hiatus, and you use «і» after a consonant. Let's look at a few examples to see this in action. Милозвучність вимагає від нас уважності до закінчень слів. Розгляньте речення: «Весна прийшла, й розквітли перші проліски». Тут перша частина закінчується на голосний «а», тому ми обираємо «й». Порівняйте з іншим прикладом: «Сніг розтанув, і почалася справжня весна». Тут ми маємо приголосний «в», тому ставимо «і». Звучання завжди підкаже правильний вибір. Наприклад: «Сонце сяє, й пташки співають». Або ж навпаки: «Вітер дме, і листя падає». Так само ви скажете: «Вона посміхнулася, й усі відчули радість». Але після приголосного буде інакше: «Він зітхнув, і розмова припинилася». :::note **Quick tip** If the word immediately preceding the conjunction ends in a vowel, reach for «й». If it ends in a consonant, use «і». This habit makes your Ukrainian sound much more native and prevents you from stumbling over awkward sound combinations. ::: Beyond the simple "and", the copulative family includes paired conjunctions that create striking parallelism. When building a negative image, the paired conjunction «ні...ні» (neither...nor) is incredibly effective. For instance, the phrase «Ні вітер не шумить, ні хвиля не плюскоче» uses double negation to emphasize stillness. Notice how Ukrainian requires the negative particle «не» before the verb even when using «ні...ні». This contrasts with English, where "neither...nor" is sufficient. For positive emphasis, «як...так і» acts as a powerful amplifier, giving equal weight to two parallel facts. Парні сполучники допомагають нам виділити певну інформацію з емоційною силою. Конструкція «як...так і» ідеально підходить для позитивного паралелізму: «Як сонце світило, так і місяць сяяв». З іншого боку, англомовні студенти часто роблять помилку, пропускаючи перший сполучник у заперечних реченнях. Українська мова вимагає обов'язкового повторення. Ви повинні сказати «Ні він не прийшов, ні вона не зателефонувала», щоб фраза звучала правильно. <!-- INJECT_ACTIVITY: essay-sentence-building, focus on building 5-8 compound sentences using copulative conjunctions about daily routines, 8 items -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -508,7 +508,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -521,18 +588,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] складносурядне речення (compound sentence)
+- [ ] сполучник сурядності (coordinating conjunction)
+- [ ] єднальний (copulative — і, й, та)
+- [ ] протиставний (adversative — але, а, зате, проте)
+- [ ] розділовий (disjunctive — або, чи, то...то)
+- [ ] рівноправний (equal, coordinate — parts of equal status)
+- [ ] одночасність (simultaneity)
+- [ ] послідовність (sequence)
+- [ ] протиставлення (opposition/contrast)
+- [ ] зіставлення (comparison/juxtaposition)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Протиставні та розділові сполучники (~800 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

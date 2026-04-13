@@ -1,0 +1,68 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T21-12-53e9babb.json
+phase: skeleton
+prompt_chars: 33470
+response_chars: 4946
+prompt_words: 4522
+response_words: 752
+sections:
+- name: preamble
+  start: 0
+  length: 486
+  fraction: 0.0145
+- name: plan
+  start: 486
+  length: 3886
+  fraction: 0.1161
+- name: wiki
+  start: 4322
+  length: 26758
+  fraction: 0.7995
+- name: output_spec
+  start: 31130
+  length: 2340
+  fraction: 0.0699
+large_sections:
+- wiki
+directives_total: 11
+directives_covered: 2
+directives_missed:
+- kind: must
+  text: Your skeleton must budget every word.
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: must
+  text: '**Word budgets must sum to 2000+.'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: '**Section budgets must match the plan''s `content_outline` word allocations**
+    (±10%).'
+  covered: false
+  coverage_note: 1/8 keywords (12%)
+- kind: must
+  text: '**CRITICAL: An exercise must ONLY test concepts already taught above it.'
+  covered: false
+  coverage_note: 0/9 keywords (0%)
+- kind: must
+  text: 'Every plan `activity_hints` entry MUST have a corresponding `<!-- INJECT_ACTIVITY:
+    id -->` marker in the skeleton.'
+  covered: false
+  coverage_note: 2/10 keywords (20%)
+- kind: skeleton_para
+  text: 'P1 (150w): Follow the plan''s points for this section EXACTLY. If the plan
+    says "Self-check questions", output a bulleted Q&A list — NOT prose. If the plan
+    says "recap", write a brief recap.'
+  covered: false
+  coverage_note: 4/20 keywords (20%)
+- kind: inject_activity
+  text: activity-id
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: activity-id
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: descriptive-id
+  covered: false
+  coverage_note: marker missing

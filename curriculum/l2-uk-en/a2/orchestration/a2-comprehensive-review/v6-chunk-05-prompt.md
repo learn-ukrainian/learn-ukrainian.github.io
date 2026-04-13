@@ -29,7 +29,7 @@ Grand total: ~2250 words
 <previous_context>
 [...previous sections truncated...]
 
-Головні помічники для цього — **сполучники**. The main helpers for this are **conjunctions**. Найчастіше ми використовуємо «**що**». Most often we use "**that**". Наприклад, «я знаю, **що** ти тут». For example, "I know **that** you are here". Інший важливий сполучник — «**тому що**». Another important conjunction is "**because**". Він пояснює причину. It explains the reason. Наприклад, «я вчу українську, **тому що** люблю Україну». For example, "I study Ukrainian **because** I love Ukraine". Перед цими сполучниками ми завжди ставимо кому. Before these conjunctions, we always put a comma. В українській мові є різні стилі спілкування. In the Ukrainian language, there are different styles of communication. У розмові з друзями ми часто кажемо «**бо**». In conversation with friends, we often say "**because/for**". Це коротке і зручне слово. This is a short and convenient word. Наприклад: «Я не прийшов, **бо** захворів». For example: "I didn't come **because** I got sick". Сполучник «**тому що**» є нейтральним. The conjunction "**because**" is neutral. В офіційних текстах ми використовуємо «**через те що**». In official texts, we use "**due to the fact that**". Наприклад: «Рейс скасували **через те що** почалася буря». For example: "The flight was canceled **due to the fact that** a storm started". Вибір залежить від ситуації. The choice depends on the situation. Для умови ми беремо сполучник «**якщо**». For a condition, we take the conjunction "**if**". Він показує залежність однієї дії від іншої. It shows the dependence of one action on another. Наприклад: «**Якщо** буде сонце, ми підемо гуляти». For example: "**If** there is sun, we will go for a walk". Щоб показати мету, ми використовуємо «**щоб**». To show a goal, we use "**in order to**". Після нього ми ставимо дієслово в інфінітиві або в минулому часі. After it, we put the verb in the infinitive or in the past tense. Наприклад: «Я читаю, **щоб** знати більше». For example: "I read **in order to** know more". Або: «Я хочу, **щоб** ти прийшов». Or: "I want you to come" (literally: that you came). Минулий час тут означає бажання, а не минуле. The past tense here means a wish, not the past. Давайте послухаємо, як студент розповідає про свій прогрес. Let's listen to how a student talks about their progress. > — **Вчителька:** Марку, як твої успіхи? *(Mark, how is your progress?)* > — **Марко:** Я вже говорю краще, **хоча** роблю **помилки**. *(I speak better already, **although** I make **mistakes**.)* > — **Вчителька:** Це нормально! *(That's normal!)* > — **Марко:** **Коли** я починав, я знав тільки прості слова. *(**When** I started, I knew only simple words.)* > — **Вчителька:** А зараз ти знаєш багато правил **граматики**. *(And now you know many rules of **grammar**.)* > — **Марко:** Так, я вчуся, **щоб** перейти на рівень В1. *(Yes, I study **in order to** move to the B1 level.)* > — **Вчителька:** **Якщо** ти будеш так вчитися, у тебе все вийде! *(**If** you study like this, you will succeed!)* > — **Марко:** Дякую! Я впевнений, **що** це можливо. *(Thank you! I am confident **that** it is possible.)* <!-- INJECT_ACTIVITY: error-correction -->
+мова гарна». Або: «Я вчуся, тому що хочу розуміти друзів». > *We already know many words. Now we are learning to connect them into complex thoughts. A complex sentence helps us explain reasons or details. Most often, we use the conjunction "shcho" (that) or "tomu shcho" (because). This is the basic level for moving to B1. Every such sentence contains a pronoun or an adjective. We say: "I know that the Ukrainian language is beautiful." Or: "I am studying because I want to understand my friends."* В українській мові є різні слова для пояснення причини. Слово «бо» — це короткий варіант для розмови з друзями. Ми часто чуємо його вдома або на вулиці. Наприклад: «Я не прийшов, бо захворів». Для офіційного листа краще обрати варіант «тому що». Це нейтральне слово, яке підходить для будь-якої ситуації. Найбільш формальний варіант — це «через те що». Він вказує на логічний наслідок у текстах або новинах. Це важливо знати, щоб не зробити **помилку** (mistake) у стилі. :::info **Grammar box** Always put a comma before conjunctions like **тому що** (because), **бо** (because), **що** (that), and **якщо** (if) in Ukrainian. This punctuation marks the boundary between two parts of a complex sentence. ::: Коли ми маємо мету або умову, ми використовуємо «щоб» та «якщо». Слово «якщо» допомагає будувати плани на майбутнє. Ми кажемо: «Якщо я буду в Києві, я піду в музей». Слово «щоб» вказує на нашу ціль. Після нього ми часто використовуємо інфінітив. Наприклад: «Я читаю, щоб більше знати». Це робить наше мовлення багатшим і допомагає з’єднувати частини речення. > *When we have a goal or a condition, we use "shchob" (in order to) and "yakshcho" (if). The word "yakshcho" helps build plans for the future. We say: "If I am in Kyiv, I will go to a museum." The word "shchob" indicates our goal. After it, we often use an infinitive. For example: "I read in order to know more." This makes our speech richer and helps connect parts of the sentence.* <!-- INJECT_ACTIVITY: fill-in, complex-sentences-conjunctions --> > — **Вчитель:** Як пройшло твоє **повторення** (review)? *(How did your review go?)* > — **Учень:** Добре, хоча **граматика** (grammar) іноді важка. *(Good, although grammar is sometimes difficult.)* > — **Вчитель:** Що було найскладнішим для тебе? *(What was the most difficult for you?)* > — **Учень:** Я довго вчив кожен **відмінок** (case) і кожне **дієслово** (verb). *(I spent a long time learning every case and every verb.)* > — **Вчитель:** Чи ти вже готовий до рівня B1? *(Are you ready for the B1 level yet?)* > — **Учень:** Думаю, що так, якщо я буду вчити нові слова щодня. *(I think so, if I study new words every day.)* > — **Вчитель:** Який твій план на майбутнє? *(What is your plan for the future?)* > — **Учень:** Я хочу вчитися, щоб вільно говорити про культуру. *(I want to study in order to speak fluently about culture.)* > — **Вчитель:** Це чудовий план, успіхів тобі! *(That is a great plan, good luck to you!)* <!-- INJECT_ACTIVITY: error-correction, review-sentence-logic -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -560,7 +560,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 6: A2 finale (A2 M51-M69)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 40%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 40% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 70-90% Ukrainian.
 LANGUAGE ROLES:
@@ -579,18 +646,61 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (5/5).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] повторення (review, revision)
+- [ ] граматика (grammar)
+- [ ] відмінок (grammatical case)
+- [ ] дієслово (verb)
+- [ ] прикметник (adjective)
+- [ ] займенник (pronoun)
+- [ ] речення (sentence)
+- [ ] помилка (error, mistake)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Самооцінка і перехід до B1 (~350 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

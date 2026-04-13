@@ -1,4 +1,4 @@
-<!-- version: 1.1.0 | updated: 2026-03-31 -->
+<!-- version: 1.2.0 | updated: 2026-04-12 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -11,6 +11,35 @@ Generate an `activities/when-and-where.yaml` file for module **45: When and Wher
 
 ---
 
+## ⚠️ HARD COUNT TARGETS — READ TWICE
+
+These are the binding numerical contracts for THIS module. The audit will FAIL if you fall short.
+
+| Bucket | Min | Max | Notes |
+|---|---|---|---|
+| Total activities | 10 | 10+ | inline + workbook combined |
+| Inline (lesson tab) | 4 | 6 | one per `<!-- INJECT_ACTIVITY -->` marker, see below |
+| Workbook (Зошит tab) | 6 | 9 | extended practice |
+| Items per activity | 6 | — | each activity must have at least 6 items (unless its type cap is lower — see Activity Type Reference below) |
+
+**You MUST ship at least 4 inline activities AND at least 6 workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+
+**Type diversity is required.** The module (inline + workbook combined) MUST use at least **0** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level. (If `0` is `0`, the audit profile for this level does not enforce type diversity — but variety still produces a better lesson, so aim for 4+ types when the workbook allows it.)
+
+---
+
+## Allowed types for THIS level
+
+- **Inline (lesson) types:** image-to-letter, letter-grid, match-up, watch-and-repeat, quiz, true-false, fill-in, classify
+- **Inline priority (preferred):** image-to-letter, match-up, fill-in, quiz, watch-and-repeat
+- **Workbook types:** fill-in, match-up, group-sort, anagram, unjumble, quiz, true-false, classify, divide-words, count-syllables, pick-syllables, observe, phrase-table, odd-one-out
+- **Workbook priority (preferred):** fill-in, match-up, group-sort, anagram, unjumble
+- **FORBIDDEN at this level:** cloze, error-correction, mark-the-words, translate, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, highlight-morphemes, grammar-identify, select
+
+Pick from the allowed list. Lean heavily on the priority lists. Do not use any forbidden type — the build will reject it.
+
+---
+
 ## Inline vs Workbook Split
 
 Activities have two placement categories:
@@ -19,7 +48,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Rule of thumb:** inline = 2-3 quick checks after key teaching points. Workbook = 4-8 deeper practice exercises covering the full topic.
+**Rule of thumb:** inline = 4–6 quick checks after key teaching points. Workbook = 6–9 deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
 
 ---
 
@@ -27,10 +56,10 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: fill-in-conjunction-choice -->`
+- `<!-- INJECT_ACTIVITY: fill-in-conjunctions -->`
+- `<!-- INJECT_ACTIVITY: quiz-question-or-conjunction -->`
+- `<!-- INJECT_ACTIVITY: fill-in-build-sentences -->`
 - `<!-- INJECT_ACTIVITY: quiz-comma-placement -->`
-- `<!-- INJECT_ACTIVITY: quiz-function-id -->`
-- `<!-- INJECT_ACTIVITY: fill-in-sentence-builder -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -87,132 +116,149 @@ required:
 <module_content>
 ## Діалоги (Dialogues)
 
-A real-world navigation scenario often requires linking multiple facts together, such as locations and times. In the following phone conversation, a guest is trying to find an apartment and coordinate a meeting time. The bolded words act as structural links between the speaker's actions and the environment.
+When you are speaking a new language, you often start by communicating like a robot: "I am here. The cafe is there. I will come." While this gets the point across, native speakers do not talk this way. They naturally flow their ideas together. They connect their thoughts into longer, smoother sentences. Instead of stating two separate, isolated facts, they link them into one clear and cohesive message. Today, we will learn how to build these essential bridges in your Ukrainian conversations. We will explore how to make plans, how to explain where things are located, and how to express what you know or think.
 
-> **Гість:** Алло! Я зараз на площі. Ти знаєш, **де** нове кафе? *(Hello! I am on the square now. Do you know where the new cafe is?)*
-> **Господар:** Так, я знаю, **де** воно. **Коли** побачиш **фонтан** (fountain), поверни ліворуч. *(Yes, I know where it is. When you see the fountain, turn left.)*
-> **Гість:** Добре. Я йду. А **де** побачиш **парк** (park), зупинись? *(Okay. I am walking. And where you see the park, stop?)*
-> **Господар:** Саме так. Великий **будинок** (building), **що** стоїть біля дерева — це кафе. Скажи, **коли** ти вільний. *(Exactly. The big building that stands near the tree is the cafe. Tell me when you are free.)*
-> **Гість:** Я вільний, **коли** закінчу роботу. Це сьогодні ввечері. *(I am free when I finish work. That is tonight.)*
-> **Господар:** Добре. Я думаю, **що** о шостій буде добре. *(Good. I think that at six will be good.)*
-> **Гість:** Так, я теж думаю, **що** це гарний час. До зустрічі! *(Yes, I also think that this is a good time. See you!)*
+Let's look at our first conversation. Two friends are planning to meet and deciding on a location and time. Notice how they link their sentences.
 
-:::note
-The imperative verbs **поверни** (turn) and **зупинись** (stop) seen in the dialogue are used for giving direct navigation instructions. They form the core action in the main clause, waiting for the subordinate clause to provide the condition (e.g., **коли побачиш...**).
-:::
+> **Господар:** Привіт! Ти **знаєш** (know), де нове кафе?
+> *(Hi! Do you know where the new cafe is?)*
+> **Гість:** Так, я **знаю**, де воно.
+> *(Yes, I know where it is.)*
+> **Господар:** Скажи, **коли** (when) ти вільний.
+> *(Tell me when you are free.)*
+> **Гість:** Я вільний, коли закінчу роботу.
+> *(I am free when I finish work.)*
+> **Господар:** Добре. Я **думаю** (think), **що** (that) о шостій буде добре.
+> *(Good. I think that at six will be good.)*
+> **Гість:** Так, я теж **думаю**, що це гарний час.
+> *(Yes, I also think that this is a good time.)*
 
-When discussing other people and sharing information, complex sentences allow speakers to embed one fact inside another. The short bolded words connect the act of knowing or saying with the actual information being shared.
+Notice exactly how the speakers connect their ideas together. The small words **де** (where), **коли** (when), and **що** (that) act as crucial links between a main thought and a dependent thought. Without these connecting words, the conversation would feel completely disconnected and choppy. They act as bridges, turning simple, brief statements into a naturally flowing dialogue.
 
-> **Максим:** Привіт! Ти знаєш, **що** Олена вже в Києві? *(Hi! Do you know that Olena is already in Kyiv?)*
-> **Тарас:** Ні, я не знав! А де вона живе? *(No, I didn't know! And where does she live?)*
-> **Максим:** Я не знаю, **де** саме. Але я знаю, **що** біля центру. *(I don't know exactly where. But I know that it is near the center.)*
-> **Тарас:** Скажи їй, **коли** побачиш, **що** я хочу зустрітися. *(Tell her, when you see her, that I want to meet.)*
-> **Максим:** Добре, скажу, **коли** побачу. *(Okay, I will tell her when I see her.)*
+Now, let's look at a second conversation. Here, someone is asking for directions or updates about a friend. Pay attention to how the information is layered.
 
-In these dialogues, the bolded words **що**, **де**, and **коли** are not asking questions, but rather acting as bridges. They are "connector" words that glue two separate pieces of information together into a single, flowing thought. Instead of stating two separate facts like "I know" and "Where does she live?", the speaker combines them using **де**: **Я знаю, де вона живе**. This grammatical structure elevates speech from basic phrases to natural, connected communication. A specific punctuation mark appears before every single one of these connector words. The comma is an absolute requirement here, establishing a structural boundary between the two connected actions.
+> **Анна:** Ти **знаєш**, що Олена вже в Києві?
+> *(Do you know that Olena is already in Kyiv?)*
+> **Максим:** Ні, я не знав! А де вона живе?
+> *(No, I did not know! And where does she live?)*
+> **Анна:** Я не **знаю**, де саме. Але я **знаю**, що біля центру.
+> *(I don't know exactly where. But I know that it is near the center.)*
+> **Максим:** Скажи їй, коли **побачиш** (see), що я хочу зустрітися.
+> *(Tell her, when you see her, that I want to meet.)*
+> **Анна:** Добре, **скажу** (will say), коли побачу.
+> *(Good, I will tell her when I see her.)*
+
+Notice the highly natural conversational flow in this exchange. We can clearly see how a single sentence can contain multiple clauses linked by these specific conjunctions. This grammar skill makes your spoken Ukrainian sound much more advanced, fluent, and expressive, allowing you to share complex, layered information effortlessly in everyday situations.
+
+Here is a short example of explaining to a lost friend how to find your apartment, using these exact connections:
+
+> **Господар:** Коли побачиш фонтан, поверни ліворуч.
+> *(When you see the fountain, turn left.)*
+> **Гість:** Добре, я шукаю фонтан.
+> *(Good, I am looking for the fountain.)*
+> **Господар:** Де побачиш парк, зупинись. Будинок, що стоїть біля дерева, мій.
+> *(Where you see the park, stop. The building that stands near the tree is mine.)*
 
 ## Складне речення (Complex Sentences)
 
-In Module 44, you learned how to connect two equal ideas using simple words like **і** (and) or **але** (but). A sentence like **Я читаю, і він пише** (I am reading, and he is writing) contains two independent actions carrying equal weight. Now, the focus shifts to connecting a main idea with a dependent idea. In the sentence **Я знаю, що він тут** (I know that he is here), the phrase **Я знаю** operates as the core statement—it is the main clause. The second part, **що він тут**, provides supporting information and depends entirely on the first part to make sense. Ukrainian textbooks for the fifth grade call this hierarchical structure a **складнопідрядне речення** (a complex sentence with a subordinate clause).
+Let's explain the concept of the complex **речення** (sentence). In Module 44, you successfully learned how to connect EQUAL ideas using coordinating words. You built balanced sentences like "Я читаю, і він пише" (I read, and he writes). Now, we are stepping up to a completely new level: connecting a MAIN idea with a DEPENDENT idea. In Ukrainian grammar, this specific structure is called a складнопідрядне речення (complex sentence with a subordinate clause). You have a **головне** (main) clause that can stand totally alone, and a dependent part that relies heavily on the main one to make full sense.
 
-Ukrainian punctuation enforces a strict rule for these complex sentences. You must always place a comma before **що**, **де**, and **коли** when they act as conjunctions linking two clauses. This creates a significant contrast with English, where a sentence like "I think that it is correct" requires no punctuation boundary. In Ukrainian, that comma is a mandatory visual pause indicating the start of a dependent clause.
+Let's break down the structure. The grammatical formula is incredibly logical and consistent: Main clause + comma + **що** / **де** / **коли** + subordinate clause. The first part of the sentence sets up the action or the central thought, and the second part delivers the specific, supporting details. Look at these concrete, clear examples to see the pattern in action:
 
-*   **Я думаю, що це правильно.** (I think that this is correct.)
-*   **Він не знає, де магазин.** (He does not know where the store is.)
-*   **Зателефонуй, коли прийдеш.** (Call when you arrive.)
+- Я **знаю**, що він тут. *(I know that he's here.)*
+- Я не **знаю**, де він живе. *(I don't know where he lives.)*
+- Скажи мені, коли ти прийдеш. *(Tell me when you'll come.)*
+- Вона **думає**, що це правда. *(She thinks that this is true.)*
+- Ми **бачимо** (see), де стоїть машина. *(We see where the car stands.)*
 
-Every single example requires the comma before the conjunction.
+Now we must discuss the absolute golden rule of Ukrainian punctuation. This is a strict requirement that you must memorize. Unlike English, where words like "that" or "when" often do not require any punctuation before them, Ukrainian is entirely different. You MUST always place a comma immediately before **що**, **де**, and **коли** when they act as conjunctions connecting two parts of a sentence.
 
-:::caution
-English speakers often forget the comma before **що** because "I think that..." has no punctuation in English. In Ukrainian, writing **Я думаю що це так** without a comma is a grammatical error. Always insert the pause.
-:::
+Let's reinforce this essential comma rule with more examples. Read these sentences carefully and pay close attention to the punctuation marks separating the clauses:
 
-Certain actions naturally demand a subordinate clause to finish their thought. These "trigger verbs" describe perception, thought, and communication. The most common examples are **знати** (to know), **думати** (to think), **казати** (to say/tell), **сказати** (to say — perfective), **бачити** (to see), **чути** (to hear), and **розуміти** (to understand). When a speaker uses these verbs, they usually need **що**, **де**, or **коли** to complete the logical sequence. If someone says "I see," the listener immediately waits for the rest of the information. A connected clause satisfies that grammatical expectation.
+- Я **думаю**, що це правильно. *(comma before що)*
+- Він не **знає**, де магазин. *(comma before де)*
+- Зателефонуй, коли прийдеш. *(comma before коли)*
+- Я **розумію** (understand), що ти втомився. *(comma before що)*
+- Вони **чують** (hear), коли грає музика. *(comma before коли)*
 
-*   **Я бачу, що ти працюєш.** (I see that you are working.)
-*   **Ти чуєш, де грає музика?** (Do you hear where the music is playing?)
-*   **Він розуміє, коли треба йти.** (He understands when it is necessary to go.)
-*   **Ми знаємо, що це важливо.** (We know that this is important.)
-*   **Вона каже, що вона вдома.** (She says that she is at home.)
+See how the commas smoothly structure this paragraph about a park:
 
-<!-- INJECT_ACTIVITY: fill-in-conjunction-choice -->
+> Я живу у великому місті. Я **знаю**, де тут гарний парк. Мій брат **каже** (says), що там дуже тихо. Ми гуляємо там, коли маємо вільний час. Я **думаю**, що це найкраще місце.
+> *I live in a large city. I know where there is a beautiful park here. My brother says that it is very quiet there. We walk there when we have free time. I think that this is the best place.*
 
-<!-- INJECT_ACTIVITY: quiz-comma-placement -->
+<!-- INJECT_ACTIVITY: fill-in-conjunctions -->
 
 ## Що, де, коли — двоє облич (Two Faces)
 
-The words **що**, **де**, and **коли** serve two entirely different functions depending on their placement in a sentence. As question words, they appear at the beginning of a sentence to request information. You already know this role from Module 20. When positioned at the start, they function as interrogative markers and demand an answer.
+These three extremely useful words have two distinct jobs, or "Two Faces" (двоє облич), in the Ukrainian language. Job 1 is acting as simple Question words. You already learned this specific function back in Module 20. We use them right at the beginning of a sentence to ask for specific information.
 
-*   **Що це на столі?** (What is this on the table?)
-*   **Де ти зараз живеш?** (Where do you live now?)
-*   **Коли ти прийдеш додому?** (When will you arrive home?)
-*   **Що він робить там?** (What is he doing there?)
-*   **Де працює твій брат?** (Where does your brother work?)
+- **Що** це? *(What is this?)*
+- **Де** ти? *(Where are you?)*
+- **Коли** ти прийдеш? *(When will you come?)*
 
-In this primary role, their function is to open a conversation and extract specific details from the listener.
+Job 2 is acting as Conjunctions. This is the brand-new skill we are practicing today. Here, they are used to connect clauses within a single complex sentence. How do you clearly spot the difference between the two jobs? It is quite simple: a question word sits right at the start of a sentence that ends with a question mark. A conjunction sits in the middle, firmly linking two parts together, and it is always preceded by a comma.
 
-When these exact same words move to the middle of the sentence—positioned immediately after a comma—they completely drop their interrogative function and become conjunctions. Compare the direct question **Де ти?** (Where are you?) with the complex statement **Я знаю, де ти** (I know where you are). The segment following the comma uses normal statement word order. No inversion or special question intonation applies, because the speaker is no longer asking anything. The sentence simply states a fact about a location, a time, or an event.
+Let's detail some of the most common and useful sentence patterns using **що** and **де** as conjunctions. They are very frequently paired with verbs of knowing, thinking, and saying, such as **знати** (to know), **думати** (to think), and **казати** (to say).
 
-*   **Я знаю, що він робить.** (I know what he is doing.)
-*   **Я не знаю, що це.** (I do not know what this is.)
-*   **Я думаю, що це правильно.** (I think that this is correct.)
-*   **Він каже, що кафе зачинене.** (He says that the cafe is closed.)
-*   **Я знаю, де він працює.** (I know where he works.)
-*   **Я не знаю, де мій телефон.** (I do not know where my phone is.)
-*   **Скажи, коли ти будеш готовий.** (Tell me when you will be ready.)
-*   **Я не знаю, коли він приїде.** (I do not know when he will arrive.)
+- Я **знаю**, що... / Я не **знаю**, що... *(I know / don't know that...)*
+- Я **думаю**, що... *(I think that...)*
+- Він **каже**, що... *(He says that...)*
+- Вона може **сказати** (say), що... *(She can say that...)*
+- Я **знаю**, де... / Я не **знаю**, де... *(I know / don't know where...)*
+- Ми **бачимо**, де... *(We see where...)*
 
-:::tip
-A simple trick to identify the function of **що**: if you can replace it with "what" in English, it is a question word. If you can replace it with "that," it is a conjunction connecting two ideas.
-:::
+Now let's detail the important patterns using **коли**. This specific word connects actions in time.
 
-A subordinate clause stating a condition or time can sometimes appear before the main action. In such cases, the dependent clause starts with **коли** and opens the sentence.
+- Скажи, коли... *(Tell me when...)*
+- Я не **знаю**, коли... *(I don't know when...)*
+- Ми **розуміємо**, коли... *(We understand when...)*
 
-*   **Коли я прийду, ми поговоримо.** (When I arrive, we will talk.)
-*   **Коли я вдома, я відпочиваю.** (When I am at home, I rest.)
-*   **Коли вона читає, вона не чує.** (When she is reading, she does not hear.)
-*   **Коли ми працюємо, ми не говоримо.** (When we work, we do not talk.)
+Interestingly, you can also completely reverse the structure. The dependent clause can come first:
 
-The mandatory comma still separates the two parts, but it now sits in the middle of the sentence to introduce the main clause. While **що** and **де** almost always remain firmly in the middle of the sentence (e.g., **Я думаю, що...**, **Він каже, що...**), the word **коли** offers more flexibility and frequently jumps to the beginning to establish the context for the main action.
+- Коли я прийду, ми поговоримо. *(When I arrive, we will talk.)*
+- Коли він працює, він мовчить. *(When he works, he is silent.)*
 
-### Практика читання (Reading Practice)
+Notice that the comma still separates the two clauses, ensuring the sentence remains perfectly clear.
 
-Read the following paragraph. Notice how the short conjunctions hold the narrative together. 
+Here is a short classroom situation using these specific words:
 
-**Мій друг Тарас каже, що він живе біля парку. Я не знаю, де саме цей парк. Але я знаю, що він великий. Коли в Тараса є час, він гуляє там. Я думаю, що це гарне місце. Тарас каже, що він теж гуляє, коли я тут.** 
-*(My friend Taras says that he lives near the park. I do not know where exactly this park is. But I know that it is big. When Taras has time, he walks there. I think that this is a good place. Taras says that he also walks when I am here.)*
+> Студенти сидять у класі. Вчитель запитує, де лежить книга. Студент не **знає**, де вона. Інший студент **каже**, що книга на столі. Вони читають, коли вчитель просить.
+> *The students are sitting in the class. The teacher asks where the book lies. The student does not know where it is. Another student says that the book is on the table. They read when the teacher asks.*
 
-<!-- INJECT_ACTIVITY: quiz-function-id -->
+<!-- INJECT_ACTIVITY: quiz-question-or-conjunction -->
 
-<!-- INJECT_ACTIVITY: fill-in-sentence-builder -->
+<!-- INJECT_ACTIVITY: fill-in-build-sentences -->
+
+<!-- INJECT_ACTIVITY: quiz-comma-placement -->
 
 ## Підсумок — Summary
 
-Complex sentences rely on specific connectors to link a main clause to a subordinate clause. Here is a summary of the three subordinating conjunctions from this module:
+Let's provide a comprehensive recap of the subordinating conjunctions you have mastered at the A1 level. They are the essential building blocks of fluency.
 
 | Conjunction | Meaning | Example |
 | :--- | :--- | :--- |
-| **що** | that | **Я знаю, що він тут.** |
-| **де** | where | **Я не знаю, де кафе.** |
-| **коли** | when | **Скажи, коли прийдеш.** |
+| **що** | that | Я **знаю**, що він тут. *(I know that he is here.)* |
+| **де** | where | Я не **знаю**, де кафе. *(I don't know where the cafe is.)* |
+| **коли** | when | Скажи, коли прийдеш. *(Tell me when you will come.)* |
 
-The comma before these conjunctions is a strict requirement of Ukrainian punctuation. Furthermore, **що** translates to "that" when operating as a conjunction, but functions as "what" when acting as a question word. The identical spelling performs two completely different grammatical roles depending entirely on the sentence structure.
+We must strongly reiterate the paramount punctuation rule: Always place a comma before the conjunction when it connects two clauses. This tiny punctuation mark is the absolute secret to perfect, natural Ukrainian writing. Do not forget it.
 
-Combining subordinating conjunctions with the basic connectors from Module 44 allows for highly detailed sentence structures. Multiple clauses can link together to describe complex situations.
+As you progress, your sentences will become much richer. You can now combine these new subordinating conjunctions with the coordinating conjunctions you learned in Module 44 (**і**, **а**, **але**, **бо**). This allows you to build highly advanced, expressive sentences. Look at these excellent examples of double-conjunction sentences:
 
-*   **Я не йду, бо я не знаю, де це.** (I am not going, because I do not know where it is.)
-*   **Він каже, що прийде, коли закінчить.** (He says that he will come when he finishes.)
-*   **Ми думаємо, що вона знає, де він.** (We think that she knows where he is.)
-*   **Я бачу, що ти не знаєш, що робити.** (I see that you do not know what to do.)
+- Я не йду, бо я не **знаю**, де це. *(I am not going, because I do not know where it is.)* — two conjunctions!
+- Він **каже**, що прийде, коли закінчить. *(He says that he will come when he finishes.)* — two subordinate clauses!
+- Я **думаю**, що це добре, але я не впевнений. *(I think that it is good, but I am not sure.)*
 
-The first example uses **бо** (because) and **де** (where) in a single thought. The second sentence contains two separate subordinate clauses, demonstrating how these small connecting words build sophisticated real-world communication.
+Now it is time for a quick self-check section. Take a moment to actively build three of your own sentences using the following sentence frames. Say them out loud or write them down:
 
-Verify your understanding by reviewing these core concepts. Can you name the three subordinating conjunctions covered in this module? Check your memory regarding the mandatory punctuation mark required before them. Finally, practice building three original sentences starting with these specific phrases:
+- Я **думаю**, що...
+- Я не **знаю**, де...
+- Скажи мені, коли...
 
-*   **Я думаю, що...**
-*   **Я не знаю, де...**
-*   **Скажи мені, коли...**
+Read this final paragraph to see everything smoothly working together:
 
+> Зараз вечір. Я ще не **знаю**, де мій брат. Мій друг **думає**, що він іде в парк. Я не **знаю**, коли він там гуляє. Я **думаю**, що це гарна ідея.
+> *It is evening now. I do not know yet where my brother is. My friend thinks that he is going to the park. I do not know when he walks there. I think that this is a good idea.*
 </module_content>
 
 ---
@@ -226,48 +272,68 @@ version: "1.0"
 module: when-and-where
 level: a1
 
+# NOTE — these are SHAPE examples. The real targets are at the top of this prompt
+# (10 total / 4–6 inline / 6–9 workbook,
+# 6+ items per activity). The shapes below are TRUNCATED for readability;
+# YOUR output MUST hit those minimums.
+
 inline:
   - id: marker-id-here        # MUST match an <!-- INJECT_ACTIVITY: ... --> marker
     type: quiz                 # activity type
     instruction: "Оберіть правильний варіант"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - question: "_____ стіл"
-        options: ["мій", "моя", "моє"]
+        options: ["мій", "моя", "моє", "мої"]
         correct: 0             # 0-based index
+      - question: "Це ____ книга."
+        options: ["мій", "моя", "моє", "мої"]
+        correct: 1
+      # ... add at least 6 items total — never stop at 1-2
 
   - id: another-marker-id
     type: fill-in
     instruction: "Вставте правильне слово"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - sentence: "Це ____ кімната."
         answer: "моя"
         options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ вікно."
+        answer: "моє"
+        options: ["мій", "моя", "моє"]
+      # ... ≥ 6 items total
 
 workbook:
-  - type: match-up
+  - id: match-up-vocab
+    type: match-up
     instruction: "З'єднайте пари"
-    pairs:
+    pairs:                     # ← real output: ≥ 6 pairs
       - left: "стіл"
         right: "він"
       - left: "книга"
         right: "вона"
       - left: "вікно"
         right: "воно"
+      # ... ≥ 6 pairs total
 
-  - type: group-sort
+  - id: group-sort-gender
+    type: group-sort
     instruction: "Розподіліть слова за категоріями"
     groups:
-      - label: "Category A"
-        items: ["word1", "word2"]
-      - label: "Category B"
-        items: ["word3", "word4"]
+      - label: "Чоловічий рід"
+        items: ["стіл", "олівець", "будинок"]   # ≥ 3 items per group
+      - label: "Жіночий рід"
+        items: ["книга", "ручка", "школа"]
+      - label: "Середній рід"
+        items: ["вікно", "море", "молоко"]
 
-  - type: true-false
+  - id: true-false-grammar
+    type: true-false
     instruction: "Правда чи ні?"
-    items:
-      - statement: "Statement here"
-        correct: true
-        explanation: "Why it's true"
+    items:                     # ← real output: ≥ 6 items
+      - statement: "«Книга» — це чоловічий рід."
+        correct: false
+        explanation: "Книга закінчується на -а, отже жіночий рід."
+      # ... ≥ 6 items total
 
   - type: error-correction
     instruction: "Виправте помилку"
@@ -338,7 +404,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -432,10 +498,15 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 ## Quality Rules
 
-**ITEM COUNT MINIMUMS (non-negotiable):**
-- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
-- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
-- If you can't think of enough items, add more examples from the module's vocabulary and content.
+**ACTIVITY COUNT MINIMUMS (non-negotiable, audit-enforced):**
+- **Total: 10 activities.** Inline: 4–6. Workbook: 6–9. The audit gate FAILS the module if you ship fewer.
+- **Type diversity: workbook MUST cover ≥5 distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
+- **Match the inline markers exactly.** Every `<!-- INJECT_ACTIVITY: id -->` marker in the prose needs a matching inline activity with that exact id. Skipping markers means the lesson tab is broken.
+
+**ITEM COUNT MINIMUMS (non-negotiable, per-activity):**
+- **Default minimum: 6 items per activity.** Quiz, fill-in, match-up, true-false, anagram, error-correction, translate, cloze, mark-the-words, divide-words, count-syllables, odd-one-out, group-sort categories: all ≥ 6.
+- **Lower minimums for specific types only:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items, essay-response/critical-analysis = 1 prompt.
+- If you can't think of enough items, add more examples from the module's vocabulary and content. NEVER ship a 1-item or 2-item activity unless its type cap explicitly allows it.
 - **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
 - **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
@@ -542,6 +613,27 @@ IMPORTANT: After using tools, output your COMPLETE module content as plain text.
 1. Run `verify_words` on all Ukrainian words in your exercises — every word must exist in VESUM
 2. Run `query_cefr_level` on any word you're unsure about — it must be a1-appropriate
 3. For fill-in answers and distractors, verify the exact form (case, number, gender) with `verify_lemma`
+
+---
+
+## ⚠️ MANDATORY FINAL CHECKLIST — verify before emitting YAML
+
+Walk through this checklist explicitly before you start emitting. If ANY box is unchecked, fix it FIRST.
+
+- [ ] My output has **at least 4** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
+- [ ] My output has **at least 6** workbook activities.
+- [ ] **Total ≥ 10.**
+- [ ] **Every** activity has **at least 6** items, pairs, or statements (except types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3, essay-response=1).
+- [ ] The module (inline + workbook combined) uses **at least 0 distinct activity types** (or 4+ when 0 = 0 and the workbook size allows it). I am NOT shipping a wall of quizzes.
+- [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
+- [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
+- [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+- [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+- [ ] My inline count is between 4 and 6. I did NOT create more injection markers than 6.
+- [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
+- [ ] At B1+, all instructions are in Ukrainian (no English fallback).
+
+If you cannot tick all of these, REGENERATE the activities BEFORE outputting. Shipping under-spec means the build rejects you and the heal loop has to redo your work — wasting compute.
 
 ---
 

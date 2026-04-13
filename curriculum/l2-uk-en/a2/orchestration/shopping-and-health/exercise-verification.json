@@ -1,283 +1,302 @@
 {
-  "total_items": 154,
-  "grounded_items": 109,
+  "total_items": 199,
+  "grounded_items": 151,
   "ungrounded": [
     {
-      "word": "зважте",
-      "exercise_type": "fill-in",
-      "context": "Зважте мені великий шматок ____.",
-      "role": "context"
-    },
-    {
-      "word": "великий",
-      "exercise_type": "fill-in",
-      "context": "Зважте мені великий шматок ____.",
-      "role": "context"
-    },
-    {
-      "word": "свіжий",
-      "exercise_type": "fill-in",
-      "context": "Чи є у вас свіжий десяток ____?",
-      "role": "context"
-    },
-    {
-      "word": "банку",
-      "exercise_type": "fill-in",
-      "context": "Я хочу купити банку гречаного ____.",
-      "role": "context"
-    },
-    {
-      "word": "білого",
-      "exercise_type": "fill-in",
-      "context": "Можна мені кілограм білого ____?",
-      "role": "context"
-    },
-    {
-      "word": "яке",
+      "word": "взяв",
       "exercise_type": "quiz",
-      "context": "Яке запитання зазвичай ставить лікар?",
+      "context": "Я взяв сироп від ____.",
       "role": "context"
     },
     {
-      "word": "запитання",
-      "exercise_type": "quiz",
-      "context": "Яке запитання зазвичай ставить лікар?",
-      "role": "context"
-    },
-    {
-      "word": "ставить",
-      "exercise_type": "quiz",
-      "context": "Яке запитання зазвичай ставить лікар?",
-      "role": "context"
-    },
-    {
-      "word": "висока",
+      "word": "бути",
       "exercise_type": "match-up",
-      "context": "висока температура",
+      "context": "Я хочу бути здоровим.",
       "role": "answer"
     },
     {
-      "word": "хочете",
-      "exercise_type": "quiz",
-      "context": "Якщо ви не хочете їсти, ви кажете:",
+      "word": "здоровим",
+      "exercise_type": "match-up",
+      "context": "Я хочу бути здоровим.",
+      "role": "answer"
+    },
+    {
+      "word": "воду",
+      "exercise_type": "match-up",
+      "context": "Вам треба пити воду.",
       "role": "context"
     },
     {
-      "word": "кажете",
-      "exercise_type": "quiz",
-      "context": "Якщо ви не хочете їсти, ви кажете:",
+      "word": "спати",
+      "exercise_type": "match-up",
+      "context": "Я хочу спати.",
+      "role": "answer"
+    },
+    {
+      "word": "відпочивати",
+      "exercise_type": "match-up",
+      "context": "Вам треба більше відпочивати.",
       "role": "context"
     },
     {
-      "word": "просите",
-      "exercise_type": "quiz",
-      "context": "Що ви просите в аптеці, коли болить голова?",
+      "word": "правильно",
+      "exercise_type": "true-false",
+      "context": "Правильно казати: «кілограм яблука».",
       "role": "context"
     },
     {
-      "word": "відчуваєте",
-      "exercise_type": "quiz",
-      "context": "Як сказати, що ви відчуваєте нудоту?",
+      "word": "казати",
+      "exercise_type": "true-false",
+      "context": "Правильно казати: «кілограм яблука».",
       "role": "context"
     },
     {
-      "word": "нудоту",
-      "exercise_type": "quiz",
-      "context": "Як сказати, що ви відчуваєте нудоту?",
+      "word": "яйця",
+      "exercise_type": "true-false",
+      "context": "Правильно казати: «десяток яйця».",
       "role": "context"
     },
     {
-      "word": "купуєте",
-      "exercise_type": "quiz",
-      "context": "Що ви купуєте, якщо у вас сильна реакція на пилок або їжу?",
+      "word": "вода",
+      "exercise_type": "error-correction",
+      "context": "Ця пляшка вода коштує сорок гривень.",
       "role": "context"
     },
     {
-      "word": "сильна",
-      "exercise_type": "quiz",
-      "context": "Що ви купуєте, якщо у вас сильна реакція на пилок або їжу?",
+      "word": "купили",
+      "exercise_type": "error-correction",
+      "context": "Ми купили п'ять кілограми картоплі.",
       "role": "context"
     },
     {
-      "word": "реакція",
-      "exercise_type": "quiz",
-      "context": "Що ви купуєте, якщо у вас сильна реакція на пилок або їжу?",
+      "word": "хліб",
+      "exercise_type": "error-correction",
+      "context": "Мені треба шматок хліб.",
       "role": "context"
     },
     {
-      "word": "пилок",
-      "exercise_type": "quiz",
-      "context": "Що ви купуєте, якщо у вас сильна реакція на пилок або їжу?",
+      "word": "п'ємо",
+      "exercise_type": "error-correction",
+      "context": "Ми п'ємо чай без цукор.",
       "role": "context"
     },
     {
-      "word": "їжу",
-      "exercise_type": "quiz",
-      "context": "Що ви купуєте, якщо у вас сильна реакція на пилок або їжу?",
+      "word": "цукор",
+      "exercise_type": "error-correction",
+      "context": "Ми п'ємо чай без цукор.",
       "role": "context"
     },
     {
-      "word": "відповісти",
-      "exercise_type": "quiz",
-      "context": "Як відповісти, якщо лікар питає про рецепт, а у вас його нем",
-      "role": "context"
-    },
-    {
-      "word": "які",
-      "exercise_type": "quiz",
-      "context": "Які слова описують загальний поганий стан, коли вам холодно?",
-      "role": "context"
-    },
-    {
-      "word": "слова",
-      "exercise_type": "quiz",
-      "context": "Які слова описують загальний поганий стан, коли вам холодно?",
-      "role": "context"
-    },
-    {
-      "word": "описують",
-      "exercise_type": "quiz",
-      "context": "Які слова описують загальний поганий стан, коли вам холодно?",
-      "role": "context"
-    },
-    {
-      "word": "загальний",
-      "exercise_type": "quiz",
-      "context": "Які слова описують загальний поганий стан, коли вам холодно?",
+      "word": "брату",
+      "exercise_type": "error-correction",
+      "context": "Моєму брату поганий.",
       "role": "context"
     },
     {
       "word": "поганий",
-      "exercise_type": "match-up",
-      "context": "поганий сон",
-      "role": "answer"
-    },
-    {
-      "word": "стан",
-      "exercise_type": "quiz",
-      "context": "Які слова описують загальний поганий стан, коли вам холодно?",
-      "role": "context"
-    },
-    {
-      "word": "імунітет",
-      "exercise_type": "match-up",
-      "context": "слабкий імунітет",
-      "role": "answer"
-    },
-    {
-      "word": "сон",
-      "exercise_type": "match-up",
-      "context": "поганий сон",
-      "role": "answer"
-    },
-    {
-      "word": "словосполучення",
-      "exercise_type": "true-false",
-      "context": "Словосполучення «два кілограми помідор» є правильним.",
-      "role": "context"
-    },
-    {
-      "word": "правильним",
-      "exercise_type": "true-false",
-      "context": "Словосполучення «два кілограми помідор» є правильним.",
-      "role": "context"
-    },
-    {
-      "word": "тому",
-      "exercise_type": "true-false",
-      "context": "Ми кажемо «пляшка олії», тому що «пляшка» вимагає родового в",
-      "role": "context"
-    },
-    {
-      "word": "вимагає",
-      "exercise_type": "true-false",
-      "context": "Ми кажемо «пляшка олії», тому що «пляшка» вимагає родового в",
-      "role": "context"
-    },
-    {
-      "word": "родового",
-      "exercise_type": "true-false",
-      "context": "Ми кажемо «пляшка олії», тому що «пляшка» вимагає родового в",
-      "role": "context"
-    },
-    {
-      "word": "відмінка",
-      "exercise_type": "true-false",
-      "context": "Ми кажемо «пляшка олії», тому що «пляшка» вимагає родового в",
-      "role": "context"
-    },
-    {
-      "word": "фраза",
-      "exercise_type": "true-false",
-      "context": "Фраза «У мене немає температура» граматично правильна.",
-      "role": "context"
-    },
-    {
-      "word": "граматично",
-      "exercise_type": "true-false",
-      "context": "Фраза «У мене немає температура» граматично правильна.",
-      "role": "context"
-    },
-    {
-      "word": "правильна",
-      "exercise_type": "true-false",
-      "context": "Фраза «У мене немає температура» граматично правильна.",
-      "role": "context"
-    },
-    {
-      "word": "сира",
-      "exercise_type": "true-false",
-      "context": "Правильно говорити «шматок сира».",
-      "role": "context"
-    },
-    {
-      "word": "користі",
-      "exercise_type": "true-false",
-      "context": "Коли ми щось купуємо для користі, ми кажемо «для здоров'я».",
-      "role": "context"
-    },
-    {
-      "word": "називний",
-      "exercise_type": "group-sort",
-      "context": "Називний відмінок (Що це?)",
-      "role": "context"
-    },
-    {
-      "word": "відсутність",
-      "exercise_type": "group-sort",
-      "context": "Родовий відмінок (Кількість або відсутність чого?)",
-      "role": "context"
-    },
-    {
-      "word": "чого",
-      "exercise_type": "group-sort",
-      "context": "Родовий відмінок (Кількість або відсутність чого?)",
-      "role": "context"
-    },
-    {
-      "word": "вранці",
       "exercise_type": "error-correction",
-      "context": "Сьогодні вранці у мене болять голова.",
+      "context": "Моєму брату поганий.",
       "role": "context"
     },
     {
-      "word": "сили",
+      "word": "температурою",
       "exercise_type": "error-correction",
-      "context": "Я дуже погано почуваюсь, у мене немає сили.",
+      "context": "Лікар каже, що у мене немає температурою.",
       "role": "context"
     },
     {
-      "word": "м'яса",
+      "word": "комп'ютера",
       "exercise_type": "error-correction",
-      "context": "м'яса",
+      "context": "У мене болить очі від комп'ютера.",
+      "role": "context"
+    },
+    {
+      "word": "випив",
+      "exercise_type": "error-correction",
+      "context": "Я випив таблетку від кашлем.",
+      "role": "context"
+    },
+    {
+      "word": "таблетку",
+      "exercise_type": "error-correction",
+      "context": "Я випив таблетку від кашлем.",
+      "role": "context"
+    },
+    {
+      "word": "кашлем",
+      "exercise_type": "error-correction",
+      "context": "Я випив таблетку від кашлем.",
+      "role": "context"
+    },
+    {
+      "word": "п'ю",
+      "exercise_type": "fill-in",
+      "context": "Я п'ю чай ____ цукру.",
+      "role": "context"
+    },
+    {
+      "word": "натщесерце",
+      "exercise_type": "fill-in",
+      "context": "Треба приймати ці таблетки ____ їжі, а не натщесерце.",
+      "role": "context"
+    },
+    {
+      "word": "сказав",
+      "exercise_type": "fill-in",
+      "context": "Лікар сказав пити воду ____ сніданку.",
+      "role": "context"
+    },
+    {
+      "word": "тебе",
+      "exercise_type": "fill-in",
+      "context": "Ця пляшка води ____ тебе.",
+      "role": "context"
+    },
+    {
+      "word": "скаржитесь",
+      "exercise_type": "group-sort",
+      "context": "На що ви скаржитесь?",
       "role": "answer"
+    },
+    {
+      "word": "ній",
+      "exercise_type": "match-up",
+      "context": "у ній зазвичай є вода або сік",
+      "role": "context"
+    },
+    {
+      "word": "зазвичай",
+      "exercise_type": "match-up",
+      "context": "у ній зазвичай є вода або сік",
+      "role": "context"
+    },
+    {
+      "word": "сік",
+      "exercise_type": "match-up",
+      "context": "у ній зазвичай є вода або сік",
+      "role": "context"
+    },
+    {
+      "word": "де",
+      "exercise_type": "match-up",
+      "context": "магазин, де продають ліки",
+      "role": "context"
+    },
+    {
+      "word": "продають",
+      "exercise_type": "match-up",
+      "context": "магазин, де продають ліки",
+      "role": "context"
+    },
+    {
+      "word": "п'єте",
+      "exercise_type": "match-up",
+      "context": "ви п'єте це, коли хворієте",
+      "role": "context"
+    },
+    {
+      "word": "хворієте",
+      "exercise_type": "match-up",
+      "context": "ви п'єте це, коли хворієте",
+      "role": "context"
+    },
+    {
+      "word": "купують",
+      "exercise_type": "match-up",
+      "context": "місце, де купують свіжі овочі та фрукти",
+      "role": "context"
+    },
+    {
+      "word": "папірець",
+      "exercise_type": "match-up",
+      "context": "папірець від лікаря для фармацевта",
+      "role": "context"
+    },
+    {
+      "word": "фармацевта",
+      "exercise_type": "match-up",
+      "context": "папірець від лікаря для фармацевта",
+      "role": "context"
+    },
+    {
+      "word": "робите",
+      "exercise_type": "match-up",
+      "context": "коли у вас болить горло і ви робите «кхе-кхе»",
+      "role": "context"
+    },
+    {
+      "word": "кхе",
+      "exercise_type": "match-up",
+      "context": "коли у вас болить горло і ви робите «кхе-кхе»",
+      "role": "context"
+    },
+    {
+      "word": "жарко",
+      "exercise_type": "match-up",
+      "context": "коли вам дуже жарко через хворобу",
+      "role": "context"
+    },
+    {
+      "word": "через",
+      "exercise_type": "match-up",
+      "context": "коли вам дуже жарко через хворобу",
+      "role": "context"
+    },
+    {
+      "word": "хворобу",
+      "exercise_type": "match-up",
+      "context": "коли вам дуже жарко через хворобу",
+      "role": "context"
+    },
+    {
+      "word": "дідуся",
+      "exercise_type": "fill-in",
+      "context": "У дідуся часто ____ коліна.",
+      "role": "context"
+    },
+    {
+      "word": "йдіть",
+      "exercise_type": "fill-in",
+      "context": "Якщо у вас ____ живіт, йдіть до лікарні.",
+      "role": "context"
+    },
+    {
+      "word": "боліло",
+      "exercise_type": "fill-in",
+      "context": "боліло",
+      "role": "answer"
+    },
+    {
+      "word": "мої",
+      "exercise_type": "fill-in",
+      "context": "Мої ноги сильно ____ після довгої прогулянки.",
+      "role": "context"
+    },
+    {
+      "word": "боліли",
+      "exercise_type": "fill-in",
+      "context": "боліли",
+      "role": "answer"
+    },
+    {
+      "word": "небудь",
+      "exercise_type": "fill-in",
+      "context": "Чи у вас коли-небудь ____ зуби?",
+      "role": "context"
+    },
+    {
+      "word": "зуби",
+      "exercise_type": "fill-in",
+      "context": "Чи у вас коли-небудь ____ зуби?",
+      "role": "context"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 15,
-    "tested_in_exercises": 13,
+    "tested_in_exercises": 12,
     "not_tested": [
-      "ринок",
+      "алергія",
+      "помідор",
       "таблетка"
     ]
   },

@@ -247,25 +247,24 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-- Confirmed: свято, святкувати, різдво (Різдво), великдень (Великдень), новий (Новий), рік (рік), вітати, кутя, колядка, писанка, паска, парад, прапор, вишиванка, незалежність, салют.
-- Not found: None (all plan words verified as existing in standard Ukrainian forms).
+- Confirmed: свято, святкувати, Різдво, Великдень, Новий рік, вітати, кутя, колядка, писанка, паска, парад, прапор, вишиванка, незалежність, салют
+- Not found: None
 
 ## Grammar Rules
-- **Holiday Capitalization**: Правопис §52 — In names of holidays, the first word is capitalized: *Новий рік*, *День учителя*. 
-- **National Holidays**: Правопис §52, Примітка 1 — In the names *День Незалежності України*, *День Соборності України*, *День Конституції України*, all words are capitalized.
-- **Greetings Pattern**: Greetings use the preposition *З* + the name of the holiday in the Instrumental case: *З Різдвом!*, *З Новим роком!*, *З Днем Незалежності!*.
+- Capitalization of secular holidays (Новий рік): Правопис §52.1 — У назвах історичних подій, епох, календарних періодів і свят з великої букви пишемо перше (або єдине) слово і власні назви.
+- Capitalization of national holidays (День Незалежності): Правопис §52 (Примітка 1) — У назвах свят День Незалежності України, День Соборності України, День Конституції України з великої букви пишемо всі слова.
+- Capitalization of religious holidays (Різдво, Великдень): Правопис §53.3 — З великої букви пишемо назви релігійних свят і постів, а також окремих днів, що стосуються цих періодів: Благовіщення, Великдень... Покрова, Різдво.
 
 ## Calque Warnings
-- **приймати участь**: Calque from Russian — The correct Ukrainian form is **брати участь**.
-- **наступаюче свято**: Calque from Russian — Use **прийдешнє свято** or simply **наближення свята**.
-- **салют**: OK, but **феєрверк** is often preferred for festive displays.
+- святкувати: OK — (no warnings found)
+- державне свято: OK — (no warnings found)
+- привітати з (святом): OK — (no warnings found)
 
 ## CEFR Check
-- **свято**: A1 — OK
-- **Різдво**: A1 — OK
-- **Великдень**: A1 — OK
-- **прапор**: A1 — OK
-- **незалежність**: A1 (Contextual) — OK for a module on national holidays.
+- свято: A1 — OK
+- святкувати: A1 — OK
+- парад: B1 — Above target
+- кутя: B1 — Above target
 </pre_verified_facts>
 
 
@@ -589,12 +588,14 @@ These exercises, adapted from Ukrainian school materials, provide a gold standar
 
 ## Section Structure
 
-Write these sections as H2 headings, in this exact order:
+Write these sections as H2 headings, in this **exact** order:
 
 - `## Діалоги (Dialogues)` (~300 words)
 - `## Українські свята (Ukrainian Holidays)` (~300 words)
 - `## Державні свята (National Holidays)` (~300 words)
 - `## Підсумок — Summary` (~300 words)
+
+**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim** as an `## H2` line. This includes the FINAL summary/transition section (`Підсумок: ...`, `Підсумок та перехід до M...`, etc.) — the writer's most common failure is silently dropping the closing section. Do NOT skip it. Do NOT renumber. Do NOT merge headings. The post-write quick-verify check will fail your build if any heading is missing, even if the prose itself is excellent.
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -602,16 +603,17 @@ Each section should follow the word budget specified. The total must reach 1200 
 
 ## Content Rules
 
-TARGET: 20-35% Ukrainian.
+TARGET: 20-35% Ukrainian. ⚠️ HARD GATE — the audit REJECTS modules below 20%.
 LANGUAGE ROLES:
-- THEORY & EXPLANATION: English prose — brief and clear. Show, don't tell.
+- THEORY & EXPLANATION: English prose — brief, 2-3 sentences per concept. No long expository paragraphs. Explain once, then show Ukrainian.
+- UKRAINIAN NARRATIVE PARAGRAPHS: **REQUIRED — minimum 1 per section.** A 3-6 sentence Ukrainian paragraph demonstrating the concept in use, followed IMMEDIATELY by a `> *English translation*` blockquote. This is the PRIMARY driver of hitting the immersion target. Without these paragraphs you cannot reach 20%.
 - PARADIGM TABLES: Conjugation/declension tables with all cells Ukrainian.
-- EXAMPLE LISTS: Ukrainian sentences in bulleted lists (each: Ukrainian — English gloss).
-- DIALOGUES: Mini-dialogues in blockquotes with English gloss per line.
+- EXAMPLE LISTS: Ukrainian sentences in bulleted lists (each: Ukrainian — English gloss). Minimum 5 per rule.
+- DIALOGUES: Mini-dialogues in blockquotes with English gloss per line. At least 1 dialogue per module.
 - PATTERN BOXES: Show transformations: `читати → читай → читайте`.
 - INLINE: Ukrainian words/phrases bolded in English prose.
-- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian. Full Ukrainian sentences go in tables, bulleted lists, dialogues, or pattern boxes.
-Ukrainian sentences max 10 words. Mix container types.
+- STRUCTURAL RULE: Every section MUST contain a Ukrainian narrative paragraph (3-6 sentences, translated in blockquote) PLUS supporting tables/lists/dialogues/pattern boxes. Pure-English sections are FORBIDDEN at M35+.
+Ukrainian sentences max 12 words. Mix container types.
 
 HARD GRAMMAR RULES (audit will reject violations):
 - Max 10 words per Ukrainian sentence (STRICT — count every word)
@@ -643,6 +645,25 @@ PLAN-AWARE EXEMPTIONS: The following bans are RELAXED for this module because th
 - **Zero calques**: No приймати душ→брати душ, приймати рішення→ухвалювати рішення
 - **Zero paronyms**: тактична≠тактовна, ефектний≠ефективний — use the right word, not a similar-sounding one
 - **Natural Ukrainian**: Write how a Ukrainian teacher would explain this to a student. Not robotic, not textbook-dry, not overly casual.
+
+### FORBIDDEN WORDS — never write these (#1189)
+
+The following Russian words have leaked into past builds and broken modules. They are **hard-banned** — the post-write toxic-token scanner will fail your build the moment it sees one. Use the Ukrainian alternative every time, even in dialogues, even in casual prose, even when quoting a learner's mistake (use a `<!-- VERIFY -->` placeholder instead of typing the Russian form):
+
+| Russian (FORBIDDEN) | Ukrainian (USE THIS) |
+|---|---|
+| хорошо | добре |
+| конечно | звичайно / певна річ |
+| спасибо | дякую |
+| пожалуйста | будь ласка / прошу |
+| ничего | нічого |
+| сейчас | зараз |
+| тоже | теж / також |
+| здесь | тут |
+| кот | кіт |
+| кон | кін |
+
+This list is enforced word-for-word by `scripts/build/quick_verify.py` (SEVERE_RUSSIANISMS). If you produce any of these tokens — even inside a quoted example, even inside a dialogue line spoken by a Russian-speaking character — the build halts immediately. There is no exception.
 
 **Authority hierarchy (if uncertain about a word, check in this order):**
 VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (stress) → Антоненко-Давидович (style) → Грінченко (etymology).
@@ -753,38 +774,33 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Вступ: Що таке свято? (~120 words)
-- P1 (~120 words): Introduce the general concept of "свято" (holiday) in Ukraine. Categorize holidays into religious (релігійні), traditional (традиційні), and state (державні). Introduce the universal, all-purpose greeting "Зі святом!" (Happy Holiday!) and the verb "святкувати" (to celebrate). Explain that holidays are essential for understanding the Ukrainian soul.
+## Діалоги (Dialogues) (~330 words total)
+- P1 (~165 words): Dialogue 1 (Before Christmas). A Ukrainian host and foreign guest discuss the date of Christmas (Двадцять п'ятого грудня). The host explains that they used to celebrate on January 7, but now on Dec 25. They discuss traditions like singing carols (Ми співаємо колядки) and eating ritual food (їмо кутю). Ends with the greeting: З Різдвом! — З Різдвом Христовим! Focus vocabulary: Різдво, колядки, кутя, святкувати.
+- P2 (~165 words): Dialogue 2 (Independence Day). Two friends discuss August 24 (Двадцять четверте серпня — День Незалежності). They talk about plans for this major state holiday (головне державне свято): watching the parade (дивимося парад), going to a concert (ходимо на концерт), and seeing fireworks in the evening (ввечері — салют). Ends with the greeting: З Днем Незалежності! — Слава Україні! Focus vocabulary: День Незалежності, парад, концерт, салют.
 
-## Діалоги: Говоримо про свята (~330 words)
-- P1 (~110 words): Contextual introduction to the first dialogue. Two friends discuss the upcoming Christmas season. Mention the shift in the Ukrainian calendar: celebrating on December 25th (грудень) to align with Europe and break from the Russian Orthodox tradition.
-- P2 (~110 words): Dialogue 1 — Christmas Traditions. Two speakers (Українська родина та Іноземний гість) discuss what they do on Dec 24 and 25. Focus on: "Коли в тебе Різдво?", "Ми їмо кутю і співаємо колядки", and the specific greeting "З Різдвом Христовим!".
-- P3 (~110 words): Dialogue 2 — Independence Day. Setting: August 24th in a city center. Speakers discuss the atmosphere: "Сьогодні День Незалежності!", "Дивись, який гарний парад і прапори!", "Ввечері буде салют". End with the iconic exchange: "Слава Україні! — Героям слава!".
-- <!-- INJECT_ACTIVITY: quiz-holiday-match --> [quiz, Match holiday to date (e.g., Різдво → 25 грудня, День Незалежності → 24 серпня), 8 items]
+## Українські свята (Ukrainian Holidays) (~330 words total)
+- P1 (~110 words): Introduce the concept of a holiday (свято) and the universal greeting "Зі святом!" (Happy Holiday!). Explain that Ukrainian holidays are deeply tied to seasonal cycles and traditions.
+- P2 (~110 words): Різдво (Christmas) on December 25. Explicitly mention that Ukraine moved its official celebration from January 7 to December 25 to align with the rest of Europe. Detail the traditions of Свята вечеря (Holy Supper) on December 24, which features 12 страв (12 dishes), the most important being кутя (wheat porridge). Mention the living tradition of singing колядки (carols) by колядники.
+- P3 (~110 words): Великдень (Easter). Explain this is the biggest religious holiday in spring. Differentiate between the holiday (Великдень) and the traditional Easter bread (паска). Detail other traditions: creating unique decorated eggs (писанки) and blessing the basket at church (святити кошик). Introduce the traditional call-and-response greeting: "Христос воскрес!" — "Воістину воскрес!".
+- <!-- INJECT_ACTIVITY: quiz-which-holiday --> [quiz, Which holiday? Кутя, колядки, Свята вечеря → (Різдво / Великдень / Новий рік), 8 items]
 
-## Українські свята: Традиції та символи (~340 words)
-- P1 (~170 words): Christmas (Різдво) — The Winter Cycle. Detail the significance of December 25th. Describe "Свята вечеря" (Holy Supper) on Christmas Eve with its mandatory "12 страв" (12 dishes). Focus on "кутя" (ritual wheat porridge) as the most important dish. Explain "колядки" (carols) and "колядники" (carolers) who go door to door with a star. Mention the "дідух" (sheaf of wheat) as a traditional decoration.
-- P2 (~170 words): Easter (Великдень) — The Spring Cycle. Explain that this is the biggest religious celebration. Introduce "писанки" (artfully decorated eggs) as a unique Ukrainian art form. Distinguish between "Пасха" (the holiday name) and "паска" (the specific Easter bread). Describe the tradition of "святити кошик" (blessing the basket at church). Teach the ritual greeting: "Христос воскрес! — Воістину воскрес!".
-- <!-- INJECT_ACTIVITY: quiz-holiday-clues --> [quiz, Identify holiday based on clues (e.g., Кутя, колядки, 12 страв → Різдво), 8 items]
+## Державні свята (National Holidays) (~330 words total)
+- P1 (~110 words): День Незалежності (Independence Day). Highlight August 24, 1991, as the day Ukraine declared independence. Explain it as the most important державне свято (state holiday). Describe the celebrations: парад (parade), концерти, салют (fireworks), and displaying прапори (flags). Reiterate the greetings: З Днем Незалежності! and Слава Україні! — Героям слава!
+- P2 (~110 words): Новий рік (New Year). Highlight January 1 as the biggest secular celebration. Introduce associated vocabulary like ялинка (New Year tree) and подарунки (gifts). Mention the greeting З Новим роком!
+- P3 (~110 words): Other important civic and cultural days. Introduce Вишиванковий день (Vyshyvanka Day) on the third Thursday of May, where people wear a вишиванка (embroidered shirt) as a symbol of identity. Briefly mention День Конституції (Constitution Day) on June 28 and День захисників і захисниць (Defenders' Day) on October 1.
+- <!-- INJECT_ACTIVITY: quiz-match-date --> [quiz, Match holiday to date: Різдво → 25 грудня, День Незалежності → 24 серпня, 8 items]
+- <!-- INJECT_ACTIVITY: group-sort-traditions --> [group-sort, Sort traditions by holiday: Різдво vs Великдень vs День Незалежності, 10 items]
 
-## Державні свята: Громадянська ідентичність (~340 words)
-- P1 (~170 words): Independence Day (День Незалежності) — August 24, 1991. Explain that this is the most important "державне свято" (state holiday). Describe the festive atmosphere: military parades (парад), concerts, and the sea of blue and yellow flags (прапори). Use the phrase "вітати з Днем Незалежності" to show how we celebrate freedom and sovereignty.
-- P2 (~170 words): Other key celebrations. Introduce "Новий рік" (New Year, Jan 1) as the main secular holiday with the tree (ялинка) and gifts (подарунки). Explain "Вишиванковий день" (Vyshyvanka Day, 3rd Thursday of May) as a living tradition where everyone wears the embroidered shirt ("вишиванка") to show identity. Briefly mention Defenders' Day (October 1) and Constitution Day (June 28).
-- <!-- INJECT_ACTIVITY: group-sort-traditions --> [group-sort, Sort traditions and symbols by holiday: Різдво vs Великдень vs День Незалежності, 10 items]
+## Підсумок — Summary (~330 words total)
+- P1 (~130 words): Grammar pattern for holiday greetings: "З + instrumental case". Explain that learners already know this case from saying "with" (e.g., кава з молоком). Here, it literally means "(I greet you) with the holiday". Provide clear examples: З Різдвом! (Merry Christmas!), З Великоднем! (Happy Easter!), З Новим роком! (Happy New Year!), З Днем Незалежності! (Happy Independence Day!), and З днем народження! (Happy birthday!).
+- <!-- INJECT_ACTIVITY: fill-in-greetings --> [fill-in, Greetings: З ___! (Різдвом, Великоднем, Новим роком), 8 items]
+- P2 (~100 words): Quick calendar recap of the year's major dates: січень 1 — Новий рік, весна (changes yearly) — Великдень, серпень 24 — День Незалежності, грудень 25 — Різдво.
+- P3 (~100 words): Self-check questions (bulleted Q&A list): 
+  * How do you say "Merry Christmas" and "Happy New Year"? (З Різдвом! З Новим роком!)
+  * How do you reply to "Слава Україні!"? (Героям слава!)
+  * What is the difference between "Великдень" and "паска"? (Великдень is the holiday, паска is the bread).
 
-## Підсумок: Граматика вітань та побажань (~210 words)
-- P1 (~110 words): Grammar Recap — The Greeting Formula. Explain the pattern: "З + [Holiday in Instrumental Case]!". Show the transformations: Новий рік → "З Новим роком!", Різдво → "З Різдвом!", Великдень → "З Великоднем!", День народження → "З днем народження!". Relate this to the "з + noun" (with) construction they already know (e.g., кава з молоком).
-- P2 (~100 words): Wishes and the Calendar. Introduce the "Бажаю + Genitive" formula from the pedagogy brief: "Бажаю щастя, здоров'я, миру" (I wish you happiness, health, peace). Provide a quick calendar overview: 25.12, 01.01, 24.08. 
-- P3 (~60 words): Self-check Q&A. 
-  - Q: How do you greet someone on August 24? 
-  - A: З Днем Незалежності! 
-  - Q: What is the ritual response to "Христос воскрес!"? 
-  - A: Воістину воскрес! 
-  - Q: When is Christmas in Ukraine? 
-  - A: Двадцять п'ятого грудня.
-- <!-- INJECT_ACTIVITY: fill-in-greetings --> [fill-in, Complete the greeting: З ___! (Новим роком, Різдвом, Великоднем, святом), 8 items]
-
-Grand total: ~1340 words
+Grand total: ~1320 words
 </skeleton>
 
 ## Output Format
@@ -792,11 +808,55 @@ Grand total: ~1340 words
 Write in Markdown. Use:
 - `## Section Title` for main sections
 - `### Subsection` for subsections within a section
-- `**bold**` for Ukrainian words being taught — EVERY bold Ukrainian word MUST have an English translation on first use, either in parentheses `**слово** (translation)` or inline `**слово** means "translation"`. No exceptions.
+- `**bold**` for Ukrainian words being taught. For **A1 and A2** levels, provide an English translation on first use (e.g. `**стіл** (table)`) because learners lack the vocabulary to infer meaning. For **B1 and above**, do NOT provide inline translations for standard vocabulary — the learner will use the module's словник (vocabulary table). You may provide ONE parenthetical English translation ONLY for highly abstract grammar/linguistic terms on first use (e.g. `**видова пара** (aspectual pair)`).
 - Tables for paradigms (conjugation, declension)
 - `:::tip` / `:::caution` / `:::note` for callout boxes
 - `<!-- INJECT_ACTIVITY: {id} -->` for exercise placement (markers only — do NOT write exercise content)
 
 Do NOT write MDX component syntax, JSON, or DSL exercise blocks (:::quiz, etc.). Plain Markdown with injection markers.
+
+---
+
+## MANDATORY FINAL CHECKLIST (#1189)
+
+Before you finish writing, verify the prose against this checklist. Failing any item will fail the build.
+
+### Section headings (verbatim)
+
+Every heading from "Section Structure" above MUST appear as an `## H2` in your output, in order, **including the closing `Підсумок:` / `Підсумок та перехід до M...` summary**. The single most common writer failure across the B1 build has been silently dropping the final summary section. Re-read your output before stopping. If the last section in the plan is missing, write it now.
+
+### Required vocabulary (every word must appear)
+
+You MUST use **every word** from the list below at least once in the prose, in a natural sentence with bold + English translation. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, прагматика, діагностика, дієвідмінювання, зворотний, двовидовий, одновидовий, неозначено-кількісний, etc.) is the most frequently dropped category — actively find homes for those words even if it means adding a sentence that defines them.
+
+- [ ] свято (holiday, n)
+- [ ] святкувати (to celebrate)
+- [ ] Різдво (Christmas, n)
+- [ ] Великдень (Easter, m)
+- [ ] Новий рік (New Year)
+- [ ] вітати (to congratulate/greet)
+
+### Forbidden words (never produce)
+
+Do not write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use `<!-- VERIFY -->` instead). The post-write toxic-token scanner will fail the build immediately:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+### Level-specific immersion check
+
+The level-appropriate immersion rule was already injected at the top of
+this prompt as `IMMERSION RULE`. Re-read it now BEFORE you stop writing.
+If your level's rule contains a CHECKLIST block, walk through every item.
+If it doesn't, just verify your output matches the LANGUAGE ROLES and
+TARGET stated in that block.
+
+This used to hard-code a B1+ checklist that confused A1/A2 models (where
+translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+The single source of truth is now
+`scripts/pipeline/config_tables.py:IMMERSION_RULES`.
+
+---
 
 Begin writing now. Start with the first section heading.

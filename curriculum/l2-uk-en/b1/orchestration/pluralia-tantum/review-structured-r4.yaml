@@ -1,0 +1,49 @@
+round: 4
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'Missed the plan point about `штанів` in the genitive ending section:
+    "нульове: воріт, Карпат, штанів (but also штанів with -ів)".'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: Contains a hybrid typo "standardної" ("не належать до жодної standardної
+    відміни"). Falsely claims "окуляр" does not exist ("В українській літературній
+    мові таких граматичних форм просто не існує").
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent use of contrast with singularia tantum. Grammar rules are clearly
+    explained with multiple examples (e.g., contrast between "лежали гроші" and "лежало
+    масло").
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: Covered all required words naturally. Missed one recommended word ("граблі").
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All markers perfectly placed, matching the type and focus exactly as outlined
+    in the plan.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: Tone is encouraging and informative. Minor deduction for using tautologies
+    like "фінансові гроші" and calques like "фізично не можемо визначити".
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Word count is 4361, which comfortably exceeds the 4000-word target. All
+    H2 headings are present.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Beautifully explains unique Ukrainian instrumental endings ("грішми",
+    "ворітьми") and contrasts them with modern equivalents.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The dialogue ("Сусід" and "Мешканець") is natural, sets up a real-life
+    situation, and organically incorporates pluralia tantum nouns in different cases.
+findings: []

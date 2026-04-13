@@ -1,4 +1,4 @@
-<!-- version: 1.1.0 | updated: 2026-03-31 -->
+<!-- version: 1.2.0 | updated: 2026-04-12 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -11,6 +11,35 @@ Generate an `activities/word-order-emphasis.yaml` file for module **50: Поря
 
 ---
 
+## ⚠️ HARD COUNT TARGETS — READ TWICE
+
+These are the binding numerical contracts for THIS module. The audit will FAIL if you fall short.
+
+| Bucket | Min | Max | Notes |
+|---|---|---|---|
+| Total activities | 12 | 12+ | inline + workbook combined |
+| Inline (lesson tab) | 4 | 6 | one per `<!-- INJECT_ACTIVITY -->` marker, see below |
+| Workbook (Зошит tab) | 8 | 11 | extended practice |
+| Items per activity | 8 | — | each activity must have at least 8 items (unless its type cap is lower — see Activity Type Reference below) |
+
+**You MUST ship at least 4 inline activities AND at least 8 workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+
+**Type diversity is required.** The module (inline + workbook combined) MUST use at least **0** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level. (If `0` is `0`, the audit profile for this level does not enforce type diversity — but variety still produces a better lesson, so aim for 4+ types when the workbook allows it.)
+
+---
+
+## Allowed types for THIS level
+
+- **Inline (lesson) types:** quiz, true-false, fill-in, match-up, group-sort, classify, mark-the-words
+- **Inline priority (preferred):** fill-in, match-up, true-false, quiz
+- **Workbook types:** cloze, error-correction, fill-in, unjumble, translate, match-up, group-sort, odd-one-out, observe, phrase-table, quiz, true-false, mark-the-words
+- **Workbook priority (preferred):** error-correction, cloze, unjumble, translate, fill-in
+- **FORBIDDEN at this level:** anagram, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables, highlight-morphemes, grammar-identify
+
+Pick from the allowed list. Lean heavily on the priority lists. Do not use any forbidden type — the build will reject it.
+
+---
+
 ## Inline vs Workbook Split
 
 Activities have two placement categories:
@@ -19,7 +48,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Rule of thumb:** inline = 2-3 quick checks after key teaching points. Workbook = 4-8 deeper practice exercises covering the full topic.
+**Rule of thumb:** inline = 4–6 quick checks after key teaching points. Workbook = 8–11 deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
 
 ---
 
@@ -28,10 +57,10 @@ Activities have two placement categories:
 The writer placed these markers in the module content. Your inline activities must match them:
 
 - `<!-- INJECT_ACTIVITY: quiz-identify-rheme -->`
-- `<!-- INJECT_ACTIVITY: match-question-answer -->`
-- `<!-- INJECT_ACTIVITY: group-sort-neutral-marked -->`
-- `<!-- INJECT_ACTIVITY: fill-in-reorder-words-to-create-the-correct-emphasis-for-a-given-context -->`
-- `<!-- INJECT_ACTIVITY: error-correction-fix-sentences-where-word-order-creates-unintended-emphasis -->`
+- `<!-- INJECT_ACTIVITY: group-sort-neutral-emphatic -->`
+- `<!-- INJECT_ACTIVITY: fill-in-reorder-emphasis -->`
+- `<!-- INJECT_ACTIVITY: match-up-questions-answers -->`
+- `<!-- INJECT_ACTIVITY: error-correction-unintended-emphasis -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -96,101 +125,161 @@ required:
 ## Module Content (the prose the learner reads before exercises)
 
 <module_content>
-## Вступ та Діалог 1
+## Тема і рема: що відоме, що нове? (Theme and Rheme) (~600 words total)
 
-В українській мові порядок слів називають **вільним** *(free)*. Але це не означає, що слова стоять хаотично. Порядок слів — це важливий інструмент. В англійській мові граматика диктує, де стоїть підмет, а де присудок. В українській мові ми використовуємо **порядок слів** *(word order)*, щоб передати зміст та емоції. Слово, яке стоїть на початку або в кінці речення, має найбільше значення.
+You have probably heard that Ukrainian has a "free" word order. While grammar does not strictly dictate where each word must go, the arrangement is far from random. The structure of a sentence is driven by the flow of information. Every statement is divided into two parts: what is already known, called the theme, and the new, important information, called the rheme.
 
-Оленка та Марійка — **сусідки по кімнаті** *(roommates)*. Вони ділять домашні обов'язки. Зверніть увагу, як змінюється порядок слів, коли вони говорять про нову інформацію.
+Українська мова має вільний **порядок** (order) слів. Але це не означає, що слова можна ставити як завгодно. Структура **речення** (sentence) залежить від інформації, яку ми хочемо передати. Кожне висловлювання має дві частини: те, що вже відоме, або **тема** (theme), і нова важлива інформація, або **рема** (rheme).
+
+> *Ukrainian has a free word order. But this does not mean that words can be placed however you want. The structure of a sentence depends on the information we want to convey. Every utterance has two parts: what is already known, or the theme, and the new important information, or the rheme.*
+
+The fundamental rule of Ukrainian information structure is simple. In a neutral context, the known information comes first, and the new information comes at the very end of the sentence. The "news" is always delivered last. This final position naturally carries the logical stress of the statement.
+
+Основне правило дуже просте. У нейтральній ситуації тема стоїть на початку, а рема йде в самий **кінець** (end). Найголовніша новина завжди звучить останньою. Саме це останнє слово отримує логічний **наголос** (stress, emphasis). Наприклад, ми кажемо: «Тарас купив нову книгу». Тут ми вже знаємо про Тараса, а нова інформація — це його покупка.
+
+> *The basic rule is very simple. In a neutral situation, the theme stands at the beginning, and the rheme goes to the very end. The most important news always sounds last. It is this last word that receives the logical stress. For example, we say: "Taras bought a new book." Here we already know about Taras, and the new information is his purchase.*
+
+You can easily test for the theme and rheme by asking a question that the sentence answers. The question itself contains the known information, while the answer provides the rheme. 
+
+Ми можемо легко знайти тему і рему за допомогою питання. Якщо хтось питає «Хто купив книгу?», то книга нам уже відома. Нова інформація — це людина. Тому ми кажемо: «Книгу купив Тарас». Тут слово «Тарас» — це рема, і воно стоїть у кінці. Якщо ж питання «Що купив Тарас?», то Тарас нам відомий. Ми відповідаємо: «Тарас купив книгу». Тепер слово «книга» є ремою і стоїть наприкінці.
+
+> *We can easily find the theme and rheme with the help of a question. If someone asks "Who bought the book?", then the book is already known to us. The new information is the person. Therefore, we say: "The book was bought by Taras" (literally: "The book bought Taras"). Here the word "Taras" is the rheme, and it stands at the end. But if the question is "What did Taras buy?", then Taras is known to us. We answer: "Taras bought a book." Now the word "book" is the rheme and stands at the end.*
+
+This system contrasts directly with English. English relies on a rigid Subject-Verb-Object order to show who is doing what to whom. To shift emphasis in English, you often have to use vocal intonation or complex phrasing. Ukrainian, however, uses case endings to show grammatical roles. The difference between the nominative «мама» and the accusative «доньку» tells you exactly who is acting and who is receiving the action. This frees up the word order to handle meaning and communicative focus.
+
+В українській мові закінчення відмінків показують ролі слів. Речення «Мама любить доньку» і «Доньку любить мама» означають те саме граматично. Але вони мають абсолютно різні акценти. Перше відповідає на питання «Кого любить мама?», а друге — «Хто любить доньку?». 
+
+> *In the Ukrainian language, case endings show the roles of words. The sentences "Mom loves the daughter" and "The daughter loves mom" mean the same thing grammatically. But they have completely different emphases. The first answers the question "Who does mom love?", and the second — "Who loves the daughter?".*
+
+Mastering Ukrainian word order means learning to place the communicative focus at the end of the sentence naturally. Instead of relying solely on your voice to highlight a word, you use the structure of the sentence itself.
+
+:::info
+**Logical stress**
+In written Ukrainian, the position of a word often does the heavy lifting for emphasis. While you can speak louder to emphasize a word, moving it to the end of the sentence is the most natural way to show it is the new, important information.
+:::
+
+<!-- INJECT_ACTIVITY: quiz-identify-rheme -->
+
+## Прямий порядок слів (Neutral Word Order) (~550 words total)
+
+Now that we understand how new information naturally flows to the end of a sentence, let's look at the default structure. When you just want to report a fact, write an essay, or start a story without any special emotional emphasis, you use the direct word order. This is the neutral, unmarked way to build a sentence in Ukrainian. The core structure is Subject + Predicate + Object, just like in English.
+
+Прямий **порядок** (order) слів — це базова модель для українського **речення** (sentence). Цей порядок є емоційно нейтральним. Його часто використовують у новинах, документах або на **початку** (beginning) тексту. Підмет стоїть перед присудком, а додаток іде після нього. Наприклад, ми кажемо: «Студент читає книгу» або «Молоде покоління прагне свободи».
+
+> *The direct word order is the basic model for a Ukrainian sentence. This order is emotionally neutral. It is often used in news, documents, or at the beginning of a text. The subject stands before the predicate, and the object goes after it. For example, we say: "A student is reading a book" or "The young generation desires freedom."*
+
+What about descriptive words? The neutral placement of modifiers is also quite predictable. Adjectives naturally go directly before the noun they describe. Adverbs of manner, which describe how an action is done, are quite flexible. They typically sit close to the verb, either right before or right after it, with minimal shift in meaning.
+
+У прямому порядку прикметник завжди стоїть перед іменником. Ми кажемо «нова книга» або «тихий світанок». Прислівники можуть стояти перед дієсловом або після нього. Фрази «він добре працює» та «він працює добре» є правильними. Обидва варіанти звучать природно і майже не змінюють зміст.
+
+> *In the direct order, an adjective always stands before a noun. We say "a new book" or "a quiet dawn". Adverbs can stand before a verb or after it. The phrases "він добре працює" and "він працює добре" are correct. Both variants sound natural and barely change the meaning.*
+
+There is a critical error that English speakers often make when placing adjectives. In English, you can put an adjective after a noun to create a poetic phrase, like "a dawn so quiet." In Ukrainian, swapping the adjective and the noun changes the sentence structure entirely.
+
+Позиція прикметника є дуже важливою. Фраза «тихий світанок» — це просто іменник з означенням. Але якщо ви скажете «світанок тихий», ви створите повне речення. Тут слово «світанок» є підметом, а слово «тихий» стає присудком. Це означає, що прикметник виконує роль дієслова.
+
+> *The position of the adjective is very important. The phrase "a quiet dawn" is just a noun with a modifier. But if you say "the dawn is quiet," you create a complete sentence. Here the word "dawn" is the subject, and the word "quiet" becomes the predicate. This means the adjective plays the role of a verb.*
+
+:::info
+**Adjective as a predicate**
+Remember that Ukrainian often omits the present tense verb "to be" (є). Because of this, an adjective placed *after* a noun («Книга цікава») acts as the verb ("The book *is* interesting"). An adjective placed *before* a noun («Цікава книга») is just a modifier ("An interesting book").
+:::
+
+Next, we need to consider the placement of time and place expressions. These words tell us when or where an action happens. In a neutral sentence, they usually sit at the very beginning to set the scene for the listener. Alternatively, they can go at the very end if the time or place itself is the neutral focus of the sentence.
+
+Слова, які вказують на час або місце, часто стоять на початку. Наприклад, ми кажемо: «Вчора ми ходили в кіно». Це нейтрально описує ситуацію. Якщо ми хочемо **підкреслювати** (to emphasize) час, ми ставимо це слово в **кінець** (end). Речення «Ми ходили в кіно вчора» робить акцент саме на тому, коли це сталося.
+
+> *Words that indicate time or place often stand at the beginning. For example, we say: "Yesterday we went to the cinema." This neutrally describes the situation. If we want to emphasize the time, we put this word at the end. The sentence "We went to the cinema yesterday" puts the accent exactly on when it happened.*
+
+While direct order is the essential baseline for clear communication, you shouldn't feel locked into it. Sticking to a strict Subject-Verb-Object structure all the time in conversation will actually sound slightly robotic or overly formal to native speakers. Natural speech constantly shifts words around to react to new information.
+
+Прямий порядок слів — це чудовий старт для вивчення мови. Він допомагає будувати чіткі та зрозумілі фрази. Але в реальній розмові українці рідко говорять тільки так. Ми постійно змінюємо порядок слів, щоб зробити мову живою та емоційною.
+
+> *The direct word order is a great start for learning the language. It helps to build clear and understandable phrases. But in real conversation, Ukrainians rarely speak only like this. We constantly change the word order to make the speech alive and emotional.*
+
+<!-- INJECT_ACTIVITY: group-sort-neutral-emphatic -->
+
+## Інверсія для контрасту (Fronting for Contrast) (~650 words total)
+
+We have seen that the direct word order gives us a neutral, calm sentence. But what happens when we want to sound emotional, highlight a specific detail, or argue with someone? In these situations, Ukrainians break the neutral pattern. We use indirect word order to move an important word to a completely different position.
+
+Такий зворотний порядок слів називається **інверсія** (inversion). Вона допомагає нам створити сильний **контраст** (contrast) або додати емоцій. Ми виносимо важливе слово на перше місце, щоб одразу показати головну ідею.
+
+> *Such indirect word order is called inversion. It helps us create a strong contrast or add emotions. We bring an important word to the first place to immediately show the main idea.*
+
+Let's see how inversion works when people disagree. Imagine two friends discussing a movie they just watched. Pay attention to which words they put at the beginning.
+
+> — **Антон:** Цей фільм зняв Сенцов. *(Sentsov directed this movie.)*
+> — **Марина:** Ні, цей фільм зняв не Сенцов, а Лозниця. *(No, not Sentsov directed this movie, but Loznitsa.)*
+> — **Антон:** Можливо. А от «Номери» — це точно Сенцов зняв. *(Maybe. But "Numbers" — Sentsov definitely directed that.)*
+
+В українській мові ми дуже часто ставимо додаток на **початок** (beginning) речення. Подивіться на першу фразу з нашого діалогу. Прямий **порядок** (order) мав би бути таким: «Сенцов зняв цей фільм». Але Антон свідомо змінив структуру. Він поставив об'єкт на перше місце.
+
+> *In the Ukrainian language, we very often put the object at the beginning of the sentence. Look at the first phrase from our dialogue. The direct order should have been like this: "Sentsov directed this movie." But Anton consciously changed the structure. He put the object in the first place.*
+
+Тепер об'єкт став відомою інформацією, а режисер Сенцов перемістився в самий **кінець** (end) фрази. Слово «Сенцов» — це нова інформація, або **рема** (rheme). Такий незвичний варіант показує, що головний **наголос** (stress) робиться саме на авторі.
+
+> *Now the object became the known information, and director Sentsov moved to the very end of the phrase. The word "Sentsov" is the new information, or rheme. Such an unusual variant shows that the main stress is placed exactly on the author.*
+
+:::note
+**The Object-Verb-Subject pattern**
+Moving the object to the front (OVS) is one of the most common ways to say "As for X...". It establishes the object as the known context and saves the "news" (who did it) for the end.
+:::
+
+Another powerful way to use inversion is to put the verb at the very beginning of the sentence. This creates a strong emotional effect, a very firm assertion, or an energetic start to a story.
+
+Іноді ми хочемо показати сильні емоції або наполегливо довести свою правоту. Тоді ми сміливо ставимо дієслово на перше місце. Нейтральне **речення** (sentence) звучить так: «Я прочитав цю книгу». Але якщо хтось сумнівається у ваших словах, ви емоційно скажете: «Прочитав я цю книгу!». Це звучить дуже впевнено. Також дієслово часто починає нову історію або казку. Наприклад: «Прийшла тепла весна», «Почалася сильна злива». Тут немає ніякого конфлікту, але є приємна динаміка.
+
+> *Sometimes we want to show strong emotions or persistently prove we are right. Then we boldly put the verb in the first place. A neutral sentence sounds like this: "I read this book." But if someone doubts your words, you will emotionally say: "I DID read this book!". This sounds very confident. Also, a verb often starts a new story or a fairy tale. For example: "Warm spring came," "A heavy downpour began." There is no conflict here, but there is pleasant dynamics.*
+
+When you need to explicitly correct someone's statement, you will also use a specific type of fronting. You bring the corrected element forward and use the construction "не... а" (not... but). This immediately halts the previous assumption and replaces it with the truth.
+
+Щоб чітко **підкреслювати** (to emphasize) чиюсь помилку, ми виносимо неправильний факт уперед. У нашому короткому діалозі Марина каже: «цей фільм зняв не Сенцов, а Лозниця». Вона не каже нейтрально: «Лозниця зняв цей фільм». Вона використовує структуру «не А, а Б», щоб одразу виправити друга. Ще один гарний приклад: «Не Тарас це зробив, а Олег». Фокус цього висловлювання падає саме на виправлення неправильної інформації.
+
+> *To clearly emphasize someone's mistake, we bring the incorrect fact forward. In our short dialogue, Maryna says: "not Sentsov directed this movie, but Loznitsa." She does not say neutrally: "Loznitsa directed this movie." She uses the structure "not A, but B" to immediately correct her friend. Another good example: "Not Taras did this, but Oleh." The focus of this utterance falls exactly on correcting the wrong information.*
+
+Finally, Ukrainian has a very clear way to identify the new information right at the start of the sentence, similar to the English "It is X who..." pattern. We use the word "Це" (This / It is) followed by the noun we want to highlight.
+
+Слово «це» допомагає нам чітко виділити головну дійову особу. Ви ставите слово «це» на перше місце, щоб показати автора дії. Наприклад: «Це Тарас допоміг мені». Це означає, що саме він вчасно запропонував допомогу. Ця маленька граматична частка показує, де знаходиться головна **тема** (theme) вашої розповіді.
+
+> *The word "це" helps us clearly highlight the main character. You put the word "це" in the first place to show the author of the action. For example: "It was Taras who helped me." This means that exactly he offered help in time. This small grammatical particle shows where the main theme of your story is.*
+
+:::tip
+**Using "Це" for emphasis**
+Placing "Це" before a noun at the start of a sentence is the most direct equivalent to English cleft sentences ("It was X who did Y"). It leaves absolutely no doubt about who or what the focus is.
+:::
+
+<!-- INJECT_ACTIVITY: fill-in-reorder-emphasis -->
+
+## Порядок слів у реальному мовленні (Word Order in Real Speech) (~400 words total)
+
+In real life, word order constantly shifts depending on the flow of conversation. 
 
 > — **Оленка:** Хто помив посуд? *(Who washed the dishes?)*
-> — **Марійка:** Посуд помив Тарас. А підлогу? *(Taras washed the dishes. And the floor?)*
-> — **Оленка:** Підлогу ще ніхто не помив. Добре, підлогу помию я. *(No one has washed the floor yet. Okay, I will wash the floor.)*
+> — **Марійка:** Посуд помив Тарас. *(Taras washed the dishes.)*
+> — **Оленка:** А підлогу? *(And the floor?)*
+> — **Марійка:** Підлогу ще ніхто не помив. *(Nobody has washed the floor yet.)*
+> — **Оленка:** Добре, підлогу помию я. *(Okay, I will wash the floor.)*
 
-Оленка запитує про посуд. Для Марійки посуд — це вже відома інформація, тобто **тема** *(theme)*. Тому слово «посуд» стоїть на початку речення. А слово «Тарас» — це нова інформація, або **рема** *(rheme)*. Тому це слово стоїть у кінці речення. Так само працює слово «підлога».
+У цьому діалозі ми бачимо природний **порядок** (order) слів. Кожне нове **речення** (sentence) спирається на попереднє. Оленка запитує про посуд. Тепер посуд — це відома інформація, тобто **тема** (theme, topic (linguistics)). Тому у відповіді Марійка ставить це слово на **початок** (beginning). Слово «Тарас» — це нова інформація, тобто **рема** (rheme, new information). Ця нова інформація йде в **кінець** (end). Те саме відбувається зі словом «підлога».
 
-## Тема і рема: що відоме, що нове?
+> *In this dialogue, we see natural word order. Each new sentence builds on the previous one. Olenka asks about the dishes. Now the dishes are known information, meaning the theme. Therefore, in her answer, Mariyka puts this word at the beginning. The word "Taras" is new information, meaning the rheme. This new information goes to the end. The same thing happens with the word "floor".*
 
-Кожне речення має дві частини. Це те, про що ми говоримо, і що повідомляємо. У лінгвістиці їх називають **тема** *(theme)* і **рема** *(rheme)*. Тема — це відома інформація, яку співрозмовник уже знає. Рема — це нова інформація, або **фокус повідомлення** *(focus of the message)*. Українське речення зазвичай рухається від відомого до нового. Ми починаємо зі знайомих фактів і закінчуємо головною новиною.
+When you answer a question, the question itself tells you what the theme is and what the rheme will be. This is why listening carefully to your conversation partner is so important. If someone asks «Що ти купив?» (What did you buy?), the neutral SVO order works perfectly. You simply say «Я купив каву» (I bought coffee), because the coffee is the new information. But what if the question is «Хто це купив?» (Who bought this?)? Here, the object is already known to both speakers. You must use an **інверсія** (inversion) to put the object first and the new subject last. You answer: «Це купив я» (I bought it).
 
-This creates an important linguistic principle called "end focus". У нейтральному мовленні найважливіша інформація стоїть у кінці речення. Саме там знаходиться рема. Порівняйте два варіанти. Перший: «Тарас купив книгу». Тут фокус падає на слово «книгу». Співрозмовник знає Тараса, але не знає, що він купив. Другий: «Книгу купив Тарас». Тут рема — це слово «Тарас». Співрозмовник знає про покупку книги, але не знає покупця. The word at the very end of the sentence naturally carries the main communicative weight.
+Українська мова дуже гнучка, але не перекладайте англійські фрази механічно. Неправильний порядок слів може створити сильний і небажаний **контраст** (contrast). Якщо ви відповісте «Каву купив я», це звучатиме вкрай дивно. Такий **наголос** (stress, emphasis) означає: «Саме я купив цю каву». Співрозмовник може подумати, що ви сперечаєтеся з ним. Ви не повинні **підкреслювати** (to emphasize, to underline) слово «я» без причини.
 
-You can easily identify the rheme by asking a simple question. Українська відповідь завжди ставить нову інформацію в кінець. Уявіть питання: «Хто купив книгу?». Слово «книга» вже прозвучало, тому це тема. Нова інформація — це людина. Тому правильна відповідь: «Книгу купив Тарас». Тепер уявіть інше питання: «Що купив Тарас?». Тут відома інформація — це Тарас. Тому відповідь буде іншою: «Тарас купив книгу». Слова змінюють позиції залежно від питання.
+> *The Ukrainian language is very flexible, but do not translate English phrases mechanically. The wrong word order can create a strong and unwanted contrast. If you answer "Каву купив я", it will sound extremely strange. Such emphasis means: "It was exactly me who bought this coffee." Your conversation partner might think that you are arguing with them. You should not emphasize the word "I" without a reason.*
 
-Why can Ukrainian do this so effortlessly? Відповідь ховається у відмінках. In English, strict word order tells you exactly who is the subject and who is the object. В українській мові граматичну роль показують **закінчення** *(endings)*. Слово «книгу» має закінчення знахідного відмінка **-у**. Це слово завжди буде додатком. Нам не важливо, де воно стоїть. Саме відмінки дозволяють нам вільно переставляти слова.
+:::tip
+**Listen to the question!**
+The easiest way to sound natural in Ukrainian is to mirror the question. The word that replaces the question word (хто, що, коли, де) should usually go at the very end of your answer.
+:::
 
-There is also a psychological reason for this order. Люди інтуїтивно ставлять нові або довгі поняття в кінець речення. Це допомагає співрозмовнику легше сприймати інформацію. Спочатку людина чує знайомі слова, які готують ґрунт. Потім вона отримує свіжий **акцент** *(accent)*. Такий **порядок слів** *(word order)* робить українське мовлення виразним інструментом.
+Завжди уважно слухайте питання співрозмовника. Питання допомагає побудувати правильну та природну відповідь. З часом ви почнете відчувати мелодику мови.
 
-<!-- INJECT_ACTIVITY: quiz-identify-rheme --> [quiz, Identify the rheme (new information) based on the context/question, 8 items]
-
-## Прямий порядок слів
-
-Українська мова має базовий, або **прямий порядок слів** *(direct word order)*. Це нейтральна схема: **підмет** *(subject)*, **присудок** *(predicate)*, **додаток** *(object)*. Ми використовуємо прямий порядок слів для констатації фактів. Він часто звучить у новинах, наукових текстах або офіційних повідомленнях. Наприклад: «Студент читає текст». «Мама готує вечерю». Тут немає жодних емоцій. Це просто інформація. When you want to state a simple fact without emphasizing any specific part, use this SVO structure. It is the safest choice for beginners.
-
-Де стоїть **означення** *(attribute/adjective)*? У нейтральному реченні прикметник завжди стоїть перед іменником. Ми кажемо: «цікава книга», «велике місто», «холодний вітер». Це звичайна характеристика предмета. Але будьте обережні, коли змінюєте порядок. Якщо ви поставите прикметник після іменника, він стане присудком. Порівняйте: «Це велике місто» *(This is a big city)*. Але: «Місто — велике» *(The city IS big)*. У другому випадку ми робимо акцент на розмірі міста. The position of the adjective completely changes the grammatical structure of the sentence.
-
-Тепер поговоримо про **обставини** *(adverbial modifiers)*. Вони показують, як саме відбувається дія. В українській мові прислівник може стояти перед дієсловом або після нього. Обидва варіанти правильні. Ви можете сказати: «Він добре працює» або «Він працює добре». Є невелика різниця. Коли прислівник стоїть у кінці, він має трохи більше ваги. Це знову правило реми. Moving the adverb to the very end of the sentence naturally makes it the focus of your statement.
-
-Слова, які позначають час або місце, дуже рухливі. Їхня позиція залежить від вашої мети. Часто вони стоять на початку речення. Це створює контекст для всієї ситуації. Наприклад: «Вчора я був удома» *(Yesterday I was at home)*. «У Києві йде дощ» *(It is raining in Kyiv)*. Це нейтральний початок розповіді. Але якщо ви поставите час або місце в кінець, вони стануть ремою. «Я був удома вчора» *(I was at home YESTERDAY)*. Це означає, що ви наголошуєте саме на вчорашньому дні, а не сьогоднішньому.
-
-Є один дуже цікавий і специфічний випадок. Це порядок слів із числівниками. Коли ви називаєте точну кількість, числівник стоїть перед іменником. Наприклад: «До центру п’ять кілометрів» *(It is five kilometers to the center)*. Це точний факт. Але якщо ви поміняєте їх місцями, значення зміниться. «До центру кілометрів п’ять» *(It is ABOUT five kilometers to the center)*. Ця **інверсія** *(inversion)* автоматично робить число приблизним. Ukrainian uses this simple word-swap trick instead of adding extra words like "about" or "approximately".
-
-<!-- INJECT_ACTIVITY: match-question-answer --> [match-up, Match questions with the correctly word-ordered answers, 8 items]
-
-<!-- INJECT_ACTIVITY: group-sort-neutral-marked --> [group-sort, Sort sentences into neutral word order vs. marked/emphatic order, 8 items]
-
-## Діалог 2 та Інверсія для контрасту
-
-> — **Друг 1:** Ти дивився кіно вчора? Цей фільм зняв Сенцов.
-> — **Друг 2:** Ні, цей фільм зняв не Сенцов, а Лозниця.
-> — **Друг 1:** А, зрозумів. А от «Номери» — це точно Сенцов зняв!
-
-У цьому діалозі друзі обговорюють режисерів. Зверніть увагу на їхні слова. Вони використовують **інверсію** *(inversion)*. Це навмисна зміна порядку слів для **контрасту** *(contrast)*.
-
-In Ukrainian, you can freely move the object to the front of the sentence. Ми називаємо це винесенням додатка на **початок** *(beginning)*. Наприклад, ви можете сказати: «Книгу я вже прочитав». Тут ви протиставляєте цю книгу іншим речам. As for the book, I have already read it (maybe I haven't watched the movie yet). Це дуже популярна конструкція. Ви робите книгу головною темою вашої розмови.
-
-Іноді ми ставимо дієслово на найперше місце в реченні. Це інверсія присудка. Наприклад: «Прочитав я цю книгу!». What does this specific order mean? Putting the verb first shows strong emotion, frustration, or absolute certainty. Це показує ваші сильні емоції або логічну завершеність дії. Ви хочете підкреслити, що дія точно відбулася.
-
-Порядок слів також чудово допомагає швидко виправити помилку співрозмовника. Для цього ми використовуємо конструкцію «не..., а...» *(not..., but...)*. If someone assumes you walked in the park, but you actually walked in the forest, you change the word order to highlight the truth. Ви кажете: «Не в парку ми гуляли, а в лісі». You put the corrected information right at the front for maximum emphasis.
-
-Як ще можна зробити сильний **наголос** *(emphasis)* на одному слові? Ми часто використовуємо просту частку «це» *(this/it)*. Порівняйте два варіанти: «Тарас мені допоміг» та «Це Тарас мені допоміг». The second sentence works exactly like a cleft sentence in English: "It was Taras who helped me." Ви чітко показуєте, хто саме виконав цю важливу дію.
-
-Багато студентів дуже бояться самостійно змінювати порядок слів. Вони думають, що будуть звучати дивно, як майстер Йода з кінофільму «Зоряні війни». Але це міф. Речення «Книгу я бачив» — це абсолютно правильна і красива українська мова. У правильному контексті це звучить стовідсотково природно. Не бійтеся ставити слова у новий порядок у **кінець** *(end)* або на початок речення!
-
-<!-- INJECT_ACTIVITY: fill-in-reorder-words-to-create-the-correct-emphasis-for-a-given-context -->
-
-## Порядок слів у реальному мовленні
-
-Уявіть звичайну розмову. Ми постійно передаємо нову інформацію. Як це працює на практиці? Дуже часто рема одного речення стає темою для наступного. Це наче ланцюжок. This chain structure helps speakers track what is already known and what is new. Подивіться на цей короткий діалог:
-> — **Максим:** Де ти був сьогодні?
-> — **Андрій:** Я був у парку.
-
-У відповіді Андрія слово «парку» — це нова інформація, тобто рема. Воно стоїть у кінці речення. А тепер Максим запитує далі:
-> — **Максим:** А в парку ти що робив?
-
-Тепер «парк» — це вже відома інформація. Це тема. Тому Максим ставить ці слова на початок свого питання. А нова інформація (що саме Андрій там робив) буде в кінці. Ця ланцюжкова структура робить розмову дуже логічною.
-
-Let's do a quick reading practice to see this in action. Read this short text: «На вулиці йшов дощ. Цей дощ не припинявся весь день. Раптом у двері постукали. Увійшов незнайомець». Why did the author choose this specific word order? «На вулиці йшов дощ» uses inversion to set the scene. «Цей дощ» moves to the front in the next sentence because it's now the theme (known info). «У двері постукали» puts the verb last to emphasize the sudden action. And «Увійшов незнайомець» uses verb-first inversion to introduce a brand new character. Analyzing these choices helps you understand the flow of the language!
-
-Коли ми говоримо, ми використовуємо не тільки порядок слів. Ми також використовуємо голос. Це називається **логічний наголос** *(logical stress)*. Ми робимо голос сильнішим на найважливішому слові. Usually, logical stress naturally falls on the rheme at the end of the sentence. But when we use inversion, we combine both tools. Ми змінюємо порядок слів і додаємо інтонацію. Наприклад, ви хочете підкреслити свою довіру до конкретної людини. Ви кажете: «Тобі я вірю». Слово «тобі» стоїть на початку. І ви також виділяєте його голосом. By moving the object to the front and stressing it with your voice, you create a powerful contrast. Цей подвійний **акцент** *(emphasis)* робить ваші емоції дуже зрозумілими. Українці постійно використовують цей прийом у щоденному спілкуванні.
-
-Є ще один дуже важливий **шаблон** *(template)*. Уявіть, що ви розповідаєте історію. Вам потрібно представити нового героя або нову подію. Як ви це зробите? In English, you would use "There is..." or just Subject + Verb ("A teacher entered"). В українській мові ми використовуємо інверсію. Ми ставимо дієслово перед підметом. Ми кажемо: «Увійшов старий вчитель» *(An old teacher entered)*. Чому ми не кажемо «Старий вчитель увійшов»? Тому що поява вчителя — це головна новина. When introducing a brand new subject into the narrative, the subject itself is the rheme, so it goes last. Ви часто почуєте такі фрази: «Прийшла весна» *(Spring came)*, «Почалася злива» *(A downpour started)*, «Настала ніч» *(Night fell)*. Це не просто художній стиль. Це найприродніший спосіб повідомити співрозмовнику про щось нове і раптове. Тепер ви знаєте, як зробити свою розповідь справді українською!
-
-<!-- INJECT_ACTIVITY: error-correction-fix-sentences-where-word-order-creates-unintended-emphasis -->
-
-## Підсумок
-
-Let's review what we have learned today in this module. Порядок слів в українській мові — це дуже потужний інструмент. Це не просто граматична структура. Це спосіб показати ваші емоції, ваші наміри та ваші акценти. Кожен елемент має своє місце, але це місце може змінюватися. When you change the word order, you change the focus of your entire message.
-
-First, you must understand the difference between theme and rheme. Чи розумієте ви різницю між темою та ремою? Тема — це вже відома інформація. Рема — це зовсім нова інформація. Куди зазвичай ставиться нова інформація в нейтральному реченні? In neutral speech, the most important new information always goes to the end. Якщо ви відповідаєте на запитання, ваша головна відповідь має стояти саме в кінці речення.
-
-Second, adjectives and nouns have a strict relationship. Що трапиться, якщо прикметник поставити після іменника? It is no longer just a simple modifier. Він відразу стане присудком. Наприклад, фраза «Холодний вітер» означає просто "a cold wind." Але речення «Вітер холодний» означає "The wind is cold." Це вже повна і самостійна думка.
-
-Third, fronting is your tool for contrast. Для чого виносити додаток на початок речення? We do this to create focus or a strong contrast. Коли ви кажете «Каву я вже пив», ви виділяєте саме слово «кава». You show that you drank the coffee, not the tea or juice.
-
-Finally, word order helps with numbers. Як виразити приблизну кількість за допомогою порядку слів? Якщо ви ставите числівник перед іменником, ви називаєте абсолютно точну кількість. Наприклад, «П'ять кілометрів» — це рівно п'ять. Але якщо ви ставите іменник перед числівником, ви говорите про приблизну кількість. Фраза «Кілометрів п'ять» означає "about five kilometers."
-
-Українська мова дає вам велику свободу у спілкуванні. You do not need to speak with a fixed subject-verb-object structure all the time. Ви можете вільно змінювати порядок слів у щоденній розмові. Це допоможе вашій мові звучати природно, емоційно та по-справжньому українською. Уважно слухайте, як розмовляють українці на вулиці чи у фільмах. Звертайте увагу на те, яке слово стоїть першим, а яке — останнім. Не бійтеся експериментувати з інверсією. Читайте українські тексти та аналізуйте логічний наголос. З часом ви відчуєте справжню красу та гнучкість українського синтаксису!
-
+<!-- INJECT_ACTIVITY: match-up-questions-answers -->
+<!-- INJECT_ACTIVITY: error-correction-unintended-emphasis -->
 </module_content>
 
 ---
@@ -204,48 +293,68 @@ version: "1.0"
 module: word-order-emphasis
 level: a2
 
+# NOTE — these are SHAPE examples. The real targets are at the top of this prompt
+# (12 total / 4–6 inline / 8–11 workbook,
+# 8+ items per activity). The shapes below are TRUNCATED for readability;
+# YOUR output MUST hit those minimums.
+
 inline:
   - id: marker-id-here        # MUST match an <!-- INJECT_ACTIVITY: ... --> marker
     type: quiz                 # activity type
     instruction: "Оберіть правильний варіант"
-    items:
+    items:                     # ← real output: ≥ 8 items
       - question: "_____ стіл"
-        options: ["мій", "моя", "моє"]
+        options: ["мій", "моя", "моє", "мої"]
         correct: 0             # 0-based index
+      - question: "Це ____ книга."
+        options: ["мій", "моя", "моє", "мої"]
+        correct: 1
+      # ... add at least 8 items total — never stop at 1-2
 
   - id: another-marker-id
     type: fill-in
     instruction: "Вставте правильне слово"
-    items:
+    items:                     # ← real output: ≥ 8 items
       - sentence: "Це ____ кімната."
         answer: "моя"
         options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ вікно."
+        answer: "моє"
+        options: ["мій", "моя", "моє"]
+      # ... ≥ 8 items total
 
 workbook:
-  - type: match-up
+  - id: match-up-vocab
+    type: match-up
     instruction: "З'єднайте пари"
-    pairs:
+    pairs:                     # ← real output: ≥ 8 pairs
       - left: "стіл"
         right: "він"
       - left: "книга"
         right: "вона"
       - left: "вікно"
         right: "воно"
+      # ... ≥ 8 pairs total
 
-  - type: group-sort
+  - id: group-sort-gender
+    type: group-sort
     instruction: "Розподіліть слова за категоріями"
     groups:
-      - label: "Category A"
-        items: ["word1", "word2"]
-      - label: "Category B"
-        items: ["word3", "word4"]
+      - label: "Чоловічий рід"
+        items: ["стіл", "олівець", "будинок"]   # ≥ 3 items per group
+      - label: "Жіночий рід"
+        items: ["книга", "ручка", "школа"]
+      - label: "Середній рід"
+        items: ["вікно", "море", "молоко"]
 
-  - type: true-false
+  - id: true-false-grammar
+    type: true-false
     instruction: "Правда чи ні?"
-    items:
-      - statement: "Statement here"
-        correct: true
-        explanation: "Why it's true"
+    items:                     # ← real output: ≥ 8 items
+      - statement: "«Книга» — це чоловічий рід."
+        correct: false
+        explanation: "Книга закінчується на -а, отже жіночий рід."
+      # ... ≥ 8 items total
 
   - type: error-correction
     instruction: "Виправте помилку"
@@ -316,7 +425,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -412,10 +521,15 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 ## Quality Rules
 
-**ITEM COUNT MINIMUMS (non-negotiable):**
-- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
-- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
-- If you can't think of enough items, add more examples from the module's vocabulary and content.
+**ACTIVITY COUNT MINIMUMS (non-negotiable, audit-enforced):**
+- **Total: 12 activities.** Inline: 4–6. Workbook: 8–11. The audit gate FAILS the module if you ship fewer.
+- **Type diversity: workbook MUST cover ≥5 distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
+- **Match the inline markers exactly.** Every `<!-- INJECT_ACTIVITY: id -->` marker in the prose needs a matching inline activity with that exact id. Skipping markers means the lesson tab is broken.
+
+**ITEM COUNT MINIMUMS (non-negotiable, per-activity):**
+- **Default minimum: 8 items per activity.** Quiz, fill-in, match-up, true-false, anagram, error-correction, translate, cloze, mark-the-words, divide-words, count-syllables, odd-one-out, group-sort categories: all ≥ 8.
+- **Lower minimums for specific types only:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items, essay-response/critical-analysis = 1 prompt.
+- If you can't think of enough items, add more examples from the module's vocabulary and content. NEVER ship a 1-item or 2-item activity unless its type cap explicitly allows it.
 - **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
 - **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
@@ -522,6 +636,27 @@ IMPORTANT: After using tools, output your COMPLETE module content as plain text.
 1. Run `verify_words` on all Ukrainian words in your exercises — every word must exist in VESUM
 2. Run `query_cefr_level` on any word you're unsure about — it must be a2-appropriate
 3. For fill-in answers and distractors, verify the exact form (case, number, gender) with `verify_lemma`
+
+---
+
+## ⚠️ MANDATORY FINAL CHECKLIST — verify before emitting YAML
+
+Walk through this checklist explicitly before you start emitting. If ANY box is unchecked, fix it FIRST.
+
+- [ ] My output has **at least 4** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
+- [ ] My output has **at least 8** workbook activities.
+- [ ] **Total ≥ 12.**
+- [ ] **Every** activity has **at least 8** items, pairs, or statements (except types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3, essay-response=1).
+- [ ] The module (inline + workbook combined) uses **at least 0 distinct activity types** (or 4+ when 0 = 0 and the workbook size allows it). I am NOT shipping a wall of quizzes.
+- [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
+- [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
+- [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+- [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+- [ ] My inline count is between 4 and 6. I did NOT create more injection markers than 6.
+- [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
+- [ ] At B1+, all instructions are in Ukrainian (no English fallback).
+
+If you cannot tick all of these, REGENERATE the activities BEFORE outputting. Shipping under-spec means the build rejects you and the heal loop has to redo your work — wasting compute.
 
 ---
 

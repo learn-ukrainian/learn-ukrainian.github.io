@@ -7,8 +7,7 @@ pipeline: v6
 build_status: draft
 ---
 
-import CountSyllables from '@site/src/components/CountSyllables';
-import DivideWords from '@site/src/components/DivideWords';
+import Anagram from '@site/src/components/Anagram';
 import FillIn from '@site/src/components/FillIn';
 import FlashcardDeck from '@site/src/components/FlashcardDeck';
 import GroupSort from '@site/src/components/GroupSort';
@@ -23,120 +22,100 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ## Що ми зна́ємо? (What Do We Know?)
 
-This module is the first major checkpoint in the course. You are making the transition from learning individual sounds and letters to participating in a basic conversation. We began by deciphering the Cyrillic alphabet, and now you have a foundation to build upon. This section is a dedicated review where you will consolidate those skills before moving forward.
+Welcome to the first checkpoint. Over the past six modules, you have learned the Cyrillic alphabet, essential sounds, basic greetings, and how to talk about your family. This module consolidates that knowledge. You will review everything covered so far, ensuring complete readiness to hold a basic conversation in Ukrainian.
 
-Consider the comprehensive checklist of what you have acquired so far. You have achieved phonetic mastery of the Cyrillic alphabet. You understand the fundamental rule of Ukrainian phonetics: distinguishing between a **звук** (sound) that you hear and a **лі́тера** (letter) that you write. You understand how the **апо́стро́ф** (apostrophe) acts as a hard boundary separating sounds, and how the **м'яки́й знак** (soft sign), while having no sound of its own, softens the preceding consonant. You grasp the vital concept of word **на́голос** (stress) and how it shapes the entire rhythm of a spoken word. You confidently use basic greetings like **Приві́т** (Hi) and **До́брий день** (Good afternoon), and you recognize the essential vocabulary for family members such as **ма́ма** (mother), **та́то** (father), **брат** (brother), and **сестра́** (sister).
+Start with a self-assessment on sounds and letters. Can you read Ukrainian Cyrillic words fluently? You have learned to distinguish tricky letter pairs, such as the breathy **Г** (close to H) versus the hard **Ґ** (G), and the deep **И** (Y) versus the sharp **І** (I).
+ Recall the crucial phonetic roles of the **м'яки́й знак** (soft sign, **Ь**), which softens the preceding consonant, and the **апо́стро́ф** (apostrophe). 
 
-This module serves as a dedicated self-assessment phase. You will prove that you can read fluently and hold a basic introduction in a realistic context. We introduce no new vocabulary or new grammar rules here. Instead, the entire focus remains on consolidation, ensuring that the structures you have already learned become automatic and natural. The goal is moving from translation to direct comprehension.
+:::note
+The apostrophe acts as a hard stop. It prevents the preceding consonant from softening and ensures the following vowel sounds clear and distinct.
+:::
 
-<Quiz client:only="react" questions={[{"question": "What is the fundamental difference in Ukrainian phonetics?", "options": [{"text": "A звук (sound) you hear vs a літера (letter) you write.", "correct": true}, {"text": "A літера (letter) you hear vs a звук (sound) you write.", "correct": false}, {"text": "A звук is always a vowel, and a літера is a consonant.", "correct": false}, {"text": "They mean exactly the same thing.", "correct": false}]}, {"question": "What is the function of the апостроф (apostrophe) in Ukrainian?", "options": [{"text": "It acts as a hard boundary separating sounds.", "correct": true}, {"text": "It softens the preceding consonant.", "correct": false}, {"text": "It shows where the stress of the word falls.", "correct": false}, {"text": "It indicates a missing letter like in English.", "correct": false}]}, {"question": "What does the м'який знак (soft sign) do?", "options": [{"text": "It softens the preceding consonant and has no sound of its own.", "correct": true}, {"text": "It makes the preceding vowel longer.", "correct": false}, {"text": "It acts as a hard boundary.", "correct": false}, {"text": "It adds an extra 'y' sound to the word.", "correct": false}]}, {"question": "What shapes the entire rhythm of a spoken Ukrainian word?", "options": [{"text": "Наголос (stress)", "correct": true}, {"text": "Апостроф (apostrophe)", "correct": false}, {"text": "Склад (syllable)", "correct": false}, {"text": "Звук (sound)", "correct": false}]}, {"question": "How do you say a basic formal greeting 'Good afternoon'?", "options": [{"text": "Добрий день", "correct": true}, {"text": "Привіт", "correct": false}, {"text": "Навзаєм", "correct": false}, {"text": "Дуже приємно", "correct": false}]}, {"question": "Which word means 'mother'?", "options": [{"text": "мама", "correct": true}, {"text": "тато", "correct": false}, {"text": "сестра", "correct": false}, {"text": "дружина", "correct": false}]}, {"question": "Which word means 'father'?", "options": [{"text": "тато", "correct": true}, {"text": "брат", "correct": false}, {"text": "син", "correct": false}, {"text": "чоловік", "correct": false}]}, {"question": "Which word means 'brother'?", "options": [{"text": "брат", "correct": true}, {"text": "син", "correct": false}, {"text": "тато", "correct": false}, {"text": "чоловік", "correct": false}]}, {"question": "Which word means 'sister'?", "options": [{"text": "сестра", "correct": true}, {"text": "мама", "correct": false}, {"text": "дружина", "correct": false}, {"text": "вчителька", "correct": false}]}, {"question": "Why is there a dash in 'Я — студент'?", "options": [{"text": "It replaces the missing verb 'to be' in the present tense.", "correct": true}, {"text": "It means the speaker is pausing.", "correct": false}, {"text": "It shows possession.", "correct": false}, {"text": "It indicates a question.", "correct": false}]}, {"question": "How do you correctly state your name in Ukrainian?", "options": [{"text": "Мене звати Анна.", "correct": true}, {"text": "Моє ім'я є Анна.", "correct": false}, {"text": "Я є Анна.", "correct": false}, {"text": "Це моя Анна.", "correct": false}]}, {"question": "Which case must be used when calling a friend directly?", "options": [{"text": "Vocative case (changing the ending of their name).", "correct": true}, {"text": "Accusative case.", "correct": false}, {"text": "The base dictionary form.", "correct": false}, {"text": "Possessive form.", "correct": false}]}]} instruction={"Choose the correct answer based on what you have learned."} />
+Next, evaluate your knowledge of introductions and family vocabulary. Can you say who you are and where you are from? Can you list the members of your family? Check if you can use basic possessive pronouns correctly, matching them to the noun gender. Identify when to use **мій** (my, masculine) and when to use **моя́** (my, feminine). 
+
+<Quiz client:only="react" questions={[{"question": "Which letter represents the soft 'H' sound in Ukrainian?", "options": [{"text": "Ґ", "correct": false}, {"text": "И", "correct": false}, {"text": "Г", "correct": true}, {"text": "І", "correct": false}]}, {"question": "Which letter represents the hard 'G' sound?", "options": [{"text": "Г", "correct": false}, {"text": "И", "correct": false}, {"text": "І", "correct": false}, {"text": "Ґ", "correct": true}]}, {"question": "Which letter represents the deep 'Y' sound?", "options": [{"text": "И", "correct": true}, {"text": "І", "correct": false}, {"text": "Ь", "correct": false}, {"text": "Г", "correct": false}]}, {"question": "Which letter represents the sharp 'I' sound?", "options": [{"text": "И", "correct": false}, {"text": "Ґ", "correct": false}, {"text": "І", "correct": true}, {"text": "Ь", "correct": false}]}, {"question": "What is the function of the apostrophe in Ukrainian?", "options": [{"text": "It softens the preceding consonant.", "correct": false}, {"text": "It makes the vowel sound longer.", "correct": false}, {"text": "It acts as a hard stop and prevents the consonant from softening.", "correct": true}, {"text": "It makes the consonant silent.", "correct": false}]}, {"question": "What is the function of the soft sign (Ь)?", "options": [{"text": "It softens the preceding consonant.", "correct": true}, {"text": "It hardens the preceding consonant.", "correct": false}, {"text": "It makes a separate vowel sound.", "correct": false}, {"text": "It acts as a hard stop.", "correct": false}]}, {"question": "How do you say 'Hi' informally in Ukrainian?", "options": [{"text": "Мене звати", "correct": false}, {"text": "Привіт", "correct": true}, {"text": "Добрий день", "correct": false}, {"text": "Дуже приємно", "correct": false}]}, {"question": "How do you say 'Good afternoon' formally?", "options": [{"text": "Привіт", "correct": false}, {"text": "Я з України", "correct": false}, {"text": "Дуже приємно", "correct": false}, {"text": "Добрий день", "correct": true}]}, {"question": "Which possessive pronoun goes with the masculine noun 'тато'?", "options": [{"text": "моя", "correct": false}, {"text": "мій", "correct": true}, {"text": "мене", "correct": false}, {"text": "я", "correct": false}]}, {"question": "Which possessive pronoun goes with the feminine noun 'мама'?", "options": [{"text": "моя", "correct": true}, {"text": "мій", "correct": false}, {"text": "мене", "correct": false}, {"text": "я", "correct": false}]}, {"question": "Which possessive pronoun goes with the feminine noun 'дружина'?", "options": [{"text": "мій", "correct": false}, {"text": "мене", "correct": false}, {"text": "моя", "correct": true}, {"text": "я", "correct": false}]}, {"question": "Which possessive pronoun goes with the masculine noun 'брат'?", "options": [{"text": "я", "correct": false}, {"text": "моя", "correct": false}, {"text": "мене", "correct": false}, {"text": "мій", "correct": true}]}]} instruction={"Choose the correct option for each question"} />
 
 ## Чита́ння (Reading Practice)
 
-Reading aloud is the essential bridge between recognizing individual letters on a page and producing natural speech. For this exercise, focus on your reading flow and carefully observe the stress marks provided in the text. When you read a Ukrainian sentence, read it as a single continuous thought rather than a robotic list of isolated words. Speak clearly and confidently, allowing the syllables to connect smoothly. Reading aloud engages your muscle memory. It trains your tongue and lips to produce new phonetic combinations, making it easier to speak spontaneously in real-world situations. Do not rush through the text. Pace yourself and focus on pronunciation.
+Put your reading skills to the test. The goal of this task is to read a connected Ukrainian text aloud, building your reading fluency. This text uses only familiar vocabulary from the first six modules, so there are no new words to memorize. Read the sentences slowly and clearly.
 
-Read the following passage about a woman named **Окса́на Ковальчу́к** (Oksana Kovalchuk). Focus on understanding the meaning without translating it into English in your head.
+This is a short connected review text in the style of Anna's self-introduction review from ULP Season 1, Episode 10. Read it aloud once slowly, then once more smoothly.
 
-> **Ме́не зва́ти Оксана Ковальчук.** *(My name is Oksana Kovalchuk.)*
-> **Я з Ки́єва.** *(I am from Kyiv.)*
-> **Я — вчи́телька.** *(I am a teacher.)*
-> **Це — моя́ сім'я́.** *(This is my family.)*
-> **Мій чолові́к — інжене́р.** *(My husband is an engineer.)*
-> **Йо́го звати Мико́ла.** *(His name is Mykola.)*
-> **У мене є син.** *(I have a son.)*
-> **Мій син — студе́нт.** *(My son is a student.)*
-> **Ми живемо́ тут.** *(We live here.)*
-> **Ду́же приє́мно.** *(Very nice to meet you.)*
+**Приві́т! Ме́не зва́ти А́нна. Я з Ки́єва, з Украї́ни. Я студе́нтка. Це моя сім'я́. Це моя ма́ма, її звати Оле́на, вона́ вчи́телька. Це мій та́то, йо́го звати Іва́н, він інжене́р. Ду́же приє́мно!** (Hi! My name is Anna. I am from Kyiv, from Ukraine. I am a student. This is my family. This is my mother, her name is Olena, she is a teacher. This is my father, his name is Ivan, he is an engineer. Very nice to meet you!)
 
-Analyzing the name components within this text reveals important cultural patterns. The woman's personal name is **Оксана** (first name). Her family name is **Ковальчук** (surname). In formal Ukrainian culture, people also use a patronymic based on their father's name. If her father was named Mykola, her patronymic would be **Микола́ївна** (Mykolaivna). Remember the strict capitalization rule: every proper noun, including a person's **ім'я́** (first name) and **прі́звище** (surname), must always start with a capital letter. Proper names are central to Ukrainian identity, and writing them correctly is a sign of respect.
-
-:::tip
-When reading Ukrainian texts, remember that the spelling is highly phonetic. What you see is exactly what you hear. Trust the letters, and do not try to apply English pronunciation rules to Ukrainian words.
-:::
+Assess your reading comprehension and pronunciation. Did you pronounce the vowels clearly? Notice the capitalization rule for proper nouns: names like **Анна** (Anna), **Олена** (Olena), and **Іван** (Ivan), as well as places like **Ки́їв** (Kyiv) and **Украї́на** (Ukraine), always start with a capital letter just like in English. Highlight how the short, simple sentences string together to form a complete narrative. By placing one basic fact after another, you build a descriptive paragraph. You can see how these straightforward phrases work together beautifully without needing complex grammar just yet. You already know enough to tell an authentic story about your own life.
 
 ## Грама́тика (Grammar Summary)
 
-Expressing identity and identification in Ukrainian relies on specific structural patterns. We use the **Це** (This is) + noun structure to introduce people or objects. When stating who someone is, Ukrainian employs a zero-copula rule, meaning the verb "to be" is completely omitted in the present tense. Compare the English sentence "I am a student" with the Ukrainian equivalent **Я — студент** (I am a student). The dash explicitly replaces the missing verb, indicating a direct relationship between the subject and the noun.
+Review the structures used for identification and possession. To point things out, you use the pattern **Це** (This is) plus a noun: **Це мій брат** (This is my brother). For possession, you use the fixed phrase **У мене є** (I have) plus a noun: **У мене є сестра́** (I have a sister). Remember that the "is" verb is usually omitted in the present tense. You simply state the subject and the noun: **Я — студе́нт** (I am a student).
 
-*   **Це — мій друг.** *(This is my friend.)*
-*   **Вона́ — лі́карка.** *(She is a doctor.)*
-*   **Він — архіте́ктор.** *(He is an architect.)*
+Recall how to ask and answer questions about names. There is a clear difference between the informal question **Як тебе́ звати?** (What are you called?) and the formal version **Як вас звати?** (What are you called?). When answering, use the phrase **Мене звати Анна** (They call me Anna). This chunk uses the accusative pronoun **мене** (me), successfully avoiding the literal translation trap of the English phrase "My name is".
 
-:::caution
-A common L2 error is using the verb "to be" when stating identity. English speakers often say **Я є студент** or **Моє́ ім'я є А́нна**, which is a direct translation error. The correct forms are **Я — студент** and **Мене звати Анна**.
+:::tip
+Remember that **Мене звати** uses the accusative **мене**. You are literally saying "They call me," placing yourself as the object of the sentence rather than the subject.
 :::
 
-A clear structural difference exists between stating possession and naming someone. We use the construction **У мене є** (I have) to express possession of objects or family relationships. To state what someone is called, we use the fixed phrase **Мене звати** (My name is, literally: they call me). Notice that these fixed chunks require the accusative pronouns **мене** (me), **тебе́** (you, informal), and **вас** (you, formal). Treat these phrases as solid vocabulary blocks. 
+Finally, review your possessive pronouns and expressions of origin. You must match the gender for your pronouns: use **мій** (my) for masculine nouns like **мій тато** (my dad), **моя** (my) for feminine nouns like **моя мама** (my mom), and **моє́** (my) for neuter nouns like **моє ім'я́** (my name). When talking about your origin, review both chunks: **Зві́дки ти?** / **Звідки ви?** (Where are you from?) — **Я з...** (I am from...).
 
-*   **У мене є брат.** *(I have a brother.)*
-*   **У мене є сестра.** *(I have a sister.)*
-*   **Як тебе звати?** *(What is your name?)*
-*   **Його звати Тара́с.** *(His name is Taras.)*
-
-When expressing origin, we use the specific preposition and case ending combination. The question **Зві́дки ти?** (Where are you from?) is answered with **Я з...** (I am from...) followed by the city or country name with its appropriate ending, such as **Києва** (Kyiv) or **Дніпра́** (Dnipro). Memorize these origin phrases as complete units.
-
-Possessive pronouns must always agree with the grammatical gender of the noun they modify. You say **мій тато** (my dad) because the word is masculine, **моя мама** (my mom) because it is feminine, and **моє ім'я** (my name) because it is neuter. Also, recall the Vocative case endings for direct address. When calling someone, the ending changes: **Анна** becomes **А́нно!**, **Оксана** becomes **Окса́но!**, and **Тарас** becomes **Тара́се!**.
-
-:::note
-English does not have a vocative case, but in Ukrainian, it is mandatory when addressing someone directly. Forgetting to change the name ending can sound unnatural or blunt to a native speaker.
-:::
-
-<MatchUp client:only="react" pairs={[{"left": "Як тебе звати?", "right": "Мене звати Тарас."}, {"left": "Звідки ти?", "right": "Я з Києва."}, {"left": "А як Вас звати?", "right": "Моє прізвище — Коваль."}, {"left": "А Ви звідки?", "right": "Я з Тернополя."}, {"left": "Це Ваша дружина?", "right": "Так, це моя дружина."}, {"left": "Хто це?", "right": "Це моя сім'я."}, {"left": "Я — вчителька. А Ви?", "right": "Я — інженер."}, {"left": "Рада знайомству!", "right": "Навзаєм!"}]} instruction={"Match the questions with their logical answers."} />
+<MatchUp client:only="react" pairs={[{"left": "Як тебе звати?", "right": "Мене звати Анна."}, {"left": "Як вас звати?", "right": "Мене звати Богдан."}, {"left": "А вас?", "right": "Моє ім'я — Соломія."}, {"left": "Звідки ти?", "right": "Я з України."}, {"left": "Звідки ви, Богдане?", "right": "Я з Дніпра."}, {"left": "Звідки ви, Соломіє?", "right": "Я з Тернополя."}, {"left": "Хто він?", "right": "Він інженер."}, {"left": "Хто вона?", "right": "Вона вчителька."}, {"left": "Що на фото?", "right": "Це моя дружина."}, {"left": "Як звати маму?", "right": "Її звати Олена."}, {"left": "Як звати тата?", "right": "Його звати Іван."}]} instruction={"Match the questions and statements with their correct responses"} />
 
 ## Діало́г (Capstone Dialogue)
 
-Imagine the following scene at a professional conference coffee break. Two professionals, **Богдан** (Bohdan), an engineer from the city of Dnipro, and **Соломі́я** (Solomiia), a teacher from the city of Ternopil, meet between sessions. This realistic setting justifies a full exchange of personal information with a new acquaintance. Pay attention to how they ask questions and respond politely.
+Examine the capstone scenario. Imagine a busy coffee break at a professional conference. **Богдан** (Bohdan), an engineer from Dnipro, and **Соломі́я** (Solomiya), a teacher from Ternopil, meet for the very first time. They use everything you have learned to introduce themselves politely, exchange basic background information, and share a detail about their families.
+
+Read their conversation aloud:
 
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Богдан:</span> Добрий день! *(Good afternoon!)*</div>
+<div class="dialogue-line"><span class="speaker">Богдан:</span> До́брий день! *(Good afternoon!)*</div>
 
-<div class="dialogue-line"><span class="speaker">Соломія:</span> Добрий день! *(Good afternoon!)*</div>
+<div class="dialogue-line"><span class="speaker">Соломія:</span> Добрий день! Як вас звати? *(Good afternoon! What is your name?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Богдан:</span> Мене звати Богдан. А як Вас звати? *(My name is Bohdan. And what is your name?)*</div>
+<div class="dialogue-line"><span class="speaker">Богдан:</span> Мене звати Богдан. А вас? *(My name is Bohdan. And you?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Соломія:</span> Мене звати Соломія. Моє прізвище — Кова́ль. *(My name is Solomiia. My surname is Koval.)*</div>
+<div class="dialogue-line"><span class="speaker">Соломія:</span> Дуже приємно. Моє **ім'я** (first name) — Соломія. Моє **прі́звище** (surname) — Кова́ль. Звідки ви? *(Very nice to meet you. My first name is Solomiya. My surname is Koval. Where are you from?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Богдан:</span> Дуже приємно, па́ні Соломі́є! Я з Дніпра. А Ви звідки? *(Very nice to meet you, Ms. Solomiia! I am from Dnipro. And where are you from?)*</div>
+<div class="dialogue-line"><span class="speaker">Богдан:</span> Я з Дніпра́. Я інженер. А ви звідки? *(I am from Dnipro. I am an engineer. And where are you from?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Соломія:</span> Я з Терно́поля. Я — вчителька. А Ви? *(I am from Ternopil. I am a teacher. And you?)*</div>
+<div class="dialogue-line"><span class="speaker">Соломія:</span> Я з Терно́поля. Я вчителька. *(I am from Ternopil. I am a teacher.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Богдан:</span> Я — інженер. Диві́ться, це моя сім'я на фо́то. *(I am an engineer. Look, this is my family in the photo.)*</div>
+<div class="dialogue-line"><span class="speaker">Богдан:</span> Це моя дружи́на на фо́то. У мене є дружина і брат. А у вас є сім'я? *(This is my wife in the photo. I have a wife and a brother. Do you have a family?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Соломія:</span> Це Ва́ша дружи́на? *(Is this your wife?)*</div>
+<div class="dialogue-line"><span class="speaker">Соломія:</span> Так, у мене є мама, тато і сестра. *(Yes, I have a mother, a father, and a sister.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Богдан:</span> Так, це моя дружина. У мене є син. *(Yes, this is my wife. I have a son.)*</div>
+<div class="dialogue-line"><span class="speaker">Богдан:</span> Дякую! До поба́чення! *(Thank you! Goodbye!)*</div>
 
-<div class="dialogue-line"><span class="speaker">Соломія:</span> Ра́да знайо́мству, па́не Богдане! *(Glad to meet you, Mr. Bohdan!)*</div>
-
-<div class="dialogue-line"><span class="speaker">Богдан:</span> Навза́єм! *(Likewise!)*</div>
+<div class="dialogue-line"><span class="speaker">Соломія:</span> До побачення! *(Goodbye!)*</div>
 
 </div>
 
-Notice the register used in this exchange. Because this is a professional context, they use the formal pronoun **Ви** (you, formal). They also use the respectful titles **Пане** (Mr.) and **Пані** (Ms.). Соломія addresses him directly in the Vocative case as **Пане Богдане**, rather than just stating his basic name. This shows politeness and respect in a formal setting. The dialogue moves naturally from initial contact to sharing origins, professions, and personal details. 
+Analyze the natural features of this dialogue. Because they are meeting in a professional setting, they use the polite, formal address with the pronouns **ви** (you) and **вас** (you, accusative). This keeps the exchange respectful and matches the conference setting.
 
-When Богдан shows his photo, he uses the visual aid to transition the conversation from work to personal life. Using photos on your phone is an excellent, natural way to practice vocabulary with native speakers. The full introduction cycle is a predictable social script. Mastering this script allows you to navigate first encounters smoothly and build connections.
+:::tip
+For a first professional meeting, stay with **ви** and **вас**. These are the key A1.1 forms you need for a polite introduction.
+:::
 
-Creating your own graduation monologue is the final step. In Ukrainian primary schools, a simple text follows a strict three-part structure. First is the **За́чи́н** (Introduction), where you establish contact and state the topic. Second is the **Основна части́на** (Main Part), where you provide the core details about your origin and profession. Third is the **Кінці́вка** (Conclusion), where you offer a simple, polite closing sentence. This structure helps organize your thoughts logically.
+This dialogue serves as your model for transitioning from a back-and-forth conversation to a connected monologue. You can now string these individual answers together into your own continuous presentation. You might say: **Привіт! Мене звати Богдан. Я з Дніпра. Я украї́нець. Я — інженер. Моя мама — вчителька. Мій тато — інженер. У мене є брат.** (Hi! My name is Bohdan. I am from Dnipro. I am Ukrainian. I am an engineer. My mother is a teacher. My father is an engineer. I have a brother.)
+ This continuous introduction is the core milestone for this level. Once you can seamlessly present these facts about yourself in one smooth speech, you have mastered the fundamentals of your first contact.
 
-Use this template to practice introducing yourself out loud:
-
-**Привіт!** *(Hi!)*
-**Мене звати...** *(My name is...)*
-**Моє прізвище...** *(My surname is...)*
-**Я з...** *(I am from...)*
-**Я — ...** *(I am a...)*
-**Це моя сім'я.** *(This is my family.)*
-**У мене є...** *(I have a...)*
-**Дуже приємно.** *(Very nice to meet you.)*
-
-<FillIn client:only="react" items={[{"sentence": "____! (Hi!)", "answer": "Привіт", "options": ["Привіт", "Добрий день", "Навзаєм"]}, {"sentence": "____ звати Богдан.", "answer": "Мене", "options": ["Моє", "Мене", "Я"]}, {"sentence": "____ прізвище — Коваль.", "answer": "Моє", "options": ["Мій", "Моя", "Моє"]}, {"sentence": "____ з Дніпра.", "answer": "Я", "options": ["Ти", "Я", "Він"]}, {"sentence": "Я — ____. (teacher)", "answer": "вчителька", "options": ["вчителька", "інженер", "студент"]}, {"sentence": "Це ____ сім'я.", "answer": "моя", "options": ["мій", "моя", "моє"]}, {"sentence": "У ____ є син.", "answer": "мене", "options": ["тебе", "мене", "я"]}, {"sentence": "Дуже ____. (Very nice to meet you.)", "answer": "приємно", "options": ["приємно", "навзаєм", "звати"]}]} instruction={"Complete the self-introduction monologue using the correct words."} />
+<FillIn client:only="react" items={[{"sentence": "____ звати Анна.", "answer": "Мене", "options": ["Я", "Мене", "Моє", "Мій"]}, {"sentence": "Я ____ України.", "answer": "з", "options": ["в", "з", "на", "до"]}, {"sentence": "Я живу ____ Києві.", "answer": "в", "options": ["в", "з", "на", "до"]}, {"sentence": "____ моя сім'я.", "answer": "Це", "options": ["Це", "Де", "Хто", "Що"]}, {"sentence": "Це ____ мама.", "answer": "моя", "options": ["мій", "моя", "моє", "мене"]}, {"sentence": "____ звати Олена.", "answer": "Її", "options": ["Його", "Її", "Моє", "Моя"]}, {"sentence": "Вона ____.", "answer": "вчителька", "options": ["вчителька", "інженер", "тато", "студент"]}, {"sentence": "Це ____ тато.", "answer": "мій", "options": ["мій", "моя", "моє", "мене"]}, {"sentence": "____ звати Іван.", "answer": "Його", "options": ["Його", "Її", "Моє", "Моя"]}, {"sentence": "Він ____.", "answer": "інженер", "options": ["вчителька", "інженер", "мама", "студентка"]}, {"sentence": "Я ____.", "answer": "студентка", "options": ["студентка", "брат", "тато", "сім'я"]}, {"sentence": "Дуже ____!", "answer": "приємно", "options": ["приємно", "гарно", "звати", "добрий"]}]} instruction={"Fill in the blanks to complete the self-introduction"} />
 
 ## Підсумок — Summary
 
-You have reached the end of the first major phase of your language journey. Before you proceed to the next set of modules, take a moment for a final, comprehensive self-check. Can you name all 33 letters of the Ukrainian alphabet and confidently produce their corresponding sounds? Can you comfortably say hello using both formal and informal greetings depending on the specific social context? Do you clearly understand the cultural and linguistic difference between a person's **ім'я** (first name) and their **прізвище** (surname)?
+Here is your final self-check checklist. Evaluate your progress honestly.
 
-Make sure you know how to use the possessive pronouns **мій** (my, masc.) and **моя** (my, fem.) correctly when talking about your family members. Check if you can use the Vocative case to call a friend directly, changing the ending of their name appropriately so that it sounds natural to a native speaker. Can you confidently introduce yourself in five connected sentences using the specific patterns from this module? If you can answer yes to all these questions, you are fully prepared. Take pride in establishing a solid foundation.
+* Can you say how many letters and how many sounds Ukrainian has?
+* Can you place the stress correctly in common words such as **ка́ва** and **вода́**?
+* Can you read Ukrainian Cyrillic words fluently, including those utilizing the **Ь** and the apostrophe?
+* Can you say hello informally with **Привіт** (Hi) and formally with **Добрий день** (Good afternoon)?
+* Can you introduce yourself in 5 sentences?
+* Can you introduce yourself using the essential phrase **Мене звати...** (My name is...)?
+* Can you state your origin using the chunk **Я з...** (I am from...)?
+* Can you state your profession using the direct pattern **Я...** (I am...)?
+* Can you introduce your family members using the correct gendered possessives, such as **Це мій тато** (This is my dad) and **Це моя мама** (This is my mom)?
+* Can you ask someone else their name, inquire about their **прізвище** (surname), and ask where they are from?
+
+If you can confidently do all of this, you are fully prepared and ready for the next step: understanding how objects have gender in Ukrainian!
 
 </TabItem>
 <TabItem label="Словник">
@@ -147,49 +126,19 @@ Make sure you know how to use the possessive pronouns **мій** (my, masc.) and
 |-------|----------|-------------|-----|
 | **ім'я́** | first name | ім. | с. |
 | **прі́звище** | surname | ім. | с. |
-| **лі́тера** | letter | ім. | ж. |
-| **апо́стро́ф** | apostrophe | ім. | ч. |
-| **м'яки́й знак** | soft sign |  |  |
-| **на́голос** | stress | присл. |  |
-| **вчи́телька** | teacher (female) | ім. | ж. |
-| **сім'я́** | family | ім. | ж. |
-| **чолові́к** | husband | ім. | ч. |
-| **дружи́на** | wife | ім. | ж. |
-| **інжене́р** | engineer | ім. | ч. |
-| **студе́нт** | student | ім. | ч. |
-| **тут** | here | присл. |  |
-| **лі́карка** | doctor (female) | ім. | ж. |
-| **архіте́ктор** | architect | ім. | ч. |
-| **па́не** | Mr. (respectful address) | ім. | ч. |
-| **па́ні** | Ms. / Mrs. (respectful address) | ім. | ч. |
-| **Навза́єм** | Mutually / Likewise | присл. |  |
-| **За́чи́н** | Introduction / Opening | ім. | ч. |
-| **Основна части́на** | Main part |  |  |
-| **Кінці́вка** | Conclusion / Ending | ім. | ж. |
-
-### Вирази
-
-| Вираз | Переклад |
-|-------|----------|
-| **Мене звати...** | My name is... |
-| **Я з...** | I am from... |
-| **У мене є...** | I have... |
-| **Рада знайомству** | Glad to meet you |
 
 ### Картки — Flashcards
 
-<FlashcardDeck client:only="react" cards={[{ front: "ім&#39;я́", back: "first name", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "прі́звище", back: "surname", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "лі́тера", back: "letter", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "апо́стро́ф", back: "apostrophe", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "м&#39;яки́й знак", back: "soft sign" }, { front: "на́голос", back: "stress", subtitle: "присл." }, { front: "вчи́телька", back: "teacher (female)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "сім&#39;я́", back: "family", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "чолові́к", back: "husband", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "дружи́на", back: "wife", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "інжене́р", back: "engineer", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "студе́нт", back: "student", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "тут", back: "here", subtitle: "присл." }, { front: "лі́карка", back: "doctor (female)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "архіте́ктор", back: "architect", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "па́не", back: "Mr. (respectful address)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "па́ні", back: "Ms. / Mrs. (respectful address)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "Навза́єм", back: "Mutually / Likewise", subtitle: "присл." }, { front: "За́чи́н", back: "Introduction / Opening", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "Основна части́на", back: "Main part" }, { front: "Кінці́вка", back: "Conclusion / Ending", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }]} />
+<FlashcardDeck client:only="react" cards={[{ front: "ім&#39;я́", back: "first name", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "прі́звище", back: "surname", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }]} />
 
 </TabItem>
 <TabItem label="Зошит">
 
-<TrueFalse client:only="react" items={[{"statement": "You must always capitalize proper nouns, including a person's first name and surname.", "isTrue": true, "explanation": "Proper names are central to Ukrainian identity and require a capital letter."}, {"statement": "Ukrainian spelling is highly phonetic, meaning what you see is exactly what you hear.", "isTrue": true, "explanation": "Trust the Cyrillic letters instead of English pronunciation rules."}, {"statement": "It is natural to use the verb 'to be' when saying 'I am a student' in the present tense.", "isTrue": false, "explanation": "In Ukrainian, the present tense verb 'to be' is omitted. We say 'Я — студент'."}, {"statement": "When stating possession, we use 'У мене є' instead of a direct translation of 'I have'.", "isTrue": true, "explanation": "'У мене є' means 'At me there is'."}, {"statement": "Possessive pronouns like мій/моя do not need to agree with the grammatical gender of the noun.", "isTrue": false, "explanation": "They must always agree: мій тато (masc.), моя мама (fem.), моє ім'я (neuter)."}, {"statement": "Ukrainian has a Vocative case used when directly addressing or calling someone.", "isTrue": true, "explanation": "For example, Анна becomes Анно! and Тарас becomes Тарасе!"}]} instruction={"Is the statement about Ukrainian rules true or false?"} />
+<GroupSort client:only="react" groups={{"Masculine (мій, він)": ["тато", "брат", "інженер", "студент", "Богдан", "Іван"], "Feminine (моя, вона)": ["мама", "сестра", "вчителька", "студентка", "Соломія", "Анна", "дружина"]}} instruction={"Sort the words by gender"} />
 
-<GroupSort client:only="react" groups={{"мій (masculine)": ["тато", "брат", "чоловік", "син", "друг", "студент"], "моя (feminine)": ["мама", "сестра", "дружина", "сім'я", "лікарка", "вчителька"], "моє (neuter)": ["ім'я", "прізвище"]}} instruction={"Sort the nouns into groups based on which possessive pronoun they use."} />
+<TrueFalse client:only="react" items={[{"statement": "The phrase 'Мене звати' uses the accusative pronoun 'мене', meaning you are literally saying 'They call me'.", "isTrue": true, "explanation": "In Ukrainian, you say 'They call me' instead of 'My name is'."}, {"statement": "The word 'Це' means 'This is' and is used to point things out.", "isTrue": true, "explanation": "You use 'Це' plus a noun to introduce people or objects."}, {"statement": "The phrase 'У мене є' means 'I want'.", "isTrue": false, "explanation": "It means 'I have'."}, {"statement": "The question 'Як тебе звати?' is the polite, formal way to ask someone's name.", "isTrue": false, "explanation": "It is the informal way. The formal way is 'Як вас звати?'."}, {"statement": "The question 'Як вас звати?' is the formal way to ask someone's name.", "isTrue": true, "explanation": "It uses the polite 'вас'."}, {"statement": "The name form 'Богдане' is in the Vocative case, which is used for direct address.", "isTrue": true, "explanation": "The Vocative case is mandatory when addressing someone directly."}, {"statement": "Proper nouns like names and cities are not capitalized in Ukrainian.", "isTrue": false, "explanation": "Names and places always start with a capital letter, just like in English."}, {"statement": "The pronoun 'мій' is used for feminine nouns.", "isTrue": false, "explanation": "It is used for masculine nouns."}, {"statement": "The pronoun 'моя' is used for feminine nouns.", "isTrue": true, "explanation": "It matches feminine nouns like 'мама' or 'дружина'."}, {"statement": "The apostrophe in Ukrainian softens the preceding consonant.", "isTrue": false, "explanation": "The apostrophe acts as a hard stop and prevents softening."}, {"statement": "The soft sign (Ь) acts as a hard stop.", "isTrue": false, "explanation": "The soft sign softens the preceding consonant."}, {"statement": "The question 'Звідки ти?' means 'Where are you from?'.", "isTrue": true, "explanation": "It is a fixed chunk used to ask about someone's origin."}]} instruction={"Are these statements True or False?"} />
 
-<CountSyllables client:only="react" items={[{"word": "сім'я", "correct": 2}, {"word": "брат", "correct": 1}, {"word": "сестра", "correct": 2}, {"word": "вчителька", "correct": 3}, {"word": "студент", "correct": 2}, {"word": "прізвище", "correct": 3}, {"word": "привіт", "correct": 2}, {"word": "інженер", "correct": 3}]} instruction={"Count the number of syllables in each word. Hint: Count the vowels!"} />
-
-<DivideWords client:only="react" items={[{"word": "Оксана", "answer": "О-кса-на", "hint": "Three syllables"}, {"word": "Микола", "answer": "Ми-ко-ла", "hint": "Three syllables"}, {"word": "Тарас", "answer": "Та-рас", "hint": "Two syllables"}, {"word": "Богдан", "answer": "Бог-дан", "hint": "Two syllables"}, {"word": "Соломія", "answer": "Со-ло-мі-я", "hint": "Four syllables"}, {"word": "Ковальчук", "answer": "Ко-валь-чук", "hint": "Three syllables"}]} instruction={"Divide these proper names into syllables."} />
+<Anagram client:only="react" items={[{"scrambled": "с і м ' я", "answer": "сім'я", "hint": "family"}, {"scrambled": "т а т о", "answer": "тато", "hint": "dad"}, {"scrambled": "м а м а", "answer": "мама", "hint": "mom"}, {"scrambled": "б р а т", "answer": "брат", "hint": "brother"}, {"scrambled": "с е с т р а", "answer": "сестра", "hint": "sister"}, {"scrambled": "д р у ж и н а", "answer": "дружина", "hint": "wife"}, {"scrambled": "і м ' я", "answer": "ім'я", "hint": "first name"}, {"scrambled": "п р і з в и щ е", "answer": "прізвище", "hint": "surname"}, {"scrambled": "і н ж е н е р", "answer": "інженер", "hint": "engineer"}, {"scrambled": "п р и в і т", "answer": "привіт", "hint": "hi"}, {"scrambled": "с т у д е н т", "answer": "студент", "hint": "student (male)"}, {"scrambled": "с т у д е н т к а", "answer": "студентка", "hint": "student (female)"}]} instruction={"Unscramble the letters to form vocabulary words"} />
 
 </TabItem>
 <TabItem label="Ресурси">
@@ -198,14 +147,6 @@ Make sure you know how to use the possessive pronouns **мій** (my, masc.) and
 
 - [ULP Season 1, Episode 10 — Review 1-9](https://www.ukrainianlessons.com/episode10/)
   _Anna's connected self-introduction review pattern._
-
-## Підручники (Textbooks)
-
-- [Авраменко О. М. — Українська мова, 11 клас (2019)](https://pidruchnyk.com.ua/uploads/book/11-klas-ukrajinska-mova-avramenko-2019.pdf#page=195), стор. 195
-- [Большакова І. О. — Українська мова, 2 клас (2019)](https://pidruchnyk.com.ua/uploads/book/2-klas-ukrmova-bolshakova-2019-2.pdf#page=22), стор. 22
-- [Кравцова Н. М. — Українська мова, 2 клас (2019)](https://pidruchnyk.com.ua/uploads/book/2-klas-ukrmova-kravcova-2019-1.pdf#page=71), стор. 71
-- [Авраменко О. М. — Українська мова, 5 клас (2022)](https://pidruchnyk.com.ua/uploads/book/5_ukrmova_avramenko_2022.pdf#page=12), стор. 12
-- [Угор О. М. — Українська мова, 5 клас (2022)](https://shkola.in.ua/5-klas-ukrainska-mova-uhor-2022.html), стор. 108
 
 **Статті — Articles**
 

@@ -2,10 +2,10 @@
   "module": "nature-and-traditions",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-04-11T00:49:47.801438Z",
+  "last_audit": "2026-04-11T17:42:24.675845Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-11T00:41:02.455542Z",
+    "md": "2026-04-11T17:42:20.919952Z",
     "meta": null,
     "activities": "2026-04-08T21:34:33.095759Z",
     "vocabulary": "2026-04-08T21:35:58.251926Z",
@@ -20,8 +20,8 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 1,
-      "message": "2425/2000 (raw: 2474) | engagement: 0/3"
+      "violations": 2,
+      "message": "2847/2000 (raw: 2914) | engagement: 2/3 | immersion: 37.3% LOW (target 65-90% (A2.3))"
     },
     "activities": {
       "status": "pass",
@@ -32,6 +32,15 @@
       "status": "pass",
       "violations": 0,
       "message": "57/1"
+    },
+    "vocab_progression": {
+      "status": "warn",
+      "violations": 0,
+      "message": "\u0394 -21 | premature=4 | gaps=1 | well-paced=0",
+      "delta": -21,
+      "premature": 4,
+      "gaps": 1,
+      "well_paced": 0
     },
     "naturalness": {
       "status": "info",

@@ -2,9 +2,9 @@ version: '1.0'
 module: my-family
 level: a1
 inline:
-- id: match-family
+- id: match-up-family-vocab
   type: match-up
-  instruction: Match the English family words to their Ukrainian translations.
+  instruction: Match English family words to Ukrainian.
   pairs:
   - left: parents
     right: батьки
@@ -22,181 +22,345 @@ inline:
     right: сестра
   - left: mother and father
     right: мама і тато
-  title: Match the English family words to their Ukrainian translations.
-- id: quiz-possession
+  title: Match English family words to Ukrainian.
+- id: quiz-u-tebe-ie
   type: quiz
-  instruction: Choose the correct answer to the question.
+  instruction: Choose the correct answer based on the question.
   items:
   - question: У тебе є брат?
     options:
     - Так, у мене є брат.
-    - Ні, у тебе є брат.
-    - Так, це мій брат.
-    - У мене є сестра.
+    - Так, у тебе є брат.
+    - Ні, це мій брат.
+    - Так, це його брат.
     correct: 0
   - question: У тебе є сестра?
     options:
-    - Так, у мене є одна сестра.
-    - Ні, це моя сестра.
+    - Ні.
+    - Це моя сестра.
     - Так, у тебе є сестра.
-    - Так, її звати Оля.
+    - Так, це її сестра.
     correct: 0
   - question: У тебе є бабуся?
     options:
     - Так, у мене є бабуся.
-    - Ні, це бабуся.
+    - Ні, це моя бабуся.
     - Так, у тебе є бабуся.
-    - Так, це дідусь.
+    - Це його бабуся.
+    correct: 0
+  - question: У тебе є брати чи сестри?
+    options:
+    - Так, у мене є два брати.
+    - Це мої брати.
+    - Ні, це не мої брати.
+    - Так, у тебе є дві сестри.
     correct: 0
   - question: У тебе є дядько?
     options:
-    - Ні.
-    - Так, у тебе є дядько.
-    - Так, це мій дядько.
-    - Ні, її звати Оля.
+    - Ні, у мене тільки тітка.
+    - Ні, у тебе тільки тітка.
+    - Це її дядько.
+    - Так, це його дядько.
     correct: 0
-  - question: У тебе є два брати?
+  - question: У тебе є дідусь?
     options:
-    - Так, у мене є два брати.
-    - Ні, у тебе є два брати.
-    - Так, у мене є одна сестра.
-    - Так, це мої брати.
-    correct: 0
-  - question: У тебе є дідусь і бабуся?
-    options:
-    - Так, у мене є дідусь і бабуся.
+    - Так, у мене є дідусь.
+    - Ні, це дідусь.
+    - У тебе є дідусь.
     - Так, це мій дідусь.
-    - Ні, у тебе є бабуся.
-    - Так, її звати Оля.
     correct: 0
-  title: Choose the correct answer to the question.
+  title: Choose the correct answer based on the question.
 - id: fill-in-possessives
   type: fill-in
-  instruction: Choose the correct possessive pronoun.
+  instruction: Choose the correct possessive pronoun. All are in the nominative case.
   items:
-  - sentence: Це {моя} мама.
+  - sentence: Це ____ мама.
     answer: моя
     options:
     - мій
     - моя
     - моє
     - мої
-  - sentence: Де {твій} тато?
+  - sentence: Де ____ тато?
     answer: твій
     options:
     - твій
     - твоя
     - твоє
     - твої
-  - sentence: Ось {мої} батьки.
+  - sentence: Ось ____ батьки.
     answer: мої
     options:
     - мій
     - моя
     - моє
     - мої
-  - sentence: Це {мій} брат.
-    answer: мій
-    options:
-    - мій
-    - моя
-    - моє
-    - мої
-  - sentence: Де {твоя} сестра?
-    answer: твоя
-    options:
-    - твій
-    - твоя
-    - твоє
-    - твої
-  - sentence: Ось {твої} дідусь і бабуся.
-    answer: твої
-    options:
-    - твій
-    - твоя
-    - твоє
-    - твої
-  - sentence: Це {моя} сім'я.
+  - sentence: Це ____ бабуся.
     answer: моя
     options:
     - мій
     - моя
     - моє
     - мої
-  - sentence: Де {мій} дядько?
+  - sentence: Де ____ дідусь?
+    answer: твій
+    options:
+    - твій
+    - твоя
+    - твоє
+    - твої
+  - sentence: Ось ____ брати.
+    answer: мої
+    options:
+    - мій
+    - моя
+    - моє
+    - мої
+  - sentence: Це ____ сестра.
+    answer: твоя
+    options:
+    - твій
+    - твоя
+    - твоє
+    - твої
+  - sentence: Де ____ дядько?
     answer: мій
     options:
     - мій
     - моя
     - моє
     - мої
-  title: Choose the correct possessive pronoun.
-- id: fill-in-dialogue
+  title: Choose the correct possessive pronoun. All are in the nominative case.
+- id: fill-in-dialogue-intro
   type: fill-in
-  instruction: Complete the dialogue with the correct words.
+  instruction: Complete the family introduction dialogue. Choose the correct word
+    for each blank.
   items:
-  - sentence: — Привіт! Це {твій} брат?
-    answer: твій
+  - sentence: — Привіт! Це ____ сім'я?
+    answer: твоя
     options:
     - твій
     - твоя
-    - мій
+    - твої
     - моя
-  - sentence: — Так, це мій брат. Ось моя {мама}.
-    answer: мама
-    options:
-    - мама
-    - тато
-    - батьки
-    - брат
-  - sentence: — А це твій {тато}?
+  - sentence: — Так, це моя сім'я. Ось мій ____.
     answer: тато
     options:
-    - мама
-    - сестра
     - тато
-    - бабуся
-  - sentence: — Ні, це мій {дядько}.
-    answer: дядько
+    - мама
+    - батьки
+    - сестра
+  - sentence: — А це ____ мама?
+    answer: твоя
     options:
+    - твоя
+    - твій
+    - твої
+    - його
+  - sentence: — Так, це ____ мама.
+    answer: моя
+    options:
+    - моя
+    - мій
+    - мої
+    - її
+  - sentence: — У тебе є ____?
+    answer: брат
+    options:
+    - брат
+    - батьки
+    - брати
+    - сестри
+  - sentence: — Так, ось мій ____ Іван.
+    answer: брат
+    options:
+    - брат
+    - тато
+    - дідусь
     - дядько
-    - тітка
-    - сестра
-    - мама
-  - sentence: — А це твоя {сестра}?
-    answer: сестра
-    options:
-    - сестра
-    - брат
-    - бабуся
-    - дідусь
-  - sentence: — Так, це моя сестра. А це наша {бабуся}.
-    answer: бабуся
-    options:
-    - бабуся
-    - дідусь
-    - тато
-    - мама
-  title: Complete the dialogue with the correct words.
+  title: Complete the family introduction dialogue. Choose the correct word for each
+    blan
 workbook:
-- id: group-gender
+- id: group-sort-gender
   type: group-sort
-  instruction: Sort the words by gender (masculine or feminine).
+  instruction: Sort the family members into the correct grammatical gender.
   groups:
-  - label: Masculine (мій)
+  - label: Masculine (Чоловічий рід)
     items:
-    - брат
     - тато
+    - брат
     - дідусь
     - дядько
     - син
     - чоловік
-  - label: Feminine (моя)
+  - label: Feminine (Жіночий рід)
     items:
-    - сестра
     - мама
+    - сестра
     - бабуся
     - тітка
     - дочка
     - дружина
-  title: Sort the words by gender (masculine or feminine).
+  - label: Plural (Множина)
+    items:
+    - батьки
+    - брати
+    - сестри
+  title: Sort the family members into the correct grammatical gender.
+- id: anagram-family
+  type: anagram
+  instruction: Rearrange the letters to form family vocabulary words.
+  items:
+  - letters:
+    - м
+    - а
+    - м
+    - а
+    answer: мама
+    hint: mother
+  - letters:
+    - т
+    - а
+    - т
+    - о
+    answer: тато
+    hint: father
+  - letters:
+    - б
+    - р
+    - а
+    - т
+    answer: брат
+    hint: brother
+  - letters:
+    - с
+    - і
+    - м
+    - ''''
+    - я
+    answer: сім'я
+    hint: family
+  - letters:
+    - т
+    - і
+    - т
+    - к
+    - а
+    answer: тітка
+    hint: aunt
+  - letters:
+    - д
+    - і
+    - д
+    - у
+    - с
+    - ь
+    answer: дідусь
+    hint: grandfather
+  title: Rearrange the letters to form family vocabulary words.
+- id: odd-one-out-family
+  type: odd-one-out
+  instruction: Find the word that does not belong in the group.
+  items:
+  - words:
+    - мама
+    - тато
+    - брат
+    - один
+    correct: 3
+    explanation: Один is a number, the others are family members.
+  - words:
+    - мій
+    - твоя
+    - мої
+    - сім'я
+    correct: 3
+    explanation: Сім'я is a noun, the others are possessive pronouns.
+  - words:
+    - сестра
+    - тітка
+    - бабуся
+    - дядько
+    correct: 3
+    explanation: Дядько is masculine, the others are feminine.
+  - words:
+    - брат
+    - дідусь
+    - тато
+    - дочка
+    correct: 3
+    explanation: Дочка is feminine, the others are masculine.
+  - words:
+    - його
+    - її
+    - чи
+    - мій
+    correct: 2
+    explanation: Чи is a question word (or), the others are pronouns.
+  - words:
+    - один
+    - два
+    - тільки
+    - дві
+    correct: 2
+    explanation: Тільки means 'only', the others are numbers.
+  title: Find the word that does not belong in the group.
+- id: count-syllables-family
+  type: count-syllables
+  instruction: 'Count the number of syllables in each word. Hint: count the vowels.'
+  items:
+  - word: брат
+    correct: 1
+  - word: мама
+    correct: 2
+  - word: бабуся
+    correct: 3
+  - word: дідусь
+    correct: 2
+  - word: сім'я
+    correct: 2
+  - word: син
+    correct: 1
+  title: 'Count the number of syllables in each word. Hint: count the vowels.'
+- id: divide-words-family
+  type: divide-words
+  instruction: Divide the words into syllables. Use hyphens.
+  items:
+  - word: мама
+    answer: ма-ма
+  - word: тато
+    answer: та-то
+  - word: бабуся
+    answer: ба-бу-ся
+  - word: родина
+    answer: ро-ди-на
+  - word: чоловік
+    answer: чо-ло-вік
+  - word: дружина
+    answer: дру-жи-на
+  title: Divide the words into syllables. Use hyphens.
+- id: true-false-family
+  type: true-false
+  instruction: Are the following statements true or false?
+  items:
+  - statement: In Ukrainian, 'I have' is translated as 'у мене є'.
+    correct: true
+    explanation: Ukrainian uses 'у мене є' instead of a direct verb like 'to have'.
+  - statement: The word for 'my' never changes form, regardless of gender.
+    correct: false
+    explanation: 'It changes based on the noun: мій (m), моя (f), моє (n), мої (pl).'
+  - statement: The phrase 'у тебе є' is used to ask 'do you have' informally.
+    correct: true
+    explanation: You use a rising intonation to turn 'у тебе є' into a question.
+  - statement: There is a single Ukrainian word for 'grandparents'.
+    correct: false
+    explanation: You must say 'бабуся і дідусь' (grandmother and grandfather).
+  - statement: The word 'його' (his) and 'її' (her) change based on the gender of
+      the noun that follows.
+    correct: false
+    explanation: Unlike 'мій' and 'твій', 'його' and 'її' never change their form.
+  - statement: To say 'one brother', you use 'один брат', and for 'one sister', you
+      use 'одна сестра'.
+    correct: true
+    explanation: The number one changes to match the gender of the person.
+  title: Are the following statements true or false?

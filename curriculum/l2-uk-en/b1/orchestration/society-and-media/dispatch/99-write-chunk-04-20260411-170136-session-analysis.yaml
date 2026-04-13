@@ -1,0 +1,95 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T15-00-495bd29a.json
+phase: write-chunk-04
+prompt_chars: 51268
+response_chars: 6962
+prompt_words: 6954
+response_words: 945
+sections:
+- name: header
+  start: 0
+  length: 417
+  fraction: 0.0081
+- name: skeleton
+  start: 417
+  length: 1532
+  fraction: 0.0299
+- name: prior_summary
+  start: 1949
+  length: 3744
+  fraction: 0.073
+- name: plan
+  start: 5693
+  length: 19762
+  fraction: 0.3855
+- name: wiki
+  start: 19023
+  length: 25610
+  fraction: 0.4995
+- name: output_spec
+  start: 51065
+  length: 203
+  fraction: 0.004
+large_sections:
+- wiki
+directives_total: 27
+directives_covered: 14
+directives_missed:
+- kind: checklist
+  text: новина (news item — report of a recent event)
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: checklist
+  text: факт (fact — verifiable statement)
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: checklist
+  text: думка (opinion — personal view)
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: checklist
+  text: маніпулювання (manipulation — hidden influence)
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: checklist
+  text: джерело (source — origin of information)
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: Learners must recognize these techniques to read critically.
+  covered: false
+  coverage_note: 2/7 keywords (29%)
+- kind: must
+  text: '**MANDATORY — never omit.'
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 0/11 keywords (0%)
+- kind: skeleton_para
+  text: 'P4 (120w): Reading: A B1-adapted article on how a local Ukrainian ''громада''
+    (community) cleaned a park or helped refugees. Focus on terms like ''благодійність''
+    and ''мітинг''.'
+  covered: false
+  coverage_note: 6/18 keywords (33%)
+- kind: skeleton_para
+  text: 'P6 (100w): Vocabulary for voting and elections: вибори (elections), електорат
+    (electorate), програма (program). Briefly mention the ''Верховна Рада'' as the
+    legislative body.'
+  covered: false
+  coverage_note: 4/15 keywords (27%)
+- kind: skeleton_para
+  text: 'P7 (90w): Grammar: Using participles to describe societal roles: ''залучений''
+    (involved), ''обраний'' (elected), ''відповідальний'' (responsible - though an
+    adj, often acts like a participle in these contexts).'
+  covered: false
+  coverage_note: 8/21 keywords (38%)
+- kind: inject_activity
+  text: match-up, manipulation techniques
+  covered: false
+  coverage_note: marker missing

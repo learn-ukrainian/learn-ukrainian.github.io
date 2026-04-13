@@ -1,34 +1,4 @@
 vocabulary:
-- word: алгори́тм
-  translation: algorithm
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: конте́кст
-  translation: context
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: керува́ти
-  translation: to manage, drive
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: майбу́тнє
-  translation: future
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: відмі́нок
-  translation: grammatical case
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
 - word: прийме́нник
   translation: preposition
   expression: false
@@ -77,231 +47,69 @@ vocabulary:
   pos: дієсл.
   gender: ''
   verified: true
-- word: ба́чити
-  translation: to see
+- word: алгори́тм
+  translation: algorithm
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: конте́кст
+  translation: context
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: керува́ти
+  translation: to manage
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: зна́ти
-  translation: to know
+- word: майбу́тнє
+  translation: future
   expression: false
-  pos: дієсл.
-  gender: ''
+  pos: ім.
+  gender: с.
   verified: true
-- word: люби́ти
-  translation: to love
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: купи́ти
-  translation: to buy
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: допомага́ти
-  translation: to help
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: телефонува́ти
-  translation: to call
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: ра́дити
-  translation: to advise
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: ціка́витися
-  translation: to be interested in
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: займа́тися
-  translation: to practice, to do
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: потребува́ти
-  translation: to need
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: мрі́яти
-  translation: to dream
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: нема́є
-  translation: there is no
-  expression: false
-  pos: ''
-  gender: ''
-  verified: true
-- word: че́рез
-  translation: across, through
-  expression: false
-  pos: прийм.
-  gender: ''
-  verified: true
-- word: бі́ля
-  translation: near
-  expression: false
-  pos: прийм.
-  gender: ''
-  verified: true
-- word: на роботу
-  translation: to work (direction)
+- word: дякувати комусь
+  translation: to thank someone
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: на роботі
-  translation: at work (location)
+- word: допомагати комусь
+  translation: to help someone
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: наступного тижня
-  translation: next week
+- word: заважати комусь
+  translation: to bother someone
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: минулого місяця
-  translation: last month
+- word: вийти з дому
+  translation: to go out of the house
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: у вівторок
-  translation: on Tuesday
+- word: приїхати з Києва
+  translation: to arrive from Kyiv
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: про майбутнє
-  translation: about the future
+- word: піти з другом
+  translation: to go with a friend
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: по́дорож
-  translation: trip, journey
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: мета́
-  translation: goal
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: я́кір
-  translation: anchor
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: ло́гіка
-  translation: logic
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: ко́мпас
-  translation: compass
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: шлях
-  translation: way, path
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: квито́к
-  translation: ticket
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: пора́да
-  translation: advice
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: подару́нок
-  translation: gift
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: о́дяг
-  translation: clothes
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: окуля́ри
-  translation: glasses
-  expression: false
-  pos: ім.
+- word: кава з молоком
+  translation: coffee with milk
+  expression: true
+  pos: ''
   gender: ''
-  verified: true
-- word: ти́ждень
-  translation: week
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: мі́сяць
-  translation: month
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: по́ми́лка
-  translation: mistake
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: крок
-  translation: step
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: газе́та
-  translation: newspaper
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: журналі́ст
-  translation: journalist
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: вдя́чність
-  translation: gratitude
-  expression: false
-  pos: ім.
-  gender: ж.
   verified: true

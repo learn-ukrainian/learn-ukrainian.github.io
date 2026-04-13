@@ -2,49 +2,51 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 9
-  evidence: 'The text misses the plan requirement for Dialogue 2: "asking about delivery
-    time". The client only asks `«Де треба писати номер телефону одержувача?»` without
-    inquiring about delivery duration. All ot'
+  score: 6
+  evidence: All four planned H2 sections are present, but Dialogue 1 never reaches
+    the plan’s “giving the address, paying” step; lines 34-39 stop before payment.
+    The required action `підписати` is also absent fro
 - dimension: 2
   name: Linguistic accuracy
-  score: 9
-  evidence: 'Contains a textbook calque: `«Що знаходиться всередині?»` instead of
-    the natural `«Що всередині?»`. Otherwise, the language is highly accurate.'
+  score: 7
+  evidence: 'Critical rule error in the grammar explanation: `Слова «допоможіть» та
+    «підкажіть» вимагають після себе займенника.`'
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: Excellent pedagogical breakdown of the Dative case answering "Кому?".
-    The distinction between `дати листоноші` and `заповнити бланк` is well contextualized.
+  score: 6
+  evidence: 'The address section overstates the rule: `Ми пишемо ім''я людини тільки
+    у давальному відмінку.` It does not clearly separate address layout from dative
+    addressee phrases.'
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: All required and recommended words (`пошта`, `відправник`, `одержувач`,
-    `індекс`, `бандероль`) are naturally embedded in the narrative.
+  score: 8
+  evidence: Required/recommended lexis is mostly covered naturally (`пошта`, `лист`,
+    `конверт`, `марка`, `посилка`, `бандероль`, `квитанція`, `одержувач`, `відправник`,
+    `індекс`), but `підписати` is missing.
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: The 4 injected activity markers correspond exactly to the plan's focus
-    areas and are spaced appropriately.
+  score: 5
+  evidence: 'Marker placement is good, but [activities/services-and-communication.yaml](/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a2/activities/services-and-communication.yaml:76)
+    includes '
 - dimension: 6
   name: Engagement & tone
-  score: 9
-  evidence: Generally excellent teacher persona, though some phrasing is overly robotic,
-    e.g., `«купіть інший предмет. Це листівка»`.
+  score: 7
+  evidence: The voice is teacherly, but filler like `Це дуже важливе правило.` adds
+    emphasis without adding information.
 - dimension: 7
   name: Structural integrity
-  score: 9
-  evidence: 'Formatting artifact present where the Genitive case English translation
-    was replaced by a duplicate in backticks: `родовий відмінок (\`родовий відмінок\`)`.
-    The 2556 word count easily hits the target.'
+  score: 10
+  evidence: All planned sections are present and ordered correctly; the pipeline word
+    count is 2889, well above the 2000 target; no stray structural artifacts beyond
+    expected inject markers.
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: Authentic mention of `Укрпошта` services, yellow postboxes, and addressing
-    protocols perfectly reflects Ukrainian postal culture.
+  score: 9
+  evidence: Укрпошта is named and the module stays Ukrainian-centered; no obvious
+    cultural inaccuracies surfaced.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: The dialogues are polite, natural, and accurately capture service interactions
-    (e.g., `«Дайте мені, будь ласка, два конверти...»`).
+  score: 7
+  evidence: Named speakers help, but the first dialogue is still thin and task-incomplete
+    relative to the postal workflow in the plan.
 findings: []

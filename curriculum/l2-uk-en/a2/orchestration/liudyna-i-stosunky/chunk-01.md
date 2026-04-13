@@ -1,36 +1,45 @@
-## Зовнішність: як виглядає людина? (Appearance: What Does a Person Look Like?)
+## Зовнішність: як виглядає людина?
 
-We describe people every day. Whether meeting someone new, looking for a friend, or telling a story about a stranger, you need to know how to describe them. In Ukrainian, we use the verb **описувати** to talk about this action. The noun we focus on is **зовнішність**, which means appearance. This word covers everything you see on the outside, from head to toe. When we want to know about someone's appearance, we ask: «Як він виглядає?» or «Як вона виглядає?».
+In this section, we will learn how to describe a **людина** (person, human being). When we meet new people, we often want to talk about their **зовнішність** (appearance). Later, we will explore their **характер** (character, personality) and our **стосунок** (relationship) with them.
 
-Щодня ми зустрічаємо різних людей на вулиці чи на роботі. Іноді нам потрібно описати когось для колег. Ми часто говоримо про зовнішність людини, коли шукаємо її в натовпі. Це дуже корисна навичка. Якщо ви не знаєте людину, ви завжди можете запитати: «Як вона виглядає?».
+Ми часто запитуємо одне одного про нових знайомих. Якщо ми хочемо дізнатися про зовнішність, ми питаємо: «Який він на вигляд?». Або ми запитуємо: «Яка її зовнішність?».
 
-> *Every day we meet different people on the street or at work. Sometimes we need to describe someone for colleagues. We often talk about a person's appearance when we are looking for them in a crowd. This is a very useful skill. If you don't know the person, you can always ask: "What does she look like?".*
+> *We often ask each other about new acquaintances. If we want to know about appearance, we ask: "What does he look like?". Or we ask: "What is her appearance?".*
 
-When describing physical traits, we start with height and build. We use simple adjective pairs for a quick picture. For height, a person can be **високий** (tall) or **низький** (short). For build, someone might be **худий** or **повний**. We also categorize people by age. We use words like **молодий** for young people and **старий** for older individuals. You can also specify if someone is middle-aged using the phrase **середнього віку**.
+When describing people, we talk about both their looks and personality. Someone might be **працьовитий** (hardworking) and **терплячий** (patient). Let's look at a conversation between two friends viewing photos. They describe a **сусід** (neighbor) who is **привітний** (friendly, welcoming) and **щирий** (sincere, genuine). Notice the difference between a habitual action and a one-time action.
 
-Мій брат дуже високий і худий. Він ще зовсім молодий, багато займається спортом і має гарний вигляд. Наш сусід Петро — низький і трохи повний чоловік. Він старий, але дуже активний. А моя мама — жінка середнього віку. Вона має чудову фігуру.
+> — **Подруга 1:** Хто це на фото? *(Who is this in the photo?)*
+> — **Подруга 2:** Це моя сестра. Вона висока, темноволоса. *(This is my sister. She is tall, dark-haired.)*
+> — **Подруга 1:** Яка вона людина? *(What kind of person is she?)*
+> — **Подруга 2:** Дуже весела і щира людина. *(A very cheerful and sincere person.)*
+> — **Подруга 1:** А хто цей чоловік поруч? *(And who is this man nearby?)*
+> — **Подруга 2:** А це мій сусід. Він дуже привітний і працьовитий. *(And this is my neighbor. He is very friendly and hardworking.)*
+> — **Подруга 1:** Він хороший сусід? *(Is he a good neighbor?)*
+> — **Подруга 2:** Так, він терплячий і завжди допомагає. Учора допоміг мені з валізою. *(Yes, he is patient and always helps. Yesterday he helped me with a suitcase.)*
 
-> *My brother is very tall and thin. He is still quite young, does a lot of sports and looks good. Our neighbor Petro is a short and slightly stout man. He is old, but very active. And my mom is a middle-aged woman. She has a wonderful figure.*
+To describe someone's height, build, and age, we use basic adjectives that must agree in gender and number with the noun they describe. The most common pairs are tall and short, thin and plump, young and old.
 
-:::note
-**Quick tip** — When you want to describe someone with an average height or build, use the phrases **середнього зросту** (of average height) or **середньої статури** (of average build).
+Високий чоловік завжди привертає увагу, а висока жінка виглядає елегантно. Мій дідусь старий, але брат ще молодий. Худий хлопець швидко бігає, а повний чоловік іде повільно. Низький хлопчик стоїть поруч із мамою.
+
+> *A tall man always attracts attention, and a tall woman looks elegant. My grandfather is old, but my brother is still young. A thin guy runs fast, but a plump man walks slowly. A short boy stands next to his mom.*
+
+When describing a face, Ukrainian uses beautiful compound adjectives for hair and eyes, combining two words into one single descriptive word. You can also describe these features directly using simple adjectives.
+
+У нього темне волосся, тому він темноволосий. У неї сині очі, отже, вона синьоока. Її брат має світле волосся, він світловолосий. Якщо людина має карі очі, ми кажемо, що вона кароока.
+
+> *He has dark hair, so he is dark-haired. She has blue eyes, therefore, she is blue-eyed. Her brother has light hair, he is light-haired. If a person has brown eyes, we say that they are brown-eyed.*
+
+There are two main ways to state what physical features someone has. You can use the verb "to have" followed by the Accusative case, or the preposition "with" followed by the Instrumental case. Both options are natural when we want to **описувати** (to describe) someone. We will learn the full Instrumental case later.
+
+Вона має карі очі і довге темне волосся. Це дівчина з карими очима і довгим темним волоссям. Він має коротке русяве волосся. Це хлопець із коротким русявим волоссям. 
+
+> *She has brown eyes and long dark hair. This is a girl with brown eyes and long dark hair. He has short blonde hair. This is a guy with short blonde hair.*
+
+When learning to describe people, English speakers often make literal translations that sound unnatural or incorrect in Ukrainian. It is important to think directly in Ukrainian structures.
+
+:::tip
+**Did you know?**
+When translating "She looks beautiful", do not use the literal «Вона виглядає гарно». In Ukrainian, this implies she is actively looking at something beautifully with her eyes! Instead, use «Вона гарна» (She is beautiful) or «Вона має гарний вигляд» (She has a good look). Also, avoid the Russian calque «самий високий» for "the tallest". The correct Ukrainian superlative uses the prefix **най-**, making it «найвищий».
 :::
 
-Next, we move to the face and the eyes. There are two common patterns for eye color. You can say someone *has* a certain color using «У неї...» or «У нього...». Alternatively, use a single adjective like **кароока** (brown-eyed). The most common eye colors are **сині**, **зелені**, **сірі**, and **карі**. We also describe facial features, such as a round face or a straight nose.
-
-У сестри великі карі очі та кругле обличчя. Її чоловік має зелені очі та прямий ніс. Моя донька блакитноока, як і мій батько. Мені подобаються люди, які мають виразні сірі очі. Коли людина усміхається, її обличчя стає набагато красивішим.
-
-> *My sister has large brown eyes and a round face. Her husband has green eyes and a straight nose. My daughter is blue-eyed, just like my father. I like people who have expressive grey eyes. When a person smiles, their face becomes much more beautiful.*
-
-Hair is a key part of any description. In Ukrainian, hair is **волосся**, which is a neuter singular noun. We describe it by color, length, and style. Common colors include **темне**, **світле**, **русяве**, **руде**, and **сиве**. Hair can be **коротке** or **довге**, and its texture **хвилясте** (wavy) or **пряме** (straight). For a specific cut, we use the word **зачіска**.
-
-Подруга Олена завжди мала довге русяве волосся. Але вчора вона зробила нову коротку зачіску. Тепер у неї стильне темне волосся. Її брат має руде хвилясте волосся, яке виглядає трохи неохайно. А наш дідусь має зовсім сиве волосся, але модну зачіску.
-
-> *My friend Olena always had long light brown hair. But yesterday she got a new short hairstyle. Now she has stylish dark hair. Her brother has red wavy hair that looks a bit messy. And our grandfather has completely grey hair, but a fashionable haircut.*
-
-Let's see how these descriptions work in a natural conversation. Two friends are looking at photos on a phone and describing the people they see.
-
-> — **Подруга 1:** Дивись, це моя сестра Олена. Вона дуже висока, має довге русяве волосся і великі зелені очі. *(Look, this is my sister Olena. She is very tall, has long light brown hair and large green eyes.)*
-> — **Подруга 2:** Вона дуже гарна дівчина! А хто цей чоловік поруч із нею? *(She is a very beautiful girl! And who is this man next to her?)*
-> — **Подруга 1:** А це мій сусід, пан Іван. Він уже старий, але дуже ставний чоловік. У нього гарна сива зачіска. *(And this is my neighbor, Mr. Ivan. He is already old, but a very imposing man. He has a nice grey haircut.)*
-> — **Подруга 2:** У нього справді дуже приємне обличчя. *(He really has a very pleasant face.)*
+<!-- INJECT_ACTIVITY: fill-in, Complete sentences describing people with the correct adjective form (agreement for gender) -->

@@ -1,260 +1,553 @@
 {
-  "total_items": 169,
-  "grounded_items": 129,
+  "total_items": 237,
+  "grounded_items": 148,
   "ungrounded": [
     {
-      "word": "правду",
-      "exercise_type": "fill-in",
-      "context": "Нехай вона _____ правду.",
-      "role": "context"
-    },
-    {
       "word": "завтра",
+      "exercise_type": "unjumble",
+      "context": "завтра",
+      "role": "answer"
+    },
+    {
+      "word": "українські",
       "exercise_type": "fill-in",
-      "context": "Хай вони _____ завтра.",
+      "context": "____ українські пісні.",
       "role": "context"
     },
     {
-      "word": "наріже",
+      "word": "пісні",
       "exercise_type": "fill-in",
-      "context": "наріже",
+      "context": "____ українські пісні.",
+      "role": "context"
+    },
+    {
+      "word": "за",
+      "exercise_type": "fill-in",
+      "context": "____ за великий стіл.",
+      "role": "context"
+    },
+    {
+      "word": "великий",
+      "exercise_type": "fill-in",
+      "context": "____ за великий стіл.",
+      "role": "context"
+    },
+    {
+      "word": "стіл",
+      "exercise_type": "fill-in",
+      "context": "____ за великий стіл.",
+      "role": "context"
+    },
+    {
+      "word": "наш",
+      "exercise_type": "fill-in",
+      "context": "____ наш урок.",
+      "role": "context"
+    },
+    {
+      "word": "урок",
+      "exercise_type": "fill-in",
+      "context": "____ наш урок.",
+      "role": "context"
+    },
+    {
+      "word": "максиме",
+      "exercise_type": "match-up",
+      "context": "Максиме,",
       "role": "answer"
     },
     {
-      "word": "новий",
-      "exercise_type": "unjumble",
-      "context": "новий",
+      "word": "уважним",
+      "exercise_type": "fill-in",
+      "context": "уважним",
       "role": "answer"
     },
     {
-      "word": "важливе",
-      "exercise_type": "unjumble",
-      "context": "важливе",
+      "word": "оксано",
+      "exercise_type": "match-up",
+      "context": "Оксано,",
       "role": "answer"
     },
     {
-      "word": "воду",
-      "exercise_type": "unjumble",
-      "context": "воду",
+      "word": "лікар",
+      "exercise_type": "quiz",
+      "context": "Лікар каже пацієнту (на Ви): «_____ більше води щодня!» (заг",
+      "role": "context"
+    },
+    {
+      "word": "пацієнту",
+      "exercise_type": "quiz",
+      "context": "Лікар каже пацієнту (на Ви): «_____ більше води щодня!» (заг",
+      "role": "context"
+    },
+    {
+      "word": "води",
+      "exercise_type": "group-sort",
+      "context": "Пий багато води.",
       "role": "answer"
     },
     {
-      "word": "яке",
+      "word": "загальна",
       "exercise_type": "quiz",
-      "context": "Яке речення означає загальну пораду (регулярна дія)?",
+      "context": "Лікар каже пацієнту (на Ви): «_____ більше води щодня!» (заг",
       "role": "context"
     },
     {
-      "word": "пораду",
+      "word": "порада",
       "exercise_type": "quiz",
-      "context": "Яке речення означає загальну пораду (регулярна дія)?",
+      "context": "Лікар каже пацієнту (на Ви): «_____ більше води щодня!» (заг",
       "role": "context"
     },
     {
-      "word": "дати",
+      "word": "раптовий",
       "exercise_type": "quiz",
-      "context": "Як правильно дати конкретний наказ (разова дія)?",
+      "context": "Попередження про небезпеку (раптовий результат): «Обережно, ",
       "role": "context"
     },
     {
-      "word": "термінову",
+      "word": "обережно",
       "exercise_type": "quiz",
-      "context": "Яке речення означає термінову вимогу (доконаний вид)?",
+      "context": "Попередження про небезпеку (раптовий результат): «Обережно, ",
       "role": "context"
     },
     {
-      "word": "вимогу",
+      "word": "сина",
       "exercise_type": "quiz",
-      "context": "Яке речення означає термінову вимогу (доконаний вид)?",
+      "context": "Мама просить сина: «_____ вікно, надворі холодно!» (разова д",
       "role": "context"
     },
     {
-      "word": "ввічливо",
+      "word": "ввічливе",
       "exercise_type": "quiz",
-      "context": "Як ввічливо запросити гостей у кімнату?",
+      "context": "Ввічливе запрошення для гостей: «_____, будь ласка, за стіл!",
       "role": "context"
     },
     {
-      "word": "запросити",
+      "word": "запрошення",
       "exercise_type": "quiz",
-      "context": "Як ввічливо запросити гостей у кімнату?",
+      "context": "Ввічливе запрошення для гостей: «_____, будь ласка, за стіл!",
       "role": "context"
     },
     {
       "word": "гостей",
       "exercise_type": "quiz",
-      "context": "Як ввічливо запросити гостей у кімнату?",
+      "context": "Ввічливе запрошення для гостей: «_____, будь ласка, за стіл!",
       "role": "context"
     },
     {
-      "word": "кімнату",
+      "word": "заборона",
       "exercise_type": "quiz",
-      "context": "Як ввічливо запросити гостей у кімнату?",
+      "context": "Заборона (до групи людей): «Не _____ ці двері, там іде ремон",
       "role": "context"
     },
     {
-      "word": "містить",
+      "word": "там",
       "exercise_type": "quiz",
-      "context": "Яке побажання містить дієслово доконаного виду?",
+      "context": "Заборона (до групи людей): «Не _____ ці двері, там іде ремон",
       "role": "context"
     },
     {
-      "word": "підходить",
+      "word": "ремонт",
       "exercise_type": "quiz",
-      "context": "Яка форма підходить для дії, що триває постійно?",
+      "context": "Заборона (до групи людей): «Не _____ ці двері, там іде ремон",
       "role": "context"
     },
     {
-      "word": "дії",
+      "word": "сестру",
       "exercise_type": "quiz",
-      "context": "Яка форма підходить для дії, що триває постійно?",
+      "context": "Брат просить сестру: «_____ мені повідомлення ввечері!» (кон",
       "role": "context"
     },
     {
-      "word": "триває",
+      "word": "конкретна",
       "exercise_type": "quiz",
-      "context": "Яка форма підходить для дії, що триває постійно?",
+      "context": "Брат просить сестру: «_____ мені повідомлення ввечері!» (кон",
       "role": "context"
     },
     {
-      "word": "постійно",
+      "word": "вчителя",
       "exercise_type": "quiz",
-      "context": "Яка форма підходить для дії, що триває постійно?",
+      "context": "Загальна порада вчителя: «Учні, _____ українською мовою на у",
       "role": "context"
     },
     {
-      "word": "напишіть",
+      "word": "українською",
       "exercise_type": "group-sort",
-      "context": "Напишіть!",
+      "context": "Говоріть українською.",
       "role": "answer"
     },
     {
-      "word": "сядьте",
+      "word": "мовою",
+      "exercise_type": "quiz",
+      "context": "Загальна порада вчителя: «Учні, _____ українською мовою на у",
+      "role": "context"
+    },
+    {
+      "word": "уроці",
+      "exercise_type": "quiz",
+      "context": "Загальна порада вчителя: «Учні, _____ українською мовою на у",
+      "role": "context"
+    },
+    {
+      "word": "уважні",
+      "exercise_type": "error-correction",
+      "context": "Діти, будьте уважні!",
+      "role": "context"
+    },
+    {
+      "word": "зробимо",
+      "exercise_type": "error-correction",
+      "context": "Давай зробимо це разом.",
+      "role": "context"
+    },
+    {
+      "word": "працювати",
+      "exercise_type": "error-correction",
+      "context": "Хай вони працювати швидше.",
+      "role": "context"
+    },
+    {
+      "word": "впадай",
+      "exercise_type": "error-correction",
+      "context": "Не впадай, тут дуже слизько!",
+      "role": "context"
+    },
+    {
+      "word": "тут",
+      "exercise_type": "error-correction",
+      "context": "Не впадай, тут дуже слизько!",
+      "role": "context"
+    },
+    {
+      "word": "слизько",
+      "exercise_type": "error-correction",
+      "context": "Не впадай, тут дуже слизько!",
+      "role": "context"
+    },
+    {
+      "word": "олена",
+      "exercise_type": "error-correction",
+      "context": "Олена, хай тобі щастить!",
+      "role": "context"
+    },
+    {
+      "word": "нову",
+      "exercise_type": "fill-in",
+      "context": "____ цю нову книгу разом!",
+      "role": "context"
+    },
+    {
+      "word": "нашу",
+      "exercise_type": "fill-in",
+      "context": "____ нашу улюблену пісню!",
+      "role": "context"
+    },
+    {
+      "word": "улюблену",
+      "exercise_type": "fill-in",
+      "context": "____ нашу улюблену пісню!",
+      "role": "context"
+    },
+    {
+      "word": "пісню",
+      "exercise_type": "fill-in",
+      "context": "____ нашу улюблену пісню!",
+      "role": "context"
+    },
+    {
+      "word": "вечеря",
+      "exercise_type": "fill-in",
+      "context": "____ за стіл, вечеря готова.",
+      "role": "context"
+    },
+    {
+      "word": "готова",
+      "exercise_type": "fill-in",
+      "context": "____ за стіл, вечеря готова.",
+      "role": "context"
+    },
+    {
+      "word": "відверто",
+      "exercise_type": "fill-in",
+      "context": "____ відверто про цю проблему.",
+      "role": "context"
+    },
+    {
+      "word": "проблему",
+      "exercise_type": "fill-in",
+      "context": "____ відверто про цю проблему.",
+      "role": "context"
+    },
+    {
+      "word": "роботу",
+      "exercise_type": "fill-in",
+      "context": "____ роботу прямо зараз.",
+      "role": "context"
+    },
+    {
+      "word": "прямо",
+      "exercise_type": "fill-in",
+      "context": "____ роботу прямо зараз.",
+      "role": "context"
+    },
+    {
+      "word": "зараз",
+      "exercise_type": "fill-in",
+      "context": "____ роботу прямо зараз.",
+      "role": "context"
+    },
+    {
+      "word": "добрі",
+      "exercise_type": "fill-in",
+      "context": "____ добрі справи щодня!",
+      "role": "context"
+    },
+    {
+      "word": "справи",
+      "exercise_type": "fill-in",
+      "context": "____ добрі справи щодня!",
+      "role": "context"
+    },
+    {
+      "word": "море",
+      "exercise_type": "fill-in",
+      "context": "____ на море цього літа.",
+      "role": "context"
+    },
+    {
+      "word": "літа",
+      "exercise_type": "fill-in",
+      "context": "____ на море цього літа.",
+      "role": "context"
+    },
+    {
+      "word": "пізно",
+      "exercise_type": "fill-in",
+      "context": "____ додому, вже дуже пізно.",
+      "role": "context"
+    },
+    {
+      "word": "пий",
       "exercise_type": "group-sort",
-      "context": "Сядьте!",
+      "context": "Пий багато води.",
       "role": "answer"
     },
     {
-      "word": "зроби",
-      "exercise_type": "match-up",
-      "context": "зроби",
-      "role": "context"
-    },
-    {
-      "word": "відкрий",
-      "exercise_type": "match-up",
-      "context": "відкрий",
-      "role": "context"
-    },
-    {
-      "word": "сідай",
-      "exercise_type": "match-up",
-      "context": "сідай",
+      "word": "багато",
+      "exercise_type": "group-sort",
+      "context": "Пий багато води.",
       "role": "answer"
     },
     {
-      "word": "сядь",
-      "exercise_type": "match-up",
-      "context": "сядь",
-      "role": "context"
-    },
-    {
-      "word": "купуй",
-      "exercise_type": "match-up",
-      "context": "купуй",
+      "word": "говоріть",
+      "exercise_type": "group-sort",
+      "context": "Говоріть українською.",
       "role": "answer"
     },
     {
-      "word": "купи",
+      "word": "конкретне",
+      "exercise_type": "group-sort",
+      "context": "Конкретне завдання (доконаний вид)",
+      "role": "context"
+    },
+    {
+      "word": "випий",
+      "exercise_type": "group-sort",
+      "context": "Випий ці ліки.",
+      "role": "answer"
+    },
+    {
+      "word": "ліки",
+      "exercise_type": "group-sort",
+      "context": "Випий ці ліки.",
+      "role": "answer"
+    },
+    {
+      "word": "правду",
+      "exercise_type": "group-sort",
+      "context": "Скажи правду.",
+      "role": "answer"
+    },
+    {
+      "word": "частка",
+      "exercise_type": "true-false",
+      "context": "Частка «нехай» є більш офіційною, ніж «хай».",
+      "role": "context"
+    },
+    {
+      "word": "офіційною",
+      "exercise_type": "true-false",
+      "context": "Частка «нехай» є більш офіційною, ніж «хай».",
+      "role": "context"
+    },
+    {
+      "word": "ніж",
+      "exercise_type": "true-false",
+      "context": "Частка «нехай» є більш офіційною, ніж «хай».",
+      "role": "context"
+    },
+    {
+      "word": "йде",
+      "exercise_type": "true-false",
+      "context": "Після слова «хай» завжди йде інфінітив (наприклад, хай читат",
+      "role": "context"
+    },
+    {
+      "word": "інфінітив",
+      "exercise_type": "true-false",
+      "context": "Після слова «хай» завжди йде інфінітив (наприклад, хай читат",
+      "role": "context"
+    },
+    {
+      "word": "правильною",
+      "exercise_type": "true-false",
+      "context": "Фраза «Давайте поговоримо» є правильною і літературною.",
+      "role": "context"
+    },
+    {
+      "word": "літературною",
+      "exercise_type": "true-false",
+      "context": "Фраза «Давайте поговоримо» є правильною і літературною.",
+      "role": "context"
+    },
+    {
+      "word": "побажаннях",
+      "exercise_type": "true-false",
+      "context": "У побажаннях прикметник часто стоїть в орудному відмінку (бу",
+      "role": "context"
+    },
+    {
+      "word": "прикметник",
+      "exercise_type": "true-false",
+      "context": "У побажаннях прикметник часто стоїть в орудному відмінку (бу",
+      "role": "context"
+    },
+    {
+      "word": "стоїть",
+      "exercise_type": "true-false",
+      "context": "У побажаннях прикметник часто стоїть в орудному відмінку (бу",
+      "role": "context"
+    },
+    {
+      "word": "орудному",
+      "exercise_type": "true-false",
+      "context": "У побажаннях прикметник часто стоїть в орудному відмінку (бу",
+      "role": "context"
+    },
+    {
+      "word": "відмінку",
+      "exercise_type": "true-false",
+      "context": "У побажаннях прикметник часто стоїть в орудному відмінку (бу",
+      "role": "context"
+    },
+    {
+      "word": "раптову",
+      "exercise_type": "true-false",
+      "context": "Попередження про раптову небезпеку (Не впади!) використовує ",
+      "role": "context"
+    },
+    {
+      "word": "використовує",
+      "exercise_type": "true-false",
+      "context": "Попередження про раптову небезпеку (Не впади!) використовує ",
+      "role": "context"
+    },
+    {
+      "word": "при",
+      "exercise_type": "true-false",
+      "context": "При звертанні ім'я не змінюється (Олена, будь щасливою).",
+      "role": "context"
+    },
+    {
+      "word": "звертанні",
+      "exercise_type": "true-false",
+      "context": "При звертанні ім'я не змінюється (Олена, будь щасливою).",
+      "role": "context"
+    },
+    {
+      "word": "ім'я",
+      "exercise_type": "true-false",
+      "context": "При звертанні ім'я не змінюється (Олена, будь щасливою).",
+      "role": "context"
+    },
+    {
+      "word": "змінюється",
+      "exercise_type": "true-false",
+      "context": "При звертанні ім'я не змінюється (Олена, будь щасливою).",
+      "role": "context"
+    },
+    {
+      "word": "йти",
       "exercise_type": "match-up",
-      "context": "купи",
-      "role": "context"
-    },
-    {
-      "word": "писати",
-      "exercise_type": "fill-in",
-      "context": "Загальна порада: _____ (писати/написати) коментарі щодня.",
-      "role": "context"
-    },
-    {
-      "word": "написати",
-      "exercise_type": "fill-in",
-      "context": "Загальна порада: _____ (писати/написати) коментарі щодня.",
-      "role": "context"
-    },
-    {
-      "word": "обережно",
-      "exercise_type": "fill-in",
-      "context": "Обережно, не _____ (падати/впасти)!",
-      "role": "context"
-    },
-    {
-      "word": "падати",
-      "exercise_type": "fill-in",
-      "context": "Обережно, не _____ (падати/впасти)!",
-      "role": "context"
-    },
-    {
-      "word": "впасти",
-      "exercise_type": "fill-in",
-      "context": "Обережно, не _____ (падати/впасти)!",
-      "role": "context"
-    },
-    {
-      "word": "закривай",
-      "exercise_type": "fill-in",
-      "context": "закривай",
+      "context": "йти",
       "role": "answer"
     },
     {
-      "word": "закривати",
-      "exercise_type": "fill-in",
-      "context": "Завжди _____ (закривати/закрити) вікно.",
-      "role": "context"
-    },
-    {
-      "word": "закрити",
-      "exercise_type": "fill-in",
-      "context": "Завжди _____ (закривати/закрити) вікно.",
-      "role": "context"
-    },
-    {
-      "word": "купувати",
-      "exercise_type": "fill-in",
-      "context": "_____ (купувати/купити) ці квитки зараз!",
-      "role": "context"
-    },
-    {
-      "word": "купити",
-      "exercise_type": "fill-in",
-      "context": "_____ (купувати/купити) ці квитки зараз!",
-      "role": "context"
-    },
-    {
-      "word": "успішним",
-      "exercise_type": "error-correction",
-      "context": "успішним",
+      "word": "почати",
+      "exercise_type": "match-up",
+      "context": "почати",
       "role": "answer"
     },
     {
-      "word": "успішний",
-      "exercise_type": "error-correction",
-      "context": "Друже, будь успішний!",
+      "word": "дороги",
+      "exercise_type": "unjumble",
+      "context": "дороги!",
+      "role": "answer"
+    },
+    {
+      "word": "біля",
+      "exercise_type": "unjumble",
+      "context": "біля",
+      "role": "answer"
+    },
+    {
+      "word": "грайтеся",
+      "exercise_type": "unjumble",
+      "context": "грайтеся",
+      "role": "answer"
+    },
+    {
+      "word": "вранці",
+      "exercise_type": "unjumble",
+      "context": "вранці.",
+      "role": "answer"
+    },
+    {
+      "word": "здоровим",
+      "exercise_type": "fill-in",
+      "context": "здоровим",
+      "role": "answer"
+    },
+    {
+      "word": "сильною",
+      "exercise_type": "fill-in",
+      "context": "сильною",
+      "role": "answer"
+    },
+    {
+      "word": "спокійним",
+      "exercise_type": "fill-in",
+      "context": "спокійним",
+      "role": "answer"
+    },
+    {
+      "word": "тату",
+      "exercise_type": "fill-in",
+      "context": "Тату, будь ____!",
       "role": "context"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 20,
-    "tested_in_exercises": 8,
+    "tested_in_exercises": 9,
     "not_tested": [
       "відмінок",
-      "живи",
       "здоровий",
-      "здоровими",
       "здійснитися",
       "кличний",
       "мрія",
       "наказовий",
+      "побажання",
       "спокійний",
       "спосіб",
       "уважний",

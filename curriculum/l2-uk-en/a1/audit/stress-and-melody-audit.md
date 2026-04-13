@@ -1,7 +1,7 @@
 # Audit Report: M04 — stress-and-melody.md
 **Level:** A1 | **Module:** M04 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-11 00:50:30
+**Generated:** 2026-04-13 10:56:22
 
 ## Configuration
 **Type:** A1
@@ -18,34 +18,33 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | quiz | Where is the stress? Choose the correct stressed syllable. | 8 | 6 | ✅ |
-| 2 | match-up | Match the words with their English meanings based on their stress pattern. | 6 | 6 | ✅ |
-| 3 | quiz | What is the correct intonation for this sentence? | 6 | 6 | ✅ |
-| 4 | fill-in | Add the correct punctuation mark based on the sentence type. | 6 | 6 | ✅ |
-| 5 | true-false | Are these statements about Ukrainian stress and melody true or false? | 6 | 6 | ✅ |
-| 6 | quiz | Answer the questions based on the lesson text. | 6 | 6 | ✅ |
-| 7 | group-sort | Sort the words into groups based on where the stress falls. | 10 | 6 | ✅ |
+| 1 | match-up | Match the words with their meanings | 6 | 6 | ✅ |
+| 2 | quiz | Statement, question, or exclamation? Choose based on the punctuation. | 6 | 6 | ✅ |
+| 3 | fill-in | Add the correct punctuation mark | 6 | 6 | ✅ |
+| 4 | quiz | Which syllable is stressed? | 8 | 6 | ✅ |
+| 5 | group-sort | Group the words by their stressed syllable | 8 | 6 | ✅ |
+| 6 | true-false | True or False? | 6 | 6 | ✅ |
 
 **Summary:**
-- Total activities: 7 (target: 0-4) ❌
+- Total activities: 6 (target: 0-4) ❌
 - Unique types: 6 (minimum: 0) ✅
 - Priority types used: 3/8 (fill-in, match-up, quiz) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1604/1200 (raw: 1635)
-- **Activities:** ✅ 7/0
+- **Words:** ✅ 1357/1200 (raw: 1388)
+- **Activities:** ✅ 6/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 6/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 1/0
+- **Engagement:** ✅ 3/0
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 38/1
+- **Vocab:** ✅ 52/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 8.0% (target 8-30% (M04))
+- **Immersion:** ⚠️ 7.5% (target 8-30%, within tolerance (M04))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -53,7 +52,7 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 487 | Included in Core |
-| **Інтона́ція (Intonation)** | ✅ | 459 | Included in Core |
+| **Intro/Narrative** | ✅ | 375 | Included in Core |
+| **Інтона́ція (Intonation)** | ✅ | 365 | Included in Core |
 | **Чита́ємо вго́лос (Reading Aloud)** | ⚪️ | 0 | Skipped (using YAML) |
-| **Підсумок — Summary** | ✅ | 300 | Included in Core |
+| **Підсумок — Summary** | ✅ | 276 | Included in Core |

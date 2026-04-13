@@ -1,23 +1,45 @@
-## Описуємо людину цілком (Describing a Person Fully)
+## Описуємо людину цілком
 
-Now that we know how to talk about appearance, character, and relationships, we can put it all together to create a complete profile of a person. A natural description usually follows a simple pattern: first, we state who the person is to us, then we describe what they look like, and finally, we explain what kind of character they have. Let's look at how this works in practice.
+Now it is time to bring everything together. When you fully **описувати** (to describe) someone, you combine details about their identity and **зовнішність** (appearance). This gives a complete picture of the **людина** (person, human being).
 
-Це мій найкращий друг Андрій. Ми познайомилися в університеті. Він високий і міцний хлопець із темним волоссям. Андрій дуже веселий, привітний і завжди допомагає друзям. Коли я маю проблему, він уважно слухає і дає гарну пораду. Я дуже поважаю його.
+Мій сусід Андрій — високий хлопець із карими очима. Він має коротке темне волосся і носить окуляри. Його характер дуже спокійний. Він дуже веселий і добрий. Ми живемо поруч уже п'ять років і часто граємо у футбол.
 
-> *This is my best friend Andrii. We met at the university. He is a tall and sturdy guy with dark hair. Andrii is very cheerful, friendly, and always helps his friends. When I have a problem, he listens carefully and gives good advice. I respect him very much.*
+> *My neighbor Andrii is a tall guy with brown eyes. He has short dark hair and wears glasses. His character is very calm. He is very cheerful and kind. We have lived nearby for five years already and often play football.*
 
-Let's compare two different people from our daily lives. Notice how we combine physical traits with personality adjectives to create a clear picture of each person and their typical behavior.
+A great portrait also includes their **характер** (character, personality) and your **стосунок** (relationship). For example, you might mention how long you have known your **сусід** (neighbor).
 
-Це моя нова колега Олена. Вона невисока, струнка жінка з карими очима. Олена — дуже працьовита, серйозна і відповідальна працівниця. Вона завжди приходить на роботу вчасно. А це моя сусідка Марія. Вона старша жінка, має сиве волосся і приємну усмішку. Марія дуже весела, щира і чуйна. Вона часто пече пироги і пригощає всіх сусідів.
+To build your own descriptions effectively, you can follow a simple three-step structure. First, establish the identity by answering «Хто це?» (Who is it?). Next, describe their physical traits by asking «Яка зовнішність?». Finally, complete the portrait by explaining «Який характер?».
 
-> *This is my new colleague Olena. She is a short, slim woman with brown eyes. Olena is a very hardworking, serious, and responsible worker. She always comes to work on time. And this is my neighbor Mariia. She is an older woman; she has gray hair and a pleasant smile. Mariia is very cheerful, sincere, and responsive. She often bakes pies and treats all the neighbors.*
+Це моя нова колега Олена. Вона невисока і має довге світле волосся. Олена — дуже розумна людина з великим досвідом. Вона завжди уважно слухає інших і швидко допомагає новим працівникам.
 
-In Ukrainian culture, how a person acts and treats others is often considered much more important than their physical appearance. 
+> *This is my new colleague Olena. She is short and has long blonde hair. Olena is a very smart person with great experience. She always listens carefully to others and quickly helps new employees.*
 
-В Україні ми часто кажемо «вона добра людина» або «він гарна людина». Це означає, що людина має щирий характер, допомагає іншим і нікого не ображає. Краса обличчя чи фігури — це приємно, але внутрішня доброта є набагато важливішою. Ми можемо сказати, що хтось «красивий», якщо говоримо про зовнішність. Але слова «гарна людина» описують саме душу і характер.
-
-> *In Ukraine, we often say "she is a kind person" or "he is a good person". This means that the person has a sincere character, helps others, and offends no one. Beauty of the face or figure is pleasant, but inner kindness is much more important. We can say that someone is "beautiful" if we are talking about appearance. But the words "a good person" describe exactly the soul and character.*
+We often highlight positive traits when introducing friends or coworkers. It is incredibly helpful to know if a person is naturally **привітний** (friendly, welcoming) or if they are known as a **працьовитий** (hardworking) specialist.
 
 :::tip
-**Inner vs. Outer Beauty** — In Ukrainian, the word **красивий** (beautiful, handsome) is strictly used for physical appearance. However, the word **гарний** (good, nice, pretty) is much broader. When you call someone **гарна людина**, you are praising their inner qualities, character, and soul, making it a very powerful and authentic compliment.
+**Did you know?**
+When Ukrainians talk about others, they often value inner qualities over physical appearance. Calling someone a «добра людина» (good person) is one of the highest compliments you can give. This phrase emphasizes «душевна краса» (inner beauty) and shows that the person is caring, reliable, and treats everyone well.
 :::
+
+You can also mention if someone is truly **щирий** (sincere, genuine) in their words, or if they are consistently **терплячий** (patient) when dealing with difficult situations.
+
+Here is a short conversation about people in a photo:
+
+> — **Марко:** Привіт, Анно! А хто цей хлопець на фото? *(Hi, Anna! And who is this guy in the photo?)*
+> — **Анна:** Це мій старший брат, Іван. *(This is my older brother, Ivan.)*
+> — **Марко:** Який він? У нього дуже суворий вигляд. *(What is he like? He has a very strict look.)*
+> — **Анна:** Ні, він просто серйозний. Але він дуже добрий. *(No, he is just serious. But he is very kind.)*
+> — **Марко:** А дівчина поруч із ним? Це його дружина? *(And the girl next to him? Is that his wife?)*
+> — **Анна:** Ні, це його найкраща подруга Марія. *(No, this is his best friend Mariia.)*
+> — **Марко:** Вона має дуже гарне довге волосся. *(She has very beautiful long hair.)*
+> — **Анна:** Так, і вона дуже весела та щира людина. *(Yes, and she is a very cheerful and sincere person.)*
+
+### Читаємо українською
+
+Моя родина невелика, але ми дуже дружні. Мій батько — високий чоловік із сивим волоссям. Він дуже відповідальний і завжди багато працює. Моя мати трохи нижча за нього. Вона має коротке світле волосся і зелені очі. Мати — дуже чуйна людина. Вона любить допомагати всім сусідам. Мій молодший брат ще студент. Він іноді буває ледачий, але він дуже веселий хлопець. У нього темне кучеряве волосся. Він любить грати на гітарі вечорами. Ми любимо проводити час разом на вихідних. Зазвичай ми ходимо в кіно або гуляємо в парку.
+
+> *My family is small, but we are very close. My father is a tall man with gray hair. He is very responsible and always works a lot. My mother is a little shorter than him. She has short blonde hair and green eyes. Mother is a very caring person. She loves helping all the neighbors. My younger brother is still a student. He is sometimes lazy, but he is a very cheerful guy. He has dark curly hair. He loves playing the guitar in the evenings. We love spending time together on the weekends. Usually, we go to the movies or walk in the park.*
+
+You now have all the tools needed to talk about the people around you in Ukrainian. For your final practice task, think of two or three people you know well. Write down a short paragraph for each of them using the three-step pattern we practiced. 
+
+<!-- INJECT_ACTIVITY: fill-in, sentence completion with adjectives -->

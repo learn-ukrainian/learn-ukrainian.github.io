@@ -2,48 +2,54 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 8
-  evidence: 'The plan explicitly stated: "The instrumental case ending (-ом, -ою)
-    is grammar for A2. For now: memorize the whole phrase." The writer ignored this
-    and wrote: "You simply memorize the ending **-ом** '
+  score: 7
+  evidence: 'Most planned vocab and iconic dishes are covered, but the plan’s grandma/`борщ`
+    dialogue situation is not realized in the dialogue section; instead it uses `"Dialogue
+    1 — At home in the morning..."`. '
 - dimension: 2
   name: Linguistic accuracy
   score: 10
-  evidence: All Ukrainian terminology and phrases are accurate. No Russianisms or
-    Surzhyk.
+  evidence: No confirmed Ukrainian-form, spelling, gender, or case errors found in
+    the prose; no Russian characters (`ы э ё ъ`) appear.
 - dimension: 3
   name: Pedagogical quality
-  score: 8
-  evidence: The quiz activity is placed before the vocabulary it tests is introduced.
-    Teaching the instrumental endings here also violates the pedagogical staging designed
-    for A1.
+  score: 6
+  evidence: 'The module repeatedly opens sections with long English exposition such
+    as `"Every Ukrainian kitchen contains core staple foods..."` and `"This module
+    provides a foundational Food and Drink toolkit."` '
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: All required and recommended words are included in appropriate contexts.
+  score: 9
+  evidence: Required vocabulary is present in prose (`їжа, напій, хліб, кава, чай,
+    вода, молоко, сік, м'ясо, риба, суп, сніданок, обід, вечеря`), and recommended
+    items like `борщ, вареники, сало, компот, кефір, п
 - dimension: 5
   name: Exercise quality
-  score: 8
-  evidence: '`quiz-meals-dishes` is placed incorrectly. The other activities correspond
-    well to the provided instructions.'
+  score: 6
+  evidence: 'The marker block `<!-- INJECT_ACTIVITY: match-up-food-drink --> / <!--
+    INJECT_ACTIVITY: group-sort-food-drinks --> / <!-- INJECT_ACTIVITY: fill-in-chunks
+    -->` is clustered at the end of `## Напої`, so'
 - dimension: 6
   name: Engagement & tone
-  score: 9
-  evidence: 'Generally warm and culturally enriching, but contains gamified/corporate
-    phrasing in the summary: "You now possess the fundamental vocabulary...".'
+  score: 7
+  evidence: Cultural details on `борщ`, `вареники`, and `компот` help, but boilerplate
+    lines like `"Building this vocabulary is essential for daily life and cultural
+    connection."` dilute the teacher voice.
 - dimension: 7
   name: Structural integrity
-  score: 7
-  evidence: The text has an incomplete, dangling sentence at the very end ("If you
-    can answer these questions and name your favorite foods,"). There is also an English
-    grammar error ("which cooks stuff with").
+  score: 8
+  evidence: 'All expected H2 sections are present and the module is above the 1200-word
+    target, but the closing sentence is broken: `"If you can confidently answer these
+    questions and use the simple ordering phras'
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: Accurate and culturally grounded explanations of borshch, salo, and hospitality.
+  score: 9
+  evidence: The module treats Ukrainian food culture on its own terms and avoids Russian-centered
+    framing; the main weakness is an overbroad opener about what happens in “a Ukrainian
+    home.”
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: Dialogues are natural, demonstrate real situations, and incorporate the
-    target words logically.
+  score: 7
+  evidence: Speakers are named, but the exchanges are short and mostly transactional;
+    the plan’s grandma-cooking-`борщ` scene is not dramatized in dialogue form.
 findings: []

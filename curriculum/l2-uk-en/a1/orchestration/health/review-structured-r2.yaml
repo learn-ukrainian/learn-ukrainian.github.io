@@ -1,0 +1,51 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 7
+  evidence: 'All four planned sections are present, but the plan references are uncited
+    (`State Standard`: 0 hits; `Grade 1-2`: 0 hits), and `нога/око/вухо/ніс` never
+    enter the main `У мене болить...` practice pat'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: No Russianisms/Surzhyk/calques found in the Ukrainian text; VESUM verification
+    supports `нежить` and `нежитю`, and Russian letters `ы э ё ъ` occur 0 times.
+- dimension: 3
+  name: Pedagogical quality
+  score: 6
+  evidence: The module opens with off-target filler (`Це велика лікарня... Я купую
+    ліки тут.`) instead of moving straight into the practical scene, and the body-section
+    note overstates `рука/нога` by saying learn
+- dimension: 4
+  name: Vocabulary coverage
+  score: 8
+  evidence: 'Required plan vocab appears, but several body parts stay trapped in lists:
+    exact searches for `У мене болить нога/око/вухо/ніс` return 0.'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: Four markers appear after the relevant sections and cover the four plan
+    hints; no inline exercise logic is visible to audit further.
+- dimension: 6
+  name: Engagement & tone
+  score: 6
+  evidence: 'The prose leans on generic directives and filler: `You must remember
+    that noun gender...`, `Recognizing the gender helps reinforce your grammatical
+    reflex...`, `This core vocabulary allows you to hand'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All H2 headings from the plan are present and ordered correctly, markers
+    are clean, and the pipeline word count is 1201.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: No Russian-centric framing or cultural misinformation; the module treats
+    Ukrainian on its own terms.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Two multi-turn dialogues use named speakers and stay on-topic for doctor/pharmacy
+    situations, though the pharmacy scene is intentionally simple.
+findings: []

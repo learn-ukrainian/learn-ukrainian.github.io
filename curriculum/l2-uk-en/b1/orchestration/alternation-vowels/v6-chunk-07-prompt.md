@@ -34,7 +34,7 @@ Grand total: ~4350 words
 <previous_context>
 [...previous sections truncated...]
 
-склад стає відкритим, і первісний глибокий звук «о» автоматично повертається на своє законне історичне місце. Цей самий захопливий фонетичний механізм працює у величезній кількості українських слів. Наприклад, ми кажемо **сіль** *(salt)* із закритим складом і наголосом на корені. Але щойно ми додаємо закінчення і переносимо наголос, ми отримуємо форму **солі** *(of salt)*, де склад відкривається, а первісний звук «о» знову звучить вільно. Наголос буквально керує тим, який голосний звук ми зрештою почуємо. Коли ви глибоко розумієте цей тісний зв'язок, українська мова перестає бути просто набором випадкових чи складних літер. Вона перетворюється на логічну, струнку і дуже передбачувану живу систему, де абсолютно кожна фонетична зміна має свою чітку і зрозумілу причину. Ця дивовижна фонетична системність дає вам у руки надзвичайно потужний практичний інструмент для правильного написання багатьох нових слів. В українських школах цей ефективний і популярний метод традиційно називають **перевірне слово** *(checking word)*. Якщо ви раптом сумніваєтеся, яку саме літеру потрібно написати в ненаголошеному корені — «е» чи «и», ви можете просто змінити форму цього слова. Ваша головна стратегічна мета — знайти таку граматичну форму, де цей сумнівний склад нарешті стане закритим, а звук перетвориться на чітке та ясне «і». Відома українська мовознавиця і авторка сучасних підручників Інна Литвинова чудово пояснює цей дієвий підхід. Наприклад, ви хочете правильно написати форму **осені** *(of autumn)*, але зовсім не впевнені щодо другої літери в корені. Ви починаєте активно змінювати форму: шукаєте називний відмінок або інший споріднений варіант. І ви дуже швидко знаходите базове слово **осінь** *(autumn)*. У цій короткій формі склад надійно закривається, і миттєво з'являється літера «і». Це ваш беззаперечний доказ того, що в початковому довгому слові ми обов'язково маємо писати саме літеру «е», а не «и». Адже за правилами саме звуки «е» та «о» можуть природно чергуватися з «і». Ця надзвичайно проста стратегія працює просто бездоганно. Вона дозволяє вам швидко перевіряти себе і писати грамотно, навіть якщо ви зустрічаєте незнайоме слово вперше. Тепер ви маєте у своєму навчальному арсеналі абсолютно повну картину всіх ключових фонетичних змін. Щоб систематизувати ці важливі знання, уявіть собі дуже зручну зведену таблицю. Це ваша справжня компактна довідкова картка. Вона чітко описує тип правила, його головний тригер, типові пари слів та ключові винятки. Перша секція показує класичне правило відкритого та закритого складу. Тригером тут є поява або зникнення граматичного закінчення. Ви відразу бачите красиві пари на зразок **кінь** *(horse)* та **коня** *(of a horse)*, а також винятки іншомовного походження. Друга секція детально нагадує про хитрий **біглий голосний** *(fleeting vowel)*. Цей звук легко зникає під час відмінювання слова, як у парах **день** *(day)* та **дня** *(of a day)*. Третя секція фокусується на чергуванні «о» та «е» після шиплячих приголосних. Тут тригером є наступний звук, який остаточно вирішує долю літери. Четверта секція яскраво пояснює фонетичну магію дієслівних коренів. Тригером тут виступає поява нового суфікса та неминуча зміна позиції наголосу. Це миттєво перетворює коротке слово **летіти** *(to fly)* на тривалий процес **літати** *(to fly regularly)*. Ця структурована уявна таблиця — ваш надійний і вірний навігатор у складній граматиці. Вона обов'язково допоможе вам завжди говорити і писати правильно. <!-- INJECT_ACTIVITY: quiz-alternation-types -->
+the original vowel [о] returns to its place. This dynamic relationship means that the vowels you hear are not random anomalies meant to confuse you; they are predictable, physical responses to where the emphasis falls in a specific **форма слова** (word form). Цей глибокий зв'язок між звуком і формою дає вам потужний інструмент для перевірки орфографії. Коли ви не знаєте, яку літеру писати — «е» чи «и» — у ненаголошеному складі, вам потрібно знайти **перевірне слово** (checking word). Як це зробити практично? Ви просто змінюєте форму слова, наприклад, ставите його в інший **відмінок** (grammatical case), щоб сумнівний звук опинився під наголосом у закритому складі. Якщо в цьому новому слові раптом з'являється звук [і], то в початковому слові треба обов'язково писати літеру «е». Класичний шкільний приклад — це слово «ос..ні». Щоб перевірити цей звук, ми змінюємо форму і отримуємо називний відмінок «осінь». Оскільки ми чітко чуємо [і] в закритому складі, це означає, що початковий історичний звук — це [е], і ми впевнено пишемо «осені». Ця стратегія допомагає уникати прикрих помилок і краще відчувати внутрішню логіку української мови. > *This deep connection between sound and form gives you a powerful tool for checking spelling. When you don't know which letter to write—"е" or "и"—in an unstressed syllable, you need to find a checking word. How do you do this practically? You simply change the form of the word, for example, put it in a different grammatical case, so that the doubtful sound is stressed in a closed syllable. If the sound [i] suddenly appears in this new word, then you must absolutely write the letter "e" in the original word. A classic school example is the word "осені" (of autumn). To check this sound, we change the form and get the nominative case "осінь" (autumn). Since we clearly hear [i] in a closed syllable, it means the original historical sound is [e], and we confidently write "осені". This strategy helps avoid frustrating mistakes and better feel the internal logic of the Ukrainian language.* :::info **Grammar box** To master these rules, it helps to mentally organize them into a summary table. Think of it as a four-step checklist for your next **орфограма** (orthographic rule): 1. Analyze the structure: check if the syllable changes from open to closed. If it does, expect [о] or [е] to become [і] (like двір–двору). 2. Watch for vowels that drop out completely when the grammatical case changes, which are your fleeting vowels (like день–дня). 3. If the vowel comes immediately after a hushing consonant like [ж] or [ч], remember that [о] and [е] will alternate based on the following sound's hardness. 4. For verbs, look at the suffix; a newly stressed aspectual suffix usually forces the root vowel to change entirely. Keeping these four triggers and their core example pairs in mind will serve as your ultimate cheat sheet for navigating morphophonemic changes. ::: <!-- INJECT_ACTIVITY: quiz, Identify which vowel alternation type is present in word pairs (e.g., рік-року = [о]~[i]; день-дня = fleeting vowel), 8 items -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -452,7 +452,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -465,18 +532,67 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (7/7).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] чергування (alternation — systematic sound change between word forms)
+- [ ] голосний (vowel — sound produced without obstruction)
+- [ ] відкритий склад (open syllable — ending in a vowel sound)
+- [ ] закритий склад (closed syllable — ending in a consonant sound)
+- [ ] корінь (root — the core meaning-bearing part of a word)
+- [ ] наголос (stress — emphasized pronunciation of a syllable)
+- [ ] біглий голосний (fleeting vowel — vowel that disappears in some forms)
+- [ ] нуль звука (zero sound — absence of a vowel in an alternation)
+- [ ] суфікс (suffix — morpheme added after the root)
+- [ ] закінчення (ending — inflectional morpheme at the end of a word)
+- [ ] шиплячий (hushing consonant — ж, ч, ш, дж)
+- [ ] орфограма (orthographic rule — a spelling pattern requiring a rule)
+- [ ] відмінок (grammatical case)
+- [ ] форма слова (word form — a specific inflected variant of a word)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Підсумок: правила і практика (~350 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

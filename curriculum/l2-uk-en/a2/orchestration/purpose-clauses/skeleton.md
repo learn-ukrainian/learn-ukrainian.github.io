@@ -1,33 +1,28 @@
-## Щоб + інфінітив: для чого? (~750 words total)
-- P1 (~100 words): [Introduction to the concept of intention and goals. Explaining the difference between looking back at a cause (Чому?) and looking forward at a goal (Для чого? Навіщо?). Introduction of the connector "щоб" as the primary tool for expressing "in order to."]
-- P2 (~150 words): [Same-subject construction: "щоб" + infinitive. Explaining that when the person doing the first action is the same person doing the second, we use the infinitive. Examples: "Я вчу українську, щоб розуміти друзів", "Він прийшов, щоб допомогти", "Ми поїхали в Київ, щоб побачити місто."]
-- P3 (~200 words): [Different-subject construction: "щоб" + past tense (subjunctive). Explaining that when the subjects differ, the verb after "щоб" takes a past tense form to express a wish or instruction. Gender and number agreement rules: "Я хочу, щоб він знав" (m), "Я хочу, щоб вона знала" (f), "Я хочу, щоб вони знали" (pl).]
-- P4 (~150 words): [Deep dive into "хочу, щоб...". High-frequency usage for expressing desires regarding others. Contrast with English "I want you to..." structure. Examples: "Я хочу, щоб ти був щасливий", "Ми хочемо, щоб війна закінчилася", "Тато хоче, щоб я прибрала кімнату."]
-- P5 (~150 words): [Contrast between "тому що / бо" and "щоб". Explaining that "бо" looks at the reason (I study because I want to), while "щоб" looks at the outcome (I study to understand). Examples: "Я вчу, бо мені цікаво" vs. "Я вчу, щоб знати мову."]
-- <!-- INJECT_ACTIVITY: fill-in-purpose-form --> [fill-in, focus: Complete purpose clauses with the correct form after щоб (infinitive vs. past tense form), 8 items]
-- <!-- INJECT_ACTIVITY: quiz-cause-vs-purpose --> [quiz, focus: Choose тому що or щоб to complete sentences — distinguish cause from purpose, 8 items]
+## Щоб + інфінітив: для чого? (In Order To: What For?) (~750 words)
+- P1 (~120 words): [Dialogue: A parent explaining to a child why things are done. Мама: "Ми йдемо в магазин, щоб купити хліб (m)." Дитина: "А навіщо зараз?" Мама: "Вчителька сказала, що завтра екскурсія (f), і нам потрібні бутерброди. До речі, тато попросив, щоб ти прибрав кімнату (f) після сніданку."]
+- P2 (~100 words): [Introduce the question words "Для чого?" and "Навіщо?" (What for? Why?). Explain that to express the goal, purpose, or intention of an action, Ukrainian uses the conjunction "щоб" followed by an infinitive. Give the core example: "Я вчу українську, щоб розуміти друзів."]
+- P3 (~120 words): [Explain the "same-subject rule". Detail that when the person performing the main action and the goal action is exactly the same, we simply use the "щоб + infinitive" construction. Provide clear examples: "Він прийшов, щоб допомогти", "Ми поїхали в Київ, щоб побачити місто."]
+- P4 (~140 words): [Introduce the "different-subject construction". Explain that when the subjects differ across the two clauses (e.g., "I called so that SHE would know"), we must use "щоб + past tense form". Note that this past tense form functions as a subjunctive (expressing intent/desire), not a past action. Examples: "Я зателефонував, щоб вона знала", "Вчитель пояснив, щоб учні зрозуміли."]
+- P5 (~120 words): [Address expressing desires and commands using this different-subject construction. Highlight the high-frequency phrase "Я хочу, щоб..." (I want you to...). Contrast this heavily with English: English uses the infinitive ("I want you TO come"), but Ukrainian strictly requires "щоб" and the past tense verb agreeing with the new subject: "Я хочу, щоб ти прийшов" (never "щоб ти прийти").]
+- P6 (~150 words): [Contrast "щоб" with "тому що" (бо). Explain that "тому що" answers "Чому?" (looking backward at the cause), while "щоб" answers "Для чого?" (looking forward at the purpose). Compare directly: "Я вчу українську, бо хочу розуміти друзів" vs. "Я вчу українську, щоб розуміти друзів." Address the common L2 error of using "для купити" (for to buy) instead of the correct "щоб купити".]
+- <!-- INJECT_ACTIVITY: fill-in-schob-forms --> [fill-in, Complete purpose clauses with the correct form after щоб (infinitive vs. past tense form depending on subject), 8 items]
+- <!-- INJECT_ACTIVITY: quiz-tomuscho-vs-schob --> [quiz, Choose тому що or щоб to complete sentences — distinguish cause from purpose, 8 items]
+- <!-- INJECT_ACTIVITY: unjumble-schob-clauses --> [unjumble, Reorder words to form correct щоб purpose clauses (both infinitive and different-subject constructions), 6 items]
 
-## Базова непряма мова: він сказав, що... (~750 words total)
-- P1 (~100 words): [Introduction to reporting information. The "relay" pattern of communication: how to pass a message from one person to another. Explaining the basic structure of reported speech at the A2 level.]
-- P2 (~150 words): [Statements with "що". Transforming direct speech into indirect. Focus on personal pronoun shifts (I -> he/she) and keeping the same tense (no backshifting in Ukrainian). Examples: "Я прийду завтра" -> "Він сказав, що прийде завтра", "Ми тут" -> "Вони сказали, що вони тут."]
-- P3 (~150 words): [Reporting verbs beyond "сказати". Introducing "відповісти" (to reply), "пояснити" (to explain), "додати" (to add). Examples: "Вона пояснила, що не може прийти", "Він додав, що буде пізно", "Я відповів, що все розумію."]
-- P4 (~150 words): [Indirect questions with "чи". How to report a "yes/no" question without using a question mark. Examples: "Ти будеш?" -> "Він запитав, чи я буду", "Ви знаєте?" -> "Вона запитала, чи ми знаємо."]
-- P5 (~200 words): [The critical distinction between reporting facts ("що") and reporting requests/instructions ("щоб"). Explaining how one word changes the meaning from "He said that..." to "He said to...". Examples: "Він сказав, що я прийшов" (Fact: He mentioned my arrival) vs. "Він сказав, щоб я прийшов" (Request: He told me to come).]
-- <!-- INJECT_ACTIVITY: match-up-reported-speech --> [match-up, focus: Transform direct speech into reported speech — match the original quote to its indirect version, 8 items]
+## Базова непряма мова: він сказав, що... (Basic Reported Speech: He Said That...) (~750 words)
+- P1 (~100 words): [Introduce the concept of reported speech (непряма мова) for the A2 level. Clarify that instead of learning complex sequence-of-tenses transformations, the focus is on mastering the high-frequency relay pattern to report what someone said using the simple conjunction "що": "він сказав, що...".]
+- P2 (~130 words): [Explain the basic mechanical transformation of direct speech into reported speech with "що". Show how pronouns change (я -> він) and the verb conjugation shifts to match the new subject, but the tense usually remains the same as in the original quote. Example: "Я прийду завтра" -> "Він сказав, що прийде завтра."]
+- P3 (~120 words): [Introduce common reporting verbs: сказати, відповісти, пояснити, додати, запитати. Show how each can seamlessly introduce a "що" clause to report a statement. Examples: "Вона пояснила, що не може прийти", "Директор додав, що зустріч скасовано."]
+- P4 (~140 words): [Explain how to report questions. For yes/no questions, introduce the particle "чи" (if/whether). Give the transformation example: "Ти будеш?" -> "Він запитав, чи я буду." Emphasize that indirect questions do not use a question mark. For wh-questions, simply reuse the question word: "Він запитав, де я."]
+- P5 (~120 words): [Detail practical, everyday relay scenarios. Describe how to pass a message from a friend or explain what someone told you on the phone. Highlight that this is about natural communicative context. Example: "Олена телефонувала. Вона сказала, що запізниться на десять хвилин."]
+- P6 (~140 words): [Critically contrast reporting facts versus reporting commands. Compare: "Він сказав, що я прийшов" which means "He said THAT I came" (reporting a factual statement), with "Він сказав, щоб я прийшов" which means "He said that I SHOULD come" (reporting a command or strong request). This ties reported speech directly back to the "щоб" subjunctive concept from the first section.]
+- <!-- INJECT_ACTIVITY: match-up-reported-speech --> [match-up, Transform direct speech into reported speech — match the original quote to its indirect version, 8 items]
 
-## Мета і повідомлення в житті (~650 words total)
-- Dialogue (~120 words): [Parent and child interaction. "Мама, тато сказав, щоб ти зателефонувала бабусі." "Добре, я зателефоную, щоб запитати про здоров'я." "Він також сказав, що затримається на роботі." Incorporating що, щоб + infinitive, and щоб + past tense.]
-- P1 (~150 words): [Practical application: Short messages and notes. Writing notes on the fridge or sending SMS. Examples: "Зателефонуй мамі, вона сказала, що чекає", "Купи молоко, щоб ми могли випити кави", "Він написав, що прийде пізніше."]
-- P2 (~150 words): [Conversational starters and frames. High-frequency phrases: "Мені сказали, що..." (I was told that...), "Я чув, що..." (I heard that...), "Вони попросили, щоб..." (They asked that...). Using these to initiate talk about rumors or relayed information.]
-- P3 (~130 words): [Consolidation of subordination. Comparing the three "connectors of complexity": що (fact), щоб (purpose/wish), and тому що (cause). Summary of when to use each to build natural, detailed Ukrainian sentences.]
-- <!-- INJECT_ACTIVITY: unjumble-purpose-clauses --> [unjumble, focus: Reorder words to form correct щоб purpose clauses (both infinitive and different-subject constructions), 6 items]
+## Мета і повідомлення в житті (Purpose and Messages in Daily Life) (~650 words)
+- P1 (~140 words): [Provide examples of combining purpose clauses and reported speech in real daily situations. Show how they naturally interlock in a single thought. Example: "Мама зателефонувала, щоб я купив хліб" (purpose of the call + command). "Колега сказав, що зустріч перенесли, щоб ми мали більше часу на підготовку" (reported fact + purpose clause).]
+- P2 (~130 words): [Focus on written communication: short messages, SMS, and sticky notes left on the fridge using "щоб" and "що". Provide examples of these brief formats: "Зателефонуй мамі, вона сказала, що чекає на тебе." "Я залишив гроші на столі, щоб ти купив молоко." Show the everyday utility of these structures.]
+- P3 (~130 words): [Introduce high-frequency conversational framing patterns: "Мені сказали, що...", "Я чув, що...", "Вони попросили, щоб...". Explain that these chunks are used constantly to relay information, share news, or pass on requests smoothly without taking direct responsibility for the original source.]
+- P4 (~150 words): [Consolidation paragraph. Clearly and directly distinguish the three main uses of subordination learned so far: 1) Чому? (cause: тому що / бо), 2) Для чого? (purpose: щоб), and 3) Що сказали? (reported speech: що). Summarize their distinct functions with a clear, contrasting set of examples to solidify the boundaries between them.]
+- P5 (~100 words): [Brief wrap-up encouraging learners to practice listening specifically for "що" and "щоб" in native speech and media, noting that these small connective words act as the essential glue that connects ideas, relays messages, and conveys intentions in fluent Ukrainian.]
 
-## Підсумок (~150 words)
-- P1 (~150 words): [Recap of the module's key points:
-  - Використовуйте **щоб + інфінітив**, якщо суб’єкт один: *Я йду, щоб купити.*
-  - Використовуйте **щоб + минулий час**, якщо суб’єкти різні: *Я хочу, щоб ти купив.*
-  - Непряма мова з **що** передає факти: *Він сказав, що прийде.*
-  - Непряма мова з **щоб** передає прохання: *Він сказав, щоб я прийшов.*
-  - Питання в непрямій мові використовують **чи**: *Він запитав, чи я буду.*]
-
-Grand total: ~2300 words
+Grand total: ~2150 words

@@ -1,0 +1,61 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T01-09-2c34af83.json
+phase: write-chunk-02
+prompt_chars: 50601
+response_chars: 4782
+prompt_words: 6697
+response_words: 658
+sections:
+- name: header
+  start: 0
+  length: 432
+  fraction: 0.0085
+- name: skeleton
+  start: 432
+  length: 2039
+  fraction: 0.0403
+- name: prior_summary
+  start: 2471
+  length: 3559
+  fraction: 0.0703
+- name: plan
+  start: 6030
+  length: 16010
+  fraction: 0.3164
+- name: wiki
+  start: 17179
+  length: 28433
+  fraction: 0.5619
+- name: output_spec
+  start: 50473
+  length: 128
+  fraction: 0.0025
+large_sections:
+- wiki
+directives_total: 7
+directives_covered: 1
+directives_missed:
+- kind: must
+  text: 'This is perfectly logical: if an object has an attribute as a result of someone''s
+    action, that action must have already taken place.'
+  covered: false
+  coverage_note: 1/15 keywords (7%)
+- kind: must
+  text: 'The ending must agree with the noun: прочитана книга (ж.'
+  covered: false
+  coverage_note: 0/6 keywords (0%)
+- kind: must
+  text: '**MANDATORY — never omit.'
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: inject_activity
+  text: match-up-formation-suffixes
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: error-correction-alternations
+  covered: false
+  coverage_note: marker missing

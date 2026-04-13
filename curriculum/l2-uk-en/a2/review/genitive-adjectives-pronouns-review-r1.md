@@ -1,50 +1,73 @@
 ## Linguistic Scan
-Errors found. The genitive forms of the nouns "чемодан" and "балкон" are incorrect. They should take the "-а" ending (чемодана, балкона), not "-у". The writer copied the "чемодану" error directly from the plan's dialogue prompt. No Russianisms, Surzhyk, or Calques were detected. The text features excellent decolonized explanations comparing Ukrainian phonetics and grammar with Russian.
+- Critical case error: `Я вчора отримав важливого листа від цього нового вчителя.` Here `отримав` takes Accusative; with an inanimate masculine noun this must be `важливий лист`, not `важливого листа`.
+- Critical usage claim: the box that says `Never use «їх» for possession!` is false as an absolute rule. VESUM confirms both `їх` and `їхній` exist, and Антоненко-Давидович notes that `їх` can function possessively while modern usage often prefers `їхній` for clarity: https://www.ukrlib.com.ua/books/printit.php?page=32&tid=4002
 
 ## Exercise Check
-- `<!-- INJECT_ACTIVITY: fill-in-adj-noun -->` — Logically placed after Section 1. Tests adjective endings.
-- `<!-- INJECT_ACTIVITY: quiz-possessive-choice -->` — Logically placed after Section 2. Tests possessive pronoun forms.
-- `<!-- INJECT_ACTIVITY: match-up-nom-gen -->` — Logically placed at the end. Consolidates Nominative to Genitive mapping.
-- `<!-- INJECT_ACTIVITY: fill-in-complex-phrases -->` — Logically placed at the end. Tests building full demonstrative + adjective + noun phrases.
-- `<!-- INJECT_ACTIVITY: error-correction-agreement -->` — Logically placed at the end. Tests error detection in full phrases.
+Markers present: `fill-in-genitive-adjectives`, `quiz-possessive-pronouns`, `match-up-nom-to-gen`, `fill-in-demonstratives-full-phrases`, `error-correction-genitive-agreement`.
 
-All markers are present, evenly distributed, and match the activity hints from the plan.
+All 5 plan activities have a corresponding marker, and each marker appears after the relevant teaching block. No inline DSL exercise logic is present in the supplied content, so there is no answer-key logic to audit here.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 10/10 | Covers all 3 sections perfectly. Adheres to word budgets. Incorporates the specific dialogue situations provided in the plan (e.g., "Це сумка мого старшого брата", "Ви не бачили цієї чорної сумки?"). All required and recommended vocabulary items are used naturally. |
-| 2. Linguistic accuracy | 8/10 | Contains morphological errors with Genitive noun endings: "чемодану" (instead of "чемодана") and "балкону" (instead of "балкона"). Verified via VESUM and СУМ-11. Adjective and pronoun declensions are 100% correct. |
-| 3. Pedagogical quality | 10/10 | Outstanding pedagogical breakdown. Excellent use of the PPP flow. The writer explicitly calls out important phonetic differences ("It is pronounced exactly as it is written: with a clear, deep «г» sound... Never pronounce it like the Russian equivalent") and clarifies the unique feminine endings ("unlike the single blended sound found in Russian"). |
-| 4. Vocabulary coverage | 10/10 | All required and recommended words (прикметник, узгодження, документ, підручник, старший, дівчина, etc.) are integrated naturally into the text and examples without feeling forced. |
-| 5. Exercise quality | 10/10 | Exercise markers match the plan's intent precisely and test exactly what was just taught in the preceding sections. |
-| 6. Engagement & tone | 10/10 | The tone is warm, encouraging, and academically grounded. It feels like an actual teacher explaining the mechanics of the language clearly. |
-| 7. Structural integrity | 10/10 | Well-structured markdown. Proper headings. Word count is 2962, comfortably exceeding the 2000-word target. |
-| 8. Cultural accuracy | 10/10 | Factually correct about the direct Russian borrowing of short pronouns for possession ("direct borrowing from Russian grammar... Always use the proper, declinable forms"). |
-| 9. Dialogue & conversation quality | 10/10 | The opening lost-and-found dialogue flows naturally and organically integrates the complex grammar points targeted in this module. |
+| 1. Plan adherence | 8/10 | The 3 planned H2 sections are all present and the 5 activity markers match the plan, but section 1 says `For masculine and neuter adjectives...` and then models only `нового підручника`, `важливого документа`, `синього олівця` rather than giving a clean neuter adjective+noun phrase. |
+| 2. Linguistic accuracy | 5/10 | Critical error in `Я вчора отримав важливого листа...`; critical false absolute in `Never use «їх» for possession!`. |
+| 3. Pedagogical quality | 7/10 | The module has a PPP shape and plenty of examples, but `The natural Ukrainian word order always places...` overstates a flexible syntax, and some prose is filler instead of rule+example. |
+| 4. Vocabulary coverage | 9/10 | Required plan vocabulary appears naturally in prose: `прикметник`, `займенник`, `присвійний`, `вказівний`, `узгодження`, `дозвіл`, `підручник`, `документ`, `вчителька`, `важливий`; recommended items also appear. |
+| 5. Exercise quality | 9/10 | All planned exercise types are represented by markers and placed after the relevant teaching sections. |
+| 6. Engagement & tone | 6/10 | Repeated filler such as `This skill allows you to be precise and specific in everyday situations.` and `This makes the language very melodic.` adds words without adding instruction. |
+| 7. Structural integrity | 10/10 | All sections are present and ordered correctly; pipeline word count is 2778, above target; markers and markdown are clean. |
+| 8. Cultural accuracy | 6/10 | The `їх/їхній` “Decolonization Check” turns a usage preference into a false prohibition, which is linguistically and culturally misleading. |
+| 9. Dialogue & conversation quality | 8/10 | The opening uses named speakers and a plausible lost-and-found setting tied to the grammar target. |
 
 ## Findings
+[Linguistic accuracy] [SEVERITY: critical]  
+Location: `Я вчора отримав важливого листа від цього нового вчителя.`  
+Issue: `отримав` requires Accusative; for an inanimate masculine noun that is `важливий лист`, not Genitive `важливого листа`.  
+Fix: Change it to `Я вчора отримав важливий лист від цього нового вчителя.`
 
-2. Linguistic accuracy [critical]
-Location: Dialogue ("А ви не бачили нашого великого чемодану?", "Ні, тут немає вашого великого чемодану.", "без цього великого чемодану.")
-Issue: The noun "чемодан" takes the "-а" ending in the Genitive case (чемодана), not "-у", according to VESUM and СУМ-11. The writer inherited this error directly from the prompt's `dialogue_situations` plan.
-Fix: Change "чемодану" to "чемодана" in all three instances.
+[Linguistic accuracy] [SEVERITY: critical]  
+Location: `A very common mistake (and a direct Russianism) is using the unchanging personal pronoun «їх»... Never use «їх» for possession!`  
+Issue: This is false as an absolute rule. `Їх` can function possessively in Ukrainian; beginner teaching may prefer `їхній` for clarity, but possessive `їх` is not automatically a Russianism.  
+Fix: Rewrite the box as a usage note that recommends `їхній` in learner production without banning possessive `їх`.
 
-2. Linguistic accuracy [critical]
-Location: Section 1 ("Я шукаю вікно з відкритого балкону.")
-Issue: The noun "балкон" takes the "-а" ending in the Genitive case (балкона), not "-у", according to VESUM and СУМ-11.
-Fix: Change "з відкритого балкону" to "з відкритого балкона".
+[Plan adherence] [SEVERITY: major]  
+Location: section 1 paragraph beginning `For masculine and neuter adjectives, the hard stem ending is \`-ого\`.`  
+Issue: The explanation promises masculine and neuter coverage, but the immediate models are only masculine phrases.  
+Fix: Add explicit neuter models such as `нового міста` and `синього моря`.
+
+[Pedagogical quality] [SEVERITY: major]  
+Location: `The natural Ukrainian word order always places the demonstrative pronoun first...`  
+Issue: `always` teaches an absolute syntactic rule where Ukrainian actually has flexible word order.  
+Fix: Reframe it as the common neutral beginner pattern, not the only possible order.
+
+[Engagement & tone] [SEVERITY: minor]  
+Location: `This skill allows you to be precise and specific in everyday situations.` / `This makes the language very melodic.`  
+Issue: These are filler lines; they increase length without teaching grammar.  
+Fix: Replace them with concise, concrete guidance or delete them.
 
 ## Verdict: REVISE
-The module is exceptionally well-written and features outstanding decolonized pedagogy. However, it contains two critical morphological errors regarding Genitive noun endings ("чемодану" and "балкону"), one of which was inherited directly from the plan itself. These must be corrected before publishing to prevent learners from memorizing incorrect declensions.
+Critical linguistic findings make this unshippable as-is, even though the structure, vocabulary coverage, and exercise placement are solid.
 
 <fixes>
-- find: "А ви не бачили нашого великого чемодану?"
-  replace: "А ви не бачили нашого великого чемодана?"
-- find: "Ні, тут немає вашого великого чемодану."
-  replace: "Ні, тут немає вашого великого чемодана."
-- find: "без цього великого чемодану."
-  replace: "без цього великого чемодана."
-- find: "з відкритого балкону."
-  replace: "з відкритого балкона."
+- find: "Я вчора отримав важливого листа від цього нового вчителя."
+  replace: "Я вчора отримав важливий лист від цього нового вчителя."
+- find: "If the adjective belongs to the soft group, the ending softens to `-ього`. The word «синій» (dark blue) changes to «син**ього**», as in «без синього олівця»."
+  replace: "If the adjective belongs to the soft group, the ending softens to `-ього`. The word «синій» (dark blue) changes to «син**ього**», as in «без синього олівця» or «біля синього моря». Neuter nouns follow the same pattern as masculine ones: «нового міста», «доброго слова»."
+- find: "The natural Ukrainian word order always places the demonstrative pronoun first, followed by any **присвійний** (possessive) pronoun or descriptive **прикметник** (adjective), and finally the noun itself."
+  replace: "A common neutral Ukrainian word order places the demonstrative pronoun first, followed by any **присвійний** (possessive) pronoun or descriptive **прикметник** (adjective), and finally the noun itself."
+- find: "This skill allows you to be precise and specific in everyday situations."
+  replace: "This lets you describe missing objects more precisely."
+- find: "This makes the language very melodic."
+  replace: "This keeps the phrase grammatically consistent."
+- find: |
+    :::info
+    **Decolonization Check: "Their" is «їхній»**
+    A very common mistake (and a direct Russianism) is using the unchanging personal pronoun «їх» (them) to mean "their", as in ❌ «їх проблеми» (their problems) or ❌ «без їх друга». In standard Ukrainian, "their" is always the declining pronoun **їхній**. You must say ✅ «їхні проблеми» and, in the Genitive, ✅ «без їхнього друга». Never use «їх» for possession!
+    :::
+  replace: |
+    :::info
+    **Usage Note: «їхній» for Clarity**
+    For beginner production, it is best to prefer the declining possessive pronoun **їхній**: «їхній друг», «їхні проблеми», «без їхнього друга». The form «їх» also exists in Ukrainian and can function possessively in some styles, so it is better not to call every possessive «їх» a Russianism. In this module, teach learners to use **їхній** because it declines clearly and avoids ambiguity.
+    :::
 </fixes>

@@ -1,23 +1,22 @@
-# Section-by-Section Generation — Section 2/4
+# Section-by-Section Generation — Section 2/3
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 49: Той, який... (A2, A2.7 [Complex Sentences and Conditionals])
-**Section to write:** Де, куди, звідки — місце (Where, Where To, Where From — Place) (~650 words total)
+**Section to write:** Де, куди, звідки — місце (Where, Where To, Where From — Place) (~650 words)
 **Word target for this section:** 650 words (aim for 715 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Де, куди, звідки — місце (Where, Where To, Where From — Place) (~650 words total)
-- P1 (~100 words): Transitioning from "what kind" (який) to "where" (місце). Explain that when describing a place, we often use relative adverbs like "де", "куди", and "звідки" instead of "який".
-- P2 (~150 words): Using "де" for static location. Explain that "де" often replaces the more complex construction "в якому" (in which). Provide natural examples: *ресторан, де ми обідали* (the restaurant where we had lunch), *вулиця, де я живу*. Note that "де" is simpler and preferred in spoken Ukrainian for locations.
-- P3 (~120 words): Using "куди" for direction or motion. Contrast "де" (location) with "куди" (movement to). Examples: *місто, куди ми поїдемо у відпустку* (the city where we will go on vacation), *магазин, куди вона зайшла*.
-- P4 (~100 words): Using "звідки" for origin or source. Show how to describe where something or someone came from. Example: *село, звідки привезли це молоко* (the village where this milk was brought from), *країна, звідки він приїхав*.
-- P5 (~130 words): Dialogue: "Exploring the Neighborhood". The buyer asks about amenities. *Покупець: «Де знаходиться парк, куди ми можемо ходити?». Ріелтор: «Ось вулиця, де є гарна кав'ярня, звідки завжди пахне свіжою кавою».* Focus on the natural flow of these place-based connectors.
-- P6 (~50 words): Recap of place connectors: Use "де" for "at", "куди" for "to", and "звідки" for "from".
-- <!-- INJECT_ACTIVITY: quiz-place-connectors --> [quiz, focus: Choose де, куди, or звідки to complete sentences about places, 8 items]
+## Де, куди, звідки — місце (Where, Where To, Where From — Place) (~650 words)
+- P1 (~120 words): Introduce relative adverbs for places. Explain that while you can say "в якому" (in which), using `де` is simpler and much more natural at the A2 level for describing locations.
+- P2 (~150 words): Using `де` for location (where something is). Explain it replaces "в/на якому" and indicates static position. Examples: "Кафе, де ми зустрілися, було затишне." "Місто, де я народився, знаходиться на заході."
+- P3 (~130 words): Using `куди` for direction (where to). Explain it must be used with verbs of motion (іти, їхати) instead of `де`. Example: "Парк, куди ми ходимо гуляти, дуже гарний."
+- P4 (~130 words): Using `звідки` for origin (where from). Example: "Країна, звідки вона приїхала, — це Україна."
+- P5 (~120 words): Comparison summary. Show how the same place changes the relative word based on the verb in the subordinate clause: "Місто, де я живу" (location) vs. "Місто, куди я їду" (direction) vs. "Місто, звідки я повернувся" (origin).
+- <!-- INJECT_ACTIVITY: quiz-places --> [quiz, Choose де, куди, or звідки to complete sentences about places, 8 items]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -25,7 +24,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-relative pronoun is the active subject of the subordinate clause, it stays in the basic Nominative case *(Називний відмінок)*. «Це хлопець, який прийшов до нас вчора.» *(This is the boy who came to us yesterday.)* Here, the boy actively came. But if the relative pronoun is the direct object of the subordinate clause, it must change to the Accusative case *(Знахідний відмінок)*. «Це хлопець, якого я бачив вчора.» *(This is the boy whom I saw yesterday.)* Here, "I" am the subject doing the seeing, and the boy is the object being seen. Для жіночого роду форма «яка» змінюється на «яку» в Знахідному відмінку: «Це цікава книга, яку я читаю.» *(This is the interesting book that I am reading.)* Для істот чоловічого роду форма «який» змінюється на «якого»: «Це мій друг, якого я чекаю.» *(This is my friend whom I am waiting for.)* There is a strict punctuation rule you must always follow when writing. In Ukrainian grammar, unlike English, you *must* place a comma *(кома)* immediately before the relative pronoun «який». Think of this required comma as a clear "gate" opening to provide more detail about the main noun. You cannot skip this gate. ❌ «Машина яка стоїть там, дуже стара.» ✅ «Машина, яка стоїть там, дуже стара.» *(The car that stands there is very old.)* Ця кома чітко показує, де закінчується головна думка і починається додатковий опис. Це дуже важливе правило. В українській мові є ще одне дуже популярне слово для таких речень — це **«що»** *(that, who)*. While using «який» is perfectly correct, using «що» for Nominative and Accusative cases is a highly idiomatic Ukrainian pattern. «Це добра людина, що завжди допомагає іншим.» *(This is a kind person who always helps others.)* Слово «що» взагалі не змінює свою граматичну форму в цих відмінках. Воно не має чоловічого, жіночого або середнього роду. Воно також не має множини. This makes it incredibly easy to use in everyday conversation. «Це довгий лист, що я написав вчора.» *(This is a long letter that I wrote yesterday.)* Using «що» instead of «який» makes your speech sound very authentic. It helps you "think in Ukrainian" without translating English structures. Давайте подивимося, як ця граматика працює в реальному житті. Уявіть ситуацію: ріелтор *(real estate agent)* показує нову квартиру клієнту. > — **Ріелтор:** Це світла квартира, яка має великий балкон. *(This is a bright apartment that has a large balcony.)* > — **Покупець:** А де те вікно, яке виходить на вулицю? *(And where is that window that faces the street?)* > — **Ріелтор:** Ось маленька кімната, яка виходить на сусідній парк. *(Here is a small room that faces the neighboring park.)* Це дуже тихе місце. *(This is a very quiet place.)* > — **Покупець:** Хто ті люди, які стоять біля нашого будинку? *(Who are those people who are standing near our house?)* > — **Ріелтор:** А, це наш сусід, який живе тут вже десять років. *(Ah, that is our neighbor who has lived here for ten years already.)* <!-- INJECT_ACTIVITY: fill-in-yakiy-agreement --> <!-- INJECT_ACTIVITY: true-false-comma-agreement -->
+just opened. We found the place that she described. These are the students whom I am teaching now.* В українській мові є одне дуже суворе правило. Ви ніколи не можете пропустити слово «який». І ви завжди повинні ставити кому перед цим словом. > *In the Ukrainian language, there is one very strict rule. You can never skip the word "which". And you must always put a comma before this word.* Punctuation plays a critical role in these structures. In English, you can often drop the relative pronoun completely, simply saying "The book I read yesterday was fantastic." You can also frequently leave out commas. In Ukrainian, however, whenever you start a new relative clause to describe a noun, there must be a comma right before the connecting word. This comma acts as a natural, essential pause in your speech. :::info **Grammar box** A comma before the connector signals to the listener or reader that you are adding a descriptive detail. A complete sentence cannot continue without this small pause and the mandatory connecting word. The word for sentence or clause is **речення** (sentence, clause). ::: Слово «який» має дві абсолютно різні функції в українській мові. Ви вже дуже добре знаєте його як звичайне питальне слово. Коли ви питаєте «Який це фільм?», ви хочете почути опис або назву. Ви чекаєте на відповідь. Але в складному реченні це слово просто з'єднує дві різні частини разом. Воно більше не питає про нову інформацію. When you state a fact, you are not asking a question at all. **Фільм, який ми дивилися вчора, був дуже цікавий.** — *The film that we watched yesterday was very interesting.* You are using the connector word to point back to the film you already mentioned. It is the exact same word on the page, but it serves a completely different grammatical function. You do not raise your voice like you do for a question. The intonation remains flat and descriptive. There is also a very common and natural alternative to use when dealing with the Nominative or Accusative cases. Ukrainians frequently use the invariant word **що** (that) as a relative connector instead of the longer forms. The greatest advantage is that it never changes its form to match gender or number. You will hear this shorter word constantly in songs, poetry, and relaxed speech. This makes it incredibly easy to use in fast, everyday conversations. Це мій колега Євген, що працює зі мною в офісі. Я купив свіжі яблука, що лежали на вітрині. Це та сама проблема, що ми обговорювали раніше. Я читаю статтю, що ти мені надіслав. > *This is my colleague Yevhen, who works with me in the office. I bought the fresh apples that were lying on the display. This is the same problem that we discussed earlier. I am reading the article that you sent me.* Спробуйте прочитати ці речення вголос. Зверніть увагу на коми та відмінки. > *Try to read these sentences aloud. Pay attention to the commas and cases.* <!-- INJECT_ACTIVITY: fill-in-yakiy -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -519,7 +518,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -538,18 +604,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] який (which, that — masc.)
+- [ ] яка (which, that — fem.)
+- [ ] яке (which, that — neut.)
+- [ ] які (which, that — pl.)
+- [ ] де (where — relative)
+- [ ] куди (where to — relative)
+- [ ] звідки (where from — relative)
+- [ ] означальний (attributive, defining)
+- [ ] описувати (to describe)
+- [ ] речення (sentence, clause)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Де, куди, звідки — місце (Where, Where To, Where From — Place) (~650 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

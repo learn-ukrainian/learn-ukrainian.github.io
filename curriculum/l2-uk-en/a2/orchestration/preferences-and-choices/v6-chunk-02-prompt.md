@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-Ми кажемо: **«Мені подобається це місто»** *(I like this city)*. Якщо ми запитуємо когось, ми кажемо: **«Тобі подобається ця кава?»** *(Do you like this coffee?)*. Або: **«Їй подобається українська музика»** *(She likes Ukrainian music)*. Це базова конструкція для нашого щоденного спілкування з друзями та родиною. Але що робити, коли ми маємо дві або більше речей? Тоді ми порівнюємо. Для цього ми використовуємо фразу **більше подобається ... ніж ...** *(like more ... than ...)*. Ми можемо легко порівнювати різні **іменники** *(nouns)*. Наприклад: **«Мені більше подобається кава, ніж чай»** *(I like coffee more than tea)*. Ми також можемо порівнювати наші дії. Для цього ми беремо **інфінітив** *(infinitive)*. Наприклад: **«Йому більше подобається гуляти в парку, ніж дивитися телевізор»** *(He likes walking in the park more than watching TV)*. Зверніть увагу на кому перед словом **«ніж»** *(than)*. Ми завжди обов'язково ставимо кому перед цим словом в українській мові. Це дуже корисна та часта структура для дискусій. В українській мові є ще одне чудове дієслово. Це дієслово **воліти** *(to prefer)*. Воно показує більш активний вибір, ніж слово «подобатися». Зазвичай після слова «воліти» ми ставимо дієслово в інфінітиві. Наприклад: **«Я волію читати книги ввечері»** *(I prefer to read books in the evening)*. Або: **«Вона воліє пити воду, а не сік»** *(She prefers to drink water, not juice)*. Ми також порівнюємо дії: **«Ми воліємо йти пішки, ніж їхати автобусом»** *(We prefer walking to taking a bus)*. Це дієслово звучить дуже природно та красиво. Процес вибору — це важлива частина нашого життя. Для цього ми маємо дієслова **обирати** *(to choose - imperfective)* та **обрати** *(to choose - perfective)*. Дієслово «обирати» належить до першої дієвідміни. Його форми: я обираю, ти обираєш, він обирає, ми обираємо, ви обираєте, вони обирають. Ми кажемо: **«Я обираю цей фах»** *(I choose this profession)*. Або: **«Вона обирає нову сукню»** *(She is choosing a new dress)*. Будьте дуже обережні з англійською калькою "to choose to do something". В українській мові ми так не говоримо. Ми ніколи не кажемо *«я обираю залишитися вдома»*. Замість цього ми використовуємо дієслово **вирішити** *(to decide)*. Правильно буде сказати: **«Я вирішив залишитися вдома»** *(I decided to stay home)*. Це звучить набагато краще та природніше. Давайте подивимося, як ці слова працюють у реальній розмові. Двоє друзів планують свої вихідні. > — **Марко:** Привіт! Що ми будемо робити в суботу? *(Hi! What are we going to do on Saturday?)* > — **Олена:** Привіт! Ми можемо піти в кіно або погуляти в парку. *(Hi! We can go to the cinema or walk in the park.)* > — **Марко:** Мені більше подобається гуляти в парку, ніж сидіти в темному залі. *(I like walking in the park more than sitting in a dark hall.)* > — **Олена:** А я волію подивитися новий фільм. *(And I prefer to watch a new movie.)* > — **Марко:** Добре, тоді я обираю кіно. *(Okay, then I choose the cinema.)* > — **Олена:** Чудово! Я вирішила купити квитки онлайн. *(Great! I decided to buy tickets online.)* <!-- INJECT_ACTIVITY: quiz, Choose the appropriate preference/choice verb (подобатися, воліти, обирати, вирішити), 8 items -->
+most in any situation. Моєму брату більше подобається чорна кава, ніж зелений чай. Йому більше подобається гуляти в парку, ніж дивитися телевізор удома. Їй більше подобається читати цікаві книги, ніж слухати гучну музику. For a more active and deliberate preference, you can use the verb **воліти** (to prefer). We frequently use this verb when we are talking about actions, so it is usually followed by an infinitive. It sounds a bit more decisive and formal than simply stating that you like something. It clearly indicates what you want to do in a specific situation. Я волію читати нові книги пізно ввечері. Ми воліємо пити чорну каву кожного ранку. Вони воліють працювати вдома, а не в офісі. Це дієслово добре показує вашу чітку позицію. :::info **Grammar box** — The verb **воліти** belongs to the first conjugation group. The present tense forms are easy to remember: я волію, ти волієш, він/вона/воно воліє, ми воліємо, ви волієте, вони воліють. ::: Life is full of decisions, and when you make a selection from various options, you use the verb **обирати** (to choose). It is an imperfective verb of the first conjugation (я обираю, ти обираєш, ми обираємо) that describes the ongoing process of choosing. The perfective form for a completed choice is **обрати**. Be careful not to translate the English phrase "choose to do something" directly. In Ukrainian, it is much more natural to use the verb **вирішити** (to decide) when talking about an action you ultimately decided to take. Я часто довго обираю новий телефон у магазині. Сьогодні я свідомо обираю цей складний фах. Мій старший брат вирішив залишитися вдома сьогодні. Моя найкраща подруга вирішила піти в кіно на новий фільм. > *I often choose a new phone in the store for a long time. Today I consciously choose this difficult profession. My older brother decided to stay at home today. My best friend decided to go to the cinema for a new movie.* Let's see how two friends use these phrases while planning their weekend. They discuss their options, express their personal preferences, and finally reach a shared conclusion for their Saturday activities. > — **Максим:** Привіт! Що ти плануєш робити в суботу вдень? *(Hi! What are you planning to do on Saturday afternoon?)* > — **Олена:** Привіт! Я ще не знаю. Може, ми підемо в кіно? *(Hi! I don't know yet. Maybe we will go to the cinema?)* > — **Максим:** Мені більше подобається гуляти в парку, ніж дивитися фільми. *(I like walking in the park more than watching movies.)* > — **Олена:** Розумію тебе. Я теж волію проводити час на вулиці. *(I understand you. I also prefer to spend time outside.)* > — **Максим:** Чудова **думка**! Тоді ми йдемо в центральний парк? *(Great idea! Then we are going to the central park?)* > — **Олена:** Так, я **згодна** з тобою. Я **обираю** цей варіант, **тому що** погода сьогодні дуже тепла. *(Yes, I agree with you. I choose this option because the weather today is very warm.)* <!-- INJECT_ACTIVITY: quiz-preference-verbs -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -478,7 +478,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 6: A2 finale (A2 M51-M69)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 40%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 40% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 70-90% Ukrainian.
 LANGUAGE ROLES:
@@ -497,18 +564,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] вважати (to think, to consider)
+- [ ] воліти (to prefer)
+- [ ] обирати (to choose)
+- [ ] думка (opinion, thought)
+- [ ] згоден (agree, m.)
+- [ ] згодна (agree, f.)
+- [ ] рація (rightness — in мати рацію)
+- [ ] тому що (because)
+- [ ] навпаки (on the contrary)
+- [ ] переконаний (convinced, m.)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## На мою думку... (~550 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

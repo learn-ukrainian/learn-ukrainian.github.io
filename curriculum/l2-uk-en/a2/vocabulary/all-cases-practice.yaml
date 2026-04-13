@@ -1,27 +1,27 @@
 vocabulary:
-- word: реце́пт
-  translation: prescription
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: температу́ра
-  translation: temperature
+- word: вечі́рка
+  translation: party
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: Карпа́ти
-  translation: Carpathians
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: милува́тися
-  translation: to admire
+- word: запро́шувати
+  translation: to invite
   expression: false
   pos: дієсл.
   gender: ''
+  verified: true
+- word: торт
+  translation: cake
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: подару́нок
+  translation: gift, present
+  expression: false
+  pos: ім.
+  gender: ч.
   verified: true
 - word: частува́ти
   translation: to treat (with food)
@@ -29,14 +29,14 @@ vocabulary:
   pos: дієсл.
   gender: ''
   verified: true
-- word: вечі́рка
-  translation: party
+- word: температу́ра
+  translation: temperature
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: подару́нок
-  translation: gift
+- word: паціє́нт
+  translation: patient
   expression: false
   pos: ім.
   gender: ч.
@@ -47,8 +47,14 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: паціє́нт
-  translation: patient
+- word: лі́ки
+  translation: medicine
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: реце́пт
+  translation: prescription, recipe
   expression: false
   pos: ім.
   gender: ч.
@@ -59,23 +65,11 @@ vocabulary:
   pos: ім.
   gender: с.
   verified: true
-- word: лі́ки
-  translation: medicine
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
 - word: по́дорож
-  translation: trip
+  translation: trip, journey
   expression: false
   pos: ім.
   gender: ж.
-  verified: true
-- word: по́тяг
-  translation: train
-  expression: false
-  pos: ім.
-  gender: ч.
   verified: true
 - word: визначне місце
   translation: landmark, sight
@@ -83,81 +77,45 @@ vocabulary:
   pos: ''
   gender: ''
   verified: true
-- word: запро́шувати
-  translation: to invite
+- word: по́тяг
+  translation: train
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: милува́тися
+  translation: to admire
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: сюрпри́з
-  translation: surprise
+- word: Карпа́ти
+  translation: Carpathians
   expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: імени́нник
-  translation: birthday person
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: ліка́рня
-  translation: hospital
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: реєстрату́ра
-  translation: reception
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: за́пис
-  translation: appointment
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: че́рга́
-  translation: queue, line
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: болі́ти
-  translation: to hurt, to ache
-  expression: false
-  pos: дієсл.
+  pos: ''
   gender: ''
-  verified: true
-- word: засту́да
-  translation: cold (illness)
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: приймати ліки
-  translation: to take medicine
+  verified: false
+- word: У мене болить голова
+  translation: My head aches
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: о́гляд
-  translation: examination
-  expression: false
-  pos: ім.
-  gender: ч.
+- word: Давай поїдемо...
+  translation: Let's go...
+  expression: true
+  pos: ''
+  gender: ''
   verified: true
-- word: відпу́стка
-  translation: vacation, holiday
-  expression: false
-  pos: ім.
-  gender: ж.
+- word: Може, спочатку...
+  translation: Maybe, first...
+  expression: true
+  pos: ''
+  gender: ''
   verified: true
-- word: шпарга́лка
-  translation: cheat sheet
-  expression: false
-  pos: ім.
-  gender: ж.
+- word: А потім можна...
+  translation: And then we can...
+  expression: true
+  pos: ''
+  gender: ''
   verified: true

@@ -1,76 +1,103 @@
 ## Linguistic Scan
-No linguistic errors found. The Ukrainian text, case endings, and vocabulary are fully correct. 
+- Factually wrong phonetics claim in `Що ми знаємо?`: `the soft **Г** (H) versus the hard **Ґ** (G)`. Ukrainian **Г** is not a “soft” consonant; it is the voiced fricative [ɦ].
 
 ## Exercise Check
-- `quiz-comprehensive-review` marker is correctly placed after the initial review section.
-- `match-up-q-and-a` marker is placed after the reading section, which contains no questions. It should be moved after the Grammar section where question patterns are explicitly reviewed.
-- `fill-in-self-intro` marker is correctly placed after the self-introduction template.
+- Marker inventory is correct: `quiz-comprehensive-review`, `match-up-questions-answers`, `fill-in-self-introduction`.
+- Marker IDs match the plan’s three `activity_hints`.
+- Marker placement is acceptable: quiz after self-check, match-up after grammar, fill-in after the capstone dialogue.
+- No inline DSL exercise blocks appear in the prose, so there is no inline exercise logic to audit here.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 10/10 | All outline points are covered with correct pacing. Required and recommended vocabulary (`ім'я`, `прізвище`) is explicitly included. |
-| 2. Linguistic accuracy | 10/10 | Flawless. Proper nouns correctly declined (`з Дніпра`, `з Києва`, `з Тернополя`). Vocative forms correctly applied (`Оксано`, `пані Соломіє`, `пане Богдане`). |
-| 3. Pedagogical quality | 9/10 | Grammar section explains the zero-copula rule and fixed chunks effectively. Minor deduction because an activity marker testing questions was placed before the questions were reviewed. |
-| 4. Vocabulary coverage | 10/10 | Recycles A1.1 vocabulary effectively without introducing uncovered grammar. |
-| 5. Exercise quality | 9/10 | Three markers match the plan, but one is misplaced pedagogically. |
-| 6. Engagement & tone | 8/10 | The opening paragraph uses a gamified, self-congratulatory tone ("Welcome to the first major checkpoint on your Ukrainian language journey...") which violates the tone guidelines. |
-| 7. Structural integrity | 10/10 | Outline exactly matches the plan. Word count is 1575 (well above 1200 target). |
-| 8. Cultural accuracy | 10/10 | Accurately explains the cultural pattern of first name + patronymic + surname. |
-| 9. Dialogue & conversation quality | 9/10 | The dialogue is extremely natural and models the formal `Ви` register well. Minor deduction for an awkward English translation ("Mutually!" instead of "Likewise!"). |
+| 1. Plan adherence | 5/10 | The plan requires review of letters/sounds and stress, but the module never asks `How many letters/sounds` and never mentions `наголос`; the capstone also omits the plan’s goodbye and compresses the required graduation speech to `Мене звати Богдан. Я з Дніпра. Я інженер. Це моя сім'я.` |
+| 2. Linguistic accuracy | 7/10 | `such as the soft **Г** (H) versus the hard **Ґ** (G)` teaches a wrong phonetic description. |
+| 3. Pedagogical quality | 5/10 | The checkpoint introduces later-scope material instead of consolidating A1.1: `Я живу в Києві.` adds deferred locative/conjugation material, and the dialogue explicitly teaches `Кличний відмінок` although the plan says `No new grammar — consolidation only`. |
+| 4. Vocabulary coverage | 8/10 | Recommended checkpoint vocabulary is present and natural: `ім'я`, `прізвище`; however the reading section’s `Я живу в Києві.` pulls in later-scope material. |
+| 5. Exercise quality | 9/10 | All three planned activity types are represented by correctly named markers placed after relevant teaching sections. |
+| 6. Engagement & tone | 9/10 | The prose keeps a teacherly tone and uses concrete situations such as the conference coffee break with named speakers. |
+| 7. Structural integrity | 10/10 | All planned H2 headings are present and ordered correctly, and the pipeline word count is above target at 1230. |
+| 8. Cultural accuracy | 10/10 | The module uses Ukrainian names and places (`Богдан`, `Соломія`, `Дніпро`, `Тернопіль`) without Russian-centered framing. |
+| 9. Dialogue & conversation quality | 6/10 | The capstone exchange ends abruptly at `У вас гарна сім'я.` with no goodbye, despite the plan requiring a full-cycle first meeting. |
 
 ## Findings
-[Engagement & tone] [minor]
-Location: `## Що ми знаємо? (What Do We Know?)` -> "Welcome to the first major checkpoint on your Ukrainian language journey. You have made the critical transition..."
-Issue: The opening sentence uses a self-congratulatory, gamified tone that violates the strict tone guidelines.
-Fix: Replace with a grounded, direct opening.
+[LINGUISTIC ACCURACY] [SEVERITY: critical]  
+Location: `Що ми знаємо?` — `such as the soft **Г** (H) versus the hard **Ґ** (G)`  
+Issue: `Г` is described incorrectly as “soft.” In Ukrainian phonetics, `Г` is not a soft consonant; it is a voiced fricative [ɦ].  
+Fix: Replace `soft **Г**` with an accurate beginner-safe description such as `breathy **Г** (close to H)`.
 
-[Exercise quality] [minor]
-Location: `<!-- INJECT_ACTIVITY: match-up-q-and-a -->` placed after `## Читання (Reading Practice)`
-Issue: The activity tests matching questions to answers, but the preceding reading text contains only statements. Question forms (`Як тебе звати?`, `Звідки ти?`) are reviewed in the subsequent `Граматика` section.
-Fix: Move the marker to immediately follow the `Граматика` section.
+[PLAN ADHERENCE] [SEVERITY: major]  
+Location: `Читання` — `* **Я живу в Києві.** (I live in Kyiv.)`  
+Issue: This imports later material the source plan explicitly deferred; the checkpoint stops being pure A1.1 review.  
+Fix: Replace the sentence with an already-reviewed A1.1 pattern such as `* **Я з Києва.** (I am from Kyiv.)`.
 
-[Dialogue & conversation quality] [minor]
-Location: `**Богдан:** Навзаєм! *(Mutually!)*`
-Issue: While literal, "Mutually!" is an awkward English translation for a conversational response.
-Fix: Change the English translation to "Likewise!".
+[PEDAGOGICAL QUALITY] [SEVERITY: major]  
+Location: `Діалог` — `Crucially, they use the **Кличний відмінок** (Vocative case) for direct address.` and the following tip block  
+Issue: The checkpoint teaches new grammar even though the plan says `No new grammar — consolidation only`. Vocative belongs to a later module, not this A1.1 checkpoint.  
+Fix: Remove the vocative explanation and keep the dialogue analysis focused on formal `ви/вас`.
+
+[PLAN ADHERENCE] [SEVERITY: major]  
+Location: `Діалог` — the conversation ends with `> **Соломія:** Дуже гарно! У вас гарна сім'я.`  
+Issue: The plan requires a full cycle `greeting → name → origin → profession → family → showing photos → goodbye`, but the goodbye is missing.  
+Fix: Add a short closing exchange, e.g. `Дякую! До побачення!` / `До побачення!`.
+
+[PLAN ADHERENCE] [SEVERITY: major]  
+Location: `Діалог` — `You might say: **Мене звати Богдан. Я з Дніпра. Я інженер. Це моя сім'я.**`  
+Issue: The plan’s graduation-speech model requires a fuller connected monologue with nationality, parents, and `У мене є...`; the current version is too thin.  
+Fix: Replace it with a fuller A1.1 monologue that includes nationality, parents’ professions, and one family sentence.
+
+[PLAN ADHERENCE] [SEVERITY: major]  
+Location: `Підсумок — Summary` — checklist begins `* Can you read Ukrainian Cyrillic words fluently...`  
+Issue: The final self-check omits two plan-mandated review points: `How many letters/sounds in Ukrainian?` and stress review from M04.  
+Fix: Add checklist items for `33 letters / 38 sounds`, stress placement, and the explicit `introduce yourself in 5 sentences` check.
 
 ## Verdict: REVISE
-The module's Ukrainian content is flawless and the pedagogy is excellent. However, it requires minor polish to correct a gamified opener, improve an English translation, and fix the placement of one activity marker.
+One critical phonetics error and multiple major plan/scope violations block PASS. The module is structurally clean, but it cannot ship while it teaches wrong phonetics, introduces later grammar, and omits required checkpoint content.
 
 <fixes>
 - find: |
-    Welcome to the first major checkpoint on your Ukrainian language journey. You have made the critical transition from learning individual phonetic elements to participating in a full, meaningful conversation. We began by deciphering an entirely new alphabet, and now you have established a solid Ukrainian linguistic foundation. This module represents a milestone where you consolidate those foundational skills before moving forward.
+    such as the soft **Г** (H) versus the hard **Ґ** (G), and the deep **И** (Y) versus the sharp **І** (I).
   replace: |
-    This module is the first major checkpoint in the course. You are making the transition from learning individual sounds and letters to participating in a basic conversation. We began by deciphering the Cyrillic alphabet, and now you have a foundation to build upon. This section is a dedicated review where you will consolidate those skills before moving forward.
+    such as the breathy **Г** (close to H) versus the hard **Ґ** (G), and the deep **И** (Y) versus the sharp **І** (I).
 - find: |
-    :::tip
-    When reading Ukrainian texts, remember that the spelling is highly phonetic. What you see is exactly what you hear. Trust the letters, and do not try to apply English pronunciation rules to Ukrainian words.
-    :::
-    
-    <!-- INJECT_ACTIVITY: match-up-q-and-a -->
-    
-    ## Граматика (Grammar Summary)
+    * **Я живу в Києві.** (I live in Kyiv.)
   replace: |
-    :::tip
-    When reading Ukrainian texts, remember that the spelling is highly phonetic. What you see is exactly what you hear. Trust the letters, and do not try to apply English pronunciation rules to Ukrainian words.
-    :::
-    
-    ## Граматика (Grammar Summary)
+    * **Я з Києва.** (I am from Kyiv.)
 - find: |
-    :::note
-    English does not have a vocative case, but in Ukrainian, it is mandatory when addressing someone directly. Forgetting to change the name ending can sound unnatural or blunt to a native speaker.
-    :::
-    
-    ## Діалог (Capstone Dialogue)
+    > **Соломія:** Дуже приємно. Моє **ім'я** (first name) — Соломія. Моє **прізвище** (surname) — Коваль. Звідки ви, Богдане? *(Very nice to meet you. My first name is Solomiya. My surname is Koval. Where are you from, Bohdan?)*
+    > **Богдан:** Я з Дніпра. Я інженер. Звідки ви, Соломіє? *(I am from Dnipro. I am an engineer. Where are you from, Solomiya?)*
   replace: |
-    :::note
-    English does not have a vocative case, but in Ukrainian, it is mandatory when addressing someone directly. Forgetting to change the name ending can sound unnatural or blunt to a native speaker.
+    > **Соломія:** Дуже приємно. Моє **ім'я** (first name) — Соломія. Моє **прізвище** (surname) — Коваль. Звідки ви? *(Very nice to meet you. My first name is Solomiya. My surname is Koval. Where are you from?)*
+    > **Богдан:** Я з Дніпра. Я інженер. А ви звідки? *(I am from Dnipro. I am an engineer. And where are you from?)*
+- find: |
+    Analyze the natural features of this dialogue. Because they are meeting in a professional setting, they use the polite, formal address with the pronouns **ви** (you) and **вас** (you, accusative). Crucially, they use the **Кличний відмінок** (Vocative case) for direct address. Notice how Solomiya says **Богдане** (Bohdan) — the masculine consonant adds an **-е** ending. Bohdan replies with **Соломіє** (Solomiya). This shows authentic Ukrainian politeness. 
+
+    :::tip
+    The Vocative case (**Кличний відмінок**) is mandatory in Ukrainian when addressing someone directly. It instantly elevates your spoken language from beginner translation to authentic phrasing, showing that you understand the cultural importance of proper address.
     :::
-    
-    <!-- INJECT_ACTIVITY: match-up-q-and-a -->
-    
-    ## Діалог (Capstone Dialogue)
-- find: "**Богдан:** Навзаєм! *(Mutually!)*"
-  replace: "**Богдан:** Навзаєм! *(Likewise!)*"
+  replace: |
+    Analyze the natural features of this dialogue. Because they are meeting in a professional setting, they use the polite, formal address with the pronouns **ви** (you) and **вас** (you, accusative). This keeps the exchange respectful and matches the conference setting.
+
+    :::tip
+    For a first professional meeting, stay with **ви** and **вас**. These are the key A1.1 forms you need for a polite introduction.
+    :::
+- find: |
+    > **Соломія:** Дуже гарно! У вас гарна сім'я. *(Very nice! You have a nice family.)*
+  replace: |
+    > **Соломія:** Дуже гарно! У вас гарна сім'я. *(Very nice! You have a nice family.)*
+    > **Богдан:** Дякую! До побачення! *(Thank you! Goodbye!)*
+    > **Соломія:** До побачення! *(Goodbye!)*
+- find: |
+    You might say: **Мене звати Богдан. Я з Дніпра. Я інженер. Це моя сім'я.** (My name is Bohdan. I am from Dnipro. I am an engineer. This is my family.)
+  replace: |
+    You might say: **Привіт! Мене звати Богдан. Я з Дніпра. Я українець. Я — інженер. Моя мама — вчителька. Мій тато — інженер. У мене є брат.** (Hi! My name is Bohdan. I am from Dnipro. I am Ukrainian. I am an engineer. My mother is a teacher. My father is an engineer. I have a brother.)
+- find: |
+    * Can you read Ukrainian Cyrillic words fluently, including those utilizing the **Ь** and the apostrophe?
+    * Can you say hello informally with **Привіт** (Hi) and formally with **Добрий день** (Good afternoon)?
+  replace: |
+    * Can you say how many letters and how many sounds Ukrainian has?
+    * Can you place the stress correctly in common words such as **кава** and **вода**?
+    * Can you read Ukrainian Cyrillic words fluently, including those utilizing the **Ь** and the apostrophe?
+    * Can you say hello informally with **Привіт** (Hi) and formally with **Добрий день** (Good afternoon)?
+    * Can you introduce yourself in 5 sentences?
 </fixes>

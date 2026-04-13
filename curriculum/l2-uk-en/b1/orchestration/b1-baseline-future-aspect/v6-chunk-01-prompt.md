@@ -699,6 +699,35 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] вид дієслова (verbal aspect — grammatical category of completion)
+- [ ] доконаний вид (perfective aspect — completed, bounded action)
+- [ ] недоконаний вид (imperfective aspect — ongoing, unbounded action)
+- [ ] видова пара (aspect pair — two verbs differing only in aspect)
+- [ ] майбутній час (future tense)
+- [ ] проста форма (simple form — perfective future: напишу)
+- [ ] складна форма (synthetic/compound form — imperfective future: писатиму)
+- [ ] складена форма (analytic form — imperfective future: буду писати)
+- [ ] інфінітив (infinitive — base verb form ending in -ти/-тися)
+- [ ] дієвідміна (verb conjugation class — I or II)
+- [ ] особове закінчення (personal ending — verb suffix marking person/number)
+- [ ] дієвідмінювання (conjugation — changing verb form by person/number)
+- [ ] двовидовий (biaspectual — verb that can be either aspect: атакувати)
+- [ ] одновидовий (single-aspect — verb existing in only one aspect)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Що таке вид дієслова? (~715 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

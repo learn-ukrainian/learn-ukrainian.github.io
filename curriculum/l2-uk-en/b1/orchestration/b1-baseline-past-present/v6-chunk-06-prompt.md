@@ -27,7 +27,7 @@ Grand total: ~4300 words
 <previous_context>
 [...previous sections truncated...]
 
-the soft sign and when not to. The golden rule is extremely simple and is based on questions. If you can ask the question "what is he doing?" (що робить?), then you strictly write "-ться" with a soft sign. This applies to the third person: he studies (він вчиться), she smiles (вона усміхається), it hides (воно ховається). If the question sounds like "what are you doing?" (що робиш?), then you write "-шся" without a soft sign. This is the second person form: you study (ти вчишся), you smile (ти усміхаєшся).* :::info **Grammar box** — Pay attention to the pronunciation. The letter combination «-ться» phonetically sounds like a prolonged soft «цця», but in writing, we always preserve the historical form with the soft sign. ::: Conjugating these verbs introduces another mechanical rule that you will quickly master. The postfix physically changes its shape depending on the letter that immediately precedes it. If the verb form ends in a consonant, you attach the full «-ся». However, if the verb form ends in a vowel, the postfix shrinks into the shorter «-сь» to maintain a smooth phonetic flow and avoid awkward vowel clusters. Let us look at the verb «вмиватися» (to wash one's face) in the past tense. The masculine form ends in a consonant, so it takes the full postfix: «він вмивався». The feminine and plural forms end in vowels, so they take the shortened version: «вона вмивалася», «вони вмивалися». The exact same principle applies to the present tense paradigm of a verb like «вчитися» (to study). The first person singular ends in a vowel, so it becomes «я вчуся», whereas the third person singular ends in a consonant, yielding «він вчиться». Memorizing this alternating rhythm is crucial for natural speech. Using reflexive verbs correctly allows you to express your internal states, emotions, and daily routines with much greater naturalness. Often, the most authentic way to ask about someone's well-being relies entirely on these verbs. Notice how the speakers in the following dialogue describe their feelings and plans without ever translating the English "I am" directly. > — **Оксана:** Привіт! Як ти почуваєшся перед іспитом? *(Hi! How are you feeling before the exam?)* > — **Степан:** Привіт. Я трохи хвилююся, якщо чесно. Мені зовсім не спиться останні дні. *(Hi. I am worrying a bit, to be honest. I haven't been able to sleep at all these last few days.)* > — **Оксана:** Не переживай так сильно, усе вдасться. Ти ж довго готувався. *(Don't worry so much, everything will work out. You prepared for a long time, after all.)* > — **Степан:** Сподіваюся. А ти чим займаєшся зараз? *(I hope so. And what are you doing now?)* > — **Оксана:** Я збираюся в бібліотеку. Ми зустрічаємося з друзями, щоб разом повторити матеріал. *(I am getting ready for the library. We are meeting with friends to review the material together.)* > — **Степан:** О, це чудова ідея. Приєднуюся до вас через годину. *(Oh, that's a great idea. I am joining you in an hour.)*
+the ending **-шся** never has a soft sign. Це правило дуже легко запам'ятати. Якщо до дієслова можна поставити питання «що робить?» або «що роблять?», ми завжди пишемо м'який знак: він щиро усміхається, вони старанно вчаться. Якщо ж ми ставимо питання «що робиш?», м'який знак не потрібен: ти гарно усміхаєшся, ти багато вчишся. :::info **Grammar box** The pronunciation of **-ться** as [цця] is one of the most distinctive features of spoken Ukrainian. When you see a word like «вчиться» or «дивляться», do not try to pronounce the letters "т" and "с" separately. Instead, blend them together into a soft, prolonged "ц" sound to sound like a native speaker. ::: The postfix has two forms: **-ся** and **-сь**. Modern euphony allows using **-сь** after vowels (*я вчусь*) and **-ся** after consonants (*він вчився*), though **-ся** after vowels is also perfectly common (*я вчуся*). The core endings for **особа** (person — 1st, 2nd, 3rd) and **число** (number — однина, множина) remain the same. The rules of the first and second **дієвідміна** (conjugation class — I or II) apply normally. You just attach the postfix at the end. This applies to both the **теперішній час** (present tense) and the **минулий час** (past tense). The past tense form reflects the **рід** (gender — чоловічий, жіночий, середній). Let's see this **дієвідмінювання** (conjugation — changing verb by person and number) in action. Відмінювання зворотних дієслів є дуже логічним. Ви берете звичайне дієслово і додаєте відповідний постфікс. У теперішньому часі це виглядає так: я вчуся (або вчусь), ти вчишся, він вчиться, ми вчимося, ви вчитеся, вони вчаться. У минулому часі ми додаємо цей постфікс після суфікса минулого часу та закінчення роду. Чоловічий рід — він вмивався. Жіночий рід — вона вмивалася. Середній рід — воно вмивалося. Множина — вони вмивалися. Reflexive verbs are essential for expressing how you feel or interact with others. They can form an **видова пара** (aspectual pair — e.g., писати/написати). For example, "зустрічатися" is **недоконаний вид** (imperfective aspect — ongoing action), while "зустрітися" is **доконаний вид** (perfective aspect — completed action). Let's look at a dialogue where friends discuss their feelings right before an exam. > — **Марко:** Привіт! Як ти почуваєшся перед іспитом? *(Hi! How are you feeling before the exam?)* > — **Олена:** Привіт. Я дуже хвилююся. Мені усю ніч не спалося через стрес. *(Hi. I am worrying very much. I couldn't sleep all night because of stress.)* > — **Марко:** Не переживай. Ти добре готувалася, тому все обов'язково вдасться. *(Don't worry. You prepared well, so everything will definitely work out.)* > — **Олена:** Сподіваюся. А ти як? Зовсім не боїшся цих питань? *(I hope so. And how about you? Aren't you afraid of these questions at all?)* > — **Марко:** Трохи боюся, але намагаюся зосередитися. Ми зустрінемося після іспиту? *(I'm a little afraid, but I am trying to focus. Will we meet up after the exam?)* > — **Олена:** Так, звичайно. Побачимося біля входу в університет. *(Yes, of course. See you near the university entrance.)* <!-- INJECT_ACTIVITY: fill-in, зворотні дієслова -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -724,6 +724,33 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (6/6).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] теперішній час (present tense)
+- [ ] минулий час (past tense)
+- [ ] дієвідміна (conjugation class — I or II)
+- [ ] особа (person — 1st, 2nd, 3rd)
+- [ ] число (number — однина, множина)
+- [ ] рід (gender — чоловічий, жіночий, середній)
+- [ ] доконаний вид (perfective aspect — completed action)
+- [ ] недоконаний вид (imperfective aspect — ongoing action)
+- [ ] інфінітив (infinitive — the base form ending in -ти/-тися)
+- [ ] дієвідмінювання (conjugation — changing verb by person and number)
+- [ ] зворотний (reflexive — verbs with -ся/-сь)
+- [ ] видова пара (aspectual pair — e.g., писати/написати)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Підсумок (~450 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

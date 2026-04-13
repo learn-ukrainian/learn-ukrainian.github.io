@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-«-уть» або «-ють», це перша дієвідміна. Закінчення «-ать» або «-ять» вказують на другу дієвідміну. З семантичного погляду, дієприслівники недоконаного виду завжди виражають **одночасність** *(simultaneity)*. Це означає, що додаткова дія відбувається абсолютно паралельно з основною дією. Вони наче протікають в один і той самий проміжок часу. Розгляньмо такий приклад: «Я **працюю** *(I work)*, **слухаючи** *(while listening)* радіо». Тут головна дія — це процес роботи. А слухання радіо — це фонова, додаткова дія, яка супроводжує вашу роботу. Обидва процеси відбуваються зараз, одночасно. Студенти, для яких рідною мовою є англійська, часто намагаються перекладати такі конструкції буквально. Вони можуть сказати щось на кшталт: «Я працюю, поки слухати радіо». Це помилка. В українській мові нам не потрібні додаткові слова, як англійське «while» у комбінації з формою на «-ing». Сама форма дієприслівника вже містить у собі значення одночасності. Вам достатньо просто використати правильний суфікс. Наприклад, замість того, щоб казати «Коли я йшов додому, я зустрів друга», ви можете сказати «**Йдучи** *(while walking)* додому, я зустрів друга». Це робить вашу мову більш елегантною, стислою та дуже природною. Окремо варто розглянути творення форм від **зворотних дієслів** *(reflexive verbs)*. Це дієслова, які мають наприкінці частку **-ся** *(reflexive particle)*. Коли ми утворюємо від них дієприслівник, ця частка нікуди не зникає, але трохи змінює свій вигляд. Оскільки всі суфікси дієприслівників закінчуються на голосну літеру «и», частка «-ся» завжди перетворюється на м'який варіант **-сь**. Таким чином, ми отримуємо суфікси: **-учись**, **-ючись**, **-ачись** та **-ячись**. Правило дієвідмін залишається тим самим, ми просто додаємо «-сь» у самому кінці. Подивімося на приклади. Візьмемо популярне дієслово «усміхатися». Вони «усміхаються». Отже, дієприслівник звучатиме як «**усміхаючись**» *(while smiling)*. Якщо ми візьмемо слово «навчатися», форма для «вони» — «навчаються». Утворюємо дієприслівник і отримуємо «**навчаючись**» *(while studying)*. Ще один поширений приклад — дієслово «дивитися». У теперішньому часі маємо форму «дивляться». Відповідно, правильний варіант буде «**дивлячись**» *(while watching / looking)*. Наприклад, ви можете сказати: «Він пив каву, дивлячись у вікно». Пам'ятайте, що варіант із повним закінченням «-ся» після голосної звучить неприродно. Ми ніколи не кажемо «усміхаючися» або «дивлячися». Завжди використовуйте коротку м'яку частку «-сь». Наостанок, ми маємо обговорити кілька фонетичних і орфографічних нюансів. Найважливіша фонетична особливість українських дієприслівників — це **тверда вимова** *(hard pronunciation)* звука [ч] у суфіксах. В українській мові ми вимовляємо його чітко і твердо. Вимовляючи слово «несучи» або «читаючи», ваш язик має залишатися у твердій позиції. Це додає українській мові характерного звучання. Також важливо знати, що не від усіх українських дієслів можна утворити цю форму. Існують певні граматичні **обмеження** *(constraints)*. По-перше, ми не можемо утворити дієприслівники від слів, які не мають повноцінної основи теперішнього часу. Класичним прикладом є дієслова «бити», «пити» або «лити». По-друге, є дієслова, від яких утворення граматично можливе, але результат звучить неприродно. Наприклад, ми рідко утворюємо дієприслівники від дієслів із суфіксом «-ну-», таких як «мерзнути» або «тягнути». У таких випадках носії мови зазвичай уникають дієприслівників і використовують звичайне **складнопідрядне речення** *(subordinate clause)*. Замість того, щоб шукати складну форму, ми скажемо: «Коли він пив воду...» або «Коли ми мерзли на зупинці...». Це абсолютно нормальна і дуже поширена практика. <!-- INJECT_ACTIVITY: fill-in-gerund-formation --> <!-- INJECT_ACTIVITY: match-gerund-conjugations -->
+radio station. The main action is work, and the additional one is listening to music. Or another example: a girl walked down the street while speaking on the phone with her brother. She was simultaneously walking and talking. This construction makes our speech smoother and more elegant.* When dealing with reflexive verbs—those ending in **-ся**—the gerund retains the reflexive particle. However, because the gerund suffixes **-учи**, **-ючи**, **-ачи**, and **-ячи** all end in a vowel, the reflexive particle always takes the shortened form **-сь**. You simply attach **-сь** directly to the end of the gerund. This creates forms ending in **-учись**, **-ючись**, **-ачись**, and **-ячись**. Зворотні дієслова зберігають свою зворотну частку в кінці слова. Наприклад, від дієслова «усміхатися» ми утворюємо форму «усміхаються», а потім додаємо суфікси і отримуємо «усміхаючись». Якщо студенти хочуть здобути нові знання, вони читають книги, навчаючись чомусь новому. Від дієслова «дивитися» ми спочатку утворюємо форму «дивляться», а кінцевий результат буде звучати як «дивлячись». > *Reflexive verbs keep their reflexive particle at the end of the word. For example, from the verb "to smile" we form "they smile", and then we add the suffixes and get "while smiling". If students want to gain new knowledge, they read books, learning something new. From the verb "to watch" we first form "they watch", and the final result will sound like "while watching".* :::info **Grammar box** — Remember that the reflexive particle **-ся** transforms into **-сь** after vowels. Since all imperfective gerund suffixes end in the vowel **-и**, you will always use **-сь** for reflexive gerunds (e.g., дивлячись, сміючись). ::: There are some important phonetic and orthographic constraints to keep in mind. In Ukrainian, the letter **ч** in these suffixes is always pronounced hard, unlike in some neighboring Slavic languages where it is soft. You should clearly articulate the hard consonant. Additionally, not every verb can form an imperfective gerund. Verbs that lack a distinct present tense stem, such as «бити» or «пити», generally do not form them. Sometimes, even if grammatically possible, the resulting word might sound too awkward or unnatural to native speakers, who will instead prefer a subordinate clause with «коли» (when). В українській мові звук [ч] у цих суфіксах завжди вимовляється твердо. Це дуже важлива фонетична особливість, про яку варто пам'ятати під час розмови. Також треба знати, що не всі дієслова можуть утворювати такі форми. Наприклад, від коротких слів «пити» або «бити» ми зазвичай не утворюємо такі слова, бо вони звучать неприродно. У таких випадках ми просто використовуємо звичайні речення зі словом «коли». > *In the Ukrainian language, the sound [ch] in these suffixes is always pronounced hard. This is a very important phonetic feature that is worth remembering during a conversation. You also need to know that not all verbs can form such forms. For example, from the short words "to drink" or "to beat" we usually do not form such words, because they sound unnatural. In such cases, we simply use regular sentences with the word "when".* <!-- INJECT_ACTIVITY: fill-in-gerund-formation --> <!-- INJECT_ACTIVITY: match-gerund-conjugations -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -561,7 +561,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -574,18 +641,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] дієприслівник (adverbial participle/gerund — unchangeable verb form)
+- [ ] недоконаний вид (imperfective aspect — ongoing/repeated action)
+- [ ] читаючи (while reading — imperfective gerund)
+- [ ] слухаючи (while listening — imperfective gerund)
+- [ ] пишучи (while writing — imperfective gerund)
+- [ ] говорячи (while speaking — imperfective gerund)
+- [ ] обставина (adverbial modifier — syntactic role of the gerund)
+- [ ] додаткова дія (secondary/additional action)
+- [ ] одночасність (simultaneity — actions happening at the same time)
+- [ ] логічний підмет (logical subject — must be shared)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Дієприслівник як обставина (~650 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

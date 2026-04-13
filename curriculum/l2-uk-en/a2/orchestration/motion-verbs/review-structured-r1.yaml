@@ -2,50 +2,53 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 9
-  evidence: 'Covers all points and required vocabulary. However, the plan explicitly
-    recommended "різноспрямований", but the text used "багатоспрямований" in "**Багатоспрямований
-    рух** *(multidirectional motion)* '
+  score: 8
+  evidence: 'All four planned H2 sections appear in order, and all five activity markers
+    are present. However, the prose never cites the listed references; there is no
+    mention of `Заболотний` or `Ohoiko` anywhere '
 - dimension: 2
   name: Linguistic accuracy
-  score: 8
-  evidence: 'Excellent conjugation forms and pronunciation rules. Contains a minor
-    redundancy ("Ми часто використовуємо його щодня.") and a critical calque in the
-    summary questions ("Я їду на автобусі" instead of '
+  score: 6
+  evidence: The module teaches `we add the prefix **по-**. This creates the verbs
+    **піти**, **поїхати**, and **полетіти**`, and later claims `Комбінація літер «-ться»
+    завжди звучить як довгий м'який звук...`. Bot
 - dimension: 3
   name: Pedagogical quality
   score: 8
-  evidence: Excellent PPP flow and clear examples for each rule. However, question
-    3 in the summary asks "Яке закінчення має дієслово **їздити** *(to ride)* у формі
-    **я** *(I)*?", which is factually incorrect bec
+  evidence: 'The flow is strong: scenario → explanation → examples → practice marker
+    in each section. But the incorrect perfective explanation and the faulty phonetics
+    detour reduce instructional reliability.'
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: All required verbs of motion and conjugation models are integrated naturally
-    with clear examples.
+  score: 8
+  evidence: 'Required plan vocabulary is used in prose, including `рух`, `напрямок`,
+    `казати / кажу`, `пити / п''ю`, and `боротися / борюся`. However, the recommended
+    terms `односпрямований` and `різноспрямований` '
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: 5 `<!-- EXERCISE -->` markers are present and perfectly distributed after
-    each teaching block.
+  score: 9
+  evidence: The marker set matches the plan exactly in count and sequencing, and each
+    marker follows the content it is meant to test. No inline exercise logic is visible,
+    so there is nothing else to flag here.
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: 'Clear, encouraging teacher tone without being overly corporate. Natural
-    wrap-up: "Ось і все на сьогодні. Ви зробили велику роботу."'
+  score: 9
+  evidence: The airport/travel framing is concrete and usable, and the examples stay
+    focused on the grammar point rather than empty hype.
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: H2 headers match plan perfectly. Word count is 3013 (well over the 2000
-    target). No missing sections.
+  evidence: All required sections are present and ordered correctly, the markdown
+    is clean, and the pipeline word count is 2903, which is safely above the 2000-word
+    target.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: 'Correctly highlights the critical political/grammatical rule: "Ніколи
-    не кажіть «на Україну» чи «на Україні»".'
+  evidence: The module explains Ukrainian on its own terms and avoids Russian-centric
+    framing.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: Excellent multi-turn airport dialogue integrating the target verbs and
-    prepositions perfectly (летить до Києва, прилетів з Польщі, їде в готель).
+  score: 9
+  evidence: The module includes multi-turn, named-role dialogues in plausible travel
+    contexts rather than isolated Q/A fragments.
 findings: []

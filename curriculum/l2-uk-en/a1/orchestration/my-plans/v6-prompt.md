@@ -247,25 +247,25 @@ You do NOT need to call tools yourself — the facts are already verified.
 <pre_verified_facts>
 ## VESUM Verification
 - Confirmed: план, тиждень, вільний, зустріч, відпочивати, прибирати, вечірка, зустрінемося, задоволенням, жаль, допізна, звичайно, квартира, кіно, вчити
-- Not found: [] (All words verified in VESUM)
+- Not found: (None)
 
 ## Grammar Rules
-- **Prepositions У/В**: Правопис § 23 — Rules for alternation to achieve euphony (euphony/милозвучність). Use 'у' between consonants or at the start of a sentence before a consonant. Use 'в' between vowels.
-- **Time expressions (О/ОБ)**: Confirmed by usage in Grade 5 textbooks (e.g., "о шістнадцятій годині"). 'О' is used before most numbers, 'об' before vowels (e.g., об одинадцятій).
-- **Future Tense (Буду + Infinitive)**: Confirmed by Grade 3 textbook usage (e.g., "Як ви будете це робити?"). This is the standard compound future for imperfective verbs.
+- Чергування у-в: Правопис §23 — Позиції вживання прийменників і префіксів У та В. Щоб уникнути збігу букв на позначення приголосних або голосних звуків та щоб досягти милозвучності, в українській мові на письмі вживають прийменники «у» та «в» залежно від сусідніх букв (наприклад, між приголосними — «у», між голосними — «в»).
 
 ## Calque Warnings
-- **робити плани**: Calque (likely from English 'to make plans' or Russian 'делать планы') — use **мати плани** (to have plans) or **планувати** (to plan).
-- **зустріч з друзями**: OK — Standard Ukrainian phrasing for "meeting with friends."
-- **з задоволенням**: OK — Confirmed in Grade 5 textbook (Uhor, p. 94) as a natural response.
-- **на жаль**: OK — Standard phrase for "unfortunately."
+- з задоволенням: OK
+- на жаль: OK
+- плани на тиждень: OK
 
 ## CEFR Check
-- **тиждень**: A1 — OK (Found in Grade 1-4 textbooks)
-- **вільний**: A1 — OK (Found in Grade 5 "Social/Talk" sections, level-appropriate)
-- **вечірка**: A1 — OK (Found in Grade 3 textbooks, standard for early levels)
-- **квартира**: A1 — OK (Found in Grade 2 textbooks, basic housing vocabulary)
-- **відпочивати**: A1 — OK (Found in Grade 3-5, core daily activity)
+- план: A1 — OK
+- зустріч: A1 — OK
+- відпочивати: A1 — OK
+- звичайно: A1 — OK
+- кіно: A1 — OK
+- вчити: A1 — OK
+- вечірка: A2 — above target
+- прибирати: A2 — above target
 </pre_verified_facts>
 
 
@@ -612,12 +612,14 @@ The module should use activity formats that are common in Ukrainian primary and 
 
 ## Section Structure
 
-Write these sections as H2 headings, in this exact order:
+Write these sections as H2 headings, in this **exact** order:
 
 - `## Dialogues` (~300 words)
 - `## Планування (Planning)` (~300 words)
 - `## Мій тиждень (My Week)` (~300 words)
 - `## Summary` (~300 words)
+
+**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim** as an `## H2` line. This includes the FINAL summary/transition section (`Підсумок: ...`, `Підсумок та перехід до M...`, etc.) — the writer's most common failure is silently dropping the closing section. Do NOT skip it. Do NOT renumber. Do NOT merge headings. The post-write quick-verify check will fail your build if any heading is missing, even if the prose itself is excellent.
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -625,16 +627,17 @@ Each section should follow the word budget specified. The total must reach 1200 
 
 ## Content Rules
 
-TARGET: 20-35% Ukrainian.
+TARGET: 20-35% Ukrainian. ⚠️ HARD GATE — the audit REJECTS modules below 20%.
 LANGUAGE ROLES:
-- THEORY & EXPLANATION: English prose — brief and clear. Show, don't tell.
+- THEORY & EXPLANATION: English prose — brief, 2-3 sentences per concept. No long expository paragraphs. Explain once, then show Ukrainian.
+- UKRAINIAN NARRATIVE PARAGRAPHS: **REQUIRED — minimum 1 per section.** A 3-6 sentence Ukrainian paragraph demonstrating the concept in use, followed IMMEDIATELY by a `> *English translation*` blockquote. This is the PRIMARY driver of hitting the immersion target. Without these paragraphs you cannot reach 20%.
 - PARADIGM TABLES: Conjugation/declension tables with all cells Ukrainian.
-- EXAMPLE LISTS: Ukrainian sentences in bulleted lists (each: Ukrainian — English gloss).
-- DIALOGUES: Mini-dialogues in blockquotes with English gloss per line.
+- EXAMPLE LISTS: Ukrainian sentences in bulleted lists (each: Ukrainian — English gloss). Minimum 5 per rule.
+- DIALOGUES: Mini-dialogues in blockquotes with English gloss per line. At least 1 dialogue per module.
 - PATTERN BOXES: Show transformations: `читати → читай → читайте`.
 - INLINE: Ukrainian words/phrases bolded in English prose.
-- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian. Full Ukrainian sentences go in tables, bulleted lists, dialogues, or pattern boxes.
-Ukrainian sentences max 10 words. Mix container types.
+- STRUCTURAL RULE: Every section MUST contain a Ukrainian narrative paragraph (3-6 sentences, translated in blockquote) PLUS supporting tables/lists/dialogues/pattern boxes. Pure-English sections are FORBIDDEN at M35+.
+Ukrainian sentences max 12 words. Mix container types.
 
 HARD GRAMMAR RULES (audit will reject violations):
 - Max 10 words per Ukrainian sentence (STRICT — count every word)
@@ -666,6 +669,25 @@ PLAN-AWARE EXEMPTIONS: The following bans are RELAXED for this module because th
 - **Zero calques**: No приймати душ→брати душ, приймати рішення→ухвалювати рішення
 - **Zero paronyms**: тактична≠тактовна, ефектний≠ефективний — use the right word, not a similar-sounding one
 - **Natural Ukrainian**: Write how a Ukrainian teacher would explain this to a student. Not robotic, not textbook-dry, not overly casual.
+
+### FORBIDDEN WORDS — never write these (#1189)
+
+The following Russian words have leaked into past builds and broken modules. They are **hard-banned** — the post-write toxic-token scanner will fail your build the moment it sees one. Use the Ukrainian alternative every time, even in dialogues, even in casual prose, even when quoting a learner's mistake (use a `<!-- VERIFY -->` placeholder instead of typing the Russian form):
+
+| Russian (FORBIDDEN) | Ukrainian (USE THIS) |
+|---|---|
+| хорошо | добре |
+| конечно | звичайно / певна річ |
+| спасибо | дякую |
+| пожалуйста | будь ласка / прошу |
+| ничего | нічого |
+| сейчас | зараз |
+| тоже | теж / також |
+| здесь | тут |
+| кот | кіт |
+| кон | кін |
+
+This list is enforced word-for-word by `scripts/build/quick_verify.py` (SEVERE_RUSSIANISMS). If you produce any of these tokens — even inside a quoted example, even inside a dialogue line spoken by a Russian-speaking character — the build halts immediately. There is no exception.
 
 **Authority hierarchy (if uncertain about a word, check in this order):**
 VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (stress) → Антоненко-Давидович (style) → Грінченко (etymology).
@@ -774,33 +796,28 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Dialogues (~350 words total)
-- P1 (~60 words): Intro to the communicative setting. Explain that as we reach the end of the A1.8 phase, planning for the future (weekend, week, and graduation) becomes the primary social goal. Set up the context of a "Group Chat" where friends organize their leisure time.
-- P2 (~140 words): Dialogue 1 — Weekend Planning in a Group Chat. Speakers: Оля, Максим, Іра. Focus on future intentions: "У суботу я буду прибирати квартиру", "А я буду бігати в парку". Introduction of invitations: "Може, підемо в кіно?", "Ходімо!", "О котрій?".
-- P3 (~150 words): Dialogue 2 — The Weekly Grind. Speakers: Марія and Петро. Focus on a busy schedule: "У понеділок я буду працювати", "У вівторок буду вчитися", "У четвер буду готувати". Reinforce the "false friend" distinction between *тиждень* (week) and *неділя* (Sunday) in context.
+## Dialogues (~330 words total)
+- P1 (~165 words): Dialogue 1 — Making plans. Present a conversation about the weekend using future tense and time expressions. "— Що ти будеш робити у суботу? — Зранку я буду прибирати квартиру. — А вдень? — Вдень я буду ходити в магазин. А ти? — Я буду відпочивати! Може, підемо в кафе ввечері? — Добре! О котрій? — О шостій. Добре? — Чудово! До зустрічі у суботу!"
+- P2 (~165 words): Dialogue 2 — A busy week. Present a conversation outlining a full week schedule. "— У тебе є плани на тиждень? — Так, багато! — У понеділок я буду працювати допізна. — У вівторок буду вчитися. У середу — зустріч з друзями. — А у четвер? — У четвер я буду готувати на вечірку. — А в п'ятницю? — В п'ятницю — вечірка! Ти будеш? — Звичайно буду!"
 
-## Планування (Planning) (~330 words total)
-- P1 (~110 words): Grammatical breakdown of days of the week with the preposition *у/в* (temporal Accusative). Explain the non-negotiable ending change for feminine days: *у середу*, *у п'ятницю*, *у суботу*, versus masculine/neuter forms: *у понеділок*, *у вівторок*, *у четвер*, *в неділю*. Use the wiki tip to emphasize *на вихідних* for "on the weekend."
-- P2 (~110 words): Telling time for scheduling using the question "О котрій годині?". Explain the response pattern *о* + ordinal number in the Locative case: *о третій*, *о шостій*, *о дев'ятій*. Mention the phonetic variant *об* before vowels: *об одинадцятій*. Warn against English-like mappings (using *в* instead of *о*).
-- P3 (~110 words): Communicative chunks for invitations and responses. Introduce the patterns: "Ходімо в...!", "Може, підемо...?", and "Давай зустрінемося!". Provide natural responses for acceptance ("З задоволенням!", "Домовились!") and polite refusal ("На жаль, не можу", "Я зайнятий/зайнята").
-- <!-- INJECT_ACTIVITY: fill-in-days-time --> [fill-in, focus: combining days of the week, time prepositions, and future tense, 5 items]
-- <!-- INJECT_ACTIVITY: matching-invitations --> [matching, focus: pairing specific invitations with culturally natural responses, 4 pairs]
+## Планування (~330 words total)
+- P1 (~85 words): Explain how to state the day of the week for an event. Introduce the temporal pattern "У/В + Accusative". List all days in context: у понеділок, у вівторок, у середу, у четвер, у п'ятницю, у суботу, в неділю. Highlight the -у/-ю ending change for feminine days (середу, п'ятницю, суботу).
+- P2 (~85 words): Explain how to specify the exact time. Teach the pattern "О/Об + Locative ordinal number" for the hour: о третій, о шостій, о дев'ятій, об одинадцятій. Combine these with parts of the day: зранку, вдень, ввечері (e.g., "У суботу ввечері").
+- P3 (~80 words): Demonstrate the compound future tense for planning: "я буду / ти будеш" + imperfective infinitive. Provide the full structural formula: "У [day] о [time] я буду [verb]". Example: "У суботу ввечері я буду дивитися фільм".
+- P4 (~80 words): Introduce functional chunks for invitations and responses. Making an invitation: "Ходімо в кафе!", "Може, підемо в кіно?", "Ти будеш вільний/вільна у суботу?", "Давай зустрінемося о п'ятій!". Responding: "Добре!", "Чудово!", "З задоволенням!", "На жаль, не можу."
+- <!-- INJECT_ACTIVITY: fill-in-schedule-time --> [type: fill-in, focus: Combine days of the week, time, and future tense, 5 items]
+- <!-- INJECT_ACTIVITY: match-invitations --> [type: matching, focus: Match invitations to natural responses, 4 pairs]
 
-## Мій тиждень (My Week) (~320 words total)
-- P1 (~160 words): The Narrative Model: "Taras’s Busy Week". A cohesive story illustrating a full schedule. Taras describes his plans: "У понеділок я буду працювати, а потім буду вчити українську", "У середу я буду дивитися футбол", "У неділю я буду відпочивати". Demonstrate how to anchor activities to specific times and places using A1 vocabulary.
-- P2 (~160 words): Guided Writing Workshop. Instruct the learner to use the "My Week" template to create their own schedule. Provide a framework: "У [день] я буду [що робити]". Encourage adding layers of detail: "О котрій?" (at what time?), "Де?" (where?), "З ким?" (with whom?). Remind them to use "У мене є плани" instead of the calque "Я маю плани."
-- <!-- INJECT_ACTIVITY: fill-in-weekly-plan --> [fill-in, focus: choosing the correct future tense form (буду/будемо) and activity in context, 3 items]
+## Мій тиждень (~330 words total)
+- P1 (~165 words): Present a structured model monologue about a weekly plan (Taras's week). Focus on stringing sentences together chronologically. "У понеділок я буду працювати. Після роботи буду вчити українську. У вівторок я буду обідати з другом у кафе. У середу ввечері я буду дивитися футбол. У четвер я буду готувати вечерю для родини. У п'ятницю я буду відпочивати — піду в кіно. У суботу зранку буду прибирати, а вдень гуляти в парку. В неділю я буду спати довго!"
+- P2 (~165 words): Provide a guide for learners to create their own weekly plan. Show them how to use the template "У [day] я буду [activity]" and expand it with details: "о котрій?" (at what time), "де?" (where), "з ким?" (with whom). Example: "У суботу о десятій я буду гуляти в парку з другом." Prompt them to use A1 vocabulary for places (кіно, квартира, кафе) and activities (прибирати, вчити, відпочивати).
+- <!-- INJECT_ACTIVITY: fill-in-weekly-plan --> [type: fill-in, focus: Complete a scheduled plan for the week, 3 items]
 
-## Підсумок (~300 words total)
-- P1 (~100 words): Recap of the "Planning Toolkit." A concise summary of the module's grammar: the compound future construction (*бути* + infinitive) and the prepositions *у/в* for days and *о/об* for hours.
-- P2 (~100 words): Final Review of Days. List the days of the week one last time (понеділок, вівторок, середа, четвер, п'ятниця, субота, неділя) to ensure the learner can differentiate between the masculine and feminine forms and their respective endings in temporal phrases.
-- P3 (~100 words): Self-Check: A bulleted list for the learner to verify their skills:
-    * Can you say "On Wednesday at six I will be cleaning"? (У середу о шостій я буду прибирати).
-    * Can you invite a friend to a cafe? (Може, підемо в кафе?).
-    * Can you politely decline an invitation? (На жаль, я не можу).
-    * Can you plan your ideal weekend (Saturday and Sunday)?
+## Summary (~330 words total)
+- P1 (~165 words): Recap the core grammatical structure for scheduling: Day + time + буду + infinitive. Emphasize that this is the primary way to express future plans in A1. Reiterate a clear example: "У суботу о третій я буду готувати обід." Briefly review the invitation chunks ("Ходімо!", "Може, підемо?", "Давай зустрінемося!") and the acceptable responses ("Добре!", "З задоволенням!", "На жаль, не можу.").
+- P2 (~165 words): Review the days of the week to ensure retention: понеділок, вівторок, середа, четвер, п'ятниця, субота, неділя. Present a self-check task: ask the learner to mentally plan their ideal weekend using the newly learned structures. Pose the questions: "Що ти будеш робити у суботу? А в неділю? З ким ти будеш зустрічатися?".
 
-Grand total: ~1300 words
+Grand total: ~1320 words
 </skeleton>
 
 ## Output Format
@@ -808,11 +825,56 @@ Grand total: ~1300 words
 Write in Markdown. Use:
 - `## Section Title` for main sections
 - `### Subsection` for subsections within a section
-- `**bold**` for Ukrainian words being taught — EVERY bold Ukrainian word MUST have an English translation on first use, either in parentheses `**слово** (translation)` or inline `**слово** means "translation"`. No exceptions.
+- `**bold**` for Ukrainian words being taught. For **A1 and A2** levels, provide an English translation on first use (e.g. `**стіл** (table)`) because learners lack the vocabulary to infer meaning. For **B1 and above**, do NOT provide inline translations for standard vocabulary — the learner will use the module's словник (vocabulary table). You may provide ONE parenthetical English translation ONLY for highly abstract grammar/linguistic terms on first use (e.g. `**видова пара** (aspectual pair)`).
 - Tables for paradigms (conjugation, declension)
 - `:::tip` / `:::caution` / `:::note` for callout boxes
 - `<!-- INJECT_ACTIVITY: {id} -->` for exercise placement (markers only — do NOT write exercise content)
 
 Do NOT write MDX component syntax, JSON, or DSL exercise blocks (:::quiz, etc.). Plain Markdown with injection markers.
+
+---
+
+## MANDATORY FINAL CHECKLIST (#1189)
+
+Before you finish writing, verify the prose against this checklist. Failing any item will fail the build.
+
+### Section headings (verbatim)
+
+Every heading from "Section Structure" above MUST appear as an `## H2` in your output, in order, **including the closing `Підсумок:` / `Підсумок та перехід до M...` summary**. The single most common writer failure across the B1 build has been silently dropping the final summary section. Re-read your output before stopping. If the last section in the plan is missing, write it now.
+
+### Required vocabulary (every word must appear)
+
+You MUST use **every word** from the list below at least once in the prose, in a natural sentence with bold + English translation. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, прагматика, діагностика, дієвідмінювання, зворотний, двовидовий, одновидовий, неозначено-кількісний, etc.) is the most frequently dropped category — actively find homes for those words even if it means adding a sentence that defines them.
+
+- [ ] план (plan, m)
+- [ ] тиждень (week, m)
+- [ ] вільний (free, adj)
+- [ ] зустріч (meeting, f)
+- [ ] відпочивати (to rest)
+- [ ] прибирати (to clean)
+- [ ] вечірка (party, f)
+
+### Forbidden words (never produce)
+
+Do not write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use `<!-- VERIFY -->` instead). The post-write toxic-token scanner will fail the build immediately:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+### Level-specific immersion check
+
+The level-appropriate immersion rule was already injected at the top of
+this prompt as `IMMERSION RULE`. Re-read it now BEFORE you stop writing.
+If your level's rule contains a CHECKLIST block, walk through every item.
+If it doesn't, just verify your output matches the LANGUAGE ROLES and
+TARGET stated in that block.
+
+This used to hard-code a B1+ checklist that confused A1/A2 models (where
+translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+The single source of truth is now
+`scripts/pipeline/config_tables.py:IMMERSION_RULES`.
+
+---
 
 Begin writing now. Start with the first section heading.

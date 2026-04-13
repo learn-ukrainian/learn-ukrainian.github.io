@@ -1,31 +1,30 @@
-## Діалоги — Dialogues (~330 words)
-- P1 (~120 words): [Dialogue 1: Meeting at a tandem exchange. Anna and Viktor discuss hobbies. Viktor asks: "Що ти любиш робити?" Anna responds with a list: "Я люблю читати і слухати музику." Viktor shares his passion for cooking: "Я люблю готувати." They use 'Правда?' to show interest and introduce the verb 'готуєш' naturally.]
-- P2 (~120 words): [Dialogue 2: Preferences regarding objects. Viktor shows Anna a book and a film. He asks: "Тобі подобається ця книга?" Anna confirms: "Так, мені подобається." When asked about a film, she expresses a negative preference: "Ні, мені не подобається цей фільм. Мені подобається музика." This dialogue establishes 'подобається' as a chunk for things.]
-- P3 (~90 words): [Analysis of the dialogues: Point out that when we talk about *doing* things (actions like reading or cooking), we used 'люблю'. When we talked about *things* (the book, the film, music), we used 'подобається'. Note the transition from verbs to nouns.]
+## Діалоги (~320 words total)
+- P1 (~40 words): Set the scene: It is your first day at a language exchange, and you are getting to know your tandem partner, Віктор, by sharing hobbies over tea.
+- P2 (~120 words): Dialogue 1 — Meeting someone's interests. A conversation between Анна and Віктор using the "люблю + infinitive" pattern: "Що ти любиш робити? — Я люблю читати і слухати музику. — А я люблю готувати. — Правда? Що ти готуєш?".
+- P3 (~40 words): A brief transition pointing out how Анна and Віктор naturally use "люблю" followed by action words that end in "-ти" to express their hobbies.
+- P4 (~120 words): Dialogue 2 — Describing preferences. A follow-up conversation focusing on liking specific things using the "подобається" chunk: "Тобі подобається ця книга? — Так, мені подобається. — А цей фільм? — Ні, мені не подобається. Мені подобається музика."
 
-## Я люблю... — I Like Doing... (~330 words)
-- P1 (~80 words): [Explaining the structure "Я люблю + infinitive". Explain that this is the most direct way to talk about hobbies. Provide the formula: Subject (Я) + verb (люблю) + Action (Infinitive). Use 3 core examples: Я люблю читати, Я люблю малювати, Я люблю співати.]
-- P2 (~80 words): [Defining the Ukrainian infinitive. Explain that the "dictionary form" of a verb always ends in the suffix -ти. Give examples of how to spot it in a dictionary: читати (to read), гуляти (to walk), слухати (to listen). Explain that the ending -ти never changes in this 'like' structure.]
-- P3 (~100 words): [Hobby Vocabulary Expansion. Introduce high-frequency verbs for free time: дивитися (to watch), грати (to play), подорожувати (to travel), готувати (to cook). Briefly introduce the prepositions for sports and instruments: 'грати у футбол' (sports) vs 'грати на гітарі' (instruments) as fixed phrases to memorize.]
-- <!-- INJECT_ACTIVITY: match-up-infinitives --> [match-up, Match infinitives to their English meanings: читати ↔ to read, 8 items]
-- <!-- INJECT_ACTIVITY: fill-in-hobbies --> [fill-in, Complete the sentence based on a picture: Я люблю ___. (e.g., гуляти, малювати), 8 items]
-- P4 (~70 words): [Negation with 'люблю'. Explain that to say "I don't like", we simply place 'не' before the verb. Provide contrasting examples: "Я люблю гуляти" vs "Я не люблю гуляти". Explain that 'не' is always a separate word.]
+## Я люблю... (~330 words total)
+- P1 (~100 words): Introduce the structure "Я люблю" + infinitive to express what activities you enjoy doing. Provide concrete examples: "Я люблю читати" (I like to read), "Я люблю гуляти" (I like to walk), "Я люблю готувати" (I like to cook). Explain that this structure is used specifically for actions.
+- P2 (~100 words): Explain the grammatical concept of the infinitive form. Define it as the dictionary form of a verb, noting that it always ends in the suffix "-ти" in Ukrainian. Reinforce that this fixed "-ти" form is what immediately follows "Я люблю".
+- P3 (~130 words): Expand the vocabulary with common infinitive verbs for hobbies: "слухати" (to listen), "дивитися" (to watch), "грати" (to play), "малювати" (to draw), "подорожувати" (to travel), and "співати" (to sing). Warn the learner that pronunciation and stress vary across these verbs and must be memorized individually.
+- <!-- INJECT_ACTIVITY: match-infinitives --> [match-up, Match infinitives to their meanings: читати ↔ to read, 8 items]
+- <!-- INJECT_ACTIVITY: fill-in-activities --> [fill-in, Complete: Я люблю ___. (choose infinitive for the picture), 8 items]
 
-## Мені подобається... — It Pleases Me... (~340 words)
-- P1 (~100 words): [Introduction to the 'Мені подобається' construction. Explain that this is a "fixed chunk" used to express that you like a thing (a noun). Emphasize that learners should not analyze the grammar of 'мені' (dative) yet—just memorize the phrase. Examples: Мені подобається книга, Мені подобається музика, Мені подобається Київ.]
-- P2 (~100 words): [Distinguishing 'любити' vs 'подобатися'. Use the pedagogical distinction: 'любити' is for active hobbies, passions, and things you "love" (Я люблю читати). 'Подобатися' is for general liking, things, and first impressions (Мені подобається цей фільм). Mention that 'любити' is a stronger emotion.]
-- P3 (~100 words): [Asking questions and Negation. Show how to ask "Do you like?" using both structures: "Ти любиш читати?" and "Тобі подобається цей фільм?". Explain the negative: "Мені не подобається". Note that the word order 'Тобі подобається' or 'Подобається тобі' can vary, but the chunk remains.]
-- <!-- INJECT_ACTIVITY: quiz-like-choice --> [quiz, Choose the correct structure based on context (noun vs infinitive): Люблю or подобається?, 8 items]
-- <!-- INJECT_ACTIVITY: fill-in-negatives --> [fill-in, Change the positive sentence to negative: Я люблю → Я не люблю, 6 items]
-- P4 (~40 words): [Common error warning. Explicitly warn against literal translation of "I like". Correct the mistake "Я подобаюся футбол" to "Мені подобається футбол", explaining that in Ukrainian, the football is doing the "pleasing".]
+## Мені подобається... (~360 words total)
+- P1 (~100 words): Introduce "Мені подобається" as the second way to say "I like". Contrast its usage directly with "Я люблю": explain that while "Я люблю" + infinitive is for activities, "Мені подобається" + noun is used for liking objects, things, or places.
+- P2 (~100 words): Provide examples of "Мені подобається" functioning as a fixed, memorized chunk. Explicitly state that we are not analyzing the underlying dative grammar yet. Show examples: "Мені подобається музика", "Мені подобається ця книга", "Мені подобається Київ".
+- P3 (~90 words): Explain how to form the negative for both structures by placing "не" directly before the verb. Provide contrasting examples: "Я не люблю готувати" for actions, and "Мені не подобається цей фільм" for things.
+- P4 (~70 words): Introduce how to ask questions about preferences: "Ти любиш читати?" and "Тобі подобається?". Briefly note that "любити" changes form depending on the person ("я люблю", "ти любиш"), but reassure the learner that full conjugation rules will be covered in module 17.
+- <!-- INJECT_ACTIVITY: quiz-like-structure --> [quiz, Люблю or подобається? Choose the right structure., 8 items]
+- <!-- INJECT_ACTIVITY: fill-in-negative --> [fill-in, Make it negative: Я люблю → Я не люблю, 6 items]
 
-## Підсумок — Summary (~300 words)
-- P1 (~150 words): [Recap of the two ways to say "I like". First, for activities: "Я люблю + -ти verb" (Я люблю співати). Second, for things: "Мені подобається + noun" (Мені подобається музика). Reminder that 'не' always comes before the verb to make it negative (Я не люблю, Мені не подобається).]
-- P2 (~150 words): [Self-check checklist for the learner:
-  - Can you name three hobbies? (Я люблю читати, малювати, гуляти).
-  - Can you name two things you like? (Мені подобається музика, книга).
-  - Do you know the ending of a Ukrainian infinitive? (-ти).
-  - Can you tell a friend you don't like something? (Мені не подобається...).
-  - Do you know which preposition to use with 'гітара' (на) and 'футбол' (у)?]
+## Підсумок — Summary (~300 words total)
+- P1 (~100 words): Recap the core distinction taught in the module: use "Я люблю" + infinitive (-ти) for activities you enjoy doing, and use the chunk "Мені подобається" + noun for things and objects that you like.
+- P2 (~80 words): Summarize the negation rule, reminding learners to simply place "не" before the verb to create "не люблю" and "не подобається".
+- P3 (~120 words): 
+  * Name 3 things you like doing (Я люблю...).
+  * Name 2 things you like (Мені подобається...).
+  * Name 1 thing you don't like (Я не люблю... / Мені не подобається...).
 
-Grand total: ~1300 words
+Grand total: ~1310 words

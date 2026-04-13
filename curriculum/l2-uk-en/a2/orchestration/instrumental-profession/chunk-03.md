@@ -1,23 +1,35 @@
-## Хто ти за фахом?
+## Хто ти за фахом? (~550 words total)
 
-Коли ми зустрічаємо нових людей, ми часто розмовляємо про роботу та кар'єру. How do we ask about someone's career in Ukrainian? У нас є кілька корисних запитань для різних життєвих ситуацій. Найбільш популярне запитання — це «**Ким ти працюєш?**» *(Who do you work as? / What is your job?)*. Це запитання завжди фокусується на вашій поточній роботі сьогодні. Якщо ми хочемо запитати про університетську освіту та спеціальність, ми говоримо інакше: «**Хто ти за фахом?**» *(What is your profession/specialty?)*. Слово «**фах**» *(profession, specialty)* — це чудовий український синонім до слів «**професія**» або «**спеціальність**». We use it when we talk about our formal training or our university degree. А якщо ми розмовляємо з дитиною або молодим студентом про майбутнє, ми запитуємо: «**Ким ти хочеш стати?**» *(Who do you want to become?)*. Усі ці запитання вимагають від нас логічної відповіді в орудному відмінку.
+When we meet new people, we naturally want to know more about their lives and careers. There are several common ways to ask "What do you do?" in Ukrainian. The question you choose depends on whether you want to know about someone's current job, their formal education, or their future ambitions.
 
-Давайте подивимося, як ці фрази працюють у реальній розмові. Олена та Андрій — колишні однокласники. Вони зустрілися на зустрічі випускників через п'ять років після школи.
-> — **Олена:** Привіт, Андрію! Скільки літ, скільки зим! *(Hi, Andriy! Long time no see!)*
-> — **Андрій:** Олено, привіт! Я так радий тебе бачити. Як твої справи? Хто ти тепер за фахом?
-> — **Олена:** Усе чудово, дякую! Я стала **лікаркою** *(doctor - female)*, як і хотіла. Тепер працюю в центральній лікарні. А ти? Ким ти працюєш?
-> — **Андрій:** Ого, я дуже пишаюся тобою! А я в школі мріяв бути **музикантом** *(musician)*, але життя змінилося. Я закінчив університет і став **програмістом** *(programmer)*.
-> — **Олена:** Це також чудова сучасна професія! Ти працюєш у великій компанії?
-> — **Андрій:** Так, і мені дуже подобається. Проте я все ще захоплююся гітарою у свій вільний час.
+Найчастіше люди запитують «Ким ти працюєш?», щоб дізнатися про вашу теперішню роботу. Це питання вимагає відповіді в орудному відмінку. Якщо людина цікавиться вашою освітою, вона запитає «Хто ти за фахом?». Слово **фах** означає те саме, що і **професія** або спеціальність. А якщо ви розмовляєте з дитиною, ви можете запитати «Ким ти хочеш стати?». Це чудове питання про майбутні цілі.
 
-У світі існує дуже багато цікавих та важливих професій. Давайте вивчимо кілька нових назв для вашого активного словника. Сучасна українська мова активно і природно використовує жіночі форми професій.
-Слово «**перукар**» або «**перукарка**» *(hairdresser)* описує людину, яка робить людям гарні зачіски. Моя улюблена перукарка працює у сучасному салоні краси біля мого дому.
-Слово «**кухар**» або «**кухарка**» *(cook, chef)* означає людину, яка професійно і смачно готує їжу. Мій дядько — дуже талановитий кухар у відомому італійському ресторані.
-Слово «**журналіст**» або «**журналістка**» *(journalist)* — це людина, яка пише цікаві статті або знімає телевізійні репортажі. Відома українська журналістка зараз бере важливе інтерв'ю у президента.
-Слово «**музикант**» або «**музикантка**» *(musician)* стосується людей класичного або сучасного мистецтва. Талановитий музикант грає на скрипці в національному театрі.
-І нарешті, «**юрист**» або «**юристка**» *(lawyer)* — це серйозний спеціаліст із державних законів. Моя розумна старша сестра працює успішною юристкою в центрі Києва.
+> *Most often people ask "Ким ти працюєш?" (What do you work as?) to find out about your current job. This question requires an answer in the Instrumental case. If a person is interested in your education, they will ask "Хто ти за фахом?" (What is your specialty?). The word **фах** means the same as **професія** (profession) or specialty. And if you are talking to a child, you can ask "Ким ти хочеш стати?" (Who do you want to become?). This is a wonderful question about future goals.*
 
-В українській мові є дуже популярні сталі вирази, які ми використовуємо для розмов про кар'єру. Коли ваша щоденна робота відповідає вашому університетському диплому, ми кажемо: «**працювати за фахом**» *(to work in one's field)*. Це означає, що ви ефективно використовуєте свою освіту. Наприклад: «Олена закінчила медичний університет і тепер працює за фахом». Але досить часто буває так, що дорослі люди повністю змінюють свій життєвий шлях. Тоді ми використовуємо фразу «**працювати не за фахом**» *(to work outside one's field)*. Наприклад: «Він економіст за фахом, але працює не за фахом, бо він став успішним фотографом».
-When we talk about our career goals and deep ambitions, we use the verb «**мріяти**» *(to dream)*. You can say «мріяти про нову професію» using the preposition «про» and the Accusative case. However, it is much more natural to say what you want to *be*. In this exact situation, we use the construction «**мріяти стати**» *(to dream of becoming)* followed by the Instrumental case. Ми часто кажемо: «Молодий студент серйозно мріє стати відомим юристом». Або ми можемо сказати так: «Ця маленька дівчинка дуже мріє стати талановитою художницею».
+Let's see how these questions and answers flow in a natural conversation. Imagine a high school reunion where two former classmates, Олена and Андрій, meet after five long years. They discuss what they studied and what they actually do now.
 
-<!-- INJECT_ACTIVITY: fill-in, Answer questions about professions using full Instrumental sentences, 8 items -->
+> — **Олена:** Привіт, Андрію! Скільки літ, скільки зим! Я так рада тебе бачити. *(Hi, Andrii! It's been ages! I am so glad to see you.)*
+> — **Андрій:** Олено, привіт! Я теж дуже радий. Як твої справи після школи? *(Olena, hi! I am also very glad. How are things after school?)*
+> — **Олена:** Усе чудово, дякую. Я закінчила університет і нарешті стала лікаркою. Тепер працюю у місцевій лікарні. *(Everything is great, thank you. I graduated from the university and finally became a doctor. Now I work in a local hospital.)*
+> — **Андрій:** Ого, це дуже серйозна професія! Я пишаюся тобою. А я завжди мріяв бути музикантом, але зрештою став програмістом. *(Wow, that is a very serious profession! I am proud of you. And I always dreamed of being a musician, but eventually became a programmer.)*
+> — **Олена:** Програмістом бути теж дуже цікаво! Ти працюєш у великій компанії? *(Being a programmer is also very interesting! Do you work in a big company?)*
+> — **Андрій:** Так, я розробляю мобільні додатки. Проте я все ще займаюся музикою і захоплююся гітарою у вільний час. *(Yes, I develop mobile applications. However, I still do music and am passionate about the guitar in my free time.)*
+
+Now let's expand your professional vocabulary so you can describe more career paths. You might need words like **перукар** (hairdresser) or **кухар** (cook). Ukrainian actively uses feminine forms for professions, so it is important to practice both versions.
+
+Талановитий перукар або перукарка працює у салоні краси та щодня робить людям гарні зачіски. Мій дядько — відомий кухар, він готує смачні страви у ресторані. Розумний журналіст шукає свіжі новини, а добра вчителька допомагає дітям у школі. Також ми часто зустрічаємо таких спеціалістів, як музикант чи музикантка, юрист чи юристка. Усі ці слова регулярно використовуються в орудному відмінку, коли ми розповідаємо про нашу роботу.
+
+> *A talented hairdresser (male) or hairdresser (female) works in a beauty salon and makes beautiful hairstyles for people every day. My uncle is a famous cook, he prepares tasty dishes in a restaurant. A smart journalist (male) looks for fresh news, and a kind teacher (female) helps children at school. Also, we often meet such specialists as a musician (male or female), a lawyer (male or female). All these words are regularly used in the Instrumental case when we talk about our work.*
+
+When discussing careers with friends, you will often hear idiomatic phrases about working in your studied field. You will also hear people talk about their dreams using the verb **мріяти** (to dream).
+
+В Україні дорослі часто запитують одне одного: «Ти працюєш за фахом чи не за фахом?». Працювати за фахом означає мати роботу, яка відповідає вашій університетській освіті. Наприклад, якщо ви вивчали медицину і зараз працюєте лікарем або інженером, ви працюєте за фахом. Також люди дуже часто говорять про свої дитячі мрії. Ми можемо використовувати граматичну конструкцію «мріяти стати» разом з орудним відмінком. Наприклад, у дитинстві мій брат мріяв стати вчителем.
+
+> *In Ukraine, adults often ask each other: "Do you work in your field or not in your field?". To work in your field means to have a job that matches your university education. For example, if you studied medicine and now work as a doctor or an engineer, you work in your field. Also, people very often talk about their childhood dreams. We can use the grammatical construction "to dream of becoming" together with the Instrumental case. For example, in childhood my brother dreamed of becoming a teacher.*
+
+:::info
+**Grammar box**
+When you use the verb **стати** (to become) after verbs like **мріяти** (to dream) or **хотіти** (to want), the following profession noun must be in the Instrumental case. For example: *Я хочу стати вчителем* (I want to become a teacher). This is because the action of "becoming" implies a change into a new state or role.
+:::
+
+<!-- INJECT_ACTIVITY: fill-in-answer-questions -->

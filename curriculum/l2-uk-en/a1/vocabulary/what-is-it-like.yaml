@@ -1,6 +1,42 @@
 vocabulary:
+- word: пога́ний
+  translation: bad
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: брудни́й
+  translation: dirty
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: сві́тлий
+  translation: light, bright
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: те́мний
+  translation: dark
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: а
+  translation: and/but — contrast
+  expression: false
+  pos: спол.
+  gender: ''
+  verified: true
+- word: але́
+  translation: but
+  expression: false
+  pos: спол.
+  gender: ''
+  verified: true
 - word: яки́й, яка, яке́
-  translation: what kind?, which?
+  translation: what kind? — m/f/n
   expression: false
   pos: ''
   gender: ''
@@ -53,93 +89,15 @@ vocabulary:
   pos: прикм.
   gender: ''
   verified: true
-- word: пога́ний
-  translation: bad
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: брудни́й
-  translation: dirty
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: сві́тлий
-  translation: light, bright
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: те́мний
-  translation: dark
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: а
-  translation: and, but (to show contrast)
-  expression: false
-  pos: спол.
-  gender: ''
-  verified: true
-- word: але́
-  translation: but
-  expression: false
-  pos: спол.
-  gender: ''
-  verified: true
 - word: ціка́вий
   translation: interesting
   expression: false
   pos: прикм.
   gender: ''
   verified: true
-- word: плака́т
-  translation: poster
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: атлас
-  translation: atlas
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: фо́то
-  translation: photo
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: листі́вка
-  translation: postcard
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: су́мка
-  translation: bag
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
 - word: і
   translation: and
   expression: false
   pos: спол.
-  gender: ''
-  verified: true
-- word: прикме́тник
-  translation: adjective
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: Яка твоя кімната?
-  translation: What is your room like?
-  expression: true
-  pos: ''
   gender: ''
   verified: true

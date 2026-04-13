@@ -1,37 +1,30 @@
 ## На ринку: скільки вам? (~800 words total)
-- P1 (~120 words): [The atmosphere of a Ukrainian food market (ринок) — cultural context of Besarabskyi or Zhytnii market in Kyiv, the direct interaction with vendors, and the expectation of quality and freshness.]
-- P2 (~130 words): [Grammar: Genitive case for quantity. Explaining the use of Genitive Singular after units of weight and volume, with examples: кілограм цукру (m), літр молока (n), пляшка олії (f).]
-- P3 (~120 words): [Container and portion words + Genitive. Detailed examples of common market purchases: пачка масла (a pack of butter), банка меду (a jar of honey), шматок сала (a piece of salo), десяток яєць (a dozen eggs).]
-- P4 (~130 words): [The Partitive Genitive (-у/-ю endings). Explaining why we say "кілограм сиру" or "трохи меду" instead of -а/-я, highlighting this as a distinct Ukrainian feature for substances and collective nouns.]
-- P5 (~120 words): [Prices and Numerals. Reviewing the rules for 1 (Nom. Sg.), 2-4 (Nom. Pl. — два кілограми, три пляшки), and 5+ (Gen. Pl. — п'ять кілограмів, десять яєць) in the context of cost and weight.]
-- P6 (~100 words): [Dialogue: At the produce stall. A natural exchange between Покупець and Продавець. Focus on asking "Скільки коштує...?", "Чи свіжі ці помідори?", and requesting specific weights using "Дайте, будь ласка..."]
-- P7 (~80 words): [Polite market language and diminutives. How vendors use forms like "картопелька" or "яблучка" to be friendly, and how to respond politely using "Дякую" and "На все добре".]
-- <!-- INJECT_ACTIVITY: fill-in-market-genitive --> [fill-in, Complete market dialogue lines with correct quantity + Genitive forms, 8 items]
+- P1 (~100 words): Set the vibrant scene of a Ukrainian "ринок" (market). Explain that buying food here isn't just about taking items off a shelf; it's an interactive experience where you must specify exactly what and how much you want, making it the perfect place to master the Genitive case.
+- P2 (~120 words): Present a natural market dialogue between a "покупець" (buyer) and a "продавець" (vendor). Include greetings, asking about freshness, and requesting items: "Дайте мені кілограм помідорів і півкіло огірків." The vendor asks: "Скільки вам?" and gives the total price.
+- P3 (~130 words): Introduce the core rule: Quantity + Genitive. Explain that whenever we specify an amount of something (a measure, a container, or a portion), the noun that follows must be in the Genitive case. Provide clear, everyday examples: "кілограм яблук" (a kilogram of apples), "літр молока" (a liter of milk), "пачка масла" (a pack of butter). 
+- P4 (~150 words): Deep dive into the Genitive endings used for food quantities. Contrast uncountable substances with countable items. For uncountable masculine nouns (substances/materials), highlight the highly productive -у/-ю ending: "кілограм сиру", "шматок цукру", "банка меду". For countable items in plural quantities, show the Genitive Plural: "кілограм помідорів", "десяток яєць".
+- P5 (~120 words): Expand on measure words and partitives. Explain how to ask for portions using words like "склянка" (glass), "шматок" (piece), and "банка" (jar). Show phrases like "склянка соку" or "шматок хліба". Explain the useful prefix "пів" (half): "пів кіло помідорів", "пів літра води".
+- P6 (~100 words): Teach how to ask for prices and be polite. Contrast singular and plural verbs: "Скільки коштує кілограм?" vs. "Скільки коштують яблука?". Introduce standard polite requests: "Дайте, будь ласка...", "Чи є у вас...?". Briefly mention that vendors often use diminutives ("картопелька", "помідорчики") to sound friendly.
+- P7 (~80 words): Briefly touch on the 5+ rule for numbers, as it is essential for paying. Remind learners that after numbers 5 and above, nouns take the Genitive Plural: "п'ять кілограмів", "двадцять гривень".
+- <!-- INJECT_ACTIVITY: fill-in-market-dialogue --> [fill-in, Complete market dialogue lines with correct quantity + Genitive forms, 8 items]
 
-## У лікаря: що вас турбує? (~750 words total)
-- P1 (~110 words): [Introduction to the medical setting (поліклініка). Basic etiquette for seeing a doctor (терапевт) and the primary question: "Що вас турбує?" (What is bothering you?).]
-- P2 (~140 words): [Describing pain: "У мене болить..." vs "У мене болять...". Explaining the agreement with the body part in Nominative: У мене болить голова (Sg.) vs У мене болять ноги (Pl.). Examples: горло, живіт, коліна, очі.]
-- P3 (~130 words): [Genitive for absence/lack in health contexts. Using "немає" to describe symptoms: немає температури (no fever), немає апетиту (no appetite), немає сил (no energy/strength).]
-- P4 (~130 words): [The preposition "від" (from/against) + Genitive. Explaining its dual role: indicating a cause (болить від холоду — hurts from the cold) and a purpose for medicine (таблетки від голови — headache pills, ліки від кашлю — cough medicine).]
-- P5 (~140 words): [Dialogue: At the Doctor's. A patient describes feeling weak and having a cough. The doctor checks for fever and gives a diagnosis. Focus on phrases: "Як ви почуваєтесь?", "Я застудився", "Вам треба відпочивати".]
-- P6 (~100 words): [Describing illness state with adverbs. Impersonal constructions: Мені погано, мені холодно, мене нудить. Contrasting these with Genitive constructions to show the variety of expressing health.]
-- <!-- INJECT_ACTIVITY: quiz-health-phrases --> [quiz, Choose the correct Genitive phrase for health complaints and remedies, 8 items]
+## У лікаря: що вас турбує? (~800 words total)
+- P1 (~80 words): Transition from the market to the clinic ("у лікаря"). Explain that whether you're buying food or describing how you feel, the Genitive case remains a vital tool, especially for talking about what you *don't* have or the source of a problem.
+- P2 (~120 words): Present a realistic doctor's visit dialogue. The doctor asks: "Що вас турбує?" (What troubles you?) and "Чи є температура?". The patient responds: "У мене болить горло" and "Немає температури". 
+- P3 (~150 words): Break down the critical construction for pain: "У мене болить / болять...". Emphasize that unlike English ("I have a headache"), in Ukrainian, the body part is the subject (in the Nominative case) and the verb "боліти" must agree with it in number. Show singular ("У мене болить голова") vs. plural ("У мене болять коліна").
+- P4 (~120 words): Introduce the Genitive of Absence for medical symptoms. Explain that to say you don't have a symptom, you use "немає" + Genitive case. Provide highly frequent examples: "немає температури" (no fever), "немає апетиту" (no appetite), "немає сил" (no energy).
+- P5 (~130 words): Explain impersonal constructions for general well-being. Teach how to use the Dative case with adverbs to describe states: "Мені погано" (I feel bad), "Мені холодно" (I am cold). Contrast this with the specific pain construction. Introduce the phrase "Мене нудить" (I feel nauseous).
+- P6 (~100 words): Teach the use of the preposition "від" (from) + Genitive to express the cause of a physical state. Give examples like "болить від холоду" (hurts from the cold) or "кашель від алергії" (cough from an allergy). 
+- P7 (~100 words): Cover common doctor's advice and instructions. Show simple imperatives mixed with quantity words (tying back to Section 1): "Пийте багато води" (Drink a lot of water), "Відпочивайте" (Rest). 
+- <!-- INJECT_ACTIVITY: quiz-health-complaints --> [quiz, Choose the correct Genitive phrase for health complaints and remedies, 8 items]
 
-## В аптеці та повсякденне здоров'я (~650 words total)
-- P1 (~120 words): [Context: The Pharmacy (аптека). Distinguishing between needing a "рецепт" (prescription) and buying "вітаміни" or "краплі від нежиті" (drops for a runny nose) over the counter.]
-- P2 (~130 words): [Prepositions of time and lifestyle + Genitive. "Після їжі" (after a meal), "перед сном" (before sleep), "без цукру" (without sugar). Practical instructions for taking medicine and maintaining a healthy diet.]
-- P3 (~130 words): [The "Для" preposition (for) + Genitive. Phrases for wellbeing: для здоров'я (for health), для серця (for the heart), для імунітету (for immunity). Connecting market food (яблука для здоров'я) with health goals.]
-- P4 (~120 words): [Dialogue: At the Pharmacy. Asking a pharmacist for advice: "Що ви порадите від болю в горлі?". Pharmacist recommends drops and explains when to take them (двічі на день після їди).]
-- P5 (~150 words): [Final consolidation. Comparing the logic of the market and the clinic: both use Genitive to quantify (кілограм яблук / багато ліків), to show lack (без пакету / немає нежиті), and to show purpose (ніж для хліба / ліки від грипу).]
+## В аптеці та повсякденне здоров'я (~600 words total)
+- P1 (~120 words): Move the scenario to the "аптека" (pharmacy). Present a short dialogue asking for advice and medication: "Мені потрібні краплі від нежиті," and "Що ви порадите від кашлю?". 
+- P2 (~140 words): Expand on the "від + Genitive" structure, this time meaning "against" or "for" an ailment. Explain that in Ukrainian, we ask for medicine *against* the symptom. Show vital vocabulary: "ліки від кашлю" (cough medicine), "краплі від нежиті" (drops for a runny nose), "таблетки від головного болю" (headache pills). Highlight the masculine -ю Genitive endings for pain/illness: кашлю, болю.
+- P3 (~130 words): Teach other essential Genitive prepositions used in health contexts. Cover "для" (for purpose): "для здоров'я" (for health); "без" (without): "без рецепта" (without a prescription); and "після/до" (after/before) for taking medication: "після їжі" (after a meal).
+- P4 (~120 words): Connect everyday health and diet back to the quantity concepts learned at the market. Discuss healthy habits using Genitive phrases: "дбати про здоров'я", eating "мало цукру" (little sugar), drinking "багато води" (a lot of water), or choosing products "без кофеїну" (without caffeine). 
 - <!-- INJECT_ACTIVITY: match-up-remedies --> [match-up, Match health problems to their remedies (ліки від..., краплі від...), 8 items]
-- <!-- INJECT_ACTIVITY: true-false-grammar --> [true-false, Judge whether shopping and health phrases use the Genitive correctly, 8 items]
+- P5 (~90 words): Summarize the module. Remind learners that the Genitive case is the ultimate connector in everyday life—whether you are asking for a quantity at the market ("кілограм яблук"), stating you lack a symptom ("немає температури"), or buying medicine for a specific problem ("від кашлю"). 
+- <!-- INJECT_ACTIVITY: true-false-genitive-usage --> [true-false, Judge whether shopping and health phrases use the Genitive correctly, 8 items]
 
-## Підсумок (~150 words)
-- P1 (~150 words): [Self-check questions:
-    - Як сказати "one kilogram of tomatoes" та "five kilograms of cucumbers"? (кілограм помідорів, п'ять кілограмів огірків)
-    - Як ввічливо попросити шматок сиру на ринку? (Дайте, будь ласка, шматок сиру)
-    - Яку фразу використати, якщо у вас болить голова, але немає температури? (У мене болить голова, але немає температури)
-    - Що ви купите в аптеці "від кашлю"? (сироп або таблетки від кашлю)
-    - Коли треба приймати ліки, якщо лікар сказав "після їди"? (after eating)]
-
-Grand total: ~2350 words
+Grand total: ~2200 words

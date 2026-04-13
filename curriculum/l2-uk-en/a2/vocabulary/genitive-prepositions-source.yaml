@@ -83,29 +83,23 @@ vocabulary:
   pos: ім.
   gender: ''
   verified: true
-- word: міжнаро́дний
-  translation: international
+- word: із
+  translation: from
   expression: false
-  pos: прикм.
+  pos: прийм.
   gender: ''
   verified: true
-- word: принести́
-  translation: to bring
+- word: зі
+  translation: from
   expression: false
-  pos: дієсл.
+  pos: прийм.
   gender: ''
   verified: true
-- word: сві́жий
-  translation: fresh
+- word: від
+  translation: from
   expression: false
-  pos: прикм.
+  pos: прийм.
   gender: ''
-  verified: true
-- word: по́дорож
-  translation: trip, journey
-  expression: false
-  pos: ім.
-  gender: ж.
   verified: true
 - word: пі́сля
   translation: after
@@ -113,500 +107,74 @@ vocabulary:
   pos: присл.
   gender: ''
   verified: true
-- word: важли́вий
-  translation: important
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: спілкува́ння
-  translation: communication
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: зві́дки
-  translation: where from
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: запита́ння
-  translation: question
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: вимага́ти
-  translation: to require
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: поверну́тися
-  translation: to return
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: ви́хід
-  translation: exit (from verb вийти)
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: аудито́рія
-  translation: auditorium, classroom
+- word: милозву́чність
+  translation: euphony
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: світ
-  translation: world
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: тісни́й
-  translation: tight, small (as in 'small world')
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: милозву́чний
-  translation: euphonic, melodic
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: вимовля́ти
-  translation: to pronounce
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: комфо́рт
-  translation: comfort
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: село́
-  translation: village
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: зо́лото
-  translation: gold
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: родом з
-  translation: originally from
+- word: Звідки?
+  translation: Where from?
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: рі́зний
-  translation: different, various
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: мі́сто
-  translation: city
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: зро́блено
-  translation: made
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: де́рево
-  translation: wood, tree
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: скло
-  translation: glass (material)
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: скля́нка
-  translation: glass (drinking vessel)
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: о́вочі
-  translation: vegetables
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: я́блуко
-  translation: apple
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: помідо́р
-  translation: tomato
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: су́кня
-  translation: dress
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: смак
-  translation: taste
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: фру́кти
-  translation: fruits
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: поча́тися
-  translation: to start, to begin
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: ра́нок
-  translation: morning
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: понеді́лок
-  translation: Monday
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: вівто́рок
-  translation: Tuesday
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: ве́чір
-  translation: evening
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: обід
-  translation: lunch
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: без вихідних
-  translation: without days off
+- word: Від кого?
+  translation: From whom?
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: відпочи́ти
-  translation: to rest
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: отри́мувати
-  translation: to receive
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: нови́ни
-  translation: news
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: приві́т
-  translation: greeting, hi
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: повідо́млення
-  translation: message
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: дире́ктор
-  translation: director
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: лі́кар
-  translation: doctor
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: поси́лка
-  translation: package, parcel
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: сувені́р
-  translation: souvenir
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: коле́га
-  translation: colleague
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: завда́ння
-  translation: task, assignment
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: пека́рня
-  translation: bakery
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: сюрпри́з
-  translation: surprise
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: центр
-  translation: center
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: вокза́л
-  translation: station (train/bus)
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: мо́ре
-  translation: sea
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: метро́
-  translation: subway, metro
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: рі́чка
-  translation: river
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: аеропо́рт
-  translation: airport
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: зру́чно
-  translation: convenient
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: захища́ти
-  translation: to protect
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: головний біль
-  translation: headache
+- word: Що було потім?
+  translation: What happened next?
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: лі́ки
-  translation: medicine
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: со́нце
-  translation: sun
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: за́хист
-  translation: protection
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: стрес
-  translation: stress
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: засту́да
-  translation: cold (illness)
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: з-під
-  translation: from under
-  expression: false
-  pos: прийм.
-  gender: ''
-  verified: true
-- word: лі́жко
-  translation: bed
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: ко́вдра
-  translation: blanket
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: уро́к
-  translation: lesson
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: ле́кція
-  translation: lecture
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: свя́то
-  translation: holiday, celebration
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: зу́стріч
-  translation: meeting
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: вто́млений
-  translation: tired
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: змі́на
-  translation: shift (work)
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: вихідні́
-  translation: weekend
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: відра́зу
-  translation: immediately
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: пробу́дження
-  translation: waking up
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: пробі́жка
-  translation: jog, run
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: душ
-  translation: shower
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: до
-  translation: before, until
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: війна́
-  translation: war
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: відбудува́ти
-  translation: to rebuild
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: ї́жа
-  translation: food
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: сон
-  translation: sleep
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: Як справи?
-  translation: How are you?
+- word: піца з вечері
+  translation: pizza left over from dinner
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: Рада тебе бачити!
-  translation: Glad to see you! (feminine)
+- word: хліб зі сніданку
+  translation: bread left over from breakfast
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: до обіду
+  translation: before lunch
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: після обіду
+  translation: after lunch
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: після довгого дня
+  translation: after a long day
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: після важкої роботи
+  translation: after hard work
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: після смачного обіду
+  translation: after a tasty lunch
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: після зимових канікул
+  translation: after the winter holidays
   expression: true
   pos: ''
   gender: ''

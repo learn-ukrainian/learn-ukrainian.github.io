@@ -35,7 +35,7 @@ Grand total: ~4400 words
 <previous_context>
 [...previous sections truncated...]
 
-допомогою недоконаного виду («була», «спало»). Це наше тло. Наступні дії несподівано розбивають цю тишу. Дієслова доконаного виду («постукав», «прокинувся», «встав», «підійшов») створюють швидкий ланцюжок реакцій. Контраст між статичним фоном і динамічними подіями робить сцену напруженою. > *True storytelling mastery lies in the correct alternation of the two verb aspects. Let's look at this paragraph. "It was deep night. The city had long been sleeping. Suddenly someone knocked loudly on the door. I instantly woke up, got out of bed, and went to the window." The first two sentences create an atmosphere of calm using the imperfective aspect ("була", "спало"). This is our background. The subsequent actions unexpectedly shatter this silence. The perfective verbs ("постукав", "прокинувся", "встав", "підійшов") create a rapid chain of reactions. The contrast between the static background and the dynamic events makes the scene tense.* Your choice of aspect dictates the overall pacing and emotional rhythm of your story. Using too many perfective verbs in a row makes the narrative feel frantic, rushed, and remarkably similar to a list of facts. Adding imperfective "padding" slows things down and makes the world feel immersive, breathable, and natural. Вибір виду безпосередньо впливає на темп вашої історії. Якщо ви використаєте виключно дієслова доконаного виду («я прийшов, сів, поїв, написав лист і ліг спати»), текст звучатиме як **сухий поліцейський звіт** (dry police report). Події відбуваються занадто швидко, і читач не встигає відчути атмосферу. Щоб історія стала живою, її потрібно «уповільнити» за допомогою недоконаного виду. Додайте опис кімнати, вашого настрою чи погоди за вікном. Цей фоновий матеріал дає читачеві **простір для уяви** (room for imagination) перед наступною подією. :::tip **Quick tip** Think of imperfective verbs as breathing room for your story. They allow the listener to mentally process the scene before the perfective verbs drive the plot forward again. ::: <!-- INJECT_ACTIVITY: fill-in-aspect-narrative --> <!-- INJECT_ACTIVITY: match-aspect-logic --> Let's listen to two writers discussing how to fix the pacing of a short story draft. They realize that adding more imperfective background can completely transform the emotional impact of the final events. > — **Остап:** Цей фінал звучить занадто сухо. Головний герой просто зайшов у кімнату, побачив лист і заплакав. *(This ending sounds too dry. The main character just walked into the room, saw the letter, and cried.)* > — **Марія:** Згодна, тут є лише голі події. Нам потрібно додати більше недоконаного виду, щоб створити емоційну напругу. *(I agree, there are only bare events here. We need to add more imperfective aspect to create emotional tension.)* > — **Остап:** Може, опишемо порожню кімнату? Що там відбувалося до його приходу? *(Maybe we describe the empty room? What was happening there before his arrival?)* > — **Марія:** Точно. Напиши, що у відкрите вікно дув вітер, а на столі самотньо горіла лампа. *(Exactly. Write that the wind was blowing into the open window, and a lamp was burning lonely on the table.)* > — **Остап:** Супер. Тоді його доконані дії наприкінці здаватимуться набагато драматичнішими. *(Super. Then his perfective actions at the end will seem much more dramatic.)*
+to the window. Here we clearly see a classic sequence of perfective actions that rapidly develop the plot against the background of the night silence.* The deliberate balance between the two narrative layers directly controls the overall pacing of your story. If you use too many perfective verbs in a row, the narrative feels frantic, heavily rushed, or like a dry police report. The actions fire off rapidly without giving the reader any mental space to visualize the scene. Conversely, adding strategic imperfective "padding" between your major events significantly slows the pace down, making the story feel much more natural and deeply immersive. Якщо ви просто скажете: «Я прийшов, побачив, переміг, узяв речі і пішов», це звучить надзвичайно сухо і швидко. Це просто статистичний звіт про події. Але якщо ви додасте туди трохи опису: «Я прийшов до кімнати. Там тихо грала приємна музика. Я уважно подивився на стіл, побачив старий лист і швидко сховав його», історія одразу оживає. Ваша розповідь стає значно багатшою завдяки правильному граматичному балансу видів. <!-- INJECT_ACTIVITY: fill-in, choose the correct aspect for verbs in a narrative passage --> <!-- INJECT_ACTIVITY: match-up, match narrative functions to the correct aspect/example --> :::info **The Rhythm of Narration** Think of imperfective verbs as the "brakes" and perfective verbs as the "gas pedal." Use imperfective verbs to slow down, build tension, and let the reader look around the scene. When it is time to accelerate the plot and deliver the climax, hit the perfective gas pedal. ::: Sometimes, successfully revising a story simply means critically adjusting its aspectual balance. When a narrative feels flat, rushed, or its emotional climax lacks impact, the most effective solution is often to manipulate the background and foreground layers. By deliberately expanding the imperfective setting and slowing down the buildup, the perfective turning points will strike the reader with much greater force. Listen to these two friends discussing an early draft of a new story and using grammatical concepts to improve it. > — **Марко:** Цей старий **спогад** звучить трохи нудно. Я написав: «Ми зайшли в темний ліс, побачили великого вовка і швидко втекли». *(This old memory sounds a bit boring. I wrote: "We walked into the dark forest, saw a big wolf and ran away quickly.")* > — **Оксана:** Тобі дуже бракує якісного тла! Додай туди більше описів. Напиши, що холодний вітер сильно шумів, а ви дуже повільно йшли вузькою стежкою. *(You really lack quality background! Add more descriptions there. Write that the cold wind was rustling strongly, and you were walking very slowly along the narrow path.)* > — **Марко:** А, тепер розумію! **Поки** ми йшли, нам було дуже страшно. А **тоді** ми **раптом** побачили вовка! *(Ah, now I understand! While we were walking, we were very scared. And then we suddenly saw a wolf!)* > — **Оксана:** Саме так! Якщо ти гарно розшириш недоконане тло, твоя фінальна доконана подія стане набагато сильнішою та емоційнішою. *(Exactly! If you expand the imperfective background nicely, your final perfective event will become much stronger and more emotional.)*
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -696,6 +696,40 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (4/4).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] тло
+- [ ] передній план
+- [ ] розповідь
+- [ ] оповідання
+- [ ] оповідач
+- [ ] подія
+- [ ] опис
+- [ ] спочатку
+- [ ] потім
+- [ ] раптом
+- [ ] нарешті
+- [ ] тим часом
+- [ ] одночасно
+- [ ] послідовно
+- [ ] послідовність
+- [ ] спогад
+- [ ] поки
+- [ ] після цього
+- [ ] тоді
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Підсумок: аспект як наративний інструмент (~1150 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

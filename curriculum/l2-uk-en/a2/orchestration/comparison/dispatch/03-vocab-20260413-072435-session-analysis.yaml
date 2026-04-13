@@ -1,0 +1,75 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T05-23-1192c824.json
+phase: vocab
+prompt_chars: 20696
+response_chars: 1438
+prompt_words: 3023
+response_words: 153
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.0386
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.0111
+- name: plan
+  start: 1028
+  length: 19668
+  fraction: 0.9503
+large_sections:
+- plan
+directives_total: 12
+directives_covered: 0
+directives_missed:
+- kind: must
+  text: In Ukrainian, a few very common adjectives completely change their root when
+    forming degrees of comparison, and these irregular forms must be memorized.
+  covered: false
+  coverage_note: 1/18 keywords (6%)
+- kind: must
+  text: '" Because forms like **кращий** or **більший** are already in the comparative
+    degree, you must *never* add the word **більш** in front of them.'
+  covered: false
+  coverage_note: 3/17 keywords (18%)
+- kind: must
+  text: You must choose either the prefix/suffix approach (the simple form) OR the
+    separate word (the compound form), but never both at the same time.
+  covered: false
+  coverage_note: 1/17 keywords (6%)
+- kind: must
+  text: You must memorize the irregular forms.
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: inject_activity
+  text: fill-in-comparative
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: true-false-constructions
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-match-adjective-to-its-superlative-form
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-irregular-forms-choose-the-correct-suppletive-form
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: error-correction-double-comparisons-find-and-fix-wrong-comparative-and-superlative-forms-e-g
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-superlatives-match-adjective-to-its-superlative-form
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: true-false-comparative-constructions-identify-correct-and-incorrect-comparative-constructions
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-comparative-form-the-comparative-from-the-base-adjective
+  covered: false
+  coverage_note: marker missing

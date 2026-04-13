@@ -22,7 +22,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-до нього м'який звук «л'». Цей гнучкий **місток** *(bridge)* дозволяє нам уникати незручних комбінацій приголосних. Іноземцям часто буває складно запам'ятати це правило, адже в багатьох мовах такого явища не існує. Як тільки ви відчуєте цю мелодику, ви почнете додавати цей звук автоматично. Ця специфічна співпраця робить українські дієслова надзвичайно м'якими під час швидкого спілкування. Давайте детально розглянемо всю цю групу губних приголосних на реальних життєвих прикладах. Найпопулярніший звук у цій категорії — це дзвінкий «б», який закономірно перетворюється на комбінацію «бл». Класичний приклад — це дієслово «любити». Коли ви говорите про свої почуття, ви ніколи не кажете «я любу». Ви повинні сказати: «я ніжно люблю цю музику». Інший популярний приклад — дієслово «робити». Правильна форма звучить так: «я завжди роблю свою роботу вчасно». Глухий звук «п» також працює за цим універсальним правилом і утворює мелодійну комбінацію «пл». Візьмемо дієслово «купити». У магазині ви впевнено скажете: «я обов'язково куплю цей смачний хліб». З дієсловом «ліпити» ваша фраза звучатиме так: «я із задоволенням ліплю красиву вазу з глини». Звук «в» завжди органічно перетворюється на комбінацію «вл». Наприклад, від дієслова «ловити» ми отримуємо форму «ловлю». Рибалка гордо скаже: «я часто ловлю велику рибу». Дієслово «ставити» дає форму «ставлю»: «я обережно ставлю гарячу чашку на стіл». Носовий звук «м» закономірно трансформується у групу «мл». Від дієслова «дрімати» ми утворюємо форму «дрімлю». Ви можете сказати: «я солодко дрімлю у зручному кріслі після важкого дня». Нарешті, існує найрідкісніший звук у цій компанії — звук «ф», який переходить у «фл». Ви майже ніколи не зустрінете його в базовій розмові, але він є у слові «графити». Інженер скаже: «я точно графлю цей великий аркуш». Як бачите, це фонетичне правило є стабільним для всіх губних звуків. Кожен із них слухняно приймає до себе м'який звук «л», формуючи цілісну і логічну систему. Тепер ми маємо обговорити один критично важливий граматичний нюанс, який відрізняє ці дієслова від попередніх груп. Згадайте дієслова із зубними приголосними звуками. Там ми бачили чергування виключно у формі першої особи однини: «я ходжу», але «ти ходиш», «він ходить», «вони ходять». Для дієслів другої дієвідміни з губними приголосними правило працює значно ширше. Наш вставний звук «л» з'являється не лише у формі першої особи однини, але й **обов'язково** *(mandatorily/necessarily)* у формі третьої особи множини. Це означає, що ви повинні казати «я дуже люблю», і так само ви повинні казати «вони дуже люблять». Давайте проаналізуємо повну парадигму дієслова «робити», щоб побачити цей **контраст** *(contrast)*. Перша особа однини: «я роблю». Друга особа однини: «ти робиш». Третя особа однини: «він робить». Перша особа множини: «ми робимо». Друга особа множини: «ви робите». А ось третя особа множини: «вони роблять» (наш звук «л» тріумфально повертається!). Ця специфічна **симетрія** *(symmetry)* між формами «я» та «вони» є фірмовою ознакою всіх дієслів другої дієвідміни з губними основами. Ваше головне завдання — навчитися миттєво додавати цей вставний звук у двох різних граматичних особах. Ця навичка вимагає трохи часу, але вона є абсолютно необхідною. Якщо ви кажете «я куплю», ви маєте казати «вони куплять». Якщо «я ловлю», то і «вони ловлять». Це справжня фонетична гармонія. <!-- INJECT_ACTIVITY: sort-alternation-groups -->
+перетворюється на «люблю». Звук [п] так само закономірно переходить у [пл]. Від інфінітива «купити» ви утворюєте форму «куплю», а дієслово «ліпити» змінюється на «ліплю». Губний звук [в] перетворюється на [вл]. Від дієслова «ловити» утворюється форма «ловлю», а від слова «ставити» — форма «ставлю». The nasal labial consonant [м] follows this exact rule, creating the [мл] cluster. The verb «ломити» (to break) becomes «ломлю». Even the rare borrowed consonant [ф] participates; the verb «графити» (to draw lines) yields the form «графлю». The mechanism is blind to whether the word is native or borrowed; if the stem ends in a labial consonant, the soft [л] is inserted. Now we examine the specific conjugation scope for this labial group. You must pay attention to the **дієвідміна** (conjugation class — verb classification) and the **особа** (grammatical person — я/ти/він). When looking at the **парадигма** (paradigm — full set of inflected forms), the pattern is clear. For verbs in the second conjugation class in the **теперішній час** (present tense), the inserted [л] appears not just in the first person singular, but also in the third person plural. Це критична відмінність від чергування зубних приголосних, де зміна відбувається лише в першій особі однини. Коли ми відмінюємо дієслово «любити», ми бачимо чітку систему: я люблю, ти любиш, він любить, ми любимо, ви любите, вони люблять. Вставний звук з'являється на початку і в кінці цієї системи. > *This is a critical difference from the alternation of dental consonants, where the change occurs only in the first person singular. When we conjugate the verb "to love", we see a clear system: I love, you love, he loves, we love, you (pl.) love, they love. The inserted sound appears at the beginning and at the end of this system.* :::info **Grammar box** For II дієвідміна verbs ending in a labial consonant (б, п, в, м, ф), the [л] is inserted in **both** the 1st person singular (я роблю) AND the 3rd person plural (вони роблять). All other persons (ти, він, ми, ви) retain the plain labial consonant (робиш, робить). ::: To truly internalize this pattern, let's return to our television cooking competition. The chef and host constantly describe their actions, illustrating when the epenthetic [л] appears. > — **Оксана:** Я зараз акуратно ліплю вареники з вишнею. *(I am currently carefully sculpting cherry varenyky.)* > — **Ведучий:** Оксана майстерно ліпить вареники. А що роблять інші учасники? *(Oksana is masterfully sculpting varenyky. And what are the other participants doing?)* > — **Оксана:** Вони просто стоять і ловлять кожне моє слово. Вони дуже люблять мої десерти! *(They are just standing and catching my every word. They really love my desserts!)* > — **Ведучий:** Якщо ви дозволите, я обов'язково куплю ваш рецепт. *(If you allow it, I will definitely buy your recipe.)* > — **Оксана:** Я зазвичай не продаю секрети, але сьогодні я роблю виняток. *(I usually do not sell secrets, but today I am making an exception.)* <!-- INJECT_ACTIVITY: group-sort, Sort verbs by alternation type: [д]->[дж], [т]->[ч], [з]->[ж], [с]->[ш], labial+[л], 10 items -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -635,7 +635,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -648,18 +715,67 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] чергування (alternation — systematic sound change)
+- [ ] дієслово (verb)
+- [ ] дієвідміна (conjugation class — verb classification)
+- [ ] особа (grammatical person — я/ти/він)
+- [ ] теперішній час (present tense)
+- [ ] інфінітив (infinitive — base verb form)
+- [ ] зубний (dental — consonant formed at the teeth: д, т)
+- [ ] свистячий (sibilant — whistling consonant: з, с, ц, дз)
+- [ ] губний (labial — consonant formed with lips: б, п, в, м, ф)
+- [ ] задньоязиковий (velar — consonant formed at back of mouth: г, к, х)
+- [ ] доконаний вид (perfective aspect)
+- [ ] недоконаний вид (imperfective aspect)
+- [ ] парадигма (paradigm — full set of inflected forms)
+- [ ] палаталізація (palatalization — softening of consonant)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Чергування при утворенні недоконаних дієслів (~600 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

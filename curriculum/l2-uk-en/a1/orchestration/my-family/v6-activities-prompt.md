@@ -1,4 +1,4 @@
-<!-- version: 1.1.0 | updated: 2026-03-31 -->
+<!-- version: 1.2.0 | updated: 2026-04-12 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -11,6 +11,35 @@ Generate an `activities/my-family.yaml` file for module **6: My Family** (a1).
 
 ---
 
+## ⚠️ HARD COUNT TARGETS — READ TWICE
+
+These are the binding numerical contracts for THIS module. The audit will FAIL if you fall short.
+
+| Bucket | Min | Max | Notes |
+|---|---|---|---|
+| Total activities | 10 | 10+ | inline + workbook combined |
+| Inline (lesson tab) | 4 | 6 | one per `<!-- INJECT_ACTIVITY -->` marker, see below |
+| Workbook (Зошит tab) | 6 | 9 | extended practice |
+| Items per activity | 6 | — | each activity must have at least 6 items (unless its type cap is lower — see Activity Type Reference below) |
+
+**You MUST ship at least 4 inline activities AND at least 6 workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+
+**Type diversity is required.** The module (inline + workbook combined) MUST use at least **0** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level. (If `0` is `0`, the audit profile for this level does not enforce type diversity — but variety still produces a better lesson, so aim for 4+ types when the workbook allows it.)
+
+---
+
+## Allowed types for THIS level
+
+- **Inline (lesson) types:** image-to-letter, letter-grid, match-up, watch-and-repeat, quiz, true-false, fill-in, classify
+- **Inline priority (preferred):** image-to-letter, match-up, fill-in, quiz, watch-and-repeat
+- **Workbook types:** fill-in, match-up, group-sort, anagram, unjumble, quiz, true-false, classify, divide-words, count-syllables, pick-syllables, observe, phrase-table, odd-one-out
+- **Workbook priority (preferred):** fill-in, match-up, group-sort, anagram, unjumble
+- **FORBIDDEN at this level:** cloze, error-correction, mark-the-words, translate, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, highlight-morphemes, grammar-identify, select
+
+Pick from the allowed list. Lean heavily on the priority lists. Do not use any forbidden type — the build will reject it.
+
+---
+
 ## Inline vs Workbook Split
 
 Activities have two placement categories:
@@ -19,7 +48,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Rule of thumb:** inline = 2-3 quick checks after key teaching points. Workbook = 4-8 deeper practice exercises covering the full topic.
+**Rule of thumb:** inline = 4–6 quick checks after key teaching points. Workbook = 6–9 deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
 
 ---
 
@@ -27,10 +56,10 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: match-family -->`
-- `<!-- INJECT_ACTIVITY: quiz-possession -->`
+- `<!-- INJECT_ACTIVITY: match-up-family-vocab -->`
+- `<!-- INJECT_ACTIVITY: quiz-u-tebe-ie -->`
 - `<!-- INJECT_ACTIVITY: fill-in-possessives -->`
-- `<!-- INJECT_ACTIVITY: fill-in-dialogue -->`
+- `<!-- INJECT_ACTIVITY: fill-in-dialogue-intro -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -106,117 +135,93 @@ required:
 ## Module Content (the prose the learner reads before exercises)
 
 <module_content>
-## Діало́ги — Dialogues
+## Діалоги (Dialogues)
 
-When you meet someone new in Ukraine, small talk often quickly turns to your personal life. People want to know who you are and where you come from. Sharing information about your **сім'я́** (family) is the most common way to build a connection. Showing photos of your relatives on your phone is a natural icebreaker. You can easily start a conversation by showing a picture and talking about "my family" — **моя́ сім'я**.
+Talking about your family and sharing photos is a natural way to connect with new friends. In Ukrainian culture, family connections are very important. The following examples show how people introduce their relatives in everyday conversations.
 
-Here is a typical conversation between two friends, Оля and Марк. They are taking a break and looking at photos on their phones.
+> **Оля:** Привіт, Марку! Що це? *(Hi, Mark! What is this?)*
+> **Марк:** Привіт! Це фото. *(Hi! This is a photo.)*
+> **Оля:** У тебе є брати чи сестри? *(Do you have brothers or sisters?)*
+> **Марк:** Так, у мене є два брати і одна сестра. *(Yes, I have two brothers and one sister.)*
+> **Оля:** Ого! У мене тільки один брат. *(Wow! I have only one brother.)*
+> **Марк:** Як його звати? *(What is his name?)*
+> **Оля:** Коля. *(Kolya.)*
 
-> **Оля:** У тебе́ є брати́ чи се́стри? *(Do you have brothers or sisters?)*
-> **Марк:** Так, у мене́ є два брати і одна́ сестра́. *(Yes, I have two brothers and one sister.)*
-> **Оля:** Ого́! У мене ті́льки оди́н брат. *(Wow! I have only one brother.)*
-> **Марк:** Як йо́го зва́ти? *(What is his name?)*
-> **Оля:** Ко́ля. *(Kolya.)*
+In this first conversation, Mark and Olya are on a video call. Mark uses the phrase **у тебе є** (you have, informal) to ask a question, and Olya answers with **у мене є** (I have). Notice the word **чи** (or), which is used specifically in questions. They also use the numbers **один** and **одна** to count their siblings.
 
-Notice the core question: **У тебе є брати чи сестри?** means "Do you have brothers or sisters?". The word **чи** means "or" in questions. Марк responds with a very specific pattern: **Так, у мене є два брати і одна сестра** (Yes, I have two brothers and one sister). He then asks about the brother's name using **Як його звати?** (What is his name?).
+> **Даша:** Андрію, дивись. Це моя сім'я на фотографії. *(Andriy, look. This is my family in the photograph.)*
+> **Андрій:** Класно! Хто це? *(Cool! Who is this?)*
+> **Даша:** Це моя мама Марина. Це мій тато Євген. *(This is my mom Maryna. This is my dad Yevhen.)*
+> **Андрій:** А хто там? *(And who is there?)*
+> **Даша:** Це моя сестра Катя і мої брати — Іван і Денис. *(This is my sister Katya and my brothers — Ivan and Denys.)*
+> **Андрій:** А це твоя бабуся? *(And is this your grandmother?)*
+> **Даша:** Так, її звати Тетяна. *(Yes, her name is Tetiana.)*
 
-:::tip
-In Ukraine, asking **У тебе є брати чи сестри?** is a very normal, polite way to show interest in a new acquaintance's life. It is not considered too personal for a friendly chat.
-:::
+Dasha is showing family photos to a new Ukrainian friend at school. She uses **це моя сім'я** (this is my family) to set the context. When identifying each person, she pairs the correct possessive pronoun with the family member: **моя мама** (my mom), **мій тато** (my dad), and **моя сестра** (my sister). She also introduces **мої брати** (my brothers) in the plural form.
 
-Later, Оля shows a larger group picture on her screen.
+Once you know the basic words, you can create a short self-introduction combining all your skills. This is a connected monologue where you present yourself and your relatives smoothly.
 
-> **Оля:** Це моя сім'я на фотогра́фії. *(This is my family in the photograph.)*
-> **Марк:** Кла́сно! Хто це? *(Cool! Who is this?)*
-> **Оля:** Це моя ма́ма Мари́на. *(This is my mom Maryna.)*
-> **Оля:** Це мій та́то Євге́н. *(This is my dad Yevhen.)*
-> **Оля:** Це моя сестра Катя́ і мої́ брати — Іва́н і Дени́с. *(This is my sister Katya and my brothers — Ivan and Denys.)*
-> **Марк:** А це твоя́ бабу́ся? *(And is this your grandmother?)*
-> **Оля:** Так, її звати Тетя́на. *(Yes, her name is Tetiana.)*
-
-This dialogue relies heavily on the **Це** (This is) pattern combined with possessive words. Оля identifies each person clearly: **Це моя мама** (This is my mom) and **Це мій тато** (This is my dad). When Марк asks about the older woman, he points and asks, **А це твоя бабуся?** (And is this your grandmother?). Оля confirms and gives her name using the phrase **її звати** (her name is).
-
-You can combine these questions and answers into a connected self-introduction. This is how you introduce your world to someone else in a clear, structured way.
-
-> Приві́т! Мене звати А́нна. *(Hi! My name is Anna.)*
-> Я з Ло́ндона. *(I am from London.)*
-> Моя мама — вчи́телька. *(My mom is a teacher.)*
-> Мій тато — інжене́р. *(My dad is an engineer.)*
+> Привіт! Мене звати Антон. *(Hi! My name is Anton.)*
+> Це моя сім'я. *(This is my family.)*
+> Моя мама — вчителька. *(My mom is a teacher.)*
+> Мій тато — інженер. *(My dad is an engineer.)*
 > У мене є один брат. *(I have one brother.)*
+> Його звати Дмитро. *(His name is Dmytro.)*
+> Ми живемо тут. *(We live here.)*
 
-This short monologue demonstrates how family vocabulary anchors your personal identity. You state your name, your origin, identify your parents and their professions, and mention your siblings.
+This brief text shows how you will eventually talk about your own world. It strings together your name, your parents' professions, and what siblings you have. Practicing this short pattern builds confidence for real conversations. When you can introduce your family smoothly, you take a major step toward fluency.
 
-## Сім'я — Family Vocabulary
+## Сім'я (Family Vocabulary)
 
-Ukrainian has two common words for "family." The word **сім'я** typically refers to the immediate, nuclear family. Notice the apostrophe in this word; it tells you to pause slightly and pronounce the **я** clearly. The word **роди́на** is also very common but often implies a broader network of relatives or kin. Both words are used frequently in daily life.
+Ukrainian has two common words for family: **сім'я** (family) and **родина** (family). Both are widely used and perfectly natural. When talking about your immediate circle, you will need the core terms for relatives. The most essential pairs are **мама** (mother) or **мати**, and **тато** (father) or **батько**. In everyday conversation, **мама** and **тато** are by far the most common and affectionate choices. You will also frequently talk about a **брат** (brother) and a **сестра** (sister). Parents will speak about their **син** (son) or **дочка** (daughter), which can also be affectionately called **донька**.
 
-For your immediate family, you will use these core terms. A mother is **ма́ти** (formal) or **мама** (informal). A father is **ба́тько** (formal) or **тато** (informal). In everyday conversation, Ukrainians almost always use **мама** and **тато**. A brother is a **брат**, and a sister is a **сестра**. If you have children, a son is a **син**, and a daughter is a **дочка́** or **до́нька**. Both words for daughter are equally common and correct. A husband is a **чолові́к** (which also means "man"), and a wife is a **дружи́на**.
-
-Your extended family network adds more essential words to your vocabulary. A grandmother is a **бабуся**, and a grandfather is a **діду́сь**. An aunt is a **ті́тка**, and an uncle is a **дя́дько**. 
-
-English has convenient grouping words like "grandparents," but Ukrainian operates differently. Ukrainian has absolutely no single word that translates to "grandparents." If you want to talk about them together, you must name them both. You say **бабуся і дідусь** (grandmother and grandfather) or **мої дідусь і бабуся** (my grandfather and grandmother). This is a strict rule of the language. You must always specify both individuals when referring to your grandparents.
-
-<!-- INJECT_ACTIVITY: match-family -->
-
-## У мене є — I have
-
-Expressing possession in Ukrainian requires a completely different mindset from English. English uses the active verb "to have," as in "I have a brother." Ukrainian avoids using a direct verb for simple possession at this level. Instead, Ukrainian uses a spatial construction that literally translates to "At me there-is."
-
-The core phrase for "I have" is **у мене є**. This is a fixed chunk of language that you should memorize exactly as it is. 
-To ask someone informally if they have something, use **у тебе є** (you have). 
-To ask someone formally, or a group of people, use **у вас є** (you have).
-
-If you want to say "I have a brother," you say **У мене є брат** (At me there-is a brother). The person possessing the item comes first in this special phrase, followed by the word **є**, which simply means "is" or "exists." 
+As you expand your vocabulary to the extended family, you will learn other important pairs. You have a **бабуся** (grandmother) and a **дідусь** (grandfather). Your parents' siblings are your **тітка** (aunt) and **дядько** (uncle). The general word for parents is **батьки** (parents). For married couples, the terms are **чоловік** (man / husband) and **дружина** (wife). Note that **чоловік** can mean both "man" and "husband" depending on the context, while **дружина** specifically means "wife".
 
 :::caution
-Never try to translate "I have" word-for-word using a verb like you do in English. Always use the fixed phrase **у мене є**. This is the only natural way to express basic possession.
+English has the convenient word "grandparents" to refer to both the grandmother and grandfather together. Ukrainian has no single equivalent word for this concept. You must always say **бабуся і дідусь** (grandmother and grandfather) when referring to them together.
 :::
 
-Turning this statement into a question is incredibly simple. You do not change the word order at all. You only change your intonation. Your voice must rise clearly at the end of the sentence: **У тебе є сестра? ↗** (Do you have a sister?).
+<!-- INJECT_ACTIVITY: match-up-family-vocab -->
 
-To answer "no" to these questions right now, simply say **Ні** (No). If you want to provide more context without using complex negative grammar, you can say **Ні, у мене тільки один брат** (No, I have only one brother). The word **тільки** means "only."
+## У мене є (I have)
 
-When you count your family members, the numbers one and two must match the gender of the person. The number one changes depending on who you are counting: **один брат** (one brother - masculine) versus **одна сестра** (one sister - feminine). The number two also changes in the exact same way: **два брати** (two brothers - masculine) versus **дві сестри** (two sisters - feminine).
+Ukrainian expresses possession very differently than English. Instead of using a direct verb like "to have", the language uses a structure that literally translates to "at me there is". The core phrase is **у мене є** (I have). You should memorize this as a fixed, complete chunk. For basic communication, you only need three forms right now: **у мене є** (I have), **у тебе є** (you have, informal), and **у вас є** (you have, formal or plural). If you want to talk about a sibling, you simply state: **У мене є брат** (I have a brother) or **У мене є сестра** (I have a sister).
 
-<!-- INJECT_ACTIVITY: quiz-possession -->
+To form a question, you do not need to change the word order. You only need to use a rising intonation at the end of the sentence: **У тебе є сестра?** ↗ (Do you have a sister?). When answering negatively at this beginner stage, simply reply with **Ні** (No) or provide a correcting statement like **Ні, у мене тільки один брат** (No, I have only one brother). The word **тільки** (only) helps emphasize the true number and makes your response sound more natural in conversation.
 
-## Мій, моя, моє́ — Possessive Pronouns
-
-When you talk about your family, you need possessive words. The Ukrainian word for "my" changes its shape to match the grammatical gender of the noun it belongs to. The pronoun must agree with the person or object, not with you.
-
-If the family member is masculine, use **мій**: **мій тато** (my dad), **мій брат** (my brother), **мій син** (my son). 
-If the family member is feminine, use **моя**: **моя мама** (my mom), **моя сестра** (my sister), **моя донька** (my daughter). 
-If the noun is neuter, use **моє**: **моє мі́сто** (my city).
-If you are talking about multiple people, use the plural form **мої**: **мої брати** (my brothers). 
-
-:::note
-The word for parents, **батьки́**, is always grammatically plural in Ukrainian. Therefore, it must always be paired with the plural pronoun, meaning you must say **мої батьки** (my parents).
+:::tip
+Do not try to say "I do not have a brother" by combining the negative word with the nominative noun (like "У мене немає брат"). Negative possession in Ukrainian requires a specific grammatical case that you will learn later. For now, stick to simple **Ні** answers.
 :::
 
-The informal word for "your" follows the exact same gender pattern as "my." You use **твій** for masculine nouns, **твоя** for feminine nouns, **твоє́** for neuter nouns, and **твої́** for plural nouns. For example, you say **твій тато** (your dad) and **твоя мама** (your mom).
+When counting your relatives, remember that the numbers one and two change based on the gender of the person you are counting. For a masculine noun, use **один** and **два**. For a feminine noun, use **одна** and **дві**. Observe these exact phrases: **один брат** (one brother) versus **одна сестра** (one sister). Similarly, you say **два брати** (two brothers) but **дві сестри** (two sisters).
 
-Talking about a third person is actually much easier. The words for "his" and "her" are static. They never change their shape, regardless of the noun that follows them. The word for "his" is **його**. The word for "her" is **її**.
-You say **його мама** (his mom) and **його тато** (his dad). 
-You say **її брат** (her brother) and **її сестра** (her sister). 
-These two words remain perfectly frozen in place, making them very easy to use.
+<!-- INJECT_ACTIVITY: quiz-u-tebe-ie -->
+
+## Мій, моя, моє (Possessive Pronouns)
+
+Possessive pronouns like "my" and "your" must agree with the grammatical gender of the person or thing being possessed, not the gender of the owner. This is a fundamental rule in Ukrainian. The word for "my" has four forms. Use **мій** (my — m) for masculine nouns, **моя** (my — f) for feminine nouns, **моє** (my — n) for neuter nouns, and **мої** (my — pl) for plurals. Look at these contrasting examples to see how the ending changes: **мій брат** (my brother), **моя сестра** (my sister), **моє місто** (my city), and **мої батьки** (my parents). The pronoun always matches the noun that follows it, making the grammatical gender clearly visible and easy to practice. If you learn these pairings as complete blocks, you will not have to think about the rules.
+
+The informal word for "your" follows the exact same pattern: **твій** (your — m), **твоя** (your — f), **твоє** (your — n), and **твої** (your — pl). You use these exactly like the "my" forms. For third-person possession, Ukrainian uses **його** (his) and **її** (her). Unlike the other pronouns, **його** and **її** never change their form, regardless of the noun's gender. You will use all these forms in the nominative case with the identification construction: **Це моя мама** (This is my mom), **Це твій тато** (This is your dad), or **Це його сестра** (This is his sister).
 
 <!-- INJECT_ACTIVITY: fill-in-possessives -->
 
+<!-- INJECT_ACTIVITY: fill-in-dialogue-intro -->
+
 ## Підсумок — Summary
 
-This module gave you the tools to talk about the people closest to you. You should now be able to confidently answer basic questions about your family structure.
+You now have the core vocabulary to talk about the people closest to you. Before moving forward, review these questions to confirm you understand the main patterns.
 
-Self-check questions:
-- Can you name five family members in Ukrainian? You should know **мама**, **тато**, **брат**, **сестра**, and **бабуся**.
-- Can you say "I have a sister"? You must use the fixed chunk **У мене є сестра**.
-- What is the fundamental difference between **мій** and **моя**? You use **мій** for masculine nouns like **брат**, and **моя** for feminine nouns like **сестра**.
-- Can you use **його** and **її** correctly? Remember that these words never change their form based on the noun.
+*   Can you name five family members in Ukrainian?
+*   How do you say "I have a sister" in Ukrainian?
+    *   Answer: **У мене є сестра**.
+*   What is the difference between **мій** and **моя**? Provide an example for each.
+    *   Answer: **мій** is for masculine nouns, such as **мій тато** (my dad). **моя** is used for feminine nouns, such as **моя мама** (my mom).
+*   How do you say "grandparents" in Ukrainian?
+    *   Answer: **бабуся і дідусь**. There is no single word for both.
+*   Can you introduce your family in a few short sentences?
+    *   Example: **Привіт! Це моя сім'я. Це мій тато. Це моя мама. У мене є брат**.
 
-Mini-challenge: Introduce your own family right now. Speak out loud and create four sentences. Use the **Це моя...** pattern to identify people and the **У мене є...** pattern to state who is in your family.
-
-<!-- INJECT_ACTIVITY: fill-in-dialogue -->
- 
-
+Mastering these fixed chunks and possessive patterns builds a strong foundation for future conversations. Practice pointing to photos and naming people until it feels completely natural.
 </module_content>
 
 ---
@@ -230,48 +235,68 @@ version: "1.0"
 module: my-family
 level: a1
 
+# NOTE — these are SHAPE examples. The real targets are at the top of this prompt
+# (10 total / 4–6 inline / 6–9 workbook,
+# 6+ items per activity). The shapes below are TRUNCATED for readability;
+# YOUR output MUST hit those minimums.
+
 inline:
   - id: marker-id-here        # MUST match an <!-- INJECT_ACTIVITY: ... --> marker
     type: quiz                 # activity type
     instruction: "Оберіть правильний варіант"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - question: "_____ стіл"
-        options: ["мій", "моя", "моє"]
+        options: ["мій", "моя", "моє", "мої"]
         correct: 0             # 0-based index
+      - question: "Це ____ книга."
+        options: ["мій", "моя", "моє", "мої"]
+        correct: 1
+      # ... add at least 6 items total — never stop at 1-2
 
   - id: another-marker-id
     type: fill-in
     instruction: "Вставте правильне слово"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - sentence: "Це ____ кімната."
         answer: "моя"
         options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ вікно."
+        answer: "моє"
+        options: ["мій", "моя", "моє"]
+      # ... ≥ 6 items total
 
 workbook:
-  - type: match-up
+  - id: match-up-vocab
+    type: match-up
     instruction: "З'єднайте пари"
-    pairs:
+    pairs:                     # ← real output: ≥ 6 pairs
       - left: "стіл"
         right: "він"
       - left: "книга"
         right: "вона"
       - left: "вікно"
         right: "воно"
+      # ... ≥ 6 pairs total
 
-  - type: group-sort
+  - id: group-sort-gender
+    type: group-sort
     instruction: "Розподіліть слова за категоріями"
     groups:
-      - label: "Category A"
-        items: ["word1", "word2"]
-      - label: "Category B"
-        items: ["word3", "word4"]
+      - label: "Чоловічий рід"
+        items: ["стіл", "олівець", "будинок"]   # ≥ 3 items per group
+      - label: "Жіночий рід"
+        items: ["книга", "ручка", "школа"]
+      - label: "Середній рід"
+        items: ["вікно", "море", "молоко"]
 
-  - type: true-false
+  - id: true-false-grammar
+    type: true-false
     instruction: "Правда чи ні?"
-    items:
-      - statement: "Statement here"
-        correct: true
-        explanation: "Why it's true"
+    items:                     # ← real output: ≥ 6 items
+      - statement: "«Книга» — це чоловічий рід."
+        correct: false
+        explanation: "Книга закінчується на -а, отже жіночий рід."
+      # ... ≥ 6 items total
 
   - type: error-correction
     instruction: "Виправте помилку"
@@ -342,7 +367,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -476,10 +501,15 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 ## Quality Rules
 
-**ITEM COUNT MINIMUMS (non-negotiable):**
-- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
-- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
-- If you can't think of enough items, add more examples from the module's vocabulary and content.
+**ACTIVITY COUNT MINIMUMS (non-negotiable, audit-enforced):**
+- **Total: 10 activities.** Inline: 4–6. Workbook: 6–9. The audit gate FAILS the module if you ship fewer.
+- **Type diversity: workbook MUST cover ≥5 distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
+- **Match the inline markers exactly.** Every `<!-- INJECT_ACTIVITY: id -->` marker in the prose needs a matching inline activity with that exact id. Skipping markers means the lesson tab is broken.
+
+**ITEM COUNT MINIMUMS (non-negotiable, per-activity):**
+- **Default minimum: 6 items per activity.** Quiz, fill-in, match-up, true-false, anagram, error-correction, translate, cloze, mark-the-words, divide-words, count-syllables, odd-one-out, group-sort categories: all ≥ 6.
+- **Lower minimums for specific types only:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items, essay-response/critical-analysis = 1 prompt.
+- If you can't think of enough items, add more examples from the module's vocabulary and content. NEVER ship a 1-item or 2-item activity unless its type cap explicitly allows it.
 - **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
 - **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
@@ -586,6 +616,27 @@ IMPORTANT: After using tools, output your COMPLETE module content as plain text.
 1. Run `verify_words` on all Ukrainian words in your exercises — every word must exist in VESUM
 2. Run `query_cefr_level` on any word you're unsure about — it must be a1-appropriate
 3. For fill-in answers and distractors, verify the exact form (case, number, gender) with `verify_lemma`
+
+---
+
+## ⚠️ MANDATORY FINAL CHECKLIST — verify before emitting YAML
+
+Walk through this checklist explicitly before you start emitting. If ANY box is unchecked, fix it FIRST.
+
+- [ ] My output has **at least 4** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
+- [ ] My output has **at least 6** workbook activities.
+- [ ] **Total ≥ 10.**
+- [ ] **Every** activity has **at least 6** items, pairs, or statements (except types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3, essay-response=1).
+- [ ] The module (inline + workbook combined) uses **at least 0 distinct activity types** (or 4+ when 0 = 0 and the workbook size allows it). I am NOT shipping a wall of quizzes.
+- [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
+- [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
+- [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+- [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+- [ ] My inline count is between 4 and 6. I did NOT create more injection markers than 6.
+- [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
+- [ ] At B1+, all instructions are in Ukrainian (no English fallback).
+
+If you cannot tick all of these, REGENERATE the activities BEFORE outputting. Shipping under-spec means the build rejects you and the heal loop has to redo your work — wasting compute.
 
 ---
 

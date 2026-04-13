@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-малює красиву картину **пензлем** *(The artist paints a beautiful picture with a brush)*. Учень малює лінію синім **олівцем** *(The student draws a line with a blue pencil)*. Crucially, Ukrainian also uses the **-ем** ending for stems that end in sibilant consonants, like «ж», «ч», «ш», or «щ». Кухар швидко ріже м'ясо гострим **ножем** *(The cook quickly cuts meat with a sharp knife)*. Він відкриває старі двері **ключем** *(He opens the old door with a key)*. If the noun ends in «й», the ending becomes **-єм**. Іменники жіночого роду також мають чіткі правила. *(Feminine nouns also have clear rules.)* For standard feminine nouns that end in «-а», we always use the hard ending **-ою**. Студентка швидко пише чорною **ручкою** *(The student writes quickly with a black pen)*. Дівчина вимірює папір дерев'яною **лінійкою** *(The girl measures the paper with a wooden ruler)*. Я їм смачний суп великою **ложкою** *(I eat delicious soup with a large spoon)*. When a feminine noun ends in «-я», it takes the soft ending **-ею**. Садівник засипає коріння дерева м'якою **землею** *(The gardener covers the tree roots with soft earth)*. Feminine nouns of the third declension are special because they end in a consonant. For these nouns, we simply add the ending **-ю**. Often, the final consonant doubles in this form. Мама посипає салат дрібною **сіллю** *(Mom sprinkles the salad with fine salt)*. Тепер ми можемо розглянути іменники середнього роду. *(Now we can look at neuter nouns.)* These nouns follow patterns that are almost identical to masculine nouns. When a neuter noun ends in a hard «-о», it takes the ending **-ом**. Жінка миє руки запашним **милом** *(The woman washes her hands with fragrant soap)*. Майстер відбиває світло великим **дзеркалом** *(The craftsman reflects light with a large mirror)*. When the neuter noun ends in a soft «-е», it takes the ending **-ем**. Ми насолоджуємося теплим **морем** *(We enjoy the warm sea)*. Finally, when the neuter noun ends in «-я», it takes the ending **-ям**. Старий професор ділиться своїм **знанням** *(The old professor shares his knowledge)*. Although neuter nouns act as tools less frequently than other genders, the grammatical system works exactly the same way. Студенти часто роблять одну типову помилку. *(Students often make one typical mistake.)* In English, you always use the preposition "with" to introduce a tool. Because of this, English speakers instinctively want to use the Ukrainian preposition **«з»** *(with)*. This is a critical grammatical error. In Ukrainian, the instrumental case already contains the meaning of "with a tool". We use the preposition **«з»** only when we talk about accompaniment or a companion. Я пишу **з ручкою** *(I am writing accompanied by a pen)*. This sounds like the pen is sitting next to you on a chair while you write. Я пишу **ручкою** *(I write with a pen)*. This is the correct way to express the tool of your action. The case ending does all the heavy lifting. You must trust the ending and drop the preposition when you describe an instrument. <!-- INJECT_ACTIVITY: fill-in-tool-singular -->
+ending in a hard consonant plus "a" receive the ending **-ою**. For example, "pen" becomes "with a pen", and "paint" becomes "with paint". Words ending in a soft consonant have the ending **-ею**. For example, "earth" becomes "with earth".* There is also a unique group of feminine nouns that end in a consonant, known as the third declension. Words like **сіль** (salt) or **ніч** (night) follow a different pattern. In the Instrumental case, the final consonant often doubles, and they take the ending **-ю**. So, if you want to say "to sprinkle with salt," you use the form **сіллю**. The regular feminine endings apply to everyday items you use to get things done. You will use these endings constantly, like when you measure with a **лінійка** (ruler), eat soup with a **ложка** (spoon), or paint a picture using **фарба** (paint). Іменники середнього роду дуже схожі на чоловічий рід. Слова, які закінчуються на **-о**, мають тверду основу і отримують закінчення **-ом**. Наприклад, слово «вікно» стає «вікном», а «мило» стає «милом». Слова на **-е** або **-я** мають м'яку основу і отримують закінчення **-ем** або **-ям**. > *Neuter nouns are very similar to the masculine gender. Words that end in **-o** have a hard stem and receive the ending **-ом**. For example, the word "window" becomes "with a window", and "soap" becomes "with soap". Words ending in **-e** or **-я** have a soft stem and receive the ending **-ем** or **-ям**.* For example, the word **обличчя** (face) becomes **обличчям**, and **знання** (knowledge) becomes **знанням**. While you might not often use a face or a window as a direct tool, the grammar rule applies exactly the same way to materials or means. You might wash your hands with soap, or clean the glass with a mirror. The endings for neuter nouns mirror the masculine rules almost perfectly, making them easier to remember. Коли студенти вивчають орудний відмінок, вони часто роблять одну типову помилку. Вони додають прийменник «з» перед інструментом. Це неправильно. В українській мові ми використовуємо орудний відмінок без прийменника, щоб показати засіб дії. > *When students learn the instrumental case, they often make one typical mistake. They add the preposition "with" before the instrument. This is incorrect. In the Ukrainian language, we use the instrumental case without a preposition to show the means of an action.* It is crucial to understand that the Ukrainian preposition **з** means "accompanied by," not "using a tool." If you say "Я пишу з ручкою," a Ukrainian speaker hears "I am writing, and a pen is keeping me company." The pen is your friend, sitting next to you while you write. To say "I write using a pen," you must drop the preposition entirely and rely solely on the case ending to express the **засіб** (means, tool). :::note **Grammar box** — Never use the preposition **з** for tools or instruments. The case ending itself translates to the English word "with." ::: <!-- INJECT_ACTIVITY: fill-in, Put the noun in Instrumental singular to express the tool of an action -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -54,7 +54,7 @@ objectives:
   - Learner can form Instrumental plural endings for common nouns (-ами, -ями).
 dialogue_situations:
   - setting: 'Art class — discussing tools and methods: Малюю олівцем (m, pencil).
-      Фарбую пензлем (m, brush). Різаю ножицями (pl, scissors). Їду на виставку автобусом
+      Фарбую пензлем (m, brush). Ріжу ножицями (pl, scissors). Їду на виставку автобусом
       (m, bus).'
     speakers:
       - Вчитель мистецтва
@@ -492,7 +492,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -511,18 +578,64 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] ручка (pen)
+- [ ] олівець (pencil)
+- [ ] фарба (paint)
+- [ ] лінійка (ruler)
+- [ ] ніж (knife)
+- [ ] ложка (spoon)
+- [ ] автобус (bus)
+- [ ] потяг (train)
+- [ ] літак (airplane)
+- [ ] трамвай (tram)
+- [ ] засіб (means, tool)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Їхати автобусом: Засіб пересування (Travel by Bus: Means of Transport) (~550 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

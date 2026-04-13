@@ -242,25 +242,26 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-- Confirmed: перевірка, завдання, помилка, виправити, впевнено, самоперевірка, обрати, контрольна, точка, вид, дієслово, рух, наказовий, спосіб.
-- Not found: (all individual components verified; multi-word pedagogical terms like "вид дієслова" and "дієслова руху" confirmed in textbook sources).
+- Confirmed: контрольна, точка, перевірка, завдання, помилка, виправити, вид, дієслова, руху, наказовий, спосіб, впевнено, самоперевірка, обрати
+- Not found: (None)
 
 ## Grammar Rules
-- Наказовий спосіб: Правопис §117 (Творення форм наказового способу) — 2-а ос. одн. -и, -∅ (іди, пиши, ріж); 1-а ос. мн. -імо, -мо (ідімо, пишімо, ріжмо); 2-а ос. мн. -іть, -те (ідіть, пишіть, ріжте). Частки хай, нехай для 3-ї особи.
-- Вид дієслова: Правопис §116 (Категорія виду) — доконаний (результат, одноразова дія: написати, прийти) та недоконаний (процес, тривалість, повторюваність: писати, іти).
-- Дієслова руху: Традиційне протиставлення односпрямованих (іти, їхати) та багатоспрямованих (ходити, їздити) дієслів у теперішньому та минулому часі.
+- Дієслівні суфікси: Правопис §34 — У багатьох дієсловах української мови пишемо суфікс -ува- (-юва-): будувати, гостювати, керувати, міркувати; лікарювати, учителювати. У віддієслівних іменниках та дієприкметниках -ува- (-юва-) пишемо тоді, коли на перший голосний цього суфікса не падає наголос.
 
 ## Calque Warnings
-- контрольна точка: OK (Acceptable for modern "checkpoint"), but "контрольна робота" or "перевірка" is more traditional.
-- виправити помилку: OK — Correct Ukrainian form (Avoid "ісправити" or other Russianisms).
-- давай/давайте [інфінітив]: Calque — Avoid in imperatives. Use 1-у особу множини (напр., "ходімо", "зробімо") або частки "хай", "нехай".
+- контрольна точка: OK — (Немає застережень)
+- робити помилку: OK — (Помилятися також є природним варіантом, але "робити помилку" не зафіксовано як скальковане)
+- самоперевірка: OK — (Немає застережень)
 
 ## CEFR Check
+- спосіб: B1 — Above target
+- обрати: B1 — Above target
+- впевнено: B2 — Above target
+- рух: A2 — OK
+- помилка: A2 — OK
 - завдання: A1 — OK
-- помилка: A1 — OK
 - виправити: A2 — OK
-- впевнено: B1 — Above target (Common in teacher talk, but consider "впевнено" as a stretch word or simplify to "ти можеш").
-- самоперевірка: A2 — OK
+- вид: A2 — OK
 </pre_verified_facts>
 
 
@@ -618,12 +619,14 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 ## Section Structure
 
-Write these sections as H2 headings, in this exact order:
+Write these sections as H2 headings, in this **exact** order:
 
 - `## Частина 1: Вид дієслова — минулий і майбутній час (Part 1: Aspect in Past and Future)` (~450 words)
 - `## Частина 2: Дієслова руху та наказовий спосіб (Part 2: Motion Verbs and Imperatives)` (~450 words)
 - `## Частина 3: Комплексні завдання (Part 3: Integrated Tasks)` (~600 words)
 - `## Підсумок` (~150 words)
+
+**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim** as an `## H2` line. This includes the FINAL summary/transition section (`Підсумок: ...`, `Підсумок та перехід до M...`, etc.) — the writer's most common failure is silently dropping the closing section. Do NOT skip it. Do NOT renumber. Do NOT merge headings. The post-write quick-verify check will fail your build if any heading is missing, even if the prose itself is excellent.
 
 Each section should follow the word budget specified. The total must reach 1500 words minimum.
 
@@ -659,6 +662,25 @@ GRAMMAR RULES:
 - **Zero calques**: No приймати душ→брати душ, приймати рішення→ухвалювати рішення
 - **Zero paronyms**: тактична≠тактовна, ефектний≠ефективний — use the right word, not a similar-sounding one
 - **Natural Ukrainian**: Write how a Ukrainian teacher would explain this to a student. Not robotic, not textbook-dry, not overly casual.
+
+### FORBIDDEN WORDS — never write these (#1189)
+
+The following Russian words have leaked into past builds and broken modules. They are **hard-banned** — the post-write toxic-token scanner will fail your build the moment it sees one. Use the Ukrainian alternative every time, even in dialogues, even in casual prose, even when quoting a learner's mistake (use a `<!-- VERIFY -->` placeholder instead of typing the Russian form):
+
+| Russian (FORBIDDEN) | Ukrainian (USE THIS) |
+|---|---|
+| хорошо | добре |
+| конечно | звичайно / певна річ |
+| спасибо | дякую |
+| пожалуйста | будь ласка / прошу |
+| ничего | нічого |
+| сейчас | зараз |
+| тоже | теж / також |
+| здесь | тут |
+| кот | кіт |
+| кон | кін |
+
+This list is enforced word-for-word by `scripts/build/quick_verify.py` (SEVERE_RUSSIANISMS). If you produce any of these tokens — even inside a quoted example, even inside a dialogue line spoken by a Russian-speaking character — the build halts immediately. There is no exception.
 
 **Authority hierarchy (if uncertain about a word, check in this order):**
 VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (stress) → Антоненко-Давидович (style) → Грінченко (etymology).
@@ -757,42 +779,37 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Частина 1: Вид дієслова — минулий і майбутній час (~460 words total)
-- P1 (~100 words): [Introductory motivation for the A2.6 Checkpoint. Explain why the "Verb Trinity" (Aspect, Tense, Motion) is the final hurdle to intermediate fluency. Set the stage for reviewing how a single prefix can change the entire meaning of a sentence from "I was doing it" to "I got it done."]
-- P2 (~120 words): [Aspect in the Past Tense: Process vs. Result. Contrast the imperfective (process/habit) with the perfective (completed action). Use specific pairs: "довго писав" (imperfective process) vs. "нарешті написав" (perfective result); "щовечора читала" (habit) vs. "прочитала за ніч" (single event).]
-- P3 (~120 words): [Aspect in the Future Tense: The Two Futures. Explain the logic of choosing between "буду робити" (imperfective/intent/process) and "зроблю" (perfective/guaranteed result). Provide examples of typical future markers like "завтра о п'ятій" (imperfective process) vs. "до вечора" (perfective deadline).]
-- P4 (~120 words): [The Unique Ukrainian Synthetic Future. Focus on the "-му, -меш, -ме" endings. Explain its historical origin (infinitive + мати) and its stylistic nuance as a more rhythmic, authentic alternative to "буду". Examples: "працюватиму" (I will be working), "знатимете" (you will know).]
-- <!-- INJECT_ACTIVITY: group-sort-verb-forms --> [group-sort, Categorize 8 verb forms into imperfective past, perfective past, synthetic future, and analytical future, 8 items]
-- <!-- INJECT_ACTIVITY: fill-in-aspect-choice --> [fill-in, Choose between imperfective/perfective in past and future contexts (e.g., "Вона довго ___ (готувати/приготувати) обід"), 8 items]
+## Частина 1: Вид дієслова — минулий і майбутній час (~450 words)
+- P1 (~80 words): Introduction to the checkpoint module. State the goal: reviewing the verb system, specifically aspect, tense, motion, and mood. Set the scene for Dialogue 1: a teacher conducting an oral review with a student about their weekend.
+- P2 (~120 words): Dialogue 1: Teacher (Вчитель) and Student (Студент) discussing the weekend. The student uses past imperfective for a process (`Я довго готував обід`) and perfective for a result (`Я приготував борщ`). The teacher asks about future plans, eliciting both future forms (`буду читати` vs `прочитаю`).
+- P3 (~125 words): Recap of Aspect in the Past Tense. Explain how Imperfective (`недоконаний вид`) focuses on the process, habit, or background action (`він довго писав листа`), while Perfective (`доконаний вид`) focuses on the result, sequence, or a single completed event (`він швидко написав листа`). Compare pairs: `робити / зробити`, `читати / прочитати`.
+- P4 (~125 words): Recap of Aspect in the Future Tense. Detail the formation: Imperfective uses the analytical form (`буду` + infinitive: `буду читати`), focusing on planned processes. Perfective uses the simple form (prefix + present endings: `прочитаю`), focusing on planned results. Explicitly warn against the common L2 error of mixing them (e.g., combining `буду` with a perfective infinitive like `буду прочитати` is strictly incorrect).
 
-## Частина 2: Дієслова руху та наказовий спосіб (~450 words total)
-- P1 (~110 words): [Unidirectional vs. Multidirectional Motion. Recap the "Two Pairs" logic: "іти/ходити" and "їхати/їздити". Contrast "Я зараз іду додому" (specific trip right now) with "Я щодня ходжу до парку" (regular habit). Mention the transport distinction (пішки vs. транспортом).]
-- P2 (~110 words): [Motion + Prepositions and Cases. Review the logic of directionality. "До + Genitive" (destination: до Львова), "З/Зі + Genitive" (origin: зі школи), and "На + Accusative" (event/location: на роботу). Contrast with "В/У + Accusative" (into: у магазин).]
-- P3 (~110 words): [Formation of Imperatives. Review the rules for 2nd person (читай/пиши), 2nd person plural (читайте/пишіть), and the 1st person plural "let's" form (читаймо/пишімо). Highlight the importance of stress: "рОбиш" vs. "зробИ".]
-- P4 (~120 words): [Indirect Imperatives and Wishes. Explain "хай/нехай" + 3rd person (Хай щастить!). Teach the "Vocative + Будь + Instrumental" wish construction for personal greetings. Examples: "Маріє, будь щасливою!", "Друже, будь обережним!"]
-- <!-- INJECT_ACTIVITY: motion-verb-preposition-match --> [fill-in, Match motion verbs with correct destinations and prepositions (e.g., "їздити ___ (Львів)"), 8 items]
-- <!-- INJECT_ACTIVITY: imperative-formation-drill --> [fill-in, Form imperatives for 2nd sing, 2nd plur, 1st plur, and 3rd person from given infinitives, 8 items]
+## Частина 2: Дієслова руху та наказовий спосіб (~450 words)
+- P1 (~80 words): Transition to verbs of motion. Introduce Dialogue 2 context: two friends (Оксана and Тарас) planning a hiking trip to the Carpathians, discussing logistics and giving commands.
+- P2 (~120 words): Dialogue 2: Friends planning the trip. They use unidirectional motion verbs for the specific plan (`ми їдемо`, `ми підемо`) and imperative mood for suggestions and commands (`візьми теплий одяг`, `ходімо разом`). 
+- P3 (~125 words): Recap of Motion Verbs. Explain the core difference: foot (`іти/ходити`) vs. transport (`їхати/їздити`), and unidirectional (specific trip, `я йду / їду`) vs. multidirectional (habitual, `я ходжу / їжджу`). Detail prefixes `по-` (start/future plan: `поїду`) and `при-` (arrival: `приїде`). Remind about case governance: `з` + Genitive (from), `до` + Genitive (to), `на` + Accusative (to an event/surface).
+- P4 (~125 words): Recap of the Imperative Mood (`наказовий спосіб`). Detail the forms: 2nd person singular/plural (`читай / читайте`, `роби / робіть`), 3rd person with `хай` (`хай читає`), and 1st person plural for suggestions (`читаймо`, `ходімо`). Emphasize avoiding the Russian calque `давай поговоримо` (use the proper Ukrainian form `поговорімо` замість цього).
+- <!-- INJECT_ACTIVITY: group-sort-verb-forms --> [group-sort, Sort verb forms into categories — imperfective past, perfective past, synthetic future, analytical future, imperative, 8 items]
 
-## Частина 3: Комплексні завдання (~600 words total)
-- P1 (~100 words): [Dialogue 1: The Oral Review. A teacher (пані Олена) asks a student (Марко) to retell his weekend. Marco uses "ходив" (past habit), "поїхав" (perfective trip), and "написав" (completed task). Marco makes a small error with "давай підемо", and the teacher corrects him to "ходімо".]
-- P2 (~120 words): [Deep Dive: Common L2 Logic Errors. Explain why English "to go" causes trouble and why "буду прочитати" is a grammatical impossible. Decolonization note: Explicitly forbid "давай(те)" for imperatives, replacing it with the authentic "ходімо" or "зробімо".]
-- P3 (~100 words): [Dialogue 2: Planning a Hike. Two friends (Андрій and Ірина) discuss a trip to the Carpathians. They use motion verbs for directions ("Ідіть до лісу") and imperatives for packing ("Візьми карту"). They express wishes for the trip: "Друзі, будьмо готові!"]
-- P4 (~130 words): [Integrated Narrative Context. Setting up a story about a traveler visiting Kyiv for the first time. The narrator describes arriving (приїхав), walking through the center (ішов), visiting churches (заходив), and plans for tomorrow (піду, оглядатиму).]
-- P5 (~150 words): [Synthesis of Aspect and Motion. Explaining how prefixes like "по-" and "при-" interact with aspect. Contrast "він ішов" (process of walking) with "він пішов" (he set off/left) and "він прийшов" (he arrived). Explain how these are used in integrated storytelling.]
-- <!-- INJECT_ACTIVITY: quiz-verb-errors --> [quiz, Identify and fix 8 sentences with verb errors (wrong aspect, motion type, or future tense construction), 8 items]
-- <!-- INJECT_ACTIVITY: error-correction-integrated --> [error-correction, Find and fix 6 specific verb form errors in a short paragraph context, 6 items]
-- <!-- INJECT_ACTIVITY: story-completion-verbs --> [fill-in, Complete a short narrative about a trip to the mountains using 8 mixed verb forms (aspect, motion, imperatives), 8 items]
+## Частина 3: Комплексні завдання (~600 words)
+- P1 (~120 words): Introduction to the integrated practice section. Emphasize that choosing the correct aspect, motion verb, and mood simultaneously is essential for natural, fluent Ukrainian storytelling. Briefly explain how these elements interact in a narrative sequence.
+- <!-- INJECT_ACTIVITY: fill-in-mixed-drill --> [fill-in, Mixed drill — complete sentences requiring aspect choice, motion verb selection, and imperative formation across all M35-40 topics, 8 items]
+- P2 (~160 words): Story Completion context. Present a short narrative text with blanks (modeling the upcoming exercise) about a person describing their habitual travel versus a specific upcoming trip. Contrast `їздимо` (multidirectional habit) with `поїдемо` (unidirectional future perfective), and `робили` (process) with `зробимо` (result).
+- <!-- INJECT_ACTIVITY: quiz-error-correction --> [quiz, Error correction — identify and fix verb errors (wrong aspect, motion type, imperative form, or future formation), 8 items]
+- P3 (~160 words): Common Pitfalls Review. Discuss typical mistakes to prepare learners for the final error correction task. Explain why specific sentences are wrong: e.g., correcting *`Він щодня зробив вправи` to `робив` (habit requires imperfective), *`Я буду поїхати` to `Я поїду` (future perfective), and *`Ми ідемо туди кожного літа` to `Ми їздимо` (multidirectional for recurring trips).
+- <!-- INJECT_ACTIVITY: error-correction-verb-forms --> [error-correction, Find and fix verb form errors — wrong aspect, wrong motion verb type, wrong imperative form, wrong future tense construction, 6 items]
+- P4 (~160 words): Guided Production Task prompt. Instruct the learner to write 8-10 sentences narrating a weekend trip. Detail the requirements: the text must include past tense aspect pairs (both imperfective and perfective), at least two motion verbs with corresponding prepositions, one imperative suggestion to a friend, and one wish using the Vocative case + `будь` + Instrumental case (e.g., `Олено, будь щасливою!`).
 
 ## Підсумок (~150 words)
-- P1 (~150 words): [Follow the plan exactly with a self-assessment checklist.
-*   Чи можу я обрати правильний вид у минулому часі? (Process vs. Result)
-*   Чи розрізняю я "буду читати" та "прочитаю"?
-*   Чи знаю я, коли використовувати "іти", а коли "ходити"?
-*   Чи вмію я утворювати наказовий спосіб для всіх осіб?
-*   Чи можу я побажати комусь здоров'я (Vocative + будь + Instrumental)?
-If you answered "так" to all, you are ready for A2.7!]
+- P1 (~150 words): 
+  - Can I confidently choose between imperfective and perfective aspect in past and future tenses (e.g., `читав` vs `прочитав`, `буду читати` vs `прочитаю`)?
+  - Do I know when to use unidirectional motion verbs (`іти`, `їхати`) versus multidirectional ones (`ходити`, `їздити`)?
+  - Can I form imperatives for all persons, especially avoiding the `давай` calque (e.g., using `ходімо`, `хай знає`)?
+  - Can I make wishes using the Vocative case and the Instrumental case (`будь здоровим`)?
+  - Am I ready to advance to module A2.7?
 
-Grand total: ~1660 words
+Grand total: ~1650 words
 </skeleton>
 
 ## Output Format
@@ -800,11 +817,57 @@ Grand total: ~1660 words
 Write in Markdown. Use:
 - `## Section Title` for main sections
 - `### Subsection` for subsections within a section
-- `**bold**` for Ukrainian words being taught — EVERY bold Ukrainian word MUST have an English translation on first use, either in parentheses `**слово** (translation)` or inline `**слово** means "translation"`. No exceptions.
+- `**bold**` for Ukrainian words being taught. For **A1 and A2** levels, provide an English translation on first use (e.g. `**стіл** (table)`) because learners lack the vocabulary to infer meaning. For **B1 and above**, do NOT provide inline translations for standard vocabulary — the learner will use the module's словник (vocabulary table). You may provide ONE parenthetical English translation ONLY for highly abstract grammar/linguistic terms on first use (e.g. `**видова пара** (aspectual pair)`).
 - Tables for paradigms (conjugation, declension)
 - `:::tip` / `:::caution` / `:::note` for callout boxes
 - `<!-- INJECT_ACTIVITY: {id} -->` for exercise placement (markers only — do NOT write exercise content)
 
 Do NOT write MDX component syntax, JSON, or DSL exercise blocks (:::quiz, etc.). Plain Markdown with injection markers.
+
+---
+
+## MANDATORY FINAL CHECKLIST (#1189)
+
+Before you finish writing, verify the prose against this checklist. Failing any item will fail the build.
+
+### Section headings (verbatim)
+
+Every heading from "Section Structure" above MUST appear as an `## H2` in your output, in order, **including the closing `Підсумок:` / `Підсумок та перехід до M...` summary**. The single most common writer failure across the B1 build has been silently dropping the final summary section. Re-read your output before stopping. If the last section in the plan is missing, write it now.
+
+### Required vocabulary (every word must appear)
+
+You MUST use **every word** from the list below at least once in the prose, in a natural sentence with bold + English translation. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, прагматика, діагностика, дієвідмінювання, зворотний, двовидовий, одновидовий, неозначено-кількісний, etc.) is the most frequently dropped category — actively find homes for those words even if it means adding a sentence that defines them.
+
+- [ ] контрольна точка (checkpoint)
+- [ ] перевірка (review, check)
+- [ ] завдання (task, exercise)
+- [ ] помилка (error, mistake)
+- [ ] виправити (to correct)
+- [ ] вид дієслова (verb aspect)
+- [ ] дієслова руху (motion verbs)
+- [ ] наказовий спосіб (imperative mood)
+
+### Forbidden words (never produce)
+
+Do not write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use `<!-- VERIFY -->` instead). The post-write toxic-token scanner will fail the build immediately:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+### Level-specific immersion check
+
+The level-appropriate immersion rule was already injected at the top of
+this prompt as `IMMERSION RULE`. Re-read it now BEFORE you stop writing.
+If your level's rule contains a CHECKLIST block, walk through every item.
+If it doesn't, just verify your output matches the LANGUAGE ROLES and
+TARGET stated in that block.
+
+This used to hard-code a B1+ checklist that confused A1/A2 models (where
+translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+The single source of truth is now
+`scripts/pipeline/config_tables.py:IMMERSION_RULES`.
+
+---
 
 Begin writing now. Start with the first section heading.

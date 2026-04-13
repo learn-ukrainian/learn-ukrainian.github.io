@@ -235,25 +235,27 @@ You do NOT need to call tools yourself — the facts are already verified.
 <pre_verified_facts>
 ## VESUM Verification
 - Confirmed: який, яка, яке, великий, маленький, новий, старий, гарний, чистий, дорогий, дешевий, поганий, брудний, світлий, темний, а, але
-- Not found: [none]
+- Not found: (none)
 
 ## Grammar Rules
-- Adjective Gender Agreement: Правопис § 33 (and general declension) — Adjectives agree with nouns in gender, number, and case. In the nominative singular: Masculine endings are typically **-ий** (e.g., *новий*), Feminine **-а** (e.g., *нова*), and Neuter **-е** (e.g., *нове*).
-- Conjunction "а" (Contrast): СУМ-11 — "А" is a contrastive conjunction (протиставний сполучник) used to join sentences or parts of sentences that are contrasted with each other, similar to "але" but often used for lighter juxtaposition (e.g., *Стіл новий, а ліжко — старе*).
+- Прикметникові суфікси: Правопис §33 — За допомогою суфікса -н-(ий) від іменникових і дієслівних основ утворено основний склад якісних і відносних прикметників... Суфікс -н-(ій) ужитий порівняно в небагатьох прикметниках.
 
 ## Calque Warnings
-- який він / яка вона: OK — These are standard Ukrainian constructions for asking about properties or characteristics when the subject is known.
-- гарна сумка: OK — Natural Ukrainian for "nice/beautiful bag."
-- великий і дешевий: OK — Natural use of adjectives to describe an object.
+- у мене є: OK — (no calque detected)
+- моя кімната: OK — (no calque detected)
+- який він: OK — (no calque detected)
 
 ## CEFR Check
 - великий: A1 — OK
-- маленький: A1 — OK
-- чистий: A1 — OK
-- брудний: A1 — OK
+- новий: A1 — OK
 - дорогий: A1 — OK
-- дешевий: A1 — OK
-- новий/старий: A1 — OK
+- старий: A1 — OK
+- маленький: A1 — OK
+- світлий: A1 — OK
+- поганий: A1 — OK
+- гарний: A1 — OK
+- чистий: A2 — Above target
+- дешевий: A2 — Above target
 </pre_verified_facts>
 
 
@@ -581,12 +583,14 @@ These exercises are models for the types of activities the content writer should
 
 ## Section Structure
 
-Write these sections as H2 headings, in this exact order:
+Write these sections as H2 headings, in this **exact** order:
 
 - `## Діалоги (Dialogues)` (~300 words)
 - `## Який? Яка? Яке? (What kind?)` (~300 words)
 - `## Прикметники (Common Adjectives)` (~300 words)
 - `## Підсумок — Summary` (~300 words)
+
+**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim** as an `## H2` line. This includes the FINAL summary/transition section (`Підсумок: ...`, `Підсумок та перехід до M...`, etc.) — the writer's most common failure is silently dropping the closing section. Do NOT skip it. Do NOT renumber. Do NOT merge headings. The post-write quick-verify check will fail your build if any heading is missing, even if the prose itself is excellent.
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -632,6 +636,25 @@ PLAN-AWARE EXEMPTIONS: The following bans are RELAXED for this module because th
 - **Zero calques**: No приймати душ→брати душ, приймати рішення→ухвалювати рішення
 - **Zero paronyms**: тактична≠тактовна, ефектний≠ефективний — use the right word, not a similar-sounding one
 - **Natural Ukrainian**: Write how a Ukrainian teacher would explain this to a student. Not robotic, not textbook-dry, not overly casual.
+
+### FORBIDDEN WORDS — never write these (#1189)
+
+The following Russian words have leaked into past builds and broken modules. They are **hard-banned** — the post-write toxic-token scanner will fail your build the moment it sees one. Use the Ukrainian alternative every time, even in dialogues, even in casual prose, even when quoting a learner's mistake (use a `<!-- VERIFY -->` placeholder instead of typing the Russian form):
+
+| Russian (FORBIDDEN) | Ukrainian (USE THIS) |
+|---|---|
+| хорошо | добре |
+| конечно | звичайно / певна річ |
+| спасибо | дякую |
+| пожалуйста | будь ласка / прошу |
+| ничего | нічого |
+| сейчас | зараз |
+| тоже | теж / також |
+| здесь | тут |
+| кот | кіт |
+| кон | кін |
+
+This list is enforced word-for-word by `scripts/build/quick_verify.py` (SEVERE_RUSSIANISMS). If you produce any of these tokens — even inside a quoted example, even inside a dialogue line spoken by a Russian-speaking character — the build halts immediately. There is no exception.
 
 **Authority hierarchy (if uncertain about a word, check in this order):**
 VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (stress) → Антоненко-Давидович (style) → Грінченко (etymology).
@@ -738,41 +761,38 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Діалоги (Dialogues) (~330 words total)
-- P1 (~60 words): [Introduction to the scene — setting the stage at a weekend book fair. Brief context on why Taras and Sofia are looking at items like books, maps, and posters.]
-- P2 (~100 words): [Dialogue 1: At the Book Fair. Taras and Sofia browse items. Taras: "Який великий плакат!" Sofia: "А яка цікава книга!" Use specific plan nouns: новий атлас (m), цікава книга (f), старе фото (n), великий плакат (m), маленька листівка (f).]
-- P3 (~70 words): [Transition and context shift to a second dialogue based on describing a room (referencing Вашуленко p.131). Sofia describes her room to Taras using the M08 nouns.]
-- P4 (~100 words): [Dialogue 2: Моя кімната. Sofia: "Моя кімната велика і світла." Taras: "А стіл?" Sofia: "Стіл новий, а ліжко старе." Focus on immediate agreement: велика кімната, світла кімната, новий стіл, старе ліжко.]
+## Діалоги (~330 words total)
+- P1 (~50 words): Introduce the setting. Тарас and Софія are spending their weekend at a local book fair. They are browsing through various items, including a новий атлас (new atlas), a цікава книга (interesting book), and an старе фото (old photo), describing what they see.
+- P2 (~110 words): Dialogue 1 — Describing a room (inspired by Вашуленко Grade 3). Taras asks Sofia about her room to practice descriptive questions: "— Яка твоя кімната?" Sofia responds with adjectives: "— Моя кімната велика і світла." Taras asks about specific furniture: "— А стіл?" Sofia answers: "— Стіл новий. А ліжко — старе." Explain how adjective agreement emerges naturally from this real description.
+- P3 (~50 words): Transition to window shopping. While walking home, they look at shop windows and discuss the qualities of items they notice.
+- P4 (~120 words): Dialogue 2 — Window shopping. Sofia points out an item: "— Яка гарна сумка!" Taras agrees but notes a contrast: "— Так, але вона дорога." Sofia asks about another item: "— А телефон? Який він?" Taras replies: "— Він великий і дешевий."
 
-## Який? Яка? Яке? (What kind?) (~340 words total)
-- P1 (~80 words): [Introducing the concept of the 'describing word' — прикметник. Explain that it answers the question "What kind?" and that this question word must change based on the gender of the noun, following the мій/моя/моє pattern learned in M08.]
-- P2 (~80 words): [Detailing Masculine and Feminine agreement. Masculine nouns take 'який?' and adjectives ending in -ий (новий стіл, великий плакат). Feminine nouns take 'яка?' and adjectives ending in -а (нова книга, велика листівка).]
-- P3 (~80 words): [Detailing Neuter agreement. Neuter nouns take 'яке?' and adjectives ending in -е (нове фото, чисте вікно). Note that while soft-stem endings like -ій/-я/-є exist, they will be covered in M10 (Colors) — for now, focus on the -ий/-а/-е pattern.]
-- P4 (~100 words): [Linguistic nuance: The rule from Пономарова p.98: 'Прикметник має такий рід, як іменник, з яким він зв’язаний.' Explain that the noun is the 'boss' and the adjective is the 'assistant' that copies its gender.]
-- <!-- INJECT_ACTIVITY: quiz-question-word --> [Quiz, choosing correct question word (який/яка/яке) for nouns, 6 items]
-- <!-- INJECT_ACTIVITY: fill-in-adjective-endings --> [Fill-in, adding correct adjective endings (-ий, -а, -е) to given roots, 10 items]
+## Який? Яка? Яке? (~350 words total)
+- P1 (~70 words): Introduce the concept of asking "What kind?". Explain that in Ukrainian, this question changes based on the gender of the noun being asked about. Compare this to the familiar pattern of possessive pronouns (мій/моя/моє) to build on existing knowledge.
+- P2 (~80 words): Explain Masculine agreement. Introduce the question word Який? (What kind? - masc.) and the standard masculine adjective ending `-ий`. Provide examples: Який стіл? → Великий стіл. Який плакат? → Новий плакат.
+- P3 (~80 words): Explain Feminine agreement. Introduce the question word Яка? (What kind? - fem.) and the feminine adjective ending `-а`. Provide examples: Яка книга? → Нова книга. Яка листівка? → Маленька листівка.
+- P4 (~80 words): Explain Neuter agreement. Introduce the question word Яке? (What kind? - neut.) and the neuter adjective ending `-е`. Provide examples: Яке вікно? → Чисте вікно. Яке фото? → Старе фото. Briefly note that soft-stem adjectives ending in -ій/-я/-є (like синій) will be covered later in the Colors module.
+- P5 (~40 words): Summarize the core rule with a principle from Пономарова Grade 3: "Прикметник має такий рід, як іменник, з яким він зв'язаний" (An adjective has the same gender as the noun it is connected to).
+- <!-- INJECT_ACTIVITY: quiz-question-word --> [quiz, Який/яка/яке? Choose correct question word, 6 items]
+- <!-- INJECT_ACTIVITY: fill-in-endings --> [fill-in, Add correct adjective ending: нов__ книга, велик__ стіл, чист__ вікно, 10 items]
 
-## Прикметники (Common Adjectives) (~350 words total)
-- P1 (~90 words): [Introducing the 'Opposites Strategy' for vocabulary. Present the primary size and age pairs: великий ↔ маленький (big ↔ small) and новий ↔ старий (new ↔ old). Examples: великий стіл, маленька ручка, новий телефон, старе фото.]
-- P2 (~90 words): [Expanding the set with quality and light pairs: гарний ↔ поганий (nice ↔ bad), чистий ↔ брудний (clean ↔ dirty), світлий ↔ темний (light ↔ dark). Examples: гарний день, чиста вода, світла кімната.]
-- P3 (~90 words): [Introducing value pairs: дорогий ↔ дешевий (expensive ↔ cheap). Connect back to the shopping dialogue in the plan: "Яка гарна сумка! — Так, але вона дорога."]
-- P4 (~80 words): [Grammar spotlight: The contrastive 'а' (and/but) vs the parallel 'і' (and). Explain that 'а' is used when comparing opposites: "Стіл новий, а ліжко старе." Explain 'і' for combined qualities: "Кімната велика і світла."]
-- <!-- INJECT_ACTIVITY: match-up-opposites --> [Match-up, pairing adjective opposites like великий with маленький, 6 items]
-- <!-- INJECT_ACTIVITY: fill-in-room-description --> [Fill-in, describing a room using a word bank of nouns and adjectives, 6 items]
+## Прикметники (~350 words total)
+- P1 (~70 words): Introduce the vocabulary strategy of learning adjectives in opposite pairs. Explain that memorizing opposites together builds stronger mental connections and makes recall much easier.
+- P2 (~100 words): Present the first set of opposite pairs with translations: великий ↔ маленький (big ↔ small), новий ↔ старий (new ↔ old), гарний ↔ поганий (nice/beautiful ↔ bad). Provide short phrases to show them in context: великий стіл, маленька кімната, нове ліжко, старе фото.
+- P3 (~80 words): Present the second set of pairs: чистий ↔ брудний (clean ↔ dirty), дорогий ↔ дешевий (expensive ↔ cheap), світлий ↔ темний (light ↔ dark). Use examples to reinforce gender agreement: дорога сумка, дешевий телефон, світла кімната, чисте вікно.
+- P4 (~100 words): Teach how to build full descriptive sentences combining these adjectives with previously learned nouns. Explain the difference between conjunctions: use 'і' for parallel ideas (Вікно велике і чисте) and 'а' or 'але' for contrast (Стілець старий, а ліжко — нове; Моя кімната маленька, але гарна).
+- <!-- INJECT_ACTIVITY: match-up-opposites --> [match-up, Match adjective opposites: великий ↔ маленький, 6 items]
+- <!-- INJECT_ACTIVITY: fill-in-describe-room --> [fill-in, Describe the room using given nouns and adjectives, 6 items]
 
 ## Підсумок — Summary (~300 words total)
-- P1 (~150 words): [Recap of the module's core logic. 
-  - Masculine: який? → -ий (великий)
-  - Feminine: яка? → -а (велика)
-  - Neuter: яке? → -е (велике)
-  - Use 'а' to show contrast between two things.]
-- P2 (~150 words): [Self-check Q&A:
-  - Як буде "What kind of book?" (Яка книга?)
-  - Яке закінчення (ending) має чоловічий рід? (-ий)
-  - Як сказати "The table is big, but the chair is small"? (Стіл великий, а стілець маленький.)
-  - Завдання: Опишіть вашу кімнату. Використовуйте 3 речення і прикметники великий, світлий, новий.]
+- P1 (~150 words): Recap the fundamental rule of Ukrainian adjectives: they describe nouns and must always agree with them in gender (in the nominative case). Reiterate the core pattern to memorize: masculine adjectives end in -ий, feminine adjectives end in -а, and neuter adjectives end in -е. Emphasize that knowing the noun's gender is the key to using adjectives correctly.
+- P2 (~150 words): Self-check task formatted as a Q&A list to test comprehension. 
+  * What ending does a masculine adjective have? (-ий/-ій)
+  * What ending does a feminine adjective have? (-а/-я)
+  * What ending does a neuter adjective have? (-е/-є)
+  * Describe your room in 3 sentences using adjectives (e.g., Моя кімната..., Стіл..., Ліжко...).
 
-Grand total: ~1320 words
+Grand total: ~1330 words
 </skeleton>
 
 ## Output Format
@@ -780,11 +800,58 @@ Grand total: ~1320 words
 Write in Markdown. Use:
 - `## Section Title` for main sections
 - `### Subsection` for subsections within a section
-- `**bold**` for Ukrainian words being taught — EVERY bold Ukrainian word MUST have an English translation on first use, either in parentheses `**слово** (translation)` or inline `**слово** means "translation"`. No exceptions.
+- `**bold**` for Ukrainian words being taught. For **A1 and A2** levels, provide an English translation on first use (e.g. `**стіл** (table)`) because learners lack the vocabulary to infer meaning. For **B1 and above**, do NOT provide inline translations for standard vocabulary — the learner will use the module's словник (vocabulary table). You may provide ONE parenthetical English translation ONLY for highly abstract grammar/linguistic terms on first use (e.g. `**видова пара** (aspectual pair)`).
 - Tables for paradigms (conjugation, declension)
 - `:::tip` / `:::caution` / `:::note` for callout boxes
 - `<!-- INJECT_ACTIVITY: {id} -->` for exercise placement (markers only — do NOT write exercise content)
 
 Do NOT write MDX component syntax, JSON, or DSL exercise blocks (:::quiz, etc.). Plain Markdown with injection markers.
+
+---
+
+## MANDATORY FINAL CHECKLIST (#1189)
+
+Before you finish writing, verify the prose against this checklist. Failing any item will fail the build.
+
+### Section headings (verbatim)
+
+Every heading from "Section Structure" above MUST appear as an `## H2` in your output, in order, **including the closing `Підсумок:` / `Підсумок та перехід до M...` summary**. The single most common writer failure across the B1 build has been silently dropping the final summary section. Re-read your output before stopping. If the last section in the plan is missing, write it now.
+
+### Required vocabulary (every word must appear)
+
+You MUST use **every word** from the list below at least once in the prose, in a natural sentence with bold + English translation. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, прагматика, діагностика, дієвідмінювання, зворотний, двовидовий, одновидовий, неозначено-кількісний, etc.) is the most frequently dropped category — actively find homes for those words even if it means adding a sentence that defines them.
+
+- [ ] який, яка, яке (what kind? — m/f/n)
+- [ ] великий (big)
+- [ ] маленький (small)
+- [ ] новий (new)
+- [ ] старий (old)
+- [ ] гарний (nice, beautiful)
+- [ ] чистий (clean)
+- [ ] дорогий (expensive)
+- [ ] дешевий (cheap)
+
+### Forbidden words (never produce)
+
+Do not write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use `<!-- VERIFY -->` instead). The post-write toxic-token scanner will fail the build immediately:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+### Level-specific immersion check
+
+The level-appropriate immersion rule was already injected at the top of
+this prompt as `IMMERSION RULE`. Re-read it now BEFORE you stop writing.
+If your level's rule contains a CHECKLIST block, walk through every item.
+If it doesn't, just verify your output matches the LANGUAGE ROLES and
+TARGET stated in that block.
+
+This used to hard-code a B1+ checklist that confused A1/A2 models (where
+translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+The single source of truth is now
+`scripts/pipeline/config_tables.py:IMMERSION_RULES`.
+
+---
 
 Begin writing now. Start with the first section heading.

@@ -18,7 +18,7 @@ module: a1-006
 level: A1
 sequence: 6
 slug: my-family
-version: '1.2'
+version: '1.3'
 title: My Family
 subtitle: У мене є брат — Showing photos
 focus: vocabulary
@@ -36,12 +36,12 @@ dialogue_situations:
   - Оля
   - Марк
   motivation: У мене є + family members, possessives мій/моя with photos
-- setting: Filling out a visa application together — helping each other with family
-    questions
+- setting: Showing family photos to a new Ukrainian friend at school — describing
+    who everyone is, asking about each other's families
   speakers:
-  - Даша (applicant)
-  - Андрій (friend helping)
-  motivation: Family vocabulary, У тебе є брати? in practical context
+  - Даша
+  - Андрій
+  motivation: Family vocabulary, У тебе є брати? Це мій/моя... in natural teen context
 content_outline:
 - section: Діалоги (Dialogues)
   words: 400

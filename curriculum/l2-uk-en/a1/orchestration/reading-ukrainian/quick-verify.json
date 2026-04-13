@@ -2,6 +2,12 @@
   "attempt": 1,
   "passed": true,
   "errors": [],
-  "warnings": [],
-  "timestamp": "2026-04-08T22:23:28.275110+00:00"
+  "warnings": [
+    {
+      "check": "VOCABULARY",
+      "severity": "WARNING",
+      "message": "Missing 2/7 required vocab: людина (person) — Л + Ю combination, вулиця (street) — Ц sound practice"
+    }
+  ],
+  "timestamp": "2026-04-12T17:11:04.314934+00:00"
 }

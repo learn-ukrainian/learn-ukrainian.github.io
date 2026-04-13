@@ -2,50 +2,53 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 10
-  evidence: Covers all 5 sections exactly as outlined in the plan. All grammatical
-    patterns and vocabulary categories (time, calendar, weather, routine) are reviewed.
+  score: 6
+  evidence: 'All five planned H2 sections are present, but section pacing is far off
+    the plan: `Що ми знаємо?` is about 286 words vs 200 planned, `Читання` about 343
+    vs 250, `Граматика` about 361 vs 200, and `Діал'
 - dimension: 2
   name: Linguistic accuracy
-  score: 10
-  evidence: No Russianisms, Surzhyk, or Calques. Gender and case usage is correct.
-    The phonetic rule for `у/в` euphony is factually accurate.
+  score: 7
+  evidence: 'The grammar tip states `We use **у** before a word starting with a consonant,
+    and **в** before a word starting with a vowel`, which is factually wrong and contradicted
+    by the module’s own examples `у '
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: Excellent pedagogical notes, especially the clarification on "неділя"
-    (Sunday) vs "тиждень" (week), which is a very common false friend for learners.
-    Good use of context to explain the difference betw
+  score: 6
+  evidence: The checkpoint spends too much space on English meta-commentary instead
+    of concise review/practice, e.g. `This text is an excellent example of how you
+    can build a narrative` and `This dialogue represe
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: All required vocabulary themes (time expressions, days, months, seasons,
-    weather adverbs, frequency) are naturally integrated into the text and dialogue.
+  score: 8
+  evidence: 'Core A1.4 vocabulary appears naturally across the prose, but the planned
+    frequency set is incomplete: the module lists `завжди`, `часто`, `іноді`, `ніколи`
+    and omits `рідко`.'
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: Exercise markers are present, correctly placed, and correspond perfectly
-    to the plan's requirements to test the consolidated knowledge.
+  score: 9
+  evidence: The three activity markers align with the three plan hints and appear
+    after the relevant teaching sections. Distribution is even across the module.
 - dimension: 6
   name: Engagement & tone
-  score: 8
-  evidence: 'DEDUCT: Contains gamified/self-congratulatory openers ("You have reached
-    a significant milestone in your Ukrainian journey.") and empty filler ("These
-    tools are absolutely essential for a vibrant soci'
+  score: 7
+  evidence: 'The tone slips into hype/filler: `Welcome to the A1.4 checkpoint!` and
+    especially `Celebrate this milestone! 4 phase of your Ukrainian learning journey.`
+    The latter is also broken English.'
 - dimension: 7
   name: Structural integrity
-  score: 10
-  evidence: Clean markdown, no missing headings, correct ordering. Word count is 1468,
-    well above the 1200 target.
+  score: 8
+  evidence: 'All H2 headings are present and the pipeline word count is 1624, but
+    the self-check ends with a dangling fragment: `If you can understand and answer
+    these questions,`'
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: Decolonized perspective, accurately explaining Ukrainian time and calendar
-    structures on their own terms.
+  score: 9
+  evidence: No Russia-centered framing or cultural misinformation found; Ukrainian
+    is presented on its own terms.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: The dialogue is a natural, multi-turn conversation about planning a weekend,
-    utilizing the targeted vocabulary effectively with realistic phrasing ("Ходімо
-    в музей!").
+  score: 9
+  evidence: The dialogue has named speakers, a plausible planning situation, and natural
+    A1 chunks such as `Ходімо в парк!`, `О десятій ранку`, and `А потім ходімо в кіно!`
 findings: []

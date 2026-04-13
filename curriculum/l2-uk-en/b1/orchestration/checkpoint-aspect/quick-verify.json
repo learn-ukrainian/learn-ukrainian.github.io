@@ -2,17 +2,6 @@
   "attempt": 1,
   "passed": true,
   "errors": [],
-  "warnings": [
-    {
-      "check": "VOCABULARY",
-      "severity": "WARNING",
-      "message": "Missing 3/15 required vocab: видова пара (aspectual pair — e.g., писати/написати), результативність (resultativity — focus on outcome, triggers perfective), діагностика (diagnostics — self-assessment of aspect mastery)"
-    },
-    {
-      "check": "EXERCISES",
-      "severity": "WARNING",
-      "message": "Plan expects 6 exercise(s) but content has 4"
-    }
-  ],
-  "timestamp": "2026-04-09T03:20:44.362098+00:00"
+  "warnings": [],
+  "timestamp": "2026-04-11T12:43:16.952789+00:00"
 }

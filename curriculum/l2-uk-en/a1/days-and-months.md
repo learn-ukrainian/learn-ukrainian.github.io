@@ -1,15 +1,15 @@
 ## Діало́ги — Dialogues
 
-Time management and scheduling are essential parts of daily life. In Ukraine, planning revolves around the **ти́ждень** (week). For anyone accustomed to calendars starting on Sunday, a small mental adjustment is required. The Ukrainian week strictly begins on **понеді́лок** (Monday). Observe how two friends, Olena and Marko, coordinate their plans for the upcoming week. They use days as time markers to organize their activities.
+In Ukraine, weekly planning often starts with **понеді́лок** (Monday). Observe how two friends, Olena and Marko, coordinate their plans for the upcoming week in a pattern similar to ULP Season 1, Episode 15. They use days as time markers to organize their activities.
 
 > **Оле́на:** Приві́т, Марку! Що ти ро́биш у понеділок? *(Hi Marko! What are you doing on Monday?)*
-> **Марко́:** У понеділок я працю́ю. *(On Monday I am working.)*
-> **Олена:** А у вівто́рок? *(And on Tuesday?)*
-> **Марко:** У вівторок я вивча́ю украї́нську. *(On Tuesday I study Ukrainian.)*
-> **Олена:** А у субо́ту? *(And on Saturday?)*
-> **Марко:** У суботу гуля́ю. Неді́ля — ві́льний день! *(On Saturday I walk. Sunday is a free day!)*
+> **Марко́:** У понеділок я працю́ю. А ти? *(On Monday I am working. And you?)*
+> **Олена:** Я теж працюю. А у вівто́рок? *(I am working too. And on Tuesday?)*
+> **Марко:** У вівторок о сьо́мій ве́чора я вивча́ю украї́нську. *(On Tuesday at seven in the evening I study Ukrainian.)*
+> **Олена:** Ціка́во! У субо́ту я гуля́ю в парку. Що робиш ти? *(Interesting! On Saturday I walk in the park. What do you do? )*
+> **Марко:** У суботу я теж гуляю. Неді́ля — ві́льний день! *(On Saturday I walk too. Sunday is a free day!)*
 
-Notice how Olena uses the question **Що ти робиш у...?** (What are you doing on...?) to ask about specific days. Marko responds using the exact same grammatical structure to state his plans. He also highlights a very important lifestyle concept: **неділя — вільний день** (Sunday is a free day). A **вільний день** (free day) is a day without professional obligations, which contrasts directly with a **робо́чий день** (work day). 
+Notice the reusable pattern here: **Що ти робиш у...? — У ... я ...** Use it to talk about your own week: **Що ти робиш у вівторок? — У вівторок я вивчаю українську.** The contrast **робо́чий день** / **вільний день** also helps you describe busy days and free days.
 
 When discussing birthdays, the vocabulary naturally shifts from days of the week to months and seasons. Read how Andriy and Sofia discuss their birthdays.
 
@@ -19,6 +19,8 @@ When discussing birthdays, the vocabulary naturally shifts from days of the week
 > **Софія:** П'ятна́дцятого бе́резня. *(The fifteenth of March.)*
 > **Андрій:** Це весна́? *(Is that spring?)*
 > **Софія:** Так, поча́ток весни́. *(Yes, the beginning of spring.)*
+> **Софія:** А у тебе? *(And yours?)*
+> **Андрій:** У мене́ в се́рпні. О, це лі́то! *(Mine is in August. Oh, that's summer!)*
 
 When Andriy wants to know the exact day, he asks **Якого числа?** (What date?). For now, treat both the question **Якого числа?** and the response **П'ятнадцятого березня** (The fifteenth of March) as fixed vocabulary chunks to memorize.
 
@@ -28,7 +30,7 @@ To effectively plan a schedule, the seven days of the week are required. In orde
 
 When you want to say that something happens "on" a specific day, you use the prepositions **у** or **в** followed by the day. The ending of the word might change depending on its gender. For masculine days, the form remains completely stable. You simply add the preposition: **у понеділок** (on Monday), **у вівторок** (on Tuesday), **у четвер** (on Thursday). For feminine days ending in a vowel, the final vowel shifts to an -у or -ю sound. You simply memorize this pattern: **середа** → **у се́реду** (on Wednesday), **п'ятниця** → **у п'я́тницю** (on Friday), **неділя** → **в неді́лю** (on Sunday). The same rule applies to Saturday: **субота** → **в суботу** (on Saturday).
 
-Let us focus specifically on the word **неділя** (Sunday). For learners coming from other Slavic languages, this word can be a tricky false friend. In Russian, a similar-sounding word means "week." In Ukrainian, **неділя** only means Sunday. The etymology is fascinating and helps anchor its meaning: it comes from the phrase "не ділати," which translates to "not to work." Note that while **неділя** means Sunday in standard Ukrainian, in some regional dialects it can also mean "week." However, the standard word for "week" is always **тиждень**.
+Let us focus specifically on the word **неділя** (Sunday). In standard Ukrainian, **неділя** means only the seventh day of the week. If you want to say "week," the standard word is **ти́ждень**. This is an important contrast to memorize early: **неділя** = Sunday, **тиждень** = week.
 
 To talk about your week broadly, you can group the days into two main categories. The days from Monday to Friday are called **робо́чі дні** (work days). The days of rest, Saturday and Sunday, are called **вихідні́** (the weekend). In Ukrainian elementary schools, such as in the Grade 2 textbook by Vashulenko, students learn days of the week by creating a personal weekly schedule.
 
@@ -43,12 +45,12 @@ Just as the days form a week, the twelve months form a year. In Ukrainian school
 
 *   **Зима́** (Winter): **гру́день** (December), **сі́чень** (January), **лю́тий** (February).
 *   **Весна** (Spring): **бе́резень** (March), **кві́тень** (April), **тра́вень** (May).
-*   **Лі́то** (Summer): **че́рвень** (June), **ли́пень** (July), **се́рпень** (August).
+*   **Літо** (Summer): **че́рвень** (June), **ли́пень** (July), **се́рпень** (August).
 *   **О́сінь** (Autumn): **ве́ресень** (September), **жо́втень** (October), **листопа́д** (November).
 
-The story of the Ukrainian months is deeply rooted in the natural world. While English and Russian use names derived from the ancient Latin calendar, Ukrainian has preserved its native Slavic system. The names describe exactly what is happening in nature. For example, **березень** (March) comes from the word for birch tree, as this is when birch sap begins to flow. **Квітень** (April) is related to flowers blooming. **Липень** (July) is named after the linden tree. **Вересень** (September) is tied to the blooming of heather. Perhaps the most obvious is **листопад** (November), which literally means "leaf fall."
+Many Ukrainian month names come from nature words rather than Latin names. For example, **березень** relates to birch, **квітень** to flowers, **липень** to the linden tree, and **листопад** to falling leaves.
 
-When you want to say that something happens "in" a specific month, you again use the prepositions **у** or **в**. However, months require a different grammatical ending than days. You must add the ending **-і** to the base word. Often, the final fleeting vowel **-е-** in the month's name drops out. Here is the pattern you need to learn: **січень** → **у січні** (in January), **березень** → **у березні** (in March), **квітень** → **у квітні** (in April), **жовтень** → **у жо́втні** (in October). The exception is **лютий**, which takes a different ending: **у лю́тому** (in February).
+When you want to say that something happens "in" a specific month, you again use the prepositions **у** or **в**. At A1 level, the safest approach is to learn each month together with its "in" form as a fixed chunk, rather than forcing one ending onto every month name. Useful chunks are: **січень** → **у січні** (in January), **лютий** → **у лю́тому** (in February), **березень** → **у березні** (in March), **квітень** → **у квітні** (in April), **серпень** → **у серпні** (in August), **листопад** → **у листопа́ді** (in November).
 
 Finally, you also need to know how to say "in" a specific season. When acting as an adverb to answer the question "when?", the seasons take irregular forms that you simply must memorize as fixed vocabulary items: **взи́мку** (in winter), **навесні́** (in spring), **влі́тку** (in summer), **восени́** (in autumn). Compare these to the base nouns: **зима**, **весна**, **літо**, **осінь**.
 
@@ -67,7 +69,7 @@ To help organize the calendar vocabulary, here is a consolidated reference table
 | **січень** | **у січні** |
 | **зима** | **взимку** |
 
-Learning this vocabulary is a vital step in thinking like a Ukrainian. By using native Slavic names like **березень** instead of Latin-based alternatives, and by structuring your week to begin on **понеділок**, you are aligning yourself with the cultural rhythms of Ukraine. Remember to practice the soft endings on months like **січень** and **вересень** to make your pronunciation sound natural and authentic. The soft sign **ь** indicates that the preceding consonant is soft.
+This vocabulary helps you talk about schedules, birthdays, and seasons more naturally in Ukrainian. Remember that days and months are written in lowercase, and learn common time chunks such as **у понеділок**, **у березні**, and **взимку**. The soft sign **ь** indicates that the preceding consonant is soft.
 
 Answer the following questions based on today's actual date and your own life. Speak the answers out loud to practice forming the complete phrases.
 
@@ -77,4 +79,4 @@ Answer the following questions based on today's actual date and your own life. S
 *   Коли у тебе день народження? (Мій день народження у ...)
 *   Що ти робиш у суботу? (У суботу я ...)
 
-Mastering these basic questions provides the confidence to schedule meetings, talk about the past, and make plans for the future in Ukrainian.
+These questions are enough for short, real-life calendar conversations in Ukrainian.

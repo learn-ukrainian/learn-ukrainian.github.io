@@ -1,0 +1,76 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T09-20-993d9590.json
+phase: review
+prompt_chars: 63007
+response_chars: 7717
+prompt_words: 9361
+response_words: 1098
+sections:
+- name: preamble
+  start: 0
+  length: 469
+  fraction: 0.0074
+- name: plan
+  start: 469
+  length: 59543
+  fraction: 0.945
+- name: output_spec
+  start: 60012
+  length: 2995
+  fraction: 0.0475
+large_sections:
+- plan
+directives_total: 28
+directives_covered: 18
+directives_missed:
+- kind: must
+  text: 'To truly understand the soul of the Ukrainian verb, you must look beyond
+    simply when an action happens and ask yourself a completely different question:
+    is the action currently in progress, or is it fully done?'
+  covered: false
+  coverage_note: 4/22 keywords (18%)
+- kind: must
+  text: When you encounter a new verb in the dictionary or in conversation, you must
+    immediately ask either "Що робити?" or "Що зробити?".
+  covered: false
+  coverage_note: 4/13 keywords (31%)
+- kind: must
+  text: This is why you must memorize from the beginning that the perfective partner
+    of **говорити** is **сказати**, and for the verb **брати** it is **взяти**.
+  covered: false
+  coverage_note: 5/15 keywords (33%)
+- kind: must
+  text: They assume that if it looks like the present, it must mean the present.
+  covered: false
+  coverage_note: 3/8 keywords (38%)
+- kind: must
+  text: We naturally use perfective verbs to state clear goals and deliver results,
+    while we rely on imperfective verbs to describe the ongoing processes and meetings
+    required to reach those milestones.
+  covered: false
+  coverage_note: 4/20 keywords (20%)
+- kind: must
+  text: 'Start your sentence building by asking yourself one fundamental question:
+    "Do I need a result, or a process?" If you need to describe a completed action
+    or a specific goal, you must use the perfective aspect.'
+  covered: false
+  coverage_note: 5/22 keywords (23%)
+- kind: must
+  text: Conversely, if you are describing an ongoing process, a regular habit, or
+    an action without a defined endpoint, you must use the imperfective aspect.
+  covered: false
+  coverage_note: 4/16 keywords (25%)
+- kind: must
+  text: If you are not 100% certain a word/form/usage is wrong, you MUST flag it as
+    `[NEEDS RAG VERIFICATION]` instead of marking it as a definitive error.
+  covered: false
+  coverage_note: 6/17 keywords (35%)
+- kind: must
+  text: '**CRITICAL RULE: If you mention ANY error, mistake, or inaccuracy in the
+    evidence column of your scores table, you MUST also list it as a structured finding
+    below AND include it in your `<fixes>` block.'
+  covered: false
+  coverage_note: 8/22 keywords (36%)
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing

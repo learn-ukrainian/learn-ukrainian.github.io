@@ -1,0 +1,55 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 3
+  evidence: The plan says the reading must use `ONLY vocabulary from M15-M20. No new
+    words`, but it adds `**Я диза́йнер. Я бага́то ду́маю і малю́ю.**`, `**...вчи́ти
+    англі́йську**`, and `**...в парку**`. The dialo
+- dimension: 2
+  name: Linguistic accuracy
+  score: 4
+  evidence: 'Two teachable errors: `**Одина́дцята ве́чора — я вже сплю.**` and the
+    false `-ся/-сь` explanation in Grammar. No Russianisms/Surzhyk were clearly confirmed
+    beyond that.'
+- dimension: 3
+  name: Pedagogical quality
+  score: 4
+  evidence: 'The checkpoint is overloaded with English meta-explanation: `Reading
+    connected text is the best way...`, `We can analyze the lexical choices...`, `Several
+    pedagogical mechanics are at play.` This push'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 6
+  evidence: Required review verbs are present (`хотіти`, `могти`, `мусити`, `читати`,
+    `говорити`, `працювати`, `дивитися`, `прокидатися`, `вмиватися`), but the reading
+    section dilutes the review with off-plan lex
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: All 4 planned activity slots are present, with IDs matching the intended
+    quiz / fill-in / fill-in / group-sort sequence, and each marker follows the relevant
+    teaching section.
+- dimension: 6
+  name: Engagement & tone
+  score: 6
+  evidence: 'The teacher voice is clear, but the module drifts into filler/self-congratulation:
+    `You have officially reached the end...`, `This is a massive step forward...`,
+    `You have mastered the "What"...` Thes'
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: All planned H2 sections are present and correctly ordered, and the deterministic
+    total word count is 1799, which is above the 1200 target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 9
+  evidence: No Russian-centric framing or obvious cultural distortion was found; references
+    such as Kyiv and everyday routines are appropriate.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 4
+  evidence: 'The dialogue is short and mostly Viktor asking questions while Olena
+    answers. It is also off-scenario: `meeting between two friends` instead of the
+    planned flatmate routine/chore exchange, so it does '
+findings: []

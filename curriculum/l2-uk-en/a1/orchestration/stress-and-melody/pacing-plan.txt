@@ -1,5 +1,5 @@
-Section 1 "Наголос (Stress)": ~480 words — Detail the definition, freedom, and mobility of Ukrainian stress, ending with meaning-changing homographs.
-Section 2 "Інтонація (Intonation)": ~380 words — Explain sentence melodies for statements, questions, and exclamations, highlighting punctuation cues.
-Section 3 "Читаємо вголос (Reading Aloud)": ~300 words — Provide a step-by-step reading method and practical dialogue for rhythm.
-Section 4 "Підсумок — Summary": ~250 words — Recap core logic of stress and melody and provide a self-check list.
-Total: 1410 words
+Section 1 "Наголос (Stress)": ~430 words — Introduce free and mobile stress, minimal pairs, and common patterns.
+Section 2 "Інтонація (Intonation)": ~365 words — Teach falling melody for statements/wh-questions and rising for yes/no questions.
+Section 3 "Читаємо вголос (Reading Aloud)": ~370 words — Practice multisyllable words and apply intonation to dialogues.
+Section 4 "Підсумок — Summary": ~310 words — Recap stress, meaning changes, intonation, and final read-aloud practice.
+Total: ~1475 words

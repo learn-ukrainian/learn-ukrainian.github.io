@@ -1,25 +1,23 @@
-# Section-by-Section Generation — Section 2/4
+# Section-by-Section Generation — Section 2/3
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 51: Якщо... то... (A2, A2.7 [Complex Sentences and Conditionals])
-**Section to write:** Умова в повсякденному житті (Conditions in Everyday Life) (~780 words)
-**Word target for this section:** 780 words (aim for 858 to account for undershoot)
+**Section to write:** Умова в повсякденному житті (Conditions in Everyday Life) (~770 words total)
+**Word target for this section:** 770 words (aim for 847 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Умова в повсякденному житті (Conditions in Everyday Life) (~780 words)
-- P1 (~120 words): [Dialogue "На дачі" (Planning a Garden): A husband and wife discuss planting. Uses 'якщо буде сонце', 'якщо купиш насіння', 'якщо польємо'. Includes vocabulary: помідори, грядка, насіння.]
-- P2 (~100 words): [Dialogue Analysis: Breakdown of how 'якщо' was used in the garden dialogue to express collaboration and dependency between actions (If you do X, I will do Y).]
-- P3 (~120 words): [Advice and Recommendations: Using the Imperative mood in the result clause. Examples: "Якщо болить голова, випий таблетку," "Якщо хочеш вивчити мову, говори щодня."]
-- P4 (~120 words): [Warnings and Likely Outcomes: Using perfective verbs to show immediate consequences of failure. Examples: "Якщо не поспішиш, запізнишся," "Якщо не візьмеш парасольку, змокнеш."]
-- P5 (~110 words): [Promises and Agreements: Using the future tense to build trust and set conditions. Examples: "Якщо ти допоможеш мені, я допоможу тобі," "Якщо все буде добре, поїдемо у відпустку."]
-- P6 (~110 words): [Social Contexts: Planning meetings and calls. "Якщо ви зможете прийти, напишіть мені," "Якщо зустріч закінчиться вчасно, я прийду." Use of 'вчасно' and 'закінчитися'.]
-- P7 (~100 words): [Aspect Choice in Conditionals: Explain why 'поспішиш' (perfective) is used for a specific condition vs 'спізнишся'. Mention that repeated conditions use imperfective: "Якщо ти завжди запізнюєшся..."]
-- <!-- INJECT_ACTIVITY: match-condition-to-result --> [match-up, Match conditions (якщо-clauses) to their logical results, 8 items]
-- <!-- INJECT_ACTIVITY: fix-aspect-errors --> [error-correction, Fix incorrect verb aspect usage in conditional sentences, 6 items]
+## Умова в повсякденному житті (Conditions in Everyday Life) (~770 words total)
+- P1 (Dialogue) (~110 words): Setting: Planning a garden. If/then decisions about planting. "Якщо буде сонце (n), посадимо помідори (pl). Якщо не буде дощу (m), доведеться полити ввечері. Якщо ти купиш насіння (n), я підготую грядку (f)."
+- P2 (~160 words): Planning and decisions. Explain how conditionals help coordinate daily life. Provide examples: `Якщо завтра буде вільний час, я піду в спортзал.` and `Якщо у магазині є свіжий хліб, купи, будь ласка.`
+- P3 (~160 words): Advice and recommendations. Detail the pattern of `Якщо + теперішній час, + наказовий спосіб` (imperative) to give advice. Examples: `Якщо болить голова, випий таблетку.` and `Якщо хочеш вивчити мову, практикуй щодня.`
+- P4 (~170 words): Warnings. Explain how to use negative conditions to warn about consequences. Examples: `Якщо не поспішиш, запізнишся.` and `Якщо не візьмеш парасольку, змокнеш.`
+- P5 (~170 words): Promises and agreements. Show how to make reciprocal agreements or conditional promises using future tense. Examples: `Якщо ти допоможеш мені, я допоможу тобі.` and `Якщо все буде добре, ми поїдемо у відпустку.`
+- <!-- INJECT_ACTIVITY: match-up-logical-results --> [match-up, Match conditions (якщо-clauses) to their logical results, 8 items]
+- <!-- INJECT_ACTIVITY: error-correction-verb-forms --> [error-correction, Fix incorrect verb aspect usage in sentences, 6 items]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -27,7 +25,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-дієслова описують загальний факт. Інший дуже простий приклад: «Якщо вода кипить, вона гаряча». Це відомий фізичний закон. Вода не може бути холодною, якщо вона зараз кипить. Тому ми завжди використовуємо тільки теперішній час для таких очевидних фактів. Це дуже логічна структура української граматики. Але найчастіше ми говоримо про майбутні можливості. Ми кожного дня плануємо наші майбутні дії. We explain future possibilities using Present or Future in the condition and Future in the result. В українській мові ми можемо використовувати теперішній або майбутній час після слова «якщо». А в другій частині речення ми зазвичай використовуємо майбутній час. Також там може бути наказовий спосіб *(imperative)*. Особливо часто ми використовуємо дієслова «бути» і «мати» у майбутньому часі. Наприклад, ми кажемо «якщо буде» *(if there will be)*. Або ми кажемо «якщо матимеш» *(if you will have)*. Подивіться на цей приклад: «Якщо ти матимеш час, я зателефоную тобі». Тут ми чітко бачимо умову в майбутньому часі. Інший приклад: «Якщо буде гарна **погода** *(weather)*, ми поїдемо на море». Або: «Якщо ти маєш **вільний** *(free)* час, треба **поспішити** *(to hurry)* на поїзд». Це дуже гарна **порада** *(advice)* для туристів. Ми використовуємо таку структуру щодня. В українській мові є одне дуже цікаве коротке слово. Це слово «то» *(then)*. Воно дуже часто працює разом зі словом «якщо». The word "то" is a correlative particle that marks the start of the result clause. Ми ставимо слово «то» на самому початку другої частини речення. Воно стоїть прямо перед результатом. Це слово робить зв'язок між умовою і результатом більш сильним. Це слово додає важливий акцент. Наприклад: «Якщо **дощитиме** *(it will rain)*, то ми **залишимося** *(will stay)* вдома». Слово «дощитиме» — це наша умова. Далі йде слово «то». І потім іде наш результат — «ми залишимося». Слово «то» не є граматично обов'язковим. Ви можете сказати це речення без нього. Але українці дуже люблять використовувати це слово у повсякденній розмові. Правила пунктуації є дуже важливими для таких складних речень. Правильна кома допомагає нам легко читати і розуміти текст. A comma always follows the "якщо"-clause when it comes first. A comma always precedes "якщо" when it comes second. Якщо умова зі словом «якщо» стоїть на першому місці, ми завжди ставимо кому після неї. Наприклад: «Якщо ти хочеш, я **допоможу** *(will help)*». Якщо результат стоїть на першому місці, ми ставимо кому прямо перед словом «якщо». Наприклад: «Я допоможу, якщо ти хочеш». А що треба робити зі словом «то»? Кома завжди стоїть перед словом «то». Наявність слова «то» не змінює наше головне правило пунктуації. Наприкінці ми маємо обов'язково згадати про форми дієслів. У реальних умовах ми завжди використовуємо дійсний спосіб. In real conditionals, we use regular present or future forms. We never use the "б/би" particle used in English "would". Ми використовуємо звичайні форми теперішнього або майбутнього часу. Ми ніколи не використовуємо частку «б» або «би» після слова «якщо». Частка «б/би» існує тільки для слова «якби». А слово «якби» створює нереальну умову. Тому запам'ятайте це просте правило. Після «якщо» ми просто ставимо дієслово. Це робить граматику набагато простішою для вивчення та щоденного використання. <!-- INJECT_ACTIVITY: fill-in-conditional-verbs -->
+Навіть якщо ви використовуєте слово «то», кома все одно ставиться перед ним. Наприклад: «Якщо буде сонце, ми підемо в ліс» або «Якщо буде сонце, то ми підемо в ліс». Якщо ви вирішите змінити порядок частин і поставити «якщо» всередині речення, то кома все одно буде стояти прямо перед ним. Наприклад: «Ми підемо в ліс, якщо буде сонце». Це маленьке правило допоможе вашому тексту виглядати професійно, а вашому співрозмовнику буде набагато легше стежити за вашою думкою під час розмови чи читання. > *Punctuation in such sentences is very simple if you remember one main rule: a comma always separates the two parts of the sentence. In Ukrainian, we must put a comma before the main part if the sentence begins with the word "if." Even if you use the word "то," the comma is still placed before it. For example: "If it's sunny, we will go to the forest" or "If it's sunny, then we will go to the forest." If you decide to change the order of the parts and put "if" in the middle of the sentence, the comma will still stand right before it. For example: "We will go to the forest if it's sunny." This small rule will help your text look professional, and it will be much easier for your interlocutor to follow your thought during conversation or reading.* На завершення важливо підкреслити, що цей тип речень описує саме **реальний** (real) сценарій життя. Це означає, що ми обговорюємо події, які з великою ймовірністю можуть відбутися або вже відбуваються. В українській мові існує інше слово — «якби», але воно призначене для нереальних мрій, фантазій або суто гіпотетичних ситуацій, які навряд чи стануть правдою. Наприклад, вираз «якби я був птахом» — це мрія, а фраза «якщо я куплю квиток» — це реальний план. У цьому модулі ми фокусуємося виключно на вживанні слова **якщо**. Це база, яка дозволить вам вільно спілкуватися на щоденні теми. Коли ви захочете дати комусь корисну **порада** (advice) або обговорити спільні плани, ви будете використовувати саме ці конструкції. Це зробить вашу мову більш точною та логічною. > *In conclusion, it is important to emphasize that this type of sentence describes specifically a real-life scenario. This means we are discussing events that are very likely to happen or are already happening. In the Ukrainian language, there is another word — "якби", but it is intended for unreal dreams, fantasies, or purely hypothetical situations that are unlikely to come true. For example, the expression "if I were a bird" is a dream, while the phrase "if I buy a ticket" is a real plan. In this module, we focus exclusively on the use of the word "якщо". This is the foundation that will allow you to communicate freely on daily topics. When you want to give someone useful advice or discuss mutual plans, you will use exactly these constructions. This will make your speech more precise and logical.* <!-- INJECT_ACTIVITY: fill-in, Complete real conditional sentences with the correct verb form in the якщо-clause or result clause -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -56,7 +54,7 @@ objectives:
 - Learner can apply real conditionals in practical everyday scenarios (planning, advice, warnings, promises).
 dialogue_situations:
 - setting: 'Planning a garden — if/then decisions about planting: Якщо буде сонце (n, sun), посадимо помідори
-    (pl). Якщо йтиме дощ (m, rain), польємо пізніше. Якщо ти купиш насіння (n, seeds), я підготую грядку
+    (pl). Якщо не буде дощу (m, rain), доведеться полити ввечері. Якщо ти купиш насіння (n, seeds), я підготую грядку
     (f, garden bed).'
   speakers:
   - Подружжя (на дачі)
@@ -459,14 +457,100 @@ A structured approach is best for internalizing this pattern.
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
 
-TARGET: 70-90% Ukrainian.
+**You are in PHASE 6: A2 finale (A2 M51-M69)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 40%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 40% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
+
+TARGET: 70-90% Ukrainian. THIS IS A HARD GATE — the audit REJECTS modules outside this range.
+
 LANGUAGE ROLES:
-- PRIMARY: Ukrainian for everything.
-- ENGLISH: Only in vocabulary tables and one-line grammar notes where absolutely necessary.
-- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English.
-A2 register. Concrete everyday vocabulary. No literary language, no metaphors. Near-full Ukrainian immersion. Ukrainian sentences max 15 words. Max 2 clauses. All cases allowed. Simple subordinate clauses only. Full aspect pairs. No participles.
+- PRIMARY: Ukrainian for narrative, dialogues, examples, section intros, cultural notes, Reading Practice blocks, learning callouts.
+- METALANGUAGE: For abstract grammar terms, you may provide ONE parenthetical English translation on FIRST use only, e.g. `**доконаний вид** (perfective aspect)`. Subsequent uses must be Ukrainian only.
+- VOCABULARY TABLE: English glosses live here, not in prose.
+- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English. Never mix mid-sentence.
+
+⚠️ HARD STRUCTURAL RULES — READ THIS TWICE:
+- FORBIDDEN: long English narrative paragraphs explaining grammar. If a concept needs more than ONE sentence of English scaffolding, it goes in a `:::info` or `:::tip` callout, NOT in the main prose.
+- FORBIDDEN: mirroring a Ukrainian paragraph with an English translation paragraph. Write ONE paragraph in Ukrainian, move on.
+- FORBIDDEN: `> *English translation*` blockquotes after Ukrainian dialogues. They were required at A1 but they cap immersion below 50% — at A2-late they MUST be removed.
+
+ESCAPE HATCH (the 'Dual Ladder'):
+For genuinely abstract grammar concepts, you may use ONE `:::info` or `:::tip` callout written in English per section to clarify the concept. Because callouts are stripped from the immersion metric, this serves as on-demand scaffolding for struggling learners without penalising the immersion score. Do NOT abuse this — at most one English callout per major section.
+
+A2 register. Concrete everyday vocabulary. No literary language, no metaphors. Ukrainian sentences max 15 words. Max 2 clauses. All cases allowed. Simple subordinate clauses only (який/що/коли). Full aspect pairs. No participles.
+
+CHECKLIST (re-read before writing each section):
+- [ ] Every narrative paragraph in Ukrainian?
+- [ ] Zero `> *English translation*` blockquotes after dialogues?
+- [ ] At most ONE English `:::info` callout per major section?
+- [ ] Metalanguage terms parenthetically translated on first use only (max 2 per section)?
+- [ ] Reading Practice / Читаємо українською block in EVERY major section?
+
 
 GRAMMAR RULES:
 - Max 15 words per Ukrainian sentence
@@ -478,18 +562,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] якщо (if — real condition)
+- [ ] умова (condition)
+- [ ] результат (result, outcome)
+- [ ] реальний (real)
+- [ ] погода (weather)
+- [ ] допомогти (to help)
+- [ ] поспішити (to hurry)
+- [ ] вільний (free, available)
+- [ ] залишитися (to stay, to remain)
+- [ ] порада (advice)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Умова в повсякденному житті (Conditions in Everyday Life) (~770 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

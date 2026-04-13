@@ -1,61 +1,56 @@
-## Яке сьогодні число? Котра година?
+## Яке сьогодні число? Родовий з датами (What's the Date? Genitive with Dates) (~550 words)
 
-Asking for the date and time is a daily necessity. In Ukrainian, these questions rely on the Genitive case and ordinal numerals. When you want to know today's date, you ask «Яке сьогодні число?». The word **число** (date) means "number," but here it describes the calendar date. If you want to ask when an event is happening, you use the Genitive form and ask «Якого числа?».
+When you travel to Ukraine or book accommodation, you will quickly need to understand how to state dates and quantities. Knowing how to say the date is essential for scheduling meetings, buying tickets, and organizing your life. Let's listen to a typical conversation at a hotel reception desk. Notice how the endings change when discussing dates and counting people or rooms.
 
-Яке сьогодні число? Сьогодні десяте березня. Якого числа твій день народження? Мій день народження двадцятого березня. Коли ми їдемо до Києва? Ми їдемо п'ятого травня. Якого числа починається відпустка? Відпустка починається сьомого серпня.
+> — **Адміністратор готелю:** Добрий день! Чим я можу вам допомогти? *(Good day! How can I help you?)*
+> — **Гість:** Добрий день! Я хочу забронювати номер у вашому готелі. *(Good day! I want to book a room in your hotel.)*
+> — **Адміністратор готелю:** Звичайно. З якого числа ви плануєте жити у нас? *(Certainly. From what date do you plan to stay with us?)*
+> — **Гість:** З п'ятого березня. *(From March 5th.)*
+> — **Адміністратор готелю:** Зрозуміло. А до якого числа ви залишаєтесь? *(Understood. And until what date are you staying?)*
+> — **Гість:** Ми залишаємось до десятого березня. *(We are staying until March 10th.)*
+> — **Адміністратор готелю:** Добре. Скільки номерів вам потрібно забронювати? *(Good. How many rooms do you need to book?)*
+> — **Гість:** Два номери, будь ласка. *(Two rooms, please.)*
+> — **Адміністратор готелю:** А скільки гостей буде жити в номерах? *(And how many guests will stay in the rooms?)*
+> — **Гість:** Буде п'ять гостей. *(There will be five guests.)*
 
-> *What is the date today? Today is the tenth of March. On what date is your birthday? My birthday is on the twentieth of March. When are we going to Kyiv? We are going on the fifth of May. On what date does the vacation start? The vacation starts on the seventh of August.*
+To ask about the current date, we use the phrase «Яке сьогодні число?». The word **число** means date or number. It is a neuter noun, so the question word «яке» also takes the neuter form. When answering this question, the structure involves two parts: the day and the **місяць** (month).
 
-To state today's date, we use a specific grammatical formula. We start with an ordinal numeral in the neuter Nominative form. This numeral agrees with the implied neuter noun «число». Then, we add the name of the month in the Genitive singular. Ukrainian logic translates closer to "the first of January." The number changes its ending, but the month stays in the Genitive case.
+В українській мові день — це завжди порядковий числівник середнього роду. Назва місяця завжди стоїть у родовому відмінку однини. Ми ніби кажемо: перше число цього місяця.
 
-:::info
-**Grammar box**
-Always put the month in the Genitive case when giving a date. The day itself is an ordinal number like **перше** (first) or **друге** (second).
-:::
+> *In the Ukrainian language, the day is always an ordinal numeral of the neuter gender. The name of the month always stands in the Genitive singular. It is as if we are saying: the first number of this month.*
 
-Сьогодні перше січня. Завтра буде друге лютого. День Незалежності України — двадцять четверте серпня. Мій іспит буде дев'ятого вересня. Новий рік ми святкуємо першого січня. Коли ти працюєш? Я працюю третього квітня.
+For example, to say "Today is January 1st", you use the neuter ordinal *перше* and the Genitive form of the month. You say «Сьогодні перше січня». To say "Today is February 2nd", you say «Сьогодні друге лютого». The word for date itself is almost always omitted in the answer, but its grammatical influence remains.
 
-> *Today is the first of January. Tomorrow will be the second of February. The Independence Day of Ukraine is the twenty-fourth of August. My exam will be on the ninth of September. We celebrate the New Year on the first of January. When do you work? I work on the third of April.*
+Українські назви місяців — це іменники чоловічого роду. **Січень** стає **січня**, а **березень** стає **березня**. **Квітень** змінюється на **квітня**, а **травень** — на **травня**. **Червень** стає **червня**, а **липень** змінюється на **липня**. **Серпень** стає **серпня**, а **вересень** — **вересня**. **Жовтень** стає **жовтня**, а **грудень** змінюється на **грудня**.
 
-Let's look at all twelve months and their Genitive forms. In Ukrainian, all month names are masculine. Most end in a consonant in the Nominative case, taking the ending **-я** or **-а** in the Genitive. Notice that some months lose the fleeting vowel **-е-** when they change form, like «січень» becoming «січня». The only exception is **лютий** (February), which takes the adjectival Genitive ending **-ого**.
+> *Ukrainian month names are masculine nouns. January becomes січня, and March becomes березня. April changes to квітня, and May to травня. June becomes червня, and July changes to липня. August becomes серпня, and September becomes вересня. October becomes жовтня, and December changes to грудня.*
 
-Січень — перше січня. Лютий — друге лютого. Березень — третє березня. Квітень — четверте квітня. Травень — п'яте травня. Червень — шосте червня. Липень — сьоме липня. Серпень — восьме серпня. Вересень — дев'яте вересня. Жовтень — десяте жовтня. Листопад — одинадцяте листопада. Грудень — дванадцяте грудня. Я дуже люблю травень. Ми чекаємо снігу у кінці листопада. Вона народилася п'ятнадцятого грудня. Я відпочиваю з першого липня до десятого серпня. Твій брат приїде п'ятого вересня.
+Є два важливі винятки з цього правила. Місяць **листопад** має закінчення **-а**, тому його форма — **листопада**. Місяць **лютий** відмінюється як прикметник, тому він стає **лютого**.
 
-> *January — the first of January. February — the second of February. March — the third of March. April — the fourth of April. May — the fifth of May. June — the sixth of June. July — the seventh of July. August — the eighth of August. September — the ninth of September. October — the tenth of October. November — the eleventh of November. December — the twelfth of December. I really love May. We are waiting for snow at the end of November. She was born on the fifteenth of December. I am resting from the first of July until the tenth of August. Your brother will arrive on the fifth of September.*
+> *There are two important exceptions to this rule. The month November has the ending -a, so its form is листопада. The month February declines like an adjective, so it becomes лютого.*
 
 :::tip
-**Did you know?**
-Ukrainian month names are deeply connected to nature and traditional activities. For example, **листопад** (November) literally describes the falling of leaves, and **квітень** (April) is the time of blooming flowers.
+**Did you know?** — Ukrainian month names are deeply connected to nature and the changing seasons. For instance, **листопад** literally means "falling of leaves", and **квітень** is related to flowers blooming. This is very different from English month names, which come from Latin.
 :::
 
-To ask "What time is it?", you say «Котра година?». Because «година» is feminine, we use feminine ordinal numerals for the hours. To ask "At what time?", use «О котрій годині?», placing the numeral in the Locative case. To say "half past," we use the preposition «на» followed by the *next* hour in the Accusative case. «Пів на другу» means "half toward the second hour" (1:30).
+Things change slightly when you want to state when an event happened, happens, or will happen. This is the most common way to talk about schedules. To answer the questions «Коли?» (When?) or «Якого числа?» (On what date?), the day also changes to the Genitive case.
 
-Вибачте, котра зараз година? Зараз п'ята година. О котрій годині починається фільм? Фільм починається о дев'ятій годині. Коли у нас зустріч? Зустріч о пів на другу. Урок закінчується об одинадцятій. Ми йдемо додому о пів на шосту.
+Коли ми говоримо про час події, день стає порядковим числівником у родовому відмінку чоловічого роду. Назва місяця також залишається в родовому відмінку. Це дуже важливе правило.
 
-> *Excuse me, what time is it now? It is five o'clock now. At what time does the movie start? The movie starts at nine o'clock. When is our meeting? The meeting is at half past one. The lesson ends at eleven. We are going home at half past five.*
+> *When we talk about the time of an event, the day becomes an ordinal numeral in the Genitive case of the masculine gender. The name of the month also remains in the Genitive case. This is a very important rule.*
 
-Here is a short conversation where a client is booking an appointment at a salon. Notice how the client and the administrator use both Nominative and Genitive forms for the dates.
+This structure contrasts directly with simply stating the current date. Compare the question «Яке сьогодні число?» with «Коли він приїхав?». In the first case, we say «Сьогодні перше січня» (Today is January 1st). In the second case, we say «Він приїхав першого січня» (He arrived on January 1st). The phrase «двадцять четверте серпня» becomes «двадцять четвертого серпня» when discussing an event.
 
-> — **Клієнтка:** Добрий день! Яке сьогодні число? *(Good day! What is the date today?)*
-> — **Адміністратор:** Добрий день! Сьогодні п'яте травня. *(Good day! Today is the fifth of May.)*
-> — **Клієнтка:** Я хочу записатися на стрижку. Коли у вас є вільний час? *(I want to book an appointment for a haircut. When do you have free time?)*
-> — **Адміністратор:** Ми маємо час завтра, шостого травня. *(We have time tomorrow, the sixth of May.)*
-> — **Клієнтка:** Чудово. Я хочу записатися на шосте травня. *(Great. I want to book for the sixth of May.)*
-> — **Адміністратор:** Добре, о котрій годині вам зручно? *(Good, at what time is convenient for you?)*
-> — **Клієнтка:** Об одинадцятій годині. А скільки коштує стрижка? *(At eleven o'clock. And how much does a haircut cost?)*
-> — **Адміністратор:** Триста гривень. Домовилися. Чекаємо на вас об одинадцятій. *(Three hundred hryvnias. Agreed. We are waiting for you at eleven.)*
+Here are some natural and cultural examples of dates in action. These sentences focus on important historical events and everyday conversations. Notice how the Genitive case is used consistently for both the day and the month.
 
-Here is another situation. Two friends are meeting at a train station.
+Тарас Шевченко народився дев'ятого березня. Він дуже відомий український поет і художник. Прийнято Акт проголошення незалежності України двадцять четвертого серпня. Це головне свято в країні.
 
-> — **Максим:** Привіт! Котра зараз година? *(Hi! What time is it now?)*
-> — **Анна:** Привіт! Зараз пів на десяту. *(Hi! It is half past nine now.)*
-> — **Максим:** О котрій годині прибуває поїзд з Одеси? *(At what time does the train from Odesa arrive?)*
-> — **Анна:** Поїзд прибуває о десятій годині. Ми маємо тридцять хвилин. *(The train arrives at ten o'clock. We have thirty minutes.)*
-> — **Максим:** Добре. Хочеш випити кави? *(Good. Do you want to drink coffee?)*
-> — **Анна:** Так, із задоволенням. *(Yes, with pleasure.)*
+> *Taras Shevchenko was born on March 9th. He is a very famous Ukrainian poet and artist. The Act of Declaration of Independence of Ukraine was adopted on August 24th. This is the main holiday in the country.*
 
 ### Читаємо українською (Reading Practice)
 
-Сьогодні десяте березня. Зараз восьма година ранку. Я п'ю каву і планую свій день. Об одинадцятій годині у мене важлива зустріч у центрі міста. Після обіду, о пів на третю, я йду до лікаря. Завтра буде одинадцяте березня, і мій старший брат приїжджає до Києва. Ми зустрічаємо його о п'ятій годині вечора на центральному вокзалі. Я дуже чекаю цього дня, тому що ми рідко бачимося. Він працює в іншому місті з першого жовтня.
+Сьогодні п'ятнадцяте листопада. Це звичайний осінній день. Мій брат має день народження двадцятого листопада. Ми плануємо велике свято. Я купив йому подарунок ще десятого жовтня. Наші батьки приїдуть дев'ятнадцятого числа.
 
-<!-- INJECT_ACTIVITY: quiz-dates-drill -->
+> *Today is November 15th. This is a regular autumn day. My brother has his birthday on November 20th. We are planning a big celebration. I bought him a gift back on October 10th. Our parents will arrive on the nineteenth.*
+
+<!-- INJECT_ACTIVITY: quiz, What's the Date? (Drill) -->

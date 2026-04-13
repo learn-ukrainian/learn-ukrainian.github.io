@@ -21,7 +21,7 @@ Grand total: ~2150 words
 <previous_context>
 [...previous sections truncated...]
 
-Does your wife already know?)* > — **Олег:** Ще ні. Зараз буду дзвонити їй. Скажу: «Кохана моя, усе добре, не хвилюйся, моє сонечко!». *(Not yet. I will call her now. I will say: "My beloved, everything is fine, don't worry, my sunshine!".)* > — **Друг:** Добре, друже. Тоді до зустрічі! *(Good, friend. Then see you later!)* <!-- INJECT_ACTIVITY: error-correction-vocative --> ## Який кличний обрати? (Choosing the Right Vocative) У повсякденному житті ми постійно змінюємо дистанцію спілкування. The vocative case is your main tool to show exactly how close or formal you want to be. Коли ви говорите з незнайомими людьми, ви використовуєте офіційний стиль. Наприклад, ви кажете «**пане Ковальчуку**» *(Mr. Kovalchuk)* або «**пані директорко**» *(Madam Director)*. Для фахівців ми обираємо професійний кличний відмінок, як-от «**лікарю**» *(doctor)* або «**офіціанте**» *(waiter)*. Якщо ви знаєте людину, але зберігаєте дистанцію, найкращий вибір — це нейтрально-ввічливий стиль. Ми кажемо «**пані Олено**» *(Ms. Olena)* або «**пане Андрію**» *(Mr. Andriy)*. З друзями ми використовуємо звичайні імена: «**Тарасе**» *(Taras)* чи «**Анно**» *(Anna)*. А для найрідніших маємо інтимний стиль: «**серденько**» *(sweetheart)*. If you choose the wrong register, you might sound cold to a friend or overly familiar to a boss. Давайте розглянемо практичні життєві ситуації. Уявіть, що ви пишете електронний лист викладачу в університет. Ви повинні почати лист так: «**Шановний пане професоре!**» *(Dear Mr. Professor!)*. Це показує вашу повагу до його статусу. У ресторані ви кличете працівника просто: «**Пане офіціанте!**» *(Mr. Waiter!)*. А коли ви зустрічаєте сусіда, ви кажете: «**Пане Степане, добрий день!**» *(Mr. Stepan, good day!)*. First names in the vocative case without the titles "пан" or "пані" act as the perfect middle ground of politeness. Ми часто використовуємо їх на роботі з колегами. Ви кажете «**Маріє**» *(Maria)* або «**Олеже**» *(Oleh)*. Це звучить привітно, але не занадто інтимно. Коли іноземці вивчають українську мову, вони часто роблять типові помилки. The most common pitfall is using the nominative case for direct address. Ніколи не кажіть «*Привіт, Іван!*». Правильна форма завжди вимагає кличного відмінка: «**Привіт, Іване!**» *(Hi, Ivan!)*. Another frequent error is mixing up gender agreement in possessive phrases. Не можна казати «*друже моя*», тому що «друг» — це чоловічий рід. Жінці ми завжди кажемо «**подруго моя**» *(my friend)*. Також існує класична проблема з популярним ім'ям Ігор. Many learners fall into the trap of using the archaic form "Ігоре". The modern standard rule treats this name as a soft-stem noun. Тому єдина правильна форма сьогодні — це «**Ігорю**» *(Ihor)*. Запам'ятайте її! Кличний відмінок — це набагато більше, ніж просто граматичне правило. It is a profound mark of respect and a reflection of Ukrainian cultural identity. Коли ви використовуєте правильну форму, ви будуєте невидимий міст до людини. Ви показуєте, що ви відчуваєте контекст ситуації та поважаєте співрозмовника. Українська мова звучить дуже мелодійно саме завдяки цим м'яким закінченням. Слова «**мамо**» *(mom)*, «**брате**» *(brother)* або «**колего**» *(colleague)* роблять нашу комунікацію теплою та живою. The vocative case is the true music of the Ukrainian language. Використовуйте його щодня, і ви побачите приємну реакцію людей на ваші слова. <!-- INJECT_ACTIVITY: quiz-register-choice --> <!-- INJECT_ACTIVITY: group-sort-registers -->
+think so too. Now I want to call my wife and say: "My dear, I am healthy!")* <!-- INJECT_ACTIVITY: error-correction-vocative --> ## Який кличний обрати? (Choosing the Right Vocative) (~400 words) Choosing the correct vocative case is about understanding social distance and register. A highly **офіційний** (official, formal) tone requires using **пан** (Mr., sir) or **пані** (Mrs., Ms., madam) with a surname. For neutral interactions, combining these titles with a first name is the standard. A professional register uses the person's **професія** (profession) directly in the vocative case. For instance, you would use «лікарю» from **лікар** (doctor) or «вчителю» from **вчитель** (teacher). For people you know well, a friendly first name is perfect, while intimate relationships allow for affectionate terms like «серденько». Якщо ви оберете неправильне **звертання** (address, appeal), це може створити проблеми. Дуже формальний стиль із друзями звучить холодно. А надто емоційні слова з колегами виглядають непрофесійно. Тому важливо відчувати ситуацію. > *If you choose the wrong address, it can create problems. A very formal style with friends sounds cold. And overly emotional words with colleagues look unprofessional. Therefore, it is important to feel the situation.* Let's analyze some practical scenarios. If you write an email to a university professor, use a formal combination like «Шановний пане професоре». If you are calling a waiter, a polite «Пане офіціанте» is appropriate. When greeting your neighbor, the neutral-polite «Пане Степане» strikes the right balance between respect and warmth. Використання тільки імені у кличному відмінку — це золота середина. Наприклад, «Олено» або «Андрію» — це **ввічливий** (polite) вибір, коли ви не знаєте, наскільки формальною має бути розмова. > *Using only the first name in the vocative case is the golden mean. For example, "Олено" or "Андрію" is a polite choice when you do not know how formal the conversation should be.* Learners often stumble over a few common pitfalls. The most frequent mistake is using the nominative case instead of the vocative for a direct address, like saying «*Привіт, Іван» instead of the correct «Привіт, Іване». Another issue is gender agreement in emotional addresses. You must say «подруго моя» to a woman, avoiding the mismatched «*друже моя». :::info **Grammar box** — The "Igor" trap. Historically, the name Ігор had the vocative form Ігоре. Modern Ukrainian standardizes soft-stem masculine names with the **-ю** ending. Always use **Ігорю** today. ::: Українська мова має чіткі правила для звертань. Коли іноземець використовує правильний відмінок, це завжди викликає повагу. Місцеві жителі одразу розуміють, що ви серйозно вивчаєте їхню мову. The **кличний** (vocative case) is much more than a grammatical rule. It is a fundamental mark of respect and a bridge to the person you are talking to. Whether addressing a **друг** (friend) or a respected colleague, the vocative adds melody to your speech. Кличний відмінок — це музика української мови. Він робить розмову живою та емоційною. Використовуйте його сміливо! > *The vocative case is the music of the Ukrainian language. It makes conversation alive and emotional. Use it boldly!* <!-- INJECT_ACTIVITY: quiz-register-choice --> <!-- INJECT_ACTIVITY: group-sort-registers -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -528,7 +528,74 @@ The vocative case is a powerful and immediate grammatical differentiator between
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -547,18 +614,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (5/5).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] кличний (vocative (case))
+- [ ] звертання (address, appeal)
+- [ ] пан (Mr., sir)
+- [ ] пані (Mrs., Ms., madam)
+- [ ] лікар (doctor)
+- [ ] вчитель (teacher)
+- [ ] друг (friend)
+- [ ] ввічливий (polite)
+- [ ] офіційний (official, formal)
+- [ ] професія (profession)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Підсумок (~150 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

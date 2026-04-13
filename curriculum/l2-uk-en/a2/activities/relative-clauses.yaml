@@ -2,270 +2,232 @@ version: '1.0'
 module: relative-clauses
 level: a2
 inline:
-- id: fill-in-yakiy-agreement
+- id: fill-in-insert-the-correct-form-of-into-relative-clauses-matching-gender-and-number
   type: fill-in
-  instruction: Вставте правильну форму займенника (який, яка, яке, які)
+  instruction: Вставте правильну форму слова «який»
   items:
-  - sentence: Це той новий будинок, _____ стоїть біля метро.
+  - sentence: Це мій брат, ____ живе у Києві.
     answer: який
     options:
     - який
     - яка
     - яке
     - які
-  - sentence: Ось маленька кімната, _____ має велике вікно.
+  - sentence: Ось книга, ____ лежить на столі.
     answer: яка
     options:
     - який
     - яка
     - яке
     - які
-  - sentence: Де ті ключі, _____ лежать на столі?
-    answer: які
-    options:
-    - який
-    - яка
-    - яке
-    - які
-  - sentence: Це гарне місто, _____ знаходиться на півдні.
+  - sentence: Це місто, ____ я дуже люблю.
     answer: яке
     options:
     - який
     - яка
     - яке
     - які
-  - sentence: Хто ці люди, _____ працюють тут щодня?
+  - sentence: Там стоять студенти, ____ чекають на лекцію.
     answer: які
     options:
     - який
     - яка
     - яке
     - які
-  - sentence: Мій брат купив новий телефон, _____ дуже добре працює.
+  - sentence: Я купив телефон, ____ працює дуже швидко.
     answer: який
     options:
     - який
     - яка
     - яке
     - які
-  - sentence: Це нова машина, _____ стоїть на вулиці.
+  - sentence: Це кімната, ____ має велике вікно.
     answer: яка
     options:
     - який
     - яка
     - яке
     - які
-  - sentence: Я люблю це тихе місце, _____ знаходиться біля парку.
+  - sentence: Ось кафе, ____ знаходиться біля парку.
     answer: яке
     options:
     - який
     - яка
     - яке
     - які
-- id: true-false-comma-agreement
-  type: true-false
-  instruction: Правда чи ні? Зверніть увагу на коми та узгодження.
-  items:
-  - statement: Машина яка стоїть там, дуже стара.
-    correct: false
-    explanation: Перед словом «яка» обов'язково потрібна кома.
-  - statement: Це новий ресторан, який ми вчора відвідали.
-    correct: true
-    explanation: Кома стоїть правильно, а «який» узгоджується зі словом «ресторан»
-      (чоловічий рід).
-  - statement: Ось цікава книга, який я зараз читаю.
-    correct: false
-    explanation: Слово «книга» жіночого роду, тому потрібно використовувати форму
-      «яку» (Знахідний відмінок).
-  - statement: Хто ті люди, які стоять біля нашого будинку?
-    correct: true
-    explanation: Для множини («люди») правильно використовується форма «які», кома
-      стоїть.
-  - statement: Це гарне місце яке знаходиться біля парку.
-    correct: false
-    explanation: Пропущена кома перед словом «яке».
-  - statement: Ось мій друг, якого я чекаю.
-    correct: true
-    explanation: Кома є, а для істоти чоловічого роду в Знахідному відмінку використовується
-      форма «якого».
-  - statement: Де ключі, яка лежать на столі?
-    correct: false
-    explanation: Слово «ключі» — це множина, тому потрібно «які», а не «яка».
-  - statement: Це велике вікно, яке виходить на вулицю.
-    correct: true
-    explanation: Кома на місці, «яке» узгоджується з іменником середнього роду «вікно».
-- id: quiz-place-connectors
+  - sentence: Це друзі, ____ приїхали вчора.
+    answer: які
+    options:
+    - який
+    - яка
+    - яке
+    - які
+- id: quiz-choose-or-to-complete-sentences-about-places
   type: quiz
-  instruction: 'Оберіть правильне слово: де, куди або звідки'
+  instruction: Оберіть де, куди або звідки
   items:
-  - question: Це той самий ресторан, _____ ми вчора обідали.
+  - question: Це парк, ____ ми гуляємо кожного дня.
     options:
     - де
     - куди
     - звідки
-    - коли
+    - який
     correct: 0
-  - question: Ми вибрали місто, _____ поїдемо у відпустку.
-    options:
-    - де
-    - куди
-    - звідки
-    - що
-    correct: 1
-  - question: Ось те маленьке село, _____ привезли це молоко.
+  - question: Місто, ____ я їду завтра, дуже гарне.
     options:
     - де
     - куди
     - звідки
     - яке
-    correct: 2
-  - question: Я покажу тобі великий будинок, _____ працює мій брат.
-    options:
-    - де
-    - куди
-    - звідки
-    - хто
-    correct: 0
-  - question: Це новий магазин, _____ вона швидко зайшла.
+    correct: 1
+  - question: Країна, ____ він приїхав, має цікаву історію.
     options:
     - де
     - куди
     - звідки
     - яка
-    correct: 1
-  - question: Я хочу побачити країну, _____ він приїхав.
+    correct: 2
+  - question: Це кафе, ____ ми зустрілися вчора.
     options:
     - де
     - куди
     - звідки
-    - коли
-    correct: 2
-  - question: Де парк, _____ ми можемо піти погуляти?
+    - яке
+    correct: 0
+  - question: Ресторан, ____ ми йдемо на вечерю, новий.
     options:
     - де
     - куди
     - звідки
     - який
     correct: 1
-  - question: Я люблю місця, _____ є така затишна атмосфера.
+  - question: Університет, ____ я щойно повернувся, близько.
     options:
     - де
     - куди
     - звідки
-    - які
+    - який
+    correct: 2
+  - question: Кімната, ____ вона працює, дуже затишна.
+    options:
+    - де
+    - куди
+    - звідки
+    - яка
     correct: 0
-- id: match-up-sentence-combine
+  - question: Магазин, ____ вони приносять свіжі овочі, працює цілодобово.
+    options:
+    - де
+    - куди
+    - звідки
+    - який
+    correct: 2
+- id: match-up-combine-two-simple-sentences-into-one-using-a-relative-clause
   type: match-up
-  instruction: З'єднайте частини складнопідрядного речення
+  instruction: З'єднайте частини речень
   pairs:
-  - left: Це новий будинок,
-    right: який стоїть біля метро.
-  - left: Ось цікава книга,
-    right: яку я зараз читаю.
-  - left: Де ті ключі,
-    right: які лежали на столі?
-  - left: Це те місто,
-    right: де ми вчора гуляли.
-  - left: Я знаю магазин,
-    right: звідки привезли цей хліб.
-  - left: Ми вибрали парк,
-    right: куди підемо на вихідних.
-  - left: Хто ці люди,
-    right: які стоять на вулиці?
-  - left: Це тиха кімната,
-    right: яка виходить на парк.
+  - left: Це мій друг. Він живе у Києві.
+    right: Це мій друг, який живе у Києві.
+  - left: Ось книга. Вона дуже цікава.
+    right: Ось книга, яка дуже цікава.
+  - left: Це вікно. Воно велике.
+    right: Це вікно, яке велике.
+  - left: Там люди. Вони чекають на нас.
+    right: Там люди, які чекають на нас.
+  - left: Це ресторан. Ми там вечеряли.
+    right: Це ресторан, де ми вечеряли.
+  - left: Ось парк. Ми туди йдемо.
+    right: Ось парк, куди ми йдемо.
+  - left: Це місто. Я звідти приїхав.
+    right: Це місто, звідки я приїхав.
+  - left: Ось студент. Я його знаю.
+    right: Ось студент, якого я знаю.
+- id: true-false-judge-whether-relative-clauses-have-correct-agreement-and-comma-placement
+  type: true-false
+  instruction: Правда чи ні? Визначте, чи правильне речення.
+  items:
+  - statement: Книга, яка лежить на столі, дуже цікава.
+    correct: true
+    explanation: Правильне узгодження (книга — яка) і є кома.
+  - statement: Це мій брат який живе у Києві.
+    correct: false
+    explanation: Перед словом «який» обов'язково має бути кома.
+  - statement: Дерево, яке росте біля будинку, старе.
+    correct: true
+    explanation: Правильне узгодження (дерево — яке) і є кома.
+  - statement: Студенти, яка вчаться тут, розумні.
+    correct: false
+    explanation: «Студенти» — це множина, тому потрібно використовувати «які».
+  - statement: Місто де я живу, велике.
+    correct: false
+    explanation: Перед словом «де» обов'язково має бути кома.
+  - statement: Це парк, куди ми йдемо гуляти.
+    correct: true
+    explanation: Правильно вжито «куди» (напрямок дії) і є кома.
+  - statement: Жінка, який стоїть там, моя мама.
+    correct: false
+    explanation: «Жінка» — це жіночий рід, тому потрібно використовувати «яка».
+  - statement: Це телефон, який я купив учора.
+    correct: true
+    explanation: Правильне узгодження (телефон — який) і є кома.
 workbook:
-- id: fill-in-cases
+- id: fill-in-relative-adverbs
   type: fill-in
-  instruction: Вставте правильну форму займенника (який, якого, яка, яку, яке, які)
+  instruction: Вставте правильне слово (де, куди, звідки)
   items:
-  - sentence: Це хлопець, _____ прийшов до нас вчора.
-    answer: який
+  - sentence: Це будинок, ____ я живу.
+    answer: де
     options:
-    - який
-    - якого
-    - яка
-    - яку
-    - яке
-    - які
-  - sentence: Це хлопець, _____ я бачив вчора.
-    answer: якого
+    - де
+    - куди
+    - звідки
+  - sentence: Магазин, ____ ми йдемо, новий.
+    answer: куди
     options:
-    - який
-    - якого
-    - яка
-    - яку
-    - яке
-    - які
-  - sentence: Ось книга, _____ лежить на столі.
-    answer: яка
+    - де
+    - куди
+    - звідки
+  - sentence: Місто, ____ вона приїхала, дуже старе.
+    answer: звідки
     options:
-    - який
-    - якого
-    - яка
-    - яку
-    - яке
-    - які
-  - sentence: Ось книга, _____ я зараз читаю.
-    answer: яку
+    - де
+    - куди
+    - звідки
+  - sentence: Парк, ____ грають діти, великий.
+    answer: де
     options:
-    - який
-    - якого
-    - яка
-    - яку
-    - яке
-    - які
-  - sentence: Це люди, _____ працюють тут.
-    answer: які
+    - де
+    - куди
+    - звідки
+  - sentence: Університет, ____ він іде на лекцію, близько.
+    answer: куди
     options:
-    - який
-    - якого
-    - яка
-    - яку
-    - яке
-    - які
-  - sentence: Це мій друг, _____ я чекаю.
-    answer: якого
+    - де
+    - куди
+    - звідки
+  - sentence: Країна, ____ вони повернулися, цікава.
+    answer: звідки
     options:
-    - який
-    - якого
-    - яка
-    - яку
-    - яке
-    - які
-  - sentence: Це нове місто, _____ знаходиться на півдні.
-    answer: яке
+    - де
+    - куди
+    - звідки
+  - sentence: Ресторан, ____ ми вечеряли, затишний.
+    answer: де
     options:
-    - який
-    - якого
-    - яка
-    - яку
-    - яке
-    - які
-- id: error-correction-agreement
+    - де
+    - куди
+    - звідки
+  - sentence: Театр, ____ ми купили квитки, відомий.
+    answer: куди
+    options:
+    - де
+    - куди
+    - звідки
+- id: error-correction-relative-clauses
   type: error-correction
-  instruction: Знайдіть і виправте помилку
+  instruction: Знайдіть і виправте помилку в реченні
   items:
-  - sentence: Це та нова книга, яку я читав її вчора.
-    error: читав її
-    correction: читав
-    error_type: construction
-    options:
-    - читав
-    - читав її
-    - її читав
-    explanation: Слово «яку» вже замінює слово «книга». Ніколи не додавайте зайві
-      слова «його», «її» або «їх» після «який/яка/яке/які».
-  - sentence: Мій брат, який працює лікарем, він живе у Польщі.
-    error: він живе
-    correction: живе
-    error_type: construction
-    options:
-    - живе
-    - він живе
-    - вони живуть
-    explanation: Зайвий займенник «він». Головне речення — «Мій брат живе у Польщі».
-  - sentence: Це новий будинок, яка стоїть біля метро.
+  - sentence: Це студент, яка добре вчиться.
     error: яка
     correction: який
     error_type: word
@@ -273,17 +235,35 @@ workbook:
     - який
     - яке
     - які
-    explanation: Слово «будинок» чоловічого роду, тому потрібна форма «який».
-  - sentence: Де ті ключі, яка лежать на столі?
-    error: яка
+    explanation: «Студент» — чоловічий рід, тому потрібно «який».
+  - sentence: Ось вікно, який я відкрив.
+    error: який
+    correction: яке
+    error_type: word
+    options:
+    - яка
+    - яке
+    - які
+    explanation: «Вікно» — середній рід, тому потрібно «яке».
+  - sentence: Там люди, яке чекають на нас.
+    error: яке
     correction: які
     error_type: word
     options:
     - який
-    - яке
+    - яка
     - які
-    explanation: Слово «ключі» у множині, тому потрібна форма «які».
-  - sentence: Я знаю магазин, де вона пішла.
+    explanation: «Люди» — множина, тому потрібно «які».
+  - sentence: Місто, куди я живу, велике.
+    error: куди
+    correction: де
+    error_type: word
+    options:
+    - де
+    - звідки
+    - яке
+    explanation: «Живу» — це статична дія (місце), тому потрібно використовувати «де».
+  - sentence: Парк, де ми йдемо, дуже гарний.
     error: де
     correction: куди
     error_type: word
@@ -291,78 +271,402 @@ workbook:
     - куди
     - звідки
     - який
-    explanation: Дієслово руху «пішла» вимагає слова «куди» (напрямок).
-  - sentence: Це мій друг, який я бачив вчора.
-    error: який
-    correction: якого
+    explanation: «Йдемо» — це рух (напрямок), тому потрібно використовувати «куди».
+  - sentence: Країна, де він приїхав, далеко.
+    error: де
+    correction: звідки
     error_type: word
     options:
-    - якого
-    - яку
+    - звідки
+    - куди
+    - яка
+    explanation: «Приїхав» вказує на походження (з якого місця), тому потрібно «звідки».
+  - sentence: Це дівчина, який читає книгу.
+    error: який
+    correction: яка
+    error_type: word
+    options:
+    - яка
     - яке
-    explanation: «Друг» є об'єктом дії (я бачив кого?), тому використовуємо Знахідний
-      відмінок для істот — «якого».
-- id: translate-connectors
+    - які
+    explanation: «Дівчина» — жіночий рід, тому потрібно «яка».
+  - sentence: Ось кафе, яка знаходиться поруч.
+    error: яка
+    correction: яке
+    error_type: word
+    options:
+    - який
+    - яке
+    - які
+    explanation: «Кафе» — середній рід, тому потрібно «яке».
+- id: translate-relative-clauses
   type: translate
   instruction: Оберіть правильний переклад
   items:
-  - source: This is the house that stands near the subway.
+  - source: The book that lies on the table is interesting.
     options:
-    - text: Це будинок, який стоїть біля метро.
+    - text: Книга, яка лежить на столі, цікава.
       correct: true
-    - text: Це будинок, яка стоїть біля метро.
+    - text: Книга, який лежить на столі, цікава.
       correct: false
-    - text: Це будинок, де стоїть біля метро.
+    - text: Книга яка лежить на столі, цікава.
       correct: false
-    - text: Це будинок який стоїть біля метро.
+    - text: Книга, що лежить на столі цікава.
       correct: false
-  - source: Here is the apartment that has three rooms.
+  - source: The city where I was born.
     options:
-    - text: Ось квартира, яка має три кімнати.
+    - text: Місто, де я народився.
       correct: true
-    - text: Ось квартира, який має три кімнати.
+    - text: Місто, куди я народився.
       correct: false
-    - text: Ось квартира, куди має три кімнати.
+    - text: Місто, звідки я народився.
       correct: false
-    - text: Ось квартира яка має три кімнати.
+    - text: Місто де я народився.
       correct: false
-  - source: This is the exact same restaurant where we had lunch yesterday.
+  - source: The friends who live in Kyiv.
     options:
-    - text: Це той самий ресторан, де ми вчора обідали.
+    - text: Друзі, які живуть у Києві.
       correct: true
-    - text: Це той самий ресторан, куди ми вчора обідали.
+    - text: Друзі, які живе у Києві.
       correct: false
-    - text: Це той самий ресторан, який ми вчора обідали.
+    - text: Друзі, яка живуть у Києві.
       correct: false
-    - text: Це той самий ресторан де ми вчора обідали.
+    - text: Друзі які живуть у Києві.
       correct: false
-  - source: I really want to see the country where he came from yesterday.
+  - source: The restaurant where we are going.
     options:
-    - text: Я дуже хочу побачити країну, звідки він вчора приїхав.
+    - text: Ресторан, куди ми йдемо.
       correct: true
-    - text: Я дуже хочу побачити країну, де він вчора приїхав.
+    - text: Ресторан, де ми йдемо.
       correct: false
-    - text: Я дуже хочу побачити країну, куди він вчора приїхав.
+    - text: Ресторан, звідки ми йдемо.
       correct: false
-    - text: Я дуже хочу побачити країну звідки він вчора приїхав.
+    - text: Ресторан куди ми йдемо.
       correct: false
-  - source: These are smart people who work here every day.
+  - source: The person whom I met works here.
     options:
-    - text: Це розумні люди, які працюють тут щодня.
+    - text: Людина, яку я зустрів, працює тут.
       correct: true
-    - text: Це розумні люди, які працює тут щодня.
+    - text: Людина, яка я зустрів, працює тут.
       correct: false
-    - text: Це розумні люди, яка працюють тут щодня.
+    - text: Людина, який я зустрів, працює тут.
       correct: false
-    - text: Це розумні люди які працюють тут щодня.
+    - text: Людина яку я зустрів, працює тут.
       correct: false
-  - source: Where is the nearest park where we can go for a walk?
+  - source: This is the university from which I returned.
     options:
-    - text: Де знаходиться найближчий парк, куди ми можемо ходити гуляти?
+    - text: Це університет, звідки я повернувся.
       correct: true
-    - text: Де знаходиться найближчий парк, де ми можемо ходити гуляти?
+    - text: Це університет, де я повернувся.
       correct: false
-    - text: Де знаходиться найближчий парк, звідки ми можемо ходити гуляти?
+    - text: Це університет, куди я повернувся.
       correct: false
-    - text: Де знаходиться найближчий парк куди ми можемо ходити гуляти?
+    - text: Це університет звідки я повернувся.
       correct: false
+  - source: The room where she works is cozy.
+    options:
+    - text: Кімната, де вона працює, затишна.
+      correct: true
+    - text: Кімната, яка вона працює, затишна.
+      correct: false
+    - text: Кімната, куди вона працює, затишна.
+      correct: false
+    - text: Кімната де вона працює, затишна.
+      correct: false
+  - source: This is an ideal place that I like.
+    options:
+    - text: Це ідеальне місце, яке мені подобається.
+      correct: true
+    - text: Це ідеальне місце, яка мені подобається.
+      correct: false
+    - text: Це ідеальне місце, який мені подобається.
+      correct: false
+    - text: Це ідеальне місце яке мені подобається.
+      correct: false
+- id: group-sort-relative-pronouns
+  type: group-sort
+  instruction: Розподіліть іменники за правильним відносним займенником (який, яка,
+    яке, які)
+  groups:
+  - label: який (чоловічий рід)
+    items:
+    - фільм
+    - парк
+    - театр
+    - комп'ютер
+  - label: яка (жіночий рід)
+    items:
+    - книга
+    - кімната
+    - країна
+    - вулиця
+  - label: яке (середній рід)
+    items:
+    - місто
+    - вікно
+    - озеро
+    - кафе
+  - label: які (множина)
+    items:
+    - друзі
+    - студенти
+    - діти
+    - люди
+- id: fill-in-kotryi
+  type: fill-in
+  instruction: Вставте правильну форму слова «котрий» (формальний синонім до «який»)
+  items:
+  - sentence: Письменник, ____ написав цей роман, народився у Львові.
+    answer: котрий
+    options:
+    - котрий
+    - котра
+    - котре
+    - котрі
+  - sentence: Журналістка, ____ веде програму, дуже відома.
+    answer: котра
+    options:
+    - котрий
+    - котра
+    - котре
+    - котрі
+  - sentence: Місто, ____ знаходиться поруч, дуже велике.
+    answer: котре
+    options:
+    - котрий
+    - котра
+    - котре
+    - котрі
+  - sentence: Студенти, ____ вчаться тут, розумні.
+    answer: котрі
+    options:
+    - котрий
+    - котра
+    - котре
+    - котрі
+  - sentence: Історичний документ, ____ знайшли в архіві, дуже цікавий.
+    answer: котрий
+    options:
+    - котрий
+    - котра
+    - котре
+    - котрі
+  - sentence: Книга, ____ лежить на столі, цікава.
+    answer: котра
+    options:
+    - котрий
+    - котра
+    - котре
+    - котрі
+  - sentence: Озеро, ____ знаходиться за містом, дуже велике.
+    answer: котре
+    options:
+    - котрий
+    - котра
+    - котре
+    - котрі
+  - sentence: Люди, ____ працюють тут, дуже цікаві.
+    answer: котрі
+    options:
+    - котрий
+    - котра
+    - котре
+    - котрі
+- id: match-up-vocabulary-definitions
+  type: match-up
+  instruction: З'єднайте слова з їхнім перекладом або значенням
+  pairs:
+  - left: затишний
+    right: cozy, comfortable
+  - left: знаходитися
+    right: to be located
+  - left: стояти
+    right: to stand, to be situated
+  - left: означальний
+    right: attributive, defining
+  - left: описувати
+    right: to describe
+  - left: речення
+    right: sentence, clause
+  - left: котрий
+    right: which (formal synonym of який)
+  - left: звідки
+    right: where from (relative)
+- id: odd-one-out-relative
+  type: odd-one-out
+  instruction: Оберіть зайве слово, яке не підходить до інших за певною ознакою
+  items:
+  - words:
+    - де
+    - куди
+    - звідки
+    - який
+    correct: 3
+    explanation: «Який» — це займенник, а інші слова є відносними прислівниками місця.
+  - words:
+    - який
+    - яка
+    - яке
+    - де
+    correct: 3
+    explanation: «Де» — це прислівник місця, а інші слова є відносними займенниками.
+  - words:
+    - брат
+    - хлопець
+    - сусід
+    - сестра
+    correct: 3
+    explanation: «Сестра» — це слово жіночого роду, а інші — чоловічого.
+  - words:
+    - місто
+    - кафе
+    - вікно
+    - книга
+    correct: 3
+    explanation: «Книга» — це слово жіночого роду, а інші — середнього.
+  - words:
+    - друзі
+    - діти
+    - студенти
+    - дівчина
+    correct: 3
+    explanation: «Дівчина» — це слово в однині, а інші стоять у множині.
+  - words:
+    - знаходитися
+    - стояти
+    - описувати
+    - затишний
+    correct: 3
+    explanation: «Затишний» — це прикметник, а інші слова є дієсловами.
+  - words:
+    - де
+    - жити
+    - працювати
+    - відпочивати
+    correct: 0
+    explanation: «Де» — це прислівник, а інші слова є дієсловами.
+  - words:
+    - звідки
+    - куди
+    - де
+    - повернутися
+    correct: 3
+    explanation: «Повернутися» — це дієслово, а інші слова є відносними прислівниками.
+- id: unjumble-complex-sentences
+  type: unjumble
+  instruction: Складіть складні речення зі слів
+  items:
+  - words:
+    - квартира,
+    - яка
+    - великий
+    - має
+    - Це
+    - балкон.
+    correct_order:
+    - Це
+    - квартира,
+    - яка
+    - має
+    - великий
+    - балкон.
+  - words:
+    - тихий.
+    - поруч,
+    - який
+    - Сусід,
+    - дуже
+    - живе
+    correct_order:
+    - Сусід,
+    - який
+    - живе
+    - поруч,
+    - дуже
+    - тихий.
+  - words:
+    - люблю,
+    - завжди
+    - яке
+    - красиве.
+    - я
+    - Місто,
+    correct_order:
+    - Місто,
+    - яке
+    - я
+    - люблю,
+    - завжди
+    - красиве.
+  - words:
+    - Києві,
+    - які
+    - чекають.
+    - Друзі,
+    - живуть
+    - у
+    correct_order:
+    - Друзі,
+    - які
+    - живуть
+    - у
+    - Києві,
+    - чекають.
+  - words:
+    - яка
+    - тут.
+    - мене
+    - Людина,
+    - працює
+    - зустріла,
+    correct_order:
+    - Людина,
+    - яка
+    - мене
+    - зустріла,
+    - працює
+    - тут.
+  - words:
+    - який
+    - купив
+    - Це
+    - телефон,
+    - учора.
+    - я
+    correct_order:
+    - Це
+    - телефон,
+    - який
+    - я
+    - купив
+    - учора.
+  - words:
+    - яку
+    - бачили
+    - Там
+    - дівчина,
+    - ми
+    - вчора.
+    correct_order:
+    - Там
+    - дівчина,
+    - яку
+    - ми
+    - бачили
+    - вчора.
+  - words:
+    - ти
+    - яких
+    - запросив
+    - люди,
+    - Ось
+    - на
+    - вечерю.
+    correct_order:
+    - Ось
+    - люди,
+    - яких
+    - ти
+    - запросив
+    - на
+    - вечерю.

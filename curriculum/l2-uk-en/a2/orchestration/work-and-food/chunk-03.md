@@ -1,26 +1,47 @@
-## Мій робочий день (My Workday)
+## Мій робочий день (My Workday) (~500 words total)
 
-Ми вже знаємо, як говорити про наші професії та смачну їжу. *(We already know how to talk about our professions and delicious food.)* Тепер давайте детально поговоримо про наш типовий **робочий день** (workday). Коли ми описуємо свою щоденну професійну рутину, ми постійно рухаємося в просторі та часі. Ми швидко їдемо на роботу, сидимо за робочим столом, смачно обідаємо з колегами. У всіх цих ситуаціях нам дуже допомагає орудний відмінок. Він показує не тільки зручний інструмент або приємну компанію. Орудний відмінок чудово описує, як саме ми подорожуємо містом і де точно ми працюємо. *(The Instrumental case perfectly describes exactly how we travel through the city and where exactly we work.)* When we talk about daily movement and schedules, the Instrumental case clearly expresses the core idea of "by means of".
+In this section, we will look at how to describe your typical workday. We will move from talking about who we are to how we move through the day. The Instrumental case is essential here because it helps us describe the means of transportation we use to get to work.
 
-In Ukrainian, we don't need an extra preposition to say we travel "by" a certain type of transport. Ми просто використовуємо слово у правильній формі орудного відмінка. *(We simply use the word in the correct Instrumental case form.)* Наприклад, ми часто кажемо **«їхати автобусом»** (to go by bus), **«їхати машиною»** (to go by car), або **«їхати велосипедом»** (to go by bicycle). Пам'ятайте, що популярне слово **«метро»** (subway) ніколи не змінює свою форму. The Instrumental case is also absolutely essential for describing physical locations and time using specific prepositions. These important spatial and temporal prepositions are **«перед»** (before / in front of), **«за»** (behind / at), **«між»** (between), **«над»** (above), and **«під»** (under). Ми кажемо: **«Я завжди паркуюся за офісом»** (I always park behind the office). Або ми детально описуємо кімнату: **«Мій стіл стоїть між великим вікном і дверима»** (My desk stands between the big window and the door). Ми часто ховаємо сумку **під столом** (under the table).
+Кожного дня ми кудись їдемо і щось робимо. Коли ми розповідаємо про свій день, ми часто використовуємо орудний відмінок. Він допомагає нам сказати, чим ми подорожуємо на роботу.
 
-Давайте разом подивимося короткий відеоблог про типовий день менеджера. *(Let's watch a short vlog about a manager's typical day together.)* Ця цікава розповідь чудово поєднує різні корисні функції орудного відмінка. *(This interesting story perfectly combines various useful functions of the Instrumental case.)*
-> — **Менеджер:** Вранці я завжди їду на роботу **трамваєм** (by tram). *(In the morning I always go to work by tram.)*
-> — **Менеджер:** **Перед роботою** (Before work) я купую гарячу каву з молоком.
-> — **Менеджер:** Мій новий офіс — **над кав'ярнею** (above the coffee shop).
-> — **Менеджер:** Я майже весь день працюю **за комп'ютером** (at the computer).
-> — **Менеджер:** О першій годині я обідаю **з колегами** (with colleagues).
-> — **Менеджер:** Після смачного обіду я маю важливу **нараду** (meeting) з директором.
-> — **Менеджер:** Ввечері я повертаюся додому машиною. *(In the evening I return home by car.)*
+> *Every day we go somewhere and do something. When we talk about our day, we often use the Instrumental case. It helps us say what we travel to work with.*
 
-To make our sentences more natural and descriptive, we very often add adjectives and possessive pronouns. When the main noun changes to the Instrumental case, its connected adjectives and pronouns must change too. Для чоловічого та середнього роду ми завжди використовуємо закінчення **-им**. *(For masculine and neuter genders, we always use the ending -ym.)* Наприклад, ми із задоволенням говоримо **«з моїм новим менеджером»** (with my new manager) або вішаємо лампу **«над великим столом»** (above the big table). Для жіночого роду ми використовуємо м'яке закінчення **-ою** або **-єю**. *(For the feminine gender, we use the soft ending -oyu or -yeyu.)* Наприклад, ми пишемо **«новою ручкою»** (with a new pen) або щодня працюємо **«з моєю новою директоркою»** (with my new director).
+When describing transportation in Ukrainian, we use the verb **їхати** (to go by vehicle) followed directly by the vehicle in the Instrumental case. We do not use any prepositions for this function. This expresses the idea of traveling "by means of" a vehicle.
 
-| Рід (Gender) | Займенник (Pronoun) | Прикметник (Adjective) | Приклад (Example) |
-| :--- | :--- | :--- | :--- |
-| **Чоловічий / Середній** | мо**їм** | нов**им**, велик**им** | з мо**їм** нов**им** менеджером |
-| **Жіночий** | мо**єю** | нов**ою**, цікав**ою** | з мо**єю** нов**ою** директоркою |
+:::info
+**Transport without prepositions**
+To say "by bus" or "by car", simply put the noun in the Instrumental case:
+**автобус** → **автобусом**
+**машина** → **машиною**
+For example: «Я їду на роботу автобусом» (I go to work by bus). Note that foreign loan words ending in **-о**, like **метро** or **таксі** (ending in -і), do not change: «Вона їде метро» (She goes by subway).
+:::
 
-Ці граматичні закінчення роблять нашу українську мову красивою та дуже точною. *(These grammatical endings make our Ukrainian language beautiful and very precise.)* Тепер ви можете детально описати свій щоденний маршрут та звичайний робочий день. *(Now you can describe your daily route and regular workday in detail.)*
+The Instrumental case is also used with specific spatial prepositions to describe where things are located in relation to each other. These prepositions are **перед** (before/in front of), **за** (behind/after), **між** (between), **над** (above), and **під** (under). 
+
+Я паркую свою машину за офісом. Мій робочий стіл стоїть між вікном і дверима. Наш новий офіс розташований над кав'ярнею.
+
+> *I park my car behind the office. My work desk stands between the window and the door. Our new office is located above the coffee shop.*
+
+Let's look at a vlog-style monologue of a project manager describing his typical routine. Notice how he uses the Instrumental case for transport, tools, accompaniment, and spatial locations. During lunch, you might also hear him mention food like **картопля** (potato) or eating utensils like a **виделка** (fork).
+
+Привіт! Мій робочий день завжди дуже активний. Вранці я їду на роботу трамваєм або велосипедом. Перед роботою я купую смачну каву з молоком. Майже весь день я працюю за комп'ютером. О першій годині я обідаю з колегами. Ми часто їмо м'ясо з картоплею, і я завжди користуюся ножем та виделкою. Після обіду я маю важливу нараду з директором. Наш великий офіс розташований над рестораном. Увечері я їду додому машиною.
+
+> *Hi! My workday is always very active. In the morning, I go to work by tram or by bicycle. Before work, I buy tasty coffee with milk. Almost all day I work at the computer. At one o'clock I have lunch with colleagues. We often eat meat with potatoes, and I always use a knife and fork. After lunch, I have an important meeting with the director. Our big office is located above a restaurant. In the evening, I go home by car.*
+
+Notice that when we use adjectives and pronouns with nouns in the Instrumental case, their endings must also change to match. The endings depend on the gender of the noun they describe.
+
+Для чоловічого та середнього роду ми використовуємо закінчення **-им**. Для жіночого роду ми використовуємо закінчення **-ою**. Займенники також мають свої спеціальні форми.
+
+> *For masculine and neuter genders, we use the ending **-им**. For feminine gender, we use the ending **-ою**. Pronouns also have their own special forms.*
+
+Here is a quick reference for the most common adjective and pronoun endings in the Instrumental case:
+
+| Gender | Adjective Ending | Pronoun Example | Noun Example | Phrase |
+| :--- | :--- | :--- | :--- | :--- |
+| Masculine/Neuter | **-им** | **моїм**, **цим** | **колегою**, **столом** | з моїм новим колегою, над великим столом |
+| Feminine | **-ою** | **моєю**, **цією** | **книжкою**, **роботою** | цікавою книжкою, перед моєю роботою |
+
+Now you can combine all these elements to describe your daily routine, the tools you use, the people you spend time with, and exactly where everything happens!
 
 <!-- INJECT_ACTIVITY: identify-instr-function -->
 <!-- INJECT_ACTIVITY: true-false-workday -->

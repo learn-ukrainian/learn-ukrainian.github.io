@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-професій ми зазвичай додаємо закінчення **-ом** або **-ем** в орудному відмінку. Наприклад, слово **«програміст»** (programmer) стає **«програмістом»**. Слово **«лікар»** (doctor) змінюється на **«лікарем»**, а **«водій»** (driver) — на **«водієм»**. Для сучасних жіночих професій ми дуже часто використовуємо природний суфікс **-ка**. Наприклад, ми кажемо **«вчителька»** (female teacher), **«журналістка»** (female journalist), **«дизайнерка»** (female designer). Ці нові слова в орудному відмінку завжди мають закінчення **-ою**: працюю **«вчителькою»**, працюю **«журналісткою»**, працюю **«дизайнеркою»**. The Instrumental case is also absolutely essential when you are talking about your personal hobbies, daily interests, and deep passions. We naturally use it after specific verbs. Відоме дієслово **«захоплюватися»** (to be passionate about) завжди вимагає орудного відмінка. Наприклад, ви можете **«захоплюватися фотографією»** (to be passionate about photography). Дієслово **«цікавитися»** (to be interested in) також постійно працює з цим відмінком. Ви можете **«цікавитися спортом»** (to be interested in sport) або активно **«цікавитися мистецтвом»** (to be interested in art). Ми також використовуємо орудний відмінок, коли говоримо про мрії дитинства. Ми запитуємо друзів: **«Ким ти мріяв стати?»** (Who did you dream of becoming?). І відповідаємо: **«Я мріяв стати пілотом»** (I dreamed of becoming a pilot) або **«Я хотіла стати акторкою»** (I wanted to become an actress). > — **Олексій:** Привіт! Мене звати Олексій. А тебе як звати? *(Hi! My name is Oleksiy. And what is your name?)* > — **Марина:** Привіт, Олексію! Я Марина. Дуже приємно познайомитися. Ким ти працюєш? *(Hi, Oleksiy! I am Maryna. Nice to meet you. What do you work as?)* > — **Олексій:** Я працюю кухарем у великому ресторані. А ти хто за фахом? *(I work as a chef in a large restaurant. And what is your specialty?)* > — **Марина:** Я працюю вчителькою в школі. Мені дуже подобається бути вчителькою. *(I work as a teacher in a school. I really like being a teacher.)* > — **Олексій:** Це надзвичайно цікава професія! А чим ти захоплюєшся у вільний час? *(That is an extremely interesting profession! And what are you passionate about in your free time?)* > — **Марина:** Я захоплююся сучасною музикою. А також я багато цікавлюся подорожами. *(I am passionate about modern music. And I am also very interested in traveling.)* > — **Олексій:** О, ми цікавимося подорожами разом! Я теж дуже люблю мандрувати. *(Oh, we are interested in traveling together! I also really love to journey.)* It is historically and culturally critical to use authentic Ukrainian terms for professions and actively avoid Russian calques. For example, a professional cook is **«кухар»** (cook), so you must never use the Russian word «повар». A skilled hairdresser is **«перукар»** (hairdresser), not the Russian «парикмахер». Using the correct terminology shows respect for the Ukrainian language. Ось коротка таблиця популярних професій та їхніх правильних форм в орудному відмінку: * **«продавець»** (seller) → я працюю **«продавцем»** * **«будівельник»** (builder) → він працює **«будівельником»** * «кухар» → мій брат працює **«кухарем»** * «перукар» → вона працює **«перукарем»** * **«менеджер»** (manager) → я працюю **«менеджером»** * **«інженер»** (engineer) → мій тато працює **«інженером»** Завжди звертайте пильну увагу на ці автентичні українські слова. <!-- INJECT_ACTIVITY: match-professions -->
+you might want to ask about hobbies and childhood dreams. In Ukrainian, verbs that describe passion or interest also require the Instrumental case. The two most common verbs are «захоплюватися» (to be passionate about) and «цікавитися» (to be interested in). Я захоплююся фотографією, а мій брат цікавиться спортом. Моя сестра цікавиться мистецтвом і багато читає. Коли ми запитуємо про дитячі мрії, ми використовуємо фразу «мріяти стати» разом із питанням «ким?». Наприклад, у дитинстві я мріяв стати пілотом. > *I am passionate about photography, and my brother is interested in sports. My sister is interested in art and reads a lot. When we ask about childhood dreams, we use the phrase "to dream to become" together with the question "who?". For example, in childhood I dreamed of becoming a pilot.* Let's see this in action. Олексій (a chef) and Марина (a teacher) meet at a party. They discuss their daily tasks, why they chose their professions, and discover a shared interest. > — **Олексій:** Привіт! Я Олексій. Хто ти за фахом? *(Hi! I'm Oleksiy. What is your profession?)* > — **Марина:** Привіт! Мене звати Марина. Я працюю вчителькою в школі. Мені подобається бути вчителькою. А ким ти працюєш? *(Hi! My name is Maryna. I work as a teacher at a school. I like being a teacher. And what do you do?)* > — **Олексій:** Я працюю кухарем у ресторані. Це дуже творча робота. *(I work as a chef in a restaurant. It is a very creative job.)* > — **Марина:** Це цікаво! Що ти любиш **готувати** (to cook)? *(That's interesting! What do you like to cook?)* > — **Олексій:** Я люблю робити свіжі салати. Там завжди є **помідор** (tomato) та **огірок** (cucumber). А чим ти захоплюєшся у вільний час? *(I like making fresh salads. There is always tomato and cucumber there. And what are you passionate about in your free time?)* > — **Марина:** Я цікавлюся мистецтвом і подорожами. А ти? *(I am interested in art and travel. And you?)* > — **Олексій:** Я теж захоплююся подорожами! У дитинстві я навіть мріяв стати пілотом. *(I am also passionate about travel! In my childhood, I even dreamed of becoming a pilot.)* When learning profession names, it is crucial to use authentic Ukrainian words and avoid Russian calques. This is a common mistake for learners who encounter regional slang. Українською мовою правильно говорити «кухар», а не «повар». Також ми кажемо «перукар», а слово «парикмахер» є русизмом. Завжди перевіряйте словник, щоб використовувати сучасні та правильні назви професій. > *In the Ukrainian language, it is correct to say "cook" (kuhar), not "povar". Also, we say "hairdresser" (perukar), and the word "parykmaher" is a Russianism. Always check the dictionary to use modern and correct profession names.* Here is a reference list of common A2 professions in their Nominative and Instrumental forms: - **продавець** → **продавцем** *(seller)* - **будівельник** → **будівельником** *(builder)* - **інженер** → **інженером** *(engineer)* - **письменник** → **письменником** *(writer)* - **актор** → **актором** *(actor)* - **кухарка** → **кухаркою** *(female cook)* <!-- INJECT_ACTIVITY: match-professions -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -559,7 +559,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -578,18 +645,65 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] готувати (to cook, to prepare)
+- [ ] різати (to cut)
+- [ ] мішати (to stir, to mix)
+- [ ] посипати (to sprinkle)
+- [ ] подавати (to serve)
+- [ ] вареники (varenyky, dumplings)
+- [ ] картопля (potato)
+- [ ] помідор (tomato)
+- [ ] огірок (cucumber)
+- [ ] сіль (salt)
+- [ ] олія (oil)
+- [ ] виделка (fork)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## На кухні: Готуємо разом (In the Kitchen: Cooking Together) (~550 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

@@ -1,0 +1,64 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T10-27-0e5975ee.json
+phase: review
+prompt_chars: 59551
+response_chars: 8568
+prompt_words: 7966
+response_words: 1188
+sections:
+- name: preamble
+  start: 0
+  length: 458
+  fraction: 0.0077
+- name: plan
+  start: 458
+  length: 55764
+  fraction: 0.9364
+- name: output_spec
+  start: 56222
+  length: 3329
+  fraction: 0.0559
+large_sections:
+- plan
+directives_total: 15
+directives_covered: 6
+directives_missed:
+- kind: must
+  text: If you are not 100% certain a word/form/usage is wrong, you MUST flag it as
+    `[NEEDS RAG VERIFICATION]` instead of marking it as a definitive error.
+  covered: false
+  coverage_note: 2/17 keywords (12%)
+- kind: must
+  text: '**Before you claim a word, symbol, notation, or plan point is MISSING from
+    the content, you MUST search for it.'
+  covered: false
+  coverage_note: 4/13 keywords (31%)
+- kind: must
+  text: '**CRITICAL RULE: If you mention ANY error, mistake, or inaccuracy in the
+    evidence column of your scores table, you MUST also list it as a structured finding
+    below AND include it in your `<fixes>` block.'
+  covered: false
+  coverage_note: 5/22 keywords (23%)
+- kind: must
+  text: This is a language curriculum — every error you identify must be fixed.
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: inject_activity
+  text: match-up-match-portrait-lexis-to-body-categories
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-character-valence-identify-character-traits-as-and-choose-the-correct-adjective-for-a-description
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-complete-a-portrait-description-by-filling-in-missing-adjectives-and-relationship-terms-in-a-text-about-a-family
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: free-write-write-a-structured-portrait-of-a-real-or-fictional-person
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing

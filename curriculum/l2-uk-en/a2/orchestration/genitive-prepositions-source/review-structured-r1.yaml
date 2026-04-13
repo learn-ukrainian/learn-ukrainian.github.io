@@ -2,50 +2,52 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 8
-  evidence: Word count (3758) strongly exceeds the target (2000). However, required
-    vocabulary words (`джерело`, `походження`) are missing from the text. Additionally,
-    plan references (Заболотний, ULP) were not e
+  score: 9
+  evidence: 'All `content_outline` points are present in order: origin/euphony/material/time
+    in section 1, person/distance/protection in section 2, and `після` plus `до` contrast
+    in section 3. Required/recommended'
 - dimension: 2
   name: Linguistic accuracy
-  score: 7
-  evidence: Identified a Russianism calque ("знаходиться" instead of "розташовано"
-    for location) and a semantic error ("до їжі" instead of the prescriptive normative
-    "до їди").
+  score: 6
+  evidence: The section says `Hard masculine stems take **-у**, while soft stems take
+    **-ю**`, but the same lesson gives `після дня`, and VESUM confirms Genitive `дня`,
+    not `дню`.
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: Excellent PPP flow. Introduces the situation naturally with an international
-    dinner, explains grammar rules simply, and uses multiple context-rich examples.
-    No overly long English theory blocks.
+  score: 7
+  evidence: The lesson has presentation -> examples -> activity flow, but `Вона терпляче
+    чекає на твій важливий дзвінок з минулого тижня` is an ambiguous model for time-start
+    `з + Genitive`, and the wrong `-ю` ru
 - dimension: 4
   name: Vocabulary coverage
-  score: 8
-  evidence: Included almost all required and recommended words (e.g., `сніданок`,
-    `вечеря`, `дитинство`, `шовк`), but missed `джерело` and `походження`.
+  score: 9
+  evidence: 'Plan vocabulary is well covered in prose rather than dumped in lists:
+    `походження`, `матеріал`, `далеко`, `подарунок`, `сніданок`, `вечеря`, `канікули`;
+    recommended items also appear naturally.'
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: Markers perfectly align with the `activity_hints` from the plan, and appear
-    exactly where the concepts have just been taught.
+  score: 9
+  evidence: The 4 planned exercise types are all present, each has 8 items/pairs,
+    and each marker follows the relevant teaching block.
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: Warm, supportive teacher tone without being generic. The decolonization
-    tip regarding "з України" is extremely valuable and engaging.
+  score: 8
+  evidence: The potluck and routine contexts are concrete, but `Після басейну я маю
+    обід з подругою` sounds stiff rather than natural teacherly Ukrainian.
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: Clean Markdown. All H2 headings from the plan outline are present. The
-    word count is well above the target.
+  evidence: All planned H2 headings are present and ordered correctly; the pipeline
+    word count is 3221, above target; formatting is clean apart from expected activity
+    markers.
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: Factually correct. Strong emphasis on euphony and a great decolonized
-    rule addressing the "з України" vs obsolete colonial forms.
+  score: 9
+  evidence: The module explains Ukrainian on its own terms, with no Russian comparison
+    or colonial framing.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 9
-  evidence: Dialogues are multi-turn, very natural, and feature distinct voices. Minor
-    deduction for a speaker using the tautology "ранкового сніданку".
+  score: 8
+  evidence: Dialogues are named and multi-turn, but `Після басейну я маю обід з подругою`
+    is textbook-robotic rather than natural spoken Ukrainian.
 findings: []

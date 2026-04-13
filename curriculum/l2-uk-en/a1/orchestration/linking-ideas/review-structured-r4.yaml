@@ -1,0 +1,55 @@
+round: 4
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'All four planned sections are present and in order, and the required
+    conjunctions appear throughout the prose and examples. Minor gap: `These are **сполучники
+    суря́дності**: **і** and **та** add infor'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: No Russian characters (`ы э ё ъ`) appear, and I found no Russianisms,
+    Surzhyk, calques, paronym errors, or wrong grammar claims. The potentially risky
+    forms are standard Ukrainian in context.
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: 'The module mostly follows PPP well: dialogue presentation, rule explanation,
+    then practice. The weak point is sequencing: `<!-- INJECT_ACTIVITY: fill-in-choose-conjunction
+    -->` comes before `## Сполу́'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 'All required vocabulary from the plan is used in context: `і`, `та`,
+    `а`, `але`, `бо`, `тому що`. Recommended items are also mostly present in prose:
+    `чому`, `також`, `теж`, `або`, `чи`.'
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: 'The module includes all 4 expected exercise markers and they match the
+    plan’s activity types/foci. The main issue is placement: the first fill-in marker
+    appears before the explicit conjunction teachin'
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: 'The tone is teacherly and substantive rather than gamified: `Now let
+    us focus on reason.` and `A useful classroom pattern is question plus reason.`
+    keep the voice supportive without filler.'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All H2 sections from the plan are present, the markdown is clean, and
+    the pipeline word count is 1342, which is above the 1200 target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: The module treats Ukrainian on its own terms and makes no Russian-centric
+    comparisons or cultural misstatements.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: Named speakers and multi-turn exchanges are a strength, but the framing
+    line `Observe how a couple plans their vacation and decides what to eat.` overpromises
+    one coherent scene; the first dialogue ju
+findings: []

@@ -1,21 +1,23 @@
 ## VESUM Verification
 - Confirmed: який, яка, яке, великий, маленький, новий, старий, гарний, чистий, дорогий, дешевий, поганий, брудний, світлий, темний, а, але
-- Not found: [none]
+- Not found: (none)
 
 ## Grammar Rules
-- Adjective Gender Agreement: Правопис § 33 (and general declension) — Adjectives agree with nouns in gender, number, and case. In the nominative singular: Masculine endings are typically **-ий** (e.g., *новий*), Feminine **-а** (e.g., *нова*), and Neuter **-е** (e.g., *нове*).
-- Conjunction "а" (Contrast): СУМ-11 — "А" is a contrastive conjunction (протиставний сполучник) used to join sentences or parts of sentences that are contrasted with each other, similar to "але" but often used for lighter juxtaposition (e.g., *Стіл новий, а ліжко — старе*).
+- Прикметникові суфікси: Правопис §33 — За допомогою суфікса -н-(ий) від іменникових і дієслівних основ утворено основний склад якісних і відносних прикметників... Суфікс -н-(ій) ужитий порівняно в небагатьох прикметниках.
 
 ## Calque Warnings
-- який він / яка вона: OK — These are standard Ukrainian constructions for asking about properties or characteristics when the subject is known.
-- гарна сумка: OK — Natural Ukrainian for "nice/beautiful bag."
-- великий і дешевий: OK — Natural use of adjectives to describe an object.
+- у мене є: OK — (no calque detected)
+- моя кімната: OK — (no calque detected)
+- який він: OK — (no calque detected)
 
 ## CEFR Check
 - великий: A1 — OK
-- маленький: A1 — OK
-- чистий: A1 — OK
-- брудний: A1 — OK
+- новий: A1 — OK
 - дорогий: A1 — OK
-- дешевий: A1 — OK
-- новий/старий: A1 — OK
+- старий: A1 — OK
+- маленький: A1 — OK
+- світлий: A1 — OK
+- поганий: A1 — OK
+- гарний: A1 — OK
+- чистий: A2 — Above target
+- дешевий: A2 — Above target

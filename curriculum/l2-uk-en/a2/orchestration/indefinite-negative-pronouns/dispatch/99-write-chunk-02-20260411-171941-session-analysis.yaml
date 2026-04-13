@@ -1,0 +1,77 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T15-18-24a51d8e.json
+phase: write-chunk-02
+prompt_chars: 40831
+response_chars: 4358
+prompt_words: 5977
+response_words: 719
+sections:
+- name: header
+  start: 0
+  length: 437
+  fraction: 0.0107
+- name: skeleton
+  start: 437
+  length: 1811
+  fraction: 0.0444
+- name: prior_summary
+  start: 2248
+  length: 3375
+  fraction: 0.0827
+- name: plan
+  start: 5623
+  length: 11439
+  fraction: 0.2802
+- name: wiki
+  start: 10695
+  length: 23548
+  fraction: 0.5767
+- name: output_spec
+  start: 40610
+  length: 221
+  fraction: 0.0054
+large_sections:
+- wiki
+directives_total: 16
+directives_covered: 6
+directives_missed:
+- kind: checklist
+  text: хтось (someone)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: ніхто (nobody)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: ніщо (nothing)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: ніколи (never)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: ніде (nowhere)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: десь (somewhere)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: колись (once, sometime)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: must
+  text: someone must have been somewhere.
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 2/11 keywords (18%)

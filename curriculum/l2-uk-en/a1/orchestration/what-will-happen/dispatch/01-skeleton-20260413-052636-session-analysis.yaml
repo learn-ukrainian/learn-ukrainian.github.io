@@ -1,0 +1,104 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T03-25-a85c3785.json
+phase: skeleton
+prompt_chars: 32519
+response_chars: 4446
+prompt_words: 4777
+response_words: 702
+sections:
+- name: preamble
+  start: 0
+  length: 478
+  fraction: 0.0147
+- name: plan
+  start: 478
+  length: 5803
+  fraction: 0.1784
+- name: wiki
+  start: 6225
+  length: 23908
+  fraction: 0.7352
+- name: output_spec
+  start: 30189
+  length: 2330
+  fraction: 0.0717
+large_sections:
+- wiki
+directives_total: 21
+directives_covered: 4
+directives_missed:
+- kind: must
+  text: Your skeleton must budget every word.
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: must
+  text: Skim this for the key concepts, paradigms, and examples you must cover.
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: must
+  text: 'Learners must use one or the other, not both (Source: `7-klas-ukrmova-litvinova-2024_s0056`).'
+  covered: false
+  coverage_note: 2/12 keywords (17%)
+- kind: must
+  text: 'While Ukrainian can sometimes do this for scheduled events (`Завтра я їду
+    до моря` - Source: `7-klas-ukrmova-avramenko-2024_s0079`), for general plans,
+    the future tense is required.'
+  covered: false
+  coverage_note: 7/20 keywords (35%)
+- kind: must
+  text: The learner's mental model must be built from Ukrainian examples alone.
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: must
+  text: The introduction must be gradual, building from the simplest, most frequent
+    forms to more complex ones.
+  covered: false
+  coverage_note: 2/12 keywords (17%)
+- kind: must
+  text: The learner must memorize this structural difference for possession.
+  covered: false
+  coverage_note: 2/7 keywords (29%)
+- kind: must
+  text: '" Ukrainian grammar must be explained on its own terms, using its own logic
+    and native pedagogical sources (e.'
+  covered: false
+  coverage_note: 3/12 keywords (25%)
+- kind: must
+  text: The curriculum must proactively teach and test this difference.
+  covered: false
+  coverage_note: 1/7 keywords (14%)
+- kind: must
+  text: '**Word budgets must sum to 1200+.'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: '**Section budgets must match the plan''s `content_outline` word allocations**
+    (±10%).'
+  covered: false
+  coverage_note: 1/8 keywords (12%)
+- kind: must
+  text: '**CRITICAL: An exercise must ONLY test concepts already taught above it.'
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: must
+  text: 'Every plan `activity_hints` entry MUST have a corresponding `<!-- INJECT_ACTIVITY:
+    id -->` marker in the skeleton.'
+  covered: false
+  coverage_note: 2/10 keywords (20%)
+- kind: skeleton_para
+  text: 'P1 (150w): Follow the plan''s points for this section EXACTLY. If the plan
+    says "Self-check questions", output a bulleted Q&A list — NOT prose. If the plan
+    says "recap", write a brief recap.'
+  covered: false
+  coverage_note: 6/20 keywords (30%)
+- kind: inject_activity
+  text: activity-id
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: activity-id
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: descriptive-id
+  covered: false
+  coverage_note: marker missing

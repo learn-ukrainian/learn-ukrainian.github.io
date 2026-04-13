@@ -3,65 +3,17 @@
   "track": "a1",
   "slug": "my-morning",
   "phases": {
-    "check": {
+    "review": {
       "status": "complete",
-      "ts": "2026-04-09T03:28:22.390522+00:00"
-    },
-    "research": {
-      "status": "complete",
-      "ts": "2026-04-09T03:28:22.398198+00:00"
-    },
-    "skeleton": {
-      "status": "complete",
-      "ts": "2026-04-09T03:29:13.288229+00:00"
-    },
-    "pre-verify": {
-      "status": "complete",
-      "ts": "2026-04-09T03:32:02.019707+00:00"
-    },
-    "write": {
-      "status": "complete",
-      "ts": "2026-04-09T03:33:33.077145+00:00"
-    },
-    "exercises": {
-      "status": "complete",
-      "ts": "2026-04-09T03:33:33.077282+00:00"
-    },
-    "activities": {
-      "status": "complete",
-      "ts": "2026-04-10T22:57:07.779999+00:00"
-    },
-    "verify-exercises": {
-      "status": "complete",
-      "ts": "2026-04-09T03:34:49.860531+00:00"
-    },
-    "annotate": {
-      "status": "complete",
-      "ts": "2026-04-09T03:34:49.865777+00:00"
-    },
-    "vocab": {
-      "status": "complete",
-      "ts": "2026-04-09T03:35:56.936474+00:00"
-    },
-    "enrich": {
-      "status": "complete",
-      "ts": "2026-04-09T03:35:56.936619+00:00"
-    },
-    "verify": {
-      "status": "complete",
-      "ts": "2026-04-09T03:35:57.011991+00:00"
+      "ts": "2026-04-13T20:27:23.435765+00:00"
     },
     "stress": {
       "status": "complete",
-      "ts": "2026-04-09T03:38:38.584060+00:00"
-    },
-    "review": {
-      "status": "complete",
-      "ts": "2026-04-10T23:29:00.211530+00:00"
+      "ts": "2026-04-13T20:27:27.886222+00:00"
     },
     "publish": {
       "status": "complete",
-      "ts": "2026-04-10T23:29:05.516899+00:00"
+      "ts": "2026-04-13T20:27:29.026519+00:00"
     }
   }
 }

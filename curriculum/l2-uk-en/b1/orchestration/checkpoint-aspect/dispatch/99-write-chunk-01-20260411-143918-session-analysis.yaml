@@ -1,0 +1,65 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T12-38-8ccfe2a2.json
+phase: write-chunk-01
+prompt_chars: 48380
+response_chars: 7214
+prompt_words: 6602
+response_words: 1080
+sections:
+- name: header
+  start: 0
+  length: 457
+  fraction: 0.0094
+- name: skeleton
+  start: 457
+  length: 2018
+  fraction: 0.0417
+- name: plan
+  start: 2475
+  length: 18488
+  fraction: 0.3821
+- name: wiki
+  start: 14159
+  length: 27193
+  fraction: 0.5621
+- name: output_spec
+  start: 48156
+  length: 224
+  fraction: 0.0046
+large_sections:
+- wiki
+directives_total: 26
+directives_covered: 18
+directives_missed:
+- kind: checklist
+  text: наказовий спосіб (imperative mood — commands and requests)
+  covered: false
+  coverage_note: 0/6 keywords (0%)
+- kind: checklist
+  text: заперечення (negation — negative constructions with aspect)
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: checklist
+  text: умовний спосіб (conditional mood — hypothetical actions with би/б)
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: must
+  text: '**MANDATORY — never omit.'
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 4/11 keywords (36%)
+- kind: inject_activity
+  text: quiz-aspect-identification
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-past-aspect
+  covered: false
+  coverage_note: marker missing

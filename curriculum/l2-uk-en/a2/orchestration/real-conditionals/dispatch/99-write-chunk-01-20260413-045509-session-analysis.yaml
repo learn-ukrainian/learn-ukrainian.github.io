@@ -1,0 +1,70 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T02-54-511d1e21.json
+phase: write-chunk-01
+prompt_chars: 38903
+response_chars: 8576
+prompt_words: 5826
+response_words: 1390
+sections:
+- name: header
+  start: 0
+  length: 467
+  fraction: 0.012
+- name: skeleton
+  start: 467
+  length: 1466
+  fraction: 0.0377
+- name: plan
+  start: 1933
+  length: 13381
+  fraction: 0.344
+- name: wiki
+  start: 7212
+  length: 23348
+  fraction: 0.6002
+- name: output_spec
+  start: 38662
+  length: 241
+  fraction: 0.0062
+large_sections:
+- wiki
+directives_total: 27
+directives_covered: 18
+directives_missed:
+- kind: checklist
+  text: Every narrative paragraph in Ukrainian?
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: checklist
+  text: Zero `> *English translation*` blockquotes after dialogues?
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: checklist
+  text: Metalanguage terms parenthetically translated on first use only (max 2 per
+    section)?
+  covered: false
+  coverage_note: 1/10 keywords (10%)
+- kind: checklist
+  text: Reading Practice / Читаємо українською block in EVERY major section?
+  covered: false
+  coverage_note: 1/8 keywords (12%)
+- kind: checklist
+  text: залишитися (to stay, to remain)
+  covered: false
+  coverage_note: 1/3 keywords (33%)
+- kind: must
+  text: While the basic logic of `Якщо А, то Б` is similar to Russian `Если А, то
+    Б`, learners must avoid assuming the languages are interchangeable.
+  covered: false
+  coverage_note: 5/14 keywords (36%)
+- kind: must
+  text: The student must conjugate it correctly based on the context.
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: inject_activity
+  text: fill-in-real-conditionals
+  covered: false
+  coverage_note: marker missing

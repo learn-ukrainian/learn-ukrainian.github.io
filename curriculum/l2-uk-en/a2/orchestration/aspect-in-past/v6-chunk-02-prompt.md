@@ -1,20 +1,20 @@
-# Section-by-Section Generation — Section 2/5
+# Section-by-Section Generation — Section 2/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 40: Що ти робив? А що зробив? (A2, A2.6 [Aspect, Tenses, and Motion])
-**Section to write:** Коли вживати недоконаний вид (~550 words total)
+**Section to write:** Коли вживати недоконаний вид (~550 words)
 **Word target for this section:** 550 words (aim for 605 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Коли вживати недоконаний вид (~550 words total)
-- P1 (~130 words): [Use Case 1: Duration and Process. Explain that we use imperfective when the action takes time and the focus is on that time spent. Key signal phrases: довго (long time), весь день (all day), три години (three hours). Example: "Я довго писав листа" (The writing was a journey, no mention of the finished envelope).]
-- P2 (~130 words): [Use Case 2: Repetition and Habits. Explain that repeated actions in the past are always imperfective, even if they were "completed" each time. Key signal words: завжди (always), часто (often), щодня (every day), зазвичай (usually). Example: "Вона щодня готувала сніданок" (A routine, not a single event).]
-- P3 (~120 words): [Use Case 3: Background actions (Scene-setting). Explain that when narrating, the "long" background action that was happening when something else occurred must be imperfective. Introduce "Коли..." (When...) constructions. Example: "Коли я снідав (impf background), подзвонив друг (pf interruptor)."]
-- <!-- INJECT_ACTIVITY: match-signal-words --> [match-up, Focus: Match signal words (довго, щодня, зазвичай, часто) with the correct aspect and a corresponding example sentence, 8 items]
+## Коли вживати недоконаний вид (~550 words)
+- P1 (~140 words): Discuss Process or Duration. Explain that when an action stretches over time, we use the imperfective past. Example: "Я довго писав листа" (I was writing a letter for a long time). Emphasize that the result (whether the letter was finished) is either unknown or unimportant in this context.
+- P2 (~140 words): Discuss Repetition or Habit. A repeated action is always imperfective, even if each individual instance was completed. Example: "Вона щодня готувала сніданок" (She made breakfast every day). It describes a routine rather than a single event.
+- P3 (~130 words): Discuss Background Action. Explain how the imperfective sets the scene for another (usually sudden) action. Example: "Коли я снідав, подзвонив друг" (While I was having breakfast, a friend called). The breakfast is the ongoing background.
+- P4 (~140 words): Introduce Signal Words for the imperfective past. Words like довго (for a long time), часто (often), завжди (always), щодня (every day), зазвичай (usually), раніше (earlier/used to), and коли (when, for background). Provide 2-3 sentence examples using these words, such as "Я часто читав казки" and "Він довго готував вечерю."
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -22,7 +22,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-you get done?)*. The choice between the **недоконаний вид** *(imperfective aspect)* and the **доконаний вид** *(perfective aspect)* is like choosing between shooting a video and taking a photo. Коли ми використовуємо недоконаний вид, ми описуємо процес або факт дії. The camera is rolling, the action takes time, and we do not care if it finished. Коли ми використовуємо доконаний вид, ми показуємо конкретний результат. The camera takes a snapshot of a completed action. The action has a clear endpoint, and it produced a visible outcome. This is a very real difference in how Ukrainians think about their actions. Сьогодні понеділок. Оля і Тарас говорять про свої вихідні дні. Вони обговорюють, що вони робили і що зробили. > — **Тарас:** Привіт, Олю! Як пройшла твоя неділя? Що ти робила вчора? > — **Оля:** Привіт! Я добре відпочивала. Я **читала** *(was reading)* цікаву книгу майже весь день. А ти? > — **Тарас:** А я багато працював. Але я **прочитав** *(read/finished)* цілий новий роман! > — **Оля:** Ого! Ти дуже швидко читаєш. А що ти робив увечері? > — **Тарас:** Я **готував** *(was cooking)* обід і вечерю дві години. Це було довго. > — **Оля:** Це справді довго. А я теж не сиділа без діла. Я швидко **приготувала** *(cooked/finished cooking)* дуже смачну вечерю для своєї родини. Дієслова недоконаного виду описують дію, яка довго тривала в часі. These verbs answer the fundamental question «що робив?». Утворювати ці граматичні форми дуже просто і зрозуміло. You already know this perfectly from the basic past tense rules. Ми просто беремо основу дієслова і додаємо стандартні суфікси минулого часу. Для чоловічого роду ми завжди додаємо суфікс «-в». Для жіночого роду ми додаємо суфікс «-ла». Для середнього роду ми використовуємо «-ло», а для множини — «-ли». Наприклад: він робив, вона **робила** *(was doing)*, воно робило, вони робили. Він **писав** *(was writing)*, вона писала, вони писали лист. Він **вчив** *(was studying)* нові слова, вона вчила, вони вчили. Він читав журнал, вона читала, вони читали. Ці дієслова показують нам сам факт дії в минулому, але вони нічого не кажуть про її успішний кінець або результат. Дієслова доконаного виду показують, що дія успішно закінчилася і ми маємо результат. These verbs always answer the specific question «що зробив?». В українській мові більшість дієслів існують у парах. These are called aspectual pairs, and learning them together is essential. Найчастіше доконаний вид утворюється дуже логічно — за допомогою префіксів. Ми просто додаємо префікс до дієслова недоконаного виду. Найбільш популярні префікси — це «з-», «по-», «на-» або «про-». Наприклад, процес читав стає результатом **прочитав** *(read completely)*. Процес писав стає результатом **написав** *(wrote)*. Тривалий процес робив стає завершеним результатом **зробив** *(did/finished)*. There is a special spelling rule for the prefix «з-» that you must remember. Before the voiceless consonants к, п, т, ф, х (you can remember the mnemonic phrase "Кафе Птах"), the prefix always changes to «с-» for easier pronunciation. Тому дієслово **казав** *(was saying)* отримує префікс «с-» і стає **сказав** *(said)*. Складне дієслово **фотографував** *(was photographing)* стає **сфотографував** *(took a photo)*. <!-- INJECT_ACTIVITY: quiz-aspect-id -->
+**писати** — це недоконаний вид. Вони відповідають на питання «що робив?». Якщо ти робив щось **довго**, ти обов'язково використовуєш цю форму. Ти просто описуєш, чим був зайнятий твій час. > *The imperfective aspect of a verb is like a video camera recording an action. When you say "я читав книгу" (I was reading a book), you show the process itself. The focus remains on the action, its duration, or the mere fact that it happened. We do not know if you finished this action. The verbs **робити** (to do), **читати** (to read), **готувати** (to cook), **вчити** (to study), **писати** (to write) are imperfective. They answer the question "what were you doing?". If you were doing something **довго** (for a long time), you must use this form. You are simply describing how your time was occupied.* Доконаний вид дієслова нагадує фотографію, яка фіксує результат. Коли ти кажеш «я прочитав книгу», дія вже повністю закінчилася. Ти маєш конкретний результат своєї роботи. Якщо щось сталося **раптом**, ми також використовуємо доконаний вид для цієї короткої події. Дієслова **зробити**, **прочитати**, **приготувати**, **вивчити**, **написати** — це доконаний вид. Вони відповідають на питання «що зробив?». Важливо пам'ятати, що дієслова доконаного виду не можуть мати форми теперішнього часу. Завершена дія не може відбуватися прямо зараз. > *The perfective aspect of a verb resembles a photograph that captures the result. When you say "я прочитав книгу" (I read/finished the book), the action has completely ended. You have a concrete result of your work. If something happened **раптом** (suddenly), we also use the perfective aspect for this short event. The verbs **зробити** (to get done), **прочитати** (to finish reading), **приготувати** (to finish cooking), **вивчити** (to learn completely), **написати** (to finish writing) are perfective. They answer the question "what did you get done?". It is important to remember that perfective verbs cannot have a present tense form. A completed action cannot be happening right now.* :::info **Grammar box** Every time you want to use a verb in the past tense, pause and ask yourself: "Am I describing the camera rolling, or am I showing the final photograph?" Your answer determines the aspect. ::: The good news is that the mechanics of forming the past tense remain exactly the same for both aspects. You already know how to match the verb ending to the gender and number of the subject. The imperfective verb **робити** (to do) conjugates as usual. * **Він робив.** — *He was doing.* * **Вона робила.** — *She was doing.* * **Воно робило.** — *It was doing.* * **Вони робили.** — *They were doing.* Its perfective partner **зробити** (to get done) uses the exact same endings. * **Він зробив.** — *He got done.* * **Вона зробила.** — *She got done.* * **Воно зробило.** — *It got done.* * **Вони зробили.** — *They got done.* Another common pair is **читати / прочитати** (to read). It follows the exact same logic. You simply need to pick the right aspect before you apply your familiar past tense endings. <!-- INJECT_ACTIVITY: quiz-aspect-identification -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -474,7 +474,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -493,18 +560,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] минулий час (past tense)
+- [ ] робити / зробити (to do — impf./pf.)
+- [ ] писати / написати (to write — impf./pf.)
+- [ ] читати / прочитати (to read — impf./pf.)
+- [ ] готувати / приготувати (to cook/prepare — impf./pf.)
+- [ ] вчити / вивчити (to study/learn — impf./pf.)
+- [ ] процес (process)
+- [ ] результат (result)
+- [ ] довго (for a long time)
+- [ ] раптом (suddenly)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Коли вживати недоконаний вид (~550 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

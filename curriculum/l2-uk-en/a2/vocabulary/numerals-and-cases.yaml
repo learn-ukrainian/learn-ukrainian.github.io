@@ -1,15 +1,27 @@
 vocabulary:
+- word: оби́два
+  translation: both (m.)
+  expression: false
+  pos: числ.
+  gender: ''
+  verified: true
+- word: оби́дві
+  translation: both (f.)
+  expression: false
+  pos: числ.
+  gender: ''
+  verified: true
+- word: деся́ток
+  translation: a ten, a dozen
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
 - word: числі́вник
   translation: numeral
   expression: false
   pos: ім.
   gender: ч.
-  verified: true
-- word: кі́лькісний
-  translation: cardinal
-  expression: false
-  pos: прикм.
-  gender: ''
   verified: true
 - word: порядко́вий
   translation: ordinal
@@ -17,20 +29,14 @@ vocabulary:
   pos: прикм.
   gender: ''
   verified: true
-- word: оди́н
-  translation: one
-  expression: false
-  pos: числ.
-  gender: ''
-  verified: true
-- word: пе́рший
-  translation: first
+- word: кі́лькісний
+  translation: cardinal
   expression: false
   pos: прикм.
   gender: ''
   verified: true
-- word: дру́гий
-  translation: second
+- word: пе́рший
+  translation: first
   expression: false
   pos: прикм.
   gender: ''
@@ -41,161 +47,17 @@ vocabulary:
   pos: прикм.
   gender: ''
   verified: true
-- word: четве́ртий
-  translation: fourth
+- word: оди́н
+  translation: one
   expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: п'я́тий
-  translation: fifth
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: деся́тий
-  translation: tenth
-  expression: false
-  pos: прикм.
+  pos: числ.
   gender: ''
   verified: true
 - word: скі́льки
-  translation: how many / how much
+  translation: how many
   expression: false
   pos: присл.
   gender: ''
-  verified: true
-- word: бага́то
-  translation: many / much
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: ма́ло
-  translation: few / little
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: кі́лька
-  translation: several
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: де́кілька
-  translation: several
-  expression: false
-  pos: числ.
-  gender: ''
-  verified: true
-- word: пів
-  translation: half
-  expression: false
-  pos: числ.
-  gender: ''
-  verified: true
-- word: півтора́
-  translation: one and a half
-  expression: false
-  pos: числ.
-  gender: ''
-  verified: true
-- word: деся́ток
-  translation: a ten / a dozen
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: оби́два
-  translation: both (masculine/neuter)
-  expression: false
-  pos: числ.
-  gender: ''
-  verified: true
-- word: оби́дві
-  translation: both (feminine)
-  expression: false
-  pos: числ.
-  gender: ''
-  verified: true
-- word: че́рга́
-  translation: line / queue
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: пове́рх
-  translation: floor (of a building)
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: зупи́нка
-  translation: stop (bus/tram)
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: впра́ва
-  translation: exercise
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: да́та
-  translation: date
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: мі́сяць
-  translation: month
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: сі́чень
-  translation: January
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: бе́резень
-  translation: March
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: кві́тень
-  translation: April
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: тра́вень
-  translation: May
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: че́рвень
-  translation: June
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: се́рпень
-  translation: August
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: гру́день
-  translation: December
-  expression: false
-  pos: ім.
-  gender: ч.
   verified: true
 - word: кілогра́м
   translation: kilogram
@@ -209,92 +71,14 @@ vocabulary:
   pos: дієсл.
   gender: ''
   verified: true
-- word: гри́вня
-  translation: hryvnia
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: ву́лиця
-  translation: street
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: буди́нок
-  translation: building / house
+- word: вік
+  translation: age
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: кварти́ра
-  translation: apartment
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: свя́то
-  translation: holiday / celebration
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: м'яч
-  translation: ball
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: насо́с
-  translation: pump
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: з однієї сторони
-  translation: from one side
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Мені ... років
-  translation: I am ... years old
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: о третій годині
-  translation: at three o'clock
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Новий рік
-  translation: New Year
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Різдво́
-  translation: Christmas
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: День Незалежності
-  translation: Independence Day
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: День Конституції
-  translation: Constitution Day
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: двадцять першого березня
-  translation: March 21st
+- word: скільки коштує
+  translation: how much costs
   expression: true
   pos: ''
   gender: ''

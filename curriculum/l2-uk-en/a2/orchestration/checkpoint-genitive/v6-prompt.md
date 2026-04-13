@@ -220,24 +220,24 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-- Confirmed: прийменник, узгодження, множина, однина, закінчення, перевірка, помилка, виправити, впізнати, вибрати, родовий, відмінок.
-- Not found: All plan vocabulary words are verified (either as single words or components of the term "родовий відмінок").
+- Confirmed: родовий, відмінок, прийменник, узгодження, множина, однина, закінчення, перевірка, помилка, виправити, впізнати, вибрати
+- Not found: (None)
 
 ## Grammar Rules
-- **Родовий відмінок однини (II відміна)**: Правопис §95-97 (2019) — Masculine nouns ending in -а/-я for specific objects, persons, and terms (автобуса, лікаря, відмінка) and -у/-ю for abstract concepts, substances, and collective nouns (саду, болю, тексту).
-- **Родовий відмінок множини**: Правопис §104 — Masculine nouns usually take -ів/-їв (учнів, водіїв), but some take -ей (коней, гостей). Feminine and neuter nouns usually have a zero ending (шкіл, доріг), but exceptions exist (бабів, статей — zero ending is 'статей' but some prefer 'статтей' or 'статей' depending on the stem; specific plural-only nouns like 'грошей', 'радощів' are critical).
+- Вживання прийменника З та його варіантів ІЗ, ЗІ (ЗО): Правопис §25 — З уживаємо на початку речення перед буквою, що позначає голосний; всередині речення перед такою самою буквою незалежно від закінчення попереднього слова чи паузи. Варіанти із, зі (зо) вживаємо перед буквами, що передають важкі для вимови збіги приголосних, та для досягнення милозвучності.
 
 ## Calque Warnings
-- **вірний**: Calque when used as "correct" — Use **правильний** (правильна відповідь, правильний варіант). "Вірний" means "loyal/faithful".
-- **приймати участь**: Calque — Use **брати участь**.
-- **робити помилку**: Stylistically weaker — Use **припускатися помилки** (formal) or **помилятися** (verb).
+- правильна форма: OK
+- виправити помилку: OK
+- родовий відмінок: OK
 
 ## CEFR Check
-- **помилка**: A1 — Confirmed in Grade 5 textbooks.
-- **вибрати**: A1 — Confirmed in Grade 3/5 textbooks.
-- **виправити**: A2 — Standard vocabulary for "to correct/fix".
-- **перевірка**: A2 — Standard for "test/check".
-- **прийменник**: A2 — Essential metalanguage for Genitive case prepositions.
+- прийменник: B1 — Above target
+- помилка: A2 — OK
+- виправити: A2 — OK
+- вибрати: A2 — OK
+- перевірка: Not found in PULS (verb "перевірити" is A2) — Above target
+- впізнати: Not found in PULS — Above target
 </pre_verified_facts>
 
 
@@ -655,12 +655,14 @@ Here are sentences demonstrating the use of the genitive case with `немає`.
 
 ## Section Structure
 
-Write these sections as H2 headings, in this exact order:
+Write these sections as H2 headings, in this **exact** order:
 
 - `## Частина 1: Впізнавання форм (Part 1: Recognizing Forms)` (~450 words)
 - `## Частина 2: Вибір правильної форми (Part 2: Choosing the Correct Form)` (~500 words)
 - `## Частина 3: Вільне вживання (Part 3: Free Production)` (~550 words)
 - `## Підсумок` (~150 words)
+
+**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim** as an `## H2` line. This includes the FINAL summary/transition section (`Підсумок: ...`, `Підсумок та перехід до M...`, etc.) — the writer's most common failure is silently dropping the closing section. Do NOT skip it. Do NOT renumber. Do NOT merge headings. The post-write quick-verify check will fail your build if any heading is missing, even if the prose itself is excellent.
 
 Each section should follow the word budget specified. The total must reach 1500 words minimum.
 
@@ -704,6 +706,25 @@ GRAMMAR RULES:
 - **Zero calques**: No приймати душ→брати душ, приймати рішення→ухвалювати рішення
 - **Zero paronyms**: тактична≠тактовна, ефектний≠ефективний — use the right word, not a similar-sounding one
 - **Natural Ukrainian**: Write how a Ukrainian teacher would explain this to a student. Not robotic, not textbook-dry, not overly casual.
+
+### FORBIDDEN WORDS — never write these (#1189)
+
+The following Russian words have leaked into past builds and broken modules. They are **hard-banned** — the post-write toxic-token scanner will fail your build the moment it sees one. Use the Ukrainian alternative every time, even in dialogues, even in casual prose, even when quoting a learner's mistake (use a `<!-- VERIFY -->` placeholder instead of typing the Russian form):
+
+| Russian (FORBIDDEN) | Ukrainian (USE THIS) |
+|---|---|
+| хорошо | добре |
+| конечно | звичайно / певна річ |
+| спасибо | дякую |
+| пожалуйста | будь ласка / прошу |
+| ничего | нічого |
+| сейчас | зараз |
+| тоже | теж / також |
+| здесь | тут |
+| кот | кіт |
+| кон | кін |
+
+This list is enforced word-for-word by `scripts/build/quick_verify.py` (SEVERE_RUSSIANISMS). If you produce any of these tokens — even inside a quoted example, even inside a dialogue line spoken by a Russian-speaking character — the build halts immediately. There is no exception.
 
 **Authority hierarchy (if uncertain about a word, check in this order):**
 VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (stress) → Антоненко-Давидович (style) → Грінченко (etymology).
@@ -803,40 +824,35 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Частина 1: Впізнавання форм (~450 words total)
-- P1 (~50 words): [Introduction to the module's goal: consolidating knowledge of the Genitive case from M08-M13. Emphasize that this is a "checkpoint" to ensure the foundations are solid before moving to more complex case interactions.]
-- P2 (~100 words): [Spatial prepositions identification. Explain how 'біля' (near), 'навпроти' (opposite), 'коло' (around/near), and 'до' (to) trigger the Genitive. Provide examples focusing on physical location: 'біля собору', 'навпроти театру', 'до станції'.]
-- P3 (~100 words): [Source and Time prepositions. Explain the use of 'від' (from/away from), 'з/із/зі' (from/out of), and 'після' (after). Illustrate with examples of origin and sequence: 'від мами', 'зі Львова', 'після обіду'.]
-- P4 (~100 words): [Purpose and Lack prepositions. Detail the role of 'для' (for) and 'без' (without). Use essential everyday examples: 'для сестри', 'кава без цукру', 'квиток для студента'.]
-- P5 (~100 words): [Function recognition summary. How to distinguish between a preposition meaning "direction" (до) vs "location" (біля) and "source" (від). Provide a brief guide on asking the question 'кого? чого?' after these triggers.]
-- <!-- INJECT_ACTIVITY: quiz-genitive-prepositions --> [quiz, Identify the Genitive preposition and its function (location, time, source, purpose, lack), 8 items]
+## Частина 1: Впізнавання форм (Part 1: Recognizing Forms) (~500 words)
+- P1 (~100 words): [Role-play dialogue: A tour guide in Kyiv using multiple Genitive prepositions. Examples: "Біля Софійського собору...", "Без квитка не можна.", "Для групи з десяти людей.", "До Хрещатика п'ять хвилин."]
+- P2 (~80 words): [Analyze the dialogue. Point out the prepositions used (біля, без, для, з, до) and explicitly state how they force the following noun phrase into the Genitive case, changing the endings.]
+- P3 (~100 words): [Review prepositions of location and direction. Provide clear examples for each: біля (біля парку), навпроти (навпроти школи), коло (коло дому), до (до університету), з/із/зі (з Києва, зі школи). Explain their spatial meanings.]
+- P4 (~100 words): [Review prepositions of time, purpose, and absence. Provide clear examples: після (після роботи), для (для сестри), від (від вівторка), без (без молока, без цукру). Explain how they function to set context.]
+- P5 (~120 words): [Focus on form recognition and identifying correct vs. incorrect usage. Show contrasts like incorrect "до магазин" vs. correct "до магазину", or "без цукор" vs. "без цукру". Briefly recap the masculine -а vs -у ending logic (конкретне vs абстрактне) as a refresher.]
+- <!-- INJECT_ACTIVITY: quiz-preposition-identification --> [quiz, Identify the Genitive preposition and its function in context sentences, 8 items]
 
-## Частина 2: Вибір правильної форми (~550 words total)
-- P1 (~110 words): [Adjective and Possessive agreement in the Genitive. Detail the masculine/neuter ending '-ого' and feminine '-ої'. Use examples: 'мого нового друга', 'твоєї старшої сестри', 'цього старого стола'.]
-- P2 (~120 words): [The challenge of Genitive Plural endings. Explain the distribution of '-ів' (masculine/some neuter), zero ending (feminine/most neuter), and '-ей' (special cases). Examples: 'десять друзів', 'п'ять книжок', 'багато людей', 'кілька ночей'.]
-- P3 (~100 words): [The Masculine singular -а/-у distinction for inanimate nouns. Explain the "concrete object" (-а/-я) vs "abstract/collective concept" (-у/-ю) logic. Examples: 'автобуса' (concrete) vs 'часу' (abstract), 'магазина' (concrete) vs 'цукру' (material).]
-- <!-- INJECT_ACTIVITY: fill-in-genitive-forms --> [fill-in, Complete sentences requiring Genitive singular and plural with correct adjective/noun agreement, 8 items]
-- P4 (~110 words): [Preposition minimal pairs. Compare 'з' vs 'від' (origin vs personal source) and 'біля' vs 'навпроти' (proximity vs facing). Explain when 'зі' is used for phonetic ease (зі Львова, зі столу).]
-- P5 (~110 words): [Analysis of common L2 errors. Discuss the tendency to leave the noun in Nominative after 'немає' or prepositions. Explain why 'Я потребую допомоги' is correct while 'потребую допомогу' (Accusative) is a common mistake.]
-- <!-- INJECT_ACTIVITY: error-correction-genitive-checks --> [error-correction, Find and correct grammar errors involving wrong endings, wrong prepositions, or incorrect plural forms, 6 items]
+## Частина 2: Вибір правильної форми (Part 2: Choosing the Correct Form) (~550 words)
+- P1 (~100 words): [Explain adjective and pronoun agreement in the Genitive case. Provide full phrase examples across genders: masculine/neuter (-ого: мого нового друга, цього синього моря), feminine (-ої/-еї: моєї старої книги, цієї статті), and plural (-их: моїх нових друзів).]
+- P2 (~120 words): [Review Genitive plural formation with the zero ending (-ø). Explain vowel insertion (о, е) to break up consonant clusters. Examples: багато машин, п'ять сестер, немає вікон, кілька пісень.]
+- P3 (~120 words): [Review Genitive plural formation with specific suffixes. Cover -ів/-їв for masculine (братів, столів, трамваїв) and -ей for third declension/irregulars (ночей, грошей, дітей, людей, статей).]
+- P4 (~110 words): [Clarify nuances in preposition choice using minimal pairs. Compare `з` (out of a place: з кімнати) vs `від` (away from a person: від лікаря); `біля` (near: біля стола) vs `навпроти` (opposite: навпроти вікна); and `до` (up to a time: до вечора) vs `після` (after: після обіду).]
+- P5 (~100 words): [Highlight common L2 errors to avoid. Warn against translating English directly: "Я потребую допомоги" (not допомогу), forgetting Genitive after negation "немає сестри" (not сестра), and plural errors with numbers 5+ "п'ять книжок" (not книга).]
+- <!-- INJECT_ACTIVITY: fill-in-genitive-agreement --> [fill-in, Complete sentences requiring Genitive singular and plural with correct agreement, 8 items]
+- <!-- INJECT_ACTIVITY: error-correction-genitive --> [error-correction, Find and correct grammar errors in sentences covering module topics, 6 items]
 
-## Частина 3: Вільне вживання (~600 words total)
-- P1 (~120 words): [Contextual scenario: At the market and the pharmacy. Model sentences using Genitive for quantity and purpose: 'два кілограми яблук', 'пляшка води', 'таблетки від болю', 'крем для рук'.]
-- P2 (~120 words): [Dialogue: The Kyiv Tour Guide. A multi-turn dialogue where a guide describes landmarks using various Genitive patterns. Examples: 'Ми стоїмо біля Золотих воріт', 'До Хрещатику десять хвилин', 'Ця екскурсія для туристів з України'.]
-- P3 (~110 words): [Translation strategies. Explain how English 's possession and 'of' phrases map to the Ukrainian Genitive. Contrast 'my brother's car' with 'машина мого брата' and 'the city center' with 'центр міста'.]
-- P4 (~100 words): [Using Genitive with 'багато', 'мало', and 'кілька'. Explain that quantity words always take the Genitive Plural (or Singular for mass nouns). Examples: 'багато часу', 'кілька студентів', 'мало води'.]
-- <!-- INJECT_ACTIVITY: match-up-genitive-situational --> [match-up, Match common situations (market, doctor, directions, daily routine) to the correct Genitive expressions, 8 items]
-- P5 (~150 words): [Concluding thoughts on Genitive mastery. Reiterate that consistent use of correct endings is a sign of A2+ proficiency. Transition to the summary checklist.]
+## Частина 3: Вільне вживання (Part 3: Free Production) (~600 words)
+- P1 (~120 words): [Demonstrate Genitive in a shopping context. Focus on quantities and absence. Examples: "два кілограми яблук", "сто гривень", "немає свіжого хліба", "кава без цукру".]
+- P2 (~120 words): [Demonstrate Genitive in a health/doctor context. Focus on expressing symptoms and remedies. Examples: "ліки від болю", "сироп від кашлю", "немає сил", "немає настрою", "після операції".]
+- P3 (~120 words): [Demonstrate Genitive for giving directions and stating timeframes. Examples: "Як дійти до станції метро?", "аптека знаходиться навпроти банку", "працює від ранку до ночі".]
+- P4 (~100 words): [Provide strategies for building full sentences and completing dialogues naturally. Show Q&A pairs: Q: "Звідки ви?" A: "Я з України." / Q: "Для кого цей подарунок?" A: "Це для моєї мами."]
+- <!-- INJECT_ACTIVITY: match-up-situations --> [match-up, Match situations (market, doctor, directions) to correct Genitive expressions, 8 items]
+- P5 (~140 words): [Підсумок: Self-assessment checklist formatted as a bulleted Q&A list.
+  - Can I use all 9+ prepositions? (Provide a quick test sentence).
+  - Can I form Genitive plural for all genders? (Test words: стіл -> столів, книга -> книжок, море -> морів, ніч -> ночей).
+  - Can I agree adjectives and pronouns? (Test phrase: "my new phone" -> мого нового телефону).]
 
-## Підсумок (~150 words)
-- P1 (~150 words): [Self-assessment checklist. Provide the following bulleted list for the learner:
-  * Чи можу я використати прийменники 'до', 'біля', 'від', 'для' без помилок?
-  * Чи правильно я утворюю множину (друзів, книжок, людей)?
-  * Чи вмію я узгоджувати прикметники ('мого нового') з іменниками?
-  * Чи розумію я різницю між 'автобуса' та 'часу'?
-  * Чи можу я пояснити напрямок або рецепт, використовуючи родовий відмінок?]
-
-Grand total: ~1750 words
+Grand total: ~1650 words
 </skeleton>
 
 ## Output Format
@@ -844,11 +860,57 @@ Grand total: ~1750 words
 Write in Markdown. Use:
 - `## Section Title` for main sections
 - `### Subsection` for subsections within a section
-- `**bold**` for Ukrainian words being taught — EVERY bold Ukrainian word MUST have an English translation on first use, either in parentheses `**слово** (translation)` or inline `**слово** means "translation"`. No exceptions.
+- `**bold**` for Ukrainian words being taught. For **A1 and A2** levels, provide an English translation on first use (e.g. `**стіл** (table)`) because learners lack the vocabulary to infer meaning. For **B1 and above**, do NOT provide inline translations for standard vocabulary — the learner will use the module's словник (vocabulary table). You may provide ONE parenthetical English translation ONLY for highly abstract grammar/linguistic terms on first use (e.g. `**видова пара** (aspectual pair)`).
 - Tables for paradigms (conjugation, declension)
 - `:::tip` / `:::caution` / `:::note` for callout boxes
 - `<!-- INJECT_ACTIVITY: {id} -->` for exercise placement (markers only — do NOT write exercise content)
 
 Do NOT write MDX component syntax, JSON, or DSL exercise blocks (:::quiz, etc.). Plain Markdown with injection markers.
+
+---
+
+## MANDATORY FINAL CHECKLIST (#1189)
+
+Before you finish writing, verify the prose against this checklist. Failing any item will fail the build.
+
+### Section headings (verbatim)
+
+Every heading from "Section Structure" above MUST appear as an `## H2` in your output, in order, **including the closing `Підсумок:` / `Підсумок та перехід до M...` summary**. The single most common writer failure across the B1 build has been silently dropping the final summary section. Re-read your output before stopping. If the last section in the plan is missing, write it now.
+
+### Required vocabulary (every word must appear)
+
+You MUST use **every word** from the list below at least once in the prose, in a natural sentence with bold + English translation. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, прагматика, діагностика, дієвідмінювання, зворотний, двовидовий, одновидовий, неозначено-кількісний, etc.) is the most frequently dropped category — actively find homes for those words even if it means adding a sentence that defines them.
+
+- [ ] родовий відмінок (genitive case)
+- [ ] прийменник (preposition)
+- [ ] узгодження (agreement)
+- [ ] множина (plural)
+- [ ] однина (singular)
+- [ ] закінчення (ending)
+- [ ] перевірка (check, review)
+- [ ] помилка (mistake, error)
+
+### Forbidden words (never produce)
+
+Do not write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use `<!-- VERIFY -->` instead). The post-write toxic-token scanner will fail the build immediately:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+### Level-specific immersion check
+
+The level-appropriate immersion rule was already injected at the top of
+this prompt as `IMMERSION RULE`. Re-read it now BEFORE you stop writing.
+If your level's rule contains a CHECKLIST block, walk through every item.
+If it doesn't, just verify your output matches the LANGUAGE ROLES and
+TARGET stated in that block.
+
+This used to hard-code a B1+ checklist that confused A1/A2 models (where
+translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+The single source of truth is now
+`scripts/pipeline/config_tables.py:IMMERSION_RULES`.
+
+---
 
 Begin writing now. Start with the first section heading.

@@ -1,0 +1,77 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T15-26-e4f2df47.json
+phase: write-chunk-03
+prompt_chars: 42408
+response_chars: 4583
+prompt_words: 5807
+response_words: 731
+sections:
+- name: header
+  start: 0
+  length: 445
+  fraction: 0.0105
+- name: skeleton
+  start: 445
+  length: 1417
+  fraction: 0.0334
+- name: prior_summary
+  start: 1862
+  length: 3377
+  fraction: 0.0796
+- name: plan
+  start: 5239
+  length: 11872
+  fraction: 0.2799
+- name: wiki
+  start: 10695
+  length: 25074
+  fraction: 0.5913
+- name: output_spec
+  start: 42185
+  length: 223
+  fraction: 0.0053
+large_sections:
+- wiki
+directives_total: 19
+directives_covered: 9
+directives_missed:
+- kind: checklist
+  text: синонім (synonym)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: антонім (antonym)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: епітет (epithet)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: метафора (metaphor)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: еліпсис (ellipsis)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: повтор (repetition)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: образний (figurative, expressive)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: must
+  text: '**MANDATORY — never omit.'
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 3/11 keywords (27%)

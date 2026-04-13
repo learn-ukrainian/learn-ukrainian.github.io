@@ -1,0 +1,110 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T21-10-d49517e2.json
+phase: write-chunk-02
+prompt_chars: 46438
+response_chars: 8078
+prompt_words: 6631
+response_words: 1350
+sections:
+- name: header
+  start: 0
+  length: 505
+  fraction: 0.0109
+- name: skeleton
+  start: 505
+  length: 2351
+  fraction: 0.0506
+- name: prior_summary
+  start: 2856
+  length: 3424
+  fraction: 0.0737
+- name: plan
+  start: 6280
+  length: 11929
+  fraction: 0.2569
+- name: wiki
+  start: 10601
+  length: 27969
+  fraction: 0.6023
+- name: output_spec
+  start: 46178
+  length: 260
+  fraction: 0.0056
+large_sections:
+- wiki
+directives_total: 21
+directives_covered: 3
+directives_missed:
+- kind: checklist
+  text: число (дата) (date)
+  covered: false
+  coverage_note: 1/3 keywords (33%)
+- kind: checklist
+  text: місяць (month)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: січень (січня) (January)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: лютий (лютого) (February)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: березень (березня) (March)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: квітень (квітня) (April)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: травень (травня) (May)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: червень (червня) (June)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: липень (липня) (July)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: серпень (серпня) (August)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: вересень (вересня) (September)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: жовтень (жовтня) (October)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: листопад (листопада) (November)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: грудень (грудня) (December)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: заперечення (negation)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: must
+  text: '⚠️ CRITICAL: You MUST write at least 30% Ukrainian text or the module will
+    be REJECTED.'
+  covered: false
+  coverage_note: 3/10 keywords (30%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 4/11 keywords (36%)
+- kind: inject_activity
+  text: quiz, What's the Date? (Drill)
+  covered: false
+  coverage_note: marker missing

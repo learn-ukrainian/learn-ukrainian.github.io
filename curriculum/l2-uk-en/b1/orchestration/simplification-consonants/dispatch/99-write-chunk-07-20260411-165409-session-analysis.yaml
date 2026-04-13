@@ -1,0 +1,83 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T14-53-1d1bab0f.json
+phase: write-chunk-07
+prompt_chars: 53227
+response_chars: 2865
+prompt_words: 7153
+response_words: 403
+sections:
+- name: header
+  start: 0
+  length: 406
+  fraction: 0.0076
+- name: skeleton
+  start: 406
+  length: 943
+  fraction: 0.0177
+- name: prior_summary
+  start: 1349
+  length: 3461
+  fraction: 0.065
+- name: plan
+  start: 4810
+  length: 18963
+  fraction: 0.3563
+- name: wiki
+  start: 17033
+  length: 29258
+  fraction: 0.5497
+- name: output_spec
+  start: 53031
+  length: 196
+  fraction: 0.0037
+large_sections:
+- wiki
+directives_total: 22
+directives_covered: 11
+directives_missed:
+- kind: checklist
+  text: милозвучність (euphony — pleasant sound quality of speech)
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: checklist
+  text: виняток (exception — case that does not follow the rule)
+  covered: false
+  coverage_note: 3/8 keywords (38%)
+- kind: checklist
+  text: прикметник (adjective)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: іменник (noun)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: основа (stem — the word minus its ending)
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: checklist
+  text: орфограма (orthographic rule — spelling pattern requiring knowledge)
+  covered: false
+  coverage_note: 1/7 keywords (14%)
+- kind: checklist
+  text: морфонологія (morphophonology — sound changes in morphology)
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: must
+  text: '**Найвищий пріоритет (Must Know):** Чергування **`[г], [к], [х] → [з''],
+    [ц''], [с'']`** в **давальному** та **місцевому** відмінках однини **іменників
+    І відміни**.'
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: EVERY word in the checklist below MUST appear at least once with a bold Ukrainian
+    form and English translation in a natural sentence.
+  covered: false
+  coverage_note: 3/15 keywords (20%)
+- kind: inject_activity
+  text: error-correction, find and fix spelling errors related to simplification
+  covered: false
+  coverage_note: marker missing

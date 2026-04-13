@@ -2,45 +2,45 @@
   "module": "foundations-practice",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-04-11T01:49:57.084937Z",
+  "last_audit": "2026-04-12T23:41:32.750318Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-11T01:49:53.654940Z",
+    "md": "2026-04-12T23:41:30.023734Z",
     "meta": null,
-    "activities": "2026-04-11T01:46:54.781144Z",
-    "vocabulary": "2026-04-07T22:41:20.972021Z",
+    "activities": "2026-04-12T23:20:03.333723Z",
+    "vocabulary": "2026-04-12T23:20:43.085620Z",
     "research": null,
     "plan": "2026-04-04T22:04:59.910312Z"
   },
   "gates": {
     "meta": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Valid Structure"
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Summary'"
     },
     "lesson": {
       "status": "fail",
-      "violations": 1,
-      "message": "3250/2000 (raw: 3303) | pedagogy: 1 violations"
+      "violations": 2,
+      "message": "2890/2000 (raw: 2958) | engagement: 2/3 | immersion: 24.6% LOW (target 30-55% (A2.1))"
     },
     "activities": {
-      "status": "fail",
-      "violations": 1,
-      "message": "8/0 | density: 3 < 8"
+      "status": "pass",
+      "violations": 0,
+      "message": "11/0"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "49/1"
+      "message": "22/1"
     },
     "vocab_progression": {
       "status": "warn",
       "violations": 0,
-      "message": "\u0394 -15 | premature=3 | gaps=4 | well-paced=2",
-      "delta": -15,
-      "premature": 3,
-      "gaps": 4,
-      "well_paced": 2
+      "message": "\u0394 -8 | premature=1 | gaps=3 | well-paced=0",
+      "delta": -8,
+      "premature": 1,
+      "gaps": 3,
+      "well_paced": 0
     },
     "naturalness": {
       "status": "info",
@@ -60,7 +60,9 @@
   },
   "overall": {
     "status": "fail",
-    "blocking_issues": [],
+    "blocking_issues": [
+      "Structure: Missing '## Summary'"
+    ],
     "pass_count": 4,
     "fail_count": 2,
     "deferred_count": 0

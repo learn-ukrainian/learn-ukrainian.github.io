@@ -1,0 +1,55 @@
+round: 5
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: All planned H2 sections are present and the module covers `прокидатися
+    → вмиватися → одягатися → снідати → йти`, but only `*Карама́н Grade 10 (p. 176)*`
+    and `*Кравцо́ва Grade 4 (p. 113)*` are cited; t
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: 'No Russianisms/Surzhyk found, but the grammar explanation overstates
+    `-ся` as if it simply equals `"oneself"/"myself"` in all cases: `Think of this
+    suffix as...` / `you instantly change the target...`'
+- dimension: 3
+  name: Pedagogical quality
+  score: 7
+  evidence: The PPP skeleton is there, but the core reflexive explanation leans on
+    an overly broad English shortcut instead of staying with the concrete pairs `вмивати
+    → вмиватися`, `одягати → одягатися`.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 'Required vocabulary is covered in prose or examples: `прокидатися`, `вмиватися`,
+    `одягатися`, `снідати`, `йти`, `спочатку`, `потім`; recommended items like `збиратися`,
+    `повертатися`, `поспішати`, `вр'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: All 4 markers are present and aligned to the plan; they appear after the
+    relevant teaching and match the hinted exercise types/focus.
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: 'The teacher voice is generally solid, but some lines are padded or overstated:
+    `This rule is fundamental to fluent Ukrainian speech...` and `This simple structure
+    is exactly how a native speaker outli'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All H2 headings from the plan are present and ordered correctly; pipeline
+    word count is 1470, above the 1200 target; no dangling sections or formatting
+    breakage.
+- dimension: 8
+  name: Cultural accuracy
+  score: 9
+  evidence: No Russian-centric framing or cultural inaccuracies found. The module
+    treats Ukrainian on its own terms, though it is not especially culture-rich.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: 'Named speakers and a plausible roommate setting help, but the opening
+    exchange is still mostly prompt-response: `Ко́ли ти прокида́єшся?` → `Що ти ро́биш
+    по́тім?` → `А коли ти йдеш на робо́ту?`'
+findings: []

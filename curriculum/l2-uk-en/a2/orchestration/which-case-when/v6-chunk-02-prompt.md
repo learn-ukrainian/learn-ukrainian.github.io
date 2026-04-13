@@ -1,48 +1,31 @@
-# Section-by-Section Generation — Section 2/6
+# Section-by-Section Generation — Section 2/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 36: Компас відмінків (A2, A2.5 [Case Synthesis and Plurals])
-**Section to write:** Дієслово вирішує: Який відмінок після дієслова? (~550 слів)
-**Word target for this section:** 300 words (aim for 330 to account for undershoot)
+**Section to write:** Прийменник вирішує: Один прийменник — різні відмінки (~600 words)
+**Word target for this section:** 600 words (aim for 660 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Дієслово вирішує: Який відмінок після дієслова? (~550 слів)
-- P1 (~120 слів): [Accusative verbs (Direct Objects). Explain that most transitive verbs govern the Accusative case without prepositions. Examples: бачити (бачу друга), знати (знаю правду), любити (люблю Україну), купити (куплю квиток).]
-- P2 (~100 слів): [Dative verbs (The Recipient). Focus on the logic of giving or helping someone. Examples: допомагати (допомагаю мамі), телефонувати (телефоную сестрі), дякувати (дякую вчителю), радити (раджу другу).]
-- P3 (~110 слів): [Instrumental verbs (Interest and Tools). Explain verbs that describe what we use or what we are interested in. Examples: користуватися (користуюсь ручкою), цікавитися (цікавлюся мовою), займатися (займаюся спортом).]
-- P4 (~110 слів): [Genitive verbs and constructions. Focus on the concept of "lack" and "fear". Examples: немає (немає часу), боятися (боятися вовка), потребувати (потребую допомоги).]
-- P5 (~110 слів): [Thinking and Dreaming. Explain that while "about" in English is often Locative, in Ukrainian "думати про" and "мріяти про" strictly govern the Accusative. Example: думати про майбутнє, мріяти про подорож.]
-- <!-- INJECT_ACTIVITY: quiz-verb-case --> [quiz, focus: choose the correct case form after specific governing verbs, 8 items]
+## Прийменник вирішує: Один прийменник — різні відмінки (~600 words)
+- P1 (~100 words): Introduce the concept that prepositions dictate cases, but explain that some "dual-use" prepositions change the case they govern depending on their meaning, primarily distinguishing between direction and static location.
+- P2 (~120 words): Detail the preposition "на" with the Accusative (direction/goal) versus the Locative (location). Compare examples: "Я йду на роботу" and "Поклади книгу на стіл" (Accusative) vs. "Я на роботі" and "Книга лежить на столі" (Locative).
+- P3 (~120 words): Detail the preposition "у/в" with the Accusative (direction) versus the Locative (location). Compare examples: "Я йду в магазин" (Accusative) vs. "Я в магазині" (Locative). Briefly preview that this difference extends to time contexts.
+- P4 (~80 words): Detail the preposition "по" with the Locative case to indicate surface or path. Provide examples of movement along a space: "бігати по кімнаті", "ходити по вулиці", "подорожувати по Україні".
+- P5 (~90 words): Contrast the preposition "з/із" governing the Genitive (from/out of) versus the Instrumental (together with). Compare examples: "вийти з дому", "приїхати з Києва" (Genitive) vs. "піти з другом", "кава з молоком" (Instrumental).
+- P6 (~90 words): Contrast the preposition "за" governing the Accusative (in exchange for) versus the Instrumental (behind/after). Compare examples: "дякувати за допомогу", "платити за квитки" (Accusative) vs. "за столом", "бігти за автобусом" (Instrumental).
+- <!-- INJECT_ACTIVITY: group-sort-prepositions --> [group-sort, Sort prepositions by which case(s) they govern (Acc., Gen., Instr., Loc.), 8 items]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
 
 <previous_context>
-## Вступ: Граматичний детектив
+[...previous sections truncated...]
 
-> — **Вчитель:** Привіт! *(Hi!)* Сьогодні ми — граматичні детективи. *(Today we are grammar detectives.)* Ми шукаємо **відмінки** *(cases)* у текстах. *(We are looking for cases in texts.)*
-> — **Анна:** Що ми читаємо сьогодні? *(What are we reading today?)*
-> — **Вчитель:** Українську газету: «Президент зустрівся з прем'єром. Для журналістів підготували зал». *(A Ukrainian newspaper: "The President met with the Prime minister. They prepared a hall for the journalists".)* Де тут відмінки? *(Where are the cases here?)*
-> — **Анна:** Слово «Президент» *(The word "President")* — це **Називний відмінок** *(Nominative case)*. Він виконує дію. *(He performs the action.)*
-> — **Вчитель:** Точно! *(Exactly!)* А фраза «з прем'єром»? *(And the phrase "with the prime minister"?)*
-> — **Марко:** Тут є **прийменник** *(preposition)* «з». *(Here is the preposition "with".)* Це **Орудний відмінок** *(Instrumental case)*. Питання «з ким?». *(The question "with whom?".)*
-> — **Вчитель:** Дуже добре. *(Very good.)* А друге речення: «Для журналістів підготували зал»? *(And the second sentence: "They prepared a hall for the journalists"?)*
-> — **Анна:** Прийменник «для» вимагає певної форми. *(The preposition "for" requires a specific form.)* Це **Родовий відмінок** *(Genitive case)*.
-> — **Марко:** А слово «зал» *(And the word "hall")* — це **Знахідний відмінок** *(Accusative case)*. Дія спрямована на нього. *(The action is directed at it.)*
-> — **Вчитель:** Блискуче! *(Brilliant!)* Ви розпізнали чотири різні відмінки. *(You recognized four different cases.)*
-
-Як обрати правильний відмінок? *(How to choose the right case?)* Cases in Ukrainian are never random. Вони мають чітку логіку. *(They have a clear logic.)* Уявіть, що у вас є **компас відмінків** *(case compass)*. Цей компас показує правильний шлях. *(This compass shows the right way.)*
-
-In Ukrainian grammar, specific words act as anchors that govern the case of the noun. Перший якір — це **дієслово** *(verb)*. *(The first anchor is the verb.)* Verbs dictate which case must follow them to complete the meaning. Наприклад, дієслово «бачити» вимагає Знахідного відмінка. *(For example, the verb "to see" requires the Accusative case.)* 
-
-Другий якір — це прийменник. *(The second anchor is the preposition.)* Prepositions are strongly linked to specific cases. Прийменник «для» завжди вимагає Родового відмінка. *(The preposition "for" always requires the Genitive case.)* 
-
-When you identify the governing verb or preposition, you easily determine the correct noun ending. У цьому модулі ми вивчимо простий **алгоритм** *(algorithm)*. *(In this module we will learn a simple algorithm.)* Ви завжди будете знати правильну форму. *(You will always know the correct form.)*
-
+"to help", "to call", "to thank", "to advise", and "to bother" require only the Dative case. In the Ukrainian language, you help or thank to someone, not someone. For example: "I help my younger sister do her difficult homework every day." Another good example: "We sincerely thank the teachers for their important work."* :::info **Grammar box** — Remember that English direct objects do not always translate to Ukrainian direct objects. You "call someone" in English, but you must "call *to* someone" (телефонувати + Dative) in Ukrainian. ::: Another fascinating category involves verbs that govern the Instrumental case. This typically happens when the verb expresses the idea of utilizing a tool, managing a system, or demonstrating a deep personal interest in a subject. The Instrumental case answers the questions "with whom?" or "with what?". Дієслова «цікавитися», «займатися», «керувати» та **користуватися** (to use) вимагають Орудного відмінка. Цей відмінок чудово показує інструмент, засіб або тривалий процес. Наприклад: «Мій старший брат користується новим комп'ютером на роботі». Або: «Вона дуже цікавиться стародавньою українською історією». > *The verbs "to be interested in", "to be engaged in", "to manage", and "to use" require the Instrumental case. This case perfectly shows a tool, a means, or a continuous process. For example: "My older brother uses a new computer at work." Or: "She is very interested in ancient Ukrainian history."* The Genitive case serves multiple critical functions, but it is most frequently triggered by verbs and constructions denoting absence, fear, or strong necessity. Recognizing these triggers will help you avoid confusing the Genitive with the Accusative. Якщо ви хочете сказати, що чогось або когось немає, вам обов'язково потрібен Родовий відмінок. Також ми регулярно використовуємо цей відмінок з дієсловами **боятися** (to be afraid) та «потребувати». Наприклад, можна сказати: «У мене зараз зовсім немає вільного часу». Або: «Маленька дівчинка боїться темряви у цій великій кімнаті». > *If you want to say that something or someone is missing, you absolutely need the Genitive case. We also regularly use this case with the verbs "to be afraid" and "to need". For example, you can say: "I have absolutely no free time right now." Or: "The little girl is afraid of the dark in this large room."* Finally, you will encounter verbs that require a specific preposition to be complete, and that preposition in turn dictates the required case. A very common and poetic pattern involves verbs of thought, desire, and reflection paired with the preposition «про» (about). Коли ми хочемо **думати** (to think) про майбутнє або «мріяти» про відпустку, ми використовуємо прийменник «про» та Знахідний відмінок. Це дуже проста і логічна конструкція. Ми кажемо: «Я часто думаю про наше спільне світле майбутнє». Або: «Моя родина мріє про велику подорож до моря». > *When we want to think about the future or "dream" about a vacation, we use the preposition "про" and the Accusative case. This is a very simple and logical construction. We say: "I often think about our shared bright future." Or: "My family dreams about a big trip to the sea."*
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -460,7 +443,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -479,18 +529,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] відмінок (grammatical case)
+- [ ] прийменник (preposition)
+- [ ] дієслово (verb)
+- [ ] напрямок (direction)
+- [ ] місце (place, location)
+- [ ] час (time)
+- [ ] характеристика (characteristic, description)
+- [ ] думати (to think)
+- [ ] боятися (to be afraid)
+- [ ] користуватися (to use)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Прийменник вирішує: Один прийменник — різні відмінки (~600 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

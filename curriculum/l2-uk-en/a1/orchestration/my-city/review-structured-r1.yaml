@@ -2,52 +2,55 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 10
-  evidence: All outline points are covered. Dialogues exactly mirror the plan's requirements
-    (e.g., asking for directions, describing a neighborhood with `є` and `біля`).
-    All required and recommended vocabulary w
+  score: 7
+  evidence: The plan requires a Kyiv-neighborhood map dialogue using `бібліотека,
+    музей, площа, озеро, зупинка, церква` plus `біля, поруч з, далеко від`, but Dialogue
+    2 is only `“Що є біля твого дому? … Біля дому
 - dimension: 2
   name: Linguistic accuracy
-  score: 8
-  evidence: '"кінотеатр" is erroneously classified under neuter nouns despite being
-    masculine and ending in a consonant. Otherwise, case endings (e.g., `в аптеці`,
-    `у банку`), prepositions, and phonetic rules are '
+  score: 10
+  evidence: No confirmed Ukrainian-form or grammar errors in examples such as `“Вибачте,
+    де тут аптека?”`, `“Біля дому є магазин і кафе.”`, `“на пошті / на вокзалі / на
+    площі.”`
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: 'Excellent PPP flow. Rules are explained clearly with contextual examples
-    (e.g., contrasting `близько` as an adverb vs `біля` requiring the Genitive case).
-    The `Чергування` note on `к -> ц` is a great '
+  score: 6
+  evidence: 'The module opens with two dense English theory paragraphs: `“Navigating
+    a new city is a highly practical skill...”` and `“Imagine arriving in a new town...”`
+    before the first Ukrainian example. Simila'
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: All 16 required and recommended vocabulary items from the plan are successfully
-    integrated and introduced within context.
+  score: 9
+  evidence: 'Required vocabulary is covered naturally across the module: `аптека,
+    бібліотека, магазин, ресторан, готель, вокзал, тут, там`; recommended items like
+    `лікарня, пошта, музей, церква, далеко, близько, б'
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: All 4 exercise markers correspond to the requested plan hints and are
-    logically distributed after their respective teaching material.
+  score: 8
+  evidence: 'All 4 planned activity markers are present, but `<!-- INJECT_ACTIVITY:
+    fill-in-describe-city -->` and `<!-- INJECT_ACTIVITY: quiz-where-to-go -->` are
+    clustered together at the end of one section.'
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: Warm, practical, and highly engaging tone. Explanations like "This is
-    exactly how you get a stranger's attention on the street politely" feel natural
-    and avoid corporate filler.
+  score: 5
+  evidence: 'Filler-heavy lines like `“This conversation demonstrates a highly efficient
+    pattern”` and `“To navigate effectively, a robust vocabulary of city landmarks
+    is essential”` add length more than teaching '
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: Word count is 1400 (exceeds the 1200 target). Headings match the plan
-    exactly. Markdown formatting is clean.
+  evidence: All planned H2 sections are present and in order; markdown is clean; pipeline
+    word count is 1627, which is above the 1200 target.
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: The distinction between `вокзал` (train station) and `автовокзал` (bus
-    station) is a very useful and practical cultural detail.
+  score: 9
+  evidence: No Russian-centric framing or cultural inaccuracies; examples stay in
+    ordinary Ukrainian urban context such as `“на вулиці Шевченка”` and `“У моєму
+    місті є великий парк...”`
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: Conversations are highly natural, polite, and effectively model the target
-    grammar. Raising intonation for yes/no questions (`Це далеко?`) is explicitly
-    modeled and explained well.
+  score: 6
+  evidence: 'Dialogue 2 is a thin Q/A sequence: `“Що є біля твого дому? ... А школа?”`
+    It feels like an interrogation rather than a concrete shared task with richer
+    turns.'
 findings: []

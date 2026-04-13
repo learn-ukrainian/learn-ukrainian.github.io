@@ -2,45 +2,45 @@
   "module": "genitive-intro",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-04-11T01:40:23.213168Z",
+  "last_audit": "2026-04-12T22:42:35.598803Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-11T01:40:20.284452Z",
+    "md": "2026-04-12T22:42:32.289075Z",
     "meta": null,
-    "activities": "2026-04-11T01:37:07.396781Z",
-    "vocabulary": "2026-04-07T21:29:29.465992Z",
+    "activities": "2026-04-12T22:24:00.119295Z",
+    "vocabulary": "2026-04-12T22:25:39.738038Z",
     "research": null,
     "plan": "2026-04-04T22:04:59.904924Z"
   },
   "gates": {
     "meta": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Valid Structure"
-    },
-    "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "3207/2000 (raw: 3276) | pedagogy: 2 violations | immersion: 22.0% LOW (target 30-55% (A2.1))"
-    },
-    "activities": {
       "status": "fail",
       "violations": 1,
-      "message": "7/0 | density: 1 < 8"
+      "message": "Missing '## Summary'"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "3887/2000 (raw: 4050)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/0"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "57/1"
+      "message": "85/1"
     },
     "vocab_progression": {
       "status": "warn",
       "violations": 0,
-      "message": "\u0394 +7 | premature=4 | gaps=1 | well-paced=14",
-      "delta": 7,
+      "message": "\u0394 -9 | premature=4 | gaps=1 | well-paced=6",
+      "delta": -9,
       "premature": 4,
       "gaps": 1,
-      "well_paced": 14
+      "well_paced": 6
     },
     "naturalness": {
       "status": "info",
@@ -60,9 +60,11 @@
   },
   "overall": {
     "status": "fail",
-    "blocking_issues": [],
-    "pass_count": 4,
-    "fail_count": 2,
+    "blocking_issues": [
+      "Structure: Missing '## Summary'"
+    ],
+    "pass_count": 5,
+    "fail_count": 1,
     "deferred_count": 0
   }
 }

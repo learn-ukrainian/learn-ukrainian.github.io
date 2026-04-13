@@ -27,7 +27,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-не прочитав, але я обов'язково зроблю це завтра». Він просто назавжди закриває цю книгу і залишає ситуацію в минулому. Така прямолінійність іноді може здаватися співрозмовнику трохи різкою, але вона є абсолютно незамінною стратегією, коли вам потрібно дуже чітко окреслити свої особисті межі. Ви просто спокійно повідомляєте: цієї події ніколи не було, і на цьому крапка. Це ваша надійна лінія захисту, яка не залишає вільного місця для маніпуляцій з боку співрозмовника. <!-- INJECT_ACTIVITY: fill-in, Complete negated sentences with the correct aspect form based on the speaker's attitude (neutral fact), 8 items --> Ця унікальна здатність недоконаного виду безпристрасно описувати загальну об'єктивну картину робить його дійсно ідеальним інструментом для **заперечення факту** *(factual denial)* у значно складніших і триваліших життєвих ситуаціях. Коли ми говоримо про довгострокові стани, складні процеси або періоди людського життя, загальне заперечення надійно покриває весь цей час суцільною ковдрою. Розглянемо детальніше класичний біографічний приклад: «Він **не жив** у Києві» *(He didn't live in Kyiv)*. Ця проста фраза легко охоплює весь довгий період його минулого життя. Вона чітко означає, що сам процес проживання в українській столиці ніколи не був частиною його унікального досвіду. Це фундаментальний і беззаперечний факт його біографії. А тепер уважно порівняйте це з дієсловом доконаного виду: «Він **не переїхав** у Київ» *(He failed to move to Kyiv)*. Це вже зовсім інша, значно драматичніша історія. Тут ми чітко бачимо конкретну точку в часі, амбітний план, який зазнав невдачі, або очікуваний результат, який так і не був досягнутий. Недоконаний вид у фразі «не жив» свідомо ігнорує будь-який нереалізований намір чи амбіції. Він просто сухо описує період абсолютної відсутності події. Саме тому, коли публічні особи хочуть категорично відкинути серйозні звинувачення за довгий період часу, вони завжди майстерно використовують недоконаний вид. Щоб вам було значно легше орієнтуватися в цих граматичних тонкощах на практиці, варто запам'ятати кілька спеціальних слів-маркерів. Ці конкретні слова діють у реченні як дуже потужні магніти: вони майже завжди неминуче притягують до себе дієслова саме недоконаного виду в різноманітних заперечних реченнях. Найсильнішим і найпомітнішим із таких маркерів є категоричне слово **ніколи** *(never)*. Якщо ви впевнено заперечуєте певну дію протягом усього свого життя, ви просто не можете говорити про якийсь один завершений результат. Ви дуже впевнено скажете: «Я ніколи **не купував** такі шалено дорогі речі» *(I have never bought such wildly expensive things)*. Іншим надзвичайно потужним маркером є популярне слово **взагалі** *(at all)*. Воно максимально підсилює абсолютну відсутність будь-якого процесу: «Вона взагалі **не дивилася** телевізор у своєму дитинстві» *(She didn't watch TV at all in her childhood)*. Також недоконаний вид завжди використовується, коли ми прямо заперечуємо регулярність певної дії. Наприклад, це відбувається разом із словом **часто** *(often)*: «Ми не часто **зустрічалися** минулого важкого року» *(We didn't meet often last difficult year)*. Усі ці корисні слова яскраво підкреслюють, що ми зараз говоримо про глобальну картину, наші усталені звички або повну відсутність досвіду. Навчившись помічати ці маркери, ви зможете будувати свої заперечні речення абсолютно природно, як це роблять носії української мови. <!-- INJECT_ACTIVITY: group-sort, Sort negated sentences into загальне заперечення (не + impf) and незавершене очікування (ще не + pf), 10 items -->
+situation tonight or tomorrow. This contrasts sharply with forms that imply an **очікуване завершення** (expected completion), where the speaker admits the action is pending but signals they plan to complete it later, often using the word **ще** (yet). The neutral imperfective stance firmly denies the action and leaves no lingering threads or pending obligations for the speaker to fulfill. <!-- INJECT_ACTIVITY: fill-in-factual-denial --> Фактичне заперечення стає ще більш помітним, коли ми говоримо про довготривалі стани або комплексні життєві ситуації. Якщо ми хочемо описати тривалий період, коли певна подія не відбувалася, недоконаний вид є єдиним правильним вибором. Розглянемо різницю між двома ситуаціями. Речення «Він не жив у Києві» констатує загальний факт його біографії. Це означає, що протягом усього його життя процес проживання в цьому місті ніколи не мав місця. З іншого боку, фраза «Він не переїхав у Київ» фокусується на одному конкретному моменті в минулому, коли очікувався результат. Недоконаний вид створює широке полотно заперечення, яке не обмежується однією точкою на шкалі часу. Це допомагає нам малювати повну картину минулого без зайвих деталей про конкретні спроби чи невдачі. > *Factual denial becomes even more noticeable when we talk about long-term states or complex life situations. If we want to describe a long period when a certain event did not happen, the imperfective aspect is the only correct choice. Let's consider the difference between two situations. The sentence "He didn't live in Kyiv" states a general fact of his biography. This means that throughout his entire life, the process of living in this city never took place. On the other hand, the phrase "He didn't move to Kyiv" focuses on one specific moment in the past when a result was expected. The imperfective aspect creates a broad canvas of negation that is not limited to a single point on the timeline. This helps us paint a complete picture of the past without unnecessary details about specific, **незавершений** (unfinished) attempts or the **очікування** (expectation) of success.* To master this pattern, it is incredibly helpful to recognize specific marker words that naturally trigger the use of the imperfective aspect in negative sentences. These words emphasize the absolute lack of the action over a period of time or in general. The most common triggers include adverbs like «ніколи» (never) and «взагалі» (at all). When you say «Я ніколи не купував такі дорогі речі» (I never bought such expensive things), the word "never" stretches the negation across your entire past, demanding the continuous, general sweep of the imperfective aspect. Similarly, negating words that imply frequency inherently describes a process rather than a single completed event. If you need to **відповідати** (to answer) a question about your general habits, you will naturally gravitate toward these imperfective structures. Even if you want to explicitly say you did not **дочитати** (to finish reading) a specific book, if your goal is just to state the general historical absence of that activity without any future promises, the broader context of factual denial remains your most reliable grammatical tool. <!-- INJECT_ACTIVITY: group-sort-negation-types -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -582,7 +582,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -595,18 +662,72 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] заперечення
+- [ ] загальне заперечення
+- [ ] очікуване завершення
+- [ ] ще
+- [ ] факт
+- [ ] очікування
+- [ ] прагматика
+- [ ] обговорювати
+- [ ] обговорити
+- [ ] вирішувати
+- [ ] вирішити
+- [ ] відповідати
+- [ ] відповісти
+- [ ] домити
+- [ ] дочитати
+- [ ] доробити
+- [ ] нейтральний
+- [ ] незавершений
+- [ ] намір
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Ще не + доконаний: очікуване завершення (~1150 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

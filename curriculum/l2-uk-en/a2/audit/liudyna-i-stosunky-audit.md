@@ -1,7 +1,7 @@
 # Audit Report: M04 — liudyna-i-stosunky.md
 **Level:** A2 | **Module:** M04 | **Phase:** A2.1 | **Pedagogy:** PPP | **Target:** 2000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-04-11 01:35:07
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-04-12 22:14:35
 
 ## Configuration
 **Type:** A2
@@ -18,59 +18,53 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | match-up |  | 8 | 8 | ✅ |
-| 2 | quiz |  | 8 | 8 | ✅ |
-| 3 | fill-in |  | 8 | 8 | ✅ |
-| 4 | group-sort |  | 8 | 8 | ✅ |
-| 5 | error-correction |  | 6 | 6 | ✅ |
-| 6 | true-false |  | 6 | 8 | ❌ |
-| 7 | translate |  | 6 | 6 | ✅ |
+| 1 | fill-in |  | 8 | 8 | ✅ |
+| 2 | group-sort |  | 11 | 8 | ✅ |
+| 3 | match-up |  | 8 | 8 | ✅ |
+| 4 | quiz |  | 8 | 8 | ✅ |
+| 5 | fill-in |  | 8 | 8 | ✅ |
+| 6 | error-correction |  | 8 | 6 | ✅ |
+| 7 | translate |  | 8 | 6 | ✅ |
+| 8 | true-false |  | 8 | 8 | ✅ |
+| 9 | fill-in |  | 8 | 8 | ✅ |
+| 10 | group-sort |  | 10 | 8 | ✅ |
+| 11 | quiz |  | 8 | 8 | ✅ |
+| 12 | fill-in |  | 8 | 8 | ✅ |
+| 13 | match-up |  | 8 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 7 (target: 0-4) ❌
+- Total activities: 13 (target: 0-4) ❌
 - Unique types: 7 (minimum: 0) ✅
 - Priority types used: 7/15 (error-correction, fill-in, group-sort, match-up, quiz, translate, true-false) ✅
-- Low density activities: 1
-
-## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY]** true-false '' has 6 items (minimum: 8)
-  - FIX: Add more items. A2 true-false requires at least 8 items.
+- Low density activities: 0
 
 ## Recommendation
-**📝 UPDATE** (severity 15/100)
+**📝 UPDATE** (severity 20/100)
 
-- 1 violations (minor)
-- Activity density below minimum
+- Structure issue: Missing '## Summary'
 
 ## Gates
-- **Words:** ✅ 3090/2000 (raw: 3154)
-- **Activities:** ✅ 7/0
-- **Density:** ❌ 1 < 8
+- **Words:** ✅ 3113/2000 (raw: 3159)
+- **Activities:** ✅ 13/0
+- **Density:** ✅ All > 8
 - **Unique_types:** ✅ 7/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 5/3
+- **Engagement:** ✅ 4/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 59/1
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ✅ 47/1
+- **Structure:** ❌ Missing '## Summary'
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 32.0% (target 30-55% (A2.1))
+- **Immersion:** ⚠️ 29.6% (target 30-55%, within tolerance (A2.1))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
 
-## Low Density Activities
-| Activity | Type | Items | Required | Fix |
-|----------|------|-------|----------|-----|
-|  | true-false | 6 | 8 | Add 2 more items |
-
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 822 | Included in Core |
-| **Характер: яка вона людина? (Character: What Kind of Person Is She?)** | ✅ | 857 | Included in Core |
-| **Люди навколо нас: родичі, друзі, знайомі (People Around Us)** | ✅ | 715 | Included in Core |
-| **Описуємо людину цілком (Describing a Person Fully)** | ✅ | 510 | Included in Core |
-| **Підсумок — Summary (~150 words)** | ✅ | 186 | Included in Core |
+| **Intro/Narrative** | ✅ | 697 | Included in Core |
+| **Характер: яка вона людина? (~660 words total)** | ✅ | 829 | Included in Core |
+| **Люди навколо нас: родичі, друзі, знайомі (~600 words total)** | ✅ | 831 | Included in Core |
+| **Описуємо людину цілком** | ✅ | 756 | Included in Core |

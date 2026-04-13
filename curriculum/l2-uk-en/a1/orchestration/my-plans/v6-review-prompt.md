@@ -136,139 +136,141 @@ references:
 <generated_module_content>
 ## Dialogues
 
-As we approach the end of our A1 journey, our ability to communicate moves beyond describing the present moment and past events. We are now stepping into the future. Whether you are organizing your weekend, outlining your work schedule, or preparing for graduation, planning is the ultimate social tool. A typical group chat provides the perfect context for friends to coordinate their leisure time. Stating intentions in Ukrainian is surprisingly straightforward, relying on a simple two-part verb structure. The days of the week, specific times, and future verbs combine effortlessly into a complete schedule.
+Weekend plans are a natural context for the future tense. In this dialogue, three friends share a **план**, ask when something will happen, and invite each other out.
 
-> **Оля:** Що ти будеш робити у суботу? *(What will you be doing on Saturday?)*
-> **Максим:** Зранку я буду прибирати квартиру. *(In the morning I will be cleaning the apartment.)*
-> **Іра:** А вдень? *(And in the afternoon?)*
-> **Максим:** Вдень я буду ходити в магазин. А ти? *(In the afternoon I will go to the store. And you?)*
-> **Іра:** Я буду відпочивати! Може, підемо в кафе ввечері? *(I will be resting! Maybe we'll go to a cafe in the evening?)*
-> **Оля:** Добре! О котрій? *(Good! At what time?)*
-> **Іра:** О шостій. Добре? *(At six. Good?)*
-> **Максим:** Чудово! До зустрічі у суботу! *(Wonderful! See you on Saturday!)*
+> **Оксана:** Що ти будеш робити у суботу? *(What will you be doing on Saturday?)*
+> **Максим:** Зранку я буду прибирати квартиру. *(In the morning, I will be cleaning the apartment.)*
+> **Оксана:** А вдень? *(And in the afternoon?)*
+> **Максим:** Вдень я буду ходити в магазин. А ти? *(In the afternoon, I will go to the store. And you?)*
+> **Дарина:** Я буду відпочивати! Може, підемо в кафе ввечері? *(I will be resting! Maybe we will go to a cafe in the evening?)*
+> **Оксана:** Добре! О котрій? *(Good! At what time?)*
+> **Дарина:** О шостій. Добре? *(At six. Good?)*
+> **Максим:** Чудово! До зустрічі у суботу! *(Great! See you on Saturday!)*
 
-Notice how **Оля** asks **Може, підемо в кіно?** in the plan context, or in this case, **Іра** suggests **Може, підемо в кафе ввечері?**. This is a natural way to propose an idea. The future actions are formed simply: **буду прибирати** (will be cleaning), **буду ходити** (will be going), and **буду відпочивати** (will be resting).
+This short conversation is rich with real-world communication patterns. Notice how Максим combines a time of day with a future action to structure his day. He uses the words **зранку** (in the morning) and **вдень** (in the afternoon) to divide his Saturday into clear segments. Дарина shifts the conversation from personal routines to a shared invitation. Then, Оксана quickly confirms the specific time using the question phrase **о котрій?** (at what time?). This flow moves logically from individual tasks to a shared group activity, representing exactly how friends communicate.
 
-:::note
-Notice how the word **план** (plan) behaves just like its English equivalent, but is usually pluralized when asking about general intentions: **У тебе є плани?** (Do you have plans?).
+Here is how someone might describe their simple plans for a single day:
+
+Сьогодні я буду відпочивати. Вдень я буду гуляти в парку. Ввечері я буду читати книгу.
+> *(Today I will rest. In the afternoon I will walk in the park. In the evening I will read a book.)*
+
+:::caution
+When discussing plans, avoid translating directly from English phrases like "I have plans." Instead, use the structure **У мене є плани** (I have plans), which relies on the possession pattern you already know.
 :::
 
-> **Марія:** У тебе є плани на тиждень? *(Do you have plans for the week?)*
-> **Петро:** Так, багато! У понеділок я буду працювати допізна. *(Yes, many! On Monday I will work until late.)*
-> **Петро:** У вівторок буду вчитися. У середу — зустріч з друзями. *(On Tuesday I will study. On Wednesday — a meeting with friends.)*
-> **Марія:** А у четвер? *(And on Thursday?)*
-> **Петро:** У четвер я буду готувати на вечірку. *(On Thursday I will cook for the party.)*
-> **Марія:** А в п'ятницю? *(And on Friday?)*
-> **Петро:** В п'ятницю — вечірка! Ти будеш? *(On Friday — the party! Will you be there?)*
-> **Марія:** Звичайно буду! *(Of course I will be!)*
+Now, read a different conversation about organizing a busy **тиждень** (week) filled with work, studies, and social events. Scheduling involves mapping out commitments day by day.
 
-**Петро** outlines his busy week using the word **тиждень** (week). Be careful not to confuse this with **неділя** (Sunday). While they sound similar to words in other Slavic languages, in Ukrainian, **тиждень** is the entire seven-day period, and **неділя** is specifically the day of rest at the end of it.
+> **Антон:** У тебе є плани на тиждень? *(Do you have plans for the week?)*
+> **Віктор:** Так, багато! *(Yes, many!)*
+> **Віктор:** У понеділок я буду працювати допізна. *(On Monday, I will work until late.)*
+> **Віктор:** У вівторок буду вчитися. У середу — зустріч з друзями. *(On Tuesday, I will study. On Wednesday — a meeting with friends.)*
+> **Антон:** А у четвер? *(And on Thursday?)*
+> **Віктор:** У четвер я буду готувати на вечірку. *(On Thursday, I will prepare for a party.)*
+> **Антон:** А в п'ятницю? *(And on Friday?)*
+> **Віктор:** В п'ятницю — вечірка! Ти будеш? *(On Friday — a party! Will you be there?)*
+> **Антон:** Звичайно буду! *(Of course I will!)*
+
+This second dialogue shifts focus from a single day to the entire week. The speakers map out their obligations chronologically, from Monday to Friday. They use the days of the week alongside the future tense to create a clear timeline of events like a **зустріч** (meeting) or a **вечірка** (party). Notice the question **Ти будеш?** (Will you be there?) — this is a highly natural, conversational way to confirm attendance at an event. You do not always need a full verb like "attend"; the verb "to be" in the future tense is perfectly sufficient for asking if someone plans to show up.
 
 ## Планування (Planning)
 
-To say that an event happens *on* a certain day, English uses the preposition "on". Ukrainian uses the preposition **у** (or its phonetic variant **в**) followed by the day of the week. Because we are showing the time when an action takes place, the day of the week must change its ending if it is a feminine noun. This happens because we are using the temporal accusative case. The masculine and neuter days remain exactly the same, which makes them very easy to remember. The feminine days, however, change their final vowel to «у» or «ю».
+Scheduling requires combining the day of the week with the correct preposition. To say "on a certain day," use the temporal pattern **У/В** + Accusative case form of the day.
 
-- **у понеділок** (on Monday) — masculine, no change.
-- **у вівторок** (on Tuesday) — masculine, no change.
-- **у середу** (on Wednesday) — feminine, changes from **середа**.
-- **у четвер** (on Thursday) — masculine, no change.
-- **у п'ятницю** (on Friday) — feminine, changes from **п'ятниця**.
-- **у суботу** (on Saturday) — feminine, changes from **субота**.
-- **в неділю** (on Sunday) — feminine, changes from **неділя**.
+- **у понеділок** (on Monday)
+- **у вівторок** (on Tuesday)
+- **у середу** (on Wednesday)
+- **у четвер** (on Thursday)
+- **у п'ятницю** (on Friday)
+- **у суботу** (on Saturday)
+- **в неділю** (on Sunday)
 
-:::caution
-English speakers frequently attempt to translate the phrase "on the weekend" word-for-word. In Ukrainian, you must use the specific phrase **на вихідних** (on the weekend). Never use the preposition **в** for this context.
+:::note
+Notice the vowel ending change for feminine days. The days **середа**, **п'ятниця**, **субота**, and **неділя** change their final **-а** or **-я** to **-у** or **-ю**. Masculine days like **понеділок** remain unchanged.
 :::
 
-To specify the time of day, use the words **зранку** (in the morning), **вдень** (in the afternoon), and **ввечері** (in the evening). You can easily combine these with the days:
-- **У суботу ввечері я буду дивитися фільм.** *(On Saturday evening I will watch a film.)*
-
-When you want to ask someone "At what time?", the natural Ukrainian phrase is **О котрій годині?**. English speakers often try to translate "at seven o'clock" literally by using the preposition "в" (in). This is a common mistake that immediately sounds unnatural. In Ukrainian, you must always use the preposition **о** followed by an ordinal number (first, second, third) in the locative case. Think of it as answering "on which hour?".
+To specify the exact time of an event, use the preposition **о** (or **об** before a vowel) followed by the ordinal number in the Locative case. You can combine the hour with the parts of the day to be precise.
 
 - **о третій** (at three)
-- **о п'ятій** (at five)
 - **о шостій** (at six)
 - **о дев'ятій** (at nine)
-
-If the number starts with a vowel sound, the preposition smoothly changes to **об** to avoid two vowels clashing. This makes pronunciation much easier:
-
 - **об одинадцятій** (at eleven)
 
-Now that you can state the day and the time, you need the social tools to invite someone. You can use several natural communicative chunks to propose a plan to your friends or colleagues.
+You can easily pair the day, the time, and the part of the day.
+
+- У понеділок вранці я працюю. *(On Monday morning I work.)*
+- У суботу ввечері ми читаємо. *(On Saturday evening we read.)*
+- В неділю вдень вона гуляє. *(On Sunday afternoon she walks.)*
+
+To express what you plan to do at these times, use the compound future tense. This structure is very straightforward: use the future form of the verb "to be" (**бути**), which must match the subject (like **я буду**, **ти будеш**, **ми будемо**), and add an imperfective infinitive verb. The imperfective aspect emphasizes the process or the duration of the action, which is perfect for laying out a continuous schedule. The full structural formula is **У [day] о [time] я буду [verb]**.
+
+- У суботу о третій я буду готувати. *(On Saturday at three I will cook.)*
+- У вівторок ввечері ти будеш читати. *(On Tuesday evening you will read.)*
+- В неділю зранку ми будемо спати. *(On Sunday morning we will sleep.)*
+
+When you want to include others in your plans, you need functional chunks for making and responding to invitations.
 
 - **Ходімо в кафе!** *(Let's go to a cafe!)*
-- **Може, підемо в кіно?** *(Maybe we'll go to the cinema?)*
-- **Ти будеш вільний у суботу?** *(Will you be free on Saturday? — asking a male)*
-- **Ти будеш вільна у суботу?** *(Will you be free on Saturday? — asking a female)*
+- **Може, підемо в кіно?** *(Maybe we will go to the cinema?)*
+- **Ти будеш вільний у суботу?** *(Will you be free on Saturday? - masculine)*
+- **Ти будеш вільна у суботу?** *(Will you be free on Saturday? - feminine)*
 - **Давай зустрінемося о п'ятій!** *(Let's meet at five!)*
 
-When someone invites you, you need a polite response. If you are free and willing, you can accept warmly:
+Responding naturally keeps the conversation moving.
 
 - **Добре!** *(Good!)*
-- **Чудово!** *(Wonderful!)*
+- **Чудово!** *(Great!)*
 - **З задоволенням!** *(With pleasure!)*
-
-If you have other plans, you should decline politely and clearly:
-
 - **На жаль, не можу.** *(Unfortunately, I cannot.)*
 
-<!-- INJECT_ACTIVITY: fill-in-days-time -->
-<!-- INJECT_ACTIVITY: matching-invitations -->
+Here is how these scheduling elements look in a continuous thought:
+
+У п'ятницю я працюю допізна. У суботу ввечері ми будемо дивитися кіно. Давай зустрінемося о шостій біля кафе!
+> *(On Friday I work until late. On Saturday evening we will watch a movie. Let's meet at six near the cafe!)*
+
+<!-- INJECT_ACTIVITY: fill-in-schedule-time -->
+
+<!-- INJECT_ACTIVITY: match-invitations -->
 
 ## Мій тиждень (My Week)
 
-The Narrative Model: Taras's Busy Week. These grammatical pieces come together logically in a longer narrative. **Тарас** is planning his entire week, and he combines days, times, and activities into a clear schedule.
+When you connect your daily routines into a larger timeline, you form a cohesive narrative about your life. Look at this model monologue detailing Taras's entire week. Notice how he strings sentences together chronologically.
 
-- **У понеділок я буду працювати.** *(On Monday I will work.)*
-- **Після роботи буду вчити українську.** *(After work I will study Ukrainian.)*
-- **У вівторок я буду обідати з другом у кафе.** *(On Tuesday I will dine with a friend in a cafe.)*
-- **У середу ввечері я буду дивитися футбол.** *(On Wednesday evening I will watch football.)*
-- **У четвер я буду готувати вечерю для родини.** *(On Thursday I will cook dinner for the family.)*
-- **У п'ятницю я буду відпочивати — піду в кіно.** *(On Friday I will rest — I will go to the cinema.)*
-- **У суботу зранку буду прибирати, а вдень гуляти в парку.** *(On Saturday morning I will clean, and in the afternoon walk in the park.)*
-- **В неділю я буду спати довго!** *(On Sunday I will sleep long!)*
+У понеділок я буду працювати. Після роботи буду вчити українську. У вівторок я буду обідати в кафе. У середу ввечері я буду дивитися футбол. У четвер я буду готувати вечерю для родини. У п'ятницю я буду відпочивати. Я піду в кіно. У суботу зранку я буду прибирати. Вдень я буду гуляти в парку. В неділю я буду спати довго!
+> *(On Monday I will work. After work I will study Ukrainian. On Tuesday I will have lunch in a cafe. On Wednesday evening I will watch football. On Thursday I will prepare dinner for the family. On Friday I will rest. I will go to the cinema. On Saturday morning I will clean. In the afternoon I will walk in the park. On Sunday I will sleep long!)*
 
-Notice how **Тарас** anchors each activity to a specific time and place. He uses the future tense effortlessly. 
+Taras uses the same foundational structure for every single day, creating a steady rhythm. The action moves smoothly from the start of the week toward the weekend. By keeping his sentences short and focused, he communicates his entire weekly availability without using complicated grammar.
 
-:::tip
-The verb **бути** (to be) changes to match the speaker (**я буду**, **ми будемо**), but the second verb always remains in its infinitive dictionary form (**працювати**, **вчити**, **відпочивати**). You only conjugate the first word.
-:::
+Now, you can create your own weekly plan. Use the core template **У [day] я буду [activity]**. This template is your safest tool for building confidence. To make your sentences more descriptive, expand the basic template by adding specific details. Answer the question **о котрій?** (at what time?) to set a schedule. Answer **де?** (where?) to provide a location. Answer **з ким?** (with whom?) to include the people in your life.
 
-Guided Writing Workshop. Now it is your turn to build a schedule. Use the "My Week" template to create your own personalized plan. Start with the basic grammatical framework: **У** [день] **я буду** [що робити]. For example, you can write **У вівторок я буду працювати** (On Tuesday I will work). Once you have established the core sentence, you should add layers of detail to make your schedule richer and more descriptive. Ask yourself specific questions: **о котрій?** (at what time?), **де?** (where?), and **з ким?** (with whom?).
+For example, instead of just saying "I will walk," you can build a detailed sentence that paints a much clearer picture of your afternoon:
 
-- **У суботу о десятій я буду гуляти в парку з другом.** *(On Saturday at ten I will walk in the park with a friend.)*
+- У суботу я буду гуляти в парку з другом. *(On Saturday I will walk in the park with a friend.)*
+- У середу ввечері ми будемо читати вдома. *(On Wednesday evening we will read at home.)*
+- В неділю вдень вона буде обідати в кафе. *(On Sunday afternoon she will have lunch in a cafe.)*
 
-When you talk about your schedule, always remember to use the natural Ukrainian construction for possession: **У мене є плани** (I have plans). Do not use the direct English translation "Я маю плани". Using the correct structure makes your spoken Ukrainian sound authentic and natural. Try mapping out your next few days right now using all the vocabulary you know for places, food, people, and daily activities.
+Take a moment to map out your own upcoming days. Use the vocabulary you already know for places like your apartment, a restaurant, or the cinema. Include your daily activities like studying, working, cleaning, and resting.
 
 <!-- INJECT_ACTIVITY: fill-in-weekly-plan -->
 
 ## Summary
 
-Recap of the Planning Toolkit. You now possess the essential grammatical and social tools to organize your future effectively. The grammatical foundation of planning in Ukrainian is the compound future tense, which pairs the helper word **буду** (will) with an infinitive action verb. We anchor these future actions in time using the preposition **у** (or its phonetic variant **в**) for days of the week, and the preposition **о** (or **об**) for specific hours. This precise combination allows you to say exactly when and what you will be doing in any situation:
+The ability to structure your time and share your schedule is a major milestone in communication. The core grammatical formula for scheduling in this module is extremely reliable: Day + time + буду + infinitive. This scheduling focus aligns with **State Standard 2024, §4.2.4.1**. This pattern is the primary way you will express future plans in the early stages of your learning journey.
 
-- **У суботу о третій я буду готувати обід.** *(On Saturday at three I will cook lunch.)*
+У суботу о третій я буду готувати обід. Ввечері я буду відпочивати. У неділю я буду читати.
+> *(On Saturday at three I will prepare lunch. In the evening I will rest. On Sunday I will read.)*
 
-You also learned the key communicative chunks for making invitations: **Ходімо!**, **Може, підемо?**, and **Давай зустрінемося!**. You can reply with **Добре!**, **З задоволенням!**, or **На жаль, не можу.**
+When you want to turn your personal schedule into a social event, you rely on a few key invitation chunks. You can propose an outing with **Ходімо!** (Let's go!), suggest an idea with **Може, підемо?** (Maybe we will go?), or specify a time with **Давай зустрінемося!** (Let's meet!). You can then respond enthusiastically with **Добре!** (Good!) or **З задоволенням!** (With pleasure!), or politely decline using **На жаль, не можу** (Unfortunately, I cannot).
 
-Final Review of Days. Review the days of the week carefully. When used with the preposition **у** to indicate when something happens, it is absolutely vital to remember the difference between the masculine and feminine noun endings. The masculine days remain unchanged in this context, while the feminine days must change their final vowel to «у» or «ю»:
+To successfully navigate a calendar, you must retain the days of the week. Review the sequence to ensure they come to mind effortlessly: **понеділок**, **вівторок**, **середа**, **четвер**, **п'ятниця**, **субота**, **неділя**.
 
-- **понеділок** → **у понеділок**
-- **вівторок** → **у вівторок**
-- **середа** → **у середу**
-- **четвер** → **у четвер**
-- **п'ятниця** → **у п'ятницю**
-- **субота** → **у суботу**
-- **неділя** → **в неділю**
+:::tip
+Mental practice is one of the most effective ways to solidify new vocabulary. While riding the bus or waiting in line, try to list the days of the week silently to yourself.
+:::
 
-Self-Check. Before moving on to the next module, verify your skills with this checklist.
-
-- Can you say "On Wednesday at six I will be cleaning"? (**У середу о шостій я буду прибирати.**)
-- Can you invite a friend to a cafe? (**Може, підемо в кафе?**)
-- Can you politely decline an invitation? (**На жаль, не можу.**)
-- Can you plan your ideal weekend — what will you do on Saturday and Sunday?
+Now it is time for a self-check task. Mentally plan your ideal weekend using these new structures. Ask yourself: **Що ти будеш робити у суботу?** (What will you do on Saturday?). Think about Sunday: **А в неділю?** (And on Sunday?). Finally, consider the people you want to see: **З ким ти будеш зустрічатися?** (Who will you be meeting?). Formulate your answers in complete Ukrainian sentences to prove you can manage your own schedule.
 </generated_module_content>
 
-**PIPELINE NOTE — Word count: 1593 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
+**PIPELINE NOTE — Word count: 1665 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -444,41 +446,171 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 90 words | Not found: 5 words
+Verified: 97 words | Not found: 4 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
-  ✗ Іра — NOT IN VESUM
-  ✗ Марія — NOT IN VESUM
-  ✗ Оля — NOT IN VESUM
-  ✗ Петро — NOT IN VESUM
-  ✗ Тарас — NOT IN VESUM
+  ✗ Антон — NOT IN VESUM
+  ✗ Віктор — NOT IN VESUM
+  ✗ Дарина — NOT IN VESUM
+  ✗ Оксана — NOT IN VESUM
 
-All 90 other words are confirmed to exist in VESUM.
+All 97 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
-## Verification Tools (MCP)
+---
 
-You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
+## Verification Tools (Shell Commands)
 
-**Core Verification:**
-- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
-- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
+You have access to verification tools via shell commands. Use these to verify
+Ukrainian vocabulary, check grammar, and search textbook content **as you write**.
 
-**Content Quality:**
-- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+**IMPORTANT:** Run verification commands BEFORE finalizing any Ukrainian text.
+Batch multiple verifications together to minimize round-trips.
 
-**Reference:**
-- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp_rag_search_literary` — verify literary references against primary sources
-- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
+### 1. Batch-verify Ukrainian words exist in VESUM (preferred — one call for many words)
 
-**Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_words
+results = verify_words(['слово1', 'слово2', 'слово3'])
+for w, matches in results.items():
+    if matches:
+        print(f'{w}: FOUND — lemma={matches[0][\"lemma\"]}, pos={matches[0][\"pos\"]}')
+    else:
+        print(f'{w}: NOT FOUND — may not exist in standard Ukrainian')
+"
+```
+
+### 2. Verify a single Ukrainian word in VESUM (with full morphological tags)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_word
+results = verify_word('WORD_HERE')
+if results:
+    for m in results:
+        print(f'lemma={m[\"lemma\"]}, pos={m[\"pos\"]}, tags={m[\"tags\"]}')
+else:
+    print('NOT FOUND in VESUM')
+"
+```
+
+### 3. Get all inflected forms of a lemma (declension/conjugation)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_lemma
+forms = verify_lemma('LEMMA_HERE')
+for f in forms[:20]:
+    print(f'{f[\"word_form\"]:20s} {f[\"pos\"]:8s} {f[\"tags\"]}')
+print(f'... {len(forms)} forms total')
+"
+```
+
+### 4. Check CEFR level of a word (is it level-appropriate?)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import query_cefr_level
+results = query_cefr_level('WORD_HERE')
+for r in results:
+    print(f'{r[\"word\"]}: {r[\"level\"]} ({r[\"pos\"]})')
+if not results:
+    print('Not in CEFR database')
+"
+```
+
+### 5. Search textbook content (Ukrainian school textbooks, Grades 1-11)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_textbooks
+keywords = {'keyword1', 'keyword2'}
+results = search_textbooks(keywords, 5)
+for r in results:
+    title = r.get('section_title', r.get('title', ''))
+    grade = r.get('grade', '?')
+    text = r.get('text', '')[:200]
+    print(f'Grade {grade} | {title}')
+    print(f'  {text}')
+    print()
+"
+```
+
+### 6. Search style guide for calques/Russianisms (Антоненко-Давидович, 279 entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_style_guide
+results = search_style_guide('TOPIC_HERE', 3)
+for r in results:
+    print(f'--- {r.get(\"word\", \"\")} [{r.get(\"section\", \"\")}]')
+    print(r.get('text', '')[:300])
+    print()
+if not results:
+    print('No style guide entries found')
+"
+```
+
+### 7. Look up word definition in СУМ-11 (Ukrainian explanatory dictionary, 127K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_definitions
+results = search_definitions('WORD_HERE', 3)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+### 8. Search idioms (Фразеологічний словник, 25K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_idioms
+results = search_idioms('WORD_HERE', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"text\", r.get(\"definition\", \"\")))[:200]}')
+"
+```
+
+### 9. English-to-Ukrainian translation (Балла, 79K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import translate_en_uk
+results = translate_en_uk('ENGLISH_WORD', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+---
+
+**WHEN to use these tools:**
+
+1. **Before writing any Ukrainian text** — batch-verify all key vocabulary with
+   `verify_words` (tool 1). Any word that returns NOT FOUND must be replaced.
+2. **When you suspect a Russicism or calque** — search the style guide (tool 6)
+   and verify the correct Ukrainian form with `verify_word` (tool 2).
+3. **When writing for A1/A2** — check CEFR levels (tool 4) to ensure vocabulary
+   is level-appropriate.
+4. **When unsure about a case ending or conjugation** — use `verify_lemma` (tool 3)
+   to see the full paradigm.
+5. **When covering a grammar topic** — search textbooks (tool 5) to see how
+   Ukrainian school textbooks teach it.
+6. **When you need the precise Ukrainian meaning** — use СУМ-11 (tool 7).
+7. **When looking for natural Ukrainian expressions** — search idioms (tool 8).
+
+**Batching rule:** Collect all words you want to verify, then run ONE `verify_words`
+call instead of multiple `verify_word` calls. This is faster and uses fewer tokens.

@@ -1,0 +1,96 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T00-03-a9560aca.json
+phase: write
+prompt_chars: 68060
+response_chars: 10134
+prompt_words: 9724
+response_words: 1677
+sections:
+- name: preamble
+  start: 0
+  length: 6398
+  fraction: 0.094
+- name: plan
+  start: 6398
+  length: 8823
+  fraction: 0.1296
+- name: wiki
+  start: 14322
+  length: 27762
+  fraction: 0.4079
+- name: rules
+  start: 42983
+  length: 10854
+  fraction: 0.1595
+- name: skeleton
+  start: 53837
+  length: 4423
+  fraction: 0.065
+- name: output_spec
+  start: 58260
+  length: 9800
+  fraction: 0.144
+large_sections:
+- wiki
+directives_total: 52
+directives_covered: 38
+directives_missed:
+- kind: checklist
+  text: No 'Let us...', 'In this section...', or formulaic openers
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: checklist
+  text: Every exercise marker from the skeleton is placed
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: must
+  text: For A1 early modules, the learner cannot read Cyrillic — English must dominate.
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: must
+  text: Your output must be original teaching prose at the correct CEFR level, not
+    a rephrased version of the article.
+  covered: false
+  coverage_note: 3/13 keywords (23%)
+- kind: must
+  text: The introduction must be methodical and layered, building from the simplest
+    concept to the more complex.
+  covered: false
+  coverage_note: 2/10 keywords (20%)
+- kind: must
+  text: '- UKRAINIAN NARRATIVE PARAGRAPHS: **REQUIRED — minimum 1 per section.'
+  covered: false
+  coverage_note: 1/7 keywords (14%)
+- kind: must
+  text: '- STRUCTURAL RULE: Every section MUST contain a Ukrainian narrative paragraph
+    (3-6 sentences, translated in blockquote) PLUS supporting tables/lists/dialogues/pattern
+    boxes.'
+  covered: false
+  coverage_note: 6/19 keywords (32%)
+- kind: must
+  text: translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: must
+  text: '- **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).'
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-sounds-vs-letters
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-sounds-vs-letters
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-false-friends
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing

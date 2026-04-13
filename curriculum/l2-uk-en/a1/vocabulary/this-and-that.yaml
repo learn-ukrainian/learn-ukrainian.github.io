@@ -1,6 +1,6 @@
 vocabulary:
 - word: ось
-  translation: here is / look
+  translation: here is, look
   expression: false
   pos: част.
   gender: ''
@@ -11,201 +11,51 @@ vocabulary:
   pos: присл.
   gender: ''
   verified: true
-- word: вона́
-  translation: she
+- word: тут
+  translation: here
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: він, вона́, воно́
+  translation: he, she, it
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: цей, ця, це
+  translation: this
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: той, та, те
+  translation: that
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: консульта́нт
+  translation: shop assistant
   expression: false
   pos: ім.
-  gender: ж.
+  gender: ч.
   verified: true
-- word: воно́
-  translation: it
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: цей
-  translation: this (masculine)
+- word: ці
+  translation: these
   expression: false
   pos: прикм.
   gender: ''
   verified: true
-- word: ця
-  translation: this (feminine)
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: той
-  translation: that (masculine)
+- word: ті
+  translation: those
   expression: false
   pos: прикм.
   gender: ''
   verified: true
 - word: та
-  translation: that (feminine)
+  translation: and
   expression: false
   pos: спол.
-  gender: ''
-  verified: true
-- word: те
-  translation: that (neuter)
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: су́мка
-  translation: bag
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: черво́ний
-  translation: red
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: си́ній
-  translation: blue
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: рюкза́к
-  translation: backpack
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: телефо́н
-  translation: phone
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: смартфо́н
-  translation: smartphone
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: крі́сло
-  translation: armchair
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: кімна́та
-  translation: room
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: га́рний
-  translation: nice / beautiful
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: нови́й
-  translation: new
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: стіле́ць
-  translation: chair
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: стари́й
-  translation: old
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: ша́фа
-  translation: wardrobe / cupboard
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: вікно́
-  translation: window
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: вели́кий
-  translation: big
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: мале́нький
-  translation: small
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: бі́лий
-  translation: white
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: оліве́ць
-  translation: pencil
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: ціка́вий
-  translation: interesting
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: нудни́й
-  translation: boring
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: жі́нка
-  translation: woman
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: Скільки коштує?
-  translation: How much does it cost?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Яка гарна кімната!
-  translation: What a nice room!
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Добрий день!
-  translation: Good afternoon!
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Дякую
-  translation: Thank you
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: книжкова полиця
-  translation: bookshelf
-  expression: true
-  pos: ''
   gender: ''
   verified: true

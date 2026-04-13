@@ -1,29 +1,7 @@
 {
-  "attempt": 1,
-  "passed": false,
-  "errors": [
-    {
-      "check": "STRUCTURE",
-      "severity": "ERROR",
-      "message": "Missing section heading: 'Підсумок: від знання до вживання'"
-    },
-    {
-      "check": "TOXIC",
-      "severity": "ERROR",
-      "message": "Russian characters found: ё"
-    },
-    {
-      "check": "VOCABULARY",
-      "severity": "ERROR",
-      "message": "Missing 4/12 required vocab: число (number — однина, множина), дієвідмінювання (conjugation — changing verb by person and number), зворотний (reflexive — verbs with -ся/-сь), видова пара (aspectual pair — e.g., писати/написати)"
-    }
-  ],
-  "warnings": [
-    {
-      "check": "EXERCISES",
-      "severity": "WARNING",
-      "message": "Plan expects 6 exercise(s) but content has 5"
-    }
-  ],
-  "timestamp": "2026-04-10T23:28:55.662450+00:00"
+  "attempt": 2,
+  "passed": true,
+  "errors": [],
+  "warnings": [],
+  "timestamp": "2026-04-11T10:05:19.354092+00:00"
 }

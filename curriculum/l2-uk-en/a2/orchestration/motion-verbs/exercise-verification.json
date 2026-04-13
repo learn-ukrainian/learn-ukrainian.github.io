@@ -1,110 +1,322 @@
 {
-  "total_items": 104,
-  "grounded_items": 89,
+  "total_items": 170,
+  "grounded_items": 119,
   "ungrounded": [
     {
-      "word": "регулярно",
+      "word": "південь",
+      "exercise_type": "fill-in",
+      "context": "Птахи завжди ____ на південь восени.",
+      "role": "context"
+    },
+    {
+      "word": "восени",
+      "exercise_type": "fill-in",
+      "context": "Птахи завжди ____ на південь восени.",
+      "role": "context"
+    },
+    {
+      "word": "повертаюся",
+      "exercise_type": "match-up",
+      "context": "повертаюся від",
+      "role": "answer"
+    },
+    {
+      "word": "казає",
+      "exercise_type": "error-correction",
+      "context": "Вона казає правду.",
+      "role": "context"
+    },
+    {
+      "word": "правду",
+      "exercise_type": "error-correction",
+      "context": "Вона казає правду.",
+      "role": "context"
+    },
+    {
+      "word": "пиємо",
+      "exercise_type": "error-correction",
+      "context": "Ми пиємо воду.",
+      "role": "context"
+    },
+    {
+      "word": "воду",
+      "exercise_type": "error-correction",
+      "context": "Ми пиємо воду.",
+      "role": "context"
+    },
+    {
+      "word": "повертаються",
+      "exercise_type": "error-correction",
+      "context": "Вони повертаються із лікаря.",
+      "role": "context"
+    },
+    {
+      "word": "учора",
+      "exercise_type": "fill-in",
+      "context": "Учора мій брат ____ до магазину.",
+      "role": "context"
+    },
+    {
+      "word": "машиною",
+      "exercise_type": "fill-in",
+      "context": "Моя сестра ____ на роботу машиною.",
+      "role": "context"
+    },
+    {
+      "word": "другій",
+      "exercise_type": "fill-in",
+      "context": "Літак ____ до Києва о другій годині.",
+      "role": "context"
+    },
+    {
+      "word": "полетіли",
+      "exercise_type": "fill-in",
+      "context": "полетіли",
+      "role": "answer"
+    },
+    {
+      "word": "відпочинок",
+      "exercise_type": "fill-in",
+      "context": "Батьки ____ до Парижа на відпочинок.",
+      "role": "context"
+    },
+    {
+      "word": "додому",
+      "exercise_type": "fill-in",
+      "context": "Я вже ____ додому пішки.",
+      "role": "context"
+    },
+    {
+      "word": "йому",
+      "exercise_type": "fill-in",
+      "context": "Вона ____ сказати йому правду.",
+      "role": "context"
+    },
+    {
+      "word": "означає",
+      "exercise_type": "true-false",
+      "context": "Слово «ходжу» означає регулярний рух пішки.",
+      "role": "context"
+    },
+    {
+      "word": "регулярний",
+      "exercise_type": "true-false",
+      "context": "Слово «ходжу» означає регулярний рух пішки.",
+      "role": "context"
+    },
+    {
+      "word": "їзджу",
+      "exercise_type": "true-false",
+      "context": "Ми кажемо «я їзджу», а не «я їжджу».",
+      "role": "context"
+    },
+    {
+      "word": "прийменник",
+      "exercise_type": "true-false",
+      "context": "Прийменник «до» завжди використовується з родовим відмінком.",
+      "role": "context"
+    },
+    {
+      "word": "використовується",
+      "exercise_type": "true-false",
+      "context": "Прийменник «до» завжди використовується з родовим відмінком.",
+      "role": "context"
+    },
+    {
+      "word": "родовим",
+      "exercise_type": "true-false",
+      "context": "Прийменник «до» завжди використовується з родовим відмінком.",
+      "role": "context"
+    },
+    {
+      "word": "відмінком",
+      "exercise_type": "true-false",
+      "context": "Прийменник «до» завжди використовується з родовим відмінком.",
+      "role": "context"
+    },
+    {
+      "word": "йдемо",
+      "exercise_type": "true-false",
+      "context": "Коли ми йдемо ДО друга, ми повертаємося З друга.",
+      "role": "context"
+    },
+    {
+      "word": "пишеться",
+      "exercise_type": "true-false",
+      "context": "Дієслово «пити» пишеться з апострофом у теперішньому часі (я",
+      "role": "context"
+    },
+    {
+      "word": "апострофом",
+      "exercise_type": "true-false",
+      "context": "Дієслово «пити» пишеться з апострофом у теперішньому часі (я",
+      "role": "context"
+    },
+    {
+      "word": "теперішньому",
+      "exercise_type": "true-false",
+      "context": "Дієслово «пити» пишеться з апострофом у теперішньому часі (я",
+      "role": "context"
+    },
+    {
+      "word": "часі",
+      "exercise_type": "true-false",
+      "context": "Дієслово «пити» пишеться з апострофом у теперішньому часі (я",
+      "role": "context"
+    },
+    {
+      "word": "слові",
+      "exercise_type": "true-false",
+      "context": "Комбінація «-ться» у слові «бореться» читається як довгий м'",
+      "role": "context"
+    },
+    {
+      "word": "читається",
+      "exercise_type": "true-false",
+      "context": "Комбінація «-ться» у слові «бореться» читається як довгий м'",
+      "role": "context"
+    },
+    {
+      "word": "єш",
       "exercise_type": "group-sort",
-      "context": "Багатоспрямований (регулярно)",
+      "context": "Перша дієвідміна (-у/-ю, -еш/-єш)",
       "role": "context"
     },
     {
-      "word": "автобусом",
-      "exercise_type": "fill-in",
-      "context": "Вони ____ на роботу автобусом щодня.",
+      "word": "иш",
+      "exercise_type": "group-sort",
+      "context": "Друга дієвідміна (-у/-ю, -иш/-їш)",
       "role": "context"
     },
     {
-      "word": "подивись",
-      "exercise_type": "fill-in",
-      "context": "Подивись! Ми вже ____ додому.",
+      "word": "їш",
+      "exercise_type": "group-sort",
+      "context": "Друга дієвідміна (-у/-ю, -иш/-їш)",
       "role": "context"
     },
     {
-      "word": "зелений",
+      "word": "йду",
       "exercise_type": "quiz",
-      "context": "Вона часто (пити) зелений чай.",
+      "context": "Я йду ____ школи.",
+      "role": "context"
+    },
+    {
+      "word": "повертається",
+      "exercise_type": "quiz",
+      "context": "Він повертається ____ лікаря.",
+      "role": "context"
+    },
+    {
+      "word": "йдуть",
+      "exercise_type": "quiz",
+      "context": "Вони йдуть ____ парк.",
+      "role": "context"
+    },
+    {
+      "word": "цікаво",
+      "exercise_type": "fill-in",
+      "context": "Я ____, що це дуже цікаво.",
+      "role": "context"
+    },
+    {
+      "word": "щоранку",
+      "exercise_type": "fill-in",
+      "context": "Вона щоранку ____ чорну каву.",
+      "role": "context"
+    },
+    {
+      "word": "чорну",
+      "exercise_type": "fill-in",
+      "context": "Вона щоранку ____ чорну каву.",
+      "role": "context"
+    },
+    {
+      "word": "каву",
+      "exercise_type": "fill-in",
+      "context": "Вона щоранку ____ чорну каву.",
+      "role": "context"
+    },
+    {
+      "word": "багато",
+      "exercise_type": "fill-in",
+      "context": "Вони ____ багато води влітку.",
+      "role": "context"
+    },
+    {
+      "word": "води",
+      "exercise_type": "fill-in",
+      "context": "Вони ____ багато води влітку.",
+      "role": "context"
+    },
+    {
+      "word": "влітку",
+      "exercise_type": "fill-in",
+      "context": "Вони ____ багато води влітку.",
+      "role": "context"
+    },
+    {
+      "word": "тихо",
+      "exercise_type": "fill-in",
+      "context": "Ти ____ дуже тихо, я тебе не чую.",
+      "role": "context"
+    },
+    {
+      "word": "чую",
+      "exercise_type": "fill-in",
+      "context": "Ти ____ дуже тихо, я тебе не чую.",
+      "role": "context"
+    },
+    {
+      "word": "сніданок",
+      "exercise_type": "fill-in",
+      "context": "Що ви ____ на сніданок?",
+      "role": "context"
+    },
+    {
+      "word": "ніколи",
+      "exercise_type": "fill-in",
+      "context": "Він ніколи не ____ про свої проблеми.",
+      "role": "context"
+    },
+    {
+      "word": "про",
+      "exercise_type": "fill-in",
+      "context": "Він ніколи не ____ про свої проблеми.",
+      "role": "context"
+    },
+    {
+      "word": "свої",
+      "exercise_type": "fill-in",
+      "context": "Він ніколи не ____ про свої проблеми.",
+      "role": "context"
+    },
+    {
+      "word": "проблеми",
+      "exercise_type": "fill-in",
+      "context": "Він ніколи не ____ про свої проблеми.",
       "role": "context"
     },
     {
       "word": "чай",
-      "exercise_type": "quiz",
-      "context": "Вона часто (пити) зелений чай.",
+      "exercise_type": "fill-in",
+      "context": "Я завжди ____ чай з молоком.",
       "role": "context"
     },
     {
-      "word": "неправду",
-      "exercise_type": "quiz",
-      "context": "Ви (казати) неправду!",
-      "role": "context"
-    },
-    {
-      "word": "гуляю",
-      "exercise_type": "match-up",
-      "context": "гуляю по",
-      "role": "answer"
-    },
-    {
-      "word": "їзджу",
-      "exercise_type": "error-correction",
-      "context": "Я їзджу на роботу автобусом.",
-      "role": "context"
-    },
-    {
-      "word": "мій",
-      "exercise_type": "error-correction",
-      "context": "Мій брат їде на Україну.",
-      "role": "context"
-    },
-    {
-      "word": "боряться",
-      "exercise_type": "error-correction",
-      "context": "Вони боряться за свої права.",
-      "role": "context"
-    },
-    {
-      "word": "тобі",
-      "exercise_type": "error-correction",
-      "context": "Завтра я кажу тобі всю правду.",
-      "role": "context"
-    },
-    {
-      "word": "містом",
-      "exercise_type": "error-correction",
-      "context": "Ми гуляємо по містом.",
-      "role": "context"
-    },
-    {
-      "word": "школа",
-      "exercise_type": "error-correction",
-      "context": "Діти йдуть з школа.",
-      "role": "context"
-    },
-    {
-      "word": "літиш",
-      "exercise_type": "error-correction",
-      "context": "Ти часто літиш літаком?",
-      "role": "context"
-    },
-    {
-      "word": "літаком",
-      "exercise_type": "error-correction",
-      "context": "Ти часто літиш літаком?",
+      "word": "молоком",
+      "exercise_type": "fill-in",
+      "context": "Я завжди ____ чай з молоком.",
       "role": "context"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 20,
-    "tested_in_exercises": 11,
+    "tested_in_exercises": 15,
     "not_tested": [
-      "борюся",
       "звідки",
       "напрямок",
-      "п'ю",
       "поїхати",
       "піти",
-      "рух",
-      "різноспрямований",
       "чергування"
     ]
   },

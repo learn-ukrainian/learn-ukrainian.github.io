@@ -1,0 +1,97 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T16-25-7d19041e.json
+phase: write-chunk-02
+prompt_chars: 42782
+response_chars: 5183
+prompt_words: 5764
+response_words: 825
+sections:
+- name: header
+  start: 0
+  length: 428
+  fraction: 0.01
+- name: skeleton
+  start: 428
+  length: 1069
+  fraction: 0.025
+- name: prior_summary
+  start: 1497
+  length: 3503
+  fraction: 0.0819
+- name: plan
+  start: 5000
+  length: 21275
+  fraction: 0.4973
+- name: wiki
+  start: 19108
+  length: 16300
+  fraction: 0.381
+- name: output_spec
+  start: 42575
+  length: 207
+  fraction: 0.0048
+large_sections:
+- plan
+directives_total: 23
+directives_covered: 8
+directives_missed:
+- kind: checklist
+  text: префікс (prefix — meaningful part before the root)
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: checklist
+  text: суфікс (suffix — meaningful part after the root)
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: checklist
+  text: спільнокореневий (cognate — words sharing the same root)
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: checklist
+  text: іменник (noun — names things, answers хто? що?)
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: checklist
+  text: прикметник (adjective — names qualities, answers який? чий?)
+  covered: false
+  coverage_note: 2/7 keywords (29%)
+- kind: checklist
+  text: дієслово (verb — names actions, answers що робити?)
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: checklist
+  text: прислівник (adverb — names circumstances, answers як? де? коли?)
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: checklist
+  text: самостійний (content/autosemantic — part of speech with independent meaning)
+  covered: false
+  coverage_note: 2/7 keywords (29%)
+- kind: checklist
+  text: службовий (function/synsemantic — part of speech without independent meaning)
+  covered: false
+  coverage_note: 3/8 keywords (38%)
+- kind: checklist
+  text: прийменник (preposition — links words, governs case)
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: checklist
+  text: сполучник (conjunction — connects words or clauses)
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: checklist
+  text: частка (particle — adds shades of meaning)
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: must
+  text: '**MANDATORY — never omit.'
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 1/11 keywords (9%)

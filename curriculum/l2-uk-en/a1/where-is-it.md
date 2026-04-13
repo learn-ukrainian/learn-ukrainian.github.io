@@ -1,130 +1,82 @@
-## Діало́ги — Dialogues
+## Діало́ги (Dialogues)
 
-Moving to a new city means asking questions about where things are. During your first week in a new neighborhood, you quickly learn to rely on local residents. A friendly neighbor is often the best guide for practical navigation. You need to know the location of essential services like an **апте́ка** (pharmacy) for medicine, a **по́шта** (post office) for packages, and a **банк** (bank) for financial tasks. Knowing how to ask about these places and understanding the answers helps you settle into the rhythm of daily life.
+Read this rapid-fire exchange about where different family members are located. Notice how the endings of the place names change when answering the question **де?**:
 
-> **Сусі́д:** Приві́т! Ти тут живе́ш? *(Hi! Do you live here?)*  
-> **Но́вий ме́шканець:** Так, я новий сусід. *(Yes, I am a new neighbor.)*  
-> **Сусід:** Ду́же приє́мно! *(Very nice to meet you!)*  
-> **Новий мешканець:** Де Оле́на? Вона́ тут? *(Where is Olena? Is she here?)*  
-> **Сусід:** Ні, вона **в шко́лі**. *(No, she is at school.)*  
-> **Новий мешканець:** А Тара́с? *(And Taras?)*  
-> **Сусід:** Він **на робо́ті**. *(He is at work.)*  
-> **Новий мешканець:** А ді́ти де? *(And where are the children?)*  
-> **Сусід:** Вони́ **в парку**. *(They are in the park.)*  
-> **Новий мешканець:** А кі́шка? *(And the cat?)*  
-> **Сусід:** Вона **на дива́ні**! *(She is on the sofa!)*
+> **Но́вий ме́шканець:** До́брий день! Я ще ні́кого тут не зна́ю. Де за́раз Оле́на? *(Good day! I do not know anyone here yet. Where is Olena now?)*
+> **Сусі́д:** Вона́ в шко́лі. *(She is at school.)*
+> **Новий мешканець:** А Тара́с? *(And Taras?)*
+> **Сусід:** Він на робо́ті. *(He is at work.)*
+> **Новий мешканець:** А ді́ти? *(And the children?)*
+> **Сусід:** Вони́ в парку. *(They are in the park.)*
+> **Новий мешканець:** А кі́шка? *(And the cat?)*
+> **Сусід:** Вона на дива́ні! *(She is on the sofa!)*
 
-Notice the clear contrast between the small words **в** and **на** in the dialogue above. Both translate broadly to English "in" or "at", but they sound distinct in Ukrainian and carry different spatial meanings.
+Answering the question **де?** (where?) naturally leads to using the locative case. You can see this in phrases like **в школі** (at school) and **на роботі** (at work). These phrases combine a preposition, usually **в** or **на**, with a changed noun ending. The word **шко́ла** becomes **школі**, and the word **робо́та** becomes **роботі**. The preposition tells us the spatial relationship, and the ending confirms it.
 
-> **Сусід:** А де ти працю́єш? *(And where do you work?)*  
-> **Новий мешканець:** Я працю́ю **в о́фісі**. *(I work in an office.)*  
-> **Сусід:** Це дале́ко? *(Is it far?)*  
-> **Новий мешканець:** Ні. Я живу́ **в Ки́єві**, **на ву́лиці** Хреща́тик. *(No. I live in Kyiv, on Khreshchatyk street.)*  
-> **Сусід:** Це дуже бли́зько. *(That is very close.)*  
-> **Новий мешканець:** Так! О́фіс **на дру́гому по́версі**. *(Yes! The office is on the second floor.)*
+Now read a conversation about living and working:
 
-Notice the hierarchy of location used in the second dialogue. When talking about a city, we use **в** (as in **в Києві**). When narrowing down to a street, we switch to **на** (as in **на вулиці**). Finally, for a specific room or building, we use **в** or **у** again. You can also see that the ends of the nouns change: the basic word **шко́ла** becomes **в школі**, **парк** turns into **у парку**, and **робо́та** changes to **на роботі**. This predictable change is called the **Місце́вий відмі́нок** (Locative case). 
+> **Сусід:** Де ти живе́ш? *(Where do you live?)*
+> **Новий мешканець:** Я живу́ в Ки́єві, на ву́лиці Хреща́тик. *(I live in Kyiv, on Khreshchatyk street.)*
+> **Сусід:** А де ти працю́єш? *(And where do you work?)*
+> **Новий мешканець:** В о́фісі, на дру́гому по́версі. *(In an office, on the second floor.)*
 
-## Місцевий відмінок — The Locative Case
+Notice the preposition **на** is used for the street (**на вулиці**), while **в** is used for the city (**в Києві**) and the building (**в офісі**).
 
-The core function of the Locative case is to describe static location—where something is situated or where an action takes place without any movement toward a destination. It is the grammatical tool that specifically answers the question **Де?** (Where?). There is one crucial rule that makes this case unique among all Ukrainian grammatical cases: the Locative case *always* requires a preposition. You cannot use it on its own; it must be attached to **в**, **у**, or **на**.
+## Місце́вий відмі́нок (The Locative Case)
 
-Ukrainian primary school textbooks teach a very practical method to identify and form the Locative case. In Grade 4 (Захарійчук p.74), students learn the "helper question" method for the **Місцевий відмінок**. You memorize the helper questions: **на/у ко́му? на/у чому́?** (on/in whom? on/in what?). By asking these questions, you naturally prompt the correct case ending for the noun.
-* стіл → **у чому?** → **у столі́** (in the desk)
-* стіл → **на чому?** → **на столі** (on the table)
-* мі́сто → **у чому?** → **у мі́сті** (in the city)
+Ukrainian children learn grammar using specific helper questions, which naturally link grammatical cases to their real-world function. In the fourth grade, students learn that the locative case, or **місцевий відмінок**, answers the questions **на/у ко́му? на/у чому́?** (on/in whom? on/in what?). The locative case is used exclusively to describe a static location — where something or someone currently IS, rather than the direction where they are going. Unlike other cases, the locative case ALWAYS needs a preposition to function. You cannot use it alone; it must be paired with a preposition, most commonly **в** (or its phonetic variant **у**) and **на**.
 
-Feminine and neuter nouns form the Locative case very consistently. The dominant ending for almost all of them is **-і**. You simply replace the final vowel of the base word.
-* школа → в школі (at school)
-* робота → на роботі (at work)
-* пошта → на по́шті (at the post office)
-* ву́лиця → на вулиці (on the street)
-* місто → у місті (in the city)
-* вікно́ → на вікні́ (on the window)
-
-Some borrowed neuter nouns are indeclinable, meaning their endings never change regardless of the grammar rules. These are easy wins for learners: **кафе́** always stays **кафе**, so you just say **в кафе** (in the café).
-
-Masculine nouns are slightly more complex because they split into two groups. Many standard masculine nouns take the same **-і** ending as feminine and neuter words.
-* офіс → в офісі (in the office)
-* теа́тр → у теа́трі (in the theater)
-* стіл → на столі (on the table)
-* магази́н → у/в магази́ні (in the shop)
-
-However, a very common group of masculine nouns takes the **-у** ending. These are often high-frequency places and spaces that learners must memorize early on.
-* парк → у парку (in the park)
-* банк → у ба́нку (at the bank)
-* сад → у саду́ (in the orchard)
-
-<!-- INJECT_ACTIVITY: match-nom-loc -->
-
-<!-- INJECT_ACTIVITY: quiz-loc-form -->
-
-## В чи на? — В or На?
-
-The basic logic for choosing between **в** and **на** comes down to the physical space you are describing. **В** (or its phonetic twin **у**) is used for enclosed spaces—places that have walls, boundaries, or a clear "inside."
-* **в офісі** (in the office)
-* **у магазині** (in the store)
-* **в апте́ці** (in the pharmacy)
-* **у ліка́рні** (in the hospital)
-
-Conversely, **на** is generally used for open spaces, flat surfaces, or when something is physically "atop" something else.
-* **на вулиці** (on the street)
-* **на пло́щі** (on the square)
-* **на столі** (on the table)
-* **на дивані** (on the sofa)
-
-Beyond physical spaces, **на** is also used in a more abstract way for events and specific statuses. When you attend an activity or event, you are **на**. Furthermore, for the concept of being "at work," Ukrainian always uses **на**.
-* **на конце́рті** (at the concert)
-* **на уроці** (at the lesson)
-* **на футбо́лі** (at the football game)
-* **на роботі** (at work)
-
-:::note 
-Remember that English uses "in the office," but Ukrainian separates the physical building (**в офісі**) from the abstract status of working (**на роботі**).
+:::note
+The helper question **на/у кому? на/у чому?** is how Ukrainian native speakers identify the locative case. Memorize it to build your intuition!
 :::
 
-There are some conventional places that always use **на** regardless of whether they have walls or seem like an enclosed space. These must simply be learned as fixed phrases.
-* **на пошті** (at the post office)
-* **на вокза́лі** (at the train station)
-* **на ста́нції** (at the station)
+The most common ending for the locative case is **-і**. Many feminine nouns ending in **-а** or **-я** have **-і** in the locative, sometimes with a stem change, so learn the most common place words as fixed phrases. For example, **ліка́рня** (hospital) becomes **у ліка́рні** (in the hospital). This same **-і** ending also applies to neuter nouns ending in **-о** or **-е**. The word **мі́сто** (city) becomes **у мі́сті** (in the city), and **мо́ре** (sea) becomes **на мо́рі** (at the sea).
 
-The rule for countries and cities is very strict: always use **в** or **у**. It does not matter if a country is an island or a continent.
-* **в Украї́ні** (in Ukraine)
-* **у Києві** (in Kyiv)
-* **у Льво́ві** (in Lviv)
-* **в Оде́сі** (in Odesa)
+Masculine nouns ending in a consonant also frequently take the **-і** ending. For instance, **о́фіс** (office) becomes **в офісі** (in the office), and **уро́к** (lesson) becomes **на уроці** (at the lesson). However, many common masculine places take a different ending entirely: **-у**. There is a historical linguistic reason for this difference, but for now, learn these specific masculine words as exceptions.
 
-:::caution Decolonization Note
-You will sometimes hear Russian speakers say "на Украине" (on Ukraine). This is historically incorrect and politically offensive. Using "на" implies that Ukraine is merely a geographic territory or a region of an empire, rather than a sovereign state. A country always takes "в/у". You must always say **в Україні**.
+Instead of trying to calculate every single ending on the fly, you should focus on memorizing the most common places as fixed phrases. Learn the preposition and the noun together as a single grammatical chunk:
+
+* школа → в школі (school)
+* робота → на роботі (work)
+* банк → у ба́нку (bank)
+* магази́н → у/в магази́ні (shop)
+* ву́лиця → на вулиці (street)
+* парк → у/в парку (park)
+
+<!-- INJECT_ACTIVITY: match-up-nominative-locative -->
+
+<!-- INJECT_ACTIVITY: fill-in-answer-where -->
+
+## В чи на? (В or На?)
+
+How do you choose between the prepositions **в** and **на**? The general rule for **в** (and its euphonic alternative **у**) is that it is used for enclosed spaces or being physically "inside" a structure with walls, a ceiling, or clear boundaries. When you are inside a building, you almost always use **в/у**. For example, you say **в школі** (in the school building), **у/в магазині** (in the shop), **у банку** (inside the bank branch), and **у лікарні** (in the hospital). Note that foreign borrowed words ending in a vowel, like **кафе́** (café), are indeclinable: **у/в кафе** (in the café).
+
+:::tip
+To avoid awkward consonant clusters, Ukrainian uses **у** instead of **в** before words starting with consonants (like **у банку**), and **в** after vowels (like **Вона в школі**). 
 :::
 
-<!-- INJECT_ACTIVITY: quiz-v-na -->
+The preposition **на**, on the other hand, is generally used for open spaces, flat surfaces, or events. When you are standing on a surface or attending a public gathering, you use **на**. Clear examples include **на вулиці** (on the street), **на пло́щі** (on the square), **на конце́рті** (at a concert), and **на уроці** (at a lesson). However, there are conventional exceptions that must be memorized. Some institutional concepts take **на** regardless of whether they have walls. You must say **на роботі** (at work), **на по́шті** (at the post office, not в пошті), and **на вокза́лі** (at the train station, not в вокзалі).
 
-<!-- INJECT_ACTIVITY: fill-in-de -->
+There is a strong rule regarding countries and cities. Countries and cities normally take the preposition **в/у**. You say **в Украї́ні** (in Ukraine), **у Києві** (in Kyiv), **у Льво́ві** (in Lviv), and **в Оде́сі** (in Odesa). Contrast this with smaller local spaces like streets and squares, which typically take **на**. You say **на площі** (on the square) or **на Хреща́тику** (on Khreshchatyk). Do not extend the **в/у** rule to every geographical name: some regional and historical names use **на**. For this A1 pattern, remember: countries and cities usually use **в/у**, while streets and squares often use **на**.
+
+There is a critical cultural and political note regarding the name of the country. You must NEVER say **на Україні**. It is ЗА́ВЖДИ́ (always) **в Україні**. Historically, the incorrect preposition "на" was pushed by imperial policy to frame Ukraine as a mere territory or borderland rather than a fully independent state. Using **в Україні** is not just a grammatical rule; it is a matter of profound respect and national sovereignty.
+
+:::caution
+Never say **на Україні**. Using **в Україні** affirms Ukraine's status as an independent state, not a region. 
+:::
+
+<!-- INJECT_ACTIVITY: quiz-v-or-na -->
+
+<!-- INJECT_ACTIVITY: quiz-where-is-it -->
 
 ## Підсумок — Summary
 
-The Locative case is your primary tool for expressing static location. Whenever you need to answer the question **Де?** (Where?), you will use this case. Here is a final recap of the logic:
+The locative case, or **місцевий відмінок**, is the essential grammatical tool you use to describe a static location. Whenever you are answering the core question **де?** (where?), you will need to use either **в/у** plus a locative ending or **на** plus a locative ending. Remember the Grade 4 helper phrase: **М. (на, у) — на/у кому? на/у чому?**. This case never appears on its own without a preposition.
 
-* **Question:** Де? (Where?)
-* **Prepositions:**
-  * **В/У** is for enclosed spaces, countries, and cities.
-  * **На** is for open spaces, surfaces, events, and specific concepts like work.
-* **Endings:**
-  * **-і** is the most common ending for almost all nouns (feminine, neuter, and many masculine).
-  * **-у** is used for a specific group of masculine nouns like **банк** and **парк**.
-* **Key Phrases to remember:**
-  * Я **в Україні**. (I am in Ukraine.)
-  * Я **у Києві**. (I am in Kyiv.)
-  * Я **на роботі**. (I am at work.)
+Focus your energy on learning the core vocabulary chunks as fixed phrases. If you learn these as single units, your speech will sound much more natural. And most importantly, always remember to say **в Україні** (in Ukraine).
 
-Now it is time to practice by applying these patterns to your own life. Answer the following questions about yourself, either aloud or in writing, using the Locative case:
+Can you answer these simple questions in Ukrainian?
 
-* **Де ви за́раз?** (Where are you now?)
-  * Я **в**... / Я **на**...
-* **Де ви працю́єте?** (Where do you work?)
-  * Я працюю **в**... / **на**...
-* **Де ви живете́?** (Where do you live?)
-  * Я живу **в**... **на вулиці**...
-* **Де ваш телефо́н?** (Where is your phone?)
-  * Він **на**... / Він **у**...
+*   **Де ви зараз?** (Where are you right now?) Are you **вдо́ма** (at home), **в офісі** (in the office), or perhaps **у/в кафе** (in a café)?
+*   **Де ви працю́єте?** (Where do you work?) Do you work **на роботі** (at work) or **у/в лікарні** (in a hospital)?
+*   **Де ви живете́?** (Where do you live?) Do you live **у/в місті** (in a city) or **на вулиці** (on a street)?

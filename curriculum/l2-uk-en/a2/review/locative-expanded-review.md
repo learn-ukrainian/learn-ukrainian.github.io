@@ -1,66 +1,75 @@
 ## Linguistic Scan
-No linguistic errors found. The Ukrainian text is standard and natural, with excellent pedagogical explanations of prepositional nuances (e.g., *на роботі* vs. *в офісі*).
+- Factual grammar-teaching error: `Let's read some more examples to see how the locative case shifts the meaning...` is followed by `У мене є одна дуже цікава думка. Учора у нас була важлива зустріч.` These are not locative-case examples, so the section mislabels non-target material as target grammar.
+- Factual overstatement: `However, for the methods we discussed here, the locative case is the authentic standard.` This is too absolute for the `по` section; the module itself already treats these as fixed expressions, and local textbook evidence is less categorical.
+- Misleading glosses: `У минулому місяці...` is glossed as `In the past month...`, and `У минулому році...` is glossed as `In the past year...` These blur the basic A2 mapping of `минулий` here as `last/previous`.
 
 ## Exercise Check
-- Exercises match the plan's `activity_hints`.
-- Markers are clustered entirely at the end of the module. They need to be distributed so they follow the sections they test. Specifically, Exercise 1 tests the four functions and should follow the "Locative Matrix" that summarizes them. Exercise 2 tests temporal and means locative and should follow the "Means" section.
+- Marker inventory in the prose matches the 4 planned activity hints:
+  - `fill-in-complete-sentences-with-the-correct-locative-form`
+  - `error-correction-prepositions`
+  - `quiz-identify-the-function-of-locative-in-each-sentence`
+  - `match-up-expressions`
+- Placement is broadly acceptable: the fill-in and error-correction markers come after the teaching sections they depend on, and the quiz/match-up markers come after consolidation.
+- Issue: the prose marker `error-correction-prepositions` does not match the generated activity ID. The activities file defines `error-correction-locative-usage`, so this planned exercise will not inject correctly.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 10/10 | The module perfectly covers all plan points, including abstract nouns, temporal expressions, and means of communication. |
-| 2. Linguistic accuracy | 9/10 | The Ukrainian text is flawless. Minor deduction for a slightly awkward English literal translation: "*(In October it often rains coldly.)*". |
-| 3. Pedagogical quality | 10/10 | Exceptional pedagogical contrast (e.g., "Засіб: Я говорю по телефону." vs. "Тема: Я думаю про новий телефон."). The explanations for *у/в* vs *на* are clear and memorable. |
-| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary words are present and used naturally in context (e.g., "у думках", "на зустрічі", "про подорожі"). |
-| 5. Exercise quality | 9/10 | Exercises are high quality and test the right concepts, but the markers are clustered at the very end of the file instead of being spread evenly through the module. |
-| 6. Engagement & tone | 10/10 | The teacher persona is encouraging and clear without using empty filler or corporate gamification language. The dialogue examples feel authentic to real-life situations. |
-| 7. Structural integrity | 10/10 | Word count is 2936 words (well above the 2000 target). All required H2 headings are present. Markdown formatting is clean. |
-| 8. Cultural accuracy | 10/10 | The text accurately reflects standard modern Ukrainian usage, distinguishing between prepositional patterns while acknowledging the instrumental alternative for means of communication. |
-| 9. Dialogue & conversation quality | 10/10 | Dialogues are natural, contextually appropriate, and efficiently demonstrate the target grammar points in a realistic conversational flow. |
+| 1. Plan adherence | 7/10 | All four planned H2 sections are present and the planned vocab is covered, but the plan references are never cited in the module text, and the planned error-correction activity is broken by `<!-- INJECT_ACTIVITY: error-correction-prepositions -->` not matching the generated activity ID. |
+| 2. Linguistic accuracy | 6/10 | The Ukrainian is mostly solid, but the module makes factual teaching errors: `У мене є одна дуже цікава думка. Учора у нас була важлива зустріч.` is presented as locative evidence, and the tip claims `the locative case is the authentic standard`, which is too absolute. |
+| 3. Pedagogical quality | 6/10 | The module has PPP flow, but explanation and evidence drift apart: `Let's read some more examples...` is followed by two non-locative sentences, and the glosses `In the past month` / `In the past year` weaken the learner’s `минулий = last/previous` mapping. |
+| 4. Vocabulary coverage | 9/10 | Required vocabulary is used naturally in prose: `місцевий`, `абстрактний`, `минулий`, `місяць`, `тиждень`, `телефон`, `подорож`, `зустріч`, `думка`, `проблема`; recommended `дитинство`, `молодість`, `майбутнє`, `освіта`, `мистецтво` also appear. |
+| 5. Exercise quality | 6/10 | The module has the right four marker types, but `error-correction-prepositions` will not resolve because the generated activities file uses `error-correction-locative-usage`. |
+| 6. Engagement & tone | 8/10 | Mostly teacherly and concrete, but some English meta-commentary adds padding, e.g. `This adds a dynamic layer of meaning to the case.` |
+| 7. Structural integrity | 9/10 | All planned H2s are present and ordered correctly, and the pipeline word count `2926` is above target. The main structural defect is the broken exercise marker link. |
+| 8. Cultural accuracy | 8/10 | No Russia-centric framing or fabricated cultural claims, but `authentic standard` overstates normative certainty in a way the module does not fully support. |
+| 9. Dialogue & conversation quality | 7/10 | Dialogues are named and multi-turn, but some register is off: `> — **Марія:** Привіт! Ти де зараз?` followed by `> — **Іван:** Добрий день! Я по дорозі на роботу.` sounds mismatched. |
 
 ## Findings
-[5. Exercise quality] [major]
-Location: `<!-- EXERCISE_1 --> <!-- EXERCISE_2 --> <!-- EXERCISE_3 --> <!-- EXERCISE_4 -->` (at the end of the file)
-Issue: All exercise markers are clustered at the end of the module. They should be distributed to follow the specific concepts they test.
-Fix: Move `<!-- EXERCISE_1 -->` to follow the "Locative Matrix" in Section 4. Move `<!-- EXERCISE_2 -->` to the end of Section 3. Leave Exercises 3 and 4 at the end.
+[DIMENSION 2] [SEVERITY: critical]  
+Location: `Let's read some more examples to see how the locative case shifts the meaning from a physical location to an abstract sphere.` and `Він багато років працює в українській політиці. У мене є одна дуже цікава думка. Учора у нас була важлива зустріч. У цій сфері є одна велика проблема.`  
+Issue: Two of the four sentences offered as locative examples are not locative constructions (`У мене`, `у нас`). This teaches the wrong case identification.  
+Fix: Replace the sentence block with examples that actually contain locative constructions.
 
-[2. Linguistic accuracy] [minor]
-Location: `У жовтні часто йде холодний дощ. *(In October it often rains coldly.)*`
-Issue: The English translation is awkward and literal.
-Fix: Change the English translation to "*(In October, a cold rain often falls.)*"
+[DIMENSION 2] [SEVERITY: critical]  
+Location: `**Did you know?** — The preposition «по» is incredibly versatile... However, for the methods we discussed here, the locative case is the authentic standard.`  
+Issue: The rule is stated too absolutely. The section should present `по телефону`, `по радіо`, `по дорозі` as fixed expressions, not as a blanket normative claim.  
+Fix: Narrow the wording to fixed expressions and remove `authentic standard`.
+
+[DIMENSION 1] [SEVERITY: major]  
+Location: Module-wide — no occurrences of `Заболотний`, `ULP`, `§28`, `§34`, or `§35` appear in the module text.  
+Issue: The plan references are never integrated, despite being listed in the source-of-truth plan.  
+Fix: Add one short reference note in the concluding tip or summary.
+
+[DIMENSION 2] [SEVERITY: critical]  
+Location: `> — **Ігор:** Привіт, Маріє! У минулому місяці я змінив роботу. *(Hi, Mariia! In the past month I changed my job.)*` and `> *My sister works in medicine. In the past year, she lived in Odesa. Now she works in a hospital. We often talk by phone. She tells about life in the new city. I am very happy for her.*`  
+Issue: The English glosses misrepresent `у минулому місяці / році` as `in the past month / year` instead of the intended `last month / year`.  
+Fix: Change the glosses to `Last month...` and `Last year...`.
+
+[DIMENSION 5] [SEVERITY: major]  
+Location: `<!-- INJECT_ACTIVITY: error-correction-prepositions -->`  
+Issue: This marker ID does not match the generated activity ID, so the planned error-correction exercise will fail to inject.  
+Fix: Rename the marker to `error-correction-locative-usage`.
+
+[DIMENSION 9] [SEVERITY: minor]  
+Location: `> — **Марія:** Привіт! Ти де зараз?` / `> — **Іван:** Добрий день! Я по дорозі на роботу.`  
+Issue: The reply shifts from informal `Привіт` to formal `Добрий день` inside a casual exchange.  
+Fix: Make Іван’s reply informal as well.
 
 ## Verdict: REVISE
-The module is outstanding in its pedagogical approach, linguistic accuracy, and fulfillment of the plan. It requires a revision solely to fix a minor translation awkwardness and to distribute the exercise markers more evenly throughout the text according to the formatting guidelines.
+This cannot pass. There are critical grammar-teaching errors, a broken exercise marker, and multiple dimensions below 9. The module is salvageable with deterministic edits, so `REVISE` is the correct verdict rather than `REJECT`.
 
 <fixes>
-- find: "*(In October it often rains coldly.)*"
-  replace: "*(In October, a cold rain often falls.)*"
-- find: |
-    | **Засіб** *(Means)* | **по** | **по радіо** *(on the radio)*, **по телефону** *(by phone)* |
-  replace: |
-    | **Засіб** *(Means)* | **по** | **по радіо** *(on the radio)*, **по телефону** *(by phone)* |
-
-    <!-- EXERCISE_1 -->
-- find: |
-    > — **Марія:** Ні, я пила каву вдома, коли дивилася новини по телевізору. *(No, I drank coffee at home when I was watching the news on TV.)*
-
-    ## Місцевий відмінок: від місця до сенсу
-  replace: |
-    > — **Марія:** Ні, я пила каву вдома, коли дивилася новини по телевізору. *(No, I drank coffee at home when I was watching the news on TV.)*
-
-    <!-- EXERCISE_2 -->
-
-    ## Місцевий відмінок: від місця до сенсу
-- find: |
-    <!-- EXERCISE_1 -->
-
-    <!-- EXERCISE_2 -->
-
-    <!-- EXERCISE_3 -->
-
-    <!-- EXERCISE_4 -->
-  replace: |
-    <!-- EXERCISE_3 -->
-
-    <!-- EXERCISE_4 -->
+- find: "Він багато років працює в українській політиці. У мене є одна дуже цікава думка. Учора у нас була важлива зустріч. У цій сфері є одна велика проблема."
+  replace: "Він багато років працює в українській політиці. На цій зустрічі ми говорили про одну дуже цікаву думку. У цій сфері є одна велика проблема. У житті такі зміни бувають часто."
+- find: "**Did you know?** — The preposition «по» is incredibly versatile. While it denotes means of communication («по телефону») or a path («по дорозі») with the locative case, you will also see it used with other cases to express distribution. However, for the methods we discussed here, the locative case is the authentic standard."
+  replace: "**Did you know?** — The preposition «по» is versatile, but learners should treat «по телефону», «по радіо», and «по дорозі» as fixed expressions rather than a blanket rule for every communication noun. For broader reference, compare Заболотний Grade 5 §28-30, Заболотний Grade 6 §34-35, and the ULP locative overview listed in the plan."
+- find: "> — **Ігор:** Привіт, Маріє! У минулому місяці я змінив роботу. *(Hi, Mariia! In the past month I changed my job.)*"
+  replace: "> — **Ігор:** Привіт, Маріє! У минулому місяці я змінив роботу. *(Hi, Mariia! Last month I changed my job.)*"
+- find: "> *My sister works in medicine. In the past year, she lived in Odesa. Now she works in a hospital. We often talk by phone. She tells about life in the new city. I am very happy for her.*"
+  replace: "> *My sister works in medicine. Last year, she lived in Odesa. Now she works in a hospital. We often talk by phone. She tells me about life in the new city. I am very happy for her.*"
+- find: "<!-- INJECT_ACTIVITY: error-correction-prepositions -->"
+  replace: "<!-- INJECT_ACTIVITY: error-correction-locative-usage -->"
+- find: "> — **Іван:** Добрий день! Я по дорозі на роботу. *(Good day! I am on the way to work.)*"
+  replace: "> — **Іван:** Привіт! Я по дорозі на роботу. *(Hi! I am on the way to work.)*"
 </fixes>

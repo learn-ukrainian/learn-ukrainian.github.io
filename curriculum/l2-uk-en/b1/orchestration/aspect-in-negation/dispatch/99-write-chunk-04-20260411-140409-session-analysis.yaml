@@ -1,0 +1,62 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T12-02-3608fd5c.json
+phase: write-chunk-04
+prompt_chars: 53150
+response_chars: 11178
+prompt_words: 7567
+response_words: 1719
+sections:
+- name: header
+  start: 0
+  length: 450
+  fraction: 0.0085
+- name: skeleton
+  start: 450
+  length: 2299
+  fraction: 0.0433
+- name: prior_summary
+  start: 2749
+  length: 3391
+  fraction: 0.0638
+- name: plan
+  start: 6140
+  length: 18027
+  fraction: 0.3392
+- name: wiki
+  start: 17892
+  length: 28751
+  fraction: 0.5409
+- name: output_spec
+  start: 52918
+  length: 232
+  fraction: 0.0044
+large_sections:
+- wiki
+directives_total: 33
+directives_covered: 28
+directives_missed:
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: skeleton_para
+  text: 'P1 (180w): Synthesis: Negation as a mirror of the speaker''s mind. Summarize
+    that the choice between ''не писав'' and ''ще не написав'' isn''t about the letter
+    itself, but about the speaker''s relationship to the task. Use the term ''прагматичний
+    вибір'' (pragmatic choice).'
+  covered: false
+  coverage_note: 8/26 keywords (31%)
+- kind: skeleton_para
+  text: "P6 (170w): Summary Table & Self-Check. Provide a clear contrast table:\n\
+    \  - 'Не' + Impf = Нейтральний факт (Я не їв).\n  - 'Ще не' + Pf = Очікуваний\
+    \ результат (Я ще не поїв).\n  - 'Не' + Pf = Специфічна невдача/провина (Ти не\
+    \ зробив!)."
+  covered: false
+  coverage_note: 7/21 keywords (33%)
+- kind: inject_activity
+  text: error-correction-negated-aspect
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-pragmatic-context
+  covered: false
+  coverage_note: marker missing

@@ -1,63 +1,22 @@
-## Дієслово: категорії та терміни
+## Дієслово: категорії та терміни (~620 words)
 
-Ми довго вчили мову інтуїтивно. Ми просто слухали діалоги і повторювали корисні фрази. Це був дуже хороший і легкий старт. Але тепер нам потрібна чітка система для роботи. 
+Up to this point in your journey, you have learned to speak Ukrainian mostly intuitively. You already know how to talk about your daily routine, describe your future plans, and share interesting stories from the past. You have built a strong foundation for everyday communication. However, as you prepare to transition to the intermediate B1 level, it is time to learn the specific language of the classroom. We call this **термінологія** (terminology). Knowing how to identify and name the basic parts of speech is the absolute key to becoming a truly independent learner. When you open a **словник** (dictionary) to look up a new word, or when you read a native grammar guide in Ukrainian, you need to understand exactly what the grammatical labels mean. This analytical understanding will help you build complex sentences confidently, understand why certain endings change, and ultimately allow you to correct your own mistakes without always needing a teacher.
 
-Welcome to the language of the classroom. 
+**Дієслово** — це справжнє серце кожного українського речення. Воно завжди показує дію, рух або фізичний стан людини. Щоб правильно і красиво використовувати дієслова у розмові, нам потрібно знати три великі граматичні категорії. Це **час**, **вид** та **спосіб**. Сьогодні ми детально вивчимо ці українські терміни, щоб ви могли легко і швидко розуміти складну граматику. Коли ви знаєте ці слова, ви можете говорити про мову як справжній експерт.
 
-Щоб вільно читати граматику далі, нам потрібна **термінологія** (terminology). Усі слова у мові мають свої групи. Це **частини мови** (parts of speech). 
+> *The verb is the true heart of every Ukrainian sentence. It always shows an action, movement, or a person's physical state. To use verbs correctly and beautifully in conversation, we need to know three big grammatical categories. These are tense, aspect, and mood. Today we will study these Ukrainian terms in detail so you can easily and quickly understand complex grammar. When you know these words, you can talk about the language like a real expert.*
 
-Why is this so important for us right now? 
+The first major category we need to label is **час** (tense or time). You already use these tenses every single day in your conversations, but now we will label them using their proper Ukrainian names. The **минулий час** (past tense) describes actions that happened before the moment of speaking, like when you tell a story and say «я працював» (I was working). The **теперішній час** (present tense) describes actions happening right now or regular routines, such as «я працюю» (I work). Finally, the **майбутній час** (future tense) describes actions, plans, and promises that will happen later, like «я буду працювати» (I will be working) or «я попрацюю» (I will work for a bit). It is extremely important to note that these three tenses only exist when we are stating actual, real-world facts. If we are giving commands or talking about hypothetical situations, the concept of tense does not apply in the same way.
 
-На рівні B1 ми будемо часто використовувати українські словники. Ми будемо читати нові правила українською мовою. 
+Найважливіша і найскладніша категорія у всіх слов'янських мовах — це **вид**. Він завжди буває двох різних типів. **Недоконаний** вид показує довгий процес, звичку або регулярне повторення дії. Він завжди відповідає на питання «що робити?», наприклад, «читати» або «писати». Натомість **доконаний** вид показує конкретний результат або успішне завершення дії. Він відповідає на питання «що зробити?», наприклад, «прочитати» або «написати». Порівняйте ці два речення: «я купував каву» — це просто процес у минулому часі, а «я купив каву» — це успішний результат і фінал вашої дії.
 
-You will see grammatical terms instead of English explanations. Knowing these terms is the key to independent learning. 
+> *The most important and most difficult category in all Slavic languages is aspect. It always comes in two different types. The imperfective aspect shows a long process, a habit, or the regular repetition of an action. It always answers the question "what to do?", for example, "to read" or "to write". Instead, the perfective aspect shows a specific result or the successful completion of an action. It answers the question "what to successfully do?", for example, "to read completely" or "to write completely". Compare these two sentences: "I was buying coffee" is just a process in the past tense, while "I bought coffee" is a successful result and the finale of your action.*
 
-Сьогодні ми уважно подивимося на ті граматичні концепції, які ми вже добре знаємо. Але тепер ми дамо цим правилам правильні українські назви.
+The final major category we will look at today is **спосіб** (mood or manner). This category tells us how the action relates to reality and what the speaker's intention is. When we state real facts that actually happen in the world, we use the indicative mood (Дійсний спосіб), like «Сонце світить» (The sun is shining). When we talk about hypothetical conditions, dreams, or make very polite requests, we use the conditional mood (Умовний спосіб), like «Я б пішов» (I would go). Finally, when we need to give direct commands, offer strong advice, or make urgent requests, we use the imperative mood (Наказовий спосіб), like «Слухай!» (Listen!). Learning to recognize these three moods will help you understand the emotional tone of any Ukrainian text.
 
-Головна частина мови для нас сьогодні — це **дієслово** (the verb). Це справжнє серце кожного українського речення. Дієслово показує активну дію або стан людини. Ми вже добре знаємо, як ці слова працюють у тексті. 
-
-Тепер ми подивимося на три великі категорії дієслова. Ці категорії логічно показують, як саме дієслово змінюється. 
-
-Перша базова категорія — це **час** (tense). Друга важлива категорія — це **вид** (aspect). Третя цікава категорія — це **спосіб** (mood). 
-
-Зараз ми детально розглянемо кожну з цих категорій.
-
-Перша і найпростіша категорія — це час. Він дуже логічно показує, коли саме відбувається наша дія. Українська мова має три часи, які ви вже дуже добре знаєте. 
-
-**Минулий час** (past tense) показує дію, яка вже давно відбулася. Наприклад: «я працював вчора в офісі», «вона довго читала цікаву книгу». 
-
-**Теперішній час** (present tense) показує дію, яка відбувається прямо зараз. Наприклад: «я працюю сьогодні вдома», «вона зараз уважно читає нову книгу». 
-
-**Майбутній час** (future tense) показує дію, яка ще тільки буде завтра. Наприклад: «я буду працювати завтра» або «я попрацюю пізно ввечері». 
-
-Тут є один дуже важливий нюанс для розуміння граматики. 
-
-Only verbs that state real facts have tenses. 
-
-Ця категорія реальності називається **дійсний спосіб** (indicative mood). Якщо дія повністю реальна, вона завжди має минулий, теперішній або майбутній час.
-
-Друга і мабуть найважливіша категорія — це вид. Це фундаментальна різниця у всіх слов'янських мовах. Вид показує, як саме протікає наша дія. 
-
-**Недоконаний вид** (imperfective aspect) означає довгий процес або регулярну дію. Він завжди відповідає на питання «що робити?». Наприклад: «що робити кожного дня? — читати, писати, купувати, працювати». 
-
-**Доконаний вид** (perfective aspect) означає фінальний результат або одноразову завершену дію. Він завжди відповідає на питання «що зробити?». Наприклад: «що зробити сьогодні? — прочитати, написати, купити, попрацювати». 
-
-Let's closely compare two past tense verbs you already know well. 
-
-Слово «купував» — це минулий час, недоконаний вид. Це означає, що ви просто ходили по магазину і дуже довго вибирали речі. 
-
-Слово «купив» — це минулий час, доконаний вид. Це означає конкретний результат: ви вже дали гроші касиру і взяли свій товар. 
-
-Правильний вид дуже важливий для точного спілкування з людьми.
-
-Третя граматична категорія — це спосіб. Він емоційно показує відношення дії до нашої реальності. Ми вже чудово знаємо дійсний спосіб, який описує реальні факти. Наприклад: «Сонце яскраво світить на небі». 
-
-Але є ще **наказовий спосіб** (imperative mood). Ми використовуємо його кожного дня для наказів, прохань або корисних порад. Наприклад: «Слухай мене уважно!» або «Читай цей текст швидко!». 
-
-Третій тип — це **умовний спосіб** (conditional mood). Він показує наші мрії або цікаві гіпотетичні ситуації. Наприклад: «Я б пішов у кіно сьогодні ввечері». 
-
-Here is a critical decolonization rule for authentic Ukrainian phrasing. Never use the Russian calque "давайте" to form group commands. 
-
-Українська мова має свої власні красиві та синтетичні форми для цього. Замість «давайте підемо», ми завжди кажемо коротко «ходімо». Замість «давайте працювати», ми чудово кажемо «працюймо». Це звучить дуже природно і правильно для носіїв мови.
+:::info
+**Decolonization Check**
+When giving commands or making suggestions to a group that includes yourself (like saying "Let's go" or "Let's work" in English), you must never use the borrowed Russian structure with "давайте". Instead, the Ukrainian language has a beautiful, built-in synthetic ending for this exact purpose: **-мо**. You should say «ходімо» (let's go) or «працюймо» (let's work). This is a hallmark of authentic, clean Ukrainian grammar and shows a high level of linguistic respect.
+:::
 
 <!-- INJECT_ACTIVITY: match-up-verb-terms -->

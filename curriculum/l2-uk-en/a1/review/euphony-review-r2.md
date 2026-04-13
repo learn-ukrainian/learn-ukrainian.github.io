@@ -1,39 +1,50 @@
 ## Linguistic Scan
-No linguistic errors found. The explanations of the `у/в`, `і/й`, and `з/із/зі` euphony rules are highly accurate and align perfectly with Правопис 2019 (§ 17, 18, 23-25). 
+- Factually wrong classification in `У чи В?`: `This rule applies not only to prepositions but also to some word prefixes, such as the alternating forms **вже** (already) and **уже** (already).` VESUM verification returns both `вже` and `уже` as `adv`, so they are standalone adverbs, not prefixes.
+- Factually wrong absolute rule in `І чи Й?`: `Just like the preposition **у**, the conjunction **і** is always used at the very beginning of a sentence, no matter what word follows it.` Textbook search returns Grade 5 p.176 with sentence-initial `Й` before a vowel: `Й учимося грамотно писати.`
 
 ## Exercise Check
-All four activity hints from the plan are represented with correct marker IDs (`quiz-u-v-choice`, `quiz-naturalness-comparison`, `quiz-i-y-choice`, `fill-in-z-iz-zi`). They are logically placed directly following the relevant teaching sections. No issues found.
+- Found 4 markers: `quiz-u-or-v`, `quiz-i-or-y`, `fill-in-z-iz-zi`, `quiz-euphony-comparison`.
+- Marker IDs match all 4 `activity_hints`.
+- Each marker comes after the relevant teaching block, and the markers are spread sensibly through the module.
+- No inline DSL exercise blocks are present here, so only marker placement/id logic could be reviewed. No marker-placement issues found.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 8/10 | The plan explicitly requested: `Text mentions: у городі/в городі, і яблука/й яблука, у школі/в школі.` The generated Dialogue 1 completely omitted the `і/й яблука` and `у/в школі` examples. |
-| 2. Linguistic accuracy | 10/10 | The phonetic rules are stated with precision. Exceptions like "у Франції" (before ф), "у Львові" (before льв), and "зі школи" (before шк) are handled flawlessly. |
-| 3. Pedagogical quality | 10/10 | Excellent pedagogical flow (PPP). The analogy of building a "V-C-V sandwich" helps visualize the abstract concept of euphony, breaking down the mechanical reasoning behind the rules. |
-| 4. Vocabulary coverage | 10/10 | All required alternating prepositions/conjunctions and recommended nouns (Київ, Львів, офіс, парк, театр) are used effectively in context. |
-| 5. Exercise quality | 10/10 | The 4 injected markers perfectly match the focus and type counts specified in the plan. |
-| 6. Engagement & tone | 10/10 | The tone is warm and encouraging. Phrases like "well-oiled gears" and "keep the melody flowing" add excellent linguistic flavor without relying on generic/gamified filler. |
-| 7. Structural integrity | 10/10 | The markdown is clean, headers perfectly match the outline, and the module exceeds the word target (1655 words). |
-| 8. Cultural accuracy | 10/10 | Geography and contexts are standard and culturally appropriate. |
-| 9. Dialogue & conversation quality | 7/10 | There is a critical logic error in Dialogue 2. The student asks "Ти і Олена йдете в кіно?", the friend corrects the grammar, but then the *student* says "Ні, я і Максим йдемо в парк" and answers for the friend's group. |
+| 1. Plan adherence | 10/10 | All four planned H2 sections are present and in order; the prose cites Avramenko and Litvinova directly; required/recommended vocabulary appears naturally in context: `в Києві`, `у Львові`, `в офісі`, `в парк`, `у театр`. |
+| 2. Linguistic accuracy | 6/10 | Two factual grammar claims are wrong: `вже/уже` are called “word prefixes,” and `і` is called “always” sentence-initial, but school-textbook evidence allows sentence-initial `й` before vowels. |
+| 3. Pedagogical quality | 7/10 | The module has strong example density, but it teaches one key `і/й` rule incorrectly as an absolute: `the conjunction **і** is always used at the very beginning of a sentence`. That is harmful in a rule-teaching module. |
+| 4. Vocabulary coverage | 10/10 | All required forms are taught in prose (`у/в`, `і/й`, `з/із/зі`), and all recommended words are used naturally (`Київ`, `Львів`, `офіс`, `парк`, `театр`). |
+| 5. Exercise quality | 9/10 | The four markers match the planned quiz/fill-in progression and appear after the relevant explanations. The only reason this is not a 10 is that the actual injected item logic is not visible in this draft. |
+| 6. Engagement & tone | 9/10 | The tone is mostly teacherly and practical rather than gamified; lines like `Read your sentences aloud and trust your ears` support the lesson well. |
+| 7. Structural integrity | 10/10 | Clean markdown, all expected H2 headings present, no dangling sections, and pipeline word count is `1565`, which is above the `1200` target. |
+| 8. Cultural accuracy | 10/10 | The module treats Ukrainian on its own terms and makes no Russian-comparison claims or cultural misstatements. |
+| 9. Dialogue & conversation quality | 7/10 | Dialogue 1 is usable, but Dialogue 2 contains a self-reference error: `> **Максим:** Ні, я і Максим йдемо в парк.` That makes the exchange sound artificial and confusing. |
 
 ## Findings
-[Plan adherence] [Major]
-Location: Dialogue 1
-Issue: The plan explicitly required the inclusion of the examples `і яблука/й яблука` and `у школі/в школі` as part of the essay proofreading exercise, but they are missing from the text.
-Fix: Add these corrections to the friend's line in the first dialogue.
+1. `[Linguistic accuracy] [SEVERITY: critical]`  
+Location: `This rule applies not only to prepositions but also to some word prefixes, such as the alternating forms **вже** (already) and **уже** (already).`  
+Issue: `вже/уже` are not prefixes; VESUM identifies both as adverbs. This teaches the wrong grammatical category.  
+Fix: Change `word prefixes` to `standalone words` and identify `вже/уже` as adverbs.
 
-[Dialogue & conversation quality] [Critical]
-Location: Dialogue 2 `> **Студент:** А, добре. Ні, я і Максим йдемо в парк.`
-Issue: The conversational logic breaks. The student asks if the friend is going to the cinema, but then the student answers their own question on behalf of the friend. The friend should be the one answering "No, Maksym and I are going to the park."
-Fix: Reassign the speaker roles in the second half of Dialogue 2 so the Friend answers the question about their plans.
+2. `[Linguistic accuracy] [SEVERITY: critical]`  
+Location: `Just like the preposition **у**, the conjunction **і** is always used at the very beginning of a sentence, no matter what word follows it.`  
+Issue: This is false as stated. Textbook evidence for milozvuchnist allows sentence-initial `й` before vowels.  
+Fix: Rewrite the sentence to say that sentence-initial `і` is standard before consonants, while `й` can appear before vowels.
+
+3. `[Dialogue & conversation quality] [SEVERITY: major]`  
+Location: `> **Максим:** Ні, я і Максим йдемо в парк. *(No, Maksym and I are going to the park.)*`  
+Issue: The speaker refers to himself by name inside his own answer, which makes the dialogue unnatural and confusing.  
+Fix: Replace the second `Максим` with a different noun phrase, such as `мій брат`.
 
 ## Verdict: REVISE
-The explanations of Ukrainian phonetics are exceptionally well done, but the module requires a structural fix to the dialogue logic and the inclusion of the missing plan examples. 
+Critical factual grammar errors are present, and both `Linguistic accuracy` and `Pedagogical quality` fall below 9. The module is structurally solid, but it should not ship until those claims are corrected.
 
 <fixes>
-- find: "> **Друг:** Краще сказати «у городі», бо слово «був» закінчується на приголосний. *(It is better to say \"у городі\", because \"був\" ends in a consonant.)*\n> **Студент:** Зрозумів. А як правильно: «в Києві» чи «у Києві»? Де ти живеш? *(Understood. And what is correct: \"в Києві\" or \"у Києві\"? Where do you live?)*"
-  replace: "> **Друг:** Краще сказати «у городі», бо слово «був» закінчується на приголосний. А замість «й яблука» та «в школі» у твоєму тексті краще «і яблука» та «у школі». *(It is better to say \"у городі\", because \"був\" ends in a consonant. And instead of \"й яблука\" and \"в школі\" in your text, it's better \"і яблука\" and \"у школі\".)*\n> **Студент:** Зрозумів. А як правильно: «в Києві» чи «у Києві»? Де ти живеш? *(Understood. And what is correct: \"в Києві\" or \"у Києві\"? Where do you live?)*"
-- find: "> **Друг:** Ти й Олена. Так швидше. *(You and Olena. It is faster this way.)*\n> **Студент:** А, добре. Ні, я і Максим йдемо в парк. *(Ah, good. No, I and Maksym are going to the park.)*\n> **Друг:** А Олена й Тарас? *(And Olena and Taras?)*\n> **Студент:** Вони йдуть у театр. *(They are going to the theater.)*"
-  replace: "> **Друг:** Ти й Олена. Так швидше. А щодо кіно — ні, я і Максим йдемо в парк. *(You and Olena. It is faster this way. As for the cinema — no, I and Maksym are going to the park.)*\n> **Студент:** А Олена й Тарас? *(And Olena and Taras?)*\n> **Друг:** Вони йдуть у театр. *(They are going to the theater.)*"
+- find: "This rule applies not only to prepositions but also to some word prefixes, such as the alternating forms **вже** (already) and **уже** (already)."
+  replace: "This rule applies not only to prepositions but also to some standalone words, such as the alternating adverbs **вже** (already) and **уже** (already)."
+- find: "Just like the preposition **у**, the conjunction **і** is always used at the very beginning of a sentence, no matter what word follows it."
+  replace: "At the beginning of a sentence, **і** is standard before a consonant, while **й** can appear before a vowel."
+- find: "> **Максим:** Ні, я і Максим йдемо в парк. *(No, Maksym and I are going to the park.)*"
+  replace: "> **Максим:** Ні, я і мій брат йдемо в парк. *(No, my brother and I are going to the park.)*"
 </fixes>

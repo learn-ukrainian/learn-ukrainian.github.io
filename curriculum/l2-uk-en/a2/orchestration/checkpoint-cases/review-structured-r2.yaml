@@ -1,0 +1,53 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 7
+  evidence: All three planned parts are present, and the plan vocabulary is integrated
+    (`контрольна точка`, `перевірка`, `самоперевірка`). But the dialogue completion
+    has 7 blanks, not the planned 8-10, and the w
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: No Russianisms, Surzhyk, calques, paronym misuse, or forbidden Russian
+    letters were found in the reviewed text. But `Most masculine nouns take the «-ів»
+    ending.` is followed by `п'яти морів`; `море` i
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: 'The module gives multiple examples for each trigger (`допомагати`, `бачити`,
+    `користуватися`, `у/в`, `з`, `по`). Sequencing slips because `<!-- INJECT_ACTIVITY:
+    group-sort-cases -->` comes before the '
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'All required words appear naturally in prose: `перевірка`, `контрольна
+    точка`, `завдання`, `помилка`, `виправити`, `відмінок`, `множина`, `однина`. Recommended
+    `самоперевірка`, `впевнено`, `вихідний д'
+- dimension: 5
+  name: Exercise quality
+  score: 7
+  evidence: The inline tasks are relevant to the taught material, and all 4 planned
+    activity types have corresponding markers. But `group-sort-cases` is placed before
+    Vocative is reviewed, and the dialogue-comple
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: The tone is teacherly and generally substantive, with concrete examples
+    and no gamified/corporate phrasing.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean markdown structure with `Частина 1`, `Частина 2`, `Частина 3`, and
+    `Підсумок`; pipeline word count is 2203, which is above the 1500 target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: No Russia-centered framing; examples are grounded in Ukrainian contexts
+    (`Київ`, `Чернівці`, `борщ`, `пампушки`, wedding planning).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Dialogues use named speakers and practical situations (`Наталя/Олег`,
+    `Подруга/Наречена`), and the wedding scene supports case review coherently overall.
+findings: []

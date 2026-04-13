@@ -21,7 +21,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-спілкуванні. Ви зможете звучати абсолютно природно та невимушено у неформальній розмові. Водночас ви будете писати дуже вишукано та інтелектуально у вашому важливому есе чи діловому електронному листі. Крім того, деякі специфічні дієприслівники з основою на приголосний звук звучать дуже важко та немилозвучно. Наприклад, слова **принісши** *(having brought)* або **спікши** *(having baked)* часто свідомо уникають навіть у дуже серйозних письмових текстах. Тепер ми обов'язково маємо дуже детально розібрати найнебезпечнішу граматичну пастку цієї теми. Йдеться про так званий «висячий дієприслівник», або ситуацію, коли основна дія речення та додаткова дія не збігаються за своїм виконавцем. Давайте критично проаналізуємо дуже поширене, але абсолютно неправильне речення, яке часто будують іноземці: «Повернувшись додому після важкого дня, несподівано почався сильний дощ». Чому це вважається надзвичайно грубою граматичною помилкою? Давайте знайдемо головну частину: тут підметом виступає іменник **дощ** *(rain)*, а основним присудком є дієслово **почався** *(started)*. За непорушним залізним правилом українського синтаксису, саме цей підмет має одночасно виконувати обидві вказані дії. Тобто з цього речення буквально випливає, що спочатку розумний дощ сам повернувся додому, а вже тільки потім він раптом почався. Це створює повний логічний абсурд і дуже часто викликає щирий сміх у носіїв мови. Як нам правильно виправити цю прикру помилку? Правило порятунку дуже просте: якщо дві різні дії виконують абсолютно різні суб'єкти, ви зобов'язані використовувати виключно підрядне речення. Правильний варіант звучатиме тільки так: «Коли я повернувся додому, несподівано почався сильний дощ». Тепер логіка повністю відновлена: я повертаюся додому, а дощ починається на вулиці. Ось іще один типовий приклад такої ж самої поширеної помилки: «**Закінчивши** *(having finished)* складний університетський проєкт, вечір здався мені дуже теплим». Тут підметом є слово «вечір», але ж сам вечір ніяк не міг закінчити проєкт! Тому єдиний правильний вихід — це негайна граматична трансформація: «Після того як ми закінчили проєкт, вечір здався мені теплим». Наостанок ми безумовно мусимо звернути вашу пильну увагу на надзвичайно важливу проблему деколонізації мови та свідомого уникнення русизмів. Російська мова дуже активно використовує дієприкметники минулого часу з характерним суфіксом «-вш-» як звичайні прикметники, щоб описувати людей чи предмети. Наприклад, поширений російський вислів «прочитавший студент» описує конкретного студента, який успішно завершив своє читання. Запам'ятайте раз і назавжди: таких активних дієприкметників у сучасній літературній українській мові просто не існує в принципі. Слова на зразок **прочитавший** *(the one who read)*, **зробивший** *(the one who did)*, **написавший** *(the one who wrote)* чи **побачивший** *(the one who saw)* є абсолютно неправильними. Їх використання є дуже грубою мовною калькою та очевидним наслідком зросійщення. Українська мова вирішує це комунікативне завдання двома абсолютно різними, але дуже красивими способами. Якщо ви хочете описати іменник, ви завжди маєте використати підрядне речення зі словом **який** *(which/who)*. Наприклад: «студент, який повністю прочитав цю складну книгу». Якщо ж ви описуєте обставину або час виконання дії, ви спокійно використовуєте наш нормативний дієприслівник **прочитавши**. Наприклад: «Прочитавши цю книгу, студент дуже швидко відповів на всі питання свого викладача». Отже, правильна українська форма на «-вши» — це виключно обставина. Вона ніколи в житті не може відповідати на питання «який?» і категорично не може виступати прикметником у вашому реченні. <!-- INJECT_ACTIVITY: transformation-clause-gerund --> <!-- INJECT_ACTIVITY: error-correction-dangling -->
+language. You will constantly encounter them while reading fiction, in official legal documents, serious scientific articles, and news. Conversely, in everyday spoken language, Ukrainians much more often prefer simple complex sentences. During a casual friendly conversation over coffee, you are most likely to say "When I read this article, I understood everything" rather than use the form "Having read the article, I understood everything". However, this does not mean at all that such forms can be completely ignored. On the contrary, their correct use adds considerable stylistic elegance to your text. For example, having written a large essay or a business letter, you will sound much more convincing. Meanwhile, simultaneity in conversation is often conveyed differently, avoiding complex literary forms.* Зараз ми маємо детально розібрати одну з найпоширеніших і найнебезпечніших синтаксичних помилок, яку роблять не лише ті, хто вивчає мову, а й самі носії. Це проблема так званого «висячого дієприслівника». Розгляньте уважно таке речення: «Повернувшись додому, почався дощ». На перший погляд, загальний сенс цієї фрази здається цілком зрозумілим, але з точки зору української граматики це речення є абсолютно абсурдним. Чому так відбувається і де саме ховається помилка? Головним дієсловом тут виступає «почався», а підметом є слово «дощ», отже, саме дощ виконує головну дію. А золоте правило українського синтаксису стверджує, що додаткова дія завжди належить тому ж самому підмету, що й основна дія. Відповідно, граматична структура цього речення стверджує, що дощ спочатку довго йшов по вулиці, успішно повернувся додому, а вже потім почався. Це звучить дуже комічно і неприродно. Щоб виправити цю грубу помилку, вам потрібно запам'ятати одне ключове правило: якщо виконавці двох різних дій не збігаються, використання дієприслівника заборонено. У таких випадках ви зобов'язані перетворити фразу на складнопідрядне речення, наприклад: «Коли я повернувся додому, почався дощ». Тільки так ви збережете логіку і уникнете неприємних граматичних непорозумінь під час спілкування. :::info **Grammar box** Пам'ятайте правило спільного підмета. Якщо дії виконують різні об'єкти чи люди, ви не можете використовувати дієприслівниковий зворот. У таких випадках завжди будуйте складне речення зі сполучниками «коли» або «після того як». ::: Наостанок необхідно звернути особливу увагу на питання деколонізації вашого словникового запасу та уникнення типових русизмів. Російська мова дуже активно використовує активні дієприкметники минулого часу, які закінчуються на «-вший» або «-вшийся». В українській літературній мові таких специфічних дієслівних форм просто не існує. Їхнє використання вважається дуже грубим порушенням сучасної мовної норми. Ви ніколи не повинні утворювати слова на кшталт «прочитавший» або «повернувшийся». Замість цього штучного калькованого прикметника українська мова пропонує вам два природні та елегантні шляхи. Перший шлях — це використання нашого знайомого **дієприслівника доконаного виду** (perfective gerund). Наприклад, ви можете сміливо сказати: «**Побачивши** (having seen — perfective gerund) друга, я зупинився» або «**Дізнавшись** (having found out — reflexive perfective gerund) правду, він звільнився». Другий шлях — це використання підрядного речення зі словом «який». Ви можете побудувати фразу так: «Студент, який прочитав книгу, отримав дуже високу оцінку». Обидва ці варіанти є абсолютно автентичними та граматично правильними. Вони дозволяють вам повністю позбутися нав'язаних російських граматичних кальок у вашому щоденному мовленні. <!-- INJECT_ACTIVITY: transformation-clause-gerund --> <!-- INJECT_ACTIVITY: error-correction-dangling -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -528,7 +528,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -541,18 +608,62 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] дієприслівник доконаного виду (perfective gerund)
+- [ ] різночасність (temporal non-simultaneity — gerund before main action)
+- [ ] одночасність (simultaneity — imperfective gerund, review)
+- [ ] прочитавши (having read — perfective gerund)
+- [ ] дізнавшись (having found out — reflexive perfective gerund)
+- [ ] повернувшись (having returned — reflexive perfective gerund)
+- [ ] написавши (having written — perfective gerund)
+- [ ] побачивши (having seen — perfective gerund)
+- [ ] попередність (precedence — action completed before the main one)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Читання та вільне письмо (~660 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

@@ -1,43 +1,50 @@
 ## Linguistic Scan
-No linguistic errors found (with the exception of the mangled Ukrainian phrase `Я в України` in the pedagogical caution block, addressed in Findings).
+`Діалоги` contains a factual grammar overstatement: “The names of the country and city change their endings to indicate origin.” This is not true as a general rule, because indeclinable place names such as `Торонто` do not change form after `з/із/зі`.
 
 ## Exercise Check
-- `<!-- INJECT_ACTIVITY: answer-zvidky -->`: Placed correctly after explaining how to form Genitive chunks with Звідки. Matches the plan's `fill-in` activity for 8 items.
-- `<!-- INJECT_ACTIVITY: location-trio-sort -->`: Placed perfectly at the end of the `Звідки?` section, contrasting the newly learned origin patterns with the previously learned location and destination patterns. Matches the 9-item `group-sort` activity.
-- `<!-- INJECT_ACTIVITY: preposition-quiz -->`: Placed correctly after the cities and countries section. Matches the 8-item `quiz` activity.
-- `<!-- INJECT_ACTIVITY: location-contrast -->`: Placed correctly after teaching the sentence structure linking origin and current location ("Я живу в Києві, але я зі Львова."). Matches the 6-item `fill-in` activity.
-All markers are present, evenly distributed, test the immediately preceding concepts, and map exactly to the plan's requirements.
+4 markers are present, and the IDs match the 4 `activity_hints` in the plan: `fill-in-where-from`, `group-sort-location-trio`, `quiz-preposition-choice`, `fill-in-contrast-location-origin`.
+
+Placement is mostly correct, but `<!-- INJECT_ACTIVITY: group-sort-location-trio -->` is too late. It tests the `Де? / Куди? / Звідки?` trio yet appears only after the final summary, clustered with the quiz, instead of following the trio teaching in `Звідки?`.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 10/10 | The module perfectly covers all points in the `content_outline`. The word count is 1597, safely exceeding the 1200 target. |
-| 2. Linguistic accuracy | 8/10 | There is a factual phonetic error when explaining euphony rules: "especially those starting with z, s, or sh, you use зі, which is why we say зі Львова". "Львів" does not start with a sibilant, it starts with "Льв" (a lateral and a labiodental). The text also contradicts itself by using `із США` but later teaching `зі США`. |
-| 3. Pedagogical quality | 8/10 | The caution block warns: "Never say Я в України to mean 'I am from Ukraine'". English speakers would not naturally invent "в" + Genitive to translate "from". It's much more helpful to warn against using "з" without the case ending (e.g., "Я з Україна"). The euphony explanation is also contradictory and confusing. |
-| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary items (звідки, з/із/зі, Україна, Київ, Львів, Канада, Одеса, Харків, США, Англія, Німеччина, Польща, додому) are perfectly integrated into contextual examples. |
-| 5. Exercise quality | 10/10 | Markers perfectly align with the plan, are well-spaced, and test the target grammar logically. |
-| 6. Engagement & tone | 10/10 | Tone is encouraging and natural. The introduction ("An international student mixer at a university in Kyiv...") is an excellent framing device. |
-| 7. Structural integrity | 10/10 | Markdown is clean, headers exactly match the plan, and there is no meta-commentary. |
-| 8. Cultural accuracy | 10/10 | Excellent integration of a decolonized cultural note regarding the etymology of "Україна" and its contrast with Russian imperialist myths. |
-| 9. Dialogue & conversation quality | 10/10 | Dialogues are natural, use named speakers, and provide great contrast between the "meeting someone new" context and the "daily routine movements" context. |
+| 1. Plan adherence | 8/10 | All four planned sections are present and the planned vocabulary is broadly covered, but the prose demonstrates the trio only with `в Україні / в Україну / з України`; a city destination form is never shown in prose even though the plan requires “Country/city names in three case forms.” |
+| 2. Linguistic accuracy | 8/10 | Most Ukrainian forms are clean, but `Діалоги` states: “The names of the country and city change their endings to indicate origin,” which falsely generalizes declension to all place names. |
+| 3. Pedagogical quality | 8/10 | The module has a clear PPP flow with dialogues, explanation, and practice markers, but the key trio explanation lacks a parallel city example, so the learner does not see the full city pattern alongside the country pattern. |
+| 4. Vocabulary coverage | 10/10 | All required plan vocabulary appears naturally in prose, and the recommended set is also covered: `Одеса`, `Харків`, `США`, `Англія`, `Німеччина`, `Польща`, `додому`. |
+| 5. Exercise quality | 8/10 | All 4 marker IDs match the 4 planned activities, but `group-sort-location-trio` is placed after the summary and clustered with the quiz instead of directly after the trio is taught. |
+| 6. Engagement & tone | 9/10 | The tone is teacherly and concrete; the student mixer and street-encounter scenarios keep the explanation grounded in plausible beginner situations. |
+| 7. Structural integrity | 10/10 | All H2 headings from the plan are present in order, the pipeline word count is 1380, and there are no stray formatting artifacts beyond the expected inject markers. |
+| 8. Cultural accuracy | 10/10 | The framing is Ukrainian-centered throughout, with no Russian-comparison framing and with decolonized English spellings such as `Kyiv` and `Odesa`. |
+| 9. Dialogue & conversation quality | 9/10 | The dialogues use named speakers, real situations, and multi-turn exchanges; the second dialogue naturally contrasts `звідки` and `куди`. |
 
 ## Findings
-[2. Linguistic accuracy] [Critical]
-Location: `Звідки? — Where From?` -> "If the next word starts with a sibilant sound (like s, sh, or z), you switch to **із** for easier pronunciation, as in **із США** (from the USA). For specific difficult consonant clusters, especially those starting with z, s, or sh, you use **зі**, which is why we say **зі Львова** (from Lviv)."
-Issue: Factual phonetic error. "Львів" does not start with a sibilant (z, s, or sh), making it a confusing example for that specific claim. Furthermore, the text contradicts itself by using `із США` here but later (in the notes and countries section) stating that "the United States is usually abbreviated, giving us зі США".
-Fix: Update the euphony explanation to use "Запоріжжя" as the "із" example, and group "Львів" and "США" correctly under the "зі" rule.
+[LINGUISTIC ACCURACY] [SEVERITY: critical]  
+Location: `Діалоги` — “The names of the country and city change their endings to indicate origin.”  
+Issue: This teaches a false generalization. Not every place name changes form after `з/із/зі`; indeclinable names such as `Торонто` stay the same.  
+Fix: Change the sentence so it says that many names change, while some names such as `Торонто` do not.
 
-[3. Pedagogical quality] [Major]
-Location: `Звідки? — Where From?` -> "English relies heavily on the verb "to be" to express location, but Ukrainian relies on prepositions and case endings. Never say **Я в України** to mean "I am from Ukraine" — always use **з** for your origin."
-Issue: Pedagogically confusing example. A learner translating "I am from Ukraine" is highly unlikely to invent "в" + Genitive (`Я в України`). They are much more likely to forget the case ending entirely (`Я з Україна`).
-Fix: Change the incorrect example to `Я з Україна` and clarify that the correct ending is required.
+[PLAN ADHERENCE / PEDAGOGICAL QUALITY] [SEVERITY: major]  
+Location: `Звідки?` — “We ask **Де ти?** ... **в Україні** ... **в Україну** ... **з України**.”  
+Issue: The module explains the trio only with a country example. The plan explicitly requires “Country/city names in three case forms,” but the prose never shows a city destination form in the teaching text.  
+Fix: Add a parallel city trio, e.g. `в Києві / в Київ / з Києва`, to that paragraph.
+
+[EXERCISE QUALITY] [SEVERITY: major]  
+Location: end of module — `<!-- INJECT_ACTIVITY: group-sort-location-trio -->` immediately before `<!-- INJECT_ACTIVITY: quiz-preposition-choice -->`  
+Issue: The group-sort activity tests the location trio but is delayed until after the summary and clustered with the final quiz instead of appearing near the trio explanation.  
+Fix: Move `group-sort-location-trio` to the end of the `Звідки?` section, near `fill-in-where-from`.
 
 ## Verdict: REVISE
-The module is exceptionally well-written, engaging, and structurally sound. However, the factual error regarding the phonetic properties of "Львів", the internal contradiction regarding "із/зі США", and the slightly confusing pedagogical warning in the caution block require targeted revisions to prevent confusing learners.
+REVISE. The module is structurally solid and mostly accurate, but it contains one factual grammar error and two important alignment/pedagogy issues. That fails the severity gate and leaves multiple dimensions below 9.
 
 <fixes>
-- find: "If the next word starts with a sibilant sound (like s, sh, or z), you switch to **із** for easier pronunciation, as in **із США** (from the USA). For specific difficult consonant clusters, especially those starting with z, s, or sh, you use **зі**, which is why we say **зі Львова** (from Lviv)."
-  replace: "If the next word starts with a sibilant sound (like s, sh, or z), you switch to **із** for easier pronunciation, as in **із Запоріжжя** (from Zaporizhzhia). For specific difficult consonant clusters, you use **зі**, which is why we say **зі Львова** (from Lviv) and **зі США** (from the USA)."
-- find: "English relies heavily on the verb \"to be\" to express location, but Ukrainian relies on prepositions and case endings. Never say **Я в України** to mean \"I am from Ukraine\" — always use **з** for your origin."
-  replace: "English relies heavily on the verb \"to be\" to express location, but Ukrainian relies on prepositions and case endings. Never say **Я з Україна** to mean \"I am from Ukraine\" — always use **з** with the correct ending for your origin."
+- find: "Notice how the question is formed with one word: **звідки**. The answer begins with the preposition **з** (from) or **із**, followed by the place name. The names of the country and city change their endings to indicate origin."
+  replace: "Notice how the question is formed with one word: **звідки**. The answer begins with the preposition **з** (from) or **із**, followed by the place name. Many country and city names change their endings to indicate origin, while some names, such as **Торонто**, stay the same."
+- find: "You now have the complete trio of spatial questions in Ukrainian. These three questions form the foundation of how we talk about location and movement. We ask **Де ти?** (Where are you?) when talking about a static location, like **в Україні** (in Ukraine). We ask **Куди ти їдеш?** (Where are you going?) for a destination, like **в Україну** (to Ukraine). Finally, we ask **Звідки ти?** (Where are you from?) to find out the origin, like **з України** (from Ukraine)."
+  replace: "You now have the complete trio of spatial questions in Ukrainian. These three questions form the foundation of how we talk about location and movement. We ask **Де ти?** (Where are you?) when talking about a static location, like **в Україні** (in Ukraine). We ask **Куди ти їдеш?** (Where are you going?) for a destination, like **в Україну** (to Ukraine). Finally, we ask **Звідки ти?** (Where are you from?) to find out the origin, like **з України** (from Ukraine). The same trio works with cities too: **в Києві** (in Kyiv), **в Київ** (to Kyiv), **з Києва** (from Kyiv)."
+- find: "<!-- INJECT_ACTIVITY: fill-in-where-from -->"
+  replace: "<!-- INJECT_ACTIVITY: fill-in-where-from -->\n<!-- INJECT_ACTIVITY: group-sort-location-trio -->"
+- find: "<!-- INJECT_ACTIVITY: group-sort-location-trio -->\n<!-- INJECT_ACTIVITY: quiz-preposition-choice -->"
+  replace: "<!-- INJECT_ACTIVITY: quiz-preposition-choice -->"
 </fixes>

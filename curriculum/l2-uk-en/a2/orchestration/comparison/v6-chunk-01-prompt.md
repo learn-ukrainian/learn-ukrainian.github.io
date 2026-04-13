@@ -1,25 +1,24 @@
-# Section-by-Section Generation — Section 1/5
+# Section-by-Section Generation — Section 1/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 54: Більше, краще, найкраще (A2, A2.8 [Refinement and Graduation])
-**Section to write:** Вищий ступінь: порівнюємо два предмети (~670 words total)
-**Word target for this section:** 670 words (aim for 737 to account for undershoot)
+**Section to write:** Вищий ступінь: порівнюємо два предмети (~715 words)
+**Word target for this section:** 715 words (aim for 786 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Вищий ступінь: порівнюємо два предмети (~670 words total)
-- P1 (~70 words): Introduction to the concept of comparison in Ukrainian. Explain that only qualitative adjectives (якісні прикметники) that describe a quality that can be "more" or "less" (like size, speed, sweetness) can form degrees of comparison.
-- P2 (~100 words): Formation of the simple (synthetic) comparative using the suffix **-ш-**. Explain that the suffix **-к-**, **-ок-**, **-ек-** usually drops before adding **-ш-**. Examples: солодкий → солодший, тонкий → тонший, короткий → коротший.
-- P3 (~100 words): Formation of the simple comparative using the suffix **-іш-**. This is the more productive and common suffix for many adjectives. Examples: цікавий → цікавіший, теплий → тепліший, гарний → гарніший (as a regular alternative), швидкий → швидший/швидкіший.
-- P4 (~120 words): Consonant mutations (чергування) when adding **-ш-**. Detail the three key changes: **г, ж, з + ш → жч** (дорогий → дорожчий, ближчий, дужчий); **с + ш → щ** (високий → вищий); and **ст + ш → щ** (товстий → товстіший/товщий). Use "дорожчий" and "вищий" as primary examples.
-- <!-- INJECT_ACTIVITY: fill-in-comparative-form --> [fill-in, Form the comparative from the base adjective, 8 items]
-- P5 (~80 words): The compound (analytic) comparative: **більш** (more) or **менш** (less) + the basic form of the adjective. Explain that this is used for nuance, formal speech, or with complex multi-syllable adjectives. Examples: більш відомий, менш популярний.
-- P6 (~100 words): Syntax of comparison: using **ніж** + Nominative and **за** + Accusative. Explain that they are interchangeable but have different case requirements. Examples: "Цей телефон дорожчий, ніж той" vs "Цей телефон дорожчий за той".
-- P7 (~100 words): Dialogue: "В магазині електроніки". A customer (Покупець) and consultant (Консультант) compare two smartphones. Focus on synthetic forms and syntax. "Цей екран більший", "Ця модель дешевша за ту".
-- <!-- INJECT_ACTIVITY: true-false-comparative-syntax --> [true-false, Identify correct and incorrect comparative constructions (ніж/за/Genitive traps), 8 items]
+## Вищий ступінь: порівнюємо два предмети (~715 words)
+- P1 (~100 words): Short introductory dialogue comparing two things (e.g., foods or seasons). Two friends debate: "Кава чи чай? Кава смачніша, але чай корисніший." Introduces the concept of comparing two objects in a natural context.
+- P2 (~120 words): Explain the synthetic comparative degree (проста форма). Show how to add suffixes `-ший` or `-іший` to the adjective stem. Provide clear examples: `солодкий` → `солодший`, `теплий` → `тепліший`, `дешевий` → `дешевший`. Note that this is the most common and natural way to compare in Ukrainian.
+- P3 (~130 words): Explain predictable consonant alternations when adding `-ший`. Show `г, ж, з + ш` → `жч` (`дорогий` → `дорожчий`, `близький` → `ближчий`). Show `с + ш` → `щ` (`високий` → `вищий`). Explain that suffixes like `-к-` usually drop out (`тонкий` → `тонший`). 
+- P4 (~110 words): Explain the analytic comparative degree (складена форма). Show how to use `більш` / `менш` + the base adjective (`більш солодкий`, `менш відомий`). Clarify that the synthetic form is always preferred, but the analytic form is useful for long words or nuanced formality.
+- P5 (~120 words): Teach the comparison constructions. Explain how to link the two compared items using `ніж` + Nominative (`Київ більший, ніж Львів`) or `за` / `від` + Accusative (`Київ більший за Львів`). Emphasize that both structures are completely correct and interchangeable.
+- P6 (~135 words): Decolonial/Grammar warning. Warn learners against using just the Genitive case for comparison (e.g., `*сталь міцніше міді`), which is a Russian structure. Reiterate that natural Ukrainian requires the `за` or `ніж` prepositions/conjunctions (`сталь міцніша за мідь`).
+- <!-- INJECT_ACTIVITY: fill-in-comparative --> [fill-in, Form the comparative from the base adjective, 8 items]
+- <!-- INJECT_ACTIVITY: true-false-constructions --> [true-false, Identify correct and incorrect comparative constructions (ніж/за vs Genitive), 8 items]
 
 ---
 ## Full Plan (for reference)
@@ -29,7 +28,7 @@ module: a2-054
 level: A2
 sequence: 54
 slug: comparison
-version: '1.0'
+version: '1.1'
 title: Більше, краще, найкраще
 subtitle: Ступені порівняння прикметників та прислівників
 focus: grammar
@@ -132,8 +131,7 @@ references:
     notes: Full presentation of comparative and superlative formation with 
       exercises
   - title: "ULP: Ukrainian Adjectives — Degrees of Comparison"
-    url: "https://www.ukrainianlessons.com/adjectives-comparison/"
-    notes: Synthetic vs analytic forms explained with examples
+    notes: Synthetic vs analytic forms explained with examples (URL removed — confirmed 404)
 
 </plan_content>
 
@@ -547,12 +545,31 @@ in this paragraph the same language?" If no, fix it.
 
 ## Other Rules
 
-TARGET: 70-90% Ukrainian.
+TARGET: 70-90% Ukrainian. THIS IS A HARD GATE — the audit REJECTS modules outside this range.
+
 LANGUAGE ROLES:
-- PRIMARY: Ukrainian for everything.
-- ENGLISH: Only in vocabulary tables and one-line grammar notes where absolutely necessary.
-- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English.
-A2 register. Concrete everyday vocabulary. No literary language, no metaphors. Near-full Ukrainian immersion. Ukrainian sentences max 15 words. Max 2 clauses. All cases allowed. Simple subordinate clauses only. Full aspect pairs. No participles.
+- PRIMARY: Ukrainian for narrative, dialogues, examples, section intros, cultural notes, Reading Practice blocks, learning callouts.
+- METALANGUAGE: For abstract grammar terms, you may provide ONE parenthetical English translation on FIRST use only, e.g. `**доконаний вид** (perfective aspect)`. Subsequent uses must be Ukrainian only.
+- VOCABULARY TABLE: English glosses live here, not in prose.
+- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English. Never mix mid-sentence.
+
+⚠️ HARD STRUCTURAL RULES — READ THIS TWICE:
+- FORBIDDEN: long English narrative paragraphs explaining grammar. If a concept needs more than ONE sentence of English scaffolding, it goes in a `:::info` or `:::tip` callout, NOT in the main prose.
+- FORBIDDEN: mirroring a Ukrainian paragraph with an English translation paragraph. Write ONE paragraph in Ukrainian, move on.
+- FORBIDDEN: `> *English translation*` blockquotes after Ukrainian dialogues. They were required at A1 but they cap immersion below 50% — at A2-late they MUST be removed.
+
+ESCAPE HATCH (the 'Dual Ladder'):
+For genuinely abstract grammar concepts, you may use ONE `:::info` or `:::tip` callout written in English per section to clarify the concept. Because callouts are stripped from the immersion metric, this serves as on-demand scaffolding for struggling learners without penalising the immersion score. Do NOT abuse this — at most one English callout per major section.
+
+A2 register. Concrete everyday vocabulary. No literary language, no metaphors. Ukrainian sentences max 15 words. Max 2 clauses. All cases allowed. Simple subordinate clauses only (який/що/коли). Full aspect pairs. No participles.
+
+CHECKLIST (re-read before writing each section):
+- [ ] Every narrative paragraph in Ukrainian?
+- [ ] Zero `> *English translation*` blockquotes after dialogues?
+- [ ] At most ONE English `:::info` callout per major section?
+- [ ] Metalanguage terms parenthetically translated on first use only (max 2 per section)?
+- [ ] Reading Practice / Читаємо українською block in EVERY major section?
+
 
 GRAMMAR RULES:
 - Max 15 words per Ukrainian sentence
@@ -596,6 +613,31 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] порівняння (comparison)
+- [ ] більший (bigger)
+- [ ] менший (smaller)
+- [ ] кращий (better)
+- [ ] гірший (worse)
+- [ ] найкращий (the best)
+- [ ] найбільший (the biggest)
+- [ ] солодший (sweeter)
+- [ ] цікавіший (more interesting)
+- [ ] ніж (than)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Вищий ступінь: порівнюємо два предмети (~715 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

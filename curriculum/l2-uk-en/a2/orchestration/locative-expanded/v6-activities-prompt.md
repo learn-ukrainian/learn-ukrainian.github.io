@@ -1,4 +1,4 @@
-<!-- version: 1.1.0 | updated: 2026-03-31 -->
+<!-- version: 1.2.0 | updated: 2026-04-12 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -11,6 +11,35 @@ Generate an `activities/locative-expanded.yaml` file for module **20: Місце
 
 ---
 
+## ⚠️ HARD COUNT TARGETS — READ TWICE
+
+These are the binding numerical contracts for THIS module. The audit will FAIL if you fall short.
+
+| Bucket | Min | Max | Notes |
+|---|---|---|---|
+| Total activities | 12 | 12+ | inline + workbook combined |
+| Inline (lesson tab) | 4 | 6 | one per `<!-- INJECT_ACTIVITY -->` marker, see below |
+| Workbook (Зошит tab) | 8 | 11 | extended practice |
+| Items per activity | 8 | — | each activity must have at least 8 items (unless its type cap is lower — see Activity Type Reference below) |
+
+**You MUST ship at least 4 inline activities AND at least 8 workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+
+**Type diversity is required.** The module (inline + workbook combined) MUST use at least **0** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level. (If `0` is `0`, the audit profile for this level does not enforce type diversity — but variety still produces a better lesson, so aim for 4+ types when the workbook allows it.)
+
+---
+
+## Allowed types for THIS level
+
+- **Inline (lesson) types:** quiz, true-false, fill-in, match-up, group-sort, classify, mark-the-words
+- **Inline priority (preferred):** fill-in, match-up, true-false, quiz
+- **Workbook types:** cloze, error-correction, fill-in, unjumble, translate, match-up, group-sort, odd-one-out, observe, phrase-table, quiz, true-false, mark-the-words
+- **Workbook priority (preferred):** error-correction, cloze, unjumble, translate, fill-in
+- **FORBIDDEN at this level:** anagram, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables, highlight-morphemes, grammar-identify
+
+Pick from the allowed list. Lean heavily on the priority lists. Do not use any forbidden type — the build will reject it.
+
+---
+
 ## Inline vs Workbook Split
 
 Activities have two placement categories:
@@ -19,7 +48,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Rule of thumb:** inline = 2-3 quick checks after key teaching points. Workbook = 4-8 deeper practice exercises covering the full topic.
+**Rule of thumb:** inline = 4–6 quick checks after key teaching points. Workbook = 8–11 deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
 
 ---
 
@@ -27,7 +56,13 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-(No injection markers found in prose. All activities will go to workbook.)
+- `<!-- INJECT_ACTIVITY: quiz-identify-the-function-of-locative-in-each-sentence -->`
+- `<!-- INJECT_ACTIVITY: fill-in-complete-sentences-with-the-correct-locative-form -->`
+- `<!-- INJECT_ACTIVITY: fill-in-complete-sentences-with-the-correct-locative-form -->`
+- `<!-- INJECT_ACTIVITY: fill-in-locative-forms -->`
+- `<!-- INJECT_ACTIVITY: error-correction-prepositions -->`
+- `<!-- INJECT_ACTIVITY: quiz-locative-functions -->`
+- `<!-- INJECT_ACTIVITY: match-up-expressions -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -89,190 +124,186 @@ required:
 ## Module Content (the prose the learner reads before exercises)
 
 <module_content>
-## Місцевий з абстрактними іменниками (Locative with Abstract Nouns)
+## Місцевий з абстрактними іменниками (Locative with Abstract Nouns) (~600 words total)
 
-На рівні А1 ми вивчали місцевий відмінок як фізичне місце. *(In A1, we studied the locative case as a physical place.)* For example, «у кімнаті» *(in the room)*, «у місті» *(in the city)*, or «на столі» *(on the table)*. Now, we are expanding this concept. The locative case is not just for physical spaces on a map. Це абстрактний простір. *(It is an abstract space.)* We also use it for abstract domains, fields of activity, and general life contexts.
+Let's listen to a conversation between Mariia and Ihor. They are catching up on life changes after not seeing each other for a long time. Pay attention to how they talk about the past month and their current situations. The word for past or previous is **минулий** (past), and a month is **місяць** (month). The word for a telephone is **телефон** (phone). Notice the different endings they use to describe where they are in life.
 
-Let's compare two ideas to see the difference clearly. If you say «Я працюю в університеті» *(I work at the university)*, you mean the physical building. It is a concrete place. But if you say «Я працюю в освіті» *(I work in education)*, you mean the abstract field. You could be working from home, but your professional domain is education. This is a very natural and common way to talk about professions and society.
+> — **Марія:** Привіт, Ігорю! Ми так давно не бачилися. Що нового у твоєму житті? *(Hi, Ihor! We haven't seen each other in so long. What is new in your life?)*
+> — **Ігор:** Привіт, Маріє! У минулому місяці я змінив роботу. *(Hi, Mariia! In the past month I changed my job.)*
+> — **Марія:** Ого! І де ти зараз працюєш? *(Wow! And where do you work now?)*
+> — **Ігор:** Тепер я працюю в освіті. Це дуже цікаво. А ти? *(Now I work in education. It is very interesting. And you?)*
+> — **Марія:** Я на новому курсі. Вчора ми розмовляли по телефону з мамою — вона хвилюється. *(I am on a new course. Yesterday we talked on the phone with my mom — she is worried.)*
+> — **Ігор:** Не хвилюйся. Це не велика проблема. *(Don't worry. It is not a big problem.)*
 
-Давайте прочитаємо діалог. *(Let's read the dialogue.)* Марія та Ігор зустрілися на вулиці після довгої перерви. Вони говорять про новини. *(Maria and Ihor met on the street after a long break. They are talking about news.)*
+In previous lessons, we used the locative case to talk about physical places and locations. The Ukrainian word for this case is **місцевий** (locative). You learned how to say where a person or an object is physically situated in space. Now, we will expand our understanding of this case to talk about abstract ideas, concepts, and contexts. We can use this grammar to talk about the spheres of our lives, our professions, and our general situations without referring to a specific building or street.
 
-> — **Марія:** Привіт, Ігоре! Рада тебе бачити. Що нового у твоєму житті? *(Hi, Ihor! Glad to see you. What is new in your life?)*
-> — **Ігор:** Привіт, Маріє! У минулому місяці я змінив роботу. *(Hi, Maria! Last month I changed jobs.)*
-> — **Марія:** Це чудово! Де ти тепер працюєш? *(That is great! Where do you work now?)*
-> — **Ігор:** Тепер працюю в освіті. А ти? *(Now I work in education. And you?)*
-> — **Марія:** Я на новому курсі в університеті. Вчора розмовляла по телефону з мамою. Вона дуже хвилюється за моє навчання. *(I am on a new course at the university. Yesterday I talked on the phone with mom. She is very worried about my studies.)*
+Місцевий відмінок допомагає нам говорити про абстрактні речі. Ми використовуємо його, коли говоримо про різні сфери життя.
 
-When we talk about a professional sphere or a broad domain of life, we use the specific pattern **у/в + abstract noun in the locative case**. These are not physical places where you can stand or sit, but conceptual spaces where you spend your time, build a career, or focus your energy. Here are some high-frequency combinations for different professional and cultural fields: **у політиці** *(in politics)*, **в економіці** *(in economics)*, **у науці** *(in science)*, and **у мистецтві** *(in art)*. You can also talk about your broad personal experience using **у житті** *(in life)* or **у думках** *(in thoughts)*.
+> *The locative case helps us talk about abstract things. We use it when we talk about different spheres of life.*
 
-**Читаємо українською (Reading in Ukrainian):**
-- Мій старший брат зараз працює у політиці. *(My older brother now works in politics.)*
-- Вона зробила велике відкриття у науці. *(She made a great discovery in science.)*
-- У сучасному мистецтві немає строгих правил. *(There are no strict rules in modern art.)*
-- У моєму житті було багато цікавих людей. *(In my life there were many interesting people.)*
+When we talk about different professional domains or life situations, we use the prepositions for location with an abstract noun. The word for abstract is **абстрактний** (abstract). This structure translates to "in the domain of" or "in the field of." It shows that someone is immersed in a particular area, not just physically standing inside a room. Let's look at some common examples that you will hear frequently in daily conversations with your friends or colleagues.
 
-Let's review the grammatical precision for these abstract nouns. Many of these professional fields are feminine nouns ending in the suffix **-ка**. Remember the fundamental consonant mutation rule for the locative case: **к → ц**. When a feminine noun ends in **-ка**, the locative form changes to **-ці**. Thus, «політика» becomes «у політиці», «наука» becomes «у науці», and «економіка» becomes «в економіці». On the other hand, neuter abstract nouns ending in **-я**, such as **життя** *(life)* and **навчання** *(studies/learning)*, are much simpler to decline. They just take the standard **-і** ending. So, the nominative «життя» becomes «у житті», and «навчання» becomes «у навчанні».
+Багато людей в Україні працюють в освіті або в сучасній медицині. Мій старший брат має великий досвід у політиці. Що нового у твоєму житті? Моя сестра зараз працює у бізнесі.
 
-**Читаємо українською (Reading in Ukrainian):**
-- Музика → Мій друг нічого не розуміє у музиці. *(Music → My friend understands nothing in music.)*
-- Культура → Вони багато читають про нове у культурі. *(Culture → They read a lot about what is new in culture.)*
-- Навчання → У навчанні завжди є одна типова проблема. *(Studies → There is always one typical problem in studies.)*
+> *Many people in Ukraine work in education or in modern medicine. My older brother has great experience in politics. What is new in your life? My sister currently works in business.*
 
-There is one major exception regarding the preposition. When we say "at work" in Ukrainian, we always use the preposition **на**. The phrase is **на роботі**, never «у роботі». Why? Because work is viewed as an activity or an event you attend, rather than an enclosed container or a broad abstract domain. Contrast this with specific physical locations or broad concepts: **в офісі** *(at the office)* means you are physically inside the building, and **у бізнесі** *(in business)* means you operate in that specific professional field.
+There is one very important exception that you must remember when talking about employment. The word for work is **робота** (work). It always takes the preposition "на". This is a fixed phrase. We always say it this way to mean "at work," and we never use the preposition "у," even when we are talking about the abstract concept of our daily employment. You must contrast this with other abstract nouns that describe fields of study or economy, which usually take "в" or "у".
 
-**Читаємо українською (Reading in Ukrainian):**
-- Зараз мій тато на роботі, він буде ввечері. *(Right now my dad is at work, he will be here in the evening.)*
-- Сьогодні я був у великому новому офісі. *(Today I was in a large new office.)*
-- Моя сестра дуже хоче працювати у бізнесі. *(My sister really wants to work in business.)*
-- Ми не можемо говорити, тому що ми на роботі. *(We cannot talk, because we are at work.)*
+Зараз мій тато на роботі, тому він не може говорити. В економіці часто бувають серйозні кризи. У європейському мистецтві є багато різних стилів. Моя мама працює в архітектурі.
 
-<!-- EXERCISE_1 -->
+> *Right now my dad is at work, so he cannot talk. In economics there are often serious crises. In European art there are many different styles. My mom works in architecture.*
 
-## Часовий місцевий відмінок (Temporal Locative)
+:::info
+**Preposition rule** — The noun **робота** strictly pairs with the preposition **на** to say "at work." However, most other abstract fields of study or professional domains take the prepositions **у** or **в**.
+:::
 
-The most common use of the temporal locative is with months of the year to answer the question «коли?» *(when?)*. Кожен місяць має свою назву. *(Each month has its name.)* To say that something happens in a specific month, we use the preposition **у** or **в** followed by the locative case. Most Ukrainian months end in the suffix **-ень**, making them masculine nouns. When these decline into the locative case, the **-ень** mutates to **-ні**. Let's look at this predictable pattern.
+Many abstract domains are feminine nouns ending in a vowel. To form the locative case for these words, you simply change the final vowel to an "і". However, you must remember the consonant alternation rules that we studied before. If the stem of the word ends in a "к", it changes to a "ц" before the new ending. For example, the word for science is **наука** (science), and it becomes "у науці" in the locative case. The word for politics is **політика** (politics).
 
-- **січень** *(January)* → **у січні** *(in January)*
-- **березень** *(March)* → **у березні** *(in March)*
-- **травень** *(May)* → **у травні** *(in May)*
-- **жовтень** *(October)* → **у жовтні** *(in October)*
+Ця нова стаття розповідає про тенденції у сучасній політиці. В українській культурі є багато дуже цікавих традицій. Ми багато читаємо про нові відкриття у науці.
 
-**Читаємо українською (Reading in Ukrainian):**
-- Мій день народження у січні. *(My birthday is in January.)*
-- У березні погода часто буває холодна. *(In March the weather is often cold.)*
-- У травні ми завжди відпочиваємо на природі. *(In May we always rest in nature.)*
-- У жовтні часто йде холодний дощ. *(In October it often rains coldly.)*
+> *This new article talks about trends in modern politics. In Ukrainian culture there are many very interesting traditions. We read a lot about new discoveries in science.*
 
-While months use the preposition **у/в**, weeks require a different approach. The word **тиждень** *(week)* also ends in **-ень** and mutates to **тижні** in the locative. However, just like the noun **робота** *(work)* takes the preposition **на** (на роботі), **тиждень** requires **на** when used as a time point. To specify which week, you combine **на** with locative adjectives like **цьому** *(this)*, **минулому** *(last)*, or **наступному** *(next)*.
+Let's read some more examples to see how the locative case shifts the meaning from a physical location to an abstract sphere. Notice how these sentences describe situations, thoughts, or professional domains. The word for a thought or opinion is **думка** (thought), and a meeting is a **зустріч** (meeting). The word for a problem is **проблема** (problem). By mastering these grammatical forms, you can have much deeper and more interesting conversations about your career, your interests, and your daily life in Ukrainian.
 
-- **на цьому тижні** *(this week)*
-- **на минулому тижні** *(last week)*
-- **на наступному тижні** *(next week)*
+Він багато років працює в українській політиці. У мене є одна дуже цікава думка. Учора у нас була важлива зустріч. У цій сфері є одна велика проблема.
 
-**Читаємо українською (Reading in Ukrainian):**
-- Минулий тиждень був дуже теплим. *(The past week was very warm.)*
-- На цьому тижні я маю багато роботи. *(This week I have a lot of work.)*
-- Ми були в театрі на минулому тижні. *(We were at the theater last week.)*
-- На наступному тижні вона їде у відрядження. *(Next week she is going on a business trip.)*
+> *He has been working in Ukrainian politics for many years. I have one very interesting thought. Yesterday we had an important meeting. In this sphere there is one big problem.*
 
-We also use the locative case to talk about broad periods of life and historical eras. These are treated like abstract conceptual spaces where events happen, taking the preposition **у/в**. When sharing stories, you will frequently use phrases like **у дитинстві** *(in childhood)*, **у молодості** *(in youth)*, and **у старості** *(in old age)*. We extend this logic to general historical time, using **у минулому** *(in the past)* and **у майбутньому** *(in the future)*.
+<!-- INJECT_ACTIVITY: quiz-identify-the-function-of-locative-in-each-sentence -->
+<!-- INJECT_ACTIVITY: fill-in-complete-sentences-with-the-correct-locative-form -->
 
-**Читаємо українською (Reading in Ukrainian):**
-- У дитинстві я жив у маленькому селі. *(In childhood I lived in a small village.)*
-- Мій дідусь багато подорожував у молодості. *(My grandfather traveled a lot in his youth.)*
-- У минулому люди не мали інтернету. *(In the past people did not have the internet.)*
-- Я сподіваюся, що у майбутньому все буде добре. *(I hope that in the future everything will be fine.)*
-- У старості вона хоче жити біля моря. *(In old age she wants to live near the sea.)*
+## Часовий місцевий відмінок (Temporal Locative) (~650 words total)
 
-Let's see how these temporal and abstract locative phrases blend naturally in conversation. Here, a student is discussing their schedule and interests with a tutor. 
+We have seen how the locative case is used for an **абстрактний** (abstract) domain. Now we will explore how it expresses time. Listen to this conversation between a student and a teacher. Notice how they use the locative case to talk about weeks, months, and periods of life.
 
+> — **Викладач:** Добрий день! Як ваші справи на цьому тижні? *(Good day! How are your things this week?)*
 > — **Студент:** Добрий день! На цьому тижні у мене три заняття. *(Good day! This week I have three classes.)*
-> — **Викладач:** Це дуже добре. Ви маєте час на домашнє завдання? *(That is very good. Do you have time for homework?)*
-> — **Студент:** Так. У вільний час я читаю про Україну — у підручнику з історії. *(Yes. In my free time I read about Ukraine — in a history textbook.)*
-> — **Викладач:** Це цікаво! Що саме ви читаєте зараз? *(That is interesting! What exactly are you reading right now?)*
-> — **Студент:** В дитинстві я мало знав про українську культуру, тому зараз читаю все. *(In childhood I knew little about Ukrainian culture, so now I am reading everything.)*
+> — **Викладач:** Це дуже добре. Що ви читали у вільний час? *(That is very good. What did you read in your free time?)*
+> — **Студент:** Я читав цікавий текст у підручнику з історії. *(I read an interesting text in a history textbook.)*
+> — **Викладач:** Вам подобається історія України? *(Do you like the history of Ukraine?)*
+> — **Студент:** Так, дуже. В дитинстві я мало знав про українську культуру, але зараз це мій улюблений предмет. *(Yes, very much. In childhood I knew little about Ukrainian culture, but now it is my favorite subject.)*
+> — **Викладач:** Прекрасно. У минулому місяці ми говорили про традиції. Яка наша нова тема? *(Wonderful. Last month we talked about traditions. What is our new topic?)*
 
-It is crucial to understand the difference between a point in time and a duration. The locative case strictly answers the question **Коли?** *(When?)* to pinpoint an exact moment, such as **у січні** *(in January)*. To answer **Як довго?** *(How long?)*, you must use the accusative case, like **увесь січень** *(all January)*. Mixing these is a common mistake. Remember the strict preposition rules: never use «на» for months, and never use «у» for weeks.
+In Ukrainian, we use the prepositions "у" or "в" with the locative case to say that something happens in a specific month. All months are masculine nouns, and most end in the suffix "-ень". When forming the locative case, the vowel "е" drops out before adding the "-і" ending. For example, the word for January is **січень** (January), which becomes "у січні". The word for March is **березень** (March), which becomes "у березні".
 
-**Читаємо українською (Reading in Ukrainian):**
-- Коли? Ми зустрілися у травні. *(When? We met in May.)*
-- Як довго? Ми працювали весь травень. *(How long? We worked all May.)*
-- Коли? Він купив машину на минулому тижні. *(When? He bought a car last week.)*
-- Як довго? Він читав цю книгу цілий тиждень. *(How long? He read this book for a whole week.)*
+Мій брат народився у серпні. Ми плануємо нову подорож у травні. У лютому в Україні часто буває дуже холодно. У жовтні студенти мають багато роботи.
 
-<!-- EXERCISE_2 -->
+> *My brother was born in August. We are planning a new journey in May. In February it is often very cold in Ukraine. In October students have a lot of work.*
 
-## По телефону, по радіо: місцевий із прийменником «по»
+When we do not name the month, we use the word **місяць** (month). To say "last month", both the adjective and the noun take the locative case. The masculine word "місяць" ends in a soft consonant, so it becomes "у місяці". The adjective **минулий** (past, previous) changes to "минулому".
 
-We have seen that the locative case describes where things are and when things happen. Now we will use it to describe *how* we communicate or send things. When indicating a medium of communication or a channel of transmission, Ukrainian uses the preposition **по** *(by/on)* followed by the locative case. Common examples include **по телефону** *(by phone)*, **по радіо** *(on the radio)*, **по телевізору** *(on TV)*, and **по пошті** *(by mail)*. Notice that for many masculine nouns denoting these channels, like **телефон** and **імейл** *(email)*, the locative ending is **-у**.
+У минулому місяці я прочитав дві цікаві книги. Що ви робили у минулому місяці? Ми хочемо купити нову машину у наступному місяці. У цьому місяці ми маємо багато проєктів.
 
-**Читаємо українською (Reading in Ukrainian):**
-- Я часто говорю з мамою по телефону. *(I often talk with my mom by phone.)*
-- Ми почули ці новини по радіо. *(We heard these news on the radio.)*
-- Дідусь любить дивитися фільми по телевізору. *(Grandpa likes to watch movies on TV.)*
-- Вона надіслала важливі документи по пошті. *(She sent the important documents by mail.)*
-- Цей концерт показують по телевізору сьогодні. *(They are showing this concert on TV today.)*
+> *Last month I read two interesting books. What did you do last month? We want to buy a new car next month. This month we have many projects.*
 
-Another very common and useful expression using **по** + locative is **по дорозі** *(on the way/along the path)*. This phrase beautifully combines the idea of a physical path with a sense of time or process. You will use this frequently when talking about things that happen while you are traveling from one place to another. 
+The word for week is **тиждень** (week). Unlike months, the word "тиждень" strictly requires the preposition **на** when expressing time. Just like the months, "тиждень" loses its vowel "е" when it takes the locative ending, becoming "на тижні". You will often see this combined with adjectives.
 
-**Читаємо українською (Reading in Ukrainian):**
-- Я зустрів старого друга по дорозі додому. *(I met an old friend on the way home.)*
-- Ми купили смачну каву по дорозі на роботу. *(We bought delicious coffee on the way to work.)*
+На цьому тижні ми маємо дуже важливу зустріч. На минулому тижні я був у відрядженні. Що ви плануєте робити на наступному тижні? Вони закінчили роботу на минулому тижні.
 
-> — **Оксана:** Де ти зараз? *(Where are you now?)*
-> — **Тарас:** Я йду пішки. Я зараз по дорозі додому. *(I am walking. I am on the way home right now.)*
-> — **Оксана:** Купи хліб по дорозі, будь ласка. *(Buy bread on the way, please.)*
-> — **Тарас:** Добре. Я подзвоню тобі по телефону з магазину. *(Okay. I will call you by phone from the store.)*
+> *This week we have a very important meeting. Last week I was on a business trip. What are you planning to do next week? They finished the work last week.*
 
-It is important to distinguish the *medium* of communication from the *topic* of communication. When the phone is the tool you are using to speak, you use the locative case: **говорити по телефону** *(to talk by phone)*. However, if you are discussing the device itself—for example, if you want to buy a new one—the phone becomes the subject of conversation. For topics, Ukrainian uses the preposition **про** *(about)* followed by the accusative case: **говорити про телефон** *(to talk about a phone)*. This logic applies to all communication subjects.
+The locative case also describes major periods of a person's life or general eras. These expressions use "у" or "в" paired with abstract nouns. For instance, the word for childhood is **дитинство** (childhood), which becomes "у дитинстві". The word for youth is **молодість** (youth), which becomes "у молодості". You can also talk about the **майбутнє** (future) or the past.
 
-**Читаємо українською (Reading in Ukrainian):**
-- Засіб: Я говорю по телефону. *(Means: I am talking by phone.)*
-- Тема: Я думаю про новий телефон. *(Topic: I am thinking about a new phone.)*
-- Засіб: Ми почули цю пісню по радіо. *(Means: We heard this song on the radio.)*
-- Тема: Ми говорили про українське радіо. *(Topic: We were talking about Ukrainian radio.)*
-- Засіб: Вона отримала листа по пошті. *(Means: She received a letter by mail.)*
-- Тема: Вона читала про нову пошту. *(Topic: She was reading about the new post office.)*
+У дитинстві я дуже любив малювати. Він багато подорожував у молодості. У минулому люди писали довгі листи. Що ми будемо робити у майбутньому?
 
-In modern Ukrainian, you might sometimes hear native speakers use the instrumental case without a preposition to indicate means, such as **дзвонити телефоном** *(to call by phone)* or **надіслати поштою** *(to send by mail)*. While this is grammatically correct and elegant, the construction **по** + locative remains the most natural, frequent, and standard way to express communication channels in everyday speech. As an A2 learner, mastering the **по** + locative pattern will make your Ukrainian sound authentic and help you navigate modern digital life. You can easily adapt it to new technologies and internet platforms.
+> *In childhood I really loved to draw. He traveled a lot in his youth. In the past people wrote long letters. What will we do in the future?*
 
-**Читаємо українською (Reading in Ukrainian):**
-- Ми часто спілкуємося по скайпу. *(We often communicate on Skype.)*
-- Студенти отримали завдання по імейлу. *(The students received the task by email.)*
-- Я прочитав цю цікаву статтю по інтернету. *(I read this interesting article on the internet.)*
+We must contrast the temporal locative with the accusative case. The accusative case is used for specific days of the week or to express duration. The locative case answers the question "Коли?" (When?) for longer periods like weeks, months, or life stages. If you ask "Як довго?" (How long?), you need the accusative.
 
-> — **Ігор:** Привіт, Маріє! Я дзвонив тобі вчора по телефону. *(Hi, Maria! I called you yesterday by phone.)*
-> — **Марія:** Привіт! Вибач, я була на роботі. Я надіслала тобі повідомлення по імейлу. *(Hi! Sorry, I was at work. I sent you a message by email.)*
-> — **Ігор:** Так, я бачив. Ти купила каву по дорозі в офіс? *(Yes, I saw it. Did you buy coffee on the way to the office?)*
-> — **Марія:** Ні, я пила каву вдома, коли дивилася новини по телевізору. *(No, I drank coffee at home when I was watching the news on TV.)*
+Коли ви були у Києві? Ми були там у минулому місяці. Як довго ви були у Києві? Ми були там один тиждень. Коли буде зустріч? Вона буде у понеділок.
 
-<!-- EXERCISE_3 -->
+> *When were you in Kyiv? We were there last month. How long were you in Kyiv? We were there for one week. When will the meeting be? It will be on Monday.*
 
-## Місцевий відмінок: від місця до сенсу
+:::info
+**Grammar box** — Days of the week take the accusative case (у понеділок), while weeks, months, and life periods take the locative case (на цьому тижні, у грудні, у молодості).
+:::
 
-The locative case is not just for physical places. It also maps abstract spaces, time periods, and communication channels.
+<!-- INJECT_ACTIVITY: fill-in-complete-sentences-with-the-correct-locative-form -->
 
-**Читаємо українською (Reading in Ukrainian):**
-- Спочатку ми вивчали конкретні місця: у парку, на вулиці, в Україні. *(First we studied concrete places: in the park, on the street, in Ukraine.)*
-- Тепер ми знаємо час: у січні, у минулому місяці, на цьому тижні. *(Now we know time: in January, last month, this week.)*
-- Ми також говоримо про абстрактні сфери життя: у новій роботі, в освіті, у політиці. *(We also talk about abstract spheres of life: in a new job, in education, in politics.)*
-- Ми часто слухаємо новини по радіо і говоримо по телефону. *(We often listen to the news on the radio and talk by phone.)*
+## По телефону, по радіо: місцевий із прийменником «по» (Locative with "po") (~550 words total)
 
-The "Locative Matrix" summarizes these four functions. 
+In Ukrainian, we use the preposition «по» with the **місцевий** (locative) case to talk about the means or channel of communication. This pattern describes how information travels from one person to another. Common examples include «по телефону» (by phone), «по радіо» (on the radio), «по пошті» (by mail), and «по дорозі» (on the way).
 
-| Функція (Function) | Прийменник (Preposition) | Приклад (Example) |
+Я часто говорю з мамою по телефону. Ми почули гарні новини по радіо. Мій брат надіслав лист по пошті. Ми зустріли друга по дорозі додому.
+> *I often speak with my mom by phone. We heard good news on the radio. My brother sent a letter by mail. We met a friend on the way home.*
+
+Notice how these phrases describe the method of connection or the path something takes. The word for mail changes to «пошті», and the word **телефон** (phone, telephone) takes the special locative ending «-у» to form «по телефону».
+
+There is a crucial grammatical distinction between the channel of communication and the topic you are discussing. When you talk "by phone", the phone is the instrument, so you use «по» with the locative case («говорити по телефону»). However, when you talk "about a phone" (for example, if you have a **проблема** (problem) with your device), the phone is the topic of conversation. For topics, Ukrainian uses the preposition «про» with the accusative case («говорити про телефон»).
+
+Вони говорили по телефону про новий проєкт. Ми слухали пісню по радіо, а потім говорили про музику. Студенти розмовляли про нову проблему по дорозі в університет.
+> *They talked by phone about a new project. We listened to a song on the radio, and then talked about music. The students talked about a new problem on the way to the university.*
+
+Mixing these up changes the meaning entirely. Always use «по» + locative for how you communicate, and «про» + accusative to share a **думка** (thought, opinion) about a specific subject, whether physical or **абстрактний** (abstract).
+
+Let's look at more examples demonstrating this means of communication in action. It works with various verbs like «дзвонити» (to call), «чути» (to hear), or «надсилати» (to send).
+
+Завтра я подзвоню тобі по телефону. Ми часто чуємо цікаві новини по радіо. Він надіслав важливі документи по пошті.
+> *Tomorrow I will call you by phone. We often hear interesting news on the radio. He sent important documents by mail.*
+
+The phrase «по дорозі» is also very common. It means "on the way" and shows the path of your **подорож** (journey, trip). You can use it when describing a **зустріч** (meeting, encounter) or a quick conversation during your commute.
+
+> — **Марія:** Привіт! Ти де зараз? *(Hi! Where are you now?)*
+> — **Іван:** Добрий день! Я по дорозі на роботу. *(Good day! I am on the way to work.)*
+> — **Марія:** Я надіслала тобі новий план по пошті. *(I sent you a new plan by mail.)*
+> — **Іван:** Дякую! Ми поговоримо про це по телефону. *(Thank you! We will talk about it by phone.)*
+
+:::info
+**Grammar box** — The preposition «по» followed by the locative case is the traditional, authentic Ukrainian pattern for describing means or paths. In modern grammar, you might sometimes see «по» used with the dative case to express distribution, like giving things out «по одному» (one by one). However, for communication means and paths («по телефону», «по пошті», «по дорозі»), the locative case remains strictly the standard. This preserves the beautiful logic of the locative case showing the "where" or "how" of an action.
+:::
+
+In summary, the preposition «по» transforms the locative case from a static location into an active instrument, a channel of communication, or a path of movement. This adds a dynamic layer of meaning to the case. If you look back at the **минулий** (past, previous) **місяць** (month) or **тиждень** (week), you will likely realize how often you communicated «по телефону» or heard news «по радіо»!
+
+<!-- INJECT_ACTIVITY: fill-in-locative-forms -->
+<!-- INJECT_ACTIVITY: error-correction-prepositions -->
+
+## Місцевий відмінок: від місця до сенсу (From Place to Meaning)
+
+The **місцевий** (locative (case)) is far more than just a tool for pointing at a map. It expands from answering simple questions about physical locations to framing entire contexts. We can use it to describe an **абстрактний** (abstract) domain, such as an industry, or look back at a **минулий** (past, previous) period to set the stage for a story. 
+
+**Читаємо українською:**
+Моя сестра працює в медицині. У минулому році вона жила в Одесі. Зараз вона працює в лікарні. Ми часто розмовляємо по телефону. Вона розповідає про життя в новому місті. Я дуже радий за неї.
+
+> *My sister works in medicine. In the past year, she lived in Odesa. Now she works in a hospital. We often talk by phone. She tells about life in the new city. I am very happy for her.*
+
+Let's consolidate these four functions. Whether pinpointing a specific **місяць** (month) for an event or organizing a busy **тиждень** (week) in your schedule, they all share the same locative endings but serve fundamentally different purposes.
+
+| Функція (Function) | Питання (Question) | Приклад (Example) |
 | :--- | :--- | :--- |
-| **Місце** *(Place)* | **в/у**, **на** | **в офісі** *(in the office)*, **на столі** *(on the table)* |
-| **Час** *(Time)* | **в/у**, **на** | **у січні** *(in January)*, **на цьому тижні** *(this week)* |
-| **Сфера** *(Abstract)* | **в/у**, **на** | **у житті** *(in life)*, **на роботі** *(at work)* |
-| **Засіб** *(Means)* | **по** | **по радіо** *(on the radio)*, **по телефону** *(by phone)* |
+| **Фізичне місце** (Physical location) | Де? (Where?) | У місті, на столі |
+| **Абстрактна сфера** (Abstract domain) | Де? / У чому? (In what?) | У житті, в освіті |
+| **Час** (Temporal) | Коли? (When?) | У січні, на тижні |
+| **Засіб / Канал** (Means / Channel) | Як? (How?) | По телефону, по радіо |
 
-> — **Марія:** Ігоре, що нового у твоєму житті? *(Ihor, what is new in your life?)*
-> — **Ігор:** У минулому місяці я змінив роботу. *(Last month I changed jobs.)*
-> — **Марія:** Були проблеми на роботі? *(Were there problems at work?)*
-> — **Ігор:** Ні, просто тепер працюю в освіті. А ти? *(No, just now I work in education. And you?)*
-> — **Марія:** Я навчаюся на новому курсі. Учора була цікава зустріч. *(I am studying in a new course. Yesterday there was an interesting meeting.)*
-> — **Ігор:** Ти говорила про це з мамою? *(Did you talk about this with mom?)*
-> — **Марія:** Так, ми довго розмовляли по телефону. *(Yes, we talked by phone for a long time.)*
+**Читаємо українською:**
+Я часто слухаю музику по радіо. У лютому я відпочивав у горах. Там я познайомився з цікавими людьми. Моє життя в Києві також дуже цікаве. На цьому тижні я йду на новий ярмарок. В дитинстві я не любив такі події, але зараз люблю.
 
-Remember: the locative always needs a preposition (**у/в**, **на**, **по**, **при**). Use **на** for weeks (**на цьому тижні**). Watch for consonant shifts: **політика** *(politics)* becomes **у політиці**. Try combining functions in one sentence!
+> *I often listen to music on the radio. In February, I rested in the mountains. There I met interesting people. My life in Kyiv is also very interesting. This week I am going to a new fair. In childhood I did not like such events, but now I do.*
 
-**Читаємо українською (Reading in Ukrainian):**
-- Місцевий відмінок завжди має прийменник. *(The locative case always has a preposition.)*
-- На цьому тижні у мене немає проблем у роботі. *(This week I have no problems at work.)*
-- Мій старший брат зараз працює у політиці. *(My older brother works in politics now.)*
-- У минулому місяці я був на цікавій зустрічі. *(Last month I was at an interesting meeting.)*
-- У дитинстві ми часто читали про подорожі. *(In childhood we often read about journeys.)*
+You can build complex sentences by combining multiple functions. Whether you are planning a **подорож** (journey, trip), scheduling a **зустріч** (meeting, encounter), or just talking by **телефон** (phone, telephone), you can merge these details naturally.
 
-> — **Студент:** На цьому тижні у мене три заняття. *(This week I have three classes.)*
-> — **Викладач:** Що ви зараз вивчаєте? *(What are you studying right now?)*
-> — **Студент:** У вільний час я читаю про Україну. *(In my free time I read about Ukraine.)*
-> — **Викладач:** Де ви це читаєте? *(Where do you read this?)*
-> — **Студент:** У підручнику з історії. *(In a history textbook.)*
-> — **Викладач:** Це дуже цікаво. В дитинстві я теж багато читав. *(This is very interesting. In childhood I also read a lot.)*
+> — **Анна:** Привіт! Ми так давно не бачилися. *(Hi! We haven't seen each other for so long.)*
+> — **Марко:** Привіт! Так, у минулому місяці я був у відрядженні. *(Hi! Yes, last month I was on a business trip.)*
+> — **Анна:** Як пройшла твоя подорож? *(How was your journey?)*
+> — **Марко:** Дуже добре. Ми багато говорили про нові проєкти по дорозі в офіс. *(Very well. We talked a lot about new projects on the way to the office.)*
+> — **Анна:** А на цьому тижні у тебе є вільний час? *(And this week do you have free time?)*
+> — **Марко:** Так, я вільний у суботу. Ми можемо поговорити по телефону. *(Yes, I am free on Saturday. We can talk by phone.)*
 
-<!-- EXERCISE_4 -->
+By mastering these varied uses, your Ukrainian becomes much more expressive. If you want to share a complex **думка** (thought, opinion) or discuss a serious **проблема** (problem), the locative case helps you specify exactly where, when, and how it occurred. 
 
+> — **Олег:** У тебе є проблема на роботі? *(Do you have a problem at work?)*
+> — **Ірина:** Так, в освіті зараз багато нових правил. *(Yes, in education there are many new rules now.)*
+> — **Олег:** Це цікава думка. Я читав про це в інтернеті. *(That is an interesting thought. I read about it on the internet.)*
+> — **Ірина:** У минулому році все було простіше. *(Last year everything was simpler.)*
+> — **Олег:** Не хвилюйся, у житті завжди є зміни. *(Don't worry, in life there are always changes.)*
+> — **Ірина:** Дякую! Твоя підтримка дуже допомагає в біді. *(Thank you! Your support helps a lot in trouble.)*
+
+:::tip
+**Did you know?** — The preposition «по» is incredibly versatile. While it denotes means of communication («по телефону») or a path («по дорозі») with the locative case, you will also see it used with other cases to express distribution. However, for the methods we discussed here, the locative case is the authentic standard.
+:::
+
+<!-- INJECT_ACTIVITY: quiz-locative-functions -->
+<!-- INJECT_ACTIVITY: match-up-expressions -->
 </module_content>
 
 ---
@@ -286,48 +317,68 @@ version: "1.0"
 module: locative-expanded
 level: a2
 
+# NOTE — these are SHAPE examples. The real targets are at the top of this prompt
+# (12 total / 4–6 inline / 8–11 workbook,
+# 8+ items per activity). The shapes below are TRUNCATED for readability;
+# YOUR output MUST hit those minimums.
+
 inline:
   - id: marker-id-here        # MUST match an <!-- INJECT_ACTIVITY: ... --> marker
     type: quiz                 # activity type
     instruction: "Оберіть правильний варіант"
-    items:
+    items:                     # ← real output: ≥ 8 items
       - question: "_____ стіл"
-        options: ["мій", "моя", "моє"]
+        options: ["мій", "моя", "моє", "мої"]
         correct: 0             # 0-based index
+      - question: "Це ____ книга."
+        options: ["мій", "моя", "моє", "мої"]
+        correct: 1
+      # ... add at least 8 items total — never stop at 1-2
 
   - id: another-marker-id
     type: fill-in
     instruction: "Вставте правильне слово"
-    items:
+    items:                     # ← real output: ≥ 8 items
       - sentence: "Це ____ кімната."
         answer: "моя"
         options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ вікно."
+        answer: "моє"
+        options: ["мій", "моя", "моє"]
+      # ... ≥ 8 items total
 
 workbook:
-  - type: match-up
+  - id: match-up-vocab
+    type: match-up
     instruction: "З'єднайте пари"
-    pairs:
+    pairs:                     # ← real output: ≥ 8 pairs
       - left: "стіл"
         right: "він"
       - left: "книга"
         right: "вона"
       - left: "вікно"
         right: "воно"
+      # ... ≥ 8 pairs total
 
-  - type: group-sort
+  - id: group-sort-gender
+    type: group-sort
     instruction: "Розподіліть слова за категоріями"
     groups:
-      - label: "Category A"
-        items: ["word1", "word2"]
-      - label: "Category B"
-        items: ["word3", "word4"]
+      - label: "Чоловічий рід"
+        items: ["стіл", "олівець", "будинок"]   # ≥ 3 items per group
+      - label: "Жіночий рід"
+        items: ["книга", "ручка", "школа"]
+      - label: "Середній рід"
+        items: ["вікно", "море", "молоко"]
 
-  - type: true-false
+  - id: true-false-grammar
+    type: true-false
     instruction: "Правда чи ні?"
-    items:
-      - statement: "Statement here"
-        correct: true
-        explanation: "Why it's true"
+    items:                     # ← real output: ≥ 8 items
+      - statement: "«Книга» — це чоловічий рід."
+        correct: false
+        explanation: "Книга закінчується на -а, отже жіночий рід."
+      # ... ≥ 8 items total
 
   - type: error-correction
     instruction: "Виправте помилку"
@@ -398,7 +449,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -489,10 +540,15 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 ## Quality Rules
 
-**ITEM COUNT MINIMUMS (non-negotiable):**
-- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
-- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
-- If you can't think of enough items, add more examples from the module's vocabulary and content.
+**ACTIVITY COUNT MINIMUMS (non-negotiable, audit-enforced):**
+- **Total: 12 activities.** Inline: 4–6. Workbook: 8–11. The audit gate FAILS the module if you ship fewer.
+- **Type diversity: workbook MUST cover ≥5 distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
+- **Match the inline markers exactly.** Every `<!-- INJECT_ACTIVITY: id -->` marker in the prose needs a matching inline activity with that exact id. Skipping markers means the lesson tab is broken.
+
+**ITEM COUNT MINIMUMS (non-negotiable, per-activity):**
+- **Default minimum: 8 items per activity.** Quiz, fill-in, match-up, true-false, anagram, error-correction, translate, cloze, mark-the-words, divide-words, count-syllables, odd-one-out, group-sort categories: all ≥ 8.
+- **Lower minimums for specific types only:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items, essay-response/critical-analysis = 1 prompt.
+- If you can't think of enough items, add more examples from the module's vocabulary and content. NEVER ship a 1-item or 2-item activity unless its type cap explicitly allows it.
 - **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
 - **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
@@ -599,6 +655,27 @@ IMPORTANT: After using tools, output your COMPLETE module content as plain text.
 1. Run `verify_words` on all Ukrainian words in your exercises — every word must exist in VESUM
 2. Run `query_cefr_level` on any word you're unsure about — it must be a2-appropriate
 3. For fill-in answers and distractors, verify the exact form (case, number, gender) with `verify_lemma`
+
+---
+
+## ⚠️ MANDATORY FINAL CHECKLIST — verify before emitting YAML
+
+Walk through this checklist explicitly before you start emitting. If ANY box is unchecked, fix it FIRST.
+
+- [ ] My output has **at least 4** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
+- [ ] My output has **at least 8** workbook activities.
+- [ ] **Total ≥ 12.**
+- [ ] **Every** activity has **at least 8** items, pairs, or statements (except types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3, essay-response=1).
+- [ ] The module (inline + workbook combined) uses **at least 0 distinct activity types** (or 4+ when 0 = 0 and the workbook size allows it). I am NOT shipping a wall of quizzes.
+- [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
+- [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
+- [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+- [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+- [ ] My inline count is between 4 and 6. I did NOT create more injection markers than 6.
+- [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
+- [ ] At B1+, all instructions are in Ukrainian (no English fallback).
+
+If you cannot tick all of these, REGENERATE the activities BEFORE outputting. Shipping under-spec means the build rejects you and the heal loop has to redo your work — wasting compute.
 
 ---
 

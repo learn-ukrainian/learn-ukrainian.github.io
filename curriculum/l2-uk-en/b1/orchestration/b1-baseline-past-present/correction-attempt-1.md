@@ -2,8 +2,6 @@
 CRITICAL: Your previous attempt failed the following checks. Fix ONLY the listed errors. Keep everything else exactly as is — do not rewrite sections that are working correctly.
 
 - FIX: Missing section heading: 'Підсумок: від знання до вживання'
-- NOTE: Missing 1/12 required vocab: зворотний (reflexive — verbs with -ся/-сь)
-- NOTE: Plan expects 6 exercise(s) but content has 5
 </correction_directive>
 
 LEARNINGS FROM PAST BUILDS (same error patterns seen before):

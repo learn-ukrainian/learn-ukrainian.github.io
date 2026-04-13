@@ -159,118 +159,71 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Діалоги — Dialogues
+## Діалоги (Dialogues)
 
-An international student mixer at a university in Kyiv is the perfect place to hear a symphony of languages and accents. When people from different backgrounds gather in one room, the most natural icebreaker is finding out where everyone comes from. In Ukrainian, asking about someone's origin is a direct, essential communicative skill. You will hear the question **Звідки ти?** (Where are you from?) echoing across the room as students connect, share their stories, and learn about each other's homes. The ability to state your origin confidently is your passport to deeper conversations. 
+Imagine you are at an international student mixer at a university in **Київ** (Kyiv). People are chatting, sharing their origins, and talking about where they live now. This is the perfect setting to practice asking where someone is from. 
 
-> **Джон:** Звідки ти? *(Where are you from?)*
-> **Максим:** Я з України, з Києва. А ти? *(I am from Ukraine, from Kyiv. And you?)*
-> **Джон:** Я з Канади, із Торонто. *(I am from Canada, from Toronto.)*
-> **Максим:** Давно тут? *(Have you been here long?)*
-> **Джон:** Ні, я приїхав місяць тому. *(No, I arrived a month ago.)*
+In this situation, the most important phrase you need is **звідки ти** (where from are you). Let us listen to a conversation between two students meeting for the first time. Pay attention to the prepositions they use when naming their home countries and cities.
 
-The core interaction for stating your origin revolves around the question **Звідки ти?** (Where are you from?). Notice how the response is constructed: **Я з...** (I am from...). In Ukrainian, the present tense verb for "to be" is almost always omitted in these standard phrases. You do not need to say "I am," you simply state your pronoun, the preposition, and the place. The structure **Я з України** (I am from Ukraine) is a complete, grammatically correct sentence that you can use immediately. When talking about a specific city, you simply add it to the phrase, such as **Я з України, з Києва** (I am from Ukraine, from Kyiv).
+> **Олег:** Привіт! Я Олег. А тебе як звати? *(Hi! I am Oleh. And what is your name?)*
+> **Марк:** Мене звати Марк. *(My name is Mark.)*
+> **Олег:** Дуже приємно, Марк. **Звідки ти?** *(Very nice to meet you, Mark. Where are you from?)*
+> **Марк:** Я **з Канади** (from Canada), **із Торонто**. А ти? *(I am from Canada, from Toronto. And you?)*
+> **Олег:** Я **з України** (from Ukraine), **з Києва**. Давно тут? *(I am from Ukraine, from Kyiv. Have you been here long?)*
+> **Марк:** Ні, я приїхав місяць тому. *(No, I arrived a month ago.)*
 
-> **Анна:** Звідки ти йдеш? *(Where are you coming from?)*
-> **Марко:** Я йду з роботи. *(I am coming from work.)*
-> **Анна:** А Олена? *(And Olena?)*
-> **Марко:** Вона йде зі школи. *(She is coming from school.)*
-> **Анна:** Куди вона йде? *(Where is she going?)*
-> **Марко:** Додому. *(Home.)*
+Notice how the question is formed with one word: **звідки**. The answer begins with the preposition **з** (from) or **із**, followed by the place name. Many country and city names change their endings to indicate origin, while some names, such as **Торонто**, stay the same.
 
-This second conversation highlights a shorter exchange about physical movement. We are contrasting the origin point — coming from work or from school — with the destination. You use the exact same preposition to describe walking away from a building as you do when stating the country you were born in.
+We can also ask about movement from everyday places, not just geographic origins. If you see a friend walking on the street, you might want to know where they are coming from right now. 
 
-## Звідки? — Where From?
+In this next dialogue, two friends meet outside. Listen to how they talk about their current movement and destinations.
 
-Ukrainian categorizes spatial relations and movement into three distinct, logical questions: **Де?** (Where are you?), **Куди?** (Where are you going?), and **Звідки?** (Where are you from?). Think of this as the "Location Trio." If we take a country like **Україна** (Ukraine), it changes its shape depending on which of the three questions you are answering. At this A1 level, you will learn to use these combinations as memorized chunks, while the full grammatical rules of the genitive case will be covered in A2.
+> **Ганна:** Привіт, Тарасе! **Звідки** ти йдеш? *(Hi, Taras! Where are you coming from?)*
+> **Тарас:** Привіт! Я йду **з роботи** (from work). А ти? *(Hi! I am walking from work. And you?)*
+> **Ганна:** Я йду **з магазину**. А де Олена? *(I am walking from the store. And where is Olena?)*
+> **Тарас:** Вона йде **зі школи**. *(She is walking from school.)*
+> **Ганна:** Куди вона йде? *(Where is she going?)*
+> **Тарас:** Вона йде **додому** (home). *(She is going home.)*
 
-*   **Де ти? — В Україні.** (Where are you? — In Ukraine.) This uses the locative case to show exactly where you ARE.
-*   **Куди ти їдеш? — В Україну.** (Where are you traveling to? — To Ukraine.) This uses the accusative case to show where you are GOING.
-*   **Звідки ти? — З України.** (Where are you from? — From Ukraine.) This is a genitive chunk, showing the point where you are FROM.
+Here, the pattern is exactly the same: **звідки** asks the question, and the preposition **з** or **зі** shows the starting point of the movement.
 
-To express this origin, you need a preposition. Just as you learned in Module 28, Ukrainian applies euphony rules to make speech flow smoothly. The basic preposition for "from" is **з**, and you will use it before most vowels and consonants, like **з Канади** (from Canada). If the next word starts with a sibilant sound (like s, sh, or z), you switch to **із** for easier pronunciation, as in **із США** (from the USA). For specific difficult consonant clusters, especially those starting with z, s, or sh, you use **зі**, which is why we say **зі Львова** (from Lviv).
+## Звідки? (Where From?)
 
-:::note
-You do not need to memorize complex euphony rules for **з**, **із**, and **зі** right now. Focus on learning the correct combinations as single blocks of vocabulary, like **зі США** (from the USA).
-:::
+You now have the complete trio of spatial questions in Ukrainian. These three questions form the foundation of how we talk about location and movement. We ask **Де ти?** (Where are you?) when talking about a static location, like **в Україні** (in Ukraine). We ask **Куди ти їдеш?** (Where are you going?) for a destination, like **в Україну** (to Ukraine). Finally, we ask **Звідки ти?** (Where are you from?) to find out the origin, like **з України** (from Ukraine). The same trio works with cities too: **в Києві** (in Kyiv), **в Київ** (to Kyiv), **з Києва** (from Kyiv).
 
-When you use this preposition, the noun that follows it must change its ending. Feminine nouns ending in **-а** change to **-и**: **Україна** becomes **з України**, **Канада** becomes **з Канади**, and **Одеса** becomes **з Одеси**. Feminine nouns ending in **-я** change to **-ї**: **Англія** becomes **з Англії**. Masculine place names ending in a consonant usually add an **-а**: **Київ** becomes **з Києва**, and **Харків** becomes **з Харкова**. These predictable patterns allow you to comfortably form the origin phrase for most common locations without needing to memorize a complex table.
+The question **Звідки ти?** translates to "Where are you from?", but it works differently than in English. First, it is a complete sentence all on its own. In Ukrainian, we do not need a verb like "to be" for this question. Second, the interrogative word **звідки** is a single, solid unit that cannot be split apart. You cannot put a preposition at the end of the sentence. The standard answer is simply **Я з** followed by your place of origin.
 
-:::caution
-English relies heavily on the verb "to be" to express location, but Ukrainian relies on prepositions and case endings. Never say **Я в України** to mean "I am from Ukraine" — always use **з** for your origin.
-:::
+To answer this question correctly, you use the pattern **з / із / зі** (from) followed by a specific form of the noun, which belongs to the genitive case. At this early stage, the best strategy is to memorize these common origins as fixed chunks. For cities, you will say **з Києва** (from Kyiv), **зі Львова** (from Lviv), **з Одеси** (from Odesa), or **з Харкова** (from Kharkiv). For everyday places in town, the pattern is the same: **з роботи** (from work), **зі школи** (from school), **з магазину** (from the store), or **з банку** (from the bank).
 
-<!-- INJECT_ACTIVITY: answer-zvidky -->
+You have likely noticed that the preposition changes its shape. Ukrainian uses euphony rules to make speech flow smoothly and avoid awkward clusters of sounds. The basic form **з** is used before most vowels and simple consonants, as in **з Канади** or **з України**. The variant **із** helps with pronunciation before certain letters, like **із Торонто**. Finally, we use **зі** before difficult consonant clusters or specific tricky sounds, such as **зі Львова**, **зі школи**, and **зі США**.
 
-The question **Звідки?** is used for much more than just international geography. You will use it constantly in your daily life to explain your routine movements. The same exact pattern applies to everyday locations in your city. When you finish your shift, you are walking **з роботи** (from work). After buying groceries, you are coming **з магазину** (from the store). When you finish your financial tasks, you step out **з банку** (from the bank). And when classes end, a student walks **зі школи** (from school).
+<!-- INJECT_ACTIVITY: fill-in-where-from -->
+<!-- INJECT_ACTIVITY: group-sort-location-trio -->
 
-<!-- INJECT_ACTIVITY: location-trio-sort -->
+## Країни і міста (Countries and Cities)
 
-## Країни і міста — Countries and Cities
+When discussing origins, it is helpful to know the names of major Ukrainian cities and how they change after the preposition. The capital is **Київ**, and someone from there says **Я з Києва**. A resident of **Львів** will say **Я зі Львова**. For the southern coastal city of **Одеса**, the origin form is **з Одеси**. A person from the eastern city of **Харків** says **Я з Харкова**. Other major centers include **Дніпро**, which becomes **з Дніпра**, and **Запоріжжя**, which takes the form **із Запоріжжя**.
 
-Major Ukrainian cities provide excellent practice for forming these origin phrases. The capital city is **Київ** (Kyiv), so you would say **з Києва** (from Kyiv). The cultural hub of the west is **Львів** (Lviv), which becomes **зі Львова** (from Lviv). The southern port is **Одеса** (Odesa), forming **з Одеси** (from Odesa). In the east, we have **Харків** (Kharkiv), which changes to **з Харкова** (from Kharkiv). The central city of **Дніпро** (Dnipro) becomes **з Дніпра** (from Dnipro), and the southeastern industrial center **Запоріжжя** (Zaporizhzhia) becomes **із Запоріжжя** (from Zaporizhzhia).
+You will also want to know how to state your home country. We have already seen **Україна**, which becomes **з України**, and **Канада**, which changes to **з Канади**. Other very common countries include **США** (USA), which uses the special form **зі США**. For European nations, **Англія** (England) becomes **з Англії**, **Німеччина** (Germany) is **з Німеччини**, and **Польща** (Poland) becomes **з Польщі**. Further away, **Франція** (France) changes to **з Франції**, **Італія** (Italy) is **з Італії**, and **Японія** (Japan) becomes **з Японії**.
 
-:::tip
-The name **Україна** historically means "land," "region," or "our country." It is not a "borderland," as Russian imperialist myths have tried to claim. And its capital, **Київ**, has always been the historical heart of this land.
-:::
+Your geographic origin is often the first step in describing your identity. This connects directly to the nationalities and languages you learned earlier. There is a logical, three-step progression when introducing yourself to a new group of people. First, you state your origin: **Я з України** (I am from Ukraine). Next, you state your nationality: **Я українець** or **Я українка** (I am Ukrainian). Finally, you state your primary language: **Я говорю українською** (I speak Ukrainian). This full sequence gives a complete picture of who you are.
 
-When interacting in international environments, you will also need to recognize common country names. If someone asks where you are from, you might need to say you are from Canada: **Канада** (Canada) becomes **з Канади** (from Canada). The United States is usually abbreviated, giving us **зі США** (from the USA) or occasionally **зі Штатів** (from the States). Other frequent European nations include **Англія** (England), which forms **з Англії** (from England), and **Німеччина** (Germany), which becomes **з Німеччини** (from Germany). You might also meet people from neighboring **Польща** (Poland), saying **з Польщі** (from Poland), or from further away like **Франція** (France), making **із Франції** (from France), **Італія** (Italy), making **з Італії** (from Italy), and **Японія** (Japan), which changes to **з Японії** (from Japan).
+People frequently move, so you will often need to contrast your current location with your origin. To do this naturally, you can join two facts together using the conjunction **але** (but). You state your current location using **в** or **на** plus the locative ending, and then state your origin using **з** plus the genitive form. For example, a student might explain: **Я живу в Києві, але я зі Львова** (I live in Kyiv, but I am from Lviv).
 
-Your origin is deeply connected to your identity and the language you speak. We can review concepts from Module 05 and link them to the new origin pattern. Notice how these phrases flow together in a logical sequence.
-
-*   **Мене звати Петро.** (My name is Petro.)
-*   **Я з України.** (I am from Ukraine.)
-*   **Я українець.** (I am a Ukrainian man.)
-*   **Я говорю українською.** (I speak Ukrainian.)
-
-We can contrast this with someone from a different background:
-
-*   **Мене звати Джон.** (My name is John.)
-*   **Я з Англії.** (I am from England.)
-*   **Я англієць.** (I am an Englishman.)
-*   **Я говорю англійською.** (I speak English.)
-
-<!-- INJECT_ACTIVITY: preposition-quiz -->
-
-Often, where you are from is not where you are right now. You can combine your origin and your current location in a single sentence to tell a richer story about yourself. To do this, use the conjunction **але** (but) and the adverb **зараз** (now). This is an excellent way to practice both the "from" pattern and the "in" pattern together. 
-
-*   **Я живу в Києві, але я зі Львова.** (I live in Kyiv, but I am from Lviv.)
-*   **Вона з Канади, але зараз вона живе в Україні.** (She is from Canada, but now she lives in Ukraine.)
-
-<!-- INJECT_ACTIVITY: location-contrast -->
+<!-- INJECT_ACTIVITY: fill-in-contrast-location-origin -->
 
 ## Підсумок — Summary
 
-You now have a complete, functional system for describing spatial relations and movement in Ukrainian. A review of the three core questions will solidify this system. 
+This module has given you the final piece of the spatial puzzle in Ukrainian. You now have a complete toolkit for talking about where things happen, where things are going, and where things come from. Remember the three fundamental questions and their grammatical pairs. When asking **Де?** (Where at?), use the prepositions **в** or **на** with the static locative case, as in **В Україні**. When asking **Куди?** (Where to?), use **в** or **на** with the accusative case to show direction, as in **В Україну**. Finally, when asking **Звідки?** (Where from?), use the prepositions **з**, **із**, or **зі** with a memorized genitive chunk, as in **З України**.
 
-When you want to express a static location, you ask **Де?** (Where?). The answer usually requires the prepositions **в** or **на** and the locative case, such as **в Україні** (in Ukraine). 
+To describe your origin, you will always rely on the prepositions **з**, **із**, or **зі**, depending on the sounds that follow them. This small change ensures that your speech remains smooth and natural. Always remember that Ukrainian spatial questions like **звідки** are single, independent words. Unlike English, where you might ask a question that ends with a dangling preposition, Ukrainian keeps the concept of origin tightly bound into one compact interrogative word.
 
-When you want to talk about a destination, you ask **Куди?** (Where to?). The answer also uses **в** or **на** but with the accusative case, such as **в Україну** (to Ukraine). 
+Before you move forward, take a moment to answer these three practical self-check questions. First, consider the question: **Звідки ти?** (Where are you from?). Think of the name of your home country and your home city, and practice saying them out loud using the correct form of **з**, **із**, or **зі**. Second, ask yourself: **Де ти зараз живеш?** (Where do you live now?). Picture your current city or town, and formulate a sentence using **в** or **на** to describe this static location. Finally, think about your immediate plans and ask: **Куди ти йдеш після цього уроку?** (Where are you going after this lesson?). Decide on your destination and express that movement using **в** or **на**, or use the single directional word **додому** if you are heading back to your house.
 
-Finally, when you are talking about an origin, you ask **Звідки?** (Where from?). The answer requires the prepositions **з**, **із**, or **зі** plus a genitive chunk, like **з України** (from Ukraine).
-
-Here is a summary of the most frequent city and country changes you learned in this module:
-*   **Україна** → **з України**
-*   **Канада** → **з Канади**
-*   **Німеччина** → **з Німеччини**
-*   **Київ** → **з Києва**
-*   **Львів** → **зі Львова**
-*   **Харків** → **з Харкова**
-
-To ensure you have mastered these concepts, try to answer the following self-check questions out loud. Use your own real-world information where possible.
-
-*   **Звідки ти?** (Where are you from?) → **Я з...**
-*   **Звідки твій друг?** (Where is your male friend from?) → **Він з...**
-*   **Звідки твоя подруга?** (Where is your female friend from?) → **Вона з...**
-*   **Ти зараз у Києві чи у Львові?** (Are you in Kyiv or in Lviv right now?) → **Я зараз у...**
-*   **Звідки ти йдеш зараз?** (Where are you coming from right now?) → **Я йду з...**
-*   **Де ти живеш?** (Where do you live now?) → **Я живу в...**
-*   **Куди ти йдеш після уроку?** (Where are you going after this lesson?) → **Я йду в/на...**
-
-By mastering the question **Звідки?**, you have unlocked the final piece of the basic location puzzle. You can now confidently describe where you are, where you are heading, and where you came from. In the next module, Checkpoint — Places, you will review and consolidate all of this spatial vocabulary before moving on to new topics.
+<!-- INJECT_ACTIVITY: quiz-preposition-choice -->
 </generated_module_content>
 
-**PIPELINE NOTE — Word count: 1597 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
+**PIPELINE NOTE — Word count: 1406 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -446,15 +399,14 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 51 words | Not found: 29 words
+Verified: 47 words | Not found: 30 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
   ✗ Італія — NOT IN VESUM
   ✗ Італії — NOT IN VESUM
   ✗ Англія — NOT IN VESUM
   ✗ Англії — NOT IN VESUM
-  ✗ Анна — NOT IN VESUM
-  ✗ Джон — NOT IN VESUM
+  ✗ Ганна — NOT IN VESUM
   ✗ Дніпра — NOT IN VESUM
   ✗ Дніпро — NOT IN VESUM
   ✗ Запоріжжя — NOT IN VESUM
@@ -462,16 +414,18 @@ Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dic
   ✗ Канади — NOT IN VESUM
   ✗ Києва — NOT IN VESUM
   ✗ Львова — NOT IN VESUM
-  ✗ Львові — NOT IN VESUM
   ✗ Львів — NOT IN VESUM
+  ✗ Марк — NOT IN VESUM
   ✗ Німеччина — NOT IN VESUM
   ✗ Німеччини — NOT IN VESUM
   ✗ Одеса — NOT IN VESUM
   ✗ Одеси — NOT IN VESUM
+  ✗ Олег — NOT IN VESUM
   ✗ Олена — NOT IN VESUM
-  ✗ Петро — NOT IN VESUM
   ✗ Польща — NOT IN VESUM
   ✗ Польщі — NOT IN VESUM
+  ✗ Тарас — NOT IN VESUM
+  ✗ Тарасе — NOT IN VESUM
   ✗ Торонто — NOT IN VESUM
   ✗ Франція — NOT IN VESUM
   ✗ Харкова — NOT IN VESUM
@@ -479,32 +433,163 @@ Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dic
   ✗ Японія — NOT IN VESUM
   ✗ Японії — NOT IN VESUM
 
-All 51 other words are confirmed to exist in VESUM.
+All 47 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
-## Verification Tools (MCP)
+---
 
-You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
+## Verification Tools (Shell Commands)
 
-**Core Verification:**
-- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
-- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
+You have access to verification tools via shell commands. Use these to verify
+Ukrainian vocabulary, check grammar, and search textbook content **as you write**.
 
-**Content Quality:**
-- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+**IMPORTANT:** Run verification commands BEFORE finalizing any Ukrainian text.
+Batch multiple verifications together to minimize round-trips.
 
-**Reference:**
-- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp_rag_search_literary` — verify literary references against primary sources
-- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
+### 1. Batch-verify Ukrainian words exist in VESUM (preferred — one call for many words)
 
-**Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_words
+results = verify_words(['слово1', 'слово2', 'слово3'])
+for w, matches in results.items():
+    if matches:
+        print(f'{w}: FOUND — lemma={matches[0][\"lemma\"]}, pos={matches[0][\"pos\"]}')
+    else:
+        print(f'{w}: NOT FOUND — may not exist in standard Ukrainian')
+"
+```
+
+### 2. Verify a single Ukrainian word in VESUM (with full morphological tags)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_word
+results = verify_word('WORD_HERE')
+if results:
+    for m in results:
+        print(f'lemma={m[\"lemma\"]}, pos={m[\"pos\"]}, tags={m[\"tags\"]}')
+else:
+    print('NOT FOUND in VESUM')
+"
+```
+
+### 3. Get all inflected forms of a lemma (declension/conjugation)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_lemma
+forms = verify_lemma('LEMMA_HERE')
+for f in forms[:20]:
+    print(f'{f[\"word_form\"]:20s} {f[\"pos\"]:8s} {f[\"tags\"]}')
+print(f'... {len(forms)} forms total')
+"
+```
+
+### 4. Check CEFR level of a word (is it level-appropriate?)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import query_cefr_level
+results = query_cefr_level('WORD_HERE')
+for r in results:
+    print(f'{r[\"word\"]}: {r[\"level\"]} ({r[\"pos\"]})')
+if not results:
+    print('Not in CEFR database')
+"
+```
+
+### 5. Search textbook content (Ukrainian school textbooks, Grades 1-11)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_textbooks
+keywords = {'keyword1', 'keyword2'}
+results = search_textbooks(keywords, 5)
+for r in results:
+    title = r.get('section_title', r.get('title', ''))
+    grade = r.get('grade', '?')
+    text = r.get('text', '')[:200]
+    print(f'Grade {grade} | {title}')
+    print(f'  {text}')
+    print()
+"
+```
+
+### 6. Search style guide for calques/Russianisms (Антоненко-Давидович, 279 entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_style_guide
+results = search_style_guide('TOPIC_HERE', 3)
+for r in results:
+    print(f'--- {r.get(\"word\", \"\")} [{r.get(\"section\", \"\")}]')
+    print(r.get('text', '')[:300])
+    print()
+if not results:
+    print('No style guide entries found')
+"
+```
+
+### 7. Look up word definition in СУМ-11 (Ukrainian explanatory dictionary, 127K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_definitions
+results = search_definitions('WORD_HERE', 3)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+### 8. Search idioms (Фразеологічний словник, 25K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_idioms
+results = search_idioms('WORD_HERE', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"text\", r.get(\"definition\", \"\")))[:200]}')
+"
+```
+
+### 9. English-to-Ukrainian translation (Балла, 79K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import translate_en_uk
+results = translate_en_uk('ENGLISH_WORD', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+---
+
+**WHEN to use these tools:**
+
+1. **Before writing any Ukrainian text** — batch-verify all key vocabulary with
+   `verify_words` (tool 1). Any word that returns NOT FOUND must be replaced.
+2. **When you suspect a Russicism or calque** — search the style guide (tool 6)
+   and verify the correct Ukrainian form with `verify_word` (tool 2).
+3. **When writing for A1/A2** — check CEFR levels (tool 4) to ensure vocabulary
+   is level-appropriate.
+4. **When unsure about a case ending or conjugation** — use `verify_lemma` (tool 3)
+   to see the full paradigm.
+5. **When covering a grammar topic** — search textbooks (tool 5) to see how
+   Ukrainian school textbooks teach it.
+6. **When you need the precise Ukrainian meaning** — use СУМ-11 (tool 7).
+7. **When looking for natural Ukrainian expressions** — search idioms (tool 8).
+
+**Batching rule:** Collect all words you want to verify, then run ONE `verify_words`
+call instead of multiple `verify_word` calls. This is faster and uses fewer tokens.

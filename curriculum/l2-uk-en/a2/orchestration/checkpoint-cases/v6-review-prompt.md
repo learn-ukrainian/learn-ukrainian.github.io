@@ -116,127 +116,209 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Вступ: Весільний квест та компас відмінків
-
-Ласкаво просимо до фінального випробування рівня A2! Ця **контрольна точка** (checkpoint) — час перевірити, як добре ви орієнтуєтеся у світі відмінків та множини. Це ваша головна **перевірка** (review). Ви вже знаєте, як іменники змінюють свої закінчення залежно від їхньої ролі в реченні. Ваш **компас відмінків** (case compass) з модуля 31 залишається головним інструментом навігації. Ми синтезуємо все, що ви знаєте про такі категорії, як **однина** (singular) та **множина** (plural). 
-
-> **Наречена:** **Олено!** Ти маєш хвилину? *(Olena! Do you have a minute?)*
-> **Подруга:** Привіт! Так, звичайно. Що сталося? *(Hi! Yes, of course. What happened?)*
-> **Наречена:** Я планую весілля. Це такий стрес! Я пишу **запрошення для гостей**. *(I am planning a wedding. It is such stress! I am writing invitations for the guests.)*
-> **Подруга:** О, це чудово! Я вже маю **подарунок нареченій**. *(Oh, that is wonderful! I already have a gift for the bride.)*
-> **Наречена:** Дякую! Я так хочу, щоб усе було ідеально. Коли я **бачу наречену** в кіно, вона завжди спокійна. *(Thank you! I want everything to be perfect so much. When I see a bride in a movie, she is always calm.)*
-> **Подруга:** Ти теж будеш спокійною. Уяви: красивий ресторан, музика, ти танцюєш **з молодятами**... Ой, тобто зі своїм чоловіком! *(You will be calm too. Imagine: a beautiful restaurant, music, you are dancing with the newlyweds... Oh, I mean with your husband!)*
-> **Наречена:** Так, **на весіллі** всі будуть танцювати. *(Yes, at the wedding everyone will dance.)*
-
-This dialogue naturally uses all seven Ukrainian cases. We see the Vocative (**Олено**), Nominative (**весілля**), Genitive (**для гостей**), Dative (**нареченій**), Accusative (**наречену**), Instrumental (**з молодятами**), and Locative (**на весіллі**). Every noun adapts to its specific environment.
-
 ## Частина 1: Форми множини (Part 1: Plural Forms)
 
-First, consider the Nominative plural — the dictionary form for multiple items. The ending depends on the noun's gender and whether its stem ends in a hard or soft consonant. For the hard group, masculine and feminine nouns take **-и**: **столи** (tables), **книжки** (books). Soft group nouns take **-і** or **-ї**: **дні** (days), **землі** (lands). Neuter nouns change completely, taking **-а** or **-я**: **вікна** (windows), **моря** (seas). Remember the "high priority trio" of irregular plurals: **друг** (friend) becomes **друзі**, **людина** (person) becomes **люди**, and **дитина** (child) becomes **діти**.
-- Тут живуть мої **друзі**. (My friends live here.)
-- Це нові **столи** та **книжки**. (These are new tables and books.)
-- У кімнаті великі **вікна**. (There are big windows in the room.)
-- Мої **батьки** дуже добрі. (My parents are very kind.)
+Welcome to this **контрольна точка** (checkpoint). Today, our goal is a comprehensive **перевірка** (check, review) of your skills. We will look at how the Ukrainian language changes words in the **множина** (plural). The plural in Ukrainian affects every **відмінок** (grammatical case), not just the Nominative. When you move from **однина** (singular) to plural, the endings change entirely. This is essential for talking about groups of people, daily routines, and quantities.
 
-The Genitive plural is the "wall" that many learners hit. It is the hardest form, but also the most common. For feminine and neuter nouns, the ending simply disappears — this is the zero ending. **Книга** (book) becomes **книг**, and **місто** (city) becomes **міст**. Most masculine nouns take the **-ів** ending: **студент** (student) becomes **студентів**. Sometimes, dropping the ending creates a difficult consonant cluster. To fix this, Ukrainian inserts a "fleeting vowel" (**вставний голосний**). **Земля** (land) becomes **земель**, **вікно** (window) becomes **вікон**, and **дошка** (board) becomes **дощок**.
-- У мене немає **книг**. (I do not have books.)
-- У групі багато **студентів**. (There are many students in the group.)
-- Я бачу п'ять **вікон**. (I see five windows.)
-- На столі немає **тарілок**. (There are no plates on the table.)
+> **Наталя:** Де мої речі? *(Where are my things?)*
+> **Олег:** Твої речі лежать там. *(Your things are lying there.)*
+> **Наталя:** А де мої книги і зошити? *(And where are my books and notebooks?)*
+> **Олег:** Вони на столі. *(They are on the table.)*
 
-Some nouns have a fixed number. They are either Pluralia Tantum (plural only) or Singularia Tantum (singular only). Everyday items that consist of two parts are often plural-only: **гроші** (money), **окуляри** (glasses), **штани** (pants), **двері** (doors). Geographical names like **Карпати** (Carpathians) are also plural-only. Remember that verbs and adjectives must agree with them in the plural: "Гроші **були** на столі" (The money was on the table — literally "they were"). Some nouns are collective singulars, like **молодь** (youth) or **людство** (humanity).
-- Мої нові **штани** дуже зручні. (My new pants are very comfortable.)
-- **Гроші** лежать у сумці. (The money lies in the bag.)
-- Сучасна **молодь** любить технології. (Modern youth loves technology.)
-- Вона відчиняє великі **двері**. (She opens the big doors.)
+First, let's review the Nominative plural endings. Most nouns take «-и», «-і/ї», or «-а/я». 
 
-A few nouns use special suffixal plurals. Baby animals and some abstract concepts belong to the fourth declension and add **-ат-** / **-ят-** or **-ен-** in the plural. **Курча** (chick) becomes **курчата**, **кошеня** (kitten) becomes **кошенята**, and **ім'я** (name) becomes **імена**. Ukrainian also preserves remnants of the ancient dual number. "Double body parts" take the unique **-има** ending in the Instrumental case: **очима** (with eyes), **плечима** (with shoulders), **вушима** (with ears).
-- У дворі граються **кошенята**. (Kittens are playing in the yard.)
-- Я бачу це своїми **очима**. (I see this with my own eyes.)
-- Які ваші **імена**? (What are your names?)
+> Ось мій **стіл**. Там стоять великі **столи**. *(Here is my table. Big tables stand there.)*
+> Це наша **земля**. Ми любимо наші **землі**. *(This is our land. We love our lands.)*
+> Це старе **місто**. Я люблю красиві **міста**. *(This is an old city. I love beautiful cities.)*
 
-The good news is that the Dative, Instrumental, and Locative plural endings are highly consistent across all genders. They are much easier to memorize than the Genitive plural. Dative takes **-ам** / **-ям**, Instrumental takes **-ами** / **-ями**, and Locative takes **-ах** / **-ях**.
-- Я даю їжу **кошенятам**. (I give food to the kittens.)
-- Ми гуляємо з **друзями**. (We are walking with friends.)
-- Книги лежать на **столах**. (The books lie on the tables.)
+However, some very common words have irregular forms. These are worth memorizing early because they appear often in everyday Ukrainian:
+- **друг** (friend) changes to **друзі** (friends).
+- **людина** (person) changes to **люди** (people).
+- **дитина** (child) changes to **діти** (children).
+- **око** (eye) changes to **очі** (eyes).
 
-<!-- INJECT_ACTIVITY: nominative-plural-forms -->
-<!-- INJECT_ACTIVITY: genitive-plural-challenge -->
-<!-- INJECT_ACTIVITY: quantity-genitive-pl -->
+> Мої **друзі** хочуть знімати квартиру разом. *(My friends want to rent an apartment together.)*
+> На вулиці стоять невідомі **люди**. *(Unknown people are standing on the street.)*
+> Маленькі **діти** граються у парку. *(Little children are playing in the park.)*
+> У неї красиві блакитні **очі**. *(She has beautiful blue eyes.)*
+
+Your **завдання** (task, exercise) is to form the Nominative plural for these ten singular nouns: **книга, зошит, вікно, студент, ніч, море, дитина, людина, око, друг**. Write the plural form next to each word, then group the answers by ending pattern.
+
+Next, we review the complex Genitive plural forms. These are often considered the hardest. Many feminine and neuter nouns take a "zero ending" (they lose their final vowel). For example, «книга» becomes «книг», and «місто» becomes «міст». Sometimes, a fleeting vowel appears to make pronunciation easier: «земля» becomes «земель». 
+
+> У бібліотеці дуже багато **книг**. *(There are very many books in the library.)*
+> В Україні багато великих **міст**. *(There are many large cities in Ukraine.)*
+> Ми купили багато солодких **яблук**. *(We bought many sweet apples.)*
+
+Most masculine nouns take the «-ів» ending.
+> В університеті тисячі **студентів**. *(There are thousands of students at the university.)*
+> На столі лежить п'ять **олівців**. *(Five pencils lie on the table.)*
+> У нас немає нових **комп'ютерів**. *(We do not have new computers.)*
+> Ми знаємо назви п'яти **морів**. *(We know the names of five seas.)*
+
+Finally, some nouns take the «-ей» ending.
+> Вони працювали п'ять довгих **ночей**. *(They worked for five long nights.)*
+> У магазині є багато гарних **речей**. *(There are many nice things in the store.)*
+> Ми чекаємо важливих **гостей**. *(We are waiting for important guests.)*
+
+To master this, form the Genitive plural for these ten nouns: **книга, місто, ніч, море, студент, олівець, гість, яблуко, річ, теля**. Then compare your answers with the patterns above. Remember: **теля → телят**.
+
+We use the Genitive plural extensively with quantities and special nouns. After numbers five and higher, or words like **багато** (many) and **мало** (few), you must use the Genitive plural.
+> У мене є п'ять **років** досвіду. *(I have five years of experience.)*
+> На площі було багато **людей**. *(There were many people on the square.)*
+> У класі мало **учнів**. *(There are few students in the class.)*
+
+Some nouns only exist in the plural. These are called pluralia tantum. Examples include **гроші** (money), **окуляри** (glasses), and **штани** (pants). Since they are always plural, their Genitive forms are also plural: «грошей», «окулярів», «штанів». 
+> У мене немає **грошей**. *(I have no money.)*
+> Я не бачу без **окулярів**. *(I cannot see without glasses.)*
+> У магазині немає чорних **штанів**. *(There are no black pants in the store.)*
+
+Complete these quantity expressions with the correct Genitive plural forms:
+1. `п'ять ___` (студент)
+2. `багато ___` (місто)
+3. `скільки ___?` (книга)
+4. `мало ___` (гроші)
+5. `десять ___` (ніч)
 
 ## Частина 2: Який відмінок? (Part 2: Which Case?)
 
-Choosing the right **відмінок** (case) depends heavily on verb government. Every verb demands a specific case from its object. The verb **допомагати** (to help) requires the Dative case: "Я допомагаю **мамі**" (I help my mom). The verb **бачити** (to see) requires the Accusative case: "Я бачу **маму**" (I see my mom). **Користуватися** (to use) triggers the Instrumental case: "Я користуюся **телефоном**" (I use a phone). Always remember the contrast between a direct object (Accusative) and absence or quantity (Genitive). "Я маю **плани**" (I have plans - Accusative direct object). But negated: "Я не маю **планів**" (I do not have plans - Genitive of negation).
-- Ми часто дякуємо **батькам**. (We often thank our parents.)
-- Вони бачать високі **дерева**. (They see tall trees.)
-- Він користується новим **ноутбуком**. (He uses a new laptop.)
-- Вона дарує квіти **вчителю**. (She gives flowers to the teacher.)
+Choosing the correct case depends heavily on the verb. Different verbs govern different cases. For instance, the verb **допомагати** (to help) requires the Dative case. You are giving help "to" someone.
+> Я завжди допомагаю своїй **сестрі**. *(I always help my sister.)*
+> Син допомагає **батькові**. *(The son helps the father.)*
+> Ми радісно допомагаємо новим **друзям**. *(We gladly help new friends.)*
 
-Prepositions are your next major navigation tool. Double-case prepositions change their meaning based on the case. **У** or **в** with the Locative case means static location: "Я живу в **місті**" (I live in the city). With the Accusative case, it means direction: "Я їду в **місто**" (I am going into the city). The preposition **на** works the exact same way. The preposition **з** means origin when used with the Genitive: "Я з **України**" (I am from Ukraine). But it means company when used with the Instrumental: "Я йду з **братом**" (I am walking with my brother). The preposition **по** is used for movement along a surface or a schedule in the Locative: "йти по **вулицях**" (to walk along the streets), "по **суботах**" (on Saturdays).
-- Книги лежать на **полиці**. (The books lie on the shelf.)
-- Ми кладемо книги на **полицю**. (We are putting the books onto the shelf.)
-- Вона п'є каву з **молоком**. (She drinks coffee with milk.)
-- Вони гуляють по **парку**. (They walk through the park.)
+The verb **бачити** (to see) requires the Accusative case for direct objects.
+> Ми бачимо красивих **людей** на вулиці. *(We see beautiful people on the street.)*
+> Я бачу великий **будинок**. *(I see a big house.)*
 
-Special constructions also trigger specific cases. Time expressions often use the Accusative or Locative. Days of the week take the Accusative: **у четвер** (on Thursday). Hours of the day take the Locative: **о п'ятій годині** (at five o'clock). When describing appearance or characteristics, use the Locative or Instrumental: **хлопець у светрі** (the boy in the sweater), **дівчина з карими очима** (the girl with brown eyes). For path and means of transport, use the Instrumental without a preposition: **летіти літаком** (to fly by plane), **йти лісом** (to walk through the forest).
-- Ми зустрінемося **у п'ятницю**. (We will meet on Friday.)
-- Це **чоловік у капелюсі**. (This is the man in the hat.)
-- Вони подорожують **поїздом**. (They travel by train.)
+Meanwhile, the verb **користуватися** (to use) requires the Instrumental case.
+> Вона користується новим **словником**. *(She uses a new dictionary.)*
+> Вони щодня користуються **комп'ютерами**. *(They use computers every day.)*
 
-Error analysis is a crucial skill. You must distinguish between similar endings. For inanimate nouns, the Nominative and Accusative plural look identical: "Дерев'яні **столи** стоять тут" (Wooden tables stand here - Nominative subject). "Я бачу дерев'яні **столи**" (I see wooden tables - Accusative object). For animate nouns, the Accusative plural looks exactly like the Genitive plural: "Я бачу **друзів**" (I see friends). Watch out for direct translations that use the wrong case. In Ukrainian, **чекати** (to wait) takes the Genitive or Accusative, never the Dative. **Дякувати** (to thank) takes the Dative, never the Accusative.
-- Я бачу нові **будинки**. (I see new buildings.)
-- Вона любить своїх **котів**. (She loves her cats.)
-- Ми чекаємо **автобуса**. (We are waiting for the bus.)
+Prepositions also dictate case selection. The preposition «у» or «в» takes the Locative case when describing a location (answering the question "where?").
+> Вони живуть у **Чернівцях**. *(They live in Chernivtsi.)*
+> Мої старі книги лежать у **сумці**. *(My old books lie in the bag.)*
 
-Read this short text about a trip to identify cases in context:
-"Минулого року ми їздили в **Карпати** (Accusative - direction). У **Карпатах** (Locative - location) дуже красиво. Ми гуляли зеленими **лісами** (Instrumental - path) і пили воду з гірських **річок** (Genitive - origin). Наші **друзі** (Nominative - subject) робили багато **фотографій** (Genitive - quantity). Ми розповідали **людям** (Dative - recipient) про нашу подорож."
-Notice how "у Карпатах" shows location, while "в Карпати" shows direction. Every noun form has a specific trigger.
+However, it takes the Accusative case when describing direction or destination (answering the question "where to?").
+> Діти швидко йдуть в **школу**. *(The children are walking quickly to school.)*
+> Ми завтра їдемо у **Київ**. *(We are traveling to Kyiv tomorrow.)*
 
-<!-- INJECT_ACTIVITY: case-trigger-quiz -->
-<!-- INJECT_ACTIVITY: group-sort-noun-cases -->
-<!-- INJECT_ACTIVITY: mixed-error-hunt -->
+Similarly, the preposition «з» takes the Genitive case when showing origin (from where?).
+> Він приїхав з великого **міста**. *(He arrived from a big city.)*
+> Вона взяла книгу з дерев'яної **полиці**. *(She took the book from the wooden shelf.)*
+
+But it takes the Instrumental case when it means "with" (accompaniment).
+> Я гуляю з найкращими **друзями**. *(I am walking with my best friends.)*
+> Ми п'ємо чорний чай з **молоком**. *(We drink black tea with milk.)*
+
+The preposition «по» also commonly takes the Locative when we mean movement along a place or distribution across a surface.
+> Ми довго гуляли по **парку**. *(We walked around the park for a long time.)*
+> Книжки лежать по **полицях**. *(The books are lying on the shelves.)*
+
+<!-- INJECT_ACTIVITY: group-sort-cases -->
+
+Ukrainian uses special case constructions for specific meanings. For time expressions with days of the week or years, we use specific cases.
+> Ми зустрінемося у **четвер**. *(We will meet on Thursday.)* — Accusative case.
+> Це сталося у дві тисячі чотирнадцятому **році**. *(This happened in 2014.)* — Locative case.
+
+To describe a characteristic, like clothing, we use «у/в» with the Locative.
+> Хто той хлопець у жовтому **светрі**? *(Who is that guy in the yellow sweater?)*
+> Жінка у червоній **сукні** — моя мама. *(The woman in the red dress is my mom.)*
+
+And we always use the Vocative case to address people directly.
+> **Мамо**, де мої ключі? *(Mom, where are my keys?)*
+> **Друзі**, ходімо швидше додому! *(Friends, let's go home faster!)*
+> **Пане**, ви забули свій телефон. *(Sir, you forgot your phone.)*
+
+Read the short text and identify the case and trigger for the underlined nouns.
+
+> У суботу я був у __музеї__. Там я бачив __друзів__. Один хлопець був у синьому __светрі__. Після екскурсії я подзвонив __сестрі__. Ми повернулися з __центру__ без __парасольки__.
+
+For each underlined noun, name the case and say whether the trigger is a verb, a preposition, or a time construction.
+
+<!-- INJECT_ACTIVITY: fill-in-mixed-cases -->
+
+Learners often make common mistakes when applying cases. A frequent **помилка** (error, mistake) is confusing animate and inanimate nouns in the Accusative plural. For inanimate objects, the Accusative plural looks exactly like the Nominative. For living things (animate), it looks exactly like the Genitive plural.
+> Я бачу нові **столи**. *(I see new tables.)* — Inanimate (Nominative form).
+> Я бачу нових **студентів**. *(I see new students.)* — Animate (Genitive form).
+
+Another common issue is using incorrect case endings after prepositions, such as forgetting that «після» (after) and «без» (without) always take the Genitive.
+
+Let's focus on specific errors. Many learners use the Nominative instead of the Genitive plural after numbers like five. They say «п'ять студенти», but you must **виправити** (to correct) this to «п'ять студентів». 
+
+Another issue is choosing the standard Instrumental plural forms for paired nouns. In standard modern Ukrainian, we usually use forms like «очима», «плечима», and «дверима». The form «очами» does exist, but it is archaic or poetic, so A2 learners should prefer «очима». 
+
+:::caution
+Subject-verb agreement is critical! If the subject is plural, the verb must be plural. "Книги лежить" is incorrect; it must be "книги лежать". Always check the ending of your verb.
+:::
+
+<!-- INJECT_ACTIVITY: quiz-error-correction -->
+
+<!-- INJECT_ACTIVITY: error-correction-mixed -->
 
 ## Частина 3: Вільне мовлення (Part 3: Free Production)
 
-Guided writing requires strategy. Ваше **завдання** (task) — "Опишіть свій ідеальний **вихідний день**" (Describe your ideal day off). Building a coherent narrative requires using the full case spectrum. Start with your destination using the Accusative: "У суботу я їду в **центр**" (On Saturday I go to the center). Mention your company using the Instrumental: "Я гуляю з **друзями**" (I walk with friends). Describe your activities using the Accusative or Instrumental: "Я бачу красиві **будівлі**" (I see beautiful buildings), "Я малюю **олівцем**" (I draw with a pencil). Finally, mention what you eat using the Genitive for quantities or Accusative for specific items: "Я купую багато **яблук**" (I buy many apples), "Я їм смачну **піцу**" (I eat a tasty pizza).
-- Мій ідеальний **вихідний день** починається пізно. (My ideal day off starts late.)
-- У неділю я читаю **книгу**. (On Sunday I read a book.)
-- Ми йдемо в **парк**. (We go to the park.)
+Now it is time to integrate all cases into your free speech. The ultimate goal is to naturally mix cases in conversation without overthinking the grammar rules. When you speak, you do not have time to run through declension tables in your head. You just need to express your thoughts. Practice is the only way to build this fluency.
 
-Dialogue completion requires strict logical agreement. When answering a question, you must provide a natural short answer that respects the case of the question word. The question "Кого?" (Whom? - Accusative/Genitive animate) requires an Accusative or Genitive response. "Кому?" (To whom? - Dative) requires a Dative response.
-> **Максим:** З ким ти розмовляв? *(With whom were you talking?)*
-> **Анна:** З **батьками**. *(With parents.)*
-> **Максим:** Про що ви говорили? *(About what were you talking?)*
-> **Анна:** Про **плани** на вихідні. *(About plans for the weekend.)*
-> **Максим:** Кому ви будете дзвонити завтра? *(To whom will you call tomorrow?)*
-> **Анна:** Нашим **родичам**. *(To our relatives.)*
+Let's look at a dialogue between a **наречена** (bride) and her **подруга** (female friend). They are planning a wedding, and every case appears naturally. Read the dialogue aloud and notice how the cases change based on the role of the noun.
 
-A critical focus is the living Vocative case (**Кличний відмінок**). It is not an archaic relic; it is a vital part of modern Ukrainian communication. Whenever you address someone directly, you must use it. For singular names and nouns, use endings like -о, -е, or -ю: **Мамо** (Mom!), **Оксано** (Oksana!), **пане** (sir!). For plural, the Vocative usually matches the Nominative: **Друзі!** (Friends!), **Колеги!** (Colleagues!). Using the Vocative is a sign of cultured, natural Ukrainian speech.
-- **Брате**, допоможи мені, будь ласка. (Brother, help me, please.)
-- Добрий день, **пане** Іване! (Good day, Mr. Ivan!)
-- Шановні **колеги**, почнемо нашу зустріч. (Respected colleagues, let's begin our meeting.)
-- **Сергію**, де ти був? (Serhiy, where were you?)
+> **Подруга:** **Олено**! Ти вже маєш запрошення для **гостей**? *(Olena! Do you already have the invitations for the guests?)*
+> **Наречена:** Так, маю. А ти вже купила подарунок **нареченій**? *(Yes, I do. And have you already bought a gift for the bride?)*
+> **Подруга:** Звичайно! Я бачу **наречену**, яка дуже хвилюється. *(Of course! I see a bride who is very nervous.)*
+> **Наречена:** Я просто хочу зробити багато фото з **молодятами**. *(I just want to take a lot of photos with the newlyweds.)*
+> **Подруга:** Не хвилюйся, усе буде чудово на **весіллі**! *(Do not worry, everything will be wonderful at the wedding!)*
+> **Наречена:** Наш **фотограф** уже чекає біля ресторану. *(Our photographer is already waiting by the restaurant.)*
 
-A letter to a friend synthesizes everything. This models how to connect thoughts across sentences while maintaining case agreement and logical flow.
-"Привіт, **Олено**! Як твої **справи**? Я зараз у **Львові**. Це чудове **місто** з красивими **вулицями**. Учора я гуляла з **друзями** по **центру**. Ми бачили багато старих **будівель** і пили каву в затишному **кафе**. Я купила **сувеніри** для **батьків**. Завтра ми їдемо в **гори**. Я чекаю твого **листа**!"
-Notice how every noun seamlessly connects to its verb or preposition. This is the goal of your free production practice.
+This dialogue contains all seven cases. Let us analyze them:
+- «фотограф» is the Nominative singular. It names the subject of the sentence.
+- «Олено!» is the Vocative case. It is used to address the person directly.
+- «запрошення для гостей» uses the Genitive plural after the preposition «для».
+- «подарунок нареченій» uses the Dative singular. It answers the question "to whom?"
+- «бачу наречену» uses the Accusative singular. It is the direct object of the verb «бачити».
+- «з молодятами» uses the Instrumental plural. It indicates accompaniment with the preposition «з».
+- «на весіллі» uses the Locative singular. It indicates the location.
 
-<!-- INJECT_ACTIVITY: writing-ideal-day -->
-<!-- INJECT_ACTIVITY: dialogue-gap-fill -->
+:::tip
+When you learn new nouns, always try to use them in small phrases or sentences rather than alone. Knowing that a word is feminine is helpful, but knowing how to say «я йду з мамою» (I am walking with my mom) is practical language use.
+:::
+
+To test your understanding, complete this dialogue with the correct noun forms in the correct case.
+
+> **Андрій:** Ти вже запросила всіх ___ (гість)?
+> **Олена:** Так, і я вже купила подарунок ___ (подруга).
+> **Андрій:** А фотограф буде з ___ (молодята)?
+> **Олена:** Так, він чекатиме нас на ___ (весілля).
+> **Андрій:** Добре. Тоді я ще подзвоню ___ (батьки) і ___ (друзі).
+> **Олена:** Чудово, дякую тобі, ___ (Андрій)!
+
+Finally, try a guided writing task: "Опишіть свій ідеальний **вихідний день**" (Describe your ideal day off). This is a perfect way to practice cases. 
+Think about where you go. You will need the Accusative or Locative case for destinations.
+Think about who you meet. You will need the Accusative or Dative case for people.
+Think about what you do. You will need the Accusative or Instrumental case for actions.
+Think about what you eat. You will need the Genitive for quantities and Accusative for items.
+
+Here is an example of how you can combine these cases into a coherent text:
+
+> Ось мій ідеальний вихідний день. Вранці я прокидаюся пізно. Я п'ю велику чашку гарячої кави з молоком. Потім я дзвоню своїм друзям. Ми домовляємося зустрітися у центрі міста. О першій годині я їду в улюблений ресторан. Я замовляю смачний український борщ зі сметаною і пампушками. Після обіду ми йдемо в парк. Ми довго гуляємо під високими деревами. Ми говоримо про роботу, життя і плани на майбутнє. Увечері я повертаюся додому. Я читаю нову книгу або дивлюся цікавий фільм. Це ідеальний час для відпочинку.
+
+Try to write eight to ten sentences using these patterns.
 
 ## Підсумок
 
-You have reached the end of the A2 case checkpoint. Take a moment for **самоперевірка** (self-check) to ensure you can use these forms **впевнено** (confidently). Ask yourself these questions:
-- Чи можу я **впевнено** утворити Родовий відмінок множини (**книг**, **столів**)? (Can I confidently form the Genitive plural?)
-- Чи пам'ятаю я нерегулярні форми (**люди**, **діти**, **друзі**)? (Do I remember the irregular forms?)
-- Чи знаю я, які відмінки вимагають прийменники "на", "в", "з", "по"? (Do I know which cases the prepositions require?)
-- Чи використовую я Кличний відмінок під час звертання? (Do I use the Vocative case during direct address?)
+We have covered a lot of ground in this module. Take a moment for a **самоперевірка** (self-check). If you want extra review, compare these patterns with the declension table in Варзацька Grade 4, с. 38, and the review exercises in Заболотний Grade 6. Ask yourself these questions:
 
-Якщо ви бачите **помилку** (error), ви знаєте, як її **виправити** (to correct). You have now mastered the skeleton of the Ukrainian language. The case system is the foundation. 6 to add the flesh of adjectives and verbs of motion to this strong structure!
-```
+- Чи можу я **впевнено** (confidently) утворювати форми множини, особливо складний Родовий відмінок?
+- Чи знаю я, який відмінок вимагає кожен прийменник?
+- Чи пам'ятаю я винятки, такі як «діти», «люди», «друзі»?
+- Чи використовую я Кличний відмінок при звертанні до людей?
+- Чи вмію я користуватися «case compass» з M31, коли сумніваюся?
+- Чи готовий я до рівня A2.6?
+
+If you can answer "yes" to these questions, keep practicing, read more texts, and do not be afraid to make a **помилка** — every error is a step toward fluency.
+ You can always review and **виправити** (to correct) your mistakes. The more you use the language, the more natural these cases will feel.
 </generated_module_content>
 
-**PIPELINE NOTE — Word count: 2154 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
+**PIPELINE NOTE — Word count: 2203 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -412,46 +494,174 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 371 words | Not found: 10 words
+Verified: 349 words | Not found: 7 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
-  ✗ Іване — NOT IN VESUM
-  ✗ Анна — NOT IN VESUM
-  ✗ Карпатах — NOT IN VESUM
-  ✗ Карпати — NOT IN VESUM
-  ✗ Львові — NOT IN VESUM
-  ✗ Оксано — NOT IN VESUM
+  ✗ Андрій — NOT IN VESUM
+  ✗ Варзацька — NOT IN VESUM
+  ✗ Наталя — NOT IN VESUM
+  ✗ Олег — NOT IN VESUM
+  ✗ Олена — NOT IN VESUM
   ✗ Олено — NOT IN VESUM
-  ✗ Сергію — NOT IN VESUM
-  ✗ ами — NOT IN VESUM
-  ✗ има — NOT IN VESUM
+  ✗ Чернівцях — NOT IN VESUM
 
-All 371 other words are confirmed to exist in VESUM.
+All 349 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
-## Verification Tools (MCP)
+---
 
-You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
+## Verification Tools (Shell Commands)
 
-**Core Verification:**
-- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
-- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
+You have access to verification tools via shell commands. Use these to verify
+Ukrainian vocabulary, check grammar, and search textbook content **as you write**.
 
-**Content Quality:**
-- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+**IMPORTANT:** Run verification commands BEFORE finalizing any Ukrainian text.
+Batch multiple verifications together to minimize round-trips.
 
-**Reference:**
-- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp_rag_search_literary` — verify literary references against primary sources
-- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
+### 1. Batch-verify Ukrainian words exist in VESUM (preferred — one call for many words)
 
-**Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_words
+results = verify_words(['слово1', 'слово2', 'слово3'])
+for w, matches in results.items():
+    if matches:
+        print(f'{w}: FOUND — lemma={matches[0][\"lemma\"]}, pos={matches[0][\"pos\"]}')
+    else:
+        print(f'{w}: NOT FOUND — may not exist in standard Ukrainian')
+"
+```
+
+### 2. Verify a single Ukrainian word in VESUM (with full morphological tags)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_word
+results = verify_word('WORD_HERE')
+if results:
+    for m in results:
+        print(f'lemma={m[\"lemma\"]}, pos={m[\"pos\"]}, tags={m[\"tags\"]}')
+else:
+    print('NOT FOUND in VESUM')
+"
+```
+
+### 3. Get all inflected forms of a lemma (declension/conjugation)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_lemma
+forms = verify_lemma('LEMMA_HERE')
+for f in forms[:20]:
+    print(f'{f[\"word_form\"]:20s} {f[\"pos\"]:8s} {f[\"tags\"]}')
+print(f'... {len(forms)} forms total')
+"
+```
+
+### 4. Check CEFR level of a word (is it level-appropriate?)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import query_cefr_level
+results = query_cefr_level('WORD_HERE')
+for r in results:
+    print(f'{r[\"word\"]}: {r[\"level\"]} ({r[\"pos\"]})')
+if not results:
+    print('Not in CEFR database')
+"
+```
+
+### 5. Search textbook content (Ukrainian school textbooks, Grades 1-11)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_textbooks
+keywords = {'keyword1', 'keyword2'}
+results = search_textbooks(keywords, 5)
+for r in results:
+    title = r.get('section_title', r.get('title', ''))
+    grade = r.get('grade', '?')
+    text = r.get('text', '')[:200]
+    print(f'Grade {grade} | {title}')
+    print(f'  {text}')
+    print()
+"
+```
+
+### 6. Search style guide for calques/Russianisms (Антоненко-Давидович, 279 entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_style_guide
+results = search_style_guide('TOPIC_HERE', 3)
+for r in results:
+    print(f'--- {r.get(\"word\", \"\")} [{r.get(\"section\", \"\")}]')
+    print(r.get('text', '')[:300])
+    print()
+if not results:
+    print('No style guide entries found')
+"
+```
+
+### 7. Look up word definition in СУМ-11 (Ukrainian explanatory dictionary, 127K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_definitions
+results = search_definitions('WORD_HERE', 3)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+### 8. Search idioms (Фразеологічний словник, 25K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_idioms
+results = search_idioms('WORD_HERE', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"text\", r.get(\"definition\", \"\")))[:200]}')
+"
+```
+
+### 9. English-to-Ukrainian translation (Балла, 79K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import translate_en_uk
+results = translate_en_uk('ENGLISH_WORD', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+---
+
+**WHEN to use these tools:**
+
+1. **Before writing any Ukrainian text** — batch-verify all key vocabulary with
+   `verify_words` (tool 1). Any word that returns NOT FOUND must be replaced.
+2. **When you suspect a Russicism or calque** — search the style guide (tool 6)
+   and verify the correct Ukrainian form with `verify_word` (tool 2).
+3. **When writing for A1/A2** — check CEFR levels (tool 4) to ensure vocabulary
+   is level-appropriate.
+4. **When unsure about a case ending or conjugation** — use `verify_lemma` (tool 3)
+   to see the full paradigm.
+5. **When covering a grammar topic** — search textbooks (tool 5) to see how
+   Ukrainian school textbooks teach it.
+6. **When you need the precise Ukrainian meaning** — use СУМ-11 (tool 7).
+7. **When looking for natural Ukrainian expressions** — search idioms (tool 8).
+
+**Batching rule:** Collect all words you want to verify, then run ONE `verify_words`
+call instead of multiple `verify_word` calls. This is faster and uses fewer tokens.

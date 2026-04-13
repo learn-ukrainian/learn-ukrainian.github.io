@@ -2,49 +2,50 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 7
-  evidence: The text failed to use the exact 30 pairs organized into the specific
-    groups defined in the plan (e.g., missed `робити/зробити`, `писати/написати` in
-    Group A; missed `казати/сказати` in Group B). Dial
+  score: 6
+  evidence: 'All four planned sections and all 4 activity markers are present, but
+    section pacing is far off plan: 693/500, 864/600, 727/500, 619/400 words. Recommended
+    vocabulary item `морфологія` has 0 matches i'
 - dimension: 2
   name: Linguistic accuracy
-  score: 8
-  evidence: General usage is flawless, but the morphological claim that "звуки «ог»
-    змінюються на «ага»" in `допомогти/допомагати` is a factual linguistic error.
-    The alternation is the root vowel `о` -> `а` and t
+  score: 5
+  evidence: 'Critical teaching errors: the text presents `говорити / сказати` as an
+    aspect pair, uses `допомагати / допомогти` as the suffix-pattern example, and
+    later says suffix changes “form the perfective aspe'
 - dimension: 3
   name: Pedagogical quality
-  score: 9
-  evidence: Excellent explanations of aspect logic and clear minimal pairs ("Я варив
-    борщ годину" vs "Я зварив борщ"), but slightly marred by the clunky morphology
-    explanation.
+  score: 6
+  evidence: 'There is a PPP skeleton and many examples, but the first section opens
+    with a long English theory block before the first Ukrainian example, and later
+    sections spend too much space on meta-explanation '
 - dimension: 4
   name: Vocabulary coverage
   score: 8
-  evidence: Uses the majority of the vocabulary naturally, but failed to include all
-    30 pairs exactly as stipulated in the plan's section 2 outline.
+  evidence: Required plan vocabulary is present in prose, and recommended `утворення`,
+    `тільки що`, and `вже` appear; `морфологія` is missing.
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: All markers are correctly placed, correspond to the plan's hints, and
-    test the concepts just taught.
+  score: 9
+  evidence: 'Marker placement is strong: each activity comes after the target teaching
+    section, and the marker inventory matches the plan exactly.'
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: Great teacher persona, encouraging and clear without useless filler or
-    fluff.
+  score: 8
+  evidence: The voice is teacherly rather than gamified, but repeated lines like “You
+    will use these pairs constantly” and “absolute key to fluency” add filler more
+    than teaching value.
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: Word count is 3056 (well above the 2000 target). All headers are present
-    and logically ordered.
+  evidence: All planned H2 headings are present and ordered correctly, formatting
+    is clean, and the pipeline count is 2925 words, safely above target.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Contexts and examples are natural, appropriate, and authentic.
+  evidence: No Russian-centric framing or cultural inaccuracies surfaced.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 9
-  evidence: Dialogues are highly natural and demonstrate the grammar perfectly, though
-    the second dialogue deviated from the plan's required prompt.
+  score: 8
+  evidence: The dialogues are named and scenario-based, but the dialogue section spends
+    substantial space explaining the dialogues instead of giving more actual turns.
 findings: []

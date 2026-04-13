@@ -1,23 +1,22 @@
-# Section-by-Section Generation — Section 1/4
+# Section-by-Section Generation — Section 1/3
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 10: Для кого? Без чого? Біля чого? (A2, A2.2 [Genitive Case Complete])
-**Section to write:** Для кого це? Для + родовий (Who Is It For? Для + Genitive) (~650 words total)
-**Word target for this section:** 650 words (aim for 715 to account for undershoot)
+**Section to write:** Для кого це? Для + родовий (Who Is It For? Для + Genitive) (~700 words)
+**Word target for this section:** 700 words (aim for 770 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Для кого це? Для + родовий (Who Is It For? Для + Genitive) (~650 words total)
-- P1 (~120 words): [Introduce the preposition 'для' as the primary way to express purpose or the intended recipient of an object or action. Contrast 'для' with the English 'for' and emphasize that it ALWAYS triggers the Genitive case. Examples: подарунок для мами (gift for mom), час для відпочинку (time for rest).]
-- P2 (~100 words): [Focus on the 'purpose' aspect of 'для'. Explain how it attaches to abstract nouns to show what something is intended for. Examples: фрукти для здоров'я (fruit for health), одяг для роботи (clothes for work), книги для навчання (books for studying).]
-- P3 (~100 words): [Focus on recipients with hard-stem nouns (masculine and feminine). Review the Genitive endings -а and -и. Examples: квиток для брата (ticket for brother), сюрприз для сестри (surprise for sister), вечеря для тата (dinner for dad).]
-- P4 (~100 words): [Address soft-stem and -ія nouns as recipients, highlighting the -я and -ії endings. Provide clear contrasts to avoid confusion. Examples: стілець для вчителя (chair for the teacher), квіти для Марії (flowers for Maria), іграшка для Софії (toy for Sophia).]
-- P5 (~100 words): [Cover neuter nouns and plural recipients after 'для'. Explain the -я ending for neuter nouns like 'щастя' and the -ів ending for masculine plurals. Examples: все для щастя (everything for happiness), кімната для дітей (room for children), новини для друзів (news for friends).]
-- P6 (~130 words): [Dialogue (Part 1): Igor and Marta start packing for their camping trip. Igor holds up a blanket and asks who it's for. Marta explains it's for Olena. They discuss needing items 'для комфорту' (for comfort). Includes examples: для Олени, для комфорту, для походу.]
-- <!-- INJECT_ACTIVITY: match-up-purpose --> [Match-up, focus on matching Ukrainian 'для' phrases to their English equivalents, 8 items]
+## Для кого це? Для + родовий (Who Is It For? Для + Genitive) (~700 words)
+- P1 (~120 words): [Dialogue] Ігор and Марта packing for a camping trip. Introduce the target prepositions naturally in context: "Для кого ця ковдра? Для Олени. Без ліхтарика — ніяк! Біля річки поставимо намет."
+- P2 (~100 words): [Concept Introduction] Analyze the dialogue. Highlight that *для*, *без*, and *біля* all share a core grammatical rule: they demand the Genitive case (родовий відмінок). State that this section focuses on *для* (for).
+- P3 (~120 words): [Purpose] Explain *для* for expressing Purpose. It answers "Для чого?" (For what purpose?). Provide examples: *для здоров'я* (for health), *для роботи* (for work), *для навчання* (for studying). 
+- P4 (~130 words): [Recipient] Explain *для* for expressing the Intended Recipient. It answers "Для кого?" (For whom?). Provide examples: *для мами* (for mom), *для друга* (for a friend), *для дітей* (for children).
+- P5 (~130 words): [Paradigm Practice] Detail the Genitive case endings across genders and stem types after *для*. Show hard masculine (*для брата*), soft masculine (*для вчителя*), hard feminine (*для сестри*), soft feminine (*для Марії*), and neuter (*для щастя*).
+- P6 (~100 words): [Common Phrases] Showcase high-frequency everyday phrases using *для*. Examples: *подарунок для тебе*, *час для відпочинку*, *це важливо для мене*. Note that personal pronouns also take the Genitive form (*тебе*, *мене*).
 
 ---
 ## Full Plan (for reference)
@@ -591,6 +590,31 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] призначення (purpose, destination)
+- [ ] відпочинок (rest, relaxation)
+- [ ] допомога (help, assistance)
+- [ ] сумнів (doubt)
+- [ ] будинок (building, house)
+- [ ] зупинка (stop (bus/tram))
+- [ ] бібліотека (library)
+- [ ] лікарня (hospital)
+- [ ] площа (square (city))
+- [ ] станція (station)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Для кого це? Для + родовий (Who Is It For? Для + Genitive) (~700 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

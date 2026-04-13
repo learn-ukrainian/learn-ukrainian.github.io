@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-назва також походить від грецького слова «grapho», що означає «писати». Графіка вивчає систему умовних знаків для передачі звуків на письмі. Вона пояснює, як саме ми малюємо літери на папері. Третій необхідний розділ — це **орфоепія** *(orthoepy)*. Орфоепія — це суворі правила літературної вимови усіх слів. Вона пояснює, де потрібно ставити правильний наголос. Кожен з цих розділів має свою власну важливу місію. Ці три мовні науки завжди працюють разом як одна велика команда. Фонетика просто і ясно пояснює, що саме ми чуємо вухами. Графіка візуально показує, як це правильно записати у зошиті. А орфоепія вчить нас, як говорити чисто і абсолютно правильно. Вони формують базу для всієї граматики. Найголовніше правило української фонетики звучить дуже просто і логічно. Ось воно: «Ми чуємо і вимовляємо звуки, а бачимо і пишемо літери». **Звук** *(sound)* — це невидима хвиля, яку ми сприймаємо своїми вухами. **Літера** *(letter)* або **буква** *(letter)* — це візуальний символ на папері. В українській мові є один дуже цікавий математичний факт. Ми маємо рівно тридцять три літери в нашому алфавіті. Це легко запам'ятати. Але ми маємо аж тридцять вісім різних звуків у мові! Чому їхня загальна кількість ніколи не збігається? Відповідь проста: деякі літери можуть успішно позначати два різні звуки. Це робить нашу мову дуже компактною на письмі. Наприклад, цікава літера «щ» завжди означає два звуки разом: [ш] і [ч]. Літери «я», «ю», «є», «ї» також дуже часто позначають два звуки. Вони називаються **йотованими літерами** *(iotated letters)*. З іншого боку, у нас є літери, які не мають власного звуку. Це відомий усім **м'який знак** *(soft sign)* «ь». Він ніколи не звучить самостійно під час нашої розмови. Він тільки мовчки показує, що попередній приголосний звук є м'яким. Також у нас є **апостроф** *(apostrophe)*, який узагалі не є літерою. Це просто спеціальний графічний знак. Він тільки допомагає нам розділяти звуки під час читання. У серйозній науці про мову є важлива різниця між звуком і фонемою. **Звук** *(sound)* — це конкретна фізична вібрація, яку створює кожна людина. Кожна людина у світі вимовляє свої звуки трохи інакше. Адже ми всі маємо різні голоси та різні звички. Але ми все одно прекрасно розуміємо одне одного щодня. Чому ми можемо це робити без жодних проблем? Тому що в нашій голові існує **фонема** *(phoneme)*. Фонема — це ідеальна абстрактна одиниця нашої мови. Вона активно допомагає нам розрізняти справжнє значення слів. Наприклад, візьмемо перший звук [г] у звичайному слові «горох» *(peas)*. Ви можете сказати це коротке слово дуже голосно на вулиці. Ви можете прошепотіти його тихо у кімнаті. Реальний фізичний звук буде абсолютно різним щоразу. Апаратура в лабораторії покаже різні графіки. Але це завжди та сама фонема, яка відрізняє «горох» від слова «порох» *(dust/gunpowder)*. Якщо ви зміните фонему [г] на фонему [п], слово повністю зміниться. Ця глибока різниця дуже важлива для розуміння української граматики. Багато українських граматичних правил логічно базуються саме на фонемах. Коли ми вивчаємо українські правила читання, ми завжди працюємо з фонемами. Це допомагає студентам не плутатися у складних граматичних випадках. Ви швидко звикнете до цієї системи. <!-- INJECT_ACTIVITY: match-up, Match Ukrainian phonetic terms to their definitions -->
+sound is **звук** (sound). The word for letter is **літера** (letter). A letter is just a visual symbol printed on a page. A sound is a physical vibration in the air created by your vocal cords. This critical distinction is the core of all the spelling and pronunciation rules you will encounter in the future. Запам'ятайте головне правило: ми чуємо і вимовляємо звуки, а бачимо і пишемо букви. В українській мові існує тридцять вісім звуків. Але в українському алфавіті є тільки тридцять три літери. Кожна літера виконує свою особливу функцію. Чому ці цифри ніколи не збігаються? Деякі літери можуть позначати два звуки одночасно. Наприклад, літера «щ» завжди позначає два звуки разом. З іншого боку, м'який знак взагалі не позначає жодного звуку. > *Remember the main rule: we hear and pronounce sounds, but we see and write letters. In the Ukrainian language, there are thirty-eight sounds. But in the Ukrainian alphabet, there are only thirty-three letters. Every letter performs its special function. Why do these numbers never match? Some letters can represent two sounds simultaneously. For example, the letter "щ" always represents two sounds together. On the other hand, the soft sign does not represent any sound at all.* :::info **Grammar box** — The distinction between spoken sounds and written letters is the foundation of Ukrainian linguistics. Whenever you see square brackets like `[шч]`, we are using a phonetic transcription. The word for transcription is **транскрипція** (transcription). ::: As we dive deeper into the structure of Ukrainian, linguists make a specific distinction between a regular sound and a phoneme. The term for phoneme is **фонема** (phoneme). A sound is any concrete acoustic noise a human person produces in a specific moment. A phoneme is an abstract structural unit in our brain that distinguishes meaning between words. Understanding this difference will help you grasp why certain sounds change depending on the context. Звук — це дуже конкретне фізичне явище, яке ми вимовляємо. Кожна людина завжди вимовляє звуки трохи по-різному. Але фонема — це абстрактна мовна одиниця, яка розрізняє значення слів. Візьмемо для простого прикладу слово «горох». Ви можете вимовити перший звук голосно, тихо або пошепки. Фізичний звук буде абсолютно різним щоразу. Але це завжди одна і та сама фонема. Вона чітко відрізняє це слово від слова «порох». > *A sound is a very concrete physical phenomenon that we pronounce. Every person always pronounces sounds slightly differently. But a phoneme is an abstract linguistic unit that distinguishes the meaning of words. Let's take the word "горох" (peas) as a simple example. You can pronounce the first sound loudly, quietly, or in a whisper. The physical sound will be absolutely different every time. But it is always one and the same phoneme. It clearly distinguishes this word from the word "порох" (dust/powder).* :::note **Quick tip** — Knowing linguistic terms helps you understand why changing just one sound can completely change a word's meaning. For example, a syllable is called a **склад** (syllable). ::: <!-- INJECT_ACTIVITY: match-up, Match Ukrainian phonetic terms to their definitions -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -475,7 +475,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 6: A2 finale (A2 M51-M69)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 40%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 40% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 70-90% Ukrainian.
 LANGUAGE ROLES:
@@ -494,18 +561,69 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] фонетика (phonetics — the study of speech sounds)
+- [ ] звук (sound — what we hear and pronounce)
+- [ ] літера (letter — what we see and write)
+- [ ] фонема (phoneme — abstract sound unit that distinguishes meaning)
+- [ ] голосний (vowel — sound made with voice only)
+- [ ] приголосний (consonant — sound made with obstruction)
+- [ ] дзвінкий (voiced — consonant produced with voice + noise)
+- [ ] глухий (voiceless — consonant produced with noise only)
+- [ ] сонорний (sonorant — consonant where voice dominates over noise)
+- [ ] твердий (hard — non-palatalized consonant)
+- [ ] м'який (soft — palatalized consonant)
+- [ ] наголос (stress — emphasized pronunciation of a syllable)
+- [ ] наголошений (stressed — syllable bearing the stress)
+- [ ] ненаголошений (unstressed — syllable without stress)
+- [ ] транскрипція (transcription — phonetic notation in square brackets)
+- [ ] склад (syllable)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Голосні звуки (~610 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

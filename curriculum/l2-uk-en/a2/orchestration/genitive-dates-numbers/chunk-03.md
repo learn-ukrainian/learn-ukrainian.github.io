@@ -1,53 +1,80 @@
-## Заперечення з прямим додатком
+## Заперечення з прямим додатком (Negation with a Direct Object) (~750 words)
 
-When you express an action happening to an object in an affirmative sentence, you use the Accusative case, which serves as the direct object. However, Ukrainian syntax has a unique and highly important rule for negative sentences. When a positive sentence with a direct object is turned into a negative sentence using the negative particle **не**, the object very often shifts from the Accusative case into the Genitive case. This transformation is a classic hallmark of Slavic grammar and is widely known as the Genitive of negation. It emphasizes the total absence of the action affecting the object in question. For example, if you have a physical ticket, you use the standard Accusative case to show that you possess it. If you do not have a ticket, the word for ticket shifts immediately into the Genitive case to reflect that negation.
+When you learn to use a transitive verb, you will eventually need to express **заперечення** (negation). In Ukrainian, when you add the negative particle «не» before a verb, the direct object very often shifts from the Accusative case to the Genitive case. This grammatical transformation is a hallmark of natural, idiomatic Ukrainian. 
 
-Я маю новий квиток на потяг. Ти маєш квиток на автобус. Я не маю нового квитка. Ти не маєш квитка на автобус. Вона має гарну сумку. Вона не має гарної сумки.
+Я читаю книгу. Я не читаю книги.
+Він бачить велике місто. Він не бачить великого міста.
+Ми слухаємо музику щодня. Ми не слухаємо музики сьогодні.
+Студенти пишуть довгий тест. Студенти не пишуть довгого тесту.
 
-> *I have a new train ticket. You have a bus ticket. I do not have a new ticket. You do not have a bus ticket. She has a beautiful bag. She does not have a beautiful bag.*
+> *I am reading a book. I am not reading a book. He sees a large city. He does not see a large city. We listen to music every day. We are not listening to music today. The students are writing a long test. The students are not writing a long test.*
 
-You might naturally wonder if you can just keep using the Accusative case after a negative verb, just like you do in English. While native Ukrainian speakers do sometimes use the Accusative in modern, casual speech after negation, the Genitive case remains the absolute standard for expressing total negation. Using the Genitive case creates a subtle nuance of emphasis that native speakers feel intuitively. It signals that you are not just denying a specific instance of an action, but rather you are denying the action in its entirety regarding that object. For instance, using the Accusative might suggest you did not read a specific book that was mentioned earlier, while using the Genitive suggests you did not read any book at all, or that you have not been reading recently.
+Why does this shift happen? The primary motivation behind using the Genitive case for a negated object is to add emphasis and totality to the denial. The Genitive case inherently expresses boundaries and absence, making the negation feel absolute. When you use the Accusative in a negative sentence, it can carry a subtle, restrictive nuance. It might imply that you did not read *that specific book*, but you perhaps read a different one. However, when you use the Genitive case, it implies that you did not read *any book at all*.
 
-Вчора я читав дуже цікаву книгу. Сьогодні я не читав цієї книги. Мій друг купив дорогу машину. Його брат не купив машини. Студент написав довгий текст. Студент не написав тексту.
+Моя сестра не купила телефон. Це означає, що вона купила щось інше.
+Можливо, вона вибрала новий планшет або ноутбук.
+Але якщо вона не купила телефону, це означає абсолютну відсутність.
+Вона не витратила грошей, і вона взагалі не має нової техніки.
 
-> *Yesterday I read a very interesting book. Today I did not read this book. My friend bought an expensive car. His brother did not buy a car. The student wrote a long text. The student did not write a text.*
+> *My sister did not buy the phone [Accusative]. This means that she bought something else. Perhaps she chose a new tablet or laptop. But if she did not buy a phone [Genitive], this means absolute absence. She did not spend money, and she has no new tech at all.*
 
-Let us look at a practical comparison using common masculine and feminine nouns to see exactly how this grammatical shift works in everyday speech. For masculine nouns ending in a consonant, the Genitive singular usually takes the ending **-а** or **-у**. For feminine nouns ending in **-а**, the Genitive singular ending is **-и**. When you change a positive statement into a negative one, the object drops its Accusative form and adopts these specific Genitive endings instead. This pattern is very consistent across everyday vocabulary, whether you are talking about buying food, seeing objects, or reading texts. Memorizing this shift will make your Ukrainian sound much more natural and idiomatic.
+To see this pattern clearly, let us look at how it affects nouns of different genders. The transformation is consistent across the board for masculine, feminine, and neuter words. The affirmative sentence uses the standard Accusative ending, but the negative version shifts directly to the Genitive.
 
-Я купую свіжий хліб у магазині. Я не купую свіжого хліба сьогодні. Він бачить велику машину на вулиці. Він не бачить великої машини там. Вона п'є гарячу каву щоранку. Вона не п'є гарячої кави.
+Він має квиток. Він не має квитка.
+Вона купила машину. Вона не купила машини.
+Я бачу вікно. Я не бачу вікна.
+Ми знайшли дорогу. Ми не знайшли дороги.
+Ти зрозумів правило. Ти не зрозумів правила.
 
-> *I buy fresh bread in the store. I am not buying fresh bread today. He sees a large car on the street. He does not see a large car there. She drinks hot coffee every morning. She does not drink hot coffee.*
+> *He has a ticket. He does not have a ticket. She bought a car. She did not buy a car. I see a window. I do not see a window. We found the road. We did not find the road. You understood the rule. You did not understand the rule.*
+
+> — **Анна:** Привіт! Ти маєш ручку? *(Hi! Do you have a pen?)*
+> — **Богдан:** Ні, я не маю ручки. Я залишив її вдома. *(No, I do not have a pen. I left it at home.)*
+> — **Анна:** А зошит? Ти купив зошит? *(And a notebook? Did you buy a notebook?)*
+> — **Богдан:** Я не купив зошита. У магазині не було паперу. *(I did not buy a notebook. There was no paper in the store.)*
+> — **Анна:** Що ти будеш робити на уроці? Ти не маєш нічого! *(What will you do in the lesson? You have nothing!)*
+> — **Богдан:** Я буду просто слухати. Я не пишу тексту сьогодні. *(I will just listen. I am not writing a text today.)*
+
+It is important to clarify the modern conversational reality of this rule. In everyday spoken Ukrainian, you will frequently hear people using the Accusative case even in negative sentences. However, the Genitive form is considered the grammatically standard, traditional, and highly frequent choice. Mastering the Genitive of negation makes your Ukrainian sound more authentic and educated.
 
 :::info
-**Grammar box**
-The shift from Accusative to Genitive is especially strong with verbs of possessing, acquiring, perceiving, and consuming. Always try to default to the Genitive case when you place the particle **не** before verbs like **мати**, **купувати**, **бачити**, and **читати**.
+**Grammar box** — While casual speech might tolerate the Accusative for negated objects («Я не п'ю каву»), classical Ukrainian literature and formal writing strictly prefer the Genitive case («Я не п'ю кави») to express the total absence of an action's result.
 :::
 
-There is one specific vocabulary word that acts as an absolute and undeniable trigger for the Genitive case, and that is the word **немає** (there is no / is absent). While the phrase **не маю** translates to "I do not have" and acts as a regular negated verb, the word **немає** is an impersonal construct denoting complete physical or conceptual absence. It always demands the Genitive case for the thing or person that is missing. You will use this word constantly in daily conversations when explaining that a certain place lacks something, a store is out of stock, or a person is absent from a meeting.
+Я не п'ю каву. Я не п'ю кави.
+Обидва варіанти можливі в розмові. Ви можете почути їх на вулиці кожного дня.
+Але другий варіант звучить більш класично і правильно.
+Вчителі в школі та диктори на телебаченні використовують родовий відмінок.
 
-Тут є смачна кава. Тут немає смачної кави. У центрі міста є новий театр. У місті немає нового театру. На столі лежить книга. На столі немає книги.
+> *I do not drink coffee [Accusative]. I do not drink coffee [Genitive]. Both options are possible in conversation. You can hear them on the street every day. But the second option sounds more classical and correct. Teachers in school and announcers on television use the Genitive case.*
 
-> *There is delicious coffee here. There is no delicious coffee here. There is a new theater in the city center. There is no new theater in the city. A book lies on the table. There is no book on the table.*
+Finally, we must connect this concept to the absolute word for absence: «немає» (there is no / is not). Unlike standard verbs, the word «немає» ALWAYS requires the Genitive case, regardless of the noun, the **число** (date), or the **місяць** (month). It represents total absence and admits no exceptions.
 
-This negation rule applies to all types of objects, but it is particularly strict and noticeable when you are dealing with abstract concepts or uncountable substances. Words representing abstract ideas like **час** (time), **гроші** (money), or **допомога** (help) almost always take the Genitive case in negative sentences without exception. When you cannot physically count or touch the object, the sense of total absence feels much stronger, making the Genitive case feel like the only natural and correct choice. Furthermore, certain verbs like **потребувати** (to need) always require the Genitive case for their object, regardless of whether the sentence is positive or negative.
+У мене немає вільного часу. В магазині немає свіжого хліба.
+У цьому великому місті немає метро.
+На моєму робочому столі немає комп'ютера.
+Сьогодні немає сильного дощу, але небо дуже сіре.
+Ми хочемо купити квитки, але їх уже немає.
 
-Зараз я не маю вільного часу на це. У мене немає грошей на цей дорогий квиток. Він не потребує вашої допомоги сьогодні. Вони не мають бажання працювати.
+> *I have no free time. There is no fresh bread in the store. There is no subway in this large city. There is no computer on my desk. There is no heavy rain today, but the sky is very gray. We want to buy tickets, but they are already gone.*
 
-> *Right now I do not have free time for this. I do not have money for this expensive ticket. He does not need your help today. They do not have the desire to work.*
+### Читаємо українською (Reading Practice)
 
-Here is a practical dialogue demonstrating these negation patterns in a real-life situation. Notice carefully how the customer and the seller shift fluently between the Nominative, Accusative, and Genitive cases depending entirely on whether an item is present in the store, physically absent, or being actively looked for on the shelves. Reading this dialogue will help you understand the rhythm of negated sentences.
+Першого **січня** (January) та другого **лютого** (February) ми не бачили сонця. Була довга зима, і ми сиділи вдома. Третього **березня** (March) почався сильний дощ, і ми не мали парасольки.
 
-> — **Покупець:** Добрий день! Чи є у вас свіжий хліб? *(Good day! Do you have fresh bread?)*
-> — **Продавець:** Ні, на жаль, сьогодні немає хліба. *(No, unfortunately, there is no bread today.)*
-> — **Покупець:** А молоко? Я хочу купити молоко. *(And milk? I want to buy milk.)*
-> — **Продавець:** Я не бачу молока на полиці. *(I do not see milk on the shelf.)*
-> — **Покупець:** Шкода. Тоді я піду в інший магазин. *(It is a pity. Then I will go to another store.)*
-> — **Продавець:** Почекайте, машина з молоком уже тут. *(Wait, the car with milk is already here.)*
-> — **Покупець:** Вибачте, я не маю часу чекати. *(Sorry, I do not have time to wait.)*
+> *On the first of January and the second of February we did not see the sun. It was a long winter, and we sat at home. On the third of March heavy rain started, and we had no umbrella.*
 
-:::tip
-**Did you know?**
-The highly common phrase **У мене немає** (I don't have) is actually built directly on the impersonal word **немає** (there is not). It literally means "at me there is no". This underlying grammar is exactly why the object that follows it must always be placed in the Genitive case rather than the Accusative.
-:::
+Четвертого **квітня** (April) і п'ятого **травня** (May) було дуже тепло. Ми хотіли поїхати в гори, але я не купив квитка. Шостого **червня** (June) ми працювали, і не бачили лісу.
 
-<!-- INJECT_ACTIVITY: match-up-negation-shift -->
+> *On the fourth of April and the fifth of May it was very warm. We wanted to go to the mountains, but I did not buy a ticket. On the sixth of June we worked, and did not see the forest.*
+
+Сьомого **липня** (July) і восьмого **серпня** (August) у нас не було відпустки. Ми залишилися в місті і не бачили океану. Дев'ятого **вересня** (September) студенти не мали вільного часу.
+
+> *On the seventh of July and the eighth of August we had no vacation. We stayed in the city and did not see the ocean. On the ninth of September students had no free time.*
+
+Десятого **жовтня** (October) та одинадцятого **листопада** (November) вони вчили складну граматику. Дванадцятого **грудня** (December) ми не бачили снігу. Це була дуже дивна погода для кінця року.
+
+> *On the tenth of October and the eleventh of November they studied complex grammar. On the twelfth of December we did not see snow. It was very strange weather for the end of the year.*
+
+<!-- INJECT_ACTIVITY: match-up-accusative-genitive-negation -->
+<!-- INJECT_ACTIVITY: match-up-qa-quantities-dates -->

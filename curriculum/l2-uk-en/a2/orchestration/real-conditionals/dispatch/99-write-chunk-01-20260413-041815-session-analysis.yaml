@@ -1,0 +1,81 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T02-17-f0664db1.json
+phase: write-chunk-01
+prompt_chars: 38903
+response_chars: 5597
+prompt_words: 5826
+response_words: 924
+sections:
+- name: header
+  start: 0
+  length: 467
+  fraction: 0.012
+- name: skeleton
+  start: 467
+  length: 1466
+  fraction: 0.0377
+- name: plan
+  start: 1933
+  length: 13381
+  fraction: 0.344
+- name: wiki
+  start: 7212
+  length: 23348
+  fraction: 0.6002
+- name: output_spec
+  start: 38662
+  length: 241
+  fraction: 0.0062
+large_sections:
+- wiki
+directives_total: 27
+directives_covered: 16
+directives_missed:
+- kind: checklist
+  text: Every narrative paragraph in Ukrainian?
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: checklist
+  text: Zero `> *English translation*` blockquotes after dialogues?
+  covered: false
+  coverage_note: 0/6 keywords (0%)
+- kind: checklist
+  text: At most ONE English `:::info` callout per major section?
+  covered: false
+  coverage_note: 2/8 keywords (25%)
+- kind: checklist
+  text: Metalanguage terms parenthetically translated on first use only (max 2 per
+    section)?
+  covered: false
+  coverage_note: 3/10 keywords (30%)
+- kind: checklist
+  text: Reading Practice / Читаємо українською block in EVERY major section?
+  covered: false
+  coverage_note: 2/8 keywords (25%)
+- kind: must
+  text: '** When the `якщо` clause follows the main clause, a comma is still typically
+    required in formal writing, treating it as a standard complex sentence.'
+  covered: false
+  coverage_note: 4/15 keywords (27%)
+- kind: must
+  text: While the basic logic of `Якщо А, то Б` is similar to Russian `Если А, то
+    Б`, learners must avoid assuming the languages are interchangeable.
+  covered: false
+  coverage_note: 3/14 keywords (21%)
+- kind: must
+  text: The student must conjugate it correctly based on the context.
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: must
+  text: They were required at A1 but they cap immersion below 50% — at A2-late they
+    MUST be removed.
+  covered: false
+  coverage_note: 2/10 keywords (20%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 2/11 keywords (18%)

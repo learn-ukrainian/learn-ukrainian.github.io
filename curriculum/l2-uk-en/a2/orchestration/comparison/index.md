@@ -1,6 +1,6 @@
 # Build Summary: comparison (A2)
 
-Generated: 2026-04-11 00:40
+Generated: 2026-04-11 16:59
 
 ## Pipeline Phases
 
@@ -12,15 +12,15 @@ Generated: 2026-04-11 00:40
 | pre-verify | complete | 2026-04-09 00:05:41 |
 | write | complete | 2026-04-09 00:10:27 |
 | exercises | complete | 2026-04-09 00:10:27 |
-| activities | complete | 2026-04-09 00:12:29 |
+| activities | complete | 2026-04-11 14:54:31 |
 | verify-exercises | complete | 2026-04-09 00:12:29 |
 | annotate | complete | 2026-04-09 00:12:29 |
 | vocab | complete | 2026-04-09 00:18:00 |
 | enrich | complete | 2026-04-09 00:18:00 |
 | verify | complete | 2026-04-09 00:18:01 |
 | stress | complete | 2026-04-09 00:20:48 |
-| publish | complete | 2026-04-10 22:40:51 |
-| audit | complete | 2026-04-10 22:40:51 |
+| publish | complete | 2026-04-11 14:59:01 |
+| audit | complete | 2026-04-11 14:59:01 |
 
 ## Reviews
 
@@ -37,17 +37,28 @@ Generated: 2026-04-11 00:40
 | skeleton | gemini (auto) | 300s | ❌ |
 | skeleton | gemini (gemini-3-flash-preview) | 197s | ✅ |
 | activities | gemini-tools (gemini-3.1-pro-preview) | 121s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 160s | ✅ |
 | vocab | gemini (gemini-3-flash-preview) | 323s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 167s | ✅ |
 | write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 79s | ✅ |
+| write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 70s | ✅ |
 | write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 73s | ✅ |
+| write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 40s | ✅ |
 | write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 49s | ✅ |
+| write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 45s | ✅ |
 | write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 54s | ✅ |
+| write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 35s | ✅ |
 | write-chunk-05 | gemini-tools (gemini-3.1-pro-preview) | 32s | ✅ |
+| write-chunk-05 | gemini-tools (gemini-3.1-pro-preview) | 65s | ✅ |
 
 ## Files
 
 - `.build.lock`
+- `chunk-01.md`
+- `chunk-02.md`
+- `chunk-03.md`
+- `chunk-04.md`
+- `chunk-05.md`
 - `exercise-verification.json`
 - `pre-verify-results.md`
 - `quick-verify.json`

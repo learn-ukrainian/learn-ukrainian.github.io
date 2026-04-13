@@ -1,0 +1,62 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T21-17-4090e67d.json
+phase: write-chunk-02
+prompt_chars: 42815
+response_chars: 4469
+prompt_words: 6249
+response_words: 742
+sections:
+- name: header
+  start: 0
+  length: 428
+  fraction: 0.01
+- name: skeleton
+  start: 428
+  length: 1606
+  fraction: 0.0375
+- name: prior_summary
+  start: 2034
+  length: 3075
+  fraction: 0.0718
+- name: plan
+  start: 5109
+  length: 13267
+  fraction: 0.3099
+- name: wiki
+  start: 11665
+  length: 24230
+  fraction: 0.5659
+- name: output_spec
+  start: 42606
+  length: 209
+  fraction: 0.0049
+large_sections:
+- wiki
+directives_total: 19
+directives_covered: 13
+directives_missed:
+- kind: checklist
+  text: казати / кажу (to say — stem change model)
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: checklist
+  text: пити / п'ю (to drink — irregular model)
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: checklist
+  text: боротися / борюся (to fight/struggle — reflexive model)
+  covered: false
+  coverage_note: 0/6 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: inject_activity
+  text: group-sort, Sort motion verb forms into unidirectional vs. multidirectional
+    categories, 8 items
+  covered: false
+  coverage_note: marker missing

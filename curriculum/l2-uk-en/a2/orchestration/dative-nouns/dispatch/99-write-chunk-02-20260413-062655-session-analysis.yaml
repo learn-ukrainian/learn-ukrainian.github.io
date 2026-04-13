@@ -1,0 +1,56 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T04-26-c0d4c64e.json
+phase: write-chunk-02
+prompt_chars: 42089
+response_chars: 4610
+prompt_words: 5969
+response_words: 731
+sections:
+- name: header
+  start: 0
+  length: 446
+  fraction: 0.0106
+- name: skeleton
+  start: 446
+  length: 1631
+  fraction: 0.0388
+- name: prior_summary
+  start: 2077
+  length: 3364
+  fraction: 0.0799
+- name: plan
+  start: 5441
+  length: 12621
+  fraction: 0.2999
+- name: wiki
+  start: 10584
+  length: 23797
+  fraction: 0.5654
+- name: output_spec
+  start: 41859
+  length: 230
+  fraction: 0.0055
+large_sections:
+- wiki
+directives_total: 14
+directives_covered: 9
+directives_missed:
+- kind: checklist
+  text: показати (to show)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: пояснити (to explain)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: відповісти (to answer, to reply)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: inject_activity
+  text: fill-in-dative-masculine
+  covered: false
+  coverage_note: marker missing

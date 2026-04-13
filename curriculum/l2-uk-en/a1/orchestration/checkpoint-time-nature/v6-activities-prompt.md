@@ -1,4 +1,4 @@
-<!-- version: 1.1.0 | updated: 2026-03-31 -->
+<!-- version: 1.2.0 | updated: 2026-04-12 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -11,6 +11,35 @@ Generate an `activities/checkpoint-time-nature.yaml` file for module **27: Check
 
 ---
 
+## ⚠️ HARD COUNT TARGETS — READ TWICE
+
+These are the binding numerical contracts for THIS module. The audit will FAIL if you fall short.
+
+| Bucket | Min | Max | Notes |
+|---|---|---|---|
+| Total activities | 8 | 8+ | inline + workbook combined |
+| Inline (lesson tab) | 3 | 5 | one per `<!-- INJECT_ACTIVITY -->` marker, see below |
+| Workbook (Зошит tab) | 5 | 8 | extended practice |
+| Items per activity | 10 | — | each activity must have at least 10 items (unless its type cap is lower — see Activity Type Reference below) |
+
+**You MUST ship at least 3 inline activities AND at least 5 workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+
+**Type diversity is required.** The module (inline + workbook combined) MUST use at least **0** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level. (If `0` is `0`, the audit profile for this level does not enforce type diversity — but variety still produces a better lesson, so aim for 4+ types when the workbook allows it.)
+
+---
+
+## Allowed types for THIS level
+
+- **Inline (lesson) types:** match-up, quiz, fill-in, true-false, classify, group-sort
+- **Inline priority (preferred):** match-up, fill-in, quiz
+- **Workbook types:** fill-in, match-up, group-sort, unjumble, quiz, true-false, classify, observe, phrase-table, odd-one-out, anagram
+- **Workbook priority (preferred):** fill-in, match-up, group-sort, unjumble, anagram
+- **FORBIDDEN at this level:** image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables, cloze, error-correction, mark-the-words, translate, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, highlight-morphemes, grammar-identify, select
+
+Pick from the allowed list. Lean heavily on the priority lists. Do not use any forbidden type — the build will reject it.
+
+---
+
 ## Inline vs Workbook Split
 
 Activities have two placement categories:
@@ -19,7 +48,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Rule of thumb:** inline = 2-3 quick checks after key teaching points. Workbook = 4-8 deeper practice exercises covering the full topic.
+**Rule of thumb:** inline = 3–5 quick checks after key teaching points. Workbook = 5–8 deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
 
 ---
 
@@ -27,9 +56,9 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: fill-in-mixed-review -->`
-- `<!-- INJECT_ACTIVITY: match-up-logical-logic -->`
-- `<!-- INJECT_ACTIVITY: fill-in-routine-sequence -->`
+- `<!-- INJECT_ACTIVITY: fill-in-time-weather-chunks -->`
+- `<!-- INJECT_ACTIVITY: fill-in-day-description -->`
+- `<!-- INJECT_ACTIVITY: match-up-logical-answers -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -90,103 +119,134 @@ required: []
 ## Module Content (the prose the learner reads before exercises)
 
 <module_content>
-## Що ми знаємо? (What Do We Know?)
+## Що ми зна́ємо? (What Do We Know?)
 
-You have reached a significant milestone in your Ukrainian journey. The last five modules introduced the foundational vocabulary of daily communication: time, the calendar, weather, and your daily routine. You started by learning to read the clock, moving from numbers to formal time expressions. Then, you expanded your vocabulary to include the days of the week and the months of the year, allowing you to discuss schedules in broader strokes. You discovered how to describe the world outside your window with precise weather expressions and seasonal vocabulary. Finally, you brought all these elements together to narrate your own daily schedule and discuss your hobbies. A checkpoint is an opportunity to pause, reflect, and consolidate these foundational skills before moving forward.
+This checkpoint reviews the main patterns from A1.4: time, calendar, weather, daily routine, and hobbies. Use it to check whether you can combine these chunks into clear, simple Ukrainian.
 
-Take a moment to ask yourself a few essential questions about your progress. Can you confidently ask a stranger **Котра година?** (What time is it?) on the street? When scheduling a meeting, can you specify **о п'ятій годині** (at five o'clock)? Do you remember all seven days of the week, starting sequentially from **понеділок** (Monday)? Look outside right now—can you describe the current weather using impersonal constructions like **сонячно** (sunny) or **іде дощ** (it is raining)? Can you talk about what you usually do in the morning, afternoon, and evening? Can you talk about your hobbies, like what you do on the weekend? If you can answer yes to these questions, you have built a solid grammatical and lexical foundation.
+Let's start with a quick self-check. Read the following questions and see if you can answer them confidently in Ukrainian.
 
-:::note
-You do not need to memorize every single word perfectly right now. A checkpoint is about recognizing your progress. If you can understand the main ideas and patterns in this review, you are exactly where you need to be!
-:::
+* Can you say what time it is?
+  * **Котра́ годи́на?** (What time is it?)
+  * **Деся́та три́дцять.** (Ten thirty.)
+* Can you name your favorite season and month?
+  * **Моя́ улю́блена пора ро́ку — о́сінь.** (My favorite season is autumn.)
+  * **Мій улю́блений мі́сяць — жо́втень.** (My favorite month is October.)
+* Can you describe today's weather?
+  * **Яка сього́дні пого́да?** (What is the weather today?)
+  * **Сьогодні со́нячно і те́пло.** (Today it is sunny and warm.)
+* Can you talk about your weekend plans?
+  * **Що ти ро́биш у неді́лю?** (What are you doing on Sunday?)
+  * **У неділю я відпочива́ю і чита́ю.** (On Sunday I rest and read.)
+* Can you describe your morning routine?
+  * **Що ти робиш вра́нці?** (What do you do in the morning?)
+  * **Вранці я прокида́юся о сьо́мій.** (In the morning I wake up at seven.)
 
-These tools are absolutely essential for a vibrant social life in any Ukrainian-speaking environment. You need this specific vocabulary to make concrete plans with friends, understand local transport schedules, and simply talk about the world around you. Time and nature are universal topics of conversation. Mastering them allows you to move beyond basic greetings and start participating in real, practical exchanges. Whether you are arranging a coffee date, checking when a museum opens, or deciding if you need an umbrella today, these vocabulary sets work together constantly.
+If you can understand and answer these questions, you are ready for the checkpoint practice below.
 
-## Читання (Reading Practice)
+## Чита́ння (Reading Practice)
 
-The following short narrative describes a typical week for a person living and working in Ukraine. It combines time expressions, days of the week, weather vocabulary, and daily routine actions. Reading it aloud helps practice pronunciation, while highlighting how the sentences transition smoothly from one idea to the next.
+Read the short text about Oksana's week. Notice the time expressions, days, seasons, and weather words.
 
-**Мій робочий тиждень** (My work week)
+* **Приві́т! Ме́не зва́ти Окса́на.** (Hi! My name is Oksana.)
+* **Мій ти́ждень ду́же акти́вний.** (My week is very active.)
+* **У понеді́лок і се́реду я працю́ю з дев'я́тої до п'я́тої.** (On Monday and Wednesday I work from nine to five.)
+* **У вівто́рок я вивча́ю украї́нську мо́ву.** (On Tuesday I study the Ukrainian language.)
+* **На вихідни́х я ча́сто гуля́ю.** (On the weekend I often walk.)
+* **Сьогодні погода дуже га́рна.** (Today the weather is very good.)
+* **Я люблю́ осінь. Восени́ тепло.** (I love autumn. In autumn it is warm.)
+* **Взи́мку часто йде сніг і дуже хо́лодно.** (In winter it often snows and is very cold.)
+* **Я читаю кни́ги вдо́ма або́ йду в кіно́.** (I read books at home or go to the cinema.)
+* **А що ви ро́бите у субо́ту?** (And what do you do on Saturday?)
 
-*   **Сьогодні понеділок.** (Today is Monday.)
-*   **Вранці я прокидаюся о сьомій годині.** (In the morning I wake up at seven o'clock.)
-*   **Спочатку я снідаю.** (First I eat breakfast.)
-*   **Потім я йду на роботу.** (Then I go to work.)
-*   **Я завжди працюю з дев'ятої до п'ятої.** (I always work from nine to five.)
-*   **У середу ввечері я часто гуляю в парку.** (On Wednesday evening I often walk in the park.)
-*   **Зараз весна.** (It is spring now.)
-*   **На вулиці дуже тепло і сонячно.** (Outside it is very warm and sunny.)
-*   **У суботу я ніколи не працюю.** (On Saturday I never work.)
-*   **Взимку я люблю дивитися кіно.** (In winter I like to watch movies.)
-*   **Влітку я часто ходжу на річку.** (In summer I often go to the river.)
-*   **Нарешті я відпочиваю вдома.** (Finally I rest at home.)
+Oksana links schedule, weather, and hobbies in one short story. Answer these questions in English or simple Ukrainian.
+* What are Oksana's working hours on Monday and Wednesday?
+* What does she do on Tuesday?
+* What is the weather like in autumn?
+* What does she do when it snows and is cold outside?
+* What question does she ask you at the end?
 
-The linguistic structure of this text relies on specific grammatical patterns. Notice the choice of prepositions when talking about time. For days of the week, speakers use the preposition **у** or **в** followed by the accusative case, as seen in **у середу** (on Wednesday) and **у суботу** (on Saturday). However, when we talk about seasons, we do not use a preposition with a noun. Instead, we use a single seasonal adverb like **взимку** (in winter) or **влітку** (in summer). You can also see the sequence words **спочатку** (first), **потім** (then), and **нарешті** (finally) used to create a chronological order of the day's events. These small connective words are what transform a disjointed list of sentences into a natural, flowing narrative. By adding frequency adverbs like **завжди** (always) or **часто** (often), the speaker provides a clear picture of their consistent habits.
+<!-- INJECT_ACTIVITY: fill-in-time-weather-chunks -->
 
-## Граматика (Grammar Summary)
+## Грама́тика (Grammar Summary)
 
-Telling time requires understanding the difference between two key questions. When you want to know the current time, you ask **Котра година?** (What time is it?). When you want to know the timing of a specific event, you ask **О котрій годині?** (At what time?). In both cases, Ukrainian uses ordinal numbers in the feminine form to match the feminine noun **година** (hour). 
+Here is a quick review of the key A1.4 patterns.
 
-*   **Котра година?** — What time is it?
-*   **Зараз перша година.** — It is now one o'clock.
-*   **О котрій зустріч?** — At what time is the meeting?
-*   **Зустріч о п'ятій годині.** — The meeting is at five o'clock.
+To ask the time, use **Котра година?** To ask when something happens, use **О котрі́й годи́ні?**
 
-Your calendar vocabulary relies heavily on specific prepositions and case endings. To say that an event happens on a specific day, use **у** or **в** with the accusative case. To say an event happens in a specific month, use the locative case ending. The four seasons operate differently; they function as standalone adverbs without adding any extra prepositions. 
+* **Котра година?** (What time is it?) — **Пе́рша година.** (One o'clock.)
+* **О котрій годині?** (At what time?) — **О пе́ршій годині.** (At one o'clock.)
 
-*   **Я працюю у п'ятницю.** — I work on Friday.
-*   **Мій день народження у січні.** — My birthday is in January.
-*   **Взимку дуже холодно.** — In winter it is very cold.
-*   **Навесні гарна погода.** — In spring the weather is beautiful.
+For days of the week, use **у/в** + accusative. We choose **у** or **в** for euphony depending on the surrounding sounds.
+
+* **у понеділок** (on Monday)
+* **в суботу** (on Saturday)
+
+Next, we have months and seasons. Months take the locative case with **у** or **в**. Seasons, however, act as standalone adverbs, so they do not need a preposition.
+
+* **у січні** (in January)
+* **в се́рпні** (in August)
+* **взимку** (in winter)
+* **навесні́** (in spring)
+* **влі́тку** (in summer)
+* **восени** (in autumn)
+
+More examples:
+
+* **Мій день наро́дження у січні.** (My birthday is in January.)
+* **Ми відпочива́ємо в серпні.** (We rest in August.)
 
 :::tip
-Remember the Ukrainian euphony rules for **у** and **в**. You should use **у** before words starting with consonants like **в** or **ф**, and before consonant clusters (like **у вівторок** or **у п'ятницю**). You use **в** when it sits between two vowels. This alternation makes your Ukrainian sound smooth and natural.
+Always remember the rule of euphony (милозву́чність). We choose **у** or **в** according to the surrounding sounds, so both forms are possible: **у понеділок**, **в суботу**, **у січні**, **в серпні**.
 :::
 
-Describing the weather often involves impersonal constructions. You do not need a subject like "it" in Ukrainian. You simply state the condition using an adverb. For precipitation, use the verb **іде** (goes) combined with the noun. Finally, you can describe how often these weather patterns or your own habits occur using frequency adverbs.
+Weather, sequence, and frequency also stay simple at A1.
 
-*   **Сьогодні дуже тепло і сонячно.** — Today it is very warm and sunny.
-*   **Восени часто іде дощ.** — In autumn it often rains.
-*   **Я завжди читаю ввечері.** — I always read in the evening.
-*   **Вона ніколи не п'є каву.** — She never drinks coffee.
+* **Сьогодні холодно.** (Today it is cold.)
+* **Сьогодні дуже тепло.** (Today it is very warm.)
+* **На ву́лиці іде́ дощ.** (Outside it is raining.)
 
-<!-- INJECT_ACTIVITY: fill-in-mixed-review -->
+To connect your ideas and describe a routine, you can use sequence words.
 
-## Діалог (Connected Dialogue)
+* **споча́тку** (first)
+* **по́тім** (then / later)
+* **наре́шті** (finally)
 
-These rules apply directly to real-world situations. Two friends, Олена (Olena) and Марко (Marko), are planning a weekend trip to a nearby city. They need to check the weather forecast, agree on a departure time, and decide what activities they will do. They use the present tense and direct invitations to discuss their scheduled plans, which is a very common and natural way to speak in Ukrainian.
+You can also describe how often you do things using frequency adverbs.
 
-> **Марко:** Привіт! Яка завтра погода? *(Hi! What is the weather tomorrow?)*
-> **Олена:** Привіт! У суботу тепло і сонячно. *(Hi! On Saturday it is warm and sunny.)*
-> **Марко:** Чудово! Ходімо в музей! О котрій? *(Great! Let's go to the museum! At what time?)*
-> **Олена:** О дев'ятій ранку. *(At nine in the morning.)*
-> **Марко:** Добре. А що ми робимо в неділю? *(Good. And what do we do on Sunday?)*
-> **Олена:** У неділю іноді йде дощ. Ходімо в кіно. *(On Sunday it sometimes rains. Let's go to the movies.)*
+* **за́вжди́** (always)
+* **часто** (often)
+* **і́ноді** (sometimes)
+* **рі́дко** (rarely)
+* **ніколи** (never)
 
-This dialogue is packed with highly useful communicative chunks. The phrase **Ходімо!** (Let's go!) is a standard invitation. Notice how Olena specifies the exact part of the day by adding **ранку** (of the morning) after the time: **о дев'ятій ранку** (at nine in the morning). You can do the same with **вечора** (of the evening) to clarify your schedule, for example saying **о п'ятій вечора** (at five in the evening). The friends confirm their actions using the present tense, making their planning sound immediate and certain.
+<!-- INJECT_ACTIVITY: fill-in-day-description -->
 
-:::caution
-A common false friend! The word **неділя** (Sunday) refers specifically to the seventh day of the week. Do not confuse it with the word **тиждень** (week), which represents the entire seven-day period. 
-:::
+## Діало́г (Connected Dialogue)
 
-There is an important cultural and linguistic distinction to reinforce here. Remember that a work week is **робочий тиждень**, while the day of rest is **неділя**. When Marko and Olena discuss their plans, they clearly separate their Saturday activities from their Sunday expectations based on the weather forecast. 
+Now read a short dialogue that combines weather, time, and weekend plans. Notice how the speakers set a time and add a second activity.
 
-<!-- INJECT_ACTIVITY: match-up-logical-logic -->
-<!-- INJECT_ACTIVITY: fill-in-routine-sequence -->
+> **Андрі́й:** Привіт, Оле́но! Яка за́втра погода? *(Hi, Olena! What is the weather tomorrow?)*
+> **Оле́на:** Привіт! Тепло і сонячно. *(Hi! Warm and sunny.)*
+> **Андрій:** Чудо́во! Ході́мо в парк! О котрій? *(Great! Let's go to the park! At what time?)*
+> **Олена:** О деся́тій ра́нку. *(At ten in the morning.)*
+> **Андрій:** До́бре! Я часто гуляю в суботу, а влітку люблю парк. *(Good! I often walk on Saturday, and in summer I like the park.)*
+> **Олена:** А потім ходімо в кіно! *(And then let's go to the cinema!)*
+> **Андрій:** О п'я́тій? *(At five?)*
+> **Олена:** Так! *(Yes!)*
+
+This dialogue combines weather, invitations, time, a day of the week, and a sequence word in a natural A1 exchange. Notice the short replies: **О котрій?**, **О десятій ранку**, **А потім ходімо в кіно!**
+
+<!-- INJECT_ACTIVITY: match-up-logical-answers -->
 
 ## Підсумок — Summary
 
-You have reached the end of the Time and Nature phase! This is a major accomplishment that significantly expands your ability to communicate in everyday situations. Here is what you can now do confidently in Ukrainian:
+This checkpoint completes A1.4 and brings the main time-and-nature patterns together in one place. At this stage, the goal is not new theory but confident use: telling time, naming days and months, describing the weather, and talking about your routine.
 
-*   Tell time using hours (**Котра година? Перша, друга...**).
-*   Use time expressions for appointments (**О котрій? О п'ятій...**).
-*   Navigate the calendar: name all 7 days and 12 months with correct prepositions (**у вівторок**, **у березні**).
-*   Use seasonal adverbs (**взимку**, **навесні**, **влітку**, **восени**).
-*   Describe the weather and state of the environment using impersonal adverbs (**тепло**, **сонячно**, **іде дощ**).
-*   Sequence your actions using chronological adverbs like **спочатку**, **потім**, and **нарешті**.
-*   Describe your lifestyle with frequency words (**завжди**, **часто**, **іноді**).
+Take a moment to appreciate what you can do. You can tell time and plan meetings with friends. You can name all the days of the week, the months of the year, and the four seasons. You can look out the window and describe the weather accurately. Furthermore, you can tell a coherent story about your typical day, discuss your hobbies, and make plans using sequence and frequency words. These are crucial skills for everyday communication.
 
-Review these points and practice building your own sentences that combine weather, time, and routine. The next phase, A1.5, introduces navigation around the city, giving directions, and using transport. Your knowledge of time and days will be essential to read bus schedules and plan your visits!
+Reviewing this material helps the core A1.4 chunks become automatic. Read the examples again, answer the questions aloud, and reuse the dialogue patterns with your own times, days, and weather words.
+
+Next comes A1.5. Now that you can express *when* things happen, the next phase will focus on *where* things happen. In the upcoming modules, you will explore places in the city, ask for directions, use public transport, and describe nearby streets, shops, and other everyday locations.
 
 </module_content>
 
@@ -201,48 +261,68 @@ version: "1.0"
 module: checkpoint-time-nature
 level: a1
 
+# NOTE — these are SHAPE examples. The real targets are at the top of this prompt
+# (8 total / 3–5 inline / 5–8 workbook,
+# 10+ items per activity). The shapes below are TRUNCATED for readability;
+# YOUR output MUST hit those minimums.
+
 inline:
   - id: marker-id-here        # MUST match an <!-- INJECT_ACTIVITY: ... --> marker
     type: quiz                 # activity type
     instruction: "Оберіть правильний варіант"
-    items:
+    items:                     # ← real output: ≥ 10 items
       - question: "_____ стіл"
-        options: ["мій", "моя", "моє"]
+        options: ["мій", "моя", "моє", "мої"]
         correct: 0             # 0-based index
+      - question: "Це ____ книга."
+        options: ["мій", "моя", "моє", "мої"]
+        correct: 1
+      # ... add at least 10 items total — never stop at 1-2
 
   - id: another-marker-id
     type: fill-in
     instruction: "Вставте правильне слово"
-    items:
+    items:                     # ← real output: ≥ 10 items
       - sentence: "Це ____ кімната."
         answer: "моя"
         options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ вікно."
+        answer: "моє"
+        options: ["мій", "моя", "моє"]
+      # ... ≥ 10 items total
 
 workbook:
-  - type: match-up
+  - id: match-up-vocab
+    type: match-up
     instruction: "З'єднайте пари"
-    pairs:
+    pairs:                     # ← real output: ≥ 10 pairs
       - left: "стіл"
         right: "він"
       - left: "книга"
         right: "вона"
       - left: "вікно"
         right: "воно"
+      # ... ≥ 10 pairs total
 
-  - type: group-sort
+  - id: group-sort-gender
+    type: group-sort
     instruction: "Розподіліть слова за категоріями"
     groups:
-      - label: "Category A"
-        items: ["word1", "word2"]
-      - label: "Category B"
-        items: ["word3", "word4"]
+      - label: "Чоловічий рід"
+        items: ["стіл", "олівець", "будинок"]   # ≥ 3 items per group
+      - label: "Жіночий рід"
+        items: ["книга", "ручка", "школа"]
+      - label: "Середній рід"
+        items: ["вікно", "море", "молоко"]
 
-  - type: true-false
+  - id: true-false-grammar
+    type: true-false
     instruction: "Правда чи ні?"
-    items:
-      - statement: "Statement here"
-        correct: true
-        explanation: "Why it's true"
+    items:                     # ← real output: ≥ 10 items
+      - statement: "«Книга» — це чоловічий рід."
+        correct: false
+        explanation: "Книга закінчується на -а, отже жіночий рід."
+      # ... ≥ 10 items total
 
   - type: error-correction
     instruction: "Виправте помилку"
@@ -313,7 +393,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -386,10 +466,15 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 ## Quality Rules
 
-**ITEM COUNT MINIMUMS (non-negotiable):**
-- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
-- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
-- If you can't think of enough items, add more examples from the module's vocabulary and content.
+**ACTIVITY COUNT MINIMUMS (non-negotiable, audit-enforced):**
+- **Total: 8 activities.** Inline: 3–5. Workbook: 5–8. The audit gate FAILS the module if you ship fewer.
+- **Type diversity: workbook MUST cover ≥5 distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
+- **Match the inline markers exactly.** Every `<!-- INJECT_ACTIVITY: id -->` marker in the prose needs a matching inline activity with that exact id. Skipping markers means the lesson tab is broken.
+
+**ITEM COUNT MINIMUMS (non-negotiable, per-activity):**
+- **Default minimum: 10 items per activity.** Quiz, fill-in, match-up, true-false, anagram, error-correction, translate, cloze, mark-the-words, divide-words, count-syllables, odd-one-out, group-sort categories: all ≥ 10.
+- **Lower minimums for specific types only:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items, essay-response/critical-analysis = 1 prompt.
+- If you can't think of enough items, add more examples from the module's vocabulary and content. NEVER ship a 1-item or 2-item activity unless its type cap explicitly allows it.
 - **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
 - **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
@@ -496,6 +581,27 @@ IMPORTANT: After using tools, output your COMPLETE module content as plain text.
 1. Run `verify_words` on all Ukrainian words in your exercises — every word must exist in VESUM
 2. Run `query_cefr_level` on any word you're unsure about — it must be a1-appropriate
 3. For fill-in answers and distractors, verify the exact form (case, number, gender) with `verify_lemma`
+
+---
+
+## ⚠️ MANDATORY FINAL CHECKLIST — verify before emitting YAML
+
+Walk through this checklist explicitly before you start emitting. If ANY box is unchecked, fix it FIRST.
+
+- [ ] My output has **at least 3** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
+- [ ] My output has **at least 5** workbook activities.
+- [ ] **Total ≥ 8.**
+- [ ] **Every** activity has **at least 10** items, pairs, or statements (except types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3, essay-response=1).
+- [ ] The module (inline + workbook combined) uses **at least 0 distinct activity types** (or 4+ when 0 = 0 and the workbook size allows it). I am NOT shipping a wall of quizzes.
+- [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
+- [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
+- [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+- [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+- [ ] My inline count is between 3 and 5. I did NOT create more injection markers than 5.
+- [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
+- [ ] At B1+, all instructions are in Ukrainian (no English fallback).
+
+If you cannot tick all of these, REGENERATE the activities BEFORE outputting. Shipping under-spec means the build rejects you and the heal loop has to redo your work — wasting compute.
 
 ---
 

@@ -1,0 +1,65 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T14-57-9c2a7c1a.json
+phase: write-chunk-02
+prompt_chars: 52204
+response_chars: 8190
+prompt_words: 7064
+response_words: 1155
+sections:
+- name: header
+  start: 0
+  length: 415
+  fraction: 0.0079
+- name: skeleton
+  start: 415
+  length: 2298
+  fraction: 0.044
+- name: prior_summary
+  start: 2713
+  length: 3918
+  fraction: 0.0751
+- name: plan
+  start: 6631
+  length: 19762
+  fraction: 0.3786
+- name: wiki
+  start: 19961
+  length: 25610
+  fraction: 0.4906
+- name: output_spec
+  start: 52003
+  length: 201
+  fraction: 0.0039
+large_sections:
+- wiki
+directives_total: 33
+directives_covered: 27
+directives_missed:
+- kind: must
+  text: A vital aspect of this landscape is the «Закон про мову» (Language Law), which
+    establishes mandatory quotas for Ukrainian-language content on television and
+    radio.
+  covered: false
+  coverage_note: 6/16 keywords (38%)
+- kind: must
+  text: '**MANDATORY — never omit.'
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 4/11 keywords (36%)
+- kind: inject_activity
+  text: fill-in, "Вставте правильну граматичну форму у реченнях на тему що таке медіа?
+    (дієприкметники/дієприслівники)."
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: 'quiz, "Оберіть правильний варіант: лексика та граматика з розділу «Що таке
+    медіа?»."'
+  covered: false
+  coverage_note: marker missing

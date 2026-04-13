@@ -1,0 +1,100 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T11-39-82249ffa.json
+phase: write-chunk-03
+prompt_chars: 51138
+response_chars: 5460
+prompt_words: 7358
+response_words: 844
+sections:
+- name: header
+  start: 0
+  length: 400
+  fraction: 0.0078
+- name: skeleton
+  start: 400
+  length: 1717
+  fraction: 0.0336
+- name: prior_summary
+  start: 2117
+  length: 3515
+  fraction: 0.0687
+- name: plan
+  start: 5632
+  length: 17585
+  fraction: 0.3439
+- name: wiki
+  start: 16653
+  length: 27712
+  fraction: 0.5419
+- name: output_spec
+  start: 50929
+  length: 209
+  fraction: 0.0041
+large_sections:
+- wiki
+directives_total: 36
+directives_covered: 21
+directives_missed:
+- kind: checklist
+  text: прокидатися (to wake up — reflexive)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: снідати / обідати / вечеряти (to have breakfast / lunch / dinner)
+  covered: false
+  coverage_note: 1/7 keywords (14%)
+- kind: checklist
+  text: 'займатися (to engage in, do — reflexive: займатися спортом)'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: checklist
+  text: запізнюватися (to be late — reflexive)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: відкладати (to postpone)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: будильник (alarm clock)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: пошук роботи (job search)
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: checklist
+  text: співбесіда (interview)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: робоче місце (workplace)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: колега (colleague)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: must
+  text: Finally, before you even secure a job and join a team, you must successfully
+    pass a **співбесіда** (interview).
+  covered: false
+  coverage_note: 2/13 keywords (15%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 3/11 keywords (27%)
+- kind: skeleton_para
+  text: 'P4 (120w): Decolonization focus: The "Прати vs Стирати" distinction. Explaining
+    why ''стирати'' is a Russicism when applied to clothes (correct: прати) and means
+    ''to erase'' in Ukrainian. Mentioning ''праска'' vs ''утюг''.'
+  covered: false
+  coverage_note: 7/21 keywords (33%)
+- kind: inject_activity
+  text: quiz, Choose the correct Phase 3 grammar structure for workplace situations
+  covered: false
+  coverage_note: marker missing

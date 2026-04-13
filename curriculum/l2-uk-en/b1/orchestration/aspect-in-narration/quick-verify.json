@@ -2,12 +2,6 @@
   "attempt": 1,
   "passed": true,
   "errors": [],
-  "warnings": [
-    {
-      "check": "VOCABULARY",
-      "severity": "WARNING",
-      "message": "Missing 3/19 required vocab: {'word': 'оповідання', 'pos': 'noun:n', 'translation': 'short story, narration'}, {'word': 'оповідач', 'pos': 'noun:m', 'translation': 'narrator'}, {'word': 'спогад', 'pos': 'noun:m', 'translation': 'memory, recollection'}"
-    }
-  ],
-  "timestamp": "2026-04-11T00:46:53.365172+00:00"
+  "warnings": [],
+  "timestamp": "2026-04-11T11:25:51.136153+00:00"
 }

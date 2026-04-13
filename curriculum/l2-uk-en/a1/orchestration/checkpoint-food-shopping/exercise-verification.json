@@ -1,125 +1,293 @@
 {
-  "total_items": 76,
-  "grounded_items": 56,
+  "total_items": 109,
+  "grounded_items": 61,
   "ungrounded": [
     {
-      "word": "неістоти",
-      "exercise_type": "group-sort",
-      "context": "Неістоти — Inanimate (що?)",
-      "role": "context"
-    },
-    {
-      "word": "істоти",
-      "exercise_type": "group-sort",
-      "context": "Істоти — Animate (кого?)",
-      "role": "context"
-    },
-    {
-      "word": "кого",
-      "exercise_type": "group-sort",
-      "context": "Істоти — Animate (кого?)",
-      "role": "context"
-    },
-    {
-      "word": "лікаря",
-      "exercise_type": "group-sort",
-      "context": "лікаря",
+      "word": "яблук",
+      "exercise_type": "unjumble",
+      "context": "яблук.",
       "role": "answer"
     },
     {
-      "word": "сусіда",
-      "exercise_type": "group-sort",
-      "context": "сусіда",
+      "word": "п'єш",
+      "exercise_type": "fill-in",
+      "context": "п'єш",
       "role": "answer"
     },
     {
-      "word": "вчителя",
-      "exercise_type": "group-sort",
-      "context": "вчителя",
-      "role": "answer"
-    },
-    {
-      "word": "люблю",
-      "exercise_type": "quiz",
-      "context": "Я люблю ___.",
-      "role": "context"
-    },
-    {
-      "word": "чекаю",
-      "exercise_type": "quiz",
-      "context": "Я чекаю ___.",
-      "role": "context"
-    },
-    {
-      "word": "купую",
-      "exercise_type": "quiz",
-      "context": "Я купую ___.",
-      "role": "context"
-    },
-    {
-      "word": "тут",
+      "word": "картка",
       "exercise_type": "match-up",
-      "context": "Тут вільно?",
+      "context": "картка",
       "role": "answer"
     },
     {
-      "word": "вільно",
+      "word": "ціна",
       "exercise_type": "match-up",
-      "context": "Тут вільно?",
+      "context": "ціна",
       "role": "answer"
     },
     {
-      "word": "каша",
-      "exercise_type": "error-correction",
-      "context": "Я їм каша на сніданок.",
-      "role": "context"
+      "word": "дуже",
+      "exercise_type": "unjumble",
+      "context": "дуже",
+      "role": "answer"
     },
     {
-      "word": "тарас",
-      "exercise_type": "error-correction",
-      "context": "Я бачу Тарас.",
-      "role": "context"
+      "word": "все",
+      "exercise_type": "unjumble",
+      "context": "Все",
+      "role": "answer"
     },
     {
-      "word": "купує",
+      "word": "смачно",
+      "exercise_type": "unjumble",
+      "context": "смачно!",
+      "role": "answer"
+    },
+    {
+      "word": "було",
+      "exercise_type": "unjumble",
+      "context": "було",
+      "role": "answer"
+    },
+    {
+      "word": "реченні",
       "exercise_type": "true-false",
-      "context": "Анна купує помідори та огірки на ринку.",
+      "context": "У реченні «Я бачу брата» слово «брата» — це знахідний відмін",
       "role": "context"
     },
     {
-      "word": "та",
+      "word": "слово",
       "exercise_type": "true-false",
-      "context": "Анна купує помідори та огірки на ринку.",
+      "context": "У реченні «Я бачу брата» слово «брата» — це знахідний відмін",
       "role": "context"
     },
     {
-      "word": "ринку",
+      "word": "це",
       "exercise_type": "true-false",
-      "context": "Анна купує помідори та огірки на ринку.",
+      "context": "У реченні «Я бачу брата» слово «брата» — це знахідний відмін",
       "role": "context"
     },
     {
-      "word": "п'є",
+      "word": "знахідний",
       "exercise_type": "true-false",
-      "context": "Анна п'є каву з молоком у кафе.",
+      "context": "У реченні «Я бачу брата» слово «брата» — це знахідний відмін",
       "role": "context"
     },
     {
-      "word": "знає",
+      "word": "відмінок",
       "exercise_type": "true-false",
-      "context": "Олена знає Тараса.",
+      "context": "У реченні «Я бачу брата» слово «брата» — це знахідний відмін",
       "role": "context"
     },
     {
-      "word": "брат",
+      "word": "називний",
       "exercise_type": "true-false",
-      "context": "Тарас — це брат Анни.",
+      "context": "У реченні «Я п'ю воду» слово «воду» — це називний відмінок (",
       "role": "context"
     },
     {
-      "word": "анни",
+      "word": "не",
       "exercise_type": "true-false",
-      "context": "Тарас — це брат Анни.",
+      "context": "Слово «борщ» не змінюється у знахідному відмінку, тому що це",
+      "role": "context"
+    },
+    {
+      "word": "змінюється",
+      "exercise_type": "true-false",
+      "context": "Слово «борщ» не змінюється у знахідному відмінку, тому що це",
+      "role": "context"
+    },
+    {
+      "word": "знахідному",
+      "exercise_type": "true-false",
+      "context": "Слово «борщ» не змінюється у знахідному відмінку, тому що це",
+      "role": "context"
+    },
+    {
+      "word": "відмінку",
+      "exercise_type": "true-false",
+      "context": "Слово «борщ» не змінюється у знахідному відмінку, тому що це",
+      "role": "context"
+    },
+    {
+      "word": "тому",
+      "exercise_type": "true-false",
+      "context": "Слово «борщ» не змінюється у знахідному відмінку, тому що це",
+      "role": "context"
+    },
+    {
+      "word": "неістота",
+      "exercise_type": "true-false",
+      "context": "Слово «борщ» не змінюється у знахідному відмінку, тому що це",
+      "role": "context"
+    },
+    {
+      "word": "правильно",
+      "exercise_type": "true-false",
+      "context": "Правильно сказати «Я люблю мама».",
+      "role": "context"
+    },
+    {
+      "word": "сказати",
+      "exercise_type": "true-false",
+      "context": "Правильно сказати «Я люблю мама».",
+      "role": "context"
+    },
+    {
+      "word": "мама",
+      "exercise_type": "true-false",
+      "context": "Правильно сказати «Я люблю мама».",
+      "role": "context"
+    },
+    {
+      "word": "жіночі",
+      "exercise_type": "true-false",
+      "context": "Жіночі імена, як «Олена», змінюють закінчення на -у у знахід",
+      "role": "context"
+    },
+    {
+      "word": "імена",
+      "exercise_type": "true-false",
+      "context": "Жіночі імена, як «Олена», змінюють закінчення на -у у знахід",
+      "role": "context"
+    },
+    {
+      "word": "як",
+      "exercise_type": "true-false",
+      "context": "Жіночі імена, як «Олена», змінюють закінчення на -у у знахід",
+      "role": "context"
+    },
+    {
+      "word": "олена",
+      "exercise_type": "true-false",
+      "context": "Жіночі імена, як «Олена», змінюють закінчення на -у у знахід",
+      "role": "context"
+    },
+    {
+      "word": "змінюють",
+      "exercise_type": "true-false",
+      "context": "Жіночі імена, як «Олена», змінюють закінчення на -у у знахід",
+      "role": "context"
+    },
+    {
+      "word": "закінчення",
+      "exercise_type": "true-false",
+      "context": "Жіночі імена, як «Олена», змінюють закінчення на -у у знахід",
+      "role": "context"
+    },
+    {
+      "word": "відповідає",
+      "exercise_type": "true-false",
+      "context": "У реченні «Я їм піцу» слово «піцу» відповідає на питання «що",
+      "role": "context"
+    },
+    {
+      "word": "питання",
+      "exercise_type": "true-false",
+      "context": "У реченні «Я їм піцу» слово «піцу» відповідає на питання «що",
+      "role": "context"
+    },
+    {
+      "word": "друг",
+      "exercise_type": "true-false",
+      "context": "Слово «друг» у знахідному відмінку буде «друг».",
+      "role": "context"
+    },
+    {
+      "word": "буде",
+      "exercise_type": "true-false",
+      "context": "Слово «друг» у знахідному відмінку буде «друг».",
+      "role": "context"
+    },
+    {
+      "word": "щоб",
+      "exercise_type": "true-false",
+      "context": "Щоб запитати про ціну одного яблука, ми кажемо «Скільки кошт",
+      "role": "context"
+    },
+    {
+      "word": "запитати",
+      "exercise_type": "true-false",
+      "context": "Щоб запитати про ціну одного яблука, ми кажемо «Скільки кошт",
+      "role": "context"
+    },
+    {
+      "word": "про",
+      "exercise_type": "true-false",
+      "context": "Щоб запитати про ціну одного яблука, ми кажемо «Скільки кошт",
+      "role": "context"
+    },
+    {
+      "word": "ціну",
+      "exercise_type": "true-false",
+      "context": "Щоб запитати про ціну одного яблука, ми кажемо «Скільки кошт",
+      "role": "context"
+    },
+    {
+      "word": "одного",
+      "exercise_type": "true-false",
+      "context": "Щоб запитати про ціну одного яблука, ми кажемо «Скільки кошт",
+      "role": "context"
+    },
+    {
+      "word": "кажемо",
+      "exercise_type": "true-false",
+      "context": "Щоб запитати про ціну одного яблука, ми кажемо «Скільки кошт",
+      "role": "context"
+    },
+    {
+      "word": "фразі",
+      "exercise_type": "true-false",
+      "context": "У фразі «кава з молоком» слово «молоком» стоїть у знахідному",
+      "role": "context"
+    },
+    {
+      "word": "стоїть",
+      "exercise_type": "true-false",
+      "context": "У фразі «кава з молоком» слово «молоком» стоїть у знахідному",
+      "role": "context"
+    },
+    {
+      "word": "український",
+      "exercise_type": "fill-in",
+      "context": "Я люблю український ____.",
+      "role": "context"
+    },
+    {
+      "word": "одну",
+      "exercise_type": "fill-in",
+      "context": "Дайте одну ____, будь ласка.",
+      "role": "context"
+    },
+    {
+      "word": "свого",
+      "exercise_type": "fill-in",
+      "context": "Я бачу свого ____.",
+      "role": "context"
+    },
+    {
+      "word": "чекаємо",
+      "exercise_type": "fill-in",
+      "context": "Ми чекаємо ____.",
+      "role": "context"
+    },
+    {
+      "word": "цю",
+      "exercise_type": "fill-in",
+      "context": "Я знаю цю ____.",
+      "role": "context"
+    },
+    {
+      "word": "свіжий",
+      "exercise_type": "fill-in",
+      "context": "Я купую свіжий ____.",
+      "role": "context"
+    },
+    {
+      "word": "ці",
+      "exercise_type": "fill-in",
+      "context": "Скільки коштують ці ____?",
       "role": "context"
     }
   ],

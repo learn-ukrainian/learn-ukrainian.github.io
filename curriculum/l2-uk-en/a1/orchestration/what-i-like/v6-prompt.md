@@ -238,26 +238,24 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-- Confirmed: любити, подобатися, читати, гуляти, готувати, слухати, дивитися, грати, малювати, подорожувати, співати, музика, фільм, книга.
-- Not found: None.
+- Confirmed: любити, подобатися, читати, гуляти, готувати, слухати, дивитися, грати, малювати, подорожувати, співати, музика, фільм, книга
+- Not found: 
 
 ## Grammar Rules
-- Infinitive endings: Правопис §106 — The standard ending for the infinitive is **-ти** (e.g., читати, любити). In certain contexts (poetry, colloquial speech), **-ть** can occur, but **-ти** is the primary literary form.
-- Negation with verbs: Правопис §107 — The particle **не** is written separately from verbs (e.g., не люблю, не подобається), except in cases where the verb does not exist without it (e.g., ненавидіти, нетямитися).
+- [частка не з дієсловами]: Правопис §44 — Окремо пишемо частку не з дієсловами: не ї́сти, не пи́ти; не мо́же не ба́чити;
 
 ## Calque Warnings
-- подобатися: OK — Used correctly for "to like" in the sense of "to be pleasing to" (Мені подобається...).
-- любити: OK — Used correctly for "to like/love" (Я люблю читати...).
-- грати: OK — Note: Use "грати в" + Accusative for sports/games (грати в футбол) and "грати на" + Locative for musical instruments (грати на гітарі). In the plan, it is used as a general activity.
+- [мені подобається]: OK — no issues found in style guide
+- [я люблю]: OK — no issues found in style guide
+- [грати]: OK — no issues found in style guide
 
 ## CEFR Check
-- любити: A1 — OK (High frequency, found in Grade 1-2 textbooks).
-- читати: A1 — OK (Fundamental skill, Grade 1-2).
-- гуляти: A1 — OK (Basic activity, Grade 2).
-- готувати: A1 — OK (Daily routine, Grade 2).
-- подорожувати: A1 — OK (Found in Grade 2 textbooks: "Ви продовжуєте подорожувати світом української мови").
-- фільм: A1 — OK (Modern basic vocabulary).
-- музика: A1 — OK (Internationalism, basic vocabulary).
+- [любити]: A1 — OK
+- [подобатися]: A1 — OK
+- [читати]: A1 — OK
+- [гуляти]: A1 — OK
+- [готувати]: A1 — OK
+- [подорожувати]: A1 — OK
 </pre_verified_facts>
 
 
@@ -585,12 +583,14 @@ These exercises from Ukrainian textbooks are the gold standard for A1 activities
 
 ## Section Structure
 
-Write these sections as H2 headings, in this exact order:
+Write these sections as H2 headings, in this **exact** order:
 
 - `## Діалоги (Dialogues)` (~300 words)
 - `## Я люблю... (I Like...)` (~300 words)
 - `## Мені подобається... (I Like...)` (~300 words)
 - `## Підсумок — Summary` (~300 words)
+
+**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim** as an `## H2` line. This includes the FINAL summary/transition section (`Підсумок: ...`, `Підсумок та перехід до M...`, etc.) — the writer's most common failure is silently dropping the closing section. Do NOT skip it. Do NOT renumber. Do NOT merge headings. The post-write quick-verify check will fail your build if any heading is missing, even if the prose itself is excellent.
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -638,6 +638,25 @@ PLAN-AWARE EXEMPTIONS: The following bans are RELAXED for this module because th
 - **Zero calques**: No приймати душ→брати душ, приймати рішення→ухвалювати рішення
 - **Zero paronyms**: тактична≠тактовна, ефектний≠ефективний — use the right word, not a similar-sounding one
 - **Natural Ukrainian**: Write how a Ukrainian teacher would explain this to a student. Not robotic, not textbook-dry, not overly casual.
+
+### FORBIDDEN WORDS — never write these (#1189)
+
+The following Russian words have leaked into past builds and broken modules. They are **hard-banned** — the post-write toxic-token scanner will fail your build the moment it sees one. Use the Ukrainian alternative every time, even in dialogues, even in casual prose, even when quoting a learner's mistake (use a `<!-- VERIFY -->` placeholder instead of typing the Russian form):
+
+| Russian (FORBIDDEN) | Ukrainian (USE THIS) |
+|---|---|
+| хорошо | добре |
+| конечно | звичайно / певна річ |
+| спасибо | дякую |
+| пожалуйста | будь ласка / прошу |
+| ничего | нічого |
+| сейчас | зараз |
+| тоже | теж / також |
+| здесь | тут |
+| кот | кіт |
+| кон | кін |
+
+This list is enforced word-for-word by `scripts/build/quick_verify.py` (SEVERE_RUSSIANISMS). If you produce any of these tokens — even inside a quoted example, even inside a dialogue line spoken by a Russian-speaking character — the build halts immediately. There is no exception.
 
 **Authority hierarchy (if uncertain about a word, check in this order):**
 VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (stress) → Антоненко-Давидович (style) → Грінченко (etymology).
@@ -749,37 +768,36 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Діалоги — Dialogues (~330 words)
-- P1 (~120 words): [Dialogue 1: Meeting at a tandem exchange. Anna and Viktor discuss hobbies. Viktor asks: "Що ти любиш робити?" Anna responds with a list: "Я люблю читати і слухати музику." Viktor shares his passion for cooking: "Я люблю готувати." They use 'Правда?' to show interest and introduce the verb 'готуєш' naturally.]
-- P2 (~120 words): [Dialogue 2: Preferences regarding objects. Viktor shows Anna a book and a film. He asks: "Тобі подобається ця книга?" Anna confirms: "Так, мені подобається." When asked about a film, she expresses a negative preference: "Ні, мені не подобається цей фільм. Мені подобається музика." This dialogue establishes 'подобається' as a chunk for things.]
-- P3 (~90 words): [Analysis of the dialogues: Point out that when we talk about *doing* things (actions like reading or cooking), we used 'люблю'. When we talked about *things* (the book, the film, music), we used 'подобається'. Note the transition from verbs to nouns.]
+## Діалоги (~320 words total)
+- P1 (~40 words): Set the scene: It is your first day at a language exchange, and you are getting to know your tandem partner, Віктор, by sharing hobbies over tea.
+- P2 (~120 words): Dialogue 1 — Meeting someone's interests. A conversation between Анна and Віктор using the "люблю + infinitive" pattern: "Що ти любиш робити? — Я люблю читати і слухати музику. — А я люблю готувати. — Правда? Що ти готуєш?".
+- P3 (~40 words): A brief transition pointing out how Анна and Віктор naturally use "люблю" followed by action words that end in "-ти" to express their hobbies.
+- P4 (~120 words): Dialogue 2 — Describing preferences. A follow-up conversation focusing on liking specific things using the "подобається" chunk: "Тобі подобається ця книга? — Так, мені подобається. — А цей фільм? — Ні, мені не подобається. Мені подобається музика."
 
-## Я люблю... — I Like Doing... (~330 words)
-- P1 (~80 words): [Explaining the structure "Я люблю + infinitive". Explain that this is the most direct way to talk about hobbies. Provide the formula: Subject (Я) + verb (люблю) + Action (Infinitive). Use 3 core examples: Я люблю читати, Я люблю малювати, Я люблю співати.]
-- P2 (~80 words): [Defining the Ukrainian infinitive. Explain that the "dictionary form" of a verb always ends in the suffix -ти. Give examples of how to spot it in a dictionary: читати (to read), гуляти (to walk), слухати (to listen). Explain that the ending -ти never changes in this 'like' structure.]
-- P3 (~100 words): [Hobby Vocabulary Expansion. Introduce high-frequency verbs for free time: дивитися (to watch), грати (to play), подорожувати (to travel), готувати (to cook). Briefly introduce the prepositions for sports and instruments: 'грати у футбол' (sports) vs 'грати на гітарі' (instruments) as fixed phrases to memorize.]
-- <!-- INJECT_ACTIVITY: match-up-infinitives --> [match-up, Match infinitives to their English meanings: читати ↔ to read, 8 items]
-- <!-- INJECT_ACTIVITY: fill-in-hobbies --> [fill-in, Complete the sentence based on a picture: Я люблю ___. (e.g., гуляти, малювати), 8 items]
-- P4 (~70 words): [Negation with 'люблю'. Explain that to say "I don't like", we simply place 'не' before the verb. Provide contrasting examples: "Я люблю гуляти" vs "Я не люблю гуляти". Explain that 'не' is always a separate word.]
+## Я люблю... (~330 words total)
+- P1 (~100 words): Introduce the structure "Я люблю" + infinitive to express what activities you enjoy doing. Provide concrete examples: "Я люблю читати" (I like to read), "Я люблю гуляти" (I like to walk), "Я люблю готувати" (I like to cook). Explain that this structure is used specifically for actions.
+- P2 (~100 words): Explain the grammatical concept of the infinitive form. Define it as the dictionary form of a verb, noting that it always ends in the suffix "-ти" in Ukrainian. Reinforce that this fixed "-ти" form is what immediately follows "Я люблю".
+- P3 (~130 words): Expand the vocabulary with common infinitive verbs for hobbies: "слухати" (to listen), "дивитися" (to watch), "грати" (to play), "малювати" (to draw), "подорожувати" (to travel), and "співати" (to sing). Warn the learner that pronunciation and stress vary across these verbs and must be memorized individually.
+- <!-- INJECT_ACTIVITY: match-infinitives --> [match-up, Match infinitives to their meanings: читати ↔ to read, 8 items]
+- <!-- INJECT_ACTIVITY: fill-in-activities --> [fill-in, Complete: Я люблю ___. (choose infinitive for the picture), 8 items]
 
-## Мені подобається... — It Pleases Me... (~340 words)
-- P1 (~100 words): [Introduction to the 'Мені подобається' construction. Explain that this is a "fixed chunk" used to express that you like a thing (a noun). Emphasize that learners should not analyze the grammar of 'мені' (dative) yet—just memorize the phrase. Examples: Мені подобається книга, Мені подобається музика, Мені подобається Київ.]
-- P2 (~100 words): [Distinguishing 'любити' vs 'подобатися'. Use the pedagogical distinction: 'любити' is for active hobbies, passions, and things you "love" (Я люблю читати). 'Подобатися' is for general liking, things, and first impressions (Мені подобається цей фільм). Mention that 'любити' is a stronger emotion.]
-- P3 (~100 words): [Asking questions and Negation. Show how to ask "Do you like?" using both structures: "Ти любиш читати?" and "Тобі подобається цей фільм?". Explain the negative: "Мені не подобається". Note that the word order 'Тобі подобається' or 'Подобається тобі' can vary, but the chunk remains.]
-- <!-- INJECT_ACTIVITY: quiz-like-choice --> [quiz, Choose the correct structure based on context (noun vs infinitive): Люблю or подобається?, 8 items]
-- <!-- INJECT_ACTIVITY: fill-in-negatives --> [fill-in, Change the positive sentence to negative: Я люблю → Я не люблю, 6 items]
-- P4 (~40 words): [Common error warning. Explicitly warn against literal translation of "I like". Correct the mistake "Я подобаюся футбол" to "Мені подобається футбол", explaining that in Ukrainian, the football is doing the "pleasing".]
+## Мені подобається... (~360 words total)
+- P1 (~100 words): Introduce "Мені подобається" as the second way to say "I like". Contrast its usage directly with "Я люблю": explain that while "Я люблю" + infinitive is for activities, "Мені подобається" + noun is used for liking objects, things, or places.
+- P2 (~100 words): Provide examples of "Мені подобається" functioning as a fixed, memorized chunk. Explicitly state that we are not analyzing the underlying dative grammar yet. Show examples: "Мені подобається музика", "Мені подобається ця книга", "Мені подобається Київ".
+- P3 (~90 words): Explain how to form the negative for both structures by placing "не" directly before the verb. Provide contrasting examples: "Я не люблю готувати" for actions, and "Мені не подобається цей фільм" for things.
+- P4 (~70 words): Introduce how to ask questions about preferences: "Ти любиш читати?" and "Тобі подобається?". Briefly note that "любити" changes form depending on the person ("я люблю", "ти любиш"), but reassure the learner that full conjugation rules will be covered in module 17.
+- <!-- INJECT_ACTIVITY: quiz-like-structure --> [quiz, Люблю or подобається? Choose the right structure., 8 items]
+- <!-- INJECT_ACTIVITY: fill-in-negative --> [fill-in, Make it negative: Я люблю → Я не люблю, 6 items]
 
-## Підсумок — Summary (~300 words)
-- P1 (~150 words): [Recap of the two ways to say "I like". First, for activities: "Я люблю + -ти verb" (Я люблю співати). Second, for things: "Мені подобається + noun" (Мені подобається музика). Reminder that 'не' always comes before the verb to make it negative (Я не люблю, Мені не подобається).]
-- P2 (~150 words): [Self-check checklist for the learner:
-  - Can you name three hobbies? (Я люблю читати, малювати, гуляти).
-  - Can you name two things you like? (Мені подобається музика, книга).
-  - Do you know the ending of a Ukrainian infinitive? (-ти).
-  - Can you tell a friend you don't like something? (Мені не подобається...).
-  - Do you know which preposition to use with 'гітара' (на) and 'футбол' (у)?]
+## Підсумок — Summary (~300 words total)
+- P1 (~100 words): Recap the core distinction taught in the module: use "Я люблю" + infinitive (-ти) for activities you enjoy doing, and use the chunk "Мені подобається" + noun for things and objects that you like.
+- P2 (~80 words): Summarize the negation rule, reminding learners to simply place "не" before the verb to create "не люблю" and "не подобається".
+- P3 (~120 words): 
+  * Name 3 things you like doing (Я люблю...).
+  * Name 2 things you like (Мені подобається...).
+  * Name 1 thing you don't like (Я не люблю... / Мені не подобається...).
 
-Grand total: ~1300 words
+Grand total: ~1310 words
 </skeleton>
 
 ## Output Format
@@ -787,11 +805,57 @@ Grand total: ~1300 words
 Write in Markdown. Use:
 - `## Section Title` for main sections
 - `### Subsection` for subsections within a section
-- `**bold**` for Ukrainian words being taught — EVERY bold Ukrainian word MUST have an English translation on first use, either in parentheses `**слово** (translation)` or inline `**слово** means "translation"`. No exceptions.
+- `**bold**` for Ukrainian words being taught. For **A1 and A2** levels, provide an English translation on first use (e.g. `**стіл** (table)`) because learners lack the vocabulary to infer meaning. For **B1 and above**, do NOT provide inline translations for standard vocabulary — the learner will use the module's словник (vocabulary table). You may provide ONE parenthetical English translation ONLY for highly abstract grammar/linguistic terms on first use (e.g. `**видова пара** (aspectual pair)`).
 - Tables for paradigms (conjugation, declension)
 - `:::tip` / `:::caution` / `:::note` for callout boxes
 - `<!-- INJECT_ACTIVITY: {id} -->` for exercise placement (markers only — do NOT write exercise content)
 
 Do NOT write MDX component syntax, JSON, or DSL exercise blocks (:::quiz, etc.). Plain Markdown with injection markers.
+
+---
+
+## MANDATORY FINAL CHECKLIST (#1189)
+
+Before you finish writing, verify the prose against this checklist. Failing any item will fail the build.
+
+### Section headings (verbatim)
+
+Every heading from "Section Structure" above MUST appear as an `## H2` in your output, in order, **including the closing `Підсумок:` / `Підсумок та перехід до M...` summary**. The single most common writer failure across the B1 build has been silently dropping the final summary section. Re-read your output before stopping. If the last section in the plan is missing, write it now.
+
+### Required vocabulary (every word must appear)
+
+You MUST use **every word** from the list below at least once in the prose, in a natural sentence with bold + English translation. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, прагматика, діагностика, дієвідмінювання, зворотний, двовидовий, одновидовий, неозначено-кількісний, etc.) is the most frequently dropped category — actively find homes for those words even if it means adding a sentence that defines them.
+
+- [ ] любити (to love/like — verb)
+- [ ] подобатися (to be pleasing — used as 'to like')
+- [ ] читати (to read)
+- [ ] гуляти (to walk)
+- [ ] готувати (to cook)
+- [ ] слухати (to listen)
+- [ ] дивитися (to watch)
+- [ ] грати (to play)
+
+### Forbidden words (never produce)
+
+Do not write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use `<!-- VERIFY -->` instead). The post-write toxic-token scanner will fail the build immediately:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+### Level-specific immersion check
+
+The level-appropriate immersion rule was already injected at the top of
+this prompt as `IMMERSION RULE`. Re-read it now BEFORE you stop writing.
+If your level's rule contains a CHECKLIST block, walk through every item.
+If it doesn't, just verify your output matches the LANGUAGE ROLES and
+TARGET stated in that block.
+
+This used to hard-code a B1+ checklist that confused A1/A2 models (where
+translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+The single source of truth is now
+`scripts/pipeline/config_tables.py:IMMERSION_RULES`.
+
+---
 
 Begin writing now. Start with the first section heading.

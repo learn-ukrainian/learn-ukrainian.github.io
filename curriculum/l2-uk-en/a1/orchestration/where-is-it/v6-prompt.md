@@ -226,6 +226,45 @@ references:
 
 ---
 
+## Pre-Verified Facts (from MCP tools — use these, do NOT guess)
+
+A verification step already called VESUM, textbooks, Правопис, and style guide tools. The results below are GROUND TRUTH. Use them:
+- If a word is marked ❌ NOT IN VESUM — do NOT use it
+- If a textbook excerpt is provided — use that pedagogy
+- If a calque is flagged — use the correct alternative
+- If CEFR says a word is above target — find a simpler synonym
+
+You do NOT need to call tools yourself — the facts are already verified.
+
+<pre_verified_facts>
+## VESUM Verification
+- Confirmed: школа, робота, банк, магазин, вулиця, місто, парк, лікарня, кафе, площа, вокзал, пошта, школі, роботі, банку, магазині, вулиці, місті, парку, лікарні, площі, вокзалі, пошті
+- Not found: 
+
+## Grammar Rules
+- Чергування У/В: Правопис §23 — Щоб уникнути збігу букв на позначення приголосних звуків... вживають прийменник "у". Щоб уникнути збігу букв, що передають голосні... вживають прийменник "в".
+
+## Calque Warnings
+- по вулиці: Calque — на вулиці (Антоненко-Давидович: неправильно "живу по вулиці", треба "живу на вулиці")
+- на вулиці: OK — на вулиці
+- на Україні: Calque — в Україні (згідно з інструкціями плану, питання суверенітету)
+- на роботі: OK — на роботі
+- в місті: OK — в місті
+
+## CEFR Check
+- школа: A1 — OK
+- робота: A1 — OK
+- банк: A1 — OK
+- магазин: A1 — OK
+- вулиця: A1 — OK
+- місто: A1 — OK
+- парк: A1 — OK
+- лікарня: A1 — OK
+- кафе: A1 — OK
+- площа: A1 — OK
+- вокзал: A1 — OK
+- пошта: A1 — OK
+</pre_verified_facts>
 
 
 ## Wiki Teaching Brief — Your Authoritative Source
@@ -520,12 +559,14 @@ These exercises from Ukrainian textbooks are the gold standard for A1 activities
 
 ## Section Structure
 
-Write these sections as H2 headings, in this exact order:
+Write these sections as H2 headings, in this **exact** order:
 
 - `## Діалоги (Dialogues)` (~300 words)
 - `## Місцевий відмінок (The Locative Case)` (~300 words)
 - `## В чи на? (В or На?)` (~300 words)
 - `## Підсумок — Summary` (~300 words)
+
+**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim** as an `## H2` line. This includes the FINAL summary/transition section (`Підсумок: ...`, `Підсумок та перехід до M...`, etc.) — the writer's most common failure is silently dropping the closing section. Do NOT skip it. Do NOT renumber. Do NOT merge headings. The post-write quick-verify check will fail your build if any heading is missing, even if the prose itself is excellent.
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -571,6 +612,25 @@ HARD GRAMMAR RULES (audit will reject violations):
 - **Zero calques**: No приймати душ→брати душ, приймати рішення→ухвалювати рішення
 - **Zero paronyms**: тактична≠тактовна, ефектний≠ефективний — use the right word, not a similar-sounding one
 - **Natural Ukrainian**: Write how a Ukrainian teacher would explain this to a student. Not robotic, not textbook-dry, not overly casual.
+
+### FORBIDDEN WORDS — never write these (#1189)
+
+The following Russian words have leaked into past builds and broken modules. They are **hard-banned** — the post-write toxic-token scanner will fail your build the moment it sees one. Use the Ukrainian alternative every time, even in dialogues, even in casual prose, even when quoting a learner's mistake (use a `<!-- VERIFY -->` placeholder instead of typing the Russian form):
+
+| Russian (FORBIDDEN) | Ukrainian (USE THIS) |
+|---|---|
+| хорошо | добре |
+| конечно | звичайно / певна річ |
+| спасибо | дякую |
+| пожалуйста | будь ласка / прошу |
+| ничего | нічого |
+| сейчас | зараз |
+| тоже | теж / також |
+| здесь | тут |
+| кот | кіт |
+| кон | кін |
+
+This list is enforced word-for-word by `scripts/build/quick_verify.py` (SEVERE_RUSSIANISMS). If you produce any of these tokens — even inside a quoted example, even inside a dialogue line spoken by a Russian-speaking character — the build halts immediately. There is no exception.
 
 **Authority hierarchy (if uncertain about a word, check in this order):**
 VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (stress) → Антоненко-Давидович (style) → Грінченко (etymology).
@@ -681,41 +741,37 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Діалоги — Dialogues (~320 words total)
-- P1 (~70 words): Intro to the situational context. A new resident in a Ukrainian city meets a neighbor and asks about local landmarks. Set the scene of helpfulness and the necessity of finding specific places: аптека (pharmacy), пошта (post office), and банк (bank).
-- P2 (~100 words): Dialogue 1 — Where is everyone? A series of short exchanges identifying locations of people and pets: "Де Олена? — Вона в школі. Де Тарас? — Він на роботі. Де кішка? — Вона на дивані!" Focus on the immediate auditory contrast between "в" and "на".
-- P3 (~100 words): Dialogue 2 — The Address. A newcomer explains where they live and work. "Я живу в Києві, на вулиці Хрещатик. Я працюю в офісі на другому поверсі." Introduce the hierarchy of location: Country/City (в) → Street (на) → Building/Room (в/у).
-- P4 (~50 words): Brief linguistic bridge. Point out the changes in the word endings: "школа" becomes "в школі," "парк" becomes "у парку," and "робота" becomes "на роботі." Introduce the term "Місцевий відмінок" (Locative case).
+## Діалоги (Dialogues) (~330 words total)
+- P1 (~50 words): Introduce the module's scenario: a newcomer is settling into a city and asking their neighbor where essential places are. Establish the core question "Де?" (Where?).
+- P2 (~120 words): Dialogue 1 — Where is everyone? (ULP Ep17 pattern). A rapid-fire exchange about locations: — Де Олена? — Вона в школі. — А Тарас? — Він на роботі. — А діти? — Вони в парку. — А кішка? — Вона на дивані!
+- P3 (~60 words): Break down Dialogue 1. Point out that answering "Де?" naturally leads to the locative case, using phrases like "в школі" and "на роботі", which combine a preposition (в/на) with a changed noun ending.
+- P4 (~100 words): Dialogue 2 — Describing locations. A conversation about living and working: — Де ти живеш? — Я живу в Києві, на вулиці Хрещатик. — А де ти працюєш? — В офісі, на другому поверсі. Emphasize city, street, and building locations.
 
-## Місцевий відмінок — The Locative Case (~340 words total)
-- P1 (~80 words): Core function of the Locative. Explain that this case is used for static location (where something IS) to answer the question "Де?". Crucial rule: unlike other cases, the Locative *always* requires a preposition (в, у, or на).
-- P2 (~80 words): The Grade 4 Helper Method. Introduce the Ukrainian school method (Захарійчук p.74) using helper questions: М. (місцевий) — "на кому? у чому?". Show how "стіл" answers "у чому? — у столі" or "на чому? — на столі."
-- P3 (~90 words): Feminine and Neuter endings. Explain the dominant "-і" ending for feminine nouns (школа → в школі, пошта → на пошті, вулиця → на вулиці) and neuter nouns (місто → у місті, вікно → на вікні). Mention indeclinable nouns like "кафе" (в кафе) as easy wins.
-- P4 (~90 words): Masculine endings (-і vs -у). Contrast the standard "-і" for many masculine nouns (офіс → в офісі, театр → у театрі) with the high-frequency "-у" group that learners must memorize: парк → у парку, банк → у банку, сад → у саду.
-- <!-- INJECT_ACTIVITY: match-nom-loc --> [match-up, Match nominative to locative: школа ↔ в школі, 8 items]
-- <!-- INJECT_ACTIVITY: quiz-loc-form --> [quiz, Choose the correct locative form based on the noun gender/pattern, 6 items]
+## Місцевий відмінок (The Locative Case) (~350 words total)
+- P1 (~90 words): Introduce the Grade 4 helper word method (Захарійчук Gr4 p.74): М. = місцевий відмінок: на/у кому? на/у чому? Explain that the locative case is used for static location (where something IS) and ALWAYS needs a preposition, most commonly в/у or на.
+- P2 (~100 words): Explain the most common locative ending: -і. Show how it applies to feminine nouns (школа → в школі, лікарня → у лікарні, вулиця → на вулиці) and neuter nouns (місто → у місті, море → на морі).
+- P3 (~90 words): Explain masculine locative endings. While some take -і (офіс → в офісі, урок → на уроці), many common places take -у. Provide essential examples to memorize: парк → у парку, банк → у банку.
+- P4 (~70 words): Emphasize learning these places as fixed phrases. Instead of overthinking the declension rules right now, learners should memorize the chunks (e.g., "в школі", "на роботі", "у банку") just like English "at school" vs "in the office".
+- <!-- INJECT_ACTIVITY: match-up-nominative-locative --> [match-up, Match nominative to locative: школа ↔ в школі, 8 items]
+- <!-- INJECT_ACTIVITY: fill-in-answer-where --> [fill-in, Answer Де?: Олена ___ (школа). Тарас ___ (робота)., 8 items]
 
-## В чи на? — В or На? (~340 words total)
-- P1 (~90 words): The logic of "Inside" vs "Surface." Explain "В/У" for enclosed spaces with walls or boundaries (в офісі, у магазині, в аптеці). Explain "На" for open spaces, surfaces, or being "atop" something (на вулиці, на площі, на столі).
-- P2 (~90 words): "На" for Events and Status. Introduce the abstract use of "на" for events (на концерті, на уроці, на футболі) and the common status phrase "на роботі" (at work), contrasting it with English "in the office."
-- P3 (~80 words): Conventional places. Highlight common places that use "на" regardless of the "open space" rule: на пошті (at the post office), на вокзалі (at the train station). Note that these should be learned as fixed phrases.
-- P4 (~80 words): Sovereignty and Cities. Teach the rule for countries and cities: always "В/У" (в Україні, у Києві, у Львові, в Одесі). Include a strong decolonization note: explain why "на Україні" is incorrect and offensive, as it implies a territory rather than a sovereign state.
-- <!-- INJECT_ACTIVITY: quiz-v-na --> [quiz, Choose the correct preposition (в/у or на) for various locations, 10 items]
-- <!-- INJECT_ACTIVITY: fill-in-de --> [fill-in, Answer "Де?" by putting the noun in parentheses into the correct Locative form, 8 items]
+## В чи на? (В or На?) (~340 words total)
+- P1 (~90 words): Explain the general rule for "В/у". It is used for enclosed spaces or being "inside" a structure. Provide clear examples: в школі, в магазині, у банку, в лікарні, в кафе (note that кафе is indeclinable).
+- P2 (~100 words): Explain the general rule for "На". It is used for open spaces, surfaces, or events. Provide examples: на вулиці, на площі, на роботі, на концерті. Highlight conventional exceptions that must be memorized: на пошті (not в пошті), на вокзалі (not в вокзалі).
+- P3 (~90 words): Explain the Country/City rule. Countries and cities ALWAYS take "В/у": в Україні, у Києві, у Львові, в Одесі. Contrast this with streets and squares, which take "На": на Хрещатику, на площі.
+- P4 (~60 words): Address the critical decolonization note: NEVER say "на Україні". Explain that it is ЗАВЖДИ "в Україні", and this distinction is not just a grammatical rule, but a matter of respect and national sovereignty.
+- <!-- INJECT_ACTIVITY: quiz-v-or-na --> [quiz, В or на? Choose the correct preposition for each place., 10 items]
+- <!-- INJECT_ACTIVITY: quiz-where-is-it --> [quiz, Where is it? Choose the correct locative form., 6 items]
 
 ## Підсумок — Summary (~300 words total)
-- P1 (~150 words): Final recap of the Locative case logic. Use a summary table or list:
-  - Question: Де? (Where?)
-  - Prepositions: В/У (inside) vs На (on/at/event).
-  - Endings: -і (most nouns), -у (some masculine nouns like банк, парк).
-  - Key Phrase: Я в Україні, у Києві, на роботі.
-- P2 (~150 words): Self-check interactive section. Provide a bulleted list of questions for the learner to answer aloud or in writing:
-  - Де ви зараз? (Where are you now?) — [Я в... / Я на...]
-  - Де ви працюєте? (Where do you work?) — [Я працюю в... / на...]
-  - Де ви живете? (Where do you live?) — [Я живу в... на вулиці...]
-  - Де ваш телефон? (Where is your phone?) — [Він на...]
+- P1 (~100 words): Recap that the Locative case is used for static location (where something IS). Answering "Де?" requires "в/у + locative" (inside) or "на + locative" (on/at). Reiterate the helper word: М. (на, у) — на/у кому? на/у чому?
+- P2 (~100 words): Summarize the core vocabulary chunks to memorize: в школі, на роботі, у банку, в парку, на вулиці. Remind the learner about the importance of "в Україні".
+- P3 (~100 words): Self-check questions. Provide a bulleted Q&A list for the learner to practice answering:
+  - Де ви зараз? (Where are you right now?)
+  - Де ви працюєте? (Where do you work?)
+  - Де ви живете? (Where do you live?)
 
-Grand total: ~1300 words
+Grand total: ~1320 words
 </skeleton>
 
 ## Output Format
@@ -723,11 +779,55 @@ Grand total: ~1300 words
 Write in Markdown. Use:
 - `## Section Title` for main sections
 - `### Subsection` for subsections within a section
-- `**bold**` for Ukrainian words being taught — EVERY bold Ukrainian word MUST have an English translation on first use, either in parentheses `**слово** (translation)` or inline `**слово** means "translation"`. No exceptions.
+- `**bold**` for Ukrainian words being taught. For **A1 and A2** levels, provide an English translation on first use (e.g. `**стіл** (table)`) because learners lack the vocabulary to infer meaning. For **B1 and above**, do NOT provide inline translations for standard vocabulary — the learner will use the module's словник (vocabulary table). You may provide ONE parenthetical English translation ONLY for highly abstract grammar/linguistic terms on first use (e.g. `**видова пара** (aspectual pair)`).
 - Tables for paradigms (conjugation, declension)
 - `:::tip` / `:::caution` / `:::note` for callout boxes
 - `<!-- INJECT_ACTIVITY: {id} -->` for exercise placement (markers only — do NOT write exercise content)
 
 Do NOT write MDX component syntax, JSON, or DSL exercise blocks (:::quiz, etc.). Plain Markdown with injection markers.
+
+---
+
+## MANDATORY FINAL CHECKLIST (#1189)
+
+Before you finish writing, verify the prose against this checklist. Failing any item will fail the build.
+
+### Section headings (verbatim)
+
+Every heading from "Section Structure" above MUST appear as an `## H2` in your output, in order, **including the closing `Підсумок:` / `Підсумок та перехід до M...` summary**. The single most common writer failure across the B1 build has been silently dropping the final summary section. Re-read your output before stopping. If the last section in the plan is missing, write it now.
+
+### Required vocabulary (every word must appear)
+
+You MUST use **every word** from the list below at least once in the prose, in a natural sentence with bold + English translation. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, прагматика, діагностика, дієвідмінювання, зворотний, двовидовий, одновидовий, неозначено-кількісний, etc.) is the most frequently dropped category — actively find homes for those words even if it means adding a sentence that defines them.
+
+- [ ] школа → в школі (school)
+- [ ] робота → на роботі (work)
+- [ ] банк → у банку (bank)
+- [ ] магазин → у/в магазині (shop)
+- [ ] вулиця → на вулиці (street)
+- [ ] місто → у/в місті (city)
+
+### Forbidden words (never produce)
+
+Do not write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use `<!-- VERIFY -->` instead). The post-write toxic-token scanner will fail the build immediately:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+### Level-specific immersion check
+
+The level-appropriate immersion rule was already injected at the top of
+this prompt as `IMMERSION RULE`. Re-read it now BEFORE you stop writing.
+If your level's rule contains a CHECKLIST block, walk through every item.
+If it doesn't, just verify your output matches the LANGUAGE ROLES and
+TARGET stated in that block.
+
+This used to hard-code a B1+ checklist that confused A1/A2 models (where
+translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+The single source of truth is now
+`scripts/pipeline/config_tables.py:IMMERSION_RULES`.
+
+---
 
 Begin writing now. Start with the first section heading.

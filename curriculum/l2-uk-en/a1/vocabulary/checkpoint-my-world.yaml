@@ -1,21 +1,27 @@
 vocabulary:
-- word: кімна́та
-  translation: room
+- word: вона́
+  translation: she
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: вели́кий
-  translation: big
+- word: воно́
+  translation: it
   expression: false
-  pos: прикм.
-  gender: ''
+  pos: ім.
+  gender: с.
   verified: true
-- word: сві́тлий
-  translation: bright
+- word: кни́га
+  translation: book
   expression: false
-  pos: прикм.
-  gender: ''
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: вікно́
+  translation: window
+  expression: false
+  pos: ім.
+  gender: с.
   verified: true
 - word: нови́й
   translation: new
@@ -23,83 +29,17 @@ vocabulary:
   pos: прикм.
   gender: ''
   verified: true
-- word: жо́втий
-  translation: yellow
+- word: вели́кий
+  translation: big
   expression: false
   pos: прикм.
   gender: ''
   verified: true
-- word: мали́й
-  translation: small
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: стіна́
-  translation: wall
+- word: ла́мпа
+  translation: lamp
   expression: false
   pos: ім.
   gender: ж.
-  verified: true
-- word: бі́лий
-  translation: white
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: стіле́ць
-  translation: chair
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: стари́й
-  translation: old
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: зру́чний
-  translation: comfortable
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: дзе́ркало
-  translation: mirror
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: ру́чка
-  translation: pen
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: га́рний
-  translation: beautiful
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: пі́сня
-  translation: song
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: фо́то
-  translation: photo
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: черво́ний
-  translation: red
-  expression: false
-  pos: прикм.
-  gender: ''
   verified: true
 - word: си́ній
   translation: dark blue
@@ -113,20 +53,44 @@ vocabulary:
   pos: прикм.
   gender: ''
   verified: true
-- word: п'ятдеся́т
-  translation: fifty
+- word: два́дцять
+  translation: twenty
   expression: false
   pos: числ.
   gender: ''
   verified: true
-- word: сто
-  translation: one hundred
+- word: гри́вня
+  translation: hryvnia
   expression: false
-  pos: числ.
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: цей
+  translation: this (masculine)
+  expression: false
+  pos: прикм.
   gender: ''
   verified: true
-- word: я́рмарок
-  translation: market (fair)
+- word: ця
+  translation: this (feminine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: той
+  translation: that (masculine)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: те
+  translation: that (neuter)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: гле́чик
+  translation: jug
   expression: false
   pos: ім.
   gender: ч.
@@ -137,52 +101,130 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: гле́чик
-  translation: jug
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: нами́сто
-  translation: necklace
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: пи́санка
-  translation: Easter egg
+- word: кімна́та
+  translation: room
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: Подивись!
-  translation: Look!
+- word: бі́лий
+  translation: white
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: жо́втий
+  translation: yellow
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: У мене є...
+  translation: I have...
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: о́дяг
-  translation: clothing
+- word: стіна́
+  translation: wall
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: мали́й
+  translation: small
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ки́лим
+  translation: carpet
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: теж
-  translation: also
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: ду́же
-  translation: very
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: краси́вий
-  translation: beautiful
+- word: черво́ний
+  translation: red
   expression: false
   pos: прикм.
+  gender: ''
+  verified: true
+- word: люби́ти
+  translation: to love
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: свій
+  translation: one's own
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: за́чи́н
+  translation: introduction
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: основна частина
+  translation: main body
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: кінці́вка
+  translation: conclusion
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: сестра́
+  translation: sister
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: мо́ре
+  translation: sea
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: зо́шит
+  translation: notebook
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: я́рмарок
+  translation: market
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: пи́санка
+  translation: decorated egg
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: У вас є...?
+  translation: Do you have...?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Так!
+  translation: Yes!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Скільки коштує...?
+  translation: How much does it cost?
+  expression: true
+  pos: ''
   gender: ''
   verified: true
 - word: дві́сті
@@ -191,14 +233,44 @@ vocabulary:
   pos: числ.
   gender: ''
   verified: true
-- word: три́ста
-  translation: three hundred
+- word: до́бре
+  translation: good
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: оди́н
+  translation: one
   expression: false
   pos: числ.
   gender: ''
   verified: true
-- word: Купуємо!
-  translation: We are buying!
+- word: п'ятдеся́т
+  translation: fifty
+  expression: false
+  pos: числ.
+  gender: ''
+  verified: true
+- word: ду́же
+  translation: very
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: га́рний
+  translation: beautiful
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: Я беру...
+  translation: I will take...
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Дуже дякую!
+  translation: Thank you very much!
   expression: true
   pos: ''
   gender: ''

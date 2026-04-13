@@ -1,7 +1,7 @@
 # Audit Report: M45 — when-and-where.md
 **Level:** A1 | **Module:** M45 | **Phase:** A1.7 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-11 01:00:31
+**Generated:** 2026-04-13 21:19:40
 
 ## Configuration
 **Type:** A1-grammar
@@ -20,20 +20,22 @@
 |---|------|-------|-------|-----|--------|
 | 1 | fill-in |  | 8 | 6 | ✅ |
 | 2 | quiz |  | 8 | 6 | ✅ |
-| 3 | quiz |  | 8 | 6 | ✅ |
-| 4 | fill-in |  | 6 | 6 | ✅ |
-| 5 | match-up |  | 6 | 6 | ✅ |
-| 6 | error-correction |  | 6 | 6 | ✅ |
-| 7 | translate |  | 6 | 6 | ✅ |
-| 8 | true-false |  | 6 | 6 | ✅ |
+| 3 | fill-in |  | 6 | 6 | ✅ |
+| 4 | quiz |  | 8 | 6 | ✅ |
+| 5 | match-up |  | 8 | 6 | ✅ |
+| 6 | group-sort |  | 8 | 6 | ✅ |
+| 7 | true-false |  | 6 | 6 | ✅ |
+| 8 | fill-in |  | 6 | 6 | ✅ |
 
 **Summary:**
 - Total activities: 8 (target: 0-4) ❌
-- Unique types: 6 (minimum: 0) ✅
+- Unique types: 5 (minimum: 0) ✅
 - Priority types used: 3/8 (fill-in, match-up, quiz) ✅
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+- **[INFO]** Dative case used at A1: 'мені' (taught formally at A2)
+  - FIX: No action needed — incidental dative exposure is acceptable.
 - **[INFO]** Dative case used at A1: 'мені' (taught formally at A2)
   - FIX: No action needed — incidental dative exposure is acceptable.
 - **[INFO]** Dative case used at A1: 'їй' (taught formally at A2)
@@ -42,22 +44,22 @@
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
+- 3 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1792/1200 (raw: 1879)
+- **Words:** ✅ 1205/1200 (raw: 1306)
 - **Activities:** ✅ 8/0
 - **Density:** ✅ All > 6
-- **Unique_types:** ✅ 6/0 types
+- **Unique_types:** ✅ 5/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 3/0
+- **Engagement:** ✅ 0/0
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/1
+- **Vocab:** ✅ 9/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ⚠️ 18.8% (target 20-40%, within tolerance (M45))
+- **Immersion:** 🇺🇦 29.2% (target 20-40% (M45))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -65,7 +67,7 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 506 | Included in Core |
-| **Складне речення (Complex Sentences)** | ✅ | 423 | Included in Core |
-| **Що, де, коли — дво́є обли́ч (Two Faces)** | ✅ | 606 | Included in Core |
-| **Підсумок — Summary** | ✅ | 257 | Included in Core |
+| **Intro/Narrative** | ✅ | 347 | Included in Core |
+| **Складне речення (Complex Sentences)** | ✅ | 269 | Included in Core |
+| **Що, де, коли — дво́є обли́ч (Two Faces)** | ✅ | 309 | Included in Core |
+| **Підсумок — Summary** | ✅ | 280 | Included in Core |

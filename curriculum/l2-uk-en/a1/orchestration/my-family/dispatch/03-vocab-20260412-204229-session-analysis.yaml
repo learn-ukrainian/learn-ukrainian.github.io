@@ -1,0 +1,45 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T18-41-2368a96b.json
+phase: vocab
+prompt_chars: 10304
+response_chars: 2150
+prompt_words: 1702
+response_words: 251
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.0774
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.0223
+- name: plan
+  start: 1028
+  length: 9276
+  fraction: 0.9002
+large_sections:
+- plan
+directives_total: 6
+directives_covered: 1
+directives_missed:
+- kind: must
+  text: Possessive pronouns like "my" and "your" must agree with the grammatical gender
+    of the person or thing being possessed, not the gender of the owner.
+  covered: false
+  coverage_note: 1/14 keywords (7%)
+- kind: inject_activity
+  text: match-up-family-vocab
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-u-tebe-ie
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-possessives
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-dialogue-intro
+  covered: false
+  coverage_note: marker missing

@@ -1,11 +1,49 @@
-## Орудний множини: З ким? Чим? (Instrumental Plural)
+## Орудний множини: З ким? Чим? (Instrumental Plural) (~600 words total)
 
-Тепер ми вивчаємо орудний відмінок множини. Цей відмінок має дуже важливу функцію в українській мові. The Instrumental plural answers the core questions «з ким?» (with whom?) and «чим?» (with what?). We use it constantly to describe the people we do things with or the exact tools we use for our tasks. Цей відмінок також є надзвичайно регулярним і логічним у множині. Більшість слів мають лише два можливі закінчення: «-ами» або «-ями». Граматичний рід тут зовсім не має значення. Усі слова працюють за одним загальним правилом. Якщо слово має твердий приголосний звук в кінці основи, ми завжди використовуємо закінчення «-ами». Це дуже поширений і простий варіант для багатьох іменників. Наприклад, ми кажемо: **братами** *(with brothers)*, **жінками** *(with women)*, **вікнами** *(with windows)*, **містами** *(with cities)*. Зверніть увагу на ці типові форми. Якщо основа слова закінчується на м'який приголосний звук, тоді ми завжди додаємо закінчення «-ями». Це робить вимову більш плавною і приємною. Подивіться на такі приклади: **вчителями** *(with teachers)*, **вулицями** *(by streets)*, **обличчями** *(with faces)*, **морями** *(with seas)*. Як бачите, правило є дуже стабільним для всіх іменників.
+The **орудний відмінок** (instrumental case) in the plural is just as regular and predictable as the Dative case we just learned. We use it to talk about who we are doing something with, or what tools we are using to get something done. Whether a noun is masculine, feminine, or neuter, it will take one of two endings: **-ами** after hard consonants or **-ями** after soft consonants and vowels.
 
-Ukrainian has a special, historically preserved ending for the Instrumental plural. Деякі дуже популярні слова мають коротке закінчення «-ми». Це не якийсь дивний виняток, а давня і красива українська форма. In modern Russian, this specific short ending is mostly archaic, but in standard Ukrainian, it is an everyday, living reality that you must quickly learn. Найважливіші слова з цим закінченням — це **дітьми** *(with children)* та **людьми** *(with people)*. Ми постійно чуємо і говоримо ці слова кожного дня у різних ситуаціях. Також ми часто використовуємо такі цікаві форми як **кіньми** *(with horses)*, **гістьми** *(with guests)* та **чобітьми** *(with boots)*. Для слова «гості» також існує варіант **гостями** *(with guests)*. Він теж є абсолютно правильним у сучасній мові. Слово «гроші» має дві популярні форми в орудному відмінку. Ви можете сказати **грішми** *(with money)* або **грошима** *(with money)*. Обидві ці форми є стандартними і дуже часто звучать у повсякденних розмовах. Запам'ятайте цю невелику групу важливих слів. Вони роблять вашу українську мову дуже автентичною, багатою і природною.
+Ми часто подорожуємо з нашими братами та сестрами. Жінки розмовляють з іншими жінками, а чоловіки працюють над новими проєктами. Ми дивимося на світ великими вікнами і ходимо широкими вулицями. Ми часто зустрічаємося з хорошими вчителями. Наші фотографії завжди з усміхненими обличчями.
 
-Найчастіше ми використовуємо орудний відмінок множини з прийменником **з** *(with)* або **із** *(with)*. Цей прийменник завжди показує компанію або спільну дію кількох людей. Social interaction is the absolute most common context for this grammatical case. Ми дуже часто кажемо, що ми робимо щось разом з іншими. Наприклад: я люблю **зустрічатися** *(to meet)* з друзями на вихідних у парку. Вона довго розмовляла з **колегами** *(with colleagues)* про новий цікавий проєкт. Наші маленькі діти просто обожнюють гратися з **котами** *(with cats)* у дворі біля дому. The choice between the short preposition «з» and its longer variant «із» depends entirely on vowel harmony and pronunciation rules. The main goal is to make the sentence flow easily without awkward or heavy consonant clusters. Ми завжди використовуємо «із», коли наступне слово починається з важкої групи приголосних звуків. Наприклад, ми кажемо «із студентами» або «із братами», щоб наша мова звучала мелодійно. Правильна вимова є дуже важливою частиною гарної української мови.
+> *We often travel with our brothers and sisters. Women talk with other women, and men work on new projects. We look at the world through large windows and walk along wide streets. We often meet with good teachers. Our photographs are always with smiling faces.*
 
-Ми також дуже активно використовуємо орудний відмінок без жодних прийменників. У цьому важливому випадку він показує інструмент, конкретний засіб або спосіб дії. The noun itself directly becomes the tool or the means by which a specific action is performed. Це відповідає на дуже просте питання «чим?». Наприклад, маленькі учні у школі часто пишуть **олівцями** *(with pencils)* або малюють яскравими **фарбами** *(with paints)*. В азійському ресторані ми зазвичай їмо смачну їжу **паличками** *(with chopsticks)*. На великі свята ми традиційно прикрашаємо наш дім гарними весняними **квітами** *(with flowers)*. Ми також регулярно використовуємо орудний відмінок для опису різного транспорту у множині. Сьогодні ми всі разом їдемо на довгу екскурсію великими **автобусами** *(by buses)*. Наш молодий вчитель радісно каже: ми їдемо швидко, безпечно і дуже комфортно. Ці сучасні автобуси є нашим надійним засобом пересування сьогодні. Отже, орудний відмінок множини — це ваш головний інструмент для опису засобів і матеріалів.
+:::info
+**Grammar box**
+To form the Instrumental plural, look at the stem of the noun. If it ends in a hard consonant, add **-ами** (брат ➔ братами, жінка ➔ жінками, вікно ➔ вікнами). If it ends in a soft consonant, a hissing consonant, or a vowel, add **-ями** (вчитель ➔ вчителями, вулиця ➔ вулицями, обличчя ➔ обличчями).
+:::
 
-<!-- INJECT_ACTIVITY: fill-in-plural-forms, focus: Put the noun in parentheses into the correct plural case (Dat or Instr) based on context, 8 items -->
+While the **-ами** and **-ями** endings cover almost everything, Ukrainian has preserved a beautiful, ancient ending for a specific group of very common words. Instead of the full ending, these words take a short **-ми**. This is not an exception you can ignore; these are high-frequency words that native speakers use every single day.
+
+Наші **діти** люблять гратися з іншими дітьми на вулиці. Ми часто спілкуємося з різними **людьми** в центрі міста. У селі фермери працюють з великими кіньми. На свята ми завжди сидимо за столом з дорогими гістьми. Взимку ми ходимо теплими чобітьми, а в магазині платимо грішми або карткою.
+
+> *Our children love to play with other children on the street. We often communicate with various people in the city center. In the village, farmers work with large horses. On holidays, we always sit at the table with dear guests. In winter, we walk in warm boots, and in the store, we pay with money or a card.*
+
+Here are the essential high-frequency nouns that preserve this ancient ending. You must memorize these forms:
+
+*   **діти** ➔ **дітьми** *(with children)*
+*   **люди** ➔ **людьми** *(with people)*
+*   **коні** ➔ **кіньми** *(with horses)*
+*   **гості** ➔ **гістьми** *(with guests)*
+*   **чоботи** ➔ **чобітьми** *(with boots)*
+
+The word for money has two equally correct forms. You can say **грішми** or use the slightly longer **грошима**. You will hear both variants in everyday conversations.
+
+The most common way you will use the Instrumental plural is with the preposition **з** (with). This is how we describe social activities, teamwork, and spending time together. Whenever you do an action accompanied by others, you need this preposition followed by the Instrumental case.
+
+У вихідні я люблю зустрічатися з друзями в кав'ярні. На роботі ми щодня розмовляємо з колегами про нові завдання. Діти обожнюють бігати в парку і гратися з веселими собаками. Ми завжди радіємо часу, який проводимо з близькими родичами.
+
+> *On weekends, I love meeting with friends in a cafe. At work, we talk with colleagues every day about new tasks. Children adore running in the park and playing with cheerful dogs. We always rejoice at the time we spend with close relatives.*
+
+:::note
+**Quick tip**
+Ukrainian loves a smooth flow of sounds. If the word after "with" starts with two or three consonants (like **ст**удентами or **бр**атами), the preposition **з** changes to **із** or **зі** to make it easier to pronounce. For example, we say "з друзями" but "із братами" or "зі студентами".
+:::
+
+When you use the Instrumental plural *without* a preposition, it describes the tool or the means by which an action is performed. This answers the question "by means of what?" (чим?). You will use this to talk about writing instruments, eating utensils, transportation, and materials used for creating things.
+
+У школі на уроках малювання учні малюють кольоровими олівцями та фарбами. В азійському ресторані ми завжди їмо смачну їжу дерев'яними паличками. Навесні ми любимо прикрашати наш дім яскравими **квітами**. Завтра ми їдемо на екскурсію великими автобусами.
+
+> *At school in drawing lessons, students draw with colored pencils and paints. In an Asian restaurant, we always eat delicious food with wooden chopsticks. In spring, we like to decorate our home with bright flowers. Tomorrow we are going on an excursion by large buses.*
+
+Notice how English uses prepositions like "with," "by," or "using" in these situations, but Ukrainian simply changes the noun's ending. "We go by buses" is exactly «Ми їдемо автобусами». "We decorate with flowers" is «Ми прикрашаємо квітами». The case ending itself carries the meaning of the tool or the method.
+
+<!-- INJECT_ACTIVITY: fill-in-plural-forms -->

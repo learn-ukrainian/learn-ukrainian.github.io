@@ -1,33 +1,28 @@
-## Милозвучність мови: евфонія (The Melody of Language: Euphony)
+## Милозвучність мови: евфонія (~440 words)
 
-The Ukrainian language has strict rules designed specifically to make speech sound beautiful and fluid. This concept is called euphony, or the melody of language. Unlike languages that tolerate heavy consonant clusters, Ukrainian actively avoids them. To achieve this acoustic balance, the language employs alternating particles and prepositions. These are not just stylistic suggestions; they are grammatical laws you must follow to sound authentic.
+Have you ever noticed how smooth and melodic Ukrainian sounds when spoken naturally? This rhythmic flow is called euphony, or **милозвучність** (euphony). The Ukrainian language actively avoids awkward clusters of vowels or consonants. It relies on a system of specific phonetic laws, known as **чергування** (alternation), to ensure that words connect seamlessly in speech. This euphonic alternation is not just an optional stylistic choice; it is a strict grammatical rule that every speaker follows. For example, Ukrainian naturally breaks up groups of three consonants to keep the melody alive. This is a fundamental law of the language, which stands in stark contrast to Russian, where heavy, unbroken consonant clusters are entirely normal and expected.
 
-Милозвучність української мови — це важливе правило для кожного. Вона допомагає нам говорити легко і красиво. Ми завжди чергуємо голосні та приголосні звуки в реченнях.
+The most common euphonic alternation you will encounter involves the prepositions and prefixes «у» and «в». To maintain the melodic rhythm of your speech, you must choose between them based entirely on the surrounding sounds. If you are placing the preposition between two consonants, or if you are at the very beginning of a sentence before a **приголосний** (consonant), you must use «у». This inserts a necessary vowel break and makes the phrase much easier to pronounce. Conversely, if you are placing the preposition between two vowels, or immediately after a **голосний** (vowel) and before a consonant, you should use «в» to avoid vowel collision.
 
-> *The euphony of the Ukrainian language is an important rule for everyone. It helps us speak easily and beautifully. We always alternate vowel and consonant sounds in sentences.*
+Він був у школі. У місті є новий парк. Вона пішла в аптеку. Ми живемо в Україні.
 
-The most common euphonic alternation is the choice between the prepositions «у» and «в», which mean "in" or "at". You must use the vowel «у» when the preposition is squeezed between two consonants. You use the consonant «в» when it follows a vowel, allowing the speech to flow forward without a pause.
+> *He was at school. There is a new park in the city. She went to the pharmacy. We live in Ukraine.*
 
-Мій брат учора був у школі. А моя сестра була в школі тільки вранці. Наш собака гуляє у великому парку біля дому.
+You will apply this exact same melodic logic to the conjunctions «і» and «й», which both mean "and". When you connect words or ideas, the language demands a smooth, uninterrupted transition. You should use «і» when you are connecting two words that end and begin with consonants, or when you are starting a new phrase right after a pause in speech. On the other hand, you must use «й» when the word immediately before it ends in a vowel. This is especially important if the next word also starts with a vowel, preventing an awkward pause.
 
-> *My brother was at school yesterday. And my sister was at school only in the morning. Our dog walks in the large park near the house.*
+Мій брат і сестра читають книгу. Батько і мати працюють разом. Оксана й Андрій гуляють. Вона любить кіно й театр.
+
+> *My brother and sister are reading a book. Father and mother are working together. Oksana and Andriy are walking. She loves the cinema and theater.*
+
+Finally, the preposition meaning "with" or "from" changes its form to match its phonetic environment. The basic, default form is «з», which you will use before most single consonants or before vowels. However, if the following word starts with a difficult consonant cluster—especially those beginning with sibilant sounds like «с», «ш», or «з»—you must use «зі». This adds a crucial vowel break. Furthermore, you can use the form «із» between specific, heavy groups of consonants to perfectly maintain the rhythmic balance of the whole sentence.
+
+Я часто гуляю з собакою. Цей студент працює зі мною. Моя донька повертається зі школи. Ми отримали лист із Києва.
+
+> *I often walk with the dog. This student works with me. My daughter is returning from school. We received a letter from Kyiv.*
 
 :::info
-**Grammar box**
-Use **у** between two consonants to break them up (бу**в у ш**колі). Use **в** after a vowel to keep the melody flowing (бул**а в ш**колі).
+**Grammar box** — The choice between «у/в», «і/й», and «з/зі/із» depends almost entirely on whether the surrounding letters are a **голосний** (vowel) or a **приголосний** (consonant). Vowels and consonants take turns to keep the music of the sentence flowing smoothly.
 :::
 
-An identical rule governs the conjunction meaning "and". You choose between the vowel «і» and the consonant «й» to maintain the vocalic balance of your sentence. If the preceding word ends in a consonant, «і» is required. If the preceding word ends in a vowel, «й» is the correct choice, creating a seamless transition. This adjustment eliminates robotic rhythm.
-
-Сьогодні я бачу тебе і твого нового друга. Завтра ми й вони будемо працювати разом. На столі лежать зошит і ручка. Мама й тато зараз читають книгу.
-
-> *Today I see you and your new friend. Tomorrow we and they will work together. A notebook and a pen are lying on the table. Mom and dad are reading a book right now.*
-
-Finally, the preposition meaning "with" or "from" expands into three distinct forms: «з», «із», and «зі». The standard form is «з». However, when a word begins with an awkward cluster of consonants, the language deploys a protective vowel. You use «зі» before difficult combinations, especially those starting with «с», «ш», or «м». The form «із» adds rhythmic balance between consonants.
-
-Я завжди гуляю в лісі зі своїм старим собакою. Вона із задоволенням п'є цю каву. Завтра я буду говорити зі своїм учителем. Мій друг бере книгу із шафи.
-
-> *I always walk in the forest with my old dog. She drinks this coffee with pleasure. Tomorrow I will talk with my teacher. My friend takes a book from the cabinet.*
-
-<!-- INJECT_ACTIVITY: match-up, Euphony Choice Exercise, 8 items -->
-<!-- INJECT_ACTIVITY: error-correction, Euphony Error Correction, 6 items -->
+<!-- INJECT_ACTIVITY: match-up-euphony-choice -->
+<!-- INJECT_ACTIVITY: error-correction-euphony -->

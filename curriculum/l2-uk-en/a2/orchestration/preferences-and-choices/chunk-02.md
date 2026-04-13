@@ -1,13 +1,37 @@
-## На мою думку...
+## На мою думку... (~550 words total)
 
-Коли ми хочемо сказати, що ми думаємо, ми використовуємо спеціальні фрази. Найчастіше ми говоримо **«Я вважаю, що...»** *(I think that...)* або **«На мою думку...»** *(In my opinion...)*. Це дуже корисні конструкції для будь-якої розмови. Вони допомагають нам показати нашу позицію. Наприклад: **«На мою думку, українська мова дуже милозвучна»** *(In my opinion, the Ukrainian language is very melodic)*. Зверніть увагу на важливу різницю між словами в українській мові. Дієслово **думати** *(to think)* є нейтральним. Ми використовуємо його щодня, коли говоримо про повсякденні речі. А от дієслово **вважати** *(to consider, to think)* звучить більш формально. Воно показує вашу серйозну, зважену та обдуману позицію. Це слово часто звучить у новинах або під час серйозних дискусій.
+When you want to express your **думка** (opinion, thought) in Ukrainian, you have several options depending on the context. For everyday conversations, the verb **думати** (to think) is perfectly fine. However, when you want to express a more formal or well-weighed opinion, it is better to use the verb **вважати** (to think, to consider). Another very common and polite phrase is «На мою думку...» (In my opinion...).
 
-Іноді ми не зовсім впевнені у своїх словах. Тоді ми використовуємо чудову фразу **«Мені здається, що...»** *(It seems to me that...)*. Ця фраза робить нашу думку дуже м'якою. Наприклад: **«Мені здається, що завтра буде дощ»** *(It seems to me that it will rain tomorrow)*. Але якщо ми абсолютно впевнені, ми говоримо інакше. Ми використовуємо прикметник **переконаний** *(convinced)*. Зверніть увагу на закінчення. Чоловік скаже: **«Я переконаний, що...»** *(I am convinced that...)*. Жінка обов'язково скаже: **«Я переконана, що...»** *(I am convinced that...)*. Наприклад: **«Я переконана, що цей фільм дуже цікавий»** *(I am convinced that this movie is very interesting)*. Це дуже сильна позиція. Використовуйте цю фразу, коли ви готові захищати свою думку.
+Я вважаю, що вивчати іноземні мови — це дуже важливо. На мою думку, українська мова дуже милозвучна і цікава. Мій брат думає, що граматика складна, але я вважаю цей процес захопливим. На мою думку, найкращий спосіб вивчити мову — це багато читати і слухати.
 
-Коли ми висловлюємо думку, ми завжди маємо пояснити причину. Для цього ми використовуємо спеціальні слова-зв'язки. Найпопулярніше слово — це **тому що** *(because)*. Воно ідеально підходить для будь-якої життєвої ситуації. Наприклад: **«Я вважаю, що це важливо, тому що це впливає на наше майбутнє»** *(I think this is important because it affects our future)*. У неформальній розмовній мові ми часто використовуємо коротке слово **бо** *(because)*. Воно звучить швидко і природно. Наприклад: **«Я обираю зелений чай, бо він гарячий»** *(I choose green tea because it is hot)*. Також є чудове слово **адже** *(since, after all)*. Воно додає більше емоцій у ваше речення. Якщо ситуація дуже офіційна, ми кажемо **оскільки** *(since, as)*. Усі ці слова з'єднують дві частини складного речення. Пам'ятайте, що перед цими словами ми завжди ставимо кому.
+> *I consider that studying foreign languages is very important. In my opinion, the Ukrainian language is very melodic and interesting. My brother thinks that the grammar is difficult, but I consider this process fascinating. In my opinion, the best way to learn a language is to read and listen a lot.*
 
-Дієслово «вважати» має ще одну дуже цікаву граматичну конструкцію. Вона допомагає нам давати оцінку або характеристику іншим людям чи речам. Ми кажемо: **вважати когось або щось** *(to consider someone or something)* **ким або чим** *(as someone or something)*. Після дієслова ми ставимо об'єкт у **Знахідний відмінок** *(Accusative case)*. А характеристику ми ставимо в **Орудний відмінок** *(Instrumental case)*. Наприклад: **«Я вважаю його своїм найкращим другом»** *(I consider him my best friend)*. Або: **«Ми вважаємо цей проєкт успішним»** *(We consider this project successful)*. Зверніть увагу на відмінність від англійської мови. В англійській мові ми часто не використовуємо спеціальні форми слів для такої конструкції. В українській мові зміна закінчення є обов'язковою. Ми завжди використовуємо Орудний відмінок для характеристики об'єкта. Це робить ваше речення правильним і дуже природним.
+Sometimes you are not entirely sure about something, or you want to sound less direct. In such cases, use the phrase «Мені здається, що...» (It seems to me that...). On the other hand, when you are absolutely sure of your position, you can use the word **переконаний** (convinced, m.). For example, a man would say «Я переконаний, що...» and a woman would say «Я переконана, що...». Notice how the ending changes depending on your gender.
 
-Ця ж сама граматична конструкція допомагає нам говорити про себе. Ми можемо описувати свій характер, свою національність або професію. Ми використовуємо фразу **вважати себе** *(to consider oneself)* і додаємо потрібне слово в Орудному відмінку. Наприклад: **«Я вважаю себе оптимістом»** *(I consider myself an optimist)*. Або інший приклад: **«Вона вважає себе українкою»** *(She considers herself a Ukrainian)*. Зверніть увагу на ще один дуже важливий момент. В українській мові ми використовуємо тільки дієслово «вважати». Слово «считаю» — це типовий **суржик** *(surzhyk, mixed language)*. Це слово походить з російської мови. Завжди правильно говорити: «Я вважаю», а не «Я считаю». Це правило допомагає вашій українській мові бути чистою, правильною та красивою.
+Мені здається, що сьогодні буде дощ, тому я візьму парасольку. Олена переконана, що ми встигнемо на потяг, якщо підемо зараз. Я переконаний, що ця книжка тобі дуже сподобається. Мені здається, що ми вже були в цьому кафе минулого року. Сергій переконаний, що його команда виграє цей матч.
 
-<!-- INJECT_ACTIVITY: fill-in, focus: Complete opinion sentences with correct connectors (тому що, адже) and Instrumental case endings, 8 items -->
+A good opinion always needs a solid reason. To connect your thoughts and explain why you think a certain way, you can use several connectors. The standard and most versatile option is **тому що** (because). In informal, fast-paced speech, Ukrainians often use the short word «бо» (because). When you want to remind someone of a known fact, use «адже» (since, after all). Finally, for more formal situations, you can use «оскільки» (since, as).
+
+Я вважаю, що це важливо, тому що це впливає на наше майбутнє. Мені подобається жити в місті, бо тут багато парків і красивих вулиць. Ми вирішили залишитися вдома, адже надворі почалася сильна гроза. Оскільки наш університет знаходиться дуже далеко, ми поїдемо туди на метро.
+
+> *I consider that this is important because it affects our future. I like living in the city because there are many parks and beautiful streets here. We decided to stay home since a strong thunderstorm started outside. As our university is located very far away, we will go there by subway.*
+
+The verb **вважати** has an advanced and very elegant usage when you want to characterize someone or something. We use the construction where the object is in the Accusative case, and the characteristic is in the Instrumental case. This is similar to the English "to consider X as Y", but in Ukrainian, the case endings do all the work without extra prepositions.
+
+:::info
+**Grammar box** — Remember to change the case of the characteristic to the Instrumental case. Do not leave it in the Nominative case. For example, «свій друг» becomes «своїм другом».
+:::
+
+Я вважаю його своїм найкращим другом, бо ми знайомі з дитинства. Наш директор вважає цей новий проєкт дуже успішним і перспективним. Багато людей вважають Київ найкрасивішим містом в Україні. Журналісти вважають цю подію історичною. Моя мама завжди вважала мене талановитою людиною.
+
+This same structure is incredibly useful for self-identification. When discussing your identity, profession, or character traits, use «вважати себе» (to consider oneself) followed by the Instrumental case. It is a powerful way to express who you are and what values you hold.
+
+:::tip
+**Did you know?** — The Ukrainian verb **вважати** comes from the word «вага» (weight), implying that you have weighed your thoughts. Never use the Russian-sounding word «считаю» when speaking Ukrainian. This is a common form of Surzhyk. Always use «вважаю»!
+:::
+
+Я вважаю себе великим оптимістом, тому що завжди бачу хороше. Вона вважає себе справжньою українкою і пишається цим. Мій дідусь вважав себе дуже щасливою людиною. Ми вважаємо себе відповідальними студентами.
+
+> *I consider myself a great optimist because I always see the good. She considers herself a true Ukrainian and is proud of it. My grandfather considered himself a very happy person. We consider ourselves responsible students.*
+
+<!-- INJECT_ACTIVITY: fill-in-opinion-connectors -->

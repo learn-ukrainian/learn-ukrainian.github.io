@@ -1,32 +1,27 @@
-## Вступ та діалог (~200 words)
-- P1 (~100 words): [Dialogue: A passenger gives directions to a taxi driver using a sequence of destinations. Speakers: Пасажир and Таксист. Focus: До вокзалу (m), до аптеки (f), до п’ятої години (time), до готелю (m).]
-- P2 (~100 words): [Introduction to the preposition 'до'. Explain that in A2 we move beyond simple location to direction, purpose, and time limits. Contrast 'до' as the "toward" or "until" preposition that always requires the Genitive case.]
+## Куди ти йдеш? До + родовий для напрямку (~770 words)
+- P1 (~110 words): Dialogue setting the scene. A passenger gives directions to a taxi driver: "До вокзалу, будь ласка. Потім до аптеки. Чекайте до п'ятої години. А потім до готелю."
+- P2 (~120 words): Break down the dialogue. Explain that the preposition `до` requires the Genitive case to express the concept of "to" or "toward" a destination (`напрямок`). Show the transformations from the dialogue: `вокзал` → `до вокзалу`, `аптека` → `до аптеки`, `готель` → `до готелю`.
+- P3 (~140 words): Explain destination as a place. Provide examples with cities and countries: `до Львова`, `до Києва`, `до України`, `до Польщі`. Include natural sentences like "Цього літа ми поїхали до України" and "Завтра ти прилетиш до Києва."
+- P4 (~150 words): Explain destination as a person. Emphasize that going to see someone is ALWAYS `до` + Genitive. Give examples: `до друга` (to a friend's place), `до бабусі` (to grandma's), `до лікаря` (to the doctor). Provide the example "Я хочу записатися на прийом до лікаря." Include a decolonization note: unlike Russian (`к маме`), Ukrainian strictly uses `до` (`до мами`).
+- P5 (~150 words): Contrast `до` + Genitive with `в/на` + Accusative. Explain that "Іду до магазину" emphasizes the journey or direction, while "Іду в магазин" emphasizes the destination itself or going inside. State clearly that both are equally standard and natural in Ukrainian, with no strict hierarchy. 
+- P6 (~100 words): Briefly review hard and soft stems for Genitive nouns following `до`. Provide a quick reference list: `до будинку` (hard masculine), `до музею` (soft masculine), `до школи` (hard feminine), `до станції` (soft feminine), `до моря` (soft neuter).
+- <!-- INJECT_ACTIVITY: fill-in-genitive-direction --> [fill-in, Complete sentences with до + correct Genitive noun form, 8 items]
 
-## Куди ти йдеш? До + родовий для напрямку (~750 words)
-- P1 (~140 words): [Destinations as places: cities and countries. Explain the rule for masculine city endings (-а/-я) with examples: до Києва, до Львова, до Харкова, and feminine countries (-и/-ії): до України, до Польщі, до Франції.]
-- P2 (~140 words): [Destinations as people: 'to see someone' or 'to someone's place'. Explain that Ukrainian uses 'до' + person where English uses "to" or "to's". Examples: іду до лікаря, до бабусі, до сусіда. Highlight the common error of using 'в' with people (e.g., *в лікар).]
-- P3 (~150 words): [Contrast 'до' vs. 'в/на' + Accusative. Use the nuance from the Knowledge Packet: 'до' emphasizes the journey/direction toward the perimeter/vicinity, while 'в/на' emphasizes entry/destination. Examples: іду до магазину (toward it) vs. іду в магазин (into it).]
-- P4 (~140 words): [Morphological drill: Hard and soft stems in the Genitive. Masculine: до будинку (hard -у), до музею (soft -ю), до університету (institution -у). Feminine: до школи (hard -и), до станції (soft -ії), до площі (sibilant -і).]
-- <!-- INJECT_ACTIVITY: fill-in-genitive-forms --> [fill-in, focus: Complete sentences with 'до' + correct noun forms for direction, 8 items]
-- P5 (~130 words): [Adjective agreement with 'до' phrases. Show how adjectives follow the Genitive pattern: до нового будинку, до великої станції, до старого друга.]
-- P6 (~50 words): [The adverb 'додому'. Explain its origin as 'до дому' and its unique status as a fixed direction word.]
+## До якого часу? До + родовий для часу (~715 words)
+- P1 (~130 words): Introduce the concept of a time limit. Explain that just as `до` shows the end point of a physical journey, it shows the end point of time ("until"). Provide core examples: `до вечора` (until evening), `до ранку` (until morning), `до понеділка` (until Monday), `до літа` (until summer).
+- P2 (~140 words): Discuss `до` as a deadline ("by" a certain time). Give examples of completing actions before a limit: `зробити до п'ятниці` (finish by Friday), `прийти до восьмої` (come by eight o'clock). Note that `до восьмої` is short for `до восьмої години`.
+- P3 (~150 words): Explain how `до` is paired with `від` or `з` to express time ranges ("from X to Y"). Give examples: `від ранку до вечора` (from morning to evening), `з понеділка до п'ятниці` (from Monday to Friday). Provide natural sentences like "Я маю вчитися з ранку до вечора."
+- P4 (~150 words): List common daily phrases and contexts using `до` for time. Include: `працювати до шостої` (work until six), `чекати до завтра` (wait until tomorrow), `відкрито до дев'ятої` (open until nine), `до початку уроку` (until the start of the lesson), and `до війни` (before the war).
+- P5 (~145 words): Synthesize the connection between space and time. Show how the grammatical structure is identical whether you are mapping a physical route (`з Києва до Варшави`) or a chronological schedule (`з ранку до вечора`). It is always about a starting point (`з/від`) and an ending point (`до`).
 
-## До якого часу? До + родовий для часу (~650 words)
-- P1 (~130 words): [Time limit — "until". Expressing the end point of an action. Examples: працювати до вечора, чекати до ранку, відпочивати до літа. Explain the masculine endings -а/-я for specific time units (дня, вівторка).]
-- P2 (~140 words): [Deadline — "by". Setting a specific time for completion. Examples: зробити до п'ятниці, прийти до восьмої години, підготувати до завтра. Focus on ordinal numerals for hours (до п'ятої, до шостої).]
-- P3 (~130 words): [Time ranges with 'від/з ... до'. Pairing prepositions to show duration. Examples: з ранку до вечора, з понеділка до п'ятниці, з дев'ятої до шостої. Reinforce that both ends take the Genitive.]
-- <!-- INJECT_ACTIVITY: match-up-functions --> [match-up, focus: Match phrases with their time function: 'until' (duration) vs. 'by' (deadline), 8 items]
-- P4 (~150 words): [Common daily time idioms and fixed expressions. Examples: до завтра (see you tomorrow), до початку уроку (before/by the start), до кінця липня. Contrast this with 'перед' or 'після'.]
+## До + родовий: решта значень та узагальнення (~715 words)
+- P1 (~120 words): Introduce the abstract uses of `до`. Explain that the preposition extends beyond physical space and literal time to express purpose (`мета`), readiness, and relationships between concepts.
+- P2 (~150 words): Discuss purpose and readiness. Give examples like `готовий до екзамену` (ready for the exam). Explain fixed expressions where `до` implies a future goal or meeting: `до речі` (by the way / to the point), `до побачення` (goodbye — literally "until the seeing"), and `до зустрічі` (until we meet).
+- P3 (~150 words): Discuss addition and relationships. Explain how `до` is used to link things together. Provide examples: `додати до списку` (add to the list). Show how it expresses feelings or attitudes directed toward something: `ставлення до роботи` (attitude toward work), `інтерес до мови` (interest in the language).
+- P4 (~150 words): Consolidate and compare `до` with `від` and `після` (from previous modules). Explain that all three take the Genitive case, but express different vectors: `до` is movement toward an end point, `від` is movement away from a start point, and `після` is sequential (after in time).
+- P5 (~145 words): Provide a comprehensive summary table of all `до` meanings covered in the module: direction to a place (`до Львова`), direction to a person (`до лікаря`), time limit (`до вечора`), deadline (`до п'ятниці`), and abstract purpose/relation (`до побачення`, `до списку`).
+- <!-- INJECT_ACTIVITY: quiz-meaning-context --> [quiz, Choose the correct meaning of до in context (direction, time, purpose), 8 items]
+- <!-- INJECT_ACTIVITY: match-up-functions --> [match-up, Match до-phrases with their functions (direction, time limit, purpose), 8 items]
+- <!-- INJECT_ACTIVITY: group-sort-categories --> [group-sort, Sort до-phrases by meaning category (direction vs. time vs. purpose), 8 items]
 
-## До + родовий: решта значень та узагальнення (~650 words)
-- P1 (~140 words): [Purpose and abstract relations. Explain 'до' in terms of goals and readiness. Examples: до речі (by the way), до побачення (goodbye), готовий до екзамену (ready for the exam), квиток до Львова (ticket to).]
-- P2 (~130 words): [Addition and attitude. Using 'до' to express relations between concepts. Examples: додати до списку (add to the list), ставлення до роботи (attitude toward), інтерес до мови (interest in).]
-- <!-- INJECT_ACTIVITY: group-sort-categories --> [group-sort, focus: Sort phrases into three categories: direction, time limit, and purpose/abstract, 8 items]
-- P3 (~130 words): [Consolidation: Comparing 'до' with 'від' (from) and 'після' (after). All take the Genitive but move the focus in space or time. Example: від вокзалу (from) -> до готелю (to) -> після поїздки (after).]
-- <!-- INJECT_ACTIVITY: quiz-meaning-choice --> [quiz, focus: Choose the correct meaning of 'до' in context (direction, time, purpose), 8 items]
-- P4 (~100 words): [Decolonization note: Avoiding the Russian-influenced 'к + Dative'. Emphasize that 'до + Genitive' is the natural Ukrainian way to express movement toward people and time limits.]
-
-## Підсумок — Summary (~150 words)
-- P1 (~150 words): [Recap of all 'до' functions. Provide a summary table: 1. Direction (до Києва, до мами), 2. Time limit/deadline (до вечора, до п'ятниці), 3. Purpose (до побачення, до речі). End with self-check questions: Як сказати "by 5 o'clock"? Чому ми кажемо "до лікаря", а не "в лікар"?]
-
-Grand total: ~2300 words
+Grand total: ~2200 words

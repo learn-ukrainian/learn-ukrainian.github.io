@@ -1,23 +1,22 @@
-# Section-by-Section Generation — Section 1/4
+# Section-by-Section Generation — Section 1/3
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 5: У мене немає... (A2, A2.1 [Foundation and Aspect Introduction])
-**Section to write:** Родовий відмінок: Коли чогось немає (The Genitive Case: When Something Isn't There) (~650 words total)
-**Word target for this section:** 650 words (aim for 715 to account for undershoot)
+**Section to write:** Родовий відмінок: Коли чогось немає (The Genitive Case: When Something Isn't There) (~660 words)
+**Word target for this section:** 660 words (aim for 726 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Родовий відмінок: Коли чогось немає (The Genitive Case: When Something Isn't There) (~650 words total)
-- P1 (~120 words): Introduction to the Genitive case (Родовий відмінок). Explain that it answers the questions "Кого?" (Whom?) and "Чого?" (What?). Connect it to the idea of origin or possession but pivot immediately to its most common everyday use: expressing absence.
-- P2 (~100 words): The core construction "У мене є..." (I have) vs. "У мене немає..." (I don't have). Explain that while the positive construction uses the Nominative (Називний відмінок), the negative requires a shift to the Genitive. Use the example "У мене є сестра" (Nom) vs. "У мене немає сестри" (Gen).
-- P3 (~120 words): Dialogue: Moving into a new apartment. A conversation between Сусідка (neighbor) and Нова мешканка (new tenant). They look at an empty kitchen. Examples to use: "Немає холодильника" (m, fridge), "Немає плити" (f, stove), "Немає дзеркала" (n, mirror). Mention that there are "багато коробок" (many boxes).
-- P4 (~100 words): Linguistic analysis of the dialogue. Break down why "холодильник" became "холодильника" and "плита" became "плити". Emphasize that "немає" acts like a magnet that pulls nouns into the Genitive form.
-- P5 (~130 words): Practical contrast drills in prose. Compare "Тут є стіл" with "Тут немає стола". Explain that "немає" can be shortened to "нема" in casual speech, which is a distinct Ukrainian feature compared to other Slavic languages. Use "Часу нема" (No time) as an example.
-- <!-- INJECT_ACTIVITY: quiz-possession-vs-absence --> [quiz, Possession vs. Absence Drill (`Є` vs. `Немає`), 8 items]
-- P6 (~80 words): Summary of Section 1. Reiterate that whenever something is missing—be it a person, an object, or a concept—the Genitive case is mandatory.
+## Родовий відмінок: Коли чогось немає (The Genitive Case: When Something Isn't There) (~660 words)
+- P1 (~100 words): [Dialogue: "Moving into a new apartment". Сусідка and Нова мешканка discover what's missing. "Немає холодильника! Немає плити! Немає дзеркала! Є багато коробок, але мало меблів." Introduces the core concept naturally in context.]
+- P2 (~120 words): [Introduce the Genitive case (Родовий відмінок), answering 'Кого? Чого?'. Explain its first key function: expressing absence or non-existence using the construction `(У мене) немає + Genitive`. Link back to the dialogue examples: холодильник → холодильника, плита → плити, дзеркало → дзеркала.]
+- P3 (~120 words): [Contrast the Nominative case for possession with the Genitive for absence. 'У мене є брат' (Nominative) vs. 'У мене немає брата' (Genitive). Emphasize that `немає` (or colloquial `нема`) is absolute and always changes the noun's case, unlike English negation where the noun remains unchanged.]
+- P4 (~160 words): [Practice with simple transformations to build the habit. 'Тут є стіл.' -> 'Тут немає стола.', 'У саду є яблуня.' -> 'У саду немає яблуні.' Note that `немає` historically comes from Old East Slavic `не мать` ("not to have"), making this a core structural feature, not just a random rule. Provide the proverb "У природи нема поганої погоди" as a natural example.]
+- P5 (~160 words): [Focus on high-frequency abstract phrases that A2 learners should memorize immediately as fixed chunks. Examples: `немає часу` (no time), `немає настрою` (no mood), `немає сенсу` (no sense/point). This provides immediate conversational utility before diving into the full paradigm.]
+- <!-- INJECT_ACTIVITY: quiz-possession-absence --> [quiz, Possession vs. Absence Drill (`Є` vs. `Немає`), 8 items]
 
 ---
 ## Full Plan (for reference)
@@ -659,6 +658,30 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] родовий відмінок (genitive case)
+- [ ] немає ((there) is not, (I) don't have)
+- [ ] багато (a lot, many, much)
+- [ ] мало (a little, few)
+- [ ] кілька (a few, several)
+- [ ] скільки (how many, how much)
+- [ ] закінчення (ending (grammar))
+- [ ] однина (singular)
+- [ ] множина (plural)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Родовий відмінок: Коли чогось немає (The Genitive Case: When Something Isn't There) (~660 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

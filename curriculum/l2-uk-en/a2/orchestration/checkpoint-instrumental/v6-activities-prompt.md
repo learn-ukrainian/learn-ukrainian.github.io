@@ -89,173 +89,146 @@ required:
 <module_content>
 ## Частина 1: Розпізнавання та форми (Part 1: Recognition and Forms)
 
-> **Студент:** Що ми робимо сьогодні? *(What are we doing today?)*
-> **Вчитель:** Сьогодні у нас **контрольна точка** *(checkpoint)*. Ми повторюємо **орудний відмінок** *(instrumental case)*.
+Ця контрольна точка допоможе вам повторити орудний відмінок. (This checkpoint will help you review the Instrumental case.) Орудний відмінок відповідає на питання **ким?** та **чим?**. (The Instrumental case answers the questions by whom? and with what?.) У попередніх модулях ми вивчали п'ять головних функцій цього відмінка. (In previous modules, we studied the five main functions of this case.) Ось ці функції (Here are these functions):
 
-The **орудний відмінок** (instrumental case) is essential. It answers the questions **ким?** (by whom?) and **чим?** (by/with what?). In this module, we review five primary functions: tool or means (**інструмент або засіб**), accompaniment (**супровід**), profession (**професія**), spatial location (**місце**), and temporal expressions (**час**). Let us test your knowledge with a short **вправа** (exercise).
+1. Інструмент (Tool): Я малюю **олівцем**. (I draw with a pencil.)
+2. Супровід (Accompaniment): Вона гуляє **з другом**. (She walks with a friend.)
+3. Професія (Profession): Він працює **лікарем**. (He works as a doctor.)
+4. Місце (Location): Собака спить **під столом**. (The dog sleeps under the table.)
+5. Час (Time): Ми зустрілися раннім **ранком**. (We met in the early morning.)
 
-Let's review the basic noun endings, as taught in Ukrainian school textbooks (Захарійчук Grade 4, Заболотний Grade 5). Words in the first and second declensions change depending on their stem (hard, soft, or mixed).
+Давайте згадаємо закінчення іменників першої та другої відмін. (Let's recall the endings of nouns of the first and second declensions.) For these nouns, the endings depend strictly on whether the stem is hard, soft, or mixed. This pattern is consistent across the language.
 
-For hard stems, we use the endings **-ою** (feminine) and **-ом** (masculine/neuter).
-* **Вона розмовляє з рідною сестрою.** (She is talking with her own sister.)
-* **Родина сидить за великим столом.** (The family sits behind the large table.)
+Перша відміна (First declension - mostly feminine and some masculine nouns ending in -а/-я):
+- Тверда група (Hard stem) бере закінчення **-ою**: **сестра** → **сестрою** (with a sister), **машина** → **машиною** (by car), **книга** → **книгою** (with a book).
+- М'яка та мішана групи (Soft and mixed stems) беруть закінчення **-ею**: **земля** → **землею** (by/with earth), **межа** → **межею** (by the boundary), **груша** → **грушею** (with a pear).
+- Голосний + м'який знак (Vowel + soft sign) бере закінчення **-єю**: **мрія** → **мрією** (with a dream), **надія** → **надією** (with hope).
 
-For soft and mixed stems, we use **-ею** and **-ем**.
-* **Фермер працює із сирою землею.** (The farmer works with the damp earth.)
-* **Чайки літають над синім морем.** (The seagulls fly above the blue sea.)
+Друга відміна (Second declension - masculine and neuter nouns):
+- Тверда група бере закінчення **-ом**: **стіл** → **столом** (under a table), **брат** → **братом** (with a brother), **батько** → **батьком** (with a father).
+- М'яка та мішана групи беруть закінчення **-ем**: **море** → **морем** (by the sea), **олівець** → **олівцем** (with a pencil), **хлопець** → **хлопцем** (with a boy).
+- Голосний + м'який знак бере закінчення **-єм**: **край** → **краєм** (by the edge), **музей** → **музеєм** (with a museum).
 
-For words ending in **-я**, **-є**, **-ї**, or **-й**, we use **-єю** and **-єм**.
-* **Ми живемо однією великою мрією.** (We live by one great dream.)
-* **Стежка йде самим краєм лісу.** (The path goes by the very edge of the forest.)
+Іменники третьої та четвертої відмін мають свої фонетичні правила. (Nouns of the third and fourth declensions have their own phonetic rules.) For feminine nouns ending in a consonant (III declension), the final consonant doubles if it is soft or hissing.
+- Подовження приголосних (Doubling of consonants): **сіль** → **сіллю** (with salt), **ніч** → **ніччю** (at night), **зустріч** → **зустріччю** (with a meeting).
 
-Nouns in the third and fourth declensions have special phonetic changes. When a third declension feminine noun ends in a single consonant, that consonant doubles.
-* **Вона любить гуляти темною ніччю.** (She likes to walk during the dark night.)
-* **Ми купуємо хліб із морською сіллю.** (We buy bread with sea salt.)
+If the stem ends in a labial consonant (б, п, в, м, ф) or «р», we use an apostrophe instead of doubling.
+- Апостроф (Apostrophe): **кров** → **кров'ю** (with blood), **мати** → **матір'ю** (with a mother).
 
-If the word ends in two consonants, there is no doubling (**радістю**). If it ends in an `р` or a labial consonant (б, п, в, м, ф), we use an apostrophe.
-* **Вона пише картину з великою любов'ю.** (She paints the picture with great love.)
-* **Він часто говорить з матір'ю.** (He often speaks with his mother.)
+Neuter nouns of the IV declension ending in -я often have parallel forms.
+- Паралельні форми (Parallel forms): **ім'я** → **ім'ям** або **іменем** (by name). Обидва варіанти правильні. (Both options are correct.)
 
-Neuter nouns of the fourth declension can have parallel forms.
-* **Ми називаємо його своїм справжнім ім'ям.** (We call him by his real name.)
-* **Також можна сказати: своїм іменем.** (Also one can say: by his name.)
+Прикметники та займенники також змінюють свою форму. (Adjectives and pronouns also change their form.) Adjectives must agree with the noun they describe in gender, number, and case.
+- Чоловічий та середній рід (Masculine and neuter): **-им**. Наприклад: **з новим другом** (with a new friend), **під великим столом** (under a big table).
+- Жіночий рід (Feminine): **-ою** / **-ею**. Наприклад: **з гарною подругою** (with a beautiful friend), **синьою ручкою** (with a blue pen).
 
-Adjectives must agree with their nouns. For masculine and neuter words, the ending is **-им** (or **-ім**). For feminine words, the ending is **-ою** (or **-єю**). For plurals, adjectives take **-ими** (or **-іми**), and nouns take **-ами**, **-ями**, or **-ми** (like **дітьми**). As noted in Голуб (Grade 6, p. 179), personal pronouns also have specific forms. You must memorize these forms: **мною** (me), **тобою** (you), **ним** (him/it), **нею** (her), **нами** (us), **вами** (you, plural), and **ними** (them).
+Особові займенники мають спеціальні форми. (Personal pronouns have special forms.) Вони звучать так: **мною** (me), **тобою** (you), **ним** (him/it), **нею** (her), **нами** (us), **вами** (you all), **ними** (them).
 
-A crucial rule applies to third-person pronouns. When they follow a preposition, they require a mandatory **н-** at the beginning.
+:::caution
+Remember the mandatory **н-** rule! When a third-person pronoun follows any preposition, it must start with «н-». You must always say **з ним** (with him) and **з нею** (with her), never *з їм* or *з єю*.
+:::
 
-* **Він іде в кіно зі мною.** (He goes to the cinema with me.)
-* **Я хочу танцювати тільки з тобою.** (I want to dance only with you.)
-* **Сьогодні я обідаю з ним.** (Today I am having lunch with him.)
-* **Ми довго розмовляли з нею вчора.** (We talked with her for a long time yesterday.)
-* **Друзі хочуть поїхати з нами на море.** (Friends want to go to the sea with us.)
-* **Кіт любить спати між ними.** (The cat likes to sleep between them.)
+У першій вправі ви прочитаєте короткий текст про чийсь день. (In the first exercise, you will read a short text about someone's day.) You will identify all nouns in the Instrumental case and label their function (tool, companion, profession, spatial, temporal). Далі ви будете змінювати слова в дужках. (Next, you will change the words in parentheses.) You will put nouns into the correct Instrumental form, changing (**брат**) into **братом**, (**подруга**) into **подругою**, and (**море**) into **морем**. Нарешті, ви утворите множину з називного відмінка. (Finally, you will form the plural from the Nominative case.) You will change Nominative plurals like (**руки**) to **руками**, (**олівці**) to **олівцями**, and (**діти**) to **дітьми**.
 
 <!-- INJECT_ACTIVITY: quiz-instrumental-mixed -->
 
 ## Частина 2: Вибір та застосування (Part 2: Choice and Application)
 
-Spatial prepositions describe where things are located. When we describe a static location — answering the question **де?** (where?) — we must use the **орудний відмінок** (instrumental case). The most common spatial prepositions are **над** (above), **під** (under), **між** (between), **перед** (in front of/before), and **за** (behind).
+Просторові прийменники часто вимагають орудного відмінка. (Spatial prepositions often require the Instrumental case.) When describing a static location that answers the question **де?** (where?), the prepositions **над** (above), **під** (under), and **між** (between) must take the Instrumental case.
 
-* **Кругле дзеркало висить над умивальником.** (The round mirror hangs above the washbasin.)
-* **Велика картина висить над моїм ліжком.** (The large painting hangs above my bed.)
-* **Чорна кішка спить під столом.** (The black cat sleeps under the table.)
-* **Старі кросівки лежать під шафою.** (The old sneakers lie under the wardrobe.)
-* **Кіт любить сидіти між вікнами.** (The cat likes to sit between the windows.)
-* **Є вузький прохід між шафою і ліжком.** (There is a narrow passage between the wardrobe and the bed.)
+- **Над** (above, without physical contact): Дзеркало висить **над умивальником**. (The mirror hangs above the sink.) Картина знаходиться **над ліжком**. (The painting is located above the bed.)
+- **Під** (under): Кішка сидить **під столом**. (The cat sits under the table.) Моє тепле взуття лежить **під ліжком**. (My warm shoes lie under the bed.)
+- **Між** (between - requires two or more objects): Тут є зручний прохід **між шафою і ліжком**. (Here is a convenient passage between the wardrobe and the bed.) Я сиджу **між братом і сестрою**. (I am sitting between my brother and sister.)
 
-These prepositions can also be used for time (temporal expressions): **перед сном** (before sleep), **за вечерею** (during dinner).
+У наступних завданнях ви будете вибирати правильний прийменник. (In the following tasks, you will choose the correct preposition.) You will choose among **з, над, під, перед, за, між** to complete spatial and temporal sentences.
 
-Notice that **між** (between) always requires at least two nouns, and both must be in the instrumental case.
-* **Вона стоїть між братом і сестрою.** (She stands between the brother and the sister.)
+Дуже важливо розрізняти інструмент та супровід. (It is very important to distinguish a tool and accompaniment.) A common error for English speakers is using the preposition **з** (with) for tools. In Ukrainian, **з** is strictly for accompaniment (being with someone) or characteristics. For tools or the means of an action, you must use the bare Instrumental case without any preposition.
 
-:::tip
-Always ask yourself if the object is moving to a new location. If the object is stationary (**де?**), use the instrumental case with these prepositions.
-:::
+- Інструмент (Tool - correct): Я швидко пишу **ручкою**. (I write quickly with a pen.) Ми їмо суп **ложкою**. (We eat soup with a spoon.)
+- Супровід (Accompaniment - absurd): Я гуляю **з ручкою**. (I walk with a pen — as if the pen is a person.)
+- Супровід (Accompaniment - correct): Я гуляю **з другом**. (I walk with a friend.) Вона п'є каву **з молоком**. (She drinks coffee with milk.)
 
-The most common mistake learners make is mixing up the tool function and the accompaniment function. Both use the instrumental case, but only accompaniment uses the preposition **з** (with). A tool NEVER takes a preposition.
+Ви будете вирішувати, коли потрібен прийменник. (You will decide when a preposition is needed.) This will test your tool vs. accompaniment discrimination, like choosing between **писати ручкою** and **ходити з другом**.
 
-* **Я пишу синьою ручкою.** (I am writing with a blue pen.) — *Tool*
-* **Кухар ріже овочі гострим ножем.** (The cook cuts vegetables with a sharp knife.) — *Tool*
+Дієслова стану та професії також потребують орудного відмінка. (Verbs of state and profession also require the Instrumental case.) When describing a temporary state, a future profession, or a change in status, verbs like **бути** (to be) in the future or past tense, **стати** (to become), and **працювати** (to work) govern the Instrumental case. The Nominative case is only used for permanent facts in the present tense (e.g., Вона — студентка).
 
-If you add **з** to a tool, it creates an absurd situation where you and the object are companions.
-* ❌ **Я гуляю з ручкою.** (I am walking with a pen.) — *Incorrect for a tool!*
-* ✅ **Я гуляю з братом.** (I am walking with my brother.) — *Accompaniment*
+- **Бути** (to be): Він **буде архітектором**. (He will be an architect.) Вона **була хорошою студенткою**. (She was a good student.)
+- **Стати** (to become): Моя молодша сестра **стала менеджеркою**. (My younger sister became a manager.)
+- **Працювати** (to work): Я **працюю головним перекладачем**. (I work as a chief translator.) Він **працює лікарем**. (He works as a doctor.)
 
-Only use **з** when two living beings or separate entities do something together.
+Ви будете трансформувати речення. (You will transform sentences.) You will change Nominative sentences into sentences using **бути** or **стати** + Instrumental for professions. Наприклад: Вона лікарка → Вона **буде лікаркою**. Ви також будете вибирати правильну форму словосполучень у тестах. (You will also choose the correct form of phrases in tests.) For example, you must select the correct form of an adjective + noun phrase, choosing **з гарним другом** over *з гарний/гарною*.
 
-We use the **орудний відмінок** (instrumental case) to describe professions or temporary states when using verbs like **бути** (to be) in the past or future tense, **стати** (to become), and **працювати** (to work).
+Деякі дієслова керують орудним відмінком без прийменників. (Some verbs govern the Instrumental case without prepositions.) These include verbs expressing deep interest, hobbies, or pride. They are essential for talking about your personality.
 
-* **Він хоче стати відомим архітектором.** (He wants to become a famous architect.)
-* **Коли вона виросте, вона буде лікаркою.** (When she grows up, she will be a doctor.)
-* **Моя старша сестра стала менеджеркою.** (My older sister became a manager.)
-* **Він багато років працює перекладачем.** (He has worked as a translator for many years.)
-* **У дитинстві я був тихим хлопчиком.** (In childhood, I was a quiet boy.)
+- **Цікавитися** (to be interested in): Я дуже **цікавлюся українською історією**. (I am very interested in Ukrainian history.) Вони **цікавляться сучасним мистецтвом**. (They are interested in modern art.)
+- **Займатися** (to be engaged in / to practice): Вона професійно **займається спортом**. (She plays sports professionally.) Ми кожного дня **займаємося музикою**. (We study music every day.)
+- **Пишатися** (to be proud of): Я **пишаюся своїм старшим братом**. (I am proud of my older brother.) Батьки **пишаються розумними дітьми**. (The parents are proud of the smart children.)
 
-This structure shows that the profession or state is not permanent. It is something you do or become.
-
-Certain Ukrainian verbs require the **орудний відмінок** (instrumental case) directly, without any prepositions. The most common verbs in this category are **цікавитися** (to be interested in), **займатися** (to be occupied with / to do), and **пишатися** (to be proud of).
-
-* **Я дуже цікавлюся українською історією.** (I am very interested in Ukrainian history.)
-* **Мій брат цікавиться сучасною літературою.** (My brother is interested in modern literature.)
-* **Щоранку я займаюся активним спортом.** (Every morning I do active sports.)
-* **Діти займаються музикою та малюванням.** (The children study music and drawing.)
-* **Батьки завжди пишаються своїм сином.** (Parents are always proud of their son.)
-* **Ми щиро пишаємося вашим успіхом.** (We are sincerely proud of your success.)
-
-Whenever you use these verbs, immediately put the following noun into the instrumental case. Do not use any prepositions like "в" or "про".
+Запам'ятайте ці дієслова, вони дуже корисні. (Remember these verbs, they are very useful.) They make your speech sound much more natural and expressive in daily conversations.
 
 <!-- INJECT_ACTIVITY: fill-in-instrumental-transform -->
 <!-- INJECT_ACTIVITY: group-sort-functions -->
 
 ## Частина 3: Вільне вживання (Part 3: Free Production)
 
-Let us look at a natural dialogue. In this scene, friends recall a perfect day out. Notice how many times they use the **орудний відмінок** (instrumental case).
+Давайте подивимося на природну розмову. (Let's look at a natural conversation.) Two friends are reminiscing about a perfect picnic they had recently.
 
-> **Оксана:** Пам'ятаєш наш чудовий день у парку? *(Do you remember our wonderful day in the park?)*
-> **Тарас:** Звичайно! Ми **їхали автобусом**, і там було порожньо. *(Of course! We traveled by bus, and it was empty.)*
-> **Оксана:** Так, а потім ми довго **гуляли з дітьми** біля озера. *(Yes, and then we walked for a long time with the children near the lake.)*
-> **Тарас:** А на обід ми **їли канапки з сиром**. *(And for lunch, we ate sandwiches with cheese.)*
-> **Оксана:** Було так тепло! Ми **сиділи під старою липою** і відпочивали. *(It was so warm! We sat under the old linden tree and rested.)*
-> **Тарас:** Цей день був **найкращим**! *(This day was the best!)*
+> **Олег:** Пам'ятаєш наш пікнік минулого тижня? Це був чудовий день! *(Do you remember our picnic last week? It was a wonderful day!)*
+> **Марія:** Так, звичайно. Ми поїхали туди **автобусом**. *(Yes, of course. We went there by bus.)*
+> **Олег:** Ми так добре гуляли **з дітьми** біля озера. *(We had such a good walk with the children near the lake.)*
+> **Марія:** А потім ми їли смачні бутерброди **з ковбасою** і пили гарячий чай. *(And then we ate delicious sandwiches with sausage and drank hot tea.)*
+> **Олег:** Ми довго сиділи **під старою липою**, і було дуже тепло. *(We sat for a long time under an old linden tree, and it was very warm.)*
+> **Марія:** Згодна, цей день був **найкращим**! *(I agree, this day was the best!)*
 
-Every highlighted phrase uses the instrumental case for a different reason: means of transport, accompaniment, ingredient, and location.
+Notice how densely the Instrumental case is used here. It expresses transport (**автобусом**), accompaniment (**з дітьми**), ingredients (**з ковбасою**), spatial location (**під старою липою**), and state (**найкращим**).
 
-When speaking Ukrainian, you must avoid translating directly from other languages. We call this linguistic hygiene. Avoid common Russianisms and calques by learning the correct Ukrainian verbs and their required cases.
+Коли ви говорите українською, важливо уникати русизмів. (When you speak Ukrainian, it is important to avoid Russianisms.) Pay attention to these important distinctions regarding the Instrumental case:
 
-1. **Language of communication:** Always use the pure instrumental case when saying what language you speak.
-   ✅ **Ми розмовляємо українською мовою.** (We speak the Ukrainian language.)
-   ❌ *Ми розмовляємо на мові.* (Incorrect calque).
-2. **Missing someone:** The verb **сумувати** (to miss/be sad) requires the preposition **за** with the instrumental case.
-   ✅ **Я дуже сумую за тобою.** (I miss you very much.)
-   ❌ *Я сумую по тобі.* (Incorrect Russianism).
-3. **Laughing at something:** The verb **сміятися** (to laugh) requires the preposition **з** and the *genitive* case. Do not use **над** with the instrumental case.
-   ✅ **Ми голосно сміялися з нього.** (We laughed loudly at him.)
-   ❌ *Ми сміялися над ним.* (Incorrect Russian error).
+- Говорити про мову (Talking about language): Always use the bare Instrumental case for the language you speak. Say **Я розмовляю українською мовою** (I speak Ukrainian), and never use the preposition «на» (*на українській мові* is a direct calque). You can also just say **Я розмовляю українською** (I speak Ukrainian).
+- Відчувати сум (Feeling sadness): The verb **сумувати** (to miss) requires the preposition **за** + Instrumental case. Say **Я сумую за тобою** (I miss you), not *по тобі*. Ми **сумуємо за домом** (We miss home).
+- Сміятися (Laughing): The verb **сміятися** (to laugh) requires the preposition **з** + Genitive case. Say **сміятися з когось** (to laugh at someone), not *над кимось* (which incorrectly uses the Instrumental case).
 
-Let us analyze a visual scene to prepare for your next **завдання** (task). Imagine a busy kitchen. You must **визначити** (to identify) the objects and **описати** (to describe) the scene using the instrumental case.
+:::tip
+Always use **розмовляти українською** (to speak Ukrainian) without any prepositions. This elegant construction highlights the unique character of the Ukrainian language and shows advanced language skills.
+:::
 
-> **На кухні багато людей. Батько ріже свіжий хліб гострим ножем.** *(There are many people in the kitchen. The father is cutting fresh bread with a sharp knife.)*
-> **Мати готує смачний суп із м'ясом.** *(The mother is cooking a delicious soup with meat.)*
-> **Велика миска з фруктами стоїть між вікнами.** *(A large bowl with fruit stands between the windows.)*
-> **Білий рушник висить під мийкою.** *(A white towel hangs under the sink.)*
-> **Маленький собака лежить під обіднім столом.** *(A small dog lies under the dining table.)*
+Уявіть собі кухню. (Imagine a kitchen.) Describing a picture is a great way to practice these grammar rules in context.
 
-This short **текст** (text) uses the instrumental case to show the tool (**гострим ножем**), the ingredients (**із м'ясом**), and the spatial relations (**між вікнами**, **під мийкою**, **під обіднім столом**).
+На кухні дуже шумно і весело. (It is very noisy and fun in the kitchen.) Мама готує смачну вечерю для всієї родини. (Mom is cooking a delicious dinner for the whole family.) Вона обережно ріже свіжий хліб **гострим ножем**. (She carefully cuts fresh bread with a sharp knife.) На столі стоїть велика миска **з салатом**. (A large bowl with salad stands on the table.) Ця миска знаходиться прямо **між вікнами**. (This bowl is located right between the windows.) Наш старий собака солодко спить **під столом**. (Our old dog sleeps sweetly under the table.) Чистий рушник висить **під раковиною**. (A clean towel hangs under the sink.)
 
-Now it is time to write your own paragraph. A great way to practice the **орудний відмінок** (instrumental case) is to describe your daily routine. You can build complex **речення** (sentences) by combining different functions.
+У наступній вправі ви будете описувати схожу картинку. (In the next exercise, you will describe a similar picture.) You will state who is cooking, what tools they use, what ingredients are on the table, and where objects are located in space. 
 
-Use these sentence starters:
-* **Я працюю...** (I work as...) — Add your profession.
-* **Я добираюся на роботу...** (I commute to work by...) — Add a vehicle as a tool.
-* **На роботі я часто розмовляю з...** (At work I often talk with...) — Add a colleague or client.
-* **Ввечері я займаюся...** (In the evening I am occupied with...) — Add a hobby.
+Щоб вільно говорити, треба вміти відповідати на різні питання. (To speak fluently, you need to know how to answer various questions.) Practice answering these open-ended questions out loud:
+- **Ким ти працюєш?** (What is your profession?)
+- **Чим ти захоплюєшся?** (What are you passionate about?)
+- **З ким ти живеш?** (Who do you live with?)
+- **Що знаходиться перед твоїм будинком?** (What is in front of your house?)
 
-By linking these **словосполучення** (phrases), you create a rich narrative. Ensure that every noun phrase has the **правильний** (correct) ending.
+When you write your own paragraph, use these helpful sentence starters to build a complete story:
+- **Я працюю...** (I work as...)
+- **Я добираюся на роботу...** (I commute to work by...)
+- **Ввечері я займаюся...** (In the evening, I am engaged in...)
 
-Here is a sample narrative. Read this text about "My Tuesday" (**Мій вівторок**). It demonstrates the goal of your final writing task. It contains more than six different instrumental functions.
+Ці фрази допоможуть вам структурувати текст логічно. (These phrases will help you structure the text logically.)
 
-> **Зазвичай мій вівторок дуже активний. Я працюю головним архітектором у великій компанії. Вранці я п'ю чорну каву з молоком. Потім я їду на роботу швидким поїздом. Вдень я маю зустріч із новим клієнтом. Ми довго сидимо за круглим столом у конференц-залі. Після роботи я цікавлюся фотографією, тому йду в парк. Там я гуляю зі своїм собакою. Ввечері я готую вечерю і ріжу овочі великим ножем. Я завжди пишаюся своїм продуктивним днем!**
+Ось приклад тексту «Мій вівторок». (Here is an example text "My Tuesday".) This model paragraph demonstrates the goal of your final writing task. Your task will be an 8-10 sentence writing prompt: «Опишіть свій типовий день. Розкажіть про свою професію, як ви добираєтесь на роботу, з ким ви обідаєте, і що ви готуєте на вечерю.» (Describe your typical day. Tell about your profession, how you get to work, who you have lunch with, and what you cook for dinner.) You must use at least 6 different Instrumental constructions.
 
-*(Usually my Tuesday is very active. I work as a chief architect in a large company. In the morning I drink black coffee with milk. Then I go to work by a fast train. During the day I have a meeting with a new client. We sit for a long time at a round table in the conference room. After work I am interested in photography, so I go to the park. There I walk with my dog. In the evening I cook dinner and cut vegetables with a large knife. I am always proud of my productive day!)*
+> Я працюю **вчителем** у великій школі. Кожного ранку я добираюся на роботу **автобусом**. Я дуже цікавлюся **історією**, тому читаю історичні книги в дорозі. Вдень я обідаю **з колегами** у шкільному кафе. Наш стіл завжди знаходиться **під великим вікном**. Ввечері я повертаюся додому і готую вечерю **з дружиною**. Ми часто їмо гарячий борщ **із сметаною**. Після вечері я займаюся **спортом**, а потім ми гуляємо **з собакою**. Я дуже задоволений своїм **життям**.
+
+This short text successfully uses the Instrumental case for professions, tools, transport, interests, accompaniment, and spatial relations. 
 
 <!-- INJECT_ACTIVITY: error-correction-instrumental -->
 
 ## Підсумок
 
-You have completed the checkpoint! Let us do a quick **перевірка** (check). Can you answer these questions with a **правильна відповідь** (correct answer)?
+Перевірте свої знання за допомогою цього списку. (Check your knowledge using this list.) Read each question and answer it honestly.
 
-*   **Can you form feminine endings with -ою/-ею?**
-    *   Yes, I know that hard stems take **-ою** (**мамою**) and soft stems take **-ею** (**землею**).
-*   **Do you remember to use 'н-' with 'з ним/нею'?**
-    *   Yes, after prepositions, third-person pronouns must start with "н", like **з ними** (with them).
-*   **Can you describe your profession?**
-    *   Yes, I use the verb **працювати** and the instrumental case: **Я працюю лікарем** (I work as a doctor).
-*   **Do you use 'з' only for company, not for tools?**
-    *   Yes, I write **ручкою** (with a pen, no "з"), but I walk **з братом** (with a brother).
+- Can you form feminine endings with **-ою / -ею**? Наприклад: **сестрою**, **землею**, **ручкою**.
+- Do you remember to use the letter **н-** with third-person pronouns like **з ним** and **з нею**? (Remember: never say *з їм*).
+- Can you describe your profession using **працювати** or **бути** + Instrumental case? Наприклад: Я працюю **лікарем**, вона буде **вчителькою**.
+- Do you confidently use **з** only for company, and the bare Instrumental case for tools? Наприклад: Я пишу **олівцем**, but я гуляю **з другом**.
 
-Review these points often. You are now ready for the next level of Ukrainian grammar!
-
+Орудний відмінок робить вашу українську природною та багатою. (The Instrumental case makes your Ukrainian natural and rich.) You can now confidently describe how you do things, what tools you use, who you spend time with, and where things are located in physical space. Use these skills щодня (every day) to think in Ukrainian!
 </module_content>
 
 ---

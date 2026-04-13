@@ -1,92 +1,128 @@
-## Діало́ги
+## Діало́ги (Dialogues)
 
-Lviv is a beautiful, historic city in western Ukraine. Imagine you are taking a walking tour of the old town. You want to see the famous architecture, but the narrow cobblestone streets can be confusing. You need to navigate from **Пло́ща Ри́нок** (Market Square) to the majestic **О́перний теа́тр** (Opera House), and then up to **Висо́кий замок** (High Castle). You might ask: **Де ми?** (Where are we?). The guide answers: **На пло́щі.** (On the square). Then you ask: **Куди́ да́лі?** (Where to next?). The reply is: **В театр.** (To the theater). And if someone asks: **Зві́дки ви прийшли́?** (Where did you come from?), you say: **Із за́мку.** (From the castle). Navigating a city means understanding where you are, where you are going, and where you came from.
+Navigating a city requires a mix of spatial awareness and clear communication. Imagine a walking tour in the old town of Lviv. The route goes from **Пло́ща Ри́нок** (Rynok Square, the main square) to the **О́перний теа́тр** (Opera House), and finally up to the **Висо́кий замок** (High Castle). Moving between these landmarks means you constantly need to ask where things are and where to go next. A guide can turn that route into a short real exchange:
 
-> **Тури́ст:** Ви́бачте, як діста́тися до бібліоте́ки? *(Excuse me, how to get to the library?)*
-> **Гід:** Іді́ть пря́мо, по́тім напра́во. Бібліоте́ка на ро́зі. *(Go straight, then to the right. The library is on the corner.)*
-> **Турист:** А музе́й? *(And the museum?)*
-> **Гід:** Музей дале́ко. Ї́дьте на метро́ до це́нтру. *(The museum is far. Go by metro to the center.)*
+> **Гід:** **Де ми за́раз?** *(Where are we now?)*
+> **Тури́стка:** **Ми на пло́щі Ринок.** *(We are at Rynok Square.)*
+> **Тури́ст:** **Куди́ йдемо́ да́лі?** *(Where are we going next?)*
+> **Гід:** **В Оперний театр.** *(To the Opera House.)*
+> **Туристка:** **Зві́дки ми прийшли́?** *(Where did we come from?)*
+> **Гід:** **З Висо́кого за́мку.** *(From the High Castle.)*
 
-This dialogue shows a typical street interaction. The tourist uses a polite greeting and asks for simple directions to local landmarks. The guide provides clear, step-by-step instructions using directional adverbs and landmarks, then suggests public transport for a longer distance. Every urban interaction relies on these basic, highly functional patterns.
+When asking strangers for help on the street, directness combined with polite markers is the most natural approach. The formal imperative forms **іді́ть** (go! - on foot) and **ї́дьте** (go! - by transport) are essential for giving or receiving directions safely.
 
-> **Окса́на:** Як ти дістає́шся на робо́ту? *(How do you get to work?)*
-> **Тара́с:** Споча́тку йду на зупи́нку. Потім ї́ду авто́бусом до центру. *(First I go to the stop. Then I go by bus to the center.)*
-> **Оксана:** А потім? *(And then?)*
-> **Тарас:** Потім іду́ пі́шки п'ять хвили́н. Робо́та в о́фісі на площі. *(Then I go on foot for five minutes. Work is in an office on the square.)*
+> **Турист:** **Ви́бачте, як діста́тися до бібліоте́ки?** *(Excuse me, how to get to the library?)*
+> **Гід:** **Ідіть пря́мо, по́тім напра́во. Бібліоте́ка на ро́зі.** *(Go straight, then to the right. The library is on the corner.)*
+> **Турист:** **А музе́й?** *(And the museum?)*
+> **Гід:** **Музей дале́ко. Їдьте на метро́ до це́нтру.** *(The museum is far. Go by metro to the center.)*
 
-Here, two friends discuss their daily commute. They break down the journey into distinct, logical steps. They mention walking to a transport hub, taking a specific vehicle, and finally arriving at their destination. This structure is very common when describing regular habits and routines.
-
-The phrase **Вибачте** (Excuse me) is the most polite and natural way to get a stranger's attention in Ukrainian. When giving directions, the guide uses two different command forms. **Ідіть** (Go / Walk) is an instruction to move on foot. When suggesting public transport, the guide switches to **Їдьте** (Go / Travel by vehicle). Both verbs end in **-іть** / **-те**, marking the formal "you" (**ви**) form.
+This brief interaction combines essential movement directions, specific modes of transport, and clear city landmarks. The adverb **направо** (to the right) functions as a simple direction without requiring complex case changes. The noun phrase **на розі** (on the corner) is a fixed locative chunk. The verb **дістатися** (to get to) is the standard, natural way to ask about reaching a destination.
 
 :::tip
-This formal ending is essential for politeness. Using the informal form with strangers on the street is considered rude. Always stick to the formal commands when asking for or giving directions!
+The phrase **на розі** (on the corner) is a highly common exception. The noun **ріг** (corner) changes its root vowel from **і** to **о** in the locative case.
 :::
-
-In the second dialogue, Taras structures his route using sequence words. The word **спочатку** (first / initially) starts the explanation, and **потім** (then / afterward) connects the steps. This creates a logical narrative. We also see two ways to talk about transportation. To travel by a vehicle, Ukrainians often use the instrumental case, such as **автобусом** (by bus). Alternatively, they use the preposition **на** with the locative case, such as **на метро** (by metro). When moving under your own power, use the specific adverb **пішки** (on foot).
-
-<!-- INJECT_ACTIVITY: match-navigation-responses -->
-
-## Де і куди ра́зом
-
-Real urban navigation requires a constant, fluid switch between two core concepts: static location and the direction of movement. When you describe your current position, you answer the question **Де?** (Where?). This requires the locative case. For example: **Я за́раз у парку.** (I am in the park now.) However, when you describe your destination, you answer the question **Куди?** (Where to?). This requires the accusative case. For example: **Я йду в магази́н.** (I am going to the store.) A natural Ukrainian conversation blends these forms effortlessly. You might say: **Магазин на ву́лиці Шевче́нка.** (The store is on Shevchenko street — locative). And immediately follow with: **Потім їду на роботу.** (Then I am going to work — accusative). Recognizing which case to use is the key to clear communication.
-
-The prepositional patterns for **в** (in) and **на** (on) require careful attention. The choice of preposition stays the same, but the noun ending changes based on whether you describe location or direction. Consider these contrasting examples:
-
-*   **На вулиці** (On the street — Locative: Де?) vs. **На ву́лицю** (Onto the street — Accusative: Куди?).
-*   **На площі** (On the square — Locative: Де?) vs. **На пло́щу** (Onto the square — Accusative: Куди?).
-*   **В офісі** (In the office — Locative: Де?) vs. **В о́фіс** (Into the office — Accusative: Куди?).
-
-Feminine nouns change clearly from **-і** to **-ю** or **-у**. Masculine inanimate nouns like **офіс** show a zero-ending in the accusative direction form but take an **-і** ending for static location.
-
-:::note
-You might notice that the preposition **в** (in) frequently changes to **у** to make the sentence sound smoother (like **у парку** instead of **в парку**). The grammatical case and meaning remain exactly the same.
-:::
-
-This synthesis table categorizes the essential navigation information. It separates static locations, active movements, transportation methods, and physical distance.
-
-| Category | Question | Grammar Form | Examples |
-| :--- | :--- | :--- | :--- |
-| Location (Static) | **Де ти?** (Where are you?) | **в / на** + Locative | **В парку, на площі.** |
-| Destination (Direction) | **Куди йдеш?** (Where are you going?) | **в / на** + Accusative | **В парк, на площу.** |
-| Transport Method | **Як? / Чим?** (How? / By what?) | Instrumental OR **на** + Loc | **Автобусом, на метро.** |
-| Distance | **Далеко?** (Is it far?) | Adverbs | **Далеко, бли́зько, пішки.** |
-
-When you combine these elements, you can give clear, formal directions to anyone. This is where the imperative mood becomes very useful. We use formal commands ending in **-іть** or **-те** to speak politely to strangers. The verb **ідіть** (go / walk) is the standard command for pedestrian movement. For example: **Ідіть прямо.** (Go straight.) If the destination requires a vehicle, you must use the verb **ї́хати** (to ride). Its formal command form is irregular: **їдьте** (go / travel). For example: **Їдьте на метро.** (Go by metro.) Using these formal commands ensures you sound respectful and helpful on the streets of any Ukrainian city.
-
-<!-- INJECT_ACTIVITY: quiz-de-vs-kudy -->
 
 <!-- INJECT_ACTIVITY: fill-in-directions -->
 
-## Мій райо́н
+Not all navigation happens on foot or as a tourist. Daily routines require combining different transport methods and sequence words to describe a commute.
 
-To describe your daily life, you need vocabulary for distance and proximity. The most common adverbs for space are paired with the preposition **від** (from), requiring the genitive case. We use the chunks **далеко від** (far from) and **близько від** (near from / close to). You might say: **Шко́ла далеко від до́му.** (The school is far from home.) If a place is highly accessible, you say: **Апте́ка близько.** (The pharmacy is near.) You can add: **Мо́жна піти пішки.** (It is possible to go on foot.) Another excellent word for proximity is **по́руч** (nearby / next door). If you live right next to a bakery, you say: **Пека́рня поруч.** (The bakery is nearby.)
+> **Окса́на:** **Як ти дістає́шся на робо́ту?** *(How do you get to work?)*
+> **Тара́с:** **Споча́тку йду на зупи́нку. Потім ї́ду авто́бусом до центру.** *(First I go to the stop. Then I go by bus to the center.)*
+> **Оксана:** **А потім?** *(And then?)*
+> **Тарас:** **Потім іду́ пі́шки п'ять хвили́н. Робо́та в о́фісі на площі.** *(Then I go on foot for five minutes. Work is in an office on the square.)*
 
-Your daily life revolves around your local area. The Ukrainian word for a neighborhood or a city district is **район**. When describing your city, you usually relate locations to the **центр** (center) or the **око́лиця** (outskirts). Living in the center is very different from living on the outskirts. The standard way to state your address is to use the preposition **на** with the word **ву́лиця** (street) in the locative case. You say: **Я живу́ на вулиці Шевченка.** (I live on Shevchenko street.) The street name itself often takes a genitive form (like Шевченка), but simply remember the phrase as a fixed chunk.
+Describing a daily route involves sequencing actions. The adverb **спочатку** (first/initially) sets up the beginning of the journey, while **потім** (then/afterwards) links the subsequent steps. The transition from walking to taking transport is a core part of urban life, demonstrating how vocabulary adapts to the physical reality of the city.
 
-Time is a crucial part of navigation. We often measure distance in time rather than kilometers. The word for minute is **хвили́на**. A very common and natural phrase is **п'ять хвилин пішки** (five minutes on foot). For example: **Суперма́ркет близько, п'ять хвилин пішки.** (The supermarket is near, five minutes on foot.) To navigate successfully, you must recognize physical landmarks. A **перехре́стя** (intersection) is a common reference point for turning. A **зупи́нка** (stop) is essential for catching a bus.
+## Де і куди ра́зом (Where and Where To Together)
 
-A cohesive text describing a personal neighborhood combines places, transport, and directions into a single narrative.
+The contrast between static location and active direction is fundamental to Ukrainian grammar. Real navigation uses both concepts together, switching back and forth depending on the verb.
 
-> **Я живу на вулиці Франка́. Бі́ля мого дому є парк і магазин. Школа далеко — тре́ба їхати автобусом. Аптека близько, можна піти пішки. У моє́му райо́ні є кафе́, рестора́н і бібліотека. Бібліотека на розі. Ідіть прямо, потім направо.**
-> *(I live on Franko street. Near my house there is a park and a store. The school is far — one needs to go by bus. The pharmacy is near, it is possible to go on foot. In my neighborhood there is a cafe, a restaurant, and a library. The library is on the corner. Go straight, then to the right.)*
+*   **Я зараз у парку.** *(I am now in the park.)* — **Де?** (Where?) triggers the locative case.
+*   **Я йду в магази́н.** *(I am going to the store.)* — **Куди?** (Where to?) triggers the accusative case.
+*   **Магазин на ву́лиці Шевче́нка.** *(The store is on Shevchenko street.)* — **Де?** (Where?) returns to the locative.
+*   **Потім їду на роботу.** *(Then I go to work.)* — **Куди?** (Where to?) requires the accusative.
 
-This description uses static locations, explains how to travel to distant places, and gives specific walking instructions.
+This constant switch between **де** and **куди** is a hallmark of natural Ukrainian speech. A static verb of position anchors you in a location, while a verb of motion pushes you toward a destination.
+
+:::caution
+Do not confuse **де** (where - static) with **куди** (where to - directional). In English, we often use "where" for both ("Where are you?" vs. "Where are you going?"), but Ukrainian strictly separates them. Using **де** with a verb of motion sounds unnatural.
+:::
+
+Preposition patterns synthesize these rules into a clear communication toolkit. The choice of preposition and case depends entirely on the question being answered. The destination itself does not dictate the grammar; the action dictates it.
+
+| Situation | Question | Form |
+|---|---|---|
+| Static | **Де ти?** | **в/на** + locative |
+| Direction | **Куди йдеш?** | **в/на** + accusative |
+| By transport | **Як? Чим?** | **автобусом / на метро** |
+| Distance | **Далеко?** | **далеко / бли́зько / пішки** |
+
+When answering the question **Де ти?** (Where are you?), you must use the prepositions **в/на** with the locative case, as in **Магазин на вулиці Шевченка**. When answering **Куди йдеш?** (Where are you going to?), you must switch to **в/на** with the accusative case, as seen in the phrase **Потім їду на роботу**. The preposition remains the same, but the ending of the noun changes to reflect the movement.
+
+<!-- INJECT_ACTIVITY: quiz-locative-accusative -->
+
+Moving through the city requires specifying the mechanics of transport and distance. When answering the questions **Як?** (How?) and **Чим?** (By what means?), Ukrainian relies on distinct grammatical structures. The instrumental case is used for vehicles you ride inside, like **автобусом** (by bus). However, borrowed words like **метро** (metro/subway) do not decline, so the phrase remains **на метро** (by metro).
+
+Distance can be described relatively using the adverbs **далеко** (far) and **близько** (near/close). For shorter distances, the adverb **пішки** (on foot) indicates walking.
+
+*   **Музей далеко.** *(The museum is far.)*
+*   **Парк близько.** *(The park is near.)*
+*   **Ми йдемо пішки.** *(We are going on foot.)*
+
+Use these as short answers first, then add transport if needed: **Парк близько. Ми йдемо пішки.** / **Музей далеко. Ї́демо на метро.**
+
+## Мій райо́н (My Neighborhood)
+
+Describing where you live requires grounding your location relative to other landmarks. The noun **район** (neighborhood/district, m) refers to a specific section of a city. The preposition **бі́ля** (near/by) is used to establish proximity and always pairs with the genitive case.
+
+*   **Я живу́ на вулиці Франка́.** *(I live on Franko street.)*
+*   **Біля мого до́му є парк і магазин.** *(Near my house there is a park and a store.)*
+
+This gives you a simple neighborhood template: home base first, then nearby places. The chunk **біля мого дому** helps you add local landmarks immediately.
+
+Combining neighborhood features with transport needs reveals how a person interacts with their city. You must contrast what is accessible with what requires a journey.
+
+*   **Шко́ла далеко. Тре́ба ї́хати автобусом.** *(The school is far. One needs to go by bus.)*
+*   **Апте́ка близько. Мо́жна піти пішки.** *(The pharmacy is near. One can go on foot.)*
+
+The impersonal construction **треба їхати** (one needs to travel) expresses necessity without requiring a specific subject pronoun. Conversely, **можна піти** (one can go) indicates possibility and convenience. A typical neighborhood might be described by the amenities it contains: **У моє́му райо́ні є кафе́, рестора́н і бібліотека.** *(In my neighborhood there is a cafe, a restaurant, and a library.)* If a location is very close, the adverb **по́руч** (nearby) is often used instead of a specific measurement.
+
+Useful phrases for city life often measure distance in time rather than meters. The noun **хвили́на** (minute, f) is frequently paired with walking.
+
+*   **П'ять хвилин пішки.** *(Five minutes on foot.)*
+
+Other essential location chunks include the paired concepts **далеко від** (far from) and **близько від** (near from), which both require the genitive case for the following noun. To describe the general area of a city, the phrases **у це́нтрі мі́ста** (in the city center) and **на око́лиці** (on the outskirts) are standard locative constructions.
+
+*   **Мій о́фіс у центрі міста.** *(My office is in the city center.)*
+*   **Я живу на околиці.** *(I live on the outskirts.)*
+
+:::note
+The word **пішки** (on foot) is an adverb, not a noun, so it never changes its form. You cannot say "на пішки" or "з пішки" — simply use the word on its own.
+:::
+
+Using these fixed phrases allows you to describe urban geography without needing complex grammatical explanations.
 
 <!-- INJECT_ACTIVITY: fill-in-transport-route -->
 
 ## Підсумок — Summary
 
-The urban communication toolkit contains everything needed for daily navigation. Asking: **Де...?** (Where...?), **Як дістатися до...?** (How to get to...?). Directions: **прямо** (straight), **направо** (to the right), **налі́во** (to the left). Location: **в/на** + locative, **в/на** + accusative. Transport: **автобусом**, **на метро**, **пішки**. These linguistic tools allow you to move confidently and independently.
+The urban communication toolkit relies on clear questions and direct commands. Asking for a location starts with the static question **Де...?** (Where...?), while asking for a route uses the dynamic structure **Як дістатися до...?** (How to get to...?). When providing directions, the adverbs **прямо** (straight), **направо** (to the right), and **налі́во** (to the left) form the core instructions. Using the formal imperative verbs **ідіть** (go on foot) and **їдьте** (go by transport) ensures politeness when speaking to strangers on the street. Combining these elements allows you to ask for and give simple directions.
 
-When speaking Ukrainian, cultural and linguistic precision matters. Another critical distinction involves transport hubs. In English, "station" is a generic term. In Ukraine, you must be specific. If you need a bus, you ask for the **автовокза́л** (bus station). If you need a train, you ask for the **залізни́чний вокза́л** (railway station). Mixing these up will send you to the wrong side of the city!
+Grammatical navigation structures depend on a strict distinction between location and movement. The prepositions **в** and **на** act differently based on context. Pairing them with the locative case answers the static question **Де?** (Where?), while pairing them with the accusative case answers the directional question **Куди?** (Where to?). Transport methods further refine the description, distinguishing between walking (**пішки**), taking a non-declining transport (**на метро**), or riding a standard vehicle (**автобусом**). These patterns let you describe simple routes in Ukrainian.
 
-:::caution
-Many learners try to translate the English "I apologize" directly into Ukrainian as **Вибача́юся**. This is a Russian calque and sounds unnatural because it literally means "I apologize myself." The correct, polite form is always the imperative **Вибачте** (Excuse me).
-:::
+<!-- INJECT_ACTIVITY: match-up-navigation-responses -->
 
-Perform a self-check to verify these skills. Review the questions and situations below to see if you are ready for a real Ukrainian city.
-*   Чи мо́жете ви запита́ти доро́гу? (Can you ask for directions?) Example: **Вибачте, де бібліотека?** (Excuse me, where is the library?)
-*   Чи можете ви сказа́ти **направо** і **наліво**? (Can you say "to the right" and "to the left"?)
-*   Чи зна́єте ви різни́цю між **у це́нтрі** (де?) та **в центр** (куди?)? (Do you know the difference between "in the center" — locative, and "into the center" — accusative?)
-*   Опиші́ть свій шлях: Як ви дістаєте́ся на роботу чи в університе́т? (Describe your route from home to work/school: How do you get to work or to the university?) You should be able to say: **Спочатку йду... потім їду...** (First I go... then I go...).
-Mastering these scenarios prepares you for authentic communication in any town.
+Self-check: Describe your route from home to work or school. Construct a short narrative answering these specific questions to verify your understanding.
+
+*   **Де ти живе́ш?** *(Where do you live?)*
+    *   **Я живу на...** *(I live on...)*
+*   **Як ти дістаєшся на роботу?** *(How do you get to work?)*
+    *   **Я їду...** *(I go by...)*
+*   **Це далеко чи близько?** *(Is it far or near?)*
+    *   **Це...** *(It is...)*
+*   **Скі́льки хвилин ти йдеш пішки?** *(How many minutes do you walk?)*
+    *   **Я йду пішки...** *(I walk...)*
+*   **Що є біля твого́ дому?** *(What is near your house?)*
+    *   **Біля мого дому є...** *(Near my house there is...)*
+
+Using these prompts builds a cohesive description of your daily interaction with the city. The ability to synthesize location, direction, and transport into a single explanation marks a significant step in conversational independence.

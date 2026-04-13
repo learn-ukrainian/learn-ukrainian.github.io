@@ -239,27 +239,27 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-- Confirmed: наголос, замок, кава, вода, столиця, Київ, мука, ранок, метро, фотографія, Україна.
-- Not found: None.
+- Confirmed: наголос, замок, кава, вода, столиця, мука, ранок, метро, фотографія
+- Not found: None
 
 ## Grammar Rules
-- Види речень за метою висловлювання (Sentence types by purpose): Grade 5 textbook (§16) — розповідні (declarative), питальні (interrogative), спонукальні (imperative).
-- Види речень за інтонацією (Sentence types by intonation): Grade 5 textbook (§16) — окличні (exclamatory) and неокличні (non-exclamatory).
-- Наголос (Stress): Grade 5 textbook (§38) — посилена вимова одного зі складів. В українській мові наголос вільний (free) та рухомий (movable).
+- Наголос / Розділові знаки (Stress / Punctuation): Правопис §None — No matching orthography rules found in sections 1-61 for stress (наголос), intonation, or basic punctuation patterns like period or question mark. (Note: A query for "наголос" returned § 5 "Буква Г", but only because the word appears incidentally in the text, not as a rule).
 
 ## Calque Warnings
-- як справи: OK — standard greeting, no issues in style guide.
-- як гарно: OK — used in Grade 5 textbook examples for exclamatory sentences.
-- у тебе: OK — standard prepositional phrase, no issues found.
+- як справи: OK — No results in Антоненко-Давидович
+- у тебе: OK — No results in Антоненко-Давидович
+- як гарно: OK — No results in Антоненко-Давидович
 
 ## CEFR Check
-- наголос: A1 (metalanguage) — OK
-- замок: A1 — OK
-- кава: A1 — OK
+- фотографія: A1 — OK
 - столиця: A1 — OK
 - ранок: A1 — OK
 - метро: A1 — OK
-- фотографія: A1 — OK
+- кава: A1 — OK
+- вода: A1 — OK
+- наголос: B1 — above target
+- мука: B1 — above target
+- замок: A2 — above target
 </pre_verified_facts>
 
 
@@ -569,12 +569,14 @@ These exercises, adapted from Ukrainian school materials, provide a gold standar
 
 ## Section Structure
 
-Write these sections as H2 headings, in this exact order:
+Write these sections as H2 headings, in this **exact** order:
 
 - `## Наголос (Stress)` (~350 words)
 - `## Інтонація (Intonation)` (~300 words)
 - `## Читаємо вголос (Reading Aloud)` (~300 words)
 - `## Підсумок — Summary` (~250 words)
+
+**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim** as an `## H2` line. This includes the FINAL summary/transition section (`Підсумок: ...`, `Підсумок та перехід до M...`, etc.) — the writer's most common failure is silently dropping the closing section. Do NOT skip it. Do NOT renumber. Do NOT merge headings. The post-write quick-verify check will fail your build if any heading is missing, even if the prose itself is excellent.
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -618,6 +620,25 @@ HARD GRAMMAR RULES (audit will reject violations):
 - **Zero calques**: No приймати душ→брати душ, приймати рішення→ухвалювати рішення
 - **Zero paronyms**: тактична≠тактовна, ефектний≠ефективний — use the right word, not a similar-sounding one
 - **Natural Ukrainian**: Write how a Ukrainian teacher would explain this to a student. Not robotic, not textbook-dry, not overly casual.
+
+### FORBIDDEN WORDS — never write these (#1189)
+
+The following Russian words have leaked into past builds and broken modules. They are **hard-banned** — the post-write toxic-token scanner will fail your build the moment it sees one. Use the Ukrainian alternative every time, even in dialogues, even in casual prose, even when quoting a learner's mistake (use a `<!-- VERIFY -->` placeholder instead of typing the Russian form):
+
+| Russian (FORBIDDEN) | Ukrainian (USE THIS) |
+|---|---|
+| хорошо | добре |
+| конечно | звичайно / певна річ |
+| спасибо | дякую |
+| пожалуйста | будь ласка / прошу |
+| ничего | нічого |
+| сейчас | зараз |
+| тоже | теж / також |
+| здесь | тут |
+| кот | кіт |
+| кон | кін |
+
+This list is enforced word-for-word by `scripts/build/quick_verify.py` (SEVERE_RUSSIANISMS). If you produce any of these tokens — even inside a quoted example, even inside a dialogue line spoken by a Russian-speaking character — the build halts immediately. There is no exception.
 
 **Authority hierarchy (if uncertain about a word, check in this order):**
 VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (stress) → Антоненко-Давидович (style) → Грінченко (etymology).
@@ -722,42 +743,35 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Наголос (Stress) (~380 words total)
-- P1 (~100 words): [Definition of stress (наголос) as a physical act of "calling" a word. Explain that the stressed syllable (*наголошений склад*) is pronounced louder and longer. Use the "calling the turtle" technique from the wiki to find the stress in the word *черепа́ха*. Contrast with English, noting that Ukrainian vowels do not reduce as much under stress.]
-- P2 (~100 words): [Explain that Ukrainian stress is free (*ві́льний*) and can fall on any syllable, unlike French (last) or Polish (penultimate). Use examples to show different positions: first syllable (*ма́ма*, *ка́ва*), second syllable (*столи́ця*, *кни́жка*), and third/last syllable (*молоко́*, *метро́*). Briefly introduce mobile stress (*рухо́мий наголос*) using the plural shift: *рука́* (hand) → *ру́ки* (hands).]
-- P3 (~110 words): [Demonstrate how stress changes meaning using minimal pairs (*омографи*). Explain that getting the stress wrong is not just a "pronunciation mistake" but saying a different word. Detail the pair *за́мок* (castle) vs. *замо́к* (lock) and *му́ка* (torment) vs. *мука́* (flour). Add the contrast of *до́рога* (road) vs. *дорога́* (expensive) to show its importance in adjectives.]
-- P4 (~70 words): [Practical guidance on stress marks ('). Clarify that they appear in dictionaries and textbooks to help learners, but are absent in everyday text. Recommend the resource *goroh.pp.ua* as the "gold standard" for checking stress.]
-- <!-- INJECT_ACTIVITY: quiz-stress-position --> [quiz, Choose the correct stressed syllable for common A1 words, 8 items]
-- <!-- INJECT_ACTIVITY: match-stress-pairs --> [match-up, Match stress pairs based on meaning/image: замок (castle) ↔ замок (lock), 4 items]
+## Наголос (Stress) (~380 words)
+- P1 (~100 words): Introduce the concept of "наголос" (stress) in Ukrainian, noting the language has 38 sounds. Explain that stress determines which syllable is pronounced louder and longer. Emphasize that Ukrainian stress is "вільний" (free) and can fall on any syllable, and "рухомий" (mobile), meaning it shifts between forms of the same word (e.g., нога → ноги), unlike French or Czech where it is fixed.
+- P2 (~100 words): Explain that stress changes meaning using minimal pairs (омографи). Provide specific examples: за́мок (castle) vs замо́к (lock), му́ка (torment) vs мука́ (flour), а́тлас (atlas) vs атла́с (satin). Emphasize that getting the stress wrong means saying a completely different word, which is why paying attention to it is critical.
+- P3 (~80 words): Discuss the use of stress marks (') in writing. Clarify that they appear in textbooks and dictionaries to help learners, but are NOT used in everyday Ukrainian text. Recommend always checking dictionaries like goroh.pp.ua for correct stress when unsure about a new word.
+- P4 (~100 words): Present common A1 stress patterns, noting there are no shortcuts and words must be learned individually. Provide examples of first-syllable stress (ма́ма, та́то, ра́нок, ка́ва, кни́жка) and contrast them with last-syllable stress (вода́, зима́, рука́, метро́, кафе́).
+- <!-- INJECT_ACTIVITY: match-stress-pairs --> [match-up, Match stress pairs: замок (castle) ↔ замок (lock), 4 items]
 
-## Інтонація (Intonation) (~330 words total)
-- P1 (~80 words): [Introduction to sentence melody (*інтонація*). Explain that Ukrainian uses pitch to signal the purpose of a sentence: *розповідні* (declarative/statements), *питальні* (interrogative/questions), and *окличні* (exclamatory). Mention that punctuation (. ? !) is the visual guide to these melodies.]
-- P2 (~100 words): [Contrast statement vs. yes/no question melody. A statement like *Це кава.* uses falling intonation (↘). A question with the exact same words, *Це кава?*, uses rising intonation (↗) on the stressed syllable of the word being questioned. Emphasize that the rise must be distinct to avoid sounding like a statement.]
-- P3 (~90 words): [Explain the "Question Word Exception." Sentences starting with *хто* (who), *що* (what), *де* (where), or *коли* (when) already signal a question, so the intonation often falls (↘) rather than rises. Examples: *Що це?* (↘) and *Де метро?* (↘). Contrast this again with yes/no questions like *Це метро?* (↗).]
-- P4 (~60 words): [Exclamations and greetings. Describe the strong falling intonation (↘↘) used for emphasis or emotion. Examples: *Як гарно!* (How beautiful!) and the enthusiastic greeting *Привіт!*. Mention that "logical stress" — emphasizing one word in a sentence — also shifts the melody.]
-- <!-- INJECT_ACTIVITY: quiz-sentence-type --> [quiz, Identify if a sentence is a statement, question, or exclamation based on punctuation/melody, 6 items]
-- <!-- INJECT_ACTIVITY: fill-in-punctuation --> [fill-in, Add the correct punctuation (. ? !) to complete the sentence intent, 6 items]
+## Інтонація (Intonation) (~330 words)
+- P1 (~110 words): Introduce "інтонація" (melody) and how it distinguishes sentence types. Explain that the same words with a different melody convey a different meaning. Provide examples: a statement uses falling intonation (Це кава. ↘), a yes/no question uses rising intonation on the stressed syllable (Це кава? ↗), and an exclamation uses a strong fall (Як гарно! ↘↘).
+- P2 (~110 words): Explain the difference between yes/no questions and questions containing question words (хто, що, де, коли). Show that questions with question words actually have a falling intonation because the question word does the work (Що це? ↘, Де метро? ↘). Contrast this with yes/no questions, which always require a rising melody (Це метро? ↗).
+- P3 (~110 words): Briefly classify sentence types by purpose: розповідні (declarative), питальні (interrogative), and спонукальні/окличні (imperative/exclamatory). Focus A1 learners on identifying the three punctuation patterns that correspond to melody: period (.) for statements, question mark (?) for questions, and exclamation mark (!) for emotions or commands.
+- <!-- INJECT_ACTIVITY: quiz-sentence-types --> [quiz, Statement, question, or exclamation? Choose based on punctuation, 6 items]
+- <!-- INJECT_ACTIVITY: fill-in-punctuation --> [fill-in, Add the correct punctuation: Це кава_ Де метро_ Як гарно_, 6 items]
 
-## Читаємо вголос (Reading Aloud) (~340 words total)
-- P1 (~110 words): [A step-by-step method for reading long Ukrainian words. 1) Break the word into syllables: *фо-то-гра-фі-я*. 2) Locate the stressed syllable (the third *а*). 3) Read slowly, then speed up to a natural rhythm: *фотографія*. Apply this to *у-кра-їн-ська* (stress on *ї*) and *ві-дпо-чи-нок* (stress on *и*).]
-- P2 (~110 words): [Word list practice for rhythm. Group words by their stress patterns to build muscle memory. Group A (Initial stress): *Київ, ранок, кава, тато*. Group B (Final stress): *вода, зима, метро, кафе*. Group C (Middle stress): *столиця, дитина, собака*.]
-- P3 (~120 words): [Dialogue practice. A multi-turn dialogue using greetings and basic questions to practice combined stress and intonation patterns.
-- — Привіт! (↘↘)
-- — Привіт! (↘) Як справи? (↘ - question word)
-- — Добре! (↘) А у тебе? (↗ - yes/no rise)
-- — Добре! Це твоя кава? (↗)
-- — Так, це моя кава. (↘) Дякую! (↘)]
+## Читаємо вголос (Reading Aloud) (~330 words)
+- P1 (~110 words): Guide learners on how to read multisyllable words with the correct stress. Teach the method: break the word into syllables, find the stressed syllable, and then read the whole word at a natural speed. Walk through examples: у-кра-ї́н-ська (stress on ї), фо-то-гра́-фі-я (stress on third а), ві-дпо-чи́-нок (stress on и).
+- P2 (~100 words): Provide a word stress reading practice section. Instruct learners to read a list of words aloud, deliberately exaggerating the stressed syllable: Ки́-їв, мо-ло-ко́, ра́н-ок, ка́-ва, во-да́, зи-ма́, у-кра-ї́н-ська.
+- <!-- INJECT_ACTIVITY: quiz-find-stress --> [quiz, Where is the stress? Choose the correct syllable, 8 items]
+- P3 (~120 words): Present a short dialogue to practice applying intonation patterns to greetings learned in Module 1. Dialogue: "— Привіт! ↘" (statement/greeting), "— Привіт! Як справи? ↘" (question with question word), "— Добре! А у тебе? ↗" (contrastive question without a question word), "— Добре! ↘". Instruct learners to read it aloud, matching their pitch to the arrows.
 
-## Підсумок — Summary (~270 words)
-- P1 (~150 words): [Recap of the module's core logic: Stress (*наголос*) is the heartbeat of the Ukrainian word — it can fall anywhere and even change a word's meaning entirely. Intonation is the music of the sentence; use a rise for questions without question words and a fall for almost everything else. Always listen to native speakers to catch the subtle "melody" that distinguishes Ukrainian from English.]
-- P2 (~120 words): [Self-check list:
-  - What is *наголос*? (The louder, longer syllable in a word).
-  - Can stress change a word's meaning? (Yes, e.g., *за́мок* vs *замо́к*).
-  - What intonation do you use for a yes/no question? (Rising ↗ on the key word).
-  - Do questions starting with *Що* or *Де* always rise? (No, they usually fall ↘).
-  - Read this aloud with correct stress and melody: *Це аптека? Так, це аптека. Як гарно!*]
+## Підсумок — Summary (~275 words)
+- P1 (~275 words): Recap the core concepts of the module using a bulleted Q&A self-check format.
+  - What is наголос? (Stress that makes one syllable louder and longer).
+  - Can it change word meaning? (Yes, provide the за́мок/замо́к example).
+  - What intonation do you use for a yes/no question? (Rising ↗).
+  - What intonation do you use for a statement or a question with a question word? (Falling ↘).
+  Conclude with a final read-aloud practice block, instructing the learner to apply the correct melody to: "Це аптека? ↗ Так, це аптека. ↘ Як гарно! ↘↘"
 
-Grand total: ~1320 words
+Grand total: ~1315 words
 </skeleton>
 
 ## Output Format
@@ -765,11 +779,55 @@ Grand total: ~1320 words
 Write in Markdown. Use:
 - `## Section Title` for main sections
 - `### Subsection` for subsections within a section
-- `**bold**` for Ukrainian words being taught — EVERY bold Ukrainian word MUST have an English translation on first use, either in parentheses `**слово** (translation)` or inline `**слово** means "translation"`. No exceptions.
+- `**bold**` for Ukrainian words being taught. For **A1 and A2** levels, provide an English translation on first use (e.g. `**стіл** (table)`) because learners lack the vocabulary to infer meaning. For **B1 and above**, do NOT provide inline translations for standard vocabulary — the learner will use the module's словник (vocabulary table). You may provide ONE parenthetical English translation ONLY for highly abstract grammar/linguistic terms on first use (e.g. `**видова пара** (aspectual pair)`).
 - Tables for paradigms (conjugation, declension)
 - `:::tip` / `:::caution` / `:::note` for callout boxes
 - `<!-- INJECT_ACTIVITY: {id} -->` for exercise placement (markers only — do NOT write exercise content)
 
 Do NOT write MDX component syntax, JSON, or DSL exercise blocks (:::quiz, etc.). Plain Markdown with injection markers.
+
+---
+
+## MANDATORY FINAL CHECKLIST (#1189)
+
+Before you finish writing, verify the prose against this checklist. Failing any item will fail the build.
+
+### Section headings (verbatim)
+
+Every heading from "Section Structure" above MUST appear as an `## H2` in your output, in order, **including the closing `Підсумок:` / `Підсумок та перехід до M...` summary**. The single most common writer failure across the B1 build has been silently dropping the final summary section. Re-read your output before stopping. If the last section in the plan is missing, write it now.
+
+### Required vocabulary (every word must appear)
+
+You MUST use **every word** from the list below at least once in the prose, in a natural sentence with bold + English translation. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, прагматика, діагностика, дієвідмінювання, зворотний, двовидовий, одновидовий, неозначено-кількісний, etc.) is the most frequently dropped category — actively find homes for those words even if it means adding a sentence that defines them.
+
+- [ ] наголос (stress/accent) — metalanguage word
+- [ ] замок (castle) — stress pair (first syllable)
+- [ ] замок (lock) — stress pair (second syllable)
+- [ ] кава (coffee) — first-syllable stress
+- [ ] вода (water) — second-syllable stress
+- [ ] столиця (capital) — Київ — столиця України
+
+### Forbidden words (never produce)
+
+Do not write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use `<!-- VERIFY -->` instead). The post-write toxic-token scanner will fail the build immediately:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+### Level-specific immersion check
+
+The level-appropriate immersion rule was already injected at the top of
+this prompt as `IMMERSION RULE`. Re-read it now BEFORE you stop writing.
+If your level's rule contains a CHECKLIST block, walk through every item.
+If it doesn't, just verify your output matches the LANGUAGE ROLES and
+TARGET stated in that block.
+
+This used to hard-code a B1+ checklist that confused A1/A2 models (where
+translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+The single source of truth is now
+`scripts/pipeline/config_tables.py:IMMERSION_RULES`.
+
+---
 
 Begin writing now. Start with the first section heading.

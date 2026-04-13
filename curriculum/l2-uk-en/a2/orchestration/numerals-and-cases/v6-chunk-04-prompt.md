@@ -3,18 +3,19 @@
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 55: Числа у відмінках (A2, A2.8 [Refinement and Graduation])
-**Section to write:** Числа навколо нас (Numbers Around Us) (~500 words total)
+**Section to write:** Числа навколо нас (Numbers Around Us) (~500 words)
 **Word target for this section:** 500 words (aim for 550 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Числа навколо нас (Numbers Around Us) (~500 words total)
-- P1 (~130 words): [Dialogue: At the Market. A teacher and students organizing a sports day buy equipment. 'Вчитель: Скільки коштують ці три м'ячі? Продавець: П'ятсот гривень. Вчитель: Дайте, будь ласка, п'ять м'ячів і два насоси.']
-- P2 (~120 words): [Addresses and Phone Numbers. Explain the hierarchy: вулиця (street), будинок (building), квартира (apartment). Use ordinals for streets if named by numbers: 'П'ята лінія'. Demonstrate phone number reading: 'мій номер — нуль дев'яносто шість...'.]
-- P3 (~130 words): [Ages and Time. Practice 'мені ... років'. Explain that 'рік' follows the agreement cycle: 'двадцять один рік', 'двадцять два роки', 'двадцять п'ять років'. Recap telling time with ordinals: 'о третій годині' (at 3 o'clock).]
-- P4 (~120 words): [Short Reading Text: Ukrainian Holidays. Mention Independence Day (24 серпня), Constitution Day (28 червня), and New Year (1 січня). Use these to reinforce the Genitive ordinal rule for dates.]
+## Числа навколо нас (Numbers Around Us) (~500 words)
+- P1 (~130 words): Dialogue: At the market. Characters ask for prices, discuss quantities, and bargain. ("Скільки коштує? Дайте, будь ласка, три кілограми. Це коштує сто гривень.")
+- P2 (~120 words): Break down the market dialogue, focusing on currency agreement rules. Demonstrate how "гривня" changes depending on the amount (одна гривня, дві гривні, п'ять гривень, сто гривень). 
+- P3 (~120 words): Reading practice: a short text discussing Ukrainian holidays with dates (e.g., 24 серпня), ages of historical figures, and distances between cities to show numbers in a narrative context. Review how to express age using Dative + numerals (Йому двадцять один рік, їй сорок два роки, їм п'ятдесят років).
+- P4 (~130 words): Discuss practical number formats: stating addresses and housing information. Provide examples: вулиця Хрещатик, будинок 22, квартира 5. 
+- <!-- INJECT_ACTIVITY: match-up-expressions --> [match-up, Match numeral expressions to their correct Ukrainian form, 8 items]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -22,7 +23,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-**дві стіни** (two walls). Це дуже красива граматична особливість. А от числа **три** (three) та **чотири** (four) не змінюються. Вони однакові для всіх родів. Ми просто додаємо іменник у Називному відмінку множини: **три дні** (three days), **чотири машини** (four cars). Вам просто треба знати базову форму множини. Тепер перейдемо до третьої великої групи. Це числа від п'яти до двадцяти. У цій групі правило завжди однакове. Ми повинні використовувати **Родовий відмінок множини** (Genitive Plural). Якщо ви бачите число **п'ять** (five), іменник змінює свою форму. Ми кажемо **п'ять студентів** (five students). Якщо ми маємо число **десять** (ten), ми кажемо **десять гривень** (ten hryvnias). Для числа **вісім** (eight) ми використовуємо фразу **вісім годин** (eight hours). Це правило працює стабільно і допомагає нам щодня. Зверніть увагу на спеціальні слова. Деякі іменники мають унікальні форми у множині. Наприклад, слово **людина** (person) перетворюється на **людей** (people). Ми кажемо **шість людей** (six people). Слово **дитина** (child) стає словом **дітей** (children). Ми кажемо **сім дітей** (seven children). Що робити, коли ми маємо великі або складені числа? Наприклад, двадцять один або сорок п'ять? В українській мові діє правило останньої цифри. Тільки останнє слово у числі вирішує, який відмінок нам потрібен. Наприклад, число **двадцять один** (twenty-one) закінчується на «один». Тому ми використовуємо правило першої групи. Ми кажемо **двадцять один студент** (twenty-one students). Число **тридцять три** (thirty-three) закінчується на «три». Значить, це друга група. Ми кажемо **тридцять три студенти** (thirty-three students) у Називному відмінку множини. А число **сорок сім** (forty-seven) закінчується на «сім». Це вже третя група. Ми повинні сказати **сорок сім студентів** (forty-seven students). Це правило завжди працює для всіх великих чисел. Спробуйте самі побудувати кілька таких фраз усно. Ми також часто використовуємо слова, які позначають кількість без точних цифр. Наприклад, ми часто питаємо **скільки?** (how many? / how much?). Або ми використовуємо такі корисні слова, як **багато** (many / much) та **мало** (few / little). Також ми часто кажемо **кілька** або **декілька** (several). Всі ці слова працюють як числа від п'яти до двадцяти. Вони завжди вимагають Родового відмінка множини для предметів, які ми можемо порахувати. Тому ми кажемо **багато запитань** (many questions). Ми можемо сказати **мало проблем** (few problems). Або ми скажемо **кілька днів** (several days) та **декілька друзів** (several friends). Коли ми йдемо на базар чи в магазин, ці слова стають нашими найкращими помічниками. Це дуже полегшує вивчення нових тем. Нарешті, ми маємо поговорити про винятки та спеціальні слова. Найпопулярніші з них — це **пів** (half) та **півтора** (one and a half). Ці цікаві слова ніколи не відмінюються. Вони взагалі не змінюють свою форму. Але вони вимагають після себе **Родового відмінка однини** (Genitive Singular). Це дуже важливо запам'ятати. Наприклад, ми кажемо **півтора кілограма** (one and a half kilograms). Ми також кажемо **півтора місяця** (one and a half months). Для жіночого роду ми маємо спеціальну форму **півтори** (one and a half, f.). Ми дуже часто використовуємо її для часу. Наприклад, ми кажемо **півтори години** (one and a half hours). Це дуже типова українська фраза. Тепер ви знаєте всі секрети українських числівників. <!-- INJECT_ACTIVITY: group-sort-agreement --> <!-- INJECT_ACTIVITY: quiz-noun-selection -->
+will say "twenty-one students".* Другий крок у цьому граматичному циклі стосується чисел два, три і чотири. Ви повинні завжди використовувати форму Називного відмінка множини для іменників після цих чисел. Ми говоримо: «два брати», «три столи», «чотири теплі дні». Для предметів і людей жіночого роду ми маємо спеціальні форми «дві» та «обидві». Наприклад, ви скажете: «дві розумні сестри», «три гарні дівчини», «чотири нові книги». Зверніть увагу на важливу різницю. Слово «обидва» означає чоловіків або предмети чоловічого та середнього роду. А слово «обидві» використовується тільки для жіночого роду. Тому ми кажемо «обидва студенти», але «обидві студентки». :::info **Grammar box: The 2-4 Rule and Russian Interference** A common mistake for learners who have studied Russian is to use the Genitive Singular after the numbers 2, 3, and 4. In Ukrainian, this is strictly incorrect. You must always use the Nominative Plural: **чотири брати** (not *чотири брата*). This unique agreement rule is a core feature of the Ukrainian language. ::: **Третій** (third) крок циклу стосується чисел від п'яти до двадцяти. Після цих чисел ми завжди ставимо іменник у формі Родового відмінка множини. Наприклад, ми говоримо: «п'ять студентів», «шість братів», «сім днів». Якщо ви рахуєте предмети жіночого роду, правило залишається тим самим. Ви скажете: «вісім сестер», «дев'ять дівчат», «десять книг». Усі числа, які закінчуються на -дцять, також вимагають Родового відмінка множини. Тому ми кажемо: «одинадцять гривень», «п'ятнадцять хвилин», «двадцять років». > *The third step of the cycle concerns numbers from five to twenty. After these numbers, we always put the noun in the form of the Genitive Plural. For example, we say: "five students", "six brothers", "seven days". If you are counting objects of feminine gender, the rule remains the same. You will say: "eight sisters", "nine girls", "ten books". All numbers that end in -teen also require the Genitive Plural. Therefore we say: "eleven hryvnias", "fifteen minutes", "twenty years".* Коли ви рахуєте більше двадцяти, ви завжди дивитеся тільки на останню цифру. Це дуже просте і логічне правило. Якщо велике число закінчується на один, іменник стоїть в однині. Ми кажемо: «двадцять один студент», «сорок одна українська гривня». Якщо число закінчується на два, три або чотири, ми використовуємо Називний відмінок множини. Наприклад: «двадцять два нові студенти», «тридцять три довгі дні», «сорок чотири цікаві книги». А якщо остання цифра — це п'ять, шість, сім, вісім, дев'ять або нуль? Тоді потрібен Родовий відмінок множини: «двадцять п'ять розумних студентів», «п'ятдесят гривень». Зверніть увагу на числа одинадцять, дванадцять, тринадцять і чотирнадцять. Вони завжди вимагають Родового відмінка множини, тому що мають суфікс -дцять. Слова, які показують невизначену кількість, вимагають такої ж граматики. Коли ви запитуєте **скільки** (how many) предметів є тут, потрібен Родовий відмінок множини. Наприклад: «Скільки **кілограмів** (kilograms) яблук ви хочете купити?». Якщо ці яблука будуть **коштувати** (to cost) дорого, ви можете взяти мало фруктів. Ми часто говоримо: «багато людей», «мало часу», «кілька студентів», «декілька днів». Ці слова поводяться так само, як число п'ять або десять. Ви також використовуєте це правило, коли говорите про свій **вік** (age). Тоді ви кажете «багато років». <!-- INJECT_ACTIVITY: quiz-noun-agreement --> <!-- INJECT_ACTIVITY: sort-numeral-cases -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -384,14 +385,100 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
 
-TARGET: 70-90% Ukrainian.
+**You are in PHASE 6: A2 finale (A2 M51-M69)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 40%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 40% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
+
+TARGET: 70-90% Ukrainian. THIS IS A HARD GATE — the audit REJECTS modules outside this range.
+
 LANGUAGE ROLES:
-- PRIMARY: Ukrainian for everything.
-- ENGLISH: Only in vocabulary tables and one-line grammar notes where absolutely necessary.
-- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English.
-A2 register. Concrete everyday vocabulary. No literary language, no metaphors. Near-full Ukrainian immersion. Ukrainian sentences max 15 words. Max 2 clauses. All cases allowed. Simple subordinate clauses only. Full aspect pairs. No participles.
+- PRIMARY: Ukrainian for narrative, dialogues, examples, section intros, cultural notes, Reading Practice blocks, learning callouts.
+- METALANGUAGE: For abstract grammar terms, you may provide ONE parenthetical English translation on FIRST use only, e.g. `**доконаний вид** (perfective aspect)`. Subsequent uses must be Ukrainian only.
+- VOCABULARY TABLE: English glosses live here, not in prose.
+- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English. Never mix mid-sentence.
+
+⚠️ HARD STRUCTURAL RULES — READ THIS TWICE:
+- FORBIDDEN: long English narrative paragraphs explaining grammar. If a concept needs more than ONE sentence of English scaffolding, it goes in a `:::info` or `:::tip` callout, NOT in the main prose.
+- FORBIDDEN: mirroring a Ukrainian paragraph with an English translation paragraph. Write ONE paragraph in Ukrainian, move on.
+- FORBIDDEN: `> *English translation*` blockquotes after Ukrainian dialogues. They were required at A1 but they cap immersion below 50% — at A2-late they MUST be removed.
+
+ESCAPE HATCH (the 'Dual Ladder'):
+For genuinely abstract grammar concepts, you may use ONE `:::info` or `:::tip` callout written in English per section to clarify the concept. Because callouts are stripped from the immersion metric, this serves as on-demand scaffolding for struggling learners without penalising the immersion score. Do NOT abuse this — at most one English callout per major section.
+
+A2 register. Concrete everyday vocabulary. No literary language, no metaphors. Ukrainian sentences max 15 words. Max 2 clauses. All cases allowed. Simple subordinate clauses only (який/що/коли). Full aspect pairs. No participles.
+
+CHECKLIST (re-read before writing each section):
+- [ ] Every narrative paragraph in Ukrainian?
+- [ ] Zero `> *English translation*` blockquotes after dialogues?
+- [ ] At most ONE English `:::info` callout per major section?
+- [ ] Metalanguage terms parenthetically translated on first use only (max 2 per section)?
+- [ ] Reading Practice / Читаємо українською block in EVERY major section?
+
 
 GRAMMAR RULES:
 - Max 15 words per Ukrainian sentence
@@ -403,18 +490,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] числівник (numeral)
+- [ ] порядковий (ordinal)
+- [ ] кількісний (cardinal)
+- [ ] перший (first)
+- [ ] третій (third)
+- [ ] один (one)
+- [ ] скільки (how many)
+- [ ] кілограм (kilogram)
+- [ ] коштувати (to cost)
+- [ ] вік (age)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Числа навколо нас (Numbers Around Us) (~500 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

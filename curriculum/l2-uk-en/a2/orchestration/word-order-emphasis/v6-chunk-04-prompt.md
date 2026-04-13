@@ -1,23 +1,24 @@
-# Section-by-Section Generation — Section 4/6
+# Section-by-Section Generation — Section 4/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 50: Порядок слів і наголос у реченні (A2, A2.7 [Complex Sentences and Conditionals])
-**Section to write:** Діалог 2 та Інверсія для контрасту (~720 слів)
-**Word target for this section:** 300 words (aim for 330 to account for undershoot)
+**Section to write:** Порядок слів у реальному мовленні (Word Order in Real Speech) (~400 words total)
+**Word target for this section:** 400 words (aim for 440 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Діалог 2 та Інверсія для контрасту (~720 слів)
-- P1 (~120 слів): Діалог 2: Обговорення фільму. Друг 1: «Цей фільм зняв Сенцов». Друг 2: «Ні, цей фільм зняв не Сенцов, а Лозниця». Друг 1: «А от "Номери" — це точно Сенцов зняв». (Приклад корекції та емфази через порядок слів).
-- P2 (~150 слів): Винесення додатка на початок (Fronting the Object). Коли ми кажемо «Книгу я прочитав», ми протиставляємо книгу іншим речам. Це спосіб сказати «щодо книги — я її вже прочитав».
-- P3 (~100 слів): Інверсія присудка (Verb First). «Прочитав я цю книгу!» — використання дієслова на початку для вираження сильних емоцій, впевненості або завершеності дії.
-- P4 (~150 слів): Контрастне заперечення «не... а». Як порядок слів допомагає виділити помилкову інформацію: «Не в парку ми гуляли, а в лісі».
-- P5 (~100 слів): Використання частки "це" для логічного наголосу. «Це Тарас допоміг мені» — аналог англійського "It was Taras who...".
-- P6 (~100 слів): Типова помилка учнів: страх "звучати як Йода". Пояснення, що «Книгу я бачив» — це абсолютно природна, не "дивна" українська мова в правильному контексті.
-- <!-- INJECT_ACTIVITY: fill-in-reorder-emphasis --> [fill-in, Reorder words to create the correct emphasis for a given context, 8 items]
+## Порядок слів у реальному мовленні (Word Order in Real Speech) (~400 words total)
+- P1 (~100 words): Dialogue: Roommates dividing chores. "Хто помив посуд? — Посуд помив Тарас. А підлогу? — Підлогу ще ніхто не помив. Добре, підлогу помию я."
+- P2 (~120 words): Analyze how word order shifts organically in the dialogue based on the flow of conversation. "Посуд" is introduced in the question, so in the answer, it becomes the known theme and moves to the front ("Посуд помив Тарас"). The same happens with "Підлогу."
+- P3 (~100 words): Discuss how answering questions naturally dictates word order. If asked "Що ти купив?", the neutral SVO order works perfectly: "Я купив каву" (coffee is new). But if asked "Хто це купив?", the object is known, so it fronts: "Це купив я" (OVS).
+- P4 (~80 words): Caution against mechanical translation. Warn learners not to use a marked order unintentionally. Answering "What did you buy?" with "Каву купив я" sounds bizarre, as if you are declaring "It was I who bought the coffee."
+- <!-- INJECT_ACTIVITY: match-up-questions-answers --> [match-up, Match questions with the correctly word-ordered answers, 8 items]
+- <!-- INJECT_ACTIVITY: error-correction-unintended-emphasis --> [error-correction, Fix sentences where word order creates unintended emphasis, 6 items]
+
+Grand total: ~2200 words
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -25,7 +26,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-завжди буде додатком. Нам не важливо, де воно стоїть. Саме відмінки дозволяють нам вільно переставляти слова. There is also a psychological reason for this order. Люди інтуїтивно ставлять нові або довгі поняття в кінець речення. Це допомагає співрозмовнику легше сприймати інформацію. Спочатку людина чує знайомі слова, які готують ґрунт. Потім вона отримує свіжий **акцент** *(accent)*. Такий **порядок слів** *(word order)* робить українське мовлення виразним інструментом. <!-- INJECT_ACTIVITY: quiz-identify-rheme --> [quiz, Identify the rheme (new information) based on the context/question, 8 items] ## Прямий порядок слів Українська мова має базовий, або **прямий порядок слів** *(direct word order)*. Це нейтральна схема: **підмет** *(subject)*, **присудок** *(predicate)*, **додаток** *(object)*. Ми використовуємо прямий порядок слів для констатації фактів. Він часто звучить у новинах, наукових текстах або офіційних повідомленнях. Наприклад: «Студент читає текст». «Мама готує вечерю». Тут немає жодних емоцій. Це просто інформація. When you want to state a simple fact without emphasizing any specific part, use this SVO structure. It is the safest choice for beginners. Де стоїть **означення** *(attribute/adjective)*? У нейтральному реченні прикметник завжди стоїть перед іменником. Ми кажемо: «цікава книга», «велике місто», «холодний вітер». Це звичайна характеристика предмета. Але будьте обережні, коли змінюєте порядок. Якщо ви поставите прикметник після іменника, він стане присудком. Порівняйте: «Це велике місто» *(This is a big city)*. Але: «Місто — велике» *(The city IS big)*. У другому випадку ми робимо акцент на розмірі міста. The position of the adjective completely changes the grammatical structure of the sentence. Тепер поговоримо про **обставини** *(adverbial modifiers)*. Вони показують, як саме відбувається дія. В українській мові прислівник може стояти перед дієсловом або після нього. Обидва варіанти правильні. Ви можете сказати: «Він добре працює» або «Він працює добре». Є невелика різниця. Коли прислівник стоїть у кінці, він має трохи більше ваги. Це знову правило реми. Moving the adverb to the very end of the sentence naturally makes it the focus of your statement. Слова, які позначають час або місце, дуже рухливі. Їхня позиція залежить від вашої мети. Часто вони стоять на початку речення. Це створює контекст для всієї ситуації. Наприклад: «Вчора я був удома» *(Yesterday I was at home)*. «У Києві йде дощ» *(It is raining in Kyiv)*. Це нейтральний початок розповіді. Але якщо ви поставите час або місце в кінець, вони стануть ремою. «Я був удома вчора» *(I was at home YESTERDAY)*. Це означає, що ви наголошуєте саме на вчорашньому дні, а не сьогоднішньому. Є один дуже цікавий і специфічний випадок. Це порядок слів із числівниками. Коли ви називаєте точну кількість, числівник стоїть перед іменником. Наприклад: «До центру п’ять кілометрів» *(It is five kilometers to the center)*. Це точний факт. Але якщо ви поміняєте їх місцями, значення зміниться. «До центру кілометрів п’ять» *(It is ABOUT five kilometers to the center)*. Ця **інверсія** *(inversion)* автоматично робить число приблизним. Ukrainian uses this simple word-swap trick instead of adding extra words like "about" or "approximately". <!-- INJECT_ACTIVITY: match-question-answer --> [match-up, Match questions with the correctly word-ordered answers, 8 items] <!-- INJECT_ACTIVITY: group-sort-neutral-marked --> [group-sort, Sort sentences into neutral word order vs. marked/emphatic order, 8 items]
+the main topic of the conversation. Then the subject moves to the very end of our utterance. The word at the end of the sentence becomes the new information, or the rheme. It is as if we are answering the hidden question "Who exactly directed this movie?". This is a very natural way to change the focus.* You can also bring the verb all the way to the front. Putting the action before the subject creates a very strong **наголос** (stress, emphasis). The word at the end becomes the **рема** (rheme), but the fronted verb serves to **підкреслювати** (to emphasize) the action itself. If someone doubts that you finished a long novel, you might exclaim "Прочитав я цю книгу!" (I DID read this book!). This sounds much more expressive than the neutral alternative. Інверсія дієслова робить нашу мову дуже живою та емоційною. Дієслово перед підметом завжди підкреслює дію. Ми також часто використовуємо цю структуру, щоб почати нову історію або казку. Наприклад, класичний початок розповіді звучить так: «Прийшла весна» або «Почалася злива». Це звучить набагато цікавіше, ніж звичайний прямий порядок слів. > *Inverting the verb makes our speech very lively and emotional. A verb before the subject always emphasizes the action. We also often use this structure to start a new story or fairy tale. For example, a classic beginning of a narrative sounds like this: "Spring has come" or "A downpour began." This sounds much more interesting than the usual direct word order.* :::info **Narrative Openers** — Putting the verb first is the standard way to introduce a new event or start a story in Ukrainian. Sentences like **Прийшла весна** (Spring arrived) or **Настав вечір** (Evening fell) are not just poetic variations. They are actually the most natural and expected way to set the scene for a listener. ::: When we point out that someone has the wrong information, we use a highly specific pattern for corrective contrast. We bring the corrected element to the absolute front of the phrase and use the negative construction "не... а". If someone mistakenly thinks Taras broke a cup, but you know it was actually Oleh, you want to fix that specific detail immediately. Коли ми виправляємо чужу помилку, ми виносимо правильну інформацію наперед. Для цього ми використовуємо слова «не» та «а». Ми впевнено кажемо: «Не Тарас це зробив, а Олег». Це прямий і чіткий спосіб показати яскравий контраст і швидко виправити нашого співрозмовника. Finally, there is a way to explicitly highlight the rheme right at the start of your sentence. You can use the demonstrative word "Це" (This / It is) immediately followed by a noun. This acts like an English cleft sentence ("It was X who did Y"). It immediately tells the listener what the most important new information is. Ви можете одразу показати головну нову інформацію на самому початку фрази. Для цього треба використати коротке слово «це» перед іменником. Наприклад, ви можете сказати: «Це Тарас мені сьогодні допоміг». Ви одразу показуєте, хто саме зробив цю важливу дію. <!-- INJECT_ACTIVITY: fill-in-reorder-emphasis -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -543,7 +544,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -562,18 +630,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (4/4).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] порядок (order)
+- [ ] речення (sentence)
+- [ ] тема (theme, topic (linguistics))
+- [ ] рема (rheme, new information)
+- [ ] наголос (stress, emphasis)
+- [ ] інверсія (inversion)
+- [ ] контраст (contrast)
+- [ ] підкреслювати (to emphasize, to underline)
+- [ ] початок (beginning)
+- [ ] кінець (end)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Порядок слів у реальному мовленні (Word Order in Real Speech) (~400 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

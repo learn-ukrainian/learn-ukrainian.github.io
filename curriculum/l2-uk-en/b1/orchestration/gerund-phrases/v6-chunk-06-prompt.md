@@ -31,7 +31,7 @@ Grand total: ~4400 words
 <previous_context>
 [...previous sections truncated...]
 
-was sold in the main box office yesterday)*. Перетворимо його на більш елегантну форму: «Я щойно купив квиток, **проданий вчора в головній касі** *(sold yesterday in the main box office)*». Тут ми детально описуємо конкретний предмет, а зовсім не дію героя. Завжди звертайте особливу увагу на цю принципову різницю в загальному значенні та граматичній структурі. Виклик для пунктуації *(Punctuation challenge)*. Українська пунктуація часто має свої приховані пастки та неочевидні сюрпризи. Особливо це стосується складних речень із кількома різними зворотами та звичайним сполучником «і» *(and)*. Розгляньмо один набагато складніший приклад, який часто плутає навіть носіїв мови. «Молодий хлопець впевнено йшов вулицею, **щиро усміхаючись** *(smiling sincerely)* і **міцно тримаючи в руках квіти** *(holding flowers tightly in his hands)*». Чому ж перед сполучником «і» тут немає обов'язкової коми? Усе дуже просто: тому що це два однорідні дієприслівникові звороти *(homogeneous gerund phrases)*. Вони логічно з'єднані неповторюваним сурядним сполучником, тому кома між ними не ставиться. Але вам слід бути дуже обережними зі сталими фразеологізмами *(idioms)*. Вони взагалі ніколи не відокремлюються жодними комами, бо давно втратили своє первинне і пряме дієслівне значення. Розгляньмо такий приклад: «Він сумлінно працював **не покладаючи рук** *(working tirelessly)* цілий день». Тут будь-яка кома перед фразеологізмом була б дуже грубою граматичною помилкою. Також ми ніколи не ставимо кому перед одиничним дієприслівником, який означає лише загальний спосіб виконання дії. Наприклад: «Маленька дівчина захоплено читала нову книгу **лежачи** *(lying down)* на дивані». Такі дрібні, але важливі пунктуаційні та синтаксичні тонкощі роблять українську мову справді гнучкою, надзвичайно багатою та стилістично виразною. Творче завдання *(Creative task)*. Настав ідеальний час для того, щоб застосувати всі щойно отримані знання на реальній практиці. Вам потрібно самостійно написати невелику, але дуже змістовну та зв'язну розповідь. Можлива тема: ваша ідеальна щоденна ранкова рутина або чудова уявна подорож до будь-якого старовинного українського міста. Важко придумати краще місто для цього, ніж атмосферний і затишний Львів. Ваш унікальний текст повинен складатися приблизно з шести або восьми повноцінних речень. Головна і найважливіша граматична умова цього завдання: ви маєте абсолютно природно та органічно використати у своєму тексті рівно три дієприслівникові звороти та два дієприкметникові звороти. Намагайтеся зробити всі переходи між своїми реченнями максимально плавними та непомітними для читача. Звісно, не варто штучно перевантажувати абсолютно кожне речення лише складними граматичними конструкціями. Уміло чергуйте формальні книжні звороти зі звичайною, легкою та природною розмовною мовою. Наприклад, ви можете цікаво почати свій текст ось так: «**Прокинувшись рано-вранці у своєму номері** *(Having woken up early in the morning in my room)*, я одразу відчув приємний аромат кави». Це відразу задасть правильний і спокійний тон усій вашій подальшій розповіді. Далі ви можете поетично описати ранкове місто: «Старовинні вулиці, **яскраво освітлені теплим весняним сонцем** *(brightly illuminated by the warm spring sun)*, були ще зовсім порожніми». Зверніть свою особливу увагу на правильну та свідому розстановку всіх розділових знаків. Завжди пам'ятайте, що дієприслівникові звороти майже у всіх випадках відокремлюються комами. А от правила для дієприкметникових зворотів напряму залежать від їхньої точної позиції щодо головного іменника. Пишіть максимально сміливо, довіряйте своєму мовному чуттю і ніколи не бійтеся творчо експериментувати з новими словами! <!-- INJECT_ACTIVITY: essay-gerund-narrative -->
+**затамувавши подих** (holding one's breath — phraseological, no commas). Ці вирази сприймаються як одне неподільне ціле, тому коми зруйнували б їхню цілісність. > *Punctuation can seem extremely complicated when various fixed expressions or several isolated phrases in a row appear in one sentence. However, the rules are actually very logical. Remember the main exception: if a phraseological expression has the meaning of an adverb of manner, it never requires setting off with commas. For example, experienced builders worked without rest to finish the new object on time. The enthralled audience watched the incredible theatrical play holding their breath. These expressions are perceived as one indivisible whole, so commas would destroy their integrity.* What happens when we use the coordinating conjunction «і» (and) with these structures? If two gerund phrases refer to the exact same main verb and are connected by a single «і», we treat them like any other homogeneous sentence members. We do not put a comma between them. Consider this sentence: «Він ішов вулицею, щиро усміхаючись і тримаючи в руках яскраві квіти.» The comma comes before the first gerund to separate the whole block from the main clause, but absolute rules dictate that no comma breaks the «і» joining the two modifiers. Your final, culminating challenge for this module is to write a short, cohesive narrative of six to eight sentences. Imagine you have just returned from a wonderful weekend trip to a historically rich Ukrainian city, such as Lviv, Chernivtsi, Ivano-Frankivsk, or Odesa. You are writing a travel journal entry or a public blog post to share your vivid experiences with your friends. In your text, you must deliberately incorporate exactly three gerund phrases to describe your sequence of actions. For example, you might describe what you observed while strolling through the narrow cobblestone streets, or what you felt after finally arriving at the central train station. Additionally, you must include exactly two participle phrases to describe the static environment around you. Use them to detail the majestic architecture of the old buildings or the cozy, welcoming atmosphere of the local coffee shops. :::info **Stylistic Balance** — Do not overload your text with heavy grammar! Use gerund phrases strategically to compress background actions and avoid repetitive verbs, but balance them with simple, dynamic sentences to keep your Ukrainian prose natural, modern, and highly readable. ::: When drafting your narrative, pay special, meticulous attention to the punctuation rules we have studied. Ensure that every gerund phrase is properly isolated with commas, unless it happens to be a set idiom acting as an adverb of manner. Verify that every participle phrase is punctuated correctly based solely on whether it stands before or after the specific noun it modifies. Most importantly, when you finish writing, read your entire text aloud. Does it sound like a natural, flowing Ukrainian narrative, or does it feel artificially heavy and bureaucratic? Use the rules of **відокремлення** (setting off with commas) to guide the natural rhythm and intonation of your reading. <!-- INJECT_ACTIVITY: essay-gerund-narrative -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -543,7 +543,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -556,18 +623,60 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (6/6).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] дієприслівниковий зворот (gerund phrase)
+- [ ] відокремлення (setting off with commas)
+- [ ] фразеологічний зворот (phraseological expression — exception to comma rule)
+- [ ] не покладаючи рук (without rest — phraseological, no commas)
+- [ ] затамувавши подих (holding one's breath — phraseological, no commas)
+- [ ] обставина (adverbial modifier — syntactic role)
+- [ ] означення (attribute — syntactic role of дієприкметниковий зворот)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Підсумок та перехід до M64 (~440 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-зараз, але головний герой залишається без імені. Подивіться дуже уважно на ці три конкретні життєві приклади. Ми кажемо: «Хтось стукає у двері». Someone is knocking at the door. Ви чуєте гучний звук, ви знаєте, що там стоїть людина, але не знаєте її імені. Ми кажемо: «Я бачу щось цікаве». I see something interesting. Ваш погляд випадково впав на новий предмет, але ви ще не знаєте, що це. Ми кажемо: «Хтось забув парасольку». Someone forgot an umbrella. Мокра парасолька лежить на столі, подія відбулася зовсім недавно, але власник речі нам абсолютно невідомий. У цих звичайних ситуаціях ми маємо конкретний факт, але ми не маємо конкретного імені. Цей корисний суфікс «-сь» працює не тільки з людьми та різними цікавими предметами. Ми також можемо дуже легко додавати його до багатьох знайомих прислівників. These are adverbs. Так ми швидко створюємо нові слова: **«десь»**, **«колись»** та **«якось»**. They mean somewhere, sometime or once, and somehow. Слово «десь» завжди вказує на конкретне, але абсолютно невідоме для нас місце. Наприклад, ми дуже часто кажемо: «Він десь тут». He is somewhere here. Ви впевнені, що ця людина зовсім близько, але не бачите її точної локації. Слово «колись» — це дуже зручний і універсальний маркер нашого часу. Цікаво, що воно може вказувати як на далеке минуле, так і на наше майбутнє. Для далекого минулого ми кажемо: «Колись я жив у Львові». Once I lived in Lviv. Для нашого майбутнього ми скажемо: «Колись ми зустрінемося знову». Sometime we will meet again. Слово «якось» дуже сильно допомагає нам, коли ми не знаємо точного способу дії. Ми просто кажемо: «Я якось це зроблю». I will do this somehow. Тепер давайте дуже детально поговоримо про нашу граматику. Як правильно і швидко відмінювати ці нові слова? Правило тут напрочуд просте і надзвичайно логічне для вивчення. Базовий займенник просто змінює свою форму за відмінками. The base pronoun changes its form by cases. А наш суфікс «-сь» просто спокійно чекає в самому кінці цього слова. Він абсолютно ніколи не змінюється. Ось як це чітко виглядає на практиці у трьох різних відмінках. Родовий відмінок дає нам популярні форми **«когось»** та **«чогось»**. Genitive case gives us forms meaning of someone and of something. Давальний відмінок дає нам часті форми **«комусь»** та **«чомусь»**. Dative case gives us forms meaning to someone and to something. Орудний відмінок дає нам відомі слова **«кимось»** та **«чимось»**. Instrumental case gives us forms meaning by or with someone and something. Зверніть особливу увагу на одну дуже важливу маленьку деталь. Короткі прийменники абсолютно ніколи не розривають ці нові слова. Prepositions never split these words. Ми завжди пишемо їх разом і ставимо прийменник прямо перед словом. Ми кажемо тільки так: «з кимось». With someone. Наприкінці нашого уроку запам'ятайте одне дуже важливе правило для чистої української мови. Ніколи не використовуйте старі російські частки «-то» або «-либо». Never use Russian suffixes. В сучасній українській мові їх просто не існує. Наш рідний суфікс «-сь» — це єдиний правильний і природний маркер для невідомих об'єктів чи осіб. <!-- INJECT_ACTIVITY: group-sort, Sort pronouns by series (-сь, -небудь, де-, будь-, ні-) -->
+подій. Ці займенники найчастіше звучать у стверджувальних реченнях. Ви знаєте, що дія є реальною, але ви не можете або не хочете називати конкретних учасників. Давайте розглянемо ці займенники в реальних життєвих ситуаціях. Уявіть: ви сидите вдома, і раптом **хтось** стукає у двері. На вулиці я бачу **щось** цікаве. Здається, **хтось** забув чорну парасольку в коридорі нашої школи. > *We use the word "someone" for people when the person is unknown to us. We use the word "something" for objects, ideas, or events. These pronouns most often sound in affirmative sentences. You know that the action is real, but you cannot or do not want to name the specific participants. Let's look at these pronouns in real life situations. Imagine: you are sitting at home, and suddenly someone is knocking at the door. Outside I see something interesting. It seems someone forgot a black umbrella in the hallway of our school.* Цей корисний суфікс «-сь» можна додавати до інших питальних слів. Якщо ми додамо його до слова «де», ми отримаємо **десь** (somewhere). Це слово вказує на конкретне, але зараз невідоме місце. Ви шукаєте ключі і кажете: «Вони точно десь тут». Слово **колись** (once, sometime) утворюється від слова «коли». Воно може означати невідомий час у минулому або в майбутньому. Колись я жив у Києві. Я сподіваюся, що колись ми зустрінемося знову. Також існує слово **якось** (somehow). Воно означає невідомий спосіб дії. > *This useful suffix "-сь" can be added to other question words. If we add it to the word "where", we get "somewhere". This word points to a specific but currently unknown place. You are looking for keys and say: "They are definitely somewhere here." The word "once/sometime" is formed from the word "when". It can mean an unknown time in the past or in the future. Once I lived in Kyiv. I hope that sometime we will meet again. There also exists the word "somehow". It means an unknown method of action.* Як ми відмінюємо ці слова, коли змінюється граматичний відмінок? Правило є напрочуд простим і логічним. Базове питальне слово змінюється як завжди, а короткий суфікс «-сь» залишається в кінці. У родовому відмінку ми беремо слово «кого» і додаємо суфікс. Так ми отримуємо форму «когось» (someone's) або «чогось» (of something). У давальному відмінку ці слова стають «комусь» і «чомусь». Наприклад: я хочу комусь допомогти. В орудному відмінку ми використовуємо знайомі форми «кимось» і «чимось». Я розмовляв із кимось по телефону. :::info **Grammar box** Unlike some other pronoun groups you will learn later, prepositions never split the «-сь» series. The preposition always goes securely before the entire word. You say «з кимось» (with someone) or «про щось» (about something). The pronoun always stays whole. ::: :::note **Quick tip** Avoid using the suffixes «-то» or «-либо» when forming indefinite pronouns. These are Russian grammatical forms that do not exist in standard Ukrainian. The suffix «-сь» is your universal tool for expressing a specific but unknown entity. ::: <!-- INJECT_ACTIVITY: group-sort, Sort pronouns by series (-сь, -небудь, де-, будь-, ні-), 8 items -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -479,7 +479,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 6: A2 finale (A2 M51-M69)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 40%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 40% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 70-90% Ukrainian.
 LANGUAGE ROLES:
@@ -498,18 +565,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] хтось (someone)
+- [ ] щось (something)
+- [ ] ніхто (nobody)
+- [ ] ніщо (nothing)
+- [ ] ніколи (never)
+- [ ] ніде (nowhere)
+- [ ] дехто (some people)
+- [ ] будь-хто (anyone)
+- [ ] десь (somewhere)
+- [ ] колись (once, sometime)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Будь-хто, дехто, абихто: різні відтінки (~550 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

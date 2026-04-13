@@ -1,275 +1,138 @@
 {
-  "total_items": 92,
-  "grounded_items": 49,
+  "total_items": 86,
+  "grounded_items": 66,
   "ungrounded": [
     {
-      "word": "пити",
-      "exercise_type": "fill-in",
-      "context": "пити",
+      "word": "їжа",
+      "exercise_type": "group-sort",
+      "context": "Їжа (Food)",
+      "role": "context"
+    },
+    {
+      "word": "напої",
+      "exercise_type": "group-sort",
+      "context": "Напої (Drinks)",
+      "role": "context"
+    },
+    {
+      "word": "молоко",
+      "exercise_type": "group-sort",
+      "context": "молоко",
       "role": "answer"
     },
     {
-      "word": "будете",
-      "exercise_type": "fill-in",
-      "context": "— А що будете _____?",
+      "word": "коли",
+      "exercise_type": "true-false",
+      "context": "Ми кажемо «заказати», коли хочемо їсти в кафе.",
       "role": "context"
     },
     {
-      "word": "завжди",
+      "word": "хочемо",
       "exercise_type": "true-false",
-      "context": "У кафе завжди автоматично приносять рахунок.",
+      "context": "Ми кажемо «заказати», коли хочемо їсти в кафе.",
       "role": "context"
     },
     {
-      "word": "автоматично",
+      "word": "їсти",
       "exercise_type": "true-false",
-      "context": "У кафе завжди автоматично приносять рахунок.",
-      "role": "context"
-    },
-    {
-      "word": "приносять",
-      "exercise_type": "true-false",
-      "context": "У кафе завжди автоматично приносять рахунок.",
-      "role": "context"
-    },
-    {
-      "word": "правильне",
-      "exercise_type": "true-false",
-      "context": "«Заказати» — це правильне українське слово.",
-      "role": "context"
-    },
-    {
-      "word": "українське",
-      "exercise_type": "true-false",
-      "context": "«Заказати» — це правильне українське слово.",
+      "context": "Ми кажемо «заказати», коли хочемо їсти в кафе.",
       "role": "context"
     },
     {
       "word": "слово",
       "exercise_type": "true-false",
-      "context": "«Заказати» — це правильне українське слово.",
+      "context": "Слово «кафе» не змінюється (is indeclinable).",
       "role": "context"
     },
     {
       "word": "не",
       "exercise_type": "true-false",
-      "context": "Слово «кафе» не змінює своє закінчення.",
+      "context": "Слово «кафе» не змінюється (is indeclinable).",
       "role": "context"
     },
     {
-      "word": "змінює",
+      "word": "змінюється",
       "exercise_type": "true-false",
-      "context": "Слово «кафе» не змінює своє закінчення.",
-      "role": "context"
-    },
-    {
-      "word": "своє",
-      "exercise_type": "true-false",
-      "context": "Слово «кафе» не змінює своє закінчення.",
-      "role": "context"
-    },
-    {
-      "word": "закінчення",
-      "exercise_type": "true-false",
-      "context": "Слово «кафе» не змінює своє закінчення.",
-      "role": "context"
-    },
-    {
-      "word": "україні",
-      "exercise_type": "true-false",
-      "context": "В Україні рідко можна платити карткою.",
-      "role": "context"
-    },
-    {
-      "word": "рідко",
-      "exercise_type": "true-false",
-      "context": "В Україні рідко можна платити карткою.",
-      "role": "context"
-    },
-    {
-      "word": "платити",
-      "exercise_type": "true-false",
-      "context": "В Україні рідко можна платити карткою.",
-      "role": "context"
-    },
-    {
-      "word": "щоб",
-      "exercise_type": "true-false",
-      "context": "Щоб попросити меню, можна сказати «Можна меню?».",
-      "role": "context"
-    },
-    {
-      "word": "попросити",
-      "exercise_type": "true-false",
-      "context": "Щоб попросити меню, можна сказати «Можна меню?».",
-      "role": "context"
-    },
-    {
-      "word": "сказати",
-      "exercise_type": "true-false",
-      "context": "Щоб попросити меню, можна сказати «Можна меню?».",
-      "role": "context"
-    },
-    {
-      "word": "часто",
-      "exercise_type": "true-false",
-      "context": "Чайові часто складають 10%.",
-      "role": "context"
-    },
-    {
-      "word": "складають",
-      "exercise_type": "true-false",
-      "context": "Чайові часто складають 10%.",
-      "role": "context"
-    },
-    {
-      "word": "замовляє",
-      "exercise_type": "quiz",
-      "context": "Що замовляє Ростик?",
-      "role": "context"
-    },
-    {
-      "word": "правильно",
-      "exercise_type": "quiz",
-      "context": "Як правильно сказати українською «to order»?",
-      "role": "context"
-    },
-    {
-      "word": "українською",
-      "exercise_type": "quiz",
-      "context": "Як правильно сказати українською «to order»?",
+      "context": "Слово «кафе» не змінюється (is indeclinable).",
       "role": "context"
     },
     {
       "word": "означає",
-      "exercise_type": "quiz",
-      "context": "Що означає питання «Тут вільно?»?",
+      "exercise_type": "true-false",
+      "context": "«Рахунок, будь ласка» означає «The bill, please».",
       "role": "context"
     },
     {
-      "word": "питання",
-      "exercise_type": "quiz",
-      "context": "Що означає питання «Тут вільно?»?",
+      "word": "хочете",
+      "exercise_type": "true-false",
+      "context": "Коли ви хочете запитати ціну, ви кажете «Тут вільно?».",
       "role": "context"
     },
     {
-      "word": "каже",
-      "exercise_type": "quiz",
-      "context": "Що каже офіціант, коли приносить їжу?",
+      "word": "запитати",
+      "exercise_type": "true-false",
+      "context": "Коли ви хочете запитати ціну, ви кажете «Тут вільно?».",
       "role": "context"
     },
     {
-      "word": "коли",
-      "exercise_type": "quiz",
-      "context": "Що каже офіціант, коли приносить їжу?",
+      "word": "ціну",
+      "exercise_type": "true-false",
+      "context": "Коли ви хочете запитати ціну, ви кажете «Тут вільно?».",
       "role": "context"
     },
     {
-      "word": "приносить",
-      "exercise_type": "quiz",
-      "context": "Що каже офіціант, коли приносить їжу?",
+      "word": "кажете",
+      "exercise_type": "true-false",
+      "context": "Коли ви хочете запитати ціну, ви кажете «Тут вільно?».",
       "role": "context"
     },
     {
-      "word": "їжу",
-      "exercise_type": "quiz",
-      "context": "Що каже офіціант, коли приносить їжу?",
+      "word": "ресторанах",
+      "exercise_type": "true-false",
+      "context": "Ми залишаємо чайові (tips) в кафе і ресторанах.",
       "role": "context"
     },
     {
-      "word": "найчастіше",
-      "exercise_type": "quiz",
-      "context": "Що найчастіше запитують при оплаті?",
+      "word": "різних",
+      "exercise_type": "true-false",
+      "context": "Слово «меню» змінюється в різних відмінках.",
       "role": "context"
     },
     {
-      "word": "запитують",
-      "exercise_type": "quiz",
-      "context": "Що найчастіше запитують при оплаті?",
+      "word": "відмінках",
+      "exercise_type": "true-false",
+      "context": "Слово «меню» змінюється в різних відмінках.",
       "role": "context"
     },
     {
-      "word": "при",
-      "exercise_type": "quiz",
-      "context": "Що найчастіше запитують при оплаті?",
-      "role": "context"
-    },
-    {
-      "word": "оплаті",
-      "exercise_type": "quiz",
-      "context": "Що найчастіше запитують при оплаті?",
-      "role": "context"
-    },
-    {
-      "word": "змінюють",
-      "exercise_type": "group-sort",
-      "context": "Змінюють закінчення на -у (Change ending to -у)",
+      "word": "заплатити",
+      "exercise_type": "fill-in",
+      "context": "Можна заплатити ____?",
       "role": "context"
     },
     {
       "word": "на",
-      "exercise_type": "group-sort",
-      "context": "Змінюють закінчення на -у (Change ending to -у)",
+      "exercise_type": "fill-in",
+      "context": "Ми залишаємо ____ на столі.",
       "role": "context"
     },
     {
-      "word": "вода",
-      "exercise_type": "group-sort",
-      "context": "вода",
-      "role": "answer"
-    },
-    {
-      "word": "піца",
-      "exercise_type": "group-sort",
-      "context": "піца",
-      "role": "answer"
-    },
-    {
-      "word": "змінюються",
-      "exercise_type": "group-sort",
-      "context": "Не змінюються (Do not change)",
-      "role": "context"
-    },
-    {
-      "word": "заказую",
-      "exercise_type": "error-correction",
-      "context": "Я заказую піцу.",
-      "role": "context"
-    },
-    {
-      "word": "ресторані",
-      "exercise_type": "error-correction",
-      "context": "ресторані",
-      "role": "answer"
-    },
-    {
-      "word": "ми",
-      "exercise_type": "error-correction",
-      "context": "Ми в ресторан.",
-      "role": "context"
-    },
-    {
-      "word": "рахунку",
-      "exercise_type": "error-correction",
-      "context": "Можна мені рахунку, будь ласка?",
-      "role": "context"
-    },
-    {
-      "word": "смачна",
-      "exercise_type": "quiz",
-      "context": "**Вода** дуже смачна.",
+      "word": "столі",
+      "exercise_type": "fill-in",
+      "context": "Ми залишаємо ____ на столі.",
       "role": "context"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 15,
-    "tested_in_exercises": 10,
+    "tested_in_exercises": 9,
     "not_tested": [
       "вегетаріанський",
       "гостре",
       "готівка",
-      "замовляти",
-      "рекомендувати"
+      "картка",
+      "рекомендувати",
+      "ресторан"
     ]
   },
   "all_grounded": false

@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-your sentence includes words that emphasize the duration of an event, the imperfective aspect is almost always required. Phrases like **довго** (for a long time) or **весь день** (the whole day) stretch the action out over a timeline. They force the listener to focus on the continuous flow of time rather than a single endpoint. If a student says they studied Ukrainian for three years, the emphasis is heavily placed on the lengthy, ongoing journey of education. З іншого боку, існують часові маркери, які вимагають використання доконаного виду. Слова на кшталт «раптом», «нарешті» або фрази типу «за одну годину» стискають дію до однієї точки або підкреслюють межу, після якої з'являється результат. Наприклад, студент довго вчив граматику, але одного вечора він нарешті вивчив усі правила. Маркер «нарешті» чітко сигналізує про перехід від нескінченного процесу до тріумфального завершення. Якщо дія відбулася за годину, це означає, що процес мав чіткий ліміт і завершився конкретним досягненням. :::info **Time Markers as Clues** When you see duration words, your brain should automatically reach for the imperfective aspect to show the process. When you see boundary words, you should switch to the perfective aspect to show the result. ::: While time markers are incredibly useful tools, you must be wary of what we might call Marker Tyranny. Beginners often fall into the trap of treating these markers as absolute grammatical laws. They memorize that specific adverbs must always be followed by a specific aspect. However, in Ukrainian, context and the speaker's intent always override the markers. The aspect you choose depends entirely on what you want to say, not just on the adverbs in your sentence. A marker is merely a suggestion; your communicative goal is the supreme law. Найскладнішим для розуміння є використання недоконаного виду для констатації загального факту в минулому. В українській мові це називається загально-фактичним значенням. Уявіть, що вас запитують, чи ви вчора читали новини. Ніхто не хоче знати, чи ви дочитали всі статті до кінця. Співрозмовника цікавить лише сам факт: чи відбувалася ця дія взагалі. Тому ви відповідаєте недоконаним видом, підтверджуючи, що такий досвід у вас був. Але якщо начальник запитує, чи ви прочитали вчорашній звіт, він вимагає доконаного виду. Його цікавить конкретний результат вашої роботи, а не просто факт того, що ви дивилися на текст. > *The most difficult thing to understand is the use of the imperfective aspect to state a general fact in the past. In the Ukrainian language, this is called the general factual meaning. Imagine you are asked if you read the news yesterday. No one wants to know if you finished reading all the articles to the end. The interlocutor is only interested in the fact itself: whether this action took place at all. Therefore, you answer with the imperfective aspect, confirming that you had such an experience. But if a boss asks if you read yesterday's report, he demands the perfective aspect. He is interested in the specific result of your work, not just the fact that you looked at the text.* <!-- INJECT_ACTIVITY: match-up-time-markers -->
+complex rule for a long time, and finally he learned it perfectly." If you decide to **зателефонувати** (to call) someone out of the blue to share good news, that sudden action is perfective. By contrast, if you do something **завжди** (always), you are establishing a continuous pattern that demands the imperfective. However, you must be careful not to fall into the trap of "marker tyranny." Markers are helpful guides, but they do not blindly dictate the rules. The ultimate authority is always your communicative intent and the broader context of the conversation, even if **іноді** (sometimes) a sentence contains no time markers at all. You have the power to choose the aspect that fits your narrative vision. Іноді ваш намір і загальний контекст є набагато важливішими за будь-які слова-маркери. Уявіть просту ситуацію: колега на роботі питає вас: «Що ти робив учора ввечері?». Ви спокійно відповідаєте: «Я вчора читав». У цьому короткому реченні немає жодного маркера тривалості, як-от «дві години» чи «весь вечір». Але ви інтуїтивно використовуєте недоконаний вид, бо ви просто повідомляєте про загальний факт вашого вечора, про ваше заняття. Ви зовсім не концентруєте увагу слухача на результаті чи фіналі цікавої книги. > *Sometimes your intent and the general context are much more important than any marker words. Imagine a simple situation: a colleague at work asks you: "What were you doing yesterday evening?". You calmly answer: "I was reading yesterday." There is not a single marker of duration in this short sentence, like "for two hours" or "all evening". But you intuitively use the imperfective aspect, because you are simply reporting a general fact of your evening, about your activity. You are not at all concentrating the listener's attention on the result or the finale of the interesting book.* This brings us to a crucial concept: the "General Factual" function of the imperfective aspect. When you want to establish whether an event happened at all in the past, without caring about its completion or outcome, you use the imperfective. It is a way of asking about someone's life experience rather than their specific achievements. You are essentially asking, "Did this action ever take place in your timeline?" :::info **Grammar box** The "General Factual" function often surprises English speakers. When a Ukrainian asks, "Have you ever read Kobzar?", they are inquiring about the general fact of the experience, not whether you finished the entire volume. Therefore, the natural question uses the imperfective: «Ти коли-небудь читав "Кобзар"?» — «Так, читав.» If they used the perfective «прочитав», it would sound like a teacher strictly checking if you completed your assigned reading homework! ::: But if the context changes, the aspect shifts instantly. If your colleague asks, "Did you read that urgent report I sent you?", you will naturally answer, "Yes, yesterday I read it." You will use the perfective aspect («прочитав») because the conversation is entirely focused on a specific, required achievement rather than a general pastime. The result is the only thing that matters in that moment. <!-- INJECT_ACTIVITY: match-up-time-markers -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -696,6 +696,41 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] доконаний вид
+- [ ] недоконаний вид
+- [ ] видова пара
+- [ ] результат
+- [ ] процес
+- [ ] тривалість
+- [ ] завершеність
+- [ ] повторюваність
+- [ ] однократність
+- [ ] одного разу
+- [ ] щодня
+- [ ] щоразу
+- [ ] завжди
+- [ ] іноді
+- [ ] нарешті
+- [ ] раптом
+- [ ] готувати
+- [ ] приготувати
+- [ ] вивчити
+- [ ] зателефонувати
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Повторюваність і однократність (~1200 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

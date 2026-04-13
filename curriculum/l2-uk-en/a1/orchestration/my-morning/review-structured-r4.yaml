@@ -1,0 +1,53 @@
+round: 4
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 7
+  evidence: 'All planned H2 sections are present and the Karaman/Kravtsova references
+    are cited, but section pacing is badly over budget: approx. 402 / 448 / 402 /
+    314 words against the planned 300 each, and Dialo'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: 'No Russianisms/Surzhyk/Russian characters verified, but Dialogue 2 teaches
+    one wrong meaning: `лежу́` is glossed as “I lie down,” which does not match `лежати`.'
+- dimension: 3
+  name: Pedagogical quality
+  score: 6
+  evidence: The lesson spends 115 English words before the first Ukrainian line, and
+    the grammar section says learners can “simply attach **-ся**” right before showing
+    `**вмива́є-ться**`, which is confusing at A1
+- dimension: 4
+  name: Vocabulary coverage
+  score: 8
+  evidence: Required vocabulary is present, but recommended items `**збира́тися**`
+    and `**поверта́тися**` occur only once each, as list items rather than taught
+    in context.
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: Four exercise markers are present, correctly placed after the relevant
+    teaching blocks, and they map cleanly to the plan’s four activity hints.
+- dimension: 6
+  name: Engagement & tone
+  score: 6
+  evidence: 'Several lines drift into inflated meta-language rather than teacherly
+    explanation: “The spelling is perfectly regular, the pronunciation holds a secret”
+    and “Phonetics play a massive role... authentic'
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: All required H2 headings are present and ordered correctly; markdown is
+    clean; pipeline word count is 1521, so there is no underlength problem.
+- dimension: 8
+  name: Cultural accuracy
+  score: 9
+  evidence: No Russian-centric framing or cultural inaccuracies were found; the module
+    treats Ukrainian on its own terms and uses local school-textbook references.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 6
+  evidence: Dialogue 1 is mostly an interview (`Коли...?`, `Що...?`, `А коли...?`)
+    instead of a mutual comparison, so the English narration carries more of the situation
+    than the dialogue itself.
+findings: []

@@ -2,52 +2,53 @@ round: 2
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 8
-  evidence: 'DEDUCT for missing recommended vocabulary. While the content outline
-    is followed perfectly with all H2 headings and dialogues present, the prose fails
-    to cover three recommended vocabulary words from '
+  score: 9
+  evidence: All planned H2 sections are present and in order; the required conjunction
+    set `і`, `та`, `а`, `але`, `бо`, `тому що` is all covered with examples, and the
+    Карпати/море contrast appears in the opening
 - dimension: 2
   name: Linguistic accuracy
-  score: 9
-  evidence: DEDUCT for minor English translation awkwardness. The Ukrainian is highly
-    accurate, but the phrase `> **Анто́н:** Ні́чого! ... *(That is nothing! ...)*`
-    relies on an overly literal and slightly roboti
+  score: 10
+  evidence: No Russianisms, Surzhyk, calques, paronym errors, or wrong grammar claims
+    found in the Ukrainian text. Spot-checks against local tools confirmed queried
+    forms such as `відпустка`, `сполучник`, `втомле
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: REWARD for excellent PPP flow and clear grammar instruction. The text
-    doesn't just list conjunctions; it explicitly teaches the semantic difference
-    between soft contrast (`а`) and strong contrast (`ал
+  score: 8
+  evidence: 'The module has strong example density, but A1 grammar practice is burdened
+    by higher-level adverbs in core examples: `Цей суп гарячий, **але** надзвичайно
+    смачний.` and `Він багато знає, **тому що** п'
 - dimension: 4
   name: Vocabulary coverage
-  score: 7
-  evidence: DEDUCT for incomplete coverage. The required vocabulary is used naturally
-    in context, but the recommended words `тому` (therefore), `також` (also), and
-    `або` (or) are entirely absent from the text.
+  score: 9
+  evidence: All required vocabulary from the plan is used naturally in prose, and
+    recommended items such as `чому`, `чи`, and `теж` also appear.
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: REWARD for correctly matching the plan's activity hints and placing them
-    safely after all prerequisite knowledge (especially `бо/тому що`) has been introduced.
+  score: 8
+  evidence: The total number of markers matches the plan, but there is no exercise
+    marker immediately after the `Сполучники` block. Practice begins only after `Бо
+    і тому що` and the summary, so the sequence is le
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: REWARD for an encouraging, substantive teacher persona ("Connecting your
-    thoughts transforms how you sound in Ukrainian") without resorting to empty gamified
-    filler.
+  score: 8
+  evidence: 'The voice is clear and teacherly, but the prose slips into repetitive
+    English meta-explanation: `There is a strict punctuation rule you must always
+    follow...` is followed later by another near-duplica'
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: REWARD for clean markdown, correct section ordering, and a word count
-    (1778 words) that comfortably exceeds the 1200-word target.
+  evidence: All planned sections are present, markdown is clean, markers are well-formed,
+    and the deterministic pipeline word count is 1271, which is above target.
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: REWARD for teaching authentic spoken patterns, such as the "Why-Because
-    loop" and the natural conversational workhorse `бо`.
+  score: 9
+  evidence: The module is Ukrainian-centered and avoids Russian comparison framing;
+    the Карпати/море examples are appropriate, though cultural detail is fairly light.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: REWARD for writing highly contextual, multi-turn dialogues that seamlessly
-    integrate the target grammar (e.g., contrasting the Carpathians and the sea).
+  score: 7
+  evidence: 'The first dialogue has an abrupt scene jump: `Поїдемо в Карпати, **бо**
+    там дешевше.` is followed immediately by `Добре! Ти хочеш каву **чи** чай?` That
+    reads stitched together rather than like one na'
 findings: []

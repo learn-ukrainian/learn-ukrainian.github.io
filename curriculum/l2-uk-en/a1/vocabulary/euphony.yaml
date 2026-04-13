@@ -17,20 +17,20 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: у / в
-  translation: in, at
+- word: у/в
+  translation: in/at
   expression: false
   pos: ''
   gender: ''
   verified: false
-- word: і / й
+- word: і/й
   translation: and
   expression: false
   pos: ''
   gender: ''
   verified: false
-- word: з / із / зі
-  translation: with, from
+- word: з/із/зі
+  translation: with/from
   expression: false
   pos: ''
   gender: ''
@@ -41,26 +41,14 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: город
-  translation: garden
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: жи́ти
-  translation: to live
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: працюва́ти
-  translation: to work
-  expression: false
-  pos: дієсл.
+- word: Де ти живеш?
+  translation: Where do you live?
+  expression: true
+  pos: ''
   gender: ''
   verified: true
 - word: га́рно
-  translation: beautiful, nice
+  translation: beautiful
   expression: false
   pos: присл.
   gender: ''
@@ -71,50 +59,32 @@ vocabulary:
   pos: ім.
   gender: с.
   verified: true
-- word: Фра́нція
-  translation: France
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: футбо́л
-  translation: football
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: вже / уже́
+- word: вже/уже́
   translation: already
   expression: false
   pos: ''
   gender: ''
   verified: false
-- word: учи́тель / вчи́тель
-  translation: teacher
+- word: магази́н
+  translation: store
   expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: вчи́телька
-  translation: teacher (female)
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: шко́ла
+  translation: school
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: вдо́ма
-  translation: at home
+- word: ціка́во
+  translation: interesting
   expression: false
   pos: присл.
   gender: ''
   verified: true
-- word: ма́ма
-  translation: mother, mom
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: та́то
-  translation: father, dad
+- word: час
+  translation: time
   expression: false
   pos: ім.
   gender: ч.
@@ -125,33 +95,39 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: ша́фа
-  translation: wardrobe
+- word: стіле́ць
+  translation: chair
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ма́ма
+  translation: mom
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: шко́ла
-  translation: school
+- word: та́то
+  translation: dad
   expression: false
   pos: ім.
-  gender: ж.
+  gender: ч.
   verified: true
-- word: Де ти живеш?
-  translation: Where do you live?
+- word: Оде́са
+  translation: Odesa
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: Вітаємо зі святом!
+  translation: Congratulations with the holiday!
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: зі мною
-  translation: with me
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Вітаємо зі святом
-  translation: Happy holiday
-  expression: true
-  pos: ''
+- word: ді́ти
+  translation: children
+  expression: false
+  pos: ім.
   gender: ''
   verified: true

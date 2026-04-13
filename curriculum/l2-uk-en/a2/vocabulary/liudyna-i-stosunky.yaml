@@ -6,7 +6,7 @@ vocabulary:
   gender: ''
   verified: true
 - word: чу́йний
-  translation: responsive, caring, empathetic
+  translation: responsive, caring
   expression: false
   pos: прикм.
   gender: ''
@@ -24,7 +24,7 @@ vocabulary:
   gender: ч.
   verified: true
 - word: знайо́мий
-  translation: acquaintance (male)
+  translation: acquaintance
   expression: false
   pos: прикм.
   gender: ''
@@ -78,7 +78,7 @@ vocabulary:
   gender: ''
   verified: true
 - word: сусі́д
-  translation: neighbor (male)
+  translation: neighbor
   expression: false
   pos: ім.
   gender: ч.
@@ -89,158 +89,8 @@ vocabulary:
   pos: дієсл.
   gender: ''
   verified: true
-- word: висо́кий
-  translation: tall
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: низьки́й
-  translation: short (height)
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: худи́й
-  translation: thin
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: по́вний
-  translation: stout, plump, full
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: молоди́й
-  translation: young
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: стари́й
-  translation: old
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: середнього віку
-  translation: middle-aged
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: карі очі
-  translation: brown eyes
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: си́ні
-  translation: dark blue
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: блаки́тні
-  translation: light blue
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: зеле́ні
-  translation: green
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: сі́рі
-  translation: grey
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: кругле обличчя
-  translation: round face
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: прямий ніс
-  translation: straight nose
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: те́мне
-  translation: dark (hair/color)
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: сві́тле
-  translation: light, fair (hair/color)
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: руся́ве
-  translation: light brown (hair color)
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: руде́
-  translation: red (hair color)
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: си́ве
-  translation: grey, hoary (hair color)
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: коро́тке
-  translation: short (hair/length)
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: до́вге
-  translation: long (hair/length)
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: хвиля́сте
-  translation: wavy
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: пряме́
-  translation: straight (hair/style)
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: за́чіска
-  translation: haircut, hairstyle
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: струнка́
-  translation: slim, slender (female)
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: до́брий
-  translation: kind
+- word: розу́мний
+  translation: smart
   expression: false
   pos: прикм.
   gender: ''
@@ -251,8 +101,14 @@ vocabulary:
   pos: прикм.
   gender: ''
   verified: true
-- word: леда́чий
-  translation: lazy
+- word: весе́лий
+  translation: cheerful
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: сумни́й
+  translation: sad
   expression: false
   pos: прикм.
   gender: ''
@@ -269,64 +125,88 @@ vocabulary:
   pos: прикм.
   gender: ''
   verified: true
-- word: справедли́ва
-  translation: fair, just (female)
+- word: леда́чий
+  translation: lazy
   expression: false
   pos: прикм.
   gender: ''
   verified: true
-- word: друг
-  translation: friend (male)
+- word: висо́кий
+  translation: tall
   expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: по́друга
-  translation: friend (female)
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: това́риш
-  translation: comrade, buddy, companion
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: сусі́дка
-  translation: neighbor (female)
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: двоюрідний брат
-  translation: male cousin
-  expression: true
-  pos: ''
+  pos: прикм.
   gender: ''
   verified: true
-- word: двоюрідна сестра
-  translation: female cousin
-  expression: true
-  pos: ''
+- word: низьки́й
+  translation: short
+  expression: false
+  pos: прикм.
   gender: ''
   verified: true
-- word: дя́дько
-  translation: uncle
+- word: худи́й
+  translation: thin
   expression: false
-  pos: ім.
-  gender: ч.
+  pos: прикм.
+  gender: ''
   verified: true
-- word: ті́тка
-  translation: aunt
+- word: по́вний
+  translation: plump
   expression: false
-  pos: ім.
-  gender: ж.
+  pos: прикм.
+  gender: ''
   verified: true
-- word: допомага́ти
-  translation: to help
+- word: стари́й
+  translation: old
   expression: false
-  pos: дієсл.
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: молоди́й
+  translation: young
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: темноволо́сий
+  translation: dark-haired
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: синьоо́кий
+  translation: blue-eyed
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: світловоло́сий
+  translation: light-haired
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: кароо́кий
+  translation: brown-eyed
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: си́вий
+  translation: gray
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: кучерявикий
+  translation: curly
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: найви́щий
+  translation: the tallest
+  expression: false
+  pos: прикм.
   gender: ''
   verified: true
 - word: довіря́ти
@@ -341,14 +221,62 @@ vocabulary:
   pos: дієсл.
   gender: ''
   verified: true
-- word: Рада знайомству
-  translation: Nice to meet you (said by a female)
+- word: допомага́ти
+  translation: to help
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: Який він на вигляд?
+  translation: What does he look like?
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: Ми дружимо давно
-  translation: We have been friends for a long time
+- word: Яка її зовнішність?
+  translation: What is her appearance?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Яка вона людина?
+  translation: What kind of person is she?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Який у нього характер?
+  translation: What is his character?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Вона гарна
+  translation: She is beautiful
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Вона має гарний вигляд
+  translation: She has a good look
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: добра людина
+  translation: good person
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: душевна краса
+  translation: inner beauty
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Хто це?
+  translation: Who is it?
   expression: true
   pos: ''
   gender: ''

@@ -1,7 +1,7 @@
 # Audit Report: M10 — genitive-prepositions-purpose.md
 **Level:** A2 | **Module:** M10 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-04-11 02:03:56
+**Generated:** 2026-04-13 01:34:26
 
 ## Configuration
 **Type:** A2-grammar
@@ -18,39 +18,44 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | match-up |  | 8 | 8 | ✅ |
-| 2 | fill-in |  | 8 | 8 | ✅ |
-| 3 | quiz |  | 8 | 8 | ✅ |
-| 4 | true-false |  | 8 | 8 | ✅ |
-| 5 | group-sort |  | 12 | 8 | ✅ |
-| 6 | error-correction |  | 6 | 6 | ✅ |
-| 7 | translate |  | 6 | 6 | ✅ |
+| 1 | quiz | Оберіть правильний прийменник для речення | 8 | 8 | ✅ |
+| 2 | true-false | Чи правильно використано форму слова після прийменника? | 8 | 8 | ✅ |
+| 3 | fill-in | Вставте правильну форму слова (родовий відмінок) | 8 | 8 | ✅ |
+| 4 | match-up | З'єднайте українські фрази з їхніми англійськими відповідниками | 8 | 8 | ✅ |
+| 5 | fill-in | Вставте правильну форму слова у родовому відмінку | 8 | 8 | ✅ |
+| 6 | error-correction | Знайдіть і виправте помилку | 8 | 6 | ✅ |
+| 7 | translate | Оберіть правильний переклад | 8 | 6 | ✅ |
+| 8 | group-sort | Розподіліть іменники у родовому відмінку за їхнім закінченням | 12 | 8 | ✅ |
+| 9 | match-up | З'єднайте частини речень | 8 | 8 | ✅ |
+| 10 | fill-in | Вставте правильний прийменник (для, без, біля, навпроти) | 8 | 8 | ✅ |
+| 11 | quiz | Оберіть правильне закінчення для іменника після прийменника | 8 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 7 (target: 0-4) ❌
+- Total activities: 11 (target: 0-4) ❌
 - Unique types: 7 (minimum: 0) ✅
 - Priority types used: 7/15 (error-correction, fill-in, group-sort, match-up, quiz, translate, true-false) ✅
 - Low density activities: 0
 
 ## Recommendation
-**📝 UPDATE** (severity 20/100)
+**📝 UPDATE** (severity 30/100)
 
-- Immersion 16% off target
+- Immersion 7% off target (minor)
+- Structure issue: Missing '## Summary'
 
 ## Gates
-- **Words:** ✅ 3162/2000 (raw: 3237)
-- **Activities:** ✅ 7/0
+- **Words:** ✅ 2711/2000 (raw: 2787)
+- **Activities:** ✅ 11/0
 - **Density:** ✅ All > 8
 - **Unique_types:** ✅ 7/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ❌ 2/3
+- **Engagement:** ✅ 3/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 45/1
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ✅ 22/1
+- **Structure:** ❌ Missing '## Summary'
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ❌ 23.9% LOW (target 40-70% (A2.1))
+- **Immersion:** ❌ 33.3% LOW (target 40-70% (A2.1))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -58,7 +63,6 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 913 | Included in Core |
-| **Без чого? Без + родовий (Without What? Без + Genitive)** | ✅ | 961 | Included in Core |
-| **Де це? Біля, навпроти, коло + родовий (Where Is It? Біля, навпроти, коло + Genitive)** | ✅ | 1062 | Included in Core |
-| **Підсумок — Summary (~150 words)** | ✅ | 226 | Included in Core |
+| **Intro/Narrative** | ✅ | 903 | Included in Core |
+| **Без чого? Без + родовий (Without What? Без + Genitive) (~650 words)** | ✅ | 875 | Included in Core |
+| **Де це? Біля, навпроти, коло + родовий (Where Is It? Біля, навпроти, коло + Genitive) (~850 words)** | ✅ | 933 | Included in Core |

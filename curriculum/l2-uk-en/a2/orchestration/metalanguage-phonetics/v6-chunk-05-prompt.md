@@ -22,7 +22,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-має кінцевий м'який звук: [к'ін']. Інші чотири букви також роблять попередній звук м'яким. Наприклад, буква «і» у слові «ліс» пом'якшує [л]. Буква «я» у слові «лялька» робить звук [л] м'яким. Буква «ю» у слові «любов» також дає необхідну м'якість. Буква «є» у слові «синє» пом'якшує звук [н]. Ці правила читання є дуже стабільними та логічними. Вони працюють майже завжди без винятків. Коли ви бачите ці п'ять букв, одразу пом'якшуйте приголосний. Це зробить ваш український акцент набагато природнішим. В українській мові є ще один дуже цікавий фонетичний нюанс. Справа в тому, що не всі приголосні бувають повноцінно м'якими. Деякі специфічні звуки можуть бути лише **пом'якшеними** *(partially softened)*. Що саме означає цей лінгвістичний термін на практиці? Це означає, що вони пом'якшуються лише трохи, наполовину. Вони ніколи не звучать так м'яко, як звук [л'] або [т']. Це фонетичне явище характерне для двох великих груп. Перша важлива група — це **губні** *(labial)* приголосні звуки. Щоб легко їх запам'ятати, школярі використовують фразу «МаВПА БУФ». До цієї групи належать звуки [м], [в], [п], [б], [ф]. Друга група — це **задньоязикові** *(velar)* приголосні звуки. До неї належать звуки [г], [ґ], [к] та [х]. Усі ці дев'ять звуків є природно дуже твердими. Вони ніколи не мають справжньої м'якої пари. Але вони можуть ставати трохи пом'якшеними. Це стається тільки перед буквою «і» або **йотованими буквами** *(iotated letters)*. Давайте детально розглянемо слово «пісня». Тут звук [п] стоїть перед буквою «і». Тому він автоматично стає злегка пом'якшеним: [п'іс'н'а]. Зверніть увагу на важливу різницю у цьому слові. Звук [п'] є лише трохи пом'якшеним через свою позицію. А звук [с'] у цьому ж слові є повністю м'яким. Ця деталь робить українське мовлення дуже мелодійним. Тепер давайте систематизуємо всі наші нові знання про приголосні звуки. У нашій мові є звуки, які залишаються завжди твердими. Це означає, що вони ніколи не мають м'якої пари. До цієї категорії належать усі **шиплячі** *(hushing)* звуки. Це добре відомі нам звуки [ж], [ч], [ш] та [дж]. В українській мові вони завжди вимовляються дуже твердо і чітко. Наприклад, у популярному слові «чай» звук [ч] є абсолютно твердим. У слові «широка» звук [ш] також звучить дуже твердо. Цим правилом українська фонетика дуже сильно відрізняється від російської. Наші губні та задньоязикові звуки також є завжди твердими. Як ми вже знаємо, вони бувають лише злегка пом'якшеними. З іншого боку, у нас є один абсолютно унікальний звук. Звук [й] є завжди м'яким у будь-якій позиції. Він ніколи не буває твердим у жодному українському слові. І нарешті, у нас є вісім особливих пар приголосних. Ці звуки можуть бути і абсолютно твердими, і повністю м'якими. Ось ці вісім пар: [д] — [д'], [т] — [т']. Також це звуки [з] — [з'], [с] — [с'], [ц] — [ц']. І останні пари: [л] — [л'], [н] — [н'], [дз] — [дз']. Школярі запам'ятовують ці звуки за допомогою спеціальної фрази. Ця шкільна фраза звучить так: «Де ти з'їси ці лини, дз?». Абсолютно всі приголосні звуки у цій фразі утворюють пари. Вони можуть легко ставати м'якими за потреби. Такі прості правила дуже допомагають розуміти складну фонетику. <!-- INJECT_ACTIVITY: mark-the-sonorants -->
+В українській мові є спеціальні групи приголосних. Це губні звуки [б], [п], [в], [м], [ф] та задньоязикові звуки [г], [ґ], [к], [х]. Губні звуки дуже легко запам'ятати за допомогою фрази «МаВПА БУФ». Ці звуки за своєю природою не можуть бути повністю м'якими. Але іноді після них стоїть літера «і» або «я». Тоді ці приголосні стають трохи м'якшими, тобто напівпом'якшеними. Наприклад, у слові «пісня» звук [п] є напівпом'якшеним [п']. Ми вимовляємо його з легким напруженням губ. А от звук [с'] у цьому ж слові є повністю м'яким. > *In the Ukrainian language, there are special groups of consonants. These are the labial sounds [б], [п], [в], [м], [ф] and the velar sounds [г], [ґ], [к], [х]. The labial sounds are very easy to remember using the phrase "МаВПА БУФ" (Monkey BUF). These sounds by their nature cannot be fully soft. But sometimes they are followed by the letter "і" or "я". Then these consonants become a little softer, meaning partially softened. For example, in the word "пісня" (song) the sound [п] is partially softened [п']. We pronounce it with a slight tension of the lips. But the sound [с'] in this same word is fully soft.* To master Ukrainian pronunciation, you need to know which consonants form hard and soft pairs and which ones are fixed in their hardness or softness. В українській мові є лише один приголосний звук, який завжди є м'яким. Це сонорний звук [й]. Він ніколи не буває твердим. Натомість є багато звуків, які майже завжди залишаються твердими. Це всі шиплячі звуки: [ж], [ч], [ш], [дж]. Український звук [ч] завжди звучить дуже твердо і чітко, як у слові «час». Це велика відмінність від інших мов. Також завжди твердим є звук [р] у кінці складу. Більшість інших приголосних утворюють пари. Це означає, що вони можуть бути як твердими, так і м'якими. В українській мові є вісім таких пар. Це звуки [д], [т], [з], [с], [ц], [л], [н], [дз]. Ви будете дуже часто бачити ці зміни у граматиці. > *In the Ukrainian language, there is only one consonant sound that is always soft. This is the sonorant sound [й]. It is never hard. Instead, there are many sounds that almost always remain hard. These are all the hushing sounds: [ж], [ч], [ш], [дж]. The Ukrainian sound [ч] always sounds very hard and clear, like in the word "час" (time). This is a big difference from other languages. Also, the sound [р] is always hard at the end of a syllable. Most other consonants form pairs. This means that they can be both hard and soft. In the Ukrainian language, there are eight such pairs. These are the sounds [д], [т], [з], [с], [ц], [л], [н], [дз]. You will very often see these changes in grammar.* :::tip **Did you know?** — The strict hardness of hushing consonants (шиплячі) like **ч** and **ш** is a core feature of Ukrainian orthography. This is why we write «читати» and not something softer. Keep your hushing sounds strong and firm! ::: <!-- INJECT_ACTIVITY: mark-the-sonorants -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -474,7 +474,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 6: A2 finale (A2 M51-M69)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 40%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 40% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 70-90% Ukrainian.
 LANGUAGE ROLES:
@@ -493,18 +560,69 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] фонетика (phonetics — the study of speech sounds)
+- [ ] звук (sound — what we hear and pronounce)
+- [ ] літера (letter — what we see and write)
+- [ ] фонема (phoneme — abstract sound unit that distinguishes meaning)
+- [ ] голосний (vowel — sound made with voice only)
+- [ ] приголосний (consonant — sound made with obstruction)
+- [ ] дзвінкий (voiced — consonant produced with voice + noise)
+- [ ] глухий (voiceless — consonant produced with noise only)
+- [ ] сонорний (sonorant — consonant where voice dominates over noise)
+- [ ] твердий (hard — non-palatalized consonant)
+- [ ] м'який (soft — palatalized consonant)
+- [ ] наголос (stress — emphasized pronunciation of a syllable)
+- [ ] наголошений (stressed — syllable bearing the stress)
+- [ ] ненаголошений (unstressed — syllable without stress)
+- [ ] транскрипція (transcription — phonetic notation in square brackets)
+- [ ] склад (syllable)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Наголос (~660 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

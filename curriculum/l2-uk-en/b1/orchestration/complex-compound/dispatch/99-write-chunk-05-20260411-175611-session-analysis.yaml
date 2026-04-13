@@ -1,0 +1,56 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T15-54-cb8911b3.json
+phase: write-chunk-05
+prompt_chars: 47698
+response_chars: 5661
+prompt_words: 6265
+response_words: 796
+sections:
+- name: header
+  start: 0
+  length: 429
+  fraction: 0.009
+- name: skeleton
+  start: 429
+  length: 1576
+  fraction: 0.033
+- name: prior_summary
+  start: 2005
+  length: 3562
+  fraction: 0.0747
+- name: plan
+  start: 5567
+  length: 15611
+  fraction: 0.3273
+- name: wiki
+  start: 14966
+  length: 26301
+  fraction: 0.5514
+- name: output_spec
+  start: 47479
+  length: 219
+  fraction: 0.0046
+large_sections:
+- wiki
+directives_total: 21
+directives_covered: 17
+directives_missed:
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: skeleton_para
+  text: 'P3 (150w): Reading Analysis: A narrative passage describing a journey through
+    the Carpathian mountains. The text should use a variety of ССР types. After reading,
+    students should be guided to identify the conjunctions and state the semantic
+    link in each case.'
+  covered: false
+  coverage_note: 8/26 keywords (31%)
+- kind: inject_activity
+  text: error-correction-punctuation
+  covered: false
+  coverage_note: marker missing

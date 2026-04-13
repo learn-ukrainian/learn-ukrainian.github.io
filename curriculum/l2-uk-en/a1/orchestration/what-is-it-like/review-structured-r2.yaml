@@ -2,51 +2,50 @@ round: 2
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 10
-  evidence: Covers all structural points. Quotes and references to Вашуленко and Пономарова
-    are seamlessly integrated. The dialogue constraints ("NOT bags or furniture" at
-    the book fair, "window shopping" for Dia
+  score: 6
+  evidence: 'All four planned H2 sections are present and the module cites **Вашуленко
+    Grade 3, p.131** and **Пономарова Grade 3, p.98**, but the plan grammar includes
+    `який/яка/яке/які` and `які` appears 0 times '
 - dimension: 2
   name: Linguistic accuracy
   score: 8
-  evidence: 'Excellent natural Ukrainian overall, but contains two critical phonetics
-    errors with stress marks: `доро́га` instead of `дорога́`, and `У мене́` instead
-    of `У ме́не`.'
+  evidence: The Ukrainian examples themselves are morphologically correct, but the
+    caution box gives a factually wrong rule for `а` vs `але`.
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: Outstanding explanation of adjective agreement. The "boss/assistant" analogy
-    is brilliant for A1 learners. The transition from masculine to feminine and neuter
-    is logical and clear.
+  score: 7
+  evidence: The module has a usable present-explain-practice flow and many examples,
+    but it under-teaches the planned paradigm by omitting `які`, and it gives learners
+    an incorrect contrast rule.
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: All required and recommended words are introduced naturally in the dialogues
-    and prose. No bare lists; words are contextualized in opposite pairs.
+  score: 9
+  evidence: Required vocabulary appears in prose (`великий, маленький, новий, старий,
+    гарний, чистий, дорогий, дешевий`), and recommended vocabulary also appears (`поганий,
+    брудний, світлий, темний, а, але`).
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: Markers match the plan exactly and are placed strategically after the
-    relevant instructional blocks.
+  score: 9
+  evidence: Four markers are present for four planned activities, and each marker
+    sits after the relevant teaching section.
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: The writer persona is a warm, encouraging teacher. Uses great framing
-    ("It is the weekend, and the city center is bustling") without gamified filler.
+  score: 9
+  evidence: The tone is teacherly and concrete, with usable examples like `Моя кімната
+    велика і світла.` and `Вікно велике і чисте.`; it avoids gamified/corporate framing.
 - dimension: 7
   name: Structural integrity
-  score: 10
-  evidence: Word count is 1894 (well above the 1200 target). Clean markdown formatting,
-    and all H2 sections from the plan are present.
+  score: 5
+  evidence: Headings are clean and ordered correctly, but the pipeline word count
+    is **1029**, below the **1200** target.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Uses realistic Ukrainian settings (weekend book fair) and correctly references
-    Ukrainian textbooks without relying on translation from Russian norms.
+  evidence: The module presents Ukrainian on its own terms and uses Ukrainian school-textbook
+    references without Russia-centric framing.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: Dialogues are natural, contextual, and specifically designed to highlight
-    the target grammar organically. Speakers have clear turns and the exchanges feel
-    authentic.
+  score: 6
+  evidence: The dialogues have named speakers and clear turns, but dialogue 2 is thin
+    and misses the plan’s specified weekend book-fair situation.
 findings: []

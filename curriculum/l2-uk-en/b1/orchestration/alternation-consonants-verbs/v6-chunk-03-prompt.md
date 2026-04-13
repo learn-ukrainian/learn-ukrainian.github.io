@@ -22,7 +22,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-вожу». Зимове дієслово «морозити» змінюється на «я морожу». Якщо ж основа вашого дієслова закінчується на глухий звук «с», він також закономірно перейде у відповідний глухий шиплячий звук «ш». Дієслово «носити» обов'язково перетворюється на «я ношу». Інше дієслово «просити» дає нам дуже поширену форму «я прошу», яку ви також добре знаєте як ввічливе слово при звертанні. Якщо ви працюєте в саду і хочете використати дієслово «косити», ви правильно скажете «я кошу». Такі зміни свистячих приголосних на шиплячі значно покращують загальну **евфонію** *(euphony)*, тобто милозвучність дієслівної основи. Вимовляти шиплячі звуки безпосередньо перед голосним «у» набагато легше і природніше для нашого артикуляційного апарату. Українська мова уникає складних переходів і прагне до максимальної плавності. Іноді в основі дієслова стоїть не один приголосний звук, а цілий кластер. Що відбувається, коли нам потрібно змінити відразу два приголосні звуки поруч? Фонетична система працює ідеально: кожен окремий звук змінюється за своїм власним правилом. Розгляньмо детально групу «зд». Ми вже добре знаємо, що звук «з» змінюється на «ж», а звук «д» закономірно переходить у «дж». Якщо ми з'єднаємо ці дві зміни разом, ми логічно отримаємо кластер «ждж». Найвідоміший приклад такого явища — це дієслово «їздити». У формі першої особи однини воно перетворюється на «я їжджу». Цей звук є абсолютно логічним результатом еволюції мови. Тепер поглянемо на групу глухих приголосних «ст». Звук «с» завжди змінюється на «ш», а звук «т» перетворюється на звук «ч». Разом вони утворюють комбінацію звуків «шч». В українській абетці для цього поєднання звуків історично існує спеціальна літера «щ». Отже, дієслова з кластером «ст» у першій особі завжди матимуть літеру «щ». Дієслово «мостити» зміниться на «я мощу». Дієслово «простити» перетвориться на «я прощу». А дієслово «чистити» дасть нам форму «я чищу». Пам'ятайте, що літера «щ» — це просто зручний запис для двох окремих чергувань. Щоб надійно закріпити ці фонетичні знання, ми повинні поглянути на повну **парадигму** *(paradigm)* відмінювання. Як ми вже зазначали раніше, найважливіша особливість дієслів другої дієвідміни полягає в тому, що це специфічне чергування створює своєрідний «острів». Ця зміна відбувається ізольовано і стосується лише однієї форми — першої особи однини. Візьмімо знайоме нам дієслово «водити» і повністю провідміняємо його за всіма особами. Починаємо з першої особи однини: ми кажемо «я воджу». Тут відбулося чергування звуку «д» на «дж». Але щойно ми переходимо до другої особи однини, чергування миттєво зникає. Ми впевнено кажемо «ти водиш», зберігаючи оригінальний базовий звук «д». Абсолютно те саме відбувається у третій особі однини — «він водить», «вона водить», «воно водить». У множині правило також залишається непохитно стабільним. Форма першої особи множини звучить як «ми водимо». Форма другої особи множини — «ви водите». І нарешті, остання форма третьої особи множини — «вони водять». У жодній з цих п'яти інших форм звук «д» не змінився. Візуальна структура цієї граматичної таблиці дуже сильно допомагає студентам швидко запам'ятати масштаб явища. Чергування приголосних — це точковий процес. Ви застосовуєте це правило лише тоді, коли говорите про себе: «я сиджу», «я ношу», «я плачу». Коли ви говорите про будь-яких інших людей, ви завжди можете безпечно спиратися на базовий приголосний інфінітива. <!-- INJECT_ACTIVITY: fill-in-1st-person --> <!-- INJECT_ACTIVITY: match-infinitive-1st-sg -->
+звук, як у слові «носити», ми отримуємо «я ношу». Дієслово «просити» також створює дуже ввічливу форму «я прошу». These sibilant shifts actively improve the euphony of the verb stem. Pronouncing a hard [з] or [с] right before the palatal glide was physically awkward, so speakers naturally softened these sounds to [ж] and [ш], which blend much more seamlessly. What happens when a sibilant and a dental consonant are combined, as in the clusters [зд] and [ст]? The Ukrainian language resolves this by applying the alternation rules simultaneously to both consonants in the cluster! Коли ми маємо буквосполучення [зд] у слові «їздити», обидва звуки зазнають змін: [з] переходить у [ж], а [д] стає [дж]. У результаті ми отримуємо складне чергування, яке дає форму «я їжджу». У таких словах, як «мостити», «простити» або «чистити», кластер [ст] перетворюється на відповідний кластер [шч]. You might wonder why we don't write *чишчу*. The letter **щ** in Ukrainian explicitly represents the combination of the two sounds [ш] and [ч]. When the cluster [ст] transforms into [шч], we simply write it using **щ**. This means that **чистити** becomes **я чищу** (I clean), and **пустити** becomes **я пущу** (I let go). The logic remains consistent: [с] became [ш], and [т] became [ч]. :::info **Grammar box** The letter **щ** is always pronounced as two distinct sounds: [ш] + [ч]. Whenever you see a verb ending in **-стити**, you can confidently predict that its first person singular form will feature the letter **щ**! ::: Now we must see how these alternations fit into the complete **парадигма** (paradigm) of a verb. The crucial concept to grasp is the Alternation Island effect. In verbs of the second **дієвідміна** (conjugation class), the consonant alternation is entirely isolated to the first **особа** (grammatical person) singular. Давайте розглянемо повне відмінювання дієслова «водити», щоб побачити цей острівець змін. Форма першої особи однини стоїть окремо: «я воджу». Але щойно ми переходимо до другої особи, оригінальний приголосний звук основи повертається. Ми кажемо: «ти водиш», «він водить», «ми водимо», «ви водите» і «вони водять». Чергування відбувається лише один раз. > *Let's look at the complete conjugation of the verb "водити" to see this island of changes. The first person singular form stands alone: "я воджу". But as soon as we move to the second person, the original consonant sound of the stem returns. We say: "ти водиш", "він водить", "ми водимо", "ви водите" and "вони водять". The alternation occurs only once.* This highly predictable pattern is a massive relief for learners. Once you identify the infinitive stem and recognize that it belongs to the second conjugation, you only need to apply the consonant alternation to the "я" form. Every other present tense form will simply use the standard personal endings attached to the base consonant without any modifications. This structural consistency is exactly what makes the Ukrainian verb system logical and elegant. Later in this module, we will also explore how a **губний** (labial) consonant behaves in this exact same environment. <!-- INJECT_ACTIVITY: fill-in-1st-person --> <!-- INJECT_ACTIVITY: match-infinitive-1st-sg -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -635,7 +635,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -648,18 +715,67 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] чергування (alternation — systematic sound change)
+- [ ] дієслово (verb)
+- [ ] дієвідміна (conjugation class — verb classification)
+- [ ] особа (grammatical person — я/ти/він)
+- [ ] теперішній час (present tense)
+- [ ] інфінітив (infinitive — base verb form)
+- [ ] зубний (dental — consonant formed at the teeth: д, т)
+- [ ] свистячий (sibilant — whistling consonant: з, с, ц, дз)
+- [ ] губний (labial — consonant formed with lips: б, п, в, м, ф)
+- [ ] задньоязиковий (velar — consonant formed at back of mouth: г, к, х)
+- [ ] доконаний вид (perfective aspect)
+- [ ] недоконаний вид (imperfective aspect)
+- [ ] парадигма (paradigm — full set of inflected forms)
+- [ ] палаталізація (palatalization — softening of consonant)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Чергування задньоязикових у дієсловах (~650 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

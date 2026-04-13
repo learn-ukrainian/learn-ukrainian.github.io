@@ -1,29 +1,22 @@
-## Підсумок: правила і практика
+## Підсумок: правила і практика (~350 words)
 
-Ми з вами детально розглянули найважливіші фонетичні закони української мови. Щоб легко застосовувати їх на практиці, пропоную вам простий **алгоритм** *(algorithm)* рішень. Коли ви бачите нове слово або сумніваєтеся в написанні, поставте собі чотири послідовні запитання.
+To master the systematic **чергування** (alternation) of a vowel sound, you need a reliable mental flowchart that you can apply consistently. Whenever you encounter a new **орфограма** (orthographic rule) regarding a spelling change, you should ask yourself a series of analytical questions. The very first step is to look closely at the syllable structure of the word in question. You must determine if the word changes from an open syllable to a **закритий склад** (closed syllable) when it is inflected. If it does, you should automatically expect the sounds [о] or [е] to become [і] as a natural phonetic response.
 
-Крок перший: чи став склад відкритим або закритим? Якщо так, це класичне чергування «о», «е» з «і». У закритому складі ми пишемо «і» (**двір**), у відкритому — «о» або «е» (**двору**).
+Step two focuses on what happens when the grammatical structure of a noun changes. As the **відмінок** (grammatical case) shifts during speech, you need to observe whether the root vowel disappears entirely from the word. If the vowel does vanish, you are dealing with a **біглий голосний** (fleeting vowel), which is a common feature in Ukrainian morphology. This specific disappearance is formally categorized by linguists as an alternation with a **нуль звука** (zero sound). Identifying this pattern prevents you from assuming that a noun's dictionary form is completely unchangeable.
 
-Крок другий: чи зникає голосний звук під час відмінювання слова? Якщо так, перед нами типовий **біглий голосний** *(fleeting vowel)*. Це означає чергування з нулем звука, як у словах **вітер** *(wind)* — **вітру**, **хлопець** *(boy)* — **хлопця**.
+Step three requires you to check the consonant situated immediately before the target vowel. You must verify if it is a **шиплячий** (hushing consonant) like [ж], [ч], [ш], or [дж], or perhaps the sound [й]. If it is, the choice between writing [о] and [е] depends entirely on the hardness or softness of the following sound. In step four, which is specific to verbs, you must analyze the **корінь** (root) and see if the **наголос** (stress) shifts. This stress shift is usually caused by the addition of a new aspectual suffix, triggering a predictable vowel alternation.
 
-Крок третій: чи стоїть голосний після **шиплячого** *(hushing consonant)* звука «ж», «ч», «ш», «дж» або після звука «й»? Якщо так, тут діє правило чергування «о» з «е». Ми пишемо «е» перед м'яким приголосним або складом з «е» чи «и» (**пшениця** — *wheat*). А літеру «о» ми пишемо перед твердим приголосним або складом з «а», «о», «у» (**пшоно** — *millet*).
+Understanding these shifts requires you to pay attention to every single **форма слова** (word form) you encounter in your studies. Each time you see a new **закінчення** (ending) attached to a familiar word, ask yourself how it affects the internal structure. Does the addition of a **суфікс** (suffix) force a vowel to transform or disappear? Answering these questions builds your intuition and helps you internalize the language's natural rhythm. By actively analyzing these components, you move beyond mere memorization and start thinking in Ukrainian.
 
-Крок четвертий: чи це корінь **дієслова** *(verb)*, і чи змінюється його суфікс? Якщо так, це дієслівне чергування, яке залежить від наголосу. Наприклад, коротка дія **схопити** *(to grab)* перетворюється на тривалий процес **хапати** *(to grab repeatedly)* завдяки появі суфікса «-а-».
+:::tip
+**Did you know?**
+Ukrainian vowel alternations are a defining feature that distinguishes the language from other Slavic languages like Russian or Polish. Recognizing them helps you understand the deep historical roots of the vocabulary you use every day.
+:::
 
-Тепер настав час перевірити ваші нові знання. Спробуйте самостійно та вголос дати відповіді на ці запитання. Це чудова **самоперевірка** *(self-check)* перед виконанням практичних завдань.
+To solidify your foundation, you must always be aware of whether you are looking at a **голосний** (vowel) inside an **відкритий склад** (open syllable) or a closed one. These structural boundaries are the primary triggers for the majority of the sound changes we have discussed today. Recognizing them instantly will drastically reduce the number of spelling errors you make in your writing. The logic of these sound changes is universal across the language, acting as a reliable guide rather than a set of arbitrary exceptions.
 
-1. Чому в слові **двір** *(yard)* ми пишемо літеру «і», а в слові **двори** *(yards)* — літеру «о»?
-Відповідь: Тому що в першому випадку склад закритий, а в другому він став відкритим.
+Давайте перевіримо ваші знання на практиці. Спробуйте дати відповіді на ці контрольні запитання, щоб закріпити пройдений матеріал. Перше: чому в слові «двір» ми пишемо літеру «і», а в слові «двори» з'являється «о»? Відповідь: тому що склад закрився або відкрився. Друге: яке чергування відбувається у словах «день» — «дня»? Відповідь: це чергування з нулем звука, тобто біглий голосний. Третє: після яких приголосних найчастіше чергуються звуки [о] з [е]? Відповідь: після шиплячих приголосних [ж], [ч], [ш], [дж] та звука [й]. Четверте: запишіть три власні пари слів із чергуванням [о] з [і]. Прекрасний приклад: стіл — стола, кінь — коня, рік — року.
 
-2. Яке саме фонетичне чергування відбувається у знайомих словах **день** *(day)* та **дня** *(of a day)*?
-Відповідь: Це типове чергування «е» з нулем звука, тобто правило біглого голосного.
+> *Let's test your knowledge in practice. Try to answer these control questions to consolidate the covered material. First: why do we write the letter "i" in the word "двір", but "о" appears in the word "двори"? Answer: because the syllable closed or opened. Second: what alternation occurs in the words "день" — "дня"? Answer: this is an alternation with a zero sound, meaning a fleeting vowel. Third: after which consonants do the sounds [о] and [е] most often alternate? Answer: after hushing consonants [ж], [ч], [ш], [дж] and the sound [й]. Fourth: write down three of your own pairs of words with the alternation of [о] with [i]. A wonderful example: стіл — стола, кінь — коня, рік — року.*
 
-3. Після яких приголосних звуків традиційно чергуються голосні літери «о» та «е»?
-Відповідь: Це відбувається після шиплячих приголосних («ж», «ч», «ш», «дж») та після звука «й».
-
-4. Запишіть три власні пари слів із класичним чергуванням звуків «о» або «е» з літерою «і».
-Приклад: **стіл** *(table)* — **стола**, **кінь** *(horse)* — **коня**, **рік** *(year)* — **року**.
-
-Ця граматична логіка надзвичайно важлива для глибокого розуміння структури української мови. У наступному навчальному модулі ми продовжимо вивчати фонетичні зміни. Ми розглянемо чергування приголосних звуків у парадигмах іменників. Ви побачите, як приголосні також вміють м'яко адаптуватися до нових закінчень. Це зробить вашу українську вимову ще більш природною. 
-
-<!-- INJECT_ACTIVITY: error-correction, fix vowel spelling errors in sentences -->
+You now possess a comprehensive understanding of how vowels shift, vanish, and transform within Ukrainian words. These phonetic patterns follow a rigorous physical logic dictated by vocal emphasis, historical evolution, and syllable boundaries. In the upcoming module, we will explore "Чергування приголосних (іменники)" — consonant alternations in noun paradigms. You will discover that consonants also alter their shapes in highly predictable ways, building directly upon the exact same morphophonemic logic you have mastered here.

@@ -1,0 +1,128 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T19-29-0d33f329.json
+phase: write
+prompt_chars: 62591
+response_chars: 10764
+prompt_words: 9448
+response_words: 1627
+sections:
+- name: preamble
+  start: 0
+  length: 6386
+  fraction: 0.102
+- name: plan
+  start: 6386
+  length: 6287
+  fraction: 0.1004
+- name: wiki
+  start: 11803
+  length: 25427
+  fraction: 0.4062
+- name: rules
+  start: 38100
+  length: 10345
+  fraction: 0.1653
+- name: skeleton
+  start: 48445
+  length: 4285
+  fraction: 0.0685
+- name: output_spec
+  start: 52730
+  length: 9861
+  fraction: 0.1575
+large_sections:
+- wiki
+directives_total: 52
+directives_covered: 31
+directives_missed:
+- kind: checklist
+  text: No 'Let us...', 'In this section...', or formulaic openers
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: checklist
+  text: Every exercise marker from the skeleton is placed
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: must
+  text: For A1 early modules, the learner cannot read Cyrillic — English must dominate.
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: must
+  text: You MUST cover ALL of them — every textbook reference, every notation, every
+    example.
+  covered: false
+  coverage_note: 3/10 keywords (30%)
+- kind: must
+  text: '**EVERY module MUST end with `## Підсумок`** — this is the last H2 section
+    before the file ends.'
+  covered: false
+  coverage_note: 4/11 keywords (36%)
+- kind: must
+  text: Your output must be original teaching prose at the correct CEFR level, not
+    a rephrased version of the article.
+  covered: false
+  coverage_note: 2/13 keywords (15%)
+- kind: must
+  text: The approach must be communicative, visual, and context-driven.
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: must
+  text: The distinction must be made early.
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: The address format itself is a cultural and linguistic norm that must be taught
+    explicitly (Source 14).
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: must
+  text: Learners must write the correct word next to each arrow.
+  covered: false
+  coverage_note: 2/8 keywords (25%)
+- kind: must
+  text: It is crucial to emphasize that when asking for directions from a stranger,
+    the formal `ви` form (`ідіть`, `поверніть`) is mandatory for politeness and respect
+    (Source 22).
+  covered: false
+  coverage_note: 5/16 keywords (31%)
+- kind: must
+  text: Content must explicitly state that these cities were often built upon or agglomerated
+    from pre-existing Cossack settlements.
+  covered: false
+  coverage_note: 5/17 keywords (29%)
+- kind: must
+  text: '**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim**
+    as an `## H2` line.'
+  covered: false
+  coverage_note: 3/11 keywords (27%)
+- kind: must
+  text: Every sentence must teach something.
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: must
+  text: translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: must
+  text: '- **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).'
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-sounds-vs-letters
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-sounds-vs-letters
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-false-friends
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing

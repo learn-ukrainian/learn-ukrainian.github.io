@@ -1,86 +1,76 @@
-## Чоловічий рід: -ів та нульове закінчення
+## Чоловічий рід: -ів та нульове закінчення (~720 words)
 
-Уявіть, що ви вже знаєте всі відмінки української мови. Але родовий відмінок множини — це справжній фінальний бос для студентів. Коли ми рахуємо предмети і кажемо «скільки», слова змінюються зовсім не так, як у називному відмінку множини.
+Welcome to the most complex and fascinating case in the Ukrainian language. The word for plural is **множина** (plural). While the Genitive plural has many forms, its rules are highly logical and rooted in history. You already know that the Genitive case is used to show possession, absence, and origin. However, the plural form has one massive, everyday function: counting. Whenever you use numbers from five upwards, or words that denote quantity, you must use the Genitive plural. It is an essential building block for daily communication.
 
-> *Imagine that you already know all the cases of the Ukrainian language. But the Genitive plural is a true final boss for students. When we count objects and say "how many", the words change completely differently than in the Nominative plural.*
+Сьогодні ми вивчаємо родовий відмінок множини. Ця форма потрібна, коли ми рахуємо предмети або людей. Ми використовуємо її кожного дня в магазині, на роботі та вдома.
 
-> — **Продавець:** Нам треба перевірити товар. Скільки у нас пляшок води? *(We need to check the goods. How many bottles of water do we have?)*
-> — **Помічник:** Я бачу тільки п'ять пляшок. *(I see only five bottles.)*
-> — **Продавець:** Добре. А скільки банок меду залишилося на полиці? *(Good. And how many jars of honey are left on the shelf?)*
-> — **Помічник:** Там стоять три банки. *(There are three jars standing there.)*
-> — **Продавець:** А свіжих булок багато? *(And are there many fresh buns?)*
-> — **Помічник:** Немає булок! Усе розпродали ще вранці. *(There are no buns! Everything was sold out in the morning.)*
+> *Today we are studying the Genitive case plural. This form is needed when we count objects or people. We use it every day in the store, at work, and at home.*
 
-When we say "three jars", we use the Nominative plural form `банки`. But when we ask "how many bottles" or say "five bottles" and "no buns", the words change to `пляшок` and `булок`. This shows that saying "five" or "many" requires a completely different grammar rule.
+The rule is strict: after the numbers `п'ять` (five) and higher, the noun changes to the Genitive plural. This applies to numbers like `шість` (six), `десять` (ten), and beyond. 
 
-Основне правило дуже просте, але його треба запам'ятати назавжди. Числівники два, три та чотири вимагають називного відмінка множини. Але числівники від п'яти і більше завжди вимагають родового відмінка множини.
+You must also use this case after quantity words. These include **багато** (a lot, many), **мало** (a little, few), and **кілька** (a few, several). 
 
-> *The main rule is very simple, but you must remember it forever. The numerals two, three, and four require the Nominative plural. But numerals from five and up always require the Genitive plural.*
+It is also required after the question word **скільки** (how many).
 
-This exact rule applies to indefinite quantity words. Words like «багато» (a lot), «мало» (a little), «кілька» (a few), and the question word «скільки» (how many) all trigger the Genitive plural.
+Скільки тут студентів? Тут є п'ять студентів. У цій кімнаті багато столів, але мало стільців. Ми маємо кілька цікавих ідей.
 
-Для більшості іменників чоловічого роду з твердою основою правило дуже передбачуване. Ми просто додаємо закінчення «-ів» до початкової форми слова.
+> *How many students are here? There are five students here. In this room there are many tables, but few chairs. We have a few interesting ideas.*
 
-> *For most masculine nouns with a hard stem, the rule is very predictable. We simply add the ending "-ів" to the initial form of the word.*
+The most common and dominant pattern for masculine nouns is the **-ів** ending. If a masculine noun ends in a hard consonant, you simply add **-ів** to form the Genitive plural. This ending is highly productive and is one of the most recognizable sounds in spoken Ukrainian. It applies to almost all hard-stem masculine nouns.
 
-`стіл` → `столів`
-`будинок` → `будинків`
-`підручник` → `підручників`
-`студент` → `студентів`
-`брат` → `братів`
+У нашому місті є багато парків і нових будинків. Мій брат має п'ять підручників з історії. Ми купили десять столів для офісу. 
 
-У мого друга є п'ять великих столів. На цій вулиці побудували кілька нових будинків. У бібліотеці є багато підручників. Ми бачимо десять студентів.
+> *In our city there are many parks and new buildings. My brother has five history textbooks. We bought ten tables for the office.*
 
-> *My friend has five large tables. They built several new houses on this street. The library has many textbooks. We see ten students.*
+Notice how `стіл` becomes `столів`, `брат` becomes `братів`, `студент` becomes `студентів`, `будинок` becomes `будинків`, and `підручник` becomes `підручників`. This single ending will cover the vast majority of masculine nouns you encounter in daily life.
 
-Іменники чоловічого роду з м'якою основою також найчастіше отримують закінчення «-ів». Але тут треба бути уважними, бо іноді зникають голосні «е» або «о».
-
-> *Masculine nouns with a soft stem also most often receive the ending "-ів". But here you need to be careful, because sometimes the vowels "е" or "о" disappear.*
-
-`учитель` → `учителів`
-`олівець` → `олівців`
-`хлопець` → `хлопців`
-`день` → `днів`
-
-У школі працює багато хороших учителів. Я купив кілька кольорових олівців. У нашому класі вчиться вісім хлопців. Я чекав тебе п'ять днів.
-
-> *Many good teachers work at the school. I bought several colored pencils. Eight boys study in our class. I waited for you for five days.*
-
-Якщо основа слова закінчується на голосний звук або має апостроф, ми використовуємо закінчення «-їв» замість «-ів».
-
-> *If the stem of the word ends in a vowel sound or has an apostrophe, we use the ending "-їв" instead of "-ів".*
-
-`герой` → `героїв`
-`трамвай` → `трамваїв`
-`подвір'я` → `подвір'їв`
-`відкриття` → `відкриттів`
-
-У цьому фільмі є кілька головних героїв. На зупинці стоїть багато трамваїв. Учені зробили багато нових відкриттів.
-
-> *There are several main heroes in this film. There are many trams standing at the stop. Scientists have made many new discoveries.*
+> — **Оксана:** Скільки столів у новому офісі? *(How many tables are in the new office?)*
+> — **Тарас:** У нас є десять столів і багато стільців. *(We have ten tables and a lot of chairs.)*
+> — **Оксана:** А скільки комп'ютерів ви купили? *(And how many computers did you buy?)*
+> — **Тарас:** Ми купили п'ять комп'ютерів для нових працівників. *(We bought five computers for the new employees.)*
 
 :::info
 **Grammar box**
-Notice that words like `подвір'я` and `відкриття` are neuter nouns. Most neuter nouns have a zero ending in the plural, but these borrow the `-їв` ending.
+Always look at the last number in a complex numeral. If it ends in 5, 6, 7, 8, 9, or 0, use the Genitive plural. For example, twenty-five students is `двадцять п'ять студентів`.
 :::
 
-Деякі іменники чоловічого роду втрачають свій суфікс у множині і мають нульове закінчення. Це слова, які означають національність або соціальну групу і закінчуються на «-ин» або «-їн».
+Soft-stem masculine nouns also predominantly take the **-ів** ending. Unlike some other Slavic languages where soft stems often trigger entirely different endings, Ukrainian prefers the consistency of **-ів**. This is a key feature that distinguishes Ukrainian and makes the masculine Genitive plural surprisingly regular once you spot the pattern. 
 
-> *Some masculine nouns lose their suffix in the plural and have a zero ending. These are words that denote nationality or social group and end in "-ин" or "-їн".*
+Школа шукає нових учителів для старших класів. На столі лежить кілька олівців. У лікарні працює багато лікарів.
 
-`громадянин` → `громадян`
-`селянин` → `селян`
-`болгарин` → `болгар`
-`татарин` → `татар`
+> *The school is looking for new teachers for the high school classes. Several pencils are lying on the table. Many doctors work in the hospital.*
 
-На площі зібралося багато громадян. У цьому селі живе кілька працьовитих селян. Я знаю п'ять болгар.
+Here, `учитель` becomes `учителів`, `олівець` becomes `олівців`, and `лікар` becomes `лікарів`. Even though the stem ends in a soft consonant, the ending remains the familiar **-ів**.
 
-> *Many citizens gathered on the square. Several hardworking peasants live in this village. I know five Bulgarians.*
+But what about the **-їв** variant? You will often see it, but true **-їв** appears only after stems ending in a vowel, a short *й*, or an apostrophe. This includes some masculine words and several common neuter words that share this plural pattern. Most soft masculine nouns take **-ів**, not **-їв**. 
 
-Існує одне дуже важливе слово з особливим правилом. Це слово «чоловік», яке означає «людина» або «мужчина».
+Біля нових будинків є багато гарних подвір'їв. Цей рік приніс нам кілька великих відкриттів. У центрі міста немає трамваїв. Ми пам'ятаємо імена наших героїв.
 
-> *There is one very important word with a special rule. This is the word "чоловік", which means "person" or "man".*
+> *Near the new buildings there are many beautiful courtyards. This year brought us several great discoveries. There are no trams in the city center. We remember the names of our heroes.*
 
-When we count people generally as a unit, we use the zero ending form: `п'ять чоловік` (five people). When talking about men specifically, the regular form `багато чоловіків` (many men) is used.
+As you can see, the neuter noun `подвір'я` becomes `подвір'їв`, and `відкриття` becomes `відкриттів`. The masculine noun `герой` becomes `героїв`, and `трамвай` becomes `трамваїв`.
 
-<!-- INJECT_ACTIVITY: match-up-masc-genitive --> [match-up, Match Nominative singular nouns to their Genitive plural forms, 8 items]
+:::note
+**Quick tip**
+The letter **ї** is essentially **й** + **і**. When a word already ends in a vowel sound or an apostrophe, Ukrainian uses **ї** to maintain the clear **-ів** pronunciation.
+:::
+
+When adding the **-ів** ending, watch out for fleeting vowels. Many masculine nouns have an **о** or **е** in their final syllable. When you add a new ending like **-ів**, this vowel often drops out or "flees" from the word. This happens because the stress or syllable structure shifts. It is a natural phonetic process that makes the words easier to pronounce.
+
+Ми працювали там кілька днів. У дворі грає п'ять хлопців. Я купив багато нових олівців. 
+
+> *We worked there for a few days. Five boys are playing in the yard. I bought a lot of new pencils.*
+
+The word `день` loses its **е** and becomes `днів`. The word `хлопець` loses its **е** and becomes `хлопців`. This is the same fleeting vowel you saw in the Genitive singular (`хлопця`, `дня`), so the stem change should already feel familiar to you.
+
+Finally, there is a rare but important **нульове закінчення** (zero ending) for certain masculine nouns. If a masculine noun ends in the suffixes **-ин** or **-їн** to denote nationality or origin, it loses this suffix in the plural. The Genitive plural for these specific words simply has no ending at all. Additionally, the word for "person" or "husband" has a special parallel form.
+
+На конференцію приїхало багато киян і селян. У залі сидить п'ять болгар. На вулиці стоїть кілька чоловік. 
+
+> *Many Kyivans and villagers came to the conference. Five Bulgarians are sitting in the hall. Several men are standing on the street.*
+
+The noun `громадянин` becomes `громадян`. The word `селянин` becomes `селян`, and `болгарин` becomes `болгар`. The word `чоловік` is unique: when counting men, you can use the zero ending `чоловік`, though the regular form `чоловіків` also exists. 
+
+However, remember that for the general concept of people, the word is **люди** (people), which comes from the singular **людина** (person), and its Genitive plural is `людей`.
+
+<!-- INJECT_ACTIVITY: match-up-masculine -->

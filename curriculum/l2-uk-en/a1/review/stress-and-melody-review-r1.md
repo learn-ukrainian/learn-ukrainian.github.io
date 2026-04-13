@@ -1,60 +1,68 @@
 ## Linguistic Scan
-No Russianisms, Surzhyk, or Calques found. The terminology is accurate. However, there are two instances of incorrect syllable division (`ран-ок` and `ві-дпо-чи-нок`) which constitute critical phonetic errors.
+- Factually wrong grammar classification in `Інтонація`: `Third, we have **спонукальні** (imperative) or **окличні** (exclamatory) sentences, which give commands or show strong emotion.` This teaches the wrong system. By purpose, the three types are `розповідні`, `питальні`, `спонукальні`; `окличні` is a separate dimension.
+- Wrong syllable division in `Читаємо вголос`: `**ві-дпо-чи-нок**` should be `**від-по-чи-нок**`.
 
 ## Exercise Check
-- `<!-- INJECT_ACTIVITY: quiz-stress-position -->` (matches `quiz` for stress position)
-- `<!-- INJECT_ACTIVITY: match-stress-pairs -->` (matches `match-up` for stress pairs)
-- `<!-- INJECT_ACTIVITY: quiz-sentence-type -->` (matches `quiz` for sentence type)
-- `<!-- INJECT_ACTIVITY: fill-in-punctuation -->` (matches `fill-in` for punctuation)
-All four markers are present, correctly mapped to the plan's hints, and placed logically after their corresponding explanatory sections. No inline DSL exercises.
+Found 4 markers:
+- `match-stress-pairs`
+- `quiz-sentence-types`
+- `fill-in-punctuation`
+- `quiz-find-stress`
+
+Marker placement is correct:
+- `match-stress-pairs` comes after the stress explanation.
+- `quiz-sentence-types` and `fill-in-punctuation` come after the intonation explanation.
+- `quiz-find-stress` comes after the read-aloud section.
+
+Marker IDs match the 4 `activity_hints` in the plan, and the generated activities meet or exceed the planned item counts. No exercise logic issues found.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 10/10 | The module strictly follows the plan outline, integrating all specific examples (`замок/замок`, `мука/мука`, intonation arrows, and `goroh.pp.ua` mention). |
-| 2. Linguistic accuracy | 8/10 | The syllable division for `ранок` (`ран-ок` instead of `ра-нок`) and `відпочинок` (`ві-дпо-чи-нок` instead of `від-по-чи-нок`) is incorrect. The text misclassifies "А у тебе?" as a yes/no question. |
-| 3. Pedagogical quality | 10/10 | Exceptional use of the "calling the turtle" technique (`черепаааха`) to explain stress. Very clear distinction between English vowel reduction and Ukrainian core vowels. |
-| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary words are introduced naturally in context with accurate stress patterns. |
-| 5. Exercise quality | 10/10 | 4 injected activity markers present, all matching the type and focus specified in the plan hints, evenly distributed after their respective sections. |
-| 6. Engagement & tone | 10/10 | Very natural teacher voice, encouraging but substantial. "Stress and melody are the physical heartbeat..." is a great opening for the summary. |
-| 7. Structural integrity | 10/10 | Clean markdown, perfect H2 header mapping, word count target cleanly exceeded (1571 > 1200 words). |
-| 8. Cultural accuracy | 10/10 | Factually correct, treats Ukrainian phonetics on its own terms, contrasting cleanly with French, Polish, and English. |
-| 9. Dialogue & conversation quality | 7/10 | The dialogue uses "Бариста" and "Клієнт" but employs informal register ("твоя", "у тебе"), which is inappropriate for a service encounter. Changing the characters to friends ("Оксана" and "Максим") fixes both the register mismatch and the context of the interaction. |
+| 1. Plan adherence | 9/10 | All four planned sections appear in order and cover the plan’s core points: free/mobile stress, `замок / мука / атлас`, `Київ — столиця України`, and the final self-check. Minor deduction: the prose does not cite the plan’s named references in-text. |
+| 2. Linguistic accuracy | 5/10 | Two critical teaching errors: `Third, we have **спонукальні** (imperative) or **окличні** (exclamatory) sentences` misclassifies sentence types, and `**ві-дпо-чи-нок**` gives a wrong syllable split. |
+| 3. Pedagogical quality | 8/10 | The lesson has a clear teach-then-practice flow (`First, break the word into syllables. Second, find the stressed syllable. Finally, read the whole word...`), but the two critical phonetics/grammar errors make the teaching unsafe as written. |
+| 4. Vocabulary coverage | 9/10 | Required/recommended vocabulary is integrated naturally in prose: `наголос`, `замок`, `кава`, `вода`, `столиця`, `мука`, `ранок`, `метро`, `фотографія`. |
+| 5. Exercise quality | 10/10 | The four markers are staged immediately after the relevant teaching and align with the plan’s focus areas: stress pairs, sentence type by punctuation, punctuation fill-in, and stress-position quiz. |
+| 6. Engagement & tone | 9/10 | The tone is teacherly and concrete rather than gamified; lines like `Getting the stress wrong means you are saying a completely different word` keep the focus on usable phonetics. |
+| 7. Structural integrity | 10/10 | All required H2 headings are present and ordered correctly, and the pipeline word count is 1327, which is above the 1200 target. |
+| 8. Cultural accuracy | 10/10 | The module treats Ukrainian phonetics on Ukrainian terms and uses `Київ — столиця України` naturally, with no Russia-centered framing. |
+| 9. Dialogue & conversation quality | 9/10 | The dialogue has named speakers and natural A1 small talk: `Привіт! Як справи?` / `Добре! А у тебе?` |
 
 ## Findings
-[2. Linguistic accuracy] [Critical]
-Location: `## Читаємо вголос (Reading Aloud)` — `**ран-ок** (morning)` and `**ві-дпо-чи-нок** (rest)`
-Issue: Incorrect syllable division. A single consonant between vowels belongs to the next syllable (`ра-нок`), and the prefix "від-" should not be split across syllables this way (`від-по-чи-нок`).
-Fix: Change `**ран-ок**` to `**ра-нок**` and `**ві-дпо-чи-нок**` to `**від-по-чи-нок**`.
+[DIMENSION] [SEVERITY: minor]  
+Location: Stress / Intonation / Reading Aloud — `The Ukrainian language has exactly 38 sounds.`; `We classify sentences by their main purpose.`; `Here is a word stress reading practice section.`  
+Issue: The draft restates the plan’s sourced claims but never cites the plan’s named references in prose (`Заболотний Grade 5, p.73`, `Авраменко Grade 5, p.19`, `ULP Season 1, Episode 5`).  
+Fix: Add brief in-text source attributions in those three sections.
 
-[2. Linguistic accuracy] [Critical]
-Location: `## Читаємо вголос (Reading Aloud)` — "The question **А у тебе?** is a yes/no question without a question word..."
-Issue: "А у тебе?" is not a yes/no question; it is an elliptical open question. Calling it a yes/no question is factually incorrect.
-Fix: Update the description to state it lacks a direct question word, rather than calling it a yes/no question.
+[DIMENSION] [SEVERITY: critical]  
+Location: `Інтонація` — `Third, we have **спонукальні** (imperative) or **окличні** (exclamatory) sentences, which give commands or show strong emotion.`  
+Issue: This teaches wrong grammar. `Окличні` is not the third sentence-purpose type; it is a separate emotional/intonational dimension that can apply to `розповідні`, `питальні`, or `спонукальні` sentences.  
+Fix: Rewrite the sentence so `спонукальні` remains the third main type and `окличні` is presented as a separate dimension.
 
-[9. Dialogue & conversation quality] [Major]
-Location: `## Читаємо вголос (Reading Aloud)` — The dialogue block.
-Issue: The dialogue employs informal pronouns ("твоя", "у тебе") between a Barista and a Client, which is a register mismatch for a service encounter. Furthermore, a client asking if the coffee belongs to the barista is logically strange.
-Fix: Change the speaker labels from "Бариста/Клієнт" to "Оксана/Максим" to match the informal register.
+[DIMENSION] [SEVERITY: critical]  
+Location: `Читаємо вголос` — `Now try the word for rest: **ві-дпо-чи-нок**.`  
+Issue: The syllable division is wrong. `дпо` is not a valid syllable here; the correct division is `від-по-чи-нок`. Wrong syllable division is a phonetics-teaching error.  
+Fix: Replace `**ві-дпо-чи-нок**` with `**від-по-чи-нок**`.
 
 ## Verdict: REVISE
-The module is exceptionally well-written pedagogically, but contains two critical linguistic/phonetic errors (syllable division and misclassifying an open question as a yes/no question) and a register mismatch in the dialogue that must be patched.
+REVISE. The module is structurally strong and the exercise scaffolding is good, but it contains two critical teaching errors in core phonetics/grammar content, so it cannot pass as written.
 
 <fixes>
-- find: "**ві-дпо-чи-нок**"
-  replace: "**від-по-чи-нок**"
-- find: "**ран-ок**"
-  replace: "**ра-нок**"
-- find: "The question **А у тебе?** is a yes/no question without a question word, so it requires a sharp rising intonation (↗)."
-  replace: "The question **А у тебе?** lacks a direct question word, so it relies on a sharp rising intonation (↗) to signal the inquiry."
-- find: "> **Бариста:** Привіт! *(Hi!)*"
-  replace: "> **Оксана:** Привіт! *(Hi!)*"
-- find: "> **Клієнт:** Привіт! Як справи? *(Hi! How are you?)*"
-  replace: "> **Максим:** Привіт! Як справи? *(Hi! How are you?)*"
-- find: "> **Бариста:** Добре! А у тебе? *(Good! And you?)*"
-  replace: "> **Оксана:** Добре! А у тебе? *(Good! And you?)*"
-- find: "> **Клієнт:** Добре! Це твоя кава? *(Good! Is this your coffee?)*"
-  replace: "> **Максим:** Добре! Це твоя кава? *(Good! Is this your coffee?)*"
-- find: "> **Бариста:** Так, це моя кава. Дякую! *(Yes, this is my coffee. Thank you!)*"
-  replace: "> **Оксана:** Так, це моя кава. Дякую! *(Yes, this is my coffee. Thank you!)*"
+- find: |-
+    The concept of **наголос** (stress) is fundamental in Ukrainian. The Ukrainian language has exactly 38 sounds.
+  replace: |-
+    The concept of **наголос** (stress) is fundamental in Ukrainian. As Заболотний Grade 5, p.73 notes, the Ukrainian language has exactly 38 sounds.
+- find: |-
+    We classify sentences by their main purpose. There are three main types. First, we have **розповідні** (declarative) sentences, which tell you facts. Second, we have **питальні** (interrogative) sentences, which ask questions. Third, we have **спонукальні** (imperative) or **окличні** (exclamatory) sentences, which give commands or show strong emotion.
+  replace: |-
+    As Авраменко Grade 5, p.19 explains, we classify sentences by their main purpose. There are three main types. First, we have **розповідні** (declarative) sentences, which tell you facts. Second, we have **питальні** (interrogative) sentences, which ask questions. Third, we have **спонукальні** (imperative) sentences, which give commands. Any of these sentence types can also be **окличні** (exclamatory), which is a separate dimension that adds strong emotion.
+- find: |-
+    Now try the word for rest: **ві-дпо-чи-нок**. The stress is on the **и**.
+  replace: |-
+    Now try the word for rest: **від-по-чи-нок**. The stress is on the **и**.
+- find: |-
+    Here is a word stress reading practice section.
+  replace: |-
+    Following the stress-drill approach in ULP Season 1, Episode 5, here is a word stress reading practice section.
 </fixes>

@@ -2,49 +2,51 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 9
-  evidence: 'The module follows the plan closely, but slightly truncates the Grade
-    4 helper questions: `You memorize the helper questions: **на кому? у чому?**`
-    instead of the full `на/у кому? на/у чому?` specifie'
+  score: 7
+  evidence: 'The H2 structure matches the plan, but the planned newcomer-neighbor
+    situation “asking a neighbor where to find: аптека, банк, пошта, кафе, лікарня,
+    парк” is not realized in dialogue form; the opening'
 - dimension: 2
   name: Linguistic accuracy
-  score: 10
-  evidence: No Surzhyk, Russianisms, or grammatical errors. The case endings are perfectly
-    accurate.
+  score: 6
+  evidence: Most forms are correct, but “Countries, regions, and cities ALWAYS take
+    the preposition **в/у**” is factually wrong; corpus evidence includes `на Волині`.
 - dimension: 3
   name: Pedagogical quality
-  score: 9
-  evidence: The PPP flow is excellent. However, English translations in the vocabulary
-    lists are inconsistent (some include prepositions, some don't), and the literal
-    translation of "у столі" as "in the table" is
+  score: 7
+  evidence: The helper question and core chunks are explained clearly, but the presentation
+    phase spends its first dialogue on family-member locations instead of the module’s
+    target place-finding scenario, reduci
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: All required and recommended vocabulary words from the plan are integrated
-    naturally into dialogues and examples.
+  score: 9
+  evidence: 'All required vocabulary appears in prose: “в школі,” “на роботі,” “у
+    банку,” “у/в магазині,” “на вулиці,” “у місті”; recommended items also appear,
+    including “у лікарні,” “у/в кафе,” “на площі,” “на в'
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: The four requested activity hints are correctly mapped to injected markers
-    and are placed logically after their respective instructional sections.
+  score: 9
+  evidence: All four planned activity types have matching markers, and each marker
+    appears after the relevant teaching block.
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: The tone is encouraging and clear without being overly informal or using
-    gamified language.
+  score: 9
+  evidence: The teacher voice is clear and useful, especially in “Can you answer these
+    simple questions in Ukrainian?” The tone stays instructional rather than gimmicky.
 - dimension: 7
   name: Structural integrity
-  score: 10
-  evidence: All required H2 headings are present. The word count (1279 words) successfully
-    meets the target.
+  score: 5
+  evidence: Section order is clean, but the pipeline word count is 1124, below the
+    1200-word target.
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: The explanation of "в Україні" versus "на Україні" is culturally accurate
-    and handles a sensitive topic with appropriate educational context.
+  score: 8
+  evidence: The module correctly insists on `в Україні` and avoids Russian-centered
+    framing, but the overgeneralization about all “regions” taking `в/у` is culturally
+    and grammatically inaccurate.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: Dialogues are natural, contextualized, and provide clear, immediate examples
-    of the Locative case in use.
+  score: 7
+  evidence: Named speakers help, but the first exchange is a drill-like Q/A chain
+    rather than a fuller newcomer-neighbor interaction.
 findings: []

@@ -1,0 +1,63 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T14-05-4248096f.json
+phase: write-chunk-04
+prompt_chars: 48119
+response_chars: 6609
+prompt_words: 6510
+response_words: 895
+sections:
+- name: header
+  start: 0
+  length: 440
+  fraction: 0.0091
+- name: skeleton
+  start: 440
+  length: 1622
+  fraction: 0.0337
+- name: prior_summary
+  start: 2062
+  length: 3443
+  fraction: 0.0716
+- name: plan
+  start: 5505
+  length: 16211
+  fraction: 0.3369
+- name: wiki
+  start: 15417
+  length: 26188
+  fraction: 0.5442
+- name: output_spec
+  start: 47904
+  length: 215
+  fraction: 0.0045
+large_sections:
+- wiki
+directives_total: 18
+directives_covered: 12
+directives_missed:
+- kind: must
+  text: Finally, we must reinforce the single most important syntactic rule governing
+    all gerunds in the Ukrainian language.
+  covered: false
+  coverage_note: 5/13 keywords (38%)
+- kind: must
+  text: You must instead rely on a complex sentence with a subordinate clause, using
+    conjunctions like "when" or "after".
+  covered: false
+  coverage_note: 4/13 keywords (31%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 1/11 keywords (9%)
+- kind: inject_activity
+  text: aspect-choice-quiz
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-gerund-aspect
+  covered: false
+  coverage_note: marker missing

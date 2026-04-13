@@ -22,7 +22,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-абсолютно точний діагноз. Це комплексний процес, який називається **обстеження** *(medical examination)*. Українська медична термінологія в цій важливій сфері надзвичайно активно використовує родовий відмінок *(Genitive case)*. Коли ми описуємо конкретний тип обстеження, ми завжди логічно ставимо питання «чого?». Найпоширеніша і найвідоміша базова процедура — це **аналіз** *(test / analysis)*. Ми зазвичай здаємо «аналіз крові» *(blood test)* або «аналіз сечі» *(urine test)*. Тут обов'язково варто згадати надзвичайно важливе анатомічне слово **кров** *(blood)*. Це іменник жіночого роду, який історично належить до третьої відміни *(III declension)*, подібно до добре знайомих вам слів «ніч», «сіль» або «любов». У родовому відмінку слово «кров» завжди набуває характерного закінчення **-і**, тому ми кажемо виключно «аналіз крові», а не якось інакше. Крім стандартних лабораторних аналізів, лікарі також часто проводять різноманітні апаратні вимірювання. Наприклад, якщо літній пацієнт скаржиться на раптову слабкість або сильне запаморочення, йому негайно роблять **вимірювання тиску** *(blood pressure measurement)*. Тут слово **тиск** *(pressure)* логічно стоїть у родовому відмінку і має закінчення **-у**, що є типовим для абстрактних понять та фізичних явищ чоловічого роду другої відміни. Також дуже базовою щоденною процедурою є **вимірювання температури** *(temperature measurement)*. Якщо ж лікарю терміново потрібно детально побачити внутрішні органи або пошкоджені кістки, він призначає **рентген** *(X-ray)* або направляє пацієнта на сучасну ультразвукову діагностику. Правильне використання родового відмінка у цих словосполученнях є беззаперечною ознакою високого рівня володіння мовою і робить ваше щоденне мовлення максимально природним та професійним. Тепер давайте активно попрактикуємося читати та аналізувати реальні медичні документи. Коли пацієнт успішно закінчує своє стаціонарне лікування, лікар офіційно видає йому спеціальний підсумковий документ — це **виписка** *(discharge summary / medical report)*. Медичний стиль української мови *(medical register)* є дуже формальним, максимально чітким і часто містить специфічні професійні скорочення. Спробуємо разом прочитати та зрозуміти невеликий фрагмент такої типової лікарняної виписки: > **Виписка з медичної карти амбулаторного хворого** > **Симптоми** *(Symptoms)*: Пацієнт скаржиться на гострий і тривалий біль у животі, сильну загальну слабкість та стабільно високу температуру (38,5). > **Обстеження** *(Medical examination)*: Проведено детальний загальний аналіз крові. Зроблено **УЗД** *(ultrasound)* черевної порожнини. > **Діагноз** *(Diagnosis)*: Гострий апендицит. > **Призначення** *(Prescription / Treatment plan)*: Рекомендовано термінову консультацію чергового хірурга. Призначено сильні знеболювальні препарати та суворий постільний режим. Обов'язково зверніть увагу на логічну структуру цього медичного тексту. Спочатку кваліфікований лікар ретельно фіксує симптоми — тобто саме те, що фізично відчуває сам хворий пацієнт. Далі детально описуються всі проведені клінічні обстеження. Абревіатура УЗД розшифровується як «ультразвукове дослідження» і є надзвичайно поширеною та популярною в сучасній українській медицині. Після глибокого аналізу всіх отриманих даних лікар впевнено формулює діагноз — це офіційний медичний висновок про головну суть виявленої хвороби. Останній і найважливіший практичний блок — це призначення. Саме тут чітко вказується план подальших лікувальних дій: які конкретно ліки треба регулярно приймати, до яких ще вузьких фахівців варто звертатися і якого саме щоденного режиму потрібно дотримуватися. У таких офіційних документах дуже часто використовуються безособові дієслівні форми на -но та -то: «проведено», «зроблено», «рекомендовано», «призначено». Це завжди робить текст максимально об'єктивним, сухим та професійним. <!-- INJECT_ACTIVITY: quiz, Match symptoms to the correct specialist (головний біль → терапевт, зубний біль → стоматолог), 12 items -->
+doctor can see the full picture of the body's condition. Most often, you will be prescribed a general blood test or a urine test. In the therapist's office, a mandatory procedure is measuring blood pressure and temperature. Sometimes deeper investigations are needed, for example, an X-ray or an ultrasound examination. All these procedures help find the cause of the disease.* :::info **Grammar box** Notice how the genitive case connects the action to the substance. We say "аналіз крові" (a test of blood) and "вимірювання тиску" (a measurement of pressure). The word "тиск" takes the **-у** ending in the genitive case. ::: The word **кров** (blood) deserves special attention. It is a feminine noun ending in a consonant, which places it in the third declension. Nouns in this group have a distinct declension pattern. In the genitive case, they take the ending **-і**. Therefore, a blood test is translated using this specific case form. Remembering the third declension rules is vital, since many medical terms and names for a **хвороба** (disease) belong to this group. Now it is time to practice reading formal medical documents. When you are discharged from a hospital, you receive a medical summary. This document uses a formal register and contains specific technical abbreviations. For instance, you will frequently see УЗД, which stands for an ultrasound examination. Read the following simulated medical summary and identify the patient's main complaints, the final **діагноз** (diagnosis), and the prescribed treatment. Медична виписка: Пацієнт Іваненко О. П. звернувся до клініки зі скаргами на сильний головний біль, високу температуру та постійний кашель. Під час обстеження лікар зафіксував нежить і загальну слабкість. Було проведено аналіз крові та УЗД внутрішніх органів. На основі результатів встановлено діагноз: гостра респіраторна вірусна інфекція. Лікар призначив пацієнту постільний режим. Призначено такі ліки: таблетки для зниження температури та сироп проти кашлю. Пацієнт повинен приймати ліки двічі на день після їди. Наступний огляд заплановано через тиждень. > *Medical discharge summary: Patient Ivanenko O. P. applied to the clinic with complaints of a severe headache, high temperature, and a constant cough. During the examination, the doctor recorded a runny nose and general weakness. A blood test and an ultrasound of internal organs were performed. Based on the results, a diagnosis was established: acute respiratory viral infection. The doctor prescribed bed rest for the patient. The following medicines were prescribed: pills for reducing temperature and cough syrup. The patient must take the medicines twice a day after meals. The next examination is scheduled in a week.* Notice how the text utilizes passive constructions to describe the medical actions. This impersonal style is the hallmark of professional medical records in Ukraine. It removes the focus from the doctor and places all emphasis on the clinical facts. When you read your own medical documents, look for the word **симптом** (symptom) to quickly locate important information. Being able to scan these summaries will give you confidence when you receive a **рецепт** (prescription) or purchase your **ліки** (medicine) at an **аптека** (pharmacy). <!-- INJECT_ACTIVITY: quiz-specialist-match -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -604,7 +604,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -617,18 +684,69 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] здоров'я (health — noun, III відміна pattern with апостроф)
+- [ ] лікар (doctor — II відміна, -ар agent suffix)
+- [ ] хвороба (disease — I відміна feminine)
+- [ ] біль (pain — II відміна masculine, чергування: біль-болить)
+- [ ] температура (temperature — I відміна)
+- [ ] кашель (cough — II відміна masculine, м'яка група)
+- [ ] нежить (runny nose — II відміна masculine)
+- [ ] ліки (medicine — pluralia tantum)
+- [ ] рецепт (prescription)
+- [ ] аптека (pharmacy — I відміна)
+- [ ] діагноз (diagnosis — II відміна)
+- [ ] симптом (symptom — II відміна)
+- [ ] скаржитися (to complain — на + Зн.)
+- [ ] лікувати (to treat — imperfective)
+- [ ] одужати (to recover — perfective)
+- [ ] призначити (to prescribe — perfective)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## В аптеці (~770 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

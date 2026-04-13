@@ -7,14 +7,14 @@ pipeline: v6
 build_status: draft
 ---
 
-import ErrorCorrection from '@site/src/components/ErrorCorrection';
+import Anagram from '@site/src/components/Anagram';
+import Classify from '@site/src/components/Classify';
 import FillIn from '@site/src/components/FillIn';
 import FlashcardDeck from '@site/src/components/FlashcardDeck';
-import GroupSort from '@site/src/components/GroupSort';
 import MatchUp from '@site/src/components/MatchUp';
 import Quiz from '@site/src/components/Quiz';
-import Translate from '@site/src/components/Translate';
 import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
 import YouTubeVideo from '@site/src/components/YouTubeVideo';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 
@@ -23,149 +23,156 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ## Діало́ги (Dialogues)
 
-Two friends are deciding what to order in a local cafe after a long walk through the city. They use basic linking words to explain their choices, contrast their preferences, and make plans together. Notice how these short conjunctions connect simple ideas and give clear reasons for their decisions. Instead of just naming items, they are building a logical, connected conversation.
+Observe how the speakers link ideas while talking about vacation plans and everyday choices. The short words in bold link their ideas together naturally and logically.
 
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Оле́на:</span> Ти хо́чеш ка́ву чи чай? *(Do you want coffee or tea?)*</div>
+<div class="dialogue-line"><span class="speaker">Оле́г:</span> Де ми проведемо́ відпу́стку? Я хо́чу в Карпа́ти, **а** ти — на мо́ре. *(Where will we spend the vacation? I want [to go to] the Carpathians, and you — to the sea.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Марко́:</span> Каву, бо я ду́же вто́млений. *(Coffee, because I am very tired.)*</div>
+<div class="dialogue-line"><span class="speaker">А́нна:</span> Море те́пле, **бо** лі́то. *(The sea is warm, because it is summer.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Олена:</span> А я хо́чу чай, але́ без цу́кру. *(And I want tea, but without sugar.)*</div>
+<div class="dialogue-line"><span class="speaker">Олег:</span> Го́ри га́рні, **але́** дале́ко. *(The mountains are beautiful, but far.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Марко:</span> До́бре. Ході́мо в кафе́, і я візьму́ ще ті́стечко. *(Good. Let's go to the cafe, and I will also take a pastry.)*</div>
+<div class="dialogue-line"><span class="speaker">Анна:</span> Пої́демо в Карпати, **бо** там деше́вше. *(Let's go to the Carpathians, because it is cheaper there.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Олена:</span> Я теж хочу, але я на діє́ті! *(I also want one, but I am on a diet!)*</div>
+<div class="dialogue-line"><span class="speaker">Олег:</span> До́бре! Пе́ред доро́гою ти хо́чеш ка́ву **чи** чай? *(Good! Before the trip, do you want coffee or tea?)*</div>
 
-</div>
+<div class="dialogue-line"><span class="speaker">Анна:</span> Каву, **бо** я ду́же вто́млена. *(Coffee, because I am very tired.)*</div>
 
-Later that evening, two colleagues catch up on their busy day and discuss why they missed each other's messages earlier. They use linking words to organize the sequence of their actions and explain the exact reasons behind missed connections. In everyday Ukrainian communication, stringing together events and providing quick justifications is a fundamental skill.
+<div class="dialogue-line"><span class="speaker">Олег:</span> **А** я хочу чай, **але** без цу́кру. Ході́мо в кафе́, **і** я візьму́ ще ті́стечко. *(And I want tea, but without sugar. Let's go to the cafe, and I will also take a pastry.)*</div>
 
-<div class="dialogue">
+<div class="dialogue-line"><span class="speaker">Анна:</span> Я **теж** хочу, **але** я на діє́ті! *(I also want [one], but I am on a diet!)*</div>
 
-<div class="dialogue-line"><span class="speaker">Анто́н:</span> Що ти роби́в сього́дні? *(What were you doing today?)*</div>
+<div class="dialogue-line"><span class="speaker">Макси́м:</span> Що ти роби́в сього́дні? *(What did you do today?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Іва́н:</span> Я працюва́в, а по́тім ходи́в у магази́н. *(I worked, and then went to the store.)*</div>
+<div class="dialogue-line"><span class="speaker">Дени́с:</span> Я працюва́в, **а** по́тім ходи́в у магази́н. *(I worked, and then went to the store.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Антон:</span> Я хоті́в зателефонува́ти, але ти не відпові́в. *(I wanted to call, but you did not answer.)*</div>
+<div class="dialogue-line"><span class="speaker">Максим:</span> Я хоті́в зателефонува́ти, **але** ти не відпові́в. *(I wanted to call, but you didn't answer.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Іван:</span> Ви́бач, бо телефо́н був без зву́ку. *(Sorry, because the phone was on silent.)*</div>
+<div class="dialogue-line"><span class="speaker">Денис:</span> Ви́бач, **бо** телефо́н був без зву́ку. *(Sorry, because the phone was on mute.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Анто́н:</span> Ні́чого! За́втра я ві́льний, і ми мо́жемо зустрі́тися. *(No worries! Tomorrow I am free, and we can meet.)*</div>
-
-</div>
-
-A married couple is debating where to go for their upcoming summer vacation. They use contrasting words to compare two very different destinations: the Carpathian Mountains and the seaside. This dialogue models how to use adjectives with contrasting conjunctions to weigh pros and cons. You can clearly see how adding a simple linking word changes the entire flow of the debate.
-
-<div class="dialogue">
-
-<div class="dialogue-line"><span class="speaker">Ві́ктор:</span> Го́ри га́рні, але дале́ко. *(The mountains are beautiful, but far.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Марі́я:</span> Мо́ре те́пле, бо за́раз лі́то. *(The sea is warm, because it is summer now.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Віктор:</span> Я хочу в гори, а ти — на море. *(I want to go to the mountains, and you want to go to the sea.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Марія:</span> Добре. Пої́демо в Карпа́ти, бо там деше́вше. *(Fine. Let's go to the Carpathians, because it is cheaper there.)*</div>
+<div class="dialogue-line"><span class="speaker">Максим:</span> Ні́чого! За́втра я ві́льний, **і** ми мо́жемо зустрі́тися. *(It's nothing! Tomorrow I am free, and we can meet.)*</div>
 
 </div>
 
 ## Сполу́чники (Conjunctions)
 
-To build natural sentences, you need a way to link your thoughts together. The Ukrainian term for this grammatical "glue" is **сполу́чник** (conjunction), which comes directly from the verb **сполучи́ти** (to connect). These words connect individual items, short phrases, or whole sentences. Without them, communication sounds robotic and completely disconnected. For example, stating **Я люблю́ каву. Я люблю чай.** (I like coffee. I like tea.) feels very choppy. By adding a simple connecting word, you get a fluid, natural thought: **Я люблю каву і чай.** (I like coffee and tea.) Without a conjunction, you say: **Я хочу піти. Я втомлений.** (I want to go. I am tired.) With a connected thought, you say: **Я хочу піти, бо я втомлений.** (I want to go, because I am tired.)
+The Ukrainian grammatical term is **сполу́чник** (conjunction): it connects words, phrases, or whole sentences.
 
-To add information together, Ukrainian grammar uses **сполучники суря́дності** (coordinating conjunctions). These are words that connect equal, balanced parts of a sentence. The most foundational word is **і** (and). Another common word for addition is **та** (and). This is a perfect synonym for **і**, frequently used in both everyday speech and formal writing for variety. When you say **ма́ма і та́то** (mom and dad) or **хліб та ма́сло** (bread and butter), the meaning remains exactly the same. You will also see the euphony rule applied: Ukrainians often swap **і** for **й** after a vowel to maintain the melodicity of the language, such as in the phrase **вона́ й він** (she and he).
+* Я люблю́ каву. Я люблю чай. *(I like coffee. I like tea.)*
+* Я люблю каву **і** чай. *(I like coffee and tea.)*
 
-* Я чита́ю і пишу́. *(I read and write.)*
-* Це стіл і стіле́ць. *(This is a table and a chair.)*
+* Я хочу піти. Я вто́млений. *(I want to go. I am tired.)*
+* Я хочу піти, **бо** я втомлений. *(I want to go, because I am tired.)*
 
-When you want to add that something is also true, use **тако́ж** (also) or its shorter, more colloquial cousin **теж** (also). Both are incredibly common in conversation.
+In school grammar, these are **сполучники суря́дності**: they connect equal parts of a sentence. **І** and **та** add information. **Та** is a synonym of **і**, and you will often see it in writing, which matches the Grade 4-5 textbook approach.
 
-* Я тако́ж хочу чай. *(I also want tea.)*
-* Він теж працює. *(He also works.)*
+* Це ма́ма **і** та́то. *(This is mom and dad.)*
+* Тут лежи́ть хліб **та** ма́сло. *(Here lies bread and butter.)*
+* Я чита́ю **і** пишу́. *(I read and write.)*
+* Він бага́то працю́є **та** ма́ло відпочива́є. *(He works a lot and rests a little.)*
+* Це мій брат **і** моя́ сестра́. *(This is my brother and my sister.)*
 
-If you need to offer a choice, Ukrainian makes a crucial distinction that English does not: use **або́** (or) in statements, and **чи** (or) in questions.
+Use **а** for a softer contrast or switch in topic.
 
-* Я буду чай або́ ка́ву. *(I will have tea or coffee. — Statement)*
-* Ти хо́чеш ка́ву чи чай? *(Do you want coffee or tea? — Question)*
+* Я люблю каву, **а** ти? *(I like coffee, and you?)*
+* Він працює, **а** вона́ відпочиває. *(He works, and she rests.)*
+* Я студе́нт, **а** мій брат — лі́кар. *(I am a student, and my brother is a doctor.)*
+* Це черво́не я́блуко, **а** це зеле́на гру́ша. *(This is a red apple, and this is a green pear.)*
+* Ми йдемо́ в парк, **а** вони́ йдуть додо́му. *(We are going to the park, and they are going home.)*
 
-When you want to contrast two ideas or simply switch focus, Ukrainian uses the word **а** (and/but). English speakers often default to using "and" for every situation, but in Ukrainian, if you are comparing two different subjects or highlighting a shift in action, you must use **а**. This is a soft contrast, not a direct contradiction. It smoothly marks a shift in attention. The classic example for learners is **Я люблю каву, а ти?** (I like coffee, and you?) or **Я — студе́нт, а ти — вчи́тель.** (I am a student, and you are a teacher.)
+Use **але** for stronger contrast.
 
-* Він працю́є, а вона відпочива́є. *(He works, and she rests.)*
-* Це не стіл, а стілець. *(This is not a table, but a chair.)*
+* Я хочу, **але** не мо́жу. *(I want to, but I cannot.)*
+* Він молоди́й, **але** розу́мний. *(He is young, but smart.)*
+* Цей суп гаря́чий, **але** дуже смачни́й. *(This soup is hot, but very tasty.)*
+* Я розумі́ю украї́нську, **але** говорю́ пові́льно. *(I understand Ukrainian, but I speak slowly.)*
+* День со́нячний, **але** дуже холо́дний. *(The day is sunny, but very cold.)*
 
-For a strong contrast, a contradiction, or an unexpected result, use the word **але** (but). This conjunction tells the listener that the second part of the sentence directly opposes the first part. While the word **та** can sometimes mean "but" in specific folk-style contexts (like the saying **мали́й, та вда́лий** meaning small but successful), the word **але** is the absolute A1 standard you should use for clear opposition.
+<FillIn client:only="react" items={[{"sentence": "Я хочу чай, ____ ти хочеш каву.", "answer": "а", "options": ["а", "і", "бо"]}, {"sentence": "Ми йдемо в парк, ____ вони йдуть додому.", "answer": "а", "options": ["а", "але", "чи"]}, {"sentence": "Він багато працює ____ мало відпочиває.", "answer": "та", "options": ["та", "бо", "тому що"]}, {"sentence": "Я люблю каву ____ чай.", "answer": "і", "options": ["і", "а", "але"]}, {"sentence": "Це мій брат ____ моя сестра.", "answer": "і", "options": ["і", "але", "бо"]}, {"sentence": "Я студент, ____ мій брат — лікар.", "answer": "а", "options": ["а", "і", "тому що"]}]} instruction={"Вставте правильний сполучник (Insert the correct conjunction)"} />
 
-* Суп гаря́чий, але смачни́й. *(The soup is hot, but tasty.)*
-* Він молоди́й, але розу́мний. *(He is young, but smart.)*
-* Я хочу піти, але не мо́жу. *(I want to go, but I cannot.)*
+## Бо і тому що (Because)
 
-## Бо і тому́ що (Because)
+Now let us focus on reason. Ukrainian has two very common ways to say "because": **бо** and **тому що**. For this module, the key idea is simple: both conjunctions give the reason and both answer the question **Чому?** (Why?).
 
-Giving reasons is a massive step forward in your ability to communicate. You need to explain *why* you are doing something, *why* you are late, or *why* you prefer one thing over another. Ukrainian has two primary ways to say "because": **бо** and **тому що**. The word **бо** is the absolute workhorse of spoken Ukrainian. It is short, punchy, and incredibly natural. Both are correct. Both are Ukrainian. **бо** is NOT informal or wrong; it is simply the most common way people talk. The phrase **тому що** is longer and serves as the neutral or slightly more formal counterpart, frequently seen in writing or careful speech.
+Learners sometimes think that **бо** is somehow less correct because it is shorter. It is not. **Бо** is normal, standard Ukrainian. **Тому що** is also normal, standard Ukrainian. At A1, the safest rule is practical: choose the form you remember, keep the comma, and make sure the second part really gives the reason.
 
-* Я не йду, бо я хво́рий. *(I am not going, because I am sick.)*
-* Я не йду, тому що я хворий. *(I am not going, because I am sick.)*
+In everyday speech, **бо** is shorter and very common.
+* Я не йду, **бо** я хворий. *(I am not going because I am ill.)*
+* Я втомлений, **бо** багато працював. *(I am tired because I worked a lot.)*
+* Поїдемо в Карпати, **бо** там дешевше. *(Let us go to the Carpathians because it is cheaper there.)*
+* Я хочу каву, **бо** я дуже втомлений. *(I want coffee because I am very tired.)*
 
-If you want to flip the cause and effect, you can use the word **тому́** (therefore / that's why). It looks similar to **тому що**, but it introduces the result instead of the reason.
+**Тому що** means the same thing, but it is longer. Learners should recognize both forms from the start.
+* Я не йду, **тому що** я хворий. *(I am not going because I am ill.)*
+* Ми не гуляємо, **тому що** йде дощ. *(We are not walking because it is raining.)*
+* Я вчу українську, **тому що** я люблю Україну. *(I study Ukrainian because I love Ukraine.)*
+* Ми тут, **тому що** чекаємо друга. *(We are here because we are waiting for a friend.)*
 
-* Я хво́рий, тому́ не йду. *(I am sick, therefore I am not going.)*
+A useful classroom pattern is question plus reason. This turns a grammar list into real communication.
+* **Чому** ти вчиш українську? — **Бо** я люблю Україну.
+* **Чому** ти не їси? — **Тому що** я не голодний.
+* **Чому** ви тут? — **Бо** ми чекаємо друга.
+* **Чому** ви не гуляєте? — **Тому що** йде дощ.
 
-There is a strict, non-negotiable punctuation rule that you must memorize for writing in Ukrainian: you must always put a comma before these connecting words. English often skips the comma before "because", but Ukrainian punctuation rules require a comma before **а**, **але**, **бо**, and **тому що**. Whenever you introduce a contrast or a reason in writing, you must pause and add that comma. It is a visual signal that the sentence is shifting direction or providing an explanation.
+Notice the comma. When **бо** or **тому що** links two parts of a sentence, Ukrainian normally puts a comma before the conjunction.
+* Я втомлений, **бо** багато працював.
+* Ми не гуляємо, **тому що** йде дощ.
+* Я хочу піти, **бо** я втомлений.
 
-* Ми не гуля́ємо, тому що йде дощ. *(We are not walking, because it is raining.)*
-* Я втомлений, бо бага́то працював. *(I am tired, because I worked a lot.)*
+Compare the short version and the linked version:
+* Я хочу піти. Я втомлений.
+* Я хочу піти, **бо** я втомлений.
 
-These conjunctions directly answer the question word **Чо́му?** (Why?). In English, it can sometimes feel slightly awkward to start a sentence with "Because," but in Ukrainian, this is how Ukrainians explain things. The "Why-Because" loop is the foundation of daily explanation. You hear a question starting with **Чому**, and you immediately fire back with an answer starting with **Бо** or **Тому що**.
+This is the main communicative goal of the module: instead of short, separate sentences, you can connect your ideas and sound more natural.
 
-* — Чому ти вчиш украї́нську? *(Why are you learning Ukrainian?)*
-* — Бо я люблю Украї́ну. *(Because I love Ukraine.)*
-* — Чому ти не їси́? *(Why are you not eating?)*
-* — Тому що я не голо́дний. *(Because I am not hungry.)*
-* — Чому ви тут? *(Why are you here?)*
-* — Бо ми чека́ємо дру́га. *(Because we are waiting for a friend.)*
+<Quiz client:only="react" questions={[{"question": "Я не йду, ____ хворий.", "options": [{"text": "бо", "correct": true}, {"text": "і", "correct": false}, {"text": "а", "correct": false}, {"text": "але", "correct": false}]}, {"question": "Я хочу в Карпати, ____ ти — на море.", "options": [{"text": "тому що", "correct": false}, {"text": "а", "correct": true}, {"text": "і", "correct": false}, {"text": "бо", "correct": false}]}, {"question": "Гори гарні, ____ далеко.", "options": [{"text": "і", "correct": false}, {"text": "та", "correct": false}, {"text": "бо", "correct": false}, {"text": "але", "correct": true}]}, {"question": "Я працював, ____ потім ходив у магазин.", "options": [{"text": "а", "correct": true}, {"text": "бо", "correct": false}, {"text": "тому що", "correct": false}, {"text": "чи", "correct": false}]}, {"question": "Я хотів зателефонувати, ____ ти не відповів.", "options": [{"text": "і", "correct": false}, {"text": "але", "correct": true}, {"text": "бо", "correct": false}, {"text": "чи", "correct": false}]}, {"question": "Я втомлений, ____ багато працював.", "options": [{"text": "і", "correct": false}, {"text": "а", "correct": false}, {"text": "але", "correct": false}, {"text": "тому що", "correct": true}]}]} instruction={"Оберіть правильний сполучник (Choose the correct conjunction)"} />
 
-When building these explanatory sentences, English speakers often fall into a syntax trap. They might translate "because interesting" directly into Ukrainian as **бо ціка́во**. However, Ukrainian grammar requires a complete structural basis in the second half of the clause. You cannot simply drop the subject. You must provide the full idea.
-
-* Я читаю, бо це цікаво. *(I read, because it is interesting.)*
-
-<FillIn client:only="react" items={[{"sentence": "Я хочу піти, ___ не можу.", "answer": "але", "options": ["і", "а", "але", "бо"]}, {"sentence": "Він працює, ___ вона відпочиває.", "answer": "а", "options": ["і", "а", "але", "бо"]}, {"sentence": "Я люблю каву ___ чай.", "answer": "і", "options": ["і", "а", "але", "бо"]}, {"sentence": "Це не стіл, ___ стілець.", "answer": "а", "options": ["і", "а", "але", "бо"]}, {"sentence": "Суп гарячий, ___ смачний.", "answer": "але", "options": ["і", "а", "але", "бо"]}, {"sentence": "Я не йду, ___ я хворий.", "answer": "бо", "options": ["і", "а", "але", "бо"]}, {"sentence": "Він молодий, ___ розумний.", "answer": "але", "options": ["і", "а", "але", "бо"]}, {"sentence": "Хліб ___ масло.", "answer": "та", "options": ["а", "але", "та", "бо"]}, {"sentence": "Я читаю ___ пишу.", "answer": "і", "options": ["і", "а", "але", "бо"]}, {"sentence": "Ми вдома, ___ йде дощ.", "answer": "бо", "options": ["і", "а", "але", "бо"]}]} instruction={"Вставте правильний сполучник (Insert the correct conjunction)"} />
-
-<FillIn client:only="react" items={[{"sentence": "Я вчу українську, ___ я люблю Україну.", "answer": "бо", "options": ["бо", "але", "і"]}, {"sentence": "Ми не гуляємо, ___ йде дощ.", "answer": "тому що", "options": ["тому що", "чи", "але"]}, {"sentence": "Я втомлений, ___ багато працював.", "answer": "бо", "options": ["бо", "а", "та"]}, {"sentence": "Ти не відповів, ___ телефон був без звуку.", "answer": "тому що", "options": ["тому що", "а", "і"]}, {"sentence": "Поїдемо в Карпати, ___ там дешевше.", "answer": "бо", "options": ["бо", "але", "а"]}, {"sentence": "Він п'є каву, ___ він дуже втомлений.", "answer": "тому що", "options": ["тому що", "та", "а"]}]} instruction={"Доповніть речення сполучниками причини (Complete the sentences with reason conjunctions)"} />
-
-<Quiz client:only="react" questions={[{"question": "Я не йду, ___ хворий.", "options": [{"text": "і", "correct": false}, {"text": "а", "correct": false}, {"text": "але", "correct": false}, {"text": "бо", "correct": true}]}, {"question": "Ти хочеш каву ___ чай?", "options": [{"text": "чи", "correct": true}, {"text": "бо", "correct": false}, {"text": "але", "correct": false}, {"text": "і", "correct": false}]}, {"question": "Я хочу в гори, ___ ти — на море.", "options": [{"text": "і", "correct": false}, {"text": "а", "correct": true}, {"text": "але", "correct": false}, {"text": "бо", "correct": false}]}, {"question": "Море тепле, ___ зараз літо.", "options": [{"text": "а", "correct": false}, {"text": "і", "correct": false}, {"text": "бо", "correct": true}, {"text": "чи", "correct": false}]}, {"question": "Я — студент, ___ ти — вчитель.", "options": [{"text": "а", "correct": true}, {"text": "і", "correct": false}, {"text": "але", "correct": false}, {"text": "бо", "correct": false}]}, {"question": "Я хочу тістечко, ___ я на дієті.", "options": [{"text": "і", "correct": false}, {"text": "а", "correct": false}, {"text": "але", "correct": true}, {"text": "бо", "correct": false}]}, {"question": "Я працював, ___ потім ходив у магазин.", "options": [{"text": "але", "correct": false}, {"text": "а", "correct": true}, {"text": "бо", "correct": false}, {"text": "і", "correct": false}]}, {"question": "Це стіл ___ стілець.", "options": [{"text": "і", "correct": true}, {"text": "але", "correct": false}, {"text": "бо", "correct": false}, {"text": "а", "correct": false}]}]} instruction={"Оберіть правильний сполучник (Choose the correct conjunction)"} />
-
-<GroupSort client:only="react" groups={{"Додавання (Addition)": ["і", "та", "також", "теж"], "Контраст (Contrast)": ["а", "але"], "Причина (Reason)": ["бо", "тому що", "тому"], "Вибір (Choice)": ["або", "чи"]}} instruction={"Розподіліть сполучники за категоріями (Sort the conjunctions by category)"} />
+<FillIn client:only="react" items={[{"sentence": "Ми не гуляємо, ____ йде дощ.", "answer": "тому що", "options": ["тому що", "але", "і"]}, {"sentence": "Я хочу каву, ____ я дуже втомлена.", "answer": "бо", "options": ["бо", "а", "чи"]}, {"sentence": "Поїдемо в Карпати, ____ там дешевше.", "answer": "бо", "options": ["бо", "але", "та"]}, {"sentence": "Я вчу українську, ____ я люблю Україну.", "answer": "тому що", "options": ["тому що", "а", "чи"]}, {"sentence": "Ми тут, ____ чекаємо друга.", "answer": "бо", "options": ["бо", "але", "і"]}, {"sentence": "Вибач, ____ телефон був без звуку.", "answer": "бо", "options": ["бо", "а", "та"]}]} instruction={"Вставте «бо» або «тому що» (Insert «бо» or «тому що»)"} />
 
 ## Підсумок — Summary
 
-Connecting your thoughts transforms how you sound in Ukrainian. You move away from reciting isolated vocabulary words and begin building real, flowing communication. Reviewing the four key types of linking words makes this process clearer.
-
-For addition, use **і** or its synonym **та**. Both mean "and" and connect equal, balanced ideas without any contradiction. Remember the euphony rule: if the previous word ends in a vowel and the next word begins with a consonant, Ukrainians often swap **і** for **й** to keep the language melodious. 
-
-For soft contrast or shifting focus, use **а** (and/but). This is crucial for comparing two different subjects, like stating what you are doing versus what your friend is doing. It shows a change in direction, not a hard stop.
-
-For strong contrast or opposing ideas, use **але** (but). This introduces limitations, unexpected outcomes, or direct contradictions to what was just stated.
-
-For explaining reasons, use **бо** (the short, spoken "because") or **тому що** (the longer, neutral "because"). Both directly answer the question **Чому?** (Why?).
+Here is a quick reference for the conjunctions in this module. These basic patterns match the simple complex-sentence links described in the State Standard 2024 (§4.3.2).
 
 | Conjunction | Meaning | Example |
-| :--- | :--- | :--- |
-| **і** / **та** | and | Я їм хліб і п'ю воду́. *(I am eating bread and drinking water.)* |
-| **а** | and (contrast) | Я читаю, а він пи́ше. *(I am reading, and he is writing.)* |
-| **але** | but | Я хочу, але не можу. *(I want to, but I cannot.)* |
-| **бо** | because | Я не йду, бо хворий. *(I am not going, because I am sick.)* |
-| **тому що** | because | Я не йду, тому що хворий. *(I am not going, because I am sick.)* |
+|---|---|---|
+| **і / та** | and | Я їм хліб і п'ю воду. |
+| **а** | and / but (contrast) | Я читаю, а він пише. |
+| **але** | but | Я хочу, але не можу. |
+| **бо** | because | Я не йду, бо хворий. |
+| **тому що** | because | Я не йду, тому що хворий. |
 
-Always remember the "Always Comma" rule: in written Ukrainian, always put a comma before **а**, **але**, **бо**, and **тому що**. You only place a comma before **і** when it connects two entirely separate, full sentences.
+A simple rule helps:
+* Use **і / та** to add information.
+* Use **а** when you compare two people, two things, or switch to another idea.
+* Use **але** for a stronger contrast.
+* Use **бо / тому що** to give a reason.
 
-Here is a quick self-check. Try to mentally connect these short, choppy sentence pairs using the correct conjunction before you continue your practice. 
+You have already seen **теж** in the dialogue: Я теж хочу. Another common word is **також**: Я також хочу чай. For alternatives, use **чи** in questions and **або** for a choice: Хочеш каву чи чай? Море або гори?
 
-* Я люблю каву. Я не люблю чай. *(Try connecting this with **а** or **але**.)*
-* Він вдо́ма. Він хворий. *(Try explaining the reason with **бо**.)*
-* Вона чита́є. Він пише. *(Try shifting the focus with **а**.)*
-* Сьогодні со́нячно. Сьогодні хо́лодно. *(Try introducing the contrast with **але**.)*
+Look at the difference:
+* Я люблю каву, **а** ти?
+* Я люблю каву, **але** не люблю чай.
 
-Building longer, logically connected sentences is the first real step from simply "surviving" in a new language to actually "speaking" it with confidence.
+Both sentences show contrast, but they do different jobs. **А** often compares two speakers or two ideas. **Але** gives a clearer “but” meaning.
+
+Try turning short sentences into one linked sentence:
+* Я хочу чай. Я втомлений. → Я хочу чай, **бо** я втомлений.
+* Ми йдемо в парк. Вони йдуть додому. → Ми йдемо в парк, **а** вони йдуть додому.
+* Я хочу на море. Воно далеко. → Я хочу на море, **але** воно далеко.
+
+Remember the comma pattern from this module:
+* Put a comma before **а**, **але**, **бо**, and **тому що**.
+* Do not automatically put a comma before **і** when you only join words: мама і тато.
+* Do use a comma before **і** when it joins two full parts of a sentence: Завтра я вільний, **і** ми можемо зустрітися.
+
+Self-check:
+* Я люблю море, ___ гори теж гарні.
+* Я не йду, ___ я хворий.
+* Я хочу чай, ___ не хочу каву.
+* Чому ти вчиш українську?
+
+If you can answer these, you are already linking ideas more naturally in Ukrainian.
 
 </TabItem>
 <TabItem label="Словник">
@@ -174,49 +181,39 @@ Building longer, logically connected sentences is the first real step from simpl
 
 | Слово | Переклад | Частина мови | Рід |
 |-------|----------|-------------|-----|
-| **тому́** | therefore | ім. | с. |
+| **чому́** | why | присл. |  |
+| **тому́** | therefore / that is why | ім. | с. |
+| **та́ко́ж** | also | присл. |  |
 | **або́** | or | спол. |  |
 | **але́** | but | спол. |  |
 | **бо** | because | спол. |  |
 | **сполу́чник** | conjunction | ім. | ч. |
-| **вто́млений** | tired | прикм. |  |
-| **ті́стечко** | pastry | ім. | с. |
-| **зателефонува́ти** | to call | дієсл. |  |
-| **ви́бач** | sorry | дієсл. |  |
-| **го́ри** | mountains | ім. | ж. |
-| **мо́ре** | sea | ім. | ч. |
-| **лі́то** | summer | ім. | с. |
-| **деше́вше** | cheaper | присл. |  |
-| **гаря́чий** | hot | прикм. |  |
-| **смачни́й** | tasty | прикм. |  |
-| **розу́мний** | smart | прикм. |  |
-| **хво́рий** | sick | прикм. |  |
-| **голо́дний** | hungry | прикм. |  |
-| **ціка́во** | interesting | присл. |  |
+| **сполучи́ти** | to connect / to join | дієсл. |  |
 
 ### Вирази
 
 | Вираз | Переклад |
 |-------|----------|
-| **без цукру** | without sugar |
-| **на дієті** | on a diet |
-| **без звуку** | on silent |
-| **йде дощ** | it is raining |
+| **сполучники сурядності** | coordinating conjunctions |
 
 ### Картки — Flashcards
 
-<FlashcardDeck client:only="react" cards={[{ front: "тому́", back: "therefore", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "або́", back: "or", subtitle: "спол." }, { front: "але́", back: "but", subtitle: "спол." }, { front: "бо", back: "because", subtitle: "спол." }, { front: "сполу́чник", back: "conjunction", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "вто́млений", back: "tired", subtitle: "прикм." }, { front: "ті́стечко", back: "pastry", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "зателефонува́ти", back: "to call", subtitle: "дієсл." }, { front: "ви́бач", back: "sorry", subtitle: "дієсл." }, { front: "го́ри", back: "mountains", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "мо́ре", back: "sea", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "лі́то", back: "summer", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "деше́вше", back: "cheaper", subtitle: "присл." }, { front: "гаря́чий", back: "hot", subtitle: "прикм." }, { front: "смачни́й", back: "tasty", subtitle: "прикм." }, { front: "розу́мний", back: "smart", subtitle: "прикм." }, { front: "хво́рий", back: "sick", subtitle: "прикм." }, { front: "голо́дний", back: "hungry", subtitle: "прикм." }, { front: "ціка́во", back: "interesting", subtitle: "присл." }]} />
+<FlashcardDeck client:only="react" cards={[{ front: "чому́", back: "why", subtitle: "присл." }, { front: "тому́", back: "therefore / that is why", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "та́ко́ж", back: "also", subtitle: "присл." }, { front: "або́", back: "or", subtitle: "спол." }, { front: "але́", back: "but", subtitle: "спол." }, { front: "бо", back: "because", subtitle: "спол." }, { front: "сполу́чник", back: "conjunction", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "сполучи́ти", back: "to connect / to join", subtitle: "дієсл." }]} />
 
 </TabItem>
 <TabItem label="Зошит">
 
-<MatchUp client:only="react" pairs={[{"left": "Я хочу каву,", "right": "бо я дуже втомлений."}, {"left": "Я хочу в гори,", "right": "а ти хочеш на море."}, {"left": "Він молодий,", "right": "але дуже розумний."}, {"left": "Я читаю,", "right": "і пишу."}, {"left": "Це не стіл,", "right": "а стілець."}, {"left": "Ми не гуляємо,", "right": "тому що йде дощ."}]} instruction={"З'єднайте частини речень (Match the sentence halves)"} />
+<FillIn client:only="react" items={[{"sentence": "Я люблю каву, ____ ти?", "answer": "а", "options": ["а", "і", "бо"]}, {"sentence": "Цей суп гарячий, ____ дуже смачний.", "answer": "але", "options": ["але", "тому що", "чи"]}, {"sentence": "Це мій брат ____ моя сестра.", "answer": "і", "options": ["і", "але", "бо"]}, {"sentence": "Я не йду, ____ я хворий.", "answer": "бо", "options": ["бо", "а", "та"]}, {"sentence": "Ти хочеш чай ____ каву?", "answer": "чи", "options": ["чи", "але", "тому що"]}, {"sentence": "Він працює, ____ вона відпочиває.", "answer": "а", "options": ["а", "бо", "і"]}, {"sentence": "Я розумію українську, ____ говорю повільно.", "answer": "але", "options": ["але", "бо", "чи"]}, {"sentence": "День сонячний, ____ дуже холодний.", "answer": "але", "options": ["але", "тому що", "і"]}]} instruction={"Вставте правильне слово (Insert the correct word)"} />
 
-<TrueFalse client:only="react" items={[{"statement": "Марко хоче каву, бо він втомлений.", "isTrue": true, "explanation": "Так, він каже: «Каву, бо я дуже втомлений»."}, {"statement": "Олена хоче чай з цукром.", "isTrue": false, "explanation": "Олена хоче чай без цукру."}, {"statement": "Іван не відповів на телефон, бо він був у магазині.", "isTrue": false, "explanation": "Іван не відповів, бо телефон був без звуку."}, {"statement": "Віктор і Марія поїдуть у Карпати.", "isTrue": true, "explanation": "Вони вирішили поїхати в Карпати, бо там дешевше."}, {"statement": "Марія хоче на море, бо зараз літо.", "isTrue": true, "explanation": "Так, вона каже: «Море тепле, бо зараз літо»."}, {"statement": "У Карпатах дорого.", "isTrue": false, "explanation": "У Карпатах дешевше."}]} instruction={"Правда чи ні за текстом діалогів? (True or false based on the dialogues?)"} />
+<MatchUp client:only="react" pairs={[{"left": "Я люблю каву,", "right": "а ти?"}, {"left": "Гори гарні,", "right": "але далеко."}, {"left": "Ми не гуляємо,", "right": "тому що йде дощ."}, {"left": "Я читаю,", "right": "а він пише."}, {"left": "Я хочу в Карпати,", "right": "бо там дешевше."}, {"left": "Це червоне яблуко,", "right": "а це зелена груша."}]} instruction={"З'єднайте частини речень (Match the parts of the sentences)"} />
 
-<ErrorCorrection client:only="react" items={[{"sentence": "Я люблю каву, і ти?", "errorWord": "і", "correctForm": "а", "options": ["а", "але", "бо"], "explanation": "Use 'а' to shift focus and ask a corresponding question."}, {"sentence": "Я хочу піти, і не можу.", "errorWord": "і", "correctForm": "але", "options": ["а", "але", "бо"], "explanation": "Use 'але' for strong contrast or limitation (but)."}, {"sentence": "Це не стіл, і стілець.", "errorWord": "і", "correctForm": "а", "options": ["а", "але", "бо"], "explanation": "Use 'а' when contrasting 'not X, but Y'."}, {"sentence": "Ми не гуляємо, і йде дощ.", "errorWord": "і", "correctForm": "бо", "options": ["а", "але", "бо"], "explanation": "Use 'бо' to give a reason (because)."}, {"sentence": "Я не йду, а я хворий.", "errorWord": "а", "correctForm": "бо", "options": ["і", "але", "бо"], "explanation": "Use 'бо' to explain why."}, {"sentence": "Він працює, бо вона відпочиває.", "errorWord": "бо", "correctForm": "а", "options": ["а", "і", "але"], "explanation": "Use 'а' to contrast two different subjects performing different actions."}]} instruction={"Знайдіть і виправте помилку (Find and fix the mistake)"} />
+<TrueFalse client:only="react" items={[{"statement": "Перед сполучником «але» завжди ставимо кому.", "isTrue": true, "explanation": "Так, перед «а», «але», «бо», «тому що» ставимо кому."}, {"statement": "Перед сполучником «бо» кома не потрібна.", "isTrue": false, "explanation": "Перед «бо» завжди ставимо кому."}, {"statement": "У реченні «мама і тато» потрібна кома перед «і».", "isTrue": false, "explanation": "Тут «і» просто з'єднує два слова, кома не потрібна."}, {"statement": "Перед «тому що» завжди ставимо кому.", "isTrue": true, "explanation": "Так, як і перед «бо»."}, {"statement": "Сполучник «але» означає додавання інформації (addition).", "isTrue": false, "explanation": "«Але» означає протиставлення (contrast)."}, {"statement": "«Бо» і «тому що» вказують на причину.", "isTrue": true, "explanation": "Так, обидва сполучники означають «because»."}]} instruction={"Правда чи ні? (True or false?)"} />
 
-<Translate client:only="react" questions={[{"source": "I am reading, and he is writing.", "options": [{"text": "Я читаю, а він пише.", "correct": true}, {"text": "Я читаю, і він пише.", "correct": false}, {"text": "Я читаю, бо він пише.", "correct": false}]}, {"source": "The soup is hot, but tasty.", "options": [{"text": "Суп гарячий, але смачний.", "correct": true}, {"text": "Суп гарячий, і смачний.", "correct": false}, {"text": "Суп гарячий, а смачний.", "correct": false}]}, {"source": "I want to go, because I am tired.", "options": [{"text": "Я хочу піти, бо я втомлений.", "correct": true}, {"text": "Я хочу піти, але я втомлений.", "correct": false}, {"text": "Я хочу піти, а я втомлений.", "correct": false}]}, {"source": "He is young, but smart.", "options": [{"text": "Він молодий, але розумний.", "correct": true}, {"text": "Він молодий, бо розумний.", "correct": false}, {"text": "Він молодий, а розумний.", "correct": false}]}, {"source": "This is not a table, but a chair.", "options": [{"text": "Це не стіл, а стілець.", "correct": true}, {"text": "Це не стіл, але стілець.", "correct": false}, {"text": "Це не стіл, і стілець.", "correct": false}]}, {"source": "Why are you learning Ukrainian?", "options": [{"text": "Чому ти вчиш українську?", "correct": true}, {"text": "Тому що ти вчиш українську?", "correct": false}, {"text": "Бо ти вчиш українську?", "correct": false}]}]} instruction={"Оберіть правильний переклад (Choose the correct translation)"} />
+<Anagram client:only="react" items={[{"scrambled": "т а к о ж", "answer": "також", "hint": "also"}, {"scrambled": "а л е", "answer": "але", "hint": "but"}, {"scrambled": "ч о м у", "answer": "чому", "hint": "why"}, {"scrambled": "а б о", "answer": "або", "hint": "or"}, {"scrambled": "т е ж", "answer": "теж", "hint": "also (colloquial)"}, {"scrambled": "т о м у", "answer": "тому", "hint": "therefore"}]} instruction={"Складіть слово з літер (Make a word from the letters)"} />
+
+<Unjumble client:only="react" items={[{"words": "каву, / Я / ти? / люблю / а", "answer": "Я люблю каву, а ти?"}, {"words": "розумний. / Він / молодий, / але", "answer": "Він молодий, але розумний."}, {"words": "йде / не / гуляємо, / Ми / дощ. / тому що", "answer": "Ми не гуляємо, тому що йде дощ."}, {"words": "хворий. / йду, / я / Я / бо / не", "answer": "Я не йду, бо я хворий."}, {"words": "чай? / Хочеш / каву / чи", "answer": "Хочеш каву чи чай?"}, {"words": "дуже / смачний. / суп / Цей / гарячий, / але", "answer": "Цей суп гарячий, але дуже смачний."}]} instruction={"Складіть правильне речення зі слів (Make a correct sentence from the words)"} />
+
+<Classify client:only="react" categories={[{"label": "Додавання (Addition)", "items": ["і", "та", "також", "теж"]}, {"label": "Протиставлення (Contrast)", "items": ["а", "але"]}, {"label": "Причина (Reason)", "items": ["бо", "тому що"]}, {"label": "Вибір (Choice)", "items": ["або", "чи"]}]} instruction={"Розподіліть слова за категоріями (Sort the words into categories)"} />
 
 </TabItem>
 <TabItem label="Ресурси">

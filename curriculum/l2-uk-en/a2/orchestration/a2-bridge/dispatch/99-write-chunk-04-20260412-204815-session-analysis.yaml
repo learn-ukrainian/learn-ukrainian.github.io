@@ -1,0 +1,72 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T18-47-a74d6ed3.json
+phase: write-chunk-04
+prompt_chars: 41985
+response_chars: 2787
+prompt_words: 5836
+response_words: 415
+sections:
+- name: header
+  start: 0
+  length: 446
+  fraction: 0.0106
+- name: skeleton
+  start: 446
+  length: 939
+  fraction: 0.0224
+- name: prior_summary
+  start: 1385
+  length: 3284
+  fraction: 0.0782
+- name: plan
+  start: 4669
+  length: 11329
+  fraction: 0.2698
+- name: wiki
+  start: 9128
+  length: 25780
+  fraction: 0.614
+- name: output_spec
+  start: 41778
+  length: 207
+  fraction: 0.0049
+large_sections:
+- wiki
+directives_total: 17
+directives_covered: 9
+directives_missed:
+- kind: must
+  text: To maintain the melodic rhythm of your speech, you must choose between them
+    based entirely on the surrounding sounds.
+  covered: false
+  coverage_note: 3/14 keywords (21%)
+- kind: must
+  text: On the other hand, you must use «й» when the word immediately before it ends
+    in a vowel.
+  covered: false
+  coverage_note: 4/11 keywords (36%)
+- kind: must
+  text: However, if the following word starts with a difficult consonant cluster—especially
+    those beginning with sibilant sounds like «с», «ш», or «з»—you must use «зі».
+  covered: false
+  coverage_note: 3/16 keywords (19%)
+- kind: must
+  text: '**MANDATORY — never omit.'
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: EVERY word in the checklist below MUST appear at least once with a bold Ukrainian
+    form and English translation in a natural sentence.
+  covered: false
+  coverage_note: 4/15 keywords (27%)
+- kind: inject_activity
+  text: match-up-euphony-choice
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: error-correction-euphony
+  covered: false
+  coverage_note: marker missing

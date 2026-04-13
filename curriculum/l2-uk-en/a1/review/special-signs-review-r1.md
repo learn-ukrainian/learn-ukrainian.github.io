@@ -1,64 +1,74 @@
 ## Linguistic Scan
-Found 1 critical linguistic issue: The use of `брать` as an A1 pedagogical example for "to take" strongly reinforces a Russianism. (While `брать` technically exists in Ukrainian as a poetic/colloquial short infinitive, teaching it to beginners conceptually conflates Ukrainian and Russian vocabulary). No other Russianisms, Surzhyk, or calques were found.
+- Factual phonetics error: `“Ukrainian consonants are strictly divided into voiced and voiceless pairs.”` This is false. The plan explicitly states that sonorants `В, Л, М, Н, Й, Р` are neither voiced nor voiceless.
 
 ## Exercise Check
-Found 1 structural issue: The `match-up-voiced-voiceless` activity marker was misplaced in the "Вимова українських звуків" section instead of the "Дзвінкі і глухі" section where the relevant concepts were taught.
+7 markers are present, and all 7 plan hints are represented: `odd-one-out-soft-sign`, `fill-in-missing-sign`, `error-correction-apostrophe`, `group-sort-signs`, `true-false-voicing`, `match-up-voiced-voiceless`, `quiz-g-vs-g`. They are distributed through the module and appear after the relevant teaching blocks. No inline DSL exercises are present here. Actual exercise logic cannot be audited because the YAML exercises are not included in this prompt.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 6/10 | Missing the `лист` vs `ліс` minimal pair. Violated a strict negative scope constraint by including prefix apostrophe examples (з'їзд, під'їзд) in a caution box. Factually miscounted the mnemonic letters ("This phrase contains exactly the nine consonants..."). |
-| 2. Linguistic accuracy | 7/10 | Used `брать` as a minimal pair example for A1 learners, which is indistinguishable from the Russian verb "to take", creating a severe conceptual Russicism for beginners. |
-| 3. Pedagogical quality | 8/10 | Misplaced exercise marker. The explanation of `м'який` is slightly confusing but acceptable. Otherwise, concepts are explained beautifully with solid mechanics. |
-| 4. Vocabulary coverage | 10/10 | All required and recommended words are seamlessly integrated into the text. |
-| 5. Exercise quality | 8/10 | `match-up-voiced-voiceless` is injected in the wrong section, testing content not covered in its immediate preceding text. |
-| 6. Engagement & tone | 10/10 | Excellent metaphors ("solid brick wall", "gentle instruction") and an encouraging teacher persona. |
-| 7. Structural integrity | 10/10 | Word count (2003) far exceeds the 1200 target. Sections are well-organized and correctly ordered. |
-| 8. Cultural accuracy | 10/10 | Phonetics are taught on their own terms. Excellent framing of the Ukrainian Г vs Ґ distinction. |
-| 9. Dialogue & conversation quality | 8/10 | Dialogues successfully integrate phonetic pairs, but English translations are slightly robotic ("This is a father", "And is a goat there?"). |
+| 1. Plan adherence | 7/10 | All planned H2 sections are present and the required/recommended vocabulary is covered, but the plan’s `[–]` / `[=]` notation is absent (search: 0 hits each), `Anna Ohoiko` practice is absent (search: 0 hits), and the tip says the mnemonic is “taught to every Ukrainian student in the first grade,” which is not what the plan says. |
+| 2. Linguistic accuracy | 6/10 | Critical phonetics error in `“Ukrainian consonants are strictly divided into voiced and voiceless pairs.”` The plan explicitly says sonorants `В,Л,М,Н,Й,Р` are neither voiced nor voiceless. |
+| 3. Pedagogical quality | 7/10 | The module has plenty of examples, but it teaches a wrong diagnostic in `“hands-on-ears”` instead of the plan’s hand-on-throat vibration test, and the over-absolute voicing explanation can misteach beginners. |
+| 4. Vocabulary coverage | 10/10 | All required words appear naturally in prose: `сім'я, день, сіль, м'ясо, п'ять, гарно, риба`. Recommended items also appear: `батько, учитель, дев'ять, комп'ютер, м'який`. |
+| 5. Exercise quality | 9/10 | All 7 planned markers are present and aligned to the plan. Placement is appropriate for the taught material. The exercise YAML itself is not visible, so only marker alignment can be checked here. |
+| 6. Engagement & tone | 9/10 | The tone is teacherly and mostly substantive, with concrete examples rather than empty hype. |
+| 7. Structural integrity | 10/10 | All planned sections are present and correctly ordered. Markdown is clean, and the pipeline word count is 1603, which is safely above target. |
+| 8. Cultural accuracy | 10/10 | The module treats Ukrainian phonetics on Ukrainian terms and explicitly rejects the Russian form `тварь`. |
+| 9. Dialogue & conversation quality | 9/10 | Dialogues use named speakers and support the lesson’s phonetics focus. They are brief, but acceptable for an A1 pronunciation module. |
 
 ## Findings
-[1. Plan adherence] [Critical]
-Location: Section "М'який знак", paragraph 2 ("This phrase contains exactly the nine consonants that can be truly softened: Д, Т, З, С, Ц, Л, Н, Р, and ДЗ.") and Summary.
-Issue: The text factually miscounts the consonants in the phrase «ДЗіДЗьо, Де Ти З’їСи Ці ЛиНи». This phrase contains only 8 consonants (Р is famously missing, which is why students must memorize "phrase + Р").
-Fix: Correct the text to state that the phrase contains eight of the nine consonants, and that Р must be added.
+- [LINGUISTIC ACCURACY] [SEVERITY: critical]  
+Location: `## Дзвінкі і глухі`, paragraph 1 — `“Ukrainian consonants are strictly divided into voiced and voiceless pairs.”`  
+Issue: This teaches a false rule. The plan explicitly says sonorants `В, Л, М, Н, Й, Р` are neither voiced nor voiceless.  
+Fix: Rewrite the opening explanation so it says many consonants form voiced-voiceless pairs, but sonorants do not.
 
-[1. Plan adherence] [Major]
-Location: Section "Вимова українських звуків", paragraph 1 ("Notice the difference between бик (bull) and бік (side)...")
-Issue: The `лист` (leaf) vs `ліс` (forest) minimal pair from the plan's content_outline is missing.
-Fix: Add the `лист` vs `ліс` minimal pair to the sentence.
+- [PEDAGOGICAL QUALITY] [SEVERITY: major]  
+Location: `## Дзвінкі і глухі`, paragraph 1 and `## Підсумок` — `“hands-on-ears” vibration test`  
+Issue: This gives learners the wrong physical check. The plan specifies a hand-on-throat test; that is where voicing vibration is felt.  
+Fix: Replace both references with a hand-on-throat vibration test.
 
-[1. Plan adherence] [Major]
-Location: Section "Апостроф", caution box ("Later, you will also learn that the apostrophe appears after prefixes, such as in words like з'їзд (congress) or під'їзд (entrance).")
-Issue: The plan explicitly stated "NO prefix apostrophe examples (під'їзд, з'їзд) at A1." Including them in a caution box still violates this strict scope constraint.
-Fix: Remove the caution box entirely.
+- [PLAN ADHERENCE] [SEVERITY: major]  
+Location: `## М'який знак`, opening paragraph  
+Issue: The plan includes Захарійчук’s hard/soft notation `[–]` and `[=]`, but the content omits it. Proof of absence: search for `[–]` = 0 hits, `[=]` = 0 hits.  
+Fix: Add one sentence introducing `[–]` for hard consonants and `[=]` for soft consonants.
 
-[2. Linguistic accuracy] [Critical]
-Location: Section "М'який знак", paragraph 4 ("Consider the minimal pair of брат (brother) and the short infinitive verb form брать (to take).")
-Issue: While `брать` technically exists in VESUM as a poetic/short form of `брати`, teaching an A1 learner that "to take" = `брать` strongly reinforces Russian vocabulary. This is conceptually a severe Russianism for a beginner.
-Fix: Replace the `брат`/`брать` minimal pair with `стан` (waist/state) and `стань` (stand/become).
+- [PLAN ADHERENCE] [SEVERITY: major]  
+Location: `## М'який знак`, tip block — `“The phrase «**ДЗіДЗьо, Де Ти З'їСи Ці ЛиНи**» is taught to every Ukrainian student in the first grade.”`  
+Issue: This is an unsupported factual claim. The plan gives the mnemonic, but does not support the universal “every student” / “first grade” claim.  
+Fix: Rephrase it as a common school mnemonic without the grade-wide universality claim.
 
-[5. Exercise quality] [Major]
-Location: Section "Вимова українських звуків", end of section ("<!-- INJECT_ACTIVITY: match-up-voiced-voiceless -->")
-Issue: The `match-up-voiced-voiceless` activity marker is placed in the "Вимова" section, testing concepts taught in the previous "Дзвінкі і глухі" section.
-Fix: Move the marker to the end of the "Дзвінкі і глухі" section.
+- [PLAN ADHERENCE] [SEVERITY: major]  
+Location: `## Вимова українських звуків`, И/Р practice  
+Issue: The plan explicitly calls for Anna Ohoiko pronunciation practice, but the prose omits it. Proof of absence: search for `Anna Ohoiko` = 0 hits.  
+Fix: Add a brief sentence directing learners to use Anna Ohoiko’s И/Р practice videos for repetition.
 
 ## Verdict: REVISE
-The module contains a critical pedagogical Russianism (`брать`), a factual error regarding the mnemonic phrase math, and a strict scope violation regarding prefix apostrophes. Fixes provided below.
+REVISE. The module is structurally sound and has strong vocabulary coverage, but it contains a critical phonetics error in the voiced/voiceless section and several concrete plan misses. This is a fixable revision, not a full rewrite.
 
 <fixes>
-- find: "This phrase contains exactly the nine consonants that can be truly softened: **Д**, **Т**, **З**, **С**, **Ц**, **Л**, **Н**, **Р**, and **ДЗ**."
-  replace: "This phrase contains eight of the nine consonants that can be truly softened: **Д**, **Т**, **З**, **С**, **Ц**, **Л**, **Н**, and **ДЗ** (just remember to add **Р** to complete the set of nine)."
-- find: "This phrase contains exactly the nine eligible consonants: **Д**, **Т**, **З**, **С**, **Ц**, **Л**, **Н**, **Р**, and **ДЗ**."
-  replace: "This phrase contains eight of the nine eligible consonants: **Д**, **Т**, **З**, **С**, **Ц**, **Л**, **Н**, and **ДЗ** (just remember to add **Р**)."
-- find: "Notice the difference between **бик** (bull) and **бік** (side). Feel the shift in your mouth between **дим** (smoke) and **дім** (house). Hear the stark contrast between **кит** (whale) and **кіт** (cat)."
-  replace: "Notice the difference between **бик** (bull) and **бік** (side). Feel the shift in your mouth between **дим** (smoke) and **дім** (house), or between **лист** (leaf) and **ліс** (forest). Hear the stark contrast between **кит** (whale) and **кіт** (cat)."
-- find: "absorbs new concepts.\n\n:::caution\nAt this early stage, you are learning the \"Lip Consonant\" rule for the apostrophe. Later, you will also learn that the apostrophe appears after prefixes, such as in words like **з'їзд** (congress) or **під'їзд** (entrance). For now, focus only on the core labial letters!\n:::\n\n<!-- INJECT_ACTIVITY: fill-in-special-signs -->"
-  replace: "absorbs new concepts.\n\n<!-- INJECT_ACTIVITY: fill-in-special-signs -->"
-- find: "Consider the minimal pair of **брат** (brother) and the short infinitive verb form **брать** (to take). In **брат**, your tongue taps sharply against your teeth for a hard [т]. But in **брать**, the soft sign instructs you to lift the middle of your tongue, creating a soft [т']."
-  replace: "Consider the minimal pair of **стан** (waist/state) and the imperative verb form **стань** (stand/become). In **стан**, your tongue presses firmly against your teeth for a hard [н]. But in **стань**, the soft sign instructs you to lift the middle of your tongue, creating a soft [н']."
-- find: "Ear training with these pairs is vital.\n\n<!-- INJECT_ACTIVITY: true-false-devoicing -->"
-  replace: "Ear training with these pairs is vital.\n\n<!-- INJECT_ACTIVITY: match-up-voiced-voiceless -->\n<!-- INJECT_ACTIVITY: true-false-devoicing -->"
-- find: "<!-- INJECT_ACTIVITY: quiz-g-vs-ge -->\n<!-- INJECT_ACTIVITY: match-up-voiced-voiceless -->"
-  replace: "<!-- INJECT_ACTIVITY: quiz-g-vs-ge -->"
+- find: |
+    The **м'який знак** (soft sign) looks like a lowercase "b", but it produces absolutely no sound. Instead, it acts solely as a modifier to soften, or palatalize, the consonant that comes right before it. In Ukrainian phonetics, there is a clear three-way distinction for consonants. We have **м'які** (truly soft) consonants, **пом'якшені** (partially softened) consonants which include lip, hissing, and back-tongue sounds, and finally **тверді** (hard) consonants. The soft sign only interacts with specific letters to create those truly soft sounds. You will never hear the soft sign itself. You will only hear what it does to its neighbor.
+  replace: |
+    The **м'який знак** (soft sign) looks like a lowercase "b", but it produces absolutely no sound. Instead, it acts solely as a modifier to soften, or palatalize, the consonant that comes right before it. In Ukrainian phonetics, there is a clear three-way distinction for consonants. We have **м'які** (truly soft) consonants, **пом'якшені** (partially softened) consonants which include lip, hissing, and back-tongue sounds, and finally **тверді** (hard) consonants. Some Ukrainian primers mark hard consonants as [–] and soft consonants as [=], which can help you see this contrast on the page. The soft sign only interacts with specific letters to create those truly soft sounds. You will never hear the soft sign itself. You will only hear what it does to its neighbor.
+
+- find: |
+    The phrase «**ДЗіДЗьо, Де Ти З'їСи Ці ЛиНи**» is taught to every Ukrainian student in the first grade. Memorize it, and you will always know which consonants can take a soft sign!
+  replace: |
+    A common school mnemonic for these letters is «**ДЗіДЗьо, Де Ти З'їСи Ці ЛиНи**». Memorize it, and you will always know which consonants can take a soft sign!
+
+- find: |
+    Ukrainian consonants are strictly divided into voiced and voiceless pairs. The physical concept is simple: voiced consonants use your vocal cords, while voiceless ones do not. You can test this using the "hands-on-ears" vibration test. Cover your ears with your hands and say the sound [з]. You will immediately feel a vibration. Now say [с]. The vibration stops completely. There are eight primary voiced-voiceless pairs in Ukrainian: **Б-П**, **Д-Т**, **Г-Х**, **Ґ-К**, **З-С**, **Ж-Ш**, **ДЗ-Ц**, and **ДЖ-Ч**. Learning these pairs is vital for clear pronunciation. It also helps you spell correctly when you hear a new word for the first time.
+  replace: |
+    Many Ukrainian consonants form voiced-voiceless pairs, but not all consonants do. Sonorants such as **в**, **л**, **м**, **н**, **й**, and **р** are not part of these pairs. The physical concept is simple: voiced consonants use your vocal cords, while voiceless ones do not. You can test this by putting your hand on your throat and saying the sound [з]. You will feel a vibration. Now say [с]. The vibration stops. There are eight primary voiced-voiceless pairs in Ukrainian: **Б-П**, **Д-Т**, **Г-Х**, **Ґ-К**, **З-С**, **Ж-Ш**, **ДЗ-Ц**, and **ДЖ-Ч**. Learning these pairs is vital for clear pronunciation. It also helps you spell correctly when you hear a new word for the first time.
+
+- find: |
+    Finally, hear the difference between **кит** (whale) and **кіт** (cat). Mixing these up causes major confusion.
+  replace: |
+    Finally, hear the difference between **кит** (whale) and **кіт** (cat). Mixing these up causes major confusion. Anna Ohoiko's videos on **И** and **Р** are useful for slow repetition practice as you work through these sound drills.
+
+- find: |
+    Can you name three voiced-voiceless pairs? You can use the hands-on-ears vibration test to find them, such as **Б-П**, **Д-Т**, and **З-С**.
+  replace: |
+    Can you name three voiced-voiceless pairs? You can use the hand-on-throat vibration test to find them, such as **Б-П**, **Д-Т**, and **З-С**. Remember that sonorants such as **в**, **л**, **м**, **н**, **й**, and **р** do not belong to these voiced-voiceless pairs.
 </fixes>

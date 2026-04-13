@@ -144,221 +144,206 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Зовнішність: як виглядає людина? (Appearance: What Does a Person Look Like?)
+## Зовнішність: як виглядає людина?
 
-When you meet someone new, talk about a friend, or look at family photos, you often need to describe people. In Ukrainian, the verb to describe is **описувати** (to describe), and the noun for appearance is **зовнішність** (appearance). To ask what someone looks like, we use the question: «Який він на вигляд?» (What does he look like?) or «Яка вона на вигляд?» (What does she look like?).
+In this section, we will learn how to describe a **людина** (person, human being). When we meet new people, we often want to talk about their **зовнішність** (appearance). Later, we will explore their **характер** (character, personality) and our **стосунок** (relationship) with them.
 
-Let's look at some examples of how we ask and answer this question in everyday life. 
+Ми часто запитуємо одне одного про нових знайомих. Якщо ми хочемо дізнатися про зовнішність, ми питаємо: «Який він на вигляд?». Або ми запитуємо: «Яка її зовнішність?».
 
-*   Який на вигляд твій новий колега? *(What does your new colleague look like?)*
-*   Він дуже симпатичний. *(He is very handsome.)*
-*   Яка вона на вигляд? *(What does she look like?)*
-*   У неї гарна зовнішність. *(She has a beautiful appearance.)*
-*   Ти можеш описати цю людину? *(Can you describe this person?)*
-*   Так, звичайно. *(Yes, of course.)*
+> *We often ask each other about new acquaintances. If we want to know about appearance, we ask: "What does he look like?". Or we ask: "What is her appearance?".*
 
-Let's start with basic physical traits like height and build. Ukrainian uses contrast pairs to make descriptions easy to remember. We use the adjectives **високий** (tall) and **низький** (short) to talk about height. For build, we use **худий** (thin) and **повний** (stout/full). When we talk about someone's age, we use **молодий** (young), **старий** (old), and the phrase **середнього віку** (middle-aged). 
+When describing people, we talk about both their looks and personality. Someone might be **працьовитий** (hardworking) and **терплячий** (patient). Let's look at a conversation between two friends viewing photos. They describe a **сусід** (neighbor) who is **привітний** (friendly, welcoming) and **щирий** (sincere, genuine). Notice the difference between a habitual action and a one-time action.
 
-Here are some natural sentences using these words:
+> — **Подруга 1:** Хто це на фото? *(Who is this in the photo?)*
+> — **Подруга 2:** Це моя сестра. Вона висока, темноволоса. *(This is my sister. She is tall, dark-haired.)*
+> — **Подруга 1:** Яка вона людина? *(What kind of person is she?)*
+> — **Подруга 2:** Дуже весела і щира людина. *(A very cheerful and sincere person.)*
+> — **Подруга 1:** А хто цей чоловік поруч? *(And who is this man nearby?)*
+> — **Подруга 2:** А це мій сусід. Він дуже привітний і працьовитий. *(And this is my neighbor. He is very friendly and hardworking.)*
+> — **Подруга 1:** Він хороший сусід? *(Is he a good neighbor?)*
+> — **Подруга 2:** Так, він терплячий і завжди допомагає. Учора допоміг мені з валізою. *(Yes, he is patient and always helps. Yesterday he helped me with a suitcase.)*
 
-*   Мій брат дуже високий, а сестра — низька. *(My brother is very tall, and my sister is short.)*
-*   Цей чоловік худий, а його друг — повний. *(This man is thin, and his friend is stout.)*
-*   Вона ще молода, їй тільки двадцять років. *(She is still young, she is only twenty years old.)*
-*   Наш сусід — чоловік середнього віку. *(Our neighbor is a middle-aged man.)*
-*   Мій дідусь уже старий, але дуже активний. *(My grandfather is already old, but very active.)*
+To describe someone's height, build, and age, we use basic adjectives that must agree in gender and number with the noun they describe. The most common pairs are tall and short, thin and plump, young and old.
 
-Now let's focus on the face and eyes. There are two common ways to describe eyes in Ukrainian. You can use the construction «У нього/неї...» (He/she has...), use the preposition **з** + instrumental (with), or form a compound adjective like **кароока** (brown-eyed). For example, «У неї карі очі» (She has brown eyes), «Вона з карими очима» (She is with brown eyes), and «Вона кароока» mean the exact same thing. Common eye colors include **сині** (dark blue), **блакитні** (light blue), **зелені** (green), and **сірі** (grey). We can also describe facial features like a **кругле обличчя** (round face) or a **прямий ніс** (straight nose).
+Високий чоловік завжди привертає увагу, а висока жінка виглядає елегантно. Мій дідусь старий, але брат ще молодий. Худий хлопець швидко бігає, а повний чоловік іде повільно. Низький хлопчик стоїть поруч із мамою.
 
-*   У неї великі зелені очі. *(She has big green eyes.)*
-*   Цей хлопчик блакитноокий. *(This boy is blue-eyed.)*
-*   Мій батько має карі очі та прямий ніс. *(My father has brown eyes and a straight nose.)*
-*   У цієї дівчини кругле обличчя і сірі очі. *(This girl has a round face and grey eyes.)*
-*   Вона має дуже гарне обличчя. *(She has a very beautiful face.)*
+> *A tall man always attracts attention, and a tall woman looks elegant. My grandfather is old, but my brother is still young. A thin guy runs fast, but a plump man walks slowly. A short boy stands next to his mom.*
 
-When describing hair, we look at color, length, and style. In Ukrainian, hair color is often described as **темне** (dark), **світле** (light/fair), **русяве** (light brown), **руде** (red), or **сиве** (grey). You can also use compound adjectives like **темноволосий** (dark-haired) and **світловолосий** (fair-haired). For length and style, we use **коротке** (short), **довге** (long), **хвилясте** (wavy), and **пряме** (straight). If you want to compliment someone's haircut or hairstyle, use the word **зачіска** (haircut/hairstyle).
+When describing a face, Ukrainian uses beautiful compound adjectives for hair and eyes, combining two words into one single descriptive word. You can also describe these features directly using simple adjectives.
 
-*   У неї довге хвилясте волосся. *(She has long wavy hair.)*
-*   Він має коротке темне волосся. *(He has short dark hair.)*
-*   Моя мама має світле пряме волосся. *(My mom has light straight hair.)*
-*   У нього дуже модна зачіска. *(He has a very trendy haircut.)*
-*   Цей чоловік має сиве волосся. *(This man has grey hair.)*
-*   Її руде волосся таке яскраве! *(Her red hair is so bright!)*
+У нього темне волосся, тому він темноволосий. У неї блакитні очі, отже, вона блакитноока. Її брат має світле волосся, він світловолосий. Якщо людина має карі очі, ми кажемо, що вона кароока.
 
-### Читаємо українською (Reading Practice)
+> *He has dark hair, so he is dark-haired. She has blue eyes, therefore, she is blue-eyed. Her brother has light hair, he is light-haired. If a person has brown eyes, we say that they are brown-eyed.*
 
-Let's see how these words are used in a real conversation. Read this dialogue between two friends looking at photos on a phone.
+There are two main ways to state what physical features someone has. You can use the verb "to have" followed by the Accusative case, or the preposition "with" followed by the Instrumental case. Both options are natural when we want to **описувати** (to describe) someone. We will learn the full Instrumental case later.
 
-> — **Олена:** Дивись, це моя сестра Ганна. *(Look, this is my sister Hanna.)*
-> — **Марія:** Яка вона гарна! Вона дуже висока. *(How beautiful she is! She is very tall.)*
-> — **Олена:** Так, висока і струнка. Вона має довге русяве волосся і великі зелені очі. *(Yes, tall and slim. She has long light brown hair and big green eyes.)*
-> — **Марія:** Вона схожа на тебе. А хто це поруч із нею? *(She looks like you. And who is this next to her?)*
-> — **Олена:** А це наш сусід, пан Іван. *(And this is our neighbor, Mr. Ivan.)*
-> — **Марія:** Він має дуже серйозний вигляд. *(He looks very serious.)*
-> — **Олена:** Він уже старий, але дуже ставний чоловік. Він завжди має ідеальну зачіску. *(He is already old, but a very stately man. He always has a perfect haircut.)*
+Вона має карі очі і довге темне волосся. Це дівчина з карими очима і довгим темним волоссям. Він має коротке русяве волосся. Це хлопець із коротким русявим волоссям. 
 
-## Характер: яка вона людина? (Character: What Kind of Person Is She?)
+> *She has brown eyes and long dark hair. This is a girl with brown eyes and long dark hair. He has short blonde hair. This is a guy with short blonde hair.*
 
-When we want to describe someone's inner world, we talk about their **характер** (character or personality). While appearance is what we see first, character is what makes a person who they are. In Ukrainian, when we ask «Яка він людина?» (What kind of person is he?), we expect to hear about personality traits. Let's start with some of the most common positive traits. A person who is open and genuine is **щирий** (sincere). Someone who is always glad to see you and treats you warmly is **привітний** (friendly/welcoming). A person who does good things for others is **добрий** (kind), and someone who is always ready to listen and help is **чуйний** (responsive/empathetic). You can use these adjectives directly or with the word **людина** (person).
+When learning to describe people, English speakers often make literal translations that sound unnatural or incorrect in Ukrainian. It is important to think directly in Ukrainian structures.
 
-* Мій новий знайомий — дуже щира людина. *(My new acquaintance is a very sincere person.)*
-* Вона завжди привітна з усіма. *(She is always friendly with everyone.)*
-* Наш сусід дуже добрий і чуйний. *(Our neighbor is very kind and responsive.)*
-* Це щирий і веселий хлопець. *(This is a sincere and cheerful guy.)*
-* Яка вона людина? Вона привітна і добра. *(What kind of person is she? She is friendly and kind.)*
-
-When describing how people approach their work, studies, or daily tasks, we use a different set of adjectives. A person who loves to work and does it well is **працьовитий** (hardworking). Someone you can always rely on to do what they promised is **відповідальний** (responsible). If a person can calmly wait or deal with difficulties without getting angry, they are **терплячий** (patient). And someone who doesn't give up until they reach their goal is **наполегливий** (persistent/determined). These words are very useful when talking about colleagues, classmates, or family members who help you.
-
-* Моя мама — дуже працьовита жінка, вона ніколи не сидить без діла. *(My mom is a very hardworking woman, she never sits idle.)*
-* Наш новий колега дуже відповідальний. *(Our new colleague is very responsible.)*
-* Вчитель має бути терплячим. *(A teacher must be patient.)*
-* Цей студент наполегливий, тому він має гарні результати. *(This student is determined, so he has good results.)*
-* Вона працьовита і завжди виконує свої обіцянки. *(She is hardworking and always keeps her promises.)*
-* Мій брат не дуже терплячий, він хоче все відразу. *(My brother is not very patient, he wants everything at once.)*
-
-Of course, people are complex, and we don't only have positive traits. Sometimes people don't want to work, then we say they are **ледачий** (lazy). A person who rarely smiles and focuses on serious matters is **серйозний** (serious). Someone who doesn't talk much is **тихий** (quiet). A very interesting word in Ukrainian is **впертий** (stubborn/persistent). While it can mean someone who refuses to listen to others, Ukrainians often use «впертий» in a positive way to describe someone who is highly principled and refuses to give up on their goals.
-
-* Цей кіт такий ледачий, він спить цілий день. *(This cat is so lazy, he sleeps all day.)*
-* Мій батько дуже серйозний чоловік. *(My father is a very serious man.)*
-* Моя сестра тиха, але дуже розумна. *(My sister is quiet, but very smart.)*
-* Він впертий, тому обов'язково знайде правильне рішення. *(He is stubborn, so he will definitely find the right solution.)*
-* Іноді бути впертим — це добре. *(Sometimes being stubborn is a good thing.)*
-
-When we describe a person's character, we often talk about what they *usually* do. Because personality traits are constant, we use imperfective verbs for these habitual actions. For example, to prove someone is kind, you might say «Він завжди допомагає» (He always helps). However, if you want to give a specific example of their character from the past, an action that happened once and was completed, you use a perfective verb. You might say «Учора він мені допоміг» (Yesterday he helped me). This contrast is very natural in Ukrainian storytelling.
-
-* Цей хлопець добрий, він завжди допомагає людям. *(This guy is kind, he always helps people.)*
-* Учора він допоміг мені з валізою. *(Yesterday he helped me with my suitcase.)*
-* Вона відповідальна і завжди робить домашнє завдання. *(She is responsible and always does her homework.)*
-* Сьогодні вона теж зробила всі вправи. *(Today she also did all the exercises.)*
-* Мій колега працьовитий, він постійно працює. *(My colleague is hardworking, he constantly works.)*
-* Учора він попрацював дуже добре. *(Yesterday he worked very well.)*
-
-### Читаємо українською (Reading Practice)
-
-Let's see how these words are used when discussing people at work. Read this dialogue between a new employee and an experienced colleague.
-
-> — **Антон:** Добрий день! Я Антон, новий дизайнер. *(Good day! I am Anton, the new designer.)*
-> — **Марина:** Вітаю, Антоне! Я Марина. Рада знайомству. *(Greetings, Anton! I am Maryna. Nice to meet you.)*
-> — **Антон:** Марино, розкажіть, будь ласка, яка наша керівниця? *(Maryna, please tell me, what kind of person is our female manager?)*
-> — **Марина:** Вона дуже відповідальна і справедлива, але іноді буває дуже серйозна. *(She is very responsible and fair, but sometimes she is very serious.)*
-> — **Антон:** Зрозуміло. А колеги? Які вони? *(Understood. And the colleagues? What are they like?)*
-> — **Марина:** Усі привітні і добрі. Особливо Максим, він завжди допомагає новим працівникам. *(Everyone is friendly and kind. Especially Maksym, he always helps new employees.)*
-> — **Антон:** Це чудово! Я трохи хвилювався. *(That's great! I was a little worried.)*
-> — **Марина:** Не хвилюйся, у нас дуже хороший колектив. *(Don't worry, we have a very good team.)*
-
-<!-- INJECT_ACTIVITY: match-character-traits -->
-<!-- INJECT_ACTIVITY: quiz-character-choice -->
-<!-- INJECT_ACTIVITY: group-sort-traits -->
-
-## Люди навколо нас: родичі, друзі, знайомі (People Around Us)
-
-In Ukrainian culture, we are very specific about how we name our relationships. In English, you might call someone a "friend" even if you just met them at a party, but in Ukrainian, we are more careful with our words. Not everyone we know is a **друг** (friend — male) or **подруга** (friend — female). A true friend is someone very close to you, someone you trust completely. For people you know from school, work, or sports, we often use the word **товариш** (comrade / buddy). If you just know someone's name and say hello on the street, that person is a **знайомий** (acquaintance — male) or **знайома** (acquaintance — female). 
-
-* Це мій найкращий друг, **ми дружимо давно**. *(This is my best friend, we have been friends for a long time.)*
-* Олена — моя хороша подруга. *(Olena is my good friend.)*
-* Він не мій друг, він просто знайомий. *(He is not my friend, he is just an acquaintance.)*
-* Ми з Антоном старі товариші. *(Anton and I are old buddies.)*
-* У мене є багато знайомих у цьому місті. *(I have many acquaintances in this city.)*
-
-Another very important group of people in our daily lives are our neighbors. In Ukrainian, a male neighbor is a **сусід**, and a female neighbor is a **сусідка**. Because many Ukrainians live in large apartment buildings, neighbors often know each other well and form a small community. They might borrow some sugar, watch your pet when you are away, or just chat near the entrance. A good neighbor is someone who is friendly and always ready to help.
-
-* **Мій сусід живе поруч**. *(My neighbor lives nearby.)*
-* Моя сусідка дуже привітна жінка. *(My neighbor is a very friendly woman.)*
-* Наші сусіди часто допомагають нам. *(Our neighbors often help us.)*
-* Цей молодий сусід завжди вітається. *(This young neighbor always says hello.)*
-* Ми знаємо всіх сусідів у нашому будинку. *(We know all the neighbors in our building.)*
-
-Of course, the closest people are our family. You already know words like mother, father, brother, and sister. The general word for a family member is **родич** (relative). Let's expand our family tree a bit. A male cousin is a **двоюрідний брат**, and a female cousin is a **двоюрідна сестра**. We also have **дядько** (uncle) and **тітка** (aunt). In Ukrainian families, cousins are often as close as siblings. Now, we can use the adjectives we learned earlier to describe them completely.
-
-* Мій дядько — високий і дуже серйозний чоловік. *(My uncle is a tall and very serious man.)*
-* Моя тітка має світле волосся, вона дуже весела. *(My aunt has light hair, she is very cheerful.)*
-* Це мій двоюрідний брат, він надзвичайно працьовитий. *(This is my cousin, he is extremely hardworking.)*
-* У мене є багато родичів в Україні. *(I have many relatives in Ukraine.)*
-* Моя двоюрідна сестра — тиха, але дуже розумна людина. *(My cousin is a quiet, but very smart person.)*
-
-How do we act toward these people? To describe relationships (**стосунки**), we use specific verbs of interaction. When we talk about helping or trusting someone, Ukrainian grammar requires the Dative case for the person receiving the action. For example, we use **допомагати** (to help) and **довіряти** (to trust) with the Dative. If we want to say we respect someone, we use the verb **поважати** (to respect) with the Accusative case. You will learn the full Dative case rules later, but for now, remember these common pronoun patterns: **мені** (to me) and **нам** (to us).
-
-* **Вона мені довіряє** свої таємниці. *(She trusts me with her secrets.)*
-* **Він нам завжди допомагає** в саду. *(He always helps us in the garden.)*
-* Я довіряю своєму другові. *(I trust my friend.)*
-* Ми дуже поважаємо нашого керівника. *(We highly respect our manager.)*
-* Хороший сусід завжди допомагає сусідам. *(A good neighbor always helps neighbors.)*
-* Батьки поважають мій вибір. *(Parents respect my choice.)*
-
-### Читаємо українською (Reading Practice)
-
-Read this short dialogue where two friends look at some photos and discuss the people in them. Pay attention to how they describe relationships and character traits.
-
-> — **Оксана:** Хто це на фотографії? Це твій родич? *(Who is this in the photograph? Is this your relative?)*
-> — **Тарас:** Ні, це мій сусід і старий товариш, Ігор. Ми дружимо давно. *(No, this is my neighbor and old buddy, Ihor. We have been friends for a long time.)*
-> — **Оксана:** Який він? Він має дуже серйозний вигляд. *(What is he like? He looks very serious.)*
-> — **Тарас:** Так, він серйозний, але дуже чуйний і добрий. Він завжди допомагає мені. *(Yes, he is serious, but very responsive and kind. He always helps me.)*
-> — **Оксана:** Це чудово, коли є такі знайомі. А поруч з ним — його сестра? *(It is great when there are such acquaintances. And next to him — is that his sister?)*
-> — **Тарас:** Ні, це його двоюрідна сестра, Марія. Я їй дуже довіряю. *(No, that is his cousin, Mariia. I trust her a lot.)*
-> — **Оксана:** Вона дуже симпатична і має гарні карі очі. *(She is very cute and has beautiful brown eyes.)*
-> — **Тарас:** І вона дуже працьовита. Ми всі її поважаємо. *(And she is very hardworking. We all respect her.)*
-
-<!-- INJECT_ACTIVITY: fill-in-adjective-agreement -->
-
-## Описуємо людину цілком (Describing a Person Fully)
-
-To describe a person fully, we usually combine three details: who they are to us, what they look like, and what kind of person they are. Here is a complete profile.
-
-* Це мій найкращий друг Андрій. *(This is my best friend Andrii.)*
-* Він високий і спортивний хлопець із темним волоссям. *(He is a tall and athletic guy with dark hair.)*
-* Андрій дуже веселий і завжди допомагає друзям. *(Andrii is very cheerful and always helps friends.)*
-
-This structure gives a clear picture of the person. You start with the relationship, add physical details, and finish with their personality.
-
-### Порівнюємо різних людей (Comparing Different People)
-
-When we describe people we know, we often contrast their traits. Notice how we combine physical descriptions with character adjectives in these examples.
-
-* Моя працьовита колега Олена — невисока жінка. *(My hardworking colleague Olena is a short woman.)*
-* Вона має коротке світле волосся і карі очі. *(She has short light hair and brown eyes.)*
-* Олена дуже серйозна і відповідальна. *(Olena is very serious and responsible.)*
-
-Now we can describe someone with a completely different energy:
-
-* А це моя весела сусідка Марія. *(And this is my cheerful neighbor Mariia.)*
-* Вона повна і має довге русяве волосся. *(She is plump and has long dark blond hair.)*
-* Марія — дуже щира і привітна людина. *(Mariia is a very sincere and welcoming person.)*
-
-Both descriptions follow our pattern but paint completely different pictures.
-
-### Читаємо українською (Reading Practice)
-
-Read this short conversation where two friends look at a photo. Notice how they blend physical appearance with character traits.
-
-> — **Тарас:** Хто це на фото? *(Who is this in the photo?)*
-> — **Оксана:** Це мій дідусь Іван. *(This is my grandfather Ivan.)*
-> — **Тарас:** Він дуже високий і сильний чоловік. *(He is a very tall and strong man.)*
-> — **Оксана:** Так, він старий, але має добрі блакитні очі. *(Yes, he is old, but he has kind blue eyes.)*
-> — **Тарас:** Який у нього характер? *(What is his character like?)*
-> — **Оксана:** Мій дідусь — надзвичайно розумна і спокійна людина. Я його дуже поважаю, бо він завжди мені допомагає. *(My grandfather is an extremely smart and calm person. I respect him a lot because he always helps me.)*
-
-:::tip Культурний контекст (Cultural Note)
-In Ukrainian culture, we value a person's inner qualities more than their physical appearance. Calling someone **красива людина** *(a beautiful person)* usually refers to their looks. However, calling someone **гарна людина** *(a good person)* or **добра людина** *(a kind person)* is a much deeper compliment. It means they have a good heart and treat others well. When Ukrainians say «Він справді добра людина» *(He is a truly kind person)*, it is the highest praise you can give.
+:::tip
+**Did you know?**
+When translating "She looks beautiful", you can naturally say «Вона гарно виглядає», «Вона виглядає гарно», «Вона гарна», or «Вона має гарний вигляд», depending on the nuance you want. Also, avoid the Russian calque «самий високий» for "the tallest". The correct Ukrainian superlative uses the prefix **най-**, making it «найвищий».
 :::
 
-## Підсумок — Summary
+<!-- INJECT_ACTIVITY: fill-in-complete-sentences-describing-people-with-the-correct-adjective-form-agreement-for-gender -->
 
-We have learned how to fully describe the people in our lives. Now you can talk about someone's appearance, whether they are **високий** *(tall)* or have **карі очі** *(brown eyes)*. You also know how to describe their inner qualities, such as being **щирий** *(sincere)* or **працьовитий** *(hardworking)*. Finally, you can explain who this person is to you: a **знайомий** *(acquaintance)*, a **родич** *(relative)*, or a **сусід** *(neighbor)*.
+## Характер: яка вона людина? (~660 words total)
 
-Let’s look at one final example that brings everything together:
+> — **Новий працівник:** Хто наш керівник? Який він? *(Who is our manager? What is he like?)*
+> — **Досвідчений колега:** Він дуже відповідальний і справедливий. *(He is very responsible and fair.)*
+> — **Новий працівник:** А інші колеги? *(And the other colleagues?)*
+> — **Досвідчений колега:** Усі привітні, особливо Оксана — вона завжди підказує новим працівникам. *(Everyone is friendly, especially Oksana — she always helps new employees.)*
 
-* Це мій новий знайомий Віктор. *(This is my new acquaintance Viktor.)*
-* Він високий чоловік із темним волоссям. *(He is a tall man with dark hair.)*
-* Віктор — дуже привітна і розумна людина. *(Viktor is a very welcoming and smart person.)*
-* Він завжди допомагає іншим. *(He always helps others.)*
+When you start a new job, move to a new city, or meet new friends, you naturally want to know what kind of **людина** (person, human being) you are dealing with. In Ukrainian culture, when someone asks «який він?» or «яка вона?», they are usually asking you to **описувати** (to describe) their **характер** (character, personality) rather than just their physical appearance. It is common to focus on a person's inner qualities and how they treat others. If you want to ask specifically about personality to avoid any confusion, the best and most natural question is «яка вона людина?» or «який у нього характер?».
 
-Now it is your turn to practice. Try to answer these questions in Ukrainian:
+There is a rich variety of wonderful adjectives you can use to describe positive traits in Ukrainian. A good colleague or a close friend is usually **привітний** (friendly, welcoming), **щирий** (sincere, genuine), and **чуйний** (responsive, caring). 
 
-1. **Яка на вигляд ваша найкраща подруга?** *(What does your best friend look like?)*
-2. **Який характер у вашого сусіда?** *(What is your neighbor's character like?)*
-3. **Яка ви людина — тиха чи весела?** *(What kind of person are you — quiet or cheerful?)*
+In a professional setting or at the university, we highly value people who are **розумний** (smart), **працьовитий** (hardworking), and **відповідальний** (responsible). 
+
+When learning a new language or starting a difficult hobby, it is also very helpful if your teacher is **терплячий** (patient) and **веселий** (cheerful). To describe a strong inner drive, we say someone is **наполегливий** (persistent, determined).
+
+Мій старший брат — дуже працьовитий і відповідальний. Він завжди багато працює і ніколи не забуває про свої обов'язки. Моя нова колега — дуже щира і чуйна людина, з якою приємно говорити. Наш керівник — суворий, але терплячий і наполегливий.
+
+> *My older brother is very hardworking and responsible. He always works a lot and never forgets about his duties. My new colleague is a very sincere and caring person with whom it is pleasant to talk. Our manager is strict, but patient and persistent.*
+
+Of course, not everyone is always cheerful and easygoing. Sometimes we need to describe more complex or challenging traits. A person might simply be **сумний** (sad) today, or they might be naturally **серйозний** (serious) and **тихий** (quiet) in group settings. 
+
+Sometimes people do not want to work at all, so we call them **ледачий** (lazy). You might also meet someone who refuses to change their mind, whom we call **впертий** (stubborn).
+
+:::tip
+**Did you know?**
+The word **впертий** (stubborn) is not always a negative trait in Ukrainian culture. While it can mean that someone refuses to listen to reason, it often means that a person is persistent, principled, and determined to achieve their goals despite obstacles. It can be a strong compliment!
+:::
+
+<!-- INJECT_ACTIVITY: group-sort-traits -->
+<!-- INJECT_ACTIVITY: match-up-definitions -->
+
+How do we know what kind of character a person has? We usually look at their daily actions and how they treat others over time, like how a **сусід** (neighbor) acts in your building. In Ukrainian, we often prove a character trait by describing what a person regularly does. Because these are habitual, repeated actions, we must use verbs in the imperfective aspect. The word «завжди» (always) or the phrase «кожного дня» (every day) is a great hint that we need an imperfective verb to show a permanent personality trait.
+
+Мій сусід дуже привітний, тому що він завжди приємно спілкується з усіма. Мій друг щирий, бо він завжди говорить правду і ніколи не бреше. Наша колега Оксана надзвичайно чуйна — вона завжди підказує і допомагає новим працівникам у нашому офісі.
+
+> *My neighbor is very friendly because he always communicates pleasantly with everyone. My friend is sincere because he always tells the truth and never lies. Our colleague Oksana is extremely caring — she always suggests and helps new employees in our office.*
+
+While the imperfective aspect shows a habitual trait, we use the perfective aspect to describe a specific, one-time action that serves as a single proof of a person's character. The perfective aspect focuses on the completed result. If a colleague is generally helpful, they «завжди допомагають» (always help — imperfective). But if they helped you complete a specific, difficult project yesterday, you use the perfective aspect to highlight that completed action.
+
+Вона справді хороша людина, бо вона допомогла мені вчора з важким завданням. Мій друг дуже розумний і надійний — він підказав мені правильне рішення, коли я мав проблему.
+
+> *She is a truly good person because she helped me yesterday with a difficult task. My friend is very smart and reliable — he suggested the right solution to me when I had a problem.*
+
+:::info
+**Grammar box**
+Compare the two aspects when describing people:
+**Імперфектив (Imperfective):** Вона завжди підказує. *(She always helps/suggests — a habitual trait that makes her a helpful person).*
+**Перфектив (Perfective):** Вона підказала мені вчора. *(She helped/suggested yesterday — a one-time action showing her good character).*
+:::
+
+<!-- INJECT_ACTIVITY: quiz-choose-the-correct-adjective-to-complete-a-description -->
+
+## Люди навколо нас: родичі, друзі, знайомі (~600 words total)
+
+We do not live in isolation. Our lives are shaped by the different circles of people around us. In Ukrainian, we use the word **стосунок** (relationship) to describe the connection between people. Every **людина** (person, human being) has a unique personality. Having the right vocabulary helps us explain who someone is to us. Let us look at the different groups of people you might interact with regularly.
+
+Кожна людина будує унікальні стосунки з іншими. Люди навколо нас — це наші рідні, колеги по роботі та просто випадкові перехожі. Ми часто описуємо цих людей, коли розповідаємо про свій день.
+
+> *Every person builds unique relationships with others. The people around us are our family, work colleagues, and just random passersby. We often describe these people when we talk about our day.*
+
+The closest circle usually consists of our family. You likely already know the basic words for parents, siblings, and grandparents. As our families grow, we also talk about our uncles and aunts. When introducing your relatives, it is common to use an adjective like **терплячий** (patient) to describe their personality. 
+
+Це мій дядько, він дуже веселий і завжди жартує. А це моя тітка Олена — вона дуже терпляча і розумна жінка. Мої дідусь і бабуся живуть у селі, ми часто їздимо до них у гості. 
+
+> *This is my uncle, he is very cheerful and always jokes. And this is my aunt Olena — she is a very patient and smart woman. My grandfather and grandmother live in a village, we often go to visit them.*
+
+Outside of our family, we choose our friends and build social circles. We have different words for close friends, casual mates, and simple acquaintances. Ukrainians deeply value a **щирий** (sincere, genuine) friend who has a good **характер** (character, personality). 
+
+Ми дружимо вже п'ять років, тому вона — моя найкраща подруга. Ми разом вчилися в університеті, він мій давній товариш. На вечірці був один мій знайомий, але ми майже не спілкувалися. Ми дуже цінуємо щирих людей.
+
+> *We have been friends for five years already, so she is my best friend. We studied together at the university, he is my old mate. There was an acquaintance of mine at the party, but we barely talked. We really value sincere people.*
+
+:::tip
+**Did you know?** The word **знайомий** (acquaintance) acts like an adjective, but we use it as a noun to refer to a person we know. Its feminine form is **знайома**, and the plural is **знайомі**.
+:::
+
+Our daily routines also force us to interact with people at work and at home. At your workplace, you interact with colleagues. At home, you share your street or building with a **сусід** (neighbor). It is wonderful when your neighbor is a **привітний** (friendly, welcoming) person. A good colleague is usually **працьовитий** (hardworking).
+
+Він мій сусід — живе поруч, завжди привітний і готовий допомогти. Моя нова колега — дуже працьовита спеціалістка, вона працює в нашому відділі.
+ Зазвичай мої сусіди тихі, ми зустрічаємося тільки вранці.
+
+> *He is my neighbor — he lives nearby, is always friendly and ready to help. My new colleague is a very hardworking specialist, she works in our department. Usually, my neighbors are quiet, we only meet in the morning.*
+
+Relationships are defined by how we act toward one another. When we want to describe these dynamics, we use verbs paired with personal pronouns. Some verbs take the Accusative case, answering "who" receives the action, while others take the Dative case, answering "to whom" the action is directed.
+
+Моя сестра добре мене знає, тому вона мені довіряє.
+ Мій керівник дуже серйозний, але він мене поважає як професіонала. Мої батьки живуть далеко, проте вони нам допомагають.
+
+> *My sister always tells the truth, so she trusts me. My manager is very serious, but he respects me as a professional. My parents live far away, however, they help us.*
+
+:::info
+**Grammar box**
+Pay attention to the pronouns when describing actions in relationships:
+*   **Довіряти** (to trust) and **допомагати** (to help) use the Dative case: **Вона мені довіряє** (She trusts me).
+*   **Поважати** (to respect) uses the Accusative case: **Він мене поважає** (He respects me).
+:::
+
+In real life, you will frequently need to properly **описувати** (to describe) people in short, natural exchanges. When looking at photos or introducing someone new, we often start with their identity, then mention their **зовнішність** (appearance) and their character traits.
+
+> — **Марія:** А хто це? *(And who is this?)*
+> — **Антон:** Це мій колега, Ігор. *(This is my colleague, Ihor.)*
+> — **Марія:** Який він? *(What is he like?)*
+> — **Антон:** Він дуже працьовитий і серйозний. *(He is very hardworking and serious.)*
+> — **Марія:** А це хто поруч із ним? *(And who is this next to him?)*
+> — **Антон:** Це наша спільна знайома. Вона чуйна людина. *(This is our mutual acquaintance. She is a caring person.)*
+
+Описувати людей навколо нас — це дуже корисна навичка. Коли ми знаємо правильні слова, ми можемо легко розповісти про свою родину або колег.
+
+## Описуємо людину цілком
+
+Now it is time to bring everything together. When you fully **описувати** (to describe) someone, you combine details about their identity and **зовнішність** (appearance). This gives a complete picture of the **людина** (person, human being).
+
+Мій сусід Андрій — високий хлопець із карими очима. Він має коротке темне волосся і носить окуляри. Його характер дуже спокійний. Він дуже веселий і добрий. Ми живемо поруч уже п'ять років і часто граємо у футбол.
+
+> *My neighbor Andrii is a tall guy with brown eyes. He has short dark hair and wears glasses. His character is very calm. He is very cheerful and kind. We have lived nearby for five years already and often play football.*
+
+A great portrait also includes their **характер** (character, personality) and your **стосунок** (relationship). For example, you might mention how long you have known your **сусід** (neighbor).
+
+To build your own descriptions effectively, you can follow a simple three-step structure. First, establish the identity by answering «Хто це?» (Who is it?). Next, describe their physical traits by asking «Яка зовнішність?». Finally, complete the portrait by explaining «Який характер?».
+
+Це моя нова колега Олена. Вона невисока і має довге світле волосся. Олена — дуже розумна людина з великим досвідом. Вона завжди уважно слухає інших і швидко допомагає новим працівникам.
+
+> *This is my new colleague Olena. She is short and has long blonde hair. Olena is a very smart person with great experience. She always listens carefully to others and quickly helps new employees.*
+
+We often highlight positive traits when introducing friends or coworkers. It is incredibly helpful to know if a person is naturally **привітний** (friendly, welcoming) or if they are known as a **працьовитий** (hardworking) specialist.
+
+:::tip
+**Did you know?**
+When Ukrainians talk about others, they often value inner qualities over physical appearance. Calling someone a «добра людина» (good person) is one of the highest compliments you can give. This phrase emphasizes «душевна краса» (inner beauty) and shows that the person is caring, reliable, and treats everyone well.
+:::
+
+You can also mention if someone is truly **щирий** (sincere, genuine) in their words, or if they are consistently **терплячий** (patient) when dealing with difficult situations.
+
+Here is a short conversation about people in a photo:
+
+> — **Марко:** Привіт, Анно! А хто цей хлопець на фото? *(Hi, Anna! And who is this guy in the photo?)*
+> — **Анна:** Це мій старший брат, Іван. *(This is my older brother, Ivan.)*
+> — **Марко:** Який він? У нього дуже суворий вигляд. *(What is he like? He has a very strict look.)*
+> — **Анна:** Ні, він просто серйозний. Але він дуже добрий. *(No, he is just serious. But he is very kind.)*
+> — **Марко:** А дівчина поруч із ним? Це його дружина? *(And the girl next to him? Is that his wife?)*
+> — **Анна:** Ні, це його найкраща подруга Марія. *(No, this is his best friend Mariia.)*
+> — **Марко:** Вона має дуже гарне довге волосся. *(She has very beautiful long hair.)*
+> — **Анна:** Так, і вона дуже весела та щира людина. *(Yes, and she is a very cheerful and sincere person.)*
+
+### Читаємо українською
+
+Моя родина невелика, але ми дуже дружні. Мій батько — високий чоловік із сивим волоссям. Він дуже відповідальний і завжди багато працює. Моя мати трохи нижча за нього. Вона має коротке світле волосся і зелені очі. Мати — дуже чуйна людина. Вона любить допомагати всім сусідам. Мій молодший брат ще студент. Він іноді буває ледачий, але він дуже веселий хлопець. У нього темне кучеряве волосся. Він любить грати на гітарі вечорами. Ми любимо проводити час разом на вихідних. Зазвичай ми ходимо в кіно або гуляємо в парку.
+
+> *My family is small, but we are very close. My father is a tall man with gray hair. He is very responsible and always works a lot. My mother is a little shorter than him. She has short blonde hair and green eyes. Mother is a very caring person. She loves helping all the neighbors. My younger brother is still a student. He is sometimes lazy, but he is a very cheerful guy. He has dark curly hair. He loves playing the guitar in the evenings. We love spending time together on the weekends. Usually, we go to the movies or walk in the park.*
+
+You now have all the tools needed to talk about the people around you in Ukrainian. For your final practice task, think of two or three people you know well. Write down a short paragraph for each of them using the three-step pattern we practiced.
 </generated_module_content>
 
-**PIPELINE NOTE — Word count: 3204 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
+**PIPELINE NOTE — Word count: 2871 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -534,47 +519,177 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 307 words | Not found: 11 words
+Verified: 339 words | Not found: 10 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
   ✗ Іван — NOT IN VESUM
+  ✗ Імперфектив — NOT IN VESUM
   ✗ Андрій — NOT IN VESUM
+  ✗ Анна — NOT IN VESUM
+  ✗ Анно — NOT IN VESUM
   ✗ Антон — NOT IN VESUM
-  ✗ Антоне — NOT IN VESUM
-  ✗ Антоном — NOT IN VESUM
-  ✗ Віктор — NOT IN VESUM
-  ✗ Ганна — NOT IN VESUM
   ✗ Марія — NOT IN VESUM
   ✗ Оксана — NOT IN VESUM
   ✗ Олена — NOT IN VESUM
-  ✗ Тарас — NOT IN VESUM
+  ✗ Перфектив — NOT IN VESUM
 
-All 307 other words are confirmed to exist in VESUM.
+All 339 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
-## Verification Tools (MCP)
+---
 
-You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
+## Verification Tools (Shell Commands)
 
-**Core Verification:**
-- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
-- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
+You have access to verification tools via shell commands. Use these to verify
+Ukrainian vocabulary, check grammar, and search textbook content **as you write**.
 
-**Content Quality:**
-- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+**IMPORTANT:** Run verification commands BEFORE finalizing any Ukrainian text.
+Batch multiple verifications together to minimize round-trips.
 
-**Reference:**
-- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp_rag_search_literary` — verify literary references against primary sources
-- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
+### 1. Batch-verify Ukrainian words exist in VESUM (preferred — one call for many words)
 
-**Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_words
+results = verify_words(['слово1', 'слово2', 'слово3'])
+for w, matches in results.items():
+    if matches:
+        print(f'{w}: FOUND — lemma={matches[0][\"lemma\"]}, pos={matches[0][\"pos\"]}')
+    else:
+        print(f'{w}: NOT FOUND — may not exist in standard Ukrainian')
+"
+```
+
+### 2. Verify a single Ukrainian word in VESUM (with full morphological tags)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_word
+results = verify_word('WORD_HERE')
+if results:
+    for m in results:
+        print(f'lemma={m[\"lemma\"]}, pos={m[\"pos\"]}, tags={m[\"tags\"]}')
+else:
+    print('NOT FOUND in VESUM')
+"
+```
+
+### 3. Get all inflected forms of a lemma (declension/conjugation)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_lemma
+forms = verify_lemma('LEMMA_HERE')
+for f in forms[:20]:
+    print(f'{f[\"word_form\"]:20s} {f[\"pos\"]:8s} {f[\"tags\"]}')
+print(f'... {len(forms)} forms total')
+"
+```
+
+### 4. Check CEFR level of a word (is it level-appropriate?)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import query_cefr_level
+results = query_cefr_level('WORD_HERE')
+for r in results:
+    print(f'{r[\"word\"]}: {r[\"level\"]} ({r[\"pos\"]})')
+if not results:
+    print('Not in CEFR database')
+"
+```
+
+### 5. Search textbook content (Ukrainian school textbooks, Grades 1-11)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_textbooks
+keywords = {'keyword1', 'keyword2'}
+results = search_textbooks(keywords, 5)
+for r in results:
+    title = r.get('section_title', r.get('title', ''))
+    grade = r.get('grade', '?')
+    text = r.get('text', '')[:200]
+    print(f'Grade {grade} | {title}')
+    print(f'  {text}')
+    print()
+"
+```
+
+### 6. Search style guide for calques/Russianisms (Антоненко-Давидович, 279 entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_style_guide
+results = search_style_guide('TOPIC_HERE', 3)
+for r in results:
+    print(f'--- {r.get(\"word\", \"\")} [{r.get(\"section\", \"\")}]')
+    print(r.get('text', '')[:300])
+    print()
+if not results:
+    print('No style guide entries found')
+"
+```
+
+### 7. Look up word definition in СУМ-11 (Ukrainian explanatory dictionary, 127K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_definitions
+results = search_definitions('WORD_HERE', 3)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+### 8. Search idioms (Фразеологічний словник, 25K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_idioms
+results = search_idioms('WORD_HERE', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"text\", r.get(\"definition\", \"\")))[:200]}')
+"
+```
+
+### 9. English-to-Ukrainian translation (Балла, 79K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import translate_en_uk
+results = translate_en_uk('ENGLISH_WORD', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+---
+
+**WHEN to use these tools:**
+
+1. **Before writing any Ukrainian text** — batch-verify all key vocabulary with
+   `verify_words` (tool 1). Any word that returns NOT FOUND must be replaced.
+2. **When you suspect a Russicism or calque** — search the style guide (tool 6)
+   and verify the correct Ukrainian form with `verify_word` (tool 2).
+3. **When writing for A1/A2** — check CEFR levels (tool 4) to ensure vocabulary
+   is level-appropriate.
+4. **When unsure about a case ending or conjugation** — use `verify_lemma` (tool 3)
+   to see the full paradigm.
+5. **When covering a grammar topic** — search textbooks (tool 5) to see how
+   Ukrainian school textbooks teach it.
+6. **When you need the precise Ukrainian meaning** — use СУМ-11 (tool 7).
+7. **When looking for natural Ukrainian expressions** — search idioms (tool 8).
+
+**Batching rule:** Collect all words you want to verify, then run ONE `verify_words`
+call instead of multiple `verify_word` calls. This is faster and uses fewer tokens.

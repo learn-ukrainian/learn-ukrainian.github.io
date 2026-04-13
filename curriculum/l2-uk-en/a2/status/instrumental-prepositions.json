@@ -2,10 +2,10 @@
   "module": "instrumental-prepositions",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-04-11T00:49:40.245159Z",
+  "last_audit": "2026-04-11T13:40:09.370792Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-11T00:39:39.920476Z",
+    "md": "2026-04-11T13:40:06.619074Z",
     "meta": null,
     "activities": "2026-04-08T00:35:25.484981Z",
     "vocabulary": "2026-04-08T00:38:38.744824Z",
@@ -20,8 +20,8 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 1,
-      "message": "2529/2000 (raw: 2724) | immersion: 26.9% LOW (target 50-80% (A2.2))"
+      "violations": 2,
+      "message": "2968/2000 (raw: 3056) | engagement: 2/3 | immersion: 30.9% LOW (target 50-80% (A2.2))"
     },
     "activities": {
       "status": "pass",
@@ -32,6 +32,15 @@
       "status": "pass",
       "violations": 0,
       "message": "38/1"
+    },
+    "vocab_progression": {
+      "status": "warn",
+      "violations": 0,
+      "message": "\u0394 -9 | premature=3 | gaps=0 | well-paced=3",
+      "delta": -9,
+      "premature": 3,
+      "gaps": 0,
+      "well_paced": 3
     },
     "naturalness": {
       "status": "info",

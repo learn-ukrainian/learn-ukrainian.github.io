@@ -2,48 +2,52 @@ round: 2
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 10
-  evidence: All sections from the outline are present, dialogues match the plan situations
-    exactly, word count (1518) exceeds target.
+  score: 8
+  evidence: All four planned H2 sections appear in order and both planned dialogue
+    frames are present, but the module also foregrounds `ходімо` even though the stated
+    A1 scope is “ти and ви forms only.”
 - dimension: 2
   name: Linguistic accuracy
   score: 8
-  evidence: 'Contradictory grammar formula: `говори + те = говоріть` and `пиши + те
-    = пишіть`. The mathematical equation `и + те = іть` is morphologically false.'
+  evidence: Most Ukrainian forms are correct, but `In classroom speech, you may also
+    hear **розгорнути підручник**` gives an infinitive where the lesson needs an imperative.
 - dimension: 3
   name: Pedagogical quality
-  score: 8
-  evidence: The explanation "replace the final infinitive ending with -и" is confusing
-    because the previous paragraph defines the infinitive ending strictly as "-ти"
-    (which would lead a learner to erroneously for
+  score: 6
+  evidence: The PPP flow is visible, yet the sports lead-in says the coach is speaking
+    “to the team” while the sample uses singular imperatives (`Принеси`, `Розстав`,
+    `Натягни`), which weakens the core ти/ви cont
 - dimension: 4
   name: Vocabulary coverage
   score: 9
-  evidence: All required vocabulary is used in context, but the recommended word `показати`
-    is missing from the module entirely.
+  evidence: Required verbs (`читати`, `писати`, `слухати`, `дивитися`, `говорити`,
+    `дати`, `сказати`, `іти`) and key classroom nouns (`підручник`, `сторінка`, `речення`)
+    all appear in context.
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: All activity markers are perfectly placed directly after the relevant
-    teaching sections.
+  score: 9
+  evidence: 'Four exercise markers are present, and each comes after the relevant
+    teaching: politeness quiz after `Наказовий спосіб`, then sorting/fill-ins after
+    `Як утворити?`.'
 - dimension: 6
   name: Engagement & tone
-  score: 9
-  evidence: Uses mildly gamified/corporate phrasing ("Mastering the наказовий спосіб
-    unlocks your ability...").
+  score: 6
+  evidence: The summary opener `Memorizing these ten verbs will unlock hundreds of
+    new conversational possibilities.` is promotional filler rather than instruction.
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: Word count is solid, all headers are correct, no dangling sentences or
-    markdown artifacts.
+  evidence: '`Діалоги`, `Наказовий спосіб`, `Як утворити?`, and `Підсумок` are all
+    present and ordered correctly; pipeline word count is 1548, above the 1200 target.'
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: Accurately explains that direct imperatives are normal in Ukrainian and
-    not inherently rude, capturing the cultural communication style perfectly.
+  score: 7
+  evidence: '`You do not need conditional tenses or complex grammar structures to
+    be polite in Ukraine.` overgeneralizes a useful A1 shortcut into a national rule
+    about politeness.'
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: Dialogues are natural, accurately portraying classroom and friend-to-friend
-    settings with excellent colloquial flow ("Добре, йди, я зараз").
+  score: 7
+  evidence: The classroom dialogue works, but the sports vignette again blurs addressee
+    number by framing singular imperatives as commands to “the team.”
 findings: []

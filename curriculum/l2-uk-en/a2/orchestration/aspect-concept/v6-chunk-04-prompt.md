@@ -1,20 +1,20 @@
-# Section-by-Section Generation — Section 4/5
+# Section-by-Section Generation — Section 4/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 2: Зроблено чи в процесі? Вступ до виду дієслів (A2, A2.1 [Foundation and Aspect Introduction])
-**Section to write:** Порівняння пар: Бачимо різницю (~300 words total)
-**Word target for this section:** 300 words (aim for 330 to account for undershoot)
+**Section to write:** Порівняння пар: Бачимо різницю (Comparing Pairs: Seeing the Difference) (~330 words)
+**Word target for this section:** 330 words (aim for 363 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Порівняння пар: Бачимо різницю (~300 words total)
-- P1 (~100 words): [Side-by-side comparison of specific pairs. "Він писав лист" (He was writing, maybe interrupted) vs. "Він написав лист" (The letter is in the envelope). Focus on the change in meaning. Use pairs like пити/випити, їсти/поїсти, бачити/побачити.]
-- P2 (~100 words): [Timeline Visualization: Describe two lines. One is a wavy, continuous line (НВ) representing the flow of time. The other is a straight line ending with a bold X (ДВ). Explain that ДВ verbs "punctuate" time, while НВ verbs "fill" it.]
-- P3 (~100 words): [Intro to Pair Formation: Briefly explain that most pairs are made by adding a prefix to the НВ verb (писати -> написати). Mention that while there are many prefixes (на-, з-, про-), at level A2, the goal is to recognize the change in aspect first, then learn the specific prefixes later.]
-- <!-- INJECT_ACTIVITY: error-correction-aspect --> [Error-correction, focus on fixing incorrect aspect choices like *Він щодня зробив вправи*, 6 items]
+## Порівняння пар: Бачимо різницю (Comparing Pairs: Seeing the Difference) (~330 words)
+- P1 (~110 words): Explain that Ukrainian verbs usually come in aspect pairs. Show that the most common way to make an imperfective verb perfective is by adding a prefix. Show basic pairs: писати → написати, робити → зробити, читати → прочитати.
+- P2 (~110 words): Side-by-side sentence comparison to solidify the difference. "Він писав лист" (He was writing a letter, maybe he is still writing) vs. "Він написав лист" (He wrote a letter, it is ready to send). "Вона купувала" (She was buying) vs. "Вона купила" (She bought).
+- P3 (~110 words): Visual aids (described in text). Imagine a timeline. An imperfective action is a long, continuous line (`------`) showing duration or a series of dots (`...`) showing repetition. A perfective action is a single, solid dot (`•`) or an arrow hitting a wall (`--->|`) marking completion.
+- <!-- INJECT_ACTIVITY: error-correction-fix-aspect --> [error-correction, Find and fix wrong aspect choice in sentences, 6 items]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -22,7 +22,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-when you take a perfective verb and put it into a form that looks like the present tense? It automatically jumps into the future! :::info **Grammar box** — Perfective verbs never describe the present. If you see a perfective verb with present-tense endings, it means the action *will be* completed in the future. For example, «я роблю» (imperfective) means "I am doing," but «я зроблю» (perfective) means "I will do" or "I will get it done." ::: Завтра я напишу тобі довгий лист. Я куплю смачний торт на твій день народження. Ми зробимо це завдання разом. Усі ці дії дадуть результат у майбутньому. > *Tomorrow I will write you a long letter. I will buy a delicious cake for your birthday. We will do this task together. All these actions will give a result in the future.* For this specific module, we are going to focus heavily on using the perfective aspect in the past tense. This is where the contrast between a process and a result is the clearest. When you use a perfective verb in the past, you are emphasizing the "click" of completion. You are stating that the goal was successfully achieved. It answers the question "What did you accomplish?" rather than "What were you doing?" Вчора я купив новий телефон. Моя сестра нарешті прийшла додому. Ми швидко зробили домашнє завдання і пішли гуляти. > *Yesterday I bought a new phone. My sister finally arrived home. We quickly finished the homework and went for a walk.* Just as the imperfective aspect has its own set of frequency adverbs, the perfective aspect pairs naturally with words that highlight a sudden change, an achievement, or an arrival at a goal. Look out for signal words like «нарешті» (finally), «вже» (already), and «раптом» (suddenly). However, be careful with the word «вчора» (yesterday). It is completely neutral and can take either aspect depending entirely on what you want to emphasize. Вчора я довго читав цікаву статтю. Це був процес. Але вчора ввечері я вже прочитав цю статтю. Це мій результат. > *Yesterday I was reading an interesting article for a long time. This was a process. But yesterday evening I already finished reading this article. This is my result.* One of the best ways to understand the perfective aspect is to look at situations where an action fails to reach its goal. In Ukrainian, we often contrast a failed process with the lack of a result using both aspects in the same sentence. The attempt itself was a process, so it uses an imperfective verb. But the expected outcome—which didn't happen—is a boundary that wasn't crossed, so we use a negated perfective verb. Христина довго шукала свій фотоапарат, але не знайшла його. Вона робила це цілий ранок. Пошук був довгим процесом, але результату немає. > *Khrystyna was looking for her camera for a long time, but did not find it. She was doing this all morning. The search was a long process, but there is no result.* <!-- INJECT_ACTIVITY: match-up-context-aspect -->
+there is a crucial grammatical rule you must memorize. Perfective verbs have no true present tense. Think about it logically: you cannot be currently in the middle of completing a single, instantaneous result right now. An action is either ongoing as a process, or it is already completely done. Therefore, when you see a perfective verb that looks like it is conjugated in the present tense, it actually carries a future meaning. :::info **Grammar box** Perfective verbs cannot happen "right now" because a result is instantaneous. Their "present" forms automatically point to the future. For example, the imperfective verb for writing in the present tense simply means "I am writing". But the perfective form automatically transforms the meaning into "I will write" or "I will finish writing". ::: Я напишу цей важливий лист завтра вранці. Мій брат купить свіжі овочі на ярмарку. Ми зробимо це складне завдання разом. > *I will write this important letter tomorrow morning. My brother will buy fresh vegetables at the market. We will do this difficult task together.* For now, we will not worry about mastering the future tense. In this module, we will focus exclusively on using perfective verbs in the past tense. These forms are essential for marking finished events, historical facts, and personal achievements in your past. When you want to report that someone successfully did something, wrote something, or scored a point in a game, you will always reach for the past perfective form. Мій улюблений футболіст забив красивий гол. Моя сестра написала чудову статтю для журналу. Студент зробив усі домашні вправи. > *My favorite football player scored a beautiful goal. My sister wrote a wonderful article for the magazine. The student did all the homework exercises.* These sentences do not describe what people were busy doing, nor do they imply any kind of **повторення** (repetition) over time. They strictly and cleanly report what these people successfully accomplished. Just like the imperfective forms, perfective verbs have their own set of highly reliable signal words. These adverbs highlight suddenness, completion, or the successful achievement of a goal. When you see words like suddenly, finally, or already, you almost certainly need a perfective verb to complete the thought. However, you must be extremely careful with the tricky word for yesterday. This word simply sets the historical time frame, meaning it works perfectly with both aspects depending on your focus! Раптом почався сильний дощ, але ми вже прийшли додому. Вчора я довго читав журнал, а мій друг вчора прочитав цілу книгу. > *Suddenly a heavy rain started, but we had already arrived home. Yesterday I read a magazine for a long time, and my friend read a whole book yesterday.* Notice how yesterday can frame both a long, ongoing activity and a sudden, completed achievement. Your choice of the **вид дієслова** (verb aspect) depends entirely on whether you want to emphasize the long time spent on the task or the final, successful outcome. <!-- INJECT_ACTIVITY: match-up, Choose the Correct Aspect (Context-based), 8 items -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -35,7 +35,7 @@ module: a2-002
 level: A2
 sequence: 2
 slug: aspect-concept
-version: '1.1'
+version: '1.2'
 title: Зроблено чи в процесі? Вступ до виду дієслів
 subtitle: Концепція доконаного та недоконаного виду
 focus: grammar
@@ -129,8 +129,8 @@ activity_hints:
       зробив вправи → робив, *Вона довго написала листа → писала)
     items: 6
 references:
-  - title: Заболотний Grade 6, §52-54
-    notes: 'Вид дієслова: доконаний і недоконаний'
+  - title: Авраменко Grade 7, §28-30
+    notes: 'Вид дієслова: доконаний і недоконаний — aspect is taught in 7th grade curriculum'
   - title: 'ULP: Ukrainian Verb Aspect'
     url: https://www.ukrainianlessons.com/ukrainian-verb-aspect/
     notes: Imperfective vs perfective
@@ -461,6 +461,29 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (4/4).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] вид дієслова (verb aspect)
+- [ ] недоконаний вид (imperfective aspect)
+- [ ] доконаний вид (perfective aspect)
+- [ ] процес (process)
+- [ ] результат (result)
+- [ ] дія (action)
+- [ ] повторення (repetition)
+- [ ] робити / зробити (to do)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Порівняння пар: Бачимо різницю (Comparing Pairs: Seeing the Difference) (~330 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

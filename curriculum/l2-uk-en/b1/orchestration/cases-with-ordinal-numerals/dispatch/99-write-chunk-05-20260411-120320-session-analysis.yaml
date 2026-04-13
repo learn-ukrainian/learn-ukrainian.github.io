@@ -1,0 +1,53 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T10-02-2bbd0895.json
+phase: write-chunk-05
+prompt_chars: 47938
+response_chars: 7077
+prompt_words: 6649
+response_words: 1101
+sections:
+- name: header
+  start: 0
+  length: 446
+  fraction: 0.0093
+- name: skeleton
+  start: 446
+  length: 1433
+  fraction: 0.0299
+- name: prior_summary
+  start: 1879
+  length: 3484
+  fraction: 0.0727
+- name: plan
+  start: 5363
+  length: 15737
+  fraction: 0.3283
+- name: wiki
+  start: 15057
+  length: 26624
+  fraction: 0.5554
+- name: output_spec
+  start: 47724
+  length: 214
+  fraction: 0.0045
+large_sections:
+- wiki
+directives_total: 16
+directives_covered: 12
+directives_missed:
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: inject_activity
+  text: fill-in, case endings for ordinal floors
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: error-correction, ordinals in addresses and dates
+  covered: false
+  coverage_note: marker missing

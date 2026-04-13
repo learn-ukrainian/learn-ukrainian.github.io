@@ -1,0 +1,54 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T21-21-584226c5.json
+phase: vocab
+prompt_chars: 20561
+response_chars: 2200
+prompt_words: 3388
+response_words: 262
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.0388
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.0112
+- name: plan
+  start: 1028
+  length: 19533
+  fraction: 0.95
+large_sections:
+- plan
+directives_total: 7
+directives_covered: 0
+directives_missed:
+- kind: must
+  text: Since a labial consonant is followed by the letter "ю" or "є", we must use
+    an apostrophe.
+  covered: false
+  coverage_note: 0/8 keywords (0%)
+- kind: must
+  text: However, if you went *to* a person («до»), you must return *from* («від»)
+    that person.
+  covered: false
+  coverage_note: 2/8 keywords (25%)
+- kind: inject_activity
+  text: group-sort-sort-motion-verb-forms-into-unidirectional-vs-multidirectional-categories
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-motion-context
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-conjugate-and-choose-the-correct-form-for-the-given-person-and-number
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-prepositions-cases
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: unjumble-directional-sentences
+  covered: false
+  coverage_note: marker missing

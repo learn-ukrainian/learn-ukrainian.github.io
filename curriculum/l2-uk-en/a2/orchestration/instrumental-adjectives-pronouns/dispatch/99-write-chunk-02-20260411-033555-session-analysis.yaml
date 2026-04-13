@@ -1,0 +1,44 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T01-35-215a5667.json
+phase: write-chunk-02
+prompt_chars: 46092
+response_chars: 4051
+prompt_words: 6263
+response_words: 663
+sections:
+- name: header
+  start: 0
+  length: 473
+  fraction: 0.0103
+- name: skeleton
+  start: 473
+  length: 1682
+  fraction: 0.0365
+- name: prior_summary
+  start: 2155
+  length: 3348
+  fraction: 0.0726
+- name: plan
+  start: 5503
+  length: 11161
+  fraction: 0.2421
+- name: wiki
+  start: 11336
+  length: 29300
+  fraction: 0.6357
+- name: output_spec
+  start: 45964
+  length: 128
+  fraction: 0.0028
+large_sections:
+- wiki
+directives_total: 8
+directives_covered: 6
+directives_missed:
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: inject_activity
+  text: fill-in, Add correct Instrumental adjective endings to complete noun phrases
+  covered: false
+  coverage_note: marker missing

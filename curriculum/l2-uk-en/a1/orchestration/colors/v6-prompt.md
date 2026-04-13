@@ -252,24 +252,24 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-- Confirmed: червоний, жовтий, зелений, синій, блакитний, білий, чорний, сірий, колір, коричневий, рожевий, помаранчевий, фіолетовий, прапор.
-- Not found: темно-, світло- (Note: These are bound morphemes/prefixes, verified as part of compound adjectives like "темно-зелений" in Grade 6/9 textbooks).
+- Confirmed: червоний, жовтий, зелений, синій, блакитний, білий, чорний, сірий, колір, якого, коричневий, рожевий, помаранчевий, фіолетовий, темний, світлий, прапор, синьо-жовтий, темно-зелений, світло-синій, голубий, червона, червоне, синя, синє
+- Not found: None
 
 ## Grammar Rules
-- Adjective Groups: Adjectives are divided into hard and soft groups (тверда і м'яка групи) based on the stem-final consonant. Hard-stem adjectives (червоний) take -ий/-а/-е; soft-stem adjectives (синій) take -ій/-я/-є. Reference: Правопис § 33 (suffixes -н-(ий) vs -н-(ій)).
-- Compound Colors: Shades and combinations of colors are written with a hyphen. Правопис § 141 (General rule for compound adjectives; verified in Grade 6 textbooks: "Якщо прикметник означає відтінки кольору... пишемо з дефісом: темно-зелений, синьо-жовтий").
+- Складні прикметники (відтінки кольорів): Правопис §40 — З дефісом пишемо складні прикметники, які означають відтінки кольорів або поєднання кількох кольорів (наприклад: темно-зелений, світло-синій, синьо-жовтий).
 
 ## Calque Warnings
-- голубий: OK but synonymous with блакитний. Plan is correct to favor "блакитний" for sky blue and note Russian influence on "голубий" in some contexts. Both confirmed in СУМ-11.
-- якого кольору?: OK — No calque detected in style guides; standard usage in Grade 2 textbooks.
-- мені подобається: OK — Standard Ukrainian expression for preference (Dative + verb).
+- голубий: calque (Russianism) — блакитний
+- якого кольору: OK
+- мені подобається: OK
 
 ## CEFR Check
-- червоний: A1 — OK (Introduced in Grade 1/2 textbooks).
-- синій: A1 — OK (Introduced in Grade 1/2 textbooks).
-- колір: A1 — OK.
-- прапор: A1 — OK (High frequency in elementary civic education).
-- зелений: A1 — OK.
+- червоний: A1 — OK
+- синій: A1 — OK
+- блакитний: A1 — OK
+- колір: A1 — OK
+- помаранчевий: A2 — above target
+- фіолетовий: A2 — above target
 </pre_verified_facts>
 
 
@@ -613,12 +613,14 @@ These exercises, adapted from Ukrainian school materials, provide a gold standar
 
 ## Section Structure
 
-Write these sections as H2 headings, in this exact order:
+Write these sections as H2 headings, in this **exact** order:
 
 - `## Діалоги (Dialogues)` (~300 words)
 - `## Кольори (Colors)` (~300 words)
 - `## Синій ≠ блакитний (Blue ≠ Blue)` (~300 words)
 - `## Підсумок — Summary` (~300 words)
+
+**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim** as an `## H2` line. This includes the FINAL summary/transition section (`Підсумок: ...`, `Підсумок та перехід до M...`, etc.) — the writer's most common failure is silently dropping the closing section. Do NOT skip it. Do NOT renumber. Do NOT merge headings. The post-write quick-verify check will fail your build if any heading is missing, even if the prose itself is excellent.
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -662,6 +664,25 @@ HARD GRAMMAR RULES (audit will reject violations):
 - **Zero calques**: No приймати душ→брати душ, приймати рішення→ухвалювати рішення
 - **Zero paronyms**: тактична≠тактовна, ефектний≠ефективний — use the right word, not a similar-sounding one
 - **Natural Ukrainian**: Write how a Ukrainian teacher would explain this to a student. Not robotic, not textbook-dry, not overly casual.
+
+### FORBIDDEN WORDS — never write these (#1189)
+
+The following Russian words have leaked into past builds and broken modules. They are **hard-banned** — the post-write toxic-token scanner will fail your build the moment it sees one. Use the Ukrainian alternative every time, even in dialogues, even in casual prose, even when quoting a learner's mistake (use a `<!-- VERIFY -->` placeholder instead of typing the Russian form):
+
+| Russian (FORBIDDEN) | Ukrainian (USE THIS) |
+|---|---|
+| хорошо | добре |
+| конечно | звичайно / певна річ |
+| спасибо | дякую |
+| пожалуйста | будь ласка / прошу |
+| ничего | нічого |
+| сейчас | зараз |
+| тоже | теж / також |
+| здесь | тут |
+| кот | кіт |
+| кон | кін |
+
+This list is enforced word-for-word by `scripts/build/quick_verify.py` (SEVERE_RUSSIANISMS). If you produce any of these tokens — even inside a quoted example, even inside a dialogue line spoken by a Russian-speaking character — the build halts immediately. There is no exception.
 
 **Authority hierarchy (if uncertain about a word, check in this order):**
 VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (stress) → Антоненко-Давидович (style) → Грінченко (etymology).
@@ -771,39 +792,38 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Діалоги — Dialogues (~330 words)
-- P1 (~60 words): Introduction to the importance of color in daily life, setting the scene at a bustling outdoor flower market in Kyiv where Natalka is choosing a gift.
-- P2 (~120 words): [Dialogue 1: Choosing a gift] Natalka and the Seller (Продавець). Natalka asks "Якого кольору ці квіти?". Seller describes: червоні троянди (red roses), білі лілії (white lilies), and жовті соняшники (yellow sunflowers). Natalka chooses a синя ваза (blue vase) for the bouquet. Focus: Introducing "Якого кольору?" and base color agreement.
-- P3 (~50 words): Transition to the second dialogue, moving from nature and gifts to personal belongings and the "My World" theme (A1.2).
-- P4 (~100 words): [Dialogue 2: Wardrobe check] Dmytro and Liza are choosing outfits for a party. Liza points out her чорна сукня (black dress). Dmytro looks for his білий светр (white sweater) and mentions the сіре пальто (grey coat) and коричневі черевики (brown shoes). Review of M08-M09 noun genders with color agreement.
+## Діалоги (Dialogues) (~330 words)
+- P1 (~40 words): Introduction to the first dialogue. Наталка is at a flower market talking to a seller (Продавець) about buying a gift. They discuss the colors of vases and flowers, establishing the context for basic color adjectives.
+- P2 (~100 words): Dialogue 1. Наталка: Яка гарна ваза! Якого вона кольору? Продавець: Червона. А є ще синя і зелена. Наталка: Мені подобається синя. А ці троянди якого кольору? Продавець: Червоні. Є також білі лілії та жовті соняшники. Наталка: Чудово! 
+- P3 (~50 words): Analysis of Dialogue 1. Highlight the phrase "Мені подобається" as a memorized chunk for expressing preference. Point out the core question "Якого кольору?" (What color?) and how answers like "червона" and "синя" agree with the feminine noun "ваза".
+- P4 (~40 words): Introduction to Dialogue 2. Дмитро and Ліза are getting ready for a party. They extend their descriptions from previous modules by discussing the colors of the room's furniture and their clothing.
+- P5 (~100 words): Dialogue 2. Дмитро: Якого кольору твоя кімната? Ліза: Біла. А стіл — коричневий, крісло — сіре. Дмитро: Гарно. А де мій білий светр і коричневі черевики? Ліза: Там, де моя чорна сукня.
+- P6 (~50 words): Analysis of Dialogue 2. Reiterate the gender agreement rules demonstrated in the conversation: кімната (f) takes біла, стіл (m) takes коричневий, крісло (n) takes сіре, and plural черевики takes коричневі.
 
-## Кольори — Colors (~350 words)
-- P1 (~80 words): Introduction to color adjectives as the primary way to describe physical objects. Explanation of the hard-stem pattern (-ий for masculine, -а for feminine, -е for neuter), consistent with the adjectives learned in M09.
-- P2 (~100 words): Deep dive into the "Hard-Stem Rainbow." Using examples from Bolshakova Grade 2: червоне сонце (red sun), жовте жито (yellow rye), зелена трава (green grass). Listing vocabulary with gender triples: чорний/чорна/чорне (black), білий/біла/біле (white), сірий/сіра/сіре (grey).
-- <!-- INJECT_ACTIVITY: quiz-color-match --> [quiz, Match objects to typical colors (e.g., сніг -> білий), 8 items]
-- <!-- INJECT_ACTIVITY: fill-in-gender-agreement --> [fill-in, Gender agreement with colors (e.g., червон__ машина), 10 items]
-- P3 (~90 words): Introduction to the "Soft-Stem" group (м'яка група). Explanation that among common colors, only "синій" (dark blue) follows this pattern. Key morphological shift: masculine -ій, feminine -я, neuter -є. Comparison using Vashulenko Grade 3 logic: новий стіл (hard) vs синій стіл (soft).
-- P4 (~80 words): Drill on the "синій" paradigm. Explicit examples for the learner to memorize: синій олівець (m), синя ручка (f), синє вікно (n). Contrast with "великий" from M09 to show the spelling difference: велика → синя.
-- <!-- INJECT_ACTIVITY: group-sort-hard-soft --> [group-sort, Sort colors into hard-stem (-ий) vs soft-stem (-ій), 10 items]
+## Кольори (Colors) (~350 words)
+- P1 (~60 words): Introduction to the 12 basic colors. Explain that colors are adjectives and follow the agreement patterns learned in Module 09. Present the dominant "hard-stem" (тверда група) pattern (-ий/-а/-е/-і) first.
+- P2 (~80 words): Detailed breakdown of hard-stem colors: червоний (red), жовтий (yellow), зелений (green), чорний (black), білий (white), сірий (grey). Provide familiar noun associations: червоний борщ (m), зелена трава (f), чорна кава (f), білий сніг (m).
+- P3 (~60 words): Introduction to the "soft-stem" (м'яка група) adjectives (-ій/-я/-є/-і). Explain that "синій" (dark blue) is the only basic color in this group and must be memorized as a special grammatical case.
+- P4 (~80 words): Detailed comparison of hard vs. soft stem agreement. Show the contrast: великий стіл → синій стіл (m), велика книга → синя книга (f), велике вікно → синє вікно (n). Explain exactly how the endings differ from the hard-stem pattern.
+- P5 (~70 words): Provide the full vocabulary summary of these initial colors in their masculine dictionary forms, paired with their translations and IPA. Reinforce using "Якого кольору...?" to prompt these descriptions.
+- <!-- INJECT_ACTIVITY: quiz-color-matching --> [quiz, focus: Якого кольору? Match objects to their typical color., items: 8]
+- <!-- INJECT_ACTIVITY: fill-in-color-agreement --> [fill-in, focus: Gender agreement with colors: син__ книга, червон__ стіл, біл__ вікно, items: 10]
+- <!-- INJECT_ACTIVITY: group-sort-hard-soft-stem --> [group-sort, focus: Sort colors into тверда група (-ий) and м'яка група (-ій), items: 10]
 
-## Синій ≠ блакитний — Blue ≠ Blue (~330 words)
-- P1 (~100 words): The unique Ukrainian distinction between two types of blue. Explanation that "синій" refers to dark, deep shades like the sea (синє море) or the night sky (синє небо вночі). "Блакитний" (or "голубий") refers to light blue, sky blue (блакитне небо вдень). Decolonization note: prefer "блакитний" over the Russian-influenced "голубий."
-- P2 (~80 words): The Colors of the Flag. Cultural significance of the "синьо-жовтий" (blue-and-yellow) flag. Reference to Kravtsova Grade 2: "Синє — небо, жовте — жито." Discussion of why the flag is described as "синій" even when the shade appears lighter in modern prints — it symbolizes the vastness of the sky.
-- <!-- INJECT_ACTIVITY: quiz-blue-shade --> [quiz, Choose синій vs блакитний for specific contexts (e.g., deep ocean vs clear sky), 6 items]
-- P3 (~80 words): Expanding the palette for richer descriptions. Introducing hard-stem variants: рожевий (pink), помаранчевий/оранжевий (orange), фіолетовий (purple), and коричневий (brown). Association with common objects: рожева квітка (pink flower), фіолетова фіалка (purple violet).
-- P4 (~70 words): Compound colors and modifiers. How to create "dark-" and "light-" variants using the prefixes темно- and світло-. Grammar rule: these are joined by a hyphen. Examples: темно-зелений (dark green), світло-синій (light blue).
+## Синій ≠ блакитний (Blue ≠ Blue) (~340 words)
+- P1 (~90 words): Explain the critical difference between the two Ukrainian blues: синій and блакитний. "Синій" is dark, deep blue (the sea, ink, night sky). "Блакитний" is light, sky blue (a clear daytime sky). Emphasize that while English uses "blue" for both, Ukrainian enforces a strict distinction.
+- P2 (~80 words): Clarify the cultural context of the Ukrainian flag. It is officially "синьо-жовтий" (синій for the deep sky/peace, жовтий for wheat/жито). Also mention that "голубий" is a Russian-influenced word for light blue, and learners should always prefer "блакитний".
+- P3 (~90 words): Expand the color palette with more hard-stem adjectives: коричневий (brown), рожевий (pink), помаранчевий (orange), фіолетовий (purple). Provide clear examples: коричневі черевики, рожева квітка, фіолетова сукня.
+- P4 (~80 words): Introduce compound colors using the prefixes темно- (dark) and світло- (light). Examples: темно-зелений (dark green), світло-синій (light blue-ish). Connect this to the cultural hook of the "вишиванка" (embroidered shirt), which traditionally features червоний і чорний in Polissya, or червоний і синій in Poltava.
+- <!-- INJECT_ACTIVITY: quiz-blue-shades --> [quiz, focus: синій or блакитний? Choose the right shade of blue., items: 6]
 
-## Підсумок — Summary (~310 words)
-- P1 (~120 words): Final recap of the color agreement rules. A side-by-side comparison of the hard-stem paradigm (червоний) and the soft-stem paradigm (синій). Reminder that colors must match the gender of the noun they describe, even in plurals (learned as -і for all genders, e.g., зелені дерева).
-- P2 (~90 words): Cultural signature: "Два кольори." Brief mention of the traditional Ukrainian embroidery colors — червоний (love) and чорний (sorrow). Note that while Polissia favors red and black, Poltava embroidery often features red and blue (червоний і синій).
-- P3 (~100 words): Self-check Q&A:
-    *   Якого кольору прапор України? (Синьо-жовтий: синє — небо, жовте — жито)
-    *   Яка різниця між "синій" і "блакитний"? (Синій — dark/deep; блакитний — light/sky blue)
-    *   Яке закінчення має слово "синій" у жіночому роді? (Закінчення -я: синя)
-    *   Як сказати "dark green" українською? (Темно-зелений)
-    *   Назвіть три предмети у вашій кімнаті та їхні кольори. (e.g., Біла шафа, коричневий стіл, сіре крісло)
-
-Grand total: ~1320 words
+## Підсумок — Summary (~300 words)
+- P1 (~150 words): Recap the core grammatical points of the module. Emphasize that color adjective agreement strictly follows noun gender. Reiterate the crucial difference between the standard hard-stem endings (червоний стіл, червона книга, червоне вікно) and the unique soft-stem endings of синій (синій стіл, синя книга, синє вікно). Remind learners about the semantic difference between the two blues (синій vs. блакитний) and the utility of the prefixes темно- and світло-.
+- P2 (~150 words): Self-check questions:
+  * What color is the Ukrainian flag? (синьо-жовтий)
+  * Describe 3 things in your room using color adjectives. Ensure the endings match the gender of the objects.
+  * What is the difference between синій and блакитний?
+  * How do you ask "What color is it?" in Ukrainian?
 </skeleton>
 
 ## Output Format
@@ -811,11 +831,59 @@ Grand total: ~1320 words
 Write in Markdown. Use:
 - `## Section Title` for main sections
 - `### Subsection` for subsections within a section
-- `**bold**` for Ukrainian words being taught — EVERY bold Ukrainian word MUST have an English translation on first use, either in parentheses `**слово** (translation)` or inline `**слово** means "translation"`. No exceptions.
+- `**bold**` for Ukrainian words being taught. For **A1 and A2** levels, provide an English translation on first use (e.g. `**стіл** (table)`) because learners lack the vocabulary to infer meaning. For **B1 and above**, do NOT provide inline translations for standard vocabulary — the learner will use the module's словник (vocabulary table). You may provide ONE parenthetical English translation ONLY for highly abstract grammar/linguistic terms on first use (e.g. `**видова пара** (aspectual pair)`).
 - Tables for paradigms (conjugation, declension)
 - `:::tip` / `:::caution` / `:::note` for callout boxes
 - `<!-- INJECT_ACTIVITY: {id} -->` for exercise placement (markers only — do NOT write exercise content)
 
 Do NOT write MDX component syntax, JSON, or DSL exercise blocks (:::quiz, etc.). Plain Markdown with injection markers.
+
+---
+
+## MANDATORY FINAL CHECKLIST (#1189)
+
+Before you finish writing, verify the prose against this checklist. Failing any item will fail the build.
+
+### Section headings (verbatim)
+
+Every heading from "Section Structure" above MUST appear as an `## H2` in your output, in order, **including the closing `Підсумок:` / `Підсумок та перехід до M...` summary**. The single most common writer failure across the B1 build has been silently dropping the final summary section. Re-read your output before stopping. If the last section in the plan is missing, write it now.
+
+### Required vocabulary (every word must appear)
+
+You MUST use **every word** from the list below at least once in the prose, in a natural sentence with bold + English translation. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, прагматика, діагностика, дієвідмінювання, зворотний, двовидовий, одновидовий, неозначено-кількісний, etc.) is the most frequently dropped category — actively find homes for those words even if it means adding a sentence that defines them.
+
+- [ ] червоний (red)
+- [ ] жовтий (yellow)
+- [ ] зелений (green)
+- [ ] синій (dark blue — soft-stem!)
+- [ ] блакитний (light blue, sky blue)
+- [ ] білий (white)
+- [ ] чорний (black)
+- [ ] сірий (grey)
+- [ ] колір (color, m)
+- [ ] якого кольору? (what color?)
+
+### Forbidden words (never produce)
+
+Do not write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use `<!-- VERIFY -->` instead). The post-write toxic-token scanner will fail the build immediately:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+### Level-specific immersion check
+
+The level-appropriate immersion rule was already injected at the top of
+this prompt as `IMMERSION RULE`. Re-read it now BEFORE you stop writing.
+If your level's rule contains a CHECKLIST block, walk through every item.
+If it doesn't, just verify your output matches the LANGUAGE ROLES and
+TARGET stated in that block.
+
+This used to hard-code a B1+ checklist that confused A1/A2 models (where
+translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+The single source of truth is now
+`scripts/pipeline/config_tables.py:IMMERSION_RULES`.
+
+---
 
 Begin writing now. Start with the first section heading.

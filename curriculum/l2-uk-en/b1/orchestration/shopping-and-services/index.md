@@ -1,6 +1,6 @@
 # Build Summary: shopping-and-services (B1)
 
-Generated: 2026-04-09 23:56
+Generated: 2026-04-12 12:25
 
 ## Pipeline Phases
 
@@ -9,35 +9,56 @@ Generated: 2026-04-09 23:56
 | check | complete | 2026-04-09 21:30:35 |
 | research | complete | 2026-04-09 21:30:35 |
 | skeleton | complete | 2026-04-09 21:31:08 |
-| pre-verify | complete | 2026-04-09 21:32:08 |
-| write | complete | 2026-04-09 21:45:59 |
+| pre-verify | complete | 2026-04-12 09:50:02 |
+| write | complete | 2026-04-12 09:51:19 |
 | exercises | complete | 2026-04-09 21:45:59 |
 | activities | complete | 2026-04-09 21:52:19 |
 | verify-exercises | complete | 2026-04-09 21:52:19 |
 | annotate | complete | 2026-04-09 21:52:19 |
-| vocab | complete | 2026-04-09 21:53:03 |
+| vocab | complete | 2026-04-12 09:54:30 |
 | enrich | complete | 2026-04-09 21:53:03 |
 | verify | complete | 2026-04-09 21:53:03 |
-| review | complete | 2026-04-09 21:56:06 |
-| stress | complete | 2026-04-09 21:56:06 |
-| publish | complete | 2026-04-09 21:56:11 |
+| stress | complete | 2026-04-12 10:25:11 |
+| review | complete | 2026-04-12 10:25:26 |
+| publish | complete | 2026-04-12 10:25:32 |
 
 ## Reviews
 
 | Round | File |
 |-------|------|
 | 1 | shopping-and-services-review-r1.md |
+| 2 | shopping-and-services-review-r2.md |
+| 3 | shopping-and-services-review-r3.md |
+| 4 | shopping-and-services-review-r4.md |
+| 5 | shopping-and-services-review-r5.md |
 
 ## Dispatch Log
 
 | Phase | Agent | Duration | OK |
 |-------|-------|----------|----|
 | pre-verify | gemini-tools (gemini-3-flash-preview) | 60s | ✅ |
+| pre-verify | gemini-tools (gemini-3.1-pro-preview) | 95s | ✅ |
+| pre-verify | codex-tools (gpt-5.4) | 354s | ✅ |
+| pre-verify | codex-tools (gpt-5.4) | 375s | ✅ |
+| pre-verify | codex-tools (gpt-5.4) | 395s | ✅ |
 | skeleton | gemini (gemini-3-flash-preview) | 32s | ✅ |
 | activities | gemini-tools (gemini-3.1-pro-preview) | 185s | ✅ |
 | activities | gemini-tools (gemini-3.1-pro-preview) | 195s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 0s | ❌ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 0s | ❌ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 0s | ❌ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 0s | ❌ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 0s | ❌ |
 | vocab | gemini (gemini-3-flash-preview) | 32s | ✅ |
+| vocab | gemini (gemini-3.1-pro-preview) | 74s | ✅ |
+| vocab | codex (gpt-5.4) | 215s | ✅ |
+| vocab | codex (gpt-5.4) | 185s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 182s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 0s | ❌ |
+| review | codex-tools (gpt-5.4) | 486s | ✅ |
+| review | codex-tools (gpt-5.4) | 370s | ✅ |
+| review | codex-tools (gpt-5.4) | 871s | ✅ |
+| review | codex-tools (gpt-5.4) | 370s | ✅ |
 | write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 235s | ✅ |
 | write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 67s | ✅ |
 | write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 66s | ✅ |
@@ -46,6 +67,10 @@ Generated: 2026-04-09 23:56
 | write-chunk-06 | gemini-tools (gemini-3.1-pro-preview) | 57s | ✅ |
 | write-fix | gemini-tools (gemini-3.1-pro-preview) | 148s | ✅ |
 | write-fix | gemini-tools (gemini-3.1-pro-preview) | 118s | ✅ |
+| write-fix | gemini-tools (gemini-3.1-pro-preview) | 99s | ✅ |
+| write-fix | codex-tools (gpt-5.4) | 280s | ✅ |
+| write-fix | codex-tools (gpt-5.4) | 265s | ✅ |
+| write-fix | codex-tools (gpt-5.4) | 285s | ✅ |
 
 ## Files
 
@@ -61,6 +86,10 @@ Generated: 2026-04-09 23:56
 - `pre-verify-results.md`
 - `quick-verify.json`
 - `review-structured-r1.yaml`
+- `review-structured-r2.yaml`
+- `review-structured-r3.yaml`
+- `review-structured-r4.yaml`
+- `review-structured-r5.yaml`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

@@ -1,23 +1,23 @@
-# Section-by-Section Generation — Section 2/4
+# Section-by-Section Generation — Section 2/3
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 13: Мого друга, цієї книги (A2, A2.2 [Genitive Case Complete])
-**Section to write:** Мого, твого, нашого: присвійні займенники (Possessive Pronouns) (~650 words total)
-**Word target for this section:** 650 words (aim for 715 to account for undershoot)
+**Section to write:** Мого, твого, нашого: присвійні займенники (~715 words)
+**Word target for this section:** 715 words (aim for 786 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Мого, твого, нашого: присвійні займенники (Possessive Pronouns) (~650 words total)
-- P1 (~110 words): [Overview of Possessives: Defining the role of possessive pronouns (мій, твій, свій) in the Genitive. Focus on how 'Whose?' (Чий? Чия? Чиє?) becomes 'Of whom?' (Чийого? Чиєї?) in context.]
-- P2 (~110 words): [Masculine and Neuter Possessives: Paradigms for мого, твого, свого. Highlighting the shift from 'ій' in Nominative (мій) to 'о' in Genitive (мого). Practice sentences: 'біля мого дому', 'без твого дозволу'.]
-- P3 (~100 words): [Feminine Possessives: Paradigms for моєї, твоєї, своєї. Emphasizing the spelling with 'єї' and the soft pronunciation. Examples: 'від моєї сестри', 'для твоєї подруги'.]
-- P4 (~100 words): [Plurality and Inclusion: Declining 'наш' and 'ваш'. These follow the hard-group adjective pattern: 'нашого/нашої' and 'вашого/вашої'. Examples: 'до нашої лікарні', 'з вашого міста'.]
-- P5 (~120 words): [The Case of 'Їхній' vs. 'Їх': Decolonization point. Explaining that 'їхній' is a fully declinable possessive adjective (їхнього, їхньої), whereas 'їх' is a non-declinable personal pronoun form. Use of 'їхнього' is the standard for possession.]
-- P6 (~110 words): [Unchanged Possessives: 'Його' (his/its) and 'Її' (her). Explaining that these forms do not change when acting as possessives, regardless of the case of the noun they modify: 'біля його столу', 'від її сестри'.]
-- <!-- INJECT_ACTIVITY: quiz-possessive-choice --> [quiz, Choose the correct possessive pronoun form (мого vs. моєї etc.), 8 items]
+## Мого, твого, нашого: присвійні займенники (~715 words)
+- P1 (~120 words): Introduction to possessive pronouns (присвійні займенники) in the Genitive. Explain that "my", "your", and "our" behave like adjectives and must agree with the noun they describe. Contrast with English: we don't say "without my [Genitive noun]", we say "without [Genitive my] [Genitive noun]".
+- P2 (~140 words): Masculine and Neuter Genitive possessive forms. Detail the specific forms: `мій → мого`, `твій → твого`, `наш → нашого`, `ваш → вашого`. Provide concrete examples: `для мого брата`, `біля нашого будинку`, `без твого дозволу`.
+- P3 (~140 words): Feminine Genitive possessive forms. Detail the specific forms ending in `-еї`/`-ої`: `моя → моєї`, `твоя → твоєї`, `наша → нашої`, `ваша → вашої`. Provide examples: `від моєї сестри`, `для нашої вчительки`, `біля вашої школи`.
+- P4 (~165 words): The special cases of 3rd person possessives (`його`, `її`, `їхній`). Explain that `його` (his) and `її` (her) are unchanging (`його книга → його книги`, `її сумка → її сумки`). Contrast this explicitly with "their": `їхній` declines exactly like a soft adjective (`їхнього друга`, `їхньої школи`). Include a strong decolonization note: warn against the common Russianism of using the unchanging personal pronoun `їх` (❌ їх проблеми) instead of the correct Ukrainian possessive `їхні/їхніх`.
+- P5 (~150 words): Practice with spatial and logical prepositions (consolidating M08-M10). Show how the possessive pronoun anchors prepositional phrases: `з мого міста` (origin), `без твоєї допомоги` (absence), `для нашого вчителя` (beneficiary), `до вашої лікарні` (destination). 
+- <!-- INJECT_ACTIVITY: quiz-possessive-pronouns --> [quiz, Choose the correct possessive pronoun form (мого vs. моєї etc.), 8 items]
+- <!-- INJECT_ACTIVITY: match-up-nom-to-gen --> [match-up, Match Nominative noun phrases to their Genitive equivalents, 8 items]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -25,7 +25,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-English word "home". It sounds like [-oho]. Never pronounce it as [-ovo], which is a feature of the Russian language. Emphasizing the [h] sound makes your Ukrainian sound authentic, decolonized, and completely natural. ::: Not all adjectives have hard stems. Some adjectives belong to the soft group. You can easily recognize them because their dictionary form ends in a soft consonant followed by «-ій», such as «синій» (blue), «вчорашній» (yesterday's), or «літній» (summer). For these masculine and neuter adjectives, the Genitive ending becomes **-ього**. The soft sign is crucial here because it ensures that the consonant right before the ending remains soft during pronunciation. Сьогодні немає синього олівця на моєму столі. Ми дуже довго чекали цього теплого літнього дня. Він зовсім не пам'ятає вчорашнього вечора. Це був колір глибокого моря. > *Today there is no blue pencil on my table. We waited a very long time for this warm summer day. He does not remember yesterday evening at all. It was the color of the deep sea.* Feminine adjectives have entirely distinct Genitive endings. You do not use the «-ого» or «-ього» suffixes here. Instead, for hard stem feminine adjectives, you drop the «-а» and add the ending **-ої**. For soft stem adjectives, which typically end in «-я» in the Nominative case, you change the ending to **-ьої** or **-ньої**. This creates a beautiful, melodic sound that is very characteristic of spoken Ukrainian. Він уважно читає першу сторінку з нової книги. Я ніколи не бачив цієї гарної дівчини раніше. Вона купила дорогі ґудзики для синьої сукні. Учні повільно повертаються з вечірньої школи. > *He carefully reads the first page from a new book. I have never seen this beautiful girl before. She bought expensive buttons for a blue dress. The students slowly return from evening school.* :::tip **Watch out for calques!** Notice that the Ukrainian feminine Genitive endings are **-ої** and **-ьої** (for example, «нової», «синьої»). They are distinct from the Russian endings. Pay close attention to pronouncing these Ukrainian vowels clearly to avoid mixing the two languages and to preserve the unique rhythm of Ukrainian. ::: The most frequent and practical way you will use these Genitive adjectives is alongside prepositions that demand the Genitive case. Prepositions such as «без» (without), «для» (for), «біля» (near), and «від» (from) are your primary triggers. Whenever you use one of these words to build a phrase, you must expect both the descriptive adjective and the main noun to take their Genitive forms. Mastering these combinations will dramatically elevate your speaking ability. Я справді не можу працювати без того важливого документа. Це спеціальний подарунок для нашої нової вчительки. Ми вчора зустрілися біля великого торгового центру. Вона нарешті отримала повідомлення від молодого лікаря. > *I truly cannot work without that important document. This is a special gift for our new teacher. We met near the large shopping center yesterday. She finally received a message from the young doctor.* <!-- INJECT_ACTIVITY: fill-in, Put the adjective and noun into the correct Genitive form, 8 items -->
+can confidently describe any missing feminine object, or talk about a **вчителька** (female teacher) with precision. У мене немає нової цікавої книги. Ми стоїмо біля старої дерев'яної церкви. Вона не хоче купувати синьої сукні. Для цієї складної роботи потрібен інший інструмент. У сестри немає останньої версії цього документа. > *I do not have a new interesting book. We are standing near the old wooden church. She does not want to buy a blue dress. A different tool is needed for this difficult work. The sister does not have the latest version of this document.* In real-life conversations, you will frequently use full phrases that include prepositions. When you construct a sentence with prepositions like "без", "біля", or "для", both the adjective and the noun must change together as a single grammatical unit. You cannot change the noun and leave the adjective in its dictionary form. They operate as an inseparable pair. For example, if you want to say "without a new textbook," you must combine the preposition with the masculine Genitive phrase to get "без нового підручника." If you are talking about a location, such as "near the old church," the entire feminine phrase shifts to "біля старої церкви." This principle of agreement applies seamlessly across all three genders, including soft stems like "без синього олівця." You will also apply this same logic when using a **вказівний** (demonstrative) or **присвійний** (possessive) **займенник** (pronoun). Він не може працювати без важливого документа. Студенти чекають біля нової школи. Діти граються біля високого дерева. Ми не можемо увійти туди без спеціального дозволу. Вона купила квіти для нашої найкращої вчительки. > *He cannot work without an important document. The students are waiting near the new school. The children are playing near the tall tree. We cannot enter there without special permission. She bought flowers for our best teacher.* Recognizing this pattern is an **важливий** (important) step to build your fluency. Practicing common descriptive opposites in their Genitive forms will help you quickly describe what is missing or where something is located. Whether you are asking for **дозвіл** (permission) or looking for a lost **документ** (document), you need these endings. For the basic word "великий", the Genitive forms are "великого" for masculine and neuter objects, and "великої" for feminine objects. Its natural opposite, "маленький", logically becomes "маленького" and "маленької". The descriptive word "старий" shifts to "старого" and "старої", while "молодий" predictably changes to "молодого" and "молодої". Practicing these basic descriptive words in full phrases will make your spoken Ukrainian sound much more natural, fluid, and precise. Тут немає великого стола, але є багато вільного місця. Вона не знає цього старого міста. Ми шукаємо власника маленької чорної сумки. У молодої дівчини немає жодних проблем із цим новим завданням. > *There is no large table here, but there is a lot of free space. She does not know this old city. We are looking for the owner of the small black bag. The young girl has no problems at all with this new task.* <!-- INJECT_ACTIVITY: fill-in-genitive-adjectives -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -692,6 +692,31 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] прикметник (adjective)
+- [ ] займенник (pronoun)
+- [ ] присвійний (possessive)
+- [ ] вказівний (demonstrative)
+- [ ] узгодження (agreement (grammatical))
+- [ ] дозвіл (permission)
+- [ ] підручник (textbook)
+- [ ] документ (document)
+- [ ] вчителька (female teacher)
+- [ ] важливий (important)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Мого, твого, нашого: присвійні займенники (~715 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

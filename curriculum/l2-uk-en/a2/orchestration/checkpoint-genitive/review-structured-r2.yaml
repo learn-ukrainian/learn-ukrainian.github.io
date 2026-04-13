@@ -2,52 +2,54 @@ round: 2
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 9
-  evidence: 'The module follows the structural outline perfectly and uses all required
-    vocabulary. It misses one specific plan point in the dialogue: the plan requested
-    "Для групи з десяти людей" to test number+no'
+  score: 7
+  evidence: The plan is preposition-centered, but Part 2 shifts to non-prepositional
+    genitive in `Я потребую допомоги` and `У мене немає сестри`. Part 3 also omits
+    the planned `Dialogue completion` and `Translati
 - dimension: 2
   name: Linguistic accuracy
-  score: 9
-  evidence: All Ukrainian phrases are flawless and naturally constructed. However,
-    there is a technical inaccuracy in the English grammatical explanation classifying
-    "people, animals" as inanimate nouns.
+  score: 10
+  evidence: 'No Russianisms, Surzhyk, calques, paronym errors, or wrong case forms
+    found. Tricky claims were supportable: `від` with time is attested in СУМ-11,
+    and forms like `морів`, `дітей`, `людей` are confirm'
 - dimension: 3
   name: Pedagogical quality
   score: 8
-  evidence: 'The English explanation for the Genitive singular endings mixes animate
-    and inanimate nouns: "For inanimate masculine nouns in the singular... Concrete
-    objects, people, animals... take -а / -я." Peopl'
+  evidence: Parts 1-2 give many examples and move from recognition to patterning,
+    but the paragraph beginning `To виправити...` teaches extra governance patterns
+    outside the checkpoint brief, which weakens review
 - dimension: 4
   name: Vocabulary coverage
   score: 10
-  evidence: All required and recommended words (родовий відмінок, прийменник, узгодження,
-    множина, однина, закінчення, перевірка, помилка, виправити, впізнати, вибрати)
-    are present, bolded, and used naturally.
+  evidence: 'All required vocabulary appears naturally in prose: `родовий відмінок`,
+    `прийменник`, `узгодження`, `множина`, `однина`, `закінчення`, `перевірка`, `помилка`.
+    Recommended `виправити`, `впізнати`, and '
 - dimension: 5
   name: Exercise quality
   score: 10
-  evidence: The markers are injected logically at the end of their respective sections,
-    testing exactly what was just taught.
+  evidence: Marker inventory matches the four planned activity types exactly, and
+    each marker comes after the relevant teaching section. No visible exercise-logic
+    problems in the prose.
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: 'Excellent encouraging tone. The writer gives practical advice: "Every
-    time you correctly say ''для мами'' instead of ''для мама''... you are thinking
-    in Ukrainian."'
+  score: 9
+  evidence: The voice is teacherly and generally substantive, with concrete contexts
+    like Kyiv landmarks, the market, and directions.
 - dimension: 7
   name: Structural integrity
-  score: 10
-  evidence: Word count is 1929 (well above the 1500 target). All H2 headers match
-    the plan. Clean markdown.
+  score: 8
+  evidence: 'All required H2 sections are present and the pipeline word count is 1674,
+    but section pacing is uneven: local heading-based counts are about 535 / 541 /
+    411 against the planned 450 / 500 / 550.'
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Correct usage of real-world Kyiv landmarks (Золоті ворота, Софійський
-    собор, Хрещатик).
+  evidence: The module stays Ukrainian-centered, with examples such as `Софійського
+    собору` and `Хрещатика`, and avoids Russian-comparison framing.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 9
-  evidence: The dialogue is a great multi-turn contextualization of the grammar points.
-    It feels natural but loses a point for missing the required phrase from the plan.
+  score: 8
+  evidence: The tour-guide and market dialogues are functional and multi-turn, but
+    the pharmacy closing `бо я бачу, що у вас немає настрою` sounds stilted for an
+    `Аптекар`.
 findings: []

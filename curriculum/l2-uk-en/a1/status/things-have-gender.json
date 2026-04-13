@@ -2,13 +2,13 @@
   "module": "things-have-gender",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-11T00:53:15.455703Z",
+  "last_audit": "2026-04-13T10:57:30.726264Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-11T00:53:14.887769Z",
+    "md": "2026-04-13T10:57:19.619728Z",
     "meta": null,
-    "activities": "2026-04-09T02:08:50.985683Z",
-    "vocabulary": "2026-04-09T02:11:45.828594Z",
+    "activities": "2026-04-12T21:27:19.685611Z",
+    "vocabulary": "2026-04-12T21:28:08.893651Z",
     "research": null,
     "plan": "2026-03-30T22:17:20.666393Z"
   },
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
+      "status": "warn",
       "violations": 0,
-      "message": "1827/1200 (raw: 1866)"
+      "message": "1079/1200 (raw: 1115) (121 short)"
     },
     "activities": {
       "status": "pass",
@@ -31,7 +31,16 @@
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "36/1"
+      "message": "37/1"
+    },
+    "vocab_progression": {
+      "status": "warn",
+      "violations": 0,
+      "message": "\u0394 -13 | premature=9 | gaps=0 | well-paced=16",
+      "delta": -13,
+      "premature": 9,
+      "gaps": 0,
+      "well_paced": 16
     },
     "naturalness": {
       "status": "info",
@@ -52,7 +61,7 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 6,
+    "pass_count": 5,
     "fail_count": 0,
     "deferred_count": 0
   }

@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-головним у цій конкретній ситуації? Найчастіше цю важливу роль грає **іменник** *(noun)* або **займенник** *(pronoun)*. Вони обов'язково повинні стояти у формі **називного відмінка** *(nominative case)*. Тільки називний відмінок має офіційне право бути підметом у реченні. Наприклад: «Старший брат зараз працює». Хто працює? Брат. Це наш підмет, він стоїть у називному відмінку. Або інший простий приклад: «Вона тихо відпочиває». Хто відпочиває? Вона. Тут підметом є особовий займенник. Українські школярі мають спеціальне візуальне правило для синтаксичного аналізу. Коли вони знаходять підмет у тексті, вони завжди підкреслюють його однією суцільною лінією. Тепер переходимо до другого рівноправного партнера. Присудок — це головний член речення, який описує нашого героя. Присудок детально розповідає нам, що саме активно робить підмет. Також він може показувати емоційний стан героя або його фізичну ознаку. Присудок завжди відповідає на питання: що робить? що з ним робиться? який він є? або хто він такий? Найчастіше роль присудка грає звичайне **дієслово** *(verb)*. Наприклад: «Літнє сонце яскраво світить». Що робить сонце? Воно світить. Слово «світить» — це наша дія, наш присудок. Або візьмемо інший приклад: «Маленька дитина дуже швидко росте». Що робить дитина? Росте. Українська мова дуже динамічна, тому дієслова є справжньою основою нашого щоденного спілкування. Під час синтаксичного розбору речення школярі завжди підкреслюють присудок двома суцільними лініями. Так ми відразу чітко бачимо на папері і нашого героя (одна лінія), і його дію (дві лінії). В українській мові є одна дуже цікава та особлива граматична ситуація. Іноді і підмет, і присудок є іменниками. Вони обидва стоять у формі називного відмінка. У таких реченнях ми зазвичай не використовуємо дієслово «є» *(is/are)* у теперішньому часі, ми його просто пропускаємо. Замість дієслова ми ставимо на письмі спеціальний розділовий знак — **тире** *(dash)*. Тире прекрасно працює як логічний місток між двома іменниками. Наприклад: «Київ — столиця України». Що? Київ (наш підмет). Київ є чим? Столиця (наш присудок). Обидва слова є іменниками в називному відмінку, тому між ними обов'язково стоїть тире. Інший дуже популярний приклад: «Життя — це постійний виклик». Або коротка філософська фраза: «Знання — велика сила». Тире допомагає нам красиво з'єднати ці два поняття. Воно показує математичний знак рівності між підметом і присудком. Це надзвичайно характерна риса українського синтаксису. Як правильно та швидко знайти граматичну основу в довгому складному реченні? Іноді різні слова можуть нас легко заплутати. Головне правило — завжди уважно шукайте того, хто реально виконує дію. Давайте детально порівняємо дві схожі ситуації. Перше речення: «Сильний вітер хилить високі клени». Задаємо логічне питання: хто або що фізично виконує дію? Вітер. Що він робить? Хилить. Отже, наша основа — «вітер хилить». Слово «клени» тут просто пасивно приймає дію на себе, це точно не підмет. Друге речення: «Високі клени хиляються від вітру». Знову шукаємо нашого активного героя. Що виконує дію? Клени. Що вони роблять? Хиляються. Тут наша граматична основа — «клени хиляються». Як бачите, одне і те ж слово «клени» може грати абсолютно різні ролі в тексті. Все залежить тільки від контексту. Тому ніколи не вгадуйте. Завжди ставте логічні питання від дії до героя. <!-- INJECT_ACTIVITY: mark-the-words, find and mark підмет and присудок in sentences, 6 items -->
+is the **присудок** (predicate — main sentence member naming the action/state). If the subject is the hero, the predicate tells us exactly what this hero is doing, what is happening to them, or what they are like. Присудок — це другий головний член речення, який означає дію, стан або ознаку. Він тісно пов'язаний із підметом і відповідає на питання «що робить?». Також він може відповідати на питання «який він є?» або «хто він такий?». Найчастіше роль присудка бере на себе дієслово. Його завжди підкреслюють двома суцільними лініями. Подивимося на попередній приклад ще раз. Студент (що робить?) читає. Слово «читає» — це дія нашого героя, тому це присудок. Або візьмемо інше речення: книга (що робить?) лежить. Слово «лежить» показує стан предмета, тому це також присудок. Sometimes, the predicate is not an action verb at all. When you want to say that one thing *is* another thing, like "Kyiv is the capital", you use a special rule of **пунктуація** (punctuation — rules for using punctuation marks) instead of the verb "to be". Коли підмет і присудок виражені іменниками в називному відмінку, ми пропускаємо дієслово-зв'язку. Замість дієслова ми ставимо тире між цими двома словами. Тире працює як місток, який поєднує два поняття і показує їхню тотожність. Розглянемо класичні приклади: «Київ — столиця України» або «Життя — це великий виклик». У першому реченні «Київ» (що?) — це підмет, а «столиця» (що це таке?) — присудок. Обидва слова є іменниками в початковій формі, тому між ними стоїть тире. > *When the subject and the predicate are expressed by nouns in the nominative case, we skip the linking verb. Instead of a verb, we put a dash between these two words. The dash works like a bridge that connects two concepts and shows their identity. Let's look at classic examples: "Kyiv is the capital of Ukraine" or "Life is a great challenge". In the first sentence, "Kyiv" (what?) is the subject, and "capital" (what is it?) is the predicate. Both words are nouns in the initial form, so there is a dash between them.* :::info **Місток тотожності** Якщо ви можете вставити між двома іменниками слово «це» або «є», вам обов'язково потрібно поставити тире на письмі. Наприклад: «Мій брат — лікар». ::: Finding the grammatical core might seem easy when sentences are short. But when sentences grow longer and word order changes, you need a reliable diagnostic method to find the true "doer" of the action. Щоб правильно знайти граматичну основу, ви завжди повинні питати себе одну річ. Хто чи що насправді виконує дію в цьому конкретному реченні? Не дивіться лише на порядок слів, дивіться на логіку та закінчення. Порівняймо два цікаві речення. Перше: «Вітер хилить високі клени». Знайдемо основу. Хто виконує дію? Вітер (що робить?) хилить. Отже, «вітер» — це підмет, а «хилить» — присудок. Друге речення: «Високі клени хиляться від вітру». Що виконує дію тут? Тут клени (що роблять?) хиляться. У цьому випадку саме «клени» є підметом, а «хиляться» — присудком. Одне й те саме слово може бути різним членом речення. <!-- INJECT_ACTIVITY: find-grammatical-core -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -495,7 +495,74 @@ Understanding cases is the gateway to Ukrainian syntax. It is not an isolated to
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 6: A2 finale (A2 M51-M69)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 40%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 40% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 70-90% Ukrainian.
 LANGUAGE ROLES:
@@ -514,18 +581,69 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] синтаксис (syntax — the study of sentence structure)
+- [ ] пунктуація (punctuation — rules for using punctuation marks)
+- [ ] словосполучення (word combination — two+ words linked by meaning and grammar)
+- [ ] підмет (subject — main sentence member naming who/what acts)
+- [ ] присудок (predicate — main sentence member naming the action/state)
+- [ ] додаток (object — secondary member answering indirect case questions)
+- [ ] означення (attribute — secondary member answering який? чий?)
+- [ ] обставина (adverbial — secondary member answering як? де? коли?)
+- [ ] складне речення (complex sentence — sentence with two+ grammatical cores)
+- [ ] просте речення (simple sentence — sentence with one grammatical core)
+- [ ] називний відмінок (nominative case — хто? що?)
+- [ ] родовий відмінок (genitive case — кого? чого?)
+- [ ] давальний відмінок (dative case — кому? чому?)
+- [ ] знахідний відмінок (accusative case — кого? що?)
+- [ ] орудний відмінок (instrumental case — ким? чим?)
+- [ ] місцевий відмінок (locative case — на кому? на чому?)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Другорядні члени речення (~700 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

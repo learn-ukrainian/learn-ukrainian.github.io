@@ -1,6 +1,6 @@
 # Build Summary: genitive-prepositions-source (A2)
 
-Generated: 2026-04-11 01:59
+Generated: 2026-04-11 12:07
 
 ## Pipeline Phases
 
@@ -12,15 +12,15 @@ Generated: 2026-04-11 01:59
 | pre-verify | complete | 2026-04-07 21:37:47 |
 | write | complete | 2026-04-07 21:44:28 |
 | exercises | complete | 2026-04-07 21:44:28 |
-| activities | complete | 2026-04-10 23:54:09 |
+| activities | complete | 2026-04-11 10:01:06 |
 | verify-exercises | complete | 2026-04-07 21:46:51 |
 | annotate | complete | 2026-04-07 21:46:51 |
 | vocab | complete | 2026-04-07 21:47:23 |
 | enrich | complete | 2026-04-07 21:47:23 |
 | verify | complete | 2026-04-07 21:47:23 |
 | stress | complete | 2026-04-07 21:54:34 |
-| publish | complete | 2026-04-10 23:59:16 |
-| audit | complete | 2026-04-10 23:59:16 |
+| publish | complete | 2026-04-11 10:07:13 |
+| audit | complete | 2026-04-11 10:07:13 |
 
 ## Reviews
 
@@ -37,19 +37,31 @@ Generated: 2026-04-11 01:59
 | skeleton | gemini (auto) | 185s | ✅ |
 | activities | gemini-tools (gemini-3.1-pro-preview) | 143s | ✅ |
 | activities | gemini-tools (gemini-3.1-pro-preview) | 35s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 75s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 84s | ✅ |
 | vocab | gemini (auto) | 26s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 186s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 244s | ✅ |
 | write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 51s | ✅ |
 | write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 40s | ✅ |
+| write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 34s | ✅ |
+| write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 65s | ✅ |
 | write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 162s | ✅ |
 | write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 125s | ✅ |
+| write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 90s | ✅ |
+| write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 89s | ✅ |
 | write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 57s | ✅ |
 | write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 64s | ✅ |
+| write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 75s | ✅ |
+| write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 95s | ✅ |
 | write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 106s | ✅ |
 | write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 45s | ✅ |
+| write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 60s | ✅ |
+| write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 65s | ✅ |
 | write-chunk-05 | gemini-tools (gemini-3.1-pro-preview) | 26s | ✅ |
 | write-chunk-05 | gemini-tools (gemini-3.1-pro-preview) | 20s | ✅ |
+| write-chunk-05 | gemini-tools (gemini-3.1-pro-preview) | 45s | ✅ |
+| write-chunk-05 | gemini-tools (gemini-3.1-pro-preview) | 40s | ✅ |
 
 ## Files
 

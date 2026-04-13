@@ -1,0 +1,65 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T21-38-878583c1.json
+phase: write-chunk-01
+prompt_chars: 40023
+response_chars: 4525
+prompt_words: 5545
+response_words: 759
+sections:
+- name: header
+  start: 0
+  length: 469
+  fraction: 0.0117
+- name: skeleton
+  start: 469
+  length: 1485
+  fraction: 0.0371
+- name: plan
+  start: 1954
+  length: 11231
+  fraction: 0.2806
+- name: wiki
+  start: 5811
+  length: 26597
+  fraction: 0.6645
+- name: output_spec
+  start: 39782
+  length: 241
+  fraction: 0.006
+large_sections:
+- wiki
+directives_total: 12
+directives_covered: 4
+directives_missed:
+- kind: checklist
+  text: готувати / приготувати (to cook, prepare)
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: checklist
+  text: ринок (market)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: коштувати (to cost)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: кілограм (kilogram)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: день (day)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: inject_activity
+  text: quiz-planning-party
+  covered: false
+  coverage_note: marker missing

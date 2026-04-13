@@ -1,4 +1,4 @@
-<!-- version: 1.1.0 | updated: 2026-03-31 -->
+<!-- version: 1.2.0 | updated: 2026-04-12 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -11,6 +11,35 @@ Generate an `activities/yesterday.yaml` file for module **49: Yesterday** (a1).
 
 ---
 
+## ⚠️ HARD COUNT TARGETS — READ TWICE
+
+These are the binding numerical contracts for THIS module. The audit will FAIL if you fall short.
+
+| Bucket | Min | Max | Notes |
+|---|---|---|---|
+| Total activities | 10 | 10+ | inline + workbook combined |
+| Inline (lesson tab) | 4 | 6 | one per `<!-- INJECT_ACTIVITY -->` marker, see below |
+| Workbook (Зошит tab) | 6 | 9 | extended practice |
+| Items per activity | 6 | — | each activity must have at least 6 items (unless its type cap is lower — see Activity Type Reference below) |
+
+**You MUST ship at least 4 inline activities AND at least 6 workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+
+**Type diversity is required.** The module (inline + workbook combined) MUST use at least **0** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level. (If `0` is `0`, the audit profile for this level does not enforce type diversity — but variety still produces a better lesson, so aim for 4+ types when the workbook allows it.)
+
+---
+
+## Allowed types for THIS level
+
+- **Inline (lesson) types:** image-to-letter, letter-grid, match-up, watch-and-repeat, quiz, true-false, fill-in, classify
+- **Inline priority (preferred):** image-to-letter, match-up, fill-in, quiz, watch-and-repeat
+- **Workbook types:** fill-in, match-up, group-sort, anagram, unjumble, quiz, true-false, classify, divide-words, count-syllables, pick-syllables, observe, phrase-table, odd-one-out
+- **Workbook priority (preferred):** fill-in, match-up, group-sort, anagram, unjumble
+- **FORBIDDEN at this level:** cloze, error-correction, mark-the-words, translate, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, highlight-morphemes, grammar-identify, select
+
+Pick from the allowed list. Lean heavily on the priority lists. Do not use any forbidden type — the build will reject it.
+
+---
+
 ## Inline vs Workbook Split
 
 Activities have two placement categories:
@@ -19,7 +48,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Rule of thumb:** inline = 2-3 quick checks after key teaching points. Workbook = 4-8 deeper practice exercises covering the full topic.
+**Rule of thumb:** inline = 4–6 quick checks after key teaching points. Workbook = 6–9 deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
 
 ---
 
@@ -27,9 +56,9 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: ordering-daily-routine -->`
-- `<!-- INJECT_ACTIVITY: fill-in-narrative-flow -->`
-- `<!-- INJECT_ACTIVITY: gender-consistency-drill -->`
+- `<!-- INJECT_ACTIVITY: order-daily-routine -->`
+- `<!-- INJECT_ACTIVITY: fill-in-time-markers -->`
+- `<!-- INJECT_ACTIVITY: fill-in-gender-consistency -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -103,130 +132,134 @@ required:
 <module_content>
 ## Dialogues
 
-Being able to say what you did in the past is useful, but the real power of language comes from telling a story. Up until now, we have looked at isolated past tense sentences. Moving from a single statement to a connected narrative changes how you communicate. Compare a present tense fact like **Сьогодні я працюю** (Today I am working) with a past narrative like **Учора я працював** (Yesterday I worked). Knowing how to chain these actions together allows you to describe exactly what happened, step by step.
+Chaining events together in a logical order is a vital skill in any language, and in Ukrainian, it is the key to sharing your life with others. Whether you are telling a friend about your weekend or reporting a missing item to the authorities, you need to know how to sequence actions. Talking about your daily routine — what you did from the moment you opened your eyes until you went to sleep — is one of the most common conversational topics. By the end of this module, you will be able to turn a simple list of actions into a coherent story that flows naturally from morning to night.
 
-Sequencing actions is crucial when facts matter. In the situation below, a witness speaks to a police officer about a stolen bicycle. The witness uses past tense verbs to build a precise timeline of events.
+In our first dialogue, let us listen to Petro as he describes a typical workday. Notice how he uses specific time markers to signal each phase of his day.
 
-> **Свідок:** Я припаркував велосипед біля магазину. *(I parked the bicycle near the store.)*
-> **Поліцейський:** А потім? *(And then?)*
-> **Свідок:** Потім зайшов у кав'ярню. *(Then I went into the cafe.)*
-> **Поліцейський:** Ви довго там були? *(Were you there long?)*
-> **Свідок:** Ні. Коли вийшов, велосипед зник. *(No. When I came out, the bicycle disappeared.)*
-> **Поліцейський:** Ви бачили когось? *(Did you see anyone?)*
-> **Свідок:** Бачив чоловіка в куртці та кепці. *(I saw a man in a jacket and a cap.)*
+> **Колега:** Як пройшов твій день? *(How was your day?)*
+> **Петро:** Добре! Зранку я **прокинувся** (woke up) о сьомій. *(Good! In the morning I woke up at seven.)*
+> **Колега:** Що ти робив зранку? *(What did you do in the morning?)*
+> **Петро:** Я **поснідав** (had breakfast) і **пішов** (went) на роботу. *(I had breakfast and went to work.)*
+> **Колега:** А вдень? *(And in the afternoon?)*
+> **Петро:** Вдень я працював і **обідав** (had lunch) з колегою. *(In the afternoon I worked and had lunch with a colleague.)*
+> **Колега:** А ввечері? *(And in the evening?)*
+> **Петро:** Ввечері я дивився фільм і рано **ліг** спати. *(In the evening I watched a movie and went to bed early.)*
 
-The words **велосипед** (bicycle) and **магазин** (store) are masculine, while **кав'ярня** (cafe) and **куртка** (jacket) are feminine. The sequence of verbs — **припаркував** (parked), **зайшов** (went in), **вийшов** (came out) — creates a clear, undeniable timeline of the incident.
+This short conversation demonstrates how the "skeleton" of a day is built using four main blocks: **зранку** (in the morning), **вдень** (in the afternoon), **ввечері** (in the evening), and finally, **лягти** (to lie down/go to) спати. Petro is a man, so his past tense verbs all end in the masculine suffix **-в** or **-вся**. He says **прокинувся** (I woke up), **поснідав** (I had breakfast), **пішов** (I went), and **ліг** (I lay down). These endings are consistent throughout his entire story, reflecting his gender in every action he recounts.
 
-:::note
-When the order of events matters, using clear past tense verbs in sequence is essential. In official situations, a well-structured narrative establishes the facts without confusion.
-:::
+Now, let us listen to a feminine perspective. Anna is telling her friend about her Saturday. Pay attention to how the verb endings change and how she uses "then" to keep the story moving.
 
-Narrating a day is just as common in casual conversation. Friends frequently catch up on a typical work day and discuss their routines.
+> **Подруга:** Що ти робила у суботу? *(What did you do on Saturday?)*
+> **Анна:** О, я мала чудовий день! *(Oh, I had a wonderful day!)*
+> **Подруга:** Розкажи! *(Tell me!)*
+> **Анна:** Зранку я **ходила** (went) на ринок і **купила** (bought) фрукти. *(In the morning I went to the market and bought fruit.)*
+> **Подруга:** А **потім** (then)? *(And then?)*
+> **Анна:** **Потім** я готувала обід. А вдень гуляла в парку. *(Then I was cooking lunch. And in the afternoon I walked in the park.)*
+> **Подруга:** А ввечері? *(And in the evening?)*
+> **Анна:** Ввечері ми з подругою **ходили** (went) в ресторан. *(In the evening me and a friend went to a restaurant.)*
+> **Подруга:** Як файно! *(How lovely!)*
 
-> **Олег:** Як пройшов твій день? *(How was your day?)*
-> **Тарас:** Добре! Зранку я прокинувся о сьомій. *(Good! In the morning I woke up at seven.)*
-> **Олег:** Що ти робив зранку? *(What did you do in the morning?)*
-> **Тарас:** Я поснідав і пішов на роботу. *(I had breakfast and went to work.)*
-> **Олег:** А вдень? *(And in the afternoon?)*
-> **Тарас:** Вдень я працював і обідав з колегою. *(In the afternoon I worked and had lunch with a colleague.)*
-> **Олег:** А ввечері? *(And in the evening?)*
-> **Тарас:** Ввечері я дивився фільм і рано ліг спати. *(In the evening I watched a film and went to sleep early.)*
-
-And here is how someone might describe a fun weekend:
-
-> **Максим:** Що ти робила у суботу? *(What did you do on Saturday?)*
-> **Ірина:** О, я мала чудовий день! *(Oh, I had a wonderful day!)*
-> **Максим:** Розкажи! *(Tell me!)*
-> **Ірина:** Зранку я ходила на ринок і купила фрукти. *(In the morning I went to the market and bought fruit.)*
-> **Максим:** А потім? *(And then?)*
-> **Ірина:** Потім я готувала обід. А вдень гуляла в парку. *(Then I cooked lunch. And in the afternoon I walked in the park.)*
-> **Максим:** А ввечері? *(And in the evening?)*
-> **Ірина:** Ввечері ми з подругою ходили в ресторан. *(In the evening my friend and I went to a restaurant.)*
-> **Максим:** Як файно! *(How nice!)*
-
-Notice how the words **потім** (then) and the phrase **а потім** (and then) act as the glue between different verbs. They keep the story moving forward efficiently. Furthermore, in a connected story, we do not need to repeat the subject **я** (I) in every single sentence. Once the context is established, the verbs themselves carry the narrative perfectly.
+Because Anna is female, her verbs end in **-ла**: **ходила** (went), **купила** (bought), **готувала** (cooked). She also uses the word **потім** (then) several times. In Ukrainian, **потім** is a very useful "glue" word that allows you to link one event to another without repeating the time of day. You can also use **а потім** (and then) to add a bit of variety to your storytelling.
 
 ## Розповідь про день (Narrating a Day)
 
-To structure any story, you need clear time anchors. The daily routine is typically divided into four main parts. We use **зранку** (in the morning) for the start of the day. As the day progresses, we use **вдень** (in the afternoon). Later, we transition to **ввечері** (in the evening), and finally **вночі** (at night). 
+To tell a story effectively, you need a timeline. Ukrainian uses four primary adverbs to divide the day into manageable chunks. These words usually appear at the start of a sentence to establish the context immediately.
 
-:::caution
-Pay attention to the spelling of **вдень**. Written as one word, it means "in the daytime" or "in the afternoon". Do not confuse it with the two-word phrase **в день** (on the day), which is used differently, such as in **в день народження** (on the birthday).
+*   **зранку** (in the morning) — used for everything from waking up to starting work.
+*   **вдень** (in the afternoon / during the day) — used for the middle of the day, typically lunchtime and work hours.
+*   **ввечері** (in the evening) — used for the time after work, dinner, and relaxation.
+*   **вночі** (at night) — used for the late hours when the world is asleep.
+
+When you put these together, you create a natural progression. For example, a student might say:
+
+**Зранку** я читав книгу. **Вдень** я був в університеті. **Ввечері** я відпочивав.
+> *In the morning I read a book. In the afternoon I was at the university. In the evening I was resting.*
+
+Once you have your time blocks, you need sequencing words to connect the dots. Without these, your story sounds like a grocery list of isolated facts. Ukrainian provides a specific set of adverbs to help you navigate through time:
+
+*   **спочатку** (first / at first) — sets the very first scene.
+*   **потім** (then) — the most common way to move to the next event.
+*   **після цього** (after that) — a slightly more formal way to say "after that."
+*   **нарешті** (finally) — used to signal the last action in a sequence.
+
+Observe how these words transform separate sentences into a cohesive narrative paragraph:
+
+**Спочатку** я **поснідав**. **Потім** я **пішов** на роботу. **Після цього** я **обідав**. **Нарешті** я **повернувся** додому.
+> *First I had breakfast. Then I went to work. After that I had lunch. Finally I returned home.*
+
+The "engine" of your narrative consists of daily routine verbs. In the past tense, these verbs must match your gender. Here is a table showing the most common routine verbs in their masculine and feminine forms.
+
+| Verb (Infinitive) | Male Speaker (Він) | Female Speaker (Вона) | Meaning |
+| :--- | :--- | :--- | :--- |
+| **прокинутися** | **прокинувся** | **прокинулася** | to wake up |
+| **поснідати** | **поснідав** | **поснідала** | to have breakfast |
+| **піти** | **пішов** | **пішла** | to go / set out |
+| **працювати** | **працював** | **працювала** | to work |
+| **бути** | **був** | **була** | to be |
+
+:::tip
+Notice the verb **пішов** (masculine) and **пішла** (feminine). This is an irregular shift from the infinitive **піти**. It is one of the most common verbs in the past tense, so it is worth memorizing these two forms early!
 :::
 
-Using the correct time markers gives the listener a clear map of when events occurred. Beyond basic time markers, sequencing words create a chronological chain. Without them, a story is just a list of disconnected facts. Start the sequence with **спочатку** (first). To transition to the next action, use **потім** (then). For further actions, use **після цього** (after that). To conclude the narrative, use **нарешті** (finally). These connectors turn separate thoughts into a fluid story.
+As the day continues, you will need verbs for the afternoon and evening activities. These follow the same gender-agreement patterns.
 
-*   **Спочатку я поснідав.** *(First I had breakfast.)*
-*   **Потім я пішов на роботу.** *(Then I went to work.)*
-*   **Після цього я обідав.** *(After that I had lunch.)*
+*   **обідати** (to have lunch) → **обідав** / **обідала**
+*   **повернутися** (to return) → **повернувся** / **повернулася**
+*   **вечеряти** (to have dinner) → **вечеряв** / **вечеряла**
+*   **лягти** спати (to go to bed) → **ліг** спати / **лягла** спати
 
-This logical flow makes your Ukrainian sound much more natural and cohesive.
+The verb **лягти** (to lie down) is particularly unique. A man says **я ліг**, while a woman says **я лягла**. This change from **і** to **я** is a common feature in some old Ukrainian verbs, but for now, just treat them as a pair of set forms for "going to bed."
 
-The daily routine relies on a core set of action verbs. Because the Ukrainian past tense must agree with the grammatical gender of the speaker, males use the **-в** or **-вся** ending, while females use the **-ла** or **-лася** ending. The most frequent verbs for narrating a day follow this pattern:
-
-| Дієслово (Infinitive) | Чоловічий рід (Masculine) | Жіночий рід (Feminine) |
-| :--- | :--- | :--- |
-| **прокинутися** *(to wake up)* | **прокинувся** | **прокинулася** |
-| **поснідати** *(to have breakfast)* | **поснідав** | **поснідала** |
-| **піти** *(to go)* | **пішов** | **пішла** |
-| **обідати** *(to have lunch)* | **обідав** | **обідала** |
-| **повернутися** *(to return)* | **повернувся** | **повернулася** |
-| **лягти спати** *(to lie down to sleep)* | **ліг спати** | **лягла спати** |
-
-Notice that for the verb meaning to lie down (**лягти**), the masculine form **ліг** drops the **-в** suffix entirely, while the feminine form **лягла** keeps the standard **-ла** ending. This is a common pattern for verbs with stems ending in a consonant.
-
-<!-- INJECT_ACTIVITY: ordering-daily-routine -->
+<!-- INJECT_ACTIVITY: order-daily-routine -->
 
 ## Мій учорашній день (My Yesterday)
 
-A complete narrative relies on these structural elements. Anna describes her yesterday below. Since Anna is female, every past tense verb she uses ends in **-ла** or **-лася**. Her story chains actions logically using time markers.
+A truly natural story is more than just a list of verbs; it is a tapestry that combines your actions with the places you visited, the food you ate, and the people you met. To make your narrative "come alive," you should integrate the vocabulary you have learned in previous modules. Instead of just saying "I ate," you can say "I ate porridge and drank coffee." This adds texture and personality to your speech.
 
-*   **Учора був звичайний день.** *(Yesterday was an ordinary day.)*
-*   **Зранку я прокинулася о пів на сьому.** *(In the morning I woke up at half past six.)*
-*   **Я поснідала — їла кашу і пила каву.** *(I had breakfast — I ate porridge and drank coffee.)*
-*   **Потім я пішла на роботу.** *(Then I went to work.)*
-*   **Вдень я обідала в кафе біля офісу.** *(In the afternoon I had lunch in a cafe near the office.)*
-*   **Я замовила салат і сік.** *(I ordered a salad and juice.)*
-*   **Після роботи я ходила в магазин і купила продукти.** *(After work I went to the store and bought groceries.)*
-*   **Ввечері я готувала вечерю і дивилася серіал.** *(In the evening I cooked dinner and watched a TV series.)*
-*   **О одинадцятій я лягла спати.** *(At eleven I went to sleep.)*
+Let us look at a model narrative from Anna. She is describing an **звичайний** (ordinary) day. Pay close attention to how she weaves together her routine, her meals, and her evening relaxation.
 
-This narrative is highly structured. Starting with **звичайний день** (ordinary day) sets the context immediately. Notice the strict gender agreement between the speaker and her actions. Because Anna is speaking, every verb aligns with her feminine gender: **прокинулася** (woke up), **поснідала** (had breakfast), **пішла** (went), **обідала** (had lunch), **купила** (bought), **готувала** (cooked), and **лягла** (lay down). If a man were telling this exact same story, all of those endings would shift to the masculine forms. 
+**Учора** був **звичайний** день. **Зранку** я **прокинулася** о пів на сьому. Я **поснідала** — їла кашу і пила каву. **Потім** я **пішла** на роботу. **Вдень** я **обідала** в кафе біля офісу. Я замовила салат і сік. Після роботи я **ходила** в магазин і купила **продукти** (groceries). **Ввечері** я готувала вечерю і дивилася **серіал** (TV series). О одинадцятій я **лягла** спати.
+> *Yesterday was an ordinary day. In the morning I woke up at half past six. I had breakfast — I ate porridge and drank coffee. Then I went to work. In the afternoon I had lunch in a cafe near the office. I ordered a salad and juice. After work I went to the store and bought groceries. In the evening I was cooking dinner and watching a TV series. At eleven I went to bed.*
 
-:::tip
-The pronoun **я** (I) remains the same, so the verb ending is the only indicator of the speaker's gender. Memorize the ending that matches your own gender and use it consistently.
+If we analyze Anna's story, we can see why it sounds so authentic. First, because Anna is a woman, every single past tense verb ends in **-ла**: **прокинулася**, **поснідала**, **пішла**, **обідала**, **ходила**, **лягла**. This consistency is the hallmark of a fluent speaker. Second, she uses her surroundings to ground the story. She doesn't just "go"; she goes to the **магазин** (store) or the **кафе**. She doesn't just "eat"; she eats **продукти** (groceries) or a **салат**.
+
+:::note
+Even in a simple story, Ukrainian style prefers to avoid repetition. Anna uses **потім** (then) and **після роботи** (after work) to transition between scenes. This prevents every sentence from starting with "I did this, I did that."
 :::
 
-It is your turn to build a narrative. Use the following template to structure your thoughts:
+Now it is your turn to build your own narrative. You can use the template below as a guide. Simply choose the verb forms that match your gender and fill in the details of your own life.
 
-*   **Учора...** *(Yesterday...)*
-*   **Зранку я...** *(In the morning I...)*
-*   **Потім...** *(Then...)*
-*   **Вдень я...** *(In the afternoon I...)*
-*   **Ввечері я...** *(In the evening I...)*
+**Учора...** (**Учора був гарний день!**)
+**Зранку я...** (Select: **прокинувся** / **прокинулася**)
+**Потім я...** (Select: **поснідав** / **поснідала** ... **каву / чай / кашу**)
+**Вдень я...** (Select: **працював** / **працювала** ... **в офісі / вдома**)
+**Ввечері я...** (Select: **дивився** / **дивилася** ... **серіал / фільм**)
+**Нарешті я...** (Select: **ліг** / **лягла** ... **спати**)
 
-Combine these past-tense verbs with places you already know, such as a **кафе** (cafe), a **парк** (park), or a **магазин** (store). Add food items like **каша** (porridge), **кава** (coffee), or a **салат** (salad). You can also include the people you interacted with, whether it was a **друг** (friend), a **колега** (colleague), or a **подруга** (female friend). Everything you learned in A1 comes together here to help you share your personal story clearly and accurately.
+Try to include at least one **колега** (colleague) or **друг** (friend) in your story to make it more social. The more you practice connecting these chunks, the faster you will move from "translating" to "thinking" in Ukrainian.
 
-<!-- INJECT_ACTIVITY: fill-in-narrative-flow -->
-<!-- INJECT_ACTIVITY: gender-consistency-drill -->
+<!-- INJECT_ACTIVITY: fill-in-time-markers -->
+
+<!-- INJECT_ACTIVITY: fill-in-gender-consistency -->
 
 ## Summary
 
-The narration toolkit contains the elements needed to describe past experiences. Telling a coherent story requires organizing verbs with time anchors and maintaining strict grammatical consistency.
+Narrating your day in Ukrainian is like building a bridge across time. You start with a solid foundation of time markers that divide your story into logical segments. By using **зранку** (in the morning), **вдень** (in the afternoon), and **ввечері** (in the evening), you provide a clear, natural flow that native speakers expect. These words act as signposts, letting your listener know exactly where they are in your timeline.
 
-*   **Time structure:** **зранку** → **вдень** → **ввечері** → **вночі**.
-*   **Sequencing:** **спочатку**, **потім**, **після цього**, **нарешті**.
-*   **Daily routine past forms:** **прокинувся/-лася**, **поснідав/-ла**, **пішов/пішла**, **обідав/-ла**, **повернувся/-лася**, **ліг/лягла спати**.
-*   **Gender consistency:** male speakers use **-в/-вся** forms throughout, female speakers use **-ла/-лася** throughout.
+To make that bridge smooth, you use sequencing words as the "glue" between your sentences. Without words like **спочатку** (first), **потім** (then), **після цього** (after that), and **нарешті** (finally), your speech would sound like a series of disconnected bumps. These connectors are the secret to moving beyond disjointed phrases into a fluid, connected story that sounds professional and natural.
 
-Before you finish, perform a final self-check on your storytelling skills. Ask yourself these questions when building a narrative:
+In this module, we have focused on a core toolkit of routine verbs that cover the vast majority of daily life. Mastering these few forms allows you to describe almost any day:
 
-*   **Чи використав я принаймні 5 дієслів у минулому часі?** *(Did I use at least 5 verbs?)*
-*   **Чи всі дієслова мають однаковий рід (чоловічий або жіночий)?** *(Are all verbs the same gender?)*
-*   **Чи є в моїй розповіді «спочатку» і «потім»?** *(Are there "first" and "then"?)*
+*   **прокинувся/-лася** (woke up)
+*   **поснідав/-ла** (had breakfast)
+*   **пішов/пішла** (went)
+*   **обідав/-ла** (had lunch)
+*   **повернувся/-лася** (returned)
+*   **ліг/лягла** спати (went to bed)
 
-Tell the story of your yesterday using at least 5 verbs aloud, either to a partner or to yourself. Make absolutely sure to include what you ate for breakfast, using **поснідав** or **поснідала**, and mention when you went to sleep, using **ліг спати** or **лягла спати**. Practice this daily until the sequence feels natural and your verb endings match your gender automatically.
+The most important rule to remember is gender consistency. In English, "I went" is the same for everyone, but in Ukrainian, your gender is built into the verb itself. A man must strictly use the **-в** or **-вся** forms throughout his story, while a woman must strictly use the **-ла** or **-лася** forms. Switching between them mid-story is a common learner mistake that can confuse your listener.
 
+As a final self-check, try to tell the story of your **учора** (yesterday) aloud right now. Use at least five of the routine verbs and three different time markers. If you can tell your story from morning to night without stopping, you have mastered the art of Ukrainian narration!
 </module_content>
 
 ---
@@ -240,48 +273,68 @@ version: "1.0"
 module: yesterday
 level: a1
 
+# NOTE — these are SHAPE examples. The real targets are at the top of this prompt
+# (10 total / 4–6 inline / 6–9 workbook,
+# 6+ items per activity). The shapes below are TRUNCATED for readability;
+# YOUR output MUST hit those minimums.
+
 inline:
   - id: marker-id-here        # MUST match an <!-- INJECT_ACTIVITY: ... --> marker
     type: quiz                 # activity type
     instruction: "Оберіть правильний варіант"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - question: "_____ стіл"
-        options: ["мій", "моя", "моє"]
+        options: ["мій", "моя", "моє", "мої"]
         correct: 0             # 0-based index
+      - question: "Це ____ книга."
+        options: ["мій", "моя", "моє", "мої"]
+        correct: 1
+      # ... add at least 6 items total — never stop at 1-2
 
   - id: another-marker-id
     type: fill-in
     instruction: "Вставте правильне слово"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - sentence: "Це ____ кімната."
         answer: "моя"
         options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ вікно."
+        answer: "моє"
+        options: ["мій", "моя", "моє"]
+      # ... ≥ 6 items total
 
 workbook:
-  - type: match-up
+  - id: match-up-vocab
+    type: match-up
     instruction: "З'єднайте пари"
-    pairs:
+    pairs:                     # ← real output: ≥ 6 pairs
       - left: "стіл"
         right: "він"
       - left: "книга"
         right: "вона"
       - left: "вікно"
         right: "воно"
+      # ... ≥ 6 pairs total
 
-  - type: group-sort
+  - id: group-sort-gender
+    type: group-sort
     instruction: "Розподіліть слова за категоріями"
     groups:
-      - label: "Category A"
-        items: ["word1", "word2"]
-      - label: "Category B"
-        items: ["word3", "word4"]
+      - label: "Чоловічий рід"
+        items: ["стіл", "олівець", "будинок"]   # ≥ 3 items per group
+      - label: "Жіночий рід"
+        items: ["книга", "ручка", "школа"]
+      - label: "Середній рід"
+        items: ["вікно", "море", "молоко"]
 
-  - type: true-false
+  - id: true-false-grammar
+    type: true-false
     instruction: "Правда чи ні?"
-    items:
-      - statement: "Statement here"
-        correct: true
-        explanation: "Why it's true"
+    items:                     # ← real output: ≥ 6 items
+      - statement: "«Книга» — це чоловічий рід."
+        correct: false
+        explanation: "Книга закінчується на -а, отже жіночий рід."
+      # ... ≥ 6 items total
 
   - type: error-correction
     instruction: "Виправте помилку"
@@ -352,7 +405,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -447,10 +500,15 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 ## Quality Rules
 
-**ITEM COUNT MINIMUMS (non-negotiable):**
-- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
-- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
-- If you can't think of enough items, add more examples from the module's vocabulary and content.
+**ACTIVITY COUNT MINIMUMS (non-negotiable, audit-enforced):**
+- **Total: 10 activities.** Inline: 4–6. Workbook: 6–9. The audit gate FAILS the module if you ship fewer.
+- **Type diversity: workbook MUST cover ≥5 distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
+- **Match the inline markers exactly.** Every `<!-- INJECT_ACTIVITY: id -->` marker in the prose needs a matching inline activity with that exact id. Skipping markers means the lesson tab is broken.
+
+**ITEM COUNT MINIMUMS (non-negotiable, per-activity):**
+- **Default minimum: 6 items per activity.** Quiz, fill-in, match-up, true-false, anagram, error-correction, translate, cloze, mark-the-words, divide-words, count-syllables, odd-one-out, group-sort categories: all ≥ 6.
+- **Lower minimums for specific types only:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items, essay-response/critical-analysis = 1 prompt.
+- If you can't think of enough items, add more examples from the module's vocabulary and content. NEVER ship a 1-item or 2-item activity unless its type cap explicitly allows it.
 - **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
 - **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
@@ -557,6 +615,27 @@ IMPORTANT: After using tools, output your COMPLETE module content as plain text.
 1. Run `verify_words` on all Ukrainian words in your exercises — every word must exist in VESUM
 2. Run `query_cefr_level` on any word you're unsure about — it must be a1-appropriate
 3. For fill-in answers and distractors, verify the exact form (case, number, gender) with `verify_lemma`
+
+---
+
+## ⚠️ MANDATORY FINAL CHECKLIST — verify before emitting YAML
+
+Walk through this checklist explicitly before you start emitting. If ANY box is unchecked, fix it FIRST.
+
+- [ ] My output has **at least 4** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
+- [ ] My output has **at least 6** workbook activities.
+- [ ] **Total ≥ 10.**
+- [ ] **Every** activity has **at least 6** items, pairs, or statements (except types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3, essay-response=1).
+- [ ] The module (inline + workbook combined) uses **at least 0 distinct activity types** (or 4+ when 0 = 0 and the workbook size allows it). I am NOT shipping a wall of quizzes.
+- [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
+- [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
+- [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+- [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+- [ ] My inline count is between 4 and 6. I did NOT create more injection markers than 6.
+- [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
+- [ ] At B1+, all instructions are in Ukrainian (no English fallback).
+
+If you cannot tick all of these, REGENERATE the activities BEFORE outputting. Shipping under-spec means the build rejects you and the heal loop has to redo your work — wasting compute.
 
 ---
 

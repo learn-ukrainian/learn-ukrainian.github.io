@@ -295,28 +295,24 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-- Confirmed: їжа, напій, хліб, кава, чай, вода, молоко, сік, м'ясо, риба, суп, сніданок, обід, вечеря, борщ, вареник, каша, сир, масло, яйце, картопля, цукор, сіль, сметана, компот, курка, салат, піца, помідор, огірок, яблуко, банан, лимон.
-- Not found: None.
+- Confirmed: їжа, напій, хліб, кава, чай, вода, молоко, сік, м'ясо, риба, суп, сніданок, обід, вечеря, борщ, вареник, каша, сир, масло, яйце, картопля, цукор, сіль, сметана, компот, курка, салат, піца, помідор, огірок, яблуко, банан, лимон
+- Not found: none
 
 ## Grammar Rules
-- Instrumental Case for chunks (з + noun): Правопис § 90-100 (Implicitly verified via textbook usage and morphological patterns).
-    - **-ом**: молоко → молоком, цукор → цукром, лимон → лимоном, хліб → хлібом.
-    - **-ою**: вода → водою, кава → кавою.
-    - **-ею**: картопля → картоплею.
-    - **-ям**: м'ясо → м'ясом (Wait, м'ясо is neuter, so -ом is correct: м'ясом). 
-    - *Correction:* Neuter nouns in -о take -ом (молоком, маслом, м'ясом).
+- Апостроф (напр., м'ясо): Правопис §7 — Апостроф пишемо перед я, ю, є, ї після букв на позначення губних приголосних б, п, в, м, ф: б’ю, п’ять, п’є, в’я́зи, солов’ї́, м’я́со.
 
 ## Calque Warnings
-- **Блюдо**: Calque when used for "food/dish". Correct Ukrainian for food is **страва**. "Блюдо" is only the physical container (plate/platter).
-- **Приймати їжу**: Russianism (принимать пищу). Use **їсти** or **харчуватися**.
-- **Кушати**: Russianism/Sentimentalism. Use **їсти** for all contexts in A1.
+- на сніданок: OK
+- на обід: OK
+- на вечерю: OK
+- кава з молоком: OK
 
 ## CEFR Check
-- **їжа**: A1 — OK (Found in Grade 1-2 contexts).
-- **напій**: A1/A2 — OK (Slightly formal, but essential for the topic. Found in Grade 5/8 textbooks).
-- **сніданок**: A1 — OK (Found in Grade 1-2 textbooks).
-- **борщ**: A1 — OK (Cultural staple, Grade 1-3).
-- **картопля**: A1 — OK (Found in Grade 1-2).
+- їжа: A1 — OK
+- напій: A1 — OK
+- сніданок: A1 — OK
+- м'ясо: A1 — OK
+- сир: A1 — OK
 </pre_verified_facts>
 
 
@@ -612,12 +608,14 @@ The writer should model activities directly on these proven pedagogical patterns
 
 ## Section Structure
 
-Write these sections as H2 headings, in this exact order:
+Write these sections as H2 headings, in this **exact** order:
 
 - `## Діалоги (Dialogues)` (~300 words)
 - `## Їжа (Food)` (~300 words)
 - `## Напої (Drinks)` (~300 words)
 - `## Підсумок — Summary` (~300 words)
+
+**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim** as an `## H2` line. This includes the FINAL summary/transition section (`Підсумок: ...`, `Підсумок та перехід до M...`, etc.) — the writer's most common failure is silently dropping the closing section. Do NOT skip it. Do NOT renumber. Do NOT merge headings. The post-write quick-verify check will fail your build if any heading is missing, even if the prose itself is excellent.
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -625,16 +623,17 @@ Each section should follow the word budget specified. The total must reach 1200 
 
 ## Content Rules
 
-TARGET: 20-35% Ukrainian.
+TARGET: 20-35% Ukrainian. ⚠️ HARD GATE — the audit REJECTS modules below 20%.
 LANGUAGE ROLES:
-- THEORY & EXPLANATION: English prose — brief and clear. Show, don't tell.
+- THEORY & EXPLANATION: English prose — brief, 2-3 sentences per concept. No long expository paragraphs. Explain once, then show Ukrainian.
+- UKRAINIAN NARRATIVE PARAGRAPHS: **REQUIRED — minimum 1 per section.** A 3-6 sentence Ukrainian paragraph demonstrating the concept in use, followed IMMEDIATELY by a `> *English translation*` blockquote. This is the PRIMARY driver of hitting the immersion target. Without these paragraphs you cannot reach 20%.
 - PARADIGM TABLES: Conjugation/declension tables with all cells Ukrainian.
-- EXAMPLE LISTS: Ukrainian sentences in bulleted lists (each: Ukrainian — English gloss).
-- DIALOGUES: Mini-dialogues in blockquotes with English gloss per line.
+- EXAMPLE LISTS: Ukrainian sentences in bulleted lists (each: Ukrainian — English gloss). Minimum 5 per rule.
+- DIALOGUES: Mini-dialogues in blockquotes with English gloss per line. At least 1 dialogue per module.
 - PATTERN BOXES: Show transformations: `читати → читай → читайте`.
 - INLINE: Ukrainian words/phrases bolded in English prose.
-- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian. Full Ukrainian sentences go in tables, bulleted lists, dialogues, or pattern boxes.
-Ukrainian sentences max 10 words. Mix container types.
+- STRUCTURAL RULE: Every section MUST contain a Ukrainian narrative paragraph (3-6 sentences, translated in blockquote) PLUS supporting tables/lists/dialogues/pattern boxes. Pure-English sections are FORBIDDEN at M35+.
+Ukrainian sentences max 12 words. Mix container types.
 
 HARD GRAMMAR RULES (audit will reject violations):
 - Max 10 words per Ukrainian sentence (STRICT — count every word)
@@ -666,6 +665,25 @@ PLAN-AWARE EXEMPTIONS: The following bans are RELAXED for this module because th
 - **Zero calques**: No приймати душ→брати душ, приймати рішення→ухвалювати рішення
 - **Zero paronyms**: тактична≠тактовна, ефектний≠ефективний — use the right word, not a similar-sounding one
 - **Natural Ukrainian**: Write how a Ukrainian teacher would explain this to a student. Not robotic, not textbook-dry, not overly casual.
+
+### FORBIDDEN WORDS — never write these (#1189)
+
+The following Russian words have leaked into past builds and broken modules. They are **hard-banned** — the post-write toxic-token scanner will fail your build the moment it sees one. Use the Ukrainian alternative every time, even in dialogues, even in casual prose, even when quoting a learner's mistake (use a `<!-- VERIFY -->` placeholder instead of typing the Russian form):
+
+| Russian (FORBIDDEN) | Ukrainian (USE THIS) |
+|---|---|
+| хорошо | добре |
+| конечно | звичайно / певна річ |
+| спасибо | дякую |
+| пожалуйста | будь ласка / прошу |
+| ничего | нічого |
+| сейчас | зараз |
+| тоже | теж / також |
+| здесь | тут |
+| кот | кіт |
+| кон | кін |
+
+This list is enforced word-for-word by `scripts/build/quick_verify.py` (SEVERE_RUSSIANISMS). If you produce any of these tokens — even inside a quoted example, even inside a dialogue line spoken by a Russian-speaking character — the build halts immediately. There is no exception.
 
 **Authority hierarchy (if uncertain about a word, check in this order):**
 VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (stress) → Антоненко-Давидович (style) → Грінченко (etymology).
@@ -776,37 +794,38 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Діалоги — Dialogues (~320 words total)
-- P1 (~60 words): [Introduction to the domestic setting: A Ukrainian kitchen on a Saturday morning. Setting the scene with Grandma (Бабуся) and her granddaughter (Онучка) preparing to cook the national dish, highlighting the sensory environment—smell of herbs and fresh vegetables.]
-- P2 (~100 words): [Dialogue 1: Cooking борщ with Grandma. Grandma lists ingredients: буряк (beetroot), картопля (potato), капуста (cabbage), м'ясо (meat), морква (carrot), цибуля (onion), and сметана (sour cream). Grandma explains that every ingredient has a gender, reinforcing A1 grammar through cooking: буряк is 'він', картопля is 'вона'.]
-- P3 (~60 words): [Transition to the second dialogue: Shifting the focus from preparation to eating habits. Introduction to the three main meals of the day: сніданок (breakfast), обід (lunch), and вечеря (dinner).]
-- P4 (~100 words): [Dialogue 2: Talking about food preferences and the 'з + noun' chunk. "Що ти хочеш на сніданок?" — "Каву з молоком і хліб з маслом." "А на обід?" — "Суп і салат." Introduction of meal-time combinations as memorized phrases: чай з цукром (tea with sugar), м'ясо з картоплею (meat with potatoes).]
-- <!-- INJECT_ACTIVITY: quiz-meals-dishes --> [Quiz, focus on identifying meals and iconic dishes, 6 items]
+## Діалоги (Dialogues) (~330 words total)
+- P1 (~40 words): Introduction to the topic. Explain that food is central to Ukrainian hospitality, and we will start by looking at everyday conversations about meals and food preferences.
+- P2 (~100 words): Dialogue 1 — At home in the morning. A short conversation between a grandmother (Бабуся) and granddaughter (Онучка) choosing what to eat: "— Що ти хочеш на сніданок? — Каву з молоком і хліб з маслом. — А я хочу чай з цукром і кашу."
+- P3 (~70 words): Breakdown of Dialogue 1. Highlight the question structure "Що ти хочеш на сніданок?" and introduce the word "сніданок" (breakfast). Point out the food and drink combinations presented as chunks, like "кава з молоком" (coffee with milk) and "хліб з маслом" (bread with butter).
+- P4 (~80 words): Dialogue 2 — Talking about food preferences. Two friends discussing daily meals: "— Що ти зазвичай їш на обід? — Суп і салат. — А на вечерю? — М'ясо з картоплею або рибу з рисом."
+- P5 (~40 words): Breakdown of Dialogue 2. Identify the other two main meals: "обід" (lunch) and "вечеря" (dinner). Explain how to ask what someone eats for a specific meal using the pattern "Що ти їш на + [meal]".
 
-## Їжа — Food (~330 words total)
-- P1 (~70 words): [Core food vocabulary: Grains and Bakery. Defining хліб (bread), каша (porridge/cereal), рис (rice), and макарони (pasta). Explanation that 'хліб' is sacred in Ukrainian culture and usually accompanies every meal.]
-- P2 (~70 words): [Proteins and Dairy: Introducing м'ясо (meat), курка (chicken), риба (fish), and яйце (egg). Clarifying the word 'сир'—in Ukrainian, it refers to both yellow cheese and white farmer's cheese/quark, with context providing the distinction.]
-- P3 (~70 words): [The Ukrainian Garden: Vegetables and Fruits. Vocabulary for овочі (vegetables): картопля, морква, цибуля, помідор (tomato), огірок (cucumber). Fruits: яблуко (apple), банан, апельсин, лимон.]
-- P4 (~120 words): [Cultural Spotlight: Iconic Ukrainian Dishes. Deep dive into борщ (not just 'beet soup' but a UNESCO heritage symbol), вареники (dumplings with potato, cabbage, or cherry), сало (cured pork fat), and деруни (potato pancakes). Explicitly stating that Borshch is 100% Ukrainian, avoiding generic 'Eastern European' labels.]
-- <!-- INJECT_ACTIVITY: match-up-food-vocab --> [Match-up, focus on Ukrainian food/drink words to English, 10 items]
+## Їжа (Food) (~330 words total)
+- P1 (~80 words): Core staple foods (Хліб і каша, М'ясо і риба). Introduce essential vocabulary: хліб (bread), каша (porridge), рис (rice), макарони (pasta), м'ясо (meat), курка (chicken), and риба (fish). Mention that bread is an indispensable part of a Ukrainian meal.
+- P2 (~80 words): Produce (Овочі and Фрукти). List common vegetables: картопля (potato), морква (carrot), цибуля (onion), помідор (tomato), огірок (cucumber). List common fruits: яблуко (apple), банан (banana), апельсин (orange). Note the genders of key words.
+- P3 (~70 words): Dairy and other pantry staples (Молочне, Інше). Introduce молоко (milk), сир (cheese/cottage cheese), масло (butter), сметана (sour cream), йогурт (yogurt), яйце (egg), цукор (sugar), сіль (salt), and олія (oil). Note that "сир" is uniquely used for both yellow cheese and quark in Ukrainian.
+- P4 (~100 words): Iconic Ukrainian foods. Introduce cultural staples: борщ (beet soup — the national dish), вареники (filled dumplings), сало (cured pork fat), галушки (dumplings), and деруни (potato pancakes). Explain that a traditional борщ is made with буряк, картопля, капуста, and м'ясо, and emphasize that these dishes represent deep cultural identity.
 
-## Напої — Drinks (~300 words total)
-- P1 (~70 words): [Daily Hydration: Hot and Cold. Vocabulary for кава (coffee—noting it is 'кава', never the Russianism 'кофе'), чай (tea), вода (water), and сік (juice). Distinguishing between вода з газом (sparkling) and без газу (still).]
-- P2 (~70 words): [Traditional Ukrainian Drinks: Introduction to компот (fruit water) and узвар (dried fruit drink, traditional for holidays). Milk-based drinks: молоко and кефір (fermented milk drink).]
-- P3 (~160 words): [The 'з + Noun' Formula: Pedagogical explanation. Instructing students to learn phrases like кава з молоком and чай з цукром as single lexical chunks. At A1, we do not study the Instrumental case table; we simply memorize the ending -ом for masculine/neuter (цукром, молоком) and -ою for feminine (сметаною, картоплею) as part of the flavor profile of the drink or dish.]
-- <!-- INJECT_ACTIVITY: group-sort-food-drinks --> [Group-sort, focus on categorizing items into Їжа and Напої, 10 items]
-- <!-- INJECT_ACTIVITY: fill-in-chunks --> [Fill-in, focus on 'з + noun' memorized chunks for additions, 6 items]
+## Напої (Drinks) (~330 words total)
+- P1 (~80 words): Core hot and cold drinks. Introduce hot drinks (Гарячі): кава (coffee), чай (tea). Introduce cold drinks (Холодні): вода (water), сік (juice), компот (fruit drink), лимонад (lemonade). Explain that компот is a traditional, popular household drink made from boiled fruit.
+- P2 (~70 words): Dairy and alcoholic drinks. Introduce dairy drinks (Молочні): молоко (milk), кефір (kefir). Briefly introduce alcoholic drinks for recognition (Алкогольні): пиво (beer), вино (wine). Mention what кефір is.
+- P3 (~100 words): The `з + noun` chunk pattern for additions. Explain how to combine a drink or food with an addition using fixed phrases: кава з молоком (coffee with milk), чай з цукром (tea with sugar), чай з лимоном (tea with lemon), вода з газом (sparkling water).
+- P4 (~80 words): Why we use chunks instead of grammar here. Explain that while the endings (-ом, -ою, -ем) belong to the instrumental case (which will be learned in A2), at the A1 level it is best to simply memorize these whole phrases to sound natural immediately. Give example sentences: "Я хочу каву з молоком." and "Вона п'є чай з цукром."
+- <!-- INJECT_ACTIVITY: match-up-food-drink --> match-up, Match Ukrainian food and drink words to English, 10 items
+- <!-- INJECT_ACTIVITY: group-sort-food-drinks --> group-sort, Categorize into Їжа (Food) and Напої (Drinks), 10 items
+- <!-- INJECT_ACTIVITY: fill-in-chunks --> fill-in, Use 'з + noun' as memorized chunks for additions, 6 items
 
-## Підсумок — Summary (~300 words total)
-- P1 (~100 words): [Recap of the module's functional goals: how to name what you eat, how to use 'з' for additions, and recognizing the cultural weight of Ukrainian cuisine. Re-emphasizing the three meals: сніданок, обід, вечеря.]
-- P2 (~200 words): [Self-check list:
-  * Name 5 foods you have in your kitchen right now (e.g., хліб, яйця, сир, морква, яблуко).
-  * Name 3 drinks you like (e.g., кава, чай, сік).
-  * Translate: "I want coffee with milk and tea with lemon" (Я хочу каву з молоком і чай з лимоном).
-  * What is the difference between сніданок and вечеря?
-  * Why is борщ important to Ukrainians? (Identity and heritage).]
+## Підсумок — Summary (~330 words total)
+- P1 (~100 words): Recap of the Food and Drink toolkit. Summarize the core phrases learned for expressing desires: "Що ти хочеш?" paired with answers like "Каву з молоком" or "Хліб з маслом". Reiterate that using chunks helps learners communicate fluently right away.
+- P2 (~90 words): Recap the daily meal structure. Remind learners of the three meals: сніданок (breakfast), обід (lunch), and вечеря (dinner). Reinforce the question pattern "Що ти їш на сніданок / обід / вечерю?".
+- P3 (~140 words): Self-check questions:
+  * Name 5 foods and 3 drinks you like. (e.g., хліб, м'ясо, сир, яблуко, суп / кава, вода, сік)
+  * What are the three daily meals? (сніданок, обід, вечеря)
+  * Name one iconic Ukrainian dish (e.g., борщ, вареники) and describe its cultural importance briefly.
+- <!-- INJECT_ACTIVITY: quiz-meals-dishes --> quiz, Identify meals and iconic Ukrainian dishes, 6 items
 
-Grand total: ~1250 words
+Grand total: ~1320 words
 </skeleton>
 
 ## Output Format
@@ -814,11 +833,63 @@ Grand total: ~1250 words
 Write in Markdown. Use:
 - `## Section Title` for main sections
 - `### Subsection` for subsections within a section
-- `**bold**` for Ukrainian words being taught — EVERY bold Ukrainian word MUST have an English translation on first use, either in parentheses `**слово** (translation)` or inline `**слово** means "translation"`. No exceptions.
+- `**bold**` for Ukrainian words being taught. For **A1 and A2** levels, provide an English translation on first use (e.g. `**стіл** (table)`) because learners lack the vocabulary to infer meaning. For **B1 and above**, do NOT provide inline translations for standard vocabulary — the learner will use the module's словник (vocabulary table). You may provide ONE parenthetical English translation ONLY for highly abstract grammar/linguistic terms on first use (e.g. `**видова пара** (aspectual pair)`).
 - Tables for paradigms (conjugation, declension)
 - `:::tip` / `:::caution` / `:::note` for callout boxes
 - `<!-- INJECT_ACTIVITY: {id} -->` for exercise placement (markers only — do NOT write exercise content)
 
 Do NOT write MDX component syntax, JSON, or DSL exercise blocks (:::quiz, etc.). Plain Markdown with injection markers.
+
+---
+
+## MANDATORY FINAL CHECKLIST (#1189)
+
+Before you finish writing, verify the prose against this checklist. Failing any item will fail the build.
+
+### Section headings (verbatim)
+
+Every heading from "Section Structure" above MUST appear as an `## H2` in your output, in order, **including the closing `Підсумок:` / `Підсумок та перехід до M...` summary**. The single most common writer failure across the B1 build has been silently dropping the final summary section. Re-read your output before stopping. If the last section in the plan is missing, write it now.
+
+### Required vocabulary (every word must appear)
+
+You MUST use **every word** from the list below at least once in the prose, in a natural sentence with bold + English translation. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, прагматика, діагностика, дієвідмінювання, зворотний, двовидовий, одновидовий, неозначено-кількісний, etc.) is the most frequently dropped category — actively find homes for those words even if it means adding a sentence that defines them.
+
+- [ ] їжа (food, f)
+- [ ] напій (drink, m)
+- [ ] хліб (bread, m)
+- [ ] кава (coffee, f)
+- [ ] чай (tea, m)
+- [ ] вода (water, f)
+- [ ] молоко (milk, n)
+- [ ] сік (juice, m)
+- [ ] м'ясо (meat, n)
+- [ ] риба (fish, f)
+- [ ] суп (soup, m)
+- [ ] сніданок (breakfast, m)
+- [ ] обід (lunch, m)
+- [ ] вечеря (dinner, f)
+
+### Forbidden words (never produce)
+
+Do not write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use `<!-- VERIFY -->` instead). The post-write toxic-token scanner will fail the build immediately:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+### Level-specific immersion check
+
+The level-appropriate immersion rule was already injected at the top of
+this prompt as `IMMERSION RULE`. Re-read it now BEFORE you stop writing.
+If your level's rule contains a CHECKLIST block, walk through every item.
+If it doesn't, just verify your output matches the LANGUAGE ROLES and
+TARGET stated in that block.
+
+This used to hard-code a B1+ checklist that confused A1/A2 models (where
+translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+The single source of truth is now
+`scripts/pipeline/config_tables.py:IMMERSION_RULES`.
+
+---
 
 Begin writing now. Start with the first section heading.

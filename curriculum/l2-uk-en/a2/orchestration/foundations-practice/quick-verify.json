@@ -1,13 +1,7 @@
 {
   "attempt": 1,
-  "passed": false,
-  "errors": [
-    {
-      "check": "VOCABULARY",
-      "severity": "ERROR",
-      "message": "Missing 4/8 required vocab: планувати / запланувати (to plan), купувати / купити (to buy), готувати / приготувати (to cook, prepare), вечірка (party)"
-    }
-  ],
+  "passed": true,
+  "errors": [],
   "warnings": [],
-  "timestamp": "2026-04-10T23:49:53.658011+00:00"
+  "timestamp": "2026-04-12T21:41:30.042850+00:00"
 }

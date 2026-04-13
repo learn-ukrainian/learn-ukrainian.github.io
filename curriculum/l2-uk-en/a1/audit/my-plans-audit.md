@@ -1,7 +1,7 @@
 # Audit Report: M51 — my-plans.md
 **Level:** A1 | **Module:** M51 | **Phase:** A1.8 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-11 01:01:46
+**Generated:** 2026-04-13 21:21:15
 
 ## Configuration
 **Type:** A1
@@ -21,28 +21,26 @@
 | 1 | fill-in |  | 6 | 6 | ✅ |
 | 2 | match-up |  | 6 | 6 | ✅ |
 | 3 | fill-in |  | 6 | 6 | ✅ |
-| 4 | match-up |  | 6 | 6 | ✅ |
-| 5 | group-sort |  | 7 | 6 | ✅ |
-| 6 | fill-in |  | 6 | 6 | ✅ |
-| 7 | match-up |  | 6 | 6 | ✅ |
-| 8 | error-correction |  | 6 | 6 | ✅ |
-| 9 | quiz |  | 6 | 6 | ✅ |
-| 10 | true-false |  | 6 | 6 | ✅ |
-| 11 | quiz |  | 6 | 6 | ✅ |
+| 4 | quiz |  | 6 | 6 | ✅ |
+| 5 | match-up |  | 7 | 6 | ✅ |
+| 6 | true-false |  | 6 | 6 | ✅ |
+| 7 | anagram |  | 6 | 6 | ✅ |
+| 8 | group-sort |  | 12 | 6 | ✅ |
+| 9 | fill-in |  | 6 | 6 | ✅ |
 
 **Summary:**
-- Total activities: 11 (target: 0-4) ❌
+- Total activities: 9 (target: 0-4) ❌
 - Unique types: 6 (minimum: 0) ✅
-- Priority types used: 3/8 (fill-in, match-up, quiz) ✅
+- Priority types used: 4/8 (anagram, fill-in, match-up, quiz) ✅
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[GRAMMAR]** Instrumental case used at A1: 'з другом'
-  - FIX: Instrumental case not allowed until A2 (M36+). Restructure sentence.
 - **[GRAMMAR]** Instrumental case used at A1: 'З задоволенням'
   - FIX: Instrumental case not allowed until A2 (M36+). Restructure sentence.
-- **[COMPLEXITY]** group-sort '' has 7 items (target: 8-999)
-  - FIX: Adjust number of items to sort to 8-999.
+- **[LEVEL_RESTRICTION]** Activity 'anagram' should be phased out after A1 M10 (current: M51)
+  - FIX: Anagram is for Cyrillic scaffolding only. Use unjumble for word-ordering practice.
+- **[HINT_IN_ACTIVITY]** anagram activity 'Untitled' has item-level hint in item 1
+  - FIX: Remove all 'hint' fields from activity items (they break activities and provide no real pedagogical value)
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
@@ -50,19 +48,19 @@
 - 3 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1602/1200 (raw: 1626)
-- **Activities:** ✅ 11/0
+- **Words:** ✅ 1524/1200 (raw: 1548)
+- **Activities:** ✅ 9/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 6/0 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 3/0
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 29/1
+- **Vocab:** ✅ 33/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 22.1% (target 20-40% (M51))
+- **Immersion:** 🇺🇦 26.5% (target 20-40% (M51))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -70,7 +68,7 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 415 | Included in Core |
-| **Планува́ння (Planning)** | ✅ | 508 | Included in Core |
-| **Мій тиждень (My Week)** | ✅ | 391 | Included in Core |
-| **Summary** | ✅ | 288 | Included in Core |
+| **Intro/Narrative** | ✅ | 423 | Included in Core |
+| **Планува́ння (Planning)** | ✅ | 434 | Included in Core |
+| **Мій тиждень (My Week)** | ✅ | 395 | Included in Core |
+| **Summary** | ✅ | 272 | Included in Core |

@@ -1,4 +1,4 @@
-<!-- version: 1.1.0 | updated: 2026-03-31 -->
+<!-- version: 1.2.0 | updated: 2026-04-12 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -11,6 +11,35 @@ Generate an `activities/my-city.yaml` file for module **30: My City** (a1).
 
 ---
 
+## ⚠️ HARD COUNT TARGETS — READ TWICE
+
+These are the binding numerical contracts for THIS module. The audit will FAIL if you fall short.
+
+| Bucket | Min | Max | Notes |
+|---|---|---|---|
+| Total activities | 10 | 10+ | inline + workbook combined |
+| Inline (lesson tab) | 4 | 6 | one per `<!-- INJECT_ACTIVITY -->` marker, see below |
+| Workbook (Зошит tab) | 6 | 9 | extended practice |
+| Items per activity | 6 | — | each activity must have at least 6 items (unless its type cap is lower — see Activity Type Reference below) |
+
+**You MUST ship at least 4 inline activities AND at least 6 workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+
+**Type diversity is required.** The module (inline + workbook combined) MUST use at least **0** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level. (If `0` is `0`, the audit profile for this level does not enforce type diversity — but variety still produces a better lesson, so aim for 4+ types when the workbook allows it.)
+
+---
+
+## Allowed types for THIS level
+
+- **Inline (lesson) types:** image-to-letter, letter-grid, match-up, watch-and-repeat, quiz, true-false, fill-in, classify
+- **Inline priority (preferred):** image-to-letter, match-up, fill-in, quiz, watch-and-repeat
+- **Workbook types:** fill-in, match-up, group-sort, anagram, unjumble, quiz, true-false, classify, divide-words, count-syllables, pick-syllables, observe, phrase-table, odd-one-out
+- **Workbook priority (preferred):** fill-in, match-up, group-sort, anagram, unjumble
+- **FORBIDDEN at this level:** cloze, error-correction, mark-the-words, translate, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, highlight-morphemes, grammar-identify, select
+
+Pick from the allowed list. Lean heavily on the priority lists. Do not use any forbidden type — the build will reject it.
+
+---
+
 ## Inline vs Workbook Split
 
 Activities have two placement categories:
@@ -19,7 +48,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Rule of thumb:** inline = 2-3 quick checks after key teaching points. Workbook = 4-8 deeper practice exercises covering the full topic.
+**Rule of thumb:** inline = 4–6 quick checks after key teaching points. Workbook = 6–9 deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
 
 ---
 
@@ -27,10 +56,10 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: match-place-activity -->`
-- `<!-- INJECT_ACTIVITY: quiz-preposition-v-na -->`
+- `<!-- INJECT_ACTIVITY: quiz-v-or-na -->`
+- `<!-- INJECT_ACTIVITY: match-up-place-activity -->`
 - `<!-- INJECT_ACTIVITY: fill-in-describe-city -->`
-- `<!-- INJECT_ACTIVITY: quiz-situational-place -->`
+- `<!-- INJECT_ACTIVITY: quiz-where-to-go -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -91,191 +120,132 @@ required:
 <module_content>
 ## Діалоги (Dialogues)
 
-Imagine you are sitting with a Ukrainian friend. Alina is drawing a map of her neighborhood in the Ukrainian capital, Kyiv. She calls this local space **мій район у Києві** (my neighborhood in Kyiv). Being able to define your physical space and understand where things are located is a vital survival skill in any city. 
+Navigating a new city is a highly practical skill. Knowing how to identify buildings, ask for directions, and locate specific places transforms a confusing map into a readable environment. The ability to describe your surroundings is fundamental to daily communication. Understanding core urban vocabulary is essential for functioning in a Ukrainian city. Two natural conversations illustrate how people ask for and provide location information. Pay close attention to how the speakers locate places using simple vocabulary rather than complex sentences.
 
-Read how Ukrainians talk about places and ask for simple directions.
+Imagine arriving in a new town and needing to locate basic services. The most direct approach is to ask a passerby. In Ukrainian, these exchanges are brief and rely on simple spatial vocabulary rather than complex verb structures. Observe how the question is framed and how the response pinpoints the street without unnecessary elaboration. This directness is polite and highly efficient.
 
-> **Ігор:** Вибачте, будь ласка. Де тут аптека? *(Excuse me, please. Where is the pharmacy here?)*
+> **Ігор:** Вибачте, де тут аптека? *(Excuse me, where is the pharmacy here?)*
 > **Аліна:** Аптека на вулиці Шевченка. *(The pharmacy is on Shevchenko street.)*
-> **Ігор:** Дякую. А де бібліотека? *(Thank you. And where is the library?)*
-> **Аліна:** Бібліотека у центрі. *(The library is in the center.)*
-> **Ігор:** Це далеко? *(Is this far?)*
-> **Аліна:** Ні, вона біля парку. *(No, it is near the park.)*
-> **Ігор:** Дуже дякую! *(Thank you very much!)*
+> **Ігор:** А бібліотека? *(And the library?)*
+> **Аліна:** Бібліотека в центрі, біля парку. *(The library is in the center, near the park.)*
+> **Ігор:** Дякую! *(Thank you!)*
+> **Аліна:** Будь ласка! *(You're welcome!)*
 
-Notice the polite phrase **Вибачте, будь ласка** (Excuse me, please). This is exactly how you get a stranger's attention on the street politely. The question **Де тут...** (Where here is...) is the most efficient way to ask for directions without needing complex grammar.
+This conversation demonstrates a highly efficient pattern. To ask for a location, the speaker simply uses the question word **де** (where) paired with the desired place. There is no need to insert a "to be" verb in the present tense, a common mistake for English speakers who naturally want to translate "where is" word-for-word. The response is equally direct, utilizing the locative phrase **на вулиці** (on the street) to specify the location. The exchange closes with standard polite phrases, ensuring a respectful interaction with a stranger in a new environment.
 
-Alina describes her immediate neighborhood to Igor using the existence word **є** (there is/are) and the preposition **біля** (near/next to).
+The second dialogue shifts the focus from finding a specific destination to describing a local area. Two people are discussing the immediate surroundings of a home. This is a common topic of conversation when getting to know someone, understanding their daily routine, and learning about the infrastructure of their neighborhood.
 
-> **Ігор:** Що є біля твого дому? *(What is near your house?)*
-> **Аліна:** Біля дому є магазин і кафе. *(Near the house there is a shop and a cafe.)*
-> **Ігор:** А школа? Школа близько? *(And the school? Is the school near?)*
-> **Аліна:** Ні, школа далеко, у центрі міста. *(No, the school is far, in the city center.)*
+> **Ігор:** Що є біля твого дому? *(What is near your home?)*
+> **Аліна:** Біля дому є магазин і кафе. *(Near the home there is a shop and a cafe.)*
+> **Ігор:** А школа? *(And the school?)*
+> **Аліна:** Школа далеко, у центрі міста. *(The school is far away, in the city center.)*
 
-The word **є** acts like the English "there is" or "there are". Ukrainians use it to state that a place exists in a certain location. You will use this small word frequently when describing your own city.
+This brief exchange reviews the location patterns essential for describing an environment. The phrase **у центрі** (in the center) combines the preposition **у** with the locative case. Furthermore, the word **є** functions as "there is," allowing the speaker to list the establishments that exist in the neighborhood.
 
 ## Місця в місті (City Places)
 
-To navigate a Ukrainian city, you need foundational vocabulary. We group these city places by grammatical gender to help you remember their forms. Grouping vocabulary by gender makes it easier to predict case endings later.
+To navigate effectively, a robust vocabulary of city landmarks is essential. A typical urban environment consists of various public and commercial spaces. Building this foundational vocabulary allows you to identify your surroundings and plan your activities confidently. Here are the core nouns for common public places:
 
-Masculine places end in a consonant:
-*   **магазин** (shop)
-*   **супермаркет** (supermarket)
-*   **банк** (bank)
-*   **готель** (hotel)
-*   **вокзал** (train station)
-*   **музей** (museum)
-*   **театр** (theater)
+* **аптека** (pharmacy)
+* **бібліотека** (library)
+* **лікарня** (hospital)
+* **магазин** (shop)
+* **супермаркет** (supermarket)
+* **ресторан** (restaurant)
+* **кафе** (café)
+* **банк** (bank)
+* **пошта** (post office)
+* **вокзал** (train station)
+* **готель** (hotel)
+* **музей** (museum)
+* **театр** (theater)
+* **кінотеатр** (cinema)
+* **церква** (church)
+* **стадіон** (stadium)
+* **університет** (university)
 
-Feminine places end in -а or -я:
-*   **аптека** (pharmacy)
-*   **бібліотека** (library)
-*   **лікарня** (hospital)
-*   **пошта** (post office)
-*   **церква** (church)
-*   **школа** (school)
+Many of these nouns, such as **ресторан** and **супермаркет**, are international words that share recognizable roots, making them straightforward to acquire. Others, like **лікарня** (hospital) and **бібліотека** (library), are deeply integrated into daily life and represent the civic infrastructure of any Ukrainian town.
 
-Neuter places end in -о, -е, or -я:
-*   **кафе** (cafe)
-*   **кінотеатр** / **кіно** (cinema)
-*   **озеро** (lake)
+Identifying the noun is the first step; expressing that you are *at* or *in* that location requires the locative case. As established in Module 29, the locative case answers the question **де?** (where?). The majority of enclosed buildings take the prepositions **в** or **у** (in). Ukrainian alternates between **в** and **у** strictly for euphony, ensuring the language flows smoothly without harsh consonant clusters. Here is how common places appear with **в/у**:
 
-When you answer the question **Де?** (Where?), you use the Locative case. For city buildings, you must choose between the prepositions **в/у** (in) and **на** (on). Use **в/у** for standard enclosed spaces. 
+* **в аптеці** (in the pharmacy)
+* **у бібліотеці** (in the library)
+* **у лікарні** (in the hospital)
+* **в магазині** (in the shop)
+* **у ресторані** (in the restaurant)
+* **у кафе** (in the café)
+* **у банку** (in the bank)
+* **у готелі** (in the hotel)
+* **в музеї** (in the museum)
 
-*   **Я в аптеці.** (I am in the pharmacy.)
-*   **Ми у банку.** (We are in the bank.)
-*   **Брат в готелі.** (Brother is in the hotel.)
-*   **Сестра у музеї.** (Sister is in the museum.)
-*   **Студенти у бібліотеці.** (Students are in the library.)
+Notice that many feminine nouns ending in **-а** or **-я**, such as **аптека** and **бібліотека**, change their ending to **-і** in the locative case (**в аптеці**, **у бібліотеці**). However, a specific group of public spaces historically pairs with the preposition **на** (on/at) instead of **в/у**. These often refer to open areas, transport hubs, or certain types of institutions. You must memorize these specific pairings as they appear frequently in daily routines:
 
-Use the preposition **на** for open concepts, public platforms, or wide spaces. 
+* **на пошті** (at the post office)
+* **на вокзалі** (at the train station)
+* **на стадіоні** (at the stadium)
+* **на площі** (on the square)
 
-*   **Я на пошті.** (I am at the post office.)
-*   **Він на вокзалі.** (He is at the train station.)
-*   **Ми на стадіоні.** (We are at the stadium.)
-*   **Люди на площі.** (People are on the square.)
+<!-- INJECT_ACTIVITY: quiz-v-or-na -->
 
-:::note
-**Чергування** (Alternation)
-Notice how words ending in **-ка** change in the Locative case: **аптека** becomes **в аптеці**, and **бібліотека** becomes **у бібліотеці**. The consonant **к** changes to **ц** before the **-і** ending. This makes the word easier to pronounce.
-:::
+Naming locations is useful, but true communication happens when you connect these places to actions. By combining the fundamental verbs with locative phrases, you can generate practical sentences describing daily routines. You are no longer merely listing buildings; you are detailing your activities and schedules. Observe how these everyday actions link to specific city locations:
 
-Combine these places with action verbs to describe what people do there. This provides practical context for your new vocabulary.
+* **Я купую ліки в аптеці.** (I buy medicine in the pharmacy.)
+* **Я читаю в бібліотеці.** (I read in the library.)
+* **Я працюю в офісі.** (I work in the office.)
+* **Я відпочиваю в парку.** (I relax in the park.)
+* **Я їм у ресторані.** (I eat in the restaurant.)
+* **Я п'ю каву в кафе.** (I drink coffee in the café.)
 
-*   **Я купую ліки в аптеці.** (I buy medicine in the pharmacy.)
-*   **Ми читаємо книги у бібліотеці.** (We read books in the library.)
-*   **Вони дивляться фільм у кінотеатрі.** (They watch a film in the cinema.)
-*   **Мама купує продукти у магазині.** (Mom buys groceries in the shop.)
-*   **Тато обідає у ресторані.** (Dad has lunch in the restaurant.)
-*   **Брат працює в офісі.** (Brother works in the office.)
-*   **Сестра відпочиває у парку.** (Sister rests in the park.)
+This structural pattern is highly consistent: subject + verb + preposition + locative noun. By substituting different subjects and verbs, you can construct dozens of unique statements about what people do around town. A student might read in the library, while a professional works in the office. Practicing this pattern builds conversational fluency rapidly.
 
-<!-- INJECT_ACTIVITY: match-place-activity -->
-
-<!-- INJECT_ACTIVITY: quiz-preposition-v-na -->
-
-Transportation hubs are critical city infrastructure. You need specific vocabulary for different types of travel. 
-
-*   **вокзал** (train station)
-*   **автовокзал** (bus station)
-*   **аеропорт** (airport)
-*   **зупинка** (bus stop)
-
-In Ukraine, the word **вокзал** by default implies the main railway station. If you need a bus, you must specifically ask for the **автовокзал**. You wait for local city transport at a **зупинка**.
-
-*   **Автобус на зупинці.** (The bus is at the stop.)
-*   **Поїзд на вокзалі.** (The train is at the station.)
+<!-- INJECT_ACTIVITY: match-up-place-activity -->
 
 ## Де це? (Where Is It?)
 
-To explain where something is, you need relative distance adverbs. The most basic are **тут** (here) and **там** (there). For distance, use **близько** (near/close) and **далеко** (far). 
+Describing a location frequently requires indicating relative distance and physical position. The most fundamental location adverbs are **тут** (here) and **там** (there). These are essential when referencing a map, indicating a direction visually, or confirming a meeting spot. To express distance, Ukrainian uses **далеко** (far) and **близько** (near / close). These contrasting adverbs clarify spatial relationships efficiently without needing complex grammar.
 
-Notice how Ukrainians use these words in contrastive examples.
+* **Магазин тут.** (The shop is here.)
+* **Школа там.** (The school is there.)
+* **Центр близько.** (The center is close.)
+* **Вокзал далеко.** (The train station is far.)
 
-*   **Магазин тут, а школа далеко.** (The shop is here, but the school is far.)
-*   **Центр близько, а вокзал далеко.** (The center is near, but the station is far.)
-*   **Аптека там.** (The pharmacy is there.)
-*   **Готель тут.** (The hotel is here.)
+When specifying that an object is "near" a particular landmark, the preposition **біля** (near) is used. This preposition is highly frequent in everyday communication. Grammatically, **біля** demands that the following noun take the genitive case, indicating spatial proximity. At this stage, rather than memorizing full genitive declension tables, it is far more practical to learn **біля** within fixed, ready-to-use chunks. This prevents grammatical overload while allowing you to use the preposition immediately.
 
-When you want to say that something is *near something else*, use the preposition **біля** (near/next to). This preposition requires the Genitive case. For now, learn these common locations as functional chunks.
+* **біля парку** (near the park)
+* **біля дому** (near the home)
+* **біля університету** (near the university)
+* **біля магазину** (near the shop)
 
-*   **біля дому** (near the house)
-*   **біля парку** (near the park)
-*   **біля університету** (near the university)
-*   **біля метро** (near the metro)
+Additionally, the established locative phrases **у центрі** (in the center) and **на розі** (on the corner) are vital for describing key intersections and central areas in any city.
 
-You use **біля** to describe physical proximity between two objects. It acts as a bridge between the object and its location.
+* **Аптека на розі.** (The pharmacy is on the corner.)
+* **Готель у центрі.** (The hotel is in the center.)
 
-*   **Кафе біля парку.** (The cafe is near the park.)
-*   **Лікарня біля метро.** (The hospital is near the metro.)
-*   **Аптека біля банку.** (The pharmacy is near the bank.)
+To provide a comprehensive description of an urban environment, the word **є** (there is / there are) is highly effective. While previously used to indicate possession, **є** is equally capable of affirming the existence of places within a physical space. Combining **є** with city vocabulary and location adverbs yields clear, descriptive paragraphs about any neighborhood.
 
-To describe an entire neighborhood or city, combine the existence word **є** (there is/are) with your vocabulary and numbers. 
+* **У моєму місті є великий парк і два музеї.** (In my city there is a large park and two museums.)
+* **Бібліотека біля університету.** (The library is near the university.)
+* **Магазин тут, біля дому.** (The shop is here, near the home.)
+* **У центрі є старий театр.** (In the center there is an old theater.)
 
-*   **У моєму місті є великий парк і два музеї.** (In my city there is a big park and two museums.)
-*   **Тут є один стадіон.** (There is one stadium here.)
-*   **Бібліотека біля університету.** (The library is near the university.)
-*   **Магазин тут, біля дому.** (The shop is here, near the house.)
-
-This structure allows you to build complex descriptions using simple grammar. You state the location, use **є**, and then name the place.
+This structure equips you to build informative descriptions of the area where you live, establishing a core conversational skill for social interactions. By integrating **є** with your new vocabulary, you can confidently explain what makes your city unique.
 
 <!-- INJECT_ACTIVITY: fill-in-describe-city -->
-
-<!-- INJECT_ACTIVITY: quiz-situational-place -->
-
-Finally, here are some specific location markers for precise navigation. 
-
-*   **на розі** (on the corner)
-*   **у центрі** (in the center)
-*   **поруч** (nearby)
-
-The word **поруч** acts similarly to **близько**, but it often emphasizes immediate side-by-side proximity. You can pair it with the preposition **з** to say "next to something".
-
-*   **Аптека на розі вулиці.** (The pharmacy is on the corner of the street.)
-*   **Ресторан у центрі міста.** (The restaurant is in the center of the city.)
-*   **Музей поруч з готелем.** (The museum is next to the hotel.)
-
-:::tip
-**Далеко чи близько?**
-When asking a yes/no question in Ukrainian, you do not need auxiliary words like "is it" or "do you". Just raise your intonation at the end of the sentence: **Це далеко?** (Is this far?).
-:::
+<!-- INJECT_ACTIVITY: quiz-where-to-go -->
 
 ## Підсумок — Summary
 
-Review the city vocabulary with their required Locative prepositions. Mastery of these patterns is essential for urban navigation.
+The essential vocabulary required to identify and discuss public buildings and urban landmarks forms the foundation of city navigation. The majority of enclosed spaces utilize **в/у**: **в аптеці**, **у бібліотеці**, **в магазині**, **у банку**, **у готелі**, **у ресторані**. A specific subset of locations requires **на**: **на пошті**, **на вокзалі**, **на стадіоні**, **на площі**. Foundational location adverbs pinpoint locations accurately: **тут** (here), **там** (there), **далеко** (far), and **близько** (close). Furthermore, the highly practical preposition **біля** (near) operates within fixed chunks like **біля дому**. Combining these lexical elements allows for accurate descriptions of urban spaces, basic directions, and confident navigation.
 
-Use **В/У** for these enclosed spaces:
-*   **в аптеці** (in the pharmacy)
-*   **у бібліотеці** (in the library)
-*   **у банку** (in the bank)
-*   **в готелі** (in the hotel)
-*   **у магазині** (in the shop)
-*   **у музеї** (in the museum)
-*   **у ресторані** (in the restaurant)
-*   **у лікарні** (in the hospital)
-*   **у школі** (in the school)
-*   **в університеті** (in the university)
-*   **у кафе** (in the cafe)
+The immediate application of this new vocabulary is to describe your own environment. Answer the following questions about your immediate neighborhood, utilizing the patterns of places, prepositions, and verbs practiced.
 
-Use **НА** for these open areas and transport hubs:
-*   **на пошті** (at the post office)
-*   **на вокзалі** (at the train station)
-*   **на стадіоні** (at the stadium)
-*   **на зупинці** (at the bus stop)
-*   **на площі** (on the square)
+* **Назвіть 5 місць біля вашого дому.** (Name 5 places near your home.)
+* **Де ви купуєте продукти?** (Where do you buy groceries?)
+* **Що ви робите в парку?** (What do you do in the park?)
+* **Вокзал далеко чи близько?** (Is the train station far or near?)
+* **У вашому місті є велика бібліотека?** (Is there a large library in your city?)
 
-To orient yourself, use the distance words **тут** (here), **там** (there), **далеко** (far), and **близько** (near). 
-
-Remember the critical difference between **близько** and **біля**. You use the adverb **близько** to state a general fact: **Магазин близько.** (The shop is near). You use the preposition **біля** to connect two nouns and show physical proximity: **Магазин біля парку.** (The shop is near the park). Always pair **біля** with a noun in the Genitive case.
-
-Practice your new skills by answering these self-check questions aloud.
-
-*   **Де ви живете?** (Where do you live?)
-*   **Що є біля вашого дому?** (What is near your house?)
-*   **Де ви купуєте ліки?** (Where do you buy medicine?)
-*   **Центр міста далеко чи близько?** (Is the city center far or near?)
-*   **Які музеї є у вашому місті?** (What museums are in your city?)
-
+Formulating answers to these questions reinforces the ability to communicate about the practical, daily realities of your physical surroundings. Engaging with these prompts will solidify your understanding of how to locate and discuss the places that matter most to you.
 </module_content>
 
 ---
@@ -289,48 +259,68 @@ version: "1.0"
 module: my-city
 level: a1
 
+# NOTE — these are SHAPE examples. The real targets are at the top of this prompt
+# (10 total / 4–6 inline / 6–9 workbook,
+# 6+ items per activity). The shapes below are TRUNCATED for readability;
+# YOUR output MUST hit those minimums.
+
 inline:
   - id: marker-id-here        # MUST match an <!-- INJECT_ACTIVITY: ... --> marker
     type: quiz                 # activity type
     instruction: "Оберіть правильний варіант"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - question: "_____ стіл"
-        options: ["мій", "моя", "моє"]
+        options: ["мій", "моя", "моє", "мої"]
         correct: 0             # 0-based index
+      - question: "Це ____ книга."
+        options: ["мій", "моя", "моє", "мої"]
+        correct: 1
+      # ... add at least 6 items total — never stop at 1-2
 
   - id: another-marker-id
     type: fill-in
     instruction: "Вставте правильне слово"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - sentence: "Це ____ кімната."
         answer: "моя"
         options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ вікно."
+        answer: "моє"
+        options: ["мій", "моя", "моє"]
+      # ... ≥ 6 items total
 
 workbook:
-  - type: match-up
+  - id: match-up-vocab
+    type: match-up
     instruction: "З'єднайте пари"
-    pairs:
+    pairs:                     # ← real output: ≥ 6 pairs
       - left: "стіл"
         right: "він"
       - left: "книга"
         right: "вона"
       - left: "вікно"
         right: "воно"
+      # ... ≥ 6 pairs total
 
-  - type: group-sort
+  - id: group-sort-gender
+    type: group-sort
     instruction: "Розподіліть слова за категоріями"
     groups:
-      - label: "Category A"
-        items: ["word1", "word2"]
-      - label: "Category B"
-        items: ["word3", "word4"]
+      - label: "Чоловічий рід"
+        items: ["стіл", "олівець", "будинок"]   # ≥ 3 items per group
+      - label: "Жіночий рід"
+        items: ["книга", "ручка", "школа"]
+      - label: "Середній рід"
+        items: ["вікно", "море", "молоко"]
 
-  - type: true-false
+  - id: true-false-grammar
+    type: true-false
     instruction: "Правда чи ні?"
-    items:
-      - statement: "Statement here"
-        correct: true
-        explanation: "Why it's true"
+    items:                     # ← real output: ≥ 6 items
+      - statement: "«Книга» — це чоловічий рід."
+        correct: false
+        explanation: "Книга закінчується на -а, отже жіночий рід."
+      # ... ≥ 6 items total
 
   - type: error-correction
     instruction: "Виправте помилку"
@@ -401,7 +391,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -474,10 +464,15 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 ## Quality Rules
 
-**ITEM COUNT MINIMUMS (non-negotiable):**
-- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
-- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
-- If you can't think of enough items, add more examples from the module's vocabulary and content.
+**ACTIVITY COUNT MINIMUMS (non-negotiable, audit-enforced):**
+- **Total: 10 activities.** Inline: 4–6. Workbook: 6–9. The audit gate FAILS the module if you ship fewer.
+- **Type diversity: workbook MUST cover ≥5 distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
+- **Match the inline markers exactly.** Every `<!-- INJECT_ACTIVITY: id -->` marker in the prose needs a matching inline activity with that exact id. Skipping markers means the lesson tab is broken.
+
+**ITEM COUNT MINIMUMS (non-negotiable, per-activity):**
+- **Default minimum: 6 items per activity.** Quiz, fill-in, match-up, true-false, anagram, error-correction, translate, cloze, mark-the-words, divide-words, count-syllables, odd-one-out, group-sort categories: all ≥ 6.
+- **Lower minimums for specific types only:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items, essay-response/critical-analysis = 1 prompt.
+- If you can't think of enough items, add more examples from the module's vocabulary and content. NEVER ship a 1-item or 2-item activity unless its type cap explicitly allows it.
 - **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
 - **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
@@ -584,6 +579,27 @@ IMPORTANT: After using tools, output your COMPLETE module content as plain text.
 1. Run `verify_words` on all Ukrainian words in your exercises — every word must exist in VESUM
 2. Run `query_cefr_level` on any word you're unsure about — it must be a1-appropriate
 3. For fill-in answers and distractors, verify the exact form (case, number, gender) with `verify_lemma`
+
+---
+
+## ⚠️ MANDATORY FINAL CHECKLIST — verify before emitting YAML
+
+Walk through this checklist explicitly before you start emitting. If ANY box is unchecked, fix it FIRST.
+
+- [ ] My output has **at least 4** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
+- [ ] My output has **at least 6** workbook activities.
+- [ ] **Total ≥ 10.**
+- [ ] **Every** activity has **at least 6** items, pairs, or statements (except types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3, essay-response=1).
+- [ ] The module (inline + workbook combined) uses **at least 0 distinct activity types** (or 4+ when 0 = 0 and the workbook size allows it). I am NOT shipping a wall of quizzes.
+- [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
+- [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
+- [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+- [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+- [ ] My inline count is between 4 and 6. I did NOT create more injection markers than 6.
+- [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
+- [ ] At B1+, all instructions are in Ukrainian (no English fallback).
+
+If you cannot tick all of these, REGENERATE the activities BEFORE outputting. Shipping under-spec means the build rejects you and the heal loop has to redo your work — wasting compute.
 
 ---
 

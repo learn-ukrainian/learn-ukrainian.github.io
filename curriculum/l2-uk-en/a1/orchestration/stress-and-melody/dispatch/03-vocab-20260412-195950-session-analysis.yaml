@@ -1,0 +1,48 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T17-58-f67c5403.json
+phase: vocab
+prompt_chars: 10532
+response_chars: 3877
+prompt_words: 1658
+response_words: 430
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.0758
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.0218
+- name: plan
+  start: 1028
+  length: 9504
+  fraction: 0.9024
+large_sections:
+- plan
+directives_total: 8
+directives_covered: 2
+directives_missed:
+- kind: must
+  text: Words must be learned individually.
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: The contrastive question "And you?" has no question word, so it must rise.
+  covered: false
+  coverage_note: 2/7 keywords (29%)
+- kind: inject_activity
+  text: match-stress-pairs
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-sentence-types
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-punctuation
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-find-stress
+  covered: false
+  coverage_note: marker missing

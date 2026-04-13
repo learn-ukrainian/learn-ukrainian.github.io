@@ -1,19 +1,7 @@
 {
   "attempt": 1,
-  "passed": false,
-  "errors": [
-    {
-      "check": "VOCABULARY",
-      "severity": "ERROR",
-      "message": "Missing 3/9 required vocab: голосний (vowel), приголосний (consonant), наголос (stress (accent))"
-    }
-  ],
-  "warnings": [
-    {
-      "check": "EXERCISES",
-      "severity": "WARNING",
-      "message": "Plan expects 4 exercise(s) but content has 1"
-    }
-  ],
-  "timestamp": "2026-04-10T23:19:29.756821+00:00"
+  "passed": true,
+  "errors": [],
+  "warnings": [],
+  "timestamp": "2026-04-12T18:48:15.933887+00:00"
 }

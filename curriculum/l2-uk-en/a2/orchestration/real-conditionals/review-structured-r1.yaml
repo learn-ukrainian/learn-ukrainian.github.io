@@ -2,52 +2,55 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 9
-  evidence: Covers the outline well, but missed one consolidation point from A2.7
-    in Section 3. The plan required "означальне (який, де)", but the text only reviewed
-    "тому що, бо", "хоча", "щоб", and "якщо".
+  score: 8
+  evidence: The three H2 sections match the plan and the section sizes are on target
+    (`~770/~770/~660` vs `700/700/600`). Required and recommended vocabulary is realized
+    in prose (`порада`, `залишитися`, `парасол
 - dimension: 2
   name: Linguistic accuracy
-  score: 8
-  evidence: Contains a Russian calque ("погано себе почуває" instead of "погано почувається"),
-    an invalid verb form ("польємо" instead of "поллємо" confirmed by VESUM), and
-    states a factually false grammar rule (
+  score: 6
+  evidence: 'Two critical teaching inaccuracies: `«Якщо завтра дощитиме, то ми вирішили
+    залишитися вдома»` mismatches the taught tense pattern, and `якби` is mischaracterized
+    as having `a completely different func'
 - dimension: 3
   name: Pedagogical quality
-  score: 8
-  evidence: The example "Якщо ти маєш вільний час, треба поспішити на поїзд" creates
-    a logical contradiction (if you have free time, you do not need to hurry). This
-    confuses learners trying to deduce meaning from
+  score: 7
+  evidence: 'The module has good scenario-based teaching, but the faulty model sentence
+    with `вирішили` directly undermines the grammar explanation, and the `якби` gloss
+    risks teaching the wrong semantic contrast '
 - dimension: 4
   name: Vocabulary coverage
   score: 10
-  evidence: All required and recommended vocabulary items are naturally integrated
-    into the text (e.g., "погода", "вільний", "порада", "поспішити", "парасолька",
-    "відпустка").
+  evidence: 'All required plan vocabulary appears naturally in prose: `умова`, `результат`,
+    `реальний`, `погода`, `допомогти`, `поспішиш`, `вільний`, `залишитися`, `порада`.
+    Recommended vocabulary is also covered '
 - dimension: 5
   name: Exercise quality
   score: 10
-  evidence: All four required markers are present, evenly spread, and directly test
-    what was just taught (verb forms, logic matching, aspect, and recognizing if/if-only).
+  evidence: All four planned exercise types have markers, and each marker is placed
+    after the relevant teaching section. No inline exercise logic errors are visible
+    in the prose.
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: Very strong encouraging teacher persona ("Залиште ці нереальні мрії для
-    поетів"). Great practical examples using familiar contexts like dacha gardening
-    and commuting.
+  score: 9
+  evidence: The teacher voice is warm and concrete, using specific situations like
+    garden planning, advice from a doctor, and weekend plans. The tone stays instructional
+    rather than gamified.
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: Word count is robust (2568 words, well over the 2000 target). Clean formatting,
-    proper headers.
+  evidence: All planned sections are present and correctly ordered. The markdown is
+    clean, and the pipeline word count is `2427`, safely above target.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Natural use of dacha context and the pervasive conversational particle
-    "то".
+  evidence: The module frames Ukrainian on its own terms and uses everyday Ukrainian
+    contexts (`дача`, `Карпати`, family planning, advice) without Russian-centered
+    comparison.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: The opening dialogue in Section 2 is a highly natural, multi-turn negotiation
-    between a husband and wife, perfectly modeling the grammar in a practical context.
+  score: 9
+  evidence: 'The garden dialogue is natural, multi-turn, and aligned with the plan:
+    `Якщо буде сонце, посадимо помідори... Якщо ти купиш насіння, я підготую грядку.`
+    The rest of the module relies more on narrated '
 findings: []

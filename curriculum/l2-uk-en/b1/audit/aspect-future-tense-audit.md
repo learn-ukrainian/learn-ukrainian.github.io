@@ -1,7 +1,7 @@
 # Audit Report: M05 — aspect-future-tense.md
 **Level:** B1 | **Module:** M05 | **Phase:** B1.0 | **Pedagogy:** TTT | **Target:** 4000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-04-11 02:33:40
+**Generated:** 2026-04-11 13:07:11
 
 ## Configuration
 **Type:** B1-grammar
@@ -18,37 +18,43 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | quiz | Оберіть найбільш природний варіант для кожної ситуації | 10 | 8 | ✅ |
-| 2 | group-sort | Розподіліть дієслова за типами майбутнього часу (три конструкції) | 12 | 6 | ✅ |
-| 3 | fill-in | Вставте правильну форму дієслова в майбутньому часі | 8 | 8 | ✅ |
-| 4 | match-up | З'єднайте початок і кінець речення, звертаючи увагу на вид дієслова (процес чи р | 8 | 8 | ✅ |
-| 5 | translate | Оберіть правильний переклад, звертаючи увагу на процес чи результат (вид дієслов | 6 | 6 | ✅ |
-| 6 | essay-response |  | 1 | 6 | ❌ |
+| 1 | quiz |  | 10 | 8 | ✅ |
+| 2 | group-sort |  | 12 | 6 | ✅ |
+| 3 | fill-in |  | 8 | 8 | ✅ |
+| 4 | match-up |  | 8 | 8 | ✅ |
+| 5 | translate |  | 6 | 6 | ✅ |
+| 6 | fill-in |  | 6 | 8 | ❌ |
+| 7 | match-up |  | 7 | 8 | ❌ |
+| 8 | essay-response |  | 1 | 6 | ❌ |
 
 **Summary:**
-- Total activities: 6 (target: 0-4) ❌
+- Total activities: 8 (target: 0-4) ❌
 - Unique types: 6 (minimum: 3) ✅
 - Priority types used: 4/7 (essay-response, fill-in, match-up, quiz) ✅
-- Low density activities: 1
+- Low density activities: 3
 
 ## PEDAGOGICAL VIOLATIONS
 - **[LEVEL_RESTRICTION]** Activity 'essay-response' not allowed at B1
   - FIX: Use level-appropriate activities. 'essay-response' is introduced at A2+.
-- **[COMPLEXITY]** match-up 'З'єднайте початок і кінець речення, звертаючи увагу на вид дієслова (процес чи р' has 8 pairs (target: 12-18)
+- **[COMPLEXITY]** match-up '' has 8 pairs (target: 12-18)
+  - FIX: Adjust number of pairs to 12-18.
+- **[COMPLEXITY]** fill-in '' has 6 items (minimum: 8)
+  - FIX: Add more items. B1 fill-in requires at least 8 items.
+- **[COMPLEXITY]** match-up '' has 7 pairs (target: 12-18)
   - FIX: Adjust number of pairs to 12-18.
 
 ## Recommendation
-**📝 UPDATE** (severity 55/100)
+**📝 UPDATE** (severity 65/100)
 
-- Revision recommended (severity 55/100)
-- 2 violations (minor)
+- Revision recommended (severity 65/100)
+- 4 violations (moderate)
 - Immersion 44% off target (major rebalancing needed)
 - Activity density below minimum
 
 ## Gates
-- **Words:** ✅ 5563/4000 (raw: 5610)
-- **Activities:** ✅ 6/0
-- **Density:** ❌ 1 < 6
+- **Words:** ✅ 5599/4000 (raw: 5646)
+- **Activities:** ✅ 8/0
+- **Density:** ❌ 3 < 6
 - **Unique_types:** ✅ 6/3 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ❌ 4/5
@@ -58,7 +64,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ❌ 30.7% LOW (target 75-100% (B1.0 Bridge))
+- **Immersion:** ❌ 31.1% LOW (target 75-100% (B1.0 Bridge))
 - **Richness:** ❌ 53% < 95% min (grammar) - REWRITE needed
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
@@ -71,7 +77,7 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 47 | 24 | 100% | 20% | 20.0% |
+| examples | 48 | 24 | 100% | 20% | 20.0% |
 | engagement | 0 | 5 | 0% | 15% | 0.0% |
 | dialogues | 0 | 4 | 0% | 15% | 0.0% |
 | variety | 0.93 | - | 93% | 10% | 9.3% |
@@ -135,6 +141,8 @@
 ## Low Density Activities
 | Activity | Type | Items | Required | Fix |
 |----------|------|-------|----------|-----|
+|  | fill-in | 6 | 8 | Add 2 more items |
+|  | match-up | 7 | 8 | Add 1 more items |
 |  | essay-response | 1 | 6 | Add 5 more items |
 
 
@@ -142,6 +150,6 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 973 | Included in Core |
-| **Три конструкції: форма і значення** | ✅ | 1545 | Included in Core |
-| **Коли який? Вибір конструкції** | ✅ | 1737 | Included in Core |
-| **Підсумок: три майбутні як система** | ✅ | 1308 | Included in Core |
+| **Три конструкції: форма і значення** | ✅ | 1566 | Included in Core |
+| **Коли який? Вибір конструкції** | ✅ | 1741 | Included in Core |
+| **Підсумок: три майбутні як система** | ✅ | 1319 | Included in Core |

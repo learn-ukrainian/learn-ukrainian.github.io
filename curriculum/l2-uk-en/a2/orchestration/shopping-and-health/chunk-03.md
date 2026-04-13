@@ -1,55 +1,41 @@
-## В аптеці та повсякденне здоров'я
+## В аптеці та повсякденне здоров'я (~600 words total)
 
-When you visit an **аптека** (pharmacy) in Ukraine, you will find that many common remedies are available over the counter. If you have a light cold or a minor headache, you can easily buy **вітаміни** (vitamins) or simple remedies without seeing a doctor. The key distinction is whether you need a **рецепт** (prescription) or not. When asking for everyday items, you use the Genitive case to specify exactly what the medicine is meant to treat. For example, if you are sneezing, you will ask the pharmacist for **краплі від нежиті** (drops for a runny nose).
+When you go to the **аптека** (pharmacy), you can ask for **ліки** (medicine). The pharmacist can give you excellent advice if your symptoms are mild and you do not yet have a **рецепт** (prescription). Let's look at a typical conversation where someone asks for medicine. Notice how the patient describes their condition and how the pharmacist responds with a solution.
 
-:::tip **Читаємо українською (Reading in Ukrainian)**
-В Україні є багато аптек на кожній вулиці.
-Я часто купую там вітаміни для сім'ї.
-Якщо у вас застуда, рецепт не потрібен.
-Ви можете купити краплі від нежиті просто так.
-Але сильні ліки продають тільки за рецептом.
+> — **Фармацевт:** Добрий день! Чим я можу допомогти? *(Good day! How can I help?)*
+> — **Пацієнт:** Добрий день. Мені потрібні краплі від нежиті. І ще, що ви порадите від кашлю? *(Good day. I need drops for a runny nose. And also, what do you recommend for a cough?)*
+> — **Фармацевт:** У вас є температура або алергія? *(Do you have a fever or an allergy?)*
+> — **Пацієнт:** Ні, температури немає. Але я зовсім не маю апетиту. *(No, there is no fever. But I have absolutely no appetite.)*
+> — **Фармацевт:** Ось хороші ліки від кашлю. Вони продаються без рецепта. *(Here is good medicine for a cough. They are sold without a prescription.)*
+
+In Ukrainian, when we buy medicine, we literally ask for a remedy *against* the symptom. We use the preposition **від** followed immediately by the Genitive case. For example, you ask for something against a **кашель** (cough). This is a very common structure, as it differs from the English phrase "for a cough". You will use this exact pattern for almost every remedy you buy.
+
+Коли ми йдемо в аптеку, ми купуємо ліки від кашлю або краплі від нежиті. Якщо у вас сильно болить голова, вам потрібні ефективні таблетки від головного болю. Зверніть увагу на закінчення чоловічого роду в родовому відмінку. Слова «кашель» та «біль» мають закінчення «-ю».
+
+> *When we go to the pharmacy, we buy medicine for a cough or drops for a runny nose. If your head hurts a lot, you need effective pills for a headache. Pay attention to the masculine endings in the Genitive case. The words "кашель" (cough) and "біль" (pain) have the "-ю" ending.*
+
+There are other essential prepositions that require the Genitive case. You will often see the preposition **для** (for) to indicate purpose, such as vitamins for your **здоров'я** (health). You will also use **без** (without), and **після** (after) or **до** (before) for instructions on when to take your medication. 
+
+Ці вітаміни дуже корисні для здоров'я. Ви можете купити ці таблетки без рецепта від вашого лікаря. Завжди уважно читайте інструкцію, коли купуєте новий сироп. Деякі препарати треба приймати до їжі, а інші — тільки після їжі.
+
+> *These vitamins are very useful for health. You can buy these pills without a prescription from your doctor. Always read the instructions carefully when you buy a new syrup. Some medications need to be taken before a meal, and others — only after a meal.*
+
+:::info
+**Grammar box** — The Genitive case is triggered by specific prepositions. In health contexts, remember these essential triggers: **від** (from/against), **для** (for), **без** (without), **до** (before), and **після** (after).
 :::
 
-Understanding how to take medicine correctly requires knowing prepositions that trigger the Genitive case. Two important time prepositions are **після** (after) and **перед** (before). Doctors and pharmacists will often tell you to take pills **після їжі** (after a meal) or to drink a soothing tea **перед сном** (before sleep). The Genitive is also used to describe what a product lacks, using the preposition **без** (without). If you are trying to eat healthier, you might look for food **без цукру** (without sugar) or order your coffee **без кофеїну** (without caffeine).
+Everyday health and diet connect directly back to the quantity concepts we used at the **ринок** (market). Eating well means making smart choices about how much of certain foods we consume. Whether you are asking for a **кілограм** (kilogram) of vegetables or deciding to drink a **пляшка** (bottle) of water, you are managing quantities with the Genitive case.
 
-:::note **Читаємо українською (Reading in Ukrainian)**
-Мій дідусь п'є ліки тільки після їжі.
-Я завжди п'ю тепле молоко перед сном.
-Цей чай дуже смачний, хоча він без цукру.
-Лікар сказав мені пити каву без кофеїну.
-Я не можу жити без солодкого.
-:::
+Важливо завжди дбати про здоров'я. Лікарі радять їсти мало цукру і солі, але багато свіжих фруктів. Вчора на ринку я купив кілограм яблук і кілограм моркви. Кожного дня я випиваю одну велику пляшку чистої води. Я також намагаюся пити чай без кофеїну.
 
-Another vital preposition that takes the Genitive case is **для** (for). In the context of health and shopping, we use «для» to show the main purpose or beneficiary of an item. When you buy fresh produce at the market, you are buying it **для здоров'я** (for health). If you want to boost your immune system, you ask for vitamins **для імунітету** (for immunity). Older people often buy herbal teas **для серця** (for the heart). This grammatical word beautifully connects the food you buy directly to your physical wellbeing.
+> *It is important to always care about health. Doctors advise eating little sugar and salt, but a lot of fresh fruits. Yesterday at the market I bought a kilogram of apples and a kilogram of carrots. Every day I drink one large bottle of clean water. I also try to drink tea without caffeine.*
 
-:::tip **Читаємо українською (Reading in Ukrainian)**
-Свіжі овочі та фрукти дуже корисні для здоров'я.
-Я купую лимони та мед для імунітету.
-Ці таблетки потрібні моїй бабусі для серця.
-Спорт і свіже повітря — це найкраще для тіла.
-Я роблю цей салат для всієї нашої родини.
-:::
+<!-- INJECT_ACTIVITY: match-up, Match health problems to their remedies (ліки від..., краплі від...), 8 items -->
 
-Let us look at a practical situation where you need to ask a pharmacist for advice. If you do not know exactly which medicine to buy, you can describe your symptom and simply ask: «**Що ви порадите від...?**» (What do you recommend for...?). Notice how the pharmacist gives instructions using the Genitive prepositions.
+The Genitive case is the ultimate connector in everyday Ukrainian life. It is essential for navigating daily situations smoothly. You use it to specify a quantity when shopping, to state that you lack a **температура** (temperature), or to say you have no **апетит** (appetite). Mastering these practical patterns will make you confident in both the market and the clinic.
 
-> — **Покупець:** Добрий день. Що ви порадите від болю в горлі? *(Good day. What do you recommend for a sore throat?)*
-> — **Фармацевт:** Добрий день. Ось дуже хороший сироп. *(Good day. Here is a very good syrup.)*
-> — **Покупець:** Він продається без рецепта? *(Is it sold without a prescription?)*
-> — **Фармацевт:** Так, звичайно. Це просто сироп на травах. *(Yes, of course. This is just a herbal syrup.)*
-> — **Покупець:** Як його правильно приймати? *(How should I take it correctly?)*
-> — **Фармацевт:** Пийте двічі на день після їди. А ще візьміть ці краплі. *(Drink it twice a day after a meal. And also take these drops.)*
-> — **Покупець:** Дякую. А що у вас є для імунітету? *(Thank you. And what do you have for immunity?)*
-> — **Фармацевт:** Візьміть ці вітаміни. Пийте одну таблетку перед сном. *(Take these vitamins. Drink one pill before sleep.)*
+Родовий відмінок допомагає нам у багатьох життєвих ситуаціях. Ми часто просимо кілограм яблук або купуємо таблетки від болю. Також ми кажемо лікареві, що у нас немає температури. Це дуже корисна і важлива граматика.
 
-Whether you are bargaining for fresh vegetables at a market or seeking relief at a clinic, the Genitive case is the engine of your daily communication. It is the most versatile tool in Ukrainian for defining limits, quantities, and relationships between objects. We use it to quantify the exact amount of food we want, like a **кілограм яблук** (kilogram of apples) or **багато ліків** (a lot of medicine). We use it to express absence, such as asking for tea **без цукру** (without sugar) or telling a doctor we have **немає нежиті** (no runny nose). Finally, we use it to show purpose, from buying a **ніж для хліба** (knife for bread) to taking **ліки від грипу** (medicine for the flu). Mastering these patterns helps you confidently navigate practical life in Ukraine.
+> *The Genitive case helps us in many life situations. We often ask for a kilogram of apples or buy pills for pain. Also, we tell the doctor that we have no fever. This is very useful and important grammar.*
 
-:::note **Читаємо українською (Reading in Ukrainian)**
-На ринку ми купуємо багато свіжих фруктів.
-У лікарні ми кажемо, що у нас немає температури.
-В аптеці ми просимо ліки від сильного кашлю.
-Ми п'ємо чай без цукру для нашого здоров'я.
-Родовий відмінок допомагає нам говорити правильно та чітко.
-:::
-
-<!-- INJECT_ACTIVITY: match-up-remedies -->
-<!-- INJECT_ACTIVITY: true-false-grammar -->
+<!-- INJECT_ACTIVITY: true-false, Judge whether shopping and health phrases use the Genitive correctly, 8 items -->

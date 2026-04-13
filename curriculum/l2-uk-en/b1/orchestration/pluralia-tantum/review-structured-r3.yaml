@@ -1,0 +1,52 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: Missed specific planned examples like `рукавиці` (Group 1 test), `штанів`
+    in the genitive list, and the `*Ці гроші коштує дорого` common error example in
+    section 6. Otherwise solid adherence.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: Found a calque ("відчув себе трохи погано"), a Russianism ("підряд"),
+    an incorrect Surzhyk back-formation ("нові мебль"), and a false phonological claim
+    about "ножиць" having adjacent consonants.
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: The PPP flow is excellent. However, teaching that "ножиць" doesn't have
+    a fleeting vowel because its "adjacent consonants are easily pronounced" is factually
+    wrong and misleading, since the stem "ножи
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required vocabulary from the plan is naturally integrated into the
+    text.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All markers are correctly placed immediately following the relevant grammatical
+    instruction.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: The tone is professional and encouraging. The use of a travel narrative
+    and dialogue makes the text engaging.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All sections are present, well-formatted, and H2 headers map precisely
+    to the plan. Word count constraint met.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Excellent integration of Ukrainian cultural realities (Carpathians, named
+    cities) and historical endings (грішми, ворітьми).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: Dialogue effectively demonstrates adjective agreement in pluralia tantum,
+    though phrases like "кравецькі ножиці" feel slightly stiff in a casual moving
+    scenario.
+findings: []

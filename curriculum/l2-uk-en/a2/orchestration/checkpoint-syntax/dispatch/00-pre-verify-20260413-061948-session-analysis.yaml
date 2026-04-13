@@ -1,0 +1,38 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T04-14-22014ae6.json
+phase: pre-verify
+prompt_chars: 3877
+response_chars: 592
+prompt_words: 606
+response_words: 98
+sections:
+- name: preamble
+  start: 0
+  length: 569
+  fraction: 0.1468
+- name: plan
+  start: 569
+  length: 2927
+  fraction: 0.755
+- name: output_spec
+  start: 3496
+  length: 381
+  fraction: 0.0983
+large_sections:
+- plan
+directives_total: 3
+directives_covered: 0
+directives_missed:
+- kind: must
+  text: You MUST verify linguistic facts using the tools below BEFORE writing begins.
+  covered: false
+  coverage_note: 0/11 keywords (0%)
+- kind: must
+  text: '- **Частина 3: Побудуй складне речення (Part 3: Build Complex Sentences)**:
+    Sentence building: given a situation (at university, at work, planning a trip),
+    produce complex sentences using the required conjunction type.'
+  covered: false
+  coverage_note: 2/21 keywords (10%)
+- kind: must
+  text: Each task MUST include at least one tool call.
+  covered: false
+  coverage_note: 0/8 keywords (0%)

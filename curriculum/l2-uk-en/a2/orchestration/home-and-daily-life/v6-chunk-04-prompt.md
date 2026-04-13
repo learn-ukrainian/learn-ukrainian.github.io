@@ -1,19 +1,21 @@
-# Section-by-Section Generation — Section 4/5
+# Section-by-Section Generation — Section 4/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 38: Мій дім, мій день (A2, A2.5 [Case Synthesis and Plurals])
-**Section to write:** Мовленнєве завдання: Опишіть свій дім (Speaking Task) (~300 words total)
-**Word target for this section:** 300 words (aim for 330 to account for undershoot)
+**Section to write:** Мовленнєве завдання: Опишіть свій дім (~330 words)
+**Word target for this section:** 330 words (aim for 363 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Мовленнєве завдання: Опишіть свій дім (Speaking Task) (~300 words total)
-- P1 (~80 words): [Detailed task instructions: Write a 10-sentence description of your living space and your morning routine. Must mention 3 rooms, 4 items of furniture, and 3 specific times of day.]
-- P2 (~100 words): [Grammar Checklist: Explicitly list the cases that should be used: Nom. for listing, Gen. for absence/quantity, Acc. for actions, Instr. for transport/companions, and Loc. for location/time.]
-- P3 (~120 words): [Model Answer: "Я живу у великій квартирі. У вітальні є диван... Вранці я встаю о шостій... Їду в офіс машиною..." A 12-sentence demonstration of the target grammar in a natural narrative.]
+## Мовленнєве завдання: Опишіть свій дім (~330 words)
+- P1 (~100 words): Task instructions. Direct the learner to write an 8-10 sentence description of their own home and a typical daily routine, imagining they are sending a voice message to a Ukrainian friend.
+- P2 (~100 words): Grammar checklist for the task. Ensure the inclusion of: Nominative (what exists), Genitive (what is missing/quantities), Accusative (where they go), Instrumental (how they travel / with whom), and Locative (where things are).
+- P3 (~130 words): Model Answer. Provide a complete, realistic A2-level text in a `> [!model-answer]` callout block demonstrating a successful response that meets all checklist criteria (e.g., "Я живу у квартирі. У мене є велика вітальня, але немає балкона...").
+
+Grand total: ~2200 words
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -21,7 +23,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-на підлозі. > — **Оксана:** Ми купили його вчора в магазині. А тепер проходьте на кухню. Коли гості заходять у кімнату, господарі відразу запрошують їх до столу. Вони часто кажуть таку фразу: «**Сідайте за стіл**» *(Sit at the table)*. When we use the verb «сідати» to indicate movement, the preposition **за** *(behind / at)* requires the Accusative case. Після цього всі гості та господарі сидять разом. In this state of rest, the same preposition «за» takes the Instrumental case. Ми кажемо: «Ми **сидимо за столом**» *(We are sitting at the table)*. Це дуже важлива різниця в українській граматиці. Рух завжди вимагає знахідного відмінка, а позиція вимагає орудного. Гості довго сидять за великим столом у вітальні. Вони весело розмовляють, жартують і смачно вечеряють разом. Господарі завжди готують і пропонують багато різних страв. Усі почуваються дуже комфортно у цій приємній атмосфері. На кухні господиня обов'язково пропонує теплі напої. Вона часто запитує своїх гостей: «**Хочете чаю?**» *(Do you want some tea?)* або «**Вип'ємо кави?**» *(Shall we drink some coffee?)*. Ukrainian uses the Genitive case here to express an unspecified quantity of something. Це правило називається частковий родовий відмінок. Гості можуть відповідати на ці питання по-різному. Вони використовують орудний відмінок з прийменником **з** *(with)*, щоб пояснити свої смаки. Наприклад, ви можете сказати: «Я хочу чорний чай **з лимоном**» *(with lemon)*. Або ви можете сказати господині: «Я буду пити каву **з молоком**» *(with milk)*. Деякі люди люблять солодкий чай **з цукром** *(with sugar)*. Інші друзі п'ють міцну каву без цукру. Господар також може привітно запитати: «Будете їсти смачний пиріг **з яблуками**?» *(with apples)*. Під час вечері гості та господарі часто говорять про свій день. Вони цікавляться і запитують: «А о котрій годині ви встаєте вранці?». Ви можете детально відповісти: «Мій день починається рано, а мій чоловік прокидається пізно». Такі спокійні розмови допомагають краще пізнати одне одного. Українці дуже люблять обговорювати свій щоденний розпорядок дня за столом. In these social situations, the Dative case expresses gratitude or personal opinions. Наприкінці довгого вечора гості завжди щиро кажуть: «Дуже **дякую господарям**» *(thank you to the hosts)*. Замість дієслова «любити» ми часто використовуємо іншу популярну конструкцію. Ми кажемо: «**Мені подобається** ваша квартира» *(I like your apartment)*. Це звучить дуже ввічливо і природно для носіїв мови. Ви також можете радісно додати: «Нам подобається ваша смачна вечеря». Спілкування в гостях гармонійно об'єднує всі ці граматичні правила. When addressing friends directly, Ukrainians use the Vocative case. Замість форми «Оксана» ми завжди кажемо «Оксано», а замість «Тарас» ми кличемо «Тарасе». Це просте правило робить розмову теплою і дружньою. Під час цікавої бесіди ми також часто використовуємо місцевий відмінок. Ми так детально розповідаємо, де ми активно працюємо чи вчимося. Наприклад, гість може серйозно розповідати: «Я зараз працюю **на фірмі**» *(at a firm)*. А господар швидко відповідає: «А моя дружина працює **у школі**» *(at a school)*. Ми плавно переходимо від теми дому до складної роботи та активного відпочинку. Наприкінці приємної зустрічі гості збираються додому. Вони одягаються в теплому коридорі, прощаються і йдуть відпочивати. Це був чудовий і веселий вечір з друзями! <!-- INJECT_ACTIVITY: error-correction-cases -->
+to show movement. Ми використовуємо знахідний відмінок, коли є чіткий напрямок або рух до об'єкта. Але коли ми вже зручно сидимо і їмо, ми обов'язково використовуємо орудний відмінок. Ми сидимо за столом і довго розмовляємо. > *We use the Accusative case when there is a clear direction or movement toward an object. But when we are already sitting comfortably and eating, we obligatorily use the Instrumental case. We sit at the table and talk for a long time.* This is a fundamental grammatical rule that applies to many situations: **за стіл** (Accusative) implies the physical action of taking a seat, while **за столом** (Instrumental) describes the static location of being seated and spending time at the table. Another common feature of hospitality is offering drinks or food right away. Olena asks her guest: «Хочете чаю чи кави?» Here, both of these popular drinks are in the Genitive case. Коли ми пропонуємо порцію або частину чогось, ми часто використовуємо родовий відмінок замість знахідного. Ви не хочете випити весь чай у світі, ви хочете лише трохи чаю. > *When we offer a portion or a part of something, we often use the Genitive case instead of the Accusative. You do not want to drink all the tea in the world, you want only some tea.* This partitive use of the Genitive is very common with uncountable nouns like water, tea, sugar, or soup. If you want to specify exactly how you take your drink, you use the preposition **з** (with) and the Instrumental case. For example, you might ask for **кава з цукром** (coffee with sugar) or **чай з молоком** (tea with milk). During dinner, it is completely natural to discuss everyday topics, such as work schedules, morning habits like when people **снідати** (to have breakfast), or who does the household chores. The conversation flows seamlessly from offering delicious food from the **кухня** (kitchen) to talking about the **розпорядок дня** (daily routine). Гості можуть невимушено питати: «А о котрій ви встаєте?» або «Хто у вас готує вечерю?» Ці прості питання дозволяють дуже легко підтримувати бесіду за столом. Вони природно об'єднують різні граматичні відмінки, які ви вже добре знаєте. > *Guests can casually ask: "And at what time do you get up?" or "Who cooks dinner at your place?" These simple questions allow you to very easily maintain a conversation at the table. They naturally combine the different grammatical cases that you already know well.* By asking about someone's daily routine, including when they **вставати** (to get up) and leave the **спальня** (bedroom), you practice using the Locative case for specific times. You also use the Nominative or Accusative cases for describing actions throughout the day until it is time to **лягати спати** (to go to bed). :::note **Quick tip** — When someone warmly says «Пригощайтеся!», do not be shy or wait to be served. It is polite and culturally expected to try a little bit of everything on the table to show your appreciation to the hosts. ::: <!-- INJECT_ACTIVITY: error-correction-cases-routine -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -485,7 +487,74 @@ Teaching Ukrainian grammar requires a conscious effort to separate it from Russi
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -504,18 +573,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (4/4).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] помешкання (dwelling, apartment)
+- [ ] кімната (room)
+- [ ] кухня (kitchen)
+- [ ] спальня (bedroom)
+- [ ] вітальня (living room)
+- [ ] меблі (furniture)
+- [ ] розпорядок дня (daily routine)
+- [ ] вставати (to get up)
+- [ ] снідати (to have breakfast)
+- [ ] лягати спати (to go to bed)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Мовленнєве завдання: Опишіть свій дім (~330 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

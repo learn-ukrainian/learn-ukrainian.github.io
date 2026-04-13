@@ -1,51 +1,241 @@
 {
-  "total_items": 58,
-  "grounded_items": 52,
+  "total_items": 72,
+  "grounded_items": 35,
   "ungrounded": [
     {
-      "word": "ви",
-      "exercise_type": "quiz",
-      "context": "____ ви йдете? — Ми йдемо у ресторан.",
+      "word": "ми",
+      "exercise_type": "unjumble",
+      "context": "Ми",
+      "role": "answer"
+    },
+    {
+      "word": "йдемо",
+      "exercise_type": "fill-in",
+      "context": "Ми йдемо на ____.",
+      "role": "context"
+    },
+    {
+      "word": "йде",
+      "exercise_type": "fill-in",
+      "context": "Вона йде в ____.",
+      "role": "context"
+    },
+    {
+      "word": "вони",
+      "exercise_type": "unjumble",
+      "context": "Вони",
+      "role": "answer"
+    },
+    {
+      "word": "йдуть",
+      "exercise_type": "fill-in",
+      "context": "Вони йдуть у ____.",
       "role": "context"
     },
     {
       "word": "йдете",
+      "exercise_type": "match-up",
+      "context": "Куди ви йдете?",
+      "role": "answer"
+    },
+    {
+      "word": "твоя",
       "exercise_type": "quiz",
-      "context": "____ ви йдете? — Ми йдемо у ресторан.",
+      "context": "____ твоя мама? — Вдома.",
       "role": "context"
     },
     {
-      "word": "пошті",
-      "exercise_type": "match-up",
-      "context": "на пошті",
+      "word": "зараз",
+      "exercise_type": "unjumble",
+      "context": "зараз",
       "role": "answer"
     },
     {
-      "word": "бібліотеці",
+      "word": "їдемо",
+      "exercise_type": "fill-in",
+      "context": "Ми їдемо в ____.",
+      "role": "context"
+    },
+    {
+      "word": "повертаюся",
+      "exercise_type": "fill-in",
+      "context": "Я повертаюся ____.",
+      "role": "context"
+    },
+    {
+      "word": "магазині",
       "exercise_type": "match-up",
-      "context": "у бібліотеці",
+      "context": "Я в магазині.",
+      "role": "context"
+    },
+    {
+      "word": "одесі",
+      "exercise_type": "match-up",
+      "context": "Вона в Одесі.",
+      "role": "context"
+    },
+    {
+      "word": "працюєте",
+      "exercise_type": "match-up",
+      "context": "Де ви працюєте?",
       "role": "answer"
     },
     {
-      "word": "або",
+      "word": "працюємо",
+      "exercise_type": "match-up",
+      "context": "Ми працюємо на роботі.",
+      "role": "context"
+    },
+    {
+      "word": "використовуємо",
       "exercise_type": "true-false",
-      "context": "For inanimate masculine nouns like «банк» або «парк», the Ac",
+      "context": "Ми використовуємо запитання «Куди?», коли говоримо про напря",
       "role": "context"
     },
     {
-      "word": "ресторані",
-      "exercise_type": "error-correction",
-      "context": "Куди вони? Вони в ресторані.",
+      "word": "запитання",
+      "exercise_type": "true-false",
+      "context": "Ми використовуємо запитання «Куди?», коли говоримо про напря",
       "role": "context"
+    },
+    {
+      "word": "говоримо",
+      "exercise_type": "true-false",
+      "context": "Ми використовуємо запитання «Куди?», коли говоримо про напря",
+      "role": "context"
+    },
+    {
+      "word": "про",
+      "exercise_type": "true-false",
+      "context": "Ми використовуємо запитання «Куди?», коли говоримо про напря",
+      "role": "context"
+    },
+    {
+      "word": "напрямок",
+      "exercise_type": "true-false",
+      "context": "Ми використовуємо запитання «Куди?», коли говоримо про напря",
+      "role": "context"
+    },
+    {
+      "word": "руху",
+      "exercise_type": "true-false",
+      "context": "Ми використовуємо запитання «Куди?», коли говоримо про напря",
+      "role": "context"
+    },
+    {
+      "word": "фраза",
+      "exercise_type": "true-false",
+      "context": "Фраза «Я йду в банк» — це відповідь на запитання «Де?».",
+      "role": "context"
+    },
+    {
+      "word": "це",
+      "exercise_type": "true-false",
+      "context": "Фраза «Я йду в банк» — це відповідь на запитання «Де?».",
+      "role": "context"
+    },
+    {
+      "word": "відповідь",
+      "exercise_type": "true-false",
+      "context": "Фраза «Я йду в банк» — це відповідь на запитання «Де?».",
+      "role": "context"
+    },
+    {
+      "word": "слово",
+      "exercise_type": "true-false",
+      "context": "Слово «вдома» означає рух додому.",
+      "role": "context"
+    },
+    {
+      "word": "означає",
+      "exercise_type": "true-false",
+      "context": "Слово «вдома» означає рух додому.",
+      "role": "context"
+    },
+    {
+      "word": "рух",
+      "exercise_type": "true-false",
+      "context": "Слово «вдома» означає рух додому.",
+      "role": "context"
+    },
+    {
+      "word": "кажемо",
+      "exercise_type": "true-false",
+      "context": "Ми кажемо «на роботу», коли йдемо туди.",
+      "role": "context"
+    },
+    {
+      "word": "туди",
+      "exercise_type": "true-false",
+      "context": "Ми кажемо «на роботу», коли йдемо туди.",
+      "role": "context"
+    },
+    {
+      "word": "змінюється",
+      "exercise_type": "true-false",
+      "context": "Слово «місто» змінюється на «місту» після запитання «Куди?».",
+      "role": "context"
+    },
+    {
+      "word": "місту",
+      "exercise_type": "true-false",
+      "context": "Слово «місто» змінюється на «місту» після запитання «Куди?».",
+      "role": "context"
+    },
+    {
+      "word": "після",
+      "exercise_type": "true-false",
+      "context": "Слово «місто» змінюється на «місту» після запитання «Куди?».",
+      "role": "context"
+    },
+    {
+      "word": "дієслово",
+      "exercise_type": "true-false",
+      "context": "Дієслово «їхати» означає рухатися транспортом.",
+      "role": "context"
+    },
+    {
+      "word": "рухатися",
+      "exercise_type": "true-false",
+      "context": "Дієслово «їхати» означає рухатися транспортом.",
+      "role": "context"
+    },
+    {
+      "word": "транспортом",
+      "exercise_type": "true-false",
+      "context": "Дієслово «їхати» означає рухатися транспортом.",
+      "role": "context"
+    },
+    {
+      "word": "закінчення",
+      "exercise_type": "group-sort",
+      "context": "Закінчення змінюється (Ending changes)",
+      "role": "context"
+    },
+    {
+      "word": "не",
+      "exercise_type": "group-sort",
+      "context": "Закінчення не змінюється (No change)",
+      "role": "context"
+    },
+    {
+      "word": "повертаються",
+      "exercise_type": "unjumble",
+      "context": "повертаються",
+      "role": "answer"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 17,
-    "tested_in_exercises": 14,
+    "tested_in_exercises": 10,
     "not_tested": [
+      "бібліотека",
       "йти",
+      "одеса",
       "повертатися",
-      "їхати"
+      "ресторан",
+      "робота",
+      "школа"
     ]
   },
   "all_grounded": false

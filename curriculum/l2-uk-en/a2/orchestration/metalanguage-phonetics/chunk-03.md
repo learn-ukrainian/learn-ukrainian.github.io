@@ -1,22 +1,41 @@
-## Приголосні звуки: дзвінкі та глухі
+## Приголосні звуки: дзвінкі та глухі (~770 words total)
 
-> — **Студент-першокурсник:** Професоре, я маю запитання про **приголосні** *(consonants)* звуки. Я читав підручник вчора ввечері.
-> — **Професор:** Добрий день! Слухаю вас дуже уважно. Що саме вас зараз цікавить?
-> — **Студент-першокурсник:** Як ми правильно класифікуємо ці складні звуки? Я читав про **дзвінкість** *(voicing)* та **глухість** *(voicelessness)*.
-> — **Професор:** Це базова фонетична класифікація. Напишіть на **дошці** *(board)* слова «бабка» та «папка», будь ласка.
-> — **Студент-першокурсник:** Добре, я написав. Я знаю, що звук [б] — це **дзвінкий** *(voiced)* приголосний звук. А звук [п] — це **глухий** *(voiceless)* приголосний.
-> — **Професор:** Абсолютно правильно! А ви знаєте, що таке **сонорність** *(sonority)* в українській мові?
-> — **Студент-першокурсник:** Здається, це коли звук має дуже багато голосу під час вимови?
-> — **Професор:** Так, ви маєте рацію. Сонорні приголосні ніколи не мають глухої пари. Наприклад, звуки [м] або [л].
-> — **Студент-першокурсник:** Дуже дякую, професоре. Тепер я розумію цю фонетичну систему набагато краще.
+> — **Студент-першокурсник:** Професоре, я не розумію, як класифікувати приголосні звуки. Що таке дзвінкість та глухість? *(Professor, I don't understand how to classify consonant sounds. What is voicing and voicelessness?)*
+> — **Професор:** Це просто. Давайте подивимося на дошку. Приголосний звук утворюється, коли повітря зустрічає перешкоду. *(It's simple. Let's look at the board. A consonant sound is formed when the air meets an obstacle.)*
+> — **Студент-першокурсник:** Іноді ми використовуємо голос, а іноді ні? *(Sometimes we use voice, and sometimes not?)*
+> — **Професор:** Саме так. Якщо є голос і шум, це дзвінкий приголосний. Якщо тільки шум — це глухий приголосний. *(Exactly. If there is voice and noise, it is a voiced consonant. If only noise — it is a voiceless consonant.)*
+> — **Студент-першокурсник:** А що таке сонорність? *(And what is sonority?)*
+> — **Професор:** Це особлива група. Сонорний приголосний має набагато більше голосу, ніж шуму. Вони не мають глухої пари. *(This is a special group. A sonorant consonant has much more voice than noise. They don't have a voiceless pair.)*
 
-Тепер ми детально розглянемо систему приголосних звуків української мови. Головна фонетична класифікація базується на участі голосу та шуму. Коли ми вимовляємо будь-який приголосний звук, ми завжди створюємо перешкоду для повітря. Так у нашому роті виникає характерний шум. Якщо наші голосові зв'язки також активно працюють, ми додаємо свій голос. Звуки, які складаються з голосу та шуму одночасно, ми називаємо дзвінкі приголосні. Звуки, які складаються тільки з чистого шуму без голосу, ми називаємо глухі приголосні. Щоб легко перевірити звук, ви можете закрити вуха своїми долонями. Вимовте звук [з] дуже голосно. Ви одразу почуєте, як у вухах сильно «дзвенить». Це означає, що цей звук є дзвінким. Тепер вимовте звук [с]. Ви почуєте тільки звичайний шум без голосу. Більшість українських приголосних утворюють логічні пари. Давайте уважно подивимося на цю таблицю базових парних звуків. Ось головні пари: [б] — [п], [д] — [т], [з] — [с], [ж] — [ш]. Ми також маємо пари складних звуків: [дж] — [ч] та [дз] — [ц]. Звук [г] має свою глуху пару [х]. А рідкісний звук [ґ] має глуху пару [к].
+We learn that a **приголосний** (consonant) **звук** (sound) is made when the air stream meets an obstacle in the mouth, creating friction and noise. When we use our vocal cords to add voice to this noise, we produce a **дзвінкий** (voiced) consonant. You can feel this vibration if you place your hand on your throat while pronouncing the sound [б] or [з]. 
 
-В українській мові також існує особлива група приголосних звуків. Їх традиційно називають **сонорні приголосні** *(sonorant consonants)*. Ці звуки є унікальними. У них голос завжди сильно переважає над шумом. Вони звучать дуже дзвінко, чисто і максимально мелодійно. Через цю акустичну особливість сонорні приголосні взагалі не мають глухих пар. До цієї специфічної групи належать звуки: [в], [м], [н], [л], [р] та [й]. Українські школярі часто використовують спеціальні веселі фрази для швидкого запам'ятовування. Найпопулярніша шкільна фраза — це «Ми винили рій» *(We blamed the swarm)*. У цій короткій фразі зібрані всі необхідні сонорні звуки. Інший популярний і дуже простий спосіб — запам'ятати ключове слово «МіНеРаЛоВиЙ» *(mineral)*. Тут також є всі сонорні приголосні. Якщо ви випадково бачите такий специфічний звук у слові, ви вже знаєте точно. Цей звук завжди є тільки сонорним.
+If we only use air to make noise without activating the vocal cords, we produce a **глухий** (voiceless) consonant. Try saying the sound [п] or [с] while touching your throat; you will not feel any vibration. Most consonants in the Ukrainian language form symmetrical pairs based on this exact voicing principle, which is essential when reading a new **літера** (letter).
 
-Тепер ми маємо вивчити критично важливе правило української вимови. Це правило робить українську фонетику унікальною серед інших слов'янських мов. Воно також показує головну фонетичну відмінність від російської чи німецької мов. В українській літературній мові дзвінкі приголосні ніколи не втрачають свою природну дзвінкість. Вони зберігають її навіть у кінці довгого слова. Це фонетичне правило дуже важливе для правильної вимови та ідеального українського акценту. Наприклад, візьмемо дуже популярне слово «хліб» *(bread)*. Ми завжди вимовляємо його чітко зі дзвінким звуком [б] у кінці: [хліб]. Ми ніколи не вимовляємо це красиве слово як глухе [хліп]. Це дуже типова і груба **орфоепічна помилка** *(pronunciation error)* для іноземців. Інший класичний приклад — це відоме слово «дуб» *(oak)*. Ми маємо чітко артикулювати дзвінкий звук [б]: [дуб]. Вимова слова як [дуп] є абсолютно неправильною та неприродною формою. Ви також маєте дуже чітко вимовляти звук [з] у кінці слова «мороз» *(frost)*. Запам'ятайте це фундаментальне правило вимови назавжди.
+В українській мові більшість приголосних утворюють такі пари. Запам'ятайте цю таблицю, бо вона дуже важлива для правильної вимови. Дзвінкі звуки: [б], [д], [з], [ж], [дж], [дз], [г], [ґ]. Глухі пари: [п], [т], [с], [ш], [ч], [ц], [х], [к]. Якщо ви знаєте ці пари, ви легко зрозумієте правила читання та письма.
 
-Існує ще одна важлива вторинна класифікація українських приголосних звуків. Вона базується на тому, як саме ми утворюємо специфічний шум. Перша велика група — це **свистячі** *(whistling)* звуки: [з], [ц], [с], [дз]. Коли ми їх вимовляємо, повітря створює звук. Цей звук дуже схожий на звичайний свист. Друга група — це **шиплячі** *(hushing)* звуки: [ж], [ч], [ш], [дж]. Ці звуки завжди нагадують тихе шипіння змії або шум осіннього вітру. Третя важлива фонетична група — це **губні** *(labial)* приголосні: [б], [п], [в], [м], [ф]. Ми використовуємо наші губи, щоб заблокувати потік повітря для цих звуків. Навіщо нам потрібні ці додаткові складні категорії саме зараз? Вони є абсолютно необхідними для правильного розуміння майбутніх граматичних правил. У наших наступних граматичних модулях ми будемо активно вивчати складну асиміляцію. Також ми розглянемо дуже часте чергування різних приголосних. Ці фонетичні процеси майже завжди відбуваються всередині конкретних груп звуків.
+> *In the Ukrainian language, most consonants form such pairs. Remember this table, because it is very important for correct pronunciation. Voiced sounds: [б], [д], [з], [ж], [дж], [дз], [г], [ґ]. Voiceless pairs: [п], [т], [с], [ш], [ч], [ц], [х], [к]. If you know these pairs, you will easily understand the rules of reading and writing.*
 
-<!-- INJECT_ACTIVITY: quiz, Classify sounds: голосний чи приголосний? дзвінкий чи глухий? -->
-<!-- INJECT_ACTIVITY: group-sort, Sort consonants into дзвінкі / глухі / сонорні groups -->
+However, not all consonants have a voiceless pair. There is a special, very musical group of sounds in Ukrainian. A **сонорний** (sonorant) consonant is unique because the voice dominates so heavily over the noise that these sounds cannot be whispered into a voiceless equivalent. They are always voiced, and they make the Ukrainian language flow smoothly.
+
+Ця група включає звуки [м], [н], [л], [р], [в], [й]. Вони не мають глухої пари. Щоб легко запам'ятати всі сонорні приголосні, школярі вчать спеціальну фразу. Це фраза «Ми винили рій» або одне слово «МіНеРаЛоВиЙ». Усі приголосні в цьому слові є сонорними.
+
+> *This group includes the sounds [м], [н], [л], [р], [в], [й]. They do not have a voiceless pair. To easily remember all sonorant consonants, schoolchildren learn a special phrase. It is the phrase "Ми винили рій" (We blamed the swarm) or one word "МіНеРаЛоВиЙ" (Mineral). All consonants in this word are sonorants.*
+
+Now we arrive at one of the most critical pronunciation rules, and a major difference between Ukrainian and other languages like Russian or German. In those languages, a voiced consonant at the end of a word or **склад** (syllable) automatically loses its voice and sounds like its voiceless pair. This does NOT happen in Ukrainian. The strict anti-devoicing rule is a hallmark of authentic Ukrainian speech.
+
+Українські дзвінкі приголосні ніколи не оглушуються в кінці слова. Ми завжди маємо чітко вимовляти дзвінкий звук. Наприклад, слово «хліб» звучить виключно як [хліб]. Ми ніколи не кажемо [хліп], бо це помилка. Слово «дуб» завжди звучить як [дуб], а не [дуп]. Слово «мороз» має закінчуватися на дзвінкий [з], а не на глухий [с]. Це правило робить нашу мову дуже мелодійною.
+
+> *Ukrainian voiced consonants are never devoiced at the end of a word. We must always clearly pronounce the voiced sound. For example, the word "хліб" (bread) sounds exclusively like [хліб]. We never say [хліп], because it is a mistake. The word "дуб" (oak) always sounds like [дуб], and not [дуп]. The word "мороз" (frost) must end with a voiced [з], and not with a voiceless [с]. This rule makes our language very melodic.*
+
+:::info
+**Grammar box** — Always preserve the voicing of consonants at the ends of words. Devoicing words like **хліб** to sound like *[хліп]* is one of the most common foreign accents and immediately signals a non-native speaker. Keep your vocal cords active until the very end of the word!
+:::
+
+Beyond voicing and sonority, consonants are also grouped by which part of the mouth creates them. We have sibilants, which we call **свистячі** (whistling). These include [з], [ц], [с], and [дз] because they produce a sharp air stream. We also have hushing sounds, known as **шиплячі** (hushing). These are [ж], [ч], [ш], and [дж], which sound like white noise. Finally, sounds made primarily with the lips are called **губні** (labials).
+
+Ця класифікація є дуже потрібною для майбутнього. Звуки часто впливають один на одного. Ви побачите це, коли будете вивчати складні граматичні правила. Свистячі та шиплячі звуки часто змінюють одні одних у словах. Тому важливо знати ці групи вже зараз.
+
+> *This classification is very necessary for the future. Sounds often influence each other. You will see this when you study complex grammar rules. Whistling and hushing sounds often change each other in words. Therefore, it is important to know these groups already now.*
+
+<!-- INJECT_ACTIVITY: quiz-sound-classification -->
+<!-- INJECT_ACTIVITY: group-sort-consonants -->

@@ -1,19 +1,7 @@
 {
-  "attempt": 1,
-  "passed": false,
-  "errors": [
-    {
-      "check": "STRUCTURE",
-      "severity": "ERROR",
-      "message": "Missing section heading: 'Дроби та змішані кількості (§4.2.1.3)'"
-    }
-  ],
-  "warnings": [
-    {
-      "check": "VOCABULARY",
-      "severity": "WARNING",
-      "message": "Missing 3/10 required vocab: кількісний числівник (cardinal numeral — один, два, сто), збірний числівник (collective numeral — двоє, троє, четверо), неозначено-кількісний (indefinite-quantitative — багато, кілька)"
-    }
-  ],
-  "timestamp": "2026-04-10T23:59:48.641462+00:00"
+  "attempt": 2,
+  "passed": true,
+  "errors": [],
+  "warnings": [],
+  "timestamp": "2026-04-11T10:22:48.995185+00:00"
 }

@@ -1,0 +1,78 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T09-57-27845eda.json
+phase: write-chunk-03
+prompt_chars: 52792
+response_chars: 6381
+prompt_words: 7164
+response_words: 984
+sections:
+- name: header
+  start: 0
+  length: 442
+  fraction: 0.0084
+- name: skeleton
+  start: 442
+  length: 1377
+  fraction: 0.0261
+- name: prior_summary
+  start: 1819
+  length: 3373
+  fraction: 0.0639
+- name: plan
+  start: 5192
+  length: 19119
+  fraction: 0.3622
+- name: wiki
+  start: 17949
+  length: 28256
+  fraction: 0.5352
+- name: output_spec
+  start: 52567
+  length: 225
+  fraction: 0.0043
+large_sections:
+- wiki
+directives_total: 23
+directives_covered: 13
+directives_missed:
+- kind: checklist
+  text: дієвідміна (conjugation class — I or II)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: особа (person — 1st, 2nd, 3rd)
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: checklist
+  text: число (number — однина, множина)
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: checklist
+  text: рід (gender — чоловічий, жіночий, середній)
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: checklist
+  text: дієвідмінювання (conjugation — changing verb by person and number)
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: checklist
+  text: зворотний (reflexive — verbs with -ся/-сь)
+  covered: false
+  coverage_note: 1/3 keywords (33%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: skeleton_para
+  text: 'P5 (100w): Register Note: explain that using the correct aspect is what makes
+    Ukrainian sound ''natural'' rather than ''translated''.'
+  covered: false
+  coverage_note: 5/16 keywords (31%)
+- kind: inject_activity
+  text: fill-in-tense-forms
+  covered: false
+  coverage_note: marker missing

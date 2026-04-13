@@ -1,20 +1,40 @@
-## Мова класу: накази вчителя
+## Мова класу: накази вчителя (~550 words total)
 
-У школі вчителі щодня використовують спеціальні дієслова. (In school, teachers use special verbs every day.) Це наказовий спосіб, який спонукає учнів до дії. (This is the imperative mood, which prompts students to action.) Ви вже добре знаєте цю граматичну тему. (You already know this grammar topic well.) Але зараз ми детально розберемо саме мову класу. (But now we will analyze exactly the classroom language.) Українські викладачі зазвичай звертаються до студентів на формальне «Ви». (Ukrainian teachers usually address students as formal "You".) Тому всі офіційні накази мають типові закінчення **-іть** або **-йте**. (Therefore all official commands have typical endings -іть or -йте.) Вчитель просто бере основу слова і додає це закінчення. (The teacher simply takes the word stem and adds this ending.) Ось найважливіші дієслова для уроку: **прочитайте** (read) та **запишіть** (write down). (Here are the most important verbs for a lesson: read and write down.) Коли є багато варіантів, вчитель каже: **виберіть** (choose). (When there are many options, the teacher says: choose.) Якщо треба звернути увагу на текст, ви почуєте: **подивіться** (look). (If you need to pay attention to the text, you will hear: look.)
+As you progress toward an intermediate level, your Ukrainian lessons will shift closer to full immersion. Your teacher and textbooks will guide you using the formal imperative form. These commands are typically built using the "ви" form, ending in **-іть** or **-йте**.
 
-Тепер перейдемо до письмових завдань та вправ. (Now let's move to written tasks and exercises.) У підручниках ви побачите багато нових інструкцій українською мовою. (In textbooks you will see many new instructions in the Ukrainian language.) Дуже часто там пишуть: **вставте** (insert) пропущені букви. (Very often they write there: insert missing letters.) Це означає, що слово неповне, і вам треба додати літеру. (This means that the word is incomplete, and you need to add a letter.) Інше популярне завдання з граматики: **підкресліть** (underline) головні члени. (Another popular grammar task: underline main members.) Ви берете ручку і малюєте лінію під словом. (You take a pen and draw a line under the word.) Згадайте, як ми підкреслюємо підмет однією лінією, а присудок — двома. (Remember how we underline the subject with one line, and the predicate with two.) Іноді автори підручника спеціально роблять помилку в тексті. (Sometimes textbook authors purposefully make an error in the text.) Тоді ви бачите інструкцію: **знайдіть** (find) помилку. (Then you see the instruction: find the error.) Такі завдання чудово тренують вашу увагу до деталей. (Such tasks wonderfully train your attention to details.) Ви вчитеся бачити текст як справжній редактор. (You learn to see the text like a real editor.)
+Ваш вчитель часто використовує формальні накази. Коли починається нова тема, викладач каже: «Подивіться на дошку» або «**Прочитайте** (read — imperative) цей текст». Якщо ви вивчаєте нові слова, вчитель просить: «**Запишіть** (write down — imperative) ці приклади». Під час тесту ви часто бачите просту інструкцію: «Виберіть правильний варіант».
 
-На уроках ми не тільки читаємо, але й багато аналізуємо. (In lessons we not only read, but also analyze a lot.) Для цього існують серйозні аналітичні дієслова. (For this there exist serious analytical verbs.) Найголовніше слово в українській граматиці — це **визначте** (determine). (The most important word in Ukrainian grammar is determine.) Кожна друга вправа просить вас: визначте відмінок. (Every second exercise asks you: determine the case.) Також вчитель може попросити: **порівняйте** (compare) ці два речення. (Also the teacher can ask: compare these two sentences.) Ви дивитеся на структуру і шукаєте різницю. (You look at the structure and look for the difference.) Якщо речення не закінчене, інструкція каже: **доповніть** (complete). (If the sentence is not finished, the instruction says: complete.) Це означає, що ви повинні додати свої власні слова. (This means that you must add your own words.) Наприкінці вправи вчитель завжди ставить запитання. (At the end of the exercise the teacher always asks a question.) Тоді він використовує фразу: **дайте відповідь** (give an answer). (Then he uses the phrase: give an answer.) Ця команда вимагає вашої активної реакції на матеріал. (This command requires your active reaction to the material.)
+> *Your teacher often uses formal commands. When a new topic begins, the instructor says: "Look at the board" or "Read this text". If you are studying new words, the teacher asks: "Write down these examples". During a test, you often see a simple instruction: "Choose the correct option".*
 
-Для успішного навчання вам потрібна спеціальна лексика. (For successful learning you need special vocabulary.) Ми використовуємо ці слова щодня в аудиторії та онлайн. (We use these words every day in the classroom and online.) Ваш головний інструмент — це **підручник** (textbook). (Your main tool is the textbook.) У ньому є кожна **сторінка** (page), яку ви відкриваєте на уроці. (In it is every page that you open in the lesson.) На сторінках розташована кожна практична **вправа** (exercise). (On the pages is located every practical exercise.) Вчитель може дати вам складне домашнє **завдання** (task). (The teacher can give you a complex homework task.) А якщо ви працюєте в інтернеті, вам надсилають **посилання** (link). (And if you work on the internet, they send you a link.) Ви натискаєте на посилання і бачите нову тему. (You click on the link and see a new topic.) Знати ці слова дуже корисно для спілкування. (Knowing these words is very useful for communication.)
+Decoding written instructions is just as important as understanding spoken commands. In your grammar exercises, you will encounter standardized phrases. For instance, when analyzing a sentence, you might be asked to find a **додаток** (object), an **означення** (attribute), or an **обставина** (adverbial modifier). Knowing these formulas allows you to focus on the problem itself.
 
-> — **Олена:** Максиме, ти розумієш цю вправу? *(Maksym, do you understand this exercise?)*
-> — **Максим:** Так, дивись сюди. Прочитай завдання. *(Yes, look here. Read the task.)*
-> — **Олена:** «Вставте пропущені букви». А що далі? *("Insert the missing letters". And what next?)*
-> — **Максим:** Тут треба виділити закінчення у кожному слові. *(Here it is necessary to highlight the ending in every word.)*
-> — **Олена:** Добре, я вже все написала. *(Good, I already wrote everything.)*
-> — **Максим:** Чудово. Порівняймо наші відповіді! *(Excellent. Let's compare our answers!)*
-> — **Олена:** У мене в першому реченні закінчення «-у». *(I have the ending "-u" in the first sentence.)*
-> — **Максим:** Правильно, у мене теж так. *(Correct, I also have it like that.)*
+У підручнику граматики ви бачите типові завдання. Дуже часто автори просять: «**Вставте** (insert — imperative) пропущені букви». Якщо ви аналізуєте речення, інструкція звучить так: «**Підкресліть** (underline — imperative) головні члени». Іноді текст має спеціальні дефекти. Тоді вам потрібно виконати іншу дію: «Знайдіть помилку». Ці стандартні фрази роблять ваше навчання логічним.
 
-<!-- INJECT_ACTIVITY: quiz-classroom-instructions -->
+:::note
+**Quick tip**
+The verb **підкресліть** literally means "draw a line under". In Ukrainian schools, students traditionally underline the **підмет** (subject) with one line and the **присудок** (predicate) with two lines.
+:::
+
+As you learn more complex structures, the instructions demand deeper analysis. You will be asked to identify specific categories and relationships between words. These analytical verbs form the core of intermediate grammar drills.
+
+Найчастіший наказ на уроках — це слово «**визначте**» (determine — imperative). Вчитель може сказати: «Визначте відмінок іменника». Після цього підручник дає таку інструкцію: «Порівняйте ці два речення». Якщо речення неповне, ви бачите прохання: «Доповніть цей діалог». А коли викладач ставить питання, ви маєте відреагувати: «Дайте відповідь».
+
+> *The most frequent command in lessons is the word "determine" (identify). The teacher might say: "Determine the case of the noun". After this, the textbook gives the following instruction: "Compare these two sentences". If a sentence is incomplete, you see the request: "Complete this dialogue". And when the instructor asks a question, you must react: "Give an answer".*
+
+Beyond the action verbs, you must also be familiar with your study materials. Knowing the terminology for your learning tools helps you navigate smoothly. A physical course relies heavily on your **підручник** (textbook).
+
+Вчитель завжди називає цифру на початку уроку. Він каже: «Відкрийте свій підручник, це двадцята **сторінка** (page)». На цій сторінці зазвичай знаходиться ваша нова граматична **вправа** (exercise). Ви уважно читаєте інструкцію і починаєте працювати.
+
+If your class incorporates digital elements, the teacher will direct you to online resources to complete a specific **завдання** (task) or click a shared **посилання** (link).
+
+Якщо ви працюєте онлайн, викладач надсилає вам домашнє завдання у загальний чат. Він також може сказати: «Ось нове посилання на онлайн-тест, перейдіть за ним».
+
+> — **Марко:** Ти вже розумієш, що нам потрібно тут зробити? *(Do you already understand what we need to do here?)*
+> — **Олена:** Так, спочатку прочитай завдання. *(Yes, first read the task.)*
+> — **Марко:** Добре. Тут написано: «визначте будову слова». *(Okay. It says here: "determine the word structure".)*
+> — **Олена:** Точно. Тут треба виділити префікс, корінь, суфікс і закінчення. *(Exactly. Here we need to highlight the prefix, the root, the suffix, and the ending.)*
+> — **Марко:** Я думаю, що це слово не має префікса. *(I think this word doesn't have a prefix.)*
+> — **Олена:** Можливо. Порівняймо наші відповіді з правилом. *(Maybe. Let's compare our answers with the rule.)*
+> — **Марко:** Це гарна ідея, подивімося на п'яту сторінку. *(That's a good idea, let's look at page five.)*
+
+<!-- INJECT_ACTIVITY: quiz, Read a classroom instruction in Ukrainian and identify the correct action to take -->

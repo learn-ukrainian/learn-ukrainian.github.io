@@ -2,49 +2,53 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 10
-  evidence: The module perfectly covers all points in the `content_outline`. The word
-    count is 1597, safely exceeding the 1200 target.
+  score: 8
+  evidence: All four planned sections are present and the planned vocabulary is broadly
+    covered, but the prose demonstrates the trio only with `в Україні / в Україну
+    / з України`; a city destination form is never
 - dimension: 2
   name: Linguistic accuracy
   score: 8
-  evidence: 'There is a factual phonetic error when explaining euphony rules: "especially
-    those starting with z, s, or sh, you use зі, which is why we say зі Львова". "Львів"
-    does not start with a sibilant, it sta'
+  evidence: 'Most Ukrainian forms are clean, but `Діалоги` states: “The names of the
+    country and city change their endings to indicate origin,” which falsely generalizes
+    declension to all place names.'
 - dimension: 3
   name: Pedagogical quality
   score: 8
-  evidence: 'The caution block warns: "Never say Я в України to mean ''I am from Ukraine''".
-    English speakers would not naturally invent "в" + Genitive to translate "from".
-    It''s much more helpful to warn against usi'
+  evidence: The module has a clear PPP flow with dialogues, explanation, and practice
+    markers, but the key trio explanation lacks a parallel city example, so the learner
+    does not see the full city pattern alongsi
 - dimension: 4
   name: Vocabulary coverage
   score: 10
-  evidence: All required and recommended vocabulary items (звідки, з/із/зі, Україна,
-    Київ, Львів, Канада, Одеса, Харків, США, Англія, Німеччина, Польща, додому) are
-    perfectly integrated into contextual examples.
+  evidence: 'All required plan vocabulary appears naturally in prose, and the recommended
+    set is also covered: `Одеса`, `Харків`, `США`, `Англія`, `Німеччина`, `Польща`,
+    `додому`.'
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: Markers perfectly align with the plan, are well-spaced, and test the target
-    grammar logically.
+  score: 8
+  evidence: All 4 marker IDs match the 4 planned activities, but `group-sort-location-trio`
+    is placed after the summary and clustered with the quiz instead of directly after
+    the trio is taught.
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: Tone is encouraging and natural. The introduction ("An international student
-    mixer at a university in Kyiv...") is an excellent framing device.
+  score: 9
+  evidence: The tone is teacherly and concrete; the student mixer and street-encounter
+    scenarios keep the explanation grounded in plausible beginner situations.
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: Markdown is clean, headers exactly match the plan, and there is no meta-commentary.
+  evidence: All H2 headings from the plan are present in order, the pipeline word
+    count is 1380, and there are no stray formatting artifacts beyond the expected
+    inject markers.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Excellent integration of a decolonized cultural note regarding the etymology
-    of "Україна" and its contrast with Russian imperialist myths.
+  evidence: The framing is Ukrainian-centered throughout, with no Russian-comparison
+    framing and with decolonized English spellings such as `Kyiv` and `Odesa`.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: Dialogues are natural, use named speakers, and provide great contrast
-    between the "meeting someone new" context and the "daily routine movements" context.
+  score: 9
+  evidence: The dialogues use named speakers, real situations, and multi-turn exchanges;
+    the second dialogue naturally contrasts `звідки` and `куди`.
 findings: []

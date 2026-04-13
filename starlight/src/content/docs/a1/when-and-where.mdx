@@ -7,12 +7,11 @@ pipeline: v6
 build_status: draft
 ---
 
-import ErrorCorrection from '@site/src/components/ErrorCorrection';
 import FillIn from '@site/src/components/FillIn';
 import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import GroupSort from '@site/src/components/GroupSort';
 import MatchUp from '@site/src/components/MatchUp';
 import Quiz from '@site/src/components/Quiz';
-import Translate from '@site/src/components/Translate';
 import TrueFalse from '@site/src/components/TrueFalse';
 import Unjumble from '@site/src/components/Unjumble';
 import YouTubeVideo from '@site/src/components/YouTubeVideo';
@@ -23,149 +22,186 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ## Діало́ги (Dialogues)
 
-A real-world navigation scenario often requires linking multiple facts together, such as locations and times. In the following phone conversation, a guest is trying to find an apartment and coordinate a meeting time. The bolded words act as structural links between the speaker's actions and the environment.
+In this module, **що**, **де**, and **коли́** help you link ideas about facts, places, and time.
+
+Let's look at a conversation where two friends plan when and where to meet.
 
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Гість:</span> А́лло! Я за́раз на пло́щі. Ти зна́єш, **де** нове́ кафе́? *(Hello! I am on the square now. Do you know where the new cafe is?)*</div>
+<div class="dialogue-line"><span class="speaker">Госпо́дар:</span> Приві́т! Ти **зна́єш** (know), де нове́ кафе́?</div>
 
-<div class="dialogue-line"><span class="speaker">Госпо́дар:</span> Так, я зна́ю, **де** воно́. **Ко́ли** поба́чиш **фонта́н** (fountain), поверни́ ліво́руч. *(Yes, I know where it is. When you see the fountain, turn left.)*</div>
+<div class="dialogue-line">*(Hi! Do you know where the new cafe is?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Гість:</span> До́бре. Я йду. А **де** поба́чу **парк** (park), тре́ба зупини́тись? *(Okay. I am walking. And where I see the park, should I stop?)*</div>
+<div class="dialogue-line"><span class="speaker">Гість:</span> Так, я **зна́ю**, де воно́.</div>
 
-<div class="dialogue-line"><span class="speaker">Господар:</span> Са́ме так, зупини́сь. Вели́кий **буди́нок** (building), **що** стої́ть бі́ля де́рева — це кафе. Скажи́, **коли** ти ві́льний. *(Exactly, stop. The big building that stands near the tree is the cafe. Tell me when you are free.)*</div>
+<div class="dialogue-line">*(Yes, I know where it is.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Гість:</span> Я вільний, **коли** закі́нчу́ робо́ту. Це сього́дні вве́чері. *(I am free when I finish work. That is tonight.)*</div>
+<div class="dialogue-line"><span class="speaker">Господар:</span> Скажи́, **коли** (when) ти ві́льний.</div>
 
-<div class="dialogue-line"><span class="speaker">Господар:</span> Добре. Я ду́маю, **що** о шо́стій бу́де добре. *(Good. I think that at six will be good.)*</div>
+<div class="dialogue-line">*(Tell me when you are free.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Гість:</span> Так, я теж думаю, **що** це га́рний час. До зу́стрічі! *(Yes, I also think that this is a good time. See you!)*</div>
+<div class="dialogue-line"><span class="speaker">Гість:</span> Я вільний, коли закі́нчу́ робо́ту.</div>
+
+<div class="dialogue-line">*(I am free when I finish work.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Господар:</span> До́бре. Я **ду́маю** (think), **що** (that) о шо́стій бу́де добре.</div>
+
+<div class="dialogue-line">*(Good. I think that at six will be good.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Гість:</span> Так, я теж **думаю**, що це га́рний час.</div>
+
+<div class="dialogue-line">*(Yes, I also think that this is a good time.)*</div>
 
 </div>
 
-:::note
-The imperative verbs **поверни** (turn) and **зупинись** (stop) seen in the dialogue are used for giving direct navigation instructions. They form the core action in the main clause, waiting for the subordinate clause to provide the condition (e.g., **коли побачиш...**).
-:::
+Notice how **де**, **коли**, and **що** link a main clause with a dependent clause and make the dialogue sound more natural.
 
-When discussing other people and sharing information, complex sentences allow speakers to embed one fact inside another. The short bolded words connect the act of knowing or saying with the actual information being shared.
+Now let's look at a second conversation about a friend in Kyiv.
 
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Макси́м:</span> Приві́т! Ти знаєш, **що** Оле́на вже в Ки́єві? *(Hi! Do you know that Olena is already in Kyiv?)*</div>
+<div class="dialogue-line"><span class="speaker">А́нна:</span> Ти **знаєш**, що Оле́на вже в Ки́єві?</div>
 
-<div class="dialogue-line"><span class="speaker">Тара́с:</span> Ні, я не знав! А де вона́ живе́? *(No, I didn't know! And where does she live?)*</div>
+<div class="dialogue-line">*(Do you know that Olena is already in Kyiv?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Максим:</span> Я не знаю, **де** саме. Але́ я знаю, **що** біля це́нтру. *(I don't know exactly where. But I know that it is near the center.)*</div>
+<div class="dialogue-line"><span class="speaker">Макси́м:</span> Ні, я не знав! А де вона́ живе́?</div>
 
-<div class="dialogue-line"><span class="speaker">Тарас:</span> Скажи їй, **коли** побачиш, **що** я хо́чу зустрі́тися. *(Tell her, when you see her, that I want to meet.)*</div>
+<div class="dialogue-line">*(No, I did not know! And where does she live?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Максим:</span> Добре, скажу́, **коли** побачу. *(Okay, I will tell her when I see her.)*</div>
+<div class="dialogue-line"><span class="speaker">Анна:</span> Я не **знаю**, де са́ме. Але́ я **знаю**, що бі́ля це́нтру.</div>
+
+<div class="dialogue-line">*(I don't know exactly where. But I know that it is near the center.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Максим:</span> Скажи їй, коли **поба́чиш** (see), що я хо́чу зустрі́тися.</div>
+
+<div class="dialogue-line">*(Tell her, when you see her, that I want to meet.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Анна:</span> Добре, **скажу́** (will say), коли поба́чу.</div>
+
+<div class="dialogue-line">*(Good, I will tell her when I see her.)*</div>
 
 </div>
 
-In these dialogues, the bolded words **що**, **де**, and **коли** are not asking questions, but rather acting as bridges. They are "connector" words that glue two separate pieces of information together into a single, flowing thought. Instead of stating two separate facts like "I know" and "Where does she live?", the speaker combines them using **де**: **Я знаю, де вона живе**. This grammatical structure elevates speech from basic phrases to natural, connected communication. A specific punctuation mark appears before every single one of these connector words. The comma is an absolute requirement here, establishing a structural boundary between the two connected actions.
+This exchange combines several linked clauses.
+
+Here is a short directions example:
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Господар:</span> Коли побачиш фонта́н, поверни́ ліво́руч.</div>
+
+<div class="dialogue-line">*(When you see the fountain, turn left.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Гість:</span> Добре, я шука́ю фонтан.</div>
+
+<div class="dialogue-line">*(Good, I am looking for the fountain.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Господар:</span> Там, де побачиш парк, зупини́сь. Буди́нок, що стої́ть біля де́рева, мій.</div>
+
+<div class="dialogue-line">*(Where you see the park, stop. The building that stands near the tree is mine.)*</div>
+
+</div>
 
 ## Складне речення (Complex Sentences)
 
-In Module 44, you learned how to connect two equal ideas using simple words like **і** (and) or **але** (but). A sentence like **Я чита́ю, і він пи́ше** (I am reading, and he is writing) contains two independent actions carrying equal weight. Now, the focus shifts to connecting a main idea with a dependent idea. In the sentence **Я знаю, що він тут** (I know that he is here), the phrase **Я знаю** operates as the core statement—it is the **головне́ речення** (main clause). The second part, **що він тут**, provides supporting information and depends entirely on the first part to make sense. Ukrainian textbooks for the fifth grade call this hierarchical structure a **складнопідря́дне речення** (a complex sentence with a subordinate clause).
+In Module 44, you learned to connect equal ideas: "Я чита́ю, і він пи́ше." Now we connect a main clause with a dependent clause. In Ukrainian school grammar, this is a **складнопідря́дне речення**. The first part is the **головне́** clause, and the second depends on it.
 
-Ukrainian punctuation enforces a strict rule for these complex sentences. You must always place a comma before **що**, **де**, and **коли** when they act as conjunctions linking two clauses. This creates a significant contrast with English, where a sentence like "I think that it is correct" requires no punctuation boundary. In Ukrainian, that comma is a mandatory visual pause indicating the start of a dependent clause.
+Structure: main clause + comma + clause-linking word + subordinate clause. Look at these examples:
 
-*   **Я думаю, що це пра́вильно.** (I think that this is correct.)
-*   **Він не зна́є, де магази́н.** (He does not know where the store is.)
-*   **Зателефону́й, коли при́йдеш.** (Call when you arrive.)
+- Я **знаю**, що він тут. *(I know that he's here.)*
+- Я не **знаю**, де він живе. *(I don't know where he lives.)*
+- Скажи мені́, коли ти при́йдеш. *(Tell me when you'll come.)*
+- Вона **ду́має**, що це пра́вда. *(She thinks that this is true.)*
+- Ми **ба́чимо** (see), де стоїть маши́на. *(We see where the car stands.)*
 
-Every single example requires the comma before the conjunction.
+Put a comma between the clauses. If the subordinate clause comes first, put the comma after it: **Коли я прийду́, ми погово́римо.**
 
-:::caution
-English speakers often forget the comma before **що** because "I think that..." has no punctuation in English. In Ukrainian, writing **Я думаю що це так** without a comma is a grammatical error. Always insert the pause.
-:::
+Read these examples:
 
-Certain actions naturally demand a subordinate clause to finish their thought. These "trigger verbs" describe perception, thought, and communication. The most common examples are **зна́ти** (to know), **ду́мати** (to think), **каза́ти** (to say/tell), **сказа́ти** (to say — perfective), **ба́чити** (to see), **чу́ти** (to hear), and **розумі́ти** (to understand). When a speaker uses these verbs, they usually need **що**, **де**, or **коли** to complete the logical sequence. If someone says "I see," the listener immediately waits for the rest of the information. A connected clause satisfies that grammatical expectation.
+- Я **думаю**, що це пра́вильно. *(comma before що)*
+- Він не **зна́є**, де магази́н. *(comma before де)*
+- Зателефону́й, коли прийдеш. *(comma before коли)*
+- Я **розумі́ю** (understand), що ти втоми́вся. *(comma before що)*
+- Вони́ **чу́ють** (hear), коли гра́є му́зика. *(comma before коли)*
 
-*   **Я ба́чу, що ти працю́єш.** (I see that you are working.)
-*   **Ти чу́єш, де гра́є му́зика?** (Do you hear where the music is playing?)
-*   **Він розумі́є, коли треба йти.** (He understands when it is necessary to go.)
-*   **Ми зна́ємо, що це важли́во.** (We know that this is important.)
-*   **Вона ка́же, що вона вдо́ма.** (She says that she is at home.)
+Read this short paragraph:
 
-<FillIn client:only="react" items={[{"sentence": "Я знаю, _____ він тут.", "answer": "що", "options": ["що", "де", "коли"]}, {"sentence": "Я не знаю, _____ вона живе.", "answer": "де", "options": ["що", "де", "коли"]}, {"sentence": "Скажи, _____ ти прийдеш.", "answer": "коли", "options": ["що", "де", "коли"]}, {"sentence": "Ми бачимо, _____ це кафе.", "answer": "що", "options": ["що", "де", "коли"]}, {"sentence": "Він не знає, _____ знаходиться магазин.", "answer": "де", "options": ["що", "де", "коли"]}, {"sentence": "Вона розуміє, _____ треба працювати.", "answer": "коли", "options": ["що", "де", "коли"]}, {"sentence": "Я думаю, _____ це добре.", "answer": "що", "options": ["що", "де", "коли"]}, {"sentence": "Скажи мені, _____ ти вдома.", "answer": "коли", "options": ["що", "де", "коли"]}]} instruction={"Вставте правильне слово (Fill in the correct word)"} />
+> Я живу́ у вели́кому мі́сті. Я **знаю**, де тут гарний парк. Мій брат **ка́же** (says), що там ду́же ти́хо. Ми гуля́ємо там, коли ма́ємо вільний час. Я **думаю**, що це найкра́ще мі́сце.
+> *I live in a large city. I know where there is a beautiful park here. My brother says that it is very quiet there. We walk there when we have free time. I think that this is the best place.*
 
-<Quiz client:only="react" questions={[{"question": "Оберіть правильний варіант:", "options": [{"text": "Я думаю, що це так.", "correct": true}, {"text": "Я думаю що це так.", "correct": false}, {"text": "Я, думаю що це так.", "correct": false}, {"text": "Я думаю що, це так.", "correct": false}]}, {"question": "Оберіть правильний варіант:", "options": [{"text": "Він знає де мій телефон.", "correct": false}, {"text": "Він знає, де мій телефон.", "correct": true}, {"text": "Він знає де, мій телефон.", "correct": false}, {"text": "Він, знає де мій телефон.", "correct": false}]}, {"question": "Оберіть правильний варіант:", "options": [{"text": "Скажи коли ти будеш готовий.", "correct": false}, {"text": "Скажи коли, ти будеш готовий.", "correct": false}, {"text": "Скажи, коли ти будеш готовий.", "correct": true}, {"text": "Скажи, коли, ти будеш готовий.", "correct": false}]}, {"question": "Оберіть правильний варіант:", "options": [{"text": "Я бачу що ти працюєш.", "correct": false}, {"text": "Я бачу що, ти працюєш.", "correct": false}, {"text": "Я, бачу що ти працюєш.", "correct": false}, {"text": "Я бачу, що ти працюєш.", "correct": true}]}, {"question": "Оберіть правильний варіант:", "options": [{"text": "Коли я вдома, я відпочиваю.", "correct": true}, {"text": "Коли я вдома я відпочиваю.", "correct": false}, {"text": "Коли, я вдома я відпочиваю.", "correct": false}, {"text": "Коли я, вдома я відпочиваю.", "correct": false}]}, {"question": "Оберіть правильний варіант:", "options": [{"text": "Ти знаєш що Олена в Києві?", "correct": false}, {"text": "Ти знаєш, що Олена в Києві?", "correct": true}, {"text": "Ти, знаєш що Олена в Києві?", "correct": false}, {"text": "Ти знаєш що, Олена в Києві?", "correct": false}]}, {"question": "Оберіть правильний варіант:", "options": [{"text": "Я не знаю де саме цей парк.", "correct": false}, {"text": "Я не знаю, де саме цей парк.", "correct": true}, {"text": "Я не знаю де саме, цей парк.", "correct": false}, {"text": "Я не, знаю де саме цей парк.", "correct": false}]}, {"question": "Оберіть правильний варіант:", "options": [{"text": "Коли ми працюємо ми не говоримо.", "correct": false}, {"text": "Коли, ми працюємо ми не говоримо.", "correct": false}, {"text": "Коли ми працюємо, ми не говоримо.", "correct": true}, {"text": "Коли ми працюємо ми, не говоримо.", "correct": false}]}]} instruction={"Оберіть речення з правильною пунктуацією (Choose the sentence with correct punctuation)"} />
+<FillIn client:only="react" items={[{"sentence": "Я знаю, ____ він тут.", "answer": "що", "options": ["що", "де", "коли"]}, {"sentence": "Я не знаю, ____ вона живе.", "answer": "де", "options": ["що", "де", "коли"]}, {"sentence": "Скажи, ____ ти прийдеш.", "answer": "коли", "options": ["що", "де", "коли"]}, {"sentence": "Ми бачимо, ____ стоїть машина.", "answer": "де", "options": ["що", "де", "коли"]}, {"sentence": "Вона думає, ____ це правда.", "answer": "що", "options": ["що", "де", "коли"]}, {"sentence": "Вони чують, ____ грає музика.", "answer": "коли", "options": ["що", "де", "коли"]}, {"sentence": "Я знаю, ____ нове кафе.", "answer": "де", "options": ["що", "де", "коли"]}, {"sentence": "Брат каже, ____ там дуже тихо.", "answer": "що", "options": ["що", "де", "коли"]}]} instruction={"Вставте правильне слово (Fill in the correct word)"} />
 
 ## Що, де, коли — дво́є обли́ч (Two Faces)
 
-The words **що**, **де**, and **коли** serve two entirely different functions depending on their placement in a sentence. As question words, they appear at the beginning of a sentence to request information. You already know this role from Module 20. When positioned at the start, they function as interrogative markers and demand an answer.
+These three words have two jobs in Ukrainian. First, they can act as question words at the start of a sentence.
 
-*   **Що це на столі́?** (What is this on the table?)
-*   **Де ти зараз живе́ш?** (Where do you live now?)
-*   **Коли ти прийдеш додо́му?** (When will you arrive home?)
-*   **Що він ро́бить там?** (What is he doing there?)
-*   **Де працю́є твій брат?** (Where does your brother work?)
+- **Що** це? *(What is this?)*
+- **Де** ти? *(Where are you?)*
+- **Коли** ти прийдеш? *(When will you come?)*
 
-In this primary role, their function is to open a conversation and extract specific details from the listener.
+Second, they can introduce a subordinate clause. A question word forms a direct question with a question mark. A clause-linking word connects two parts of one sentence.
 
-When these exact same words move to the middle of the sentence—positioned immediately after a comma—they completely drop their interrogative function and become conjunctions. Compare the direct question **Де ти?** (Where are you?) with the complex statement **Я знаю, де ти** (I know where you are). The segment following the comma uses normal statement word order. No inversion or special question intonation applies, because the speaker is no longer asking anything. The sentence simply states a fact about a location, a time, or an event.
+Let's look at common patterns with **що** as a conjunction and **де** as a linking word in subordinate clauses. They often appear with verbs like **зна́ти** (to know), **ду́мати** (to think), and **каза́ти** (to say).
 
-*   **Я знаю, що він робить.** (I know what he is doing.)
-*   **Я не знаю, що це.** (I do not know what this is.)
-*   **Я думаю, що це правильно.** (I think that this is correct.)
-*   **Він каже, що кафе зачи́нене.** (He says that the cafe is closed.)
-*   **Я знаю, де він працює.** (I know where he works.)
-*   **Я не знаю, де мій телефо́н.** (I do not know where my phone is.)
-*   **Скажи, коли ти бу́деш гото́вий.** (Tell me when you will be ready.)
-*   **Я не знаю, коли він приї́де.** (I do not know when he will arrive.)
+- Я **знаю**, що... / Я не **знаю**, що... *(I know / don't know that...)*
+- Я **думаю**, що... *(I think that...)*
+- Він **каже**, що... *(He says that...)*
+- Вона мо́же **сказа́ти** (say), що... *(She can say that...)*
+- Я **знаю**, де... / Я не **знаю**, де... *(I know / don't know where...)*
+- Ми **бачимо**, де... *(We see where...)*
 
-:::tip
-A simple trick to identify the function of **що**: if you can replace it with "what" in English, it is a question word. If you can replace it with "that," it is a conjunction connecting two ideas.
-:::
+Here are common patterns with **коли**:
 
-A subordinate clause stating a condition or time can sometimes appear before the main action. In such cases, the dependent clause starts with **коли** and opens the sentence.
+- Скажи, коли... *(Tell me when...)*
+- Я не **знаю**, коли... *(I don't know when...)*
+- Ми **розумі́ємо**, коли... *(We understand when...)*
 
-*   **Коли я прийду́, ми погово́римо.** (When I arrive, we will talk.)
-*   **Коли я вдома, я відпочива́ю.** (When I am at home, I rest.)
-*   **Коли вона чита́є, вона не чу́є.** (When she is reading, she does not hear.)
-*   **Коли ми працю́ємо, ми не гово́римо.** (When we work, we do not talk.)
+Interestingly, you can also completely reverse the structure. The dependent clause can come first:
 
-The mandatory comma still separates the two parts, but it now sits in the middle of the sentence to introduce the main clause. While **що** and **де** almost always remain firmly in the middle of the sentence (e.g., **Я думаю, що...**, **Він каже, що...**), the word **коли** offers more flexibility and frequently jumps to the beginning to establish the context for the main action.
+- Коли я прийду, ми поговоримо. *(When I arrive, we will talk.)*
+- Коли він працю́є, він мовчи́ть. *(When he works, he is silent.)*
 
-### Пра́ктика чита́ння (Reading Practice)
+The comma still separates the two clauses.
 
-Read the following paragraph. Notice how the short conjunctions hold the narrative together. 
+Here is a short classroom situation:
 
-**Мій друг Тарас каже, що він живе біля парку. Я не знаю, де саме цей парк. Але я знаю, що він великий. Коли в Тара́са є час, він гуля́є там. Я думаю, що це га́рне мі́сце. Тарас каже, що він теж гуляє, коли я тут.** 
-*(My friend Taras says that he lives near the park. I do not know where exactly this park is. But I know that it is big. When Taras has time, he walks there. I think that this is a good place. Taras says that he also walks when I am here.)*
+> Студе́нти сидя́ть у кла́сі. Вчи́тель запи́тує, де лежи́ть кни́га. Студе́нт не **знає**, де вона. І́нший студент **каже**, що книга на столі́. Вони чита́ють, коли вчитель про́сить.
+> *The students are sitting in the class. The teacher asks where the book lies. The student does not know where it is. Another student says that the book is on the table. They read when the teacher asks.*
 
-<Quiz client:only="react" questions={[{"question": "Яка роль слова 'де' у реченні 'Де ти зараз живеш?'", "options": [{"text": "Запитує про місце (Asks about a place)", "correct": true}, {"text": "Запитує про час (Asks about time)", "correct": false}, {"text": "Запитує про предмет/дію (Asks about an object/action)", "correct": false}, {"text": "З'єднує дві частини речення (Connects two parts)", "correct": false}]}, {"question": "Яка роль слова 'де' у реченні 'Я знаю, де він працює.'", "options": [{"text": "Запитує про місце (Asks about a place)", "correct": false}, {"text": "Запитує про час (Asks about time)", "correct": false}, {"text": "Запитує про предмет/дію (Asks about an object/action)", "correct": false}, {"text": "З'єднує дві частини речення (Connects two parts)", "correct": true}]}, {"question": "Яка роль слова 'що' у реченні 'Що це на столі?'", "options": [{"text": "Запитує про місце (Asks about a place)", "correct": false}, {"text": "Запитує про час (Asks about time)", "correct": false}, {"text": "Запитує про предмет/дію (Asks about an object/action)", "correct": true}, {"text": "З'єднує дві частини речення (Connects two parts)", "correct": false}]}, {"question": "Яка роль слова 'що' у реченні 'Я думаю, що це гарне місце.'", "options": [{"text": "Запитує про місце (Asks about a place)", "correct": false}, {"text": "Запитує про час (Asks about time)", "correct": false}, {"text": "Запитує про предмет/дію (Asks about an object/action)", "correct": false}, {"text": "З'єднує дві частини речення (Connects two parts)", "correct": true}]}, {"question": "Яка роль слова 'коли' у реченні 'Коли ти прийдеш додому?'", "options": [{"text": "Запитує про місце (Asks about a place)", "correct": false}, {"text": "Запитує про час (Asks about time)", "correct": true}, {"text": "Запитує про предмет/дію (Asks about an object/action)", "correct": false}, {"text": "З'єднує дві частини речення (Connects two parts)", "correct": false}]}, {"question": "Яка роль слова 'коли' у реченні 'Скажи, коли ти будеш готовий.'", "options": [{"text": "Запитує про місце (Asks about a place)", "correct": false}, {"text": "Запитує про час (Asks about time)", "correct": false}, {"text": "Запитує про предмет/дію (Asks about an object/action)", "correct": false}, {"text": "З'єднує дві частини речення (Connects two parts)", "correct": true}]}, {"question": "Яка роль слова 'де' у реченні 'Я не знаю, де мій телефон.'", "options": [{"text": "Запитує про місце (Asks about a place)", "correct": false}, {"text": "Запитує про час (Asks about time)", "correct": false}, {"text": "Запитує про предмет/дію (Asks about an object/action)", "correct": false}, {"text": "З'єднує дві частини речення (Connects two parts)", "correct": true}]}, {"question": "Яка роль слова 'що' у реченні 'Що він робить там?'", "options": [{"text": "Запитує про місце (Asks about a place)", "correct": false}, {"text": "Запитує про час (Asks about time)", "correct": false}, {"text": "Запитує про предмет/дію (Asks about an object/action)", "correct": true}, {"text": "З'єднує дві частини речення (Connects two parts)", "correct": false}]}]} instruction={"Яка роль виділеного слова? (What is the role of the highlighted word?)"} />
+<Quiz client:only="react" questions={[{"question": "Де ти живеш?", "options": [{"text": "Питання", "correct": true}, {"text": "Зв'язка", "correct": false}, {"text": "Іменник", "correct": false}, {"text": "Дієслово", "correct": false}]}, {"question": "Я знаю, де ти живеш.", "options": [{"text": "Питання", "correct": false}, {"text": "Зв'язка", "correct": true}, {"text": "Іменник", "correct": false}, {"text": "Дієслово", "correct": false}]}, {"question": "Коли ти прийдеш?", "options": [{"text": "Питання", "correct": true}, {"text": "Зв'язка", "correct": false}, {"text": "Іменник", "correct": false}, {"text": "Дієслово", "correct": false}]}, {"question": "Скажи, коли ти вільний.", "options": [{"text": "Питання", "correct": false}, {"text": "Зв'язка", "correct": true}, {"text": "Іменник", "correct": false}, {"text": "Дієслово", "correct": false}]}, {"question": "Що це таке?", "options": [{"text": "Питання", "correct": true}, {"text": "Зв'язка", "correct": false}, {"text": "Іменник", "correct": false}, {"text": "Дієслово", "correct": false}]}, {"question": "Він каже, що прийде.", "options": [{"text": "Питання", "correct": false}, {"text": "Зв'язка", "correct": true}, {"text": "Іменник", "correct": false}, {"text": "Дієслово", "correct": false}]}, {"question": "Де нове кафе?", "options": [{"text": "Питання", "correct": true}, {"text": "Зв'язка", "correct": false}, {"text": "Іменник", "correct": false}, {"text": "Дієслово", "correct": false}]}, {"question": "Я думаю, що це правильно.", "options": [{"text": "Питання", "correct": false}, {"text": "Зв'язка", "correct": true}, {"text": "Іменник", "correct": false}, {"text": "Дієслово", "correct": false}]}]} instruction={"Це питання чи зв'язка? (Is it a question or a conjunction?)"} />
 
-<FillIn client:only="react" items={[{"sentence": "Я думаю, що _____", "answer": "це гарне місце", "options": ["це гарне місце", "де мій телефон", "коли він прийде"]}, {"sentence": "Він не знає, де _____", "answer": "мій телефон", "options": ["мій телефон", "що це", "коли він вдома"]}, {"sentence": "Скажи мені, коли _____", "answer": "ти будеш готовий", "options": ["ти будеш готовий", "де кафе", "що він робить"]}, {"sentence": "Вона каже, що _____", "answer": "вона вдома", "options": ["вона вдома", "де парк", "коли ми працюємо"]}, {"sentence": "Я бачу, що _____", "answer": "ти працюєш", "options": ["ти працюєш", "де мій брат", "коли я прийду"]}, {"sentence": "Ти знаєш, де _____", "answer": "нове кафе", "options": ["нове кафе", "що це", "коли він там"]}]} instruction={"Доповніть складне речення (Complete the complex sentence)"} />
+<FillIn client:only="react" items={[{"sentence": "Вона ____, що це правда.", "answer": "думає", "options": ["думає", "бачить", "шукає"]}, {"sentence": "Він ____, що прийде.", "answer": "каже", "options": ["каже", "розуміє", "живе"]}, {"sentence": "Я не ____, де він живе.", "answer": "знаю", "options": ["знаю", "читаю", "стою"]}, {"sentence": "____ мені, коли ти прийдеш.", "answer": "Скажи", "options": ["Скажи", "Знай", "Думай"]}, {"sentence": "Ми ____, де стоїть машина.", "answer": "бачимо", "options": ["бачимо", "кажемо", "гуляємо"]}, {"sentence": "Вони ____, коли грає музика.", "answer": "чують", "options": ["чують", "кажуть", "пишуть"]}]} instruction={"Вставте правильне дієслово (Fill in the correct verb)"} />
+
+<Quiz client:only="react" questions={[{"question": "Оберіть правильне речення", "options": [{"text": "Я думаю, що це правильно.", "correct": true}, {"text": "Я думаю що це правильно.", "correct": false}, {"text": "Я, думаю що це правильно.", "correct": false}, {"text": "Я думаю що, це правильно.", "correct": false}]}, {"question": "Оберіть правильне речення", "options": [{"text": "Він не знає де магазин.", "correct": false}, {"text": "Він не знає, де магазин.", "correct": true}, {"text": "Він, не знає де магазин.", "correct": false}, {"text": "Він не знає де, магазин.", "correct": false}]}, {"question": "Оберіть правильне речення", "options": [{"text": "Скажи, коли ти прийдеш.", "correct": true}, {"text": "Скажи коли ти прийдеш.", "correct": false}, {"text": "Скажи коли, ти прийдеш.", "correct": false}, {"text": "Скажи, коли, ти прийдеш.", "correct": false}]}, {"question": "Оберіть правильне речення", "options": [{"text": "Я розумію що ти втомився.", "correct": false}, {"text": "Я розумію що, ти втомився.", "correct": false}, {"text": "Я, розумію що ти втомився.", "correct": false}, {"text": "Я розумію, що ти втомився.", "correct": true}]}, {"question": "Оберіть правильне речення", "options": [{"text": "Вона каже, що там тихо.", "correct": true}, {"text": "Вона каже що там тихо.", "correct": false}, {"text": "Вона, каже що там тихо.", "correct": false}, {"text": "Вона каже що, там тихо.", "correct": false}]}, {"question": "Оберіть правильне речення", "options": [{"text": "Ми бачимо де стоїть машина.", "correct": false}, {"text": "Ми, бачимо де стоїть машина.", "correct": false}, {"text": "Ми бачимо де, стоїть машина.", "correct": false}, {"text": "Ми бачимо, де стоїть машина.", "correct": true}]}, {"question": "Оберіть правильне речення", "options": [{"text": "Ти знаєш, де кафе?", "correct": true}, {"text": "Ти знаєш де кафе?", "correct": false}, {"text": "Ти, знаєш де кафе?", "correct": false}, {"text": "Ти знаєш де, кафе?", "correct": false}]}, {"question": "Оберіть правильне речення", "options": [{"text": "Скажи мені коли ти вільний.", "correct": false}, {"text": "Скажи мені коли, ти вільний.", "correct": false}, {"text": "Скажи, мені коли ти вільний.", "correct": false}, {"text": "Скажи мені, коли ти вільний.", "correct": true}]}]} instruction={"Оберіть правильне речення (Choose the correct sentence)"} />
 
 ## Підсумок — Summary
 
-Complex sentences rely on specific connectors to link a main clause to a subordinate clause. Here is a summary of the three subordinating conjunctions from this module:
+Let's provide a concise recap of the words that introduce subordinate clauses at the A1 level.
 
-| Conjunction | Meaning | Example |
+| Word | Meaning | Example |
 | :--- | :--- | :--- |
-| **що** | that | **Я знаю, що він тут.** |
-| **де** | where | **Я не знаю, де кафе.** |
-| **коли** | when | **Скажи, коли прийдеш.** |
+| **що** | that | Я **знаю**, що він тут. *(I know that he is here.)* |
+| **де** | where | Я не **знаю**, де кафе. *(I don't know where the cafe is.)* |
+| **коли** | when | Скажи, коли прийдеш. *(Tell me when you will come.)* |
 
-The comma before these conjunctions is a strict requirement of Ukrainian punctuation. Furthermore, **що** translates to "that" when operating as a conjunction, but functions as "what" when acting as a question word. The identical spelling performs two completely different grammatical roles depending entirely on the sentence structure.
+We must reiterate the punctuation rule: place a comma between the two clauses. If the subordinate clause comes first, the comma follows it; if the main clause comes first, the comma stands before the clause-introducing word.
 
-Combining subordinating conjunctions with the basic connectors from Module 44 allows for highly detailed sentence structures. Multiple clauses can link together to describe complex situations.
+As you progress, your sentences will become much richer. You can now combine these clause-linking words and conjunctions with the coordinating conjunctions you learned in Module 44 (**і**, **а**, **але**, **бо**). Look at these examples:
 
-*   **Я не йду, бо я не знаю, де це.** (I am not going, because I do not know where it is.)
-*   **Він каже, що при́йде, коли закі́нчи́ть.** (He says that he will come when he finishes.)
-*   **Ми ду́маємо, що вона знає, де він.** (We think that she knows where he is.)
-*   **Я бачу, що ти не знаєш, що роби́ти.** (I see that you do not know what to do.)
+- Я не йду, бо я не **знаю**, де це. *(I am not going, because I do not know where it is.)* — two conjunctions!
+- Він **каже**, що при́йде, коли закі́нчи́ть. *(He says that he will come when he finishes.)* — two subordinate clauses!
+- Я **думаю**, що це добре, але я не впе́внений. *(I think that it is good, but I am not sure.)*
 
-The first example uses **бо** (because) and **де** (where) in a single thought. The second sentence contains two separate subordinate clauses, demonstrating how these small connecting words build sophisticated real-world communication.
+Now it is time for a quick self-check section. Take a moment to actively build three of your own sentences using the following sentence frames. Say them out loud or write them down:
 
-Verify your understanding by reviewing these core concepts. Can you name the three subordinating conjunctions covered in this module? Check your memory regarding the mandatory punctuation mark required before them. Finally, practice building three original sentences starting with these specific phrases:
+- Я **думаю**, що...
+- Я не **знаю**, де...
+- Скажи мені, коли...
 
-*   **Я думаю, що...**
-*   **Я не знаю, де...**
-*   **Скажи мені́, коли...**
+Read this final paragraph to see everything smoothly working together:
+
+> За́раз ве́чір. Я ще не **знаю**, де мій брат. Мій друг **думає**, що він іде́ в парк. Я не **знаю**, коли він там гуля́є. Я **думаю**, що це га́рна іде́я.
+> *It is evening now. I do not know yet where my brother is. My friend thinks that he is going to the park. I do not know when he walks there. I think that this is a good idea.*
 
 </TabItem>
 <TabItem label="Словник">
@@ -174,64 +210,37 @@ Verify your understanding by reviewing these core concepts. Can you name the thr
 
 | Слово | Переклад | Частина мови | Рід |
 |-------|----------|-------------|-----|
+| **сказа́ти** | to say | дієсл. |  |
+| **ба́чити** | to see | дієсл. |  |
+| **чу́ти** | to hear | дієсл. |  |
+| **розумі́ти** | to understand | дієсл. |  |
+| **головне́** | main | ім. | с. |
+| **коли́** | when | ім. |  |
 | **зна́ти** | to know | дієсл. |  |
 | **ду́мати** | to think | дієсл. |  |
-| **каза́ти** | to say, to tell | дієсл. |  |
-| **сказа́ти** | to say (perfective) | дієсл. |  |
-| **чу́ти** | to hear | дієсл. |  |
-| **головни́й** | main | прикм. |  |
-| **сполу́чник** | conjunction | ім. | ч. |
-| **ко́ма** | comma | ім. | ж. |
-| **пло́ща** | square | ім. | ж. |
-| **фонта́н** | fountain | ім. | ч. |
-| **поверну́ти** | to turn | дієсл. |  |
-| **ліво́руч** | left | присл. |  |
-| **зупини́тися** | to stop | дієсл. |  |
-| **буди́нок** | building | ім. | ч. |
-| **де́рево** | tree | ім. | с. |
-| **закі́нчи́ти** | to finish | дієсл. |  |
-| **зачи́нений** | closed | прикм. |  |
-| **гото́вий** | ready | прикм. |  |
-| **приї́хати** | to arrive | дієсл. |  |
-| **мі́сце** | place | ім. | с. |
-
-### Вирази
-
-| Вираз | Переклад |
-|-------|----------|
-| **складне речення** | complex sentence |
-| **складнопідрядне речення** | complex sentence with a subordinate clause |
-| **о шостій** | at six |
-| **До зустрічі!** | See you! |
-| **саме так** | exactly |
+| **каза́ти** | to say | дієсл. |  |
 
 ### Картки — Flashcards
 
-<FlashcardDeck client:only="react" cards={[{ front: "зна́ти", back: "to know", subtitle: "дієсл." }, { front: "ду́мати", back: "to think", subtitle: "дієсл." }, { front: "каза́ти", back: "to say, to tell", subtitle: "дієсл." }, { front: "сказа́ти", back: "to say (perfective)", subtitle: "дієсл." }, { front: "чу́ти", back: "to hear", subtitle: "дієсл." }, { front: "головни́й", back: "main", subtitle: "прикм." }, { front: "сполу́чник", back: "conjunction", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ко́ма", back: "comma", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "пло́ща", back: "square", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "фонта́н", back: "fountain", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "поверну́ти", back: "to turn", subtitle: "дієсл." }, { front: "ліво́руч", back: "left", subtitle: "присл." }, { front: "зупини́тися", back: "to stop", subtitle: "дієсл." }, { front: "буди́нок", back: "building", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "де́рево", back: "tree", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "закі́нчи́ти", back: "to finish", subtitle: "дієсл." }, { front: "зачи́нений", back: "closed", subtitle: "прикм." }, { front: "гото́вий", back: "ready", subtitle: "прикм." }, { front: "приї́хати", back: "to arrive", subtitle: "дієсл." }, { front: "мі́сце", back: "place", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }]} />
+<FlashcardDeck client:only="react" cards={[{ front: "сказа́ти", back: "to say", subtitle: "дієсл." }, { front: "ба́чити", back: "to see", subtitle: "дієсл." }, { front: "чу́ти", back: "to hear", subtitle: "дієсл." }, { front: "розумі́ти", back: "to understand", subtitle: "дієсл." }, { front: "головне́", back: "main", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "коли́", back: "when", subtitle: "ім." }, { front: "зна́ти", back: "to know", subtitle: "дієсл." }, { front: "ду́мати", back: "to think", subtitle: "дієсл." }, { front: "каза́ти", back: "to say", subtitle: "дієсл." }]} />
 
 </TabItem>
 <TabItem label="Зошит">
 
-<MatchUp client:only="react" pairs={[{"left": "Я думаю, що", "right": "це правильно."}, {"left": "Він не знає, де", "right": "нове кафе."}, {"left": "Скажи, коли", "right": "ти будеш готовий."}, {"left": "Я бачу, що", "right": "ти працюєш."}, {"left": "Ми чуємо, де", "right": "грає музика."}, {"left": "Вона розуміє, що", "right": "це важливо."}]} instruction={"З'єднайте частини складного речення (Match the parts of the complex sentence)"} />
+<MatchUp client:only="react" pairs={[{"left": "сказати", "right": "to say"}, {"left": "бачити", "right": "to see"}, {"left": "чути", "right": "to hear"}, {"left": "розуміти", "right": "to understand"}, {"left": "речення", "right": "sentence"}, {"left": "головне", "right": "main"}, {"left": "що", "right": "that"}, {"left": "думати", "right": "to think"}]} instruction={"З'єднайте слова (Match the words)"} />
 
-<Unjumble client:only="react" items={[{"words": "думаю, / Я / це / що / добре.", "answer": "Я думаю, що це добре."}, {"words": "каже, / Він / вдома. / що / вона", "answer": "Він каже, що вона вдома."}, {"words": "знаю, / де / Я / телефон. / мій", "answer": "Я знаю, де мій телефон."}, {"words": "Скажи / коли / готовий. / будеш / мені, / ти", "answer": "Скажи мені, коли ти будеш готовий."}, {"words": "бачу, / Я / працюєш. / ти / що", "answer": "Я бачу, що ти працюєш."}, {"words": "не / де / знає, / Вона / парк.", "answer": "Вона не знає, де парк."}]} instruction={"Складіть правильне речення зі слів (Form the correct sentence from words)"} />
+<Unjumble client:only="react" items={[{"words": "де / нове / кафе. / знаю, / Я", "answer": "Я знаю, де нове кафе."}, {"words": "що / Він / прийде. / каже,", "answer": "Він каже, що прийде."}, {"words": "коли / вільний. / Скажи, / ти", "answer": "Скажи, коли ти вільний."}, {"words": "це / правильно. / що / думаю, / Я", "answer": "Я думаю, що це правильно."}, {"words": "де / парк. / Ми / бачимо,", "answer": "Ми бачимо, де парк."}, {"words": "він / Ти / що / тут? / знаєш,", "answer": "Ти знаєш, що він тут?"}, {"words": "музика. / коли / грає / чують, / Вони", "answer": "Вони чують, коли грає музика."}, {"words": "де / живе. / не / знаю, / Я / вона", "answer": "Я не знаю, де вона живе."}]} instruction={"Складіть правильне речення зі слів (Make a correct sentence from the words)"} />
 
-<ErrorCorrection client:only="react" items={[{"sentence": "Я не знаю, що мій телефон.", "errorWord": "що", "correctForm": "де", "options": ["де", "коли", "хто"], "explanation": "Телефон — це предмет, ми шукаємо місце (де)."}, {"sentence": "Скажи мені, де ти прийдеш додому.", "errorWord": "де", "correctForm": "коли", "options": ["коли", "що", "який"], "explanation": "Питаємо про час (коли)."}, {"sentence": "Він думає, де це правильно.", "errorWord": "де", "correctForm": "що", "options": ["що", "коли", "хто"], "explanation": "Він висловлює думку, тому з'єднуємо словом 'що'."}, {"sentence": "Ми бачимо, коли це новий парк.", "errorWord": "коли", "correctForm": "що", "options": ["що", "де", "хто"], "explanation": "З дієсловом 'бачити' часто використовуємо 'що' для констатації факту."}, {"sentence": "Я розумію, де треба йти працювати.", "errorWord": "де", "correctForm": "коли", "options": ["коли", "що", "хто"], "explanation": "Час іти (коли)."}, {"sentence": "Я знаю, що мій брат. Він у школі.", "errorWord": "що", "correctForm": "де", "options": ["де", "коли", "хто"], "explanation": "Брат знаходиться в певному місці (де)."}]} instruction={"Знайдіть і виправте помилку у з'єднанні (Find and fix the connection mistake)"} />
+<GroupSort client:only="react" groups={{"Питання (Question)": ["Що це?", "Де мій брат?", "Коли ти прийдеш?", "Де нове кафе?"], "Зв'язка (Conjunction)": ["Я знаю, що він тут.", "Скажи, коли закінчиш.", "Ми бачимо, де парк.", "Я думаю, що це правда."]}} instruction={"Питання чи зв'язка? (Question or conjunction?)"} />
 
-<Translate client:only="react" questions={[{"source": "I know that he is here.", "options": [{"text": "Я знаю, що він тут.", "correct": true}, {"text": "Я знаю, де він тут.", "correct": false}, {"text": "Я знаю що він тут.", "correct": false}]}, {"source": "Tell me when you are ready.", "options": [{"text": "Скажи мені, коли ти будеш готовий.", "correct": true}, {"text": "Скажи мені коли ти будеш готовий.", "correct": false}, {"text": "Скажи мені, що ти будеш готовий.", "correct": false}]}, {"source": "He does not know where the store is.", "options": [{"text": "Він не знає, де магазин.", "correct": true}, {"text": "Він не знає, що магазин.", "correct": false}, {"text": "Він не знає де магазин.", "correct": false}]}, {"source": "I think that this is correct.", "options": [{"text": "Я думаю, що це правильно.", "correct": true}, {"text": "Я думаю що це правильно.", "correct": false}, {"text": "Я думаю, де це правильно.", "correct": false}]}, {"source": "Do you hear where the music is playing?", "options": [{"text": "Ти чуєш, де грає музика?", "correct": true}, {"text": "Ти чуєш, що грає музика?", "correct": false}, {"text": "Ти чуєш де грає музика?", "correct": false}]}, {"source": "When I am at home, I rest.", "options": [{"text": "Коли я вдома, я відпочиваю.", "correct": true}, {"text": "Коли я вдома я відпочиваю.", "correct": false}, {"text": "Що я вдома, я відпочиваю.", "correct": false}]}]} instruction={"Оберіть правильний переклад (Choose the correct translation)"} />
+<TrueFalse client:only="react" items={[{"statement": "Перед словом «що» у складному реченні завжди потрібна кома.", "isTrue": true, "explanation": "У складному реченні перед «що» завжди ставимо кому."}, {"statement": "Перед словом «де» у складному реченні завжди потрібна кома.", "isTrue": true, "explanation": "Кома розділяє частини складного речення."}, {"statement": "Перед словом «коли» у складному реченні завжди потрібна кома.", "isTrue": true, "explanation": "Перед «коли» в середині складного речення завжди є кома."}, {"statement": "Слово «де» може бути тільки питанням.", "isTrue": false, "explanation": "Воно може бути і питанням, і зв'язкою."}, {"statement": "«Я знаю що він тут.» — це правильне речення.", "isTrue": false, "explanation": "Потрібна кома: «Я знаю, що він тут.»"}, {"statement": "«Де мій телефон?» — це питання.", "isTrue": true, "explanation": "Слово «де» стоїть на початку, це питання."}]} instruction={"Правда чи ні? (True or false?)"} />
 
-<TrueFalse client:only="react" items={[{"statement": "Складне речення має головне слово і залежну частину.", "isTrue": true, "explanation": "Так, головне (main) дієслово з'єднується із залежною частиною."}, {"statement": "Перед словами 'що', 'де', 'коли' кома не потрібна.", "isTrue": false, "explanation": "В українській мові перед 'що', 'де', 'коли' завжди потрібна кома."}, {"statement": "Слово 'що' може бути запитанням і з'єднанням.", "isTrue": true, "explanation": "Так, 'Що це?' — запитання, 'Я знаю, що це' — з'єднання."}, {"statement": "В англійській мові завжди потрібна кома перед 'that', як і в українській перед 'що'.", "isTrue": false, "explanation": "В англійській мові кома перед 'that' зазвичай не ставиться, але в українській перед 'що' вона обов'язкова."}, {"statement": "Речення 'Коли я вдома, я відпочиваю' — це складне речення.", "isTrue": true, "explanation": "Так, воно має дві частини, з'єднані словом 'коли'."}, {"statement": "У реченні 'Я знаю, де ти' головне дієслово — 'де'.", "isTrue": false, "explanation": "Головне дієслово тут — 'знаю', а 'де' з'єднує частини."}]} instruction={"Правда чи ні? (True or False?)"} />
+<FillIn client:only="react" items={[{"sentence": "Я ____, де мій брат.", "answer": "знаю", "options": ["знаю", "читаю", "пишу"]}, {"sentence": "Ти ____, де нове кафе?", "answer": "знаєш", "options": ["знаєш", "думаєш", "чуєш"]}, {"sentence": "Він ____, що це правда.", "answer": "думає", "options": ["думає", "бачить", "стоїть"]}, {"sentence": "Скажи їй, коли ____ мене.", "answer": "побачиш", "options": ["побачиш", "подумаєш", "почуєш"]}, {"sentence": "Ми ____, коли грає музика.", "answer": "чуємо", "options": ["чуємо", "бачимо", "розуміємо"]}, {"sentence": "Вони ____, що книга на столі.", "answer": "кажуть", "options": ["кажуть", "шукають", "гуляють"]}]} instruction={"Вставте правильне дієслово (Fill in the correct verb)"} />
 
 </TabItem>
 <TabItem label="Ресурси">
 
-## Підручники (Textbooks)
-
-- [Авраменко О. М. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrajinska-mova-avramenko-2018.pdf#page=58), стор. 58
-- [Глазова О. П. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrmova-glazova-2018.pdf#page=22), стор. 22
-- [Караман С. О. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrmova-karaman-2018.pdf#page=225), стор. 225
-- [Авраменко О. М. — Українська мова, 11 клас (2019)](https://pidruchnyk.com.ua/uploads/book/11-klas-ukrajinska-mova-avramenko-2019.pdf#page=136), стор. 136
-- [Глазова О. П. — Українська мова, 11 клас (2019)](https://pidruchnyk.com.ua/uploads/book/11-klas-ukrajinska-mova-glazova-2019.pdf#page=139), стор. 139
+_Ресурси будуть додані пізніше._
 
 </TabItem>
 </Tabs>

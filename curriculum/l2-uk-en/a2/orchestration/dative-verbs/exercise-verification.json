@@ -1,324 +1,142 @@
 {
-  "total_items": 154,
-  "grounded_items": 103,
+  "total_items": 147,
+  "grounded_items": 126,
   "ungrounded": [
     {
-      "word": "шум",
+      "word": "син",
       "exercise_type": "fill-in",
-      "context": "Цей шум дуже заважає _____.",
+      "context": "Син завжди допомагає ____.",
       "role": "context"
     },
     {
-      "word": "заважає",
+      "word": "допомагають",
       "exercise_type": "fill-in",
-      "context": "Цей шум дуже заважає _____.",
+      "context": "Вони завжди допомагають ____.",
       "role": "context"
     },
     {
-      "word": "радить",
-      "exercise_type": "fill-in",
-      "context": "Вона радить _____ прочитати цю книгу.",
-      "role": "context"
-    },
-    {
-      "word": "прочитати",
-      "exercise_type": "fill-in",
-      "context": "Вона радить _____ прочитати цю книгу.",
-      "role": "context"
-    },
-    {
-      "word": "книгу",
-      "exercise_type": "fill-in",
-      "context": "Вона радить _____ прочитати цю книгу.",
-      "role": "context"
-    },
-    {
-      "word": "книга",
+      "word": "квіти",
       "exercise_type": "match-up",
-      "context": "Мені подобається ця книга.",
+      "context": "Їй подобаються квіти.",
       "role": "answer"
     },
     {
-      "word": "стара",
-      "exercise_type": "match-up",
-      "context": "Нам подобалася та стара квартира.",
-      "role": "answer"
-    },
-    {
-      "word": "тридцять",
-      "exercise_type": "true-false",
-      "context": "Мені тридцять три років.",
-      "role": "context"
-    },
-    {
-      "word": "одинадцять",
-      "exercise_type": "true-false",
-      "context": "Моїй сестрі одинадцять рік.",
-      "role": "context"
-    },
-    {
-      "word": "п'ять",
-      "exercise_type": "true-false",
-      "context": "Йому двадцять п'ять років.",
-      "role": "context"
-    },
-    {
-      "word": "мою",
+      "word": "вечора",
       "exercise_type": "quiz",
-      "context": "Я часто бачу мою _____ в парку.",
+      "context": "Ми дзвонимо ____ кожного вечора.",
       "role": "context"
     },
     {
-      "word": "ввечері",
-      "exercise_type": "quiz",
-      "context": "Я часто дзвоню моїй _____ ввечері.",
-      "role": "context"
-    },
-    {
-      "word": "любимо",
-      "exercise_type": "quiz",
-      "context": "Ми дуже любимо нашу _____.",
-      "role": "context"
-    },
-    {
-      "word": "нашу",
-      "exercise_type": "quiz",
-      "context": "Ми дуже любимо нашу _____.",
-      "role": "context"
-    },
-    {
-      "word": "нашій",
-      "exercise_type": "quiz",
-      "context": "Ми дуже дякуємо нашій _____.",
-      "role": "context"
-    },
-    {
-      "word": "знаю",
-      "exercise_type": "quiz",
-      "context": "Я добре знаю _____.",
-      "role": "context"
-    },
-    {
-      "word": "чекає",
-      "exercise_type": "quiz",
-      "context": "Вона чекає _____ біля школи.",
-      "role": "context"
-    },
-    {
-      "word": "біля",
-      "exercise_type": "quiz",
-      "context": "Вона чекає _____ біля школи.",
-      "role": "context"
-    },
-    {
-      "word": "школи",
-      "exercise_type": "quiz",
-      "context": "Вона чекає _____ біля школи.",
-      "role": "context"
-    },
-    {
-      "word": "постійно",
-      "exercise_type": "quiz",
-      "context": "Він постійно заважає _____ працювати.",
-      "role": "context"
-    },
-    {
-      "word": "кого",
-      "exercise_type": "group-sort",
-      "context": "Знахідний відмінок (кого? що?)",
-      "role": "context"
-    },
-    {
-      "word": "бачити",
-      "exercise_type": "group-sort",
-      "context": "бачити",
-      "role": "answer"
-    },
-    {
-      "word": "чекати",
-      "exercise_type": "group-sort",
-      "context": "чекати",
-      "role": "answer"
-    },
-    {
-      "word": "любити",
-      "exercise_type": "group-sort",
-      "context": "любити",
-      "role": "answer"
-    },
-    {
-      "word": "купувати",
-      "exercise_type": "group-sort",
-      "context": "купувати",
-      "role": "answer"
-    },
-    {
-      "word": "мами",
-      "exercise_type": "error-correction",
-      "context": "Він часто дзвонить до мами.",
-      "role": "context"
-    },
-    {
-      "word": "мене",
-      "exercise_type": "error-correction",
-      "context": "Вона дуже заважає мене.",
-      "role": "context"
-    },
-    {
-      "word": "ти",
-      "exercise_type": "error-correction",
-      "context": "Скільки ти років?",
-      "role": "context"
-    },
-    {
-      "word": "студент",
+      "word": "довіряю",
       "exercise_type": "fill-in",
-      "context": "Студент відповідає _____.",
-      "role": "context"
-    },
-    {
-      "word": "допомагаємо",
-      "exercise_type": "fill-in",
-      "context": "Ми допомагаємо _____.",
+      "context": "Я завжди довіряю ____.",
       "role": "context"
     },
     {
       "word": "посміхається",
       "exercise_type": "fill-in",
-      "context": "Вона посміхається своєму _____.",
+      "context": "Вона часто посміхається ____.",
       "role": "context"
     },
     {
-      "word": "дідусь",
+      "word": "співчуваємо",
       "exercise_type": "fill-in",
-      "context": "Дідусь щиро дякує _____.",
+      "context": "Ми щиро співчуваємо ____.",
       "role": "context"
     },
     {
-      "word": "дякує",
+      "word": "заздри",
       "exercise_type": "fill-in",
-      "context": "Дідусь щиро дякує _____.",
+      "context": "Ніколи не заздри ____.",
       "role": "context"
     },
     {
-      "word": "кожного",
+      "word": "вибачає",
+      "exercise_type": "fill-in",
+      "context": "Мама завжди вибачає ____.",
+      "role": "context"
+    },
+    {
+      "word": "довіряєш",
+      "exercise_type": "fill-in",
+      "context": "Чому ти не довіряєш ____?",
+      "role": "context"
+    },
+    {
+      "word": "щодня",
+      "exercise_type": "fill-in",
+      "context": "Я хочу посміхатися ____ щодня.",
+      "role": "context"
+    },
+    {
+      "word": "співчував",
+      "exercise_type": "fill-in",
+      "context": "Він ніколи не співчував ____.",
+      "role": "context"
+    },
+    {
+      "word": "дзвонить",
       "exercise_type": "unjumble",
-      "context": "кожного",
+      "context": "дзвонить",
       "role": "answer"
     },
     {
-      "word": "вечора",
-      "exercise_type": "unjumble",
-      "context": "вечора.",
+      "word": "вчителя",
+      "exercise_type": "error-correction",
+      "context": "Ми щиро дякуємо вчителя.",
+      "role": "context"
+    },
+    {
+      "word": "тебе",
+      "exercise_type": "error-correction",
+      "context": "Я раджу тебе прочитати цю книгу.",
+      "role": "context"
+    },
+    {
+      "word": "довіряємо",
+      "exercise_type": "error-correction",
+      "context": "Ми завжди довіряємо вас.",
+      "role": "context"
+    },
+    {
+      "word": "вас",
+      "exercise_type": "error-correction",
+      "context": "Ми завжди довіряємо вас.",
+      "role": "context"
+    },
+    {
+      "word": "одинадцять",
+      "exercise_type": "group-sort",
+      "context": "одинадцять",
       "role": "answer"
     },
     {
-      "word": "заважаємо",
-      "exercise_type": "unjumble",
-      "context": "заважаємо",
-      "role": "answer"
-    },
-    {
-      "word": "п'ятнадцять",
-      "exercise_type": "match-up",
-      "context": "п'ятнадцять років",
+      "word": "книга",
+      "exercise_type": "error-correction",
+      "context": "Тобі подобаються ця книга?",
       "role": "context"
     },
     {
-      "word": "чотири",
-      "exercise_type": "match-up",
-      "context": "п'ятдесят чотири роки",
+      "word": "гра",
+      "exercise_type": "error-correction",
+      "context": "У дитинстві мені подобався ця гра.",
       "role": "context"
     },
     {
-      "word": "дванадцять",
-      "exercise_type": "match-up",
-      "context": "дванадцять років",
-      "role": "context"
-    },
-    {
-      "word": "чесний",
+      "word": "заважаю",
       "exercise_type": "quiz",
-      "context": "Я завжди _____ моєму другові, він чесний.",
-      "role": "context"
-    },
-    {
-      "word": "цій",
-      "exercise_type": "quiz",
-      "context": "Ми _____ цій людині, це складна ситуація.",
-      "role": "context"
-    },
-    {
-      "word": "складна",
-      "exercise_type": "quiz",
-      "context": "Ми _____ цій людині, це складна ситуація.",
-      "role": "context"
-    },
-    {
-      "word": "ситуація",
-      "exercise_type": "quiz",
-      "context": "Ми _____ цій людині, це складна ситуація.",
-      "role": "context"
-    },
-    {
-      "word": "теж",
-      "exercise_type": "quiz",
-      "context": "Вона _____ другові, і він теж радіє.",
-      "role": "context"
-    },
-    {
-      "word": "радіє",
-      "exercise_type": "quiz",
-      "context": "Вона _____ другові, і він теж радіє.",
-      "role": "context"
-    },
-    {
-      "word": "треба",
-      "exercise_type": "quiz",
-      "context": "Не треба _____ іншим людям, треба багато працювати.",
-      "role": "context"
-    },
-    {
-      "word": "іншим",
-      "exercise_type": "quiz",
-      "context": "Не треба _____ іншим людям, треба багато працювати.",
-      "role": "context"
-    },
-    {
-      "word": "людям",
-      "exercise_type": "quiz",
-      "context": "Не треба _____ іншим людям, треба багато працювати.",
-      "role": "context"
-    },
-    {
-      "word": "помилку",
-      "exercise_type": "quiz",
-      "context": "Мама _____ синові його велику помилку.",
-      "role": "context"
-    },
-    {
-      "word": "лікар",
-      "exercise_type": "quiz",
-      "context": "Лікар _____ бабусі багато відпочивати.",
-      "role": "context"
-    },
-    {
-      "word": "відпочивати",
-      "exercise_type": "quiz",
-      "context": "Лікар _____ бабусі багато відпочивати.",
+      "context": "Я ____ не заважаю. (вони)",
       "role": "context"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 15,
-    "tested_in_exercises": 9,
+    "tested_in_exercises": 11,
     "not_tested": [
-      "вибачати",
-      "довіряти",
-      "заздрити",
-      "подобатися",
-      "посміхатися",
-      "співчувати"
+      "відповідати",
+      "дзвонити",
+      "дякувати",
+      "подобатися"
     ]
   },
   "all_grounded": false

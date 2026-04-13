@@ -1,21 +1,24 @@
-# Section-by-Section Generation — Section 4/6
+# Section-by-Section Generation — Section 4/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 36: Компас відмінків (A2, A2.5 [Case Synthesis and Plurals])
-**Section to write:** Особливі випадки: Час, характеристика, шлях (~500 слів)
-**Word target for this section:** 300 words (aim for 330 to account for undershoot)
+**Section to write:** Алгоритм вибору відмінка (~450 words)
+**Word target for this section:** 450 words (aim for 495 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Особливі випадки: Час, характеристика, шлях (~500 слів)
-- P1 (~120 слів): [Time expressions with cases. Explain why we use Accusative for days of the week (у вівторок, у п'ятницю) but Genitive for specific next/last time periods (наступного тижня).]
-- P2 (~120 слів): [Locative for Years and Characteristics. Explain the 'у/в + Loc' pattern for years (у 2024 році) and for describing someone's appearance or clothing. Examples: хлопець у синьому светрі, дівчина в окулярах.]
-- P3 (~130 слів): [Path and Surface in detail. Explain 'по + Loc' for movement over an area vs. 'через + Acc' for crossing through. Examples: гуляти по парку vs. перейти через дорогу.]
-- P4 (~130 слів): [Advanced Accusative usage: 'про' for topics (говорити про політику) and 'за' for duration in specific contexts (зробити за годину — to finish in an hour).]
-- <!-- INJECT_ACTIVITY: fill-in-mixed-triggers --> [fill-in, focus: complete sentences with correct noun forms triggered by mixed prepositions and verbs, including time and characteristic patterns, 8 items]
+## Алгоритм вибору відмінка (~450 words)
+- P1 (~120 words): Introduce a practical 3-step Case Selection Algorithm. Step 1: Is there a preposition? (If yes, check which case it governs). Step 2: If no preposition, check which case the verb requires. Step 3: Still unsure? Ask the case question (Кого? Що? Кому? Ким?).
+- P2 (~100 words): Walk through a decision tree using a mixed sentence to apply the steps in real-time, showing how to determine the Nominative for the subject and the dependent cases for objects based on the verb or preposition.
+- P3 (~130 words): Highlight common pitfalls and typical L2 learner errors. Emphasize the confusion between "на + Acc." (direction) and "на + Loc." (location), forgetting that "думати" takes "про + Acc." rather than the Locative, and mistakenly using the Genitive instead of the Dative after "допомагати".
+- P4 (~100 words): Provide a final encouraging recap. Emphasize that systematically applying the algorithm and checking verbs/prepositions removes the guesswork from case selection, leading to fluent and confident Ukrainian.
+- <!-- INJECT_ACTIVITY: quiz-case-verb-prep --> [quiz, Given a sentence with a blank, choose the correct case form based on the governing verb or preposition, 8 items]
+- <!-- INJECT_ACTIVITY: true-false-case-pairs --> [true-false, Judge whether the case used in a sentence is correct or incorrect, including tricky pairs like на роботу (Acc.) vs. на роботі (Loc.), 8 items]
+
+Grand total: ~2200 words
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -23,7 +26,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-як перемикач. *(Often a preposition works like a switch.)* One preposition can require different cases depending on the meaning of the sentence. Найпопулярніші прийменники — це **на** *(on/to)* та **у/в** *(in/into)*. Вони дружать із двома відмінками: Знахідним та Місцевим. *(They are friends with two cases: Accusative and Locative.)* The choice depends on movement versus position. Якщо ми говоримо про напрямок руху, ми запитуємо «Куди?». *(If we talk about the direction of movement, we ask "Where to?".)* This is the Accusative case. Наприклад: «Я йду **на роботу** *(I am going to work)*» або «Діти йдуть **в школу** *(The children are going to school)*». Ми рухаємося до мети. *(We are moving towards a goal.)* Але якщо ми говоримо про статичне місце, ми запитуємо «Де?». *(But if we talk about a static place, we ask "Where?".)* This requires the Locative case. Наприклад: «Я працюю **на роботі** *(I work at work)*» або «Діти сидять **у школі** *(The children sit in school)*». Дія відбувається в одному місці. *(The action happens in one place.)* Прийменник **з/із** *(from/with)* також має два різні значення. *(The preposition "з/із" also has two different meanings.)* Коли він означає походження або старт руху, нам потрібен Родовий відмінок. *(When it means origin or start of movement, we need the Genitive case.)* Наприклад: «Я приїхав **з Києва** *(I arrived from Kyiv)*» або «Він вийшов **із дому** *(He went out of the house)*». But when "з/із" means companionship or combination, it takes the Instrumental case. Це означає «разом». *(It means "together".)* Наприклад: «Я пішов гуляти **з другом** *(I went for a walk with a friend)*». Або коли ми п'ємо напій: «Я люблю каву **з молоком** *(I like coffee with milk)*». Ще один цікавий прийменник — це **за** *(for/behind)*. *(Another interesting preposition is "за".)* We use it with the Accusative case to show exchange, price, or gratitude. Наприклад: «Я плачу **за квиток** *(I pay for the ticket)*» або «Ми дякуємо **за допомогу** *(We thank for the help)*». However, when "за" indicates a physical location behind or after something, we use the Instrumental case. Наприклад: «Ми сидимо **за столом** *(We are sitting at the table)*». Або якщо ми наздоганяємо транспорт: «Він біжить **за автобусом** *(He is running after the bus)*». Прийменник **по** *(along/around)* найчастіше працює з Місцевим відмінком. *(The preposition "по" most often works with the Locative case.)* It describes movement along a path or across a surface. Наприклад: «Ми любимо ходити **по вулиці** *(We like to walk along the street)*». Якщо ми вдома: «Кіт бігає **по кімнаті** *(The cat runs around the room)*». Або масштабно: «Ми подорожуємо **по Україні** *(We travel around Ukraine)*». Інші популярні прийменники зазвичай мають лише один відмінок. *(Other popular prepositions usually have only one case.)* Прийменник **для** *(for)* вказує на мету і вимагає Родового відмінка: «Це подарунок **для мами** *(This is a gift for mom)*». Прийменник **біля** *(near)* також любить Родовий відмінок: «Я стою **біля вікна** *(I stand near the window)*». Прийменник **до** *(to/towards)* показує фінальну точку маршруту: «Ми їдемо **до лісу** *(We are driving to the forest)*». <!-- INJECT_ACTIVITY: group-sort-prepositions -->
+out based on their clothing, accessories, or a physical **характеристика** (characteristic, description), you use the Locative case. The pattern is simple: you name the person, add the preposition «у» or «в», and follow it with the clothing item in the Locative case. Remember that any adjectives describing the clothing must also be in the Locative case. This is a very natural and common way to describe someone's appearance in everyday Ukrainian. Ти пам'ятаєш того високого хлопця у червоному светрі? Поруч із ним стояла серйозна дівчина в окулярах. А та літня жінка у білому пальті — це наша нова сусідка. > *Do you remember that tall guy in the red sweater? A serious girl in glasses stood next to him. And that elderly woman in the white coat is our new neighbor.* :::tip **Describing people** — In English, you might say a girl *with* glasses or a guy *in* a sweater. In Ukrainian, both use «у» / «в» + Locative case. We generally do not say "дівчина з окулярами" when identifying someone by what they wear. ::: The Locative case is also essential for broader contexts of time, specifically when talking about months, years, centuries, or life stages. While days of the week take the Accusative case, these larger periods take the Locative case with «у» or «в». Notice how the adjectives for the year or century also take the Locative endings. У дві тисячі чотирнадцятому році багато речей змінилося. Зараз ми всі живемо у двадцять першому столітті. У дитинстві я дуже любив читати фантастичні казки. У серпні ми плануємо поїхати на море. > *In 2014, many things changed. Now we all live in the twenty-first century. In childhood, I really loved reading fantasy tales. In August we plan to go to the sea.* Finally, let's explore how we talk about paths of motion. When you move *across* a surface, *around* an area, or *through* a space, Ukrainian uses the preposition «по» followed by the Locative case. This describes movement that does not necessarily have a single strict **напрямок** (direction) or a specific **місце** (place, location) as a final destination. Instead, it shows that the continuous action covers a general area or a surface. Маленькі діти дуже люблять бігати по кімнаті. На вихідних ми часто гуляємо по старому парку або по вулиці. Влітку туристи люблять їздити по місту і дивитися на архітектуру. Ми також любимо подорожувати по Україні. > *Small children really love running around the room. On weekends we often walk around the old park or down the street. In summer, tourists like to ride around the city and look at the architecture. We also love traveling around Ukraine.* :::info **The preposition «по»** — This preposition can be tricky. In Ukrainian, «по» is mainly used with the Locative case to show movement over a surface (по столу, по вулиці) or distribution (по одному). Do not confuse it with Russian usage; we do not use it to mean "after" in time contexts or for missing someone. ::: <!-- INJECT_ACTIVITY: fill-in-mixed-cases -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -441,7 +444,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -460,18 +530,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (4/4).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] відмінок (grammatical case)
+- [ ] прийменник (preposition)
+- [ ] дієслово (verb)
+- [ ] напрямок (direction)
+- [ ] місце (place, location)
+- [ ] час (time)
+- [ ] характеристика (characteristic, description)
+- [ ] думати (to think)
+- [ ] боятися (to be afraid)
+- [ ] користуватися (to use)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Алгоритм вибору відмінка (~450 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

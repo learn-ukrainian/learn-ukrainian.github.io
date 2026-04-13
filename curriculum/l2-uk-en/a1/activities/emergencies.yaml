@@ -2,43 +2,25 @@ version: '1.0'
 module: emergencies
 level: a1
 inline:
-- id: dialogue-order
-  type: order
-  instruction: Розставте речення діалогу в правильному порядку (Put the dialogue sentences
-    in the correct order)
-  items:
-  - — Служба порятунку, слухаю вас.
-  - — Допоможіть! Тут пожежа!
-  - — Де ви?
-  - — На вулиці Шевченка, будинок п'ять.
-  - — Зрозуміло. Швидка і пожежники вже їдуть. Як вас звати?
-  - — Мене звати Анна. Дякую!
-  correct_order:
-  - 0
-  - 1
-  - 2
-  - 3
-  - 4
-  - 5
-- id: phrase-choice-quiz
+- id: quiz-emergency-phrases
   type: quiz
-  instruction: Оберіть правильну фразу для ситуації (Choose the correct phrase for
-    the situation)
+  instruction: Оберіть правильну фразу для ситуації (Choose the correct emergency
+    phrase for the situation)
   items:
   - question: You see a car crash.
     options:
     - Тут аварія! Викличте швидку!
     - Тут пожежа! Допоможіть!
     - Я загубив паспорт.
-    - Мені потрібен лікар.
+    - Людині погано!
     correct: 0
   - question: You see a building on fire.
     options:
+    - Тут аварія! Викличте швидку!
     - Тут пожежа! Допоможіть!
-    - Тут аварія!
     - Мені потрібен лікар.
     - Викличте поліцію!
-    correct: 0
+    correct: 1
   - question: Someone is feeling very ill on the street.
     options:
     - Людині погано! Викличте швидку!
@@ -48,28 +30,28 @@ inline:
     correct: 0
   - question: You cannot find your passport at the airport.
     options:
-    - Я загубив паспорт.
-    - Тут аварія!
-    - Мені потрібна швидка.
     - Людині погано!
-    correct: 0
+    - Тут аварія!
+    - Я загубив паспорт.
+    - Тут пожежа!
+    correct: 2
   - question: Someone stole your wallet.
     options:
+    - Тут пожежа!
+    - Мені потрібен лікар.
+    - Людині погано!
     - Викличте поліцію! Допоможіть!
-    - Тут пожежа!
-    - Мені потрібен лікар.
-    - Я на вулиці Хрещатик.
-    correct: 0
-  - question: You need a doctor.
+    correct: 3
+  - question: You need to see a doctor.
     options:
-    - Мені потрібен лікар.
-    - Тут аварія!
+    - Викличте поліцію!
     - Я загубив паспорт.
-    - Тут пожежа!
-    correct: 0
+    - Тут аварія!
+    - Мені потрібен лікар.
+    correct: 3
 - id: fill-in-emergency-call
   type: fill-in
-  instruction: Вставте правильне слово (Insert the correct word)
+  instruction: Заповніть пропуски (Fill in the blanks)
   items:
   - sentence: Алло! ____! Тут аварія!
     answer: Допоможіть
@@ -77,46 +59,39 @@ inline:
     - Допоможіть
     - Дякую
     - Вибачте
-    - Поліція
   - sentence: ____ швидку допомогу!
     answer: Викличте
     options:
     - Викличте
     - Загубив
     - Потрібен
-    - Адреса
   - sentence: Я на ____ Хрещатик, біля метро.
     answer: вулиці
     options:
     - вулиці
     - лікарні
     - поліції
-    - будинку
   - sentence: Мене ____ Адам.
     answer: звати
     options:
     - звати
     - прізвище
     - адреса
-    - номер
-  - sentence: Мій ____ — нуль дев'яносто три...
-    answer: номер
+  - sentence: Мій номер ____ — нуль дев'яносто три...
+    answer: телефону
     options:
-    - номер
-    - телефон
-    - будинок
-    - паспорт
+    - телефону
+    - паспорта
+    - будинку
   - sentence: Мені потрібна ____!
     answer: допомога
     options:
     - допомога
     - пожежа
     - аварія
-    - лікарня
-- id: report-issue-fill-in
+- id: fill-in-reporting-issue
   type: fill-in
-  instruction: Оберіть правильне слово для звіту (Choose the correct word for the
-    report)
+  instruction: Заповніть пропуски (Fill in the blanks)
   items:
   - sentence: Добрий день. Я ____ паспорт.
     answer: загубив
@@ -124,207 +99,160 @@ inline:
     - загубив
     - викличте
     - допоможіть
-    - потрібен
   - sentence: Моє ____ — Сміт.
     answer: прізвище
     options:
     - прізвище
     - ім'я
     - номер
-    - будинок
   - sentence: Мені ____ лікар.
     answer: потрібен
     options:
     - потрібен
     - погана
     - хворий
-    - потрібна
   - sentence: У мене ____ на ці таблетки.
     answer: алергія
     options:
     - алергія
     - пожежа
     - аварія
-    - допомога
   - sentence: Я не розумію. ____, будь ласка.
     answer: Повторіть
     options:
     - Повторіть
     - Допоможіть
     - Викличте
-    - Загубив
-  - sentence: Дайте, будь ласка, ____.
-    answer: таблетки
+  - sentence: Заповніть цю ____, будь ласка.
+    answer: форму
     options:
-    - таблетки
     - форму
-    - паспорт
-    - лікарня
+    - лікарню
+    - адресу
 workbook:
-- type: match-up
+- id: match-up-vocab
+  type: match-up
   instruction: З'єднайте українські та англійські слова (Match the Ukrainian and English
     words)
   pairs:
   - left: пожежа
     right: fire
-  - left: швидка
-    right: ambulance
-  - left: лікарня
-    right: hospital
   - left: аварія
     right: accident
+  - left: швидка
+    right: ambulance
   - left: поліція
     right: police
+  - left: лікарня
+    right: hospital
   - left: допомога
     right: help
-- type: true-false
-  instruction: Правда чи ні? (True or false?)
+- id: group-sort-emergencies
+  type: group-sort
+  instruction: Розподіліть слова за категоріями (Sort the words into categories)
+  groups:
+  - label: Медицина (Medicine)
+    items:
+    - лікар
+    - лікарня
+    - швидка
+    - алергія
+  - label: Документи (Documents)
+    items:
+    - паспорт
+    - форма
+    - прізвище
+    - адреса
+- id: true-false-emergency
+  type: true-false
+  instruction: Правда чи ні? (True or False?)
   items:
-  - statement: Номер 103 — це швидка допомога.
-    correct: true
-    explanation: 103 is the number for the ambulance.
-  - statement: Номер 101 — це поліція.
-    correct: false
-    explanation: 101 is the number for the fire service (пожежна допомога). Police
-      is 102.
-  - statement: Номер 112 — це універсальний екстрений номер.
+  - statement: Номер 112 — це універсальний номер екстреної допомоги в Україні.
     correct: true
     explanation: 112 is the universal emergency number in Ukraine.
-  - statement: «Тут аварія!» означає «There is a fire here!».
+  - statement: Номер 103 — це пожежна служба.
     correct: false
-    explanation: «Тут аварія!» means «There is an accident here!». Fire is «пожежа».
-  - statement: Якщо ви загубили паспорт, треба йти в поліцію.
+    explanation: 103 is for the ambulance (швидка). 101 is for the fire service (пожежна
+      служба).
+  - statement: Фраза «Тут аварія» означає, що сталася дорожня пригода.
     correct: true
-    explanation: If you lost your passport, you should go to the police.
-  - statement: «Мені потрібен лікар» означає «I need the police».
+    explanation: Тут аварія means 'There is an accident here'.
+  - statement: 'Правильно говорити: «Мені потрібен лікарня».'
     correct: false
-    explanation: «Мені потрібен лікар» means «I need a doctor».
-- type: error-correction
-  instruction: Виправте помилку в реченні (Correct the mistake in the sentence)
+    explanation: 'Лікарня is feminine, so you must use ''потрібна'': Мені потрібна
+      лікарня.'
+  - statement: В українській мові ми кажемо «у мене болить голова» замість «я маю
+      біль».
+    correct: true
+    explanation: Ukrainian uses the structure 'у мене болить + [body part in nominative]'.
+  - statement: Фраза «Я загубив паспорт» використовує чоловічий рід.
+    correct: true
+    explanation: The past tense ending -в in 'загубив' indicates a masculine speaker.
+- id: anagram-emergencies
+  type: anagram
+  instruction: Складіть слово з літер (Make a word from the letters)
   items:
-  - sentence: Тут аварія! Викличте поліція!
-    error: поліція
-    correction: поліцію
-    error_type: word
-    options:
-    - поліцію
-    - поліції
-    - поліцією
-    explanation: 'After verbs like «викликати» (to call), we use the Accusative case:
-      поліцію.'
-  - sentence: Мені потрібна лікар.
-    error: потрібна
-    correction: потрібен
-    error_type: word
-    options:
-    - потрібен
-    - потрібне
-    - потрібні
-    explanation: «Лікар» is masculine, so it should be «потрібен лікар».
-  - sentence: Я загубив форма.
-    error: форма
-    correction: форму
-    error_type: word
-    options:
-    - форму
-    - форми
-    - формою
-    explanation: 'After the verb «загубити» we use the Accusative case: форму.'
-  - sentence: У мене болить голову.
-    error: голову
-    correction: голова
-    error_type: word
-    options:
-    - голова
-    - голови
-    - головою
-    explanation: 'With «у мене болить», the body part is the subject and must be in
-      the Nominative case: голова.'
-  - sentence: Я на вулиця Хрещатик.
-    error: вулиця
-    correction: вулиці
-    error_type: word
-    options:
-    - вулиці
-    - вулицю
-    - вулицею
-    explanation: 'After the preposition «на» indicating location, we use the Locative
-      case: на вулиці.'
-  - sentence: Допоможіть! Тут пожежу!
-    error: пожежу
-    correction: пожежа
-    error_type: word
-    options:
-    - пожежа
-    - пожежі
-    - пожежею
-    explanation: 'Here «пожежа» is the subject, so it remains in the Nominative case:
-      Тут пожежа.'
-- type: translate
-  instruction: Оберіть правильний переклад (Choose the correct translation)
-  items:
-  - source: Call an ambulance!
-    options:
-    - text: Викличте швидку!
-      correct: true
-    - text: Викличте поліцію!
-      correct: false
-    - text: Мені потрібна швидка!
-      correct: false
-    - text: Тут швидка!
-      correct: false
-  - source: I am allergic to these pills.
-    options:
-    - text: У мене алергія на ці таблетки.
-      correct: true
-    - text: Мені потрібні ці таблетки.
-      correct: false
-    - text: Я загубив ці таблетки.
-      correct: false
-    - text: Дайте, будь ласка, ці таблетки.
-      correct: false
-  - source: My surname is Smith.
-    options:
-    - text: Моє прізвище — Сміт.
-      correct: true
-    - text: Мене звати Сміт.
-      correct: false
-    - text: Моє ім'я — Сміт.
-      correct: false
-    - text: Мій номер — Сміт.
-      correct: false
-  - source: I do not understand. Please repeat.
-    options:
-    - text: Я не розумію. Повторіть, будь ласка.
-      correct: true
-    - text: Я не знаю. Допоможіть, будь ласка.
-      correct: false
-    - text: Я не розумію. Викличте, будь ласка.
-      correct: false
-    - text: Мені погано. Повторіть, будь ласка.
-      correct: false
-  - source: I am near the metro.
-    options:
-    - text: Я біля метро.
-      correct: true
-    - text: Я на метро.
-      correct: false
-    - text: Я в метро.
-      correct: false
-    - text: Я з метро.
-      correct: false
-  - source: Someone is feeling bad!
-    options:
-    - text: Людині погано!
-      correct: true
-    - text: Мені погано!
-      correct: false
-    - text: Тут аварія!
-      correct: false
-    - text: Мені потрібен лікар!
-      correct: false
-- type: unjumble
-  instruction: Складіть правильне речення зі слів (Put the words in the correct order)
+  - letters:
+    - п
+    - о
+    - ж
+    - е
+    - ж
+    - а
+    answer: пожежа
+    hint: fire
+  - letters:
+    - а
+    - в
+    - а
+    - р
+    - і
+    - я
+    answer: аварія
+    hint: accident
+  - letters:
+    - ш
+    - в
+    - и
+    - д
+    - к
+    - а
+    answer: швидка
+    hint: ambulance
+  - letters:
+    - л
+    - і
+    - к
+    - а
+    - р
+    - н
+    - я
+    answer: лікарня
+    hint: hospital
+  - letters:
+    - п
+    - а
+    - с
+    - п
+    - о
+    - р
+    - т
+    answer: паспорт
+    hint: passport
+  - letters:
+    - п
+    - о
+    - л
+    - і
+    - ц
+    - і
+    - я
+    answer: поліція
+    hint: police
+- id: unjumble-sentences
+  type: unjumble
+  instruction: Складіть правильне речення зі слів (Put the words in the correct order
+    to make a sentence)
   items:
   - words:
     - швидку!
@@ -341,22 +269,6 @@ workbook:
     - потрібен
     - лікар.
   - words:
-    - звати
-    - Мене
-    - Адам.
-    correct_order:
-    - Мене
-    - звати
-    - Адам.
-  - words:
-    - загубив
-    - Я
-    - паспорт.
-    correct_order:
-    - Я
-    - загубив
-    - паспорт.
-  - words:
     - болить
     - мене
     - У
@@ -367,12 +279,28 @@ workbook:
     - болить
     - голова.
   - words:
-    - на
-    - вулиці
+    - паспорт.
+    - загубив
     - Я
-    - Шевченка.
     correct_order:
     - Я
-    - на
-    - вулиці
+    - загубив
+    - паспорт.
+  - words:
+    - 'адреса:'
+    - Моя
     - Шевченка.
+    - вулиця
+    correct_order:
+    - Моя
+    - 'адреса:'
+    - вулиця
+    - Шевченка.
+  - words:
+    - не
+    - розумію.
+    - Я
+    correct_order:
+    - Я
+    - не
+    - розумію.

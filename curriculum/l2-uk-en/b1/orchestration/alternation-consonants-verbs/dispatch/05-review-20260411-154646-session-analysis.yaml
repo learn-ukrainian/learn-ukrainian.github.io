@@ -1,0 +1,44 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T13-43-60f04ed5.json
+phase: review
+prompt_chars: 61569
+response_chars: 7946
+prompt_words: 8759
+response_words: 1146
+sections:
+- name: preamble
+  start: 0
+  length: 464
+  fraction: 0.0075
+- name: plan
+  start: 464
+  length: 57899
+  fraction: 0.9404
+- name: output_spec
+  start: 58363
+  length: 3206
+  fraction: 0.0521
+large_sections:
+- plan
+directives_total: 15
+directives_covered: 10
+directives_missed:
+- kind: inject_activity
+  text: fill-in-1st-person
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-identify-which-alternation-type-applies-to-a-given-verb-dental-velar-or-labial
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-imperfective
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: error-correction-find-and-fix-conjugation-errors-in-sentences
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing

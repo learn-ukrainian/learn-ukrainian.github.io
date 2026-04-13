@@ -22,7 +22,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-a full phrase, we create a strict "Agreement Chain". Every single descriptive word in this chain must share the same case, gender, and number as the noun. The classic and most useful pattern has four parts: a preposition, a pronoun, an adjective, and a noun. Подивіться уважно на цю фразу: «з моїм найкращим другом» *(with my best friend)*. Спочатку ми маємо прийменник **з** *(with)*. Далі йде присвійний займенник **моїм** *(my)*. Потім ми додаємо прикметник **найкращим** *(best)*. І наприкінці стоїть іменник **другом** *(friend)*. Усі три слова (займенник, прикметник, іменник) стоять в орудному відмінку чоловічого роду. Це ідеальний граматичний ланцюг. You cannot mix cases or drop the endings for the adjectives. Every link in the chain must perfectly agree to make the sentence correct and natural. Давайте порівняємо чоловічий та жіночий ланцюги. Вони звучать по-різному, але завжди мають однакову логіку. Чоловічий ланцюг має багато звуків «и» та «м». Наприклад: «Я розмовляю з моїм новим сусідом» *(I am talking with my new neighbor)*. Тут ми чуємо закінчення **-ім**, **-им**, **-ом**. Це звучить дуже твердо і послідовно. Жіночий ланцюг звучить зовсім інакше. Він дуже ритмічний і має багато голосних звуків «о» та «е». Ми кажемо: «Я говорю з моєю новою сусідкою» *(I speak with my new female neighbor)*. Тут ми використовуємо закінчення **-єю**, **-ою**, **-ою**. Це дуже гармонійний і мелодійний патерн. Notice how the feminine chain naturally flows because of the repeated rhythmic vowel sounds. Кожне слово в ланцюгу обов'язково змінюється. Ви ніколи не можете сказати «з мій новою сусідкою» або «з моєю новий сусідкою». Ви повинні змінити абсолютно всі слова. Ці граматичні ланцюги працюють для всіх функцій орудного відмінка. Ви вже знаєте, що орудний відмінок показує компанію, місце або інструмент. Правила узгодження діють усюди однаково. Якщо ми говоримо про компанію, ми використовуємо прийменник «з». Наприклад: «Я обідаю з моєю старшою сестрою» *(I have lunch with my older sister)*. Якщо ми говоримо про місце, ми часто використовуємо прийменники «за» *(behind)* або «під» *(under)*. Наприклад: «Наш собака спить за нашим великим будинком» *(Our dog sleeps behind our big house)*. The same strict agreement chain applies when we talk about instruments or tools. We simply do not use a preposition here. Ми кажемо: «Я пишу цією новою ручкою» *(I am writing with this new pen)*. Граматика завжди залишається стабільною. В українській мові є популярні сталі фрази, які використовують цей відмінок. Вони допомагають говорити більш природно та швидко. Ми часто використовуємо вказівні займенники для вираження часу. Наприклад, ми кажемо **тим часом** *(meanwhile)*, коли розповідаємо цікаву історію або новини. Або ми кажемо **цим разом** *(this time)*, коли розпочинаємо нову справу. We also have standard daily collocations that use full instrumental chains. Ми виконуємо улюблену роботу **з великим задоволенням** *(with great pleasure)*. Ми завжди кажемо хорошим друзям: «Я зробив це **з вашою допомогою** *(with your help)*». Це дуже корисні фрази для щоденного та ввічливого спілкування. Memorize these common chunks, and your spoken Ukrainian will sound much more authentic and fluid. <!-- INJECT_ACTIVITY: fill-in, Build full sentences using preposition + pronoun + adjective + noun in Instrumental, 8 items -->
+старий друг живе поруч? Я також люблю пити каву з моєю новою сусідкою. Ви можете почути, як змінюється звучання. У чоловічому роді ми маємо закінчення «-ім», «-им» та «-ом». У жіночому роді всі слова мають закінчення «-єю» або «-ою». Цей повторюваний звук створює красивий ритм, коли ви говорите. > *My neighbor is a very nice person, and I often talk with my new neighbor. And does your old friend live nearby? I also like to drink coffee with my new female neighbor. You can hear how the sound changes. In the masculine gender, we have the endings "-im", "-ym", and "-om". In the feminine gender, all words have the endings "-yeyu" or "-oyu". This repeating sound creates a beautiful rhythm when you speak.* :::info **Grammar box** If the noun is feminine, every modifier before it must switch to its feminine Instrumental form (usually ending in **-ою** or **-єю**). The rhythm shifts completely from the masculine pattern. ::: The grammatical endings do not change just because the meaning of the sentence changes. Whether you are talking about companionship, location, or the tool you are using, the agreement chain remains exactly the same. Сьогодні я йду в театр з моєю старшою сестрою. Ми зустрінемося за нашим великим будинком біля парку. Я пишу повідомлення цією новою ручкою. У першому реченні ми бачимо компанію людей. У другому реченні ми бачимо місце. У третьому реченні ми бачимо інструмент. Правила граматики працюють однаково для всіх цих ситуацій. Ваша мета — просто узгодити всі слова з головним іменником. > *Today I am going to the theater with my older sister. We will meet behind our big building near the park. I am writing a message with this new pen. In the first sentence, we see a company of people. In the second sentence, we see a place. In the third sentence, we see a tool. The rules of grammar work identically for all these situations. Your goal is simply to agree all words with the main noun.* Beyond literal descriptions, full Instrumental phrases are often used in fixed expressions and natural collocations. You will often hear demonstrative pronouns like **той** (that) and **цей** (this) used in expressions of time or manner. Микола пішов у магазин, а я тим часом приготувала вечерю. Цим разом ми вирішили залишитися вдома. Я з великим задоволенням допоможу вам з вашим проєктом. Ми зробили цю роботу з вашою допомогою. Ці фрази роблять ваше мовлення більш природним. Вони показують, що ви відчуваєте мову. > *Mykola went to the store, and I meanwhile prepared dinner. This time we decided to stay at home. I will help you with your project with great pleasure. We did this work with your help. These phrases make your speech more natural. They show that you feel the language.* These expressions bridge the gap between strict grammar and fluent communication. Notice how **тим часом** (meanwhile) uses the Instrumental form of **той** combined with **час**. Similarly, **цим разом** (this time) uses the Instrumental of **цей** and **раз**. <!-- INJECT_ACTIVITY: fill-in-full-chains -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -549,7 +549,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -568,18 +635,65 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] мій (my)
+- [ ] твій (your (informal))
+- [ ] наш (our)
+- [ ] ваш (your (formal/plural))
+- [ ] цей (this)
+- [ ] той (that)
+- [ ] новий (new)
+- [ ] старий (old)
+- [ ] великий (big, large)
+- [ ] гарний (nice, beautiful)
+- [ ] найкращий (the best)
+- [ ] сусід (neighbor (male))
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Практика: Опиши свій день (Practice: Describe Your Day) (~500 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

@@ -1,7 +1,7 @@
 # Audit Report: M07 — foundations-practice.md
 **Level:** A2 | **Module:** M07 | **Phase:** A2.1 | **Pedagogy:** TBL | **Target:** 2000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-04-11 01:49:57
+**Generated:** 2026-04-12 23:41:32
 
 ## Configuration
 **Type:** A2
@@ -18,69 +18,56 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | quiz |  | 6 | 8 | ❌ |
+| 1 | quiz |  | 8 | 8 | ✅ |
 | 2 | fill-in |  | 8 | 8 | ✅ |
 | 3 | match-up |  | 8 | 8 | ✅ |
 | 4 | match-up |  | 8 | 8 | ✅ |
-| 5 | group-sort |  | 16 | 8 | ✅ |
-| 6 | error-correction |  | 6 | 6 | ✅ |
-| 7 | fill-in |  | 6 | 8 | ❌ |
-| 8 | quiz |  | 6 | 8 | ❌ |
+| 5 | error-correction |  | 8 | 6 | ✅ |
+| 6 | fill-in |  | 8 | 8 | ✅ |
+| 7 | translate |  | 8 | 6 | ✅ |
+| 8 | group-sort |  | 16 | 8 | ✅ |
+| 9 | true-false |  | 8 | 8 | ✅ |
+| 10 | fill-in |  | 8 | 8 | ✅ |
+| 11 | quiz |  | 8 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 8 (target: 0-4) ❌
-- Unique types: 5 (minimum: 0) ✅
-- Priority types used: 5/15 (error-correction, fill-in, group-sort, match-up, quiz) ✅
-- Low density activities: 3
+- Total activities: 11 (target: 0-4) ❌
+- Unique types: 7 (minimum: 0) ✅
+- Priority types used: 7/15 (error-correction, fill-in, group-sort, match-up, quiz, translate, true-false) ✅
+- Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY]** quiz '' has 6 items (minimum: 8)
-  - FIX: Add more items. A2 quiz requires at least 8 items.
-- **[COMPLEXITY]** fill-in '' has 6 items (minimum: 8)
-  - FIX: Add more items. A2 fill-in requires at least 8 items.
-- **[COMPLEXITY]** quiz '' has 6 items (minimum: 8)
-  - FIX: Add more items. A2 quiz requires at least 8 items.
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: вид, іменник
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[GLOSSARY_LIST_IN_PROSE]** Glossary-style list (3 items) in narrative prose starting: '**У нас немає музики.** — *We have no music.*' — vocab tables belong in vocabulary YAML
-  - FIX: Move vocabulary definitions to vocabulary/{slug}.yaml or rewrite as natural prose with words introduced in context
+- **[SECTION_BALANCE_BLOATED]** Section 'Сценарій 3: Як пройшов твій день? (Scenario 3: How Was Your Day?) (~900 words)' has 1388 words (48% of total). Bloated sections: 'Сценарій 3: Як пройшов твій день? (Scenario 3: How Was Your Day?) (~900 words)' (48%)
+  - FIX: Consider splitting the large section or expanding smaller sections to improve balance.
 
 ## Recommendation
-**📝 UPDATE** (severity 25/100)
+**📝 UPDATE** (severity 35/100)
 
-- 5 violations (moderate)
-- Activity density below minimum
+- 1 violations (minor)
+- Immersion 5% off target (minor)
+- Structure issue: Missing '## Summary'
 
 ## Gates
-- **Words:** ✅ 3250/2000 (raw: 3303)
-- **Activities:** ✅ 8/0
-- **Density:** ❌ 3 < 8
-- **Unique_types:** ✅ 5/0 types
+- **Words:** ✅ 2890/2000 (raw: 2958)
+- **Activities:** ✅ 11/0
+- **Density:** ✅ All > 8
+- **Unique_types:** ✅ 7/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 4/3
+- **Engagement:** ❌ 2/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 49/1
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ✅ 22/1
+- **Structure:** ❌ Missing '## Summary'
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ⚠️ 28.1% (target 30-55%, within tolerance (A2.1))
+- **Immersion:** ❌ 24.6% LOW (target 30-55% (A2.1))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
 
-## Low Density Activities
-| Activity | Type | Items | Required | Fix |
-|----------|------|-------|----------|-----|
-|  | quiz | 6 | 8 | Add 2 more items |
-|  | fill-in | 6 | 8 | Add 2 more items |
-|  | quiz | 6 | 8 | Add 2 more items |
-
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 913 | Included in Core |
-| **Сценарій 2: На ринку (Scenario 2: At the Market)** | ✅ | 877 | Included in Core |
-| **Сценарій 3: Як пройшов твій день? (Scenario 3: How Was Your Day?)** | ✅ | 1281 | Included in Core |
-| **Підсумок — Summary** | ✅ | 179 | Included in Core |
+| **Intro/Narrative** | ✅ | 735 | Included in Core |
+| **Сценарій 2: На ринку (Scenario 2: At the Market) (~650 words)** | ✅ | 780 | Included in Core |
+| **Сценарій 3: Як пройшов твій день? (Scenario 3: How Was Your Day?) (~900 words)** | ✅ | 1375 | Included in Core |

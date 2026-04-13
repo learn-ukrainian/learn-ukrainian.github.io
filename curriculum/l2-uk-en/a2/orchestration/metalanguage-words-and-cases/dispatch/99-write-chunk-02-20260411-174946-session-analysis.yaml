@@ -1,0 +1,85 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T15-48-bf78914d.json
+phase: write-chunk-02
+prompt_chars: 34227
+response_chars: 4407
+prompt_words: 4912
+response_words: 713
+sections:
+- name: header
+  start: 0
+  length: 446
+  fraction: 0.013
+- name: skeleton
+  start: 446
+  length: 1592
+  fraction: 0.0465
+- name: prior_summary
+  start: 2038
+  length: 3385
+  fraction: 0.0989
+- name: plan
+  start: 5423
+  length: 12599
+  fraction: 0.3681
+- name: wiki
+  start: 11539
+  length: 15986
+  fraction: 0.4671
+- name: output_spec
+  start: 34008
+  length: 219
+  fraction: 0.0064
+large_sections:
+- wiki
+directives_total: 19
+directives_covered: 7
+directives_missed:
+- kind: checklist
+  text: прикметник (adjective)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: займенник (pronoun)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: числівник (numeral)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: прислівник (adverb)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: сполучник (conjunction)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: рід (gender, grammatical)
+  covered: false
+  coverage_note: 1/3 keywords (33%)
+- kind: checklist
+  text: однина (singular)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 1/11 keywords (9%)
+- kind: inject_activity
+  text: fill-in-case-questions
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-grammar-terms
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: group-sort-parts-of-speech
+  covered: false
+  coverage_note: marker missing

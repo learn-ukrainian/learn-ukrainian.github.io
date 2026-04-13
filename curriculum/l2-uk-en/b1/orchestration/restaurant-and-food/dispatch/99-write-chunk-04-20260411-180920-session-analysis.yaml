@@ -1,0 +1,57 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T16-07-c7e3949e.json
+phase: write-chunk-04
+prompt_chars: 53045
+response_chars: 11547
+prompt_words: 7456
+response_words: 1779
+sections:
+- name: header
+  start: 0
+  length: 408
+  fraction: 0.0077
+- name: skeleton
+  start: 408
+  length: 1949
+  fraction: 0.0367
+- name: prior_summary
+  start: 2357
+  length: 3715
+  fraction: 0.07
+- name: plan
+  start: 6072
+  length: 18393
+  fraction: 0.3467
+- name: wiki
+  start: 17705
+  length: 28377
+  fraction: 0.535
+- name: output_spec
+  start: 52842
+  length: 203
+  fraction: 0.0038
+large_sections:
+- wiki
+directives_total: 24
+directives_covered: 19
+directives_missed:
+- kind: must
+  text: '* **Must-know:** `склянка води/молока`, `ложка цукру/солі`, `кілограм борошна/м''яса`.'
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: must
+  text: '**MANDATORY:** Українська кулінарна та професійна лексика має суттєві відмінності
+    від російської.'
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: inject_activity
+  text: quiz-genitive-partitive
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: group-sort-categories
+  covered: false
+  coverage_note: marker missing

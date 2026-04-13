@@ -1,0 +1,45 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T23-45-fa7b07f5.json
+phase: vocab
+prompt_chars: 7980
+response_chars: 1709
+prompt_words: 1284
+response_words: 206
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.1
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.0288
+- name: plan
+  start: 1028
+  length: 6952
+  fraction: 0.8712
+large_sections:
+- plan
+directives_total: 5
+directives_covered: 0
+directives_missed:
+- kind: must
+  text: When we talk about the objects of our actions, we must use the accusative
+    case.
+  covered: false
+  coverage_note: 0/10 keywords (0%)
+- kind: inject_activity
+  text: group-sort-accusative
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-accusative-forms
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-dialogue
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-situational-phrases
+  covered: false
+  coverage_note: marker missing

@@ -1,6 +1,6 @@
 {
-  "total_items": 79,
-  "grounded_items": 55,
+  "total_items": 81,
+  "grounded_items": 71,
   "ungrounded": [
     {
       "word": "ти",
@@ -21,129 +21,45 @@
       "role": "answer"
     },
     {
-      "word": "магазин",
-      "exercise_type": "quiz",
-      "context": "_____ ти йдеш? — У магазин.",
-      "role": "context"
-    },
-    {
       "word": "ви",
-      "exercise_type": "quiz",
-      "context": "_____ ви? — Ми з Канади.",
-      "role": "context"
-    },
-    {
-      "word": "їде",
-      "exercise_type": "quiz",
-      "context": "_____ їде автобус? — На вокзал.",
-      "role": "context"
+      "exercise_type": "match-up",
+      "context": "Звідки ви?",
+      "role": "answer"
     },
     {
       "word": "автобус",
-      "exercise_type": "quiz",
-      "context": "_____ їде автобус? — На вокзал.",
-      "role": "context"
+      "exercise_type": "match-up",
+      "context": "Куди їде автобус?",
+      "role": "answer"
     },
     {
       "word": "їдеш",
-      "exercise_type": "quiz",
-      "context": "_____ ти їдеш? — З роботи.",
-      "role": "context"
-    },
-    {
-      "word": "аптека",
       "exercise_type": "match-up",
-      "context": "Де аптека?",
+      "context": "Звідки ти їдеш?",
       "role": "answer"
     },
     {
-      "word": "вони",
-      "exercise_type": "quiz",
-      "context": "_____ вони? — Зі США.",
-      "role": "context"
-    },
-    {
-      "word": "локація",
-      "exercise_type": "group-sort",
-      "context": "Локація (Де?)",
-      "role": "context"
-    },
-    {
-      "word": "напрямок",
-      "exercise_type": "group-sort",
-      "context": "Напрямок (Куди?)",
-      "role": "context"
-    },
-    {
-      "word": "канаду",
-      "exercise_type": "group-sort",
-      "context": "в Канаду",
-      "role": "answer"
-    },
-    {
-      "word": "походження",
-      "exercise_type": "group-sort",
-      "context": "Походження (Звідки?)",
-      "role": "context"
-    },
-    {
-      "word": "живе",
-      "exercise_type": "quiz",
-      "context": "Вона живе _____ Львові",
-      "role": "context"
-    },
-    {
-      "word": "кімнаті",
-      "exercise_type": "quiz",
-      "context": "Я _____ кімнаті",
-      "role": "context"
-    },
-    {
-      "word": "його",
+      "word": "фраза",
       "exercise_type": "true-false",
-      "context": "Його готель у центрі.",
+      "context": "Фраза «у школі» відповідає на запитання Де? (Where?)",
       "role": "context"
     },
     {
-      "word": "іде",
+      "word": "відповідає",
       "exercise_type": "true-false",
-      "context": "Марк іде на вокзал пішки.",
+      "context": "Фраза «у школі» відповідає на запитання Де? (Where?)",
       "role": "context"
     },
     {
-      "word": "живу",
-      "exercise_type": "error-correction",
-      "context": "Я живу в Київ.",
+      "word": "запитання",
+      "exercise_type": "true-false",
+      "context": "Фраза «у школі» відповідає на запитання Де? (Where?)",
       "role": "context"
     },
     {
-      "word": "київ",
-      "exercise_type": "error-correction",
-      "context": "Я живу в Київ.",
-      "role": "context"
-    },
-    {
-      "word": "йде",
-      "exercise_type": "error-correction",
-      "context": "Вона йде на школі.",
-      "role": "context"
-    },
-    {
-      "word": "їдемо",
-      "exercise_type": "error-correction",
-      "context": "Ми їдемо з автобусі.",
-      "role": "context"
-    },
-    {
-      "word": "канаді",
-      "exercise_type": "error-correction",
-      "context": "Я з Канаді.",
-      "role": "context"
-    },
-    {
-      "word": "працює",
-      "exercise_type": "error-correction",
-      "context": "Він працює в роботі.",
+      "word": "україну",
+      "exercise_type": "true-false",
+      "context": "Фраза «в Україну» відповідає на запитання Куди? (To where?)",
       "role": "context"
     }
   ],

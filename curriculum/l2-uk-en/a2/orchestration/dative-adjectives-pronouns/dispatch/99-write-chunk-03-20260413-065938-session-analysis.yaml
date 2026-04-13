@@ -1,0 +1,53 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T04-58-8b318881.json
+phase: write-chunk-03
+prompt_chars: 44436
+response_chars: 4579
+prompt_words: 6306
+response_words: 719
+sections:
+- name: header
+  start: 0
+  length: 446
+  fraction: 0.01
+- name: skeleton
+  start: 446
+  length: 1864
+  fraction: 0.0419
+- name: prior_summary
+  start: 2310
+  length: 3276
+  fraction: 0.0737
+- name: plan
+  start: 5586
+  length: 12851
+  fraction: 0.2892
+- name: wiki
+  start: 10924
+  length: 25773
+  fraction: 0.58
+- name: output_spec
+  start: 44210
+  length: 226
+  fraction: 0.0051
+large_sections:
+- wiki
+directives_total: 18
+directives_covered: 14
+directives_missed:
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 4/11 keywords (36%)
+- kind: inject_activity
+  text: quiz-possessive-forms
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-nominative-dative
+  covered: false
+  coverage_note: marker missing

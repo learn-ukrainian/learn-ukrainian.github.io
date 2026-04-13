@@ -80,6 +80,36 @@ def _write_review_with_dimension_scores(
     (review_dir / f"{slug}-review.md").write_text(review_text, "utf-8")
 
 
+def _write_passing_status(curriculum_root: Path, slug: str) -> None:
+    status_dir = curriculum_root / "b1" / "status"
+    status_dir.mkdir(parents=True, exist_ok=True)
+    status_path = status_dir / f"{slug}.json"
+    status_path.write_text(
+        json.dumps({
+            "overall": {"status": "pass"},
+            "gates": {
+                "meta": {"status": "pass"},
+                "lesson": {"status": "pass"},
+                "activities": {"status": "pass"},
+                "vocabulary": {"status": "pass"},
+                "naturalness": {"status": "pass"},
+                "research": {"status": "pass"},
+                "review": {"status": "pass"},
+            },
+        }),
+        "utf-8",
+    )
+
+    (curriculum_root / "b1").mkdir(parents=True, exist_ok=True)
+    (curriculum_root / "b1" / f"{slug}.md").write_text("# Content\n", "utf-8")
+
+    import os
+    import time
+
+    future = time.time() + 3600
+    os.utime(status_path, (future, future))
+
+
 class TestBatchReviewSkip:
     def test_batch_review_reruns_low_scores_and_skips_passing(self, tmp_path, monkeypatch):
         curriculum_root = tmp_path / "curriculum" / "l2-uk-en"
@@ -88,6 +118,8 @@ class TestBatchReviewSkip:
         _write_state(curriculum_root, "skip-me", review_complete=True)
         _write_review(curriculum_root, "rerun-me", 8)
         _write_review(curriculum_root, "skip-me", 9)
+        _write_passing_status(curriculum_root, "rerun-me")
+        _write_passing_status(curriculum_root, "skip-me")
 
         monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
         monkeypatch.setattr(v6_build, "PROJECT_ROOT", tmp_path)
@@ -114,6 +146,41 @@ class TestBatchReviewSkip:
         assert calls[0][3] == "1"
         assert "--review-threshold" in calls[0]
 
+    def test_batch_resume_passes_explicit_invalidation_plan_to_child(self, tmp_path, monkeypatch):
+        curriculum_root = tmp_path / "curriculum" / "l2-uk-en"
+        _write_manifest(curriculum_root, ["rerun-me"])
+        _write_state(curriculum_root, "rerun-me", review_complete=True, all_complete=True)
+        _write_review(curriculum_root, "rerun-me", 8)
+        _write_passing_status(curriculum_root, "rerun-me")
+
+        monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
+        monkeypatch.setattr(v6_build, "PROJECT_ROOT", tmp_path)
+
+        calls: list[list[str]] = []
+
+        def fake_run(cmd, cwd, timeout):
+            calls.append(cmd)
+            return SimpleNamespace(returncode=0)
+
+        monkeypatch.setattr(subprocess, "run", fake_run)
+        monkeypatch.setattr(
+            sys,
+            "argv",
+            ["v6_build.py", "b1", "1", "--range", "1", "--step", "review", "--resume"],
+        )
+
+        with pytest.raises(SystemExit) as exc:
+            v6_build.main()
+
+        assert exc.value.code == 0
+        assert len(calls) == 1
+        invalidate_pairs = [
+            calls[0][idx + 1]
+            for idx, token in enumerate(calls[0])
+            if token == "--invalidate-phase"
+        ]
+        assert invalidate_pairs == ["review", "stress", "publish", "audit"]
+
     def test_batch_review_uses_custom_threshold_for_skip(self, tmp_path, monkeypatch):
         curriculum_root = tmp_path / "curriculum" / "l2-uk-en"
         _write_manifest(curriculum_root, ["threshold-module"])
@@ -121,6 +188,7 @@ class TestBatchReviewSkip:
         _write_review_with_dimension_scores(
             curriculum_root, "threshold-module", [9, 8, 8, 8, 8, 8, 8, 8, 8],
         )
+        _write_passing_status(curriculum_root, "threshold-module")
 
         monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
         monkeypatch.setattr(v6_build, "PROJECT_ROOT", tmp_path)
@@ -385,6 +453,9 @@ class TestBatchReviewSkip:
         monkeypatch.setattr(v6_build.ModuleBuildLock, "release", lambda self: None)
         monkeypatch.setattr(v6_build, "step_review", lambda *args, **kwargs: (True, 9.0, "## Verdict: PASS\n"))
         monkeypatch.setattr(v6_build, "step_publish", lambda *args, **kwargs: None)
+        monkeypatch.setattr(
+            v6_build, "_run_pre_build_gate", lambda *args, **kwargs: True, raising=False,
+        )
         monkeypatch.setattr(orch_index, "generate_index", lambda *args, **kwargs: None)
 
         calls: list[tuple] = []
@@ -403,3 +474,155 @@ class TestBatchReviewSkip:
         v6_build.main()
 
         assert len(calls) == 1
+
+    def test_resume_invalidation_plan_forces_review_and_publish_rerun(self, tmp_path, monkeypatch):
+        curriculum_root = tmp_path / "curriculum" / "l2-uk-en"
+        _write_manifest(curriculum_root, ["single-module"])
+        _write_state(curriculum_root, "single-module", review_complete=True, all_complete=True)
+        status_dir = curriculum_root / "b1" / "status"
+        status_dir.mkdir(parents=True, exist_ok=True)
+        status_path = status_dir / "single-module.json"
+        status_path.write_text(
+            json.dumps({
+                "overall": {"status": "pass"},
+                "gates": {
+                    "meta": {"status": "pass"},
+                    "lesson": {"status": "pass"},
+                    "activities": {"status": "pass"},
+                    "vocabulary": {"status": "pass"},
+                    "naturalness": {"status": "pass"},
+                    "research": {"status": "pass"},
+                    "review": {"status": "pass"},
+                },
+            }),
+            "utf-8",
+        )
+        (curriculum_root / "b1").mkdir(parents=True, exist_ok=True)
+        (curriculum_root / "b1" / "single-module.md").write_text("# Content\n", "utf-8")
+
+        import os
+        import time
+
+        future = time.time() + 3600
+        os.utime(status_path, (future, future))
+
+        monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
+        monkeypatch.setattr(v6_build, "PROJECT_ROOT", tmp_path)
+        monkeypatch.setattr(v6_build.ModuleBuildLock, "acquire", lambda self: True)
+        monkeypatch.setattr(v6_build.ModuleBuildLock, "release", lambda self: None)
+        monkeypatch.setattr(
+            v6_build, "_run_pre_build_gate", lambda *args, **kwargs: True, raising=False,
+        )
+        monkeypatch.setattr(orch_index, "generate_index", lambda *args, **kwargs: None)
+
+        review_calls: list[tuple] = []
+        audit_calls: list[tuple] = []
+        publish_calls: list[tuple] = []
+
+        def track_step_review(*args, **kwargs):
+            review_calls.append((args, kwargs))
+            return True, 9.0, "## Verdict: PASS\n"
+
+        def track_step_publish(*args, **kwargs):
+            publish_calls.append((args, kwargs))
+            return None
+
+        def track_step_audit(*args, **kwargs):
+            audit_calls.append((args, kwargs))
+            return None
+
+        monkeypatch.setattr(v6_build, "step_review", track_step_review)
+        monkeypatch.setattr(v6_build, "step_audit", track_step_audit)
+        monkeypatch.setattr(v6_build, "step_publish", track_step_publish)
+        monkeypatch.setattr(
+            sys,
+            "argv",
+            [
+                "v6_build.py", "b1", "1", "--step", "review", "--resume",
+                "--invalidate-phase", "review",
+                "--invalidate-phase", "stress",
+                "--invalidate-phase", "publish",
+                "--invalidate-phase", "audit",
+            ],
+        )
+
+        v6_build.main()
+
+        assert len(review_calls) == 1
+        assert len(audit_calls) == 1
+        assert len(publish_calls) == 1
+
+    def test_resume_publish_reruns_review_when_saved_review_is_below_threshold(self, tmp_path, monkeypatch):
+        curriculum_root = tmp_path / "curriculum" / "l2-uk-en"
+        _write_manifest(curriculum_root, ["single-module"])
+        _write_state(curriculum_root, "single-module", review_complete=True, all_complete=True)
+        _write_review(curriculum_root, "single-module", 8)
+
+        status_dir = curriculum_root / "b1" / "status"
+        status_dir.mkdir(parents=True, exist_ok=True)
+        status_path = status_dir / "single-module.json"
+        status_path.write_text(
+            json.dumps({
+                "overall": {"status": "pass"},
+                "gates": {
+                    "meta": {"status": "pass"},
+                    "lesson": {"status": "pass"},
+                    "activities": {"status": "pass"},
+                    "vocabulary": {"status": "pass"},
+                    "naturalness": {"status": "pass"},
+                    "research": {"status": "pass"},
+                    "review": {"status": "pass"},
+                },
+            }),
+            "utf-8",
+        )
+        (curriculum_root / "b1").mkdir(parents=True, exist_ok=True)
+        (curriculum_root / "b1" / "single-module.md").write_text("# Content\n", "utf-8")
+
+        import os
+        import time
+
+        future = time.time() + 3600
+        os.utime(status_path, (future, future))
+
+        monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
+        monkeypatch.setattr(v6_build, "PROJECT_ROOT", tmp_path)
+        monkeypatch.setattr(v6_build.ModuleBuildLock, "acquire", lambda self: True)
+        monkeypatch.setattr(v6_build.ModuleBuildLock, "release", lambda self: None)
+        monkeypatch.setattr(
+            v6_build, "_run_pre_build_gate", lambda *args, **kwargs: True, raising=False,
+        )
+        monkeypatch.setattr(orch_index, "generate_index", lambda *args, **kwargs: None)
+
+        review_calls: list[tuple] = []
+        audit_calls: list[tuple] = []
+        publish_calls: list[tuple] = []
+
+        def track_step_review(*args, **kwargs):
+            review_calls.append((args, kwargs))
+            return True, 9.5, "## Verdict: PASS\n"
+
+        def track_step_audit(*args, **kwargs):
+            audit_calls.append((args, kwargs))
+            return None
+
+        def track_step_publish(*args, **kwargs):
+            publish_calls.append((args, kwargs))
+            return None
+
+        monkeypatch.setattr(v6_build, "step_review", track_step_review)
+        monkeypatch.setattr(v6_build, "step_audit", track_step_audit)
+        monkeypatch.setattr(v6_build, "step_publish", track_step_publish)
+        monkeypatch.setattr(v6_build, "_apply_review_fixes", lambda *args, **kwargs: (False, 0))
+        monkeypatch.setattr(v6_build, "step_verify", lambda *args, **kwargs: True)
+        monkeypatch.setattr(
+            sys,
+            "argv",
+            ["v6_build.py", "b1", "1", "--step", "publish", "--resume"],
+        )
+
+        v6_build.main()
+
+        assert len(review_calls) == 1
+        assert len(audit_calls) == 1
+        assert len(publish_calls) == 1

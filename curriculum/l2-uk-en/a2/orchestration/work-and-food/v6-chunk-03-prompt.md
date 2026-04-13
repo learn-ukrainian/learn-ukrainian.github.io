@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-**«сіль»** (salt). Це жіночий рід, який закінчується на м'який приголосний. В орудному відмінку ми кажемо **«посипати сіллю»** (to sprinkle with salt). But be careful not to confuse cooking tools with physical locations. If you cook something on a hot surface, you need the Locative case. Ми правильно кажемо **«смажити на сковорідці»** (to fry on a pan), а не використовуємо орудну форму. When we describe what a dish is made of or what it is served with, we use the preposition **«з»** (with) plus the Instrumental case. Ми часто запитуємо один одного: **«З чим це?»** (With what is this?). Відповідь детально описує інгредієнти. Наприклад, ми щоранку п'ємо гарячий **«чай з медом»** (tea with honey). Ми із задоволенням їмо смачний **«борщ зі сметаною»** (borscht with sour cream). Notice that we use the specific form **«зі»** instead of «з» before a word that starts with two consonants, like «сметана». Це робить швидку вимову значно легшою. *(This makes fast pronunciation significantly easier.)* Українці також дуже люблять літні солодкі **«вареники з вишнями»** (dumplings with cherries). У цьому смачному випадку ми використовуємо орудний відмінок множини. Давайте уважно прочитаємо діалог двох хороших друзів. *(Let's carefully read a dialogue of two good friends.)* Іван та Олена готують святкову вечерю разом. *(Ivan and Olena are cooking a festive dinner together.)* Вони читають новий **рецепт** (recipe). *(They are reading a new recipe.)* > — **Іван:** Олено, я дуже хочу зробити салат. *(Olena, I really want to make a salad.)* > — **Олена:** Добре! Спочатку помий всі овочі теплою водою. *(Good! First, wash all the vegetables with warm water.)* > — **Іван:** Чим мені швидко різати цю цибулю? *(What should I quickly cut this onion with?)* > — **Олена:** Ріж цибулю цим великим гострим ножем. Потім додай свіжі помідори. *(Cut the onion with this big sharp knife. Then add fresh tomatoes.)* > — **Іван:** А що ми зараз робимо з варениками? *(And what are we doing with the dumplings now?)* > — **Олена:** Наші вареники вже повністю готові. *(Our dumplings are already completely ready.)* > — **Іван:** З чим ми зазвичай подаємо вареники? *(What do we usually serve the dumplings with?)* > — **Олена:** Ми завжди подаємо їх зі шкварками та смаженою цибулею. *(We always serve them with cracklings and fried onion.)* There are a few common vocabulary traps to avoid in the Ukrainian kitchen. Many language learners confuse the everyday words for oil and butter. В українській мові **«олія»** (oil) — це завжди рідкий продукт, наприклад, соняшникова або оливкова олія. А **«масло»** (butter) — це завжди твердий продукт з коров'ячого молока. Також пам'ятайте про популярне слово **«сир»** (cheese). В Україні це коротке слово означає і твердий сир, і м'який кисломолочний сир. Finally, remember to use authentic Ukrainian cooking verbs. Коли ми готуємо м'ясо на сковорідці, ми повинні **«смажити»** (to fry). Ніколи не використовуйте російське слово «жарити». Ми завжди смажимо картоплю або рибу на обід. *(We always fry potatoes or fish for lunch.)* <!-- INJECT_ACTIVITY: fill-in, Complete a recipe description for Varenyky with correct Instrumental forms for tools and ingredients -->
+кафе: «З чим ця страва?». Це допоможе вам дізнатися всі інгредієнти. > *We often see the preposition "з" and the Instrumental case in recipes. For example, in the morning we drink tea with honey. And for lunch we eat borscht with sour cream. We say "зі сметаною" because the word starts with two consonant sounds. The most popular Ukrainian dishes are meat with mushrooms and a fresh salad. In the salad, there are usually fresh vegetables. Always ask the waiter in a cafe: "What is this dish with?". This will help you find out all the ingredients.* Now let's listen to two friends, Іван and Олена, as they follow a traditional recipe together. They are making a fresh salad. The main ingredients are an **огірок** (cucumber) and a **помідор** (tomato). You will also hear them discuss what they should serve the finished food with. The verb for serving a dish is **подавати** (to serve). Зверніть увагу на їхню розмову. Іван та Олена готують за інструкцією. Олена читає рецепт: «поріжте», «додайте» та «змішайте». Це ввічлива форма «ви». Українці майже завжди використовують цю форму в кулінарних рецептах. > — **Іван:** Що нам потрібно робити спочатку? *(What do we need to do first?)* > — **Олена:** У рецепті написано: «Спочатку поріжте цибулю». *(The recipe says: "First, cut the onion.")* > — **Іван:** Чим мені різати цибулю? *(What should I cut the onion with?)* > — **Олена:** Ріж цибулю цим великим ножем, а потім смаж овочі на сковорідці. *(Cut the onion with this big knife, and then fry the vegetables in the pan.)* > — **Іван:** Добре. А коли посипати м'ясо сіллю? *(Good. And when should I sprinkle the meat with salt?)* > — **Олена:** Рецепт каже: «Додайте сіль зараз і добре змішайте все ложкою». *(The recipe says: "Add the salt now and mix everything well with a spoon.")* > — **Іван:** З чим ми будемо подавати наші вареники? *(What will we serve our varenyky with?)* > — **Олена:** Ми подаємо їх зі шкварками та сметаною. *(We serve them with pork cracklings and sour cream.)* :::tip **Vocabulary precision** — Never use Russian calques in the kitchen! The Russian word «творог» is incorrect; in Ukrainian, both hard cheese and cottage cheese are called «сир». You can clarify by saying «твердий сир» (hard cheese) or «кисломолочний сир» (cottage cheese). Also, the verb «жарити» is a Russianism; you must use «смажити» to mean "to fry". ::: Another crucial distinction in the Ukrainian kitchen is between different types of fats. In Ukrainian, the word **олія** (oil) refers strictly to liquid plant-based oils, like sunflower oil or olive oil. We use it for frying vegetables and dressing fresh salads. However, the word «масло» refers only to solid animal fat, specifically butter, which we put on bread or melt in porridge. Never confuse these two words when you describe a recipe, as it will completely change the dish! <!-- INJECT_ACTIVITY: fill-in, Complete a recipe description for Varenyky with correct Instrumental forms for tools (ножем) and ingredients (картоплею), 8 items -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -559,7 +559,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -578,18 +645,65 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] готувати (to cook, to prepare)
+- [ ] різати (to cut)
+- [ ] мішати (to stir, to mix)
+- [ ] посипати (to sprinkle)
+- [ ] подавати (to serve)
+- [ ] вареники (varenyky, dumplings)
+- [ ] картопля (potato)
+- [ ] помідор (tomato)
+- [ ] огірок (cucumber)
+- [ ] сіль (salt)
+- [ ] олія (oil)
+- [ ] виделка (fork)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Мій робочий день (My Workday) (~500 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

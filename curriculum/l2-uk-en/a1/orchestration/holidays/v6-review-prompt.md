@@ -135,117 +135,160 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Вступ: Що таке́ свя́то?
+## Діалоги (Dialogues)
 
-To truly understand a culture, you must understand how its people celebrate. The rhythm of the year is marked by special days that bring people together. In Ukrainian, a holiday is a **свято** (holiday). The plural form is **свя́та́** (holidays). Ukrainians love to gather with family and friends around large tables, share traditional food, and sing songs that have been passed down for generations. 
+Ukrainian holidays are a central part of family life and national identity. Knowing how to talk about celebrations is a natural way to connect with people. You will often hear questions about dates and specific traditions. 
 
-We group our celebrations into three main categories. First, we have **релігі́йні свята** (religious holidays) like Christmas and Easter, which are deeply spiritual and rich in ancient traditions. Second, we have **традиці́йні свята** (traditional holidays) which often connect to the changing seasons and nature. Finally, we have **держа́вні свята** (state holidays) which mark important historical days for the nation.
+В Україні є багато свят. Ми часто збираємо родину разом. Люди готують смачну їжу. Ми також любимо співати пісні.
+> *In Ukraine there are many holidays. We often gather the family together. People prepare tasty food. We also love to sing songs.*
 
-When a special day arrives, people want to express their joy. The verb for this action is **святкува́ти** (to celebrate), and to express good wishes we use **віта́ти** (to congratulate/greet). You will hear these words often. If you are not sure of the exact name of the occasion, you can always use the universal greeting. You simply say **Зі свя́том!** (Happy Holiday!). This short, polite phrase works for almost any festive occasion and instantly connects you to the Ukrainian soul.
+The most important winter celebration is **Різдво** (Christmas). During the festive season, families gather to share special meals and sing traditional songs. Notice how the speakers discuss the recent date change for this holiday.
 
-## Діало́ги: Гово́римо про свята
+> **Джон:** Коли в тебе Різдво? *(When do you have Christmas?)*
+> **Оксана:** Двадцять п'ятого грудня. А в тебе? *(On the twenty-fifth of December. And you?)*
+> **Джон:** У нас — теж! *(We do too!)*
+> **Оксана:** Раніше святкували сьомого січня, але тепер — двадцять п'ятого. *(Earlier we celebrated on January seventh, but now on the twenty-fifth.)*
+> **Джон:** Що ви робите на Різдво? *(What do you do on Christmas?)*
+> **Оксана:** Ми співаємо колядки і їмо кутю. *(We sing carols and eat kutia.)*
+> **Джон:** Як гарно! З Різдвом! *(How beautiful! Merry Christmas!)*
+> **Оксана:** З Різдвом Христовим! *(Merry Christmas!)*
 
-Let us look at how people talk about these special days in real life. Our first conversation takes place during the winter season. Two friends are discussing their plans for Christmas. In 2023, Ukraine made a major historical shift in its calendar. The country officially moved the date of Christmas to December 25th. This change aligns Ukraine with the majority of Europe and the rest of the Christian world. It was a conscious decision to break away from the Russian Orthodox calendar, which celebrates on January 7th. Now, Ukrainians celebrate in the month of **гру́день** (December).
+Let's break down the vocabulary. **Різдво** is the noun for Christmas, and the verb **святкувати** means to celebrate. A **колядка** is a traditional carol that children and adults sing. The word **кутя** refers to a special ritual dish eaten only during the winter holidays. When saying goodbye or raising a toast, Ukrainians use the phrase **З Різдвом!** (Merry Christmas!).
 
-> **Украї́нська роди́на:** Ко́ли в тебе́ Різдво́? *(When is your Christmas?)*
-> **Інозе́мний гість:** Два́дцять п'я́того гру́дня. А в тебе? *(On the twenty-fifth of December. And yours?)*
-> **Українська родина:** У нас теж! Рані́ше святкува́ли сьо́мого сі́чня, але́ тепе́р двадцять п'ятого. *(We also have it then! Earlier we celebrated on the seventh of January, but now on the twenty-fifth.)*
-> **Іноземний гість:** Що ви ро́бите на Різдво? *(What do you do for Christmas?)*
-> **Українська родина:** Ми співа́ємо коля́дки і їмо́ кутю́. *(We sing carols and eat kutia.)*
-> **Іноземний гість:** Як га́рно! З Різдво́м! *(How beautiful! Merry Christmas!)*
-> **Українська родина:** З Різдвом Христо́вим! *(Merry Christmas!)*
+* Я люблю святкувати Різдво. *(I love to celebrate Christmas.)*
+* Вони святкують удома. *(They celebrate at home.)*
+* Де ви святкуєте? *(Where do you celebrate?)*
 
-Our second conversation happens in the city center during the summer. The date is August 24th, and the streets are full of people. They are celebrating the most important political day of the year. Notice the atmosphere of national pride in their exchange.
+The most important civic date is **День Незалежності** (Independence Day). This summer holiday brings people to the streets for public events, concerts, and patriotic displays.
 
-> **Окса́на:** Двадцять четверте се́рпня! *(The twenty-fourth of August!)*
-> **Марко́:** День Незале́жності! *(Independence Day!)*
-> **Оксана:** Так, це головне́ держа́вне свято Украї́ни. *(Yes, it is the main state holiday of Ukraine.)*
+> **Марко:** Двадцять четверте серпня — День Незалежності! *(The twenty-fourth of August is Independence Day!)*
+> **Сара:** Так, це головне державне свято України. *(Yes, this is the main state holiday of Ukraine.)*
 > **Марко:** Що ви робите? *(What do you do?)*
-> **Оксана:** Ми ди́вимося пара́д і хо́димо на конце́рт. *(We watch the parade and go to the concert.)*
-> **Марко:** А вве́чері? *(And in the evening?)*
-> **Оксана:** Ввечері салю́т і святко́вий ве́чір з дру́зями. *(In the evening there are fireworks and a festive evening with friends.)*
+> **Сара:** Ми дивимося парад і ходимо на концерт. *(We watch the parade and go to a concert.)*
+> **Марко:** А ввечері? *(And in the evening?)*
+> **Сара:** Ввечері — концерт і святковий вечір з друзями. *(In the evening — a concert and a festive evening with friends.)*
 > **Марко:** З Днем Незалежності! *(Happy Independence Day!)*
-> **Оксана:** Сла́ва Украї́ні! *(Glory to Ukraine!)*
+> **Сара:** Слава Україні! *(Glory to Ukraine!)*
 
-<!-- INJECT_ACTIVITY: quiz-holiday-match -->
+This conversation introduces the core noun **свято** (holiday). The phrase **державне свято** means state holiday. During these events, a **парад** (parade) takes place, a **концерт** (concert) provides music, and people gather for festive public events in the evening. The greeting **З Днем Незалежності!** is standard for August 24. It is frequently paired with the national salute **Слава Україні!** (Glory to Ukraine!).
 
-## Украї́нські свята: Тради́ції та си́мволи
+* Це велике свято. *(This is a big holiday.)*
+* Яке сьогодні свято? *(What holiday is today?)*
+* Завтра державне свято. *(Tomorrow is a state holiday.)*
 
-The winter cycle revolves around **Різдво** (Christmas). As we saw in the dialogue, this takes place on December 25th. The celebration actually begins the evening before. December 24th is known as **Свята вече́ря** (Holy Supper). When the first star appears in the night sky, families sit down at the dining table. Tradition requires exactly **двана́дцять страв** (twelve dishes). This number represents the twelve apostles. All the food on the table must be vegan, meaning no meat or dairy. 
+## Українські свята (Ukrainian Holidays)
 
-The absolute most important and sacred dish is **кутя́** (kutia). This is a sweet, ritual porridge made from whole wheat berries, poppy seeds, honey, and walnuts. It is always the very first food eaten at the meal, and everyone must have at least one spoonful. People also eat traditional **борщ** (borscht), **варе́ники** (dumplings), **ри́ба** (fish), and drink **узва́р** (dried fruit compote). 
+A **свято** is a time for rest, family, and tradition. When you want to **вітати** (to greet) someone for a festive occasion but you do not know the exact phrase, you can always say **Зі святом!** (Happy Holiday!). It is a universal, polite phrase that works for almost any situation.
 
-:::note Calendar Alignment
-In 2023, Ukraine moved its official celebration of Christmas from January 7th to December 25th. This historical change aligns the country with Europe and the broader Christian world, moving away from the Russian Orthodox calendar.
+The winter cycle centers around **Різдво**. For many years, Ukrainians celebrated Christmas on both December 25 and January 7, depending on church calendar and family tradition. In 2017, December 25 became an official public holiday, and in 2023 major Ukrainian churches adopted the revised calendar for fixed feasts. This shift is part of Ukraine's broader effort to live by its own traditions and institutions.
+
+> **Іноземний гість:** Що ви готуєте на Святвечір? *(What are you preparing for Christmas Eve?)*
+> **Українська родина:** Ми готуємо дванадцять пісних страв. *(We are preparing twelve meatless dishes.)*
+> **Іноземний гість:** Які саме? *(Which ones exactly?)*
+> **Українська родина:** Кутю, борщ, вареники, рибу й узвар. *(Kutia, borshch, varenyky, fish, and uzvar.)*
+> **Іноземний гість:** Яка страва головна? *(Which dish is the main one?)*
+> **Українська родина:** Кутя — головна страва Святого вечора. *(Kutia is the main dish of Holy Supper.)*
+
+The most important meal happens on the evening of December 24, known as **Свята вечеря** (Holy Supper). By tradition, families wait for the first star to appear in the sky before sitting down to eat.
+
+На столі стоять дванадцять пісних страв: кутя, борщ, вареники, риба й узвар. Це традиційні страви Святого вечора, а кутя — головна страва.
+> *There are twelve meatless dishes on the table: kutia, borshch, varenyky, fish, and uzvar. These are traditional foods of Holy Supper, and kutia is the main dish.*
+
+There must be exactly twelve meatless dishes, representing the twelve apostles. **Кутя** is always the first thing people eat. It is a sweet wheat porridge mixed with honey, poppy seeds, and nuts. Afterward, groups of **колядники** (carolers) go from house to house. They sing a **колядка** to wish their neighbors health, peace, and prosperity.
+
+In the spring, the biggest religious event is **Великдень** (Easter). The exact date changes every year depending on the lunar calendar, but the rich traditions remain exactly the same.
+
+Великдень — це велике весняне свято. Ми йдемо в церкву святити кошик. Там є паска і красиві писанки. Люди кажуть: «Христос воскрес!». Ми відповідаємо: «Воістину воскрес!».
+> *Easter is a big spring holiday. We go to church to bless the basket. There is Easter bread and beautiful decorated eggs there. People say: "Christ is risen!". We answer: "Indeed He is risen!".*
+
+A common mistake for language learners is confusing the name of the holiday with the food. **Великдень** is the name of the holiday itself, while a **паска** (Easter bread) is the sweet, tall bread baked specifically for the occasion. You eat a **паска** on **Великдень**. In the morning, families go to church to **святити кошик** (bless the basket) full of food.
+
+:::note
+Another famous Easter tradition is making a **писанка** (decorated Easter egg). These are not just painted with a brush; they are carefully drawn using hot beeswax and natural dyes, featuring ancient geometric symbols.
 :::
 
-After dinner, the singing begins. People sing **колядки** (carols). Groups of singers called **коля́дники** (carolers) walk from house to house in their neighborhoods. They carry a large, illuminated star and sing songs to wish the hosts wealth, health, and a good harvest. Inside the home, instead of a plastic tree, you might see a **діду́х** (sheaf of wheat). This ancient symbol represents the ancestors and the agricultural harvest, and it predates the modern Christmas tree tradition.
+* Моя бабуся готує паску. *(My grandmother prepares Easter bread.)*
+* Вони малюють писанки удома. *(They draw decorated eggs at home.)*
+* Це красива українська традиція. *(This is a beautiful Ukrainian tradition.)*
 
-The spring cycle centers entirely on **Вели́кдень** (Easter). This is the absolute biggest religious celebration of the year in Ukraine. The exact date changes every spring according to the lunar calendar. During this time, Ukrainians create **писанки́** (decorated eggs). A **пи́санка** (decorated egg) is a raw egg covered in intricate, symbolic geometric patterns using hot beeswax and vibrant dyes. It is a highly respected, unique Ukrainian art form. 
+## Державні свята (National Holidays)
 
-:::caution Name vs. Food
-Do not confuse the holiday with the holiday food! The holiday itself is **Великдень** or **Па́сха** (Easter). However, a **па́ска** (Easter bread) is the sweet bread you eat on that day. You celebrate **Великдень**, but you eat a **паска**.
+On August 24, 1991, Ukraine officially declared its **незалежність** (independence) from the Soviet Union. Today, **День Незалежності** is the most important **державне свято**. People gather in city centers to celebrate their freedom, culture, and national identity.
+
+> **Тарас:** Ти йдеш на парад? *(Are you going to the parade?)*
+> **Іван:** Так, я маю великий прапор. *(Yes, I have a big flag.)*
+> **Тарас:** Тоді ми зустрічаємося там. *(Then we meet there.)*
+> **Іван:** Добре! Слава Україні! *(Good! Glory to Ukraine!)*
+
+У серпні ми святкуємо День Незалежності. На вулиці проходить великий парад. Ми бачимо сині і жовті прапори. Увечері люди дивляться яскравий салют. Усі гордо кажуть: «Слава Україні!».
+> *In August we celebrate Independence Day. A big parade takes place on the street. We see blue and yellow flags. In the evening people watch bright fireworks. Everyone proudly says: "Glory to Ukraine!".*
+
+A **прапор** is a flag, and the Ukrainian **прапор** features a blue band over a yellow band, representing the sky above wheat fields. During the celebrations, you will constantly hear people shouting **Слава Україні!**, to which the crowd enthusiastically replies **Героям слава!** (Glory to the heroes!).
+
+Another massive celebration is **Новий рік** (New Year) on January 1. It is the biggest secular event of the year, bringing families and friends together for midnight toasts.
+
+Першого січня — Новий рік. Удома стоїть висока зелена ялинка. Ми готуємо велику святкову вечерю. Діти дуже люблять нові подарунки.
+> *On the first of January is New Year. A tall green New Year tree stands at home. We prepare a big festive dinner. Children really love new gifts.*
+
+Notice the word **подарунок** (gift). It is a very important word for any celebration. The standard greeting as the clock strikes midnight is **З Новим роком!**.
+
+* Я хочу новий телефон. *(I want a new phone.)*
+* Це мій новий подарунок. *(This is my new gift.)*
+* Ми не спимо вночі. *(We do not sleep at night.)*
+
+There are several other important cultural dates to know. On the third Thursday of May, people observe **Вишиванковий день** (Vyshyvanka Day). Everyone wears a **вишиванка** (traditional embroidered shirt) to work, to school, or just walking in the park. It is a powerful symbol of Ukrainian identity and resistance.
+
+:::tip
+You will also hear about **День Конституції** (Constitution Day) on June 28, and **День захисників і захисниць** (Defenders' Day) on October 1. The October holiday honors all the men and women fighting for the country's freedom.
 :::
 
-On Sunday morning, families wake up very early and go to church. They bring a woven basket filled with bread, eggs, salt, and meat to perform the ritual of **святи́ти ко́шик** (blessing the basket).
-
-When people meet on Easter Sunday, they do not say standard greetings like "hello" or "good morning". Instead, they use a special, joyful ritual greeting:
-*   **Христо́с воскре́с!** (Christ is risen!)
-*   **Воі́стину воскрес!** (Indeed risen!)
-
-<!-- INJECT_ACTIVITY: quiz-holiday-clues -->
-
-## Державні свята: Громадя́нська іденти́чність
-
-State holidays reflect the modern history, struggles, and identity of the nation. The most significant of these is **День Незалежності** (Independence Day). On August 24, 1991, Ukraine officially declared its independence from the Soviet Union. Today, this is the ultimate **державне свято** (state holiday) for every Ukrainian citizen. 
-
-Cities completely transform on this day. People gather in the streets and central squares to celebrate freedom and sovereignty. You will often see a large military **парад** (parade) in the capital city of Kyiv. There are massive public **конце́рти** (concerts) featuring popular musicians. The streets, balconies, and cars are decorated with thousands of blue and yellow **прапори́** (flags). In the evening, the sky lights up with a **салют** (fireworks). To greet someone on this day, you simply say **З Днем Незалежності!** (Happy Independence Day!). You will also hear the patriotic exchange echoing everywhere: **Слава Україні!** (Glory to Ukraine!) and the proud response **Геро́ям слава!** (Glory to the heroes!).
-
-Beyond Independence Day, there are several other important dates to know. The absolute biggest secular celebration of the entire year is **Но́вий рік** (New Year) on January 1st. On New Year's Eve, families decorate a festive **яли́нка** (tree) and exchange **подару́нки** (gifts) at midnight. 
-
-In the spring, Ukrainians celebrate a unique cultural event called **День виши́ва́нки** (Vyshyvanka Day). This occurs annually on the third Thursday of May. It is a modern, living tradition rather than an official day off work. Everyone goes to school, the university, or the office wearing a **виши́ва́нка** (embroidered shirt). This beautiful traditional garment serves as a powerful visual symbol of Ukrainian identity, unity, and cultural resistance.
-
-Two other key dates mark the foundations of the modern state. On June 28th, the country observes **День Конститу́ції** (Constitution Day), honoring the adoption of the nation's fundamental law. Later in the year, on October 1st, the people honor their military defenders on **День захи́сникі́в і захи́сни́ць** (Defenders' Day). This solemn and important day pays respect to all the men and women who protect the nation's borders.
-
+<!-- INJECT_ACTIVITY: quiz-which-holiday -->
+<!-- INJECT_ACTIVITY: quiz-match-date -->
 <!-- INJECT_ACTIVITY: group-sort-traditions -->
 
 ## Підсумок — Summary
 
-Now that you know the major Ukrainian holidays, you need to know how to form the most common greetings. Ukrainian uses a very specific, consistent grammatical pattern for this. The formula relies on the preposition **з** (with) followed by the name of the holiday in the instrumental case. You literally wish someone well "with" the holiday.
+Whenever you want to **вітати** (to greet or congratulate) someone for a specific holiday, Ukrainian uses a very consistent, logical grammar pattern. You simply combine the preposition **з** (with) and the name of the holiday in the instrumental case.
 
-You already know how the instrumental case works from phrases you learned earlier, like **ка́ва з молоко́м** (coffee with milk). The spelling changes at the end of the words follow the exact same rules you learned for nouns and adjectives. Here is how the names of the holidays transform in everyday speech:
+You already know the instrumental case from describing things that go together, like **кава з молоком** (coffee with milk) or **борщ з м'ясом** (borscht with meat). When greeting someone, you are literally saying that you congratulate them *with* the holiday.
 
-*   **Новий рік** → **З Новим ро́ком!** (Happy New Year!)
-*   **Різдво** → **З Різдвом!** (Merry Christmas!)
-*   **Великдень** → **З Вели́коднем!** (Happy Easter!)
-*   **День наро́дження** → **З днем народження!** (Happy birthday!)
-*   **День Незалежності** → **З Днем Незалежності!** (Happy Independence Day!)
+* **З Різдвом!** — Merry Christmas!
+* **З Великоднем!** — Happy Easter!
+* **З Новим роком!** — Happy New Year!
+* **З Днем Незалежності!** — Happy Independence Day!
+* **З днем народження!** — Happy birthday!
 
-After the initial short greeting, people often add longer, specific wishes. The pattern for making a wish uses the verb **бажа́ти** (to wish) followed by the genitive case. You can memorize this very common, polite sequence: **Бажа́ю ща́стя, здоро́в'я, ми́ру** (I wish you happiness, health, peace). 
+Here is a short paragraph showing how to use these greetings in context:
 
-Let us review the quick calendar of major events to help you remember the timeline. In **грудень** (December) on the 25th, we celebrate **Різдво**. In **сі́чень** (January) on the 1st, we celebrate the secular **Новий рік**. In the **весна́** (spring), the date changes, but we always celebrate **Великдень**. Finally, in **се́рпень** (August) on the 24th, we celebrate **День Незалежності**.
+Сьогодні дуже гарне світле свято. Я тепло вітаю маму з Різдвом. Ми п'ємо чорний чай з тортом. Це справді такий чудовий день.
+> *Today is a very beautiful bright holiday. I warmly greet mom with Christmas. We drink black tea with cake. This is truly such a wonderful day.*
 
-:::tip Self-Check
-How do you say "Merry Christmas"?
-**З Різдвом!**
-
-What is the ritual response to "Христос воскрес!"?
-**Воістину воскрес!**
-
-When is Christmas in Ukraine?
-**Двадцять п'ятого грудня.**
-
-How do you say "Happy New Year"?
-**З Новим роком!**
-
-How do you greet someone on August 24th?
-**З Днем Незалежності!**
-:::
+* Ми вітаємо друга. *(We greet a friend.)*
+* Ми купуємо гарні подарунки. *(We buy beautiful gifts.)*
 
 <!-- INJECT_ACTIVITY: fill-in-greetings -->
+
+Let's review the calendar of major dates so you know exactly when to use these greetings throughout the year:
+
+* **січень 1** (January 1) — Новий рік (New Year)
+* **весна** (Spring) — Великдень (Easter)
+* **травень** (May) — Вишиванковий день (Vyshyvanka Day)
+* **червень 28** (June 28) — День Конституції (Constitution Day)
+* **серпень 24** (August 24) — День Незалежності (Independence Day)
+* **жовтень 1** (October 1) — День захисників і захисниць (Defenders' Day)
+* **грудень 25** (December 25) — Різдво (Christmas)
+
+:::caution
+Remember that Ukrainian holiday names normally capitalize the first word and any proper names: **Новий рік**, **Великдень**, **Різдво**. In the official holiday names **День Незалежності України**, **День Конституції України**, and **День Соборності України**, all words are capitalized.
+:::
+
+Self-check questions to test your memory before moving on:
+* How do you say "Merry Christmas" and "Happy New Year"? (З Різдвом! З Новим роком!)
+* How do you reply to "Слава Україні!"? (Героям слава!)
+* What is the difference between "Великдень" and "паска"? (Великдень is the holiday itself, while паска is the traditional sweet bread).
 </generated_module_content>
 
-**PIPELINE NOTE — Word count: 1536 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
+**PIPELINE NOTE — Word count: 1765 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -421,86 +464,173 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 88 words | Not found: 73 words
+Verified: 220 words | Not found: 6 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
-  ✗ Інозе — NOT IN VESUM
-  ✗ Воі — NOT IN VESUM
-  ✗ Геро — NOT IN VESUM
-  ✗ Гово — NOT IN VESUM
-  ✗ Громадя — NOT IN VESUM
-  ✗ Діало — NOT IN VESUM
-  ✗ Конститу — NOT IN VESUM
-  ✗ Незале — NOT IN VESUM
-  ✗ Окса — NOT IN VESUM
+  ✗ Іван — NOT IN VESUM
+  ✗ Джон — NOT IN VESUM
   ✗ Оксана — NOT IN VESUM
-  ✗ Сла — NOT IN VESUM
-  ✗ Тради — NOT IN VESUM
-  ✗ Украї — NOT IN VESUM
-  ✗ Христо — NOT IN VESUM
+  ✗ Сара — NOT IN VESUM
+  ✗ Тарас — NOT IN VESUM
   ✗ Христос — NOT IN VESUM
-  ✗ в'я — NOT IN VESUM
-  ✗ вве — NOT IN VESUM
-  ✗ вече — NOT IN VESUM
-  ✗ вим — NOT IN VESUM
-  ✗ вимося — NOT IN VESUM
-  ✗ виши — NOT IN VESUM
-  ✗ вне — NOT IN VESUM
-  ✗ вні — NOT IN VESUM
-  ✗ воскре — NOT IN VESUM
-  ✗ двана — NOT IN VESUM
-  ✗ держа — NOT IN VESUM
-  ✗ дження — NOT IN VESUM
-  ✗ димо — NOT IN VESUM
-  ✗ дки — NOT IN VESUM
-  ✗ дники — NOT IN VESUM
-  ✗ дру — NOT IN VESUM
-  ✗ дцять — NOT IN VESUM
-  ✗ жності — NOT IN VESUM
-  ✗ захи — NOT IN VESUM
-  ✗ здоро — NOT IN VESUM
-  ✗ зями — NOT IN VESUM
-  ✗ йні — NOT IN VESUM
-  ✗ кдень — NOT IN VESUM
-  ✗ коднем — NOT IN VESUM
-  ✗ коля — NOT IN VESUM
-  ✗ конце — NOT IN VESUM
-  ✗ мволи — NOT IN VESUM
-  ✗ мний — NOT IN VESUM
-  ✗ наро — NOT IN VESUM
-  ✗ ники — NOT IN VESUM
-  ✗ нка — NOT IN VESUM
-  ✗ нки — NOT IN VESUM
-  ✗ нська — NOT IN VESUM
-  ✗ нські — NOT IN VESUM
-  ✗ п'я — NOT IN VESUM
 
-All 88 other words are confirmed to exist in VESUM.
+All 220 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
-## Verification Tools (MCP)
+---
 
-You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
+## Verification Tools (Shell Commands)
 
-**Core Verification:**
-- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
-- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
+You have access to verification tools via shell commands. Use these to verify
+Ukrainian vocabulary, check grammar, and search textbook content **as you write**.
 
-**Content Quality:**
-- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+**IMPORTANT:** Run verification commands BEFORE finalizing any Ukrainian text.
+Batch multiple verifications together to minimize round-trips.
 
-**Reference:**
-- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp_rag_search_literary` — verify literary references against primary sources
-- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
+### 1. Batch-verify Ukrainian words exist in VESUM (preferred — one call for many words)
 
-**Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_words
+results = verify_words(['слово1', 'слово2', 'слово3'])
+for w, matches in results.items():
+    if matches:
+        print(f'{w}: FOUND — lemma={matches[0][\"lemma\"]}, pos={matches[0][\"pos\"]}')
+    else:
+        print(f'{w}: NOT FOUND — may not exist in standard Ukrainian')
+"
+```
+
+### 2. Verify a single Ukrainian word in VESUM (with full morphological tags)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_word
+results = verify_word('WORD_HERE')
+if results:
+    for m in results:
+        print(f'lemma={m[\"lemma\"]}, pos={m[\"pos\"]}, tags={m[\"tags\"]}')
+else:
+    print('NOT FOUND in VESUM')
+"
+```
+
+### 3. Get all inflected forms of a lemma (declension/conjugation)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_lemma
+forms = verify_lemma('LEMMA_HERE')
+for f in forms[:20]:
+    print(f'{f[\"word_form\"]:20s} {f[\"pos\"]:8s} {f[\"tags\"]}')
+print(f'... {len(forms)} forms total')
+"
+```
+
+### 4. Check CEFR level of a word (is it level-appropriate?)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import query_cefr_level
+results = query_cefr_level('WORD_HERE')
+for r in results:
+    print(f'{r[\"word\"]}: {r[\"level\"]} ({r[\"pos\"]})')
+if not results:
+    print('Not in CEFR database')
+"
+```
+
+### 5. Search textbook content (Ukrainian school textbooks, Grades 1-11)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_textbooks
+keywords = {'keyword1', 'keyword2'}
+results = search_textbooks(keywords, 5)
+for r in results:
+    title = r.get('section_title', r.get('title', ''))
+    grade = r.get('grade', '?')
+    text = r.get('text', '')[:200]
+    print(f'Grade {grade} | {title}')
+    print(f'  {text}')
+    print()
+"
+```
+
+### 6. Search style guide for calques/Russianisms (Антоненко-Давидович, 279 entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_style_guide
+results = search_style_guide('TOPIC_HERE', 3)
+for r in results:
+    print(f'--- {r.get(\"word\", \"\")} [{r.get(\"section\", \"\")}]')
+    print(r.get('text', '')[:300])
+    print()
+if not results:
+    print('No style guide entries found')
+"
+```
+
+### 7. Look up word definition in СУМ-11 (Ukrainian explanatory dictionary, 127K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_definitions
+results = search_definitions('WORD_HERE', 3)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+### 8. Search idioms (Фразеологічний словник, 25K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_idioms
+results = search_idioms('WORD_HERE', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"text\", r.get(\"definition\", \"\")))[:200]}')
+"
+```
+
+### 9. English-to-Ukrainian translation (Балла, 79K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import translate_en_uk
+results = translate_en_uk('ENGLISH_WORD', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+---
+
+**WHEN to use these tools:**
+
+1. **Before writing any Ukrainian text** — batch-verify all key vocabulary with
+   `verify_words` (tool 1). Any word that returns NOT FOUND must be replaced.
+2. **When you suspect a Russicism or calque** — search the style guide (tool 6)
+   and verify the correct Ukrainian form with `verify_word` (tool 2).
+3. **When writing for A1/A2** — check CEFR levels (tool 4) to ensure vocabulary
+   is level-appropriate.
+4. **When unsure about a case ending or conjugation** — use `verify_lemma` (tool 3)
+   to see the full paradigm.
+5. **When covering a grammar topic** — search textbooks (tool 5) to see how
+   Ukrainian school textbooks teach it.
+6. **When you need the precise Ukrainian meaning** — use СУМ-11 (tool 7).
+7. **When looking for natural Ukrainian expressions** — search idioms (tool 8).
+
+**Batching rule:** Collect all words you want to verify, then run ONE `verify_words`
+call instead of multiple `verify_word` calls. This is faster and uses fewer tokens.

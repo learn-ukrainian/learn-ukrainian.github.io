@@ -1,0 +1,88 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T03-42-4e55123e.json
+phase: write-chunk-03
+prompt_chars: 46378
+response_chars: 5743
+prompt_words: 6592
+response_words: 891
+sections:
+- name: header
+  start: 0
+  length: 452
+  fraction: 0.0097
+- name: skeleton
+  start: 452
+  length: 1624
+  fraction: 0.035
+- name: prior_summary
+  start: 2076
+  length: 3293
+  fraction: 0.071
+- name: plan
+  start: 5369
+  length: 13417
+  fraction: 0.2893
+- name: wiki
+  start: 10477
+  length: 27370
+  fraction: 0.5902
+- name: output_spec
+  start: 46156
+  length: 222
+  fraction: 0.0048
+large_sections:
+- wiki
+directives_total: 26
+directives_covered: 14
+directives_missed:
+- kind: checklist
+  text: Zero `> *English translation*` blockquotes after dialogues?
+  covered: false
+  coverage_note: 0/6 keywords (0%)
+- kind: checklist
+  text: At most ONE English `:::info` callout per major section?
+  covered: false
+  coverage_note: 2/8 keywords (25%)
+- kind: checklist
+  text: Metalanguage terms parenthetically translated on first use only (max 2 per
+    section)?
+  covered: false
+  coverage_note: 2/10 keywords (20%)
+- kind: must
+  text: '* **Must-know:** `склянка води/молока`, `ложка цукру/солі`, `кілограм борошна/м''яса`.'
+  covered: false
+  coverage_note: 1/11 keywords (9%)
+- kind: must
+  text: '**MANDATORY:** Українська кулінарна та професійна лексика має суттєві відмінності
+    від російської.'
+  covered: false
+  coverage_note: 2/9 keywords (22%)
+- kind: must
+  text: They were required at A1 but they cap immersion below 50% — at A2-late they
+    MUST be removed.
+  covered: false
+  coverage_note: 2/10 keywords (20%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: EVERY word in the checklist below MUST appear at least once with a bold Ukrainian
+    form and English translation in a natural sentence.
+  covered: false
+  coverage_note: 5/15 keywords (33%)
+- kind: inject_activity
+  text: match-up-career-situations
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-complex-types
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-complex-sentences
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: true-false-culture-complex
+  covered: false
+  coverage_note: marker missing

@@ -2,48 +2,54 @@ round: 2
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 10
-  evidence: Covers all outline points, dialogues, grammatical rules, and the decolonization
-    note.
+  score: 8
+  evidence: 'The four planned H2 sections are present and most outline points are
+    covered, but the plan’s newcomer-neighbor place-finding setup is underdelivered:
+    `аптека` never appears in the prose, even though t'
 - dimension: 2
   name: Linguistic accuracy
-  score: 9
-  evidence: Vocabulary and forms are correct, but `магазин` is incorrectly categorized
-    under the `-у` ending group.
+  score: 6
+  evidence: The sentence “For feminine nouns ending in **-а** or **-я**, replace the
+    final vowel with **-і**.” is factually unsafe; verified locatives such as `аптека
+    → аптеці` and `рука → руці` contradict that b
 - dimension: 3
   name: Pedagogical quality
-  score: 8
-  evidence: The explanation lists `* магази́н → у/в магази́ні` as an example of masculine
-    nouns that take the `-у` ending, despite the word having an `-і` ending. This
-    is highly confusing for learners trying to o
+  score: 7
+  evidence: The module follows a dialogue → explanation → practice flow, but it teaches
+    the overgeneralized feminine-locative rule as a rule, not as a limited pattern,
+    which risks learners producing wrong forms.
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: All required and recommended vocabulary from the plan is included naturally
-    in the text.
+  score: 9
+  evidence: 'Required vocabulary is contextualized naturally: `в школі`, `на роботі`,
+    `у банку`, `у/в магазині`, `на вулиці`, `у місті`; recommended items like `у лікарні`,
+    `у/в кафе`, `на площі`, `на вокзалі`, `н'
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: Exercises are logically placed and align perfectly with the plan's activity
-    hints.
+  score: 9
+  evidence: All four marker IDs from `activity_hints` are present and each follows
+    the relevant teaching section, so the exercise scaffolding is aligned even though
+    the generated YAML content is not shown here.
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: Warm, encouraging teacher tone without excessive filler. Excellent use
-    of dialogue framing.
+  score: 9
+  evidence: The tone stays teacherly and concrete, e.g. “Learn the preposition and
+    the noun together as a single grammatical chunk,” without drifting into gamified
+    filler.
 - dimension: 7
   name: Structural integrity
-  score: 10
-  evidence: Word count (1291) is comfortably above the 1200 target. H2 headers map
-    correctly to the plan outline.
+  score: 6
+  evidence: 'The pipeline note gives `Word count: 1133 words`, which is below the
+    1200 target. H2 structure and ordering are otherwise clean.'
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: The Decolonization Note regarding "в Україні" vs "на Україні" is precise,
-    historically accurate, and extremely well-phrased.
+  score: 9
+  evidence: “Never say **на Україні**” and the sovereignty framing are culturally
+    aligned and avoid Russian-centered framing.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: Dialogues are natural, multi-turn, formatted with named speakers, and
-    provide solid contextual examples of the grammar.
+  score: 7
+  evidence: Named speakers help, but the opener “Добрий день! Де Олена? … А Тарас?
+    … А діти?” reads like an unexplained interrogation rather than a natural social
+    exchange.
 findings: []

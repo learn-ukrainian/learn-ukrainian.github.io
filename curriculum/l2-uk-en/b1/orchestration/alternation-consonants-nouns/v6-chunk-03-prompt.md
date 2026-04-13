@@ -26,7 +26,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-Наприклад, іменник «книга» дає нам поширений прикметник «книжковий» через проміжну зменшувальну форму «книжка». А з базового іменника «молоко» ми дуже швидко і природно отримуємо слово «молочний». Ще один важливий практичний контекст для цього чергування — це утворення прикметників від географічних назв. Це робиться за допомогою дуже характерного суфікса «-ськ-». Коли корінь оригінальної географічної назви закінчується на задньоязиковий приголосний [г], додавання нового суфікса обов'язково викликає специфічну зміну. Наприклад, столиця Чехії «Прага» перетворюється на милозвучний прикметник «празький». Тут дзвінкий звук [г] абсолютно органічно зливається із суфіксом під час швидкого мовлення. У результаті такого тісного злиття утворюється зовсім нове м'яке буквосполучення «зьк». Місто «Рига» так само легко і природно утворює прикметник «ризький». А північна країна «Норвегія» дає нам усім відоме слово «норвезький», де ми знову бачимо це чергування. Цікаво порівняти цей фонетичний процес з іншими іменниками. Слова, які не мають задньоязикових приголосних у кінці свого кореня, ніколи не зазнають таких глибоких змін. Наприклад, наше місто «Київ» дуже просто утворює прикметник «київський» без жодних суттєвих змін самої основи. Описане чергування приголосних звуків надзвичайно глибоко вкорінене в багатій українській культурі. Його ігнорування відразу робить людське мовлення дуже штучним і неприродним. Без цих обов'язкових чергувань ваше мовлення стає схожим на іноземну **кальку** *(calque)*. Відоме старе українське прислів'я дуже мудро каже нам: «Терпи, козаче, отаманом будеш». У цьому яскравому прикладі іменник «козак» стоїть у єдино правильній формі кличного відмінка. Тут ми можемо дуже чітко почути обов'язкове чергування звука [к] на [ч]. Інший показовий приклад — це класичне шкільне повчання для молоді: «Вчися, юначе, знання — то велика сила». Тут слово «юнак» також повністю підкоряється цьому строгому фонетичному правилу. Воно абсолютно природно і гармонійно перетворюється на форму «юначе». Якщо ви спробуєте сказати слово «козаку» замість правильного літературного «козаче», це звучатиме як порушення давньої мелодики мови. Вивчення цих чергувань є необхідним для глибокого опанування української. Давайте зараз разом уявимо типову буденну ситуацію. Ми опиняємося у відомій і затишній львівській книгарні в центрі старого міста. Тут зацікавлений покупець привітно спілкується з досвідченим продавцем книжок. У цій короткій і простій розмові ви зможете легко почути розглянуті фонетичні правила. Ви одразу помітите, як органічно звучать правила першої палаталізації в сучасному житті. Зверніть увагу на те, як плавно змінюються знайомі слова. Це добре помітно під час ввічливого звертання до незнайомої людини та використання зменшувальних форм предметів. > — **Покупець:** Добрий день, друже! Чи є у вас нова книжка про історію України? *(Good day, friend! Do you have a new book about the history of Ukraine?)* > — **Книгар:** Добрий день, пане! Так, ця цікава книжка лежить на полиці праворуч. *(Good day, sir! Yes, this interesting book lies on the shelf to the right.)* > — **Покупець:** Дуже дякую вам, чоловіче! А де я можу знайти гарну сувенірну ручку? *(Thank you very much, man! And where can I find a nice souvenir pen?)* > — **Книгар:** Ваша ручка продається прямо тут на касі. Бажаєте одразу подивитися на неї? *(Your pen is sold right here at the register. Do you want to look at it right away?)* <!-- INJECT_ACTIVITY: quiz-palatalization-type --> <!-- INJECT_ACTIVITY: fill-in-vocative -->
+суфікс «-к-» до слова «нога», звук [г] перетворюється на [ж], і ми отримуємо нове слово «ніжка». Так само слово «рука» змінюється на «ручка», а «вухо» стає «вушко». Це ж правило працює при творенні прикметників. Від слова «молоко» ми отримуємо форму «молочний», де [к] стає [ч]. А від іменника «книга» походить прикметник «книжковий», де [г] змінюється на [ж]. Another environment where consonant alternation occurs during word formation is when creating adjectives from geographic names. Ukrainian often uses the suffix -ськ- to build adjectives meaning "related to" a certain city or country. When this suffix attaches to a name ending in [г], the consonant undergoes a distinct shift and merges with the suffix. This specific pattern creates the ending -зьк-. We will see other variations of this pattern when we study the **давальний відмінок** (dative case) and **місцевий відмінок** (locative case) in the next section. Якщо місто називається Прага, то прикметник від нього буде празький. Так само столиця Латвії Рига дає нам форму ризький, а від назви країни Норвегія ми утворюємо слово норвезький. Для порівняння, назви міст, які не закінчуються на задньоязиковий приголосний, зберігають стандартний суфікс без змін. Наприклад, місто Лондон утворює прикметник лондонський, а Київ стає київський. Understanding the vocative case is essential for natural Ukrainian communication. This direct form of address is deeply rooted in Ukrainian folk sayings and proverbs, which perfectly showcase the first palatalization. Відоме українське прислів'я каже: «Терпи, козаче, отаманом будеш». Тут слово «козак» стоїть у кличному відмінку з правильним чергуванням. Інший приклад — «Вчися, юначе, знання — то сила». Якщо іноземець скаже «юнаку» або «козаку» замість цих форм, це звучатиме неприродно і буде схоже на іноземну кальку. Правильне звертання показує вашу повагу до мови. > *A famous Ukrainian proverb says: "Endure, cossack, and you will become an ataman." Here, the word "козак" (cossack) is in the vocative case with the correct alternation. Another example is "Learn, youth, knowledge is power." If a foreigner says "юнаку" or "козаку" instead of these forms, it will sound unnatural and like a foreign calque. A correct form of address shows your respect for the language.* Let's see how these alternations sound in a natural conversation. In this dialogue at a Lviv bookstore, notice how the customer uses the vocative case and diminutive forms. > — **Покупець:** Добрий день, друже! *(Good afternoon, friend!)* > — **Книгар:** Вітаю! Чим можу допомогти? *(Greetings! How can I help?)* > — **Покупець:** Мені потрібна гарна книжка про історію України. *(I need a good book about the history of Ukraine.)* > — **Книгар:** Звісно. Подивіться на цю полицю. Ось чудова книга. *(Certainly. Look at this shelf. Here is an excellent book.)* > — **Покупець:** Дякую. А у вас є гарна ручка для подарунка? *(Thank you. And do you have a nice pen for a gift?)* > — **Книгар:** Так, маємо чудові дерев'яні ручки. *(Yes, we have excellent wooden pens.)* <!-- INJECT_ACTIVITY: quiz-palatalization-type, identify first vs second palatalization in pairs like козак-козаче vs рука-руці --> <!-- INJECT_ACTIVITY: fill-in-vocative, produce vocative forms for masculine nouns with [г/к/х] -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -637,7 +637,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -650,18 +717,67 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] чергування (alternation — systematic sound change between forms)
+- [ ] приголосний (consonant — sound made with obstruction)
+- [ ] палаталізація (palatalization — softening of a consonant)
+- [ ] кличний відмінок (vocative case — used for direct address)
+- [ ] давальний відмінок (dative case)
+- [ ] місцевий відмінок (locative case)
+- [ ] задньоязиковий (velar — consonant formed at the back of the mouth)
+- [ ] відміна (declension class — noun classification by ending pattern)
+- [ ] тверда група (hard group — nouns with hard stem-final consonant)
+- [ ] м'яка група (soft group — nouns with soft stem-final consonant)
+- [ ] мішана група (mixed group — nouns with шиплячий stem-final)
+- [ ] закінчення (ending — inflectional morpheme)
+- [ ] звертання (form of address — using кличний відмінок)
+- [ ] корінь (root — core morpheme of a word)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Друга палаталізація: [г/к/х] -> [з'/ц'/с'] (~750 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

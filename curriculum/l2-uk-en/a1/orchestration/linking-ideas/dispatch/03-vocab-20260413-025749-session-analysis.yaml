@@ -1,0 +1,56 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T00-57-88d79bdd.json
+phase: vocab
+prompt_chars: 12983
+response_chars: 1048
+prompt_words: 2196
+response_words: 121
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.0615
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.0177
+- name: plan
+  start: 1028
+  length: 11955
+  fraction: 0.9208
+large_sections:
+- plan
+directives_total: 7
+directives_covered: 0
+directives_missed:
+- kind: must
+  text: 'There is a strict punctuation rule you must always follow when writing in
+    Ukrainian: always place a comma before **бо** and **тому що**.'
+  covered: false
+  coverage_note: 1/15 keywords (7%)
+- kind: must
+  text: While the addition word **і** only takes a comma when it connects two completely
+    independent and full sentences, the comma before **а**, **але**, **бо**, and **тому
+    що** is mandatory.
+  covered: false
+  coverage_note: 2/16 keywords (12%)
+- kind: must
+  text: 'Remember the strict punctuation rules whenever you are typing or writing:
+    you must always place a comma before **а**, **але**, **бо**, and **тому що**.'
+  covered: false
+  coverage_note: 1/15 keywords (7%)
+- kind: inject_activity
+  text: fill-in-because
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-conjunction-choice
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-all-conjunctions
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: group-sort-conjunction-roles
+  covered: false
+  coverage_note: marker missing

@@ -1,0 +1,73 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T01-47-34714923.json
+phase: write
+prompt_chars: 61380
+response_chars: 16483
+prompt_words: 8676
+response_words: 2500
+sections:
+- name: preamble
+  start: 0
+  length: 6489
+  fraction: 0.1057
+- name: plan
+  start: 6489
+  length: 7028
+  fraction: 0.1145
+- name: wiki
+  start: 13004
+  length: 27338
+  fraction: 0.4454
+- name: rules
+  start: 40855
+  length: 8030
+  fraction: 0.1308
+- name: skeleton
+  start: 48885
+  length: 4831
+  fraction: 0.0787
+- name: output_spec
+  start: 53716
+  length: 7664
+  fraction: 0.1249
+large_sections:
+- wiki
+directives_total: 53
+directives_covered: 44
+directives_missed:
+- kind: checklist
+  text: Word count is 1500–2250 words
+  covered: false
+  coverage_note: 1/3 keywords (33%)
+- kind: checklist
+  text: No 'Let us...', 'In this section...', or formulaic openers
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: must
+  text: Your output must be original teaching prose at the correct CEFR level, not
+    a rephrased version of the article.
+  covered: false
+  coverage_note: 4/13 keywords (31%)
+- kind: must
+  text: '- **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).'
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-sounds-vs-letters
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-sounds-vs-letters
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-false-friends
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing

@@ -1,0 +1,85 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T05-54-82062687.json
+phase: write-chunk-02
+prompt_chars: 41409
+response_chars: 3949
+prompt_words: 5918
+response_words: 650
+sections:
+- name: header
+  start: 0
+  length: 490
+  fraction: 0.0118
+- name: skeleton
+  start: 490
+  length: 1486
+  fraction: 0.0359
+- name: prior_summary
+  start: 1976
+  length: 3271
+  fraction: 0.079
+- name: plan
+  start: 5247
+  length: 12127
+  fraction: 0.2929
+- name: wiki
+  start: 10836
+  length: 23765
+  fraction: 0.5739
+- name: output_spec
+  start: 41139
+  length: 270
+  fraction: 0.0065
+large_sections:
+- wiki
+directives_total: 15
+directives_covered: 3
+directives_missed:
+- kind: checklist
+  text: допомагати (to help)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: дякувати (to thank)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: дзвонити (to call, to phone)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: радити (to advise)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: заважати (to bother, to disturb)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: відповідати (to answer (someone))
+  covered: false
+  coverage_note: 1/3 keywords (33%)
+- kind: checklist
+  text: рік (year)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: роки (years (2-4))
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: років (years (5+))
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: inject_activity
+  text: match-up-podobatysia
+  covered: false
+  coverage_note: marker missing

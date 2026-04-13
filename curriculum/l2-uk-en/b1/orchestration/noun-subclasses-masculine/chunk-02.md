@@ -1,13 +1,25 @@
 ## Суфікси -ар, -яр: хто що робить (~720 слів)
 
-Українська мова дуже логічна, коли йдеться про утворення нових слів. Якщо ми хочемо назвати людину за її професією або діяльністю, ми часто використовуємо **суфікс** *(suffix)* **-ар** або **-яр**. Цей суфікс додається до **кореня** *(root)* слова, яке означає дію або об'єкт. Наприклад, від дієслова «пекти» утворюється слово **пекар** *(baker)*. Від дієслова «лікувати» ми маємо слово **лікар** *(doctor)*. А від іменника «школа» походить слово **школяр** *(student)*. Цей механізм словотворення працює як конструктор, де ви можете легко зрозуміти значення слова, якщо знаєте його корінь.
+The Ukrainian language has a very logical system for creating new words. When we want to name a person by their **професія** (profession) or habitual activity, we often take a base word and add a specific **суфікс** (suffix — word-formation morpheme after the root). The most productive suffixes for this purpose are *-ар* and *-яр*.
 
-Найбільша група слів із цими суфіксами — це назви традиційних професій та ремесел. У минулому люди часто отримували свої прізвища від назви свого ремесла. Наприклад, **гончар** *(potter)* — це майстер, який робить посуд із глини. Слово **бондар** *(cooper)* походить від давнього слова «бодна», що означає велику діжку. Бондар — це майстер, який робить дерев'яні діжки. Також ви часто зустрінете слова **токар** *(turner)* та **слюсар** *(locksmith)*, які позначають спеціалістів по роботі з металом або деревом. Усі ці слова є дуже давніми та питомо українськими.
+This pattern is everywhere in daily life. A person who bakes bread is a **пекар** (baker — person who bakes). Someone who treats illnesses is a **лікар** (doctor). And a child who attends classes is a **школяр** (student — person who attends school). 
 
-Суфікси **-ар** та **-яр** можуть приєднуватися до назв інструментів. **Кобзар** *(kobza player)* — це музикант, який грає на традиційному інструменті кобзі, і це дуже важливий образ для нашої культури. Також маємо слово **пісняр** *(singer)*, тобто людина, яка створює пісні. Слово **каменяр** *(stonecutter)* позначає робітника, який видобуває камінь, а також це назва відомого вірша Івана Франка. Цей суфікс використовується і для людей, які доглядають за тваринами. Наприклад, **козар** *(goatherd)* доглядає кіз, а **вівчар** *(shepherd)* випасає овець.
+Багато традиційних ремесел мають назви, утворені за цією давньою схемою. Гончар майстерно працює з глиною, токар обробляє дерево на верстаті, а слюсар ремонтує металеві механізми. Цікаво, що слово бондар походить від старовинного слова «бодна», яке означало дерев'яну діжку.
 
-В українській мові є й інші суфікси для позначення професій, наприклад, **-ник** у слові **працівник** *(worker)*, **-ець** у слові **борець** *(fighter)*, або **-тель** у слові **вчитель** *(teacher)*. Чому ж ми не кажемо «пекарець» або «лікарник»? Суфікси **-ар** та **-яр** є найпродуктивнішими саме в народній мові для позначення фізичної або ремісничої праці. Суфікс **-тель** частіше зустрічається в книжній лексиці, а **-ник** часто означає належність до певної професійної групи. Розуміння цих нюансів робить вашу мову багатшою.
+These suffixes can be added to actions, but they are also frequently attached to the names of instruments, objects, or even animals. For instance, a person who herds goats is a «козар», and someone who herds sheep is a «вівчар».
 
-Граматично всі ці іменники належать до **другої відміни** *(second declension)*. Але тут є важлива деталь: суфікс впливає на те, до якої групи належатиме слово — до **твердої групи** *(hard group)*, **м'якої групи** *(soft group)* чи **мішаної групи** *(mixed group)*. Це означає, що вони матимуть різні закінчення під час відмінювання. Ключ до розгадки їхньої граматичної поведінки лежить у правильному наголосі. Ми детально розберемо це правило в наступній частині нашого уроку.
+Український народний музикант, який грає на кобзі, — це кобзар. Людина, яка пише тексти та мелодії, — пісняр. А робітник, який важко працює в кар'єрі та видобуває камінь, — каменяр.
+
+> *A Ukrainian folk musician who plays the kobza is a kobza player. A person who writes lyrics and melodies is a songwriter. And a worker who works hard in a quarry and extracts stone is a stonecutter.*
+
+:::tip
+**Did you know?** — The word **кобзар** (kobza player — traditional Ukrainian musician) is deeply symbolic. It is the title of Taras Shevchenko's most famous poetry collection. Similarly, «Каменяр» is the celebrated epithet of the writer Ivan Franko, symbolizing his hard work for the nation's cultural freedom.
+:::
+
+You might wonder why we use *-ар* and *-яр* here, but different suffixes for other jobs, like the *-ник* in «працівник» (worker), the *-ець* in «борець» (fighter), or the *-тель* in «вчитель» (teacher). The *-ар* and *-яр* endings carry a specific historical flavor of physical crafts and manual artisanship. While newer or more abstract professions might use different patterns, traditional trades almost always rely on these older endings.
+
+Understanding these suffixes is vital for correct grammar. Every such word is a masculine **іменник** (noun). Depending on its exact spelling and stress, it belongs to a specific group within the second **відміна** (declension class), which determines its **відмінювання** (declension — changing a word through cases).
+
+Ці слова можуть належати до твердої, м'якої або мішаної групи. Саме від цієї групи залежить, які закінчення слово отримає в різних відмінках. Тому важливо навчитися розпізнавати основу слова ще до того, як ми почнемо його відмінювати.
 
 <!-- INJECT_ACTIVITY: match-up-professions -->

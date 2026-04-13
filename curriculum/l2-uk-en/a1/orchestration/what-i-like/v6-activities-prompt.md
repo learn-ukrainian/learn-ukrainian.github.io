@@ -1,4 +1,4 @@
-<!-- version: 1.1.0 | updated: 2026-03-31 -->
+<!-- version: 1.2.0 | updated: 2026-04-12 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -11,6 +11,35 @@ Generate an `activities/what-i-like.yaml` file for module **15: What I Like** (a
 
 ---
 
+## ⚠️ HARD COUNT TARGETS — READ TWICE
+
+These are the binding numerical contracts for THIS module. The audit will FAIL if you fall short.
+
+| Bucket | Min | Max | Notes |
+|---|---|---|---|
+| Total activities | 10 | 10+ | inline + workbook combined |
+| Inline (lesson tab) | 4 | 6 | one per `<!-- INJECT_ACTIVITY -->` marker, see below |
+| Workbook (Зошит tab) | 6 | 9 | extended practice |
+| Items per activity | 6 | — | each activity must have at least 6 items (unless its type cap is lower — see Activity Type Reference below) |
+
+**You MUST ship at least 4 inline activities AND at least 6 workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+
+**Type diversity is required.** The module (inline + workbook combined) MUST use at least **0** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level. (If `0` is `0`, the audit profile for this level does not enforce type diversity — but variety still produces a better lesson, so aim for 4+ types when the workbook allows it.)
+
+---
+
+## Allowed types for THIS level
+
+- **Inline (lesson) types:** image-to-letter, letter-grid, match-up, watch-and-repeat, quiz, true-false, fill-in, classify
+- **Inline priority (preferred):** image-to-letter, match-up, fill-in, quiz, watch-and-repeat
+- **Workbook types:** fill-in, match-up, group-sort, anagram, unjumble, quiz, true-false, classify, divide-words, count-syllables, pick-syllables, observe, phrase-table, odd-one-out
+- **Workbook priority (preferred):** fill-in, match-up, group-sort, anagram, unjumble
+- **FORBIDDEN at this level:** cloze, error-correction, mark-the-words, translate, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, highlight-morphemes, grammar-identify, select
+
+Pick from the allowed list. Lean heavily on the priority lists. Do not use any forbidden type — the build will reject it.
+
+---
+
 ## Inline vs Workbook Split
 
 Activities have two placement categories:
@@ -19,7 +48,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Rule of thumb:** inline = 2-3 quick checks after key teaching points. Workbook = 4-8 deeper practice exercises covering the full topic.
+**Rule of thumb:** inline = 4–6 quick checks after key teaching points. Workbook = 6–9 deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
 
 ---
 
@@ -27,10 +56,10 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: match-up-infinitives -->`
-- `<!-- INJECT_ACTIVITY: fill-in-hobbies -->`
-- `<!-- INJECT_ACTIVITY: quiz-like-choice -->`
-- `<!-- INJECT_ACTIVITY: fill-in-negatives -->`
+- `<!-- INJECT_ACTIVITY: match-infinitives -->`
+- `<!-- INJECT_ACTIVITY: fill-in-activities -->`
+- `<!-- INJECT_ACTIVITY: quiz-like-structure -->`
+- `<!-- INJECT_ACTIVITY: fill-in-negative -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -87,137 +116,114 @@ required:
 ## Module Content (the prose the learner reads before exercises)
 
 <module_content>
-## Діалоги (Dialogues)
+## Діалоги
 
-When you meet someone new, one of the first topics of conversation is usually hobbies and interests. Finding common ground is a great way to build a connection. In Ukrainian, expressing what you enjoy doing is quite straightforward, but it requires learning a specific sentence pattern. 
+Imagine it is your first day at a local language exchange event in Kyiv. You sit down with a cup of hot tea and are getting to know your new tandem partner, **Віктор** (Viktor). The best way to break the ice and find common ground is by sharing your hobbies and talking about the activities you enjoy doing in your free time. It is a fantastic opportunity to practice speaking in a relaxed and friendly environment.
 
-Let us look at a typical conversation. Anna is an English speaker attending her first language exchange meetup in Kyiv. She is paired with Viktor, a local tandem partner. They are having tea and getting to know each other. Pay attention to how they ask about and describe their favorite activities.
+Listen to how **Анна** (Anna) and Віктор meet and discuss their interests. They use the verb **любити** (to love/like) to express what they enjoy doing. Notice how they combine it with another action word.
 
-> **Віктор:** Привіт! **Що ти любиш робити?** *(Hi! What do you like to do?)*
-> **Анна:** Привіт! **Я люблю читати і слухати музику.** *(Hi! I like to read and listen to music.)*
-> **Віктор:** Цікаво! А **я люблю готувати.** *(Interesting! And I like to cook.)*
-> **Анна:** Правда? **Що ти готуєш?** *(Really? What do you cook?)*
+> **Віктор:** Привіт! Що ти любиш робити? *(Hi! What do you like to do?)*
+> **Анна:** Я люблю читати і слухати музику. *(I like to read and listen to music.)*
+> **Віктор:** А я люблю готувати. *(And I like to cook.)*
+> **Анна:** Правда? Що ти готуєш? *(Really? What do you cook?)*
 > **Віктор:** Я готую борщ. *(I cook borscht.)*
 
-In this first exchange, Viktor uses the phrase **Що ти любиш робити?** (What do you like to do?) to ask about Anna's general interests. Anna responds by pairing the verb **люблю** (I like/love) with the action words **читати** (to read) and **слухати** (to listen). 
+In this brief exchange, Анна and Віктор naturally use the structure **я люблю** followed by action words that end in the suffix **-ти**. This allows them to express their hobbies clearly and simply, directly stating the activities they are passionate about. Whenever you want to talk about your own favorite pastimes, you will rely on this exact same combination of words to get your point across to a native speaker.
 
-Later in their conversation, Viktor pulls out a novel and a DVD from his bag to ask Anna about her specific tastes regarding objects. Notice how the sentence structure completely changes when they switch from talking about *actions* to talking about *things*.
+Now, listen to a follow-up conversation between the two partners. Here, the focus shifts from liking specific activities to liking specific things and objects around them. They use a completely different structure, the phrase **подобатися** (to be pleasing — used as 'to like'), which acts as a ready-made chunk for expressing preferences. Pay close attention to how they use this new phrase to talk about items like a book or a movie.
 
-> **Віктор:** Дивись. **Тобі подобається ця книга?** *(Look. Do you like this book?)*
-> **Анна:** Так, **мені подобається.** *(Yes, I like it.)*
+> **Віктор:** Тобі подобається ця книга? *(Do you like this book?)*
+> **Анна:** Так, мені подобається. *(Yes, I like it.)*
 > **Віктор:** А цей фільм? *(And this film?)*
-> **Анна:** Ні, **мені не подобається цей фільм. Мені подобається музика.** *(No, I don't like this film. I like music.)*
+> **Анна:** Ні, мені не подобається. *(No, I don't like it.)*
+> **Віктор:** Мені подобається музика. *(I like music.)*
 
-If you look closely at the two dialogues, you will see a clear division in how preferences are expressed. When Anna and Viktor talked about *doing* things—the actions of reading or cooking—they used the word **люблю**. However, when they shifted the topic to *things*—the physical book, the film, and the music—they used the phrase **подобається**. 
+## Я люблю...
 
-This transition from verbs to nouns requires two different grammatical approaches in Ukrainian. We will break down both of these essential patterns so you can start sharing your own interests confidently.
-
-## Я люблю... (I Like...)
-
-When you want to talk about your active hobbies, passions, and the things you physically enjoy doing, the most direct way is to use the verb **любити** (to love/to like). The formula for building these sentences is very similar to English. 
-
-You start with the subject **Я** (I), follow it with the conjugated verb **люблю** (like/love), and finish with the action you enjoy. The action word must be in its basic, unaltered dictionary form, which we call the infinitive.
+To express what activities you enjoy doing in your free time, Ukrainian uses a very direct and intuitive structure: the verb **любити** followed immediately by another action. When you want to talk about a hobby or a favorite pastime, you start with the phrase **я люблю** (I love/like) and then add the specific activity. This structure is strictly used for actions, not for physical objects or abstract concepts. For example, to say that you enjoy getting lost in a good story, you would say:
 
 *   **Я люблю читати.** (I like to read.)
-*   **Я люблю малювати.** (I like to draw.)
-*   **Я люблю співати.** (I like to sing.)
 
-To use this structure, you need to be able to recognize a Ukrainian infinitive. The infinitive is the base form of a verb before it is changed to match a person or a tense. In English, we indicate the infinitive by putting the word "to" in front of the verb (to read, to walk). In Ukrainian, the infinitive is indicated by a specific suffix at the very end of the word. 
-
-The dictionary form of a Ukrainian verb always ends in the suffix **-ти**. When you look up a new action word, this is the form you will find. 
-
-*   **читати** (to read)
-*   **гуляти** (to walk)
-*   **слухати** (to listen)
-
-The most important rule to remember for this pattern is that the ending **-ти** never changes when it follows **Я люблю**. It functions as a single, locked unit. 
-
-Let us expand your vocabulary with some high-frequency verbs for free time. You can plug any of these directly into the formula. 
-
-*   **дивитися** (to watch)
-*   **грати** (to play)
-*   **подорожувати** (to travel)
-*   **готувати** (to cook)
-
-:::tip
-When you talk about playing games or instruments, Ukrainian uses specific prepositions that you must memorize as fixed phrases. If you are playing a sport or a game, use the preposition **у** (in). If you are playing a musical instrument, use the preposition **на** (on).
-*   **Я люблю грати у футбол.** (I like to play football.)
-*   **Я люблю грати на гітарі.** (I like to play the guitar.)
-:::
-
-<!-- INJECT_ACTIVITY: match-up-infinitives -->
-
-<!-- INJECT_ACTIVITY: fill-in-hobbies -->
-
-Of course, you will not enjoy every activity. To express a negative preference, the rule is incredibly simple. To say "I don't like", we simply place the negative particle **не** (not) directly before the verb. 
-
-In Ukrainian, **не** is always written as a completely separate word. It does not attach to the verb, and it does not change the spelling of the words around it. 
+To say that you enjoy taking a stroll outside, you use the same pattern:
 
 *   **Я люблю гуляти.** (I like to walk.)
-*   **Я не люблю гуляти.** (I do not like to walk.)
-*   **Я не люблю готувати.** (I do not like to cook.)
 
-## Мені подобається... (I Like...)
+And if spending time in the kitchen is your passion, you state:
 
-Now that you know how to talk about actions, we need to look at the second structure. When you want to say that you like a specific *thing*—a noun, an object, a place, or a piece of art—you will use the construction **Мені подобається** (I like). 
+*   **Я люблю готувати.** (I like to cook.)
 
-This phrase literally translates to "To me it is pleasing." At this stage in your learning, you should treat **Мені подобається** as a fixed, memorized chunk of language. Do not worry about analyzing why the word for "I" changes to **Мені**. Just memorize the phrase as a single unit and place the object you like directly after it.
+The grammatical concept that makes this structure work so smoothly is the **інфінітив** (infinitive) form. The infinitive is simply the basic, dictionary form of a verb. It is the raw, unconjugated version of an action before it has been altered to match a specific person or a specific point in time. In Ukrainian, you can easily spot an infinitive because it always ends in the distinct suffix **-ти**. This fixed **-ти** form is exactly what immediately follows **я люблю**. You do not need to worry about conjugating the second verb at all; it stays in its pure, dictionary state, making it very easy to build these sentences.
 
-*   **Мені подобається книга.** (I like the book.)
-*   **Мені подобається музика.** (I like the music.)
+You can expand your vocabulary with some of the most common infinitive verbs used for daily hobbies and interests. You can plug any of these directly into the **я люблю** structure to talk about yourself. Notice that while they all share the exact same **-ти** ending, the pronunciation and the placement of the stress vary significantly across these verbs and must be memorized individually as you learn them:
+
+*   **слухати** (to listen) — **Я люблю слухати.** (I like to listen.)
+*   **дивитися** (to watch) — **Я люблю дивитися.** (I like to watch.)
+*   **грати** (to play) — **Я люблю грати.** (I like to play.)
+*   **малювати** (to draw) — **Я люблю малювати.** (I like to draw.)
+*   **подорожувати** (to travel) — **Я люблю подорожувати.** (I like to travel.)
+*   **співати** (to sing) — **Я люблю співати.** (I like to sing.)
+
+By mastering these basic verbs, you will be able to engage in a wide variety of conversations about your personal life.
+
+<!-- INJECT_ACTIVITY: match-infinitives -->
+<!-- INJECT_ACTIVITY: fill-in-activities -->
+
+## Мені подобається...
+
+While you now know exactly how to talk about the activities you love doing, you also need a reliable way to express that you simply like a specific thing, object, or place. For this, Ukrainian introduces a second, highly common way to say 'I like': the phrase **мені подобається**. It is crucial to contrast its usage directly with **я люблю** to avoid confusion. You use **я люблю** plus an infinitive action to express that you enjoy *doing* something. However, you must use **мені подобається** plus a noun to express that a static thing, physical object, or geographic location appeals to you.
+
+At this early stage in your learning journey, you should treat **мені подобається** as a fixed, memorized chunk of language. The grammatical mechanics behind it actually involve the dative case, which literally translates to 'to me it is pleasing', but we are not analyzing the underlying dative grammar yet. You just need to know that this chunk is the perfect, ready-to-use tool for expressing a general preference for a noun. Here are a few concrete examples showing how naturally it pairs with everyday things:
+
+*   **Мені подобається музика.** (I like music.)
+*   **Мені подобається ця книга.** (I like this book.)
 *   **Мені подобається Київ.** (I like Kyiv.)
 
-You might be wondering how to choose between the two structures. The distinction is pedagogical and helps you sound much more natural. The verb **любити** is reserved for active hobbies, deep passions, and things you truly "love." It carries a strong emotional weight. 
+:::tip
+Always remember the golden rule: actions take **люблю**, while objects and things take **подобається**. Keeping these two categories separate in your mind will immediately make your Ukrainian sound much more natural.
+:::
 
-*   **Я люблю читати.** (I love to read. This is my passion.)
+Expressing a dislike is just as straightforward, and the rule for forming the negative is identical for both of the structures we have covered today. You simply place the small negative word **не** directly before the verb you want to negate. When you want to state that you do not enjoy a particular action, you place it immediately before the main verb:
 
-The phrase **подобатися**, on the other hand, is used for general liking, everyday objects, and first impressions. It is a lighter, more objective evaluation. 
+*   **Я не люблю готувати.** (I do not like to cook.)
 
-*   **Мені подобається цей фільм.** (I like this film. It is a good movie.)
+When you want to state that a specific thing does not appeal to you, you place it directly before the chunk:
 
-To invite someone else to share their preferences, you need to know how to ask questions. Both structures can be easily turned into questions by changing your intonation and using the correct pronoun for "you."
+*   **Мені не подобається цей фільм.** (I do not like this film.)
+
+To turn these statements into questions and ask about someone else's preferences, you must adjust the phrases slightly. To ask a tandem partner about an activity, you use:
 
 *   **Ти любиш читати?** (Do you like to read?)
-*   **Тобі подобається цей фільм?** (Do you like this film?)
 
-If the answer is no, you apply the negative particle just as we did before. Place **не** directly before the verb **подобається**. Note that the word order in the question, such as **Тобі подобається** or **Подобається тобі**, can vary freely in conversational Ukrainian, but the core chunk remains intact.
+To ask them about a thing, you use the chunk:
 
-*   **Мені не подобається.** (I do not like it.)
-*   **Мені не подобається ця музика.** (I do not like this music.)
+*   **Тобі подобається?** (Do you like it?)
 
-<!-- INJECT_ACTIVITY: quiz-like-choice -->
+Briefly note that the verb **любити** changes form depending on the person speaking, shifting from **я люблю** to **ти любиш**. Rest assured, the full conjugation rules for these verbs will be covered deeply in module 17.
 
-<!-- INJECT_ACTIVITY: fill-in-negatives -->
-
-:::caution
-English speakers frequently make a critical mistake by trying to translate "I like" directly word-for-word when talking about objects. They will say **Я подобаюся футбол**. This is incorrect because it literally means "I am pleasing to football." 
-
-Always remember that in Ukrainian, the object (the football) is the thing doing the pleasing. You must use the fixed chunk: **Мені подобається футбол** (Football is pleasing to me).
-:::
+<!-- INJECT_ACTIVITY: quiz-like-structure -->
+<!-- INJECT_ACTIVITY: fill-in-negative -->
 
 ## Підсумок — Summary
 
-You now have the tools to discuss your hobbies and interests confidently. We have covered two distinct ways to say "I like," each serving a specific grammatical purpose. First, when you are talking about activities and actions, use the formula **Я люблю** followed by a verb in the infinitive. Remember that the infinitive is the dictionary form of the verb and always ends in the suffix **-ти**. 
+A quick recap of the core distinction taught in this module will cement the absolute foundation of expressing your personal preferences in Ukrainian. You now have two distinct grammatical tools at your disposal. You must use the structure **я люблю** followed by an infinitive verb ending in **-ти** specifically for activities and actions that you actively enjoy doing. In sharp contrast, you must use the fixed chunk **мені подобається** followed directly by a noun for static things, objects, and places that appeal to you. This separation between liking an action and liking an object is a fundamental part of thinking in Ukrainian, rather than simply translating directly from English.
 
+We also summarized the universal negation rule for these statements. When you want to express a dislike or tell someone that something does not appeal to you, you must remember to simply place the small word **не** directly before the verb. This straightforward rule allows you to quickly create the negative phrases **не люблю** and **не подобається** without needing to change any other part of the sentence structure.
+
+A quick self-check ensures you can actively use these patterns in a real, unscripted conversation. First, think about your own hobbies and name three things you like doing using the **я люблю** structure. For example, you might say:
+
+*   **Я люблю читати.** (I like to read.)
 *   **Я люблю співати.** (I like to sing.)
+*   **Я люблю подорожувати.** (I like to travel.)
 
-Second, when you are talking about things, objects, or places, use the fixed phrase **Мені подобається** followed by a noun. Treat this phrase as a single memorized chunk.
+Next, look around your immediate environment and name two things that you like using the **мені подобається** chunk. For example, you might point out:
 
-*   **Мені подобається музика.** (I like the music.)
+*   **Мені подобається ця музика.** (I like this music.)
+*   **Мені подобається цей фільм.** (I like this film.)
 
-To express that you do not like something, the negative particle **не** always comes as a separate word directly before the verb. This works for both structures.
+Finally, name one thing or activity that you do not like by applying the negative rule to either structure:
 
-*   **Я не люблю готувати.** (I do not like to cook.)
-*   **Мені не подобається фільм.** (I do not like the film.)
-
-Before moving on to the next module, take a moment to test your understanding with this self-check checklist. Can you answer these prompts confidently?
-
-*   Can you name three hobbies using the correct verb structure? (**Я люблю читати, малювати, гуляти.**)
-*   Can you name two things or objects that you like? (**Мені подобається музика, книга.**)
-*   Do you know the defining suffix of a Ukrainian infinitive verb? (**-ти**).
-*   Can you tell a friend that you don't like a specific object? (**Мені не подобається...**).
-*   Do you know which preposition to use when talking about playing the guitar (**на**) versus playing football (**у**)?
-
+*   **Я не люблю малювати.** (I do not like to draw.)
+*   **Мені не подобається ця книга.** (I do not like this book.)
 </module_content>
 
 ---
@@ -231,48 +237,68 @@ version: "1.0"
 module: what-i-like
 level: a1
 
+# NOTE — these are SHAPE examples. The real targets are at the top of this prompt
+# (10 total / 4–6 inline / 6–9 workbook,
+# 6+ items per activity). The shapes below are TRUNCATED for readability;
+# YOUR output MUST hit those minimums.
+
 inline:
   - id: marker-id-here        # MUST match an <!-- INJECT_ACTIVITY: ... --> marker
     type: quiz                 # activity type
     instruction: "Оберіть правильний варіант"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - question: "_____ стіл"
-        options: ["мій", "моя", "моє"]
+        options: ["мій", "моя", "моє", "мої"]
         correct: 0             # 0-based index
+      - question: "Це ____ книга."
+        options: ["мій", "моя", "моє", "мої"]
+        correct: 1
+      # ... add at least 6 items total — never stop at 1-2
 
   - id: another-marker-id
     type: fill-in
     instruction: "Вставте правильне слово"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - sentence: "Це ____ кімната."
         answer: "моя"
         options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ вікно."
+        answer: "моє"
+        options: ["мій", "моя", "моє"]
+      # ... ≥ 6 items total
 
 workbook:
-  - type: match-up
+  - id: match-up-vocab
+    type: match-up
     instruction: "З'єднайте пари"
-    pairs:
+    pairs:                     # ← real output: ≥ 6 pairs
       - left: "стіл"
         right: "він"
       - left: "книга"
         right: "вона"
       - left: "вікно"
         right: "воно"
+      # ... ≥ 6 pairs total
 
-  - type: group-sort
+  - id: group-sort-gender
+    type: group-sort
     instruction: "Розподіліть слова за категоріями"
     groups:
-      - label: "Category A"
-        items: ["word1", "word2"]
-      - label: "Category B"
-        items: ["word3", "word4"]
+      - label: "Чоловічий рід"
+        items: ["стіл", "олівець", "будинок"]   # ≥ 3 items per group
+      - label: "Жіночий рід"
+        items: ["книга", "ручка", "школа"]
+      - label: "Середній рід"
+        items: ["вікно", "море", "молоко"]
 
-  - type: true-false
+  - id: true-false-grammar
+    type: true-false
     instruction: "Правда чи ні?"
-    items:
-      - statement: "Statement here"
-        correct: true
-        explanation: "Why it's true"
+    items:                     # ← real output: ≥ 6 items
+      - statement: "«Книга» — це чоловічий рід."
+        correct: false
+        explanation: "Книга закінчується на -а, отже жіночий рід."
+      # ... ≥ 6 items total
 
   - type: error-correction
     instruction: "Виправте помилку"
@@ -343,7 +369,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -419,10 +445,15 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 ## Quality Rules
 
-**ITEM COUNT MINIMUMS (non-negotiable):**
-- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
-- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
-- If you can't think of enough items, add more examples from the module's vocabulary and content.
+**ACTIVITY COUNT MINIMUMS (non-negotiable, audit-enforced):**
+- **Total: 10 activities.** Inline: 4–6. Workbook: 6–9. The audit gate FAILS the module if you ship fewer.
+- **Type diversity: workbook MUST cover ≥5 distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
+- **Match the inline markers exactly.** Every `<!-- INJECT_ACTIVITY: id -->` marker in the prose needs a matching inline activity with that exact id. Skipping markers means the lesson tab is broken.
+
+**ITEM COUNT MINIMUMS (non-negotiable, per-activity):**
+- **Default minimum: 6 items per activity.** Quiz, fill-in, match-up, true-false, anagram, error-correction, translate, cloze, mark-the-words, divide-words, count-syllables, odd-one-out, group-sort categories: all ≥ 6.
+- **Lower minimums for specific types only:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items, essay-response/critical-analysis = 1 prompt.
+- If you can't think of enough items, add more examples from the module's vocabulary and content. NEVER ship a 1-item or 2-item activity unless its type cap explicitly allows it.
 - **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
 - **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
@@ -529,6 +560,27 @@ IMPORTANT: After using tools, output your COMPLETE module content as plain text.
 1. Run `verify_words` on all Ukrainian words in your exercises — every word must exist in VESUM
 2. Run `query_cefr_level` on any word you're unsure about — it must be a1-appropriate
 3. For fill-in answers and distractors, verify the exact form (case, number, gender) with `verify_lemma`
+
+---
+
+## ⚠️ MANDATORY FINAL CHECKLIST — verify before emitting YAML
+
+Walk through this checklist explicitly before you start emitting. If ANY box is unchecked, fix it FIRST.
+
+- [ ] My output has **at least 4** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
+- [ ] My output has **at least 6** workbook activities.
+- [ ] **Total ≥ 10.**
+- [ ] **Every** activity has **at least 6** items, pairs, or statements (except types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3, essay-response=1).
+- [ ] The module (inline + workbook combined) uses **at least 0 distinct activity types** (or 4+ when 0 = 0 and the workbook size allows it). I am NOT shipping a wall of quizzes.
+- [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
+- [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
+- [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+- [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+- [ ] My inline count is between 4 and 6. I did NOT create more injection markers than 6.
+- [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
+- [ ] At B1+, all instructions are in Ukrainian (no English fallback).
+
+If you cannot tick all of these, REGENERATE the activities BEFORE outputting. Shipping under-spec means the build rejects you and the heal loop has to redo your work — wasting compute.
 
 ---
 

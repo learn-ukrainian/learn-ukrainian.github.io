@@ -18,7 +18,7 @@ module: a1-055
 level: A1
 sequence: 55
 slug: a1-finale
-version: '1.2'
+version: '1.3'
 title: A1 Finale
 subtitle: One full day in a Ukrainian city — everything you've learned
 focus: review
@@ -30,6 +30,19 @@ objectives:
 - Navigate real situations: morning routine, transport, cafe, shopping, socializing
 - Use all three tenses naturally in context
 - Demonstrate readiness for A2 through integrated communication
+dialogue_situations:
+- setting: Last day of A1 course — classmates reflect on what they learned and say
+    goodbye, exchanging contact info for staying in touch
+  speakers:
+  - Студент 1
+  - Студент 2
+  motivation: 'Farewell + reflection: Я вивчив/вивчила стільки! До зустрічі на А2!'
+- setting: A learner tells their Ukrainian friend about their plans after finishing
+    the A1 course — what they want to do in Ukraine next
+  speakers:
+  - Учень
+  - Українська подруга
+  motivation: 'Future tense + celebration: Я буду подорожувати! Я хочу побачити Карпати!'
 content_outline:
 - section: Ранок (Morning)
   words: 300
@@ -121,7 +134,7 @@ activity_hints:
   - Ввечері ми {ходили|ходимо|будемо ходити} в кіно.
   - Зараз Олена {замовляє|замовляла|замовить} борщ і салат.
   - Учора була гарна погода, і ми {гуляли|гуляємо|будемо гуляти} в парку.
-  - Я вже {готовий|початок|сувенір} до рівня А2! Вітаю!
+  - Я вже {готовий|готова|впевнений} до рівня А2! Вітаю!
 - type: match-up
   focus: Match the situation to the correct A1 survival phrase.
   items:

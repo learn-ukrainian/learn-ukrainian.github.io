@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-замість цього слово **відносини** *(formal/official relations)*. Запам'ятайте одне суворе правило: «відносини» бувають лише між незалежними країнами, великими організаціями або в математиці. Ми можемо впевнено говорити про «сучасні міжнародні відносини» чи «ринкові відносини», але ніколи не про дружні чи любовні. Третє важливе концептуальне слово — це **ставлення** *(attitude/disposition)*. Воно яскраво показує, як саме одна конкретна людина реагує на іншу, що вона відчуває чи думає про неї. Наприклад, ви можете сказати: «У нашого керівника дуже справедливе ставлення до нових працівників». Зверніть особливу увагу, що це слово завжди вимагає обов'язкового використання прийменника «до». І нарешті, існує неймовірно красиве слово **взаємини** *(reciprocal relations/mutual connections)*. Воно завжди логічно підкреслює абсолютну взаємність і глибокий рівноправний зв'язок між людьми. Ми часто з гордістю говоримо про «справжні дружні взаємини» або «довірливі взаємини в нашому колективі». Розуміння цих тонкощів робить вашу мову по-справжньому багатою та природною. Коли ми свідомо будуємо наші щоденні стосунки, ми неминуче спираємося на загальні людські цінності. Найміцніший духовний зв'язок між неспорідненими людьми — це справжня і безкорислива **дружба** *(friendship)*. Вона завжди безперервно вимагає часу, уваги та спільних емоційних зусиль. Абсолютною основою будь-яких психологічно здорових стосунків є щира **довіра** *(trust)*. Якщо ви повністю і беззаперечно вірите людині, ви можете сміливо сказати їй: «Я тобі довіряю». Від цього гарного базового іменника утворюється дієслово **довіряти** *(to trust)*, яке завжди в українській мові керує давальним відмінком. Ще однією надзвичайно важливою складовою є взаємна **повага** *(respect)*. Абсолютно кожна людина щиро хоче, щоб її унікальну особистість цінували. Відповідне активне дієслово — **поважати** *(to respect)*, яке граматично вимагає вже знахідного відмінка: «Я глибоко поважаю свого старшого брата за його мудрість». У складні життєві моменти нам усім життєво необхідна дружня **підтримка** *(support)*. Дієслово **підтримувати** *(to support)* буквально означає бути фізично чи морально поруч саме тоді, коли вашому другові по-справжньому важко. Звісно, ідеальних людей у нашому світі просто не існує. Іноді ми можемо емоційно сперечатися або навіть голосно сваритися. Але після будь-якого гострого конфлікту обов'язково має настати світле **примирення** *(reconciliation)*. Уявіть типову життєву ситуацію: ви радісно присутні на великому традиційному весіллі в чудовому місті Вінниця. Щаслива наречена вперше офіційно знайомить свого молодого чоловіка з усією своєю великою і дружною родиною. Під час таких урочистих і світлих подій українці завжди дуже детально і з великою любов'ю описують характер кожного присутнього родича. > — **Наречена:** Коханий, дозволь офіційно представити тобі мою родину! Це мій старший брат Михайло — він надзвичайно розумний і надійний чоловік. > — **Наречений:** Дуже приємно нарешті познайомитися, Михайле. Я дійсно багато про вас чув від неї. > — **Наречена:** А он там біля великого вікна стоїть моя молодша сестра Олена. Вона в нас найенергійніша і завжди веселіша за всіх! > — **Олена:** Привіт! Ласкаво просимо до нашого гамірного сімейства. Ми всі дуже раді тебе тут бачити. > — **Наречена:** І найголовніше: познайомся з нашою рідною бабусею Ганною. Вона — найдобріша жінка у світі і завжди нас щиро підтримує. > — **Наречений:** Для мене величезна честь із вами познайомитися, Ганно Петрівно. У вас неймовірно чудова і турботлива родина. <!-- INJECT_ACTIVITY: group-sort, Sort relationship vocabulary into categories: родина, дружба, формальні стосунки, 12 items -->
+talking about their family or spouse. Always use **стосунки** for romance, family bonds, and friendships! ::: Once you know the right category, you need the vocabulary to describe the quality and depth of these connections. A strong bond is built on foundational concepts like **дружба** (friendship), **довіра** (trust), and **повага** (respect). When natural disagreements happen, people might experience a **суперечка** (argument), which ideally leads to a healthy **примирення** (reconciliation). These abstract nouns pair with specific verbs that describe active participation: **довіряти** (to trust), **поважати** (to respect), and **підтримувати** (to support). Notice how these verbs require different cases — you respect *someone* (Accusative), but you trust *to someone* (Dative). Справжня дружба завжди базується на спільних цінностях та інтересах. Найголовніше в будь-яких людських стосунках — це абсолютна довіра та глибока повага до вашого партнера. Звісно, люди можуть мати різні погляди та характери, тому іноді між ними виникає гостра суперечка. Але якщо ви дійсно вмієте слухати одне одного, після конфлікту обов'язково настає щире примирення. Щоб зберегти тепло і гармонію між людьми, дуже важливо повністю довіряти одне одному, поважати чужі особисті кордони та завжди підтримувати близьких у найскладніших життєвих ситуаціях. Let's see this vocabulary in action. Imagine a bustling, joyous wedding reception in the city of Vinnytsia. The bride and groom are circulating among the beautifully decorated tables, introducing their respective families to each other. This social setting is the perfect environment to practice describing people's best qualities and their specific roles in the family tree. As you read the conversation, pay close attention to how the adjectives change their endings to perfectly agree with the gender and case of the nouns they describe. > — **Наречена:** Дорогі гості, дуже рада нашому **знайомству** *(acquaintance / the act of meeting someone)*! Я хочу представити вам свою родину. Це мій старший брат Максим — він неймовірно **чуйний** *(sensitive/responsive)* і завжди надійний. *(Dear guests, I am very glad to meet you! I want to introduce my family to you. This is my older brother Maksym — he is incredibly sensitive and always reliable.)* > — **Наречений:** Дуже приємно вас бачити! А це мої **родичі** *(relatives)*. Ось моя молодша сестра Олена — вона найвеселіша за всіх. За своїм характером вона дуже **щира** *(sincere)* та відкрита людина. *(Very nice to see you! And these are my relatives. Here is my younger sister Olena — she is the most cheerful of everyone. By her character, she is a very sincere and open person.)* > — **Гості:** Щиро вітаємо вас! Ви — чудове **подружжя** *(married couple)*. Бажаємо вам щастя! *(We sincerely congratulate you! You are a wonderful married couple. We wish you happiness!)* > — **Наречена:** Дуже дякуємо за теплі слова! А зараз познайомтеся з нашою бабусею Марією. Вона дуже **лагідна** *(gentle)* і, мабуть, найдобріша жінка у всьому світі. *(Thank you very much for the warm words! And now meet our grandmother Mariia. She is very gentle and, probably, the kindest woman in the whole world.)* <!-- INJECT_ACTIVITY: group-sort, Sort relationship vocabulary into categories: родина, дружба, формальні стосунки, 12 items -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -635,7 +635,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -648,18 +715,69 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] зовнішність (appearance — a person's outward look)
+- [ ] характер (character — a person's inner qualities)
+- [ ] стосунки (interpersonal relationships — how people interact)
+- [ ] родичі (relatives — people connected by family)
+- [ ] знайомство (acquaintance / the act of meeting someone)
+- [ ] вродливий (beautiful/handsome — describing a person)
+- [ ] кремезний (stocky/sturdy — of strong build)
+- [ ] тендітний (slender/delicate — of light build)
+- [ ] щирий (sincere — genuine in feelings)
+- [ ] лагідний (gentle — soft in manner)
+- [ ] кмітливий (quick-witted — mentally sharp)
+- [ ] чуйний (sensitive/responsive — attentive to others)
+- [ ] подружжя (married couple — husband and wife together)
+- [ ] відрекомендуватися (to introduce oneself — formal register)
+- [ ] портретна деталь (portrait detail — one defining visual feature)
+- [ ] постава (posture/bearing — how a person holds their body)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Знайомство і представлення (~605 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

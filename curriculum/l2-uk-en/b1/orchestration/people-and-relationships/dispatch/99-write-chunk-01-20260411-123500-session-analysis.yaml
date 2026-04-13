@@ -1,0 +1,90 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T10-34-4d89d7b6.json
+phase: write-chunk-01
+prompt_chars: 48743
+response_chars: 6795
+prompt_words: 6541
+response_words: 1025
+sections:
+- name: header
+  start: 0
+  length: 441
+  fraction: 0.009
+- name: skeleton
+  start: 441
+  length: 1885
+  fraction: 0.0387
+- name: plan
+  start: 2326
+  length: 20490
+  fraction: 0.4204
+- name: wiki
+  start: 16150
+  length: 25702
+  fraction: 0.5273
+- name: output_spec
+  start: 48518
+  length: 225
+  fraction: 0.0046
+large_sections:
+- plan
+- wiki
+directives_total: 26
+directives_covered: 12
+directives_missed:
+- kind: checklist
+  text: стосунки (interpersonal relationships — how people interact)
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: checklist
+  text: родичі (relatives — people connected by family)
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: checklist
+  text: знайомство (acquaintance / the act of meeting someone)
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: checklist
+  text: щирий (sincere — genuine in feelings)
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: checklist
+  text: лагідний (gentle — soft in manner)
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: checklist
+  text: кмітливий (quick-witted — mentally sharp)
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: checklist
+  text: чуйний (sensitive/responsive — attentive to others)
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: checklist
+  text: подружжя (married couple — husband and wife together)
+  covered: false
+  coverage_note: 0/6 keywords (0%)
+- kind: checklist
+  text: відрекомендуватися (to introduce oneself — formal register)
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: checklist
+  text: портретна деталь (portrait detail — one defining visual feature)
+  covered: false
+  coverage_note: 2/8 keywords (25%)
+- kind: must
+  text: '**MANDATORY — never omit.'
+  covered: false
+  coverage_note: 1/3 keywords (33%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: inject_activity
+  text: match-up-portrait
+  covered: false
+  coverage_note: marker missing

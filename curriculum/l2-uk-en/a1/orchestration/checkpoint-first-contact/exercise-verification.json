@@ -1,30 +1,98 @@
 {
-  "total_items": 47,
+  "total_items": 58,
   "grounded_items": 44,
   "ungrounded": [
     {
-      "word": "студент'",
+      "word": "тато'",
       "exercise_type": "quiz",
-      "context": "Why is there a dash in 'Я — студент'?",
+      "context": "Which possessive pronoun goes with the masculine noun 'тато'",
+      "role": "context"
+    },
+    {
+      "word": "мама'",
+      "exercise_type": "quiz",
+      "context": "Which possessive pronoun goes with the feminine noun 'мама'?",
+      "role": "context"
+    },
+    {
+      "word": "дружина'",
+      "exercise_type": "quiz",
+      "context": "Which possessive pronoun goes with the feminine noun 'дружин",
+      "role": "context"
+    },
+    {
+      "word": "брат'",
+      "exercise_type": "quiz",
+      "context": "Which possessive pronoun goes with the masculine noun 'брат'",
       "role": "context"
     },
     {
       "word": "хто",
       "exercise_type": "match-up",
-      "context": "Хто це?",
+      "context": "Хто він?",
       "role": "answer"
+    },
+    {
+      "word": "маму",
+      "exercise_type": "match-up",
+      "context": "Як звати маму?",
+      "role": "answer"
+    },
+    {
+      "word": "тата",
+      "exercise_type": "match-up",
+      "context": "Як звати тата?",
+      "role": "answer"
+    },
+    {
+      "word": "звати'",
+      "exercise_type": "true-false",
+      "context": "The phrase 'Мене звати' uses the accusative pronoun 'мене', ",
+      "role": "context"
+    },
+    {
+      "word": "мене'",
+      "exercise_type": "true-false",
+      "context": "The phrase 'Мене звати' uses the accusative pronoun 'мене', ",
+      "role": "context"
+    },
+    {
+      "word": "це'",
+      "exercise_type": "true-false",
+      "context": "The word 'Це' means 'This is' and is used to point things ou",
+      "role": "context"
     },
     {
       "word": "є'",
       "exercise_type": "true-false",
-      "context": "When stating possession, we use 'У мене є' instead of a dire",
+      "context": "The phrase 'У мене є' means 'I want'.",
+      "role": "context"
+    },
+    {
+      "word": "богдане'",
+      "exercise_type": "true-false",
+      "context": "The name form 'Богдане' is in the Vocative case, which is us",
+      "role": "context"
+    },
+    {
+      "word": "мій'",
+      "exercise_type": "true-false",
+      "context": "The pronoun 'мій' is used for feminine nouns.",
+      "role": "context"
+    },
+    {
+      "word": "моя'",
+      "exercise_type": "true-false",
+      "context": "The pronoun 'моя' is used for feminine nouns.",
       "role": "context"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 2,
-    "tested_in_exercises": 2,
-    "not_tested": []
+    "tested_in_exercises": 1,
+    "not_tested": [
+      "прізвище"
+    ]
   },
   "all_grounded": false
 }

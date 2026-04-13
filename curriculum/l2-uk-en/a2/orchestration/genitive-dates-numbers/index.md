@@ -1,6 +1,6 @@
 # Build Summary: genitive-dates-numbers (A2)
 
-Generated: 2026-04-11 01:45
+Generated: 2026-04-11 11:53
 
 ## Pipeline Phases
 
@@ -12,15 +12,15 @@ Generated: 2026-04-11 01:45
 | pre-verify | complete | 2026-04-07 19:41:46 |
 | write | complete | 2026-04-07 19:47:26 |
 | exercises | complete | 2026-04-07 19:47:26 |
-| activities | complete | 2026-04-10 23:41:10 |
+| activities | complete | 2026-04-11 09:53:10 |
 | verify-exercises | complete | 2026-04-07 19:49:48 |
 | annotate | complete | 2026-04-07 19:49:48 |
 | vocab | complete | 2026-04-07 19:51:09 |
 | enrich | complete | 2026-04-07 19:51:09 |
 | verify | complete | 2026-04-07 19:51:09 |
 | stress | complete | 2026-04-07 19:56:28 |
-| publish | complete | 2026-04-10 23:45:21 |
-| audit | complete | 2026-04-10 23:45:21 |
+| publish | complete | 2026-04-11 09:53:18 |
+| audit | complete | 2026-04-11 09:53:18 |
 
 ## Reviews
 
@@ -37,6 +37,8 @@ Generated: 2026-04-11 01:45
 | activities | gemini-tools (gemini-3.1-pro-preview) | 141s | ✅ |
 | activities | gemini-tools (gemini-3.1-pro-preview) | 84s | ✅ |
 | activities | gemini-tools (gemini-3.1-pro-preview) | 39s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 90s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 90s | ✅ |
 | vocab | gemini (auto) | 75s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 319s | ✅ |
 | write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 128s | ✅ |

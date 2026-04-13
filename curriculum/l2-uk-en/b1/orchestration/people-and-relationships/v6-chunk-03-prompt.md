@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-різко негативного відтінку, означаючи людину, яка категорично відмовляється слухати логічні аргументи чи йти на компроміс. До інших негативних рис також належать **лінивий** *(lazy)*, який уникає будь-якої праці, **заздрісний** *(envious)*, що болісно реагує на чужий успіх, та надмірно **самовпевнений** *(arrogant/overconfident)*, який завжди переоцінює свої можливості. Щоб ваш опис характеру звучав справді природно та по-українськи, дуже важливо знати правильні синтаксичні конструкції. В українській мові ми маємо кілька типових моделей для розповіді про психологічний портрет. Найпростіша та найпоширеніша структура — це вживання іменника «людина» разом із прикметником. Наприклад: «Вона — людина чуйна і надзвичайно добра». Зверніть увагу, що прикметник може вільно стояти як перед іменником, так і після нього для логічного наголосу чи стилістичної краси. Друга дуже популярна модель — використання фрази **за характером** *(by character/nature)*. Вона чудово допомагає зробити плавний, логічний перехід від опису зовнішності до психології. Ви можете сказати: «За характером він дуже стриманий, але водночас товариський». Це звучить дуже літературно та елегантно, особливо в письмових текстах. Третя, дещо складніша, але надзвичайно корисна конструкція — це використання давального відмінка з прислівником **властиво** *(it is characteristic/typical for)* та інфінітивом дієслова. Ця гарна структура дозволяє описати характер через типову, щоденну поведінку особи. Наприклад: «Йому властиво завжди допомагати іншим у біді» або «Їй властиво дуже швидко приймати важливі рішення». Використання цих трьох різних синтаксичних моделей зробить ваше мовлення набагато багатшим і дозволить легко уникнути нудного повторення простого дієслова «бути». Вивчаючи психологічну лексику на рівні B1, дуже важливо розуміти тонкі семантичні відтінки між словами, які на перший погляд здаються абсолютними синонімами. Розглянемо пару слів «щирий» та **чесний** *(honest)*. Хоча вони дуже близькі за своїм значенням, «чесний» стосується насамперед строгих моральних принципів — це людина, яка не бреше, не краде і дотримується правил. Натомість «щирий» — це виключно про емоційну справжність і відкритість душі; щира людина просто не здатна ховати своїх справжніх почуттів від інших. Інша дуже цікава група синонімів стосується спокійної поведінки. Слово «лагідний» описує приємну, загальну манеру спілкування та відсутність різкості у словах. Натомість слово **ніжний** *(tender)* є значно сильнішим та емоційнішим; воно зазвичай описує дуже глибокі почуття або ласкавий фізичний дотик до коханої людини чи дитини. Третє слово у цій групі — **м'який** *(soft)*. Коли ми говоримо саме про характер, «м'який» означає людину, яка легко поступається іншим, уникає конфліктів і якій дуже важко сказати тверде «ні». Розуміння цих лексичних нюансів дозволить вам вибирати ідеальне слово для кожної ситуації. Найкращий спосіб назавжди запам'ятати нові слова — це застосувати їх до відомих українських історичних постатей. Візьмемо, наприклад, видатну поетесу Лесю Українку. За характером вона була надзвичайно наполеглива та мужня, адже все своє життя боролася з важкою хворобою, але ніколи не припиняла творити. Водночас у своїх листах до родини вона залишалася дуже щирою, лагідною та чуйною людиною. Якщо ж ми згадаємо поета Тараса Шевченка, то йому було властиво бути надзвичайно емоційним і безкомпромісним. Він був людиною відкритою, але його характер історики часто описують як дуже впертий і принциповий у питаннях національної справедливості та людської свободи. <!-- INJECT_ACTIVITY: quiz-character-valence, Identify character traits as позитивні чи негативні and choose the correct adjective for a description, 12 items -->
+mean you are persistent when facing a difficult task, which is highly positive. Other traits like "нетерплячий" (impatient), "лінивий" (lazy), "заздрісний" (envious), and "самовпевнений" (arrogant/overconfident) carry a clearer negative valence. When you want to describe a character in Ukrainian, you can use several common syntactic patterns. The simplest way is to use the verb "бути" followed by an adjective. However, native speakers frequently use more elegant constructions. Дуже популярною є конструкція зі словом «людина». Ми кажемо: «Він — людина дуже чуйна і щира». Інший зручний варіант — це використання фрази «за характером». Наприклад: «За характером вона спокійна, але товариська». Також ми часто використовуємо слово «властиво» з інфінітивом: «Йому властиво допомагати іншим». > *A very popular construction is with the word "person". We say: "He is a very responsive and sincere person." Another convenient option is using the phrase "by character". For example: "By character, she is calm but sociable." We also often use the word "characteristic" with an infinitive: "It is characteristic of him to help others."* The pattern "Він/вона — людина + adjective" emphasizes the qualities strongly. The phrase "За характером..." (By nature...) is perfect for general descriptions. Finally, the construction "Йому/їй властиво + infinitive" (It is characteristic for him/her to...) is excellent for describing habitual actions. Remember to use the dative case for the person: йому (for him) or їй (for her). As you expand your vocabulary, you will encounter words that seem to mean the same thing but carry subtle semantic nuances. Understanding these differences allows you to describe people with much greater precision. Часто люди плутають слова «щирий» та «чесний». Слово «чесний» описує людину, яка не говорить брехні. А слово «щирий» означає емоційну відкритість. Також є різниця між словами «лагідний», «ніжний» та «м'який». «Лагідний» вказує на спокійну поведінку. «Ніжний» передає глибоке почуття любові. А «м'який» означає людину, яка легко погоджується на компроміси. While "чесний" (honest) focuses on moral integrity, **щирий** (sincere) is about emotional authenticity. A person can be honest but cold; a sincere person is open and genuine. Similarly, **лагідний** (gentle) describes a calm demeanor. "Ніжний" (tender) is much more intimate, usually reserved for romantic partners or children. "М'який" (soft) describes a yielding temperament, someone who easily compromises. :::info **Precision in Vocabulary** Using the exact right word demonstrates high language mastery. Try to move beyond simple translations and learn the emotional weight of each adjective to make your descriptions sound perfectly natural. ::: To solidify your understanding of these adjectives, let us look at how they apply to iconic figures in Ukrainian history and literature. Тарас Шевченко за характером був людиною щирою, але дуже впертою у своїх переконаннях. Йому було властиво боротися за справедливість. Леся Українка мала неймовірно наполегливий характер. Вона була чуйною до чужого горя і працьовитою. By applying these nuanced traits to historical figures, you can see how context creates a complete psychological portrait. Whether describing a poet, a friend, or a colleague, this vocabulary allows you to capture their true essence. <!-- INJECT_ACTIVITY: quiz, Identify character traits as позитивні чи негативні -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -635,7 +635,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -648,18 +715,69 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] зовнішність (appearance — a person's outward look)
+- [ ] характер (character — a person's inner qualities)
+- [ ] стосунки (interpersonal relationships — how people interact)
+- [ ] родичі (relatives — people connected by family)
+- [ ] знайомство (acquaintance / the act of meeting someone)
+- [ ] вродливий (beautiful/handsome — describing a person)
+- [ ] кремезний (stocky/sturdy — of strong build)
+- [ ] тендітний (slender/delicate — of light build)
+- [ ] щирий (sincere — genuine in feelings)
+- [ ] лагідний (gentle — soft in manner)
+- [ ] кмітливий (quick-witted — mentally sharp)
+- [ ] чуйний (sensitive/responsive — attentive to others)
+- [ ] подружжя (married couple — husband and wife together)
+- [ ] відрекомендуватися (to introduce oneself — formal register)
+- [ ] портретна деталь (portrait detail — one defining visual feature)
+- [ ] постава (posture/bearing — how a person holds their body)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Родина і родичі (~660 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

@@ -1,0 +1,69 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T11-37-4dae9555.json
+phase: write-chunk-03
+prompt_chars: 40922
+response_chars: 4406
+prompt_words: 5821
+response_words: 704
+sections:
+- name: header
+  start: 0
+  length: 440
+  fraction: 0.0108
+- name: skeleton
+  start: 440
+  length: 1230
+  fraction: 0.0301
+- name: prior_summary
+  start: 1670
+  length: 3117
+  fraction: 0.0762
+- name: plan
+  start: 4787
+  length: 12122
+  fraction: 0.2962
+- name: wiki
+  start: 10441
+  length: 23782
+  fraction: 0.5812
+- name: output_spec
+  start: 40691
+  length: 231
+  fraction: 0.0056
+large_sections:
+- wiki
+directives_total: 18
+directives_covered: 10
+directives_missed:
+- kind: checklist
+  text: над (above, over)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: між (between)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: будинок (building, house)
+  covered: false
+  coverage_note: 1/3 keywords (33%)
+- kind: checklist
+  text: ліжко (bed)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: стіна (wall)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 4/11 keywords (36%)
+- kind: inject_activity
+  text: quiz-spatial-vs-temporal
+  covered: false
+  coverage_note: marker missing

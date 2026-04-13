@@ -7,13 +7,11 @@ pipeline: v6
 build_status: draft
 ---
 
-import ErrorCorrection from '@site/src/components/ErrorCorrection';
+import Anagram from '@site/src/components/Anagram';
 import FillIn from '@site/src/components/FillIn';
 import FlashcardDeck from '@site/src/components/FlashcardDeck';
 import GroupSort from '@site/src/components/GroupSort';
 import MatchUp from '@site/src/components/MatchUp';
-import Order from '@site/src/components/Order';
-import Translate from '@site/src/components/Translate';
 import TrueFalse from '@site/src/components/TrueFalse';
 import Unjumble from '@site/src/components/Unjumble';
 import YouTubeVideo from '@site/src/components/YouTubeVideo';
@@ -24,182 +22,213 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ## Dialogues
 
-Learning a language is about connecting with people. You already know how to state simple facts about yourself: your name, your country, and your profession. Now, it is time to move from simple facts to a cohesive narrative. A life story spans across time. You need to talk about where you were born, what you do now, and what you plan for the future. By combining the past, present, and future tenses, you can share your unique journey. 
+Listen for three parts of the story: past, present, and future.
+ 
 
-When getting to know someone deeply, you will ask about their past and their plans. Read this interview between two friends.
+**Моя́ по́дорож**
+Ко́жна люди́на ма́є свою́ істо́рію. Я народи́вся в одному мі́сті. За́раз я живу́ в і́ншому місті. Далі я бу́ду працюва́ти і вчи́тися. Це про́ста́ істо́рія про життя́.
+
+> *Every person has their story. We live in different cities. We work a lot. We study interestingly. We have big plans. Next we will talk about this.*
+
+When you meet someone new or talk to family, sharing your life journey is a natural step. Let's listen to a grandfather sharing his past, present, and future with his grandchildren.
 
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Оле́г:</span> **Розкажи́ про себе́!** *(Tell about yourself!)*</div>
+<div class="dialogue-line"><span class="speaker">Ону́к:</span> **Дідусю, розкажи́ про себе́!** *(Grandpa, tell about yourself!)*</div>
 
-<div class="dialogue-line"><span class="speaker">Марко́:</span> **Я народи́вся в Кана́ді, у Торо́нто.** *(I was born in Canada, in Toronto.)*</div>
+<div class="dialogue-line"><span class="speaker">Діду́сь:</span> **Я народився в селі́.** *(I was born in a village.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Олег:</span> **А за́раз ти живе́ш тут?** *(And now do you live here?)*</div>
+<div class="dialogue-line"><span class="speaker">Дідусь:</span> **Там я ходи́в у шко́лу.** *(There I went to school.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Марко:</span> **Так, зараз я живу́ в Ки́єві.** *(Yes, now I live in Kyiv.)*</div>
+<div class="dialogue-line"><span class="speaker">Ону́ка:</span> **А зараз ти живе́ш тут?** *(And now you live here?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Олег:</span> **Чо́му ти переї́хав?** *(Why did you move?)*</div>
+<div class="dialogue-line"><span class="speaker">Дідусь:</span> **Зараз я живу в місті.** *(Now I live in a city.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Марко:</span> **Я хоті́в вивча́ти украї́нську.** *(I wanted to study Ukrainian.)* **Мої́ бабу́ся і діду́сь з Украї́ни.** *(My grandmother and grandfather are from Ukraine.)*</div>
+<div class="dialogue-line"><span class="speaker">Дідусь:</span> **Я працю́ю в ліка́рні.** *(I work in a hospital.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Олег:</span> **А що ти бу́деш роби́ти да́лі?** *(And what will you do next?)*</div>
+<div class="dialogue-line"><span class="speaker">Онук:</span> **А що ти бу́деш роби́ти далі?** *(And what will you do next?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Марко:</span> **Я бу́ду працюва́ти тут і вчи́ти мо́ву.** *(I will work here and study the language.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Олег:</span> **Чудо́во! У́спіхів тобі́!** *(Wonderful! Success to you!)*</div>
+<div class="dialogue-line"><span class="speaker">Дідусь:</span> **Я буду відпочива́ти на да́чі!** *(I will rest at the dacha!)*</div>
 
 </div>
 
-Notice how Marko moves smoothly through time. He starts in the past with **народився** (was born). Then, he uses the present tense **живу** (I live) to describe his current situation. Finally, he shifts to the future tense with **буду працювати** (I will work). In just a few sentences, he paints a complete picture of his life using three different grammatical timeframes.
-
-Now, let us read Anna's story. She talks about her education and her career path.
+Now, let's look at another conversation where two friends, Marko and David, get to know each other deeply.
 
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Макси́м:</span> **А́нно, розкажи свою́ істо́рію.** *(Anna, tell your story.)*</div>
+<div class="dialogue-line"><span class="speaker">Марко́:</span> **Розкажи про себе!** *(Tell about yourself!)*</div>
 
-<div class="dialogue-line"><span class="speaker">А́нна:</span> **Я народи́лася у Льво́ві.** *(I was born in Lviv.)* **Там я вчи́лася в шко́лі.** *(There I studied in school.)*</div>
+<div class="dialogue-line"><span class="speaker">Де́від:</span> **Я народився в Кана́ді.** *(I was born in Canada.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Максим:</span> **А університе́т?** *(And university?)*</div>
+<div class="dialogue-line"><span class="speaker">Девід:</span> **Це було́ у Торо́нто.** *(It was in Toronto.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Анна:</span> **По́тім я переї́хала в Ки́їв і закі́нчи́ла університет.** *(Then I moved to Kyiv and finished university.)*</div>
+<div class="dialogue-line"><span class="speaker">Марко:</span> **А зараз ти живеш тут?** *(And now you live here?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Максим:</span> **Ким ти працю́єш?** *(What do you work as?)*</div>
+<div class="dialogue-line"><span class="speaker">Девід:</span> **Так, зараз я живу в Ки́єві.** *(Yes, now I live in Kyiv.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Анна:</span> **Зараз я працю́ю вчи́телькою і живу в це́нтрі мі́ста.** *(Now I work as a teacher and live in the city center.)*</div>
+<div class="dialogue-line"><span class="speaker">Марко:</span> **Чо́му ти переї́хав?** *(Why did you move?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Девід:</span> **Я хоті́в вивча́ти украї́нську.** *(I wanted to study Ukrainian.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Девід:</span> **Мої́ дідусь і бабу́ся з Украї́ни.** *(My grandfather and grandmother are from Ukraine.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Марко:</span> **А що ти будеш робити далі?** *(And what will you do next?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Девід:</span> **Я буду працювати тут і вчи́ти мо́ву. Ме́ні подо́бається Ки́їв.** *(I will work here and study the language. I like Kyiv.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Марко:</span> **Це чудо́во.** *(That is wonderful.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Девід:</span> **Так, мені тут до́бре.** *(Yes, I feel good here.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Марко:</span> **Чудово! У́спіхів тобі́!** *(Wonderful! Success to you!)*</div>
+
+</div>
+
+This dialogue moves clearly through past, present, and future: origin, current life, then plans.
+
+Anna's dialogue uses the same sequence: past in Lviv, present in Kyiv, then future plans.
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Макси́м:</span> **А́нно, розкажи свою історію.** *(Anna, tell your story.)*</div>
+
+<div class="dialogue-line"><span class="speaker">А́нна:</span> **Я народи́лася у Льво́ві.** *(I was born in Lviv.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Анна:</span> **Там я вчи́лася в шко́лі.** *(There I studied in school.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Анна:</span> **По́тім я переї́хала в Київ.** *(Then I moved to Kyiv.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Анна:</span> **Тут я закі́нчи́ла університе́т.** *(Here I graduated university.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Анна:</span> **Зараз я працюю вчи́телькою.** *(Now I work as a teacher.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Анна:</span> **Я живу в це́нтрі мі́ста.** *(I live in the city center.)*</div>
 
 <div class="dialogue-line"><span class="speaker">Максим:</span> **А що далі?** *(And what next?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Анна:</span> **Я буду подорожува́ти!** *(I will travel!)* **Я хо́чу поба́чити Япо́нію.** *(I want to see Japan.)*</div>
+<div class="dialogue-line"><span class="speaker">Анна:</span> **Я буду подорожува́ти!** *(I will travel!)*</div>
+
+<div class="dialogue-line"><span class="speaker">Анна:</span> **Я хо́чу поба́чити Япо́нію.** *(I want to see Japan.)*</div>
 
 <div class="dialogue-line"><span class="speaker">Максим:</span> **І ти будеш вчити япо́нську?** *(And you will study Japanese?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Анна:</span> **Мо́же! Але́ споча́тку — украї́нська для тебе́!** *(Maybe! But first — Ukrainian for you!)*</div>
+<div class="dialogue-line"><span class="speaker">Анна:</span> **Мо́же! Але́ споча́тку — украї́нська!** *(Maybe! But first — Ukrainian!)*</div>
 
 </div>
 
-Anna explains her sequence of life events clearly: Birth, School, University, Job, and Future Dream. Because Anna is a woman, she uses feminine past tense endings: **народилася** (was born), **вчилася** (studied), and **переїхала** (moved). Each stage of her life requires a specific grammatical form to show exactly when it happened.
+Anna begins with her past in Lviv, using the feminine past tense verb **народилася**. She brings us to the present with **працюю**. Then she reveals her **мрі́я** (dream, f) for the future using **буду подорожувати**. 
 
 ## Три часи́ ра́зом (Three Tenses Together)
 
-To tell your biography, you need a "Time Line" that combines three main structures. First, the Past Tense (**Мину́лий час**). This uses gendered endings: **-в** for masculine, and **-ла** for feminine. Second, the Present Tense (**Тепе́рішній час**). This uses person endings, like **-ю** or **-єш**. Third, the Compound Future Tense (**Майбу́тній час**). This uses the auxiliary verb **буду** plus an infinitive. Together, they organize your story.
+A life story usually moves through three questions: where you were born, how you live now, and what you will do next. Here is how the three tenses work together.
 
-Let us look at a grandparent telling their life story to their grandchildren. This perfectly demonstrates the Past Tense.
+**Мій брат**
+Рані́ше мій брат жив у селі. Він бага́то чита́в. Зараз він живе́ в місті. Він працю́є в університе́ті. Далі він бу́де писа́ти кни́гу. Він буде багато подорожувати.
 
-<div class="dialogue">
+> *Earlier my brother lived in a village. He read a lot. Now he lives in a city. He works at a university. Next he will write a book. He will travel a lot.*
 
-<div class="dialogue-line"><span class="speaker">Дідусь:</span> **Я народився в селі́.** *(I was born in a village.)*</div>
+The past tense (**мину́лий час**) shows what happened before. Match the verb to the speaker: **я народився / я народилася**, **я жив / я жила́**, **я вчи́вся / я вчилася**.
 
-<div class="dialogue-line"><span class="speaker">Ону́к:</span> **Там була́ шко́ла?** *(Was there a school there?)*</div>
+| Pronoun | Verb (to live) | English |
+|---------|----------------|---------|
+| Я (masculine) | **жив** | I lived |
+| Я (feminine) | **жила** | I lived |
+| Він (He) | **жив** | He lived |
+| Вона́ (She) | **жила** | She lived |
+| Ми (We) | **жили** | We lived |
 
-<div class="dialogue-line"><span class="speaker">Дідусь:</span> **Так, я ходи́в у шко́лу.** *(Yes, I went to school.)*</div>
+*   **Я народився в місті.** *(I was born in a city. — masculine)*
+*   **Я народилася в селі.** *(I was born in a village. — feminine)*
+*   **Я жив тут.** *(I lived here. — masculine)*
+*   **Я жила там.** *(I lived there. — feminine)*
+*   **Я вчився добре.** *(I studied well. — masculine)*
+*   **Я працюва́ла в школі.** *(I worked in a school. — feminine)*
 
-</div>
+The present tense (**тепе́рішній час**) describes your current situation and regular habits. Unlike the past tense, the present tense does not use gender endings. Instead, it relies on standard person endings based on the subject pronoun. The present tense focuses entirely on the person performing the action. Notice that the ending **-ю** is common for the first person singular (**я**).
 
-The verb **народи́тися** means "to be born". It is almost always used in the past tense. A man says **я народився**, and a woman says **я народилася**. Other key verbs are **жи́ти** (to live) and **вчи́тися** (to study).
-*   **Він жив у селі.** (He lived in a village.)
-*   **Вона́ жила́ у мі́сті.** (She lived in a city.)
-*   **Я вчи́вся в університе́ті.** (I studied at the university. — masculine)
+| Pronoun | Verb (to live) | English |
+|---------|----------------|---------|
+| Я | **живу** | I live |
+| Ти | **живеш** | You live |
+| Він / Вона | **живе** | He / She lives |
+| Ми | **живемо́** | We live |
 
-Next, you ground your story in the present. Use the adverb **зараз** (now) to show you are talking about today. The Present Tense uses endings that match the person speaking.
-*   **Зараз я живу в місті.** (Now I live in a city.)
-*   **Зараз я працюю в ліка́рні.** (Now I work in a hospital.)
-*   **Я вивча́ю українську мову.** (I study the Ukrainian language.)
+*   **Зараз я живу в місті.** *(Now I live in a city.)*
+*   **Я працюю в лікарні.** *(I work in a hospital.)*
+*   **Я вивча́ю українську мову.** *(I am studying the Ukrainian language.)*
+*   **Я люблю́ чита́ти кни́ги.** *(I love to read books.)*
+*   **Мій друг працює програмі́стом.** *(My friend works as a programmer.)*
 
-These actions are happening right now in your timeline. 
+The future tense (**майбу́тній час**) shows plans. In this module, use **бу́ти** + infinitive: **буду працювати**, **будеш працювати**, **буде працювати**, **бу́демо працювати**.
 
-Finally, you look forward. The Future Tense describes your plans and dreams. Use the words **потім** (then) and **далі** (further) to signal a shift into the future. Form the future by taking **буду** (I will) and adding an infinitive verb.
-*   **Потім я буду жити в Оде́сі.** (Then I will live in Odesa.)
-*   **Далі ми бу́демо подорожувати.** (Further we will travel.)
-*   **Я буду відпочива́ти на да́чі.** (I will rest at the dacha.)
+| Pronoun | Verb (to work) | English |
+|---------|----------------|---------|
+| Я | **буду працювати** | I will work |
+| Ти | **будеш працювати** | You will work |
+| Він / Вона | **буде працювати** | He / She will work |
+| Ми | **будемо працювати** | We will work |
 
-Signal words are crucial. They tell the listener which tense is coming before you even say the verb. Here is a table of the most important signal words for your life story:
+*   **Я буду працювати тут.** *(I will work here.)*
+*   **Я буду вивчати історію.** *(I will study history.)*
+*   **Я буду жи́ти в місті.** *(I will live in a city.)*
+*   **Я буду подорожувати.** *(I will travel.)*
+*   **Вона буде читати книгу.** *(She will read a book.)*
 
-| Signal Word | Meaning | Tense Trigger |
-| :--- | :--- | :--- |
-| **рані́ше** | before / earlier | Past |
-| **у дити́нстві** | in childhood | Past |
-| **коли́ я був/була мале́ньким/мале́нькою** | when I was little | Past |
-| **зараз** | now | Present |
-| **сього́дні** | today | Present |
-| **цього́ ро́ку** | this year | Present |
-| **потім** | then | Future |
-| **далі** | further / next | Future |
-| **насту́пного року** | next year | Future |
+To help your listener clearly follow your story, use time signal words. For the past, try **раніше**, **у дити́нстві**, or **коли́ я був мале́ньким / коли я була́ мале́нькою**. For the present, use **зараз**, **сього́дні**, or **цього́ ро́ку**. For the future, use **потім**, **далі**, or **насту́пного року**.
 
-If you start a sentence with **раніше**, your listener automatically expects a past tense verb.
+*   **Раніше я жив у Ло́ндоні.** *(Before I lived in London.)*
+*   **Цього року я живу в Києві.** *(This year I live in Kyiv.)*
+*   **Наступного року я буду жити в Оде́сі.** *(Next year I will live in Odesa.)*
 
-<MatchUp client:only="react" pairs={[{"left": "народився", "right": "Минулий час (Past)"}, {"left": "переїхала", "right": "Минулий час (Past)"}, {"left": "живу", "right": "Теперішній час (Present)"}, {"left": "працюю", "right": "Теперішній час (Present)"}, {"left": "буду подорожувати", "right": "Майбутній час (Future)"}, {"left": "будемо вчитися", "right": "Майбутній час (Future)"}]} instruction={"З'єднайте дієслово з правильним часом (Match the verb with the correct tense)"} />
+<MatchUp client:only="react" pairs={[{"left": "народився", "right": "Минулий час (Past)"}, {"left": "переїхала", "right": "Минулий час (Past)"}, {"left": "живу", "right": "Теперішній час (Present)"}, {"left": "працюю", "right": "Теперішній час (Present)"}, {"left": "буду подорожувати", "right": "Майбутній час (Future)"}, {"left": "будемо вчитися", "right": "Майбутній час (Future)"}]} instruction={"З'єднайте дієслово з часом (Match the verb with the tense)"} />
+<FillIn client:only="react" items={[{"sentence": "Раніше я ____ в Канаді.", "answer": "жив", "options": ["жив", "живу", "буду жити"]}, {"sentence": "Зараз я ____ в університеті.", "answer": "працюю", "options": ["працюю", "працював", "буду працювати"]}, {"sentence": "Далі я ____ українську мову.", "answer": "буду вивчати", "options": ["буду вивчати", "вивчав", "вивчаю"]}, {"sentence": "У дитинстві вона ____ читати.", "answer": "любила", "options": ["любила", "любить", "буде любити"]}, {"sentence": "Сьогодні ми ____ в Україні.", "answer": "живемо", "options": ["живемо", "жили", "будемо жити"]}, {"sentence": "Далі ми ____ говорити про це.", "answer": "будемо", "options": ["будемо", "були", "є"]}]} instruction={"Вставте правильне дієслово (Fill in the correct verb)"} />
 
-<FillIn client:only="react" items={[{"sentence": "Раніше я ____ в Канаді.", "answer": "жив", "options": ["жив", "живу", "буду жити"]}, {"sentence": "Зараз я ____ в університеті.", "answer": "працюю", "options": ["працюю", "працював", "буду працювати"]}, {"sentence": "Далі я ____ українську мову.", "answer": "буду вивчати", "options": ["буду вивчати", "вивчав", "вивчаю"]}, {"sentence": "У дитинстві вона ____ читати.", "answer": "любила", "options": ["любила", "любить", "буде любити"]}, {"sentence": "Сьогодні ми ____ в Україні.", "answer": "живемо", "options": ["живемо", "жили", "будемо жити"]}, {"sentence": "Потім він ____ програмістом.", "answer": "буде працювати", "options": ["буде працювати", "працює", "працював"]}]} instruction={"Оберіть правильне дієслово за контекстом (Choose the correct verb based on the context)"} />
+## Моя історія (My Story)
 
-## Моя́ істо́рія (My Story)
+Now turn the pattern into a short monologue: past background, present life, future plans. Use the model and then build your own story.
 
-Now, read a complete model story. This is Taras's life. Notice how he connects simple sentences into a full biography.
+Let's read a model text that brings everything together. This is Taras's life story. Notice how he structures his narrative.
 
-*   **Я народився в Одесі у ти́сяча дев'ятсо́т дев'яно́сто п'я́тому ро́ці.** (I was born in Odesa in nineteen ninety-five.)
-*   **Я жив там з батька́ми і сестро́ю.** (I lived there with parents and sister.)
-*   **Я ходив у школу і люби́в матема́тику.** (I went to school and loved math.)
-*   **Потім я переїхав у Київ і вчився в університеті.** (Then I moved to Kyiv and studied in the university.)
-*   **Зараз я живу в Києві.** (Now I live in Kyiv.)
-*   **Я працюю програмі́стом.** (I work as a programmer.)
-*   **Я люблю́ свою робо́ту.** (I love my work.)
-*   **У ві́льний час я гра́ю у футбо́л і чита́ю книжки́.** (In free time I play football and read books.)
-*   **Далі я буду подорожувати.** (Next I will travel.)
-*   **Я буду вивчати англі́йську.** (I will study English.)
-*   **І я буду жити в Києві — це моє́ мі́сто!** (And I will live in Kyiv — this is my city!)
+**Моя історія**
+Я народився в Одесі у ти́сяча дев'ятсо́т дев'яно́сто п'я́тому ро́ці. Я жив там з батька́ми і сестро́ю. Я ходив у школу. Я люби́в матема́тику. Потім я переїхав у Київ. Там я вчився в університеті. Зараз я живу в Києві. Я працюю програмістом. Я люблю свою робо́ту. У ві́льний час я гра́ю у футбо́л. Я чита́ю книжки́. Далі я буду подорожувати. Я буду вивчати англі́йську. І я буду жити в Києві. Це моє́ мі́сто!
 
-Taras's story uses a clear structure taught in Ukrainian schools. It has three parts. First is the **За́чи́н** (Introduction) — he states his birth and childhood. Second is the **Основна части́на** (Main Part) — he describes his current life, job, and hobbies. Third is the **Кінці́вка** (Conclusion) — he shares his future plans and his feelings about his city.
+> *I was born in Odesa in nineteen ninety-five. I lived there with my parents and sister. I went to school. I loved math. Then I moved to Kyiv. There I studied at a university. Now I live in Kyiv. I work as a programmer. I love my work. In my free time I play football. I read books. Next I will travel. I will study English. And I will live in Kyiv. This is my city!*
 
-A key verb for storytelling is **переї́хати** (to move). It acts as a bridge between locations and times in your life. Another important verb is **закі́нчи́ти** (to finish / to graduate). When you talk about the future, you can mention a **мрі́я** (dream). Using **переїхати** physically changes the setting of your narrative from your past home to your present home.
+Let's deconstruct Taras's story to see how it works. His biography has a clear, logical chronological flow. He starts his introduction in the past to establish his background, using verbs like **народився** (was born), **жив** (lived), and **переїхав** (moved). Then, the main body transitions to his present reality using verbs like **живу** (live) and **працюю** (work). Finally, his conclusion looks to the future using the compound constructions **буду подорожувати** (will travel) and **буду вивчати** (will study).
 
-Now it is your turn to tell your story. You will write a short biography of 8 to 10 sentences. Follow these steps. Start with the past. Use these sentence starters:
-*   **Я народився в...** (I was born in...) or **Я народилася в...** (for women).
-*   **Я жив у...** (I lived in...) or **Я жила у...**
-*   **Я вчився в...** (I studied in...) or **Я вчилася в...**
-*   **Я працюва́в...** (I worked...) or **Я працюва́ла...**
+Now it is your turn to create your own biography. Use this scaffolding template to build your narrative block by block. 
 
-Then, move to the present.
-*   **Зараз я живу в...** (Now I live in...)
+Start with your origin in the past tense: 
+*   **Я народився / Я народилася в...** (I was born in...)
+*   **Я жив / Я жила...** (I lived...)
+*   **Я вчився / Я вчилася...** (I studied...)
+
+Then, move your story to the present tense: 
+*   **Зараз я живу...** (Now I live...)
 *   **Я працюю...** (I work...)
-*   **Я вивчаю українську...** (I study Ukrainian...)
 
-Finally, finish with the future.
-*   **Далі я буду...** (Next I will...)
+Finally, share your future plans: 
+*   **Я буду...** (I will...)
 *   **Я хочу...** (I want...)
 
-Use at least three past verbs, three present verbs, and three future constructions.
+Try to use at least three verbs for each tense to build a complete text. This structured approach helps you build a complex story from simple parts.
 
-<Order client:only="react" items={["Я народився в Торонто.", "У дитинстві я жив з батьками.", "Потім я вчився в університеті.", "Зараз я живу в Києві і працюю програмістом.", "Далі я буду подорожувати."]} correct_order={[0, 1, 2, 3, 4]} instruction={"Розставте події в правильному порядку (Put the events in the correct order)"} />
-
-<FillIn client:only="react" items={[{"sentence": "Я ____ у Львові.", "answer": "народилася", "options": ["народилася", "народився", "народилися"]}, {"sentence": "Там я ____ в школі.", "answer": "вчилася", "options": ["вчилася", "вчився", "вчилися"]}, {"sentence": "Зараз я ____ вчителькою.", "answer": "працюю", "options": ["працюю", "працювала", "буду працювати"]}, {"sentence": "Наступного року я ____.", "answer": "буду подорожувати", "options": ["буду подорожувати", "подорожувала", "подорожую"]}, {"sentence": "Я ____ побачити Японію.", "answer": "хочу", "options": ["хочу", "хотіла", "буду хотіти"]}, {"sentence": "Моя ____ — це Японія.", "answer": "мрія", "options": ["мрія", "успіх", "дитинство"]}]} instruction={"Вставте правильні дієслова, щоб завершити біографію (Insert the correct verbs to complete the biography)"} />
+<FillIn client:only="react" items={[{"sentence": "Я ____ у Львові.", "answer": "народилася", "options": ["народилася", "народився", "народилися"]}, {"sentence": "Там я ____ в школі.", "answer": "вчилася", "options": ["вчилася", "вчився", "вчилися"]}, {"sentence": "Потім я ____ в Київ.", "answer": "переїхала", "options": ["переїхала", "переїхав", "переїде"]}, {"sentence": "Тут я ____ університет.", "answer": "закінчила", "options": ["закінчила", "закінчив", "буду закінчувати"]}, {"sentence": "Зараз я ____ вчителькою.", "answer": "працюю", "options": ["працюю", "працювала", "буду працювати"]}, {"sentence": "Наступного року я ____.", "answer": "буду подорожувати", "options": ["буду подорожувати", "подорожувала", "подорожую"]}]} instruction={"Доповніть історію (Complete the story)"} />
 
 ## Summary
 
-You can now tell a complete life story. The three-tense system is your timeline. Here is a final recap:
+Here is the recap. The past tense uses gender endings for the speaker: **Я народився** or **Я народилася**. The present tense uses person endings, for example **Я живу** and **Я працюю**. The future tense uses **буду** + infinitive, for example **Я буду працювати**. Together, these forms build a clear life story.
 
-| Tense | Form | Example |
-| :--- | :--- | :--- |
-| **Минулий** (Past) | **-в** (m), **-ла** (f), **-ло** (n), **-ли** (pl) | **Я народився.** (I was born.) / **Я жила.** (I lived.) |
-| **Теперішній** (Present) | **-ю**, **-єш**, **-є** (person endings) | **Я живу.** (I live.) / **Ти працюєш.** (You work.) |
-| **Майбутній** (Future) | **буду**, **будеш**, **бу́де** + infinitive | **Я буду працювати.** (I will work.) |
+**На́ші пла́ни**
+Раніше ми жили в Аме́риці. Там ми вчи́ли англійську мову. Зараз ми живемо в Украї́ні. Тут ми вчимо́ українську мову. Далі ми будемо ві́льно говори́ти.
 
-Let us check your core vocabulary for this module. You need these eight words to narrate your journey:
-*   **народитися** (to be born): **Я народився в Аме́риці.** (I was born in America.)
-*   **жити** (to live): **Ми живемо́ в місті.** (We live in the city.)
-*   **вчитися** (to study): **Вона вчи́ться в школі.** (She studies at school.)
-*   **переїхати** (to move): **Я хочу переїхати в Украї́ну.** (I want to move to Ukraine.)
-*   **зараз** (now): **Зараз він працю́є.** (Now he is working.)
-*   **раніше** (before / earlier): **Раніше я жив там.** (Before I lived there.)
-*   **далі** (further / next): **Що ти будеш робити далі?** (What will you do next?)
-*   **розповіда́ти** (to tell / narrate): **Я люблю розповідати істо́рії.** (I love to tell stories.)
+> *Earlier we lived in America. There we studied the English language. Now we live in Ukraine. Here we study the Ukrainian language. Next we will speak fluently.*
 
-Before you finish this module, use this self-check checklist:
-*   Can you state where you were born using the correct gender agreement (**народився** or **народилася**)?
-*   Can you use the word **зараз** to describe your current job or study?
-*   Can you list two things you will do next year using **буду**?
-*   Do you know the difference between **раніше** (before) and **потім** (then)?
-*   Have you written your own 8-10 sentence narrative using all three tenses?
+Do not forget the crucial signal words that guide the narrative timeline. These anchors help your listener understand exactly when an event happened. Use **раніше** (before/earlier) to signal the past tense. Use **зараз** (now) to mark the present tense. Finally, use **далі** (further/next) to introduce your future plans.
+
+Let's quickly recap your core biographical vocabulary. Your foundation includes the verbs **народи́тися** (to be born), **жити** (to live), **вчитися** (to study), **переї́хати** (to move), and **подорожувати** (to travel). When discussing your career, remind yourself to use the instrumental case for professions. For example, you should say **Я працюю програмістом** (I work as a programmer) or **Я працюю вчителькою** (I work as a teacher). Achieving **у́спіх** (success, m) in storytelling is all about using these blocks correctly. Mastering these verbs will give you the confidence to speak about your life in any situation. You can discuss your early life or your time at the **університет** (university, m).
+
+Self-check: Write your own life story in eight to ten sentences using all three tenses. Ensure you include where you were born, where you live now, and your future plans.
 
 </TabItem>
 <TabItem label="Словник">
@@ -213,66 +242,46 @@ Before you finish this module, use this self-check checklist:
 | **вчи́тися** | to study | дієсл. |  |
 | **переї́хати** | to move | дієсл. |  |
 | **за́раз** | now | присл. |  |
-| **рані́ше** | before / earlier | присл. |  |
-| **да́лі** | further / next | присл. |  |
-| **розповіда́ти** | to tell / narrate | дієсл. |  |
+| **рані́ше** | before/earlier | присл. |  |
+| **да́лі** | further/next | присл. |  |
+| **розповіда́ти** | to tell/narrate | дієсл. |  |
 | **подорожува́ти** | to travel | дієсл. |  |
-| **закі́нчи́ти** | to finish / graduate | дієсл. |  |
+| **закі́нчи́ти** | to finish/graduate | дієсл. |  |
 | **дити́нство** | childhood | ім. | с. |
 | **університе́т** | university | ім. | ч. |
 | **програмі́ст** | programmer | ім. | ч. |
 | **у́спіх** | success | ім. | ч. |
 | **мрі́я** | dream | ім. | ж. |
 | **батьки́** | parents | ім. |  |
-| **вчи́телька** | teacher | ім. | ж. |
-| **шко́ла** | school | ім. | ж. |
-| **село́** | village | ім. | с. |
-| **по́тім** | then | присл. |  |
-| **сього́дні** | today | присл. |  |
-| **робо́та** | job / work | ім. | ч. |
-| **споча́тку** | at first / initially | присл. |  |
 
 ### Вирази
 
 | Вираз | Переклад |
 |-------|----------|
 | **Розкажи про себе!** | Tell about yourself! |
-| **Успіхів тобі!** | Success to you! / Good luck! |
-| **Ким ти працюєш?** | What do you work as? |
-| **центр міста** | city center |
-| **у дитинстві** | in childhood |
-| **цього року** | this year |
-| **наступного року** | next year |
-| **вільний час** | free time |
-| **коли я був маленьким** | when I was little |
+| **Успіхів тобі!** | Success to you! |
 
 ### Картки — Flashcards
 
-<FlashcardDeck client:only="react" cards={[{ front: "народи́тися", back: "to be born", subtitle: "дієсл." }, { front: "жи́ти", back: "to live", subtitle: "дієсл." }, { front: "вчи́тися", back: "to study", subtitle: "дієсл." }, { front: "переї́хати", back: "to move", subtitle: "дієсл." }, { front: "за́раз", back: "now", subtitle: "присл." }, { front: "рані́ше", back: "before / earlier", subtitle: "присл." }, { front: "да́лі", back: "further / next", subtitle: "присл." }, { front: "розповіда́ти", back: "to tell / narrate", subtitle: "дієсл." }, { front: "подорожува́ти", back: "to travel", subtitle: "дієсл." }, { front: "закі́нчи́ти", back: "to finish / graduate", subtitle: "дієсл." }, { front: "дити́нство", back: "childhood", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "університе́т", back: "university", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "програмі́ст", back: "programmer", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "у́спіх", back: "success", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "мрі́я", back: "dream", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "батьки́", back: "parents", subtitle: "ім." }, { front: "вчи́телька", back: "teacher", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "шко́ла", back: "school", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "село́", back: "village", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "по́тім", back: "then", subtitle: "присл." }, { front: "сього́дні", back: "today", subtitle: "присл." }, { front: "робо́та", back: "job / work", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "споча́тку", back: "at first / initially", subtitle: "присл." }]} />
+<FlashcardDeck client:only="react" cards={[{ front: "народи́тися", back: "to be born", subtitle: "дієсл." }, { front: "жи́ти", back: "to live", subtitle: "дієсл." }, { front: "вчи́тися", back: "to study", subtitle: "дієсл." }, { front: "переї́хати", back: "to move", subtitle: "дієсл." }, { front: "за́раз", back: "now", subtitle: "присл." }, { front: "рані́ше", back: "before/earlier", subtitle: "присл." }, { front: "да́лі", back: "further/next", subtitle: "присл." }, { front: "розповіда́ти", back: "to tell/narrate", subtitle: "дієсл." }, { front: "подорожува́ти", back: "to travel", subtitle: "дієсл." }, { front: "закі́нчи́ти", back: "to finish/graduate", subtitle: "дієсл." }, { front: "дити́нство", back: "childhood", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "університе́т", back: "university", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "програмі́ст", back: "programmer", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "у́спіх", back: "success", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "мрі́я", back: "dream", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "батьки́", back: "parents", subtitle: "ім." }]} />
 
 </TabItem>
 <TabItem label="Зошит">
 
-<GroupSort client:only="react" groups={{"Минулий час (Past)": ["народився", "жила", "вчилися", "переїхав", "працювала"], "Теперішній час (Present)": ["живу", "працює", "вчимося", "розповідаю", "хочу"], "Майбутній час (Future)": ["буду жити", "будеш працювати", "буде подорожувати", "будемо вчитися"]}} instruction={"Розподіліть слова за часом (Sort the words by tense)"} />
+<GroupSort client:only="react" groups={{"Минулий час (Past)": ["жив", "народилася", "вчився", "переїхала"], "Теперішній час (Present)": ["живу", "працюю", "люблю", "читає"], "Майбутній час (Future)": ["буду жити", "буду працювати", "будемо вчити", "буде подорожувати"]}} instruction={"Розподіліть дієслова за часом (Sort the verbs by tense)"} />
 
-<TrueFalse client:only="react" items={[{"statement": "Тарас народився в Києві.", "isTrue": false, "explanation": "Тарас народився в Одесі."}, {"statement": "У дитинстві Тарас любив математику.", "isTrue": true, "explanation": "Він ходив у школу і любив математику."}, {"statement": "Зараз Тарас працює програмістом.", "isTrue": true, "explanation": "Він живе в Києві і працює програмістом."}, {"statement": "Тарас не любить свою роботу.", "isTrue": false, "explanation": "Він каже: 'Я люблю свою роботу'."}, {"statement": "У вільний час він грає у баскетбол.", "isTrue": false, "explanation": "У вільний час він грає у футбол."}, {"statement": "Далі Тарас хоче жити в Одесі.", "isTrue": false, "explanation": "Він каже: 'Я буду жити в Києві — це моє місто!'."}]} instruction={"Правда чи ні? (Прочитайте історію Тараса) (True or false? Read Taras's story)"} />
+<Unjumble client:only="react" items={[{"words": "в / Я / народився / місті.", "answer": "Я народився в місті."}, {"words": "живу / я / Зараз / Києві. / в", "answer": "Зараз я живу в Києві."}, {"words": "буду / Далі / я / подорожувати.", "answer": "Далі я буду подорожувати."}, {"words": "в / Він / працює / лікарні.", "answer": "Він працює в лікарні."}, {"words": "вчилася / в / Вона / школі.", "answer": "Вона вчилася в школі."}, {"words": "будемо / українську / Ми / вчити / мову.", "answer": "Ми будемо вчити українську мову."}]} instruction={"Складіть правильне речення (Make a correct sentence)"} />
 
-<ErrorCorrection client:only="react" items={[{"sentence": "Раніше я живу в Канаді.", "errorWord": "живу", "correctForm": "жив", "options": ["жив", "буду жити", "живемо"], "explanation": "Раніше (before) requires the past tense (жив)."}, {"sentence": "Зараз я працював в школі.", "errorWord": "працював", "correctForm": "працюю", "options": ["працюю", "працювати", "буду працювати"], "explanation": "Зараз (now) requires the present tense (працюю)."}, {"sentence": "Далі я подорожував.", "errorWord": "подорожував", "correctForm": "буду подорожувати", "options": ["подорожую", "буду подорожувати", "подорожувала"], "explanation": "Далі (next) requires the future tense (буду подорожувати)."}, {"sentence": "Анна народився у Львові.", "errorWord": "народився", "correctForm": "народилася", "options": ["народилася", "народилися", "народжуюся"], "explanation": "Anna is a woman, so she needs the feminine past tense ending (-ла)."}, {"sentence": "У дитинстві ми живемо в селі.", "errorWord": "живемо", "correctForm": "жили", "options": ["жили", "будемо жити", "живуть"], "explanation": "У дитинстві (in childhood) requires the past tense (жили)."}, {"sentence": "Потім я переїхала в Київ і закінчив університет.", "errorWord": "закінчив", "correctForm": "закінчила", "options": ["закінчила", "закінчую", "закінчили"], "explanation": "The speaker is female (переїхала), so the second verb must also be feminine (закінчила)."}]} instruction={"Знайдіть і виправте помилку (Find and fix the error)"} />
+<Anagram client:only="react" items={[{"scrambled": "у с п і х", "answer": "успіх", "hint": "success"}, {"scrambled": "м р і я", "answer": "мрія", "hint": "dream"}, {"scrambled": "з а р а з", "answer": "зараз", "hint": "now"}, {"scrambled": "д а л і", "answer": "далі", "hint": "next/further"}, {"scrambled": "ж и т и", "answer": "жити", "hint": "to live"}, {"scrambled": "в ч и т и", "answer": "вчити", "hint": "to study/learn"}]} instruction={"Складіть слово з літер (Make a word from the letters)"} />
 
-<Translate client:only="react" questions={[{"source": "I was born in Toronto.", "options": [{"text": "Я народився в Торонто.", "correct": true}, {"text": "Я живу в Торонто.", "correct": false}, {"text": "Я буду жити в Торонто.", "correct": false}, {"text": "Я працюю в Торонто.", "correct": false}]}, {"source": "Now I live in Kyiv.", "options": [{"text": "Зараз я живу в Києві.", "correct": true}, {"text": "Раніше я жив у Києві.", "correct": false}, {"text": "Далі я буду жити в Києві.", "correct": false}, {"text": "Я переїхав у Київ.", "correct": false}]}, {"source": "Next I will travel.", "options": [{"text": "Далі я буду подорожувати.", "correct": true}, {"text": "Я подорожував.", "correct": false}, {"text": "Я люблю подорожувати.", "correct": false}, {"text": "Зараз я подорожую.", "correct": false}]}, {"source": "I studied at the university.", "options": [{"text": "Я вчився в університеті.", "correct": true}, {"text": "Я вчуся в університеті.", "correct": false}, {"text": "Я буду вчитися в університеті.", "correct": false}, {"text": "Я закінчив університет.", "correct": false}]}, {"source": "She wants to move to Ukraine.", "options": [{"text": "Вона хоче переїхати в Україну.", "correct": true}, {"text": "Вона переїхала в Україну.", "correct": false}, {"text": "Вона буде жити в Україні.", "correct": false}, {"text": "Вона живе в Україні.", "correct": false}]}, {"source": "I love to tell stories.", "options": [{"text": "Я люблю розповідати історії.", "correct": true}, {"text": "Я розповідав історії.", "correct": false}, {"text": "Я буду розповідати історії.", "correct": false}, {"text": "Вона розповідає історії.", "correct": false}]}]} instruction={"Оберіть правильний переклад (Choose the correct translation)"} />
+<MatchUp client:only="react" pairs={[{"left": "дитинство", "right": "childhood"}, {"left": "батьки", "right": "parents"}, {"left": "університет", "right": "university"}, {"left": "програміст", "right": "programmer"}, {"left": "закінчити", "right": "to graduate/finish"}, {"left": "раніше", "right": "earlier/before"}, {"left": "потім", "right": "then"}]} instruction={"З'єднайте українські та англійські слова (Match Ukrainian and English words)"} />
 
-<Unjumble client:only="react" items={[{"words": "Я / в / Одесі. / народився", "answer": "Я народився в Одесі."}, {"words": "школі. / вчилася / Там / я / в", "answer": "Там я вчилася в школі."}, {"words": "живу / Києві. / я / Зараз / в", "answer": "Зараз я живу в Києві."}, {"words": "програмістом. / Зараз / я / працюю", "answer": "Зараз я працюю програмістом."}, {"words": "буду / Далі / я / подорожувати.", "answer": "Далі я буду подорожувати."}, {"words": "вивчати / мову. / українську / Я / буду", "answer": "Я буду вивчати українську мову."}]} instruction={"Складіть правильне речення зі слів (Put the words in the correct order to make a sentence)"} />
+<FillIn client:only="react" items={[{"sentence": "Він народив____ в селі.", "answer": "ся", "options": ["ся", "лася", "лися"]}, {"sentence": "Вона народи____ в місті.", "answer": "лася", "options": ["ся", "лася", "лися"]}, {"sentence": "Дідусь жи____ в Канаді.", "answer": "в", "options": ["в", "ла", "ли"]}, {"sentence": "Бабуся жи____ в Україні.", "answer": "ла", "options": ["в", "ла", "ли"]}, {"sentence": "Марко вчи____ в університеті.", "answer": "вся", "options": ["вся", "лася", "лися"]}, {"sentence": "Анна вчи____ в школі.", "answer": "лася", "options": ["вся", "лася", "лися"]}]} instruction={"Вставте правильне закінчення для минулого часу (Fill in the correct ending for the past tense)"} />
+
+<TrueFalse client:only="react" items={[{"statement": "«Я буду працювати» — це минулий час (past tense).", "isTrue": false, "explanation": "Це майбутній час (future tense)."}, {"statement": "«Я живу в Києві» — це теперішній час (present tense).", "isTrue": true, "explanation": "Дієслово «живу» означає дію зараз."}, {"statement": "«Вона народилася» — це минулий час (past tense).", "isTrue": true, "explanation": "Дієслово має суфікс -ла-, що вказує на минулий час."}, {"statement": "«Ми будемо подорожувати» — це теперішній час (present tense).", "isTrue": false, "explanation": "Слово «будемо» вказує на майбутній час."}, {"statement": "Слово «раніше» (earlier) часто використовують з минулим часом.", "isTrue": true, "explanation": "Так, це слово вказує на минуле."}, {"statement": "Слово «зараз» (now) часто використовують з майбутнім часом.", "isTrue": false, "explanation": "«Зараз» використовують з теперішнім часом (present tense)."}]} instruction={"Правда чи ні? (True or false?)"} />
 
 </TabItem>
 <TabItem label="Ресурси">
-
-## Підручники (Textbooks)
-
-- [Глазова О. П. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrmova-glazova-2018.pdf#page=46), стор. 46
-- [Авраменко О. М. — Українська мова, 11 клас (2019)](https://pidruchnyk.com.ua/uploads/book/11-klas-ukrajinska-mova-avramenko-2019.pdf#page=191), стор. 191
-- [Глазова О. П. — Українська мова, 11 клас (2019)](https://pidruchnyk.com.ua/uploads/book/11-klas-ukrajinska-mova-glazova-2019.pdf#page=186), стор. 186
-- [Авраменко О. М. — Українська мова, 6 клас (2023)](https://pidruchnyk.com.ua/uploads/book/6-klas-ukrmova-avramenko-2023.pdf#page=210), стор. 210
-- [Літвінова І. М. — Українська мова, 6 клас (2023)](https://pidruchnyk.com.ua/uploads/book/6-klas-ukrmova-litvinova-2023.pdf#page=285), стор. 285
 
 **Статті — Articles**
 

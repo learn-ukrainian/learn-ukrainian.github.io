@@ -22,7 +22,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-маєте чудовий практичний досвід. Тепер ми додамо до нього лінгвістичну теорію. Що саме таке **морфологія** *(morphology)*? Морфологія — це великий розділ науки про мову. Вона вивчає слово як частину мови. Морфологія пояснює, які є частини мови та як вони змінюються. Інший дуже важливий розділ — це **будова слова** *(word structure)*. Будова слова вивчає те, з чого складається слово всередині. Кожне слово має свої внутрішні частини. Це наче деталі конструктора. Третій розділ — це **словотвір** *(word formation)*. Словотвір вивчає те, як утворюються абсолютно нові слова з інших слів. Наприклад, як зі слова «ліс» зробити слово «лісовий». Ці три сфери завжди працюють разом. Ви повинні знати дрібні частини слова, щоб розуміти їхні комбінації. Уявіть, що слова — це великі будинки. Будова слова показує нам окремі цеглинки. Морфологія показує типи будинків: школи, магазини, квартири. А словотвір показує, як саме з цеглинок збудувати новий дім. Щоб вільно володіти українською мовою, треба знати всі ці «цеглинки». Чому ці специфічні знання такі необхідні для рівня B1? Відповідь дуже проста: абсолютно всі серйозні граматичні правила використовують ці терміни. На рівні B1 ви будете вивчати складні та цікаві теми. Наприклад, ви будете детально вчити **чергування** *(alternation)* голосних або приголосних звуків. Правило в підручнику звучить так: «У цьому слові відбувається чергування голосних у корені». Якщо ви не знаєте точно значення слова «корінь», ви просто не зрозумієте це правило. Або інше типове правило: «Перед цим суфіксом приголосний звук стає м'яким». Знову ж таки, вам обов'язково потрібно знати термін **суфікс** *(suffix)*. Без цих базових термінів українська граматика часто здається незрозумілою магією. Морфологія — це ваш надійний міст до точної граматики. Коли ви знаєте правильні назви, ви починаєте бачити логіку. Ви бачите струнку систему, а не просто довгий хаотичний список слів. Українська мова є надзвичайно систематичною. Її слова утворюються за дуже чіткими та красивими правилами. Якщо ви розумієте цю логіку, ви зможете читати і говорити набагато краще. > — **Марина:** Богдане, ти готовий до іспиту з морфології? *(Bogdan, are you ready for the morphology exam?)* > — **Богдан:** Майже. Давай повторимо частини слова. *(Almost. Let's review the parts of a word.)* > — **Марина:** Добре. Візьмемо дієслово «переказувати». Де тут корінь? *(Okay. Let's take the verb "to retell". Where is the root here?)* > — **Богдан:** Корінь — це «каз». Слово «казати» — це **спільнокореневе** *(cognate)* слово. *(The root is "kaz". The word "to say" is a cognate word.)* > — **Марина:** Правильно! А що таке «пере»? Це **префікс** *(prefix)*? *(Correct! And what is "pere"? Is it a prefix?)* > — **Богдан:** Так, це префікс. А «ува» і «ти» — це суфікси. *(Yes, it's a prefix. And "uva" and "ty" are suffixes.)* > — **Марина:** Супер. Тепер іменник «написання». Яке тут закінчення? *(Super. Now the noun "writing". What is the ending here?)* > — **Богдан:** Тут закінчення «я». А **основа** *(stem)* слова — це «написанн». *(The ending is "ya" here. And the stem of the word is "napysann".)* > — **Марина:** Ти чудово знаєш будову слова! Ми точно складемо цей іспит. *(You know word structure wonderfully! We will definitely pass this exam.)*
+In this module, we will study the five main elements of a word. These are the root, prefix, suffix, ending, and stem. We will also examine what a noun, adjective, and verb are. These terms will help you understand the rules of our grammar.* Why is this metalanguage a necessity for B1? Upcoming grammar modules will explain advanced rules using exclusively these Ukrainian terms. For example, you will soon encounter concepts like vowel alternation in the root or consonant softening before a specific suffix. An explanation stating that an adjective agrees with a noun in gender, number, and case is incomprehensible if you do not know the Ukrainian words for those categories. Knowing this terminology provides the tools for precise grammatical understanding. :::info **Think like a native speaker** Using authentic Ukrainian terminology allows you to immerse yourself completely in the language's own logic. It empowers you to consult local dictionaries and understand native teachers directly, bypassing confusing English translations. ::: Студенти часто запитують, навіщо вчити граматичні терміни. Без цих слів майже неможливо зрозуміти правила українського правопису. Наприклад, ви не зможете пояснити складні орфографічні правила. Чому **спільнокореневий** прикметник має саме таку форму? Знання термінології дає вам можливість аналізувати кожну деталь самостійно. > *Students often ask why they should learn grammatical terms. Without these words, it is almost impossible to understand the rules of Ukrainian orthography. For example, you will not be able to explain complex spelling rules. Why does a cognate adjective have exactly this form? Knowing the terminology gives you the ability to analyze every detail independently.* Let's see how Ukrainian university students use these analytical terms in real life. Maryna and Bohdan are studying at the main library of Lviv University. They are preparing for an upcoming language exam by verbally practicing morphemic analysis. > — **Студентка Марина:** Давай розберемо слово «переказувати». Де тут **корінь**? *(Let's analyze the word "переказувати". Where is the root here?)* > — **Студент Богдан:** Корінь тут «каз», від слова «казати». А попереду стоїть **префікс** «пере-». *(The root here is "каз", from the word "казати". And in front stands the prefix "пере-".)* > — **Студентка Марина:** Правильно. А що стоїть після нашого кореня? *(Correct. And what stands after our root?)* > — **Студент Богдан:** Там є **суфікс** «-ува-» та суфікс «-ти». А **закінчення** тут немає. *(There is the suffix "-ува-" and the suffix "-ти". And there is no ending here.)* > — **Студентка Марина:** Так, дієслова в цій формі не мають закінчень. Отже, вся частина слова — це **основа**. *(Yes, verbs in this form do not have endings. So, the entire part of the word is the stem.)* > — **Студент Богдан:** А тепер візьмемо слово «написання». Яке тут закінчення? *(And now let's take the word "написання". What is the ending here?)* > — **Студентка Марина:** Це **іменник**, тому він змінюється. Закінчення тут «-я». *(This is a noun, so it changes. The ending here is "-я".)* > — **Студент Богдан:** Чудово! Ми успішно складемо цей іспит завтра. *(Great! We will successfully pass this exam tomorrow.)*
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -450,7 +450,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 6: A2 finale (A2 M51-M69)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 40%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 40% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 70-90% Ukrainian.
 LANGUAGE ROLES:
@@ -469,18 +536,69 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] морфологія (morphology — the study of word forms and parts of speech)
+- [ ] корінь (root — the main meaningful part of a word)
+- [ ] префікс (prefix — meaningful part before the root)
+- [ ] суфікс (suffix — meaningful part after the root)
+- [ ] закінчення (ending — changeable part expressing grammatical meaning)
+- [ ] основа (stem — the part of a word without the ending)
+- [ ] спільнокореневий (cognate — words sharing the same root)
+- [ ] іменник (noun — names things, answers хто? що?)
+- [ ] прикметник (adjective — names qualities, answers який? чий?)
+- [ ] дієслово (verb — names actions, answers що робити?)
+- [ ] прислівник (adverb — names circumstances, answers як? де? коли?)
+- [ ] самостійний (content/autosemantic — part of speech with independent meaning)
+- [ ] службовий (function/synsemantic — part of speech without independent meaning)
+- [ ] прийменник (preposition — links words, governs case)
+- [ ] сполучник (conjunction — connects words or clauses)
+- [ ] частка (particle — adds shades of meaning)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Основа і закінчення (~720 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

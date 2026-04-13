@@ -2,12 +2,12 @@
   "module": "cases-with-quantity-expressions",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-11T02:00:44.449595Z",
+  "last_audit": "2026-04-11T12:23:47.737491Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-11T01:59:48.672021Z",
+    "md": "2026-04-11T12:22:49.005346Z",
     "meta": null,
-    "activities": "2026-04-11T01:52:02.776436Z",
+    "activities": "2026-04-11T12:13:01.465483Z",
     "vocabulary": "2026-04-09T23:04:47.481163Z",
     "research": null,
     "plan": "2026-04-05T19:21:47.091867Z"
@@ -21,12 +21,12 @@
     "lesson": {
       "status": "fail",
       "violations": 3,
-      "message": "3805/4000 (raw: 3945) (195 short) | pedagogy: 2 violations | immersion: 43.4% LOW (target 85-100% (B1.5-6 Vocab)) | richness: 52% < 95% min (grammar) - REWRITE needed"
+      "message": "3854/4000 (raw: 3944) (146 short) | engagement: 4/5 | immersion: 51.0% LOW (target 85-100% (B1.5-6 Vocab)) | richness: 50% < 95% min (grammar) - REWRITE needed"
     },
     "activities": {
       "status": "fail",
       "violations": 1,
-      "message": "9/0 | density: 7 < 6"
+      "message": "7/0 | density: 5 < 6"
     },
     "vocabulary": {
       "status": "pass",
@@ -61,7 +61,7 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "4 Outline Compliance Errors"
+      "3 Outline Compliance Errors"
     ],
     "pass_count": 4,
     "fail_count": 2,

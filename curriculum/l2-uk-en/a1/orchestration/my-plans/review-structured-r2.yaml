@@ -1,0 +1,56 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 7
+  evidence: 'All planned H2 sections are present and the core topics are covered,
+    but section pacing is badly off the plan’s 300-word design: computed section counts
+    are `Dialogues 538`, `Планування 458`, `Мій тиж'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: No confirmed Russianisms, Surzhyk, calques, paronym errors, bad case endings,
+    or false grammar claims. The prompt’s VESUM verification already confirms all
+    non-name Ukrainian words in the module.
+- dimension: 3
+  name: Pedagogical quality
+  score: 6
+  evidence: The module has too much English meta-explanation, e.g. “`This short conversation
+    is rich with real-world communication patterns...`”, which reduces Ukrainian input.
+    More importantly, the Planning sect
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'Required vocabulary is used in context: “`тиждень`”, “`вільний / вільна`”,
+    “`зустріч`”, “`відпочивати`”, “`прибирати квартиру`”, “`вечірка`”. Recommended
+    items also appear naturally, including “`зустр'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: The three markers align well with the three `activity_hints`, and each
+    appears after the material it should test. No visible logic problems are present
+    in the placeholders.
+- dimension: 6
+  name: Engagement & tone
+  score: 7
+  evidence: 'The teacher voice is generally calm and usable, but parts of the Summary
+    drift into generic filler: “`The ability to structure your time and share your
+    schedule is a major milestone in communication.`'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean markdown, all planned H2 headings are present and ordered correctly,
+    markers are intact, and the pipeline word count is 1665, which is above the 1200
+    target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: No Russia-centric framing or suspect cultural claims. Ukrainian is presented
+    on its own terms.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: 'Dialogue 1 is natural and multi-turn. Dialogue 2 is much flatter: one
+    speaker lists “`У понеділок... У вівторок... У середу...`” while the other mostly
+    prompts, so it reads more like a schedule dump t'
+findings: []

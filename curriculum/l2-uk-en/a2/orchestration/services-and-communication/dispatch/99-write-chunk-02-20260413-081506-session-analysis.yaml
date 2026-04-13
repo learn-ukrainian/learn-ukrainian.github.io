@@ -1,0 +1,80 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T06-12-913e6ae7.json
+phase: write-chunk-02
+prompt_chars: 45691
+response_chars: 5713
+prompt_words: 6823
+response_words: 945
+sections:
+- name: header
+  start: 0
+  length: 413
+  fraction: 0.009
+- name: skeleton
+  start: 413
+  length: 1323
+  fraction: 0.029
+- name: prior_summary
+  start: 1736
+  length: 3226
+  fraction: 0.0706
+- name: plan
+  start: 4962
+  length: 11789
+  fraction: 0.258
+- name: wiki
+  start: 10259
+  length: 28725
+  fraction: 0.6287
+- name: output_spec
+  start: 45476
+  length: 215
+  fraction: 0.0047
+large_sections:
+- wiki
+directives_total: 22
+directives_covered: 12
+directives_missed:
+- kind: checklist
+  text: конверт (envelope)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: марка (stamp)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: отримати (to receive)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: must
+  text: '- **Middle School (5-7 клас):** The focus shifts to the official, standardized
+    format of a postal address (`поштова адреса`) as required by Ukrposhta (`Укрпошта`).'
+  covered: false
+  coverage_note: 4/15 keywords (27%)
+- kind: must
+  text: '`) and the cases required for location.'
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: must
+  text: '* **Fill-in-the-Blank (Aspect):** Create sentences where students must choose
+    between the imperfective and perfective verb.'
+  covered: false
+  coverage_note: 4/13 keywords (31%)
+- kind: must
+  text: '` | `Привіт, Оксано!` | The **Vocative case** (`кличний відмінок`) is mandatory
+    for direct address in Ukrainian.'
+  covered: false
+  coverage_note: 3/10 keywords (30%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 3/11 keywords (27%)
+- kind: inject_activity
+  text: fill-in-dialogue-dative
+  covered: false
+  coverage_note: marker missing

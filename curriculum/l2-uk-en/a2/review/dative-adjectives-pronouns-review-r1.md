@@ -1,60 +1,81 @@
 ## Linguistic Scan
-Linguistic error found: The text incorrectly claims that ALL plural adjectives take the `-им` ending in the Dative case, completely ignoring soft-stem adjectives which take `-ім`. Paradoxically, the text itself uses the correct form `синім` in the examples but teaches the wrong grammatical rule.
+- Factual grammar error: `It is absolutely crucial to remember that Ukrainian endings are unified; both hard and soft masculine adjectives comfortably take the **-ому** ending in the Dative case.` This teaches the wrong rule. Soft-stem adjectives take `-ьому` (`синьому`, `останньому`), not `-ому`. Verified in VESUM.
 
 ## Exercise Check
-- **Markers present:** 7
-- **Plan required:** 5
-- The writer correctly implemented the 5 planned activities but then inappropriately added 2 extra markers (`<!-- INJECT_ACTIVITY: match-up -->` and `<!-- INJECT_ACTIVITY: group-sort -->`) at the end of the "Порівняння відмінків" section. These extra markers have no corresponding `activity_hints` in the plan and will cause generation errors during the `ACTIVITIES` pipeline step.
+- 5 activity markers are present, which matches the 5 `activity_hints` in the plan.
+- Marker placement is correct: `group-sort` follows the adjective section; `quiz` and `match-up` follow the pronoun section; `fill-in` and `error-correction` follow the full noun-phrase section.
+- Marker IDs align with the planned exercise types/foci.
+- No inline DSL exercises are present, so there is no exercise logic to audit beyond marker placement.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 8/10 | Missed the English translation in the heading for Section 2: `## Присвійні та вказівні займенники у давальному відмінку`. Inappropriately added unmapped activity markers. |
-| 2. Linguistic accuracy | 8/10 | Factual error: claimed the plural Dative ending is *always* `-им` regardless of whether the adjective is hard or soft. Soft stems take `-ім` (e.g. `синім`). |
-| 3. Pedagogical quality | 7/10 | Severe pedagogical confusion: stated "For masculine and neuter **nouns** that end in a hard consonant (like новий...)" when referring to adjectives. This is highly confusing for learners trying to grasp the concept of agreement. |
-| 4. Vocabulary coverage | 9/10 | Required terms like "прикметник" and "присвійний" were used only in section headers rather than being naturally integrated into the explanatory prose itself. |
-| 5. Exercise quality | 8/10 | The injected markers for the extra activities do not exist in the plan and break the pipeline contract. |
-| 6. Engagement & tone | 10/10 | Excellent teacher persona. Great mini-dialogues contextualizing the grammar and clear "Читаємо українською" examples. |
-| 7. Structural integrity | 10/10 | Word count is extremely healthy (3251). All sections are present and logically ordered. Clean markdown. |
-| 8. Cultural accuracy | 10/10 | Naturally highlights the beauty of the Ukrainian language ("melodic", "consistent") and contrasts with Russian forms appropriately without making the entire explanation about Russian. |
-| 9. Dialogue & conversation quality | 10/10 | Realistic and engaging dialogue contexts (handing out tests, giving gifts, calling friends). |
+| 1. Plan adherence | 8/10 | All four planned sections are present and the five markers cover all five `activity_hints`, but none of the planned references is cited in the prose (`Заболотний`: 0, `Захарійчук`: 0, `ULP`: 0). |
+| 2. Linguistic accuracy | 6/10 | Critical rule error: `both hard and soft masculine adjectives comfortably take the **-ому** ending...` Soft stems take `-ьому`; VESUM verifies `синьому` and `останньому`. |
+| 3. Pedagogical quality | 7/10 | Section 1 opens with a long all-English theory paragraph (`When you give a gift...` to `This creates a beautiful harmony in the sentence.`) before any Ukrainian example, which slows the PPP flow. |
+| 4. Vocabulary coverage | 10/10 | Required vocabulary is used in prose: `моєму`, `моїй`, `твоєму`, `нашій`, `цьому`, `тому`, `новому`, `старшому`, `прикметник`, `присвійний`; recommended `узгодження`, `іменникова група`, `їхньому` also appear. |
+| 5. Exercise quality | 10/10 | All 5 planned exercise types have markers, and each marker appears after the relevant teaching block. No observable marker-placement or scope problem. |
+| 6. Engagement & tone | 7/10 | The prose slips into generic praise instead of instruction: `This makes the language melodic and highly predictable compared to other Slavic languages...` |
+| 7. Structural integrity | 10/10 | All H2 sections are present and ordered correctly; marker count is complete; pipeline word count is 2781, so the module clears the 2000-word target. |
+| 8. Cultural accuracy | 10/10 | No Russian characters (`ы э ё ъ`) appear, and the module stays in ordinary Ukrainian contexts without overt Russocentric framing. |
+| 9. Dialogue & conversation quality | 7/10 | The only dialogue is a very short two-turn grading snippet: `Моєму найкращому студентові — десятка!... / Дякуємо нашій добрій вчительці!` It is functional but not a natural multi-turn exchange. |
 
 ## Findings
+- [PLAN ADHERENCE] [SEVERITY: major]  
+  Location: `Ця таблиця показує логіку української мови. Кожен відмінок має свій унікальний звук. Ви швидко запам'ятаєте ці нові закінчення.`  
+  Issue: The module never integrates the plan’s references. Search confirmation: `Заболотний` = 0, `Захарійчук` = 0, `ULP` = 0.  
+  Fix: Add one concise sentence tying the chart to the listed references.
 
-[Linguistic accuracy] [CRITICAL]
-Location: `All genders (masculine, feminine, and neuter) use the exact same ending: **-им**. Whether the adjective is hard or soft in the dictionary form, the plural Dative ending is always **-им**. This unification makes plural adjectives very easy to form.` and `For plural words, use the ending **-им**.`
-Issue: The text claims that all adjectives take `-им` in the plural Dative, but soft-stem adjectives take `-ім` (as the text itself correctly demonstrates with `синім морям`).
-Fix: Update the rules to specify `-им` for hard stems and `-ім` for soft stems.
+- [LINGUISTIC ACCURACY] [SEVERITY: critical]  
+  Location: `It is absolutely crucial to remember that Ukrainian endings are unified; both hard and soft masculine adjectives comfortably take the **-ому** ending in the Dative case.`  
+  Issue: This is false. Soft-stem masculine/neuter adjectives take `-ьому`, not `-ому`. Learners will memorize the wrong paradigm.  
+  Fix: Replace the sentence with an explicit hard-stem `-ому` vs soft-stem `-ьому` contrast and examples.
 
-[Pedagogical quality] [CRITICAL]
-Location: `For masculine and neuter nouns that end in a hard consonant (like **новий** - *new*, **старий** - *old*, **гарний** - *beautiful/good*), the adjective takes the ending **-ому**.`
-Issue: The text mistakenly categorizes "новий", "старий", "гарний" as "nouns" instead of adjectives, which creates fundamental confusion for a learner trying to understand adjective-noun agreement.
-Fix: Change "nouns that end in a hard consonant" to "adjectives that have a hard stem".
+- [PEDAGOGICAL QUALITY] [SEVERITY: major]  
+  Location: `When you give a gift to a friend... This creates a beautiful harmony in the sentence.`  
+  Issue: The section starts with a long English explanation before showing Ukrainian forms. For PPP grammar teaching, the pattern should appear earlier and more concretely.  
+  Fix: Shorten the opener and introduce a Ukrainian contrast immediately (`новий друг → новому другові`, `нова подруга → новій подрузі`).
 
-[Exercise quality] [MAJOR]
-Location: At the end of the `Порівняння відмінків` section:
-`<!-- INJECT_ACTIVITY: match-up -->`
-`<!-- INJECT_ACTIVITY: group-sort -->`
-Issue: The writer added two extra activity markers that are not defined in the plan's `activity_hints`. This will break the automated generation pipeline.
-Fix: Remove the two extra markers.
+- [ENGAGEMENT & TONE] [SEVERITY: minor]  
+  Location: `This makes the language melodic and highly predictable compared to other Slavic languages, which often have diverging sounds.`  
+  Issue: This is generic praise, not useful instruction. It spends words on aesthetic commentary instead of helping the learner choose forms.  
+  Fix: Replace it with a practical takeaway about recognizing stem type and selecting the correct dative ending.
 
-[Plan adherence] [MINOR]
-Location: `## Присвійні та вказівні займенники у давальному відмінку`
-Issue: The section heading is missing its English translation, which was specifically required in the `content_outline`.
-Fix: Add "(Possessive and Demonstrative Pronouns in the Dative)" to the heading.
+- [DIALOGUE & CONVERSATION QUALITY] [SEVERITY: major]  
+  Location: `> — **Вчитель:** Моєму найкращому студентові — десятка!...` through `> — **Студенти:** Дякуємо нашій добрій вчительці!`  
+  Issue: The dialogue is too short and static to feel like a real classroom exchange. One speaker announces grades; the other gives a single choral response.  
+  Fix: Expand it into a short multi-turn exchange with at least one follow-up question and answer.
 
 ## Verdict: REVISE
-The module is highly engaging, properly scoped, and well-structured, but it contains two critical errors (categorizing adjectives as nouns, and falsely claiming soft plural adjectives end in `-им` instead of `-ім`) along with one pipeline-breaking error (extra unmapped activity markers). These must be addressed via the deterministic find/replace block before publishing.
+REVISE because the module contains a critical factual grammar error, and several scored dimensions fall below 9 (`Plan adherence`, `Linguistic accuracy`, `Pedagogical quality`, `Engagement & tone`, `Dialogue & conversation quality`). The structure is usable, so this does not require a full rebuild.
 
 <fixes>
-- find: "## Присвійні та вказівні займенники у давальному відмінку\n\nNow that you know"
-  replace: "## Присвійні та вказівні займенники у давальному відмінку (Possessive and Demonstrative Pronouns in the Dative)\n\nNow that you know"
-- find: "For masculine and neuter nouns that end in a hard consonant (like **новий** - *new*, **старий** - *old*, **гарний** - *beautiful/good*), the adjective takes the ending **-ому**."
-  replace: "For masculine and neuter adjectives that have a hard stem (like **новий** - *new*, **старий** - *old*, **гарний** - *beautiful/good*), the adjective takes the ending **-ому**."
-- find: "In the plural, the adjective system becomes even simpler. All genders (masculine, feminine, and neuter) use the exact same ending: **-им**. Whether the adjective is hard or soft in the dictionary form, the plural Dative ending is always **-им**. This unification makes plural adjectives very easy to form."
-  replace: "In the plural, the adjective system becomes even simpler. All genders (masculine, feminine, and neuter) use the exact same ending pattern: **-им** for hard stems and **-ім** for soft stems."
-- find: "For plural words, use the ending **-им**."
-  replace: "For plural words, use the ending **-им** (or **-ім** for soft stems)."
-- find: "<!-- INJECT_ACTIVITY: match-up -->\n<!-- INJECT_ACTIVITY: group-sort -->\n\n## Підсумок (Summary)"
-  replace: "## Підсумок (Summary)"
+- find: |-
+    Ця таблиця показує логіку української мови. Кожен відмінок має свій унікальний звук. Ви швидко запам'ятаєте ці нові закінчення.
+  replace: |-
+    Ця таблиця показує логіку української мови. Кожен відмінок має свій унікальний звук. Ви швидко запам'ятаєте ці нові закінчення. Такі самі парадигми подають Заболотний (§157), Захарійчук (§281) і ULP: Ukrainian Possessive Pronouns.
+
+- find: |-
+    It is absolutely crucial to remember that Ukrainian endings are unified; both hard and soft masculine adjectives comfortably take the **-ому** ending in the Dative case.
+  replace: |-
+    It is absolutely crucial to remember the spelling difference: hard-stem masculine and neuter adjectives take **-ому** (новому, старшому), while soft-stem adjectives take **-ьому** (синьому, останньому) in the Dative case.
+
+- find: |-
+    When you give a gift to a friend, the form of the word for "friend" changes to the Dative case. But what if you want to specify exactly which friend you mean? Giving a thoughtful gift to a new friend is quite different from giving one to an old friend. In Ukrainian grammar, every **прикметник** (adjective) must perfectly agree with the noun it describes. This fundamental concept is called **узгодження** (agreement). If the core noun is in the Dative case because it is the recipient of an action, the attached adjective must also be in the Dative case. It must match the noun's gender, number, and case perfectly to form a cohesive grammatical unit. This creates a beautiful harmony in the sentence.
+  replace: |-
+    When you give something to a person, the noun phrase moves into the Dative case. The adjective must agree with the noun in gender, number, and case: **новий друг → новому другові**, **нова подруга → новій подрузі**. In Ukrainian grammar, this agreement is called **узгодження** (agreement).
+
+- find: |-
+    This makes the language melodic and highly predictable compared to other Slavic languages, which often have diverging sounds.
+  replace: |-
+    For learners, the useful point is practical: once you recognize the stem type, the dative ending is predictable.
+
+- find: |-
+    > — **Вчитель:** Моєму найкращому студентові — десятка! Нашій новій студентці — дев'ятка. А цьому хлопцю треба більше працювати. *(To my best student — a ten! To our new student — a nine. And this boy needs to work more.)*
+    > — **Студенти:** Дякуємо нашій добрій вчительці! *(We thank our kind teacher!)*
+  replace: |-
+    > — **Вчитель:** Моєму найкращому студентові — десятка! Нашій новій студентці — дев'ятка. А цьому хлопцю треба більше працювати. *(To my best student — a ten! To our new student — a nine. And this boy needs to work more.)*
+    > — **Студент:** Дякую Вам, пані Олено! Ви завжди дуже чітко пояснюєте нашій групі складні теми. *(Thank you, Ms. Olena! You always explain difficult topics very clearly to our group.)*
+    > — **Студентка:** А можна мені показати помилки в моєму есе? *(Could you show me the mistakes in my essay?)*
+    > — **Вчитель:** Звичайно. Після уроку я все поясню тобі й твоєму одногрупникові. *(Of course. After class I’ll explain everything to you and your classmate.)*
 </fixes>

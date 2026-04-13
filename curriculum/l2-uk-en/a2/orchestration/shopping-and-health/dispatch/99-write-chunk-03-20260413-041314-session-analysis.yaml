@@ -1,0 +1,76 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T02-12-32a272bf.json
+phase: write-chunk-03
+prompt_chars: 43719
+response_chars: 4995
+prompt_words: 6364
+response_words: 824
+sections:
+- name: header
+  start: 0
+  length: 441
+  fraction: 0.0101
+- name: skeleton
+  start: 441
+  length: 1902
+  fraction: 0.0435
+- name: prior_summary
+  start: 2343
+  length: 3201
+  fraction: 0.0732
+- name: plan
+  start: 5544
+  length: 12559
+  fraction: 0.2873
+- name: wiki
+  start: 10508
+  length: 25396
+  fraction: 0.5809
+- name: output_spec
+  start: 43499
+  length: 220
+  fraction: 0.005
+large_sections:
+- wiki
+directives_total: 20
+directives_covered: 11
+directives_missed:
+- kind: must
+  text: '` | After numbers 5 and greater, nouns must be in the Genitive Plural case.'
+  covered: false
+  coverage_note: 3/8 keywords (38%)
+- kind: must
+  text: '` | The Instrumental case (`орудний відмінок`) is required to show the "instrument"
+    or method of payment.'
+  covered: false
+  coverage_note: 2/9 keywords (22%)
+- kind: must
+  text: '` | Similar to the error with `яблука`, the noun `гривня` must be in the
+    Genitive Plural (`гривень`) after numbers like `двадцять`.'
+  covered: false
+  coverage_note: 2/13 keywords (15%)
+- kind: must
+  text: '**Ukrainian Phonetics Only**: Pronunciation must be taught based on the Ukrainian
+    phonetic system.'
+  covered: false
+  coverage_note: 2/9 keywords (22%)
+- kind: must
+  text: Students must construct a dialogue to buy 1-2 items.
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: EVERY word in the checklist below MUST appear at least once with a bold Ukrainian
+    form and English translation in a natural sentence.
+  covered: false
+  coverage_note: 3/15 keywords (20%)
+- kind: inject_activity
+  text: match-up-remedies
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: true-false-genitive-usage
+  covered: false
+  coverage_note: marker missing

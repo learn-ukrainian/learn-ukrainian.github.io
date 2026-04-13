@@ -25,7 +25,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-буде чіткою: «в Україні». Отже, слова «в Україні» безпосередньо залежать від цього дієприкметника. Разом ці компоненти утворюють повноцінний дієприкметниковий зворот «знятий в Україні». Ця конструкція допомагає нам надавати багато інформації про будь-який предмет чи явище дуже стисло, максимально точно і професійно. Кожен дієприкметниковий зворот ніколи не існує в реченні сам по собі — він завжди детально описує якийсь конкретний предмет або особу. Слово, яке описує та граматично доповнює цей розширений зворот, називається **означуване слово** *(modified word)*. Найчастіше в ролі означуваного слова виступає звичайний український іменник або особовий займенник. Саме від цього головного слова ми ставимо логічне питання до всього дієприкметникового звороту. Наприклад, у фразі «книжка, написана відомим автором» означуваним словом є іменник «книжка». Ми запитуємо: книжка яка саме? І одразу отримуємо розгорнуту відповідь: «написана відомим автором». Просто порівняйте звичайне одиничне слово «книжка» та розширену, дуже інформативну фразу «книжка, написана відомим автором». Використання такого звороту робить нашу мову набагато багатшою, точнішою та виразнішою. Також дуже важливо пам'ятати одне залізне правило нашої мови. Будь-який дієприкметниковий зворот завжди суворо узгоджується зі своїм означуваним словом у правильному роді, відповідному числі та потрібному відмінку. Коли ми аналізуємо внутрішню структуру українського речення, весь дієприкметниковий зворот завжди виступає як один неподільний член речення. Ця важлива і поширена синтаксична роль традиційно в науці називається **означення** *(attribute)*. Хоча такий зворот може складатися з трьох, чотирьох або навіть більше слів, під час синтаксичного розбору ми завжди впевнено підкреслюємо його однією довгою хвилястою лінією. Як і звичайне означення, розширений зворот відповідає на питання «який?», «яка?», «яке?» або «які?». Розгляньмо детально таке речення: «Книга, прочитана всіма новими учнями, лежала на великому дерев'яному столі». Спочатку ми шукаємо головні члени: підмет — це «книга», а присудок — це дієслово «лежала». Тепер ми ставимо питання від підмета: книга яка? Відповідь є абсолютно очевидною: «прочитана всіма новими учнями». Весь цей великий і змістовний фрагмент є єдиним повноцінним означенням у цьому реченні. Це надзвичайно зручний стилістичний інструмент для написання складних наукових текстів, щоденних новинних репортажів та серйозних офіційних документів, де необхідно подавати максимально точні, об'єктивні описи без жодних зайвих слів. У вас може виникнути логічне запитання: навіщо ми так часто використовуємо ці довгі дієприкметникові звороти, якщо існують звичайні одиничні дієприкметники? Головна відповідь лежить у загальній кількості та високій якості переданої інформації. Одиничний дієприкметник здатний дати нам лише одну базову характеристику предмета. Наприклад, у простому реченні «Ми уважно подивилися обговорюваний фільм» слово «обговорюваний» — це лише звичайне означення без додаткових деталей. Але якщо ми додамо до нього залежні слова, ми миттєво отримаємо повноцінний дієприкметниковий зворот: «Фільм, активно обговорюваний усіма глядачами, отримав престижну міжнародну нагороду». Як ви бачите, такий розгорнутий зворот додає нашому реченню значно більше описової ваги та глибокого контексту. Він пояснює не просто факт обговорення, а уточнює, хто саме брав участь у цьому процесі. Зверніть свою особливу увагу на пунктуацію: звичайний одиничний дієприкметник ніколи не відокремлюється комами, тоді як наш розширений зворот дуже часто потребує спеціальних розділових знаків. Про ці важливі пунктуаційні правила ми докладно поговоримо в наступному розділі нашого уроку. <!-- INJECT_ACTIVITY: quiz, focus on identifying the "означуване слово" and the "зворот" in 12 sentences -->
+about? Let's take an example: "The book written by a famous author lies on the table." Here, the participle phrase "written by a famous author" describes an object. What exactly was written? It is the "book". Therefore, the word "book" is the modified word for this phrase.* It is important to clearly separate the modified word from the phrase itself. The **означуване слово** (modified word) is the core subject of our attention, while the phrase acts as a descriptive attachment that hangs onto it. Because the participle phrase acts as an adjective describing a noun, its syntactic role in a sentence is very straightforward. The entire phrase, no matter how long or complex it might be, functions as a single **означення** (attribute). It behaves exactly like one giant adjective. У реченні весь дієприкметниковий зворот виступає одним членом речення — означенням. Він завжди відповідає на питання «який?», «яка?», «яке?» або «які?», поставлене від означуваного слова. Наприклад: «Книга (яка?), прочитана всіма учнями, лежала на столі». Хоча зворот складається з трьох слів, ми підкреслюємо його однією хвилястою лінією, як звичайний прикметник. > *In a sentence, the entire participle phrase acts as a single sentence part — an attribute. It always answers the question "which?" or "what kind of?" asked from the modified word. For example: "The book (which?), read by all the students, lay on the table." Although the phrase consists of three words, we underline it with a single wavy line, just like a regular adjective.* This concept is highly elegant. Instead of breaking the sentence into a **підрядне речення** (subordinate clause) with its own verb and subject, you package an entire action and its details into one neat **означення** (attribute). This allows Ukrainian writers to craft dense, information-rich sentences without sounding repetitive or overly conversational. :::info **Grammar box** Always ask the question from the **означуване слово** (modified word) to the entire phrase. If the noun is feminine, like «книга» (book), the question is «яка?» (which?), and the participle in the phrase will take the matching feminine ending. ::: To truly appreciate the utility of these phrases, we should compare them to single participles. A lone participle gives a basic description, but adding dependent words expands the narrative dramatically. Порівняймо два речення. Перше: «Ми подивилися обговорюваний фільм». Тут маємо лише одиничний дієприкметник «обговорюваний». Він дає нам мінімум інформації. Друге речення: «Ми подивилися фільм, обговорюваний усіма глядачами після прем'єри». Тепер ми бачимо повноцінний дієприкметниковий зворот. Він додає важливі деталі про те, ким саме і коли обговорювався цей фільм. In the first sentence, the single participle simply acts as a standard adjective in **препозиція** (preposition — phrase before the noun). However, in the second sentence, the phrase appears in **постпозиція** (postposition — phrase after the noun) and brings in actors and timelines, creating a vivid picture. This is why mastering the **дієприкметниковий зворот** (participle phrase) is essential for anyone aiming to read Ukrainian literature or write at an advanced level. It elevates your language from simple statements to nuanced storytelling. <!-- INJECT_ACTIVITY: quiz-basics -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -532,7 +532,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -545,18 +612,61 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] дієприкметниковий зворот (participle phrase)
+- [ ] означуване слово (modified word — the noun the participle refers to)
+- [ ] означення (attribute — syntactic role of the participle phrase)
+- [ ] відокремлення (setting off — punctuation with commas)
+- [ ] постпозиція (postposition — phrase after the noun)
+- [ ] препозиція (preposition — phrase before the noun)
+- [ ] підрядне речення (subordinate clause)
+- [ ] залежні слова (dependent words)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Правила відокремлення (~880 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

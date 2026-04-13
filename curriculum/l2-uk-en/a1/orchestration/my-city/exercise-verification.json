@@ -1,133 +1,7 @@
 {
-  "total_items": 98,
-  "grounded_items": 67,
+  "total_items": 75,
+  "grounded_items": 51,
   "ungrounded": [
-    {
-      "word": "купувати",
-      "exercise_type": "match-up",
-      "context": "купувати ліки",
-      "role": "context"
-    },
-    {
-      "word": "читати",
-      "exercise_type": "match-up",
-      "context": "читати книги",
-      "role": "context"
-    },
-    {
-      "word": "дивитися",
-      "exercise_type": "match-up",
-      "context": "дивитися фільм",
-      "role": "context"
-    },
-    {
-      "word": "обідати",
-      "exercise_type": "match-up",
-      "context": "обідати",
-      "role": "context"
-    },
-    {
-      "word": "офіс",
-      "exercise_type": "match-up",
-      "context": "офіс",
-      "role": "answer"
-    },
-    {
-      "word": "працювати",
-      "exercise_type": "match-up",
-      "context": "працювати",
-      "role": "context"
-    },
-    {
-      "word": "відпочивати",
-      "exercise_type": "match-up",
-      "context": "відпочивати",
-      "role": "context"
-    },
-    {
-      "word": "дім",
-      "exercise_type": "match-up",
-      "context": "дім",
-      "role": "answer"
-    },
-    {
-      "word": "жити",
-      "exercise_type": "match-up",
-      "context": "жити",
-      "role": "context"
-    },
-    {
-      "word": "зараз",
-      "exercise_type": "quiz",
-      "context": "Я зараз ___ аптеці.",
-      "role": "context"
-    },
-    {
-      "word": "чекають",
-      "exercise_type": "quiz",
-      "context": "Люди чекають ___ зупинці.",
-      "role": "context"
-    },
-    {
-      "word": "сім'я",
-      "exercise_type": "quiz",
-      "context": "Сім'я обідає ___ ресторані.",
-      "role": "context"
-    },
-    {
-      "word": "нова",
-      "exercise_type": "fill-in",
-      "context": "Тут є нова ____.",
-      "role": "context"
-    },
-    {
-      "word": "стара",
-      "exercise_type": "fill-in",
-      "context": "Там є стара ____.",
-      "role": "context"
-    },
-    {
-      "word": "новий",
-      "exercise_type": "fill-in",
-      "context": "У місті є новий ____.",
-      "role": "context"
-    },
-    {
-      "word": "мені",
-      "exercise_type": "quiz",
-      "context": "Мені потрібні ліки. Де я?",
-      "role": "context"
-    },
-    {
-      "word": "потрібні",
-      "exercise_type": "quiz",
-      "context": "Мені потрібні ліки. Де я?",
-      "role": "context"
-    },
-    {
-      "word": "хочу",
-      "exercise_type": "quiz",
-      "context": "Я хочу дивитися фільм. Де я?",
-      "role": "context"
-    },
-    {
-      "word": "хочемо",
-      "exercise_type": "quiz",
-      "context": "Ми хочемо обідати. Де ми?",
-      "role": "context"
-    },
-    {
-      "word": "чекаю",
-      "exercise_type": "quiz",
-      "context": "Я чекаю автобус. Де я?",
-      "role": "context"
-    },
-    {
-      "word": "потрібен",
-      "exercise_type": "quiz",
-      "context": "Мені потрібен поїзд. Де я?",
-      "role": "context"
-    },
     {
       "word": "площа",
       "exercise_type": "group-sort",
@@ -135,45 +9,135 @@
       "role": "answer"
     },
     {
-      "word": "купують",
-      "exercise_type": "true-false",
-      "context": "Люди купують ліки в аптеці.",
+      "word": "супермаркеті",
+      "exercise_type": "match-up",
+      "context": "у супермаркеті",
       "role": "context"
     },
     {
-      "word": "завжди",
-      "exercise_type": "true-false",
-      "context": "Поїзд завжди на зупинці.",
+      "word": "чекаю",
+      "exercise_type": "match-up",
+      "context": "Я чекаю на поїзд...",
+      "role": "answer"
+    },
+    {
+      "word": "поїзд",
+      "exercise_type": "match-up",
+      "context": "Я чекаю на поїзд...",
+      "role": "answer"
+    },
+    {
+      "word": "моя",
+      "exercise_type": "fill-in",
+      "context": "Моя школа ____, у центрі міста.",
       "role": "context"
+    },
+    {
+      "word": "книги",
+      "exercise_type": "quiz",
+      "context": "Де я читаю книги?",
+      "role": "context"
+    },
+    {
+      "word": "вулиця",
+      "exercise_type": "group-sort",
+      "context": "вулиця",
+      "role": "answer"
+    },
+    {
+      "word": "ріг",
+      "exercise_type": "group-sort",
+      "context": "ріг",
+      "role": "answer"
     },
     {
       "word": "місце",
       "exercise_type": "true-false",
-      "context": "Вокзал — це місце, де є автобуси.",
+      "context": "Аптека — це місце, де ми купуємо ліки.",
       "role": "context"
     },
     {
-      "word": "автобуси",
+      "word": "ми",
       "exercise_type": "true-false",
-      "context": "Вокзал — це місце, де є автобуси.",
+      "context": "Аптека — це місце, де ми купуємо ліки.",
       "role": "context"
     },
     {
-      "word": "читають",
+      "word": "купуємо",
       "exercise_type": "true-false",
-      "context": "Студенти читають книги у бібліотеці.",
+      "context": "Аптека — це місце, де ми купуємо ліки.",
       "role": "context"
     },
     {
-      "word": "чекаємо",
-      "exercise_type": "error-correction",
-      "context": "Ми чекаємо автобус в зупинці.",
+      "word": "правильно",
+      "exercise_type": "true-false",
+      "context": "Правильно говорити «в пошті».",
       "role": "context"
     },
     {
-      "word": "готелю",
+      "word": "говорити",
+      "exercise_type": "true-false",
+      "context": "Правильно говорити «в пошті».",
+      "role": "context"
+    },
+    {
+      "word": "слово",
+      "exercise_type": "true-false",
+      "context": "Слово «далеко» означає «не близько».",
+      "role": "context"
+    },
+    {
+      "word": "означає",
+      "exercise_type": "true-false",
+      "context": "Слово «далеко» означає «не близько».",
+      "role": "context"
+    },
+    {
+      "word": "не",
+      "exercise_type": "true-false",
+      "context": "Слово «далеко» означає «не близько».",
+      "role": "context"
+    },
+    {
+      "word": "після",
+      "exercise_type": "true-false",
+      "context": "Після слова «біля» ми кажемо «біля парк».",
+      "role": "context"
+    },
+    {
+      "word": "слова",
+      "exercise_type": "true-false",
+      "context": "Після слова «біля» ми кажемо «біля парк».",
+      "role": "context"
+    },
+    {
+      "word": "кажемо",
+      "exercise_type": "true-false",
+      "context": "Після слова «біля» ми кажемо «біля парк».",
+      "role": "context"
+    },
+    {
+      "word": "читаємо",
+      "exercise_type": "true-false",
+      "context": "У бібліотеці ми читаємо.",
+      "role": "context"
+    },
+    {
+      "word": "вживається",
+      "exercise_type": "true-false",
+      "context": "Слово «вокзал» вживається з прийменником «на».",
+      "role": "context"
+    },
+    {
+      "word": "прийменником",
+      "exercise_type": "true-false",
+      "context": "Слово «вокзал» вживається з прийменником «на».",
+      "role": "context"
+    },
+    {
+      "word": "театру",
       "exercise_type": "fill-in",
-      "context": "готелю",
+      "context": "театру",
       "role": "answer"
     },
     {
@@ -181,19 +145,14 @@
       "exercise_type": "fill-in",
       "context": "вокзалу",
       "role": "answer"
-    },
-    {
-      "word": "музею",
-      "exercise_type": "fill-in",
-      "context": "музею",
-      "role": "answer"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 16,
-    "tested_in_exercises": 15,
+    "tested_in_exercises": 14,
     "not_tested": [
-      "супермаркет"
+      "там",
+      "церква"
     ]
   },
   "all_grounded": false

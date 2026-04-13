@@ -1,0 +1,109 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T04-48-8419438a.json
+phase: skeleton
+prompt_chars: 35965
+response_chars: 5016
+prompt_words: 4925
+response_words: 748
+sections:
+- name: preamble
+  start: 0
+  length: 472
+  fraction: 0.0131
+- name: plan
+  start: 472
+  length: 6531
+  fraction: 0.1816
+- name: wiki
+  start: 6953
+  length: 26632
+  fraction: 0.7405
+- name: output_spec
+  start: 33635
+  length: 2330
+  fraction: 0.0648
+large_sections:
+- wiki
+directives_total: 20
+directives_covered: 2
+directives_missed:
+- kind: must
+  text: Your skeleton must budget every word.
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: must
+  text: Skim this for the key concepts, paradigms, and examples you must cover.
+  covered: false
+  coverage_note: 2/9 keywords (22%)
+- kind: must
+  text: Teaching emergency language at the A1 level must be functional, direct, and
+    immediately applicable.
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: must
+  text: '** Learners must memorize the three primary emergency numbers in Ukraine.'
+  covered: false
+  coverage_note: 3/8 keywords (38%)
+- kind: must
+  text: Teaching Ukrainian must be done on its own terms, completely decoupled from
+    Russian.
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: must
+  text: The learner's mind must build a new, separate phonetic inventory for Ukrainian.
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: must
+  text: The introduction must be methodical and layered, building from the simplest
+    concept to the more complex.
+  covered: false
+  coverage_note: 3/10 keywords (30%)
+- kind: must
+  text: They often incorrectly use the nominative form (`цей`) after a preposition
+    instead of the required locative (`цьому`).
+  covered: false
+  coverage_note: 2/12 keywords (17%)
+- kind: must
+  text: '**Independent Phonetics:** The sound `[ц]` must be taught as a native Ukrainian
+    phoneme.'
+  covered: false
+  coverage_note: 1/8 keywords (12%)
+- kind: must
+  text: The learner's reference point must be Ukrainian itself.
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: must
+  text: '**Word budgets must sum to 1200+.'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: '**Section budgets must match the plan''s `content_outline` word allocations**
+    (±10%).'
+  covered: false
+  coverage_note: 0/8 keywords (0%)
+- kind: must
+  text: '**CRITICAL: An exercise must ONLY test concepts already taught above it.'
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: must
+  text: 'Every plan `activity_hints` entry MUST have a corresponding `<!-- INJECT_ACTIVITY:
+    id -->` marker in the skeleton.'
+  covered: false
+  coverage_note: 3/10 keywords (30%)
+- kind: skeleton_para
+  text: 'P1 (150w): Follow the plan''s points for this section EXACTLY. If the plan
+    says "Self-check questions", output a bulleted Q&A list — NOT prose. If the plan
+    says "recap", write a brief recap.'
+  covered: false
+  coverage_note: 6/20 keywords (30%)
+- kind: inject_activity
+  text: activity-id
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: activity-id
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: descriptive-id
+  covered: false
+  coverage_note: marker missing

@@ -1,32 +1,25 @@
-## Ранок: Початок дня у Києві (~330 words)
-- P1 (80 words): Setting the scene in a Kyiv hotel. Using the past tense to describe waking up: "Я прокинувся/прокинулася о сьомій годині." Checking the weather using M24 vocabulary: "Яка сьогодні погода? Сьогодні сонячно і тепло." Establishing the mood for the finale.
-- P2 (90 words): The breakfast scenario. A multi-turn dialogue at a cafe reviewing M36 (food) and M10 (numbers). Ordering "каву з молоком і круасан" using polite requests: "Дайте, будь ласка." Handling the price: "Сто двадцять гривень." Using "Скільки коштує?" as a key A1 survival skill.
-- P3 (80 words): Navigating transport (M34). Asking for directions to the center: "Вибачте, як дістатися до Хрещатика?" Receiving instructions: "Їдьте на метро." Buying a ticket: "Один квиток, будь ласка." Reviewing the concept of polite imperatives for instructions.
-- P4 (80 words): Inside the metro. Reviewing colors (M22) and locations: "Мені потрібна зелена лінія." Narrative transition from past to present: "Зранку я снідав, а зараз я їду в метро." Previewing the goal: reaching the heart of the city.
-- <!-- INJECT_ACTIVITY: order-day-events --> [order, Chronological events of the morning and afternoon, 8 items]
+## Ранок (Morning) (~330 words)
+- P1 (~110 words): Set the scene of waking up in Kyiv to test everything learned. Narrate the morning routine in past and present tense: "Ти прокинувся/прокинулася в готелі", check the weather: "Сьогодні тепло і сонячно."
+- P2 (~110 words): Breakfast at a cafe dialogue. Order food politely: "Будь ласка, каву з молоком і круасан." Handle the bill using numbers: "Скільки коштує? — Сто двадцять гривень." Use proper greetings and farewells: "Доброго ранку!", "Дякую! До побачення!"
+- P3 (~110 words): Navigating public transport. Ask for directions: "Вибачте, як дістатися до Хрещатика?" Receive instructions: "Їдьте на метро, станція Хрещатик." Buy a ticket: "Один квиток, будь ласка." Read the metro map using colors: "Тобі потрібна зелена лінія."
+- <!-- INJECT_ACTIVITY: match-up-survival-phrases --> [match-up, Match the situation to the correct A1 survival phrase, 7 items]
 
-## День: Прогулянка та нові друзі (~330 words)
-- P1 (80 words): Exploring Khreshchatyk. Using descriptive adjectives (M09) and city vocabulary (M30): "Яка гарна вулиця!", "Тут великі будинки." Using demonstratives from the wiki (цей/ця) to point out landmarks: "Ця будівля — мерія, а цей майдан — Незалежності."
-- P2 (90 words): Shopping for a souvenir (M37). A dialogue about the price of a "вишиванка." Reviewing large numbers: "тисяча двісті гривень" vs "вісімсот гривень." Using adjectives for evaluation: "Це дорого" or "Це гарно." Avoiding the tautology "пам’ятний сувенір" as per the pedagogy notes.
-- P3 (80 words): Meeting Olena. Reviewing introductions (M01-M06): "Привіт! Мене звати...", "Звідки ти?", "Я з Канади." Explaining the purpose of the visit: "Я вивчаю українську мову." Using present tense verbs (M16-17) for current states.
-- P4 (80 words): Lunch invitation and ordering (M43, M36). Using the imperative "Ходімо обідати!" and "Замовляйте." Vocabulary focus: "борщ," "вареники," "салат." Using impersonal expressions to describe the experience: "Це дуже смачно!" and "Мені подобається."
-- <!-- INJECT_ACTIVITY: match-survival-phrases --> [match-up, Situations to A1 survival phrases (ordering, directions, meeting), 7 items]
+## День (Daytime) (~330 words)
+- P1 (~110 words): Exploring the city and expressing admiration. "Ти гуляєш по Хрещатику. Яка гарна вулиця!" Narrate entering a large shop to buy a "сувенір".
+- P2 (~110 words): Shopping dialogue focusing on demonstrative pronouns (цей, ця, це). "Скільки коштує ця вишиванка? — Тисяча двісті гривень. Дорого!" Contrast with another item: "А ця? — Ця — вісімсот. — Добре, я беру!"
+- P3 (~110 words): Dialogue: Meeting a new friend (Олена) for lunch. Introductions: "Привіт! Ти звідки? — Я з Канади." Discussing actions: "Що ти робиш тут? — Я вивчаю українську!" Using imperatives to invite: "Ходімо обідати!" Ordering "борщ і вареники".
+- <!-- INJECT_ACTIVITY: fill-in-tenses --> [fill-in, Complete the sentences narrating the day using past, present, and future tenses, 8 items]
 
-## Вечір: Кіно та рефлексія (~330 words)
-- P1 (90 words): Planning the evening (M50, M51). Using the compound future tense: "Що ми будемо робити ввечері?" Invitations: "Ходімо в кіно!" Discussing time (M26): "О котрій годині? — О сьомій." Emphasizing the structure "о + locative" for time.
-- P2 (80 words): The cinema experience. Using linking words (M44) to describe the flow: "Спочатку ми купили квитки, потім дивилися фільм." Admitting partial understanding: "Я не все розумію, але це цікаво." Focus on integrated communication over perfection.
-- P3 (80 words): After the cinema. Directions and movement: "Ми йдемо в ресторан." Discussing the day with Olena using past and present: "Сьогодні був чудовий день," "Я дуже задоволений/задоволена." Final uses of etiquette formulas for saying goodbye: "Дякую за компанію! До побачення!"
-- P4 (80 words): Reflection at the hotel. A summary paragraph using all three tenses: "Зранку я снідав... Зараз я відпочиваю... Завтра я буду подорожувати далі." Integrating "Я хочу побачити Лавру" to show future intent and goal setting.
-- <!-- INJECT_ACTIVITY: fill-in-tenses --> [fill-in, Narrative completion using past/present/future forms, 8 items]
+## Вечір (Evening) (~330 words)
+- P1 (~110 words): Dialogue: Making evening plans with Олена. Suggesting an activity: "Що будемо робити ввечері? — Ходімо в кіно!" Setting a time: "О котрій? — О сьомій."
+- P2 (~110 words): Narrating the evening using linking words. "Ви дивитеся український фільм." Use connectors for sequences: "Після кіно ви йдете в ресторан." Give basic walking directions to the restaurant.
+- P3 (~110 words): Dialogue: Back at the hotel, chatting with a Ukrainian friend about the day and future plans. Mix tenses naturally: "Сьогодні був чудовий день! Зранку я снідав... Ввечері ми ходили в кіно." Look to tomorrow: "Завтра я буду подорожувати. Я хочу побачити Лавру!"
+- <!-- INJECT_ACTIVITY: order-chronological --> [order, Put the events of the day in chronological order, 8 items]
 
-## Підсумок: Ти готовий до А2! (~330 words)
-- P1 (120 words): The A1 Skill Checklist. Explicitly recapping the eight phases of A1. Can you: Greet and introduce (A1.1)? Describe family (A1.2)? Talk about habits (A1.3)? Tell time and weather (A1.4)? Navigate a city (A1.5)? Order food and shop (A1.6)? Use polite instructions (A1.7)? Talk about the past and future (A1.8)?
-- P2 (100 words): Motivation and A2 Preview. Acknowledging the achievement: "Вітаю! Ти вивчив рівень А1." Explaining that the journey continues with "відмінки" (cases) and "вид дієслова" (aspect). Using the wiki's advice to keep it encouraging: "Це тільки початок!"
-- P3 (110 words): Final Challenge and Self-Check. Follow the plan's requirements for a Q&A list and production task:
-    - Can you describe your day in 10 sentences?
-    - Can you order a meal without English?
-    - Can you ask for directions and understand the answer?
-    - Final sign-off: "До зустрічі на рівні А2!"
-- <!-- INJECT_ACTIVITY: a1-grammar-quiz --> [quiz, Final review of tenses, prices, time, and survival phrases, 5 items]
+## Підсумок: ти готовий/готова! (~330 words)
+- P1 (~110 words): Dialogue: The last day of the A1 course. Two classmates reflect on their progress and say goodbye. "Я вивчив/вивчила стільки! До зустрічі на А2!" Exchanging contact information to stay in touch.
+- P2 (~110 words): The A1 skills checklist. A comprehensive summary of what the learner can now do: greet (A1.1), describe people (A1.2), talk about habits (A1.3), tell time/weather (A1.4), navigate transport (A1.5), order food/shop (A1.6), make polite requests (A1.7), and narrate past/future (A1.8).
+- P3 (~110 words): What's next and celebration. Preview A2 concepts (відмінки, доконаний/недоконаний вид). Congratulate the learner: "Ти вивчив A1! Вітаю! Ти вже можеш жити в українському місті. Це тільки початок!" End with a self-check prompt asking them to describe their day in a Ukrainian city in 10+ sentences.
+- <!-- INJECT_ACTIVITY: quiz-a1-review --> [quiz, Review of key A1 grammar and survival vocabulary, 5 items]
 
 Grand total: ~1320 words

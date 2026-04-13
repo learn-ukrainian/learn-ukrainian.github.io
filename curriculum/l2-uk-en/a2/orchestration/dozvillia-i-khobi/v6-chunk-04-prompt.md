@@ -21,7 +21,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-давай!»** (Yes, let's!). А в неформальній розмові серед друзів дуже часто звучить коротка фраза **«Я — за!»** (I'm in!). Вона означає, що ви повністю підтримуєте план. Використовуйте ці емоційні відповіді, щоб показати, що ви раді провести час разом. Вони роблять вашу українську мову більш живою та природною. Але іноді ми не маємо часу або просто не хочемо кудись іти. Declining an invitation politely is just as important as accepting one. Найкращий спосіб відмовити — це почати з фрази **«На жаль, не можу»** (Unfortunately, I can't). Це показує, що ви б хотіли піти, але обставини не дозволяють. Потім варто пояснити причину. Чоловік скаже **«Я сьогодні зайнятий»** (I'm busy today), а жінка — **«Я сьогодні зайнята»**. Ви також можете сказати **«У мене вже є плани»** (I already have plans). Це універсальна відмова, коли ви не хочете розповідати деталі. Щоб зберегти хороші стосунки і показати, що ви хочете зустрітися пізніше, запитайте: **«Може, іншим разом?»** (Maybe another time?). Така відповідь є дуже дружньою. Навіть коли ви відмовляєте, важливо залишатися ввічливим. Коли ви вже домовилися про зустріч, треба обговорити важливі деталі. Discussing logistics like time and place involves specific question words and cases. Щоб запитати про час, ми використовуємо фразу **«О котрій?»** (At what time?). Відповідь завжди буде з прийменником «о» або «об» та порядковим числівником. Наприклад: **«О п'ятій»** (At five) або «О сьомій» (At seven). Щоб домовитися про місце, запитайте **«Де зустрінемося?»** (Where will we meet?). Часто ми зустрічаємося біля якихось об'єктів. Для цього ми використовуємо прийменник **«біля»** (near) та іменник у родовому відмінку (Genitive case). Наприклад, ви можете сказати: **«Біля входу»** (Near the entrance), «Біля метро» (Near the subway), або «Біля парку» (Near the park). Ці короткі запитання і відповіді роблять планування дуже швидким та ефективним. Давайте прочитаємо коротку історію про те, як двоє друзів планують свої вихідні. Вони обирають між концертом, музеєм та прогулянкою. > — **Марко:** Привіт, Тарасе! Які маєш плани на неділю? Хочеш піти на концерт? *(Hi, Taras! What plans do you have for Sunday? Do you want to go to a concert?)* > — **Тарас:** Привіт! На жаль, не можу. У мене вже є плани на ранок. А що ти робиш після обіду? *(Hi! Unfortunately, I can't. I already have plans for the morning. And what are you doing in the afternoon?)* > — **Марко:** Після обіду я вільний. Може, підемо в музей? *(In the afternoon I am free. Maybe we'll go to the museum?)* > — **Тарас:** Музей — це цікаво, але погода дуже гарна. Ходімо краще в парк! *(A museum is interesting, but the weather is very nice. Let's go to the park instead!)* > — **Марко:** Чудова ідея! Я — за! Де зустрінемося? *(Great idea! I'm in! Where will we meet?)* > — **Тарас:** Давай зустрінемося біля входу в парк. О котрій? *(Let's meet near the entrance to the park. At what time?)* > — **Марко:** О п'ятій годині. *(At five o'clock.)* > — **Тарас:** Домовилися! До неділі! *(Agreed! Until Sunday!)* Цей діалог показує, як легко комбінувати пропозиції, відмови та деталі логістики. <!-- INJECT_ACTIVITY: error-correction-cases -->
+"Unfortunately, I can't. I am very busy today." My sister often answers differently, "Sorry, but I already have plans for the evening." Not to offend a friend, we always add an optimistic phrase, "Maybe another time?". This is a very polite refusal that leaves the possibility for a new meeting.* Once you have agreed on an activity, you need to sort out the logistics. The two most important questions are about time and place. To ask "at what time?", use the phrase **о котрій?**. The answer will use the preposition **о** (or **об**) and an ordinal number, like **о п'ятій** (at five). To ask "where will we meet?", use the verb **зустрінемося**. A very common meeting point is near the entrance of a building or a park. Коли ми вибрали місце для відпочинку, треба домовитися про важливі деталі. Я запитую друга по телефону: «О котрій годині ми йдемо?». Він швидко відповідає: «Давай о п'ятій». Потім я питаю: «А де зустрінемося?». Найчастіше ми зустрічаємося біля входу в кінотеатр або біля центральної станції метро. Це дуже зручно, коли на вулиці багато людей. > *When we have chosen a place for rest, we need to agree on important details. I ask my friend on the phone, "At what time are we going?". He quickly answers, "Let's make it at five." Then I ask, "And where will we meet?". Most often, we meet near the entrance to the cinema or near the central metro station. It is very convenient when there are many people on the street.* :::info **Grammar box** When saying "near the entrance" (**біля входу**), the preposition **біля** (near/by) requires the Genitive case. That is why **вхід** changes to **входу**. You will use this pattern often when deciding where to meet! ::: Let's see how all these pieces come together in a real conversation. In this short dialogue, two friends are figuring out what to do on Sunday afternoon. They consider a few different options, practice declining politely, and eventually make a final decision, setting a specific time and place for their meeting. > — **Анна:** Привіт, Максиме! Маєш плани на неділю? *(Hi, Maksym! Do you have plans for Sunday?)* > — **Максим:** Привіт! Ні, я абсолютно вільний. *(Hi! No, I am completely free.)* > — **Анна:** Чудово! Хочеш піти на **виставку** (exhibition) сучасного мистецтва? *(Great! Do you want to go to an exhibition of modern art?)* > — **Максим:** На жаль, не можу. Я не дуже люблю мистецтво. Може, підемо в парк? *(Unfortunately, I can't. I don't really like art. Maybe we'll go to the park?)* > — **Анна:** З задоволенням! Я — за. Погода буде дуже гарна. *(With pleasure! I'm in. The weather will be very nice.)* > — **Максим:** Де зустрінемося і о котрій годині? *(Where will we meet and at what time?)* > — **Анна:** Давай о другій годині біля входу в парк. *(Let's make it at two o'clock near the entrance to the park.)* > — **Максим:** Домовилися! До неділі. *(Agreed! Until Sunday.)* <!-- INJECT_ACTIVITY: error-correction-cases -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -527,7 +527,74 @@ This grammar topic is a hub that connects to several other key areas of Ukrainia
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -546,18 +613,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] дозвілля (leisure, free time)
+- [ ] хобі (hobby)
+- [ ] захоплюватися (to be passionate about)
+- [ ] займатися (to engage in, to do)
+- [ ] спорт (sport)
+- [ ] розвага (entertainment)
+- [ ] вільний (free)
+- [ ] плавання (swimming)
+- [ ] музика (music)
+- [ ] виставка (exhibition)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Що мені подобається найбільше (~400 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

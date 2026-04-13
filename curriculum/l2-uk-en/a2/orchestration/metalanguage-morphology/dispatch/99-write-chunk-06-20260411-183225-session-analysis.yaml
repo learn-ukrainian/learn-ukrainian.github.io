@@ -1,0 +1,81 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T16-31-5291965c.json
+phase: write-chunk-06
+prompt_chars: 42661
+response_chars: 4987
+prompt_words: 5723
+response_words: 785
+sections:
+- name: header
+  start: 0
+  length: 430
+  fraction: 0.0101
+- name: skeleton
+  start: 430
+  length: 872
+  fraction: 0.0204
+- name: prior_summary
+  start: 1302
+  length: 3575
+  fraction: 0.0838
+- name: plan
+  start: 4877
+  length: 21275
+  fraction: 0.4987
+- name: wiki
+  start: 18985
+  length: 16300
+  fraction: 0.3821
+- name: output_spec
+  start: 42452
+  length: 209
+  fraction: 0.0049
+large_sections:
+- plan
+directives_total: 26
+directives_covered: 15
+directives_missed:
+- kind: checklist
+  text: префікс (prefix — meaningful part before the root)
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: checklist
+  text: суфікс (suffix — meaningful part after the root)
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: checklist
+  text: спільнокореневий (cognate — words sharing the same root)
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: checklist
+  text: іменник (noun — names things, answers хто? що?)
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: checklist
+  text: прикметник (adjective — names qualities, answers який? чий?)
+  covered: false
+  coverage_note: 1/7 keywords (14%)
+- kind: checklist
+  text: дієслово (verb — names actions, answers що робити?)
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: checklist
+  text: прислівник (adverb — names circumstances, answers як? де? коли?)
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: must
+  text: '**MANDATORY — never omit.'
+  covered: false
+  coverage_note: 1/3 keywords (33%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: inject_activity
+  text: match-pos-questions
+  covered: false
+  coverage_note: marker missing

@@ -1,4 +1,4 @@
-<!-- version: 1.1.0 | updated: 2026-03-31 -->
+<!-- version: 1.2.0 | updated: 2026-04-12 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -11,6 +11,35 @@ Generate an `activities/checkpoint-places.yaml` file for module **35: Checkpoint
 
 ---
 
+## ⚠️ HARD COUNT TARGETS — READ TWICE
+
+These are the binding numerical contracts for THIS module. The audit will FAIL if you fall short.
+
+| Bucket | Min | Max | Notes |
+|---|---|---|---|
+| Total activities | 8 | 8+ | inline + workbook combined |
+| Inline (lesson tab) | 3 | 5 | one per `<!-- INJECT_ACTIVITY -->` marker, see below |
+| Workbook (Зошит tab) | 5 | 8 | extended practice |
+| Items per activity | 10 | — | each activity must have at least 10 items (unless its type cap is lower — see Activity Type Reference below) |
+
+**You MUST ship at least 3 inline activities AND at least 5 workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+
+**Type diversity is required.** The module (inline + workbook combined) MUST use at least **0** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level. (If `0` is `0`, the audit profile for this level does not enforce type diversity — but variety still produces a better lesson, so aim for 4+ types when the workbook allows it.)
+
+---
+
+## Allowed types for THIS level
+
+- **Inline (lesson) types:** match-up, quiz, fill-in, true-false, classify, group-sort
+- **Inline priority (preferred):** match-up, fill-in, quiz
+- **Workbook types:** fill-in, match-up, group-sort, unjumble, quiz, true-false, classify, observe, phrase-table, odd-one-out, anagram
+- **Workbook priority (preferred):** fill-in, match-up, group-sort, unjumble, anagram
+- **FORBIDDEN at this level:** image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables, cloze, error-correction, mark-the-words, translate, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, highlight-morphemes, grammar-identify, select
+
+Pick from the allowed list. Lean heavily on the priority lists. Do not use any forbidden type — the build will reject it.
+
+---
+
 ## Inline vs Workbook Split
 
 Activities have two placement categories:
@@ -19,7 +48,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Rule of thumb:** inline = 2-3 quick checks after key teaching points. Workbook = 4-8 deeper practice exercises covering the full topic.
+**Rule of thumb:** inline = 3–5 quick checks after key teaching points. Workbook = 5–8 deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
 
 ---
 
@@ -28,8 +57,8 @@ Activities have two placement categories:
 The writer placed these markers in the module content. Your inline activities must match them:
 
 - `<!-- INJECT_ACTIVITY: quiz-question-choice -->`
-- `<!-- INJECT_ACTIVITY: group-sort-cases -->`
-- `<!-- INJECT_ACTIVITY: quiz-euphony-check -->`
+- `<!-- INJECT_ACTIVITY: group-sort-case-function -->`
+- `<!-- INJECT_ACTIVITY: quiz-euphony-rules -->`
 - `<!-- INJECT_ACTIVITY: fill-in-dialogue-forms -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
@@ -116,114 +145,161 @@ required: []
 <module_content>
 ## Що ми знаємо? (What Do We Know?)
 
-Navigating a new city is often your very first real test of survival in a completely new language environment. Before reaching this point in your studies, you could name a few isolated objects, describe who you are, or exchange basic daily greetings. Now, you have acquired the tools to confidently step out into the street, find what you need, and interact with the world around you. This module serves as a comprehensive checkpoint to review the essential skills you acquired throughout the "Places" section. 
+You have reached the final stage of the Places phase. Navigating a Ukrainian city requires you to combine several different skills into one smooth conversation. You must know how to state your current location, your destination, your point of origin, and your mode of transport. This checkpoint brings all those pieces together.
 
-The leap from speaking in isolated words to building connected urban navigation phrases is a huge milestone. You are no longer just pointing and saying **центр** (center) or **метро** (subway); instead, you are constructing full ideas by saying **у центрі** (in the center) and **на метро** (by subway). This review highlights the critical differences between simply being somewhere, actively going somewhere, and returning from somewhere. 
+The Ukrainian spatial system relies on a solid triad of questions. Understanding these three questions unlocks basic urban mobility. The static location answers the question **Де?** (Where?). The dynamic destination answers the question **Куди?** (To where?). Finally, the point of origin answers the question **Звідки?** (From where?). Ukrainians naturally categorize every movement into one of these three buckets.
 
-Evaluate exactly what you know so far. Ask yourself the following questions to see if you are truly ready to navigate the busy streets of Ukraine:
+Review this checklist to see what you already know. Can you apply the rules of euphony for a smooth pronunciation?
+* **Вона живе у Львові.** (She lives in Lviv.)
+* **Він живе в Києві.** (He lives in Kyiv.)
 
-*   **Чи можу я вибрати між «у» та «в»?** (Can I choose between «у» and «в»?) — This tests your grasp of euphony rules for smooth pronunciation.
-*   **Чи знаю я, як сказати, де я?** (Do I know how to say where I am?) — This checks if you can use the locative case to state your location.
-*   **Чи можу я назвати місця в місті?** (Can I name places in the city?) — This ensures you recognize essential city vocabulary.
-*   **Чи можу я сказати, куди я йду?** (Can I say where I am going?) — This confirms you understand the accusative case for direction.
-*   **Чи можу я користуватися транспортом?** (Can I use transport?) — This checks your ability to say how you are traveling.
-*   **Чи можу я запитати дорогу?** (Can I ask for directions?) — This ensures you can communicate with locals and follow a route.
-*   **Чи можу я сказати, звідки я приїхав?** (Can I say where I came from?) — This confirms you can use genitive chunks for origin.
+Can you say where things are currently located?
+* **Я зараз у парку.** (I am in the park now.)
+* **Ми в центрі.** (We are in the center.)
 
-If you can answer these questions affirmatively, you have a solid foundation for the rest of the A1 level.
+Can you say where you are going right now?
+* **Я йду в магазин.** (I am going to the store.)
+* **Вона йде на роботу.** (She is going to work.)
+
+Can you accurately state your origin?
+* **Я родом з України.** (I am originally from Ukraine.)
+* **Він іде зі школи.** (He is walking from school.)
+
+Can you use transport vocabulary and give basic directions?
+* **Ми їдемо автобусом.** (We are going by bus.)
+* **Ідіть прямо і направо.** (Go straight and to the right.)
+
+To prove you are ready, read this short introduction out loud:
+> **Мене звати Анна.**
+> *(My name is Anna.)*
+>
+> **Я живу в Києві.**
+> *(I live in Kyiv.)*
+>
+> **Я щодня їду на роботу.**
+> *(I travel to work every day.)*
+>
+> **Я їду на метро.**
+> *(I travel by metro.)*
 
 <!-- INJECT_ACTIVITY: quiz-question-choice -->
 
 ## Читання (Reading Practice)
 
-Reading short, contextual narratives in Ukrainian helps solidify grammar patterns naturally without feeling like you are memorizing rules. The following reading practice follows a traveler named Марк who arrives in the capital city. He begins his journey at the main train station, known as **вокзал** (train station), and needs to locate his accommodation, a **готель** (hotel), which is situated right in the heart of the city. Finally, he navigates his way to one of the most famous historical landmarks in the capital, **Золоті ворота** (Golden Gate). 
+Real navigation happens in continuous conversation, not in isolated textbook sentences. Imagine a tourist navigating the bustling, vibrant streets of Kyiv. They need to ask locals for accurate directions, understand the public transit system, locate a specific cultural site, and clearly explain their travel plans. This requires combining all your spatial skills.
 
-Read the text below carefully. Pay close attention to how Mark uses prepositions like **у**, **в**, **на**, and **з** depending on whether he is describing his static location, his destination, or his origin.
+Read the following narrative about a tourist in the city. It combines all the spatial patterns you have learned so far.
 
-*   **Я зараз у Києві.** (I am currently in Kyiv.)
-*   **Я з Польщі.** (I am from Poland.)
-*   **Мій готель у центрі.** (My hotel is in the center.)
-*   **Я йду пішки.** (I am walking on foot.)
-*   **Вокзал далеко.** (The train station is far.)
-*   **Я їду на метро.** (I am going by subway.)
-*   **Скажіть, будь ласка, де музей?** (Tell me, please, where is the museum?)
-*   **Я йду направо.** (I am walking to the right.)
-*   **Тут площа.** (Here is a square.)
-*   **Золоті ворота близько.** (Golden Gate is near.)
-*   **Я вже біля музею.** (I am already near the museum.)
+> **Привіт! Я турист з Канади.**
+> *(Hi! I am a tourist from Canada.)*
+>
+> **Я зараз у центрі Києва.**
+> *(I am currently in the center of Kyiv.)*
+>
+> **Я дуже хочу їхати в музей.**
+> *(I really want to go to the museum.)*
+>
+> **Але музей стоїть далеко.**
+> *(But the museum stands far away.)*
+>
+> **Тому я йду на метро.**
+> *(Therefore I am walking to the metro.)*
+>
+> **Я їду на станцію Хрещатик.**
+> *(I travel to the Khreshchatyk station.)*
+>
+> **Там я йду прямо і направо.**
+> *(There I go straight and to the right.)*
+>
+> **І ось музей на великій площі!**
+> *(And here is the museum on the large square!)*
 
-Notice how Mark integrates all the fundamental A1.5 vocabulary and grammar in just a few straightforward sentences. He seamlessly uses **на метро** (by subway) for his mode of transport, **направо** (to the right) for simple directions, and **біля музею** (near the museum) to establish his exact location relative to another landmark. 
-
-:::tip
-As you read Ukrainian texts, try your best not to translate word for word in your head. Instead, visualize the scene unfolding. Picture Mark exiting the train station, looking at a map, and walking towards the center. This visualization technique helps you link the Ukrainian words directly to real-world concepts.
-:::
+Notice how this narrative effortlessly switches between different spatial concepts to tell a complete story. The tourist starts by answering the question of origin with **з Канади** (from Canada). Then, they state their current static location using **у центрі Києва** (in the center of Kyiv). Next, they switch to a dynamic destination with **в музей** (to the museum). They describe their route using transport vocabulary and basic directions like **прямо** (straight) and **направо** (to the right). Finally, they confirm the static location of their destination with **на великій площі** (on the large square). You already possess all the grammatical tools needed to understand and construct a detailed story exactly like this one.
 
 ## Граматика (Grammar Summary)
 
-The grammatical patterns from this phase rely on a few core principles. First, the Ukrainian language places a very high value on a smooth, flowing sound, a concept known as euphony. The rules of euphony determine whether we should use **у** or **в**, **і** or **й**, and **з**, **із**, or **зі**. The basic guiding principle is to avoid awkward clusters of consonants or vowels. 
+The core spatial patterns form the absolute foundation of your navigation skills. The question **Де?** (Where?) requires the prepositions **в** or **на** followed by the Locative case. You use this exclusively for static locations, telling people exactly where an object or person currently rests.
+* **Студент зараз у школі.** (The student is in school now.)
+* **Вона весь день на роботі.** (She is at work all day.)
+* **Ми сидимо в парку.** (We are sitting in the park.)
+* **Зошит лежить на столі.** (The notebook is lying on the table.)
 
-Compare the following pairs:
-*   **Він у Львові** (He is in Lviv) versus **Вона в Одесі** (She is in Odesa). We use **у** between consonants, and **в** between vowels.
-*   **Брат і сестра** (Brother and sister) versus **Тато й мама** (Dad and mom). We use **і** between consonants, and **й** between vowels.
-*   **Зі школи** (From school) versus **З роботи** (From work). We use **зі** before difficult consonant clusters, but **з** before a single consonant.
+The question **Куди?** (To where?) requires the prepositions **в** or **на** followed by the Accusative case. You use this strictly for movement toward a destination, indicating the endpoint of a physical journey.
+* **Студент іде у школу.** (The student is going to school.)
+* **Вона швидко їде на роботу.** (She is traveling quickly to work.)
+* **Ми йдемо в парк.** (We are walking to the park.)
+* **Він іде в театр.** (He is going to the theater.)
 
-The most crucial grammatical concept in urban navigation is understanding the three main directional questions. The specific noun case you use depends entirely on the question you are answering:
+The question **Звідки?** (From where?) requires the prepositions **з**, **із**, or **зі** followed by the Genitive case. You use this to express the starting point of a movement or a person's geographic origin.
+* **Студент іде зі школи.** (The student is walking from school.)
+* **Вона йде з роботи.** (She is walking from work.)
+* **Турист іде з готелю.** (The tourist is walking from the hotel.)
+* **Я йду з парку.** (I am walking from the park.)
 
-*   **Де?** (Where?) indicates a static location. It uses the Locative case. 
-    *   **В аптеці** (In the pharmacy)
-    *   **В школі** (In school)
-    *   **На роботі** (At work)
-*   **Куди?** (To where?) indicates the direction of movement. It uses the Accusative case.
-    *   **В аптеку** (To the pharmacy)
-    *   **У школу** (To school)
-    *   **На роботу** (To work)
-*   **Звідки?** (From where?) indicates an origin or starting point. It uses the Genitive case with the preposition **з** (or **із**/**зі**).
-    *   **З аптеки** (From the pharmacy)
-    *   **З України** (From Ukraine)
-    *   **З роботи** (From work)
+Ukrainian speech requires a smooth flow of sounds. The euphony rules ensure that words connect naturally without awkward consonant clusters. You alternate between vowels and consonants using specific sets of prepositions and conjunctions.
+* **Брат і сестра йдуть.** (Brother and sister are walking.)
+* **Мама й тато вдома.** (Mom and dad are at home.)
+* **Вона зараз у Львові.** (She is in Lviv now.)
+* **Він живе в Одесі.** (He lives in Odesa.)
 
-Notice the distinct contrast between **на роботі** (location) and **на роботу** (direction). Furthermore, the preposition **на** is generally used for open spaces, events, and abstract concepts, while **в** / **у** is strictly used for enclosed physical structures. This directional system also applies when matching city places with correct prepositions, taking transport like **автобусом** (by bus) or **на метро** (by subway), and following adverbs for directions such as **прямо** (straight), **направо** (to the right), and **наліво** (to the left).
+When discussing your daily commute and transport, you use specific grammatical forms. You use the Instrumental case for the vehicle itself, or you use the preposition **на** with the Locative case for public transit systems.
+* **Ми їдемо великим автобусом.** (We are going by a large bus.)
+* **Вони їдуть на метро.** (They are going by metro.)
 
-<!-- INJECT_ACTIVITY: group-sort-cases -->
-<!-- INJECT_ACTIVITY: quiz-euphony-check -->
+You also use fixed, unchanging adverbs for simple directions on the street.
+* **Ідіть прямо по вулиці.** (Go straight along the street.)
+* **Аптека стоїть направо.** (The pharmacy stands to the right.)
+* **Гарний парк наліво.** (The beautiful park is to the left.)
+
+All these individual elements combine to form complete, natural, and highly functional thoughts.
+* **Я їду з роботи.** (I am traveling from work.)
+* **Я їду автобусом у центр.** (I am traveling by bus to the center.)
+
+<!-- INJECT_ACTIVITY: group-sort-case-function -->
+<!-- INJECT_ACTIVITY: quiz-euphony-rules -->
 
 ## Діалог (Connected Dialogue)
 
-Imagine a very common, real-world scenario: a tourist from Canada arrives at a busy, crowded metro station in Kyiv. They need to find a specific museum first, and then head over to the main train station, the **вокзал**. When approaching a stranger on the street for help, it is absolutely vital to emphasize the polite register. Starting your request with **Вибачте** (Excuse me) and **Скажіть, будь ласка** (Tell me, please) shows cultural respect and instantly makes people much more willing to assist you. 
+Imagine you are visiting Kyiv and you urgently need some assistance. You stop a local resident on the street to ask for clear directions to a famous museum. After you find out about the museum, you also need to figure out how to reach the main train station for your onward journey to the city of Lviv.
 
-Read the multi-turn connected dialogue below. Pay close attention to how the tourist combines phrases indicating origin, location, and direction into a single, cohesive conversation.
+> **Турист:** Вибачте, я з Канади. Де тут музей?
+> *(Tourist: Excuse me, I am from Canada. Where is the museum here?)*
+>
+> **Місцевий:** Музей у центрі. Ідіть на метро до станції Хрещатик.
+> *(Local: The museum is in the center. Go by metro to the Khreshchatyk station.)*
+>
+> **Турист:** А як дістатися від метро?
+> *(Tourist: And how do I get there from the metro?)*
+>
+> **Місцевий:** Вийдіть і йдіть направо. Музей на площі.
+> *(Local: Exit and go right. The museum is on the square.)*
+>
+> **Турист:** Дякую! А потім я хочу їхати у Львів. Де вокзал?
+> *(Tourist: Thank you! And then I want to travel to Lviv. Where is the train station?)*
+>
+> **Місцевий:** Вокзал далеко, їдьте на метро до станції Вокзальна.
+> *(Local: The train station is far, go by metro to Vokzalna station.)*
 
-> **Турист:** Вибачте, я з Канади. Де тут музей? *(Excuse me, I am from Canada. Where is the museum here?)*
-> **Місцевий:** Музей у центрі. Ідіть на метро до станції Хрещатик. *(The museum is in the center. Go by subway to Khreshchatyk station.)*
-> **Турист:** А як дістатися від метро? *(And how to get there from the subway?)*
-> **Місцевий:** Вийдіть і йдіть направо. Музей на площі. *(Exit and walk to the right. The museum is on the square.)*
-> **Турист:** Дякую! А потім я хочу їхати у Львів. Де вокзал? *(Thank you! And then I want to go to Lviv. Where is the train station?)*
-> **Місцевий:** Вокзал далеко. Їдьте на метро до станції Вокзальна. *(The train station is far. Go by subway to Vokzalna station.)*
+The first half of the dialogue handles the immediate navigation problem. The tourist successfully states their geographical origin using the phrase **з Канади** (from Canada). They then ask a simple, direct question about their target location using **Де тут музей?** (Where is the museum here?). The local resident responds with a static location, **у центрі** (in the center), and provides a clear route using transport vocabulary. 
 
-This exchange perfectly demonstrates practical functional language in action. Notice the specific use of the word **дістатися** (to get to). While **йти** (to go on foot) and **їхати** (to go by vehicle) specify the exact method of transport, **дістатися** focuses purely on the goal of reaching the destination, making it the perfect word for asking directions. 
+The tourist then asks how to navigate on foot from the station using the phrase **від метро** (from the metro). They use the verb **дістатися** (to reach / to get to). This is a highly practical verb when you need to know how to navigate between two specific points.
 
-You also see how prepositions shift based on the point of reference. The local uses **від метро** (from the subway), showing the starting point of the walking route, and **до вокзалу** (to the station) to show the end point. 
+The second half of the dialogue shifts the focus to a future destination. The tourist uses the Accusative case to explain their next city target, saying **у Львів** (to Lviv). They immediately ask for the location of the main train station. The local resident gives them practical advice, explaining that the station is far away. They use the command form **їдьте** (drive/travel) and combine it with the transport phrase to give a clear, actionable route across the city.
 
 :::note
-To fully consolidate your urban vocabulary, try describing your own city or a city you love. Imagine video-calling a friend while walking through a coastal city like **Одеса** (Odesa). You might show them the sights: **Дерибасівська вулиця** (Derybasivska street), the famous **Потьомкінські сходи** (Potemkin Stairs), a large **порт** (port), and a sunny **пляж** (beach). Practice describing exactly where you are and where you are going using these nouns!
+You might hear people say **на метро** (by metro) very often in casual speech. While this is widely understood, standard Ukrainian style guides often recommend simply using the word **метро** on its own (as an instrumental form) or **в метро** to sound more authentic. However, **на метро** remains extremely common in everyday city navigation.
 :::
 
 <!-- INJECT_ACTIVITY: fill-in-dialogue-forms -->
 
 ## Підсумок — Summary
 
-Congratulations on reaching the end of the A1.5 phase! You have successfully built a solid, reliable foundation for urban survival in Ukraine. The following points summarize your new achievements. 
+You can now successfully navigate the bustling streets of a Ukrainian city. You have built a solid grammatical foundation for basic urban survival. You know exactly how to ask locals for directions, understand the specific routes people give you, and explain your own daily movements. You can confidently state where you are originally from and where you currently intend to go. This means you can handle the most crucial interactions required of any traveler or new resident.
 
-**Я тепер можу...** (I can now...):
-*   Apply basic euphony rules. You know how to instinctively alternate between **у** and **в**, or **і** and **й**, to ensure your spoken Ukrainian maintains a natural, flowing rhythm.
-*   State your exact location. You can confidently answer the question **Де?** (Where?) using the locative case, such as saying **в готелі** (in the hotel) or **на площі** (on the square).
-*   Indicate your direction of travel. You can accurately answer the question **Куди?** (To where?) using the accusative case, such as stating you are going **у парк** (to the park).
-*   Use city transport options. You can explain how you are traveling from point A to point B, using forms like **на автобусі** (by bus) or **на метро** (by subway).
-*   Give and follow street directions. You understand vital navigation commands like **направо** (to the right), **наліво** (to the left), and **прямо** (straight).
-*   State your country of origin. You can seamlessly answer the question **Звідки?** (From where?), telling people you are **з України** (from Ukraine) or from another specific country.
+You have acquired several powerful technical tools during this phase. You know the euphony rules that make your pronunciation sound natural, fluid, and connected. You know how to use the Locative case to answer the question **Де?** (Where?) for static locations. You know how to use the Accusative case to answer the question **Куди?** (To where?) for dynamic movement toward a target. You also know how to use Genitive chunks to answer the question **Звідки?** (From where?). These tools allow you to form precise, accurate sentences without second-guessing your preposition choices.
 
-You can now find your way to a shop, a museum, or a restaurant, but what happens when you finally walk inside the building? In the upcoming A1.6 module, "Food and Shopping," we will transition directly from navigating the outdoor streets to interacting within these indoor establishments. You will learn the specific language required for ordering food, buying groceries, and using the Accusative case to talk about direct objects. Get ready to proudly say **Я хочу каву** (I want coffee) and master the art of the daily transaction!
-
+The next phase of your learning journey will build directly on these exact skills. In the upcoming Food and Shopping modules, you will take the Accusative case, which you currently use only for physical destinations, and dramatically expand its function. You will learn to use the Accusative case for direct objects, allowing you to successfully order a coffee, buy a train ticket, or purchase fresh groceries at the market. Understanding how to direct your movement was the first step; soon, you will direct your actions toward objects. You have the momentum, and you are ready for the next step.
+```
 </module_content>
 
 ---
@@ -237,48 +313,68 @@ version: "1.0"
 module: checkpoint-places
 level: a1
 
+# NOTE — these are SHAPE examples. The real targets are at the top of this prompt
+# (8 total / 3–5 inline / 5–8 workbook,
+# 10+ items per activity). The shapes below are TRUNCATED for readability;
+# YOUR output MUST hit those minimums.
+
 inline:
   - id: marker-id-here        # MUST match an <!-- INJECT_ACTIVITY: ... --> marker
     type: quiz                 # activity type
     instruction: "Оберіть правильний варіант"
-    items:
+    items:                     # ← real output: ≥ 10 items
       - question: "_____ стіл"
-        options: ["мій", "моя", "моє"]
+        options: ["мій", "моя", "моє", "мої"]
         correct: 0             # 0-based index
+      - question: "Це ____ книга."
+        options: ["мій", "моя", "моє", "мої"]
+        correct: 1
+      # ... add at least 10 items total — never stop at 1-2
 
   - id: another-marker-id
     type: fill-in
     instruction: "Вставте правильне слово"
-    items:
+    items:                     # ← real output: ≥ 10 items
       - sentence: "Це ____ кімната."
         answer: "моя"
         options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ вікно."
+        answer: "моє"
+        options: ["мій", "моя", "моє"]
+      # ... ≥ 10 items total
 
 workbook:
-  - type: match-up
+  - id: match-up-vocab
+    type: match-up
     instruction: "З'єднайте пари"
-    pairs:
+    pairs:                     # ← real output: ≥ 10 pairs
       - left: "стіл"
         right: "він"
       - left: "книга"
         right: "вона"
       - left: "вікно"
         right: "воно"
+      # ... ≥ 10 pairs total
 
-  - type: group-sort
+  - id: group-sort-gender
+    type: group-sort
     instruction: "Розподіліть слова за категоріями"
     groups:
-      - label: "Category A"
-        items: ["word1", "word2"]
-      - label: "Category B"
-        items: ["word3", "word4"]
+      - label: "Чоловічий рід"
+        items: ["стіл", "олівець", "будинок"]   # ≥ 3 items per group
+      - label: "Жіночий рід"
+        items: ["книга", "ручка", "школа"]
+      - label: "Середній рід"
+        items: ["вікно", "море", "молоко"]
 
-  - type: true-false
+  - id: true-false-grammar
+    type: true-false
     instruction: "Правда чи ні?"
-    items:
-      - statement: "Statement here"
-        correct: true
-        explanation: "Why it's true"
+    items:                     # ← real output: ≥ 10 items
+      - statement: "«Книга» — це чоловічий рід."
+        correct: false
+        explanation: "Книга закінчується на -а, отже жіночий рід."
+      # ... ≥ 10 items total
 
   - type: error-correction
     instruction: "Виправте помилку"
@@ -349,7 +445,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -433,10 +529,15 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 ## Quality Rules
 
-**ITEM COUNT MINIMUMS (non-negotiable):**
-- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
-- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
-- If you can't think of enough items, add more examples from the module's vocabulary and content.
+**ACTIVITY COUNT MINIMUMS (non-negotiable, audit-enforced):**
+- **Total: 8 activities.** Inline: 3–5. Workbook: 5–8. The audit gate FAILS the module if you ship fewer.
+- **Type diversity: workbook MUST cover ≥5 distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
+- **Match the inline markers exactly.** Every `<!-- INJECT_ACTIVITY: id -->` marker in the prose needs a matching inline activity with that exact id. Skipping markers means the lesson tab is broken.
+
+**ITEM COUNT MINIMUMS (non-negotiable, per-activity):**
+- **Default minimum: 10 items per activity.** Quiz, fill-in, match-up, true-false, anagram, error-correction, translate, cloze, mark-the-words, divide-words, count-syllables, odd-one-out, group-sort categories: all ≥ 10.
+- **Lower minimums for specific types only:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items, essay-response/critical-analysis = 1 prompt.
+- If you can't think of enough items, add more examples from the module's vocabulary and content. NEVER ship a 1-item or 2-item activity unless its type cap explicitly allows it.
 - **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
 - **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
@@ -543,6 +644,27 @@ IMPORTANT: After using tools, output your COMPLETE module content as plain text.
 1. Run `verify_words` on all Ukrainian words in your exercises — every word must exist in VESUM
 2. Run `query_cefr_level` on any word you're unsure about — it must be a1-appropriate
 3. For fill-in answers and distractors, verify the exact form (case, number, gender) with `verify_lemma`
+
+---
+
+## ⚠️ MANDATORY FINAL CHECKLIST — verify before emitting YAML
+
+Walk through this checklist explicitly before you start emitting. If ANY box is unchecked, fix it FIRST.
+
+- [ ] My output has **at least 3** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
+- [ ] My output has **at least 5** workbook activities.
+- [ ] **Total ≥ 8.**
+- [ ] **Every** activity has **at least 10** items, pairs, or statements (except types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3, essay-response=1).
+- [ ] The module (inline + workbook combined) uses **at least 0 distinct activity types** (or 4+ when 0 = 0 and the workbook size allows it). I am NOT shipping a wall of quizzes.
+- [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
+- [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
+- [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+- [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+- [ ] My inline count is between 3 and 5. I did NOT create more injection markers than 5.
+- [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
+- [ ] At B1+, all instructions are in Ukrainian (no English fallback).
+
+If you cannot tick all of these, REGENERATE the activities BEFORE outputting. Shipping under-spec means the build rejects you and the heal loop has to redo your work — wasting compute.
 
 ---
 

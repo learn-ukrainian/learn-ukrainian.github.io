@@ -228,23 +228,26 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-- Confirmed: перевірка, контрольна точка, завдання, помилка, виправити, відмінок, множина, однина, самоперевірка, впевнено, вихідний день, діти, люди, очі, плечі, гроші, двері.
-- Not found: [None]
+- Confirmed: перевірка, контрольна, точка, завдання, помилка, виправити, відмінок, множина, однина, самоперевірка, впевнено, вихідний, день, дитина, людина, око, книга, студент, місто, ніч, теля
+- Not found: None
 
 ## Grammar Rules
-- **Plural Formation (І/ІІ Declensions)**: Confirmed in Grade 6 textbook (Avramenko). 1st declension feminines often have zero ending in Gen. Pl. (книг, земель), while 2nd declension masculines take -ів/-їв (студентів, зятів).
-- **Irregular Plurals**: плече → плечі (Gen. Pl. плечей), око → очі, дитина → діти, людина → люди.
-- **Case Triggers**: Prepositions like *у/в* take Locative for location (у світлі) and Accusative for direction/time (у четвер); *з* takes Genitive for origin (з міста) and Instrumental for accompaniment (з другом).
+- Прийменники У/В: Правопис §23 — Щоб уникнути збігу букв на позначення приголосних звуків, що є важкими для вимови, та щоб досягти милозвучності, в українській мові вживають на письмі прийменник "у" та префікс "у-". Прийменник "в" вживають між буквами на позначення голосних.
+- Прийменники З/ІЗ/ЗІ (ЗО): Правопис §25 — "З" уживаємо на початку речення перед голосною або між голосною та приголосною. Варіанти "із", "зі" (зо) вживаємо перед буквами, що передають важкі для вимови збіги приголосних, та для досягнення милозвучності.
 
 ## Calque Warnings
-- **контрольна точка**: OK. While *контрольна робота* is standard for "test," *контрольна точка* is the accepted term for "checkpoint/milestone" in modular education.
-- **брати участь**: Confirmed as the correct form (vs. calque *приймати участь*).
-- **вихідний день**: OK. Natural Ukrainian for "day off."
+- контрольна точка: OK — No issues found in Антоненко-Давидович
+- вихідний день: OK — No issues found in Антоненко-Давидович
+- виправити помилку: OK — No issues found in Антоненко-Давидович
 
 ## CEFR Check
-- **відмінок, множина, однина**: A1 — Fundamental grammar terms found in Grade 4 textbooks.
-- **перевірка, завдання, помилка**: A1 — Core classroom vocabulary.
-- **самоперевірка, впевнено**: A2 — Appropriate for self-assessment sections.
+- завдання: A1 — OK
+- відмінок: A1 — OK
+- помилка: A2 — OK
+- виправити: A2 — OK
+- впевнено: B2 — Above target (A2)
+- перевірка: Not listed in PULS (Likely above target)
+- самоперевірка: Not listed in PULS (Likely above target)
 </pre_verified_facts>
 
 
@@ -452,12 +455,14 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 ## Section Structure
 
-Write these sections as H2 headings, in this exact order:
+Write these sections as H2 headings, in this **exact** order:
 
 - `## Частина 1: Форми множини (Part 1: Plural Forms)` (~450 words)
 - `## Частина 2: Який відмінок? (Part 2: Which Case?)` (~500 words)
 - `## Частина 3: Вільне мовлення (Part 3: Free Production)` (~550 words)
 - `## Підсумок` (~150 words)
+
+**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim** as an `## H2` line. This includes the FINAL summary/transition section (`Підсумок: ...`, `Підсумок та перехід до M...`, etc.) — the writer's most common failure is silently dropping the closing section. Do NOT skip it. Do NOT renumber. Do NOT merge headings. The post-write quick-verify check will fail your build if any heading is missing, even if the prose itself is excellent.
 
 Each section should follow the word budget specified. The total must reach 1500 words minimum.
 
@@ -493,6 +498,25 @@ GRAMMAR RULES:
 - **Zero calques**: No приймати душ→брати душ, приймати рішення→ухвалювати рішення
 - **Zero paronyms**: тактична≠тактовна, ефектний≠ефективний — use the right word, not a similar-sounding one
 - **Natural Ukrainian**: Write how a Ukrainian teacher would explain this to a student. Not robotic, not textbook-dry, not overly casual.
+
+### FORBIDDEN WORDS — never write these (#1189)
+
+The following Russian words have leaked into past builds and broken modules. They are **hard-banned** — the post-write toxic-token scanner will fail your build the moment it sees one. Use the Ukrainian alternative every time, even in dialogues, even in casual prose, even when quoting a learner's mistake (use a `<!-- VERIFY -->` placeholder instead of typing the Russian form):
+
+| Russian (FORBIDDEN) | Ukrainian (USE THIS) |
+|---|---|
+| хорошо | добре |
+| конечно | звичайно / певна річ |
+| спасибо | дякую |
+| пожалуйста | будь ласка / прошу |
+| ничего | нічого |
+| сейчас | зараз |
+| тоже | теж / також |
+| здесь | тут |
+| кот | кіт |
+| кон | кін |
+
+This list is enforced word-for-word by `scripts/build/quick_verify.py` (SEVERE_RUSSIANISMS). If you produce any of these tokens — even inside a quoted example, even inside a dialogue line spoken by a Russian-speaking character — the build halts immediately. There is no exception.
 
 **Authority hierarchy (if uncertain about a word, check in this order):**
 VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (stress) → Антоненко-Давидович (style) → Грінченко (etymology).
@@ -592,47 +616,36 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Вступ: Весільний квест та компас відмінків (~150 words)
-- P1 (~50 words): [Welcome to the checkpoint. Explanation that this module is the "boss fight" of A2, synthesizing all knowledge of noun numbers and case government. Mention of the "Case Compass" from M31 as the primary navigation tool for the review.]
-- P2 (~100 words): [Dialogue: "Planning a Wedding". Наречена (Bride) and Подруга (Friend) discuss preparations. The dialogue naturally employs all 7 cases: invitations for guests (Gen), gift for the bride (Dat), seeing the bride (Acc), photo with the newlyweds (Inst), at the wedding (Loc), and direct addresses: "Олено!" (Voc). Examples: запрошення для гостей, подарунок нареченій, бачу наречену, з молодятами, на весіллі.]
+## Частина 1: Форми множини (~490 words)
+- P1 (~110 words): Introduction to the checkpoint. Emphasize that plural in Ukrainian affects all cases, not just Nominative, and is essential for talking about quantities, groups, and routines.
+- P2 (~130 words): Review Nominative plural endings (`-и`, `-і/ї`, `-а/я`) and high-frequency irregulars (`друг` → `друзі`, `людина` → `люди`, `дитина` → `діти`, `око` → `очі`). Includes a text-based task (Exercise 1): Form Nominative plural for a mixed-gender list of 10 singular nouns.
+- P3 (~140 words): Review the complex Genitive plural forms. Explain the zero ending (`книга` → `книг`, `місто` → `міст`) with fleeting vowels (`земля` → `земель`), the `-ів` ending (`студентів`, `морів`), and the `-ей` ending (`ночей`). Includes a text-based task (Exercise 2): Form Genitive plural for 10 challenging nouns.
+- P4 (~110 words): Explain Genitive plural with quantities (`п'ять років`, `багато людей`) and pluralia tantum nouns (`гроші`, `окуляри`, `штани`). Includes a text-based task (Exercise 3): Complete quantity expressions with Genitive plural forms.
 
-## Частина 1: Форми множини (Part 1: Plural Forms) (~500 words)
-- P1 (~100 words): [Review of Nominative Plural across all three genders. Contrast between hard group (-и) and soft group (-і/-ї) endings. Focus on masculine plurals like столи and книжки vs. neuter endings in -а/-я like вікна and моря. Introduction of the "High Priority Trio" of irregulars: друзі, люди, діти.]
-- P2 (~120 words): [The Genitive Plural "Wall". Explanation of the zero ending for feminine and neuter nouns (книга → книг, місто → міст) and the -ів ending for masculine nouns (студент → студентів). Detailed look at "fleeting vowels" (вставні голосні) that appear in zero endings to prevent consonant clusters: земля → земель, вікно → вікон, дошка → дощок.]
-- P3 (~100 words): [Nouns with fixed number: Pluralia Tantum and Singularia Tantum. Focus on everyday plural-only items like гроші, окуляри, штани, двері and geographical names like Карпати. Warning about agreement: "Гроші були на столі" (they were, not it was). Brief mention of collective singulars like молодь or людство.]
-- P4 (~100 words): [Suffixal plurals and remnants of dual number. Explanation of IV declension plurals using -ат-/-ят- (курча → курчата, кошеня → кошенята) and -ен- (ім'я → імена). Highlight of the "double body parts" that take -има in the Instrumental: очима, плечима, вушима.]
-- P5 (~80 words): [Summary of plural endings for Dative (-ам/-ям), Instrumental (-ами/-ями), and Locative (-ах/-ях). Emphasis on the high consistency of these endings across genders, making them easier to memorize than the Genitive Plural.]
-- <!-- INJECT_ACTIVITY: nominative-plural-forms --> [fill-in, focus on forming Nom.Pl. from singular nouns including irregulars (дитина, око), 10 items]
-- <!-- INJECT_ACTIVITY: genitive-plural-challenge --> [fill-in, focus on the hardest Gen.Pl. forms with zero endings and fleeting vowels, 10 items]
-- <!-- INJECT_ACTIVITY: quantity-genitive-pl --> [fill-in, complete quantity expressions with Gen.Pl. forms (багато людей, п’ять книг), 8 items]
+## Частина 2: Який відмінок? (~540 words)
+- P1 (~110 words): Review case selection governed by verbs. Provide clear examples: `допомагати сестрі` (+ Dative), `бачити людей` (+ Accusative), `користуватися словником` (+ Instrumental).
+- P2 (~110 words): Review case selection governed by prepositions. Contrast usage: `у/в` + Locative for place (`у Чернівцях`) vs Accusative for direction (`в школу`). Contrast `з` + Genitive for origin (`з міста`) vs Instrumental for accompaniment (`з друзями`).
+- <!-- INJECT_ACTIVITY: group-sort-cases --> [group-sort, Sort noun forms by case (Nom., Gen., Dat., Acc., Instr., Loc., Voc.), 8 items]
+- P3 (~110 words): Review special case constructions: time (`у четвер`, `у 2014 році`), characteristics (`хлопець у светрі`), and Vocative (`Мамо`, `Друзі`). Includes a text-based task (Exercise 5): Read a short text and identify the case and trigger for underlined nouns.
+- <!-- INJECT_ACTIVITY: fill-in-mixed-cases --> [fill-in, Mixed case drill — complete sentences requiring all 7 cases, singular and plural, 8 items]
+- P4 (~100 words): Address common L2 case errors, particularly animate/inanimate confusion in Accusative and incorrect case endings after prepositions.
+- P5 (~110 words): Focus on specific L2 errors from the wiki: using Nominative instead of Genitive plural after numbers (`п'ять студенти` → `п'ять студентів`), ignoring dual remnants in Instrumental (`очами` → `очима`), and failing subject-verb agreement (`книги лежить` → `книги лежать`).
+- <!-- INJECT_ACTIVITY: quiz-error-correction --> [quiz, Error correction — identify and fix case errors in sentences, 8 items]
+- <!-- INJECT_ACTIVITY: error-correction-mixed --> [error-correction, Find and fix mixed case errors in sentences — wrong endings after prepositions, animate/inanimate confusion, Gen.Pl. mistakes, 6 items]
 
-## Частина 2: Який відмінок? (Part 2: Which Case?) (~550 words)
-- P1 (~100 words): [Verb government review. Categorizing verbs by the case they trigger: "допомагати" (Dative), "бачити" (Accusative), "користуватися" (Instrumental), "дякувати" (Dative). Contrast between direct objects (Acc) and absence/quantity (Gen): "Я маю плани" vs "Я не маю планів".]
-- P2 (~120 words): [Prepositional navigation. Deep dive into double-case prepositions like "у/в" and "на" (Location/Locative vs. Direction/Accusative). Analysis of "з" (Origin/Genitive vs. Company/Instrumental). Introduction of "по" for movement or schedule: "йти по вулицях", "по суботах".]
-- P3 (~100 words): [Special case constructions. Time expressions: "у четвер" (Acc), "о п’ятій годині" (Loc). Appearance and characteristics: "хлопець у светрі", "дівчина з карими очима". Path and means: "летіти літаком", "йти лісом".]
-- P4 (~130 words): [Error analysis strategy. How to distinguish similar endings. Distinguishing Nom.Pl. and Acc.Pl. for inanimate nouns (столи стоять vs бачу столи). Identifying Acc.Pl. for animate nouns (бачу друзів). Warning against "Case Russianisms" like using the wrong case after "чекати" or "дякувати".]
-- P5 (~100 words): [Case identification in context. Reading a short 8-sentence text about a trip to the mountains (Карпати). Analyzing why "у Карпатах" is Locative but "в гори" is Accusative, and identifying the triggers for each noun form.]
-- <!-- INJECT_ACTIVITY: case-trigger-quiz --> [quiz, multiple-choice for choosing the correct case based on verb/preposition triggers, 8 items]
-- <!-- INJECT_ACTIVITY: group-sort-noun-cases --> [group-sort, sort 8 specific noun forms into their correct case buckets (Nom, Gen, Dat, Acc, Inst, Loc, Voc), 8 items]
-- <!-- INJECT_ACTIVITY: mixed-error-hunt --> [error-correction, find and fix case errors in sentences (e.g., *допомагаю сестру, *багато студенти), 8 items]
+## Частина 3: Вільне мовлення (~600 words)
+- P1 (~100 words): Introduction to integrating all cases into free speech. The goal is to naturally mix cases in conversation without overthinking the grammar rules.
+- P2 (~120 words): Dialogue: "Planning a wedding" (Наречена and Подруга). Features all 7 cases naturally: `запрошення для гостей` (Gen.Pl.), `подарунок нареченій` (Dat.Sg.), `бачу наречену` (Acc.Sg.), `з молодятами` (Instr.Pl.), `на весіллі` (Loc.Sg.), `Олено!` (Voc.Sg.).
+- P3 (~120 words): Dialogue analysis and text-based task (Exercise 8). A dialogue completion exercise where learners must fill in 8-10 missing noun forms in the correct case, both singular and plural.
+- P4 (~120 words): Text-based task (Exercise 7): Guided writing "Опишіть свій ідеальний вихідний день" (Describe your ideal day off). Prompt includes structural hints for using Acc./Loc. (destinations), Acc./Dat. (people), Acc./Instr. (actions), Gen. (quantities).
+- P5 (~140 words): Підсумок. 
+  - Чи можу я впевнено утворювати форми множини (особливо Родовий відмінок)?
+  - Чи знаю я, який відмінок вимагає кожен прийменник?
+  - Чи пам'ятаю я винятки (діти, люди, друзі)?
+  - Чи використовую я Кличний відмінок при звертанні?
+  - Чи готовий я до рівня A2.6?
 
-## Частина 3: Вільне мовлення (Part 3: Free Production) (~600 words)
-- P1 (~120 words): [Guided Writing Strategy: "Describe Your Ideal Day Off". Instructions on how to build a coherent narrative using the full case spectrum. Start with destination (Acc: "їду в Карпати"), mention company (Instr: "з друзями"), describe activities (Acc: "бачу гори"), and mention food/items (Gen: "багато яблук", "склянка води").]
-- P2 (~100 words): [Dialogue Completion Logic. How to provide natural short answers that respect the case of the question. Question "Кого?" requires Accusative response, "Кому?" requires Dative. Example: "З ким ти розмовляв?" — "З батьками". "Про що ви говорили?" — "Про плани".]
-- P3 (~100 words): [Decolonization Focus: The living Vocative. Reminder that the Vocative (Кличний відмінок) is not an archaic relic but a vital part of modern Ukrainian communication. Examples for singular (Мамо, Оксано, пане) and plural (Друзі!, Колеги!). Contrast with languages where it has merged with the Nominative.]
-- P4 (~130 words): [Synthesis text: A letter to a friend. A 10-sentence text with multiple blanks requiring diverse case forms. This paragraph models how to connect thoughts across sentences while maintaining case agreement and logical flow.]
-- <!-- INJECT_ACTIVITY: writing-ideal-day --> [fill-in, guided writing task with prompts to use specific cases (Where? With whom? How many?), 10 sentences]
-- <!-- INJECT_ACTIVITY: dialogue-gap-fill --> [fill-in, complete a dialogue with missing noun forms in various cases, 10 items]
-
-## Підсумок (~150 words)
-- P1 (~150 words): [Self-assessment checklist for A2.5 completion:
-  *   Чи можу я впевнено утворити Родовий відмінок множини (книг, столів)?
-  *   Чи пам’ятаю я нерегулярні форми (люди, діти, друзі)?
-  *   Чи знаю я, які відмінки вимагають прийменники "на", "в", "з", "по"?
-  *   Чи використовую я Кличний відмінок під час звертання?
-  Recap of the module: You have now mastered the skeleton of the Ukrainian language. You are ready to move to A2.6 to add the flesh of adjectives and verbs of motion to this structure.]
-
-Grand total: ~1700 words
+Grand total: ~1630 words
 </skeleton>
 
 ## Output Format
@@ -640,11 +653,57 @@ Grand total: ~1700 words
 Write in Markdown. Use:
 - `## Section Title` for main sections
 - `### Subsection` for subsections within a section
-- `**bold**` for Ukrainian words being taught — EVERY bold Ukrainian word MUST have an English translation on first use, either in parentheses `**слово** (translation)` or inline `**слово** means "translation"`. No exceptions.
+- `**bold**` for Ukrainian words being taught. For **A1 and A2** levels, provide an English translation on first use (e.g. `**стіл** (table)`) because learners lack the vocabulary to infer meaning. For **B1 and above**, do NOT provide inline translations for standard vocabulary — the learner will use the module's словник (vocabulary table). You may provide ONE parenthetical English translation ONLY for highly abstract grammar/linguistic terms on first use (e.g. `**видова пара** (aspectual pair)`).
 - Tables for paradigms (conjugation, declension)
 - `:::tip` / `:::caution` / `:::note` for callout boxes
 - `<!-- INJECT_ACTIVITY: {id} -->` for exercise placement (markers only — do NOT write exercise content)
 
 Do NOT write MDX component syntax, JSON, or DSL exercise blocks (:::quiz, etc.). Plain Markdown with injection markers.
+
+---
+
+## MANDATORY FINAL CHECKLIST (#1189)
+
+Before you finish writing, verify the prose against this checklist. Failing any item will fail the build.
+
+### Section headings (verbatim)
+
+Every heading from "Section Structure" above MUST appear as an `## H2` in your output, in order, **including the closing `Підсумок:` / `Підсумок та перехід до M...` summary**. The single most common writer failure across the B1 build has been silently dropping the final summary section. Re-read your output before stopping. If the last section in the plan is missing, write it now.
+
+### Required vocabulary (every word must appear)
+
+You MUST use **every word** from the list below at least once in the prose, in a natural sentence with bold + English translation. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, прагматика, діагностика, дієвідмінювання, зворотний, двовидовий, одновидовий, неозначено-кількісний, etc.) is the most frequently dropped category — actively find homes for those words even if it means adding a sentence that defines them.
+
+- [ ] перевірка (check, review)
+- [ ] контрольна точка (checkpoint)
+- [ ] завдання (task, exercise)
+- [ ] помилка (error, mistake)
+- [ ] виправити (to correct)
+- [ ] відмінок (grammatical case)
+- [ ] множина (plural)
+- [ ] однина (singular)
+
+### Forbidden words (never produce)
+
+Do not write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use `<!-- VERIFY -->` instead). The post-write toxic-token scanner will fail the build immediately:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+### Level-specific immersion check
+
+The level-appropriate immersion rule was already injected at the top of
+this prompt as `IMMERSION RULE`. Re-read it now BEFORE you stop writing.
+If your level's rule contains a CHECKLIST block, walk through every item.
+If it doesn't, just verify your output matches the LANGUAGE ROLES and
+TARGET stated in that block.
+
+This used to hard-code a B1+ checklist that confused A1/A2 models (where
+translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+The single source of truth is now
+`scripts/pipeline/config_tables.py:IMMERSION_RULES`.
+
+---
 
 Begin writing now. Start with the first section heading.

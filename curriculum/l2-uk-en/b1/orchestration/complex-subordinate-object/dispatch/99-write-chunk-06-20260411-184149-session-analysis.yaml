@@ -1,0 +1,45 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T16-40-c60915e9.json
+phase: write-chunk-06
+prompt_chars: 45137
+response_chars: 4680
+prompt_words: 6299
+response_words: 737
+sections:
+- name: header
+  start: 0
+  length: 421
+  fraction: 0.0093
+- name: skeleton
+  start: 421
+  length: 902
+  fraction: 0.02
+- name: prior_summary
+  start: 1323
+  length: 3286
+  fraction: 0.0728
+- name: plan
+  start: 4609
+  length: 15599
+  fraction: 0.3456
+- name: wiki
+  start: 13735
+  length: 24715
+  fraction: 0.5476
+- name: output_spec
+  start: 44923
+  length: 214
+  fraction: 0.0047
+large_sections:
+- wiki
+directives_total: 15
+directives_covered: 13
+directives_missed:
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: inject_activity
+  text: reading, comprehension questions about the dialogue focusing on explanatory
+    clauses
+  covered: false
+  coverage_note: marker missing

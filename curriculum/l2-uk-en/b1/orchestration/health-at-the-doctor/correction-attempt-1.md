@@ -2,8 +2,6 @@
 CRITICAL: Your previous attempt failed the following checks. Fix ONLY the listed errors. Keep everything else exactly as is — do not rewrite sections that are working correctly.
 
 - FIX: Missing section heading: 'Підсумок: здоров'я українською'
-- NOTE: Missing 1/16 required vocab: призначити (to prescribe — perfective)
-- NOTE: Plan expects 5 exercise(s) but content has 3
 </correction_directive>
 
 LEARNINGS FROM PAST BUILDS (same error patterns seen before):

@@ -1,0 +1,61 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T12-26-d36a17fb.json
+phase: write-chunk-02
+prompt_chars: 48172
+response_chars: 5054
+prompt_words: 6847
+response_words: 880
+sections:
+- name: header
+  start: 0
+  length: 447
+  fraction: 0.0093
+- name: skeleton
+  start: 447
+  length: 1515
+  fraction: 0.0314
+- name: prior_summary
+  start: 1962
+  length: 3363
+  fraction: 0.0698
+- name: plan
+  start: 5325
+  length: 12770
+  fraction: 0.2651
+- name: wiki
+  start: 11596
+  length: 29871
+  fraction: 0.6201
+- name: output_spec
+  start: 47966
+  length: 206
+  fraction: 0.0043
+large_sections:
+- wiki
+directives_total: 25
+directives_covered: 19
+directives_missed:
+- kind: must
+  text: The verbal noun `малювання` (painting/drawing) must be used.
+  covered: false
+  coverage_note: 1/7 keywords (14%)
+- kind: must
+  text: 'The learner must produce a full sentence: `Я граю у футбол`.'
+  covered: false
+  coverage_note: 2/7 keywords (29%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: inject_activity
+  text: group-sort-categories
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-hobbies-cases
+  covered: false
+  coverage_note: marker missing

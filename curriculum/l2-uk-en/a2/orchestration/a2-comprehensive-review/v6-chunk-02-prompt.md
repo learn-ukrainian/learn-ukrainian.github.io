@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-це **непрямі відмінки**. These are the oblique cases. Вони показують зв'язок між словами. Непрямий відмінок може означати об'єкт, інструмент, місце або напрямок. Давайте згадаємо їхні головні ролі. **Родовий відмінок** is the genitive case. Він означає відсутність чогось. Після слова «немає» завжди стоїть родовий відмінок. Ми кажемо «немає **часу**». This means "no time". Він також показує належність. Ми кажемо «книга **вчителя**». This means "the teacher's book". Ми використовуємо його для частини від цілого. Наприклад, «трохи **води**». This translates to "a little water". **Знахідний відмінок** is the accusative case. Він вказує на прямий об'єкт дії. Якщо дія переходить на предмет, ми кажемо «я бачу **книгу**». This means "I see a book". Для істот чоловічого роду він має форму родового відмінка. Ми кажемо «я бачу **вчителя**». This means "I see a teacher". **Давальний відмінок** is the dative case. Він показує адресата дії. Коли ми щось даємо, ми використовуємо цей відмінок. Ми кажемо «я даю **мамі**». This means "I give to mom". Цей відмінок також описує стан. Наприклад, «**мені** подобається». This translates to "I like". **Орудний відмінок** is the instrumental case. Він вказує на інструмент дії. Наприклад, «я пишу **ручкою**». This means "I write with a pen". Ми використовуємо прийменник «з» та орудний відмінок для сумісної дії. Наприклад, «кава з **молоком**». This is "coffee with milk". Якщо ми не маємо чогось, ми використовуємо прийменник «без» та родовий відмінок. Наприклад, «кава без **молока**». This is "coffee without milk". **Місцевий відмінок** is the locative case. Він завжди вживається з прийменниками «у», «в» та «на». Він показує місце дії. Наприклад, «ми вчимося у **школі**». This means "we study at school". **Кличний відмінок** is the vocative case. Ми використовуємо його виключно для звертання. Наприклад, ми кажемо «**Друже**!». This means "Friend!". Також кажемо «**Оксано**!» або «**Пане**!». These mean "Oksana!" and "Sir!". The vocative case is a living, essential feature of the Ukrainian language. Це не архаїзм. Використання називного відмінка замість кличного — це поширена помилка. Українська мова завжди вимагає кличного відмінка при звертанні. Давайте розглянемо типові помилки на рівні А2. Не забувайте про літеру «н» у займенниках третьої особи. Після прийменників ми завжди додаємо цю літеру. Правильно казати «про **нього**». This means "about him". Неправильно казати «про його». Пам'ятайте про родовий відмінок після заперечення. Ми кажемо «я не маю **часу**». Зверніть увагу на чергування приголосних у місцевому та давальному відмінках. Приголосні «г», «к», «х» змінюються на «з», «ц», «с» перед закінченням «-і». Правильно казати «у **руці**». This means "in the hand". Також правильно «на **дорозі**». This means "on the road". <!-- INJECT_ACTIVITY: fill-in-mixed-cases --> В українській мові числівники вимагають різних відмінків. The word **один** means "one". Він змінюється як прикметник. Він має однаковий рід та відмінок з іменником. Наприклад, «один **зошит**» або «одна **книга**» у називному відмінку. These mean "one notebook" and "one book". Після числівників 2, 3 та 4 ми використовуємо називний відмінок множини. Наприклад, «три **зошити**». This translates to "three notebooks". Після числівників від 5 і більше ми використовуємо родовий відмінок множини. Наприклад, «п'ять **зошитів**». This means "five notebooks". Також «десять **книг**». This translates to "ten books".
+is performed. Давальний відмінок вказує на людину, яка отримує щось. Ми кажемо «я пишу листа другу». Також він потрібен для вираження стану: «мені весело» або «мамі холодно». Орудний відмінок — це ваш інструмент. Кожен **прикметник** (adjective) та іменник у цій формі показує, як саме ми діємо. Наприклад, ми подорожуємо «потягом» або «літаком». Порівняйте: ми п'ємо каву «з молоком» (Орудний), але чай «без лимона» (Родовий). Це базове розрізнення є дуже важливим для щоденного спілкування. Місцевий відмінок унікальний тим, що ніколи не вживається самостійно. Він завжди працює з прийменниками «у» або «на», щоб показати локацію. Ми кажемо «жити в Одесі» або «працювати на фірмі». На завершення системи ми маємо Кличний відмінок. Це форма для звертання, яка робить вашу мову природною та ввічливою. Використовуйте форми «сестро!», «Михайле!» або «друже!». В українській мові це не просто граматичне правило, а вияв поваги до співрозмовника. > *The Locative case is unique because it is never used alone. It always works with the prepositions "u" or "na" to show location. We say "to live in Odesa" or "to work at a company." At the end of the system, we have the Vocative case. This is the form for address, which makes your speech natural and polite. Use the forms "sister!", "Mykhailo!" or "friend!". In Ukrainian, this is not just a grammatical rule, but an expression of respect for the interlocutor.* :::info **Grammar box** In Ukrainian, nouns change their endings front and center. Remember: the Vocative case is mandatory for people, while the Locative case is your primary tool for answering "where?" (де?). ::: Наприкінці рівня А2 важливо знати, де зазвичай трапляється **помилка** (error). Часто студенти забувають додавати літеру «н», коли використовують третій **займенник** (pronoun) з прийменником. Правильно казати «його», але «до нього» або «біля неї». Ще одна складність — це зміна звуків у корені. Коли іменник жіночого роду стоїть у Давальному або Місцевому відмінку, приголосні змінюються. Запам'ятайте ці пари: г стає з, к стає ц, х стає с. Наприклад: «нога — на нозі». > *At the end of level A2, it is important to know where a mistake usually occurs. Students often forget to add the letter "n" when using the third-person pronoun with a preposition. It is correct to say "yoho" (his/him), but "do nioho" (to him) or "bilia nei" (near her). Another difficulty is the change of sounds in the root. When a feminine noun is in the Dative or Locative case, the consonants change. Remember these pairs: g becomes z, k becomes ts, kh becomes s. For example: "noha" (leg) — "na nozi" (on the leg).* <!-- INJECT_ACTIVITY: fill-in, Mixed case drill — all seven cases in one exercise --> Остання важлива деталь — це узгодження іменників із числами. Коли ми рахуємо від одного до ста, форма слова змінюється. Числівник «один» вимагає форми однини. Числа «два», «три» та «чотири» вимагають називного відмінка множини. Проте, коли ви бачите число «п'ять» або більше, ви повинні вживати родовий відмінок множини. Наприклад, ми кажемо «чотири дні», але «десять днів». Постійна практика таких конструкцій зробить вашу мову значно впевненішою.
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -555,7 +555,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 6: A2 finale (A2 M51-M69)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 40%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 40% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 70-90% Ukrainian.
 LANGUAGE ROLES:
@@ -574,18 +641,61 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] повторення (review, revision)
+- [ ] граматика (grammar)
+- [ ] відмінок (grammatical case)
+- [ ] дієслово (verb)
+- [ ] прикметник (adjective)
+- [ ] займенник (pronoun)
+- [ ] речення (sentence)
+- [ ] помилка (error, mistake)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Дієслово: вид, час, спосіб (~500 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

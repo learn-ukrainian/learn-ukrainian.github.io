@@ -1,0 +1,120 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T16-46-f2d8d698.json
+phase: write-chunk-02
+prompt_chars: 42442
+response_chars: 4814
+prompt_words: 6128
+response_words: 751
+sections:
+- name: header
+  start: 0
+  length: 428
+  fraction: 0.0101
+- name: skeleton
+  start: 428
+  length: 1282
+  fraction: 0.0302
+- name: prior_summary
+  start: 1710
+  length: 3767
+  fraction: 0.0888
+- name: plan
+  start: 5477
+  length: 21067
+  fraction: 0.4964
+- name: wiki
+  start: 19352
+  length: 15701
+  fraction: 0.3699
+- name: output_spec
+  start: 42245
+  length: 197
+  fraction: 0.0046
+large_sections:
+- plan
+directives_total: 33
+directives_covered: 14
+directives_missed:
+- kind: checklist
+  text: пунктуація (punctuation — rules for using punctuation marks)
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: checklist
+  text: додаток (object — secondary member answering indirect case questions)
+  covered: false
+  coverage_note: 1/8 keywords (12%)
+- kind: checklist
+  text: означення (attribute — secondary member answering який? чий?)
+  covered: false
+  coverage_note: 2/7 keywords (29%)
+- kind: checklist
+  text: обставина (adverbial — secondary member answering як? де? коли?)
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: checklist
+  text: називний відмінок (nominative case — хто? що?)
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: checklist
+  text: родовий відмінок (genitive case — кого? чого?)
+  covered: false
+  coverage_note: 0/6 keywords (0%)
+- kind: checklist
+  text: давальний відмінок (dative case — кому? чому?)
+  covered: false
+  coverage_note: 0/6 keywords (0%)
+- kind: checklist
+  text: знахідний відмінок (accusative case — кого? що?)
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: checklist
+  text: орудний відмінок (instrumental case — ким? чим?)
+  covered: false
+  coverage_note: 0/6 keywords (0%)
+- kind: checklist
+  text: місцевий відмінок (locative case — на кому? на чому?)
+  covered: false
+  coverage_note: 0/6 keywords (0%)
+- kind: must
+  text: Adjectives must agree with the noun they modify in gender, number, and **case**
+    (Source 6, 13).
+  covered: false
+  coverage_note: 3/10 keywords (30%)
+- kind: must
+  text: '` | The **Locative case** is required to express location and it **must**
+    be used with a preposition like `в` or `на`.'
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: must
+  text: '` | Adjectives must agree with their nouns in case.'
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: must
+  text: Both the pronoun (`мій` -> `моїм`) and the noun (`друг` -> `другом`) must
+    change.
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: must
+  text: '**Кличний відмінок (Vocative Case):** Emphasize that the Vocative is a living,
+    breathing, and **mandatory** feature of standard Ukrainian for all applicable
+    nouns.'
+  covered: false
+  coverage_note: 2/15 keywords (13%)
+- kind: must
+  text: '* **Prerequisites:** A learner must first be able to identify a `noun`, `adjective`,
+    and `verb`.'
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: must
+  text: '* **Adjective Agreement:** Adjectives must match the noun''s gender, number,
+    and case.'
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 3/11 keywords (27%)

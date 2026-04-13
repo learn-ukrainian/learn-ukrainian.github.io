@@ -255,30 +255,26 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-- Confirmed: учора, зранку, вдень, ввечері, потім, прокинутися, поснідати, обідати, спочатку, нарешті, повернутися, лягти, звичайний, продукти, серіал, колега.
-- Not found: none. 
-- Note: **колега** is a noun of common gender (m/f), allowing for both "мій колега" and "моя колега".
+- Confirmed: учора, зранку, вдень, ввечері, потім, прокинутися, поснідати, обідати, спочатку, нарешті, повернутися, лягти, звичайний, продукти, серіал, колега
+- Not found: (None)
 
 ## Grammar Rules
-- **Past Tense Formation**: Основа інфінітива + суфікс **-л-** (feminine/neuter/plural) or **-в** (masculine). 
-  - *Example*: прокинутися → прокинувся (m), прокинулася (f).
-  - *Rule*: For stems ending in a consonant, the masculine suffix -в is omitted (e.g., **ліг** from лягти, **біг** from бігти).
-- **Euphony (U/V Alternation)**: Правопис § 23 — Use **учора** at the beginning of a sentence or between consonants; use **вчора** after a vowel to maintain melodic flow.
+- Time markers and sequencing adverbs (зранку, вдень, ввечері, вночі, спочатку, нарешті): Правопис §41 — "Разом пишемо... прислівники, утворені сполученням прийменника з іменником: вве́чері (уве́чері)... вдень (уде́нь)... вночі́ (уночі́)... зра́нку... споча́тку... наре́шті".
 
 ## Calque Warnings
-- **"бувший колега"**: Calque — Use **колишній колега** instead.
-- **"як пройшов день"**: OK (neutral) — **як минув день** is a more stylistic alternative, but "пройшов" is acceptable for A1.
-- **"продукти"**: OK — Standard term for "groceries/food products" in daily routine context.
-- **"лягти спати"**: OK — Natural Ukrainian phrase.
+- як пройшов твій день: OK (Not found in style guide) — *Note: While not flagged by the tool, "як минув твій день" is often preferred over the Russian-influenced "пройшов".*
+- мати чудовий день: OK (Not found in style guide)
+- лягти спати: OK (Not found in style guide)
 
 ## CEFR Check
-- **учора**: A1 — OK (Found in Grade 2 textbooks).
-- **прокинутися**: A1 — OK (Found in Grade 1 "My Day" materials).
-- **поснідати**: A1 — OK (Found in Grade 1/4 routine narratives).
-- **звичайний**: A1 — OK (Common adjective for routine descriptions).
-- **продукти**: A1 — OK (Standard vocabulary for shopping).
-- **серіал**: A1/A2 — OK (Introduced in Grade 5, suitable for A1 leisure topics).
-- **колега**: A1/A2 — OK (Essential for workplace-related A1 content).
+- продукти (продукт): A1 — OK
+- колега: A1 — OK
+- серіал: A2 — Above target
+- прокинутися: A2 — Above target
+- поснідати: A2 — Above target
+- повернутися: A2 — Above target
+- нарешті: A2 — Above target
+- звичайний: A2 — Above target
 </pre_verified_facts>
 
 
@@ -601,12 +597,14 @@ These exercises, adapted from Ukrainian school materials, provide a gold standar
 
 ## Section Structure
 
-Write these sections as H2 headings, in this exact order:
+Write these sections as H2 headings, in this **exact** order:
 
 - `## Dialogues` (~300 words)
 - `## Розповідь про день (Narrating a Day)` (~300 words)
 - `## Мій учорашній день (My Yesterday)` (~300 words)
 - `## Summary` (~300 words)
+
+**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim** as an `## H2` line. This includes the FINAL summary/transition section (`Підсумок: ...`, `Підсумок та перехід до M...`, etc.) — the writer's most common failure is silently dropping the closing section. Do NOT skip it. Do NOT renumber. Do NOT merge headings. The post-write quick-verify check will fail your build if any heading is missing, even if the prose itself is excellent.
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -614,16 +612,17 @@ Each section should follow the word budget specified. The total must reach 1200 
 
 ## Content Rules
 
-TARGET: 20-35% Ukrainian.
+TARGET: 20-35% Ukrainian. ⚠️ HARD GATE — the audit REJECTS modules below 20%.
 LANGUAGE ROLES:
-- THEORY & EXPLANATION: English prose — brief and clear. Show, don't tell.
+- THEORY & EXPLANATION: English prose — brief, 2-3 sentences per concept. No long expository paragraphs. Explain once, then show Ukrainian.
+- UKRAINIAN NARRATIVE PARAGRAPHS: **REQUIRED — minimum 1 per section.** A 3-6 sentence Ukrainian paragraph demonstrating the concept in use, followed IMMEDIATELY by a `> *English translation*` blockquote. This is the PRIMARY driver of hitting the immersion target. Without these paragraphs you cannot reach 20%.
 - PARADIGM TABLES: Conjugation/declension tables with all cells Ukrainian.
-- EXAMPLE LISTS: Ukrainian sentences in bulleted lists (each: Ukrainian — English gloss).
-- DIALOGUES: Mini-dialogues in blockquotes with English gloss per line.
+- EXAMPLE LISTS: Ukrainian sentences in bulleted lists (each: Ukrainian — English gloss). Minimum 5 per rule.
+- DIALOGUES: Mini-dialogues in blockquotes with English gloss per line. At least 1 dialogue per module.
 - PATTERN BOXES: Show transformations: `читати → читай → читайте`.
 - INLINE: Ukrainian words/phrases bolded in English prose.
-- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian. Full Ukrainian sentences go in tables, bulleted lists, dialogues, or pattern boxes.
-Ukrainian sentences max 10 words. Mix container types.
+- STRUCTURAL RULE: Every section MUST contain a Ukrainian narrative paragraph (3-6 sentences, translated in blockquote) PLUS supporting tables/lists/dialogues/pattern boxes. Pure-English sections are FORBIDDEN at M35+.
+Ukrainian sentences max 12 words. Mix container types.
 
 HARD GRAMMAR RULES (audit will reject violations):
 - Max 10 words per Ukrainian sentence (STRICT — count every word)
@@ -653,6 +652,25 @@ HARD GRAMMAR RULES (audit will reject violations):
 - **Zero calques**: No приймати душ→брати душ, приймати рішення→ухвалювати рішення
 - **Zero paronyms**: тактична≠тактовна, ефектний≠ефективний — use the right word, not a similar-sounding one
 - **Natural Ukrainian**: Write how a Ukrainian teacher would explain this to a student. Not robotic, not textbook-dry, not overly casual.
+
+### FORBIDDEN WORDS — never write these (#1189)
+
+The following Russian words have leaked into past builds and broken modules. They are **hard-banned** — the post-write toxic-token scanner will fail your build the moment it sees one. Use the Ukrainian alternative every time, even in dialogues, even in casual prose, even when quoting a learner's mistake (use a `<!-- VERIFY -->` placeholder instead of typing the Russian form):
+
+| Russian (FORBIDDEN) | Ukrainian (USE THIS) |
+|---|---|
+| хорошо | добре |
+| конечно | звичайно / певна річ |
+| спасибо | дякую |
+| пожалуйста | будь ласка / прошу |
+| ничего | нічого |
+| сейчас | зараз |
+| тоже | теж / також |
+| здесь | тут |
+| кот | кіт |
+| кон | кін |
+
+This list is enforced word-for-word by `scripts/build/quick_verify.py` (SEVERE_RUSSIANISMS). If you produce any of these tokens — even inside a quoted example, even inside a dialogue line spoken by a Russian-speaking character — the build halts immediately. There is no exception.
 
 **Authority hierarchy (if uncertain about a word, check in this order):**
 VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (stress) → Антоненко-Давидович (style) → Грінченко (etymology).
@@ -761,38 +779,35 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Dialogues (~320 words total)
-- P1 (~60 words): Introduction to the importance of storytelling in the past tense. Transition from isolated sentences ("I ate") to a connected narrative ("Yesterday I woke up, then I ate"). Contrast "Сьогодні я працюю" with "Учора я працював."
-- P2 (~100 words): Dialogue 1 — The Police Report. A witness describes a theft. Use vocabulary from the plan: "Я припаркував велосипед (m) біля магазину. Потім зайшов у кав'ярню (f). Коли вийшов, велосипед зник." Focus on the sequencing of actions to establish facts.
-- P3 (~100 words): Dialogue 2 — A typical day. Two friends catch up: "Як пройшов твій день? — Добре! Зранку я прокинувся о сьомій, поснідав і пішов на роботу." Focus on the division of the day into "зранку," "вдень," and "ввечері" to structure the conversation.
-- P4 (~60 words): Analysis of the dialogues. Point out how "потім" (then) and "а потім" (and then) act as the glue between verbs. Explain that in a story, we don't repeat the subject "я" (I) in every single sentence if the context is clear.
+## Dialogues (~330 words total)
+- P1 (~40 words): Introduce the communicative goal of narrating a past day. Explain that talking about your daily routine is one of the most common conversational topics, and it requires chaining together past events in a logical sequence.
+- P2 (~100 words): Present Dialogue 1 ("Як пройшов твій день?"). A masculine speaker describes his workday: "Зранку я прокинувся о сьомій. Я поснідав і пішов на роботу. Вдень я працював і обідав з колегою. Ввечері я дивився фільм і рано ліг спати." Include English translations for context.
+- P3 (~60 words): Analyze Dialogue 1. Point out the use of core time markers (зранку, вдень, ввечері) to give the story structure, and highlight the masculine past tense verb endings (-в/-вся) for "прокинувся", "пішов", "працював", "ліг".
+- P4 (~100 words): Present Dialogue 2 ("Що ти робила у суботу?"). A feminine speaker shares her fun weekend: "Зранку я ходила на ринок і купила фрукти. Потім я готувала обід... Ввечері ми з подругою ходили в ресторан." Include English translations.
+- P5 (~30 words): Analyze Dialogue 2. Highlight the feminine verb endings (-ла) such as "робила", "ходила", "купила", and note the use of "потім" (then) and "а потім" to sequence the narrative.
 
-## Розповідь про день (Narrating a Day) (~300 words total)
-- P1 (~100 words): Detailed explanation of time adverbs as anchors for a story: зранку (in the morning), вдень (in the afternoon), ввечері (in the evening), вночі (at night). Note the orthography and stress of "вдень" to avoid confusion with the phrase "в день" (on the day), as per decolonization notes.
-- P2 (~100 words): Mastering the logic of sequencing. Introduce "спочатку" (first/at first), "потім" (then), "після цього" (after that), and "нарешті" (finally). Show how these words create a chronological chain of events: "Спочатку я випив каву. Після цього я пішов у парк."
-- P3 (~100 words): Vocabulary focus on daily routine verbs in the past tense. Provide a table for high-frequency verbs with both masculine and feminine forms: прокинувся/прокинулася (woke up), поснідав/поснідала (had breakfast), пішов/пішла (went), обідав/обідала (had lunch), повернувся/повернулася (returned), ліг/лягла (lay down).
-- <!-- INJECT_ACTIVITY: ordering-daily-routine --> [Ordering, focus on putting daily actions in chronological order using time markers, 6 items]
+## Розповідь про день (Narrating a Day) (~330 words total)
+- P1 (~80 words): Introduce the core time markers for structuring a story chronologically: зранку (in the morning), вдень (in the afternoon), ввечері (in the evening), вночі (at night). Show how they establish the timeline of a day.
+- P2 (~80 words): Explain sequencing words that connect separate sentences into a cohesive story: спочатку (first), потім (then), після цього (after that), нарешті (finally). Provide a clear example: "Спочатку я поснідав. Потім я пішов на роботу. Після цього я обідав."
+- P3 (~90 words): Present the imperfective past tense of daily routine verbs, explicitly reminding learners of gender agreement. Show both masculine and feminine forms: прокинутися (прокинувся / прокинулася), поснідати (поснідав / поснідала), піти (пішов / пішла).
+- P4 (~80 words): Continue with the remaining high-frequency routine verbs: обідати (обідав / обідала), повернутися (повернувся / повернулася), лягти спати (ліг / лягла спати). Emphasize that these verbs form the backbone of any daily narrative.
+- <!-- INJECT_ACTIVITY: order-daily-routine --> [ordering, Put the daily routine in chronological order, 6 items]
 
 ## Мій учорашній день (My Yesterday) (~330 words total)
-- P1 (~120 words): Model Narrative — Anna's Day. A full-prose example of a female speaker narrating her day. "Учора був звичайний день. Зранку я прокинулася о пів на сьому. Я поснідала — їла кашу і пила каву. Потім я пішла на роботу." Use 8-10 sentences to show consistency in the "-ла" ending.
-- P2 (~100 words): Breakdown of the model narrative. Explain why "звичайний день" (ordinary day) is a good starting point. Point out the gender agreement between the speaker (Anna) and every verb (прокинулася, поснідала, пішла, обідала, купила, готувала, лягла).
-- P3 (~110 words): Transition to learner's practice. Provide a "Narrative Template" for the student to adapt. "Учора... (час)... я (дієслово). Потім я...". Encourage the combination of past tense with known A1 topics like food (салат, сік), places (офіс, кафе), and people (друг, колега).
-- <!-- INJECT_ACTIVITY: fill-in-narrative-flow --> [Fill-in-the-blanks, focus on choosing the correct time markers and sequenced verbs in context, 6 items]
-- <!-- INJECT_ACTIVITY: gender-consistency-drill --> [Fill-in-the-blanks, focus on choosing between masculine (-в) and feminine (-ла) forms for a female narrator, 4 items]
+- P1 (~50 words): Explain that a natural story combines time markers, sequencing words, past tense verbs, and known vocabulary (places, food, people) to create a rich, detailed narrative.
+- P2 (~120 words): Provide the model narrative — "Anna's yesterday." Text: "Учора був звичайний день. Зранку я прокинулася о пів на сьому. Я поснідала — їла кашу і пила каву. Потім я пішла на роботу. Вдень я обідала в кафе біля офісу. Я замовила салат і сік. Після роботи я ходила в магазин і купила продукти. Ввечері я готувала вечерю і дивилася серіал. О одинадцятій я лягла спати."
+- P3 (~60 words): Analyze Anna's story. Emphasize that because Anna is female, absolutely every verb must end in -ла (прокинулася, поснідала, пішла, обідала). Note how she integrated food (каша, кава, салат) and places (робота, кафе, магазин) effortlessly.
+- P4 (~100 words): Provide the "Your turn" template: "Учора... Зранку я... Потім... Вдень... Ввечері...". Instruct learners to build their own narrative by plugging in their own places (кафе, парк, магазин), food (каша, кава, салат), and people (друг, колега, подруга), bringing together everything learned in A1.
+- <!-- INJECT_ACTIVITY: fill-in-time-markers --> [fill-in, Complete the narrative with time markers and sequenced verbs, 6 items]
+- <!-- INJECT_ACTIVITY: fill-in-gender-consistency --> [fill-in, Practice gender consistency in narration (Female speaker 'Anna'), 4 items]
 
-## Summary (~300 words total)
-- P1 (~150 words): The "Narration Toolkit" recap. Provide a clear summary table:
-    * Times: зранку → вдень → ввечері → вночі.
-    * Sequencing: спочатку → потім → після цього → нарешті.
-    * Key Forms: Masculine endings (-в/-вся) vs. Feminine endings (-ла/-лася).
-- P2 (~150 words): Final self-check and practical task.
-    * Question Checklist:
-        - Чи використав я принаймні 5 дієслів у минулому часі? (Did I use at least 5 verbs?)
-        - Чи всі дієслова мають однаковий рід (чоловічий або жіночий)? (Are all verbs the same gender?)
-        - Чи є в моїй розповіді "спочатку" і "потім"? (Are there 'first' and 'then'?)
-    * Task: Tell the story of your yesterday aloud to a partner or yourself, making sure to include what you ate for breakfast (поснідав/поснідала) and when you went to sleep (ліг/лягла спати).
+## Підсумок (~330 words total)
+- P1 (~80 words): Recap the Narration toolkit's time structure. Remind learners that dividing the story into "зранку → вдень → ввечері → вночі" provides a clear, natural flow that native speakers expect when listening to a recounted day.
+- P2 (~80 words): Recap the sequencing words: спочатку, потім, після цього, нарешті. Emphasize that using these words is the secret to moving beyond disjointed, isolated sentences into a fluid, connected story.
+- P3 (~100 words): Summarize the daily routine past forms taught in this module: прокинувся/-лася, поснідав/-ла, пішов/пішла, обідав/-ла, повернувся/-лася, ліг/лягла спати. Remind learners that mastering this core list covers 80% of what happens in an average day.
+- P4 (~70 words): Give a final, critical reminder on gender consistency: male speakers must strictly use -в/-вся forms throughout their narrative, while female speakers must strictly use -ла/-лася. End with a self-check task: "Tell the story of your yesterday aloud using at least 5 of the routine verbs."
 
-Grand total: ~1250 words
+Grand total: ~1320 words
 </skeleton>
 
 ## Output Format
@@ -800,11 +815,57 @@ Grand total: ~1250 words
 Write in Markdown. Use:
 - `## Section Title` for main sections
 - `### Subsection` for subsections within a section
-- `**bold**` for Ukrainian words being taught — EVERY bold Ukrainian word MUST have an English translation on first use, either in parentheses `**слово** (translation)` or inline `**слово** means "translation"`. No exceptions.
+- `**bold**` for Ukrainian words being taught. For **A1 and A2** levels, provide an English translation on first use (e.g. `**стіл** (table)`) because learners lack the vocabulary to infer meaning. For **B1 and above**, do NOT provide inline translations for standard vocabulary — the learner will use the module's словник (vocabulary table). You may provide ONE parenthetical English translation ONLY for highly abstract grammar/linguistic terms on first use (e.g. `**видова пара** (aspectual pair)`).
 - Tables for paradigms (conjugation, declension)
 - `:::tip` / `:::caution` / `:::note` for callout boxes
 - `<!-- INJECT_ACTIVITY: {id} -->` for exercise placement (markers only — do NOT write exercise content)
 
 Do NOT write MDX component syntax, JSON, or DSL exercise blocks (:::quiz, etc.). Plain Markdown with injection markers.
+
+---
+
+## MANDATORY FINAL CHECKLIST (#1189)
+
+Before you finish writing, verify the prose against this checklist. Failing any item will fail the build.
+
+### Section headings (verbatim)
+
+Every heading from "Section Structure" above MUST appear as an `## H2` in your output, in order, **including the closing `Підсумок:` / `Підсумок та перехід до M...` summary**. The single most common writer failure across the B1 build has been silently dropping the final summary section. Re-read your output before stopping. If the last section in the plan is missing, write it now.
+
+### Required vocabulary (every word must appear)
+
+You MUST use **every word** from the list below at least once in the prose, in a natural sentence with bold + English translation. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, прагматика, діагностика, дієвідмінювання, зворотний, двовидовий, одновидовий, неозначено-кількісний, etc.) is the most frequently dropped category — actively find homes for those words even if it means adding a sentence that defines them.
+
+- [ ] учора (yesterday)
+- [ ] зранку (in the morning)
+- [ ] вдень (in the afternoon)
+- [ ] ввечері (in the evening)
+- [ ] потім (then)
+- [ ] прокинутися (to wake up)
+- [ ] поснідати (to have breakfast)
+- [ ] обідати (to have lunch)
+
+### Forbidden words (never produce)
+
+Do not write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use `<!-- VERIFY -->` instead). The post-write toxic-token scanner will fail the build immediately:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+### Level-specific immersion check
+
+The level-appropriate immersion rule was already injected at the top of
+this prompt as `IMMERSION RULE`. Re-read it now BEFORE you stop writing.
+If your level's rule contains a CHECKLIST block, walk through every item.
+If it doesn't, just verify your output matches the LANGUAGE ROLES and
+TARGET stated in that block.
+
+This used to hard-code a B1+ checklist that confused A1/A2 models (where
+translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+The single source of truth is now
+`scripts/pipeline/config_tables.py:IMMERSION_RULES`.
+
+---
 
 Begin writing now. Start with the first section heading.

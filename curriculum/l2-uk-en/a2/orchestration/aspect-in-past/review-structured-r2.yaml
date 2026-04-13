@@ -1,0 +1,56 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 7
+  evidence: 'The module explicitly teaches only five aspect pairs: `писати / написати`,
+    `читати / прочитати`, `готувати / приготувати`, `робити / зробити`, `вчити / вивчити`.
+    The recommended word `тривалість` does'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: 'No Russianisms, Surzhyk, calques, or wrong Ukrainian forms were confirmed.
+    The only issue is register: `готовий до відправки` is colloquial in otherwise
+    standard teaching prose; `до відправлення` is c'
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'The PPP arc is clear: dialogue in section 1, rule explanation in sections
+    2-3, and contrastive practice/decision flowchart in section 4. Examples like `Коли
+    я готував вечерю, раптом погасло світло` co'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 8
+  evidence: All required vocabulary appears naturally in prose, including `минулий
+    час`, `процес`, `результат`, `довго`, and `раптом`. Recommended `щодня`, `нарешті`,
+    and `одного разу` appear, but `тривалість` is
+- dimension: 5
+  name: Exercise quality
+  score: 7
+  evidence: 'All four planned activity types are represented by markers, but there
+    is no marker after `## Коли вживати недоконаний вид`, and `<!-- INJECT_ACTIVITY:
+    fill-in-aspect-choice -->` plus `<!-- INJECT_ACTI'
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: 'The voice is teacherly and useful: `Let us look at...`, `Notice how...`,
+    `Ask yourself two questions before you speak.` It stays instructional rather than
+    gamified.'
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: All four planned H2 headings are present and in the correct order. The
+    pipeline word count is 2879, above the 2000-word target, and the markdown markers
+    are clean.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Ukrainian is presented on its own terms with no Russian-centric framing
+    or misleading cultural comparisons.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: 'The dialogue uses named speakers and a plausible Sunday comparison: `Оля`
+    and `Тарас` contrast `Я читала весь день` with `Я прочитав новий роман`. It is
+    short but natural enough for the teaching purpo'
+findings: []

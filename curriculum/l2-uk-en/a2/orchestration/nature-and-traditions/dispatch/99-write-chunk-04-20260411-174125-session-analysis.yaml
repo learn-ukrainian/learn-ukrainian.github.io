@@ -1,0 +1,66 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T15-40-3fe77a5f.json
+phase: write-chunk-04
+prompt_chars: 44503
+response_chars: 3948
+prompt_words: 6257
+response_words: 654
+sections:
+- name: header
+  start: 0
+  length: 437
+  fraction: 0.0098
+- name: skeleton
+  start: 437
+  length: 1033
+  fraction: 0.0232
+- name: prior_summary
+  start: 1470
+  length: 3323
+  fraction: 0.0747
+- name: plan
+  start: 4793
+  length: 11430
+  fraction: 0.2568
+- name: wiki
+  start: 9822
+  length: 28064
+  fraction: 0.6306
+- name: output_spec
+  start: 44287
+  length: 216
+  fraction: 0.0049
+large_sections:
+- wiki
+directives_total: 16
+directives_covered: 9
+directives_missed:
+- kind: checklist
+  text: літо (summer)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: осінь (autumn)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: писанка (decorated Easter egg)
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: 2) Using the Nominative case for the month (`грудень`) instead of the required
+    Genitive (`грудня`).
+  covered: false
+  coverage_note: 2/9 keywords (22%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 1/11 keywords (9%)
+- kind: inject_activity
+  text: fill-in-grammar-seasons
+  covered: false
+  coverage_note: marker missing

@@ -1,14 +1,36 @@
-## Мовленнєве завдання: Моя подорож
+## Мовленнєве завдання: Моя подорож (~450 words)
 
-Ваше головне завдання — написати коротку розповідь про свою недавню подорож. Write a cohesive text consisting of 8 to 10 sentences about a trip you recently took. Це може бути реальна історія або ваша фантазія. Your narrative must clearly demonstrate your ability to sequence past events and describe travel. Обов'язково використайте принаймні три **слова-зв'язки** (time connectors) для логіки тексту. For example, you can use «спочатку», «потім», або «нарешті». Також вам потрібно використати мінімум два **дієслова руху** (verbs of motion) у минулому часі. Most importantly, your story must show a clear contrast between background actions using the imperfective aspect and main events using the perfective aspect. Розкажіть детально, куди саме ви їздили та як ви туди дісталися. Напишіть, що ви там робили та які позитивні враження отримали.
+Now it is time to write your own story. Your task is to write a short narrative (eight to ten sentences) about a real or imagined journey, integrating past tense aspects, motion verbs, and time connectors. 
 
-Коли ви закінчите писати текст, уважно перевірте його за допомогою цього списку. This checklist will help you identify and fix common mistakes before you finalize your story. Перше: чи правильно ви узгодили дієслова минулого часу зі своїм родом? If you are female, did you remember to use the «-ла» endings for all your past tense verbs? Друге: чи правильно ви використали прийменники напрямку? Did you use the preposition «до» plus the genitive case when naming destination cities? Третє: чи логічно розвивається ваша історія? Did you successfully use words like «потім» (then) or «після цього» (after that) to show the chronological sequence of your actions? Четверте: чи описали ви свої фінальні емоції від поїздки?
+Тепер твоя черга **розповідати** (to tell) історію. Тобі треба написати короткий текст про свою останню **подорож** (trip). Ти можеш описати реальну відпустку або придумати цікаву пригоду. Головне — правильно використовувати минулий час, дієслова руху та слова для зв'язку подій.
 
-Ось приклад гарної розповіді, яку ви можете використати як орієнтир для вашого власного тексту. Here is a model answer annotated with grammatical explanations for the key verbs and structures. Read it carefully to see how the background states contrast with the sudden actions.
+> *Now it's your turn to tell a story. You need to write a short text about your last trip. You can describe a real vacation or invent an interesting adventure. The main thing is to correctly use the past tense, verbs of motion, and words to connect events.*
+
+:::tip
+**Did you know?** — Writing a structured narrative helps solidify your understanding of verb aspects. By consciously choosing between a process and a completed result, you train your brain to think in Ukrainian categories rather than simply translating from English.
+:::
+
+Before you start writing, review this checklist for self-evaluation. Did you use at least two motion verbs? Did you alternate aspects, using imperfective for background details and perfective for completed events? Did you include time connectors?
+
+Під час перевірки тексту зверни увагу на важливі деталі. Не забудь описати свої емоції та загальне **враження** (impression). Важливо зрозуміти, чи змогла ця відпустка тобі **сподобатися** (to like). Також згадай, що несподіваного могло **трапитися** (to happen) під час твого відпочинку.
+
+> *While checking your text, pay attention to important details. Don't forget to describe your emotions and overall impression. It is important to understand if this vacation managed to please you. Also mention what unexpected things could happen during your vacation.*
+
+To make your narrative clear and logical, follow a recommended chronological structure. Start with an introduction. Then, describe the journey itself, outline your main activities, and share your final thoughts.
+
+Опиши процес дороги. Розкажи, як ти купував **квиток** (ticket) і коли приїхав на **вокзал** (station). Напиши, чи ти вибрав для цієї поїздки літак, чи **потяг** (train).
+
+> *Describe the process of the journey. Tell how you bought a ticket and when you arrived at the station. Write whether you chose a plane or a train for this trip.*
+
+Потім перейди до основних подій. Розкажи, як ти зміг **доїхати** (to reach by vehicle) до місця призначення. Напиши, де ти вирішив **зупинитися** (to stay) і які цікаві місця ти відвідав.
+
+> *Then move on to the main events. Tell how you managed to reach your destination. Write where you decided to stay and what interesting places you visited.*
+
+Here is a high-quality example text about a trip to Lviv. Notice how the writer alternates between imperfective (impf) verbs for background actions and perfective (pf) verbs for completed events. Read this model answer to inspire your own writing.
 
 > [!model-answer]
-> **Минулого літа** (Last summer) я **їздив** [Imperfective, completed round-trip] до Карпат зі своїми друзями. **Спочатку** (At first) ми дуже довго **їхали** [Imperfective, process of traveling] потягом до міста Яремче. **Потім** (Then) ми швидко **знайшли** [Perfective, completed event] наш маленький готель. Там ми **залишили** [Perfective, completed event] усі свої важкі речі. Наступного дня ми **пішли** [Perfective, one-time departure on foot] високо в гори. Погода була просто чудова, і сонце яскраво **світило** [Imperfective, background state]. Ми повільно **йшли** [Imperfective, continuous process] темним лісом. Раптом ми **побачили** [Perfective, sudden event] великого оленя біля дерева. Це було справді неймовірно! Увечері ми **повернулися** [Perfective, completed result] до нашого готелю дуже втомлені, але абсолютно щасливі. Мені дуже **сподобалася** [Perfective, final impression] ця коротка, але надзвичайно цікава подорож. Я обов'язково хочу поїхати туди ще раз наступного року.
+> Минулого місяця я їздив (impf) до Львова. Ми поїхали (pf) туди з друзями. Спочатку ми купили (pf) квитки онлайн, а потім ввечері приїхали (pf) на вокзал. Ми спали (impf) у потязі всю ніч і вранці успішно доїхали (pf) до міста. У Львові ми вирішили зупинитися (pf) в готелі біля парку. Спочатку ми гуляли (impf) в центрі і дивилися (impf) на архітектуру. Потім ми зайшли (pf) в кафе і випили (pf) смачну каву, коли раптом пішов (pf) сильний дощ. Ми сиділи (impf) там, слухали (impf) музику і говорили (impf) про життя. Ця коротка подорож нам дуже сподобалася (pf). Це було (impf) чудово!
+>
+> *Last month I went to Lviv. We went there with friends. First, we bought tickets online, and then in the evening we arrived at the station. We slept in the train all night and in the morning successfully reached the city. In Lviv, we decided to stay in a hotel near the park. First, we walked in the center and looked at the architecture. Then we went into a cafe and drank delicious coffee, when suddenly a heavy rain started. We sat there, listened to music, and talked about life. We really liked this short trip. It was wonderful!*
 
-Перед тим як почати свою розповідь, давайте ще раз згадаємо найчастіші помилки. Before you write, let's review the most typical pitfalls English speakers face with travel narratives. Найперша проблема стосується роду в минулому часі. If a woman says "I went to the cinema," she must say «я ходила в кіно», never «я ходив». Українські дієслова завжди показують рід того, хто говорить. The second major pitfall relates to transportation methods. When you say "I will fly by airplane," you must use the instrumental case directly. Правильно казати «летіти літаком» або «їхати потягом». You must never use the preposition «з» (with) for vehicles, so «летіти з літаком» is completely wrong. Завжди пам'ятайте про ці важливі граматичні правила.
-
-<!-- INJECT_ACTIVITY: error-correction-travel -->
+<!-- INJECT_ACTIVITY: error-correction-grammar -->

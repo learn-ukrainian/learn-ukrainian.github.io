@@ -1,64 +1,4 @@
 vocabulary:
-- word: звук
-  translation: sound
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: лі́тера
-  translation: letter
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: голосни́й
-  translation: vowel sound
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: при́голосний
-  translation: consonant sound
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: приві́т
-  translation: hi (informal)
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: як справи
-  translation: how are you
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: до́бре
-  translation: fine, good
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: чудо́во
-  translation: great, wonderful
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: ма́ма
-  translation: mother
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: молоко́
-  translation: milk
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
 - word: норма́льно
   translation: okay
   expression: false
@@ -95,6 +35,66 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
+- word: звук
+  translation: sound
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: лі́тера
+  translation: letter
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: голосни́й
+  translation: vowel sound
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: при́голосний
+  translation: consonant sound
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: приві́т
+  translation: hi
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: Як справи?
+  translation: How are you?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: до́бре
+  translation: fine, good
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: чудо́во
+  translation: great, wonderful
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ма́ма
+  translation: mother
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: молоко́
+  translation: milk
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
 - word: абе́тка
   translation: alphabet
   expression: false
@@ -107,32 +107,62 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: тверди́й
-  translation: hard (consonant)
+- word: тверді
+  translation: hard
   expression: false
   pos: прикм.
   gender: ''
   verified: true
-- word: м'яки́й
-  translation: soft (consonant)
+- word: м'які́
+  translation: soft
   expression: false
   pos: прикм.
   gender: ''
   verified: true
-- word: А у тебе?
+- word: м'який знак
+  translation: soft sign
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Добрий день!
+  translation: Good afternoon!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: дякую
+  translation: thank you
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: Як тебе звати?
+  translation: What is your name?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Мене звати
+  translation: My name is
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: А тебе?
   translation: And you?
   expression: true
   pos: ''
   gender: ''
   verified: true
 - word: Рада тебе бачити!
-  translation: Glad to see you! (female speaker)
+  translation: Glad to see you!
   expression: true
   pos: ''
   gender: ''
   verified: true
 - word: Радий тебе бачити!
-  translation: Glad to see you! (male speaker)
+  translation: Glad to see you!
   expression: true
   pos: ''
   gender: ''
@@ -142,4 +172,16 @@ vocabulary:
   expression: true
   pos: ''
   gender: ''
+  verified: true
+- word: вчи́тель
+  translation: teacher
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: у́чні
+  translation: students
+  expression: false
+  pos: ім.
+  gender: ч.
   verified: true

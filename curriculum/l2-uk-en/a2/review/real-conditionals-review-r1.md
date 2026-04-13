@@ -1,68 +1,60 @@
 ## Linguistic Scan
-Errors found:
-1. `погано себе почуває` — Russian calque (себя чувствовать). Correct Ukrainian is `погано почувається`.
-2. `польємо` — Word form does not exist in standard Ukrainian (confirmed via VESUM verification). The correct 1st-person plural future perfective form of "полити" is `поллємо`.
-3. Factually incorrect grammatical claim: `Ми ніколи не використовуємо частку «б» або «би» після слова «якщо».` The phrase "якщо б" is widely used for unreal conditions (synonymous with "якби"). The rule must specify that this applies only to *real* conditions.
+- `«Якщо завтра дощитиме, то ми вирішили **залишитися** (to stay) вдома».` This example contradicts the module’s own rule that real-condition result clauses here should use future or imperative forms; as taught, it models the wrong pattern for this lesson.
+- `However, another word looks similar but has a completely different function: **якби** (if only).` and `It often translates to "if only" and expresses a strong wish about something that cannot be changed.` This is semantically misleading. `якби` is also a conditional conjunction, but for unreal/hypothetical conditions; “if only” is only one context-dependent gloss, not its core function.
 
 ## Exercise Check
-- `<!-- INJECT_ACTIVITY: fill-in-conditional-verbs -->` (after Section 1) — Matches hint #1. Focuses on completing real conditional sentences. Correctly placed.
-- `<!-- INJECT_ACTIVITY: match-condition-to-result -->` (after Section 2) — Matches hint #3. Focuses on matching condition to result. Correctly placed.
-- `<!-- INJECT_ACTIVITY: fix-aspect-errors -->` (after Section 2) — Matches hint #4. Focuses on aspect errors. Placed accurately after the paragraph discussing perfective/imperfective choices in conditions.
-- `<!-- INJECT_ACTIVITY: choose-if-style-yakshcho-yakby -->` (after Section 3) — Matches hint #2. Focuses on distinguishing "якщо" vs "якби". Correctly placed.
+4 activity markers are present:
+- `fill-in-real-conditionals` after section 1
+- `match-up-logical-results` after section 2
+- `error-correction-verb-forms` after section 2
+- `quiz-yakscho-vs-yakby` in section 3 after the `якщо/якби` contrast
 
-All markers are present, evenly distributed, and logically align with both the teaching sequence and the plan's requirements.
+Placement is generally correct: each marker comes after the relevant teaching. No inline DSL exercise blocks appear in the prose, so there is no exercise logic to audit here beyond marker placement.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 9/10 | Covers the outline well, but missed one consolidation point from A2.7 in Section 3. The plan required "означальне (який, де)", but the text only reviewed "тому що, бо", "хоча", "щоб", and "якщо". |
-| 2. Linguistic accuracy | 8/10 | Contains a Russian calque ("погано себе почуває" instead of "погано почувається"), an invalid verb form ("польємо" instead of "поллємо" confirmed by VESUM), and states a factually false grammar rule ("Ми ніколи не використовуємо частку «б» або «би» після слова «якщо»" — "якщо б" is valid for unreal conditions). |
-| 3. Pedagogical quality | 8/10 | The example "Якщо ти маєш вільний час, треба поспішити на поїзд" creates a logical contradiction (if you have free time, you do not need to hurry). This confuses learners trying to deduce meaning from context. Otherwise, excellent PPP flow. |
-| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary items are naturally integrated into the text (e.g., "погода", "вільний", "порада", "поспішити", "парасолька", "відпустка"). |
-| 5. Exercise quality | 10/10 | All four required markers are present, evenly spread, and directly test what was just taught (verb forms, logic matching, aspect, and recognizing if/if-only). |
-| 6. Engagement & tone | 10/10 | Very strong encouraging teacher persona ("Залиште ці нереальні мрії для поетів"). Great practical examples using familiar contexts like dacha gardening and commuting. |
-| 7. Structural integrity | 10/10 | Word count is robust (2568 words, well over the 2000 target). Clean formatting, proper headers. |
-| 8. Cultural accuracy | 10/10 | Natural use of dacha context and the pervasive conversational particle "то". |
-| 9. Dialogue & conversation quality | 10/10 | The opening dialogue in Section 2 is a highly natural, multi-turn negotiation between a husband and wife, perfectly modeling the grammar in a practical context. |
+| 1. Plan adherence | 8/10 | The three H2 sections match the plan and the section sizes are on target (`~770/~770/~660` vs `700/700/600`). Required and recommended vocabulary is realized in prose (`порада`, `залишитися`, `парасольку`, `змокнеш`, `відпустку`). Deduction: the plan references are not integrated anywhere; searched content shows `Заболотний` = 0, `ULP` = 0, `Ukrainian Lessons` = 0. |
+| 2. Linguistic accuracy | 6/10 | Two critical teaching inaccuracies: `«Якщо завтра дощитиме, то ми вирішили залишитися вдома»` mismatches the taught tense pattern, and `якби` is mischaracterized as having `a completely different function` and primarily meaning `if only`. |
+| 3. Pedagogical quality | 7/10 | The module has good scenario-based teaching, but the faulty model sentence with `вирішили` directly undermines the grammar explanation, and the `якби` gloss risks teaching the wrong semantic contrast at A2. |
+| 4. Vocabulary coverage | 10/10 | All required plan vocabulary appears naturally in prose: `умова`, `результат`, `реальний`, `погода`, `допомогти`, `поспішиш`, `вільний`, `залишитися`, `порада`. Recommended vocabulary is also covered through natural forms: `якби`, `змокнеш`, `запізнишся`, `парасольку`, `відпустку`. |
+| 5. Exercise quality | 10/10 | All four planned exercise types have markers, and each marker is placed after the relevant teaching section. No inline exercise logic errors are visible in the prose. |
+| 6. Engagement & tone | 9/10 | The teacher voice is warm and concrete, using specific situations like garden planning, advice from a doctor, and weekend plans. The tone stays instructional rather than gamified. |
+| 7. Structural integrity | 10/10 | All planned sections are present and correctly ordered. The markdown is clean, and the pipeline word count is `2427`, safely above target. |
+| 8. Cultural accuracy | 10/10 | The module frames Ukrainian on its own terms and uses everyday Ukrainian contexts (`дача`, `Карпати`, family planning, advice) without Russian-centered comparison. |
+| 9. Dialogue & conversation quality | 9/10 | The garden dialogue is natural, multi-turn, and aligned with the plan: `Якщо буде сонце, посадимо помідори... Якщо ти купиш насіння, я підготую грядку.` The rest of the module relies more on narrated examples than additional full dialogues. |
 
 ## Findings
-[2. Linguistic accuracy] [CRITICAL]
-Location: "Наприклад, ваш друг погано себе почуває на роботі."
-Issue: "себе почуває" is a Russian calque (себя чувствовать).
-Fix: Change to "погано почувається".
+- [LINGUISTIC ACCURACY] [SEVERITY: critical]  
+Location: `Наприклад: «Якщо завтра дощитиме, то ми вирішили **залишитися** (to stay) вдома».`  
+Issue: This model sentence contradicts the lesson’s own rule that the result clause in these A2 real conditionals uses future or imperative forms.  
+Fix: Change the result clause to a future form, e.g. `«Якщо завтра дощитиме, то ми залишимося вдома».`
 
-[2. Linguistic accuracy] [CRITICAL]
-Location: "Якщо йтиме дощ, ми почекаємо в будинку. Ми польємо всі рослини трохи пізніше."
-Issue: The word form "польємо" does not exist in standard Ukrainian (as confirmed by the VESUM check). The correct 1st-person plural future perfective of "полити" is "поллємо".
-Fix: Change to "поллємо".
+- [LINGUISTIC ACCURACY] [SEVERITY: critical]  
+Location: `However, another word looks similar but has a completely different function: **якби** (if only). This word introduces an unreal or hypothetical situation.`  
+Issue: `якби` is not a “completely different function”; it is also a conditional conjunction, but for unreal/hypothetical conditions. This wording teaches the contrast inaccurately.  
+Fix: Rephrase it as a different type of condition, not a completely different function.
 
-[2. Linguistic accuracy] [CRITICAL]
-Location: "Ми ніколи не використовуємо частку «б» або «би» після слова «якщо». Частка «б/би» існує тільки для слова «якби». А слово «якби» створює нереальну умову."
-Issue: Factually incorrect grammar rule. The construction "якщо б" exists and is widely used for unreal conditions as a synonym for "якби".
-Fix: Qualify the rule to specify that this restriction applies only to *real* conditions.
+- [LINGUISTIC ACCURACY] [SEVERITY: critical]  
+Location: `It often translates to "if only" and expresses a strong wish about something that cannot be changed.`  
+Issue: This overnarrows the meaning of `якби`. In this module it should primarily be glossed as marking an unreal/hypothetical condition; `if only` is only one possible context.  
+Fix: Replace this line with wording that makes unreal/hypothetical condition the primary meaning.
 
-[3. Pedagogical quality] [MAJOR]
-Location: "Або: «Якщо ти маєш вільний (free) час, треба поспішити (to hurry) на поїзд»."
-Issue: The example sentence is a logical absurdity. Having free time contradicts the need to hurry to catch a train. It confuses learners trying to grasp the meaning of "поспішити".
-Fix: Rewrite the sentence to restore logical coherence while retaining the target vocabulary words.
-
-[1. Plan adherence] [MINOR]
-Location: "Слово «щоб» (in order to) показує вашу головну мету. Наприклад: «Я беру фотоапарат, щоб робити красиві фотографії». І тепер ви також знаєте реальну умову."
-Issue: The plan explicitly required a review of all A2.7 complex clauses, including "означальне (який, де)". This item was omitted from the summary paragraph.
-Fix: Add a brief sentence illustrating "який" and "де" before transitioning to the conclusion.
+- [PLAN ADHERENCE] [SEVERITY: major]  
+Location: module-wide; no integration around the rule sections or the `якщо/якби` contrast  
+Issue: The source-of-truth plan includes `Заболотний Grade 5`, `Заболотний Grade 6`, and `ULP: If in Ukrainian — якщо vs якби`, but none are cited in the module text. I verified 0 occurrences of `Заболотний`, `ULP`, and `Ukrainian Lessons`.  
+Fix: Add one short sentence in the `якщо/якби` section noting that this real-vs-unreal distinction matches the school textbook framing and the Ukrainian Lessons explainer.
 
 ## Verdict: REVISE
-The module requires revision due to critical linguistic inaccuracies (a calque, an invalid verb form, and a factually incorrect grammatical absolute rule) and a major pedagogical flaw in one of the example sentences.
+Critical teaching inaccuracies remain in the grammar explanation, so this cannot pass as-is even though coverage, structure, vocabulary, and exercise placement are otherwise strong.
 
 <fixes>
-- find: "Наприклад, ваш друг погано себе почуває на роботі."
-  replace: "Наприклад, ваш друг погано почувається на роботі."
-- find: "Якщо йтиме дощ, ми почекаємо в будинку. Ми польємо всі рослини трохи пізніше."
-  replace: "Якщо йтиме дощ, ми почекаємо в будинку. Ми поллємо всі рослини трохи пізніше."
-- find: "Ми ніколи не використовуємо частку «б» або «би» після слова «якщо». Частка «б/би» існує тільки для слова «якби». А слово «якби» створює нереальну умову."
-  replace: "Для реальної умови ми ніколи не використовуємо частку «б» або «би». Такі частки потрібні для слова «якби». А слово «якби» створює нереальну умову."
-- find: "Або: «Якщо ти маєш **вільний** *(free)* час, треба **поспішити** *(to hurry)* на поїзд». Це дуже гарна **порада** *(advice)* для туристів."
-  replace: "Або: «Якщо ти маєш **вільний** *(free)* час, ми можемо погуляти. Але якщо ми запізнюємося на поїзд, треба **поспішити** *(to hurry)*». Це дуже гарна **порада** *(advice)* для туристів."
-- find: "Слово «**щоб**» *(in order to)* показує вашу головну мету. Наприклад: «Я беру фотоапарат, щоб робити красиві фотографії». І тепер ви також знаєте реальну умову."
-  replace: "Слово «**щоб**» *(in order to)* показує вашу головну мету. Наприклад: «Я беру фотоапарат, щоб робити красиві фотографії». Також ми використовуємо слова «**який**» і «**де**» *(which, where)* для опису деталей. Наприклад: «Це готель, який мені подобається». І тепер ви також знаєте реальну умову."
+- find: "Наприклад: «Якщо завтра дощитиме, то ми вирішили **залишитися** (to stay) вдома»."
+  replace: "Наприклад: «Якщо завтра дощитиме, то ми залишимося вдома»."
+- find: "However, another word looks similar but has a completely different function: **якби** (if only). This word introduces an unreal or hypothetical situation."
+  replace: "However, another word looks similar but introduces a different type of condition: **якби** (if, hypothetically; sometimes \"if only\"). This word introduces an unreal or hypothetical situation."
+- find: "It often translates to \"if only\" and expresses a strong wish about something that cannot be changed."
+  replace: "In this module, treat it mainly as a marker of an unreal or hypothetical condition; in some contexts it can also mean \"if only.\""
+- find: "Тому ми маємо чітко розділяти ці два важливі слова."
+  replace: "Тому ми маємо чітко розділяти ці два важливі слова. Таке розрізнення реальної умови («якщо») і нереальної/гіпотетичної («якби») ви також побачите в шкільних підручниках Заболотного та в поясненні Ukrainian Lessons."
 </fixes>

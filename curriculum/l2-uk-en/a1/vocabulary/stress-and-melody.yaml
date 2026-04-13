@@ -5,35 +5,35 @@ vocabulary:
   pos: присл.
   gender: ''
   verified: true
-- word: мука
-  translation: flour
+- word: ві́льний
+  translation: free
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: рухо́мий
+  translation: mobile
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: нога́
+  translation: leg
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: мука
-  translation: torment
+- word: но́ги
+  translation: legs
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: ра́нок
-  translation: morning
+- word: омо́графи
+  translation: homographs
   expression: false
   pos: ім.
   gender: ''
-  verified: true
-- word: метро́
-  translation: metro
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: фотогра́фія
-  translation: photograph
-  expression: false
-  pos: ім.
-  gender: ж.
   verified: true
 - word: замок
   translation: castle
@@ -47,29 +47,29 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: ка́ва
-  translation: coffee
+- word: мука
+  translation: torment
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: вода́
-  translation: water
+- word: мука
+  translation: flour
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: столи́ця
-  translation: capital
+- word: атлас
+  translation: atlas
   expression: false
   pos: ім.
-  gender: ж.
+  gender: ч.
   verified: true
-- word: черепа́ха
-  translation: turtle
+- word: атлас
+  translation: satin
   expression: false
   pos: ім.
-  gender: ж.
+  gender: ч.
   verified: true
 - word: ма́ма
   translation: mother
@@ -83,8 +83,26 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: кни́га
+- word: ра́нок
+  translation: morning
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: ка́ва
+  translation: coffee
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: кни́жка
   translation: book
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: вода́
+  translation: water
   expression: false
   pos: ім.
   gender: ж.
@@ -101,11 +119,11 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: ру́ки
-  translation: hands
+- word: метро́
+  translation: metro
   expression: false
   pos: ім.
-  gender: ж.
+  gender: с.
   verified: true
 - word: кафе́
   translation: cafe
@@ -113,23 +131,17 @@ vocabulary:
   pos: ім.
   gender: с.
   verified: true
-- word: доро́га
-  translation: road
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: доро́га
-  translation: expensive
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
 - word: інтона́ція
   translation: intonation
   expression: false
   pos: ім.
   gender: ж.
+  verified: true
+- word: це
+  translation: this
+  expression: false
+  pos: ім.
+  gender: с.
   verified: true
 - word: хто
   translation: who
@@ -149,50 +161,38 @@ vocabulary:
   pos: ім.
   gender: ''
   verified: true
-- word: Як справи?
-  translation: How are you?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: До́бре
-  translation: Good!
+- word: розповідні́
+  translation: declarative
   expression: false
-  pos: присл.
+  pos: прикм.
   gender: ''
   verified: true
-- word: Це твоя кава?
-  translation: Is this your coffee?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Це моя кава
-  translation: This is my coffee
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Так
-  translation: 'Yes'
+- word: пита́льні
+  translation: interrogative
   expression: false
-  pos: присл.
+  pos: прикм.
   gender: ''
   verified: true
-- word: Приві́т
-  translation: Hi!
+- word: спонука́льні
+  translation: imperative
   expression: false
-  pos: ім.
-  gender: ч.
+  pos: прикм.
+  gender: ''
   verified: true
-- word: Як гарно!
-  translation: How beautiful!
-  expression: true
-  pos: ''
+- word: окли́чні
+  translation: exclamatory
+  expression: false
+  pos: прикм.
   gender: ''
   verified: true
 - word: украї́нська
   translation: Ukrainian
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: фотогра́фія
+  translation: photograph
   expression: false
   pos: ім.
   gender: ж.
@@ -203,11 +203,59 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
+- word: Ки́їв
+  translation: Kyiv
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: столи́ця
+  translation: capital
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: Украї́на
+  translation: Ukraine
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
 - word: молоко́
   translation: milk
   expression: false
   pos: ім.
   gender: с.
+  verified: true
+- word: приві́т
+  translation: hi
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: як
+  translation: how
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: до́бре
+  translation: good
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: теж
+  translation: also
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: так
+  translation: 'yes'
+  expression: false
+  pos: присл.
+  gender: ''
   verified: true
 - word: апте́ка
   translation: pharmacy
@@ -215,14 +263,50 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: Що це?
-  translation: What is this?
-  expression: true
-  pos: ''
+- word: га́рно
+  translation: beautiful
+  expression: false
+  pos: присл.
   gender: ''
   verified: true
 - word: Де метро?
   translation: Where is the metro?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Привіт!
+  translation: Hi!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: А у тебе?
+  translation: And you?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Теж добре!
+  translation: Also good!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Як гарно!
+  translation: How beautiful!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Це аптека?
+  translation: Is this a pharmacy?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Так, це аптека.
+  translation: Yes, this is a pharmacy.
   expression: true
   pos: ''
   gender: ''

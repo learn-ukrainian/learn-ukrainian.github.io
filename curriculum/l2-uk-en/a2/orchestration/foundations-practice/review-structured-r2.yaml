@@ -1,0 +1,56 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'All three planned sections are present and the reference is cited: `This
+    recap follows the review logic noted in «Заболотний Grade 5-6»`. However, Section
+    2 spends a full block on diminutives/`да` ins'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 6
+  evidence: Most Ukrainian forms are clean, but the module teaches `Після цифри п'ять
+    і більше...` (wrong grammatical term) and `Ніколи не кажіть «да»...` (false absolute).
+    It also equates diminutives with `милоз
+- dimension: 3
+  name: Pedagogical quality
+  score: 7
+  evidence: The module gives multiple examples for aspect and Genitive, but Section
+    2 burns valuable space on an off-plan diminutives lecture, and Section 3 weakens
+    the `Що ти робив?/Що ти зробив?` target by swit
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 'Required vocabulary is well covered in context: `планувати`, `купувати/купити`,
+    `готувати/приготувати`, `ринок`, `коштує`, `кілограм`, `вечірка`, `день`. `замовити`
+    and `запланувати` also appear in th'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: The module has 4 markers for 4 planned activities, and each marker comes
+    after the material it is supposed to test. No inline exercise content is present
+    here, so placement is the main thing to audit,
+- dimension: 6
+  name: Engagement & tone
+  score: 6
+  evidence: The teacher voice is consistent, but the Section 2 digression becomes
+    inflated and slogan-like, especially `Diminutives are the DNA of the Ukrainian
+    language`, which adds heat more than instruction.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All H2 scenario sections are present and ordered correctly, markdown is
+    clean, all 4 markers are intact, and the pipeline word count is 2885, which is
+    above the 2000 target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 5
+  evidence: '`Ніколи не кажіть «да»...` and the claim that diminutives create `милозвучність`
+    both oversimplify or misstate Ukrainian usage and linguistic culture.'
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 7
+  evidence: 'Named speakers and real situations help, but Section 3 stops sounding
+    like a past-events catch-up and starts sounding like future planning: `ми будемо
+    купувати необхідні продукти`, `планую замовити см'
+findings: []

@@ -1,26 +1,27 @@
-# Section-by-Section Generation — Section 3/4
+# Section-by-Section Generation — Section 3/3
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 10: Для кого? Без чого? Біля чого? (A2, A2.2 [Genitive Case Complete])
-**Section to write:** Де це? Біля, навпроти, коло + родовий (Where Is It? Біля, навпроти, коло + Genitive) (~850 words total)
+**Section to write:** Де це? Біля, навпроти, коло + родовий (Where Is It? Біля, навпроти, коло + Genitive) (~850 words)
 **Word target for this section:** 850 words (aim for 935 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Де це? Біля, навпроти, коло + родовий (Where Is It? Біля, навпроти, коло + Genitive) (~850 words total)
-- P1 (~120 words): [Introduce 'біля' as the primary preposition for 'near' or 'next to'. Explain its spatial logic—something is close to a reference point. Examples: біля школи (near the school), біля будинку (near the house), біля вікна (by the window).]
-- P2 (~100 words): [Provide gender-specific examples for 'біля' to reinforce Genitive declension. Examples: біля парку (m), біля річки (f), біля моря (n). Mention the frequency of 'біля' in city descriptions.]
-- P3 (~110 words): [Introduce 'навпроти' for 'opposite' or 'across from'. Explain that it describes two objects facing each other, such as buildings on opposite sides of a street. Examples: навпроти банку (opposite the bank), навпроти вокзалу (opposite the train station), навпроти церкви (opposite the church).]
-- P4 (~100 words): [Introduce 'коло' as a synonym for 'біля'. Explain that while it's less common in casual urban speech, it's very frequent in literature, folk songs, and rural contexts. Examples: коло хати (by the house), коло дороги (by the road).]
-- P5 (~100 words): [Special focus on soft-stem feminine nouns (-ія and -а/-я) in the context of location. Use city infrastructure examples. Examples: біля станції (near the station), біля площі (near the square), навпроти лікарні (opposite the hospital).]
-- P6 (~120 words): [Practical orientation: how to describe a neighborhood using these prepositions. Create a mental map for the learner. Examples: Аптека біля ринку. Кафе навпроти бібліотеки. Зупинка біля станції метро.]
-- P7 (~120 words): [Dialogue (Part 3): Igor and Marta arrive at the campsite. They decide where to put the tent. Igor suggests 'біля річки' (near the river). Marta points out a spot 'навпроти дерева' (opposite the tree). Includes examples: біля річки, навпроти дерева, коло вогню.]
-- P8 (~80 words): [Briefly mention that these prepositions are part of a larger system of spatial Genitive prepositions (like 'до', 'з', 'від') which will be expanded later. Focus on the 'static' nature of біля/навпроти compared to 'до' (direction).]
-- <!-- INJECT_ACTIVITY: fill-in-location --> [Fill-in, focus on completing location descriptions with біля/навпроти/коло + correct Genitive form, 8 items]
-- <!-- INJECT_ACTIVITY: true-false-grammar --> [True-false, focus on judging whether preposition + noun combinations (для, без, біля, навпроти, коло) are grammatically correct, 8 items]
+## Де це? Біля, навпроти, коло + родовий (Where Is It? Біля, навпроти, коло + Genitive) (~850 words)
+- P1 (~130 words): [Location with Біля] Transition from abstract concepts to physical space. Introduce *біля* (near, next to) as the primary preposition for proximity. Examples: *біля школи*, *біля будинку*, *біля річки*. Emphasize that it answers "Де?" but strictly requires the Genitive.
+- P2 (~130 words): [Location with Навпроти] Introduce *навпроти* (opposite, across from). Explain that it describes objects facing one another. Provide examples: *навпроти парку*, *навпроти вокзалу*, *навпроти церкви*.
+- P3 (~120 words): [Location with Коло] Introduce *коло* (near, by). Explain that it is synonymous with *біля* but has a slightly more literary or folksy flavor, often found in poetry, songs, and classic literature (*коло хати*, *коло дороги*).
+- P4 (~150 words): [Practical Descriptions] Provide practical examples of describing city locations and giving directions. Examples: *Аптека біля ринку.* *Кафе навпроти бібліотеки.* *Зупинка біля станції метро.*
+- P5 (~120 words): [Complex Endings] Focus specifically on mixed group and -ія noun endings in a location context, as these are common traps. Examples: *біля станції* (soft fem. -ія), *біля площі* (mixed fem.), *навпроти лікарні* (soft fem. ending in -я).
+- P6 (~100 words): [Usage Note / Decolonization] Explicitly clarify that the preposition *возле* is a Russianism and a common error in Surzhyk. The correct, natural Ukrainian prepositions for proximity are exclusively *біля* and *коло*.
+- P7 (~70 words): [Module Conclusion] Wrap up by uniting *для*, *без*, and *біля/навпроти/коло* as the "Genitive Preposition Toolkit," essential for describing purpose, lack, and location in A2 Ukrainian.
+- <!-- INJECT_ACTIVITY: fill-in-location --> [fill-in, Complete location descriptions with біля/навпроти/коло + correct Genitive form, 8]
+- <!-- INJECT_ACTIVITY: match-up-prepositions --> [match-up, Match Ukrainian prepositional phrases to their English equivalents, 8]
+- <!-- INJECT_ACTIVITY: true-false-forms --> [true-false, Judge whether preposition + noun form combinations are grammatically correct, 8]
+- <!-- INJECT_ACTIVITY: quiz-everyday-sentences --> [quiz, Choose для, без, or біля to complete everyday sentences, 8]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -28,7 +29,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-not like to drink tea without honey.* For feminine and neuter nouns, the rules remain completely consistent with what you already know about the Genitive case. Feminine nouns will typically end in **-и** for hard stems or **-і** for soft stems after **без**. Neuter nouns will change their final **-о** or **-е** to **-а** or **-я**. Pay close attention to how these endings sound in full phrases to build your confidence. Людина не може довго жити без чистої води. Ця страва зовсім не смачна без солі. У цьому старому будинку є кімната без вікна. Я не уявляю своє літо без теплого моря. Вона вийшла на вулицю без шапки. > *A person cannot live long without clean water. This dish is not tasty at all without salt. In this old house, there is a room without a window. I do not imagine my summer without the warm sea. She went out onto the street without a hat.* In complete sentences, the preposition **без** is very frequently paired with the phrase **не можу** (I cannot) to express a strong personal preference, a habit, or a dependence on something. You will also often see it used with personal pronouns when talking about people missing from a group. Remember that personal pronouns also change their specific form in the Genitive case after a preposition. Я просто не можу почати свій день без кави. Вона сьогодні прийшла на роботу без парасольки, а надворі йде дощ. Ми вчора поїхали на концерт без нього. Ти не можеш працювати цілий день без відпочинку. Вони організували це чудове свято без нас. > *I simply cannot start my day without coffee. She came to work today without an umbrella, and it is raining outside. We went to the concert without him yesterday. You cannot work all day without rest. They organized this wonderful holiday without us.* Let's rejoin Igor and Marta as they continue packing their bags for their weekend camping trip. They are double-checking their gear and suddenly realizing that some specific items are absolutely essential. Notice how they use **без** to emphasize what they cannot manage without while out in the forest. > — **Ігор:** Ой, я забув свій новий ліхтарик удома. *(Oh, I forgot my new flashlight at home.)* > — **Марта:** Це дуже погано! Ми нічого не зможемо робити вночі без ліхтарика. *(This is very bad! We will not be able to do anything at night without a flashlight.)* > — **Ігор:** Ти маєш рацію. Ми не можемо йти в ліс без води. *(You are right. We cannot go into the forest without water.)* > — **Марта:** Звісно. Туристи ніколи не ходять у гори без чіткого плану. *(Of course. Tourists never go into the mountains without a clear plan.)* > — **Ігор:** Добре, що ми перевіряємо наші речі зараз. *(It is good that we are checking our things now.)* > — **Марта:** Так, наша подорож без цих предметів була б дуже складною. *(Yes, our trip without these items would be very difficult.)* <!-- INJECT_ACTIVITY: quiz-prep-choice -->
+каву, будь ласка. *(I will have black coffee, please.)* > — **Марта:** Тобі зробити з молоком і цукром? *(Make it with milk and sugar?)* > — **Ігор:** Ні, я п'ю тільки без молока і без цукру. *(No, only without milk and sugar.)* > — **Марта:** Зрозуміла. А як щодо смачного десерту? У нас є торт. *(Understood. And how about a tasty dessert? We have a cake.)* > — **Ігор:** Ні, я сьогодні зовсім без десерту, дуже дякую тобі. *(No, I am completely without dessert today, thank you very much.)* > — **Марта:** Без проблем! Я також часто п'ю каву без нічого. Це корисно. *(No problem! I often drink coffee without anything too. It is healthy.)* The preposition **без** often pairs with **могти** (can) to show dependence. You also hear it with personal pronouns like **без нього** (without him). **Читаємо українською** Сучасні люди залежать від технологій. Я просто не можу жити без смартфона. Вчора вона прийшла на зупинку без ноутбука. Чому ви поїхали на станцію без нього? Ми не можемо почати презентацію без директора. Він швидко пішов додому без жодного слова. > *Modern people depend on technologies. I simply cannot live without a smartphone. Yesterday she came to the stop without a laptop. Why did you go to the station without him? We cannot start the presentation without the director. He quickly went home without a word.* > — **Олег:** Де Андрій? Ми вже дуже спізнюємося на наш поїзд! *(Where is Andrii? We are already very late for our train!)* > — **Анна:** Він ще вдома у своїй кімнаті. Він шукає свої ключі. *(He is still at home in his room. He is looking for his keys.)* > — **Олег:** Ми можемо поїхати на вокзал без нього? *(Can we go to the train station without him?)* > — **Анна:** Ні, він нам дуже потрібен. Ми ніяк не можемо поїхати без нього. *(No, we really need him. We absolutely cannot go without him.)* > — **Олег:** Добре, ми почекаємо його ще п'ять хвилин біля нашої машини. *(Fine, we will wait for him another five minutes near our car.)* > — **Анна:** Без сумніву, він дуже скоро буде тут. *(Without a doubt, he will be here very soon.)* For masculine nouns, concrete objects take **-а/-я**, while abstract concepts or substances take **-у/-ю**. **Читаємо українською** Справжній кухар знає багато секретів. Він живе біля площі і готує без ножа. Я не можу працювати швидко без комп'ютера. У цьому старому будинку ми зараз сидимо без шуму. Вона закінчила цей складний проект без успіху. Цей десерт готують без цукру. Він завжди працює дуже добре. Його кухня працює щодня. > — **Віктор:** Ти йдеш на вулицю зовсім без шапки? > — **Марія:** Так, сьогодні на вулиці дуже тепло і гарно. > — **Віктор:** Але там зараз дуже сильний і холодний вітер. > — **Марія:** Я завжди гуляю без шапки весною і влітку. > — **Віктор:** Як хочеш. А я без теплої куртки точно не піду. <!-- INJECT_ACTIVITY: quiz, Choose для, без, or біля to complete everyday sentences -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -605,6 +606,31 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (3/3).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] призначення (purpose, destination)
+- [ ] відпочинок (rest, relaxation)
+- [ ] допомога (help, assistance)
+- [ ] сумнів (doubt)
+- [ ] будинок (building, house)
+- [ ] зупинка (stop (bus/tram))
+- [ ] бібліотека (library)
+- [ ] лікарня (hospital)
+- [ ] площа (square (city))
+- [ ] станція (station)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Де це? Біля, навпроти, коло + родовий (Where Is It? Біля, навпроти, коло + Genitive) (~850 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

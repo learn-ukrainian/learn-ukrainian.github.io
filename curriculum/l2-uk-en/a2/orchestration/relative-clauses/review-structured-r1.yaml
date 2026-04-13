@@ -2,46 +2,51 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 8
-  evidence: 'Missed the explicit plan point: "Contrast with questions: Який це фільм?
-    (question) vs. Фільм, який ми дивилися вчора...".'
+  score: 7
+  evidence: All three planned sections and all 5 activity types are present, but the
+    off-plan block `Finally, there is a very common, natural alternative... "що"`
+    introduces grammar outside the stated objectives,
 - dimension: 2
   name: Linguistic accuracy
-  score: 8
-  evidence: Used the calque "знаходиться" for physical locations instead of "розташований"
-    or "лежить/стоїть" in three different places.
+  score: 6
+  evidence: '`Театр, куди ми вчора купили квитки...` misuses `куди` with `купили`,
+    and `The third important relative pronoun...` wrongly classifies `звідки`.'
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: Excellent use of PPP flow, clear grammar explanations, and contrasting
-    examples (e.g., highlighting redundant pronouns).
+  score: 7
+  evidence: The `Ріелтор` / `Покупець` opening gives a solid PPP-style lead-in and
+    there are many examples, but the `що` detour and the wrong part-of-speech label
+    blur the target grammar set.
 - dimension: 4
   name: Vocabulary coverage
   score: 9
-  evidence: Included all required vocabulary naturally, but missed the recommended
-    word "котрий".
+  evidence: 'Required plan vocab appears naturally in prose: `який/яка/яке/які`, `де`,
+    `куди`, `звідки`, `означальний`, `описувати`, `речення`; recommended items `котрий`,
+    `затишний`, `знаходитися`, `стояти` also '
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: Markers perfectly match the plan's requirements and are well-distributed
-    after the relevant teaching segments.
+  score: 9
+  evidence: Marker count matches the plan and placement is logically sequenced after
+    teaching points. No visible inline exercise logic is wrong in the provided draft.
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: Encouraging teacher persona, avoids gamified cliches, and explains "the
-    why" behind grammar clearly.
+  score: 8
+  evidence: The voice is mostly teacherly and concrete, but `Таке речення звучить
+    набагато природніше і показує ваш високий рівень володіння мовою.` is promotional
+    rather than instructional.
 - dimension: 7
   name: Structural integrity
-  score: 10
-  evidence: The module exceeds the 2000-word target and all headings are correctly
-    formatted.
+  score: 8
+  evidence: All H2 headings are present and the pipeline word count is safely above
+    target, but the learner-facing artifact `<!-- VERIFY -->` remains in the prose.
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: Sentences and contexts are natural to Ukrainian settings.
+  score: 9
+  evidence: No Russocentric framing or cultural inaccuracies detected; examples stay
+    within Ukrainian usage and context.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: Dialogues are highly contextualized and demonstrate the grammar concepts
-    perfectly without sounding robotic.
+  score: 8
+  evidence: The named `Ріелтор` / `Покупець` dialogue is relevant and natural enough,
+    but it is brief and the rest of the module is mostly expository.
 findings: []

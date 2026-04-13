@@ -22,24 +22,27 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 ## Previous Sections (for continuity — do NOT repeat this content)
 
 <previous_context>
-## Вступ: Зустріч на Полтавщині
+## Вступ: Зустріч на Полтавщині (~120 слів)
 
-Полтавщина — це серце традиційних українських ремесел. Тут, серед мальовничих пейзажів, досі можна зустріти справжніх майстрів своєї справи, які зберігають давні секрети. Уявіть невелике, але гомінливе село, де пахне свіжим деревом. Сюди часто приїжджають люди з великих міст, щоб навчитися працювати руками та відчути зв'язок із минулим. Сьогодні біля сільської ради зустрічають нового гостя зі столиці, який шукає талановитих ремісників.
+Welcome to the heart of Ukraine. Imagine you are traveling through the picturesque Poltava region, a place famous for its rich traditions and skilled artisans. When you visit a local village, you do not just meet people; you meet masters of their craft. In Ukrainian, the way we name a person's **професія** (profession) or their **походження** (origin) often follows beautiful, predictable patterns. Today, we will explore how specific endings transform everyday words into titles of respect and identity.
 
-> — **Сільський голова** *(village head)*: Доброго дня! Ласкаво просимо до нашого села.
-> — **Гість:** Вітаю! Я — **киянин** *(Kyivan)*, приїхав сюди, щоб перейняти ваш унікальний досвід. Мене дуже цікавить робота з деревом.
-> — **Сільський голова:** О, ви потрапили саме туди, куди треба! Ось наш найкращий **столяр** *(carpenter)*, пан Микола. Він створює справжні дива з дуба та ясена.
-> — **Гість:** Дуже приємно познайомитися. Ваші вироби відомі навіть у Києві, їх високо цінують.
-> — **Микола:** Дякую на доброму слові! Я працюю тут уже тридцять років. А до речі, пане голово, де наш **бондар** *(cooper)*? Він обіцяв принести нові діжки для меду.
-> — **Сільський голова:** Бондар Петро зараз у своїй майстерні. Він закінчує велике замовлення. А цей хлопець поруч — місцевий **полтавчанин** *(Poltavian)*, який йому постійно допомагає.
-> — **Гість:** Це чудово, що молодь переймає такі давні професії.
+Село зустрічає нас запахом свіжого дерева та звуками роботи. Ми йдемо до місцевої майстерні, де працюють найкращі ремісники краю. Кожен майстер тут має свою історію, і навіть назва його справи звучить як пісня.
 
-У цьому діалозі ви почули кілька цікавих слів, які позначають професії та походження людей. Зверніть увагу на **іменники** *(nouns)* «столяр» та «бондар». Вони мають спільну рису — закінчуються на **суфікс** *(suffix)* **-ар** або **-яр**. Це дуже поширений і питомо український спосіб утворення назв професій або занять. Люди, які працюють із деревом, каменем чи глиною, часто мають саме такі назви у своїх професіях.
+> *The village greets us with the smell of fresh wood and the sounds of work. We are walking to the local workshop, where the best artisans of the region work. Every master here has their own story, and even the name of their trade sounds like a song.*
 
-Також ви помітили слова «киянин» та «полтавчанин». Тут працює інший словотвірний суфікс — **-ин** (або **-янин**). Він чітко вказує на **походження** *(origin)* людини, де вона живе або до якої соціальної групи вона належить.
+> — **Сільський голова:** Ласкаво просимо до нашої майстерні! Ось наш столяр. *(Welcome to our workshop! Here is our carpenter.)*
+> — **Гість:** Добрий день! Дуже приємно. А де бондар? *(Good day! Very nice to meet you. And where is the cooper?)*
+> — **Сільський голова:** Він зараз у дворі. До речі, знайомтеся: цей киянин приїхав учитися. *(He is in the yard right now. By the way, meet: this Kyiv resident came to learn.)*
+> — **Гість:** Зі столиці в село? Це чудово! А хто його вчить? *(From the capital to the village? That is wonderful! And who is teaching him?)*
+> — **Сільський голова:** А полтавчанин — наш майстер, він усе покаже. *(And the Poltavian is our master, he will show everything.)*
 
-Ці слова важливі не лише для розширення словникового запасу. Вони мають свої граматичні секрети та особливі правила **відмінювання** *(declension)*. Наприклад, вони можуть поводитися несподівано у формі **множини** *(plural)* або коли ми використовуємо **кличний відмінок** *(vocative case)* під час звертання. Сьогодні ми детально розберемо ці особливості, щоб ви могли говорити про **професії** *(professions)* та походження впевнено і без помилок.
+Look closely at the words the village head used. To describe a person by their craft, he used words ending in **-ар** and **-яр**, like **столяр** (carpenter) and **бондар** (cooper). To describe a person by where they are from, he used the suffix **-ин**, as in **киянин** (Kyivan) and **полтавчанин** (Poltavian). These endings are incredibly productive. They take a root word—like the city of Kyiv or the act of making barrels—and turn it into a specific **іменник** (noun) denoting a person. In this module, we will learn exactly how to form these words and how their **відмінювання** (declension) works across different cases.
 
+:::note
+**Quick tip** — When you see a masculine noun ending in **-ар** or **-яр**, it almost always indicates a person's occupation or habitual activity. If you see **-ин**, it usually points to their geographic origin, nationality, or civic identity.
+:::
+
+Ці маленькі частинки слова додають мові точності. Коли ви знаєте, як працюють ці суфікси, ви можете легко розуміти нові слова навіть без словника. Це відкриває перед вами справжню логіку українського словотворення.
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -640,7 +643,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -653,18 +723,69 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] суфікс (suffix — word-formation morpheme after the root)
+- [ ] іменник (noun)
+- [ ] відміна (declension class)
+- [ ] відмінювання (declension — changing a word through cases)
+- [ ] однина (singular number)
+- [ ] множина (plural number)
+- [ ] кличний відмінок (vocative case)
+- [ ] родовий відмінок (genitive case)
+- [ ] походження (origin — where someone is from)
+- [ ] професія (profession)
+- [ ] пекар (baker — person who bakes)
+- [ ] лікар (doctor)
+- [ ] школяр (student — person who attends school)
+- [ ] кобзар (kobza player — traditional Ukrainian musician)
+- [ ] киянин (Kyivan — resident of Kyiv)
+- [ ] громадянин (citizen)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Суфікси -ар, -яр: хто що робить (~720 слів)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

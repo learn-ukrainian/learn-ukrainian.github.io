@@ -689,6 +689,42 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] розпорядок дня (daily routine/schedule)
+- [ ] прокидатися (to wake up — reflexive)
+- [ ] снідати / обідати / вечеряти (to have breakfast / lunch / dinner)
+- [ ] прибирати (to clean up, tidy)
+- [ ] пилососити (to vacuum)
+- [ ] прати білизну (to do laundry — NOT *стирати)
+- [ ] прасувати (to iron)
+- [ ] виносити сміття (to take out the trash)
+- [ ] готувати їжу (to cook food)
+- [ ] займатися (to engage in, do — reflexive: займатися спортом)
+- [ ] запізнюватися (to be late — reflexive)
+- [ ] встигати (to manage in time)
+- [ ] відкладати (to postpone)
+- [ ] вихідні (weekend — pluralia tantum)
+- [ ] будильник (alarm clock)
+- [ ] хатні справи (household chores)
+- [ ] пошук роботи (job search)
+- [ ] співбесіда (interview)
+- [ ] робоче місце (workplace)
+- [ ] колега (colleague)
+- [ ] обов'язки (duties)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Мій день: ранок (~750 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

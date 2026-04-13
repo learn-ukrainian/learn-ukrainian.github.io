@@ -2,52 +2,52 @@ round: 2
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 9
-  evidence: The module follows the plan almost perfectly, integrating the dialogues
-    and vocabulary seamlessly. However, it misses "**галушки**" in the list of iconic
-    Ukrainian foods specified in the `content_outl
+  score: 8
+  evidence: 'The core outline is covered: meals, food categories, drinks, `з + noun`
+    chunks, and iconic dishes all appear. But the plan references are not integrated
+    into the prose: `ULP`, `Episodes 11-13`, and `S'
 - dimension: 2
   name: Linguistic accuracy
-  score: 10
-  evidence: Flawless. Zero Russianisms, Surzhyk, or calques. The module actively and
-    correctly warns learners about common Russianisms like `творог` and `кофе`.
+  score: 8
+  evidence: 'Ukrainian forms are clean and VESUM-backed, with no Russian letters.
+    The weak point is the lexicon note: `There is no separate word for quark.` is
+    too absolute and can misteach learners.'
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: Excellent pedagogical approach. The module introduces vocabulary organically
-    through natural dialogue, beautifully reinforces noun gender ("Це він", "Це вона"),
-    and perfectly handles the `з + noun` co
+  score: 8
+  evidence: 'The module broadly follows PPP: dialogues first, then vocabulary, then
+    chunk practice, then summary. But the first exercise marker appears before some
+    of its target vocabulary is taught, which breaks '
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: All required and recommended vocabulary items from the plan are fully
-    integrated into the contextual prose.
+  score: 9
+  evidence: All required plan vocabulary appears in prose, including `їжа`, `напій`,
+    `хліб`, `кава`, `чай`, `вода`, `молоко`, `сік`, `м'ясо`, `риба`, `суп`, `сніданок`,
+    `обід`, `вечеря`. Recommended cultural item
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: All four required activity markers are present, matching the planned IDs,
-    and are placed logically after the learner has been exposed to the relevant vocabulary
-    and concepts.
+  score: 7
+  evidence: 'There are 4 markers and the planned exercise types are represented, but
+    `match-up-food-drink` is misordered: `вода` and `сік` are not taught before the
+    learner reaches it.'
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: The tone is warm, culturally rich, and encouraging. Sentences like "The
-    most sacred and respected food on the table is хліб" create excellent cultural
-    immersion.
+  score: 9
+  evidence: Tone is teacherly and concrete, with useful cultural detail around `борщ`,
+    `вареники`, `сало`, and family meals.
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: Clean Markdown formatting. All sections are present and ordered exactly
-    as planned. The word count (1509 words) provides healthy, substantive coverage
-    well above the 1200-word target.
+  evidence: All planned H2 sections are present and ordered correctly. Markdown is
+    clean, and the deterministic word count `1658` is above the `1200` target.
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: Extremely high cultural accuracy. Mentions the UNESCO status of borshch,
-    the hospitality associated with bread, and authentic eating habits.
+  score: 8
+  evidence: The module stays Ukrainian-centered and avoids Russian comparison framing.
+    The main cultural/lexical problem is the overgeneralized claim about `quark`/`сир`.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: The dialogues between the grandmother and granddaughter are natural, purposeful,
-    and effectively model how a family discusses meals and ingredients in real life.
+  score: 9
+  evidence: 'Named speakers and plausible situations are present: breakfast with `Бабуся`/`Онучка`,
+    meal talk, and cafe ordering.'
 findings: []

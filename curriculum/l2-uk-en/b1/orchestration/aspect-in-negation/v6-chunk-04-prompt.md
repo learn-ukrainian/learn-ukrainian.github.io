@@ -31,7 +31,7 @@ Grand total: ~4400 words
 <previous_context>
 [...previous sections truncated...]
 
-очікування щодо себе. Ця зручна граматична форма чудово допомагає нам висловити певне розчарування власним повільним прогресом або яскраво підкреслити наші амбітні цілі. Порівняймо два популярних дієслова: **вчити** *(to study, impf)* та його результативну пару **вивчити** *(to master / to learn completely, pf)*. Якщо ви спокійно кажете: «Я сьогодні не вчив ці нові слова», ви просто сухо констатуєте факт своєї бездіяльності протягом усього дня. Але якщо ви зітхаєте і кажете: «Я **ще не вивчив** ці складні слова» *(I haven't mastered these difficult words yet)*, ви відверто демонструєте сильне бажання швидко досягти грандіозного успіху. Ваша кінцева мета — це повне й абсолютне володіння новою лексикою. Ви зараз дещо засмучені тим фактом, що бажаний результат поки що не досягнутий вашою наполегливою працею. Таким чином, граматичний вид стає потужним інструментом вираження емоцій. <!-- INJECT_ACTIVITY: error-correction, Find and correct aspect errors in negated sentences (*ще не читав → ще не прочитав; *не написав without context → не писав), 6 items --> Під час активного щоденного спілкування українською мовою надзвичайно важливо уникати однієї дуже поширеної та підступної граматичної пастки: змішування слова «ще не» з дієсловами недоконаного виду. Для будь-якого носія мови популярна серед студентів фраза на кшталт «Я ще не читав цю книжку» завжди звучить досить неприродно і навіть трохи кумедно. Чому ж саме так відбувається на практиці? Тому що ця помилкова граматична комбінація намагається штучно поєднати дві абсолютно різні концепції. З одного боку, перспективне слово «ще» голосно сигналізує про сильне очікування якогось конкретного фінального результату в найближчому майбутньому. З іншого боку, дієслово недоконаного виду «читав» завжди прямо вказує на загальний факт або тривалий процес без жодного логічного результату. Між цими словами виникає сильний логічний конфлікт. Щоб виправити цю неточність, вам потрібно зробити чіткий вибір. Якщо ви хочете констатувати сухий факт, просто приберіть слово «ще»: «Я **не читав** цю книжку». Якщо ж ви плануєте обов'язково завершити розпочате цікаве читання, змініть вид дієслова на доконаний: «Я **ще не прочитав** цю книжку». Насамкінець, варто обов'язково підкреслити ще один надзвичайно важливий психологічний аспект цієї захопливої граматичної теми — фактор вашої особистої інтенціональності та бажання. Конструкція «ще не» разом із дієсловом доконаного виду — це завжди дуже «м'яке», надзвичайно ввічливе і максимально дипломатичне заперечення. Вона дійсно ідеально підходить для тих непростих життєвих ситуацій, коли ви дуже хочете зберегти гарні дружні стосунки та показати свою щиру зацікавленість. Ця форма неявно транслює вашому співрозмовнику таке позитивне повідомлення: «Я дійсно хочу це зробити вчасно, і я дуже стараюся». Це заперечення надійно зберігає живу можливість того, що очікувана важлива подія все ж таки обов'язково відбудеться. Розглянемо дуже простий життєвий приклад, який чудово ілюструє цей тонкий соціальний нюанс. Якщо ви стоїте під холодним дощем і сумно кажете друзям: «Вона **не прийшла**» *(She didn't come)*, ви констатуєте остаточний факт. Ви просто визнаєте поразку і йдете пити гарячу каву. Але якщо ви, дивлячись на свій годинник, кажете: «Вона **ще не прийшла**» *(She hasn't arrived yet)*, ви активно підтримуєте спільну надію на зустріч. <!-- INJECT_ACTIVITY: match-up, Match pragmatic situations (boss asking about tasks, friend asking about books, teacher checking homework) to the correct negation pattern, 8 items -->
+perfectly captures that internal drive and ambition. The sentence is not just conveying dry information; it is revealing the speaker's mindset and their profound dedication to seeing the task through to its logical end. When you want to express that you haven't managed to **дочитати** (to finish reading) a fascinating article, or you haven't managed to **вирішити** (to decide) a personal dilemma, you are expressing an unfulfilled personal goal, keeping the intention alive for the next day. <!-- INJECT_ACTIVITY: error-correction-negated-aspect --> :::note **Quick tip** When someone asks you a broad, philosophical question about your habits, you must **відповідати** (to answer) using the imperfective aspect to match the ongoing process of their speech and inquiry. ::: There is one very common trap that learners fall into, which you must avoid: mixing the word «ще» with the imperfective aspect in negative sentences. The phrase «Я ще не читав цю книжку» sounds quite awkward and unnatural to a native Ukrainian speaker. It clumsily tries to combine the idea of a temporary delay or pending action with the absolute absence of the action in general. To correct this mistake and sound natural, you need to make a clear, conscious decision about what exactly you want to say. If you want to emphasize that you have active plans to take up this book in the future, you must use the perfective aspect: «Я ще не прочитав» (I haven't read it yet). Similarly, if a committee is struggling to **вирішувати** (to decide) an ongoing issue, they shouldn't mix forms; they must state «Ми ще не вирішили» (We haven't decided yet) to confirm a pending verdict. But if you are simply answering a direct question and stating your general unfamiliarity with a text, you should choose the pure imperfective aspect without the word "ще" to create a **загальне заперечення** (general negation): «Я не читав». Such a precise choice shows that you understand the underlying **прагматика** (pragmatics) of the language, making your speech confident and grammatically accurate. Ultimately, the defining characteristic of "ще не + perfective" is intentionality. It is fundamentally a "soft" negation because it keeps the possibility of the action alive and breathing. It implies "I want to," "I am trying to," or "I am supposed to." Let's look at one final, clear contrast involving workplace meetings. If a manager says, «Ми не обговорювали цю проблему» (We didn't discuss this problem), it is a **нейтральний** (neutral) statement; the topic simply did not arise, and the act of **обговорювати** (to discuss) never happened. But if the manager says, «Ми ще не обговорили цю проблему» (We haven't discussed this problem yet), everyone in the room knows that the intent to **обговорити** (to discuss) is definitely on the agenda and will be addressed soon. Contrast «Вона не прийшла» (She didn't come — a cold fact) with «Вона ще не прийшла» (She hasn't come yet — we are still waiting, expecting her arrival). Your choice of aspect signals your hopes, plans, and expectations to everyone listening. <!-- INJECT_ACTIVITY: match-up-pragmatic-context -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -586,7 +586,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -599,18 +666,72 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (4/4).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] заперечення
+- [ ] загальне заперечення
+- [ ] очікуване завершення
+- [ ] ще
+- [ ] факт
+- [ ] очікування
+- [ ] прагматика
+- [ ] обговорювати
+- [ ] обговорити
+- [ ] вирішувати
+- [ ] вирішити
+- [ ] відповідати
+- [ ] відповісти
+- [ ] домити
+- [ ] дочитати
+- [ ] доробити
+- [ ] нейтральний
+- [ ] незавершений
+- [ ] намір
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Підсумок: заперечення як прагматичний вибір (~1200 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

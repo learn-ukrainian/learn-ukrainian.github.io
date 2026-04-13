@@ -2,48 +2,51 @@ round: 2
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 6
-  evidence: Missing English translations in 3 section headings. Mandatory references
-    (Заболотний, ULP) and recommended vocabulary (одноразовий, концепція) are omitted
-    from the text.
+  score: 8
+  evidence: 'The module covers all four planned sections and the football dialogue
+    matches the plan, but the plan references are not integrated: `Авраменко` and
+    `ULP` have 0 occurrences in the provided module text'
 - dimension: 2
   name: Linguistic accuracy
-  score: 7
-  evidence: The text incorrectly translates "Я бачив це" as "I was looking at it".
-    "Бачити" means "to see"; "to look" is "дивитися".
+  score: 10
+  evidence: No confirmed Russianisms, Surzhyk, calques, paronym misuse, or grammar
+    errors in the Ukrainian examples; checked forms are standard, and the rule about
+    present-tense forms being imperfective is accura
 - dimension: 3
   name: Pedagogical quality
-  score: 6
-  evidence: Quizzes testing both aspects are placed at the end of Section 2, before
-    the perfective aspect is taught in Section 3.
+  score: 8
+  evidence: 'The explanations are example-rich, but one conceptual sentence is wrong:
+    `Almost every concept in Ukrainian exists as a pair of these two aspects.` The
+    module should say `verb`, not `concept`.'
 - dimension: 4
   name: Vocabulary coverage
-  score: 7
-  evidence: All required vocabulary is included, but recommended words "одноразовий"
-    and "концепція" are missing.
+  score: 8
+  evidence: All required plan vocabulary appears naturally, but the recommended items
+    `завершений`, `тривалий`, `одноразовий`, and `концепція` are absent from the prose.
 - dimension: 5
   name: Exercise quality
-  score: 9
-  evidence: Activity markers match the plan exactly in number and focus, though their
-    placement needs fixing (deducted in Pedagogy).
+  score: 10
+  evidence: 'All four planned exercise types have corresponding markers placed after
+    the relevant teaching blocks: `quiz-aspect-sorting`, `fill-in-identify-aspect`,
+    `match-up-choose-aspect`, `error-correction-fix-'
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: Excellent teacher persona. The movie vs. "The End" screen analogy is highly
-    effective.
+  score: 9
+  evidence: The football opener and later room/book/homework examples keep the tone
+    concrete and teacherly without corporate or gamified filler.
 - dimension: 7
   name: Structural integrity
-  score: 8
-  evidence: Excellent word count (2478 words), but missing English translations in
-    headings breaks structural consistency with the plan.
+  score: 10
+  evidence: All H2 headings from the plan are present and ordered correctly; the pipeline
+    word count is 2487, above target, and the inject markers are clean.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Explains aspect natively without comparing it directly to Russian, using
-    standard Ukrainian pedagogical tricks ("Що робити?").
+  evidence: The module explains Ukrainian grammar on its own terms and avoids Russian-centric
+    framing.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: The football match dialogue perfectly demonstrates the grammar points
-    in a natural context.
+  score: 9
+  evidence: The named-speaker football exchange is relevant to the aspect contrast
+    and works as a natural short opener.
 findings: []

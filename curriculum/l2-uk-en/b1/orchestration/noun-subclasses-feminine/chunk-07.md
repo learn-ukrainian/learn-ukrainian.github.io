@@ -1,21 +1,34 @@
-## Підсумок
+## Підсумок (~400 words)
 
-Сьогодні ми з вами зробили великий і дуже важливий крок у вивченні української граматики. Ми детально познайомилися з третьою відміною іменників, яка є однією з найелегантніших і найцікавіших систем у нашій мові. Ця група слів не просто описує базовий світ навколо нас. Вона активно допомагає нам передавати найглибші людські емоції, складні абстрактні концепції та важливі природні явища. Давайте ще раз чітко й уважно структуруємо всі ключові правила, які ми сьогодні обговорили.
+Ми завершуємо вивчення цієї унікальної групи іменників. Кожна **відміна** (declension type) має свої особливості, але третя є найромантичнішою. Вона об'єднує слова жіночого роду, які мають **нульове закінчення** (zero ending) у називному відмінку. До цієї групи також належить особливе слово **мати** (mother), яке змінює свою основу під час відмінювання.
 
-Перш за все, ми завжди повинні пам'ятати головний ідентифікаційний критерій. До третьої відміни належать винятково іменники жіночого роду, які мають нульове закінчення в називному відмінку. Сюди також традиційно входить дуже особливе слово **мати** *(mother)*, яке має свою власну унікальну парадигму відмінювання з постійним розширенням основи. 
+> *We are finishing the study of this unique group of nouns. Each declension type has its own features, but the third is the most romantic. It unites feminine words that have a zero ending in the nominative case. This group also includes the special word "mother", which changes its stem during declension.*
 
-Найбільше уваги на нашому уроці ми приділили орудному відмінку однини, адже саме тут ховається найяскравіша фонетична особливість цієї групи. Ми завжди робимо подвоєння приголосних, якщо основа слова закінчується рівно на один м'який або шиплячий приголосний звук. Цей природний фонетичний процес робить нашу мову надзвичайно мелодійною. Наприклад: **ніччю** *(by night)*, **сіллю** *(with salt)*, **тінню** *(with shadow)*. 
+Most of these words describe abstract concepts or emotions, such as **любов** (love), **радість** (joy), and **гордість** (pride). They represent feelings and qualities that you cannot physically touch.
 
-Проте ми ніколи не робимо подвоєння у двох конкретних граматичних випадках. По-перше, якщо основа закінчується на збіг кількох приголосних звуків, як у слові **радістю** *(with joy)* або **гордістю** *(with pride)*. По-друге, якщо основа закінчується на специфічний губний приголосний звук (б, п, в, м, ф) або на літеру «р». У таких випадках ми обов'язково використовуємо апостроф, наприклад: **кров'ю** *(with blood)* або **любов'ю** *(with love)*.
+Another common category includes natural phenomena and times of day. Words like **осінь** (autumn), **ніч** (night), and **тінь** (shadow) all belong to the third declension.
 
-Також ми звернули пильну увагу на паралельні закінчення в родовому відмінку однини. Для слів із суфіксом «-ть» та для деяких особливих слів (кров, любов, осінь, сіль) ми можемо вільно використовувати як закінчення **-і**, так і закінчення **-и**. Обидві ці форми — **радості** та **радости**, **любові** та **любови** — є абсолютно правильними літературними варіантами. Варіант із літерою «и» часто додає тексту особливого історичного або поетичного відтінку.
+You will also find substances and materials in this group, for example, **сіль** (salt) and **кров** (blood). Additionally, it includes some everyday concepts like an oven or a **річ** (thing).
 
-Не забувайте і про класичне чергування голосних звуків, яке ми вже вивчали раніше. У закритому складі ми маємо звук [і], який закономірно перетворюється на [о] або [е], коли склад стає відкритим під час відмінювання: **ніч** — **ночі**, **піч** — **печі**, **річ** — **речі**. Цей фонетичний процес є дуже стабільним.
+Let's review the core rules you need to remember. The most critical feature is the spelling in the instrumental case singular. If the word's stem ends in a single soft or hissing consonant, we write **подвоєння** (doubling), as seen in forms like «ніччю» and «сіллю».
 
-Щоб самостійно перевірити свої нові знання, спробуйте вголос дати відповіді на ці короткі контрольні запитання:
-1. Які саме іменники належать до третьої відміни?
-2. Коли ми повинні писати подвоєння в орудному відмінку однини?
-3. Утворіть правильну форму орудного відмінка для таких слів: ніч, кров, радість, сіль, любов.
-4. Чому слово **олень** *(deer)* — це точно не третя відміна, хоча воно також закінчується на приголосний?
+However, if the word ends in a consonant cluster, like «радістю» or **мудрість** (wisdom) becoming «мудрістю», doubling never occurs. Furthermore, we use an apostrophe instead of doubling after labial consonants and the letter «р». This explains why we write «кров'ю» and «любов'ю».
 
-У нашому наступному модулі ми обов'язково продовжимо досліджувати граматичні таємниці українських іменників. Ми детально поговоримо про унікальні слова, які існують у нашій мові тільки у формі множини. Це буде ще одна захоплива мовна подорож!
+Another specific trait appears in the genitive case singular. Words ending in «-ть» after a consonant, as well as specific nouns like «кров» or a **подорож** (journey), often interact with parallel endings. While the «-і» ending is standard, you will encounter the «-и» ending in formal literature.
+
+Finally, remember the vowel alternation. The vowel [і] often changes to [о] or [е] when the syllable opens during declension. Therefore, «ніч» becomes «ночі», and a **піч** (oven) changes to «печі».
+
+:::note
+**Quick tip**
+If you see a noun ending in a consonant, always check its gender first. The word «олень» ends in a soft consonant, but it is masculine, so it belongs to the second declension, not the third!
+:::
+
+Тепер перевірте свої знання перед тим, як рухатися далі. Спробуйте відповісти на ці запитання самостійно.
+Які іменники належать до третьої відміни?
+Коли ми пишемо подвоєння в орудному відмінку?
+Як правильно утворити орудний відмінок для слів «ніч», «кров», «радість», «сіль», «любов»?
+Чому слово «олень» — це не третя відміна?
+
+> *Now check your knowledge before moving on. Try to answer these questions yourself. Which nouns belong to the third declension? When do we write doubling in the instrumental case? How to correctly form the instrumental case for the words "night", "blood", "joy", "salt", "love"? Why is the word "deer" not the third declension?*
+
+In the next module, we will explore another fascinating grammatical category: nouns that are used exclusively in the plural form.

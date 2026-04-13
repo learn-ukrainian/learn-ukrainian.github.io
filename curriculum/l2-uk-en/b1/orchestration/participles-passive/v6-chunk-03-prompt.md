@@ -22,7 +22,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-основні суфікси: **-н-**, **-ен-** (або **-єн-**) та **-т-**. Перший суфікс **-н-** додається до основи інфінітива, яка закінчується на голосний **-а-** або **-я-**. Щоб знайти основу, ми просто відкидаємо закінчення **-ти**. Наприклад, від дієслова **прочитати** *(to read)* ми залишаємо «прочита-» і додаємо суфікс та закінчення: **прочитаний** *(read)*. Так само утворюються слова **написати** *(to write)* → **написаний** *(written)*, **посіяти** *(to sow)* → **посіяний** *(sown)*. Зверніть увагу, що тематичний голосний **-а-** обов'язково зберігається. Суфікс **-ен-** (після голосних — **-єн-**) використовується, коли основа дієслова закінчується на приголосний звук або на голосні **-и-**, **-і-**, **-ї-**. У цьому випадку кінцеві голосні основи **-и-** або **-і-** зазвичай випадають. Наприклад, дієслово **принести** *(to bring)* має основу на приголосний, тому утворюємо **принесений** *(brought)*. Дієслово **вивчити** *(to learn)* втрачає «и» перед суфіксом і стає словом **вивчений** *(learned)*. Якщо основа закінчується на «ї», ми додаємо **-єн-**: **напоїти** *(to give a drink)* → **напоєний** *(watered)*. Останній суфікс **-т-** приєднується до односкладових дієслів, а також до тих, що мають суфікс **-ну-** або **-у-**. Це дуже коротка і милозвучна форма. Наприклад: **мити** *(to wash)* → **митий** *(washed)*, **бити** *(to beat)* → **битий** *(beaten)*. Якщо дієслово має суфікс «-ну-», як-от **зігнути** *(to bend)*, ми отримуємо **зігнутий** *(bent)*, а від **взути** *(to put shoes on)* — **взутий** *(shod)*. Цікаво, що деякі слова мають паралельні варіантні форми: можна сказати і **замкнений** *(locked)*, і **замкнутий** *(locked)*. <!-- INJECT_ACTIVITY: match-up-formation-suffixes --> Найбільше цікавих змін відбувається при додаванні суфікса **-ен-**, адже тут часто зустрічається **чергування приголосних** *(consonant alternation)*. Це робить слова легшими для вимови. Наприклад, звук [д] змінюється на [дж]: **розбудити** *(to wake up)* → **розбуджений** *(woken up)*, а не «розбудений». Звук [т] перетворюється на [ч]: **сплатити** *(to pay)* → **сплачений** *(paid)*. Порівняйте в контексті: «Ми зайшли у **розбуджений** ліс» та «Це давно **сплачений** рахунок». Інші важливі чергування приголосних включають зміну [з] на [ж] та [с] на [ш]. Наприклад, **вразити** *(to impress)* стає **вражений** *(impressed)*, а **скосити** *(to mow)* — **скошений** *(mown)*. Після губних приголосних (б, п, в, м, ф) завжди з'являється додатковий звук [л]. Тому від дієслова **робити** *(to do)* ми утворюємо **роблений** *(made)*, а від **замовити** *(to order)* — **замовлений** *(ordered)*. Ось коротка таблиця основних змін: * [д] → [дж] (**воджений** — *driven*) * [т] → [ч] (**кручений** — *twisted*) * [з] → [ж] (**вожений** — *transported*) * [с] → [ш] (**ношений** — *worn*) * [б, в, м] → [бл, вл, мл] (**люблений** — *loved*) <!-- INJECT_ACTIVITY: error-correction-alternations --> Щоб ніколи не помилятися, використовуйте цей простий покроковий алгоритм творення. Крок 1: візьміть інфінітив, наприклад, **запросити** *(to invite)*. Крок 2: визначте основу, відкинувши «-ти» (запроси-). Крок 3: оскільки основа закінчується на «-и-», обираємо суфікс **-ен-**. Крок 4: перевіряємо чергування: перед суфіксом звук [с] переходить у [ш] (запрош-). Крок 5: додаємо закінчення прикметника і отримуємо готовий результат: **запрошений** *(invited)*. Наостанок згадаємо про правопис цих суфіксів. В українській мові пасивні дієприкметники завжди пишуться з однією літерою «н»: **сказаний** *(said)*, **зроблений** *(done)*. Це відрізняє їх від деяких прикметників, де можливе подвоєння. Також пам'ятайте, що в суфіксі **-ен-** завжди пишеться літера «е», а не «и». Форма «скошиний» є грубою помилкою, правильно лише **скошений**.
+«напоєний».* The third suffix, **-т-**, is used primarily with monosyllabic verbs and verbs ending in **-ну-** or **-у-**. For example, «мити» (to wash) becomes «митий» (washed), and «бити» (to beat) becomes «битий» (beaten). We can also see this with «взути» (to put on shoes) forming «взутий», and «зігнути» (to bend) forming «зігнутий». Some verbs allow for two variant forms, both of which are correct. For instance, «замкнути» (to lock) can be either «замкнений» or «замкнутий», and «відкрити» (to open) yields **відкритий** (opened). <!-- INJECT_ACTIVITY: match-up, З'єднайте терміни з розділу «Творення пасивних дієприкметників» з їхніми визначеннями (дієслово + суфікс), 12 items --> Коли ми використовуємо суфікс **-ен-**, в основі дієслова часто відбувається **чергування** (alternation) приголосних звуків. Це історичний процес, який робить вимову легшою. Наприклад, звук [д] змінюється на [дж]: від «розбудити» утворюється «розбуджений». Звук [т] переходить у [ч]: дієслово «сплатити» дає нам «сплачений», а «закрутити» — **закручений** (twisted). > *When we use the suffix **-ен-**, an **чергування** (alternation) of consonant sounds often occurs in the verb stem. This is a historical process that makes pronunciation easier. For example, the sound [д] changes to [дж]: from «розбудити» we form «розбуджений». The sound [т] transitions to [ч]: the verb «сплатити» gives us «сплачений», and «закрутити» gives **закручений** (twisted).* This consonant alternation continues with other sounds. The sound [з] changes to [ж], so «вразити» (to impress) becomes «вражений». The sound [с] changes to [ш], meaning «скосити» (to mow) becomes «скошений», and «носити» (to wear) becomes **ношений** (worn/carried). Additionally, when a stem ends in a labial consonant (б, п, в, м, ф), the sound [л] appears before the suffix. Thus, «робити» (to do/make) transforms into **зроблений** (made/done), and «замовити» (to order) becomes «замовлений». :::info **Grammar box** — Remember the labial rule: if you have a verb like «робити», you cannot just say *робений. You must add the soft [л], resulting in **зроблений**. ::: <!-- INJECT_ACTIVITY: error-correction, Знайдіть і виправте помилки у реченнях на тему творення пасивних дієприкметників (фокус на чергуваннях), 12 items --> To reliably form these words, follow a simple step-by-step algorithm. First, find the infinitive and drop the **-ти** ending to get the stem. Second, look at the last sound of the stem. Third, choose the correct suffix: **-н-** for **-а-** stems, **-ен-** for consonant and **-и-/-і-** stems, or **-т-** for short verbs. Fourth, check if any consonant alternations are needed. Finally, add the adjectival ending. Let's trace «запросити» (to invite): the stem is «запрос-и-», it needs the **-ен-** suffix, the [с] alternates to [ш], giving us «запрош-ен-ий» (invited). Правопис суфіксів має кілька важливих правил. В українських пасивних дієприкметниках завжди пишеться лише одна літера «н»: **написаний**, **зроблений**, **вишитий** (embroidered). Також пам'ятайте, що у суфіксі **-ен-** завжди пишеться літера «е», а не «и». Ми пишемо «скошений», а не «скошиний». > *The spelling of suffixes has a few important rules. In Ukrainian passive participles, only one letter "н" is always written: **написаний**, **зроблений**, **вишитий** (embroidered). Also remember that in the suffix **-ен-**, the letter "е" is always written, not "и". We write «скошений», not «скошиний».*
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -557,7 +557,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -570,18 +637,64 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] пасивний дієприкметник (passive participle — subject receives the action)
+- [ ] прочитаний (read — passive participle from прочитати)
+- [ ] збудований (built — passive participle from збудувати)
+- [ ] написаний (written — passive participle from написати)
+- [ ] вишитий (embroidered — passive participle from вишити)
+- [ ] зроблений (made/done — passive participle from зробити)
+- [ ] принесений (brought — passive participle from принести)
+- [ ] відкритий (opened — passive participle from відкрити)
+- [ ] ношений (worn/carried — with [с]→[ш] alternation)
+- [ ] закручений (twisted — with [т]→[ч] alternation)
+- [ ] чергування (alternation — consonant changes in formation)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Відмінювання пасивних дієприкметників (~700 слів)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

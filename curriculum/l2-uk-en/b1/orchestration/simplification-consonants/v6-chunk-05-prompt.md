@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-незручний для нашої артикуляції кластер приголосних: звуки «р», «н» та «ц» стають поруч. Щоб уникнути цього серйозного артикуляційного колапсу, українська мова просто елегантно викидає звук «р». Хоча це слово є досить рідкісним у щоденному побутовому спілкуванні, воно має величезне значення для розуміння української історії. Ви обов'язково зустрінете форму «ченці», коли будете читати історичні романи, вивчати релігійні тексти або досліджувати давні літописи. Тому на рівні B1 дуже важливо вміти розпізнавати такі приховані фонетичні зміни у специфічних текстах. Усі ці численні орфографічні правила та історичні винятки існують зовсім не для того, щоб максимально ускладнювати життя студентам. Вони підпорядковані одній великій меті — зробити наше мовлення по-справжньому красивим. У шкільних підручниках, зокрема в підручнику Голуб для п'ятого класу, учням ставлять дуже цікаве запитання: «Чи можна вважати спрощення приголосних засобом милозвучності?». Відповідь науковців тут є абсолютно ствердною. **Милозвучність** *(euphony)* — це одна з найголовніших характеристик української фонетичної системи. Наша мова органічно уникає надто важких, грубих скупчень кількох приголосних звуків поспіль. Коли ми ефективно спрощуємо такі складні групи, як «стн» або «здн», ми миттєво робимо наші слова набагато легшими та плавнішими для вимови. Завдяки цьому природному процесу українська фраза звучить дуже ритмічно, м'яко та мелодійно. Вона втрачає той різкий, уривчастий характер вимови, який можна часто почути в багатьох інших мовах. Спрощення — це не орфографічна помилка, а природне прагнення мови до музикальності. Щоб по-справжньому відчути, як усі ці правила працюють на практиці, давайте детально проаналізуємо одну дуже популярну родину слів. Візьмемо для аналізу щоденний іменник **«тиждень»** *(week)*. Коли ви намагаєтеся змінити це слово або утворюєте від нього нові лексичні одиниці, вам доведеться застосувати відразу кілька різних фонетичних правил. Наприклад, у формі родового відмінка **«тижня»** *(of a week)* ви спостерігаєте цікаве мовне явище: тут відбувається випадіння **біглого голосного** *(fleeting vowel)* «е». Це правило ви вже добре знаєте з попередніх навчальних модулів. А от коли ви утворюєте прикметник **«тижневий»** *(weekly)*, у гру вступає наше нове правило спрощення приголосних. Тут назавжди випадає звук «д», щоб уникнути важкого збігу приголосних «ждн». Такий самий активний процес спрощення ми бачимо і в прислівнику **«щотижня»** *(every week)*. Таким чином, працюючи лише з одним коренем, ви повинні майстерно орієнтуватися в кількох фонетичних правилах одночасно. Це вимагає уважності, але робить ваше мовлення граматично правильним. На завершення цієї теми варто обов'язково згадати про ще один цікавий мовний нюанс, який стосується літературної творчості. Іноді, читаючи українську класичну поезію або старовинні тексти, ви можете помітити, що автори навмисно ігнорують вивчені нами правила спрощення. У віршах іноді можна зустріти слова, де складна група приголосних залишається повністю збереженою на письмі. Видатні поети роблять це виключно задля збереження специфічного ритму свого рядка або для створення певного архаїчного чи урочистого настрою у своєму творі. Проте ви повинні дуже чітко пам'ятати, що це лише стилістичний прийом, який є допустимим виключно в художній літературі. У звичайному повсякденному житті, в діловому листуванні або під час складання мовних іспитів ви зобов'язані суворо дотримуватися вимог сучасного академічного **правопису** *(orthography)*. Цей строгий стандарт не допускає вільних інтерпретацій: якщо правило вимагає спрощення в слові, ви мусите неодмінно застосувати його на письмі. Це фундаментальна ознака вашого високого рівня знань.
+historical simplification that occurs when a word changes its number. Consider the word «чернець» (monk). When forming the plural, the **основа** (stem — the word minus its ending) changes. We would expect «чернці», but this creates the difficult **група приголосних** (consonant cluster — sequence of consonants) [рнц]. To resolve this, Ukrainian drops the [р] entirely, resulting in «ченці». This specific change is rare in modern **словотворення** (word formation — creating new words). Nevertheless, it is an important exception for B1 learners, especially when reading historical documents or classic literature. Українська мова прагне до гармонійного звучання. У шкільному підручнику Голуба для п'ятого класу є цікаве питання: «Чи можна вважати спрощення засобом милозвучності?». Відповідь є абсолютно ствердною. Милозвучність — це фундаментальний принцип, за яким працює мова. Коли ми уникаємо важких скупчень, таких як [стн] або [здн], мовлення стає більш ритмічним. Мови, які зберігають ці приголосні, часто звучать більш уривчасто. Натомість українська вимова обирає комфорт, дозволяючи зайвим звукам зникати. Це робить мову легшою для всіх. The concept of **милозвучність** (euphony — pleasant sound quality of speech) is the driving force behind these changes. Good **вимова** (pronunciation — how words are spoken) in Ukrainian connects sounds smoothly. When a cluster becomes too dense, the language naturally simplifies it. Let's analyze how phonetic processes interact. Take the familiar **іменник** (noun) «тиждень» (week) as your base. When changed to the genitive case, it becomes «тижня». Here, you see a fleeting vowel drop out. Now, to form the **прикметник** (adjective) «тижневий» (weekly), you must apply consonant **спрощення** (simplification — dropping of a consonant from a cluster). The base has the cluster [ждн], but the [д] drops out to form [жн]. The same process creates the adverb «щотижня» (every week). Every **виняток** (exception — case that does not follow the rule) often has a deep etymological reason. Understanding these reasons helps you see that **морфонологія** (morphophonology — sound changes in morphology) is a logical system. A sound will usually **випадати** (to drop out — of a sound disappearing) only when keeping it ruins the natural rhythm. :::info **Grammar box** When building a word family from a single root, expect to apply multiple phonetic rules. A fleeting vowel might disappear in one form, while a consonant simplification might be required in another. ::: Офіційний правопис чітко визначає, де приголосний повинен зникати. Проте у класичній поезії або архаїчних текстах можна зустріти форми, які ігнорують ці правила. Поети іноді спеціально залишають повні групи приголосних, щоб зберегти певний ритм вірша або надати тексту старовинного відтінку. Такі форми не вважаються помилками в мистецтві, але вони є неприпустимими у щоденному спілкуванні або в документах. Сучасна граматика вимагає від нас дотримуватися стандартних норм. The official **правопис** (orthography — correct spelling) ensures these rules are applied consistently. Whether a change is phonetic or historical, once it becomes standard, it is **закріплений** (fixed — reflected in standard spelling). Recognizing a special **орфограма** (orthographic rule — spelling pattern requiring knowledge) like «серце» is a key step in B1 grammar. <!-- INJECT_ACTIVITY: match-up, identify simplification in word families -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -615,7 +615,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -628,18 +695,67 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] спрощення (simplification — dropping of a consonant from a cluster)
+- [ ] група приголосних (consonant cluster — sequence of consonants)
+- [ ] милозвучність (euphony — pleasant sound quality of speech)
+- [ ] випадати (to drop out — of a sound disappearing)
+- [ ] вимова (pronunciation — how words are spoken)
+- [ ] правопис (orthography — correct spelling)
+- [ ] закріплений (fixed — reflected in standard spelling)
+- [ ] виняток (exception — case that does not follow the rule)
+- [ ] словотворення (word formation — creating new words)
+- [ ] прикметник (adjective)
+- [ ] іменник (noun)
+- [ ] основа (stem — the word minus its ending)
+- [ ] орфограма (orthographic rule — spelling pattern requiring knowledge)
+- [ ] морфонологія (morphophonology — sound changes in morphology)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Спрощення у дієслівних формах та прикметниках (~660 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

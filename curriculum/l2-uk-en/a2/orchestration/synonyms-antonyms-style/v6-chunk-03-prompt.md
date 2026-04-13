@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-words.)* Один із найпопулярніших засобів образності — це **епітет** *(epithet)*. *(One of the most popular devices of expressiveness is the epithet.)* Епітет — це дуже емоційний і яскравий прикметник. *(An epithet is a very emotional and bright adjective.)* Він не просто констатує факт, а малює картину. *(It does not just state a fact, but paints a picture.)* Епітети впливають на наші почуття. *(Epithets affect our feelings.)* Українська література дуже любить цей художній засіб. *(Ukrainian literature loves this artistic device very much.)* Замість звичайного дощу ми можемо побачити «срібний дощ» *(silvery rain)*. *(Instead of ordinary rain, we can see "silvery rain".)* Рідна мова часто називається «калинова мова» *(guelder-rose language)*. *(The native language is often called "guelder-rose language".)* Вона красива, як червона калина. *(It is beautiful like a red guelder-rose.)* Людина, яка щиро любить, має «палке серце» *(passionate heart)*. *(A person who loves sincerely has a "passionate heart".)* Епітети роблять текст живим і кольоровим. *(Epithets make the text alive and colorful.)* Вони часто звертаються до наших емоцій. *(They often appeal to our emotions.)* Інший важливий стилістичний прийом — це **метафора** *(metaphor)*. *(Another important stylistic device is the metaphor.)* Метафора — це приховане порівняння. *(A metaphor is a hidden comparison.)* Ми порівнюємо дві речі, але не використовуємо слово «як» *(like)*. *(We compare two things, but we do not use the word "like".)* Ми просто називаємо один предмет іменем іншого. *(We simply name one object with the name of another.)* Наприклад, ми кажемо «море квітів» *(a sea of flowers)*. *(For example, we say "a sea of flowers".)* Це означає, що квітів дуже багато. *(This means there are very many flowers.)* Ми можемо мати «крила мрії» *(wings of a dream)* або бачити «зорю надії» *(star of hope)*. *(We can have "wings of a dream" or see a "star of hope".)* Метафори дозволяють нам коротко і влучно передавати складні емоції. *(Metaphors allow us to convey complex emotions briefly and aptly.)* Вони роблять нашу мову глибокою та поетичною. *(They make our language deep and poetic.)* Особливий тип метафори — це **персоніфікація** *(personification)*. *(A special type of metaphor is personification.)* Вона наділяє неживі предмети людськими рисами. *(It endows inanimate objects with human traits.)* Це характерна ознака української народної творчості. *(This is a characteristic feature of Ukrainian folk creativity.)* В українських піснях природа завжди жива. *(In Ukrainian songs, nature is always alive.)* Вона думає, плаче і радіє разом із людиною. *(It thinks, cries, and rejoices together with a person.)* Навесні ми кажемо, що «сонце сміється» *(the sun laughs)*. *(In spring we say that "the sun laughs".)* Під час бурі ми чуємо, як «вітер співає» *(the wind sings)*. *(During a storm, we hear how "the wind sings".)* А вночі здається, що «ліси дивляться» *(forests watch)* на нас. *(And at night it seems that "forests watch" us.)* Персоніфікація допомагає нам відчути єдність із природою. *(Personification helps us feel unity with nature.)* Вона створює магічну атмосферу в тексті. *(It creates a magical atmosphere in the text.)* <!-- INJECT_ACTIVITY: quiz, Identify the literary device (epithet, metaphor, personification) in short phrases, 8 items -->
+переносне значення. Такий текст є дуже образним. Ми беремо ознаку одного предмета і передаємо її іншому. Так з'являється «золота осінь» або «холодний погляд». > *The direct meaning of a word describes a real object or its property. For example, we say "a gold watch" or "cold ice". But words can have a figurative meaning. Such a text is very expressive. We take a characteristic of one object and transfer it to another. This is how "golden autumn" or "a cold look" appear.* The literary term for an epithet is **епітет** (epithet). This is an expressive adjective that paints a vivid picture rather than simply stating a fact. While a normal adjective just gives information, an epithet adds emotion, color, and atmosphere. It appeals to our senses and imagination. Епітет не просто описує предмет, а створює яскравий образ. Звичайний прикметник дає точний факт: «сильний дощ». Епітет відразу дає емоцію: «срібний дощ». В українській поезії часто використовують різні епітети. Наприклад, ми чуємо вислів «калинова мова». Це означає, що наша мова красива та рідна. Або ми кажемо, що людина має «палке серце». Це показує, що вона дуже емоційна та щира. The Ukrainian term for a metaphor is **метафора** (metaphor). It is a hidden comparison. We compare two things that share a similar quality, but we do not use the word "like". This device allows you to convey complex emotions very concisely. Метафора переносить ознаки одного предмета на інший. Ми робимо це на основі їхньої подібності. Уявіть велике поле, де росте багато квітів. Ми не кажемо, що це поле велике, як море. Ми кажемо коротко: «море квітів». Це і є метафора. Інші відомі приклади — це «крила мрії» або «зоря надії». Вони допомагають нам висловити глибокі почуття. > *A metaphor transfers the characteristics of one object to another. We do this based on their similarity. Imagine a large field where many flowers grow. We don't say that this field is big like a sea. We say briefly: "a sea of flowers". This is exactly what a metaphor is. Other well-known examples are "wings of a dream" or "star of hope". They help us express deep feelings.* :::note **Quick tip** A simile (порівняння) always uses words like **як**, **мов**, or **наче** (like, as). If you drop those words and state the comparison directly, it becomes a metaphor. ::: Personification is a special type of metaphor. It gives human traits, actions, or emotions to inanimate objects, nature, or abstract concepts. This technique is a hallmark of Ukrainian folk poetry, where nature is often treated as a living being. Персоніфікація — це олюднення природи. Ми даємо неживим предметам справжні людські властивості. В українській літературі природа часто живе своїм власним життям. Ми можемо сказати, що «сонце сміється» вранці. Або ми кажемо, що «вітер співає» сумну пісню. Відома поетеса Ліна Костенко писала: «Самі на себе дивляться ліси». Дерева не мають очей, але цей образ створює магічну атмосферу. Такі яскраві фрази роблять текст глибоким. <!-- INJECT_ACTIVITY: quiz-literary-devices, Identify the literary device (epithet, metaphor, personification) in short phrases, 8 items -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -469,7 +469,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 6: A2 finale (A2 M51-M69)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 40%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 40% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 70-90% Ukrainian.
 LANGUAGE ROLES:
@@ -488,18 +555,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] синонім (synonym)
+- [ ] антонім (antonym)
+- [ ] епітет (epithet)
+- [ ] метафора (metaphor)
+- [ ] зменшувальний (diminutive)
+- [ ] суфікс (suffix)
+- [ ] еліпсис (ellipsis)
+- [ ] повтор (repetition)
+- [ ] образний (figurative, expressive)
+- [ ] ласкавий (tender, affectionate)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Зменшувальні суфікси: ласкаві слова (~520 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

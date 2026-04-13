@@ -1,0 +1,57 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T09-20-be360332.json
+phase: write-chunk-05
+prompt_chars: 46735
+response_chars: 6269
+prompt_words: 6415
+response_words: 994
+sections:
+- name: header
+  start: 0
+  length: 446
+  fraction: 0.0095
+- name: skeleton
+  start: 446
+  length: 1433
+  fraction: 0.0307
+- name: prior_summary
+  start: 1879
+  length: 3549
+  fraction: 0.0759
+- name: plan
+  start: 5428
+  length: 14555
+  fraction: 0.3114
+- name: wiki
+  start: 15122
+  length: 26624
+  fraction: 0.5697
+- name: output_spec
+  start: 46607
+  length: 128
+  fraction: 0.0027
+large_sections:
+- wiki
+directives_total: 8
+directives_covered: 3
+directives_missed:
+- kind: must
+  text: '> *According to the university rules, every student must carefully read chapter
+    eight of the study guide.'
+  covered: false
+  coverage_note: 4/12 keywords (33%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: inject_activity
+  text: reading-ordinals
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up, match ordinals with their appropriate usage contexts
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: error-correction, correct the declension of ordinal numbers in sentences
+  covered: false
+  coverage_note: marker missing

@@ -2,91 +2,357 @@ version: '1.0'
 module: linking-ideas
 level: a1
 inline:
-- id: fill-in-conjunction-choice
+- id: fill-in-choose-conjunction
   type: fill-in
   instruction: Вставте правильний сполучник (Insert the correct conjunction)
   items:
-  - sentence: Я хочу піти, ___ не можу.
-    answer: але
-    options:
-    - і
-    - а
-    - але
-    - бо
-  - sentence: Він працює, ___ вона відпочиває.
+  - sentence: Я хочу чай, ____ ти хочеш каву.
     answer: а
     options:
-    - і
     - а
-    - але
-    - бо
-  - sentence: Я люблю каву ___ чай.
-    answer: і
-    options:
     - і
-    - а
-    - але
     - бо
-  - sentence: Це не стіл, ___ стілець.
+  - sentence: Ми йдемо в парк, ____ вони йдуть додому.
     answer: а
     options:
-    - і
     - а
     - але
-    - бо
-  - sentence: Суп гарячий, ___ смачний.
-    answer: але
-    options:
-    - і
-    - а
-    - але
-    - бо
-  - sentence: Я не йду, ___ я хворий.
-    answer: бо
-    options:
-    - і
-    - а
-    - але
-    - бо
-  - sentence: Він молодий, ___ розумний.
-    answer: але
-    options:
-    - і
-    - а
-    - але
-    - бо
-  - sentence: Хліб ___ масло.
+    - чи
+  - sentence: Він багато працює ____ мало відпочиває.
     answer: та
     options:
-    - а
-    - але
     - та
     - бо
-  - sentence: Я читаю ___ пишу.
+    - тому що
+  - sentence: Я люблю каву ____ чай.
     answer: і
     options:
     - і
     - а
     - але
+  - sentence: Це мій брат ____ моя сестра.
+    answer: і
+    options:
+    - і
+    - але
     - бо
-  - sentence: Ми вдома, ___ йде дощ.
-    answer: бо
+  - sentence: Я студент, ____ мій брат — лікар.
+    answer: а
+    options:
+    - а
+    - і
+    - тому що
+- id: quiz-conjunction-choice
+  type: quiz
+  instruction: Оберіть правильний сполучник (Choose the correct conjunction)
+  items:
+  - question: Я не йду, ____ хворий.
+    options:
+    - бо
+    - і
+    - а
+    - але
+    correct: 0
+  - question: Я хочу в Карпати, ____ ти — на море.
+    options:
+    - тому що
+    - а
+    - і
+    - бо
+    correct: 1
+  - question: Гори гарні, ____ далеко.
+    options:
+    - і
+    - та
+    - бо
+    - але
+    correct: 3
+  - question: Я працював, ____ потім ходив у магазин.
+    options:
+    - а
+    - бо
+    - тому що
+    - чи
+    correct: 0
+  - question: Я хотів зателефонувати, ____ ти не відповів.
+    options:
+    - і
+    - але
+    - бо
+    - чи
+    correct: 1
+  - question: Я втомлений, ____ багато працював.
     options:
     - і
     - а
     - але
+    - тому що
+    correct: 3
+- id: fill-in-bo-tomu-shcho
+  type: fill-in
+  instruction: Вставте «бо» або «тому що» (Insert «бо» or «тому що»)
+  items:
+  - sentence: Ми не гуляємо, ____ йде дощ.
+    answer: тому що
+    options:
+    - тому що
+    - але
+    - і
+  - sentence: Я хочу каву, ____ я дуже втомлена.
+    answer: бо
+    options:
     - бо
-- id: group-sort-categories
-  type: group-sort
-  instruction: Розподіліть сполучники за категоріями (Sort the conjunctions by category)
-  groups:
+    - а
+    - чи
+  - sentence: Поїдемо в Карпати, ____ там дешевше.
+    answer: бо
+    options:
+    - бо
+    - але
+    - та
+  - sentence: Я вчу українську, ____ я люблю Україну.
+    answer: тому що
+    options:
+    - тому що
+    - а
+    - чи
+  - sentence: Ми тут, ____ чекаємо друга.
+    answer: бо
+    options:
+    - бо
+    - але
+    - і
+  - sentence: Вибач, ____ телефон був без звуку.
+    answer: бо
+    options:
+    - бо
+    - а
+    - та
+workbook:
+- id: workbook-fill-in-conjunctions
+  type: fill-in
+  instruction: Вставте правильне слово (Insert the correct word)
+  items:
+  - sentence: Я люблю каву, ____ ти?
+    answer: а
+    options:
+    - а
+    - і
+    - бо
+  - sentence: Цей суп гарячий, ____ дуже смачний.
+    answer: але
+    options:
+    - але
+    - тому що
+    - чи
+  - sentence: Це мій брат ____ моя сестра.
+    answer: і
+    options:
+    - і
+    - але
+    - бо
+  - sentence: Я не йду, ____ я хворий.
+    answer: бо
+    options:
+    - бо
+    - а
+    - та
+  - sentence: Ти хочеш чай ____ каву?
+    answer: чи
+    options:
+    - чи
+    - але
+    - тому що
+  - sentence: Він працює, ____ вона відпочиває.
+    answer: а
+    options:
+    - а
+    - бо
+    - і
+  - sentence: Я розумію українську, ____ говорю повільно.
+    answer: але
+    options:
+    - але
+    - бо
+    - чи
+  - sentence: День сонячний, ____ дуже холодний.
+    answer: але
+    options:
+    - але
+    - тому що
+    - і
+- id: workbook-match-up-sentences
+  type: match-up
+  instruction: З'єднайте частини речень (Match the parts of the sentences)
+  pairs:
+  - left: Я люблю каву,
+    right: а ти?
+  - left: Гори гарні,
+    right: але далеко.
+  - left: Ми не гуляємо,
+    right: тому що йде дощ.
+  - left: Я читаю,
+    right: а він пише.
+  - left: Я хочу в Карпати,
+    right: бо там дешевше.
+  - left: Це червоне яблуко,
+    right: а це зелена груша.
+- id: workbook-true-false-comma
+  type: true-false
+  instruction: Правда чи ні? (True or false?)
+  items:
+  - statement: Перед сполучником «але» завжди ставимо кому.
+    correct: true
+    explanation: Так, перед «а», «але», «бо», «тому що» ставимо кому.
+  - statement: Перед сполучником «бо» кома не потрібна.
+    correct: false
+    explanation: Перед «бо» завжди ставимо кому.
+  - statement: У реченні «мама і тато» потрібна кома перед «і».
+    correct: false
+    explanation: Тут «і» просто з'єднує два слова, кома не потрібна.
+  - statement: Перед «тому що» завжди ставимо кому.
+    correct: true
+    explanation: Так, як і перед «бо».
+  - statement: Сполучник «але» означає додавання інформації (addition).
+    correct: false
+    explanation: «Але» означає протиставлення (contrast).
+  - statement: «Бо» і «тому що» вказують на причину.
+    correct: true
+    explanation: Так, обидва сполучники означають «because».
+- id: workbook-anagram-vocab
+  type: anagram
+  instruction: Складіть слово з літер (Make a word from the letters)
+  items:
+  - letters:
+    - т
+    - а
+    - к
+    - о
+    - ж
+    answer: також
+    hint: also
+  - letters:
+    - а
+    - л
+    - е
+    answer: але
+    hint: but
+  - letters:
+    - ч
+    - о
+    - м
+    - у
+    answer: чому
+    hint: why
+  - letters:
+    - а
+    - б
+    - о
+    answer: або
+    hint: or
+  - letters:
+    - т
+    - е
+    - ж
+    answer: теж
+    hint: also (colloquial)
+  - letters:
+    - т
+    - о
+    - м
+    - у
+    answer: тому
+    hint: therefore
+- id: workbook-unjumble-sentences
+  type: unjumble
+  instruction: Складіть правильне речення зі слів (Make a correct sentence from the
+    words)
+  items:
+  - words:
+    - каву,
+    - Я
+    - ти?
+    - люблю
+    - а
+    correct_order:
+    - Я
+    - люблю
+    - каву,
+    - а
+    - ти?
+  - words:
+    - розумний.
+    - Він
+    - молодий,
+    - але
+    correct_order:
+    - Він
+    - молодий,
+    - але
+    - розумний.
+  - words:
+    - йде
+    - не
+    - гуляємо,
+    - Ми
+    - дощ.
+    - тому що
+    correct_order:
+    - Ми
+    - не
+    - гуляємо,
+    - тому що
+    - йде
+    - дощ.
+  - words:
+    - хворий.
+    - йду,
+    - я
+    - Я
+    - бо
+    - не
+    correct_order:
+    - Я
+    - не
+    - йду,
+    - бо
+    - я
+    - хворий.
+  - words:
+    - чай?
+    - Хочеш
+    - каву
+    - чи
+    correct_order:
+    - Хочеш
+    - каву
+    - чи
+    - чай?
+  - words:
+    - дуже
+    - смачний.
+    - суп
+    - Цей
+    - гарячий,
+    - але
+    correct_order:
+    - Цей
+    - суп
+    - гарячий,
+    - але
+    - дуже
+    - смачний.
+- id: workbook-classify-conjunctions
+  type: classify
+  instruction: Розподіліть слова за категоріями (Sort the words into categories)
+  categories:
   - label: Додавання (Addition)
     items:
     - і
     - та
     - також
     - теж
-  - label: Контраст (Contrast)
+  - label: Протиставлення (Contrast)
     items:
     - а
     - але
@@ -94,254 +360,7 @@ inline:
     items:
     - бо
     - тому що
-    - тому
   - label: Вибір (Choice)
     items:
     - або
     - чи
-- id: fill-in-reason-building
-  type: fill-in
-  instruction: Доповніть речення сполучниками причини (Complete the sentences with
-    reason conjunctions)
-  items:
-  - sentence: Я вчу українську, ___ я люблю Україну.
-    answer: бо
-    options:
-    - бо
-    - але
-    - і
-  - sentence: Ми не гуляємо, ___ йде дощ.
-    answer: тому що
-    options:
-    - тому що
-    - чи
-    - але
-  - sentence: Я втомлений, ___ багато працював.
-    answer: бо
-    options:
-    - бо
-    - а
-    - та
-  - sentence: Ти не відповів, ___ телефон був без звуку.
-    answer: тому що
-    options:
-    - тому що
-    - а
-    - і
-  - sentence: Поїдемо в Карпати, ___ там дешевше.
-    answer: бо
-    options:
-    - бо
-    - але
-    - а
-  - sentence: Він п'є каву, ___ він дуже втомлений.
-    answer: тому що
-    options:
-    - тому що
-    - та
-    - а
-- id: quiz-conjunction-matching
-  type: quiz
-  instruction: Оберіть правильний сполучник (Choose the correct conjunction)
-  items:
-  - question: Я не йду, ___ хворий.
-    options:
-    - і
-    - а
-    - але
-    - бо
-    correct: 3
-  - question: Ти хочеш каву ___ чай?
-    options:
-    - чи
-    - бо
-    - але
-    - і
-    correct: 0
-  - question: Я хочу в гори, ___ ти — на море.
-    options:
-    - і
-    - а
-    - але
-    - бо
-    correct: 1
-  - question: Море тепле, ___ зараз літо.
-    options:
-    - а
-    - і
-    - бо
-    - чи
-    correct: 2
-  - question: Я — студент, ___ ти — вчитель.
-    options:
-    - а
-    - і
-    - але
-    - бо
-    correct: 0
-  - question: Я хочу тістечко, ___ я на дієті.
-    options:
-    - і
-    - а
-    - але
-    - бо
-    correct: 2
-  - question: Я працював, ___ потім ходив у магазин.
-    options:
-    - але
-    - а
-    - бо
-    - і
-    correct: 1
-  - question: Це стіл ___ стілець.
-    options:
-    - і
-    - але
-    - бо
-    - а
-    correct: 0
-workbook:
-- type: match-up
-  instruction: З'єднайте частини речень (Match the sentence halves)
-  pairs:
-  - left: Я хочу каву,
-    right: бо я дуже втомлений.
-  - left: Я хочу в гори,
-    right: а ти хочеш на море.
-  - left: Він молодий,
-    right: але дуже розумний.
-  - left: Я читаю,
-    right: і пишу.
-  - left: Це не стіл,
-    right: а стілець.
-  - left: Ми не гуляємо,
-    right: тому що йде дощ.
-- type: true-false
-  instruction: Правда чи ні за текстом діалогів? (True or false based on the dialogues?)
-  items:
-  - statement: Марко хоче каву, бо він втомлений.
-    correct: true
-    explanation: 'Так, він каже: «Каву, бо я дуже втомлений».'
-  - statement: Олена хоче чай з цукром.
-    correct: false
-    explanation: Олена хоче чай без цукру.
-  - statement: Іван не відповів на телефон, бо він був у магазині.
-    correct: false
-    explanation: Іван не відповів, бо телефон був без звуку.
-  - statement: Віктор і Марія поїдуть у Карпати.
-    correct: true
-    explanation: Вони вирішили поїхати в Карпати, бо там дешевше.
-  - statement: Марія хоче на море, бо зараз літо.
-    correct: true
-    explanation: 'Так, вона каже: «Море тепле, бо зараз літо».'
-  - statement: У Карпатах дорого.
-    correct: false
-    explanation: У Карпатах дешевше.
-- type: error-correction
-  instruction: Знайдіть і виправте помилку (Find and fix the mistake)
-  items:
-  - sentence: Я люблю каву, і ти?
-    error: і
-    correction: а
-    error_type: word
-    options:
-    - а
-    - але
-    - бо
-    explanation: Use 'а' to shift focus and ask a corresponding question.
-  - sentence: Я хочу піти, і не можу.
-    error: і
-    correction: але
-    error_type: word
-    options:
-    - а
-    - але
-    - бо
-    explanation: Use 'але' for strong contrast or limitation (but).
-  - sentence: Це не стіл, і стілець.
-    error: і
-    correction: а
-    error_type: word
-    options:
-    - а
-    - але
-    - бо
-    explanation: Use 'а' when contrasting 'not X, but Y'.
-  - sentence: Ми не гуляємо, і йде дощ.
-    error: і
-    correction: бо
-    error_type: word
-    options:
-    - а
-    - але
-    - бо
-    explanation: Use 'бо' to give a reason (because).
-  - sentence: Я не йду, а я хворий.
-    error: а
-    correction: бо
-    error_type: word
-    options:
-    - і
-    - але
-    - бо
-    explanation: Use 'бо' to explain why.
-  - sentence: Він працює, бо вона відпочиває.
-    error: бо
-    correction: а
-    error_type: word
-    options:
-    - а
-    - і
-    - але
-    explanation: Use 'а' to contrast two different subjects performing different actions.
-- type: translate
-  instruction: Оберіть правильний переклад (Choose the correct translation)
-  items:
-  - source: I am reading, and he is writing.
-    options:
-    - text: Я читаю, а він пише.
-      correct: true
-    - text: Я читаю, і він пише.
-      correct: false
-    - text: Я читаю, бо він пише.
-      correct: false
-  - source: The soup is hot, but tasty.
-    options:
-    - text: Суп гарячий, але смачний.
-      correct: true
-    - text: Суп гарячий, і смачний.
-      correct: false
-    - text: Суп гарячий, а смачний.
-      correct: false
-  - source: I want to go, because I am tired.
-    options:
-    - text: Я хочу піти, бо я втомлений.
-      correct: true
-    - text: Я хочу піти, але я втомлений.
-      correct: false
-    - text: Я хочу піти, а я втомлений.
-      correct: false
-  - source: He is young, but smart.
-    options:
-    - text: Він молодий, але розумний.
-      correct: true
-    - text: Він молодий, бо розумний.
-      correct: false
-    - text: Він молодий, а розумний.
-      correct: false
-  - source: This is not a table, but a chair.
-    options:
-    - text: Це не стіл, а стілець.
-      correct: true
-    - text: Це не стіл, але стілець.
-      correct: false
-    - text: Це не стіл, і стілець.
-      correct: false
-  - source: Why are you learning Ukrainian?
-    options:
-    - text: Чому ти вчиш українську?
-      correct: true
-    - text: Тому що ти вчиш українську?
-      correct: false
-    - text: Бо ти вчиш українську?
-      correct: false

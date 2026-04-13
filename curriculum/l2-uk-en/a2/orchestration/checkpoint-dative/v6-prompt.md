@@ -117,7 +117,7 @@ module: a2-023
 level: A2
 sequence: 23
 slug: checkpoint-dative
-version: '1.0'
+version: '1.1'
 title: Контрольна робота — давальний відмінок
 subtitle: Перевірка засвоєння давального відмінка (М15-М19)
 focus: review
@@ -132,7 +132,7 @@ objectives:
   recall).
 dialogue_situations:
 - setting: 'Secret Santa at the office — matching gifts to people: Що подарувати Олексієві (m)? Книгу!
-    А Наталці (f)? Шоколад! Новому колезі (m) — кружку (f, mug). Шефу (m) — вино.'
+    А Наталці (f)? Шоколад! Новому колезі (m) — чашку (f, cup). Шефу (m) — вино.'
   speakers:
   - Організатор
   - Колеги
@@ -219,26 +219,24 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-- Confirmed: давальний, відмінок, допомагати, дякувати, подобатися, подарувати, надіслати, потрібно, холодно, закінчення, чергування, узгодження.
-- Not found: None.
+- Confirmed: давальний, відмінок, допомагати, дякувати, подобатися, подарувати, надіслати, потрібно, холодно, закінчення, чергування, узгодження
+- Not found: (none)
 
 ## Grammar Rules
-- **Dative case of masculine nouns**: Правопис § 82 — In the Dative case, nouns of the second declension (masculine) primarily use the endings **-ові, -еві (-єві)** (especially for persons: *братові, учителеві*) or **-у, -ю** (*брату, учителю*).
-- **Dative case of feminine nouns**: Правопис § 66 — Nouns of the first declension in the Dative singular take the ending **-і**. This often triggers consonant alternations: **г → з, к → ц, х → с** (*книжка → книжці, рука → руці*).
-- **Adjective agreement**: Adjectives in the Dative case take the endings **-ому** (masc./neut.) and **-ій** (fem.).
+- [Чергування приголосних у давальному відмінку]: Правопис §12 — Чергування Г, К, Х із м’якими З, Ц, С. У давальному відмінку однини іменників жіночого роду першої відміни: дуга́ — дузі́, кві́тка — кві́тці, сва́ха — сва́сі.
 
 ## Calque Warnings
-- **дякувати**: OK — Always requires the Dative case (**дякувати комусь**, not *дякувати когось*). "Дякую вас" is a common Russianism; use **"Дякую вам"**.
-- **допомагати**: OK — Requires the Dative case (**допомагати комусь**).
-- **потрібно/треба**: OK — Impersonal constructions use the Dative for the "experiencer" (**мені потрібно**, not *я потрібно*).
+- дякувати: OK
+- допомагати: OK
+- мені холодно: OK
 
 ## CEFR Check
-- **допомагати**: A2 — OK
-- **дякувати**: A1 — OK
-- **подобатися**: A2 — OK
-- **подарувати**: A2 — OK
-- **надіслати**: A2 — OK
-- **холодно**: A1 — OK
+- допомагати: A1 — OK
+- дякувати: A1 — OK
+- подобатися: A1 — OK
+- подарувати: A1 — OK
+- надіслати: A2 — OK
+- холодно: A1 — OK
 </pre_verified_facts>
 
 
@@ -611,13 +609,15 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 ## Section Structure
 
-Write these sections as H2 headings, in this exact order:
+Write these sections as H2 headings, in this **exact** order:
 
 - `## Частина 1: Розпізнавання (Part 1: Recognition)` (~400 words)
 - `## Частина 2: Вибір форми (Part 2: Choosing the Correct Form)` (~500 words)
 - `## Частина 3: Продукування (Part 3: Production)` (~400 words)
 - `## Огляд помилок та порівняння відмінків (Error Review and Case Comparison)` (~200 words)
 - `## Підсумок` (~150 words)
+
+**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim** as an `## H2` line. This includes the FINAL summary/transition section (`Підсумок: ...`, `Підсумок та перехід до M...`, etc.) — the writer's most common failure is silently dropping the closing section. Do NOT skip it. Do NOT renumber. Do NOT merge headings. The post-write quick-verify check will fail your build if any heading is missing, even if the prose itself is excellent.
 
 Each section should follow the word budget specified. The total must reach 1500 words minimum.
 
@@ -654,6 +654,25 @@ GRAMMAR RULES:
 - **Zero paronyms**: тактична≠тактовна, ефектний≠ефективний — use the right word, not a similar-sounding one
 - **Natural Ukrainian**: Write how a Ukrainian teacher would explain this to a student. Not robotic, not textbook-dry, not overly casual.
 
+### FORBIDDEN WORDS — never write these (#1189)
+
+The following Russian words have leaked into past builds and broken modules. They are **hard-banned** — the post-write toxic-token scanner will fail your build the moment it sees one. Use the Ukrainian alternative every time, even in dialogues, even in casual prose, even when quoting a learner's mistake (use a `<!-- VERIFY -->` placeholder instead of typing the Russian form):
+
+| Russian (FORBIDDEN) | Ukrainian (USE THIS) |
+|---|---|
+| хорошо | добре |
+| конечно | звичайно / певна річ |
+| спасибо | дякую |
+| пожалуйста | будь ласка / прошу |
+| ничего | нічого |
+| сейчас | зараз |
+| тоже | теж / також |
+| здесь | тут |
+| кот | кіт |
+| кон | кін |
+
+This list is enforced word-for-word by `scripts/build/quick_verify.py` (SEVERE_RUSSIANISMS). If you produce any of these tokens — even inside a quoted example, even inside a dialogue line spoken by a Russian-speaking character — the build halts immediately. There is no exception.
+
 **Authority hierarchy (if uncertain about a word, check in this order):**
 VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (stress) → Антоненко-Давидович (style) → Грінченко (etymology).
 
@@ -686,7 +705,7 @@ Without speaker names, the reader cannot tell who is speaking. NEVER use anonymo
   REQUIRED: Every dialogue must have a SPECIFIC REAL-WORLD SITUATION that motivates the grammar being taught. The situation must be different from all other modules.
 
   **Module-specific dialogue settings (from plan):**
-  1. **Secret Santa at the office — matching gifts to people: Що подарувати Олексієві (m)? Книгу! А Наталці (f)? Шоколад! Новому колезі (m) — кружку (f, mug). Шефу (m) — вино.**
+  1. **Secret Santa at the office — matching gifts to people: Що подарувати Олексієві (m)? Книгу! А Наталці (f)? Шоколад! Новому колезі (m) — чашку (f, cup). Шефу (m) — вино.**
      Speakers: Організатор, Колеги
      Why: Dative consolidation: Олексієві, Наталці, колезі, шефу
 
@@ -752,40 +771,38 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Частина 1: Розпізнавання (Part 1: Recognition) (~440 words)
-- P1 (~80 words): Introduction to the Dative Checkpoint, explaining that the focus is on consolidating the "recipient" role learned in Modules 15-19. Define the scope: pronouns, noun endings with alternations, and basic impersonal constructions.
-- P2 (~120 words): Recognition of personal pronouns in the dative form. Explain how to identify "мені", "тобі", "йому", "їй", "нам", "вам", "їм" in sentences, distinguishing them from their nominative (я, ти) and accusative (мене, тебе) counterparts using sentences like "Він дав мені книгу" vs "Він бачив мене".
-- P3 (~120 words): Identifying the "logical subject" in impersonal dative constructions. Contrast the nominative "Я замерзла" (I am frozen) with the dative "Мені холодно" (It is cold to me), using examples like "Тобі сумно?" and "Нам треба йти".
-- P4 (~120 words): Identifying the "experiencer" with the verb *подобатися*. Explain that the person who likes something is in the dative case, while the object liked is the nominative subject. Use examples: "Студентові подобається мова" and "Дівчині подобаються квіти."
-- <!-- INJECT_ACTIVITY: quiz-dative-recognition --> [quiz, Focus: Identifying dative pronouns and logical subjects in context, 8 items]
+## Частина 1: Розпізнавання (~450 words)
+- P1 (~120 words): Introduce the context with the "Secret Santa" dialogue. Speakers: Організатор and Колеги. Dialogue: "Що подарувати Олексієві? Книгу! А Наталці? Шоколад! Новому колезі — чашку. Шефу — вино." Set the module's focus: recognizing the Dative case (давальний відмінок) and understanding its core function as the recipient or addressee of an action.
+- P2 (~110 words): Explain how to identify the Dative case using the questions `кому?` and `чому?`. Contrast it strictly with the Locative case (which answers `на/у кому? на/у чому?` and always uses prepositions) and the Genitive case. Use the contrast example: `дали білочці горішки` (Dative) vs. `руда шубка на білочці` (Locative).
+- P3 (~110 words): Review impersonal dative constructions. Contrast a Dative state (e.g., `мені холодно`, `мені потрібно`, `мені здається`) with a Nominative active subject (`я замерзла`, `я хочу`). Map the Dative personal pronouns to their Nominative counterparts (`я` → `мені`, `ти` → `тобі`, `він/воно` → `йому`, `вона` → `їй`, `ми` → `нам`, `ви` → `вам`, `вони` → `їм`).
+- P4 (~110 words): Review the verb `подобатися`. Explain the syntax inversion: the person who likes something is the *experiencer* in the Dative case (`мені`), and the object being liked is the grammatical subject in the Nominative case. Use the example: `Мені подобається планшет` and `Їй подобаються квіти`.
+- <!-- INJECT_ACTIVITY: quiz-dative-recognition --> [quiz, Identify the dative form among case options (recognition — Part 1 material), 8 items]
 
-## Частина 2: Вибір форми (Part 2: Choosing the Correct Form) (~550 words)
-- P1 (~140 words): Formation of dative noun endings for masculine and neuter genders. Explain the parallel endings -ові/-у for masculine (братові/брату, директорові/директору) and the standard -у/-ю for neuter (місту, морю, обличчю), emphasizing the "avoiding monotony" rule (панові директору).
-- P2 (~140 words): Formation of dative noun endings for feminine nouns with consonant alternations. Explain the shift of г/к/х to з/ц/с before the ending -і. Use specific examples: дорога → дорозі, рука → руці, муха → мусі, and soft group nouns like земля → землі.
-- P3 (~120 words): Adjective and possessive agreement in the dative case. Explain the endings -ому for masculine/neuter (новому колезі, моєму брату) and -ій for feminine (моїй сестрі, старій подрузі), including soft endings like "синій".
-- P4 (~150 words): Dialogue: "Secret Santa at the Office." A multi-turn conversation between the Organizer and Colleagues deciding who gets what. Examples: "Що ми подаруємо Олексієві?", "Я дам цю книгу Наталці," "Треба купити сувенір новому колезі," "Подякуємо нашому шефу."
-- <!-- INJECT_ACTIVITY: fill-in-dative-endings --> [fill-in, Focus: Completing sentences with correct noun/adjective dative endings, 8 items]
-- <!-- INJECT_ACTIVITY: match-verbs-to-case --> [match-up, Focus: Matching dative-governing verbs (допомагати, дякувати, дарувати) to recipients, 8 items]
+## Частина 2: Вибір форми (~550 words)
+- P1 (~110 words): Review Dative noun endings for Masculine and Neuter genders. Highlight the masculine parallel forms (`-ові/-еві/-єві` vs. `-у/-ю`) explaining that both are correct but `-ові/-еві` is distinctively Ukrainian. Examples: `батькові/батьку`, `учителеві/учителю`, `Андрієві/Андрію`. Show Neuter endings (`-у/-ю`): `селу`, `морю`. 
+- P2 (~120 words): Review Dative noun endings for Feminine nouns (`-і`). Heavily emphasize the mandatory consonant alternations (`г` → `з'`, `к` → `ц'`, `х` → `с'`) before the `-і` ending in the hard group. Provide concrete examples: `подруга` → `подрузі`, `ріка` → `ріці`, `муха` → `мусі`.
+- P3 (~110 words): Review adjective and possessive pronoun agreement in the Dative case. Break down the endings: Masculine/Neuter take `-ому` (`моєму новому колезі`), Feminine takes `-ій` (`моїй старшій сестрі`), and Plural takes `-им` (`нашим друзям`). 
+- P4 (~110 words): Contrast verb government: Dative vs. Accusative. Explain that English speakers often use direct objects (Accusative) where Ukrainian requires an indirect object (Dative). Contrast `допомагати мамі` (Dat) with `бачити маму` (Acc). List high-frequency Dative verbs: `давати, дарувати, допомагати, дякувати, радити`.
+- P5 (~100 words): Provide a short communicative application via a post office / service dialogue (recalling M19). Example context: A clerk asks "Кому ви хочете надіслати пакунок?" and the customer replies "Своєму братові в Київ." Demonstrate the full noun phrase agreement working together in a natural scenario.
+- <!-- INJECT_ACTIVITY: fill-in-dative-endings --> [fill-in, Complete sentences with correct dative noun/adjective/pronoun endings, 8 items]
+- <!-- INJECT_ACTIVITY: match-up-dative-verbs --> [match-up, Match dative-governing verbs to correct case forms and sentence completions, 8 items]
 
-## Частина 3: Продукування (Part 3: Production) (~440 words)
-- P1 (~120 words): Producing complete sentences with dative-governing verbs. Focus on "дякувати" and "допомагати," contrasting them with English or other languages where they might take a direct object. Examples: "Я дякую вчителеві за урок," "Вона допомагає мамі вдома."
-- P2 (~120 words): Expressing age using dative constructions. Explain the structure: [Person in Dative] + [Number] + [років/рік/роки]. Use examples: "Моєму синові три роки," "Наталії двадцять один рік," "Скільки років вашому дідусеві?"
-- P3 (~120 words): Building complex noun phrases with full agreement. Practice combining possessives, adjectives, and nouns in recipient roles. Examples: "Я пишу лист моїй найкращій подрузі," "Ми надіслали подарунок нашому старому вчителеві."
-- P4 (~80 words): Practical application: Addressing envelopes and greetings. Explain how to write "To [Name]" on a gift or letter. Examples: "Любій мамі," "Шановному панові Івану," "Дорогому другові."
-- <!-- INJECT_ACTIVITY: error-correction-dative --> [error-correction, Focus: Finding and fixing errors in gender agreement and alternation rules, 6 items]
+## Частина 3: Продукування (~450 words)
+- P1 (~110 words): Guide the learner on building complete sentences with Dative-governing verbs. Emphasize the natural word order: Subject + Verb + Dative Recipient + Accusative Object. Provide examples of giving/sending: `Я дарую своєму другові цікаву книгу.` `Ми надіслали бабусі лист.`
+- P2 (~120 words): Detail the production of complex `подобатися` sentences with full noun phrases. Show how the verb must agree in number (singular/plural) with the Nominative subject, while the experiencer phrase remains entirely in the Dative. Example: `Моєму старшому братові подобаються нові автомобілі.`
+- P3 (~110 words): Review how to express age. Remind learners that Ukrainian uses the Dative case for the person + the number of years. Provide examples mixing pronouns and noun phrases: `Скільки років вашій сестрі?` `Моєму синові десять років.`
+- P4 (~110 words): Explain how to write short addresses or formal greetings using full Dative noun phrases. Show examples like `Шановному пану директору` or `Дорогій Олені`. Explicitly warn against using the Genitive case for dedications (e.g., correct: `пам'ятник Шевченкові`, incorrect: `пам'ятник Шевченка`).
 
-## Огляд помилок та порівняння відмінків (Error Review and Case Comparison) (~220 words)
-- P1 (~100 words): Common L2 error review. Highlight the mistake of using the accusative after "дякувати" (Дякую вас -> Дякую вам) and the tendency to forget alternations (подругі -> подрузі). Mention the confusion between Dative and Locative due to identical endings (в книзі vs дати книзі).
-- P2 (~120 words): Comparison summary and self-check list.
-  - Recap table: Nominative (Who/What) vs Genitive (Whose/Of what/Absence) vs Dative (To whom/For whom).
-  - Summary of key dative markers: -ові/-у (M), -і (F), -у (N), -ому/-ій (Adj).
-  - Self-check list:
-    1. Can I say "I am 25 years old" in Ukrainian?
-    2. Do I remember to change 'к' to 'ц' in 'подрузі'?
-    3. Do I use 'дякую' with the dative case?
-    4. Can I correctly use 'мені подобається'?
+## Огляд помилок та порівняння відмінків (~220 words)
+- P1 (~90 words): Review common Dative errors. Highlight the mixing of adjective endings (e.g., incorrectly saying `моєму сестрі` instead of `моїй сестрі`), forgetting the `г/к/х` alternation (`подругі` ❌ → `подрузі` ✅), and the direct translation trap with `дякувати` (`Дякую вас` ❌ → `Дякую вам` ✅).
+- P2 (~80 words): Present a summary comparison chart formatting Nominative, Genitive, and Dative endings for a full phrase. Example progression: `мій новий дім` (Nom) → `мого нового дому` (Gen) → `моєму новому дому` (Dat), and `моя старша сестра` (Nom) → `моєї старшої сестри` (Gen) → `моїй старшій сестрі` (Dat).
+- <!-- INJECT_ACTIVITY: error-correction-dative --> [error-correction, Find and correct grammar errors in sentences covering module topics, 6 items]
+- P3 (~50 words): Provide a self-assessment checklist as a bulleted Q&A list.
+  * Чи можете ви утворити давальний відмінок від свого імені?
+  * Чи знаєте ви, як сказати про свій вік та вік друзів?
+  * Чи пам'ятаєте ви три дієслова, які завжди вимагають давального відмінка?
 
-Grand total: ~1650 words
+Grand total: ~1670 words
 </skeleton>
 
 ## Output Format
@@ -793,11 +810,57 @@ Grand total: ~1650 words
 Write in Markdown. Use:
 - `## Section Title` for main sections
 - `### Subsection` for subsections within a section
-- `**bold**` for Ukrainian words being taught — EVERY bold Ukrainian word MUST have an English translation on first use, either in parentheses `**слово** (translation)` or inline `**слово** means "translation"`. No exceptions.
+- `**bold**` for Ukrainian words being taught. For **A1 and A2** levels, provide an English translation on first use (e.g. `**стіл** (table)`) because learners lack the vocabulary to infer meaning. For **B1 and above**, do NOT provide inline translations for standard vocabulary — the learner will use the module's словник (vocabulary table). You may provide ONE parenthetical English translation ONLY for highly abstract grammar/linguistic terms on first use (e.g. `**видова пара** (aspectual pair)`).
 - Tables for paradigms (conjugation, declension)
 - `:::tip` / `:::caution` / `:::note` for callout boxes
 - `<!-- INJECT_ACTIVITY: {id} -->` for exercise placement (markers only — do NOT write exercise content)
 
 Do NOT write MDX component syntax, JSON, or DSL exercise blocks (:::quiz, etc.). Plain Markdown with injection markers.
+
+---
+
+## MANDATORY FINAL CHECKLIST (#1189)
+
+Before you finish writing, verify the prose against this checklist. Failing any item will fail the build.
+
+### Section headings (verbatim)
+
+Every heading from "Section Structure" above MUST appear as an `## H2` in your output, in order, **including the closing `Підсумок:` / `Підсумок та перехід до M...` summary**. The single most common writer failure across the B1 build has been silently dropping the final summary section. Re-read your output before stopping. If the last section in the plan is missing, write it now.
+
+### Required vocabulary (every word must appear)
+
+You MUST use **every word** from the list below at least once in the prose, in a natural sentence with bold + English translation. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, прагматика, діагностика, дієвідмінювання, зворотний, двовидовий, одновидовий, неозначено-кількісний, etc.) is the most frequently dropped category — actively find homes for those words even if it means adding a sentence that defines them.
+
+- [ ] давальний відмінок (dative case)
+- [ ] допомагати (to help)
+- [ ] дякувати (to thank)
+- [ ] подобатися (to be pleasing to, to like)
+- [ ] подарувати (to give as a gift)
+- [ ] надіслати (to send)
+- [ ] потрібно (necessary, needed)
+- [ ] холодно (cold (impersonal state))
+
+### Forbidden words (never produce)
+
+Do not write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use `<!-- VERIFY -->` instead). The post-write toxic-token scanner will fail the build immediately:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+### Level-specific immersion check
+
+The level-appropriate immersion rule was already injected at the top of
+this prompt as `IMMERSION RULE`. Re-read it now BEFORE you stop writing.
+If your level's rule contains a CHECKLIST block, walk through every item.
+If it doesn't, just verify your output matches the LANGUAGE ROLES and
+TARGET stated in that block.
+
+This used to hard-code a B1+ checklist that confused A1/A2 models (where
+translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+The single source of truth is now
+`scripts/pipeline/config_tables.py:IMMERSION_RULES`.
+
+---
 
 Begin writing now. Start with the first section heading.

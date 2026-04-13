@@ -1,135 +1,86 @@
 {
-  "total_items": 79,
-  "grounded_items": 59,
+  "total_items": 82,
+  "grounded_items": 70,
   "ungrounded": [
     {
-      "word": "спеціальна",
+      "word": "малюємо",
       "exercise_type": "quiz",
-      "context": "Спеціальна вишита сорочка, третій четвер травня — це...",
+      "context": "Ми малюємо писанки.",
       "role": "context"
     },
     {
-      "word": "вишита",
+      "word": "співають",
       "exercise_type": "quiz",
-      "context": "Спеціальна вишита сорочка, третій четвер травня — це...",
+      "context": "Діти співають колядки.",
+      "role": "context"
+    },
+    {
+      "word": "святимо",
+      "exercise_type": "quiz",
+      "context": "Ми святимо кошик і паску.",
+      "role": "context"
+    },
+    {
+      "word": "взимку",
+      "exercise_type": "true-false",
+      "context": "Ми святкуємо День Незалежності взимку.",
+      "role": "context"
+    },
+    {
+      "word": "традиційна",
+      "exercise_type": "true-false",
+      "context": "Кутя — це традиційна страва на Різдво.",
+      "role": "context"
+    },
+    {
+      "word": "солодкий",
+      "exercise_type": "true-false",
+      "context": "Писанка — це солодкий хліб.",
+      "role": "context"
+    },
+    {
+      "word": "хліб",
+      "exercise_type": "true-false",
+      "context": "Писанка — це солодкий хліб.",
+      "role": "context"
+    },
+    {
+      "word": "український",
+      "exercise_type": "true-false",
+      "context": "Український прапор синій і жовтий.",
+      "role": "context"
+    },
+    {
+      "word": "синій",
+      "exercise_type": "true-false",
+      "context": "Український прапор синій і жовтий.",
+      "role": "context"
+    },
+    {
+      "word": "жовтий",
+      "exercise_type": "true-false",
+      "context": "Український прапор синій і жовтий.",
       "role": "context"
     },
     {
       "word": "сорочка",
-      "exercise_type": "quiz",
-      "context": "Спеціальна вишита сорочка, третій четвер травня — це...",
-      "role": "context"
-    },
-    {
-      "word": "третій",
-      "exercise_type": "quiz",
-      "context": "Спеціальна вишита сорочка, третій четвер травня — це...",
-      "role": "context"
-    },
-    {
-      "word": "четвер",
-      "exercise_type": "quiz",
-      "context": "Спеціальна вишита сорочка, третій четвер травня — це...",
-      "role": "context"
-    },
-    {
-      "word": "травня",
-      "exercise_type": "quiz",
-      "context": "Спеціальна вишита сорочка, третій четвер травня — це...",
-      "role": "context"
-    },
-    {
-      "word": "повага",
-      "exercise_type": "quiz",
-      "context": "Повага до військових, 1 жовтня — це...",
-      "role": "context"
-    },
-    {
-      "word": "до",
-      "exercise_type": "quiz",
-      "context": "Повага до військових, 1 жовтня — це...",
-      "role": "context"
-    },
-    {
-      "word": "військових",
-      "exercise_type": "quiz",
-      "context": "Повага до військових, 1 жовтня — це...",
-      "role": "context"
-    },
-    {
-      "word": "жовтня",
-      "exercise_type": "quiz",
-      "context": "Повага до військових, 1 жовтня — це...",
-      "role": "context"
-    },
-    {
-      "word": "перша",
-      "exercise_type": "quiz",
-      "context": "Дідух, Свята вечеря, перша зірка — це...",
-      "role": "context"
-    },
-    {
-      "word": "зірка",
-      "exercise_type": "quiz",
-      "context": "Дідух, Свята вечеря, перша зірка — це...",
-      "role": "context"
-    },
-    {
-      "word": "сьогодні",
-      "exercise_type": "fill-in",
-      "context": "Сьогодні 25 грудня. З ___!",
-      "role": "context"
-    },
-    {
-      "word": "червня",
-      "exercise_type": "fill-in",
-      "context": "Сьогодні 28 червня. З Днем ___!",
-      "role": "context"
-    },
-    {
-      "word": "твоє",
-      "exercise_type": "fill-in",
-      "context": "Сьогодні твоє свято! З днем ___!",
-      "role": "context"
-    },
-    {
-      "word": "універсальне",
-      "exercise_type": "fill-in",
-      "context": "Універсальне привітання: ___ святом!",
-      "role": "context"
-    },
-    {
-      "word": "привітання",
-      "exercise_type": "fill-in",
-      "context": "Універсальне привітання: ___ святом!",
-      "role": "context"
-    },
-    {
-      "word": "паску",
-      "exercise_type": "error-correction",
-      "context": "паску",
-      "role": "answer"
-    },
-    {
-      "word": "традиція",
       "exercise_type": "true-false",
-      "context": "Кутя — це традиція на Різдво.",
+      "context": "Вишиванка — це традиційна сорочка.",
       "role": "context"
     },
     {
-      "word": "мир",
-      "exercise_type": "error-correction",
-      "context": "Бажаю щастя, здоров'я, мир.",
+      "word": "вас",
+      "exercise_type": "fill-in",
+      "context": "Ми вітаємо вас зі ____!",
       "role": "context"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 16,
-    "tested_in_exercises": 13,
+    "tested_in_exercises": 14,
     "not_tested": [
-      "вишиванка",
       "вітати",
-      "святкувати"
+      "незалежність"
     ]
   },
   "all_grounded": false

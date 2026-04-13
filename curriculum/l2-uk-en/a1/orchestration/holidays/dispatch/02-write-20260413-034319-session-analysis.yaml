@@ -1,0 +1,111 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T01-41-a94f4678.json
+phase: write
+prompt_chars: 68740
+response_chars: 12337
+prompt_words: 9979
+response_words: 1934
+sections:
+- name: preamble
+  start: 0
+  length: 6394
+  fraction: 0.093
+- name: plan
+  start: 6394
+  length: 7909
+  fraction: 0.1151
+- name: wiki
+  start: 13407
+  length: 28266
+  fraction: 0.4112
+- name: rules
+  start: 42569
+  length: 11246
+  fraction: 0.1636
+- name: skeleton
+  start: 53815
+  length: 5090
+  fraction: 0.074
+- name: output_spec
+  start: 58905
+  length: 9835
+  fraction: 0.1431
+large_sections:
+- wiki
+directives_total: 54
+directives_covered: 37
+directives_missed:
+- kind: checklist
+  text: No 'Let us...', 'In this section...', or formulaic openers
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: checklist
+  text: Every exercise marker from the skeleton is placed
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: must
+  text: For A1 early modules, the learner cannot read Cyrillic — English must dominate.
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: must
+  text: Your output must be original teaching prose at the correct CEFR level, not
+    a rephrased version of the article.
+  covered: false
+  coverage_note: 3/13 keywords (23%)
+- kind: must
+  text: The introduction must be methodical and layered, building from the simplest
+    concept to the more complex.
+  covered: false
+  coverage_note: 2/10 keywords (20%)
+- kind: must
+  text: They often incorrectly use the nominative form (`цей`) after a preposition
+    instead of the required locative (`цьому`).
+  covered: false
+  coverage_note: 4/12 keywords (33%)
+- kind: must
+  text: '**Independent Phonetics:** The sound `[ц]` must be taught as a native Ukrainian
+    phoneme.'
+  covered: false
+  coverage_note: 2/8 keywords (25%)
+- kind: must
+  text: '- UKRAINIAN NARRATIVE PARAGRAPHS: **REQUIRED — minimum 1 per section.'
+  covered: false
+  coverage_note: 2/7 keywords (29%)
+- kind: must
+  text: '- STRUCTURAL RULE: Every section MUST contain a Ukrainian narrative paragraph
+    (3-6 sentences, translated in blockquote) PLUS supporting tables/lists/dialogues/pattern
+    boxes.'
+  covered: false
+  coverage_note: 7/19 keywords (37%)
+- kind: must
+  text: '- **The Wall of Text:** 3+ paragraphs of English theory without a single
+    Ukrainian example — every concept must be anchored in immediate Ukrainian examples.'
+  covered: false
+  coverage_note: 4/15 keywords (27%)
+- kind: must
+  text: translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: must
+  text: '- **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).'
+  covered: false
+  coverage_note: 0/9 keywords (0%)
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-sounds-vs-letters
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-sounds-vs-letters
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-false-friends
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing

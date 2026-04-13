@@ -2,50 +2,54 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 6
-  evidence: The text misses recommended vocabulary "обидва/обидві" and "десяток".
-    The reading practice section completely omits the required "ages of historical
-    figures" and "distances between cities", focusing s
+  score: 7
+  evidence: 'All planned sections are present and the required vocabulary is well
+    represented, but the ordinal section only demonstrates selected forms: **«п''ятого…
+    п''ятому… п''ятим… на п''ятому»** instead of delive'
 - dimension: 2
   name: Linguistic accuracy
-  score: 8
-  evidence: Good overall syntax and declension tables, but contains Russian calques
-    for imperative verbs ("Давайте подивимося", "Давайте попрактикуємо") and Surzhyk
-    introductory words ("Значить" instead of "Отже"
+  score: 6
+  evidence: Most Ukrainian forms are sound, but **«В українській мові кожне число
+    має дві форми.»** is factually wrong. Local textbook search shows the standard
+    school classification is broader than just cardinal
 - dimension: 3
   name: Pedagogical quality
-  score: 9
-  evidence: Excellent grammar progression. The explanation of the "1-2-5" rule is
-    clear and logical. However, modeling the "Давайте" imperative teaches learners
-    bad habits.
+  score: 7
+  evidence: 'The module has a PPP-like flow and many examples, but the teaching does
+    not fully support the stated objective before practice: the ordinal explanation
+    gives partial paradigms, not an all-case walkthr'
 - dimension: 4
   name: Vocabulary coverage
-  score: 8
-  evidence: All required vocabulary is used in clear context, but recommended words
-    "обидва/обидві" and "десяток" are omitted entirely.
+  score: 9
+  evidence: 'Required plan vocabulary is integrated naturally across prose and dialogues:
+    **числівник, порядковий, кількісний, перший, третій, один, скільки, кілограм,
+    коштувати, вік** all appear in context.'
 - dimension: 5
   name: Exercise quality
   score: 8
-  evidence: The writer injected 6 markers instead of the 4 requested by the plan,
-    disrupting the pipeline's 1:1 mapping for `activity_hints`.
+  evidence: The marker set is strong and maps well to the plan overall, but the planned
+    fill-in focus **“dates, addresses”** is only partially prepared before `fill-in-ordinals`.
+    Actual YAML logic is not shown, s
 - dimension: 6
   name: Engagement & tone
-  score: 9
-  evidence: The tone is warm and encouraging ("Це дуже красива граматична особливість").
+  score: 8
+  evidence: The sports-day and market contexts help, and the examples are concrete,
+    but the prose is often explanation-heavy rather than tightly example-driven.
 - dimension: 7
   name: Structural integrity
-  score: 10
-  evidence: All required H2 sections are present in order. Word count is reported
-    as 2528, safely above the 2000 target.
+  score: 9
+  evidence: Clean markdown, all major H2 sections present and ordered correctly, and
+    the pipeline word count is **2851**, safely above target.
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: Appropriately references Ukrainian holidays (Independence Day, Constitution
-    Day) and acknowledges the modern December 25th date for Christmas.
+  score: 9
+  evidence: The module stays Ukrainian-centered and uses appropriate examples such
+    as **День Незалежності**, **Тарас Шевченко**, and **Хрещатик** without Russian-comparison
+    framing.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 7
-  evidence: The generated dialogue missed the planned motivational context ("Organizing
-    a school sports day"), resulting in a generic transaction that didn't showcase
-    the required ordinal expressions.
+  score: 8
+  evidence: Named speakers and real situations are present. The market dialogue is
+    functional and clear; the opening sports dialogue is slightly list-like rather
+    than fully natural.
 findings: []

@@ -29,7 +29,7 @@ Grand total: ~2350 words
 <previous_context>
 [...previous sections truncated...]
 
-much OF what?". Дуже важливо чітко розуміти різницю між числами. В українській граматиці ми маємо дві різні системи для рахування. Числа два, три і чотири працюють зовсім інакше, ніж числа від п'яти і далі. Після чисел два, три і чотири ми завжди використовуємо називний відмінок множини. Наприклад, ми кажемо: **три студенти** *(three students)* або **чотири книги** *(four books)*. Але після п'яти ми обов'язково використовуємо родовий відмінок множини: **п'ять студентів** *(five students)*, **шість книг** *(six books)*. This strict distinction is a major marker of natural, authentic Ukrainian speech. In some other Slavic languages, such as Russian, the numbers two, three, and four take the Genitive singular case. Ukrainian grammar is entirely different and has its own deep historical logic. We proudly say **два столи** *(two tables)*, not *два стола*. We say **три брати** *(three brothers)*, not *три брата*. Remembering and applying this fundamental contrast helps you sound truly Ukrainian. Давайте подивимося, як це правило працює в реальному житті. Уявіть велику шкільну їдальню. Працівники рахують посуд після обіду. > — **Завідувач:** Давай перевіримо посуд. Скільки у нас чистих **тарілок** *(plates)*? > — **Помічник:** Я вже порахував. У нас є тільки двадцять тарілок. > — **Завідувач:** Це погано. А скільки чистих **виделок** *(forks)* ти знайшов? > — **Помічник:** Тільки п'ятнадцять виделок. Вони ще миються. > — **Завідувач:** Це дуже мало для обіду. А скільки **ложок** *(spoons)* у нас є? > — **Помічник:** Ложок зараз багато. Я нарахував рівно сорок штук. > — **Завідувач:** Добре. А що у нас сьогодні зі склянками? > — **Помічник:** Я маю погані новини. У нас зовсім немає чистих **склянок** *(glasses)*! > — **Завідувач:** Ох, нам негайно треба знайти більше склянок! І також нам треба купити кілька нових **чашок** *(cups)*. Тепер інша типова ситуація в супермаркеті. Ми купуємо продукти для великої вечірки з друзями. > — **Покупець:** Добрий день! Дайте мені, будь ласка, п'ять **кілограмів** *(kilograms)* червоних яблук. > — **Продавець:** Добрий день! Ось ваші яблука. Бажаєте щось ще? > — **Покупець:** Так, дайте ще кілька **десятків** *(dozens)* яєць. Скільки це все коштує? > — **Продавець:** Ваша покупка коштує рівно двісті **гривень** *(hryvnias)*. > — **Покупець:** Ой, у мене в гаманці є тільки кілька **сотень** *(hundreds)* готівкою. Я не маю дрібних **грошей** *(money)*. Можна заплатити банківською карткою? > — **Продавець:** Так, звичайно. У нас немає з цим жодних **проблем** *(problems)*. У нас працює багато **терміналів** *(terminals)*. Прикладайте картку сюди. А тепер послухайте цікаву розповідь екскурсовода під час прогулянки про старе історичне місто. > — **Екскурсовод:** Подивіться на цю старовинну будівлю. У цьому будинку багато **вікон** *(windows)*, але мало **дверей** *(doors)* відкриті для туристів. > — **Турист:** Дуже цікаво. А скільки **людей** *(people)* живе тут сьогодні? > — **Екскурсовод:** Зараз у цьому районі живе кілька **тисяч** *(thousands)* місцевих жителів. А раніше тут жили сотні багатих **родин** *(families)*. > — **Турист:** Я бачу, що тут гуляє багато **туристів** *(tourists)*. > — **Екскурсовод:** Так, це правда. Щороку наше місто приймає сотні тисяч іноземних **гостей** *(guests)* з різних **країн** *(countries)*. Це приносить місту багато грошей. <!-- INJECT_ACTIVITY: quiz-quantity-agreement --> <!-- INJECT_ACTIVITY: true-false-genitive-errors -->
+> *The numerals two, three, and four always require the Nominative plural. And the numbers from five onwards require the Genitive plural. This is a unique history of our grammar. A long time ago, numbers from five to ten were feminine nouns. That is why they required other words after them in the Genitive case.* :::info **Grammar box** A common mistake for learners is to use the Genitive singular after 2, 3, and 4 (e.g., *два студента* instead of **два студенти**). In Ukrainian, 2, 3, and 4 group with the Nominative plural for almost all nouns. Remember this important contrast: **три книги** (Nom.Pl.) vs. **п'ять книг** (Gen.Pl.). ::: У їдальні завідувач і помічник рахують посуд. Слова «тарілка» і «виделка» мають **нульове закінчення** (zero ending) у родовому відмінку множини. > *In the cafeteria, the manager and the assistant are counting dishes. The words "plate" and "fork" have a zero ending in the Genitive plural.* > — **Завідувач:** Скільки у нас тарілок? *(How many plates do we have?)* > — **Помічник:** Двадцять тарілок. *(Twenty plates.)* > — **Завідувач:** А виделок? Нам потрібно багато виделок. *(And forks? We need a lot of forks.)* > — **Помічник:** Тільки десять виделок. *(Only ten forks.)* > — **Завідувач:** Це проблема. А скільки ложок? *(This is a problem. And how many spoons?)* > — **Помічник:** П'ятнадцять ложок. Але немає склянок! *(Fifteen spoons. But there are no glasses!)* > — **Завідувач:** Нам треба більше склянок! *(We need more glasses!)* Двоє друзів купують продукти. Вони говорять про кілограми і витрачають **гроші** (money). Основна валюта в Україні — **гривня** (hryvnia). > — **Покупець:** Дайте мені, будь ласка, п'ять кілограмів яблук. *(Give me five kilograms of apples, please.)* > — **Продавець:** Ось ваші яблука. Ще щось? *(Here are your apples. Anything else?)* > — **Покупець:** Так, кілька десятків яєць і шість бананів. Скільки це коштує? *(Yes, a few dozen eggs and six bananas. How much does it cost?)* > — **Продавець:** Це коштує двісті гривень. *(It costs two hundred hryvnias.)* > — **Покупець:** У мене є тільки кілька сотень. Ось триста гривень. *(I only have a few hundreds. Here are three hundred hryvnias.)* > — **Продавець:** Дякую, ось ваша решта — сто гривень. *(Thank you, here is your change — one hundred hryvnias.)* Гід розповідає туристам про стару будівлю у місті. > — **Гід:** Подивіться на цю будівлю. Тут багато вікон. *(Look at this building. There are many windows here.)* > — **Турист:** Скільки тут вікон? *(How many windows are here?)* > — **Гід:** П'ятдесят вікон. Але мало дверей відкриті. *(Fifty windows. But few doors are open.)* > — **Турист:** А скільки людей тут працювало раніше? *(And how many people worked here before?)* > — **Гід:** Кілька тисяч людей. Це була фабрика. *(Several thousand people. It was a factory.)* > — **Турист:** У місті багато таких старих місць? *(Are there many such old places in the city?)* > — **Гід:** Так, є декілька десятків історичних будівель. *(Yes, there are several dozen historical buildings.)* <!-- INJECT_ACTIVITY: quiz-quantity-agreement --> <!-- INJECT_ACTIVITY: true-false-genitive-errors -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -541,7 +541,74 @@ Understanding numeral agreement is a crucial hub connecting several grammatical 
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -560,18 +627,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (5/5).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] родовий відмінок (genitive case)
+- [ ] нульове закінчення (zero ending)
+- [ ] кількість (quantity, amount)
+- [ ] багато (a lot, many)
+- [ ] мало (few, little)
+- [ ] кілька (a few, several)
+- [ ] декілька (a few, several)
+- [ ] скільки (how many, how much)
+- [ ] гроші (money)
+- [ ] гривня (hryvnia)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Підсумок (~150 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

@@ -26,7 +26,7 @@ Grand total: ~2300 words
 <previous_context>
 [...previous sections truncated...]
 
-**поля** *(fields)*. Контекст речення — це завжди наш найкращий граматичний підказник. Давайте уважно подивимося, як ці два відмінки працюють разом у реальному повсякденному житті. Візьмемо для прикладу дуже просте і зрозуміле речення: «Студенти читають нові книжки». Тут живі люди активно роблять дію, а неживі предмети її отримують. Слово «студенти» стоїть у називному відмінку множини. Слово «книжки» логічно стоїть у знахідному відмінку. Це класична і дуже правильна українська структура. Але українська мова дозволяє нам вільно грати зі словами. We can completely swap the semantic roles in the sentence to see how the meaning and the grammar change. Уявіть таке метафоричне речення: «Книжки вчать цих студентів». Тепер наші предмети стали головними суб'єктами дії. Тому слово «книжки» перейшло у називний відмінок. А от слово «студентів» тепер пасивно отримує цю дію. It is an animate noun, so its Accusative form must match the Genitive case exactly. Найкраще тренувати ці граматичні правила у жвавих місцях, де завжди є багато людей і предметів. Звичайний український міський ринок ідеально підходить для такої розмовної практики. > — **Олена:** Дивись, який сьогодні шумний ринок! Тут працюють хороші **продавці** *(sellers)*. > — **Максим:** Так, і тут постійно ходять різні **покупці** *(buyers)*. Я якраз бачу знайомих продавців біля входу. > — **Олена:** Вони зараз продають свіжі **овочі** *(vegetables)* та солодкі **фрукти** *(fruits)*. > — **Максим:** Я хочу купити ці красиві овочі на вечерю. Але тут досить високі **ціни** *(prices)*. > — **Олена:** Ціни завжди швидко ростуть восени. Давай запитаємо тих людей про фрукти. > — **Максим:** Добре, я знаю цих людей, вони часто роблять приємні знижки. У цьому діалозі ми бачимо, як називний і знахідний відмінки множини природно змінюють один одного. Знахідний відмінок у множині також дуже часто працює разом зі спеціальними прийменниками. Certain prepositions always strictly demand the Accusative case when they indicate a direction, a duration of time, or the specific topic of a conversation. Прийменник **через** *(through, across)* показує активний рух: «Ми довго їдемо через високі **гори** *(mountains)*». Прийменник **на** *(onto, for)* часто показує час: «Вони планують поїздку на наступні **вихідні** *(weekend)*». Прийменник **про** *(about)* показує головну тему розмови: «Мої друзі говорять про нові українські **фільми** *(movies)*». You must constantly remember that after these specific prepositions, the plural noun is always in the Accusative case. Навіть для живих людей ми кажемо: «Ми сьогодні читаємо статтю про молодих українських студентів». Зараз ми разом прочитаємо невеликий текст про звичайний день у нашому університеті. Під час читання спробуйте самостійно знайти всі іменники у множині. Світлі просторі **аудиторії** *(classrooms)* щоранку чекають на студентів. Молоді амбітні **викладачі** *(teachers)* ретельно готують складні **завдання** *(tasks)*. Вони акуратно кладуть нові **маркери** *(markers)* на великі дерев'яні столи. Студенти швидко відкривають свої чисті **зошити** *(notebooks)* і уважно пишуть довгі **речення** *(sentences)*. Викладачі бачать розумних студентів і щиро радіють. У цьому тексті слова «аудиторії» та «викладачі» є головними підметами у чистому називному відмінку. Вони самі виконують дію. Слова «маркери» та «зошити» — це прямі додатки у знахідному відмінку, хоча їхня форма нагадує називний. Слово «студентів» тут чудово показує нам класичний знахідний відмінок для живих істот. <!-- INJECT_ACTIVITY: error-correction-plural -->
+стоять місцеві продавці. *(And over there stand the local sellers.)* > — **Максим:** Я знаю тих продавців, вони завжди продають смачні яблука. *(I know those sellers, they always sell delicious apples.)* > — **Олена:** Покупці швидко купують свіжі продукти. *(The buyers quickly buy the fresh produce.)* > — **Максим:** Я теж хочу купити такі продукти. *(I also want to buy such produce.)* > — **Олена:** Але тут дуже високі ціни! *(But the prices here are very high!)* > — **Максим:** Я не люблю високі ціни. *(I do not love high prices.)* > — **Олена:** Давай знайдемо інших продавців. *(Let us find other sellers.)* Beyond recognizing direct objects, the accusative case is also triggered by specific prepositions. When you talk about movement, direction, or the subject of a story, you will need to use the accusative **множина** (plural) after certain prepositions. The most common ones are «через» (through), «на» (onto or for a period of time), and «про» (about). Туристи їдуть через високі гори. Ми купуємо продукти на наступні вихідні. Студенти часто говорять про нові фільми. Маленькі **діти** (children) читають казки про лісових тварин. У всіх цих реченнях після прийменника йде знахідний відмінок. Ви повинні завжди звертати увагу на ці прийменники, коли будуєте речення. > *Tourists drive through the high mountains. We buy groceries for the next weekend. Students often talk about new films. Small children read fairy tales about forest animals. In all these sentences, the preposition is followed by the accusative case. You must always pay attention to these prepositions when you build sentences.* :::info **Grammar box** Remember that the prepositions «в» and «на» can take either the locative case (for location) or the accusative case (for direction). When you are going *to* a place or doing something *for* a period of time (e.g., «на вихідні»), use the accusative. ::: Now it is time to practice reading these distinct cases in context. Read the following paragraph describing a typical scene. Try to identify which plural nouns act as the subjects of the sentences and which ones act as the direct objects based on the narrative logic. У великій аудиторії сидять розумні студенти. Вони уважно слухають лекцію про комп'ютерні технології. Досвідчені викладачі пояснюють складні правила та показують різні приклади. Студенти записують ці правила у зошити. На столах лежать ручки, олівці та телефони. Викладач дивиться у їхні **очі** (eyes) і розуміє їхні запитання. Після лекції друзі йдуть у кафе. Вони купують солодкі десерти та п'ють гарячу каву. Усі **люди** (people) відпочивають і обговорюють свої плани на вихідні. > *Smart students sit in a large classroom. They attentively listen to a lecture about computer technologies. Experienced instructors explain complex rules and show various examples. The students write these rules down in notebooks. Pens, pencils, and phones lie on the tables. The instructor looks into their eyes and understands their questions. After the lecture, the friends go to a cafe. They buy sweet desserts and drink hot coffee. All the people relax and discuss their plans for the weekend.* <!-- INJECT_ACTIVITY: error-correction-plural -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -490,7 +490,74 @@ A phased approach is best for internalizing plural cases.
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -509,18 +576,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (4/4).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] множина (plural)
+- [ ] називний відмінок (nominative case)
+- [ ] знахідний відмінок (accusative case)
+- [ ] живий (animate)
+- [ ] неживий (inanimate)
+- [ ] закінчення (ending (grammar))
+- [ ] люди (people)
+- [ ] діти (children)
+- [ ] речі (things)
+- [ ] очі (eyes)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Підсумок (~150 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

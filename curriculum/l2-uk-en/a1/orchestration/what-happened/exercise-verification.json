@@ -1,76 +1,180 @@
 {
-  "total_items": 59,
-  "grounded_items": 50,
+  "total_items": 88,
+  "grounded_items": 61,
   "ungrounded": [
     {
-      "word": "працювало",
+      "word": "говорив",
       "exercise_type": "match-up",
-      "context": "працювало",
+      "context": "говорив",
       "role": "context"
     },
     {
-      "word": "іване",
-      "exercise_type": "fill-in",
-      "context": "Що ти ____ учора, Іване?",
+      "word": "говорила",
+      "exercise_type": "match-up",
+      "context": "говорила",
       "role": "context"
     },
     {
-      "word": "мій",
-      "exercise_type": "fill-in",
-      "context": "Мій брат ____ у парку.",
+      "word": "це",
+      "exercise_type": "true-false",
+      "context": "«Він читала книжку» — це правильне речення.",
       "role": "context"
     },
     {
-      "word": "брат",
-      "exercise_type": "fill-in",
-      "context": "Мій брат ____ у парку.",
+      "word": "правильне",
+      "exercise_type": "true-false",
+      "context": "«Він читала книжку» — це правильне речення.",
       "role": "context"
     },
     {
-      "word": "провели",
-      "exercise_type": "fill-in",
-      "context": "провели",
+      "word": "речення",
+      "exercise_type": "true-false",
+      "context": "«Він читала книжку» — це правильне речення.",
+      "role": "context"
+    },
+    {
+      "word": "дієслова",
+      "exercise_type": "true-false",
+      "context": "Дієслова в минулому часі змінюються за родами (чоловічий, жі",
+      "role": "context"
+    },
+    {
+      "word": "минулому",
+      "exercise_type": "true-false",
+      "context": "Дієслова в минулому часі змінюються за родами (чоловічий, жі",
+      "role": "context"
+    },
+    {
+      "word": "часі",
+      "exercise_type": "true-false",
+      "context": "Дієслова в минулому часі змінюються за родами (чоловічий, жі",
+      "role": "context"
+    },
+    {
+      "word": "змінюються",
+      "exercise_type": "true-false",
+      "context": "Дієслова в минулому часі змінюються за родами (чоловічий, жі",
+      "role": "context"
+    },
+    {
+      "word": "за",
+      "exercise_type": "true-false",
+      "context": "Дієслова в минулому часі змінюються за родами (чоловічий, жі",
+      "role": "context"
+    },
+    {
+      "word": "родами",
+      "exercise_type": "true-false",
+      "context": "Дієслова в минулому часі змінюються за родами (чоловічий, жі",
+      "role": "context"
+    },
+    {
+      "word": "робили",
+      "exercise_type": "group-sort",
+      "context": "робили",
       "role": "answer"
     },
     {
-      "word": "пила",
-      "exercise_type": "fill-in",
-      "context": "пила",
-      "role": "answer"
-    },
-    {
-      "word": "моя",
-      "exercise_type": "fill-in",
-      "context": "Моя подруга ____ каву.",
-      "role": "context"
-    },
-    {
-      "word": "подруга",
-      "exercise_type": "fill-in",
-      "context": "Моя подруга ____ каву.",
-      "role": "context"
-    },
-    {
-      "word": "та",
+      "word": "яке",
       "exercise_type": "quiz",
-      "context": "Іван та Олена ____ разом.",
+      "context": "Яке закінчення має дієслово в чоловічому роді (він)?",
+      "role": "context"
+    },
+    {
+      "word": "закінчення",
+      "exercise_type": "quiz",
+      "context": "Яке закінчення має дієслово в чоловічому роді (він)?",
+      "role": "context"
+    },
+    {
+      "word": "має",
+      "exercise_type": "quiz",
+      "context": "Яке закінчення має дієслово в чоловічому роді (він)?",
+      "role": "context"
+    },
+    {
+      "word": "дієслово",
+      "exercise_type": "quiz",
+      "context": "Яке закінчення має дієслово в чоловічому роді (він)?",
+      "role": "context"
+    },
+    {
+      "word": "чоловічому",
+      "exercise_type": "quiz",
+      "context": "Яке закінчення має дієслово в чоловічому роді (він)?",
+      "role": "context"
+    },
+    {
+      "word": "роді",
+      "exercise_type": "quiz",
+      "context": "Яке закінчення має дієслово в чоловічому роді (він)?",
+      "role": "context"
+    },
+    {
+      "word": "жіночому",
+      "exercise_type": "quiz",
+      "context": "Яке закінчення має дієслово в жіночому роді (вона)?",
+      "role": "context"
+    },
+    {
+      "word": "множині",
+      "exercise_type": "quiz",
+      "context": "Яке закінчення має дієслово в множині (ми, ви, вони)?",
+      "role": "context"
+    },
+    {
+      "word": "правильно",
+      "exercise_type": "quiz",
+      "context": "Як правильно сказати: «I was reading» (якщо говорить жінка)?",
+      "role": "context"
+    },
+    {
+      "word": "сказати",
+      "exercise_type": "quiz",
+      "context": "Як правильно сказати: «I was reading» (якщо говорить жінка)?",
+      "role": "context"
+    },
+    {
+      "word": "якщо",
+      "exercise_type": "quiz",
+      "context": "Як правильно сказати: «I was reading» (якщо говорить жінка)?",
+      "role": "context"
+    },
+    {
+      "word": "говорить",
+      "exercise_type": "quiz",
+      "context": "Як правильно сказати: «I was reading» (якщо говорить жінка)?",
+      "role": "context"
+    },
+    {
+      "word": "жінка",
+      "exercise_type": "quiz",
+      "context": "Як правильно сказати: «I was reading» (якщо говорить жінка)?",
+      "role": "context"
+    },
+    {
+      "word": "запитати",
+      "exercise_type": "quiz",
+      "context": "Як правильно запитати чоловіка: «What did you do?»",
+      "role": "context"
+    },
+    {
+      "word": "чоловіка",
+      "exercise_type": "quiz",
+      "context": "Як правильно запитати чоловіка: «What did you do?»",
       "role": "context"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 15,
-    "tested_in_exercises": 4,
+    "tested_in_exercises": 8,
     "not_tested": [
       "говорити",
       "готувати",
       "гуляти",
       "дивитися",
-      "минулий",
-      "неділя",
       "працювати",
-      "провести",
       "робити",
-      "субота",
       "читати"
     ]
   },

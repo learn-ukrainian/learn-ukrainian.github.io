@@ -2,50 +2,10 @@ version: '1.0'
 module: food-and-drink
 level: a1
 inline:
-- id: quiz-meals-dishes
-  type: quiz
-  instruction: Оберіть правильну відповідь (Choose the correct answer)
-  items:
-  - question: Що ми їмо вранці?
-    options:
-    - сніданок
-    - обід
-    - вечерю
-    correct: 0
-  - question: Що ми їмо ввечері?
-    options:
-    - вечерю
-    - сніданок
-    - обід
-    correct: 0
-  - question: Традиційний український суп — це...
-    options:
-    - борщ
-    - каша
-    - вода
-    correct: 0
-  - question: 'Українська страва з тіста і картоплі або сиру:'
-    options:
-    - вареники
-    - сало
-    - хліб
-    correct: 0
-  - question: 'Популярний холодний напій з фруктів:'
-    options:
-    - компот
-    - борщ
-    - кава
-    correct: 0
-  - question: Що ми їмо вдень?
-    options:
-    - обід
-    - сніданок
-    - вечерю
-    correct: 0
-- id: match-up-food-vocab
+- id: match-up-food-drink
   type: match-up
-  instruction: З'єднайте українські слова з англійським перекладом (Match Ukrainian
-    words to their English translations)
+  instruction: З'єднайте українські слова з англійськими (Match Ukrainian words with
+    English)
   pairs:
   - left: хліб
     right: bread
@@ -67,228 +27,96 @@ inline:
     right: dinner
   - left: суп
     right: soup
-- id: group-sort-food-drinks
-  type: group-sort
-  instruction: Розподіліть слова за категоріями (Categorize the words)
-  groups:
-  - label: Їжа
-    items:
-    - хліб
-    - м'ясо
-    - риба
-    - суп
-    - каша
-  - label: Напої
-    items:
-    - кава
-    - чай
-    - вода
-    - сік
-    - молоко
 - id: fill-in-chunks
   type: fill-in
-  instruction: Вставте правильну фразу (Fill in the correct phrase)
+  instruction: Вставте правильне слово (Fill in the correct word)
   items:
-  - sentence: Я хочу каву _____.
+  - sentence: Я хочу каву ____.
     answer: з молоком
     options:
     - з молоком
     - з цукром
-    - з картоплею
-  - sentence: Вона п'є чай _____.
+    - з маслом
+  - sentence: Вона п'є чай ____.
     answer: з цукром
     options:
+    - з молоком
     - з цукром
-    - з газом
     - з картоплею
-  - sentence: Він їсть хліб _____.
+  - sentence: Він їсть хліб ____.
     answer: з маслом
     options:
     - з маслом
-    - з молоком
-    - з цукром
-  - sentence: Я люблю чай _____.
+    - з лимоном
+    - з газом
+  - sentence: Я люблю чай ____.
     answer: з лимоном
     options:
     - з лимоном
-    - з газом
     - з маслом
-  - sentence: Дайте, будь ласка, воду _____.
+    - з молоком
+  - sentence: Дайте, будь ласка, воду ____.
     answer: з газом
     options:
     - з газом
-    - з лимоном
-    - з молоком
-  - sentence: Ми їмо м'ясо _____.
+    - з картоплею
+    - з цукром
+  - sentence: Ми їмо м'ясо ____.
     answer: з картоплею
     options:
     - з картоплею
-    - з цукром
+    - з лимоном
     - з газом
-workbook:
-- id: divide-words-syllables
-  type: divide-words
-  instruction: Поділіть слова на склади (Divide words into syllables)
+- id: quiz-meals-dishes
+  type: quiz
+  instruction: Оберіть правильну відповідь (Choose the correct answer)
   items:
-  - word: молоко
-    answer: мо-ло-ко
-  - word: яблуко
-    answer: яб-лу-ко
-  - word: вечеря
-    answer: ве-че-ря
-  - word: сніданок
-    answer: сні-да-нок
-  - word: картопля
-    answer: кар-топ-ля
-  - word: вареник
-    answer: ва-ре-ник
-- id: count-syllables-food
-  type: count-syllables
-  instruction: Скільки складів у слові? (How many syllables?)
-  items:
-  - word: хліб
-    correct: 1
-  - word: вода
-    correct: 2
-  - word: сир
-    correct: 1
-  - word: м'ясо
-    correct: 2
-  - word: кава
-    correct: 2
-  - word: помідор
-    correct: 3
-- id: odd-one-out-categories
-  type: odd-one-out
-  instruction: Оберіть зайве слово (Choose the odd one out)
-  items:
-  - words:
-    - хліб
-    - вода
-    - каша
-    - м'ясо
-    correct: 1
-    explanation: Вода — це напій, а не їжа.
-  - words:
-    - кава
-    - чай
-    - сік
-    - салат
-    correct: 3
-    explanation: Салат — це їжа, а не напій.
-  - words:
-    - яблуко
-    - банан
-    - апельсин
-    - картопля
-    correct: 3
-    explanation: Картопля — це овоч, а не фрукт.
-  - words:
-    - помідор
-    - огірок
-    - морква
-    - курка
-    correct: 3
-    explanation: Курка — це м'ясо, а не овоч.
-  - words:
-    - молоко
-    - сир
-    - масло
-    - хліб
-    correct: 3
-    explanation: Хліб — це не молочний продукт.
-  - words:
+  - question: Що ми їмо вранці?
+    options:
     - сніданок
     - обід
-    - вечеря
-    - кава
-    correct: 3
-    explanation: Кава — це напій, а не прийом їжі.
-- id: true-false-culture
-  type: true-false
-  instruction: Правда чи ні? (True or false?)
-  items:
-  - statement: В Україні традиційно їдять суп на сніданок.
-    correct: false
-    explanation: Суп, такий як борщ, зазвичай їдять на обід.
-  - statement: Борщ — це важливий символ української кухні та культури.
-    correct: true
-    explanation: Борщ — це абсолютний національний символ України.
-  - statement: Хліб — це традиційний знак гостинності в Україні.
-    correct: true
-    explanation: Так, хліб є майже з кожною їжею і є знаком гостинності.
-  - statement: Сало — це популярний холодний напій.
-    correct: false
-    explanation: Сало — це їжа (cured pork fat), а не напій.
-  - statement: Компот — це домашній напій з ягід або фруктів.
-    correct: true
-    explanation: Так, це дуже популярний традиційний солодкий напій.
-  - statement: Обід — це їжа ввечері.
-    correct: false
-    explanation: Обід їдять вдень (у середині дня), а ввечері — вечерю.
-- id: error-correction-cases
-  type: error-correction
-  instruction: Знайдіть і виправте помилку (Find and correct the error)
-  items:
-  - sentence: Я п'ю кава з молоком.
-    error: кава
-    correction: каву
-    error_type: word
-    options:
-    - каву
-    - каві
-    - кавою
-    explanation: 'Коли ви щось п''єте, потрібен знахідний відмінок (Accusative case):
-      каву.'
-  - sentence: Я люблю чай з лимон.
-    error: лимон
-    correction: лимоном
-    error_type: word
-    options:
-    - лимоном
-    - лимону
-    - лимони
-    explanation: 'Після ''з'' використовуємо орудний відмінок (Instrumental case):
-      з лимоном.'
-  - sentence: Ми їмо борщ з сметана.
-    error: сметана
-    correction: сметаною
-    error_type: word
-    options:
-    - сметаною
-    - сметану
-    - сметані
-    explanation: 'Після ''з'' для жіночого роду (сметана) закінчення -ою: зі сметаною.'
-  - sentence: Що ти хочеш на сніданку?
-    error: сніданку
-    correction: сніданок
-    error_type: word
-    options:
-    - сніданок
-    - сніданком
-    - сніданки
-    explanation: Правильна фраза — 'на сніданок'.
-  - sentence: Я хочу вода з газом.
-    error: вода
-    correction: воду
-    error_type: word
-    options:
-    - воду
-    - воді
-    - водою
-    explanation: 'Дієслово ''хочу'' тут вимагає знахідного відмінка: воду.'
-  - sentence: Ввечері я їм обід.
-    error: обід
-    correction: вечерю
-    error_type: word
-    options:
     - вечерю
+    - компот
+    correct: 0
+  - question: Що ми їмо ввечері?
+    options:
+    - обід
     - сніданок
-    - сніданки
-    explanation: Ввечері їдять вечерю, а обід — вдень.
-- id: anagram-food-words
+    - вечерю
+    - салат
+    correct: 2
+  - question: Що ми їмо вдень?
+    options:
+    - сніданок
+    - обід
+    - вечерю
+    - чай
+    correct: 1
+  - question: Традиційний український суп — це...
+    options:
+    - вода
+    - каша
+    - кава
+    - борщ
+    correct: 3
+  - question: 'Українська страва з тіста і картоплі або сиру:'
+    options:
+    - сало
+    - вареники
+    - хліб
+    - сік
+    correct: 1
+  - question: 'Популярний холодний напій з фруктів:'
+    options:
+    - борщ
+    - кава
+    - компот
+    - суп
+    correct: 2
+workbook:
+- id: anagram-food
   type: anagram
-  instruction: Складіть слово з літер (Rearrange letters to form the word)
+  instruction: Складіть слово з літер (Make a word from the letters)
   items:
   - letters:
     - х
@@ -307,6 +135,26 @@ workbook:
     answer: молоко
     hint: milk
   - letters:
+    - в
+    - о
+    - д
+    - а
+    answer: вода
+    hint: water
+  - letters:
+    - к
+    - а
+    - в
+    - а
+    answer: кава
+    hint: coffee
+  - letters:
+    - с
+    - и
+    - р
+    answer: сир
+    hint: cheese
+  - letters:
     - я
     - б
     - л
@@ -316,24 +164,205 @@ workbook:
     answer: яблуко
     hint: apple
   - letters:
-    - м
-    - ''''
-    - я
     - с
-    - о
-    answer: м'ясо
-    hint: meat
-  - letters:
-    - в
-    - о
-    - д
     - а
-    answer: вода
-    hint: water
-  - letters:
-    - б
-    - о
-    - р
-    - щ
+    - л
+    - а
+    - т
+    answer: салат
+    hint: salad
+- id: unjumble-sentences
+  type: unjumble
+  instruction: Складіть правильне речення зі слів (Put the words in the correct order)
+  items:
+  - words:
+    - хочеш
+    - на
+    - Що
+    - сніданок?
+    - ти
+    correct_order:
+    - Що
+    - ти
+    - хочеш
+    - на
+    - сніданок?
+  - words:
+    - каву
+    - молоком.
+    - хочу
+    - Я
+    - з
+    correct_order:
+    - Я
+    - хочу
+    - каву
+    - з
+    - молоком.
+  - words:
+    - смачний
+    - суп.
+    - Це
+    - дуже
+    correct_order:
+    - Це
+    - дуже
+    - смачний
+    - суп.
+  - words:
+    - будете
+    - ви
+    - пити?
+    - Що
+    correct_order:
+    - Що
+    - ви
+    - будете
+    - пити?
+  - words:
+    - чай
+    - Вона
+    - цукром.
+    - п'є
+    - з
+    correct_order:
+    - Вона
+    - п'є
+    - чай
+    - з
+    - цукром.
+  - words:
+    - ми
+    - Увечері
+    - разом.
+    - вечеряємо
+    correct_order:
+    - Увечері
+    - ми
+    - вечеряємо
+    - разом.
+- id: true-false-meals
+  type: true-false
+  instruction: Правда чи ні? (True or false?)
+  items:
+  - statement: Борщ — це український напій.
+    correct: false
+    explanation: Борщ — це традиційний суп (food), а не напій (drink).
+  - statement: Компот — це гарячий напій з кави.
+    correct: false
+    explanation: Компот — це холодний напій з фруктів.
+  - statement: Уранці ми зазвичай снідаємо.
+    correct: true
+    explanation: Так, сніданок — це ранкова їжа.
+  - statement: Сало — це популярний десерт.
+    correct: false
+    explanation: Сало (cured pork fat) — це м'ясний продукт, а не десерт.
+  - statement: Люди часто п'ють каву з молоком.
+    correct: true
+    explanation: Так, це дуже популярний напій.
+  - statement: Обід — це наша вечеря.
+    correct: false
+    explanation: Обід (lunch) ми їмо вдень, а вечерю (dinner) — увечері.
+- id: odd-one-out-food
+  type: odd-one-out
+  instruction: Знайдіть зайве слово (Find the odd one out)
+  items:
+  - words:
+    - хліб
+    - кава
+    - чай
+    - сік
+    correct: 0
+    explanation: Хліб — це їжа, а кава, чай і сік — це напої.
+  - words:
+    - яблуко
+    - м'ясо
+    - банан
+    - апельсин
+    correct: 1
+    explanation: М'ясо — це не фрукт.
+  - words:
+    - сніданок
+    - обід
+    - вода
+    - вечеря
+    correct: 2
+    explanation: Вода — це напій, а інші слова — це назви прийомів їжі (meals).
+  - words:
+    - картопля
+    - помідор
+    - огірок
+    - молоко
+    correct: 3
+    explanation: Молоко — це напій/молочний продукт, а картопля, помідор і огірок
+      — овочі.
+  - words:
+    - борщ
+    - вода
+    - суп
+    - сало
+    correct: 1
+    explanation: Вода — це напій, а інші — це страви або їжа.
+  - words:
+    - сіль
+    - сир
+    - масло
+    - сметана
+    correct: 0
+    explanation: Сіль — це спеція, а сир, масло і сметана — це молочні продукти (dairy).
+- id: match-up-meals
+  type: match-up
+  instruction: З'єднайте запитання та відповіді (Match questions and answers)
+  pairs:
+  - left: Що ти їш на сніданок?
+    right: Я їм яйце і сир.
+  - left: Що ти хочеш пити?
+    right: Воду з лимоном.
+  - left: Що вона хоче їсти?
+    right: Суп і хліб.
+  - left: Що ви хочете на вечерю?
+    right: Ми хочемо м'ясо.
+  - left: Що вона їсть на обід?
+    right: Вона їсть борщ.
+  - left: Що ви будете пити?
+    right: Дайте, будь ласка, каву.
+- id: fill-in-vocab
+  type: fill-in
+  instruction: Вставте правильне слово (Fill in the correct word)
+  items:
+  - sentence: Я п'ю гарячий ____.
+    answer: чай
+    options:
+    - чай
+    - хліб
+    - салат
+  - sentence: Ми їмо свіжий ____.
+    answer: хліб
+    options:
+    - хліб
+    - суп
+    - сік
+  - sentence: Традиційний український суп — це ____.
     answer: борщ
-    hint: beet soup
+    options:
+    - борщ
+    - компот
+    - салат
+  - sentence: Вона любить пити холодну ____.
+    answer: воду
+    options:
+    - воду
+    - каву
+    - картоплю
+  - sentence: На обід я їм суп і ____.
+    answer: салат
+    options:
+    - салат
+    - чай
+    - сік
+  - sentence: Цей ____ дуже смачний.
+    answer: суп
+    options:
+    - суп
+    - салат
+    - хліб

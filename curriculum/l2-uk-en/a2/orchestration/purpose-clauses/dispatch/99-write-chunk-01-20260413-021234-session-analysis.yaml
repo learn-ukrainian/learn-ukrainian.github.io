@@ -1,0 +1,61 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T00-11-802f689d.json
+phase: write-chunk-01
+prompt_chars: 41567
+response_chars: 6326
+prompt_words: 6038
+response_words: 1054
+sections:
+- name: header
+  start: 0
+  length: 462
+  fraction: 0.0111
+- name: skeleton
+  start: 462
+  length: 2717
+  fraction: 0.0654
+- name: plan
+  start: 3179
+  length: 11827
+  fraction: 0.2845
+- name: wiki
+  start: 8479
+  length: 26328
+  fraction: 0.6334
+- name: output_spec
+  start: 41334
+  length: 233
+  fraction: 0.0056
+large_sections:
+- wiki
+directives_total: 22
+directives_covered: 15
+directives_missed:
+- kind: checklist
+  text: сказати (to say, to tell)
+  covered: false
+  coverage_note: 1/3 keywords (33%)
+- kind: checklist
+  text: відповісти (to answer, to reply)
+  covered: false
+  coverage_note: 1/3 keywords (33%)
+- kind: checklist
+  text: повідомлення (message)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: непряма мова (indirect/reported speech)
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: checklist
+  text: додати (to add)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 1/11 keywords (9%)

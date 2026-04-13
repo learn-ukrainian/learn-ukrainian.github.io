@@ -1,0 +1,59 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T14-51-cd8ca8fc.json
+phase: write-chunk-06
+prompt_chars: 53399
+response_chars: 3852
+prompt_words: 7147
+response_words: 590
+sections:
+- name: header
+  start: 0
+  length: 434
+  fraction: 0.0081
+- name: skeleton
+  start: 434
+  length: 1116
+  fraction: 0.0209
+- name: prior_summary
+  start: 1550
+  length: 3609
+  fraction: 0.0676
+- name: plan
+  start: 5159
+  length: 18758
+  fraction: 0.3513
+- name: wiki
+  start: 17382
+  length: 29258
+  fraction: 0.5479
+- name: output_spec
+  start: 53175
+  length: 224
+  fraction: 0.0042
+large_sections:
+- wiki
+directives_total: 22
+directives_covered: 17
+directives_missed:
+- kind: must
+  text: '**Найвищий пріоритет (Must Know):** Чергування **`[г], [к], [х] → [з''],
+    [ц''], [с'']`** в **давальному** та **місцевому** відмінках однини **іменників
+    І відміни**.'
+  covered: false
+  coverage_note: 3/11 keywords (27%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 3/11 keywords (27%)
+- kind: inject_activity
+  text: error-correction-simplification
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in, Form adjectives or adverbs from nouns, applying simplification
+  covered: false
+  coverage_note: marker missing

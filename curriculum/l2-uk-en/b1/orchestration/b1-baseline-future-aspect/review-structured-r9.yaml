@@ -1,0 +1,51 @@
+round: 9
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 6
+  evidence: Failed to cite textbook sources (Литвінова, Заболотний, Авраменко, Кравцова)
+    in the text. Missed the preview of module M06. Injected two unauthorized activity
+    markers not present in the plan.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: Used the non-existent adverb form `українсько` ("традиційно українсько").
+    Created an incorrect trap form `малююму` instead of the plan's `малютиму`.
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: Strong explanation of the aspect-tense matrix and PPP flow. However, the
+    section on synthetic future has ~200 words of English theory with very few Ukrainian
+    examples.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 8
+  evidence: 'Most required vocabulary is present, but `двовидовий` was only translated
+    to English ("biaspectual") without the Ukrainian term. Missing recommended terms:
+    `дійсний спосіб`, `основа інфінітива`, `часо'
+- dimension: 5
+  name: Exercise quality
+  score: 7
+  evidence: Markers placed logically after concepts, but injected 2 extra `fill-in`
+    and `group-sort` markers that do not correspond to the plan's `activity_hints`.
+- dimension: 6
+  name: Engagement & tone
+  score: 7
+  evidence: 'Writer''s persona relies heavily on generic enthusiasm: "unique and elegant
+    feature", "beautiful one-word alternative", "fascinating piece of linguistic history",
+    "proudly and uniquely Ukrainian".'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Word count is 5618 (exceeds 4000). All H2 headings match the plan exactly.
+- dimension: 8
+  name: Cultural accuracy
+  score: 8
+  evidence: Falsely claimed that "other East Slavic languages rely solely on a two-word
+    analytic construction". (Belarusian also has a synthetic future form, e.g., *рабіцьму*).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Dialogues are natural, correctly formatted, and effectively demonstrate
+    the contrast between perfective and imperfective verbs in context.
+findings: []

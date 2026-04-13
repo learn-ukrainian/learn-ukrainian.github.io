@@ -1,309 +1,521 @@
 version: '1.0'
 module: motion-verbs
 level: a2
-workbook:
-- id: group-sort-motion-type
+inline:
+- id: group-sort-sort-motion-verb-forms-into-unidirectional-vs-multidirectional-categories
   type: group-sort
-  instruction: 'Розподіліть дієслова: односпрямований (зараз) чи багатоспрямований
-    (регулярно) рух?'
+  instruction: Розподіліть дієслова руху за напрямком (односпрямований чи різноспрямований).
   groups:
-  - label: Односпрямований (зараз)
+  - label: Односпрямований рух
     items:
+    - іду
+    - їдемо
+    - летить
     - іти
     - їхати
-    - летіти
-    - йду
-  - label: Багатоспрямований (регулярно)
+  - label: Різноспрямований рух
     items:
+    - ходжу
+    - їздимо
+    - літає
     - ходити
     - їздити
-    - літати
-    - ходжу
-- id: fill-in-motion-verbs
+- id: fill-in-motion-context
   type: fill-in
-  instruction: Оберіть правильне дієслово руху за контекстом
+  instruction: Вставте правильне дієслово руху.
   items:
-  - sentence: Куди ти зараз ____?
-    answer: ідеш
+  - sentence: Я зараз ____ до магазину, бо мені потрібен хліб.
+    answer: іду
     options:
-    - ідеш
-    - ходиш
-    - їдеш
-    - їздиш
-  - sentence: Ми часто ____ у цей парк.
-    answer: ходимо
+    - іду
+    - ходжу
+  - sentence: Ми ____ до Львова щоліта.
+    answer: їздимо
     options:
-    - йдемо
     - їдемо
-    - ходимо
     - їздимо
-  - sentence: Де Олена? Вона зараз ____ до Києва.
+  - sentence: У небі ____ великий літак.
     answer: летить
     options:
-    - їде
     - летить
     - літає
-    - їздить
-  - sentence: Він ____ у справах дуже рідко.
+  - sentence: Мій колега дуже часто ____ у відрядження.
     answer: літає
     options:
     - летить
-    - іде
     - літає
-    - ходить
-  - sentence: Вони ____ на роботу автобусом щодня.
-    answer: їздять
+  - sentence: Вони зараз ____ в місто на таксі.
+    answer: їдуть
     options:
     - їдуть
-    - ідуть
     - їздять
-    - ходять
-  - sentence: Подивись! Ми вже ____ додому.
+  - sentence: Я ____ до цього магазину щодня.
+    answer: ходжу
+    options:
+    - іду
+    - ходжу
+  - sentence: Ми зараз ____ до Львова на машині.
     answer: їдемо
     options:
-    - їздимо
     - їдемо
-    - йдемо
-    - ходимо
-  - sentence: Вчора Марко ____ у кіно.
-    answer: ходив
+    - їздимо
+  - sentence: Птахи завжди ____ на південь восени.
+    answer: літають
     options:
-    - ішов
-    - їхав
-    - ходив
-    - їздив
-  - sentence: Вона уже ____ додому.
-    answer: пішла
-    options:
-    - ішла
-    - ходила
-    - пішла
-    - полетіла
-- id: quiz-conjugation-models
+    - летять
+    - літають
+- id: quiz-conjugate-and-choose-the-correct-form-for-the-given-person-and-number
   type: quiz
-  instruction: Оберіть правильну форму дієслова (казати, пити, боротися)
+  instruction: Оберіть правильну форму дієслова.
   items:
-  - question: Що ти зараз (казати)?
+  - question: Я (казати)
     options:
+    - кажу
     - кажеш
-    - казаєш
-    - кажиш
-    - кажуєш
+    - казаю
+    - казу
     correct: 0
-  - question: Зазвичай зранку я (пити) чорну каву.
+  - question: Ти (пити)
     options:
-    - пию
-    - п'ю
-    - п'є
-    - пйю
-    correct: 1
-  - question: Ми щодня (боротися) за свободу.
-    options:
-    - боромося
-    - боремось
-    - боремося
-    - борються
-    correct: 2
-  - question: Завтра я (сказати) всю правду.
-    options:
-    - сказу
-    - скаже
-    - сказаю
-    - скажу
-    correct: 3
-  - question: Вони мужньо (боротися) з проблемами.
-    options:
-    - боряться
-    - боротяться
-    - борються
-    - бороться
-    correct: 2
-  - question: Вона часто (пити) зелений чай.
-    options:
-    - пиє
-    - п'є
-    - піє
+    - пиєш
+    - пєш
     - п'єш
-    correct: 1
-  - question: Ви (казати) неправду!
+    - пієш
+    correct: 2
+  - question: Він (боротися)
     options:
-    - кажете
-    - казаєте
-    - кажите
-    - кажуте
+    - борюся
+    - бореться
+    - боритеся
+    - борется
+    correct: 1
+  - question: Ми (казати)
+    options:
+    - казаємо
+    - кажем
+    - кажумо
+    - кажемо
+    correct: 3
+  - question: Вони (пити)
+    options:
+    - пиють
+    - п'ють
+    - пють
+    - пиять
+    correct: 1
+  - question: Ви (боротися)
+    options:
+    - боретеся
+    - борютеся
+    - боритеся
+    - боретесь
     correct: 0
-  - question: Ти мужньо (боротися).
+  - question: Вона (казати)
     options:
-    - боришся
+    - казає
+    - казить
+    - каже
+    - кажу
+    correct: 2
+  - question: Я (боротися)
+    options:
+    - боруюся
+    - борюсь
     - борешся
-    - борошся
-    - борюшся
-    correct: 1
-- id: match-up-directions
+    - борюся
+    correct: 3
+- id: match-up-prepositions-cases
   type: match-up
-  instruction: З'єднайте дієслово з правильним прийменником та місцем
+  instruction: З'єднайте дієслово з прийменником та правильним іменником.
   pairs:
   - left: іду до
     right: школи
   - left: їду на
     right: роботу
-  - left: лечу в
-    right: Україну
-  - left: йду з
-    right: роботи
-  - left: їду від
+  - left: лечу до
+    right: Парижа
+  - left: повертаюся від
     right: лікаря
-  - left: лечу з
-    right: України
-  - left: йду через
+  - left: іду з
+    right: магазину
+  - left: гуляємо по
+    right: вулиці
+  - left: ідемо через
     right: парк
-  - left: гуляю по
-    right: місту
-- id: unjumble-directions
-  type: unjumble
-  instruction: Складіть правильні речення про напрямок руху
+  - left: їду в
+    right: місто
+workbook:
+- id: translate-motion-sentences
+  type: translate
+  instruction: Оберіть правильний переклад.
   items:
-  - words:
-    - до
-    - Я
-    - школи.
-    - йду
-    correct_order:
-    - Я
-    - йду
-    - до
-    - школи.
-  - words:
-    - їдемо
-    - на
-    - Ми
-    - роботу.
-    correct_order:
-    - Ми
-    - їдемо
-    - на
-    - роботу.
-  - words:
-    - в
-    - летить
-    - Україну.
-    - Літак
-    correct_order:
-    - Літак
-    - летить
-    - в
-    - Україну.
-  - words:
-    - йдуть
-    - зі
-    - школи.
-    - Діти
-    correct_order:
-    - Діти
-    - йдуть
-    - зі
-    - школи.
-  - words:
-    - лікаря.
-    - від
-    - їдуть
-    - Вони
-    correct_order:
-    - Вони
-    - їдуть
-    - від
-    - лікаря.
-  - words:
-    - місту.
-    - гуляємо
-    - по
-    - Ми
-    correct_order:
-    - Ми
-    - гуляємо
-    - по
-    - місту.
-- id: error-correction-motion
+  - source: I am walking to the store right now.
+    options:
+    - text: Я зараз іду до магазину.
+      correct: true
+    - text: Я зараз ходжу до магазину.
+      correct: false
+    - text: Я зараз їду до магазину.
+      correct: false
+    - text: Я зараз пішов до магазину.
+      correct: false
+  - source: We drive to Lviv every summer.
+    options:
+    - text: Ми їздимо до Львова щоліта.
+      correct: true
+    - text: Ми їдемо до Львова щоліта.
+      correct: false
+    - text: Ми ходимо до Львова щоліта.
+      correct: false
+    - text: Ми літаємо до Львова щоліта.
+      correct: false
+  - source: He is riding to the city by taxi.
+    options:
+    - text: Він їде в місто на таксі.
+      correct: true
+    - text: Він їздить в місто на таксі.
+      correct: false
+    - text: Він іде в місто на таксі.
+      correct: false
+    - text: Він летить в місто на таксі.
+      correct: false
+  - source: A big plane is flying in the sky.
+    options:
+    - text: У небі летить великий літак.
+      correct: true
+    - text: У небі літає великий літак.
+      correct: false
+    - text: У небі іде великий літак.
+      correct: false
+    - text: У небі їде великий літак.
+      correct: false
+  - source: They left the apartment.
+    options:
+    - text: Вони пішли з квартири.
+      correct: true
+    - text: Вони ідуть з квартири.
+      correct: false
+    - text: Вони ходили з квартири.
+      correct: false
+    - text: Вони поїхали з квартири.
+      correct: false
+  - source: I drink coffee.
+    options:
+    - text: Я п'ю каву.
+      correct: true
+    - text: Я пию каву.
+      correct: false
+    - text: Я пю каву.
+      correct: false
+    - text: Я каву пити.
+      correct: false
+  - source: She says that we are going to the park.
+    options:
+    - text: Вона каже, що ми ідемо в парк.
+      correct: true
+    - text: Вона казає, що ми ідемо в парк.
+      correct: false
+    - text: Вона каже, що ми ходимо в парк.
+      correct: false
+    - text: Вона кажу, що ми ідемо через парк.
+      correct: false
+  - source: We are fighting.
+    options:
+    - text: Ми боремося.
+      correct: true
+    - text: Ми борються.
+      correct: false
+    - text: Ми боротеся.
+      correct: false
+    - text: Ми боремось.
+      correct: false
+- id: error-correction-verbs-prepositions
   type: error-correction
-  instruction: Знайдіть і виправте помилку в реченні
+  instruction: Знайдіть і виправте помилку.
   items:
-  - sentence: Я їзджу на роботу автобусом.
-    error: їзджу
-    correction: їжджу
+  - sentence: Я зараз ходжу до школи.
+    error: ходжу
+    correction: іду
     error_type: word
     options:
-    - їжджу
-    - їзжу
-    - їздю
-    - їзджу
-    explanation: Чергування зд -> ждж у першій особі (я).
-  - sentence: Мій брат їде на Україну.
-    error: на
-    correction: в
+    - іду
+    - їду
+    - лечу
+    explanation: Для односпрямованого руху в даний момент використовуємо «іду».
+  - sentence: Він їздить на роботу зараз.
+    error: їздить
+    correction: їде
     error_type: word
+    options:
+    - їде
+    - іде
+    - летить
+    explanation: Для руху транспортом в один момент використовуємо «їде».
+  - sentence: Вона казає правду.
+    error: казає
+    correction: каже
+    error_type: word
+    options:
+    - каже
+    - казить
+    - кажу
+    explanation: 'Дієслово «казати» має чергування з → ж: вона каже.'
+  - sentence: Ми пиємо воду.
+    error: пиємо
+    correction: п'ємо
+    error_type: word
+    options:
+    - п'ємо
+    - пємо
+    - пимо
+    explanation: 'Дієслово «пити» має апостроф: ми п''ємо.'
+  - sentence: Я іду в лікаря.
+    error: в
+    correction: до
+    error_type: word
+    options:
+    - до
+    - на
+    - з
+    explanation: З людьми ми використовуємо прийменник «до».
+  - sentence: Вони повертаються із лікаря.
+    error: із
+    correction: від
+    error_type: word
+    options:
+    - від
+    - з
+    - через
+    explanation: Якщо ми йдемо ДО людини, то повертаємося ВІД людини.
+  - sentence: Ми гуляємо через вулиці.
+    error: через
+    correction: по
+    error_type: word
+    options:
+    - по
+    - на
+    - в
+    explanation: Рух уздовж поверхні або маршруту — це «по» + місцевий відмінок.
+  - sentence: Літак літає до Парижа зараз.
+    error: літає
+    correction: летить
+    error_type: word
+    options:
+    - летить
+    - їде
+    - іде
+    explanation: Для польоту в даний момент в одному напрямку використовуємо «летить».
+- id: fill-in-perfective-verbs
+  type: fill-in
+  instruction: Вставте правильне дієслово доконаного виду (пішов, поїхала, полетів
+    тощо).
+  items:
+  - sentence: Учора мій брат ____ до магазину.
+    answer: пішов
+    options:
+    - пішов
+    - ішов
+  - sentence: Моя сестра ____ на роботу машиною.
+    answer: поїхала
+    options:
+    - поїхала
+    - їхала
+  - sentence: Літак ____ до Києва о другій годині.
+    answer: полетів
+    options:
+    - полетів
+    - летів
+  - sentence: Ми ____ з квартири дуже швидко.
+    answer: пішли
+    options:
+    - пішли
+    - ішли
+  - sentence: Батьки ____ до Парижа на відпочинок.
+    answer: полетіли
+    options:
+    - полетіли
+    - летіли
+  - sentence: Я вже ____ додому пішки.
+    answer: пішов
+    options:
+    - пішов
+    - ішов
+  - sentence: Друг ____ в місто на таксі.
+    answer: поїхав
+    options:
+    - поїхав
+    - їхав
+  - sentence: Вона ____ сказати йому правду.
+    answer: пішла
+    options:
+    - пішла
+    - ішла
+- id: match-up-infinitives-first-person
+  type: match-up
+  instruction: З'єднайте інфінітив із формою першої особи однини (я).
+  pairs:
+  - left: іти
+    right: іду
+  - left: ходити
+    right: ходжу
+  - left: їхати
+    right: їду
+  - left: їздити
+    right: їжджу
+  - left: летіти
+    right: лечу
+  - left: літати
+    right: літаю
+  - left: казати
+    right: кажу
+  - left: боротися
+    right: борюся
+- id: true-false-motion-rules
+  type: true-false
+  instruction: Правда чи ні?
+  items:
+  - statement: Дієслово «іти» використовуємо, коли ми їдемо на машині.
+    correct: false
+    explanation: «Іти» — це рух пішки.
+  - statement: Слово «ходжу» означає регулярний рух пішки.
+    correct: true
+    explanation: «Ходити» — це різноспрямований або регулярний рух.
+  - statement: Ми кажемо «я їзджу», а не «я їжджу».
+    correct: false
+    explanation: Правильна форма — «я їжджу» з чергуванням зд → ждж.
+  - statement: Прийменник «до» завжди використовується з родовим відмінком.
+    correct: true
+    explanation: «До» вимагає родового відмінка (до школи, до лікаря).
+  - statement: Коли ми йдемо ДО друга, ми повертаємося З друга.
+    correct: false
+    explanation: Ми повертаємося ВІД друга.
+  - statement: Дієслово «пити» пишеться з апострофом у теперішньому часі (я п'ю).
+    correct: true
+    explanation: Після губного приголосного перед «ю» ставимо апостроф.
+  - statement: «Літати» — це дієслово доконаного виду.
+    correct: false
+    explanation: Це дієслово недоконаного виду. Доконаний вид — «полетіти».
+  - statement: Комбінація «-ться» у слові «бореться» читається як довгий м'який звук.
+    correct: true
+    explanation: Це важливе фонетичне правило української мови.
+- id: group-sort-conjugation-classes
+  type: group-sort
+  instruction: Розподіліть дієслова за дієвідміною (перша чи друга).
+  groups:
+  - label: Перша дієвідміна (-у/-ю, -еш/-єш)
+    items:
+    - іти
+    - їхати
+    - літати
+    - казати
+    - пити
+  - label: Друга дієвідміна (-у/-ю, -иш/-їш)
+    items:
+    - ходити
+    - їздити
+    - летіти
+    - боротися
+- id: quiz-motion-prepositions
+  type: quiz
+  instruction: Оберіть правильний прийменник.
+  items:
+  - question: Я йду ____ школи.
+    options:
+    - на
+    - зі
+    - по
+    - від
+    correct: 1
+  - question: Ми їдемо ____ роботу.
     options:
     - в
     - до
+    - через
+    - на
+    correct: 3
+  - question: Літак летить ____ Парижа.
+    options:
+    - до
+    - в
+    - на
+    - по
+    correct: 0
+  - question: Він повертається ____ лікаря.
+    options:
     - з
-    - у
-    explanation: З країнами ми завжди використовуємо прийменник «в» або «у».
-  - sentence: Вони боряться за свої права.
-    error: боряться
-    correction: борються
-    error_type: word
+    - через
+    - від
+    - із
+    correct: 2
+  - question: Вони йдуть ____ парк.
     options:
-    - борються
-    - боріться
-    - бореться
-    - борять
-    explanation: Правильне закінчення для «вони» — борються.
-  - sentence: Завтра я кажу тобі всю правду.
-    error: кажу
-    correction: скажу
-    error_type: word
+    - по
+    - через
+    - в
+    - на
+    correct: 1
+  - question: Ми гуляємо ____ вулиці.
     options:
-    - скажу
-    - сказаю
-    - розкажу
+    - в
+    - на
+    - по
+    - через
+    correct: 2
+  - question: Вона їде ____ місто.
+    options:
+    - на
+    - в
+    - до
+    - по
+    correct: 1
+  - question: Я йду ____ друга.
+    options:
+    - до
+    - на
+    - через
+    - в
+    correct: 0
+- id: fill-in-irregular-verbs
+  type: fill-in
+  instruction: Вставте правильне дієслово («казати» або «пити» у правильній формі).
+  items:
+  - sentence: Я ____, що це дуже цікаво.
+    answer: кажу
+    options:
     - кажу
-    explanation: Для майбутнього завершеного часу потрібен доконаний вид (сказати).
-  - sentence: Ми гуляємо по містом.
-    error: містом
-    correction: місту
-    error_type: word
+    - п'ю
+  - sentence: Вона щоранку ____ чорну каву.
+    answer: п'є
     options:
-    - місту
-    - міста
-    - місті
-    - містом
-    explanation: Прийменник «по» вимагає місцевого відмінка (по чому? по місту).
-  - sentence: Діти йдуть з школа.
-    error: школа
-    correction: школи
-    error_type: word
+    - каже
+    - п'є
+  - sentence: Ми завжди ____ правду.
+    answer: кажемо
     options:
-    - школи
-    - школу
-    - школою
-    - школі
-    explanation: Прийменник «з» вимагає родового відмінка (з чого? зі школи).
-  - sentence: Ти часто літиш літаком?
-    error: літиш
-    correction: літаєш
-    error_type: word
+    - кажемо
+    - п'ємо
+  - sentence: Вони ____ багато води влітку.
+    answer: п'ють
     options:
-    - літаєш
-    - летиш
-    - літаш
-    - літають
-    explanation: Для регулярної дії потрібне дієслово багатоспрямованого руху (літати).
-  - sentence: Я ходжу до парк.
-    error: парк
-    correction: парку
-    error_type: word
+    - кажуть
+    - п'ють
+  - sentence: Ти ____ дуже тихо, я тебе не чую.
+    answer: кажеш
     options:
-    - парку
-    - парка
-    - парком
-    - парку
-    explanation: Прийменник «до» вимагає родового відмінка (до чого? до парку).
+    - кажеш
+    - п'єш
+  - sentence: Що ви ____ на сніданок?
+    answer: п'єте
+    options:
+    - кажете
+    - п'єте
+  - sentence: Він ніколи не ____ про свої проблеми.
+    answer: каже
+    options:
+    - каже
+    - п'є
+  - sentence: Я завжди ____ чай з молоком.
+    answer: п'ю
+    options:
+    - кажу
+    - п'ю

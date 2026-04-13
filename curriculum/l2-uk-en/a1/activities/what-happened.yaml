@@ -4,21 +4,24 @@ level: a1
 inline:
 - id: matching-pronoun-ending
   type: match-up
-  instruction: З'єднайте займенник із дієсловом (Match the pronoun with the verb)
+  instruction: З'єднайте займенник із правильним закінченням (Match the pronoun with
+    the correct ending)
   pairs:
-  - left: Він
+  - left: він
     right: працював
-  - left: Вона
+  - left: вона
     right: працювала
-  - left: Воно
+  - left: воно
     right: працювало
-  - left: Вони
+  - left: вони
     right: працювали
   - left: Тарас
     right: говорив
   - left: Олена
     right: говорила
-- id: fill-in-past-tense-forms
+  - left: Іван
+    right: читав
+- id: fill-in-core-verbs
   type: fill-in
   instruction: Вставте правильну форму дієслова (Fill in the correct verb form)
   items:
@@ -58,9 +61,10 @@ inline:
     - робив
     - робила
     - робили
-- id: fill-in-gender-subject-agreement
+- id: fill-in-choose-gender
   type: fill-in
-  instruction: Оберіть правильне дієслово за родом (Choose the correct verb by gender)
+  instruction: Оберіть правильну форму дієслова за родом (Choose the correct verb
+    form by gender)
   items:
   - sentence: Марія ____ фільм.
     answer: дивилася
@@ -80,272 +84,291 @@ inline:
     - провели
     - провів
     - провела
-  - sentence: Моя подруга ____ каву.
-    answer: пила
+  - sentence: Іван ____ нову книжку.
+    answer: читав
     options:
-    - пила
-    - пив
-    - пили
-  - sentence: Іван ____ борщ.
-    answer: готував
-    options:
-    - готував
-    - готувала
-    - готували
-  - sentence: Ми ____ цікаву книжку.
-    answer: читали
-    options:
-    - читали
     - читав
     - читала
+    - читали
+  - sentence: Моя сестра ____ вечерю.
+    answer: готувала
+    options:
+    - готувала
+    - готував
+    - готували
+  - sentence: Олена багато ____ в офісі.
+    answer: працювала
+    options:
+    - працювала
+    - працював
+    - працювали
+- id: true-false-past
+  type: true-false
+  instruction: Правда чи ні? (True or false?)
+  items:
+  - statement: «Він читала книжку» — це правильне речення.
+    correct: false
+    explanation: 'Для «він» потрібне закінчення чоловічого роду: читав.'
+  - statement: «Вона готувала вечерю» — це правильне речення.
+    correct: true
+    explanation: 'Для «вона» використовується закінчення жіночого роду: -ла.'
+  - statement: «Ми гуляв у парку» — це правильне речення.
+    correct: false
+    explanation: 'Для «ми» потрібне закінчення множини: гуляли.'
+  - statement: «Вони працювали разом» — це правильне речення.
+    correct: true
+    explanation: 'Для «вони» використовується закінчення множини: -ли.'
+  - statement: Дієслова в минулому часі змінюються за родами (чоловічий, жіночий,
+      середній).
+    correct: true
+    explanation: Так, у минулому часі дієслова мають рід, а не особу.
+  - statement: «Тарас дивилася фільм» — це правильне речення.
+    correct: false
+    explanation: Тарас — це чоловічий рід, тому правильно «дивився».
 workbook:
-- type: group-sort
+- id: match-up-vocab-weekend
+  type: match-up
+  instruction: З'єднайте українські слова з англійським перекладом (Match Ukrainian
+    words with English translation)
+  pairs:
+  - left: минулий
+    right: past
+  - left: вихідні
+    right: weekend
+  - left: субота
+    right: Saturday
+  - left: неділя
+    right: Sunday
+  - left: разом
+    right: together
+  - left: учора
+    right: yesterday
+  - left: провести
+    right: to spend time
+- id: group-sort-verb-gender
+  type: group-sort
   instruction: Розподіліть дієслова за родами та числом (Sort verbs by gender and
     number)
   groups:
-  - label: Він (masculine)
+  - label: Він (Чоловічий рід)
     items:
     - працював
     - читав
+    - гуляв
     - дивився
-  - label: Вона (feminine)
+    - робив
+  - label: Вона (Жіночий рід)
     items:
     - працювала
     - читала
+    - готувала
     - дивилася
-  - label: Вони (plural)
+    - робила
+  - label: Вони (Множина)
     items:
     - працювали
     - читали
+    - гуляли
     - дивилися
-- type: quiz
+    - робили
+- id: anagram-verbs
+  type: anagram
+  instruction: Складіть слова з літер (Make words from letters)
+  items:
+  - letters:
+    - ч
+    - и
+    - т
+    - а
+    - в
+    answer: читав
+    hint: he read
+  - letters:
+    - г
+    - у
+    - л
+    - я
+    - л
+    - и
+    answer: гуляли
+    hint: they walked
+  - letters:
+    - р
+    - а
+    - з
+    - о
+    - м
+    answer: разом
+    hint: together
+  - letters:
+    - у
+    - ч
+    - о
+    - р
+    - а
+    answer: учора
+    hint: yesterday
+  - letters:
+    - ф
+    - і
+    - л
+    - ь
+    - м
+    answer: фільм
+    hint: film
+  - letters:
+    - с
+    - у
+    - б
+    - о
+    - т
+    - а
+    answer: субота
+    hint: Saturday
+- id: unjumble-past-sentences
+  type: unjumble
+  instruction: Складіть правильне речення зі слів (Make a correct sentence from the
+    words)
+  items:
+  - words:
+    - читав
+    - я
+    - книжку.
+    - Учора
+    correct_order:
+    - Учора
+    - я
+    - читав
+    - книжку.
+  - words:
+    - у
+    - Вона
+    - парку.
+    - гуляла
+    correct_order:
+    - Вона
+    - гуляла
+    - у
+    - парку.
+  - words:
+    - разом.
+    - Вони
+    - вечерю
+    - готували
+    correct_order:
+    - Вони
+    - готували
+    - вечерю
+    - разом.
+  - words:
+    - ти
+    - Що
+    - робив?
+    correct_order:
+    - Що
+    - ти
+    - робив?
+  - words:
+    - фільм.
+    - Тарас
+    - дивився
+    correct_order:
+    - Тарас
+    - дивився
+    - фільм.
+  - words:
+    - неділю.
+    - ми
+    - У
+    - відпочивали
+    correct_order:
+    - У
+    - неділю
+    - ми
+    - відпочивали.
+- id: fill-in-pronouns-past
+  type: fill-in
+  instruction: Вставте правильний займенник (Fill in the correct pronoun)
+  items:
+  - sentence: ____ читала нову книжку.
+    answer: Вона
+    options:
+    - Він
+    - Вона
+    - Вони
+  - sentence: ____ гуляли в парку.
+    answer: Ми
+    options:
+    - Я
+    - Він
+    - Ми
+  - sentence: ____ працював учора.
+    answer: Він
+    options:
+    - Він
+    - Вона
+    - Вони
+  - sentence: ____ готували обід разом.
+    answer: Вони
+    options:
+    - Він
+    - Вона
+    - Вони
+  - sentence: ____ дивилося старий фільм.
+    answer: Воно
+    options:
+    - Він
+    - Вона
+    - Воно
+  - sentence: Що ____ робила в суботу?
+    answer: ти
+    options:
+    - ти
+    - ви
+    - ми
+- id: quiz-past-rules
+  type: quiz
   instruction: Оберіть правильний варіант (Choose the correct option)
   items:
-  - question: Учора Тарас ____ в офісі.
+  - question: Яке закінчення має дієслово в чоловічому роді (він)?
     options:
-    - працював
-    - працювала
-    - працювали
+    - -в
+    - -ла
+    - -ло
+    - -ли
     correct: 0
-  - question: Минулого тижня ми ____ фільм.
+  - question: Яке закінчення має дієслово в жіночому роді (вона)?
     options:
-    - дивилася
-    - дивився
-    - дивилися
-    correct: 2
-  - question: У суботу Марія ____ у парку.
-    options:
-    - гуляв
-    - гуляла
-    - гуляли
+    - -в
+    - -ла
+    - -ло
+    - -ли
     correct: 1
-  - question: Що ви ____ у неділю?
+  - question: Яке закінчення має дієслово в множині (ми, ви, вони)?
     options:
-    - робив
-    - робила
-    - робили
-    correct: 2
-  - question: Іван та Олена ____ разом.
+    - -в
+    - -ла
+    - -ло
+    - -ли
+    correct: 3
+  - question: 'Як правильно сказати: «I was reading» (якщо говорить жінка)?'
     options:
-    - готував
-    - готувала
-    - готували
-    correct: 2
-  - question: Учора я (female) ____ книжку.
-    options:
-    - читала
-    - читав
-    - читали
+    - Я читала
+    - Я читав
+    - Я читали
+    - Я читати
     correct: 0
-- type: error-correction
-  instruction: Знайдіть і виправте помилку (Find and correct the error)
-  items:
-  - sentence: Учора вона працював.
-    error: працював
-    correction: працювала
-    error_type: word
+  - question: 'Як правильно запитати чоловіка: «What did you do?»'
     options:
-    - працювала
-    - працювали
-    - працювати
-    explanation: The pronoun is 'вона' (she), so the verb needs the feminine ending
-      -ла.
-  - sentence: Минулого тижня ми був у кафе.
-    error: був
-    correction: були
-    error_type: word
+    - Що ти робив?
+    - Що ти робила?
+    - Що ти робили?
+    - Що ти робити?
+    correct: 0
+  - question: Яке речення правильне?
     options:
-    - були
-    - була
-    - було
-    explanation: The pronoun is 'ми' (we), so the verb needs the plural ending -ли.
-  - sentence: Тарас дивилася фільм у неділю.
-    error: дивилася
-    correction: дивився
-    error_type: word
-    options:
-    - дивився
-    - дивилися
-    - дивитись
-    explanation: Тарас is a man, so the verb needs the masculine ending.
-  - sentence: Що ти робила учора, Іване?
-    error: робила
-    correction: робив
-    error_type: word
-    options:
-    - робив
-    - робили
-    - робити
-    explanation: Іван is a male name, so the question must use the masculine form.
-  - sentence: У суботу вони гуляв разом.
-    error: гуляв
-    correction: гуляли
-    error_type: word
-    options:
-    - гуляли
-    - гуляла
-    - гуляти
-    explanation: The pronoun is 'вони' (they), so the verb needs the plural ending
-      -ли.
-  - sentence: Олена читав цікаву книжку.
-    error: читав
-    correction: читала
-    error_type: word
-    options:
-    - читала
-    - читали
-    - читати
-    explanation: Олена is a woman, so the verb needs the feminine ending -ла.
-- type: translate
-  instruction: Оберіть правильний переклад (Choose the correct translation)
-  items:
-  - source: Yesterday I (male) worked.
-    options:
-    - text: Учора я працював.
-      correct: true
-    - text: Учора я працювала.
-      correct: false
-    - text: Учора я працювали.
-      correct: false
-  - source: How did she spend the weekend?
-    options:
-    - text: Як вона провела вихідні?
-      correct: true
-    - text: Як вона провів вихідні?
-      correct: false
-    - text: Як вона провели вихідні?
-      correct: false
-  - source: We watched a film together.
-    options:
-    - text: Ми дивилися фільм разом.
-      correct: true
-    - text: Ми дивилася фільм разом.
-      correct: false
-    - text: Ми дивився фільм разом.
-      correct: false
-  - source: On Sunday they walked in the park.
-    options:
-    - text: У неділю вони гуляли в парку.
-      correct: true
-    - text: У неділю вони гуляв у парку.
-      correct: false
-    - text: У неділю вони гуляла в парку.
-      correct: false
-  - source: What did you do yesterday? (to a female)
-    options:
-    - text: Що ти робила учора?
-      correct: true
-    - text: Що ти робив учора?
-      correct: false
-    - text: Що ти робили учора?
-      correct: false
-  - source: On Saturday he read a book.
-    options:
-    - text: У суботу він читав книжку.
-      correct: true
-    - text: У суботу він читала книжку.
-      correct: false
-    - text: У суботу він читали книжку.
-      correct: false
-- type: true-false
-  instruction: Правда чи ні? (True or false?)
-  items:
-  - statement: Учора Тарас читав книжку.
-    correct: true
-    explanation: 'He says: ''Я читав книжку''.'
-  - statement: Олена гуляла у парку.
-    correct: false
-    explanation: 'Olena says: ''Я готувала вечерю''. Ivan walked in the park.'
-  - statement: Іван готував вечерю.
-    correct: false
-    explanation: Olena cooked dinner. Ivan walked in the park.
-  - statement: Марія працювала.
-    correct: true
-    explanation: 'Olena says: ''Вона працювала'' when talking about Mariia.'
-  - statement: У неділю Тарас дивився фільм.
-    correct: true
-    explanation: 'In the second dialogue, Taras says: ''У неділю я дивився фільм''.'
-  - statement: Олена і Тарас провели вихідні разом.
-    correct: false
-    explanation: They are talking about their separate weekend activities.
-- type: unjumble
-  instruction: Складіть правильне речення зі слів (Put the words in the correct order)
-  items:
-  - words:
-    - учора?
-    - ти
-    - Що
-    - робив
-    correct_order:
-    - Що
-    - ти
-    - робив
-    - учора?
-  - words:
-    - читала
-    - Я
-    - книжку.
-    correct_order:
-    - Я
-    - читала
-    - книжку.
-  - words:
-    - в
-    - Ми
-    - парку.
-    - гуляли
-    correct_order:
-    - Ми
-    - гуляли
-    - в
-    - парку.
-  - words:
-    - дивилися
-    - разом.
-    - Вони
-    - фільм
-    correct_order:
-    - Вони
-    - дивилися
-    - фільм
-    - разом.
-  - words:
-    - вихідні?
-    - вона
-    - провела
-    - Як
-    correct_order:
-    - Як
-    - вона
-    - провела
-    - вихідні?
-  - words:
-    - працював.
-    - я
-    - суботу
-    - У
-    correct_order:
-    - У
-    - суботу
-    - я
-    - працював.
+    - Тарас гуляв у парку.
+    - Тарас гуляла у парку.
+    - Тарас гуляли у парку.
+    - Тарас гуляло у парку.
+    correct: 0

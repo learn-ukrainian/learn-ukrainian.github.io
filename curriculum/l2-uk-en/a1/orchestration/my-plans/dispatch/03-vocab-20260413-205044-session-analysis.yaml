@@ -1,0 +1,46 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T18-50-b85ae194.json
+phase: vocab
+prompt_chars: 12307
+response_chars: 2913
+prompt_words: 2040
+response_words: 334
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.0648
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.0187
+- name: plan
+  start: 1028
+  length: 11279
+  fraction: 0.9165
+large_sections:
+- plan
+directives_total: 5
+directives_covered: 0
+directives_missed:
+- kind: must
+  text: 'This structure is very straightforward: use the future form of the verb "to
+    be" (**бути**), which must match the subject (like **я буду**, **ти будеш**, **ми
+    будемо**), and add an imperfective infinitive verb.'
+  covered: false
+  coverage_note: 1/20 keywords (5%)
+- kind: must
+  text: To successfully navigate a calendar, you must retain the days of the week.
+  covered: false
+  coverage_note: 2/8 keywords (25%)
+- kind: inject_activity
+  text: fill-in-schedule-time
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-invitations
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-weekly-plan
+  covered: false
+  coverage_note: marker missing

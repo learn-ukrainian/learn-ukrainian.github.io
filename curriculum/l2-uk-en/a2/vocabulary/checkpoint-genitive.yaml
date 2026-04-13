@@ -72,15 +72,15 @@ vocabulary:
   gender: ''
   verified: true
 - word: ко́ло
-  translation: around, near
+  translation: near, around
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: від
-  translation: from (a person or object)
-  expression: false
-  pos: прийм.
+- word: з / із / зі
+  translation: from, out of
+  expression: true
+  pos: ''
   gender: ''
   verified: true
 - word: пі́сля
@@ -89,50 +89,158 @@ vocabulary:
   pos: присл.
   gender: ''
   verified: true
-- word: потребува́ти
-  translation: to need, to require
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: бага́то
-  translation: a lot, many
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: ма́ло
-  translation: a little, few
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: кі́лька
-  translation: several, a few
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: будь ласка
-  translation: please
+- word: біля Софійського собору
+  translation: near Saint Sophia Cathedral
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: два кілограми
-  translation: two kilograms
+- word: без квитка
+  translation: without a ticket
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: пляшка води
-  translation: bottle of water
+- word: для групи з десяти людей
+  translation: for a group of ten people
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: центр міста
-  translation: city center
+- word: після екскурсії
+  translation: after the tour
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: до Хрещатика
+  translation: to Khreshchatyk
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: багато машин
+  translation: many cars
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: п'ять сестер
+  translation: five sisters
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: немає вікон
+  translation: there are no windows
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: кілька пісень
+  translation: several songs
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: п'ять братів
+  translation: five brothers
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: багато столів
+  translation: many tables
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: десять трамваїв
+  translation: ten trams
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: багато ночей
+  translation: many nights
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: немає грошей
+  translation: no money
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: п'ять дітей
+  translation: five children
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: група людей
+  translation: a group of people
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: кілька статей
+  translation: several articles
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: два кілограми яблук
+  translation: two kilograms of apples
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: сто гривень
+  translation: one hundred hryvnias
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: немає свіжого хліба
+  translation: there is no fresh bread
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: без цукру
+  translation: without sugar
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ліки від болю
+  translation: medicine for pain
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: немає сил
+  translation: I have no strength
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: сироп від кашлю
+  translation: cough syrup
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: після операції
+  translation: after surgery
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Орієнтування в місті
+  translation: Navigating the city
   expression: true
   pos: ''
   gender: ''

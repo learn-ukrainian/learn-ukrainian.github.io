@@ -1,54 +1,212 @@
 ## Linguistic Scan
-No linguistic errors found. The usage of cases, pronouns without prepositions (завдяки йому), and false friends (заважати, дякувати) is accurate and natural. However, an inconsistency with elliptical case usage exists in Dialogue 1 (detailed in Findings).
+- No Russianisms, Surzhyk, calques, paronym errors, forbidden Russian characters, or clear prose-level case/gender mistakes found in the module text.
+- One exercise form is wrong: `тебою` in the quiz options is not found in VESUM; the standard instrumental form is `тобою`.
 
 ## Exercise Check
-- `<!-- INJECT_ACTIVITY: match-up-match-nominative-pronoun-to-its-dative-form -->`: Placed correctly in Section 2 after the plural pronouns. Matches plan (match-up, 8 items).
-- `<!-- INJECT_ACTIVITY: fill-in-dative-pronouns -->`: Placed correctly at the end of Section 2. Matches plan (fill-in, 8 items).
-- `<!-- INJECT_ACTIVITY: true-false-impersonal -->`: Placed correctly at the end of Section 3. Matches plan (true-false, 8 items).
-- `<!-- INJECT_ACTIVITY: quiz-case-choice -->`: Placed correctly at the end of Section 4. Matches plan (quiz, 8 items).
-
-All markers are logically placed after the relevant concepts are taught and align perfectly with the `activity_hints`.
+- Marker inventory is correct: `match-up-pronouns`, `fill-in-dative-pronouns`, `true-false-impersonal`, and `quiz-choose-dative-or-accusative-pronoun-form-in-context-vs` all appear exactly once.
+- Marker placement is correct: each marker comes after the relevant teaching block, and they are spread sensibly through the module.
+- The `fill-in-dative-pronouns` exercise is logically broken. Prompts such as `Я дарую ____ нову книгу.` and `Мама купує ____ теплий шарф.` allow multiple dative answers, so the keyed answer is arbitrary.
+- The same `fill-in-dative-pronouns` block is guessable because all 8 correct answers are in option slot 0.
+- The `match-up-pronouns` block is off-plan: it tests `хто → кому` instead of the planned personal-pronoun item `воно → йому`.
+- The quiz block contains the non-word `тебою` twice.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 8/10 | Deductions for missing the explicit comparison with the Genitive case question (Кого? Чого?) in the opening section and omitting "легко", "важко", and "нудно" from the initial list of common impersonal adverbs in Section 3 ("Common examples include «холодно»..."). |
-| 2. Linguistic accuracy | 9/10 | Generally flawless Ukrainian grammar, but there is a case inconsistency in the first dialogue. "Мені — цікаву книгу" implies an accusative transitive verb, while the next lines use "є" which requires Nominative ("А що є для тата? Йому — теплий зимовий шарф"). |
-| 3. Pedagogical quality | 10/10 | Exceptional explanations. The breakdown of "I am sad" vs "It is sad to me" and the note on English speakers saying "Дай я книгу" are highly targeted and effective. |
-| 4. Vocabulary coverage | 10/10 | All required and recommended words (давальний відмінок, мені, тобі, йому, їй, нам, вам, їм, холодно, потрібно, приємно, цікаво, сумно, важко) are incorporated naturally into explanations and examples. |
-| 5. Exercise quality | 10/10 | The 4 injected activity markers match the `activity_hints` completely and are appropriately spaced. |
-| 6. Engagement & tone | 10/10 | The tone is warm and encouraging. It uses clear, narrative-driven situations (family birthdays, cafe orders) without reverting to empty corporate language. |
-| 7. Structural integrity | 10/10 | The markdown is clean. Headers match the plan. The word count is robust at 3281 words, providing excellent depth for an A2 grammar module. |
-| 8. Cultural accuracy | 10/10 | Scenarios are authentic and accurate to Ukrainian interactions. |
-| 9. Dialogue & conversation quality | 8/10 | Dialogues are natural, but Dialogue 1 has a minor logical flaw. The speaker says "Цей великий пакунок" (singular) but extracts a book, chocolate, a scarf, flowers, and a cake from it. Pluralizing the package resolves this. |
+| 1. Plan adherence | 7/10 | All four planned H2 sections are present, but none of the plan references is cited in the module text (`Захарійчук: 0`, `Заболотний: 0`, `ukrainianlessons.com/dative-case: 0`), and the match-up tests `хто → кому` instead of the planned paradigm item `воно → йому`. |
+| 2. Linguistic accuracy | 8/10 | No Russian contamination found, but the quiz options use `тебою`; VESUM finds `тобою` and does not find `тебою`. |
+| 3. Pedagogical quality | 9/10 | The module follows a clear explain -> example -> contrast -> practice sequence: recipient meaning, pronoun paradigm, impersonal dative, then accusative-vs-dative minimal pairs before activities. |
+| 4. Vocabulary coverage | 10/10 | All required vocabulary appears naturally in prose, and the recommended `приємно`, `цікаво`, `сумно`, `важко` are all present. |
+| 5. Exercise quality | 4/10 | Marker count and placement are right, but `fill-in-dative-pronouns` has ambiguous prompts (`Я дарую ____ нову книгу.`, `Мама купує ____ теплий шарф.`), all answers sit in option 0, the match-up omits explicit `воно → йому`, and the quiz includes non-word `тебою`. |
+| 6. Engagement & tone | 9/10 | The teacher voice stays natural and concrete, using gift-distribution and cafe scenes rather than generic hype. |
+| 7. Structural integrity | 10/10 | All required H2s are present and ordered correctly; all four markers appear exactly once; pipeline word count is 2901, above target. |
+| 8. Cultural accuracy | 10/10 | No Russian-centered framing or cultural distortion appears in the module. |
+| 9. Dialogue & conversation quality | 9/10 | The dialogues use named speakers and multi-turn exchange (`Іменинник/Родина`, `Марко/Олена`) rather than anonymous textbook prompts. |
 
 ## Findings
+[PLAN ADHERENCE] [SEVERITY: major]  
+Location: module text, exact search results for plan references: `Захарійчук: 0`, `Заболотний: 0`, `ukrainianlessons.com/dative-case: 0`  
+Issue: The plan explicitly includes three references, but the module never cites them.  
+Fix: Add one short source note in the pronoun section citing Захарійчук §281, Заболотний §157, and the Ukrainian Lessons overview.
 
-[1. Plan adherence] [minor]
-Location: Sections 1 and 3
-Issue: The text fails to explicitly compare the Dative question with the Genitive question (Кого? Чого?) in the first section as requested by the plan. Additionally, the words "легко", "важко", and "нудно" were omitted from the specific list of common impersonal adverbs in Section 3, despite some being used later in the text.
-Fix: Add the Genitive comparison to the case explanation and append the missing adverbs to the list.
+[EXERCISE QUALITY] [SEVERITY: major]  
+Location: `activities/dative-pronouns.yaml`, `fill-in-dative-pronouns` — `Я дарую ____ нову книгу.`; `Мама купує ____ теплий шарф.`  
+Issue: These prompts are ambiguous; multiple dative pronouns fit, so the keyed answer is arbitrary.  
+Fix: Rewrite the items so each sentence contains enough context to force exactly one pronoun.
 
-[2. Linguistic accuracy] [major]
-Location: Section 1, Dialogue 1
-Issue: Grammatical case mismatch in elliptical sentences. The first sentence "Мені — цікаву книгу" uses the Accusative case, while the subsequent sentences assume a Nominative case structure with "є" ("А що є для тата? Йому — теплий зимовий шарф"). This is inconsistent and confusing for A2 learners.
-Fix: Change "цікаву книгу" to "цікава книга" to align with the implied "є" and the rest of the dialogue.
+[EXERCISE QUALITY] [SEVERITY: major]  
+Location: `activities/dative-pronouns.yaml`, `fill-in-dative-pronouns`  
+Issue: All 8 correct answers are in option slot 0, making the exercise guessable without grammar knowledge.  
+Fix: Shuffle option order so correct answers vary by position while remaining uniquely correct.
 
-[9. Dialogue & conversation quality] [minor]
-Location: Section 1, Dialogue 1
-Issue: Logical inconsistency. The speaker says "Цей великий пакунок — це мій подарунок!" (singular), but then proceeds to distribute a book, chocolate, a scarf, flowers, and a cake from it to different people.
-Fix: Change "Цей великий пакунок — це мій подарунок!" to plural: "Ці великі пакунки — це наші подарунки!"
+[LINGUISTIC ACCURACY] [SEVERITY: critical]  
+Location: `activities/dative-pronouns.yaml`, quiz options for `Я бачу ____ в парку.` and `Я кажу ____ правду.` — `тебою`  
+Issue: `тебою` is not found in VESUM; the standard instrumental form is `тобою`.  
+Fix: Replace `тебою` with `тобою`.
+
+[PLAN ADHERENCE] [SEVERITY: major]  
+Location: `activities/dative-pronouns.yaml`, `match-up-pronouns` — `він / воно → йому` and `хто → кому`  
+Issue: The plan calls for the personal-pronoun paradigm; `воно → йому` should be tested explicitly, and `хто → кому` is off-plan.  
+Fix: Split `він` and `воно` into separate pairs and replace `хто → кому` with `воно → йому`.
 
 ## Verdict: REVISE
-The module is highly detailed and pedagogically superb. However, the missing Genitive comparison from the plan and the structural mismatch in the first dialogue (singular package for many gifts, Accusative vs Nominative elliptical mismatch) trigger a REVISE verdict to ensure learners receive fully consistent examples.
+The prose is mostly sound, but the activity YAML is not shippable as written: it contains one wrong Ukrainian form and multiple exercise-logic failures. This needs revision, not a full rebuild.
 
 <fixes>
-- find: "In a standard sentence, the Nominative case acts as the doer of the action, while the Accusative case is the direct object that is being handled, moved, or affected."
-  replace: "In a standard sentence, each case has its own question and function. The Nominative acts as the doer of the action. We can compare this with the Genitive (Кого? Чого?), which shows possession, and the Accusative (Кого? Що?), which marks the direct object being handled."
-- find: "Common examples include **«холодно»** *(cold)*, **«тепло»** *(warm)*, **«сумно»** *(sad)*, **«весело»** *(joyful)*, **«приємно»** *(pleasant)*, and **«цікаво»** *(interesting)*."
-  replace: "Common examples include **«холодно»** *(cold)*, **«тепло»** *(warm)*, **«сумно»** *(sad)*, **«весело»** *(joyful)*, **«приємно»** *(pleasant)*, **«цікаво»** *(interesting)*, **«легко»** *(easy)*, **«важко»** *(difficult)*, and **«нудно»** *(boring)*."
-- find: "> — **Іменинник:** Цей великий пакунок — це мій подарунок! *(This big package is my gift!)*\n> — **Мама:** Кому цей подарунок? *(To whom is this gift?)*"
-  replace: "> — **Іменинник:** Ці великі пакунки — це наші подарунки! *(These big packages are our gifts!)*\n> — **Мама:** Кому ці подарунки? *(To whom are these gifts?)*"
-- find: "**Мені** — цікаву книгу. **Тобі** — солодкий шоколад. *(For me — an interesting book. For you — sweet chocolate.)*"
-  replace: "**Мені** — цікава книга. **Тобі** — солодкий шоколад. *(For me — an interesting book. For you — sweet chocolate.)*"
+- find: |
+    Notice that "він" and "воно" share the exact same form in the dative case. You will use these tiny words continuously when explaining who received a specific item or who is being addressed.
+  replace: |
+    Notice that "він" and "воно" share the exact same form in the dative case. You will use these tiny words continuously when explaining who received a specific item or who is being addressed. For a school-style declension table, compare Захарійчук Grade 4, §281; for a broader learner overview, see Ukrainian Lessons, “Dative Case in Ukrainian”; and when you later move from pronouns to noun endings such as -ові/-у, compare Заболотний Grade 10, §157.
+
+- find: |
+      - left: він / воно
+        right: йому
+  replace: |
+      - left: він
+        right: йому
+
+- find: |
+      - left: хто
+        right: кому
+  replace: |
+      - left: воно
+        right: йому
+
+- find: |
+    - id: fill-in-dative-pronouns
+      type: fill-in
+      instruction: Вставте правильний займенник у давальному відмінку.
+      items:
+      - sentence: Я дарую ____ нову книгу.
+        answer: йому
+        options:
+        - йому
+        - їй
+        - їм
+      - sentence: Вчитель каже ____ правило.
+        answer: нам
+        options:
+        - нам
+        - вам
+        - їм
+      - sentence: Що вони дарують ____ на свято?
+        answer: тобі
+        options:
+        - тобі
+        - мені
+        - вам
+      - sentence: Ми даємо ____ квитки в театр.
+        answer: їм
+        options:
+        - їм
+        - йому
+        - їй
+      - sentence: Будь ласка, скажи ____ усю правду.
+        answer: мені
+        options:
+        - мені
+        - тобі
+        - нам
+      - sentence: Брат показує ____ нове фото.
+        answer: їй
+        options:
+        - їй
+        - йому
+        - їм
+      - sentence: Мама купує ____ теплий шарф.
+        answer: вам
+        options:
+        - вам
+        - нам
+        - тобі
+      - sentence: Вони пишуть ____ довгого листа.
+        answer: нам
+        options:
+        - нам
+        - вам
+        - їм
+  replace: |
+    - id: fill-in-dative-pronouns
+      type: fill-in
+      instruction: Вставте правильний займенник у давальному відмінку.
+      items:
+      - sentence: Це мій брат. Я дарую ____ нову книгу.
+        answer: йому
+        options:
+        - їй
+        - йому
+        - їм
+      - sentence: Це моя сестра. Мама купує ____ теплий шарф.
+        answer: їй
+        options:
+        - йому
+        - їй
+        - їм
+      - sentence: Це твій подарунок. Що вони дарують ____ на свято?
+        answer: тобі
+        options:
+        - мені
+        - вам
+        - тобі
+      - sentence: Ми купили квитки для друзів. Ми даємо їх ____.
+        answer: їм
+        options:
+        - їм
+        - йому
+        - їй
+      - sentence: Це мій секрет. Будь ласка, скажи ____ усю правду.
+        answer: мені
+        options:
+        - тобі
+        - нам
+        - мені
+      - sentence: Брат показує сестрі нове фото. Він показує ____ його зараз.
+        answer: їй
+        options:
+        - їм
+        - їй
+        - йому
+      - sentence: Пані Олено, я пишу ____ листа сьогодні.
+        answer: вам
+        options:
+        - вам
+        - нам
+        - тобі
+      - sentence: Учитель пояснює нове правило всьому класу. Він пояснює його ____.
+        answer: нам
+        options:
+        - їм
+        - нам
+        - вам
+
+- find: |
+      - question: Я бачу ____ в парку.
+        options:
+        - тебе
+        - тобі
+        - ти
+        - тебою
+        correct: 0
+      - question: Я кажу ____ правду.
+        options:
+        - тебе
+        - тобі
+        - ти
+        - тебою
+        correct: 1
+  replace: |
+      - question: Я бачу ____ в парку.
+        options:
+        - тебе
+        - тобі
+        - ти
+        - тобою
+        correct: 0
+      - question: Я кажу ____ правду.
+        options:
+        - тебе
+        - тобі
+        - ти
+        - тобою
+        correct: 1
 </fixes>

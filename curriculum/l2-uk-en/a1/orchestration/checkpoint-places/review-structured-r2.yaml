@@ -2,46 +2,54 @@ round: 2
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 10
-  evidence: Covers all outline points exactly and correctly addresses the A1.5 review
-    checklist.
+  score: 6
+  evidence: The plan says the reading should show “a tourist navigates Kyiv — asks
+    for directions, takes metro, finds a museum...”; the reading block contains no
+    question/request at all (`?` x0, `Вибачте` x0, `Де
 - dimension: 2
   name: Linguistic accuracy
-  score: 9
-  evidence: 'No Russianisms, Surzhyk, or Calques. Minor issue: uses the masculine
-    default "приїхав" for a general reader question.'
+  score: 10
+  evidence: No confirmed Russianisms, Surzhyk, calques, paronym errors, or Russian
+    letters. Suspect forms such as `направо`, `наліво`, `відеодзвінку`, `метро`, and
+    `дістатися` check out.
 - dimension: 3
   name: Pedagogical quality
-  score: 7
-  evidence: DEDUCT for stating a factually incorrect euphony rule ("We use й between
-    vowels" for "Тато й мама") and claiming a phrase ("до вокзалу") was used in the
-    dialogue when the local actually said "до станц
+  score: 6
+  evidence: 'The module repeatedly uses abstract English framing instead of tight
+    A1 teaching cues: “Real navigation happens in continuous conversation... bustling,
+    vibrant streets of Kyiv” and “The core spatial p'
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: Integrates M28-M34 vocabulary smoothly into the narrative and dialogue.
+  score: 9
+  evidence: 'Plan vocabulary is covered in prose: `Дерибасівській вулиці`, `Потьомкінські
+    сходи`, `порт`, `пляж`, `музей`, `метро`, `вокзал`, `площа`, transport, and direction
+    words all appear naturally.'
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: All 4 exercise markers are present and logically distributed.
+  score: 9
+  evidence: Marker count matches the 4 planned activities, marker order is pedagogically
+    sensible, and each marker tests the preceding section’s skill. No visible logic
+    flaw can be confirmed without the downstrea
 - dimension: 6
   name: Engagement & tone
-  score: 8
-  evidence: DEDUCT for slightly corporate/gamified phrasing ("huge milestone", "solid
-    foundation", "master the art of the daily transaction!").
+  score: 6
+  evidence: 'The voice slips into generic AI filler: “absolute foundation of your
+    navigation skills,” “complete, natural, and highly functional thoughts,” and “urgently
+    need some assistance.” This weakens the teac'
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: Clean markdown, appropriate H2 headers, word count of 1626 easily exceeds
-    the 1200 target.
+  evidence: All planned H2 sections are present and in order; markdown is clean; marker
+    count is correct; pipeline word count is 1468, which is above the 1200 target.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Appropriate references to real navigation points in Kyiv (Вокзальна, Хрещатик,
-    Золоті ворота) and Odesa.
+  evidence: The module stays grounded in Ukrainian cities and Ukrainian usage, with
+    no colonial framing or factual cultural problems.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: The dialogue is highly contextual, polite, and uses appropriate multi-turn
-    interaction for asking directions.
+  score: 9
+  evidence: The dialogue has named speakers, a realistic city-navigation task, and
+    a plausible follow-up destination (`у Львів`, `до станції Вокзальна`). It is functional
+    and usable for A1 review.
 findings: []

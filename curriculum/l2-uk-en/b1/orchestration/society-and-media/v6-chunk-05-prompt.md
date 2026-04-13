@@ -25,7 +25,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-пояснення, чому ця ідея є правильною. На рівні B1 ми використовуємо складні підрядні речення, щоб логічно з'єднати тезу з аргументом. Найчастіше ми беремо сполучники причини: «тому що» та «через те що». Розглянемо класичний приклад такої конструкції: «Я вважаю, що волонтерство дуже важливе *(теза)*, **тому що** воно об'єднує різних людей заради доброї мети *(аргумент)*». Або інший варіант: «Громадянське суспільство в Україні сильне, **через те що** люди звикли самостійно вирішувати критичні проблеми». Давайте прочитаємо невеликий текст про те, як працює українська самоорганізація на практиці. «Минулого тижня наша місцева громада організувала великий проект. У центрі міста є старий парк без належного догляду. Місцеві активісти вирішили, що їм не потрібен галасливий **мітинг** *(rally)* або політичний **протест** *(protest)*, щоб змінити ситуацію. Вони опублікували оголошення в інтернеті, і в суботу сотні жителів прийшли прибирати територію. Це була справжня **благодійність** *(charity)* — люди безкоштовно віддали свій час та принесли інструменти. Під час прибирання вони також збирали речі для сімей переселенців. Цей приклад чудово демонструє, що ініціативні громадяни здатні самостійно створювати комфортне середовище, не чекаючи на швидкі рішення від державних чиновників чи місцевої влади». <!-- INJECT_ACTIVITY: reading, "Прочитайте текст про місцеву громаду та дайте відповіді на запитання щодо ролі активістів і благодійності." --> Сучасний український інформаційний простір неможливо уявити без розмов про нашу національну ідентичність. Головними темами у новинах щодня залишаються **державність** *(statehood)* та наша повна **незалежність** *(independence)*. Україна постійно бореться за свій **суверенітет** *(sovereignty)* — абсолютне право самостійно приймати всі рішення на своїй території, без агресивного зовнішнього тиску. Ще один ключовий вектор розвитку — це **євроінтеграція** *(European integration)*. Цей термін означає поступове об'єднання України з європейськими політичними структурами. Ці слова домінують у публічних дискусіях, оскільки вони відображають фундаментальні цілі нашого суспільства. Коли українські журналісти пишуть свої аналітичні статті, вони постійно підкреслюють, що незалежність і євроінтеграція — це не просто політичні гасла, а життєво необхідні умови для вільного демократичного розвитку держави. Демократичне суспільство завжди розвивається через регулярні **вибори** *(elections)*. Це головний інструмент, за допомогою якого громадяни законно змінюють владу. Люди, які мають офіційне право голосувати, утворюють **електорат** *(electorate)*. Перед кожним голосуванням політики або партії презентують свій план дій, який називається політична **програма** *(program)*. В Україні найважливішим законодавчим органом є **Верховна Рада** *(Verkhovna Rada)* — наш національний парламент. Саме там обрані депутати обговорюють необхідні реформи та ухвалюють нові державні закони. Читаючи українські новини, ви дуже часто будете бачити ці терміни. Розуміння цієї базової лексики допоможе вам легко орієнтуватися у складних публіцистичних текстах та краще розуміти політичний контекст нашої країни. Для того щоб описувати соціальні ролі, в публіцистичному стилі ми часто використовуємо пасивні дієприкметники. Наприклад, ми вживаємо слово **залучений** *(involved)*, коли говоримо про участь людей у важливих процесах: «Кожен свідомий громадянин сьогодні залучений у волонтерський рух». Коли ми говоримо про політиків чи депутатів, ми використовуємо дієприкметник **обраний** *(elected)*: «Новий парламент, обраний на демократичних виборах, повинен негайно працювати». Хоча слово **відповідальний** *(responsible)* за своєю формою є прикметником, у таких серйозних контекстах воно функціонує подібно до дієприкметника: «Кожен міністр є відповідальний за свою сферу роботи». Використовуючи ці форми, ви зможете писати аналітичні тексти та коментарі значно більш переконливою і природною українською мовою.
+громада невеликого містечка організувала масштабну екологічну акцію. Сотні небайдужих жителів зібралися разом, щоб прибрати центральний міський парк та висадити нові дерева. Ця ініціатива показала, що справжня благодійність починається з постійної турботи про свій рідний дім. Після успішної роботи відбувся мирний мітинг, і місцевий **кореспондент** (correspondent — reporter) поспішив **повідомити** (to report — to convey news) про цю важливу подію. Організатори заходу підкреслили, що їхня головна мета — створити комфортний та безпечний простір для всіх мешканців. Такі локальні ініціативи щоразу доводять, що спільні зусилля звичайних людей здатні дуже швидко змінювати реальність». Цей текст є типовим прикладом регіонального повідомлення з позитивним емоційним забарвленням. <!-- INJECT_ACTIVITY: reading, read the short news article about the local community and answer comprehension questions --> Сучасний **публіцистичний стиль** (publicistic style — media register) неможливо уявити без термінів, що стосуються державної ідентичності та геополітичного вибору. У кожному випуску новин ви обов'язково почуєте слова державність, незалежність та суверенітет. Ці поняття домінують в українському публічному дискурсі, оскільки вони відображають ключові цінності нації, які доводиться щодня захищати. Ще одним надзвичайно важливим словом є євроінтеграція, що означає процес зближення та об'єднання України з європейськими структурами. Євроінтеграція — це не просто політичний термін, а цивілізаційний вибір суспільства, який впливає на економіку, освіту та культуру. Журналісти, політики та експерти постійно аналізують кроки держави на цьому шляху, обговорюючи реформи. Розуміння цих концепцій дозволить вам глибше осягнути суть процесів, що відбуваються в країні. :::tip **Did you know?** В українському медіапросторі слово «незалежність» часто використовується не лише у політичному контексті, але й для опису енергетичної, економічної чи інформаційної самостійності держави. ::: Важливою складовою демократичного суспільства є політичний процес, який регулярно висвітлюється у пресі. Головною подією в цьому процесі є **вибори** (elections), під час яких громадяни голосують за своїх представників. Сукупність усіх виборців, які мають право голосу, називається терміном **електорат** (electorate). Перед голосуванням кожен кандидат або партія презентує свою політичну програму, де описані плани та майбутні дії. В Україні єдиним законодавчим органом влади є **Верховна Рада** (Supreme Council). Це національний парламент, де депутати обговорюють законопроєкти, приймають важливі рішення та формують правове поле держави. Новини з сесійної зали парламенту завжди займають центральне місце у щоденних інформаційних випусках. Читаючи аналітичні статті про суспільство, ви часто зустрічатимете пасивні дієприкметники та прикметники, які описують ролі людей. Вони допомагають стисло та точно охарактеризувати статус особи або групи. Наприклад, слово «залучений» вказує на активну участь у певному процесі: «До цього масштабного проєкту залучені тисячі громадян». Слово «обраний» використовується для опису тих, хто отримав посаду шляхом голосування: «Новий обраний мер пообіцяв провести реформи». Також дуже часто вживається прикметник «відповідальний», який у медіатекстах функціонує подібно до дієприкметника, вказуючи на обов'язок: «Кожен відповідальний політик має дбати про інтереси свого народу». Ці слова роблять ваше мовлення більш формальним та професійним. :::info **Grammar box** Passive participles (пасивні дієприкметники) like **обраний** (elected) and **залучений** (involved) are extremely common in media texts. They act like adjectives, agreeing in gender, number, and case with the noun they modify, and instantly elevate your language to a formal B1 level. ::: <!-- INJECT_ACTIVITY: fill-in, practice using participles like залучений and обраний in context -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -567,7 +567,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -580,18 +647,66 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] засоби масової інформації (mass media — channels of public communication)
+- [ ] суспільство (society — organized community of people)
+- [ ] громадянин (citizen — member of a state)
+- [ ] публіцистичний стиль (publicistic style — media register)
+- [ ] новина (news item — report of a recent event)
+- [ ] заголовок (headline — title of a news article)
+- [ ] факт (fact — verifiable statement)
+- [ ] думка (opinion — personal view)
+- [ ] маніпулювання (manipulation — hidden influence)
+- [ ] волонтер (volunteer — person working without pay)
+- [ ] джерело (source — origin of information)
+- [ ] кореспондент (correspondent — reporter)
+- [ ] повідомити (to report — to convey news)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Медіатекст: аналіз і створення (~770 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

@@ -1,7 +1,7 @@
 # Audit Report: M38 — home-and-daily-life.md
 **Level:** A2 | **Module:** M38 | **Phase:** A2.5 | **Pedagogy:** TBL | **Target:** 2000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-04-11 00:49:36
+**Generated:** 2026-04-12 21:21:40
 
 ## Configuration
 **Type:** A2
@@ -21,65 +21,56 @@
 | 1 | fill-in |  | 8 | 8 | ✅ |
 | 2 | quiz |  | 8 | 8 | ✅ |
 | 3 | match-up |  | 8 | 8 | ✅ |
-| 4 | group-sort |  | 11 | 8 | ✅ |
-| 5 | group-sort |  | 8 | 8 | ✅ |
-| 6 | match-up |  | 6 | 8 | ❌ |
-| 7 | fill-in |  | 6 | 8 | ❌ |
-| 8 | error-correction |  | 6 | 6 | ✅ |
-| 9 | translate |  | 6 | 6 | ✅ |
-| 10 | true-false |  | 6 | 8 | ❌ |
+| 4 | group-sort |  | 19 | 8 | ✅ |
+| 5 | translate |  | 8 | 6 | ✅ |
+| 6 | fill-in |  | 8 | 8 | ✅ |
+| 7 | true-false |  | 8 | 8 | ✅ |
+| 8 | match-up |  | 8 | 8 | ✅ |
+| 9 | fill-in |  | 8 | 8 | ✅ |
+| 10 | error-correction |  | 8 | 6 | ✅ |
 
 **Summary:**
 - Total activities: 10 (target: 0-4) ❌
 - Unique types: 7 (minimum: 0) ✅
 - Priority types used: 7/15 (error-correction, fill-in, group-sort, match-up, quiz, translate, true-false) ✅
-- Low density activities: 3
+- Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY]** match-up '' has 6 pairs (target: 8-14)
-  - FIX: Adjust number of pairs to 8-14.
-- **[COMPLEXITY]** fill-in '' has 6 items (minimum: 8)
-  - FIX: Add more items. A2 fill-in requires at least 8 items.
-- **[COMPLEXITY]** true-false '' has 6 items (minimum: 8)
-  - FIX: Add more items. A2 true-false requires at least 8 items.
+- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'in the...'.
+  - FIX: Vary sentence structure.
+- **[GLOSSARY_LIST_IN_PROSE]** Glossary-style list (4 items) in narrative prose starting: '**Quick tip** — For general times of day, you do not need prepositions or cases.' — vocab tables belong in vocabulary YAML
+  - FIX: Move vocabulary definitions to vocabulary/{slug}.yaml or rewrite as natural prose with words introduced in context
 
 ## Recommendation
-**📝 UPDATE** (severity 15/100)
+**📝 UPDATE** (severity 45/100)
 
-- 3 violations (minor)
-- Activity density below minimum
+- Revision recommended (severity 45/100)
+- 2 violations (minor)
+- Immersion 19% off target
+- Structure issue: Missing '## Summary'
 
 ## Gates
-- **Words:** ✅ 2674/2000 (raw: 2725)
+- **Words:** ✅ 3281/2000 (raw: 3345)
 - **Activities:** ✅ 10/0
-- **Density:** ❌ 3 < 8
+- **Density:** ✅ All > 8
 - **Unique_types:** ✅ 7/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ❌ 0/3
+- **Engagement:** ✅ 4/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 57/1
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ✅ 45/1
+- **Structure:** ❌ Missing '## Summary'
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 58.8% (target 50-80% (A2.2))
+- **Immersion:** ❌ 31.0% LOW (target 50-80% (A2.2))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
 
-## Low Density Activities
-| Activity | Type | Items | Required | Fix |
-|----------|------|-------|----------|-----|
-|  | match-up | 6 | 8 | Add 2 more items |
-|  | fill-in | 6 | 8 | Add 2 more items |
-|  | true-false | 6 | 8 | Add 2 more items |
-
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 818 | Included in Core |
-| **Сценарій 2: Мій звичайний день (Scenario 2: My Typical Day)** | ✅ | 690 | Included in Core |
-| **Сценарій 3: В гостях (Scenario 3: Visiting Someone)** | ✅ | 645 | Included in Core |
-| **Мовленнєве завдання: Опишіть свій дім (Speaking Task)** | ✅ | 350 | Included in Core |
-| **Підсумок** | ✅ | 171 | Included in Core |
+| **Intro/Narrative** | ✅ | 973 | Included in Core |
+| **Сценарій 2: Мій звичайний день (~660 words)** | ✅ | 846 | Included in Core |
+| **Сценарій 3: В гостях (~550 words)** | ✅ | 985 | Included in Core |
+| **Мовленнєве завдання: Опишіть свій дім (~330 words)** | ✅ | 477 | Included in Core |

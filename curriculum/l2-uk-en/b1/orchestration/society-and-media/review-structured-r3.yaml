@@ -1,0 +1,55 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'The text misses several minor elements from the plan: the news outlet
+    "ТСН", the note about diaspora/learners, the news vocabulary "за словами", "зізнатися",
+    "попередити", critical reading questions ('
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: 'Contains several notable calques and grammatical errors that need fixing:
+    "зустрічається" instead of "трапляється", "прийняли закон" instead of "ухвалили",
+    "залучений у" instead of "залучений до", and'
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Grammar rules and concepts are introduced cleanly in context (PPP flow)
+    with excellent supporting examples before abstract explanations.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: Covers the vast majority of the required and recommended B1 vocabulary
+    naturally. Missed only a few items explicitly required by the plan (e.g., "самовизначення",
+    "права людини").
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: The required markers are present but they are heavily clustered at the
+    end of the first two sections. This matches the specific focus of the hints provided
+    in the plan, but it leaves sections 3-6 with
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Tone is an encouraging, authoritative teacher. Decolonized phrasing like
+    "культурна самооборона" works perfectly. The tone is engaging without falling
+    into corporate or gamified cliches.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: H2 headings are all present. Text pacing is solid. At 4687 words, it safely
+    exceeds the 4000-word target. Markdown is clean and free of artifacts.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Excellent discussion of the Ukrainian media landscape, decolonization
+    of the media space, and the vital role of critical reading in the face of Russian
+    propaganda.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: One dialogue (Головний редактор and Журналіст). A bit formal but contextually
+    completely appropriate for a professional newsroom demonstrating reported speech
+    and passive voice.
+findings: []

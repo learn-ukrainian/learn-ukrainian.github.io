@@ -138,78 +138,126 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Діалоги — Dialogues
+## Діалоги (Dialogues)
 
-Numbers are the invisible architecture of our daily interactions. From the moment you wake up, you are surrounded by quantities, prices, and measurements. When you walk into a traditional Ukrainian bakery, you do not just point at items; you ask for a specific amount. You might need **один хліб** (one bread) for the family dinner, **одна булочка** (one bun) for a quick snack, or perhaps **одне тістечко** (one pastry) as a treat. You will inevitably need to ask the baker, **Скільки коштує торт? А три булочки?** (How much does a cake cost? And three buns?). If you are packing a backpack for a language class, you check your supplies by counting: **один олівець** (one pencil) for taking notes, and **дві ручки** (two pens) just in case one runs out of ink. Numbers allow us to navigate the practical realities of life, whether we are comparing prices or sharing personal details.
+Numbers are the foundation of navigating daily life in any new language. Whether you are ordering food at a local bakery, checking the price of a train ticket, or simply sharing basic information about yourself, you need to know how to count. In this module, we will explore Ukrainian numbers. We will focus on real-world contexts like shopping at a market stall and asking new friends about their age. You will notice that Ukrainian numbers behave a bit differently than English numbers. They often change the words that follow them, but we will learn these as simple, rhythmic patterns.
 
-Let us look at how numbers naturally emerge when shopping at a bustling market stall. In this scenario, a customer is looking to buy a bag and needs to ask about the **ціна** (price). Read the dialogue below to see how numbers are used in a real commercial context.
+Let us look at a typical interaction at a bustling Ukrainian market stall. A customer is asking about the price of bags. 
 
-> **Покупець:** Добрий день! **Скільки коштує сумка?** *(Good afternoon! How much does the bag cost?)*
-> **Продавець:** Добрий день! **Двісті гривень.** *(Good afternoon! Two hundred hryvnias.)*
-> **Покупець:** **А маленька?** *(And the small one?)*
-> **Продавець:** **Сто п'ятдесят.** *(One hundred fifty.)*
-> **Покупець:** **Добре, дякую!** *(Good, thank you!)*
+> **Покупець:** Добрий день! **Скільки коштує** сумка? *(Good afternoon! How much does the bag cost?)*
+> **Продавець:** **Двісті** гривень. *(Two hundred hryvnias.)*
+> **Покупець:** А **маленька**? *(And the small one?)*
+> **Продавець:** **Сто п'ятдесят**. *(One hundred fifty.)*
+> **Покупець:** Добре, **дякую**! *(Good, thank you!)*
 
-In this exchange, the customer uses the essential phrase **Скільки коштує?** (How much does it cost?) alongside the noun **сумка** (bag) and the adjective **маленька** (small). The seller responds using exact numbers: **двісті** (two hundred) and **сто п'ятдесят** (one hundred fifty).
+In this exchange, the phrase **скільки коштує** (how much does it cost) is your most important tool. The customer asks **Скільки коштує сумка?** (How much does the bag cost?). The seller responds with numbers: **двісті** (two hundred) and **сто п'ятдесят** (one hundred fifty). The numbers emerge naturally through the shopping context. You do not need complex grammar to buy things. You just need the core question and the vocabulary for the numbers.
 
-Numbers are also crucial when meeting someone new and expanding beyond basic greetings. A common follow-up question in any conversation is asking about age.
+Now, let us look at another common situation. You are meeting someone new and sharing basic personal details.
 
-> **Антон:** Привіт! **Скільки тобі років?** *(Hi! How old are you?)*
-> **Віктор:** Привіт! **Мені двадцять п'ять. А тобі?** *(Hi! I am twenty-five. And you?)*
-> **Антон:** **Мені тридцять два. А твоя сестра?** *(I am thirty-two. And your sister?)*
-> **Віктор:** **Їй вісімнадцять.** *(She is eighteen.)*
+> **Анна:** Привіт! **Скільки тобі років?** *(Hi! How old are you?)*
+> **Максим:** **Мені двадцять п'ять.** А тобі? *(I am twenty-five. And you?)*
+> **Анна:** **Мені тридцять два.** А твоя сестра? *(I am thirty-two. And your sister?)*
+> **Максим:** **Їй вісімнадцять.** *(She is eighteen.)*
 
-Here, we see the question **Скільки тобі років?** (How old are you?) and the response pattern **Мені...** (To me is...). They use the numbers **вісімнадцять** (eighteen), **двадцять п'ять** (twenty-five), and **тридцять два** (thirty-two). This formula is a fixed pattern you can memorize right now to share your own details.
+This dialogue uses a highly specific formula. To ask someone's age, you say **Скільки тобі років?** (How old are you?). The word **скільки** means how many. To reply, you do not use the verb "to have" like in some languages, and you do not use "to be" like in English. Instead, you use a fixed chunk: **мені** (to me), **тобі** (to you), or **їй** (to her) followed by the number. **Мені двадцять п'ять** literally translates as "to me is twenty-five". Treat this entire phrase as a single memorized chunk.
 
-## Числа 1-20 — Numbers 1-20
+<!-- INJECT_ACTIVITY: quiz-ages --> 
 
-The absolute foundation of counting relies on the numbers from one to ten. These are the building blocks you will use every single day. The sequence is **один** (one), **два** (two), **три** (three), **чотири** (four), **п'ять** (five), **шість** (six), **сім** (seven), **вісім** (eight), **дев'ять** (nine), and **десять** (ten). Pronunciation here is critical. Pay close attention to the apostrophe in the words **п'ять** and **дев'ять**. The apostrophe tells you to pronounce the preceding consonant sharply and then transition distinctly into the following vowel, creating a slight pause. Furthermore, notice the clear **і** sound in both **сім** and **вісім**. It sounds like the "ee" in "meet" and must never be relaxed into a softer sound. 
+## Числа 1-20 (Numbers 1-20)
 
-Unlike English, where numbers are static words, Ukrainian numbers must harmonize with the objects they describe. The number one has three distinct forms that match the gender of the noun. You must say **один стіл** (one table) for a masculine noun, **одна книга** (one book) for a feminine noun, and **одне вікно** (one window) for a neuter noun. The number two also changes, but it only has two forms. You use **два** for both masculine and neuter nouns, such as **два столи** (two tables) or **два вікна** (two windows). However, when counting feminine objects, you must switch to the feminine form, which is **дві**. Therefore, you say **дві книги** (two books).
+Let us start with the core building blocks: the numbers from one to ten. Listen carefully to how they sound. Ukrainian Lessons Season 1, Episode 5 focuses on this pronunciation set. 
 
-Once you have mastered the first ten numbers, learning the teens is remarkably straightforward because they follow a highly predictable pattern. You simply take the base number and add the suffix **-надцять**. The sequence is **одинадцять** (eleven), **дванадцять** (twelve), **тринадцять** (thirteen), **чотирнадцять** (fourteen), **п'ятнадцять** (fifteen), **шістнадцять** (sixteen), **сімнадцять** (seventeen), **вісімнадцять** (eighteen), and **дев'ятнадцять** (nineteen), leading up to **двадцять** (twenty). There is a crucial phonetic rule here: the stress always falls on the syllable **-на-**. You must pronounce it as **одинадцять** and **дванадцять**. 
+*   **один** (one)
+*   **два** (two)
+*   **три** (three)
+*   **чотири** (four)
+*   **п'ять** (five)
+*   **шість** (six)
+*   **сім** (seven)
+*   **вісім** (eight)
+*   **дев'ять** (nine)
+*   **десять** (ten)
 
-:::caution
-A common mistake for learners is trying to place the stress at the beginning of the word, similar to English. Always emphasize the **-на-** syllable in these numbers.
-:::
+Pronunciation requires special attention here. The words **п'ять** and **дев'ять** contain an apostrophe. In Ukrainian, the apostrophe shows that the consonant before the following vowel stays hard; it is not a pause sound. So in **п'ять** and **дев'ять**, pronounce the consonant clearly before the next vowel. The number **сім** has a clear Ukrainian **і** sound. 
 
-When we count classroom objects, the nouns change their endings based on the number. You do not need to memorize complex grammatical tables yet; simply learn these high-frequency combinations as fixed patterns. Notice how the ending shifts depending on the quantity: **один зошит** (one notebook), **два зошити** (two notebooks), and **п'ять зошитів** (five notebooks). Similarly, we say **один підручник** (one textbook), **два підручники** (two textbooks), and **десять підручників** (ten textbooks). By learning these blocks together, you internalize the rhythm of the language without analyzing the underlying rules.
+For now, learn the most common combinations as ready-made chunks: **один стіл** (one table), **одна книга** (one book), **одне вікно** (one window), **два столи** (two tables), **два вікна** (two windows), **дві книги** (two books).
 
-<!-- INJECT_ACTIVITY: fill-in-numbers-words -->
+At this level, treat these as patterns you can repeat: **один рік** (one year), **два роки** (two years), **три студенти** (three students), **п'ять років** (five years), **десять гривень** (ten hryvnias). You do not need the grammar rule yet. 
 
-## Десятки і сотні — Tens and Hundreds
+Now, let us expand to the numbers from eleven to twenty. 
 
-Larger numbers allow us to discuss broader concepts, prices, and quantities. The tens follow a fairly regular pattern, usually ending in the suffix **-дцять** or **-десят**. The sequence continues with **тридцять** (thirty), **п'ятдесят** (fifty), **шістдесят** (sixty), **сімдесят** (seventy), and **вісімдесят** (eighty). However, there are two critical irregular numbers you must memorize immediately: **сорок** (forty) and **дев'яносто** (ninety). They do not follow the standard suffix rules. To create compound numbers, you simply place the ten and the unit next to each other, exactly as you do in English. For example, you combine them to say **сорок сім** (forty-seven), **двадцять один** (twenty-one), or **дев'яносто дев'ять** (ninety-nine). 
+*   **одинадцять** (eleven)
+*   **дванадцять** (twelve)
+*   **тринадцять** (thirteen)
+*   **чотирнадцять** (fourteen)
+*   **п'ятнадцять** (fifteen)
+*   **шістнадцять** (sixteen)
+*   **сімнадцять** (seventeen)
+*   **вісімнадцять** (eighteen)
+*   **дев'ятнадцять** (nineteen)
+*   **двадцять** (twenty)
 
-When it comes to purchasing high-value items or discussing large sums, you need the hundreds. The base unit is **сто** (one hundred). The subsequent hundreds are built systematically, but their spellings must be memorized: **двісті** (two hundred), **триста** (three hundred), **чотириста** (four hundred), **п'ятсот** (five hundred), and finally **тисяча** (one thousand). Notice carefully that two hundred is written and pronounced as **двісті**, using the feminine root form, and never as "двасто". These hundreds combine easily with the tens and units you already know. If you want to say three hundred and fifty, you simply say **триста п'ятдесят**. 
+These numbers follow a clear pattern: a base number plus the suffix **-надцять**. This is exactly like the English "-teen". There are two crucial rules here. First, the stress always falls on the **-на-** syllable. You say **одинáдцять** and **дванáдцять**. Second, there is a spelling rule. There is no soft sign in the middle of these words. You write **п'ятнадцять**, not **п'ятьнадцять**.
 
-:::tip
-The number **тисяча** (thousand) is a feminine noun. If you want to say "one thousand," you must use the feminine form of one: **одна тисяча**.
-:::
+## Десятки і сотні (Tens and Hundreds)
 
-These larger numbers are indispensable when dealing with money and currency. The national currency of Ukraine is the **гривня** (hryvnia). Just like the classroom objects we counted earlier, the word for currency changes depending on the exact number preceding it. You must memorize these three core patterns. For amounts ending in one, use the base form: **одна гривня** (one hryvnia). For amounts ending in two, three, or four, the word changes: **дві гривні** (two hryvnias), **три гривні** (three hryvnias), or **чотири гривні** (four hryvnias). For all numbers from five to zero, the form changes again: **п'ять гривень** (five hryvnias), **десять гривень** (ten hryvnias), or **сто гривень** (one hundred hryvnias). Combine these patterns with the essential question **Скільки це коштує?** (How much does this cost?) to handle any shopping scenario confidently.
+Once you know the base numbers, learning the tens is mostly a matter of adding a suffix. Let us look at the tens from thirty to one hundred.
+
+*   **тридцять** (thirty)
+*   **сорок** (forty)
+*   **п'ятдесят** (fifty)
+*   **шістдесят** (sixty)
+*   **сімдесят** (seventy)
+*   **вісімдесят** (eighty)
+*   **дев'яносто** (ninety)
+*   **сто** (one hundred)
+
+Pay close attention to the two historical irregulars in this list. The word for forty is **сорок**. It is completely unique and does not look like the word for four. The word for ninety is **дев'яносто**. It does not look like the other tens. You must memorize these two separately.
+
+Forming compound numbers is incredibly simple. You just combine the ten and the unit. There are no connecting words like "and". You place the words side by side. 
+*   **двадцять один** (twenty-one)
+*   **тридцять п'ять** (thirty-five)
+*   **сорок сім** (forty-seven)
+
+<!-- INJECT_ACTIVITY: fill-in-numbers -->
+
+To navigate Ukrainian markets, buy train tickets, or order coffee, you need to know the hundreds. These are essential vocabulary words.
+
+*   **сто** (one hundred)
+*   **двісті** (two hundred)
+*   **триста** (three hundred)
+*   **чотириста** (four hundred)
+*   **п'ятсот** (five hundred)
+*   **тисяча** (one thousand)
+
+Let us apply these numbers directly to prices. The national currency is the **гривня** (hryvnia), and smaller amounts use **копійка** (kopek). Ukrainian Lessons Season 1, Episode 9 teaches these numbers through real prices. It follows the same ready-made patterns we learned earlier. 
+*   1: **одна гривня** (one hryvnia)
+*   2-4: **дві гривні** (two hryvnias)
+*   5+: **п'ять гривень** (five hryvnias)
+
+Remember the question **Скільки коштує?** (How much does it cost?). You can use this everywhere. If you are in a bakery, you might ask **Скільки коштує торт?** (How much does the cake cost?). The baker will reply with the price, perhaps **триста гривень** (three hundred hryvnias). You might also ask **Скільки коштує хліб?** (How much does the bread cost?). The answer might be **тридцять гривень** (thirty hryvnias). 
 
 <!-- INJECT_ACTIVITY: quiz-prices -->
 
 ## Підсумок — Summary
 
-Stating your age in Ukrainian relies on a fixed formula. In Ukrainian, age is not something you "are" or "have"; rather, years are accumulated "to you." The structure **Мені... років** (To me is... years) is a fixed grammatical chunk. You use the dative pronoun **мені** (to me) followed by the number, and then the word for "years". The word for years changes based on the last digit of your age. If your age ends in one (except eleven), you use the singular form: **двадцять один рік** (twenty-one years). If your age ends in two, three, or four, you use the plural form: **тридцять три роки** (thirty-three years). For all other numbers, including zero and the teens, you use the third form: **сорок років** (forty years) or **вісімнадцять років** (eighteen years).
+Numbers have immense practical value. Let us review the three most common ways you will use them every single day. 
 
-Numbers are also essential for sharing contact information, specifically phone numbers. The word for a digit or a phone number is **номер** (number). When reciting a phone number, you will frequently use the word **нуль** (zero). Ukrainians typically read phone numbers by grouping the digits into blocks of two or three, rather than reciting them as single digits. For instance, the area code 067 is usually read as a single block: **нуль шістдесят сім** (zero sixty-seven). Alternatively, you might hear the digits separated out distinctly, such as **нуль, дев'ять, сім** (zero, nine, seven), before grouping the remaining digits into pairs like **сорок п'ять, шістдесят сім** (forty-five, sixty-seven).
+The first practical use is for prices. When you want to buy something, you use the question pattern **Скільки коштує?** (How much does it cost?). The seller will reply with a number and the word for currency. You might hear **двісті гривень** (two hundred hryvnias) or **сто п'ятдесят гривень** (one hundred fifty hryvnias). This pattern works in cafes, markets, and shops.
 
-The question word **Скільки** is highly versatile because it functions as both "how many" and "how much," depending on the context. When you ask **Скільки книг?** (How many books?), you are inquiring about the physical quantity of objects. However, when you ask **Скільки коштує книга?** (How much does the book cost?), the focus shifts entirely to the price. This single word serves as the gateway to unlocking both physical inventory and financial transactions in your daily life.
+The second practical use is for expressing age. You will often hear the question **Скільки тобі років?** (How old are you?). Remember the fixed response format. You do not use the verb "to have". You must use the dative case pronoun **мені** (to me). You reply with **мені** plus your age. For example, **мені двадцять три роки** (I am twenty-three years old) or **мені сорок років** (I am forty years old). 
 
-Before finishing this module, take a moment to perform a self-check:
-- Can you say your age? (**Мені ... років**)
-- Can you ask for a price? (**Скільки коштує ...?**)
-- Can you count to ten without looking?
-- Can you say your phone number in Ukrainian?
+The third practical use is for reading and sharing phone numbers. To do this, you need one more essential word: **нуль** (zero). When Ukrainians read phone numbers aloud, they typically group the digits into pairs or triplets. A full phone number statement sounds like this: **Мій номер — нуль дев'яносто сім, три два один, сорок п'ять, шістдесят сім** (My number is zero ninety-seven, three two one, forty-five, sixty-seven). 
 
-<!-- INJECT_ACTIVITY: quiz-age-matching -->
-<!-- INJECT_ACTIVITY: fill-in-phone-numbers -->
+<!-- INJECT_ACTIVITY: dictation-phone -->
+
+Before you finish this module, perform these quick self-check tasks:
+*   Say your own age aloud in Ukrainian using the chunk **мені ... років**.
+*   Translate the price "250 hryvnias" aloud. It should be **двісті п'ятдесят гривень**.
+*   Read a fictional phone number aloud. Try saying "050 123 45 67" using the typical Ukrainian groupings.
 </generated_module_content>
 
-**PIPELINE NOTE — Word count: 1530 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
+**PIPELINE NOTE — Word count: 1304 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -385,41 +433,169 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 89 words | Not found: 5 words
+Verified: 81 words | Not found: 2 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
-  ✗ Антон — NOT IN VESUM
-  ✗ Віктор — NOT IN VESUM
-  ✗ двасто — NOT IN VESUM
-  ✗ десят — NOT IN VESUM
-  ✗ дцять — NOT IN VESUM
+  ✗ Анна — NOT IN VESUM
+  ✗ п'ятьнадцять — NOT IN VESUM
 
-All 89 other words are confirmed to exist in VESUM.
+All 81 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
-## Verification Tools (MCP)
+---
 
-You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
+## Verification Tools (Shell Commands)
 
-**Core Verification:**
-- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
-- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
+You have access to verification tools via shell commands. Use these to verify
+Ukrainian vocabulary, check grammar, and search textbook content **as you write**.
 
-**Content Quality:**
-- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+**IMPORTANT:** Run verification commands BEFORE finalizing any Ukrainian text.
+Batch multiple verifications together to minimize round-trips.
 
-**Reference:**
-- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp_rag_search_literary` — verify literary references against primary sources
-- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
+### 1. Batch-verify Ukrainian words exist in VESUM (preferred — one call for many words)
 
-**Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_words
+results = verify_words(['слово1', 'слово2', 'слово3'])
+for w, matches in results.items():
+    if matches:
+        print(f'{w}: FOUND — lemma={matches[0][\"lemma\"]}, pos={matches[0][\"pos\"]}')
+    else:
+        print(f'{w}: NOT FOUND — may not exist in standard Ukrainian')
+"
+```
+
+### 2. Verify a single Ukrainian word in VESUM (with full morphological tags)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_word
+results = verify_word('WORD_HERE')
+if results:
+    for m in results:
+        print(f'lemma={m[\"lemma\"]}, pos={m[\"pos\"]}, tags={m[\"tags\"]}')
+else:
+    print('NOT FOUND in VESUM')
+"
+```
+
+### 3. Get all inflected forms of a lemma (declension/conjugation)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_lemma
+forms = verify_lemma('LEMMA_HERE')
+for f in forms[:20]:
+    print(f'{f[\"word_form\"]:20s} {f[\"pos\"]:8s} {f[\"tags\"]}')
+print(f'... {len(forms)} forms total')
+"
+```
+
+### 4. Check CEFR level of a word (is it level-appropriate?)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import query_cefr_level
+results = query_cefr_level('WORD_HERE')
+for r in results:
+    print(f'{r[\"word\"]}: {r[\"level\"]} ({r[\"pos\"]})')
+if not results:
+    print('Not in CEFR database')
+"
+```
+
+### 5. Search textbook content (Ukrainian school textbooks, Grades 1-11)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_textbooks
+keywords = {'keyword1', 'keyword2'}
+results = search_textbooks(keywords, 5)
+for r in results:
+    title = r.get('section_title', r.get('title', ''))
+    grade = r.get('grade', '?')
+    text = r.get('text', '')[:200]
+    print(f'Grade {grade} | {title}')
+    print(f'  {text}')
+    print()
+"
+```
+
+### 6. Search style guide for calques/Russianisms (Антоненко-Давидович, 279 entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_style_guide
+results = search_style_guide('TOPIC_HERE', 3)
+for r in results:
+    print(f'--- {r.get(\"word\", \"\")} [{r.get(\"section\", \"\")}]')
+    print(r.get('text', '')[:300])
+    print()
+if not results:
+    print('No style guide entries found')
+"
+```
+
+### 7. Look up word definition in СУМ-11 (Ukrainian explanatory dictionary, 127K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_definitions
+results = search_definitions('WORD_HERE', 3)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+### 8. Search idioms (Фразеологічний словник, 25K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_idioms
+results = search_idioms('WORD_HERE', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"text\", r.get(\"definition\", \"\")))[:200]}')
+"
+```
+
+### 9. English-to-Ukrainian translation (Балла, 79K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import translate_en_uk
+results = translate_en_uk('ENGLISH_WORD', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+---
+
+**WHEN to use these tools:**
+
+1. **Before writing any Ukrainian text** — batch-verify all key vocabulary with
+   `verify_words` (tool 1). Any word that returns NOT FOUND must be replaced.
+2. **When you suspect a Russicism or calque** — search the style guide (tool 6)
+   and verify the correct Ukrainian form with `verify_word` (tool 2).
+3. **When writing for A1/A2** — check CEFR levels (tool 4) to ensure vocabulary
+   is level-appropriate.
+4. **When unsure about a case ending or conjugation** — use `verify_lemma` (tool 3)
+   to see the full paradigm.
+5. **When covering a grammar topic** — search textbooks (tool 5) to see how
+   Ukrainian school textbooks teach it.
+6. **When you need the precise Ukrainian meaning** — use СУМ-11 (tool 7).
+7. **When looking for natural Ukrainian expressions** — search idioms (tool 8).
+
+**Batching rule:** Collect all words you want to verify, then run ONE `verify_words`
+call instead of multiple `verify_word` calls. This is faster and uses fewer tokens.

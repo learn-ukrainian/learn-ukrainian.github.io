@@ -22,7 +22,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-яка перервала цей процес. Якщо ж дві дії відбуваються одночасно і не заважають одна одній, ми використовуємо два дієслова недоконаного виду і слово «поки». Наприклад: «Поки я обідав, Тарас читав новини». Тут немає конфлікту чи переривання, лише дві паралельні прямі. > *When we want to show such an intersection, we say: "I was eating lunch peacefully when Taras unexpectedly called." The process of eating is the continuous background, and the call is the instantaneous event that interrupted this process. But if two actions happen simultaneously and do not interfere with each other, we use two verbs of the imperfective aspect and the word "while" (поки). For example: "While I was eating lunch, Taras was reading the news." Here there is no conflict or interruption, only two parallel lines.* Understanding this cinematic distinction helps you avoid one of the most common mistakes made by language learners. Because English often relies on context to show duration, you might be tempted to pair a perfective verb with a specific block of time. This creates a severe logical contradiction in Ukrainian. You cannot state that a single, instantaneous, completed milestone lasted for three hours. The logic of the Ukrainian language demands a strict boundary between the ongoing process of an action and its final, achieved result. Неможливо сказати: «Вчора я прочитав книжку три години». Слово «прочитав» означає фінальну точку, результат дії, тому воно несумісне з тривалістю. Ви маєте обрати: або ви акцентуєте на витраченому часі і кажете «я читав книжку три години», або ви хвалитеся результатом і кажете «я прочитав книжку за три години». Завжди запитуйте себе, що важливіше: як довго ви щось робили, чи той факт, що ви довели справу до кінця. To truly master this concept, let us observe how aspect choice completely transforms the mood and rhythm of a story. We can narrate the exact same day in Kyiv using two entirely different grammatical strategies. First, we will construct the story strictly out of perfective verbs. This creates a dry, factual report of achievements, sounding exactly like a rigid checklist of tasks successfully crossed off your daily agenda. Вранці я приїхав до Києва. Я вийшов з вокзалу, купив каву і пішов на Хрещатик. Там я зустрів старого друга. Ми зайшли в кафе, з'їли борщ і випили чай. Потім ми подивилися новий фільм у кінотеатрі. Увечері я сів у поїзд і повернувся додому. Now, let us rewrite that exact same day using primarily imperfective verbs. Suddenly, the rigid checklist disappears. The narrative instantly slows down, inviting the listener to actually experience the atmosphere, the continuous states, and the unfolding daily routines rather than just rushing towards the final destinations. Той день у Києві був чудовим. Зранку я гуляв біля вокзалу, пив гарячу каву і повільно йшов Хрещатиком. Світило сонце, навколо розмовляли люди. Ми з другом сиділи в затишному кафе, їли смачний борщ і довго пили чай. У кінотеатрі показували цікавий фільм. Увечері я просто сидів у поїзді, дивився у вікно і думав про дім. <!-- INJECT_ACTIVITY: error-correction-aspect --> <!-- INJECT_ACTIVITY: open-writing-yesterday -->
+the time duration: «Я прочитав книжку». :::info **Grammar box** Never mix perfective verbs with time phrases that indicate duration (like "for two hours" or "all day"). Duration strictly belongs to the imperfective domain. Choose process OR result, but never both. ::: As we shift our focus back to the story, notice how we use the past tense instead of the **теперішній час** (present tense). Remember that in the past tense, verbs do not undergo complex **дієвідмінювання** (conjugation) by **особа** (person) or belong to a specific **дієвідміна** (conjugation class). To truly feel the stylistic power of aspectual choice, let's look at how it transforms a simple narrative about a day in Kyiv. We will tell the exact same story twice to see the contrast. The first version uses only perfective verbs, presenting a dry, factual report of achievements. The second version uses imperfective verbs to create an immersive, descriptive atmosphere, turning the facts into a vivid memory of routines. Ось строга послідовність завершених подій. «Я приїхав до Києва вранці. Я вийшов з вокзалу і відразу сів у поїзд метро. Я доїхав до центральної станції Хрещатик. Там я зайшов у дуже затишну кав’ярню, випив чорну каву і з’їв смачний фруктовий десерт. Потім я зустрівся зі старими друзями, і ми разом пішли на пішохідну екскурсію». Це звучить як інформативний поліцейський звіт. > *Here is a strict sequence of completed events. "I arrived in Kyiv in the morning. I exited the station and immediately got on the subway train. I rode to the central station Khreshchatyk. There I went into a very cozy cafe, drank black coffee, and ate a delicious fruit dessert. Then I met up with old friends, and we went on a walking tour together." This sounds like an informative police report.* А тепер подивіться на ту саму історію, але як на живу картину процесу. «Я приїжджав до Києва вранці. Я виходив з вокзалу і сідав у поїзд метро. Я їхав до центральної станції Хрещатик. Там я заходив у дуже затишну кав’ярню, пив чорну каву і їв смачний фруктовий десерт. Потім я зустрічався зі старими друзями, і ми разом йшли на пішохідну екскурсію». Це звучить як приємний ностальгічний спогад про ваші звичні дії. > *And now look at the same story, but as a living picture of a process. "I used to arrive in Kyiv in the morning. I would exit the station and get on the subway train. I would ride to the central station Khreshchatyk. There I would go into a very cozy cafe, drink black coffee, and eat a delicious fruit dessert. Then I would meet up with old friends, and we would go on a walking tour together." This sounds like a pleasant nostalgic memory of your habitual actions.* Notice the use of the **зворотний** (reflexive) verb «зустрітися» (to meet up with each other) at the end of the story. Whether you are using a standard verb or a reflexive one, the rules of aspect remain exactly the same. <!-- INJECT_ACTIVITY: error-correction-aspect --> <!-- INJECT_ACTIVITY: open-writing-yesterday -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -719,6 +719,33 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] теперішній час (present tense)
+- [ ] минулий час (past tense)
+- [ ] дієвідміна (conjugation class — I or II)
+- [ ] особа (person — 1st, 2nd, 3rd)
+- [ ] число (number — однина, множина)
+- [ ] рід (gender — чоловічий, жіночий, середній)
+- [ ] доконаний вид (perfective aspect — completed action)
+- [ ] недоконаний вид (imperfective aspect — ongoing action)
+- [ ] інфінітив (infinitive — the base form ending in -ти/-тися)
+- [ ] дієвідмінювання (conjugation — changing verb by person and number)
+- [ ] зворотний (reflexive — verbs with -ся/-сь)
+- [ ] видова пара (aspectual pair — e.g., писати/написати)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Дієслова на -ся: зворотні дієслова (~650 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

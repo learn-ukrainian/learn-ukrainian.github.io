@@ -1,24 +1,63 @@
-## Який? Яка? Яке? Які? (Which? What Kind?)
+## Який? Яка? Яке? Які? (Which? What Kind?) (~800 words)
 
-В українській мові ми часто використовуємо **означальні підрядні речення** *(relative clauses)*, щоб описати людину, річ або місце. You already know how simple adjectives describe nouns. For example, you can say «гарна книга» *(a good book)*. Але іноді нам потрібно сказати більше. A relative clause expands this description into a full action. Замість одного слова ми використовуємо ціле речення: «книга, яку я зараз читаю» *(the book that I am reading now)*. This creates a complex structure with two parts. Перша частина — це **головне речення** *(the main clause)*. Друга частина — це **підрядне речення** *(the subordinate clause)*. The relative clause always connects to a specific noun in the main clause to give us more information.
+Часто ми хочемо дати більше інформації про людину або предмет. Ми не хочемо починати нове речення. Для цього ми використовуємо спеціальні слова.
 
-Головне слово для таких речень — це займенник **«який»** *(which, who, that)*. This relative pronoun is the bridge between the two parts. It must always agree in gender with the specific noun it describes in the main sentence. Якщо іменник має чоловічий рід *(masculine)*, ми використовуємо форму «який». «Це будинок, який стоїть біля метро.» *(This is the house that stands near the subway.)* Якщо іменник має жіночий рід *(feminine)*, нам потрібна форма «яка». «Ось квартира, яка має три кімнати.» *(Here is the apartment that has three rooms.)* Якщо іменник має середній рід *(neuter)*, ми беремо форму «яке». «Це місто, яке знаходиться на півдні.» *(This is the city that is located in the south.)* Remember this fundamental rule: the gender of «який» comes strictly from the noun it points back to, regardless of its role in the new sentence.
+> *Often we want to give more information about a person or an object. We do not want to start a new sentence. For this, we use special words.*
 
-Для множини *(plural)* ми завжди використовуємо форму «які». The plural form is universal and does not change based on gender. It works perfectly for both groups of people and objects, making it very easy to use. Ми можемо говорити про людей: «Це розумні люди, які працюють тут щодня.» *(These are smart people who work here every day.)* Або ми можемо описувати різні речі: «Де ключі, які лежать на цьому столі?» *(Where are the keys that lie on this table?)* Notice the transition from the singular to the plural form. If you have only one phone, you say «телефон, який добре працює» *(a phone that works well)*. But if you have two or more, it becomes «телефони, які добре працюють» *(phones that work well)*. The word «які» simply links the plural noun to the action.
+In Ukrainian grammar, an attributive clause acts exactly like a long, detailed adjective. It helps you to describe a noun in the main sentence, adding extra details naturally. The word for attributive is **означальний** (attributive, defining), and the verb to describe is **описувати** (to describe). Instead of saying two short, simple facts, you combine them into one flowing, sophisticated thought.
 
-Now, let's look at how the cases *(відмінки)* work. While the exact gender of «який» comes from the main noun, its case comes entirely from its specific role *inside* the subordinate clause. If the relative pronoun is the active subject of the subordinate clause, it stays in the basic Nominative case *(Називний відмінок)*. «Це хлопець, який прийшов до нас вчора.» *(This is the boy who came to us yesterday.)* Here, the boy actively came. But if the relative pronoun is the direct object of the subordinate clause, it must change to the Accusative case *(Знахідний відмінок)*. «Це хлопець, якого я бачив вчора.» *(This is the boy whom I saw yesterday.)* Here, "I" am the subject doing the seeing, and the boy is the object being seen. Для жіночого роду форма «яка» змінюється на «яку» в Знахідному відмінку: «Це цікава книга, яку я читаю.» *(This is the interesting book that I am reading.)* Для істот чоловічого роду форма «який» змінюється на «якого»: «Це мій друг, якого я чекаю.» *(This is my friend whom I am waiting for.)*
+> — **Ріелтор:** Добрий день! Проходьте, будь ласка. Це квартира, яка має великий балкон. *(Good afternoon! Come in, please. This is an apartment that has a large balcony.)*
+> — **Покупець:** Дуже гарно. А що це за світла кімната? *(Very nice. And what is this bright room?)*
+> — **Ріелтор:** Ось кімната, де можна працювати або читати книжки. *(Here is the room where you can work or read books.)*
+> — **Покупець:** Зрозуміло. А сусіди тут не шумлять уночі? *(I understand. And the neighbors here aren't noisy at night?)*
+> — **Ріелтор:** Ні, сусід, який живе поруч, дуже тихий. *(No, the neighbor who lives next door is very quiet.)*
+> — **Покупець:** Це добре. А де кухня? *(That is good. And where is the kitchen?)*
+> — **Ріелтор:** Кухня знаходиться праворуч. Вона маленька, але зручна. *(The kitchen is located on the right. It is small but comfortable.)*
+> — **Покупець:** Це саме те місце, яке я довго шукав. Я готовий підписати договір. *(This is exactly the place that I was looking for for a long time. I am ready to sign the contract.)*
 
-There is a strict punctuation rule you must always follow when writing. In Ukrainian grammar, unlike English, you *must* place a comma *(кома)* immediately before the relative pronoun «який». Think of this required comma as a clear "gate" opening to provide more detail about the main noun. You cannot skip this gate. ❌ «Машина яка стоїть там, дуже стара.» ✅ «Машина, яка стоїть там, дуже стара.» *(The car that stands there is very old.)* Ця кома чітко показує, де закінчується головна думка і починається додатковий опис. Це дуже важливе правило.
+The most common connector is the word for 'which'. It must always agree in gender and number with the specific noun it describes in the main part of the sentence. You already know these endings from basic adjectives. The form for masculine nouns is **який** (which, that — masc.), the form for feminine nouns is **яка** (which, that — fem.), and the form for neuter nouns is **яке** (which, that — neut.).
 
-В українській мові є ще одне дуже популярне слово для таких речень — це **«що»** *(that, who)*. While using «який» is perfectly correct, using «що» for Nominative and Accusative cases is a highly idiomatic Ukrainian pattern. «Це добра людина, що завжди допомагає іншим.» *(This is a kind person who always helps others.)* Слово «що» взагалі не змінює свою граматичну форму в цих відмінках. Воно не має чоловічого, жіночого або середнього роду. Воно також не має множини. This makes it incredibly easy to use in everyday conversation. «Це довгий лист, що я написав вчора.» *(This is a long letter that I wrote yesterday.)* Using «що» instead of «який» makes your speech sound very authentic. It helps you "think in Ukrainian" without translating English structures.
+Слово «який» працює як міст між двома частинами думки. Це правило дуже схоже на звичайні прикметники. Ви уважно дивитеся на головне слово перед комою. Тоді ви обираєте правильне закінчення для наступного слова. Це допомагає людям точно зрозуміти вас.
 
-Давайте подивимося, як ця граматика працює в реальному житті. Уявіть ситуацію: ріелтор *(real estate agent)* показує нову квартиру клієнту.
+Це нова книжка, яка зараз лежить на столі. Це цікавий журнал, який я читаю щодня. Ми добре знаємо хлопця, який прийшов сюди вчора. Я часто згадую велике місто, яке дуже люблю. Там живуть мої друзі, які працюють у Києві.
 
-> — **Ріелтор:** Це світла квартира, яка має великий балкон. *(This is a bright apartment that has a large balcony.)*
-> — **Покупець:** А де те вікно, яке виходить на вулицю? *(And where is that window that faces the street?)*
-> — **Ріелтор:** Ось маленька кімната, яка виходить на сусідній парк. *(Here is a small room that faces the neighboring park.)* Це дуже тихе місце. *(This is a very quiet place.)*
-> — **Покупець:** Хто ті люди, які стоять біля нашого будинку? *(Who are those people who are standing near our house?)*
-> — **Ріелтор:** А, це наш сусід, який живе тут вже десять років. *(Ah, that is our neighbor who has lived here for ten years already.)*
+> *This is the new book that is currently lying on the table. This is an interesting magazine that I read every day. We know the boy well who came here yesterday. I often remember the big city that I love very much. My friends who work in Kyiv live there.*
 
-<!-- INJECT_ACTIVITY: fill-in-yakiy-agreement -->
-<!-- INJECT_ACTIVITY: true-false-comma-agreement -->
+For plural nouns, you must use **які** (which, that — pl.). One of the most important rules is that the connector word takes the grammatical case required by its role inside the *subordinate* clause, not the main clause. If the relative pronoun is the subject doing the action, it must be in the Nominative case. But if it receives the action as a direct object, it must be in the Accusative case.
+
+Слово «який» завжди живе у своєму власному маленькому реченні. Там воно виконує свою окрему роботу. Воно може бути головним підметом або об'єктом дії. Тому форма цього слова може бути різною. Ми повинні знати відмінки.
+
+Це новий телефон, який я купив учора в магазині. Я бачу чоловіка, якого ти добре знаєш. Це дівчина, яку ми запросили на вечірку. Ось вікно, яке він щойно відкрив. Ми знайшли місце, яке вона описала. Це студенти, яких я зараз вчу.
+
+> *This is the new phone that I bought yesterday in the store. I see the man whom you know well. This is the girl whom we invited to the party. Here is the window that he just opened. We found the place that she described. These are the students whom I am teaching now.*
+
+В українській мові є одне дуже суворе правило. Ви ніколи не можете пропустити слово «який». І ви завжди повинні ставити кому перед цим словом.
+
+> *In the Ukrainian language, there is one very strict rule. You can never skip the word "which". And you must always put a comma before this word.*
+
+Punctuation plays a critical role in these structures. In English, you can often drop the relative pronoun completely, simply saying "The book I read yesterday was fantastic." You can also frequently leave out commas. In Ukrainian, however, whenever you start a new relative clause to describe a noun, there must be a comma right before the connecting word. This comma acts as a natural, essential pause in your speech.
+
+:::info
+**Grammar box**
+A comma before the connector signals to the listener or reader that you are adding a descriptive detail. A complete sentence cannot continue without this small pause and the mandatory connecting word. The word for sentence or clause is **речення** (sentence, clause).
+:::
+
+Слово «який» має дві абсолютно різні функції в українській мові. Ви вже дуже добре знаєте його як звичайне питальне слово. Коли ви питаєте «Який це фільм?», ви хочете почути опис або назву. Ви чекаєте на відповідь. Але в складному реченні це слово просто з'єднує дві різні частини разом. Воно більше не питає про нову інформацію.
+
+When you state a fact, you are not asking a question at all. 
+
+**Фільм, який ми дивилися вчора, був дуже цікавий.** — *The film that we watched yesterday was very interesting.*
+
+You are using the connector word to point back to the film you already mentioned. It is the exact same word on the page, but it serves a completely different grammatical function. You do not raise your voice like you do for a question. The intonation remains flat and descriptive.
+
+There is also a very common and natural alternative to use when dealing with the Nominative or Accusative cases. Ukrainians frequently use the invariant word **що** (that) as a relative connector instead of the longer forms. The greatest advantage is that it never changes its form to match gender or number. You will hear this shorter word constantly in songs, poetry, and relaxed speech. This makes it incredibly easy to use in fast, everyday conversations.
+
+Це мій колега Євген, що працює зі мною в офісі. Я купив свіжі яблука, що лежали на вітрині. Це та сама проблема, що ми обговорювали раніше. Я читаю статтю, що ти мені надіслав.
+
+> *This is my colleague Yevhen, who works with me in the office. I bought the fresh apples that were lying on the display. This is the same problem that we discussed earlier. I am reading the article that you sent me.*
+
+Спробуйте прочитати ці речення вголос. Зверніть увагу на коми та відмінки.
+
+> *Try to read these sentences aloud. Pay attention to the commas and cases.*
+
+<!-- INJECT_ACTIVITY: fill-in-yakiy -->

@@ -2,12 +2,6 @@
   "attempt": 1,
   "passed": true,
   "errors": [],
-  "warnings": [
-    {
-      "check": "VOCABULARY",
-      "severity": "WARNING",
-      "message": "Missing 2/8 required vocab: половина (half — о пів на п'яту), хвилина (minute)"
-    }
-  ],
-  "timestamp": "2026-04-10T23:34:44.095103+00:00"
+  "warnings": [],
+  "timestamp": "2026-04-11T10:04:35.803580+00:00"
 }

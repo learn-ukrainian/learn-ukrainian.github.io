@@ -1,12 +1,38 @@
-## Присвійні та вказівні займенники (Possessive and Demonstrative Pronouns)
+## Присвійні та вказівні займенники (Possessive and Demonstrative Pronouns) (~550 words)
 
-Зараз ми поговоримо про присвійні займенники. Це такі слова, як **мій** *(my)*, **твій** *(your)* та **свій** *(one's own)*. В орудному відмінку вони мають спеціальні форми для чоловічого та середнього роду. Ми використовуємо закінчення **-їм**. Отже, ми кажемо «з моїм другом» *(with my friend)* або «з твоїм братом» *(with your brother)*. Для жіночого роду ми маємо красиве закінчення **-єю**. Ми кажемо «з моєю мамою» *(with my mom)* або «з твоєю сестрою» *(with your sister)*. These three pronouns behave very similarly to adjectives. However, they feature a unique «ї» or «є» sound right before the ending. This makes them sound very melodic. Займенник «свій» працює абсолютно так само. Наприклад: «Я пишаюся своєю сестрою» *(I am proud of my sister)*. Або: «Він працює зі своїм батьком» *(He is working with his father)*. They perfectly match the gender and case of the noun they describe. Remember to always change both the pronoun and the noun together.
+When you talk about your belongings, you naturally use possessive pronouns like **мій** (my) or **твій** (your). In the Instrumental case, the "Big Three" possessives — including **свій** (one's own) — behave almost exactly like adjectives, but feature a unique «ї» or «є» sound. For masculine and neuter nouns, they take the ending **-їм**, becoming **моїм**, **твоїм**, and **своїм**. For feminine nouns, they take the melodic ending **-єю**, becoming **моєю**, **твоєю**, and **своєю**.
 
-Тепер розглянемо займенники **наш** *(our)* та **ваш** *(your)*. Вони поводяться як звичайні прикметники твердої групи. Для чоловічого та середнього роду ми маємо закінчення **-им**. Ми кажемо «з нашим сусідом» *(with our neighbor)* або «з вашим сином» *(with your son)*. Для жіночого роду ми використовуємо стандарт закінчення **-ою**. Наприклад: «Ми розмовляємо з вашою вчителькою» *(We are talking with your teacher)*. Або: «Вони стоять за нашою школою» *(They are standing behind our school)*. However, the pronoun **їхній** *(their)* is different. It belongs to the soft group of adjectives. Тому ми кажемо «з їхнім братом» *(with their brother)* та «з їхньою донькою» *(with their daughter)*. In Ukrainian, it is standard and grammatically correct to decline the word for "their" just like an adjective. You might sometimes hear people use the invariable form «їх» instead. This is a common mistake influenced by Russian grammar. Always use the fully declined forms like «їхнім» and «їхньою» to speak clean and natural Ukrainian.
+Ці короткі слова допомагають нам розповідати про близьких. Я часто гуляю з **моїм** найкращим другом після роботи. Він любить відпочивати зі **своєю** старшою сестрою. Ти можеш пишатися **твоїм** новим проєктом. Вона із задоволенням працює над **своєю** книжкою.
 
-В українській мові є два присвійні займенники, які ніколи не змінюються. Це слова **його** *(his)* та **її** *(her)*. When these words act as possessive pronouns, they completely ignore the case of the surrounding words. Вони залишаються однаковими в усіх відмінках. Якщо ми говоримо про друга чоловіка, ми кажемо «з його другом» *(with his friend)*. Займенник «його» не отримує жодного нового закінчення. Якщо ми говоримо про сестру жінки, ми кажемо «з її сестрою» *(with her sister)*. Слово «її» також залишається незмінним. This rule is incredibly important because it is a very frequent source of errors for learners. Many students try to invent forms like «йогом» or «їєю» by analogy with other pronouns. Це велика граматична помилка. Simply memorize that «його» and «її» are locked in their base forms. Ми завжди кажемо «за його будинком» *(behind his house)*. Або ми кажемо «під її столом» *(under her table)* без жодних змін займенника.
+> *These short words help us talk about close ones. I often walk with my best friend after work. He likes to relax with his older sister. You can be proud of your new project. She works on her book with pleasure.*
 
-Наостанок ми вивчимо важливі вказівні займенники. Це слова **цей** *(this)* та **той** *(that)*. Вони дуже часто використовуються в орудному відмінку для вказівки на місце або час. Займенник «цей» змінюється на **цим** для чоловічого та середнього роду. Для жіночого роду він змінюється на **цією**. Наприклад, ми можемо сказати «за цим будинком» *(behind this building)*. Або ми кажемо «перед цією машиною» *(in front of this car)*. Займенник «той» має схожі форми. Він змінюється на **тим** та **тією**. Ми кажемо «під тим деревом» *(under that tree)* або «за тією ялинкою» *(behind that spruce)*. These demonstrative pronouns are also essential for common temporal expressions. We frequently use the phrase «цим вечором» *(this evening)* to describe when an event happens. Ми також часто кажемо «тим часом» *(meanwhile)* у розповідях. Завжди узгоджуйте ці займенники з іменниками, щоб ваша мова звучала правильно та природно.
+The plural-based possessives **наш** (our) and **ваш** (your) follow the exact same rules as hard-group adjectives. For masculine and neuter, you simply add **-им** to form **нашим** and **вашим**. For feminine nouns, you use the broad **-ою** ending to create **нашою** and **вашою**. In contrast, the pronoun **їхній** (their) belongs to the soft group. It behaves just like a soft adjective, taking the endings **-ім** and **-ьою** to become **їхнім** and **їхньою**.
+
+Ми завжди радіємо зустрічі з **нашим** старим сусідом. Вчора ми довго говорили з **нашою** вчителькою. Ви можете поїхати туди з **вашим** братом або з **вашою** мамою. Вони люблять гуляти з **їхнім** маленьким сином. Ми часто бачимося з **їхньою** родиною.
+
+> *We always rejoice at meeting with our old neighbor. Yesterday we talked for a long time with our teacher. You can go there with your brother or with your mother. They like to walk with their little son. We often see their family.*
+
+:::tip
+**Did you know?**
+In standard Ukrainian, the possessive pronoun **їхній** fully declines like an adjective. While you might occasionally hear the invariable Russian-influenced form «їх» used for possession, saying «з **їхнім** сином» is the correct, authentic way to express "with their son."
+:::
+
+There is an important exception for the pronouns **його** (his) and **її** (her). When these words act as possessives, they are completely invariable. They never change their form, even if you are describing a **великий** (big, large) object. A common point of confusion for students is trying to add Instrumental endings to these words, resulting in incorrect forms like «їєю» or «йогом». You must resist this temptation; they remain exactly the same in every situation.
+
+Мій брат прийшов на свято з **його** гарним другом. Я хочу познайомитися з **її** батьками. Ми сиділи за столом поруч з **його** собакою. Вона пішла в кіно з **її** колегою. Ці слова ніколи не змінюють свою форму.
+
+> *My brother came to the holiday with his nice friend. I want to get acquainted with her parents. We sat at the table next to his dog. She went to the cinema with her colleague. These words never change their form.*
+
+:::info
+**Grammar box**
+Remember the golden rule for his and her: **його** and **її** are frozen. You say «з **його** другом» (with his friend) and «з **її** сестрою» (with her sister). The preposition only changes the noun and adjectives.
+:::
+
+Finally, demonstrative pronouns **цей** (this) and **той** (that) are crucial for pointing out specific objects around you. In the Instrumental case, **цей** transforms into **цим** for masculine and neuter, and **цією** for feminine. The pronoun **той** similarly shifts to **тим** and **тією**. These forms are frequently used to describe spatial relationships, such as standing behind a specific building. They are also essential for common temporal expressions.
+
+Ми домовилися зустрітися за **цим** будинком. Діти люблять гратися під **тією** високою ялинкою. Я не хочу розмовляти з **тим** чоловіком. Що ти плануєш робити **цим** вечором? Ми подивимося цікавий фільм **тим** часом.
+
+> *We agreed to meet behind this building. Children like to play under that tall spruce. I do not want to talk with that man. What do you plan to do this evening? We will watch an interesting film meanwhile.*
 
 <!-- INJECT_ACTIVITY: match-up, Match Nominative phrases to Instrumental forms, 8 items -->
 <!-- INJECT_ACTIVITY: quiz, Choose the correct pronoun form (моїм vs. моєю) based on noun gender, 8 items -->

@@ -1,40 +1,28 @@
-## Сім відмінків: питання та назви
+## Сім відмінків: питання та назви (~600 words total)
 
-Ми знаємо, що слова в реченні працюють разом. *(We know that words in a sentence work together.)* Щоб показати свою роль, іменники, прикметники та займенники змінюють закінчення. *(To show their role, nouns, adjectives, and pronouns change endings.)* Цей процес називається **відмінювання** *(declension)*. Українська мова має систему відмінків. **Відмінок** *(case)* — це граматичний статус слова в реченні. *(Case is the grammatical status of a word in a sentence.)* Відмінок показує, що саме робить слово. *(The case shows exactly what the word does.)* Воно є головним героєм чи об'єктом дії? *(Is it the main character or the object of the action?)* Це інструмент чи місце? *(Is it an instrument or a place?)* В англійській мові ви використовуєте прийменники або порядок слів. *(In English, you use prepositions or word order.)* В українській мові ми змінюємо закінчення слова. *(In Ukrainian, we change the ending of the word.)* Це дуже важливий механізм. *(This is a very important mechanism.)*
+Коли слова об'єднуються в речення, вони починають взаємодіяти між собою. Щоб показати свою роль у реченні, іменник змінює своє закінчення. Цей процес називається відмінюванням. Відмінок — це граматичний статус слова, який показує, що саме воно робить прямо зараз. Називний відмінок — це базова форма, але в інших ситуаціях слово має працювати інакше.
 
-Давайте послухаємо, як студенти тренуються визначати відмінки. *(Let's listen to how students practice identifying cases.)*
-> — **Марко:** Наступне речення: «Я бачу кота». *(Next sentence: "I see a cat".)*
-> — **Анна:** Добре, шукаємо іменник. Це слово «кота». *(Good, we look for the noun. It is the word "cat".)*
-> — **Марко:** Який це відмінок? *(Which case is this?)*
-> — **Анна:** Треба задати питання від дієслова. Бачу кого? — Кота. *(We need to ask a question from the verb. See whom? — A cat.)*
-> — **Марко:** Питання «кого?» має **Знахідний відмінок** *(Accusative case)*. *(The question "whom?" has the Accusative case.)*
-> — **Анна:** Правильно! А слово «я» — це **Називний відмінок** *(Nominative case)*. *(Correct! And the word "I" is the Nominative case.)*
-> — **Марко:** Так, бо це головний герой. Хто? — Я. *(Yes, because it is the main character. Who? — I.)*
+> *When words combine into a sentence, they start interacting with each other. To show its role in a sentence, a noun changes its ending. This process is called declension. A case is the grammatical status of a word, which shows exactly what it is doing right now. The nominative case is the base form, but in other situations, the word has to work differently.*
 
-В українській мові є сім відмінків. *(There are seven cases in the Ukrainian language.)* Кожен відмінок має назву та спеціальні питання. *(Each case has a name and special questions.)* Ми завжди ставимо два питання: для істот і для неістот. *(We always ask two questions: for animate and inanimate objects.)* Ось повний список: *(Here is the full list:)*
-1. **Називний** *(Nominative)* — хто? що? *(who? what?)*
-2. **Родовий** *(Genitive)* — кого? чого? *(of whom? of what?)*
-3. **Давальний** *(Dative)* — кому? чому? *(to whom? to what?)*
-4. **Знахідний** *(Accusative)* — кого? що? *(whom? what?)*
-5. **Орудний** *(Instrumental)* — ким? чим? *(by whom? with what?)*
-6. **Місцевий** *(Locative)* — на кому? на чому? *(on whom? on what?)*
-7. **Кличний** *(Vocative)* — це форма для звертання *(this is the form for address)*. Він не має питань. *(It does not have questions.)*
+> — **Студент А:** Давай тренувати відмінки. Я кажу речення: «Я бачу кота». *(Let's practice cases. I say a sentence: "I see a cat".)*
+> — **Студент Б:** Добре. Я бачу кого? Кота. *(Okay. I see who? A cat.)*
+> — **Студент А:** Правильно. Який це відмінок? *(Right. Which case is this?)*
+> — **Студент Б:** Це знахідний відмінок, бо він відповідає на питання «кого?». *(This is the accusative case because it answers the question "whom?".)*
+> — **Студент А:** А якщо я скажу: «У мене немає кота»? *(And if I say: "I don't have a cat"?)*
+> — **Студент Б:** У мене немає кого? Кота. Це родовий відмінок. *(I don't have whom? A cat. This is the genitive case.)*
 
-Ці сім відмінків — база української граматики. *(These seven cases are the base of Ukrainian grammar.)*
+В українській мові є сім відмінків, і кожен має свою назву та пару обов'язкових питань. Називний відмінок відповідає на питання «хто?» або «що?». Родовий відмінок відповідає на питання «кого?» або «чого?». Давальний відмінок потрібен для отримувача: «кому?» або «чому?». Знахідний відмінок маркує прямий об'єкт: «кого?» або «що?». Орудний відмінок показує інструмент або компанію: «ким?» або «чим?». Місцевий відмінок завжди потребує прийменника і відповідає на питання «на кому?» або «на чому?». Кличний відмінок не має питань, бо він використовується тільки для звертання.
 
-Як запам'ятати всі ці назви по порядку? *(How to remember all these names in order?)* Українські школярі мають один секрет. *(Ukrainian schoolchildren have one secret.)* Вони вчать спеціальну фразу: «**Нашого Ромчика Дивує Зебра — Оця Маленька Красуня**» *(Our Romchik is surprised by the zebra — this little beauty)*. Перша літера кожного слова — це перша літера назви відмінка. *(The first letter of each word is the first letter of the case name.)*
-* Н — Називний
-* Р — Родовий
-* Д — Давальний
-* З — Знахідний
-* О — Орудний
-* М — Місцевий
-* К — Кличний
+> *In Ukrainian, there are seven cases, and each has its name and a pair of mandatory questions. The nominative case answers the questions "who?" or "what?". The genitive case answers the questions "of whom?" or "of what?". The dative case is needed for the receiver: "to whom?" or "to what?". The accusative case marks the direct object: "whom?" or "what?". The instrumental case shows the instrument or company: "with whom?" or "with what?". The locative case always needs a preposition and answers the questions "on whom?" or "on what?". The vocative case has no questions because it is used only for addressing.*
 
-Це дуже зручний і веселий метод. *(This is a very convenient and fun method.)* Ви можете придумати власну фразу! *(You can invent your own phrase!)*
+Українські школярі часто використовують спеціальну фразу, щоб легко запам'ятати порядок відмінків. Ця весела фраза звучить так: «Нашого Ромчика Дивує Зебра — Оця Маленька Красуня». Перша літера кожного слова відповідає першій літері назви відмінка. Слово «Нашого» — це Називний, «Ромчика» — Родовий, «Дивує» — Давальний, «Зебра» — Знахідний, «Оця» — Орудний, «Маленька» — Місцевий, «Красуня» — Кличний. Це дуже простий і ефективний метод для запам'ятовування.
 
-Головний секрет відмінків — це метод питань. *(The main secret of cases is the question method.)* Не треба відразу вчити всі закінчення. *(You don't need to learn all endings right away.)* Спочатку треба навчитися **задати питання** *(to ask a question)*. *(First, you need to learn to ask a question.)* Ми завжди задаємо питання від дієслова до іменника. *(We always ask the question from the verb to the noun.)* Наприклад, у нас є таке речення: «Я даю подарунок братові». *(For example, we have such a sentence: "I give a gift to my brother".)* Як знайти відмінок слова «братові»? *(How to find the case of the word "brother"?)* Ми беремо дієслово «даю» і питаємо: даю кому? — братові. *(We take the verb "give" and ask: give to whom? — to brother.)* Питання «кому?» — це завжди Давальний відмінок. *(The question "to whom?" is always the Dative case.)* Цей метод чудово працює. *(This method works wonderfully.)*
+The absolute secret to mastering Ukrainian cases is not memorizing tables of endings first. The secret is learning to ask the right question relative to the action. Ukrainian teachers call this method **задати питання** (to ask a question). When you have a **дієслово** (verb), you ask a specific question to find the right ending for the noun. For example, if you use the verb "to give", you ask «даю кому?» (I give to whom?). The question «кому?» automatically points you to the dative case. If you say "I write with a pen", you ask «пишу чим?» (I write with what?), which leads you directly to the instrumental case.
+
+:::note
+**Quick tip** — Always memorize the case questions as a pair for animate and inanimate objects, like «кого? / чого?». This habit will save you from many mistakes later.
+:::
 
 <!-- INJECT_ACTIVITY: fill-in, Complete the case name and its question pair (e.g., Родовий — ___? ___?), 8 items -->
 
-Українські підручники для початкової школи дуже просто пояснюють цю тему. *(Ukrainian primary school textbooks explain this topic very simply.)* Наприклад, підручник автора Вашуленка пише цікаву річ. *(For example, Vashulenko's textbook writes an interesting thing.)* Там сказано, що відмінки допомагають словам «дружити» між собою. *(It is said there that cases help words "make friends" with each other.)* Це створює **зв'язок слів у реченні** *(connection of words in a sentence)*. Без відмінків ми мали б просто випадковий список слів. *(Without cases, we would just have a random list of words.)* Відмінки — це клей, який тримає речення разом. *(Cases are the glue that holds the sentence together.)* Тому їх так важливо розуміти. *(That is why it is so important to understand them.)*
+У підручнику для початкових класів автори пояснюють цей процес дуже просто. Вони пишуть, що слова в реченні мають «дружити» між собою. Зміна закінчень допомагає встановити правильний зв’язок слів у реченні. Без відмінків слова були б просто окремими цеглинами. Відмінки роблять із цих цеглин міцний і гарний будинок. Ти можеш думати про відмінки як про граматичний клей, який тримає все речення разом.

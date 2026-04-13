@@ -2,136 +2,275 @@ version: '1.0'
 module: genitive-intro
 level: a2
 inline:
-- id: quiz-possession-vs-absence
+- id: quiz-possession-vs-absence-drill-vs
   type: quiz
-  instruction: Оберіть правильний варіант
+  instruction: Оберіть правильний варіант (Є чи немає?)
   items:
-  - question: У місті є новий _____.
+  - question: У мене ____ новий комп'ютер.
     options:
-    - театр
-    - театру
-    - театра
-    - театрі
+    - є
+    - немає
+    - мало
+    - багато
     correct: 0
-  - question: У місті немає _____.
+  - question: У брата ____ машини.
     options:
-    - театру
-    - театр
-    - театра
-    - театрі
-    correct: 0
-  - question: У мене є _____.
+    - є
+    - немає
+    - кілька
+    - багато
+    correct: 1
+  - question: У нас ____ велика сім'я.
     options:
-    - сестра
-    - сестри
-    - сестру
-    - сестрою
+    - є
+    - немає
+    - мало
+    - багато
     correct: 0
-  - question: На кухні немає _____.
+  - question: На жаль, у мене ____ часу.
     options:
-    - холодильника
-    - холодильник
-    - холодильнику
-    - холодильники
+    - є
+    - немає
+    - кілька
+    - бути
+    correct: 1
+  - question: У кімнаті ____ гарне дзеркало.
+    options:
+    - є
+    - немає
+    - мало
+    - багато
     correct: 0
-  - question: У кімнаті є великий _____.
+  - question: Сьогодні надворі ____ вітру.
+    options:
+    - є
+    - немає
+    - кілька
+    - багато
+    correct: 1
+  - question: У місті ____ новий театр.
+    options:
+    - є
+    - немає
+    - мало
+    - багато
+    correct: 0
+  - question: У цьому супі ____ солі.
+    options:
+    - є
+    - немає
+    - кілька
+    - багато
+    correct: 1
+- id: fill-in-genitive-singular-formation
+  type: fill-in
+  instruction: Вставте правильну форму слова в родовому відмінку
+  items:
+  - sentence: У кімнаті немає ____.
+    answer: стола
     options:
     - стіл
     - стола
     - столу
-    - столі
-    correct: 0
-  - question: У нас немає _____.
+  - sentence: У мене немає ____.
+    answer: машини
     options:
-    - проблеми
-    - проблема
-    - проблему
-    - проблемою
-    correct: 0
-  - question: Сьогодні у мене є _____.
+    - машина
+    - машину
+    - машини
+  - sentence: Сьогодні надворі немає ____.
+    answer: вітру
     options:
-    - час
-    - часу
-    - часа
-    - часом
-    correct: 0
-  - question: У мене зовсім немає _____.
+    - вітер
+    - вітру
+    - вітра
+  - sentence: У нашому місті немає ____.
+    answer: моря
     options:
-    - часу
-    - час
-    - часа
-    - часом
-    correct: 0
-  title: Оберіть правильний варіант
-- id: fill-in-genitive-singular
-  type: fill-in
-  instruction: Вставте іменник у формі родового відмінка (однина)
-  items:
-  - sentence: У нього зараз немає _____.
-    answer: телефона
-  - sentence: У каві зовсім немає _____.
-    answer: цукру
-  - sentence: На кухні немає _____.
-    answer: кави
-  - sentence: У цій кімнаті немає _____.
-    answer: вікна
-  - sentence: У цьому офісі немає _____.
-    answer: принтера
-  - sentence: Біля будинку немає _____.
-    answer: вулиці
-  - sentence: Без води немає _____.
-    answer: життя
-  - sentence: На столі немає _____.
+    - море
+    - моря
+    - морю
+  - sentence: У цьому супі немає ____.
+    answer: солі
+    options:
+    - сіль
+    - солі
+    - соля
+  - sentence: Сьогодні вдома немає ____.
+    answer: сестри
+    options:
+    - сестра
+    - сестри
+    - сестру
+  - sentence: У мене ще немає ____.
     answer: комп'ютера
-  title: Вставте іменник у формі родового відмінка (однина)
-- id: match-up-genitive-plural-quantity
+    options:
+    - комп'ютер
+    - комп'ютеру
+    - комп'ютера
+  - sentence: Вибачте, у мене зараз немає ____.
+    answer: часу
+    options:
+    - час
+    - часу
+    - часа
+- id: match-up-genitive-plural
   type: match-up
-  instruction: З'єднайте форму називного відмінка (однина) з правильною формою після
-    слів кількості
+  instruction: З'єднайте слово з його правильною формою після слова «багато»
   pairs:
-  - left: одна книжка
-    right: багато книжок
-  - left: один друг
-    right: багато друзів
-  - left: одне вікно
-    right: мало вікон
-  - left: одна сестра
-    right: кілька сестер
-  - left: одне яблуко
-    right: багато яблук
-  - left: одна ідея
-    right: багато ідей
-  - left: один день
-    right: кілька днів
-  - left: одна машина
-    right: мало машин
-  title: З'єднайте форму називного відмінка (однина) з правильною формою після слів
-    кільк
-- id: match-up-translate-genitive
+  - left: брат
+    right: братів
+  - left: машина
+    right: машин
+  - left: вікно
+    right: вікон
+  - left: сестра
+    right: сестер
+  - left: гість
+    right: гостей
+  - left: книжка
+    right: книжок
+  - left: трамвай
+    right: трамваїв
+  - left: гроші
+    right: грошей
+- id: match-up-translations
   type: match-up
-  instruction: З'єднайте українські фрази з їхнім англійським перекладом
+  instruction: З'єднайте англійське речення з українським перекладом
   pairs:
-  - left: У мене немає часу.
-    right: I have no time.
-  - left: У мене немає грошей.
-    right: I have no money.
-  - left: Там є багато дерев.
-    right: There are many trees.
-  - left: Скільки книжок?
-    right: How many books?
-  - left: Кілька запитань.
-    right: A few questions.
-  - left: Багато друзів.
-    right: A lot of friends.
-  - left: У мене дуже багато книжок.
-    right: I have a lot of books.
-  - left: Скільки часу?
-    right: How much time?
-  title: З'єднайте українські фрази з їхнім англійським перекладом
+  - left: I don't have time.
+    right: У мене немає часу.
+  - left: I have a lot of time.
+    right: У мене є багато часу.
+  - left: I don't have a car.
+    right: У мене немає машини.
+  - left: There are many cars.
+    right: Тут є багато машин.
+  - left: I don't have a brother.
+    right: У мене немає брата.
+  - left: He doesn't have money.
+    right: У нього немає грошей.
+  - left: How much money?
+    right: Скільки грошей?
+  - left: How many students?
+    right: Скільки студентів?
 workbook:
-- type: error-correction
-  instruction: Знайдіть і виправте помилку
+- id: workbook-fill-in-quantity
+  type: fill-in
+  instruction: Вставте правильну форму слова після слів кількості (багато, мало, кілька)
+    або слова немає.
   items:
+  - sentence: У місті є багато ____.
+    answer: площ
+    options:
+    - площі
+    - площ
+    - площа
+  - sentence: Тут дуже мало ____.
+    answer: меблів
+    options:
+    - меблі
+    - меблів
+    - меблям
+  - sentence: На столі лежить кілька ____.
+    answer: зошитів
+    options:
+    - зошити
+    - зошитів
+    - зошита
+  - sentence: У нас немає ____.
+    answer: грошей
+    options:
+    - гроші
+    - грошей
+    - грошів
+  - sentence: Скільки ____ до Києва?
+    answer: кілометрів
+    options:
+    - кілометрів
+    - кілометри
+    - кілометра
+  - sentence: Сьогодні в парку багато ____.
+    answer: людей
+    options:
+    - люди
+    - люд
+    - людей
+  - sentence: У мене немає ____.
+    answer: настрою
+    options:
+    - настрою
+    - настроя
+    - настрій
+  - sentence: Я бачу кілька ____.
+    answer: трамваїв
+    options:
+    - трамваїв
+    - трамваї
+    - трамвая
+- id: workbook-error-correction
+  type: error-correction
+  instruction: Знайдіть і виправте помилку у відмінку
+  items:
+  - sentence: У мене немає брат.
+    error: брат
+    correction: брата
+    error_type: word
+    options:
+    - брата
+    - брату
+    - брати
+    explanation: Слово «брат» означає живу істоту (чоловічий рід), тому в родовому
+      відмінку має закінчення -а.
+  - sentence: Тут є багато машина.
+    error: машина
+    correction: машин
+    error_type: word
+    options:
+    - машин
+    - машини
+    - машинів
+    explanation: Після слова «багато» потрібен родовий відмінок множини. Для слова
+      «машина» це нульове закінчення — «машин».
+  - sentence: У нього немає гроші.
+    error: гроші
+    correction: грошей
+    error_type: word
+    options:
+    - грошей
+    - грошів
+    - гроша
+    explanation: Слово «гроші» в родовому відмінку завжди має форму «грошей».
+  - sentence: Скільки кілометри до міста?
+    error: кілометри
+    correction: кілометрів
+    error_type: word
+    options:
+    - кілометрів
+    - кілометра
+    - кілометр
+    explanation: 'Після слова «скільки» ми використовуємо родовий відмінок множини:
+      «кілометрів».'
+  - sentence: У супі немає сіль.
+    error: сіль
+    correction: солі
+    error_type: word
+    options:
+    - солі
+    - сілі
+    - сілю
+    explanation: 'Слово «сіль» — жіночого роду на приголосний, у родовому відмінку
+      має закінчення -і: «солі».'
+  - sentence: Я маю кілька книга.
+    error: книга
+    correction: книжок
+    error_type: word
+    options:
+    - книжок
+    - книг
+    - книги
+    explanation: Після «кілька» потрібен родовий відмінок множини. Для слова «книжка»
+      з'являється випадний голосний «о» — «книжок».
   - sentence: У мене немає час.
     error: час
     correction: часу
@@ -139,97 +278,324 @@ workbook:
     options:
     - часу
     - часа
-    - часом
-    explanation: Слово «немає» вимагає родового відмінка (чого? — часу).
-  - sentence: Скільки у тебе книжки?
-    error: книжки
-    correction: книжок
+    - часи
+    explanation: Абстрактні поняття чоловічого роду зазвичай мають закінчення -у в
+      родовому відмінку.
+  - sentence: На вулиці мало люди.
+    error: люди
+    correction: людей
     error_type: word
     options:
-    - книжок
-    - книжку
-    - книжкою
-    explanation: Після слова «скільки» потрібен родовий відмінок множини.
-  - sentence: Я маю мало гроші.
-    error: гроші
-    correction: грошей
-    error_type: word
-    options:
-    - грошей
-    - грошів
-    - грошам
-    explanation: Слово «гроші» після слова «мало» має форму «грошей» (родовий відмінок
-      множини).
-  - sentence: У місті немає театр.
-    error: театр
-    correction: театру
-    error_type: word
-    options:
-    - театру
-    - театра
-    - театрі
-    explanation: Слово «театр» (місце) у родовому відмінку однини має закінчення -у.
-  - sentence: Тут багато машина.
-    error: машина
-    correction: машин
-    error_type: word
-    options:
-    - машин
-    - машини
-    - машиною
-    explanation: Слово «багато» вимагає родового відмінка множини (нульове закінчення).
-  - sentence: У нас немає вода.
-    error: вода
-    correction: води
-    error_type: word
-    options:
-    - води
-    - воду
-    - водою
-    explanation: Після слова «немає» потрібен родовий відмінок (води).
-  title: Знайдіть і виправте помилку
-- type: group-sort
-  instruction: Розподіліть іменники за їхнім закінченням у родовому відмінку (однина)
+    - людей
+    - людів
+    - люд
+    explanation: 'Після слова «мало» потрібен родовий відмінок множини: «людей».'
+- id: workbook-true-false
+  type: true-false
+  instruction: Правда чи ні? (Правила родового відмінка)
+  items:
+  - statement: Після слова «немає» ми завжди використовуємо родовий відмінок.
+    correct: true
+    explanation: Це головне правило для слова «немає».
+  - statement: Слово «вікно» в родовому відмінку однини має форму «вікну».
+    correct: false
+    explanation: Слово «вікно» (середній рід) змінюється на «вікна».
+  - statement: Після слів «багато» і «мало» іменники завжди змінюють свою форму.
+    correct: true
+    explanation: Ці слова вимагають родового відмінка множини (або однини для незліченних
+      іменників).
+  - statement: Слово «метро» змінюється на «метра» в родовому відмінку.
+    correct: false
+    explanation: Слово «метро» є незмінюваним і завжди залишається у формі «метро».
+  - statement: Абстрактні поняття чоловічого роду часто мають закінчення -у або -ю
+      в родовому відмінку.
+    correct: true
+    explanation: 'Наприклад: час — часу, вітер — вітру, прогрес — прогресу.'
+  - statement: Слово «машина» в множині після слова «багато» має форму «машин».
+    correct: true
+    explanation: Для більшості слів жіночого роду на -а ми просто забираємо останню
+      букву (нульове закінчення).
+  - statement: Для слова «гроші» правильна форма родового відмінка — «грошів».
+    correct: false
+    explanation: Правильна форма, яку потрібно запам'ятати, — «грошей».
+  - statement: Після слова «кілька» ми використовуємо називний відмінок.
+    correct: false
+    explanation: Після «кілька» ми також використовуємо родовий відмінок множини.
+- id: workbook-group-sort
+  type: group-sort
+  instruction: Розподіліть іменники за їхнім закінченням у родовому відмінку однини
   groups:
-  - label: Закінчення -а / -я (конкретні предмети)
+  - label: Закінчення -а / -я
     items:
-    - стіл
     - брат
-    - метр
-    - телефон
-    - холодильник
-    - автобус
-  - label: Закінчення -у / -ю (абстрактні, речовини)
+    - стіл
+    - вікно
+    - море
+  - label: Закінчення -у / -ю
     items:
     - час
+    - вітер
     - цукор
-    - досвід
-    - смуток
-    - прогрес
-    - сенс
-  title: Розподіліть іменники за їхнім закінченням у родовому відмінку (однина)
-- type: true-false
-  instruction: Правда чи ні?
+    - настрій
+  - label: Закінчення -и / -і / -ї
+    items:
+    - машина
+    - сестра
+    - земля
+    - ніч
+- id: workbook-translate
+  type: translate
+  instruction: Оберіть правильний український переклад речення
   items:
-  - statement: В українській мові слово «гроші» завжди використовується у множині.
-    correct: true
-    explanation: Слово «гроші» (money) не має форми однини.
-  - statement: Якщо ми маємо предмет, ми кажемо «У мене немає».
-    correct: false
-    explanation: Слово «немає» використовується для відсутності предмета. Для наявності
-      кажемо «є».
-  - statement: Після слова «багато» завжди використовується родовий відмінок множини.
-    correct: true
-    explanation: Слова кількості, такі як багато, мало, кілька, вимагають родового
-      відмінка множини.
-  - statement: Слова «час» і «досвід» мають закінчення -а у родовому відмінку.
-    correct: false
-    explanation: Це абстрактні поняття, тому вони мають закінчення -у (часу, досвіду).
-  - statement: Після слова «немає» іменник стоїть у називному відмінку.
-    correct: false
-    explanation: Слово «немає» — це магніт, який завжди вимагає родового відмінка.
-  - statement: Запитання «Скільки?» також вимагає використання родового відмінка для
-      предметів, які ми рахуємо.
-    correct: true
-    explanation: 'Наприклад: Скільки книжок? Скільки часу? Усе це родовий відмінок.'
-  title: Правда чи ні?
+  - source: I don't have a car.
+    options:
+    - text: У мене немає машини.
+      correct: true
+    - text: У мене немає машина.
+      correct: false
+    - text: Я не маю машині.
+      correct: false
+  - source: There is no sugar in the coffee.
+    options:
+    - text: У каві немає цукру.
+      correct: true
+    - text: У каві немає цукор.
+      correct: false
+    - text: У каві немає цукра.
+      correct: false
+  - source: He has a lot of friends.
+    options:
+    - text: У нього є багато друзів.
+      correct: true
+    - text: У нього є багато друзі.
+      correct: false
+    - text: У нього немає друзів.
+      correct: false
+  - source: How much time do you have?
+    options:
+    - text: Скільки часу у тебе є?
+      correct: true
+    - text: Скільки час у тебе є?
+      correct: false
+    - text: Скільки часа у тебе є?
+      correct: false
+  - source: There are a few boxes.
+    options:
+    - text: Тут є кілька коробок.
+      correct: true
+    - text: Тут є кілька коробки.
+      correct: false
+    - text: Тут є мало коробок.
+      correct: false
+  - source: I don't have money.
+    options:
+    - text: У мене немає грошей.
+      correct: true
+    - text: У мене немає гроші.
+      correct: false
+    - text: У мене немає грошів.
+      correct: false
+  - source: There are few people on the street.
+    options:
+    - text: На вулиці мало людей.
+      correct: true
+    - text: На вулиці мало люди.
+      correct: false
+    - text: На вулиці багато людей.
+      correct: false
+  - source: She doesn't have a computer.
+    options:
+    - text: У неї немає комп'ютера.
+      correct: true
+    - text: У неї немає комп'ютеру.
+      correct: false
+    - text: У неї немає комп'ютер.
+      correct: false
+- id: workbook-odd-one-out
+  type: odd-one-out
+  instruction: Знайдіть слово, яке має інше закінчення або форму в родовому відмінку
+  items:
+  - words:
+    - час
+    - вітер
+    - стіл
+    - настрій
+    correct: 2
+    explanation: Слово «стіл» має закінчення -а (стола), інші слова — абстрактні поняття
+      і мають закінчення -у (часу, вітру, настрою).
+  - words:
+    - машина
+    - книга
+    - кімната
+    - ніч
+    correct: 3
+    explanation: Слово «ніч» має закінчення -і (ночі), інші закінчуються на -и (машини,
+      книги, кімнати).
+  - words:
+    - брат
+    - стіл
+    - комп'ютер
+    - цукор
+    correct: 3
+    explanation: Слово «цукор» (речовина) має закінчення -у (цукру), інші — конкретні
+      предмети чи особи і мають закінчення -а.
+  - words:
+    - вікно
+    - море
+    - місто
+    - гроші
+    correct: 3
+    explanation: Слово «гроші» вживається тільки у множині (грошей), інші — слова
+      середнього роду однини (-а/-я).
+  - words:
+    - багато
+    - мало
+    - кілька
+    - є
+    correct: 3
+    explanation: Після слова «є» ми вживаємо називний відмінок, після інших слів потрібен
+      родовий відмінок.
+  - words:
+    - люди
+    - гроші
+    - гості
+    - коробки
+    correct: 3
+    explanation: Слово «коробки» в родовому відмінку множини має нульове закінчення
+      (коробок), інші закінчуються на -ей (людей, грошей, гостей).
+  - words:
+    - сестра
+    - книга
+    - вікно
+    - брат
+    correct: 3
+    explanation: Слово «брат» у множині має закінчення -ів (братів), інші слова мають
+      нульове закінчення або випадний голосний (сестер, книг, вікон).
+  - words:
+    - Київ
+    - брат
+    - стіл
+    - час
+    correct: 3
+    explanation: Слово «час» має закінчення -у (часу), інші слова мають закінчення
+      -а (Києва, брата, стола).
+- id: workbook-unjumble
+  type: unjumble
+  instruction: Складіть правильне речення зі слів, звертаючи увагу на відмінки
+  items:
+  - words:
+    - дуже
+    - мало
+    - У
+    - мене
+    - часу.
+    correct_order:
+    - У
+    - мене
+    - дуже
+    - мало
+    - часу.
+  - words:
+    - багато
+    - є
+    - У
+    - місті
+    - машин.
+    correct_order:
+    - У
+    - місті
+    - є
+    - багато
+    - машин.
+  - words:
+    - немає
+    - брата.
+    - старшого
+    - У
+    - неї
+    correct_order:
+    - У
+    - неї
+    - немає
+    - старшого
+    - брата.
+  - words:
+    - сьогодні
+    - Скільки
+    - студентів
+    - в
+    - аудиторії?
+    correct_order:
+    - Скільки
+    - студентів
+    - сьогодні
+    - в
+    - аудиторії?
+  - words:
+    - грошей.
+    - немає
+    - У
+    - нас
+    - зараз
+    correct_order:
+    - У
+    - нас
+    - зараз
+    - немає
+    - грошей.
+  - words:
+    - кілька
+    - На
+    - лежить
+    - столі
+    - книжок.
+    correct_order:
+    - На
+    - столі
+    - лежить
+    - кілька
+    - книжок.
+  - words:
+    - зовсім
+    - немає
+    - цукру.
+    - У
+    - каві
+    correct_order:
+    - У
+    - каві
+    - зовсім
+    - немає
+    - цукру.
+  - words:
+    - немає
+    - У
+    - сенсу.
+    - цьому
+    - ніякого
+    correct_order:
+    - У
+    - цьому
+    - немає
+    - ніякого
+    - сенсу.
+- id: workbook-match-up-phrases
+  type: match-up
+  instruction: З'єднайте українську фразу з її англійським значенням
+  pairs:
+  - left: немає часу
+    right: no time
+  - left: немає настрою
+    right: no mood
+  - left: немає сенсу
+    right: no point
+  - left: немає грошей
+    right: no money
+  - left: багато людей
+    right: a lot of people
+  - left: мало меблів
+    right: little furniture
+  - left: кілька коробок
+    right: a few boxes
+  - left: скільки кілометрів?
+    right: how many kilometers?

@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-us what person or object it is. Слово «будь-хто» звучить значно сильніше, ніж просте слово «хто-небудь». Наприклад, ми кажемо: «Будь-хто може це зробити». Anyone can do this. Це означає, що завдання дуже просте для всіх. Або ми кажемо в книжковому магазині: «Вибирай будь-яку книгу». Choose any book. Ви маєте повну свободу вибору. You have complete freedom of choice. Цей префікс робить ваше мовлення дуже природним. Наступна важлива група слів починається з префікса **«де-»**. It means some. Цей короткий префікс завжди пишеться разом зі словом. This prefix is always written together with the word. Він допомагає нам створити дуже корисне слово **«дехто»**. This means some people. Також ми часто використовуємо слово **«дещо»**. This means some things. Інше популярне слово — це **«деякий»**. This means some or certain. Ця група має зовсім інший, дуже спокійний характер. Вони завжди вказують лише на певну частину великої групи. They always point only to a certain part of a large group. Ми використовуємо їх, коли говоримо про кількох людей чи кілька предметів. Наприклад, ми кажемо: «Дехто з нас уже бачив цей новий фільм». Some of us have already seen this new movie. Це означає, що фільм бачили не всі люди в кімнаті. Або ми хочемо почати серйозну розмову з другом. Ми кажемо: «Я маю дещо сказати тобі зараз». I have something to say to you now. Остання група має дуже цікавий і специфічний характер. Це слова з префіксом **«аби-»**. It means just any or low quality. Цей префікс також завжди пишеться разом зі своїм словом. Він допомагає створити слово **«абихто»**. This means just anyone. Також ми маємо слово **«абищо»**. This means just anything. Інше важливе слово — це **«абияк»**. This means carelessly or anyhow. Вони часто мають дуже негативний відтінок у нашій щоденній розмові. They often have a very negative nuance in our daily conversation. Слово «абихто» означає просто випадкову людину абсолютно без досвіду. Слово «абияк» означає, що людина робить дію дуже погано та без уваги. Наприклад, ми дуже гостро критикуємо поганого працівника в офісі. Ми кажемо: «Він робить свою роботу абияк». He does his job carelessly. Ми не хочемо працювати з абиким. We do not want to work with just anyone. Наприкінці цієї секції давайте запам'ятаємо одне критично важливе правило орфографії. At the end of this section, let us remember one critically important orthography rule. Це правило стосується коротких прийменників і наших нових займенників. This rule concerns short prepositions and our new pronouns. Якщо між префіксом і словом стає прийменник, слово повністю розривається. If a preposition stands between the prefix and the word, the word breaks apart completely. Усі три частини пишуться абсолютно окремо. All three parts are written completely separately. Ми кажемо: «будь з ким». With anyone. Ми кажемо: «аби до кого». To just anyone. Ми кажемо: «де в чому». In some things. Завжди пам'ятайте про дефіс для частки «будь-» і частки «-небудь». Також завжди пам'ятайте про написання разом для префіксів «де-» і «аби-» без прийменників. <!-- INJECT_ACTIVITY: fill-in, Complete sentences with the appropriate -сь, -небудь, де-, будь-, or ні- form, 8 items -->
+not matter who or which one. Будь-хто може навчитися грати на гітарі, якщо має бажання. Ти можеш вибрати будь-яку книгу з цієї великої полиці. Я зроблю будь-що, щоб допомогти тобі з цим складним завданням. > *Anyone can learn to play the guitar if they have the desire. You can choose any book from this large shelf. I will do anything to help you with this difficult task.* What if you are talking about a specific part of a larger group, but you do not want to name them directly? For this precise nuance, Ukrainian uses the prefix «де-». It creates useful words like **дехто** (some people), «дещо» (some things), and «деякий» (some, certain). This prefix clearly indicates that you are referring to a limited, unspecified portion of a whole, rather than the entire group or a completely random selection. It sounds a bit more formal but is very common in everyday speech. Дехто з нас уже бачив цей цікавий фільм у кінотеатрі. Я маю дещо сказати тобі перед нашою довгою поїздкою. Деякі студенти не зрозуміли це нове граматичне правило. > *Some of us have already seen this interesting movie in the cinema. I have something to tell you before our long trip. Some students did not understand this new grammar rule.* Finally, we have the unique prefix «аби-», which adds a very specific emotional color to the pronoun. Words like «абихто» (just anyone, any old person) and «абищо» (just anything, random stuff) carry a distinctly dismissive or negative nuance. They strongly imply low quality, a lack of standards, or a careless attitude. The adverb «абияк» literally means "carelessly" or "anyhow." You use this series when you want to show that something was done poorly or without any serious thought. Він завжди робить свою важливу роботу абияк і дуже швидко. Я не хочу говорити з абиким про мої особисті проблеми. Вона купила абищо, бо магазин уже зачинявся ввечері. > *He always does his important work carelessly and very quickly. I do not want to talk with just anyone about my personal problems. She bought just anything, because the store was already closing in the evening.* How do we write all these different prefixes and suffixes? The spelling rules are actually quite logical and easy to remember. The parts «де-» and «аби-» are always written together with the pronoun as one single word. On the other hand, the parts «будь-» and «-небудь» are always written with a hyphen to connect them to the base word. :::info **Grammar box** When a preposition appears, it breaks apart the pronouns that start with a prefix. The preposition acts like the filling in a sandwich, sitting right between the prefix and the pronoun base. You write all three words separately. For example: «будь з ким» (with anyone), «аби до кого» (to just anyone), and «де в чому» (in some things). Remember that the suffix «-небудь» works differently; the preposition simply goes before the whole word, like in «з ким-небудь» (with anybody). ::: <!-- INJECT_ACTIVITY: fill-in-indefinite-pronouns -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -479,7 +479,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 6: A2 finale (A2 M51-M69)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 40%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 40% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 70-90% Ukrainian.
 LANGUAGE ROLES:
@@ -498,18 +565,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] хтось (someone)
+- [ ] щось (something)
+- [ ] ніхто (nobody)
+- [ ] ніщо (nothing)
+- [ ] ніколи (never)
+- [ ] ніде (nowhere)
+- [ ] дехто (some people)
+- [ ] будь-хто (anyone)
+- [ ] десь (somewhere)
+- [ ] колись (once, sometime)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Ніхто, ніщо, ніколи: заперечення (~600 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

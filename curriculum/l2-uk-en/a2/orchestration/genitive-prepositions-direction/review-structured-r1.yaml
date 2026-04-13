@@ -3,53 +3,55 @@ scores:
 - dimension: 1
   name: Plan adherence
   score: 8
-  evidence: 'DEDUCT: The outline specifically required teaching neuter nouns ("до
-    моря (soft neuter)"), but this was completely omitted from the text''s grammar
-    notes. Additionally, the English translations for two'
+  evidence: 'All three planned sections are present, in order, and on-budget; all
+    required/recommended vocabulary appears in prose. Deduction: the place-direction
+    explanation overstates the rule with `Коли ми гово'
 - dimension: 2
   name: Linguistic accuracy
-  score: 8
-  evidence: 'DEDUCT: Contains a known Russian calque for physical location ("Вона
-    знаходиться біля старого парку"). This must be fixed to ensure learners do not
-    pick up conversational Surzhyk/calques. The rest of '
+  score: 7
+  evidence: 'No Russianisms/Surzhyk/forbidden letters found, and `прийом`/`доки` verify
+    as valid Ukrainian. Critical issue: `ми завжди вживаємо` / `This rule applies
+    universally` teaches a false absolute about des'
 - dimension: 3
   name: Pedagogical quality
-  score: 9
-  evidence: 'REWARD: Excellent explanation of `до` vs `в/на` for people vs places,
-    and a brilliant summary comparing `від`, `до`, and `після`. DEDUCT (minor): The
-    English translation in the dialogue "I have very m'
+  score: 7
+  evidence: 'The module has a PPP-like flow: taxi situation, explanation, examples,
+    then practice markers. Deduction: it presents an absolute rule before nuance,
+    then corrects itself later, which is bad sequencing'
 - dimension: 4
   name: Vocabulary coverage
-  score: 9
-  evidence: 'DEDUCT: The required word "мета" (purpose) was only included in the final
-    summary table. It should be introduced naturally in the running prose when the
-    concept of purpose is first taught.'
+  score: 10
+  evidence: 'Required words are all used naturally: `напрямок`, `мета`, `музей`, `лікар`,
+    `бабуся`, `вечір`, `ранок`, `екзамен`, `побачення`, `список`. Recommended words
+    also appear: `ставлення`, `інтерес`, `готов'
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: 'REWARD: All 4 injected markers are present, perfectly match the `activity_hints`
-    from the plan, and are placed logically after the relevant instructional content.'
+  score: 7
+  evidence: 'The module includes all 4 planned markers, but distribution is weak:
+    one marker appears after section 1 and three markers are grouped at the end, so
+    section 2 gets no immediate practice.'
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: 'REWARD: The tone is natural, encouraging, and structured clearly. It
-    addresses common learner pitfalls (like using ''в лікар'') gracefully and explains
-    concepts gently.'
+  score: 6
+  evidence: 'The teacher voice is readable, but filler weakens it: `This small but
+    mighty word is your key to navigating cities and organizing your schedule.` and
+    `the Genitive case will be your constant companion'
 - dimension: 7
   name: Structural integrity
-  score: 9
-  evidence: 'DEDUCT: The missing English text in the H2 headings slightly violates
-    the plan''s exact structural requirement for these sections. Word count is healthy
-    (2259 words).'
+  score: 10
+  evidence: All H2 headings from the plan are present and ordered correctly. The pipeline
+    word count is 3195, safely above the 2000 target, and the markdown structure is
+    clean.
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: 'REWARD: Accurately explains why the Russian "к" + Dative is incorrect
-    in Ukrainian, explicitly reinforcing a decolonized perspective on the language
-    and teaching authentic sentence structures.'
+  score: 7
+  evidence: The tip beginning `Unlike Russian...` frames Ukrainian through Russian
+    and uses evaluative phrasing (`strictly and elegantly`), which is below the repo’s
+    decolonized standard.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 9
-  evidence: 'REWARD: Dialogues feature named speakers and highly contextual, natural
-    phrasing ("Мені дуже треба купити ліки", "Чудово! Передавай вітання!").'
+  score: 8
+  evidence: The taxi dialogue is multi-turn and functional, with named speakers and
+    a plausible scenario. The later Олена/Марко exchanges are serviceable but mostly
+    illustrative rather than vivid.
 findings: []

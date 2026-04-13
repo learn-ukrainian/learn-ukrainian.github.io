@@ -26,7 +26,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-we want to spend time together, we can play tennis first, and then go to the cinema.)* > — **Андрій:** Це чудова ідея! Я згоден, хоча грати в теніс я зовсім не вмію. *(That's a great idea! I agree, although I don't know how to play tennis at all.)* Активний **спорт** *(sport)* і регулярні тренування займають надзвичайно важливе місце в житті багатьох українців. У великих містах шалену популярність здобули такі заняття, як **йога** *(yoga)*, **плавання** *(swimming)* та ранковий **біг** *(running)*. Люди різного віку охоче відвідують спортивні клуби, тому що вони щиро хочуть підтримувати своє тіло у гарній фізичній формі. Кожне інтенсивне **тренування** *(training)* вимагає від людини неабиякої дисципліни, терпіння та регулярності. Багато спортсменів-аматорів із задоволенням беруть участь у міських марафонах, щоб перевірити свою витривалість і силу духу. Наприклад, мій старший брат почав щодня бігати, тому що він хотів серйозно підготуватися до осіннього благодійного марафону. Будь-яке спортивне **змагання** *(competition)* приносить усім учасникам неймовірно багато яскравих емоцій. Справжня **перемога** *(victory)* — це не лише блискуча медаль, а насамперед важлива перемога над власними слабкостями та щоденною лінню. Ми часто використовуємо складнопідрядні речення причини зі сполучниками «тому що» або «бо», коли детально пояснюємо мотивацію наших спортивних занять. У щоденних розмовах про дозвілля ми дуже часто переказуємо слова та поради інших людей. Для цього ми активно використовуємо непряму мову та складнопідрядні з'ясувальні речення. Наприклад, коли ми хочемо точно передати корисні поради інструктора, ми кажемо: «**Тренер** *(coach)* сказав, що завтра вранці буде додаткове інтенсивне тренування». Якщо ми захоплено обговорюємо нове хобі, ми можемо спиратися на відгуки наших знайомих: «Друзі порадили, аби я обов'язково спробував йогу на свіжому повітрі». Такі граматичні конструкції роблять наше повсякденне мовлення значно більш природним, багатим і логічно зв'язним. Замість того, щоб постійно та дослівно цитувати кожну фразу, ми гармонійно вплітаємо чужі думки у власну розповідь. Досвідчений лікар наголосив, що регулярні вечірні прогулянки надзвичайно корисні для нашого здоров'я. Використовуючи поширені сполучники «що», «аби» та запитальну частку «чи», ми можемо легко ділитися своїми враженнями, рекомендаціями та цікавими ідеями щодо ідеального проведення вільного часу. Давайте поєднаємо вивчену тематичну лексику та нову граматику, щоб детально описати ідеальний вихідний день. Мій ідеальний день зазвичай починається досить пізно, тому що після важкого робочого тижня я дуже люблю довго спати. Коли я нарешті прокидаюся, я відразу йду на коротке спортивне тренування, яке завжди додає мені багато позитивної енергії. Мої друзі часто кажуть, що активний ранковий спорт — це найкращий спосіб швидко прокинутися. Після смачного обіду я радо зустрічаюся з цікавими людьми, які повністю поділяють мої численні захоплення. Ми можемо годинами грати в захопливі настільні ігри або з ентузіазмом планувати нашу майбутню подорож у мальовничі гори. Хоча іноді я волію спокійно залишитися вдома з улюбленою книгою, я завжди щиро радий приємній компанії друзів. Якщо надворі гарна сонячна погода, ми обов'язково йдемо гуляти в міський парк, щоб спокійно насолодитися красою природи. Пізно ввечері я зазвичай дивлюся новий документальний фільм, бо саме це допомагає мені розслабитися. Вправно використовуючи складнопідрядні речення, ви зможете дуже детально розповісти про свій улюблений вільний час. <!-- INJECT_ACTIVITY: reading-leisure-habits --> <!-- INJECT_ACTIVITY: fill-in-leisure-grammar --> <!-- INJECT_ACTIVITY: quiz-leisure-choice -->
+I run every morning.)* > — **Андрій:** Це чудово, але я віддаю перевагу кіно або коли ми відвідуємо якусь **виставку** (exhibition). *(That's great, but I prefer the cinema or when we visit an exhibition.)* > — **Роксолана:** **Виставка** (exhibition) — це теж цікаво, але спорт дає більше енергії, тому що ти активно рухаєшся. *(An exhibition is also interesting, but sport gives more energy because you move actively.)* > — **Андрій:** Можливо. Друзі запрошували мене в гори, якщо буде гарна погода. *(Maybe. Friends invited me to the mountains if the weather is good.)* > — **Роксолана:** Обов'язково погоджуйся! Це чудова ідея для вихідних. *(Definitely agree! It's a great idea for the weekend.)* :::info **Граматика** — Зверніть увагу на те, як співрозмовники використовують слова «хоча», «що» та «тому що» для з'єднання своїх думок. Це складнопідрядні речення, які є необхідними для вираження власної думки та пояснення причин. ::: Спорт і регулярні тренування стали невіддільною частиною життя в сучасних українських містах. Люди різного віку обирають йогу для відновлення балансу, плавання для зміцнення здоров'я або біг для підтримання фізичної форми. У багатьох містах постійно проводяться марафони та спортивні змагання, які збирають тисячі учасників. Кожна перемога на таких змаганнях, навіть найменша, мотивує людей продовжувати тренування. Для пояснення причин наших дій ми часто використовуємо складнопідрядні речення причини зі сполучниками «тому що» або «бо». Наприклад: «Він почав бігати щоранку, тому що хотів підготуватися до благодійного марафону». Або інша ситуація: «Вона обрала плавання, бо цей вид спорту допомагає розслабити спину після роботи за комп'ютером». Ці граматичні конструкції дозволяють нам чітко аргументувати свій вибір і пояснювати мотивацію, що стоїть за нашими захопленнями. Коли ми обговорюємо спорт та дозвілля, нам часто потрібно передати те, що сказала інша людина. Саме тут непряма мова стає надзвичайно корисною. Незалежно від того, чи передаєте ви пораду тренера, чи рекомендацію друга щодо нового хобі, ви будете спиратися на складнопідрядні речення зі сполучниками «що» та «аби» або «щоб». Наприклад, якщо ваш тренер дав вам вказівки, ви можете сказати: «Тренер сказав, що завтра буде дуже інтенсивне тренування». Якщо ж ви хочете поділитися порадою, яку отримали, можна використати сполучник «аби»: «Друзі порадили, аби я спробував йогу для зняття стресу». Використання непрямої мови дозволяє вам плавно інтегрувати думки та інструкції інших людей у власну розповідь. Це ключова навичка для природного та вільного спілкування на цьому рівні. Ідеальний вихідний день для кожної людини виглядає по-різному, але вміння описати його вимагає використання різноманітних синтаксичних структур. Хтось любить прокидатися рано, щоб зустріти схід сонця і насолодитися ранковою тишею. Інші вважають, що вихідні створені для того, аби спати якомога довше, хоча це залишає менше часу на активності. Уявіть свій ідеальний день: ви можете піти на прогулянку в парк, який знаходиться неподалік, відвідати цікаву **виставу** (performance), або зустрітися з друзями в кафе. Деякі люди планують свої вихідні заздалегідь, тому що хочуть встигнути зробити багато справ: прочитати нову книгу або просто приготувати смачну вечерю. Незалежно від того, як ви проводите час, здатність поєднувати різні типи підрядних речень робить вашу розповідь детальною та дуже цікавою. <!-- INJECT_ACTIVITY: reading-leisure-habits --> <!-- INJECT_ACTIVITY: fill-in-leisure-grammar --> <!-- INJECT_ACTIVITY: quiz-leisure-choice -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -526,7 +526,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -539,18 +606,71 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] дозвілля (leisure, free time)
+- [ ] захоплення (hobby, passion)
+- [ ] мистецтво (art)
+- [ ] виставка (exhibition)
+- [ ] вистава (performance, show)
+- [ ] Різдво (Christmas)
+- [ ] Великдень (Easter)
+- [ ] свято (holiday, celebration)
+- [ ] традиція (tradition)
+- [ ] культура (culture)
+- [ ] святкувати (to celebrate)
+- [ ] колядка (Christmas carol)
+- [ ] писанка (decorated Easter egg)
+- [ ] ресторан (restaurant)
+- [ ] меню (menu)
+- [ ] замовлення (order)
+- [ ] страва (dish)
+- [ ] шеф-кухар (chef)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Розділ 2: Культура і мистецтво (~780 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

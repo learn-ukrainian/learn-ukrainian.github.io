@@ -1,21 +1,21 @@
 ## VESUM Verification
-- Confirmed: відмінок, називний, знахідний, місцевий, кличний, чергування, голосний, приголосний, наголос, милозвучність, огляд, система, правило.
-- Not found: [none]
+- Confirmed: відмінок, називний, знахідний, місцевий, кличний, чергування, голосний, приголосний, наголос, милозвучність, огляд, система, правило
+- Not found: None
 
 ## Grammar Rules
-- Euphony (у/в alternation): Правопис §23 — Rules for choosing 'у' or 'в' to avoid difficult consonant clusters and achieve melodiousness (милозвучність).
-- Euphony (і/й alternation): Правопис §24 — Rules for choosing 'і' or 'й' to ensure smooth transitions between words.
-- Vowel Alternation (о/і, е/і): Правопис §26 (also Grade 5 Textbook §48-49) — Core rule where 'о' and 'е' in open syllables change to 'і' in closed syllables (e.g., стіл/стола).
-- Consonant Alternation (г/ж, к/ч, х/ш): Grade 5 Textbook §50 (also Правопис §12 for related patterns) — First palatalization of consonants during word formation or inflection (e.g., нога/ніжка).
+- у/в: Правопис §23 — Щоб уникнути збігу букв на позначення приголосних звуків, що є важкими для вимови, та щоб досягти милозвучності, в українській мові вживають на письмі прийменник у та префікс у- на початку слів у відповідних позиціях.
+- і/й: Правопис §24 — Щоб уникнути збігу букв, що позначають важкі для вимови приголосні звуки, та для досягнення милозвучності, на письмі вживаємо і. Щоб уникнути збігу букв, що передають голосні, уживаємо й.
+- з/зі/із: Правопис §25 — Варіанти із, зі (зо) вживаємо перед буквами, що передають важкі для вимови збіги приголосних, та для досягнення милозвучності.
 
 ## Calque Warnings
-- приймати участь: CALQUE — Correct form: **брати участь**.
-- в якості: CALQUE (often) — Correct form: **як**, **у ролі**, or **у статусі**.
-- огляд: OK — Natural Ukrainian term for "review" or "overview".
+- магія: OK — No calques found
+- огляд: OK — No calques found
+- чекає нас: OK — No calques found
 
 ## CEFR Check
-- відмінок: A2 (Technical) — OK (Standard pedagogical term for A2 level).
-- правило: A1 — OK.
-- система: A2 — OK.
-- голосний: A2 (Technical) — OK (Introduced in phonology sections).
-- милозвучність: B1 (Abstract) — ABOVE TARGET (Use carefully; explain as "melody" or "harmony" for A2).
+- відмінок: A1 — OK
+- правило: A1 — OK
+- система: A2 — OK
+- чергування: B2 — above target
+- милозвучність: Not found — above target
+- огляд: Not found (оглядати is B1) — above target

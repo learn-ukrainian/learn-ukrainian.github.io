@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-«Він ішов парком, радісно **усміхаючись** *(while smiling)*». Тут ми ставимо чітке питання: як він ішов? Яким способом відбувався цей рух? Правильна відповідь — усміхаючись. Варто запам'ятати один важливий нюанс. У таких випадках, якщо одиночний дієприслівник стоїть безпосередньо після головного дієслова і майже втрачає свою активну дієслівну силу, перетворюючись на характеристику стану, ми іноді можемо не ставити кому. Обставина часу працює дещо інакше. Вона вказує на конкретний часовий проміжок, паралельно з яким триває основна дія суб'єкта. Розглянемо такий повсякденний приклад: «**Снідаючи** *(while having breakfast)*, я завжди уважно слухаю свіжі новини». Головна дія мовця — я слухаю новини. Коли саме це відбувається? Під час сніданку. Дієприслівник недоконаного виду ідеально передає цю повну одночасність двох різних процесів. Використання такої граматичної форми робить ваше мовлення набагато компактнішим, елегантнішим і динамічнішим, дозволяючи уникнути нагромадження однакових займенників чи сполучників. Менш очевидними для іноземців, але так само критично важливими є обставини причини та умови. Дієприслівник недоконаного виду може дуже лаконічно пояснювати, чому саме відбувається певна дія. Подивіться на такий приклад: «Сильно **хвилюючись** *(worrying)* за сина, мати не спала майже всю ніч». Чому мати не могла заснути? З якої причини це сталося? Тому що вона дуже хвилювалася. Тут дієприслівниковий зворот фактично замінює собою ціле громіздке підрядне речення причини. Замість того, щоб будувати довгу конструкцію і казати «Оскільки вона хвилювалася...», ми використовуємо лише одну компактну форму. Абсолютно так само дієприслівник може влучно виражати умову, за якої реалізується головна подія. Подивіться на цю фразу: «Лише **працюючи** *(working)* злагоджено і разом, ми обов'язково досягнемо успіху». За якої умови ми зможемо досягти успіху? Якщо ми будемо постійно працювати разом. Знову ж таки, наш дієприслівник майстерно замінює класичну умовну конструкцію «якщо ми будемо працювати...». Цей прийом є особливо характерним для публіцистики та офіційно-ділового стилю, де цінується максимальна стислість, точність і логічність викладу думок. Такі конструкції роблять текст більш переконливим і професійним. Тепер перейдімо до правил пунктуації та розташування цих форм у реченні. Одне з найголовніших правил української орфографії стосується відокремлення **дієприслівникових зворотів** *(gerund phrases)*. Дієприслівниковий зворот — це сам дієприслівник разом з усіма залежними від нього словами. За загальним правилом, такий поширений зворот завжди виділяється комами на письмі, абсолютно незалежно від того, де саме він стоїть у вашому реченні. Що стосується позиції, українська мова дає вам величезну синтаксичну гнучкість. Ви вільно можете поставити зворот на самому початку, в середині або в самому кінці речення. Проте пам'ятайте, що ця зміна позиції суттєво впливає на логічний наголос. Порівняймо три стилістичні варіанти. Перший: «Уважно **читаючи** *(reading)* газету, батько пив каву». Тут головний смисловий акцент падає на саму дію читання, вона задає тон усій сцені. Другий варіант: «Батько, уважно читаючи газету, пив каву». Це дуже збалансоване речення, де додаткова дія акуратно вбудована всередину і не перетягує на себе надмірну увагу читача. Третій варіант: «Батько пив каву, уважно читаючи газету». У цьому випадку фокус уваги зміщується на головну дію — пиття кави, а читання сприймається як фоновий супровід. Усі три конструкції є абсолютно правильними з погляду граматики. Ваш фінальний вибір завжди залежить лише від того, яку саме деталь ви хочете підкреслити у своїй історії. <!-- INJECT_ACTIVITY: essay-gerund-situations -->
+ставиться. Наприклад, ми можемо сказати, що він ішов усміхаючись, або що хлопець біг не чуючи ніг. Beyond time and manner, gerunds are incredibly useful for expressing reason and condition. An adverbial modifier of reason answers the question чому? (why?), explaining the cause of the main action. Instead of using a complex clause with a word like "because", you can use a gerund for a more elegant sentence structure. This makes your writing feel much more sophisticated and mature. **Хвилюючись за сина, мати не спала.** — *Worrying about her son, the mother did not sleep.* Similarly, an adverbial modifier of condition answers the question за якої умови? (under what condition?). It elegantly replaces conditional clauses starting with "if". **Працюючи разом, ми досягнемо успіху.** — *Working together, we will achieve success.* Використання обставин причини та умови робить текст набагато лаконічнішим. **Слухаючи** (while listening — imperfective gerund) поради експертів, ви зможете уникнути багатьох помилок. Це означає: якщо ви будете слухати поради, ви уникнете помилок. Так само працює і причина. **Пишучи** (while writing — imperfective gerund) цей звіт цілу ніч, менеджер дуже втомився. Причина його втоми полягає саме в тому, що він писав звіт. **Одночасність** (simultaneity — actions happening at the same time) цих процесів тут менш важлива, ніж причинно-наслідковий зв'язок. :::info **Grammar box** — A gerund with its dependent words forms a дієприслівниковий зворот (gerund phrase). This phrase is highly mobile, but it must ALWAYS be separated by commas from the rest of the sentence, no matter where you place it. ::: When using these forms, punctuation is a vital component. The strict rule in Ukrainian punctuation is that a gerund phrase must always be set off by commas. However, the placement of the gerund phrase itself is highly flexible. You can place it at the beginning, in the middle, or at the end of a sentence. While the grammatical meaning remains identical, shifting the phrase changes the logical emphasis and the rhythm of your speech. This flexibility allows writers and speakers to subtly guide the listener's attention to the most important part of the sentence. Розташування дієприслівникового звороту залежить від того, на чому ви хочете наголосити. Позиція на початку речення задає контекст для головної дії: «Читаючи газету, батько пив каву». Якщо ви ставите зворот у середину речення, він робить думку більш збалансованою: «Батько, читаючи газету, пив каву». Позиція в кінці речення переносить усю увагу на головне дієслово: «Батько пив каву, читаючи газету». Усі три варіанти є абсолютно правильними граматично. > *The placement of the gerund phrase depends on what you want to emphasize. The position at the beginning of the sentence sets the context for the main action: "Reading the newspaper, the father drank coffee." If you put the phrase in the middle of the sentence, it makes the thought more balanced: "The father, reading the newspaper, drank coffee." The position at the end of the sentence shifts all attention to the main verb: "The father drank coffee, reading the newspaper." All three options are absolutely correct grammatically.* <!-- INJECT_ACTIVITY: essay-gerund-situations -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -561,7 +561,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -574,18 +641,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] дієприслівник (adverbial participle/gerund — unchangeable verb form)
+- [ ] недоконаний вид (imperfective aspect — ongoing/repeated action)
+- [ ] читаючи (while reading — imperfective gerund)
+- [ ] слухаючи (while listening — imperfective gerund)
+- [ ] пишучи (while writing — imperfective gerund)
+- [ ] говорячи (while speaking — imperfective gerund)
+- [ ] обставина (adverbial modifier — syntactic role of the gerund)
+- [ ] додаткова дія (secondary/additional action)
+- [ ] одночасність (simultaneity — actions happening at the same time)
+- [ ] логічний підмет (logical subject — must be shared)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Поширені помилки та практика (~650 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

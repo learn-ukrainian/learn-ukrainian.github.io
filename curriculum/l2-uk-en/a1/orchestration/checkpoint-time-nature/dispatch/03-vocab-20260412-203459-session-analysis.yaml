@@ -1,0 +1,36 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T18-33-18bef21e.json
+phase: vocab
+prompt_chars: 11088
+response_chars: 4833
+prompt_words: 1832
+response_words: 659
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.072
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.0207
+- name: plan
+  start: 1028
+  length: 10060
+  fraction: 0.9073
+large_sections:
+- plan
+directives_total: 3
+directives_covered: 0
+directives_missed:
+- kind: inject_activity
+  text: fill-in-day-description
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-time-weather-chunks
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-logical-answers
+  covered: false
+  coverage_note: marker missing

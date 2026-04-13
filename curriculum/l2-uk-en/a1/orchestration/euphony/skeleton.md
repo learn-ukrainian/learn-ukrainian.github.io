@@ -1,32 +1,33 @@
-## Діалоги — Милозвучність у дії (~400 words total)
-- P1 (~80 words): [Intro: The concept of "Милозвучність" (euphony). Explain that Ukrainian isn't just a language of rules, but a language of music. The core goal is avoiding "clashes" of sounds (consonants or vowels) to keep the air flowing smoothly.]
-- P2 (~100 words): [Dialogue 1: Setting — Proofreading a text about a garden (город). Студент: "Я працюю в городі." Друг: "Краще сказати 'у городі', бо 'в г-' важко вимовити." Examples: у городі, в офісі, у Львові, в Києві.]
-- P3 (~60 words): [Analysis 1: Break down the prepositional choice from Dialogue 1. Why `в Києві` (vowel ends 'и', starts 'К') sounds better than `у Києві` (vowel ends 'и', starts vowel 'у'), and why `у Львові` avoids the triple consonant cluster `в-л-ь-в`.]
-- P4 (~100 words): [Dialogue 2: Planning an evening. Студент: "Ти і Олена йдете?" Друг: "Ти й Олена. Так швидше." Speakers discuss going to the theater (у театр) or park (в парк). Examples: ти й Олена, я і Максим, Олена й Тарас.]
-- P5 (~60 words): [Analysis 2: Break down the conjunction choice from Dialogue 2. Explain that `й` is a glide between vowels (`и-й-о`), while `і` provides a necessary break between heavy consonants (`я-і-м`).]
+## Діалоги (Dialogues) (~330 words total)
+- P1 (~50 words): Introduce the concept of *милозвучність* (euphony, sweet-soundingness) as the secret to making Ukrainian speech flow naturally. Explain that Ukrainian grammaticalizes the avoidance of consonant or vowel clashes.
+- P2 (~30 words): Set the scene for the first dialogue: A student is writing an essay about their city and a friend helps correct the flow.
+- P3 (~100 words): Dialogue 1 (Describing locations). "— Де ти живеш? — Я живу в Києві. А ти? — Я живу у Львові. — У Львові гарно!" Highlight the alternating forms "в Києві" and "у Львові".
+- P4 (~30 words): Set the scene for the second dialogue: Making plans and listing people.
+- P5 (~120 words): Dialogue 2 (Making plans). "— Ти й Олена йдете в кіно? — Ні, я і Максим йдемо в парк. — А Олена й Тарас? — Вони йдуть у театр." Highlight "й" between vowels and "і" between consonants.
 
-## У чи В? Майстерність чергування (~350 words total)
-- P1 (~90 words): [The Core Rule: Vowel vs. Consonant environment. Explain the "V-C-V" (vowel-consonant-vowel) sandwich. Use `в` when the preceding word ends in a vowel and the next starts with a consonant (`живу в Україні`). Use `у` between consonants (`Максим у банку`).]
-- P2 (~80 words): [The "Difficult Neighbors" Exception: Explain that even if a word ends in a vowel, we use `у` if the next word starts with `в`, `ф`, `св`, or `льв`. Examples: `була у Франції` (not `в Франції`), `працюю у Львові`, `граю у футбол`.]
-- P3 (~90 words): [Sentence Position and Pauses: Explain that `У` is the absolute king at the start of a sentence or after a comma/pause. It provides a strong, clear start. Examples: `У мене є...`, `Так, у нас є...`, `У понеділок...`. Contrast this with the weaker `в` sound.]
-- P4 (~90 words): [Beyond Prepositions: Initial У/В on words. Introduce the idea that the same rules apply to words like `учитель/вчитель`, `уже/вже`, `увечері/ввечері`. Example: `мій учитель` (ends in consonant) vs. `моя вчителька` (ends in vowel).]
-- <!-- INJECT_ACTIVITY: quiz-u-v-choice --> [Quiz: Choose the correct preposition (У or В) based on the surrounding sentence context. 10 items.]
-- <!-- INJECT_ACTIVITY: quiz-naturalness-comparison --> [Quiz: Comparison of two sentences. Identify which one sounds "more Ukrainian" (euphonic) and which sounds "choppy" (clusters). 6 items.]
+## У чи В? (У or В?) (~330 words total)
+- P1 (~80 words): Explain the core rule of *у/в* alternation: avoiding consonant clusters. Use the contrast of "в Києві" (vowel-consonant) vs "у Львові" (consonant-consonant) to show how the rule ensures a smooth phonetic flow. Mention this applies to prefixes too (вже/уже).
+- P2 (~80 words): Detail the rule for using **В**. Use it after a vowel and before a consonant. Provide examples: "живу в Києві", "працюю в офісі", "пішла в магазин".
+- P3 (~80 words): Detail the rule for using **У**. Use it after a consonant and before a consonant. Provide examples: "Тарас у Львові", "Максим у банку", "брат у школі".
+- P4 (~90 words): Explain the key exceptions. Always use "У" at the start of a sentence ("У мене є...", "У понеділок...") or after a pause/comma ("Так, у нас є..."). Advise learners to trust their ears and not overthink the rule.
+- <!-- INJECT_ACTIVITY: quiz-u-or-v --> [quiz, У or В? Choose correct form based on surrounding sounds, 10 items]
 
-## І чи Й? З, із, чи зі? (~300 words total)
-- P1 (~80 words): [The І/Й Rule: Explain that `Й` is a semivowel that glides between two vowels, whereas `І` is a full vowel used to separate consonants. Examples: `мама й тато` (glide), `брат і сестра` (break), `вона й він`.]
-- P2 (~60 words): [Initial `І`: Similar to `У`, at the start of a sentence or after a pause, we always use `І`. Example: `І він прийшов.` Explain that `Й` can never start a sentence as a conjunction.]
-- P3 (~70 words): [The `З` Preposition: Introduce `з` (with/from) as the default. Explain that it is highly "sticky" and usually merges with the next word. Examples: `з Одеси`, `з другом`, `з братом`.]
-- P4 (~90 words): [The `Із` and `Зі` variants: Explain that `із` is used between consonants, especially before `ш` or `щ` (`із шафи`). `Зі` is the special variant for difficult clusters like `св`, `ст`, or `льв`, and the fixed phrase `зі мною`. Examples: `зі святом`, `зі школи`, `зі мною`.]
-- <!-- INJECT_ACTIVITY: quiz-i-y-choice --> [Quiz: Choose the correct conjunction (І or Й) to connect nouns. 8 items.]
-- <!-- INJECT_ACTIVITY: fill-in-z-iz-zi --> [Fill-in-the-blank: Choose the correct form of the preposition 'with/from' (з, із, or зі). 6 items.]
+## І чи Й? З, із, чи зі? (~330 words total)
+- P1 (~80 words): Introduce the *і/й* alternation for conjunctions. Explain the rule for **І**: use it between two consonants to break them up. Examples: "брат і сестра", "Тарас і Максим", "стіл і стілець". Mention "І" is always used at the start of a sentence: "І він прийшов".
+- P2 (~70 words): Explain the rule for **Й**: use it between two vowels to create a glide. Examples: "мама й тато", "вона й він", "Олена й Андрій".
+- <!-- INJECT_ACTIVITY: quiz-i-or-y --> [quiz, І or Й? Choose correct conjunction, 8 items]
+- P3 (~80 words): Introduce the *з/із/зі* alternation. Explain that **З** is the default before vowels and most single consonants: "з Одеси", "з другом", "з братом".
+- P4 (~100 words): Explain the variants **Із** and **Зі**. Use "Із" between consonants to avoid a cluster: "Максим із Семеном". Use "Зі" before difficult clusters, especially those starting with з, с, ш, щ, льв: "зі мною", "зі святом", "зі школи", "зі Львова".
+- <!-- INJECT_ACTIVITY: fill-in-z-iz-zi --> [fill-in, З, із, or зі? Complete the sentence, 6 items]
 
-## Підсумок — Резюме (~270 words total)
-- P1 (~120 words): [Recap of the three euphonic "gears". 1) У/В helps avoid consonant clusters or vowel clashes in locations. 2) І/Й keeps connections between words musical. 3) З/Із/Зі handles the most difficult "sticky" clusters. Remind the student that these rules are about making speech easier for the SPEAKER, not just the listener.]
-- P2 (~150 words): [Self-check Q&A list:
-  * Q: What is the main goal of euphony? A: To avoid clusters of consonants or clashing vowels (милозвучність).
-  * Q: Which form do I use at the start of a sentence? A: Always the full vowels (У, І).
-  * Q: How do I say "I live in Lviv"? A: "Я живу у Львові" (to avoid the в-льв cluster).
-  * Q: "Mama and Tato" — І or Й? A: "Мама й тато" (the й glides between the vowels 'а' and 'т').]
+## Підсумок — Summary (~330 words total)
+- P1 (~100 words): Recap the three pairs of euphonic alternations and their primary purpose: avoiding consonant+consonant clashes (у/в), avoiding vowel+vowel clashes (і/й), and softening difficult consonant clusters (з/із/зі).
+- P2 (~100 words): Provide a summary list of the key contrasting examples for quick review: "у Львові" vs "в Києві"; "брат і сестра" vs "мама й тато"; "з другом" vs "із сестрою" vs "зі мною". Remind them of the sentence-start exceptions ("У мене є", "І він...").
+- P3 (~130 words): Self-check questions. Present a bulleted list for the learner to mentally solve:
+  - Which is correct? Я живу (в/у) Києві.
+  - Which is correct? Мама (і/й) тато.
+  - Which is correct? Він іде (зі/з) школи.
+  Conclude by encouraging the learner to read sentences aloud to feel the natural phonetic flow of Ukrainian.
+- <!-- INJECT_ACTIVITY: quiz-euphony-comparison --> [quiz, Which sentence sounds more natural? (euphony comparison), 6 items]
 
 Grand total: ~1320 words

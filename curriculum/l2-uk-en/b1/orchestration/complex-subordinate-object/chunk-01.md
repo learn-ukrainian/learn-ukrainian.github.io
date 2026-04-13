@@ -1,0 +1,39 @@
+## Складнопідрядне речення: вступ (~770 words total)
+
+When we communicate complex thoughts, we often need to combine multiple ideas into a single sentence. In Ukrainian, as in English, we use different types of complex sentences depending on how these ideas relate to each other. Previously, we explored the compound sentence, where two independent clauses are joined as equals. Now, we are stepping into the territory of the **складнопідрядне речення** (complex sentence with subordination). This type of sentence is fundamentally different because its parts are not equal. It consists of a **головна частина** (main clause) and one or more **підрядні частини** (subordinate clauses).
+
+The core characteristic of this grammatical structure is its strict hierarchy. The main clause is grammatically independent and holds the core message. The subordinate clause, on the other hand, provides essential supporting information, context, or clarification that the main clause lacks. These clauses are inextricably linked together by a **сполучник підрядності** (subordinating conjunction) or a **сполучне слово** (relative/connective word). Without these vital connectors, the dependency relationship would collapse.
+
+Складнопідрядне речення — це складне речення, у якому одна частина синтаксично залежить від іншої. Головна частина завжди виступає як основа, від якої ми ставимо питання. Підрядна частина підпорядковується цій основі і не може існувати як окреме, повноцінне висловлювання без втрати змісту. На відміну від складносурядного речення, де частини є рівноправними партнерами, тут ми маємо чітку ієрархію: головна частина керує, а підрядна служить їй.
+
+The most crucial concept to master when working with complex sentences in Ukrainian is the dependency relationship. The entire structure relies on the fact that the subordinate clause depends entirely on the main clause. You can always prove this dependency by asking a specific logical question. This question must originate from the main clause—often from a specific word within it—and point directly to the subordinate clause, which acts as the answer. Let us look at a classic example to illustrate this mechanics.
+
+Уявіть ситуацію, коли хтось каже: «Я знаю». Це речення звучить незавершено, оскільки дієслово вимагає додаткової інформації. Слухач одразу хоче запитати: «Що саме ти знаєш?». І тоді підрядна частина дає відповідь: «Я знаю, що він прийде». У цьому випадку слово «що» виконує роль місточка, який з'єднує головну думку з її логічним продовженням. Підрядна частина повністю задовольняє запит, який виник у головній.
+
+:::note
+**The Power of the Question** — In Ukrainian syntax, the ability to ask the right question from the main clause to the subordinate clause is your primary tool for analyzing and constructing complex sentences correctly. Always find the main verb and ask: *що? який? де? коли?*
+:::
+
+Detailed grammatical analysis requires us to identify exactly what kind of information the subordinate clause provides. We do this by categorizing the question we asked. By determining the type of question, we uncover the specific type of the subordinate clause. For instance, if the main clause contains a noun that needs description, we might ask «який?» (which?). This leads us to an attributive clause.
+
+Розглянемо кілька прикладів, щоб зрозуміти цей механізм на практиці. Якщо ми скажемо: «Книга, яку я прочитав, була дуже цікава», ми маємо справу з ознакою предмета. Головна частина — «Книга була дуже цікава». Від слова «книга» ми ставимо питання: книга (яка?), яку я прочитав. Це означальний тип. Інший випадок: «Коли пішов дощ, ми сховались під деревом». Головна частина — «ми сховались під деревом». Ми ставимо питання: сховались (коли?), коли пішов дощ. Це вже обставинний тип, який вказує на час дії.
+
+> *Let's look at a few examples to understand this mechanism in practice. If we say: "The book that I read was very interesting," we are dealing with the attribute of an object. The main clause is "The book was very interesting." From the word "book," we ask the question: the book (which?), that I read. This is the attributive type. Another case: "When it started raining, we hid under a tree." The main clause is "we hid under a tree." We ask the question: hid (when?), when it started raining. This is the adverbial type, which indicates the time of the action.*
+
+According to standard Ukrainian school grammar, all these subordinate clauses are divided into three main categories based on the questions they answer and their syntactic function. These categories are attributive, adverbial, and explanatory clauses. While attributive clauses describe nouns and adverbial clauses describe the circumstances of an action, the **з'ясувальне речення** (explanatory/object clause) serves a very special and incredibly frequent role. It acts almost like a direct object, answering the questions of indirect cases. The specific word in the main clause that demands this explanation is called the **пояснюване слово** (explained word — verb in main clause).
+
+This explanation is vital because the main clause alone often feels incomplete without it. To smoothly connect the main clause to its necessary explanation, we rely on a specific set of conjunctions. The most frequent tools for this job are **що** (that — conjunction or relative word), **щоб** (in order to/that — conjunction of desire/purpose), and **чи** (whether — conjunction for questions). Mastering these three connectors unlocks a massive portion of natural Ukrainian speech.
+
+У цьому модулі ми зосередимо нашу увагу виключно на з'ясувальних реченнях. Чому саме на них? Тому що вони є абсолютно незамінними в щоденному спілкуванні. Ми постійно використовуємо їх, коли хочемо передати чужі слова, висловити власну думку, поділитися почуттями або описати свої бажання. Вони відповідають на питання непрямих відмінків: кого? чого? кому? чому? що? ким? чим? Для їх приєднання ми найчастіше використовуємо сполучники що, щоб, чи, а також різноманітні питальні слова.
+
+To truly grasp how naturally these structures flow in Ukrainian, you need to see them in context. Reading a cohesive text allows you to observe how different types of complex sentences work together to create a detailed narrative. This is essential for building an intuitive feel for the language. As you read the following passage, pay close attention to the punctuation—specifically, the comma that almost always precedes the subordinating conjunction—and try to identify which part of the sentence is the main clause and which part acts as the subordinate clause.
+
+Уявіть звичайний ранок у сучасному офісі. Керівник повідомив, що сьогодні відбудеться важлива нарада. Усі співробітники знали, що на цьому зібранні обговорюватимуть новий проєкт. Менеджер запитав, чи готові всі необхідні документи для презентації. Головний інженер хотів, щоб команда звернула увагу на технічні деталі, які потребують доопрацювання. Ніхто не знав точно, коли закінчиться ця дискусія, але кожен розумів, що результати матимуть велике значення для компанії. Коли нарада нарешті завершилася, усі відчули, що вони зробили крок у правильному напрямку. Цей короткий текст демонструє, як органічно з'ясувальні та інші підрядні частини вплітаються в нашу повсякденну мову.
+
+:::info
+**Punctuation Rule** — In a complex sentence with subordination, the main clause and the subordinate clause are always separated by a comma. The comma is placed immediately before the subordinating conjunction or relative connective word.
+:::
+
+<!-- INJECT_ACTIVITY: reading-complex-sentence-intro -->
+<!-- INJECT_ACTIVITY: fill-in-complex-sentence-intro -->
+<!-- INJECT_ACTIVITY: quiz-complex-sentence-intro -->

@@ -1,40 +1,39 @@
-## Спосіб 3: Зовсім інші слова (суплетивізм)
+## Спосіб 3: Зовсім інші слова (суплетивізм) (Method 3: Completely Different Words) (~550 words)
 
-Sometimes, a verb changes so drastically between its forms that it becomes a completely different word. This is called suppletion. You know this from English, where the past tense of "go" is "went." In Ukrainian, a few basic verbs use entirely different roots to distinguish between the ongoing process and the final result. The most critical pair is the verb for taking.
+We have already looked at how to form an aspectual **пара** (pair) using a **префікс** (prefix) or a **суфікс** (suffix), and sometimes by changing the internal **корінь** (root). You saw this with regular pairs like **читати / прочитати** (to read) and **писати / написати** (to write). But what happens when the two verbs do not look alike at all? Our third method involves completely different words for the imperfective and perfective aspects. Linguists call this suppletion. These are usually the oldest and most fundamental verbs in the language. Because they do not follow a predictable pattern, you simply have to memorize them. Let us look at the most important ones you need to know right now.
 
-Уявіть, що ви берете речі з полиці. Це довгий процес. Але коли ви нарешті взяли останню річ, дія завершилася. Тому ми маємо два слова: «брати» для процесу і «взяти» для результату.
+Деякі дуже важливі дієслова мають унікальні видові пари. Ці слова виглядають абсолютно по-різному, тому що вони дуже давні. Їх неможливо утворити за правилами, тому вам треба просто запам'ятовувати кожну таку пару.
 
-> *Imagine that you are taking things from a shelf. This is a long process. But when you finally took the last thing, the action finished. That is why we have two words: "брати" (to be taking) for the process and "взяти" (to take) for the result.*
+> *Some very important verbs have unique aspectual pairs. These words look completely different because they are very old. It is impossible to form them by rules, so you just need to memorize each such pair.*
 
-Another essential pair relates to speech. The imperfective verb «говорити» describes the continuous act of speaking. It is a process that can last for hours. However, to express the result of delivering a single message, you must use the perfective verb «сказати». This is the instantaneous act of saying or telling a concrete fact.
+The first essential pair you must learn is **брати** (imperfective) and **взяти** (perfective), which mean "to take". Use the imperfective form when you are describing the continuous process of taking things regularly, or an ongoing attempt to take something over a longer period of time. Use the perfective form when the object is successfully in your hands as a single, definitively completed action in the past or future.
 
-Вчора ми довго говорили про роботу. Ми говорили дві години, але колега так і не сказав мені новину. Тільки сьогодні він сказав правду.
+Кожного ранку я брав свою улюблену книгу з полиці і читав її. Але сьогодні я взяв іншу книгу, тому що та мені вже не цікава.
 
-> *Yesterday we talked for a long time about work. We talked for two hours, but the colleague still did not tell me the news. Only today he told the truth.*
+> *Every morning I took my favorite book from the shelf and read it. But today I took a different book because that one is no longer interesting to me.*
 
-Students always learn another famous pair together: «шукати» (to search) and «знайти» (to find). Strictly speaking, they are different actions rather than a true grammatical pair. The actual perfective partner for «шукати» is «пошукати» (to search for a bit). But in daily life, finding is the natural result of searching, so we treat them as a practical pair. A similar jump happens with «ловити» (to catch - process) and «піймати» (to catch - result).
+Another incredibly common pair in daily life is **говорити** (imperfective) and **сказати** (perfective). The imperfective verb focuses heavily on the ongoing process of talking, conversing, or speaking a specific language. The perfective verb focuses entirely on the result of delivering a specific message or making a single, complete statement. If you chat with a friend for an hour, you use the imperfective, but if you deliver a single piece of news, you use the perfective.
 
-Мій брат любить ловити рибу. Він може ловити її цілий день. Але рідко він може дійсно піймати велику рибу. Коли він шукає гриби, він хоче їх знайти.
+Ми довго говорили про наші плани на майбутнє та нову роботу. Нарешті він сказав, що хоче переїхати в інше місто.
 
-> *My brother likes catching fish. He can be catching them all day. But rarely can he actually catch a big fish. When he searches for mushrooms, he wants to find them.*
+> *We talked for a long time about our plans for the future and a new job. Finally, he said that he wants to move to another city.*
 
-:::info
-**Grammar box**
-Always memorize verbs in their aspectual pairs. If you only know the imperfective form, you will never be able to express that you have successfully finished an action!
+There are a few more irregular pairs that you will use frequently in everyday conversations. The pair for "to catch" is **ловити** (imperfective) and **піймати** (perfective). You might spend all day trying to catch fish, which is the process, but the moment you actually secure one, you have achieved the result. Similarly, the verb "to put" horizontally is **класти** (imperfective) and **покласти** (perfective). Even though they share part of a root, they are treated as a suppletive pair because of the historical changes in the word structure.
+
+Мій кіт цілий день ловив маленьку мишу в саду. Ввечері він нарешті піймав її і поклав біля дверей.
+
+> *My cat caught a small mouse in the garden all day. In the evening, he finally caught it and put it near the door.*
+
+:::note
+**Quick tip**
+Remember that perfective verbs like **взяти** or **сказати** can never be used in the present tense! A definitively completed result cannot be happening right now. They only exist in the past and simple future.
 :::
 
-Now that you understand the three main ways Ukrainian forms aspectual pairs, let us look at the big picture. We have grouped twenty essential verb pairs for this level into a reference table. This includes examples of prefixation, suffix changes, and completely different words. Notice the essential pair «купувати» and «купити» (to buy), which drops its long suffix to form the perfective result.
+Finally, we must warn you about a very common trap for language learners. The verbs for "to search" and "to find" are often taught together, leading students to believe they are an aspectual pair. The verb "to search" is **шукати**, while the verb "to find" is **знайти**. However, they describe two completely different actions. Searching is looking for something, and finding is discovering it. They are not a true pair. The actual perfective partner for searching is **пошукати**, and the imperfective partner for finding is **знаходити**. Keep this distinction clear in your mind.
 
-Ось найважливіші дієслова для вашого рівня. Вивчайте їх тільки парами. Так ви зможете завжди правильно описувати дію.
+Я довго шукав свої ключі від машини у кімнаті. Я був дуже радий, коли нарешті знайшов їх під столом.
 
-> *Here are the most important verbs for your level. Learn them only in pairs. This way you will always be able to correctly describe the action.*
+> *I searched for my car keys in the room for a long time. I was very glad when I finally found them under the table.*
 
-| Спосіб | Недоконаний вид (Процес) | Доконаний вид (Результат) |
-| :--- | :--- | :--- |
-| **Префікс по-** | снідати, думати, бачити | поснідати, подумати, побачити |
-| **Інші префікси** | робити, читати, писати, пити | зробити, прочитати, написати, випити |
-| **Суфікси / Корінь**| купувати, допомагати, відчиняти | купити, допомогти, відчинити |
-| **Інші слова** | брати, говорити, шукати, ловити | взяти, сказати, знайти, піймати |
-
-<!-- INJECT_ACTIVITY: match-up-blanks-pairs -->
-<!-- INJECT_ACTIVITY: fill-in-aspect-choice -->
+<!-- INJECT_ACTIVITY: fill-in-categorize -->
+<!-- INJECT_ACTIVITY: fill-in-choose-partner -->

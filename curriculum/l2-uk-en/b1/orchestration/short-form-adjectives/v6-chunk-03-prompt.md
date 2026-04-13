@@ -22,7 +22,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-статична картинка. Але коли в українській народній пісні співають про «зелен гай» *(green grove)*, це слово ніби оживає. Коротке слово змушує ритм пісні прискорюватися, воно передає глибоке почуття та особливу атмосферу. Слово «ясен» у звертанні «ясен місяцю» *(bright moon)* звучить урочисто та магічно. Ці слова створюють специфічний художній ефект: вони роблять опис менш статичним і набагато виразнішим. Хоча ми рідко використовуємо їх у щоденній розмові, їх треба знати, щоб глибоко розуміти українську літературу. Друга категорія — це **активний сучасний список** *(active modern list)*. Це слова, які не є архаїзмами чи поетичними прикрасами. Ми використовуємо їх кожного дня у звичайному сучасному українському спілкуванні. Вони абсолютно необхідні для того, щоб висловлювати свої потреби, описувати свої стани та оцінювати ситуації. Ці прикметники виконують у реченні роль присудка. Найважливіше слово з цієї групи — це **потрібен** *(needed)* від повного «потрібний». Ми постійно кажемо: «Мені потрібен час» або «Тобі потрібен відпочинок». Інше дуже популярне слово — **певен** *(certain, sure)* від «певний». Його використовують для вираження абсолютної впевненості: «Я певен, що ми переможемо». Також дуже активно вживається слово **годен** *(fit, capable)* від «годний», яке показує фізичну або моральну здатність щось зробити. Коли ми говоримо про психологічну готовність до дій, ми використовуємо коротку форму **ладен** *(willing, ready)* від «ладний». Наприклад: «Він ладен допомогти всім друзям». Для оцінки якості або важливості ми беремо слово **варт** *(worth)* від «вартий». Ми часто чуємо фразу: «Цей фільм не варт нашої уваги». Ще одне чудове коротке слово — це **рад** *(glad)* від «радий», яке показує емоційний стан: «Я дуже рад тебе бачити». І нарешті, слово **жив** *(alive)* від «живий» також часто виступає у предикативній ролі, коли ми хочемо підкреслити сам факт існування. Усі ці слова є живою, дихаючою частиною сучасної української граматики. Вони роблять наше мовлення точним, лаконічним та природним. Як же ці сучасні короткі форми поводяться з точки зору граматики? Ми вже згадували, що вони не відмінюються за відмінками. Однак це зовсім не означає, що вони є абсолютно незмінними словами. Сучасні предикативні форми дуже гнучкі: вони завжди узгоджуються з підметом у роді та числі. Візьмемо для прикладу наше найпопулярніше слово «потрібен». У чоловічому роді воно має нульове закінчення і виглядає як «потрібен». Це і є та сама «коротка» форма, яка втратила закінчення «-ий». Але як тільки ми змінюємо рід підмета на жіночий, форма миттєво адаптується: вона отримує закінчення «-а» і перетворюється на **потрібна** *(needed)*. Наприклад: «Мені потрібна допомога». Якщо підмет має середній рід, ми використовуємо закінчення «-е», і отримуємо форму **потрібне** *(needed)*, як у реченні: «Нам потрібне нове обладнання». У множині для всіх родів діє єдине закінчення «-і», яке дає нам форму **потрібні** *(needed)*: «Їм потрібні гроші». Абсолютно за таким самим принципом працюють і всі інші слова з нашого активного списку. Форма чоловічого роду «певен» змінюється на **певна** *(certain)*, а «годен» стає **годна** *(capable)*. Також слово «ладен» перетворюється на **ладна** *(willing)*, «варт» адаптується як **варта** *(worth)*, а «рад» стає формою **рада** *(glad)*. Тобто, хоча вони й втратили класичне прикметникове закінчення у чоловічому роді, їхній граматичний зв'язок із підметом залишається дуже міцним і обов'язковим. <!-- INJECT_ACTIVITY: match-short-full --> <!-- INJECT_ACTIVITY: essay-usage -->
+form acts as a stylistic amplifier, stripping away the static weight of the standard ending. However, these forms are confined to their artistic habitat. Using «зелен» in a modern conversation to describe a car would sound incredibly archaic. While the poetic group is reserved for literature, there is a second, highly active category of short forms you will use every day. These are not archaic remnants; they are essential for expressing states, readiness, and needs, usually appearing in the predicate position. The most common is the word **потрібен/потрібна/потрібне** (needed — short form, predicative). If you feel confidence, you will say that you are **певен/певна** (certain, sure — short form) in your decision. У сучасній мові ми постійно використовуємо ці слова для вираження фізичного або емоційного стану. Наприклад, ми часто кажемо: «Мені потрібна твоя допомога» або «Я певен, що все буде добре». > *In modern language, we constantly use these words to express a physical or emotional state. For example, we often say: "I need your help" or "I am certain that everything will be fine."* This active list extends to words describing human capability and emotion. When discussing someone's fitness for a task, you use **годен/годна** (fit, capable — short form). If you want to express psychological readiness, the correct choice is **ладен/ладна** (willing, ready — short form). To evaluate if an action merits attention, you deploy **варт/варта** (worth — short form), and to express joy, you use **рад/рада** (glad — short form). You might also encounter «жив» (alive). These words express dynamic states rather than static attributes. The morphological behavior of this modern list requires careful attention. Even though these adjectives are "short," they do not lose their ability to agree with the subject. In the masculine singular form, the ending is dropped entirely. This is why we say «потрібен» or «певен». :::info **The Zero Ending** The masculine singular form of a short adjective essentially has a zero ending. When creating the feminine, neuter, or plural forms, you add the standard endings `-а`, `-е`, and `-і` directly to the stem. ::: Незважаючи на відсутність закінчення в чоловічому роді, ці прикметники обов'язково узгоджуються з іменником у жіночому, середньому роді та у множині. Тому слово змінює свою форму: чоловічий рід — «потрібен», жіночий рід — «потрібна», середній рід — «потрібне», а множина — «потрібні». > *Despite the absence of an ending in the masculine gender, these adjectives necessarily agree with the noun in the feminine, neuter genders, and in the plural. Therefore, the word changes its form: masculine gender — "потрібен", feminine gender — "потрібна", neuter gender — "потрібne", and plural — "потрібні".* Whenever you use these active forms, you must identify the gender and number of the subject. A woman speaking about her willingness says «я ладна», whereas a man says «я ладен». Similarly, a task is «варта» if the noun is feminine (like «увага» — attention), or «варте» if neuter. The masculine form looks stripped down, but the paradigm remains intact. <!-- INJECT_ACTIVITY: match-short-full --> <!-- INJECT_ACTIVITY: essay-usage -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -549,7 +549,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -562,18 +629,64 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] короткий прикметник (short-form adjective)
+- [ ] повний прикметник (full-form adjective)
+- [ ] потрібен/потрібна/потрібне (needed — short form, predicative)
+- [ ] певен/певна (certain, sure — short form)
+- [ ] годен/годна (fit, capable — short form)
+- [ ] ладен/ладна (willing, ready — short form)
+- [ ] варт/варта (worth — short form)
+- [ ] рад/рада (glad — short form)
+- [ ] зелен (green — poetic short form)
+- [ ] ясен (bright, clear — poetic short form)
+- [ ] народнопоетичний (folk-poetic register)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Короткі прикметники у фольклорі та літературі (~800 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

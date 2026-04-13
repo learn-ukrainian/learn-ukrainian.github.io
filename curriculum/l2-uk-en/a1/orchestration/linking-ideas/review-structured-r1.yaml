@@ -2,43 +2,54 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 10
-  evidence: Covers all points in the `content_outline`, including the specific dialogues
-    and comma rules.
+  score: 6
+  evidence: 'All planned H2 sections are present and the required conjunctions are
+    covered, but the section pacing is far off the 300-word plan budgets: `Діалоги`
+    ~422 words, `Сполучники` ~563, `Бо і тому що` ~488'
 - dimension: 2
   name: Linguistic accuracy
-  score: 9
-  evidence: Generally excellent, but "Сьогодні сонце" is less pedagogically sound
-    as an adverbial parallel to "Сьогодні холодно".
+  score: 10
+  evidence: I did not find a substantiated Russianism, Surzhyk form, calque, paronym
+    error, wrong gender/case, or false grammar claim in the Ukrainian text. VESUM/textbook
+    spot checks did not contradict the modul
 - dimension: 3
   name: Pedagogical quality
-  score: 8
-  evidence: Good use of examples, but two activity markers testing `бо` are placed
-    before the `бо` section.
+  score: 6
+  evidence: 'The module has a PPP-like flow (`Діалоги` → explanation → practice markers),
+    but much of the English exposition is bloated and low-yield: “These small words
+    are the grammatical glue of the language.”,'
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: All required and recommended conjunctions are used naturally in prose.
+  score: 9
+  evidence: 'All required vocabulary from the plan appears naturally in prose: `і`,
+    `та`, `а`, `але`, `бо`, `тому що`. Recommended items are also partly integrated
+    (`теж`, `або`, `чи`, `тому`).'
 - dimension: 5
   name: Exercise quality
-  score: 8
-  evidence: Exercises test appropriate skills, but placement causes them to test untaught
-    concepts.
+  score: 6
+  evidence: 'The module includes the expected 4 markers, but they are clustered late:
+    two appear only after `Бо і тому що`, and two more after the summary. The broad
+    all-conjunction practice marker is not placed r'
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: Natural teacher tone without corporate gamification. Good, practical examples.
+  score: 5
+  evidence: 'The tone is readable, but several lines are empty hype rather than instruction:
+    “These small words are the grammatical glue of the language.”, “This immediately
+    elevates Ukrainian speech…”, “Mastering'
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: 1778 words easily exceeds the 1200 word target. Clean markdown structure.
+  evidence: All planned H2 headings are present and in order, markdown is clean, and
+    the pipeline word count is 1973, which is above the 1200 target.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Correct explanations of Ukrainian communication styles (e.g., answering
-    "Чому" with "Бо").
+  evidence: The module presents Ukrainian on its own terms and does not rely on Russian-centric
+    framing or dubious cultural claims.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: Natural multi-turn conversations showing real situations.
+  score: 8
+  evidence: 'The dialogues use named speakers and multi-turn exchanges in plausible
+    situations: vacation planning, cafe choice, daily routine, missed call. They are
+    functional and more natural than drill-only text'
 findings: []

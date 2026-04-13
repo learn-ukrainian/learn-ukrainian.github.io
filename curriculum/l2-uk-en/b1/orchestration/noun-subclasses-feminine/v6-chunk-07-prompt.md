@@ -32,7 +32,7 @@ Grand total: ~4600 words
 <previous_context>
 [...previous sections truncated...]
 
-**-ість** має один дуже важливий фонетичний секрет, про який ви повинні завжди пам'ятати. Давайте дуже уважно подивимося на його внутрішню структуру. Він завжди закінчується на складну комбінацію двох приголосних звуків: **-ст-**. Що саме це означає для нашої граматики та відмінювання? Згадайте наше головне, фундаментальне правило орудного відмінка: ми робимо подвоєння тільки тоді, коли основа закінчується рівно на один приголосний звук. Це добре видно у таких словах, як ніччю або **сіллю** *(with salt)*. Оскільки слова із суфіксом **-ість** завжди мають збіг кількох приголосних наприкінці, вони ніколи не отримують подвоєння в орудному відмінку. Це абсолютно залізне і непорушне правило нашої мови. Тому ми пишемо і впевнено говоримо: ми можемо захоплюватися його глибокою **мудрістю** *(with wisdom)*. Ми завжди повинні пишатися своєю національною **гідністю** *(with dignity)*, або ми можемо просто працювати з великою **радістю** *(with joy)*. Ніякого подвоєння тут немає і бути не може. Це правило є дуже логічним, адже вимовляти три приголосні звуки підряд було б фізично незручно для нашого мовного апарату. Тому наша мова завжди обирає легкість і фонетичну мелодійність. Прочитайте цей короткий атмосферний текст і зверніть особливу увагу на те, як слова третьої відміни створюють настрій. Спробуйте самостійно визначити відмінок кожного виділеного слова під час читання. «Харківська **осінь** *(autumn)* завжди приходить дуже несподівано і швидко. Ця осінь принесла з собою ранню прохолоду, але в кожному серці залишалася тепла радість. Кожна довга **тінь** *(shadow)* у старому парку Шевченка ставала ще довшою, коли до міста наближалася темна ніч. Гуляти центральними вулицями цією **осінню** *(by autumn)* було справжньою естетичною насолодою. Історичні будівлі ніби дихали глибокою мудрістю поколінь, а кожна коротка подорож до центру перетворювалася на маленьку міську пригоду. Незважаючи на темряву і труднощі, всі харків'яни щиро ділилися своєю **любов'ю** *(with love)* до рідного і незламного міста. У кожній розмові постійно відчувалася велика гордість за свою сучасну історію.» Ці елегантні жіночі слова роблять будь-який текст більш глибоким та емоційним. Чи успішно ви змогли знайти всі форми орудного відмінка у цьому тексті? Так, це чудові слова осінню, мудрістю та любов'ю. Наостанок, давайте детально подивимося на ще одну надзвичайно цікаву групу слів нашої третьої відміни. Це спеціальні збірні поняття та різноманітні матеріали. Наприклад, популярне слово **молодь** *(youth)* описує абсолютно всіх молодих людей разом як одну групу. Це слово граматично існує тільки в однині, але фактично означає багатьох людей. Сучасна українська молодь активно і невтомно волонтерить щодня. Коли ми використовуємо це слово в орудному відмінку, ми обов'язково робимо наше класичне подвоєння. Ми щиро пишаємося нашою креативною **молоддю** *(with youth)*. Інший чудовий приклад — це різні метали та хімічні речовини, такі як червона **мідь** *(copper)*. Старий майстер працював із блискучою **міддю** *(with copper)* цілий довгий день у своїй просторій майстерні. Також до цієї унікальної відміни належать сильні людські емоції, наприклад, сліпа **лють** *(fury)*. Вороги завжди швидко тікали перед нашою справедливою **люттю** *(with fury)*. Ці різноманітні приклади яскраво показують, наскільки функціональною, багатою і важливою є третя відміна. Вона гармонійно охоплює буквально все: від базових явищ природи до найвищих людських почуттів і складних абстрактних філософських концепцій нашого життя. <!-- INJECT_ACTIVITY: sentence-builder, Build sentences using III відміна nouns in different відмінки -->
+describes a deep **мудрість** *(wisdom)* or a physical **річ** *(thing)*, the suffix inherently ends in a consonant cluster. This makes consonant duplication physically and phonetically impossible, so you simply add the final vowel. Коли основа слова закінчується на два приголосні звуки, в орудному відмінку ми просто додаємо закінчення «-ю». Ми захоплюємося глибокою мудрістю літніх людей. Кожен громадянин завжди пишається своєю національною гідністю. Ви можете бути абсолютно впевнені у цьому правилі. У таких граматичних формах ніколи не відбувається подвоєння, що значно полегшує їхнє правильне написання. :::info **Grammar box: Consonant Clusters** Remember that the "no doubling" rule applies to *any* third declension noun ending in two consonants. For example, the noun **жовч** (bile) has a single final consonant and doubles to become «жовччю», but **якість** (quality) ends in a cluster and simply becomes «якістю». ::: Now, let's observe how these various nouns function organically within a continuous narrative. Read the following descriptive text about a typical, atmospheric autumn day in an Eastern Ukrainian city. Pay close attention to the third declension nouns embedded in the story. You will encounter words like **осінь** *(autumn)*, **радість** *(joy)*, and **тінь** *(shadow)*. Try to mentally identify which grammatical case is being used for each occurrence as you read. Харківська осінь завжди приходить несподівано, приносячи приємну прохолоду після літа. Для багатьох студентів ця пора року є справжньою радістю, адже місто знову оживає. Коли сонце сідає, довга тінь від старих дерев ховає вулиці. Холодна ніч швидко огортає парки, змушуючи людей поспішати додому. Проте навіть у таку погоду мешканці зігрівають своє місто щирою любов'ю. > *Kharkiv autumn always arrives unexpectedly, bringing pleasant coolness after summer. For many students, this season is a real joy, because the city comes alive again. When the sun sets, a long shadow from the old trees hides the streets. A cold night quickly envelops the parks, forcing people to hurry home. However, even in such weather, the residents warm their city with sincere love.* Beyond abstract qualities and natural phenomena, the third declension also includes several important collective nouns and names of industrial or natural materials. These specific words typically exist only in the singular form within the dictionary, but they conceptually carry a collective, plural, or mass meaning that you need to be aware of. Сучасна українська молодь бере активну участь у відбудові країни. Цей іменник означає велику групу людей, але граматично поводиться як слово в однині. Так само працюють назви матеріалів або важливих речовин, наприклад, мідь та кров. Будівельники часто використовують мідь, а лікарі щодня перевіряють людську кров. Ще одна цікава група — це слова, що виражають сильні емоції, такі як сліпа лють. Коли ворог нападає, справедлива лють об'єднує націю. Because words like **молодь** *(youth)*, **кров** *(blood)*, or emotions like **любов** *(love)* represent uncountable mass concepts or large groups, they strictly take singular verb agreements. Notice carefully how the collective word is grammatically paired with a singular verb, even though it conceptually refers to many individual parts. <!-- INJECT_ACTIVITY: sentence-builder, Build sentences using III відміна nouns in different відмінки, 6 items -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -655,7 +655,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -668,18 +735,69 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (7/7).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] любов (love — III відміна, орудний: любов'ю)
+- [ ] осінь (autumn — III відміна, орудний: осінню)
+- [ ] радість (joy — III відміна, орудний: радістю, no подвоєння)
+- [ ] подорож (journey — III відміна, орудний: подорожжю)
+- [ ] ніч (night — III відміна, орудний: ніччю, чергування і→о)
+- [ ] піч (oven — III відміна, орудний: піччю, чергування і→е)
+- [ ] сіль (salt — III відміна, орудний: сіллю)
+- [ ] кров (blood — III відміна, орудний: кров'ю, no подвоєння)
+- [ ] мати (mother — III відміна, unique stem expansion -ер-/-ір-)
+- [ ] подвоєння (doubling — consonant doubling in орудний)
+- [ ] нульове закінчення (zero ending — no visible suffix in називний)
+- [ ] відміна (declension type — I through IV)
+- [ ] гордість (pride — abstract noun from гордий)
+- [ ] мудрість (wisdom — abstract noun from мудрий)
+- [ ] тінь (shadow — III відміна, орудний: тінню)
+- [ ] річ (thing — III відміна, чергування і→е, орудний: річчю)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Підсумок (~400 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

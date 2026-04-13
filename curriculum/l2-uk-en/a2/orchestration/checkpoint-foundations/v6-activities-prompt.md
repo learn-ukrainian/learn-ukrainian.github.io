@@ -1,4 +1,4 @@
-<!-- version: 1.1.0 | updated: 2026-03-31 -->
+<!-- version: 1.2.0 | updated: 2026-04-12 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -11,6 +11,35 @@ Generate an `activities/checkpoint-foundations.yaml` file for module **8: Кон
 
 ---
 
+## ⚠️ HARD COUNT TARGETS — READ TWICE
+
+These are the binding numerical contracts for THIS module. The audit will FAIL if you fall short.
+
+| Bucket | Min | Max | Notes |
+|---|---|---|---|
+| Total activities | 10 | 10+ | inline + workbook combined |
+| Inline (lesson tab) | 3 | 5 | one per `<!-- INJECT_ACTIVITY -->` marker, see below |
+| Workbook (Зошит tab) | 7 | 10 | extended practice |
+| Items per activity | 10 | — | each activity must have at least 10 items (unless its type cap is lower — see Activity Type Reference below) |
+
+**You MUST ship at least 3 inline activities AND at least 7 workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+
+**Type diversity is required.** The module (inline + workbook combined) MUST use at least **0** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level. (If `0` is `0`, the audit profile for this level does not enforce type diversity — but variety still produces a better lesson, so aim for 4+ types when the workbook allows it.)
+
+---
+
+## Allowed types for THIS level
+
+- **Inline (lesson) types:** quiz, true-false, fill-in, match-up, group-sort, classify, mark-the-words
+- **Inline priority (preferred):** fill-in, match-up, true-false
+- **Workbook types:** cloze, error-correction, fill-in, unjumble, translate, match-up, group-sort, odd-one-out, quiz, true-false, mark-the-words, observe, phrase-table
+- **Workbook priority (preferred):** error-correction, cloze, unjumble, translate, fill-in
+- **FORBIDDEN at this level:** anagram, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables, highlight-morphemes, grammar-identify
+
+Pick from the allowed list. Lean heavily on the priority lists. Do not use any forbidden type — the build will reject it.
+
+---
+
 ## Inline vs Workbook Split
 
 Activities have two placement categories:
@@ -19,7 +48,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Rule of thumb:** inline = 2-3 quick checks after key teaching points. Workbook = 4-8 deeper practice exercises covering the full topic.
+**Rule of thumb:** inline = 3–5 quick checks after key teaching points. Workbook = 7–10 deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
 
 ---
 
@@ -27,10 +56,10 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: quiz -->`
-- `<!-- INJECT_ACTIVITY: fill-in -->`
-- `<!-- INJECT_ACTIVITY: fill-in-2 -->`
-- `<!-- INJECT_ACTIVITY: error-correction -->`
+- `<!-- INJECT_ACTIVITY: quiz-mixed-grammar -->`
+- `<!-- INJECT_ACTIVITY: fill-in-transformation -->`
+- `<!-- INJECT_ACTIVITY: error-correction-mixed -->`
+- `<!-- INJECT_ACTIVITY: fill-in-production -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -87,138 +116,163 @@ required:
 <module_content>
 ## Частина 1: Вправи на розпізнавання (Part 1: Recognition Exercises)
 
-A **контрольна точка** (checkpoint) is an essential pedagogical tool for consolidating knowledge and confirming linguistic reflexes. According to the standard curriculum guidelines, such as those found in the classic *Заболотний Grade 5-6* textbook, a dedicated **повторення вивченого** (review of what has been learned) is necessary before advancing to complex sentence structures. This systematic **перевірка** (check, test) anchors the core concepts of verb aspect and the Genitive case into your active memory.
+**Кожна мова потребує часу на повторення. Сьогодні ми будемо перевіряти ваші знання.** (Every language requires time for review. Today we will be checking your knowledge.)
 
-> **Олена:** Привіт, Марку! Ти готовий до перевірки? *(Hi, Marko! Are you ready for the test?)*
-> **Марко:** Привіт! Не дуже. Ця **контрольна точка** здається складною. *(Hi! Not really. This checkpoint seems difficult.)*
-> **Олена:** Давай повторимо разом. Скажи, скільки у тебе братів? *(Let's review together. Tell me, how many brothers do you have?)*
-> **Марко:** У мене... двох братів... ні, два брати! Ох, я завжди плутаю. *(I have... two brothers... no, two brothers! Oh, I always confuse them.)*
-> **Олена:** Дивись, після числа два ми використовуємо називний відмінок: два брати. А після п'яти — родовий множини: п'ять братів. *(Look, after the number two we use the nominative: two brothers. And after five — genitive plural: five brothers.)*
-> **Марко:** А як щодо дієслів? Ти вчора читала **текст** чи прочитала його? *(And what about verbs? Did you read the text yesterday or read it completely?)*
-> **Олена:** Я **читала** його довго, але нарешті **прочитала**. *(I was reading it for a long time, but finally I read it completely.)*
-> **Марко:** Зрозумів. Процес і результат. Дякую! *(Understood. Process and result. Thanks!)*
+Learning a language requires stopping to review what you know. A **контрольна точка** (checkpoint) is precisely that moment in your journey. This module serves as a comprehensive **перевірка** (check) of the foundational grammar topics covered so far at the A2 level. You will deeply review how to navigate verb aspect, known as the **вид дієслова**, and how to master the Genitive case, or the **родовий відмінок**. Both of these grammatical systems are fundamental to speaking clearly and being understood by native speakers. Without them, you cannot accurately describe what happened yesterday, what will happen tomorrow, or what you currently do not have. Mastering these forms moves you away from speaking in broken phrases and allows you to build complete, logical sentences.
 
-The foundation of recognizing verb aspect lies in distinguishing the duration of an action from its completion. Imperfective verbs describe a process, habit, or general fact, answering the question «що робити?» (what to be doing). Perfective verbs describe a finished result, a single occurrence, or a limit reached, answering the question «що зробити?» (what to get done). 
+**Граматика завжди працює в реальному житті. Давайте подивимося на розмову двох студентів.** (Grammar always works in real life. Let's look at a conversation between two students.)
 
-In Exercise 1, a short text is provided. The learner must highlight all perfective verbs in one color and all imperfective verbs in another. This visual sorting helps map out the flow of the narrative, separating background actions from advancing plot points. 
+Before jumping into grammar rules, read a natural conversation. Two students are studying together before their Ukrainian class. One is struggling with numbers and cases, while the other helps him navigate the rules.
 
-**Читаємо українською** (Reading in Ukrainian)
-* Кожного дня я **робив** свої **вправи**. (Every day I was doing my exercises.)
-* Учора я швидко **зробив** нове **завдання**. (Yesterday I quickly completed the new task.)
-* Студенти довго **писали** складне есе. (The students were writing the complex essay for a long time.)
-* Нарешті він **написав** ідеальне **речення**. (Finally he wrote a perfect sentence.)
-* Ми часто **зустрічали** друзів у парку. (We often met friends in the park.)
-* Сьогодні я **зустрів** брата біля школи. (Today I met my brother near the school.)
+> **Олена:** Привіт, Марку! Що ти читаєш? Це новий **текст** (text) до уроку?
+> **Марко:** Привіт, Олено! Ні, я просто повторюю граматику. Я маю тест завтра.
+> **Олена:** Це добре. Тобі потрібна допомога?
+> **Марко:** Так, дуже потрібна! Скільки у тебе братів? Треба казати «два брати» чи «двох братів»? Ох, я завжди плутаю ці складні закінчення.
+> **Олена:** Дивись, правило просте. Треба казати «два брати», але «п'ять братів». Це дуже важливо пам'ятати, коли ти купуєш щось у магазині або рахуєш людей.
+> **Марко:** Зрозумів. А сестер? Як сказати правильно про сестер?
+> **Олена:** У мене немає сестри. Але у мого друга є три сестри і п'ять братів.
+> **Марко:** Ого, це велика родина! Добре, я зрозумів логіку. Дякую за допомогу!
+> **Олена:** Нема за що. Успіхів на тесті!
 
-For Exercise 2, you will see a list of sentences with a noun in parentheses. The learner must rewrite the sentence, putting the noun in the correct Genitive form. For example, changing «У мене немає (брат)» to «У мене немає брата». The Genitive case is fundamentally triggered by the concept of absence, mathematically represented by the word **немає** (there is no).
+*(Vocabulary: плутаю — I confuse; рахуєш — you count; родина — family; успіхів — good luck)*
 
-**Форми родового відмінка** (Genitive case forms)
-* У мене немає **часу** на розмови. (I have no time for conversations.)
-* Сьогодні в магазині не було свіжого **хліба**. (There was no fresh bread in the store today.)
-* Без **тебе** тут дуже сумно. (It's very sad here without you.)
-* Я чекаю свого старого **друга**. (I am waiting for my old friend.)
-* Ми йдемо до великого **парку**. (We are going to the large park.)
+Notice how Марко struggles with the plural endings, but Олена quickly provides the right forms based on the numbers used. This is a common situation for language learners trying to memorize the rules for numbers.
 
-Exercise 3 asks you to match the imperfective verbs with their perfective partners. Creating mental links between verb pairs is crucial for choosing the right aspect later. Many pairs are formed simply by adding a prefix, while others change a suffix or adopt a completely different root.
+Recognizing verb aspect is your first major step in this review. The imperfective aspect, or **недоконаний вид** (imperfective aspect), focuses entirely on the process of an action or its regular repetition. The perfective aspect, or **доконаний вид** (perfective aspect), signals a completed result or a one-time action that is successfully finished. These two verb forms together make up an aspectual pair, which linguists call a **видова пара** (aspectual pair). The upcoming **вправа** (exercise) will thoroughly test your ability to recognize these pairs in context.
 
-**Видові пари дієслів** (Verb aspect pairs)
-* робити — з**робити** (to do — to get done)
-* читати — **про**читати (to read — to finish reading)
-* писати — **на**писати (to write — to finish writing)
-* купувати — куп**ити** (to be buying — to buy)
-* говорити — сказ**ати** (to be speaking — to say)
+* Читаємо українською (Reading in Ukrainian):
+* **Я читаю цікаву книгу щодня.** (I read an interesting book every day. — *Process/Repetition*)
+* **Я прочитав цю книгу вчора.** (I read this book yesterday. — *Result/Completion*)
+* **Вона довго писала довгого листа.** (She was writing a long letter for a long time. — *Process*)
+* **Вона швидко написала листа і пішла.** (She quickly wrote the letter and left. — *Result/Completion*)
+* **Ми вчимо нові слова кожного ранку.** (We learn new words every morning. — *Process/Repetition*)
+* **Сьогодні ми нарешті вивчили всі слова.** (Today we finally learned all the words. — *Result/Completion*)
+* **Брат часто готував вечерю.** (Brother often cooked dinner. — *Process/Repetition*)
+* **Брат приготував дуже смачну вечерю.** (Brother cooked a very tasty dinner. — *Result/Completion*)
 
-<!-- INJECT_ACTIVITY: quiz -->
+The second major grammar topic for this review is the Genitive case. The most common trigger for this case is absence or negation, specifically using the word **немає** (there is no). Following absence, expressing possession is another major trigger, answering the specific question «whose?». Finally, basic prepositions like **з** (from), **без** (without), and **для** (for) strictly require the Genitive case. For this **завдання** (task), you must recognize these grammatical forms embedded in a connected text and inside an individual **речення** (sentence).
+
+* Читаємо українською (Reading in Ukrainian):
+* **У мене зараз немає вільного часу.** (I do not have free time right now. — *Absence*)
+* **Він прийшов на урок без свого телефона.** (He arrived to the lesson without his phone. — *Preposition*)
+* **Це нова машина мого старшого брата.** (This is my older brother's new car. — *Possession*)
+* **Цей великий подарунок тільки для тебе.** (This big gift is only for you. — *Preposition*)
+* **На столі немає гарячої кави.** (There is no hot coffee on the table. — *Absence*)
+* **Я живу недалеко від центру міста.** (I live not far from the city center. — *Preposition*)
+* **Ми п'ємо чай без цукру і молока.** (We drink tea without sugar and milk. — *Preposition*)
+* **Сьогодні немає гарної погоди.** (There is no good weather today. — *Absence*)
+
+<!-- INJECT_ACTIVITY: quiz-mixed-grammar -->
 
 ## Частина 2: Вправи на вибір (Part 2: Choice Exercises)
 
-Moving forward, Exercise 4 features multiple-choice sentences where the learner must choose between the perfective and imperfective form of a verb. A classic example is deciding between «Вчора я (читав / прочитав) цю книгу три години». The phrase «три години» (three hours) explicitly emphasizes the duration and continuous nature of the action. Because the focus is on the ongoing process rather than the final achievement, the imperfective form «читав» is the only **правильний** (correct) choice.
+**Вибір дієслова — це завжди вибір контексту.** (Choosing a verb is always a choice of context.)
 
-> **Мама:** Доню, ти вже зробила всі свої **вправи**? *(Daughter, have you already done all your exercises?)*
-> **Донька:** Ще ні. Мені треба закінчити одне **завдання**. *(Not yet. I need to finish one task.)*
-> **Мама:** Що саме ти повинна **зробити** сьогодні? *(What exactly must you get done today?)*
-> **Донька:** Я маю **написати** довгу **відповідь**. *(I have to write a long answer.)*
-> **Мама:** Добре, я не буду тобі заважати. Немає **часу** на розмови. *(Good, I will not bother you. There is no time for conversations.)*
-> **Донька:** Дякую! Я знайду найкращий **варіант** дуже швидко. *(Thanks! I will find the best option very quickly.)*
-
-Context clues dictate the aspect. Words like «завжди» (always), «часто» (often), and «довго» (for a long time) trigger the imperfective. Words like «раптом» (suddenly), «нарешті» (finally), and «за хвилину» (in a minute) demand the perfective.
-
-**Вибір дієслова** (Choosing the verb)
-* Я **робив** це складне **завдання** весь вечір. (I was doing this complex task all evening.)
-* Я **зробив** це **завдання** за п'ять хвилин. (I got this task done in five minutes.)
-* Щовечора вона **дивилася** цікавий серіал. (Every evening she watched an interesting series.)
-* Вона **подивилася** фільм і пішла спати. (She watched the film completely and went to sleep.)
-* Ми **купували** продукти на ринку. (We were buying groceries at the market.)
-* Я **купив** свіжі яблука для пирога. (I bought fresh apples for the pie.)
-
-Exercise 5 involves fill-in-the-blanks with the correct quantity word or numeral, ensuring noun agreement. You will complete sentences like «У класі ___ (5) студентів» by applying the numerical rules. Historians of the Ukrainian language note that numbers like **п'ять** (five) and **десять** (ten) were originally nouns in Old East Slavic (давньоруська мова). Because they functioned as nouns, they required the word following them to take the Genitive plural case, literally translating to a phrase like "a five of tables." This historical logic is perfectly preserved in modern Ukrainian.
-
-When counting, the number «один» (one) acts like an adjective, agreeing fully with the noun. The numbers «два, три, чотири» (two, three, four) pair with the Nominative plural form of the noun. Numbers from «п'ять» (five) upward strictly govern the Genitive plural. 
-
-**Кількість і відмінок** (Quantity and case)
-* Один великий **стіл** стоїть у кімнаті. (One large table stands in the room.)
-* Два нові **столи** стоять у кімнаті. (Two new tables stand in the room.)
-* П'ять старих **столів** стоять у кімнаті. (Five old tables stand in the room.)
-* Одна цікава **книга** лежить на полиці. (One interesting book lies on the shelf.)
-* Три нові **книги** лежать на полиці. (Three new books lie on the shelf.)
-* Шість розумних **студентів** сидять у класі. (Six smart students sit in the classroom.)
+Choosing the right verb aspect depends entirely on the specific context of your sentence. Words like «завжди» (always) or «довго» (for a long time) point directly to a continuous process, requiring the imperfective aspect. Conversely, words like «нарешті» (finally) or a specific, limited timeframe for a result require the perfective aspect. When completing tests or writing emails, you must identify what is **правильний** (correct) and what is incorrect. You need to **обрати** (choose) the best **варіант** (option) based entirely on these time markers.
 
 :::tip
-**Правильний варіант** (Correct option)
-When reviewing your work, you must look for the **правильний** (correct) answer, not "вірний". The adjective "вірний" means "loyal" or "faithful" (like a loyal dog). A correct answer on a test is always a **правильна відповідь**. Recognizing this distinction elevates your speech and avoids common calques.
+Always look for time words in a sentence. If a sentence has «кожного дня» (every day), the verb will almost certainly be imperfective. If it has «за одну годину» (in one hour) or «вже» (already), it will be perfective because it shows a clear, completed result.
 :::
 
-<!-- INJECT_ACTIVITY: fill-in -->
+* Читаємо українською (Reading in Ukrainian):
+* **Вчора я читав нову книгу три години.** (Yesterday I read the new book for three hours. — *Process: три години*)
+* **Я успішно прочитав книгу за один вечір.** (I successfully read the book in one evening. — *Result: за один вечір*)
+* **Ми часто купували свіже молоко тут.** (We often bought fresh milk here. — *Habit: часто*)
+* **Сьогодні вранці ми купили яблучний сік.** (This morning we bought apple juice. — *Result: сьогодні вранці (one time)*)
+* **Він завжди довго робив домашнє завдання.** (He always did his homework for a long time. — *Habit: завжди*)
+* **Він швидко зробив завдання за п'ять хвилин.** (He quickly did the task in five minutes. — *Result: за п'ять хвилин*)
+* **Вона завжди купувала каву вранці.** (She always bought coffee in the morning. — *Habit: завжди*)
+* **Раптом вона купила зелений чай.** (Suddenly she bought green tea. — *Result: раптом*)
+
+**Українські числівники завжди працюють разом з відмінками. Це дуже важливе правило.** (Ukrainian numbers always work together with cases. This is a very important rule.)
+
+The Genitive case intersects heavily and predictably with numbers. Numbers 5 and above always require the Genitive plural, or **родовий відмінок множини** (Genitive plural). The numbers 2, 3, and 4 act completely differently, requiring the Nominative plural instead. This specific split in the number system is an ancient grammatical feature that you will use every single day when shopping or counting objects.
+
+* Читаємо українською (Reading in Ukrainian):
+* **У нашому класі стоїть два великі столи.** (There are two large tables in our classroom. — *Nominative plural*)
+* **У цьому кабінеті є шість старих столів.** (There are six old tables in this office. — *Genitive plural*)
+* **Я вчора купив три цікаві книги.** (I bought three interesting books yesterday. — *Nominative plural*)
+* **Мій сусід має десять товстих книжок.** (My neighbor has ten thick books. — *Genitive plural*)
+* **Там на вулиці стоїть п'ять нових студентів.** (Five new students are standing there on the street. — *Genitive plural*)
+* **У мене є чотири гарні яблука.** (I have four beautiful apples. — *Nominative plural*)
+* **Він з'їв сім солодких яблук.** (He ate seven sweet apples. — *Genitive plural*)
+* **Ми побачили вісім великих машин.** (We saw eight large cars. — *Genitive plural*)
+
+Forming the Genitive plural correctly requires learning a few specific patterns. For feminine and neuter nouns, you generally drop the final vowel to create a zero ending, sometimes inserting an «o» or «e» to make the word pronounceable. Masculine nouns that end in a consonant usually take the «-ів» ending. There are also important exceptions like the «-ей» ending for words such as «стаття» (article) or «ніч» (night).
+
+* Читаємо українською (Reading in Ukrainian):
+* **Одна гарна сестра → п'ять гарних сестер** (One beautiful sister → five beautiful sisters)
+* **Одна цікава думка → дуже багато думок** (One interesting thought → very many thoughts)
+* **Один старший брат → п'ять старших братів** (One older brother → five older brothers)
+* **Один дерев'яний стіл → десять дерев'яних столів** (One wooden table → ten wooden tables)
+* **Одна темна ніч → сім темних ночей** (One dark night → seven dark nights)
+* **Одна нова стаття → шість нових статей** (One new article → six new articles)
+* **Одне велике вікно → дев'ять великих вікон** (One large window → nine large windows)
+* **Один розумний студент → багато розумних студентів** (One smart student → many smart students)
+
+You are now fully ready for the choice and transformation exercises. In the upcoming section, you will complete a challenging sentence transformation drill where you insert the correct grammatical form into the blank space. Pay close attention to the **дієвідміна** (conjugation) of the verbs you use, and ensure that every single **особове закінчення** (personal ending) matches the sentence's subject perfectly.
+
+<!-- INJECT_ACTIVITY: fill-in-transformation -->
 
 ## Частина 3: Практичне застосування (Part 3: Production Exercises)
 
-In Exercise 6, you will answer open-ended questions that require the Genitive case or a specific aspect. You will see questions like «Скільки у вас братів і сестер?», «Що ви зробили вчора?», and «Коли у вас день народження?». Formulating original responses forces the brain to retrieve the correct grammatical endings without a prompt, testing true mastery over the language patterns.
+**Тепер час говорити і писати самостійно. Ми будемо поєднувати всі правила в одному тексті.** (Now it is time to speak and write independently. We will combine all the rules in one text.)
 
-When answering «Скільки у вас братів і сестер?», you must navigate the rules of possession and quantity simultaneously. If you lack siblings, you employ the absolute negation trigger **немає**, which immediately demands the Genitive case. If you have siblings, the number you use dictates whether you follow with the Nominative or Genitive plural.
+Shifting from choosing answers on a screen to actually producing them in real speech is your ultimate goal. You will frequently need to combine verb aspect and the Genitive case in the exact same sentence. For instance, using a perfective verb in a negative sentence very often requires a Genitive object to clearly show that a specific item was not obtained or found.
 
-**Приклади відповідей** (Example answers)
-* У мене немає **братів** і **сестер**. (I have no brothers and sisters.)
-* У мене є один **брат** і дві **сестри**. (I have one brother and two sisters.)
-* У мене є три **брати** і чотири **сестри**. (I have three brothers and four sisters.)
-* Моя бабуся має п'ять **братів**. (My grandmother has five brothers.)
-* Я не маю вільного **часу** сьогодні. (I do not have free time today.)
+* Читаємо українською (Reading in Ukrainian):
+* **Я пішов у магазин, але не купив молока.** (I went to the store, but did not buy milk. — *Perfective verb + Genitive object*)
+* **Вона шукала довго, але не знайшла ключів.** (She searched for a long time, but did not find the keys. — *Perfective verb + Genitive plural object*)
+* **Ми були там, але не побачили наших друзів.** (We were there, but did not see our friends. — *Perfective verb + Genitive plural object*)
+* **Він купив газету, але не прочитав цікавої статті.** (He bought the newspaper, but did not read the interesting article. — *Perfective verb + Genitive object*)
+* **Я хотів працювати, але не мав вільного часу.** (I wanted to work, but did not have free time. — *Imperfective verb + Genitive object*)
+* **Вони дивилися фільм, але не побачили фіналу.** (They watched the movie, but did not see the finale. — *Perfective verb + Genitive object*)
 
-When answering «Що ви зробили вчора?», you must consciously choose your verb aspect based on your intent. If you want to communicate that an action was successfully completed, you must deploy the perfective form. If you merely want to state that an action occupied your time, the imperfective is required.
-
-**Минулий час** (Past tense)
-* Вчора я **написав** лист і **прочитав** довгу статтю. (Yesterday I wrote a letter and read a long article.)
-* Вчора я весь день **працював** і **відпочивав**. (Yesterday I worked all day and rested.)
-* Ми **купили** новий телефон для нашої мами. (We bought a new phone for our mom.)
-* Студенти уважно **слухали** новий **текст**. (The students were listening carefully to the new text.)
-
-Finally, Exercise 7 provides a short writing prompt of 5-7 sentences. The prompt is «Напишіть про свої плани на вихідні. Що ви будете робити? Що ви хочете зробити?». This encourages you to synthesize your knowledge into a cohesive paragraph. Discussing plans inherently involves the future tense, requiring another layer of aspectual choice. The phrase «Що ви будете робити?» invites process-oriented imperfective verbs constructed with the auxiliary verb **бути**. The phrase «Що ви хочете зробити?» targets concrete goals, requiring perfective infinitives.
-
-> **Вчитель:** Доброго ранку! Хто хоче розповісти про свої плани на вихідні? *(Good morning! Who wants to tell about their plans for the weekend?)*
-> **Анна:** Я можу розповісти. У суботу я **буду допомагати** батькам. *(I can tell. On Saturday I will be helping my parents.)*
-> **Вчитель:** Дуже добре. А що ти **хочеш зробити** ввечері? *(Very good. And what do you want to get done in the evening?)*
-> **Анна:** Я **хочу приготувати** смачну вечерю для всієї родини. *(I want to prepare a delicious dinner for the whole family.)*
-> **Вчитель:** Чудовий план. Скільки страв ти приготуєш? *(A wonderful plan. How many dishes will you prepare?)*
-> **Анна:** Я думаю, що я приготую три **страви** і спечу один пиріг. *(I think that I will prepare three dishes and bake one pie.)*
-
-To succeed in this final writing prompt, observe how native speakers combine these elements into a single narrative flow. You can use this example as a structural template.
-
-**Приклад тексту про плани** (Example text about plans)
-На ці вихідні я маю багато планів. У суботу вранці я **буду прибирати** свою кімнату. Це забере багато **часу**. Потім я **хочу зустрітися** з друзями в центрі міста. Ми підемо до нового кафе і **будемо пити** гарячу каву. У неділю я **буду відпочивати** вдома. Я планую **прочитати** цікаву статтю і **написати** невелике есе. Сподіваюся, мої вихідні будуть чудовими!
+Before writing your own original text, you must systematically analyze common errors made by learners. The verb «потребувати» (to need) rigidly demands the Genitive case, so translating "I need help" directly is a severe mistake. Another classic error is ignoring the required case after negation, or matching numbers incorrectly like «п'ять книга». Use the "Світлофор" (Traffic light) strategy to stop completely and check your mental translations.
 
 :::caution
-**Уникаємо русизмів** (Avoiding Russianisms)
-As you write your sentences, remember that Ukrainian has its own unique idioms. The construction **брати участь** (to take part) is genuinely Ukrainian. You must never use the direct translation «приймати участь», which is a common calque. Additionally, when discussing school tasks, we say **складати іспит** (to take an exam), not «здавати іспит». Using authentic phrasing demonstrates true language proficiency.
+Do not use the word «приймати» for taking a shower or participating in an event. You must use the verb «брати». A very common mistake is saying «приймати участь»; the correct and natural Ukrainian phrase is always **брати участь**.
 :::
 
-<!-- INJECT_ACTIVITY: fill-in-2 -->
-<!-- INJECT_ACTIVITY: error-correction -->
+* Читаємо українською (Reading in Ukrainian):
+* ❌ *Я дуже сильно потребую допомогу.* → ✅ **Я дуже сильно потребую допомоги.** (I very much need help.)
+* ❌ *На жаль, у мене немає сестра.* → ✅ **На жаль, у мене немає сестри.** (Unfortunately, I don't have a sister.)
+* ❌ *Я вчора купив п'ять книга.* → ✅ **Я вчора купив п'ять книжок.** (I bought five books yesterday.)
+* ❌ *Зараз вона приймає душ.* → ✅ **Зараз вона бере душ.** (She is taking a shower now.)
+* ❌ *Сьогодні ми приймаємо участь.* → ✅ **Сьогодні ми беремо участь.** (Today we are participating.)
+* ❌ *Я не маю новий телефон.* → ✅ **Я не маю нового телефона.** (I do not have a new phone.)
+
+You are now acting as the teacher for a moment. In the following error correction **вправа** (exercise), you must read each provided **відповідь** (answer) carefully and find the hidden mixed grammar errors. Your specific job is to identify the wrong aspect choice, spot incorrect genitive endings, and fix any verb or noun agreement mistakes. Finding errors in other people's writing builds the exact mental muscle you need to catch errors in your own speaking. Look closely at every single noun immediately following a number or a preposition, as that is where mistakes usually hide.
+
+<!-- INJECT_ACTIVITY: error-correction-mixed -->
+
+Open-ended questions simulate real, unpredictable conversations. You will need to answer personal questions which immediately require you to use genitive plural numbers and perfective verbs correctly. You must **написати** (write) your own authentic answers to these questions. Take your time to think deeply about the correct cases and verb forms before you write anything down.
+
+> **Марко:** Привіт, Олено! Ми дуже давно не бачилися. Як твої справи?
+> **Олена:** Привіт! Все чудово. Я зараз багато працюю.
+> **Марко:** Скільки у тебе братів і сестер зараз? Вони живуть тут?
+> **Олена:** У мене є два старші брати і немає сестер. Вони живуть у Києві. А у тебе велика родина?
+> **Марко:** У мене одна маленька сестра. Зрозуміло. А що ти зробила вчора ввечері? Ти відпочивала?
+> **Олена:** Ні, я не відпочивала. Я нарешті прочитала нову цікаву книгу і написала довгий текст для університету. Я працювала чотири години.
+> **Марко:** О, це дуже багато роботи! Я вчора просто дивився телевізор.
+> **Олена:** Тобі пощастило! Але сьогодні ти мусиш вчитися.
+
+*(Vocabulary: давно не бачилися — haven't seen each other for a long time; відпочивала — rested; пощастило — got lucky; мусиш — must)*
+
+The final writing prompt tests your ability to plan ahead and organize your thoughts. You will write a short paragraph about your plans for the weekend using both aspects naturally. Combine imperfective verbs for ongoing, continuous processes and perfective verbs for specific, completed goals. Mixing these aspects gives your writing much more depth, realistic pacing, and precision.
+
+:::note
+**Практика читання** (Reading practice):
+Вчора я був у великому супермаркеті. Я дуже хотів купити молоко для кави, але там зовсім не було молока. Я довго шукав, але не знайшов його. Тому я купив п'ять червоних яблук, шість солодких бананів і десять свіжих яєць. Я завжди купую свіжі фрукти на ринку, але сьогодні пішов у магазин. Потім я швидко пішов додому і прочитав свіжі новини в інтернеті. Це був звичайний і дуже спокійний день.
+
+*(Vocabulary: зовсім — absolutely; свіжі яйця — fresh eggs; ринок — market; спокійний — calm)*
+:::
+
+<!-- INJECT_ACTIVITY: fill-in-production -->
 
 ## Підсумок — Summary
 
-This checkpoint solidifies the essential grammatical pillars required for confident communication in Ukrainian. We reviewed the critical distinction between imperfective and perfective verb aspects, learning to accurately **обрати** (choose) between describing a continuous process and a completed result. We reinforced the mechanics of the Genitive case, confirming its role in expressing absence with **немає**, denoting possession, and modifying nouns following numbers like **п'ять** and above.
-
-By completing these recognition exercises, multiple-choice tasks, and open-ended writing prompts, you have tested your ability to apply rules dynamically. You constructed sentences about your personal plans, manipulated verb pairs, and corrected common numerical agreement errors. This rigorous review guarantees that your foundational knowledge is secure, providing a stable platform for mastering more complex vocabulary and syntax in the upcoming modules.
-
+The A2 level builds the essential core of your everyday speaking ability. You have thoroughly reviewed the fundamental distinction between the imperfective and perfective verb aspects, learning exactly when to focus on the ongoing process and when to highlight the final result. You have also actively practiced the Genitive case, especially its critical role with negation, expressing possession, and pairing with numbers. Mastering the Genitive plural after the number five is a major linguistic milestone for any Ukrainian learner. This checkpoint confirms your solid understanding of these interconnected systems. As you progress further, these rules will become automatic reflexes rather than mathematical puzzles you have to solve. You are building a strong, reliable foundation for fluent, natural communication in all your future conversations.
 </module_content>
 
 ---
@@ -232,48 +286,68 @@ version: "1.0"
 module: checkpoint-foundations
 level: a2
 
+# NOTE — these are SHAPE examples. The real targets are at the top of this prompt
+# (10 total / 3–5 inline / 7–10 workbook,
+# 10+ items per activity). The shapes below are TRUNCATED for readability;
+# YOUR output MUST hit those minimums.
+
 inline:
   - id: marker-id-here        # MUST match an <!-- INJECT_ACTIVITY: ... --> marker
     type: quiz                 # activity type
     instruction: "Оберіть правильний варіант"
-    items:
+    items:                     # ← real output: ≥ 10 items
       - question: "_____ стіл"
-        options: ["мій", "моя", "моє"]
+        options: ["мій", "моя", "моє", "мої"]
         correct: 0             # 0-based index
+      - question: "Це ____ книга."
+        options: ["мій", "моя", "моє", "мої"]
+        correct: 1
+      # ... add at least 10 items total — never stop at 1-2
 
   - id: another-marker-id
     type: fill-in
     instruction: "Вставте правильне слово"
-    items:
+    items:                     # ← real output: ≥ 10 items
       - sentence: "Це ____ кімната."
         answer: "моя"
         options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ вікно."
+        answer: "моє"
+        options: ["мій", "моя", "моє"]
+      # ... ≥ 10 items total
 
 workbook:
-  - type: match-up
+  - id: match-up-vocab
+    type: match-up
     instruction: "З'єднайте пари"
-    pairs:
+    pairs:                     # ← real output: ≥ 10 pairs
       - left: "стіл"
         right: "він"
       - left: "книга"
         right: "вона"
       - left: "вікно"
         right: "воно"
+      # ... ≥ 10 pairs total
 
-  - type: group-sort
+  - id: group-sort-gender
+    type: group-sort
     instruction: "Розподіліть слова за категоріями"
     groups:
-      - label: "Category A"
-        items: ["word1", "word2"]
-      - label: "Category B"
-        items: ["word3", "word4"]
+      - label: "Чоловічий рід"
+        items: ["стіл", "олівець", "будинок"]   # ≥ 3 items per group
+      - label: "Жіночий рід"
+        items: ["книга", "ручка", "школа"]
+      - label: "Середній рід"
+        items: ["вікно", "море", "молоко"]
 
-  - type: true-false
+  - id: true-false-grammar
+    type: true-false
     instruction: "Правда чи ні?"
-    items:
-      - statement: "Statement here"
-        correct: true
-        explanation: "Why it's true"
+    items:                     # ← real output: ≥ 10 items
+      - statement: "«Книга» — це чоловічий рід."
+        correct: false
+        explanation: "Книга закінчується на -а, отже жіночий рід."
+      # ... ≥ 10 items total
 
   - type: error-correction
     instruction: "Виправте помилку"
@@ -344,7 +418,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -444,10 +518,15 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 ## Quality Rules
 
-**ITEM COUNT MINIMUMS (non-negotiable):**
-- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
-- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
-- If you can't think of enough items, add more examples from the module's vocabulary and content.
+**ACTIVITY COUNT MINIMUMS (non-negotiable, audit-enforced):**
+- **Total: 10 activities.** Inline: 3–5. Workbook: 7–10. The audit gate FAILS the module if you ship fewer.
+- **Type diversity: workbook MUST cover ≥5 distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
+- **Match the inline markers exactly.** Every `<!-- INJECT_ACTIVITY: id -->` marker in the prose needs a matching inline activity with that exact id. Skipping markers means the lesson tab is broken.
+
+**ITEM COUNT MINIMUMS (non-negotiable, per-activity):**
+- **Default minimum: 10 items per activity.** Quiz, fill-in, match-up, true-false, anagram, error-correction, translate, cloze, mark-the-words, divide-words, count-syllables, odd-one-out, group-sort categories: all ≥ 10.
+- **Lower minimums for specific types only:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items, essay-response/critical-analysis = 1 prompt.
+- If you can't think of enough items, add more examples from the module's vocabulary and content. NEVER ship a 1-item or 2-item activity unless its type cap explicitly allows it.
 - **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
 - **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
@@ -554,6 +633,27 @@ IMPORTANT: After using tools, output your COMPLETE module content as plain text.
 1. Run `verify_words` on all Ukrainian words in your exercises — every word must exist in VESUM
 2. Run `query_cefr_level` on any word you're unsure about — it must be a2-appropriate
 3. For fill-in answers and distractors, verify the exact form (case, number, gender) with `verify_lemma`
+
+---
+
+## ⚠️ MANDATORY FINAL CHECKLIST — verify before emitting YAML
+
+Walk through this checklist explicitly before you start emitting. If ANY box is unchecked, fix it FIRST.
+
+- [ ] My output has **at least 3** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
+- [ ] My output has **at least 7** workbook activities.
+- [ ] **Total ≥ 10.**
+- [ ] **Every** activity has **at least 10** items, pairs, or statements (except types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3, essay-response=1).
+- [ ] The module (inline + workbook combined) uses **at least 0 distinct activity types** (or 4+ when 0 = 0 and the workbook size allows it). I am NOT shipping a wall of quizzes.
+- [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
+- [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
+- [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+- [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+- [ ] My inline count is between 3 and 5. I did NOT create more injection markers than 5.
+- [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
+- [ ] At B1+, all instructions are in Ukrainian (no English fallback).
+
+If you cannot tick all of these, REGENERATE the activities BEFORE outputting. Shipping under-spec means the build rejects you and the heal loop has to redo your work — wasting compute.
 
 ---
 

@@ -2,51 +2,53 @@ round: 2
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 10
-  evidence: The module perfectly covers all plan points, including abstract nouns,
-    temporal expressions, and means of communication.
+  score: 7
+  evidence: All four planned H2 sections are present and the planned vocab is covered,
+    but the plan references are never cited in the module text, and the planned error-correction
+    activity is broken by `<!-- INJE
 - dimension: 2
   name: Linguistic accuracy
-  score: 9
-  evidence: 'The Ukrainian text is flawless. Minor deduction for a slightly awkward
-    English literal translation: "*(In October it often rains coldly.)*".'
+  score: 6
+  evidence: 'The Ukrainian is mostly solid, but the module makes factual teaching
+    errors: `У мене є одна дуже цікава думка. Учора у нас була важлива зустріч.` is
+    presented as locative evidence, and the tip claims '
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: 'Exceptional pedagogical contrast (e.g., "Засіб: Я говорю по телефону."
-    vs. "Тема: Я думаю про новий телефон."). The explanations for *у/в* vs *на* are
-    clear and memorable.'
+  score: 6
+  evidence: 'The module has PPP flow, but explanation and evidence drift apart: `Let''s
+    read some more examples...` is followed by two non-locative sentences, and the
+    glosses `In the past month` / `In the past year'
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: All required and recommended vocabulary words are present and used naturally
-    in context (e.g., "у думках", "на зустрічі", "про подорожі").
+  score: 9
+  evidence: 'Required vocabulary is used naturally in prose: `місцевий`, `абстрактний`,
+    `минулий`, `місяць`, `тиждень`, `телефон`, `подорож`, `зустріч`, `думка`, `проблема`;
+    recommended `дитинство`, `молодість`, `'
 - dimension: 5
   name: Exercise quality
-  score: 9
-  evidence: Exercises are high quality and test the right concepts, but the markers
-    are clustered at the very end of the file instead of being spread evenly through
-    the module.
+  score: 6
+  evidence: The module has the right four marker types, but `error-correction-prepositions`
+    will not resolve because the generated activities file uses `error-correction-locative-usage`.
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: The teacher persona is encouraging and clear without using empty filler
-    or corporate gamification language. The dialogue examples feel authentic to real-life
-    situations.
+  score: 8
+  evidence: Mostly teacherly and concrete, but some English meta-commentary adds padding,
+    e.g. `This adds a dynamic layer of meaning to the case.`
 - dimension: 7
   name: Structural integrity
-  score: 10
-  evidence: Word count is 2936 words (well above the 2000 target). All required H2
-    headings are present. Markdown formatting is clean.
+  score: 9
+  evidence: All planned H2s are present and ordered correctly, and the pipeline word
+    count `2926` is above target. The main structural defect is the broken exercise
+    marker link.
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: The text accurately reflects standard modern Ukrainian usage, distinguishing
-    between prepositional patterns while acknowledging the instrumental alternative
-    for means of communication.
+  score: 8
+  evidence: No Russia-centric framing or fabricated cultural claims, but `authentic
+    standard` overstates normative certainty in a way the module does not fully support.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: Dialogues are natural, contextually appropriate, and efficiently demonstrate
-    the target grammar points in a realistic conversational flow.
+  score: 7
+  evidence: 'Dialogues are named and multi-turn, but some register is off: `> — **Марія:**
+    Привіт! Ти де зараз?` followed by `> — **Іван:** Добрий день! Я по дорозі на роботу.`
+    sounds mismatched.'
 findings: []

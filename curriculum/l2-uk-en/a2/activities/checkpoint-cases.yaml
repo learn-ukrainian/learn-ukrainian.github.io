@@ -2,486 +2,593 @@ version: '1.0'
 module: checkpoint-cases
 level: a2
 inline:
-- id: nominative-plural-forms
-  type: fill-in
-  instruction: Вставте іменник у формі множини (Називний відмінок)
-  items:
-  - sentence: Це новий ____.
-    answer: столи
-    options:
-    - столи
-    - столів
-    - столам
-  - sentence: У кімнаті великі ____.
-    answer: вікна
-    options:
-    - вікна
-    - вікон
-    - вікнам
-  - sentence: Тут живуть мої ____.
-    answer: друзі
-    options:
-    - друзі
-    - друзів
-    - друзям
-  - sentence: На вулиці граються ____.
-    answer: діти
-    options:
-    - діти
-    - дітей
-    - дітям
-  - sentence: Це цікаві ____.
-    answer: книжки
-    options:
-    - книжки
-    - книжок
-    - книжками
-  - sentence: Ми бачимо теплі ____.
-    answer: моря
-    options:
-    - моря
-    - морів
-    - морям
-- id: genitive-plural-challenge
-  type: fill-in
-  instruction: Вставте іменник у Родовому відмінку множини
-  items:
-  - sentence: У мене немає ____.
-    answer: книг
-    options:
-    - книг
-    - книги
-    - книгами
-  - sentence: У групі багато ____.
-    answer: студентів
-    options:
-    - студентів
-    - студенти
-    - студентам
-  - sentence: Я бачу п'ять ____.
-    answer: вікон
-    options:
-    - вікон
-    - вікна
-    - вікнам
-  - sentence: На столі немає ____.
-    answer: тарілок
-    options:
-    - тарілок
-    - тарілки
-    - тарілкам
-  - sentence: Нам треба багато ____.
-    answer: дощок
-    options:
-    - дощок
-    - дошки
-    - дошками
-  - sentence: Це союз різних ____.
-    answer: земель
-    options:
-    - земель
-    - землі
-    - землям
-- id: quantity-genitive-pl
-  type: quiz
-  instruction: Оберіть правильну форму слова після числівника
-  items:
-  - question: У мене є п'ять ____.
-    options:
-    - книг
-    - книги
-    - книгах
-    - книгами
-    correct: 0
-  - question: На столі немає ____.
-    options:
-    - тарілок
-    - тарілки
-    - тарілкам
-    - тарілками
-    correct: 0
-  - question: Я бачу багато ____.
-    options:
-    - студентів
-    - студенти
-    - студентам
-    - студентами
-    correct: 0
-  - question: У кімнаті десять ____.
-    options:
-    - вікон
-    - вікна
-    - вікнах
-    - вікнами
-    correct: 0
-  - question: У нас немає ____.
-    options:
-    - грошей
-    - гроші
-    - грошам
-    - грошима
-    correct: 0
-  - question: Він має багато ____.
-    options:
-    - друзів
-    - друзі
-    - друзям
-    - друзями
-    correct: 0
-- id: case-trigger-quiz
-  type: quiz
-  instruction: Який відмінок потрібен?
-  items:
-  - question: Ми завжди допомагаємо ____.
-    options:
-    - друзям
-    - друзів
-    - друзі
-    - друзями
-    correct: 0
-  - question: Вона довго чекала ____.
-    options:
-    - автобуса
-    - автобус
-    - автобусу
-    - автобусом
-    correct: 0
-  - question: Він щодня користується новим ____.
-    options:
-    - ноутбуком
-    - ноутбук
-    - ноутбука
-    - ноутбуку
-    correct: 0
-  - question: Увечері ми гуляємо по ____.
-    options:
-    - вулицях
-    - вулиці
-    - вулицями
-    - вулиць
-    correct: 0
-  - question: Я хочу подякувати своїм ____.
-    options:
-    - батькам
-    - батьків
-    - батьки
-    - батьками
-    correct: 0
-  - question: Вони люблять подорожувати ____.
-    options:
-    - літаком
-    - літак
-    - літаку
-    - літака
-    correct: 0
-- id: group-sort-noun-cases
+- id: group-sort-cases
   type: group-sort
   instruction: Розподіліть слова за відмінками
   groups:
-  - label: Називний
+  - label: Називний відмінок
     items:
-    - друзі
     - столи
-  - label: Родовий
+    - діти
+    - землі
+  - label: Родовий відмінок
     items:
     - книг
-    - студентів
-  - label: Давальний
+    - людей
+    - років
+  - label: Давальний відмінок
     items:
-    - батькам
-    - людям
-  - label: Знахідний
+    - сестрі
+    - батькові
+    - нареченій
+  - label: Знахідний відмінок
     items:
-    - дерева
-    - піцу
-  - label: Орудний
+    - будинок
+    - школу
+    - Київ
+  - label: Орудний відмінок
     items:
+    - словником
     - молоком
-    - олівцем
-  - label: Місцевий
+    - комп'ютерами
+  - label: Місцевий відмінок
     items:
-    - вулицях
-    - Львові
-  - label: Кличний
+    - сумці
+    - Чернівцях
+    - весіллі
+  - label: Кличний відмінок
     items:
-    - Олено
+    - мамо
     - пане
-- id: writing-ideal-day
+    - Олено
+- id: fill-in-mixed-cases
   type: fill-in
-  instruction: Вставте слова в правильному відмінку
+  instruction: Вставте правильну форму слова
   items:
-  - sentence: Мій ідеальний вихідний ____ починається пізно.
-    answer: день
+  - sentence: Вони живуть у ____.
+    answer: Чернівцях
     options:
-    - день
-    - дня
-    - днем
-  - sentence: У суботу я їду в ____.
-    answer: центр
-    options:
-    - центр
-    - центрі
-    - центром
+    - Чернівцях
+    - Чернівці
+    - Чернівцями
   - sentence: Я гуляю з ____.
     answer: друзями
     options:
     - друзями
-    - друзів
-    - друзям
-  - sentence: Ми п'ємо каву з ____.
-    answer: молоком
-    options:
-    - молоком
-    - молока
-    - молоці
-  - sentence: Потім я купую багато ____.
-    answer: яблук
-    options:
-    - яблук
-    - яблука
-    - яблуками
-  - sentence: Увечері я їм смачну ____.
-    answer: піцу
-    options:
-    - піцу
-    - піци
-    - піцою
-- id: dialogue-gap-fill
-  type: fill-in
-  instruction: Доповніть діалог правильними формами
-  items:
-  - sentence: Максиме! З ким ти розмовляв? — З ____.
-    answer: батьками
-    options:
-    - батьками
-    - батьків
-    - батькам
-  - sentence: Про що ви говорили? — Про ____ на вихідні.
-    answer: плани
-    options:
-    - плани
-    - планів
-    - планах
-  - sentence: Кому ви будете дзвонити? — Нашим ____.
-    answer: родичам
-    options:
-    - родичам
-    - родичів
-    - родицями
-  - sentence: Де ви будете відпочивати? — У ____.
-    answer: Карпатах
-    options:
-    - Карпатах
-    - Карпати
-    - Карпатами
-  - sentence: Ви вже написали їм ____?
-    answer: запрошення
-    options:
-    - запрошення
-    - запрошень
-    - запрошеннями
-  - sentence: А ви вже купили цікаві ____?
-    answer: сувеніри
-    options:
-    - сувеніри
-    - сувенірів
-    - сувенірами
-workbook:
-- type: fill-in
-  instruction: Вставте іменник у правильній формі
-  items:
-  - sentence: Це моя ____, я маю її виправити.
-    answer: помилка
-    options:
-    - помилка
-    - помилки
-    - помилці
-  - sentence: У мене немає ____ на цей дорогий ресторан.
+    - друзі
+    - друзях
+  - sentence: У нас немає ____.
     answer: грошей
     options:
     - грошей
     - гроші
-    - грошима
-  - sentence: Я даю ці нові книжки ____.
-    answer: студентам
+    - грошам
+  - sentence: Вона допомагає ____.
+    answer: батькові
     options:
-    - студентам
-    - студентів
-    - студентами
-  - sentence: Ми малюємо новим ____.
-    answer: олівцем
+    - батькові
+    - батько
+    - батьком
+  - sentence: Я бачу великий ____.
+    answer: будинок
     options:
-    - олівцем
-    - олівця
-    - олівцю
-  - sentence: Мої хороші друзі зараз у ____.
-    answer: Львові
+    - будинок
+    - будинку
+    - будинком
+  - sentence: Ми зустрінемося у ____.
+    answer: четвер
     options:
-    - Львові
-    - Львів
-    - Львовом
-  - sentence: Добрий день, ____!
-    answer: Сергію
+    - четвер
+    - четверга
+    - четверзі
+  - sentence: У класі мало ____.
+    answer: учнів
     options:
-    - Сергію
-    - Сергій
-    - Сергія
-  - sentence: У нашому місті з'явилося багато нових ____.
-    answer: будівель
+    - учнів
+    - учні
+    - учням
+  - sentence: Жінка у червоній ____ — моя мама.
+    answer: сукні
     options:
-    - будівель
-    - будівлі
-    - будівлям
-  - sentence: Я вже маю гарний подарунок для ____.
-    answer: нареченої
+    - сукні
+    - сукню
+    - сукнею
+  - sentence: ____, де мої ключі?
+    answer: Мамо
     options:
-    - нареченої
-    - наречену
-    - нареченій
-- type: quiz
-  instruction: Оберіть речення БЕЗ помилок
+    - Мамо
+    - Мама
+    - Мамі
+  - sentence: Діти швидко йдуть в ____.
+    answer: школу
+    options:
+    - школу
+    - школі
+    - школою
+- id: quiz-error-correction
+  type: quiz
+  instruction: Оберіть правильний варіант, щоб виправити помилку
   items:
-  - question: 'Оберіть правильне речення:'
+  - question: Я бачу нові (студенти).
     options:
-    - Я не маю планів на вихідні.
-    - Я не маю плани на вихідні.
-    - Я не маю планах на вихідні.
-    - Я не маю планами на вихідні.
+    - нових студентів
+    - нові студенти
+    - нових студенти
+    - нові студентів
     correct: 0
-  - question: 'Оберіть правильне речення:'
+  - question: У мене є п'ять (роки) досвіду.
     options:
-    - Ми зустрінемося у п'ятницю.
-    - Ми зустрінемося в п'ятниці.
-    - Ми зустрінемося на п'ятницю.
-    - Ми зустрінемося у п'ятницею.
+    - років
+    - роки
+    - роками
+    - роках
     correct: 0
-  - question: 'Оберіть правильне речення:'
+  - question: Вона користується новим (словник).
     options:
-    - Вона дуже любить своїх котів.
-    - Вона дуже любить своїх коти.
-    - Вона дуже любить своїх котам.
-    - Вона дуже любить своїх котами.
+    - словником
+    - словнику
+    - словника
+    - словники
     correct: 0
-  - question: 'Оберіть правильне речення:'
+  - question: Ми п'ємо чай з (молоко).
     options:
-    - Вони подорожують поїздом.
-    - Вони подорожують поїзду.
-    - Вони подорожують на поїздом.
-    - Вони подорожують з поїздом.
+    - молоком
+    - молока
+    - молоку
+    - молоці
     correct: 0
-  - question: 'Оберіть правильне речення:'
+  - question: Син допомагає (сестра).
     options:
-    - Це чоловік у капелюсі.
-    - Це чоловік в капелюх.
-    - Це чоловік з капелюсі.
-    - Це чоловік капелюхом.
+    - сестрі
+    - сестру
+    - сестрою
+    - сестри
     correct: 0
-  - question: 'Оберіть правильне речення:'
+  - question: Вона взяла книгу з (полиця).
     options:
-    - Шановні колеги, почнемо зустріч.
-    - Шановні колег, почнемо зустріч.
-    - Шановні колегам, почнемо зустріч.
-    - Шановні колегами, почнемо зустріч.
+    - полиці
+    - полицю
+    - полицею
+    - полицях
     correct: 0
-  - question: 'Оберіть правильне речення:'
+  - question: Вони працювали п'ять (ночі).
     options:
-    - Я користуюся новим ноутбуком.
-    - Я користуюся новий ноутбук.
-    - Я користуюся нового ноутбука.
-    - Я користуюся новому ноутбуку.
+    - ночей
+    - ночі
+    - ночами
+    - ночам
     correct: 0
-  - question: 'Оберіть правильне речення:'
+  - question: У магазині немає чорних (штани).
     options:
-    - Я пишу запрошення для гостей.
-    - Я пишу запрошення для гості.
-    - Я пишу запрошення для гостям.
-    - Я пишу запрошення для гостями.
+    - штанів
+    - штани
+    - штанам
+    - штанах
     correct: 0
-- type: true-false
+  - question: (Мама), де мої ключі?
+    options:
+    - Мамо
+    - Мама
+    - Мамі
+    - Мамою
+    correct: 0
+  - question: Я дивлюся своїми (очі).
+    options:
+    - очима
+    - очами
+    - очі
+    - очей
+    correct: 0
+workbook:
+- id: unjumble-practice
+  type: unjumble
+  instruction: Складіть правильне речення зі слів
+  items:
+  - words:
+    - лежать
+    - там.
+    - Твої
+    - речі
+    correct_order:
+    - Твої
+    - речі
+    - лежать
+    - там.
+  - words:
+    - У
+    - багато
+    - бібліотеці
+    - книг.
+    correct_order:
+    - У
+    - бібліотеці
+    - багато
+    - книг.
+  - words:
+    - знаємо
+    - морів.
+    - назви
+    - Ми
+    - п'яти
+    correct_order:
+    - Ми
+    - знаємо
+    - назви
+    - п'яти
+    - морів.
+  - words:
+    - досвіду.
+    - років
+    - п'ять
+    - є
+    - мене
+    - У
+    correct_order:
+    - У
+    - мене
+    - є
+    - п'ять
+    - років
+    - досвіду.
+  - words:
+    - бачу
+    - окулярів.
+    - Я
+    - без
+    - не
+    correct_order:
+    - Я
+    - не
+    - бачу
+    - без
+    - окулярів.
+  - words:
+    - сестрі.
+    - завжди
+    - допомагаю
+    - Я
+    correct_order:
+    - Я
+    - завжди
+    - допомагаю
+    - сестрі.
+  - words:
+    - новому
+    - комп'ютері.
+    - Вона
+    - працює
+    - на
+    correct_order:
+    - Вона
+    - працює
+    - на
+    - новому
+    - комп'ютері.
+  - words:
+    - з
+    - кращими
+    - друзями.
+    - Я
+    - гуляю
+    correct_order:
+    - Я
+    - гуляю
+    - з
+    - кращими
+    - друзями.
+  - words:
+    - у
+    - зустрінемося
+    - четвер.
+    - Ми
+    correct_order:
+    - Ми
+    - зустрінемося
+    - у
+    - четвер.
+  - words:
+    - у
+    - забули
+    - машині.
+    - Ви
+    - телефон
+    correct_order:
+    - Ви
+    - забули
+    - телефон
+    - у
+    - машині.
+- id: match-up-genitive
+  type: match-up
+  instruction: З'єднайте іменник із правильною формою Родового відмінка множини (багато...)
+  pairs:
+  - left: стіл
+    right: столів
+  - left: книга
+    right: книг
+  - left: місто
+    right: міст
+  - left: людина
+    right: людей
+  - left: студент
+    right: студентів
+  - left: гість
+    right: гостей
+  - left: річ
+    right: речей
+  - left: око
+    right: очей
+  - left: день
+    right: днів
+  - left: ніч
+    right: ночей
+- id: true-false-cases
+  type: true-false
   instruction: Правда чи ні?
   items:
-  - statement: У Родовому відмінку множини слово 'книга' має форму 'книгів'.
+  - statement: Після слова «багато» ми використовуємо Називний відмінок.
     correct: false
-    explanation: Слово 'книга' (жіночий рід) у Родовому відмінку множини має нульове
-      закінчення — 'книг'.
-  - statement: Дієслово 'дякувати' вимагає Знахідного відмінка (Accusative).
+  - statement: Слово «окуляри» має тільки форму множини.
+    correct: true
+  - statement: Слово «гроші» у Родовому відмінку буде «грошей».
+    correct: true
+  - statement: Після прийменника «без» завжди йде Знахідний відмінок.
     correct: false
-    explanation: 'Дієслово ''дякувати'' вимагає Давального відмінка (Dative): дякувати
-      батькам.'
-  - statement: Слова 'гроші' та 'окуляри' мають тільки форму множини.
+  - statement: Якщо ми йдемо «в школу», це Знахідний відмінок (напрямок).
     correct: true
-    explanation: Так, це іменники, які вживаються лише в множині (Pluralia Tantum).
-  - statement: Прийменник 'з' з Орудним відмінком (Instrumental) означає компанію
-      (наприклад, 'з братом').
-    correct: true
-    explanation: Так, 'з братом' означає 'with brother'. З Родовим відмінком 'з' означає
-      напрямок (з України).
-  - statement: Слово 'людина' у множині — це 'людини'.
+  - statement: Форма «п'ять студенти» — правильна.
     correct: false
-    explanation: Це неправильна форма. Множина від 'людина' — 'люди'.
-  - statement: У формі Кличного відмінка слово 'мама' буде 'мамо'.
+  - statement: Для звертання до людини ми використовуємо Кличний відмінок.
     correct: true
-    explanation: Так, Кличний відмінок для іменників на -а часто має закінчення -о.
-- type: translate
-  instruction: Оберіть правильний переклад
+  - statement: Дієслово «допомагати» вимагає Знахідного відмінка.
+    correct: false
+  - statement: Дієслово «користуватися» вимагає Орудного відмінка.
+    correct: true
+  - statement: Множина від слова «друг» — «други».
+    correct: false
+- id: fill-in-weekend
+  type: fill-in
+  instruction: Вставте правильне слово у текст про ідеальний вихідний день
   items:
-  - source: He uses a phone.
+  - sentence: Вранці я п'ю чашку кави з ____.
+    answer: молоком
     options:
-    - text: Він користується телефоном.
-      correct: true
-    - text: Він користується телефон.
-      correct: false
-    - text: Він користується телефона.
-      correct: false
-    - text: Він користується телефону.
-      correct: false
-  - source: I do not have books.
+    - молоком
+    - молоко
+    - молока
+  - sentence: Потім я дзвоню своїм ____.
+    answer: друзям
     options:
-    - text: У мене немає книг.
-      correct: true
-    - text: У мене немає книги.
-      correct: false
-    - text: У мене немає книгах.
-      correct: false
-    - text: У мене немає книгами.
-      correct: false
-  - source: She is walking with friends.
+    - друзям
+    - друзі
+    - друзях
+  - sentence: Ми домовляємося зустрітися у центрі ____.
+    answer: міста
     options:
-    - text: Вона гуляє з друзями.
-      correct: true
-    - text: Вона гуляє з друзів.
-      correct: false
-    - text: Вона гуляє з друзям.
-      correct: false
-    - text: Вона гуляє з друзі.
-      correct: false
-  - source: They see tall trees.
+    - міста
+    - місто
+    - місті
+  - sentence: О першій годині я їду в улюблений ____.
+    answer: ресторан
     options:
-    - text: Вони бачать високі дерева.
-      correct: true
-    - text: Вони бачать високих дерев.
-      correct: false
-    - text: Вони бачать високими деревами.
-      correct: false
-    - text: Вони бачать високим деревам.
-      correct: false
-  - source: We are waiting for the bus.
+    - ресторан
+    - ресторані
+    - рестораном
+  - sentence: Я замовляю український борщ зі ____.
+    answer: сметаною
     options:
-    - text: Ми чекаємо автобуса.
-      correct: true
-    - text: Ми чекаємо автобусом.
-      correct: false
-    - text: Ми чекаємо автобусу.
-      correct: false
-    - text: Ми чекаємо автобусам.
-      correct: false
-  - source: We travel by train.
+    - сметаною
+    - сметана
+    - сметані
+  - sentence: Після обіду ми йдемо в ____.
+    answer: парк
     options:
-    - text: Ми подорожуємо поїздом.
+    - парк
+    - парку
+    - парком
+  - sentence: Ми довго гуляємо під високими ____.
+    answer: деревами
+    options:
+    - деревами
+    - дерева
+    - деревах
+  - sentence: Ми говоримо про плани на ____.
+    answer: майбутнє
+    options:
+    - майбутнє
+    - майбутньому
+    - майбутнього
+  - sentence: Я читаю нову ____.
+    answer: книгу
+    options:
+    - книгу
+    - книга
+    - книзі
+  - sentence: Я дивлюся цікавий ____.
+    answer: фільм
+    options:
+    - фільм
+    - фільму
+    - фільмом
+- id: translate-sentences
+  type: translate
+  instruction: Оберіть правильний переклад речення
+  items:
+  - source: I have five years of experience.
+    options:
+    - text: У мене є п'ять років досвіду.
       correct: true
-    - text: Ми подорожуємо поїзді.
+    - text: У мене є п'ять роки досвіду.
       correct: false
-    - text: Ми подорожуємо на поїзд.
+  - source: They live in Chernivtsi.
+    options:
+    - text: Вони живуть у Чернівцях.
+      correct: true
+    - text: Вони живуть у Чернівці.
       correct: false
-    - text: Ми подорожуємо поїзда.
+  - source: She uses a new dictionary.
+    options:
+    - text: Вона користується новим словником.
+      correct: true
+    - text: Вона користується новий словник.
       correct: false
+  - source: We gladly help new friends.
+    options:
+    - text: Ми радісно допомагаємо новим друзям.
+      correct: true
+    - text: Ми радісно допомагаємо нові друзі.
+      correct: false
+  - source: I cannot see without glasses.
+    options:
+    - text: Я не бачу без окулярів.
+      correct: true
+    - text: Я не бачу без окуляри.
+      correct: false
+  - source: The woman in the red dress is my mom.
+    options:
+    - text: Жінка у червоній сукні — моя мама.
+      correct: true
+    - text: Жінка у червоною сукнею — моя мама.
+      correct: false
+  - source: Mom, where are my keys?
+    options:
+    - text: Мамо, де мої ключі?
+      correct: true
+    - text: Мама, де мої ключі?
+      correct: false
+  - source: We bought many sweet apples.
+    options:
+    - text: Ми купили багато солодких яблук.
+      correct: true
+    - text: Ми купили багато солодкі яблука.
+      correct: false
+  - source: I am walking with my best friends.
+    options:
+    - text: Я гуляю з найкращими друзями.
+      correct: true
+    - text: Я гуляю з найкращі друзі.
+      correct: false
+  - source: He arrived from a big city.
+    options:
+    - text: Він приїхав з великого міста.
+      correct: true
+    - text: Він приїхав з велике місто.
+      correct: false
+- id: error-correction-grammar
+  type: error-correction
+  instruction: Знайдіть і виправте граматичну помилку
+  items:
+  - sentence: Ми купили п'ять яблука.
+    error: яблука
+    correction: яблук
+    error_type: word
+  - sentence: На площі було багато люди.
+    error: люди
+    correction: людей
+    error_type: word
+  - sentence: У мене немає гроші.
+    error: гроші
+    correction: грошей
+    error_type: word
+  - sentence: Вона допомагає нові друзям.
+    error: нові
+    correction: новим
+    error_type: word
+  - sentence: Вони працювали п'ять ночі.
+    error: ночі
+    correction: ночей
+    error_type: word
+  - sentence: Вона взяла книгу з полиця.
+    error: полиця
+    correction: полиці
+    error_type: word
+  - sentence: Хлопець у жовтому светр.
+    error: светр
+    correction: светрі
+    error_type: word
+  - sentence: Ми зустрінемося у четверг.
+    error: четверг
+    correction: четвер
+    error_type: word
+  - sentence: Я бачу великий будинку.
+    error: будинку
+    correction: будинок
+    error_type: word
+  - sentence: Ми п'ємо чай з молоко.
+    error: молоко
+    correction: молоком
+    error_type: word
+- id: quiz-mixed
+  type: quiz
+  instruction: Оберіть правильний варіант
+  items:
+  - question: Я п'ю каву з ____.
+    options:
+    - молоком
+    - молоку
+    - молока
+    - молоко
+    correct: 0
+  - question: У бібліотеці дуже багато ____.
+    options:
+    - книг
+    - книги
+    - книгами
+    - книгах
+    correct: 0
+  - question: Я завжди допомагаю своїй ____.
+    options:
+    - сестрі
+    - сестру
+    - сестри
+    - сестрою
+    correct: 0
+  - question: Вона користується новим ____.
+    options:
+    - словником
+    - словнику
+    - словника
+    - словників
+    correct: 0
+  - question: Діти швидко йдуть в ____.
+    options:
+    - школу
+    - школі
+    - школою
+    - школи
+    correct: 0
+  - question: Ми завтра їдемо у ____.
+    options:
+    - Київ
+    - Києві
+    - Києвом
+    - Києва
+    correct: 0
+  - question: Вона взяла книгу з дерев'яної ____.
+    options:
+    - полиці
+    - полицю
+    - полицею
+    - полицях
+    correct: 0
+  - question: Ми зустрінемося у ____.
+    options:
+    - четвер
+    - четверг
+    - четверга
+    - четвергу
+    correct: 0
+  - question: Це сталося у дві тисячі чотирнадцятому ____.
+    options:
+    - році
+    - року
+    - роком
+    - роки
+    correct: 0
+  - question: Хто той хлопець у жовтому ____?
+    options:
+    - светрі
+    - светру
+    - светром
+    - светра
+    correct: 0

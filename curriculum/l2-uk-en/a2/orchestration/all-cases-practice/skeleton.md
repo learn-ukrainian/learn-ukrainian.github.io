@@ -1,43 +1,42 @@
-## Діалог 1: Організовуємо день народження (~550 words total)
-- P1 (~60 words): Introduction to the social scenario—friends Oksana and Andrii are calling to plan a surprise party for Olena. Sets the stage for functional use of all cases.
-- P2 (~100 words): Dialogue Part 1A—The Plan. Focused on Nominative (Хто прийде?), Accusative (Купити торт і подарунок), and Genitive (Немає свічок, багато гостей).
-- P3 (~90 words): Grammatical breakdown of the "Birthday Triggers." Explaining the direct object in Accusative (запросити друзів) versus the genitive of quantity/absence (багато друзів, немає соку).
-- P4 (~100 words): Dialogue Part 1B—Invitations and Gifts. Focused on Dative (Дзвонити друзям, подарунок Олені) and Instrumental (З великою компанією, прикрасити кульками).
-- P5 (~90 words): Explanation of the Dative "Recipient" role (дати комусь) and Instrumental "Accompaniment/Means" (з кимось, чимось). Contrast between "з друзями" (plural) and "з Оксаною" (singular).
-- P6 (~60 words): Dialogue Part 1C—The Venue and Vocative. Using Locative (У ресторані "Дніпро", на терасі) and Vocative (Андрію, Оксано) to finalize details.
-- P7 (~50 words): Cultural Note—Ukrainian birthday etiquette. Explanation that the "іменинник" (birthday person) usually treats the guests ("частує"), rather than the guests paying for the party.
-- <!-- INJECT_ACTIVITY: quiz-case-identification --> [quiz, Identify case of highlighted nouns in the birthday dialogue and explain the trigger, 8 items]
+## Діалог 1: Організовуємо день народження (~600 words)
+- P1 (~50 words): Introduction to the first scenario: two friends, Оксана and Андрій, are planning a surprise birthday party (вечірка) for their friend Олена. Emphasize that everyday planning naturally requires jumping between all seven cases.
+- P2 (~150 words): Dialogue Part 1 (Planning the basics). A 6-8 exchange dialogue focusing on Nominative, Genitive, and Accusative. Examples: "Хто прийде?" (Nom. subject), "У нас немає торта", "Буде багато гостей" (Gen. of absence and quantity), "Треба купити торт", "Час запрошувати друзів" (Acc. direct objects).
+- P3 (~100 words): Grammar breakdown of Part 1. Explain the case triggers used: why "торт" becomes "торта" after "немає", and why "друзі" becomes "друзів" (Accusative animate plural matching Genitive).
+- P4 (~150 words): Dialogue Part 2 (Details and gifts). A 6-8 exchange dialogue focusing on Dative, Instrumental, Locative, and Vocative. Examples: "Який подарунок купимо Олені?", "Треба написати друзям" (Dat. recipient), "Підемо з друзями", "Прикрасимо кімнату кулями" (Instr. accompaniment and instrument), "Зустрінемося у кафе", "На вечірці буде весело" (Loc. location), "Оксано!", "Андрію!" (Voc. direct address).
+- P5 (~100 words): Grammar breakdown of Part 2. Highlight prepositions: "з" + Instrumental ("з друзями"), "у/на" + Locative ("у кафе", "на вечірці"). Reiterate the Dative case for giving/writing to someone ("написати друзям").
+- P6 (~50 words): Cultural note on Ukrainian birthday traditions. Explain the verb "частувати" — unlike in some western cultures where guests pay for the birthday person, in Ukraine, the birthday person (іменинник) treats the guests to food and drinks.
+- <!-- INJECT_ACTIVITY: quiz-case-identification --> [quiz, Identify which case a highlighted noun is in and explain why (verb or preposition trigger), 8 items]
 
-## Діалог 2: У лікарні (~550 words total)
-- P1 (~60 words): Setting the scene at a hospital. Patient Petro arrives for an appointment. Introduces medical vocabulary (лікарня, реєстратура, запис).
-- P2 (~110 words): Dialogue Part 2A—At the Reception. Focus on Locative (В черзі, на другому поверсі) and the "n-" prefix for 3rd person pronouns (У нього є запис? До неї можна?).
-- P3 (~90 words): Linguistic focus on the "n-" prefix rule for personal pronouns after prepositions (у нього, без неї, для них) using hospital-related examples like "без нього (лікарського огляду)".
-- P4 (~120 words): Dialogue Part 2B—The Consultation. Describing symptoms using the Genitive/Dative state constructions: "У мене болить голова" (Gen.), "Мені погано" (Dat.), "З високою температурою" (Instr.).
-- P5 (~90 words): Deep dive into body parts and health grammar. Explaining the logic of "боліти" (Nom. subject: "голова болить") vs. "почуватися" (Adverb: "почуваюся добре").
-- P6 (~80 words): Dialogue Part 2C—The Prescription. Doctor gives advice using Accusative (Пити ліки, робити огляд) and Dative (Раджу вам відпочинок).
-- <!-- INJECT_ACTIVITY: fill-in-singular-plural-hospital --> [fill-in, Rewrite dialogue sentences changing singular to plural (e.g., один пацієнт → п'ять пацієнтів), 8 items]
+## Діалог 2: У лікарні (~600 words)
+- P1 (~50 words): Introduction to the second scenario: a patient visiting a doctor (лікар). Focus on expressing physical states, symptoms, and medical advice using specific case constructions.
+- P2 (~150 words): Dialogue Part 1 (Describing symptoms). A 6-8 exchange dialogue focusing on Nominative, Genitive, and Dative. Examples: "Що вас турбує?", "У мене температура" (Nom. as subject in possession), "Немає сильного болю", "Аптека біля лікарні" (Gen. after немає and біля), "Мені погано", "Що ви порадите пацієнтові?" (Dat. for impersonal state and recipient).
+- P3 (~100 words): Grammar breakdown of Part 1. Contrast the English "I have a headache" with the correct Ukrainian construction "У мене болить голова" (Nom. subject). Review the impersonal Dative construction for states: "Мені погано", "Мені краще".
+- P4 (~150 words): Dialogue Part 2 (Diagnosis and treatment). A 6-8 exchange dialogue focusing on Accusative, Instrumental, Locative, and Vocative. Examples: "Треба приймати ці ліки", "Чекаю вас на огляд" (Acc. direct object and direction), "Ви прийшли з кашлем", "Купіть за рецептом" (Instr. with "з" and "за"), "Ви зараз у лікарні", "На прийомі" (Loc. location), "Лікарю!", "Пане докторе!" (Voc.).
+- P5 (~100 words): Grammar breakdown of Part 2. Focus on plural nouns and transformations. Explain pluralia tantum words like "ліки" (Acc. plural). Show how to change singular concepts to plural: "один пацієнт" → "багато пацієнтів" (Gen. pl.), "ці ліки" (Acc. pl.).
+- P6 (~50 words): Vocabulary note integrating health terms naturally (голова, горло, рецепт, здоров'я). Explicitly warn against the calque "Я маю головний біль" and reinforce authentic phrasing.
+- <!-- INJECT_ACTIVITY: match-up-health-cases --> [match-up, Match sentence halves so that the case form in the first half agrees with the preposition/verb in the second half, 8 items]
 
-## Діалог 3: Подорож Україною (~550 words total)
-- P1 (~60 words): Intro to the travel scenario. Taras and Iryna are planning a road trip across Ukraine. Introduces geography terms (місто, гори, річка, кордон).
-- P2 (~110 words): Dialogue Part 3A—Choosing the Route. Focused on Movement Cases: "Поїхати до Львова" (Gen.), "Відвідати Одесу" (Acc.), "Бути в Карпатах" (Loc. Plural).
-- P3 (~100 words): Explanation of case changes for cities and regions. Contrast between masculine "-а/-у" in Genitive (до Києва, до Харкова) and the pluralia tantum "Карпати" in various cases.
-- P4 (~110 words): Dialogue Part 3B—Transport and Companions. Focus on Instrumental Plural (Подорожувати потягами або машинами) and Genitive Plural (Багато цікавих місць).
-- P5 (~90 words): Grammatical focus on Instrumental endings "-ами/-ями" for transport and companions (з друзями, автобусами). Mentioning the unique "-ми" ending for "грошима/грішми".
-- P6 (~80 words): Dialogue Part 3C—Final Planning. Using Dative for destination targets (Львову пасує дощ) and Locative for surface movement (Гуляти по Хрещатику, по горах).
-- <!-- INJECT_ACTIVITY: match-up-case-triggers --> [match-up, Match sentence halves ensuring case agreement with prepositions/verbs, 8 items]
+## Діалог 3: Подорож Україною (~600 words)
+- P1 (~50 words): Introduction to the third scenario: two friends planning a trip (подорож) across Ukraine. Focus on geography, motion verbs, and travel logistics.
+- P2 (~150 words): Dialogue Part 1 (Origin and Destination). A 6-8 exchange dialogue focusing on Nominative, Genitive, and Accusative. Examples: "Київ — гарне місто" (Nom.), "Ми їдемо з Києва", "Квитки до Львова", "Там багато визначних місць" (Gen. of motion origin and quantity), "Треба відвідати Одесу", "Поїдемо через Умань" (Acc. direct object and motion path).
+- P3 (~100 words): Grammar breakdown of Part 1. Explain the cases of motion: "з" (from) and "до" (to) always take the Genitive, while "через" (through) takes the Accusative. Highlight the Genitive plural ending in "багато визначних місць".
+- P4 (~150 words): Dialogue Part 2 (Transport and Activities). A 6-8 exchange dialogue focusing on Dative, Instrumental, Locative, and Vocative. Examples: "Купимо сувеніри друзям у Львові", "Нам треба поспішати" (Dat.), "Краще поїхати потягом", "Я їду з подругою", "Будемо милуватися Карпатами" (Instr. means of transport, accompaniment, object of 'милуватися'), "Зустрінемося у Львові", "Гулятимемо по Хрещатику", "У 2024 році" (Loc.), "Тарасе!", "Друже!" (Voc.).
+- P5 (~100 words): Grammar breakdown of Part 2. Contrast Locative for static location ("у Львові") with Instrumental for means of transport ("потягом"). Highlight the pluralia tantum "Карпати" and its Instrumental form ("Карпатами"). Note the authentic Ukrainian use of "по" + Locative ("по Хрещатику").
+- P6 (~50 words): Phrases for planning and suggesting: "Давай поїдемо...", "Може, спочатку...", "А потім можна...". Show how these trigger specific infinitive and case patterns.
+- <!-- INJECT_ACTIVITY: fill-in-travel-dialogue --> [fill-in, Complete gaps in a dialogue with the correct case form — all 7 cases represented, both singular and plural, 8 items]
 
-## Самоперевірка: Знайди помилку (~350 words total)
-- P1 (~70 words): Identifying common pitfalls for A2 learners: direct calques like "Маю головний біль" instead of "У мене болить голова" and wrong "по" usage (Dative vs Locative).
-- P2 (~140 words): The "Case Master Cheat Sheet." A structured summary list covering:
-  - 1. Називний (Хто? Що? - Subject)
-  - 2. Родовий (Кого? Чого? - Absence, "У мене є", quantity)
-  - 3. Давальний (Кому? Чому? - Recipient, state "Мені...")
-  - 4. Знахідний (Кого? Що? - Direct object, destination)
-  - 5. Орудний (Ким? Чим? - Instrument, with someone)
-  - 6. Місцевий (На кому? На чому? - Location, surface movement)
-  - 7. Кличний (Addressing someone)
-- P3 (~100 words): Analysis of three "buggy" sentences. Example: "*Ми їхали по потягу* (Wrong case) -> *Ми їхали потягом* (Correct Instrument) or *по потягах* (Locative movement)."
-- P4 (~40 words): Strategy for self-correction: The "Verb-Preposition Check" introduced in M31.
-- <!-- INJECT_ACTIVITY: error-correction-all-cases --> [error-correction, Find and fix case ending errors in a short text about a trip to a party, 6 items]
+## Самоперевірка: Знайди помилку (~400 words)
+- P1 (~50 words): Introduction to the self-check section. Emphasize that spotting errors in context is the final step to mastering cases. Instruct learners to find the deliberate mistakes in the following short texts.
+- P2 (~100 words): Error analysis text 1 (Prepositions). Present 3-4 sentences containing deliberate errors like "Ми їхали по полям" (Russism, should be "по полях" Loc. Pl.) and "Я пішов з друзі" (missing Instr. ending, should be "з друзями"). Walk through the corrections and explain why the original was wrong.
+- P3 (~100 words): Error analysis text 2 (Objects and Quantities). Present 3-4 sentences with errors like "Я допомагаю сестру" (wrong case for recipient, should be Dat. "сестрі") and "Там було багато студенти" (missing Gen. Pl. after quantity, should be "студентів"). Walk through the corrections.
+- P4 (~150 words): The "Case Cheat Sheet" summary. A concise bulleted recap of all 7 cases for quick reference:
+  * Називний (Nom): хто/що? (Subject: Київ, друзі)
+  * Родовий (Gen): кого/чого? (Absence, quantity, 'з/до/біля': немає торта, до Львова)
+  * Давальний (Dat): кому/чому? (Recipient, age, impersonal states: друзям, мені холодно)
+  * Знахідний (Acc): кого/що? (Direct object, 'через': купити ліки, через Умань)
+  * Орудний (Instr): ким/чим? (Instrument, 'з' accompaniment: потягом, з кашлем)
+  * Місцевий (Loc): на/у кому/чому? (Location 'в/на/по': у лікарні, по Хрещатику)
+  * Кличний (Voc): (Addressing someone directly: Оксано, лікарю!)
+- <!-- INJECT_ACTIVITY: error-correction-cases --> [error-correction, Find and fix wrong case endings across all 7 cases (e.g., *допомагаю сестру → сестрі, *багато студенти → студентів), 6 items]
 
-Grand total: ~2000 words
+Grand total: ~2200 words

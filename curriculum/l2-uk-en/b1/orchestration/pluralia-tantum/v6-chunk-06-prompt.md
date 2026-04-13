@@ -22,7 +22,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-категорія охоплює різноманітні речовини та матеріали *(substances)*. Ви постійно зустрічаєте їх у побуті: свіже **молоко** *(milk)*, соняшникова **олія** *(oil)*, блискуче **золото** *(gold)*, міцне **залізо** *(iron)* або звичайна шкільна **крейда** *(chalk)*. Третя дуже цікава група — це збірні іменники *(collective nouns)*. Вони описують сукупність окремих осіб або предметів як одне неподільне ціле. Чудовими прикладами є слова **студентство** *(student body)*, весела **дітвора** *(kids)*, галасливе **птаство** *(birds)* та сухе осіннє **листя** *(leaves)*. Вони завжди вимагають дієслова винятково в однині. Чому цей різкий структурний контраст між двома групами є настільки важливим для вас? Чітке розуміння цієї логіки допомагає успішно уникати поширених мовних пасток. Багато іноземних учнів часто намагаються додати типові закінчення множини до абстрактних понять. Вони помилково думають, що так можна висловити більшу інтенсивність почуття. Але казати форми на зразок «наші дружби» або «великі добра» — це груба помилка. Інша популярна пастка виникає тоді, коли учні намагаються штучно створити форму однини для слів pluralia tantum. Запам'ятайте назавжди: українською мовою неможливо і неправильно сказати «одна двері» або «один гроші». Цей поділ іменників чудово відображає специфічний український спосіб ментальної категоризації світу. Візьмемо для прикладу збірне слово **молодь** *(youth)*. В англійській мові ви іноді можете думати про молодих людей у множині. Але в українській мові це слово завжди є суворою граматичною одниною. Ви обов'язково маєте казати «молодь активно читає», а не «молодь читають». Граматичне число тут базується не на простій математиці, а на глибокій логіці нашої мови. Проте українська література завжди є надзвичайно гнучкою, лексично багатою та емоційно експресивною. Іноді талановиті письменники та поети свідомо порушують ці суворі базові правила для створення стилістичного ефекту. У красивій поезії або художній прозі абстрактні іменники singularia tantum зрідка можуть з'являтися у формі множини. Наприклад, ви можете зустріти такі поетичні фрази, як неймовірні **красоти природи** *(beauties of nature)* або світлі **радості життя** *(joys of life)*. Іноді назви речовин також отримують форму множини, щоб показати різні види або безкраї простори певного матеріалу. Автори пишуть про цілющі мінеральні води або про глибокі зимові сніги. Але саме тут вам треба бути максимально обережними. Для амбітних студентів рівня B1 наше золоте правило залишається незмінним: завжди сприймайте і вживайте ці конкретні слова винятково як однину. Такі літературні форми множини є дуже специфічними та стилістично маркованими. Якщо ви почнете використовувати їх у своїй щоденній розмові, це звучатиме досить неприродно або занадто театрально. Наостанок нам варто обов'язково поговорити про унікальні власні географічні назви. Більшість традиційних українських імен та назв великих міст стабільно існують тільки у формі однини. Наприклад, столиця **Київ** *(Kyiv)*, сонячна **Одеса** *(Odesa)*, найвища гора **Говерла** *(Hoverla)* та ім'я **Оксана** *(Oksana)* — це класичні слова singularia tantum. Але саме тут ховається наш останній і найбільш захопливий лінгвістичний контраст. Чимало відомих українських географічних назв є повноцінними pluralia tantum! Хоча вони позначають лише одне місто на карті, слова **Суми** *(Sumy)*, **Черкаси** *(Cherkasy)* та мальовничі **Чернівці** *(Chernivtsi)* завжди залишаються граматично множинними. Величезна столиця Київ завжди вимагає суворої однини, тоді як прекрасні Суми завжди вимагають множини. Цей парадоксальний факт ідеально демонструє неповторну історичну логіку системи українських іменників. <!-- INJECT_ACTIVITY: group-sort, sort nouns into pluralia tantum, singularia tantum, and both numbers -->
+substances and materials: "milk," "iron," "oil," or "chalk." Another important category is collective nouns, which denote a collection of beings or objects as a single whole, for example, "student body," "birds/flock," "children," and "leaves." All these words always require verbs and adjectives in the singular form.* Understanding the strict boundary between these two noun classes prevents common mistakes among learners, particularly regarding **узгодження** (agreement — grammatical concord). The main trap is attempting to force a plural ending onto an abstract concept or a singular ending onto a plural-only noun. This distinction reflects how the Ukrainian language naturally categorizes the world, grouping certain things as indivisible masses and others as inseparable pairs. Найбільша пастка для студентів полягає у спробах утворити множину від абстрактних понять або навпаки — зробити однину зі слів pluralia tantum. В українській мові не можна сказати «одна двері» чи «один гроші», так само як і нормативне мовлення не приймає штучних форм на кшталт «міцні дружби» чи «великі добра». Це відображає специфічний український спосіб класифікації світу. Наприклад, слово «молодь» завжди граматично сприймається як неподільна однина, незалежно від кількості молодих людей у реальному житті. However, literature and poetry often play with these grammatical rules to create a specific mood or emphasize the scale of an emotion. While normative grammar forbids the pluralization of abstract singularia tantum nouns, writers occasionally break this rule for stylistic effect. For a learner at the B1 level, it is important to recognize these exceptions when reading, but you should avoid using them in everyday conversation or formal writing. У художній літературі автори іноді порушують граматичні норми та вживають абстрактні іменники у множині для створення сильного стилістичного ефекту. Ви можете зустріти в поезії такі вислови, як «красоти природи», «радості життя» або «глибини почуттів». У цих випадках множина підкреслює багатогранність, інтенсивність або тривалість явища. Проте в нейтральному щоденному спілкуванні абстрактні поняття залишаються виключно в однині, тому вам слід уникати таких літературних експериментів у власному мовленні. :::info **Grammar box** While reading Ukrainian literature, you might see abstract singularia tantum nouns transformed into plurals (e.g., радості, красоти). Treat these as poetic licenses rather than standard grammar rules you should imitate. ::: Another fascinating contrast involves proper names and geographical locations. The names of most people and cities are inherently singular, as they refer to a unique, individual entity. However, certain geographical names are structurally pluralia tantum, even though they represent a single location on the map. This creates a situation where you must memorize whether a city acts as a singular or a plural noun. Власні назви, такі як імена людей або назви більшості міст, належать до групи singularia tantum. Наприклад, імена «Оксана» чи «Степан», а також міста «Київ» або «Харків» мають лише форму однини. Проте існує ціла категорія географічних назв, які є виключно множинними, хоча позначають одне конкретне місце. Місто «Суми» або місто «Черкаси» завжди вимагають граматичної множини, тому ми кажемо «Суми розташовані» або «я їду до Черкас», зберігаючи множинну логіку для єдиного об'єкта. <!-- INJECT_ACTIVITY: group-sort, sort nouns: pluralia tantum / singularia tantum / both числа -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -602,7 +602,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -615,18 +682,68 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] двері (door — pluralia tantum, Р. дверей)
+- [ ] окуляри (glasses — pluralia tantum, Р. окулярів)
+- [ ] гроші (money — pluralia tantum, Р. грошей, Ор. грішми/грошима)
+- [ ] ворота (gate — pluralia tantum, Р. воріт, Ор. ворітьми/воротами)
+- [ ] ножиці (scissors — pluralia tantum, Р. ножиць)
+- [ ] Карпати (Carpathians — geographical pluralia tantum)
+- [ ] канікули (holidays/vacation — pluralia tantum)
+- [ ] ліки (medicine — pluralia tantum, connects to M16)
+- [ ] меблі (furniture — pluralia tantum)
+- [ ] сани (sleigh — pluralia tantum, Р. саней)
+- [ ] дріжджі (yeast — pluralia tantum)
+- [ ] однина (singular number)
+- [ ] множина (plural number)
+- [ ] родовий відмінок (genitive case)
+- [ ] узгодження (agreement — grammatical concord)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Узгодження з pluralia tantum (~450 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

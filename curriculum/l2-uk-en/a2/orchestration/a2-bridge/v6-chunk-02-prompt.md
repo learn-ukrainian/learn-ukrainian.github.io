@@ -3,21 +3,21 @@
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 1: Ласкаво просимо до рівня А2 (A2, A2.1 [Foundation and Aspect Introduction])
-**Section to write:** Магія української фонології (The Magic of Ukrainian Phonology) (~750 words total)
-**Word target for this section:** 750 words (aim for 825 to account for undershoot)
+**Section to write:** Магія української фонології (~770 words)
+**Word target for this section:** 770 words (aim for 847 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Магія української фонології (The Magic of Ukrainian Phonology) (~750 words total)
-- P1 (~140 words): [Vowel alternations: The "closed syllable" rule (о/і, е/і). Explain how vowels change when the syllable closes or opens during declension. Examples: стіл/стола, Київ/Києва, вечір/вечора.]
-- P2 (~120 words): [Consonant mutations (First Palatalization). Historic changes (г/ж, к/ч, х/ш) in stems. Use diminutive examples to illustrate: нога/ніжка, рука/ручка, вухо/вушко.]
-- P3 (~130 words): [Consonant mutations in cases (Second Palatalization). Specific focus on г/з, к/ц, х/с before the ending -і in the Dative/Locative. Examples: на дорозі, в руці, мусі.]
-- P4 (~120 words): [Stress patterns and Homographs. Using stress to distinguish meaning. Examples: замок (castle) vs. замок (lock). Note that stress in Ukrainian is free and mobile.]
-- P5 (~120 words): [Consonant assimilation. Explaining дз and дж as single affricate sounds (бджола, дзвінок). Briefly cover voicing assimilation: просьба pronounced as [проз'ба], вокзал as [воґзал].]
-- P6 (~120 words): [Mobile stress in noun paradigms. Show how stress shifts between stem and ending across cases (вода vs. воду, рука vs. руки). This predicts correct pronunciation in conversation.]
-- <!-- INJECT_ACTIVITY: fill-in-phonology --> [fill-in, Phonological Alternation Pairs, 8 items]
+## Магія української фонології (~770 words)
+- P1 (~100 words): Introduction to Ukrainian phonology. Emphasize that changes in word stems during declension are not random exceptions but follow historical, predictable patterns. Introduce the concept of alternations (чергування) of vowels (голосні) and consonants (приголосні).
+- P2 (~130 words): Vowel alternations: о/і, е/і. Explain the "closed syllable" rule. Provide clear examples showing how 'і' appears when a syllable ends in a consonant (closed), and changes to 'о' or 'е' when a vowel ending is added (open): стіл → стола, Київ → Києва.
+- P3 (~140 words): Consonant alternations (the first palatalization). Explain how г, к, х change to з', ц', с' before the vowel 'і' in the Dative and Locative cases of feminine nouns. Give explicit examples: нога → нозі, рука → руці, муха → мусі. Emphasize avoiding the common mistake of saying "подругі" instead of the correct "подрузі".
+- P4 (~120 words): Consonant assimilation. Explain that 'дж' and 'дз' function as single sounds (affricates), not two separate consonants (e.g., джерело, бджола). Discuss voicing assimilation before voiced consonants with examples: просьба → [проз'ба], вокзал → [воґзал].
+- P5 (~130 words): Introduction to stress (наголос). Explain its crucial role in conveying correct meaning and how it can disambiguate words (homographs). Provide examples: за́мок (castle) vs. замо́к (lock), ні́коли (no time) vs. ніко́ли (never).
+- P6 (~150 words): Mobile stress in noun paradigms. Explain how stress often shifts between the stem and the ending across different cases, which is a key feature of Ukrainian rhythm. Provide examples showing this shift: вода́ (Н.в.) / во́ду (Зн.в.), рука́ (Н.в.) / ру́ки (Р.в. однини / Н.в. множини). Explain how recognizing these patterns helps predict pronunciation.
+- <!-- INJECT_ACTIVITY: fill-in-phonological-alternations --> [fill-in, Phonological Alternation Pairs, 8 items]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -25,7 +25,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-who you are. This structure directly links a subject to its definition. ::: The Accusative case, or Знахідний відмінок, points directly to the direct object of an action. It answers the questions «кого?» (whom?) or «що?» (what?). This case shows what is receiving the action of the verb. For feminine nouns ending in -а or -я, the ending typically changes to -у or -ю. However, for inanimate masculine and neuter nouns, the form stays exactly the same as the dictionary form. Recognizing when a word acts as a direct object is crucial for clear communication. Я п'ю гарячу каву і читаю цікаву книжку. Наш викладач починає новий урок. Ми бачимо великий стіл. > *I am drinking hot coffee and reading an interesting book. Our teacher starts a new lesson. We see a large table.* The Locative case, or Місцевий відмінок, tells us exactly where an action takes place, answering the essential question «де?» (where?). A unique and strict rule of this case is that it is never used alone; it always requires a preposition. Most commonly, you will use it with the prepositions «у» or «в» (in), and «на» (on). This case is extremely common in daily conversations when discussing locations, cities, or workplaces. Зараз ми сидимо у світлій школі. Мій старший брат працює на заводі. Минулої весни ми були в Ужгороді. > *Right now we are sitting in a bright school. My older brother works at a factory. Last spring we were in Uzhhorod.* The Vocative case, or Кличний відмінок, is used exclusively for addressing people, animals, or personified objects directly. It does not answer any standard questions. This case is a vibrant, living marker of the Ukrainian language and carries deep cultural significance. Unlike Russian, where the vocative case has largely disappeared in modern speech, Ukrainian strictly requires it for natural communication. Using the Nominative dictionary form instead of the Vocative to address someone immediately marks a speaker as a foreigner or indicates the use of Surzhyk. Привіт, найкращий друже! Олю, допоможи мені, будь ласка. Пане вчителю, я маю важливе запитання. > *Hi, best friend! Olia, help me, please. Mr. Teacher, I have an important question.* :::tip **Did you know?** — Always use the Vocative case when writing emails or messages. Starting a message with «Оксана» instead of «Оксано» sounds abrupt and unnatural to a native Ukrainian speaker. ::: In total, the full Ukrainian grammatical system contains seven cases. You have already successfully practiced four of them: Nominative, Accusative, Locative, and Vocative. This is a massive achievement that allows you to handle many basic interactions. In the A2 level, we will introduce the three missing pieces to complete your grammatical map. We will learn the Genitive case to express absence and possession, the Dative case to identify the recipient of an action, and the Instrumental case to explain what tools we use. By mastering all seven cases, you will be able to express any thought with complete precision. <!-- INJECT_ACTIVITY: quiz-case-id --> [quiz, Case Identification Drill, 8 items]
+one specific and vital purpose: addressing someone directly. Кличний відмінок є душею українського спілкування. Коли ми звертаємося до людини, ми обов'язково змінюємо закінчення її імені. Ми кажемо «друже», «мамо» або «Оксано». > *The Vocative case is the soul of Ukrainian communication. When we address a person, we obligatorily change the ending of their name. We say "friend", "mom", or "Oksana".* :::tip **Did you know?** The Vocative case is a living, essential feature of the Ukrainian language. Unlike in Russian, where the vocative has largely disappeared from modern speech, failing to use the Vocative in Ukrainian when addressing someone sounds incredibly unnatural and immediately marks you as a foreigner. It is a beautiful marker of the language's unique identity. ::: Next, we review the cases that handle objects and locations. The **знахідний** (accusative) case identifies the direct object of an action. It answers the questions "whom?" or "what?" (Кого? Що?). If you read a fascinating book, drink cold water, or see an old friend, those nouns must take the Accusative form because the action of the verb is happening directly to them. On the other hand, the **місцевий** (locative) case is used exclusively to indicate a physical or abstract location, answering the questions "where?", "on whom?", or "on what?" (Де? На кому? На чому?). Місцевий відмінок є особливим, тому що він ніколи не вживається самостійно. Цей відмінок завжди вимагає прийменника, такого як «у», «в» або «на». Без прийменника він не має сенсу. > *The Locative case is special because it is never used independently. This case always requires a preposition, such as "in", "in", or "on". Without a preposition, it makes no sense.* To truly think in Ukrainian, you need to see the whole picture. The Ukrainian language features a complete system of exactly seven cases. While you already know four of them from your previous studies, seeing them all arranged together helps you understand how the language functions as a beautiful, interconnected web. The seven cases are: Nominative (Називний), Genitive (Родовий), Dative (Давальний), Accusative (Знахідний), Instrumental (Орудний), Locative (Місцевий), and Vocative (Кличний). :::info **Grammar box** Ukrainian students learn a fun mnemonic phrase in school to remember the exact order of the seven cases. The first letter of each word matches the first letter of a case: **Н**ашого **Р**омчика **Д**ивує **З**ебра — **О**ця **М**аленька **К**расуня. *(Our Romchyk is surprised by the zebra — this little beauty.)* ::: As you progress through the A2 level, you will conquer the remaining three cases, unlocking exciting new layers of expression. You will learn the Genitive case to talk about absence, possession, and quantities. You will master the Dative case to express who receives an action or who is experiencing a certain feeling. Finally, you will explore the Instrumental case to describe the tools you use to perform an action or the people you spend your time with. These new grammatical tools will bridge the gap between making simple, isolated statements and engaging in fluent, detailed conversations about your daily life. <!-- INJECT_ACTIVITY: quiz-case-identification -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -612,6 +612,30 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] відмінок (case)
+- [ ] називний (nominative)
+- [ ] знахідний (accusative)
+- [ ] місцевий (locative)
+- [ ] кличний (vocative)
+- [ ] чергування (alternation)
+- [ ] голосний (vowel)
+- [ ] приголосний (consonant)
+- [ ] наголос (stress (accent))
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Магія української фонології (~770 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

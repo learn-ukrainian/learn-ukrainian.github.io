@@ -1,22 +1,24 @@
 ## VESUM Verification
-- Confirmed: порівняння, більший, менший, кращий, гірший, найкращий, найбільший, солодший, цікавіший, ніж, набагато, трохи, значно, навпаки, тихіший, тихший, дорожчий, вищий, дужчий, нижчий.
-- Not found: дорожший, висший, дужший, самий кращий (use "найкращий").
+- Confirmed: порівняння, більший, менший, кращий, гірший, найкращий, найбільший, солодший, цікавіший, ніж, набагато, трохи, значно, навпаки
+- Not found: None
 
 ## Grammar Rules
-- Ступені порівняння прикметників: Правопис § 105–106 — (as verified via school textbooks Grade 6 Golub § 50 and Grade 11 Avramenko § 9–10).
-  - Synthetic comparative: stem + -ш- (довший) or -іш- (яскравіший).
-  - Synthetic superlative: prefix най- + comparative (найкращий).
-  - Analytic comparative: більш / менш + adjective (більш цікавий).
-  - Consonant alternations (г, з, ж + ш → жч; с + ш → щ): дорогий → дорожчий, низький → нижчий, дужий → дужчий, високий → вищий.
+- Consonant alternations in comparative forms (г→ж, к→ч, х→ш): Правопис §20 — Під час творення прикметників і прислівників вищого ступеня порівняння г, ж, з змінюємо на жч, а с — на щ: дороги́й — доро́жчий (доро́жче); ду́жий — ду́жчий (ду́жче); вузьки́й — ву́жчий (ву́жче); низьки́й — ни́жчий (ни́жче); висо́кий — ви́щий (ви́ще), але: легки́й — ле́гший (ле́гше).
 
 ## Calque Warnings
-- більш кращий: CALQUE — Double comparison is incorrect. Correct: "кращий" or "більш добрий".
-- самий кращий: CALQUE — "Самий" is a Russianism for superlatives. Correct: "найкращий".
-- більш цікавіший: CALQUE — Double comparison. Correct: "цікавіший" or "більш цікавий".
+- самий кращий: calque — найкращий
+- значно кращий: overuse warning (style guide) — далеко кращий, куди кращий, набагато кращий
+- більш кращий: incorrect double comparison — кращий
 
 ## CEFR Check
-- кращий: A1/A2 — OK
-- гірший: A1/A2 — OK
-- більший: A1/A2 — OK
-- цікавий: A1 — OK
-- порівняння: A2 — OK
+- порівняння: B2 — ABOVE TARGET
+- значно: B1 — ABOVE TARGET
+- навпаки: B1 — ABOVE TARGET
+- більший: A2 — OK
+- менший: A2 — OK
+- кращий: A2 — OK
+- найкращий: A1 — OK
+- солодший: A2 — OK
+- ніж: A1 — OK
+- набагато: A2 — OK
+- трохи: A1 — OK

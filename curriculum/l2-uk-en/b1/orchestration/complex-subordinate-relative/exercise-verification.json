@@ -1,0 +1,320 @@
+{
+  "total_items": 223,
+  "grounded_items": 172,
+  "ungrounded": [
+    {
+      "word": "скільки",
+      "exercise_type": "quiz",
+      "context": "Скільки років росте дерево, про яке згадав ботанік?",
+      "role": "context"
+    },
+    {
+      "word": "згадав",
+      "exercise_type": "quiz",
+      "context": "Скільки років росте дерево, про яке згадав ботанік?",
+      "role": "context"
+    },
+    {
+      "word": "країни",
+      "exercise_type": "quiz",
+      "context": "З якої країни подарували рідкісну орхідею?",
+      "role": "context"
+    },
+    {
+      "word": "рідкісну",
+      "exercise_type": "quiz",
+      "context": "З якої країни подарували рідкісну орхідею?",
+      "role": "context"
+    },
+    {
+      "word": "орхідею",
+      "exercise_type": "quiz",
+      "context": "З якої країни подарували рідкісну орхідею?",
+      "role": "context"
+    },
+    {
+      "word": "розташоване",
+      "exercise_type": "quiz",
+      "context": "Де розташоване місце для відпочинку?",
+      "role": "context"
+    },
+    {
+      "word": "відпочинку",
+      "exercise_type": "quiz",
+      "context": "Де розташоване місце для відпочинку?",
+      "role": "context"
+    },
+    {
+      "word": "ботаніка",
+      "exercise_type": "quiz",
+      "context": "Хто, на думку ботаніка, обов'язково досягне успіху в науці?",
+      "role": "context"
+    },
+    {
+      "word": "досягне",
+      "exercise_type": "quiz",
+      "context": "Хто, на думку ботаніка, обов'язково досягне успіху в науці?",
+      "role": "context"
+    },
+    {
+      "word": "орхідеї",
+      "exercise_type": "quiz",
+      "context": "Яку характеристику орхідеї дав студент?",
+      "role": "context"
+    },
+    {
+      "word": "дав",
+      "exercise_type": "quiz",
+      "context": "Яку характеристику орхідеї дав студент?",
+      "role": "context"
+    },
+    {
+      "word": "синонім",
+      "exercise_type": "match-up",
+      "context": "науковий синонім терміна «означуване слово»",
+      "role": "context"
+    },
+    {
+      "word": "терміна",
+      "exercise_type": "match-up",
+      "context": "науковий синонім терміна «означуване слово»",
+      "role": "context"
+    },
+    {
+      "word": "категорія",
+      "exercise_type": "match-up",
+      "context": "граматична категорія, що визначає форму слова «який» у підря",
+      "role": "context"
+    },
+    {
+      "word": "визначає",
+      "exercise_type": "match-up",
+      "context": "граматична категорія, що визначає форму слова «який» у підря",
+      "role": "context"
+    },
+    {
+      "word": "цікава",
+      "exercise_type": "fill-in",
+      "context": "Книга, _____ я зараз читаю, дуже цікава.",
+      "role": "context"
+    },
+    {
+      "word": "гуртожитку",
+      "exercise_type": "fill-in",
+      "context": "Студент, _____ живе в гуртожитку, вивчає хімію.",
+      "role": "context"
+    },
+    {
+      "word": "хімію",
+      "exercise_type": "fill-in",
+      "context": "Студент, _____ живе в гуртожитку, вивчає хімію.",
+      "role": "context"
+    },
+    {
+      "word": "народилися",
+      "exercise_type": "fill-in",
+      "context": "Місто, в _____ ми народилися, розташоване на півдні.",
+      "role": "context"
+    },
+    {
+      "word": "півдні",
+      "exercise_type": "fill-in",
+      "context": "Місто, в _____ ми народилися, розташоване на півдні.",
+      "role": "context"
+    },
+    {
+      "word": "допомагав",
+      "exercise_type": "fill-in",
+      "context": "Люди, _____ я допомагав, подякували мені.",
+      "role": "context"
+    },
+    {
+      "word": "подякували",
+      "exercise_type": "fill-in",
+      "context": "Люди, _____ я допомагав, подякували мені.",
+      "role": "context"
+    },
+    {
+      "word": "розмовляв",
+      "exercise_type": "fill-in",
+      "context": "Дівчина, з _____ я розмовляв, моя колега.",
+      "role": "context"
+    },
+    {
+      "word": "моя",
+      "exercise_type": "fill-in",
+      "context": "Дівчина, з _____ я розмовляв, моя колега.",
+      "role": "context"
+    },
+    {
+      "word": "колега",
+      "exercise_type": "fill-in",
+      "context": "Дівчина, з _____ я розмовляв, моя колега.",
+      "role": "context"
+    },
+    {
+      "word": "будинок",
+      "exercise_type": "fill-in",
+      "context": "Будинок, вікна _____ виходять на парк, дуже старий.",
+      "role": "context"
+    },
+    {
+      "word": "вікна",
+      "exercise_type": "fill-in",
+      "context": "Будинок, вікна _____ виходять на парк, дуже старий.",
+      "role": "context"
+    },
+    {
+      "word": "виходять",
+      "exercise_type": "fill-in",
+      "context": "Будинок, вікна _____ виходять на парк, дуже старий.",
+      "role": "context"
+    },
+    {
+      "word": "парк",
+      "exercise_type": "fill-in",
+      "context": "Будинок, вікна _____ виходять на парк, дуже старий.",
+      "role": "context"
+    },
+    {
+      "word": "реченнях",
+      "exercise_type": "quiz",
+      "context": "Яке слово НЕ може бути сполучним словом в означальних реченн",
+      "role": "context"
+    },
+    {
+      "word": "захоплююся",
+      "exercise_type": "quiz",
+      "context": "Який відмінок займенника «який» потрібен у реченні: «Людина,",
+      "role": "context"
+    },
+    {
+      "word": "вважається",
+      "exercise_type": "quiz",
+      "context": "Слово «котрий» у сучасній мові вважається:",
+      "role": "context"
+    },
+    {
+      "word": "високе",
+      "exercise_type": "match-up",
+      "context": "небо (у «високе небо»)",
+      "role": "answer"
+    },
+    {
+      "word": "виділене",
+      "exercise_type": "quiz",
+      "context": "У реченні «Я читаю **книгу**» виділене слово — це:",
+      "role": "context"
+    },
+    {
+      "word": "ввечері",
+      "exercise_type": "quiz",
+      "context": "У реченні «Ми зустрілися **ввечері**» виділене слово — це:",
+      "role": "context"
+    },
+    {
+      "word": "синтаксичному",
+      "exercise_type": "quiz",
+      "context": "Чим підкреслюють обставину при синтаксичному розборі?",
+      "role": "context"
+    },
+    {
+      "word": "розборі",
+      "exercise_type": "quiz",
+      "context": "Чим підкреслюють обставину при синтаксичному розборі?",
+      "role": "context"
+    },
+    {
+      "word": "стародавнє",
+      "exercise_type": "group-sort",
+      "context": "Київ — стародавнє місто на Дніпрі.",
+      "role": "answer"
+    },
+    {
+      "word": "дніпрі",
+      "exercise_type": "group-sort",
+      "context": "Київ — стародавнє місто на Дніпрі.",
+      "role": "answer"
+    },
+    {
+      "word": "вивчаю",
+      "exercise_type": "error-correction",
+      "context": "Я вивчаю мову і мій друг мені допомагає.",
+      "role": "context"
+    },
+    {
+      "word": "друг",
+      "exercise_type": "error-correction",
+      "context": "Я вивчаю мову і мій друг мені допомагає.",
+      "role": "context"
+    },
+    {
+      "word": "весна",
+      "exercise_type": "error-correction",
+      "context": "весна, птахи",
+      "role": "answer"
+    },
+    {
+      "word": "повернулися",
+      "exercise_type": "error-correction",
+      "context": "Настала весна птахи повернулися з вирію.",
+      "role": "context"
+    },
+    {
+      "word": "вирію",
+      "exercise_type": "error-correction",
+      "context": "Настала весна птахи повернулися з вирію.",
+      "role": "context"
+    },
+    {
+      "word": "сказав",
+      "exercise_type": "error-correction",
+      "context": "сказав, що",
+      "role": "answer"
+    },
+    {
+      "word": "скоро",
+      "exercise_type": "error-correction",
+      "context": "Він сказав що скоро прийде.",
+      "role": "context"
+    },
+    {
+      "word": "прийде",
+      "exercise_type": "error-correction",
+      "context": "Він сказав що скоро прийде.",
+      "role": "context"
+    },
+    {
+      "word": "холодно",
+      "exercise_type": "error-correction",
+      "context": "Сонце світить але на вулиці холодно.",
+      "role": "context"
+    },
+    {
+      "word": "шукає",
+      "exercise_type": "error-correction",
+      "context": "Той, хто шукає, знайде",
+      "role": "answer"
+    },
+    {
+      "word": "знайде",
+      "exercise_type": "error-correction",
+      "context": "Той, хто шукає, знайде",
+      "role": "answer"
+    },
+    {
+      "word": "відповідь",
+      "exercise_type": "error-correction",
+      "context": "Той хто шукає знайде відповідь.",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 14,
+    "tested_in_exercises": 13,
+    "not_tested": [
+      "яка"
+    ]
+  },
+  "all_grounded": false
+}

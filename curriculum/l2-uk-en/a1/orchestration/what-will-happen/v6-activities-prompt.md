@@ -1,4 +1,4 @@
-<!-- version: 1.1.0 | updated: 2026-03-31 -->
+<!-- version: 1.2.0 | updated: 2026-04-12 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -11,6 +11,35 @@ Generate an `activities/what-will-happen.yaml` file for module **50: What Will H
 
 ---
 
+## ⚠️ HARD COUNT TARGETS — READ TWICE
+
+These are the binding numerical contracts for THIS module. The audit will FAIL if you fall short.
+
+| Bucket | Min | Max | Notes |
+|---|---|---|---|
+| Total activities | 10 | 10+ | inline + workbook combined |
+| Inline (lesson tab) | 4 | 6 | one per `<!-- INJECT_ACTIVITY -->` marker, see below |
+| Workbook (Зошит tab) | 6 | 9 | extended practice |
+| Items per activity | 6 | — | each activity must have at least 6 items (unless its type cap is lower — see Activity Type Reference below) |
+
+**You MUST ship at least 4 inline activities AND at least 6 workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+
+**Type diversity is required.** The module (inline + workbook combined) MUST use at least **0** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level. (If `0` is `0`, the audit profile for this level does not enforce type diversity — but variety still produces a better lesson, so aim for 4+ types when the workbook allows it.)
+
+---
+
+## Allowed types for THIS level
+
+- **Inline (lesson) types:** image-to-letter, letter-grid, match-up, watch-and-repeat, quiz, true-false, fill-in, classify
+- **Inline priority (preferred):** image-to-letter, match-up, fill-in, quiz, watch-and-repeat
+- **Workbook types:** fill-in, match-up, group-sort, anagram, unjumble, quiz, true-false, classify, divide-words, count-syllables, pick-syllables, observe, phrase-table, odd-one-out
+- **Workbook priority (preferred):** fill-in, match-up, group-sort, anagram, unjumble
+- **FORBIDDEN at this level:** cloze, error-correction, mark-the-words, translate, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, highlight-morphemes, grammar-identify, select
+
+Pick from the allowed list. Lean heavily on the priority lists. Do not use any forbidden type — the build will reject it.
+
+---
+
 ## Inline vs Workbook Split
 
 Activities have two placement categories:
@@ -19,7 +48,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Rule of thumb:** inline = 2-3 quick checks after key teaching points. Workbook = 4-8 deeper practice exercises covering the full topic.
+**Rule of thumb:** inline = 4–6 quick checks after key teaching points. Workbook = 6–9 deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
 
 ---
 
@@ -27,8 +56,8 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: matching-pronoun-to-be -->`
-- `<!-- INJECT_ACTIVITY: fill-in-future-formation -->`
+- `<!-- INJECT_ACTIVITY: match-pronoun-to-buty -->`
+- `<!-- INJECT_ACTIVITY: fill-in-analytic-future -->`
 - `<!-- INJECT_ACTIVITY: fill-in-tense-distinction -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
@@ -102,122 +131,115 @@ required:
 <module_content>
 ## Dialogues
 
-When we talk about our lives, we constantly shift between the past, the present, and the future. In the previous lessons, we focused heavily on what already happened. We learned to describe completed actions and past states using past tense verbs that change based on gender. We talked about yesterday, last week, and what we did during our time off. But human conversations are equally focused on what comes next. We make plans, we set goals, and we imagine future possibilities. Moving from what we did to what we will do requires a new grammatical tool. In Ukrainian, talking about the future is surprisingly straightforward, especially when we focus on ongoing plans and intentions. Observe how native speakers discuss their upcoming activities in different real-world situations.
+Imagine sitting in the cozy, sunlit kitchen of a Ukrainian village **ворожка** (fortune teller). She is intently reading a client’s palm, tracing the intricate lines that predict what lies ahead in life. To describe major life events that will stretch across time—like embarking on long journeys, building relationships, or experiencing a continuous series of happy encounters—she uses a specific continuous form of the future tense. This powerful grammatical structure allows her to talk about ongoing processes and repeated, habitual actions rather than single, sudden, or completed events. It paints a picture of a continuous future reality. Let us listen closely to her predictions and observe how she constructs her sentences.
+
+> **Ворожка:** Ти будеш багато подорожувати. *(You will travel a lot.)*
+> **Ворожка:** Будеш зустрічати цікавих людей. *(You will meet interesting people.)*
+> **Ворожка:** Будеш отримувати подарунки. *(You will receive gifts.)*
+> **Ворожка:** Будеш щасливий! *(You will be happy!)*
+> **Клієнт:** Дякую! Це дуже добре. *(Thank you! That is very good.)*
+
+The fortune teller builds her sweeping predictions using a simple, highly predictable, and repeated grammatical pattern: the conjugated word **будеш** (you will) followed immediately by action words like **подорожувати** (to travel), **зустрічати** (to meet), and **отримувати** (to receive). Notice carefully how the main action verbs stay locked in their dictionary form (the infinitive ending in "-ти"), while only the helper word changes to match the person being spoken to. This specific grammatical construction actively describes an iterative process or repeated actions spread across time, rather than a single, isolated, completed event. It tells the client that the traveling, the meeting, and the receiving will happen continuously and repeatedly in the future.
 
 :::note
-The future tense is essential for making plans. Notice how the speakers in these dialogues use a special form of the verb "to be" combined with an action verb.
+The word **будеш** is the "you" form of the verb **бути** (to be) in the future tense. When combined with an infinitive, it creates the analytic future tense, which focuses on the process of an action.
 :::
 
-> **Ворожка:** Сідай. Я бачу твоє майбутнє. *(Sit down. I see your future.)*
-> **Клієнт:** Що там? Що ви бачите? *(What is there? What do you see?)*
-> **Ворожка:** Ти **будеш** багато **подорожувати**. *(You will travel a lot.)*
-> **Клієнт:** Це добре. А робота? *(That is good. And work?)*
-> **Ворожка:** У тебе **буде** цікава робота. Ти **будеш знаходити** нових друзів. *(You will have interesting work. You will find new friends.)*
-> **Клієнт:** А гроші? *(And money?)*
-> **Ворожка:** Ти **будеш отримувати** подарунки. Ти **будеш** щасливий! *(You will receive gifts. You will be happy!)*
+Now, let us move from mystical predictions to a completely natural, everyday conversation about planning the upcoming week. Notice how the exact same grammatical pattern is utilized to discuss normal daily routines, chores, and leisure activities with friends.
 
-Notice how the fortune teller uses the word **будеш** (you will) before every action. Now, observe two friends discussing a much closer future — tomorrow.
-
-> **Максим:** Що ти **будеш робити завтра**? *(What will you do tomorrow?)*
-> **Олег:** **Завтра** я **буду працювати**. *(Tomorrow I will work.)*
-> **Максим:** А **ввечері**? *(And in the evening?)*
-> **Олег:** **Ввечері** я **буду готувати** вечерю. А що **буде робити** Олена? *(In the evening I will prepare dinner. And what will Olena do?)*
-> **Максим:** Вона **буде читати**. *(She will read.)*
-> **Олег:** А ви **будете гуляти**? *(And will you walk?)*
-> **Максим:** Так, ми **будемо гуляти** в парку! *(Yes, we will walk in the park!)*
-
-Finally, observe how families plan their weekends. The pattern remains consistent even when multiple people are involved.
-
-> **Анна:** Що ви **будете робити на вихідних**? *(What will you do on the weekend?)*
-> **Ігор:** У суботу ми **будемо відпочивати**. *(On Saturday we will rest.)*
-> **Анна:** А в неділю? *(And on Sunday?)*
-> **Ігор:** У неділю я **буду готувати**. Чоловік **буде гуляти** з дітьми. *(On Sunday I will cook. My husband will walk with the children.)*
-> **Анна:** Звучить добре! А я **буду дивитися футбол**. *(Sounds good! And I will watch football.)*
-> **Ігор:** Ти завжди **будеш дивитися футбол**! *(You will always watch football!)*
+> **Олена:** Що ти будеш робити завтра? *(What will you do tomorrow?)*
+> **Антон:** Завтра я буду працювати. *(Tomorrow I will work.)*
+> **Олена:** А ввечері? *(And in the evening?)*
+> **Антон:** Ввечері я буду готувати вечерю. *(In the evening I will prepare dinner.)*
+> **Олена:** Що ви будете робити на вихідних? *(What will you guys do on the weekend?)*
+> **Антон:** У суботу ми будемо відпочивати. *(On Saturday we will rest.)*
+> **Олена:** А в неділю? *(And on Sunday?)*
+> **Антон:** У неділю я буду готувати, а чоловік буде гуляти з дітьми. *(On Sunday I will cook, and my husband will walk with the children.)*
+> **Олена:** Чудова думка! А я буду дивитися футбол. *(Great idea! And I will watch football.)*
+> **Антон:** Ти завжди будеш дивитися футбол! *(You will always watch football!)*
 
 ## Майбутній час (Future Tense)
 
-Grade 3-4 textbooks in Ukrainian schools introduce the concept of **майбутній час** (future tense) using a systematic approach. Ukrainian actually has two different ways to form the future tense, depending on whether you are talking about an ongoing process or a single completed result. At the A1 level, we focus exclusively on one — the analytic future form. This is the most common and accessible way to express future plans, intentions, and ongoing actions in tomorrow's schedule. If you understand how the English future tense works with the word "will," you already have a solid mental anchor for this Ukrainian structure. In English, you take the word "will" and add a base verb, like "will read" or "will work." Ukrainian does exactly the same thing, but instead of a single word like "will," we use a conjugated form of the verb **бути** (to be) followed by the infinitive of your main action verb.
+When discussing your upcoming **план** (plan, m), life predictions, or scheduled events, we need to utilize the **майбутній час** (future tense). Ukrainian actually possesses two distinct ways to talk about the future depending on the nature of the action—whether it is a continuous process or a single completed task. However, at the A1 level, we focus exclusively on learning the most common, accessible, and highly practical form first: the analytic future, known grammatically as **складений майбутній час**. This form is remarkably straightforward for English speakers because it perfectly mirrors the familiar English sentence structure of using the helper word "will" followed by a main action verb.
 
-To use this structure, you only need to memorize six forms of the verb **бути**. These forms act as your future tense helpers. Notice how their endings closely resemble the present tense endings you already know from standard first-conjugation verbs.
+The grammatical formula for the analytic future consists of two distinct parts working seamlessly together. The first part is the auxiliary helper verb **бути** (to be), which must be conjugated in the future tense to match the person performing the action (I, you, he, we, etc.). The second part is the infinitive form of your main action verb, such as **робити** (to do)—the pure dictionary form ending in "-ти". You must strongly emphasize this structural rule in your mind: the main verb stays completely frozen in the infinitive and never changes its endings in this tense. Only the helper verb actively conjugates to match the subject of the sentence.
 
-| Займенник (Pronoun) | Дієслово бути (Verb 'to be') | Значення (Meaning) |
-| :--- | :--- | :--- |
-| **я** | **буду** | I will |
-| **ти** | **будеш** | you will (informal/singular) |
-| **він / вона / воно** | **буде** | he / she / it will |
-| **ми** | **будемо** | we will |
-| **ви** | **будете** | you will (formal/plural) |
-| **вони** | **будуть** | they will |
+To truly master this essential sentence structure, you first need to memorize the future tense conjugation of the verb **бути**. Here is the complete paradigm paired with the common verb **читати** (to read) to provide a clear, working model for how this tense operates in spoken practice:
 
-<!-- INJECT_ACTIVITY: matching-pronoun-to-be -->
+* я **буду** (I will — form of бути) читати
+* ти **будеш** (you will) читати
+* він/вона/воно **буде** (he/she/it will) читати
+* ми **будемо** (we will) читати
+* ви **будете** (you pl. will) читати
+* вони **будуть** (they will) читати
 
-The most important rule of the analytic future is the invariant infinitive rule. When you build a sentence using this structure, the main action verb — words like **читати** (to read), **працювати** (to work), or **відпочивати** (to rest) — never changes its ending. It stays frozen in its dictionary form. The only word that changes to match the speaker is your helper verb.
-*   Я **буду читати**. (I will read.)
-*   Ти **будеш читати**. (You will read.)
-*   Він / вона **буде читати**. (He / she will read.)
-*   Ми **будемо читати**. (We will read.)
-*   Ви **будете читати**. (You will read.)
-*   Вони **будуть читати**. (They will read.)
+:::tip
+This tense is incredibly learner-friendly! Because the main verb remains an infinitive, you completely bypass the need to remember complex present tense conjugation groups (Дієвідміна I or II) when making future plans.
+:::
 
-As you can see, the infinitive remains exactly the same in every sentence. Contrast this new future form with the tenses you already know. The past tense relies on gender endings, the present tense relies on person endings attached directly to the verb, and the future tense relies on **буду** plus the infinitive.
-*   Минулий (past): Я **читав** книжку. (I read a book. - masculine speaker)
-*   Минулий (past): Я **читала** книжку. (I read a book. - feminine speaker)
-*   Теперішній (present): Я **читаю** книжку. (I am reading a book.)
-*   Майбутній (future): Я **буду читати** книжку. (I will read a book.)
+<!-- INJECT_ACTIVITY: match-pronoun-to-buty -->
 
-Note that the synthetic future (like **прочитаю**) exists in the language, but it is material for the A2 level. For now, the analytic form gives you everything you need to talk about your plans.
+We can now clearly compare the three primary time frames you have learned so far to see how the Ukrainian language handles time. The **минулий** (past) tense relies entirely on gendered suffixes to show who performed the action. The **теперішній** (present) tense relies on specific person endings attached directly to the main verb stem. The newly learned **майбутній** (future) tense relies on the conjugated helper word plus the unchanging infinitive.
+
+Я читав нову книжку.
+> *I read a new book.* (Masculine past)
+
+Зараз я читаю нову книжку.
+> *Now I am reading a new book.* (Present)
+
+Завтра я буду читати нову книжку.
+> *Tomorrow I will read a new book.* (Future)
+
+Please note that a simple perfective future form exists exclusively for single, completed actions, but that is a complex topic reserved for the A2 level.
 
 ## Практика (Practice)
 
-With the mechanics of the analytic future established, grouping and practicing the core A1 verbs solidifies the pattern. Because the infinitive never changes, you can take any action verb you have learned so far and instantly talk about your future plans. You simply plug the infinitive into the structure after your chosen form of **бути**. Here is how our most frequent daily verbs look in action:
-*   **читати** (to read) → я **буду читати**, ти **будеш читати**, він **буде читати**
-*   **працювати** (to work) → я **буду працювати**, ти **будеш працювати**, вона **буде працювати**
-*   **готувати** (to cook) → я **буду готувати**, ти **будеш готувати**, ми **будемо готувати**
-*   **гуляти** (to walk) → я **буду гуляти**, ти **будеш гуляти**, ви **будете гуляти**
-*   **дивитися** (to watch) → я **буду дивитися**, ти **будеш дивитися**, вони **будуть дивитися**
-*   **говорити** (to speak) → я **буду говорити**, ти **будеш говорити**, ми **будемо говорити**
+Now let us rigorously apply the future tense formula to some of our core vocabulary verbs to see how predictable and reliable the pattern truly is. Because the main verb remains firmly in the infinitive form, you do not need to worry about spelling exceptions or stem changes here. For example, the verb **працювати** (to work) simply becomes **буду працювати** (I will work), **будеш працювати** (you will work), and so on through the paradigm. The daily verb **готувати** (to cook) follows the exact same mechanical pattern without any variation: **буду готувати** (I will cook), **буде готувати** (he/she will cook).
 
-To make your sentences specific, you need time markers. These are the adverbs and phrases that signal exactly when your future action will happen. These words naturally trigger the use of the future tense.
-*   **завтра** (tomorrow)
-*   **наступного тижня** (next week)
-*   **у суботу** (on Saturday)
-*   **ввечері** (in the evening)
-*   **скоро** (soon)
+We can quickly and confidently expand this pattern to include other common daily verbs like **гуляти** (to walk), **дивитися** (to watch), and **говорити** (to speak). Here are short, clear sentence examples demonstrating each verb in action to steadily build your structural familiarity and listening comprehension.
 
-<!-- INJECT_ACTIVITY: fill-in-future-formation -->
+* **Ми будемо гуляти в парку.** (We will walk in the park.)
+* **Вона буде дивитися футбол.** (She will watch football.)
+* **Вони будуть говорити.** (They will speak.)
+* **Я буду відпочивати** (to rest) **вдома.** (I will rest at home.)
 
-When you want to know about someone else's plans, you will rely on a standard, highly frequent question format. The most common way to ask about future intentions is: **Що ти будеш робити?** (What will you do?). If you are speaking formally or addressing a group, you simply change the pronoun and the helper verb: **Що ви будете робити?** (What will you do?). The word order in Ukrainian questions is flexible, but starting with the question word **що** (what) followed by the pronoun, the helper verb, and the main verb is standard and natural.
+To solidly anchor these future actions in a realistic, everyday context, we must use essential future time markers. These crucial words tell the listener exactly when the planned action or event is expected to happen in the real world. The most important time markers to learn right now are **завтра** (tomorrow), **наступний** (next, adj) and **тиждень** (week, m) in the phrase **наступного тижня** (next week), **у суботу** (on Saturday), and **ввечері** (in the evening). Placing these time words either at the very beginning or the very end of your sentence establishes a clear, undeniable time frame for your personal plans.
 
-Building natural sentences about intentions and full-day plans requires combining time markers with the future structure. By using familiar vocabulary, you can describe a complete schedule step by step.
-*   **Завтра** я **буду працювати** з дев'ятої до п'ятої. (Tomorrow I will work from nine to five.)
-*   **Ввечері** ми **будемо дивитися** фільм. (In the evening we will watch a film.)
-*   **У суботу** вони **будуть гуляти** в парку. (On Saturday they will walk in the park.)
-*   Що ви **будете їсти** на вечерю? (What will you eat for dinner?)
-*   Вранці я **буду снідати**. (In the morning I will have breakfast.)
-*   Вдень я **буду працювати**. (In the afternoon I will work.)
-*   Ввечері ми **будемо відпочивати**. (In the evening we will rest.)
+:::caution
+When saying "next week" in Ukrainian, we use the genitive case form **наступного тижня** (literally "of the next week"). Do not translate "in the next week" word-for-word.
+:::
+
+Let us construct full, natural sentences by combining the subject, the correctly conjugated helper verb, the main infinitive action verb, and our new time markers. This is exactly how Ukrainians naturally discuss their daily schedules and weekend plans.
+
+Завтра я буду працювати з дев'ятої до п'ятої.
+> *Tomorrow I will work from nine to five.*
+
+Що ви будете їсти на вечерю?
+> *What will you eat for dinner?*
+
+У неділю вони будуть відпочивати.
+> *On Sunday they will rest.*
+
+<!-- INJECT_ACTIVITY: fill-in-analytic-future -->
 
 ## Summary
 
-The essential mechanics of discussing future plans rely on a simple two-part formula. The analytic future formation requires the conjugated auxiliary verb **бути** (**буду** / **будеш** / **буде** / **будемо** / **будете** / **будуть**) followed by an infinitive. The infinitive is the basic, unaltered "dictionary form" of the verb, ending in **-ти** (like **читати**, **робити**, **відпочивати**). This infinitive never changes its ending, regardless of who is speaking or how many people are involved. Only the **буду** part conjugates to match the subject. This grammatical structure is your primary tool at the A1 level for talking about processes, ongoing actions, and personal intentions that will happen tomorrow, next week, or next year.
+Let us carefully recap the core grammatical rule for constructing the analytic future tense in the Ukrainian language. This foundational tense is dependably formed by using the conjugated auxiliary verb **бути**—specifically memorizing the forms **буду**, **будеш**, **буде**, **будемо**, **будете**, and **будуть**—followed immediately by an unchanging infinitive verb. You must absolutely remember that the main action word never drops its final "-ти"; only the helper verb actively shifts its shape to match the person who is performing the future action.
 
-With the addition of this future structure, you now have a complete framework to describe any event in time. Each tense has its own unique structural marker that makes it instantly recognizable. The past tense is marked by gender endings (**-в**, **-ла**, **-ло**, **-ли**) attached to the verb stem. The present tense is marked by person endings attached directly to the verb stem, requiring you to modify the word based on the pronoun. The future tense stands apart because it uses a separate helper word (**буду**) plus the infinitive.
+It is immensely helpful to visualize the complete three-tense timeline using a single clear verb example to solidify the grammatical distinctions in your mind. Notice precisely how the endings and structures shift depending entirely on the time frame being discussed.
 
-Observe the three tenses in action with the verb **читати**:
-*   Учора я **читав**. (Past — gender)
-*   Зараз я **читаю**. (Present — person)
-*   Завтра я **буду читати**. (Future — буду + infinitive)
-
-The core question to spark any conversation about the future is: **Що ти будеш робити?** (What will you do?). To answer, you simply reply with **Я буду** plus your intended action.
-
-Now, perform a final self-check to ensure you can apply these rules to your own life:
-*   Що ти **будеш робити завтра** вранці? (What will you do tomorrow morning?)
-*   Що ти **будеш робити наступного тижня**? (What will you do next week?)
-*   Що **будуть робити** твої друзі ввечері? (What will your friends do in the evening?)
+* **Учора я читав.** (Yesterday I read. – Past tense, using a masculine ending)
+* **Зараз я читаю.** (Now I am reading. – Present tense, using a person ending)
+* **Завтра я буду читати.** (Tomorrow I will read. – Future tense, using a helper verb plus infinitive)
 
 <!-- INJECT_ACTIVITY: fill-in-tense-distinction -->
 
+You now firmly possess the grammatical tools required to talk about the future and make extensive plans. The single core communicative question you must memorize is: **Що ти будеш робити?** (What will you do?). When someone asks you this common question, you simply reply with **Я буду** plus the infinitive of your planned action. To actively test your understanding of this module, look at the bulleted question-and-answer self-check list below and try to answer each question mentally using a full, complete Ukrainian sentence.
+
+* **Що ти будеш робити завтра вранці?** (What will you do tomorrow morning?)
+* **Що ти будеш робити завтра ввечері?** (What will you do tomorrow evening?)
+* **Що ти будеш робити у суботу?** (What will you do on Saturday?)
+* **Що ти будеш робити у неділю?** (What will you do on Sunday?)
 </module_content>
 
 ---
@@ -231,48 +253,68 @@ version: "1.0"
 module: what-will-happen
 level: a1
 
+# NOTE — these are SHAPE examples. The real targets are at the top of this prompt
+# (10 total / 4–6 inline / 6–9 workbook,
+# 6+ items per activity). The shapes below are TRUNCATED for readability;
+# YOUR output MUST hit those minimums.
+
 inline:
   - id: marker-id-here        # MUST match an <!-- INJECT_ACTIVITY: ... --> marker
     type: quiz                 # activity type
     instruction: "Оберіть правильний варіант"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - question: "_____ стіл"
-        options: ["мій", "моя", "моє"]
+        options: ["мій", "моя", "моє", "мої"]
         correct: 0             # 0-based index
+      - question: "Це ____ книга."
+        options: ["мій", "моя", "моє", "мої"]
+        correct: 1
+      # ... add at least 6 items total — never stop at 1-2
 
   - id: another-marker-id
     type: fill-in
     instruction: "Вставте правильне слово"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - sentence: "Це ____ кімната."
         answer: "моя"
         options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ вікно."
+        answer: "моє"
+        options: ["мій", "моя", "моє"]
+      # ... ≥ 6 items total
 
 workbook:
-  - type: match-up
+  - id: match-up-vocab
+    type: match-up
     instruction: "З'єднайте пари"
-    pairs:
+    pairs:                     # ← real output: ≥ 6 pairs
       - left: "стіл"
         right: "він"
       - left: "книга"
         right: "вона"
       - left: "вікно"
         right: "воно"
+      # ... ≥ 6 pairs total
 
-  - type: group-sort
+  - id: group-sort-gender
+    type: group-sort
     instruction: "Розподіліть слова за категоріями"
     groups:
-      - label: "Category A"
-        items: ["word1", "word2"]
-      - label: "Category B"
-        items: ["word3", "word4"]
+      - label: "Чоловічий рід"
+        items: ["стіл", "олівець", "будинок"]   # ≥ 3 items per group
+      - label: "Жіночий рід"
+        items: ["книга", "ручка", "школа"]
+      - label: "Середній рід"
+        items: ["вікно", "море", "молоко"]
 
-  - type: true-false
+  - id: true-false-grammar
+    type: true-false
     instruction: "Правда чи ні?"
-    items:
-      - statement: "Statement here"
-        correct: true
-        explanation: "Why it's true"
+    items:                     # ← real output: ≥ 6 items
+      - statement: "«Книга» — це чоловічий рід."
+        correct: false
+        explanation: "Книга закінчується на -а, отже жіночий рід."
+      # ... ≥ 6 items total
 
   - type: error-correction
     instruction: "Виправте помилку"
@@ -343,7 +385,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -427,10 +469,15 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 ## Quality Rules
 
-**ITEM COUNT MINIMUMS (non-negotiable):**
-- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
-- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
-- If you can't think of enough items, add more examples from the module's vocabulary and content.
+**ACTIVITY COUNT MINIMUMS (non-negotiable, audit-enforced):**
+- **Total: 10 activities.** Inline: 4–6. Workbook: 6–9. The audit gate FAILS the module if you ship fewer.
+- **Type diversity: workbook MUST cover ≥5 distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
+- **Match the inline markers exactly.** Every `<!-- INJECT_ACTIVITY: id -->` marker in the prose needs a matching inline activity with that exact id. Skipping markers means the lesson tab is broken.
+
+**ITEM COUNT MINIMUMS (non-negotiable, per-activity):**
+- **Default minimum: 6 items per activity.** Quiz, fill-in, match-up, true-false, anagram, error-correction, translate, cloze, mark-the-words, divide-words, count-syllables, odd-one-out, group-sort categories: all ≥ 6.
+- **Lower minimums for specific types only:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items, essay-response/critical-analysis = 1 prompt.
+- If you can't think of enough items, add more examples from the module's vocabulary and content. NEVER ship a 1-item or 2-item activity unless its type cap explicitly allows it.
 - **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
 - **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
@@ -537,6 +584,27 @@ IMPORTANT: After using tools, output your COMPLETE module content as plain text.
 1. Run `verify_words` on all Ukrainian words in your exercises — every word must exist in VESUM
 2. Run `query_cefr_level` on any word you're unsure about — it must be a1-appropriate
 3. For fill-in answers and distractors, verify the exact form (case, number, gender) with `verify_lemma`
+
+---
+
+## ⚠️ MANDATORY FINAL CHECKLIST — verify before emitting YAML
+
+Walk through this checklist explicitly before you start emitting. If ANY box is unchecked, fix it FIRST.
+
+- [ ] My output has **at least 4** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
+- [ ] My output has **at least 6** workbook activities.
+- [ ] **Total ≥ 10.**
+- [ ] **Every** activity has **at least 6** items, pairs, or statements (except types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3, essay-response=1).
+- [ ] The module (inline + workbook combined) uses **at least 0 distinct activity types** (or 4+ when 0 = 0 and the workbook size allows it). I am NOT shipping a wall of quizzes.
+- [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
+- [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
+- [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+- [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+- [ ] My inline count is between 4 and 6. I did NOT create more injection markers than 6.
+- [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
+- [ ] At B1+, all instructions are in Ukrainian (no English fallback).
+
+If you cannot tick all of these, REGENERATE the activities BEFORE outputting. Shipping under-spec means the build rejects you and the heal loop has to redo your work — wasting compute.
 
 ---
 

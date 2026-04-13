@@ -1,7 +1,7 @@
 # Audit Report: M34 — plural-other-cases.md
 **Level:** A2 | **Module:** M34 | **Phase:** A2.5 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-04-11 00:49:50
+**Generated:** 2026-04-11 14:23:26
 
 ## Configuration
 **Type:** A2-grammar
@@ -18,13 +18,13 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | match-up |  | 8 | 8 | ✅ |
-| 2 | fill-in |  | 8 | 8 | ✅ |
-| 3 | quiz |  | 8 | 8 | ✅ |
-| 4 | group-sort |  | 12 | 8 | ✅ |
-| 5 | quiz |  | 6 | 8 | ❌ |
-| 6 | fill-in |  | 6 | 8 | ❌ |
-| 7 | true-false |  | 6 | 8 | ❌ |
+| 1 | quiz | Оберіть правильний варіант із прийменником та закінченням (Choose the correct op | 8 | 8 | ✅ |
+| 2 | match-up | З'єднайте фразу з правильним відмінком множини (Match the phrase with the correc | 8 | 8 | ✅ |
+| 3 | fill-in | Вставте іменник у правильній формі множини (давальний або орудний відмінок). | 8 | 8 | ✅ |
+| 4 | true-false | Правда чи ні? (True or false?) | 6 | 8 | ❌ |
+| 5 | group-sort | Який відмінок потрібен після цих дієслів? Розподіліть їх за групами (Sort verbs  | 12 | 8 | ✅ |
+| 6 | quiz | Оберіть правильний варіант, щоб закінчити речення (Choose the correct option to  | 6 | 8 | ❌ |
+| 7 | quiz | Визначте відмінок виділеного слова (Identify the case of the highlighted word). | 6 | 8 | ❌ |
 
 **Summary:**
 - Total activities: 7 (target: 0-4) ❌
@@ -33,39 +33,34 @@
 - Low density activities: 3
 
 ## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY]** Sentence too long for A2: 16 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Наші іноземні туристи часто люблять...'
-- **[COMPLEXITY]** Sentence too long for A2: 17 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Зауважте що всі ці важливі...'
-- **[COMPLEXITY]** quiz '' has 6 items (minimum: 8)
-  - FIX: Add more items. A2 quiz requires at least 8 items.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q1 prompt length 4 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY]** fill-in '' has 6 items (minimum: 8)
-  - FIX: Add more items. A2 fill-in requires at least 8 items.
-- **[COMPLEXITY]** true-false '' has 6 items (minimum: 8)
+- **[COMPLEXITY]** true-false 'Правда чи ні? (True or false?)' has 6 items (minimum: 8)
   - FIX: Add more items. A2 true-false requires at least 8 items.
+- **[COMPLEXITY]** quiz 'Оберіть правильний варіант, щоб закінчити речення (Choose the correct option to ' has 6 items (minimum: 8)
+  - FIX: Add more items. A2 quiz requires at least 8 items.
+- **[COMPLEXITY]** quiz 'Визначте відмінок виділеного слова (Identify the case of the highlighted word).' has 6 items (minimum: 8)
+  - FIX: Add more items. A2 quiz requires at least 8 items.
 
 ## Recommendation
-**📝 UPDATE** (severity 25/100)
+**📝 UPDATE** (severity 35/100)
 
-- 6 violations (moderate)
+- 3 violations (minor)
+- Immersion 18% off target
 - Activity density below minimum
 
 ## Gates
-- **Words:** ✅ 2355/2000 (raw: 2463)
+- **Words:** ✅ 3068/2000 (raw: 3145)
 - **Activities:** ✅ 7/0
 - **Density:** ❌ 3 < 8
 - **Unique_types:** ✅ 5/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ❌ 0/3
+- **Engagement:** ✅ 4/3
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 33/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 66.2% (target 50-80% (A2.2))
+- **Immersion:** ❌ 32.2% LOW (target 50-80% (A2.2))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -73,16 +68,16 @@
 ## Low Density Activities
 | Activity | Type | Items | Required | Fix |
 |----------|------|-------|----------|-----|
-|  | quiz | 6 | 8 | Add 2 more items |
-|  | fill-in | 6 | 8 | Add 2 more items |
-|  | true-false | 6 | 8 | Add 2 more items |
+| Правда чи ні? (True or false?) | true-false | 6 | 8 | Add 2 more items |
+| Оберіть правильний варіант, щоб закінчити речення (Choose the correct option to  | quiz | 6 | 8 | Add 2 more items |
+| Визначте відмінок виділеного слова (Identify the case of the highlighted word). | quiz | 6 | 8 | Add 2 more items |
 
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 541 | Included in Core |
-| **Орудний множини: З ким? Чим? (Instrumental Plural)** | ✅ | 672 | Included in Core |
-| **Місцевий множини: Де? На чому? (Locative Plural)** | ✅ | 621 | Included in Core |
-| **Три відмінки разом: Практика (Synthesis)** | ✅ | 349 | Included in Core |
-| **Підсумок** | ✅ | 172 | Included in Core |
+| **Intro/Narrative** | ✅ | 804 | Included in Core |
+| **Орудний множини: З ким? Чим? (Instrumental Plural) (~600 words total)** | ✅ | 807 | Included in Core |
+| **Місцевий множини: Де? На чому? (Locative Plural) (~500 words total)** | ✅ | 683 | Included in Core |
+| **Три відмінки разом: Практика (Synthesis) (~350 words total)** | ✅ | 496 | Included in Core |
+| **Підсумок (~150 words)** | ✅ | 278 | Included in Core |

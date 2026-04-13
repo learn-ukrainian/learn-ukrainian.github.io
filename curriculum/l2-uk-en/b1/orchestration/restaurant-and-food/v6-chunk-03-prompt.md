@@ -28,7 +28,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
--у або -ю: «кава» стає «каву». У ресторані ви не завжди точно знаєте, що саме хочете замовити сьогодні. Тоді варто поставити кілька запитань офіціанту. Якщо ви хочете скуштувати щось особливе, запитайте: **«Яка у вас фірмова страва?»** *(What is your signature dish?)*. Фірмова страва — це головна гордість закладу. Якщо назва страви в меню вам незнайома, використовуйте корисну фразу: **«А це з чим подається?»** *(What is this served with?)*. Офіціант може відповісти: «Ця риба подається з овочами». Зверніть увагу на орудний відмінок із прийменником «з». Якщо у вас є алергія, ви можете уточнити наявність інгредієнта: **«Чи є в цьому салаті цибуля?»** *(Is there onion in this salad?)*. Ви також можете попросити кухаря приготувати страву без певного інгредієнта: «Принесіть, будь ласка, салат без цибулі». Після прийменника «без» ми завжди використовуємо форму родового відмінка. Для створення більш м'якого тону в дорогих ресторанах українці часто використовують умовний спосіб. Конструкція **«Я б хотів замовити...»** *(I would like to order... - masc.)* або **«Я б хотіла замовити...»** *(I would like to order... - fem.)* звучить дуже вишукано та елегантно. Використання частки «б» додає вашому проханню дипломатичності. Іншою популярною ввічливою формою є використання простого слова «можна». Наприклад: **«Можна мені каву, будь ласка?»** *(Can I have a coffee, please?)*. Це коротка і дуже природна фраза для будь-якої кав'ярні. Якщо ви хочете попросити додатковий прибор, ви так само кажете: «Можна мені чисту виделку?». Запам'ятайте, що в українській культурі ввічливість виражається правильно обраною інтонацією та тоном голосу. Наказовий спосіб («принесіть», «дайте») є цілком нормальним і ніколи не вважається грубим, якщо він супроводжується ввічливою інтонацією. Після того, як ви насолодилися смачною вечерею, настає час розрахуватися за замовлення. Щоб попросити рахунок, ви можете просто сказати офіціанту: **«Можна рахунок, будь ласка?»** *(Can I have the bill, please?)*. Коли офіціант підходить до вашого столика, він може запитати про бажаний спосіб оплати. Ви можете сміливо відповісти: **«Я заплачу готівкою»** *(I will pay with cash)* або запитати: **«Ви приймаєте картки?»** *(Do you accept cards?)*. Сьогодні в Україні майже всі заклади харчування без проблем приймають оплату банківською карткою. Залишати **чайові** *(tips)* є ознакою гарного тону, особливо якщо вам сподобався сервіс. Слово «чайові» завжди вживається лише у формі множини. Зазвичай чайові становлять близько десяти відсотків від загальної суми замовлення. Ви можете залишити їх готівкою на столі або додати до рахунку карткою. Спілкування під час їжі супроводжується певним дружнім етикетом. Коли вам приносять страву, офіціант зазвичай бажає вам гарного апетиту: **«Смачного!»** *(Enjoy your meal!)*. Цю ж фразу ви кажете своїм друзям перед початком трапези. Важливо ввічливо відповідати «Дякую» або **«Навзаєм»** *(Likewise)*. Якщо ви завітали в гості, господарі обов'язково запросять вас до столу теплою фразою: **«Просимо до столу!»** *(Please, come to the table!)*. Це щире запрошення розділити їжу та спілкування, що є невід'ємною частиною української гостинності. Коли вечеря закінчується, офіціант часто питає: «Чи все вам сподобалося?». Це ідеальний момент, щоб зробити комплімент шеф-кухарю. Ви можете сказати: **«Все було дуже смачно»** *(Everything was very tasty)* або **«Нам дуже сподобалося»** *(We liked it very much)*. Такі теплі слова завжди приємно чути, і вони залишать гарне враження про вас. <!-- INJECT_ACTIVITY: fill-in-restaurant-dialogue -->
+language. The imperative form is very polite when combined with the word for "please", while the future tense confidently states your choice. :::info **Grammar box** — When ordering, «Я буду...» (I will be...) is a completely natural way to say "I will have...". It must be followed by the Accusative case for the specific item you are ordering. ::: Sometimes you need a little guidance before making your final decision. Asking the waiter for advice helps you discover hidden culinary gems that might not be obvious on the menu. You can ask about their signature items or inquire about specific ingredients used in the kitchen. Щоб дізнатися про найкраще в меню, просто запитайте: «Яка у вас фірмова страва?». Часто гості також хочуть уточнити інгредієнти, щоб уникнути неприємних сюрпризів: «А це з чим подається?». Якщо у вас є харчова алергія, обов'язково перевіряйте склад кожної порції. Наприклад, корисно знати, як сказати: «Чи є в цьому салаті цибуля?». Офіціант завжди з радістю допоможе вам з вибором. By asking clarifying questions, you ensure your meal matches your expectations and dietary needs. In upscale dining environments, you might want to elevate your register to match the atmosphere. Using conditional structures instead of direct commands instantly adds a layer of refinement and politeness to your speech. Замість звичайного прохання ви можете сказати: «Я б хотів замовити...» або «Я б хотіла замовити...» для жінок. Це звучить дуже м'яко і створює атмосферу взаємоповаги. Інший універсальний варіант починається зі слова «можна». Ви просто запитуєте: «Можна мені чашку кави, будь ласка?». Ця фраза чудово підходить для будь-якої ситуації, від кав'ярні до розкішного ресторану. While the direct imperative is perfectly acceptable everyday, having conditional tools allows you to adapt seamlessly to formal social settings. When you finish your meal, you need to handle the financial aspect. To ask for the **рахунок** (bill), simply catch the waiter's attention with a polite request. Викличте офіціанта і скажіть: «Можна рахунок, будь ласка?». Сьогодні в Україні дуже зручно платити карткою, тому ви можете запитати: «Ви приймаєте картки?». Якщо ж ви віддаєте перевагу готівці, просто скажіть: «Я заплачу готівкою». Також прийнято залишати чайові за гарне обслуговування. While many places offer the option to add **чайові** (tips) through the card terminal, leaving cash on the table is always appreciated. A crucial part of Ukrainian dining culture involves expressing enjoyment of the meal and acknowledging the hospitality. Перед їжею всі за столом завжди бажають одне одному: «Смачного!». Коли ви закінчили обід, дуже важливо подякувати кухареві та офіціанту. Ви можете сказати: «Все було дуже смачно» або «Нам дуже сподобалося». А якщо ви в гостях, господарі часто використовують теплу фразу: «Просимо до столу!». > *Before the meal, everyone at the table always wishes each other: "Enjoy your meal!". When you have finished lunch, it is very important to thank the chef and the waiter. You can say: "Everything was very tasty" or "We liked it very much." And if you are a guest, the hosts often use the warm phrase: "We invite you to the table!".* <!-- INJECT_ACTIVITY: fill-in-restaurant-dialogue -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -670,7 +670,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -683,18 +750,68 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] страва (dish/course — a prepared food item)
+- [ ] борщ (borscht — quintessential Ukrainian beet soup)
+- [ ] вареники (varenyky — filled dumplings, pl of вареник)
+- [ ] деруни (potato pancakes — pl of дерун)
+- [ ] пампушки (garlic bread rolls — served with борщ, pl of пампушка)
+- [ ] сало (cured pork fat — iconic Ukrainian product)
+- [ ] узвар (dried fruit compote — traditional Ukrainian drink)
+- [ ] меню (menu — невідмінюване noun)
+- [ ] замовлення (order — the act of ordering food)
+- [ ] офіціант (waiter — masc; fem: офіціантка)
+- [ ] рахунок (bill/check — restaurant bill)
+- [ ] гарнір (side dish — served with a main course)
+- [ ] закуска (appetizer/starter — first course before soup)
+- [ ] кухня (cuisine/kitchen — both meanings in Ukrainian)
+- [ ] порція (portion — a serving of food)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Відмінки в контексті їжі (~1100 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

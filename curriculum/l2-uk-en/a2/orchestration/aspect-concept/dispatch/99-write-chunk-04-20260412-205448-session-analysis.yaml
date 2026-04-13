@@ -1,0 +1,53 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T18-54-a5f2c14a.json
+phase: write-chunk-04
+prompt_chars: 30823
+response_chars: 2595
+prompt_words: 4443
+response_words: 423
+sections:
+- name: header
+  start: 0
+  length: 509
+  fraction: 0.0165
+- name: skeleton
+  start: 509
+  length: 1097
+  fraction: 0.0356
+- name: prior_summary
+  start: 1606
+  length: 3183
+  fraction: 0.1033
+- name: plan
+  start: 4789
+  length: 11699
+  fraction: 0.3796
+- name: wiki
+  start: 9616
+  length: 14082
+  fraction: 0.4569
+- name: output_spec
+  start: 30570
+  length: 253
+  fraction: 0.0082
+large_sections:
+- wiki
+directives_total: 13
+directives_covered: 9
+directives_missed:
+- kind: must
+  text: '* However, you must be careful with the tricky word «вчора» for yesterday.'
+  covered: false
+  coverage_note: 3/8 keywords (38%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: EVERY word in the checklist below MUST appear at least once with a bold Ukrainian
+    form and English translation in a natural sentence.
+  covered: false
+  coverage_note: 5/15 keywords (33%)
+- kind: inject_activity
+  text: match-up-choose-aspect
+  covered: false
+  coverage_note: marker missing

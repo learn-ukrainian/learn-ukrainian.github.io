@@ -1,36 +1,30 @@
-## Як утворюються видові пари (~550 words total)
-- P1 (~120 words): Introduction to the concept of aspect (вид дієслова). Definition of Imperfective (НДВ - що робити?) as process/habit and Perfective (ДВ - що зробити?) as result/completion. Contrast with English continuous vs simple tenses, emphasizing that in Ukrainian, these are two different lexical items forming a pair.
-- P2 (~130 words): Pattern 1 — Prefixation. Explaining how adding a prefix creates a perfective form without changing the core meaning. Examples: писати → написати, читати → прочитати, робити → зробити. Mention the "Cafe Ptakh" (к, п, т, ф, х) rule for the prefix "с-" (сфотографувати, сказати, спекти).
-- P3 (~150 words): Pattern 2 — Suffix changes and Pattern 3 — Stem changes. Explain the shift from imperfective suffixes (-увати, -ати) to perfective ones (-ити, -нути). Examples: вирішувати → вирішити, записувати → записати, стукати → стукнути. Detail stem mutations like "допомагати → допомогти" (ог/ага alternation) and "відповідати → відповісти".
-- P4 (~150 words): Pattern 4 — Suppletive pairs (different roots). Stress that these are high-frequency verbs that must be memorized as unique pairs. Examples: брати → взяти (to take), говорити/казати → сказати (to say/tell), ловити → піймати/зловити (to catch), шукати → знайти (to look for/find).
-- <!-- INJECT_ACTIVITY: group-sort-patterns --> [group-sort, Sort aspect pairs by formation pattern (prefix, suffix, stem change, suppletive), 8 items]
+## Як утворюються видові пари (~550 words)
+- P1 (~100 words): Introduce the concept of aspect pairs (видові пари). Explain that while English uses different tenses for ongoing vs. completed actions (was doing vs. did), Ukrainian uses different verb forms: Imperfective (НДВ) for process/habit, Perfective (ДВ) for result/completion.
+- P2 (~120 words): Explain Pattern 1 — Prefixation. State that this is the most common way to form the perfective. The prefix adds completion but doesn't change the core meaning. Provide examples: писати → написати, читати → прочитати, робити → зробити, їсти → з'їсти, варити → зварити. Briefly mention the phonetic rule for the 'с-' prefix before 'к, п, т, ф, х' (сфотографувати, сказати, спекти).
+- P3 (~120 words): Explain Pattern 2 — Suffix change (Imperfectivation). Show how to create the imperfective from the perfective by adding longer suffixes (-ува-, -а-, -я-) or changing them. Provide examples: записувати → записати, розповідати → розповісти, пояснювати → пояснити. Mention consonant mutations like допомогти → допомагати.
+- P4 (~110 words): Explain Pattern 3 — Stem change and Stress change. Describe how sometimes the stem transforms slightly (відповідати → відповісти) or only the stress changes (розрі́зати → розріза́ти). Note that these are less common but important to recognize.
+- P5 (~100 words): Explain Pattern 4 — Suppletive verbs (different roots). State clearly that the imperfective and perfective look completely different and must be memorized as pairs. Provide the most crucial examples: брати → взяти, ловити → піймати, шукати → знайти, говорити → сказати.
+- <!-- INJECT_ACTIVITY: group-sort-formation --> [group-sort, Sort aspect pairs by formation pattern (prefix, suffix, stem change, suppletive), 8 items]
 
-## 30 пар: Список і приклади (~650 words total)
-- P1 (~160 words): Group A — Daily Routine and Housework (10 pairs). Listing: готувати/приготувати, їсти/з'їсти, пити/випити, варити/зварити, мити/помити, прибирати/прибрати, прасувати/випрасувати, вмиватися/вмитися, одягатися/одягнутися, дивитися/подивитися. Example: "Я варив борщ годину" (process) vs "Я зварив борщ" (result).
-- P2 (~170 words): Group B — Communication, Learning, and Cognition (10 pairs). Listing: говорити/сказати, відповідати/відповісти, запитувати/запитати, пояснювати/пояснити, вчити/вивчити, розуміти/зрозуміти, перекладати/перекласти, писати/написати, читати/прочитати, розповідати/розповісти. Contrast: "Вчитель пояснював правило" (background) vs "Він нарешті пояснив" (success).
-- P3 (~170 words): Group C — Social Interaction and Movement (10 pairs). Listing: брати/взяти, давати/дати, купувати/купити, платити/заплатити, допомагати/допомогти, відкривати/відкрити, закривати/закрити, починати/почати, закінчувати/закінчити, телефонувати/зателефонувати. Example: "Ми купували квитки" (attempt/process) vs "Ми купили квитки" (possession).
-- P4 (~150 words): Minimal contrast drills. Short pairs of sentences illustrating the semantic difference between the 30 pairs. "Вона пила каву" (sipping) vs "Вона випила каву" (cup is empty). "Ми починали о дев'ятій" (habitual start) vs "Ми почали о дев'ятій" (specific start yesterday).
+## 30 пар: Список і приклади (~660 words)
+- P1 (~80 words): Introduce the master list of the 30 most essential aspect pairs for everyday A2 communication, divided into three thematic groups. Emphasize that learning them as linked pairs is the key to fluency.
+- P2 (~180 words): Present Group A — Daily actions (10 pairs). List them: робити/зробити, писати/написати, читати/прочитати, готувати/приготувати, їсти/з'їсти, пити/випити, варити/зварити, мити/помити, прибирати/прибрати, прасувати/випрасувати. Provide minimal contrast sentences for context: "Я варив суп" (was cooking, process) vs. "Я зварив суп" (cooked it, result is ready).
+- P3 (~180 words): Present Group B — Communication & learning (10 pairs). List them: говорити/сказати, питати/запитати, відповідати/відповісти, пояснювати/пояснити, вчити/вивчити, розуміти/зрозуміти, казати/сказати, розповідати/розповісти, записувати/записати, перекладати/перекласти. Give examples showing process vs. completed fact (e.g., Вчитель довго пояснював правило vs. Нарешті він пояснив).
+- P4 (~180 words): Present Group C — Movement & interaction (10 pairs). List them: брати/взяти, давати/дати, класти/покласти, відкривати/відкрити, закривати/закрити, починати/почати, закінчувати/закінчити, допомагати/допомогти, купувати/купити, платити/заплатити. Highlight the highly irregular "брати/взяти" and "давати/дати" with examples (Я брав книгу vs. Я взяв книгу).
+- P5 (~40 words): Provide a brief summary tip on how to practice these pairs actively by writing personal sentences.
 - <!-- INJECT_ACTIVITY: match-up-pairs --> [match-up, Match imperfective verbs with their perfective partners from the 30 pairs, 8 items]
 
-## Вибір виду в складних ситуаціях (~550 words total)
-- P1 (~140 words): Sequence of events vs. Interruption. Explain that a chain of completed actions uses only perfective (Я встав, вмився, одягнувся). Contrast this with interruption where an imperfective background action is "cut" by a perfective event: "Я читав (impf), коли мама зайшла (pf)".
-- P2 (~140 words): Habitual actions vs. Single Result. Use signal words (завжди, часто, зазвичай) for imperfective. Contrast with specific time markers (вчора, один раз, раптом) for perfective. Examples: "Він завжди допомагав" (habit) vs "Він допоміг мені вчора" (specific act).
-- P3 (~140 words): Negation nuances. Explain the difference between "Я не робив" (general denial of action or process) and "Я не зробив" (failure to achieve result despite attempt). Use the example: "Я не читав" (never touched it) vs "Я не прочитав" (didn't finish it).
-- P4 (~130 words): Aspect in the Future. Brief recap on how Imperfective uses "бути + infinitive" (буду писати) while Perfective uses the simple future form (напишу). Reiterate that "буду + perfective" is a major error (буду прочитати ❌).
-- <!-- INJECT_ACTIVITY: fill-in-aspect-context --> [fill-in, Complete sentences by choosing the correct aspect based on context (sequence, interruption, habit, single event), 8 items]
-- <!-- INJECT_ACTIVITY: quiz-aspect-justification --> [quiz, Read a mini-situation and choose the correct aspect form with justification, 8 items]
+## Вибір виду в складних ситуаціях (~550 words)
+- P1 (~110 words): Transition from forms to usage in complex situations. Explain that while "process vs. result" is the basic rule, real sentences often have combinations of actions. Introduce the four common scenarios for choosing aspect.
+- P2 (~120 words): Detail Scenario 1: Sequence of completed events. Explain that when narrating a chronological chain of events, use ONLY perfective verbs. Provide the example: "Я встав, вмився, поснідав і пішов на роботу" (I got up, washed, had breakfast, and left for work). Each action is a completed step before the next begins.
+- P3 (~110 words): Detail Scenario 2: Interruption. Explain this classic pattern: a long, ongoing background action (Imperfective) is interrupted by a sudden, completed event (Perfective). Provide the example: "Коли я готувала вечерю, подзвонила подруга" (While I was cooking [impf] dinner, a friend called [pf]).
+- P4 (~100 words): Detail Scenario 3: Habitual vs. Single Result. Explain that for things done regularly, always use imperfective, even if they finish each time: "Вона завжди допомагала сусідам" (habit, impf). For a specific, one-time result, use perfective: "Вона допомогла сусідці вчора" (single event, pf).
+- P5 (~110 words): Detail Scenario 4: Negation nuances. Explain that negating the imperfective means the action didn't happen at all or is a general fact: "Я не читав цю книгу" (I haven't read it). Negating the perfective often implies the action was attempted but the result wasn't achieved: "Я не прочитав цю книгу" (I started but didn't finish reading it).
+- <!-- INJECT_ACTIVITY: fill-in-context --> [fill-in, Complete sentences by choosing the correct aspect based on context (sequence, interruption, habit, single event), 8 items]
 
-## Практика у діалогах (~400 words total)
-- P1 (~120 words): Dialogue 1 — The Homework Situation. A conversation between a parent and student using "робити/зробити", "писати/написати", "вчити/вивчити". "Ти вже зробив уроки?" — "Ні, я ще пишу твір". Emphasis on the change of state from process to result.
-- P2 (~120 words): Dialogue 2 — Weekend Planning and Reporting. A conversation between friends using "планувати", "поїхати", "купити", "дивитися/подивитися". Contrast between what they *will do* (process/intent) and what they *did* (result).
-- P3 (~80 words): Common conversational patterns. Teaching chunks like "Я тільки що зробив" (I just did it), "Я ще не закінчив" (I haven't finished yet), and "Давай почнемо" (Let's start).
-- P4 (~80 words): Summary of the aspectual "Mindset". Final tip: Always ask yourself "Is the action done?" (ДВ) or "Is the action happening/repeating?" (НДВ) before choosing the verb.
-
-## Підсумок (~150 words)
-- P1 (~150 words): Self-check questions based on the plan:
-  - Які 4 основні способи творення видових пар ви знаєте? (Префікси, суфікси, чергування, різні основи).
-  - Назвіть видову пару до дієслова "брати" (взяти) та "говорити" (сказати).
-  - Який вид дієслова використовується для послідовності завершених дій? (Доконаний).
-  - У чому різниця між "Я не читав" і "Я не прочитав"? (Процес/факт проти результату).
-
-Grand total: ~2300 words
+## Практика у діалогах (~440 words)
+- P1 (~90 words): Introduce the dialogues. Explain that aspect choice in conversation often depends on whether asking about a general activity or checking off a task list. Introduce conversational trigger phrases: "вже" (already, often with pf) and "тільки що" (just now, pf).
+- P2 (~120 words): Present Dialogue 1: Parent and child doing homework. Demonstrate checking completed tasks vs ongoing process. Include the lines: Мама: "Ти вже написав (pf) домашнє завдання?" / Школяр: "Ні, я ще пишу (impf)." / Мама: "Прочитай (pf) цей абзац." / Школяр: "Я читаю (impf) вже годину!"
+- P3 (~110 words): Present Dialogue 2: Evening recap. Contrast listing completed tasks with evening activities. Use: "Що ти зробив сьогодні?" (listing perfective tasks like 'написав звіт', 'купив хліб') versus "А що ти робив увечері?" (describing imperfective ongoing process 'дивився фільм', 'готував вечерю').
+- P4 (~120 words): Present Dialogue 3: Planning and reporting (Future context). Show how aspect works in future plans. Contrast: "Що ти будеш робити завтра?" (impf - what are your general plans?) vs. "Що ти зробиш до п'ятниці?" (pf - what results will you have delivered?). Provide brief sample answers for both.
+- <!-- INJECT_ACTIVITY: quiz-situations --> [quiz, Read a mini-situation and choose the correct aspect form with justification, 8 items]

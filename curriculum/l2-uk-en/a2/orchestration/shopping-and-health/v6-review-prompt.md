@@ -122,283 +122,176 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## На ринку: скільки вам? (At the Market: How Much Do You Want?)
+## На ринку: скільки вам? (~800 words total)
 
-«Ринок — це серце українського міста. Тут завжди багато людей, свіжі продукти та цікаві розмови.» (A market is the heart of a Ukrainian city. Here there are always many people, fresh products, and interesting conversations.)
+The heart of local commerce in Ukraine is the **ринок** (market). Here, buying food is an interactive process. You must talk to the vendor and specify what you need. This makes the market the perfect place to master the Genitive case.
 
-Going to a **ринок** (market) in Ukraine is more than just shopping; it is a cultural experience. Whether you visit the historic **Бессарабський ринок** (Besarabskyi market) in the center of Kyiv, the bustling **Житній ринок** (Zhytnii market) in Podil, or a small local bazaar in your neighborhood, the expectation is the same: quality and freshness. Supermarkets are convenient, but Ukrainians often prefer the market for fresh vegetables, meat, and dairy. Here, you buy directly from the farmer or vendor. You can ask about the origin of the food, request to taste a piece of cheese, and negotiate quantities. The interaction is direct, personal, and requires specific vocabulary. You do not just put items in a basket; you must tell the **продавець** (vendor) exactly what you want and how much.
+Я дуже люблю ходити на ринок у суботу вранці. Там завжди багато людей, свіжі овочі та фрукти. Я купую продукти на весь тиждень. Можна вибрати найкращі яблука чи молоко. Люди говорять про ціни, запитують про свіжість продуктів.
 
-:::note
-**Читаємо українською (Reading in Ukrainian)**
-Українці люблять купувати свіжі продукти на ринку.
-Там можна купити домашнє молоко, сир та м'ясо.
-Продавці часто пропонують скуштувати їхній товар.
-Вони кажуть: «Спробуйте, це дуже смачно!»
-На ринку завжди можна знайти найсвіжіші овочі та фрукти.
+> *I really like going to the market on Saturday morning. There are always a lot of people, fresh vegetables, and fruits there. I buy groceries for the whole week. You can choose the best apples or milk. People talk about prices, ask about the freshness of products.*
+
+Let us look at a typical interaction when you approach a stall. A **покупець** (buyer) asks about the produce, while the **продавець** (vendor) calculates the cost. 
+
+> — **Покупець:** Добрий день! У вас є свіжі помідори? *(Do you have fresh tomatoes?)*
+> — **Продавець:** Добрий день! Так, дуже свіжі і солодкі. Скільки вам? *(Yes, very fresh and sweet. How much for you?)*
+> — **Покупець:** Дайте мені, будь ласка, один **кілограм** (kilogram) помідорів. І ще кілограм яблук. *(Give me, please, one kilogram of tomatoes. And a kilogram of apples.)*
+> — **Продавець:** Які красиві яблука! Вони дуже солодкі і соковиті. Яблука з мого саду. Спробуйте одне. Якщо хочете кисліші, є ще інший сорт.
+> — **Покупець:** Добре, я візьму ще два кілограми яблук.
+> — **Продавець:** Будь ласка, обирайте найкращі. Щось ще бажаєте?
+> — **Покупець:** Так, мені ще потрібні огірки. Дайте пів кіло огірків. *(Give me half a kilo of cucumbers.)*
+> — **Продавець:** З вас дев'яносто гривень. *(That will be ninety hryvnias from you.)*
+> — **Покупець:** Дякую, ось гроші.
+> — **Продавець:** Дякую за покупку! Приходьте ще.
+
+The core rule of shopping is Quantity + Genitive. Whenever you specify an amount, a precise weight, or a container for a **рецепт** (recipe), the noun that follows takes the Genitive case.
+
+Ми часто використовуємо цю граматику вдома. Для цього рецепта мені потрібен кілограм яблук. Також я маю купити літр молока і пачку масла. Без цих продуктів я не зможу спекти пиріг. Ми завжди купуємо два кілограми м'яса на вихідних.
+
+> *We often use this grammar at home. For this recipe I need a kilogram of apples. Also I have to buy a liter of milk and a pack of butter. Without these products I will not be able to bake a pie. We always buy two kilograms of meat on the weekend.*
+
+We must distinguish between uncountable substances and countable items. For masculine substances, Ukrainian uses the **-у** or **-ю** ending in the Genitive singular. For countable items, use the Genitive Plural.
+
+:::info
+**Grammar box**
+Remember that for masculine substances, the **-у/-ю** ending is the standard. The language strongly prefers this form for materials: чаю, соку, рису.
 :::
 
-When you ask for a specific amount of food at the market, you must use the Genitive case. In Ukrainian, words that denote a measure of weight, volume, or quantity act like containers. The item you are measuring goes into the Genitive case, answering the question "a kilogram of what?" or "a bottle of what?". This rule applies every time you use a unit of measurement.
+Мама просить мене піти в сусідній магазин. Вона каже: купи, будь ласка, кілограм цукру і двісті грамів сиру. Я записую все на папірці. У магазині я також беру десяток яєць і пів кілограма рису. Тепер у нас є все для сніданку.
 
-[Кількість] + [Іменник у родовому відмінку]
-([Quantity] + [Noun in Genitive])
-кілограм (kilogram) + цукор (sugar) → кілограм **цукру**
-літр (liter) + молоко (milk) → літр **молока**
-пляшка (bottle) + олія (oil) → пляшка **олії**
+> *Mom asks me to go to the neighboring store. She says: buy, please, a kilogram of sugar and two hundred grams of cheese. I write everything down on a piece of paper. In the store, I also take a ten of eggs and half a kilogram of rice. Now we have everything for breakfast.*
 
-:::tip
-**Читаємо українською (Reading in Ukrainian)**
-Дайте, будь ласка, кілограм цукру.
-Мені потрібен один літр домашнього молока.
-Я хочу купити пів кілограма свіжого сиру.
-Ось ваша пляшка олії.
-У мене є велика склянка води.
-:::
+You will also need measure words and partitives like **склянка** (glass), **шматок** (piece), or **пляшка** (bottle). These also trigger the Genitive case. Another common word is the prefix **пів** (half).
 
-This structure is essential. You cannot just say the unit and the item in their dictionary forms. The item being measured must take its Genitive singular ending.
+Я хочу випити велику склянку соку. Дайте мені, будь ласка, шматок свіжого хліба. Ця велика пластикова пляшка мінеральної води коштує сорок гривень. Вчора я купив пів літра молока. Моя сестра випила чашку зеленого чаю без цукру.
 
-Beyond kilograms and liters, you will use many container and portion words when shopping or cooking. These words function exactly like units of measurement. The container is the main word, and the substance inside it takes the Genitive case. 
+> *I want to drink a large glass of juice. Give me, please, a piece of fresh bread. This large plastic bottle of mineral water costs forty hryvnias. Yesterday I bought half a liter of milk. My sister drank a cup of green tea without sugar.*
 
-Let us look at common examples you will hear at the market or read in recipes:
-- **пачка** (pack) + масло (butter) → пачка **масла** (a pack of butter)
-- **банка** (jar) + мед (honey) → банка **меду** (a jar of honey)
-- **шматок** (piece) + сало (salo/pork fat) → шматок **сала** (a piece of salo)
-- **склянка** (glass) + сік (juice) → склянка **соку** (a glass of juice)
-- **десяток** (a dozen/ten) + яйця (eggs) → десяток **яєць** (a dozen eggs)
+When buying, pay attention to whether the item is singular or plural. You ask "Скільки коштує?" for singular, but "Скільки коштують?" for plural. You will also hear "По скільки помідори?" at the market, and people often react with words like "дорого", "дешево", or "нормально". Vendors often use diminutives to sound friendly.
 
-:::note
-**Читаємо українською (Reading in Ukrainian)**
-Мені потрібна одна пачка вершкового масла.
-Чи є у вас банка гречаного меду?
-Дайте мені, будь ласка, невеликий шматок сала.
-Я випив склянку яблучного соку на сніданок.
-Купіть один десяток свіжих яєць.
-:::
+> — **Покупець:** Добрий день, чи є у вас свіжа картопелька? *(Do you have fresh potatoes?)*
+> — **Продавець:** Добрий день! Так, звичайно є. Дуже добра картопля.
+> — **Покупець:** Скільки коштує один кілограм? *(How much does one kilogram cost?)*
+> — **Продавець:** Тридцять гривень. Будете брати?
+> — **Покупець:** Дайте мені, будь ласка, два кілограми. І ще десяток яєць. *(Give me, please, two kilograms. And a ten of eggs.)*
+> — **Продавець:** Ось ваша картопелька. Дуже гарна, без бруду. Я завжди продаю тільки найкраще для моїх клієнтів.
+> — **Покупець:** Дуже дякую. Я завжди купую овочі тільки у вас.
+> — **Продавець:** Добре. З вас дев'яносто гривень загалом. *(That will be ninety hryvnias in total.)*
+> — **Покупець:** Тримайте сто гривень.
+> — **Продавець:** Ваша решта — десять гривень. Гарного дня!
+> — **Покупець:** До побачення!
 
-Notice that «яєць» is in the Genitive plural, because a dozen contains multiple individual items, whereas honey or butter is an uncountable substance in the Genitive singular.
+The Genitive Plural is required after numbers like five, six, ten, or thirty: п'ять кілограмів, десять гривень, тридцять яблук. But compound numerals follow the last component: двадцять три яблука, but twenty five apples = двадцять п'ять яблук.
 
-When you look at masculine nouns that denote substances, materials, or collective items, you might notice a specific pattern. Why do we say «кілограм **сиру**» (a kilogram of cheese) and «банка **меду**» (a jar of honey) with an «-у» ending, instead of the «-а» ending we see in words like «брат» → «брата»? In Ukrainian, abstract concepts and uncountable materials in the masculine gender often take the endings **-у** or **-ю** in the Genitive singular. This is called the Partitive Genitive. It shows that you are taking a portion of a larger mass.
+З вас вісімдесят гривень, каже продавець. Я купую п'ять кілограмів картоплі і три кілограми цибулі на зиму. Мій старший брат несе важкі сумки додому. У моєму кошику акуратно лежить десяток яєць. Ми витратили сто п'ятдесят гривень на ринку сьогодні вранці. Ринок — це чудове місце. Там можна купити все необхідне. Я завжди приходжу сюди з радістю.
 
-Common masculine substances ending in -у/-ю:
-- сир → **сиру** (cheese)
-- цукор → **цукру** (sugar)
-- чай → **чаю** (tea)
-- сік → **соку** (juice)
-- часник → **часнику** (garlic)
+> — **Продавець:** Добрий ранок!
+> — **Покупець:** Добрий ранок! Скільки коштують ці яблука?
+> — **Продавець:** Сорок гривень за кілограм.
+> — **Покупець:** Дайте мені один кілограм.
+> — **Продавець:** Будь ласка. З вас сорок гривень.
+> — **Покупець:** Дякую!
 
-:::tip
-**Читаємо українською (Reading in Ukrainian)**
-Я хочу випити чашку гарячого чаю.
-Додайте трохи цукру у вашу каву.
-Купіть кілограм твердого сиру на ринку.
-Дайте мені головку свіжого часнику.
-У нас немає томатного соку.
-:::
+<!-- INJECT_ACTIVITY: fill-in-complete-market-dialogue-lines-with-correct-quantity-genitive-forms -->
 
-This distinction is a beautiful and natural feature of the Ukrainian language. Remember: if you can pour it, scoop it, or cut a piece from a larger block, a masculine word will likely end in -у or -ю.
+## У лікаря: що вас турбує? (~800 words total)
 
-When paying for your groceries, you need to understand prices and how numbers interact with nouns. The currency is the **гривня** (hryvnia). Asking the price is simple: «**Скільки коштує...?**» (How much does it cost?). When the vendor answers, the form of the noun depends on the number preceding it. We learned this rule for objects, and it applies exactly the same way to units of weight and currency.
+We have just learned how to use the Genitive case to buy food and describe quantities at the **ринок** (market). Now, let us imagine you need to visit a clinic to talk about your **здоров'я** (health). The language of medicine relies heavily on the grammatical patterns you just practiced. Whether you are asking for a **кілограм** (kilogram) of apples or explaining to a doctor that you do not have a fever, the Genitive case remains a vital tool. We use it frequently to talk about what we lack or to identify the source of a problem.
 
-- **1** takes the Nominative singular: одна **гривня**, один **кілограм**.
-- **2, 3, 4** take the Nominative plural: дві **гривні**, три **кілограми**, чотири **пляшки** (bottles).
-- **5 and above** take the Genitive plural: п'ять **гривень**, десять **кілограмів**, двадцять **яєць**.
+Сьогодні ми йдемо до лікаря, бо мій брат несподівано захворів. Він каже, що йому дуже погано і потрібна медична допомога. У нього зовсім немає сил, тому я йду разом із ним до поліклініки. Ми хочемо дізнатися, що сталося, і як швидко повернути його здоров'я.
 
-:::note
-**Читаємо українською (Reading in Ukrainian)**
-Скільки коштують ці яблука?
-Вони коштують сорок п'ять гривень за кілограм.
-Дайте мені два кілограми, будь ласка.
-З вас рівно дев'яносто гривень.
-Це дуже дешево, а помідори дорогі.
-:::
+> *Today we are going to the doctor because my brother unexpectedly got sick. He says that he feels very bad and needs medical help. He has absolutely no energy, so I am going together with him to the clinic. We want to find out what happened, and how to quickly restore his health.*
 
-Let us put this grammar into practice. Read this natural exchange between a **покупець** (buyer) and a продавець.
+Here is a typical conversation you might have during a medical consultation. Pay attention to how the doctor asks about symptoms and how the patient responds using simple, direct phrases.
 
-> — **Продавець:** Добрий день! Що вам запропонувати? *(Good day! What can I offer you?)*
-> — **Покупець:** Добрий день. Скажіть, будь ласка, скільки коштують ці помідори? *(Good day. Tell me, please, how much do these tomatoes cost?)*
-> — **Продавець:** Вісімдесят гривень за кілограм. Вони дуже свіжі та солодкі. *(Eighty hryvnias per kilogram. They are very fresh and sweet.)*
-> — **Покупець:** Добре. Дайте мені півтора кілограма, будь ласка. І ще кілограм огірків. *(Good. Give me one and a half kilograms, please. And also a kilogram of cucumbers.)*
-> — **Продавець:** Звісно. Огірки по шістдесят гривень. Щось ще? *(Of course. Cucumbers are at sixty hryvnias. Anything else?)*
-> — **Покупець:** Ні, це все. Скільки з мене? *(No, that is all. How much do I owe?)*
-> — **Продавець:** З вас сто вісімдесят гривень. *(You owe one hundred eighty hryvnias.)*
-> — **Покупець:** Ось, візьміть. Дякую! *(Here, take it. Thank you!)*
-> — **Продавець:** Дякую вам. Смачного! *(Thank you. Enjoy your meal!)*
-
-When you visit a market, you will notice that vendors try to create a warm, friendly atmosphere. They often use diminutive forms of words to sound welcoming and encouraging. Instead of «картопля» (potatoes), you might hear «**картопелька**» (nice little potatoes). Instead of «яблука» (apples), they might offer «**яблучка**» (sweet little apples). This is a very common feature of everyday Ukrainian. You do not need to use these forms yourself, but recognizing them helps you feel the cultural warmth of the interaction. Simply reply politely with «**Дякую**» (Thank you) and say «**На все добре**» (All the best) when leaving.
-
-<!-- INJECT_ACTIVITY: fill-in-market-genitive -->
-
-## У лікаря: що вас турбує?
-
-Коли ви погано почуваєтесь, вам треба звернутися до лікаря. В Україні люди зазвичай ідуть у поліклініку або в приватну лікарню. Лікар завжди спочатку запитає вас про ваші симптоми.
-
-When you feel unwell in Ukraine, the first step is usually to visit a **поліклініка** (clinic) or a private hospital to see a **терапевт** (general practitioner). The medical culture here is quite direct. When you enter the office, the doctor will not ask you about your day. Instead, they will start with a very specific, practical question.
-
-«**Що вас турбує?**» (What is bothering you?) is the standard opening phrase. You will also often hear «**На що скаржитесь?**» (What are you complaining about?). To answer these questions, you need to describe your physical state accurately.
-
-Кожна людина іноді хворіє. У мене часто болить голова. Мій друг каже, що у нього болить спина.
-
-In English, you say "I have a headache" or "My throat hurts". In Ukrainian, we almost exclusively use the construction «**у мене болить...**» (it hurts at my place) to describe pain. This is very similar to how we say "I have", but instead of an object, the subject of the sentence is the body part that hurts.
-
-Because the body part is the subject, it must be in the Nominative case. The verb «**боліти**» (to hurt, to ache) must agree with the number of the body part. If one thing hurts, use the singular «**болить**». If multiple things hurt, use the plural «**болять**».
-
-- **У мене болить...** (Singular) + **голова** (head), **горло** (throat), **живіт** (stomach), **спина** (back).
-- **У мене болять...** (Plural) + **ноги** (legs), **очі** (eyes), **коліна** (knees), **вуха** (ears).
-
-:::note **Читаємо українською (Reading in Ukrainian)**
-Лікар завжди питає, що мене турбує.
-Сьогодні у мене дуже сильно болить голова.
-Мій брат каже, що у нього болить живіт після обіду.
-Після довгої прогулянки парком у мене болять ноги.
-У мого дідуся часто болять коліна.
-:::
-
-Минулого тижня я був хворий, але зараз у мене немає температури.
-
-When visiting a doctor, you also need to explain what symptoms you *do not* have. We already know that the word «**немає**» (there is no) requires the Genitive case. This rule is extremely important for medical conversations.
-
-When a doctor asks «**Чи є у вас температура?**» (Do you have a fever?), your negative answer must use the Genitive.
-
-- **немає температури** (no fever)
-- **немає апетиту** (no appetite)
-- **немає кашлю** (no cough)
-- **немає сил** (no energy)
-- **немає нежиті** (no runny nose)
-
-:::tip **Читаємо українською (Reading in Ukrainian)**
-Сьогодні я відчуваю себе значно краще.
-У мене вже немає високої температури.
-Але я досі слабкий, у мене зовсім немає сил.
-Лікар сказав, що у мене немає грипу.
-У хворої дитини немає апетиту, вона нічого не їсть.
-:::
-
-Лікар виписав мені сильні ліки від кашлю.
-
-The preposition «**від**» (from, against) always takes the Genitive case. In a medical context, it has two very important functions.
-
-First, it describes the cause of your pain or discomfort. For example, «**У мене болить горло від холоду**» (My throat hurts from the cold).
-
-Second, and most importantly for a pharmacy or clinic, «від» describes the *purpose* of a medicine. In English, you take medicine "for" a cough. In Ukrainian, you take medicine "against" or "from" it.
-
-- **ліки від кашлю** (cough medicine)
-- **краплі від нежиті** (drops for a runny nose)
-- **таблетки від головного болю** (headache pills)
-- **сироп від болю у горлі** (syrup for a sore throat)
-
-:::note **Читаємо українською (Reading in Ukrainian)**
-> — **Покупець:** Добрий день. Мені потрібні ліки від алергії. *(Good day. I need medicine for allergy.)*
-> — **Фармацевт:** Добрий день. У вас є рецепт? *(Good day. Do you have a prescription?)*
-> — **Покупець:** Ні, немає. Дайте щось без рецепта. *(No, I do not. Give me something without a prescription.)*
-> — **Фармацевт:** Ось хороші таблетки. Вони дуже допомагають. *(Here are good pills. They help a lot.)*
-:::
-
-Let us see how these phrases come together in a typical visit to the clinic. Read this dialogue between a **пацієнт** (patient) and a **лікар** (doctor).
-
-> — **Лікар:** Добрий день! Проходьте, сідайте. Що вас турбує? *(Good day! Come in, sit down. What is bothering you?)*
-> — **Пацієнт:** Добрий день. Я погано почуваюсь. Я застудився. *(Good day. I feel unwell. I caught a cold.)*
-> — **Лікар:** Розумію. У вас болить горло? *(I understand. Does your throat hurt?)*
-> — **Пацієнт:** Так, болить горло і дуже болить голова. *(Yes, my throat hurts and my head hurts a lot.)*
+> — **Лікар:** Добрий день! Що вас турбує? *(Good day! What troubles you?)*
+> — **Пацієнт:** Добрий день. У мене дуже сильно болить горло і голова. *(Good day. My throat and head hurt very much.)*
+> — **Лікар:** Як давно це почалося? *(How long ago did this start?)*
+> — **Пацієнт:** Вчора ввечері, після роботи. *(Yesterday evening, after work.)*
 > — **Лікар:** Чи є у вас температура? *(Do you have a fever?)*
-> — **Пацієнт:** Ні, температури немає. Але у мене сильний кашель і немає сил. *(No, there is no fever. But I have a bad cough and no energy.)*
-> — **Лікар:** Я випишу вам рецепт. Ось ліки від кашлю. *(I will write you a prescription. Here is cough medicine.)*
-> — **Пацієнт:** Дякую. Скільки разів на день їх пити? *(Thank you. How many times a day should I drink them?)*
-> — **Лікар:** Тричі на день. І вам треба багато відпочивати. *(Three times a day. And you need to rest a lot.)*
+> — **Пацієнт:** Ні, температури немає, але є сильний кашель. *(No, there is no fever, but there is a strong cough.)*
 
-Іноді у нас немає сильного болю, але є загальна слабкість. Мені дуже погано і холодно. Мене нудить після вечері.
+When you want to say that something hurts, you cannot literally translate the English phrase "I have a headache." Instead, Ukrainian uses a special construction: **У мене болить...** (literally: "At me hurts..."). In this structure, the body part that hurts is the actual subject of the sentence, so it must be in the Nominative case. Importantly, the verb **боліти** (to hurt) must agree with that body part in number.
 
-Sometimes you do not have a specific pain, but your overall state is bad. For these general feelings, Ukrainian uses impersonal constructions. Instead of saying "I feel cold", you say "To me it is cold". The person experiencing the feeling takes the Dative case (which we will study later, but you should learn these fixed phrases now as «**мені**» — to me).
+У мене болить голова, тому я сьогодні не хочу читати. Мій дідусь часто каже, що у нього болять коліна після довгої прогулянки. Якщо у вас сильно болить живіт, вам треба йти до лікарні. У моєї сестри болять очі, коли вона довго працює за комп'ютером.
 
-- **Мені погано.** (I feel bad.)
-- **Мені краще.** (I feel better.)
-- **Мені холодно.** (I am cold.)
-- **Мені гаряче.** (I am hot.)
+> *My head hurts, so today I do not want to read. My grandfather often says that his knees hurt after a long walk. If your stomach hurts a lot, you need to go to the hospital. My sister's eyes hurt when she works at the computer for a long time.*
 
-Якщо у вас проблеми зі шлунком, ви використовуєте спеціальне дієслово.
-
-If you feel sick to your stomach, you use a special verb: «**Мене нудить**» (I feel nauseous). 
-
-:::tip **Читаємо українською (Reading in Ukrainian)**
-Учора ввечері мені було дуже погано.
-Я випив гарячий чай, і зараз мені краще.
-Відчини вікно, будь ласка, бо мені гаряче.
-Одягни теплий светр, якщо тобі холодно.
-Я не хочу їсти, бо мене нудить.
+:::info
+**У мене болить / болять**
+Use **болить** (singular verb) for one body part: У мене болить спина (My back hurts).
+Use **болять** (plural verb) for multiple body parts: У мене болять ноги (My legs hurt).
 :::
 
-Combining these phrases with the Genitive vocabulary gives you a complete toolkit to explain your health to any doctor.
+Another crucial use of the Genitive case in a medical context is the Genitive of Absence. Whenever you want to state that you *do not* have a certain symptom, like an **апетит** (appetite) or a **температура** (temperature, fever), you must use the negative word **немає** followed by the symptom in the Genitive case. This is a strict rule that applies to the absence of anything, whether it is a physical object like a **пляшка** (bottle) of syrup or a medical condition.
 
-<!-- INJECT_ACTIVITY: quiz-health-phrases -->
+Лікар уважно дивиться на мене і питає, чи є у мене алергія. Я швидко відповідаю, що у мене немає алергії. Інший пацієнт каже, що у нього зовсім немає апетиту вже два дні. На щастя, у мого брата немає високої температури.
 
-## В аптеці та повсякденне здоров'я
+> *The doctor looks at me carefully and asks if I have an allergy. I quickly answer that I have no allergy. Another patient says that he has absolutely no appetite for two days already. Fortunately, my brother has no high fever.*
 
-When you visit an **аптека** (pharmacy) in Ukraine, you will find that many common remedies are available over the counter. If you have a light cold or a minor headache, you can easily buy **вітаміни** (vitamins) or simple remedies without seeing a doctor. The key distinction is whether you need a **рецепт** (prescription) or not. When asking for everyday items, you use the Genitive case to specify exactly what the medicine is meant to treat. For example, if you are sneezing, you will ask the pharmacist for **краплі від нежиті** (drops for a runny nose).
+Sometimes you just feel unwell without a specific localized pain. To describe your general physical state, Ukrainian uses impersonal constructions featuring the Dative case and an adverb. You place the pronoun in the Dative (such as **мені**, **йому**, **їй**) and follow it with a descriptive adverb like **погано** (bad) or **холодно** (cold). If you feel nauseous, there is a specific verb used with the Accusative case: **Мене нудить** (I feel nauseous).
 
-:::tip **Читаємо українською (Reading in Ukrainian)**
-В Україні є багато аптек на кожній вулиці.
-Я часто купую там вітаміни для сім'ї.
-Якщо у вас застуда, рецепт не потрібен.
-Ви можете купити краплі від нежиті просто так.
-Але сильні ліки продають тільки за рецептом.
+Взимку на вулиці мені часто буває дуже холодно. Коли ми довго їхали в старому автобусі, моїй мамі раптом стало погано. Вона сказала, що її трохи нудить від запаху бензину. Зараз їй вже набагато краще, і ми йдемо додому.
+
+> *In winter outside I am often very cold. When we were riding for a long time in an old bus, my mom suddenly started to feel bad. She said that she felt a little nauseous from the smell of gasoline. Now she is already much better, and we are walking home.*
+
+If you know the cause of your pain or physical state, you can explain it using the preposition **від** (from) followed by the Genitive case. This is very common when describing symptoms related to weather, such as a **кашель** (cough) from the cold. Interestingly, we also use this exact same preposition when we buy medicine *against* a specific symptom.
+
+У мене зараз сильно болить горло від холодної води. Цей жахливий кашель у мого колеги з'явився від пилу на будівництві. Моя подруга скаржиться, що у неї болить голова від гучної музики. Ввечері ми підемо купувати ефективні краплі від нежиті.
+
+> *Right now I have a very sore throat from cold water. This terrible cough of my colleague appeared from the dust at the construction site. My friend complains that her head hurts from loud music. In the evening we will go to buy effective drops for a runny nose.*
+
+At the end of your visit, the doctor will usually give you some professional advice and write out a **рецепт** (prescription). These instructions often combine simple imperative verbs with the quantity words we learned earlier, which naturally require the Genitive case. Finally, the doctor will tell you to go to the **аптека** (pharmacy) to buy your **ліки** (medicine).
+
+Лікар серйозно дивиться на брата і каже: пийте багато теплої води та більше відпочивайте. Він радить їсти багато свіжих фруктів і менше цукру. Потім він виписує рецепт і каже йти в найближчу аптеку. Там ми купимо всі необхідні ліки.
+
+> *The doctor looks seriously at my brother and says: drink a lot of warm water and rest more. He advises eating a lot of fresh fruits and less sugar. Then he writes a prescription and says to go to the nearest pharmacy. There we will buy all the necessary medicine.*
+
+<!-- INJECT_ACTIVITY: quiz-choose-the-correct-genitive-phrase-for-health-complaints-and-remedies -->
+
+## В аптеці та повсякденне здоров'я (~600 words total)
+
+When you go to the **аптека** (pharmacy), you can ask for **ліки** (medicine). The pharmacist can give you excellent advice if your symptoms are mild and you do not yet have a **рецепт** (prescription). Let's look at a typical conversation where someone asks for medicine. Notice how the patient describes their condition and how the pharmacist responds with a solution.
+
+> — **Фармацевт:** Добрий день! Чим я можу допомогти? *(Good day! How can I help?)*
+> — **Пацієнт:** Добрий день. Мені потрібні краплі від нежиті. І ще, що ви порадите від кашлю? *(Good day. I need drops for a runny nose. And also, what do you recommend for a cough?)*
+> — **Фармацевт:** У вас є температура або алергія? *(Do you have a fever or an allergy?)*
+> — **Пацієнт:** Ні, температури немає. У мене зовсім немає апетиту. *(No, there is no fever. I have absolutely no appetite.)*
+> — **Фармацевт:** Ось хороші ліки від кашлю. Вони продаються без рецепта. *(Here is good medicine for a cough. They are sold without a prescription.)*
+
+In Ukrainian, when we buy medicine, we literally ask for a remedy *against* the symptom. We use the preposition **від** followed immediately by the Genitive case. For example, you ask for something against a **кашель** (cough). This is a very common structure, as it differs from the English phrase "for a cough". You will use this exact pattern for almost every remedy you buy.
+
+Коли ми йдемо в аптеку, ми купуємо ліки від кашлю або краплі від нежиті. Якщо у вас сильно болить голова, вам потрібні ефективні таблетки від головного болю. Зверніть увагу на закінчення чоловічого роду в родовому відмінку. Слова «кашель» та «біль» мають закінчення «-ю».
+
+> *When we go to the pharmacy, we buy medicine for a cough or drops for a runny nose. If your head hurts a lot, you need effective pills for a headache. Pay attention to the masculine endings in the Genitive case. The words "кашель" (cough) and "біль" (pain) have the "-ю" ending.*
+
+There are other essential prepositions that require the Genitive case. You will often see the preposition **для** (for) to indicate purpose, such as vitamins for your **здоров'я** (health). You will also use **без** (without), and **після** (after) or **до** (before) for instructions on when to take your medication. 
+
+Ці вітаміни дуже корисні для здоров'я. Ви можете купити ці таблетки без рецепта від вашого лікаря. Завжди уважно читайте інструкцію, коли купуєте новий сироп. Деякі препарати треба приймати до їжі, а інші — тільки після їжі.
+
+> *These vitamins are very useful for health. You can buy these pills without a prescription from your doctor. Always read the instructions carefully when you buy a new syrup. Some medications need to be taken before a meal, and others — only after a meal.*
+
+:::info
+**Grammar box** — The Genitive case is triggered by specific prepositions. In health contexts, remember these essential triggers: **від** (from/against), **для** (for), **без** (without), **до** (before), and **після** (after).
 :::
 
-Understanding how to take medicine correctly requires knowing prepositions that trigger the Genitive case. Two important time prepositions are **після** (after) and **перед** (before). Doctors and pharmacists will often tell you to take pills **після їжі** (after a meal) or to drink a soothing tea **перед сном** (before sleep). The Genitive is also used to describe what a product lacks, using the preposition **без** (without). If you are trying to eat healthier, you might look for food **без цукру** (without sugar) or order your coffee **без кофеїну** (without caffeine).
+Everyday health and diet connect directly back to the quantity concepts we used at the **ринок** (market). Eating well means making smart choices about how much of certain foods we consume. Whether you are asking for a **кілограм** (kilogram) of vegetables or deciding to drink a **пляшка** (bottle) of water, you are managing quantities with the Genitive case.
 
-:::note **Читаємо українською (Reading in Ukrainian)**
-Мій дідусь п'є ліки тільки після їжі.
-Я завжди п'ю тепле молоко перед сном.
-Цей чай дуже смачний, хоча він без цукру.
-Лікар сказав мені пити каву без кофеїну.
-Я не можу жити без солодкого.
-:::
+Важливо завжди дбати про здоров'я. Лікарі радять їсти мало цукру і солі, але багато свіжих фруктів. Вчора на ринку я купив кілограм яблук і кілограм моркви. Кожного дня я випиваю одну велику пляшку чистої води. Я також намагаюся пити чай без кофеїну.
 
-Another vital preposition that takes the Genitive case is **для** (for). In the context of health and shopping, we use «для» to show the main purpose or beneficiary of an item. When you buy fresh produce at the market, you are buying it **для здоров'я** (for health). If you want to boost your immune system, you ask for vitamins **для імунітету** (for immunity). Older people often buy herbal teas **для серця** (for the heart). This grammatical word beautifully connects the food you buy directly to your physical wellbeing.
+> *It is important to always care about health. Doctors advise eating little sugar and salt, but a lot of fresh fruits. Yesterday at the market I bought a kilogram of apples and a kilogram of carrots. Every day I drink one large bottle of clean water. I also try to drink tea without caffeine.*
 
-:::tip **Читаємо українською (Reading in Ukrainian)**
-Свіжі овочі та фрукти дуже корисні для здоров'я.
-Я купую лимони та мед для імунітету.
-Ці таблетки потрібні моїй бабусі для серця.
-Спорт і свіже повітря — це найкраще для тіла.
-Я роблю цей салат для всієї нашої родини.
-:::
+<!-- INJECT_ACTIVITY: match-up-match-health-problems-to-their-remedies -->
 
-Let us look at a practical situation where you need to ask a pharmacist for advice. If you do not know exactly which medicine to buy, you can describe your symptom and simply ask: «**Що ви порадите від...?**» (What do you recommend for...?). Notice how the pharmacist gives instructions using the Genitive prepositions.
+The same Genitive patterns connect both topics in this module: quantity at the market, absence of symptoms, and remedies **від** a condition. Compare these pairs: кілограм яблук, немає температури, ліки від кашлю. This is the practical overlap you should notice and practice.
 
-> — **Покупець:** Добрий день. Що ви порадите від болю в горлі? *(Good day. What do you recommend for a sore throat?)*
-> — **Фармацевт:** Добрий день. Ось дуже хороший сироп. *(Good day. Here is a very good syrup.)*
-> — **Покупець:** Він продається без рецепта? *(Is it sold without a prescription?)*
-> — **Фармацевт:** Так, звичайно. Це просто сироп на травах. *(Yes, of course. This is just a herbal syrup.)*
-> — **Покупець:** Як його правильно приймати? *(How should I take it correctly?)*
-> — **Фармацевт:** Пийте двічі на день після їди. А ще візьміть ці краплі. *(Drink it twice a day after a meal. And also take these drops.)*
-> — **Покупець:** Дякую. А що у вас є для імунітету? *(Thank you. And what do you have for immunity?)*
-> — **Фармацевт:** Візьміть ці вітаміни. Пийте одну таблетку перед сном. *(Take these vitamins. Drink one pill before sleep.)*
+Родовий відмінок поєднує обидві теми цього модуля: кілограм яблук, немає температури, ліки від кашлю. Ті самі моделі працюють у магазині, у лікаря й в аптеці.
 
-Whether you are bargaining for fresh vegetables at a market or seeking relief at a clinic, the Genitive case is the engine of your daily communication. It is the most versatile tool in Ukrainian for defining limits, quantities, and relationships between objects. We use it to quantify the exact amount of food we want, like a **кілограм яблук** (kilogram of apples) or **багато ліків** (a lot of medicine). We use it to express absence, such as asking for tea **без цукру** (without sugar) or telling a doctor we have **немає нежиті** (no runny nose). Finally, we use it to show purpose, from buying a **ніж для хліба** (knife for bread) to taking **ліки від грипу** (medicine for the flu). Mastering these patterns helps you confidently navigate practical life in Ukraine.
+> *The Genitive case helps us in many life situations. We often ask for a kilogram of apples or buy pills for pain. Also, we tell the doctor that we have no fever. This is very useful and important grammar.*
 
-:::note **Читаємо українською (Reading in Ukrainian)**
-На ринку ми купуємо багато свіжих фруктів.
-У лікарні ми кажемо, що у нас немає температури.
-В аптеці ми просимо ліки від сильного кашлю.
-Ми п'ємо чай без цукру для нашого здоров'я.
-Родовий відмінок допомагає нам говорити правильно та чітко.
-:::
-
-<!-- INJECT_ACTIVITY: match-up-remedies -->
-<!-- INJECT_ACTIVITY: true-false-grammar -->
-
-## Підсумок
-
-**Ви чудово попрацювали!** (You have worked wonderfully!) You learned how to use the Genitive case at a market and a pharmacy. Let us review the core phrases.
-
-*   Як сказати «one kilogram of tomatoes» та «five kilograms of cucumbers»? It is **кілограм помідорів** (a kilogram of tomatoes) and **п'ять кілограмів огірків** (five kilograms of cucumbers).
-*   Як ввічливо попросити шматок сиру на ринку? Use the polite request and the Genitive of quantity. You say: «**Дайте, будь ласка, шматок сиру**» (Give me, please, a piece of cheese).
-*   Яку фразу використати, якщо у вас болить голова, але немає температури? Use the physical state construction and the word for absence. Say: «**У мене болить голова, але немає температури**» (I have a headache, but no fever).
-*   Що ви купите в аптеці «від кашлю»? You can buy **сироп від кашлю** (cough syrup) or **таблетки від кашлю** (cough pills).
-*   Коли треба приймати ліки, якщо лікар сказав «після їди»? This instruction means you must take the medicine **після їди** (after eating).
-
-**Здоров'я вам і смачних покупок!** (Good health to you and tasty shopping!)
+<!-- INJECT_ACTIVITY: true-false-judge-whether-shopping-and-health-phrases-use-the-genitive-correctly -->
 </generated_module_content>
 
-**PIPELINE NOTE — Word count: 2651 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
+**PIPELINE NOTE — Word count: 2857 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -574,34 +467,165 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 414 words | Not found: 0 words
+Verified: 434 words | Not found: 0 words
 
-All 414 other words are confirmed to exist in VESUM.
+All 434 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
-## Verification Tools (MCP)
+---
 
-You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
+## Verification Tools (Shell Commands)
 
-**Core Verification:**
-- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
-- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
+You have access to verification tools via shell commands. Use these to verify
+Ukrainian vocabulary, check grammar, and search textbook content **as you write**.
 
-**Content Quality:**
-- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+**IMPORTANT:** Run verification commands BEFORE finalizing any Ukrainian text.
+Batch multiple verifications together to minimize round-trips.
 
-**Reference:**
-- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp_rag_search_literary` — verify literary references against primary sources
-- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
+### 1. Batch-verify Ukrainian words exist in VESUM (preferred — one call for many words)
 
-**Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_words
+results = verify_words(['слово1', 'слово2', 'слово3'])
+for w, matches in results.items():
+    if matches:
+        print(f'{w}: FOUND — lemma={matches[0][\"lemma\"]}, pos={matches[0][\"pos\"]}')
+    else:
+        print(f'{w}: NOT FOUND — may not exist in standard Ukrainian')
+"
+```
+
+### 2. Verify a single Ukrainian word in VESUM (with full morphological tags)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_word
+results = verify_word('WORD_HERE')
+if results:
+    for m in results:
+        print(f'lemma={m[\"lemma\"]}, pos={m[\"pos\"]}, tags={m[\"tags\"]}')
+else:
+    print('NOT FOUND in VESUM')
+"
+```
+
+### 3. Get all inflected forms of a lemma (declension/conjugation)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_lemma
+forms = verify_lemma('LEMMA_HERE')
+for f in forms[:20]:
+    print(f'{f[\"word_form\"]:20s} {f[\"pos\"]:8s} {f[\"tags\"]}')
+print(f'... {len(forms)} forms total')
+"
+```
+
+### 4. Check CEFR level of a word (is it level-appropriate?)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import query_cefr_level
+results = query_cefr_level('WORD_HERE')
+for r in results:
+    print(f'{r[\"word\"]}: {r[\"level\"]} ({r[\"pos\"]})')
+if not results:
+    print('Not in CEFR database')
+"
+```
+
+### 5. Search textbook content (Ukrainian school textbooks, Grades 1-11)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_textbooks
+keywords = {'keyword1', 'keyword2'}
+results = search_textbooks(keywords, 5)
+for r in results:
+    title = r.get('section_title', r.get('title', ''))
+    grade = r.get('grade', '?')
+    text = r.get('text', '')[:200]
+    print(f'Grade {grade} | {title}')
+    print(f'  {text}')
+    print()
+"
+```
+
+### 6. Search style guide for calques/Russianisms (Антоненко-Давидович, 279 entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_style_guide
+results = search_style_guide('TOPIC_HERE', 3)
+for r in results:
+    print(f'--- {r.get(\"word\", \"\")} [{r.get(\"section\", \"\")}]')
+    print(r.get('text', '')[:300])
+    print()
+if not results:
+    print('No style guide entries found')
+"
+```
+
+### 7. Look up word definition in СУМ-11 (Ukrainian explanatory dictionary, 127K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_definitions
+results = search_definitions('WORD_HERE', 3)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+### 8. Search idioms (Фразеологічний словник, 25K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_idioms
+results = search_idioms('WORD_HERE', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"text\", r.get(\"definition\", \"\")))[:200]}')
+"
+```
+
+### 9. English-to-Ukrainian translation (Балла, 79K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import translate_en_uk
+results = translate_en_uk('ENGLISH_WORD', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+---
+
+**WHEN to use these tools:**
+
+1. **Before writing any Ukrainian text** — batch-verify all key vocabulary with
+   `verify_words` (tool 1). Any word that returns NOT FOUND must be replaced.
+2. **When you suspect a Russicism or calque** — search the style guide (tool 6)
+   and verify the correct Ukrainian form with `verify_word` (tool 2).
+3. **When writing for A1/A2** — check CEFR levels (tool 4) to ensure vocabulary
+   is level-appropriate.
+4. **When unsure about a case ending or conjugation** — use `verify_lemma` (tool 3)
+   to see the full paradigm.
+5. **When covering a grammar topic** — search textbooks (tool 5) to see how
+   Ukrainian school textbooks teach it.
+6. **When you need the precise Ukrainian meaning** — use СУМ-11 (tool 7).
+7. **When looking for natural Ukrainian expressions** — search idioms (tool 8).
+
+**Batching rule:** Collect all words you want to verify, then run ONE `verify_words`
+call instead of multiple `verify_word` calls. This is faster and uses fewer tokens.

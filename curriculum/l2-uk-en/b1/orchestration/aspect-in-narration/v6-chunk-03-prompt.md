@@ -29,7 +29,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-і герої повинні шукати укриття. Випадковий доконаний вид повністю ламає статичність фону. > *The difference between the two aspects is critical for understanding the general situation in the story. If you say "it was raining outside," you are simply describing the weather as a decoration for your narrative. But if you say "it started raining outside," the action instantly becomes an event. This means that the rain suddenly started right now, and the characters must look for shelter. An accidental perfective aspect completely breaks the static nature of the background.* :::tip **Aspect Check** If you can logically add "suddenly" to your sentence without changing the core meaning, you have likely created a foreground event. Background descriptions rarely happen "suddenly." ::: To truly master the imperfective background, you must practice building scenes without relying on events. Imagine you need to describe a quiet evening in a small Ukrainian town, like Berezhany or Kolomyia. Your goal is to write a paragraph using exclusively background verbs. Focus entirely on the atmosphere, the parallel activities of the townspeople, and the general mood. Describe how the old streetlamps were glowing, how the distant sound of a train was echoing, and how the locals were strolling through the main square. By temporarily banning perfective verbs from your writing, you force your brain to engage with the descriptive power of the imperfective aspect. Уявіть собі старовинне українське містечко пізнього вечора. Сонце повільно сідало за високі пагорби, і на вузьких вулицях ставало темніше. Місцеві жителі неквапливо гуляли площею, а з відчинених вікон лунала музика. Старі ліхтарі м'яко світили, освітлюючи кам'яну бруківку. Ніхто нікуди не поспішав, і час ніби зупинився. Спробуйте самостійно написати подібний текст, фокусуючись лише на процесах. Ultimately, the imperfective aspect in a narrative is all about controlling the rhythm and the "vibe" of your story. When you rely on imperfective verbs, you deliberately slow down time. You invite your listener to pause, look around, and focus on the sensory details of the environment. You anchor the reader in the specific space and emotional reality of your characters before the plot disrupts their world. The background is the wide, expansive canvas upon which the actual story will eventually be painted. Недоконаний вид працює як потужний кінематографічний інструмент, який ефективно уповільнює час і дозволяє нам уважно роздивитися деталі. Він зовсім не штовхає історію вперед, а розширює її вглиб. Завдяки йому ми можемо фізично відчути атмосферу, почути звуки навколишнього світу та зрозуміти емоції людей. Це фундамент, без якого будь-яка пригода здаватиметься штучною. We have spent considerable time setting the stage, adjusting the lighting, and establishing the mood. But a stage set, no matter how beautifully described, is not a story on its own. A narrative requires action, consequence, and change. If the imperfective background is the wide canvas and the subtle shading, what is the brush that draws the sharp, defining lines of the plot? To turn a static scene into a compelling tale, we must introduce the foreground, and that requires a complete shift in our aspect strategy.
+started, drastically changing the current situation and acting as a real plot twist.* Щоб успішно залишити цей вітер на задньому тлі як постійний і безперервний атмосферний елемент, ви завжди повинні використовувати тільки недоконаний вид: «Надворі було неймовірно холодно. Дув дуже сильний вітер.» Тепер цей вітер є просто природною частиною пейзажу, він існує там постійно і зовсім не порушує вашу спокійну сцену. Свідомий вибір правильного виду прямо диктує точне значення тексту, а не лише його базову граматичну правильність. To truly master the nuances of the imperfective background, you must deliberately practice creating extended scenes where absolutely nothing significant happens. Your challenging goal is to write a short **оповідання** (short story) that is purely and intensely descriptive. Imagine a quiet, sleepy evening in a small, picturesque Ukrainian town, perhaps somewhere like Бережани or Коломия. Write five to seven detailed sentences exclusively describing the local atmosphere, the shifting weather, and what the ordinary people around you were casually doing. Do not allow a single concrete event to occur throughout this entire descriptive paragraph. Do not use perfective event markers like **раптом** (suddenly), **потім** (then), or **тоді** (at that time, then) under any circumstances. Focus your attention entirely on the human senses: what did the scene look like, what did it sound like, and how did it physically feel? Use only imperfective verbs to artificially stretch the moment and build a remarkably rich, timeless snapshot. This specific exercise forces you to rely entirely on sensory texture rather than dramatic action. :::tip **Did you know?** Many classic Ukrainian literary works open with paragraphs of pure imperfective description. This technique grounds the reader in the vast landscapes of Ukraine before introducing the characters. ::: Недоконаний вид є абсолютним фундаментом і основою атмосфери в будь-якій хорошій українській розповіді. Він завжди навмисно і дуже м'яко уповільнює час, ввічливо просячи вашого слухача або читача затриматися в цьому моменті та повністю поринути в нове середовище. Зосереджуючись виключно на безперервних фізичних станах, паралельних одночасних діях і глибоких, складних внутрішніх емоціях, ви міцно закріплюєте свою аудиторію в багатій сенсорній реальності вашої історії. Це той самий постійний, безперервний і спокійний гул життя, який тихо існує до самого початку сюжету, непомітно триває під час бурхливих подій і назавжди залишається після того, як остаточно осідає пил. Оволодіння цим тонким шаром мови означає, що ви можете майстерно намалювати світ, який відчувається справжнім, історично багатим та неймовірно емоційно резонуючим. If the imperfective background reliably serves as the static, richly detailed canvas of your developing story, what is the sharp brush that actually draws the dynamic, changing lines across it? **Спочатку** (at first), we patiently establish the scene, but how do we eventually introduce sudden change, forward momentum, and **нарешті** (finally) reach a satisfying conclusion? To make a story actually happen and move forward, we must deliberately shift our grammatical focus from the continuous, unchanging scenery to the sharp, decisive actions that drive a narrative forward. It is time to leave the quiet atmosphere behind and step directly into the fast-paced, unpredictable world of the **передній план** (foreground).
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -690,6 +690,40 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] тло
+- [ ] передній план
+- [ ] розповідь
+- [ ] оповідання
+- [ ] оповідач
+- [ ] подія
+- [ ] опис
+- [ ] спочатку
+- [ ] потім
+- [ ] раптом
+- [ ] нарешті
+- [ ] тим часом
+- [ ] одночасно
+- [ ] послідовно
+- [ ] послідовність
+- [ ] спогад
+- [ ] поки
+- [ ] після цього
+- [ ] тоді
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Передній план: доконаний вид у наративі (~1200 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

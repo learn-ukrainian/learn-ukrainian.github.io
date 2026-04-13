@@ -32,7 +32,7 @@ objectives:
 - Learner can apply real conditionals in practical everyday scenarios (planning, advice, warnings, promises).
 dialogue_situations:
 - setting: 'Planning a garden — if/then decisions about planting: Якщо буде сонце (n, sun), посадимо помідори
-    (pl). Якщо йтиме дощ (m, rain), польємо пізніше. Якщо ти купиш насіння (n, seeds), я підготую грядку
+    (pl). Якщо не буде дощу (m, rain), доведеться полити ввечері. Якщо ти купиш насіння (n, seeds), я підготую грядку
     (f, garden bed).'
   speakers:
   - Подружжя (на дачі)
@@ -123,143 +123,114 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Якщо + теперішній/майбутній час (If + Present/Future)
+## Якщо + теперішній/майбутній час (If + Present/Future) (~770 words total)
 
-Ми часто говоримо про різні **умови** *(conditions)* у нашому житті. **Умова** — це спеціальна ситуація. Ця ситуація є необхідною для певного **результату** *(result)*. Ми використовуємо слово «якщо» *(if)*, коли говоримо про **реальну** *(real)* умову. Це означає, що така ситуація є дуже можливою. Вона цілком може статися в реальному житті.
+Real conditionals describe situations that are highly possible or likely to happen.
 
-We use "якщо" to introduce a condition that is likely or possible in the real world.
+Ми часто говоримо про плани, які залежать від різних ситуацій. Для цього ми використовуємо слово **якщо** (if). Це слово допомагає показати, що дія можлива. Ми називаємо це **реальна умова** (real condition). Це означає, що ситуація може статися сьогодні або завтра. Наприклад, ми дивимося на небо і бачимо сонце. Ми знаємо, що **погода** (weather) буде хороша. Тоді ми кажемо: «Якщо буде гарна погода, ми підемо гуляти». Або ваш друг робить домашнє завдання. Ви хочете **допомогти** (to help). Ви кажете: «Якщо ти хочеш, я допоможу». Це не фантазія, це реальна ситуація.
 
-Важливо розуміти різницю між різними словами. Слово «якщо» відрізняється від слова «коли» *(when)*. Слово «коли» означає просто час майбутньої дії. Слово «якщо» означає саме умову цієї дії. Також «якщо» відрізняється від слова «якби» *(if only)*. Слово «якби» ми використовуємо лише для нереальних або фантастичних ситуацій.
+> *We often talk about plans that depend on different situations. For this, we use the word "якщо" (if). This word helps show that an action is possible. We call this a real condition. This means that the situation can happen today or tomorrow. For example, we look at the sky and see the sun. We know that the weather will be good. Then we say: "If the weather is good, we will go for a walk." Or your friend is doing homework. You want to help. You say: "If you want, I will help." This is not a fantasy, it is a real situation.*
 
-Наприклад, подивіться на це речення: «Якщо буде **сонце** *(sun)*, ми підемо гуляти». Це реальний план. Сонце є дуже ймовірним сьогодні.
+Який час ми використовуємо у таких реченнях? Тут немає спеціальних форм. Ми використовуємо звичайний теперішній або майбутній час. Частина зі словом «якщо» описує умову. Тут дієслово стоїть у теперішньому або майбутньому часі. Друга частина речення показує **результат** (result). Ця дія відбудеться потім. Тому ми використовуємо майбутній час або наказовий спосіб. Наприклад: «Якщо в мене буде **вільний** (free) час, я прочитаю цю книгу». Або: «Якщо ти йдеш у магазин, купи хліб». У цих реченнях усе просто і логічно. Ми беремо знайомі форми дієслів і будуємо нову структуру. Якщо завтра буде сонце, ми поїдемо на озеро. Якщо ви вже готові, ми можемо починати урок.
 
-Як ми будуємо такі складні речення? Їхня структура є дуже простою і логічною. Зазвичай нове речення починається зі слова «якщо». Далі йде сама умова. Після умови ми завжди ставимо кому. Потім ми говоримо про результат цієї умови.
+:::info
+**Grammar box**
+In Ukrainian real conditionals, the `якщо`-clause uses the present or future tense, and the result clause uses the future tense or imperative. There is no special "conditional" mood here — just the regular tenses you already know.
+:::
 
-Typically, "якщо" starts the sentence, followed by a comma that separates the condition from the result.
+В українській мові ми дуже часто використовуємо слово «то». Воно стоїть на початку другої частини речення. Слово «то» працює як місток між умовою та результатом. Воно робить логічний зв'язок сильнішим. Це слово не є обов'язковим. Ви можете сказати речення без нього. Але з ним ваша мова звучить більш природно. Наприклад: «Якщо завтра дощитиме, то ми залишимося вдома». Це означає, що ми точно не підемо гуляти. Якщо ми купимо квитки сьогодні, то завтра підемо в кіно. Або: «Якщо ти не знаєш правило, то запитай викладача». Тут слово «то» дає логічний старт для другої дії. Це хороша **порада** (advice) для студентів.
 
-Подивіться на такий приклад. «Якщо ти купиш **насіння** *(seeds)*, я підготую **грядку** *(garden bed)*». Тут перша частина — це умова. А друга частина — це логічний результат.
+:::note
+**Читаємо українською**
+Прочитайте ці короткі ситуації. Зверніть увагу на коми та дієслова.
 
-Але ми також можемо легко змінити порядок цих частин. Результат може стояти на першому місці. Тоді слово «якщо» стоїть посередині речення.
+* Якщо ти хочеш спати, іди в ліжко.
+* Я зроблю чай, якщо ти принесеш торт.
+* Якщо завтра буде тепло, то ми поїдемо в ліс.
+* Ти складеш іспит добре, якщо будеш багато читати.
+:::
 
-The order can be reversed without changing the meaning of the sentence.
+Тепер поговоримо про пунктуацію. Правило дуже просте: ми завжди ставимо кому між двома частинами. Кома ділить складнопідрядне речення на дві логічні половини. Якщо слово «якщо» стоїть на початку, ми ставимо кому перед другою частиною. Наприклад: «Якщо ти маєш час, допоможи мені». Або: «Якщо ти зараз не **поспішиш** (hurry), то ми точно запізнимося на поїзд». Але іноді головна частина стоїть на першому місці. Тоді слово «якщо» стоїть посередині речення. У такому випадку кома завжди стоїть перед словом «якщо». Наприклад: «Ми точно запізнимося на поїзд, якщо ти не поспішиш». Або: «Ми не поїдемо на море, якщо погода буде погана». Я прочитаю цю статтю, якщо матиму час. Ви бачите, що кома завжди стоїть на межі двох ідей. Під час розмови ми робимо там маленьку паузу.
 
-Наприклад: «Ми підемо гуляти, якщо буде сонце». Зверніть увагу на цей факт. Сенс цього речення не змінюється від зміни порядку.
+:::tip
+**Did you know?**
+In Ukrainian punctuation, a comma must always separate the condition clause from the result clause. Whether `якщо` comes first or in the middle of the sentence, the comma acts as a clear visual border between the two ideas.
+:::
 
-Ми часто говоримо про відомі факти. Також ми говоримо про загальні істини. Для цього ми використовуємо тільки теперішній час в обох частинах речення.
+Наш рівень фокусується тільки на реальних ситуаціях. Це означає, що ми говоримо про факти, плани та можливі події. Для цього ми використовуємо тільки слово «якщо». Але ви можете почути інше слово у піснях або розмовах. Це слово — «якби». Слово «якби» показує нереальну умову. Це фантазія або мрія про те, чого немає. Наприклад: «Якби я мав мільйон доларів, я б купив острів». Але у нас немає мільйона доларів. Це тільки мрія. Ми будемо вивчати нереальну умову і слово «якби» пізніше. На цьому етапі вам потрібно пам'ятати одне правило. Якщо ситуація можлива сьогодні або завтра, ми кажемо «якщо». Якщо це реальний план, ми використовуємо звичайний майбутній або теперішній час.
 
-We use Present + Present for facts and logical consequences.
+> *Our level focuses only on real situations. This means that we talk about facts, plans, and possible events. For this, we use only the word "якщо". But you might hear another word in songs or conversations. This word is "якби" (if only / what if). The word "якби" shows an unreal condition. This is a fantasy or a dream about something that does not exist. For example: "If I had a million dollars, I would buy an island." But we don't have a million dollars. It is only a dream. We will study the unreal condition and the word "якби" later. At this stage, you need to remember one rule. If the situation is possible today or tomorrow, we say "якщо". If it is a real plan, we use the regular future or present tense.*
 
-Умова має форму теперішнього часу. І результат також має форму теперішнього часу. Це так званий нульовий тип умови. Він показує гарантований результат.
+<!-- INJECT_ACTIVITY: fill-in-real-conditionals -->
 
-Наприклад, подивіться на це цікаве англійське прислів'я. «Якщо платити **горіхами** *(peanuts)*, отримуєш **мавп** *(monkeys)*». Тут ми бачимо дієслово «платити» *(to pay)*. Також тут є дієслово «отримуєш» *(you get)*. Обидва ці дієслова описують загальний факт.
+## Умова в повсякденному житті (Conditions in Everyday Life) (~770 words total)
 
-Інший дуже простий приклад: «Якщо вода кипить, вона гаряча». Це відомий фізичний закон. Вода не може бути холодною, якщо вона зараз кипить. Тому ми завжди використовуємо тільки теперішній час для таких очевидних фактів. Це дуже логічна структура української граматики.
+> — **Чоловік:** Яка завтра буде **погода** (weather)? *(What will the weather be tomorrow?)*
+> — **Дружина:** Якщо буде сонце, посадимо помідори. *(If there is sun, we will plant tomatoes.)*
+> — **Чоловік:** А якщо вдень буде дуже сухо? *(And if it's very dry during the day?)*
+> — **Дружина:** Якщо не буде дощу, доведеться полити ввечері. *(If there is no rain, we will have to water in the evening.)*
+> — **Чоловік:** Добре. Якщо ти купиш насіння, я підготую грядку. *(Good. If you buy seeds, I will prepare the garden bed.)*
+> — **Дружина:** Домовилися! Якщо буде **вільний** (free) час, ми приготуємо смачну вечерю надворі. *(Agreed! If there is free time, we will cook a delicious dinner outside.)*
 
-Але найчастіше ми говоримо про майбутні можливості. Ми кожного дня плануємо наші майбутні дії.
+Ми щодня плануємо наш день. Ми часто використовуємо слово «якщо», коли приймаємо рішення. Це дуже зручна граматика для повсякденного життя. Наприклад, ми дивимося на небо перед тим, як вийти з дому. Якщо ми бачимо темні хмари, ми беремо парасольку. Якщо на вулиці йде сильний дощ, ми можемо **залишитися** (to stay) вдома. Ми також часто використовуємо цю форму, коли просимо когось про послугу. Наприклад: «Якщо у магазині є свіжий хліб, купи, будь ласка». Тут перша частина показує **умову** (condition), а друга частина — це наше прохання або план. «Якщо завтра буде **вільний** (free) час, я піду в спортзал».
 
-We explain future possibilities using Present or Future in the condition and Future in the result.
+> *Every day we plan our day. We often use the word "якщо" when making decisions. This is very convenient grammar for everyday life. For example, we look at the sky before leaving the house. If we see dark clouds, we take an umbrella. If it is raining heavily outside, we might stay at home. We also often use this form when asking someone for a favor. For example: "If the store has fresh bread, please buy it." Here the first part shows the condition, and the second part is our request or plan. "If there is free time tomorrow, I will go to the gym."*
 
-В українській мові ми можемо використовувати теперішній або майбутній час після слова «якщо». А в другій частині речення ми зазвичай використовуємо майбутній час. Також там може бути наказовий спосіб *(imperative)*.
+Складнопідрядні речення також чудово підходять, щоб давати **поради** (advice). В умові стоїть теперішній час, а в результаті — наказовий спосіб. Наприклад, ваш колега погано почувається на роботі. Ви кажете йому: «Якщо болить голова, випий таблетку і відпочинь». Тут немає майбутнього часу, бо хороший **результат** (result) потрібний людині прямо зараз. Батьки дуже часто використовують цю форму, коли серйозно говорять зі своїми дітьми. Друзі також постійно так спілкуються. Ви можете порадити новому студенту: «Якщо хочеш швидко вивчити мову, практикуй щодня і читай тексти». Слово «якщо» тут працює як чіткий маркер вашого життєвого досвіду. Ви ніби кажете: я знаю цю ситуацію і маю гарне рішення. Ви також обов'язково почуєте такі корисні конструкції від лікаря або викладача. Лікар скаже наприкінці візиту: «Якщо вам раптом буде гірше, одразу зателефонуйте мені». А викладач порадить: «Якщо ви не розумієте це правило, прочитайте текст ще раз удома». Це дуже ввічлива і граматично правильна форма сучасної комунікації. Вона завжди показує вашу щиру турботу про іншу людину.
 
-Особливо часто ми використовуємо дієслова «бути» і «мати» у майбутньому часі. Наприклад, ми кажемо «якщо буде» *(if there will be)*. Або ми кажемо «якщо матимеш» *(if you will have)*.
+:::info
+**Grammar box: Imperative in the result clause**
+When giving advice or instructions, use the present or future tense in the *якщо*-clause, and the imperative mood in the result clause.
+:::
 
-Подивіться на цей приклад: «Якщо ти матимеш час, я зателефоную тобі». Тут ми чітко бачимо умову в майбутньому часі.
+Іноді нам обов'язково потрібно попередити іншу людину про можливі проблеми або небезпеку. Для цього ми також активно використовуємо умовні речення, але часто додаємо заперечення. Ми ставимо частку «не» перед дієсловом, щоб показати негативну умову. Наприклад, мама вранці суворо каже сину: «Якщо не **поспішиш** (hurry), ти точно запізнишся до школи». Це **реальний** (real) сценарій, який може статися дуже скоро. Або інша популярна фраза: «Якщо не візьмеш парасольку, ти точно змокнеш під дощем». Людина одразу розуміє, що вона повинна змінити свою поведінку просто зараз. Ми зазвичай використовуємо майбутній час в обох частинах речення, бо дія ще не відбулася. Якщо ви подорожуєте в Карпатах, ваш досвідчений гід може прямо сказати: «Якщо ви не будете уважно слухати мої команди, то ви дуже швидко заблукаєте в лісі». Тут маленька частка «то» робить це попередження ще більш серйозним і сильним. Знання цієї структури допомагає нам краще розуміти важливі попередження на вулиці чи на роботі.
 
-Інший приклад: «Якщо буде гарна **погода** *(weather)*, ми поїдемо на море».
+Остання важлива функція таких складних речень — це наші щоденні обіцянки та домовленості. Коли ми домовляємося з кимось про спільну роботу, ми фактично створюємо словесний контракт. У цьому цікавому випадку слово «якщо» працює як наша гарантія. Наприклад, ви довго працюєте над складним та важливим проєктом в офісі. Ви кажете колезі: «Якщо ти **допоможеш** (help) мені з текстом, я допоможу з презентацією». Це чесний і дуже логічний обмін вашим часом та зусиллями. Інший гарний приклад стосується наших надій та великих планів на найближче майбутнє. Ми часто кажемо рідним: «Якщо все буде добре, ми разом поїдемо у відпустку». Якщо ваші друзі активно планують домашню вечірку на вихідні, вони також домовляються між собою: «Якщо я куплю піцу і напої, то ви обов'язково принесете цікаві настільні ігри». У таких розмовах ми завжди використовуємо простий або складений майбутній час. Ці чіткі домовленості роблять наші людські стосунки набагато більш прозорими та зрозумілими.
 
-Або: «Якщо ти маєш **вільний** *(free)* час, треба **поспішити** *(to hurry)* на поїзд». Це дуже гарна **порада** *(advice)* для туристів. Ми використовуємо таку структуру щодня.
+<!-- INJECT_ACTIVITY: match-up-logical-results -->
+<!-- INJECT_ACTIVITY: error-correction-verb-forms -->
 
-В українській мові є одне дуже цікаве коротке слово. Це слово «то» *(then)*. Воно дуже часто працює разом зі словом «якщо».
+## Якщо чи якби? Тільки реальна умова (Якщо or якби? Real Conditions Only) (~660 words total)
 
-The word "то" is a correlative particle that marks the start of the result clause.
+Understanding the difference between real and hypothetical conditions is a major milestone. You already know that we use the word **якщо** (if) for a real, possible condition. However, another word looks similar but introduces a different type of condition: **якби** (if, hypothetically; sometimes "if only"). This word introduces an unreal or hypothetical situation.
 
-Ми ставимо слово «то» на самому початку другої частини речення. Воно стоїть прямо перед результатом. Це слово робить зв'язок між умовою і результатом більш сильним. Це слово додає важливий акцент.
+Слово «якщо» завжди показує **реальний** (real) сценарій або можливу ситуацію. Ми використовуємо його для розмов про факти або майбутні події. Вони дійсно можуть статися. Наприклад, ми дивимося на небо. Ми впевнено кажемо: «Якщо завтра буде сонце, ми підемо гуляти». Або ми плануємо наш вечір. Ми вирішуємо: «Якщо піде дощ, ми маємо **залишитися** (to stay) вдома». Це пряма і дуже логічна **умова** (condition). Вона має цілком можливий фінал у нашому житті.
 
-Наприклад: «Якщо **дощитиме** *(it will rain)*, то ми **залишимося** *(will stay)* вдома». Слово «дощитиме» — це наша умова. Далі йде слово «то». І потім іде наш результат — «ми залишимося».
+Натомість слово «якби» працює зовсім інакше. Воно створює нереальну ситуацію. Ми використовуємо його, коли мріємо або фантазуємо про певні речі. Це ситуація, яка існує тільки в нашій уяві. Наприклад, людина може сказати: «Якби я був птахом, я б літав». Але ця людина не є птахом. Це просто фізично неможливо. Тому ми маємо чітко розділяти ці два важливі слова. Таке розрізнення реальної умови («якщо») і нереальної/гіпотетичної («якби») ви також побачите в шкільних підручниках Заболотного та в поясненні Ukrainian Lessons.
 
-Слово «то» не є граматично обов'язковим. Ви можете сказати це речення без нього. Але українці дуже люблять використовувати це слово у повсякденній розмові.
+At your current level, you only need to recognize **якби** when you hear it. You will encounter this word in songs, proverbs, or conversation. In this module, treat it mainly as a marker of an unreal or hypothetical condition; in some contexts it can also mean "if only."
 
-Правила пунктуації є дуже важливими для таких складних речень. Правильна кома допомагає нам легко читати і розуміти текст.
+Ви дуже часто будете чути це цікаве слово у розмовах. Ваш друг може сумно сказати: «Якби я знав усю правду!». Це означає, що він не знав правди в минулому. Тепер він просто шкодує про це. Ви також зустрінете такі форми у відомих віршах або народних піснях. Ваше головне завдання зараз — просто розуміти цей загальний зміст. Ви робите це, коли читаєте тексти або слухаєте музику.
 
-A comma always follows the "якщо"-clause when it comes first. A comma always precedes "якщо" when it comes second.
+Вам поки що не потрібно самостійно будувати такі складні речення. Для успішної комунікації вам цілком достатньо використовувати базову конструкцію. Ви можете вільно говорити про ваші поточні плани. Ваш колега просить вас **допомогти** (to help) з новим проєктом. Ви відповідаєте йому просто і чітко. Ви також використовуєте цю форму, коли даєте друзям гарну **пораду** (advice). Або ви можете попросити їх **поспішити** (to hurry) на важливу зустріч. Ви завжди можете тренувати ці практичні навички щодня.
 
-Якщо умова зі словом «якщо» стоїть на першому місці, ми завжди ставимо кому після неї. Наприклад: «Якщо ти хочеш, я **допоможу** *(will help)*».
+<!-- INJECT_ACTIVITY: quiz-yakscho-vs-yakby -->
 
-Якщо результат стоїть на першому місці, ми ставимо кому прямо перед словом «якщо». Наприклад: «Я допоможу, якщо ти хочеш».
+Now is a great time to review complex sentences. Over past lessons, you have built a strong foundation for expressing reasons, goals, and conditions. All these clause types work together to make your Ukrainian sound much more natural.
 
-А що треба робити зі словом «то»? Кома завжди стоїть перед словом «то». Наявність слова «то» не змінює наше головне правило пунктуації.
+Ви вже знаєте багато корисних сполучників. Вони допомагають поєднувати прості ідеї у великі та красиві речення. Ми хочемо пояснити причину нашої дії. Тоді ми впевнено використовуємо слова «тому що» або «бо». Якщо ми робимо щось попри серйозні перешкоди, нам чудово допомагає слово «хоча». Коли ми говоримо про мету нашої роботи, ми завжди ставимо сполучник «щоб». Це дуже важливі інструменти для щоденного спілкування.
 
-Наприкінці ми маємо обов'язково згадати про форми дієслів. У реальних умовах ми завжди використовуємо дійсний спосіб.
+Спробуйте зробити короткий тест для себе. Чи можете ви зараз пояснити причину свого рішення? Чи можете ви описати об'єкт, використовуючи слова «який» або «де»? Чи знаєте ви, як правильно показати прямий **результат** (result) вашої дії? Звичайно, тепер ви також вмієте додавати умову, використовуючи слово **якщо** (if). Це означає, що ви можете вільно висловлювати думки. Робіть це, коли у вас є **вільний** (free) час для практики.
 
-In real conditionals, we use regular present or future forms. We never use the "б/би" particle used in English "would".
+Finally, let's look at the intonation of conditional sentences. The way you use your voice is just as important as the grammar. Your pitch naturally guides the listener, showing them where the condition ends and the result begins.
 
-Ми використовуємо звичайні форми теперішнього або майбутнього часу. Ми ніколи не використовуємо частку «б» або «би» після слова «якщо». Частка «б/би» існує тільки для слова «якби». А слово «якби» створює нереальну умову.
+Коли ми починаємо речення зі слова «якщо», наш голос має працювати за певним правилом. У першій частині речення знаходиться наша умова. Тут наша інтонація завжди йде вгору (↗). Цим підвищенням тону ми ніби даємо слухачу спеціальний сигнал. Ми кажемо: зачекай, це ще не кінець. Ваш співрозмовник автоматично розуміє, що думка ще не завершена. Він має уважно слухати вас далі.
 
-Тому запам'ятайте це просте правило. Після «якщо» ми просто ставимо дієслово. Це робить граматику набагато простішою для вивчення та щоденного використання.
+Після короткої паузи починається друга частина речення. Вона містить наш логічний наслідок. Тут наша інтонація впевнено і спокійно йде вниз (↘). Це природне зниження голосу показує важливу річ. Воно означає, що думка нарешті повністю завершена. Наприклад: «Якщо завтра буде гарна **погода** (weather) ↗, ми підемо гуляти ↘». Спробуйте прочитати це речення вголос кілька разів. Ви одразу відчуєте цю красиву музику нашої мови.
 
-<!-- INJECT_ACTIVITY: fill-in-conditional-verbs -->
+:::info
+**Grammar box: Intonation in complex sentences**
+When a sentence starts with a subordinate clause (like a condition), the pitch naturally rises at the comma to indicate that the thought is incomplete. The main clause then follows with a falling pitch, signaling the end of the statement.
+:::
 
-## Умова в повсякденному житті (Conditions in Everyday Life)
+### Читаємо українською
 
-> — **Чоловік:** Що ми будемо робити сьогодні на **дачі** *(at the dacha/summer house)*? Роботи тут дуже багато.
-> — **Дружина:** Так, справді. Якщо сьогодні буде сонце, ми посадимо **помідори** *(tomatoes)* і огірки.
-> — **Чоловік:** А якщо піде сильний дощ? Небо зараз сіре.
-> — **Дружина:** Якщо йтиме дощ, ми почекаємо в будинку. Ми польємо всі рослини трохи пізніше.
-> — **Чоловік:** Але спочатку нам треба купити нове **насіння** *(seeds)*.
-> — **Дружина:** Точно. Якщо ти поїдеш у магазин і купиш насіння, я підготую **грядку** *(garden bed)*.
-> — **Чоловік:** Добре, я все зроблю. А коли ми будемо відпочивати?
-> — **Дружина:** Якщо ми швидко закінчимо роботу, то ввечері будемо пити чай на терасі.
-> — **Чоловік:** Чудово! Якщо ти обіцяєш смачний чай, я поїду в магазин зараз.
+Сьогодні субота. Ми з друзями маємо чудові плани на вечір. Якщо буде тепло, ми підемо гуляти в центр міста. Ми хочемо купити смачну каву. Якщо ж піде дощ, ми зустрінемося вдома у Максима. Ми замовимо піцу і будемо грати в настільні ігри. Це завжди гарна ідея. Якщо всі будуть мати гарний настрій, ми також подивимося новий фільм. Я дуже люблю наші спільні вихідні.
 
-Цей діалог ідеально показує, як ми використовуємо умову в реальному житті кожного дня. Коли ми працюємо разом з іншими, наші дії часто залежать одна від одної. The husband and wife use real conditions to plan their collaboration step by step. Слово «якщо» допомагає їм створити чіткий план роботи. Дружина каже чоловікові: «Якщо ти купиш насіння, я підготую грядку». Це означає просту річ: "If you do X, I will do Y". Її дія прямо залежить від його дії. Це дуже практичний спосіб планувати спільну роботу в родині. Вони також планують свої дії залежно від погоди надворі. Якщо буде сонце, вони будуть садити помідори. Вони вільно використовують майбутній час в обох частинах цього складного речення.
-
-Ми також дуже часто використовуємо реальну умову, коли даємо корисні поради іншим людям. We often use real conditionals to give advice, recommendations, or friendly instructions. У таких реченнях ми зазвичай використовуємо наказовий спосіб у другій частині. The result clause typically contains an imperative verb to tell someone what to do. Наприклад, ваш друг погано себе почуває на роботі. Ви кажете йому: «Якщо у тебе болить голова, випий **таблетку** *(pill/tablet)*». Умова стоїть у теперішньому часі, а результат — це ваша пряма порада. Вчитель може сказати студентам: «Якщо хочеш вивчити нову мову, говори нею щодня». Або мама суворо каже своїй дитині: «Якщо ти хочеш гуляти з друзями, спочатку зроби домашнє завдання». Це пряма і дуже зрозуміла інструкція. Наказовий спосіб робить вашу пораду більш сильною та ефективною.
-
-Слово «якщо» також чудово допомагає нам попередити людей про майбутню проблему. We use conditional sentences to warn people about likely negative outcomes if they ignore our advice. У таких ситуаціях ми майже завжди використовуємо дієслова доконаного виду. Perfective verbs show the immediate, completed, and negative result of an action. Наприклад, ваш колега дуже повільно збирається на роботу. Ви кажете: «Якщо ти зараз не **поспішиш** *(will hurry)*, ти запізнишся на свій ранковий поїзд». Дія «запізнитися» — це конкретний і гарантований результат. Інший приклад стосується дощової погоди. Ви бачите темні хмари на небі вранці. Ви кажете своєму другу: «Якщо ти не візьмеш із собою **парасольку** *(umbrella)*, ти обов'язково **змокнеш** *(will get wet)*». Це логічне попередження. Якщо умова не виконана, результат точно буде поганим. Ми завжди використовуємо майбутній час доконаного виду для попереджень.
-
-Граматична умова є дуже важливою, коли ми домовляємося про щось із різними людьми. Real conditionals help us build mutual trust, make firm promises, and set clear agreements. Ми обіцяємо зробити щось корисне, якщо інша людина виконає свою частину роботи. Два колеги в офісі кажуть: «Якщо ти допоможеш мені сьогодні, я допоможу тобі завтра». Це рівноцінний і чесний обмін послугами. Ми також постійно використовуємо умову для позитивних планів на майбутнє. Часто ми говоримо родичам: «Якщо все буде добре, ми поїдемо у **відпустку** *(vacation)* влітку». Або ви можете сказати дітям: «Якщо я отримаю премію на роботі, ми підемо в ресторан». Ми використовуємо тільки майбутній час, щоб показати наші реальні плани.
-
-Ми постійно і дуже активно використовуємо цю граматику в нашому соціальному житті. Conditionals are absolutely essential for planning meetings, phone calls, and social events. Наприклад, ви організовуєте вечірку на вихідні. Ви пишете своїм друзям: «Якщо ви зможете прийти до мене в гості, напишіть мені повідомлення до вечора». Тут ми використовуємо майбутній час в умові та наказовий спосіб у результаті. Або ви чекаєте свого колегу після його важливої зустрічі. Ви кажете йому: «Якщо твоя зустріч **закінчиться** *(will finish)* вчасно, я прийду в кафе». Слово **вчасно** *(on time)* дуже часто стоїть разом зі словом «якщо». Ми всі маємо щільний розклад, і наші плани постійно залежать від інших подій. Тому ми часто кажемо: «Якщо я звільнюся з роботи раніше, я обов'язково зателефоную тобі».
-
-Дуже важливо правильно вибирати граматичний вид дієслова у таких реченнях. The choice between perfective and imperfective aspect directly depends on the exact type of condition. Чому ми кажемо «Якщо не поспішиш, запізнишся»? Обидва дієслова в цьому реченні є дієсловами доконаного виду. Ми використовуємо їх для конкретної, унікальної ситуації в майбутньому часі. Це станеться з людиною тільки один раз. Але якщо ситуація постійно повторюється, ми обов'язково беремо дієслова недоконаного виду. For repeated or habitual conditions, always use the imperfective aspect. Наприклад, ми можемо сказати: «Якщо ти завжди запізнюєшся на роботу, люди не хочуть з тобою працювати». Тут умова є постійною звичкою людини, тому ми використовуємо теперішній час. Правильний вид дієслова робить вашу умову дуже точною та природною.
-
-<!-- INJECT_ACTIVITY: match-condition-to-result -->
-<!-- INJECT_ACTIVITY: fix-aspect-errors -->
-
-## Якщо чи якби? Тільки реальна умова (Якщо or якби? Real Conditions Only)
-
-У цій граматичній темі ми детально вивчаємо тільки реальні ситуації. We use the word «якщо» when a condition is very possible or highly likely to happen in real life. Наприклад, ви стабільно працюєте кожен день. Ви регулярно отримуєте свою зарплату. Тому ви впевнено кажете: «Якщо я маю **гроші** *(money)*, я обов'язково купую свіжі продукти». Це реальна і типова ситуація. Але іноді люди просто мріють про якісь фантастичні речі. Sometimes people dream about impossible or purely hypothetical situations. Для таких фантазій українці завжди використовують інше слово — «**якби**» *(if only / what if)*. Наприклад: «Якби я мав **мільйон** *(million)* доларів, я б купив великий острів». Ця людина не має мільйона доларів зараз. Це тільки фантазія. We will study these unreal conditions much later, at the B1 level. Наразі вам потрібно добре запам'ятати головне правило. At the A2 level, you only need to use «якщо» for real life.
-
-Чому ми взагалі говоримо про це нове слово «якби» саме зараз? Ви точно колись почуєте це слово в українських ліричних піснях, старих віршах або просто в розмовах. You will definitely hear it in popular culture or daily conversations with native speakers. Українці дуже люблять емоційно співати про якісь нереальні мрії. Часто популярна пісня починається так: «Якби я знав...» або «Якби я тільки міг...». When you hear «якби», just recognize that the person is dreaming or regretting something impossible. Будь ласка, ніколи не плутайте його зі звичайним словом «якщо». Do not use «якби» when you make real plans for the upcoming weekend. Якщо ви кажете своєму другові про реальну зустріч завтра, завжди використовуйте тільки «якщо». Залиште ці нереальні мрії для поетів. For your daily practical communication right now, «якщо» is your only tool.
-
-Тепер давайте детально поговоримо про правильну вимову таких складних речень. Proper intonation is just as important as correct grammar for clear communication. Коли ми використовуємо умову, ми ділимо наше довге речення на дві частини. Між ними завжди обов'язково є коротка пауза. We signal this pause with a specific melody in our voice. Коли ви кажете першу частину (саму умову), ваш голос завжди йде вгору. The pitch rises at the end of the «якщо» clause. Це чітко показує, що ваша думка ще не закінчена. Наприклад: «Якщо завтра буде сонце ↗...». Ваш співрозмовник уважно чекає логічного продовження. Далі ви робите коротку паузу. Потім ви кажете головний результат, і ваш голос іде вниз. The main clause has a falling pitch to show completion. «...ми підемо ↘ гуляти в парк». Спробуйте сказати це правило вголос кілька разів. Ця проста мелодія робить вашу українську дуже красивою та природною.
-
-На цьому етапі ви вже знаєте багато різних типів складних речень. You now know how to connect ideas logically and clearly. Давайте згадаємо всі важливі слова-конектори. Ми нещодавно вивчили їх. Уявімо, що ви плануєте цікаву подорож. Слово «**тому що**» *(because)* показує причину. Наприклад: «Я їду в гори, тому що люблю природу». Слово «**хоча**» *(although)* показує логічний контраст. Наприклад: «Я йду гуляти, хоча надворі холодно». Слово «**щоб**» *(in order to)* показує вашу головну мету. Наприклад: «Я беру фотоапарат, щоб робити красиві фотографії». І тепер ви також знаєте реальну умову. Для цього є наше слово «якщо». These connectors allow you to build rich narratives in Ukrainian. Ви можете пояснити будь-яку складну ситуацію. Ви вже не говорите короткими та дуже простими фразами.
-
-Тепер давайте спробуємо поєднати ці різні ідеї в один великий текст. Let's build a complete paragraph using these logical connections. Уявіть, що ваш колега питає про ваші точні плани на літо. Ви можете дати йому дуже довгу і детальну відповідь. «Я обов'язково поїду в Карпати, якщо матиму довгу відпустку на роботі. Хоча там може бути сильний дощ, я все одно хочу піти в гори. Я роблю це, щоб побачити чудовий **краєвид** *(landscape)*. Я дуже люблю гори, тому що там завжди тихо і спокійно». Notice how smoothly the ideas flow together when you use these words. Використовуйте ці граматичні структури щодня, і ви швидко побачите свій великий прогрес. Ваша українська мова стає набагато кращою і значно багатшою!
-
-<!-- INJECT_ACTIVITY: choose-if-style-yakshcho-yakby -->
-
-## Підсумок
-
-Ось ми і закінчили цю дуже важливу граматичну тему. Тепер ви можете вільно та впевнено планувати своє майбутнє. Давайте перевіримо ваші нові знання перед кінцем уроку. Будь ласка, дайте чесну відповідь на ці запитання:
-
-* Чи можу я скласти речення з «якщо» про **погоду** *(weather)*?
-  Так! Наприклад: «Якщо завтра буде сильний дощ, я залишуся вдома».
-
-* Чи знаю я точно, де треба ставити **кому** *(comma)*?
-  Так! Кома завжди стоїть між двома частинами складного речення. Наприклад: «Якщо ти підеш у кіно, то я піду з тобою».
-
-* Чи добре я розумію **різницю** *(difference)* між «якщо» та «якби»?
-  Так! Слово «якщо» — це завжди **реальна умова** *(real condition)*. А слово «якби» — це тільки нереальні мрії та фантазії. Зараз ми використовуємо тільки «якщо» для наших реальних планів.
-
-* Чи можу я дати корисну **пораду** *(advice)* через «якщо»?
-  Так! Ви можете дуже легко допомогти вашому другу. Наприклад: «Якщо ти хочеш спати, іди в ліжко зараз».
-
-Ваша українська мова стала ще кращою та значно багатшою! Ви дуже добре попрацювали сьогодні. Пам'ятайте наше головне правило: «Якщо ви будете багато читати щодня, то швидко заговорите вільно!»
+> *Today is Saturday. My friends and I have wonderful plans for the evening. If it is warm, we will go for a walk in the city center. We want to buy delicious coffee. If it rains, we will meet at Maksym's house. We will order pizza and play board games. This is always a good idea. If everyone is in a good mood, we will also watch a new movie. I really love our shared weekends.*
 </generated_module_content>
 
-**PIPELINE NOTE — Word count: 2568 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
+**PIPELINE NOTE — Word count: 2455 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -435,38 +406,168 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 791 words | Not found: 2 words
+Verified: 769 words | Not found: 1 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
-  ✗ Карпати — NOT IN VESUM
-  ✗ польємо — NOT IN VESUM
+  ✗ Карпатах — NOT IN VESUM
 
-All 791 other words are confirmed to exist in VESUM.
+All 769 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
-## Verification Tools (MCP)
+---
 
-You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
+## Verification Tools (Shell Commands)
 
-**Core Verification:**
-- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
-- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
+You have access to verification tools via shell commands. Use these to verify
+Ukrainian vocabulary, check grammar, and search textbook content **as you write**.
 
-**Content Quality:**
-- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+**IMPORTANT:** Run verification commands BEFORE finalizing any Ukrainian text.
+Batch multiple verifications together to minimize round-trips.
 
-**Reference:**
-- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp_rag_search_literary` — verify literary references against primary sources
-- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
+### 1. Batch-verify Ukrainian words exist in VESUM (preferred — one call for many words)
 
-**Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_words
+results = verify_words(['слово1', 'слово2', 'слово3'])
+for w, matches in results.items():
+    if matches:
+        print(f'{w}: FOUND — lemma={matches[0][\"lemma\"]}, pos={matches[0][\"pos\"]}')
+    else:
+        print(f'{w}: NOT FOUND — may not exist in standard Ukrainian')
+"
+```
+
+### 2. Verify a single Ukrainian word in VESUM (with full morphological tags)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_word
+results = verify_word('WORD_HERE')
+if results:
+    for m in results:
+        print(f'lemma={m[\"lemma\"]}, pos={m[\"pos\"]}, tags={m[\"tags\"]}')
+else:
+    print('NOT FOUND in VESUM')
+"
+```
+
+### 3. Get all inflected forms of a lemma (declension/conjugation)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_lemma
+forms = verify_lemma('LEMMA_HERE')
+for f in forms[:20]:
+    print(f'{f[\"word_form\"]:20s} {f[\"pos\"]:8s} {f[\"tags\"]}')
+print(f'... {len(forms)} forms total')
+"
+```
+
+### 4. Check CEFR level of a word (is it level-appropriate?)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import query_cefr_level
+results = query_cefr_level('WORD_HERE')
+for r in results:
+    print(f'{r[\"word\"]}: {r[\"level\"]} ({r[\"pos\"]})')
+if not results:
+    print('Not in CEFR database')
+"
+```
+
+### 5. Search textbook content (Ukrainian school textbooks, Grades 1-11)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_textbooks
+keywords = {'keyword1', 'keyword2'}
+results = search_textbooks(keywords, 5)
+for r in results:
+    title = r.get('section_title', r.get('title', ''))
+    grade = r.get('grade', '?')
+    text = r.get('text', '')[:200]
+    print(f'Grade {grade} | {title}')
+    print(f'  {text}')
+    print()
+"
+```
+
+### 6. Search style guide for calques/Russianisms (Антоненко-Давидович, 279 entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_style_guide
+results = search_style_guide('TOPIC_HERE', 3)
+for r in results:
+    print(f'--- {r.get(\"word\", \"\")} [{r.get(\"section\", \"\")}]')
+    print(r.get('text', '')[:300])
+    print()
+if not results:
+    print('No style guide entries found')
+"
+```
+
+### 7. Look up word definition in СУМ-11 (Ukrainian explanatory dictionary, 127K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_definitions
+results = search_definitions('WORD_HERE', 3)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+### 8. Search idioms (Фразеологічний словник, 25K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_idioms
+results = search_idioms('WORD_HERE', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"text\", r.get(\"definition\", \"\")))[:200]}')
+"
+```
+
+### 9. English-to-Ukrainian translation (Балла, 79K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import translate_en_uk
+results = translate_en_uk('ENGLISH_WORD', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+---
+
+**WHEN to use these tools:**
+
+1. **Before writing any Ukrainian text** — batch-verify all key vocabulary with
+   `verify_words` (tool 1). Any word that returns NOT FOUND must be replaced.
+2. **When you suspect a Russicism or calque** — search the style guide (tool 6)
+   and verify the correct Ukrainian form with `verify_word` (tool 2).
+3. **When writing for A1/A2** — check CEFR levels (tool 4) to ensure vocabulary
+   is level-appropriate.
+4. **When unsure about a case ending or conjugation** — use `verify_lemma` (tool 3)
+   to see the full paradigm.
+5. **When covering a grammar topic** — search textbooks (tool 5) to see how
+   Ukrainian school textbooks teach it.
+6. **When you need the precise Ukrainian meaning** — use СУМ-11 (tool 7).
+7. **When looking for natural Ukrainian expressions** — search idioms (tool 8).
+
+**Batching rule:** Collect all words you want to verify, then run ONE `verify_words`
+call instead of multiple `verify_word` calls. This is faster and uses fewer tokens.

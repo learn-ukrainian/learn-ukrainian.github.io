@@ -2,436 +2,533 @@ version: '1.0'
 module: checkpoint-my-world
 level: a1
 inline:
-- id: group-sort-categories
-  type: group-sort
-  instruction: Розподіліть слова за категоріями (Sort the words into categories)
-  groups:
-  - label: Речі (Objects)
-    items:
-    - стіл
-    - вікно
-    - лампа
-    - ручка
-  - label: Кольори (Colors)
-    items:
-    - жовтий
-    - синій
-    - зелений
-    - білий
-  - label: Числа (Numbers)
-    items:
-    - десять
-    - сто
-    - два
-    - три
-- id: transform-plural-sentences
+- id: quiz-gender-agreement
   type: quiz
-  instruction: Оберіть правильну форму множини (Choose the correct plural form)
-  items:
-  - question: Цей великий стіл.
-    options:
-    - Ці великі столи.
-    - Цей великі стіл.
-    - Ці великі стіли.
-    correct: 0
-  - question: Ця синя книга.
-    options:
-    - Ці сині книги.
-    - Ці синя книги.
-    - Ця сині книги.
-    correct: 0
-  - question: Це нове вікно.
-    options:
-    - Ці нові вікна.
-    - Це нові вікна.
-    - Ці нове вікна.
-    correct: 0
-  - question: Ця стара лампа.
-    options:
-    - Ці старі лампи.
-    - Ті старі лампи.
-    - Ці старий лампи.
-    correct: 0
-  - question: Той гарний день.
-    options:
-    - Ті гарні дні.
-    - Ті гарний дні.
-    - Той гарні дні.
-    correct: 0
-  - question: Цей зручний стілець.
-    options:
-    - Ці зручні стільці.
-    - Ці зручний стільці.
-    - Цей зручні стільці.
-    correct: 0
-  - question: Це мале дзеркало.
-    options:
-    - Ці малі дзеркала.
-    - Ці мале дзеркала.
-    - Це малі дзеркала.
-    correct: 0
-  - question: Та біла стіна.
-    options:
-    - Ті білі стіни.
-    - Та білі стіни.
-    - Ті біла стіни.
-    correct: 0
-- id: quiz-agreement-pairs
-  type: quiz
-  instruction: Оберіть правильну форму прикметника (Choose the correct adjective form)
+  instruction: Choose the correct adjective or pronoun to match the noun's **рід**
+    (gender).
   items:
   - question: _____ стіл
     options:
     - великий
     - велика
     - велике
+    - великі
     correct: 0
-  - question: _____ ручка
+  - question: _____ лампа
     options:
     - новий
     - нова
     - нове
+    - нові
     correct: 1
-  - question: _____ вікно
+  - question: Це _____ вікно.
     options:
-    - чистий
-    - чиста
-    - чисте
+    - мій
+    - моя
+    - моє
+    - мої
     correct: 2
-  - question: _____ дзеркало
+  - question: _____ брат
     options:
-    - старий
-    - стара
-    - старе
+    - мій
+    - моя
+    - моє
+    - мої
+    correct: 0
+  - question: _____ сестра
+    options:
+    - мій
+    - моя
+    - моє
+    - мої
+    correct: 1
+  - question: _____ море
+    options:
+    - синій
+    - синя
+    - синє
+    - сині
     correct: 2
-  - question: _____ день
+  - question: _____ зошит
+    options:
+    - синій
+    - синя
+    - синє
+    - сині
+    correct: 0
+  - question: _____ вишиванка
     options:
     - гарний
     - гарна
     - гарне
-    correct: 0
-  - question: _____ пісня
-    options:
-    - красивий
-    - красива
-    - красиве
+    - гарні
     correct: 1
-  - question: _____ фото
-    options:
-    - новий
-    - нова
-    - нове
-    correct: 2
   - question: _____ кімната
     options:
     - великий
     - велика
     - велике
+    - великі
     correct: 1
-  - question: _____ одяг
+  - question: _____ дім
     options:
     - новий
     - нова
     - нове
+    - нові
     correct: 0
-  - question: _____ вишиванка
-    options:
-    - білий
-    - біла
-    - біле
-    correct: 1
-- id: fill-in-market-dialogue
-  type: fill-in
-  instruction: Заповніть пропуски в діалозі (Complete the dialogue)
+- id: quiz-singular-plural
+  type: quiz
+  instruction: Choose the correct **множина** (plural) form for the singular phrase.
   items:
-  - sentence: Подивись! Це ____ вишиванка?
-    answer: гарна
+  - question: великий стіл → _____
     options:
-    - гарна
-    - гарний
-    - гарне
-  - sentence: А ____ синя?
+    - великі столи
+    - велика столи
+    - великий столи
+    - великі стіл
+    correct: 0
+  - question: нова книга → _____
+    options:
+    - нова книги
+    - нові книги
+    - нове книги
+    - нові книга
+    correct: 1
+  - question: мале вікно → _____
+    options:
+    - малі вікна
+    - мале вікна
+    - мала вікна
+    - малі вікно
+    correct: 0
+  - question: жовта лампа → _____
+    options:
+    - жовті лампи
+    - жовта лампи
+    - жовте лампи
+    - жовті лампа
+    correct: 0
+  - question: цей брат → _____
+    options:
+    - ці брати
+    - ця брати
+    - цей брати
+    - ці брат
+    correct: 0
+  - question: та сестра → _____
+    options:
+    - ті сестри
+    - та сестри
+    - той сестри
+    - ті сестра
+    correct: 0
+  - question: білий килим → _____
+    options:
+    - білі килими
+    - біла килими
+    - білий килими
+    - білі килим
+    correct: 0
+  - question: червоний зошит → _____
+    options:
+    - червоні зошити
+    - червона зошити
+    - червоне зошити
+    - червоний зошити
+    correct: 0
+  - question: гарна писанка → _____
+    options:
+    - гарна писанки
+    - гарні писанки
+    - гарне писанки
+    - гарні писанка
+    correct: 1
+  - question: синій глечик → _____
+    options:
+    - синя глечики
+    - синє глечики
+    - сині глечики
+    - синій глечики
+    correct: 2
+- id: fill-in-shopping-dialogue
+  type: fill-in
+  instruction: Complete the shopping dialogue with the correct words.
+  items:
+  - sentence: Добрий ____! У вас є вишиванки?
+    answer: день
+    options:
+    - ранок
+    - день
+    - вечір
+    - ніч
+  - sentence: Так! Ця червона чи ____ синя?
     answer: та
     options:
     - той
     - та
     - те
-  - sentence: Той ____ теж гарний.
-    answer: одяг
-    options:
-    - одяг
-    - кімната
-    - вікно
-  - sentence: А ось ____ писанки — дуже красиві!
-    answer: ці
-    options:
-    - цей
-    - ця
-    - ці
-  - sentence: Скільки ____ цей глечик?
+    - ті
+  - sentence: Та синя. Скільки вона ____?
     answer: коштує
     options:
     - коштує
-    - є
-    - стіл
-  - sentence: Він коштує ____ гривень.
-    answer: сто
+    - коштують
+    - коштувати
+    - коштував
+  - sentence: Двісті ____.
+    answer: гривень
     options:
-    - один
-    - два
-    - сто
-  - sentence: А ____ намиста?
+    - гривня
+    - гривні
+    - гривень
+    - гривню
+  - sentence: Добре. А ____ писанки?
     answer: ці
     options:
     - цей
     - ця
-    - ці
-  - sentence: У мене є ____ гривень. Купуємо!
-    answer: триста
-    options:
-    - три
-    - один
-    - триста
-workbook:
-- id: wb-match-up-pronouns
-  type: match-up
-  instruction: З'єднайте іменник із займенником (Match the noun to the pronoun)
-  pairs:
-  - left: стіл
-    right: він
-  - left: лампа
-    right: вона
-  - left: вікно
-    right: воно
-  - left: стільці
-    right: вони
-  - left: дзеркало
-    right: воно
-  - left: ручка
-    right: вона
-  - left: одяг
-    right: він
-  - left: книги
-    right: вони
-- id: wb-group-sort-gender
-  type: group-sort
-  instruction: Розподіліть слова за родами (Sort the words by gender)
-  groups:
-  - label: Він (Masculine)
-    items:
-    - одяг
-    - глечик
-    - стіл
-    - день
-  - label: Вона (Feminine)
-    items:
-    - вишиванка
-    - кімната
-    - стіна
-    - ручка
-  - label: Воно (Neuter)
-    items:
-    - дзеркало
-    - намисто
-    - фото
-    - вікно
-- id: wb-true-false-agreement
-  type: true-false
-  instruction: Чи правильно узгоджені слова? (Are the words agreed correctly?)
-  items:
-  - statement: гарна стіл
-    correct: false
-    explanation: Стіл is masculine (він), so it should be гарний стіл.
-  - statement: велике вікно
-    correct: true
-    explanation: Вікно is neuter (воно), and велике is the correct neuter adjective.
-  - statement: старий ручка
-    correct: false
-    explanation: Ручка is feminine (вона), so it should be стара ручка.
-  - statement: нові книги
-    correct: true
-    explanation: Книги is plural (вони), and нові is the correct plural adjective.
-  - statement: ця дзеркало
-    correct: false
-    explanation: Дзеркало is neuter (воно), so it should be це дзеркало.
-  - statement: той день
-    correct: true
-    explanation: День is masculine (він), and той is the correct masculine demonstrative.
-- id: wb-error-correction
-  type: error-correction
-  instruction: Знайдіть і виправте помилку (Find and fix the error)
-  items:
-  - sentence: У мене є два стілець.
-    error: стілець
-    correction: стільці
-    error_type: word
-    options:
-    - стільці
-    - стілеці
-    - стільця
-    explanation: Після 'два' потрібна форма множини.
-  - sentence: Скільки коштує ця глечик?
-    error: ця
-    correction: цей
-    error_type: word
-    options:
-    - цей
     - це
     - ці
-    explanation: Глечик is masculine (він), so use цей.
-  - sentence: Це гарний вишиванка.
-    error: гарний
-    correction: гарна
-    error_type: word
+  - sentence: Скільки коштує ____ писанка?
+    answer: одна
     options:
-    - гарна
-    - гарне
-    - гарні
-    explanation: Вишиванка is feminine (вона), so use гарна.
-  - sentence: Там є три синій книги.
-    error: синій
-    correction: сині
-    error_type: word
+    - один
+    - одна
+    - одне
+    - одні
+  - sentence: П'ятдесят гривень. Ці ____, дуже гарні.
+    answer: нові
     options:
-    - сині
-    - синя
-    - синє
-    explanation: Книги is plural (вони), so use сині.
-  - sentence: Той намисто коштує сто гривень.
-    error: Той
-    correction: Те
-    error_type: word
+    - новий
+    - нова
+    - нове
+    - нові
+  - sentence: Я беру ____.
+    answer: три
     options:
-    - Те
-    - Та
-    - Ті
-    explanation: Намисто is neuter (воно), so use те.
-  - sentence: Ця вікно дуже велике.
-    error: Ця
-    correction: Це
-    error_type: word
+    - один
+    - два
+    - три
+    - чотири
+  - sentence: А ____ глечик?
+    answer: той
     options:
-    - Це
-    - Цей
-    - Ці
-    explanation: Вікно is neuter (воно), so use це.
-- id: wb-translate
-  type: translate
-  instruction: Оберіть правильний переклад (Choose the correct translation)
+    - той
+    - та
+    - те
+    - ті
+  - sentence: ____ гривень.
+    answer: Сто
+    options:
+    - Десять
+    - Двадцять
+    - П'ятдесят
+    - Сто
+workbook:
+- id: match-up-vocab-translation
+  type: match-up
+  instruction: Match the Ukrainian words to their English translations.
+  pairs:
+  - left: кімната
+    right: room
+  - left: стіл
+    right: table
+  - left: вікно
+    right: window
+  - left: килим
+    right: carpet
+  - left: лампа
+    right: lamp
+  - left: книга
+    right: book
+  - left: вишиванка
+    right: embroidered shirt
+  - left: глечик
+    right: jug
+  - left: писанка
+    right: decorated egg
+  - left: ярмарок
+    right: market
+- id: anagram-objects-colors
+  type: anagram
+  instruction: Rearrange the letters to form the correct word.
   items:
-  - source: This is my room.
-    options:
-    - text: Це моя кімната.
-      correct: true
-    - text: Це мій кімната.
-      correct: false
-    - text: Це моє кімната.
-      correct: false
-  - source: How much does this cost?
-    options:
-    - text: Скільки це коштує?
-      correct: true
-    - text: Скільки це є?
-      correct: false
-    - text: Де це коштує?
-      correct: false
-  - source: I have one hundred hryvnias.
-    options:
-    - text: У мене є сто гривень.
-      correct: true
-    - text: У мене є одна гривня.
-      correct: false
-    - text: Я маю сто гривня.
-      correct: false
-  - source: This window is big.
-    options:
-    - text: Це вікно велике.
-      correct: true
-    - text: Ця вікно велика.
-      correct: false
-    - text: Цей вікно великий.
-      correct: false
-  - source: These are beautiful shirts.
-    options:
-    - text: Ці вишиванки гарні.
-      correct: true
-    - text: Ця вишиванка гарна.
-      correct: false
-    - text: Ці вишиванки гарний.
-      correct: false
-  - source: Here is my table.
-    options:
-    - text: Ось мій стіл.
-      correct: true
-    - text: Тут моя стіл.
-      correct: false
-    - text: Ось моє стіл.
-      correct: false
-- id: wb-unjumble
+  - letters:
+    - с
+    - т
+    - і
+    - л
+    answer: стіл
+    hint: table
+  - letters:
+    - в
+    - і
+    - к
+    - н
+    - о
+    answer: вікно
+    hint: window
+  - letters:
+    - к
+    - н
+    - и
+    - г
+    - а
+    answer: книга
+    hint: book
+  - letters:
+    - к
+    - и
+    - л
+    - и
+    - м
+    answer: килим
+    hint: carpet
+  - letters:
+    - л
+    - а
+    - м
+    - п
+    - а
+    answer: лампа
+    hint: lamp
+  - letters:
+    - б
+    - і
+    - л
+    - и
+    - й
+    answer: білий
+    hint: white
+  - letters:
+    - ж
+    - о
+    - в
+    - т
+    - и
+    - й
+    answer: жовтий
+    hint: yellow
+  - letters:
+    - с
+    - и
+    - н
+    - і
+    - й
+    answer: синій
+    hint: dark blue
+  - letters:
+    - н
+    - о
+    - в
+    - и
+    - й
+    answer: новий
+    hint: new
+  - letters:
+    - г
+    - а
+    - р
+    - н
+    - и
+    - й
+    answer: гарний
+    hint: beautiful
+- id: true-false-grammar-rules
+  type: true-false
+  instruction: Are these statements about Ukrainian grammar true or false?
+  items:
+  - statement: The word «стіл» (table) is feminine.
+    correct: false
+    explanation: «Стіл» ends in a consonant, so it is masculine.
+  - statement: The word «книга» (book) is feminine.
+    correct: true
+    explanation: Nouns ending in -а are typically feminine.
+  - statement: The word «вікно» (window) is neuter.
+    correct: true
+    explanation: Nouns ending in -о or -е are neuter.
+  - statement: «Великий» is the feminine form of the adjective.
+    correct: false
+    explanation: «Великий» is the masculine form. The feminine form is «велика».
+  - statement: To say 'these tables' in Ukrainian, you say «ці столи».
+    correct: true
+    explanation: «Ці» is the plural form of 'this/these', and «столи» is plural.
+  - statement: Adjectives always end in -і in the plural form.
+    correct: true
+    explanation: Yes, plural adjectives take the -і ending, like «нові» or «великі».
+  - statement: «Той» is used for feminine objects.
+    correct: false
+    explanation: «Той» is masculine. The feminine form is «та».
+  - statement: «Синій» means light blue.
+    correct: false
+    explanation: «Синій» means dark blue. Light blue is «блакитний».
+  - statement: «Двісті» means two hundred.
+    correct: true
+    explanation: Yes, «двісті» is 200.
+  - statement: The plural of «книга» is «книго».
+    correct: false
+    explanation: The plural of «книга» is «книги».
+- id: unjumble-sentences-world
   type: unjumble
-  instruction: Складіть правильне речення (Build the correct sentence)
+  instruction: Put the words in the correct order to form a sentence.
   items:
   - words:
-    - велика
-    - і
-    - Вона
-    - світла.
+    - кімната.
+    - Це
+    - моя
     correct_order:
-    - Вона
-    - велика
-    - і
-    - світла.
+    - Це
+    - моя
+    - кімната.
   - words:
-    - стіл.
-    - мій
-    - Ось
+    - стіл
+    - новий.
+    - Мій
     correct_order:
-    - Ось
-    - мій
-    - стіл.
+    - Мій
+    - стіл
+    - новий.
   - words:
-    - є
-    - сто
-    - мене
-    - У
-    - гривень.
+    - Ця
+    - біла.
+    - лампа
     correct_order:
-    - У
-    - мене
-    - є
-    - сто
-    - гривень.
-  - words:
-    - цей
-    - коштує
-    - Скільки
-    - глечик?
-    correct_order:
-    - Скільки
-    - коштує
-    - цей
-    - глечик?
-  - words:
-    - красиві!
-    - А
-    - ці
-    - дуже
-    - писанки
-    correct_order:
-    - А
-    - ці
-    - писанки
-    - дуже
-    - красиві!
+    - Ця
+    - лампа
+    - біла.
   - words:
     - є
-    - два
+    - три
     - У
+    - книги.
     - мене
-    - стільці.
     correct_order:
     - У
     - мене
     - є
-    - два
-    - стільці.
+    - три
+    - книги.
+  - words:
+    - книги
+    - Ці
+    - нові.
+    correct_order:
+    - Ці
+    - книги
+    - нові.
+  - words:
+    - Стіни
+    - білі.
+    correct_order:
+    - Стіни
+    - білі.
+  - words:
+    - вікно
+    - велике.
+    - Це
+    correct_order:
+    - Це
+    - вікно
+    - велике.
+  - words:
+    - мале.
+    - те
+    - вікно
+    correct_order:
+    - те
+    - вікно
+    - мале.
+  - words:
+    - килим
+    - Той
+    - червоний.
+    correct_order:
+    - Той
+    - килим
+    - червоний.
+  - words:
+    - свою
+    - кімнату.
+    - Я
+    - люблю
+    correct_order:
+    - Я
+    - люблю
+    - свою
+    - кімнату.
+- id: fill-in-demonstratives
+  type: fill-in
+  instruction: Choose the correct demonstrative (**цей/ця/це** or **той/та/те**) to
+    match the noun.
+  items:
+  - sentence: ____ стіл великий.
+    answer: Цей
+    options:
+    - Цей
+    - Ця
+    - Це
+    - Ці
+  - sentence: ____ книга нова.
+    answer: Та
+    options:
+    - Той
+    - Та
+    - Те
+    - Ті
+  - sentence: ____ вікно мале.
+    answer: Це
+    options:
+    - Цей
+    - Ця
+    - Це
+    - Ці
+  - sentence: ____ лампа жовта.
+    answer: Ця
+    options:
+    - Цей
+    - Ця
+    - Це
+    - Ці
+  - sentence: ____ брат мій.
+    answer: Той
+    options:
+    - Той
+    - Та
+    - Те
+    - Ті
+  - sentence: ____ море синє.
+    answer: Те
+    options:
+    - Той
+    - Та
+    - Те
+    - Ті
+  - sentence: ____ столи великі.
+    answer: Ці
+    options:
+    - Цей
+    - Ця
+    - Це
+    - Ці
+  - sentence: ____ книги нові.
+    answer: Ті
+    options:
+    - Той
+    - Та
+    - Те
+    - Ті
+  - sentence: ____ килим червоний.
+    answer: Той
+    options:
+    - Той
+    - Та
+    - Те
+    - Ті
+  - sentence: ____ писанки гарні.
+    answer: Ці
+    options:
+    - Цей
+    - Ця
+    - Це
+    - Ці

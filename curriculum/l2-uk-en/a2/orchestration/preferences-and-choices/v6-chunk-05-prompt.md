@@ -26,7 +26,7 @@ Grand total: ~2150 words
 <previous_context>
 [...previous sections truncated...]
 
-are right. She writes well. But this new novella is much more dynamic!)* > — **Оксана:** Це правда, але вона занадто коротка. З одного боку, читати швидко, а з іншого — хочеться більше. *(That's true, but it is too short. On one hand, it's fast to read, and on the other, you want more.)* <!-- INJECT_ACTIVITY: match-up, focus: Match agreement/disagreement phrases to various social/debate situations, 8 items --> ## Обговорення: що краще? Іноді наша думка складна. Коли ми хочемо пояснити її детально, нам потрібні спеціальні слова. Вони допомагають структурувати наші аргументи. Для початку ми використовуємо вступне слово **по-перше** *(firstly)*. Потім ми додаємо наступний логічний аргумент за допомогою слова **по-друге** *(secondly)*. Якщо у нас є ще одна важлива деталь, ми кажемо **крім того** *(moreover)*. І щоб зробити гарний підсумок, ми використовуємо фразу **на завершення** *(in conclusion)*. Наприклад: «Я вважаю, що цей телефон чудовий. По-перше, він працює швидко. По-друге, у нього якісна камера. Крім того, він має красивий дизайн. На завершення скажу, що це найкращий вибір». Спробуйте завжди використовувати ці слова, коли ви пояснюєте свій вибір! Давайте прочитаємо цікаву дискусію. Уявіть інтернет-форум, де українці обговорюють важливу тему: що краще — життя в місті чи в селі? Зверніть увагу, як люди використовують різні фрази. > — **Олена:** На мою думку, жити в місті краще. По-перше, тут є хороша робота. По-друге, тут багато цікавих місць. *(In my opinion, living in the city is better. Firstly, there is good work here. Secondly, there are many interesting places here.)* > — **Тарас:** Я не зовсім згоден. Мені здається, що в селі жити спокійніше. Я волію жити там, бо там красива природа. *(I don't quite agree. It seems to me that living in the village is calmer. I prefer to live there because there is beautiful nature there.)* > — **Марія:** З одного боку, Тарас має рацію. Але, з іншого боку, в місті краща медицина. Крім того, там зручно. *(On one hand, Taras is right. But, on the other hand, there is better medicine in the city. Moreover, it is convenient there.)* > — **Ігор:** Безумовно. Але я переконаний, що кожен обирає своє. На завершення скажу: головне — бути щасливим там, де ти живеш! *(Absolutely. But I am convinced that everyone chooses their own. In conclusion I will say: the main thing is to be happy where you live!)* Ви бачите, що ця дискусія дуже ввічлива. Кожен учасник поважає думку іншого, але має власні аргументи. Тепер ваша черга активно практикувати! Ваша тема — це кулінарні вподобання. Що краще: готувати вечерю вдома чи їсти в ресторані? Уявіть, що ви розмовляєте з друзями. Використовуйте корисні інструменти з модуля. Скажіть: «Мені більше подобається готувати вдома, ніж ходити в ресторан». Або: «Я волію їсти в кафе, бо це економить час». Додайте логічні аргументи: «На мою думку, домашня їжа здоровіша. По-перше, ви знаєте всі інгредієнти». Якщо партнер каже: «Але в ресторані смачніше!», відповідайте: «Можливо, але це дорого». Або скажіть: «Навпаки, я вважаю, що я готую краще!». Не бійтеся відкрито висловлювати свою власну думку і захищати свій свідомий вибір. <!-- INJECT_ACTIVITY: error-correction-opinions -->
+По-друге, це допомагає збільшити словниковий запас. Крім того, книжку можна читати будь-де: у парку, в метро або вдома на дивані. На завершення, я переконаний, що література дає глибші емоції. > *I think that reading books is better than watching movies. Firstly, reading develops imagination, because you imagine the characters yourself. Secondly, it helps to increase vocabulary. Moreover, you can read a book anywhere: in the park, in the subway, or at home on the couch. In conclusion, I am convinced that literature provides deeper emotions.* Now let's look at a realistic situation. Imagine you are reading a Ukrainian internet forum where people are discussing where it is better to live: in the city or in the village. Notice how people mix different levels of formality to express their thoughts, using casual connectors like **бо** (because) alongside formal structures like **я переконана** (I am convinced, f.). :::info **Grammar box** When participating in online discussions, you will see a mix of formal and informal phrases. This is completely normal for internet communication, as users express their honest opinions while responding to each other. ::: > — **Оксана:** Мені здається, що жити в селі набагато краще. По-перше, там чисте повітря. По-друге, там тихо, бо немає багато машин. *(It seems to me that living in the village is much better. Firstly, the air is clean there. Secondly, it is quiet there because there are not many cars.)* > — **Тарас:** Я не зовсім згоден. З одного боку, природа — це чудово. Але з іншого боку, в місті більше можливостей. Я волію жити в Києві. *(I do not quite agree. On one hand, nature is wonderful. But on the other hand, there are more opportunities in the city. I prefer to live in Kyiv.)* > — **Ірина:** Ви маєте рацію, Тарасе. Я переконана, що для молоді місто — це ідеальний вибір. Крім того, я обираю місто через інфраструктуру. *(You are right, Taras. I am convinced that for young people, the city is an ideal choice. Moreover, I choose the city because of the infrastructure.)* > — **Оксана:** Можливо, але на мою думку, стресу в місті занадто багато. *(Perhaps, but in my opinion, there is too much stress in the city.)* Now it is your turn to practice. Imagine you are discussing food preferences with a friend. The topic is cooking at home versus eating at a restaurant. You need to express what you like more, state what you prefer to do on weekends, and give a reason for your opinion. Try to use all the tools we have learned: comparatives, verbs of preference, and agreement or disagreement phrases. Наприклад, ви можете сказати: «Мені більше подобається готувати вдома, ніж ходити в ресторан». Ваша подруга може відповісти: «Я не зовсім згодна. Навпаки, я волію вечеряти в кафе, бо це економить час». Тоді ви можете аргументувати свою думку: «Я вважаю, що домашня їжа корисніша. Крім того, я обираю готувати самостійно, тому що це цікавий процес». Спробуйте скласти свій власний діалог і обговорити цю тему. <!-- INJECT_ACTIVITY: error-correction-opinions -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -480,7 +480,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 6: A2 finale (A2 M51-M69)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 40%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 40% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 70-90% Ukrainian.
 LANGUAGE ROLES:
@@ -499,18 +566,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (5/5).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] вважати (to think, to consider)
+- [ ] воліти (to prefer)
+- [ ] обирати (to choose)
+- [ ] думка (opinion, thought)
+- [ ] згоден (agree, m.)
+- [ ] згодна (agree, f.)
+- [ ] рація (rightness — in мати рацію)
+- [ ] тому що (because)
+- [ ] навпаки (on the contrary)
+- [ ] переконаний (convinced, m.)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Підсумок (~150 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

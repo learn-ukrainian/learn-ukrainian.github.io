@@ -1,0 +1,53 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 6
+  evidence: The three planned H2 sections are present and required vocabulary is used,
+    but repo search on the module text returned 0 hits for plan-specified exemplars
+    `банка`, `меду`, `алергія на ліки`, `від алер
+- dimension: 2
+  name: Linguistic accuracy
+  score: 5
+  evidence: The prose teaches `пів` as “the prefix **пів**”, the doctor dialogue has
+    `У мене дуже сильно болить горло і голова`, and the activity explanation says
+    `Яблука — це однина`.
+- dimension: 3
+  name: Pedagogical quality
+  score: 6
+  evidence: The market section has good example density, but core explanation accuracy
+    is undermined by the wrong `пів` rule and by exercise items that reward answer-position
+    guessing instead of case knowledge.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 8
+  evidence: 'All required plan words appear naturally in prose: `ринок`, `кілограм`,
+    `пляшка`, `здоров''я`, `температура`, `рецепт`, `аптека`, `ліки`, `кашель`, `апетит`;
+    recommended words also appear.'
+- dimension: 5
+  name: Exercise quality
+  score: 4
+  evidence: Marker count and placement are correct, but the fill-in block has every
+    answer in slot 1, the match-up block includes non-remedy advice pairs like `Мене
+    нудить` → `Вам треба пити воду`, and one true/f
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: The teacher voice is calm and usable, with concrete market details like
+    tasting apples, asking price, paying, and getting change.
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: All planned sections are present and ordered correctly, markers are clean,
+    and the pipeline word count is 2857, which is above target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 9
+  evidence: Kyiv market / doctor / pharmacy contexts are localized and not Russia-centered;
+    no false cultural framing stood out.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: 'Named speakers are used throughout, and the market dialogue is the strongest:
+    it includes greeting, choosing, tasting, pricing, payment, and leave-taking.'
+findings: []

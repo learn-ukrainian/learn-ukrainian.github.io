@@ -1,0 +1,54 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'The module covers the garden scenario, optional `то`, punctuation, `якби`
+    recognition, and intonation. But the A2.7 consolidation stops at metalanguage:
+    “Ми впевнено використовуємо слова «тому що» або'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: No verified Russianisms, Surzhyk, calques, or paronym errors found in
+    the prose. Russian letters `ы э ё ъ` are absent, and VESUM verification already
+    cleared all content words except the proper-name f
+- dimension: 3
+  name: Pedagogical quality
+  score: 7
+  evidence: 'The explanation states: “Тому ми використовуємо майбутній час або наказовий
+    спосіб,” then immediately gives “Якщо ви вже готові, ми можемо починати урок.”
+    That weakens the pattern at the point of intr'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'All required plan vocabulary appears naturally in prose: `якщо`, `умова`,
+    `результат`, `реальний`, `погода`, `допомогти`, `поспішити`, `вільний`, `залишитися`,
+    `порада`. Recommended vocabulary is also'
+- dimension: 5
+  name: Exercise quality
+  score: 7
+  evidence: Marker placement is good, but the planned aspect-focused `error-correction`
+    exercise is unsupported by the teaching. The module never introduces aspect terminology
+    or a mini-rule before `<!-- INJECT_A
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: 'The tone is teacherly and concrete, with useful everyday scenarios: garden
+    planning, advice from a doctor/teacher, weekend plans with friends.'
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: All three planned H2 sections are present and ordered correctly. Markdown
+    is clean, markers are intentional, and the pipeline word count is 2455, safely
+    above target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: The module treats Ukrainian on its own terms and uses plausible Ukrainian
+    settings and examples (`дача`, `Карпати`, `викладач`, `відпустка`) without Russia-centering.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: 'The garden dialogue is natural, multi-turn, and directly tied to the
+    plan’s core scenario: planting, rain, seeds, and a garden bed.'
+findings: []

@@ -1,26 +1,41 @@
-## Просити, дякувати, допомагати: Давальний у сфері послуг
+## Просити, дякувати, допомагати: Давальний у сфері послуг (~600 words)
 
-У поштовому відділенні ми часто просимо про допомогу. Коли ви не знаєте, як заповнити документ, вам потрібне дієслово **допомагати** *(to help)*. When you ask for assistance, the person who receives the help is the indirect object. This means the verb «допомагати» always takes the Dative case. Ви можете сказати оператору: «**Допоможіть мені** *(help me)* заповнити цей бланк». The pronoun «я» changes to the Dative form «мені». Інший корисний приклад — це прохання показати щось. Ви можете запитати: «**Покажіть мені** *(show me)*, де писати адресу». Або ви можете сказати: «Покажіть клієнту, де стоїть скринька». Ці фрази роблять ваше спілкування ввічливим та ефективним. Оператор завжди готовий допомогти вам.
+When you are at the post office, you often need assistance to navigate the services. To ask for help politely, you will use specific verbs that direct the action to you or someone else. In Ukrainian, verbs like **допомагати** (to help), **показувати** (to show), and **пояснювати** (to explain) always require the Dative case for the person receiving the action. Think of these verbs as transferring something — whether it is physical help, visual information, or knowledge — from one person to another. You are not just helping "me" as a direct object; you are giving help *to* me.
 
-Після того, як ви отримали допомогу, важливо подякувати. У сфері послуг ми використовуємо дієслово **дякувати** *(to thank)*. This is a critical point where many learners make a mistake. In Ukrainian, you do not thank a person; you give thanks to a person. The question is always «дякувати кому?». Тому ми кажемо «**Дякую вам** *(thank you)*», а не «дякую вас». Інші правильні приклади: «Дякую **листоноші** *(to the mail carrier)* за лист». Також ми кажемо: «Дякуємо оператору за швидку роботу». Якщо ви розмовляєте з другом, ви кажете «Дякую **тобі** *(to you)*». Завжди пам'ятайте про давальний відмінок після цього дієслова. Це звучить дуже природно українською мовою.
+Коли ви на пошті, працівники часто пояснюють вам нові правила. Вони також показують важливі форми. Якщо ви не розумієте текст, ви кажете: «Допоможіть мені заповнити цей бланк». Якщо ви шукаєте конверт, ви питаєте: «Покажіть мені, де тут каса». Ваш друг не знає, як працює пошта в Україні? Ви просите працівника: «Поясніть йому, як надіслати посилку». Коли ви отримуєте лист, ви показуєте працівнику свій паспорт. Тоді вони дають вам вашу пошту.
 
-Працівники пошти також можуть давати корисні рекомендації. Для цього вони використовують дієслово **радити** *(to advise / to suggest)*. This verb also governs the Dative case because you are offering advice to someone. Наприклад, досвідчений оператор може сказати: «**Раджу вам** *(I advise you)* надіслати це **авіапоштою** *(by airmail)*». Так посилка приїде набагато швидше. Якщо посилка дуже важлива, він скаже: «Раджу клієнту обрати надійну доставку». У неформальній ситуації ви можете дати пораду другу. Ви кажете: «**Раджу тобі** *(I advise you)* уважно перевірити **індекс** *(postal code)* перед відправленням». Ці фрази дуже часто звучать у різних сервісних центрах. Вони показують увагу до деталей та турботу про результат.
+> *When you are at the post office, workers often explain new rules to you. They also show important forms. If you do not understand the text, you say: "Help me fill out this form". If you are looking for an envelope, you ask: "Show me where the checkout is here". Your friend does not know how the post office works in Ukraine? You ask the worker: "Explain to him how to send a parcel". When you receive a letter, you show the worker your passport. Then they give you your mail.*
 
-Коли ми спілкуємося на пошті, ми часто використовуємо ввічливий наказовий спосіб. Polite commands direct an action toward someone, so they naturally pair with the Dative case. Ми вже добре знаємо корисні фрази «допоможіть мені» та «покажіть мені». Є й інші дуже популярні та важливі слова. Ви можете ввічливо запитати: «**Скажіть мені** *(tell me)*, скільки сьогодні коштує марка». Якщо ви прийшли на пошту з родиною, ви скажете щось інше. Ви кажете: «**Поясніть нам** *(explain to us)* ці нові правила відправлення». Працівник пошти може попросити свого колегу: «**Принесіть їй** *(bring her)* ще один великий конверт». Всі ці наказові форми роблять діалог чітким та зрозумілим. Ви прямо вказуєте, кому потрібна конкретна інформація або річ.
+Another crucial verb that governs the Dative case is **дякувати** (to thank). This is a very common mistake for learners, because in English we thank someone directly. In Ukrainian, you express gratitude *to* someone. You must always use the Dative case after this verb to sound natural. When you give advice, you also direct that advice to a person using the Dative. The verb **радити** (to advise) works the exact same way.
 
-Давайте розглянемо життєву ситуацію перед походом на пошту. Ви хочете надіслати подарунок, але не вмієте гарно його **загорнути** *(to wrap)*. Ви йдете до сусідки і просите її про допомогу.
-> — **Ви:** Олено, привіт! Це подарунок **моїй бабусі** *(to my grandmother)*.
-> — **Олена:** Привіт! Дуже гарна річ. Чим я можу допомогти?
-> — **Ви:** Допоможи мені загорнути його, будь ласка.
-> — **Олена:** Звичайно, дай мені папір і ножиці.
-> — **Ви:** Тримай. Раджу тобі використовувати цю стрічку.
-> — **Олена:** Готово. Тепер ти можеш нести посилку на пошту.
-> — **Ви:** Дякую тобі за допомогу!
+:::info
+**Grammar box**
+The verb for thanking always takes the Dative case. Never use the Accusative case for the person you are thanking. When you send something by mail, use the Instrumental case to show the means: **поштою** (by mail) or **бандероллю** (as a small parcel). We do not use a preposition for this.
+:::
 
-Тут ми яскраво бачимо, як давальний відмінок працює у реальній розмові. 
+Вам потрібно знати, як правильно дякувати людям у сфері послуг. Після того, як ви відправили свій лист, ви кажете: «Дякую вам за допомогу». Ви також можете сказати: «Дякую листоноші за роботу». Якщо ви надсилаєте велику книгу, працівник може порадити: «Раджу вам надіслати це бандероллю, так значно дешевше». А ваша подруга може сказати: «Раджу тобі перевірити адресу ще один раз».
 
-Як ви вже помітили, короткі особові займенники часто стоять у давальному відмінку. It is essential to memorize their Dative forms for fluent communication in service situations. Use **мені** *(to me)*, **нам** *(to us)*, or the formal **вам** *(to you)* for yourself. When you direct the action at someone else, use the other forms. These are **тобі** *(to you)*, **йому** *(to him/it)*, **їй** *(to her)*, or **їм** *(to them)*. Завжди використовуйте ці займенники разом із дієсловами «давати», «показувати» та «допомагати». Також вони чудово працюють зі словами «радити» та «дякувати». Тоді ваша щоденна українська мова буде граматично правильною та дуже ввічливою. Тепер ви повністю готові до будь-якої розмови на пошті або в іншому місці.
+> *You need to know how to properly thank people in the service sector. After you have dispatched your letter, you say: "Thank you for the help". You can also say: "Thank the mail carrier for the work". If you are sending a large book, the worker might advise: "I advise you to dispatch this as a small parcel, it is significantly cheaper that way". And your friend might say: "I advise you to check the address one more time".*
 
-<!-- INJECT_ACTIVITY: match-up-service-requests -->
+<!-- INJECT_ACTIVITY: group-sort-service-phrases -->
 
-<!-- INJECT_ACTIVITY: group-sort-dative-functions -->
+Let's look at an extended everyday scenario. Imagine you need to prepare a package at home, but you are not sure how to pack it correctly. You might ask a neighbor or a friend for assistance. In this conversation, you will use the Dative case not only to ask for help, but also to explain who the item is intended for.
+
+> — **Сусідка:** Привіт! Що ти робиш? *(Hi! What are you doing?)*
+> — **Ви:** Добрий день! Я хочу надіслати посилку. Це подарунок моїй бабусі. *(Good day! I want to send a parcel. This is a gift for my grandmother.)*
+> — **Сусідка:** О, це чудово. Твоїй бабусі дуже сподобається. *(Oh, that is wonderful. Your grandmother will really like it.)*
+> — **Ви:** Але я не вмію це правильно пакувати. Допоможи мені закрити цю коробку. *(But I do not know how to pack this correctly. Help me close this box.)*
+> — **Сусідка:** Звичайно. Дай мені ножиці. І покажи мені, що там всередині. *(Of course. Give me the scissors. And show me what is inside there.)*
+> — **Ви:** Там теплий шарф і смачні солодощі. *(There is a warm scarf and tasty sweets there.)*
+> — **Сусідка:** Не забудь наклеїти марку на коробку. *(Do not forget to stick a stamp on the box.)*
+> — **Ви:** Так, дякую. Тепер нам треба написати адресу. *(Yes, thank you. Now we need to write the address.)*
+> — **Сусідка:** Давай я продиктую, а ти пиши. *(Let me dictate, and you write.)*
+> — **Ви:** Дуже дякую тобі за допомогу! *(Thank you very much for the help!)*
+
+Notice how naturally the imperative forms blend with Dative pronouns in these service interactions. You learned the imperative, which covers commands and requests, earlier in your journey. Now, you are combining those direct requests with the specific target of the action. This creates the exact phrases you will use every time you need a service, whether at the post office, a bank, or a local store. Mastering these short pairs will give you immense confidence in any public situation.
+
+Використовуйте імператив і давальний відмінок разом. Так ваше мовлення звучить ввічливо і природно. Якщо вам потрібна квитанція, ви кажете працівнику: «Дайте мені квитанцію». Якщо вам треба побачити нові ціни, ви кажете: «Покажіть нам каталог». Якщо ваша сестра забула свій індекс, ви просите працівника: «Скажіть їй правильний індекс». Такі фрази роблять ваше життя в Україні набагато легшим. Ви завжди зможете швидко отримати допомогу.
+
+> *Use the imperative and the Dative case together. This way your speech sounds polite and natural. If you need a receipt, you say to the worker: "Give me the receipt". If you need to see the new prices, you say: "Show us the catalog". If your sister forgot her postal code, you ask the worker: "Tell her the correct postal code". Such phrases make your life in Ukraine much easier. You will always be able to quickly get help.*
+
+<!-- INJECT_ACTIVITY: match-up-requests-responses -->

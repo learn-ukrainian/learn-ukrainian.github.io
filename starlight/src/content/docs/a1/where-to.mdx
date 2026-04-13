@@ -7,13 +7,14 @@ pipeline: v6
 build_status: draft
 ---
 
-import ErrorCorrection from '@site/src/components/ErrorCorrection';
+import Anagram from '@site/src/components/Anagram';
 import FillIn from '@site/src/components/FillIn';
 import FlashcardDeck from '@site/src/components/FlashcardDeck';
 import GroupSort from '@site/src/components/GroupSort';
 import MatchUp from '@site/src/components/MatchUp';
 import Quiz from '@site/src/components/Quiz';
 import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
 import YouTubeVideo from '@site/src/components/YouTubeVideo';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 
@@ -22,146 +23,137 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ## Діало́ги (Dialogues)
 
-It is a busy Saturday morning in the bustling city center. Oksana and Stepan are standing on the street corner, holding their lists of weekend errands. They need to visit several different places before finally meeting up later in the afternoon. In Ukrainian, when you are talking about going to a specific destination, you must answer the essential question **куди́** (where to).
-
-Listen to their conversation as they figure out their immediate plans and split up to run their respective errands. Pay close attention to how they use the specific question word **куди** (where to) and the prepositions **в** (in/to) and **на** (on/to) to indicate their direction of travel.
+It is Saturday morning in the city. This opening dialogue follows the same everyday pattern as Ukrainian Lessons Podcast, Episode 18: two friends compare where they are going and use **Куди́?** to talk about direction.
 
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Степа́н:</span> Приві́т! **Куди ти йдеш?** *(Hi! Where are you going?)*</div>
+<div class="dialogue-line"><span class="speaker">Окса́на:</span> **Куди** (where to) ти йдеш? *(Where are you going?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Окса́на:</span> Привіт! **Я йду в банк.** А ти? *(Hi! I am going to the bank. And you?)*</div>
+<div class="dialogue-line"><span class="speaker">Степа́н:</span> Я йду в банк. А ти? *(I am going to the bank. And you?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Степан:</span> **Я йду на робо́ту.** *(I am going to work.)*</div>
+<div class="dialogue-line"><span class="speaker">Оксана:</span> Я йду на по́шту. *(I am going to the post office.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Оксана:</span> А по́тім? *(And then?)*</div>
+<div class="dialogue-line"><span class="speaker">Степан:</span> А по́тім? *(And then?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Степан:</span> **Потім іду́ в магази́н.** *(Then I am going to the store.)*</div>
+<div class="dialogue-line"><span class="speaker">Оксана:</span> Потім іду́ в апте́ку. *(Then I am going to the pharmacy.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Оксана:</span> **А потім ході́мо в кафе́!** *(And then let's go to a cafe!)*</div>
-
-<div class="dialogue-line"><span class="speaker">Степан:</span> До́бре! **Я йду в апте́ку.** *(Good! I am going to the pharmacy.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Оксана:</span> **А я йду на по́шту.** *(And I am going to the post office.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Степан:</span> **Тоді́ до зу́стрічі!** *(Then see you later!)*</div>
-
-<div class="dialogue-line"><span class="speaker">Оксана:</span> **Бува́й!** *(Bye!)*</div>
+<div class="dialogue-line"><span class="speaker">Степан:</span> А потім зустрі́немося в кафе́! *(And then we will meet in a cafe!)*</div>
 
 </div>
 
-Later that afternoon, they meet up at the local cafe and start discussing their upcoming travel plans for the next weekend. Notice how the verb changes when they talk about taking a train or bus to a different city rather than just walking around town.
+This dialogue shows the key contrast for this module: **я йду в банк** means movement toward a place, while **я в ба́нку** means the speaker is already there.
 
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Оксана:</span> **Куди ти ї́деш у субо́ту?** *(Where are you traveling on Saturday?)*</div>
+<div class="dialogue-line"><span class="speaker">Степан:</span> Куди ти ї́деш у субо́ту? *(Where are you going on Saturday?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Степан:</span> **Я ї́ду у Львів.** *(I am traveling to Lviv.)*</div>
+<div class="dialogue-line"><span class="speaker">Оксана:</span> Я ї́ду у Львів. *(I am going to Lviv.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Оксана:</span> Клас! А Оле́на? *(Cool! And Olena?)*</div>
+<div class="dialogue-line"><span class="speaker">Степан:</span> А Оле́на? *(And Olena?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Степан:</span> **Вона́ ї́де в Оде́су.** *(She is traveling to Odesa.)*</div>
+<div class="dialogue-line"><span class="speaker">Оксана:</span> Вона́ ї́де в Оде́су. *(She is going to Odesa.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Оксана:</span> А я нікуди не їду. *(And I am not traveling anywhere.)*</div>
+<div class="dialogue-line"><span class="speaker">Степан:</span> А коли́ ви бу́дете **поверта́тися** (to return) **додо́му** (home)? *(And when will you return home?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Степан:</span> Чо́му? *(Why?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Оксана:</span> **Я йду в бібліоте́ку.** *(I am going to the library.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Степан:</span> **А в неді́лю?** *(And on Sunday?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Оксана:</span> **У неділю я йду в парк.** *(On Sunday I am going to the park.)*</div>
+<div class="dialogue-line"><span class="speaker">Оксана:</span> У неді́лю. *(On Sunday.)*</div>
 
 </div>
+
+This second conversation focuses on cities as destinations. In this dialogue, the speakers use the verb **ї́хати** (to go by transport) with the preposition **в** or **у** and the name of the city. Notice the morphological change for Odesa: the nominative **Оде́са** becomes the accusative **в Одесу** (to Odesa). However, **Львів** shows no visible change in form: **у Львів**. This illustrates how the accusative case affects different types of nouns differently. 
 
 :::note
-**Two "Wheres"**
-Did you notice how the nouns at the end of their sentences looked slightly different than usual? When Oksana says «**Я йду на пошту**» (I am going to the post office) or «**Я йду в банк**» (I am going to the bank), she is using a specific grammatical form. In English, the word "where" covers both your current location and your future destination. Ukrainian strictly separates these concepts. Asking **куди** (where to) triggers a specific grammatical change that shows movement toward a target.
+**Cultural Note: Errands in Ukraine**
+Many Ukrainians rely heavily on public transport or walking to complete their daily errands. Because of this, specifying the exact mode of transportation (**йти** vs **їхати**) is highly natural and common in everyday conversation.
 :::
 
 ## Куди? Знахі́дний відмі́нок (Where To? Accusative)
 
-In Ukrainian primary schools, Grade 4 students learn to identify cases using "helper words" to ask the right question. For the Accusative case, known as **знахідний відмінок** (accusative case), the helper method is **ба́чу — кого? що?** (I see — whom? what?). When we talk about inanimate places and destinations, we use the question **що?** (what?). When combined with motion verbs and prepositions like **в/у** or **на**, the Accusative case indicates **куди** (where to) or motion toward a place.
+In Ukrainian primary schools, Grade 4 students learn to identify cases with helper words and questions. For the accusative case (**Знахідний відмінок**), the helper is **ба́чу** (I see), and the core questions are **кого?** (whom?) and **що?** (what?). For direction, Ukrainian also uses **в/у** or **на** plus the accusative to answer **Куди?**.
+
+We must explicitly contrast this directional use of the accusative with the static locative case (**Місце́вий відмінок**). The formula **в/у** plus the locative case answers the question **Де?** (Where? = static position). English conflates these two concepts into a single interrogative word, but Ukrainian keeps them rigorously separated. Consider this clear comparison:
+* **Де ти? — Я в банку.** (Locative — you ARE there, standing inside the building.)
+* **Куди ти йдеш? — Я йду в банк.** (Accusative — you are GOING there, walking toward the building.)
+
+For inanimate masculine and neuter place nouns, the accusative for direction is the same as the nominative. Add the preposition **в/у** or **на**, but do not change the noun ending.
+* **банк → у банк** (to the bank)
+* **магази́н → у/в магазин** (to the shop)
+* **парк → у парк** (to the park)
+* **кафе → у кафе** (to the cafe)
+* **мі́сто → у місто** (to the city)
+* **рестора́н → у ресторан** (to the restaurant)
 
 :::tip
-**The "No-Change" Rule**
-For inanimate masculine nouns and all neuter nouns, the Accusative form is identical to the basic Nominative dictionary form. You simply add the preposition **в/у** (in/into) or **на** (on/onto) before the noun. The noun itself does not change its ending at all.
+**Mnemonic: The "No-Change" Rule**
+If a place name is masculine (ends in a consonant) or neuter (ends in **-о** or **-е**), its accusative form for direction is exactly the same as its dictionary form. You only need to worry about changing the ending if the word is feminine!
 :::
 
-*   банк → у банк (to the bank)
-*   магазин → у магазин (to the store)
-*   парк → у парк (to the park)
-*   кафе → у кафе (to the cafe)
-*   мі́сто → у місто (to the city)
+The only noun category that demands a visible change in this directional context is feminine nouns. Feminine nouns that end in **-а** or **-я** shift their final vowel when answering the question **Куди?**. The ending **-а** consistently changes to **-у**, and the ending **-я** consistently changes to **-ю**. This is the main ending change learners need at this stage.
+* **шко́ла → у шко́лу** (to school)
+* **робо́та → на робо́ту** (to work)
+* **бібліоте́ка → у бібліоте́ку** (to the library)
+* **ву́лиця → на ву́лицю** (to the street)
+* **Одеса → в Одесу** (to Odesa)
 
-Feminine nouns, however, undergo a highly visible and consistent change. If a feminine noun ends in **-а** or **-я** in its dictionary form, that ending must shift to **-у** or **-ю** in the Accusative case. This small vowel shift is the most frequent signal that you are talking about a destination rather than a static location.
-
-*   шко́ла → у шко́лу (to school)
-*   робо́та → на роботу (to work)
-*   бібліоте́ка → у бібліотеку (to the library)
-*   ву́лиця → на ву́лицю (onto the street)
-*   апте́ка → в аптеку (to the pharmacy)
-*   по́шта → на пошту (to the post office)
-*   краї́на → в краї́ну (to the country)
-*   пло́ща → на пло́щу (onto the square)
-
-This rule for direction applies perfectly to countries and cities as well. Inanimate masculine cities like Kyiv or Lviv will not change their form, while feminine cities will change their final vowel. You will say **в Одесу** (to Odesa). Most importantly, the sovereign nation of Ukraine is a feminine noun ending in **-а**. When expressing travel to Ukraine, you must always use the preposition **в** with the Accusative case ending: **в Украї́ну** (to Ukraine). Never use the preposition **на** for the country of Ukraine.
-
-<FillIn client:only="react" items={[{"sentence": "Я йду в ____ (магазин).", "answer": "магазин", "options": ["магазин", "магазині", "магазину"]}, {"sentence": "Ми йдемо у ____ (бібліотека).", "answer": "бібліотеку", "options": ["бібліотека", "бібліотеку", "бібліотеці"]}, {"sentence": "Він іде на ____ (робота).", "answer": "роботу", "options": ["робота", "роботі", "роботу"]}, {"sentence": "Вони йдуть у ____ (банк).", "answer": "банк", "options": ["банк", "банку", "банком"]}, {"sentence": "Степан іде у ____ (кафе).", "answer": "кафе", "options": ["кафе", "кафею", "кафі"]}, {"sentence": "Оксана йде в ____ (аптека).", "answer": "аптеку", "options": ["аптека", "аптеці", "аптеку"]}, {"sentence": "Вона їде в ____ (Одеса).", "answer": "Одесу", "options": ["Одеса", "Одесу", "Одесі"]}, {"sentence": "Студент іде в ____ (університет).", "answer": "університет", "options": ["університет", "університету", "університеті"]}, {"sentence": "Ми їдемо в ____ (центр).", "answer": "центр", "options": ["центр", "центру", "центрі"]}, {"sentence": "Я йду на ____ (пошта).", "answer": "пошту", "options": ["пошта", "пошту", "пошті"]}]} instruction={"Вставте правильну форму слова (Fill in the correct form of the word)"} />
+<FillIn client:only="react" items={[{"sentence": "Я йду в ____.", "answer": "школу", "options": ["школа", "школу", "школі"]}, {"sentence": "Ми йдемо на ____.", "answer": "роботу", "options": ["робота", "роботу", "роботі"]}, {"sentence": "Вона йде в ____.", "answer": "бібліотеку", "options": ["бібліотека", "бібліотеку", "бібліотеці"]}, {"sentence": "Він іде в ____.", "answer": "магазин", "options": ["магазин", "магазину", "магазині"]}, {"sentence": "Вони йдуть у ____.", "answer": "парк", "options": ["парк", "парку", "парком"]}, {"sentence": "Ти йдеш у ____?", "answer": "банк", "options": ["банк", "банку", "банком"]}, {"sentence": "Олена їде в ____.", "answer": "Одесу", "options": ["Одеса", "Одесу", "Одесі"]}]} instruction={"Вставте правильну форму (Insert the correct form)"} />
 
 ## Де чи куди? (Where or Where To?)
 
-The most critical habit to build is separating static location from dynamic direction. English conflates these by using "where" and "in" or "at" for both situations. Ukrainian demands a strict choice depending on the intent of the verb. If your verb shows static existence, you must ask **де?** (where?) and use the Locative case. If your verb shows movement toward a goal, you must ask **куди?** (where to?) and use the Accusative case, even though the prepositions **в/у** and **на** remain exactly the same.
+Keep this question pair simple. **Де ти?** asks about a static location, so the answer uses **в**, **у**, or **на** plus the LOCATIVE case. **Куди ти йдеш?** asks about direction, so the answer uses **в**, **у**, or **на** plus the ACCUSATIVE case. The table below shows the contrast.
 
-Compare these two states directly. Notice how the same preposition requires a completely different noun ending based on whether you are simply existing in a place or traveling toward it.
-
-| Place | **Де?** (Static - Locative) | **Куди?** (Motion - Accusative) |
+| Place | Де? (М.в. - Static) | Куди? (Зн.в. - Dynamic) |
 | :--- | :--- | :--- |
-| **школа** (school) | **Я в шко́лі.** (I am at school.) | **Я йду у школу.** (I am going to school.) |
-| **робота** (work) | **Він на робо́ті.** (He is at work.) | **Він іде́ на роботу.** (He is going to work.) |
-| **банк** (bank) | **Ми у ба́нку.** (We are in the bank.) | **Ми йдемо́ у банк.** (We are going to the bank.) |
-| **парк** (park) | **Вона у парку.** (She is in the park.) | **Вона йде у парк.** (She is going to the park.) |
-| **кафе** (cafe) | **Степан у кафе.** (Stepan is in the cafe.) | **Степан іде у кафе.** (Stepan is going to the cafe.) |
-| **аптека** (pharmacy) | **Оксана в апте́ці.** (Oksana is in the pharmacy.) | **Оксана йде в аптеку.** (Oksana is going to the pharmacy.) |
+| **школа** | **в шко́лі** | **у школу** |
+| **робота** | **на робо́ті** | **на роботу** |
+| **банк** | **у банку** | **у банк** |
+| **парк** | **у парку** | **у парк** |
 
-To answer the question **куди?** (where to?), you need verbs of motion. Ukrainian distinguishes between moving under your own physical power and moving by using a vehicle. The verb **йти** means "to go on foot" or "to walk". The verb **ї́хати** means "to go by transport" or "to drive/ride". Both of these verbs trigger the Accusative case for the destination.
-
-*   **Я йду в магазин.** (I am walking to the store.)
-*   **Студе́нт іде в університе́т.** (The student is walking to the university.)
-*   **Ми йдемо в рестора́н.** (We are walking to the restaurant.)
-*   **Вони́ йдуть у кіно́.** (They are walking to the cinema.)
-*   **Я їду на вокза́л.** (I am driving to the station.)
-*   **Ми ї́демо в центр.** (We are driving to the center.)
-*   **Тара́с їде у Ки́їв.** (Taras is traveling to Kyiv.)
-*   **Вона їде в аеропо́рт.** (She is traveling to the airport.)
+Clear sentence examples highlight how to contrast the two cases in context. It is always the verb that dictates whether the situation is static or dynamic.
+* **Лі́кар працю́є в ліка́рні.** (Де? — The doctor works in the hospital. The action of working is stationary.)
+* **Я йду в ліка́рню.** (Куди? — I am going to the hospital. The action involves physical movement toward a specific target.)
+* **Він сиди́ть на роботі.** (Де? — He is sitting at work. The position is fixed.)
+* **Вона їде на роботу.** (Куди? — She is driving to work. The position is actively changing.)
+English merges these distinct realities into a single concept of "where," but Ukrainian strictly separates static location from dynamic direction. You must learn to hear the difference.
 
 :::caution
-**The Exception: Going Home**
-There is one very common destination that breaks the preposition rules entirely: your own home. When expressing movement homeward or returning home (**поверта́тися додо́му**), Ukrainian uses a special directional adverb: **додому** (homeward / to home). This word has the direction built directly into it, so it never takes a preposition. You must contrast this with the static adverb **вдо́ма** (at home).
+**Common L2 Mistake: "Where" vs "Where To"**
+English speakers often ask **Де ти йдеш?** when trying to say "Where are you going?". This is incorrect in Ukrainian because **Де** implies static location. You must ask **Куди ти йдеш?** to indicate movement toward a destination.
 :::
 
-*   **Де Іва́н? Іван вдома.** (Where is Ivan? Ivan is at home.)
-*   **Куди йде Іван? Іван іде додому.** (Where is Ivan going? Ivan is going home.)
+<Quiz client:only="react" questions={[{"question": "____ ти йдеш? — У магазин.", "options": [{"text": "Куди", "correct": true}, {"text": "Де", "correct": false}, {"text": "Як", "correct": false}, {"text": "Хто", "correct": false}]}, {"question": "____ працює лікар? — У лікарні.", "options": [{"text": "Куди", "correct": false}, {"text": "Де", "correct": true}, {"text": "Коли", "correct": false}, {"text": "Чому", "correct": false}]}, {"question": "____ вона їде? — В Одесу.", "options": [{"text": "Куди", "correct": true}, {"text": "Де", "correct": false}, {"text": "Що", "correct": false}, {"text": "Хто", "correct": false}]}, {"question": "____ Оксана? — На роботі.", "options": [{"text": "Куди", "correct": false}, {"text": "Де", "correct": true}, {"text": "Який", "correct": false}, {"text": "Чий", "correct": false}]}, {"question": "____ ви йдете в суботу? — У парк.", "options": [{"text": "Куди", "correct": true}, {"text": "Де", "correct": false}, {"text": "Як", "correct": false}, {"text": "Хто", "correct": false}]}, {"question": "____ твоя мама? — Вдома.", "options": [{"text": "Куди", "correct": false}, {"text": "Де", "correct": true}, {"text": "Звідки", "correct": false}, {"text": "Коли", "correct": false}]}, {"question": "____ Степан? — У банку.", "options": [{"text": "Куди", "correct": false}, {"text": "Де", "correct": true}, {"text": "Як", "correct": false}, {"text": "Чому", "correct": false}]}]} instruction={"Оберіть правильне запитання: Де? чи Куди? (Choose the correct question: Where? or Where to?)"} />
 
-<Quiz client:only="react" questions={[{"question": "____ ти йдеш? — Я йду в банк.", "options": [{"text": "Де", "correct": false}, {"text": "Куди", "correct": true}, {"text": "Що", "correct": false}, {"text": "Хто", "correct": false}]}, {"question": "____ Оксана? — Вона в аптеці.", "options": [{"text": "Де", "correct": true}, {"text": "Куди", "correct": false}, {"text": "Що", "correct": false}, {"text": "Коли", "correct": false}]}, {"question": "____ їде Степан? — Він їде у Львів.", "options": [{"text": "Що", "correct": false}, {"text": "Коли", "correct": false}, {"text": "Де", "correct": false}, {"text": "Куди", "correct": true}]}, {"question": "____ ми? — Ми у парку.", "options": [{"text": "Де", "correct": true}, {"text": "Куди", "correct": false}, {"text": "Як", "correct": false}, {"text": "Хто", "correct": false}]}, {"question": "____ ви йдете? — Ми йдемо у ресторан.", "options": [{"text": "Де", "correct": false}, {"text": "Що", "correct": false}, {"text": "Куди", "correct": true}, {"text": "Як", "correct": false}]}, {"question": "____ Іван? — Іван вдома.", "options": [{"text": "Куди", "correct": false}, {"text": "Де", "correct": true}, {"text": "Коли", "correct": false}, {"text": "Чому", "correct": false}]}, {"question": "____ вона йде? — Вона йде додому.", "options": [{"text": "Де", "correct": false}, {"text": "Куди", "correct": true}, {"text": "Як", "correct": false}, {"text": "Що", "correct": false}]}, {"question": "____ вони? — Вони на роботі.", "options": [{"text": "Чому", "correct": false}, {"text": "Куди", "correct": false}, {"text": "Коли", "correct": false}, {"text": "Де", "correct": true}]}]} instruction={"Де чи Куди? Оберіть правильне запитання (Where or Where To? Choose the correct question)"} />
-<GroupSort client:only="react" groups={{"Де? (Static Location)": ["вдома", "у школі", "на роботі", "у парку", "в аптеці"], "Куди? (Direction)": ["додому", "у школу", "на роботу", "у парк", "в аптеку"]}} instruction={"Розподіліть фрази (Sort the phrases)"} />
-<Quiz client:only="react" questions={[{"question": "Я ____ у бібліотеку. (walking)", "options": [{"text": "йду", "correct": true}, {"text": "їду", "correct": false}, {"text": "іде", "correct": false}, {"text": "їде", "correct": false}]}, {"question": "Ми ____ в Одесу. (traveling by transport)", "options": [{"text": "йдемо", "correct": false}, {"text": "їдемо", "correct": true}, {"text": "йдуть", "correct": false}, {"text": "їдуть", "correct": false}]}, {"question": "Степан ____ у парк. (walking)", "options": [{"text": "йду", "correct": false}, {"text": "їду", "correct": false}, {"text": "іде", "correct": true}, {"text": "їде", "correct": false}]}, {"question": "Олена ____ у Львів. (traveling by transport)", "options": [{"text": "іде", "correct": false}, {"text": "їде", "correct": true}, {"text": "йдемо", "correct": false}, {"text": "їдемо", "correct": false}]}, {"question": "Вони ____ у кіно. (walking)", "options": [{"text": "йдуть", "correct": true}, {"text": "їдуть", "correct": false}, {"text": "йдемо", "correct": false}, {"text": "їдемо", "correct": false}]}, {"question": "Тарас ____ у Київ. (traveling by transport)", "options": [{"text": "іде", "correct": false}, {"text": "їде", "correct": true}, {"text": "йду", "correct": false}, {"text": "їду", "correct": false}]}]} instruction={"Йти чи їхати? Оберіть правильне слово (To walk or to drive? Choose the correct word)"} />
+When discussing direction, you need the right verbs of motion. The two most vital verbs in Ukrainian are **йти** (to go on foot) and **їхати** (to go by transport). The choice between them depends entirely on how you are getting to your destination.
+* **Я йду в магазин.** (I am walking to the local shop.)
+* **Я їду на вокза́л.** (I am taking transport to the train station.)
+Both of these verbs express movement toward a target, so they both pair perfectly with **в** or **на** plus the accusative case to answer **Куди?**. You cannot use them interchangeably.
+
+There is one special directional adverb that defies the usual preposition rules: **додому** (homeward or to home). This word inherently contains the concept of direction and requires no preposition at all. The phrase **повертатися додому** (to return home) is a fixed expression that naturally pairs a verb of motion with the directional adverb. We contrast it directly with the static location adverb **вдо́ма** (at home).
+* **Іва́н іде́ додому.** (Куди? — Ivan is walking home.)
+* **Ма́ма вдома.** (Де? — Mom is at home.)
+
+<Quiz client:only="react" questions={[{"question": "Я ____ в магазин (on foot).", "options": [{"text": "йду", "correct": true}, {"text": "їду", "correct": false}, {"text": "йде", "correct": false}, {"text": "їде", "correct": false}]}, {"question": "Вона ____ у Львів (by transport).", "options": [{"text": "йде", "correct": false}, {"text": "їде", "correct": true}, {"text": "йдуть", "correct": false}, {"text": "їдуть", "correct": false}]}, {"question": "Ми ____ на роботу (by transport).", "options": [{"text": "йдемо", "correct": false}, {"text": "їдемо", "correct": true}, {"text": "йду", "correct": false}, {"text": "їду", "correct": false}]}, {"question": "Степан ____ в банк (on foot).", "options": [{"text": "йде", "correct": true}, {"text": "їде", "correct": false}, {"text": "йдуть", "correct": false}, {"text": "їдуть", "correct": false}]}, {"question": "Вони ____ в Одесу (by transport).", "options": [{"text": "йдуть", "correct": false}, {"text": "їдуть", "correct": true}, {"text": "йдемо", "correct": false}, {"text": "їдемо", "correct": false}]}, {"question": "Ти ____ додому (on foot)?", "options": [{"text": "йдеш", "correct": true}, {"text": "їдеш", "correct": false}, {"text": "йде", "correct": false}, {"text": "їде", "correct": false}]}]} instruction={"Оберіть правильне дієслово: йти чи їхати? (Choose the correct verb: to go on foot or by transport?)"} />
 
 ## Підсумок — Summary
 
-The absolute cornerstone of Ukrainian spatial grammar is the strict two-question system. The question **де?** (where?) asks about a static location and requires the Locative case. The question **куди?** (where to?) asks about dynamic direction and requires the Accusative case. When answering **куди?** (where to?), remember the simplest rule: inanimate masculine and neuter nouns look exactly identical to their original dictionary forms. The only time you need to actively change the noun is when it is a feminine noun ending in **-а** or **-я**, which must always shift to **-у** or **-ю**.
+We can recap the fundamental difference between the two core questions and their associated cases. The question **Де?** triggers the Locative case (such as **в школі**, **на роботі**, or **у банку**) to express STATIC location. You use this when you are already physically present somewhere, sitting, standing, or working. Conversely, the question **Куди?** triggers the Accusative case (such as **у школу**, **на роботу**, or **у банк**) to express dynamic DIRECTION. You use this when you are in transit, walking, driving, or actively moving toward a specific destination. Mastering this distinction is essential for accurate communication in Ukrainian.
 
-**How do I say "I am going to the bank" and "He is going to the park"?**
-You say **Я йду у банк** and **Він іде у парк**. Because these are inanimate masculine nouns, they follow the "no-change" rule for the Accusative case. They look completely identical to the Nominative case.
+The rules for case endings for places in the Accusative case are remarkably straightforward. Masculine and neuter nouns experience absolutely no change; their nominative form is used exactly as is. For example, **банк** remains **у банк**, and **місто** remains **у місто**. Feminine nouns, however, shift their endings: the final **-а** changes to **-у**, and the final **-я** changes to **-ю**. Thus, **школа** becomes **у школу**, and **бібліотека** becomes **у бібліотеку**. The surrounding context and the specific verb of motion dictate the correct grammatical form you must select.
 
-**How do I say "We are going to the library" and "She is going to work"?**
-You say **Ми йдемо у бібліотеку** and **Вона іде на роботу**. These are feminine nouns ending in **-а**. To show direction, the **-а** must change to **-у**.
+Before moving forward, review this self-check Q&A list to guarantee you have absorbed these vital distinctions.
 
-**What is the difference between "Я вдома" and "Я йду додому"?**
-The phrase **Я вдома** (I am at home) is static; it means you are already located there. The phrase **Я йду додому** (I am going home) is dynamic; it means you are currently moving in the direction of your home.
-
-**Which case follows verbs of motion like "їхати" and "йти"?**
-Verbs of motion show direction toward a target, so they answer the question **куди?** (where to?) and must be followed by the Accusative case.
+* Q: Which question asks about static location?
+* A: **Де?** (Where?)
+* Q: Which question asks about the direction of movement?
+* A: **Куди?** (Where to?)
+* Q: How do you say "I am going to the bank"?
+* A: **Я йду в банк.**
+* Q: How do you say "I am at the bank"?
+* A: **Я в банку.**
+* Q: What happens to feminine place names answering "**Куди?**"
+* A: They change their ending (for example, **школа → у школу**).
+* Q: Which verb means "to go on foot"?
+* A: **Йти.**
+* Q: Which verb means "to go by transport"?
+* A: **Їхати.**
 
 </TabItem>
 <TabItem label="Словник">
@@ -170,57 +162,63 @@ Verbs of motion show direction toward a target, so they answer the question **к
 
 | Слово | Переклад | Частина мови | Рід |
 |-------|----------|-------------|-----|
-| **ї́хати** | to go (by transport) | дієсл. |  |
-| **шко́ла** | school | ім. | ж. |
+| **куди́** | where to | присл. |  |
+| **ї́хати** | to go by transport | дієсл. |  |
 | **робо́та** | work | ім. | ч. |
+| **шко́ла** | school | ім. | ж. |
+| **магази́н** | shop | ім. | ч. |
+| **бібліоте́ка** | library | ім. | ж. |
+| **рестора́н** | restaurant | ім. | ч. |
 | **Оде́са** | Odesa |  |  |
+| **поверта́тися** | to return | дієсл. |  |
+| **додо́му** | home | присл. |  |
 | **кафе́** | cafe | ім. | с. |
 | **мі́сто** | city | ім. | с. |
 | **ву́лиця** | street | ім. | ж. |
-| **пло́ща** | square | ім. | ж. |
-| **краї́на** | country | ім. | ж. |
-| **університе́т** | university | ім. | ч. |
-| **центр** | center | ім. | ч. |
-| **аеропо́рт** | airport | ім. | ч. |
-| **додо́му** | home / homeward | присл. |  |
+| **ліка́рня** | hospital | ім. | ж. |
+| **вокза́л** | train station | ім. | ч. |
 | **вдо́ма** | at home | присл. |  |
-| **субо́та** | Saturday | ім. | ж. |
-| **неді́ля** | Sunday | ім. | ж. |
-| **нікуди** | nowhere | присл. |  |
+| **ба́чу** | I see | дієсл. |  |
+| **кого** | whom | ім. | ч. |
 
 ### Вирази
 
 | Вираз | Переклад |
 |-------|----------|
-| **у школу** | to school |
-| **на роботу** | to work |
 | **у банк** | to the bank |
-| **у магазин** | to the shop |
+| **на роботу** | to work |
+| **у школу** | to school |
+| **у/в магазин** | to the shop |
 | **у бібліотеку** | to the library |
 | **у ресторан** | to the restaurant |
 | **в Одесу** | to Odesa |
-| **йти додому** | to return home / to go home |
-| **в аптеку** | to the pharmacy |
-| **на пошту** | to the post office |
-| **Тоді до зустрічі!** | Then see you later! |
-| **Бувай!** | Bye! |
-| **Клас!** | Cool! / Great! |
-| **знахідний відмінок** | Accusative case |
+| **повертатися додому** | to return home |
+| **у парк** | to the park |
+| **у кафе** | to the cafe |
+| **у місто** | to the city |
+| **на вулицю** | to the street |
+| **у Львів** | to Lviv |
+| **в лікарню** | to the hospital |
+| **на вокзал** | to the train station |
 
 ### Картки — Flashcards
 
-<FlashcardDeck client:only="react" cards={[{ front: "ї́хати", back: "to go (by transport)", subtitle: "дієсл." }, { front: "шко́ла", back: "school", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "робо́та", back: "work", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "Оде́са", back: "Odesa" }, { front: "кафе́", back: "cafe", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "мі́сто", back: "city", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "ву́лиця", back: "street", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "пло́ща", back: "square", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "краї́на", back: "country", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "університе́т", back: "university", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "центр", back: "center", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "аеропо́рт", back: "airport", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "додо́му", back: "home / homeward", subtitle: "присл." }, { front: "вдо́ма", back: "at home", subtitle: "присл." }, { front: "субо́та", back: "Saturday", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "неді́ля", back: "Sunday", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "нікуди", back: "nowhere", subtitle: "присл." }]} />
+<FlashcardDeck client:only="react" cards={[{ front: "куди́", back: "where to", subtitle: "присл." }, { front: "ї́хати", back: "to go by transport", subtitle: "дієсл." }, { front: "робо́та", back: "work", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "шко́ла", back: "school", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "магази́н", back: "shop", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "бібліоте́ка", back: "library", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "рестора́н", back: "restaurant", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "Оде́са", back: "Odesa" }, { front: "поверта́тися", back: "to return", subtitle: "дієсл." }, { front: "додо́му", back: "home", subtitle: "присл." }, { front: "кафе́", back: "cafe", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "мі́сто", back: "city", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "ву́лиця", back: "street", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ліка́рня", back: "hospital", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "вокза́л", back: "train station", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "вдо́ма", back: "at home", subtitle: "присл." }, { front: "ба́чу", back: "I see", subtitle: "дієсл." }, { front: "кого", back: "whom", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }]} />
 
 </TabItem>
 <TabItem label="Зошит">
 
-<FillIn client:only="react" items={[{"sentence": "Я йду в ____ (магазин).", "answer": "магазин"}, {"sentence": "Він іде у ____ (школа).", "answer": "школу"}, {"sentence": "Вона їде на ____ (робота).", "answer": "роботу"}, {"sentence": "Ми йдемо у ____ (ресторан).", "answer": "ресторан"}, {"sentence": "Оксана йде в ____ (бібліотека).", "answer": "бібліотеку"}, {"sentence": "Степан їде в ____ (Одеса).", "answer": "Одесу"}, {"sentence": "Вони йдуть на ____ (пошта).", "answer": "пошту"}]} instruction={"Вставте правильну форму (Fill in the correct form)"} />
+<FillIn client:only="react" items={[{"sentence": "Я йду на ____.", "answer": "роботу", "options": ["роботу", "роботі", "робота"]}, {"sentence": "Він зараз на ____.", "answer": "роботі", "options": ["роботу", "роботі", "робота"]}, {"sentence": "Ми їдемо в ____.", "answer": "Одесу", "options": ["Одеса", "Одесу", "Одесі"]}, {"sentence": "Олена працює у ____.", "answer": "банку", "options": ["банк", "банку", "банком"]}, {"sentence": "Степан іде у ____.", "answer": "школу", "options": ["школа", "школу", "школі"]}, {"sentence": "Вони зараз у ____.", "answer": "парку", "options": ["парк", "парку", "парком"]}, {"sentence": "Я повертаюся ____.", "answer": "додому", "options": ["додому", "вдома", "дім"]}]} instruction={"Вставте правильне слово (Insert the correct word)"} />
 
-<MatchUp client:only="react" pairs={[{"left": "у школі", "right": "у школу"}, {"left": "в аптеці", "right": "в аптеку"}, {"left": "на роботі", "right": "на роботу"}, {"left": "на пошті", "right": "на пошту"}, {"left": "у бібліотеці", "right": "у бібліотеку"}, {"left": "вдома", "right": "додому"}]} instruction={"З'єднайте місце (Де?) і напрямок (Куди?)"} />
+<MatchUp client:only="react" pairs={[{"left": "Куди ти йдеш?", "right": "Я йду в магазин."}, {"left": "Де ти?", "right": "Я в магазині."}, {"left": "Куди вона їде?", "right": "Вона їде в Одесу."}, {"left": "Де вона?", "right": "Вона в Одесі."}, {"left": "Куди ви йдете?", "right": "Ми йдемо на роботу."}, {"left": "Де ви працюєте?", "right": "Ми працюємо на роботі."}]} instruction={"З'єднайте запитання та відповідь (Match the question and answer)"} />
 
-<TrueFalse client:only="react" items={[{"statement": "«Я йду в магазин» answers the question «Куди?».", "isTrue": true, "explanation": "Магазин is the destination, so it answers where to (Куди)."}, {"statement": "«Ми у банку» means we are going to the bank.", "isTrue": false, "explanation": "«Ми у банку» means we are located in the bank (Де?). To say we are going, use «Ми йдемо у банк»."}, {"statement": "For inanimate masculine nouns like «банк» або «парк», the Accusative case form is the same as the Nominative.", "isTrue": true, "explanation": "Inanimate masculine and neuter nouns do not change their endings in the Accusative case."}, {"statement": "«Я йду вдома» is the correct way to say «I am going home».", "isTrue": false, "explanation": "«Вдома» means at home (static). To say going home (dynamic), use «додому»."}, {"statement": "If a feminine noun ends in -а, it changes to -у in the Accusative case to show direction.", "isTrue": true, "explanation": "Feminine nouns ending in -а change to -у, for example: школа → у школу."}, {"statement": "«Вона їде на роботу» means she is currently at work.", "isTrue": false, "explanation": "«Вона їде на роботу» means she is traveling to work. «Вона на роботі» means she is at work."}]} instruction={"Правда чи ні? (True or False?)"} />
+<TrueFalse client:only="react" items={[{"statement": "Ми використовуємо запитання «Куди?», коли говоримо про напрямок руху (movement).", "isTrue": true, "explanation": "«Куди?» означає напрямок руху (Where to)."}, {"statement": "Фраза «Я йду в банк» — це відповідь на запитання «Де?».", "isTrue": false, "explanation": "Це рух, тому це відповідь на запитання «Куди?»."}, {"statement": "Слово «вдома» означає рух додому.", "isTrue": false, "explanation": "«Вдома» означає статичну позицію (Де?). Для руху ми використовуємо «додому» (Куди?)."}, {"statement": "Ми кажемо «на роботу», коли йдемо туди.", "isTrue": true, "explanation": "Це Знахідний відмінок (Accusative) для напрямку."}, {"statement": "Слово «місто» змінюється на «місту» після запитання «Куди?».", "isTrue": false, "explanation": "Слово «місто» середнього роду і не змінюється: «Я їду у місто»."}, {"statement": "Дієслово «їхати» означає рухатися транспортом.", "isTrue": true, "explanation": "Так, для руху пішки ми використовуємо «йти»."}]} instruction={"Правда чи ні? (True or false?)"} />
 
-<ErrorCorrection client:only="react" items={[{"sentence": "Я йду в аптека.", "errorWord": "аптека", "correctForm": "аптеку", "options": ["аптеку", "аптеці", "аптекою"], "explanation": "Аптека is a feminine destination, so it changes to аптеку (Accusative)."}, {"sentence": "Він іде на роботі.", "errorWord": "роботі", "correctForm": "роботу", "options": ["робота", "роботу", "роботою"], "explanation": "Робота is a destination here, so we use the Accusative: на роботу."}, {"sentence": "Куди вони? Вони в ресторані.", "errorWord": "Куди", "correctForm": "Де", "options": ["Що", "Коли", "Де"], "explanation": "«В ресторані» is a static location, so the question is Де? (Where?)."}, {"sentence": "Я їду вдома.", "errorWord": "вдома", "correctForm": "додому", "options": ["додому", "дім", "у дім"], "explanation": "With verbs of motion, we use the directional word додому (homeward)."}, {"sentence": "Ми йдемо у парку.", "errorWord": "парку", "correctForm": "парк", "options": ["парк", "парком", "на парк"], "explanation": "Парк is inanimate masculine, so it does not change ending in the Accusative: у парк."}, {"sentence": "Оксана йде в школі.", "errorWord": "школі", "correctForm": "школу", "options": ["школу", "школа", "школою"], "explanation": "Школа is a feminine destination, so it changes to школу."}]} instruction={"Виправте помилку (Fix the error)"} />
+<GroupSort client:only="react" groups={{"Закінчення змінюється (Ending changes)": ["у школу", "на роботу", "у бібліотеку", "в Одесу"], "Закінчення не змінюється (No change)": ["у банк", "у магазин", "у парк", "у місто"]}} instruction={"Знахідний відмінок: змінюється закінчення чи ні? (Accusative case: does the ending change?)"} />
+
+<Anagram client:only="react" items={[{"scrambled": "р о б о т а", "answer": "робота", "hint": "work"}, {"scrambled": "ш к о л а", "answer": "школа", "hint": "school"}, {"scrambled": "б а н к", "answer": "банк", "hint": "bank"}, {"scrambled": "м і с т о", "answer": "місто", "hint": "city"}, {"scrambled": "д о д о м у", "answer": "додому", "hint": "homeward / to home"}, {"scrambled": "ї х а т и", "answer": "їхати", "hint": "to go by transport"}]} instruction={"Складіть слово з літер (Make a word from the letters)"} />
+
+<Unjumble client:only="react" items={[{"words": "в / школу. / йду / Я", "answer": "Я йду в школу."}, {"words": "Одесу. / їде / Вона / в", "answer": "Вона їде в Одесу."}, {"words": "на / Ми / роботі. / зараз", "answer": "Ми зараз на роботі."}, {"words": "ти / Куди / йдеш?", "answer": "Куди ти йдеш?"}, {"words": "банку. / у / працює / Степан", "answer": "Степан працює у банку."}, {"words": "Вони / додому. / повертаються", "answer": "Вони повертаються додому."}]} instruction={"Складіть правильне речення зі слів (Make a correct sentence from the words)"} />
 
 </TabItem>
 <TabItem label="Ресурси">
@@ -229,12 +227,6 @@ Verbs of motion show direction toward a target, so they answer the question **к
 
 - [ULP Season 1, Episode 18](https://www.ukrainianlessons.com/episode18/)
   _Accusative case for directions._
-
-## Підручники (Textbooks)
-
-- [Большакова І. О. — Українська мова, 2 клас (2019)](https://pidruchnyk.com.ua/uploads/book/2-klas-ukrmova-bolshakova-2019-1.pdf#page=94), стор. 94
-- [Угор О. М. — Українська мова, 5 клас (2022)](https://shkola.in.ua/5-klas-ukrainska-mova-uhor-2022.html), стор. 62
-- [Беца І. Ф. — Українська мова, 6 клас (2023)](https://shkola.in.ua/6-klas-ukrainska-mova-betsa-2023.html), стор. 82
 
 **Статті — Articles**
 

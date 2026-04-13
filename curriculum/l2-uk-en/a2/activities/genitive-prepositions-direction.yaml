@@ -2,419 +2,613 @@ version: '1.0'
 module: genitive-prepositions-direction
 level: a2
 inline:
-- id: fill-in-genitive-forms
+- id: fill-in-complete-sentences-with-correct-genitive-noun-form
   type: fill-in
-  instruction: Вставте іменник у правильній формі
+  instruction: Вставте іменник у правильній формі родового відмінка (Genitive)
   items:
-  - sentence: Ми їдемо до ____.
-    answer: Києва
+  - sentence: Пасажир їде до ____.
+    answer: вокзалу
     options:
-    - Києва
-    - Києву
-    - Київ
-  - sentence: Я йду до ____.
+    - вокзал
+    - вокзалу
+    - вокзалі
+  - sentence: Завтра я йду до ____.
     answer: лікаря
     options:
+    - лікар
     - лікаря
     - лікарю
-    - лікар
-  - sentence: Студенти поспішають до ____.
-    answer: університету
-    options:
-    - університету
-    - університета
-    - університеті
-  - sentence: На вихідних ми їдемо до ____.
-    answer: бабусі
-    options:
-    - бабусі
-    - бабусю
-    - бабуся
-  - sentence: Машина під'їхала до ____.
-    answer: станції
-    options:
-    - станції
-    - станцію
-    - станціє
-  - sentence: Вони йдуть до великого ____.
-    answer: будинку
-    options:
-    - будинку
-    - будинка
-    - будинки
-  - sentence: Завтра ми їдемо до ____.
+  - sentence: Ми поїдемо до ____.
     answer: Львова
     options:
     - Львова
-    - Львову
     - Львів
-  - sentence: Я йду до ____.
-    answer: магазину
+    - Львову
+  - sentence: Він іде до ____.
+    answer: аптеки
     options:
-    - магазину
-    - магазина
-    - магазині
-  title: Вставте іменник у правильній формі
+    - аптеку
+    - аптеки
+    - аптека
+  - sentence: Вона гуляє від парку до ____.
+    answer: музею
+    options:
+    - музея
+    - музею
+    - музей
+  - sentence: Студенти їдуть до ____.
+    answer: Києва
+    options:
+    - Києву
+    - Київ
+    - Києва
+  - sentence: Ми йдемо в гості до ____.
+    answer: бабусі
+    options:
+    - бабусю
+    - бабусі
+    - бабуся
+  - sentence: Ти часто їздиш до ____?
+    answer: Польщі
+    options:
+    - Польщу
+    - Польщі
+    - Польща
+- id: quiz-meaning-context
+  type: quiz
+  instruction: Оберіть правильне значення прийменника «до» у кожному реченні
+  items:
+  - question: Ми їдемо до музею.
+    options:
+    - Напрямок (місце)
+    - Напрямок (особа)
+    - Час або дедлайн
+    - Мета або зв'язок
+    correct: 0
+  - question: Сьогодні я йду до лікаря.
+    options:
+    - Напрямок (місце)
+    - Напрямок (особа)
+    - Час або дедлайн
+    - Мета або зв'язок
+    correct: 1
+  - question: Магазин працює до восьмої.
+    options:
+    - Напрямок (місце)
+    - Напрямок (особа)
+    - Час або дедлайн
+    - Мета або зв'язок
+    correct: 2
+  - question: У нього серйозне ставлення до роботи.
+    options:
+    - Напрямок (місце)
+    - Напрямок (особа)
+    - Час або дедлайн
+    - Мета або зв'язок
+    correct: 3
+  - question: Зробіть це завдання до п'ятниці.
+    options:
+    - Напрямок (місце)
+    - Напрямок (особа)
+    - Час або дедлайн
+    - Мета або зв'язок
+    correct: 2
+  - question: Ми купили квитки до Харкова.
+    options:
+    - Напрямок (місце)
+    - Напрямок (особа)
+    - Час або дедлайн
+    - Мета або зв'язок
+    correct: 0
+  - question: Я маю великий інтерес до історії.
+    options:
+    - Напрямок (місце)
+    - Напрямок (особа)
+    - Час або дедлайн
+    - Мета або зв'язок
+    correct: 3
+  - question: Вона поїхала в село до бабусі.
+    options:
+    - Напрямок (місце)
+    - Напрямок (особа)
+    - Час або дедлайн
+    - Мета або зв'язок
+    correct: 1
 - id: match-up-functions
   type: match-up
-  instruction: З'єднайте фразу з її значенням
+  instruction: З'єднайте фразу з її граматичною функцією
   pairs:
   - left: до музею
-    right: напрямок (direction)
-  - left: до п'ятниці
-    right: дедлайн (deadline)
-  - left: з ранку до вечора
-    right: проміжок часу (time range)
-  - left: готовий до екзамену
-    right: готовність (readiness)
-  - left: до побачення
-    right: сталий вираз (fixed expression)
-  - left: додати до списку
-    right: зв'язок (connection)
+    right: напрямок до будівлі
   - left: до лікаря
-    right: напрямок до людини (person)
-  - left: до кінця тижня
-    right: кінець періоду (end of period)
-  title: З'єднайте фразу з її значенням
+    right: напрямок до людини
+  - left: до вечора
+    right: кінець проміжку часу
+  - left: до п'ятниці
+    right: дедлайн для завдання
+  - left: готові до екзамену
+    right: мета підготовки
+  - left: ставлення до роботи
+    right: емоційний зв'язок
+  - left: до Києва
+    right: напрямок до міста
+  - left: до Польщі
+    right: напрямок до країни
 - id: group-sort-categories
   type: group-sort
-  instruction: Розподіліть фрази за категоріями значення
+  instruction: Розподіліть фрази з «до» за категоріями значення
   groups:
   - label: Напрямок (Direction)
     items:
-    - до парку
+    - до вокзалу
+    - до аптеки
+    - до готелю
     - до бабусі
-    - до Одеси
-  - label: Час (Time limit)
+    - до лікаря
+    - до Харкова
+  - label: Час (Time)
     items:
+    - до вечора
     - до ранку
-    - до літа
-    - до вівторка
-  - label: Мета або ставлення (Purpose/Attitude)
+    - до обіду
+    - до п'ятниці
+    - до восьмої
+    - до завтра
+  - label: Мета і зв'язок (Purpose)
     items:
-    - готовий до екзамену
-    - інтерес до історії
-    - ставлення до роботи
-  title: Розподіліть фрази за категоріями значення
-- id: quiz-meaning-choice
-  type: quiz
-  instruction: Яке запитання найкраще підходить до виділеної фрази?
-  items:
-  - question: Я буду читати книгу **до ранку**.
-    options:
-    - До якого часу?
-    - Куди?
-    - Для чого?
-    - Звідки?
-    correct: 0
-  - question: Студенти йдуть **до університету**.
-    options:
-    - Куди?
-    - До якого часу?
-    - Коли?
-    - Звідки?
-    correct: 0
-  - question: Твоє ставлення **до навчання** дуже гарне.
-    options:
-    - До чого?
-    - До якого часу?
-    - Куди?
-    - Звідки?
-    correct: 0
-  - question: Мені треба зробити це **до п'ятниці**.
-    options:
-    - До якого часу?
-    - Куди?
-    - Для чого?
-    - До кого?
-    correct: 0
-  - question: Ввечері я йду **до друга**.
-    options:
-    - До кого?
-    - До якого часу?
-    - Куди?
-    - Звідки?
-    correct: 0
-  - question: Я маю квитки **до Києва** на завтра.
-    options:
-    - Куди?
-    - До якого часу?
-    - До кого?
-    - Звідки?
-    correct: 0
-  - question: Ми гуляли в парку **до пізнього вечора**.
-    options:
-    - До якого часу?
-    - До кого?
-    - Куди?
-    - Звідки?
-    correct: 0
-  - question: Студенти вже готові **до екзамену**.
-    options:
-    - До чого?
-    - До якого часу?
-    - Куди?
-    - Звідки?
-    correct: 0
-  title: Яке запитання найкраще підходить до виділеної фрази?
+    - до екзамену
+    - до списку
+    - до роботи
+    - до історії
+    - до побачення
 workbook:
-- type: fill-in
-  instruction: Вставте правильний прийменник (з, від, до, після)
+- id: fill-in-time-phrases
+  type: fill-in
+  instruction: Вставте правильну форму слова для вираження часу
   items:
-  - sentence: Наш новий офіс працює ____ понеділка до п'ятниці.
-    answer: з
+  - sentence: Я читаю книгу до пізньої ____.
+    answer: ночі
     options:
+    - ночі
+    - ніч
+    - ніччю
+  - sentence: Ми гуляли в парку до самого ____.
+    answer: вечора
+    options:
+    - вечора
+    - вечір
+    - вечору
+  - sentence: Він спить до ____ в неділю.
+    answer: обіду
+    options:
+    - обіду
+    - обід
+    - обіда
+  - sentence: Студенти повинні написати текст до ____.
+    answer: п'ятниці
+    options:
+    - п'ятниці
+    - п'ятницю
+    - п'ятниця
+  - sentence: Магазин працює щодня з десятої до ____.
+    answer: сьомої
+    options:
+    - сьомої
+    - сьома
+    - сьому
+  - sentence: Будь ласка, зателефонуй мені до ____.
+    answer: восьмої
+    options:
+    - восьмої
+    - восьма
+    - восьму
+  - sentence: Я маю працювати в офісі з понеділка до ____.
+    answer: п'ятниці
+    options:
+    - п'ятниці
+    - п'ятниця
+    - п'ятницю
+  - sentence: Вони жили тут ще до ____.
+    answer: війни
+    options:
+    - війни
+    - війна
+    - війну
+- id: error-correction-genitive
+  type: error-correction
+  instruction: Знайдіть і виправте граматичну помилку в реченні
+  items:
+  - sentence: Ми їдемо до вокзал.
+    error: вокзал
+    correction: вокзалу
+    error_type: word
+    options:
+    - вокзалу
+    - вокзалі
+    - вокзалом
+    explanation: Після прийменника «до» потрібен родовий відмінок.
+  - sentence: Вона йде до лікар.
+    error: лікар
+    correction: лікаря
+    error_type: word
+    options:
+    - лікаря
+    - лікарю
+    - лікарем
+    explanation: Після прийменника «до» потрібен родовий відмінок.
+  - sentence: Я буду чекати до вечір.
+    error: вечір
+    correction: вечора
+    error_type: word
+    options:
+    - вечора
+    - вечору
+    - вечером
+    explanation: Після прийменника «до» потрібен родовий відмінок.
+  - sentence: Ти готовий до екзамен?
+    error: екзамен
+    correction: екзамену
+    error_type: word
+    options:
+    - екзамену
+    - екзамена
+    - екзамені
+    explanation: Після прийменника «до» потрібен родовий відмінок.
+  - sentence: Він додав це до список.
+    error: список
+    correction: списку
+    error_type: word
+    options:
+    - списку
+    - списка
+    - списком
+    explanation: Після прийменника «до» потрібен родовий відмінок.
+  - sentence: Ми поїдемо в бабусі.
+    error: в
+    correction: до
+    error_type: word
+    options:
+    - до
+    - на
+    - з
+    explanation: Коли напрямок — це людина, ми завжди кажемо «до».
+  - sentence: Цей магазин працює до сьома.
+    error: сьома
+    correction: сьомої
+    error_type: word
+    options:
+    - сьомої
+    - сьому
+    - сьомій
+    explanation: Після прийменника «до» потрібен родовий відмінок.
+  - sentence: У мене гарне ставлення до робота.
+    error: робота
+    correction: роботи
+    error_type: word
+    options:
+    - роботи
+    - роботу
+    - роботою
+    explanation: Після прийменника «до» потрібен родовий відмінок.
+- id: unjumble-sentences
+  type: unjumble
+  instruction: Складіть правильні речення зі слів
+  items:
+  - words:
+    - Ми
+    - поїдемо
+    - Києва.
+    - до
+    correct_order:
+    - Ми
+    - поїдемо
+    - до
+    - Києва.
+  - words:
+    - до
+    - Вони
+    - їдуть
+    - бабусі.
+    correct_order:
+    - Вони
+    - їдуть
+    - до
+    - бабусі.
+  - words:
+    - магазин
+    - восьмої.
+    - працює
+    - Цей
+    - до
+    correct_order:
+    - Цей
+    - магазин
+    - працює
+    - до
+    - восьмої.
+  - words:
+    - екзамену.
+    - Я
+    - готовий
+    - до
+    correct_order:
+    - Я
+    - готовий
+    - до
+    - екзамену.
+  - words:
+    - ставлення
+    - У
+    - нього
+    - гарне
+    - роботи.
+    - до
+    correct_order:
+    - У
+    - нього
+    - гарне
+    - ставлення
+    - до
+    - роботи.
+  - words:
+    - до
+    - працюю
+    - Я
+    - з
+    - понеділка
+    - п'ятниці.
+    correct_order:
+    - Я
+    - працюю
+    - з
+    - понеділка
+    - до
+    - п'ятниці.
+  - words:
+    - він
+    - великий
+    - має
+    - інтерес
+    - мови.
+    - до
+    correct_order:
+    - він
+    - має
+    - великий
+    - інтерес
+    - до
+    - мови.
+  - words:
+    - брат
+    - Завтра
+    - лікаря.
+    - йде
+    - до
+    correct_order:
+    - Завтра
+    - брат
+    - йде
+    - до
+    - лікаря.
+- id: translate-do-phrases
+  type: translate
+  instruction: Оберіть правильний український переклад для англійської фрази
+  items:
+  - source: We are going to the museum.
+    options:
+    - text: Ми їдемо до музею.
+      correct: true
+    - text: Ми їдемо до музей.
+      correct: false
+    - text: Ми їдемо в музею.
+      correct: false
+    - text: Ми їдемо на музею.
+      correct: false
+  - source: I am going to the doctor.
+    options:
+    - text: Я йду до лікаря.
+      correct: true
+    - text: Я йду в лікаря.
+      correct: false
+    - text: Я йду на лікаря.
+      correct: false
+    - text: Я йду до лікар.
+      correct: false
+  - source: The store works until evening.
+    options:
+    - text: Магазин працює до вечора.
+      correct: true
+    - text: Магазин працює на вечір.
+      correct: false
+    - text: Магазин працює до вечір.
+      correct: false
+    - text: Магазин працює в вечора.
+      correct: false
+  - source: I am ready for the exam.
+    options:
+    - text: Я готовий до екзамену.
+      correct: true
+    - text: Я готовий для екзамену.
+      correct: false
+    - text: Я готовий до екзамен.
+      correct: false
+    - text: Я готовий в екзамен.
+      correct: false
+  - source: Do this by Friday.
+    options:
+    - text: Зроби це до п'ятниці.
+      correct: true
+    - text: Зроби це для п'ятниці.
+      correct: false
+    - text: Зроби це до п'ятниця.
+      correct: false
+    - text: Зроби це в п'ятниці.
+      correct: false
+  - source: From morning to evening.
+    options:
+    - text: Від ранку до вечора.
+      correct: true
+    - text: Від ранок до вечір.
+      correct: false
+    - text: З ранку на вечір.
+      correct: false
+    - text: Від ранку до вечір.
+      correct: false
+  - source: He has a great interest in history.
+    options:
+    - text: Він має великий інтерес до історії.
+      correct: true
+    - text: Він має великий інтерес в історію.
+      correct: false
+    - text: Він має великий інтерес до історія.
+      correct: false
+    - text: Він має великий інтерес на історії.
+      correct: false
+  - source: Add this to the list.
+    options:
+    - text: Додай це до списку.
+      correct: true
+    - text: Додай це для списку.
+      correct: false
+    - text: Додай це до список.
+      correct: false
+    - text: Додай це на список.
+      correct: false
+- id: match-up-from-to
+  type: match-up
+  instruction: З'єднайте слова, щоб утворити правильні логічні фрази
+  pairs:
+  - left: від ранку
+    right: до вечора
+  - left: з понеділка
+    right: до п'ятниці
+  - left: з Києва
+    right: до Варшави
+  - left: готові
+    right: до екзамену
+  - left: ставлення
+    right: до роботи
+  - left: інтерес
+    right: до історії
+  - left: квитки
+    right: до Львова
+  - left: додати
+    right: до списку
+- id: true-false-grammar-rules
+  type: true-false
+  instruction: Правда чи ні? Оцініть граматичні правила
+  items:
+  - statement: Після прийменника «до» ми завжди використовуємо родовий відмінок (Genitive).
+    correct: true
+    explanation: Прийменник «до» завжди вимагає після себе родового відмінка.
+  - statement: Коли ми йдемо в гості до людини (наприклад, лікаря), ми використовуємо
+      прийменник «в».
+    correct: false
+    explanation: Для людей ми завжди використовуємо «до» (до лікаря, до бабусі).
+  - statement: Слово «вокзал» після «до» змінюється на «до вокзалу».
+    correct: true
+    explanation: Це чоловічий рід, тверда група, тому закінчення -у.
+  - statement: Ми можемо використовувати «до» для часу, щоб сказати «until» або «by».
+    correct: true
+    explanation: Наприклад, «до вечора» (until evening) або «до п'ятниці» (by Friday).
+  - statement: 'Правильно казати: «Я готовий на екзамен».'
+    correct: false
+    explanation: 'Правильно казати: «Я готовий до екзамену» (абстрактний напрямок/мета).'
+  - statement: Фрази «до магазину» і «в магазин» є правильними в українській мові.
+    correct: true
+    explanation: Обидві фрази правильні, різниця лише в невеликому нюансі (маршрут
+      vs приміщення).
+  - statement: Слово «Польща» після «до» не змінює своє закінчення.
+    correct: false
+    explanation: 'Слово обов''язково змінюється: до Польщі (родовий відмінок).'
+  - statement: Прийменник «після» показує рух до мети.
+    correct: false
+    explanation: Прийменник «після» показує послідовність у часі (after), а рух до
+      мети — це «до».
+- id: quiz-choose-preposition
+  type: quiz
+  instruction: Оберіть правильний прийменник
+  items:
+  - question: Я маю записатися на прийом ____ лікаря.
+    options:
+    - до
+    - в
+    - на
+    - з
+    correct: 0
+  - question: Ми гуляли в парку ____ самого вечора.
+    options:
+    - в
+    - на
+    - після
+    - до
+    correct: 3
+  - question: Студенти повинні зробити це завдання ____ п'ятниці.
+    options:
+    - в
+    - до
+    - на
+    - від
+    correct: 1
+  - question: Наш робочий день триває ____ дев'ятої до шостої.
+    options:
+    - до
     - з
     - на
+    - після
+    correct: 1
+  - question: Додай це нове слово ____ свого списку.
+    options:
     - в
-  - sentence: Я в університеті кожного дня з дев'ятої ____ шостої.
-    answer: до
-    options:
-    - до
-    - по
     - на
-  - sentence: Вона чекає ____ завтра.
-    answer: до
+    - до
+    - з
+    correct: 2
+  - question: Він має дуже гарне ставлення ____ роботи.
     options:
+    - на
+    - в
     - до
     - для
-    - на
-  - sentence: ____ роботи ми йдемо до нового ресторану.
-    answer: Після
-    options:
-    - Після
-    - До
-    - Від
-  - sentence: Я маю прийти до офісу ____ восьмої.
-    answer: до
+    correct: 2
+  - question: Ми їдемо ____ бабусі в село.
     options:
     - до
     - в
     - на
-  - sentence: Лікар приймає пацієнтів від другої ____ п'ятої години.
-    answer: до
+    - для
+    correct: 0
+  - question: Мій брат ще не готовий ____ екзамену.
     options:
-    - до
+    - на
     - в
-    - після
-  title: Вставте правильний прийменник (з, від, до, після)
-- type: error-correction
-  instruction: Знайдіть і виправте помилку
-  items:
-  - sentence: Я йду в лікар.
-    error: в лікар
-    correction: до лікаря
-    error_type: phrase
-    options:
-    - до лікаря
-    - лікарю
-    - до лікарем
-    explanation: Movement toward a person requires «до» + Genitive.
-  - sentence: Ми працюємо з ранку до вечір.
-    error: до вечір
-    correction: до вечора
-    error_type: phrase
-    options:
-    - до вечора
-    - до вечіру
-    - у вечір
-    explanation: Time limits require «до» + Genitive. Вечір takes -а.
-  - sentence: Магазин не працює до понеділок.
-    error: до понеділок
-    correction: до понеділка
-    error_type: phrase
-    options:
-    - до понеділка
-    - до понеділку
-    - у понеділок
-    explanation: Days of the week take -а in the Genitive.
-  - sentence: Ми їдемо к бабусі.
-    error: к бабусі
-    correction: до бабусі
-    error_type: phrase
-    options:
-    - до бабусі
-    - в бабусю
-    - на бабусю
-    explanation: Movement toward a person is always «до» + Genitive in Ukrainian.
-      Using «к» is a Russian calque.
-  - sentence: Студенти готові до екзамен.
-    error: до екзамен
-    correction: до екзамену
-    error_type: phrase
-    options:
-    - до екзамену
-    - до екзамена
-    - в екзамен
-    explanation: Abstract goals require Genitive, and masculine abstract nouns typically
-      take -у.
-  - sentence: Ти можеш додати молоко в список?
-    error: в список
-    correction: до списку
-    error_type: phrase
-    options:
+    - для
+    - до
+    correct: 3
+- id: group-sort-endings
+  type: group-sort
+  instruction: Розподіліть іменники за їхнім закінченням після прийменника «до»
+  groups:
+  - label: Закінчення -у / -ю
+    items:
+    - до вокзалу
+    - до готелю
+    - до ранку
+    - до обіду
     - до списку
-    - в списку
-    - до списка
-    explanation: We say «додати до» (add to) + Genitive.
-  title: Знайдіть і виправте помилку
-- type: unjumble
-  instruction: Складіть правильне речення зі слів
-  items:
-  - words:
-    - Одеси.
-    - їду
-    - до
-    - Я
-    correct_order:
-    - Я
-    - їду
-    - до
-    - Одеси.
-  - words:
-    - Львова.
-    - ми
-    - Завтра
-    - до
-    - їдемо
-    correct_order:
-    - Завтра
-    - ми
-    - їдемо
-    - до
-    - Львова.
-  - words:
-    - вже
-    - Студенти
-    - до
-    - екзамену.
-    - готові
-    correct_order:
-    - Студенти
-    - вже
-    - готові
-    - до
-    - екзамену.
-  - words:
-    - від
-    - ранку
-    - Ми
-    - до
-    - гуляли
-    - вечора.
-    correct_order:
-    - Ми
-    - гуляли
-    - від
-    - ранку
-    - до
-    - вечора.
-  - words:
-    - до
-    - Я
-    - маю
-    - восьмої.
-    - прийти
-    - до
-    - офісу
-    correct_order:
-    - Я
-    - маю
-    - прийти
-    - до
-    - офісу
-    - до
-    - восьмої.
-  - words:
-    - ресторану.
-    - Після
-    - ми
-    - роботи
-    - йдемо
-    - до
-    correct_order:
-    - Після
-    - роботи
-    - ми
-    - йдемо
-    - до
-    - ресторану.
-  - words:
-    - додати
-    - молоко
-    - Ти
-    - до
-    - можеш
-    - кави?
-    correct_order:
-    - Ти
-    - можеш
-    - додати
-    - молоко
-    - до
-    - кави?
-  title: Складіть правильне речення зі слів
-- type: translate
-  instruction: Оберіть правильний переклад
-  items:
-  - source: I am going to the doctor because I am sick.
-    options:
-    - text: Я йду до лікаря, тому що я хворий.
-      correct: true
-    - text: Я йду в лікар, тому що я хворий.
-      correct: false
-    - text: Я йду на лікаря, тому що я хворий.
-      correct: false
-    - text: Я йду до лікарю, тому що я хворий.
-      correct: false
-  - source: We are resting at the sea until summer.
-    options:
-    - text: Ми відпочиваємо на морі до літа.
-      correct: true
-    - text: Ми відпочиваємо на морі до літо.
-      correct: false
-    - text: Ми відпочиваємо на морі в літо.
-      correct: false
-    - text: Ми відпочиваємо на морі після літа.
-      correct: false
-  - source: Are you ready for the exam?
-    options:
-    - text: Ти готовий до екзамену?
-      correct: true
-    - text: Ти готовий на екзамен?
-      correct: false
-    - text: Ти готовий в екзамен?
-      correct: false
-    - text: Ти готовий для екзамену?
-      correct: false
-  - source: Tomorrow we are traveling to Lviv.
-    options:
-    - text: Завтра ми їдемо до Львова.
-      correct: true
-    - text: Завтра ми їдемо в Львів.
-      correct: false
-    - text: Завтра ми їдемо на Львів.
-      correct: false
-    - text: Завтра ми їдемо до Львів.
-      correct: false
-  - source: Please, do this task by Friday.
-    options:
-    - text: Будь ласка, зробіть це завдання до п'ятниці.
-      correct: true
-    - text: Будь ласка, зробіть це завдання в п'ятницю.
-      correct: false
-    - text: Будь ласка, зробіть це завдання після п'ятниці.
-      correct: false
-    - text: Будь ласка, зробіть це завдання на п'ятницю.
-      correct: false
-  - source: What is your attitude toward work?
-    options:
-    - text: Яке твоє ставлення до роботи?
-      correct: true
-    - text: Яке твоє ставлення на роботу?
-      correct: false
-    - text: Яке твоє ставлення в роботу?
-      correct: false
-    - text: Яке твоє ставлення для роботи?
-      correct: false
-  title: Оберіть правильний переклад
+    - до парку
+  - label: Закінчення -а / -я
+    items:
+    - до Львова
+    - до лікаря
+    - до Києва
+    - до моря
+    - до Харкова
+  - label: Закінчення -и / -і
+    items:
+    - до аптеки
+    - до бабусі
+    - до Польщі
+    - до роботи
+    - до п'ятниці
+    - до історії

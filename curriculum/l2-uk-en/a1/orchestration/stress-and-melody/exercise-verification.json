@@ -1,55 +1,32 @@
 {
-  "total_items": 33,
-  "grounded_items": 26,
+  "total_items": 22,
+  "grounded_items": 19,
   "ungrounded": [
+    {
+      "word": "молоко",
+      "exercise_type": "quiz",
+      "context": "молоко",
+      "role": "context"
+    },
     {
       "word": "що'",
       "exercise_type": "true-false",
-      "context": "Questions starting with 'що' or 'де' always use a rising int",
+      "context": "A question with 'що' (what) or 'де' (where) uses a rising in",
       "role": "context"
     },
     {
       "word": "де'",
       "exercise_type": "true-false",
-      "context": "Questions starting with 'що' or 'де' always use a rising int",
-      "role": "context"
-    },
-    {
-      "word": "о'",
-      "exercise_type": "true-false",
-      "context": "In Ukrainian, an unstressed 'О' is still pronounced clearly ",
-      "role": "context"
-    },
-    {
-      "word": "наголос'",
-      "exercise_type": "quiz",
-      "context": "What is 'наголос' in Ukrainian?",
-      "role": "context"
-    },
-    {
-      "word": "фотографія'",
-      "exercise_type": "quiz",
-      "context": "How do you correctly divide 'фотографія' into syllables?",
-      "role": "context"
-    },
-    {
-      "word": "рука'",
-      "exercise_type": "quiz",
-      "context": "What happens to the stress when 'рука' (hand) becomes 'руки'",
-      "role": "context"
-    },
-    {
-      "word": "руки'",
-      "exercise_type": "quiz",
-      "context": "What happens to the stress when 'рука' (hand) becomes 'руки'",
+      "context": "A question with 'що' (what) or 'де' (where) uses a rising in",
       "role": "context"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 9,
-    "tested_in_exercises": 7,
+    "tested_in_exercises": 6,
     "not_tested": [
       "наголос",
+      "столиця",
       "фотографія"
     ]
   },

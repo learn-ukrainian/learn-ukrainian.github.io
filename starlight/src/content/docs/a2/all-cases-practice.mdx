@@ -7,7 +7,6 @@ pipeline: v6
 build_status: draft
 ---
 
-import ErrorCorrection from '@site/src/components/ErrorCorrection';
 import FillIn from '@site/src/components/FillIn';
 import FlashcardDeck from '@site/src/components/FlashcardDeck';
 import GroupSort from '@site/src/components/GroupSort';
@@ -21,225 +20,223 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 <Tabs syncKey="module-tab">
 <TabItem label="Урок">
 
-## Діалог 1: Організовуємо день народження
+## Діалог 1: Організовуємо день народження (~550 words total)
 
-Сьогодні ми слухаємо цікаву розмову двох друзів. **Оксана** *(Oksana)* та **Андрій** *(Andrii)* телефонують одне одному. Вони хочуть організувати чудову **вечірку** *(party)* для своєї подруги. Її звати **Олена** *(Olena)*. Це буде великий **сюрприз** *(surprise)* на її **день народження** *(birthday)*. У цьому діалозі вони природно використовують усі сім відмінків української мови. Це чудова можливість уважно послухати та побачити, як працює українська граматика в реальному житті.
-
-<div class="dialogue">
-
-<div class="dialogue-line"><span class="speaker">Оксана:</span> Привіт, Андрію! Ти пам'ятаєш, що завтра в Олени день народження? *(Hi, Andrii! Do you remember that tomorrow is Olena's birthday?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Андрій:</span> Привіт, Оксано! Так, пам'ятаю. Хто саме **прийде** *(will come)* на свято? *(Hi, Oksana! Yes, I remember. Who exactly will come to the holiday?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Оксана:</span> Прийдуть усі наші найкращі **друзі** *(friends)*. Але у нас є проблема: ще **немає торта** *(there is no cake)*. *(All our best friends will come. But we have a problem: there is no cake yet.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Андрій:</span> Я можу **купити торт** *(to buy a cake)*. А що ще нам треба? *(I can buy a cake. And what else do we need?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Оксана:</span> У нас буде **багато гостей** *(many guests)*, але зовсім **немає соку** *(there is no juice)*. *(We will have many guests, but there is absolutely no juice.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Андрій:</span> Добре, я куплю сік. А ти можеш **запросити друзів** *(to invite friends)*? *(Okay, I will buy juice. And can you invite the friends?)*</div>
-
-</div>
-
-Let's pause and look at the "birthday triggers" we just heard in the conversation. Notice how verbs and words of quantity change the endings of the nouns that follow them. 
-
-When Andrii says he will buy a cake, he uses the Accusative case for the direct object of his action: «купити торт». Because the word «торт» is an inanimate noun, it does not change its ending here. 
-
-However, when Oksana talks about what they specifically do not have, she must use the Genitive case of absence: «немає торта», «немає соку». Words that express quantity also trigger the Genitive case, which is exactly why she says «багато гостей» instead of the Nominative plural form «багато гості».
+Оксана та Андрій хочуть зробити великий сюрприз. У їхньої найкращої подруги Олени скоро день народження. Вони планують веселу **вечірку** (party) і зараз обговорюють усі важливі деталі по телефону. Їм треба вирішити багато складних питань: кого **запрошувати** (to invite), який торт вибрати, що купити і де саме святкувати цей день. Ця життєва ситуація — ідеальний приклад того, як ми використовуємо абсолютно всі відмінки в одній звичайній розмові.
 
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Оксана:</span> Я вже почала **дзвонити друзям** *(to call friends)*. Вони дуже раді. *(I already started to call friends. They are very glad.)*</div>
+<div class="dialogue-line">*Oksana and Andrii want to make a big surprise. Their best friend Olena has a birthday soon. They are planning a fun party and are now discussing all the important details on the phone. They need to decide many complex questions: who to invite, which cake to choose, what to buy, and where exactly to celebrate this day. This real-life situation is a perfect example of how we use absolutely all cases in one ordinary conversation.*</div>
 
-<div class="dialogue-line"><span class="speaker">Андрій:</span> Супер. А що ми подаруємо Олені? Нам потрібен гарний **подарунок** *(gift)*. *(Super. And what will we give Olena? We need a beautiful gift.)*</div>
+<div class="dialogue-line"><span class="speaker">Оксана:</span> Привіт, Андрію! Ти пам'ятаєш, що в нашої Олени скоро день народження? *(Hi, Andrii! Do you remember that our Olena has a birthday soon?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Оксана:</span> Я думаю, ми можемо подарувати **Олені** *(to Olena)* нову книгу. *(I think we can give Olena a new book.)*</div>
+<div class="dialogue-line"><span class="speaker">Андрій:</span> Привіт, Оксано! Звичайно, я пам'ятаю. Хто прийде на це свято? *(Hi, Oksana! Of course, I remember. Who will come to this holiday?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Андрій:</span> Це чудова ідея. Ми прийдемо **з великою компанією** *(with a large company)*. *(That is a wonderful idea. We will come with a large company.)*</div>
+<div class="dialogue-line"><span class="speaker">Оксана:</span> Я хочу запросити всіх наших спільних друзів. Але у нас поки що немає торта. *(I want to invite all our mutual friends. But we don't have a cake yet.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Оксана:</span> Так, ми будемо **з друзями** *(with friends)*. Ми також можемо **прикрасити** *(to decorate)* кімнату **кульками** *(with balloons)*. *(Yes, we will be with friends. We can also decorate the room with balloons.)*</div>
+<div class="dialogue-line"><span class="speaker">Андрій:</span> Це не проблема. Я можу купити великий шоколадний торт. А що ще нам треба? *(This is not a problem. I can buy a big chocolate cake. And what else do we need?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Оксана:</span> Нам треба вибрати і купити гарний **подарунок** (gift). І ще у нас зовсім немає свічок для торта. *(We need to choose and buy a nice gift. And also we have absolutely no candles for the cake.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Андрій:</span> Я все зрозумів. Там буде багато гостей? *(I understood everything. Will there be many guests there?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Оксана:</span> Так, я думаю, що туди прийде багато хороших людей. *(Yes, I think many good people will come there.)*</div>
 
 </div>
 
-Now we clearly see both the Dative and Instrumental cases in action. 
-
-The Dative case identifies the "recipient" of an action. When Oksana gives a gift, she gives it directly «Олені» (to Olena). Similarly, when she makes a phone call, she speaks «друзям» (to the friends).
-
-The Instrumental case shows accompaniment or the physical means of doing something. It answers the question "with who?" or "with what?". They plan to arrive «з великою компанією» and celebrate «з друзями». Notice the difference between the singular ending in «з компанією» and the plural ending in «з друзями». They also decorate the room using balloons: «кульками».
+Let's look at the "Birthday Triggers" in this first part of the dialogue. When Oksana says «купити торт» (to buy a cake) or «купити подарунок» (to buy a gift), she naturally uses the Accusative case because these items are the direct objects of her action. However, when she talks about things they currently lack, like «немає торта» (no cake) or «немає свічок» (no candles), she switches to the Genitive case. The Genitive case is also strictly required by words of quantity. This is exactly why Andrii asks about «багато гостей» (many guests) instead of using the simple Nominative plural form.
 
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Андрій:</span> Де саме ми зробимо цю вечірку? **У ресторані** *(in a restaurant)* «Дніпро»? *(Where exactly will we do this party? In the restaurant "Dnipro"?)*</div>
+<div class="dialogue-line"><span class="speaker">Андрій:</span> Кому ти вже дзвонила сьогодні вранці? *(Who have you already called this morning?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Оксана:</span> Так, там завжди дуже гарно. Ми будемо зручно сидіти **на терасі** *(on the terrace)*. *(Yes, it is always very beautiful there. We will sit comfortably on the terrace.)*</div>
+<div class="dialogue-line"><span class="speaker">Оксана:</span> Я дзвонила Марії, Павлу та Івану. Нам треба ще написати іншим друзям. *(I called Mariia, Pavlo, and Ivan. We still need to write to other friends.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Андрій:</span> Домовилися, **Оксано** *(Oksana)*! Усе буде ідеально. *(Agreed, Oksana! Everything will be perfect.)*</div>
+<div class="dialogue-line"><span class="speaker">Андрій:</span> Дуже добре. А що ми подаруємо Олені від нас усіх? *(Very good. And what will we gift to Olena from all of us?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Оксана:</span> Дуже дякую за допомогу, **Андрію** *(Andrii)*! До завтра! *(Thank you very much for the help, Andrii! Until tomorrow!)*</div>
+<div class="dialogue-line"><span class="speaker">Оксана:</span> Я думаю, їй дуже сподобається нова цікава книга. Ми можемо піти в книжковий магазин з великою компанією. *(I think she will really like a new interesting book. We can go to the bookstore with a big group.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Андрій:</span> Це просто чудова ідея! А хто буде прикрашати кімнату яскравими кульками? *(This is simply a great idea! And who will decorate the room with bright balloons?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Оксана:</span> Ми з тобою! І, звичайно, разом з іншими друзями. *(You and I! And, of course, together with other friends.)*</div>
 
 </div>
 
-В Україні є дуже цікава традиція. Зазвичай **іменинник** *(birthday person)* сам організовує свято і щедро **частує** *(treats)* своїх гостей. Гості просто приносять подарунки, але вони не платять за ресторан. Оскільки Оксана та Андрій роблять таємний сюрприз, це приємний виняток із правил! *(In Ukraine there is a very interesting tradition. Usually the birthday person themselves organizes the holiday and generously treats their guests. Guests simply bring gifts, but they do not pay for the restaurant. Since Oksana and Andrii are making a secret surprise, this is a pleasant exception to the rules!)*
-
-<Quiz client:only="react" questions={[{"question": "Я можу купити **торт**.", "options": [{"text": "Називний", "correct": false}, {"text": "Знахідний", "correct": true}, {"text": "Родовий", "correct": false}, {"text": "Орудний", "correct": false}]}, {"question": "У нас зовсім немає **соку**.", "options": [{"text": "Називний", "correct": false}, {"text": "Давальний", "correct": false}, {"text": "Родовий", "correct": true}, {"text": "Місцевий", "correct": false}]}, {"question": "Я вже почала дзвонити **друзям**.", "options": [{"text": "Знахідний", "correct": false}, {"text": "Давальний", "correct": true}, {"text": "Орудний", "correct": false}, {"text": "Місцевий", "correct": false}]}, {"question": "Ми прийдемо з великою **компанією**.", "options": [{"text": "Називний", "correct": false}, {"text": "Родовий", "correct": false}, {"text": "Давальний", "correct": false}, {"text": "Орудний", "correct": true}]}, {"question": "Ми будемо зручно сидіти на **терасі**.", "options": [{"text": "Знахідний", "correct": false}, {"text": "Родовий", "correct": false}, {"text": "Місцевий", "correct": true}, {"text": "Кличний", "correct": false}]}, {"question": "Домовилися, **Оксано**!", "options": [{"text": "Називний", "correct": false}, {"text": "Знахідний", "correct": false}, {"text": "Давальний", "correct": false}, {"text": "Кличний", "correct": true}]}, {"question": "**Іменинник** сам організовує свято.", "options": [{"text": "Називний", "correct": true}, {"text": "Знахідний", "correct": false}, {"text": "Родовий", "correct": false}, {"text": "Орудний", "correct": false}]}, {"question": "Ми можемо подарувати **Олені** нову книгу.", "options": [{"text": "Знахідний", "correct": false}, {"text": "Давальний", "correct": true}, {"text": "Родовий", "correct": false}, {"text": "Місцевий", "correct": false}]}]} instruction={"Визначте відмінок виділеного слова."} />
-
-## Діалог 2: У лікарні
-
-Сьогодні Петро йде до **лікарні** *(hospital)*. Він дуже погано почувається ще з самого ранку. У лікарні завжди багато хворих людей, тому Петро спочатку підходить до **реєстратури** *(reception)*. Йому потрібно точно дізнатися, де приймає його **лікар** *(doctor)*. Петро має **запис** *(appointment)* на десяту годину ранку. Він сподівається, що лікар швидко допоможе йому.
+Notice how the focus of the conversation shifts to the people receiving actions and the means of doing things. The Dative case is the classic "Recipient" case. When Oksana says she «дзвонила Марії» (called Mariia) or discusses a gift «Олені» (to Olena), she is showing exactly who receives the phone call or the present. The Instrumental case, on the other hand, shows accompaniment or the physical tool used for an action. They will go to the store «з великою компанією» (with a big group) and they will decorate the room «кульками» (with balloons). Pay special attention to the difference between using the plural form «з друзями» (with friends) and a singular person like «з Оксаною» (with Oksana).
 
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Петро:</span> Добрий день! Я маю запис до лікаря Коваленка.</div>
+<div class="dialogue-line"><span class="speaker">Андрій:</span> Оксано, а де саме ми будемо святкувати? *(Oksana, and where exactly will we celebrate?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Адміністраторка:</span> Добрий день! Ваше прізвище, будь ласка?</div>
+<div class="dialogue-line"><span class="speaker">Оксана:</span> У ресторані «Дніпро». Я вже замовила нам великий стіл на літній терасі. *(In the restaurant "Dnipro". I already booked us a big table on the summer terrace.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Петро:</span> Моє прізвище — Бойко. Я записаний на десяту годину.</div>
+<div class="dialogue-line"><span class="speaker">Андрій:</span> Супер! Оксано, ти молодець, що все так добре організувала. *(Super! Oksana, you did a great job organizing everything so well.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Адміністраторка:</span> Хвилинку, я перевірю. Так, бачу. Але лікар зараз зайнятий. У нього інший **пацієнт** *(patient)*.</div>
-
-<div class="dialogue-line"><span class="speaker">Петро:</span> Зрозуміло. А де мені чекати? Мені потрібно сидіти в черзі?</div>
-
-<div class="dialogue-line"><span class="speaker">Адміністраторка:</span> Ні, ви можете почекати біля кабінету. Кабінет лікаря Коваленка знаходиться на другому поверсі.</div>
-
-<div class="dialogue-line"><span class="speaker">Петро:</span> А до лікарки Іванової зараз можна? Може, до неї немає черги?</div>
-
-<div class="dialogue-line"><span class="speaker">Адміністраторка:</span> На жаль, без неї ми не можемо вас прийняти. Вона сьогодні не працює. Зачекайте біля кабінету Коваленка.</div>
+<div class="dialogue-line"><span class="speaker">Оксана:</span> Дякую! До швидкої зустрічі на вечірці! *(Thank you! See you soon at the party!)*</div>
 
 </div>
 
-When we use personal pronouns like «він» (he), «вона» (she), or «вони» (they) after a preposition, we must add the letter «н» at the beginning of the pronoun. The receptionist says «у нього» instead of «у його». This rule applies to all indirect cases when a preposition is present. For example, if Petro asks about a female doctor, he says «до неї» (to her). If the doctor is not there, we say «без неї» (without her). If Petro talks about the doctors in plural, he might ask: «Чи є ліки для них?» (Are there medicines for them?). Without a preposition, the letter «н» is simply dropped: «Я бачу його» (I see him).
+:::tip
+**Cultural note: Who pays for the party?**
+In Ukraine, birthday etiquette works a bit differently than in many English-speaking countries. Usually, it is the birthday person, the «іменинник» (birthday boy) or «іменинниця» (birthday girl), who treats the guests and pays for the food or the restaurant. This tradition is called «частувати» (to treat). The guests, in turn, bring the gifts, flowers, and a very good mood! A surprise party like the one Oksana and Andrii are planning is a fun exception to the rule.
+:::
 
-Петро піднімається на другий поверх і заходить до кабінету.
+## Діалог 2: У лікарні (~550 words total)
+
+Petro is not feeling well today, so he goes to the local **лікарня** (hospital). He needs to speak with a **лікар** (doctor) about his symptoms. The **пацієнт** (patient) must go to the reception desk first to confirm his appointment. Ukrainian hospitals are usually busy in the morning, so he has to wait a little bit in line.
 
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Лікар:</span> Добрий день, пане Петре. Сідайте, будь ласка. Що вас сьогодні турбує?</div>
+<div class="dialogue-line"><span class="speaker">Петро:</span> Добрий день. У мене є запис до лікаря Коваленка на десяту годину. *(Good afternoon. I have an appointment with doctor Kovalenko for ten o'clock.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Петро:</span> Добрий день, лікарю. Мені дуже погано.</div>
+<div class="dialogue-line"><span class="speaker">Медсестра:</span> Добрий день. Ваше прізвище, будь ласка? Шукаю вас у системі. *(Good afternoon. Your last name, please? I am looking for you in the system.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Лікар:</span> Розкажіть детальніше. Що саме у вас болить?</div>
+<div class="dialogue-line"><span class="speaker">Петро:</span> Моє прізвище Петренко. Я вже був у нього минулого місяця. Тоді я мав проблеми зі спиною. *(My last name is Petrenko. I was already at his place last month. Then I had problems with my back.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Петро:</span> У мене болить голова і горло. Також я прийшов з високою температурою і страшним кашлем.</div>
+<div class="dialogue-line"><span class="speaker">Медсестра:</span> Так, бачу ваш запис. Але лікар зараз зайнятий. У нього в кабінеті інший пацієнт. *(Yes, I see your appointment. But the doctor is busy right now. There is another patient in his office.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Лікар:</span> Яка у вас **температура** *(temperature)* зараз?</div>
+<div class="dialogue-line"><span class="speaker">Петро:</span> Розумію. До нього можна зайти трохи пізніше? *(I understand. Can I go in to him a little later?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Петро:</span> Тридцять вісім і п'ять. Я відчуваю сильну слабкість у всьому тілі.</div>
+<div class="dialogue-line"><span class="speaker">Медсестра:</span> Почекайте в черзі, будь ласка. Його кабінет знаходиться на другому поверсі. *(Wait in line, please. His office is located on the second floor.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Лікар:</span> Зрозуміло. Мені потрібно вас уважно оглянути. Відкрийте рот і скажіть «А-а-а».</div>
-
-<div class="dialogue-line"><span class="speaker">Петро:</span> А-а-а. Це дуже неприємно.</div>
-
-<div class="dialogue-line"><span class="speaker">Лікар:</span> Так, ваше горло дуже червоне. Ви маєте класичну застуду, пане Петре. Ваші легені чисті, це добре.</div>
+<div class="dialogue-line"><span class="speaker">Петро:</span> Дякую за допомогу. Я почекаю біля нього в коридорі. *(Thank you for the help. I will wait near it in the corridor.)*</div>
 
 </div>
 
-Notice how Petro describes his health. In English, you say "I have a headache". In Ukrainian, the body part is the subject in the Nominative case, and it performs the action of hurting. The verb is «боліти» (to hurt). Petro says «у мене болить голова» (literally: "at me the head hurts"). If multiple things hurt, the verb changes to plural: «у мене болять очі» (my eyes hurt). When describing a general state, we use the Dative case with an adverb: «мені погано» (to me it is bad) or the reflexive verb «почуватися» (to feel). You can simply say «я погано почуваюся».
+Notice how the nurse and Petro talk about the doctor using the pronouns «у нього» (at his), «до нього» (to him), and «біля нього» (near him). When the third-person pronouns «він», «вона», or «вони» follow a preposition, they always gain an extra «н-» at the beginning. This phonetic rule makes pronunciation much smoother and connects the preposition directly to the pronoun. 
+
+Зазвичай пацієнти чекають біля кабінету, щоб зайти до нього. Якщо лікарка вільна, ви можете підійти до неї. Лікарі багато працюють, тому для них важливо мати перерву. Без неї вони швидко втомлюються.
 
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Лікар:</span> Я випишу вам **рецепт** *(prescription)*. Вам потрібно **приймати ліки** *(to take medicine)* за рецептом тричі на день після їжі. Це дуже важливо.</div>
+<div class="dialogue-line">*Usually patients wait near the office to go in to him. If the female doctor is free, you can approach her. Doctors work a lot, so for them it is important to have a break. Without it, they get tired quickly.*</div>
 
-<div class="dialogue-line"><span class="speaker">Петро:</span> Дякую. А що ще мені потрібно робити вдома?</div>
+<div class="dialogue-line"><span class="speaker">Лікар:</span> Добрий день, пане Петренко. Проходьте і сідайте. Що вас турбує сьогодні? *(Good afternoon, Mr. Petrenko. Come in and sit down. What is bothering you today?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Лікар:</span> Я раджу вам багато спати. Пийте гарячий чай з лимоном і медом. Ваш організм потребує відпочинку.</div>
+<div class="dialogue-line"><span class="speaker">Петро:</span> Добрий день, лікарю. Мені дуже погано з учорашнього вечора. У мене сильно болить голова. *(Good afternoon, doctor. I feel very bad since yesterday evening. My head hurts a lot.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Петро:</span> Добре. Коли мені прийти на наступний **огляд** *(examination)*?</div>
+<div class="dialogue-line"><span class="speaker">Лікар:</span> Розумію ваші симптоми. У вас є висока температура або слабкість? *(I understand your symptoms. Do you have a high temperature or weakness?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Лікар:</span> Приходьте до мене через п'ять днів. Якщо вам раптом стане гірше, телефонуйте одразу. Бажаю вам міцного **здоров'я** *(health)*!</div>
+<div class="dialogue-line"><span class="speaker">Петро:</span> Так, я прийшов з високою температурою і сильним кашлем. Мені важко дихати. *(Yes, I came with a high temperature and a strong cough. It is hard for me to breathe.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Петро:</span> Дуже дякую вам за допомогу, пане докторе! До побачення.</div>
+<div class="dialogue-line"><span class="speaker">Лікар:</span> Давайте я вас уважно огляну. Дихайте глибоко і не хвилюйтеся. *(Let me examine you carefully. Breathe deeply and do not worry.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Петро:</span> У мене також дуже болить горло, коли я п'ю воду. *(My throat also hurts a lot when I drink water.)*</div>
 
 </div>
 
-<FillIn client:only="react" items={[{"sentence": "— Привіт, ____ (Андрій)! Як справи?", "answer": "Андрію"}, {"sentence": "— Хто прийде на свято?\n— Прийдуть усі наші ____ (друг).", "answer": "друзі"}, {"sentence": "— Де ми будемо святкувати?\n— Ми замовимо стіл у ____ (ресторан).", "answer": "ресторані"}, {"sentence": "— Що ти подаруєш Олені?\n— Я купив кілька цікавих ____ (книга).", "answer": "книг"}, {"sentence": "— Чим ви будете прикрашати кімнату?\n— Ми прикрасимо її ____ (кулька).", "answer": "кульками"}, {"sentence": "— Кому ти зараз дзвониш?\n— Я дзвоню своїм ____ (друг).", "answer": "друзям"}, {"sentence": "— Скільки людей буде на вечірці?\n— У нас буде багато ____ (гість).", "answer": "гостей"}, {"sentence": "— Які у вас плани на літо?\n— Ми хочемо відвідати багато нових ____ (місто).", "answer": "міст"}]} instruction={"Прочитайте міні-діалог і вставте слово в дужках у правильній формі. Зверніть увагу на відмінок та множину."} />
+When talking about **здоров'я** (health) in Ukrainian, we use very specific case constructions. To say "I have a headache," we literally say "At me hurts the head" — «У мене болить голова». The body part is the subject in the Nominative case, and the person experiencing the pain is in the Genitive case after the preposition «у». When the doctor prescribes **ліки** (medicine), you must follow their advice carefully.
 
-## Діалог 3: Подорож Україною
+Українці часто використовують давальний відмінок для опису свого стану. Наприклад, пацієнт каже «мені погано», а не «я є поганий». Якщо ви хочете описати свої відчуття дієсловом, використовуйте слово «почуватися».
 
-Україна — дуже велика і красива країна. Тарас та Ірина планують велику **подорож** *(trip)*. Вони хочуть побачити нове **місто** *(city)* і високі **гори** *(mountains)*. Також вони мріють поїхати на південь, де тече широка **річка** *(river)*. Їхній маршрут дуже довгий. Він іде через усю країну, майже від одного **кордону** *(border)* до іншого. Давайте послухаємо їхню розмову.
+> *Ukrainians often use the Dative case to describe their condition. For example, a patient says "to me it is bad" rather than "I am bad." If you want to describe your feelings with a verb, use the word "to feel."*
+
+:::info
+**Grammar box**
+Do not use "I have" (я маю) to describe physical pain. Always say «У мене болить...» followed by the specific body part in the Nominative case. Use the reflexive verb «почуватися» to describe how you feel overall: «Я почуваюся добре» (I feel good).
+:::
 
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Тарас:</span> Ірино, куди ми поїдемо у відпустку цього літа? Київ — гарне місто, але хочеться чогось нового.</div>
+<div class="dialogue-line"><span class="speaker">Лікар:</span> Я бачу проблему. У вас звичайна застуда. Це нічого серйозного. *(I see the problem. You have a common cold. This is nothing serious.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Ірина:</span> Тарасе, я дуже хочу поїхати до **Львова** *(Lviv)*. Я так люблю старі вулиці цього прекрасного міста.</div>
+<div class="dialogue-line"><span class="speaker">Петро:</span> Що мені потрібно робити зараз? *(What do I need to do now?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Тарас:</span> Це чудова ідея! Але може спочатку ми маємо відвідати **Одесу** *(Odesa)*? Ми дуже давно там не були.</div>
+<div class="dialogue-line"><span class="speaker">Лікар:</span> Я раджу вам спокійний відпочинок удома. Вам треба пити ці ліки тричі на день. *(I advise you quiet rest at home. You need to drink this medicine three times a day.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Ірина:</span> Добре, я згодна. А після Одеси ми поїдемо на захід країни? Ми можемо поїхати через Умань.</div>
+<div class="dialogue-line"><span class="speaker">Петро:</span> Добре, я буду приймати таблетки після їжі. *(Good, I will take the pills after meals.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Тарас:</span> Саме так. З Одеси ми поїдемо просто до Львова. Ми будемо там у четвер. А потім я дуже хочу відпочивати в **Карпатах** *(Carpathians)*.</div>
+<div class="dialogue-line"><span class="speaker">Лікар:</span> Також пийте багато теплого чаю з лимоном. Приходьте на новий огляд через тиждень. *(Also drink a lot of warm tea with lemon. Come for a new check-up in a week.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Ірина:</span> О, я теж мрію про Карпати! Ми можемо знайти тихий будиночок біля гірської річки і милуватися Карпатами.</div>
-
-<div class="dialogue-line"><span class="speaker">Тарас:</span> Ідеальний план. Ми точно побачимо дуже багато гарних місць під час подорожі.</div>
+<div class="dialogue-line"><span class="speaker">Петро:</span> Дуже дякую за допомогу, лікарю. До побачення! *(Thank you very much for the help, doctor. Goodbye!)*</div>
 
 </div>
 
-In this dialogue, Taras and Iryna use different cases for destinations. When they talk about moving towards a city, they use the Genitive case with the preposition «до». For masculine cities, the ending is usually «-а» or «-у». For example, they say «до Львова» and «до Києва» (to Kyiv). When they talk about the city as a direct object, they use the Accusative case: «відвідати Одесу» (to visit Odesa). The mountains «Карпати» only exist in the plural form. When Taras talks about being inside the mountains, he uses the Locative plural with the preposition «в»: «в Карпатах». If they wanted to go *to* the mountains, they would say «в Карпати» using the Accusative case for direction.
+## Діалог 3: Подорож Україною (~550 words total)
+
+Тарас та Ірина планують велику подорож Україною. Вони довго думали, який маршрут обрати. Україна велика: кожне місто має свою історію, гори захоплюють дух, а кожна річка веде до моря. Вони хочуть побачити все, від східного кордону до західних лісів. 
 
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Ірина:</span> Як саме ми будемо туди їхати? Будемо подорожувати **потягами** *(trains)* чи **машинами** *(cars)*?</div>
+<div class="dialogue-line">*Taras and Iryna are planning a big trip across Ukraine. They thought for a long time about which route to choose. Ukraine is big: every city has its own history, the mountains take your breath away, and every river leads to the sea. They want to see everything, from the eastern border to the western forests.*</div>
 
-<div class="dialogue-line"><span class="speaker">Тарас:</span> Я думаю, що набагато краще їхати нашою власною машиною. Так ми матимемо більше свободи під час подорожі.</div>
+<div class="dialogue-line"><span class="speaker">Тарас:</span> Ірино, куди ми поїдемо цього літа? Наша **подорож** *(trip)* має бути цікавою. *(Iryna, where will we go this summer? Our trip has to be interesting.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Ірина:</span> Повністю згодна. Ми зможемо зупинятися там, де тільки захочемо.</div>
+<div class="dialogue-line"><span class="speaker">Ірина:</span> Я хочу поїхати до Львова. Там така гарна архітектура і смачна кава. *(I want to go to Lviv. The architecture is so beautiful there and the coffee is tasty.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Тарас:</span> Так, адже по дорозі є дуже багато **визначних місць** *(landmarks)*. Ми обов'язково відвідаємо кілька старовинних замків.</div>
+<div class="dialogue-line"><span class="speaker">Тарас:</span> Це чудова ідея. Але я також дуже хочу відвідати Одесу. Я люблю море. *(That is a wonderful idea. But I also really want to visit Odesa. I love the sea.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Ірина:</span> Чудово! А ми запросимо когось із собою? Ми ж можемо поїхати з нашими **друзями** *(friends)*.</div>
+<div class="dialogue-line"><span class="speaker">Ірина:</span> Добре, ми можемо спочатку поїхати до Львова, а потім відвідати Одесу. А як щодо гір? *(Good, we can go to Lviv first, and then visit Odesa. And what about the mountains?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Тарас:</span> Звісно! Я сьогодні запитаю Олега та Марію. З ними завжди надзвичайно весело подорожувати.</div>
+<div class="dialogue-line"><span class="speaker">Тарас:</span> Обов'язково! Ми повинні побувати в Карпатах хоча б кілька днів. Я хочу дихати свіжим повітрям. *(Absolutely! We must be in the Carpathians for at least a few days. I want to breathe fresh air.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Ірина:</span> Прекрасно. Тільки нам треба взяти з собою достатньо **грошей** *(money)* на пальне та їжу.</div>
-
-<div class="dialogue-line"><span class="speaker">Тарас:</span> Не хвилюйся про це, я вже все детально порахував.</div>
+<div class="dialogue-line"><span class="speaker">Ірина:</span> Згодна. Цей маршрут виглядає ідеально. *(Agreed. This route looks perfect.)*</div>
 
 </div>
 
-Notice the Instrumental case in the plural. When Iryna asks about the method of transport, she says «потягами» or «машинами». The endings «-ами» and «-ями» are standard for the Instrumental plural. They also use this case to say *with whom* they are traveling: «з друзями». The word «гроші» is another noun that only exists in the plural. In the Genitive case, it becomes «грошей» (of money). If you need to use it in the Instrumental case (for example, to pay *with money*), you can use a unique, older ending «-ми» and say «грішми». You can also use the standard form «грошима». Both are correct and natural.
+When planning a route, city names change their endings depending on the direction of movement. To say you are going *to* a destination, use the preposition «до» with the Genitive case. Most masculine cities take **-а** or **-у** (до Києва, до Харкова). Feminine cities take **-и** or **-і** (до Одеси). When visiting a place as a direct object, use the Accusative case: «відвідати Одесу» (visit Odesa). The region «Карпати» (Carpathians) exists only in the plural, so "in the Carpathians" is «у Карпатах» (Locative plural).
+
+:::info
+**Grammar box**
+Remember that «Карпати» is a *pluralia tantum* noun. It behaves like a plural word in all cases: Називний (Карпати), Родовий (немає Карпат), Місцевий (у Карпатах). You cannot say "одна Карпата".
+:::
 
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Ірина:</span> Отже, ми їдемо до Львова. Але там часто йде дощ.</div>
+<div class="dialogue-line"><span class="speaker">Тарас:</span> Як ми будемо туди їхати? *(How will we travel there?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Тарас:</span> Нічого страшного. Львову дуже пасує дощ. Це навіть романтично.</div>
+<div class="dialogue-line"><span class="speaker">Ірина:</span> Краще подорожувати потягами або автобусами. Так ми зможемо більше відпочивати. *(It is better to travel by trains or buses. This way we will be able to rest more.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Ірина:</span> Можливо, ти маєш рацію. А що ми будемо там робити?</div>
+<div class="dialogue-line"><span class="speaker">Тарас:</span> Згоден, **потяг** *(train)* — це дуже зручно. Ми побачимо багато нових краєвидів. *(I agree, a train is very comfortable. We will see many new landscapes.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Тарас:</span> Ми будемо багато гуляти по **Хрещатику** *(Khreshchatyk)*... Ой, я переплутав! Хрещатик у Києві.</div>
+<div class="dialogue-line"><span class="speaker">Ірина:</span> Ми побачимо багато цікавих місць! В Україні стільки краси. *(We will see many interesting places! There is so much beauty in Ukraine.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Ірина:</span> Смішно! Ми будемо гуляти по старих площах Львова, а потім підемо гуляти по горах.</div>
+<div class="dialogue-line"><span class="speaker">Тарас:</span> Я думаю, ми зустрінемося з друзями у Львові. *(I think we will meet with friends in Lviv.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Тарас:</span> Домовилися. Це буде найкраща відпустка у 2024 році!</div>
+<div class="dialogue-line"><span class="speaker">Ірина:</span> Чудово. Кожне **визначне місце** *(landmark)* стає цікавішим, коли ти подорожуєш з друзями. *(Wonderful. Every landmark becomes more interesting when you travel with friends.)*</div>
 
 </div>
 
-<MatchUp client:only="react" pairs={[{"left": "Ми поїдемо до", "right": "красивого Львова."}, {"left": "Я хочу відвідати", "right": "стару Одесу."}, {"left": "Вони будуть відпочивати в", "right": "високих Карпатах."}, {"left": "Ми гуляли по", "right": "вузьких вулицях."}, {"left": "Петро записаний на", "right": "десяту годину."}, {"left": "Оксана дзвонить", "right": "своїм друзям."}, {"left": "Ми будемо подорожувати", "right": "швидкими потягами."}, {"left": "У нас зовсім немає", "right": "вільного часу."}]} instruction={"З'єднайте частини речень, звертаючи увагу на відмінки."} />
+Notice the Instrumental case in the plural. When we talk about transportation or people we travel with, we use the endings **-ами** or **-ями**: "by trains" (потягами), "by buses" (автобусами), or "with friends" (з друзями). These forms are very consistent across most nouns. However, a few common words have the unique ending **-ми**. The most important one for traveling is "money" — «гроші». Its Instrumental form is «грошима» or «грішми».
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Тарас:</span> Сподіваюся, погода буде гарною. Я не хочу гуляти під дощем. *(I hope the weather will be good. I do not want to walk in the rain.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Ірина:</span> Львову пасує дощ. Там дуже романтично. *(Rain suits Lviv. It is very romantic there.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Тарас:</span> Ми будемо гуляти по Хрещатику завтра, щоб купити квитки. *(We will walk along Khreshchatyk tomorrow to buy tickets.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Ірина:</span> А потім будемо ходити по горах і насолоджуватися природою. *(And then we will walk in the mountains and enjoy nature.)*</div>
+
+</div>
 
 ## Самоперевірка: Знайди помилку
 
-Часто ми робимо помилки, коли перекладаємо фрази з англійської мови слово в слово. English speakers often use direct translation for common phrases. In Ukrainian, we use a completely different structure. Ми кажемо: «У мене болить голова». Інша типова помилка — це прийменник «по». In Ukrainian, when we talk about moving across a surface, we must use the Locative case. Тому ми кажемо: «Ми гуляли по горах». Ми не використовуємо давальний відмінок у цій ситуації.
+As you learn to use all seven cases together, it is completely normal to make mistakes or feel confused. Some errors happen because learners try to translate directly from English or apply rules from other languages. For example, saying «Маю головний біль» instead of the natural Ukrainian phrase «У мене болить голова». Another common trap is using the wrong case after a preposition, like using the Dative case after «по» instead of the Locative case. Remember that every case has a specific role in the sentence structure.
 
-Ось коротка **шпаргалка** *(cheat sheet)*, яка допоможе вам швидко перевірити себе:
+Here is a quick reference guide to help you remember the core function and key questions for each case. You can use this checklist whenever you are building a complex sentence.
 
-1. **Називний** *(Nominative)*: Хто? Що? Це головне слово в реченні. The person or thing doing the action.
-2. **Родовий** *(Genitive)*: Кого? Чого? Ми використовуємо його, коли чогось немає («немає часу») або коли ми щось маємо («у мене є»). Також він потрібен для кількості («багато друзів») або після прийменників «з», «від», «для», «без».
-3. **Давальний** *(Dative)*: Кому? Чому? Він показує напрямок дії («дати другові») або фізичний стан («мені тепло», «мені подобається»).
-4. **Знахідний** *(Accusative)*: Кого? Що? Ми вживаємо його для об'єкта дії («бачу машину»). Також він показує напрямок руху з прийменниками «в» чи «на» («їду в місто»).
-5. **Орудний** *(Instrumental)*: Ким? Чим? Використовуйте його для інструмента дії («писати ручкою») або коли робите щось разом («з друзями»).
-6. **Місцевий** *(Locative)*: На/У кому? чому? Цей відмінок завжди потребує прийменника («в», «на», «по», «при»). Він показує місце («жити в Києві») або рух по поверхні («йти по вулиці»).
-7. **Кличний** *(Vocative)*: Ми вживаємо цей відмінок, коли звертаємося до людини («Олеже!», «Маріє!»).
+*   **Називний відмінок** (Хто? Що?): The active subject of the sentence or the basic dictionary form.
+*   **Родовий відмінок** (Кого? Чого?): Used for expressing absence, showing possession, and defining quantity.
+*   **Давальний відмінок** (Кому? Чому?): Indicates the logical recipient of an action or a person's state.
+*   **Знахідний відмінок** (Кого? Що?): The direct object of an action or the specific destination of movement.
+*   **Орудний відмінок** (Ким? Чим?): The instrument used to do something, or doing an activity with someone.
+*   **Місцевий відмінок** (На кому? На чому?): Indicates physical location or movement across a surface, and it always requires a preposition.
+*   **Кличний відмінок**: Used exclusively when you are directly addressing someone.
 
-Давайте розглянемо три типові помилки та виправимо їх. Look at these buggy sentences and how to fix them:
+Ми часто робимо типові помилки, коли говоримо про здоров'я, подорожі або свята. Подивіться на ці речення. «Лікар дав ліки пацієнт» — тут неправильний відмінок. Правильно сказати: «Лікар дав ліки пацієнту», тому що це давальний відмінок.
 
-* *«Я допомагаю мою сестру.»* Дієслово «допомагати» завжди вимагає давального відмінка, а не знахідного. The correct version is different. Ми маємо сказати: «Я допомагаю моїй сестрі».
-* *«Ми їхали по потягу.»* Прийменник «по» з місцевим відмінком означає рух по поверхні. If you want to say by train, you need the Instrumental case without a preposition. Правильний варіант: «Ми їхали потягом». You could also use the Locative case if you mean inside the train. Тоді ми скажемо: «Ми їхали в потязі».
-* *«У театрі було багато студенти.»* Після слова «багато» ми завжди маємо використовувати родовий відмінок множини. The correct sentence is different. Правильно буде: «У театрі було багато студентів».
+> *We often make typical mistakes when we talk about health, trips, or holidays. Look at these sentences. "The doctor gave medicine patient" — the case is wrong here. It is correct to say: "The doctor gave medicine to the patient", because this is the Dative case.*
 
-The best strategy for self-correction is the check we learned before. Завжди перевіряйте дієслово або прийменник перед іменником. They dictate the rules. Вони вирішують, який відмінок треба використати в реченні.
+Інший приклад: «Я запрошую тебе на вечірку і маю подарунок для ти». Прийменник «для» завжди вимагає родового відмінка, тому правильно сказати «для тебе». Також ми часто помиляємося з транспортом під час довгої подорожі. Речення «Ми їхали по потягу» неправильне. Треба говорити «Ми їхали потягом», якщо це орудний відмінок, або «Ми ходили по визначних місцях», якщо це місцевий відмінок.
 
-<ErrorCorrection client:only="react" items={[{"sentence": "Я допомагаю мою сестру.", "errorWord": "мою сестру", "correctForm": "моїй сестрі", "options": [], "explanation": "Дієслово 'допомагати' вимагає давального відмінка (Кому?)."}, {"sentence": "Ми їхали по потягу.", "errorWord": "по потягу", "correctForm": "потягом", "options": [], "explanation": "Для транспорту ми використовуємо орудний відмінок без прийменника ('їхати потягом')."}, {"sentence": "У театрі було багато студенти.", "errorWord": "студенти", "correctForm": "студентів", "options": [], "explanation": "Слово 'багато' вимагає родового відмінка множини (Кого? Чого?)."}, {"sentence": "Вона прийшла без він.", "errorWord": "він", "correctForm": "нього", "options": [], "explanation": "Після прийменника 'без' ми використовуємо родовий відмінок ('нього')."}, {"sentence": "Мені болить голова.", "errorWord": "Мені", "correctForm": "У мене", "options": [], "explanation": "Українською ми кажемо 'у мене болить', використовуючи родовий відмінок."}, {"sentence": "Дякую за допомога.", "errorWord": "допомога", "correctForm": "допомогу", "options": [], "explanation": "Прийменник 'за' в цьому випадку вимагає знахідного відмінка (Що?)."}]} instruction={"Знайдіть і виправте помилку у відмінку (як у розділі 'Самоперевірка')."} />
+> *Another example: "I invite you to the party and have a gift for you" (using the basic form "you"). The preposition "для" always requires the Genitive case, so it is correct to say "для тебе". Also, we often make mistakes with transport during a long trip. The sentence "We were riding by train" (using the Locative case incorrectly) is wrong. You should say «Ми їхали потягом» if it is the Instrumental case, or «Ми ходили по визначних місцях» if it is the Locative case.*
+
+:::tip
+**Quick tip**
+When you are unsure, use the verb and preposition check strategy. First, identify the main verb and ask what question it naturally triggers. Then, check if there is a preposition involved, because prepositions strictly dictate which case must follow.
+:::
 
 </TabItem>
 <TabItem label="Словник">
@@ -288,22 +285,22 @@ The best strategy for self-correction is the check we learned before. Завжд
 </TabItem>
 <TabItem label="Зошит">
 
-<GroupSort client:only="react" groups={{"Називний (Хто? Що?)": ["лікар", "рецепт", "вечірка"], "Родовий (Кого? Чого?)": ["лікарів", "рецептів", "вечірки"], "Давальний (Кому? Чому?)": ["лікарям", "рецептам", "вечірці"]}} instruction={"Розподіліть іменники за відмінками на основі їхньої форми."} />
+<Quiz client:only="react" questions={[{"question": "Чому ми кажемо «немає **торта**»?", "options": [{"text": "Це родовий відмінок після слова «немає»", "correct": true}, {"text": "Це знахідний відмінок для об'єкта дії", "correct": false}, {"text": "Це місцевий відмінок для місця", "correct": false}, {"text": "Це орудний відмінок для інструмента", "correct": false}]}, {"question": "Чому ми кажемо «подарувати **Олені**»?", "options": [{"text": "Це давальний відмінок, який показує напрямок дії (кому?)", "correct": true}, {"text": "Це родовий відмінок, який показує належність", "correct": false}, {"text": "Це називний відмінок, головне слово", "correct": false}, {"text": "Це орудний відмінок, що показує спільну дію", "correct": false}]}, {"question": "Чому ми кажемо «з великою **компанією**»?", "options": [{"text": "Це орудний відмінок із прийменником «з» (разом)", "correct": true}, {"text": "Це знахідний відмінок, об'єкт дії", "correct": false}, {"text": "Це місцевий відмінок для місця", "correct": false}, {"text": "Це родовий відмінок після прийменника", "correct": false}]}, {"question": "Чому ми кажемо «прикрасити **кульками**»?", "options": [{"text": "Це орудний відмінок, який показує засіб чи інструмент", "correct": true}, {"text": "Це давальний відмінок, який показує одержувача", "correct": false}, {"text": "Це місцевий відмінок із прийменником", "correct": false}, {"text": "Це називний відмінок у множині", "correct": false}]}, {"question": "Чому ми кажемо «сидіти на **терасі**»?", "options": [{"text": "Це місцевий відмінок із прийменником «на» для місця", "correct": true}, {"text": "Це знахідний відмінок, який показує напрямок руху", "correct": false}, {"text": "Це родовий відмінок після прийменника", "correct": false}, {"text": "Це давальний відмінок для одержувача", "correct": false}]}, {"question": "Чому ми кажемо «купити **торт**»?", "options": [{"text": "Це знахідний відмінок, прямий об'єкт дії дієслова", "correct": true}, {"text": "Це називний відмінок, бо він головний у реченні", "correct": false}, {"text": "Це місцевий відмінок без прийменника", "correct": false}, {"text": "Це родовий відмінок частини цілого", "correct": false}]}, {"question": "Чому ми кажемо «багато **гостей**»?", "options": [{"text": "Це родовий відмінок множини після слова кількості", "correct": true}, {"text": "Це називний відмінок множини", "correct": false}, {"text": "Це знахідний відмінок множини для об'єкта", "correct": false}, {"text": "Це орудний відмінок множини", "correct": false}]}, {"question": "Чому Оксана каже: «Дуже дякую за допомогу, **Андрію**!»?", "options": [{"text": "Це кличний відмінок для звертання до людини", "correct": true}, {"text": "Це називний відмінок, бо це ім'я", "correct": false}, {"text": "Це місцевий відмінок", "correct": false}, {"text": "Це орудний відмінок", "correct": false}]}]} instruction={"Визначте відмінок виділеного слова та оберіть правильне пояснення."} />
 
-<Unjumble client:only="react" items={[{"words": "Ми / в / поїдемо / Карпати.", "answer": "Ми поїдемо в Карпати."}, {"words": "потрібно / Мені / ліки. / випити", "answer": "Мені потрібно випити ліки."}, {"words": "допоможе / Лікар / пацієнту. / своєму", "answer": "Лікар допоможе своєму пацієнту."}, {"words": "Олені / Ми / подарунок. / подаруємо / гарний", "answer": "Ми подаруємо Олені гарний подарунок."}, {"words": "немає / на / У / часу / це. / нас", "answer": "У нас немає часу на це."}, {"words": "Андрій / вечірки. / торт / для / купив", "answer": "Андрій купив торт для вечірки."}]} instruction={"Складіть правильне речення зі слів. Звертайте увагу на відмінки та прийменники."} />
+<FillIn client:only="react" items={[{"sentence": "У лікарні був один **пацієнт**. → У лікарні було багато ____.", "answer": "пацієнтів", "options": ["пацієнтів", "пацієнти", "пацієнтами", "пацієнтах"]}, {"sentence": "Я хочу запросити на вечірку **друга**. → Я хочу запросити на вечірку ____.", "answer": "друзів", "options": ["друзів", "друзі", "друзям", "друзями"]}, {"sentence": "Ми поїхали у подорож **потягом**. → Ми поїхали у подорож ____.", "answer": "потягами", "options": ["потягами", "потяги", "потягам", "потягів"]}, {"sentence": "Лікар дав мені один **рецепт**. → Лікарі дали мені нові ____.", "answer": "рецепти", "options": ["рецепти", "рецептів", "рецептам", "рецептами"]}, {"sentence": "Вона милується високою **горою**. → Вона милується високими ____.", "answer": "горами", "options": ["горами", "гори", "горам", "горах"]}, {"sentence": "Я мрію побачити нове **місто**. → Я мрію побачити нові ____.", "answer": "міста", "options": ["міста", "міст", "містами", "містах"]}]} instruction={"Вставте виділене слово (в однині) у формі множини у відповідному відмінку."} />
 
-<TrueFalse client:only="react" items={[{"statement": "Слово 'багато' вимагає використання називного відмінка.", "isTrue": false, "explanation": "Після слова 'багато' ми використовуємо родовий відмінок множини (наприклад, 'багато друзів')."}, {"statement": "З прийменниками 'в' або 'на' для позначення напрямку руху (куди?) використовується знахідний відмінок.", "isTrue": true, "explanation": "Наприклад: 'Ми їдемо в місто', 'Я йду на роботу'."}, {"statement": "Коли ми описуємо свій фізичний стан ('мені холодно', 'мені погано'), ми використовуємо називний відмінок.", "isTrue": false, "explanation": "Для опису фізичного стану використовується давальний відмінок ('мені')."}, {"statement": "Дієслово 'допомагати' завжди вимагає давального відмінка.", "isTrue": true, "explanation": "Ми кажеємо 'допомагати другові', 'допомагати сестрі'."}, {"statement": "Для позначення інструмента дії (наприклад, 'писати ручкою') використовується родовий відмінок.", "isTrue": false, "explanation": "Для інструмента дії використовується орудний відмінок (Ким? Чим?)."}, {"statement": "Особовий займенник після прийменника отримує літеру 'н' (наприклад, 'без нього').", "isTrue": true, "explanation": "Це правило діє для непрямих відмінків після прийменників ('до неї', 'з ними')."}]} instruction={"Визначте, чи правильне твердження про відмінки."} />
+<MatchUp client:only="react" pairs={[{"left": "Сьогодні у нас зовсім немає", "right": "соку для наших гостей."}, {"left": "Ми хочемо подарувати книгу", "right": "Олені на її свято."}, {"left": "Нам треба купити смачний", "right": "торт у магазині."}, {"left": "Ми прийдемо на вечірку з", "right": "нашими найкращими друзями."}, {"left": "Завтра ми будемо зручно сидіти на", "right": "терасі біля ресторану."}, {"left": "У мене сьогодні дуже сильно болить", "right": "голова і горло."}, {"left": "Дуже дякую за допомогу,", "right": "мій дорогий Андрію!"}, {"left": "Вам потрібно обов'язково приймати ці", "right": "ліки за рецептом лікаря."}]} instruction={"З'єднайте частини речень. Зверніть увагу на відмінок після дієслова або прийменника."} />
+
+<FillIn client:only="react" items={[{"sentence": "— Привіт, Маріє! Ти йдеш на ____ сьогодні?", "answer": "вечірку", "options": ["вечірка", "вечірку", "вечірці", "вечіркою"]}, {"sentence": "— Так! Я купила для Олени чудовий ____.", "answer": "подарунок", "options": ["подарунок", "подарунка", "подарунком", "подарунку"]}, {"sentence": "— А що ти подаруєш ____?", "answer": "Олегу", "options": ["Олег", "Олегу", "Олегом", "Олега"]}, {"sentence": "— Я подарую йому книгу про Карпати. Він любить ____.", "answer": "гори", "options": ["гори", "гір", "горами", "горах"]}, {"sentence": "— Ми поїдемо туди моєю ____?", "answer": "машиною", "options": ["машина", "машину", "машиною", "машині"]}, {"sentence": "— Так, але спочатку я маю бути в ____.", "answer": "лікарні", "options": ["лікарня", "лікарні", "лікарнею", "лікарню"]}, {"sentence": "— Що сталося? У тебе є ____?", "answer": "температура", "options": ["температура", "температуру", "температурою", "температурі"]}, {"sentence": "— Ні, я здорова. Моєму другові потрібні ____.", "answer": "ліки", "options": ["ліки", "ліків", "лікам", "ліками"]}, {"sentence": "— Тоді зустрінемося біля ____ о п'ятій.", "answer": "реєстратури", "options": ["реєстратура", "реєстратуру", "реєстратурі", "реєстратури"]}, {"sentence": "— ____, домовилися! До зустрічі!", "answer": "Маріє", "options": ["Марія", "Маріє", "Марію", "Марією"]}]} instruction={"Вставте слова в правильному відмінку, щоб завершити розмову друзів."} />
+
+<GroupSort client:only="react" groups={{"Родовий відмінок (Кого? Чого?)": ["немає соку", "багато гостей", "від кордону"], "Давальний відмінок (Кому? Чому?)": ["подарувати Олені", "дзвонити друзям", "мені погано"], "Орудний відмінок (Ким? Чим?)": ["з компанією", "прикрасити кульками", "їхати потягом"], "Місцевий відмінок (На/У кому? Чому?)": ["на терасі", "у ресторані", "в Карпатах"]}} instruction={"Розподіліть іменники за відмінками, звертаючи увагу на їхню форму у фразі."} />
+
+<Unjumble client:only="react" items={[{"words": "до / піти / Мені / потрібно / лікаря.", "answer": "Мені потрібно піти до лікаря.", "hint": "Dative pronoun + потрібно + infinitive + preposition + Genitive"}, {"words": "У / дуже / болить / мене / голова.", "answer": "У мене дуже болить голова."}, {"words": "вечірку. / запросити / друзів / Я / на / хочу", "answer": "Я хочу запросити друзів на вечірку."}, {"words": "чудовий / Ми / маємо / на / подарунок / день / народження.", "answer": "Ми маємо чудовий подарунок на день народження."}, {"words": "з / Ми / їдемо / друзями. / в / Карпати", "answer": "Ми їдемо в Карпати з друзями."}, {"words": "приймати / за / Вам / ліки / треба / рецептом.", "answer": "Вам треба приймати ліки за рецептом."}]} instruction={"Складіть речення, звертаючи увагу на правильний порядок слів та відмінки."} />
+
+<TrueFalse client:only="react" items={[{"statement": "Оксана та Андрій хочуть організувати велику вечірку-сюрприз для Олени.", "isTrue": true, "explanation": "Так, вони роблять таємний сюрприз на її день народження."}, {"statement": "За традицією в Україні гості завжди самі платять за ресторан.", "isTrue": false, "explanation": "Зазвичай іменинник організовує свято і щедро частує своїх гостей."}, {"statement": "У Петра болить нога, тому він прийшов до лікарні.", "isTrue": false, "explanation": "У Петра болить голова і горло, а також є температура."}, {"statement": "Лікар радить Петру багато спати і пити гарячий чай.", "isTrue": true, "explanation": "Лікар каже, що організм хворого дуже потребує відпочинку."}, {"statement": "Тарас та Ірина хочуть поїхати у подорож Україною потягом.", "isTrue": false, "explanation": "Тарас вважає, що набагато краще їхати власною машиною."}, {"statement": "Ірина мріє знайти тихий будиночок біля гірської річки в Карпатах.", "isTrue": true, "explanation": "Вона дуже хоче милуватися горами і відпочивати біля річки."}]} instruction={"Прочитайте твердження про діалоги. Це правда чи ні?"} />
 
 </TabItem>
 <TabItem label="Ресурси">
-
-## Підручники (Textbooks)
-
-- [Заболотний О. В. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrajinska-mova-zabolotnij-2018.pdf#page=19), стор. 19
-- [Заболотний О. В. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrajinska-mova-zabolotnij-2018.pdf#page=147), стор. 147
-- [Глазова О. П. — Українська мова, 11 клас (2019)](https://pidruchnyk.com.ua/uploads/book/11-klas-ukrajinska-mova-glazova-2019.pdf#page=89), стор. 89
-- [Большакова І. О. — Українська мова, 2 клас (2019)](https://pidruchnyk.com.ua/uploads/book/2-klas-ukrmova-bolshakova-2019-2.pdf#page=52), стор. 52
-- [Голуб Н. Б. — Українська мова, 5 клас (2022)](https://pidruchnyk.com.ua/uploads/book/5_ukrmova_golub_2022.pdf#page=201), стор. 201
 
 **Статті — Articles**
 

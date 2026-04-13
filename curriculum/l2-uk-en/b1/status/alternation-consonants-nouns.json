@@ -2,12 +2,12 @@
   "module": "alternation-consonants-nouns",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-10T21:25:59.748542Z",
+  "last_audit": "2026-04-11T15:41:50.304820Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-10T12:49:36.682658Z",
+    "md": "2026-04-11T15:40:45.977215Z",
     "meta": null,
-    "activities": "2026-04-09T06:27:09.819585Z",
+    "activities": "2026-04-11T15:31:14.418866Z",
     "vocabulary": "2026-04-09T06:28:55.612966Z",
     "research": null,
     "plan": "2026-04-04T21:31:33.284016Z"
@@ -21,17 +21,26 @@
     "lesson": {
       "status": "fail",
       "violations": 3,
-      "message": "4726/4000 (raw: 4847) | engagement: 0/5 | richness: 62% < 95% min (grammar) - REWRITE needed | salad: Phase 7 (Early B1 (B1 M01-M30)): 1 error(s) \u2014 SALAD_EXCESSIVE_INLINE_GLOSSES: paragraph has 4 inline **term** (gloss) markers across 4 sentence(s) \u2014 too dense; move to vocabulary section or convert "
+      "message": "6399/4000 (raw: 6610) | engagement: 3/5 | immersion: 35.1% LOW (target 85-100% (B1.2 Motion)) | richness: 57% < 95% min (grammar) - REWRITE needed"
     },
     "activities": {
       "status": "fail",
       "violations": 1,
-      "message": "10/0 | density: 4 < 6"
+      "message": "5/0 | density: 1 < 6"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
       "message": "42/25"
+    },
+    "vocab_progression": {
+      "status": "warn",
+      "violations": 0,
+      "message": "\u0394 -12 | premature=4 | gaps=0 | well-paced=4",
+      "delta": -12,
+      "premature": 4,
+      "gaps": 0,
+      "well_paced": 4
     },
     "naturalness": {
       "status": "info",

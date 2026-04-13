@@ -1,47 +1,46 @@
-## Для кого це? Для + родовий (Who Is It For? Для + Genitive)
+## Для кого це? Для + родовий (Who Is It For? Для + Genitive) (~700 words)
 
-In Ukrainian, when we want to express who something is intended for or the purpose of an object, we rely on the preposition **для** (for). Unlike English, where the word "for" can have many different grammatical functions depending on the context, the Ukrainian **для** is very specific in its usage. It is a demanding preposition: it always, without exception, requires the noun or pronoun that follows it to be in the Genitive case. You will never see it used with the Nominative dictionary form.
+> — **Ігор:** Для кого ця ковдра? *(For whom is this blanket?)*
+> — **Марта:** Це для Олени. Вона завжди мерзне вночі. *(This is for Olena. She is always cold at night.)*
+> — **Ігор:** Зрозумів. А де мій ліхтарик? *(Understood. And where is my flashlight?)*
+> — **Марта:** Без ліхтарика — ніяк! Він лежить там, біля рюкзака. *(Without a flashlight — no way! It's lying there, near the backpack.)*
+> — **Ігор:** Добре. Ми поставимо наш намет біля річки. *(Good. We will set up our tent near the river.)*
+> — **Марта:** Так, там ідеальне місце для відпочинку. *(Yes, it's a perfect place for rest.)*
 
-Це красивий подарунок для мами. У мене нарешті є вільний час для відпочинку. Ця важлива інформація тільки для тебе. Ми готуємо великий сюрприз для друга.
+The dialogue above showcases three very common words that you will use constantly in spoken Ukrainian: **для** (for), **без** (without), and **біля** (near). Although they express different ideas—purpose, absence, and location—they all share one grammatical requirement. Whenever you use one of these prepositions, the noun or pronoun that follows it must change into the Genitive case. You cannot use the dictionary form. In this section, we will focus exclusively on how to use **для** to express who or what something is intended for, such as a **будинок** (building) or a **лікарня** (hospital).
 
-> *This is a beautiful gift for mom. I finally have free time for rest. This important information is only for you. We are preparing a big surprise for a friend.*
+Українська мова використовує прийменник «для» дуже часто. Він завжди вимагає після себе родового відмінка. Це означає, що слово змінює своє закінчення. Ти не можеш використовувати звичайну словникову форму після цього прийменника.
 
-Let's look at how **для** expresses purpose. We often attach it to abstract nouns or activities to show exactly what an item is designed to do. When you buy something for a specific reason or need an item to achieve a goal, you use this structure. Remember that these abstract nouns must also take their proper Genitive endings, which usually means **-у** or **-я** for masculine abstract concepts, and **-и** or **-і** for feminine ones.
+> *The Ukrainian language uses the preposition "для" very often. It always requires the Genitive case after it. This means that the word changes its ending. You cannot use the regular dictionary form after this preposition.*
 
-Я щодня купую свіжі фрукти для здоров'я. Мені терміново потрібен новий одяг для роботи. Ми зараз шукаємо цікаві книги для навчання. Ця спокійна музика ідеальна для сну.
+One of the main functions of **для** is to express the purpose of an object or an action. When used this way, it answers the question **Для чого?** (For what purpose?). This explains why something exists, why a tool is used, or why you need **допомога** (help). For example, if you buy a special desk, it is for work, or if you plan a vacation, it is for **відпочинок** (rest). Notice how the noun endings change from their original forms.
 
-> *I buy fresh fruit for health every day. I urgently need new clothes for work. We are currently looking for interesting books for studying. This calm music is perfect for sleep.*
+Робота дуже важлива, тому я купив новий стіл для роботи. Моя сестра п'є ці вітаміни для здоров'я. Цей зошит потрібен мені для навчання. Ми шукаємо гарне місце для відпочинку.
 
-:::info
-**Grammar box**
-The English word "for" has multiple translations in Ukrainian. If you mean "for the purpose of" or "intended recipient", you must use **для** + Genitive. If you mean "for a duration of time" (like "for three days"), you will use a different grammatical structure entirely. Never use **для** for time durations!
+> *Work is very important, so I bought a new desk for work. My sister takes these vitamins for health. I need this notebook for studying. We are looking for a nice place for rest.*
+
+:::note
+**Quick tip** — When you want to translate the English word "for", be careful! If you are talking about the *purpose* of something or the *intended recipient*, use **для**. But if you mean "for" as a duration of time (like "for three days"), Ukrainian uses different structures.
 :::
 
-Now let's focus on specific people as the intended recipients of objects or actions. When the recipient is a hard-stem noun, forming the Genitive case is quite straightforward. Masculine hard-stem nouns indicating people will typically take the **-а** ending. Feminine hard-stem nouns will change their dictionary ending to **-и**. You will use this pattern constantly when giving gifts or buying tickets.
+The second major function of **для** is to indicate the intended recipient. In this context, it answers the question **Для кого?** (For whom?). You use this construction whenever you have a gift, a message, or a task intended for a specific person. Whether you are buying flowers for your mother, asking about the **призначення** (purpose) of a tool, or preparing a surprise without **сумнів** (doubt), the preposition **для** followed by the Genitive case is the correct structure.
 
-Я маю один зайвий квиток для брата. Ми разом робимо приємний сюрприз для сестри. Вони зараз готують смачну вечерю для тата. Це мій новий телефон для сина.
+Я маю невеликий подарунок для мами. Цей смачний торт ми спекли спеціально для друга. У нас є багато цікавих ігор для дітей. Вона залишила коротку записку для лікаря.
 
-> *I have one extra ticket for brother. We are making a pleasant surprise for sister together. They are currently cooking a delicious dinner for dad. This is my new phone for son.*
+> *I have a small gift for mom. We baked this delicious cake especially for a friend. We have many interesting games for children. She left a short note for the doctor.*
 
-When dealing with soft-stem nouns or feminine nouns ending in **-ія**, we need to switch to our soft Genitive endings. Soft masculine nouns, especially professions ending in **-тель**, will take the **-я** ending instead of **-а**. Feminine nouns that end in **-ія** are very common for names, and they will change their ending to **-ії**. It is important to hear the difference between these endings.
+To use **для** correctly, you need to feel confident forming the Genitive case across different genders and stem types. Let's look at how the endings change. For masculine nouns, hard stems usually take **-а** (брат → для брата), while soft stems take **-я** (вчитель → для вчителя). For feminine nouns, hard stems take **-и** (сестра → для сестри), and soft stems take **-і**, such as **станція** (station) becoming для станції. Neuter nouns generally end in **-а** or **-я**.
 
-У нашому класі є зручний стілець для вчителя. Я з радістю несу ці красиві квіти для Марії. Ми вчора купили цю м'яку іграшку для Софії. Це важливий лист для лікаря.
+Це новий телефон для брата. Ми купили квіти для вчителя. Я маю гарну новину для сестри. Цей квиток ми купили для Марії. Усе, що ми робимо, це для щастя.
 
-> *There is a comfortable chair for the teacher in our classroom. I am carrying these beautiful flowers for Maria with joy. We bought this soft toy for Sophia yesterday. This is an important letter for the doctor.*
+> *This is a new phone for a brother. We bought flowers for the teacher. I have good news for a sister. We bought this ticket for Mariia. Everything we do is for happiness.*
 
-Finally, let's look at how neuter nouns and plural recipients behave after **для**. Many abstract neuter nouns end in **-я** (like the words for life or happiness). These will simply keep their **-я** ending in the Genitive singular. For plural recipients, masculine nouns often take the **-ів** ending. You should also pay attention to common irregular plurals, like the word for children.
+:::info
+**Grammar box** — Remember the masculine **-а/-я** vs **-у/-ю** split! Words for living beings, distinct objects, and specific places usually take **-а/-я** (для брата, для стола). Abstract concepts or substances often take **-у/-ю** (для успіху, для чаю).
+:::
 
-Нам усім дуже потрібне сонце для життя. Кожна людина робить все можливе для щастя. У цьому великому будинку є світла кімната для дітей. Я маю дуже хороші новини для друзів.
+There are many high-frequency everyday phrases using **для** that you should memorize. You will hear these expressions constantly, whether you are at a **зупинка** (stop), inside a **бібліотека** (library), or walking across a city **площа** (square). Notice that personal pronouns also change their forms in the Genitive case. For example, «ти» (you) becomes «тебе», and «я» (I) becomes «мене».
 
-> *We all really need the sun for life. Every person does everything possible for happiness. There is a bright room for children in this large house. I have very good news for friends.*
+Це дуже важливо для мене. У мене є чудовий подарунок для тебе. Нова зупинка біля станції зручна для пасажирів. Ця площа ідеальна для концертів. Ми купили ці книги для місцевої бібліотеки.
 
-Let's see these exact phrases in action in a real conversation. Igor and Marta are actively packing their bags for a weekend camping trip in the forest. Notice how they use **для** to discuss who each item belongs to and what specific purpose each piece of equipment serves.
-
-> — **Ігор:** Марто, скажи мені, для кого ця велика ковдра? *(Marta, tell me, who is this large blanket for?)*
-> — **Марта:** Це дуже тепла ковдра для Олени. Вона завжди швидко мерзне вночі. *(This is a very warm blanket for Olena. She always gets cold quickly at night.)*
-> — **Ігор:** Добре, я розумію. А де лежить мій новий ліхтарик? *(Good, I understand. And where is my new flashlight lying?)*
-> — **Марта:** Він уже у твоєму рюкзаку. Нам також обов'язково потрібні речі для комфорту. *(It is already in your backpack. We also definitely need things for comfort.)*
-> — **Ігор:** Я повністю згоден з тобою. Я беру теплий одяг для походу. *(I completely agree with you. I am taking warm clothes for the hike.)*
-> — **Марта:** Це просто чудово! Тепер у нас є абсолютно все для відпочинку біля річки. *(This is simply great! Now we have absolutely everything for rest near the river.)*
-
-<!-- INJECT_ACTIVITY: match-up, focus on matching Ukrainian 'для' phrases to their English equivalents, 8 items -->
+> *This is very important for me. I have a wonderful gift for you. The new stop near the station is convenient for passengers. This square is ideal for concerts. We bought these books for the local library.*

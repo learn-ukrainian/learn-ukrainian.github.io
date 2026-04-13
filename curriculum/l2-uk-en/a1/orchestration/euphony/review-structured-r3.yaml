@@ -2,50 +2,52 @@ round: 3
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 10
-  evidence: All plan objectives and dialogues are covered exactly as requested. Word
-    budget is 1692, exceeding the 1200 minimum.
+  score: 9
+  evidence: 'All planned H2 sections are present and in order, and plan examples/vocab
+    recur in prose: `в Києві`, `у Львові`, `в офісі`, `в парк`, `у театр`, `з Одеси`,
+    `Максим із Семеном`, `зі мною`.'
 - dimension: 2
   name: Linguistic accuracy
-  score: 10
-  evidence: All Ukrainian phrases are correctly formed. Rules accurately reflect euphony
-    laws (e.g. `у Львові` vs `в Києві`, `і яблука`). No Russianisms found.
+  score: 4
+  evidence: The module states “you must always use **У**” and “**і** is always used
+    at the absolute beginning of a sentence,” but the repo textbook corpus gives sentence-start
+    `В Одесі тепло` and `Й учимося грамо
 - dimension: 3
   name: Pedagogical quality
-  score: 8
-  evidence: Excellent PPP flow and rich use of examples. DEDUCT for a contradictory
-    presentation of the `із/зі` rule, where the stated rule contradicts the module's
-    own examples (e.g., claiming `зі` is reserved f
+  score: 6
+  evidence: 'The opening spends a long English theory paragraph before the first Ukrainian
+    example: “The Ukrainian language is famous for its musical quality…”; later explanations
+    are overprescriptive (`at all cos'
 - dimension: 4
   name: Vocabulary coverage
   score: 10
-  evidence: All required and recommended vocabulary words (у/в, і/й, з/із/зі, Київ,
-    Львів, офіс, парк, театр) are seamlessly integrated into prose and examples.
+  evidence: Required alternants `у/в`, `і/й`, `з/із/зі` are taught in context, and
+    recommended vocab `Київ`, `Львів`, `офіс`, `парк`, `театр` all appear naturally
+    in prose/examples.
 - dimension: 5
   name: Exercise quality
-  score: 8
-  evidence: DEDUCT for placing a comprehensive euphony quiz marker (`quiz-naturalness-comparison`)
-    before two of the three euphony rules are taught.
+  score: 9
+  evidence: 'Four markers match the four plan hints and are placed after the relevant
+    teaching blocks: `quiz-u-or-v`, `quiz-i-or-y`, `fill-in-z-iz-zi`, `quiz-euphony-comparison`.'
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: Warm, natural teacher tone ("Think of it as building a comfortable V-C-V
-    sandwich in your mouth"). Highly engaging.
+  score: 7
+  evidence: There is teacher voice, but phrases such as “famous for its musical quality,”
+    “key to sounding like a native speaker,” and “perfectly aligning with Ukrainian
+    euphony” add hype more than instruction.
 - dimension: 7
   name: Structural integrity
-  score: 9
-  evidence: Clean markdown and perfect section structure. Minor deduction because
-    the writer manually injected stress marks (e.g., `Студе́нт`, `шви́дше`) into the
-    prose, which is supposed to be handled determinis
+  score: 10
+  evidence: All planned H2 headings are present and ordered correctly; pipeline word
+    count is 1548, above the 1200 target.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Euphony is respectfully and accurately presented as a foundational characteristic
-    of the Ukrainian language.
+  evidence: The module explains Ukrainian on its own terms and does not lean on Russian
+    comparison or colonial framing.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: Dialogues represent a realistic scenario (proofreading an essay, making
-    plans) with named speakers, distinct voices, and highly relevant usage of the
-    target grammar.
+  score: 8
+  evidence: Speakers are named and the exchanges are multi-turn (`Де ти живеш?...`,
+    `Ти й Олена йдете...`), though the dialogues are brief.
 findings: []

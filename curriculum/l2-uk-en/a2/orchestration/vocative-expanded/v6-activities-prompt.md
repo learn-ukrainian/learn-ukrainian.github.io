@@ -27,11 +27,11 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: fill-in-focus-form-the-correct-vocative-of-professional-titles-and-names -->`
+- `<!-- INJECT_ACTIVITY: fill-in-formal-vocative -->`
 - `<!-- INJECT_ACTIVITY: match-professions-vocative -->`
-- `<!-- INJECT_ACTIVITY: error-correction-vocative -->`
-- `<!-- INJECT_ACTIVITY: quiz-register-choice -->`
-- `<!-- INJECT_ACTIVITY: group-sort-registers -->`
+- `<!-- INJECT_ACTIVITY: error-correction-focus-fix-vocative-errors -->`
+- `<!-- INJECT_ACTIVITY: quiz-focus-choose-the-correct-vocative-register-for-a-given-social-situation -->`
+- `<!-- INJECT_ACTIVITY: group-sort-focus-sort-vocative-forms-by-register-formal-professional-emotional -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -97,89 +97,146 @@ required:
 <module_content>
 ## Пане, пані: формальне звертання (Formal Address)
 
-У базовому курсі ми вивчали прості форми звертання. Ви знаєте, як сказати **«Тарасе!»** *(Taras!)* або **«Олено!»** *(Olena!)*. Але для роботи та **офіційних** *(official, formal)* ситуацій нам потрібні формальні **звертання** *(addresses)*. Ukrainian culture highly values polite and formal address in professional or unfamiliar settings. The vocative case (**кличний відмінок** *(vocative case)*) is mandatory when you address someone directly. Using the nominative case for address is a serious grammatical error and is often considered a Russianism. Якщо ви скажете **«Привіт, Наталя!»** *(Hi, Nataliya!)*, це звучить неприродно. Українці так не говорять. Правильно казати **«Привіт, Наталю!»** *(Hi, Nataliya!)*. Для поваги ми додаємо слова **пан** *(Mr., sir)* та **пані** *(Mrs., Ms., madam)*. Отже, ми кажемо **«Пані Маріє!»** *(Ms. Mariia!)* замість просто «Маріє». Це дуже важливе правило нашої мови.
+In your earlier lessons, you learned how to use the vocative case for basic names, calling out to friends like «Тарасе!» or «Олено!». Now, as you navigate more complex social and professional situations, you need to master formal address. In Ukrainian, politeness requires specific grammatical structures. You cannot simply use a person's name in its dictionary form when talking to them directly. The vocative case is absolutely mandatory for all forms of address. Using the nominative case instead of the vocative sounds unnatural and is often a direct result of Russian influence. Calling someone «Маріє!» is correct, while saying «Пані Марія!» to her face is a grammatical mistake.
 
-Ми часто використовуємо конструкцію «пане» або «пані» плюс **професія** *(profession)*. The word **«пане»** *(sir)* is the vocative form of «пан», and it triggers the vocative case in the following noun. Both words must change. For hard-stem masculine nouns, the ending is usually **-е**. Ми кажемо: **«пане директоре»** *(Mr. director)*, **«пане професоре»** *(Mr. professor)*, **«пане міністре»** *(Mr. minister)*. For soft-stem masculine nouns, the ending is **-ю**. Тому правильно казати: **«пане лікарю»** *(Mr. doctor)*, **«пане вчителю»** *(Mr. teacher)*, **«пане водію»** *(Mr. driver)*. For women, the word «пані» is invariable (it never changes its form). However, the feminine profession takes the vocative ending **-о**. В українській мові ми активно використовуємо жіночі форми професій. Тому ми кажемо: **«пані вчителько»** *(Ms. teacher)*, **«пані директорко»** *(Ms. director)*, **«пані лікарко»** *(Ms. doctor)*. Це показує вашу повагу.
+Для офіційного звертання ми використовуємо слова «пане» або «пані» разом із назвою професії. Слово «пане» вимагає кличного відмінка для наступного іменника. Іменник із твердим приголосним отримує закінчення «-е», як «пане директоре» або «пане професоре». М’який приголосний вимагає закінчення «-ю», наприклад, «пане лікарю» чи «пане водію».
 
-Ми також можемо використовувати ці слова з прізвищами людей. When we address a man by his surname, the surname must also be in the vocative case if it is a declinable noun. Masculine surnames ending in -о or -ко typically take the **-у** ending in the vocative. Тому ми кажемо: **«пане Коваленку»** *(Mr. Kovalenko)*, **«пане Шевченку»** *(Mr. Shevchenko)*, **«пане Ковальчуку»** *(Mr. Kovalchuk)*. The grammatical rule is very different for women. As we know, «пані» does not change. In addition, feminine surnames ending in a consonant or in -о/-ко are indeclinable in Ukrainian grammar. Вони завжди мають форму називного відмінка. Тому ми кажемо: **«пані Коваленко»** *(Ms. Kovalenko)*, **«пані Шевченко»** *(Ms. Shevchenko)*, **«пані Ковальчук»** *(Ms. Kovalchuk)*. Це правило треба запам'ятати.
+> *For formal address, we use the words "пане" or "пані" together with the name of the profession. The word "пане" requires the vocative case for the following noun. A noun with a hard consonant gets the ending "-е", like "пане директоре" or "пане професоре". A soft consonant requires the ending "-ю", for example, "пане лікарю" or "пане водію".*
 
-Слова «пан» і «пані» мають глибоке історичне коріння в українській культурі. Вони існували багато століть. During the Soviet era, these traditional polite forms were actively suppressed and banned from official language. The regime replaced them with the word **«товариш»** *(comrade)* to enforce artificial equality and Russian linguistic norms. Сьогодні використання слів «пане» та «пані» — це ваш свідомий вибір. It strongly signals authentic, decolonized Ukrainian identity and respect for the listener. Це справжнє повернення до нашої рідної мови. Ви можете часто почути цю красиву форму в давніх текстах і народних піснях. Є відома різдвяна колядка: **«Добрий вечір тобі, пане господарю!»** *(Good evening to you, Mr. host!)*.
+Addressing women formally is slightly different. The word «пані» is invariable, meaning it never changes its form. However, the female profession or title that follows it must still take the vocative case. Most feminine roles will take the «-о» ending. This creates polite and standard forms like «пані вчителько» or «пані директорко».
 
-В українській мові також є красиві слова **«добродій»** *(sir, gentleman)* та **«добродійка»** *(madam, lady)*. Вони теж мають спеціальні форми кличного відмінка: **«добродію»** *(sir)* та **«добродійко»** *(madam)*. These are older, highly literary alternatives to «пане» and «пані». Today, they are much less common in everyday street conversation or modern slang. However, they remain very polite, highly respected forms used in formal writing, official letters, or by the Ukrainian diaspora. В офіційному листі ви пишете: **«Шановний добродію!»** *(Honorable sir!)* або **«Вельмишановна добродійко!»** *(Highly honorable madam!)*. Це звучить дуже інтелігентно та надзвичайно **ввічливо** *(politely)*. Використовуйте ці слова для створення особливого стилю.
+Ми також використовуємо ці слова разом із прізвищами людей. Чоловічі прізвища обов'язково змінюються у кличному відмінку після слова «пане». Зазвичай вони отримують закінчення «-у». Тому ми завжди кажемо «пане Коваленку» або «пане Шевченку». Жіночі прізвища на «-о» часто не змінюються. Після слова «пані» ми залишаємо жіноче прізвище в називному відмінку. Тому правильно казати «пані Коваленко» або «пані Шевченко».
 
-<!-- INJECT_ACTIVITY: fill-in-focus-form-the-correct-vocative-of-professional-titles-and-names -->
+> *We also use these words together with people's surnames. Masculine surnames necessarily change in the vocative case after the word "пане". Usually, they get the ending "-у". Therefore, we always say "пане Коваленку" or "пане Шевченку". Feminine surnames ending in "-о" often do not change. After the word "пані", we leave the feminine surname in the nominative case. Therefore, it is correct to say "пані Коваленко" or "пані Шевченко".*
 
+Understanding this system is also a matter of cultural identity and decolonization. Historically, «пан» and «пані» were the traditional, respectful ways Ukrainians addressed each other. During the Soviet era, these words were heavily suppressed and replaced by the Russian-derived «товариш» (comrade). Today, using «пане» and «пані» is a conscious choice to speak authentic Ukrainian. It reconnects the language with its roots. You can hear this deep tradition in the famous Ukrainian Christmas carol, which opens with the respectful greeting: «Добрий вечір тобі, пане господарю!».
+
+Існують також красиві літературні альтернативи: «добродію» та «добродійко». Ви рідко почуєте їх на вулиці в щоденних розмовах. Проте це дуже ввічливі форми. Їх часто використовує українська діаспора в офіційних листах. Ви можете написати «Шановний добродію!» для вираження глибокої поваги.
+
+> *There are also beautiful literary alternatives: "добродію" and "добродійко". You will rarely hear them on the street in everyday conversations. However, these are very polite forms. The Ukrainian diaspora often uses them in official letters. You can write "Шановний добродію!" to express deep respect.*
+
+:::info
+**Grammar box** — When combining a title and a surname, remember the pattern: «пане Коваленку» (the masculine surname takes the vocative ending) but «пані Коваленко» (the feminine surname remains in the nominative).
+:::
+
+<!-- INJECT_ACTIVITY: fill-in-formal-vocative -->
 
 ## Професійні звертання (Professional Vocative)
 
-Уявіть ситуацію на роботі або в університеті. Ви хочете звернутися до свого керівника, викладача або колеги. В українській мові ми використовуємо спеціальний кличний відмінок для назв **професій** *(professions)*. For masculine professional titles, the vocative ending depends directly on the final consonant of the word. Якщо слово закінчується на твердий приголосний звук, ми зазвичай додаємо закінчення **-е**. Наприклад, **інженер** *(engineer)* стає «інженере». Слово **майстер** *(master, foreman)* стає «майстре». Якщо слово закінчується на м'який приголосний звук, ми додаємо закінчення **-ю**. Наприклад, **лікар** *(doctor)* має форму «лікарю», а **вчитель** *(teacher)* стає «вчителю». Слово **водій** *(driver)* також має форму «водію». There is an important note about masculine words ending in the -ер or -ор suffixes, like **професор** *(professor)* or **директор** *(director)*. These are hard stems in Ukrainian, so they always take the -е ending: «професоре», «директоре». Ми часто використовуємо ці форми в офіційній розмові.
+When addressing professionals directly, the vocative case endings depend on the final consonant of the noun. Most masculine professions belong to the second declension. If the word ends in a hard consonant, we add the ending «-е». For example, the word for engineer becomes «інженере», and the word for master becomes «майстре». If the word ends in a soft consonant or a liquid consonant, we use the ending «-ю». This means the word for doctor changes to «лікарю», and the word for teacher becomes «вчителю».
 
-Українська мова має дуже красиву та важливу особливість. Ми активно, часто та природно використовуємо **фемінітиви** *(femininitives)* у повсякденному житті. Це жіночі форми назв професій та соціальних ролей. For women, we use the first declension pattern that you learned previously in the A1 level. Більшість таких сучасних слів закінчується на суфікс **-ка** або на літеру **-а**. У кличному відмінку ці слова завжди і без винятків мають закінчення **-о**. Наприклад, слово **вчителька** *(female teacher)* стає «вчителько». Слово **лікарка** *(female doctor)* має форму «лікарко», а **журналістка** *(female journalist)* легко стає «журналістко». Популярне слово **директорка** *(female director)* має правильну форму «директорко». This reinforces the "feminine-hard" declension pattern perfectly. Ми можемо сказати просто «лікарко». Або ми додаємо слово «пані» для більшої поваги: «пані лікарко». Це звучить дуже ввічливо, професійно та сучасно.
+Українська мова має одне цікаве правило для слів іншомовного походження на «-ер» або «-ір». Такі слова мають твердий приголосний у кінці, тому вони отримують закінчення «-е». Ми кажемо «професоре», «директоре» або «офіцере». Але питомі українські слова або давно запозичені професії на «-ар» та «-яр» належать до м'якої групи. Тому ми завжди використовуємо закінчення «-ю» для таких професій. Правильно казати «лікарю», «перукарю» або «касирю».
 
-Існують також спеціальні слова, які ми однаково використовуємо для чоловіків і для жінок. Наприклад, популярне слово **колега** *(colleague)*. Це слово має спільний рід. У кличному відмінку воно завжди має форму «колего». Ми з повагою кажемо «колего Андрію» або «колего Маріє». Інше важливе слово у цій групі — це **суддя** *(judge)*. Воно закінчується на м'який приголосний, тому в кличному відмінку завжди має форму «суддю». Також є класичне слово **товариш** *(friend, comrade)*. Це іменник мішаної групи. У кличному відмінку він має закінчення **-у**. Тому ми кажемо «товаришу». Пам'ятайте ці спеціальні форми, коли ви працюєте або навчаєтесь в українському колективі.
+> *The Ukrainian language has one interesting rule for words of foreign origin ending in "-ер" or "-ір". Such words have a hard consonant at the end, so they get the "-е" ending. We say "професоре", "директоре", or "офіцере". But native Ukrainian words or long-borrowed professions ending in "-ар" and "-яр" belong to the soft group. Therefore, we always use the "-ю" ending for such professions. It is correct to say "лікарю", "перукарю", or "касирю".*
 
-Давайте подивимося, як це працює в реальному щоденному житті. Олег прийшов у поліклініку або **лікарню** *(clinic, hospital)*. Він має проблему зі здоров'ям і хоче поговорити з лікарем. Notice how Oleh starts the conversation with a formal title, and the doctor responds using Oleh's surname in the vocative case. This grammatical choice shows professional respect and social distance on both sides.
+Ukrainian naturally and actively uses femininitives for professions. When you address a female professional, you must use the feminine form of her title. Most of these feminine titles end in «-а» or «-я» and belong to the first declension. This pattern is very straightforward because it follows the basic rule you learned in the A1 level. Words ending in a hard consonant plus «-а» change the ending to «-о» in the vocative case.
 
-> — **Пацієнт (Олег):** Добрий день! Пане лікарю, мені потрібна допомога. *(Good day! Mr. doctor, I need help.)*
-> — **Лікар:** Добрий день. Сідайте, будь ласка. Добре, пане Ковальчуку, що вас турбує? *(Good day. Sit down, please. Alright, Mr. Kovalchuk, what is bothering you?)*
-> — **Пацієнт (Олег):** У мене дуже сильно болить голова. *(I have a very bad headache.)*
-> — **Лікар:** Зрозуміло. Я дам вам ліки, пане Олегу. *(I understand. I will give you medicine, Mr. Oleh.)*
-> — **Пацієнт (Олег):** Дякую, лікарю. Ви дуже добрі. *(Thank you, doctor. You are very kind.)*
+Коли ви звертаєтеся до жінки, ви використовуєте жіночу форму професії. Наприклад, слово «вчителька» у кличному відмінку має форму «вчителько». Жінка-лікар — це «лікарка», тому ми кажемо «лікарко». Слово «журналістка» змінюється на «журналістко», а «професорка» стає «професорко». Ця зміна є дуже природною та регулярною. Ви можете легко утворити форму кличного відмінка для більшості жіночих професій.
 
-У цьому короткому діалозі ми бачимо класичний приклад офіційної української поваги. Тепер ви знаєте, як правильно та ввічливо говорити з лікарем або зі своїм директором.
+> *When you address a woman, you use the feminine form of the profession. For example, the word "вчителька" in the vocative case has the form "вчителько". A female doctor is "лікарка", so we say "лікарко". The word "журналістка" changes to "журналістко", and "професорка" becomes "професорко". This change is very natural and regular. You can easily form the vocative case for most feminine professions.*
+
+Some professional nouns are common gender, meaning the same word applies to both men and women. The vocative ending depends strictly on the word's grammatical class, not the gender of the person. For example, the word for colleague takes the «-о» ending for everyone, becoming «колего». Another important word is the one for judge, which is a soft-group noun and takes «-ю» to become «суддю». There are also nouns from the mixed declension group that take the «-у» ending. The word for comrade changes to «товаришу», and the word for listener becomes «слухачу».
+
+:::info
+**Grammar box** — The word «колега» always takes the «-о» ending in the vocative case, regardless of whether you are speaking to a man or a woman. You say «пане колего» to a man and «пані колего» to a woman.
+:::
+
+Let's see how these formal and professional vocative forms work in a real situation. When visiting a doctor, patients start with a highly formal address. Once the doctor establishes a professional relationship, they might use the patient's surname. Notice how the patient transitions from the full formal title to a simpler professional address at the end.
+
+> — **Пацієнт (Олег):** Добрий день, пане лікарю! Мені потрібна ваша допомога. *(Good afternoon, doctor! I need your help.)*
+> — **Лікар:** Добрий день, пане Ковальчуку. Сідайте, будь ласка. Що вас турбує? *(Good afternoon, Mr. Kovalchuk. Please, sit down. What is bothering you?)*
+> — **Пацієнт (Олег):** У мене дуже болить голова і висока температура. *(I have a bad headache and a high temperature.)*
+> — **Лікар:** Зрозуміло. Зараз я вас огляну. Відкрийте рот. *(Understood. I will examine you now. Open your mouth.)*
+> — **Пацієнт (Олег):** Дякую, лікарю. Ви можете виписати мені ліки? *(Thank you, doctor. Can you prescribe me medicine?)*
+> — **Лікар:** Так, звичайно. Я напишу рецепт. *(Yes, of course. I will write a prescription.)*
+
+У цьому діалозі Олег спочатку каже «пане лікарю», щоб показати велику повагу. Лікар відповідає «пане Ковальчуку». Він використовує прізвище пацієнта у кличному відмінку. Наприкінці Олег каже просто «лікарю». Це також ввічливо, але трохи менш формально.
 
 <!-- INJECT_ACTIVITY: match-professions-vocative -->
 
-
 ## Друже мій, люба моя: емоційний кличний (Emotional Vocative)
 
-Коли ми говоримо з близькими друзями або родиною, ми також активно використовуємо кличний відмінок. Це робить нашу мову теплою та емоційною. Подивіться на дуже популярне слово **друг** *(friend)*. У кличному відмінку приголосний звук «г» завжди змінюється на «ж». Тому ми маємо казати «друже», а не «другу». Це дуже важливе правило української мови. Наприклад, ми часто кажемо: «Привіт, друже! Як твої справи?». Але жіноча форма **подруга** *(female friend)* має іншу структуру. Вона має твердий приголосний в кінці слова. Тому ми просто додаємо закінчення **-о**. Ми кажемо «подруго». Наприклад: «Моя люба подруго, я так рада тебе бачити!». Також ми використовуємо емоційні прикметники для звертання. Наприклад, **любий** *(dear - masculine)* та **люба** *(dear - feminine)*. When we use adjectives as forms of address, they always stay in the nominative case. Вони ніколи не змінюють свою форму. Ми завжди кажемо «люба» або «любий» без змін.
+When you speak to close friends or loved ones, the vocative case helps express warmth and intimacy. The word for a male friend is «друг». Because its stem ends in a hard consonant «-г», it undergoes a consonant mutation in the vocative case, changing the «-г» to «-ж». This makes the vocative form «друже».
 
-Українці часто кажуть, що їхня рідна мова **пісенна** *(song-like)* та дуже **ніжна** *(tender)*. Це тому, що ми дуже любимо використовувати **пестливі форми** *(diminutive forms)*. Ми використовуємо їх кожного дня, коли говоримо з дітьми або нашими коханими. For these affectionate addresses, the vocative case is especially rich and natural. Найпопулярніші теплі слова — це **серденько** *(sweetheart, little heart)* та **сонечко** *(sunshine, little sun)*. Neuter nouns ending in -ко usually keep their exact form in the vocative case, or they can take the -о ending, which looks exactly the same in writing. Тому ми кажемо: «Спи, моє сонечко» або «Ходи сюди, серденько». Для дівчат ми часто використовуємо красиве слово **зіронька** *(little star)*. У кличному відмінку це слово має форму «зіронько». Також популярне ім'я Люба має ніжну форму **Любочка** *(darling)*. Ми лагідно кличемо її «Любочко». Це звучить дуже приємно.
+Коли ви говорите з жінкою, ви кажете «подруга». Це слово має закінчення «-а», тому в кличному відмінку воно стає «подруго». Ви також можете використовувати емоційні слова. Наприклад, ви можете сказати «любий» до чоловіка або «люба» до жінки. Ці слова є прикметниками. Прикметники не змінюють свою форму в кличному відмінку. Вони залишаються в називному відмінку.
 
-In Ukrainian, we have a very specific word order when we use possessive pronouns in the vocative case. Unlike in English, where you normally say "My friend", Ukrainian strongly prefers the grammatical pattern "Noun + Pronoun". Тому ми зазвичай кажемо «Друже мій!», а не «Мій друже!». Цей порядок слів звучить набагато природніше та емоційніше. Так само ми завжди говоримо «Мамо моя!», «Подруго моя!» або «Брате мій!». It is also very important to remember that possessive pronouns like **мій** *(my - masculine)* and **моя** *(my - feminine)* do not change their form. They always stay in the nominative case when used in a direct address. Ви змінюєте тільки сам іменник.
+> *When you speak to a woman, you say "подруга". This word has the ending "-a", so in the vocative case it becomes "подруго". You can also use emotional words. For example, you can say "любий" to a man or "люба" to a woman. These words are adjectives. Adjectives do not change their form in the vocative case. They remain in the nominative case.*
 
-The vocative case is also perfectly preserved in many common emotional exclamations. Наприклад, коли ми дуже дивуємося, ми кажемо «**Боже мій!**» *(My God!)*. Це правильний кличний відмінок від слова «Бог». Інше дуже популярне слово — це «**Господи!**» *(Lord!)*. Ми використовуємо ці слова щодня як сильні емоційні вигуки. What happens when we address a group of people? In the plural, the vocative case is usually identical to the nominative plural. Тому ми просто кажемо «Друзі!» *(Friends!)* або «Колеги!» *(Colleagues!)*. But there is one major historical exception. Слово «пани» у кличному відмінку має спеціальну форму «**Панове!**» *(Gentlemen! / Sirs! / Ladies and Gentlemen!)*. Це дуже красиве та поважне українське звертання.
+Ukrainian is often described as a very melodic and tender language. This is partly because it has a rich system of diminutive forms. You can make almost any word sound smaller or more affectionate. These affectionate forms are very common when addressing children, romantic partners, or very close friends.
 
-Давайте подивимося на нову ситуацію. Після візиту до лікаря Олег телефонує своєму другу. Він хоче розповісти йому хороші новини. Notice how the formal register from the clinic completely disappears, and Oleh uses warm, emotional vocative forms.
-> — **Олег:** Алло! Привіт, друже мій! Як ти? *(Hello! Hi, my friend! How are you?)*
-> — **Друг:** Привіт, Олеже! Я добре. Як твій візит до лікаря? *(Hi, Oleh! I am good. How was your visit to the doctor?)*
-> — **Олег:** Усе чудово! Лікар каже, що я здоровий. Я дуже радий! *(Everything is great! The doctor says I am healthy. I am very happy!)*
-> — **Друг:** Це супер! Твоя дружина вже знає? *(That is super! Does your wife already know?)*
-> — **Олег:** Ще ні. Зараз буду дзвонити їй. Скажу: «Кохана моя, усе добре, не хвилюйся, моє сонечко!». *(Not yet. I will call her now. I will say: "My beloved, everything is fine, don't worry, my sunshine!".)*
-> — **Друг:** Добре, друже. Тоді до зустрічі! *(Good, friend. Then see you later!)*
+Люди часто називають коханих людей дуже ніжними словами. Вони кажуть «серденько», що означає маленьке серце. Вони також кажуть «сонечко» або «зіронько». Якщо жінку звати Люба, її можна ніжно назвати «любочко». Іменники середнього роду із закінченням «-ко» можуть мати закінчення «-о» в кличному відмінку. Але часто вони не змінюють свою форму. Ви можете казати і «серденько», і «сонечко» як звертання.
 
-<!-- INJECT_ACTIVITY: error-correction-vocative -->
+> *People often call their loved ones by very tender words. They say "серденько", which means a little heart. They also say "сонечко" or "зіронько". If a woman's name is Lyuba, she can be tenderly called "любочко". Neuter nouns with the ending "-ко" can have the "-о" ending in the vocative case. But often they do not change their form. You can say both "серденько" and "сонечко" as an address.*
 
+:::tip
+**Did you know?** — The Ukrainian word for a star is «зірка», but in folk songs and poetry, people often use the diminutive vocative form «зіронько» to address a beloved woman.
+:::
+
+When you use a possessive pronoun like "my" with a vocative noun, the word order changes. In English, you say "My friend". In Ukrainian, the pronoun usually comes after the noun when you address someone directly.
+
+Українці майже завжди кажуть «друже мій», а не «мій друже». Ви також кажете «мамо моя», «любов моя» або «сину мій». Такий порядок слів робить фразу більш емоційною та мелодійною. Зверніть увагу, що займенники «мій» або «моя» не змінюють свою форму. Вони завжди стоять у називному відмінку, навіть якщо іменник стоїть у кличному.
+
+The vocative case is also preserved in common emotional exclamations and religious expressions. The most frequent phrase you will hear is «Боже мій!» which means "My God!". The word «Бог» takes the «-е» ending to become «Боже». Similarly, the word «Господь» becomes «Господи!». 
+
+Коли ви звертаєтеся до кількох людей, ви використовуєте множину. Кличний відмінок у множині зазвичай має таку саму форму, як і називний відмінок. Ви кажете «друзі» або «колеги». Але є один дуже важливий виняток. Слово «пани» в кличному відмінку має форму «панове». Це дуже ввічливе звертання до групи чоловіків або змішаної групи.
+
+> *When you address several people, you use the plural. The vocative case in the plural usually has the same form as the nominative case. You say "друзі" or "колеги". But there is one very important exception. The word "пани" in the vocative case has the form "панове". This is a very polite address to a group of men or a mixed group.*
+
+Let's see how these emotional forms sound in a real conversation. After his visit to the doctor, Oleh calls his close friend and his wife to share the good news. Notice how quickly his language shifts from the formal professional register to a very intimate and emotional tone.
+
+> — **Олег:** Друже мій, уяви собі! Лікар сказав, що я здоровий. *(My friend, imagine that! The doctor said that I am healthy.)*
+> — **Друг:** Боже мій! Це чудова новина, Олеже. Я дуже радий. *(My God! This is wonderful news, Oleh. I am very glad.)*
+> — **Олег:** Дякую, друже! Зараз я подзвоню дружині. *(Thank you, friend! Now I will call my wife.)*
+> — **Олег:** Кохана моя, сонечко! У мене все добре. *(My beloved, sunshine! Everything is fine with me.)*
+
+<!-- INJECT_ACTIVITY: error-correction-focus-fix-vocative-errors -->
 
 ## Який кличний обрати? (Choosing the Right Vocative)
 
-У повсякденному житті ми постійно змінюємо дистанцію спілкування. The vocative case is your main tool to show exactly how close or formal you want to be. Коли ви говорите з незнайомими людьми, ви використовуєте офіційний стиль. Наприклад, ви кажете «**пане Ковальчуку**» *(Mr. Kovalchuk)* або «**пані директорко**» *(Madam Director)*. Для фахівців ми обираємо професійний кличний відмінок, як-от «**лікарю**» *(doctor)* або «**офіціанте**» *(waiter)*. Якщо ви знаєте людину, але зберігаєте дистанцію, найкращий вибір — це нейтрально-ввічливий стиль. Ми кажемо «**пані Олено**» *(Ms. Olena)* або «**пане Андрію**» *(Mr. Andriy)*. З друзями ми використовуємо звичайні імена: «**Тарасе**» *(Taras)* чи «**Анно**» *(Anna)*. А для найрідніших маємо інтимний стиль: «**серденько**» *(sweetheart)*. If you choose the wrong register, you might sound cold to a friend or overly familiar to a boss.
+Ukrainian uses the vocative case not just to call someone, but to show social distance and respect. Choosing the right word is like choosing the right clothes for an event. If you use a very formal address with a close friend, it sounds cold and strange. But if you use an intimate word with a stranger, it can be rude.
 
-Давайте розглянемо практичні життєві ситуації. Уявіть, що ви пишете електронний лист викладачу в університет. Ви повинні почати лист так: «**Шановний пане професоре!**» *(Dear Mr. Professor!)*. Це показує вашу повагу до його статусу. У ресторані ви кличете працівника просто: «**Пане офіціанте!**» *(Mr. Waiter!)*. А коли ви зустрічаєте сусіда, ви кажете: «**Пане Степане, добрий день!**» *(Mr. Stepan, good day!)*. First names in the vocative case without the titles "пан" or "пані" act as the perfect middle ground of politeness. Ми часто використовуємо їх на роботі з колегами. Ви кажете «**Маріє**» *(Maria)* або «**Олеже**» *(Oleh)*. Це звучить привітно, але не занадто інтимно.
+Українська мова має багатий вибір звертань для кожної ситуації. Ми використовуємо офіційні форми для незнайомих людей або на роботі. Наприклад, ми кажемо «пане директоре» або «пані вчителько». Нейтральна ввічливість — це «пане» або «пані» плюс ім'я, наприклад «пані Олено». Для друзів ми беремо просто ім'я: «Тарасе» чи «Анно». А для найрідніших людей існують ніжні слова, такі як «серденько» або «сонечко».
 
-Коли іноземці вивчають українську мову, вони часто роблять типові помилки. The most common pitfall is using the nominative case for direct address. Ніколи не кажіть «*Привіт, Іван!*». Правильна форма завжди вимагає кличного відмінка: «**Привіт, Іване!**» *(Hi, Ivan!)*. Another frequent error is mixing up gender agreement in possessive phrases. Не можна казати «*друже моя*», тому що «друг» — це чоловічий рід. Жінці ми завжди кажемо «**подруго моя**» *(my friend)*. Також існує класична проблема з популярним ім'ям Ігор. Many learners fall into the trap of using the archaic form "Ігоре". The modern standard rule treats this name as a soft-stem noun. Тому єдина правильна форма сьогодні — це «**Ігорю**» *(Ihor)*. Запам'ятайте її!
+> *The Ukrainian language has a rich choice of addresses for every situation. We use formal forms for strangers or at work. For example, we say "пане директоре" or "пані вчителько". Neutral politeness is "пане" or "пані" plus a first name, for example, "пані Олено". For friends, we just take the first name: "Тарасе" or "Анно". And for the dearest people, there are tender words, such as "серденько" or "сонечко".*
 
-Кличний відмінок — це набагато більше, ніж просто граматичне правило. It is a profound mark of respect and a reflection of Ukrainian cultural identity. Коли ви використовуєте правильну форму, ви будуєте невидимий міст до людини. Ви показуєте, що ви відчуваєте контекст ситуації та поважаєте співрозмовника. Українська мова звучить дуже мелодійно саме завдяки цим м'яким закінченням. Слова «**мамо**» *(mom)*, «**брате**» *(brother)* або «**колего**» *(colleague)* роблять нашу комунікацію теплою та живою. The vocative case is the true music of the Ukrainian language. Використовуйте його щодня, і ви побачите приємну реакцію людей на ваші слова.
+Let's look at some practical situations. Imagine you are writing an email to your university professor. You should start with «Шановний пане професоре» or use their first name and patronymic, like «Сергію Васильовичу». In a restaurant, it is polite to call the waiter «пане офіціанте», not just "boy" or "excuse me".
 
-<!-- INJECT_ACTIVITY: quiz-register-choice -->
-<!-- INJECT_ACTIVITY: group-sort-registers -->
+Якщо ви говорите зі своїм сусідом, який старший за вас, найкраще сказати «пане Степане». Це показує повагу, але не звучить занадто офіційно. Використання імені в кличному відмінку — це золота середина. Це найкращий спосіб звернутися до колеги або знайомого. Використовуйте його, якщо ви маєте добрі стосунки.
 
+> *If you are talking to your neighbor who is older than you, it is best to say "пане Степане". This shows respect but does not sound too formal. Using the first name in the vocative case is the golden mean. It is the best way to address a colleague or an acquaintance. Use it if you have a good relationship.*
+
+When learning Ukrainian, it is easy to make mistakes with direct address. The most common error is using the nominative case instead of the vocative.
+
+:::info
+**Grammar box** — Never say «Привіт, Іван!» or «Добрий день, пан директор!». Always change the noun to the vocative: «Привіт, Іване!» and «Добрий день, пане директоре!». If you use the nominative, it sounds like you are talking *about* the person, not *to* them.
+:::
+
+Інша часта помилка — це неправильний рід займенника або прикметника. Ви повинні пам'ятати, що слово «друг» чоловічого роду, а «подруга» — жіночого. Тому ми кажемо «друже мій», але «подруго моя». Також зверніть увагу на ім'я Ігор. Сучасна літературна норма вимагає закінчення «-ю», тому правильно говорити «Ігорю», а не «Ігоре».
+
+> *Another frequent mistake is the wrong gender of the pronoun or adjective. You must remember that the word "друг" is masculine, and "подруга" is feminine. Therefore, we say "друже мій", but "подруго моя". Also, pay attention to the name Ihor. The modern literary norm requires the ending "-ю", so it is correct to say "Ігорю", not "Ігоре".*
+
+The vocative case is much more than just a grammatical rule you have to memorize. It is the music of the Ukrainian language. When you use it correctly, you show that you understand the culture.
+
+Кличний відмінок допомагає будувати місток між людьми. Коли ви використовуєте правильне звертання, людина відчуває вашу повагу та увагу. Ви показуєте, що не просто перекладаєте слова з англійської. Ви дійсно думаєте українською мовою. Говоріть красиво, і люди завжди відповідатимуть вам усмішкою.
+
+> *The vocative case helps build a bridge between people. When you use the correct address, the person feels your respect and attention. You show that you are not just translating words from English. You are truly thinking in Ukrainian. Speak beautifully, and people will always answer you with a smile.*
+
+<!-- INJECT_ACTIVITY: quiz-focus-choose-the-correct-vocative-register-for-a-given-social-situation -->
+<!-- INJECT_ACTIVITY: group-sort-focus-sort-vocative-forms-by-register-formal-professional-emotional -->
 
 ## Підсумок
 
-Давайте згадаємо головне правило цієї теми. Кличний відмінок має три основні закінчення. Ми використовуємо закінчення **-о** для твердої групи жіночого роду: **Оксано** *(Oksana)*, **мамо** *(mom)*. Закінчення **-е** працює для чоловічого роду твердої групи: **пане** *(sir)*, **друже** *(friend)*. А закінчення **-ю** ми додаємо до м'якої групи та пестливих форм: **лікарю** *(doctor)*, **бабусю** *(grandma)*.
+Ми вивчили багато нових правил сьогодні. Кличний відмінок робить вашу мову природною та ввічливою. Згадаємо три головні закінчення. Жіночі імена та тверді чоловічі іменники часто мають закінчення «-о»: мамо, Оксано. Чоловічі слова із твердим приголосним закінчуються на «-е»: пане, директоре, Петре. М'які слова та пестливі форми отримують закінчення «-ю»: лікарю, вчителю, бабусю.
 
-Remember that formal addresses require the vocative for the title and the profession, but a surname stays in the nominative.
+> *We learned many new rules today. The vocative case makes your speech natural and polite. Let's recall the three main endings. Feminine names and hard masculine nouns often take the ending "-о": мамо, Оксано. Masculine words with a hard consonant end in "-е": пане, директоре, Петре. Soft words and diminutive forms get the ending "-ю": лікарю, вчителю, бабусю.*
 
-Перевірте себе! *(Check yourself!)*
-1. Як звернутися до вчителя чоловіка? *(How to address a male teacher?)* — **Пане вчителю!** *(Mr. Teacher!)*
-2. Як сказати «My friend» українською? *(How to say "My friend" in Ukrainian?)* — **Друже мій!** *(My friend!)*
-3. Чи змінюється прізвище жінки після слова «пані»? *(Does a woman's surname change after the word "Ms."?)* — Ні, воно не змінюється. Ми кажемо: **пані Шевченко** *(Ms. Shevchenko)*.
-4. Яка форма є стандартною для імені Олег? *(Which form is standard for the name Oleh?)* — **Олегу!** *(Oleh!)*
+Тепер час перевірити свої знання. Спробуйте дати відповіді на ці питання. По-перше, як звернутися до вчителя чоловіка? Правильна відповідь: пане вчителю. По-друге, як сказати «My friend» українською мовою? Правильно говорити: друже мій. По-третє, чи змінюється прізвище жінки після слова «пані»? Ні, воно залишається без змін. І нарешті, яка форма є стандартною для імені Олег? Це форма Олегу.
 
-Тепер ви готові спілкуватися українською ввічливо та природно. *(Now you are ready to communicate in Ukrainian politely and naturally.)*
+> *Now it is time to check your knowledge. Try to answer these questions. First, how do you address a male teacher? The correct answer is: пане вчителю. Second, how do you say "My friend" in Ukrainian? It is correct to say: друже мій. Third, does a woman's surname change after the word "пані"? No, it remains unchanged. Finally, what form is standard for the name Олег? It is the form Олегу.*
 
+:::note
+**Quick tip** — Don't be afraid to make mistakes with the vocative case. Ukrainians will be very happy and impressed that you are trying to use it!
+:::
 </module_content>
 
 ---

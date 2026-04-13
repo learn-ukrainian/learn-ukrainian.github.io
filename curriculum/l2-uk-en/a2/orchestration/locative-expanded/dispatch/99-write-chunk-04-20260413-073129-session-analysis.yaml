@@ -1,0 +1,80 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T05-30-635b815c.json
+phase: write-chunk-04
+prompt_chars: 46168
+response_chars: 3181
+prompt_words: 6884
+response_words: 495
+sections:
+- name: header
+  start: 0
+  length: 475
+  fraction: 0.0103
+- name: skeleton
+  start: 475
+  length: 1422
+  fraction: 0.0308
+- name: prior_summary
+  start: 1897
+  length: 3356
+  fraction: 0.0727
+- name: plan
+  start: 5253
+  length: 13788
+  fraction: 0.2986
+- name: wiki
+  start: 11413
+  length: 26878
+  fraction: 0.5822
+- name: output_spec
+  start: 45919
+  length: 249
+  fraction: 0.0054
+large_sections:
+- wiki
+directives_total: 24
+directives_covered: 15
+directives_missed:
+- kind: must
+  text: For example, students learn that in an `ім’я + по батькові` address, both
+    words must be in the vocative case (e.
+  covered: false
+  coverage_note: 4/12 keywords (33%)
+- kind: must
+  text: '| `Привіт, Наталя!` | `Привіт, Наталю!` | The vocative case is mandatory
+    for direct address in Ukrainian.'
+  covered: false
+  coverage_note: 2/9 keywords (22%)
+- kind: must
+  text: '` | In a formal address consisting of a first name and patronymic, **both**
+    nouns must be in the vocative case (Source 5, 10, 16).'
+  covered: false
+  coverage_note: 1/12 keywords (8%)
+- kind: must
+  text: '` | When addressing someone using a title (`пан`, `пані`, `колега`, `лікар`)
+    and a surname, the title must be in the vocative case, while the surname remains
+    in the nominative (Source 5, 16).'
+  covered: false
+  coverage_note: 2/17 keywords (12%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: EVERY word in the checklist below MUST appear at least once with a bold Ukrainian
+    form and English translation in a natural sentence.
+  covered: false
+  coverage_note: 3/15 keywords (20%)
+- kind: skeleton_para
+  text: 'P4 (90w): Final concluding paragraph summarizing the evolution of the learner''s
+    understanding of the locative case, framing it as a versatile and elegant tool
+    for expressing nuanced relationships and contexts in Ukrainian.'
+  covered: false
+  coverage_note: 7/19 keywords (37%)
+- kind: inject_activity
+  text: fill-in-locative-forms
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: error-correction-prepositions
+  covered: false
+  coverage_note: marker missing

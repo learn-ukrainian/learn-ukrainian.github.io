@@ -7,10 +7,9 @@ pipeline: v6
 build_status: draft
 ---
 
-import ErrorCorrection from '@site/src/components/ErrorCorrection';
+import Anagram from '@site/src/components/Anagram';
 import FillIn from '@site/src/components/FillIn';
 import FlashcardDeck from '@site/src/components/FlashcardDeck';
-import GroupSort from '@site/src/components/GroupSort';
 import MatchUp from '@site/src/components/MatchUp';
 import OddOneOut from '@site/src/components/OddOneOut';
 import Quiz from '@site/src/components/Quiz';
@@ -22,141 +21,82 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 <Tabs syncKey="module-tab">
 <TabItem label="Урок">
 
-## Діало́ги — Dialogues
+## Діало́ги (Dialogues)
 
-Imagine walking into a pet shop. You are looking at the different animals and the items they need. In English, unless you know the specific sex of an animal, you refer to it as an "it." The basket it sleeps in is definitely an "it." In Ukrainian, this perspective shifts entirely. Every single noun, whether it is a living breathing creature or a woven basket, has a specific grammatical gender. It is either masculine, feminine, or neuter. Observe a conversation between two friends to see how this works in practice.
-
-<div class="dialogue">
-
-<div class="dialogue-line"><span class="speaker">Марі́я:</span> Диви́сь, **кіт** (cat)! *(Look, a cat!)*</div>
-
-<div class="dialogue-line"><span class="speaker">Оле́нка:</span> Так, **він** (he) спить. Тут **ко́шик** (basket). *(Yes, he is sleeping. Here is a basket.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Марія:</span> Кошик — він. *(A basket is a "he".)*</div>
-
-<div class="dialogue-line"><span class="speaker">Оленка:</span> А там моя́ улю́блена **ри́бка** (fish). **Вона́** (she) пла́ває. *(And there is my favorite fish. She is swimming.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Марія:</span> Вели́кий **аква́ріум** (aquarium)! Він ду́же га́рний. *(A big aquarium! He is very beautiful.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Оленка:</span> О, дивись! **Черепа́ха** (turtle). Вона тут. *(Oh, look! A turtle. She is here.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Марія:</span> Мале́ньке **кошеня́** (kitten)! **Воно́** (it) теж тут. *(A little kitten! It is also here.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Оленка:</span> І вели́ке **дзе́ркало** (mirror). Воно там. *(And a big mirror. It is there.)*</div>
-
-</div>
-
-Notice how Марія and Оленка talk about the animals and objects. The word **кіт** is masculine, so they use the pronoun **він**. The basket, **кошик**, is also masculine, so it is also a "he." The **рибка** and the **черепаха** are feminine, referred to as **вона**. The mirror, **дзеркало**, and the little **кошеня** are neuter, using **воно**.
-
-Now consider a different situation. You are on a video call with a friend, showing them your room. The furniture around you also follows these strict rules of grammatical gender.
+Ukrainian nouns have grammatical gender. Read this short pet-shop dialogue and notice how **він**, **вона́**, and **воно́** help you test noun gender.
 
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Оле́г:</span> Приві́т! Дивись, це моя **кімна́та** (room). *(Hi! Look, this is my room.)*</div>
+<div class="dialogue-line"><span class="speaker">Марі́я:</span> Диви́сь, яки́й га́рний кіт! Він спить у ко́шику. *(Look, what a nice cat! He is sleeping in a basket.)*</div>
 
-<div class="dialogue-line"><span class="speaker">А́нна:</span> Кла́сно! У тебе́ є **стіл** (table)? *(Cool! Do you have a table?)*</div>
+<div class="dialogue-line"><span class="speaker">Оле́нка:</span> А ри́бка? Вона в аква́ріумі. *(And the fish? She is in the aquarium.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Олег:</span> Так, у мене́ є стіл. Це мій стіл. *(Yes, I have a table. This is my table.)*</div>
+<div class="dialogue-line"><span class="speaker">Марія:</span> Так. А це черепа́ха. Вона бі́ля дзе́ркала. *(Yes. And this is a turtle. She is near the mirror.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Анна:</span> А де **лі́жко** (bed)? *(And where is the bed?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Олег:</span> Моє́ ліжко тут. А там вели́ка **ша́фа** (wardrobe). *(My bed is here. And there is a big wardrobe.)*</div>
+<div class="dialogue-line"><span class="speaker">Оленка:</span> О, а кошеня́ мале́ньке! Воно теж га́рне. *(Oh, and the kitten is small! It is nice too.)*</div>
 
 </div>
 
-In this brief exchange, the gender emerges naturally through the possessive words. Oleg says **моя кімната** (my room) because room is feminine. He says **мій стіл** (my table) because table is masculine, and **моє ліжко** (my bed) because bed is neuter.
-
-Finally, observe a quick conversation about everyday items you carry with you in a bag.
-
-<div class="dialogue">
-
-<div class="dialogue-line"><span class="speaker">Макси́м:</span> Що у тебе є? *(What do you have?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Іри́на:</span> У мене є **кни́га** (book), **телефо́н** (phone) і **фо́то** (photo). *(I have a book, a phone, and a photo.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Максим:</span> А у мене є **ру́чка** (pen) і **зо́шит** (notebook). *(And I have a pen and a notebook.)*</div>
-
-</div>
-
-Even in a simple list, a Ukrainian speaker unconsciously categorizes these items: **телефон** and **зошит** are masculine, **книга** and **ручка** are feminine, while **фото** is neuter.
-
-## Він, вона, воно — The Gender Test
-
-For an English speaker, the idea that a table is masculine and a book is feminine feels abstract. English primarily reserves gender for living things with a biological sex. A table is an "it." A book is an "it." You must set this habit aside. In Ukrainian, grammatical gender, known as **рід** (gender), is a permanent, structural feature of every single noun. You cannot change a word's gender, just as you cannot change its core meaning.
-
-As outlined in Ukrainian primary school materials like the Grade 3 textbook by Ponomarova, the Ukrainian language divides all nouns into three categories. These are **чолові́чий рід** (masculine gender), **жіно́чий рід** (feminine gender), and **сере́дній рід** (neuter gender). To determine which category a word belongs to, students use a simple substitution test with personal pronouns. Can you replace the noun with "he," "she," or "it"? If the word is a **стіл**, you refer to it as **він**. If the word is a **книга**, you refer to it as **вона**. If the word is a **вікно́** (window), you refer to it as **воно**.
-
-<Quiz client:only="react" questions={[{"question": "стіл", "options": [{"text": "він", "correct": true}, {"text": "вона", "correct": false}, {"text": "воно", "correct": false}]}, {"question": "книга", "options": [{"text": "він", "correct": false}, {"text": "вона", "correct": true}, {"text": "воно", "correct": false}]}, {"question": "вікно", "options": [{"text": "він", "correct": false}, {"text": "вона", "correct": false}, {"text": "воно", "correct": true}]}, {"question": "телефон", "options": [{"text": "він", "correct": true}, {"text": "вона", "correct": false}, {"text": "воно", "correct": false}]}, {"question": "сумка", "options": [{"text": "він", "correct": false}, {"text": "вона", "correct": true}, {"text": "воно", "correct": false}]}, {"question": "ліжко", "options": [{"text": "він", "correct": false}, {"text": "вона", "correct": false}, {"text": "воно", "correct": true}]}, {"question": "ключ", "options": [{"text": "він", "correct": true}, {"text": "вона", "correct": false}, {"text": "воно", "correct": false}]}, {"question": "кімната", "options": [{"text": "він", "correct": false}, {"text": "вона", "correct": true}, {"text": "воно", "correct": false}]}]} instruction={"Choose the correct pronoun: **він**, **вона**, or **воно**."} />
-
-This concept becomes much more intuitive when you attach a possessive pronoun to the noun.
- This is known as the "My" test. Instead of just trying to memorize that a table is masculine, you practice saying "my table." The word for "my" changes depending on the gender of the noun it describes.
-
-If a noun is masculine, you use **мій** (my). You say **мій стіл** (my table) and **мій телефон** (my phone). This firmly establishes the word in the masculine category. If a noun is feminine, you use **моя** (my). You say **моя книга** (my book) and **моя кімната** (my room). If a noun is neuter, you use **моє** (my). You say **моє вікно** (my window) and **моє ліжко** (my bed). By consistently pairing the noun with the correct form of "my," your brain builds a strong associative link.
-
-<FillIn client:only="react" items={[{"sentence": "Це ____ кімната.", "answer": "моя", "options": ["мій", "моя", "моє"]}, {"sentence": "Це ____ стіл.", "answer": "мій", "options": ["мій", "моя", "моє"]}, {"sentence": "Це ____ ліжко.", "answer": "моє", "options": ["мій", "моя", "моє"]}, {"sentence": "Це ____ телефон.", "answer": "мій", "options": ["мій", "моя", "моє"]}, {"sentence": "Це ____ книга.", "answer": "моя", "options": ["мій", "моя", "моє"]}, {"sentence": "Це ____ вікно.", "answer": "моє", "options": ["мій", "моя", "моє"]}, {"sentence": "Це ____ зошит.", "answer": "мій", "options": ["мій", "моя", "моє"]}, {"sentence": "Це ____ ручка.", "answer": "моя", "options": ["мій", "моя", "моє"]}]} instruction={"Choose the correct form of **мій/моя/моє**."} />
-
-While the "My" test helps you confirm a word's gender,
- you also need a way to predict the gender of a new word you encounter. Fortunately, Ukrainian spelling is highly systematic. You can predict the gender of approximately ninety percent of nouns simply by looking at the last letter of the word in its basic, dictionary form. The Vashulenko textbook for the third grade outlines these primary rules.
-
-If a noun ends in a consonant, it is almost certainly masculine. Look at words like **телефон**, **зошит**, and **ключ** (key). The final sounds are consonants, placing them firmly in the masculine category.
-
-If a noun ends in the vowel **-а** or the vowel **-я**, it is typically feminine. Consider words like **ла́мпа** (lamp), **кімната**, **книга**, and **ручка**. The open vowel ending is the strongest indicator of the feminine gender.
-
-If a noun ends in the vowel **-о** or the vowel **-е**, it is neuter. Words such as **вікно**, **ліжко**, **мі́сто** (city), and **дзеркало** all follow this exact pattern.
-
-:::tip
-There are a few exceptions to these rules, particularly words ending in a soft sign. However, at this stage, mastering the primary consonant, -а/-я, and -о/-е patterns allows you to correctly identify the vast majority of nouns you encounter.
-:::
-
-<Quiz client:only="react" questions={[{"question": "зошит", "options": [{"text": "чоловічий (masculine)", "correct": true}, {"text": "жіночий (feminine)", "correct": false}, {"text": "середній (neuter)", "correct": false}]}, {"question": "лампа", "options": [{"text": "чоловічий (masculine)", "correct": false}, {"text": "жіночий (feminine)", "correct": true}, {"text": "середній (neuter)", "correct": false}]}, {"question": "дзеркало", "options": [{"text": "чоловічий (masculine)", "correct": false}, {"text": "жіночий (feminine)", "correct": false}, {"text": "середній (neuter)", "correct": true}]}, {"question": "комп'ютер", "options": [{"text": "чоловічий (masculine)", "correct": true}, {"text": "жіночий (feminine)", "correct": false}, {"text": "середній (neuter)", "correct": false}]}, {"question": "фото", "options": [{"text": "чоловічий (masculine)", "correct": false}, {"text": "жіночий (feminine)", "correct": false}, {"text": "середній (neuter)", "correct": true}]}, {"question": "ручка", "options": [{"text": "чоловічий (masculine)", "correct": false}, {"text": "жіночий (feminine)", "correct": true}, {"text": "середній (neuter)", "correct": false}]}]} instruction={"What is the **рід** (gender)? Look at the ending."} />
-
-## Предме́ти навко́ло — Objects Around Us
-
-To make these rules concrete, organize common vocabulary by gender. We start with masculine objects you find in a study or carry in a bag. Read these words carefully and note the final consonant sound that defines their gender.
-
-The word for a table is a **стіл**. The word for a chair is a **стіле́ць** (chair). Your mobile device is a **телефон**, and your computer is a **комп'ю́тер** (computer). When you need to write something down, you use a **зошит**, and you unlock your door with a **ключ**. Every single one of these items belongs to the masculine gender. You refer to any of them as **він**, and if they belong to you, you use the possessive **мій**.
-
-Now consider the feminine and neuter objects around you. The feminine words all share the characteristic open vowel endings. You read a **книга**. You turn on a **лампа** for light. You carry your belongings in a **су́мка** (bag), write with a **ручка**, and sit inside a **кімната** surrounded by a **стіна́** (wall). All of these end in **-а**, marking them as feminine (**вона**, **моя**).
-
-Neuter nouns describe other essential items, clearly marked by their **-о** or **-е** endings. You look out a **вікно**. You sleep in a **ліжко**. You relax in a comfortable **крі́сло** (armchair). You check your reflection in a **дзеркало**, and you frame a **фото** for memories. These are all neuter objects (**воно**, **моє**).
-
-<GroupSort client:only="react" groups={{"Він (Masculine)": ["стіл", "стілець", "телефон", "комп'ютер"], "Вона (Feminine)": ["стіна", "книга", "кімната", "сумка"], "Воно (Neuter)": ["вікно", "ліжко", "крісло", "дзеркало"]}} instruction={"Sort the words by **рід** (gender)."} />
-
-You previously learned how to talk about your family using the phrase **У мене є** (I have). You practiced saying things like "У мене є брат" (I have a brother) and "У мене є сестра́" (I have a sister). This exact same grammatical construction is used to talk about inanimate objects. The gender of the object does not change the structure of the sentence. The phrase **У мене є** remains constant.
-
-If you want to state that you own a table, you simply combine the phrase with the vocabulary word. You say **У мене є стіл** (I have a table). If you want to state that you have a book, you say **У мене є книга** (I have a book). If you are describing a room and want to say it has a window, you say **У мене є вікно** (I have a window).
-
-This is a powerful pattern. By learning one fixed phrase, you can instantly communicate ownership or possession of any new vocabulary word you learn, regardless of whether that word is masculine, feminine, or neuter.
+In this dialogue, the pronouns show gender directly: **кіт — він**, **рибка — вона**, **черепаха — вона**, **кошеня — воно**. The same idea works with objects too: **аква́ріум — він**, **дзе́ркало — воно**.
 
 :::note
-The phrase **У мене є** translates literally to "At me there is." The noun that follows it is the subject of the sentence, which is why it stays in its basic dictionary form. You do not need to change the ending of the object you possess in this specific construction.
+In Ukrainian, possessive pronouns like **мій**, **моя́**, and **моє́** must agree with the object they describe, not the person who owns it. Whether a man or a woman says it, a table is always **мій стіл** because the word **стіл** itself is masculine.
 :::
+
+Observe another short dialogue where two people are discussing what they carry with them in their bags. This introduces new objects.
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Оленка:</span> Що у тебе́ є в су́мці? *(What do you have in your bag?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Марія:</span> У мене́ є кни́га, телефо́н і фо́то. Але́ де моя ру́чка? *(I have a book, a phone, and a photo. But where is my pen?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Оленка:</span> Ось ручка. А це мій зо́шит, не твій. *(Here is the pen. And this is my notebook, not yours.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Марія:</span> То́чно, дякую! *(Right, thanks!)*</div>
+
+</div>
+
+This conversation adds more everyday objects: **телефон** (phone), **фото** (photo), **ручка** (pen), and **зошит** (notebook). In the next section, we will test which gender each word belongs to.
+
+## Він, вона, воно (The Gender Test)
+
+Grade 3 Ukrainian textbooks teach this with a simple test: add **він**, **вона**, or **воно** to the noun. That gives you three genders: **чолові́чий рід** (masculine), **жіно́чий рід** (feminine), and **сере́дній рід** (neuter). In the pet shop scene, **кіт** and **акваріум** take **він**, **рибка** and **черепаха** take **вона**, and **кошеня** takes **воно**.
+
+You can check the same idea with **мій / моя / моє**. Say **мій стіл**, **моя книга**, and **моє вікно́**. If **мій** fits, the noun is masculine. If **моя** fits, it is feminine. If **моє** fits, it is neuter. This follows the textbook pattern from Пономарова (p.86) and the endings overview in Вашуленко (p.112).
+
+<Quiz client:only="react" questions={[{"question": "стіл", "options": [{"text": "він", "correct": true}, {"text": "вона", "correct": false}, {"text": "воно", "correct": false}, {"text": "вони", "correct": false}]}, {"question": "кімната", "options": [{"text": "він", "correct": false}, {"text": "вона", "correct": true}, {"text": "воно", "correct": false}, {"text": "вони", "correct": false}]}, {"question": "вікно", "options": [{"text": "він", "correct": false}, {"text": "вона", "correct": false}, {"text": "воно", "correct": true}, {"text": "вони", "correct": false}]}, {"question": "телефон", "options": [{"text": "він", "correct": true}, {"text": "вона", "correct": false}, {"text": "воно", "correct": false}, {"text": "вони", "correct": false}]}, {"question": "книга", "options": [{"text": "він", "correct": false}, {"text": "вона", "correct": true}, {"text": "воно", "correct": false}, {"text": "вони", "correct": false}]}, {"question": "ліжко", "options": [{"text": "він", "correct": false}, {"text": "вона", "correct": false}, {"text": "воно", "correct": true}, {"text": "вони", "correct": false}]}, {"question": "сумка", "options": [{"text": "він", "correct": false}, {"text": "вона", "correct": true}, {"text": "воно", "correct": false}, {"text": "вони", "correct": false}]}, {"question": "комп'ютер", "options": [{"text": "він", "correct": true}, {"text": "вона", "correct": false}, {"text": "воно", "correct": false}, {"text": "вони", "correct": false}]}]} instruction={"Choose the correct pronoun (**він, вона, воно**) for each word"} />
+<FillIn client:only="react" items={[{"sentence": "Це ____ стілець.", "answer": "мій", "options": ["мій", "моя", "моє"]}, {"sentence": "Це ____ лампа.", "answer": "моя", "options": ["мій", "моя", "моє"]}, {"sentence": "Це ____ крісло.", "answer": "моє", "options": ["мій", "моя", "моє"]}, {"sentence": "У мене є ____ ключ.", "answer": "мій", "options": ["мій", "моя", "моє"]}, {"sentence": "У мене є ____ стіна.", "answer": "моя", "options": ["мій", "моя", "моє"]}, {"sentence": "У мене є ____ фото.", "answer": "моє", "options": ["мій", "моя", "моє"]}, {"sentence": "Де ____ зошит?", "answer": "мій", "options": ["мій", "моя", "моє"]}, {"sentence": "Де ____ ручка?", "answer": "моя", "options": ["мій", "моя", "моє"]}]} instruction={"Fill in the correct possessive pronoun (**мій, моя, моє**)"} />
+
+While the pronoun test is how native speakers feel gender, you can also identify a word's gender simply by looking at its final letter. Masculine nouns generally end in a consonant. Words like **стіл** (table), **телефон** (phone), and **зошит** (notebook) all end with a solid consonant sound, clearly marking them as masculine. Feminine nouns typically end in the vowels **-а** or **-я**. Look at **книга** (book), **ла́мпа** (lamp), **кімна́та** (room), and **ручка** (pen) — that final **-а** is a strong feminine indicator. Finally, neuter nouns usually end in **-о** or **-е**. Words such as **вікно** (window), **лі́жко** (bed), and the word for city, **мі́сто** (city), follow this steady neuter pattern.
+
+:::caution
+Do not try to change a word's gender by changing its ending. Gender is a permanent trait. Say **стіл — він, мій стіл**, not **він стіл**. The same pattern works with other nouns: **книга — вона, моя книга** and **вікно — воно, моє вікно**.
+:::
+
+There are a few exceptions, such as words ending in the soft sign **-ь**, which can sometimes be feminine instead of masculine. However, do not worry about those right now. The reliable rules for consonant endings, **-а** / **-я**, and **-о** / **-е** will confidently cover about ninety percent of the nouns you are currently learning.
+
+<Quiz client:only="react" questions={[{"question": "стіл (ends in a consonant)", "options": [{"text": "Чоловічий (він)", "correct": true}, {"text": "Жіночий (вона)", "correct": false}, {"text": "Середній (воно)", "correct": false}, {"text": "Множина (вони)", "correct": false}]}, {"question": "лампа (ends in -а)", "options": [{"text": "Чоловічий (він)", "correct": false}, {"text": "Жіночий (вона)", "correct": true}, {"text": "Середній (воно)", "correct": false}, {"text": "Множина (вони)", "correct": false}]}, {"question": "дзеркало (ends in -о)", "options": [{"text": "Чоловічий (він)", "correct": false}, {"text": "Жіночий (вона)", "correct": false}, {"text": "Середній (воно)", "correct": true}, {"text": "Множина (вони)", "correct": false}]}, {"question": "зошит (ends in a consonant)", "options": [{"text": "Чоловічий (він)", "correct": true}, {"text": "Жіночий (вона)", "correct": false}, {"text": "Середній (воно)", "correct": false}, {"text": "Множина (вони)", "correct": false}]}, {"question": "кімната (ends in -а)", "options": [{"text": "Чоловічий (він)", "correct": false}, {"text": "Жіночий (вона)", "correct": true}, {"text": "Середній (воно)", "correct": false}, {"text": "Множина (вони)", "correct": false}]}, {"question": "ліжко (ends in -о)", "options": [{"text": "Чоловічий (він)", "correct": false}, {"text": "Жіночий (вона)", "correct": false}, {"text": "Середній (воно)", "correct": true}, {"text": "Множина (вони)", "correct": false}]}]} instruction={"What gender is it? Look at the ending"} />
+
+## Предме́ти навко́ло (Objects Around Us)
+
+Organize your physical environment by grouping everyday objects according to their grammatical gender. Start by expanding the list of masculine nouns. Look around your workspace. You might see a **стіле́ць** (chair), a **комп'ю́тер** (computer), or perhaps a **ключ** (key). Notice how each of these words ends in a consonant. Because they share this characteristic, they belong to the masculine category. You can test them with the patterns we just learned: **стілець — він, мій стілець** (chair — it is masculine, my chair), **комп'ютер — він, мій комп'ютер** (computer — it is masculine, my computer), and **ключ — він, мій ключ** (key — it is masculine, my key).
+
+Next, focus on the feminine objects that might be in the same room. You probably have a **су́мка** (bag) nearby, and every room is surrounded by at least one **стіна́** (wall). The final **-а** in these words is your visual and auditory signal that they belong to the feminine group. To reinforce this identity, practice the test pattern: **сумка — вона, моя сумка** (bag — it is feminine, my bag) and **стіна — вона, моя стіна** (wall — it is feminine, my wall). This consistent pattern helps cement the gender of these objects in your mind.
+
+Finally, turn to the neuter objects in your environment. A comfortable room might feature a **крі́сло** (armchair), and you will often find a **дзеркало** (mirror) on the wall. These words end in **-о**, marking them clearly as neuter. They fit the neuter test pattern: **крісло — воно, моє крісло** (armchair — it is neuter, my armchair) and **дзеркало — воно, моє дзеркало** (mirror — it is neuter, my mirror).
+
+:::tip
+When you learn a new Ukrainian noun, try to memorize it with its matching possessive pronoun. Instead of just memorizing **стілець**, repeat **мій стілець** out loud. This naturally locks the gender into your memory without relying on abstract rules.
+:::
+
+Now that you can classify the objects around you, put them to use. You already know the phrase **У мене є** (I have) from the family module, and the same pattern works with objects: **У мене є стіл**, **У мене є книга**, **У мене є вікно**.
 
 ## Підсумок — Summary
 
-Determining the grammatical gender of a Ukrainian noun is a foundational skill. It dictates how you use pronouns, how you form plurals later on, and how adjectives change to match the noun. Master this process by following a reliable three-step strategy.
+Use three quick checks when you meet a new noun. First, try **він**, **вона**, or **воно**. Second, look at the ending: a consonant usually means masculine, **-а / -я** usually means feminine, and **-о / -е** usually means neuter. Third, say **мій / моя / моє** with the noun and listen for the form that sounds right.
 
-First, apply the pronoun test. Ask yourself which personal pronoun replaces the noun naturally. Does the object feel like a **він**, a **вона**, or a **воно**?
-
-Second, reinforce this with the "My" test. Pair the noun with a possessive pronoun to build a strong auditory and visual association. Say the combination out loud. Is it **мій** (masculine), **моя** (feminine), or **моє** (neuter)?
-
-Third, check the ending of the dictionary form of the word. This is your visual proof.
-
-Here is your quick-reference summary of the typical noun endings:
-
-*   **Чоловічий рід** (Masculine gender): The word ends in a consonant. Examples include **стіл**, **зошит**, and **телефон**. You use **він** and **мій**.
-*   **Жіночий рід** (Feminine gender): The word ends in the vowel **-а** or **-я**. Examples include **книга**, **сумка**, and **кімната**. You use **вона** and **моя**.
-*   **Середній рід** (Neuter gender): The word ends in the vowel **-о** or **-е**. Examples include **вікно**, **ліжко**, and **дзеркало**. You use **воно** and **моє**.
-
-Perform a self-check to ensure these concepts are clear.
-
-What gender is the word **стіл**? It is masculine (**чоловічий рід**). We know this because it ends in a consonant sound, and we refer to it by saying **мій стіл**.
-
-What gender is the word **книга**? It is feminine (**жіночий рід**). The visual proof is the **-а** ending, and we claim ownership by saying **моя книга**.
-
-What gender is the word **вікно**? It is neuter (**середній рід**). It ends in the vowel **-о**, and we pair it with the neuter possessive, saying **моє вікно**.
-
-Finally, how do you say "I have a chair" in Ukrainian? You combine the fixed possession phrase with the masculine noun for chair. The correct sentence is **У мене є стілець**. Keep practicing this structure with all the new objects around you.
+Try it once more: **стіл — він — мій стіл**; **книга — вона — моя книга**; **вікно — воно — моє вікно**. Then make your own sentence with **У мене є**, the same pattern you met earlier with family vocabulary and hear again in Ukrainian Lessons Episode 6: **У мене є стілець**.
 
 </TabItem>
 <TabItem label="Словник">
@@ -165,15 +105,6 @@ Finally, how do you say "I have a chair" in Ukrainian? You combine the fixed pos
 
 | Слово | Переклад | Частина мови | Рід |
 |-------|----------|-------------|-----|
-| **стіл** | table | ім. | ч. |
-| **кни́га** | book | ім. | ж. |
-| **вікно́** | window | ім. | с. |
-| **кімна́та** | room | ім. | ж. |
-| **лі́жко** | bed | ім. | с. |
-| **стіле́ць** | chair | ім. | ч. |
-| **ла́мпа** | lamp | ім. | ж. |
-| **телефо́н** | phone | ім. | ч. |
-| **комп'ю́тер** | computer | ім. | ч. |
 | **зо́шит** | notebook | ім. | ч. |
 | **ру́чка** | pen | ім. | ж. |
 | **су́мка** | bag | ім. | ж. |
@@ -182,47 +113,59 @@ Finally, how do you say "I have a chair" in Ukrainian? You combine the fixed pos
 | **ключ** | key | ім. | ч. |
 | **фо́то** | photo | ім. | с. |
 | **стіна́** | wall | ім. | ж. |
+| **кни́га** | book | ім. | ж. |
+| **вікно́** | window | ім. | с. |
+| **кімна́та** | room | ім. | ж. |
+| **лі́жко** | bed | ім. | с. |
+| **стіле́ць** | chair | ім. | ч. |
+| **ла́мпа** | lamp | ім. | ж. |
+| **телефо́н** | phone | ім. | ч. |
+| **комп'ю́тер** | computer | ім. | ч. |
 | **вона́** | she | ім. | ж. |
 | **воно́** | it | ім. | с. |
-| **моя́** | my (feminine) | прикм. |  |
-| **моє́** | my (neuter) | прикм. |  |
-| **ко́шик** | basket | ім. | ч. |
-| **ри́бка** | fish | ім. | ж. |
-| **аква́ріум** | aquarium | ім. | ч. |
-| **черепа́ха** | turtle | ім. | ж. |
-| **кошеня́** | kitten | ім. | с. |
-| **ша́фа** | wardrobe | ім. | ж. |
-| **мі́сто** | city | ім. | с. |
-| **рід** | gender | ім. | ч. |
-| **Приві́т** | Hi | ім. | ч. |
 | **Диви́сь** | Look | дієсл. |  |
 | **Кла́сно** | Cool | присл. |  |
+| **нови́й** | new | прикм. |  |
+| **ду́же** | very | присл. |  |
+| **га́рний** | nice | прикм. |  |
+| **Ой** | Oh | виг. |  |
+| **аква́ріум** | aquarium | ім. | ч. |
+| **ри́бка** | fish | ім. | ж. |
+| **черепа́ха** | turtle | ім. | ж. |
+| **кошеня́** | kitten | ім. | с. |
+| **мі́сто** | city | ім. | с. |
+| **моя́** | my (feminine) | прикм. |  |
+| **моє́** | my (neuter) | прикм. |  |
+| **підсумок** | summary | ім. | ч. |
 
 ### Вирази
 
 | Вираз | Переклад |
 |-------|----------|
+| **А ще** | And also |
 | **чоловічий рід** | masculine gender |
 | **жіночий рід** | feminine gender |
 | **середній рід** | neuter gender |
-| **Що у тебе є?** | What do you have? |
+| **предмети навколо** | objects around us |
 
 ### Картки — Flashcards
 
-<FlashcardDeck client:only="react" cards={[{ front: "стіл", back: "table", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "кни́га", back: "book", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "вікно́", back: "window", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "кімна́та", back: "room", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "лі́жко", back: "bed", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "стіле́ць", back: "chair", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ла́мпа", back: "lamp", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "телефо́н", back: "phone", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "комп&#39;ю́тер", back: "computer", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "зо́шит", back: "notebook", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ру́чка", back: "pen", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "су́мка", back: "bag", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "крі́сло", back: "armchair", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "дзе́ркало", back: "mirror", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "ключ", back: "key", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "фо́то", back: "photo", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "стіна́", back: "wall", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "вона́", back: "she", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "воно́", back: "it", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "моя́", back: "my (feminine)", subtitle: "прикм." }, { front: "моє́", back: "my (neuter)", subtitle: "прикм." }, { front: "ко́шик", back: "basket", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ри́бка", back: "fish", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "аква́ріум", back: "aquarium", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "черепа́ха", back: "turtle", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "кошеня́", back: "kitten", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "ша́фа", back: "wardrobe", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "мі́сто", back: "city", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "рід", back: "gender", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "Приві́т", back: "Hi", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "Диви́сь", back: "Look", subtitle: "дієсл." }, { front: "Кла́сно", back: "Cool", subtitle: "присл." }]} />
+<FlashcardDeck client:only="react" cards={[{ front: "зо́шит", back: "notebook", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ру́чка", back: "pen", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "су́мка", back: "bag", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "крі́сло", back: "armchair", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "дзе́ркало", back: "mirror", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "ключ", back: "key", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "фо́то", back: "photo", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "стіна́", back: "wall", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "кни́га", back: "book", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "вікно́", back: "window", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "кімна́та", back: "room", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "лі́жко", back: "bed", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "стіле́ць", back: "chair", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ла́мпа", back: "lamp", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "телефо́н", back: "phone", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "комп&#39;ю́тер", back: "computer", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "вона́", back: "she", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "воно́", back: "it", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "Диви́сь", back: "Look", subtitle: "дієсл." }, { front: "Кла́сно", back: "Cool", subtitle: "присл." }, { front: "нови́й", back: "new", subtitle: "прикм." }, { front: "ду́же", back: "very", subtitle: "присл." }, { front: "га́рний", back: "nice", subtitle: "прикм." }, { front: "Ой", back: "Oh", subtitle: "виг." }, { front: "аква́ріум", back: "aquarium", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ри́бка", back: "fish", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "черепа́ха", back: "turtle", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "кошеня́", back: "kitten", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "мі́сто", back: "city", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "моя́", back: "my (feminine)", subtitle: "прикм." }, { front: "моє́", back: "my (neuter)", subtitle: "прикм." }, { front: "підсумок", back: "summary", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }]} />
 
 </TabItem>
 <TabItem label="Зошит">
 
-<MatchUp client:only="react" pairs={[{"left": "зошит", "right": "він"}, {"left": "черепаха", "right": "вона"}, {"left": "фото", "right": "воно"}, {"left": "ключ", "right": "він"}, {"left": "лампа", "right": "вона"}, {"left": "місто", "right": "воно"}]} instruction={"Match each noun to its correct pronoun."} />
+<MatchUp client:only="react" pairs={[{"left": "зошит", "right": "він"}, {"left": "кімната", "right": "вона"}, {"left": "ліжко", "right": "воно"}, {"left": "ключ", "right": "він"}, {"left": "лампа", "right": "вона"}, {"left": "дзеркало", "right": "воно"}]} instruction={"Match the word with the correct pronoun (**він, вона, воно**)"} />
 
-<TrueFalse client:only="react" items={[{"statement": "The word **стіл** is masculine (**він**).", "isTrue": true, "explanation": "**Стіл** ends in a consonant."}, {"statement": "The word **книга** is neuter (**воно**).", "isTrue": false, "explanation": "**Книга** ends in **-а**, making it feminine (**вона**)."}, {"statement": "The word **вікно** is neuter (**воно**).", "isTrue": true, "explanation": "**Вікно** ends in **-о**."}, {"statement": "If a word ends in **-а**, it is masculine.", "isTrue": false, "explanation": "Words ending in **-а** or **-я** are typically feminine."}, {"statement": "If a word ends in **-о**, it is neuter.", "isTrue": true, "explanation": "For example, **вікно** and **ліжко**."}, {"statement": "The word **телефон** is feminine (**вона**).", "isTrue": false, "explanation": "**Телефон** ends in a consonant, making it masculine."}]} instruction={"**Правда чи ні?** (True or False?)"} />
+<TrueFalse client:only="react" items={[{"statement": "Слово «стіл» — це жіночий рід.", "isTrue": false, "explanation": "Стіл закінчується на приголосний, це чоловічий рід."}, {"statement": "Слово «книга» — це жіночий рід, тому що закінчується на -а.", "isTrue": true, "explanation": "Слова на -а зазвичай жіночого роду."}, {"statement": "Слово «вікно» — це середній рід, тому що закінчується на -о.", "isTrue": true, "explanation": "Слова на -о зазвичай середнього роду."}, {"statement": "Правильно говорити «моя телефон».", "isTrue": false, "explanation": "Телефон — це чоловічий рід (він), тому правильно «мій телефон»."}, {"statement": "Слово «ліжко» — це середній рід.", "isTrue": true, "explanation": "Ліжко закінчується на -о, це середній рід."}, {"statement": "Правильно говорити «моя сумка».", "isTrue": true, "explanation": "Сумка — це жіночий рід, тому «моя» — це правильно."}]} instruction={"True or false? (**Правда чи ні?**)"} />
 
-<ErrorCorrection client:only="react" items={[{"sentence": "Це мій кімната.", "errorWord": "мій", "correctForm": "моя", "options": ["моя", "моє", "мою"], "explanation": "**Кімната** is feminine, so use **моя**."}, {"sentence": "У мене є моє телефон.", "errorWord": "моє", "correctForm": "мій", "options": ["мій", "моя", "мої"], "explanation": "**Телефон** is masculine, so use **мій**."}, {"sentence": "Там моя ліжко.", "errorWord": "моя", "correctForm": "моє", "options": ["мій", "моє", "мої"], "explanation": "**Ліжко** is neuter, so use **моє**."}, {"sentence": "Це моє книга.", "errorWord": "моє", "correctForm": "моя", "options": ["мій", "моя", "мої"], "explanation": "**Книга** is feminine, so use **моя**."}, {"sentence": "Тут моя стіл.", "errorWord": "моя", "correctForm": "мій", "options": ["мій", "моє", "мої"], "explanation": "**Стіл** is masculine, so use **мій**."}, {"sentence": "У мене є мій дзеркало.", "errorWord": "мій", "correctForm": "моє", "options": ["моя", "моє", "мої"], "explanation": "**Дзеркало** is neuter, so use **моє**."}]} instruction={"Find and fix the wrong word."} />
+<Anagram client:only="react" items={[{"scrambled": "с т і л", "answer": "стіл", "hint": "table"}, {"scrambled": "к н и г а", "answer": "книга", "hint": "book"}, {"scrambled": "в і к н о", "answer": "вікно", "hint": "window"}, {"scrambled": "р у ч к а", "answer": "ручка", "hint": "pen"}, {"scrambled": "з о ш и т", "answer": "зошит", "hint": "notebook"}, {"scrambled": "к л ю ч", "answer": "ключ", "hint": "key"}]} instruction={"Make a word from letters"} />
 
-<OddOneOut client:only="react" items={[{"words": ["стіл", "телефон", "лампа"], "correct": 2, "explanation": "Лампа is feminine (вона), the others are masculine (він)."}, {"words": ["книга", "кімната", "зошит"], "correct": 2, "explanation": "Зошит is masculine (він), the others are feminine (вона)."}, {"words": ["вікно", "стілець", "ліжко"], "correct": 1, "explanation": "Стілець is masculine (він), the others are neuter (воно)."}, {"words": ["ручка", "комп'ютер", "сумка"], "correct": 1, "explanation": "Комп'ютер is masculine (він), the others are feminine (вона)."}, {"words": ["кошеня", "дзеркало", "ключ"], "correct": 2, "explanation": "Ключ is masculine (він), the others are neuter (воно)."}, {"words": ["кіт", "черепаха", "кошик"], "correct": 1, "explanation": "Черепаха is feminine (вона), the others are masculine (він)."}]} instruction={"Find the odd one out based on its **рід** (gender)."} />
+<OddOneOut client:only="react" items={[{"words": ["стіл", "телефон", "книга"], "correct": 2, "explanation": "Книга — вона (жіночий рід). Стіл і телефон — він (чоловічий рід)."}, {"words": ["лампа", "вікно", "сумка"], "correct": 1, "explanation": "Вікно — воно (середній рід). Лампа і сумка — вона (жіночий рід)."}, {"words": ["ліжко", "дзеркало", "ручка"], "correct": 2, "explanation": "Ручка — вона (жіночий рід). Ліжко і дзеркало — воно (середній рід)."}, {"words": ["комп'ютер", "кімната", "стілець"], "correct": 1, "explanation": "Кімната — вона (жіночий рід). Комп'ютер і стілець — він (чоловічий рід)."}, {"words": ["фото", "зошит", "ключ"], "correct": 0, "explanation": "Фото — воно (середній рід). Зошит і ключ — він (чоловічий рід)."}, {"words": ["стіна", "ручка", "стіл"], "correct": 2, "explanation": "Стіл — він (чоловічий рід). Стіна і ручка — вона (жіночий рід)."}]} instruction={"Find the odd word out by gender"} />
 
-<Unjumble client:only="react" items={[{"words": "є / мене / У / книга.", "answer": "У мене є книга."}, {"words": "моя / Це / кімната.", "answer": "Це моя кімната."}, {"words": "ліжко. / Там / моє", "answer": "Там моє ліжко."}, {"words": "у / Що / є? / тебе", "answer": "Що у тебе є?"}, {"words": "є / мене / У / стіл.", "answer": "У мене є стіл."}, {"words": "ручка. / моя / Це", "answer": "Це моя ручка."}]} instruction={"Put the words in the correct order."} />
+<FillIn client:only="react" items={[{"sentence": "У мене є ____ кімната.", "answer": "моя", "options": ["мій", "моя", "моє"]}, {"sentence": "У мене є ____ зошит.", "answer": "мій", "options": ["мій", "моя", "моє"]}, {"sentence": "У мене є ____ дзеркало.", "answer": "моє", "options": ["мій", "моя", "моє"]}, {"sentence": "А це ____ нове вікно.", "answer": "моє", "options": ["мій", "моя", "моє"]}, {"sentence": "У тебе є ____ ручка?", "answer": "моя", "options": ["мій", "моя", "моє"]}, {"sentence": "Це ____ новий комп'ютер.", "answer": "мій", "options": ["мій", "моя", "моє"]}]} instruction={"Fill in the correct word"} />
+
+<Unjumble client:only="react" items={[{"words": "кімната. / Це / моя", "answer": "Це моя кімната."}, {"words": "є / У / мене / стіл.", "answer": "У мене є стіл."}, {"words": "зошит! / мій / Це", "answer": "Це мій зошит!"}, {"words": "нове / це / А / моє / вікно.", "answer": "А це моє нове вікно."}, {"words": "кімната. / гарна / Дуже", "answer": "Дуже гарна кімната."}, {"words": "є / тебе / У / стіл?", "answer": "У тебе є стіл?"}]} instruction={"Put the words in the correct order"} />
 
 </TabItem>
 <TabItem label="Ресурси">
@@ -232,13 +175,8 @@ Finally, how do you say "I have a chair" in Ukrainian? You combine the fixed pos
 - [ULP Season 1, Episode 6 — Gender naturally through family](https://www.ukrainianlessons.com/episode6/)
   _Gender emerges from possessives already taught._
 
-## Підручники (Textbooks)
-
-- [Авраменко О. М. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrajinska-mova-avramenko-2018.pdf#page=156), стор. 156
-- [Караман С. О. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrmova-karaman-2018.pdf#page=96), стор. 96
-- [Захарійчук М. Д. — Українська мова, 4 клас ()](https://shkola.in.ua/4-klas-ukrainska-mova-zaharijchuk.html), стор. 122
-- [Літвінова І. М. — Українська мова, 5 клас (2022)](https://pidruchnyk.com.ua/uploads/book/5_ukrmova_litvinova_2022.pdf#page=34), стор. 34
-- [Угор О. М. — Українська мова, 5 клас (2022)](https://shkola.in.ua/5-klas-ukrainska-mova-uhor-2022.html), стор. 36
+### Підручники
+- [Вашуленко. Українська мова, 3 клас (2020)](https://pidruchnyk.com.ua/1524-ukrmova-ta-chytannya-vashulenko-3klas-nush.html)
 
 **Статті — Articles**
 

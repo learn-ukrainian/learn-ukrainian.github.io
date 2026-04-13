@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-в українській мові мають закінчення. Слова діляться на дві великі групи. Перша група — це **змінні слова** *(changeable words)*. Змінні слова завжди мають закінчення. Вони можуть легко змінювати свою форму. Вони можуть мати різні відмінки, числа або особи. До цієї групи належать іменники, прикметники та дієслова. Наприклад, слово «стіл» — це змінне слово. Воно може бути «стол-а», «стол-у», «стол-ом». Слово «велики-й» також змінне: «велик-а», «велик-е», «велик-і». Друга група — це **незмінні слова** *(unchangeable words)*. Незмінні слова ніколи не змінюють свою форму. Вони завжди виглядають абсолютно однаково. І головне правило: незмінні слова не мають закінчення взагалі. Вони повністю складаються тільки з основи. Які це слова? Це насамперед прислівники. Наприклад, слова «тут», «учора», «швидко», «по-французьки». У слові «швидко» буква «о» в кінці — це не закінчення. Це частина основи. Ми не можемо сказати «швидка» чи «швидку» в цьому контексті. Також до незмінних слів належать слова іншомовного походження. Наприклад, слова «метро», «кіно», «шосе», «таксі», «кафе». Ці слова ніколи не змінюються. Ми кажемо «одне кафе» і «п'ять кафе». Слово «кафе» — це повністю основа. Воно не має і ніколи не матиме жодного закінчення. Як знайти закінчення у слові? Це дуже практичне питання. Є надійний і простий метод. Щоб знайти закінчення, треба просто змінити форму слова. Ви повинні поставити його в інший відмінок або змінити його число. Наприклад, у нас є слово «книга». Ми змінюємо його: «книги», «книгу», «книгою». Ми чітко бачимо, що частина «книг-» ніколи не змінюється. А частина після неї постійно інша: «-а», «-и», «-у», «-ою». Та частина, яка змінюється, і є закінченням. А та частина, яка залишається стабільною, є основою. Цей метод чудово працює і для нульових закінчень. Уявіть слово «кінь». Де тут закінчення? Ми змінюємо форму цього слова. Ми кажемо «кон-я», «кон-еві», «кон-ем». Ми відразу бачимо, що з'явилися звукові закінчення «-я», «-еві», «-ем». Отже, в початковому слові «кінь» було невидиме місце для них. Це означає, що слово «кінь» має нульове закінчення. Цей простий аналіз — ваш найкращий інструмент. Завжди перевіряйте себе цим методом. Змініть слово кілька разів, і ви побачите його основу та закінчення. > — **Марина:** Давай потренуємося шукати закінчення. *(Let's practice finding endings.)* > — **Богдан:** Добре. Візьмемо слово «вулиця». *(Okay. Let's take the word "street".)* > — **Марина:** Я змінюю форму: «вулицю», «вулиці», «вулицею». *(I change the form: "street" [Acc.], "streets", "with a street".)* > — **Богдан:** Отже, основа — це «вулиц», а закінчення — «я». *(So, the stem is "vulyts", and the ending is "ya".)* > — **Марина:** Точно. А як щодо слова «перехід»? *(Exactly. And what about the word "crossing"?)* > — **Богдан:** Я кажу «переходу», «переходом». З'явилися звуки! *(I say "crossing" [Gen.], "crossing" [Inst.]. Sounds appeared!)* > — **Марина:** Правильно. Значить, слово «перехід» має нульове закінчення. *(Correct. That means the word "crossing" has a zero ending.)* > — **Богдан:** Це дуже логічна система. *(This is a very logical system.)* > — **Марина:** А слово «Київ»? *(And the word "Kyiv"?)* > — **Богдан:** Я кажу «Києва», «Києву». Значить, «Київ» також має нульове закінчення! *(I say "Kyiv" [Gen.], "Kyiv" [Dat.]. So, "Kyiv" also has a zero ending!)*
+слово «альбом» має нульове закінчення. Воно вказує на чоловічий рід, однину та називний відмінок. Інший приклад — слово «яблуня». Форма «яблун-я» має звукове закінчення «-я». Але у формі родового відмінка множини ми кажемо «багато яблунь». Тут звукове закінчення зникає, і з'являється нульове закінчення. Not all words in Ukrainian can change their form. We divide words into changeable and unchangeable categories. Changeable words like an **іменник** (noun), **прикметник** (adjective), and **дієслово** (verb) take different endings. Unchangeable words like a **прислівник** (adverb) consist entirely of a stem. Змінні слова завжди мають закінчення. Звичайний іменник, прикметник та дієслово — це змінні слова. Вони постійно змінюють свою форму в реченні. Незмінні слова ніколи не мають закінчень. Наприклад, прислівник — це незмінна частина мови. Слова «тут», «учора», «швидко», «по-французьки» не змінюються за жодних обставин. Вони завжди виглядають однаково і складаються тільки з основи. Також незмінними є деякі іншомовні слова. Наприклад, слова «шосе», «таксі», «кіно», «авокадо» прийшли з інших мов. Вони не мають закінчень і не відмінюються. :::info **Grammar box** Remember that a zero ending is still a valid ending! It belongs only to changeable words. An unchangeable word has *no ending at all*. The word «ліс» has a zero ending, but the word «вчора» consists entirely of the stem «вчора». ::: How do we correctly identify the stem and the ending in a new word? There is a simple and reliable technique. You just need to change the grammatical form of the word. Щоб знайти закінчення, треба змінити форму слова. Та частина слова, яка змінюється, і є закінченням. Наприклад, візьмемо звичайне слово «книга». Ми змінюємо його для різних відмінків: «книги», «книгою», «у книзі». Ми бачимо, що змінюється лише остання літера. Отже, «-а» — це закінчення, а «книг-» — це основа слова. Якщо після зміни форми в кінці з'являється новий звук, то початкове слово мало нульове закінчення. Наприклад, ми маємо слово «кінь». Тут закінчення немає. Але ми змінюємо форму на «коня», і тут з'явилося звукове закінчення «-я». Отже, слово «кінь» мало нульове закінчення. > *To find the ending, you need to change the form of the word. The part of the word that changes is the ending. For example, let's take the common word "книга". We change it for different cases: "книги", "книгою", "у книзі". We see that only the last letter changes. Therefore, "-а" is the ending, and "книг-" is the stem of the word. If a new sound appears at the end after changing the form, it means the initial word had a zero ending. For example, we have the word "кінь". Here there is no ending. But we change the form to "коня", and here the sound ending "-я" appeared. This means the word "кінь" had a zero ending.* :::tip **Did you know?** When you change a word to find its ending, you are creating forms of the same word (форми одного слова). You are changing its grammatical meaning, but its core lexical meaning remains exactly the same. ::: <!-- INJECT_ACTIVITY: quiz, identify основа and закінчення in word sets (звукове vs нульове) -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -451,7 +451,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 6: A2 finale (A2 M51-M69)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 40%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 40% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 70-90% Ukrainian.
 LANGUAGE ROLES:
@@ -470,18 +537,69 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] морфологія (morphology — the study of word forms and parts of speech)
+- [ ] корінь (root — the main meaningful part of a word)
+- [ ] префікс (prefix — meaningful part before the root)
+- [ ] суфікс (suffix — meaningful part after the root)
+- [ ] закінчення (ending — changeable part expressing grammatical meaning)
+- [ ] основа (stem — the part of a word without the ending)
+- [ ] спільнокореневий (cognate — words sharing the same root)
+- [ ] іменник (noun — names things, answers хто? що?)
+- [ ] прикметник (adjective — names qualities, answers який? чий?)
+- [ ] дієслово (verb — names actions, answers що робити?)
+- [ ] прислівник (adverb — names circumstances, answers як? де? коли?)
+- [ ] самостійний (content/autosemantic — part of speech with independent meaning)
+- [ ] службовий (function/synsemantic — part of speech without independent meaning)
+- [ ] прийменник (preposition — links words, governs case)
+- [ ] сполучник (conjunction — connects words or clauses)
+- [ ] частка (particle — adds shades of meaning)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Корінь і спільнокореневі слова (~660 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

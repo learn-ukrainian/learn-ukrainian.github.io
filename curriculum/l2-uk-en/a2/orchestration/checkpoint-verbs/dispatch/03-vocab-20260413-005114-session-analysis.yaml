@@ -1,0 +1,59 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T22-50-83bd2008.json
+phase: vocab
+prompt_chars: 14798
+response_chars: 1203
+prompt_words: 2304
+response_words: 129
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.0539
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.0155
+- name: plan
+  start: 1028
+  length: 13770
+  fraction: 0.9305
+large_sections:
+- plan
+directives_total: 9
+directives_covered: 1
+directives_missed:
+- kind: must
+  text: If you want to describe a planned process, a continuous action, or a regular
+    habit in the future, you must use the imperfective aspect.
+  covered: false
+  coverage_note: 2/14 keywords (14%)
+- kind: must
+  text: You must choose either the continuous process (`я буду читати`) or the completed
+    result (`я прочитаю`).
+  covered: false
+  coverage_note: 1/11 keywords (9%)
+- kind: must
+  text: You must combine them dynamically.
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: must
+  text: 'For a planned result or a complete trip, you must use the simple future tense:
+    `Я поїду до Києва у вівторок.'
+  covered: false
+  coverage_note: 0/13 keywords (0%)
+- kind: inject_activity
+  text: group-sort-verb-forms
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-mixed-drill
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-error-correction
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: error-correction-verb-forms
+  covered: false
+  coverage_note: marker missing

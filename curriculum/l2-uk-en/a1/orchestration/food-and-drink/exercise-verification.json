@@ -1,13 +1,7 @@
 {
-  "total_items": 77,
-  "grounded_items": 44,
+  "total_items": 86,
+  "grounded_items": 66,
   "ungrounded": [
-    {
-      "word": "їмо",
-      "exercise_type": "quiz",
-      "context": "Що ми їмо вранці?",
-      "role": "context"
-    },
     {
       "word": "вранці",
       "exercise_type": "quiz",
@@ -18,6 +12,12 @@
       "word": "ввечері",
       "exercise_type": "quiz",
       "context": "Що ми їмо ввечері?",
+      "role": "context"
+    },
+    {
+      "word": "вдень",
+      "exercise_type": "quiz",
+      "context": "Що ми їмо вдень?",
       "role": "context"
     },
     {
@@ -69,156 +69,80 @@
       "role": "context"
     },
     {
+      "word": "холодний",
+      "exercise_type": "quiz",
+      "context": "Популярний холодний напій з фруктів:",
+      "role": "context"
+    },
+    {
       "word": "фруктів",
       "exercise_type": "quiz",
       "context": "Популярний холодний напій з фруктів:",
       "role": "context"
     },
     {
-      "word": "вдень",
-      "exercise_type": "quiz",
-      "context": "Що ми їмо вдень?",
+      "word": "кави",
+      "exercise_type": "true-false",
+      "context": "Компот — це гарячий напій з кави.",
       "role": "context"
     },
     {
-      "word": "п'є",
+      "word": "снідаємо",
+      "exercise_type": "true-false",
+      "context": "Уранці ми зазвичай снідаємо.",
+      "role": "context"
+    },
+    {
+      "word": "десерт",
+      "exercise_type": "true-false",
+      "context": "Сало — це популярний десерт.",
+      "role": "context"
+    },
+    {
+      "word": "люди",
+      "exercise_type": "true-false",
+      "context": "Люди часто п'ють каву з молоком.",
+      "role": "context"
+    },
+    {
+      "word": "часто",
+      "exercise_type": "true-false",
+      "context": "Люди часто п'ють каву з молоком.",
+      "role": "context"
+    },
+    {
+      "word": "п'ють",
+      "exercise_type": "true-false",
+      "context": "Люди часто п'ють каву з молоком.",
+      "role": "context"
+    },
+    {
+      "word": "свіжий",
       "exercise_type": "fill-in",
-      "context": "Вона п'є чай _____.",
-      "role": "context"
-    },
-    {
-      "word": "їсть",
-      "exercise_type": "fill-in",
-      "context": "Він їсть хліб _____.",
-      "role": "context"
-    },
-    {
-      "word": "дайте",
-      "exercise_type": "fill-in",
-      "context": "Дайте, будь ласка, воду _____.",
-      "role": "context"
-    },
-    {
-      "word": "будь",
-      "exercise_type": "fill-in",
-      "context": "Дайте, будь ласка, воду _____.",
-      "role": "context"
-    },
-    {
-      "word": "ласка",
-      "exercise_type": "fill-in",
-      "context": "Дайте, будь ласка, воду _____.",
-      "role": "context"
-    },
-    {
-      "word": "україні",
-      "exercise_type": "true-false",
-      "context": "В Україні традиційно їдять суп на сніданок.",
-      "role": "context"
-    },
-    {
-      "word": "традиційно",
-      "exercise_type": "true-false",
-      "context": "В Україні традиційно їдять суп на сніданок.",
-      "role": "context"
-    },
-    {
-      "word": "їдять",
-      "exercise_type": "true-false",
-      "context": "В Україні традиційно їдять суп на сніданок.",
-      "role": "context"
-    },
-    {
-      "word": "важливий",
-      "exercise_type": "true-false",
-      "context": "Борщ — це важливий символ української кухні та культури.",
-      "role": "context"
-    },
-    {
-      "word": "символ",
-      "exercise_type": "true-false",
-      "context": "Борщ — це важливий символ української кухні та культури.",
-      "role": "context"
-    },
-    {
-      "word": "української",
-      "exercise_type": "true-false",
-      "context": "Борщ — це важливий символ української кухні та культури.",
-      "role": "context"
-    },
-    {
-      "word": "кухні",
-      "exercise_type": "true-false",
-      "context": "Борщ — це важливий символ української кухні та культури.",
-      "role": "context"
-    },
-    {
-      "word": "та",
-      "exercise_type": "true-false",
-      "context": "Борщ — це важливий символ української кухні та культури.",
-      "role": "context"
-    },
-    {
-      "word": "культури",
-      "exercise_type": "true-false",
-      "context": "Борщ — це важливий символ української кухні та культури.",
-      "role": "context"
-    },
-    {
-      "word": "знак",
-      "exercise_type": "true-false",
-      "context": "Хліб — це традиційний знак гостинності в Україні.",
-      "role": "context"
-    },
-    {
-      "word": "гостинності",
-      "exercise_type": "true-false",
-      "context": "Хліб — це традиційний знак гостинності в Україні.",
-      "role": "context"
-    },
-    {
-      "word": "домашній",
-      "exercise_type": "true-false",
-      "context": "Компот — це домашній напій з ягід або фруктів.",
-      "role": "context"
-    },
-    {
-      "word": "ягід",
-      "exercise_type": "true-false",
-      "context": "Компот — це домашній напій з ягід або фруктів.",
-      "role": "context"
-    },
-    {
-      "word": "сметаною",
-      "exercise_type": "error-correction",
-      "context": "сметаною",
-      "role": "answer"
-    },
-    {
-      "word": "сніданку",
-      "exercise_type": "error-correction",
-      "context": "Що ти хочеш на сніданку?",
+      "context": "Ми їмо свіжий ____.",
       "role": "context"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 33,
-    "tested_in_exercises": 19,
+    "tested_in_exercises": 17,
     "not_tested": [
       "банан",
       "вареник",
+      "кава",
       "картопля",
+      "каша",
       "курка",
+      "лимон",
       "масло",
       "огірок",
       "помідор",
       "піца",
-      "салат",
-      "сир",
+      "сметана",
       "сіль",
       "цукор",
       "яблуко",
-      "яйце"
+      "їжа"
     ]
   },
   "all_grounded": false

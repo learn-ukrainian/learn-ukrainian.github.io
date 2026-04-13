@@ -2,49 +2,50 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 9
-  evidence: The module covers all plan points except for the exact example "дві дині"
-    which was explicitly specified in the plan for the 1, 2-4, 5+ rule. It uses other
-    examples (кавуни, лимони) instead.
+  score: 8
+  evidence: 'Core plan points are covered with direct examples: `Ми будемо купувати
+    напої`, `Скільки коштує кілограм меду?`, `Я не бачу помідорів`, `Що ти робив?`
+    / `Що ти зробив?`. Deduction: Scenario 2 spends a '
 - dimension: 2
   name: Linguistic accuracy
   score: 8
-  evidence: The text incorrectly uses the Russianism/Surzhyk "**винишко**" instead
-    of the Ukrainian "**винце**" (Section 1, tip "Українська гостинність").
+  evidence: 'Most Ukrainian is clean, with no Russian characters and no clear Russianisms/Surzhyk
+    in the module text. Deduction: `Ніколи не кажіть «да», а завжди кажіть «так»`
+    plus “a Russian calque” is an overgen'
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: Excellent PPP flow. Grammar rules are explained with clear contrasts (imperfective
-    process vs perfective result) and followed by numerous concrete examples.
+  score: 8
+  evidence: 'The module usually teaches through dialogue plus examples, especially
+    in Scenarios 1 and 3. Deduction: the Scenario 2 block starting `A defining characteristic
+    of spoken Ukrainian...` is off-plan fill'
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: All required vocabulary is used naturally in context (планувати, купувати,
-    готувати, ринок, коштувати, кілограм, вечірка, день).
+  score: 9
+  evidence: 'Required vocabulary is used naturally in prose and dialogue: `планувати`,
+    `купувати`, `готувати`, `ринок`, `коштує`, `кілограм`, `вечірку`, `день`.'
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: Markers are placed logically after the corresponding teaching sections
-    and match the plan's activity hints exactly.
+  score: 9
+  evidence: All 4 planned activity markers are present, correctly ordered, and aligned
+    to the lesson flow; nothing is placed before the concept is taught.
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: Warm and encouraging teacher tone ("Notice how Maksym and Olena use...",
-    "One of the most elegant ways..."). Excellent cultural notes on hospitality and
-    market interactions.
+  score: 8
+  evidence: The teacher voice is generally solid, but `Diminutives are the DNA of
+    the Ukrainian language` is hypey filler rather than useful A2 instruction.
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: Word count is 3140 words, well above the 2000 target. Headings match the
-    plan perfectly. Clean markdown structure.
+  evidence: All three planned H2 sections are present and ordered; marker syntax is
+    intact; pipeline word count is 2866, safely above the 2000 target.
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: Accurate description of Ukrainian hospitality (diminutives), market culture,
-    and the explicit instruction to avoid the Russian-influenced "здавати іспит".
+  score: 8
+  evidence: The module is mostly decolonized and Ukrainian-centered, but labeling
+    `да` simply as a Russian calque is too blunt and not culturally/lexically precise.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: Natural dialogues with named speakers. Dialogues demonstrate the grammar
-    points perfectly in context (e.g., mixing process and result in party planning).
+  score: 9
+  evidence: Dialogues use named speakers, multiple turns, and plausible everyday situations
+    instead of robotic interrogation patterns.
 findings: []

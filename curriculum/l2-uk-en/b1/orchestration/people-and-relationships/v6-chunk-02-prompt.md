@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-від особи. Наприклад, в українській мові ми можемо яскраво протиставити **тендітний** *(delicate/slender)* тип статури, який зазвичай характеризується неймовірною легкістю, слабкістю та витонченістю, набагато більш масивному типу. Якщо людина має дуже міцну будову тіла, розвинені м'язи та помітну фізичну силу, ми об'єктивно називаємо її словом **кремезний** *(sturdy/stocky)*. Для точного опису чоловіків, які мають широку спину та розвинений плечовий пояс, ідеально підходить складний прикметник **широкоплечий** *(broad-shouldered)*. Якщо ж людина є об'єктивно невисокою, але має дуже міцну, дещо важку та широку фігуру, ми використовуємо влучне слово **приземкуватий** *(squat/stocky)*. Навпаки, для естетичного опису гармонійної, спортивно підтягнутої та ідеально пропорційної фігури ми завжди вживаємо дуже красиве слово **стрункий** *(slender/graceful)*. Слово «стрункий» часто асоціюється з рівною спиною та граціозною ходою, що робить його дуже позитивною характеристикою. Наступний, можливо, найважливіший етап будь-якого словесного портрета — це детальне **обличчя** *(face)* та **волосся** *(hair)*. В українській мові колір волосся має свої спеціальні, традиційні назви, які варто знати. Наприклад, природне **русяве** *(light brown/blondish)* волосся є дуже типовим та історично поширеним для багатьох українців. Якщо волосся має глибокий, насичений коричневий відтінок, ми завжди називаємо його красивим словом **каштанове** *(chestnut)*. Текстура волосся також відіграє велику роль у формуванні образу: воно часто буває **кучеряве** *(curly)*, хвилясте або ж абсолютно **пряме** *(straight)*. Риси обличчя завжди передають співрозмовнику надзвичайно багато візуальної інформації. Якщо обличчя є гармонійним та дуже естетично привабливим, ми з упевненістю кажемо, що воно **вродливе** *(beautiful/handsome)*. За природним кольором шкіри обличчя може бути **смагляве** *(swarthy/dark-skinned)*, особливо якщо людина має від природи темний відтінок шкіри або сильну літню засмагу. Якщо ж шкіра від природи дуже світла і позбавлена пігменту, ми називаємо таке обличчя **бліде** *(pale)*. Здоровий, яскравий рожевий колір щік, який часто свідчить про молодість, описується теплим словом **рум'яне** *(rosy)*. В українській глибокій культурній традиції та класичній літературі зовнішність персонажа ніколи не існує просто сама по собі як сухий факт. Вона завжди є своєрідним, дуже прозорим вікном у складний **внутрішній світ** *(inner world)* людини. Українські письменники майстерно використовують зовнішні візуальні характеристики, щоб тонко показати приховані риси характеру, справжній емоційний стан або навіть точне соціальне походження особи. Наприклад, така невелика, але виразна художня деталь, як **привітний погляд** *(welcoming gaze)*, одразу і безпомилково сигналізує уважному читачеві про добрий характер, відкритість і щирість героя. В українській культурі очі традиційно вважаються дзеркалом душі, саме тому їхньому детальному опису українські автори завжди приділяють максимальну увагу. Через такий уважний, глибокий опис зовнішності ми поступово вчимося набагато краще та тонше розуміти психологію реальних людей навколо нас у повсякденному житті. Давайте уважно розглянемо, як саме ця портретна лексика працює на практиці, аналізуючи дуже типовий короткий літературний уривок. Уявіть собі такий описовий текст: «Перед нами несподівано з'явився високий, неймовірно широкоплечий козак. Його густе русяве волосся вільно спадало на відкрите обличчя, а дуже привітний погляд викликав миттєву довіру». У цьому лаконічному портреті ми можемо легко ідентифікувати та правильно розподілити всю лексику за відповідними категоріями. Слово «високий» чітко описує зріст персонажа, «широкоплечий» безпомилково характеризує його міцну статуру, слово «козак» вказує на статус, а «русяве» точно визначає колір волосся. <!-- INJECT_ACTIVITY: match-up, Match portrait lexis (зріст, постава, волосся, обличчя, характер) to body categories, 12 items -->
+(squat/stocky), which indicates someone who is short and thickset, and "стрункий" (slender/graceful), which is universally used to describe a well-proportioned, lean figure for any gender. The most expressive part of any portrait, however, is the face and hair. The details here are endless, but let us focus on the most common descriptive categories used in Ukrainian literature and daily conversation. Коли ми описуємо волосся, ми завжди звертаємо увагу на його колір та структуру. Волосся може бути русяве, каштанове, темне або світле. За своєю структурою воно буває кучеряве або зовсім пряме. Очі можуть бути карі, блакитні, зелені або сірі. > *When we describe hair, we always pay attention to its color and texture. Hair can be light brown, chestnut, dark, or light. By its texture, it can be curly or completely straight. Eyes can be brown, blue, green, or gray.* The word "русяве" specifically refers to the natural, light-brown or dark-blond hair color that is very common in Eastern Europe. "Каштанове" is a warm, rich chestnut brown. When describing the face itself, a person might be called **вродливий** (beautiful/handsome — describing a person). A face can also be "смагляве" (swarthy/dark-skinned) from spending time in the sun, "рум'яне" (rosy-cheeked), or simply "бліде" (pale). :::tip **Внутрішній світ через зовнішність** In Ukrainian literature and school pedagogy, describing appearance is never just a cold list of physical facts. According to standard curriculum guidelines, a writer shows the character's inner world, their life history, and their personality through elements of external characterization. A "привітний погляд" (welcoming gaze) or a "задумане обличчя" (thoughtful face) tells the reader immediately about the person's soul, not just their anatomy. ::: To master this vocabulary, observe how Ukrainian authors combine these elements. They rarely list everything; instead, they select a few striking features to create a lasting impression. Notice how the adjectives change endings to agree with masculine and feminine subjects. Це був чоловік середнього віку та високого зросту. Він мав кремезну статуру та дуже засмагле обличчя. Його русяве волосся було трохи кучеряве, а погляд — завжди теплий і привітний. > *It was a man of middle age and tall height. He had a sturdy build and a very tanned face. His light brown hair was a bit curly, and his gaze was always warm and welcoming.* Поруч з ним стояла юна дівчина. Вона була невисока, неймовірно тендітна та струнка. Її довге каштанове волосся падало на плечі, а великі карі очі дивилися на світ з цікавістю. > *Next to him stood a youthful girl. She was short, incredibly delicate, and slender. Her long chestnut hair fell on her shoulders, and her large brown eyes looked at the world with curiosity.* In these short excerpts, we easily identify the portrait vocabulary categorized by its function: age and height ("юна", "високого зросту"), physical build ("кремезну", "тендітна"), facial appearance ("засмагле обличчя"), hair color and texture ("русяве", "каштанове"), and the emotional impression of the eyes ("карі очі", "привітний"). <!-- INJECT_ACTIVITY: match-up, Match portrait lexis (зріст, постава, волосся, обличчя, характер) to body categories, 12 items -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -636,7 +636,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -649,18 +716,69 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] зовнішність (appearance — a person's outward look)
+- [ ] характер (character — a person's inner qualities)
+- [ ] стосунки (interpersonal relationships — how people interact)
+- [ ] родичі (relatives — people connected by family)
+- [ ] знайомство (acquaintance / the act of meeting someone)
+- [ ] вродливий (beautiful/handsome — describing a person)
+- [ ] кремезний (stocky/sturdy — of strong build)
+- [ ] тендітний (slender/delicate — of light build)
+- [ ] щирий (sincere — genuine in feelings)
+- [ ] лагідний (gentle — soft in manner)
+- [ ] кмітливий (quick-witted — mentally sharp)
+- [ ] чуйний (sensitive/responsive — attentive to others)
+- [ ] подружжя (married couple — husband and wife together)
+- [ ] відрекомендуватися (to introduce oneself — formal register)
+- [ ] портретна деталь (portrait detail — one defining visual feature)
+- [ ] постава (posture/bearing — how a person holds their body)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Характер людини: риси і оцінка (~770 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

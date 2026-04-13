@@ -1,4 +1,4 @@
-<!-- version: 1.1.0 | updated: 2026-03-31 -->
+<!-- version: 1.2.0 | updated: 2026-04-12 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -11,6 +11,35 @@ Generate an `activities/holidays.yaml` file for module **46: Holidays** (a1).
 
 ---
 
+## ⚠️ HARD COUNT TARGETS — READ TWICE
+
+These are the binding numerical contracts for THIS module. The audit will FAIL if you fall short.
+
+| Bucket | Min | Max | Notes |
+|---|---|---|---|
+| Total activities | 10 | 10+ | inline + workbook combined |
+| Inline (lesson tab) | 4 | 6 | one per `<!-- INJECT_ACTIVITY -->` marker, see below |
+| Workbook (Зошит tab) | 6 | 9 | extended practice |
+| Items per activity | 6 | — | each activity must have at least 6 items (unless its type cap is lower — see Activity Type Reference below) |
+
+**You MUST ship at least 4 inline activities AND at least 6 workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+
+**Type diversity is required.** The module (inline + workbook combined) MUST use at least **0** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level. (If `0` is `0`, the audit profile for this level does not enforce type diversity — but variety still produces a better lesson, so aim for 4+ types when the workbook allows it.)
+
+---
+
+## Allowed types for THIS level
+
+- **Inline (lesson) types:** image-to-letter, letter-grid, match-up, watch-and-repeat, quiz, true-false, fill-in, classify
+- **Inline priority (preferred):** image-to-letter, match-up, fill-in, quiz, watch-and-repeat
+- **Workbook types:** fill-in, match-up, group-sort, anagram, unjumble, quiz, true-false, classify, divide-words, count-syllables, pick-syllables, observe, phrase-table, odd-one-out
+- **Workbook priority (preferred):** fill-in, match-up, group-sort, anagram, unjumble
+- **FORBIDDEN at this level:** cloze, error-correction, mark-the-words, translate, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, highlight-morphemes, grammar-identify, select
+
+Pick from the allowed list. Lean heavily on the priority lists. Do not use any forbidden type — the build will reject it.
+
+---
+
 ## Inline vs Workbook Split
 
 Activities have two placement categories:
@@ -19,7 +48,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Rule of thumb:** inline = 2-3 quick checks after key teaching points. Workbook = 4-8 deeper practice exercises covering the full topic.
+**Rule of thumb:** inline = 4–6 quick checks after key teaching points. Workbook = 6–9 deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
 
 ---
 
@@ -27,8 +56,8 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: quiz-holiday-match -->`
-- `<!-- INJECT_ACTIVITY: quiz-holiday-clues -->`
+- `<!-- INJECT_ACTIVITY: quiz-which-holiday -->`
+- `<!-- INJECT_ACTIVITY: quiz-match-date -->`
 - `<!-- INJECT_ACTIVITY: group-sort-traditions -->`
 - `<!-- INJECT_ACTIVITY: fill-in-greetings -->`
 
@@ -89,118 +118,156 @@ required:
 ## Module Content (the prose the learner reads before exercises)
 
 <module_content>
-## Вступ: Що таке свято?
+## Діалоги (Dialogues)
 
-To truly understand a culture, you must understand how its people celebrate. The rhythm of the year is marked by special days that bring people together. In Ukrainian, a holiday is a **свято** (holiday). The plural form is **свята** (holidays). Ukrainians love to gather with family and friends around large tables, share traditional food, and sing songs that have been passed down for generations. 
+Ukrainian holidays are a central part of family life and national identity. Knowing how to talk about celebrations is a natural way to connect with people. You will often hear questions about dates and specific traditions. 
 
-We group our celebrations into three main categories. First, we have **релігійні свята** (religious holidays) like Christmas and Easter, which are deeply spiritual and rich in ancient traditions. Second, we have **традиційні свята** (traditional holidays) which often connect to the changing seasons and nature. Finally, we have **державні свята** (state holidays) which mark important historical days for the nation.
+В Україні є багато свят. Ми часто збираємо родину разом. Люди готують смачну їжу. Ми також любимо співати пісні.
+> *In Ukraine there are many holidays. We often gather the family together. People prepare tasty food. We also love to sing songs.*
 
-When a special day arrives, people want to express their joy. The verb for this action is **святкувати** (to celebrate), and to express good wishes we use **вітати** (to congratulate/greet). You will hear these words often. If you are not sure of the exact name of the occasion, you can always use the universal greeting. You simply say **Зі святом!** (Happy Holiday!). This short, polite phrase works for almost any festive occasion and instantly connects you to the Ukrainian soul.
+The most important winter celebration is **Різдво** (Christmas). During the festive season, families gather to share special meals and sing traditional songs. Notice how the speakers discuss the recent date change for this holiday.
 
-## Діалоги: Говоримо про свята
+> **Джон:** Коли в тебе Різдво? *(When do you have Christmas?)*
+> **Оксана:** Двадцять п'ятого грудня. А в тебе? *(On the twenty-fifth of December. And you?)*
+> **Джон:** У нас — теж! *(We do too!)*
+> **Оксана:** Раніше святкували сьомого січня, але тепер — двадцять п'ятого. *(Earlier we celebrated on January seventh, but now on the twenty-fifth.)*
+> **Джон:** Що ви робите на Різдво? *(What do you do on Christmas?)*
+> **Оксана:** Ми співаємо колядки і їмо кутю. *(We sing carols and eat kutia.)*
+> **Джон:** Як гарно! З Різдвом! *(How beautiful! Merry Christmas!)*
+> **Оксана:** З Різдвом Христовим! *(Merry Christmas!)*
 
-Let us look at how people talk about these special days in real life. Our first conversation takes place during the winter season. Two friends are discussing their plans for Christmas. In 2023, Ukraine made a major historical shift in its calendar. The country officially moved the date of Christmas to December 25th. This change aligns Ukraine with the majority of Europe and the rest of the Christian world. It was a conscious decision to break away from the Russian Orthodox calendar, which celebrates on January 7th. Now, Ukrainians celebrate in the month of **грудень** (December).
+Let's break down the vocabulary. **Різдво** is the noun for Christmas, and the verb **святкувати** means to celebrate. A **колядка** is a traditional carol that children and adults sing. The word **кутя** refers to a special ritual dish eaten only during the winter holidays. When saying goodbye or raising a toast, Ukrainians use the phrase **З Різдвом!** (Merry Christmas!).
 
-> **Українська родина:** Коли в тебе Різдво? *(When is your Christmas?)*
-> **Іноземний гість:** Двадцять п'ятого грудня. А в тебе? *(On the twenty-fifth of December. And yours?)*
-> **Українська родина:** У нас теж! *(We also have it then!)*
-> **Українська родина:** Раніше святкували сьомого січня. *(Earlier we celebrated on the seventh of January.)*
-> **Українська родина:** Але тепер двадцять п'ятого. *(But now on the twenty-fifth.)*
-> **Іноземний гість:** Що ви робите на Різдво? *(What do you do for Christmas?)*
-> **Українська родина:** Ми співаємо колядки і їмо кутю. *(We sing carols and eat kutia.)*
-> **Іноземний гість:** Як гарно! З Різдвом! *(How beautiful! Merry Christmas!)*
-> **Українська родина:** З Різдвом Христовим! *(Merry Christmas!)*
+* Я люблю святкувати Різдво. *(I love to celebrate Christmas.)*
+* Вони святкують удома. *(They celebrate at home.)*
+* Де ви святкуєте? *(Where do you celebrate?)*
 
-Our second conversation happens in the city center during the summer. The date is August 24th, and the streets are full of people. They are celebrating the most important political day of the year. Notice the atmosphere of national pride in their exchange.
+The most important civic date is **День Незалежності** (Independence Day). This summer holiday brings people to the streets for public events, concerts, and patriotic displays.
 
-> **Оксана:** Двадцять четверте серпня! *(The twenty-fourth of August!)*
-> **Марко:** День Незалежності! *(Independence Day!)*
-> **Оксана:** Так, це головне державне свято України. *(Yes, it is the main state holiday of Ukraine.)*
+> **Марко:** Двадцять четверте серпня — День Незалежності! *(The twenty-fourth of August is Independence Day!)*
+> **Сара:** Так, це головне державне свято України. *(Yes, this is the main state holiday of Ukraine.)*
 > **Марко:** Що ви робите? *(What do you do?)*
-> **Оксана:** Ми дивимося парад і ходимо на концерт. *(We watch the parade and go to the concert.)*
+> **Сара:** Ми дивимося парад і ходимо на концерт. *(We watch the parade and go to a concert.)*
 > **Марко:** А ввечері? *(And in the evening?)*
-> **Оксана:** Ввечері салют. *(In the evening there are fireworks.)*
-> **Оксана:** І святковий вечір з друзями. *(And a festive evening with friends.)*
+> **Сара:** Ввечері — салют і святковий вечір з друзями. *(In the evening — fireworks and a festive evening with friends.)*
 > **Марко:** З Днем Незалежності! *(Happy Independence Day!)*
-> **Оксана:** Слава Україні! *(Glory to Ukraine!)*
+> **Сара:** Слава Україні! *(Glory to Ukraine!)*
 
-<!-- INJECT_ACTIVITY: quiz-holiday-match -->
+This conversation introduces the core noun **свято** (holiday). The phrase **державне свято** means state holiday. During these events, a **парад** (parade) takes place, a **концерт** (concert) provides music, and a **салют** (fireworks) lights up the sky. The greeting **З Днем Незалежності!** is standard for August 24. It is frequently paired with the national salute **Слава Україні!** (Glory to Ukraine!).
 
-## Українські свята: Традиції та символи
+* Це велике свято. *(This is a big holiday.)*
+* Яке сьогодні свято? *(What holiday is today?)*
+* Завтра державне свято. *(Tomorrow is a state holiday.)*
 
-The winter cycle revolves around **Різдво** (Christmas). As we saw in the dialogue, this takes place on December 25th. The celebration actually begins the evening before. December 24th is known as **Свята вечеря** (Holy Supper). When the first star appears in the night sky, families sit down at the dining table. Tradition requires exactly **дванадцять страв** (twelve dishes). This number represents the twelve apostles. All the food on the table must be vegan, meaning no meat or dairy. 
+## Українські свята (Ukrainian Holidays)
 
-The absolute most important and sacred dish is **кутя** (kutia). This is a sweet, ritual porridge made from whole wheat berries, poppy seeds, honey, and walnuts. It is always the very first food eaten at the meal, and everyone must have at least one spoonful. People also eat traditional **борщ** (borscht), **вареники** (dumplings), **риба** (fish), and drink **узвар** (dried fruit compote). 
+A **свято** is a time for rest, family, and tradition. When you want to **вітати** (to greet) someone for a festive occasion but you do not know the exact phrase, you can always say **Зі святом!** (Happy Holiday!). It is a universal, polite phrase that works for almost any situation.
 
-:::note Calendar Alignment
-In 2023, Ukraine moved its official celebration of Christmas from January 7th to December 25th. This historical change aligns the country with Europe and the broader Christian world, moving away from the Russian Orthodox calendar.
+The winter cycle centers around **Різдво**. Historically, under Russian and Soviet influence, many Ukrainians celebrated on January 7. However, in 2023, Ukraine officially moved the date to December 25. This decision aligns the country with Europe and the majority of the Christian world, marking a major cultural shift away from the Russian Orthodox calendar.
+
+> **Олена:** Що ми готуємо на Святвечір? *(What are we preparing for Christmas Eve?)*
+> **Мама:** Ми готуємо дванадцять страв. *(We are preparing twelve dishes.)*
+> **Олена:** А кутя є? *(And is there kutia?)*
+> **Мама:** Звичайно, кутя — перша страва. *(Of course, kutia is the first dish.)*
+
+The most important meal happens on the evening of December 24, known as **Свята вечеря** (Holy Supper). By tradition, families wait for the first star to appear in the sky before sitting down to eat.
+
+На столі стоять дванадцять страв. Вони дуже смачні і традиційні. Головна страва — це кутя. Ми дуже любимо це свято.
+> *There are twelve dishes on the table. They are very tasty and traditional. The main dish is kutia. We really love this holiday.*
+
+There must be exactly twelve meatless dishes, representing the twelve apostles. **Кутя** is always the first thing people eat. It is a sweet wheat porridge mixed with honey, poppy seeds, and nuts. Afterward, groups of **колядники** (carolers) go from house to house. They sing a **колядка** to wish their neighbors health, peace, and prosperity.
+
+In the spring, the biggest religious event is **Великдень** (Easter). The exact date changes every year depending on the lunar calendar, but the rich traditions remain exactly the same.
+
+Великдень — це велике весняне свято. Ми йдемо в церкву святити кошик. Там є паска і красиві писанки. Люди кажуть: «Христос воскрес!». Ми відповідаємо: «Воістину воскрес!».
+> *Easter is a big spring holiday. We go to church to bless the basket. There is Easter bread and beautiful decorated eggs there. People say: "Christ is risen!". We answer: "Indeed He is risen!".*
+
+A common mistake for language learners is confusing the name of the holiday with the food. **Великдень** is the name of the holiday itself, while a **паска** (Easter bread) is the sweet, tall bread baked specifically for the occasion. You eat a **паска** on **Великдень**. In the morning, families go to church to **святити кошик** (bless the basket) full of food.
+
+:::note
+Another famous Easter tradition is making a **писанка** (decorated Easter egg). These are not just painted with a brush; they are carefully drawn using hot beeswax and natural dyes, featuring ancient geometric symbols.
 :::
 
-After dinner, the singing begins. People sing **колядки** (carols). Groups of singers called **колядники** (carolers) walk from house to house in their neighborhoods. They carry a large, illuminated star and sing songs to wish the hosts wealth, health, and a good harvest. Inside the home, instead of a plastic tree, you might see a **дідух** (sheaf of wheat). This ancient symbol represents the ancestors and the agricultural harvest, and it predates the modern Christmas tree tradition.
+* Моя бабуся готує паску. *(My grandmother prepares Easter bread.)*
+* Вони малюють писанки удома. *(They draw decorated eggs at home.)*
+* Це красива українська традиція. *(This is a beautiful Ukrainian tradition.)*
 
-The spring cycle centers entirely on **Великдень** (Easter). This is the absolute biggest religious celebration of the year in Ukraine. The exact date changes every spring according to the lunar calendar. During this time, Ukrainians create **писанки** (decorated eggs). A **писанка** (decorated egg) is a raw egg covered in intricate, symbolic geometric patterns using hot beeswax and vibrant dyes. It is a highly respected, unique Ukrainian art form. 
+<!-- INJECT_ACTIVITY: quiz-which-holiday -->
 
-:::caution Name vs. Food
-Do not confuse the holiday with the holiday food! The holiday itself is **Великдень** or **Пасха** (Easter). However, a **паска** (Easter bread) is the sweet bread you eat on that day. You celebrate **Великдень**, but you eat a **паска**.
+## Державні свята (National Holidays)
+
+On August 24, 1991, Ukraine officially declared its **незалежність** (independence) from the Soviet Union. Today, **День Незалежності** is the most important **державне свято**. People gather in city centers to celebrate their freedom, culture, and national identity.
+
+> **Тарас:** Ти йдеш на парад? *(Are you going to the parade?)*
+> **Іван:** Так, я маю великий прапор. *(Yes, I have a big flag.)*
+> **Тарас:** Тоді ми зустрічаємося там. *(Then we meet there.)*
+> **Іван:** Добре! Слава Україні! *(Good! Glory to Ukraine!)*
+
+У серпні ми святкуємо День Незалежності. На вулиці проходить великий парад. Ми бачимо сині і жовті прапори. Увечері люди дивляться яскравий салют. Усі гордо кажуть: «Слава Україні!».
+> *In August we celebrate Independence Day. A big parade takes place on the street. We see blue and yellow flags. In the evening people watch bright fireworks. Everyone proudly says: "Glory to Ukraine!".*
+
+A **прапор** is a flag, and the Ukrainian **прапор** features a blue band over a yellow band, representing the sky above wheat fields. During the celebrations, you will constantly hear people shouting **Слава Україні!**, to which the crowd enthusiastically replies **Героям слава!** (Glory to the heroes!).
+
+Another massive celebration is **Новий рік** (New Year) on January 1. It is the biggest secular event of the year, bringing families and friends together for midnight toasts.
+
+Першого січня — Новий рік. Удома стоїть висока зелена ялинка. Ми готуємо велику святкову вечерю. Діти дуже люблять нові подарунки.
+> *On the first of January is New Year. A tall green New Year tree stands at home. We prepare a big festive dinner. Children really love new gifts.*
+
+Notice the word **подарунок** (gift). It is a very important word for any celebration. The standard greeting as the clock strikes midnight is **З Новим роком!**.
+
+* Я хочу новий телефон. *(I want a new phone.)*
+* Це мій новий подарунок. *(This is my new gift.)*
+* Ми не спимо вночі. *(We do not sleep at night.)*
+
+There are several other important cultural dates to know. On the third Thursday of May, people observe **Вишиванковий день** (Vyshyvanka Day). Everyone wears a **вишиванка** (traditional embroidered shirt) to work, to school, or just walking in the park. It is a powerful symbol of Ukrainian identity and resistance.
+
+:::tip
+You will also hear about **День Конституції** (Constitution Day) on June 28, and **День захисників і захисниць** (Defenders' Day) on October 1. The October holiday honors all the men and women fighting for the country's freedom.
 :::
 
-On Sunday morning, families wake up very early and go to church. They bring a woven basket filled with bread, eggs, salt, and meat to perform the ritual of **святити кошик** (blessing the basket).
-
-When people meet on Easter Sunday, they do not say standard greetings like "hello" or "good morning". Instead, they use a special, joyful ritual greeting:
-*   **Христос воскрес!** (Christ is risen!)
-*   **Воістину воскрес!** (Indeed risen!)
-
-<!-- INJECT_ACTIVITY: quiz-holiday-clues -->
-
-## Державні свята: Громадянська ідентичність
-
-State holidays reflect the modern history, struggles, and identity of the nation. The most significant of these is **День Незалежності** (Independence Day). On August 24, 1991, Ukraine officially declared its independence from the Soviet Union. Today, this is the ultimate **державне свято** (state holiday) for every Ukrainian citizen. 
-
-Cities completely transform on this day. People gather in the streets and central squares to celebrate freedom and sovereignty. You will often see a large military **парад** (parade) in the capital city of Kyiv. There are massive public **концерти** (concerts) featuring popular musicians. The streets, balconies, and cars are decorated with thousands of blue and yellow **прапори** (flags). In the evening, the sky lights up with a **салют** (fireworks). To greet someone on this day, you simply say **З Днем Незалежності!** (Happy Independence Day!). You will also hear the patriotic exchange echoing everywhere: **Слава Україні!** (Glory to Ukraine!) and the proud response **Героям слава!** (Glory to the heroes!).
-
-Beyond Independence Day, there are several other important dates to know. The absolute biggest secular celebration of the entire year is **Новий рік** (New Year) on January 1st. On New Year's Eve, families decorate a festive **ялинка** (tree) and exchange **подарунки** (gifts) at midnight. 
-
-In the spring, Ukrainians celebrate a unique cultural event called **Вишиванковий день** (Vyshyvanka Day). This occurs annually on the third Thursday of May. It is a modern, living tradition rather than an official day off work. Everyone goes to school, the university, or the office wearing a **вишиванка** (embroidered shirt). This beautiful traditional garment serves as a powerful visual symbol of Ukrainian identity, unity, and cultural resistance.
-
-Two other key dates mark the foundations of the modern state. On June 28th, the country observes **День Конституції** (Constitution Day), honoring the adoption of the nation's fundamental law. Later in the year, on October 1st, the people honor their military defenders on **День захисників і захисниць** (Defenders' Day). This solemn and important day pays respect to all the men and women who protect the nation's borders.
-
+<!-- INJECT_ACTIVITY: quiz-match-date -->
 <!-- INJECT_ACTIVITY: group-sort-traditions -->
 
 ## Підсумок — Summary
 
-Now that you know the major Ukrainian holidays, you need to know how to form the most common greetings. Ukrainian uses a very specific, consistent grammatical pattern for this. The formula relies on the preposition **з** (with) followed by the name of the holiday in the instrumental case. You literally wish someone well "with" the holiday.
+Whenever you want to **вітати** (to greet or congratulate) someone for a specific holiday, Ukrainian uses a very consistent, logical grammar pattern. You simply combine the preposition **з** (with) and the name of the holiday in the instrumental case.
 
-You already know how the instrumental case works from phrases you learned earlier, like **кава з молоком** (coffee with milk). The spelling changes at the end of the words follow the exact same rules you learned for nouns. Here is how the names of the holidays transform in everyday speech:
+You already know the instrumental case from describing things that go together, like **кава з молоком** (coffee with milk) or **борщ з м'ясом** (borscht with meat). When greeting someone, you are literally saying that you congratulate them *with* the holiday.
 
-*   **Новий рік** → **З Новим роком!** (Happy New Year!)
-*   **Різдво** → **З Різдвом!** (Merry Christmas!)
-*   **Великдень** → **З Великоднем!** (Happy Easter!)
-*   **День народження** → **З днем народження!** (Happy birthday!)
-*   **День Незалежності** → **З Днем Незалежності!** (Happy Independence Day!)
+* **З Різдвом!** — Merry Christmas!
+* **З Великоднем!** — Happy Easter!
+* **З Новим роком!** — Happy New Year!
+* **З Днем Незалежності!** — Happy Independence Day!
+* **З днем народження!** — Happy birthday!
 
-After the initial short greeting, people often add longer, specific wishes. The pattern for making a wish uses the verb **бажати** (to wish) followed by the genitive case. You can memorize this very common, polite sequence: **Бажаю щастя, здоров'я, миру** (I wish you happiness, health, peace). 
+Here is a short paragraph showing how to use these greetings in context:
 
-Let us review the quick calendar of major events to help you remember the timeline. In **грудень** (December) on the 25th, we celebrate **Різдво**. In **січень** (January) on the 1st, we celebrate the secular **Новий рік**. In the **весна** (spring), the date changes, but we always celebrate **Великдень**. Finally, in **серпень** (August) on the 24th, we celebrate **День Незалежності**.
+Сьогодні дуже гарне світле свято. Я тепло вітаю маму з Різдвом. Ми п'ємо чорний чай з тортом. Це справді такий чудовий день.
+> *Today is a very beautiful bright holiday. I warmly greet mom with Christmas. We drink black tea with cake. This is truly such a wonderful day.*
 
-:::tip Self-Check
-How do you say "Merry Christmas"?
-**З Різдвом!**
-
-What is the ritual response to "Христос воскрес!"?
-**Воістину воскрес!**
-
-When is Christmas in Ukraine?
-**Двадцять п'ятого грудня.**
-
-How do you say "Happy New Year"?
-**З Новим роком!**
-
-How do you greet someone on August 24th?
-**З Днем Незалежності!**
-:::
+* Ми вітаємо друга. *(We greet a friend.)*
+* Ми купуємо гарні подарунки. *(We buy beautiful gifts.)*
 
 <!-- INJECT_ACTIVITY: fill-in-greetings -->
 
+Let's review the calendar of major dates so you know exactly when to use these greetings throughout the year:
+
+* **січень 1** (January 1) — Новий рік (New Year)
+* **весна** (Spring) — Великдень (Easter)
+* **травень** (May) — Вишиванковий день (Vyshyvanka Day)
+* **червень 28** (June 28) — День Конституції (Constitution Day)
+* **серпень 24** (August 24) — День Незалежності (Independence Day)
+* **жовтень 1** (October 1) — День захисників і захисниць (Defenders' Day)
+* **грудень 25** (December 25) — Різдво (Christmas)
+
+:::caution
+Remember that Ukrainian capitalizes the first word of holidays. For example, **День Незалежності** has both words capitalized because it is a major state holiday, but **Новий рік** only has the first word capitalized. Religious holidays like **Різдво** and **Великдень** are always capitalized.
+:::
+
+Self-check questions to test your memory before moving on:
+* How do you say "Merry Christmas" and "Happy New Year"? (З Різдвом! З Новим роком!)
+* How do you reply to "Слава Україні!"? (Героям слава!)
+* What is the difference between "Великдень" and "паска"? (Великдень is the holiday itself, while паска is the traditional sweet bread).
 </module_content>
 
 ---
@@ -214,48 +281,68 @@ version: "1.0"
 module: holidays
 level: a1
 
+# NOTE — these are SHAPE examples. The real targets are at the top of this prompt
+# (10 total / 4–6 inline / 6–9 workbook,
+# 6+ items per activity). The shapes below are TRUNCATED for readability;
+# YOUR output MUST hit those minimums.
+
 inline:
   - id: marker-id-here        # MUST match an <!-- INJECT_ACTIVITY: ... --> marker
     type: quiz                 # activity type
     instruction: "Оберіть правильний варіант"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - question: "_____ стіл"
-        options: ["мій", "моя", "моє"]
+        options: ["мій", "моя", "моє", "мої"]
         correct: 0             # 0-based index
+      - question: "Це ____ книга."
+        options: ["мій", "моя", "моє", "мої"]
+        correct: 1
+      # ... add at least 6 items total — never stop at 1-2
 
   - id: another-marker-id
     type: fill-in
     instruction: "Вставте правильне слово"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - sentence: "Це ____ кімната."
         answer: "моя"
         options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ вікно."
+        answer: "моє"
+        options: ["мій", "моя", "моє"]
+      # ... ≥ 6 items total
 
 workbook:
-  - type: match-up
+  - id: match-up-vocab
+    type: match-up
     instruction: "З'єднайте пари"
-    pairs:
+    pairs:                     # ← real output: ≥ 6 pairs
       - left: "стіл"
         right: "він"
       - left: "книга"
         right: "вона"
       - left: "вікно"
         right: "воно"
+      # ... ≥ 6 pairs total
 
-  - type: group-sort
+  - id: group-sort-gender
+    type: group-sort
     instruction: "Розподіліть слова за категоріями"
     groups:
-      - label: "Category A"
-        items: ["word1", "word2"]
-      - label: "Category B"
-        items: ["word3", "word4"]
+      - label: "Чоловічий рід"
+        items: ["стіл", "олівець", "будинок"]   # ≥ 3 items per group
+      - label: "Жіночий рід"
+        items: ["книга", "ручка", "школа"]
+      - label: "Середній рід"
+        items: ["вікно", "море", "молоко"]
 
-  - type: true-false
+  - id: true-false-grammar
+    type: true-false
     instruction: "Правда чи ні?"
-    items:
-      - statement: "Statement here"
-        correct: true
-        explanation: "Why it's true"
+    items:                     # ← real output: ≥ 6 items
+      - statement: "«Книга» — це чоловічий рід."
+        correct: false
+        explanation: "Книга закінчується на -а, отже жіночий рід."
+      # ... ≥ 6 items total
 
   - type: error-correction
     instruction: "Виправте помилку"
@@ -326,7 +413,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -399,10 +486,15 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 ## Quality Rules
 
-**ITEM COUNT MINIMUMS (non-negotiable):**
-- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
-- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
-- If you can't think of enough items, add more examples from the module's vocabulary and content.
+**ACTIVITY COUNT MINIMUMS (non-negotiable, audit-enforced):**
+- **Total: 10 activities.** Inline: 4–6. Workbook: 6–9. The audit gate FAILS the module if you ship fewer.
+- **Type diversity: workbook MUST cover ≥5 distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
+- **Match the inline markers exactly.** Every `<!-- INJECT_ACTIVITY: id -->` marker in the prose needs a matching inline activity with that exact id. Skipping markers means the lesson tab is broken.
+
+**ITEM COUNT MINIMUMS (non-negotiable, per-activity):**
+- **Default minimum: 6 items per activity.** Quiz, fill-in, match-up, true-false, anagram, error-correction, translate, cloze, mark-the-words, divide-words, count-syllables, odd-one-out, group-sort categories: all ≥ 6.
+- **Lower minimums for specific types only:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items, essay-response/critical-analysis = 1 prompt.
+- If you can't think of enough items, add more examples from the module's vocabulary and content. NEVER ship a 1-item or 2-item activity unless its type cap explicitly allows it.
 - **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
 - **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
@@ -509,6 +601,27 @@ IMPORTANT: After using tools, output your COMPLETE module content as plain text.
 1. Run `verify_words` on all Ukrainian words in your exercises — every word must exist in VESUM
 2. Run `query_cefr_level` on any word you're unsure about — it must be a1-appropriate
 3. For fill-in answers and distractors, verify the exact form (case, number, gender) with `verify_lemma`
+
+---
+
+## ⚠️ MANDATORY FINAL CHECKLIST — verify before emitting YAML
+
+Walk through this checklist explicitly before you start emitting. If ANY box is unchecked, fix it FIRST.
+
+- [ ] My output has **at least 4** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
+- [ ] My output has **at least 6** workbook activities.
+- [ ] **Total ≥ 10.**
+- [ ] **Every** activity has **at least 6** items, pairs, or statements (except types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3, essay-response=1).
+- [ ] The module (inline + workbook combined) uses **at least 0 distinct activity types** (or 4+ when 0 = 0 and the workbook size allows it). I am NOT shipping a wall of quizzes.
+- [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
+- [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
+- [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+- [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+- [ ] My inline count is between 4 and 6. I did NOT create more injection markers than 6.
+- [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
+- [ ] At B1+, all instructions are in Ukrainian (no English fallback).
+
+If you cannot tick all of these, REGENERATE the activities BEFORE outputting. Shipping under-spec means the build rejects you and the heal loop has to redo your work — wasting compute.
 
 ---
 

@@ -30,19 +30,19 @@ vocabulary:
   gender: ''
   verified: true
 - word: рані́ше
-  translation: before / earlier
+  translation: before/earlier
   expression: false
   pos: присл.
   gender: ''
   verified: true
 - word: да́лі
-  translation: further / next
+  translation: further/next
   expression: false
   pos: присл.
   gender: ''
   verified: true
 - word: розповіда́ти
-  translation: to tell / narrate
+  translation: to tell/narrate
   expression: false
   pos: дієсл.
   gender: ''
@@ -54,7 +54,7 @@ vocabulary:
   gender: ''
   verified: true
 - word: закі́нчи́ти
-  translation: to finish / graduate
+  translation: to finish/graduate
   expression: false
   pos: дієсл.
   gender: ''
@@ -95,48 +95,6 @@ vocabulary:
   pos: ім.
   gender: ''
   verified: true
-- word: вчи́телька
-  translation: teacher
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: шко́ла
-  translation: school
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: село́
-  translation: village
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: по́тім
-  translation: then
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: сього́дні
-  translation: today
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: робо́та
-  translation: job / work
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: споча́тку
-  translation: at first / initially
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
 - word: Розкажи про себе!
   translation: Tell about yourself!
   expression: true
@@ -144,49 +102,7 @@ vocabulary:
   gender: ''
   verified: true
 - word: Успіхів тобі!
-  translation: Success to you! / Good luck!
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Ким ти працюєш?
-  translation: What do you work as?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: центр міста
-  translation: city center
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: у дитинстві
-  translation: in childhood
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: цього року
-  translation: this year
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: наступного року
-  translation: next year
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: вільний час
-  translation: free time
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: коли я був маленьким
-  translation: when I was little
+  translation: Success to you!
   expression: true
   pos: ''
   gender: ''

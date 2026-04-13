@@ -1,7 +1,7 @@
 # Audit Report: M62 — cases-with-quantity-expressions.md
 **Level:** B1 | **Module:** M62 | **Phase:** B1.5 | **Pedagogy:** PPP | **Target:** 4000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-04-11 02:00:44
+**Generated:** 2026-04-11 12:23:47
 
 ## Configuration
 **Type:** B1-grammar
@@ -18,89 +18,81 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | quiz |  | 6 | 8 | ❌ |
-| 2 | match-up |  | 6 | 8 | ❌ |
-| 3 | quiz |  | 6 | 8 | ❌ |
-| 4 | fill-in |  | 6 | 8 | ❌ |
-| 5 | fill-in |  | 6 | 8 | ❌ |
-| 6 | match-up |  | 6 | 8 | ❌ |
-| 7 | error-correction |  | 6 | 6 | ✅ |
-| 8 | group-sort |  | 13 | 6 | ✅ |
-| 9 | essay-response |  | 1 | 6 | ❌ |
+| 1 | match-up | З'єднайте терміни з розділу «Відмінювання кількісних числівників» з їхніми визна | 6 | 8 | ❌ |
+| 2 | quiz | Оберіть правильний варіант: лексика та граматика з розділу «Узгодження кількісни | 6 | 8 | ❌ |
+| 3 | fill-in | Вставте правильну граматичну форму у реченнях на тему узгодження кількісних числ | 6 | 8 | ❌ |
+| 4 | fill-in | Вставте іменник у правильній відмінковій формі. | 6 | 8 | ❌ |
+| 5 | group-sort | Розподіліть кількісні вирази за відмінком іменника, якого вони вимагають у назив | 11 | 6 | ✅ |
+| 6 | translate | Оберіть правильний переклад кількісних виразів. | 6 | 6 | ✅ |
+| 7 | essay-response | Напишіть 5 речень, використовуючи нову лексику з розділу «Відмінювання кількісни | 1 | 6 | ❌ |
 
 **Summary:**
-- Total activities: 9 (target: 0-4) ❌
+- Total activities: 7 (target: 0-4) ❌
 - Unique types: 6 (minimum: 3) ✅
-- Priority types used: 5/7 (error-correction, essay-response, fill-in, match-up, quiz) ✅
-- Low density activities: 7
+- Priority types used: 4/7 (essay-response, fill-in, match-up, quiz) ✅
+- Low density activities: 5
 
 ## PEDAGOGICAL VIOLATIONS
 - **[LEVEL_RESTRICTION]** Activity 'essay-response' not allowed at B1
   - FIX: Use level-appropriate activities. 'essay-response' is introduced at A2+.
-- **[COMPLEXITY]** quiz '' has 6 items (minimum: 8)
-  - FIX: Add more items. B1 quiz requires at least 8 items.
-- **[COMPLEXITY]** match-up '' has 6 pairs (target: 12-16)
+- **[COMPLEXITY]** match-up 'З'єднайте терміни з розділу «Відмінювання кількісних числівників» з їхніми визна' has 6 pairs (target: 12-16)
   - FIX: Adjust number of pairs to 12-16.
-- **[COMPLEXITY]** quiz '' has 6 items (minimum: 8)
+- **[COMPLEXITY]** quiz 'Оберіть правильний варіант: лексика та граматика з розділу «Узгодження кількісни' has 6 items (minimum: 8)
   - FIX: Add more items. B1 quiz requires at least 8 items.
-- **[COMPLEXITY]** fill-in '' has 6 items (minimum: 8)
+- **[COMPLEXITY]** fill-in 'Вставте правильну граматичну форму у реченнях на тему узгодження кількісних числ' has 6 items (minimum: 8)
   - FIX: Add more items. B1 fill-in requires at least 8 items.
-- **[COMPLEXITY]** fill-in '' has 6 items (minimum: 8)
+- **[COMPLEXITY]** fill-in 'Вставте іменник у правильній відмінковій формі.' has 6 items (minimum: 8)
   - FIX: Add more items. B1 fill-in requires at least 8 items.
-- **[COMPLEXITY]** match-up '' has 6 pairs (target: 12-16)
-  - FIX: Adjust number of pairs to 12-16.
-- **[GLOSSARY_LIST_IN_PROSE]** Glossary-style list (3 items) in narrative prose starting: '**Один стіл.** — *One table (masculine).*' — vocab tables belong in vocabulary YAML
-  - FIX: Move vocabulary definitions to vocabulary/{slug}.yaml or rewrite as natural prose with words introduced in context
-- **[GLOSSARY_LIST_IN_PROSE]** Glossary-style list (3 items) in narrative prose starting: '**П'ять озер.** — *Five lakes.*' — vocab tables belong in vocabulary YAML
-  - FIX: Move vocabulary definitions to vocabulary/{slug}.yaml or rewrite as natural prose with words introduced in context
-- **[STATE_STANDARD_LOW_IMMERSION]** Module 62 has 43.4% immersion (target: 90.0%+)
+- **[COMPLEXITY]** group-sort 'Розподіліть кількісні вирази за відмінком іменника, якого вони вимагають у назив' has 11 items (target: 12-999)
+  - FIX: Adjust number of items to sort to 12-999.
+- **[STATE_STANDARD_LOW_IMMERSION]** Module 62 has 51.0% immersion (target: 90.0%+)
   - FIX: Add more Ukrainian content to reach 90%+ immersion for full immersion modules
 
 ## Recommendation
 **🔄 REWRITE** (severity 80/100)
 
-- 10 violations (significant)
-- Immersion 42% off target (major rebalancing needed)
+- 7 violations (significant)
+- Immersion 34% off target (major rebalancing needed)
 - Activity density below minimum
 
 ## Gates
-- **Words:** ⚠️ 3805/4000 (raw: 3945) (195 short)
-- **Activities:** ✅ 9/0
-- **Density:** ❌ 7 < 6
+- **Words:** ⚠️ 3854/4000 (raw: 3944) (146 short)
+- **Activities:** ✅ 7/0
+- **Density:** ❌ 5 < 6
 - **Unique_types:** ✅ 6/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 6/5
+- **Engagement:** ❌ 4/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 31/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ❌ 43.4% LOW (target 85-100% (B1.5-6 Vocab))
-- **Richness:** ❌ 52% < 95% min (grammar) - REWRITE needed
+- **Immersion:** ❌ 51.0% LOW (target 85-100% (B1.5-6 Vocab))
+- **Richness:** ❌ 50% < 95% min (grammar) - REWRITE needed
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
 
 ## Richness Details
-**Score:** 52% (minimum: 95%)
+**Score:** 50% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 53 | 24 | 100% | 20% | 20.0% |
+| examples | 70 | 24 | 100% | 20% | 20.0% |
 | engagement | 0 | 5 | 0% | 15% | 0.0% |
 | dialogues | 0 | 4 | 0% | 15% | 0.0% |
-| variety | 0.94 | - | 94% | 10% | 9.4% |
+| variety | 0.96 | - | 96% | 10% | 9.6% |
 | cultural | 0 | 3 | 0% | 10% | 0.0% |
 | realworld | 20 | 3 | 100% | 10% | 10.0% |
 | visual | 0 | 3 | 0% | 5% | 0.0% |
-| questions | 17 | 5 | 100% | 5% | 5.0% |
-| tables | 1 | 2 | 50% | 4% | 2.0% |
+| questions | 23 | 5 | 100% | 5% | 5.0% |
+| tables | 0 | 2 | 0% | 4% | 0.0% |
 | paragraph_var | 1.00 | - | 100% | 3% | 3.0% |
 | proverbs | 10 | 1 | 100% | 3% | 3.0% |
-| **TOTAL** | | | | | **52.4%** |
+| **TOTAL** | | | | | **50.6%** |
 
 ### Dryness Flags & Fixes
 - ❌ **NO_ENGAGEMENT**
@@ -140,6 +132,9 @@
     
     IMPORTANT: Dialogues OUTSIDE blockquotes (>) using **Speaker:** format are NOT detected.
     Place dialogues inside [!dialogue] callouts or blockquotes.
+- ❌ **NO_TABLES**
+  - FIX:
+    Address this issue to improve richness score
 - ❌ **NO_CULTURAL_ANCHOR**
   - FIX:
     Add 3+ cultural references. Use this exact format:
@@ -153,23 +148,21 @@
 ## Low Density Activities
 | Activity | Type | Items | Required | Fix |
 |----------|------|-------|----------|-----|
-|  | quiz | 6 | 8 | Add 2 more items |
-|  | match-up | 6 | 8 | Add 2 more items |
-|  | quiz | 6 | 8 | Add 2 more items |
-|  | fill-in | 6 | 8 | Add 2 more items |
-|  | fill-in | 6 | 8 | Add 2 more items |
-|  | match-up | 6 | 8 | Add 2 more items |
-|  | essay-response | 1 | 6 | Add 5 more items |
+| З'єднайте терміни з розділу «Відмінювання кількісних числівників» з їхніми визна | match-up | 6 | 8 | Add 2 more items |
+| Оберіть правильний варіант: лексика та граматика з розділу «Узгодження кількісни | quiz | 6 | 8 | Add 2 more items |
+| Вставте правильну граматичну форму у реченнях на тему узгодження кількісних числ | fill-in | 6 | 8 | Add 2 more items |
+| Вставте іменник у правильній відмінковій формі. | fill-in | 6 | 8 | Add 2 more items |
+| Напишіть 5 речень, використовуючи нову лексику з розділу «Відмінювання кількісни | essay-response | 1 | 6 | Add 5 more items |
 
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 568 | Included in Core |
-| **1. Узгодження кількісних числівників з іменниками (~850 слів)** | ✅ | 419 | Included in Core |
-| **2. Відмінювання кількісних числівників (~750 слів)** | ✅ | 427 | Included in Core |
-| **3. Збірні числівники: Коли і як? (~650 слів)** | ✅ | 433 | Included in Core |
-| **4. Дроби та мішані кількості (~550 слів)** | ✅ | 398 | Included in Core |
-| **5. Неозначено-кількісні слова та наближення (~550 слів)** | ✅ | 427 | Included in Core |
-| **6. Кількісні вирази в контексті: Рецепти та Статистика (~750 слів)** | ✅ | 629 | Included in Core |
-| **Підсумок** | ✅ | 504 | Included in Core |
+| **Intro/Narrative** | ✅ | 493 | Included in Core |
+| **1. Узгодження кількісних числівників з іменниками (~850 слів)** | ✅ | 440 | Included in Core |
+| **2. Відмінювання кількісних числівників (~750 слів)** | ✅ | 540 | Included in Core |
+| **3. Збірні числівники: Коли і як? (~650 слів)** | ✅ | 491 | Included in Core |
+| **4. Дроби та змішані кількості (§4.2.1.3) (~550 слів)** | ✅ | 435 | Included in Core |
+| **5. Неозначено-кількісні слова та наближення (~550 слів)** | ✅ | 529 | Included in Core |
+| **6. Кількісні вирази в контексті: Рецепти та Статистика (~750 слів)** | ✅ | 522 | Included in Core |
+| **Підсумок (~450 слів)** | ✅ | 404 | Included in Core |

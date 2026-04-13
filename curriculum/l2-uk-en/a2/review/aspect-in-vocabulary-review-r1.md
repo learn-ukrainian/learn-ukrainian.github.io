@@ -1,123 +1,84 @@
 ## Linguistic Scan
-Errors found:
-- The perfective verb for `відповідати` is spelled incorrectly in the summary table as `відповідісти` instead of `відповісти`. VESUM confirms `відповідісти` does not exist.
+- Critical factual grammar error: `Кожне українське дієслово має свою пару.` This is false; Ukrainian also has `одновидові` and `двовидові` verbs.
+- Critical factual teaching error: Method 1 says `часто правильним і безпечним варіантом буде саме «по-»` and presents `по-` as the default perfectivizing prefix. That is unsafe and misleading.
+- Critical factual phonetics error: the grammar box says `the wider «а» sound naturally takes longer to pronounce.` That is not a valid explanation of Ukrainian aspect morphology.
 
 ## Exercise Check
-- `<!-- INJECT_ACTIVITY: quiz-find-partner -->` - Correctly placed after Section 2. Matches plan.
-- `<!-- INJECT_ACTIVITY: fill-in-categorize-by-formation-type -->` - Correctly placed after Section 3. Matches plan.
-- `<!-- INJECT_ACTIVITY: match-up-fill-in-the-blanks-with-the-correct-pair -->` - Placed at the end to review the summary. Matches plan.
-- `<!-- INJECT_ACTIVITY: fill-in-choose-the-correct-aspect-partner -->` - Placed at the end. Matches plan.
-No exercise issues found.
+- Found 4 markers, matching the 4 `activity_hints`: `quiz-find-partner`, `match-up-fill-in-the-blanks-with-the-correct-pair`, `fill-in-categorize`, `fill-in-choose-partner`.
+- Placement is mostly correct: the first marker follows Method 1, the second follows Method 2, and the last two come after all three formation types have been taught.
+- No inline DSL exercises are present, so only marker placement could be checked here.
+- No exercise-marker defects found.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 7/10 | The plan required "готувати / приготувати" as a core example in Section 2, but it was skipped and only included in the table. The plan required "класти / покласти" in Section 4, but it was completely missing from the text. The summary table only lists 15 pairs, but the plan required 20 pairs ("Present a list of the 20 most important aspectual pairs"). |
-| 2. Linguistic accuracy | 8/10 | The perfective verb for "відповідати" is spelled as "відповідісти" in the summary table. This is a critical grammatical error. The correct form is "відповісти". All other forms and explanations are accurate. |
-| 3. Pedagogical quality | 9/10 | Excellent explanation of the difference between process and result. The "Кафе Птах" mnemonic is taught brilliantly and contextually. Minor deduction for wordy English explanations of prefixes (~90 words of pure theory before providing practical examples of the `по-` prefix). |
-| 4. Vocabulary coverage | 8/10 | Required vocabulary words `префікс`, `суфікс`, and `корінь` are only used in Ukrainian within section headings or table formatting. They are never explicitly introduced to the learner as vocabulary terms (e.g., `* **префікс** — prefix`) the way `пара` was. Recommended words are absent. |
-| 5. Exercise quality | 10/10 | All 4 activity markers are present, mapped exactly to the plan's requirements, and correctly placed after the relevant grammatical concepts are taught. |
-| 6. Engagement & tone | 10/10 | The tone is warm, encouraging, and highly instructional. The shoe store analogy effectively illustrates the concept of aspectual pairs. |
-| 7. Structural integrity | 10/10 | Word count is a robust 3027 words (exceeding the 2000 target). Markdown formatting is clean, and all requested sections are present in order. |
-| 8. Cultural accuracy | 10/10 | The module appropriately integrates real Ukrainian pedagogical tools (Кафе Птах) and authentic cultural practices (making varenyky with grandmother) into the grammar instruction. |
-| 9. Dialogue & conversation quality | 10/10 | The dialogue between the grandmother and granddaughter making varenyky perfectly demonstrates the functional difference between imperfective and perfective commands in real life. |
+| 1. Plan adherence | 8/10 | All planned H2 sections are present and required pairs like `читати / прочитати`, `писати / написати`, `брати / взяти`, `говорити / сказати` appear, but the plan references are not cited in the prose: search confirmed `Заболотний` = 0 and `Ukrainian Lessons`/`ULP` = 0. |
+| 2. Linguistic accuracy | 5/10 | The Ukrainian forms are mostly fine, but the module teaches false grammar/phonetics claims: `Кожне українське дієслово має свою пару`, `часто правильним і безпечним варіантом буде саме «по-»`, and `the wider «а» sound naturally takes longer to pronounce`. |
+| 3. Pedagogical quality | 6/10 | The PPP shape exists, but Method 1 overgeneralizes: `This process is highly predictable... recognize perfective verbs instantly` and `often the correct and safe option will be exactly "по-"`. That trains guessing instead of pair memorization. |
+| 4. Vocabulary coverage | 9/10 | Required vocabulary is integrated naturally: `пара`, `префікс`, `суфікс`, `корінь`, `читати / прочитати`, `писати / написати`, `брати / взяти`, `говорити / сказати`. Recommended words like `словник`, `запам'ятовувати`, `базовий` also appear. |
+| 5. Exercise quality | 9/10 | All 4 planned activity types have corresponding markers, and each comes after the relevant teaching block. No inline exercise logic was available to inspect for distractor quality. |
+| 6. Engagement & tone | 7/10 | The teacher voice is warm, but some prose is inflated and overconfident: `The absolute most universal and frequent prefix...` and `This process is highly predictable...`. That reads like filler and weakens trust. |
+| 7. Structural integrity | 10/10 | All four H2 sections are present and ordered correctly, markers are clean, and the pipeline word count is 3132, which is above the 2000 target. |
+| 8. Cultural accuracy | 10/10 | The module uses a credible Ukrainian kitchen scene with `вареники`, `Бабуся`, and `Онучка`, and it does not frame Ukrainian through Russian. |
+| 9. Dialogue & conversation quality | 9/10 | The opening бабуся/онучка exchange is a natural multi-turn dialogue with named speakers and a real cooking task; later examples stay contextual rather than robotic. |
 
 ## Findings
-[1. Plan adherence] [major]
-Location: Section 2 (Спосіб 1: Додавання префікса)
-Issue: The plan required `готувати / приготувати` to be featured as a core example, but it was skipped in the prose and only added to the table.
-Fix: Insert `* **Готувати / приготувати** — to cook / to finish cooking.` into the bulleted list of examples.
+[LINGUISTIC ACCURACY] [SEVERITY: critical]  
+Location: First section — `Кожне українське дієслово має свою пару.`  
+Issue: This teaches a false absolute. Ukrainian does not consist only of neat aspectual pairs.  
+Fix: Replace it with wording that most verbs have aspectual pairs, but some verbs are one-aspect or bi-aspectual.
 
-[1. Plan adherence] [major]
-Location: Section 4 (Спосіб 3: Зовсім інші слова) and Summary Table
-Issue: The plan explicitly required teaching `класти / покласти` and presenting a summary table of 20 essential aspect pairs. The generated text missed `класти / покласти` entirely and the table only has 15 pairs.
-Fix: Add `класти / покласти` to Section 4 and expand the summary table with 5 additional verbs taught in the lesson (пити, вчити, платити, чути, класти) to hit exactly 20 pairs.
+[PEDAGOGICAL QUALITY] [SEVERITY: critical]  
+Location: Method 1 — `This process is highly predictable...`, `The absolute most universal and frequent prefix...`, `часто правильним і безпечним варіантом буде саме «по-».`  
+Issue: The section overstates predictability and teaches a bad heuristic. Learners should not guess perfective partners by defaulting to `по-`.  
+Fix: Rephrase Method 1 to say prefixation is common, but the full pair must be memorized.
 
-[2. Linguistic accuracy] [critical]
-Location: Summary Table under "Корінь" (`| | відповід**а**ти | відповід**іс**ти | to answer |`)
-Issue: The perfective form of "відповідати" is "відповісти", not "відповідісти". This is a non-existent word.
-Fix: Replace `відповід**іс**ти` with `відпов**іс**ти` in the table row.
+[LINGUISTIC ACCURACY] [SEVERITY: critical]  
+Location: Method 2 grammar box — `the wider «а» sound naturally takes longer to pronounce.`  
+Issue: False phonetics. The `о → а` alternation here is morphological, not a vowel-length rule.  
+Fix: Replace the box with a morphology-based explanation.
 
-[4. Vocabulary coverage] [major]
-Location: Throughout the module
-Issue: The plan's required vocabulary words `префікс`, `суфікс`, and `корінь` are only used in Ukrainian in headings. They must be explicitly introduced as terms.
-Fix: Add bulleted definitions for `Префікс`, `Суфікс`, and `Корінь` at the beginning of their respective sections.
+[PLAN ADHERENCE] [SEVERITY: major]  
+Location: Module-wide — references section from the plan vs generated prose  
+Issue: The plan lists `Заболотний Grade 6, §52-54` and `ULP: Ukrainian Verb Aspect`, but neither is cited anywhere in the module text.  
+Fix: Add one brief sentence pointing learners to both listed references.
 
 ## Verdict: REVISE
-The module contains a critical linguistic error (`відповідісти` does not exist) and failed to satisfy several explicit plan requirements (missing the 20-pair count, missing the core `готувати` example, and missing explicit vocabulary definitions). The fixes below structurally align the text with the plan and correct the grammatical error.
+Critical factual teaching errors are present in the grammar explanation, so this cannot pass as-is. The structure and vocabulary coverage are strong, but the module needs targeted corrections before shipping.
 
 <fixes>
 - find: |
-    ## Спосіб 1: Додавання префікса (Method 1: Adding a Prefix)
-
-    In the Ukrainian language,
+    Кожне українське дієслово має свою пару. Одне дієслово описує процес, а інше дієслово показує результат.
   replace: |
-    ## Спосіб 1: Додавання префікса (Method 1: Adding a Prefix)
-
-    * **Префікс** — prefix.
-
-    In the Ukrainian language,
+    Більшість українських дієслів мають видові пари. Одне дієслово описує процес, а інше показує результат, але є й одновидові та двовидові дієслова.
 - find: |
-    * **Бачити / побачити** — to see / to catch sight of.
-    * **Чути / почути** — to hear / to catch a sound of.
+    The first and most common way to form an aspectual **пара** (pair) is by adding a **префікс** (prefix) to the basic, imperfective verb. Think of it like adding a small grammatical tag to the very beginning of the word to announce, "This action is now successfully finished." This process is highly predictable in its structure, and once you start noticing these short additions, you will be able to recognize perfective verbs instantly in any text.
   replace: |
-    * **Бачити / побачити** — to see / to catch sight of.
-    * **Готувати / приготувати** — to cook / to finish cooking.
-    * **Чути / почути** — to hear / to catch a sound of.
+    The first and most common way to form an aspectual **пара** (pair) is by adding a **префікс** (prefix) to an imperfective verb. This pattern is common, but it is not fully automatic, so learners should memorize the whole pair instead of relying on the prefix alone.
 - find: |
-    ## Спосіб 2: Зміна в корені або суфіксі
+    The absolute most universal and frequent prefix you will encounter in the Ukrainian language is «по-». In a vast majority of cases, it simply flips the verb from a continuous process into a completed, singular action without changing its core, fundamental meaning at all. It is essentially the default tool the language reaches for to create a perfective partner when no other specific nuance is required.
 
-    У попередньому розділі
+    Якщо ви не знаєте, який саме префікс потрібен новому слову, часто правильним і безпечним варіантом буде саме «по-». Наприклад, ми кажемо «думати», коли процес мислення триває, і «подумати», коли ми вже завершили цю дію. Інші дуже популярні пари — це «снідати» та «поснідати», а також «бачити» і «побачити».
+
+    > *If you do not know exactly which prefix a new word needs, often the correct and safe option will be exactly "по-". For example, we say "думати" (to think) when the process of thinking continues, and "подумати" when we have already finished this action. Other very popular pairs are "снідати" (to have breakfast) and "поснідати", as well as "бачити" (to see) and "побачити".*
   replace: |
-    ## Спосіб 2: Зміна в корені або суфіксі
+    One common way to build a perfective partner is with a prefix, but there is no single universal prefix that works safely for every new verb. Learners should memorize the whole pair, because prefixes such as «по-», «з-», «на-», and «про-» can help form aspectual partners in some verbs while also adding lexical nuance.
 
-    * **Корінь** — root.
-    * **Суфікс** — suffix.
+    Якщо ви не знаєте, який префікс потрібен новому слову, краще не вгадувати. Краще вчити дієслова готовими парами: «думати / подумати», «снідати / поснідати», «бачити / побачити».
 
-    У попередньому розділі
+    > *If you do not know which prefix a new verb needs, it is better not to guess. It is better to learn verbs as ready-made pairs: "думати / подумати", "снідати / поснідати", "бачити / побачити".*
 - find: |
-    Similarly, we have the pair **ловити / піймати** (to catch). You spend time trying to catch something («ловити»), but the moment of capture is instantaneous («піймати»).
+    :::info
+    **Grammar box**
+    When a verb root changes from «о» to «а» (like допомогти → допомагати), the wider «а» sound naturally takes longer to pronounce. This phonetic stretching perfectly matches the grammatical shift from a quick result to a continuous process!
+    :::
   replace: |
-    Similarly, we have the pair **ловити / піймати** (to catch). You spend time trying to catch something («ловити»), but the moment of capture is instantaneous («піймати»). Finally, you must memorize the pair for putting or laying things down: **класти / покласти** (to put).
+    :::info
+    **Grammar box**
+    When a verb root changes from «о» to «а» (like допомогти → допомагати), treat this as a morphological pattern that belongs to the pair. The important point for learners is the aspectual relationship, not an imagined difference in vowel length.
+    :::
 - find: |
-    | Форма (Formation) | Недоконаний (Process) | Доконаний (Result) | Переклад (Translation) |
-    | :--- | :--- | :--- | :--- |
-    | **Префікс** | читати | **про**читати | to read |
-    | | писати | **на**писати | to write |
-    | | робити | **з**робити | to do |
-    | | бачити | **по**бачити | to see |
-    | | готувати | **при**готувати | to cook |
-    | **Суфікс** | відчин**я**ти | відчин**и**ти | to open |
-    | | куп**ува**ти | куп**и**ти | to buy |
-    | | виріш**ува**ти | виріш**и**ти | to decide |
-    | | запит**ува**ти | запит**а**ти | to ask |
-    | **Корінь** | допом**ага**ти | допом**ог**ти | to help |
-    | | відповід**а**ти | відповід**іс**ти | to answer |
-    | **Інші слова** | брати | взяти | to take |
-    | | говорити | сказати | to speak / to say |
-    | | ловити | піймати | to catch |
-    | | шукати | знайти* | to search / to find |
+    The imperfective verb is considered the **базовий** (basic) form. It is the raw, pure name of the action. When you want to talk about completing that action, you reach for its perfective partner. Throughout your journey, you should always memorize both forms at the exact same time.
   replace: |
-    | Форма (Formation) | Недоконаний (Process) | Доконаний (Result) | Переклад (Translation) |
-    | :--- | :--- | :--- | :--- |
-    | **Префікс** | читати | **про**читати | to read |
-    | | писати | **на**писати | to write |
-    | | робити | **з**робити | to do |
-    | | бачити | **по**бачити | to see |
-    | | готувати | **при**готувати | to cook |
-    | | пити | **ви**пити | to drink |
-    | | вчити | **ви**вчити | to study |
-    | | платити | **за**платити | to pay |
-    | | класти | **по**класти | to put |
-    | | чути | **по**чути | to hear |
-    | **Суфікс** | відчин**я**ти | відчин**и**ти | to open |
-    | | куп**ува**ти | куп**и**ти | to buy |
-    | | виріш**ува**ти | виріш**и**ти | to decide |
-    | | запит**ува**ти | запит**а**ти | to ask |
-    | **Корінь** | допом**ага**ти | допом**ог**ти | to help |
-    | | відповід**а**ти | відпов**іс**ти | to answer |
-    | **Інші слова** | брати | взяти | to take |
-    | | говорити | сказати | to speak / to say |
-    | | ловити | піймати | to catch |
-    | | шукати | знайти* | to search / to find |
+    The imperfective verb is considered the **базовий** (basic) form. It is the raw, pure name of the action. When you want to talk about completing that action, you reach for its perfective partner. Throughout your journey, you should always memorize both forms at the exact same time. For a fuller explanation, compare Заболотний Grade 6, §52-54 and the Ukrainian Lessons article «Ukrainian Verb Aspect» listed in the references.
 </fixes>

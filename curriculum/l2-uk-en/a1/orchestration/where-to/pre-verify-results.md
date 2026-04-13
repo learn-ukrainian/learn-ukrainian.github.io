@@ -3,17 +3,22 @@
 - Not found: None
 
 ## Grammar Rules
-- Euphony (у/в): Правопис §23 — "в" between vowels (побувала в Одесі), "у" between consonants (зайти у банк), "у" at start before consonant (У лісі...).
-- Accusative for Direction: Syntactic rule — motion verbs (йти, їхати) with prepositions в/на require Accusative case to show destination (Куди? — У школу). Masculine inanimate/neuter endings match Nominative (банк, магазин); Feminine -а/-я changes to -у/-ю (школу, роботу).
+- Чергування у/в: Правопис §23 — Позиції вживання прийменників і префіксів У та В: "у" вживається між приголосними, на початку речення перед приголосним, після паузи; "в" вживається між голосними, на початку речення перед голосним, та після голосного перед більшістю приголосних.
 
 ## Calque Warnings
-- йти в банк: OK — Common usage for destination/building.
-- на роботу: OK — Standard phrase for "to work".
-- повертатися додому: OK — Standard adverbial usage.
+- йти в банк: OK — no issues found in style guide
+- на роботу: OK — no issues found in style guide
+- у школу: OK — no issues found in style guide
 
 ## CEFR Check
-- куди: A1 — OK (High frequency, Grade 1 textbooks)
-- йти: A1 — OK (Core verb)
-- їхати: A1 — OK (Core verb)
-- бібліотека: A1 — OK (Found in early grade textbooks)
-- ресторан: A1 — OK (Found in early grade textbooks)
+- куди: A1 — OK
+- їхати: A1 — OK
+- школа: A1 — OK
+- робота: A1 — OK
+- банк: A1 — OK
+- магазин: A1 — OK
+- бібліотека: A1 — OK
+- ресторан: A1 — OK
+- додому: A1 — OK
+- повертатися: A2 — above target
+- йти: Not found — (N/A)

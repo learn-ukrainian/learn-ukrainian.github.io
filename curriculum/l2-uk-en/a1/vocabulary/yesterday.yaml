@@ -1,24 +1,6 @@
 vocabulary:
-- word: учо́ра
-  translation: yesterday
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: зра́нку
-  translation: in the morning
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
 - word: споча́тку
-  translation: first/at first
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: по́тім
-  translation: then
+  translation: first / at first
   expression: false
   pos: присл.
   gender: ''
@@ -28,24 +10,6 @@ vocabulary:
   expression: false
   pos: присл.
   gender: ''
-  verified: true
-- word: проки́нутися
-  translation: to wake up
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: посні́дати
-  translation: to have breakfast
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: піти
-  translation: to go
-  expression: false
-  pos: ім.
-  gender: ж.
   verified: true
 - word: поверну́тися
   translation: to return
@@ -57,12 +21,6 @@ vocabulary:
   translation: to lie down
   expression: false
   pos: дієсл.
-  gender: ''
-  verified: true
-- word: лягти спати
-  translation: to go to sleep
-  expression: true
-  pos: ''
   gender: ''
   verified: true
 - word: звича́йний
@@ -89,99 +47,123 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: велосипе́д
-  translation: bicycle
+- word: учо́ра
+  translation: yesterday
   expression: false
-  pos: ім.
-  gender: ч.
+  pos: присл.
+  gender: ''
   verified: true
-- word: кав'я́рня
-  translation: cafe/coffee shop
+- word: зра́нку
+  translation: in the morning
   expression: false
-  pos: ім.
-  gender: ж.
+  pos: присл.
+  gender: ''
   verified: true
-- word: зни́кнути
-  translation: to disappear
+- word: вве́чері
+  translation: in the evening
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: по́тім
+  translation: then
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: проки́нутися
+  translation: to wake up
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: ку́ртка
-  translation: jacket
+- word: посні́дати
+  translation: to have breakfast
   expression: false
-  pos: ім.
-  gender: ж.
+  pos: дієсл.
+  gender: ''
   verified: true
-- word: ке́пка
-  translation: cap
+- word: обі́дати
+  translation: to have lunch
   expression: false
-  pos: ім.
-  gender: ж.
+  pos: дієсл.
+  gender: ''
   verified: true
-- word: Як пройшов твій день?
-  translation: How was your day?
+- word: Що ти робив зранку?
+  translation: What did you do in the morning?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Що ти робила у суботу?
+  translation: What did you do on Saturday?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: О, я мала чудовий день!
+  translation: Oh, I had a wonderful day!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Розкажи!
+  translation: Tell me!
   expression: true
   pos: ''
   gender: ''
   verified: true
 - word: Як файно!
-  translation: How nice!
+  translation: How lovely!
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: ри́нок
-  translation: market
+- word: вночі́
+  translation: at night
   expression: false
-  pos: ім.
+  pos: присл.
   gender: ''
   verified: true
-- word: фру́кти
-  translation: fruit
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: готува́ти
-  translation: to cook
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: гуля́ти
-  translation: to walk/stroll
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: по́друга
-  translation: female friend
+- word: піти
+  translation: to go / set out
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: ка́ша
-  translation: porridge
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: замо́вити
-  translation: to order
+- word: працюва́ти
+  translation: to work
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: сала́т
-  translation: salad
+- word: бу́ти
+  translation: to be
   expression: false
-  pos: ім.
-  gender: ч.
+  pos: дієсл.
+  gender: ''
   verified: true
-- word: ра́но
-  translation: early
+- word: вече́ряти
+  translation: to have dinner
   expression: false
-  pos: ім.
-  gender: ж.
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: лягти спати
+  translation: to go to bed
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ходи́ти
+  translation: to go / to walk
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: купи́ти
+  translation: to buy
+  expression: false
+  pos: дієсл.
+  gender: ''
   verified: true

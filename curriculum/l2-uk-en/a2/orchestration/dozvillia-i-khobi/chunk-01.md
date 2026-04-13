@@ -1,48 +1,42 @@
-## Хобі та вподобання
+## Хобі та вподобання (~600 words total)
 
-У кожної людини є **вільний час** (free time) або **дозвілля** (leisure). Після довгої роботи чи навчання ми всі хочемо приємно відпочивати. Хтось любить активний спорт, а хтось любить спокійне мистецтво чи відпочинок на природі. Коли ми знайомимося з новими людьми, ми часто запитуємо: «**Що ти любиш робити у вільний час?**» (What do you like to do in your free time?). Це дуже важливе та корисне питання. Воно допомагає краще зрозуміти людину, її характер та її світ. Ваші інтереси та **хобі** (hobbies) — це велика частина вашого життя. Сьогодні ми детально навчимося розповідати про свої улюблені заняття. Ми поговоримо про те, що ми любимо робити вдома чи на вулиці.
+When you meet someone new in Ukraine, you eventually want to learn about their interests. The concept of **дозвілля** (leisure, free time) or a person's **хобі** (hobby) is central to making friends and building relationships. The most common question you will hear is «Що ти любиш робити у вільний час?». A **вільний** (free) evening or weekend is the perfect time for relaxation.
 
-The simplest way to talk about your hobbies is to use the verb **любити** (to love / to like) followed by an infinitive verb. You already know this structure from previous lessons. It is very versatile and easy to use. You can describe almost any activity this way without changing endings. Ось кілька дуже корисних прикладів:
+Кожна людина має свої інтереси та улюблені заняття. Ми часто запитуємо нових знайомих про їхнє життя поза роботою. Це допомагає знайти спільні теми для цікавої розмови. Зазвичай ми відпочиваємо ввечері або на вихідних.
 
-* Я **люблю читати книги** (I love to read books) пізно ввечері.
-* Мій старший брат **любить плавати в басейні** (loves to swim in the pool) на вихідних.
-* Ми з друзями **любимо подорожувати** (love to travel) влітку.
-* Після важкої роботи я **люблю дивитися серіали** (love to watch TV series).
-* У неділю моя мама **любить готувати** (loves to cook) нові смачні страви.
+> *Every person has their own interests and favorite activities. We often ask new acquaintances about their life outside of work. This helps to find common topics for an interesting conversation. Usually, we relax in the evening or on the weekend.*
 
-Такі речення дуже прості, але вони чудово описують ваше щоденне дозвілля.
+The easiest way to talk about your preferences is to use the verb «любити» followed by an action in the infinitive. You do not need to worry about complex grammar cases here. You simply state what action you love to do.
 
-If you want to sound more advanced and natural, use specific verbs that require the Instrumental case. The two most common verbs for hobbies are **займатися** (to engage in / to do) and **захоплюватися** (to be passionate about). These verbs cannot take an infinitive action. They must be followed by a noun in the Instrumental case. Давайте уважно подивимося на закінчення іменників в орудному відмінку:
+Я дуже люблю читати книги ввечері. Мій брат любить плавати в басейні на вихідних. Мої батьки люблять подорожувати Європою влітку. Моя подруга любить дивитися серіали після роботи. А мій чоловік любить готувати смачну вечерю для нас.
 
-* Чоловічий рід (Masculine) зазвичай отримує закінчення **-ом**: Я активно займаюся **спортом** (sport), мій друг дуже захоплюється **футболом** (football).
-* Жіночий рід (Feminine) отримує закінчення **-ою**: Моя сестра займається класичною **музикою** (music), я захоплююся **йогою** (yoga).
-* Середній рід (Neuter verbal nouns) часто закінчується на **-ям**: Ми займаємося **плаванням** (swimming), діти в школі захоплюються **малюванням** (drawing).
+> *I really love to read books in the evening. My brother loves to swim in the pool on the weekend. My parents love to travel around Europe in the summer. My friend loves to watch series after work. And my husband loves to cook a delicious dinner for us.*
 
-Ці слова допомагають гарно розказати про ваші глибокі та серйозні інтереси.
+To sound more natural, Ukrainians use specific verbs to describe how they spend their time. The verbs **займатися** (to engage in, to do) and **захоплюватися** (to be passionate about) are extremely common in everyday speech. You might engage in **спорт** (sport) or be passionate about something else. These verbs require the noun that follows them to be in the Instrumental case. 
 
-To give more detail about your daily routine, you can use adverbs of frequency and time expressions. These words clearly tell others how often you do your favorite leisure activities. Ви можете використовувати такі корисні слова:
+Українці часто використовують орудний відмінок, коли говорять про свої хобі. Для чоловічого роду ми додаємо закінчення «-ом». Наприклад, мій брат захоплюється футболом і займається спортом. Для жіночого роду ми використовуємо закінчення «-ою». Моя сестра займається йогою, а я захоплююся музикою. Слова середнього роду на «-ння» мають закінчення «-ям». Ми займаємося плаванням та малюванням.
 
-* **завжди** (always): Я завжди читаю цікаві книги перед сном.
-* **часто** (often): Ми часто гуляємо в зеленому парку біля дому.
-* **іноді** (sometimes): Іноді я дивлюся старі європейські фільми.
-* **рідко** (rarely): Взимку я дуже рідко граю в настільний теніс.
-* **ніколи** (never): Я ніколи не займаюся професійним боксом.
+:::info
+**Grammar box**
+When using «займатися» or «захоплюватися», remember the Instrumental endings: masculine takes **-ом** (спортом), feminine nouns like **музика** (music) take **-ою** (музикою), and neuter verbal nouns like **плавання** (swimming) take **-ям** (плаванням).
+:::
 
-Також вам буде корисно знати фрази про регулярність:
+Ми завжди знаходимо час для улюблених справ. Я часто читаю цікаві статті вранці. Іноді ми граємо у волейбол у парку. Мої друзі рідко дивляться телевізор удома. Ми ніколи не працюємо на вихідних. Я роблю зарядку щодня, а в басейн ходжу раз на тиждень.
 
-* **щодня** (every day): Вона плаває щодня вранці.
-* **раз на тиждень** (once a week): Я ходжу в спортзал раз на тиждень.
+> *We always find time for favorite activities. I often read interesting articles in the morning. Sometimes we play volleyball in the park. My friends rarely watch TV at home. We never work on the weekend. I do morning exercises every day, and I go to the pool once a week.*
 
-Ці маленькі слова роблять вашу розповідь набагато точнішою та живою.
+To describe how often you do your hobbies, use adverbs of frequency. Words like «завжди» (always), «часто» (often), «іноді» (sometimes), «рідко» (rarely), and «ніколи» (never) go before the verb. You can also use periodic phrases like «щодня» (every day) and «раз на тиждень» (once a week).
 
-Давайте подивимося, як люди говорять про своє дозвілля в реальному житті. Двоє колег обідають разом у кафе і говорять про плани на вихідні.
+Let's see how these phrases sound in a real conversation. Two colleagues are at lunch discussing their upcoming weekend plans. They talk about their active hobbies and places they want to visit for **розвага** (entertainment), like a modern **виставка** (exhibition) in the city center.
 
-> — **Колега 1:** Що ти робитимеш на вихідних? Маєш уже якісь плани?
-> — **Колега 2:** Я дуже захоплююся **плаванням** (swimming), тож у суботу піду **у басейн** (to the pool). А ти?
-> — **Колега 1:** А я люблю сучасне мистецтво. У неділю я йду **на виставку** (to an exhibition) з подругою.
-> — **Колега 2:** Це чудово! Я також іноді люблю ходити в різні музеї.
-> — **Колега 1:** Може, наступного тижня ми підемо кудись разом?
-> — **Колега 2:** З задоволенням! Але спочатку я хочу пограти у футбол з моїми друзями.
+> — **Колега 1:** Що ти будеш робити на вихідних? *(What will you do on the weekend?)*
+> — **Колега 2:** Я дуже захоплююся плаванням. *(I am very passionate about swimming.)*
+> — **Колега 2:** Тому я піду у басейн у суботу вранці. *(Therefore, I will go to the pool on Saturday morning.)*
+> — **Колега 1:** Класно! А в неділю що плануєш робити? *(Cool! And on Sunday, what are you planning to do?)*
+> — **Колега 2:** У неділю я піду на виставку з подругою. А ти? *(On Sunday I will go to an exhibition with a friend. And you?)*
+> — **Колега 1:** Може, я пограю у футбол зі своїми друзями. *(Maybe I will play football with my friends.)*
+> — **Колега 2:** Ходімо разом у парк після обіду! *(Let's go together to the park after lunch!)*
+> — **Колега 1:** З задоволенням! Це чудова ідея. *(With pleasure! That is a great idea.)*
 
 <!-- INJECT_ACTIVITY: group-sort-categories -->
 <!-- INJECT_ACTIVITY: fill-in-hobbies-cases -->

@@ -1,0 +1,55 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T14-49-d6056c5e.json
+phase: write-chunk-05
+prompt_chars: 53738
+response_chars: 5161
+prompt_words: 7199
+response_words: 755
+sections:
+- name: header
+  start: 0
+  length: 443
+  fraction: 0.0082
+- name: skeleton
+  start: 443
+  length: 1339
+  fraction: 0.0249
+- name: prior_summary
+  start: 1782
+  length: 3707
+  fraction: 0.069
+- name: plan
+  start: 5489
+  length: 18758
+  fraction: 0.3491
+- name: wiki
+  start: 17712
+  length: 29258
+  fraction: 0.5445
+- name: output_spec
+  start: 53505
+  length: 233
+  fraction: 0.0043
+large_sections:
+- wiki
+directives_total: 25
+directives_covered: 21
+directives_missed:
+- kind: must
+  text: A fleeting vowel might disappear in one form, while a consonant simplification
+    might be required in another.
+  covered: false
+  coverage_note: 4/11 keywords (36%)
+- kind: must
+  text: '**Найвищий пріоритет (Must Know):** Чергування **`[г], [к], [х] → [з''],
+    [ц''], [с'']`** в **давальному** та **місцевому** відмінках однини **іменників
+    І відміни**.'
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: inject_activity
+  text: match-up, identify simplification in word families
+  covered: false
+  coverage_note: marker missing

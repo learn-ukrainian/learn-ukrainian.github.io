@@ -33,7 +33,7 @@ Grand total: ~4400 words
 <previous_context>
 [...previous sections truncated...]
 
-йому: «**Старайся прокидатися** *(Try to wake up)* раніше щодня і ніколи не відкладай свою важку роботу на пізній вечір!». Ви також можете використати слово «хай» для третьої особи: «Хай кожен студент самостійно і відповідально складе свій власний розклад». Це надзвичайно природні способи ефективно мотивувати інших людей. Прочитайте цю коротку, але корисну статтю з популярного українського журналу для сучасної молоді. Вона чудово ілюструє наші нові правила. **«Як встигати все: найкращі поради для сучасного студента»** Чи часто ви з розпачем відчуваєте, що двадцяти чотирьох годин у добі вам просто недостатньо? Якщо ви дійсно хочете завжди мати вільний час на навчання, улюблені хобі та веселі зустрічі з друзями, вам абсолютно необхідно змінити свої звички. По-перше, завжди ретельно плануйте свій розклад заздалегідь. Хай ваш розумний телефон регулярно нагадує вам про всі важливі університетські лекції та семінари. По-друге, ніколи не відкладайте найскладніші домашні завдання на самий останній момент. Якщо ви успішно зробите найважчу аналітичну роботу ще вранці, вся решта вашого дня пройде легко і приємно. На вашому місці я б також суттєво обмежив час сидіння у соціальних мережах. Обов'язково вимикайте всі гучні сповіщення, коли ви уважно читаєте складний підручник або пишете важливий звіт. І найголовніше правило — ніколи не забувайте повноцінно відпочивати! Якби ви спали менше шести годин щоночі, ваш втомлений мозок просто не зміг би ефективно засвоювати великі обсяги нової інформації. Старайтеся завжди лягати спати вчасно, і ваші академічні результати вас дуже приємно здивують. Давайте тепер дуже уважно проаналізуємо цей цікавий текст. Ви, напевно, вже помітили, як багато різних граматичних конструкцій ми тут майстерно використали. Знайдіть у тексті всі умовні речення, які активно допомагають нам планувати наші майбутні дії. Наприклад: «Якщо ви хочете мати час... вам необхідно змінити звички». Це абсолютно класичний реальний умовний спосіб, який ми вивчали раніше. А ось інше речення «Якби ви спали менше... мозок не зміг би» яскраво показує нам нереальну, гіпотетичну ситуацію. Також зверніть свою пильну увагу на численні дієслова наказового способу, які чітко формують прямі інструкції: «плануйте», «не відкладайте», «вимикайте». Усі вони мають недоконаний вид, тому що це регулярні та постійні поради для щоденного використання. Крім того, у цьому тексті є типові зворотні дієслова, такі як «відчуваєте», і знайомі нам віддієслівні іменники, наприклад, слово «навчання». Спробуйте самостійно знайти всі дієслова з різними префіксами і детально пояснити, як саме цей префікс змінює значення слова. Це буде чудове практичне тренування для вашого мозку! Правильна організація свого дорогоцінного часу — це дуже корисна життєва навичка, яку безумовно варто постійно розвивати. Завжди пам'ятайте, що хороший і продуманий план на день — це вже гарантована половина вашого майбутнього успіху. Якщо ви будете щодня дисципліновано дотримуватися цих простих правил, ви зможете швидко **досягати поставлених цілей** *(to reach goals)*. Надзвичайно важливо не лише багато і важко працювати, але й **успішно навчатися** *(to study successfully)*, завжди знаходячи достатньо вільного часу для себе та своїх близьких. Активно використовуйте нові українські слова та складні граматичні конструкції щодня. Регулярно обговорюйте свій детальний розклад з друзями, давайте їм корисні поради та разом плануйте чудові спільні вихідні. Тоді ваше щоденне життя гарантовано стане набагато яскравішим та приємнішим! <!-- INJECT_ACTIVITY: quiz-grammar-choice -->
+почніть ранок усвідомлено. Прокидайтеся щодня в один і той самий час, навіть у вихідні. Після сніданку перевірте свій розклад і виділіть найголовніші завдання на день. На вашому місці я б завжди починав працювати із найскладніших проектів, поки мозок має свіжу енергію. Не забувайте робити перерви кожні сорок п'ять хвилин, щоб ефективно відпочивати. Старайтеся ніколи не відволікатися на соціальні мережі під час інтенсивного читання. Якщо ви будете дотримуватися цих правил, ви зможете легко досягати поставлених цілей. Хай ваше планування завжди залишається гнучким, але стабільним. Let us analyze the grammatical markers utilized in this short advice article. The author relies on a strategic mix of real conditional sentences and imperative forms to guide the reader toward better habits. These structures work together to create a logical flow of cause and effect. By presenting the advice conditionally, the text empowers the reader to make their own choices. Look for the specific reflexive verbs used to describe daily routines, such as waking up and actively avoiding digital distractions. The text uses direct, second-person plural imperatives to establish strong, non-negotiable habits. These direct commands are frequently paired with conditional sentences that demonstrate the positive result of taking action. Furthermore, the text uses a polite conditional construction to offer a hypothetical suggestion about tackling difficult projects first. :::info **Grammar box** Notice how the prefix **до-** in the verb **досягати** (to reach/achieve) emphasizes moving toward and successfully completing a targeted, long-term result. Prefixes are essential for expressing the exact nuance of your daily actions in Ukrainian. Recognizing these small additions will drastically improve your reading comprehension. ::: Finally, the passage employs the third-person imperative with the particle "хай" to express a general wish for the reader's scheduling strategy. This elegant combination of diverse grammatical structures creates a narrative tone that is authoritative and deeply encouraging. It is the perfect linguistic register for a formal article focused on professional time management. You will encounter this specific style frequently in Ukrainian self-help literature. Building a sustainable routine requires a functional vocabulary that perfectly matches your advanced grammar skills. Whether you are organizing your university studies or balancing work commitments, articulating your goals is absolutely essential. A strong command of professional terminology allows you to discuss your ambitions clearly with peers. As you expand your lexicon, you will navigate the adult responsibilities of daily life much easier. Ваш детальний **план на день** (day plan) завжди повинен чесно відображати ваші реальні життєві пріоритети. Здатність постійно **досягати поставлених цілей** (to reach goals) напряму залежить від вашої дисципліни та регулярної практики. Якщо ви серйозно плануєте **успішно навчатися** (to study successfully), вам необхідно знайти свій ідеальний ритм. Цей персональний графік дозволить вам уникнути професійного вигорання. Це правило ефективно працює для всіх можливих сфер дорослого життя. Коли вас чекає важлива **співбесіда** (interview) або ви маєте складні професійні **обов'язки** (duties), правильний розклад допомагає значно зменшити хвилювання. Навіть звичайні **хатні справи** (household chores) стають набагато легшими, якщо ви виконуєте їх за чітким графіком. Знайдіть час для планування, і ваше життя стане значно спокійнішим. <!-- INJECT_ACTIVITY: quiz-grammar-choice -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -595,7 +595,74 @@ Teaching Ukrainian grammar requires a conscious effort to separate it from Russi
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -608,18 +675,74 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (6/6).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] розпорядок дня (daily routine/schedule)
+- [ ] прокидатися (to wake up — reflexive)
+- [ ] снідати / обідати / вечеряти (to have breakfast / lunch / dinner)
+- [ ] прибирати (to clean up, tidy)
+- [ ] пилососити (to vacuum)
+- [ ] прати білизну (to do laundry — NOT *стирати)
+- [ ] прасувати (to iron)
+- [ ] виносити сміття (to take out the trash)
+- [ ] готувати їжу (to cook food)
+- [ ] займатися (to engage in, do — reflexive: займатися спортом)
+- [ ] запізнюватися (to be late — reflexive)
+- [ ] встигати (to manage in time)
+- [ ] відкладати (to postpone)
+- [ ] вихідні (weekend — pluralia tantum)
+- [ ] будильник (alarm clock)
+- [ ] хатні справи (household chores)
+- [ ] пошук роботи (job search)
+- [ ] співбесіда (interview)
+- [ ] робоче місце (workplace)
+- [ ] колега (colleague)
+- [ ] обов'язки (duties)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Підсумок — Summary (~400 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

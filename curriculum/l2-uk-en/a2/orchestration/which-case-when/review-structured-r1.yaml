@@ -3,47 +3,53 @@ scores:
 - dimension: 1
   name: Plan adherence
   score: 8
-  evidence: 'Missed specific examples required by `content_outline`: `читати`, `шукати`,
-    `заважати`, `у четвер`, `у середу`, `у двадцять першому столітті`, `у дитинстві`,
-    `жінка у білому пальті`, and the "Default '
+  evidence: 'All four planned H2 sections are present, and core examples from the
+    plan appear: `думати про майбутнє`, `у четвер`, `хлопець у червоному светрі`,
+    `бігати по кімнаті`, `у 2014 році`. But the generated'
 - dimension: 2
   name: Linguistic accuracy
-  score: 10
-  evidence: Flawless grammatical descriptions and usage of cases. No Russianisms or
-    Surzhyk detected.
+  score: 7
+  evidence: The line `Але для фраз зі словами «наступний» або «минулий» ми завжди
+    обираємо родовий відмінок` teaches a false absolute rule. The note below repeats
+    the same overgeneralization.
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: Excellent pedagogical flow using vivid metaphors ("дієслово — це магніт",
-    "компас відмінків") and clear PPP structure.
+  score: 7
+  evidence: The algorithm section says to ask case questions such as `кого?`, `що?`,
+    `кому?`, `ким?`, but omits Genitive and Locative prompts even though this module
+    heavily teaches both. That makes the advertise
 - dimension: 4
   name: Vocabulary coverage
-  score: 9
-  evidence: Incorporated almost all required vocabulary effectively. Missed the recommended
-    word `керувати`.
+  score: 10
+  evidence: 'Required vocabulary is fully present in prose: `відмінок`, `прийменник`,
+    `дієслово`, `напрямок`, `місце`, `час`, `характеристика`, `думати`, `боятися`,
+    `користуватися`. Recommended vocabulary also app'
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: Markers perfectly track the plan's requirements and follow immediately
-    after the relevant grammatical instruction blocks.
+  score: 7
+  evidence: The markers are not evenly distributed. `group-sort` comes after section
+    2, `fill-in` after section 3, but both `quiz-case-verb-prep` and `true-false-case-pairs`
+    sit at the very end, so the verb-gover
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: Warm, encouraging tone without any gamified clutter. The "grammar detective"
-    narrative sets the stage effectively.
+  score: 9
+  evidence: The teacherly frame is clear and useful, especially `Сьогодні ми граємо
+    в граматичних детективів` and the steady use of concrete sentence examples.
 - dimension: 7
   name: Structural integrity
-  score: 9
-  evidence: Clean structure and word count is excellent (2870). A minor formatting
-    artifact `(~400 слів)` was left in one of the H2 headings.
+  score: 8
+  evidence: 'The module has all planned sections and exceeds the 2000-word target,
+    but this line is a formatting artifact: `<!-- INJECT_ACTIVITY: fill-in-mixed-cases
+    --> [fill-in, Complete sentences ...]`.'
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Explains Ukrainian grammar naturally through its own logic rather than
-    drawing comparisons to Russian or forcing English paradigms onto it.
+  evidence: The module stays Ukrainian-centered, makes no Russia-comparison shortcuts,
+    and uses culturally neutral Ukrainian examples.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: Natural conversational start that immediately introduces the core grammatical
-    anchor points in context.
+  score: 7
+  evidence: 'The opening exchange is mostly teacher interrogation with short answer
+    retrieval: `Де тут називний відмінок?` → `Слово «президент».` → `А чому ми кажемо
+    «з прем''єром»?` It is functional, but not a nat'
 findings: []

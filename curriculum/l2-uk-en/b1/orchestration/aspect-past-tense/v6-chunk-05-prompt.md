@@ -21,7 +21,7 @@ Grand total: ~4400 words
 <previous_context>
 [...previous sections truncated...]
 
-a reliable dictionary is so important. Do not try to guess the perfective form of a new verb. When you learn a new action, you should always memorize it as an aspectual pair. The dictionary will show you whether the pair is formed by changing a suffix, adding a prefix, or using an entirely different word. Relying on authentic Ukrainian sources ensures that your speech remains natural and free from artificial constructions. <!-- INJECT_ACTIVITY: error-correction-aspect --> Now it is time to put this matrix into practice. Your final task for this module is to write a short story about your past week, titled "Мій минулий тиждень." In this story, you will intentionally weave both aspects together to create a dynamic and natural narrative. This is not just a grammar exercise; it is an exercise in controlling the listener's attention and structuring information. У вашій розповіді ви повинні використати щонайменше три дії недоконаного виду для опису ваших звичок, рутини або фонових процесів. Це можуть бути речі, які ви робили щодня, або процеси, які тривали довго. Потім вам потрібно додати щонайменше три дії доконаного виду, щоб описати конкретні досягнення, завершені події або раптові зміни. Нарешті, ви повинні створити хоча б одне речення, де обидва види зустрічаються разом: одна дія перериває іншу. > *In your story, you must use at least three actions of the imperfective aspect to describe your habits, routine, or background processes. These can be things you did every day, or processes that lasted a long time. Then you need to add at least three actions of the perfective aspect to describe specific achievements, completed events, or sudden changes. Finally, you must create at least one sentence where both aspects meet together: one action interrupts another.* For example, you might structure your narrative like this: "Минулого тижня я щоранку пив каву і читав новини. Це була моя рутина. Але в середу я не пив каву. Я прокинувся, швидко одягнувся і поїхав на важливу зустріч. Поки я їхав у метро, я перевіряв документи. Раптом мені зателефонував директор і сказав, що зустріч скасовано." > *Last week, I drank coffee and read the news every morning. This was my routine. But on Wednesday, I didn't drink coffee. I woke up, dressed quickly, and went to an important meeting. While I was riding in the subway, I was checking documents. Suddenly, the director called me and said that the meeting was canceled.* Notice how the imperfective verbs build the environment, while the perfective verbs drive the plot forward. By mastering this contrast, you transform a flat list of activities into a compelling story. Remember to use time markers to signal your intentions clearly. Use words like "щодня" or "завжди" to set up your imperfective habits, and use "одного разу" or "раптом" to introduce your perfective events. :::tip **Weaving the narrative** Think of the imperfective aspect as the stage design and the perfective aspect as the actors moving across the stage. Both are necessary for the play to make sense. ::: <!-- INJECT_ACTIVITY: open-writing-my-week -->
+in one pair look completely different. For example, we say "to take" (impf) and "to take" (pf), or "to catch" (impf) and "to catch" (pf).* It is a significant mistake to assume that a **видова пара** (aspectual pair (e.g., писати/написати)) in Ukrainian directly mirrors the grammar or vocabulary found in other Slavic languages. The absolute independence of the Ukrainian grammatical system means you should never guess an aspectual form based on patterns from neighboring languages. Ukrainian frequently employs unique lexical choices and distinct root changes to express the shift between a process and a result. If you want to proudly declare that you managed to **вивчити** (to learn thoroughly (perfective of вчити)) a difficult grammar topic, or that you remembered to **зателефонувати** (to call (perfective — one completed call)) an old friend, you must learn these specific perfective forms as distinct and independent vocabulary items. Always rely on a trusted Ukrainian dictionary like VESUM to verify the correct pairing. <!-- INJECT_ACTIVITY: error-correction-aspect --> Now it is time to put this profound theoretical understanding into active practice. Your final task for this module is an open-writing exercise titled «Мій минулий тиждень» (My past week). In this activity, you will write a short but detailed narrative describing your daily routine and the specific events that stood out from that routine. This exercise is not just about translating sentences; it is about adopting a new way of structuring your memories in a new language. To complete this task successfully and demonstrate your mastery of the past tense, you must intentionally weave both aspects together to create a natural storytelling rhythm. First, establish the background of your week by describing at least three habitual actions. Use the imperfective aspect alongside frequency markers like **завжди** (always (imperfective marker)) or **іноді** (sometimes (imperfective marker)) to paint a vivid picture of your normal routine. For example, what did you do every morning before work, or where did you usually go in the evenings? Next, you need to break this routine by introducing at least three completed results or achievements using the perfective aspect. What were the specific milestones of your week? What tasks did you finish? Think about the difference between saying "I was writing a report" and "I wrote a report." Your narrative should contain both forms. Finally, you must include at least one "interrupted action" to show the dynamic contrast between a background process and a sudden event. Use a structure like «Коли я...» (When I...) with an imperfective verb to set the scene, followed immediately by a perfective verb for the interrupting event. :::info **Grammar box** When reviewing your own writing, become your own editor by asking two critical questions for every single verb you use. First, was this action a process or a result? Second, was this a repeated habit or a single event? If you can answer these questions clearly, your choice of aspect will always be correct, and your Ukrainian storytelling will sound natural and authentic. ::: <!-- INJECT_ACTIVITY: open-writing-my-week -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -693,6 +693,41 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (5/5).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] доконаний вид
+- [ ] недоконаний вид
+- [ ] видова пара
+- [ ] результат
+- [ ] процес
+- [ ] тривалість
+- [ ] завершеність
+- [ ] повторюваність
+- [ ] однократність
+- [ ] одного разу
+- [ ] щодня
+- [ ] щоразу
+- [ ] завжди
+- [ ] іноді
+- [ ] нарешті
+- [ ] раптом
+- [ ] готувати
+- [ ] приготувати
+- [ ] вивчити
+- [ ] зателефонувати
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Підсумок — Summary (~150 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

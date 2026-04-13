@@ -1,0 +1,146 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T12-05-da6a3233.json
+phase: activities
+prompt_chars: 66604
+response_chars: 15434
+prompt_words: 9550
+response_words: 1748
+sections:
+- name: preamble
+  start: 0
+  length: 1813
+  fraction: 0.0272
+- name: plan
+  start: 1813
+  length: 64683
+  fraction: 0.9712
+- name: output_spec
+  start: 66496
+  length: 108
+  fraction: 0.0016
+large_sections:
+- plan
+directives_total: 51
+directives_covered: 24
+directives_missed:
+- kind: must
+  text: '** Your very first character must be `version:`.'
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: must
+  text: Each inline activity MUST have an `id` that matches one of these markers.
+  covered: false
+  coverage_note: 1/10 keywords (10%)
+- kind: must
+  text: Each inline activity's `id` must match one of these markers exactly (lowercase,
+    hyphenated).
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: must
+  text: You MUST create activities that cover all these hints.
+  covered: false
+  coverage_note: 0/9 keywords (0%)
+- kind: must
+  text: '**Grounding rule:** Every Ukrainian word in your exercises must appear either
+    in the prose content or in this vocabulary list.'
+  covered: false
+  coverage_note: 1/15 keywords (7%)
+- kind: must
+  text: This means the word itself does not change its ending based on gender, but
+    the adjectives and pronouns attached to it must match the gender of the person
+    you are talking about.
+  covered: false
+  coverage_note: 2/22 keywords (9%)
+- kind: must
+  text: To apply, you must submit your **резюме** (CV or resume).
+  covered: false
+  coverage_note: 1/7 keywords (14%)
+- kind: must
+  text: In Ukrainian, you must never use "як" to state your profession.
+  covered: false
+  coverage_note: 0/8 keywords (0%)
+- kind: must
+  text: '> *When you need to describe a rapid sequence of completed actions, you must
+    use exclusively perfective verbs.'
+  covered: false
+  coverage_note: 1/13 keywords (8%)
+- kind: must
+  text: When moving from everyday conversational Ukrainian (A2) to a professional
+    B1 level, the register of your speech must adapt.
+  covered: false
+  coverage_note: 1/13 keywords (8%)
+- kind: must
+  text: When you talk about what you are specifically responsible for, you must use
+    the preposition **за** followed by the Accusative case (Знахідний відмінок).
+  covered: false
+  coverage_note: 4/16 keywords (25%)
+- kind: must
+  text: Because **резюме** does not change its form, you must rely on context or surrounding
+    adjectives to indicate its grammatical case in a sentence, such as "моє нове резюме"
+    or "у моєму новому резюме".
+  covered: false
+  coverage_note: 3/22 keywords (14%)
+- kind: must
+  text: Beyond narrating your career history, you must be able to clearly articulate
+    your daily responsibilities.
+  covered: false
+  coverage_note: 1/12 keywords (8%)
+- kind: must
+  text: If you use the verb "відповідати" (to be responsible), the next word must
+    be in the accusative case with the preposition "за".
+  covered: false
+  coverage_note: 4/11 keywords (36%)
+- kind: must
+  text: '- id: marker-id-here # MUST match an <!-- INJECT_ACTIVITY: .'
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: must
+  text: '**CRITICAL RULE: EVERY single activity object MUST include an `id` field
+    (a unique string like "quiz-grammar", "match-up-vocab").'
+  covered: false
+  coverage_note: 3/16 keywords (19%)
+- kind: must
+  text: 'Required: id, instruction, items[] (array of strings), correct_order[] (TOP-LEVEL
+    array of **integers** — zero-based indices into items).'
+  covered: false
+  coverage_note: 4/13 keywords (31%)
+- kind: must
+  text: 'Required: id, syllables[], correctIndices[], category.'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: 'Required: id, letters[{upper, lower}].'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: 'Required: id, items[{video}].'
+  covered: false
+  coverage_note: 1/3 keywords (33%)
+- kind: must
+  text: '- **critical-analysis**: Required: id, prompt.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**You MUST use these patterns.'
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: must
+  text: If the pattern lists divide-words, count-syllables, and odd-one-out — your
+    output MUST include all three.
+  covered: false
+  coverage_note: 0/15 keywords (0%)
+- kind: must
+  text: '**Test LANGUAGE, not trivia** — exercises must test Ukrainian language skills.'
+  covered: false
+  coverage_note: 0/8 keywords (0%)
+- kind: must
+  text: '- **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).'
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: '...'
+  covered: false
+  coverage_note: marker missing

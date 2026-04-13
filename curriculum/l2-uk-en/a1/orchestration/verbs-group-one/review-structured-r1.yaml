@@ -2,54 +2,50 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 9
-  evidence: Covers all content outline points and required vocabulary. However, two
-    recommended vocabulary words ("малювати", "грати") were omitted from the prose.
+  score: 8
+  evidence: 'All planned H2 sections are present and all 6 required verbs appear,
+    but pacing is uneven: `## Діалоги` is about 415 words while `## Підсумок` is about
+    257 against the plan’s 300-per-section target, a'
 - dimension: 2
   name: Linguistic accuracy
-  score: 10
-  evidence: All Ukrainian text is grammatically correct. The explanation of the "They
-    test" (3rd person plural -уть/-ють) accurately reflects standard Ukrainian pedagogical
-    rules. No Russianisms or calques detect
+  score: 6
+  evidence: 'The module teaches inaccurate grammar claims: `You can typically recognize
+    verbs... because... ends in **-ати** or **-ювати**` and `The pattern is always:
+    stem + **-ю**, **-єш**, **-є**...`.'
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: The lesson flows beautifully from situation (dialogue) to presentation
-    (conjugation table) to practice. The explanation of dropping the "-ва-" in "готувати"
-    and the clarification on the "No-Be" rule (
+  score: 6
+  evidence: 'PPP structure is visible, but the module opens with a long English theory
+    preamble (`Language is fundamentally about action...`) before the first Ukrainian
+    example, and a beginner contrast drill uses '
 - dimension: 4
   name: Vocabulary coverage
   score: 8
-  evidence: All required verbs are present and used in context. However, the recommended
-    verbs "малювати" (to draw) and "грати" (to play) are missing entirely from the
-    module.
+  evidence: All 6 required verbs are present in prose and examples, but one support
+    example uses `подкаст` instead of simpler in-scope vocabulary already used elsewhere
+    in the module.
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: Four exercise markers are present and correspond perfectly to the plan's
-    activity hints in type and focus. They are placed logically after the relevant
-    teaching sections.
+  score: 9
+  evidence: The 4 markers match the 4 planned `activity_hints` and are placed after
+    the relevant teaching sections.
 - dimension: 6
   name: Engagement & tone
   score: 7
-  evidence: The text relies occasionally on gamified and corporate filler language,
-    such as "universal key to unlocking", "unlocks massive communicative potential",
-    and "instantly possess the power to use it in s
+  evidence: 'Mostly teacherly, but the summary uses rubric-banned gamified phrasing:
+    `You have now unlocked the ability to describe actions...`.'
 - dimension: 7
   name: Structural integrity
-  score: 9
-  evidence: 'The markdown structure is clean and matches the plan''s H2 headers perfectly.
-    Word count is healthy (1420 words). There are minor typographical errors: a double
-    space and capitalization error ("Now  Yo'
+  score: 10
+  evidence: All planned H2 headings are present, markers are clean, and the pipeline
+    word count is 1451, which is above the 1200 target.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Uses natural, contextually appropriate Ukrainian names and settings. The
-    explanation of the "No-Be" rule addresses a specific English-speaker hurdle accurately.
+  evidence: No Russia-centric framing or cultural inaccuracies detected.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: The dialogues are natural and effectively demonstrate the target grammar
-    in realistic scenarios (shared kitchen, discussing work/school). Named speakers
-    and clear contexts make them engaging.
+  score: 9
+  evidence: Both dialogues use named speakers and multi-turn everyday exchanges (`Сашко/Юля`,
+    `Марія/Максим`) rather than isolated prompt-response lines.
 findings: []

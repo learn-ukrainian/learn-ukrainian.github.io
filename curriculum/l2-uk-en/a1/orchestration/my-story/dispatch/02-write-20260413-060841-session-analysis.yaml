@@ -1,0 +1,108 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T04-06-b7c7e1c5.json
+phase: write
+prompt_chars: 66160
+response_chars: 13358
+prompt_words: 9808
+response_words: 2253
+sections:
+- name: preamble
+  start: 0
+  length: 6405
+  fraction: 0.0968
+- name: plan
+  start: 6405
+  length: 8242
+  fraction: 0.1246
+- name: wiki
+  start: 13786
+  length: 26308
+  fraction: 0.3976
+- name: rules
+  start: 40955
+  length: 10892
+  fraction: 0.1646
+- name: skeleton
+  start: 51847
+  length: 4443
+  fraction: 0.0672
+- name: output_spec
+  start: 56290
+  length: 9870
+  fraction: 0.1492
+large_sections: []
+directives_total: 58
+directives_covered: 41
+directives_missed:
+- kind: checklist
+  text: Word count is 1200–1800 words
+  covered: false
+  coverage_note: 1/3 keywords (33%)
+- kind: checklist
+  text: No 'Let us...', 'In this section...', or formulaic openers
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: checklist
+  text: Every exercise marker from the skeleton is placed
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: must
+  text: Your output must be original teaching prose at the correct CEFR level, not
+    a rephrased version of the article.
+  covered: false
+  coverage_note: 3/13 keywords (23%)
+- kind: must
+  text: '**Active Production:** The methodology must push learners from passive comprehension
+    to active production.'
+  covered: false
+  coverage_note: 2/9 keywords (22%)
+- kind: must
+  text: Learners' auditory maps must be built from Ukrainian sources alone.
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: must
+  text: The learner must find and correct them.
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: must
+  text: '**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim**
+    as an `## H2` line.'
+  covered: false
+  coverage_note: 3/11 keywords (27%)
+- kind: must
+  text: '- UKRAINIAN NARRATIVE PARAGRAPHS: **REQUIRED — minimum 1 per section.'
+  covered: false
+  coverage_note: 2/7 keywords (29%)
+- kind: must
+  text: '- STRUCTURAL RULE: Every section MUST contain a Ukrainian narrative paragraph
+    (3-6 sentences, translated in blockquote) PLUS supporting tables/lists/dialogues/pattern
+    boxes.'
+  covered: false
+  coverage_note: 6/19 keywords (32%)
+- kind: must
+  text: translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: must
+  text: '- **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).'
+  covered: false
+  coverage_note: 2/9 keywords (22%)
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-sounds-vs-letters
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-sounds-vs-letters
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-false-friends
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing

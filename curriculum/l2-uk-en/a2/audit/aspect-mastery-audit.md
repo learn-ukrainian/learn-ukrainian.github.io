@@ -1,7 +1,7 @@
 # Audit Report: M42 — aspect-mastery.md
 **Level:** A2 | **Module:** M42 | **Phase:** A2.6 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-04-11 00:49:19
+**Generated:** 2026-04-12 23:14:10
 
 ## Configuration
 **Type:** A2-grammar
@@ -18,47 +18,51 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | group-sort |  | 8 | 8 | ✅ |
-| 2 | match-up |  | 8 | 8 | ✅ |
-| 3 | fill-in |  | 8 | 8 | ✅ |
+| 1 | group-sort |  | 12 | 8 | ✅ |
+| 2 | match-up |  | 9 | 8 | ✅ |
+| 3 | fill-in |  | 9 | 8 | ✅ |
 | 4 | quiz |  | 8 | 8 | ✅ |
-| 5 | error-correction |  | 6 | 6 | ✅ |
+| 5 | error-correction |  | 8 | 6 | ✅ |
+| 6 | translate |  | 8 | 6 | ✅ |
+| 7 | fill-in |  | 8 | 8 | ✅ |
+| 8 | true-false |  | 8 | 8 | ✅ |
+| 9 | match-up |  | 8 | 8 | ✅ |
+| 10 | group-sort |  | 10 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 5 (target: 0-4) ❌
-- Unique types: 5 (minimum: 0) ✅
-- Priority types used: 5/15 (error-correction, fill-in, group-sort, match-up, quiz) ✅
+- Total activities: 10 (target: 0-4) ❌
+- Unique types: 7 (minimum: 0) ✅
+- Priority types used: 7/15 (error-correction, fill-in, group-sort, match-up, quiz, translate, true-false) ✅
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q5 prompt length 22 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: вид
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (86% overlap): "*(The teacher was explaining the rule.)*
-Він нарешті пояснив правило.". Shares significant keywords with sentence at index 86.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
+- **[COMPLEXITY]** Sentence too long for A2: 20 words (max 15)
+  - FIX: Break into shorter sentences. First 5 words: 'повсякденній розмові вибір правильної видової...'
+- **[COMPLEXITY]** Sentence too long for A2: 16 words (max 15)
+  - FIX: Break into shorter sentences. First 5 words: 'Коли ми хочемо підтвердити результат...'
 
 ## Recommendation
-**📝 UPDATE** (severity 15/100)
+**📝 UPDATE** (severity 45/100)
 
-- 3 violations (minor)
-- Immersion 7% off target (minor)
+- Revision recommended (severity 45/100)
+- 2 violations (minor)
+- Immersion 19% off target
+- Structure issue: Missing '## Summary'
 
 ## Gates
-- **Words:** ✅ 3557/2000 (raw: 3596)
-- **Activities:** ✅ 5/0
+- **Words:** ✅ 3174/2000 (raw: 3219)
+- **Activities:** ✅ 10/0
 - **Density:** ✅ All > 8
-- **Unique_types:** ✅ 5/0 types
+- **Unique_types:** ✅ 7/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ❌ 0/3
+- **Engagement:** ❌ 1/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 33/1
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ✅ 40/1
+- **Structure:** ❌ Missing '## Summary'
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ❌ 43.0% LOW (target 50-80% (A2.3))
+- **Immersion:** ❌ 31.3% LOW (target 50-80% (A2.3))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -66,8 +70,7 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 714 | Included in Core |
-| **30 пар: Список і приклади** | ✅ | 1325 | Included in Core |
-| **Вибір виду в складних ситуаціях** | ✅ | 788 | Included in Core |
-| **Практика у діалогах** | ✅ | 520 | Included in Core |
-| **Підсумок** | ✅ | 210 | Included in Core |
+| **Intro/Narrative** | ✅ | 992 | Included in Core |
+| **30 пар: Список і приклади (~660 words)** | ✅ | 1019 | Included in Core |
+| **Вибір виду в складних ситуаціях (~550 words)** | ✅ | 589 | Included in Core |
+| **Практика у діалогах (~440 words)** | ✅ | 574 | Included in Core |

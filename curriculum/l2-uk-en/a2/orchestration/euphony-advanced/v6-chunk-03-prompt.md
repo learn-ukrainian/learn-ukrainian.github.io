@@ -1,22 +1,22 @@
-# Section-by-Section Generation — Section 3/5
+# Section-by-Section Generation — Section 3/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 12: Милозвучність у складних контекстах (A2, A2.2 [Genitive Case Complete])
-**Section to write:** І чи й? У складних реченнях (500 words)
-**Word target for this section:** 300 words (aim for 330 to account for undershoot)
+**Section to write:** І чи й? У складних реченнях (I or Y? In Complex Sentences) (~550 words)
+**Word target for this section:** 550 words (aim for 605 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## І чи й? У складних реченнях (500 words)
-- P1 (~100 words): [Logic of **і** vs. **й**. Explain that **й** is a glide (semi-vowel) that requires a vowel before it to "anchor" it (**Ольга й Андрій**), while **і** is a full vowel used to break up consonants (**син і мати**).]
-- P2 (~130 words): [Euphony in complex sentences. Explain how commas act as phonetic "fences." Even if a word ends in a vowel, if there is a comma followed by a conjunction, **і** is usually preferred because the pause breaks the glide. Example: **Вона співала, і всі слухали** (not й всі).]
-- P3 (~120 words): [The "Forbidden Collision" for **й**. Explain that **й** is never used before words starting with **й, я, ю, є, ї** because it would create an ugly "double-y" sound. Example: **Олена і її брат** (not й її), **Київ і Ялта**. Use the term "phonetic hygiene."]
-- P4 (~100 words): [The safety of **та**. Introduce the conjunction **та** as a synonymous alternative to **і/й** that does not alternate. Explain that when a learner is unsure of the euphony or wants to avoid a repetitive "i-i-i" sound, **та** is a stylish and safe choice: **мама та тато**.]
-- P5 (~50 words): [Compound objects in Genitive. Brief drill on phrases like **немає хліба й молока** vs. **немає соку і кави** to reinforce the A2.2 grammar focus.]
-- <!-- INJECT_ACTIVITY: match-up-conjunctions --> [match-up, Match sentence beginnings with ends that require a specific conjunction form (i/y/ta), 8 items]
+## І чи й? У складних реченнях (I or Y? In Complex Sentences) (~550 words)
+- P1 (~100 words): Review the basic rule for І / Й: use 'й' between vowels ("Ольга й Андрій") and 'і' between consonants ("син і мати"). State that these same rules apply when connecting clauses in complex sentences.
+- P2 (~120 words): Clause boundaries and commas. Explain that a comma acts as a pause, resetting the phonetic context. Show the example "Він прийшов, і ми поїхали." Explain why "Вона заспівала, й усі заплакали" is incorrect—after a comma, the default 'і' is always safe and preferred ("... , і усі заплакали").
+- P3 (~110 words): Compound subjects and objects. Show how to apply the rules to lists of items: "хліб і масло, кава й молоко, помідори й огірки". Emphasize analyzing each adjacent pair independently to maintain a 'мелодійний' (melodious) flow.
+- P4 (~120 words): Special contexts for 'і'. Explain that 'і' is always used before words starting with й, я, ю, є, ї ("Одеса і Ялта", "Олена і її брат"). Also note that 'і' is strictly used for contrast or comparison, regardless of surrounding vowels: "батьки і діти", "добро і зло".
+- P5 (~100 words): The conjunction 'та'. Introduce 'та' as a non-alternating synonym for 'і'. Explain that it serves as a helpful stylistic alternative when euphonic rules are tricky or to avoid repetition (e.g., using "мама та тато" instead of "мама й тато").
+- <!-- INJECT_ACTIVITY: fill-in --> [fill-in, Complete sentences with the correct preposition or conjunction form, 8 items]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-братом про нову роботу. Ми з мамою часто готуємо вечерю разом. Мій друг повернувся з Києва. > *Yesterday I went to the cinema with Olena. He talked with his brother about the new job. My mom and I often cook dinner together. My friend returned from Kyiv.* Форма «із» працює як голосовий місток між двома групами приголосних звуків. Також ми обов'язково вживаємо «із» перед свистячими та шиплячими звуками (з, с, ц, ш, ч, ж), щоб вони не зливалися з прийменником. > *The form "із" works as a vocal bridge between two groups of consonant sounds. We also mandatorily use "із" before sibilant and hushing sounds (з, с, ц, ш, ч, ж) so that they do not merge with the preposition.* **Читаємо українською** Сьогодні я отримала лист із Бразилії. У нас була дуже цікава зустріч із вчителем. Я допоможу тобі із задоволенням. Ми із сестрою любимо читати. > *Today I received a letter from Brazil. We had a very interesting meeting with the teacher. I will help you with pleasure. My sister and I love to read.* :::info **Grammar box** — The choice between **з**, **із**, and **зі** depends on the sounds of the words *before* and *after* the preposition. Always look at the whole phrase, not just the word that follows! ::: Форма «зі» — це найсильніший буфер для вашого язика. Вона стоїть перед словами, які починаються на збіг приголосних, особливо якщо перша літера — це «з», «с», «ш» або «щ». Також є два надзвичайно важливі винятки, які треба просто запам'ятати: «зі мною» та «зі Львова». > *The form "зі" is the strongest buffer for your tongue. It stands before words that begin with a cluster of consonants, especially if the first letter is "з", "с", "ш", or "щ". There are also two extremely important exceptions that you just need to remember: "зі мною" (with me) and "зі Львова" (from Lviv).* **Читаємо українською** Діти повернулися зі школи дуже пізно. Моя подруга приїхала зі Львова. Ти хочеш піти в театр зі мною? Вони ліпили сніговика зі снігу. > *The children returned from school very late. My friend arrived from Lviv. Do you want to go to the theater with me? They were making a snowman from snow.* Зараз ми активно вивчаємо родовий відмінок. Правила милозвучності роблять практику цього відмінка дуже природною. Звертайте увагу на те, як прийменники поєднуються із закінченнями родового відмінка. Вивчайте ці фрази як єдиний фонетичний блок. > *Now we are actively studying the genitive case. The rules of euphony make the practice of this case very natural. Pay attention to how the prepositions combine with the endings of the genitive case. Learn these phrases as a single phonetic block.* **Читаємо українською** Цей хлопець походить з родини лікарів. Він пішов із сім'ї багато років тому. Моя донька прийшла зі школи втомлена. Вона взяла книгу зі столу. > *This boy comes from a family of doctors. He left the family many years ago. My daughter came from school tired. She took the book from the table.* <!-- INJECT_ACTIVITY: fill-in-z-variants -->
+instructor arrived from Lviv. We sincerely congratulated our colleague on the holiday of spring.* There is also a rare, specialized form «зо». You will only hear this variation used together with the numbers «два» (two) and «три» (three) to mean "about" or "approximately" in conversational contexts. Ми чекали на нього зо дві години на холоді. Він витратив зо три сотні гривень у магазині. > *We waited for him for about two hours in the cold. He spent about three hundred hryvnias in the store.* Since we are currently studying the Genitive case, you will use these prepositions constantly to express origin or source. The exact same phonetic rules apply seamlessly to Genitive phrases when you explain where someone or something comes from. Вона походить з великої родини на півдні країни. Цей розумний хлопець із хорошої сім'ї. Учні швидко вийшли зі школи після останнього уроку. > *She comes from a large family in the south of the country. This smart boy is from a good family. The students quickly left the school after the last lesson.* Pronouns also follow these rules, but with one critical exception that you must memorize. The phrase "with me" creates the cluster «з мн-», which is phonetically very harsh in Ukrainian. Therefore, it is always formed as «зі мною». For other common pronouns, the default «з» works perfectly. Я хочу піти в нове кіно з ним. Мій брат вчора довго розмовляв з нею про роботу. Чи ви підете на цей концерт зі мною? > *I want to go to the new cinema with him. My brother talked with her for a long time yesterday about work. Will you go to this concert with me?* Learners often try to force the default «з» where it does not belong, leading to noticeable pronunciation errors. Saying "з школи" forces you to pronounce the awkward cluster "з-шк", so it must be corrected to «зі школи». Similarly, trying to say "з мною" creates the unnatural "з-мн", which must be fixed to «зі мною». Іноземець часто помилково каже: я приїхав з Сполучених Штатів. Але українці знають, що правильно казати: я приїхав зі Сполучених Штатів. > *A foreigner often mistakenly says: I arrived from the United States. But Ukrainians know that it is correct to say: I arrived from the United States.* Conversely, do not over-apply these variations when they are not needed. Some learners mistakenly say "зі ним", thinking the pronoun needs a buffer. Because «ним» only starts with a single, simple consonant, the default «з ним» is perfectly smooth. Whether dealing with a preposition or a **сполучник** (conjunction), the goal is simply to make the sentence comfortable to say. :::note **Quick tip** — Don't stress about memorizing every single combination of letters. Say the phrase out loud. If your tongue gets tied up trying to push three consonants together, you probably need to switch «з» to «із» or «зі»! ::: <!-- INJECT_ACTIVITY: error-correction, Find euphony errors in sentences (e.g., *в вікно, *з школи, *і усі) and correct them, 8 items -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -606,6 +606,31 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] милозвучність (euphony, melodiousness)
+- [ ] евфонія (euphony (technical term))
+- [ ] чергування (alternation)
+- [ ] голосний (vowel)
+- [ ] приголосний (consonant)
+- [ ] збіг (cluster, collision)
+- [ ] прийменник (preposition)
+- [ ] сполучник (conjunction)
+- [ ] вживати (to use, to apply)
+- [ ] складний (complex, compound)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## І чи й? У складних реченнях (I or Y? In Complex Sentences) (~550 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

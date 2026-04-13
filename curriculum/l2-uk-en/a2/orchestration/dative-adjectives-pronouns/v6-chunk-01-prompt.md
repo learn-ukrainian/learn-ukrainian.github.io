@@ -1,18 +1,23 @@
-# Section-by-Section Generation — Section 1/6
+# Section-by-Section Generation — Section 1/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 19: Моєму другові, нашій вчительці (A2, A2.3 [Dative Case])
-**Section to write:** Вступ та діалог (~150 words)
-**Word target for this section:** 150 words (aim for 165 to account for undershoot)
+**Section to write:** Прикметники у давальному відмінку (~660 words)
+**Word target for this section:** 660 words (aim for 726 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Вступ та діалог (~150 words)
-- P1 (~50 words): Introduction to the importance of describing who we are giving to or helping; setting the stage for Dative adjectives and pronouns using the "to whom" logic.
-- P2 (~100 words): Dialogue: Teacher handing back graded essays. "Вчитель: Моєму найкращому студентові — десятка! Нашій новій студентці — дев'ятка. Цьому хлопцю треба більше працювати. Студент: Дякую нашому доброму вчителеві!" Focus on high-frequency dative phrases: моєму студентові, нашій студентці, цьому хлопцю.
+## Прикметники у давальному відмінку (~660 words)
+- P1 (~120 words): Introduce the concept of agreement (узгодження) in the dative case. Explain that adjectives must match the noun's gender, number, and case. Hook the learner with a simple scenario: giving a gift to a "new friend" (новому другу/другові) versus an "old friend" (старому другу).
+- P2 (~120 words): Detail the masculine and neuter dative adjective endings. Explain that hard stems take `-ому` (новий → новому, старий → старому, гарний → гарному) and soft stems take `-ьому` (синій → синьому, останній → останньому). Note that Ukrainian unifies the `-ому` ending sound across both groups, unlike Russian.
+- P3 (~120 words): Explain the feminine dative adjective endings. Show that both hard and soft stems take `-ій` (нова → новій, стара → старій, синя → синій). Point out the special rule for stems ending in г, к, х: they take `-ій` without consonant alternation in the adjective (довга → довгій, тиха → тихій), unlike the noun (подруга → подрузі).
+- P4 (~100 words): Cover the plural dative adjective endings. State that all genders take `-им` in the plural (нові → новим, старі → старим, гарні → гарним, сині → синім).
+- P5 (~120 words): Present a comprehensive chart comparing Nominative, Genitive, and Dative adjective endings for pattern recognition. Highlight how the dative forms build on the noun's grammatical case.
+- P6 (~80 words): Provide practice examples using familiar A1-A2 adjectives in short sentences, such as "Я телефоную новому другу" and "Я допомагаю новій подрузі".
+- <!-- INJECT_ACTIVITY: group-sort-adjectives --> [group-sort, Sort dative adjective forms by gender (masculine -ому, feminine -ій, plural -им), 8 items]
 
 ---
 ## Full Plan (for reference)
@@ -620,6 +625,31 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] моєму (to my (masc./neut. dat.))
+- [ ] моїй (to my (fem. dat.))
+- [ ] твоєму (to your (masc./neut. dat.))
+- [ ] нашій (to our (fem. dat.))
+- [ ] цьому (to this (masc./neut. dat.))
+- [ ] тому (to that (masc./neut. dat.))
+- [ ] новому (to the new (masc./neut. dat.))
+- [ ] старшому (to the older (masc./neut. dat.))
+- [ ] прикметник (adjective)
+- [ ] присвійний (possessive)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Прикметники у давальному відмінку (~660 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

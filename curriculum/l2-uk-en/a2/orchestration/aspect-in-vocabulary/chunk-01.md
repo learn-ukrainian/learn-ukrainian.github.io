@@ -1,31 +1,26 @@
-## Чому дієслова потрібно вчити парами?
+## Чому дієслова потрібно вчити парами? (Why Verbs Must Be Learned in Pairs) (~450 words)
 
-In Ukrainian, learning a new verb is a unique experience because you are rarely learning just a single word. Instead, you are learning an aspect pair (**видова пара**). Imagine trying to buy shoes, but you only buy the left one. It is useful, but you cannot walk far without its partner! When you learn the verb for writing, you must learn the word for the ongoing process alongside the word for the completed result. You need both halves to answer two completely different questions. 
+Imagine you are in a cozy Ukrainian kitchen, learning how to make traditional varenyky from a family recipe. Your grandmother is teaching you the steps, and as she speaks, you notice she uses different versions of the same action words. She changes the verbs depending on whether she wants you to focus on the continuous cooking process or the final, delicious result.
 
-**Що ти робив?** — *What were you doing?*
-**Що ти зробив?** — *What have you done?*
+> — **Бабуся:** Ліпи вареники, онучко. *(Keep forming varenyky, granddaughter.)*
+> — **Онучка:** Добре, я уважно ліплю. *(Okay, I am forming them carefully.)*
+> — **Бабуся:** Спочатку зліпи один гарний вареник і покажи мені. *(First, form one beautiful varenyk and show me.)*
+> — **Онучка:** Ось, я зліпила його. *(Here, I have formed it.)*
+> — **Бабуся:** Дуже добре. Тепер вари їх у воді десять хвилин. *(Very good. Now boil them in water for ten minutes.)*
+> — **Онучка:** Добре, я розумію. *(Okay, I understand.)*
+> — **Бабуся:** Звари їх до готовності, щоб ми могли швидко пообідати. *(Boil them until they are fully cooked, so we can have lunch quickly.)*
 
-В українській мові ми завжди вчимо дієслова парами. Кожна дія має дві різні форми. Одна форма описує довгий процес, а інша — готовий результат.
+Let us carefully analyze this kitchen conversation. The grandmother uses the verbs «ліпи» (form) and «вари» (boil) when she wants her granddaughter to focus entirely on the ongoing, continuous process of cooking. In Ukrainian grammar, this focus on the duration or repetition of an action is called the imperfective aspect, or «недоконаний вид». However, the moment she wants to see a single, successfully completed action or a specific final achievement, she switches her verbs to «зліпи» and «звари». This focus on the achieved destination or a one-time completed result is the perfective aspect, or «доконаний вид». The verb changes because the intention behind the action has changed from a continuous effort to a final outcome.
 
-> *In the Ukrainian language, we always learn verbs in pairs. Every action has two different forms. One form describes a long process, and the other describes a finished result.*
+This distinction brings us to the most fundamental concept of the Ukrainian verb system: almost every action naturally exists as a **пара** (pair). English primarily relies on complex grammar tenses, like "was doing" versus "have done", to communicate the exact status of an action. Ukrainian, however, takes a completely different approach by using two distinct verbs to show the fundamental difference between trying and succeeding. One verb in the pair will always describe the journey or the process, while its dedicated partner will always describe the final destination or the result. 
 
-Let us look at how this works in a cooking scenario. 
+Українці завжди думають про дію як про процес або як про результат. Якщо ти знаєш тільки одне дієслово з пари, ти не можеш вільно говорити про свої дії.
 
-> — **Бабуся:** Ліпи вареники, поки я грію воду. *(Keep forming the varenyky while I heat the water.)*
-> — **Онучка:** Я вже зліпила десять штук! *(I have already formed ten of them!)*
-> — **Бабуся:** Тепер вари їх п'ять хвилин, поки вони не спливуть. *(Now boil them for five minutes until they float.)*
-> — **Онучка:** А що робити потім? *(And what to do after?)*
-> — **Бабуся:** Як звариш, клич усіх до столу! *(Once you have boiled them, call everyone to the table!)*
+> *Ukrainians always think about an action as a process or as a result. If you only know one verb from a pair, you cannot speak freely about your actions.*
 
-The logic behind these pairs is the contrast between process and result. The imperfective aspect describes the effort you put into an action, while the perfective aspect describes the final outcome. For example, the imperfective verb for cleaning emphasizes the physical act of working with a broom and a cloth. The perfective verb means the room is completely clean and the job is done. You should memorize these two forms as a single lexical unit, treating them like two halves of the same concept.
-
-Недоконаний вид показує довгий процес і твою роботу. Доконаний вид показує успішний результат цієї роботи. Наприклад, ти можеш прибирати кімнату цілий день, але так і не прибрати її.
-
-> *The imperfective aspect shows a long process and your work. The perfective aspect shows the successful result of this work. For example, you can be cleaning a room all day, but still not have cleaned it.*
-
-Because these pairs are fundamental, dictionaries are designed to help you find both forms. When you look up a new action, you usually see the imperfective verb listed first, followed by its perfective partner. You will often see standard abbreviations like **нед.** (imperfective) and **док.** (perfective) in official resources. Getting comfortable with these dictionary entries makes expanding your vocabulary much easier.
+Because these two verbs are so deeply connected in meaning, you must make it a habit to learn them together from the very beginning of your studies. When you look up a new action in a dictionary or a vocabulary list, you will usually see them listed side by side. The imperfective verb, which describes the ongoing action, is typically presented as the basic, default form. It is immediately followed by its perfective partner. For example, you will commonly see essential entries like «робити / зробити» (to do / to have done), «**читати / прочитати**» (to read), and «**писати / написати**» (to write). 
 
 :::note
 **Quick tip**
-Always write down new verbs as a pair in your notebook, like **робити / зробити**. If a dictionary only gives you one form, take a moment to search for its partner!
+Always write new verbs down together in your vocabulary notebook. If you learn the word **брати** (to take as a process), immediately find and write down its partner **взяти** (to take as a result). If you learn **говорити** (to speak), learn **сказати** (to say). This ensures you always have the complete picture of that action.
 :::

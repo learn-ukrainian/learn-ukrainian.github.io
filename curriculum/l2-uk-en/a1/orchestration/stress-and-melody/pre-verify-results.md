@@ -1,22 +1,22 @@
 ## VESUM Verification
-- Confirmed: наголос, замок, кава, вода, столиця, Київ, мука, ранок, метро, фотографія, Україна.
-- Not found: None.
+- Confirmed: наголос, замок, кава, вода, столиця, мука, ранок, метро, фотографія
+- Not found: None
 
 ## Grammar Rules
-- Види речень за метою висловлювання (Sentence types by purpose): Grade 5 textbook (§16) — розповідні (declarative), питальні (interrogative), спонукальні (imperative).
-- Види речень за інтонацією (Sentence types by intonation): Grade 5 textbook (§16) — окличні (exclamatory) and неокличні (non-exclamatory).
-- Наголос (Stress): Grade 5 textbook (§38) — посилена вимова одного зі складів. В українській мові наголос вільний (free) та рухомий (movable).
+- Наголос / Розділові знаки (Stress / Punctuation): Правопис §None — No matching orthography rules found in sections 1-61 for stress (наголос), intonation, or basic punctuation patterns like period or question mark. (Note: A query for "наголос" returned § 5 "Буква Г", but only because the word appears incidentally in the text, not as a rule).
 
 ## Calque Warnings
-- як справи: OK — standard greeting, no issues in style guide.
-- як гарно: OK — used in Grade 5 textbook examples for exclamatory sentences.
-- у тебе: OK — standard prepositional phrase, no issues found.
+- як справи: OK — No results in Антоненко-Давидович
+- у тебе: OK — No results in Антоненко-Давидович
+- як гарно: OK — No results in Антоненко-Давидович
 
 ## CEFR Check
-- наголос: A1 (metalanguage) — OK
-- замок: A1 — OK
-- кава: A1 — OK
+- фотографія: A1 — OK
 - столиця: A1 — OK
 - ранок: A1 — OK
 - метро: A1 — OK
-- фотографія: A1 — OK
+- кава: A1 — OK
+- вода: A1 — OK
+- наголос: B1 — above target
+- мука: B1 — above target
+- замок: A2 — above target

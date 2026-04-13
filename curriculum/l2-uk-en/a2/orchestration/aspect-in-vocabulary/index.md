@@ -1,6 +1,6 @@
 # Build Summary: aspect-in-vocabulary (A2)
 
-Generated: 2026-04-11 01:25
+Generated: 2026-04-11 11:48
 
 ## Pipeline Phases
 
@@ -12,15 +12,15 @@ Generated: 2026-04-11 01:25
 | pre-verify | complete | 2026-04-07 19:16:14 |
 | write | complete | 2026-04-07 19:28:20 |
 | exercises | complete | 2026-04-07 21:27:30 |
-| activities | complete | 2026-04-10 23:24:57 |
+| activities | complete | 2026-04-11 09:48:09 |
 | verify-exercises | complete | 2026-04-07 21:27:30 |
 | annotate | complete | 2026-04-07 19:34:27 |
 | vocab | complete | 2026-04-07 19:36:49 |
 | enrich | complete | 2026-04-07 19:36:49 |
 | verify | complete | 2026-04-07 19:36:49 |
 | stress | complete | 2026-04-07 21:27:30 |
-| publish | complete | 2026-04-10 23:25:01 |
-| audit | complete | 2026-04-10 23:25:01 |
+| publish | complete | 2026-04-11 09:48:16 |
+| audit | complete | 2026-04-11 09:48:16 |
 
 ## Reviews
 
@@ -41,6 +41,8 @@ Generated: 2026-04-11 01:25
 | activities | gemini-tools (gemini-3.1-pro-preview) | 168s | ✅ |
 | activities | gemini-tools (gemini-3.1-pro-preview) | 110s | ✅ |
 | activities | gemini-tools (gemini-3.1-pro-preview) | 105s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 230s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 90s | ✅ |
 | vocab | gemini (gemini-3-flash-preview) | 136s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 195s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 318s | ✅ |

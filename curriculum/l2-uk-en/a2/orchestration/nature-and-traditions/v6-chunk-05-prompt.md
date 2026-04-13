@@ -26,7 +26,7 @@ Grand total: ~2150 words
 <previous_context>
 [...previous sections truncated...]
 
-ходили до річки, тому що було дуже спекотно». Щоб розповісти про свої регулярні дії, ми беремо спеціальні слова. Це корисні прислівники **зазвичай** *(usually)*, **завжди** *(always)* та **іноді** *(sometimes)*. Взимку ми зазвичай святкуємо Різдво вдома з рідними людьми. Навесні ми іноді їздимо в гори, щоб дихати свіжим повітрям. Влітку ми завжди відпочиваємо біля води і багато плаваємо. А восени ми зазвичай збираємо багатий врожай у своєму саду. Такі короткі слова дуже допомагають нам говорити природно, красиво і граматично правильно. <!-- INJECT_ACTIVITY: fill-in-grammar-seasons --> ## Мої традиції (My Traditions) Тепер давайте прочитаємо цікаву історію. Це розповідь українського підлітка про його сімейне свято. «Моє найулюбленіше зимове свято — це **Різдво** *(Christmas)*. Ми завжди святкуємо його вдома. Наша велика родина збирається разом кожного року. **Спочатку** *(First)* ми довго **готуємо вечерю** *(prepare dinner)*. Моя мама і бабуся роблять дванадцять різних страв. Найголовніша страва на нашому столі — це солодка кутя з медом. **Потім** *(Then)* ми чекаємо, коли на небі з'явиться перша зірка. Вона показує, що свято вже почалося. Коли зірка вже світить, ми нарешті починаємо вечеряти. Але перед вечерею у нас завжди є традиційна **молитва** *(prayer)*. Ми всі дякуємо за цей рік і просимо миру. Після смачної вечері починається найкращий час для нас, дітей. Ми **співаємо колядки** *(sing carols)* і радіємо цьому світлому святу. Наші батьки дають нам чудові **подарунки** *(gifts)*. Ця тепла **родинна вечеря** *(family dinner)* завжди дарує мені багато радості і спокою. Я просто обожнюю цю магічну зимову атмосферу». А як ви святкуєте ваші свята? У кожної людини є свої улюблені традиції. Щоб розказати про них, ми можемо використовувати такі фрази: «**У моїй країні ми святкуємо** *(In my country we celebrate)*...» або «**Моя улюблена традиція — це** *(My favorite tradition is)*...». Наприклад, ви можете сказати: «У моїй країні ми святкуємо Новий рік на вулиці». Або ви можете розповісти: «Моя улюблена традиція — це робити великий **подарунок для сестри** *(gift for sister)*». Коли ми говоримо про компанію людей, ми використовуємо орудний відмінок. Наприклад, дуже весело **святкувати з друзями** *(to celebrate with friends)* або вечеряти з батьками. Деякі люди люблять гучні вечірки, а інші обирають тихий вечір. Які традиції має ваша сім'я? Ви зазвичай готуєте багато їжі чи замовляєте піцу? Ви любите танцювати всю ніч чи спати? Розкажіть про це своїм друзям. Українські свята мають дуже глибокий сенс. Вони показують багату історію і культуру народу. Ці давні традиції об'єднують людей різних поколінь. Коли українці співають старі пісні, вони відчувають свій міцний зв'язок з минулим. Це допомагає їм краще розуміти себе. Щоб сказати про свої бажання або мрії, ми використовуємо слова **б** або **би** *(would)*. Це спеціальні форми умовного способу. Наприклад, ви можете сказати: «**Я хотів би** *(I would like)* побачити, як люди **плетуть вінки** *(weave wreaths)* на Купала». Якщо говорить жінка, вона скаже: «**Я хотіла б** *(I would like)* почути українські колядки на Різдво». А **які українські традиції ви хотіли б спробувати** *(what Ukrainian traditions would you like to try)*? Ви хотіли б зробити писанку на Великдень? Або ви б хотіли стрибати через велике вогнище? Кожна традиція — це унікальний досвід. <!-- INJECT_ACTIVITY: true-false-culture -->
+the first star appears in the sky. Our family reads a prayer, and we start eating. After dinner, we sing cheerful carols. We wish everyone health and happiness. Late in the evening, we open presents. This is always a very joyful and warm moment.* When you talk about your own celebrations, you can use phrases like «У моїй країні ми святкуємо...» (In my country we celebrate...). Notice how you need different cases to describe the details. Use the Instrumental case to say who you celebrate with, and the Genitive case to talk about gifts. У моїй країні ми святкуємо багато різних свят. Але моя улюблена традиція — це святкувати Новий рік з друзями. Ми завжди купуємо цікаві подарунки один для одного. Наприклад, учора я шукав подарунок для сестри, а сьогодні купую сюрприз для брата. Навесні ми також маємо гарні традиції. Коли приходить Великдень, ми розмальовуємо писанки всією родиною. Це дуже творчий процес. Ми любимо проводити цей час разом. > *In my country, we celebrate many different holidays. But my favorite tradition is celebrating the New Year with friends. We always buy interesting presents for each other. For example, yesterday I was looking for a present for my sister, and today I am buying a surprise for my brother. In the spring, we also have beautiful traditions. When Easter comes, we paint pysankas with the whole family. This is a very creative process. We love spending this time together.* :::note **Quick tip** When you talk about buying or making something **for** someone, use the preposition **для** with the Genitive case: **подарунок для сестри** (a present for a sister). ::: Traditions connect people and help them remember their history. In Ukrainian culture, holidays are closely tied to nature. We celebrate when flowers start to **розквітати** (to blossom), and we have special rituals when severe **мороз** (frost) arrives. When you want to say what you *would like* to do, use the conditional particles **б** or **би** with the past tense verb. Українські традиції дуже багаті та цікаві. Кожна пора року має свої унікальні свята. Вони показують, як люди жили раніше і у що вони вірили. Навіть коли надворі погана погода, свято дарує радість. Я дуже люблю читати про старі українські свята. Наприклад, я хотів би побачити, як дівчата плетуть вінки на свято Івана Купала. Це дуже романтично. А мій друг хотів би спробувати справжню кутю на Різдво. Які українські традиції ви хотіли б спробувати? Що вам подобається найбільше? > *Ukrainian traditions are very rich and interesting. Each season has its own unique holidays. They show how people lived before and what they believed in. Even when the weather is bad outside, a holiday brings joy. I really like reading about old Ukrainian holidays. For example, I would like to see how girls weave wreaths on the holiday of Ivan Kupala. It is very romantic. And my friend would like to try real kutia for Christmas. Which Ukrainian traditions would you like to try? What do you like the most?* <!-- INJECT_ACTIVITY: true-false-culture -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -512,7 +512,74 @@ This topic is deeply intertwined with Ukrainian cultural and political identity,
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 6: A2 finale (A2 M51-M69)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 40%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 40% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 70-90% Ukrainian.
 LANGUAGE ROLES:
@@ -531,18 +598,64 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (5/5).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] пора року (season)
+- [ ] весна (spring)
+- [ ] літо (summer)
+- [ ] осінь (autumn)
+- [ ] зима (winter)
+- [ ] погода (weather)
+- [ ] свято (holiday)
+- [ ] Різдво (Christmas)
+- [ ] Великдень (Easter)
+- [ ] традиція (tradition)
+- [ ] писанка (decorated Easter egg)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Підсумок (~150 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

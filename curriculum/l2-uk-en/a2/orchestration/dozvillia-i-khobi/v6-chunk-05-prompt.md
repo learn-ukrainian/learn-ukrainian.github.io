@@ -21,7 +21,7 @@ Grand total: ~2350 words
 <previous_context>
 [...previous sections truncated...]
 
-Музей — це цікаво, але погода дуже гарна. Ходімо краще в парк! *(A museum is interesting, but the weather is very nice. Let's go to the park instead!)* > — **Марко:** Чудова ідея! Я — за! Де зустрінемося? *(Great idea! I'm in! Where will we meet?)* > — **Тарас:** Давай зустрінемося біля входу в парк. О котрій? *(Let's meet near the entrance to the park. At what time?)* > — **Марко:** О п'ятій годині. *(At five o'clock.)* > — **Тарас:** Домовилися! До неділі! *(Agreed! Until Sunday!)* Цей діалог показує, як легко комбінувати пропозиції, відмови та деталі логістики. <!-- INJECT_ACTIVITY: error-correction-cases --> ## Що мені подобається найбільше Коли ми плануємо вихідні, ми обираємо те, що любимо. Іноді нам подобається багато різних речей, але одна є улюбленою. To express strong preferences and rank your interests, Ukrainian has several useful phrases that go beyond basic likes. Базова фраза — це **«мені подобається»** (I like). Наприклад: «Мені подобається сучасна музика». Але якщо ви дуже любите певне заняття, скажіть **«мені найбільше подобається»** (I like most). Це показує ваш головний пріоритет серед інших справ. А для максимальної емоції ми маємо дієслово **«обожнювати»** (to adore). The phrase "я обожнюю" is a fantastic way to show true passion for an activity. Ми часто комбінуємо різні хобі в одному реченні, щоб показати контраст. Ви можете сказати: **«Я люблю читати, але найбільше обожнюю малювати»** (I love to read, but most of all I adore drawing). Або інший приклад: «Мені подобається спорт, але я обожнюю ходити в гори». А як українці проводять свій вільний час? Звичайно, ми любимо ходити в кіно, театри та займатися спортом. Але відпочинок на природі має особливе місце в нашій культурі. Nature holds a very special place in Ukrainian leisure activities. Дуже популярно їздити в **Карпати** (the Carpathians). Там люди гуляють у лісі, дихають свіжим повітрям і просто відпочивають. Exploring ancient castles in Western Ukraine is another favorite weekend trip for many families. Там можна побачити багато цікавої історії. Також українці мають традиційні сезонні хобі. Восени багато людей їдуть у ліс **збирати гриби** (to hunt mushrooms). Це заняття часто називають тихим полюванням. А влітку дуже популярно **збирати ягоди** (to pick berries). Ці традиції допомагають забути про стрес і швидкий міський шум. Якщо ви скажете українцям: «Я обожнюю збирати гриби», ви одразу знайдете нових друзів! Наш вільний час показує, які ми насправді люди. Our leisure time often defines our personality and helps us connect with others. Тепер ви знаєте достатньо слів, щоб цікаво розповісти про себе. You have the vocabulary and grammar tools to describe your unique lifestyle to new Ukrainian friends. Не забувайте активно використовувати чотири головні дієслова з цього уроку. Ви можете **«займатися»** (to engage in) спортом, танцями або йогою. Ви можете сильно **«захоплюватися»** (to be passionate about) музикою чи фотографією. Ви можете **«грати в»** (to play) теніс або **«грати на»** (to play an instrument) гітарі. І, звичайно, ви можете **«ходити в»** (to go to) кіно, музей або на стадіон. Практикуйте ці конструкції, комбінуйте їх і розповідайте про свої хобі впевнено. Розкажіть світу, чим ви захоплюєтеся!
+phrases help you rank your favorite pastimes and show true enthusiasm. Let's look at how people combine different activities in conversation. They might talk about a new **хобі** (hobby) they just discovered, or a favorite **спорт** (sport) they do regularly. Combining different verbs makes your speech sound much more natural and fluent. Кожна людина має своє улюблене хобі. Мені подобається спорт і **плавання** (swimming), але найбільше я обожнюю малювати. Мій брат **захоплюється** (to be passionate about) історією, тому він часто ходить на **виставку** (exhibition). У свій вільний час я зазвичай читаю або граю на гітарі. Моя подруга слухає музику, але найбільше їй подобається танцювати. > *Every person has their favorite hobby. I like sport and swimming, but most of all I adore drawing. My brother is passionate about history, so he often goes to an exhibition. In my free time, I usually read or play the guitar. My friend listens to music, but most of all she likes to dance.* Leisure time in Ukraine often involves spending time outdoors, especially during the warmer months. Our **вільний** (free) time is precious, and traditional outdoor activities blend beautifully with modern urban pastimes. For many people, whether it is listening to **музика** (music) in a local park or exploring nature trails, getting outside is the perfect way to relax. Українці дуже люблять активне **дозвілля** (leisure, free time) на природі. Влітку та восени багато людей їздять у Карпати. Там можна гуляти в горах, збирати гриби та збирати ягоди. Це популярна **розвага** (entertainment) для всієї родини. Також ми любимо відвідувати старовинні замки на заході України або просто відпочивати біля річки. > *Ukrainians really love active leisure in nature. In summer and autumn, many people go to the Carpathians. There you can walk in the mountains, pick mushrooms, and pick berries. This is a popular entertainment for the whole family. Also, we love visiting ancient castles in the west of Ukraine or simply resting near a river.* :::tip **Did you know?** Foraging for wild mushrooms (**збирати гриби**) and berries (**збирати ягоди**) is a deeply rooted cultural tradition in Ukraine. It is considered a relaxing weekend activity that connects people with nature. ::: How we spend our time says a lot about our personality and values. Now that you know the core verbs for hobbies, you are ready to share your own unique story. You can use verbs like **займатися** (to engage in, to do) to describe your daily activities and find common ground with new friends. Asking about someone's interests is the best icebreaker. Коли ви зустрічаєте нових друзів в Україні, розкажіть їм про свої інтереси. Розкажіть про свої улюблені заняття. Поясніть, чим ви найбільше захоплюєтеся. Також скажіть, куди ви любите ходити. Це найкращий спосіб знайти спільні теми. > *When you meet new friends in Ukraine, tell them about your interests. Tell them about your favorite activities. Explain what you are most passionate about. Also, say where you like to go. This is the best way to find common topics.* <!-- INJECT_ACTIVITY: group-sort, leisure categories -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -527,7 +527,74 @@ This grammar topic is a hub that connects to several other key areas of Ukrainia
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -546,18 +613,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (5/5).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] дозвілля (leisure, free time)
+- [ ] хобі (hobby)
+- [ ] захоплюватися (to be passionate about)
+- [ ] займатися (to engage in, to do)
+- [ ] спорт (sport)
+- [ ] розвага (entertainment)
+- [ ] вільний (free)
+- [ ] плавання (swimming)
+- [ ] музика (music)
+- [ ] виставка (exhibition)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Підсумок (~150 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

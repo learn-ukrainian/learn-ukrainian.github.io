@@ -1,19 +1,22 @@
-# Section-by-Section Generation — Section 4/5
+# Section-by-Section Generation — Section 4/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 17: Мені, тобі, йому... (A2, A2.3 [Dative Case])
-**Section to write:** Давальний чи знахідний? (Dative or Accusative?) (~350 words total)
-**Word target for this section:** 350 words (aim for 385 to account for undershoot)
+**Section to write:** Давальний чи знахідний? (Dative or Accusative?) (~330 words total)
+**Word target for this section:** 330 words (aim for 363 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Давальний чи знахідний? (Dative or Accusative?) (~350 words total)
-- P1 (~180 words): The "Minimal Pairs" challenge. Contrast sentences where the only difference is the pronoun case: "Я бачу тебе" (Acc — direct sight) vs. "Я кажу тобі" (Dat — recipient of speech). "Він знає її" (Acc — direct knowledge) vs. "Він дзвонить їй" (Dat — recipient of call). Explain that the choice depends entirely on the verb's "logic" of interaction.
-- P2 (~170 words): Provide a strategy for L2 learners to distinguish between the two. If the action is directed *at* the person (to them), use Dative. If the action "uses" or "sees" the person as an object, use Accusative. Highlight "False Friends" for English speakers like "допомагати" (help TO someone) which feels like it should be Accusative but is Dative.
-- <!-- INJECT_ACTIVITY: quiz-case-choice --> [quiz, Choose between Dative and Accusative pronoun forms (e.g., тобі vs тебе) based on the verb in the sentence, 8 items]
+## Давальний чи знахідний? (Dative or Accusative?) (~330 words total)
+- P1 (~110 words): Focus on the core decision strategy for learners: Who receives the action? → Dative. Who is directly affected by the action? → Accusative. Establish this rule of thumb to prevent confusing the two object cases.
+- P2 (~120 words): Present minimal pairs to solidify the distinction. Compare direct vs. indirect object verbs: "Я бачу тебе" (Accusative - direct object) versus "Я кажу тобі" (Dative - recipient). "Він знає її" (Accusative) versus "Він дзвонить їй" (Dative).
+- P3 (~100 words): Practice distinguishing case usage within a single sentence using two-object verbs. Explain that in a sentence like "Я даю книгу тобі", the thing given ("книгу") is Accusative, and the person receiving ("тобі") is Dative.
+- <!-- INJECT_ACTIVITY: quiz-dative-vs-accusative --> [quiz, Choose dative or accusative pronoun form in context (тобі vs. тебе), 8 items]
+
+Grand total: ~2200 words
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -21,7 +24,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-for "cold" remains exactly the same. Найчастіше ми використовуємо такі короткі слова: холодно, тепло, сумно, весело, приємно та цікаво. Взимку на вулиці мені часто буває дуже холодно. А тобі цікаво читати цю нову українську книгу про історію? Моїй молодшій сестрі зараз сумно, тому що надворі йде сильний дощ. Нам дуже приємно бачити вас у нашому новому домі. > *Most often we use such short words: cold, warm, sad, fun, pleasant, and interesting. In winter on the street, I am often very cold. And is it interesting for you to read this new Ukrainian book about history? My younger sister is sad right now because it is raining heavily outside. It is very pleasant for us to see you in our new home.* This exact same impersonal structure is also used to express necessity, permission, or advice. Instead of using active verbs like "must" or "should," Ukrainian relies on modal adverbs such as «треба» or «потрібно» (need/necessary), «можна» (allowed/possible), and «варто» (should/worthwhile). When you want to say "I need to go," the literal translation is "To me it is necessary to go." This is a fundamental pattern you will hear constantly in everyday life. Зараз уже пізно, тому мені негайно треба йти додому. Чи можна вам тут сидіти і так голосно розмовляти під час лекції? Йому варто більше відпочити після такого важкого робочого тижня в офісі. Їм потрібно купити квитки на ранковий поїзд заздалегідь. Нам можна взяти ці смачні червоні яблука зі столу? > *It is already late now, so I immediately need to go home. Are you allowed to sit here and talk so loudly during the lecture? He should rest more after such a hard work week in the office. They need to buy tickets for the morning train in advance. Can we take these tasty red apples from the table?* Let's see how these impersonal expressions naturally flow in a real conversation. Notice how often the speakers use the Dative pronouns to check in on each other's physical comfort and to express their own immediate desires. This makes the dialogue sound authentically Ukrainian. > — **Остап:** Привіт! Тобі тут тепло біля великого вікна? *(Hi! Are you warm here by the large window?)* > — **Ганна:** Так, дуже дякую. Мені приємно тут сидіти і спокійно дивитися на вулицю. *(Yes, thank you very much. It is pleasant for me to sit here and calmly look at the street.)* > — **Остап:** Мені цікаво, що ти замовиш сьогодні на обід. *(I wonder what you will order today for lunch.)* > — **Ганна:** Мені потрібно випити чашку гарячої чорної кави. *(I need to drink a cup of hot black coffee.)* > — **Остап:** Чому саме кави? *(Why specifically coffee?)* > — **Ганна:** Бо мені трохи сумно без неї зранку, я ще хочу спати. *(Because I am a little sad without it in the morning, I still want to sleep.)* > — **Остап:** Зрозуміло. Тоді нам усім варто покликати нашого офіціанта. *(Understood. Then we all should call our waiter.)* <!-- INJECT_ACTIVITY: true-false-impersonal -->
+of fun because she is reading a funny book. Are you sad watching this old movie? We are interested in listening to this story. I need to work tomorrow morning. You should rest after a long day.* :::info **Grammar box** Notice that modal words never take a nominative subject. You must use dative pronouns. Instead of «ми треба», you must say **нам** (to us) «треба». The same rule applies when using **вам** (to you (formal/plural)) and **їм** (to them). ::: It is critical to distinguish between sentences where you are the active subject and sentences where you are simply the experiencer of a state. When you use the nominative case, you are the one performing a state of being. For instance, the phrase «Я втомлена» uses the nominative subject «Я» and means "I am tired." But if you want to say "It is hard for him," you must use the impersonal dative construction with **йому** (to him, to it) and say «Йому важко». Similarly, you would use **їй** (to her) to describe a woman's feelings. A very common mistake for English speakers is trying to directly translate phrases like "I need." In Ukrainian, you cannot ever say «Я треба». You must shift your perspective to "To me it is necessary" and say «Мені треба» or «Мені потрібно». Я дуже втомлена сьогодні. Мені важко працювати так багато годин. Він хворий і лежить у ліжку. Йому потрібно пити гарячий чай. Ми готові до нового тесту. Нам легко читати цей текст. > *I am very tired today. It is hard for me to work so many hours. He is sick and lying in bed. He needs to drink hot tea. We are ready for the new test. It is easy for us to read this text.* Let's see how these impersonal constructions flow in a natural conversation. Notice how the speakers constantly use dative pronouns to ask about feelings and express their own needs. In Ukrainian culture, asking someone if they are cold or if they need something is a very common way to show care and politeness. > — **Марко:** Привіт, Олено! Тобі не холодно тут стояти? *(Hi, Olena! Are you not cold standing here?)* > — **Олена:** Привіт! Ні, мені тепло. Але мені трохи нудно чекати автобус. *(Hi! No, I am warm. But I am a bit bored waiting for the bus.)* > — **Марко:** Мені теж нудно. Нам варто піти в кафе. *(I am bored too. We should go to a cafe.)* > — **Олена:** Це гарна ідея! Мені дуже хочеться пити каву. *(That is a good idea! I really want to drink coffee.)* > — **Марко:** А що робити Сергію? Йому потрібно працювати сьогодні? *(And what should Serhiy do? Does he need to work today?)* > — **Олена:** Ні, йому сьогодні легко. Йому можна відпочивати. *(No, it is easy for him today. He is allowed to rest.)* > — **Марко:** Чудово. Тоді нам усім буде весело разом. *(Great. Then we will all have fun together.)* <!-- INJECT_ACTIVITY: true-false-impersonal -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -628,6 +631,31 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (4/4).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] давальний відмінок (dative case)
+- [ ] мені (to me)
+- [ ] тобі (to you (informal))
+- [ ] йому (to him, to it)
+- [ ] їй (to her)
+- [ ] нам (to us)
+- [ ] вам (to you (formal/plural))
+- [ ] їм (to them)
+- [ ] холодно (cold (impersonal state))
+- [ ] потрібно (necessary, needed)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Давальний чи знахідний? (Dative or Accusative?) (~330 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

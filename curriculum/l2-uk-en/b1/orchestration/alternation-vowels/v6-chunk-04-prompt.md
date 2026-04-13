@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-*(wind)*. Коли він стихає, ми кажемо, що сьогодні немає **вітру** *(of the wind)*. У всіх цих випадках додавання нового закінчення працює як потужний прес. Воно просто виштовхує слабкий голосний звук із фонетичного кореня слова. Це робить вимову набагато динамічнішою і значно коротшою. Ви можете помітити, що більшість таких слів мають дуже давнє походження і описують базові поняття. Окрім звичайних коренів, це чергування масово відбувається у специфічних українських суфіксах. Це надзвичайно продуктивна модель, яка формує впізнаваний ритм нашої мови. Найпопулярнішим є суфікс **-ець** *(-ets)*, який часто позначає людей або їхні професії. Наприклад, розумний **хлопець** *(boy)* у родовому відмінку завжди стає формою **хлопця** *(of the boy)*. Звук [е] зникає без жодного сліду. Справжній **молодець** *(fine fellow)* миттєво перетворюється на **молодця** *(of the fine fellow)*. Інший надзвичайно поширений суфікс — це зменшувальний суфікс **-ок** *(-ok)*. Він робить великі предмети маленькими і дуже милими. Зелений **садок** *(little orchard)* швидко перетворюється на **садка** *(of the little orchard)*. Старий **замок** *(castle)* втрачає свій звук [о] і стає формою **замка** *(of the castle)*. Навіть шкільний **гурток** *(club)* обов'язково змінюється на **гуртка** *(of the club)*. Третій важливий суфікс — це суфікс **-ень** *(-en)*, який дуже часто зустрічається в назвах місяців. Холодний **жовтень** *(October)* у родовому відмінку звучить як **жовтня** *(of October)*. Весняний **квітень** *(April)* змінюється на **квітня** *(of April)*, а теплий **серпень** *(August)* стає формою **серпня** *(of August)*. Ці суфікси працюють як ідеальний і точний годинниковий механізм. Якщо ви бачите їх у називному відмінку, ви можете бути абсолютно впевнені, що звук зникне. Це просте правило допомагає іноземцям говорити дуже впевнено і природно. Як же розпізнати, коли голосний звук є біглим, а коли він залишається повністю стабільним? Це одне з найскладніших питань для багатьох іноземних студентів. Історично це явище виникло через так званий занепад зредукованих звуків, або дуже давніх «єрів». Тисячу років тому в нашій мові існували надзвичайно короткі, напівголосні і тихі звуки. З часом у сильних позиціях вони перетворилися на повноцінні звуки [о] та [е]. Але у слабких позиціях вони просто зникли назавжди, залишивши після себе лише порожнє місце. Тому сьогодні ми маємо такі, на перший погляд, дивні чергування. Найкраща стратегія розпізнавання — це мисленнєвий фонетичний експеримент. Спробуйте подумки прибрати сумнівний голосний звук і прочитати слово. Якщо після цього утворюється абсолютно неможливий для вимови збіг приголосних, звук, імовірно, залишиться на місці. Але пам'ятайте, що українська мова дуже толерантна до багатьох незвичних комбінацій. Давайте порівняємо дві дуже схожі короткі пари слів. Візьмемо глибокий **сон** *(sleep)*. Якщо ми приберемо звук [о] і додамо закінчення, ми отримаємо правильну форму **сну** *(of the sleep)*. Це звучить природно, легко і не ламає ритм. Отже, цей голосний звук є біглим. А тепер візьмемо гучний **стон** *(moan)*. Якщо ми спробуємо зробити те саме, ми отримаємо дуже дивну і важку форму «стну». Це звучить зовсім неприродно для української традиційної фонетики. Тому ми обов'язково зберігаємо голосний звук і кажемо **стону** *(of the moan)*. Завжди довіряйте своєму слуху та внутрішньому відчуттю ритму. Мова сама підкаже вам найзручніший і найкрасивіший шлях. Регулярна практика та уважне читання українських текстів швидко зроблять цей аналітичний процес повністю автоматичним. <!-- INJECT_ACTIVITY: fill-in-fleeting-vowels -->
+example, adding the genitive case ending "-a" or "-u", the last root vowel disappears. Let's look at very common words: "учень" (student), "вітер" (wind), "день" (day), and "пень" (stump). If we want to talk about the absence of something, each new word form loses the letter "e" or "i". We say: немає учня (no student), немає вітру (no wind), немає дня (no day), немає пня (no stump). The vowel sound is as if pushed out of the word by the new ending. This happens because the Ukrainian language avoids unnecessary vowels in certain positions, preserving the dynamic rhythm of speech. If you see a masculine word ending in a consonant, preceded by "e" or "o", always check whether this sound is fleeting.* :::info **Grammar box** Always check the **відмінок** (grammatical case) of a new masculine noun to see if it has a fleeting vowel. Dictionaries often list the dictionary form next to its new **форма слова** (word form) in the genitive case like this: *день, дня*. This immediately tells you that the vowel drops into a **нуль звука** (zero sound) when the word changes! ::: This rhythmic disappearance of vowels is not just limited to the **корінь** (root) of a word; it is deeply embedded in the structure of many common Ukrainian suffixes. By paying attention to the **суфікс** (suffix) of a noun, you can almost always predict when a vowel will drop out. The suffix `-ець` is a prime example. When you decline a word like «хлопець» (boy) or «молодець» (a fine fellow), the [е] instantly vanishes, giving you «хлопця» and «молодця». The same rule applies to the diminutive suffix `-ок`. A «садок» (small orchard) becomes «садка», and a «замок» (castle) becomes «замка». Another highly predictable pattern is found in the suffix `-ень`, which is used for many months of the year. «Жовтень» (October) loses its vowel to become «жовтня», just as «квітень» (April) becomes «квітня». This mechanical rhythm prevents the word from becoming too long or melodically awkward when a new **закінчення** (ending) is attached, creating a crisp, fluid pronunciation that is characteristic of native Ukrainian speech. Як розпізнати, чи є голосний біглим? На жаль, не існує єдиного правила, яке працює завжди, але є надійні підказки. Варто порівняти схожі слова. Наприклад, у слові «сон» голосний зникає, і ми отримуємо форму «сну». Але у слові «стон», яке звучить майже так само, голосний залишається стабільним — «стону». Чому так відбувається? Відповідь ховається в історії мови. Багато століть тому в слов'янських мовах існували надкороткі звуки, які називаються «єрами». З часом ці слабкі звуки або перетворилися на повноцінні голосні «о» та «е», або повністю зникли. Там, де давній звук перетворився на повноцінний, ми маємо стабільний голосний. А там, де він був слабким, ми отримали зникнення звука при додаванні закінчень. Тому поява або випадання голосного часто залежить від історичного фонетичного оточення, а не лише від сучасного вигляду слова. З часом, багато читаючи та слухаючи українську мову, ви інтуїтивно відчуватимете, які слова втрачають свої голосні, а які зберігають їх назавжди. <!-- INJECT_ACTIVITY: fill-in-fleeting-vowels -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -441,7 +441,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -454,18 +521,67 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] чергування (alternation — systematic sound change between word forms)
+- [ ] голосний (vowel — sound produced without obstruction)
+- [ ] відкритий склад (open syllable — ending in a vowel sound)
+- [ ] закритий склад (closed syllable — ending in a consonant sound)
+- [ ] корінь (root — the core meaning-bearing part of a word)
+- [ ] наголос (stress — emphasized pronunciation of a syllable)
+- [ ] біглий голосний (fleeting vowel — vowel that disappears in some forms)
+- [ ] нуль звука (zero sound — absence of a vowel in an alternation)
+- [ ] суфікс (suffix — morpheme added after the root)
+- [ ] закінчення (ending — inflectional morpheme at the end of a word)
+- [ ] шиплячий (hushing consonant — ж, ч, ш, дж)
+- [ ] орфограма (orthographic rule — a spelling pattern requiring a rule)
+- [ ] відмінок (grammatical case)
+- [ ] форма слова (word form — a specific inflected variant of a word)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Чергування [о] з [е] після шиплячих та [й] (~600 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

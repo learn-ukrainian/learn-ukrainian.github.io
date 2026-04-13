@@ -232,25 +232,24 @@ You do NOT need to call tools yourself — the facts are already verified.
 <pre_verified_facts>
 ## VESUM Verification
 - Confirmed: автобус, метро, таксі, потяг, квиток, зупинка, трамвай, маршрутка, літак, направо, наліво, прямо, дістатися
-- Not found: none
+- Not found: (none)
 
 ## Grammar Rules
-- Instrumental for transport: Textbook (Grade 5, Uhor, p. 59) — Їхати/летіти + Instrumental (автобусом, потягом, літаком).
-- Locative with 'на' for transport: Textbook (Grade 5, Uhor, p. 59) — Їхати на + Locative (на метро, на таксі).
-- Indeclinable nouns: Pravopys § 103 — Nouns of foreign origin like 'метро', 'таксі' are indeclinable in all cases.
+- [Prepositions with transport locative (у/в вагоні, в автобусі)]: Правопис §23 — Позиції вживання прийменників і префіксів У та В (напр., "Сидимо у вагоні").
+- [Indeclinable foreign nouns (метро, таксі)]: Правопис §— (Tool limited to §1-61 index, could not retrieve the exact section for "невідмінювані іменники", but the rule is that nouns of foreign origin ending in -о, -і do not decline).
 
 ## Calque Warnings
-- відправляється (автобус/потяг): Calque — Use 'відбуває', 'виїжджає' (bus) or 'рушає' (train). (Source: Grade 10, Karaman, p. 188).
-- туди й назад: OK — Commonly used for round-trip tickets in textbooks (Source: Grade 3, Ponomarova, p. 104).
-- скільки коштує: OK — Standard question for price in textbooks (Source: Grade 3, Ponomarova, p. 104).
-- на здоров'я: OK/Contextual — Used as a polite response to 'дякую' (as in plan), though 'будь ласка' or 'прошу' are also common.
+- направо: OK — (no calque warning found in Антоненко-Давидович)
+- в один бік: OK — (no calque warning found in Антоненко-Давидович)
+- наступний потяг: OK — (no calque warning found in Антоненко-Давидович)
 
 ## CEFR Check
-- автобус: A1 — Found in Grade 1 textbooks (Bolshakova).
-- метро: A1 — Found in Grade 5 textbooks (Uhor) as basic transport.
-- квиток: A1 — Found in Grade 3 textbooks (Ponomarova).
-- зупинка: A1 — Found in Grade 7 textbooks in practical city contexts.
-- літак: A1 — Found in Grade 1 textbooks (Bolshakova).
+- автобус: A1 — OK
+- квиток: A1 — OK
+- метро: A1 — OK
+- потяг: A2 — Above target (A1)
+- зупинка: A1 — OK
+- направо: A1 — OK
 </pre_verified_facts>
 
 
@@ -599,12 +598,14 @@ These exercises, adapted from Ukrainian school materials, provide a gold standar
 
 ## Section Structure
 
-Write these sections as H2 headings, in this exact order:
+Write these sections as H2 headings, in this **exact** order:
 
 - `## Діалоги (Dialogues)` (~300 words)
 - `## Транспорт (Transport Types)` (~300 words)
 - `## Корисні фрази (Useful Phrases)` (~300 words)
 - `## Підсумок — Summary` (~300 words)
+
+**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim** as an `## H2` line. This includes the FINAL summary/transition section (`Підсумок: ...`, `Підсумок та перехід до M...`, etc.) — the writer's most common failure is silently dropping the closing section. Do NOT skip it. Do NOT renumber. Do NOT merge headings. The post-write quick-verify check will fail your build if any heading is missing, even if the prose itself is excellent.
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -652,6 +653,25 @@ PLAN-AWARE EXEMPTIONS: The following bans are RELAXED for this module because th
 - **Zero calques**: No приймати душ→брати душ, приймати рішення→ухвалювати рішення
 - **Zero paronyms**: тактична≠тактовна, ефектний≠ефективний — use the right word, not a similar-sounding one
 - **Natural Ukrainian**: Write how a Ukrainian teacher would explain this to a student. Not robotic, not textbook-dry, not overly casual.
+
+### FORBIDDEN WORDS — never write these (#1189)
+
+The following Russian words have leaked into past builds and broken modules. They are **hard-banned** — the post-write toxic-token scanner will fail your build the moment it sees one. Use the Ukrainian alternative every time, even in dialogues, even in casual prose, even when quoting a learner's mistake (use a `<!-- VERIFY -->` placeholder instead of typing the Russian form):
+
+| Russian (FORBIDDEN) | Ukrainian (USE THIS) |
+|---|---|
+| хорошо | добре |
+| конечно | звичайно / певна річ |
+| спасибо | дякую |
+| пожалуйста | будь ласка / прошу |
+| ничего | нічого |
+| сейчас | зараз |
+| тоже | теж / також |
+| здесь | тут |
+| кот | кіт |
+| кон | кін |
+
+This list is enforced word-for-word by `scripts/build/quick_verify.py` (SEVERE_RUSSIANISMS). If you produce any of these tokens — even inside a quoted example, even inside a dialogue line spoken by a Russian-speaking character — the build halts immediately. There is no exception.
 
 **Authority hierarchy (if uncertain about a word, check in this order):**
 VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (stress) → Антоненко-Давидович (style) → Грінченко (etymology).
@@ -762,44 +782,37 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Діалоги — Dialogues (~330 words total)
-- P1 (~50 words): Intro to transport in Ukraine. Setting the scene at Boryspil airport (Бориспіль) and the need to get into Kyiv. Mentioning the variety of choices: bus, train, taxi, or metro.
-- Dialogue 1 (~100 words): Getting from the airport to the city. [Приїжджий: Вибачте, як дістатися до вокзалу? Друг: Їдьте автобусом номер сім. Зупинка ось там. Приїжджий: А можна на метро? Друг: Так, але спочатку треба їхати автобусом до станції метро «Харківська».]
-- P2 (~40 words): Language focus on the first dialogue. Explaining the phrase "Як дістатися до..." (How to get to...) + Genitive case (вокзалу, станції). Highlighting the polite response "На здоров'я!"
-- Dialogue 2 (~100 words): Buying a train ticket at the station. [Пасажир: Добрий день! Один квиток до Львова, будь ласка. Касир: В один бік чи туди й назад? Пасажир: Туди й назад на завтра. Касир: Є потяг о дев'ятій ранку. П'ятсот гривень. Пасажир: Дякую. О котрій годині він рушає? Касир: О дев'ятій рівно.]
-- P3 (~40 words): Cultural and linguistic notes on ticket buying. The distinction between "в один бік" (one way) and "туди й назад" (round trip). Integration of time (о дев'ятій) and numbers (п'ятсот).
-- <!-- INJECT_ACTIVITY: fill-in-ticket-buying --> [fill-in, focus: Buying a ticket: Один ___ до ___, будь ласка, 6 items]
+## Діалоги (Dialogues) (~320 words total)
+- P1 (~80 words): Introduction to the module's setting. Context: moving around the city of Kyiv and navigating from the airport (Бориспіль) to a hotel. Highlight the importance of knowing basic transport vocabulary to get around efficiently.
+- P2 (~120 words): Dialogue 1 — Getting to the train station. Characters: Приїжджий (visitor) and Друг (local). Focus on asking for directions ("Як дістатися до вокзалу?") and receiving transport advice ("Їдьте автобусом або на метро"). Include follow-up questions: "Який автобус?", "Номер сім", "Зупинка ось там".
+- P3 (~120 words): Dialogue 2 — Buying a ticket at the station. Focus on the transaction: "Один квиток до Львова, будь ласка," "В один бік чи туди й назад?", "Скільки коштує?". Combine transport, numbers, and time ("О котрій відправлення?", "О дев'ятій ранку").
 
-## Транспорт — Transport Types (~330 words total)
-- P1 (~80 words): Introduction to city transport (громадський транспорт). Listing the "big four": автобус (bus), тролейбус (trolleybus), трамвай (tram), and метро (metro). Explaining that "метро" and "таксі" are indeclinable (незмінювані) nouns of foreign origin.
-- P2 (~70 words): Intercity and private transport. Introducing "потяг/поїзд" (train) and "літак" (plane). Mentioning "маршрутка" (the ubiquitous Ukrainian minibus) and "машина" (car). Essential locations: вокзал (station), аеропорт (airport), зупинка (stop).
-- P3 (~90 words): Grammar of "By Transport" — Part 1. The Instrumental case for declinable nouns. Explain the "by means of" pattern without a preposition: їхати автобусом (by bus), потягом (by train), трамваєм (by tram), тролейбусом (by trolleybus). Contrast with "іти пішки" (to go on foot).
-- P4 (~90 words): Grammar of "By Transport" — Part 2. The "на + Locative" pattern for indeclinable and specific nouns. Explain: їхати на метро (by metro), на таксі (by taxi), на машині (by car). Warning: do not mix the patterns (no "на автобусом"). Mention that "на автобусі" is possible but "автобусом" is more idiomatic for "by bus."
-- <!-- INJECT_ACTIVITY: quiz-transport-patterns --> [quiz, focus: Автобусом or на метро? Choose the right pattern, 6 items]
-- <!-- INJECT_ACTIVITY: quiz-match-situation --> [quiz, focus: Which transport? Match situation to transport type, 8 items]
+## Транспорт (Transport Types) (~330 words total)
+- P1 (~100 words): Introduce city transport vocabulary (громадський транспорт). Present the most common vehicles: автобус (bus, masculine), тролейбус (trolleybus, masculine), трамвай (tram, masculine), маршрутка (minibus, feminine). Introduce indeclinable nouns: метро (metro, neuter) and таксі (taxi, neuter).
+- P2 (~70 words): Introduce intercity transport (міжміський транспорт). Cover long-distance options: потяг (train, masculine), автобус (bus), літак (plane, masculine).
+- <!-- INJECT_ACTIVITY: quiz-which-transport --> [quiz, Which transport? Match situation to transport type., 8 items]
+- P3 (~90 words): Explain the core difference between іти (to go on foot) and їхати (to go by vehicle). Teach pattern 1 for saying "by transport": using the instrumental chunk without deep grammar explanation. Provide examples: їхати автобусом, їхати тролейбусом, їхати трамваєм, їхати потягом. 
+- P4 (~70 words): Teach pattern 2 for saying "by transport": using "на" + locative chunk. Explain this is used for indeclinable nouns and cars. Provide examples: їхати на метро, їхати на таксі, їхати на машині. Note that both patterns translate to "by [transport]" in English.
+- <!-- INJECT_ACTIVITY: quiz-instrumental-or-locative --> [quiz, Автобусом or на метро? Choose the right pattern., 6 items]
 
-## Корисні фрази — Useful Phrases (~330 words total)
-- P1 (~80 words): Finding your way. Essential questions at the station: "Де зупинка автобуса?", "Де найближча станція метро?". Vocabulary for finding the right line/number: "Який автобус їде в центр?", "Номер п'ять."
-- P2 (~80 words): On-board communication. How to ask about your stop: "Яка це зупинка?" (What stop is this?), "Вибачте, ви виходите?" (Excuse me, are you getting off? — the standard way to pass in a crowded bus). Use of "Мені виходити тут."
-- P3 (~80 words): Directions and movement. Revisiting movement from M31: прямо (straight), направо (right), наліво (left). Combining with transport: "Поїдьте прямо, а потім поверніть направо на зупинці."
-- P4 (~90 words): Vocabulary of departure. Decolonization note: avoid "відправлятися." Use "рушати" (for trains starting to move), "відбувати" (for scheduled buses), and "виїжджати" (to leave/depart). Examples: "Потяг рушає о восьмій," "Автобус виїжджає з автовокзалу."
-- <!-- INJECT_ACTIVITY: fill-in-directions --> [fill-in, focus: Ask for directions: Як дістатися до __?, 6 items]
+## Корисні фрази (Useful Phrases) (~330 words total)
+- P1 (~110 words): Essential phrases for stations and stops. Introduce the word зупинка (stop) and the question "Де зупинка автобуса?". Cover phrases for buying tickets: квиток (ticket), "Один квиток, будь ласка," "Скільки коштує квиток?". Teach asking about schedules: "Коли наступний потяг?".
+- <!-- INJECT_ACTIVITY: fill-in-buy-ticket --> [fill-in, Buy a ticket: Один ___ до ___, будь ласка., 6 items]
+- P2 (~110 words): Asking for directions to a specific place. Introduce the highly useful phrase "Як дістатися до...?" (How do I get to...?). Combine this with directional responses from previous modules: прямо (straight), направо (right), наліво (left). Example: "Як дістатися до вокзалу? Йдіть прямо, потім наліво."
+- P3 (~110 words): Navigating while on the vehicle. Teach phrases to ensure the learner is on the right track: "Яка це зупинка?" (What stop is this?), "Мені виходити тут?" (Do I get off here?). Address decolonization: emphasize using standard Ukrainian verbs for departure like рушати (for trains) or відбувати (for buses) instead of the Russianism відправлятися.
+- <!-- INJECT_ACTIVITY: fill-in-ask-directions --> [fill-in, Ask for directions: Як дістатися до ___?, 6 items]
 
-## Підсумок — Summary (~330 words total)
-- P1 (~150 words): Recap of transport communication. We have learned to name the main types of transport (автобус, потяг, таксі, метро) and how to say we are traveling by them using two patterns: the instrumental case (автобусом) and the "на" construction (на метро). We also covered the basics of buying a ticket and asking for the schedule using "о котрій годині" and the verb "рушати."
-- P2 (~180 words): Self-check Q&A.
-    - Q: How do you say "I am going to work by bus"?
-    - A: Я їду на роботу автобусом.
-    - Q: How do you ask "Where is the train station?"
-    - A: Де залізничний вокзал?
-    - Q: How do you buy a train ticket to Lviv (round trip)?
-    - A: Один квиток до Львова туди й назад, будь ласка.
-    - Q: How do you ask "What stop is this?"
-    - A: Яка це зупинка?
-    - Q: How do you say "Go straight and then left"?
-    - A: Ідіть прямо, а потім наліво.
+## Підсумок — Summary (~320 words total)
+- P1 (~160 words): Recap of all major transport types covered (автобус, метро, таксі, потяг, трамвай). Remind learners of the two distinct patterns for expressing "by transport": the instrumental case pattern (автобусом, потягом) and the prepositional pattern (на метро, на таксі). Reiterate key communicative phrases for finding stops and getting directions (Де зупинка?, Як дістатися до...?).
+- P2 (~160 words): 
+  * How do you get to work? (Я їду на роботу автобусом / на метро.)
+  * Buy a train ticket to Lviv. (Один квиток до Львова, будь ласка.)
+  * Ask where the bus stop is. (Вибачте, де зупинка автобуса?)
+  * Ask how to get to the station. (Як дістатися до вокзалу?)
+  * Ask the price of a ticket. (Скільки коштує квиток?)
+  * Check if you need to get off at this stop. (Мені виходити тут?)
 
-Grand total: ~1320 words
+Grand total: ~1300 words
 </skeleton>
 
 ## Output Format
@@ -807,11 +820,55 @@ Grand total: ~1320 words
 Write in Markdown. Use:
 - `## Section Title` for main sections
 - `### Subsection` for subsections within a section
-- `**bold**` for Ukrainian words being taught — EVERY bold Ukrainian word MUST have an English translation on first use, either in parentheses `**слово** (translation)` or inline `**слово** means "translation"`. No exceptions.
+- `**bold**` for Ukrainian words being taught. For **A1 and A2** levels, provide an English translation on first use (e.g. `**стіл** (table)`) because learners lack the vocabulary to infer meaning. For **B1 and above**, do NOT provide inline translations for standard vocabulary — the learner will use the module's словник (vocabulary table). You may provide ONE parenthetical English translation ONLY for highly abstract grammar/linguistic terms on first use (e.g. `**видова пара** (aspectual pair)`).
 - Tables for paradigms (conjugation, declension)
 - `:::tip` / `:::caution` / `:::note` for callout boxes
 - `<!-- INJECT_ACTIVITY: {id} -->` for exercise placement (markers only — do NOT write exercise content)
 
 Do NOT write MDX component syntax, JSON, or DSL exercise blocks (:::quiz, etc.). Plain Markdown with injection markers.
+
+---
+
+## MANDATORY FINAL CHECKLIST (#1189)
+
+Before you finish writing, verify the prose against this checklist. Failing any item will fail the build.
+
+### Section headings (verbatim)
+
+Every heading from "Section Structure" above MUST appear as an `## H2` in your output, in order, **including the closing `Підсумок:` / `Підсумок та перехід до M...` summary**. The single most common writer failure across the B1 build has been silently dropping the final summary section. Re-read your output before stopping. If the last section in the plan is missing, write it now.
+
+### Required vocabulary (every word must appear)
+
+You MUST use **every word** from the list below at least once in the prose, in a natural sentence with bold + English translation. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, прагматика, діагностика, дієвідмінювання, зворотний, двовидовий, одновидовий, неозначено-кількісний, etc.) is the most frequently dropped category — actively find homes for those words even if it means adding a sentence that defines them.
+
+- [ ] автобус (bus, m)
+- [ ] метро (metro, n)
+- [ ] таксі (taxi, n)
+- [ ] потяг (train, m)
+- [ ] квиток (ticket, m)
+- [ ] зупинка (stop, f)
+
+### Forbidden words (never produce)
+
+Do not write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use `<!-- VERIFY -->` instead). The post-write toxic-token scanner will fail the build immediately:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+### Level-specific immersion check
+
+The level-appropriate immersion rule was already injected at the top of
+this prompt as `IMMERSION RULE`. Re-read it now BEFORE you stop writing.
+If your level's rule contains a CHECKLIST block, walk through every item.
+If it doesn't, just verify your output matches the LANGUAGE ROLES and
+TARGET stated in that block.
+
+This used to hard-code a B1+ checklist that confused A1/A2 models (where
+translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+The single source of truth is now
+`scripts/pipeline/config_tables.py:IMMERSION_RULES`.
+
+---
 
 Begin writing now. Start with the first section heading.

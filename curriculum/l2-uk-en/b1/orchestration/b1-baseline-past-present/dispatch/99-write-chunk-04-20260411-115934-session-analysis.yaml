@@ -1,0 +1,57 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T09-58-29aa0772.json
+phase: write-chunk-04
+prompt_chars: 52751
+response_chars: 7741
+prompt_words: 7156
+response_words: 1253
+sections:
+- name: header
+  start: 0
+  length: 441
+  fraction: 0.0084
+- name: skeleton
+  start: 441
+  length: 1274
+  fraction: 0.0242
+- name: prior_summary
+  start: 1715
+  length: 3437
+  fraction: 0.0652
+- name: plan
+  start: 5152
+  length: 19119
+  fraction: 0.3624
+- name: wiki
+  start: 17909
+  length: 28256
+  fraction: 0.5356
+- name: output_spec
+  start: 52527
+  length: 224
+  fraction: 0.0042
+large_sections:
+- wiki
+directives_total: 22
+directives_covered: 17
+directives_missed:
+- kind: checklist
+  text: інфінітив (infinitive — the base form ending in -ти/-тися)
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: inject_activity
+  text: quiz-aspect-id
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-aspect-pairs
+  covered: false
+  coverage_note: marker missing

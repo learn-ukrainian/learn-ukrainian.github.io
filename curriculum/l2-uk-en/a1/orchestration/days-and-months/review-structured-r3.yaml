@@ -1,0 +1,56 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 7
+  evidence: 'All planned H2 sections are present, required vocabulary is present,
+    and all 3 activity markers match the plan. But the planned 4x300-word pacing drifted
+    substantially: measured locally, `Діало́ги` is'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: No evidence-backed Ukrainian error found. The forms `у середу`, `у п'ятницю`,
+    `у суботу`, `у березні`, `у серпні`, `взимку`, `навесні`, `влітку`, `восени` verify
+    locally, and the calendar/chunk patter
+- dimension: 3
+  name: Pedagogical quality
+  score: 7
+  evidence: The module follows a basic PPP shape and gives multiple examples, but
+    too much space goes to English exposition instead of reusable learner output.
+    After Dialogue 1, the explanation says `He also high
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 'All required vocabulary from the plan appears in prose: all 7 days, `тиждень`,
+    all 4 seasons, all 12 months, and `день народження`. The dialogue and examples
+    reuse several target chunks naturally.'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: The 3 markers match the 3 planned activity types and are placed after
+    the relevant teaching sections. At marker level, the exercise plan is coherent
+    and testable.
+- dimension: 6
+  name: Engagement & tone
+  score: 6
+  evidence: 'Several lines add word count without adding much instruction: `Time management
+    and scheduling are essential parts of daily life.`, `He also highlights a very
+    important lifestyle concept`, and `Masteri'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All planned H2 headings are present and in the correct order. Markdown
+    is clean, marker syntax is intact, and the pipeline word count is 1250, which
+    clears the 1200 target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 9
+  evidence: The module presents Ukrainian calendar vocabulary on its own terms, especially
+    in the month-name paragraph, and avoids Russian-centered framing.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 6
+  evidence: 'Dialogue 1 is mostly one speaker interrogating the other: `Що ти ро́биш
+    у понеділок? ... А у вівто́рок? ... А у субо́ту?`, with Marko giving short replies.
+    Dialogue 2 is a bit better, but still heavil'
+findings: []

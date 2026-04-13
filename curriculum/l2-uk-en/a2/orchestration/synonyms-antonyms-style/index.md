@@ -1,6 +1,6 @@
 # Build Summary: synonyms-antonyms-style (A2)
 
-Generated: 2026-04-08 20:17
+Generated: 2026-04-11 17:29
 
 ## Pipeline Phases
 
@@ -12,15 +12,15 @@ Generated: 2026-04-08 20:17
 | pre-verify | complete | 2026-04-08 15:42:23 |
 | write | complete | 2026-04-08 17:50:15 |
 | exercises | complete | 2026-04-08 17:50:15 |
-| activities | complete | 2026-04-08 17:56:44 |
+| activities | complete | 2026-04-11 15:24:49 |
 | verify-exercises | complete | 2026-04-08 17:56:44 |
 | annotate | complete | 2026-04-08 17:56:44 |
 | vocab | complete | 2026-04-08 17:59:51 |
 | enrich | complete | 2026-04-08 17:59:51 |
 | verify | complete | 2026-04-08 17:59:51 |
-| review | complete | 2026-04-08 18:17:39 |
 | stress | complete | 2026-04-08 18:17:39 |
-| publish | complete | 2026-04-08 18:17:40 |
+| publish | complete | 2026-04-11 15:29:53 |
+| audit | complete | 2026-04-11 15:29:53 |
 
 ## Reviews
 
@@ -35,14 +35,20 @@ Generated: 2026-04-08 20:17
 | pre-verify | gemini-tools (gemini-3-flash-preview) | 350s | ✅ |
 | skeleton | gemini (gemini-3-flash-preview) | 152s | ✅ |
 | activities | gemini-tools (gemini-3.1-pro-preview) | 389s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 80s | ✅ |
 | vocab | gemini (gemini-3-flash-preview) | 179s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 900s | ❌ |
 | review | gemini-tools (auto) | 167s | ✅ |
 | write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 354s | ✅ |
+| write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 30s | ✅ |
 | write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 306s | ✅ |
+| write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 84s | ✅ |
 | write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 156s | ✅ |
+| write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 85s | ✅ |
 | write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 274s | ✅ |
+| write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 50s | ✅ |
 | write-chunk-05 | gemini-tools (gemini-3.1-pro-preview) | 72s | ✅ |
+| write-chunk-05 | gemini-tools (gemini-3.1-pro-preview) | 35s | ✅ |
 
 ## Files
 

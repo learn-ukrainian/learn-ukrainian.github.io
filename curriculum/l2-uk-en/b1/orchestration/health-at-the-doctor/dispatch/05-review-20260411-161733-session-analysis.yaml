@@ -1,0 +1,44 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T14-10-955e59c2.json
+phase: review
+prompt_chars: 61800
+response_chars: 7412
+prompt_words: 8719
+response_words: 1023
+sections:
+- name: preamble
+  start: 0
+  length: 450
+  fraction: 0.0073
+- name: plan
+  start: 450
+  length: 58479
+  fraction: 0.9463
+- name: output_spec
+  start: 58929
+  length: 2871
+  fraction: 0.0465
+large_sections:
+- plan
+directives_total: 15
+directives_covered: 11
+directives_missed:
+- kind: must
+  text: 'А якщо ситуація вимагає обов''язкових дій, ми використовуємо слово **потрібно**
+    *(it is necessary / one must)*: вам терміново потрібно здати аналізи, або хворому
+    потрібно залишатися в ліжку.'
+  covered: false
+  coverage_note: 3/18 keywords (17%)
+- kind: must
+  text: '**CRITICAL RULE: If you mention ANY error, mistake, or inaccuracy in the
+    evidence column of your scores table, you MUST also list it as a structured finding
+    below AND include it in your `<fixes>` block.'
+  covered: false
+  coverage_note: 8/22 keywords (36%)
+- kind: must
+  text: This is a language curriculum — every error you identify must be fixed.
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing

@@ -2,51 +2,51 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 8
-  evidence: The module covers all structural sections and dialogue scenarios perfectly,
-    but fails to include the required vocabulary word `купувати` (only using perfective
-    `купити`).
+  score: 6
+  evidence: 'The supermarket dialogue covers `хліб`, `молоко`, and `сир`, but misses
+    the planned price-comparison items `ковбаса` and `масло`; the module also rejects
+    `буханка`, which the plan’s quantity activity '
 - dimension: 2
   name: Linguistic accuracy
-  score: 8
-  evidence: The module explains Ukrainian numeral case agreement but contains a critical
-    factual omission by failing to mention that numbers ending in 11-14 take the genitive
-    plural (`гривень`).
+  score: 6
+  evidence: The tip says `«буханка» ... is an incorrect Russian calque`, but local
+    dictionary verification attests `буханка` as Ukrainian.
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: Excellent PPP flow. Grammar rules for case usage with quantities are taught
-    brilliantly as "fixed chunks" ("The hidden 'of'"), which is perfect for A1 learners.
+  score: 6
+  evidence: The lesson opens with a long English paragraph (“Shopping in Ukraine blends
+    modern convenience with traditional culture...”) before any Ukrainian, then adds
+    more English meta-explanation after short d
 - dimension: 4
   name: Vocabulary coverage
   score: 8
-  evidence: The required word `купувати` and recommended word `гроші` are absent from
-    the prose text.
+  evidence: Required/recommended vocabulary is broadly present (`коштувати`, `скільки`,
+    `гривня`, `ціна`, `ринок`, `знижка`, `гроші`, `готівка`), but the loaf-of-bread
+    vocabulary becomes confusing because `буханк
 - dimension: 5
   name: Exercise quality
-  score: 8
-  evidence: The `match-up-shops` exercise is placed immediately after the Dialogues,
-    testing vocabulary (`м'ясний відділ`, `крамниця`) that isn't taught until the
-    subsequent section.
+  score: 7
+  evidence: All four markers are present and sensibly placed, but the locations exercise
+    tests `кафе` and `ресторан` before those place words are taught.
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: The tone is exceptionally warm and engaging, using an encouraging teacher
-    persona without falling into corporate/gamified language.
+  score: 7
+  evidence: The tone is teacherly, but filler like “This makes the local market the
+    perfect place to practice your Ukrainian communication skills” adds words without
+    adding much lesson value.
 - dimension: 7
   name: Structural integrity
-  score: 10
-  evidence: All H2 headings match the plan perfectly. The word count is 1830 (well
-    above the 1200 target).
+  score: 9
+  evidence: All planned H2 headings are present and in order; pipeline word count
+    is 1641, so the module is comfortably above the 1200-word target.
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: Superb decolonized context explaining the difference between the Russian-imposed
-    `копійка` and the historical Ukrainian `шаг`, as well as the cultural habit of
-    using diminutives in markets.
+  score: 7
+  evidence: The market/supermarket framing is fine, but the categorical claim that
+    `буханка` is a Russian calque misrepresents Ukrainian usage.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: Dialogues are natural, polite, and effectively demonstrate the difference
-    between communicative market interactions and transactional supermarket shopping.
+  score: 6
+  evidence: The market dialogue is usable, but the supermarket dialogue stays thin
+    and misses the planned comparison set `ковбаса`/`масло`.
 findings: []

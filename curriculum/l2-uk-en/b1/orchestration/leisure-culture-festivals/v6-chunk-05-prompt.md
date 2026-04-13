@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-> — **Клієнт:** Звучить неймовірно апетитно. А які легкі гарніри у вас є в меню? > — **Офіціант:** Ми пропонуємо печену картоплю або свіжий салат. Якщо ви хочете щось легке, овочевий салат підійде найкраще. > — **Клієнт:** Дуже добре, тоді я із задоволенням візьму смажену рибу і ваш фірмовий салат. І принесіть, будь ласка, меню напоїв. Сучасна українська кухня є надзвичайно багатою, і кожен регіон має свої гастрономічні візитівки. Наша кулінарна мапа є дуже різноманітною та унікальною. Звісно, найвідомішою українською стравою у світі є традиційний червоний **борщ** *(borscht)*, який міжнародна спільнота включила до списку культурної спадщини ЮНЕСКО. Хоча класичний борщ готують абсолютно по всій Україні, кожна господиня має свій унікальний секретний рецепт. Іншою популярною стравою є домашні **вареники** *(dumplings)*, які можуть мати безліч різних смачних начинок: від солодкої вишні до солоної капусти з грибами. Якщо ми поїдемо в мальовничі Карпати, ми обов'язково повинні там скуштувати справжній гарячий **банош** *(banosh)*. Хоча банош — це давня гуцульська страва, яку історично готували пастухи високо в горах, сьогодні його елегантно подають у найкращих ресторанах Києва. Також дуже популярними є смачні **голубці** *(cabbage rolls)*, які зазвичай готують із молодої капусти та рису з м'ясом. Хоча складний процес їхнього приготування займає багато часу, результат завжди того вартий. Дарма що сучасна молодь зараз часто обирає швидку їжу, традиційні українські страви залишаються улюбленими на кожному родинному столі. Культура щоденного споживання їжі в Україні має свої особливі традиції, які передаються з покоління в покоління. Наші українські люди є дуже гостинними, тому традиційні родинні застілля завжди приємно вражають неймовірною кількістю смачних страв. Коли українці запрошують друзів додому, стіл повністю заставлений різноманітною їжею, бо господарі хочуть показати свою щедрість. Сучасний європейський ресторанний етикет в Україні також дуже активно розвивається. Коли ми обираємо новий заклад для святкування важливої події, ми часто звертаємо увагу на те, яка саме там є **фірмова страва** *(signature dish)*. Ми вчора вибрали цей популярний ресторан, бо наші колеги розповідали, що там готують автентичні українські деруни за давнім рецептом. Успішна фірмова страва — це унікальна кулінарна пропозиція, яка яскраво вирізняє заклад серед багатьох інших конкурентів на гастрономічному ринку. Завдяки таким оригінальним рецептам наша ресторанна культура стає дедалі цікавішою. Після відвідування цікавого ресторану сучасні українські клієнти часто залишають свої коментарі та відгуки в інтернеті. Це допомагає іншим людям зробити правильний вибір, а закладам — якісно покращити свій сервіс. У таких відгуках ми природно використовуємо непряму мову, щоб передати свої враження або процитувати слова інших людей. Наприклад, ви можете написати: «Клієнт у відгуку сказав, що сервіс у цьому закладі був відмінним, а їжа — дуже смачною». Або інший приклад: «Моя подруга вчора зазначила, що цей новий ресторан має найкраще меню в місті». Активне використання непрямої мови дозволяє нам об'єктивно описати ситуацію. Якщо офіціант був ввічливим, гість обов'язково напише, що він отримав величезне задоволення від своєї вечері. Коли ми трансформуємо пряму емоційну мову кухаря на непряму, це звучить так: «Шеф-кухар пояснив гостям, що він завжди використовує лише локальні фермерські продукти». Такі розгорнуті відгуки, які містять різноманітні складні речення, роблять ваші тексти значно більш професійними. <!-- INJECT_ACTIVITY: reading-regional-cuisine --> <!-- INJECT_ACTIVITY: fill-in-restaurant-dialogue -->
+зрозуміти культуру певного регіону, вам обов'язково треба скуштувати його місцеву їжу. > *The culinary map of Ukraine is incredibly rich and diverse, as each region has its unique gastronomic calling cards. The most famous Ukrainian dish is, undoubtedly, borscht, which every family cooks according to their own special recipe. Another culinary symbol is varenyky, which can have countless filling options: from potatoes with mushrooms to sweet cherries. Although banosh is a traditional Hutsul dish historically cooked by shepherds in the Carpathians, today it is gladly served in restaurants all over Ukraine. It is a thick corn porridge boiled in homemade sour cream and served with brynza or pork rinds. In the south and center of the country, holubtsi are very popular, which housewives often prepare for big holidays or family dinners. When we travel around Ukraine, we have a wonderful opportunity to explore these regional differences. Although the ingredients may seem simple, the mastery of local cooks turns them into true masterpieces. If you want to understand the culture of a certain region, you definitely need to taste its local food.* Українська культура споживання їжі завжди була тісно пов'язана з гостинністю та щедрістю. Традиційні родинні застілля відзначаються великою кількістю страв, довгими розмовами та співом пісень. Сучасний ресторанний етикет дещо відрізняється від домашніх традицій, але він зберігає ту саму теплоту та увагу до гостя. У багатьох закладах існує поняття «фірмова страва» — це особливий рецепт, яким найбільше пишається шеф-кухар. Відвідувачі часто звертають увагу на атмосферу закладу, якість обслуговування та оригінальність подачі. Ми часто вибираємо певний заклад, бо там готують автентичні страви за старовинними рецептами. Іноді люди повертаються в той самий ресторан роками, тому що їм подобається стабільна якість та привітність персоналу. Сучасні українці люблять проводити час у кафе, бо це чудова нагода зустрітися з друзями після напруженого робочого дня. :::info **Граматика** — Причинні та допустові речення We use **бо** (because/as) and **тому що** (because) to explain the reason for an action: *Ми прийшли сюди, бо тут смачно.* To express a contrast or unexpected result, use **хоча** (although/even though): *Хоча порція була велика, я з'їв усе.* These conjunctions help you build more sophisticated arguments when reviewing a restaurant or expressing preferences. ::: Перед тим як зробити **замовлення** (order) у новому місці, люди часто читають відгуки в інтернеті. Написання гарного відгуку вимагає вміння чітко формулювати свої думки та аргументувати оцінку. У таких випадках ми часто переказуємо чужі слова, використовуючи непряму мову. Наприклад, ми можемо написати: «Мій друг сказав, що цей ресторан має найкращу винну карту в місті». Або: «Клієнт зазначив, що сервіс був відмінним, а їжа — надзвичайно смачною». Перетворення прямої мови на непряму вимагає використання з'ясувального сполучника «що» та правильного узгодження займенників. Якщо офіціант запитав: «Вам сподобалася вечеря?», ми передаємо це так: «Офіціант запитав, чи нам сподобалася вечеря». Вміння правильно використовувати ці граматичні конструкції дозволяє вам вільно обговорювати кулінарний досвід та об'єктивно оцінювати якість послуг. Гастрономія — це не лише про втамування голоду, а й про спілкування, обмін емоціями та відкриття нових смакових горизонтів. <!-- INJECT_ACTIVITY: reading-regional-cuisine --> <!-- INJECT_ACTIVITY: fill-in-restaurant-dialogue -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -524,7 +524,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -537,18 +604,71 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] дозвілля (leisure, free time)
+- [ ] захоплення (hobby, passion)
+- [ ] мистецтво (art)
+- [ ] виставка (exhibition)
+- [ ] вистава (performance, show)
+- [ ] Різдво (Christmas)
+- [ ] Великдень (Easter)
+- [ ] свято (holiday, celebration)
+- [ ] традиція (tradition)
+- [ ] культура (culture)
+- [ ] святкувати (to celebrate)
+- [ ] колядка (Christmas carol)
+- [ ] писанка (decorated Easter egg)
+- [ ] ресторан (restaurant)
+- [ ] меню (menu)
+- [ ] замовлення (order)
+- [ ] страва (dish)
+- [ ] шеф-кухар (chef)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Розділ 5: Вираження думок і аргументація (~780 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

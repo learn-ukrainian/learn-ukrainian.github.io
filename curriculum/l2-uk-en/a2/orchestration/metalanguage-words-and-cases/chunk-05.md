@@ -1,28 +1,36 @@
-## Підсумок
+## Підсумок (~150 words)
 
-Ось ваш короткий граматичний довідник. *(Here is your short grammar reference guide.)* Збережіть цю інформацію для наступних уроків. *(Save this information for the next lessons.)* Ви будете часто використовувати ці терміни. *(You will use these terms often.)*
+Тепер ви маєте міцний фундамент для подальшого навчання. Ви можете самостійно читати граматичні правила українською мовою. Це допоможе вам думати як носій мови.
 
-*   **Частини мови** *(Parts of speech)*:
-    *   **іменник** *(noun)* — стіл, радість
-    *   **прикметник** *(adjective)* — великий, гарна
-    *   **дієслово** *(verb)* — читати, знати
-    *   **займенник** *(pronoun)* — я, він, хтось
-    *   **числівник** *(numeral)* — п'ять, перший
-    *   **прислівник** *(adverb)* — швидко, завтра
-    *   **прийменник** *(preposition)* — у, на, біля
-    *   **сполучник** *(conjunction)* — і, але, бо
+> *Now you have a solid foundation for further learning. You can independently read grammar rules in the Ukrainian language. This will help you think like a native speaker.*
 
-*   **Відмінки** *(Cases)*:
-    *   **Н.** (Називний) — хто? що?
-    *   **Р.** (Родовий) — кого? чого?
-    *   **Д.** (Давальний) — кому? чому?
-    *   **Зн.** (Знахідний) — кого? що?
-    *   **Ор.** (Орудний) — ким? чим?
-    *   **М.** (Місцевий) — на кому? на чому?
-    *   **Кл.** (Кличний) — звертання *(direct address)*
+:::note
+**Граматичний довідник**
+Take a screenshot of this complete summary list for your future studies.
 
-*   **Граматичні категорії** *(Grammatical categories)*:
-    *   **рід** *(gender)*: чоловічий рід (ч.р.), жіночий рід (ж.р.), середній рід (с.р.)
-    *   **число** *(number)*: однина *(singular)*, множина *(plural)*
+**Частини мови**
+*   **іменник** (noun) — хто? що?
+*   **прикметник** (adjective) — який? яка? яке?
+*   **дієслово** (verb) — що робити? що зробити?
+*   **займенник** (pronoun) — хто? що? (я, ти, він)
+*   **числівник** (numeral) — скільки? який?
+*   **прислівник** (adverb) — як? де? коли?
+*   **прийменник** (preposition) — у, на, до
+*   **сполучник** (conjunction) — і, але, що
 
-**Самоперевірка** *(Self-check)*: Чи можу я назвати свою професію та три предмети у моїй кімнаті, використовуючи українські терміни **іменник** та **прикметник**? *(Can I name my own profession and 3 objects in my room using the labels noun and adjective?)* Якщо так, ви чудово попрацювали сьогодні! *(If so, you did a great job today!)*
+**Відмінки**
+*   **називний відмінок** (nominative case) — Н. (хто? що?)
+*   **родовий відмінок** (genitive case) — Р. (кого? чого?)
+*   Давальний — Д. (кому? чому?)
+*   Знахідний — Зн. (кого? що?)
+*   Орудний — Ор. (ким? чим?)
+*   Місцевий — М. (на кому? на чому?)
+*   Кличний — Кл. (звертання)
+
+**Граматичні категорії**
+*   **рід** (gender, grammatical) — ч.р., ж.р., с.р.
+*   **однина** (singular) — один
+*   множина (plural) — багато
+:::
+
+Self-check time! Can you name your own profession and three objects in your room using the labels **іменник** and **прикметник**? If you can confidently categorize the words in your daily life, you are absolutely ready for the intermediate level.

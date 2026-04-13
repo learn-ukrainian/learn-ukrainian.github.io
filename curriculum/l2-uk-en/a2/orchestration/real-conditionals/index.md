@@ -1,6 +1,6 @@
 # Build Summary: real-conditionals (A2)
 
-Generated: 2026-04-09 00:33
+Generated: 2026-04-11 16:41
 
 ## Pipeline Phases
 
@@ -12,15 +12,15 @@ Generated: 2026-04-09 00:33
 | pre-verify | complete | 2026-04-08 22:27:03 |
 | write | complete | 2026-04-08 22:30:37 |
 | exercises | complete | 2026-04-08 22:30:37 |
-| activities | complete | 2026-04-08 22:31:37 |
+| activities | complete | 2026-04-11 14:33:26 |
 | verify-exercises | complete | 2026-04-08 22:31:37 |
 | annotate | complete | 2026-04-08 22:31:37 |
 | vocab | complete | 2026-04-08 22:32:07 |
 | enrich | complete | 2026-04-08 22:32:07 |
 | verify | complete | 2026-04-08 22:32:07 |
-| review | complete | 2026-04-08 22:33:56 |
 | stress | complete | 2026-04-08 22:33:56 |
-| publish | complete | 2026-04-08 22:33:59 |
+| publish | complete | 2026-04-11 14:41:14 |
+| audit | complete | 2026-04-11 14:41:14 |
 
 ## Reviews
 
@@ -35,15 +35,21 @@ Generated: 2026-04-09 00:33
 | pre-verify | gemini-tools (gemini-3-flash-preview) | 36s | ✅ |
 | skeleton | gemini (gemini-3-flash-preview) | 27s | ✅ |
 | activities | gemini-tools (gemini-3.1-pro-preview) | 60s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 100s | ✅ |
 | vocab | gemini (gemini-3-flash-preview) | 21s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 109s | ✅ |
 | write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 74s | ✅ |
+| write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 210s | ✅ |
 | write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 67s | ✅ |
+| write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 99s | ✅ |
 | write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 48s | ✅ |
+| write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 80s | ✅ |
 | write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 26s | ✅ |
+| write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 65s | ✅ |
 
 ## Files
 
+- `.build.lock`
 - `chunk-01.md`
 - `chunk-02.md`
 - `chunk-03.md`

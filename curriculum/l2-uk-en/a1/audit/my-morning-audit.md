@@ -1,7 +1,7 @@
 # Audit Report: M20 — my-morning.md
 **Level:** A1 | **Module:** M20 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-11 00:57:08
+**Generated:** 2026-04-11 16:52:01
 
 ## Configuration
 **Type:** A1-grammar
@@ -18,43 +18,36 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | fill-in |  | 10 | 6 | ✅ |
-| 2 | quiz |  | 8 | 6 | ✅ |
-| 3 | fill-in |  | 3 | 6 | ❌ |
-| 4 | match-up |  | 7 | 6 | ✅ |
-| 5 | group-sort |  | 10 | 6 | ✅ |
-| 6 | true-false |  | 6 | 6 | ✅ |
-| 7 | anagram |  | 6 | 6 | ✅ |
+| 1 | fill-in | Вставте правильне закінчення дієслова | 10 | 6 | ✅ |
+| 2 | quiz | Оберіть правильну форму дієслова | 8 | 6 | ✅ |
+| 3 | fill-in | Вставте правильне слово | 6 | 6 | ✅ |
+| 4 | fill-in | Доповніть речення, щоб описати ранок | 6 | 6 | ✅ |
+| 5 | match-up | З'єднайте займенник із формою дієслова | 6 | 6 | ✅ |
+| 6 | group-sort | Розподіліть дієслова: зворотні чи ні? | 12 | 6 | ✅ |
+| 7 | true-false | Правда чи ні? | 6 | 6 | ✅ |
 
 **Summary:**
 - Total activities: 7 (target: 0-4) ❌
-- Unique types: 6 (minimum: 0) ✅
-- Priority types used: 4/8 (anagram, fill-in, match-up, quiz) ✅
-- Low density activities: 1
+- Unique types: 5 (minimum: 0) ✅
+- Priority types used: 3/8 (fill-in, match-up, quiz) ✅
+- Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
 - **[INFO]** Dative case used at A1: 'пові' (taught formally at A2)
   - FIX: No action needed — incidental dative exposure is acceptable.
-- **[LEVEL_RESTRICTION]** Activity 'anagram' should be phased out after A1 M10 (current: M20)
-  - FIX: Anagram is for Cyrillic scaffolding only. Use unjumble for word-ordering practice.
-- **[COMPLEXITY]** fill-in '' has 3 items (minimum: 6)
-  - FIX: Add more items. A1 fill-in requires at least 6 items.
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: займенник, дієслово
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: дієслово, займенник
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[HINT_IN_ACTIVITY]** anagram activity 'Untitled' has item-level hint in item 1
-  - FIX: Remove all 'hint' fields from activity items (they break activities and provide no real pedagogical value)
 
 ## Recommendation
-**📝 UPDATE** (severity 25/100)
+**📝 UPDATE** (severity 5/100)
 
-- 5 violations (moderate)
-- Activity density below minimum
+- 2 violations (minor)
 
 ## Gates
 - **Words:** ✅ 1471/1200 (raw: 1620)
 - **Activities:** ✅ 7/0
-- **Density:** ❌ 1 < 6
-- **Unique_types:** ✅ 6/0 types
+- **Density:** ✅ All > 6
+- **Unique_types:** ✅ 5/0 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 2/0
 - **Audio:** ℹ️ No audio
@@ -67,12 +60,6 @@
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
-
-## Low Density Activities
-| Activity | Type | Items | Required | Fix |
-|----------|------|-------|----------|-----|
-|  | fill-in | 3 | 6 | Add 3 more items |
-
 
 ## Section Audit
 | Section | Status | Count | Notes |

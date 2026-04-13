@@ -11,7 +11,7 @@ import ErrorCorrection from '@site/src/components/ErrorCorrection';
 import FillIn from '@site/src/components/FillIn';
 import FlashcardDeck from '@site/src/components/FlashcardDeck';
 import GroupSort from '@site/src/components/GroupSort';
-import Order from '@site/src/components/Order';
+import MatchUp from '@site/src/components/MatchUp';
 import Quiz from '@site/src/components/Quiz';
 import Translate from '@site/src/components/Translate';
 import TrueFalse from '@site/src/components/TrueFalse';
@@ -23,141 +23,210 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ## Вступ: Весільний квест та компас відмінків
 
-Ласкаво просимо до фінального випробування рівня A2! Ця **контрольна точка** (checkpoint) — час перевірити, як добре ви орієнтуєтеся у світі відмінків та множини. Це ваша головна **перевірка** (review). Ви вже знаєте, як іменники змінюють свої закінчення залежно від їхньої ролі в реченні. Ваш **компас відмінків** (case compass) з модуля 31 залишається головним інструментом навігації. Ми синтезуємо все, що ви знаєте про такі категорії, як **однина** (singular) та **множина** (plural). 
+Ласкаво просимо на останню велику станцію цього розділу! Ця **контрольна точка** (checkpoint) — це ваша фінальна граматична перевірка рівня А2. Ви вже добре знаєте, що таке **однина** (singular) та **множина** (plural). Ви також розглядали кожен непрямий **відмінок** (grammatical case) окремо. Тепер настав час поєднати всі ці знання в єдину систему. Вашим головним інструментом сьогодні буде "Компас відмінків" (Case Compass) з попередніх модулів. Він допоможе вам орієнтуватися у складних правилах і швидко визначати правильні форми.
 
-<div class="dialogue">
+Уявіть собі класичну життєву ситуацію: планування великого українського весілля. Кожен організаційний крок вимагає використання правильної форми слова!
 
-<div class="dialogue-line"><span class="speaker">Наречена:</span> **Олено!** Ти маєш хвилину? *(Olena! Do you have a minute?)*</div>
+> **Наречена**: Привіт! Роботи дуже багато. Зараз я підписую **запрошення для гостей** (invitations for guests).
+> **Подруга**: Клас! До речі, який **подарунок нареченій** (gift for the bride) ти хочеш отримати?
+> **Наречена**: Головне для мене — це бачити **мою сім'ю** (my family) та рідних людей.
+> **Подруга**: Звичайно! Я так хочу зробити гарне **фото з молодятами** (photo with the newlyweds)!
+> **Наречена**: Зробимо його ввечері **на весіллі** (at the wedding)!
+> **Подруга**: **Олено** (Olena), ти будеш найкращою у цей день!
 
-<div class="dialogue-line"><span class="speaker">Подруга:</span> Привіт! Так, звичайно. Що сталося? *(Hi! Yes, of course. What happened?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Наречена:</span> Я планую весілля. Це такий стрес! Я пишу **запрошення для гостей**. *(I am planning a wedding. It is such stress! I am writing invitations for the guests.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Подруга:</span> О, це чудово! Я вже маю **подарунок нареченій**. *(Oh, that is wonderful! I already have a gift for the bride.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Наречена:</span> Дякую! Я так хочу, щоб усе було ідеально. Коли я **бачу наречену** в кіно, вона завжди спокійна. *(Thank you! I want everything to be perfect so much. When I see a bride in a movie, she is always calm.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Подруга:</span> Ти теж будеш спокійною. Уяви: красивий ресторан, музика, ти танцюєш **з молодятами**... Ой, тобто зі своїм чоловіком! *(You will be calm too. Imagine: a beautiful restaurant, music, you are dancing with the newlyweds... Oh, I mean with your husband!)*</div>
-
-<div class="dialogue-line"><span class="speaker">Наречена:</span> Так, **на весіллі** всі будуть танцювати. *(Yes, at the wedding everyone will dance.)*</div>
-
-</div>
-
-This dialogue naturally uses all seven Ukrainian cases. We see the Vocative (**Олено**), Nominative (**весілля**), Genitive (**для гостей**), Dative (**нареченій**), Accusative (**наречену**), Instrumental (**з молодятами**), and Locative (**на весіллі**). Every noun adapts to its specific environment.
+Подивіться уважно на цей короткий діалог. Фраза **запрошення для гостей** використовує Родовий відмінок (Genitive) для позначення призначення. Фраза **подарунок нареченій** вимагає Давального відмінка (Dative), щоб показати адресата. Коли наречена каже, що хоче бачити **сім'ю**, це класичний Знахідний відмінок (Accusative) для прямого об'єкта. Вираз **з молодятами** — це Орудний відмінок (Instrumental), який позначає компанію. Місце дії **на весіллі** передається через Місцевий відмінок (Locative). І, звісно, звертання **Олено** — це Кличний відмінок (Vocative). Усього в одному діалозі ми бачимо повну роботу шести непрямих відмінків! Це чудова базова **перевірка** (check, review) перед тим, як занурюватися в деталі.
 
 ## Частина 1: Форми множини (Part 1: Plural Forms)
 
-First, consider the Nominative plural — the dictionary form for multiple items. The ending depends on the noun's gender and whether its stem ends in a hard or soft consonant. For the hard group, masculine and feminine nouns take **-и**: **столи** (tables), **книжки** (books). Soft group nouns take **-і** or **-ї**: **дні** (days), **землі** (lands). Neuter nouns change completely, taking **-а** or **-я**: **вікна** (windows), **моря** (seas). Remember these irregular plurals: **друг** (friend) becomes **друзі**, **людина** (person) becomes **люди**, **дитина** (child) becomes **діти**, and **око** (eye) becomes **очі**.
-- Тут живуть мої **друзі**. (My friends live here.)
-- Це нові **столи** та **книжки**. (These are new tables and books.)
-- У кімнаті великі **вікна**. (There are big windows in the room.)
-- Мої **батьки** дуже добрі. (My parents are very kind.)
+Почнемо з найпростішого базового рівня. Коли ви бачите кілька предметів і просто хочете назвати їх, ви використовуєте Називний відмінок (Nominative case). Для чоловічого роду ми найчастіше додаємо закінчення **-и** для твердої групи або **-і** для м'якої групи:
+- **великий стіл** (large table) → **великі столи** (large tables)
+- **розумний студент** (smart student) → **розумні студенти** (smart students)
+- **добрий лікар** (good doctor) → **добрі лікарі** (good doctors)
 
-The Genitive plural is the "wall" that many learners hit. It is the hardest form, but also the most common. For feminine and neuter nouns, the ending simply disappears — this is the zero ending. **Книга** (book) becomes **книг**, and **місто** (city) becomes **міст**. Most masculine nouns take the **-ів** ending: **студент** (student) becomes **студентів**. Sometimes, dropping the ending creates a difficult consonant cluster. To fix this, Ukrainian inserts a "fleeting vowel" (**вставний голосний**). **Земля** (land) becomes **земель**, **вікно** (window) becomes **вікон**, and **дошка** (board) becomes **дощок**.
-- У мене немає **книг**. (I do not have books.)
-- У групі багато **студентів**. (There are many students in the group.)
-- Я бачу п'ять **вікон**. (I see five windows.)
-- На столі немає **тарілок**. (There are no plates on the table.)
+Жіночий рід працює майже так само. Він теж використовує закінчення **-и** або **-і** / **-ї** залежно від групи приголосних:
+- **цікава книжка** (interesting book) → **цікаві книжки** (interesting books)
+- **важлива лінія** (important line) → **важливі лінії** (important lines)
 
-Some nouns have a fixed number. They are either Pluralia Tantum (plural only) or Singularia Tantum (singular only). Everyday items that consist of two parts are often plural-only: **гроші** (money), **окуляри** (glasses), **штани** (pants), **двері** (doors). Geographical names like **Карпати** (Carpathians) are also plural-only. Remember that verbs and adjectives must agree with them in the plural: "Гроші **були** на столі" (The money was on the table — literally "they were"). Some nouns are collective singulars, like **молодь** (youth) or **людство** (humanity).
-- Мої нові **штани** дуже зручні. (My new pants are very comfortable.)
-- **Гроші** лежать у сумці. (The money lies in the bag.)
-- Сучасна **молодь** любить технології. (Modern youth loves technology.)
-- Вона відчиняє великі **двері**. (She opens the big doors.)
+Середній рід має свої унікальні закінчення **-а** або **-я**, які візуально нагадують форми жіночого роду в однині:
+- **чисте вікно** (clean window) → **чисті вікна** (clean windows)
+- **глибоке море** (deep sea) → **глибокі моря** (deep seas)
 
-A few nouns use special suffixal plurals. Baby animals and some abstract concepts belong to the fourth declension and add **-ат-** / **-ят-** or **-ен-** in the plural. **Курча** (chick) becomes **курчата**, **кошеня** (kitten) becomes **кошенята**, and **ім'я** (name) becomes **імена**. Ukrainian also preserves remnants of the ancient dual number. "Double body parts" take the unique **-има** ending in the Instrumental case: **очима** (with eyes), **плечима** (with shoulders).
-- У дворі граються **кошенята**. (Kittens are playing in the yard.)
-- Я бачу це своїми **очима**. (I see this with my own eyes.)
-- Які ваші **імена**? (What are your names?)
+Обов'язково запам'ятайте три найважливіші винятки! Це високочастотна трійка слів, які мають нерегулярні форми:
+- **один друг** (one friend) → **мої друзі** (my friends)
+- **одна людина** (one person) → **різні люди** (different people)
+- **одна дитина** (one child) → **малі діти** (small children)
 
-The good news is that the Dative, Instrumental, and Locative plural endings are highly consistent across all genders. They are much easier to memorize than the Genitive plural. Dative takes **-ам** / **-ям**, Instrumental takes **-ами** / **-ями**, and Locative takes **-ах** / **-ях**.
-- Я даю їжу **кошенятам**. (I give food to the kittens.)
-- Ми гуляємо з **друзями**. (We are walking with friends.)
-- Книги лежать на **столах**. (The books lie on the tables.)
+Тепер переходимо до найскладнішого випробування. Родовий відмінок множини (Genitive plural) має найбільш різноманітні закінчення. Для жіночого та середнього роду ми дуже часто маємо нульове закінчення (zero ending), коли остання голосна літера просто зникає:
+- **одна книга** (one book) → п'ять **книг** (five books)
+- **велике місто** (large city) → багато **міст** (many cities)
 
-<FillIn client:only="react" items={[{"sentence": "Це новий ____ (стіл).", "answer": "столи", "options": ["столи", "столів", "столам"]}, {"sentence": "У кімнаті великі ____ (вікно).", "answer": "вікна", "options": ["вікна", "вікон", "вікнам"]}, {"sentence": "Тут живуть мої ____ (друг).", "answer": "друзі", "options": ["друзі", "друзів", "друзям"]}, {"sentence": "На вулиці граються ____ (дитина).", "answer": "діти", "options": ["діти", "дітей", "дітям"]}, {"sentence": "Це цікаві ____ (книжка).", "answer": "книжки", "options": ["книжки", "книжок", "книжками"]}, {"sentence": "Ми бачимо теплі ____ (море).", "answer": "моря", "options": ["моря", "морів", "морям"]}]} instruction={"Вставте іменник у формі множини (Називний відмінок)"} />
-<FillIn client:only="react" items={[{"sentence": "У мене немає ____ (книга).", "answer": "книг", "options": ["книг", "книги", "книгами"]}, {"sentence": "У групі багато ____ (студент).", "answer": "студентів", "options": ["студентів", "студенти", "студентам"]}, {"sentence": "Я бачу п'ять ____ (вікно).", "answer": "вікон", "options": ["вікон", "вікна", "вікнам"]}, {"sentence": "На столі немає ____ (тарілка).", "answer": "тарілок", "options": ["тарілок", "тарілки", "тарілкам"]}, {"sentence": "Нам треба багато ____ (дошка).", "answer": "дощок", "options": ["дощок", "дошки", "дошками"]}, {"sentence": "Це союз різних ____ (земля).", "answer": "земель", "options": ["земель", "землі", "землям"]}]} instruction={"Вставте іменник у Родовому відмінку множини"} />
-<Quiz client:only="react" questions={[{"question": "У мене є п'ять ____.", "options": [{"text": "книг", "correct": true}, {"text": "книги", "correct": false}, {"text": "книгах", "correct": false}, {"text": "книгами", "correct": false}]}, {"question": "На столі немає ____.", "options": [{"text": "тарілок", "correct": true}, {"text": "тарілки", "correct": false}, {"text": "тарілкам", "correct": false}, {"text": "тарілками", "correct": false}]}, {"question": "Я бачу багато ____.", "options": [{"text": "студентів", "correct": true}, {"text": "студенти", "correct": false}, {"text": "студентам", "correct": false}, {"text": "студентами", "correct": false}]}, {"question": "У кімнаті десять ____.", "options": [{"text": "вікон", "correct": true}, {"text": "вікна", "correct": false}, {"text": "вікнах", "correct": false}, {"text": "вікнами", "correct": false}]}, {"question": "У нас немає ____.", "options": [{"text": "грошей", "correct": true}, {"text": "гроші", "correct": false}, {"text": "грошам", "correct": false}, {"text": "грошима", "correct": false}]}, {"question": "Він має багато ____.", "options": [{"text": "друзів", "correct": true}, {"text": "друзі", "correct": false}, {"text": "друзям", "correct": false}, {"text": "друзями", "correct": false}]}]} instruction={"Оберіть правильну форму слова після числівника"} />
+Натомість чоловічий рід найчастіше отримує закінчення **-ів** або **-їв**, що робить ці слова довшими:
+- **один студент** (one student) → п'ять **студентів** (five students)
+- **новий музей** (new museum) → багато **музеїв** (many museums)
+
+Іноді перед нульовим закінченням з'являються "вставні голосні" (fleeting vowels) **о** або **е**. Вони потрібні, щоб уникнути складного збігу кількох приголосних літер поспіль:
+- **рідна земля** (native earth, land) → багато рідних **земель** (many native lands)
+- **відкрите вікно** (open window) → п'ять відкритих **вікон** (five open windows)
+- **шкільна дошка** (school board) → багато шкільних **дощок** (many school boards)
+
+:::tip
+The Genitive plural of feminine and neuter nouns often drops the ending entirely. Think of it as "less is more" when talking about large quantities: **багато книг** (many books), **багато міст** (many cities).
+:::
+
+Важливо знати, що деякі слова існують тільки в одному числі. До вашого щоденного активного словника повинні увійти такі слова (Pluralia Tantum):
+- **великі гроші** (big money)
+- **нові окуляри** (new glasses)
+- **зручні штани** (comfortable pants)
+- **широкі двері** (wide door)
+- **мальовничі Карпати** (picturesque Carpathian mountains)
+
+Тут існує критично важливе правило узгодження. Дієслово завжди повинно узгоджуватися з граматичною формою слова. Українською ми кажемо **Гроші були на столі** (Money were on the table), а не "гроші було". Слово **молодь** (youth) — це класичний приклад Singularia Tantum. Воно завжди залишається в однині: **сучасна молодь читає** (modern youth reads).
+
+Існують також особливі граматичні форми з суфіксами та давні залишки "двоїни" (dual number). Слова, що позначають малих тварин, у множині отримують спеціальні суфікси **-ат-** або **-ят-**:
+- **мале курча** (small chick) → **жовті курчата** (yellow chicks)
+- **миле кошеня** (cute kitten) → **сірі кошенята** (grey kittens)
+
+Слово **ім'я** також отримує додатковий суфікс **-ен-**:
+- **моє ім'я** (my name) → **наші імена** (our names)
+
+Окремо зверніть увагу на слова, що позначають парні частини тіла людини. В Орудному відмінку (Instrumental) множини вони зберігають дуже давні закінчення **-има**:
+- **праве око** (right eye) → бачу своїми **очима** (see with my own eyes)
+- **ліве плече** (left shoulder) → рухаю сильними **плечима** (move with strong shoulders)
+- **мале вухо** (small ear) → слухаю двома **вушима** (listen with two ears)
+
+Наостанок є гарні новини! Закінчення Давального (Dative), Орудного (Instrumental) та Місцевого (Locative) відмінків у множині є надзвичайно регулярними та передбачуваними. Вони однакові або майже однакові для всіх трьох родів:
+- Давальний: **-ам** / **-ям** (я допомагаю студентам, я допомагаю лікарям).
+- Орудний: **-ами** / **-ями** (я працюю зі студентами, я працюю з лікарями).
+- Місцевий: **-ах** / **-ях** (я бачу помилки на студентах, інформація на лікарях).
+
+<FillIn client:only="react" items={[{"sentence": "Тут живуть мої ____.", "answer": "друзі", "options": ["други", "друзі", "другов"]}, {"sentence": "Це нові ____.", "answer": "столи", "options": ["столи", "столі", "столів"]}, {"sentence": "У кімнаті великі ____.", "answer": "вікна", "options": ["вікни", "вікна", "вікон"]}, {"sentence": "Мої ____ дуже добрі.", "answer": "батьки", "options": ["батьки", "батька", "батьків"]}, {"sentence": "Це цікаві ____.", "answer": "книжки", "options": ["книжки", "книжка", "книжок"]}, {"sentence": "Там ідуть ____.", "answer": "люди", "options": ["людини", "люди", "людей"]}]} instruction={"Напишіть множину (Nominative plural)"} />
+<FillIn client:only="react" items={[{"sentence": "У мене немає ____.", "answer": "книг", "options": ["книгів", "книг", "книги"]}, {"sentence": "У групі багато ____.", "answer": "студентів", "options": ["студентів", "студентей", "студенти"]}, {"sentence": "Я бачу п'ять ____.", "answer": "вікон", "options": ["вікнів", "вікна", "вікон"]}, {"sentence": "На столі немає ____.", "answer": "тарілок", "options": ["тарілок", "тарілки", "тарілків"]}, {"sentence": "Це країна лісів і ____.", "answer": "земель", "options": ["земель", "землів", "землі"]}, {"sentence": "У нас немає ____.", "answer": "грошей", "options": ["грошів", "гроші", "грошей"]}]} instruction={"Вставте іменник у правильній формі (Genitive plural)"} />
+<Quiz client:only="react" questions={[{"question": "У мене багато _____.", "options": [{"text": "друзі", "correct": false}, {"text": "другів", "correct": false}, {"text": "друзів", "correct": true}, {"text": "друзям", "correct": false}]}, {"question": "Він не має _____.", "options": [{"text": "плани", "correct": false}, {"text": "планів", "correct": true}, {"text": "планам", "correct": false}, {"text": "планах", "correct": false}]}, {"question": "На вулиці мало _____.", "options": [{"text": "люди", "correct": false}, {"text": "людям", "correct": false}, {"text": "людей", "correct": true}, {"text": "людами", "correct": false}]}, {"question": "Тут немає великих _____.", "options": [{"text": "міста", "correct": false}, {"text": "міст", "correct": true}, {"text": "містів", "correct": false}, {"text": "містам", "correct": false}]}, {"question": "Скільки у вас _____?", "options": [{"text": "діти", "correct": false}, {"text": "дітей", "correct": true}, {"text": "дітям", "correct": false}, {"text": "дітями", "correct": false}]}, {"question": "На дереві багато _____.", "options": [{"text": "яблуки", "correct": false}, {"text": "яблук", "correct": true}, {"text": "яблуків", "correct": false}, {"text": "яблуками", "correct": false}]}]} instruction={"Оберіть правильний варіант після слів кількості та заперечення"} />
 
 ## Частина 2: Який відмінок? (Part 2: Which Case?)
 
-Choosing the right **відмінок** (case) depends heavily on verb government. Every verb demands a specific case from its object. The verb **допомагати** (to help) requires the Dative case: "Я допомагаю **мамі**" (I help my mom). The verb **бачити** (to see) requires the Accusative case: "Я бачу **маму**" (I see my mom). **Користуватися** (to use) triggers the Instrumental case: "Я користуюся **телефоном**" (I use a phone). Always remember the contrast between a direct object (Accusative) and absence or quantity (Genitive). "Я маю **плани**" (I have plans - Accusative direct object). But negated: "Я не маю **планів**" (I do not have plans - Genitive of negation).
-- Ми часто дякуємо **батькам**. (We often thank our parents.)
-- Вони бачать високі **дерева**. (They see tall trees.)
-- Він користується новим **ноутбуком**. (He uses a new laptop.)
-- Вона дарує квіти **вчителю**. (She gives flowers to the teacher.)
+Як правильно обрати потрібний відмінок у розмові? Перший і найголовніший крок — уважно подивитися на дієслово. Деякі українські дієслова жорстко вимагають використання конкретного непрямого відмінка. Ця концепція називається дієслівним керуванням (verb government).
+- **допомагати** (to help) + Давальний: Я допомагаю **моїй мамі** кожного дня (I help my mom every day).
+- **дякувати** (to thank) + Давальний: Ми щиро дякуємо **цим лікарям** (We sincerely thank these doctors).
+- **бачити** (to see) + Знахідний: Я бачу **високі гори** вдалині (I see high mountains in the distance).
+- **користуватися** (to use) + Орудний: Вона користується **новим телефоном** (She uses a new phone).
 
-Prepositions are your next major navigation tool. Double-case prepositions change their meaning based on the case. **У** or **в** with the Locative case means static location: "Я живу в **місті**" (I live in the city). With the Accusative case, it means direction: "Я їду в **місто**" (I am going into the city). The preposition **на** works the exact same way. The preposition **з** means origin when used with the Genitive: "Я з **України**" (I am from Ukraine). But it means company when used with the Instrumental: "Я йду з **братом**" (I am walking with my brother). The preposition **по** is used for movement along a surface in the Locative: "йти по **вулицях**" (to walk along the streets).
-- Книги лежать на **полиці**. (The books lie on the shelf.)
-- Ми кладемо книги на **полицю**. (We are putting the books onto the shelf.)
-- Вона п'є каву з **молоком**. (She drinks coffee with milk.)
-- Вони гуляють по **парку**. (They walk through the park.)
+Також завжди пам'ятайте критичну різницю між наявністю прямого об'єкта та його повною відсутністю. Відсутність об'єкта завжди вимагає Родового відмінка:
+- Я маю **великі плани** (I have big plans).
+- Я не маю **великих планів** (I don't have big plans).
 
-Special constructions also trigger specific cases. Time expressions often use the Accusative or Locative. Days of the week take the Accusative: **у четвер** (on Thursday). Years and hours take the Locative: **у 2014 році** (in 2014), **о п'ятій годині** (at five o'clock). When describing appearance or characteristics, use the Locative or Instrumental: **хлопець у светрі** (the boy in the sweater), **дівчина з карими очима** (the girl with brown eyes). For path and means of transport, use the Instrumental without a preposition: **летіти літаком** (to fly by plane), **йти лісом** (to walk through the forest).
-- Ми зустрінемося **у п'ятницю**. (We will meet on Friday.)
-- Це **чоловік у капелюсі**. (This is the man in the hat.)
-- Вони подорожують **поїздом**. (They travel by train.)
+Другий важливий крок — це правильна навігація за допомогою прийменників (prepositions). Деякі прийменники працюють з двома різними відмінками залежно від змісту. Прийменники **у / в** та **на** працюють так:
+- Де? (Location) → Місцевий: Ми зараз відпочиваємо **в місті** (We are resting in the city now).
+- Куди? (Direction) → Знахідний: Завтра ми їдемо **в місто** на роботу (Tomorrow we are going into the city for work).
 
-Error analysis is a crucial skill. You must distinguish between similar endings. For inanimate nouns, the Nominative and Accusative plural look identical: "Дерев'яні **столи** стоять тут" (Wooden tables stand here - Nominative subject). "Я бачу дерев'яні **столи**" (I see wooden tables - Accusative object). For animate nouns, the Accusative plural looks exactly like the Genitive plural: "Я бачу **друзів**" (I see friends). Watch out for direct translations that use the wrong case. In Ukrainian, **чекати** (to wait) takes the Genitive or Accusative, never the Dative. **Дякувати** (to thank) takes the Dative, never the Accusative.
-- Я бачу нові **будинки**. (I see new buildings.)
-- Вона любить своїх **котів**. (She loves her cats.)
-- Ми чекаємо **автобуса**. (We are waiting for the bus.)
+Прийменник **з** (from, with) також має два обличчя:
+- Звідки? (Origin) → Родовий: Цей новий студент приїхав **з Києва** (This new student came from Kyiv).
+- З ким? (Company) → Орудний: Я йду в кіно **з хорошим другом** (I am going to the cinema with a good friend).
 
-Read this short text about a trip to identify cases in context:
-"Минулого року ми їздили в **Карпати** (Accusative - direction). У **Карпатах** (Locative - location) дуже красиво. Ми гуляли зеленими **лісами** (Instrumental - path) і пили воду з гірських **річок** (Genitive - origin). Наші **друзі** (Nominative - subject) робили багато **фотографій** (Genitive - quantity). Ми розповідали **людям** (Dative - recipient) про нашу подорож."
-Notice how "у Карпатах" shows location, while "в Карпати" shows direction. Every noun form has a specific trigger.
+Дуже корисний прийменник **по** зазвичай означає рух по поверхні або регулярність дії. Він найчастіше вимагає використання Місцевого відмінка:
+- Гуляти **по вузьких вулицях** (To walk along the narrow streets).
+- Працювати вдома **по суботах** (To work at home on Saturdays).
 
-<Quiz client:only="react" questions={[{"question": "Ми завжди допомагаємо ____.", "options": [{"text": "друзям", "correct": true}, {"text": "друзів", "correct": false}, {"text": "друзі", "correct": false}, {"text": "друзями", "correct": false}]}, {"question": "Вона довго чекала ____.", "options": [{"text": "автобуса", "correct": true}, {"text": "автобус", "correct": false}, {"text": "автобусу", "correct": false}, {"text": "автобусом", "correct": false}]}, {"question": "Він щодня користується новим ____.", "options": [{"text": "ноутбуком", "correct": true}, {"text": "ноутбук", "correct": false}, {"text": "ноутбука", "correct": false}, {"text": "ноутбуку", "correct": false}]}, {"question": "Увечері ми гуляємо по ____.", "options": [{"text": "вулицях", "correct": true}, {"text": "вулиці", "correct": false}, {"text": "вулицями", "correct": false}, {"text": "вулиць", "correct": false}]}, {"question": "Я хочу подякувати своїм ____.", "options": [{"text": "батькам", "correct": true}, {"text": "батьків", "correct": false}, {"text": "батьки", "correct": false}, {"text": "батьками", "correct": false}]}, {"question": "Вони люблять подорожувати ____.", "options": [{"text": "літаком", "correct": true}, {"text": "літак", "correct": false}, {"text": "літаку", "correct": false}, {"text": "літака", "correct": false}]}]} instruction={"Який відмінок потрібен?"} />
-<GroupSort client:only="react" groups={{"Називний": ["друзі", "столи"], "Родовий": ["книг", "студентів"], "Давальний": ["батькам", "людям"], "Знахідний": ["дерева", "піцу"], "Орудний": ["молоком", "олівцем"], "Місцевий": ["вулицях", "Львові"], "Кличний": ["Олено", "пане"]}} instruction={"Розподіліть слова за відмінками"} />
-<ErrorCorrection client:only="react" items={[{"sentence": "Ми часто дякуємо батьків.", "errorWord": "батьків", "correctForm": "батькам", "options": ["батькам", "батьками", "батьки"], "explanation": "Дієслово 'дякувати' вимагає Давального відмінка."}, {"sentence": "Вона користується телефон.", "errorWord": "телефон", "correctForm": "телефоном", "options": ["телефоном", "телефону", "телефоні"], "explanation": "Дієслово 'користуватися' вимагає Орудного відмінка."}, {"sentence": "Книги лежать на полицю.", "errorWord": "полицю", "correctForm": "полиці", "options": ["полиці", "полицею", "полиць"], "explanation": "На питання 'Де?' з прийменником 'на' відповідає Місцевий відмінок."}, {"sentence": "Я йду з брат.", "errorWord": "брат", "correctForm": "братом", "options": ["братом", "брата", "брату"], "explanation": "На питання 'З ким?' відповідає Орудний відмінок."}, {"sentence": "У кімнаті багато студенті.", "errorWord": "студенті", "correctForm": "студентів", "options": ["студентів", "студенти", "студентам"], "explanation": "Слово 'багато' вимагає Родового відмінка множини."}, {"sentence": "Я люблю моїх друзі.", "errorWord": "друзі", "correctForm": "друзів", "options": ["друзів", "друзям", "друзями"], "explanation": "Для назв істот Знахідний відмінок множини має форму, як у Родовому (друзів)."}]} instruction={"Знайдіть і виправте помилку"} />
+Також існують спеціальні граматичні конструкції для позначення часу та опису людей. Для часу ми найчастіше використовуємо такі схеми:
+- Дні тижня завжди беруть Знахідний: Я працюю **у четвер** (I work on Thursday).
+- Точна година вимагає Місцевого: Урок починається **о п'ятій годині** (The lesson starts at five o'clock).
+
+Для опису зовнішнього вигляду або одягу людини ми традиційно використовуємо прийменник **у / в** або прийменник **з**:
+- **Молодий хлопець у теплому светрі** (A young guy in a warm sweater).
+- **Красива дівчина з карими очима** (A beautiful girl with brown eyes).
+
+Спосіб пересування або інструмент дії зазвичай не потребують прийменника, але вимагають Орудного відмінка:
+- **Летіти великим літаком** (To fly by a large plane).
+- **Йти темним лісом** (To walk through a dark forest).
+
+Щоб не робити неприємних помилок, треба знати основні пастки. Головне питання: як розрізнити Називний і Знахідний відмінки множини? Для неістот (inanimate nouns) їхні форми повністю збігаються:
+- **Широкі столи** стоять у кімнаті. (Wide tables stand in the room. - Nominative)
+- Я бачу **широкі столи**. (I see wide tables. - Accusative)
+
+Але для істот (animate nouns) Знахідний відмінок множини завжди збігається з формою Родового відмінка:
+- Я бачу **своїх друзів**. (I see my friends. - Accusative)
+
+:::caution
+A very common error for English speakers is translating "to wait for" literally. In Ukrainian, the verb **чекати** (to wait) takes the Accusative or Genitive case directly. NEVER use a preposition like "для". Say **я чекаю мій автобус**, not "чекаю для автобуса".
+:::
+
+Кожна граматична **помилка** (error, mistake) — це ваш найкращий шанс навчитися і стати кращим. Давайте спробуємо проаналізувати контекст і знайдемо кожне практичне **завдання** (task, exercise) у короткому тексті.
+
+Минулого тижня ми поїхали **в гори** (Accusative). Ми довго відпочивали **у мальовничих Карпатах** (Locative). Під час прогулянки ми зустріли **багато туристів** (Genitive). Ввечері ми весело сиділи **з гітарою** (Instrumental) біля теплого вогню. Згодом я подзвонив **моїм батькам** (Dative), щоб сказати, що все чудово.
+
+Кожна форма має свій чіткий і логічний тригер. Вам потрібно лише **виправити** (to correct) свої старі звички, вивчити керування дієслів і щоразу думати про українські граматичні правила.
+
+<Quiz client:only="react" questions={[{"question": "Я часто допомагаю _____.", "options": [{"text": "маму", "correct": false}, {"text": "мами", "correct": false}, {"text": "мамі", "correct": true}, {"text": "мамою", "correct": false}]}, {"question": "Він бачить красиву _____.", "options": [{"text": "дівчина", "correct": false}, {"text": "дівчині", "correct": false}, {"text": "дівчину", "correct": true}, {"text": "дівчиною", "correct": false}]}, {"question": "Вона користується новим _____.", "options": [{"text": "телефоном", "correct": true}, {"text": "телефон", "correct": false}, {"text": "телефону", "correct": false}, {"text": "телефоні", "correct": false}]}, {"question": "Ми завжди дякуємо _____.", "options": [{"text": "батьки", "correct": false}, {"text": "батьків", "correct": false}, {"text": "батькам", "correct": true}, {"text": "батьками", "correct": false}]}, {"question": "Вони чекають _____.", "options": [{"text": "автобус", "correct": false}, {"text": "автобуса", "correct": true}, {"text": "автобусу", "correct": false}, {"text": "автобусом", "correct": false}]}, {"question": "Я їду з _____.", "options": [{"text": "брата", "correct": false}, {"text": "братом", "correct": true}, {"text": "брату", "correct": false}, {"text": "браті", "correct": false}]}]} instruction={"Який відмінок потрібен? Оберіть правильну форму"} />
+<GroupSort client:only="react" groups={{"Називний (Хто? Що?)": ["весілля", "друзі"], "Родовий (Кого? Чого?)": ["гостей", "вікон"], "Давальний (Кому? Чому?)": ["нареченій", "батькам"], "Знахідний (Кого? Що?)": ["наречену", "книгу"], "Орудний (Ким? Чим?)": ["молодятами", "олівцем"], "Місцевий (На кому? На чому?)": ["весіллі", "столах"], "Кличний (Звертання)": ["Олено", "брате"]}} instruction={"Розподіліть форми іменників за відмінками"} />
 
 ## Частина 3: Вільне мовлення (Part 3: Free Production)
 
-Guided writing requires strategy. Ваше **завдання** (task) — "Опишіть свій ідеальний **вихідний день**" (Describe your ideal day off). Building a coherent narrative requires using the full case spectrum. Start with your destination using the Accusative: "У суботу я їду в **центр**" (On Saturday I go to the center). Mention your company using the Instrumental: "Я гуляю з **друзями**" (I walk with friends). Describe your activities using the Accusative or Instrumental: "Я бачу красиві **будівлі**" (I see beautiful buildings), "Я малюю **олівцем**" (I draw with a pencil). Finally, mention what you eat using the Genitive for quantities or Accusative for specific items: "Я купую багато **яблук**" (I buy many apples), "Я їм смачну **піцу**" (I eat a tasty pizza).
-- Мій ідеальний **вихідний день** починається пізно. (My ideal day off starts late.)
-- У неділю я читаю **книгу**. (On Sunday I read a book.)
-- Ми йдемо в **парк**. (We go to the park.)
+Як скласти цікаву та логічну розповідь українською мовою? Давайте спробуємо написати невелике есе на тему: "Мій ідеальний **вихідний день**" (My ideal day off). Ця керована стратегія письма допоможе вам будувати історію поступово.
 
-Dialogue completion requires strict logical agreement. When answering a question, you must provide a natural short answer that respects the case of the question word. The question "Кого?" (Whom? - Accusative/Genitive animate) requires an Accusative or Genitive response. "Кому?" (To whom? - Dative) requires a Dative response.
+Спочатку оберіть ваше місце призначення, використовуючи Знахідний відмінок:
+- Завтра я з радістю їду **в Карпати** (Tomorrow I am happily going to the Carpathians).
 
-<div class="dialogue">
+Тоді обов'язково додайте вашу компанію, використовуючи Орудний відмінок:
+- Я їду туди **з моїми найкращими друзями** (I am going there with my best friends).
 
-<div class="dialogue-line"><span class="speaker">Максим:</span> З ким ти розмовляв? *(With whom were you talking?)*</div>
+Опишіть ваші активні дії та те, що ви бачите:
+- Ми бачимо навколо **дуже високі гори** (We see very high mountains around).
 
-<div class="dialogue-line"><span class="speaker">Анна:</span> З **батьками**. *(With parents.)*</div>
+Додайте деталі про їжу, напої або речі, використовуючи Родовий відмінок для позначення кількості:
+- Ми купуємо на ринку **багато свіжих яблук** (We buy many fresh apples at the market) та п'ємо **склянку холодної води** (a glass of cold water).
 
-<div class="dialogue-line"><span class="speaker">Максим:</span> Про що ви говорили? *(About what were you talking?)*</div>
+Це дуже проста, але ефективна стратегія, щоб використовувати різні відмінки природно та без паніки! Логіка виконання діалогів також повністю спирається на питання. Яке питання ви чуєте — такий самий відмінок ви використовуєте у відповіді!
 
-<div class="dialogue-line"><span class="speaker">Анна:</span> Про **плани** на вихідні. *(About plans for the weekend.)*</div>
+Якщо я питаю "Кого?" (Whom?), ви повинні відповідати у Знахідному або Родовому відмінку:
+- Кого ти зараз чекаєш? — Я чекаю **свою старшу сестру**. (Whom are you waiting for now? — I am waiting for my older sister.)
 
-<div class="dialogue-line"><span class="speaker">Максим:</span> Кому ви будете дзвонити завтра? *(To whom will you call tomorrow?)*</div>
+Якщо звучить питання "Кому?" (To whom?), ви завжди відповідаєте у Давальному відмінку:
+- Кому ти так довго пишеш? — Я пишу **моїм батькам**. (To whom are you writing for so long? — I am writing to my parents.)
 
-<div class="dialogue-line"><span class="speaker">Анна:</span> Нашим **родичам**. *(To our relatives.)*</div>
+Для Орудного і Місцевого відмінків система працює абсолютно аналогічно:
+- З ким ти вчора розмовляв? — Я розмовляв **зі своїми батьками**. (With whom did you speak yesterday? — I spoke with my parents.)
+- Про що ви так довго говорили? — Ми говорили **про наші плани**. (What did you talk about for so long? — We talked about our plans.)
 
-</div>
+В українській мові існує особливий Кличний відмінок (Vocative case). Дуже важливо розуміти, що це не якийсь історичний архаїзм! Це абсолютно жива, щоденна і обов'язкова норма спілкування. Коли ви безпосередньо звертаєтеся до будь-якої людини, ви повинні змінити закінчення її імені або статусу:
+- Мама → **Мамо!** (Mom!)
+- Оксана → **Оксано, привіт!** (Oksana, hi!)
+- Пан → **Шановний пане!** (Respected Sir!)
 
-A critical focus is the living Vocative case (**Кличний відмінок**). It is not an archaic relic; it is a vital part of modern Ukrainian communication. Whenever you address someone directly, you must use it. For singular names and nouns, use endings like -о, -е, or -ю: **Мамо** (Mom!), **Оксано** (Oksana!), **пане** (sir!). For plural, the Vocative usually matches the Nominative: **Друзі!** (Friends!), **Колеги!** (Colleagues!). Using the Vocative is a sign of cultured, natural Ukrainian speech.
-- **Брате**, допоможи мені, будь ласка. (Brother, help me, please.)
-- Добрий день, **пане** Іване! (Good day, Mr. Ivan!)
-- Шановні **колеги**, почнемо нашу зустріч. (Respected colleagues, let's begin our meeting.)
-- **Сергію**, де ти був? (Serhiy, where were you?)
+Цікаво, що у множині Кличний відмінок дуже часто збігається з формою Називного відмінка:
+- **Дорогі друзі!** (Dear friends!)
+- **Шановні колеги!** (Respected colleagues!)
 
-A letter to a friend synthesizes everything. This models how to connect thoughts across sentences while maintaining case agreement and logical flow.
-"Привіт, **Олено**! Як твої **справи**? Я зараз у **Львові**. Це чудове **місто** з красивими **вулицями**. Учора я гуляла з **друзями** по **центру**. Ми бачили багато старих **будівель** і пили каву в затишному **кафе**. Я купила **сувеніри** для **батьків**. Завтра ми їдемо в **гори**. Я чекаю твого **листа**!"
-Notice how every noun seamlessly connects to its verb or preposition. This is the goal of your free production practice.
+:::note
+The Vocative case (**Кличний відмінок**) is a vibrant part of Ukrainian culture. Using it shows respect and natural fluency. Never say "Привіт, Оксана!" (Nominative). Always say "Привіт, **Оксано**!" (Vocative).
+:::
 
-<FillIn client:only="react" items={[{"sentence": "Мій ідеальний вихідний ____ (день) починається пізно.", "answer": "день", "options": ["день", "дня", "днем"]}, {"sentence": "У суботу я їду в ____ (центр).", "answer": "центр", "options": ["центр", "центрі", "центром"]}, {"sentence": "Я гуляю з ____ (друзі).", "answer": "друзями", "options": ["друзями", "друзів", "друзям"]}, {"sentence": "Ми п'ємо каву з ____ (молоко).", "answer": "молоком", "options": ["молоком", "молока", "молоці"]}, {"sentence": "Потім я купую багато ____ (яблука).", "answer": "яблук", "options": ["яблук", "яблука", "яблуками"]}, {"sentence": "Увечері я їм смачну ____ (піца).", "answer": "піцу", "options": ["піцу", "піци", "піцою"]}]} instruction={"Вставте слова в правильному відмінку"} />
-<FillIn client:only="react" items={[{"sentence": "Максиме! З ким ти розмовляв? — З ____ (батьки).", "answer": "батьками", "options": ["батьками", "батьків", "батькам"]}, {"sentence": "Про що ви говорили? — Про ____ (плани) на вихідні.", "answer": "плани", "options": ["плани", "планів", "планах"]}, {"sentence": "Кому ви будете дзвонити? — Нашим ____ (родичі).", "answer": "родичам", "options": ["родичам", "родичів", "родицями"]}, {"sentence": "Де ви будете відпочивати? — У ____ (Карпати).", "answer": "Карпатах", "options": ["Карпатах", "Карпати", "Карпатами"]}, {"sentence": "Ви вже написали їм ____ (запрошення)?", "answer": "запрошення", "options": ["запрошення", "запрошень", "запрошеннями"]}, {"sentence": "А ви вже купили цікаві ____ (сувеніри)?", "answer": "сувеніри", "options": ["сувеніри", "сувенірів", "сувенірами"]}]} instruction={"Доповніть діалог правильними формами"} />
+Давайте поєднаємо всі ці розрізнені знання у зв'язному тексті. Прочитайте цей лист до друга. Він чудово моделює те, як відмінки працюють разом у реальному житті:
+
+> Привіт, **дорога Олено** (dear Olena)!
+> Завтра я їду **у старовинний Львів** (to ancient Lviv) **швидким поїздом** (by a fast train).
+> Я дуже хочу купити там **багато цікавих сувенірів** (many interesting souvenirs).
+> Я буду довго гуляти **по вузьких старих вулицях** (along narrow old streets).
+> Згодом я зустрінуся **з моїм братом** (with my brother) та **його новими друзями** (his new friends).
+> Ввечері ми хочемо випити **гарячої кави** (hot coffee) **у центрі** (in the center).
+> Я обов'язково надішлю **тобі** (to you) наші гарні фотографії!
+> Сподіваюся, зараз у тебе немає **великих проблем** (big problems) **на роботі** (at work).
+> До скорої зустрічі **у столичному Києві** (in capital Kyiv)!
+
+Цей короткий текст-синтез містить приклади майже всіх українських відмінків. Зверніть увагу, як логічно слова перетікають від Знахідного відмінка напрямку (**у Львів**) до Орудного відмінка транспорту (**поїздом**), далі до Родового відмінка кількості (**багато сувенірів**) та Давального адресата (**тобі**). Цей текст показує, як будувати зв'язні думки.
+
+<FillIn client:only="react" items={[{"sentence": "У ____ я їду в центр.", "answer": "суботу", "options": ["суботі", "суботу", "суботою"]}, {"sentence": "Я гуляю з ____.", "answer": "друзями", "options": ["друзях", "друзями", "друзів"]}, {"sentence": "Ми бачимо красиві ____.", "answer": "будівлі", "options": ["будівель", "будівлі", "будівлях"]}, {"sentence": "Потім ми купуємо багато ____.", "answer": "яблук", "options": ["яблуки", "яблук", "яблукам"]}, {"sentence": "Я їм смачну ____.", "answer": "піцу", "options": ["піцу", "піці", "піцою"]}, {"sentence": "Мій ____ день просто супер!", "answer": "вихідний", "options": ["вихідний", "вихідного", "вихідному"]}]} instruction={"Вставте правильні форми слів для опису ідеального дня"} />
 
 ## Підсумок
 
-You have reached the end of the A2 case checkpoint. Take a moment for **самоперевірка** (self-check) to ensure you can use these forms **впевнено** (confidently). Ask yourself these questions:
-- Чи можу я **впевнено** утворити Родовий відмінок множини (**книг**, **столів**)? (Can I confidently form the Genitive plural?)
-- Чи пам'ятаю я нерегулярні форми (**люди**, **діти**, **друзі**)? (Do I remember the irregular forms?)
-- Чи знаю я, які відмінки вимагають прийменники "на", "в", "з", "по"? (Do I know which cases the prepositions require?)
-- Чи використовую я Кличний відмінок під час звертання? (Do I use the Vocative case during direct address?)
+Ви пройшли справді довгий і важливий шлях. Ця коротка **самоперевірка** (self-check) покаже вам, чи дійсно ви готові рухатися далі до нових тем.
 
-Якщо ви бачите **помилку** (error), ви знаєте, як її **виправити** (to correct). You have now mastered the skeleton of the Ukrainian language. The case system is the foundation. Ready for A2.6 to add the flesh of adjectives and verbs of motion to this strong structure!
+Чесно дайте відповідь на ці чотири питання:
+- Чи можу я **впевнено** (confidently) утворити Родовий відмінок множини для більшості слів (**книг**, **міст**, **столів**)?
+- Чи пам'ятаю я ключові нерегулярні форми множини (**люди**, **діти**, **друзі**)?
+- Чи знаю я чітко, які відмінки вимагають популярні прийменники **на**, **в**, **з**, **по**?
+- Чи використовую я Кличний відмінок щоразу під час звертання до людей?
+
+Ви успішно опанували міцний граматичний каркас української мови. Відмінки іменників та форми однини чи множини — це той базовий фундамент, на якому завжди тримається кожне ваше речення. Якщо ви чітко розумієте цю логіку, ви зможете будувати будь-які складні думки! Тепер ви повністю готові перейти до модуля A2.6, де ми поступово додамо більше яскравих деталей за допомогою прикметників і детально вивчимо дієслова руху. Успіхів!
 
 </TabItem>
 <TabItem label="Словник">
@@ -207,15 +276,15 @@ You have reached the end of the A2 case checkpoint. Take a moment for **само
 </TabItem>
 <TabItem label="Зошит">
 
-<FillIn client:only="react" items={[{"sentence": "Це моя ____ (помилка), я маю її виправити.", "answer": "помилка", "options": ["помилка", "помилки", "помилці"]}, {"sentence": "У мене немає ____ (гроші) на цей дорогий ресторан.", "answer": "грошей", "options": ["грошей", "гроші", "грошима"]}, {"sentence": "Я даю ці нові книжки ____ (студенти).", "answer": "студентам", "options": ["студентам", "студентів", "студентами"]}, {"sentence": "Ми малюємо новим ____ (олівець).", "answer": "олівцем", "options": ["олівцем", "олівця", "олівцю"]}, {"sentence": "Мої хороші друзі зараз у ____ (Львів).", "answer": "Львові", "options": ["Львові", "Львів", "Львовом"]}, {"sentence": "Добрий день, ____ (Сергій)!", "answer": "Сергію", "options": ["Сергію", "Сергій", "Сергія"]}, {"sentence": "У нашому місті з'явилося багато нових ____ (будівля).", "answer": "будівель", "options": ["будівель", "будівлі", "будівлям"]}, {"sentence": "Я вже маю гарний подарунок для ____ (наречена).", "answer": "нареченої", "options": ["нареченої", "наречену", "нареченій"]}]} instruction={"Вставте іменник у правильній формі"} />
+<FillIn client:only="react" items={[{"sentence": "Привіт, ____!", "answer": "Оксано", "options": ["Оксана", "Оксано", "Оксані"]}, {"sentence": "Я йду в ____.", "answer": "парк", "options": ["парк", "парку", "парком"]}, {"sentence": "Я зараз у ____.", "answer": "парку", "options": ["парк", "парку", "парком"]}, {"sentence": "Я гуляю з ____.", "answer": "собакою", "options": ["собака", "собаки", "собакою"]}, {"sentence": "Я не бачу твого ____.", "answer": "брата", "options": ["брата", "брату", "братом"]}, {"sentence": "Дай цю книгу ____.", "answer": "сестрі", "options": ["сестра", "сестрі", "сестрою"]}, {"sentence": "Я купую ____.", "answer": "книгу", "options": ["книга", "книгу", "книзі"]}, {"sentence": "Тут багато ____.", "answer": "книг", "options": ["книг", "книги", "книгам"]}]} instruction={"Комплексне тренування: вставте іменники в потрібному відмінку (Mixed case drill)"} />
 
-<Quiz client:only="react" questions={[{"question": "Оберіть правильне речення:", "options": [{"text": "Я не маю планів на вихідні.", "correct": true}, {"text": "Я не маю плани на вихідні.", "correct": false}, {"text": "Я не маю планах на вихідні.", "correct": false}, {"text": "Я не маю планами на вихідні.", "correct": false}]}, {"question": "Оберіть правильне речення:", "options": [{"text": "Ми зустрінемося у п'ятницю.", "correct": true}, {"text": "Ми зустрінемося в п'ятниці.", "correct": false}, {"text": "Ми зустрінемося на п'ятницю.", "correct": false}, {"text": "Ми зустрінемося у п'ятницею.", "correct": false}]}, {"question": "Оберіть правильне речення:", "options": [{"text": "Вона дуже любить своїх котів.", "correct": true}, {"text": "Вона дуже любить своїх коти.", "correct": false}, {"text": "Вона дуже любить своїх котам.", "correct": false}, {"text": "Вона дуже любить своїх котами.", "correct": false}]}, {"question": "Оберіть правильне речення:", "options": [{"text": "Вони подорожують поїздом.", "correct": true}, {"text": "Вони подорожують поїзду.", "correct": false}, {"text": "Вони подорожують на поїздом.", "correct": false}, {"text": "Вони подорожують з поїздом.", "correct": false}]}, {"question": "Оберіть правильне речення:", "options": [{"text": "Це чоловік у капелюсі.", "correct": true}, {"text": "Це чоловік в капелюх.", "correct": false}, {"text": "Це чоловік з капелюсі.", "correct": false}, {"text": "Це чоловік капелюхом.", "correct": false}]}, {"question": "Оберіть правильне речення:", "options": [{"text": "Шановні колеги, почнемо зустріч.", "correct": true}, {"text": "Шановні колег, почнемо зустріч.", "correct": false}, {"text": "Шановні колегам, почнемо зустріч.", "correct": false}, {"text": "Шановні колегами, почнемо зустріч.", "correct": false}]}, {"question": "Оберіть правильне речення:", "options": [{"text": "Я користуюся новим ноутбуком.", "correct": true}, {"text": "Я користуюся новий ноутбук.", "correct": false}, {"text": "Я користуюся нового ноутбука.", "correct": false}, {"text": "Я користуюся новому ноутбуку.", "correct": false}]}, {"question": "Оберіть правильне речення:", "options": [{"text": "Я пишу запрошення для гостей.", "correct": true}, {"text": "Я пишу запрошення для гості.", "correct": false}, {"text": "Я пишу запрошення для гостям.", "correct": false}, {"text": "Я пишу запрошення для гостями.", "correct": false}]}]} instruction={"Оберіть речення БЕЗ помилок"} />
+<ErrorCorrection client:only="react" items={[{"sentence": "Я зустрічаюся з мій друг.", "errorWord": "мій друг", "correctForm": "моїм другом", "options": ["мого друга", "моїм другом", "моєму другу"], "explanation": "З (with) + Instrumental case: з моїм другом."}, {"sentence": "У нас є багато проблема.", "errorWord": "проблема", "correctForm": "проблем", "options": ["проблем", "проблеми", "проблемах"], "explanation": "Багато + Genitive plural: багато проблем."}, {"sentence": "Я живу в Україна.", "errorWord": "Україна", "correctForm": "Україні", "options": ["Україну", "Україні", "Україною"], "explanation": "В (in) + Locative case (location): в Україні."}, {"sentence": "Я їду в Україні.", "errorWord": "Україні", "correctForm": "Україну", "options": ["Україну", "Україні", "Україною"], "explanation": "В (into) + Accusative case (direction): в Україну."}, {"sentence": "Ми дякуємо мама.", "errorWord": "мама", "correctForm": "мамі", "options": ["маму", "мамі", "мамою"], "explanation": "Дякувати + Dative case: дякуємо мамі."}, {"sentence": "Пан Іван, як ваші справи?", "errorWord": "Пан Іван", "correctForm": "Пане Іване", "options": ["Пану Івану", "Пане Іване", "Паном Іваном"], "explanation": "Vocative case is required for address: Пане Іване."}, {"sentence": "Ми чекаємо автобусу.", "errorWord": "автобусу", "correctForm": "автобуса", "options": ["автобуса", "автобусу", "автобусом"], "explanation": "Дієслово 'чекати' вимагає Родового або Знахідного відмінка, а 'автобусу' тут Давальний."}, {"sentence": "Я бачу багато люди.", "errorWord": "люди", "correctForm": "людей", "options": ["людей", "людям", "людьми"], "explanation": "Багато + Genitive plural of 'люди' is 'людей'."}]} instruction={"Знайдіть і виправте помилку в реченні (Error correction)"} />
 
-<TrueFalse client:only="react" items={[{"statement": "У Родовому відмінку множини слово 'книга' має форму 'книгів'.", "isTrue": false, "explanation": "Слово 'книга' (жіночий рід) у Родовому відмінку множини має нульове закінчення — 'книг'."}, {"statement": "Дієслово 'дякувати' вимагає Знахідного відмінка (Accusative).", "isTrue": false, "explanation": "Дієслово 'дякувати' вимагає Давального відмінка (Dative): дякувати батькам."}, {"statement": "Слова 'гроші' та 'окуляри' мають тільки форму множини.", "isTrue": true, "explanation": "Так, це іменники, які вживаються лише в множині (Pluralia Tantum)."}, {"statement": "Прийменник 'з' з Орудним відмінком (Instrumental) означає компанію (наприклад, 'з братом').", "isTrue": true, "explanation": "Так, 'з братом' означає 'with brother'. З Родовим відмінком 'з' означає напрямок (з України)."}, {"statement": "Слово 'людина' у множині — це 'людини'.", "isTrue": false, "explanation": "Це неправильна форма. Множина від 'людина' — 'люди'."}, {"statement": "У формі Кличного відмінка слово 'мама' буде 'мамо'.", "isTrue": true, "explanation": "Так, Кличний відмінок для іменників на -а часто має закінчення -о."}]} instruction={"Правда чи ні?"} />
+<MatchUp client:only="react" pairs={[{"left": "Хто? Що? (Nominative)", "right": "нові міста"}, {"left": "Кого? Чого? (Genitive)", "right": "нових міст"}, {"left": "Кому? Чому? (Dative)", "right": "новим містам"}, {"left": "Ким? Чим? (Instrumental)", "right": "новими містами"}, {"left": "На кому? На чому? (Locative)", "right": "на нових містах"}, {"left": "Кличний відмінок (Vocative)", "right": "рідне місто!"}]} instruction={"З'єднайте запитання з правильною формою іменника (Cases and Questions)"} />
 
-<Translate client:only="react" questions={[{"source": "He uses a phone.", "options": [{"text": "Він користується телефоном.", "correct": true}, {"text": "Він користується телефон.", "correct": false}, {"text": "Він користується телефона.", "correct": false}, {"text": "Він користується телефону.", "correct": false}]}, {"source": "I do not have books.", "options": [{"text": "У мене немає книг.", "correct": true}, {"text": "У мене немає книги.", "correct": false}, {"text": "У мене немає книгах.", "correct": false}, {"text": "У мене немає книгами.", "correct": false}]}, {"source": "She is walking with friends.", "options": [{"text": "Вона гуляє з друзями.", "correct": true}, {"text": "Вона гуляє з друзів.", "correct": false}, {"text": "Вона гуляє з друзям.", "correct": false}, {"text": "Вона гуляє з друзі.", "correct": false}]}, {"source": "They see tall trees.", "options": [{"text": "Вони бачать високі дерева.", "correct": true}, {"text": "Вони бачать високих дерев.", "correct": false}, {"text": "Вони бачать високими деревами.", "correct": false}, {"text": "Вони бачать високим деревам.", "correct": false}]}, {"source": "We are waiting for the bus.", "options": [{"text": "Ми чекаємо автобуса.", "correct": true}, {"text": "Ми чекаємо автобусом.", "correct": false}, {"text": "Ми чекаємо автобусу.", "correct": false}, {"text": "Ми чекаємо автобусам.", "correct": false}]}, {"source": "We travel by train.", "options": [{"text": "Ми подорожуємо поїздом.", "correct": true}, {"text": "Ми подорожуємо поїзді.", "correct": false}, {"text": "Ми подорожуємо на поїзд.", "correct": false}, {"text": "Ми подорожуємо поїзда.", "correct": false}]}]} instruction={"Оберіть правильний переклад"} />
+<TrueFalse client:only="react" items={[{"statement": "Слово 'гроші' має форму однини.", "isTrue": false, "explanation": "Слово 'гроші' вживається тільки в множині (Pluralia Tantum)."}, {"statement": "Дієслово 'дякувати' вимагає Давального відмінка.", "isTrue": true, "explanation": "Так, правильно: дякувати (кому?) батькам."}, {"statement": "Після слова 'багато' завжди потрібен Знахідний відмінок.", "isTrue": false, "explanation": "Після слова 'багато' завжди потрібен Родовий відмінок множини."}, {"statement": "Прийменник 'з' може використовуватися з Родовим та Орудним відмінками.", "isTrue": true, "explanation": "Звідки? З України (Genitive). З ким? З братом (Instrumental)."}, {"statement": "Форма 'друзі' — це правильна множина слова 'друг'.", "isTrue": true, "explanation": "Так, це нерегулярна форма."}, {"statement": "Знахідний відмінок для неживих предметів у множині завжди збігається з Родовим.", "isTrue": false, "explanation": "Він збігається з Називним (бачу столи). З Родовим збігається для живих істот (бачу друзів)."}]} instruction={"Правда чи ні? Правила відмінків та множини"} />
 
-<Order client:only="react" items={["— Привіт, Олено! Ти вже написала запрошення для гостей?", "— Привіт! Так, я вже написала всім друзям.", "— А ти пам'ятаєш про подарунок нареченій?", "— Ой, я зовсім забула! Мені треба купити квіти.", "— Тоді йдемо в центр міста разом."]} correct_order={[0, 1, 2, 3, 4]} instruction={"Розставте речення в правильному порядку"} />
+<Translate client:only="react" questions={[{"source": "We have no money.", "options": [{"text": "У нас немає грошей.", "correct": true}, {"text": "У нас немає гроші.", "correct": false}, {"text": "Ми не маємо грошам.", "correct": false}, {"text": "Ми немає гроші.", "correct": false}]}, {"source": "She helps her parents.", "options": [{"text": "Вона допомагає своїх батьків.", "correct": false}, {"text": "Вона допомагає своїм батькам.", "correct": true}, {"text": "Вона допомагає своїми батьками.", "correct": false}, {"text": "Вона допомагає свої батьки.", "correct": false}]}, {"source": "They walk with friends.", "options": [{"text": "Вони гуляють з друзі.", "correct": false}, {"text": "Вони гуляють з друзів.", "correct": false}, {"text": "Вони гуляють з друзями.", "correct": true}, {"text": "Вони гуляють з друзям.", "correct": false}]}, {"source": "I see the trees.", "options": [{"text": "Я бачу дерева.", "correct": true}, {"text": "Я бачу дерев.", "correct": false}, {"text": "Я бачу деревами.", "correct": false}, {"text": "Я бачу деревах.", "correct": false}]}, {"source": "There are no tables here.", "options": [{"text": "Тут немає столи.", "correct": false}, {"text": "Тут немає столам.", "correct": false}, {"text": "Тут немає столами.", "correct": false}, {"text": "Тут немає столів.", "correct": true}]}, {"source": "He talks to Oksana.", "options": [{"text": "Він розмовляє з Оксаною.", "correct": true}, {"text": "Він розмовляє з Оксану.", "correct": false}, {"text": "Він розмовляє з Оксані.", "correct": false}, {"text": "Він розмовляє з Оксана.", "correct": false}]}]} instruction={"Оберіть правильний переклад"} />
 
 </TabItem>
 <TabItem label="Ресурси">

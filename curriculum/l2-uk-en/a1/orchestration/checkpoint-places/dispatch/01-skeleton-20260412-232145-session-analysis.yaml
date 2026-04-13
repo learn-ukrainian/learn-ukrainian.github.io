@@ -1,0 +1,72 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T21-21-584226c5.json
+phase: skeleton
+prompt_chars: 30578
+response_chars: 4890
+prompt_words: 4197
+response_words: 762
+sections:
+- name: preamble
+  start: 0
+  length: 461
+  fraction: 0.0151
+- name: plan
+  start: 461
+  length: 4993
+  fraction: 0.1633
+- name: wiki
+  start: 5404
+  length: 22794
+  fraction: 0.7454
+- name: output_spec
+  start: 28248
+  length: 2330
+  fraction: 0.0762
+large_sections:
+- wiki
+directives_total: 15
+directives_covered: 5
+directives_missed:
+- kind: must
+  text: '** This is a critical element of natural Ukrainian speech and must be introduced
+    early.'
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: must
+  text: '" English speakers must learn the fixed Ukrainian construction which uses
+    the accusative pronoun `мене` (me).'
+  covered: false
+  coverage_note: 4/12 keywords (33%)
+- kind: must
+  text: The ending must change (`-ія` -> `-іє`, `-а` -> `-о`, consonant -> `-е`).
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Word budgets must sum to 1200+.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Section budgets must match the plan''s `content_outline` word allocations**
+    (±10%).'
+  covered: false
+  coverage_note: 2/8 keywords (25%)
+- kind: must
+  text: '**CRITICAL: An exercise must ONLY test concepts already taught above it.'
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: must
+  text: 'Every plan `activity_hints` entry MUST have a corresponding `<!-- INJECT_ACTIVITY:
+    id -->` marker in the skeleton.'
+  covered: false
+  coverage_note: 3/10 keywords (30%)
+- kind: inject_activity
+  text: activity-id
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: activity-id
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: descriptive-id
+  covered: false
+  coverage_note: marker missing

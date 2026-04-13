@@ -65,38 +65,8 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: Що там?
-  translation: What is there?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Хто там?
-  translation: Who is there?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Де аптека?
-  translation: Where is the pharmacy?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Дякую!
-  translation: Thank you!
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Це все?
-  translation: Is this all?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Так, це все!
-  translation: Yes, this is all!
+- word: У слові стільки складів, скільки голосних звуків
+  translation: Count the vowels, count the syllables
   expression: true
   pos: ''
   gender: ''
@@ -107,14 +77,50 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: та́то
-  translation: father
+- word: банк
+  translation: bank
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: банк
-  translation: bank
+- word: голосни́й
+  translation: vowel
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: звуковий аналіз слова
+  translation: sound analysis
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: визначаю голосні звуки
+  translation: I identify the vowel sounds
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ділю слово на склади
+  translation: I divide the word into syllables
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ставлю наголос
+  translation: I place the stress
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: позначаю приголосні звуки
+  translation: I mark the consonant sounds
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: кит
+  translation: whale
   expression: false
   pos: ім.
   gender: ч.
@@ -125,26 +131,8 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: кит
-  translation: whale
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
 - word: дим
   translation: smoke
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: єно́т
-  translation: raccoon
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: їжа́к
-  translation: hedgehog
   expression: false
   pos: ім.
   gender: ч.
@@ -155,17 +143,17 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: апте́ка
-  translation: pharmacy
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
 - word: кни́га
   translation: book
   expression: false
   pos: ім.
   gender: ж.
+  verified: true
+- word: односкладо́ві
+  translation: 1-syllable
+  expression: false
+  pos: прикм.
+  gender: ''
   verified: true
 - word: ліс
   translation: forest
@@ -181,6 +169,18 @@ vocabulary:
   verified: true
 - word: хліб
   translation: bread
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: двоскладо́ві
+  translation: 2-syllable
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: та́то
+  translation: father
   expression: false
   pos: ім.
   gender: ч.
@@ -202,6 +202,54 @@ vocabulary:
   expression: false
   pos: ім.
   gender: ж.
+  verified: true
+- word: Це каша?
+  translation: Is this porridge?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Ні, це не каша. Це вода.
+  translation: No, this is not porridge. This is water.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: трискладо́ві
+  translation: 3-syllable
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: багатоскладо́ві
+  translation: 4+ syllable
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: апте́ка
+  translation: pharmacy
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: Де бібліотека?
+  translation: Where is the library?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Вона там. А тут — університет.
+  translation: It is there. And here is the university.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Дякую!
+  translation: Thanks!
+  expression: true
+  pos: ''
+  gender: ''
   verified: true
 - word: Ки́їв
   translation: Kyiv
@@ -239,6 +287,12 @@ vocabulary:
   pos: ''
   gender: ''
   verified: false
+- word: Київ — столиця України
+  translation: Kyiv is the capital of Ukraine
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
 - word: що
   translation: what
   expression: false
@@ -269,57 +323,21 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: м'я́со
-  translation: meat
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
 - word: сім'я́
   translation: family
   expression: false
   pos: ім.
   gender: ж.
   verified: true
+- word: м'я́со
+  translation: meat
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
 - word: п'ять
   translation: five
   expression: false
   pos: числ.
-  gender: ''
-  verified: true
-- word: Тут каша.
-  translation: Porridge is here.
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: А там молоко.
-  translation: And milk is there.
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Там кіт.
-  translation: A cat is there.
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Ні, це не кіт.
-  translation: No, this is not a cat.
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Аптека там.
-  translation: The pharmacy is there.
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Київ — столиця України
-  translation: Kyiv is the capital of Ukraine
-  expression: true
-  pos: ''
   gender: ''
   verified: true

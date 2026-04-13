@@ -1,0 +1,49 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T20-46-b8ab946a.json
+phase: write-chunk-01
+prompt_chars: 42773
+response_chars: 5990
+prompt_words: 6031
+response_words: 961
+sections:
+- name: header
+  start: 0
+  length: 502
+  fraction: 0.0117
+- name: skeleton
+  start: 502
+  length: 2116
+  fraction: 0.0495
+- name: plan
+  start: 2618
+  length: 11929
+  fraction: 0.2789
+- name: wiki
+  start: 6939
+  length: 27969
+  fraction: 0.6539
+- name: output_spec
+  start: 42516
+  length: 257
+  fraction: 0.006
+large_sections:
+- wiki
+directives_total: 19
+directives_covered: 15
+directives_missed:
+- kind: checklist
+  text: заперечення (negation)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 3/11 keywords (27%)
+- kind: inject_activity
+  text: quiz-whats-the-date
+  covered: false
+  coverage_note: marker missing

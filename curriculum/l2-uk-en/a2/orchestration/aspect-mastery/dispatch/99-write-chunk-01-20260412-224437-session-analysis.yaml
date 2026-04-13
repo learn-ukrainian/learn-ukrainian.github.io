@@ -1,0 +1,57 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T20-42-f852e78a.json
+phase: write-chunk-01
+prompt_chars: 33701
+response_chars: 4405
+prompt_words: 4381
+response_words: 710
+sections:
+- name: header
+  start: 0
+  length: 441
+  fraction: 0.0131
+- name: skeleton
+  start: 441
+  length: 1823
+  fraction: 0.0541
+- name: plan
+  start: 2264
+  length: 12574
+  fraction: 0.3731
+- name: wiki
+  start: 8222
+  length: 18655
+  fraction: 0.5535
+- name: output_spec
+  start: 33493
+  length: 208
+  fraction: 0.0062
+large_sections:
+- wiki
+directives_total: 15
+directives_covered: 9
+directives_missed:
+- kind: checklist
+  text: давати / дати (to give — impf./pf.)
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: checklist
+  text: класти / покласти (to put — impf./pf.)
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: checklist
+  text: починати / почати (to begin — impf./pf.)
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: checklist
+  text: закінчувати / закінчити (to finish — impf./pf.)
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 2/11 keywords (18%)

@@ -1,0 +1,49 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T19-24-48fd67b3.json
+phase: write-chunk-02
+prompt_chars: 42826
+response_chars: 6029
+prompt_words: 6043
+response_words: 946
+sections:
+- name: header
+  start: 0
+  length: 472
+  fraction: 0.011
+- name: skeleton
+  start: 472
+  length: 1317
+  fraction: 0.0308
+- name: prior_summary
+  start: 1789
+  length: 3281
+  fraction: 0.0766
+- name: plan
+  start: 5070
+  length: 11116
+  fraction: 0.2596
+- name: wiki
+  start: 9536
+  length: 26402
+  fraction: 0.6165
+- name: output_spec
+  start: 42588
+  length: 238
+  fraction: 0.0056
+large_sections:
+- wiki
+directives_total: 11
+directives_covered: 8
+directives_missed:
+- kind: checklist
+  text: суфікс (suffix)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: брати / взяти (to take)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 2/11 keywords (18%)

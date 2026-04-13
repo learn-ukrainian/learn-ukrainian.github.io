@@ -2,51 +2,53 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 10
-  evidence: Covers all 6 grammar/review points from the plan. Adapts the dialogue
-    perfectly to the `dialogue_situations` setting (market, crafts) rather than the
-    generic placeholder text.
+  score: 7
+  evidence: 'The module keeps the planned H2 structure, but the reading section adds
+    off-plan metalanguage: **“The first part is the зачin… основна частина… кінцівка”**
+    even though the plan reference says **“No ne'
 - dimension: 2
   name: Linguistic accuracy
-  score: 10
-  evidence: No Russianisms, calques, or grammatical errors. Correct use of plurals
-    with numbers (два стільці, три сині книги) and adjectives (мале, білі).
+  score: 7
+  evidence: 'No Russianisms/Surzhyk/calques found, but two grammar claims are inaccurate:
+    **“The final letter always reveals the answer.”** and **“with a simple vowel change
+    at the end of the word.”**'
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: Excellent PPP flow. The grammar section clearly breaks down noun endings
-    by gender with immediate examples (стіл, ручка, дзеркало) before explaining adjective
-    agreement.
+  score: 6
+  evidence: 'There is too much English meta-explanation around the reading: **“Reading
+    practice serves a specific purpose…”** and **“Breaking down the text''s structure…”**
+    spend many words on theory instead of dir'
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: All core cultural items mentioned in the plan's dialogue setting (вишиванка,
-    глечик, намисто, писанки) are used naturally in the dialogue.
+  score: 7
+  evidence: The prose uses planned cultural vocabulary like **вишиванка**, **глечик**,
+    and **писанки**, but the planned item `намисто` is absent.
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: Four activity markers are present, mapped precisely to the correct concepts,
-    and placed immediately after the relevant teaching sections.
+  score: 9
+  evidence: 'All 4 planned exercise markers are present and placed after relevant
+    teaching sections: `group-sort-vocabulary`, `quiz-gender-agreement`, `quiz-singular-plural`,
+    `fill-in-shopping-dialogue`.'
 - dimension: 6
   name: Engagement & tone
-  score: 8
-  evidence: 'Generally encouraging, but the opener uses gamified/cliché phrasing:
-    "You have reached a significant milestone in your Ukrainian learning journey."'
+  score: 7
+  evidence: The teacher voice is mostly calm and usable, but generic framing like
+    **“Reading practice serves a specific purpose in your language development”**
+    adds padding without much learner value.
 - dimension: 7
   name: Structural integrity
-  score: 8
-  evidence: 'The module is structurally sound and well over the word count target
-    (1514 words), but contains a dangling, incomplete sentence fragment: "If you answered
-    yes to these questions,  To truly consolidate'
+  score: 10
+  evidence: All planned sections are present and ordered correctly, markdown is clean,
+    and the pipeline word count is **1492**, safely above the **1200** target.
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: The dialogue authentically references a Ukrainian "ярмарок" and specific
-    cultural crafts, teaching numbers and colors within a culturally accurate context.
+  score: 9
+  evidence: 'The module is grounded in specifically Ukrainian content: **ярмарок**,
+    **вишиванка**, **глечик**, **писанки**. It avoids Russia-centric framing.'
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 9
-  evidence: The conversation at the market is natural, using appropriate demonstratives
-    and prices in a realistic shopping scenario ("Одне намисто — двісті гривень. У
-    мене є триста гривень. Купуємо!").
+  score: 8
+  evidence: The dialogue has named speakers and a concrete market situation, and it
+    combines demonstratives, prices, and plurals through lines like **“Скільки вона
+    коштує?”** and **“Я беру три.”**
 findings: []

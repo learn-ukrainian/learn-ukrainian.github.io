@@ -1,0 +1,68 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T21-44-3afb7bd6.json
+phase: write-chunk-02
+prompt_chars: 42870
+response_chars: 5425
+prompt_words: 6114
+response_words: 894
+sections:
+- name: header
+  start: 0
+  length: 472
+  fraction: 0.011
+- name: skeleton
+  start: 472
+  length: 1586
+  fraction: 0.037
+- name: prior_summary
+  start: 2058
+  length: 3191
+  fraction: 0.0744
+- name: plan
+  start: 5249
+  length: 13361
+  fraction: 0.3117
+- name: wiki
+  start: 11971
+  length: 24010
+  fraction: 0.5601
+- name: output_spec
+  start: 42620
+  length: 250
+  fraction: 0.0058
+large_sections:
+- wiki
+directives_total: 16
+directives_covered: 8
+directives_missed:
+- kind: checklist
+  text: нехай (let — formal variant)
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: checklist
+  text: побажання (wish, blessing)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: кличний відмінок (Vocative case)
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: checklist
+  text: будь / будьте (be — imperative of бути)
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: checklist
+  text: щасливий / щасливою (happy / happy — Instr.f.)
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: checklist
+  text: здоровий / здоровими (healthy / healthy — Instr.pl.)
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: inject_activity
+  text: fill-in-imperatives-3rd-1st-plural
+  covered: false
+  coverage_note: marker missing

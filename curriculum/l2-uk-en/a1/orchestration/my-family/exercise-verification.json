@@ -1,13 +1,7 @@
 {
-  "total_items": 42,
-  "grounded_items": 31,
+  "total_items": 41,
+  "grounded_items": 30,
   "ungrounded": [
-    {
-      "word": "ось",
-      "exercise_type": "fill-in",
-      "context": "— Так, це мій брат. Ось мій ____.",
-      "role": "context"
-    },
     {
       "word": "де",
       "exercise_type": "fill-in",
@@ -15,72 +9,77 @@
       "role": "context"
     },
     {
-      "word": "тут",
+      "word": "ось",
       "exercise_type": "fill-in",
-      "context": "Тут ____ брат.",
+      "context": "Ось ____ батьки.",
       "role": "context"
     },
     {
-      "word": "мама'",
-      "exercise_type": "true-false",
-      "context": "You can say 'мій мама'.",
+      "word": "чоловічий",
+      "exercise_type": "group-sort",
+      "context": "Masculine (Чоловічий рід)",
       "role": "context"
     },
     {
-      "word": "мій'",
-      "exercise_type": "true-false",
-      "context": "The plural of 'мій' is 'мої'.",
+      "word": "рід",
+      "exercise_type": "group-sort",
+      "context": "Masculine (Чоловічий рід)",
       "role": "context"
     },
     {
-      "word": "мої'",
-      "exercise_type": "true-false",
-      "context": "The plural of 'мій' is 'мої'.",
+      "word": "жіночий",
+      "exercise_type": "group-sort",
+      "context": "Feminine (Жіночий рід)",
       "role": "context"
     },
     {
-      "word": "маю",
-      "exercise_type": "true-false",
-      "context": "To say 'I have a brother', say 'Я маю брат'.",
-      "role": "context"
-    },
-    {
-      "word": "брат'",
-      "exercise_type": "true-false",
-      "context": "To say 'I have a brother', say 'Я маю брат'.",
-      "role": "context"
-    },
-    {
-      "word": "її'",
-      "exercise_type": "true-false",
-      "context": "'Її' means 'her' and never changes shape.",
+      "word": "множина",
+      "exercise_type": "group-sort",
+      "context": "Plural (Множина)",
       "role": "context"
     },
     {
       "word": "є'",
       "exercise_type": "true-false",
-      "context": "If asking a friend, you use 'У тебе є'.",
+      "context": "In Ukrainian, 'I have' is translated as 'у мене є'.",
       "role": "context"
     },
     {
-      "word": "батьки'",
+      "word": "його'",
       "exercise_type": "true-false",
-      "context": "'Батьки' means only 'fathers'.",
+      "context": "The word 'його' (his) and 'її' (her) change based on the gen",
+      "role": "context"
+    },
+    {
+      "word": "її'",
+      "exercise_type": "true-false",
+      "context": "The word 'його' (his) and 'її' (her) change based on the gen",
+      "role": "context"
+    },
+    {
+      "word": "брат'",
+      "exercise_type": "true-false",
+      "context": "To say 'one brother', you use 'один брат', and for 'one sist",
+      "role": "context"
+    },
+    {
+      "word": "сестра'",
+      "exercise_type": "true-false",
+      "context": "To say 'one brother', you use 'один брат', and for 'one sist",
       "role": "context"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 31,
-    "tested_in_exercises": 23,
+    "tested_in_exercises": 24,
     "not_tested": [
+      "два",
       "дві",
-      "мене",
+      "його",
       "моє",
-      "один",
-      "одна",
       "твоє",
       "тільки",
-      "чи"
+      "її"
     ]
   },
   "all_grounded": false

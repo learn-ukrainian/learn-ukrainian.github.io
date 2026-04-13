@@ -1,21 +1,536 @@
 {
-  "total_items": 139,
-  "grounded_items": 139,
-  "ungrounded": [],
+  "total_items": 213,
+  "grounded_items": 127,
+  "ungrounded": [
+    {
+      "word": "свіжих",
+      "exercise_type": "quiz",
+      "context": "Цей сік зроблений ____ свіжих яблук.",
+      "role": "context"
+    },
+    {
+      "word": "італії",
+      "exercise_type": "error-correction",
+      "context": "Італії",
+      "role": "answer"
+    },
+    {
+      "word": "дістала",
+      "exercise_type": "quiz",
+      "context": "Вона дістала книгу ____ шафи.",
+      "role": "context"
+    },
+    {
+      "word": "сувенір",
+      "exercise_type": "fill-in",
+      "context": "Цей сувенір ____.",
+      "role": "context"
+    },
+    {
+      "word": "вийшов",
+      "exercise_type": "fill-in",
+      "context": "Він вийшов ____.",
+      "role": "context"
+    },
+    {
+      "word": "місце",
+      "exercise_type": "group-sort",
+      "context": "Місце та матеріал (з/із/зі)",
+      "role": "context"
+    },
+    {
+      "word": "особа",
+      "exercise_type": "group-sort",
+      "context": "Особа та захист (від)",
+      "role": "context"
+    },
+    {
+      "word": "захист",
+      "exercise_type": "group-sort",
+      "context": "Особа та захист (від)",
+      "role": "context"
+    },
+    {
+      "word": "лікаря",
+      "exercise_type": "group-sort",
+      "context": "від лікаря",
+      "role": "answer"
+    },
+    {
+      "word": "час",
+      "exercise_type": "group-sort",
+      "context": "Час (після / з)",
+      "role": "context"
+    },
+    {
+      "word": "використовуємо",
+      "exercise_type": "true-false",
+      "context": "Ми використовуємо «від», щоб сказати, з якої ми країни.",
+      "role": "context"
+    },
+    {
+      "word": "сказати",
+      "exercise_type": "true-false",
+      "context": "Ми використовуємо «від», щоб сказати, з якої ми країни.",
+      "role": "context"
+    },
+    {
+      "word": "якої",
+      "exercise_type": "true-false",
+      "context": "Ми використовуємо «від», щоб сказати, з якої ми країни.",
+      "role": "context"
+    },
+    {
+      "word": "країни",
+      "exercise_type": "true-false",
+      "context": "Ми використовуємо «від», щоб сказати, з якої ми країни.",
+      "role": "context"
+    },
+    {
+      "word": "словосполучення",
+      "exercise_type": "true-false",
+      "context": "Словосполучення «з брата» означає подарунок від людини.",
+      "role": "context"
+    },
+    {
+      "word": "означає",
+      "exercise_type": "true-false",
+      "context": "Словосполучення «з брата» означає подарунок від людини.",
+      "role": "context"
+    },
+    {
+      "word": "людини",
+      "exercise_type": "true-false",
+      "context": "Словосполучення «з брата» означає подарунок від людини.",
+      "role": "context"
+    },
+    {
+      "word": "прийменника",
+      "exercise_type": "true-false",
+      "context": "Після прийменника «після» іменник завжди стоїть у родовому в",
+      "role": "context"
+    },
+    {
+      "word": "іменник",
+      "exercise_type": "true-false",
+      "context": "Після прийменника «після» іменник завжди стоїть у родовому в",
+      "role": "context"
+    },
+    {
+      "word": "родовому",
+      "exercise_type": "true-false",
+      "context": "Після прийменника «після» іменник завжди стоїть у родовому в",
+      "role": "context"
+    },
+    {
+      "word": "відмінку",
+      "exercise_type": "true-false",
+      "context": "Після прийменника «після» іменник завжди стоїть у родовому в",
+      "role": "context"
+    },
+    {
+      "word": "матеріалу",
+      "exercise_type": "true-false",
+      "context": "Для матеріалу (наприклад, дерево, скло) ми використовуємо пр",
+      "role": "context"
+    },
+    {
+      "word": "наприклад",
+      "exercise_type": "true-false",
+      "context": "Для матеріалу (наприклад, дерево, скло) ми використовуємо пр",
+      "role": "context"
+    },
+    {
+      "word": "дерево",
+      "exercise_type": "true-false",
+      "context": "Для матеріалу (наприклад, дерево, скло) ми використовуємо пр",
+      "role": "context"
+    },
+    {
+      "word": "скло",
+      "exercise_type": "true-false",
+      "context": "Для матеріалу (наприклад, дерево, скло) ми використовуємо пр",
+      "role": "context"
+    },
+    {
+      "word": "українці",
+      "exercise_type": "true-false",
+      "context": "Українці кажуть «ліки від болю», а не «ліки для болю».",
+      "role": "context"
+    },
+    {
+      "word": "кажуть",
+      "exercise_type": "true-false",
+      "context": "Українці кажуть «ліки від болю», а не «ліки для болю».",
+      "role": "context"
+    },
+    {
+      "word": "використовується",
+      "exercise_type": "true-false",
+      "context": "Прийменник «зі» використовується перед голосними звуками.",
+      "role": "context"
+    },
+    {
+      "word": "перед",
+      "exercise_type": "true-false",
+      "context": "Прийменник «зі» використовується перед голосними звуками.",
+      "role": "context"
+    },
+    {
+      "word": "голосними",
+      "exercise_type": "true-false",
+      "context": "Прийменник «зі» використовується перед голосними звуками.",
+      "role": "context"
+    },
+    {
+      "word": "звуками",
+      "exercise_type": "true-false",
+      "context": "Прийменник «зі» використовується перед голосними звуками.",
+      "role": "context"
+    },
+    {
+      "word": "прийменників",
+      "exercise_type": "true-false",
+      "context": "Після прийменників «з», «від» та «після» іменники змінюють с",
+      "role": "context"
+    },
+    {
+      "word": "іменники",
+      "exercise_type": "true-false",
+      "context": "Після прийменників «з», «від» та «після» іменники змінюють с",
+      "role": "context"
+    },
+    {
+      "word": "змінюють",
+      "exercise_type": "true-false",
+      "context": "Після прийменників «з», «від» та «після» іменники змінюють с",
+      "role": "context"
+    },
+    {
+      "word": "закінчення",
+      "exercise_type": "true-false",
+      "context": "Після прийменників «з», «від» та «після» іменники змінюють с",
+      "role": "context"
+    },
+    {
+      "word": "фраза",
+      "exercise_type": "true-false",
+      "context": "Фраза «далеко з міста» є граматично правильною.",
+      "role": "context"
+    },
+    {
+      "word": "граматично",
+      "exercise_type": "true-false",
+      "context": "Фраза «далеко з міста» є граматично правильною.",
+      "role": "context"
+    },
+    {
+      "word": "правильною",
+      "exercise_type": "true-false",
+      "context": "Фраза «далеко з міста» є граматично правильною.",
+      "role": "context"
+    },
+    {
+      "word": "моєї",
+      "exercise_type": "error-correction",
+      "context": "Я отримав цікавий лист з моєї сестри.",
+      "role": "context"
+    },
+    {
+      "word": "готелю",
+      "exercise_type": "error-correction",
+      "context": "Ми дуже далеко з нашого готелю.",
+      "role": "context"
+    },
+    {
+      "word": "ваза",
+      "exercise_type": "unjumble",
+      "context": "ваза",
+      "role": "answer"
+    },
+    {
+      "word": "чекаю",
+      "exercise_type": "unjumble",
+      "context": "чекаю",
+      "role": "answer"
+    },
+    {
+      "word": "урок",
+      "exercise_type": "error-correction",
+      "context": "Я чекаю на тебе після урок.",
+      "role": "context"
+    },
+    {
+      "word": "італія",
+      "exercise_type": "error-correction",
+      "context": "Вона повернулася додому з Італія.",
+      "role": "context"
+    },
+    {
+      "word": "потрібна",
+      "exercise_type": "error-correction",
+      "context": "Мені потрібна парасолька для дощу.",
+      "role": "context"
+    },
+    {
+      "word": "п'ємо",
+      "exercise_type": "error-correction",
+      "context": "Ми п'ємо каву після сніданок.",
+      "role": "context"
+    },
+    {
+      "word": "сорочка",
+      "exercise_type": "unjumble",
+      "context": "сорочка",
+      "role": "answer"
+    },
+    {
+      "word": "нова",
+      "exercise_type": "unjumble",
+      "context": "Нова",
+      "role": "answer"
+    },
+    {
+      "word": "увечері",
+      "exercise_type": "fill-in",
+      "context": "Увечері, ____ роботи, я повертаюся додому.",
+      "role": "context"
+    },
+    {
+      "word": "повертаюся",
+      "exercise_type": "fill-in",
+      "context": "Увечері, ____ роботи, я повертаюся додому.",
+      "role": "context"
+    },
+    {
+      "word": "квартира",
+      "exercise_type": "fill-in",
+      "context": "Моя квартира знаходиться недалеко ____ центру міста.",
+      "role": "context"
+    },
+    {
+      "word": "отримую",
+      "exercise_type": "fill-in",
+      "context": "Я часто отримую повідомлення ____ моєї мами.",
+      "role": "context"
+    },
+    {
+      "word": "живе",
+      "exercise_type": "fill-in",
+      "context": "Вона зараз живе в іншій країні і часто привозить сувеніри __",
+      "role": "context"
+    },
+    {
+      "word": "іншій",
+      "exercise_type": "fill-in",
+      "context": "Вона зараз живе в іншій країні і часто привозить сувеніри __",
+      "role": "context"
+    },
+    {
+      "word": "країні",
+      "exercise_type": "fill-in",
+      "context": "Вона зараз живе в іншій країні і часто привозить сувеніри __",
+      "role": "context"
+    },
+    {
+      "word": "привозить",
+      "exercise_type": "fill-in",
+      "context": "Вона зараз живе в іншій країні і часто привозить сувеніри __",
+      "role": "context"
+    },
+    {
+      "word": "європи",
+      "exercise_type": "fill-in",
+      "context": "Вона зараз живе в іншій країні і часто привозить сувеніри __",
+      "role": "context"
+    },
+    {
+      "word": "їм",
+      "exercise_type": "fill-in",
+      "context": "На вечерю я п'ю чай і їм шоколад, який зроблений ____ какао.",
+      "role": "context"
+    },
+    {
+      "word": "какао",
+      "exercise_type": "fill-in",
+      "context": "На вечерю я п'ю чай і їм шоколад, який зроблений ____ какао.",
+      "role": "context"
+    },
+    {
+      "word": "пити",
+      "exercise_type": "fill-in",
+      "context": "Я люблю пити гарячий чай ____ довгої прогулянки.",
+      "role": "context"
+    },
+    {
+      "word": "прогулянки",
+      "exercise_type": "fill-in",
+      "context": "Я люблю пити гарячий чай ____ довгої прогулянки.",
+      "role": "context"
+    },
+    {
+      "word": "іноді",
+      "exercise_type": "fill-in",
+      "context": "Іноді я беру цікаву книгу ____ шафи.",
+      "role": "context"
+    },
+    {
+      "word": "беру",
+      "exercise_type": "fill-in",
+      "context": "Іноді я беру цікаву книгу ____ шафи.",
+      "role": "context"
+    },
+    {
+      "word": "цікаву",
+      "exercise_type": "fill-in",
+      "context": "Іноді я беру цікаву книгу ____ шафи.",
+      "role": "context"
+    },
+    {
+      "word": "книга",
+      "exercise_type": "fill-in",
+      "context": "Ця книга — це подарунок ____ мого старого сусіда.",
+      "role": "context"
+    },
+    {
+      "word": "мого",
+      "exercise_type": "fill-in",
+      "context": "Ця книга — це подарунок ____ мого старого сусіда.",
+      "role": "context"
+    },
+    {
+      "word": "голосним",
+      "exercise_type": "group-sort",
+      "context": "з (перед голосним або одним приголосним)",
+      "role": "context"
+    },
+    {
+      "word": "одним",
+      "exercise_type": "group-sort",
+      "context": "з (перед голосним або одним приголосним)",
+      "role": "context"
+    },
+    {
+      "word": "приголосним",
+      "exercise_type": "group-sort",
+      "context": "з (перед голосним або одним приголосним)",
+      "role": "context"
+    },
+    {
+      "word": "свистячим",
+      "exercise_type": "group-sort",
+      "context": "із (перед свистячим/шиплячим або між приголосними)",
+      "role": "context"
+    },
+    {
+      "word": "шиплячим",
+      "exercise_type": "group-sort",
+      "context": "із (перед свистячим/шиплячим або між приголосними)",
+      "role": "context"
+    },
+    {
+      "word": "між",
+      "exercise_type": "group-sort",
+      "context": "із (перед свистячим/шиплячим або між приголосними)",
+      "role": "context"
+    },
+    {
+      "word": "приголосними",
+      "exercise_type": "group-sort",
+      "context": "із (перед свистячим/шиплячим або між приголосними)",
+      "role": "context"
+    },
+    {
+      "word": "збігом",
+      "exercise_type": "group-sort",
+      "context": "зі (перед збігом приголосних)",
+      "role": "context"
+    },
+    {
+      "word": "приголосних",
+      "exercise_type": "group-sort",
+      "context": "зі (перед збігом приголосних)",
+      "role": "context"
+    },
+    {
+      "word": "україн",
+      "exercise_type": "quiz",
+      "context": "Вона приїхала з Україн____.",
+      "role": "context"
+    },
+    {
+      "word": "мам",
+      "exercise_type": "quiz",
+      "context": "Я чекаю на лист від мам____.",
+      "role": "context"
+    },
+    {
+      "word": "дідус",
+      "exercise_type": "quiz",
+      "context": "Це подарунок від дідус____.",
+      "role": "context"
+    },
+    {
+      "word": "парк",
+      "exercise_type": "quiz",
+      "context": "Мій офіс недалеко від парк____.",
+      "role": "context"
+    },
+    {
+      "word": "зустрінуться",
+      "exercise_type": "quiz",
+      "context": "Вони зустрінуться після урок____.",
+      "role": "context"
+    },
+    {
+      "word": "дерев",
+      "exercise_type": "quiz",
+      "context": "Цей стіл зроблений з дерев____.",
+      "role": "context"
+    },
+    {
+      "word": "робот",
+      "exercise_type": "quiz",
+      "context": "Ми відпочиваємо після робот____.",
+      "role": "context"
+    },
+    {
+      "word": "києв",
+      "exercise_type": "quiz",
+      "context": "Він родом з Києв____.",
+      "role": "context"
+    },
+    {
+      "word": "прийшов",
+      "exercise_type": "fill-in",
+      "context": "Я прийшов додому після ____.",
+      "role": "context"
+    },
+    {
+      "word": "гуляли",
+      "exercise_type": "fill-in",
+      "context": "Ми гуляли після ____.",
+      "role": "context"
+    },
+    {
+      "word": "новин",
+      "exercise_type": "fill-in",
+      "context": "Ми чекаємо новин з ____.",
+      "role": "context"
+    }
+  ],
   "vocab_coverage": {
     "plan_vocab_total": 14,
-    "tested_in_exercises": 5,
+    "tested_in_exercises": 7,
     "not_tested": [
       "вечеря",
       "джерело",
       "дитинство",
-      "матеріал",
-      "парасолька",
+      "канікули",
       "походження",
-      "прийменник",
       "сусід",
       "шовк"
     ]
   },
-  "all_grounded": true
+  "all_grounded": false
 }

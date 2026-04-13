@@ -1,21 +1,22 @@
-# Section-by-Section Generation — Section 1/5
+# Section-by-Section Generation — Section 1/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 43: Іду, їду, лечу (A2, A2.6 [Aspect, Tenses, and Motion])
-**Section to write:** Три пари дієслів руху (~550 words total)
+**Section to write:** Три пари дієслів руху (~550 words)
 **Word target for this section:** 550 words (aim for 605 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Три пари дієслів руху (~550 words total)
-- P1 (~120 words): [Introduction to the logic of Ukrainian motion verbs: explaining the fundamental distinction between unidirectional (one-way, right now) and multidirectional (habitual, round-trip, or aimless) movement. Contrast with English "to go".]
-- P2 (~140 words): [Pair 1 — On foot: іти vs. ходити. Explain that "іти" is for "I am walking there now" (Я йду до парку) while "ходити" is for "I go there regularly" (Я ходжу в зал тричі на тиждень). Use the "round-trip" concept to explain why "ходити" is used for past completed trips (Вчора я ходив у кіно).]
-- P3 (~140 words): [Pair 2 — By vehicle: їхати vs. їздити. Emphasize that any transport (car, bus, bike) requires this pair. Contrast "Ми їдемо в Одесу" (We are on our way now) with "Ми щоліта їздимо в Одесу" (Habitual summer trip).]
-- P4 (~150 words): [Pair 3 — By air: летіти vs. літати. Explain movement through the sky. Examples: "Літак летить над містом" (The plane is flying over the city now) vs. "Птахи літають" (Birds fly — general ability) or "Я часто літаю у справах" (I often fly for business).]
-- <!-- INJECT_ACTIVITY: group-sort-motion-type --> [group-sort, Sort motion verb forms into unidirectional vs. multidirectional categories, 8 items]
+## Три пари дієслів руху (~550 words)
+- P1 (~120 words): [Dialogue: Airport chaos. Пасажири rushing and a Друг on the phone. "Я іду до виходу... Він їде в місто... Літак летить до Парижа... Ми пішли о третій." Demonstrates real travel situations with іти, їхати, летіти, and піти.]
+- P2 (~100 words): [Explain the core concept: Ukrainian distinguishes motion based on transport method (foot, vehicle, air) and directionality (one-way/now vs. habitual/round-trip). Emphasize this is not about speed or distance, but the nature of the trip.]
+- P3 (~110 words): [Introduce Pair 1 — on foot: `іти` (going right now, one direction) vs. `ходити` (going regularly, back and forth). Provide examples: "Я іду до магазину" (I am walking to the store right now) vs. "Я ходжу до магазину щодня" (I go to the store every day).]
+- P4 (~110 words): [Introduce Pair 2 — by vehicle: `їхати` (riding/driving right now) vs. `їздити` (riding regularly). Contrast with English "to go". Provide examples: "Ми їдемо до Львова" (We are driving to Lviv now) vs. "Ми їздимо до Львова щоліта" (We go to Lviv every summer).]
+- P5 (~110 words): [Introduce Pair 3 — by air: `летіти` (flying right now) vs. `літати` (flying regularly/in general). Provide examples: "Літак летить до Києва" (The plane is flying to Kyiv) vs. "Він часто літає до Києва" (He often flies to Kyiv).]
+- <!-- INJECT_ACTIVITY: group-sort-motion-verbs --> [group-sort, Sort motion verb forms into unidirectional vs. multidirectional categories, 8 items]
 
 ---
 ## Full Plan (for reference)
@@ -630,6 +631,31 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] іти / ходити (to go on foot — unidirectional/multidirectional)
+- [ ] їхати / їздити (to go by vehicle — unidirectional/multidirectional)
+- [ ] летіти / літати (to fly — unidirectional/multidirectional)
+- [ ] піти (to leave on foot — pf.)
+- [ ] поїхати (to leave by vehicle — pf.)
+- [ ] казати / кажу (to say — stem change model)
+- [ ] пити / п'ю (to drink — irregular model)
+- [ ] боротися / борюся (to fight/struggle — reflexive model)
+- [ ] напрямок (direction)
+- [ ] рух (movement, motion)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Три пари дієслів руху (~550 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

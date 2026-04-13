@@ -1,0 +1,209 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T09-45-75c9a8b7.json
+phase: activities
+prompt_chars: 63083
+response_chars: 15537
+prompt_words: 9242
+response_words: 1715
+sections:
+- name: preamble
+  start: 0
+  length: 2093
+  fraction: 0.0332
+- name: plan
+  start: 2093
+  length: 60882
+  fraction: 0.9651
+- name: output_spec
+  start: 62975
+  length: 108
+  fraction: 0.0017
+large_sections:
+- plan
+directives_total: 73
+directives_covered: 34
+directives_missed:
+- kind: must
+  text: '** Your very first character must be `version:`.'
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: must
+  text: Each inline activity MUST have an `id` that matches one of these markers.
+  covered: false
+  coverage_note: 1/10 keywords (10%)
+- kind: must
+  text: Each inline activity's `id` must match one of these markers exactly (lowercase,
+    hyphenated).
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: must
+  text: You MUST create activities that cover all these hints.
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: must
+  text: '**Grounding rule:** Every Ukrainian word in your exercises must appear either
+    in the prose content or in this vocabulary list.'
+  covered: false
+  coverage_note: 1/15 keywords (7%)
+- kind: must
+  text: While the hard group covers almost everything, there is one major exception
+    that you must memorize.
+  covered: false
+  coverage_note: 1/14 keywords (7%)
+- kind: must
+  text: Because ordinal numerals function as adjectives grammatically, the rules of
+    agreement are strict and mandatory.
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: must
+  text: Finally, if you are discussing the "first students" in the plural genitive
+    case, you must say «перших учнів».
+  covered: false
+  coverage_note: 2/13 keywords (15%)
+- kind: must
+  text: When you want to state what today's date is in Ukrainian, you must use the
+    Nominative case for the ordinal numeral and the Genitive case for the month.
+  covered: false
+  coverage_note: 4/16 keywords (25%)
+- kind: must
+  text: Now that you know how to state today's date, we must look at how to describe
+    an event happening *on* a specific date.
+  covered: false
+  coverage_note: 0/14 keywords (0%)
+- kind: must
+  text: You must take the neuter Nominative form, like «п'яте», and change it to the
+    neuter Genitive form, which is «п'ятого».
+  covered: false
+  coverage_note: 3/12 keywords (25%)
+- kind: must
+  text: Here, you must apply the compound ordinal numeral rule discussed in the previous
+    section.
+  covered: false
+  coverage_note: 3/11 keywords (27%)
+- kind: must
+  text: When you write an ordinal numeral using Arabic numerals, you must attach a
+    specific suffix to indicate its grammatical case, gender, and number.
+  covered: false
+  coverage_note: 3/18 keywords (17%)
+- kind: must
+  text: While the hyphen rule is widely applied, there are two major exceptions you
+    must memorize to write flawless Ukrainian.
+  covered: false
+  coverage_note: 0/16 keywords (0%)
+- kind: must
+  text: When you write an ordinal numeral using Roman numerals, you must never attach
+    a hyphen or a grammatical suffix.
+  covered: false
+  coverage_note: 3/14 keywords (21%)
+- kind: must
+  text: We know this date answers the question "when?", which means the entire phrase
+    must be in the Genitive case.
+  covered: false
+  coverage_note: 3/13 keywords (23%)
+- kind: must
+  text: To answer this question for full hours, you must use the preposition «о» (or
+    «об» before a vowel sound) followed by an ordinal numeral in the Locative case
+    (Місцевий відмінок).
+  covered: false
+  coverage_note: 6/19 keywords (32%)
+- kind: must
+  text: You must remember that the numeral after the preposition "на" is always in
+    the form of the accusative case of the feminine gender.
+  covered: false
+  coverage_note: 1/13 keywords (8%)
+- kind: must
+  text: You must explicitly avoid the common, yet entirely incorrect, Russicism «*без
+    десяти п'ять».
+  covered: false
+  coverage_note: 3/12 keywords (25%)
+- kind: must
+  text: Conversely, when indicating movement toward a specific floor, you must use
+    **на** with the Accusative case.
+  covered: false
+  coverage_note: 0/12 keywords (0%)
+- kind: must
+  text: When stating that a historical event occurred within a specific century, you
+    must use the preposition **у** or **в** followed by the Locative case.
+  covered: false
+  coverage_note: 1/16 keywords (6%)
+- kind: must
+  text: They are typically used as introductory words at the beginning of a sentence
+    and must be separated from the rest of the clause by commas.
+  covered: false
+  coverage_note: 1/14 keywords (7%)
+- kind: must
+  text: '> *According to the university rules, every student must carefully read chapter
+    eight of the study guide.'
+  covered: false
+  coverage_note: 0/12 keywords (0%)
+- kind: must
+  text: To truly master ordinal numerals, you must see them working together in a
+    natural environment.
+  covered: false
+  coverage_note: 2/12 keywords (17%)
+- kind: must
+  text: Such messages require precision, meaning that every single number—from the
+    day of the month to the exact room number—must be expressed using the correct
+    case.
+  covered: false
+  coverage_note: 2/19 keywords (11%)
+- kind: must
+  text: Because it answers the question of when a specific event occurs on the calendar,
+    the ordinal numeral must be in the Genitive case.
+  covered: false
+  coverage_note: 4/13 keywords (31%)
+- kind: must
+  text: In this fast-paced exchange, you must specify the exact date of your departure,
+    confirm the platform number, and ask about the train car.
+  covered: false
+  coverage_note: 0/18 keywords (0%)
+- kind: must
+  text: '- id: marker-id-here # MUST match an <!-- INJECT_ACTIVITY: .'
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: must
+  text: '**CRITICAL RULE: EVERY single activity object MUST include an `id` field
+    (a unique string like "quiz-grammar", "match-up-vocab").'
+  covered: false
+  coverage_note: 2/16 keywords (12%)
+- kind: must
+  text: 'Required: id, instruction, items[] (array of strings), correct_order[] (TOP-LEVEL
+    array of **integers** — zero-based indices into items).'
+  covered: false
+  coverage_note: 4/13 keywords (31%)
+- kind: must
+  text: 'Required: id, syllables[], correctIndices[], category.'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: 'Required: id, letters[{upper, lower}].'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: 'Required: id, items[{video}].'
+  covered: false
+  coverage_note: 1/3 keywords (33%)
+- kind: must
+  text: '- **critical-analysis**: Required: id, prompt.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**You MUST use these patterns.'
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: must
+  text: If the pattern lists divide-words, count-syllables, and odd-one-out — your
+    output MUST include all three.
+  covered: false
+  coverage_note: 1/15 keywords (7%)
+- kind: must
+  text: '**Test LANGUAGE, not trivia** — exercises must test Ukrainian language skills.'
+  covered: false
+  coverage_note: 0/8 keywords (0%)
+- kind: must
+  text: '- **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).'
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing

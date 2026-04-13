@@ -22,7 +22,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-Виступаючи в ролі того, хто переживає цей стан, ви кажете «мені» замість активного «я». Ця ж логіка бездоганно працює і для інших відчуттів. Якщо температура в кімнаті надто низька, ви кажете: **«Мені холодно»** *(I am cold)*. Якщо ви відчуваєте дискомфорт у шлунку, використовується безособове дієслово: **«Мені нудить»** *(I am nauseous)*. Також часто можна почути паралельний варіант **«Мене нудить»** (зі знахідним відмінком). Обидві граматичні форми є абсолютно природними та описують стан, який ви не контролюєте. Тепер подивимося на медичну лексику крізь захопливу призму морфонології. Одним із найважливіших слів у цій темі є короткий іменник **біль** *(pain)*. Зверніть особливу увагу: в українській мові слово «біль» — виключно чоловічого роду! Тому ми завжди правильно кажемо **«сильний біль»** *(strong pain)*, **«головний біль»** *(headache)* або неприємний **«зубний біль»** *(toothache)*. Але що відбувається, коли ми беремо дієслово від цього ж кореня? Ми кажемо: «У мене **болить**». Корінь залишається той самий, але голосний звук змінився. Чому замість звука [і] з'явився звук [о]? Це класичне чергування голосних *(vowel alternation)*, яке ми з вами детально вивчали раніше. У слові «біль» склад повністю закритий, бо він закінчується на приголосний, тому ми маємо звук [і]. У формі «бо-лить» перший склад стає відкритим, він закінчується на голосний, і звук [і] закономірно перетворюється на звук [о]. Цей фундаментальний принцип стабільно працює при творенні нових слів. Візьмемо префікс **без-** *(without)* та додамо його до нашого кореня, щоб утворити прикметник **безболісний** *(painless)*. Це слово ділиться на склади так: без-бо-ліс-ний. Склад «бо» — знову відкритий, тому ми бачимо там звук [о]. Завдяки цьому чергуванню ви завжди можете легко простежити історичний зв'язок між іменником «біль», дієсловом «болить» та прикметником «безболісний». Це допомагає зрозуміти внутрішню логіку українського словотвору. Звичайно, медична тема неможлива без вивчення назв різних частин людського тіла. І тут нас знову привітно зустрічають добре знайомі фонетичні правила. Медичні слова не мають особливих «медичних винятків» — вони повністю підкоряються стандартним законам української мови. Візьмемо для початку таке слово, як **ніс** *(nose)*. Якщо у вас почався сильний **нежить** *(runny nose)*, ви використовуєте спеціальні аптечні краплі для носа. Слово «ніс» має закритий склад із голосним звуком [і]. Коли ми трохи змінюємо його форму в родовому відмінку — у фразі **«для носа»** *(for the nose)* — цей склад одразу відкривається, і звук [і] плавно переходить у звук [о]. Це те ж саме класичне чергування, що й у простій парі **«кіт — кота»** *(cat)*. Інший цікавий приклад — це слово **вухо** *(ear)*. Якщо ви відчуваєте там біль, ви обов'язково скажете лікареві: «У мене болить у **вусі** *(in the ear)*». Тут ми дуже яскраво бачимо чергування приголосних звуків у місцевому відмінку. Задньоязиковий твердий звук [х] перед закінченням [і] змінюється на свистячий м'який звук [с']. Така ж сама ситуація щоразу відбувається зі словом **око** *(eye)*. Якщо туди щось випадково потрапило, ви скажете: «У мене щось в **оці** *(in the eye)*». Твердий звук [к] перед закінченням місцевого відмінка [і] закономірно змінюється на м'який звук [ц']. Як ви бачите, українська фонетика залишається логічною та системною. Вивчивши базове правило чергування на прикладі звичайних об'єктів, ви можете легко застосувати його до медичної лексики. <!-- INJECT_ACTIVITY: match-medical-families -->
+difference: "my head hurts" takes the Nominative subject "голова" and the possessive "у мене". But "I feel bad" uses the dative "мені" with the adverb "погано". The medical vocabulary provides excellent examples of Ukrainian morphophonemic alternations. Let's carefully examine the noun **біль** (pain) and the verb "болить" (it hurts). This is a classic example of the [і] to [о] vowel shift. В українській мові іменник «біль» належить до чоловічого роду. Ми завжди кажемо «сильний головний біль», а не «сильна». У називному відмінку це слово має закритий склад, тому ми чітко чуємо звук [і]. Але коли ми змінюємо форму слова, цей склад стає відкритим. > *In the Ukrainian language, the noun "pain" belongs to the masculine gender. We always say "strong headache (masculine)," not "strong (feminine)." In the nominative case, this word has a closed syllable, so we clearly hear the sound [i]. But when we change the form of the word, this syllable becomes open.* Because the syllable opens up when a vowel ending is added, the [і] naturally shifts back to [о]. This is exactly why the verb is "болить" and the genitive form is "болю". We can also trace this alternation in word formation. If we add the prefix «без-» (without) and the suffix «-н-», we create the adjective "безболісний" (painless). Here, the syllable containing the root vowel is closed once again, so the [і] safely returns. This vowel alternation is a fundamental pattern of the Ukrainian language. We see the exact same [і] to [о] shift in many names for body parts. The word for nose is «ніс» (closed syllable), but if you want to say you don't have a runny nose, you say «немає носа» (open syllable). It is common to have a strong **нежить** (runny nose) or a deep **кашель** (cough) in winter. A blocked nose is a very unpleasant **симптом** (symptom). Узимку люди часто мають сильний нежить і глибокий кашель. Коли людина має нежить, вона не може нормально дихати через ніс. Це дуже неприємний симптом. :::info **Grammar box** Remember that both «нежить» and «кашель» are masculine nouns of the second declension in Ukrainian. You will always use them with masculine adjectives, like "сильний нежить". ::: Consonant alternations are equally important when discussing health. When we put body parts into the Locative case to say where something hurts, the final root consonant often shifts. The word "вухо" (ear) ends in the consonant [х], but in the Locative it becomes «у вусі» (the [х] changes to [с]). У мене несподівано стріляє у вусі. Лікар дуже уважно дивиться в оці пацієнта. Ці чергування приголосних звуків роблять українську мову такою мелодійною. Similarly, the word "око" (eye) ends in [к], which reliably shifts to [ц] in the Locative, giving us «в оці». These are the exact same consonant shifts you learned for places, like the noun **аптека** (pharmacy) becoming «в аптеці» (at the pharmacy). Recognizing these phonetic patterns helps you predict how new medical vocabulary will behave. <!-- INJECT_ACTIVITY: match-up, Match medical word families: лікар-лікувати-ліки, біль-болить-безболісний, 12 items -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -604,7 +604,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -617,18 +684,69 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] здоров'я (health — noun, III відміна pattern with апостроф)
+- [ ] лікар (doctor — II відміна, -ар agent suffix)
+- [ ] хвороба (disease — I відміна feminine)
+- [ ] біль (pain — II відміна masculine, чергування: біль-болить)
+- [ ] температура (temperature — I відміна)
+- [ ] кашель (cough — II відміна masculine, м'яка група)
+- [ ] нежить (runny nose — II відміна masculine)
+- [ ] ліки (medicine — pluralia tantum)
+- [ ] рецепт (prescription)
+- [ ] аптека (pharmacy — I відміна)
+- [ ] діагноз (diagnosis — II відміна)
+- [ ] симптом (symptom — II відміна)
+- [ ] скаржитися (to complain — на + Зн.)
+- [ ] лікувати (to treat — imperfective)
+- [ ] одужати (to recover — perfective)
+- [ ] призначити (to prescribe — perfective)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## У лікаря: діалог (~880 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

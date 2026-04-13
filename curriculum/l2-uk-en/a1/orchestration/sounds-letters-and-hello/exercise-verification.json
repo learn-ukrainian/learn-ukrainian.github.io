@@ -1,6 +1,6 @@
 {
-  "total_items": 40,
-  "grounded_items": 27,
+  "total_items": 28,
+  "grounded_items": 22,
   "ungrounded": [
     {
       "word": "що",
@@ -11,82 +11,44 @@
     {
       "word": "скільки",
       "exercise_type": "quiz",
-      "context": "Скільки літер в українській абетці? (How many letters are in",
+      "context": "Скільки літер в абетці? (How many letters in the alphabet?)",
       "role": "context"
     },
     {
       "word": "літер",
       "exercise_type": "quiz",
-      "context": "Скільки літер в українській абетці? (How many letters are in",
-      "role": "context"
-    },
-    {
-      "word": "українській",
-      "exercise_type": "quiz",
-      "context": "Скільки літер в українській абетці? (How many letters are in",
+      "context": "Скільки літер в абетці? (How many letters in the alphabet?)",
       "role": "context"
     },
     {
       "word": "абетці",
       "exercise_type": "quiz",
-      "context": "Скільки літер в українській абетці? (How many letters are in",
+      "context": "Скільки літер в абетці? (How many letters in the alphabet?)",
       "role": "context"
     },
     {
-      "word": "звуків",
+      "word": "українській",
       "exercise_type": "quiz",
-      "context": "Скільки звуків в українській мові? (How many sounds are in t",
+      "context": "Скільки звуків в українській мові? (How many sounds in Ukrai",
       "role": "context"
     },
     {
       "word": "мові",
       "exercise_type": "quiz",
-      "context": "Скільки звуків в українській мові? (How many sounds are in t",
-      "role": "context"
-    },
-    {
-      "word": "яка",
-      "exercise_type": "quiz",
-      "context": "Яка літера не позначає жодного звука? (Which letter represen",
-      "role": "context"
-    },
-    {
-      "word": "не",
-      "exercise_type": "quiz",
-      "context": "Яка літера не позначає жодного звука? (Which letter represen",
-      "role": "context"
-    },
-    {
-      "word": "позначає",
-      "exercise_type": "quiz",
-      "context": "Яка літера не позначає жодного звука? (Which letter represen",
-      "role": "context"
-    },
-    {
-      "word": "жодного",
-      "exercise_type": "quiz",
-      "context": "Яка літера не позначає жодного звука? (Which letter represen",
-      "role": "context"
-    },
-    {
-      "word": "звука",
-      "exercise_type": "quiz",
-      "context": "Яка літера не позначає жодного звука? (Which letter represen",
-      "role": "context"
-    },
-    {
-      "word": "мама'",
-      "exercise_type": "true-false",
-      "context": "The word 'мама' contains two vowel sounds.",
+      "context": "Скільки звуків в українській мові? (How many sounds in Ukrai",
       "role": "context"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 17,
-    "tested_in_exercises": 15,
+    "tested_in_exercises": 11,
     "not_tested": [
-      "нормально",
-      "чудово"
+      "голосний",
+      "дім",
+      "ніс",
+      "око",
+      "приголосний",
+      "сон"
     ]
   },
   "all_grounded": false

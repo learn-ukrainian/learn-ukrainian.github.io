@@ -1,4 +1,4 @@
-<!-- version: 1.1.0 | updated: 2026-03-31 -->
+<!-- version: 1.2.0 | updated: 2026-04-12 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -11,6 +11,35 @@ Generate an `activities/at-the-cafe.yaml` file for module **38: At the Cafe** (a
 
 ---
 
+## ⚠️ HARD COUNT TARGETS — READ TWICE
+
+These are the binding numerical contracts for THIS module. The audit will FAIL if you fall short.
+
+| Bucket | Min | Max | Notes |
+|---|---|---|---|
+| Total activities | 10 | 10+ | inline + workbook combined |
+| Inline (lesson tab) | 4 | 6 | one per `<!-- INJECT_ACTIVITY -->` marker, see below |
+| Workbook (Зошит tab) | 6 | 9 | extended practice |
+| Items per activity | 6 | — | each activity must have at least 6 items (unless its type cap is lower — see Activity Type Reference below) |
+
+**You MUST ship at least 4 inline activities AND at least 6 workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+
+**Type diversity is required.** The module (inline + workbook combined) MUST use at least **0** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level. (If `0` is `0`, the audit profile for this level does not enforce type diversity — but variety still produces a better lesson, so aim for 4+ types when the workbook allows it.)
+
+---
+
+## Allowed types for THIS level
+
+- **Inline (lesson) types:** image-to-letter, letter-grid, match-up, watch-and-repeat, quiz, true-false, fill-in, classify
+- **Inline priority (preferred):** image-to-letter, match-up, fill-in, quiz, watch-and-repeat
+- **Workbook types:** fill-in, match-up, group-sort, anagram, unjumble, quiz, true-false, classify, divide-words, count-syllables, pick-syllables, observe, phrase-table, odd-one-out
+- **Workbook priority (preferred):** fill-in, match-up, group-sort, anagram, unjumble
+- **FORBIDDEN at this level:** cloze, error-correction, mark-the-words, translate, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, highlight-morphemes, grammar-identify, select
+
+Pick from the allowed list. Lean heavily on the priority lists. Do not use any forbidden type — the build will reject it.
+
+---
+
 ## Inline vs Workbook Split
 
 Activities have two placement categories:
@@ -19,7 +48,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Rule of thumb:** inline = 2-3 quick checks after key teaching points. Workbook = 4-8 deeper practice exercises covering the full topic.
+**Rule of thumb:** inline = 4–6 quick checks after key teaching points. Workbook = 6–9 deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
 
 ---
 
@@ -27,10 +56,10 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: match-up-functions -->`
-- `<!-- INJECT_ACTIVITY: fill-in-ordering-accusative -->`
-- `<!-- INJECT_ACTIVITY: quiz-situation-choice -->`
-- `<!-- INJECT_ACTIVITY: dialogue-completion-cafe -->`
+- `<!-- INJECT_ACTIVITY: fill-in-dialogue -->`
+- `<!-- INJECT_ACTIVITY: fill-in-accusative -->`
+- `<!-- INJECT_ACTIVITY: quiz-situations -->`
+- `<!-- INJECT_ACTIVITY: match-up-phrases -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -149,90 +178,130 @@ required:
 ## Module Content (the prose the learner reads before exercises)
 
 <module_content>
-## Діалоги — Dialogues
+## Діалоги (Dialogues)
 
-Welcome to a cozy **кафе** (cafe) in the heart of Lviv. The city is famous for its rich **кава** (coffee) culture, where locals spend hours talking over a warm cup. Before you can enjoy the atmosphere, you need to know how to navigate the interaction. Every cafe visit begins with a polite greeting, such as **Добрий день** (Good day), and a direct request to see what they offer. To start, you simply ask the waiter: **Можна меню?** (Can I have the menu?). Politeness is your strongest tool, so always keep **будь ласка** (please) and **дякую** (thank you) ready.
+Entering a local Ukrainian coffee shop or restaurant is a practical opportunity to practice your speaking skills. Successful communication in any setting starts with foundational politeness. You should begin every interaction with standard greetings and expressions of gratitude to establish a friendly tone.
 
-> **Ростик:** Добрий день! Можна меню? *(Good day! Can I have the menu?)*
-> **Офіціант:** Ось, будь ласка. *(Here, please.)*
-> **Ростик:** Що ви рекомендуєте? *(What do you recommend?)*
-> **Офіціант:** Борщ дуже смачний. *(The borscht is very delicious.)*
-> **Ростик:** Добре, мені борщ і хліб. А тобі, Іванко? *(Good, I will have borscht and bread. And for you, Ivanka?)*
-> **Іванка:** Мені каву з молоком і тістечко. *(I will have a coffee with milk and a pastry.)*
+> У неділю ми йдемо в **кафе** (cafe). **Офіціант** (waiter) несе **меню** (menu). Ми читаємо меню. Ми замовляємо каву. Ми кажемо "**будь ласка**" (please) і "дякую". Це дуже важливо.
+> *On Sunday we go to a cafe. The waiter brings the menu. We read the menu. We order coffee. We say "please" and "thank you". This is very important.*
 
-This dialogue shows the core structure of ordering. When the waiter approaches, Rostyk asks for advice using the verb **рекомендувати** (to recommend). Once they decide, they use the pattern **Мені + [Accusative case]** to state their choices. You already know the accusative case from the previous module. Notice the noun genders: the feminine **кава** (coffee) changes to **каву**, while the masculine **чай** (tea) and neuter **тістечко** (pastry) stay exactly the same. Even when you are ordering a complex combination like **кава з молоком** (coffee with milk), only the main noun changes its ending.
+Imagine a relaxing date at a cozy, dimly lit Lviv café. The air smells of freshly roasted beans. Rostyk and Ivanka sit at a comfortable table near the large window. The waiter approaches to take their order. They will look at the menu, discuss the options, and order coffee, traditional borsch, and a fresh pastry.
 
-> **Ростик:** Вибачте, можна рахунок? *(Excuse me, can I have the bill?)*
-> **Офіціант:** Так, одну хвилинку. З вас сто двадцять гривень. Карткою чи готівкою? *(Yes, one minute. From you, one hundred twenty hryvnias. By card or by cash?)*
-> **Ростик:** Карткою, будь ласка. *(By card, please.)*
-> **Офіціант:** Ось термінал. Дякую. *(Here is the terminal. Thank you.)*
-> **Іванка:** Дуже смачно було! Дякуємо! *(It was very delicious! We thank you!)*
-> **Офіціант:** Приходьте ще! *(Come again!)*
+> **Офіціант:** Добрий день! Ось меню. *(Good day! Here is the menu.)*
+> **Ростик:** Дякую. Що ви рекомендуєте? *(Thank you. What do you recommend?)*
+> **Офіціант:** Борщ дуже смачний. Сьогодні також є свіжі салати. *(The borsch is very delicious. Today there are also fresh salads.)*
+> **Ростик:** Добре, мені борщ і хліб, будь ласка. *(Good, borsch and bread for me, please.)*
+> **Офіціант:** А що будете пити? *(And what will you drink?)*
+> **Іванка:** Мені каву з молоком, будь ласка. А ще круасан. *(Coffee with milk for me, please. And also a croissant.)*
+> **Офіціант:** Добре, одну хвилинку. *(Good, one minute.)*
 
-<!-- INJECT_ACTIVITY: match-up-functions -->
+Notice how Rostyk and Ivanka order their food. Instead of using complex verbs, they rely on a simple and polite pattern: the word **мені** (to/for me) followed by the item they want in the accusative case. They also use the key question **Що ви рекомендуєте?** (What do you recommend?) to ask the waiter for advice. This straightforward approach helps you sound polite and natural without needing advanced grammar.
 
-## Як замовити — How to Order
+After enjoying a pleasant meal and a long conversation, it is time to conclude the date. Rostyk gets the attention of the waiter to ask for the total cost. He will check if he can use his bank card, and Ivanka will make sure to compliment the chef's work before they leave.
 
-The most versatile request phrase you can learn at this level is **Можна мені...?**. Literally, it means "Is it possible for me...?" and it is the standard, polite way to ask for anything you need. Always follow this phrase with the item in the accusative case. Let us look at a few examples:
+> **Ростик:** Рахунок, будь ласка. *(The bill, please.)*
+> **Офіціант:** Ось, будь ласка. Сто двадцять гривень. *(Here you go, please. One hundred twenty hryvnias.)*
+> **Ростик:** Можна карткою? *(Can I pay by card?)*
+> **Офіціант:** Так, звичайно. Ось ваш чек. *(Yes, of course. Here is your receipt.)*
+> **Іванка:** Дякую, дуже смачно було! *(Thank you, it was very delicious!)*
+> **Офіціант:** Дякуємо, приходьте ще! *(We thank you, come again!)*
 
-*   **Можна мені каву?** — Can I have a coffee?
-*   **Можна мені воду?** — Can I have some water?
-*   **Можна мені сік?** — Can I have juice?
-*   **Можна мені меню?** — Can I have the menu?
+When the meal is finished, you must ask for the bill directly. You then confirm your payment method. Finally, it is always polite to leave a sincere compliment about the food before you depart from the table.
 
-Another polite option is **Дайте, будь ласка** (Give me, please), which is slightly more direct but perfectly acceptable. When you are finally ready to tell the waiter your decision, you will often use the phrase **Я буду** (I will have). This is the standard way to state a final choice from the menu. 
+<!-- INJECT_ACTIVITY: fill-in-dialogue -->
 
-*   **Я буду піцу і чай.** — I will have pizza and tea.
-*   **Я буду салат і суп.** — I will have a salad and soup.
+## Як замовити (How to Order)
 
-You might also hear people say **Я хочу** (I want). While **Я хочу** is grammatically correct and widely used, it sounds slightly more demanding than **Я буду**. Both require the accusative case.
+There are several core request formulas you can use when you are ready to order. The most versatile and polite approach is to use the phrase **Можна мені, будь ласка, ...?** (Can I please have...?). Another common and direct way to state your choice is to say **Я буду...** (I will have...) or **Я хочу...** (I want...). These phrases function as simple, prefabricated chunks of language that allow you to express exactly what you desire without worrying about complicated verb conjugations in the moment.
 
-Before you make a final decision, you may need to ask questions about the food. You can easily check for specific dietary preferences or tastes using simple questions. If you do not like spicy food, you ask: **Це гостре?** (Is it spicy?). If you want to know the ingredients, you can ask: **Це з м'ясом?** (Is it with meat?) or **Є вегетаріанське меню?** (Is there a vegetarian menu?). Often, you will see a delicious pastry in the display case but you do not know the name. In that situation, you simply point and ask: **А що це?** (And what is this?). 
+> Я приходжу в кафе. Я хочу **замовляти** (to order) їжу. Я читаю меню. Я вибираю гарячий суп і холодну воду. Офіціант питає: "Що будете замовляти?" Я кажу: "Мені воду і суп, будь ласка."
+> *I arrive at the cafe. I want to order food. I read the menu. I choose hot soup and cold water. The waiter asks: "What will you be ordering?" I say: "Water and soup for me, please."*
 
-Sometimes you just need a bit more. You can handle extra quantities easily by saying: **Ще одну каву, будь ласка** (One more coffee, please). You can also add simple modifiers to your drink order. You might ask for a drink **без цукру** (without sugar) or **з лимоном** (with lemon). Finally, listen carefully for the most common question at any modern coffee counter: **Вам тут чи з собою?** (For here or to go?). You just reply **Тут** (Here) or **З собою** (To go).
+Whenever you ask for a specific item using the patterns above, you must place the noun in the accusative case. This is because the food or drink is the direct object of your request. You learned the accusative case rules in Module 37, and a cafe is the perfect place to practice them in a real application. Feminine nouns ending in **-а** change to **-у**, while masculine and neuter inanimate nouns remain the same as their dictionary forms. Here are practical examples:
 
-<!-- INJECT_ACTIVITY: fill-in-ordering-accusative -->
+* **Мені каву, будь ласка.** (Coffee for me, please.) — from **кава**.
+* **Можна воду?** (Can I have water?) — from **вода**.
+* **Дайте, будь ласка, піцу.** (Give me pizza, please.) — from **піца**.
+* **Я буду борщ.** (I will have borsch.) — from **борщ** (masculine, no change).
+* **Я хочу салат.** (I want a salad.) — from **салат** (masculine, no change).
 
-## Культура кафе — Cafe Culture
+Before you make your final decision, you might need to ask the staff a few questions about the dishes. You can easily inquire about ingredients, prices, or dietary options using short questions. The verb **рекомендувати** (to recommend) is very useful in these situations. Here are the most useful phrases for inquiring about the menu:
 
-When it is time to order, there is one linguistic "Golden Rule" you must follow: always use the verb **замовляти** (to order). You might sometimes hear people use the word *заказати*, but this is a direct calque from Russian and is considered incorrect in modern standard Ukrainian. You should always say **Я замовляю піцу** (I am ordering a pizza). 
+* **Що ви рекомендуєте?** (What do you recommend?)
+* **Це гостре?** (Is it **гостре** — spicy?)
+* **Це з м'ясом?** (Is it with meat?)
+* **А що це?** (What is this?)
+* **Скільки коштує?** (How much does it cost?)
+* **Є вегетаріанське меню?** (Is there a **вегетаріанський** — vegetarian menu?)
+* **Можна меню, будь ласка?** (Can I have the menu, please?)
 
-Additionally, you need to recognize a special group of nouns like **кафе** (cafe) and **меню** (menu). These are indeclinable foreign words. This means they NEVER change their endings, no matter what case they are in. You say **Це кафе** (This is a cafe) and you also say **Я в кафе** (I am in the cafe). The ending stays exactly the same. Other common indeclinable words you will hear include **какао** (cocoa), **метро** (subway), and **ескімо** (popsicle). 
+When you want to say "to order" in Ukrainian, the only correct verb is **замовляти**. This is a crucial point for building authentic language skills from the very beginning.
 
 :::caution
-Never try to change the ending of **кафе** or **меню**. Forms like *кафі* or *менюю* do not exist in Ukrainian. Keep them exactly as they are in the dictionary.
+**Decolonization Note: Avoid Russianisms**
+You might occasionally hear people use the verb **заказати** when referring to ordering food. This is a direct calque (Russianism) and is incorrect in standard Ukrainian. Always use the authentic Ukrainian verb **замовляти** when you want to order a meal, a drink, or a service.
 :::
 
-When you finish eating, there is an important point of etiquette regarding the **рахунок** (bill). In a traditional **ресторан** (restaurant) or a formal cafe, the waiter rarely brings the bill automatically. This is done so you do not feel rushed to leave. You must catch their eye, raise your hand slightly, and ask: **Можна рахунок?** (Can I have the bill?). Once the bill arrives, you must consider the **чайові** (tips). In most cities, leaving a 10% tip is standard for good service. You can usually leave cash in the folder they provide or ask to add it directly to your card payment.
+Finally, if you are buying a drink or a quick snack at a counter, the barista will almost certainly ask you one highly frequent question: **Вам тут чи з собою?** (For here or to go?). You only need to remember two simple replies for this situation.
 
-When it comes to payment logistics, the waiter will almost always ask: **Карткою чи готівкою?** (By card or by cash?). Ukraine has one of the highest rates of contactless payment in Europe. Even a small street kiosk usually has a **термінал** (payment terminal). You can confidently reply **Карткою, будь ласка** (By card, please). If you pay with cash, they will take your **оплата** (payment) and bring you the **решта** (change).
+* **Тут.** (Here.)
+* **З собою.** (To go.)
 
-Finally, you need a few social phrases to complete the cafe experience. If you enter a crowded place and see an empty chair at a shared table, you should politely ask: **Тут вільно?** (Is this seat free?). When the waiter brings your food, they will always say: **Смачного!** (Bon appétit!), and you should reply with **Дякую!** (Thank you!). As you leave, the best compliment you can give the staff is to smile and say: **Все було дуже смачно!** (Everything was very delicious!). 
+:::tip
+**Listening Comprehension**
+When standing at the counter, the barista might speak quickly. Listen closely for the word **тут** (here) or **з собою** (with oneself / to go). Answering with a single word is perfectly polite in a fast-paced environment.
+:::
 
-<!-- INJECT_ACTIVITY: quiz-situation-choice -->
-<!-- INJECT_ACTIVITY: dialogue-completion-cafe -->
+<!-- INJECT_ACTIVITY: fill-in-accusative -->
+
+## Культура кафе (Cafe Culture)
+
+Understanding local customs is just as important as knowing the vocabulary. In Ukraine, there is a distinct difference in formality between a **кафе** and a **ресторан** (restaurant). A cafe is generally casual, perfect for a quick coffee, a sweet pastry, or a light lunch. A restaurant is more formal and is typically meant for a full dinner experience. It is important to note that many common food-related words in Ukrainian are internationalisms borrowed from French and other languages. Words like **кафе**, **меню**, and **десерт** will sound familiar to you. Furthermore, **кафе** and **меню** are indeclinable nouns; they never change their endings, regardless of their role in the sentence.
+
+> Українські кафе дуже затишні. Люди часто п'ють каву або чай. Вони розмовляють або працюють там. Час платити. Ми просимо **рахунок** (bill). Все дуже **смачно** (delicious). Ми залишаємо чайові.
+> *Ukrainian cafes are very cozy. People often drink coffee or tea. They talk or work there. It is time to pay. We ask for the bill. Everything is very delicious. We leave a tip.*
+
+When you enter a busy venue, you may need to ask if a table or an empty chair is available. You can simply ask, **Тут вільно?** (Is this seat free?) or just **Вільно?** (Is it free?). Once you are seated, the waiter will usually bring the menu to your table. If they are busy and do not see you immediately, or if the menu is not already on the table, you should politely ask for it by saying: **Можна меню?** (Can I have the menu?). You do not need to wait passively.
+
+You can easily customize your drinks using the preposition **без** (without) with the genitive case, or **з** (with) with the instrumental case. If you need a refill, you simply ask for one more.
+
+* **Ще одну каву, будь ласка.** (One more coffee, please.)
+* **Чай без цукру.** (Tea without sugar.)
+* **Вода з лимоном.** (Water with lemon.)
+
+When you finish your meal, it is a wonderful gesture to praise the food. Instead of attempting a literal, unnatural translation of an English compliment, you should use the standard Ukrainian phrase: **Все було дуже смачно!** (Everything was very delicious!) or simply say that the food is **смачно**.
+
+When you are ready to leave, you must explicitly ask for the bill. It will not be brought to you automatically at the end of the meal. You say: **Рахунок, будь ласка** (The bill, please). The staff will often ask you how you prefer to pay: **Картка чи готівка?** (Card or cash?). Most modern places in Ukraine easily accept cards, so you can confidently ask: **Можна карткою?** (Can I pay by **картка** — card?). If you prefer paper money, you use **готівка** (cash). Finally, leaving **чайові** (tips) is a common practice to show your appreciation for good service. While not strictly obligatory, leaving around ten percent of the total bill is the standard custom in cafes and restaurants.
+
+:::note
+**Payment Etiquette**
+Unlike in some countries where the tip is automatically added or written on the receipt, tipping in Ukraine is usually handled separately. You can leave the tip in cash on the table or ask the waiter to add it to the card terminal before you tap.
+:::
+
+<!-- INJECT_ACTIVITY: quiz-situations -->
+<!-- INJECT_ACTIVITY: match-up-phrases -->
 
 ## Підсумок — Summary
 
-You now have the complete communication toolkit needed to navigate a Ukrainian cafe with confidence. You understand that politeness is key, and you know how to use the accusative case to make clear, accurate requests. Here is a recap of the essential patterns you should memorize:
+You now have the essential cafe communication toolkit to comfortably navigate dining out in Ukrainian. You know how to politely place an order using the reliable pattern **Мені [accusative], будь ласка** or by stating **Я буду [accusative]**. You also have the vocabulary to inquire about the menu before making a choice, asking crucial questions such as **Скільки коштує?** (How much does it cost?), **Що рекомендуєте?** (What do you recommend?), and checking if a dish is suitable by asking **Є вегетаріанське меню?** or **Це гостре?**.
 
-*   **To order:** Мені [accusative], будь ласка. *(Мені каву, будь ласка.)*
-*   **To ask:** Скільки коштує? Що рекомендуєте? *(How much does it cost? What do you recommend?)*
-*   **To pay:** Рахунок, будь ласка. Можна карткою? *(The bill, please. Can I pay by card?)*
-*   **To compliment:** Дуже смачно! Дякую! *(Very delicious! Thank you!)*
+> Я дуже люблю українську їжу. Ми часто їмо в кафе. Я завжди замовляю гарячий суп. Мій друг замовляє свіжий салат. Все дуже смачно.
+> *I really love Ukrainian food. We often eat at cafes. I always order hot soup. My friend orders fresh salad. Everything is very delicious.*
 
-Remember that the phrase **будь ласка** (please) is your magic key for all interactions. It softens any request and shows respect for the person helping you. 
+Beyond just ordering, you are prepared to complete the entire dining experience gracefully. You understand the culture of paying the bill and the importance of asking **Рахунок, будь ласка** when you are ready to leave. You can confirm your payment method by asking **Можна карткою?** instead of relying entirely on cash. Most importantly, you know how to leave a warm, culturally appropriate compliment by telling the staff **Дуже смачно!** to show your appreciation for their hard work.
 
-Before you move to the next module, do a quick self-check. Can you perform all of these tasks?
+Use this practical self-check checklist to verify your readiness before you visit a real Ukrainian coffee shop. Read each question carefully and try to formulate the answer in your head before looking at the solution. Practice these functional phrases aloud multiple times until they feel completely natural and effortless to you.
 
-*   Can you greet the waiter and ask for a menu? (**Добрий день, можна меню?**)
-*   Can you order a drink and a main course using the accusative case? (**Мені каву і піцу.**)
-*   Can you ask if a dish is spicy or vegetarian? (**Це гостре? Є вегетаріанське меню?**)
-*   Can you ask for the bill and specify your payment method? (**Можна рахунок? Карткою, будь ласка.**)
-*   Do you remember to use the correct verb **замовляти** (to order) instead of the Russianism *заказати*?
-
-If you can confidently handle these situations, you are ready to order your next meal in Ukrainian!
-
+*   **Q: How do you order coffee and a croissant?**
+    **A:** Мені каву і круасан, будь ласка.
+*   **Q: How do you ask if a dish is spicy?**
+    **A:** Це гостре?
+*   **Q: How do you ask for the bill?**
+    **A:** Рахунок, будь ласка.
+*   **Q: How do you say you want to pay by card?**
+    **A:** Можна карткою?
+*   **Q: How do you compliment the food?**
+    **A:** Все було дуже смачно!
 </module_content>
 
 ---
@@ -246,48 +315,68 @@ version: "1.0"
 module: at-the-cafe
 level: a1
 
+# NOTE — these are SHAPE examples. The real targets are at the top of this prompt
+# (10 total / 4–6 inline / 6–9 workbook,
+# 6+ items per activity). The shapes below are TRUNCATED for readability;
+# YOUR output MUST hit those minimums.
+
 inline:
   - id: marker-id-here        # MUST match an <!-- INJECT_ACTIVITY: ... --> marker
     type: quiz                 # activity type
     instruction: "Оберіть правильний варіант"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - question: "_____ стіл"
-        options: ["мій", "моя", "моє"]
+        options: ["мій", "моя", "моє", "мої"]
         correct: 0             # 0-based index
+      - question: "Це ____ книга."
+        options: ["мій", "моя", "моє", "мої"]
+        correct: 1
+      # ... add at least 6 items total — never stop at 1-2
 
   - id: another-marker-id
     type: fill-in
     instruction: "Вставте правильне слово"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - sentence: "Це ____ кімната."
         answer: "моя"
         options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ вікно."
+        answer: "моє"
+        options: ["мій", "моя", "моє"]
+      # ... ≥ 6 items total
 
 workbook:
-  - type: match-up
+  - id: match-up-vocab
+    type: match-up
     instruction: "З'єднайте пари"
-    pairs:
+    pairs:                     # ← real output: ≥ 6 pairs
       - left: "стіл"
         right: "він"
       - left: "книга"
         right: "вона"
       - left: "вікно"
         right: "воно"
+      # ... ≥ 6 pairs total
 
-  - type: group-sort
+  - id: group-sort-gender
+    type: group-sort
     instruction: "Розподіліть слова за категоріями"
     groups:
-      - label: "Category A"
-        items: ["word1", "word2"]
-      - label: "Category B"
-        items: ["word3", "word4"]
+      - label: "Чоловічий рід"
+        items: ["стіл", "олівець", "будинок"]   # ≥ 3 items per group
+      - label: "Жіночий рід"
+        items: ["книга", "ручка", "школа"]
+      - label: "Середній рід"
+        items: ["вікно", "море", "молоко"]
 
-  - type: true-false
+  - id: true-false-grammar
+    type: true-false
     instruction: "Правда чи ні?"
-    items:
-      - statement: "Statement here"
-        correct: true
-        explanation: "Why it's true"
+    items:                     # ← real output: ≥ 6 items
+      - statement: "«Книга» — це чоловічий рід."
+        correct: false
+        explanation: "Книга закінчується на -а, отже жіночий рід."
+      # ... ≥ 6 items total
 
   - type: error-correction
     instruction: "Виправте помилку"
@@ -358,7 +447,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -442,10 +531,15 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 ## Quality Rules
 
-**ITEM COUNT MINIMUMS (non-negotiable):**
-- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
-- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
-- If you can't think of enough items, add more examples from the module's vocabulary and content.
+**ACTIVITY COUNT MINIMUMS (non-negotiable, audit-enforced):**
+- **Total: 10 activities.** Inline: 4–6. Workbook: 6–9. The audit gate FAILS the module if you ship fewer.
+- **Type diversity: workbook MUST cover ≥5 distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
+- **Match the inline markers exactly.** Every `<!-- INJECT_ACTIVITY: id -->` marker in the prose needs a matching inline activity with that exact id. Skipping markers means the lesson tab is broken.
+
+**ITEM COUNT MINIMUMS (non-negotiable, per-activity):**
+- **Default minimum: 6 items per activity.** Quiz, fill-in, match-up, true-false, anagram, error-correction, translate, cloze, mark-the-words, divide-words, count-syllables, odd-one-out, group-sort categories: all ≥ 6.
+- **Lower minimums for specific types only:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items, essay-response/critical-analysis = 1 prompt.
+- If you can't think of enough items, add more examples from the module's vocabulary and content. NEVER ship a 1-item or 2-item activity unless its type cap explicitly allows it.
 - **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
 - **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
@@ -552,6 +646,27 @@ IMPORTANT: After using tools, output your COMPLETE module content as plain text.
 1. Run `verify_words` on all Ukrainian words in your exercises — every word must exist in VESUM
 2. Run `query_cefr_level` on any word you're unsure about — it must be a1-appropriate
 3. For fill-in answers and distractors, verify the exact form (case, number, gender) with `verify_lemma`
+
+---
+
+## ⚠️ MANDATORY FINAL CHECKLIST — verify before emitting YAML
+
+Walk through this checklist explicitly before you start emitting. If ANY box is unchecked, fix it FIRST.
+
+- [ ] My output has **at least 4** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
+- [ ] My output has **at least 6** workbook activities.
+- [ ] **Total ≥ 10.**
+- [ ] **Every** activity has **at least 6** items, pairs, or statements (except types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3, essay-response=1).
+- [ ] The module (inline + workbook combined) uses **at least 0 distinct activity types** (or 4+ when 0 = 0 and the workbook size allows it). I am NOT shipping a wall of quizzes.
+- [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
+- [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
+- [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+- [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+- [ ] My inline count is between 4 and 6. I did NOT create more injection markers than 6.
+- [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
+- [ ] At B1+, all instructions are in Ukrainian (no English fallback).
+
+If you cannot tick all of these, REGENERATE the activities BEFORE outputting. Shipping under-spec means the build rejects you and the heal loop has to redo your work — wasting compute.
 
 ---
 

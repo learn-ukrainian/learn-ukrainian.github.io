@@ -1,7 +1,7 @@
 # Audit Report: M17 — noun-subclasses-hissing.md
 **Level:** B1 | **Module:** M17 | **Phase:** B1.1 | **Pedagogy:** PPP | **Target:** 4000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-04-10 21:26:03
+**Generated:** 2026-04-11 17:49:01
 
 ## Configuration
 **Type:** B1-grammar
@@ -18,105 +18,79 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | quiz | quiz | 8 | 8 | ✅ |
-| 2 | group-sort | group-sort | 10 | 6 | ✅ |
-| 3 | fill-in | fill-in | 6 | 8 | ❌ |
-| 4 | match-up | match-up | 8 | 8 | ✅ |
-| 5 | quiz | quiz | 6 | 8 | ❌ |
-| 6 | quiz | quiz | 6 | 8 | ❌ |
-| 7 | fill-in | fill-in | 8 | 8 | ✅ |
-| 8 | error-correction | error-correction | 6 | 6 | ✅ |
-| 9 | error-correction | error-correction | 6 | 6 | ✅ |
-| 10 | group-sort | group-sort | 10 | 6 | ✅ |
-| 11 | fill-in | fill-in | 6 | 8 | ❌ |
+| 1 | quiz |  | 8 | 8 | ✅ |
+| 2 | group-sort |  | 12 | 6 | ✅ |
+| 3 | match-up |  | 8 | 8 | ✅ |
+| 4 | fill-in |  | 8 | 8 | ✅ |
+| 5 | fill-in |  | 6 | 8 | ❌ |
+| 6 | group-sort |  | 9 | 6 | ✅ |
+| 7 | match-up |  | 8 | 8 | ✅ |
+| 8 | error-correction |  | 6 | 6 | ✅ |
 
 **Summary:**
-- Total activities: 11 (target: 0-4) ❌
+- Total activities: 8 (target: 0-4) ❌
 - Unique types: 5 (minimum: 3) ✅
 - Priority types used: 4/7 (error-correction, fill-in, match-up, quiz) ✅
-- Low density activities: 4
+- Low density activities: 1
 
 ## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q2 prompt length 4 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q4 prompt length 4 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q6 prompt length 4 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q8 prompt length 4 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY]** group-sort '' has 10 items (target: 12-999)
-  - FIX: Adjust number of items to sort to 12-999.
-- **[COMPLEXITY]** fill-in '' has 6 items (minimum: 8)
-  - FIX: Add more items. B1 fill-in requires at least 8 items.
 - **[COMPLEXITY]** match-up '' has 8 pairs (target: 12-16)
   - FIX: Adjust number of pairs to 12-16.
-- **[COMPLEXITY]** quiz '' has 6 items (minimum: 8)
-  - FIX: Add more items. B1 quiz requires at least 8 items.
-- **[COMPLEXITY]** quiz '' has 6 items (minimum: 8)
-  - FIX: Add more items. B1 quiz requires at least 8 items.
-- **[COMPLEXITY]** group-sort '' has 10 items (target: 12-999)
-  - FIX: Adjust number of items to sort to 12-999.
 - **[COMPLEXITY]** fill-in '' has 6 items (minimum: 8)
   - FIX: Add more items. B1 fill-in requires at least 8 items.
-- **[RUSSICISM_DETECTED]** Found 2 Russicism(s) in content: 'давайте подивимося' → подивімося
-  - FIX: Replace Russicisms with standard Ukrainian equivalents. These are Russian calques that have standard Ukrainian forms. See Phase B prompt 'Russianisms Pre-Output Scan' table.
-- **[LLM_FINGERPRINT_REPETITION]** Repetitive LLM rhetorical patterns (4 total): 'не просто X, а Y' x4 — robotic prose
-  - FIX: Vary sentence structures. Replace formulaic 'не просто X, а Y' with diverse rhetorical devices
-- **[SALAD_EXCESSIVE_INLINE_GLOSSES]** paragraph has 12 inline **term** (gloss) markers across 12 sentence(s) — too dense; move to vocabulary section or convert to UK paragraph + translation block
-  - FIX: Convert inline-gloss paragraphs to monolingual Ukrainian paragraphs followed by a blockquote + italic English translation block. See docs/best-practices/language-salad.md.
-- **[SALAD_EXCESSIVE_INLINE_GLOSSES]** paragraph has 4 inline **term** (gloss) markers across 4 sentence(s) — too dense; move to vocabulary section or convert to UK paragraph + translation block
-  - FIX: Convert inline-gloss paragraphs to monolingual Ukrainian paragraphs followed by a blockquote + italic English translation block. See docs/best-practices/language-salad.md.
-- **[SALAD_EXCESSIVE_INLINE_GLOSSES]** paragraph has 6 inline **term** (gloss) markers across 3 sentence(s) — too dense; move to vocabulary section or convert to UK paragraph + translation block
-  - FIX: Convert inline-gloss paragraphs to monolingual Ukrainian paragraphs followed by a blockquote + italic English translation block. See docs/best-practices/language-salad.md.
-- **[SALAD_EXCESSIVE_INLINE_GLOSSES]** paragraph has 4 inline **term** (gloss) markers across 3 sentence(s) — too dense; move to vocabulary section or convert to UK paragraph + translation block
-  - FIX: Convert inline-gloss paragraphs to monolingual Ukrainian paragraphs followed by a blockquote + italic English translation block. See docs/best-practices/language-salad.md.
+- **[COMPLEXITY]** group-sort '' has 9 items (target: 12-999)
+  - FIX: Adjust number of items to sort to 12-999.
+- **[COMPLEXITY]** match-up '' has 8 pairs (target: 12-16)
+  - FIX: Adjust number of pairs to 12-16.
+- **[STATE_STANDARD_LOW_IMMERSION]** Module 17 has 32.2% immersion (target: 90.0%+)
+  - FIX: Add more Ukrainian content to reach 90%+ immersion for full immersion modules
 
 ## Recommendation
-**📝 UPDATE** (severity 60/100)
+**📝 UPDATE** (severity 65/100)
 
-- Revision recommended (severity 60/100)
-- 17 violations (severe - consider revision)
+- Revision recommended (severity 65/100)
+- 5 violations (moderate)
+- Immersion 53% off target (major rebalancing needed)
 - Activity density below minimum
 
 ## Gates
-- **Words:** ✅ 4481/4000 (raw: 4547)
-- **Activities:** ✅ 11/0
-- **Density:** ❌ 4 < 6
+- **Words:** ✅ 5560/4000 (raw: 5666)
+- **Activities:** ✅ 8/0
+- **Density:** ❌ 1 < 6
 - **Unique_types:** ✅ 5/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ❌ 0/5
+- **Engagement:** ❌ 2/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 41/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 94.6% (target 85-100% (B1.2 Motion))
-- **Richness:** ❌ 40% < 95% min (grammar) - REWRITE needed
+- **Immersion:** ❌ 32.2% LOW (target 85-100% (B1.2 Motion))
+- **Richness:** ❌ 52% < 95% min (grammar) - REWRITE needed
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
 
 ## Richness Details
-**Score:** 40% (minimum: 95%)
+**Score:** 52% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 8 | 24 | 33% | 20% | 6.6% |
+| examples | 19 | 24 | 79% | 20% | 15.8% |
 | engagement | 0 | 5 | 0% | 15% | 0.0% |
 | dialogues | 0 | 4 | 0% | 15% | 0.0% |
-| variety | 0.96 | - | 96% | 10% | 9.6% |
-| cultural | 1 | 3 | 33% | 10% | 3.3% |
+| variety | 0.94 | - | 94% | 10% | 9.4% |
+| cultural | 2 | 3 | 67% | 10% | 6.7% |
 | realworld | 20 | 3 | 100% | 10% | 10.0% |
 | visual | 0 | 3 | 0% | 5% | 0.0% |
-| questions | 17 | 5 | 100% | 5% | 5.0% |
+| questions | 10 | 5 | 100% | 5% | 5.0% |
 | tables | 0 | 2 | 0% | 4% | 0.0% |
 | paragraph_var | 1.00 | - | 100% | 3% | 3.0% |
-| proverbs | 6 | 1 | 100% | 3% | 3.0% |
-| **TOTAL** | | | | | **40.5%** |
+| proverbs | 10 | 1 | 100% | 3% | 3.0% |
+| **TOTAL** | | | | | **52.9%** |
 
 ### Dryness Flags & Fixes
 - ❌ **NO_ENGAGEMENT**
@@ -156,35 +130,23 @@
     
     IMPORTANT: Dialogues OUTSIDE blockquotes (>) using **Speaker:** format are NOT detected.
     Place dialogues inside [!dialogue] callouts or blockquotes.
-- ❌ **NO_EXAMPLES**
-  - FIX:
-    Add 24+ example sentences. Each grammar point needs 3-4 examples showing the pattern in context.
 - ❌ **NO_TABLES**
   - FIX:
     Address this issue to improve richness score
-- ❌ **LOW_CULTURAL_ANCHOR**
-  - FIX:
-    Add more cultural references (need 3+ total). Include:
-    - Named Ukrainian places (Поділ, Бесарабський ринок, Острозька академія)
-    - Ukrainian traditions or customs
-    - Contemporary Ukrainian life examples
 
 ## Low Density Activities
 | Activity | Type | Items | Required | Fix |
 |----------|------|-------|----------|-----|
-| fill-in | fill-in | 6 | 8 | Add 2 more items |
-| quiz | quiz | 6 | 8 | Add 2 more items |
-| quiz | quiz | 6 | 8 | Add 2 more items |
-| fill-in | fill-in | 6 | 8 | Add 2 more items |
+|  | fill-in | 6 | 8 | Add 2 more items |
 
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 593 | Included in Core |
-| **Відмінювання в однині** | ✅ | 805 | Included in Core |
-| **Відмінювання у множині** | ✅ | 720 | Included in Core |
-| **Середній рід мішаної групи** | ✅ | 575 | Included in Core |
-| **Чергування в мішаній групі** | ✅ | 705 | Included in Core |
-| **Типові помилки та практика** | ✅ | 688 | Included in Core |
-| **Підсумок** | ✅ | 395 | Included in Core |
+| **Intro/Narrative** | ✅ | 790 | Included in Core |
+| **Відмінювання в однині (~800 words total)** | ✅ | 1148 | Included in Core |
+| **Відмінювання у множині (~650 words total)** | ✅ | 861 | Included in Core |
+| **Середній рід мішаної групи (~600 words total)** | ✅ | 704 | Included in Core |
+| **Чергування в мішаній групі (~650 words total)** | ✅ | 709 | Included in Core |
+| **Типові помилки та практика (~650 words total)** | ✅ | 826 | Included in Core |
+| **Підсумок (~350 words)** | ✅ | 522 | Included in Core |

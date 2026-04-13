@@ -1,0 +1,53 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'The module covers the core grammar and all required `буду/будеш/буде/будемо/будете/будуть`
+    forms, but the planned weekend dialogue is missing: the text never reaches `Що
+    ви будете робити на вихідних?`'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: No Russianisms, Surzhyk, calques, bad case endings, or wrong grammar claims
+    found in the Ukrainian text I checked.
+- dimension: 3
+  name: Pedagogical quality
+  score: 7
+  evidence: 'The PPP arc is visible, but the explanation gets too abstract before
+    returning to Ukrainian examples: `The grammatical formula for the analytic future
+    consists of two distinct parts working seamlessly'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'All required vocabulary appears in prose: `завтра`, `буду`, `будеш`,
+    `буде`, `будемо`, `будете`, `будуть`, `робити`. Recommended items such as `відпочивати`,
+    `план`, `звучати`, `футбол`, `зараз`, `нас'
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: 'The three planned exercise markers are present and well placed after
+    teaching: `match-pronoun-to-buty`, `fill-in-analytic-future`, `fill-in-tense-distinction`.'
+- dimension: 6
+  name: Engagement & tone
+  score: 6
+  evidence: 'The prose is padded with low-information teacher talk, especially in
+    Practice: `Now let us rigorously apply...`, `We can quickly and confidently expand...`,
+    and `To solidly anchor these future actions'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All H2 sections from the plan are present and ordered correctly. Pipeline
+    word count is 1318, which is above the 1200 target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 9
+  evidence: The module stays in a Ukrainian setting and does not frame Ukrainian through
+    Russian; the `ворожка` scene matches the plan’s dialogue situation.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 7
+  evidence: The first “dialogue” is mostly one speaker predicting (`Ти будеш багато
+    подорожувати... Будеш отримувати подарунки...`), and the second collapses two
+    planned situations into one exchange instead of gi
+findings: []

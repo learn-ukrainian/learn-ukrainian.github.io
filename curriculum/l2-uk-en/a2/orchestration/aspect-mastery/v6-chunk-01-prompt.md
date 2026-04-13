@@ -1,21 +1,22 @@
-# Section-by-Section Generation — Section 1/5
+# Section-by-Section Generation — Section 1/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 42: 30 найважливіших видових пар (A2, A2.6 [Aspect, Tenses, and Motion])
-**Section to write:** Як утворюються видові пари (~550 words total)
+**Section to write:** Як утворюються видові пари (~550 words)
 **Word target for this section:** 550 words (aim for 605 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Як утворюються видові пари (~550 words total)
-- P1 (~120 words): Introduction to the concept of aspect (вид дієслова). Definition of Imperfective (НДВ - що робити?) as process/habit and Perfective (ДВ - що зробити?) as result/completion. Contrast with English continuous vs simple tenses, emphasizing that in Ukrainian, these are two different lexical items forming a pair.
-- P2 (~130 words): Pattern 1 — Prefixation. Explaining how adding a prefix creates a perfective form without changing the core meaning. Examples: писати → написати, читати → прочитати, робити → зробити. Mention the "Cafe Ptakh" (к, п, т, ф, х) rule for the prefix "с-" (сфотографувати, сказати, спекти).
-- P3 (~150 words): Pattern 2 — Suffix changes and Pattern 3 — Stem changes. Explain the shift from imperfective suffixes (-увати, -ати) to perfective ones (-ити, -нути). Examples: вирішувати → вирішити, записувати → записати, стукати → стукнути. Detail stem mutations like "допомагати → допомогти" (ог/ага alternation) and "відповідати → відповісти".
-- P4 (~150 words): Pattern 4 — Suppletive pairs (different roots). Stress that these are high-frequency verbs that must be memorized as unique pairs. Examples: брати → взяти (to take), говорити/казати → сказати (to say/tell), ловити → піймати/зловити (to catch), шукати → знайти (to look for/find).
-- <!-- INJECT_ACTIVITY: group-sort-patterns --> [group-sort, Sort aspect pairs by formation pattern (prefix, suffix, stem change, suppletive), 8 items]
+## Як утворюються видові пари (~550 words)
+- P1 (~100 words): Introduce the concept of aspect pairs (видові пари). Explain that while English uses different tenses for ongoing vs. completed actions (was doing vs. did), Ukrainian uses different verb forms: Imperfective (НДВ) for process/habit, Perfective (ДВ) for result/completion.
+- P2 (~120 words): Explain Pattern 1 — Prefixation. State that this is the most common way to form the perfective. The prefix adds completion but doesn't change the core meaning. Provide examples: писати → написати, читати → прочитати, робити → зробити, їсти → з'їсти, варити → зварити. Briefly mention the phonetic rule for the 'с-' prefix before 'к, п, т, ф, х' (сфотографувати, сказати, спекти).
+- P3 (~120 words): Explain Pattern 2 — Suffix change (Imperfectivation). Show how to create the imperfective from the perfective by adding longer suffixes (-ува-, -а-, -я-) or changing them. Provide examples: записувати → записати, розповідати → розповісти, пояснювати → пояснити. Mention consonant mutations like допомогти → допомагати.
+- P4 (~110 words): Explain Pattern 3 — Stem change and Stress change. Describe how sometimes the stem transforms slightly (відповідати → відповісти) or only the stress changes (розрі́зати → розріза́ти). Note that these are less common but important to recognize.
+- P5 (~100 words): Explain Pattern 4 — Suppletive verbs (different roots). State clearly that the imperfective and perfective look completely different and must be memorized as pairs. Provide the most crucial examples: брати → взяти, ловити → піймати, шукати → знайти, говорити → сказати.
+- <!-- INJECT_ACTIVITY: group-sort-formation --> [group-sort, Sort aspect pairs by formation pattern (prefix, suffix, stem change, suppletive), 8 items]
 
 ---
 ## Full Plan (for reference)
@@ -485,6 +486,31 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] видова пара (aspect pair)
+- [ ] префікс (prefix)
+- [ ] суфікс (suffix)
+- [ ] брати / взяти (to take — impf./pf.)
+- [ ] давати / дати (to give — impf./pf.)
+- [ ] говорити / сказати (to say — impf./pf.)
+- [ ] класти / покласти (to put — impf./pf.)
+- [ ] починати / почати (to begin — impf./pf.)
+- [ ] закінчувати / закінчити (to finish — impf./pf.)
+- [ ] допомагати / допомогти (to help — impf./pf.)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Як утворюються видові пари (~550 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

@@ -1,62 +1,74 @@
 ## Linguistic Scan
-Errors found. Incorrect stress placement on imperatives of "говорити" (`го́вори`), "ходити" (`хо́ди`), and "покласти" (`По́клади`). These are critical phonetic/morphological errors for A1 learners. The rest of the vocabulary and grammar is natural, and no Russianisms or calques were found.
+Critical grammar-teaching error: in `Діалоги`, the sentence `In classroom speech, you may also hear **розгорнути підручник**.` presents the infinitive `розгорнути` as if it were a classroom command. The imperative should be `розгорніть підручник` or `розгорни підручник`.
 
 ## Exercise Check
-- `<!-- INJECT_ACTIVITY: group-sort-imperative-register -->`: Present. Tests `ти` vs `ви` register (matches plan #3).
-- `<!-- INJECT_ACTIVITY: fill-in-imperative-formation -->`: Present. Tests formation of imperative endings (matches plan #1).
-- `<!-- INJECT_ACTIVITY: quiz-polite-choice -->`: Present. Tests choice between polite forms (matches plan #2).
-- `<!-- INJECT_ACTIVITY: fill-in-contextual-names -->`: Present. Tests contextual usage at the end (matches plan #4).
-All required exercises are properly placed and logically align with the plan.
+Markers found in the prose: `quiz-imperative-choice`, `group-sort-forms`, `fill-in-imperative-forms`, `fill-in-polite-requests`.
+
+Placement is logical: the quiz marker comes after the politeness section, and the sorting/fill-in markers come after the form-building section.
+
+Marker types match the four plan `activity_hints`.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 9/10 | The module covers all plan points, but deviates from the plan in the Volleyball dialogue by using "Відчини двері" instead of the requested "Відкрий двері". This breaks the introduction of the target vocabulary word "відкрити". |
-| 2. Linguistic accuracy | 7/10 | Incorrect stress on the imperatives of `говорити` (`го́вори`), `ходити` (`хо́ди`), and `покласти` (`По́клади`). The correct forms are `говори́`, `ходи́`, and `Поклади́`. |
-| 3. Pedagogical quality | 10/10 | Excellent pedagogical flow (PPP). The explanation of changing `-и` to `-іть` is highly actionable and helpful for A1 learners. |
-| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary items from the plan are successfully integrated in context. |
-| 5. Exercise quality | 10/10 | All activity markers are present, mapped to the correct concepts, and logically placed after the relevant teaching sections. |
-| 6. Engagement & tone | 10/10 | Natural, warm teacher persona ("Imagine a typical morning...", "Consider a completely different situation"). |
-| 7. Structural integrity | 10/10 | All H2 headings match the plan perfectly. The word count is 1509 (safely above the 1200 target). |
-| 8. Cultural accuracy | 10/10 | Scenarios (cafe, classroom, volleyball practice) and names are culturally authentic and appropriate. |
-| 9. Dialogue & conversation quality | 10/10 | Dialogues are highly realistic and contextual, avoiding stilted robotic phrasing. |
+| 1. Plan adherence | 8/10 | All four planned H2 sections appear in order and both planned dialogue frames are present, but the module also foregrounds `ходімо` even though the stated A1 scope is “ти and ви forms only.” |
+| 2. Linguistic accuracy | 8/10 | Most Ukrainian forms are correct, but `In classroom speech, you may also hear **розгорнути підручник**` gives an infinitive where the lesson needs an imperative. |
+| 3. Pedagogical quality | 6/10 | The PPP flow is visible, yet the sports lead-in says the coach is speaking “to the team” while the sample uses singular imperatives (`Принеси`, `Розстав`, `Натягни`), which weakens the core ти/ви contrast. |
+| 4. Vocabulary coverage | 9/10 | Required verbs (`читати`, `писати`, `слухати`, `дивитися`, `говорити`, `дати`, `сказати`, `іти`) and key classroom nouns (`підручник`, `сторінка`, `речення`) all appear in context. |
+| 5. Exercise quality | 9/10 | Four exercise markers are present, and each comes after the relevant teaching: politeness quiz after `Наказовий спосіб`, then sorting/fill-ins after `Як утворити?`. |
+| 6. Engagement & tone | 6/10 | The summary opener `Memorizing these ten verbs will unlock hundreds of new conversational possibilities.` is promotional filler rather than instruction. |
+| 7. Structural integrity | 10/10 | `Діалоги`, `Наказовий спосіб`, `Як утворити?`, and `Підсумок` are all present and ordered correctly; pipeline word count is 1548, above the 1200 target. |
+| 8. Cultural accuracy | 7/10 | `You do not need conditional tenses or complex grammar structures to be polite in Ukraine.` overgeneralizes a useful A1 shortcut into a national rule about politeness. |
+| 9. Dialogue & conversation quality | 7/10 | The classroom dialogue works, but the sports vignette again blurs addressee number by framing singular imperatives as commands to “the team.” |
 
 ## Findings
+[LINGUISTIC ACCURACY] [SEVERITY: critical]  
+Location: `Діалоги` — `In classroom speech, you may also hear **розгорнути підручник**.`  
+Issue: `розгорнути` is an infinitive, not an imperative. In an imperative lesson, this teaches the wrong form.  
+Fix: Replace it with an actual imperative, e.g. `розгорніть підручник`.
 
-[Linguistic accuracy] [critical]
-Location: `## Як утвори́ти? (How to Form It)`
-Issue: The module incorrectly places the stress on the first syllable for the imperatives of говорити and ходити (`го́вори`, `хо́ди`). The correct imperatives are `говори́` and `ходи́`. This contradicts the module's own rule that the stress lands clearly on the final vowel.
-Fix: Change `го́вори` to `говори́` and `хо́ди` to `ходи́` (and add the stress to `говори́` in the subsequent formal/plural example for consistency).
+[PLAN ADHERENCE] [SEVERITY: major]  
+Location: `Діалоги` / `Наказовий спосіб` — Dialogue 2 opens with `Слухай, ходімо в кафе!`, but later the text says `At the A1 level, the focus is entirely on the two most practical forms: the **ти** form and the **ви** form.`  
+Issue: `ходімо` is a 1st-person plural invitation form, outside the stated 2nd-person-only scope. Leaving it unexplained introduces a third pattern before the learner has mastered the target contrast.  
+Fix: Add one sentence that labels `ходімо` as “let’s go” and explicitly says it is not part of today’s target forms.
 
-[Linguistic accuracy] [critical]
-Location: `## Наказо́вий спо́сіб (The Imperative Mood)`
-Issue: The stress on the imperative of `покласти` is incorrect. The text has `По́клади`, but the correct form is `Поклади́` (stress on the final vowel).
-Fix: Change `По́клади` to `Поклади́`.
+[PEDAGOGICAL QUALITY] [SEVERITY: major]  
+Location: `Як утворити?` — `a coach is giving quick, direct instructions to the team:` followed by `Принеси м'яч! Розстав конуси! Натягни сітку! ...`  
+Issue: The prose says the coach is addressing a group, but every verb shown is singular imperative. That muddies the module’s main `ти` vs `ви` distinction.  
+Fix: Change the lead-in to say the coach is speaking to individual players during practice, or convert the sample to plural imperatives.
 
-[Plan adherence] [major]
-Location: `## Наказо́вий спо́сіб (The Imperative Mood)`
-Issue: In the Volleyball practice dialogue, the coach says `Відчини́ две́рі!`. While linguistically natural, the module plan explicitly states this line should be `Відкрий двері (pl)!` to teach the recommended vocabulary word `відкрити`, which is featured in the summary table. Using a different verb here breaks pedagogical consistency with the module's vocabulary goals.
-Fix: Change `Відчини́ две́рі!` to `Відкри́й две́рі!`.
+[CULTURAL ACCURACY] [SEVERITY: major]  
+Location: `Наказовий спосіб` — `You do not need conditional tenses or complex grammar structures to be polite in Ukraine.`  
+Issue: This turns a useful A1 shortcut into an absolute cultural claim about Ukrainian politeness.  
+Fix: Narrow it to the learner-facing point that `будь ласка` is a simple A1 strategy for making requests sound polite.
 
-[Linguistic accuracy] [minor]
-Location: `## Як утвори́ти? (How to Form It)`
-Issue: Missing stress marks on `дивись` and `пишіть` in the phonetic explanation bullet lists, which makes them visually inconsistent with the surrounding words that explicitly demonstrate stress placement.
-Fix: Add stress marks: change `дивись` to `диви́сь`, `пиши` to `пиши́`, and `пишіть` to `пиші́ть`.
+[ENGAGEMENT & TONE] [SEVERITY: minor]  
+Location: `Підсумок — Summary` — `Memorizing these ten verbs will unlock hundreds of new conversational possibilities.`  
+Issue: This is hype, not teaching. It spends word budget without clarifying form, register, or usage.  
+Fix: Replace it with a concrete instruction, e.g. to practice each pair aloud as `ти` and then as `ви`.
 
 ## Verdict: REVISE
-The module contains critical phonetic errors with stress placement on core imperatives (`говори́`, `ходи́`, `поклади́`) and misses a required vocabulary link in the dialogue.
+REVISE. The module has one critical grammar-teaching error, plus scope/pedagogy problems and two style/cultural issues. It also has multiple dimension scores below 9.
 
 <fixes>
-- find: "**говори́ти** (to speak) → **го́вори** (speak!)"
-  replace: "**говори́ти** (to speak) → **говори́** (speak!)"
-- find: "**ходи́ти** (to go/walk) → **хо́ди** (go!)"
-  replace: "**ходи́ти** (to go/walk) → **ходи́** (go!)"
-- find: "**диви́тися** (to look) → **дивись** (look!)"
-  replace: "**диви́тися** (to look) → **диви́сь** (look!)"
-- find: "**Натягни́ сі́тку! По́клади рушники́ на ла́вку! Відчини́ две́рі!**"
-  replace: "**Натягни́ сі́тку! Поклади́ рушники́ на ла́вку! Відкри́й две́рі!**"
-- find: "**говори** → **говорі́ть** (speak! — formal/plural)"
-  replace: "**говори́** → **говорі́ть** (speak! — formal/plural)"
-- find: "**пиши** → **пишіть** (write! — formal/plural)"
-  replace: "**пиши́** → **пиші́ть** (write! — formal/plural)"
+- find: |-
+    In classroom speech, you may also hear **розгорнути підручник**. At this level, focus on recognizing and using the imperative forms themselves.
+  replace: |-
+    In classroom speech, you may also hear **розгорніть підручник**. At this level, focus on recognizing and using the imperative forms themselves.
+- find: |-
+    These informal imperatives are used between friends: **слухай** (listen), **подивись** (look), **сідай** (sit down), **дай** (give), and **скажи** (say / tell). They are directed at a single person. Here, the friends use the shortest, most direct forms of the verbs. This signals closeness and a relaxed atmosphere.
+  replace: |-
+    These informal imperatives are used between friends: **слухай** (listen), **подивись** (look), **сідай** (sit down), **дай** (give), and **скажи** (say / tell). They are directed at a single person. Here, the friends use the shortest, most direct forms of the verbs. This signals closeness and a relaxed atmosphere. Note: **ходімо** means "let's go" and is an invitation form. Recognize it in the dialogue, but the target grammar in this module is still the 2nd-person forms like **йди**, **дай**, and **скажи**.
+- find: |-
+    To see this in action, observe a sports scenario where a coach is giving quick, direct instructions to the team:
+  replace: |-
+    To see this in action, observe a sports scenario where a coach is giving quick, direct instructions to individual players during practice:
+- find: |-
+    To transform any direct command into a polite request, simply add the phrase **будь ласка** (please). You do not need conditional tenses or complex grammar structures to be polite in Ukraine.
+  replace: |-
+    To transform any direct command into a polite request, simply add the phrase **будь ласка** (please). At A1, this is a simple and practical way to make a request sound polite.
+- find: |-
+    Essential imperatives for daily life are summarized in this comprehensive table. This includes the core vocabulary needed to interact confidently in Ukrainian. Memorizing these ten verbs will unlock hundreds of new conversational possibilities.
+  replace: |-
+    This table summarizes ten high-frequency imperatives for class and daily life. Read each pair aloud first as **ти**, then as **ви**, so the contrast becomes automatic.
 </fixes>

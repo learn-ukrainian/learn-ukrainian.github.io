@@ -1,0 +1,53 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: All instructional points were covered, but the plan references (Заболотний,
+    Ворон, Авраменко) were not explicitly cited in the text as required by the grading
+    rubric.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: 'The module contains a critical grammar calque in the dialogue: "Ми дуже
+    чекаємо, щоб ти приїхав." Also, Cyrillic script was improperly mixed into English
+    phrasing: "university in Одеса."'
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent pedagogical pacing. The explicit diagnostic checks (substitution
+    test and deletion test) to distinguish conjunctions from relative words are highly
+    effective for L2 learners. The metaphor co
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary items from the plan are utilized
+    naturally and fully contextualized within the explanations.
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: Activity markers for the "вступ" section (`fill-in` and `quiz`) are erroneously
+    placed multiple sections later, violating the principle of testing what was just
+    taught.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The tone is professional, clear, and perfectly balanced. It avoids gamified
+    filler while maintaining a strong, encouraging teacher presence.
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: The generated text includes artificial AI token-counting markers in the
+    headings (e.g., `(~770 words total)`). The total word count (5919) comfortably
+    exceeds the 4000-word target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Accurate and authentic presentation of Ukrainian grammar. The explanation
+    of `чи` versus `якщо` provides crucial native insight for English speakers.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: The dialogue is contextually appropriate and natural, effectively demonstrating
+    reported speech, though slightly marred by the "чекаємо щоб" grammar error.
+findings: []

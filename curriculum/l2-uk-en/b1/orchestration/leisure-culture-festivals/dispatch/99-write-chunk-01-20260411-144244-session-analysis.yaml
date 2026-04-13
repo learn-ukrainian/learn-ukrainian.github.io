@@ -1,0 +1,103 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T12-41-d4f5454f.json
+phase: write-chunk-01
+prompt_chars: 44023
+response_chars: 7017
+prompt_words: 6203
+response_words: 1017
+sections:
+- name: header
+  start: 0
+  length: 440
+  fraction: 0.01
+- name: skeleton
+  start: 440
+  length: 2040
+  fraction: 0.0463
+- name: plan
+  start: 2480
+  length: 15523
+  fraction: 0.3526
+- name: wiki
+  start: 11758
+  length: 25801
+  fraction: 0.5861
+- name: output_spec
+  start: 43804
+  length: 219
+  fraction: 0.005
+large_sections:
+- wiki
+directives_total: 29
+directives_covered: 12
+directives_missed:
+- kind: checklist
+  text: вистава (performance, show)
+  covered: false
+  coverage_note: 1/3 keywords (33%)
+- kind: checklist
+  text: Різдво (Christmas)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: Великдень (Easter)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: свято (holiday, celebration)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: традиція (tradition)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: культура (culture)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: святкувати (to celebrate)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: колядка (Christmas carol)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: писанка (decorated Easter egg)
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: checklist
+  text: ресторан (restaurant)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: меню (menu)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: замовлення (order)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: страва (dish)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: шеф-кухар (chef)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 1/11 keywords (9%)
+- kind: skeleton_para
+  text: 'P6 (150w): Підсумок розділу: синтез лексики та складної синтаксичної структури
+    (Phase 8). Опис ідеального вихідного дня з використанням різних типів підрядних
+    сполучників.'
+  covered: false
+  coverage_note: 1/18 keywords (6%)

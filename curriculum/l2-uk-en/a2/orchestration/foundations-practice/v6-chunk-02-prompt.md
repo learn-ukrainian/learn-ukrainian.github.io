@@ -1,24 +1,22 @@
-# Section-by-Section Generation — Section 2/4
+# Section-by-Section Generation — Section 2/3
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 7: Перші кроки в А2 (A2, A2.1 [Foundation and Aspect Introduction])
-**Section to write:** Сценарій 2: На ринку (Scenario 2: At the Market) (~680 words)
-**Word target for this section:** 680 words (aim for 748 to account for undershoot)
+**Section to write:** Сценарій 2: На ринку (Scenario 2: At the Market) (~650 words)
+**Word target for this section:** 650 words (aim for 715 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Сценарій 2: На ринку (Scenario 2: At the Market) (~680 words)
-- P1 (~80 words): Cultural context: The atmosphere of a Ukrainian "ринок" (market) like Bessarabskyi or Lukianivskyi in Kyiv. Why the market is the ultimate practice ground for the Genitive case.
-- P2 (~120 words): Dialogue between a shopper (Покупець) and a vendor (Продавець). Questions: "Скільки коштує кілограм меду?", "У вас є свіжий сир?". Using "Дайте мені..." to request specific amounts.
-- P3 (~110 words): Detailed breakdown of the "1, 2-4, 5+" rule for counting at the market. 1: кілограм (Nominative), 2-4: кілограми (Genitive Singular/Nom Plural pattern), 5+: кілограмів (Genitive Plural). Examples: "один лимон," "три лимони," "шість лимонів."
-- P4 (~100 words): Genitive of Negation and Absence. Vendor explains what is missing: "Сьогодні немає домашнього сиру." Shopper expresses lack of visibility: "Я не бачу червоних помідорів." Contrast with simple Accusative "Я бачу помідори."
-- P5 (~90 words): Linguistic note on feminine noun endings in Genitive Singular vs. Plural at the market: "кілограм картоплі" (Singular/Uncountable) vs. "кілограм яблук" (Plural).
-- P6 (~100 words): The role of diminutive suffixes in market communication as a sign of rapport. Examples: "картопелька," "морквочка," "ягідки." How these forms make the vendor more likely to give a discount (знижка).
-- P7 (~80 words): Summary of shopping vocabulary: коштувати, вибирати/вибрати, важити (to weigh), решта (change/money back).
-- <!-- INJECT_ACTIVITY: fill-in-market-genitive --> [fill-in, Role-play: Shopping for Groceries, 8 items]
+## Сценарій 2: На ринку (Scenario 2: At the Market) (~650 words)
+- P1 (~50 words): Introduction to the second scenario. Set the scene at a Kyiv farmers market (ринок) where a shopper is buying fresh produce. Emphasize that markets are the best place to practice numbers, prices, and the Genitive case.
+- P2 (~120 words): Dialogue. A conversation between a shopper and a vendor. The shopper asks for honey (мед), cheese (сир), and berries (ягоди). Include the key phrase "Скільки коштує кілограм меду?".
+- P3 (~180 words): Analysis of asking for items using the 1, 2-4, 5+ counting rule. Explain how numbers govern the noun cases in Ukrainian. Provide specific examples from the wiki: "один кілограм яблук" (Genitive plural after 'кілограм'), "дві дині" (Nominative plural after 2-4), and "п'ять лимонів" (Genitive plural after 5+).
+- P4 (~150 words): Analysis of the Genitive of negation. Explain that when a verb is negated, its direct object often takes the Genitive case instead of the Accusative. Use examples from the dialogue: The vendor says "Вибачте, у мене немає лимонів", and the shopper says "Я не бачу помідорів".
+- P5 (~150 words): Cultural and linguistic note on diminutives. Explain that market vendors frequently use diminutive suffixes (милозвучність) to sound friendly and hospitable. Give examples like "мандаринки", "борщик", "цибулька", "часничок". Briefly warn against Russian calques (e.g., using "да" instead of "так").
+- <!-- INJECT_ACTIVITY: fill-in-shopping-groceries --> [fill-in, Role-play: Shopping for Groceries, 8 items]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -26,7 +24,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-will inevitably find that some crucial things are missing. To express absence or lack in Ukrainian, we rely on the word **немає** (there is no). This word is a powerful trigger for the Genitive case. Коли ми кажемо «немає», наступне слово завжди стоїть у родовому відмінку. Це суворе граматичне правило чудово працює для живих людей, фізичних предметів та абстрактних понять. > *When we say "немає", the next word is always in the Genitive case. This strict grammatical rule works perfectly for living people, physical objects, and abstract concepts.* You can use this structure to complain about an empty new apartment or missing items: **У нас немає музики.** — *We have no music.* **Немає торта.** — *There is no cake.* **Немає великого столу.** — *There is no big table.* The Genitive case is also absolutely essential when you are talking about quantities for your event. Words like **багато** (many) and **мало** (few) strictly require the noun that follows them to take the Genitive form. For countable party items, this is usually the Genitive plural. Для гарної вечірки господарям треба купити багато свіжих фруктів і багато холодних напоїв. Якщо у вас дуже мало паперових серветок, гості будуть незадоволені. > *For a good party, the hosts need to buy a lot of fresh fruits and a lot of cold drinks. If you have very few paper napkins, the guests will be unsatisfied.* Remembering these specific plural endings will help you accurately describe the exact scale of your exciting preparations. Let us rejoin our friends a few days later to see their actual progress. Now, they are completely focusing on their completed results, which requires switching to the perfective past tense. > — **Максим:** Олено, як наші справи? Ти вже приготувала салат? *(Olena, how are our things? Have you already prepared the salad?)* > — **Олена:** Так, я все успішно зробила. А ти купив напої? *(Yes, I successfully did everything. And did you buy the drinks?)* > — **Максим:** Я вже купив торт і газовану воду, але зовсім забув про яблучний сік. *(I already bought the cake and sparkling water, but I completely forgot about the apple juice.)* > — **Олена:** Нічого страшного, ми замовили велику піцу, а кур'єр може привезти сік. *(No worries, we ordered a big pizza, and the courier can bring juice.)* > — **Максим:** Чудово! Я також успішно запланував музику для нашого вечора. *(Great! I also successfully planned the music for our evening.)* :::tip **Did you know?** Ukrainians absolutely love using diminutive suffixes in everyday speech, especially when talking about delicious food and warm hospitality. Calling a standard cake a **тортик** instead of «торт» or a fresh salad a **салатик** instead of «салат» makes the invitation sound much warmer and more welcoming. You might even hear informal slang like **винишко** or the more traditional Ukrainian diminutive **винце** for wine among very close friends. These small changes in word endings actively show deep affection and help create a beautifully cozy, relaxed atmosphere for your happy guests. ::: <!-- INJECT_ACTIVITY: quiz-party-aspect -->
+future, Ukrainian uses the imperfective aspect. To form the future tense for a continuous process or repeated action, we combine the conjugated future forms of the verb «бути» (to be) with the imperfective infinitive. Ми будемо купувати напої та свіжі фрукти. Ти будеш готувати велику вечерю, а я буду прибирати кімнату. Вони будуть планувати свято цілий вечір. > *We will be buying drinks and fresh fruits. You will be preparing a big dinner, and I will be cleaning the room. They will be planning the holiday all evening.* This compound future tense is somewhat similar to the English continuous tense ("will be doing"). It emphasizes the duration or the fact that the action will take place, without focusing on its final result. It simply states that the process will occupy some time in the future. :::info **Future tense construction** To talk about future processes, use the conjugated forms of **бути** (буду, будеш, буде, будемо, будете, будуть) plus the **imperfective infinitive**. Example: *Я буду готувати* (I will be cooking). ::: As you finalize the shopping list, you inevitably notice what is missing. In Ukrainian, expressing the absence of something always requires the Genitive case. The word «немає» (there is no / we don't have) is a powerful trigger for this case, forcing the noun that follows it to change its form. На жаль, у нас немає музики. У магазині немає свіжих серветок і солодкого соку. Я бачу, що вдома немає торта. > *Unfortunately, we have no music. The store has no fresh napkins and sweet juice. I see that there is no cake at home.* Similarly, when you talk about quantities or volumes, you must use the Genitive case. Words indicating a large or small amount, or exact numbers (five and above), govern the Genitive plural. This is essential when planning a feast for multiple guests. Нам треба купити багато фруктів і кілька пляшок води. На столі лежить десять яблук. Ми купили мало овочів. > *We need to buy a lot of fruits and several bottles of water. There are ten apples lying on the table. We bought few vegetables.* Finally, as the party approaches, you need to check if the planned tasks are actually completed. For this, we switch to the perfective aspect in the past tense. The perfective past acts much like the English present perfect — it states a current result achieved by a past action. Я вже приготувала салат, тому ми можемо сідати за стіл. Ми купили два торти і всі необхідні напої. Тарас запланував цікаві ігри. > *I have already prepared the salad, so we can sit at the table. We bought two cakes and all the necessary drinks. Taras has planned interesting games.* Compare the process «купувати» (to be buying) with the result «купити» (to have bought). You use the imperfective to describe the shopping trip itself, but the perfective to proudly announce that the items are now in your kitchen. <!-- INJECT_ACTIVITY: quiz, Role-play: Planning a Party (aspect in future tense), 8 items -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -594,6 +592,29 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] планувати / запланувати (to plan)
+- [ ] купувати / купити (to buy)
+- [ ] готувати / приготувати (to cook, prepare)
+- [ ] ринок (market)
+- [ ] коштувати (to cost)
+- [ ] кілограм (kilogram)
+- [ ] вечірка (party)
+- [ ] день (day)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Сценарій 2: На ринку (Scenario 2: At the Market) (~650 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

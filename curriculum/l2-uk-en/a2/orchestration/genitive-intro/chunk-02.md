@@ -1,61 +1,58 @@
-## Закінчення родового відмінка однини (Genitive Singular Endings)
+## Закінчення родового відмінка однини (Genitive Singular Endings) (~770 words)
 
-Now that you understand the power of the word «немає», we need to learn how to form the actual Genitive case endings for singular nouns. For masculine nouns ending in a consonant, Ukrainian presents a fascinating, logical puzzle: do you add **-а** (or **-я**) or do you add **-у** (or **-ю**)? The choice depends entirely on what the noun represents in the physical world.
+Learning the **закінчення** (ending (grammar)) for the **родовий відмінок** (genitive case) is like solving a puzzle, and the best place to start is with neuter nouns in the **однина** (singular). They follow a very straightforward pattern that depends on the final letter of the dictionary form. If a neuter noun ends in «-о», it changes to «-а». If it ends in «-е» or «-я», it changes to «-я». This predictability makes neuter nouns a great confidence builder as you begin to master the concept of absence. You simply swap the final vowel and you are ready to construct negative sentences.
 
-We use the first ending option for concrete, physical objects that you can clearly see, touch, or count. This includes all animate beings, specific items, precise units of measurement, and exact locations like cities.
+Середній рід має дуже прості правила для родового відмінка. Слово «вікно» закінчується на «-о», тому ми говоримо, що в кімнаті немає вікна. Слово «море» закінчується на «-е», тому на карті немає моря. Слово «життя» закінчується на «-я», тому на цій планеті немає життя.
 
-В офісі немає нового комп'ютера. У кімнаті немає великого стола. На зупинці немає автобуса. У мене немає брата. У нас немає одного кілограма яблук. На цій старій карті немає Києва.
-> *There is no new computer in the office. There is no large table in the room. There is no bus at the stop. I don't have a brother. We don't have one kilogram of apples. Kyiv is not on this old map.*
+> *The neuter gender has very simple rules for the genitive case. The word "вікно" ends in "-о", so we say that there is no window in the room. The word "море" ends in "-е", so there is no sea on the map. The word "життя" ends in "-я", so there is no life on this planet.*
 
-On the other hand, we use the second ending option for abstract concepts, substances, and uncountables. Think of things that are liquid, powder, or cannot be easily boxed up and counted. This ending also applies to feelings, states of being, and large geographic areas like regions or countries.
+Feminine nouns are slightly more varied but still follow clear rules based on their stem type. Most feminine nouns belong to the first declension, meaning they end in «-а» or «-я» in their dictionary form. For nouns with a hard stem ending in «-а», the genitive singular ending is «-и». For nouns with a soft stem ending in «-я», the ending becomes «-і» or «-ї» (if the stem ends in a vowel). Finally, nouns with a mixed stem (ending in hissing sounds like «ш» or «ж») take the ending «-і».
 
-У мене зараз немає вільного часу. У цій чорній каві немає цукру. Для такої складної роботи в нього немає досвіду. У моєму серці немає смутку. На цій туристичній карті немає Криму.
-> *I don't have free time right now. There is no sugar in this black coffee. He has no experience for such difficult work. There is no sadness in my heart. Crimea is not on this tourist map.*
+Більшість жіночих іменників мають закінчення «-а» або «-я». Якщо це тверда група, ми кажемо, що у нас немає машини або немає сестри. Якщо це м'яка група, як «земля» чи «пісня», ми використовуємо закінчення «-і». Ми кажемо, що там немає землі або що він не знає цієї пісні. Після голосних ми пишемо «-ї», тому у нього немає сім'ї. Слова мішаної групи також мають закінчення «-і», тому на дереві немає груші.
 
-To see the logic clearly, compare a specific point on a map with a broader region. A clearly defined city like Kyiv takes the first ending, becoming **Києва**. A vast region or country takes the second ending, so Crimea becomes **Криму**. This conceptual difference shows how deeply the grammar is tied to the meaning of the word.
+> *Most feminine nouns have the ending "-а" or "-я". If it is a hard group, we say that we don't have a car or we don't have a sister. If it is a soft group, like "земля" or "пісня", we use the ending "-і". We say that there is no land there or that he does not know this song. After vowels we write "-ї", so he has no family. Words of the mixed group also have the ending "-і", so there is no pear on the tree.*
 
-Feminine nouns are much simpler and follow a strict phonetic rule rather than a conceptual one. If the noun ends in a hard consonant followed by **-а**, the Genitive ending is **-и**. If it ends in a soft consonant, the letter **-я**, or a bare consonant, the ending becomes **-і**.
+:::info
+**Grammar box**
+When deciding between «-и» and «-і» for feminine nouns, look closely at the last consonant before the ending. Hard consonants take «-и» (води), while soft or hissing consonants take «-і» (землі, межі).
+:::
 
-У мене немає цікавої книги. На столі немає чистої води. У неї зараз немає постійної роботи. Біля нашого будинку немає землі. У моєму телефоні немає цієї пісні. У маленькому місті немає великої вулиці.
-> *I don't have an interesting book. There is no clean water on the table. She doesn't have a permanent job right now. There is no land near our house. There is no such song in my phone. There is no large street in the small city.*
+Masculine nouns ending in a consonant present the biggest challenge in Ukrainian grammar. Unlike feminine and neuter nouns, the choice of the genitive ending for inanimate masculine nouns depends entirely on the meaning of the word. They can take either «-а / -я» or «-у / -ю». The general rule is that concrete, tangible, and specific items, as well as living beings, take the «-а» or «-я» ending. Abstract concepts, substances, bulk materials, and general locations take the «-у» or «-ю» ending. Do not worry if you make mistakes with masculine nouns at first. Native speakers also occasionally debate these endings. For your current level, focus on recognizing and using high-frequency words, as perfect mastery of the «-а / -у» distinction is a goal for more advanced studies.
 
-There is also a small group of feminine nouns that end in a consonant in their base Nominative form. These are special words representing concepts like night or salt, and they almost always take the **-і** ending in the Genitive singular.
+Чоловічий рід — це найскладніша частина родового відмінка. Якщо предмет конкретний або це людина, ми використовуємо закінчення «-а» або «-я». Наприклад, у мене немає брата, а в кімнаті немає стола. На зупинці немає автобуса, а в офісі немає комп'ютера. Назви міст також мають це закінчення, тому на карті немає Києва.
 
-У нас на кухні немає солі. Сьогодні немає темної ночі.
-> *We have no salt in the kitchen. Today there is no dark night.*
+> *The masculine gender is the most difficult part of the genitive case. If the object is concrete or it is a person, we use the ending "-а" or "-я". For example, I do not have a brother, and there is no table in the room. There is no bus at the bus stop, and there is no computer in the office. Names of cities also have this ending, so there is no Kyiv on the map.*
 
-Neuter nouns are the most predictable of all the genders. They simply shift their final vowel to match the masculine concrete endings. Words ending in **-о** change to **-а**, and words ending in **-е** or **-я** change to **-я**. Listen closely to how the final vowel shifts when the object disappears.
+Якщо слово означає абстрактне поняття або матеріал, ми використовуємо закінчення «-у» або «-ю». Наприклад, у мене зараз немає часу. У каві немає цукру, а надворі немає вітру. Ми також кажемо, що у цій роботі немає прогресу.
 
-У цій кімнаті немає великого вікна. У цьому місті немає глибокого моря. Без чистої води немає здорового життя.
-> *There is no large window in this room. There is no deep sea in this city. Without clean water there is no healthy life.*
+> *If the word means an abstract concept or material, we use the ending "-у" or "-ю". For example, I don't have time right now. There is no sugar in the coffee, and there is no wind outside. We also say that there is no progress in this work.*
 
-Let's put this all together into a mental map you can rely on during conversation. Imagine a table where each gender has a predictable, default path. When you speak, you can use anchor words to remind yourself of the correct pattern.
+There is a smaller, distinct group of feminine nouns that end in a consonant or a soft sign rather than «-а» or «-я» (the third declension). These nouns are quite consistent: in the genitive singular, they take the ending «-і». There is only one major exception in this category, which is the word for "mother".
 
-For masculine nouns, your concrete anchor is the physical object **телефон**, which becomes **телефона**. Your abstract anchor is the liquid substance **чай**, which becomes **чаю**. For feminine nouns, your hard-stem anchor is the word **кава**, which smoothly shifts to **кави**. For neuter nouns, think of the word for 'word' itself—**слово**—which gracefully turns into **слова**. Building this mental framework covers the vast majority of everyday vocabulary you will encounter.
+Деякі жіночі іменники закінчуються на приголосний звук або м'який знак. Це слова «ніч», «сіль» або «любов». У родовому відмінку вони завжди мають закінчення «-і». Тому ми кажемо, що влітку немає довгої ночі. У супі немає солі, а в його серці немає любові. Єдиний важливий виняток — це слово «мати». Ми кажемо, що дитина плаче, бо поруч немає матері.
+
+> *Some feminine nouns end in a consonant sound or a soft sign. These are the words "ніч", "сіль" or "любов". In the genitive case, they always have the ending "-і". Therefore, we say that there is no long night in summer. There is no salt in the soup, and there is no love in his heart. The only important exception is the word "мати". We say that the child is crying because there is no mother nearby.*
+
+:::tip
+**Did you know?**
+The word «мати» preserves a very old declension pattern from Old East Slavic. When it declines, a special suffix «-ер-» appears before the ending, which is why it becomes «матері» instead of simply adding «-і» to the dictionary form.
+:::
 
 ### Читаємо українською (Reading Practice)
 
-Це наша нова квартира, але тут ще нічого немає. У кімнаті немає великого стола і немає зручного дивана. На кухні немає холодильника, немає води і немає гарячого чаю. У ванній кімнаті немає мила і немає чистого рушника. Для комфортного життя тут немає жодної умови. Але в нас є багато вільного часу, тому ми все зробимо завтра.
-> *This is our new apartment, but there is nothing here yet. In the room there is no large table and no comfortable sofa. In the kitchen there is no fridge, no water, and no hot tea. In the bathroom there is no soap and no clean towel. For a comfortable life, there is not a single condition here. But we have a lot of free time, so we will do everything tomorrow.*
+Олена готує вечерю, але в неї є проблема. У холодильнику немає м'яса, а на столі немає хліба. Вона хоче зробити салат, але вдома немає капусти. У кімнаті сидить її брат. У брата немає часу йти до магазину. Олена дуже сумна, бо в неї немає вибору. Вона п'є чай, але в чашці немає цукру. Це просто поганий вечір.
 
-> — **Анна:** У нас є проблема. У мене немає телефона. *(We have a problem. I don't have a phone.)*
-> — **Максим:** Як це немає телефона? *(How come there is no phone?)*
-> — **Анна:** Він удома. А тут немає інтернету. *(It's at home. And there is no internet here.)*
-> — **Максим:** Без телефона і без інтернету немає роботи. *(Without a phone and without internet, there is no work.)*
-> — **Анна:** Так, і в мене немає гарного настрою. *(Yes, and I have no good mood.)*
+> *Olena is cooking dinner, but she has a problem. There is no meat in the fridge, and there is no bread on the table. She wants to make a salad, but there is no cabbage at home. Her brother is sitting in the room. The brother has no time to go to the store. Olena is very sad because she has no choice. She drinks tea, but there is no sugar in the cup. It is just a bad evening.*
 
-:::info
-**Мій телефон чи мого телефону?**
-You will sometimes hear native speakers say «немає телефону» in fast, casual speech. While language is always evolving, the strict grammatical standard for physical devices and apparatuses is the **-а** ending. When in doubt, remember the rule: physical, countable objects take **-а**, while abstract concepts and systems (like the internet) take **-у**.
-:::
+To consolidate these rules before you practice, remember to focus on the patterns rather than trying to memorize every single word perfectly right away. The singular endings across all genders generally fall into a few predictable categories based on the stem of the noun.
 
-<!-- INJECT_ACTIVITY: fill-in-genitive-singular -->
+| Рід (Gender) | Називний (Dictionary Form) | Родовий однини (Genitive Singular) |
+| :--- | :--- | :--- |
+| **Середній** (Neuter) | -о / -е / -я | **-а / -я** |
+| **Жіночий** (Feminine) | -а / -я | **-и / -і / -ї** |
+| **Жіночий** (Feminine) | приголосний (consonant) / -ь | **-і** (виняток: мати → матері) |
+| **Чоловічий** (Masculine) | приголосний (consonant) / -ь | **-а / -я** (concrete) АБО **-у / -ю** (abstract) |
 
-Before we practice forming these endings yourself, be careful with a few common traps. The most frequent mistake English speakers make involves the word for money.
+Recognizing these key groups will allow you to quickly adapt when you encounter new vocabulary and need to express that something is missing.
 
-In Ukrainian, the word **гроші** is always a plural noun. Because it is plural, its Genitive form does not follow any of the singular rules we just discussed. Instead of a standard singular ending, it changes completely to **грошей**. We will cover plural endings in detail in the next section, but this word is so common that you need to memorize its negative form right now: «у мене немає грошей».
-
-:::note
-**Одне слово чи два? (One word or two?)**
-Remember that **немає** is a single, unified word that demands the Genitive case. Do not confuse it with **не має** (two separate words), which means "he, she, or it does not possess." That two-word verb takes the regular Accusative case for direct objects. For expressing the absolute absence of something, always use the single word!
-:::
+<!-- INJECT_ACTIVITY: fill-in, Genitive Singular Formation, 8 items -->

@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-звучати одні й ті самі слова у повсякденній розмові та у високому стилі. > — **Ведучий:** Шановні друзі, я надзвичайно **рад** *(glad)* вітати всіх вас сьогодні на нашому творчому заході. > — **Слухачка:** Зверніть увагу, ви щойно використали класичну коротку форму «рад». Це одразу звучить дуже інтелігентно та піднесено. Зазвичай люди кажуть значно простіше: «Я радий бачити вас». > — **Ведучий:** Ви маєте абсолютну рацію. Повна форма «радий» — це наш базовий і нейтральний варіант для звичайного спілкування. Але коли ми хочемо підкреслити важливість моменту, саме коротка форма підходить ідеально. > — **Слухач:** А як тоді бути зі словом **годен** *(fit, capable)*? Ми щойно читали вірш, де герой емоційно вигукує: «Я більше не годен це терпіти!». Але ж у реальному житті ми теж так говоримо? > — **Ведучий:** Так, ви влучно помітили. Такі слова, як «годен», **певен** *(certain)* та **ладен** *(willing, ready)*, досі дуже активно використовуються в нашому розмовному стилі. Проте саме в художньому тексті вони додають персонажам особливої емоційної сили та рішучості. Вони завжди звучать набагато більш категорично, ніж їхні спокійні повні аналоги. > — **Слухачка:** Тобто коротка форма — це майже завжди історія про сильні емоції та особливий стиль? > — **Ведучий:** Абсолютно правильно. Це потужний стилістичний інструмент, який робить українську мову справжнім мистецтвом. Ще одна надзвичайно цікава та важлива функція коротких прикметників у фольклорі — це їхнє використання у звертаннях. В українських народних піснях, колядках та щедрівках ми дуже часто зустрічаємо специфічні конструкції, які слугують для того, щоб викликати сили природи або звернутися до небесних світил. Найбільш яскравий і відомий приклад — це звертання «**ясен** *(bright, clear)* місяцю». Народна пісня часто починається словами: «Ой зійди, зійди, ясен місяцю, як млиновеє коло». Чому невідомий автор використовує тут коротку форму? У цьому контексті коротка форма діє майже як офіційний титул або сталий, непорушний епітет. Вона надає об'єкту звертання особливої поваги, величі та статусу. Місяць у цій пісні — це не просто астрономічний об'єкт у небі, який світить яскравіше чи тьмяніше. Це могутня, міфологічна, жива істота, до якої людина звертається з глибокою пошаною та надією. Слово «ясен» утворює разом з іменником стійку фольклорну формулу, яка передається з покоління в покоління протягом багатьох століть. Використання такої граматичної форми миттєво створює відчуття позачасовості, глибокої давнини та серйозного магічного ритуалу. Це не просто опис ознаки, це частина стародавнього замовляння. Подібні класичні прийоми дуже любили використовувати професійні українські письменники, які свідомо спиралися на багату народну традицію. Наприклад, видатна поетеса Леся Українка у своїй творчості також зверталася до цих виразних форм, щоб надати ліричним текстам справжнього національного колориту та драматизму. Вона писала: «Літо краснеє минуло, сніг лежить на полі». Хоча тут ми бачимо повну нестягнену форму «краснеє» замість короткої форми **красен** *(beautiful, fine)*, загальний стилістичний принцип залишається абсолютно тим самим. Відхилення від звичайної стандартної граматики автоматично сигналізує читачеві, що він потрапив у простір високої поезії. Короткі прикметники, такі як «ясен» або «зелен», є невіддільною частиною українського культурного коду. Розуміння їхньої ролі допомагає тим, хто вивчає мову, не просто читати слова на папері, а відчувати справжню душу української класичної літератури та музики. <!-- INJECT_ACTIVITY: identify-folk -->
+як «годен»? *(And does this rule apply to a word like "годен"?)* > — **Ведучий:** З ним ситуація трохи інша. Сказати «він **годен** працювати» — це надати фразу впевненості та категоричної сили, якої бракує нейтральному повному варіанту. *(With it the situation is slightly different. To say "he is capable of working" [short form] is to give the phrase a confidence and categorical strength that the neutral full version lacks.)* :::info **Elevated vs. Everyday** While words like «радий» or «годний» are perfectly neutral for a daily chat, switching to their short counterparts like **рад/рада** (glad — short form) or **годен/годна** (fit, capable — short form) immediately elevates your speech. It signals to the listener that you are emphasizing the emotional weight of your statement, shifting the atmosphere from casual to declarative. ::: Beyond establishing rhythm and setting an elevated tone, the short-form adjective performs a unique, almost magical syntactic role in poetic invocations and direct addresses. In Ukrainian folklore, nature is rarely a passive background; it is frequently personified and addressed directly as an active participant in the human drama. When a character or a singer calls out to the moon, the sun, or the whispering wind, the short form acts like an official title or a fixed, sacred epithet. У багатьох традиційних українських колядках та старовинних обрядових піснях ми постійно чуємо шанобливе звертання: «Ой зійди, зійди, ясен місяцю». У цьому контексті коротка форма виконує функцію давнього заклинання. Вона ніби зупиняє плин часу і перетворює звичайне природне явище на могутнього міфологічного героя. > *In many traditional Ukrainian carols and ancient ritual songs, we constantly hear the respectful address: "O rise, rise, bright moon." In this context, the short form performs the function of an ancient incantation. It seems to stop the flow of time and transforms an ordinary natural phenomenon into a powerful mythological hero.* This "calling" function creates a profound sense of timeless ritual. The adjective becomes entirely inseparable from the noun it modifies, fusing into a single, iconic image that has been passed down through centuries. Lesya Ukrainka, one of Ukraine's greatest literary figures and an expert in national folklore, frequently utilized this deep resonance in her own dramatic poetry. By intentionally selecting an archaic word like **ясен** (bright, clear — poetic short form) or **зелен** (green — poetic short form) over the modern full equivalent, she effortlessly bridged the gap between contemporary literature and ancient oral traditions. Справжні майстри слова розуміють, що цей синтаксичний прийом робить художній текст набагато глибшим та емоційнішим. Читач підсвідомо відчуває невидимий зв'язок із давніми традиціями та віруваннями свого народу. Тому використання таких форм — це не просто цікава граматична особливість, а справжній культурний код, зашифрований у мові. When you encounter these special forms in your reading, remember that they are doing heavy linguistic lifting. They are not merely missing a grammatical ending; they are actively carrying the rhythmic pulse of the falling rain, the elevated emotion of a solemn declaration, and the ancient, echoing power of a magical invocation. <!-- INJECT_ACTIVITY: identify-folk -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -550,7 +550,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -563,18 +630,64 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] короткий прикметник (short-form adjective)
+- [ ] повний прикметник (full-form adjective)
+- [ ] потрібен/потрібна/потрібне (needed — short form, predicative)
+- [ ] певен/певна (certain, sure — short form)
+- [ ] годен/годна (fit, capable — short form)
+- [ ] ладен/ладна (willing, ready — short form)
+- [ ] варт/варта (worth — short form)
+- [ ] рад/рада (glad — short form)
+- [ ] зелен (green — poetic short form)
+- [ ] ясен (bright, clear — poetic short form)
+- [ ] народнопоетичний (folk-poetic register)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Короткі форми у сучасній мові (~700 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

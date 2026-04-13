@@ -1,32 +1,31 @@
-## Діалоги — Розкажи про плани (~350 words total)
-- P1 (~50 words): [Introduction to discussing free time and making weekend plans. Emphasize that in Ukrainian, we often start by asking "Що ти робиш у вихідні?" (What are you doing this weekend?) to gauge availability before suggesting an activity.]
-- P2 (~120 words): [Dialogue 1: Weekend plans at a community bulletin board. Вітя and Оленка discuss their Saturday routine. Focus on the invitation pattern "Ходімо в кіно!" (Let's go to the cinema!) and specifying the time "О п'ятій" (At five). Include phrases for agreement like "Чудово!" and "Добре!".]
-- P3 (~60 words): [Linguistic note on invitations: Explaining the pure Ukrainian imperative "Ходімо!" (Let's go!) versus the informal "Давай!" (Let's). Explicitly mention that "Давай" is colloquial but "Ходімо" is the standard, grammatically correct form to prioritize.]
-- P4 (~120 words): [Dialogue 2: Talking about hobbies and frequency. Вітя asks Оленка if she likes sports. Оленка explains she plays football "двічі на тиждень" (twice a week). They discuss other interests like listening to music "слухати музику" and drawing "малювати". Focus on the question "Як часто?" (How often?).]
-- <!-- INJECT_ACTIVITY: fill-in-invitations --> [Fill-in-the-blanks, focus on completing invitations and frequency sentences using context clues from the dialogues, 6 items.]
+## Діалоги (Dialogues) (~330 words total)
+- P1 (~30 words): Introduce the setting at a community center bulletin board, where Вітя and Оленка are looking at activity sign-ups and discussing their free time.
+- P2 (~150 words): Dialogue 1 between Вітя and Оленка about weekend plans. Include phrases: "Що ти робиш у вихідні?", "Зазвичай я гуляю і читаю", "Ходімо в кіно в суботу!", "О котрій?", "О п'ятій." Introduce the invitation pattern, time, and day in context.
+- P3 (~150 words): Dialogue 2 between Вітя and Оленка about their hobbies and how often they do them. Include phrases: "Ти любиш спорт?", "Так, я граю у футбол", "Як часто?", "Двічі на тиждень, у вівторок і четвер", "Іноді слухаю музику і малюю." Show frequency adverbs and hobby vocabulary naturally.
 
-## Хобі і спорт — Що ти любиш? (~340 words total)
-- P1 (~80 words): [Introduction to hobby verbs using "любити" (to love/like) + infinitive. Explain that this is the simplest way to talk about interests. Provide common examples: читати книги (to read books), малювати вдома (to draw at home), фотографувати (to take photos), and готувати (to cook).]
-- P2 (~80 words): [The "Play" pattern for sports: "грати у + sport". Explain that games and competitive sports require the preposition "у/в". List examples: грати у футбол (football), грати у баскетбол (basketball), грати у теніс (tennis), and грати у комп'ютерні ігри (computer games).]
-- P3 (~80 words): [The "Play" pattern for music: "грати на + instrument". Contrast this with the sports pattern. Explain that musical instruments require "на" + the instrument name as a fixed chunk. Examples: грати на гітарі (guitar), грати на піаніно (piano), грати на скрипці (violin).]
-- P4 (~100 words): [Going to places of entertainment using "ходити" (to go habitually). Explain the chunks "ходити в" vs "ходити на". Provide common pairs: ходити в кіно (to the cinema), ходити в театр (to the theater), ходити в музей (to a museum), versus ходити на концерт (to a concert) or ходити на футбол (to a football match).]
-- <!-- INJECT_ACTIVITY: match-up-hobbies --> [Match-up, focus on connecting the correct verb (грати, слухати, дивитися, ходити) to the logical hobby noun or prepositional phrase, 8 pairs.]
-- <!-- INJECT_ACTIVITY: preposition-check --> [Fill-in-the-blanks, focus on choosing the correct preposition (у, на, в) for sports, instruments, and entertainment venues, 4 items.]
+## Хобі і спорт (Hobbies and Sports) (~360 words total)
+- P1 (~60 words): Introduce asking about free time ("Що ти любиш робити у вільний час?") and the basic pattern of stating hobbies using "люблю" + infinitive, extending module 15.
+- P2 (~90 words): Explain the "Play" pattern for sports: "грати у/в" + sport (e.g., грати у футбол, грати у баскетбол, грати у теніс). Emphasize that Ukrainian requires the preposition "у/в" for sports, unlike English.
+- P3 (~90 words): Explain the "Play" pattern for musical instruments: "грати на" + instrument (e.g., грати на гітарі, грати на піаніно). Highlight the difference between "у/в" for sports and "на" for instruments.
+- P4 (~60 words): Introduce other common free-time activities: слухати музику, дивитися фільми / серіали, малювати, фотографувати. Provide simple example sentences like "Я люблю слухати музику."
+- P5 (~60 words): Explain the "Go" pattern for entertainment using the verb "ходити": ходити в кіно, ходити в театр, ходити на концерт, ходити в музей. Note that these are fixed chunks for now (case grammar comes later).
+- <!-- INJECT_ACTIVITY: match-hobbies-verbs --> [match-up, Match the verb to the logical noun (hobbies), 8 pairs]
+- <!-- INJECT_ACTIVITY: fill-in-prepositions-activities --> [fill-in, Choose the correct preposition for the activity, 4 items]
 
-## Як часто? — Прислівники частоти (~330 words total)
-- P1 (~100 words): [Introduction to positive frequency adverbs: завжди (always), зазвичай (usually), часто (often), and іноді/інколи (sometimes). Explain the typical word order: the adverb usually sits right before the verb. Example: "Я часто гуляю в парку" or "Ми зазвичай читаємо ввечері".]
-- P2 (~100 words): [Negative frequency adverbs: рідко (rarely) and ніколи (never). Explain the critical rule of double negation with "ніколи": it MUST be followed by "не" + the verb. Example: "Я ніколи не граю у футбол" (I never play football). Contrast "рідко" which does not require "не".]
-- P3 (~100 words): [Expressions of frequency with numbers and "на тиждень". Explain how to say "once/twice/three times a week" using fixed phrases: раз на тиждень (once a week), двічі на тиждень (twice a week), тричі на тиждень (three times a week). Mention "кожен день" (every day) as a common alternative to "завжди".]
-- P4 (~30 words): [Brief synthesis: Combining days of the week with frequency. Example: "У понеділок я завжди займаюся спортом".]
-- <!-- INJECT_ACTIVITY: fill-in-frequency --> [Fill-in-the-blanks, focus on placing frequency adverbs in the correct position and ensuring double negation with "ніколи", 5 items.]
+## Як часто? (How Often?) (~330 words total)
+- P1 (~80 words): Introduce the question "Як часто?" (How often?) and the core frequency adverbs: завжди, зазвичай, часто, іноді / інколи, рідко, ніколи. 
+- P2 (~100 words): Explain the word order for frequency adverbs (usually placed before the verb) with examples: "Я часто гуляю", "Я іноді читаю." Crucially, explain the double negation rule required with "ніколи": "Я ніколи не працюю у неділю."
+- P3 (~80 words): Introduce frequency expressions using numbers and "на тиждень/місяць": раз на тиждень, двічі на тиждень, тричі на тиждень, кожен день. Give examples: "Я граю у футбол двічі на тиждень", "Я ходжу в кіно раз на місяць."
+- P4 (~70 words): Explain how to invite someone to an activity using "Ходімо!" (Let's go!) and "Давай!" (Let's! - informal). Provide examples combining invitations with activities, days, and times: "Ходімо в кіно у суботу!", "Давай грати у теніс."
+- <!-- INJECT_ACTIVITY: fill-in-invitations-frequency --> [fill-in, Complete the invitations and frequency sentences, 6 items]
 
-## Підсумок — Summary (~300 words total)
-- P1 (~100 words): [Recap of the module's core communication goals. Summarize the difference between "грати у" (sports) and "грати на" (instruments), the use of "Ходімо!" for invitations, and the placement of frequency adverbs.]
-- P2 (~150 words): [Self-check list for the learner. Output as a bulleted list of questions and model answers:
-  * Q: Що ви любите робити у вільний час? A: Я люблю читати і ходити в кіно.
-  * Q: Як часто ви граєте у футбол? A: Я граю у футбол двічі на тиждень.
-  * Q: Ви граєте на піаніно? A: Ні, я ніколи не граю на піаніно, але я слухаю музику.
-  * Q: Як запросити друга в театр? A: Ходімо в театр у суботу!]
-- P3 (~50 words): [Closing encouragement. Remind the learner that they can now combine time, weather, and activities to describe their perfect weekend in Ukrainian. Transition to the upcoming Checkpoint.]
+## Підсумок — Summary (~330 words total)
+- P1 (~100 words): Recap how to communicate about hobbies using the patterns "Я люблю + infinitive" and the distinct preposition chunks for playing sports and instruments ("Я граю у/в...", "Я граю на...").
+- P2 (~80 words): Recap how to make invitations using "Ходімо!" and "Давай!", emphasizing their use in making weekend plans.
+- P3 (~80 words): Recap the vocabulary for expressing frequency, including single adverbs (завжди, часто, іноді, рідко, ніколи) and numbered expressions (раз на тиждень, двічі на тиждень).
+- P4 (~70 words): 
+  - Name 3 hobbies you have. 
+  - How often do you do each one? 
+  - Invite a friend to do something this weekend using the phrase "Ходімо".
 
-Grand total: ~1320 words
+Grand total: ~1350 words

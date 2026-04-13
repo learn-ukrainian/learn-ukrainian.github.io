@@ -1,0 +1,68 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T12-59-a7ee7089.json
+phase: write-chunk-03
+prompt_chars: 39836
+response_chars: 5101
+prompt_words: 5513
+response_words: 795
+sections:
+- name: header
+  start: 0
+  length: 429
+  fraction: 0.0108
+- name: skeleton
+  start: 429
+  length: 1334
+  fraction: 0.0335
+- name: prior_summary
+  start: 1763
+  length: 3357
+  fraction: 0.0843
+- name: plan
+  start: 5120
+  length: 19245
+  fraction: 0.4831
+- name: wiki
+  start: 17716
+  length: 15250
+  fraction: 0.3828
+- name: output_spec
+  start: 39615
+  length: 221
+  fraction: 0.0055
+large_sections:
+- plan
+directives_total: 23
+directives_covered: 16
+directives_missed:
+- kind: checklist
+  text: шиплячий (hushing consonant — ж, ч, ш, дж)
+  covered: false
+  coverage_note: 1/3 keywords (33%)
+- kind: checklist
+  text: орфограма (orthographic rule — a spelling pattern requiring a rule)
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: must
+  text: learners must develop sensitivity to the following consonant's hardness/softness.
+  covered: false
+  coverage_note: 0/8 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 1/11 keywords (9%)
+- kind: skeleton_para
+  text: 'P4 (170w): Recognition Strategy — how to tell if a vowel is fleeting. Contrast
+    minimal pairs like сон/сну (fleeting) vs стон/стону (stable). Discuss how the
+    phonetic environment and historical development (the fall of the "yers") created
+    this phenomenon.'
+  covered: false
+  coverage_note: 10/26 keywords (38%)
+- kind: inject_activity
+  text: match-up-alternation-pairs
+  covered: false
+  coverage_note: marker missing

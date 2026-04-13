@@ -25,7 +25,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-деталі до нашої розповіді. (They add important details to our story.) Їх є три основні види. Перший вид — це **додаток** (object). Він відповідає на питання непрямих відмінків: «кого?», «що?», «кому?», «ким?», «чим?». Другий вид — це **означення** (attribute). Означення описує предмет і відповідає на питання «який?», «яка?», «яке?», «чиє?». Третій вид — це **обставина** (adverbial modifier). Обставина показує місце, час, причину або спосіб дії. (The adverbial modifier shows the place, time, reason, or manner of action.) Вона відповідає на питання «де?», «коли?», «як?», «куди?». Проаналізуємо велике речення: «Моя подруга читає цікаву книгу ввечері». (My friend reads an interesting book in the evening.) Хто? — подруга (підмет). Подруга чия? — моя (означення). Що робить подруга? — читає (присудок). Читає що? — книгу (додаток). Книгу яку? — цікаву (означення). Читає коли? — ввечері (обставина). Тепер ви бачите всі члени речення. (Now you see all the sentence members.) Речення бувають різні за своєю будовою. (Sentences can be different by their structure.) Якщо речення має тільки одну граматичну основу, це **просте речення** (simple sentence). Якщо воно має дві або більше граматичних основ, це **складне речення** (compound sentence). Також просте речення може бути коротким або довгим. (Also, a simple sentence can be short or long.) Якщо в реченні є тільки підмет і присудок, це непоширене речення. (If a sentence has only a subject and a predicate, it is an unextended sentence.) Наприклад: «Ідуть дощі». (Rains are falling.) Тут є лише основа. (Here is only the foundation.) Але коли ми додаємо другорядні члени речення, воно стає набагато ширшим. (But when we add secondary sentence members, it becomes much broader.) **Поширене речення** (extended sentence) має багато деталей. Наприклад: «Сьогодні в лісі ідуть теплі дощі». (Today warm rains are falling in the forest.) Тут є обставини часу і місця («сьогодні», «в лісі») та означення («теплі»). > — **Марко:** Вибачте, пане вчителю. Як визначити підмет у цьому довгому реченні? *(Excuse me, Mr. Teacher. How to determine the subject in this long sentence?)* > — **Вчитель:** Це не дуже складно. Спочатку постав питання «хто?» або «що?». *(It is not very difficult. First, ask the question "who?" or "what?".)* > — **Марко:** Я розумію це правило. А далі що мені робити? *(I understand this rule. And then what should I do?)* > — **Вчитель:** Далі шукай іменник або займенник у називному відмінку. *(Next, look for a noun or pronoun in the nominative case.)* > — **Марко:** А якщо це слово відповідає на питання «як?»? Це також підмет? *(And if this word answers the question "how?"? Is it also a subject?)* > — **Вчитель:** Ні, Марку. Слово, яке відповідає на питання «де?», «коли?», або «як?», — це обставина. *(No, Marko. A word that answers the questions "where?", "when?", or "how?" is an adverbial modifier.)* > — **Марко:** Дуже дякую вам! Тепер я можу правильно підкреслити всі слова. *(Thank you very much! Now I can correctly underline all the words.)* <!-- INJECT_ACTIVITY: match-up, Match sentence member terms to their question words (хто? що?, де? коли?, який? чия?, кого? кому?), 8 items -->
+робила?» і є присудком. У реченні «Вечір тихий» слово «тихий» відповідає на питання «який є?». Воно також є присудком. > *The second main sentence member is called the predicate. It describes the action or state of the subject. The predicate answers the questions "what does it do?", "what did it do?", or "what is it like?". In school, children always underline the predicate with two solid lines. For example, let's take the sentence "The river breathed steam." The word "breathed" answers the question "what did it do?" and is the predicate. In the sentence "The evening is quiet," the word "quiet" answers the question "what is it like?". It is also the predicate.* Sentences often contain secondary members that add crucial details. The first is the **додаток** (object), which answers the questions of the indirect cases, such as «кого?» or «чим?». The next is the **означення** (attribute), which describes the qualities of a noun and answers questions like «який?» or «чия?». Finally, there is the **обставина** (adverbial modifier), which provides the context of the action by answering questions such as «де?» or «коли?». By identifying these parts, learners can break down complex ideas into simple components. :::info **Grammar box** When analyzing a sentence like «Моя подруга читає цікаву книгу ввечері», you ask questions from the main members to the secondary ones: - Подруга (чия?) ➔ моя (attribute) - Читає (що?) ➔ книгу (object) - Книгу (яку?) ➔ цікаву (attribute) - Читає (коли?) ➔ ввечері (adverbial modifier) ::: Understanding these roles allows us to classify sentences. A simple sentence contains only one grammatical foundation, meaning it has one core subject and predicate pair. If a sentence has two or more independent foundations, it is called a compound sentence. Simple sentences also vary in detail. A sentence like «Ідуть дощі» is considered unextended because it consists solely of the main members. However, when we add secondary members to provide more context, it becomes an extended sentence. For instance, «Сьогодні ідуть теплі дощі» is extended because it includes an attribute and an adverbial modifier. > — **Студент:** Як визначити підмет у цьому реченні? *(How do I determine the subject in this sentence?)* > — **Вчитель:** Знайдіть дію і поставте питання «хто?» або «що?». Шукайте іменник у називному відмінку. *(Find the action and ask the question "who?" or "what?". Look for a noun in the nominative case.)* > — **Студент:** А що робити з іншими словами? Підкресліть їх також? *(And what to do with the other words? Underline them too?)* > — **Вчитель:** Так. Запишіть питання і визначте всі частини. Якщо слово відповідає на питання «де?» або «коли?», то це обставина. *(Yes. Write down the questions and determine all parts. If a word answers the question "where?" or "when?", then it is an adverbial modifier.)* > — **Студент:** Дякую! Тепер я бачу всі члени речення. *(Thank you! Now I see all the sentence members.)* <!-- INJECT_ACTIVITY: match-up, Match sentence member terms to their question words (хто? що?, де? коли?, який? чия?, кого? кому?) -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -520,7 +520,74 @@ Understanding the sentence is the central goal of syntax. It builds directly upo
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 6: A2 finale (A2 M51-M69)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 40%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 40% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 70-90% Ukrainian.
 LANGUAGE ROLES:
@@ -539,18 +606,65 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] речення (sentence)
+- [ ] підмет (subject)
+- [ ] присудок (predicate)
+- [ ] додаток (object)
+- [ ] означення (attribute)
+- [ ] обставина (adverbial modifier)
+- [ ] корінь (root)
+- [ ] префікс (prefix)
+- [ ] суфікс (suffix)
+- [ ] закінчення (ending)
+- [ ] прочитайте (read — imperative)
+- [ ] запишіть (write down — imperative)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Будова слова: корінь, префікс, суфікс (~500 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

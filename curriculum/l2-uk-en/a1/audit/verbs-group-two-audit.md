@@ -1,7 +1,7 @@
 # Audit Report: M17 — verbs-group-two.md
 **Level:** A1 | **Module:** M17 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-11 00:54:21
+**Generated:** 2026-04-11 16:47:23
 
 ## Configuration
 **Type:** A1-grammar

@@ -1,32 +1,30 @@
-## Два питання — два види (~550 words total)
-- P1 (~120 words): [Introduction to the conceptual core of Ukrainian aspect. Explain that the choice between imperfective and perfective is not a grammatical formality but a choice between "rolling the camera" (process) and "taking a photo" (result). Introduce the two defining questions: Що ти робив? (What were you doing?) and Що ти зробив? (What did you finish/get done?).]
-- P2 (~100 words): [Dialogue: Оля and Тарас. Setting: Comparing their Sundays. Тарас: "Я читав (impf) книгу весь день." Оля: "О, а я прочитала (pf) цілий роман!" Тарас: "Я готував (impf) обід дві години." Оля: "Я теж приготувала (pf) смачну вечерю." This contrast sets the stage for the process vs. result distinction.]
-- P3 (~100 words): [Explaining Imperfective Past formation. Focus on the fact that the stems are the same as A1 past tense rules (stem + -в, -ла, -ло, -ли). Use common examples: робив, писав, вчив, читав. Emphasize that these verbs answer "Що робив?".]
-- P4 (~100 words): [Explaining Perfective Past formation through prefixation. Introduce the concept of aspectual pairs. Explain that adding a prefix like з-, по-, на-, or про- usually makes the verb perfective. Mention the "з-" vs "с-" rule (Кафе Птах) using "казати" -> "сказати" and "фотографувати" -> "сфотографувати". Use examples: зробив, написав, прочитав.]
-- <!-- INJECT_ACTIVITY: quiz-aspect-id --> [quiz, Focus: Given a sentence (e.g., "Він писав листа"), identify if the verb is imperfective or perfective and why (process vs result), 8 items]
+## Два питання — два види (~550 words)
+- P1 (~100 words): Dialogue setting the scene. Two friends, Оля and Тарас, comparing their Sunday. Оля: "Я читала весь день. А ти?" (process). Тарас: "Я прочитав роман!" (result). Оля: "Я готувала обід." Тарас: "А я приготував борщ."
+- P2 (~110 words): Introduce the core concept. The key question pair: "Що ти робив?" (What were you doing? — process) vs. "Що ти зробив?" (What did you get done? — result). Explain that this isn't just a grammar trick, but a fundamental difference in how Ukrainians think about and categorize actions.
+- P3 (~120 words): Imperfective past (недоконаний вид) as a rolling camera. "Я читав книгу" (I was reading). Explain that the focus is entirely on the action itself, its duration, or the fact that it happened, without implying it finished. Use "робив" and "писав" as examples.
+- P4 (~110 words): Perfective past (доконаний вид) as a photo of the result. "Я прочитав книгу" (I read/finished the book). The focus is on the completed outcome. Use "зробив" and "написав" as examples. Note that perfective verbs cannot have a present tense because a completed result cannot happen "right now".
+- P5 (~110 words): Briefly review gender and number agreement in the past tense, showing it applies identically to both aspects. Show the pattern: він робив / вона робила / воно робило / вони робили. Compare with perfective: він зробив / вона зробила / воно зробило / вони зробили. Show "читати / прочитати" as another example pair.
+- <!-- INJECT_ACTIVITY: quiz-aspect-identification --> [quiz, Given a sentence, identify whether the verb is imperfective or perfective and explain why, 8 items]
 
-## Коли вживати недоконаний вид (~550 words total)
-- P1 (~130 words): [Use Case 1: Duration and Process. Explain that we use imperfective when the action takes time and the focus is on that time spent. Key signal phrases: довго (long time), весь день (all day), три години (three hours). Example: "Я довго писав листа" (The writing was a journey, no mention of the finished envelope).]
-- P2 (~130 words): [Use Case 2: Repetition and Habits. Explain that repeated actions in the past are always imperfective, even if they were "completed" each time. Key signal words: завжди (always), часто (often), щодня (every day), зазвичай (usually). Example: "Вона щодня готувала сніданок" (A routine, not a single event).]
-- P3 (~120 words): [Use Case 3: Background actions (Scene-setting). Explain that when narrating, the "long" background action that was happening when something else occurred must be imperfective. Introduce "Коли..." (When...) constructions. Example: "Коли я снідав (impf background), подзвонив друг (pf interruptor)."]
-- <!-- INJECT_ACTIVITY: match-signal-words --> [match-up, Focus: Match signal words (довго, щодня, зазвичай, часто) with the correct aspect and a corresponding example sentence, 8 items]
+## Коли вживати недоконаний вид (~550 words)
+- P1 (~140 words): Discuss Process or Duration. Explain that when an action stretches over time, we use the imperfective past. Example: "Я довго писав листа" (I was writing a letter for a long time). Emphasize that the result (whether the letter was finished) is either unknown or unimportant in this context.
+- P2 (~140 words): Discuss Repetition or Habit. A repeated action is always imperfective, even if each individual instance was completed. Example: "Вона щодня готувала сніданок" (She made breakfast every day). It describes a routine rather than a single event.
+- P3 (~130 words): Discuss Background Action. Explain how the imperfective sets the scene for another (usually sudden) action. Example: "Коли я снідав, подзвонив друг" (While I was having breakfast, a friend called). The breakfast is the ongoing background.
+- P4 (~140 words): Introduce Signal Words for the imperfective past. Words like довго (for a long time), часто (often), завжди (always), щодня (every day), зазвичай (usually), раніше (earlier/used to), and коли (when, for background). Provide 2-3 sentence examples using these words, such as "Я часто читав казки" and "Він довго готував вечерю."
 
-## Коли вживати доконаний вид (~550 words total)
-- P1 (~130 words): [Use Case 1: Completed Result. Explain that perfective is used when the focus is on the endpoint or the physical existence of a result. Contrast with Section 2: "Я написав листа" (The letter is finished, ready to send). Use the "вивчити" example: "Вона вивчила слова" (She knows them now, the learning is done).]
-- P2 (~130 words): [Use Case 2: Sequence of Actions. Explain that in a story, a chain of completed steps follows the perfective aspect. Examples: "Він прийшов (pf), відкрив (pf) вікно і сів (pf) за стіл." Each verb is a "tick" on a checklist of actions.]
-- P3 (~120 words): [Use Case 3: Sudden or Single Events. Explain that sudden, punctual actions use the perfective. Key signal words: раптом (suddenly), одного разу (one time), нарешті (finally). Example: "Раптом хтось постукав (pf) у двері." Contrast "стукати" (knocking as a noise/process) vs "стукнути" (a single knock/result).]
-- <!-- INJECT_ACTIVITY: fill-in-aspect-choice --> [fill-in, Focus: Choose the correct aspect form (imperfective or perfective past) based on context clues like "нарешті" or "весь вечір", 8 items]
+## Коли вживати доконаний вид (~550 words)
+- P1 (~130 words): Discuss Completed Result. Explain that when an action reaches its endpoint and produces a visible or tangible result, we use the perfective past. Example: "Я написав листа" (I wrote the letter — it is done). 
+- P2 (~140 words): Discuss Single Event in a Sequence. Explain how perfective verbs move a story forward by marking completed steps. Example: "Я прийшов додому, пообідав і подзвонив мамі" (I came home, had lunch, and called Mom). Each verb is a distinct, finished action.
+- P3 (~140 words): Discuss Sudden Action. Explain that a single, punctual event, which often interrupts a background action, uses the perfective aspect. Example: "Раптом хтось постукав у двері" (Suddenly someone knocked on the door). 
+- P4 (~140 words): Introduce Signal Words for the perfective past. Words like вже (already), нарешті (finally), раптом (suddenly), одного разу (once), and вчора (yesterday - specifically when referring to a single completed event, not a process). Provide examples like "Я вже прочитав газету" and "Нарешті вона зробила домашнє завдання."
+- <!-- INJECT_ACTIVITY: match-up-signal-words --> [match-up, Match signal words (довго, раптом, щодня, нарешті) with the correct aspect and example sentence, 8 items]
 
-## Практика вибору виду (~550 words total)
-- P1 (~130 words): [Contrastive Analysis of Pairs. Deep dive into pairs that change meaning significantly: говорити (to speak/process) vs сказати (to say/result); брати (to take/process) vs взяти (to take/finish taking). Explain why "Він довго говорив" is correct but "Він довго сказав" is impossible.]
-- P2 (~130 words): [Mini-narrative Integration. Provide a paragraph that mixes both aspects to show how they work together to create a 3D story. Background: "Був вечір, я читав (impf) книгу." Event: "Нарешті я прочитав (pf) останню сторінку і закрив (pf) її."]
-- P3 (~120 words): [Common Mistakes and L1 Interference. Address why English speakers often misuse aspect. Explain that "I was doing" is not always imperfective and "I did" is not always perfective. Highlight the "attempt vs result" failure: "Я робив (attempted) завдання, але не зробив (didn't finish it)."]
-- <!-- INJECT_ACTIVITY: error-correction-aspect --> [error-correction, Focus: Fix sentences where the aspect is used incorrectly based on frequency markers or result focus, 6 items]
+## Практика вибору виду (~550 words)
+- P1 (~130 words): Analyze contrastive pairs in context. Compare "Він читав газету" (was reading, process) with "Він прочитав газету" (finished reading, result). Compare "Вона вчила слова" (was studying words, effort) with "Вона вивчила слова" (learned the words, success).
+- P2 (~140 words): Mini-narratives combining both aspects. Show how they work together in a single paragraph. Example: "Коли я готував вечерю (impf background), раптом погасло світло (pf sudden). Я знайшов свічку (pf sequence) і запалив її (pf sequence)."
+- P3 (~150 words): Common mistakes for English speakers. Highlight using imperfective when the result matters (e.g., saying *Я писав листа вчора when you mean you finished it; it sounds ambiguous without context, so use написав). Highlight using perfective for repeated actions (e.g., *Він щодня зробив вправи is grammatically wrong; it must be робив because of щодня).
+- P4 (~130 words): Decision flowchart. Provide a mental checklist for learners: 1. Is there a clear result or a single completed step? → Perfective (що зробити?). 2. Is it a process, a habit, or a background action? → Imperfective (що робити?). 
+- <!-- INJECT_ACTIVITY: fill-in-aspect-choice --> [fill-in, Choose the correct aspect form (imperfective or perfective past) to complete sentences based on context, 8 items]
+- <!-- INJECT_ACTIVITY: error-correction-aspect --> [error-correction, Fix incorrect verb aspect usage in sentences, 6 items]
 
-## Підсумок (~150 words)
-- P1 (~150 words): [Recap the core distinction. Reiterate the "Two Questions" strategy. Provide a bulleted self-check list:
-  1. Чи є результат? (Is there a result?) -> Доконаний (Perfective).
-  2. Це процес чи повторення? (Is it a process or repetition?) -> Недоконаний (Imperfective).
-  3. Які слова-маркери? (What are the signal words?) -> довго/щодня (Impf) vs вже/раптом (Pf).]
-
-Grand total: ~2350 words
+Grand total: ~2200 words

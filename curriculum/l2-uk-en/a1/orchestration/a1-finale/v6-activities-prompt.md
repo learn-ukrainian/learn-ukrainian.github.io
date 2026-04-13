@@ -1,4 +1,4 @@
-<!-- version: 1.1.0 | updated: 2026-03-31 -->
+<!-- version: 1.2.0 | updated: 2026-04-12 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -11,6 +11,35 @@ Generate an `activities/a1-finale.yaml` file for module **55: A1 Finale** (a1).
 
 ---
 
+## ⚠️ HARD COUNT TARGETS — READ TWICE
+
+These are the binding numerical contracts for THIS module. The audit will FAIL if you fall short.
+
+| Bucket | Min | Max | Notes |
+|---|---|---|---|
+| Total activities | 10 | 10+ | inline + workbook combined |
+| Inline (lesson tab) | 4 | 6 | one per `<!-- INJECT_ACTIVITY -->` marker, see below |
+| Workbook (Зошит tab) | 6 | 9 | extended practice |
+| Items per activity | 6 | — | each activity must have at least 6 items (unless its type cap is lower — see Activity Type Reference below) |
+
+**You MUST ship at least 4 inline activities AND at least 6 workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+
+**Type diversity is required.** The module (inline + workbook combined) MUST use at least **0** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level. (If `0` is `0`, the audit profile for this level does not enforce type diversity — but variety still produces a better lesson, so aim for 4+ types when the workbook allows it.)
+
+---
+
+## Allowed types for THIS level
+
+- **Inline (lesson) types:** image-to-letter, letter-grid, match-up, watch-and-repeat, quiz, true-false, fill-in, classify
+- **Inline priority (preferred):** image-to-letter, match-up, fill-in, quiz, watch-and-repeat
+- **Workbook types:** fill-in, match-up, group-sort, anagram, unjumble, quiz, true-false, classify, divide-words, count-syllables, pick-syllables, observe, phrase-table, odd-one-out
+- **Workbook priority (preferred):** fill-in, match-up, group-sort, anagram, unjumble
+- **FORBIDDEN at this level:** cloze, error-correction, mark-the-words, translate, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, highlight-morphemes, grammar-identify, select
+
+Pick from the allowed list. Lean heavily on the priority lists. Do not use any forbidden type — the build will reject it.
+
+---
+
 ## Inline vs Workbook Split
 
 Activities have two placement categories:
@@ -19,7 +48,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Rule of thumb:** inline = 2-3 quick checks after key teaching points. Workbook = 4-8 deeper practice exercises covering the full topic.
+**Rule of thumb:** inline = 4–6 quick checks after key teaching points. Workbook = 6–9 deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
 
 ---
 
@@ -27,10 +56,10 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: order-day-events -->`
-- `<!-- INJECT_ACTIVITY: match-survival-phrases -->`
+- `<!-- INJECT_ACTIVITY: match-up-survival-phrases -->`
 - `<!-- INJECT_ACTIVITY: fill-in-tenses -->`
-- `<!-- INJECT_ACTIVITY: a1-grammar-quiz -->`
+- `<!-- INJECT_ACTIVITY: order-chronological -->`
+- `<!-- INJECT_ACTIVITY: quiz-a1-review -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -61,7 +90,7 @@ The plan specifies these exercises to create:
   - Ввечері ми {ходили|ходимо|будемо ходити} в кіно.
   - Зараз Олена {замовляє|замовляла|замовить} борщ і салат.
   - Учора була гарна погода, і ми {гуляли|гуляємо|будемо гуляти} в парку.
-  - Я вже {готовий|початок|сувенір} до рівня А2! Вітаю!
+  - Я вже {готовий|готова|впевнений} до рівня А2! Вітаю!
   type: fill-in
 - focus: Match the situation to the correct A1 survival phrase.
   items:
@@ -136,142 +165,139 @@ required:
 ## Module Content (the prose the learner reads before exercises)
 
 <module_content>
-## Ранок: Початок дня у Києві
+## Ранок (Morning)
 
-You love to **подорожувати** (travel). This is the culmination of all your hard work. You are living a day in a Ukrainian city. The past tense forms immediately root us in the reality of completed actions. 
+Welcome to the culmination of your A1 journey. To test your skills, we will simulate a full day in Ukraine. You will use the past, present, and future tenses. You will navigate the city, order food, and meet people. This is where all the separate pieces you learned come together into natural communication. You are ready for this challenge.
 
-**Ти прокинувся в готелі.** (You woke up in a hotel, masculine).
-Or for feminine: **Ти прокинулася в готелі.** (You woke up in a hotel).
+Сьогодні чудовий день. Ти в місті Київ. Зранку ти прокинувся в готелі. Або ти прокинулася. Ти дивишся у вікно. Сьогодні дуже тепло і сонячно. Це ідеальна погода.
+> *Today is a wonderful day. You are in the city of Kyiv. In the morning you woke up in a hotel. Or you woke up (female). You look into the window. Today it is very warm and sunny. This is perfect weather.*
 
-You look out the window of your **готель** (hotel) and check the weather to start planning your day.
-- **Доброго ранку!** (Good morning!)
-- **Яка сьогодні погода?** (What is the weather today?)
-- **Сьогодні тепло і сонячно.** (Today it is warm and sunny.)
+This short text uses the past tense for a completed action (**прокинувся**, **прокинулася**) and the present tense for descriptions. The word **готель** (hotel) is in the locative case after **в** (in). It is time to start your day.
 
-Down in the cafe, you use your survival skills. **Ти снідаєш у кафе.** (You eat breakfast in a cafe).
+You are hungry, so you go to a local cafe for breakfast. Ordering food is a critical survival skill.
 
+> **Ти:** Доброго ранку! *(Good morning!)*
+> **Бариста:** Добрий день! Що ви будете? *(Good day! What will you have?)*
 > **Ти:** Будь ласка, каву з молоком і круасан. *(Please, coffee with milk and a croissant.)*
-> **Бариста:** Смачного! *(Enjoy your meal!)*
-> **Ти:** Скільки коштує? *(How much does it cost?)*
+> **Бариста:** Це все? *(Is that all?)*
+> **Ти:** Так. Скільки коштує? *(Yes. How much does it cost?)*
 > **Бариста:** Сто двадцять гривень. *(One hundred twenty hryvnias.)*
 > **Ти:** Дякую! До побачення! *(Thank you! Goodbye!)*
 
-:::tip
-The question **Скільки коштує?** (How much does it cost?) is arguably your most important A1 survival tool. Memorize it well—you will use it every single day for everything from ordering a quick snack to purchasing train tickets.
-:::
+Notice the use of **Доброго ранку** for morning greetings, while the barista replies with the standard **Добрий день**. You successfully ordered food using the word **круасан** (croissant) and handled money using numbers. The phrase **кава з молоком** uses the instrumental case for "with milk", which is a fixed chunk you learned earlier. When asking for the price, **скільки коштує** is your best friend.
 
-You step outside and need to find the city center.
+Now you are ready to explore. You need to find the main street, Khreshchatyk. You ask a local on the street.
 
 > **Ти:** Вибачте, як дістатися до Хрещатика? *(Excuse me, how to get to Khreshchatyk?)*
-> **Перехожий:** Їдьте на метро, станція Хрещатик. *(Go by metro, Khreshchatyk station.)*
+> **Перехожий:** Їдьте на метро. Станція Хрещатик. *(Go by metro. Station Khreshchatyk.)*
+> **Ти:** Дякую дуже! *(Thank you very much!)*
 
-You listen for the imperative **їдьте** (go/drive) to follow instructions. At the station, you handle the purchase. **Ти купуєш квиток.** (You buy a ticket).
-**Один квиток, будь ласка.** (One ticket, please). 
-Knowing how to use polite imperatives and direct requests makes navigating transit systems surprisingly manageable.
+Inside the station, you buy a **квиток** (ticket).
 
-Underground, you navigate visually. **В метро ти дивишся на карту.** (In the metro you look at a map). You use an impersonal chunk to state a need:
-**Тобі потрібна зелена лінія.** (You need the green line).
-You are connecting different moments in time using your grammar skills.
-**Зранку я снідав.** (In the morning I ate breakfast).
-**Зараз я їду в метро.** (Now I am riding the metro).
-This shift from the past to the present shows you are narrating your own life. You are ready to reach the heart of the city.
+> **Ти:** Один квиток, будь ласка. *(One ticket, please.)*
+> **Касир:** Вісім гривень. *(Eight hryvnias.)*
 
-<!-- INJECT_ACTIVITY: order-day-events -->
+You check the **карта** (map) on the wall. The metro system is large, but you know how to read the signs.
 
-## День: Прогулянка та нові друзі
+Тобі потрібна зелена лінія. Ти чекаєш на поїзд. Ти їдеш у центр.
+> *You need the green line. You wait for the train. You ride to the center.*
 
-You emerge from the underground into the bright sunlight. **Ти гуляєш по Хрещатику.** (You are walking along Khreshchatyk). 
-**Яка гарна вулиця!** (What a beautiful street!). 
-You see the sweeping architecture and point out landmarks.
-- **Ця будівля — мерія.** (This building is the city hall.)
-- **Цей майдан — Незалежності.** (This square is of Independence.)
+The word **лінія** (line) helps you navigate. The color adjective **зелена** (green) matches the feminine noun. You used a polite request: **Один квиток, будь ласка**. You are moving around the city like a local.
 
-Using demonstratives like **цей** (this, masculine) and **ця** (this, feminine) instantly makes your speech more precise. You can evaluate the entire scene around you. 
+<!-- INJECT_ACTIVITY: match-up-survival-phrases -->
 
-You spot a vibrant shop. **Ти бачиш великий магазин.** (You see a large store). **Ти заходиш і купуєш сувеніри.** (You enter and buy souvenirs).
+## День (Daytime)
+
+You arrive at Khreshchatyk. This is the heart of the city. You walk along the street and take in the sights. The architecture is beautiful.
+
+Ти гуляєш по Хрещатику. Яка гарна вулиця! Тут є старі будинки. Тут є нові кафе. Ти бачиш великий магазин. Ти заходиш у магазин. Ти купуєш сувеніри.
+> *You walk along Khreshchatyk. What a beautiful street! Here there are old buildings. Here there are new cafes. You see a large store. You enter the store. You buy souvenirs.*
+
+The phrase **по Хрещатику** means "along Khreshchatyk". You are looking for a **сувенір** (souvenir) for your family. Inside the store, you see traditional embroidered shirts. You need to use demonstrative pronouns like **цей** (this - masculine), **ця** (this - feminine), and **це** (this - neuter) to identify what you want.
 
 > **Ти:** Скільки коштує ця вишиванка? *(How much does this vyshyvanka cost?)*
 > **Продавець:** Тисяча двісті гривень. *(One thousand two hundred hryvnias.)*
 > **Ти:** Дорого! А ця? *(Expensive! And this one?)*
 > **Продавець:** Ця — вісімсот. *(This one is eight hundred.)*
-> **Ти:** Добре, я беру! *(Good, I'll take it!)*
+> **Ти:** Добре, я беру! *(Good, I will take it!)*
 
-:::note
-In Ukrainian, we simply say **сувенір** (souvenir). Do not say "пам'ятний сувенір" (memorable souvenir) as you might in English, because the word itself already implies that it is a memory of a place.
-:::
+Here, the pronoun **ця** perfectly matches the feminine noun **вишиванка**. The word **дорого** (expensive) is a useful adverb for shopping. You successfully contrasted two items without repeating the noun.
 
-In a quiet place, you strike up a conversation. **В кафе ти зустрічаєш Олену.** (In a cafe you meet Olena).
+After shopping, you are hungry again. You go to a cafe for lunch. You share a table and **зустрічаєш** (you meet) a local named Olena. The verb **зустріти** (to meet) is an important social word. It is time to introduce yourself and make small talk.
 
 > **Олена:** Привіт! Ти звідки? *(Hi! Where are you from?)*
-> **Ти:** Я з Канади. *(I am from Canada.)*
-> **Олена:** Що ти робиш тут? *(What are you doing here?)*
-> **Ти:** Я вивчаю українську! *(I am studying Ukrainian!)*
-
-You seamlessly use present tense verbs to explain your current state. You have moved past basic drills and are forming genuine connections with locals. Olena smiles at your impressive progress.
-
+> **Ти:** Я з Канади. А ти? *(I am from Canada. And you?)*
+> **Олена:** Я з Києва. Що ти робиш тут? *(I am from Kyiv. What are you doing here?)*
+> **Ти:** Я вивчаю українську! *(I study Ukrainian!)*
 > **Олена:** Як цікаво! Ходімо обідати! *(How interesting! Let's go have lunch!)*
 
-You use the imperative **Ходімо** (Let's go) to accept the invitation. You settle at a table and order a warm meal. **Ти замовляєш борщ і вареники.** (You order borscht and varenyky). **Олена замовляє салат.** (Olena orders a salad).
+You use the imperative form **ходімо** (let's go) to enthusiastically suggest an action. Now you order your food.
 
-> **Ти:** Смачно! *(Tasty!)*
-> **Олена:** Ти добре говориш українською! *(You speak Ukrainian well!)*
+Ти замовляєш борщ і вареники. Олена замовляє салат. Їжа дуже смачна. Олена сміється.
+> *You order borscht and varenyky. Olena orders a salad. The food is very tasty. Olena laughs.*
+
+> **Олена:** Смачно! Ти добре говориш українською! *(Tasty! You speak Ukrainian well!)*
 > **Ти:** Дякую! *(Thank you!)*
 
-<!-- INJECT_ACTIVITY: match-survival-phrases -->
+<!-- INJECT_ACTIVITY: fill-in-tenses -->
 
-## Вечір: Кіно та рефлексія
+## Вечір (Evening)
 
-The day is winding down, but the city is still alive. You switch to the compound future tense to make plans.
+Lunch was great, and you want to spend more time with your new friend. You need to make plans for the evening using the future tense. This requires coordination.
 
 > **Ти:** Що будемо робити ввечері? *(What will we do in the evening?)*
 > **Олена:** Ходімо в кіно! *(Let's go to the cinema!)*
 > **Ти:** Добре! О котрій? *(Good! At what time?)*
 > **Олена:** О сьомій. *(At seven.)*
 
-You use the critical structure of **о** plus the locative case to pinpoint the exact hour for your evening entertainment.
+The phrase **що будемо робити** uses the future tense. You are asking about plans. Asking **о котрій** (at what time) is essential for scheduling.
 
-You are sitting in the dark theater, listening to the actors. **Ви дивитеся український фільм.** (You watch a Ukrainian film). At this stage, integrated communication and getting the gist are much more important than grammatical perfection.
-- **Ти не все розумієш.** (You do not understand everything.)
-- **Але багато!** (But a lot!)
+You meet Olena at the cinema. You watch a local movie.
 
-You use linking words to describe the sequence of events to yourself later. **Спочатку ми купили квитки.** (First we bought tickets). **Потім ми дивилися фільм.** (Then we watched a film).
+Ви дивитеся український фільм. Актори говорять швидко. Ти не все розумієш. Але ти розумієш багато слів! Це дуже приємно. Після кіно ви йдете в ресторан.
+> *You watch a Ukrainian film. The actors speak fast. You do not understand everything. But you understand many words! This is very pleasant. After the cinema you go to a restaurant.*
 
-The movie ends, and you step back onto the street. **Після кіно ви йдете в ресторан.** (After the cinema you go to a restaurant). You reflect on the hours you have spent together. You express your feelings clearly using past and present forms. **Я дуже задоволений.** (I am very satisfied, masculine). **Я дуже задоволена.** (I am very satisfied, feminine). It feels incredible to navigate an entire evening exclusively in Ukrainian.
+Using linking words like **але** (but) and **після** (after) makes your story flow naturally. The word **фільм** (film) is a common noun you will hear often. The restaurant is located near the cinema, so you walk there together.
 
-Back in your room, you summarize your day. **Ввечері в готелі ти думаєш про свій день.** (In the evening in the hotel you think about your day).
-- **Сьогодні був чудовий день!** (Today was a wonderful day!)
-- **Зранку я снідав у кафе.** (In the morning I ate breakfast in a cafe. — or **снідала** for feminine)
-- **Потім я гуляв по місту.** (Then I walked around the city. — or **гуляла**)
-- **Я познайомився з Оленою.** (I got acquainted with Olena. — or **познайомилася**)
-- **Ввечері ми ходили в кіно і ресторан.** (In the evening we went to the cinema and a restaurant.)
+Ви йдете прямо. Потім ви йдете направо. Ресторан там. Це близько.
+> *You go straight. Then you go to the right. The restaurant is there. It is close.*
 
-Looking ahead, you make a plan:
-- **Завтра я буду їздити по Києву.** (Tomorrow I will ride around Kyiv.)
-- **Я хочу побачити Лавру!** (I want to see the Lavra!)
+The day is over. You are back in your room. You reflect on everything that happened, mixing tenses to tell a complete story.
 
-<!-- INJECT_ACTIVITY: fill-in-tenses -->
+Ввечері в готелі ти думаєш про свій день. Сьогодні був чудовий день! Зранку я снідав у кафе. Потім я гуляв по місту. Я познайомився з Оленою. Ввечері ми ходили в кіно. Потім ми були в ресторані.
+> *In the evening in the hotel you think about your day. Today was a wonderful day! In the morning I had breakfast in a cafe. Then I walked around the city. I got acquainted with Olena. In the evening we went to the cinema. Then we were in a restaurant.*
 
-## Підсумок: Ти готовий до А2!
+You can also think about tomorrow. The verb **подорожувати** (to travel) describes your ultimate goal.
 
-Take a moment to realize how far you have come. You can now greet people, introduce yourself, and proudly say where you are from (A1.1). You can describe your friends, your family, and everyday objects (A1.2). You talk easily about your daily habits, your likes, and your actions (A1.3). You know how to tell the time, discuss the weather, and name the days and months (A1.4). You can successfully navigate a major city, give directions, and use public transport (A1.5). You can order food in a restaurant, shop in a market, and handle money (A1.6). You know how to address people politely, give basic instructions, and connect ideas (A1.7). And finally, you can confidently talk about what happened in the past, handle emergencies, and make plans for the future (A1.8).
+Завтра я буду подорожувати. Я буду їздити по Києву. Я хочу побачити Лавру!
+> *Tomorrow I will travel. I will ride around Kyiv. I want to see the Lavra!*
 
-**Вітаю! Ти вивчив рівень А1.** (Congratulations! You learned the A1 level). Or for feminine: **Ти вивчила рівень А1.** (You learned the A1 level). You should be incredibly proud. But the journey continues! In A2, you will unlock the true engine of the language: **відмінки** (cases), which change word endings to show their role in a sentence. You will explore **доконаний і недоконаний вид** (perfective and imperfective aspect) to distinguish between ongoing and completed actions. You will learn the elegant synthetic future tense, like saying **прочитаю** (I will read) instead of just using **буду читати**. You will master subordinate clauses to build complex thoughts. **Це тільки початок!** (This is only the **початок** — beginning!). You can now truly live in a Ukrainian city.
+The **Лавра** (Lavra) is a famous historical monastery in Kyiv. In this reflection, you naturally transition from the past tense to describe what you did, into the future tense to describe what you will do.
 
-Before you turn the page, test yourself with these real-world questions:
-- Can you describe YOUR day in a Ukrainian city in 10 or more sentences?
-- Can you walk into a cafe and order a full meal without using any English?
-- Can you ask a stranger for directions to the metro and understand their answer?
+<!-- INJECT_ACTIVITY: order-chronological -->
 
-If you can do these things, you are **готовий** (ready). You have built a solid, unbreakable foundation. Celebrate this incredible milestone. 
+## Підсумок: ти готовий/готова!
 
-:::tip
-Celebrate your progress! The phrase **Ти вже можеш жити в українському місті** (You can already live in a Ukrainian city) is not an exaggeration. The A1 level gives you all the fundamental building blocks to survive, connect, and thrive.
-:::
+The course is ending. Imagine it is the last day of your A1 class. Two classmates talk about their progress.
 
-**До зустрічі на рівні А2!** (See you at the A2 level!)
+> **Студент 1:** Це наш останній урок. *(This is our last lesson.)*
+> **Студент 2:** Так. Я вивчив стільки! *(Yes. I learned so much!)*
+> **Студент 1:** Я теж. Я вже говорю українською. *(Me too. I already speak Ukrainian.)*
+> **Студент 2:** Давай писати повідомлення. Ось мій номер. *(Let's write messages. Here is my number.)*
+> **Студент 1:** Звичайно! До зустрічі на А2! *(Of course! See you at A2!)*
 
-<!-- INJECT_ACTIVITY: a1-grammar-quiz -->
+Look back at your journey. You started with zero words. Now, you can greet people, introduce yourself, and say where you are from. You can describe people, objects, and your family. You can talk about your daily habits and what you like to do. You can tell the time, discuss the weather, and name the days of the week. You know how to navigate a city, give directions, and use public transport. You can confidently order food in a restaurant, shop for clothes, and handle Ukrainian money. You can make polite requests and connect your ideas. You can even narrate a story about the past and make plans for the future. You have built a massive linguistic foundation.
 
+What is next? The A2 level awaits. In A2, you will learn the grammatical cases (**відмінки**). You will learn verb aspect, specifically the difference between imperfective and perfective verbs (**доконаний/недоконаний вид**), which changes how you talk about completed actions. You will learn the synthetic future tense, like the word **прочитаю** (I will read). These tools will make your sentences richer and more complex. But right now, you must celebrate your hard work.
+
+Ти вивчив рівень А1! Вітаю! Ти вже можеш жити в українському місті. Ти готовий до нових тем. Це тільки початок!
+> *You learned level A1! Congratulations! You already can live in a Ukrainian city. You are ready for new topics. This is only the beginning!*
+
+The word **вітаю** is a fixed chunk used for congratulations, and **початок** (beginning) means there is much more to come. You are now **готовий** (ready) or **готова** (ready) to move forward.
+
+Your final self-check task: Can you describe your day in a Ukrainian city in ten or more sentences? Try it now.
+
+<!-- INJECT_ACTIVITY: quiz-a1-review -->
 </module_content>
 
 ---
@@ -285,48 +311,68 @@ version: "1.0"
 module: a1-finale
 level: a1
 
+# NOTE — these are SHAPE examples. The real targets are at the top of this prompt
+# (10 total / 4–6 inline / 6–9 workbook,
+# 6+ items per activity). The shapes below are TRUNCATED for readability;
+# YOUR output MUST hit those minimums.
+
 inline:
   - id: marker-id-here        # MUST match an <!-- INJECT_ACTIVITY: ... --> marker
     type: quiz                 # activity type
     instruction: "Оберіть правильний варіант"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - question: "_____ стіл"
-        options: ["мій", "моя", "моє"]
+        options: ["мій", "моя", "моє", "мої"]
         correct: 0             # 0-based index
+      - question: "Це ____ книга."
+        options: ["мій", "моя", "моє", "мої"]
+        correct: 1
+      # ... add at least 6 items total — never stop at 1-2
 
   - id: another-marker-id
     type: fill-in
     instruction: "Вставте правильне слово"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - sentence: "Це ____ кімната."
         answer: "моя"
         options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ вікно."
+        answer: "моє"
+        options: ["мій", "моя", "моє"]
+      # ... ≥ 6 items total
 
 workbook:
-  - type: match-up
+  - id: match-up-vocab
+    type: match-up
     instruction: "З'єднайте пари"
-    pairs:
+    pairs:                     # ← real output: ≥ 6 pairs
       - left: "стіл"
         right: "він"
       - left: "книга"
         right: "вона"
       - left: "вікно"
         right: "воно"
+      # ... ≥ 6 pairs total
 
-  - type: group-sort
+  - id: group-sort-gender
+    type: group-sort
     instruction: "Розподіліть слова за категоріями"
     groups:
-      - label: "Category A"
-        items: ["word1", "word2"]
-      - label: "Category B"
-        items: ["word3", "word4"]
+      - label: "Чоловічий рід"
+        items: ["стіл", "олівець", "будинок"]   # ≥ 3 items per group
+      - label: "Жіночий рід"
+        items: ["книга", "ручка", "школа"]
+      - label: "Середній рід"
+        items: ["вікно", "море", "молоко"]
 
-  - type: true-false
+  - id: true-false-grammar
+    type: true-false
     instruction: "Правда чи ні?"
-    items:
-      - statement: "Statement here"
-        correct: true
-        explanation: "Why it's true"
+    items:                     # ← real output: ≥ 6 items
+      - statement: "«Книга» — це чоловічий рід."
+        correct: false
+        explanation: "Книга закінчується на -а, отже жіночий рід."
+      # ... ≥ 6 items total
 
   - type: error-correction
     instruction: "Виправте помилку"
@@ -397,7 +443,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -473,10 +519,15 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 ## Quality Rules
 
-**ITEM COUNT MINIMUMS (non-negotiable):**
-- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
-- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
-- If you can't think of enough items, add more examples from the module's vocabulary and content.
+**ACTIVITY COUNT MINIMUMS (non-negotiable, audit-enforced):**
+- **Total: 10 activities.** Inline: 4–6. Workbook: 6–9. The audit gate FAILS the module if you ship fewer.
+- **Type diversity: workbook MUST cover ≥5 distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
+- **Match the inline markers exactly.** Every `<!-- INJECT_ACTIVITY: id -->` marker in the prose needs a matching inline activity with that exact id. Skipping markers means the lesson tab is broken.
+
+**ITEM COUNT MINIMUMS (non-negotiable, per-activity):**
+- **Default minimum: 6 items per activity.** Quiz, fill-in, match-up, true-false, anagram, error-correction, translate, cloze, mark-the-words, divide-words, count-syllables, odd-one-out, group-sort categories: all ≥ 6.
+- **Lower minimums for specific types only:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items, essay-response/critical-analysis = 1 prompt.
+- If you can't think of enough items, add more examples from the module's vocabulary and content. NEVER ship a 1-item or 2-item activity unless its type cap explicitly allows it.
 - **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
 - **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
@@ -583,6 +634,27 @@ IMPORTANT: After using tools, output your COMPLETE module content as plain text.
 1. Run `verify_words` on all Ukrainian words in your exercises — every word must exist in VESUM
 2. Run `query_cefr_level` on any word you're unsure about — it must be a1-appropriate
 3. For fill-in answers and distractors, verify the exact form (case, number, gender) with `verify_lemma`
+
+---
+
+## ⚠️ MANDATORY FINAL CHECKLIST — verify before emitting YAML
+
+Walk through this checklist explicitly before you start emitting. If ANY box is unchecked, fix it FIRST.
+
+- [ ] My output has **at least 4** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
+- [ ] My output has **at least 6** workbook activities.
+- [ ] **Total ≥ 10.**
+- [ ] **Every** activity has **at least 6** items, pairs, or statements (except types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3, essay-response=1).
+- [ ] The module (inline + workbook combined) uses **at least 0 distinct activity types** (or 4+ when 0 = 0 and the workbook size allows it). I am NOT shipping a wall of quizzes.
+- [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
+- [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
+- [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+- [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+- [ ] My inline count is between 4 and 6. I did NOT create more injection markers than 6.
+- [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
+- [ ] At B1+, all instructions are in Ukrainian (no English fallback).
+
+If you cannot tick all of these, REGENERATE the activities BEFORE outputting. Shipping under-spec means the build rejects you and the heal loop has to redo your work — wasting compute.
 
 ---
 

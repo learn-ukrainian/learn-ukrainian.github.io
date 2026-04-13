@@ -1,34 +1,31 @@
-## Два майбутніх часи (Two Futures in Ukrainian) (~450 words)
-- P1 (~100 words): [Introduction to the concept of two future tenses in Ukrainian based on verbal aspect. Contrast with the single English "will + verb" structure, explaining that in Ukrainian, you must choose between a "completed result" (perfective) and an "ongoing process" (imperfective).]
-- P2 (~120 words): [Definition and logic of the Perfective (Simple) Future. Explain that perfective verbs have no present tense because a "completed action" cannot be happening "now," so their present-like forms automatically shift meaning to the future. Use the example: я пишу (I write - present) vs. я напишу (I will write - future).]
-- P3 (~130 words): [Definition and logic of the Imperfective (Compound) Future. Explain the formation using the auxiliary verb "бути" (to be) in its future forms + the imperfective infinitive. Use the example: я буду писати (I will be writing/I will write - process).]
-- P4 (~100 words): [High-level comparison summary. Introduce the core distinction: Result/Completion (Simple) vs. Duration/Repetition (Compound). Mention that choosing the wrong one can change the meaning of your promise or plan.]
+## Два майбутніх часи (~450 words)
+- P1 (~100 words): Introduce the context with a lively setting: a group of friends gathering on New Year's Eve to share their resolutions and plans for the upcoming year.
+- P2 (~120 words): Dialogue: The friends share their goals using the perfective future. "Я напишу книгу!" (I will write a book), "Я вивчу іспанську!" (I will learn Spanish), "Він прочитає 50 книг!", "Вона складе іспит!" (She will pass the exam). Highlight that Ukrainian uses "складати/скласти іспит", not the Russianism "здавати".
+- P3 (~120 words): Explain that while English has one primary way to talk about the future ("will" + verb), Ukrainian has two distinct future tenses. The choice between them is not about formality or style, but entirely about aspect (вид дієслова).
+- P4 (~110 words): Briefly define the two types: the Perfective future (простий майбутній час) which uses conjugated present-tense forms for a future meaning (скажу, напишу, зроблю), and the Imperfective future (складений майбутній час) which uses the auxiliary verb "буду" (буду говорити, буду читати).
+- <!-- INJECT_ACTIVITY: group-sort-future --> [group-sort, Sort verb forms into two groups — synthetic future (perfective) and analytical future (imperfective), 8 items]
 
-## Простий майбутній час (Perfective/Synthetic Future) (~550 words)
-- P1 (~120 words): [Detailed formation of the 1st Conjugation perfective future. Show how prefixes attach to known present-tense stems. Provide the full paradigm for "прочитати" (я прочитаю, ти прочитаєш, він прочитає, ми прочитаємо, ви прочитаєте, вони прочитають).]
-- P2 (~130 words): [Detailed formation of the 2nd Conjugation perfective future, emphasizing consonant shifts in the 1st person singular. Provide the paradigm for "зробити" (я зроблю) and "побачити" (я побачу), explaining the д -> дж and б -> бл shifts.]
-- P3 (~100 words): [Focus on communication and transaction verbs essential for A2 survival. List and conjugate high-frequency forms: скажу (I will say), куплю (I will buy), подзвоню (I will call), надішлю (I will send).]
-- P4 (~100 words): [Special focus on prefixed motion verbs for stating travel plans. Explain the "по-" prefix for starting a trip and "при-" for arrival. Examples: поїду (I will leave/go by vehicle), піду (I will go by foot), приїду (I will arrive).]
-- P5 (~100 words): [Dialogue: "Concrete Promises." Friends planning a dinner. Speaker A: "Я куплю вино і фрукти." Speaker B: "Добре, а я зроблю салат і замовлю піцу. Потім ми подивимося фільм."]
-- <!-- INJECT_ACTIVITY: group-sort-future-forms --> [group-sort, Sort verb forms into synthetic future (perfective) vs. present tense (imperfective), 8 items]
+## Простий майбутній час (~550 words)
+- P1 (~100 words): Detail the formation of the simple/synthetic future (простий майбутній час). Explain the core concept: perfective verbs cannot describe an action happening right now. Therefore, when you conjugate a perfective verb using standard present-tense endings, it automatically points to a completed action in the future.
+- P2 (~120 words): Present the paradigm for 1st conjugation perfective verbs. Show how "прочитати" conjugates: прочитаю, прочитаєш, прочитає, прочитаємо, прочитаєте, прочитають. Provide another example like "поїхати" (поїду, поїдеш...).
+- P3 (~120 words): Present the paradigm for 2nd conjugation perfective verbs, reminding learners about consonant mutations in the first person singular (1-ша особа однини). Show "побачити" (побачу, ч < т) and "зробити" (зроблю, л < б+л).
+- P4 (~100 words): Explain when to use the simple future: for a single, completed action in the future that will have a clear result. Contrast the meaning: "Я напишу листа" means "I will write the letter (and finish it)", and "Він прочитає книгу" means "He will read the book (all of it)".
+- P5 (~110 words): Introduce highly frequent perfective verbs used in daily plans and promises: подзвоню (I will call), куплю (I will buy), приїду (I will arrive), скажу (I will say/tell). Provide short example sentences for each to anchor them in daily life.
 
-## Складений майбутній час (Imperfective/Analytical Future) (~550 words)
-- P1 (~130 words): [Formation of the auxiliary "бути" in the future tense. Provide the full paradigm: я буду, ти будеш, він буде, ми будемо, ви будете, вони будуть. Emphasize that the following verb MUST be an imperfective infinitive (e.g., буду працювати).]
-- P2 (~120 words): [Usage for duration and processes. Explain how to describe an action that will take time or occupy a specific period. Example: "Завтра я буду працювати весь день" (Tomorrow I will be working all day) vs. "Я буду читати книгу ввечері."]
-- P3 (~100 words): [Usage for repeated or habitual future actions. Explain that if an action happens "every day" or "often" in the future, the compound form is required. Example: "Я буду дзвонити тобі щодня" (I will be calling you every day).]
-- P4 (~100 words): [Critical error warning: The "Forbidden Hybrid." Explain that "буду + perfective infinitive" (like "буду написати") is a major grammar error. Contrast the correct "напишу" (result) and "буду писати" (process).]
-- P5 (~100 words): [Dialogue: "New Year's Resolutions." Friends discussing habits. Speaker A: "Що ти будеш робити в новому році?" Speaker B: "Я буду щодня бігати в парку і буду вчити українську кожну суботу."]
-- <!-- INJECT_ACTIVITY: fill-in-compound-future --> [fill-in, Complete sentences by conjugating 'бути' + provided imperfective infinitive, 8 items]
+## Складений майбутній час (~550 words)
+- P1 (~100 words): Detail the formation of the compound/analytical future (складений майбутній час). Explain that imperfective verbs need a helper to express future meaning, so we combine the future tense of the verb "бути" with the imperfective infinitive.
+- P2 (~120 words): Provide the full conjugation of the auxiliary verb "бути": я буду, ти будеш, він/вона буде, ми будемо, ви будете, вони будуть. Emphasize that the main verb remains in the infinitive and does not change.
+- P3 (~110 words): Provide clear examples of this structure in action: "Я буду читати" (I will be reading), "Ми будемо працювати" (We will be working), "Вони будуть вивчати українську" (They will be studying Ukrainian).
+- P4 (~120 words): Explain when to use the compound future: for ongoing, repeated, or general actions in the future where the duration or process is important, not the completion. Give examples: "Завтра я буду працювати весь день" (Tomorrow I will be working all day) and "Влітку вони будуть подорожувати" (In summer they will be traveling).
+- P5 (~100 words): Draw a direct contrast between the two formations using the same root: "Я напишу листа" (I will write it — done) versus "Я буду писати листа" (I will be writing it — focusing on the process, maybe not finishing it).
+- <!-- INJECT_ACTIVITY: unjumble-future-sentences --> [unjumble, Reorder words to form correct future tense sentences using both synthetic (напишу) and analytical (буду писати) forms, 6 items]
 
-## Як обрати вид для майбутнього (Choosing Aspect for the Future) (~450 words)
-- P1 (~120 words): [The "Result vs. Process" Decision Matrix. Provide side-by-side contrasts: "Я прочитаю цю статтю" (I will finish reading it) vs. "Я буду читати цю статтю" (I will be in the process of reading it). Use "напишу" vs "буду писати" as well.]
-- P2 (~110 words): [Time markers as aspect triggers. List adverbs that favor perfective (скоро, враз, за хвилину) vs. those that favor imperfective (довго, цілий вечір, часто, завжди).]
-- P3 (~120 words): [Future tenses in conditional "якщо" (if) and "коли" (when) sentences. Explain that unlike English, Ukrainian uses future tense in both clauses. Example: "Якщо ти прийдеш (pf), ми будемо пити (impf) чай."]
-- P4 (~100 words): [Final integration dialogue: "Weekend Coordination." A: "Що ти будеш робити завтра?" B: "Вранці я буду прибирати квартиру, а о другій годині я подзвоню тобі, і ми підемо в кіно."]
-- <!-- INJECT_ACTIVITY: quiz-aspect-choice --> [quiz, Choose between synthetic and analytical future based on situational context, 8 items]
-- <!-- INJECT_ACTIVITY: unjumble-future-sentences --> [unjumble, Reorder words to form correct future tense sentences (both types), 6 items]
+## Як обрати вид для майбутнього (~450 words)
+- P1 (~120 words): Provide a practical decision guide for learners. Ask the key questions: Will the action be completed with a final result? If yes, choose Perfective (synthetic). Will the action be ongoing, repeated, or is the duration the main point? If yes, choose Imperfective (analytical).
+- P2 (~130 words): Show contrastive pairs in realistic contexts. Compare a single action vs. a repeated habit: "Я подзвоню тобі ввечері" (I will call you tonight — a single call) versus "Я буду дзвонити тобі щодня" (I will call you every day — repeated). Compare result vs. process: "Він прочитає статтю" (He will finish reading the article) versus "Він буде читати статтю" (He will spend time reading the article).
+- P3 (~100 words): Discuss how these choices manifest in daily conversations like making plans, promises, or predictions. Introduce the classic question "Що ти будеш робити завтра?" (focusing on the general plan/process) and the mixed-aspect reply: "Я прибиратиму квартиру, а потім приготую вечерю" (I will be cleaning the apartment, and then I will cook dinner). Briefly note that "прибиратиму" is a stylish variant of "буду прибирати".
+- P4 (~100 words): Wrap up with a short summary emphasizing that choosing the correct future tense form is about expressing *how* you view the action unfolding, giving learners more expressive power in Ukrainian than they have in English.
+- <!-- INJECT_ACTIVITY: fill-in-future-aspect --> [fill-in, Complete sentences with the correct future form (synthetic perfective or analytical imperfective) based on context, 8 items]
+- <!-- INJECT_ACTIVITY: quiz-aspect-choice --> [quiz, Identify whether a future sentence uses synthetic or analytical future and explain the aspect choice, 8 items]
 
-## Підсумок (~150 words)
-- P1 (~150 words): [Bullet-pointed summary of the two future types. 1) Simple/Synthetic: Perfective verb + present endings = Result. 2) Compound/Analytical: Буду + Imperfective infinitive = Process. Include 3 self-check questions: How do you say "I will call" as a single act? Why is "буду написати" wrong? Which form do you use with "щодня"?]
-
-Grand total: ~2150 words
+Grand total: ~2000 words

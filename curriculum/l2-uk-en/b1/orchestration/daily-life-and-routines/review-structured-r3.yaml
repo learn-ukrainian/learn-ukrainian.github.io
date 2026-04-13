@@ -1,0 +1,53 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: The module strictly follows the communicative objectives and sequence
+    of the plan. However, a few required vocabulary items (обідати, вечеряти, пошук
+    роботи, займатися спортом) were omitted from the t
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: 'Contains a critical grammatical error with time structures: "За чверть
+    до восьмої я беру сумку" mixes two separate ways to tell time ("за чверть восьма"
+    and "чверть до восьмої"). Contains a stylistic '
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Adheres excellently to the PPP methodology. Grammatical properties like
+    reflexivity and verbal prefixes are clearly contextualized with rich examples
+    before dialogue introduction.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 8
+  evidence: Uses most vocabulary efficiently within natural sentences, but deducts
+    points for entirely missing the verbs "обідати" / "вечеряти", phrase "пошук роботи",
+    verb phrase "займатися (спортом)", and the f
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: Activities match the plan's targeted learning focuses and locations, but
+    6 markers were placed instead of the expected 5, causing a duplicate mismatch.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Excellent "vlogger" situational framing creates high engagement. The tone
+    is encouraging, non-robotic, and fits a B1 language learner context perfectly.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean Markdown flow. All headings are correct. With 4995 words, it exceeds
+    the target word count smoothly.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Explains cultural shifts correctly (egalitarian household roles, modern
+    breakfast habits) and actively warns against Surzhyk or Russicisms ("стирати",
+    "пилесос", "відпочиватися").
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Outstanding, natural multi-speaker dialogues that incorporate polite forms,
+    conditions, and situational verbs authentically.
+findings: []

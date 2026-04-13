@@ -133,134 +133,153 @@ references:
 <generated_module_content>
 ## Діалоги (Dialogues)
 
-A real-world navigation scenario often requires linking multiple facts together, such as locations and times. In the following phone conversation, a guest is trying to find an apartment and coordinate a meeting time. The bolded words act as structural links between the speaker's actions and the environment.
+At first, learners often use short separate sentences: "I am here. The cafe is there. I will come." In this module, you will learn how Ukrainian links those ideas with **що**, **де**, and **коли** so you can talk about what you know, where things are, and when something happens.
 
-> **Гість:** Алло! Я зараз на площі. Ти знаєш, **де** нове кафе? *(Hello! I am on the square now. Do you know where the new cafe is?)*
-> **Господар:** Так, я знаю, **де** воно. **Коли** побачиш **фонтан** (fountain), поверни ліворуч. *(Yes, I know where it is. When you see the fountain, turn left.)*
-> **Гість:** Добре. Я йду. А **де** побачиш **парк** (park), зупинись? *(Okay. I am walking. And where you see the park, stop?)*
-> **Господар:** Саме так. Великий **будинок** (building), **що** стоїть біля дерева — це кафе. Скажи, **коли** ти вільний. *(Exactly. The big building that stands near the tree is the cafe. Tell me when you are free.)*
-> **Гість:** Я вільний, **коли** закінчу роботу. Це сьогодні ввечері. *(I am free when I finish work. That is tonight.)*
-> **Господар:** Добре. Я думаю, **що** о шостій буде добре. *(Good. I think that at six will be good.)*
-> **Гість:** Так, я теж думаю, **що** це гарний час. До зустрічі! *(Yes, I also think that this is a good time. See you!)*
+Let's look at our first conversation. Two friends are planning to meet and deciding on a location and time. Notice how they link their sentences.
 
-:::note
-The imperative verbs **поверни** (turn) and **зупинись** (stop) seen in the dialogue are used for giving direct navigation instructions. They form the core action in the main clause, waiting for the subordinate clause to provide the condition (e.g., **коли побачиш...**).
-:::
+> **Господар:** Привіт! Ти **знаєш** (know), де нове кафе?
+> *(Hi! Do you know where the new cafe is?)*
+> **Гість:** Так, я **знаю**, де воно.
+> *(Yes, I know where it is.)*
+> **Господар:** Скажи, **коли** (when) ти вільний.
+> *(Tell me when you are free.)*
+> **Гість:** Я вільний, коли закінчу роботу.
+> *(I am free when I finish work.)*
+> **Господар:** Добре. Я **думаю** (think), **що** (that) о шостій буде добре.
+> *(Good. I think that at six will be good.)*
+> **Гість:** Так, я теж **думаю**, що це гарний час.
+> *(Yes, I also think that this is a good time.)*
 
-When discussing other people and sharing information, complex sentences allow speakers to embed one fact inside another. The short bolded words connect the act of knowing or saying with the actual information being shared.
+Notice exactly how the speakers connect their ideas together. The small words **де** (where), **коли** (when), and **що** (that) act as crucial links between a main thought and a dependent thought. Without these connecting words, the conversation would feel completely disconnected and choppy. They act as bridges, turning simple, brief statements into a naturally flowing dialogue.
 
-> **Максим:** Привіт! Ти знаєш, **що** Олена вже в Києві? *(Hi! Do you know that Olena is already in Kyiv?)*
-> **Тарас:** Ні, я не знав! А де вона живе? *(No, I didn't know! And where does she live?)*
-> **Максим:** Я не знаю, **де** саме. Але я знаю, **що** біля центру. *(I don't know exactly where. But I know that it is near the center.)*
-> **Тарас:** Скажи їй, **коли** побачиш, **що** я хочу зустрітися. *(Tell her, when you see her, that I want to meet.)*
-> **Максим:** Добре, скажу, **коли** побачу. *(Okay, I will tell her when I see her.)*
+Now, let's look at a second conversation. Here, someone is asking for directions or updates about a friend. Pay attention to how the information is layered.
 
-In these dialogues, the bolded words **що**, **де**, and **коли** are not asking questions, but rather acting as bridges. They are "connector" words that glue two separate pieces of information together into a single, flowing thought. Instead of stating two separate facts like "I know" and "Where does she live?", the speaker combines them using **де**: **Я знаю, де вона живе**. This grammatical structure elevates speech from basic phrases to natural, connected communication. A specific punctuation mark appears before every single one of these connector words. The comma is an absolute requirement here, establishing a structural boundary between the two connected actions.
+> **Анна:** Ти **знаєш**, що Олена вже в Києві?
+> *(Do you know that Olena is already in Kyiv?)*
+> **Максим:** Ні, я не знав! А де вона живе?
+> *(No, I did not know! And where does she live?)*
+> **Анна:** Я не **знаю**, де саме. Але я **знаю**, що біля центру.
+> *(I don't know exactly where. But I know that it is near the center.)*
+> **Максим:** Скажи їй, коли **побачиш** (see), що я хочу зустрітися.
+> *(Tell her, when you see her, that I want to meet.)*
+> **Анна:** Добре, **скажу** (will say), коли побачу.
+> *(Good, I will tell her when I see her.)*
+
+This exchange shows how one sentence can contain more than one clause linked by **що**, **де**, and **коли**.
+
+Here is a short example of explaining to a lost friend how to find your apartment, using these exact connections:
+
+> **Господар:** Коли побачиш фонтан, поверни ліворуч.
+> *(When you see the fountain, turn left.)*
+> **Гість:** Добре, я шукаю фонтан.
+> *(Good, I am looking for the fountain.)*
+> **Господар:** Де побачиш парк, зупинись. Будинок, що стоїть біля дерева, мій.
+> *(Where you see the park, stop. The building that stands near the tree is mine.)*
 
 ## Складне речення (Complex Sentences)
 
-In Module 44, you learned how to connect two equal ideas using simple words like **і** (and) or **але** (but). A sentence like **Я читаю, і він пише** (I am reading, and he is writing) contains two independent actions carrying equal weight. Now, the focus shifts to connecting a main idea with a dependent idea. In the sentence **Я знаю, що він тут** (I know that he is here), the phrase **Я знаю** operates as the core statement—it is the main clause. The second part, **що він тут**, provides supporting information and depends entirely on the first part to make sense. Ukrainian textbooks for the fifth grade call this hierarchical structure a **складнопідрядне речення** (a complex sentence with a subordinate clause).
+Let's explain the concept of the complex **речення** (sentence). In Module 44, you successfully learned how to connect EQUAL ideas using coordinating words. You built balanced sentences like "Я читаю, і він пише" (I read, and he writes). Now, we are stepping up to a completely new level: connecting a MAIN idea with a DEPENDENT idea. In Ukrainian grammar, this specific structure is called a складнопідрядне речення (complex sentence with a subordinate clause). This is the same school term used in Grade 5 textbooks such as Заболотний, and it aligns with State Standard 2024 §4.3.2 on basic complex sentences.
+ You have a **головне** (main) clause that can stand totally alone, and a dependent part that relies heavily on the main one to make full sense.
 
-Ukrainian punctuation enforces a strict rule for these complex sentences. You must always place a comma before **що**, **де**, and **коли** when they act as conjunctions linking two clauses. This creates a significant contrast with English, where a sentence like "I think that it is correct" requires no punctuation boundary. In Ukrainian, that comma is a mandatory visual pause indicating the start of a dependent clause.
+Let's break down the structure. The grammatical formula is incredibly logical and consistent: Main clause + comma + **що** / **де** / **коли** + subordinate clause. The first part of the sentence sets up the action or the central thought, and the second part delivers the specific, supporting details. Look at these concrete, clear examples to see the pattern in action:
 
-*   **Я думаю, що це правильно.** (I think that this is correct.)
-*   **Він не знає, де магазин.** (He does not know where the store is.)
-*   **Зателефонуй, коли прийдеш.** (Call when you arrive.)
+- Я **знаю**, що він тут. *(I know that he's here.)*
+- Я не **знаю**, де він живе. *(I don't know where he lives.)*
+- Скажи мені, коли ти прийдеш. *(Tell me when you'll come.)*
+- Вона **думає**, що це правда. *(She thinks that this is true.)*
+- Ми **бачимо** (see), де стоїть машина. *(We see where the car stands.)*
 
-Every single example requires the comma before the conjunction.
+Now we must discuss the core punctuation rule. In Ukrainian, you normally place a comma between the main clause and the subordinate clause introduced by **що**, **де**, or **коли**. If the subordinate clause comes first, the comma comes after that clause: **Коли я прийду, ми поговоримо.**
 
-:::caution
-English speakers often forget the comma before **що** because "I think that..." has no punctuation in English. In Ukrainian, writing **Я думаю що це так** without a comma is a grammatical error. Always insert the pause.
-:::
+Let's reinforce this essential comma rule with more examples. Read these sentences carefully and pay close attention to the punctuation marks separating the clauses:
 
-Certain actions naturally demand a subordinate clause to finish their thought. These "trigger verbs" describe perception, thought, and communication. The most common examples are **знати** (to know), **думати** (to think), **казати** (to say/tell), **сказати** (to say — perfective), **бачити** (to see), **чути** (to hear), and **розуміти** (to understand). When a speaker uses these verbs, they usually need **що**, **де**, or **коли** to complete the logical sequence. If someone says "I see," the listener immediately waits for the rest of the information. A connected clause satisfies that grammatical expectation.
+- Я **думаю**, що це правильно. *(comma before що)*
+- Він не **знає**, де магазин. *(comma before де)*
+- Зателефонуй, коли прийдеш. *(comma before коли)*
+- Я **розумію** (understand), що ти втомився. *(comma before що)*
+- Вони **чують** (hear), коли грає музика. *(comma before коли)*
 
-*   **Я бачу, що ти працюєш.** (I see that you are working.)
-*   **Ти чуєш, де грає музика?** (Do you hear where the music is playing?)
-*   **Він розуміє, коли треба йти.** (He understands when it is necessary to go.)
-*   **Ми знаємо, що це важливо.** (We know that this is important.)
-*   **Вона каже, що вона вдома.** (She says that she is at home.)
+See how the commas smoothly structure this paragraph about a park:
 
-<!-- INJECT_ACTIVITY: fill-in-conjunction-choice -->
+> Я живу у великому місті. Я **знаю**, де тут гарний парк. Мій брат **каже** (says), що там дуже тихо. Ми гуляємо там, коли маємо вільний час. Я **думаю**, що це найкраще місце.
+> *I live in a large city. I know where there is a beautiful park here. My brother says that it is very quiet there. We walk there when we have free time. I think that this is the best place.*
 
-<!-- INJECT_ACTIVITY: quiz-comma-placement -->
+<!-- INJECT_ACTIVITY: fill-in-conjunctions -->
 
 ## Що, де, коли — двоє облич (Two Faces)
 
-The words **що**, **де**, and **коли** serve two entirely different functions depending on their placement in a sentence. As question words, they appear at the beginning of a sentence to request information. You already know this role from Module 20. When positioned at the start, they function as interrogative markers and demand an answer.
+These three extremely useful words have two distinct jobs, or "Two Faces" (двоє облич), in the Ukrainian language. Job 1 is acting as simple Question words. You already learned this specific function back in Module 20. We use them right at the beginning of a sentence to ask for specific information.
 
-*   **Що це на столі?** (What is this on the table?)
-*   **Де ти зараз живеш?** (Where do you live now?)
-*   **Коли ти прийдеш додому?** (When will you arrive home?)
-*   **Що він робить там?** (What is he doing there?)
-*   **Де працює твій брат?** (Where does your brother work?)
+- **Що** це? *(What is this?)*
+- **Де** ти? *(Where are you?)*
+- **Коли** ти прийдеш? *(When will you come?)*
 
-In this primary role, their function is to open a conversation and extract specific details from the listener.
+Job 2 is acting as words that introduce a subordinate clause. This is the brand-new skill we are practicing today. Here, they connect two parts of one complex sentence. How do you spot the difference? A question word forms a direct question and the sentence ends with a question mark. A clause-introducing word links clauses, and it can stand in the middle of the sentence or at the start if the subordinate clause comes first.
 
-When these exact same words move to the middle of the sentence—positioned immediately after a comma—they completely drop their interrogative function and become conjunctions. Compare the direct question **Де ти?** (Where are you?) with the complex statement **Я знаю, де ти** (I know where you are). The segment following the comma uses normal statement word order. No inversion or special question intonation applies, because the speaker is no longer asking anything. The sentence simply states a fact about a location, a time, or an event.
+Let's detail some of the most common and useful sentence patterns using **що** and **де** as conjunctions. They are very frequently paired with verbs of knowing, thinking, and saying, such as **знати** (to know), **думати** (to think), and **казати** (to say).
 
-*   **Я знаю, що він робить.** (I know what he is doing.)
-*   **Я не знаю, що це.** (I do not know what this is.)
-*   **Я думаю, що це правильно.** (I think that this is correct.)
-*   **Він каже, що кафе зачинене.** (He says that the cafe is closed.)
-*   **Я знаю, де він працює.** (I know where he works.)
-*   **Я не знаю, де мій телефон.** (I do not know where my phone is.)
-*   **Скажи, коли ти будеш готовий.** (Tell me when you will be ready.)
-*   **Я не знаю, коли він приїде.** (I do not know when he will arrive.)
+- Я **знаю**, що... / Я не **знаю**, що... *(I know / don't know that...)*
+- Я **думаю**, що... *(I think that...)*
+- Він **каже**, що... *(He says that...)*
+- Вона може **сказати** (say), що... *(She can say that...)*
+- Я **знаю**, де... / Я не **знаю**, де... *(I know / don't know where...)*
+- Ми **бачимо**, де... *(We see where...)*
 
-:::tip
-A simple trick to identify the function of **що**: if you can replace it with "what" in English, it is a question word. If you can replace it with "that," it is a conjunction connecting two ideas.
-:::
+Now let's detail the important patterns using **коли**. This specific word connects actions in time.
 
-A subordinate clause stating a condition or time can sometimes appear before the main action. In such cases, the dependent clause starts with **коли** and opens the sentence.
+- Скажи, коли... *(Tell me when...)*
+- Я не **знаю**, коли... *(I don't know when...)*
+- Ми **розуміємо**, коли... *(We understand when...)*
 
-*   **Коли я прийду, ми поговоримо.** (When I arrive, we will talk.)
-*   **Коли я вдома, я відпочиваю.** (When I am at home, I rest.)
-*   **Коли вона читає, вона не чує.** (When she is reading, she does not hear.)
-*   **Коли ми працюємо, ми не говоримо.** (When we work, we do not talk.)
+Interestingly, you can also completely reverse the structure. The dependent clause can come first:
 
-The mandatory comma still separates the two parts, but it now sits in the middle of the sentence to introduce the main clause. While **що** and **де** almost always remain firmly in the middle of the sentence (e.g., **Я думаю, що...**, **Він каже, що...**), the word **коли** offers more flexibility and frequently jumps to the beginning to establish the context for the main action.
+- Коли я прийду, ми поговоримо. *(When I arrive, we will talk.)*
+- Коли він працює, він мовчить. *(When he works, he is silent.)*
 
-### Практика читання (Reading Practice)
+Notice that the comma still separates the two clauses, ensuring the sentence remains perfectly clear.
 
-Read the following paragraph. Notice how the short conjunctions hold the narrative together. 
+Here is a short classroom situation using these specific words:
 
-**Мій друг Тарас каже, що він живе біля парку. Я не знаю, де саме цей парк. Але я знаю, що він великий. Коли в Тараса є час, він гуляє там. Я думаю, що це гарне місце. Тарас каже, що він теж гуляє, коли я тут.** 
-*(My friend Taras says that he lives near the park. I do not know where exactly this park is. But I know that it is big. When Taras has time, he walks there. I think that this is a good place. Taras says that he also walks when I am here.)*
+> Студенти сидять у класі. Вчитель запитує, де лежить книга. Студент не **знає**, де вона. Інший студент **каже**, що книга на столі. Вони читають, коли вчитель просить.
+> *The students are sitting in the class. The teacher asks where the book lies. The student does not know where it is. Another student says that the book is on the table. They read when the teacher asks.*
 
-<!-- INJECT_ACTIVITY: quiz-function-id -->
+<!-- INJECT_ACTIVITY: quiz-question-or-conjunction -->
 
-<!-- INJECT_ACTIVITY: fill-in-sentence-builder -->
+<!-- INJECT_ACTIVITY: fill-in-build-sentences -->
+
+<!-- INJECT_ACTIVITY: quiz-comma-placement -->
 
 ## Підсумок — Summary
 
-Complex sentences rely on specific connectors to link a main clause to a subordinate clause. Here is a summary of the three subordinating conjunctions from this module:
+Let's provide a concise recap of the words that introduce subordinate clauses at the A1 level.
 
-| Conjunction | Meaning | Example |
+| Word | Meaning | Example |
 | :--- | :--- | :--- |
-| **що** | that | **Я знаю, що він тут.** |
-| **де** | where | **Я не знаю, де кафе.** |
-| **коли** | when | **Скажи, коли прийдеш.** |
+| **що** | that | Я **знаю**, що він тут. *(I know that he is here.)* |
+| **де** | where | Я не **знаю**, де кафе. *(I don't know where the cafe is.)* |
+| **коли** | when | Скажи, коли прийдеш. *(Tell me when you will come.)* |
 
-The comma before these conjunctions is a strict requirement of Ukrainian punctuation. Furthermore, **що** translates to "that" when operating as a conjunction, but functions as "what" when acting as a question word. The identical spelling performs two completely different grammatical roles depending entirely on the sentence structure.
+We must reiterate the punctuation rule: place a comma between the two clauses. If the subordinate clause comes first, the comma follows it; if the main clause comes first, the comma stands before the clause-introducing word.
 
-Combining subordinating conjunctions with the basic connectors from Module 44 allows for highly detailed sentence structures. Multiple clauses can link together to describe complex situations.
+As you progress, your sentences will become much richer. You can now combine these new subordinating conjunctions with the coordinating conjunctions you learned in Module 44 (**і**, **а**, **але**, **бо**). This allows you to build highly advanced, expressive sentences. Look at these excellent examples of double-conjunction sentences:
 
-*   **Я не йду, бо я не знаю, де це.** (I am not going, because I do not know where it is.)
-*   **Він каже, що прийде, коли закінчить.** (He says that he will come when he finishes.)
-*   **Ми думаємо, що вона знає, де він.** (We think that she knows where he is.)
-*   **Я бачу, що ти не знаєш, що робити.** (I see that you do not know what to do.)
+- Я не йду, бо я не **знаю**, де це. *(I am not going, because I do not know where it is.)* — two conjunctions!
+- Він **каже**, що прийде, коли закінчить. *(He says that he will come when he finishes.)* — two subordinate clauses!
+- Я **думаю**, що це добре, але я не впевнений. *(I think that it is good, but I am not sure.)*
 
-The first example uses **бо** (because) and **де** (where) in a single thought. The second sentence contains two separate subordinate clauses, demonstrating how these small connecting words build sophisticated real-world communication.
+Now it is time for a quick self-check section. Take a moment to actively build three of your own sentences using the following sentence frames. Say them out loud or write them down:
 
-Verify your understanding by reviewing these core concepts. Can you name the three subordinating conjunctions covered in this module? Check your memory regarding the mandatory punctuation mark required before them. Finally, practice building three original sentences starting with these specific phrases:
+- Я **думаю**, що...
+- Я не **знаю**, де...
+- Скажи мені, коли...
 
-*   **Я думаю, що...**
-*   **Я не знаю, де...**
-*   **Скажи мені, коли...**
+Read this final paragraph to see everything smoothly working together:
+
+> Зараз вечір. Я ще не **знаю**, де мій брат. Мій друг **думає**, що він іде в парк. Я не **знаю**, коли він там гуляє. Я **думаю**, що це гарна ідея.
+> *It is evening now. I do not know yet where my brother is. My friend thinks that he is going to the park. I do not know when he walks there. I think that this is a good idea.*
 </generated_module_content>
 
-**PIPELINE NOTE — Word count: 1753 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
+**PIPELINE NOTE — Word count: 1718 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -436,39 +455,169 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 130 words | Not found: 3 words
+Verified: 128 words | Not found: 2 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
+  ✗ Анна — NOT IN VESUM
   ✗ Олена — NOT IN VESUM
-  ✗ Тарас — NOT IN VESUM
-  ✗ Тараса — NOT IN VESUM
 
-All 130 other words are confirmed to exist in VESUM.
+All 128 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
-## Verification Tools (MCP)
+---
 
-You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
+## Verification Tools (Shell Commands)
 
-**Core Verification:**
-- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
-- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
+You have access to verification tools via shell commands. Use these to verify
+Ukrainian vocabulary, check grammar, and search textbook content **as you write**.
 
-**Content Quality:**
-- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+**IMPORTANT:** Run verification commands BEFORE finalizing any Ukrainian text.
+Batch multiple verifications together to minimize round-trips.
 
-**Reference:**
-- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp_rag_search_literary` — verify literary references against primary sources
-- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
+### 1. Batch-verify Ukrainian words exist in VESUM (preferred — one call for many words)
 
-**Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_words
+results = verify_words(['слово1', 'слово2', 'слово3'])
+for w, matches in results.items():
+    if matches:
+        print(f'{w}: FOUND — lemma={matches[0][\"lemma\"]}, pos={matches[0][\"pos\"]}')
+    else:
+        print(f'{w}: NOT FOUND — may not exist in standard Ukrainian')
+"
+```
+
+### 2. Verify a single Ukrainian word in VESUM (with full morphological tags)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_word
+results = verify_word('WORD_HERE')
+if results:
+    for m in results:
+        print(f'lemma={m[\"lemma\"]}, pos={m[\"pos\"]}, tags={m[\"tags\"]}')
+else:
+    print('NOT FOUND in VESUM')
+"
+```
+
+### 3. Get all inflected forms of a lemma (declension/conjugation)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_lemma
+forms = verify_lemma('LEMMA_HERE')
+for f in forms[:20]:
+    print(f'{f[\"word_form\"]:20s} {f[\"pos\"]:8s} {f[\"tags\"]}')
+print(f'... {len(forms)} forms total')
+"
+```
+
+### 4. Check CEFR level of a word (is it level-appropriate?)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import query_cefr_level
+results = query_cefr_level('WORD_HERE')
+for r in results:
+    print(f'{r[\"word\"]}: {r[\"level\"]} ({r[\"pos\"]})')
+if not results:
+    print('Not in CEFR database')
+"
+```
+
+### 5. Search textbook content (Ukrainian school textbooks, Grades 1-11)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_textbooks
+keywords = {'keyword1', 'keyword2'}
+results = search_textbooks(keywords, 5)
+for r in results:
+    title = r.get('section_title', r.get('title', ''))
+    grade = r.get('grade', '?')
+    text = r.get('text', '')[:200]
+    print(f'Grade {grade} | {title}')
+    print(f'  {text}')
+    print()
+"
+```
+
+### 6. Search style guide for calques/Russianisms (Антоненко-Давидович, 279 entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_style_guide
+results = search_style_guide('TOPIC_HERE', 3)
+for r in results:
+    print(f'--- {r.get(\"word\", \"\")} [{r.get(\"section\", \"\")}]')
+    print(r.get('text', '')[:300])
+    print()
+if not results:
+    print('No style guide entries found')
+"
+```
+
+### 7. Look up word definition in СУМ-11 (Ukrainian explanatory dictionary, 127K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_definitions
+results = search_definitions('WORD_HERE', 3)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+### 8. Search idioms (Фразеологічний словник, 25K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_idioms
+results = search_idioms('WORD_HERE', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"text\", r.get(\"definition\", \"\")))[:200]}')
+"
+```
+
+### 9. English-to-Ukrainian translation (Балла, 79K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import translate_en_uk
+results = translate_en_uk('ENGLISH_WORD', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+---
+
+**WHEN to use these tools:**
+
+1. **Before writing any Ukrainian text** — batch-verify all key vocabulary with
+   `verify_words` (tool 1). Any word that returns NOT FOUND must be replaced.
+2. **When you suspect a Russicism or calque** — search the style guide (tool 6)
+   and verify the correct Ukrainian form with `verify_word` (tool 2).
+3. **When writing for A1/A2** — check CEFR levels (tool 4) to ensure vocabulary
+   is level-appropriate.
+4. **When unsure about a case ending or conjugation** — use `verify_lemma` (tool 3)
+   to see the full paradigm.
+5. **When covering a grammar topic** — search textbooks (tool 5) to see how
+   Ukrainian school textbooks teach it.
+6. **When you need the precise Ukrainian meaning** — use СУМ-11 (tool 7).
+7. **When looking for natural Ukrainian expressions** — search idioms (tool 8).
+
+**Batching rule:** Collect all words you want to verify, then run ONE `verify_words`
+call instead of multiple `verify_word` calls. This is faster and uses fewer tokens.

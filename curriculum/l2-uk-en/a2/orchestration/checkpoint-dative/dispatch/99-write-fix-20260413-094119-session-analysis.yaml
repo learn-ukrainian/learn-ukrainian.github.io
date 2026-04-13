@@ -1,0 +1,25 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T07-39-8296409c.json
+phase: write-fix
+prompt_chars: 14962
+response_chars: 10759
+prompt_words: 2321
+response_words: 1673
+sections:
+- name: unknown
+  start: 0
+  length: 14962
+  fraction: 1.0
+large_sections:
+- unknown
+directives_total: 16
+directives_covered: 14
+directives_missed:
+- kind: must
+  text: The hand-on-throat test is a valid phonetics technique but must NOT be attributed
+    to Ukrainian textbooks.
+  covered: false
+  coverage_note: 4/12 keywords (33%)
+- kind: inject_activity
+  text: '...'
+  covered: false
+  coverage_note: marker missing

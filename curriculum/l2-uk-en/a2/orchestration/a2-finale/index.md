@@ -1,6 +1,6 @@
 # Build Summary: a2-finale (A2)
 
-Generated: 2026-04-09 02:39
+Generated: 2026-04-11 19:04
 
 ## Pipeline Phases
 
@@ -12,15 +12,15 @@ Generated: 2026-04-09 02:39
 | pre-verify | complete | 2026-04-09 00:32:15 |
 | write | complete | 2026-04-09 00:34:01 |
 | exercises | complete | 2026-04-09 00:34:01 |
-| activities | complete | 2026-04-09 00:35:29 |
+| activities | complete | 2026-04-11 17:04:00 |
 | verify-exercises | complete | 2026-04-09 00:35:29 |
 | annotate | complete | 2026-04-09 00:35:29 |
 | vocab | complete | 2026-04-09 00:37:21 |
 | enrich | complete | 2026-04-09 00:37:21 |
 | verify | complete | 2026-04-09 00:37:22 |
-| review | complete | 2026-04-09 00:39:43 |
 | stress | complete | 2026-04-09 00:39:43 |
-| publish | complete | 2026-04-09 00:39:45 |
+| publish | complete | 2026-04-11 17:04:09 |
+| audit | complete | 2026-04-11 17:04:09 |
 
 ## Reviews
 
@@ -38,6 +38,8 @@ Generated: 2026-04-09 02:39
 | skeleton | gemini (gemini-3-flash-preview) | 213s | ✅ |
 | write | gemini-tools (gemini-3.1-pro-preview) | 106s | ✅ |
 | activities | gemini-tools (gemini-3.1-pro-preview) | 87s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 9s | ❌ |
+| activities | gemini-tools (auto) | 75s | ✅ |
 | vocab | gemini (gemini-3-flash-preview) | 105s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 141s | ✅ |
 

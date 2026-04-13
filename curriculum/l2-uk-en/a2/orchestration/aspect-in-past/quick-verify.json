@@ -1,13 +1,7 @@
 {
-  "attempt": 3,
+  "attempt": 1,
   "passed": true,
   "errors": [],
-  "warnings": [
-    {
-      "check": "VOCABULARY",
-      "severity": "WARNING",
-      "message": "Missing 1/10 required vocab: вчити / вивчити (to study/learn — impf./pf.)"
-    }
-  ],
-  "timestamp": "2026-04-08T03:34:24.733977+00:00"
+  "warnings": [],
+  "timestamp": "2026-04-12T20:15:09.972761+00:00"
 }

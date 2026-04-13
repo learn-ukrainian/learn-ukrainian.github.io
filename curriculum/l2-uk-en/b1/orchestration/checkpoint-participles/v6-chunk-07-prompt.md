@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-буде сказати «я **здобуваю освіту** *(I am acquiring education)*». Науковий стиль завжди вимагає максимальної точності, абсолютної об'єктивності та використання стандартизованої термінології. Він суворо уникає зайвої емоційності та повсякденних розмовних слів, тому вибір правильного дієслова має критичне значення для створення якісного тексту. Найкращим і найдієвішим інструментом для створення правильного академічного стилю є саме дієприкметникові та дієприслівникові звороти, які ви щойно ретельно повторили. Вони роблять будь-який професійний текст максимально лаконічним, структурованим і дуже точним. Розгляньмо типову практичну ситуацію трансформації звичайного розмовного стилю в суворий науковий. Уявіть таке просте неформальне речення: «Я багато читав і написав цю статтю». Це звучить занадто примітивно для серйозної наукової публікації. Використавши складнішу граматику нашого курсу, ми можемо легко перетворити його на професійне висловлювання: «**Опрацювавши** значний обсяг фахової літератури, автор написав наукову статтю» *(Having processed a significant volume of professional literature, the author wrote a scientific article)*. Тут ми технічно замінили просте дієслово на дієприслівник доконаного виду, який чітко показує хронологічну послідовність дій. Розглянемо ще один класичний приклад неформального тексту: «Це той метод, який ми використовуємо найчастіше». В академічній курсовій роботі набагато краще написати так: «Це метод, **найчастіше використовуваний** сучасними дослідниками» *(This is the method most often used by modern researchers)*. Пасивний дієприкметник дозволяє нам елегантно уникнути зайвих займенників і робить речення значно компактнішим. Такі свідомі стилістичні трансформації є абсолютною основою професійного наукового письма. У наступному практичному завданні ви самостійно працюватимете з автентичним українським академічним текстом. Це буде невеликий, але дуже інформативний уривок, який детально описує сучасну національну систему освіти або презентує конкретні результати нового університетського дослідницького проєкту. Ваша головна мета під час читання — не просто зрозуміти загальний інформаційний зміст, а глибоко проаналізувати складну граматичну структуру цього тексту. Звертайте особливу увагу на пасивні дієприкметники, які надзвичайно часто використовуються в офіційних назвах, документах або наукових заголовках. Наприклад, ви цілком імовірно можете побачити таку характерну конструкцію: «Проєкт, **підтриманий** міністерством освіти» *(A project supported by the ministry of education)*. Також дуже уважно шукайте дієприслівники, коли будете читати детальний опис методології наукового дослідження. Вони просто ідеально підходять для логічного пояснення того, як саме науковці технічно виконували свою роботу. Наприклад, автори можуть написати: «**Аналізуючи** отримані статистичні дані, ми одразу помітили цікаву тенденцію» *(While analyzing the obtained statistical data, we immediately noticed an interesting trend)*. Цей уважний аналіз допоможе вам набагато краще відчути ритм і специфіку справжньої української наукової мови. Перед виконанням завдань прочитайте короткий діалог двох молодих аспірантів. Вони серйозно обговорюють процес написання дипломної роботи, активно використовуючи вивчену наукову лексику та складні звороти: > — **Степан:** Привіт, Оксано! Розкажи, як зараз просувається твоє університетське дослідження? > — **Оксана:** Привіт! **Завершивши** збір статистичних даних, я вчора одразу почала їхній детальний аналіз *(Having completed the collection of statistical data, I immediately started their detailed analysis yesterday)*. > — **Степан:** Це просто чудово. Твоя нова стаття вже повністю готова до офіційної публікації? > — **Оксана:** Так. Мій науковий керівник, приємно **вражений** результатами експерименту, сьогодні офіційно дозволив публікацію *(My scientific supervisor, pleasantly impressed by the results of the experiment, officially allowed the publication today)*. <!-- INJECT_ACTIVITY: match-academic-terms --> <!-- INJECT_ACTIVITY: informal-to-academic-rewrite --> <!-- INJECT_ACTIVITY: academic-reading-analysis -->
+стає набагато більш структурованим та переконливим. > *The academic style requires precision, objectivity, and conciseness, which is why it actively uses specific syntactic constructions. In everyday communication, a student might simply say: "I read a lot and wrote an article." This sounds completely natural for a friendly conversation, but it is not at all suitable for a formal scientific report or publication. To transform this simple sentence into a scientific one, we need a gerund phrase that clearly shows the logical sequence of the performed actions. In a formal style, this thought will sound much more professional: "Having processed a significant volume of literature, the author wrote a scientific article." Furthermore, instead of long subordinate clauses with many unnecessary conjunctions, scholars often use a participle phrase to describe the subject of research as concisely and accurately as possible. Thanks to these powerful grammatical tools, the text becomes much more structured and convincing.* As you prepare for the reading section of this **контрольна робота** (test/assessment), pay close attention to how these grammatical structures build complex meaning within a single paragraph. The provided text will describe a detailed university research project or offer an overview of the broader Ukrainian educational system. When reading dense academic material, your ability to quickly spot a **дієприкметник** (participle) or a **дієприслівник** (gerund/adverbial participle) is absolutely crucial for understanding who is doing what, and exactly when those actions occurred. Look specifically for passive participles used frequently in project titles or formal institutional descriptions, such as the phrase «Проєкт, підтриманий міністерством». You will also encounter various gerunds that carefully explain the methodology, relying on **одночасність** (simultaneity) to show actions happening together, or **різночасність** (temporal non-simultaneity) to demonstrate a clear sequence of research events. You might even notice a **короткий прикметник** (short-form adjective) used to express firm scientific certainty, like when a researcher is «певен» of their data. These sophisticated verbal forms allow the scientific writer to pack multiple layers of vital information into a single sentence without losing grammatical clarity. :::info **Grammar box** In academic writing, the passive participle (пасивний дієприкметник) often shifts the focus from the person performing the action to the result of the action itself. This structural choice adds a tone of objective detachment that is necessary for rigorous research papers and formal academic publications. ::: Observe how two graduate students might naturally use this academic register while discussing the progress of their respective thesis projects. > — **Остап:** Привіт! Ти вже закінчила експеримент для дипломної роботи? *(Hi! Have you already finished the experiment for your thesis?)* > — **Мар'яна:** Так. Завершивши збір даних, я почала аналіз. *(Yes. Having completed the data collection, I started the analysis.)* > — **Остап:** Це чудово. Твоя стаття, написана минулого місяця, вже опублікована? *(That is great. Is your article, written last month, already published?)* > — **Мар'яна:** Мій керівник, задоволений результатами, дозволив публікацію. *(My supervisor, satisfied with the results, allowed the publication.)* > — **Остап:** Вітаю! *(Congratulations!)* <!-- INJECT_ACTIVITY: match-academic-terms --> <!-- INJECT_ACTIVITY: informal-to-academic-rewrite --> <!-- INJECT_ACTIVITY: academic-reading-analysis -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -541,7 +541,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -554,18 +621,61 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] контрольна робота (test/assessment)
+- [ ] дієприкметник (participle)
+- [ ] дієприслівник (gerund/adverbial participle)
+- [ ] дієприкметниковий зворот (participle phrase)
+- [ ] дієприслівниковий зворот (gerund phrase)
+- [ ] короткий прикметник (short-form adjective)
+- [ ] одночасність (simultaneity)
+- [ ] різночасність (temporal non-simultaneity)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Блок 6: Інтегроване завдання (~600 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

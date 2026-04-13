@@ -1,0 +1,81 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T12-39-ddac875b.json
+phase: write-chunk-02
+prompt_chars: 51816
+response_chars: 9346
+prompt_words: 7105
+response_words: 1431
+sections:
+- name: header
+  start: 0
+  length: 453
+  fraction: 0.0087
+- name: skeleton
+  start: 453
+  length: 1899
+  fraction: 0.0366
+- name: prior_summary
+  start: 2352
+  length: 3563
+  fraction: 0.0688
+- name: plan
+  start: 5915
+  length: 18488
+  fraction: 0.3568
+- name: wiki
+  start: 17599
+  length: 27193
+  fraction: 0.5248
+- name: output_spec
+  start: 51596
+  length: 220
+  fraction: 0.0042
+large_sections:
+- wiki
+directives_total: 28
+directives_covered: 17
+directives_missed:
+- kind: checklist
+  text: послідовність подій (sequence of events — perfective event chain)
+  covered: false
+  coverage_note: 1/7 keywords (14%)
+- kind: checklist
+  text: заперечення (negation — negative constructions with aspect)
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: checklist
+  text: умовний спосіб (conditional mood — hypothetical actions with би/б)
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: checklist
+  text: повторення (review/repetition — consolidation of learned material)
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: checklist
+  text: контрольна робота (test/assessment — formal diagnostic check)
+  covered: false
+  coverage_note: 1/7 keywords (14%)
+- kind: must
+  text: '**MANDATORY — never omit.'
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: inject_activity
+  text: group-sort-future-imperative
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: error-correction-imperative
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in, Оберіть правильний вид дієслова у контексті минулого часу
+  covered: false
+  coverage_note: marker missing

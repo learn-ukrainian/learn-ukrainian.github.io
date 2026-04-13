@@ -1,23 +1,22 @@
-# Section-by-Section Generation — Section 2/4
+# Section-by-Section Generation — Section 2/3
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 5: У мене немає... (A2, A2.1 [Foundation and Aspect Introduction])
-**Section to write:** Закінчення родового відмінка однини (Genitive Singular Endings) (~750 words total)
-**Word target for this section:** 750 words (aim for 825 to account for undershoot)
+**Section to write:** Закінчення родового відмінка однини (Genitive Singular Endings) (~770 words)
+**Word target for this section:** 770 words (aim for 847 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Закінчення родового відмінка однини (Genitive Singular Endings) (~750 words total)
-- P1 (~150 words): Masculine nouns: The -а/-я vs. -у/-ю challenge. Explain the logic of concrete vs. abstract. -а/-я is for specific, animate, or well-defined items. Examples: "брата" (brother), "стола" (table), "автобуса" (bus). Mention that units of measurement like "метра" or "кілограма" also take -а.
-- P2 (~150 words): Masculine nouns: The -у/-ю ending. Explain that this is for abstract concepts, substances (liquids/powders), and large geographic areas. Use critical A2 examples: "немає часу" (time), "немає цукру" (sugar), "немає досвіду" (experience), "немає смутку" (sadness). Mention "Києва" (city) vs. "Криму" (region) to show the specific/area distinction.
-- P3 (~120 words): Feminine nouns: The -и vs. -і split. Hard stems (ending in a hard consonant + а) take -и. Examples: "книги", "мами", "роботи". Soft stems (ending in я or a soft consonant) take -і. Examples: "землі", "пісні", "вулиці". Mention the 3rd declension (consonant ending) like "ночі" or "солі" taking -і.
-- P4 (~100 words): Neuter nouns: Simple -а for -о endings and -я for -е/-я endings. Examples: "вікна" (from вікно), "моря" (from море), "життя" (from життя). Contrast this with the Nominative to show the subtle change in sound.
-- P5 (~130 words): A comprehensive paradigm chart described in prose. Walk the learner through a mental table: Masculine (concrete -а, abstract -у), Feminine (hard -и, soft -і), Neuter (-а/-я). Use "телефон - телефона", "кава - кави", "слово - слова" as the anchor examples.
+## Закінчення родового відмінка однини (Genitive Singular Endings) (~770 words)
+- P1 (~150 words): [Begin the endings puzzle with the most straightforward group: Neuter nouns. Explain -а for stems in -о (вікно → вікна), and -я for stems in -е or -я (море → моря, життя → життя). Examples: `немає вікна`, `немає моря`.]
+- P2 (~180 words): [Explain Feminine nouns (І відміна). Break down by stem: -и for hard stems (машина → машини, сестра → сестри, книга → книги), -і/-ї for soft stems and stems in -я (земля → землі, пісня → пісні, сім'я → сім'ї), and -і for mixed (груша → груші). Provide examples like `немає сестри`, `немає води`.]
+- P3 (~220 words): [Tackle Masculine nouns (ІІ відміна) — the biggest challenge. Explain the semantic distinction between -а/-я and -у/-ю. Use -а/-я for concrete, animate, specific items (брата, стола, автобуса, комп'ютера, Києва). Use -у/-ю for abstract concepts, substances, locations (часу, цукру, вітру, прогресу). Advise learners to focus on high-frequency words now, as perfect mastery is a B1/B2 goal.]
+- P4 (~150 words): [Cover Feminine nouns ending in a consonant (ІІІ відміна). Explain they take the ending -і. Examples: ніч → ночі, сіль → солі, любов → любові. Mention the important exception: мати → матері. Examples: `Немає солі`, `Немає матері`.]
+- P5 (~70 words): [Provide a concise recap chart and summary of the singular endings across all genders to consolidate the rules before the fill-in exercise. Emphasize recognizing the patterns over perfect memorization.]
 - <!-- INJECT_ACTIVITY: fill-in-genitive-singular --> [fill-in, Genitive Singular Formation, 8 items]
-- P6 (~100 words): Common pitfalls with singular endings. Warn about the word "гроші" (money), which is always plural, but often confused in singular contexts. Remind students that "немає" is one word, not "не має" (which means "he/she doesn't possess").
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -25,7 +24,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-missing. > — **Сусідка:** Добрий день! Я ваша нова сусідка. *(Good day! I am your new neighbor.)* > — **Нова мешканка:** Привіт! Заходьте, будь ласка. *(Hi! Come in, please.)* > — **Сусідка:** Ого, тут ще зовсім порожньо. *(Wow, it's still completely empty here.)* > — **Нова мешканка:** Так, це моя нова кухня. Тут є багато коробок, але ще нічого не працює. *(Yes, this is my new kitchen. There are many boxes here, but nothing works yet.)* > — **Сусідка:** Я бачу. Тут немає холодильника! *(I see. There is no fridge here!)* > — **Нова мешканка:** Так, і немає плити. Я не можу готувати. *(Yes, and there is no stove. I cannot cook.)* > — **Сусідка:** А де ваші меблі? Навіть немає дзеркала! *(And where is your furniture? There isn't even a mirror!)* > — **Нова мешканка:** Усе буде завтра. А сьогодні ми тільки розпаковуємо речі. *(Everything will be tomorrow. And today we are just unpacking things.)* Let's analyze what happened in that conversation. The word «немає» acts like a powerful grammar magnet, pulling nouns out of their default Nominative state and into the Genitive case. The masculine noun «холодильник» (fridge) transforms into «холодильника». The feminine noun «плита» (stove) changes to become «плити». Even the neuter noun «дзеркало» (mirror) shifts its final vowel to become «дзеркала». You cannot simply say «немає холодильник»—that sounds entirely broken to a native speaker. The concept of absence itself demands the Genitive form. To master this concept, practice the direct contrast between presence and absence. When an item is present, it sits safely in the Nominative case. When it is gone, it falls into the Genitive case. The sentence «Тут є стіл» (There is a table here) uses the base form. But the opposite statement, «Тут немає стола» (There is no table here), requires the case change. У кімнаті є велике вікно. Але в коридорі немає вікна. На столі є гаряча кава. Але в чашці немає цукру. Я люблю каву, але зараз у мене немає часу. > *In the room there is a large window. But in the corridor there is no window. On the table there is hot coffee. But in the cup there is no sugar. I love coffee, but right now I don't have time.* In casual, everyday Ukrainian speech, people frequently shorten the word «немає» to «нема». :::info **Скорочена форма (Shortened form)** The short form **нема** is used exactly like **немає** and carries the identical meaning. It still strictly requires the Genitive case. For example, you will often hear «Часу нема» (There is no time) instead of «Часу немає». Both are completely correct, but the shorter version is very popular in relaxed conversation. ::: <!-- INJECT_ACTIVITY: quiz-possession-vs-absence --> The core takeaway for this section is absolute. Whenever you express that something or someone is missing, the Genitive case is mandatory. Whether you are talking about an object like a stove, a person like a sister, or a concept like time, the word «немає» always triggers this fundamental change in the noun's ending.
+новий театр. У нашому місті немає нового театру. У нього є цікава ідея. У нього немає цікавої ідеї. > *There is a new theater in the city. There is no new theater in our city. He has an interesting idea. He has no interesting idea.* :::tip **Did you know?** The word **немає** (often shortened to **нема** in relaxed, spoken language) historically comes from the Old East Slavic phrase «не мать» (not to have). This historical depth explains why it fundamentally alters the sentence structure. It is not just a negative particle attached to a verb, but a deeply rooted concept of non-possession that demands a specific grammatical relationship with the object. ::: There is a famous rhyming proverb that perfectly illustrates this rule in action. It is often used to remind people to find the positive side of any situation. У природи нема поганої погоди. > *Nature has no bad weather.* ### Читаємо українською (Reading Practice) Сьогодні поганий день для Максима. Він іде на роботу, але у нього немає теплої куртки. Надворі дуже холодно, бо немає яскравого сонця. На зупинці немає його автобуса, тому він іде пішки. У кав'ярні немає його улюбленої кави. На роботі дуже багато справ і немає вільного часу. Увечері він приходить додому, але там немає світла. Максим знає, що це не проблема. У нього є надія, що завтра буде краще. > *Today is a bad day for Maksym. He goes to work, but he doesn't have a warm jacket. It is very cold outside, because there is no bright sun. His bus is not at the bus stop, so he walks on foot. There is no favorite coffee of his in the cafe. There are a lot of tasks at work and no free time. In the evening he comes home, but there is no light there. Maksym knows that this is not a problem. He has hope that tomorrow will be better.* Before we dive deep into the specific rules for forming every single ending across all noun genders, it is highly practical to memorize a few common abstract phrases as fixed chunks. You will hear these expressions constantly in everyday conversations, at work, and among friends. They all follow the exact same logic, and learning them now provides immediate conversational utility without needing to analyze a declension chart every time you speak. Вибачте, але у мене зараз зовсім немає часу. Зараз у неї немає настрою дивитися цей фільм. Робити це завдання немає жодного сенсу. На жаль, у нас немає вибору в цій ситуації. > *Sorry, but I have absolutely no time right now. Right now she has no mood to watch this movie. There is no sense at all in doing this task. Unfortunately, we have no choice in this situation.* Later in this module, we will also explore how the genitive case is used with quantity words like **багато** (a lot, many, much), **мало** (a little, few), **кілька** (a few, several), and when asking **скільки** (how many, how much). <!-- INJECT_ACTIVITY: quiz-possession-absence -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -670,6 +669,30 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] родовий відмінок (genitive case)
+- [ ] немає ((there) is not, (I) don't have)
+- [ ] багато (a lot, many, much)
+- [ ] мало (a little, few)
+- [ ] кілька (a few, several)
+- [ ] скільки (how many, how much)
+- [ ] закінчення (ending (grammar))
+- [ ] однина (singular)
+- [ ] множина (plural)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Закінчення родового відмінка однини (Genitive Singular Endings) (~770 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

@@ -134,80 +134,170 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Який? Яка? Яке? Які? (Which? What Kind?)
+## Який? Яка? Яке? Які? (Which? What Kind?) (~800 words)
 
-В українській мові ми часто використовуємо **означальні підрядні речення** *(relative clauses)*, щоб описати людину, річ або місце. You already know how simple adjectives describe nouns. For example, you can say «гарна книга» *(a good book)*. Але іноді нам потрібно сказати більше. A relative clause expands this description into a full action. Замість одного слова ми використовуємо ціле речення: «книга, яку я зараз читаю» *(the book that I am reading now)*. This creates a complex structure with two parts. Перша частина — це **головне речення** *(the main clause)*. Друга частина — це **підрядне речення** *(the subordinate clause)*. The relative clause always connects to a specific noun in the main clause to give us more information.
+Have you ever wanted to describe something in more detail without starting a whole new sentence? In Ukrainian, we do this using an **означальний** (attributive, defining) clause. This is a special type of dependent **речення** (sentence, clause) that acts just like a very long adjective. It helps us **описувати** (to describe) a noun that is mentioned in the main part of the phrase. 
 
-Головне слово для таких речень — це займенник **«який»** *(which, who, that)*. This relative pronoun is the bridge between the two parts. It must always agree in gender with the specific noun it describes in the main sentence. Якщо іменник має чоловічий рід *(masculine)*, ми використовуємо форму «який». «Це будинок, який стоїть біля метро.» *(This is the house that stands near the subway.)* Якщо іменник має жіночий рід *(feminine)*, нам потрібна форма «яка». «Ось квартира, яка має три кімнати.» *(Here is the apartment that has three rooms.)* Якщо іменник має середній рід *(neuter)*, ми беремо форму «яке». «Це місто, яке знаходиться на півдні.» *(This is the city that is located in the south.)* Remember this fundamental rule: the gender of «який» comes strictly from the noun it points back to, regardless of its role in the new sentence.
+Instead of saying "I have a car. The car is fast," you can say "I have a car that is fast." In English, you might use words like "who," "which," or "that" to smoothly connect these related ideas together. In Ukrainian, the most common way to build these connections is by using the word **який** (which, that — masc.) and its corresponding forms. This single word serves as a powerful bridge. It allows you to create much richer, more detailed stories about the interesting people, everyday objects, and new places in your life.
 
-Для множини *(plural)* ми завжди використовуємо форму «які». The plural form is universal and does not change based on gender. It works perfectly for both groups of people and objects, making it very easy to use. Ми можемо говорити про людей: «Це розумні люди, які працюють тут щодня.» *(These are smart people who work here every day.)* Або ми можемо описувати різні речі: «Де ключі, які лежать на цьому столі?» *(Where are the keys that lie on this table?)* Notice the transition from the singular to the plural form. If you have only one phone, you say «телефон, який добре працює» *(a phone that works well)*. But if you have two or more, it becomes «телефони, які добре працюють» *(phones that work well)*. The word «які» simply links the plural noun to the action.
+Let us see how this looks in a real-life situation. Imagine you are with a real estate agent, looking at a new place to live. They are showing you the specific features of the apartment.
 
-Now, let's look at how the cases *(відмінки)* work. While the exact gender of «який» comes from the main noun, its case comes entirely from its specific role *inside* the subordinate clause. If the relative pronoun is the active subject of the subordinate clause, it stays in the basic Nominative case *(Називний відмінок)*. «Це хлопець, який прийшов до нас вчора.» *(This is the boy who came to us yesterday.)* Here, the boy actively came. But if the relative pronoun is the direct object of the subordinate clause, it must change to the Accusative case *(Знахідний відмінок)*. «Це хлопець, якого я бачив вчора.» *(This is the boy whom I saw yesterday.)* Here, "I" am the subject doing the seeing, and the boy is the object being seen. Для жіночого роду форма «яка» змінюється на «яку» в Знахідному відмінку: «Це цікава книга, яку я читаю.» *(This is the interesting book that I am reading.)* Для істот чоловічого роду форма «який» змінюється на «якого»: «Це мій друг, якого я чекаю.» *(This is my friend whom I am waiting for.)*
+> — **Ріелтор:** Ось квартира, яка має великий балкон. *(Here is the apartment that has a big balcony.)*
+> — **Покупець:** Дуже гарно. А це що за кімната? *(Very nice. And what is this room?)*
+> — **Ріелтор:** Це спальня, де ви можете відпочивати. *(This is the bedroom where you can rest.)*
+> — **Покупець:** А хто живе поруч? *(And who lives nearby?)*
+> — **Ріелтор:** Сусід, який живе поруч, дуже тихий. *(The neighbor who lives nearby is very quiet.)*
+> — **Покупець:** Це ідеальне місце, яке мені дуже подобається. *(This is an ideal place that I like very much.)*
 
-There is a strict punctuation rule you must always follow when writing. In Ukrainian grammar, unlike English, you *must* place a comma *(кома)* immediately before the relative pronoun «який». Think of this required comma as a clear "gate" opening to provide more detail about the main noun. You cannot skip this gate. ❌ «Машина яка стоїть там, дуже стара.» ✅ «Машина, яка стоїть там, дуже стара.» *(The car that stands there is very old.)* Ця кома чітко показує, де закінчується головна думка і починається додатковий опис. Це дуже важливе правило.
+When you use this connecting word in the Nominative case, it must perfectly match the gender and number of the noun it is describing. This means you will need to choose carefully between **яка** (which, that — fem.), **яке** (which, that — neut.), and **які** (which, that — pl.) based on the main word you want to highlight. The relative pronoun is acting as a substitute for the noun inside the newly attached clause, so it simply adopts the noun's existing characteristics. If the main noun is feminine, the connector is feminine. If the main noun is plural, the connector becomes plural. It is a direct and logical mirror.
 
-В українській мові є ще одне дуже популярне слово для таких речень — це **«що»** *(that, who)*. While using «який» is perfectly correct, using «що» for Nominative and Accusative cases is a highly idiomatic Ukrainian pattern. «Це добра людина, що завжди допомагає іншим.» *(This is a kind person who always helps others.)* Слово «що» взагалі не змінює свою граматичну форму в цих відмінках. Воно не має чоловічого, жіночого або середнього роду. Воно також не має множини. This makes it incredibly easy to use in everyday conversation. «Це довгий лист, що я написав вчора.» *(This is a long letter that I wrote yesterday.)* Using «що» instead of «який» makes your speech sound very authentic. It helps you "think in Ukrainian" without translating English structures.
+Хлопець, який прийшов вчора, — це мій брат. Книжка, яка лежить на столі, дуже цікава. Місто, яке я люблю, завжди красиве. Друзі, які живуть у Києві, чекають на нас.
 
-Давайте подивимося, як ця граматика працює в реальному житті. Уявіть ситуацію: ріелтор *(real estate agent)* показує нову квартиру клієнту.
+> *The boy who came yesterday is my brother. The book that lies on the table is very interesting. The city that I love is always beautiful. The friends who live in Kyiv are waiting for us.*
 
-> — **Ріелтор:** Це світла квартира, яка має великий балкон. *(This is a bright apartment that has a large balcony.)*
-> — **Покупець:** А де те вікно, яке виходить на вулицю? *(And where is that window that faces the street?)*
-> — **Ріелтор:** Ось маленька кімната, яка виходить на сусідній парк. *(Here is a small room that faces the neighboring park.)* Це дуже тихе місце. *(This is a very quiet place.)*
-> — **Покупець:** Хто ті люди, які стоять біля нашого будинку? *(Who are those people who are standing near our house?)*
-> — **Ріелтор:** А, це наш сусід, який живе тут вже десять років. *(Ah, that is our neighbor who has lived here for ten years already.)*
+:::info
+**Grammar box**
+Always look at the noun *immediately before* the connector to decide its proper gender and number. If you are describing «студенти» (students), use **які**. If you are describing «кафе» (cafe), use **яке**.
+:::
 
-<!-- INJECT_ACTIVITY: fill-in-yakiy-agreement -->
-<!-- INJECT_ACTIVITY: true-false-comma-agreement -->
+Now, let us look at the Accusative case. This is where many learners make a mistake. The case of the word "який" does NOT depend on the main sentence. Instead, it takes the case required by its specific role inside the subordinate clause. If it is the object of the action in the second part of the sentence, it must be in the Accusative case, even if the main noun is in the Nominative case. Compare these two ideas: "The person who met me" and "The person whom I met." In the first phrase, the person is doing the meeting, which means they are the subject in the Nominative case. In the second phrase, the person is being met, which means they are the direct object in the Accusative case. The word ending always changes to reflect this specific action.
+
+Людина, яка мене зустріла, працює тут. Людина, яку я зустрів, працює тут.
+
+> *The person who met me works here. The person whom I met works here.*
+
+Ось студент, якого я знаю. Це телефон, який я купив. Там дівчина, яку ми бачили. Це вікно, яке я відкрив. Ось люди, яких ти запросив.
+
+> *Here is the student whom I know. This is the phone that I bought. There is the girl whom we saw. This is the window that I opened. Here are the people whom you invited.*
+
+Punctuation in Ukrainian is very strict when it comes to these descriptive clauses. You must always place a comma immediately before the connector word. This comma acts as a signal to the reader or listener that you are about to pause and add extra descriptive information. In English, you can often drop the comma or even drop the word "that" entirely, saying "The book I read." In Ukrainian, this is never allowed. The comma and the connector word are absolutely mandatory.
+
+Ми дивимося фільм, який нам дуже подобається. Я читаю статтю, яка пояснює ці правила.
+
+> *We are watching a film that we like very much. I am reading an article that explains these rules.*
+
+It is important to contrast this new grammar with something you already know. You have already learned how to use this exact same word to ask questions. When asking a question, it means "what kind" or "which one." When used to connect two parts of a sentence, it means "who," "which," or "that." It is the same word, but it performs a completely different function depending on where it sits in the sentence. Context will always tell you what the word is doing.
+
+Який це фільм? Фільм, який ми дивилися вчора, був дуже смішний. Яка це вулиця? Вулиця, яка веде до центру, довга.
+
+> *What kind of film is this? The film that we watched yesterday was very funny. What street is this? The street that leads to the center is long.*
+
+У мене є собака, який дуже любить гратися. Це комп'ютер, який я часто використовую для роботи. Жінка, яка стоїть біля вікна, — моя мама.
+
+:::tip
+**Did you know?**
+When speaking, Ukrainians slightly drop their pitch when starting a relative clause. The comma is not just for writing; it represents a brief, natural pause in spoken Ukrainian.
+:::
+
+<!-- INJECT_ACTIVITY: fill-in-insert-the-correct-form-of-into-relative-clauses-matching-gender-and-number -->
 
 ## Де, куди, звідки — місце (Where, Where To, Where From — Place)
 
-Ми вже знаємо, як описувати людей і різні речі. *(We already know how to describe people and different things.)* Для цього ми зазвичай використовуємо слово «який». *(For this we usually use the word "which".)* Але що робити, коли ми хочемо описати певне місце на карті? *(But what to do when we want to describe a certain place on the map?)* When we describe a specific location, destination, or origin, we usually don't use the relative pronoun «який». Instead, Ukrainian uses relative adverbs of place: **«де»** *(where)*, **«куди»** *(where to)*, and **«звідки»** *(where from)*. Ці маленькі слова роблять ваші речення дуже простими і природними. *(These small words make your sentences very simple and natural.)* Вони також ніколи не змінюють свою форму. *(They also never change their form.)* Вам не потрібно думати про складні відмінки. *(You do not need to think about complex cases.)*
+When you want to describe a place, you have a grammatical choice. You could use a relative pronoun together with a preposition. For example, to say "the city in which I live," you could say «місто, в якому я живу». However, there is a simpler way to build this kind of structure. The Ukrainian word for a sentence or clause is **речення** (sentence). In a complex sentence about a place, speakers frequently use invariant relative adverbs. The word for a static location is **де** (where).
 
-Давайте почнемо з найпопулярнішого слова «де». *(Let's start with the most popular word "where".)* Ми використовуємо це слово для статичного місця. *(We use this word for a static place.)* It shows where something is located or where an action happens without any movement. You might think of saying "the restaurant in which we ate" using the complex prepositional construction «в якому». But in everyday spoken Ukrainian, it is much more natural to simply use «де». «Це той самий ресторан, де ми вчора обідали.» *(This is the exact same restaurant where we had lunch yesterday.)* «Ось та гарна вулиця, де я зараз живу.» *(Here is that beautiful street where I live now.)* «Я обов'язково покажу тобі великий будинок, де працює мій старший брат.» *(I will definitely show you the big house where my older brother works.)* Using «де» means you do not need to worry about cases or gender agreement for the location. Це дійсно дуже зручно для щоденного спілкування. *(This is really very convenient for daily communication.)* Завжди ставте кому перед словом «де». *(Always put a comma before the word "where".)*
+Слово показує статичне місце. Воно легко і природно замінює складну граматичну конструкцію «в якому» або «на якому». Ти використовуєш це слово, коли хочеш описати локацію, де відбувається дія, але немає жодного руху. Зверни увагу: кома перед цим сполучним словом є обов'язковою.
 
-Але якщо ми говоримо про рух або точний напрямок, слово «де» зовсім не підходить. *(But if we talk about movement or exact direction, the word "where" does not fit at all.)* For direction or motion towards a place, we must use «куди». Це слово показує кінцеву мету нашої подорожі. *(This word shows the final goal of our journey.)* Think of it as "the place to which". «Ми нарешті вибрали місто, куди поїдемо у літню відпустку.» *(We finally chose the city where we will go on summer vacation.)* «Це той новий магазин, куди вона швидко зайшла п'ять хвилин тому.» *(This is that new store where she quickly went in five minutes ago.)* «Я не знаю парк, куди вони пішли гуляти сьогодні вранці.» *(I do not know the park where they went for a walk this morning.)* Завжди уважно дивіться на дієслово. *(Always look carefully at the verb.)* Якщо це дієслово активного руху, як-от «йти», «бігти» або «їхати», використовуйте «куди». *(If it is a verb of active motion, like "to walk", "to run", or "to ride", use "where to".)*
+> *The word shows a static place. It easily and naturally replaces the complex grammatical construction "в якому" or "на якому" (in/on which). You use this word when you want to describe a location where an action takes place, but there is no movement. Note: a comma before this connector word is mandatory.*
 
-Нарешті, ми маємо цікаве слово «звідки». *(Finally, we have the interesting word "where from".)* Ми використовуємо його, коли говоримо про джерело або самий початок руху. *(We use it when we talk about the source or the very beginning of movement.)* It describes the specific place from which someone or something came. «Це маленьке село, звідки привезли це свіже молоко.» *(This is the small village where this fresh milk was brought from.)* «Я дуже хочу побачити країну, звідки він вчора приїхав.» *(I really want to see the country where he came from yesterday.)* «Ось та нова школа, звідки щойно вийшли радісні діти.» *(Here is that new school where the joyful children just came out from.)* Як і з іншими сполучними словами, перед «звідки» завжди стоїть кома. *(Like with the other connecting words, there is always a comma before "where from".)* Це важливе граматичне правило. *(This is an important grammar rule.)*
+Кафе, де ми зустрілися, було дуже затишне. Місто, де я народився, знаходиться на заході країни. Це великий парк, де діти часто грають у футбол. Кімната, де вона працює, завжди чиста і світла. Будинок, де живе мій друг, стоїть біля озера.
 
-Давайте прочитаємо короткий діалог. *(Let's read a short dialogue.)* Клієнт хоче купити нову простору квартиру і активно розпитує про район. *(A client wants to buy a new spacious apartment and actively asks about the neighborhood.)*
+> *The cafe where we met was very cozy. The city where I was born is located in the west of the country. This is a large park where children often play football. The room where she works is always clean and bright. The house where my friend lives stands near a lake.*
 
-> — **Покупець:** Цей новий район виглядає дуже тихим і спокійним. *(This new neighborhood looks very quiet and peaceful.)* Де знаходиться найближчий парк, куди ми можемо ходити гуляти з нашим собакою? *(Where is the nearest park where we can go for a walk with our dog?)*
-> — **Ріелтор:** Великий зелений парк зовсім близько. *(The big green park is very close.)* А ось широка вулиця, де є гарна пекарня і маленька кав'ярня. *(And here is a wide street where there is a nice bakery and a small coffee shop.)*
-> — **Покупець:** О, я вже відчуваю цей приємний запах. *(Oh, I already smell this pleasant smell.)*
-> — **Ріелтор:** Так, це саме те місце, звідки завжди пахне свіжою кавою і теплим хлібом. *(Yes, this is exactly the place where it always smells of fresh coffee and warm bread.)*
-> — **Покупець:** Це просто чудово. *(This is simply wonderful.)* Я дуже люблю місця, де є така затишна атмосфера. *(I really love places where there is such a cozy atmosphere.)*
+However, Ukrainian is very strict about distinguishing between a static location and an active direction. If the action in your relative clause involves movement toward a specific destination, you cannot use the standard word for 'where'. The word for 'where to' is **куди** (where to). This is a crucial difference from English, which uses "where" for both static position and movement. Whenever your subordinate clause contains a verb of motion like «іти» or «їхати», you must switch your connector word.
 
-Отже, запам'ятайте це дуже просте правило. *(So, remember this very simple rule.)* We use «де» for static location ("at which" or "in which"), «куди» for dynamic direction towards a place ("to which"), and «звідки» for clear origin ("from which"). Ці три слова допомагають дуже легко і швидко описувати будь-які локації. *(These three words help to very easily and quickly describe absolutely any locations.)*
+Парк, куди ми ходимо гуляти кожної неділі, дуже великий. Це новий ресторан, куди вони планують піти на вечерю. Місто, куди він завтра їде у відрядження, знаходиться далеко звідси. Театр, куди ми вчора пішли, відомий на всю країну.
 
-<!-- INJECT_ACTIVITY: quiz-place-connectors -->
+> *The park where we go for a walk every Sunday is very large. This is a new restaurant where they plan to go for dinner. The city where he is going on a business trip tomorrow is located far from here. The theater where we went yesterday is famous all over the country.*
 
-## Описуємо людей, речі та місця (Describing People, Things, and Places)
+:::info
+**Direction vs. Location**
+Always check the main verb inside the descriptive part of the sentence. If the action answers the question "Where to?" (Куди?), use **куди**. If the action answers the question "Where at?" (Де?), use **де**.
+:::
 
-Ми вже добре знаємо, як використовувати слова «який», «де», «куди» та «звідки». *(We already know well how to use the words "which", "where", "where to", and "where from".)* Тепер давайте уважно подивимося, як саме вони допомагають нам детально описувати різних людей і предмети. *(Now let's look closely at exactly how they help us describe various people and objects in detail.)* Usually, when we start learning a language, we use very short and simple sentences. Наприклад, ми часто кажемо: «Мій старший брат зараз живе у Польщі. *(For example, we often say: "My older brother lives in Poland now.)* Він працює там лікарем». *(He works there as a doctor.")* Це правильно граматично, але звучить дуже просто і трохи штучно. *(This is absolutely correct grammatically, but it sounds very simple and a bit artificial.)* Складнопідрядні речення роблять наше щоденне мовлення більш **елегантним** *(elegant)*, плавним та природним. *(Complex sentences make our everyday speech more elegant, fluent, and natural.)* Ми можемо легко об'єднати ці дві окремі думки в одну красиву конструкцію. *(We can easily combine these two separate thoughts into one beautiful structure.)* «Мій брат, який працює лікарем, живе зараз у Польщі.» *(My brother, who works as a doctor, lives in Poland now.)* У цьому новому реченні головна інформація — це те, що він живе у Польщі. *(In this new sentence, the main information is that he lives in Poland.)* А підрядна частина «який працює лікарем» — це просто зручний додатковий опис. *(And the subordinate part "who works as a doctor" is just a convenient additional description.)*
+The third important relative word indicates the initial starting point or place of origin. The word for 'where from' is **звідки** (where from). It is always used together with verbs of motion that mean returning, leaving, or arriving from some specific place.
 
-Коли ми самостійно будуємо такі довгі речення, дуже важливо уникати однієї типової помилки. *(When we independently build such long sentences, it is very important to avoid one typical mistake.)* English speakers often want to repeat the subject or object inside the relative clause because it feels natural in English. Наприклад, вони часто можуть помилково сказати: «Це та нова книга, яку я читав її...» *(For example, they can often mistakenly say: "This is that new book which I read it...")* Це **зайвий** *(redundant)* займенник, який робить речення неправильним. *(This is a redundant pronoun that makes the sentence absolutely incorrect.)* В українській мові слово «яку» вже повноцінно виконує роль цього конкретного предмета. *(In the Ukrainian language, the word "which" already fully performs the role of this specific object.)* Воно повністю замінює слово «книга» у нашій підрядній частині. *(It completely replaces the word "book" in our subordinate part.)* Тому правильно і природно говорити тільки так: «Книга, яку я читав, була дуже цікава.» ✅ *(Therefore, it is correct and natural to speak only like this: "The book which I read was very interesting.")* Ніколи не додавайте зайві слова «його», «її» або «їх» відразу після слова «який». *(Never add the redundant words "him", "her", or "them" right after the word "which".)*
+Країна, звідки вона приїхала минулого року, має дуже цікаву історію. Це університет, звідки я щойно повернувся після лекції. Магазин, звідки вони приносять ці свіжі овочі, працює цілодобово. Місто, звідки починається наш маршрут, лежить на березі річки.
 
-Також обов'язково зверніть свою увагу на правильну **інтонацію** *(intonation)* у таких довгих фразах. *(Also definitely pay your attention to the correct intonation in such long phrases.)* Коли ми вимовляємо означальне підрядне речення, наш голос завжди трохи змінюється. *(When we pronounce an attributive subordinate clause, our voice always changes a bit.)* The pitch drops slightly for the parenthetical insert, which is the relative clause itself. Потім ваш голос знову повертається до нормального базового рівня для решти головного речення. *(Then your voice returns again to the normal base level for the rest of the main sentence.)* Пам'ятайте, що кома перед словом «який» — це не просто нудний розділовий знак. *(Remember that the comma before the word "which" is not just a boring punctuation mark.)* Це дуже важлива маленька пауза для вашого дихання. *(This is a very important small pause for your breathing.)* It gives the listener a necessary micro-pause to process the descriptive addition. Прочитайте це речення вголос: «Цей розумний студент, [пауза] який сидить там, [пауза] знає всі відповіді.» *(Read this sentence out loud: "This smart student, [pause] who is sitting there, [pause] knows all the answers.")*
+> *The country where she came from last year has a very interesting history. This is the university from which I just returned after a lecture. The store where they bring these fresh vegetables from is open around the clock. The city where our route begins lies on the bank of the river.*
 
-Ми можемо додавати більше цікавих деталей і вільно комбінувати різні сполучні слова. *(We can add more interesting details and freely combine different connecting words.)* You can stack information naturally to describe a specific place using multiple relative clauses. Наприклад: «Це **старий** *(old)* будинок, який стоїть на горі і де колись жив відомий поет.» *(For example: "This is an old house which stands on the mountain and where a famous poet once lived.")* Тут ми маємо одразу дві різні підрядні частини. *(Here we have two different subordinate parts at once.)* Перша частина описує сам фізичний предмет: «який стоїть на горі». *(The first part describes the physical object itself: "which stands on the mountain".)* Друга частина описує конкретну локацію: «де колись жив відомий поет». *(The second part describes the specific location: "where a famous poet once lived".)* Це чудово демонструє ваш високий рівень володіння українською мовою. *(This wonderfully demonstrates your high level of Ukrainian language proficiency.)*
+To truly master these relative adverbs, you must focus on the relationship between the place and the action happening inside the relative clause. If your goal is to describe a scene—the verb for 'to describe' is **описувати** (to describe)—the main noun remains exactly the same, but the connector word changes based on what happens next. Let's look at how the same noun behaves differently depending on whether the action is static, moving toward it, or moving away from it.
 
-Тепер, будь ласка, спробуйте самостійно описати ваш улюблений предмет або якесь особливе місце. *(Now, please, try to independently describe your favorite object or some special place.)* Подумайте про історію цієї речі або про те, де саме вона зараз знаходиться. *(Think about the history of this thing or about where exactly it is located now.)* Ось один дуже гарний приклад для вас. *(Here is one very good example for you.)* «Мій **улюблений** *(favorite)* предмет — це годинник, який подарував мені дідусь і який завжди показує точний час.» *(My favorite object is a watch, which my grandfather gave me and which always shows the exact time.)* Спробуйте написати схоже складне речення про свій новий телефон або рідне місто. *(Try to write a similar complex sentence about your new phone or hometown.)* Використовуйте всі нові слова, які ви знаєте, і ніколи не забувайте про коми! *(Use all the new words that you know, and never forget about commas!)*
+Це місто, де я живу і працюю кожного дня. Це місто, куди я їду на вихідні до своїх батьків. Це місто, звідки я щойно повернувся після відпустки.
 
-<!-- INJECT_ACTIVITY: match-up-sentence-combine -->
-<!-- INJECT_ACTIVITY: unjumble-relative-clauses -->
+> *This is the city where I live and work every day. This is the city where I am going for the weekend to see my parents. This is the city where I just returned from after a vacation.*
 
-## Підсумок
+Головний іменник залишається незмінним. Змінюється лише слово, яке з'єднує дві частини. Цей простий граматичний інструмент робить твоє мовлення багатим і дуже природним.
 
-Ось найголовніші правила, які вам потрібно пам'ятати з цього уроку. *(Here are the most important rules you need to remember from this lesson.)*
+> *The main noun remains unchanged. Only the word that connects the two parts changes. This simple grammatical tool makes your speech rich and very natural.*
 
-*   Слово «який» завжди копіює **рід** *(gender)* і **число** *(number)* слова, яке воно описує. *(The word "який" always copies the gender and number of the word it describes.)*
-*   Ми завжди ставимо кому перед словами «який», «де», «куди» або «звідки». *(We always put a comma before the words "which", "where", "where to", or "where from".)*
-*   Use «де» to describe a location, «куди» for a movement, and «звідки» for an origin.
-*   Inside the subordinate clause, «який» takes the case required by the verb. *(Наприклад: «Це дівчина, яку я бачу» — Accusative).*
-*   А тепер питання для самоперевірки. *(And now a question for self-checking.)* Can you describe your best friend using «який» and «де» in one sentence? Наприклад: «Мій найкращий друг, який живе в Одесі, дуже любить море». *(For example: "My best friend, who lives in Odesa, loves the sea very much.")*
+<!-- INJECT_ACTIVITY: quiz-choose-or-to-complete-sentences-about-places -->
+
+## Описуємо людей, речі та місця (Describing People, Things, and Places) (~750 words)
+
+When you start learning a language, you naturally speak in short, simple sentences. This is a normal stage, but it can make your speech sound a bit choppy. To sound more advanced and fluent, you need to learn how to combine these short statements into a single, cohesive thought. You can achieve this by using an attributive clause, which in Ukrainian is called an **означальний** (attributive, defining) clause. Such a **речення** (sentence, clause) acts like a long adjective, giving more information about a specific noun. We usually connect them with words like **який** (which, that — masc.).
+
+Розглянемо типовий приклад з коротких речень. Це мій друг. Він живе у Києві. Він працює програмістом. Ці речення граматично правильні, але вони звучать занадто просто. Ми можемо об'єднати їх в одне гарне речення за допомогою відносного займенника. Це мій друг, який живе у Києві і працює програмістом. Таке речення звучить набагато природніше і допомагає поєднати дві думки в одне висловлення.
+
+> *Let's look at a typical example of short sentences. This is my friend. He lives in Kyiv. He works as a programmer. These sentences are grammatically correct, but they sound too simple. We can combine them into one beautiful sentence using a relative pronoun. This is my friend, who lives in Kyiv and works as a programmer. Such a sentence sounds much more natural and shows your high level of language proficiency.*
+
+<!-- INJECT_ACTIVITY: match-up-combine-two-simple-sentences-into-one-using-a-relative-clause -->
+
+As you become more comfortable with these structures, you can start describing complex scenes by combining relative pronouns and relative adverbs in the same sentence. This allows you to build a smooth narrative flow and paint a detailed picture for your listener. You already know how to use words like **де** (where — relative), **куди** (where to — relative), and **звідки** (where from — relative) to describe locations. Now, try mixing them with the relative pronouns you learned earlier.
+
+Ресторан, де ми вчора вечеряли, знаходиться біля парку. Жінка, яка сидить за тим столиком, приїхала з іншого міста. Магазин, звідки вони привозять ці смачні фрукти, належить моєму сусіду. Ці великі речення допомагають нам детально описувати людей, речі та місця.
+
+> *The restaurant where we had dinner yesterday is located near the park. The woman who is sitting at that table came from another city. The store where they bring these delicious fruits from belongs to my neighbor. These large sentences help us accurately describe people, things, and places.*
+
+:::note
+**Quick tip**
+When you stack multiple clauses, make sure you don't lose track of the main subject. The core of the sentence remains the most important part, while the relative clauses simply add colorful details to the nouns.
+:::
+
+English speakers often make three common mistakes when forming relative clauses in Ukrainian. First, in English, you can often omit the relative pronoun, saying things like "The book I read." In Ukrainian, this is absolutely impossible. The relative pronoun is mandatory. 
+
+**Книга, яку я читав.** — *The book I read.*
+
+Skipping the connector word will confuse your listener. Second, avoid wrong gender agreement: **Хлопець, яке прийшов вчора.** is wrong, because **хлопець** needs **який**. Third, avoid using redundant pronouns. Sometimes learners try to combine the relative pronoun with a personal pronoun, resulting in incorrect sentences.
+
+**Книжка, яка вона цікава.** — *The book, which it is interesting.* (WRONG)
+
+The relative pronoun already replaces the noun, so you do not need to add the extra personal pronoun. Finally, be careful with the English distinction between "who" for humans and "which" or "that" for objects. In Ukrainian, the pronoun is universal. You will use the feminine form **яка** (which, that — fem.) for both a woman and a female-gendered object. Similarly, you use **яке** (which, that — neut.) for neuter nouns and **які** (which, that — pl.) for plurals.
+
+Дівчина, яка читає журнал, — моя сестра. Це нова машина, яка коштує дуже дорого. Студенти, які вчаться у нашому університеті, організували цікавий концерт. Це нові правила, які ми повинні запам'ятати. Дерево, яке росте біля нашого будинку, дуже старе. Озеро, яке знаходиться за містом, ідеально підходить для риболовлі.
+
+> *The girl who is reading a magazine is my sister. This is a new car that costs a lot. The students who study at our university organized an interesting concert. These are new rules that we must remember. The tree that grows near our house is very old. The lake that is located outside the city is perfect for fishing.*
+
+<!-- INJECT_ACTIVITY: true-false-judge-whether-relative-clauses-have-correct-agreement-and-comma-placement -->
+
+Another crucial aspect of mastering relative clauses is the intonation. Punctuation is strict in Ukrainian: you must always place a comma before the relative pronoun or adverb that introduces the clause. This comma is not just a grammatical rule; it is a direct instruction for your voice.
+
+Головне речення починається з нейтральної інтонації. Потім ви робите коротку паузу перед комою. Підрядна частина, яка починається з цих слів, вимовляється з нижчим тоном. Вона звучить як додаткове пояснення. Після цього інтонація повертається до нормального рівня. Ця пауза перед комою дає слухачеві сигнал, що зараз буде детальний опис.
+
+> *The main sentence begins with a neutral intonation. Then you make a short pause before the comma. The subordinate part, which begins with these words, is pronounced with a lower pitch. It sounds like an additional explanation. After that, the intonation returns to a normal level. This pause before the comma gives the listener a signal that a detailed description is coming.*
+
+:::info
+**Grammar box**
+Always use a comma before the relative words when they connect two parts of a complex sentence. In spoken Ukrainian, this comma corresponds to a slight pause and a drop in pitch, acting like verbal parentheses around the descriptive clause.
+:::
+
+While reading Ukrainian literature or watching formal news broadcasts, you might encounter another relative pronoun: котрий. This word also means "which" or "who" and is a formal synonym for the relative pronoun you have been practicing.
+
+Письменник, котрий написав цей роман, народився у Львові. Це історичний документ, котрий знайшли в архіві минулого року. Журналістка, котра веде цю програму, дуже відома в Україні. Ви будете часто бачити це слово в текстах.
+
+> *The writer who wrote this novel was born in Lviv. This is a historical document that was found in the archive last year. The journalist who hosts this program is very famous in Ukraine. You will often see this word in texts.*
+
+At the A2 level, you do not need to actively use this formal synonym in your daily conversations. It is completely acceptable and stylistically neutral to rely exclusively on the primary relative pronouns and adverbs you have learned in this module to **описувати** (to describe) things. Recognize the formal synonym when you read it, but stick to the simpler, more universal words when you speak.
+
+Now it is time to put all this theory into practice. Knowing the rules is only the first step; true fluency comes from personalizing the grammar. Think about your own life and the things that matter to you. How would you describe your favorite place using these relative clauses? How would you describe a person you admire, or an object you use every single day?
+
+Напишіть кілька речень про своє рідне місто. Використайте слова де, куди та звідки. Потім опишіть свого найкращого друга за допомогою відносних займенників. Згадайте кафе, яке ви любите відвідувати на вихідних. Регулярна практика допоможе вам використовувати ці конструкції у реальній розмові.
+
+> *Write a few sentences about your hometown. Use the words where, where to, and where from. Then describe your best friend using relative pronouns. Think of a cafe that you like to visit on the weekends. Regular practice will help you use these constructions in real conversation.*
+
+<!-- INJECT_ACTIVITY: unjumble-reorder-words-to-form-correct-relative-clauses-with-and -->
 </generated_module_content>
 
-**PIPELINE NOTE — Word count: 2998 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
+**PIPELINE NOTE — Word count: 2967 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -383,38 +473,168 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 525 words | Not found: 2 words
+Verified: 384 words | Not found: 1 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
-  ✗ Одесі — NOT IN VESUM
-  ✗ Польщі — NOT IN VESUM
+  ✗ Львові — NOT IN VESUM
 
-All 525 other words are confirmed to exist in VESUM.
+All 384 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
-## Verification Tools (MCP)
+---
 
-You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
+## Verification Tools (Shell Commands)
 
-**Core Verification:**
-- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
-- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
+You have access to verification tools via shell commands. Use these to verify
+Ukrainian vocabulary, check grammar, and search textbook content **as you write**.
 
-**Content Quality:**
-- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+**IMPORTANT:** Run verification commands BEFORE finalizing any Ukrainian text.
+Batch multiple verifications together to minimize round-trips.
 
-**Reference:**
-- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp_rag_search_literary` — verify literary references against primary sources
-- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
+### 1. Batch-verify Ukrainian words exist in VESUM (preferred — one call for many words)
 
-**Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_words
+results = verify_words(['слово1', 'слово2', 'слово3'])
+for w, matches in results.items():
+    if matches:
+        print(f'{w}: FOUND — lemma={matches[0][\"lemma\"]}, pos={matches[0][\"pos\"]}')
+    else:
+        print(f'{w}: NOT FOUND — may not exist in standard Ukrainian')
+"
+```
+
+### 2. Verify a single Ukrainian word in VESUM (with full morphological tags)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_word
+results = verify_word('WORD_HERE')
+if results:
+    for m in results:
+        print(f'lemma={m[\"lemma\"]}, pos={m[\"pos\"]}, tags={m[\"tags\"]}')
+else:
+    print('NOT FOUND in VESUM')
+"
+```
+
+### 3. Get all inflected forms of a lemma (declension/conjugation)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_lemma
+forms = verify_lemma('LEMMA_HERE')
+for f in forms[:20]:
+    print(f'{f[\"word_form\"]:20s} {f[\"pos\"]:8s} {f[\"tags\"]}')
+print(f'... {len(forms)} forms total')
+"
+```
+
+### 4. Check CEFR level of a word (is it level-appropriate?)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import query_cefr_level
+results = query_cefr_level('WORD_HERE')
+for r in results:
+    print(f'{r[\"word\"]}: {r[\"level\"]} ({r[\"pos\"]})')
+if not results:
+    print('Not in CEFR database')
+"
+```
+
+### 5. Search textbook content (Ukrainian school textbooks, Grades 1-11)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_textbooks
+keywords = {'keyword1', 'keyword2'}
+results = search_textbooks(keywords, 5)
+for r in results:
+    title = r.get('section_title', r.get('title', ''))
+    grade = r.get('grade', '?')
+    text = r.get('text', '')[:200]
+    print(f'Grade {grade} | {title}')
+    print(f'  {text}')
+    print()
+"
+```
+
+### 6. Search style guide for calques/Russianisms (Антоненко-Давидович, 279 entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_style_guide
+results = search_style_guide('TOPIC_HERE', 3)
+for r in results:
+    print(f'--- {r.get(\"word\", \"\")} [{r.get(\"section\", \"\")}]')
+    print(r.get('text', '')[:300])
+    print()
+if not results:
+    print('No style guide entries found')
+"
+```
+
+### 7. Look up word definition in СУМ-11 (Ukrainian explanatory dictionary, 127K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_definitions
+results = search_definitions('WORD_HERE', 3)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+### 8. Search idioms (Фразеологічний словник, 25K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_idioms
+results = search_idioms('WORD_HERE', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"text\", r.get(\"definition\", \"\")))[:200]}')
+"
+```
+
+### 9. English-to-Ukrainian translation (Балла, 79K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import translate_en_uk
+results = translate_en_uk('ENGLISH_WORD', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+---
+
+**WHEN to use these tools:**
+
+1. **Before writing any Ukrainian text** — batch-verify all key vocabulary with
+   `verify_words` (tool 1). Any word that returns NOT FOUND must be replaced.
+2. **When you suspect a Russicism or calque** — search the style guide (tool 6)
+   and verify the correct Ukrainian form with `verify_word` (tool 2).
+3. **When writing for A1/A2** — check CEFR levels (tool 4) to ensure vocabulary
+   is level-appropriate.
+4. **When unsure about a case ending or conjugation** — use `verify_lemma` (tool 3)
+   to see the full paradigm.
+5. **When covering a grammar topic** — search textbooks (tool 5) to see how
+   Ukrainian school textbooks teach it.
+6. **When you need the precise Ukrainian meaning** — use СУМ-11 (tool 7).
+7. **When looking for natural Ukrainian expressions** — search idioms (tool 8).
+
+**Batching rule:** Collect all words you want to verify, then run ONE `verify_words`
+call instead of multiple `verify_word` calls. This is faster and uses fewer tokens.

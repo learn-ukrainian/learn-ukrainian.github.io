@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-**осіб** (persons). * Одна **школа** (school) — багато **шкіл** (schools). Це чергування робить вимову набагато мелодійнішою та природнішою для української мови. Але що робити, коли перед останнім голосним стоять два приголосні звуки? If we just drop the final "-а" or "-я", we are left with a difficult consonant cluster at the end of the word. Українська мова не любить таких складних комбінацій приголосних. To solve this pronunciation problem, the language uses **вставні голосні** (fleeting vowels). Найчастіше це голосні звуки "о" або "е". Ми просто вставляємо цей новий голосний звук між двома останніми приголосними. We usually insert "-о-" after hard consonants, especially when the word ends in "-ка". Це дуже поширена ситуація, тому що українська мова має багато слів із суфіксом "-к". * Одна **книжка** (book) — багато **книжок** (books). * Одна **картка** (card) — п'ять **карток** (cards). * Одна **казка** (fairy tale) — десять **казок** (fairy tales). * Одна **думка** (thought) — багато **думок** (thoughts). We insert "-е-" after soft consonants or shibilants (ж, ч, ш). * Одна **земля** (earth, land) — багато **земель** (lands). * Одна **вишня** (cherry) — п'ять **вишень** (cherries). * Одна **пісня** (song) — кілька **пісень** (songs). Ці вставні голосні роблять слова легкими та приємними для вимови. Тепер давайте уважно подивимося на слова, які закінчуються на "-я". If the "-я" comes immediately after another vowel, the zero ending takes the form of the consonant "-й". Це дуже логічне правило, адже літера "я" позначає звуки "й" та "а" після іншого голосного. * Одна **мрія** (dream) — багато **мрій** (dreams). * Одна **надія** (hope) — немає **надій** (hopes). * Одна **подія** (event) — кілька **подій** (events). What happens if the noun ends in "-ня" or "-ля"? Якщо перед цим закінченням є ще один приголосний, ми використовуємо вставний звук "е". Але ми також повинні додати м'який знак у кінці слова. * Одна **їдальня** (dining room) — кілька **їдалень** (dining rooms). * Одна **спальня** (bedroom) — п'ять **спалень** (bedrooms). * Одна **читальня** (reading room) — багато **читалень** (reading rooms). М'який знак тут виконує важливу роботу. Він показує, що попередній приголосний звук залишається м'яким, незважаючи на зникнення літери "я". Звісно, кожне правило має свої винятки, які потрібно знати. Some high-frequency feminine nouns of the first declension take the ending **-ей** instead of a zero ending. Вони зберегли цю стару форму з історичних причин. * Одна **стаття** (article) — багато **статей** (articles). * Одна **сім'я** (family) — п'ять **сімей** (families). * Одна **миша** (mouse) — кілька **мишей** (mice). * Одна **свиня** (pig) — багато **свиней** (pigs). You will also encounter masculine nouns in the first declension. Це слова чоловічого роду, які закінчуються на "-а" або "-я". Деякі з них отримують типове чоловіче закінчення **-ів** замість очікуваного нульового закінчення. * Один **суддя** (judge) — багато **суддів** (judges). * Один **тесля** (carpenter) — кілька **теслів** (carpenters). * Один **староста** (headman, monitor) — п'ять **старостів** (monitors). Ці слова є своєрідними "історичними вижившими" (historical survivors). Вам потрібно просто запам'ятати ці особливі форми родового відмінка множини. Вони дуже часто зустрічаються у щоденному спілкуванні. <!-- INJECT_ACTIVITY: fill-in-genitive-i -->
+consonants, especially before the letter "k". Therefore, the word "book" changes to "knyzhok". And "card" becomes "kartok". The word "fairy tale" has the form "kazok". If the stem of the word is soft or ends in a shibilant sound, we add the letter "e". Thus the word "earth" turns into "zemel". And "cherry" becomes "vyshen". The word "song" has the form "pisen".* :::info **Вставний голосний (Fleeting vowel)** These inserted vowels only appear in the Genitive Plural to break up heavy consonant clusters. Think of them as a soft phonetic cushion that makes the word melodic and naturally easier to say without pausing. ::: For nouns ending in **-я**, the zero ending behaves slightly differently depending on what comes before the final vowel. If the noun ends in a vowel plus **-я**, dropping the **-я** leaves a **-й**. Therefore, «мрія» (dream) becomes «мрій». There are **декілька** (a few, several) special forms for soft stems, like the **гривня** (hryvnia). Коли слово має м'який приголосний перед закінченням, ми часто бачимо м'який знак у множині. Наприклад, українська валюта — це гривня. П'ять таких банкнот — це п'ять гривень. Слово «їдальня» має форму «їдалень». Слово «спальня» змінюється на «спалень», а «читальня» стає «читалень». Ці слова завжди звучать дуже м'яко, тому що ми зберігаємо м'якість основи. > *When a word has a soft consonant before the ending, we often see a soft sign in the plural. For example, the Ukrainian currency is the hryvnia. Five such banknotes is five hryvnias. The word "dining room" has the form "yidalen". The word "bedroom" changes to "spalen", and "reading room" becomes "chytalen". These words always sound very soft, because we keep the softness of the stem.* While the zero ending is the standard for the First Declension, language always has **кілька** (a few, several) exceptions. Some high-frequency words take the **-ей** ending instead of dropping the vowel completely. For instance, «стаття» (article) becomes «статей», and «сім'я» (family) becomes «сімей». You will also see this ending on plural-only words like **гроші** (money), which becomes «грошей». These words are survivors of older grammatical patterns. Також у першій відміні є слова чоловічого роду, які закінчуються на «а» або «я». Вони зазвичай мають закінчення «ів», як і більшість чоловічих слів. Наприклад, слово «суддя» у множині має форму «суддів». А слово «тесля» перетворюється на «теслів». Це цілком логічно, бо ці слова найчастіше описують чоловіків і їхні професії. > *Also in the first declension there are masculine words that end in "a" or "ya". They usually have the ending "iv", like most masculine words. For example, the word "judge" in the plural has the form "suddiv". And the word "carpenter" turns into "tesliv". This is quite logical, because these words most often describe men and their professions.* :::note **Quick tip** Masculine nouns in the First Declension (like «суддя» or «староста») prefer to act like other masculine nouns in the Genitive Plural, taking the **-ів** ending instead of a zero ending. They align with their gender rather than their word ending. ::: <!-- INJECT_ACTIVITY: fill-in-genitive-i -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -536,7 +536,74 @@ Understanding numeral agreement is a crucial hub connecting several grammatical 
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -555,18 +622,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] родовий відмінок (genitive case)
+- [ ] нульове закінчення (zero ending)
+- [ ] кількість (quantity, amount)
+- [ ] багато (a lot, many)
+- [ ] мало (few, little)
+- [ ] кілька (a few, several)
+- [ ] декілька (a few, several)
+- [ ] скільки (how many, how much)
+- [ ] гроші (money)
+- [ ] гривня (hryvnia)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## II відміна: -ів, нульове, -ей (~680 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

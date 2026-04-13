@@ -1,82 +1,66 @@
 {
-  "total_items": 54,
-  "grounded_items": 43,
+  "total_items": 51,
+  "grounded_items": 42,
   "ungrounded": [
     {
-      "word": "брудна",
-      "exercise_type": "group-sort",
-      "context": "брудна",
-      "role": "answer"
-    },
-    {
-      "word": "воно",
-      "exercise_type": "group-sort",
-      "context": "Воно (Neuter)",
-      "role": "context"
-    },
-    {
-      "word": "темне",
-      "exercise_type": "group-sort",
-      "context": "темне",
-      "role": "answer"
-    },
-    {
-      "word": "гарне",
-      "exercise_type": "true-false",
-      "context": "Гарне день.",
-      "role": "context"
-    },
-    {
-      "word": "стара",
-      "exercise_type": "error-correction",
-      "context": "Мій телефон стара.",
-      "role": "context"
-    },
-    {
-      "word": "ця",
-      "exercise_type": "error-correction",
-      "context": "Ця книга дороге.",
-      "role": "context"
-    },
-    {
-      "word": "дороге",
-      "exercise_type": "error-correction",
-      "context": "Ця книга дороге.",
+      "word": "це",
+      "exercise_type": "fill-in",
+      "context": "Це ____ книга.",
       "role": "context"
     },
     {
       "word": "погане",
-      "exercise_type": "error-correction",
+      "exercise_type": "fill-in",
       "context": "погане",
       "role": "answer"
     },
     {
-      "word": "погана",
-      "exercise_type": "error-correction",
-      "context": "Це погана фото.",
+      "word": "мій",
+      "exercise_type": "fill-in",
+      "context": "Мій стіл новий, а ____ — старе.",
       "role": "context"
     },
     {
-      "word": "софії",
-      "exercise_type": "true-false",
-      "context": "Кімната Софії темна.",
+      "word": "моє",
+      "exercise_type": "fill-in",
+      "context": "Моє вікно ____ і чисте.",
+      "role": "context"
+    },
+    {
+      "word": "брудне",
+      "exercise_type": "fill-in",
+      "context": "Стіл чистий, ____ ліжко брудне.",
+      "role": "context"
+    },
+    {
+      "word": "чоловічий",
+      "exercise_type": "group-sort",
+      "context": "Чоловічий рід (Який?)",
+      "role": "context"
+    },
+    {
+      "word": "жіночий",
+      "exercise_type": "group-sort",
+      "context": "Жіночий рід (Яка?)",
+      "role": "context"
+    },
+    {
+      "word": "середній",
+      "exercise_type": "group-sort",
+      "context": "Середній рід (Яке?)",
       "role": "context"
     },
     {
       "word": "темна",
       "exercise_type": "true-false",
-      "context": "Кімната Софії темна.",
+      "context": "The adjectives «світла» and «темна» are both in the feminine",
       "role": "context"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 16,
-    "tested_in_exercises": 13,
-    "not_tested": [
-      "яка",
-      "яке",
-      "який"
-    ]
+    "tested_in_exercises": 16,
+    "not_tested": []
   },
   "all_grounded": false
 }

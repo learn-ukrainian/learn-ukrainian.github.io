@@ -3,19 +3,19 @@
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 1: Ласкаво просимо до рівня А2 (A2, A2.1 [Foundation and Aspect Introduction])
-**Section to write:** Милозвучність мови: евфонія (The Melody of Language: Euphony) (~450 words total)
-**Word target for this section:** 450 words (aim for 495 to account for undershoot)
+**Section to write:** Милозвучність мови: евфонія (~440 words)
+**Word target for this section:** 440 words (aim for 484 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Милозвучність мови: евфонія (The Melody of Language: Euphony) (~450 words total)
-- P1 (~90 words): [The Law of Euphony. Explain that Ukrainian aesthetics require a balance of vowels and consonants. It’s not just "correct," it’s "melodious" (милозвучність).]
-- P2 (~110 words): [Rules for у/в alternation. When to use "у" (between consonants) vs "в" (between vowels or after a vowel). Examples: "був у школі" vs "була в школі".]
-- P3 (~110 words): [Rules for і/й alternation. Examples of connecting words fluidly: "я і ти" vs "ти й я". Explain how this prevents the "staccato" feel of clustered sounds.]
-- P4 (~140 words): [The "Protective" particles: з/зі/із. When to use "зі" before difficult clusters like "мн" or "св". Examples: "зі мною", "із задоволенням". Practice sentences provided.]
-- <!-- INJECT_ACTIVITY: match-up-euphony --> [match-up, Euphony Choice Exercise, 8 items]
+## Милозвучність мови: евфонія (~440 words)
+- P1 (~100 words): Introduce the concept of euphony (милозвучність). Explain that the Ukrainian language actively avoids awkward consonant or vowel clusters to maintain a melodic flow. Include a decolonization note: these euphonic alternations are strict phonetic laws, not just optional stylistic choices, unlike in Russian (e.g., Ukrainian "був у школі" avoids three consonants, unlike Russian "был в школе").
+- P2 (~120 words): Formalize the rules for у/в alternation. Explain using 'у' between consonants (Він був у школі) or at the beginning of a sentence before a consonant. Explain using 'в' between vowels (Вона пішла в аптеку) or after a vowel before a consonant.
+- P3 (~120 words): Formalize the rules for і/й alternation. Apply similar logic: use 'і' between consonants (брат і сестра) or after a pause, and use 'й' between vowels (Оксана й Андрій) or after a vowel before a consonant to maintain flow.
+- P4 (~100 words): Explain the rules for the prepositions з/зі/із. Use 'з' before single consonants, 'зі' before difficult consonant clusters (especially those starting with sibilants like с, ш, з: зі мною, зі школи), and 'із' between specific consonant groups for rhythmic balance.
+- <!-- INJECT_ACTIVITY: match-up-euphony-choice --> [match-up, Euphony Choice Exercise, 8 items]
 - <!-- INJECT_ACTIVITY: error-correction-euphony --> [error-correction, Euphony Error Correction, 6 items]
 
 ---
@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-ensures smooth transitions between sounds. You cannot say «подругі» or «дорогі»; you must always say «подрузі» and «дорозі». ::: Моя нова машина стоїть на дорозі. Я зараз тримаю телефон у правій руці. На чистому вікні сидить велика муха. Я не люблю, коли мусі там так зручно. > *My new car is parked on the road. I am holding the phone in my right hand right now. A large fly is sitting on the clean window. I do not like when the fly is so comfortable there.* Stress in the Ukrainian language is completely free and highly mobile, meaning it is not permanently fixed to a specific syllable like it is in French or Polish. Because of this unpredictability, stress alone has the power to change the entire meaning of a word. Words that share the exact same spelling but have different stress patterns are called homographs. Paying close attention to how native speakers stress their words is absolutely essential for avoiding confusion and ensuring clear comprehension. На високій горі стоїть дуже старий замок. Я ніяк не можу відкрити цей новий замок. Ми справді ніколи там раніше не були. Мені зараз ніколи сьогодні з тобою гуляти. > *A very old castle stands on the high mountain. I simply cannot open this new lock. We really have never been there before. I have no time to walk with you today right now.* Consonant assimilation is a phonetic phenomenon that makes spoken Ukrainian flow smoothly and effortlessly. The letter combinations «дж» and «дз» are not pronounced as two separate, distinct sounds, but rather as single unified affricate consonants. Additionally, voiceless consonants automatically become voiced when they stand immediately before voiced consonants in a word. This means the written spelling of a word does not always perfectly match its phonetic output in rapid, natural speech. У нашому саду літає велика бджола. Я раптом чую дуже гучний шкільний дзвінок. Це була справді велика і важлива просьба. Ми довго чекаємо на головному вокзалі. > *A large bee is flying in our garden. I suddenly hear a very loud school bell. It was truly a big and important request. We are waiting for a long time at the main train station.* Finally, the mobility of stress extends deeply into noun and verb paradigms. As you decline a noun through its cases or conjugate a verb across different persons, the stressed syllable can frequently shift back and forth between the stem and the ending. Recognizing these mobile stress patterns early on helps you predict how a completely new word will sound in different grammatical contexts. This awareness ultimately makes your conversational speech much more natural, fluid, and confident. Ця холодна гірська вода дуже смачна. Я з радістю п'ю цю холодну воду. Моя права рука сьогодні сильно болить. Підніміть ваші обидві руки високо вгору. > *This cold mountain water is very tasty. I gladly drink this cold water. My right hand hurts badly today. Raise both your hands high up.* <!-- INJECT_ACTIVITY: fill-in, Phonological Alternation Pairs, 8 items -->
+hear this in words like «джерело» (spring) or «бджола» (bee). Furthermore, Ukrainian features voicing assimilation before voiced consonants. This means that a voiceless consonant will borrow the "voice" of the consonant immediately following it. У лісі є чисте джерело. Там літає велика бджола. Наша боротьба за свободу триває. Ми довго чекали нашого друга біля вокзалу. > *There is a clean spring in the forest. A big bee is flying there. Our struggle for freedom continues. We waited a long time for our friend near the station.* In the word «боротьба» (struggle), the voiceless «т» stands before the voiced «б». Because of this, the «т» is pronounced as a voiced «д», making the word sound like [бород'ба]. You can also observe this in «просьба» (request), which sounds like [проз'ба]. Similarly, «вокзал» (train station) is pronounced [воґзал] because the voiceless «к» assimilates to the voiced «з» that follows it. Let us talk about the soul of a word: its **наголос** (stress (accent)). In Ukrainian, stress is not fixed to a specific syllable like it is in some other languages. It is free and mobile, which means it plays a crucial role in conveying correct meaning. Sometimes, the only difference between two completely different words is which syllable receives the emphasis. These words are called homographs. Misplacing the stress can completely change what you are trying to say. Ми дивимося на старовинний замок. Мій новий замок на дверях зламався. Я ніколи не їм м'яса. Мені зараз ніколи відпочивати. > *We are looking at an ancient castle. My new lock on the door broke. I never eat meat. I have no time to rest right now.* If you stress the first syllable in «замок», it means "castle". If you stress the second syllable, it means "lock". Similarly, «ніколи» means "never", but «ніколи» means "no time". Mastering stress patterns is just as important as learning the letters themselves. Finally, you will discover that stress often shifts within the exact same word depending on its grammatical role. This mobile stress in noun paradigms is a key feature of the Ukrainian rhythm. The stress shifts between the word stem and the case ending across different forms. Recognizing these shifts will help you predict the pronunciation of new nouns and speak with a natural, authentic cadence. Холодна вода тече з крана. Я хочу пити чисту воду. Моя права рука відпочиває. Мої дві руки дуже втомилися після роботи. > *Cold water flows from the tap. I want to drink clean water. My right hand is resting. My two hands are very tired after work.* Notice how the stress in «вода» in the **називний** (nominative) case falls on the ending, but when it becomes the direct object «воду» in the **знахідний** (accusative) case, the stress jumps back to the stem. The word «рука» stresses the ending, but «руки» stresses the stem. You will even see changes like this in the **кличний** (vocative) case. Embracing this shifting melody will bring your Ukrainian to a whole new level. <!-- INJECT_ACTIVITY: fill-in-phonological-alternations -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -611,6 +611,30 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] відмінок (case)
+- [ ] називний (nominative)
+- [ ] знахідний (accusative)
+- [ ] місцевий (locative)
+- [ ] кличний (vocative)
+- [ ] чергування (alternation)
+- [ ] голосний (vowel)
+- [ ] приголосний (consonant)
+- [ ] наголос (stress (accent))
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Милозвучність мови: евфонія (~440 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

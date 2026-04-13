@@ -1,44 +1,32 @@
-## Частини мови: що це за слово?
+## Частини мови: що це за слово? (~650 words total)
 
-Ви вже багато знаєте і вмієте говорити українською. You already use nouns, verbs, and adjectives every day. Але тепер ми починаємо говорити про саму мову. From now on, you will read and hear grammar instructions in Ukrainian. Щоб розуміти ці правила, нам потрібні спеціальні слова. Це як робота механіка. A mechanic knows how to fix a car, but they also need to know the names of their tools. Наші інструменти — це **частини мови** *(parts of speech)*. У кожної частини мови є своє ім'я і своя робота в реченні.
+You have been building Ukrainian sentences for months, using nouns, verbs, and adjectives naturally. Now, as you approach the B1 level, you need to know what Ukrainian teachers actually call these building blocks. Think of it like a mechanic learning the formal names of their tools after already knowing how to use them. When you know the Ukrainian term for a specific word type, you can follow grammar explanations entirely in Ukrainian. These grammatical categories are called **частини мови** (parts of speech). Let's look at how they work in context.
 
-Уявіть урок української мови. A student is asking the teacher about some tricky words.
-> — **Студент:** Скажіть, будь ласка, слово «мій» — це яка частина мови? *(Tell me please, the word "my" — what part of speech is it?)*
-> — **Вчитель:** Слово «мій» — це **займенник** *(pronoun)*.
-> — **Студент:** Чому воно так називається? *(Why is it called that?)*
-> — **Вчитель:** Тому що воно стоїть замість імені. *(Because it stands instead of a name.)* Воно не називає предмет. Воно тільки вказує на нього. *(It only points to it.)*
-> — **Студент:** А слово «швидко»? *(And the word "quickly"?)*
-> — **Вчитель:** Це **прислівник** *(adverb)*. Воно показує, як саме ми робимо дію. *(It shows exactly how we do an action.)*
+> — **Студент:** Вибачте, слово «мій» — це яка частина мови? *(Excuse me, what part of speech is the word "my"?)*
+> — **Вчитель:** Це **займенник** (pronoun). Він стоїть у реченні замість імені. *(It is a pronoun. It stands in a sentence instead of a name.)*
+> — **Студент:** Зрозуміло. А слово «швидко»? Це теж дієслово? *(Understood. And the word "quickly"? Is that also a verb?)*
+> — **Вчитель:** Ні, це **прислівник** (adverb). Він показує, як саме ми робимо дію. *(No, it is an adverb. It shows exactly how we do an action.)*
 
-Перша і найголовніша частина мови — це **іменник** *(noun)*. Українські школярі вчать, що іменник — це **назва предмета** *(name of an object)*. Слово «іменник» походить від слова «ім'я». Усі іменники відповідають на два головні питання. Якщо це жива людина або тварина, ми завжди питаємо **«хто?»** *(who?)*. Якщо це звичайний неживий предмет, явище природи або ідея, ми питаємо **«що?»** *(what?)*.
-Подивіться на ці приклади:
-* Хто? — **мама** *(mom)*, **собака** *(dog)*, **студент** *(student)*, **лікар** *(doctor)*.
-* Що? — **стіл** *(table)*, **радість** *(joy)*, **місто** *(city)*, **сонце** *(sun)*.
-Іменники мають дуже важливу роль у реченні. Вони бувають чоловічого, жіночого та середнього роду. Вони також мають однину і множину.
+Кожне слово належить до певної групи, і найголовніша з них — це **іменник** (noun). Іменник називає предмет, людину, тварину або абстрактне поняття. Ця частина мови завжди відповідає на питання «хто?» або «що?». Прикладами іменників є слова мама, собака, стіл та радість. У словнику ви завжди бачите іменник у формі, яка називається **називний відмінок** (nominative case). Крім того, кожен іменник має свій **рід** (gender, grammatical), який не змінюється.
 
-Друга важлива частина мови — це **прикметник** *(adjective)*. Прикметник завжди показує **ознаку предмета** *(characteristic of an object)*. Колір, розмір, вік, характер — усе це прикметники. Ця частина мови ніби «приклеюється» до іменника і детально описує його. Прикметники відповідають на питання «який?», «яка?», «яке?» або «які?». Прикметник — дуже слухняне слово. Він завжди має такий самий рід, число і відмінок, як і його іменник.
-Подивіться на узгодження:
-* який стіл? — **великий стіл** *(big table)*.
-* яка мама? — **гарна мама** *(beautiful mom)*.
-* яке небо? — **синє небо** *(blue sky)*.
-* які дні? — **теплі дні** *(warm days)*.
-Без прикметників наша мова була б дуже бідною.
+> *Every word belongs to a certain group, and the most important of them is the noun. A noun names an object, person, animal, or abstract concept. This part of speech always answers the questions "who?" or "what?". Examples of nouns are the words mom, dog, table, and joy. In a dictionary, you always see a noun in a form called the nominative case. Additionally, every noun has its grammatical gender, which does not change.*
 
-Третя велика категорія слів — це **дієслово** *(verb)*. Назва цієї частини мови говорить сама за себе. Дієслово означає слово, яке показує дію. Українські підручники пишуть, що дієслово — це **дія предмета** *(action of an object)*. Усі дієслова в початковій формі відповідають на питання «що робити?» або «що зробити?».
-Наприклад:
-* що робити? — **читати** *(to read)*, **писати** *(to write)*, **бігати** *(to run)*.
-* що зробити? — **прочитати** *(to have read)*, **написати** *(to have written)*.
-Дієслова — це мотор нашого речення. Вони постійно змінюються. Дієслова змінюють свою форму за особами та за часом. Вони також мають доконаний та недоконаний вид.
+Наступна важлива група слів — це **прикметник** (adjective). Він описує ознаку предмета і відповідає на питання «який?», «яка?» або «яке?». Прикметник завжди прилипає до іменника і дає нам більше інформації про нього. Наприклад, ми кажемо великий стіл, гарна мама або синє небо. Коли іменник змінює свою форму, прикметник змінюється разом із ним.
 
-<!-- INJECT_ACTIVITY: match-up, Match Ukrainian grammar terms (іменник, дієслово, etc.) to English equivalents -->
+> *The next important group of words is the adjective. It describes a characteristic of an object and answers the questions "which?" or "what kind?". The adjective always sticks to the noun and gives us more information about it. For example, we say a large table, a beautiful mom, or a blue sky. When a noun changes its form, the adjective changes along with it.*
 
-Крім цих трьох гігантів, в українській мові є інші частини мови.
-**Займенник** *(pronoun)*. Він працює як заміна для іменника або прикметника. Приклади: **я** *(I)*, **ти** *(you)*, **ми** *(we)*, **цей** *(this)*.
-**Числівник** *(numeral)*. Він показує точну кількість або порядок предметів при лічбі. Він відповідає на питання «скільки?» або «який?». Приклади: **один** *(one)*, **другий** *(second)*, **п'ять** *(five)*.
-Також є незмінні слова. Вони ніколи не змінюють своїх закінчень.
-**Прислівник** *(adverb)*. Він описує дію або іншу ознаку. Він відповідає на питання «як?», «де?», «коли?». Приклади: **тут** *(here)*, **завтра** *(tomorrow)*, **швидко** *(quickly)*.
-Є також службові слова, які допомагають будувати речення.
-**Прийменник** *(preposition)*. Він стоїть перед іменником. Приклади: **у** *(in)*, **на** *(on)*, **з** *(with)*, **до** *(to)*.
-**Сполучник** *(conjunction)*. Він з'єднує слова або частини речення між собою. Приклади: **і** *(and)*, **але** *(but)*, **бо** *(because)*.
+:::note
+**Quick tip** — When a **прикметник** (adjective) describes a noun, it must perfectly match that noun in gender, number, and case. If the noun is in **однина** (singular), the adjective must be singular too.
+:::
 
-<!-- INJECT_ACTIVITY: group-sort, Sort a list of 24 words into five buckets: іменник, прикметник, дієслово, займенник, прислівник -->
+Коли ми хочемо описати дію предмета, ми використовуємо **дієслово** (verb). У початковій формі воно відповідає на питання «що робити?» або «що зробити?». Типові приклади дієслів: читати, писати, бігати. У звичайному реченні дієслово постійно змінюється. Його форма залежить від часу та від особи, яка виконує дію. Без дієслова дуже важко побудувати повноцінне речення.
+
+> *When we want to describe an action of an object, we use a verb. In its initial form, it answers the questions "what to do?" or "what to get done?". Typical examples of verbs: to read, to write, to run. In a normal sentence, the verb constantly changes. Its form depends on the time and on the person performing the action. Without a verb, it is very difficult to build a complete sentence.*
+
+<!-- INJECT_ACTIVITY: match-up-grammar-terms -->
+
+Besides the main categories, sentences rely on several other parts of speech to function properly. A **займенник** (pronoun) replaces a noun entirely, giving us words like «я» (I), «ти» (you), and «ми» (we). When we need to count things, a **числівник** (numeral) indicates quantity or order, such as «один» (one) or «другий» (second). 
+
+There are also invariable words that never change their endings. A **прислівник** (adverb) describes how, when, or where an action happens, giving us words like «тут» (here) or «завтра» (tomorrow). Finally, we use small connecting words to glue everything together: a **прийменник** (preposition) like «у» (in), «на» (on), or «з» (with) helps show relationships. Sometimes you need a noun in the **родовий відмінок** (genitive case) right after a preposition. We also use a **сполучник** (conjunction) like «і» (and), «але» (but), or «бо» (because) to connect phrases and structure our thoughts.
+
+<!-- INJECT_ACTIVITY: group-sort-parts-of-speech -->

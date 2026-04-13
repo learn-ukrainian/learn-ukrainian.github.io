@@ -1,7 +1,7 @@
 # Audit Report: M17 — dative-pronouns.md
 **Level:** A2 | **Module:** M17 | **Phase:** A2.3 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-04-11 02:32:01
+**Generated:** 2026-04-13 05:42:25
 
 ## Configuration
 **Type:** A2-grammar
@@ -22,59 +22,48 @@
 | 2 | fill-in |  | 8 | 8 | ✅ |
 | 3 | true-false |  | 8 | 8 | ✅ |
 | 4 | quiz |  | 8 | 8 | ✅ |
-| 5 | group-sort |  | 14 | 8 | ✅ |
-| 6 | error-correction |  | 6 | 6 | ✅ |
-| 7 | fill-in |  | 8 | 8 | ✅ |
+| 5 | fill-in |  | 8 | 8 | ✅ |
+| 6 | error-correction |  | 8 | 6 | ✅ |
+| 7 | translate |  | 8 | 6 | ✅ |
+| 8 | group-sort |  | 14 | 8 | ✅ |
+| 9 | quiz |  | 8 | 8 | ✅ |
+| 10 | match-up |  | 8 | 8 | ✅ |
+| 11 | error-correction |  | 8 | 6 | ✅ |
 
 **Summary:**
-- Total activities: 7 (target: 0-4) ❌
-- Unique types: 6 (minimum: 0) ✅
-- Priority types used: 6/15 (error-correction, fill-in, group-sort, match-up, quiz, true-false) ✅
+- Total activities: 11 (target: 0-4) ❌
+- Unique types: 7 (minimum: 0) ✅
+- Priority types used: 7/15 (error-correction, fill-in, group-sort, match-up, quiz, translate, true-false) ✅
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
 - **[COMPLEXITY]** Sentence too long for A2: 16 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Але коли ми говоримо про...'
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q1 prompt length 4 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q2 prompt length 4 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q3 prompt length 4 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q4 prompt length 4 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q5 prompt length 4 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q6 prompt length 4 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q7 prompt length 4 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q8 prompt length 4 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: займенник
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
+  - FIX: Break into shorter sentences. First 5 words: 'Коли ми говоримо про третю...'
+- **[COMPLEXITY]** Sentence too long for A2: 16 words (max 15)
+  - FIX: Break into shorter sentences. First 5 words: 'Також носіям мови важко слухати...'
 
 ## Recommendation
-**📝 UPDATE** (severity 50/100)
+**📝 UPDATE** (severity 45/100)
 
-- Revision recommended (severity 50/100)
-- 10 violations (significant)
-- Immersion 13% off target
+- Revision recommended (severity 45/100)
+- 2 violations (minor)
+- Immersion 14% off target
+- Structure issue: Missing '## Summary'
 
 ## Gates
-- **Words:** ✅ 3214/2000 (raw: 3283)
-- **Activities:** ✅ 7/0
+- **Words:** ✅ 3098/2000 (raw: 3183)
+- **Activities:** ✅ 11/0
 - **Density:** ✅ All > 8
-- **Unique_types:** ✅ 6/0 types
+- **Unique_types:** ✅ 7/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 3/3
+- **Engagement:** ❌ 1/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 42/1
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ✅ 21/1
+- **Structure:** ❌ Missing '## Summary'
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ❌ 27.2% LOW (target 40-70% (A2.1))
+- **Immersion:** ❌ 26.2% LOW (target 40-70% (A2.1))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -82,8 +71,7 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 726 | Included in Core |
-| **Особові займенники у давальному відмінку (Personal Pronouns in the Dative)** | ✅ | 1037 | Included in Core |
-| **Мені холодно: Безособові конструкції (Impersonal Constructions)** | ✅ | 812 | Included in Core |
-| **Давальний чи знахідний? (Dative or Accusative?)** | ✅ | 425 | Included in Core |
-| **Підсумок** | ✅ | 214 | Included in Core |
+| **Intro/Narrative** | ✅ | 871 | Included in Core |
+| **Особові займенники у давальному відмінку (Personal Pronouns in the Dative) (~770 words total)** | ✅ | 973 | Included in Core |
+| **Мені холодно: Безособові конструкції (Impersonal Constructions with Dative) (~550 words total)** | ✅ | 808 | Included in Core |
+| **Давальний чи знахідний? (Dative or Accusative?)** | ✅ | 446 | Included in Core |

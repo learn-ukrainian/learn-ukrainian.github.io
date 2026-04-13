@@ -1,4 +1,4 @@
-<!-- version: 1.1.0 | updated: 2026-03-31 -->
+<!-- version: 1.2.0 | updated: 2026-04-12 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -11,6 +11,35 @@ Generate an `activities/verbs-group-one.yaml` file for module **16: Verbs Group 
 
 ---
 
+## ⚠️ HARD COUNT TARGETS — READ TWICE
+
+These are the binding numerical contracts for THIS module. The audit will FAIL if you fall short.
+
+| Bucket | Min | Max | Notes |
+|---|---|---|---|
+| Total activities | 10 | 10+ | inline + workbook combined |
+| Inline (lesson tab) | 4 | 6 | one per `<!-- INJECT_ACTIVITY -->` marker, see below |
+| Workbook (Зошит tab) | 6 | 9 | extended practice |
+| Items per activity | 6 | — | each activity must have at least 6 items (unless its type cap is lower — see Activity Type Reference below) |
+
+**You MUST ship at least 4 inline activities AND at least 6 workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+
+**Type diversity is required.** The module (inline + workbook combined) MUST use at least **0** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level. (If `0` is `0`, the audit profile for this level does not enforce type diversity — but variety still produces a better lesson, so aim for 4+ types when the workbook allows it.)
+
+---
+
+## Allowed types for THIS level
+
+- **Inline (lesson) types:** image-to-letter, letter-grid, match-up, watch-and-repeat, quiz, true-false, fill-in, classify
+- **Inline priority (preferred):** image-to-letter, match-up, fill-in, quiz, watch-and-repeat
+- **Workbook types:** fill-in, match-up, group-sort, anagram, unjumble, quiz, true-false, classify, divide-words, count-syllables, pick-syllables, observe, phrase-table, odd-one-out
+- **Workbook priority (preferred):** fill-in, match-up, group-sort, anagram, unjumble
+- **FORBIDDEN at this level:** cloze, error-correction, mark-the-words, translate, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, highlight-morphemes, grammar-identify, select
+
+Pick from the allowed list. Lean heavily on the priority lists. Do not use any forbidden type — the build will reject it.
+
+---
+
 ## Inline vs Workbook Split
 
 Activities have two placement categories:
@@ -19,7 +48,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Rule of thumb:** inline = 2-3 quick checks after key teaching points. Workbook = 4-8 deeper practice exercises covering the full topic.
+**Rule of thumb:** inline = 4–6 quick checks after key teaching points. Workbook = 6–9 deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
 
 ---
 
@@ -27,10 +56,10 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
+- `<!-- INJECT_ACTIVITY: fill-in-conjugation -->`
 - `<!-- INJECT_ACTIVITY: match-up-person-verb -->`
-- `<!-- INJECT_ACTIVITY: fill-in-conjugation-drill -->`
-- `<!-- INJECT_ACTIVITY: quiz-subject-verb-agreement -->`
-- `<!-- INJECT_ACTIVITY: fill-in-complete-sentence -->`
+- `<!-- INJECT_ACTIVITY: quiz-correct-form -->`
+- `<!-- INJECT_ACTIVITY: fill-in-sentences -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -87,95 +116,102 @@ required:
 <module_content>
 ## Діалоги (Dialogues)
 
-Up to this point, you have learned how to name objects, describe their qualities, and express basic states of being. However, in Ukrainian, we do not just exist in the world; we actively participate in it. We do things. Action is the engine of any language, and verbs are the parts of speech that express these actions. Setting the scene in a shared kitchen, we can see how daily life unfolds through verbs like **читати** (to read) and **готувати** (to cook). By paying close attention to the endings of these action words, you will discover how Ukrainian clearly indicates exactly who is performing the action without needing complex sentence structures.
+Language is fundamentally about action, and verbs are the engine that drives every sentence forward. Until now, you have learned how to name objects, describe their qualities, and express basic locations. Now, it is time to set those objects into motion. In Ukrainian, verbs answer the fundamental question **що робити?** (what to do?). In this module, we are taking a massive step forward by learning how to talk about your daily activities, your routines, and your hobbies. You will learn how to express what you do every day and how to politely ask others about their lives. 
+
+Let us start by looking at a very common situation. Imagine you are in a shared kitchen. One person is busy preparing a meal, and the other walks in, curious about what is happening. Read the conversation below and pay close attention to the action words. 
 
 > **Сашко:** Привіт! Що ти робиш? *(Hi! What are you doing?)*
-> **Юля:** Я готую вечерю. А ти? *(I am cooking dinner. And you?)*
-> **Сашко:** Я не готую. Я читаю. *(I am not cooking. I am reading.)*
+> **Юля:** Я читаю книгу. А ти? *(I am reading a book. And you?)*
+> **Сашко:** Я слухаю музику. *(I am listening to music.)*
 > **Юля:** А що робить Олена? *(And what is Olena doing?)*
-> **Сашко:** Вона слухає музику. *(She is listening to music.)*
-> **Юля:** Добре. *(Good.)*
+> **Сашко:** Вона готує вечерю. *(She is cooking dinner.)*
 
-Take a moment to analyze the verb endings in that kitchen conversation. Notice how the ends of the action words shift depending on exactly who is speaking or who is being spoken about. When Yulia talks about herself, she says **готую** (I cook). When Sashko asks Yulia a direct question about her actions, he uses the form **робиш** (you do). When they both discuss Olena, who is a third person not directly addressed, Sashko says **слухає** (she listens). The central question **«Що ти робиш?»** (What are you doing?) acts as your universal key to unlocking present tense conversations and discovering what people are engaged in right now.
+If you look closely at this dialogue, you will notice a crucial feature of the Ukrainian language. The verb form changes depending on who is performing the action. When Sashko asks his question, he uses the form **робиш** (you do). When Yulia replies about herself, she says **читаю** (I read). When Sashko replies about his own action, he says **слухаю** (I listen). Finally, when they both discuss Olena, the verb shifts again to **готує** (she cooks). The ending of the verb acts like a built-in nametag, telling you exactly who the subject of the sentence is. 
 
-> **Максим:** Де ти працюєш? *(Where do you work?)*
-> **Анна:** Я працюю в офісі. А ти? *(I work in an office. And you?)*
-> **Максим:** Я не працюю, я навчаюся. *(I do not work, I am studying.)*
-> **Анна:** Ти знаєш українську? *(Do you know Ukrainian?)*
-> **Максим:** Так, я вивчаю! *(Yes, I am learning!)*
+Now, let us look at another natural conversation. This time, two acquaintances are discussing their current occupations and what they are learning. 
 
-<!-- INJECT_ACTIVITY: match-up-person-verb -->
+> **Марія:** Де ти працюєш? *(Where do you work?)*
+> **Максим:** Я працюю в офісі. А ти? *(I work in an office. And you?)*
+> **Марія:** Я не працюю, я навчаюся. *(I do not work, I am studying.)*
+> **Максим:** Ти знаєш українську? *(Do you know Ukrainian?)*
+> **Марія:** Так, я вивчаю! *(Yes, I am learning!)*
+
+In this practical, everyday context, you can see the same pattern emerging. When asking "Where do you work?", the verb is **працюєш**. When answering "I work", the verb becomes **працюю**. These shifting endings are the key to unlocking conversational Ukrainian, and they follow a highly predictable system that we will explore next.
 
 ## Перша дієвідміна (Group I Verbs)
 
-Ukrainian verbs are organized into two main families, which grammarians call conjugations. We will focus entirely on **Перша дієвідміна** (First Conjugation) or Group I verbs. You can usually identify these verbs in their dictionary form, known as the infinitive, because they typically end with the marker **-ати** or sometimes **-увати**. However, the absolute most reliable method to prove a verb belongs to Group I is the "They Test". If the form for **вони** (they) ends in **-уть** or **-ють**, then the verb firmly belongs to the First Conjugation. For instance, **вони читають** (they read) proves that the verb is a Group I action word.
+To master Ukrainian verbs, you must understand the concept of **дієвідмінювання** (conjugation). Conjugation simply means changing the ending of a verb to match the person who is doing the action. Ukrainian textbooks for native speakers traditionally divide verbs into two main families, known as conjugations. Today, we are focusing exclusively on the First Conjugation, or **перша дієвідміна**. You can typically recognize verbs belonging to this group because their dictionary form, or infinitive, ends in **-ати** or **-ювати**. 
 
-The conjugation table below demonstrates the complete present tense pattern for the verb **читати** (to read). To conjugate the verb, you drop the final **-ти** from the infinitive and attach specific personal endings to the remaining stem.
+According to standard grammar references like Varzatska Grade 4, the present tense for the First Conjugation follows a strictly reliable pattern. Let us take the model verb **читати** (to read) and map out its full present tense table. 
 
-| Особа (Person) | Займенник (Pronoun) | Форма дієслова (Verb Form) |
-| :--- | :--- | :--- |
-| 1-ша однини | **я** (I) | **читаю** (I read) |
-| 2-га однини | **ти** (you) | **читаєш** (you read) |
-| 3-тя однини | **він / вона / воно** (he / she / it) | **читає** (he / she / it reads) |
-| 1-ша множини | **ми** (we) | **читаємо** (we read) |
-| 2-га множини | **ви** (you plural/formal) | **читаєте** (you read) |
-| 3-тя множини | **вони** (they) | **читають** (they read) |
+| Person | Pronoun | Verb Form | Ending |
+|---|---|---|---|
+| I | **я** | **читаю** | **-ю** |
+| You (singular) | **ти** | **читаєш** | **-єш** |
+| He/She/It | **він/вона/воно** | **читає** | **-є** |
+| We | **ми** | **читаємо** | **-ємо** |
+| You (plural/formal) | **ви** | **читаєте** | **-єте** |
+| They | **вони** | **читають** | **-ють** |
 
-Notice the characteristic vowel **-є-** that elegantly links the stem to the ending for most persons. 
+Notice how the stem of the verb (чита-) remains exactly the same, while the ending shifts to match the pronoun. The core vowels that define this First Conjugation pattern are **є** and **ю**. The pattern is always: stem + **-ю**, **-єш**, **-є**, **-ємо**, **-єте**, **-ють**.
 
-Let us dive deep into six essential Group I verbs that will form the absolute foundation of your active vocabulary: **читати** (to read), **знати** (to know), **працювати** (to work), **слухати** (to listen), **гуляти** (to walk), and **готувати** (to cook). Most of these follow the straightforward pattern of dropping the **-ти** and adding the endings. However, there is a special note regarding **працювати** and **готувати**. When conjugating verbs with the **-увати** suffix, the **-ва-** portion drops out entirely before adding the endings, resulting in the streamlined forms **я працюю** (I work) and **я готую** (I cook), rather than the incorrect forms "працюваю" or "готуваю".
+For this module, we will focus on six essential verbs that you will use every single day. All six of these verbs belong to the First Conjugation and follow the exact same rules.
+*   **читати** (to read)
+*   **знати** (to know)
+*   **працювати** (to work)
+*   **слухати** (to listen)
+*   **гуляти** (to walk)
+*   **готувати** (to cook)
 
-When pronouncing these verbs, give special phonetic focus to the characteristic vowel. The Ukrainian letter **є** in endings like **-єш** and **-є** sounds distinctly like "ye" when it follows another vowel. For example, in the word **знаєш** (you know), you must clearly pronounce the "ye" sound to ensure authentic pronunciation. Do not reduce it to a flat "e" sound. Emphasizing the clear, bright Ukrainian pronunciation of these specific endings is crucial for being understood correctly by native speakers and avoiding a foreign accent.
+If you know the pattern for one, you know the pattern for all of them. For instance, **я знаю** (I know), **ти працюєш** (you work), and **вона слухає** (she listens). Note that verbs ending in **-ювати** or **-увати** drop the **-ва-** when conjugated: **працювати** becomes **я працюю**, and **готувати** becomes **ти готуєш**.
 
-<!-- INJECT_ACTIVITY: fill-in-conjugation-drill -->
+These present tense verbs describe general habits, daily routines, and ongoing actions happening right now. Unlike English, which distinguishes between "I read every day" and "I am reading right now," Ukrainian uses the exact same present tense form for both situations. 
+
+<!-- INJECT_ACTIVITY: fill-in-conjugation -->
+
+<!-- INJECT_ACTIVITY: match-up-person-verb -->
 
 ## Я, ти, він/вона (Persons)
 
-While it is important to understand the full paradigm of all six persons, we will prioritize the "Big Three" for your active usage. The forms for **я** (I), **ти** (you), and **він / вона** (he / she) will easily cover ninety percent of your beginner Ukrainian conversations. You talk about your own actions, you ask your conversation partner about theirs, and you describe what someone else is doing. The pattern is incredibly consistent: use the **-ю** ending for the self, the **-єш** ending for the partner, and the **-є** ending for the third person. Mastering just these three targeted endings unlocks massive communicative potential.
+While it is important to understand the full conjugation table, conversational fluency requires you to prioritize. As a beginner, you should focus intensely on the three most common singular forms: **я** (I), **ти** (you, singular informal), and **він/вона** (he/she). These three persons will cover roughly 90% of your daily conversations at the A1 level. You must memorize their specific endings until they become automatic. 
+*   **я** always takes **-ю**
+*   **ти** always takes **-єш**
+*   **він/вона** always takes **-є**
 
-Now you are ready to build your first complete sentences using the classic Subject + Verb + Object structure. You can seamlessly combine these newly conjugated verbs with vocabulary you already know from previous modules. 
+Let us look at some contrasting examples focusing exclusively on these three persons.
+*   **Я слухаю музику.** *(I listen to music.)*
+*   **Ти слухаєш подкаст.** *(You listen to a podcast.)*
+*   **Вона слухає радіо.** *(She listens to the radio.)*
 
-*   **Я читаю нову книгу.** (I am reading a new book.)
-*   **Ти знаєш цю пісню?** (Do you know this song?)
-*   **Вона слухає українську музику.** (She listens to Ukrainian music.)
+Because the verb ending makes the person so obvious, Ukrainians often drop the pronoun entirely in casual speech. It is perfectly natural to walk into a room and simply say **Працюю вдома** (Working at home) instead of **Я працюю вдома**. The **-ю** ending already screams "I", so the pronoun **я** is optional.
 
-:::note
-You might notice that the object nouns change their final letters slightly, such as **книга** becoming **книгу** and **пісня** becoming **пісню**. This is the Ukrainian case system in action. For now, do not worry about the underlying grammar rules for the object; simply learn these specific combinations as memorized chunks.
-:::
+Building simple sentences in Ukrainian usually follows a straightforward Subject + Verb + Object structure. A highly useful conversational chunk to memorize right now is the question **Що ти робиш?** (What are you doing?). You can answer this question by combining your new verbs with vocabulary you already know from previous modules. 
+*   **Я читаю нову книгу.** *(I am reading a new book.)*
+*   **Вона готує вечерю.** *(She is cooking dinner.)*
+*   **Ти знаєш цю пісню?** *(Do you know this song?)*
 
-English speakers often fall into the trap of applying the "No-Be" Rule incorrectly. Because English uses the verb "to be" to create continuous present tense actions like "I am reading", learners frequently try to insert the Ukrainian equivalent **є** into their sentences, resulting in the incorrect phrase **«Я є читаю»**. You must firmly stress to your brain that in Ukrainian, the present tense verb form already contains the continuous action. The single word **читаю** simultaneously means "I read" generally and "I am reading" right at this exact moment.
+As an English speaker, you must be careful to avoid two very common mistakes. First, do not use the infinitive form for everything. In English, the verb barely changes ("I read, you read, we read"), which tricks learners into saying **Я читати книгу** ❌. This is incorrect; you must conjugate it: **Я читаю книгу** ✅. 
 
-While the singular persons dominate basic dialogue, plurality in action is equally important for recognizing group dynamics. The plural forms expand your world to include **ми** (we), **ви** (you plural or formal), and **вони** (they). You will encounter these collective actions frequently in narratives and group settings.
+Second, English speakers frequently try to translate "I am reading" literally by inserting the verb "to be". Never say **Він є читає** ❌. In Ukrainian, the present tense verb already contains the meaning of "is doing". The correct and only way to say it is simply **Він читає** ✅.
 
-*   **Ми працюємо разом.** (We work together.)
-*   **Ви гуляєте в парку.** (You walk in the park.)
-*   **Вони знають правду.** (They know the truth.)
+<!-- INJECT_ACTIVITY: quiz-correct-form -->
 
-<!-- INJECT_ACTIVITY: quiz-subject-verb-agreement -->
-<!-- INJECT_ACTIVITY: fill-in-complete-sentence -->
+<!-- INJECT_ACTIVITY: fill-in-sentences -->
 
 ## Підсумок — Summary
 
-You have successfully unlocked the core mechanics of Ukrainian verbs through the Group I pattern. Think of this as the "Formula of Actions": you start with the infinitive dictionary form ending in **-ати**, deliberately drop the final **-ти**, and firmly attach your specific personal ending: **-ю, -єш, -є, -ємо, -єте, -ють**. This incredibly reliable mathematical formula works flawlessly for the six core verbs that will serve as the heavy foundation of your daily Ukrainian communication. Whenever you encounter a new verb that follows this precise pattern, you instantly possess the power to use it in six entirely different ways to describe reality.
+You have now unlocked the ability to describe actions using the First Conjugation, or **перша дієвідміна**. Remember that the present tense conjugation pattern for Group I verbs relies on a highly consistent set of endings. To match the subject, you attach the following endings to the verb stem: **-ю**, **-єш**, **-є**, **-ємо**, **-єте**, **-ють**. 
 
-As a highly practical cultural note, you should begin encouraging yourself to narrate your daily life using these verbs. As you move through your routine, silently construct simple thoughts in your mind. Think **«Я працюю»** when you sit down at your desk, or **«Вона готує»** when you see someone in the kitchen. Even these exceptionally simple two-word thoughts actively build the essential habit of thinking directly in Ukrainian instead of exhaustively translating word-for-word from English in your head.
+We introduced a core vocabulary list of six essential verbs: **читати** (to read), **знати** (to know), **працювати** (to work), **слухати** (to listen), **гуляти** (to walk), and **готувати** (to cook). Despite slight variations in their infinitive forms, reminding the learner that they all behave exactly the same way during conjugation is critical. The endings you use for **я слухаю** are the exact same endings you use for **я гуляю**.
 
-Use the following self-check questions to measure your structural understanding before advancing:
+When building sentences and aiming for clear communication goals, remember that the verb ending must always match the subject performing the action. If the subject is **ти**, the verb must end in **-єш**. If the subject is **вона**, the verb must end in **-є**. Keep practicing the key conversational phrases from this module. Asking **Що ти робиш?** (What are you doing?) and confidently answering about your own activities will form the backbone of your early Ukrainian conversations.
 
-*   Can you conjugate the verb **слухати** (to listen) completely for **я**, **ти**, and **він/вона**?
-*   How exactly do you ask someone the fundamental question "What are you doing?" using the correct verb form?
-
-Review this essential checklist of verbs. You should be able to instantly recognize their meanings and confidently construct basic sentences with them:
-
-*   [ ] **читати** (to read)
-*   [ ] **знати** (to know)
-*   [ ] **працювати** (to work)
-*   [ ] **слухати** (to listen)
-*   [ ] **гуляти** (to walk)
-*   [ ] **готувати** (to cook)
-
-In Module 17, you will seamlessly transition from these **-ати** verbs to explore the other half of the verbal universe: the **-ити** family, which forms the Second Conjugation.
-
+Use the self-check questions below to verify your understanding before moving on:
+*   Як сказати "I listen"? (**Я слухаю**)
+*   Яке закінчення для "ти" в першій дієвідміні? (**-єш**, наприклад: **ти працюєш**)
+*   Як запитати "What are you doing?" (**Що ти робиш?**)
+*   Як сказати "He cooks dinner"? (**Він готує вечерю**)
+*   Чи можна сказати "Я є читаю"? (Ні, правильно просто "**Я читаю**")
 </module_content>
 
 ---
@@ -189,48 +225,68 @@ version: "1.0"
 module: verbs-group-one
 level: a1
 
+# NOTE — these are SHAPE examples. The real targets are at the top of this prompt
+# (10 total / 4–6 inline / 6–9 workbook,
+# 6+ items per activity). The shapes below are TRUNCATED for readability;
+# YOUR output MUST hit those minimums.
+
 inline:
   - id: marker-id-here        # MUST match an <!-- INJECT_ACTIVITY: ... --> marker
     type: quiz                 # activity type
     instruction: "Оберіть правильний варіант"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - question: "_____ стіл"
-        options: ["мій", "моя", "моє"]
+        options: ["мій", "моя", "моє", "мої"]
         correct: 0             # 0-based index
+      - question: "Це ____ книга."
+        options: ["мій", "моя", "моє", "мої"]
+        correct: 1
+      # ... add at least 6 items total — never stop at 1-2
 
   - id: another-marker-id
     type: fill-in
     instruction: "Вставте правильне слово"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - sentence: "Це ____ кімната."
         answer: "моя"
         options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ вікно."
+        answer: "моє"
+        options: ["мій", "моя", "моє"]
+      # ... ≥ 6 items total
 
 workbook:
-  - type: match-up
+  - id: match-up-vocab
+    type: match-up
     instruction: "З'єднайте пари"
-    pairs:
+    pairs:                     # ← real output: ≥ 6 pairs
       - left: "стіл"
         right: "він"
       - left: "книга"
         right: "вона"
       - left: "вікно"
         right: "воно"
+      # ... ≥ 6 pairs total
 
-  - type: group-sort
+  - id: group-sort-gender
+    type: group-sort
     instruction: "Розподіліть слова за категоріями"
     groups:
-      - label: "Category A"
-        items: ["word1", "word2"]
-      - label: "Category B"
-        items: ["word3", "word4"]
+      - label: "Чоловічий рід"
+        items: ["стіл", "олівець", "будинок"]   # ≥ 3 items per group
+      - label: "Жіночий рід"
+        items: ["книга", "ручка", "школа"]
+      - label: "Середній рід"
+        items: ["вікно", "море", "молоко"]
 
-  - type: true-false
+  - id: true-false-grammar
+    type: true-false
     instruction: "Правда чи ні?"
-    items:
-      - statement: "Statement here"
-        correct: true
-        explanation: "Why it's true"
+    items:                     # ← real output: ≥ 6 items
+      - statement: "«Книга» — це чоловічий рід."
+        correct: false
+        explanation: "Книга закінчується на -а, отже жіночий рід."
+      # ... ≥ 6 items total
 
   - type: error-correction
     instruction: "Виправте помилку"
@@ -301,7 +357,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -388,10 +444,15 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 ## Quality Rules
 
-**ITEM COUNT MINIMUMS (non-negotiable):**
-- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
-- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
-- If you can't think of enough items, add more examples from the module's vocabulary and content.
+**ACTIVITY COUNT MINIMUMS (non-negotiable, audit-enforced):**
+- **Total: 10 activities.** Inline: 4–6. Workbook: 6–9. The audit gate FAILS the module if you ship fewer.
+- **Type diversity: workbook MUST cover ≥5 distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
+- **Match the inline markers exactly.** Every `<!-- INJECT_ACTIVITY: id -->` marker in the prose needs a matching inline activity with that exact id. Skipping markers means the lesson tab is broken.
+
+**ITEM COUNT MINIMUMS (non-negotiable, per-activity):**
+- **Default minimum: 6 items per activity.** Quiz, fill-in, match-up, true-false, anagram, error-correction, translate, cloze, mark-the-words, divide-words, count-syllables, odd-one-out, group-sort categories: all ≥ 6.
+- **Lower minimums for specific types only:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items, essay-response/critical-analysis = 1 prompt.
+- If you can't think of enough items, add more examples from the module's vocabulary and content. NEVER ship a 1-item or 2-item activity unless its type cap explicitly allows it.
 - **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
 - **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
@@ -498,6 +559,27 @@ IMPORTANT: After using tools, output your COMPLETE module content as plain text.
 1. Run `verify_words` on all Ukrainian words in your exercises — every word must exist in VESUM
 2. Run `query_cefr_level` on any word you're unsure about — it must be a1-appropriate
 3. For fill-in answers and distractors, verify the exact form (case, number, gender) with `verify_lemma`
+
+---
+
+## ⚠️ MANDATORY FINAL CHECKLIST — verify before emitting YAML
+
+Walk through this checklist explicitly before you start emitting. If ANY box is unchecked, fix it FIRST.
+
+- [ ] My output has **at least 4** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
+- [ ] My output has **at least 6** workbook activities.
+- [ ] **Total ≥ 10.**
+- [ ] **Every** activity has **at least 6** items, pairs, or statements (except types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3, essay-response=1).
+- [ ] The module (inline + workbook combined) uses **at least 0 distinct activity types** (or 4+ when 0 = 0 and the workbook size allows it). I am NOT shipping a wall of quizzes.
+- [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
+- [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
+- [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+- [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+- [ ] My inline count is between 4 and 6. I did NOT create more injection markers than 6.
+- [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
+- [ ] At B1+, all instructions are in Ukrainian (no English fallback).
+
+If you cannot tick all of these, REGENERATE the activities BEFORE outputting. Shipping under-spec means the build rejects you and the heal loop has to redo your work — wasting compute.
 
 ---
 

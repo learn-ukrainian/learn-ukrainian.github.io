@@ -16,7 +16,7 @@ module: a2-002
 level: A2
 sequence: 2
 slug: aspect-concept
-version: '1.1'
+version: '1.2'
 title: Зроблено чи в процесі? Вступ до виду дієслів
 subtitle: Концепція доконаного та недоконаного виду
 focus: grammar
@@ -110,8 +110,8 @@ activity_hints:
       зробив вправи → робив, *Вона довго написала листа → писала)
     items: 6
 references:
-  - title: Заболотний Grade 6, §52-54
-    notes: 'Вид дієслова: доконаний і недоконаний'
+  - title: Авраменко Grade 7, §28-30
+    notes: 'Вид дієслова: доконаний і недоконаний — aspect is taught in 7th grade curriculum'
   - title: 'ULP: Ukrainian Verb Aspect'
     url: https://www.ukrainianlessons.com/ukrainian-verb-aspect/
     notes: Imperfective vs perfective
@@ -121,84 +121,167 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Що таке вид дієслова?
+## Що таке вид дієслова? (What is Verb Aspect?) (~550 words)
 
-Welcome to one of the most important concepts in Ukrainian grammar. Until now, you have focused on verb tenses. Tense tells us exactly when an action happens. However, Ukrainian verbs have a hidden dimension called **вид дієслова** (verb aspect). While tense answers the question of time, aspect tells us how the action unfolds. In English, you use complex tense structures to express whether an action is ongoing or completed. In Ukrainian, this information is built directly into the vocabulary. The concept of aspect is not about time at all. Instead, it is about the internal completion of the action. It describes whether we view an event as a continuous, flowing process or as a single, finished point in time. Understanding this difference is the key to speaking naturally.
+Imagine you are watching a football match with a friend. The attack is developing quickly, and the contrast between process and result is easy to hear. In that situation, you might hear a conversation like this:
 
-To master this dimension, you need to meet the two main categories of Ukrainian verbs. The first category is called **недоконаний вид** (imperfective aspect). We will often abbreviate this as НВ. This aspect represents the unfinished nature of an action. We use it to describe an ongoing **процес** (process), a repeated habit, or a general fact. The second category is **доконаний вид** (perfective aspect). We will abbreviate this as ДВ. This represents the finished nature of an action. We use it when we want to highlight total completion and a successful **результат** (result). Every time you choose a verb, you must decide what matters more: the journey or the destination.
+> **Максим:** Дивись, він швидко біжить до воріт! *(Look, he is running fast to the goal!)*
+> **Андрій:** Удар... і він забив красивий гол! *(A strike... and he scored a beautiful goal!)*
+> **Максим:** Вони грають дуже добре сьогодні. *(They are playing very well today.)*
+> **Андрій:** Так, вона класно передала м'яч. *(Yes, she passed the ball nicely.)*
 
-When Ukrainian children learn grammar in school, they do not memorize long lists of rules to figure out the aspect of a verb. Instead, they use a simple question hack. Every verb form answers a specific question that reveals its true nature. Verbs of the imperfective aspect always answer the question «Що робити?» (What to be doing?). Verbs of the perfective aspect always answer the question «Що зробити?» (What to have done?). Notice the tiny difference at the beginning of the second question! This simple test helps you group vocabulary into pairs. For example, you have **робити** (to do) and **зробити** (to have done). You also have **писати** (to write) and **написати** (to have written), as well as **читати** (to read) and **прочитати** (to have read).
+In this short exchange, we can easily spot the core vocabulary of a sports match: the **гра** (game), the **гол** (goal), and the **м'яч** (ball). But if you look much closer at the verbs the friends are using, you will notice a hidden dimension of the Ukrainian language. This crucial grammatical dimension is formally called **вид дієслова** (verb aspect). It is a concept that changes everything about how you will build sentences from this point forward.
 
-If the grammar terms feel too abstract, imagine that every action is a visual medium. Using the imperfective aspect is exactly like watching the middle of a movie. The action is actively happening, the characters are moving, and you are immersed in the scene without knowing how it ends. Using the perfective aspect is like seeing the «Кінець» (The End) screen or looking at a still photograph of the finished scene. The action is over, and the result is locked in place. For instance, in the past tense, saying «Я писав» (I was writing) means you were inside the movie. Saying «Я написав» (I wrote) means the credits are already rolling.
+Aspect is not about *when* an action happens in the timeline of the universe, which is the specific job of grammatical tense. Instead, aspect describes exactly *how* the action unfolds in time. Let us compare the verbs from our football dialogue to see this clearly. When Maksym excitedly says «біжить» (is running), he is describing an action that is currently ongoing and active. You can picture the player's legs moving right now. However, when Andriy shouts «забив» (scored), he is not describing a continuous process at all. He is announcing an instantaneous, completed event that just occurred.
 
-Let us look at how this plays out in real life. Imagine two friends watching a football match on television. The first friend describes the ongoing flow of the game, focusing on the process. The second friend reacts excitedly to the sudden, completed actions that change the score.
+To truly understand and master Ukrainian verbs, you must formally meet the two fundamental types of aspect. The first type is the **недоконаний вид** (imperfective aspect). We use this aspect to describe an ongoing **процес** (process), a regular **повторення** (repetition) of an action, or simply to state a general, continuous fact. The second type is the **доконаний вид** (perfective aspect). This aspect is strictly reserved for a single, successfully completed **дія** (action) that has a clear, visible, and undeniable **результат** (result).
 
-> — **Марко:** Дивись, він біжить дуже швидко! *(Look, he is running very fast!)*
-> — **Андрій:** Так, він забив гол! *(Yes, he scored a goal!)*
-> — **Марко:** Вони грають сьогодні дуже добре. *(They are playing very well today.)*
-> — **Андрій:** Вона чудово передала м'яч. *(She passed the ball wonderfully.)*
+:::info
+**Grammar box**
+Most Ukrainian verbs exist in permanent pairs. You will learn one verb for the continuous process, and a slightly different "twin" verb for the completed result. Learning them together as a matching set will help you use aspect more naturally.
+:::
 
-In this scenario, **бігти** (to run) and **грати** (to play) describe the ongoing process. Meanwhile, **забити** (to score) and **передати** (to pass) report a final result.
+У шкільній граматиці недоконані дієслова відповідають на питання «що робити?», а доконані — на питання «що зробити?».
 
-## Недоконаний вид: Процес і повторення
+> *In school grammar, imperfective verbs answer "what to do?", while perfective verbs answer "what to do to completion?".*
 
-In the previous section, we established that the imperfective aspect (**недоконаний вид**) is like watching the middle of a movie. Now, let us dive deeper into its primary function: describing a process, or **процес** (process) in Ukrainian. When you use an imperfective verb, you signal to your listener that the duration or flow of the action matters much more than its end point. You are describing an ongoing action, which we call a **тривала дія** (ongoing action). Imagine you spent hours immersed in a novel. You want to emphasize the time spent, not whether you reached the final page. You would say: «Я читав книгу цілий вечір» *(I was reading the book all evening)*. In this sentence, the focus is entirely on the activity itself. We do not know if the person finished the book, and frankly, we do not care. The imperfective aspect allows you to paint a picture of an action unfolding over time without worrying about its conclusion. 
+Let us look closer at those two essential questions that Ukrainian school children learn. This is the standard school explanation you will also see in Авраменко (§28-30) and in Ukrainian Lessons' overview of verb aspect. The question for the imperfective aspect focuses purely on the activity itself. It does not care about the destination or the final outcome. The question for the perfective aspect adds a tiny prefix to the question word, which acts as a signal of completion. It demands to know what has been accomplished, achieved, or finalized.
 
-The second superpower of the imperfective aspect is its ability to express repetition, or **повторення** (repetition). If an action happens more than once, it becomes a habit or a routine, and in Ukrainian, habits almost always require the imperfective aspect. Think about your daily schedule. You might say: «Я щодня роблю вправи» *(I do exercises every day)*. Because the action repeats, it never truly has a single, final result that ends forever. It is an ongoing cycle. In the past tense, the imperfective aspect is particularly useful for describing things you used to do. For example: «Він часто телефонував» *(He used to call often)*. In English, you might rely on phrases like "used to" or "would" to indicate past habits. In Ukrainian, you do not need extra auxiliary verbs for this. The imperfective verb itself already carries the meaning of a customary action. 
+A highly helpful way to remember this grammatical distinction is the classic movie analogy. Using the imperfective aspect is exactly like watching a film frame by frame. You are observing the action as it happens continuously, like watching someone **робити** (to do) their difficult homework. You do not know if they will ever finish it. Using the perfective aspect, on the other hand, is like finally seeing the "The End" screen at the conclusion of the film. The action is entirely finished, the story is over, and you can see the final product, meaning someone managed to successfully **зробити** (to do / to have done) their homework.
 
-Beyond processes and habits, the imperfective aspect serves another fundamental purpose: stating general facts. When you simply want to name an action or state a universal truth where the idea of completion is entirely irrelevant, you will use the imperfective aspect. For instance, consider the sentence: «Діти читають книги» *(Children read books)*. This is a general statement about what children do. There is no specific result being highlighted. Similarly, if you say «Птахи літають» *(Birds fly)*, you are merely stating a fact of nature. For learners at the A2 level, you can consider the imperfective aspect to be your default setting for describing how the world works. Unless you are specifically trying to draw attention to a single, completed achievement, the imperfective aspect is the safest choice for general observations. 
+Вид дієслова — це важлива концепція, яку ви повинні добре відчути. Уявіть будь-який процес як довгу пряму лінію, а фінальний результат — як яскраву крапку в кінці цієї довгої лінії.
 
-There is a critical grammatical rule regarding the imperfective aspect that makes speaking Ukrainian much easier: the present tense is exclusively imperfective. Think about it logically. You cannot have a completely finished, result-locked action happening right now in the present moment. If it is happening right now, it is inherently a process. Therefore, any verb you use in the present tense, such as «Я пишу» *(I am writing)*, is always imperfective. You do not even have to make an aspect choice when speaking in the present tense. Contrast this with the past tense, where an action could either be an ongoing process («Я писав» - *I was writing*) or a finished result. 
+> *Verb aspect is an important concept that you must feel well. Imagine any process as a long straight line, and the final result as a bright dot at the end of this long line.*
 
-To help you instantly recognize when to use the imperfective aspect, look out for specific signal words. These are frequency adverbs that inherently describe duration or repetition, making the imperfective aspect mandatory. The most common triggers include **завжди** (always), **часто** (often), **зазвичай** (usually), **регулярно** (regularly), and **щодня** (every day). Whenever you spot these words, you know a habit is being described. Another powerful signal word is **довго** (for a long time), which highlights a prolonged process. For example, if you want to emphasize the duration of an activity, you would say: «Вона довго писала листа» *(She was writing the letter for a long time)*. These adverbs act as clear signposts, guiding you safely toward the imperfective aspect.
+There is one very important, unbreakable rule about the present tense in Ukrainian grammar. Actions that are happening right now, at this exact, fleeting moment, are always imperfective. They are active processes unfolding directly before your eyes. You logically cannot be in the middle of an instantaneous completion in the present moment. Therefore, perfective verbs simply do not have a true present tense form at all. If an action is happening now, it is a process, and it must be imperfective.
 
-<!-- INJECT_ACTIVITY: aspect-sorting-process-result -->
-<!-- INJECT_ACTIVITY: identify-aspect-in-sentences -->
+Зараз ми дивимося цікавий матч і вболіваємо за нашу улюблену команду. Цей процес відбувається прямо зараз, тому ми використовуємо тільки недоконаний вид.
 
-## Доконаний вид: Результат! (Perfective: The Result!)
+> *Right now we are watching an interesting match and cheering for our favorite team. This process is happening right now, so we use only the imperfective aspect.*
 
-Now that we have explored the ongoing nature of the imperfective aspect, it is time to meet its decisive counterpart: the perfective aspect, or **доконаний вид** (perfective aspect). If the imperfective aspect is about watching the movie unfold, the perfective aspect is the moment the "The End" screen appears. It is all about the result. We use the perfective aspect when we want to announce: "Mission accomplished." It describes a **завершена дія** (completed action). Think about the difference between reading and finishing a book. If you say «Я прочитав книгу» *(I have read the book)*, you are focusing entirely on the outcome. The process of reading is over. The book is now sitting on the shelf, and you know how the story ends. You have crossed the finish line. The perfective aspect does not care how long the action took or how difficult it was; its sole purpose is to confirm that the action reached its limit and produced a clear, final result.
+<!-- INJECT_ACTIVITY: quiz-aspect-sorting --> [quiz, Aspect Sorting: Process vs. Result, 8 items]
 
-Because the perfective aspect is fundamentally tied to the concept of completion, it has a fascinating grammatical quirk: perfective verbs do not have a present tense. Think about it logically. If an action is happening right now, in the present moment, it is still ongoing. It cannot be completely finished. Therefore, when you take a perfective verb and put it into a form that looks like the present tense, it actually jumps into the future. For example, the perfective verb **зробити** (to do) in the first-person singular is **зроблю** (I will do). But «Я зроблю» does not mean "I am doing." It means "I will do" or "I will get it done." This is a major concept for you to master at the A2 level. By simply choosing the perfective aspect, you can talk about the future without needing any extra auxiliary verbs. It is a powerful tool for making promises and stating clear intentions.
+## Недоконаний вид: Процес і повторення (Imperfective: Process & Repetition) (~660 words)
 
-For this introductory module, however, we will focus primarily on using the perfective aspect in the past tense. This is where the contrast with the imperfective aspect is most obvious. When you use a perfective verb in the past, you are reporting a concrete achievement. For example: «Я купив квиток» *(I bought a ticket)*. The transaction is complete; you have the ticket in your hand. Or «Вона прийшла додому» *(She arrived home)*. The journey is over; she is inside the house. Consider «Ми зробили завдання» *(We finished the task)*. The work is done. The perfective past tense provides that satisfying "click" of a completed action.
+Let us take a deep dive into the first essential category, which is the **недоконаний вид** (imperfective aspect). Unlike the **доконаний вид** (perfective aspect) that focuses on sudden completion, the primary and most common function of the imperfective form is to describe a continuous **процес** (process). 
 
-Just as the imperfective aspect has its favorite adverbs, the perfective aspect has specific signal words that highlight a result. Look out for words like **нарешті** (finally), **вже** (already), and **раптом** (suddenly). These words naturally point to an outcome or a sudden change of state. However, be careful with the word **вчора** (yesterday). It is completely neutral and depends entirely on the speaker's focus. You can say «Вчора я читав» *(Yesterday I was reading)* if you want to emphasize the process, or «Вчора я прочитав» *(Yesterday I finished reading)* if you want to emphasize the result.
+When you use these verbs, you are inviting the listener to step inside the timeline of the event and witness an ongoing **дія** (action). You are emphasizing the effort, the duration, or the simple reality that the activity was happening at a specific moment, regardless of whether it ever reached a conclusion. The focus is entirely on the journey, not the destination.
 
-To truly understand the difference between the two aspects, let's look at a classic contrast: the concept of failure. Imagine you were looking for your keys. You can say: «Я шукав, але не знайшов» *(I looked for, but didn't find)*. The verb **шукав** (was looking for) is imperfective because the search was a process that took up your time. The verb **знайшов** (found) is perfective because finding is the ultimate result you were aiming for. By using the perfective aspect with a negative word, you are stating that the goal was never reached. The boundary was not crossed.
+Я читав цікаву книгу, коли ти несподівано подзвонив. Учора весь вечір я прибирав у своїй кімнаті, але там досі брудно. Моя сестра готувала смачну вечерю, поки ми дивилися телевізор.
 
-<!-- INJECT_ACTIVITY: match-up-context-aspect -->
+> *I was reading an interesting book when you unexpectedly called. Yesterday evening I was cleaning my room the whole time, but it is still dirty there. My sister was cooking a delicious dinner while we were watching television.*
 
-## Порівняння пар: Бачимо різницю
+The second core function of the imperfective aspect is to express regular, habitual, or frequent **повторення** (repetition). Whenever an action happens more than once, or is part of an established routine, it automatically becomes an imperfective concept. Even if each individual event was successfully completed on its own, the overarching pattern of doing it multiple times requires the imperfective form. You are not highlighting a single finished outcome, but rather a recurring cycle or a habit that defines a lifestyle.
 
-Let's look at this in practice by comparing some common verb pairs side-by-side. Consider the verbs **писати** (to write, imperfective) and **написати** (to write, perfective). If you say «Він писав лист» *(He was writing a letter)*, you are describing a process. Maybe he was interrupted, or maybe he never finished. However, «Він написав лист» *(He wrote a letter)* means the letter is complete and ready to send. The same logic applies to food. «Ми пили каву» *(We were drinking coffee)* sets a scene, while «Ми випили каву» *(We drank the coffee)* means the cups are empty. «Вона їла борщ» *(She was eating borsch)* focuses on the activity, whereas «Вона поїла» *(She finished eating)* announces a clear result. We even see this with senses: «Я бачив це» *(I saw this, I was looking at it)* versus «Я побачив це» *(I spotted it)*.
+Я читав цю популярну книгу три рази, тому що вона мені дуже подобається. Наші сусіди завжди купують свіжі овочі на місцевому ярмарку. Кожного ранку мій брат п'є чорну каву і слухає новини.
 
-To truly grasp this concept, try visualizing these two aspects as lines drawn on a page. Imagine the imperfective aspect as a wavy, continuous line. It flows across the page, representing the passage of time without a clear beginning or end. It fills the space, just as imperfective verbs fill our stories with ongoing background activities. Now, imagine the perfective aspect as a straight, sharp line that suddenly stops with a bold "X". That "X" is the concrete result, the exact moment of completion. Perfective verbs do not flow; they punctuate time. They act as milestones in your narrative, marking the moments when an action definitively ends.
+> *I read this popular book three times because I like it very much. Our neighbors always buy fresh vegetables at the local market. Every morning my brother drinks black coffee and listens to the news.*
 
-You might have noticed a pattern in our examples. In Ukrainian, most perfective verbs are created by attaching a prefix to their imperfective partner. For instance, **робити** (to do) becomes **зробити** (to finish doing). **Читати** (to read) becomes **прочитати** (to read completely). There are many different prefixes used for this purpose, such as **на-**, **з-**, **про-**, **ви-**, and **по-**. Their primary job is to flip the grammatical switch from a process to a result. At the A2 level, you do not need to memorize every prefix rule. Your main goal is simply to recognize these pairs and understand that the prefix signals a change in the verb's aspect.
+The third distinct use of the imperfective aspect is stating a general fact. Sometimes, you only want to confirm whether an action took place at all, or state a universal truth, without focusing on any specific **результат** (result). You do not care if someone managed to successfully **зробити** (to do) a task completely. In these situations, the imperfective verb acts as a simple naming device for the activity. You are asking about the sheer existence of the event in history, or making a broad statement about how things generally operate in the world, completely ignoring the concept of completion.
 
-<!-- INJECT_ACTIVITY: error-correction-aspect -->
+Маленькі діти часто читають яскраві книги перед сном. Ти бачив новий український фільм у кінотеатрі? Ми вчора говорили про важливі проблеми нашої школи.
 
-## Підсумок (Summary)
+> *Small children often read bright books before bed. Did you see the new Ukrainian movie at the cinema? We were talking about the important problems of our school yesterday.*
 
-Let's review what we have learned about verb aspect. Ask yourself these self-check questions to make sure the core concepts are clear:
+Because the imperfective aspect is so strongly tied to habits and duration, it frequently pairs with specific signal words. These adverbs act as giant neon signs pointing directly to the imperfective form. When you see the following words, you almost always need to use an imperfective verb:
 
-1. **Яке питання ми ставимо до недоконаного виду?** *(What question do we ask for the imperfective aspect?)*
-We ask: **Що робити?** *(What to do?)*. This aspect focuses on the action itself.
+- **завжди** (always)
+- **часто** (often)
+- **зазвичай** (usually)
+- **довго** (for a long time)
+- **щодня** (every day)
 
-2. **Який вид ми використовуємо для регулярних дій?** *(Which aspect do we use for regular actions?)*
-We use the imperfective aspect (**недоконаний вид**). Words like **щодня** *(every day)* and **часто** *(often)* are strong signals for this.
+These words inherently describe extended periods or recurring events. This fundamentally contradicts the idea of a single, sudden completion, making the imperfective aspect the only logical choice.
 
-3. **Чи мають дієслова доконаного виду теперішній час?** *(Do perfective verbs have a present tense?)*
-**Ні.** *(No.)* Because a perfective verb describes a completed result, it cannot happen right now in the present moment. If you use a perfective verb in what looks like a present tense form, it actually carries a future meaning.
+:::info
+**Grammar box**
+Signal words are your best friends when choosing the **вид дієслова** (verb aspect). If a sentence contains a word that implies routine or extended time, you can confidently select the imperfective form without overthinking it.
+:::
 
-4. **Який вид позначає результат?** *(Which aspect indicates a result?)*
-The perfective aspect (**доконаний вид**). This is the aspect you use when you cross the finish line.
+Мій найкращий друг завжди допомагає мені робити складні завдання. Він щодня читає свіжі новини в інтернеті. Ми довго гуляли в парку, бо погода була чудова.
 
-To recap the most important rule: the imperfective aspect is for a process or repetition, while the perfective aspect is for a result or a single, completed action. Keep this in mind, and you will navigate Ukrainian verbs with confidence.
+> *My best friend always helps me do difficult tasks. He reads fresh news on the internet every day. We walked in the park for a long time because the weather was wonderful.*
+
+It is crucial to understand that aspect is completely separate from tense. The aspect simply describes the internal nature of the action, while the tense tells you when it happened on the calendar. You can have an imperfective process happening right now, or you can have an imperfective process that used to happen in the past. The core identity of the action remains exactly the same; only the time frame changes. This proves that focusing on the journey is a perspective you can apply across different periods of time.
+
+Зараз я уважно читаю цікаву статтю про історію. Учора я також довго читав цей журнал у бібліотеці. Завтра я буду читати нові матеріали для нашого проєкту.
+
+> *Right now I am carefully reading an interesting article about history. Yesterday I also read this magazine in the library for a long time. Tomorrow I will be reading new materials for our project.*
+
+<!-- INJECT_ACTIVITY: fill-in-identify-the-aspect-in-sentences -->
+
+## Доконаний вид: Результат! (Perfective: The Result!) (~660 words)
+
+Now it is time to explore the other side of the coin: the **доконаний вид** (perfective aspect). While the **недоконаний вид** (imperfective aspect) focuses on an ongoing **процес** (process), the perfective aspect cares exclusively about the destination. Its absolute core meaning is a single, successfully completed action that has a clear boundary or a final outcome. This aspect acts like a snapshot of a finished event, capturing the exact moment when an activity reaches its goal.
+
+When you use this aspect, you are declaring that an event was brought to its logical conclusion. The duration of the event no longer matters, and the effort spent getting there is irrelevant; the only important detail is that the final **результат** (result) was successfully achieved. Ukrainian mothers often explain this fundamental difference to their children when discussing household chores, highlighting how effort does not always equal completion.
+
+Мати часто каже сину: «Прибирати й прибрати — різні дії!» Ти довго прибирав, але так і не прибрав свою кімнату.
+
+> *A mother often tells her son: "To clean and to have cleaned are different actions!" You were cleaning for a long time, but you still have not cleaned your room.*
+
+To truly understand the perfective aspect, we must contrast it directly with the imperfective forms we just learned. The difference between emphasizing a process and emphasizing a result completely changes the underlying meaning of a sentence. Let us look at how the verbs **робити** (to do) and **зробити** (to do) behave, or how reading works in both aspects. If you want to announce that you successfully finished a novel and are ready to discuss the ending, you must use the perfective form.
+
+Учора я читав нову українську книгу весь вечір. Сьогодні вранці я нарешті прочитав цю книгу до кінця. Тепер я можу дати її тобі.
+
+> *Yesterday I was reading a new Ukrainian book all evening. This morning I finally read this book to the end. Now I can give it to you.*
+
+When you say you were reading, you only confirm the **дія** (action) itself was happening at some point. Maybe you finished the book, or maybe you abandoned it after three pages because it was boring. However, when you say you have read it, you guarantee that the text is finished, the story is complete, and the knowledge is firmly in your head.
+
+Because the perfective aspect fundamentally describes a completed achievement, there is a crucial grammatical rule you must memorize. Perfective verbs have no true present tense. Think about it logically: you cannot be currently in the middle of completing a single, instantaneous result right now. An action is either ongoing as a process, or it is already completely done. Therefore, when you see a perfective verb that looks like it is conjugated in the present tense, it actually carries a future meaning.
+
+:::info
+**Grammar box**
+Perfective verbs cannot happen "right now" because a result is instantaneous. Their "present" forms automatically point to the future. For example, the imperfective verb for writing in the present tense simply means "I am writing". But the perfective form automatically transforms the meaning into "I will write" or "I will finish writing".
+:::
+
+Я напишу цей важливий лист завтра вранці. Мій брат купить свіжі овочі на ярмарку. Ми зробимо це складне завдання разом.
+
+> *I will write this important letter tomorrow morning. My brother will buy fresh vegetables at the market. We will do this difficult task together.*
+
+For now, we will not worry about mastering the future tense. In this module, we will focus exclusively on using perfective verbs in the past tense. These forms are essential for marking finished events, historical facts, and personal achievements in your past. When you want to report that someone successfully did something, wrote something, or scored a point in a game, you will always reach for the past perfective form.
+
+Мій улюблений футболіст забив красивий гол. Моя сестра написала чудову статтю для журналу. Студент зробив усі домашні вправи.
+
+> *My favorite football player scored a beautiful goal. My sister wrote a wonderful article for the magazine. The student did all the homework exercises.*
+
+These sentences do not describe what people were busy doing, nor do they imply any kind of **повторення** (repetition) over time. They strictly and cleanly report what these people successfully accomplished.
+
+Just like the imperfective forms, perfective verbs have their own set of highly reliable signal words. These adverbs highlight suddenness, completion, or the successful achievement of a goal. When you see words like suddenly, finally, or already, you almost certainly need a perfective verb to complete the thought. However, you must be extremely careful with the tricky word for yesterday. This word simply sets the historical time frame, meaning it works perfectly with both aspects depending on your focus!
+
+Раптом почався сильний дощ, але ми вже прийшли додому. Вчора я довго читав журнал, а мій друг вчора прочитав цілу книгу.
+
+> *Suddenly a heavy rain started, but we had already arrived home. Yesterday I read a magazine for a long time, and my friend read a whole book yesterday.*
+
+Notice how yesterday can frame both a long, ongoing activity and a sudden, completed achievement. Your choice of the **вид дієслова** (verb aspect) depends entirely on whether you want to emphasize the long time spent on the task or the final, successful outcome.
+
+<!-- INJECT_ACTIVITY: match-up-choose-the-correct-aspect-context-based -->
+
+## Порівняння пар: Бачимо різницю (Comparing Pairs: Seeing the Difference) (~330 words)
+
+In Ukrainian, almost every verb has a partner. Together, they form an aspect pair to describe every possible situation, like **робити / зробити** (to do). Usually, the base word represents the **недоконаний вид** (imperfective aspect). To create its partner, the **доконаний вид** (perfective aspect), we most often simply add a short prefix to the beginning of the word.
+
+Найчастіше ми утворюємо доконаний вид за допомогою префікса. Наприклад, ми беремо слово «писати» і додаємо префікс «на-». Тепер ми маємо пару: «писати» і «написати». Так само працюють слова «читати» і «прочитати».
+
+> *Most often we form the perfective aspect using a prefix. For example, we take the word "писати" and add the prefix "на-". Now we have a pair: "писати" and "написати". The words "читати" and "прочитати" work the same way.*
+
+This prefix does not change the core meaning, but it adds the crucial idea of completion and a final **результат** (result). Let us put these pairs side by side to see how the **вид дієслова** (verb aspect) completely changes the story. When you use the imperfective form, you invite the listener to watch a **процес** (process) unfold in real-time. 
+
+Порівняймо два речення. «Він писав лист» означає, що дія тривала у минулому. Можливо, він ще пише цей лист зараз. Але «він написав лист» означає, що лист уже готовий. Інший приклад: «вона купувала продукти» проти «вона купила продукти».
+
+> *Let's compare two sentences. "Він писав лист" means that the action was ongoing in the past. Perhaps he is still writing this letter now. But "він написав лист" means that the letter is already ready. Another example: "вона купувала продукти" versus "вона купила продукти".*
+
+To master this concept, try visualizing the **дія** (action) on a timeline. Imagine the imperfective aspect as a long, continuous line (`------`) showing a lasting activity, or as a series of dots (`...`) representing the **повторення** (repetition) of a habit. In contrast, picture the perfective aspect as a single, solid dot (`•`) or an arrow hitting a brick wall (`--->|`). The activity hits that wall, stops completely, and leaves a permanent mark.
+
+:::note
+**Quick tip**
+When you learn a new verb, always try to memorize its aspect pair right away. Knowing both forms is the key to speaking naturally and accurately describing your daily life.
+:::
+
+<!-- INJECT_ACTIVITY: error-correction-fix-aspect --> [error-correction, Find and fix wrong aspect choice in sentences, 6 items]
 </generated_module_content>
 
-**PIPELINE NOTE — Word count: 2489 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
+**PIPELINE NOTE — Word count: 2807 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -374,37 +457,169 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 114 words | Not found: 1 words
+Verified: 264 words | Not found: 2 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
+  ✗ Авраменко — NOT IN VESUM
   ✗ Андрій — NOT IN VESUM
 
-All 114 other words are confirmed to exist in VESUM.
+All 264 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
-## Verification Tools (MCP)
+---
 
-You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
+## Verification Tools (Shell Commands)
 
-**Core Verification:**
-- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
-- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
+You have access to verification tools via shell commands. Use these to verify
+Ukrainian vocabulary, check grammar, and search textbook content **as you write**.
 
-**Content Quality:**
-- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+**IMPORTANT:** Run verification commands BEFORE finalizing any Ukrainian text.
+Batch multiple verifications together to minimize round-trips.
 
-**Reference:**
-- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp_rag_search_literary` — verify literary references against primary sources
-- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
+### 1. Batch-verify Ukrainian words exist in VESUM (preferred — one call for many words)
 
-**Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_words
+results = verify_words(['слово1', 'слово2', 'слово3'])
+for w, matches in results.items():
+    if matches:
+        print(f'{w}: FOUND — lemma={matches[0][\"lemma\"]}, pos={matches[0][\"pos\"]}')
+    else:
+        print(f'{w}: NOT FOUND — may not exist in standard Ukrainian')
+"
+```
+
+### 2. Verify a single Ukrainian word in VESUM (with full morphological tags)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_word
+results = verify_word('WORD_HERE')
+if results:
+    for m in results:
+        print(f'lemma={m[\"lemma\"]}, pos={m[\"pos\"]}, tags={m[\"tags\"]}')
+else:
+    print('NOT FOUND in VESUM')
+"
+```
+
+### 3. Get all inflected forms of a lemma (declension/conjugation)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_lemma
+forms = verify_lemma('LEMMA_HERE')
+for f in forms[:20]:
+    print(f'{f[\"word_form\"]:20s} {f[\"pos\"]:8s} {f[\"tags\"]}')
+print(f'... {len(forms)} forms total')
+"
+```
+
+### 4. Check CEFR level of a word (is it level-appropriate?)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import query_cefr_level
+results = query_cefr_level('WORD_HERE')
+for r in results:
+    print(f'{r[\"word\"]}: {r[\"level\"]} ({r[\"pos\"]})')
+if not results:
+    print('Not in CEFR database')
+"
+```
+
+### 5. Search textbook content (Ukrainian school textbooks, Grades 1-11)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_textbooks
+keywords = {'keyword1', 'keyword2'}
+results = search_textbooks(keywords, 5)
+for r in results:
+    title = r.get('section_title', r.get('title', ''))
+    grade = r.get('grade', '?')
+    text = r.get('text', '')[:200]
+    print(f'Grade {grade} | {title}')
+    print(f'  {text}')
+    print()
+"
+```
+
+### 6. Search style guide for calques/Russianisms (Антоненко-Давидович, 279 entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_style_guide
+results = search_style_guide('TOPIC_HERE', 3)
+for r in results:
+    print(f'--- {r.get(\"word\", \"\")} [{r.get(\"section\", \"\")}]')
+    print(r.get('text', '')[:300])
+    print()
+if not results:
+    print('No style guide entries found')
+"
+```
+
+### 7. Look up word definition in СУМ-11 (Ukrainian explanatory dictionary, 127K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_definitions
+results = search_definitions('WORD_HERE', 3)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+### 8. Search idioms (Фразеологічний словник, 25K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_idioms
+results = search_idioms('WORD_HERE', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"text\", r.get(\"definition\", \"\")))[:200]}')
+"
+```
+
+### 9. English-to-Ukrainian translation (Балла, 79K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import translate_en_uk
+results = translate_en_uk('ENGLISH_WORD', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+---
+
+**WHEN to use these tools:**
+
+1. **Before writing any Ukrainian text** — batch-verify all key vocabulary with
+   `verify_words` (tool 1). Any word that returns NOT FOUND must be replaced.
+2. **When you suspect a Russicism or calque** — search the style guide (tool 6)
+   and verify the correct Ukrainian form with `verify_word` (tool 2).
+3. **When writing for A1/A2** — check CEFR levels (tool 4) to ensure vocabulary
+   is level-appropriate.
+4. **When unsure about a case ending or conjugation** — use `verify_lemma` (tool 3)
+   to see the full paradigm.
+5. **When covering a grammar topic** — search textbooks (tool 5) to see how
+   Ukrainian school textbooks teach it.
+6. **When you need the precise Ukrainian meaning** — use СУМ-11 (tool 7).
+7. **When looking for natural Ukrainian expressions** — search idioms (tool 8).
+
+**Batching rule:** Collect all words you want to verify, then run ONE `verify_words`
+call instead of multiple `verify_word` calls. This is faster and uses fewer tokens.

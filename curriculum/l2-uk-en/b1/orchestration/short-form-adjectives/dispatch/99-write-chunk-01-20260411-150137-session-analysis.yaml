@@ -1,0 +1,47 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T13-00-3ca33096.json
+phase: write-chunk-01
+prompt_chars: 46154
+response_chars: 6831
+prompt_words: 6318
+response_words: 1010
+sections:
+- name: header
+  start: 0
+  length: 449
+  fraction: 0.0097
+- name: skeleton
+  start: 449
+  length: 1629
+  fraction: 0.0353
+- name: plan
+  start: 2078
+  length: 16655
+  fraction: 0.3609
+- name: wiki
+  start: 12475
+  length: 27204
+  fraction: 0.5894
+- name: output_spec
+  start: 45937
+  length: 217
+  fraction: 0.0047
+large_sections:
+- wiki
+directives_total: 17
+directives_covered: 14
+directives_missed:
+- kind: must
+  text: '* **Must-know:** Суфікси `-н-` (`літній`), `-ов-` (`квітковий`), `-ськ-`
+    (`український`).'
+  covered: false
+  coverage_note: 2/7 keywords (29%)
+- kind: must
+  text: '* **Must-know:** Моделі `батьків` / `батькова` та `сестрин` / `сестрина`
+    є високочастотними.'
+  covered: false
+  coverage_note: 1/8 keywords (12%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 3/11 keywords (27%)

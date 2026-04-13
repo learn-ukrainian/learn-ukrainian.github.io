@@ -1,115 +1,102 @@
 ## Linguistic Scan
-Errors found:
-1. `побачити` -> `побачу` is incorrectly cited as a `т` -> `ч` consonant shift. The stem is `побач-`, the `т` is the infinitive suffix. There is no shift here.
-2. `зробити` -> `зроблю`, `зроблять` is incorrectly explained. The text claims the `бл` shift only happens in the 1st person singular, and lists `вони зроблять` as a "normal" form without the shift, which is factually false since it clearly contains `бл`.
+- Critical grammar error in **Складений майбутній час**: “However, imperfective verbs cannot express the future tense on their own...” is false. Ukrainian imperfective verbs also have a simple future (`писатиму`, `прибиратиму`).
+- Critical grammar error in **Як обрати вид для майбутнього**: “«прибиратиму» is just a stylish, one-word variant of «буду прибирати».” This is false. `Прибиратиму` is a standard simple future form of an imperfective verb, not a stylistic flourish.
 
 ## Exercise Check
-- `<!-- INJECT_ACTIVITY: fill-in-choose-between-simple-and-compound-future-forms-based-on-context -->` (Placed after Introduction) - Tests both forms, placed before they are taught.
-- `<!-- INJECT_ACTIVITY: group-sort-future-forms -->` (Placed after Perfective section) - Tests both forms, placed before Compound is taught.
-- `<!-- INJECT_ACTIVITY: fill-in-compound-future -->` (Placed after Compound section) - EXTRA marker not in plan.
-- `<!-- INJECT_ACTIVITY: quiz-aspect-choice -->` (Placed after Choosing section) - Correct placement.
-- `<!-- INJECT_ACTIVITY: unjumble-future-sentences -->` (Placed after Choosing section) - Correct placement.
-
-Issue: Markers are misplaced pedagogically and there is one extra marker. They all test the distinction between both forms, so they must be placed after both forms have been fully explained (at the end of section 4).
+- Marker inventory found: 5 total.
+- Correctly placed after relevant teaching: `group-sort-sort-verb-forms-into-two-groups-synthetic-future-perfective-and-analytical-future-imperfective`, `fill-in-complete-sentences-with-the-correct-synthetic-perfective-future-forms-based-on-context`, `unjumble-future-sentences`, `quiz-aspect-choice`.
+- Problem: the module adds an extra marker `<!-- INJECT_ACTIVITY: fill-in-future-aspect -->` that is not in the 4 planned `activity_hints`.
+- Problem: `<!-- INJECT_ACTIVITY: unjumble-future-sentences --> [unjumble, Reorder words ...]` leaves visible artifact text in the body.
+- Placement is otherwise reasonably spread through the module.
+- Actual YAML exercise logic is not present here, so only marker placement/inventory can be checked.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 8/10 | Required dialogue situation ("Making New Year's resolutions with friends" using perfective forms) was completely omitted from the "Простий майбутній час" section and replaced with a dinner planning dialogue. All other sections and required vocabulary are present. |
-| 2. Linguistic accuracy | 6/10 | CRITICAL errors: 1) Falsely claiming `побачити` undergoes a `т` -> `ч` consonant shift. 2) Falsely claiming the `бл` shift in `зробити` only applies to the 1st person singular and listing `вони зроблять` as a "normal" form. |
-| 3. Pedagogical quality | 8/10 | Excellent explanations of aspect and conditional usage. However, placing exercises that test both simple and compound future forms immediately after the introductory paragraph (before they are actually taught) is a pedagogical sequence error. |
-| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary words are used naturally in context. |
-| 5. Exercise quality | 8/10 | Generated extra marker not in plan. Placement of markers forces the pipeline to insert exercises testing concepts the student hasn't read yet. |
-| 6. Engagement & tone | 10/10 | Tone is supportive and clear. Explanations of why the tenses exist ("perfective verbs do not have a real present tense") are logical and empowering. |
-| 7. Structural integrity | 10/10 | All H2 headers from the plan are present. Word count (2982) safely exceeds the 2000 target. |
-| 8. Cultural accuracy | 10/10 | The distinction between Ukrainian and English approaches to future tense is explained well without relying on Russian comparisons. |
-| 9. Dialogue & conversation quality | 9/10 | Dialogues are natural and clearly demonstrate the grammar in action. |
+| 1. Plan adherence | 8/10 | All four planned H2 sections are present and the core contrasts are covered, but the content adds an extra out-of-plan marker: `<!-- INJECT_ACTIVITY: fill-in-future-aspect -->`. |
+| 2. Linguistic accuracy | 4/10 | The module states `imperfective verbs cannot express the future tense on their own` and later says `«прибиратиму» is just a stylish, one-word variant of «буду прибирати»`; both claims are factually wrong about Ukrainian grammar. |
+| 3. Pedagogical quality | 6/10 | The analytical-future section opens with a long English-first explanation ending in `similar to how English uses "will be" plus an "-ing" verb` before the first Ukrainian example, which is both misleading and poorly sequenced for a grammar lesson. |
+| 4. Vocabulary coverage | 9/10 | Required vocabulary is integrated naturally in prose and examples: `сказати / скажу`, `написати / напишу`, `зробити / зроблю`, `буду`, `прочитати`, `подзвонити`, `купити`. |
+| 5. Exercise quality | 6/10 | Marker placement is mostly sensible, but there are 5 markers for 4 planned activities, including extra `fill-in-future-aspect`, and the unjumble marker has stray visible text after it. |
+| 6. Engagement & tone | 6/10 | The teacher voice exists, but filler weakens it: `These verbs are absolutely essential for everyday communication and building relationships` and `This gives you incredible expressive power in Ukrainian...` add hype rather than instruction. |
+| 7. Structural integrity | 7/10 | All planned H2 headings are present and the pipeline word count is above target (2308), but `<!-- INJECT_ACTIVITY: unjumble-future-sentences --> [unjumble, Reorder words ...]` leaves a formatting artifact in the published prose. |
+| 8. Cultural accuracy | 9/10 | The module treats Ukrainian on its own terms and uses a plausible Ukrainian context (New Year’s resolutions, exams) without Russia-centered framing. |
+| 9. Dialogue & conversation quality | 4/10 | The supposed dialogue is just four isolated declarations (`Олена...`, `Марко...`, `Софія...`, `Максим...`) rather than a multi-turn conversation with reactions or interaction. |
 
 ## Findings
-1. [Linguistic accuracy] [Critical]
-Location: "Another common shift is **т** to **ч**. Від дієслова **побачити** *(to see)* ми легко утворюємо форму **я побачу** *(I will see)*."
-Issue: `побачити` does not have a `т` to `ч` consonant shift. The stem is `побач-` and the `т` is the infinitive suffix.
-Fix: Replace with a valid example of `т` to `ч` shift, such as `заплатити` -> `заплачу`.
+- [LINGUISTIC ACCURACY] [SEVERITY: critical]  
+Location: **Складений майбутній час**, opening paragraph — `However, imperfective verbs cannot express the future tense on their own because their conjugated forms describe the present.`  
+Issue: This teaches false grammar. Ukrainian imperfective verbs do have their own future forms (`писатиму`, `читатиму`, `прибиратиму`).  
+Fix: Replace the paragraph so it explicitly says this module focuses on `буду + infinitive` without claiming imperfective verbs cannot form future on their own.
 
-2. [Linguistic accuracy] [Critical]
-Location: "For example, the consonant **б** changes to the cluster **бл**. Дієслово **зробити** *(to do completely)* має форму **я зроблю** *(I will do)*. Інші форми залишаються нормальними: ... **вони зроблять** *(they will do)*."
-Issue: The text claims the `бл` shift only happens in the 1st person singular and incorrectly lists `вони зроблять` as a "normal" form that doesn't have the shift.
-Fix: Update the text to state the shift occurs in the 1st person singular and 3rd person plural, and group `я зроблю` and `вони зроблять` together.
+- [LINGUISTIC ACCURACY] [SEVERITY: critical]  
+Location: **Як обрати вид для майбутнього** — `Note that «прибиратиму» is just a stylish, one-word variant of «буду прибирати».`  
+Issue: `Прибиратиму` is not a “stylish variant”; it is a standard simple future form of an imperfective verb.  
+Fix: Rewrite the note to identify `прибиратиму` as another standard future form and say that this module is focusing on the analytical pattern.
 
-3. [Plan adherence] [Major]
-Location: Section "Простий майбутній час". "> — **Анна:** Що ми будемо робити сьогодні ввечері? ... > — **Максим:** Я **куплю** червоне вино і свіжі фрукти..."
-Issue: The required dialogue from the plan ("Making New Year's resolutions with friends" demonstrating perfective forms: напишу, вивчу, прочитає, складе) was ignored and replaced with a dinner planning dialogue.
-Fix: Replace the dinner dialogue with the New Year's resolution dialogue requested by the plan.
+- [PEDAGOGICAL QUALITY] [SEVERITY: major]  
+Location: **Складений майбутній час**, opening paragraph — `This structure might feel familiar because it is similar to how English uses "will be" plus an "-ing" verb.`  
+Issue: The explanation leans on a misleading English analogy and delays Ukrainian examples. That encourages English mapping instead of Ukrainian aspect-based reasoning.  
+Fix: Replace the paragraph with a shorter Ukrainian-focused explanation built around `буду / будеш / буде + infinitive` and immediate Ukrainian examples.
 
-4. [Exercise quality] [Major]
-Location: Throughout the text.
-Issue: There is an extra `fill-in` activity marker not requested by the plan, and the remaining markers are placed too early (testing both future forms before the compound future has even been taught).
-Fix: Delete the misplaced and extra markers, and consolidate the four required markers at the end of the "Як обрати вид для майбутнього" section.
+- [EXERCISE QUALITY] [SEVERITY: major]  
+Location: End of module — `<!-- INJECT_ACTIVITY: fill-in-future-aspect -->`  
+Issue: This is an extra exercise marker beyond the 4 planned `activity_hints`, so the activity inventory no longer matches the plan.  
+Fix: Remove the extra fill-in marker and keep the planned quiz marker.
+
+- [STRUCTURAL INTEGRITY] [SEVERITY: minor]  
+Location: **Складений майбутній час** — `<!-- INJECT_ACTIVITY: unjumble-future-sentences --> [unjumble, Reorder words to form correct future tense sentences using both synthetic (напишу) and analytical (буду писати) forms, 6 items]`  
+Issue: The bracketed text is a visible formatting artifact and should not remain in prose.  
+Fix: Leave only the HTML marker.
+
+- [ENGAGEMENT & TONE] [SEVERITY: minor]  
+Location: **Простий майбутній час** / final grammar box — `These verbs are absolutely essential for everyday communication and building relationships.` and `This gives you incredible expressive power in Ukrainian...`  
+Issue: These are inflated filler lines; they add hype instead of usable instruction.  
+Fix: Replace them with direct pedagogical language about plans, promises, result vs process.
+
+- [DIALOGUE & CONVERSATION QUALITY] [SEVERITY: major]  
+Location: Opening “dialogue” — the four quoted lines beginning `— **Олена:** ...` through `— **Максим:** ...`  
+Issue: This is not a real conversation; it is a list of separate declarations with no turn-taking or response.  
+Fix: Replace it with a short multi-turn exchange where speakers react to each other while keeping the target future forms.
 
 ## Verdict: REVISE
-The module contains critical linguistic errors regarding Ukrainian consonant shifts and a major deviation from the plan's requested dialogue. Activity markers are also placed incorrectly. These must be fixed before publishing.
+Critical factual grammar errors are present, so this cannot pass. Multiple other dimensions are below 9, and the exercise inventory and dialogue quality also need correction.
 
 <fixes>
-- find: |-
-    Обидва часи дуже потрібні для щоденного спілкування українською мовою. Both tenses are very necessary for daily communication in the Ukrainian language.
+- find: |
+    Now let's look at the second way to talk about the future in Ukrainian. When we want to describe an action that is ongoing, continuous, or repeated, we must use imperfective verbs. However, imperfective verbs cannot express the future tense on their own because their conjugated forms describe the present. They need a helper word to point to the future. To form the **складений** (compound, analytical) future tense, we combine the conjugated future tense of the helper verb "бути" with the imperfective infinitive of the main verb. This structure might feel familiar because it is similar to how English uses "will be" plus an "-ing" verb. It specifically emphasizes the process, the duration, or the routine of the action.
+  replace: |
+    Now let's look at the second way to talk about the future in Ukrainian. In this module, we focus on the analytical future of imperfective verbs: **буду / будеш / буде** + infinitive. We use this pattern for ongoing, repeated, or general actions in the future: **буду читати**, **будемо працювати**, **будуть подорожувати**. Unlike the perfective synthetic future, this form highlights the process rather than a completed result.
 
-    <!-- INJECT_ACTIVITY: fill-in-choose-between-simple-and-compound-future-forms-based-on-context -->
+- find: |
+    > — **Олена:** У новому році я обов'язково напишу книгу! *(In the new year, I will definitely write a book!)*
+    > — **Марко:** А я вивчу іспанську мову. *(And I will learn Spanish.)*
+    > — **Софія:** Мій брат прочитає п'ятдесят книг за рік! *(My brother will read fifty books in a year!)*
+    > — **Максим:** А моя сестра нарешті складе важливий іспит. *(And my sister will finally pass an important exam.)*
+  replace: |
+    > — **Олена:** У новому році я обов'язково напишу книгу! *(In the new year, I will definitely write a book!)*
+    > — **Марко:** Серйозно? Тоді я вивчу іспанську мову. *(Seriously? Then I will learn Spanish.)*
+    > — **Софія:** Чудовий план! А мій брат прочитає п'ятдесят книг за рік. *(Great plan! And my brother will read fifty books in a year.)*
+    > — **Максим:** Ого. А моя сестра нарешті складе важливий іспит. *(Wow. And my sister will finally pass an important exam.)*
+    > — **Олена:** Домовилися: наприкінці року ми скажемо, що справді зробили. *(Agreed: at the end of the year we will say what we actually accomplished.)*
 
-    ## Простий майбутній час (Perfective/Synthetic Future)
-  replace: |-
-    Обидва часи дуже потрібні для щоденного спілкування українською мовою. Both tenses are very necessary for daily communication in the Ukrainian language.
+- find: |
+    For the analytical future, you simply use the helper verb **буду** (I will — auxiliary) with an imperfective infinitive. To guarantee a result, you must know perfective verbs like **прочитати** (to read through — pf.) and **подзвонити** (to call — pf.). You will frequently mix these aspects in daily conversations when making plans, promises, or predictions. A classic question you will hear is «Що ти будеш робити завтра?». This focuses on your general process. The reply often mixes aspects: «Я прибиратиму квартиру, а потім приготую вечерю». Note that «прибиратиму» is just a stylish, one-word variant of «буду прибирати».
+  replace: |
+    For the analytical future, you simply use the helper verb **буду** (I will — auxiliary) with an imperfective infinitive. To guarantee a result, you must know perfective verbs like **прочитати** (to read through — pf.) and **подзвонити** (to call — pf.). You will frequently mix these aspects in daily conversations when making plans, promises, or predictions. A classic question you will hear is «Що ти будеш робити завтра?». This focuses on your general process. The reply often mixes aspects: «Я прибиратиму квартиру, а потім приготую вечерю». Note that «прибиратиму» is another standard future form of the imperfective verb «прибирати». In this module, we focus on the analytical pattern «буду прибирати».
 
-    ## Простий майбутній час (Perfective/Synthetic Future)
-- find: |-
-    However, you must remember the specific consonant shifts that happen in the first person singular. Ці чергування приголосних звуків дуже важливі тут. *(These consonant sound shifts are very important here.)* For example, the consonant **б** changes to the cluster **бл**. Дієслово **зробити** *(to do completely)* має форму **я зроблю** *(I will do)*. Інші форми залишаються нормальними: **ти зробиш** *(you will do)*, **він зробить** *(he will do)*, **ми зробимо** *(we will do)*, **ви зробите** *(you will do)*, **вони зроблять** *(they will do)*. Another common shift is **т** to **ч**. Від дієслова **побачити** *(to see)* ми легко утворюємо форму **я побачу** *(I will see)*.
-  replace: |-
-    However, you must remember the specific consonant shifts that happen. Ці чергування приголосних звуків дуже важливі тут. *(These consonant sound shifts are very important here.)* For example, the consonant **б** changes to the cluster **бл** in the first person singular and third person plural. Дієслово **зробити** *(to do completely)* має форми **я зроблю** *(I will do)* та **вони зроблять** *(they will do)*. Інші форми залишаються нормальними: **ти зробиш** *(you will do)*, **він зробить** *(he will do)*, **ми зробимо** *(we will do)*, **ви зробите** *(you will do)*. Another common shift is **т** to **ч** in the first person singular. Від дієслова **заплатити** *(to pay)* ми легко утворюємо форму **я заплачу** *(I will pay)*.
-- find: |-
-    Let's see how friends use these concrete promises when planning a relaxing evening together. Вони зараз планують спільну смачну вечерю. *(They are now planning a joint tasty dinner.)*
+- find: "<!-- INJECT_ACTIVITY: unjumble-future-sentences --> [unjumble, Reorder words to form correct future tense sentences using both synthetic (напишу) and analytical (буду писати) forms, 6 items]"
+  replace: "<!-- INJECT_ACTIVITY: unjumble-future-sentences -->"
 
-    > — **Анна:** Що ми будемо робити сьогодні ввечері? *(What will we do tonight?)*
-    > — **Максим:** Я **куплю** червоне вино і свіжі фрукти. *(I will buy red wine and fresh fruits.)*
-    > — **Анна:** Дуже добре, а я **зроблю** великий салат. *(Very good, and I will make a large salad.)*
-    > — **Анна:** Також я **замовлю** гарячу піцу для нас. *(Also I will order a hot pizza for us.)*
-    > — **Максим:** Чудово! А потім ми **подивимося** цікавий фільм. *(Great! And then we will watch an interesting movie.)*
-
-    <!-- INJECT_ACTIVITY: group-sort-future-forms -->
-
-    ## Складений майбутній час (Imperfective/Analytical Future)
-  replace: |-
-    Let's see how friends use these concrete forms when sharing their New Year's resolutions. Вони обговорюють свої цілі на новий рік. *(They are discussing their goals for the new year.)*
-
-    > — **Анна:** Які у вас плани на цей рік? *(What are your plans for this year?)*
-    > — **Максим:** Я **напишу** книгу! А ти, Анно? *(I will write a book! And you, Anna?)*
-    > — **Анна:** Я **вивчу** іспанську мову. Це моя головна мета. *(I will learn Spanish. This is my main goal.)*
-    > — **Максим:** А що **зробить** наш друг Іван? *(And what will our friend Ivan do?)*
-    > — **Анна:** Він **прочитає** п'ятдесят книг! А Олена **складе** свій іспит. *(He will read fifty books! And Olena will pass her exam.)*
-
-    ## Складений майбутній час (Imperfective/Analytical Future)
-- find: |-
-    > — **Олег:** Дякую, ми будемо регулярно **практикувати** мову разом. *(Thank you, we will be practicing the language regularly together.)*
-
-    <!-- INJECT_ACTIVITY: fill-in-compound-future -->
-
-    ## Як обрати вид для майбутнього (Choosing Aspect for the Future)
-  replace: |-
-    > — **Олег:** Дякую, ми будемо регулярно **практикувати** мову разом. *(Thank you, we will be practicing the language regularly together.)*
-
-    ## Як обрати вид для майбутнього (Choosing Aspect for the Future)
-- find: |-
-    > — **Марко:** Добре, якщо ти **купиш** квитки, я **куплю** попкорн. *(Good, if you buy the tickets, I will buy the popcorn.)*
-
+- find: |
+    <!-- INJECT_ACTIVITY: fill-in-future-aspect -->
     <!-- INJECT_ACTIVITY: quiz-aspect-choice -->
-    <!-- INJECT_ACTIVITY: unjumble-future-sentences -->
-
-    ## Підсумок
-  replace: |-
-    > — **Марко:** Добре, якщо ти **купиш** квитки, я **куплю** попкорн. *(Good, if you buy the tickets, I will buy the popcorn.)*
-
-    <!-- INJECT_ACTIVITY: fill-in-future-forms -->
-    <!-- INJECT_ACTIVITY: group-sort-future-forms -->
+  replace: |
     <!-- INJECT_ACTIVITY: quiz-aspect-choice -->
-    <!-- INJECT_ACTIVITY: unjumble-future-sentences -->
 
-    ## Підсумок
+- find: "These verbs are absolutely essential for everyday communication and building relationships."
+  replace: "These verbs are common in everyday plans and promises."
+
+- find: "This gives you incredible expressive power in Ukrainian, letting you highlight nuance that you simply cannot express easily in English."
+  replace: "This helps you show whether you mean a finished result or an ongoing process."
 </fixes>

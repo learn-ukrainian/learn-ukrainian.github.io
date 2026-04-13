@@ -26,7 +26,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-однієї додаткової дії. Порівняйте два речення. Перше: «Спілкуючись, спортсмен привітно усміхався». Тут ми маємо лише одиничний дієприслівник. Друге: «Спілкуючись із відомими журналістами після матчу, спортсмен привітно усміхався» *(Communicating with famous journalists after a match, the athlete smiled warmly)*. У цьому випадку «спілкуючись із відомими журналістами після матчу» — це вже повноцінний дієприслівниковий зворот. У ньому дієприслівник керує кількома залежними словами: можемо поставити питання «з ким?» (із журналістами) та «коли?» (після матчу). Яку роль відіграє ця конструкція в українському реченні? Синтаксично весь дієприслівниковий зворот виступає як один неподільний член речення — **обставина** *(adverbial modifier)*. Він пояснює головну дію, виражену дієсловом-присудком, і відповідає на питання «як?» *(how?)*, «коли?» *(when?)* або «чому?» *(why?)*. Незалежно від довжини звороту, ми підкреслюємо його штрихпунктирною лінією. Розгляньмо приклад з літератури, відомі рядки поета Левка Боровиковського: «Край річки, ставши на плотину, рибалка вудочку закинув» *(By the river, having stood on the dam, the fisherman cast his fishing rod)*. Головна дія в реченні зрозуміла: рибалка закинув *(cast)* вудочку. А далі ми запитуємо: коли саме або за яких обставин він це зробив? Відповідь: «ставши на плотину» *(having stood on the dam)*. Цей дієприслівниковий зворот складається з дієприслівника «ставши» та залежних від нього слів «на плотину» (куди?). Весь цей блок працює разом як єдина обставина, що детально описує умови успішної дії рибалки. Логіка побудови дієприслівникового звороту полягає в тому, що залежні слова забезпечують життєво необхідний контекст. Без них повідомлення втратило б сенс. Особливо яскраво цю функцію видно в текстах, які описують динамічні події чи спортивні змагання. Уявіть речення: «Випередивши головного суперника на останніх метрах дистанції, плавець здобув золоту медаль» *(Having overtaken the main opponent at the final meters of the distance, the swimmer won a gold medal)*. Цей зворот чітко пояснює обставини. Він показує, коли і завдяки чому саме спортсмен здобув *(won)* нагороду. Інший приклад: «Скориставшись грубою помилкою центрального захисника, нападник забив вирішальний гол» *(Having taken advantage of the central defender's gross mistake, the forward scored the decisive goal)*. Тут дієприслівниковий зворот прямо відповідає на питання «чому?» або «за яких умов?». Нападник забив *(scored)* м’яч саме тому, що вчасно використав сприятливу ситуацію. Як бачимо, залежні слова конкретизують додаткову дію, створюючи чіткі причиново-наслідкові зв’язки. Аналізуючи дієприслівникові звороти, важливо пам’ятати про відмінність між граматичними видами самих дієприслівників. Дієприслівники **недоконаного виду** *(imperfective aspect)* завжди позначають дію, яка відбувається абсолютно одночасно з головною. Наприклад: «Уважно читаючи нову книгу, я робив корисні нотатки» *(While carefully reading the new book, I took useful notes)*. Дві дії (читання і записування) тривають паралельно. Натомість дієприслівники **доконаного виду** *(perfective aspect)* чітко вказують на додаткову дію, яка повністю завершилася до моменту початку головної дії. Повертаючись до діалогу в подкасті, згадаємо слова коуча: «Прочитавши цю книгу до кінця, ви зрозумієте багато нового про себе» *(Having read this book to the end, you will understand much that is new about yourself)*. Зворот «прочитавши цю книгу до кінця» вказує на сувору послідовність. Спочатку ви повністю завершуєте читання, а вже потім до вас приходить розуміння. Ця різниця дозволяє українській мові бути надзвичайно точною. <!-- INJECT_ACTIVITY: reading-gerund-structure --> <!-- INJECT_ACTIVITY: fill-in-gerund-form --> <!-- INJECT_ACTIVITY: quiz-gerund-structure -->
+gerund *ставши* (having stood). From this core, we ask the question: having stood where? The answer is *на плотину* (on the dam). These dependent words attach to the gerund, forming the complete phrase. The entire block *ставши на плотину* answers the question "under what circumstances did he cast the rod?" or "what did he do before casting the rod?", fulfilling its role as an adverbial modifier. The true power of this construction lies in its logical efficiency. By using dependent words, you can pack a significant amount of context into a single sentence without needing to create multiple, separate clauses. This is particularly useful when describing dynamic events, such as sports competitions or fast-paced actions, where you want to highlight a sequence of events smoothly. Випередивши сильного суперника на останніх метрах дистанції, молодий плавець здобув золоту медаль. Скориставшись неочікуваною помилкою захисника, нападник нашої команди забив вирішальний гол. > *Having overtaken the strong opponent in the final meters of the distance, the young swimmer won a gold medal. Having taken advantage of the defender's unexpected mistake, our team's striker scored the decisive goal.* In the first example, the phrase sets up the precise condition for the victory. The main verb is *здобув* (won), and the gerund phrase explains exactly how and when this victory was secured. In the second example, *скориставшись неочікуваною помилкою захисника* explains the opportunity that led to the main action *забив* (scored). The dependent words detail whose mistake it was, giving a complete picture of the circumstances surrounding the goal. Without these phrases, the narrative would sound choppy. Finally, the choice of gerund within the phrase dictates the timeline of events. Just like single gerunds, gerund phrases can be built using either imperfective or perfective forms, and this choice radically alters the meaning of the sentence. Дієприслівникові звороти недоконаного виду означають дію, яка відбувається одночасно з головною дією. Звороти доконаного виду вказують на дію, яка завершилася перед початком головної дії. > *Imperfective gerund phrases denote an action that happens simultaneously with the main action. Perfective phrases indicate an action that was completed before the start of the main action.* Consider the difference between two similar phrases. If we say *Читаючи нову книгу, він пив каву*, the imperfective phrase *читаючи нову книгу* (while reading a new book) shows two actions happening at the exact same time. The reading and the drinking are parallel. However, if we return to our podcast coach's advice, they said: *Прочитавши цю книгу, ви зрозумієте основні принципи успіху.* Here, the perfective phrase *прочитавши цю книгу* (having read this book) establishes a strict sequence. The action of reading must be fully completed before the understanding can happen. Recognizing this temporal logic is crucial for mastering the nuances of Ukrainian storytelling. <!-- INJECT_ACTIVITY: reading, прочитайте текст про дієприслівниковий зворот будова і дайте відповіді на запитання --> <!-- INJECT_ACTIVITY: fill-in, вставте правильну граматичну форму дієприслівник та залежні слова у реченнях на тему будови звороту --> <!-- INJECT_ACTIVITY: quiz, оберіть правильний варіант ідентифікація дієприслівникового звороту та його частин -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -538,7 +538,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -551,18 +618,60 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] дієприслівниковий зворот (gerund phrase)
+- [ ] відокремлення (setting off with commas)
+- [ ] фразеологічний зворот (phraseological expression — exception to comma rule)
+- [ ] не покладаючи рук (without rest — phraseological, no commas)
+- [ ] затамувавши подих (holding one's breath — phraseological, no commas)
+- [ ] обставина (adverbial modifier — syntactic role)
+- [ ] означення (attribute — syntactic role of дієприкметниковий зворот)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Правила відокремлення (~990 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

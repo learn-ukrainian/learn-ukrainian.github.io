@@ -21,7 +21,7 @@ Grand total: ~2350 words
 <previous_context>
 [...previous sections truncated...]
 
-практикувати нові граматичні структури. Let's do a deep dive into transformation drills. We need to practice the mental shift from stating a simple identity to describing an action or a future goal. Візьмемо для прикладу слово «**художник**» *(artist)*. Перший рівень — це проста ідентифікація в теперішньому часі. Ми використовуємо називний відмінок. «Він — художник» *(He is an artist)*. Другий рівень — це опис професійної дії. Тут ми маємо дієслово «**працювати**» *(to work)*. Воно вимагає орудного відмінка. «Він працює художником» *(He works as an artist)*. Третій рівень — це опис амбіцій або планів на майбутнє. Тут ми використовуємо дієслова «**хотіти**» *(to want)* та «**стати**» *(to become)*. Дієслово «стати» завжди вимагає орудного відмінка. «Він хоче стати відомим художником» *(He wants to become a famous artist)*. Ці три рівні показують, як змінюється форма слова. The grammatical trigger is always the verb. If there is no verb (or a hidden present tense "to be"), use Nominative. If you use verbs of becoming or working, use Instrumental. Тепер давайте поговоримо про нашу родину та друзів. This kind of practice is very important. Narrating the lives of others helps you apply the Instrumental case to third-person descriptions. Ці описи дуже часто зустрічаються на іспитах рівня А2. Ось кілька гарних прикладів: «Моя молодша сестра цікавиться медициною, тому вона хоче стати **лікаркою**» *(My younger sister is interested in medicine, so she wants to become a doctor)*. «Мій старший брат займається спортом, він мріє бути **тренером**» *(My older brother does sports, he dreams of being a coach)*. «Мій тато захоплюється кулінарією, він працює **кухарем**» *(My dad is passionate about cooking, he works as a chef)*. «Моя мама любить математику, вона працює **бухгалтером**» *(My mom loves math, she works as an accountant)*. У цих реченнях ми спочатку називаємо хобі або інтерес людини. Після цього ми пояснюємо її професію або мету. We use the verbs of interest in the first clause. Then we use the verbs of profession in the second clause. Діти дуже часто говорять про свої мрії. Їхні бажання можуть швидко змінюватися. Давайте прочитаємо коротку розмову між мамою та її маленьким сином. Цей веселий діалог показує зв'язок між дитячим захопленням та майбутньою професією. > — **Дитина:** Мамо, коли я виросту, я буду **ветеринаром**! *(Mom, when I grow up, I will be a veterinarian!)* > — **Мама:** Це чудова ідея, синку! Але чому саме ветеринаром? *(That's a great idea, son! But why exactly a veterinarian?)* > — **Дитина:** Бо я дуже захоплююся тваринами. Я хочу їм допомагати. *(Because I am very passionate about animals. I want to help them.)* > — **Мама:** А ким хоче стати твій друг Сашко? *(And what does your friend Sashko want to become?)* > — **Дитина:** Сашко постійно малює. Він мріє стати **архітектором**. *(Sashko draws constantly. He dreams of becoming an architect.)* > — **Мама:** Які у вас серйозні плани на майбутнє! *(What serious plans for the future you have!)* Notice how the child naturally uses the Instrumental case. The causal link between the passion and the goal makes the conversation sound authentic and logical.
+відомим художником». > *Let's imagine we are talking about a friend. At the first level, we name his occupation: "My friend is an artist." Here we use the Nominative case because it is a simple statement of fact. At the second level, we talk about his activity: "He works as an artist in a gallery." This verb requires the Instrumental case. At the third level, we talk about his plans: "He wants to become a famous artist."* This mental shift is a necessity for speaking Ukrainian fluently. You move from the static idea of "who someone is" to the dynamic concept of "what someone does" or "what someone will become." :::tip **Did you know?** When you use verbs like **працювати** (to work) or **стати** (to become), you emphasize the action or the process of acquiring a role, rather than just labeling the person. ::: Let's apply this exact logic to talk about other people, such as your family members. You will regularly need to connect someone's current hobbies or studies with their future career. Моя сестра цікавиться медициною і мріє стати лікаркою. Вона багато читає і пишається своїми оцінками. Мій брат займається спортом і хоче бути тренером. Наша родина має різний фах. Моя мама працює вчителькою, а мій тато — відомий вчитель математики. Мій дядько вже багато років працює інженером. Його син працює лікарем у новій лікарні. > *My sister is interested in medicine and dreams of becoming a doctor. She reads a lot and is proud of her grades. My brother does sports and wants to be a coach. Our family has a different profession. My mom works as a teacher, and my dad is a famous math teacher. My uncle has been working as an engineer for many years. His son works as a doctor in a new hospital.* Notice how the verbs **цікавитися** (to be interested in), **займатися** (to be engaged in), and **пишатися** (to be proud of) use the Instrumental case to describe the activity. Their career goals naturally follow the same pattern. To see how these concepts flow naturally in real life, let's read a short, playful conversation between a mother and her young child discussing future dreams. > — **Дитина:** Мамо, коли я виросту, я обов'язково буду ветеринаром! *(Mom, when I grow up, I will definitely be a veterinarian!)* > — **Мама:** Це цікава професія. Але чому ти хочеш стати саме ветеринаром? *(That is an interesting profession. But why do you want to become exactly a veterinarian?)* > — **Дитина:** Бо я захоплююся тваринами і хочу їм допомагати. *(Because I am passionate about animals and want to help them.)* > — **Мама:** Я розумію тебе. Твій дідусь також працював ветеринаром. *(I understand you. Your grandfather also worked as a veterinarian.)* This dialogue highlights the link between a passion, expressed with the verb **захоплюватися** (to be passionate about), and a future goal. Practice reading this dialogue aloud to get comfortable with the rhythm. <!-- INJECT_ACTIVITY: fill-in, Answer questions about professions using full Instrumental sentences -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -467,7 +467,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -486,18 +553,65 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (5/5).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] професія (profession)
+- [ ] фах (profession, specialty)
+- [ ] працювати (to work)
+- [ ] стати (to become)
+- [ ] захоплюватися (to be passionate about)
+- [ ] цікавитися (to be interested in)
+- [ ] пишатися (to be proud of)
+- [ ] займатися (to be engaged in, to do (a sport/activity))
+- [ ] лікар (doctor)
+- [ ] вчитель (teacher (male))
+- [ ] вчителька (teacher (female))
+- [ ] інженер (engineer)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Підсумок (~150 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

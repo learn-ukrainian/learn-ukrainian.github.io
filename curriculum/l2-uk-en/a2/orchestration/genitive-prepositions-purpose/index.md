@@ -1,6 +1,6 @@
 # Build Summary: genitive-prepositions-purpose (A2)
 
-Generated: 2026-04-11 02:04
+Generated: 2026-04-11 12:12
 
 ## Pipeline Phases
 
@@ -19,8 +19,8 @@ Generated: 2026-04-11 02:04
 | enrich | complete | 2026-04-07 22:07:43 |
 | verify | complete | 2026-04-07 22:07:43 |
 | stress | complete | 2026-04-07 22:08:36 |
-| publish | complete | 2026-04-11 00:04:00 |
-| audit | complete | 2026-04-11 00:04:00 |
+| publish | complete | 2026-04-11 10:12:06 |
+| audit | complete | 2026-04-11 10:12:06 |
 
 ## Reviews
 
@@ -40,12 +40,16 @@ Generated: 2026-04-11 02:04
 | review | gemini-tools (gemini-3.1-pro-preview) | 52s | ✅ |
 | write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 86s | ✅ |
 | write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 49s | ✅ |
+| write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 75s | ✅ |
 | write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 56s | ✅ |
 | write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 35s | ✅ |
+| write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 50s | ✅ |
 | write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 37s | ✅ |
 | write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 69s | ✅ |
+| write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 60s | ✅ |
 | write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 40s | ✅ |
 | write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 25s | ✅ |
+| write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 95s | ✅ |
 
 ## Friction
 

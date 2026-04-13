@@ -21,7 +21,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-про майбутнє, ми запитуємо: «**Ким ти хочеш стати?**» *(Who do you want to become?)*. Усі ці запитання вимагають від нас логічної відповіді в орудному відмінку. Давайте подивимося, як ці фрази працюють у реальній розмові. Олена та Андрій — колишні однокласники. Вони зустрілися на зустрічі випускників через п'ять років після школи. > — **Олена:** Привіт, Андрію! Скільки літ, скільки зим! *(Hi, Andriy! Long time no see!)* > — **Андрій:** Олено, привіт! Я так радий тебе бачити. Як твої справи? Хто ти тепер за фахом? > — **Олена:** Усе чудово, дякую! Я стала **лікаркою** *(doctor - female)*, як і хотіла. Тепер працюю в центральній лікарні. А ти? Ким ти працюєш? > — **Андрій:** Ого, я дуже пишаюся тобою! А я в школі мріяв бути **музикантом** *(musician)*, але життя змінилося. Я закінчив університет і став **програмістом** *(programmer)*. > — **Олена:** Це також чудова сучасна професія! Ти працюєш у великій компанії? > — **Андрій:** Так, і мені дуже подобається. Проте я все ще захоплююся гітарою у свій вільний час. У світі існує дуже багато цікавих та важливих професій. Давайте вивчимо кілька нових назв для вашого активного словника. Сучасна українська мова активно і природно використовує жіночі форми професій. Слово «**перукар**» або «**перукарка**» *(hairdresser)* описує людину, яка робить людям гарні зачіски. Моя улюблена перукарка працює у сучасному салоні краси біля мого дому. Слово «**кухар**» або «**кухарка**» *(cook, chef)* означає людину, яка професійно і смачно готує їжу. Мій дядько — дуже талановитий кухар у відомому італійському ресторані. Слово «**журналіст**» або «**журналістка**» *(journalist)* — це людина, яка пише цікаві статті або знімає телевізійні репортажі. Відома українська журналістка зараз бере важливе інтерв'ю у президента. Слово «**музикант**» або «**музикантка**» *(musician)* стосується людей класичного або сучасного мистецтва. Талановитий музикант грає на скрипці в національному театрі. І нарешті, «**юрист**» або «**юристка**» *(lawyer)* — це серйозний спеціаліст із державних законів. Моя розумна старша сестра працює успішною юристкою в центрі Києва. В українській мові є дуже популярні сталі вирази, які ми використовуємо для розмов про кар'єру. Коли ваша щоденна робота відповідає вашому університетському диплому, ми кажемо: «**працювати за фахом**» *(to work in one's field)*. Це означає, що ви ефективно використовуєте свою освіту. Наприклад: «Олена закінчила медичний університет і тепер працює за фахом». Але досить часто буває так, що дорослі люди повністю змінюють свій життєвий шлях. Тоді ми використовуємо фразу «**працювати не за фахом**» *(to work outside one's field)*. Наприклад: «Він економіст за фахом, але працює не за фахом, бо він став успішним фотографом». When we talk about our career goals and deep ambitions, we use the verb «**мріяти**» *(to dream)*. You can say «мріяти про нову професію» using the preposition «про» and the Accusative case. However, it is much more natural to say what you want to *be*. In this exact situation, we use the construction «**мріяти стати**» *(to dream of becoming)* followed by the Instrumental case. Ми часто кажемо: «Молодий студент серйозно мріє стати відомим юристом». Або ми можемо сказати так: «Ця маленька дівчинка дуже мріє стати талановитою художницею». <!-- INJECT_ACTIVITY: fill-in, Answer questions about professions using full Instrumental sentences, 8 items -->
+цікаво! Ти працюєш у великій компанії? *(Being a programmer is also very interesting! Do you work in a big company?)* > — **Андрій:** Так, я розробляю мобільні додатки. Проте я все ще займаюся музикою і захоплююся гітарою у вільний час. *(Yes, I develop mobile applications. However, I still do music and am passionate about the guitar in my free time.)* Now let's expand your professional vocabulary so you can describe more career paths. You might need words like **перукар** (hairdresser) or **кухар** (cook). Ukrainian actively uses feminine forms for professions, so it is important to practice both versions. Талановитий перукар або перукарка працює у салоні краси та щодня робить людям гарні зачіски. Мій дядько — відомий кухар, він готує смачні страви у ресторані. Розумний журналіст шукає свіжі новини, а добра вчителька допомагає дітям у школі. Також ми часто зустрічаємо таких спеціалістів, як музикант чи музикантка, юрист чи юристка. Усі ці слова регулярно використовуються в орудному відмінку, коли ми розповідаємо про нашу роботу. > *A talented hairdresser (male) or hairdresser (female) works in a beauty salon and makes beautiful hairstyles for people every day. My uncle is a famous cook, he prepares tasty dishes in a restaurant. A smart journalist (male) looks for fresh news, and a kind teacher (female) helps children at school. Also, we often meet such specialists as a musician (male or female), a lawyer (male or female). All these words are regularly used in the Instrumental case when we talk about our work.* When discussing careers with friends, you will often hear idiomatic phrases about working in your studied field. You will also hear people talk about their dreams using the verb **мріяти** (to dream). В Україні дорослі часто запитують одне одного: «Ти працюєш за фахом чи не за фахом?». Працювати за фахом означає мати роботу, яка відповідає вашій університетській освіті. Наприклад, якщо ви вивчали медицину і зараз працюєте лікарем або інженером, ви працюєте за фахом. Також люди дуже часто говорять про свої дитячі мрії. Ми можемо використовувати граматичну конструкцію «мріяти стати» разом з орудним відмінком. Наприклад, у дитинстві мій брат мріяв стати вчителем. > *In Ukraine, adults often ask each other: "Do you work in your field or not in your field?". To work in your field means to have a job that matches your university education. For example, if you studied medicine and now work as a doctor or an engineer, you work in your field. Also, people very often talk about their childhood dreams. We can use the grammatical construction "to dream of becoming" together with the Instrumental case. For example, in childhood my brother dreamed of becoming a teacher.* :::info **Grammar box** When you use the verb **стати** (to become) after verbs like **мріяти** (to dream) or **хотіти** (to want), the following profession noun must be in the Instrumental case. For example: *Я хочу стати вчителем* (I want to become a teacher). This is because the action of "becoming" implies a change into a new state or role. ::: <!-- INJECT_ACTIVITY: fill-in-answer-questions -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -467,7 +467,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -486,18 +553,65 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] професія (profession)
+- [ ] фах (profession, specialty)
+- [ ] працювати (to work)
+- [ ] стати (to become)
+- [ ] захоплюватися (to be passionate about)
+- [ ] цікавитися (to be interested in)
+- [ ] пишатися (to be proud of)
+- [ ] займатися (to be engaged in, to do (a sport/activity))
+- [ ] лікар (doctor)
+- [ ] вчитель (teacher (male))
+- [ ] вчителька (teacher (female))
+- [ ] інженер (engineer)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Практика: Ким бути? (~450 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

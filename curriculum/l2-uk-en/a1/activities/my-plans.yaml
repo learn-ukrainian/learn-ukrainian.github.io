@@ -2,49 +2,49 @@ version: '1.0'
 module: my-plans
 level: a1
 inline:
-- id: fill-in-days-time
+- id: fill-in-schedule-time
   type: fill-in
-  instruction: Оберіть правильне слово (Choose the correct word)
+  instruction: Вставте правильне слово (Fill in the correct word)
   items:
-  - sentence: У _____ я буду працювати.
-    answer: середу
+  - sentence: У понеділок я ____ працювати.
+    answer: буду
     options:
-    - середа
-    - середу
-    - середою
-  - sentence: _____ суботу зранку я буду прибирати квартиру.
-    answer: У
+    - буду
+    - будеш
+    - буде
+  - sentence: У суботу зранку я буду прибирати ____.
+    answer: квартиру
+    options:
+    - квартира
+    - квартири
+    - квартиру
+  - sentence: В неділю він ____ відпочивати.
+    answer: буде
+    options:
+    - буду
+    - будеш
+    - буде
+  - sentence: У п'ятницю ввечері буде ____.
+    answer: вечірка
+    options:
+    - вечірка
+    - вечірку
+    - вечірки
+  - sentence: ____ шостій ми будемо дивитися кіно.
+    answer: О
     options:
     - У
     - О
     - На
-  - sentence: _____ шостій ми будемо дивитися кіно.
-    answer: О
+  - sentence: У вівторок ввечері ти ____ читати.
+    answer: будеш
     options:
-    - У
-    - В
-    - О
-  - sentence: У _____ він буде відпочивати.
-    answer: неділю
-    options:
-    - неділя
-    - неділю
-    - неділі
-  - sentence: У п'ятницю _____ буде вечірка.
-    answer: ввечері
-    options:
-    - ввечері
-    - вечір
-    - вечора
-  - sentence: _____ котрій ми зустрінемося?
-    answer: О
-    options:
-    - У
-    - На
-    - О
-- id: matching-invitations
+    - буду
+    - будеш
+    - буде
+- id: match-invitations
   type: match-up
-  instruction: З'єднайте репліки (Match the phrases)
+  instruction: З'єднайте фрази (Match the phrases)
   pairs:
   - left: Ходімо в кіно!
     right: З задоволенням!
@@ -54,310 +54,312 @@ inline:
     right: На жаль, не можу.
   - left: Давай зустрінемося о п'ятій!
     right: Чудово! До зустрічі!
-  - left: У тебе є плани на тиждень?
-    right: Так, багато!
   - left: Ти будеш вільна в неділю?
     right: Звичайно буду!
+  - left: У тебе є плани на тиждень?
+    right: Так, багато!
 - id: fill-in-weekly-plan
   type: fill-in
-  instruction: Оберіть правильну форму дієслова (Choose the correct verb form)
+  instruction: Вставте правильне слово (Fill in the correct word)
   items:
-  - sentence: У вівторок я _____ українську.
-    answer: буду вчити
+  - sentence: У вівторок я ____ вчити українську.
+    answer: буду
     options:
-    - буду вчити
+    - буду
     - вчив
     - вчу
-  - sentence: У середу ми _____ вечерю.
-    answer: будемо готувати
+  - sentence: У середу ми ____ готувати вечерю.
+    answer: будемо
     options:
-    - будемо готувати
+    - будемо
     - готували
     - готуємо
-  - sentence: У четвер вона _____ допізна.
-    answer: буде працювати
+  - sentence: У четвер вона ____ працювати допізна.
+    answer: буде
     options:
-    - буде працювати
+    - буде
     - працювала
     - працює
-  - sentence: У п'ятницю вони _____.
-    answer: будуть відпочивати
+  - sentence: У п'ятницю я буду ____ вдома.
+    answer: відпочивати
     options:
-    - будуть відпочивати
-    - відпочивали
-    - відпочивають
-  - sentence: У суботу ти _____ квартиру.
-    answer: будеш прибирати
+    - відпочивати
+    - відпочивав
+    - відпочиваю
+  - sentence: У суботу зранку ми будемо ____.
+    answer: прибирати
     options:
-    - будеш прибирати
-    - прибирав
-    - прибираєш
-  - sentence: В неділю я _____ довго.
-    answer: буду спати
+    - прибирати
+    - прибирали
+    - прибираємо
+  - sentence: В неділю вдень я буду ____ в парку.
+    answer: гуляти
     options:
-    - буду спати
-    - спав
-    - сплю
-workbook:
-- id: wb-match-pronouns
-  type: match-up
-  instruction: З'єднайте займенник із формою дієслова (Match the pronoun with the
-    verb form)
-  pairs:
-  - left: Я
-    right: буду прибирати
-  - left: Ти
-    right: будеш відпочивати
-  - left: Він
-    right: буде працювати
-  - left: Ми
-    right: будемо дивитися кіно
-  - left: Ви
-    right: будете вчити
-  - left: Вони
-    right: будуть готувати
-- id: wb-sort-number
-  type: group-sort
-  instruction: Розподіліть форми на однину та множину (Sort forms into singular and
-    plural)
-  groups:
-  - label: Однина (Singular)
-    items:
-    - я буду
-    - ти будеш
-    - він буде
-    - вона буде
-  - label: Множина (Plural)
-    items:
-    - ми будемо
-    - ви будете
-    - вони будуть
-- id: wb-possession-fill-in
-  type: fill-in
-  instruction: Вставте правильний займенник (Fill in the correct pronoun)
-  items:
-  - sentence: У _____ є плани на тиждень.
-    answer: мене
-    options:
-    - мене
-    - я
-    - мій
-  - sentence: У _____ є зустріч у вівторок.
-    answer: нього
-    options:
-    - він
-    - його
-    - нього
-  - sentence: У _____ є вечірка в п'ятницю.
-    answer: неї
-    options:
-    - вона
-    - її
-    - неї
-  - sentence: У _____ є час у суботу зранку.
-    answer: нас
-    options:
-    - ми
-    - нас
-    - наш
-  - sentence: У _____ є плани на вечір?
-    answer: тебе
-    options:
-    - ти
-    - тебе
-    - твій
-  - sentence: У _____ є зустріч з друзями.
-    answer: них
-    options:
-    - вони
-    - їх
-    - них
-- id: wb-match-possessive
-  type: match-up
-  instruction: З'єднайте займенник із відповідним іменником (Match the pronoun with
-    the noun)
-  pairs:
-  - left: мій
-    right: план
-  - left: твоя
-    right: квартира
-  - left: наша
-    right: зустріч
-  - left: ваше
-    right: кіно
-  - left: її
-    right: вечірка
-  - left: його
-    right: тиждень
-- id: wb-error-correction-verbs
-  type: error-correction
-  instruction: Знайдіть і виправте помилку (Find and correct the error)
-  items:
-  - sentence: Я будеш прибирати квартиру.
-    error: будеш
-    correction: буду
-    error_type: word
-    options:
-    - буду
-    - буде
-    - будемо
-    explanation: З займенником 'я' використовується форма 'буду'.
-  - sentence: Ти буду вчити українську.
-    error: буду
-    correction: будеш
-    error_type: word
-    options:
-    - будеш
-    - буде
-    - будете
-    explanation: З займенником 'ти' використовується форма 'будеш'.
-  - sentence: Він будете працювати допізна.
-    error: будете
-    correction: буде
-    error_type: word
-    options:
-    - буде
-    - будуть
-    - буду
-    explanation: З займенником 'він' використовується форма 'буде'.
-  - sentence: Ми будуть відпочивати у парку.
-    error: будуть
-    correction: будемо
-    error_type: word
-    options:
-    - будемо
-    - будете
-    - буде
-    explanation: З займенником 'ми' використовується форма 'будемо'.
-  - sentence: Ви буде готувати вечерю.
-    error: буде
-    correction: будете
-    error_type: word
-    options:
-    - будете
-    - будемо
-    - будуть
-    explanation: З займенником 'ви' використовується форма 'будете'.
-  - sentence: Вони будемо дивитися кіно.
-    error: будемо
-    correction: будуть
-    error_type: word
-    options:
-    - будуть
-    - будете
-    - буде
-    explanation: З займенником 'вони' використовується форма 'будуть'.
-- id: wb-quiz-possession
+    - гуляти
+    - гуляв
+    - гуляю
+- id: quiz-future-tense
   type: quiz
   instruction: Оберіть правильний варіант (Choose the correct option)
   items:
-  - question: _____ є плани на суботу?
+  - question: Що ти ____ робити у суботу?
     options:
-    - У тебе
-    - Ти
-    - Твій
-    - Тобі
+    - будеш
+    - буду
+    - буде
+    - будемо
     correct: 0
-  - question: _____ немає часу в понеділок.
+  - question: Зранку я ____ прибирати квартиру.
     options:
-    - У мене
-    - Я
-    - Мій
-    - Мені
-    correct: 0
-  - question: _____ є зустріч о п'ятій.
+    - будемо
+    - будеш
+    - буде
+    - буду
+    correct: 3
+  - question: У неділю вона ____ спати довго!
     options:
-    - У нього
-    - Він
-    - Його
-    - Йому
-    correct: 0
-  - question: _____ є вечірка ввечері.
+    - буду
+    - будемо
+    - буде
+    - будеш
+    correct: 2
+  - question: Вдень ми ____ ходити в магазин.
     options:
-    - У неї
-    - Вона
-    - Її
-    - Їй
+    - будемо
+    - будеш
+    - буду
+    - буде
     correct: 0
-  - question: _____ є велика квартира.
+  - question: Які у вас ____ на тиждень?
     options:
-    - У них
-    - Вони
-    - Їх
-    - Їм
+    - плани
+    - план
+    - плану
+    - планів
     correct: 0
-  - question: _____ є вільний час у неділю.
+  - question: Давай зустрінемося ____ шостій!
     options:
-    - У нас
-    - Ми
-    - Наш
-    - Нам
-    correct: 0
-- id: wb-true-false-reading
+    - у
+    - в
+    - на
+    - о
+    correct: 3
+workbook:
+- id: match-days-of-week
+  type: match-up
+  instruction: З'єднайте день і правильну форму (Match the day with the correct form)
+  pairs:
+  - left: понеділок
+    right: у понеділок
+  - left: вівторок
+    right: у вівторок
+  - left: середа
+    right: у середу
+  - left: четвер
+    right: у четвер
+  - left: п'ятниця
+    right: у п'ятницю
+  - left: субота
+    right: у суботу
+  - left: неділя
+    right: в неділю
+- id: true-false-plans
   type: true-false
   instruction: Правда чи ні? (True or false?)
   items:
-  - statement: Тарас буде працювати у понеділок.
+  - statement: «У п'ятницю» is the correct form for «on Friday».
     correct: true
-    explanation: Так, у понеділок Тарас буде працювати.
-  - statement: У вівторок Тарас буде дивитися футбол.
+    explanation: П'ятниця (feminine) changes -я to -ю after the preposition у.
+  - statement: «О шостій» means «at three».
     correct: false
-    explanation: Ні, у вівторок він буде обідати з другом. Футбол — у середу.
-  - statement: У четвер Тарас буде готувати вечерю для родини.
+    explanation: О шостій means at six. At three is о третій.
+  - statement: «Ти будеш вільна?» is used to ask a woman if she will be free.
     correct: true
-    explanation: Так, він готуватиме вечерю.
-  - statement: У п'ятницю Тарас буде прибирати квартиру.
+    explanation: Вільна is the feminine adjective form.
+  - statement: To ask «At what time?», you say «Який час?».
     correct: false
-    explanation: Ні, він буде відпочивати і піде в кіно. Прибирати він буде у суботу.
-  - statement: У суботу вдень він буде гуляти в парку.
+    explanation: To ask «At what time?», you say «О котрій?».
+  - statement: «В неділю» often uses the preposition «в» instead of «у».
     correct: true
-    explanation: Так, зранку він буде прибирати, а вдень — гуляти.
-  - statement: В неділю Тарас буде спати мало.
+    explanation: It is more natural to say «в неділю» to avoid a vowel clash.
+  - statement: «З задоволенням» means «Unfortunately».
     correct: false
-    explanation: Ні, в неділю він буде спати довго!
-- id: wb-quiz-reading
-  type: quiz
-  instruction: Оберіть правильну відповідь (Choose the correct answer)
+    explanation: З задоволенням means «With pleasure». Unfortunately is «на жаль».
+- id: anagram-vocabulary
+  type: anagram
+  instruction: Складіть слово з літер (Make a word from the letters)
   items:
-  - question: Що Тарас буде робити у понеділок після роботи?
-    options:
-    - вчити українську
-    - дивитися футбол
-    - готувати вечерю
-    - гуляти в парку
-    correct: 0
-  - question: З ким Тарас буде обідати у вівторок?
-    options:
-    - з другом
-    - з родиною
-    - з колегою
-    - один
-    correct: 0
-  - question: Що Тарас буде робити у середу ввечері?
-    options:
-    - дивитися футбол
-    - працювати допізна
-    - спати довго
-    - читати книгу
-    correct: 0
-  - question: Куди Тарас піде у п'ятницю?
-    options:
-    - в кіно
-    - в кафе
-    - в магазин
-    - на вечірку
-    correct: 0
-  - question: Коли Тарас буде прибирати?
-    options:
-    - у суботу зранку
-    - у неділю вдень
-    - у п'ятницю ввечері
-    - у понеділок
-    correct: 0
-  - question: Який план у Тараса на неділю?
-    options:
-    - спати довго
+  - letters:
+    - в
+    - е
+    - ч
+    - і
+    - р
+    - к
+    - а
+    answer: вечірка
+    hint: party
+  - letters:
+    - п
+    - л
+    - а
+    - н
+    answer: план
+    hint: plan
+  - letters:
+    - в
+    - і
+    - л
+    - ь
+    - н
+    - и
+    - й
+    answer: вільний
+    hint: free
+  - letters:
+    - т
+    - и
+    - ж
+    - д
+    - е
+    - н
+    - ь
+    answer: тиждень
+    hint: week
+  - letters:
+    - з
+    - у
+    - с
+    - т
+    - р
+    - і
+    - ч
+    answer: зустріч
+    hint: meeting
+  - letters:
+    - к
+    - і
+    - н
+    - о
+    answer: кіно
+    hint: cinema
+- id: unjumble-sentences
+  type: unjumble
+  instruction: Складіть правильне речення зі слів (Put the words in the correct order)
+  items:
+  - words:
+    - буду
+    - Я
+    - відпочивати.
+    correct_order:
+    - Я
+    - буду
+    - відпочивати.
+  - words:
+    - прибирати
+    - буду
+    - квартиру.
+    - Я
+    correct_order:
+    - Я
+    - буду
+    - прибирати
+    - квартиру.
+  - words:
+    - будеш
+    - Ти
+    - вільний?
+    correct_order:
+    - Ти
+    - будеш
+    - вільний?
+  - words:
+    - в
+    - кіно!
+    - Ходімо
+    correct_order:
+    - Ходімо
+    - в
+    - кіно!
+  - words:
+    - Давай
+    - о
+    - п'ятій!
+    - зустрінемося
+    correct_order:
+    - Давай
+    - зустрінемося
+    - о
+    - п'ятій!
+  - words:
+    - мене
+    - У
+    - є
+    - плани.
+    correct_order:
+    - У
+    - мене
+    - є
+    - плани.
+- id: group-sort-time
+  type: group-sort
+  instruction: Розподіліть слова за категоріями (Sort words by categories)
+  groups:
+  - label: Дні тижня
+    items:
+    - понеділок
+    - середа
+    - субота
+    - неділя
+  - label: Час доби
+    items:
+    - зранку
+    - вдень
+    - ввечері
+    - допізна
+  - label: Дії (Actions)
+    items:
+    - прибирати
+    - відпочивати
     - працювати
-    - вчитися
-    - готувати
-    correct: 0
+    - гуляти
+- id: fill-in-dialogue
+  type: fill-in
+  instruction: Вставте правильне слово (Fill in the correct word)
+  items:
+  - sentence: Що ти будеш ____ у суботу?
+    answer: робити
+    options:
+    - робити
+    - робив
+    - роблю
+  - sentence: А ____ я буду ходити в магазин.
+    answer: вдень
+    options:
+    - вдень
+    - ввечері
+    - зранку
+  - sentence: Може, ____ в кафе?
+    answer: підемо
+    options:
+    - підемо
+    - пішли
+    - йдемо
+  - sentence: Добре! О ____?
+    answer: котрій
+    options:
+    - котрій
+    - який
+    - скільки
+  - sentence: ____ шостій.
+    answer: О
+    options:
+    - О
+    - У
+    - В
+  - sentence: Чудово! До ____!
+    answer: зустрічі
+    options:
+    - зустрічі
+    - зустріч
+    - побачення

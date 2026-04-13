@@ -1,4 +1,4 @@
-<!-- version: 1.1.0 | updated: 2026-03-31 -->
+<!-- version: 1.2.0 | updated: 2026-04-12 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -11,6 +11,35 @@ Generate an `activities/hey-friend.yaml` file for module **42: Hey, Friend!** (a
 
 ---
 
+## ⚠️ HARD COUNT TARGETS — READ TWICE
+
+These are the binding numerical contracts for THIS module. The audit will FAIL if you fall short.
+
+| Bucket | Min | Max | Notes |
+|---|---|---|---|
+| Total activities | 10 | 10+ | inline + workbook combined |
+| Inline (lesson tab) | 4 | 6 | one per `<!-- INJECT_ACTIVITY -->` marker, see below |
+| Workbook (Зошит tab) | 6 | 9 | extended practice |
+| Items per activity | 6 | — | each activity must have at least 6 items (unless its type cap is lower — see Activity Type Reference below) |
+
+**You MUST ship at least 4 inline activities AND at least 6 workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+
+**Type diversity is required.** The module (inline + workbook combined) MUST use at least **0** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level. (If `0` is `0`, the audit profile for this level does not enforce type diversity — but variety still produces a better lesson, so aim for 4+ types when the workbook allows it.)
+
+---
+
+## Allowed types for THIS level
+
+- **Inline (lesson) types:** image-to-letter, letter-grid, match-up, watch-and-repeat, quiz, true-false, fill-in, classify
+- **Inline priority (preferred):** image-to-letter, match-up, fill-in, quiz, watch-and-repeat
+- **Workbook types:** fill-in, match-up, group-sort, anagram, unjumble, quiz, true-false, classify, divide-words, count-syllables, pick-syllables, observe, phrase-table, odd-one-out
+- **Workbook priority (preferred):** fill-in, match-up, group-sort, anagram, unjumble
+- **FORBIDDEN at this level:** cloze, error-correction, mark-the-words, translate, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, highlight-morphemes, grammar-identify, select
+
+Pick from the allowed list. Lean heavily on the priority lists. Do not use any forbidden type — the build will reject it.
+
+---
+
 ## Inline vs Workbook Split
 
 Activities have two placement categories:
@@ -19,7 +48,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Rule of thumb:** inline = 2-3 quick checks after key teaching points. Workbook = 4-8 deeper practice exercises covering the full topic.
+**Rule of thumb:** inline = 4–6 quick checks after key teaching points. Workbook = 6–9 deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
 
 ---
 
@@ -27,10 +56,10 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: dialogue-flow-practice -->`
-- `<!-- INJECT_ACTIVITY: vocative-form-practice -->`
-- `<!-- INJECT_ACTIVITY: vocative-choice-quiz -->`
-- `<!-- INJECT_ACTIVITY: ending-sorting-activity -->`
+- `<!-- INJECT_ACTIVITY: fill-in-dialogue-completion -->`
+- `<!-- INJECT_ACTIVITY: quiz-vocative-choice -->`
+- `<!-- INJECT_ACTIVITY: group-sort-endings -->`
+- `<!-- INJECT_ACTIVITY: fill-in-vocative-forms -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -160,146 +189,115 @@ required:
 <module_content>
 ## Діалоги (Dialogues)
 
-Imagine you are at a lively birthday party in Ukraine. The traditional music is playing loudly, people are talking in groups, and you need to get your friend's attention across the crowded room. In English, you would simply shout their name exactly as it is written. In Ukrainian, calling out to someone or addressing them directly requires a specific grammatical shift. You cannot just use their regular, dictionary-form name; you must change its ending to show that you are talking to them, rather than about them. 
+Imagine you are at a busy, loud birthday party. The music is playing, people are dancing, and your friends are talking in every corner of the large room. You are holding a plate of cake and you want to offer a piece to your friend who is standing far away. Or perhaps you need to ask your mom where she put the extra gifts. In English, you simply shout their name: "Olena!" or "Mom!". But to get someone's attention naturally in Ukrainian, you cannot just use their name in its basic dictionary form. You have to change the ending of the word. This subtle change is a fundamental part of everyday communication, and it instantly makes you sound like a native speaker. The party environment is the perfect place to see this grammar in action. You will hear different names and relationships, and every single one changes.
 
-Let us look at a typical interaction as guests arrive at the party. The birthday person is greeting friends as they walk through the door. Notice how the names change when they speak directly to each other. Pay special attention to how **Олена** (Olena), **Тарас** (Taras), and **Андрій** (Andriy) are addressed.
+> **Тарас:** Олено, привіт! Як справи? *(Olena, hi! How are things?)*
+> **Олена:** Добре, дякую, Тарасе! А в тебе? *(Good, thanks, Taras! And with you?)*
+> **Тарас:** Теж добре. Олено, ти знаєш мого брата? *(Also good. Olena, do you know my brother?)*
+> **Олена:** Ні, не знаю. *(No, I do not know.)*
+> **Тарас:** Андрію, ходи сюди! Це Олена. Олено, це Андрій. *(Andriy, come here! This is Olena. Olena, this is Andriy.)*
+> **Андрій:** Привіт, Олено! *(Hi, Olena!)*
+> **Олена:** Привіт, Андрію! *(Hi, Andriy!)*
 
-> **Іменинник:** **Олено, привіт! Як справи?** *(Olena, hi! How are you?)*
-> **Олена:** **Добре, дякую, Тарасе! А в тебе?** *(Good, thanks, Taras! And you?)*
-> **Іменинник:** **Теж добре. Олено, ти знаєш мого брата?** *(Also good. Olena, do you know my brother?)*
-> **Олена:** **Ні.** *(No.)*
-> **Іменинник:** **Андрію, ходи сюди! Це Олена.** *(Andriy, come here! This is Olena.)*
-> **Іменинник:** **Олено, це Андрій.** *(Olena, this is Andriy.)*
+> **Олег:** Мамо, де мій телефон? *(Mom, where is my phone?)*
+> **Мама:** На столі, **синку** (son). А де твій рюкзак? *(On the table, son. And where is your backpack?)*
+> **Олег:** Там. *(There.)*
+> **Ірина:** Тату, а де ключі? *(Dad, and where are the keys?)*
+> **Тато:** У кишені, **дочко** (daughter). *(In the pocket, daughter.)*
+> **Олег:** Бабусю, ми йдемо! *(Grandma, we are going!)*
+> **Бабуся:** Добре, будьте обережні! *(Good, be careful!)*
 
-Later at the same party, the birthday person interacts with different family members in the kitchen. Family words also change their endings when you address them directly. Pay attention to how the words for mom, dad, son, daughter, and grandma transform in conversation when someone is asking a question or giving an instruction.
+Point out the pattern you see in these conversations. Notice how the names and family words change their final letters when the person is addressed directly. The basic name is **Олена** (Olena), but to call her, Taras says **Олено**. The basic name is **Тарас** (Taras), but Olena addresses him as **Тарасе**. The **брат** (brother, m) is **Андрій** (Andriy), but Taras calls him **Андрію** across the room. The exact same transformation happens with family words: **мама** (mom) becomes **мамо**, **тато** (dad) becomes **тату**, and **бабуся** (grandmother, f) becomes **бабусю**. When the parents reply, they use **синку** and **дочко**. These changed endings show that you are talking directly to the person. They act as an auditory signal that says "I am speaking to you now."
 
-> **Син:** **Мамо, де мій телефон?** *(Mom, where is my phone?)*
-> **Мама:** **На столі, синку.** *(On the table, son.)*
-> **Дочка:** **Тату, а де ключі?** *(Dad, and where are the keys?)*
-> **Тато:** **У кишені, дочко.** *(In the pocket, daughter.)*
-> **Син:** **Бабусю, ми йдемо!** *(Grandma, we are going!)*
-> **Бабуся:** **Добре, будьте обережні!** *(Good, be careful!)*
-> **Бабуся:** **До побачення, Андрію!** *(Goodbye, Andriy!)*
+:::note
+In modern Ukrainian, using these special endings is a sign of good education and politeness. While some people might occasionally mix it up in very fast, informal speech, using the proper endings like **мамо** or **Тарасе** shows that you respect the language and the person you are speaking to.
+:::
 
-Did you notice the consistent pattern of direct address in those two dialogues? When the speaker talked about someone, they used the regular name, like saying **Це Олена** (This is Olena) or **Це Андрій** (This is Andriy). But when they spoke directly to them, **Олена** (Olena) became **Олено** (Olena), **Тарас** (Taras) became **Тарасе** (Taras), and **мама** (mom) became **мамо** (mom). This shift is not an optional stylistic choice; it is a fundamental rule of natural Ukrainian communication.
-
-*   **Добрий ранок, пане Іване!** *(Good morning, Mr. Ivan!)*
-*   **Добрий вечір, пані Оксано!** *(Good evening, Ms. Oksana!)*
-*   **До побачення, вчителю!** *(Goodbye, teacher!)*
-*   **На добраніч, синку!** *(Good night, son!)*
-*   **Смачного, друзі!** *(Bon appetit, friends!)*
-
-<!-- INJECT_ACTIVITY: dialogue-flow-practice -->
+<!-- INJECT_ACTIVITY: fill-in-dialogue-completion -->
 
 ## Кличний відмінок (The Vocative Case)
 
-Ukrainian grammar features seven cases, and one of them is used exclusively for calling, addressing, or getting someone's attention. This is called the **кличний відмінок** (Vocative Case). As you already know, Ukrainian relies on changing word endings to show grammatical relationships within a sentence. While the other six cases indicate who is doing an action or where an object is located, the vocative case serves a purely communicative function. In English you just say the name: "Olena, come here!". In Ukrainian the name CHANGES: **Олено, ходи сюди!** (Olena, come here!). When you address a person, you must alter their name or title to match this specific grammatical role. This is not optional — Ukrainians always use the vocative when addressing someone.
+The Ukrainian language has a special grammatical case dedicated entirely to calling someone or getting their attention. It is called the **кличний відмінок** (vocative case). In English, you just use the person's name exactly as it is: "Olena, come here!" In Ukrainian, the name actively changes its form: **Олено, ходи сюди!** This change is not an optional stylistic choice; Ukrainians always use the vocative case when addressing someone directly. In fact, in Ukrainian elementary schools, fourth-grade students learn a specific helper word to remember this case: **Кл. (!)**. The exclamation mark is a visual cue that reminds you: you are calling someone, you are getting their attention, so the word ending must change.
 
-In Ukrainian elementary schools, fourth-grade students learn a simple but effective trick to remember when to use this form. Teachers introduce the vocative case with a Grade 4 helper word and punctuation mark: **Кл. (!)** (Voc. (!)). The exclamation mark acts as a visual reminder that you are "shouting," calling out, or directly addressing someone. This punctuation mark triggers the ending change. Whenever you use a person's name with an exclamation mark or a comma in direct speech, you must apply the vocative ending. This mental trigger ensures that the name correctly reflects the social interaction taking place.
-
-:::note
-The vocative case is entirely independent of the other cases. It does not answer any questions (like "who?" or "what?"), because its only job is to get someone's attention.
+:::tip
+If you ever forget how to form the vocative case, try to visualize the Ukrainian abbreviation **Кл. (!)**. Imagine you are shouting across a noisy street. You would naturally stretch the end of the name. The vocative endings (**-о**, **-е**, **-ю**) are perfect vowel sounds for calling out loudly!
 :::
 
-Understanding the difference between talking about someone and talking to someone is critical for your fluency. The nominative case is the dictionary form, used when someone is the subject of a sentence. Why the vocative matters: **Олена прийшла.** (Olena came.) is in the nominative, because you are talking ABOUT her. However, if you want to address her, you must use the vocative: **Олено, ходи сюди!** (Olena, come here!), because you are talking TO her. Using the nominative to address a person sounds incredibly unnatural to native speakers. It feels as awkward as saying "Hey, him!" instead of "Hey, you!" in English. Let us compare these two states:
+Why does the vocative case matter so much in daily conversation? It creates a very clear, grammatical distinction between talking ABOUT a person and talking TO a person. When you use the nominative case, you are answering the question "Who is this?" (Хто це?). But when you use the vocative case, you are not answering a question; you are initiating contact. Look at this important difference in structure:
 
-**Називний відмінок** (Nominative):
-*   **Це мій тато.** *(This is my dad.)*
-*   **Тут працює вчитель.** *(A teacher works here.)*
-*   **Там стоїть Олена.** *(Olena is standing there.)*
-*   **Мій брат читає.** *(My brother is reading.)*
+*   **Олена читає.** *(Olena is reading.)* — This uses the nominative case. You are stating a fact about her.
+*   **Олено, ходи сюди!** *(Olena, come here!)* — This uses the vocative case. You are addressing her directly.
 
-**Кличний відмінок** (Vocative):
-*   **Тату, я тебе бачу!** *(Dad, I see you!)*
-*   **Вчителю, добрий ранок!** *(Teacher, good morning!)*
-*   **Олено, йди туди!** *(Olena, go there!)*
-*   **Брате, що ти читаєш?** *(Brother, what are you reading?)*
+Using the nominative case to address someone sounds extremely unnatural to a Ukrainian ear. It feels distant, abrupt, and slightly rude, somewhat similar to saying "Hey, him!" instead of "Hey, you!" in English. The vocative case makes your speech sound warm, natural, and polite. It stands apart from the main grammar of the sentence, often separated by a comma.
 
-The vocative case is much more than just a grammatical rule; it is a living marker of Ukrainian linguistic identity. While this grammatical feature has mostly disappeared from standard Russian, surviving only in a few archaic religious terms, it remains vibrant and absolutely necessary in everyday Ukrainian conversation. By using the vocative case correctly, you are not just following a textbook rule. You are actively speaking authentic, decolonized Ukrainian and showing deep respect for the natural structure and historical continuity of the language. When you use the vocative case, native speakers instantly recognize that you are making a genuine effort to understand the rhythm of their language, rather than just translating English words directly into Ukrainian.
+The vocative case is equally important in formal and professional situations. When you speak to a teacher, a doctor, a manager, or any adult you do not know well, you must use formal titles alongside their name. In Ukrainian, the words **пан** (Mr., m) and **пані** (Mrs./Ms., f) are used to show respect. The word **пані** is a special feminine noun that does not change its ending, but the masculine noun **пан** changes to **пане** in the vocative case.
+
+*   **Добрий день, пане Іване!** *(Good day, Mr. Ivan!)*
+*   **Добрий день, пані Оксано!** *(Good day, Ms. Oksana!)*
+
+You must always use the vocative case for both the title and the person's name. This double change shows high respect and deep cultural awareness.
+
+<!-- INJECT_ACTIVITY: quiz-vocative-choice -->
 
 ## Закінчення кличного (Vocative Endings)
 
-Let us break down the specific rules for forming the vocative case, starting with feminine names and nouns that end in the letter **-а**. This is the most common feminine pattern you will encounter. To create the vocative form, you simply replace the final **-а** with the letter **-о**. 
+Let us look at how to form the vocative case endings for different types of words. For most feminine names and feminine nouns that end in the vowel **-а**, the ending changes to **-о**. This is a very consistent and reliable pattern that you will hear constantly.
 
-*   **Олена** → **Олено** (Olena)
-*   **мама** → **мамо** (mom)
-*   **сестра** → **сестро** (sister)
-*   **Оксана** → **Оксано** (Oksana)
-*   **подруга** → **подруго** (friend, f)
+*   **Олена** → **Олено**
+*   **мама** → **мамо**
+*   **сестра** (sister, f) → **сестро**
+*   **подруга** (friend, f) → **подруго**
+*   **Оксана** → **Оксано**
 
-This rule also applies to informal or diminutive names ending in **-ка**, such as **Наталка** → **Наталко** (Natalka) and **Ірка** → **Ірко** (Irka). Furthermore, longer names ending in **-а** follow this exactly: **Катерина** → **Катерино** (Kateryna), **Тетяна** → **Тетяно** (Tetiana). Note that the polite title **пані** (Mrs. / Ms.) is an exception and does not change its form when used to address someone.
+This rule also applies to informal or diminutive names that end in **-ка**:
 
-*   **Олено, де мій зошит?** *(Olena, where is my notebook?)*
-*   **Мамо, я хочу їсти.** *(Mom, I want to eat.)*
-*   **Сестро, ти йдеш у кіно?** *(Sister, are you going to the cinema?)*
-*   **Подруго, це твоя книга?** *(Friend, is this your book?)*
-*   **Катерино, добрий день!** *(Kateryna, good day!)*
+*   **Наталка** → **Наталко**
+*   **Ірка** → **Ірко**
 
-Feminine names that end in **-ія** or the soft letter **-я** follow a slightly different but closely related pattern. If a name ends in **-ія**, the ending shifts to **-іє**. For example, **Марія** (Mariia) becomes **Маріє** (Mariia — vocative, never "Маріо!"). If a feminine word or name ends in a soft **-ся** or is a diminutive form ending in **-я**, the ending changes to **-ю**. 
+Whenever you see a feminine word ending in a standard **-а**, you can confidently swap it for an **-о** to call that person.
 
-*   **Марія** → **Маріє** (Mariia)
-*   **Юлія** → **Юліє** (Yuliia)
-*   **бабуся** → **бабусю** (grandma)
-*   **Галя** → **Галю** (Halia)
-*   **Наталя** → **Наталю** (Natalia)
+Feminine nouns have two other common patterns depending on their final letters. If a feminine name or noun ends in **-ія**, it changes to **-іє**. Be careful not to say "Маріо" — that sounds like an Italian name!
 
-Notice how the soft quality of the final consonant is preserved by using the soft vowel **-ю** or **-є**. 
+*   **Марія** → **Маріє**
+*   **Юлія** → **Юліє**
 
-*   **Маріє, як справи?** *(Mariia, how are things?)*
-*   **Юліє, ходи сюди!** *(Yuliia, come here!)*
-*   **Бабусю, ти дуже добра.** *(Grandma, you are very kind.)*
-*   **Наталю, де ти живеш?** *(Natalia, where do you live?)*
+If a feminine noun ends in **-ся**, especially affectionate family words, the ending softens and changes to **-сю**.
+
+*   **бабуся** → **бабусю**
+*   **Леся** → **Лесю**
+
+Masculine names and nouns work a little differently. If a masculine noun ends in a hard consonant, you simply add the vowel **-е** to the end of the word.
+
+*   **Тарас** → **Тарасе**
+*   **Іван** → **Іване**
+*   **брат** → **брате**
+*   **пан** → **пане**
 
 :::caution
-Do not confuse the feminine ending **-ю** (like in **бабусю**) with the masculine soft ending **-ю** (like in **Андрію**). While they look identical, they come from different spelling patterns.
+Do not confuse the masculine ending **-е** with English pronunciation rules. The letter **е** in Ukrainian is always pronounced clearly. When you say **Тарасе**, make sure you pronounce the final vowel. It is never a silent letter!
 :::
 
-Now let us look at masculine names and nouns. Most standard masculine words end in a hard consonant. To form the vocative for these words, you do not replace anything; you simply add the letter **-е** directly to the end of the hard consonant. This makes the word slightly longer and easier to call out across a room.
+Sometimes, the final consonant of the masculine word changes to make the word easier to pronounce. The hard sound **г** changes to the softer **ж**, and the sound **к** changes to **ч**. This consonant shift is a very old feature of the language and sounds very poetic.
 
-*   **Тарас** → **Тарасе** (Taras)
-*   **Іван** → **Іване** (Ivan)
-*   **брат** → **брате** (brother)
-*   **пан** → **пане** (Mr. / sir)
-*   **Богдан** → **Богдане** (Bohdan)
+*   **друг** (friend, m) → **друже**
+*   **козак** (Cossack, m) → **козаче**
 
-Whenever you use the formal title **пан**, it must also take this ending, as in **Добрий день, пане!** (Good day, sir!).
+For masculine names and nouns that end in a soft consonant or the letter **-й**, you add or change the ending to the vowel **-ю**.
 
-*   **Тарасе, що ти робиш?** *(Taras, what are you doing?)*
-*   **Іване, це твій телефон?** *(Ivan, is this your phone?)*
-*   **Брате, йди сюди!** *(Brother, come here!)*
-*   **Пане, де тут аптека?** *(Sir, where is the pharmacy here?)*
-*   **Богдане, ти студент?** *(Bohdan, are you a student?)*
+*   **Андрій** → **Андрію**
+*   **дідусь** (grandfather, m) → **дідусю**
+*   **вчитель** (teacher, m) → **вчителю**
 
-If a masculine word ends in a soft consonant or the letter **-й**, the added vowel changes to match the softness. Instead of adding **-е**, you must add the letter **-ю** to the end of the word. This maintains the softness of the final sound and creates a smooth, natural flow when speaking.
+There is one very important exception that you simply must memorize right now. The common word for dad, **тато**, does not follow the standard feminine **-о** or masculine **-е** rules. It takes a special, unique ending **-у**.
 
-*   **Андрій** → **Андрію** (Andriy)
-*   **Сергій** → **Сергію** (Serhiy)
-*   **дідусь** → **дідусю** (grandpa)
-*   **вчитель** → **вчителю** (teacher, m)
+*   **тато** → **тату**
 
-Replacing the **-й** with **-ю** is one of the most frequent transformations you will make when addressing Ukrainian men.
-
-*   **Андрію, ти маєш брата?** *(Andriy, do you have a brother?)*
-*   **Сергію, це твоя машина?** *(Serhiy, is this your car?)*
-*   **Дідусю, читай казку!** *(Grandpa, read a fairy tale!)*
-*   **Вчителю, я маю питання.** *(Teacher, I have a question.)*
-
-There are a few special cases and consonant alternations that you should memorize because they occur in very common words. The word for dad takes an exceptional **-у** ending: **тато** → **тату** (dad). You must memorize this. The word for son also takes an **-у** ending: **син** → **синку** (son). Additionally, some masculine consonants change their sound entirely to make pronunciation easier. For example, the consonant **г** changes to **ж** in **друг** → **друже** (friend, m), and the consonant **к** changes to **ч** in **козак** → **козаче** (Cossack).
-
-*   **Тату, я йду додому.** *(Dad, I am going home.)*
-*   **Синку, будь обережний!** *(Son, be careful!)*
-*   **Друже, ти маєш рацію.** *(Friend, you are right.)*
-*   **Козаче, куди ти йдеш?** *(Cossack, where are you going?)*
-
-<!-- INJECT_ACTIVITY: vocative-form-practice -->
-<!-- INJECT_ACTIVITY: vocative-choice-quiz -->
-<!-- INJECT_ACTIVITY: ending-sorting-activity -->
+<!-- INJECT_ACTIVITY: group-sort-endings -->
+<!-- INJECT_ACTIVITY: fill-in-vocative-forms -->
 
 ## Підсумок — Summary
 
-Mastering the vocative case is a crucial step in sounding like a natural, fluent Ukrainian speaker. Remember that you must always change the ending of a name or title when you are addressing someone directly. The core patterns are very consistent across the language: feminine words ending in **-а** shift to **-о**, masculine words ending in hard consonants add **-е**, and masculine words ending in soft consonants or **-й** add **-ю**. By applying these simple vowel shifts, you ensure that your greetings, questions, and daily interactions flow smoothly and respect the traditional rules of Ukrainian communication. You will quickly find that these vowel shifts become automatic as your brain learns to associate the act of calling someone with adding these specific soft or hard sounds.
-
-Keep this vocative quick reference guide handy as you practice forming the vocative case. It covers the most frequent patterns you will encounter in everyday conversation.
+You now know how to address people correctly and naturally in Ukrainian. The vocative case is a beautiful and essential feature of the language that instantly connects you to the person you are speaking with. Here is a quick reference summary table to help you remember the main patterns we covered today:
 
 | Pattern | Nominative → Vocative | Example |
 | :--- | :--- | :--- |
@@ -308,15 +306,20 @@ Keep this vocative quick reference guide handy as you practice forming the vocat
 | Feminine **-ся** | **-ся** → **-сю** | **бабуся** → **бабусю** |
 | Masculine hard | + **-е** | **Тарас** → **Тарасе**, **брат** → **брате** |
 | Masculine **-й** / soft | + **-ю** | **Андрій** → **Андрію**, **вчитель** → **вчителю** |
-| Special (**г**, **к**) | **г**→**ж**, **к**→**ч** + **-е** | **друг** → **друже** |
-| Special (**-у**) | irregular | **тато** → **тату**, **син** → **синку** |
+| Special (**г**, **к**) | **г**→**ж**, **к**→**ч** + **-е** | **друг** → **друже**, **козак** → **козаче** |
 
-:::tip
-Whenever you say **Привіт!** (Hi!), **Добрий день!** (Good day!), or ask **Як справи?** (How are you?), immediately follow it with the vocative form of the person's name or title!
-:::
+To truly master the vocative case, you need to practice it out loud with the people you talk to most often. Use these self-check questions to test your memory and build your reflexes. Imagine these people are standing in the next room and you need to call them loudly:
 
-Before moving on to the next module, take a moment to self-check your understanding of these rules. How do you call your family? **мама** (mom) → ? **тато** (dad) → ? **брат** (brother) → ? How do you correctly greet your friend Taras? Most importantly, do you clearly feel the functional difference between the sentence **Марія прийшла** (Mariia came) and the direct command **Маріє, ходи сюди!** (Mariia, come here!)? If you can confidently answer these questions and apply the correct endings, you are ready to continue your Ukrainian journey.
+*   How do you call your mom? — **Мамо!**
+*   How do you call your dad? — **Тату!**
+*   How do you call your brother? — **Брате!**
+*   How do you call your friend Taras? — **Тарасе!**
+*   How do you call your grandmother? — **Бабусю!**
+*   How do you call your friend Andriy? — **Андрію!**
+*   How do you call your sister? — **Сестро!**
+*   How do you formally address Mr. Ivan? — **Пане Іване!**
 
+By actively using these forms in your daily life, you show that you deeply understand the rhythm, grammar, and respect built into Ukrainian communication.
 </module_content>
 
 ---
@@ -330,48 +333,68 @@ version: "1.0"
 module: hey-friend
 level: a1
 
+# NOTE — these are SHAPE examples. The real targets are at the top of this prompt
+# (10 total / 4–6 inline / 6–9 workbook,
+# 6+ items per activity). The shapes below are TRUNCATED for readability;
+# YOUR output MUST hit those minimums.
+
 inline:
   - id: marker-id-here        # MUST match an <!-- INJECT_ACTIVITY: ... --> marker
     type: quiz                 # activity type
     instruction: "Оберіть правильний варіант"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - question: "_____ стіл"
-        options: ["мій", "моя", "моє"]
+        options: ["мій", "моя", "моє", "мої"]
         correct: 0             # 0-based index
+      - question: "Це ____ книга."
+        options: ["мій", "моя", "моє", "мої"]
+        correct: 1
+      # ... add at least 6 items total — never stop at 1-2
 
   - id: another-marker-id
     type: fill-in
     instruction: "Вставте правильне слово"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - sentence: "Це ____ кімната."
         answer: "моя"
         options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ вікно."
+        answer: "моє"
+        options: ["мій", "моя", "моє"]
+      # ... ≥ 6 items total
 
 workbook:
-  - type: match-up
+  - id: match-up-vocab
+    type: match-up
     instruction: "З'єднайте пари"
-    pairs:
+    pairs:                     # ← real output: ≥ 6 pairs
       - left: "стіл"
         right: "він"
       - left: "книга"
         right: "вона"
       - left: "вікно"
         right: "воно"
+      # ... ≥ 6 pairs total
 
-  - type: group-sort
+  - id: group-sort-gender
+    type: group-sort
     instruction: "Розподіліть слова за категоріями"
     groups:
-      - label: "Category A"
-        items: ["word1", "word2"]
-      - label: "Category B"
-        items: ["word3", "word4"]
+      - label: "Чоловічий рід"
+        items: ["стіл", "олівець", "будинок"]   # ≥ 3 items per group
+      - label: "Жіночий рід"
+        items: ["книга", "ручка", "школа"]
+      - label: "Середній рід"
+        items: ["вікно", "море", "молоко"]
 
-  - type: true-false
+  - id: true-false-grammar
+    type: true-false
     instruction: "Правда чи ні?"
-    items:
-      - statement: "Statement here"
-        correct: true
-        explanation: "Why it's true"
+    items:                     # ← real output: ≥ 6 items
+      - statement: "«Книга» — це чоловічий рід."
+        correct: false
+        explanation: "Книга закінчується на -а, отже жіночий рід."
+      # ... ≥ 6 items total
 
   - type: error-correction
     instruction: "Виправте помилку"
@@ -442,7 +465,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -526,10 +549,15 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 ## Quality Rules
 
-**ITEM COUNT MINIMUMS (non-negotiable):**
-- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
-- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
-- If you can't think of enough items, add more examples from the module's vocabulary and content.
+**ACTIVITY COUNT MINIMUMS (non-negotiable, audit-enforced):**
+- **Total: 10 activities.** Inline: 4–6. Workbook: 6–9. The audit gate FAILS the module if you ship fewer.
+- **Type diversity: workbook MUST cover ≥5 distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
+- **Match the inline markers exactly.** Every `<!-- INJECT_ACTIVITY: id -->` marker in the prose needs a matching inline activity with that exact id. Skipping markers means the lesson tab is broken.
+
+**ITEM COUNT MINIMUMS (non-negotiable, per-activity):**
+- **Default minimum: 6 items per activity.** Quiz, fill-in, match-up, true-false, anagram, error-correction, translate, cloze, mark-the-words, divide-words, count-syllables, odd-one-out, group-sort categories: all ≥ 6.
+- **Lower minimums for specific types only:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items, essay-response/critical-analysis = 1 prompt.
+- If you can't think of enough items, add more examples from the module's vocabulary and content. NEVER ship a 1-item or 2-item activity unless its type cap explicitly allows it.
 - **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
 - **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
@@ -636,6 +664,27 @@ IMPORTANT: After using tools, output your COMPLETE module content as plain text.
 1. Run `verify_words` on all Ukrainian words in your exercises — every word must exist in VESUM
 2. Run `query_cefr_level` on any word you're unsure about — it must be a1-appropriate
 3. For fill-in answers and distractors, verify the exact form (case, number, gender) with `verify_lemma`
+
+---
+
+## ⚠️ MANDATORY FINAL CHECKLIST — verify before emitting YAML
+
+Walk through this checklist explicitly before you start emitting. If ANY box is unchecked, fix it FIRST.
+
+- [ ] My output has **at least 4** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
+- [ ] My output has **at least 6** workbook activities.
+- [ ] **Total ≥ 10.**
+- [ ] **Every** activity has **at least 6** items, pairs, or statements (except types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3, essay-response=1).
+- [ ] The module (inline + workbook combined) uses **at least 0 distinct activity types** (or 4+ when 0 = 0 and the workbook size allows it). I am NOT shipping a wall of quizzes.
+- [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
+- [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
+- [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+- [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+- [ ] My inline count is between 4 and 6. I did NOT create more injection markers than 6.
+- [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
+- [ ] At B1+, all instructions are in Ukrainian (no English fallback).
+
+If you cannot tick all of these, REGENERATE the activities BEFORE outputting. Shipping under-spec means the build rejects you and the heal loop has to redo your work — wasting compute.
 
 ---
 

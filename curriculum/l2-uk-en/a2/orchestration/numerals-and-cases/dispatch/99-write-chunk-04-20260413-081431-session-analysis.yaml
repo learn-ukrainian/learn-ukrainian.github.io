@@ -1,0 +1,83 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T06-10-24e30de7.json
+phase: write-chunk-04
+prompt_chars: 33843
+response_chars: 4549
+prompt_words: 4762
+response_words: 692
+sections:
+- name: header
+  start: 0
+  length: 440
+  fraction: 0.013
+- name: skeleton
+  start: 440
+  length: 1091
+  fraction: 0.0322
+- name: prior_summary
+  start: 1531
+  length: 3544
+  fraction: 0.1047
+- name: plan
+  start: 5075
+  length: 12521
+  fraction: 0.37
+- name: wiki
+  start: 9545
+  length: 16028
+  fraction: 0.4736
+- name: output_spec
+  start: 33624
+  length: 219
+  fraction: 0.0065
+large_sections:
+- wiki
+directives_total: 22
+directives_covered: 11
+directives_missed:
+- kind: checklist
+  text: Every narrative paragraph in Ukrainian?
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: checklist
+  text: Zero `> *English translation*` blockquotes after dialogues?
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: checklist
+  text: At most ONE English `:::info` callout per major section?
+  covered: false
+  coverage_note: 3/8 keywords (38%)
+- kind: checklist
+  text: Metalanguage terms parenthetically translated on first use only (max 2 per
+    section)?
+  covered: false
+  coverage_note: 3/10 keywords (30%)
+- kind: checklist
+  text: Reading Practice / Читаємо українською block in EVERY major section?
+  covered: false
+  coverage_note: 2/8 keywords (25%)
+- kind: must
+  text: Subsequent uses must be Ukrainian only.
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: must
+  text: They were required at A1 but they cap immersion below 50% — at A2-late they
+    MUST be removed.
+  covered: false
+  coverage_note: 2/10 keywords (20%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: inject_activity
+  text: quiz-noun-agreement
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: sort-numeral-cases
+  covered: false
+  coverage_note: marker missing

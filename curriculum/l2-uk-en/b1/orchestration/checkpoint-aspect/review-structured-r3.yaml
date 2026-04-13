@@ -1,0 +1,55 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'The `Самоперевірка` questions outlined explicitly in the plan were omitted
+    from the text (though technically satisfied by the `open-writing` activity hint).
+    The word target was easily met (4681 words '
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: Outstanding linguistic accuracy. The distinctions between «не відчиняй»
+    (заборона) and «не відчиніть» (попередження) are flawless. No Russianisms or calques
+    identified.
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Very strong pedagogy. Concepts are clearly structured. The transition
+    from "тло" vs "ланцюг подій" features an excellent visual metaphor ("зациклене
+    відео" vs "швидкі фотографії").
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required vocabulary from the plan (доконаний вид, недоконаний вид,
+    видова пара, тло розповіді, послідовність подій, результативність, тривалість
+    тощо) is used natively in context.
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: 'The `<!-- INJECT_ACTIVITY: error-correction -->` marker tests "розповіді,
+    наказі, заперечення" according to the plan, but it was incorrectly placed before
+    the "Вид і заперечення" section.'
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: 'The text uses an explicitly penalized gamified opener: "Вітаю вас на
+    діагностичній контрольній роботі рівня B1!". The rest of the tone is encouraging
+    and appropriate.'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Headers are correct. Excellent pacing. Word count exceeds the target naturally
+    without filler. No stray tags.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Highly accurate handling of Ukrainian grammar nuances. Contrasting English
+    tense-focus with Ukrainian result-focus represents excellent decolonized pedagogy.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Excellent multi-turn dialogues with named speakers (Олена, Марко, Мама,
+    Син, Керівник, Співробітник) that effectively demonstrate grammatical points in
+    natural, non-transactional contexts.
+findings: []

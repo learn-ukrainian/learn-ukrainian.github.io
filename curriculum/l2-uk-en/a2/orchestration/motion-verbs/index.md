@@ -1,6 +1,6 @@
 # Build Summary: motion-verbs (A2)
 
-Generated: 2026-04-11 00:40
+Generated: 2026-04-11 15:35
 
 ## Pipeline Phases
 
@@ -19,8 +19,8 @@ Generated: 2026-04-11 00:40
 | enrich | complete | 2026-04-08 15:13:10 |
 | verify | complete | 2026-04-08 15:13:10 |
 | stress | complete | 2026-04-08 17:56:26 |
-| publish | complete | 2026-04-10 22:40:18 |
-| audit | complete | 2026-04-10 22:40:18 |
+| publish | complete | 2026-04-11 13:35:50 |
+| audit | complete | 2026-04-11 13:35:50 |
 
 ## Reviews
 
@@ -34,19 +34,33 @@ Generated: 2026-04-11 00:40
 |-------|-------|----------|----|
 | pre-verify | gemini-tools (gemini-3-flash-preview) | 359s | ✅ |
 | skeleton | gemini (gemini-3-flash-preview) | 107s | ✅ |
+| write | gemini-tools (gemini-3.1-pro-preview) | 0s | ❌ |
 | activities | gemini-tools (gemini-3.1-pro-preview) | 611s | ✅ |
 | vocab | gemini (gemini-3-flash-preview) | 72s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 418s | ✅ |
 | write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 187s | ✅ |
+| write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 0s | ❌ |
+| write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 0s | ❌ |
+| write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 0s | ❌ |
+| write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 55s | ✅ |
 | write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 266s | ✅ |
+| write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 85s | ✅ |
 | write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 336s | ✅ |
+| write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 135s | ✅ |
 | write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 182s | ✅ |
+| write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 49s | ✅ |
 | write-chunk-05 | gemini-tools (gemini-3.1-pro-preview) | 314s | ✅ |
+| write-chunk-05 | gemini-tools (gemini-3.1-pro-preview) | 45s | ✅ |
 | write-fix | gemini-tools (gemini-3.1-pro-preview) | 385s | ✅ |
 
 ## Files
 
 - `.build.lock`
+- `chunk-01.md`
+- `chunk-02.md`
+- `chunk-03.md`
+- `chunk-04.md`
+- `chunk-05.md`
 - `correction-attempt-1.md`
 - `exercise-verification.json`
 - `pre-verify-results.md`
@@ -61,5 +75,6 @@ Generated: 2026-04-11 00:40
 - `v6-chunk-04-prompt.md`
 - `v6-chunk-05-prompt.md`
 - `v6-pre-verify-prompt.md`
+- `v6-prompt.md`
 - `v6-review-prompt.md`
 - `v6-skeleton-prompt.md`

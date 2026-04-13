@@ -1,0 +1,67 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T14-15-f71cd119.json
+phase: review
+prompt_chars: 62079
+response_chars: 6940
+prompt_words: 8509
+response_words: 982
+sections:
+- name: preamble
+  start: 0
+  length: 461
+  fraction: 0.0074
+- name: plan
+  start: 461
+  length: 58514
+  fraction: 0.9426
+- name: output_spec
+  start: 58975
+  length: 3104
+  fraction: 0.05
+large_sections:
+- plan
+directives_total: 17
+directives_covered: 7
+directives_missed:
+- kind: must
+  text: If you are not 100% certain a word/form/usage is wrong, you MUST flag it as
+    `[NEEDS RAG VERIFICATION]` instead of marking it as a definitive error.
+  covered: false
+  coverage_note: 4/17 keywords (24%)
+- kind: must
+  text: '**CRITICAL RULE: If you mention ANY error, mistake, or inaccuracy in the
+    evidence column of your scores table, you MUST also list it as a structured finding
+    below AND include it in your `<fixes>` block.'
+  covered: false
+  coverage_note: 5/22 keywords (23%)
+- kind: inject_activity
+  text: reading-gerund-structure
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-gerund-form
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-gerund-structure
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-punctuation-terms
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: error-correction-punctuation
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-participle-vs-gerund
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: error-correction
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: essay-gerund-narrative
+  covered: false
+  coverage_note: marker missing

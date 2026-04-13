@@ -1,132 +1,134 @@
 ## Dialogues
 
-Whether you are organizing your weekend, outlining your work schedule, or preparing for graduation, planning is the ultimate social tool. A typical group chat provides the perfect context for friends to coordinate their leisure time. Stating intentions in Ukrainian is surprisingly straightforward, relying on a simple two-part verb structure. The days of the week, specific times, and future verbs combine effortlessly into a complete schedule.
+Weekend plans are a natural context for the future tense. In this dialogue, three friends share a **план**, ask when something will happen, and invite each other out.
 
-> **Оля:** Що ти бу́деш роби́ти у субо́ту? *(What will you be doing on Saturday?)*
-> **Макси́м:** Зра́нку я бу́ду прибира́ти кварти́ру. *(In the morning I will be cleaning the apartment.)*
-> **І́ра:** А вдень? *(And in the afternoon?)*
-> **Максим:** Вдень я буду ходи́ти в магази́н. А ти? *(In the afternoon I will go to the store. And you?)*
-> **Іра:** Я буду відпочива́ти! Мо́же, пі́демо в кафе́ вве́чері? *(I will be resting! Maybe we'll go to a cafe in the evening?)*
-> **Оля:** До́бре! О котрі́й? *(Good! At what time?)*
-> **Іра:** О шо́стій. Добре? *(At six. Good?)*
-> **Максим:** Чудо́во! До зу́стрічі у суботу! *(Wonderful! See you on Saturday!)*
+> **Окса́на:** Що ти бу́деш роби́ти у субо́ту? *(What will you be doing on Saturday?)*
+> **Макси́м:** Зра́нку я бу́ду прибира́ти кварти́ру. *(In the morning, I will be cleaning the apartment.)*
+> **Оксана:** А вдень? *(And in the afternoon?)*
+> **Максим:** Вдень я буду ходи́ти в магази́н. А ти? *(In the afternoon, I will go to the store. And you?)*
+> **Дари́на:** Я буду відпочива́ти! Мо́же, пі́демо в кафе́ вве́чері? *(I will be resting! Maybe we will go to a cafe in the evening?)*
+> **Оксана:** До́бре! О котрі́й? *(Good! At what time?)*
+> **Дарина:** О шо́стій. Добре? *(At six. Good?)*
+> **Максим:** Чудо́во! До зу́стрічі у суботу! *(Great! See you on Saturday!)*
 
-Notice how **Іра** suggests **Може, підемо в кафе ввечері?**. This is a natural way to propose an idea. The future actions are formed simply: **буду прибирати** (will be cleaning), **буду ходити** (will be going), and **буду відпочивати** (will be resting).
+Notice the time words **зранку** and **вдень**, plus the scheduling question **о котрій?**. The dialogue moves from individual plans to a shared invitation.
 
-:::note
-Notice how the word **план** (plan) behaves just like its English equivalent, but is usually pluralized when asking about general intentions: **У тебе́ є пла́ни?** (Do you have plans?).
+Here is how someone might describe their simple plans for a single day:
+
+Сього́дні я буду відпочивати. Вдень я буду гуля́ти в парку. Ввечері я буду чита́ти кни́гу.
+> *(Today I will rest. In the afternoon I will walk in the park. In the evening I will read a book.)*
+
+:::caution
+When discussing plans, avoid translating directly from English phrases like "I have plans." Instead, use the structure **У мене́ є пла́ни** (I have plans), which relies on the possession pattern you already know.
 :::
 
-> **Марі́я:** У тебе є плани на ти́ждень? *(Do you have plans for the week?)*
-> **Петро́:** Так, бага́то! У понеді́лок я буду працюва́ти допі́зна. *(Yes, many! On Monday I will work until late.)*
-> **Петро:** У вівто́рок буду вчи́тися. У се́реду — зу́стріч з дру́зями. *(On Tuesday I will study. On Wednesday — a meeting with friends.)*
-> **Марія:** А у четве́р? *(And on Thursday?)*
-> **Петро:** У четвер я буду готува́ти на вечі́рку. *(On Thursday I will cook for the party.)*
-> **Марія:** А в п'я́тницю? *(And on Friday?)*
-> **Петро:** В п'ятницю — вечі́рка! Ти будеш? *(On Friday — the party! Will you be there?)*
-> **Марія:** Звича́йно буду! *(Of course I will be!)*
+Now, read a different conversation about organizing a busy **ти́ждень** (week) filled with work, studies, and social events. Scheduling involves mapping out commitments day by day.
 
-**Петро** outlines his busy week using the word **тиждень** (week). Be careful not to confuse this with **неді́ля** (Sunday). While they sound similar to words in other Slavic languages, in Ukrainian, **тиждень** is the entire seven-day period, and **неділя** is specifically the day of rest at the end of it.
+> **Анто́н:** У тебе́ є плани на тиждень? *(Do you have plans for the week?)*
+> **Ві́ктор:** Так, бага́то! *(Yes, many!)*
+> **Віктор:** У понеді́лок я буду працюва́ти допі́зна. *(On Monday, I will work until late.)*
+> **Віктор:** У вівто́рок буду вчи́тися. У се́реду — зу́стріч з дру́зями. *(On Tuesday, I will study. On Wednesday — a meeting with friends.)*
+> **Антон:** О, у тебе багато пла́нів! А у четве́р? *(Oh, you have a lot of plans! And on Thursday?)*
+> **Віктор:** У четвер я буду готува́ти на вечі́рку. *(On Thursday, I will prepare for a party.)*
+> **Антон:** А в п'я́тницю? *(And on Friday?)*
+> **Віктор:** В п'ятницю — вечі́рка! Ти будеш? *(On Friday — a party! Will you be there?)*
+> **Антон:** Звича́йно буду! *(Of course I will!)*
+
+This dialogue maps out the week from Monday to Friday and shows a natural attendance question: **Ти будеш?**
 
 ## Планува́ння (Planning)
 
-To say that an event happens *on* a certain day, English uses the preposition "on". Ukrainian uses the preposition **у** (or its phonetic variant **в**) followed by the day of the week. Because we are showing the time when an action takes place, the day of the week must change its ending if it is a feminine noun. This happens because we are using the temporal accusative case. The masculine and neuter days remain exactly the same, which makes them very easy to remember. The feminine days, however, change their final vowel to «у» or «ю».
+Scheduling requires combining the day of the week with the correct preposition. To say "on a certain day," use the temporal pattern **У/В** + Accusative case form of the day.
 
-- **у понеділок** (on Monday) — masculine, no change.
-- **у вівторок** (on Tuesday) — masculine, no change.
-- **у середу** (on Wednesday) — feminine, changes from **середа́**.
-- **у четвер** (on Thursday) — masculine, no change.
-- **у п'ятницю** (on Friday) — feminine, changes from **п'я́тниця**.
-- **у суботу** (on Saturday) — feminine, changes from **субо́та**.
-- **в неді́лю** (on Sunday) — feminine, changes from **неділя**.
+- **у понеділок** (on Monday)
+- **у вівторок** (on Tuesday)
+- **у середу** (on Wednesday)
+- **у четвер** (on Thursday)
+- **у п'ятницю** (on Friday)
+- **у суботу** (on Saturday)
+- **в неді́лю** (on Sunday)
 
-:::caution
-English speakers frequently attempt to translate the phrase "on the weekend" word-for-word. In Ukrainian, you must use the specific phrase **на вихідни́х** (on the weekend). Never use the preposition **в** for this context.
+:::note
+Notice the vowel ending change for feminine days. The days **середа́**, **п'я́тниця**, **субо́та**, and **неді́ля** change their final **-а** or **-я** to **-у** or **-ю**. Masculine days like **понеділок** remain unchanged.
 :::
 
-To specify the time of day, use the words **зранку** (in the morning), **вдень** (in the afternoon), and **ввечері** (in the evening). You can easily combine these with the days:
-- **У суботу ввечері я буду диви́тися фільм.** *(On Saturday evening I will watch a film.)*
-
-When you want to ask someone "At what time?", the natural Ukrainian phrase is **О котрій годи́ні?**. English speakers often try to translate "at seven o'clock" literally by using the preposition "в" (in). This is a common mistake that immediately sounds unnatural. In Ukrainian, you must always use the preposition **о** followed by an ordinal number (first, second, third) in the locative case. Think of it as answering "on which hour?".
+To specify the exact time of an event, use the preposition **о** (or **об** before a vowel) followed by the ordinal number in the Locative case. You can combine the hour with the parts of the day to be precise.
 
 - **о тре́тій** (at three)
-- **о п'я́тій** (at five)
 - **о шостій** (at six)
 - **о дев'я́тій** (at nine)
-
-If the number starts with a vowel sound, the preposition smoothly changes to **об** to avoid two vowels clashing. This makes pronunciation much easier:
-
 - **об одина́дцятій** (at eleven)
 
-Now that you can state the day and the time, you need the social tools to invite someone. You can use several natural communicative chunks to propose a plan to your friends or colleagues.
+You can easily pair the day, the time, and the part of the day.
+
+- У понеділок вра́нці я буду працювати. *(On Monday morning I will work.)*
+- У суботу ввечері ми бу́демо читати. *(On Saturday evening we will read.)*
+- В неділю вдень вона́ бу́де гуляти. *(On Sunday afternoon she will walk.)*
+
+To express a plan, use the compound future tense: **я буду**, **ти будеш**, **ми будемо** + imperfective infinitive. The core pattern is **У [day] о [time] я буду [verb]**.
+
+- У суботу о третій я буду готувати. *(On Saturday at three I will cook.)*
+- У вівторок ввечері ти будеш читати. *(On Tuesday evening you will read.)*
+- В неділю зранку ми будемо спа́ти. *(On Sunday morning we will sleep.)*
+
+When you want to include others in your plans, you need functional chunks for making and responding to invitations.
 
 - **Ході́мо в кафе!** *(Let's go to a cafe!)*
-- **Може, підемо в кіно́?** *(Maybe we'll go to the cinema?)*
-- **Ти будеш ві́льний у суботу?** *(Will you be free on Saturday? — asking a male)*
-- **Ти будеш ві́льна у суботу?** *(Will you be free on Saturday? — asking a female)*
-- **Дава́й зустрі́немося о п'ятій!** *(Let's meet at five!)*
+- **Може, підемо в кіно́?** *(Maybe we will go to the cinema?)*
+- **Ти будеш ві́льний у суботу?** *(Will you be free on Saturday? - masculine)*
+- **Ти будеш ві́льна у суботу?** *(Will you be free on Saturday? - feminine)*
+- **Дава́й зустрі́немося о п'я́тій!** *(Let's meet at five!)*
 
-When someone invites you, you need a polite response. If you are free and willing, you can accept warmly:
+Responding naturally keeps the conversation moving.
 
 - **Добре!** *(Good!)*
-- **Чудово!** *(Wonderful!)*
+- **Чудово!** *(Great!)*
 - **З задово́ленням!** *(With pleasure!)*
-
-If you have other plans, you should decline politely and clearly:
-
 - **На жаль, не мо́жу.** *(Unfortunately, I cannot.)*
 
-<!-- INJECT_ACTIVITY: fill-in-days-time -->
-<!-- INJECT_ACTIVITY: matching-invitations -->
+Here is how these scheduling elements look in a continuous thought:
+
+У п'ятницю я працю́ю допізна. У суботу ввечері ми будемо диви́тися кіно. Давай зустрінемося о шостій бі́ля кафе!
+> *(On Friday I work until late. On Saturday evening we will watch a movie. Let's meet at six near the cafe!)*
+
+<!-- INJECT_ACTIVITY: fill-in-schedule-time -->
+
+<!-- INJECT_ACTIVITY: match-invitations -->
 
 ## Мій тиждень (My Week)
 
-The Narrative Model: Taras's Busy Week. These grammatical pieces come together logically in a longer narrative. **Тара́с** is planning his entire week, and he combines days, times, and activities into a clear schedule.
+When you connect your daily routines into a larger timeline, you form a cohesive narrative about your life. Look at this model monologue detailing Taras's entire week. Notice how he strings sentences together chronologically.
 
-- **У понеділок я буду працювати.** *(On Monday I will work.)*
-- **Пі́сля робо́ти буду вчи́ти украї́нську.** *(After work I will study Ukrainian.)*
-- **У вівторок я буду обі́дати з дру́гом у кафе.** *(On Tuesday I will dine with a friend in a cafe.)*
-- **У середу ввечері я буду дивитися футбо́л.** *(On Wednesday evening I will watch football.)*
-- **У четвер я буду готувати вече́рю для роди́ни.** *(On Thursday I will cook dinner for the family.)*
-- **У п'ятницю я буду відпочивати — піду́ в кіно.** *(On Friday I will rest — I will go to the cinema.)*
-- **У суботу зранку буду прибирати, а вдень гуля́ти в парку.** *(On Saturday morning I will clean, and in the afternoon walk in the park.)*
-- **В неділю я буду спа́ти до́вго!** *(On Sunday I will sleep long!)*
+У понеділок я буду працювати. Пі́сля робо́ти буду вчи́ти украї́нську. У вівторок я буду обі́дати в кафе. У середу ввечері я буду дивитися футбо́л. У четвер я буду готувати вече́рю для роди́ни. У п'ятницю я буду відпочивати. Я буду дивитися фільм у кіно. У суботу зранку я буду прибирати. Вдень я буду гуляти в парку. В неділю я буду спати до́вго!
+> *(On Monday I will work. After work I will study Ukrainian. On Tuesday I will have lunch in a cafe. On Wednesday evening I will watch football. On Thursday I will prepare dinner for the family. On Friday I will rest. I will go to the cinema. On Saturday morning I will clean. In the afternoon I will walk in the park. On Sunday I will sleep long!)*
 
-Notice how **Тарас** anchors each activity to a specific time and place. He uses the future tense effortlessly. 
+Taras uses the same foundational structure for every single day, creating a steady rhythm. The action moves smoothly from the start of the week toward the weekend. By keeping his sentences short and focused, he communicates his entire weekly availability without using complicated grammar.
 
-:::tip
-The verb **бу́ти** (to be) changes to match the speaker (**я буду**, **ми бу́демо**), but the second verb always remains in its infinitive dictionary form (**працювати**, **вчити**, **відпочивати**). You only conjugate the first word.
-:::
+Now, you can create your own weekly plan. Use the core template **У [day] я буду [activity]**. This template is your safest tool for building confidence. To make your sentences more descriptive, expand the basic template by adding specific details. Answer the question **о котрій?** (at what time?) to set a schedule. Answer **де?** (where?) to provide a location. Answer **з ким?** (with whom?) to include the people in your life.
 
-Guided Writing Workshop. Now it is your turn to build a schedule. Use the "My Week" template to create your own personalized plan. Start with the basic grammatical framework: **У** [день] **я буду** [що робити]. For example, you can write **У вівторок я буду працювати** (On Tuesday I will work). Once you have established the core sentence, you should add layers of detail to make your schedule richer and more descriptive. Ask yourself specific questions: **о котрій?** (at what time?), **де?** (where?), and **з ким?** (with whom?).
+For example, instead of just saying "I will walk," you can build a detailed sentence that paints a much clearer picture of your afternoon:
 
-- **У суботу о деся́тій я буду гуляти в парку з другом.** *(On Saturday at ten I will walk in the park with a friend.)*
+- У суботу я буду гуляти в парку з дру́гом. *(On Saturday I will walk in the park with a friend.)*
+- У середу ввечері ми будемо читати вдо́ма. *(On Wednesday evening we will read at home.)*
+- В неділю вдень вона буде обідати в кафе. *(On Sunday afternoon she will have lunch in a cafe.)*
 
-When you talk about your schedule, you can use the natural Ukrainian construction for possession: **У мене́ є плани** (I have plans). Using this structure makes your spoken Ukrainian sound authentic and natural. Try mapping out your next few days right now using all the vocabulary you know for places, food, people, and daily activities.
+Take a moment to map out your own upcoming days. Use the vocabulary you already know for places like your apartment, a restaurant, or the cinema. Include your daily activities like studying, working, cleaning, and resting.
 
 <!-- INJECT_ACTIVITY: fill-in-weekly-plan -->
 
 ## Summary
 
-Recap of the Planning Toolkit. The grammatical foundation of planning in Ukrainian is the compound future tense, which pairs the helper word **буду** (will) with an infinitive action verb. We anchor these future actions in time using the preposition **у** (or its phonetic variant **в**) for days of the week, and the preposition **о** (or **об**) for specific hours. This precise combination allows you to say exactly when and what you will be doing in any situation:
+The core scheduling formula in this module is clear and reliable: Day + time + буду + infinitive. This focus aligns with **State Standard 2024, §4.2.4.1**.
 
-- **У суботу о третій я буду готувати обід.** *(On Saturday at three I will cook lunch.)*
+У суботу о третій я буду готувати обід. Ввечері я буду відпочивати. У неділю я буду читати.
+> *(On Saturday at three I will prepare lunch. In the evening I will rest. On Sunday I will read.)*
 
-You also learned the key communicative chunks for making invitations: **Ходімо!**, **Може, підемо?**, and **Давай зустрінемося!**. You can reply with **Добре!**, **З задоволенням!**, or **На жаль, не можу.**
+When you want to turn your personal schedule into a social event, you rely on a few key invitation chunks. You can propose an outing with **Ходімо!** (Let's go!), suggest an idea with **Може, підемо?** (Maybe we will go?), or specify a time with **Давай зустрінемося!** (Let's meet!). You can then respond enthusiastically with **Добре!** (Good!) or **З задоволенням!** (With pleasure!), or politely decline using **На жаль, не можу** (Unfortunately, I cannot).
 
-Final Review of Days. Review the days of the week carefully. When used with the preposition **у** to indicate when something happens, it is absolutely vital to remember the difference between the masculine and feminine noun endings. The masculine days remain unchanged in this context, while the feminine days must change their final vowel to «у» or «ю»:
+To successfully navigate a calendar, you must retain the days of the week. Review the sequence to ensure they come to mind effortlessly: **понеділок**, **вівторок**, **середа**, **четвер**, **п'ятниця**, **субота**, **неділя**.
 
-- **понеділок** → **у понеділок**
-- **вівторок** → **у вівторок**
-- **середа** → **у середу**
-- **четвер** → **у четвер**
-- **п'ятниця** → **у п'ятницю**
-- **субота** → **у суботу**
-- **неділя** → **в неділю**
+:::tip
+Mental practice is one of the most effective ways to solidify new vocabulary. While riding the bus or waiting in line, try to list the days of the week silently to yourself.
+:::
 
-Self-Check. Before moving on to the next module, verify your skills with this checklist.
-
-- Can you say "On Wednesday at six I will be cleaning"? (**У середу о шостій я буду прибирати.**)
-- Can you invite a friend to a cafe? (**Може, підемо в кафе?**)
-- Can you politely decline an invitation? (**На жаль, не можу.**)
-- Can you plan your ideal weekend — what will you do on Saturday and Sunday?
+Now it is time for a self-check task. Mentally plan your ideal weekend using these new structures. Ask yourself: **Що ти будеш робити у суботу?** (What will you do on Saturday?). Think about Sunday: **А в неділю?** (And on Sunday?). Finally, consider the people you want to see: **З ким ти будеш зустріча́тися?** (Who will you be meeting?). Formulate your answers in complete Ukrainian sentences to prove you can manage your own schedule.

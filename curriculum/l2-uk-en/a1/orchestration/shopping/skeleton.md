@@ -1,29 +1,38 @@
-## Діалоги — Dialogues (~330 words total)
-- P1 (~60 words): Context setting — contrast the atmosphere of a traditional Ukrainian market (ринок, базар) with a modern supermarket. Introduce the characters: Мама and Дочка shopping for dinner, setting a friendly, communicative tone.
-- D1 (~120 words): Dialogue 1 — At the market. Buying produce from a friendly seller. Key phrases: "Скільки коштує кілограм яблук?", "Дайте, будь ласка, два кілограми помідорів". Focus on price exchange: "Сорок гривень", "Сімдесят п'ять гривень".
-- D2 (~110 words): Dialogue 2 — At the supermarket. Navigation and comparing prices. Phrases: "Вибачте, де тут хліб?", "Молоко в холодильнику". Comparing items: "Скільки коштує цей сир? — Сто двадцять гривень. — Дорого! А є дешевший?".
-- P2 (~40 words): Brief vocabulary summary of common food items used in the dialogues: хліб (bread), молоко (milk), сир (cheese), ковбаса (sausage), and масло (butter).
-- <!-- INJECT_ACTIVITY: match-up-shops --> [match-up, Focus: Where do you buy it? Match item to shop type (ринок, м'ясний відділ, аптека), 8 items]
+## Діалоги (Dialogues) (~350 words total)
+- P1 (~60 words): Setting the scene for shopping in Ukraine — contrasting the modern `супермаркет` (supermarket) with the traditional `ринок` (market), highlighting that the market is where you buy fresh produce and use direct communication.
+- P2 (~100 words): Dialogue 1 — At the market. A conversation buying apples and tomatoes: "— Скільки коштує кілограм яблук? — Сорок гривень. — А помідори? — Тридцять п'ять гривень за кілограм. — Дайте, будь ласка, два кілограми помідорів і кілограм яблук. — Сімдесят п'ять гривень. — Ось, будь ласка."
+- P3 (~70 words): Analysis of Dialogue 1. Highlighting the polite request pattern `Дайте, будь ласка...` (Give me, please...) and how prices and quantities are stated naturally at the market.
+- P4 (~80 words): Dialogue 2 — At the supermarket. A conversation navigating the store and comparing prices: "— Вибачте, де тут хліб? — Хліб у третьому ряді. — А молоко? — Молоко в холодильнику, там. — Скільки коштує цей сир? — Сто двадцять гривень. — Дорого! А є дешевший? — Так, ось цей — вісімдесят."
+- P5 (~40 words): Analysis of Dialogue 2. Focusing on phrases for navigation (`де тут...`) and reacting to prices with adjectives (`дорого`, `дешевший`).
 
-## Скільки коштує? — How Much? (~340 words total)
-- P1 (~100 words): Explaining the verb "коштувати" (to cost). Focus on the crucial A1 distinction: "Скільки коштує...?" for singular (хліб, молоко, масло) and "Скільки коштують...?" for plural (яблука, помідори, яйця). Provide 4 clear sentence pairs.
-- P2 (~120 words): The "Гривня" paradigm for prices. Explain the 1/2-4/5+ rule as a pattern: 1 гривня (21, 31), 2-3-4 гривні (22, 33, 44), and 5-20/tens гривень (10, 25, 100). Mention "копійка" and the historical "шаг" as a decolonization note.
-- P3 (~120 words): Expressing price reactions and status. Using adverbs: "дорого" (expensive), "дешево" (cheap), "нормальна ціна" (fair price). Useful transaction phrases: "є знижка?" (is there a discount?), "за все" (total amount), and "скільки з мене?" (how much do I owe?).
-- <!-- INJECT_ACTIVITY: quiz-currency-choice --> [quiz, Focus: Choose correct: 23 (гривня / гривні / гривень), 8 items]
-- <!-- INJECT_ACTIVITY: fill-in-prices --> [fill-in, Focus: Скільки коштує/коштують [item]? — [number] гривень, 8 items]
+## Скільки коштує? (How Much?) (~350 words total)
+- P1 (~70 words): The core question: `Скільки коштує...?` Explain the singular vs. plural verb agreement. Contrast `Скільки коштує хліб?` (singular noun, singular verb) with `Скільки коштують яблука?` (plural noun, plural verb).
+- P2 (~80 words): Ukrainian currency rules. Introduce the `гривня` and explain how its ending changes depending on the number preceding it: 1 `гривня`, 2-4 `гривні`, and 5+ `гривень`.
+- P3 (~60 words): Brief cultural context on `копійка` (kopeck) as the smaller unit (1/100th of a hryvnia). Note that physical kopecks are less common now and prices are often rounded.
+- P4 (~70 words): Numbers review applied to prices. Demonstrate the currency rules with larger numbers: 21 `гривня`, 32 `гривні`, 45 `гривень`, 100 `гривень`.
+- P5 (~70 words): Reacting to prices and asking for the total. Introduce essential conversational phrases: `Дорого!` (Expensive!), `Дешево!` (Cheap!), `Нормальна ціна.` (Fair price.), `Є знижка?` (Is there a discount?), and `За все` (For everything / Total).
+- <!-- INJECT_ACTIVITY: fill-in-prices --> [fill-in, match items with prices using proper agreement, 8 items]
+- <!-- INJECT_ACTIVITY: quiz-currency --> [quiz, choose correct form of hryvnia with numbers, 8 items]
 
-## Де купити? — Where to Buy (~330 words total)
-- P1 (~90 words): Vocabulary for shopping locations. Difference between "магазин" (general shop), "супермаркет", and "крамниця" (store). Introduce specific sections within a large store: "м'ясний відділ" (meat section) and "молочний відділ" (dairy section).
-- P2 (~120 words): Quantity words as chunks (pre-genitive introduction). Teach students to use these as fixed units: "кілограм яблук", "літр молока", "пачка масла", "пляшка води", and "буханка хліба". Explicitly state that "of" is included in the ending of the second word.
-- P3 (~120 words): Politeness and Payment at the counter. The request formula "Дайте, будь ласка...". Payment methods: "готівка" (cash) and "картка" (card). The final question: "Можна карткою?" and the seller's response: "Ось решта" (Here is the change) or "Ось ваш чек" (Here is your receipt).
-- <!-- INJECT_ACTIVITY: fill-in-quantities --> [fill-in, Focus: At the market: Дайте ___ (кілограм/літр/пляшку) ___, 6 items]
+## Де купити? (Where to Buy) (~320 words total)
+- P1 (~70 words): Shopping locations. Introduce vocabulary for where to buy things: `магазин` (general shop), `супермаркет` (supermarket), `ринок` (market), `аптека` (pharmacy), and `крамниця` (a Ukrainian synonym for store).
+- P2 (~60 words): Navigating sections inside a shop. Introduce specific departments: `м'ясний відділ` (meat section) for sausage and meat, and `молочний відділ` (dairy section) for milk, cheese, and butter.
+- <!-- INJECT_ACTIVITY: match-up-locations --> [match-up, Match item to shop type, 8 items]
+- P3 (~60 words): Expressing quantities. Explain that liquids and loose items require specific quantity words. Introduce the concept that the item following the quantity takes a special form (genitive), which will be learned as fixed chunks at this level.
+- P4 (~70 words): Essential quantity words part 1. Introduce `кілограм` (kilogram) with examples: `кілограм яблук`, `два кілограми помідорів`. Introduce `літр` (liter) with examples: `літр молока`, `два літри соку`.
+- P5 (~60 words): Essential quantity words part 2. Introduce `пачка` (pack) for `пачка масла` or `пачка чаю`. Introduce `пляшка` (bottle) for `пляшка води`. Introduce `буханка` (loaf) for `буханка хліба`.
+- <!-- INJECT_ACTIVITY: fill-in-quantities --> [fill-in, choosing кілограм/літр/пляшка, 6 items]
 
 ## Підсумок — Summary (~300 words total)
-- P1 (~100 words): Recap of the "Shopping Toolkit". A concise summary of the steps to a successful purchase: Ask (Скільки коштує?), Choose (Дайте, будь ласка), React (Дорого/Дешево), and Pay (Можна карткою?).
-- P2 (~100 words): Cultural/Authentic speech note. Explain why market sellers use diminutives like "картопелька" (little potato) or "яблучка" (little apples) — it’s not just about size, but about being welcoming and friendly. Remind students to use "Ви" with sellers.
-- P3 (~100 words): Self-check scenarios. Provide a bulleted list for the student to practice mentally:
-    - How do you ask for the price of 5 kilograms of potatoes at the market?
-    - How do you tell the seller that 200 hryvnias is too expensive?
-    - How do you politely ask for a bottle of water and a pack of tea in a shop?
+- P1 (~150 words): Recap of the shopping toolkit. Summarize the core functions: how to ask for prices and locations (`Скільки коштує?`, `Де тут [item]?`), how to request items politely (`Дайте, будь ласка, [quantity] [item]`), how to react to prices (`Дорого!`, `Дешево!`, `Добре, беру.`), and how to finalize the payment (`Скільки за все?`, `Можна карткою?`).
+- P2 (~150 words): 
+  * Q: Як запитати ціну на помідори? (How to ask the price of tomatoes?)
+  * A: Скільки коштують помідори?
+  * Q: Як попросити два кілограми яблук? (How to ask for two kilos of apples?)
+  * A: Дайте, будь ласка, два кілограми яблук.
+  * Q: Як сказати, що ціна зависока? (How to say the price is too high?)
+  * A: Це дорого!
+  * Q: Як дізнатися загальну суму до сплати? (How to ask for the total sum to pay?)
+  * A: Скільки за все?
 
-Grand total: ~1300 words
+Grand total: ~1320 words

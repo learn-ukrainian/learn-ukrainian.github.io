@@ -1,0 +1,201 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T11-34-123d4819.json
+phase: activities
+prompt_chars: 47713
+response_chars: 408
+prompt_words: 6682
+response_words: 55
+sections:
+- name: preamble
+  start: 0
+  length: 1795
+  fraction: 0.0376
+- name: plan
+  start: 1795
+  length: 45810
+  fraction: 0.9601
+- name: output_spec
+  start: 47605
+  length: 108
+  fraction: 0.0023
+large_sections:
+- plan
+directives_total: 44
+directives_covered: 2
+directives_missed:
+- kind: must
+  text: '** Your very first character must be `version:`.'
+  covered: false
+  coverage_note: 0/6 keywords (0%)
+- kind: must
+  text: Each inline activity MUST have an `id` that matches one of these markers.
+  covered: false
+  coverage_note: 3/10 keywords (30%)
+- kind: must
+  text: Each inline activity's `id` must match one of these markers exactly (lowercase,
+    hyphenated).
+  covered: false
+  coverage_note: 3/11 keywords (27%)
+- kind: must
+  text: You MUST create activities that cover all these hints.
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: must
+  text: '**Grounding rule:** Every Ukrainian word in your exercises must appear either
+    in the prose content or in this vocabulary list.'
+  covered: false
+  coverage_note: 3/15 keywords (20%)
+- kind: must
+  text: 'This is perfectly logical: if an object has an attribute as a result of someone''s
+    action, that action must have already taken place.'
+  covered: false
+  coverage_note: 2/15 keywords (13%)
+- kind: must
+  text: '- How do I agree the participle **написаний** (written) with the noun **лист**
+    (letter) in the Genitive case? They must match entirely, becoming **написаного
+    листа**.'
+  covered: false
+  coverage_note: 2/17 keywords (12%)
+- kind: must
+  text: '**CRITICAL RULE: EVERY single activity object MUST include an `id` field
+    (a unique string like "quiz-grammar", "match-up-vocab").'
+  covered: false
+  coverage_note: 2/16 keywords (12%)
+- kind: must
+  text: 'Required: id, instruction, items[{sentence, answer}].'
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: must
+  text: 'Required: id, instruction, pairs[{left, right}].'
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: must
+  text: 'Required: id, instruction, groups[{label, items[]}].'
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: must
+  text: 'Required: id, instruction, items[{sentence, error, correction}].'
+  covered: false
+  coverage_note: 0/6 keywords (0%)
+- kind: must
+  text: 'Required: id, instruction, items[{source}].'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: 'Required: id, instruction, items[{words[], correct_order[]}].'
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: must
+  text: 'Required: id, instruction, items[] (array of strings), correct_order[] (TOP-LEVEL
+    array of **integers** — zero-based indices into items).'
+  covered: false
+  coverage_note: 0/13 keywords (0%)
+- kind: must
+  text: 'Required: id, instruction, items[{word, answer}].'
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: must
+  text: 'Required: id, items[{word, correct}].'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: 'Required: id, syllables[], correctIndices[], category.'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: 'Required: id, items[{words[], correct, explanation}].'
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: must
+  text: 'Required: id, instruction, items[{image, letter}].'
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: must
+  text: 'Required: id, letters[{upper, lower}].'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: 'Required: id, items[{video}].'
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: must
+  text: '- **critical-analysis**: Required: id, prompt.'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: '- **essay-response**: Required: id, prompt.'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: '**You MUST use these patterns.'
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: must
+  text: If the pattern lists divide-words, count-syllables, and odd-one-out — your
+    output MUST include all three.
+  covered: false
+  coverage_note: 1/15 keywords (7%)
+- kind: must
+  text: '**Answer must be in options** — for quiz items, `correct` must be a valid
+    index.'
+  covered: false
+  coverage_note: 0/8 keywords (0%)
+- kind: must
+  text: '**Test LANGUAGE, not trivia** — exercises must test Ukrainian language skills.'
+  covered: false
+  coverage_note: 1/8 keywords (12%)
+- kind: must
+  text: '- **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).'
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: error-correction
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-participle-vs-adjective
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: reading
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: essay-response-5
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: error-correction
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-participle-vs-adjective
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: reading
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: essay-response-5
+  covered: false
+  coverage_note: marker missing

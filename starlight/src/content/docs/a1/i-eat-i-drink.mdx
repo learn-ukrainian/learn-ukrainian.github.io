@@ -7,157 +7,194 @@ pipeline: v6
 build_status: draft
 ---
 
-import ErrorCorrection from '@site/src/components/ErrorCorrection';
+import Anagram from '@site/src/components/Anagram';
 import FillIn from '@site/src/components/FillIn';
 import FlashcardDeck from '@site/src/components/FlashcardDeck';
 import GroupSort from '@site/src/components/GroupSort';
 import MatchUp from '@site/src/components/MatchUp';
 import Quiz from '@site/src/components/Quiz';
-import Translate from '@site/src/components/Translate';
 import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
 import YouTubeVideo from '@site/src/components/YouTubeVideo';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 <Tabs syncKey="module-tab">
 <TabItem label="Урок">
 
-## Діало́ги
+## Діало́ги (Dialogues)
 
-In Ukraine, food is not just fuel; it is the center of social life and hospitality. Asking someone **Що ти їси́?** (What are you eating?) or sharing a lunch break is a primary way colleagues and friends bond during the workday. Food vocabulary is universally essential, but in Ukrainian, it also acts as the perfect introduction to how verbs and nouns interact. As you will see, Ukrainians make a strict distinction between what you "eat" and what you "drink" — even when it comes to liquid dishes like soup. This topic introduces the absolute foundation of your survival vocabulary and the crucial accusative case, which you will use every single day.
-
-<div class="dialogue">
-
-<div class="dialogue-line"><span class="speaker">Тара́с:</span> Приві́т! Що ти їси на сніда́нок? *(Hi! What are you eating for breakfast?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Іри́на:</span> Я їм ка́шу і п'ю ка́ву. *(I eat porridge and drink coffee.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Тарас:</span> А Оле́на? *(And Olena?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Ірина:</span> Вона́ їсть хліб з ма́слом і п'є чай. *(She eats bread with butter and drinks tea.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Тарас:</span> А ді́ти? *(And the children?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Ірина:</span> Вони́ їдя́ть я́йця і п'ють молоко́. *(They eat eggs and drink milk.)*</div>
-
-</div>
-
-The dialogue above uses the high-frequency question **Що ти їси?** (What are you eating?) and the response **Я їм...** (I am eating...). Notice the contrast between the verbs: **їси** is highly irregular and does not look like the infinitive **ї́сти** (to eat), while **п'єш** follows a more recognizable pattern from its dictionary form **пи́ти** (to drink). The distinction between singular and plural present tense forms is fundamental because you will often speak on behalf of your family or group (**ми їмо́**, **вони п'ють**).
+Meals give you immediate practice with food vocabulary and the verbs **ї́сти** and **пи́ти**. Start with the dialogue and notice what each person eats and drinks.
 
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Коле́га 1:</span> Що ви їсте́ на обід? *(What are you eating for lunch?)*</div>
+<div class="dialogue-line">**Окса́на і Тара́с працю́ють ра́зом. За́раз ра́нок.**</div>
 
-<div class="dialogue-line"><span class="speaker">Колега 2:</span> Ми їмо суп і сала́т. А що п'єте́? *(We eat soup and salad. And what are you drinking?)*</div>
+<div class="dialogue-line">*Oksana and Taras work together. It is morning now.*</div>
 
-<div class="dialogue-line"><span class="speaker">Колега 1:</span> Ми п'ємо́ воду́ або́ сік. Я сього́дні їм бутербро́д і п'ю чай. А ти? *(We drink water or juice. Today I eat a sandwich and drink tea. And you?)*</div>
+<div class="dialogue-line"><span class="speaker">Оксана:</span> Тара́се, що ти зазвича́й їш на сніда́нок?</div>
 
-<div class="dialogue-line"><span class="speaker">Колега 2:</span> Я їм салат і п'ю каву. Я теж хо́чу суп. *(I eat a salad and drink coffee. I also want soup.)*</div>
+<div class="dialogue-line">*Oksana: Taras, what do you usually eat for breakfast?*</div>
 
-<div class="dialogue-line"><span class="speaker">Колега 1:</span> До́бре, замовля́й! Я ще хочу воду по́тім. *(Okay, order! I still want water later.)*</div>
+<div class="dialogue-line"><span class="speaker">Тарас:</span> Я їм ка́шу і п'ю ка́ву. А ти?</div>
+
+<div class="dialogue-line">*Taras: I eat porridge and drink coffee. And you?*</div>
+
+<div class="dialogue-line"><span class="speaker">Оксана:</span> Я теж! А Оле́на?</div>
+
+<div class="dialogue-line">*Oksana: Me too! And Olena?*</div>
+
+<div class="dialogue-line"><span class="speaker">Тарас:</span> Вона́ їсть хліб з ма́слом і п'є чай.</div>
+
+<div class="dialogue-line">*Taras: She eats bread with butter and drinks tea.*</div>
+
+<div class="dialogue-line"><span class="speaker">Оксана:</span> Зрозумі́ло. А ді́ти?</div>
+
+<div class="dialogue-line">*Oksana: Understood. And the children?*</div>
+
+<div class="dialogue-line"><span class="speaker">Тарас:</span> Вони́ їдя́ть я́йця і п'ють молоко́.</div>
+
+<div class="dialogue-line">*Taras: They eat eggs and drink milk.*</div>
 
 </div>
 
-## Їсти і пити
+Notice the forms in context: **я їм / п'ю**, **вона їсть / п'є**, **вони їдять / п'ють**. The next dialogue adds the plural forms **ми їмо́** and **ми п'ємо́** at lunch.
 
-The verb **їсти** (to eat) is a unique, highly irregular verb in Ukrainian grammar. It belongs to neither Group I nor Group II verb conjugations, making it a true exception. Because it is an essential daily action that you will use in almost every conversation about food, you simply need to memorize its forms. Pay close attention to the endings, as they shift noticeably between the singular and plural forms. Here is the full paradigm:
+<div class="dialogue">
 
-| English | Ukrainian |
-|---------|-----------|
-| I eat | я **їм** |
-| You (singular) eat | ти **їси** |
-| He/she eats | він/вона **їсть** |
-| We eat | ми **їмо** |
-| You (plural/formal) eat | ви **їсте** |
-| They eat | вони **їдять** |
+<div class="dialogue-line">**Обі́дня пере́рва в о́фісі.**</div>
+
+<div class="dialogue-line">*Lunch break at the office.*</div>
+
+<div class="dialogue-line"><span class="speaker">Оксана:</span> Що ви їсте́ на обід сього́дні?</div>
+
+<div class="dialogue-line">*Oksana: What are you eating for lunch today?*</div>
+
+<div class="dialogue-line"><span class="speaker">Тарас і Олена:</span> Ми їмо суп і сала́т.</div>
+
+<div class="dialogue-line">*Taras and Olena: We are eating soup and salad.*</div>
+
+<div class="dialogue-line"><span class="speaker">Оксана:</span> Сма́чно! А що п'єте́?</div>
+
+<div class="dialogue-line">*Oksana: Tasty! And what are you drinking?*</div>
+
+<div class="dialogue-line"><span class="speaker">Тарас:</span> Ми п'ємо воду́ або́ сік.</div>
+
+<div class="dialogue-line">*Taras: We are drinking water or juice.*</div>
+
+<div class="dialogue-line"><span class="speaker">Оксана:</span> Я теж хо́чу суп.</div>
+
+<div class="dialogue-line">*Oksana: I also want soup.*</div>
+
+<div class="dialogue-line"><span class="speaker">Олена:</span> До́бре, замовля́й!</div>
+
+<div class="dialogue-line">*Olena: Good, order it!*</div>
+
+</div>
+
+This second dialogue reviews the verbs with plural subjects like **ми** (we) and introduces a very useful transactional verb: **хоті́ти** (to want). Oksana says **я хочу** (I want) to express her desire for soup. You will use these phrases constantly whether you are unpacking lunch boxes with colleagues or ordering at a cafe.
+
+## Їсти і пити (To Eat and To Drink)
+
+Two high-frequency verbs drive this module: **їсти** and **пити**. Memorize **їсти** as an irregular verb; **пити** follows the present-tense pattern shown below.
+
+| Займе́нник (Pronoun) | Дієсло́во (Verb) | Переклад (Translation) |
+| :--- | :--- | :--- |
+| я | **їм** | I eat |
+| ти | **їси́** | you eat (informal) |
+| він / вона / воно́ | **їсть** | he / she / it eats |
+| ми | **їмо** | we eat |
+| ви | **їсте** | you eat (formal/plural) |
+| вони | **їдять** | they eat |
+
+:::caution
+A very common mistake for learners is confusing the first-person and third-person forms. Remember that **я їм** means "I eat," while **він їсть** means "he eats." Do not mix them up!
+:::
+
+These sentences demonstrate the forms in simple contexts:
+*   **Я їм смачни́й суп.** (I am eating a tasty soup.)
+*   **Ти їси хліб.** (You are eating bread.)
+*   **Вона їсть м'я́со.** (She is eating meat.)
+*   **Ми їмо салат.** (We are eating a salad.)
+*   **Ви їсте борщ.** (You are eating borscht.)
+*   **Вони їдять кашу.** (They are eating porridge.)
+
+The verb **пити** (to drink) is a Group I verb, but its stem changes dramatically from the infinitive form to the present tense forms.
+
+| Займенник (Pronoun) | Дієслово (Verb) | Переклад (Translation) |
+| :--- | :--- | :--- |
+| я | **п'ю** | I drink |
+| ти | **п'єш** | you drink (informal) |
+| він / вона / воно | **п'є** | he / she / it drinks |
+| ми | **п'ємо** | we drink |
+| ви | **п'єте** | you drink (formal/plural) |
+| вони | **п'ють** | they drink |
+
+Notice the apostrophe in **п'ю** and **п'є**. It shows that the consonant stays hard and the following **ю / є** keeps its **й**-sound.
+
+*   **Я п'ю гаря́чий чай.** (I am drinking hot tea.)
+*   **Ти п'єш каву.** (You are drinking coffee.)
+*   **Він п'є молоко.** (He is drinking milk.)
+*   **Ми п'ємо воду.** (We are drinking water.)
+*   **Ви п'єте холо́дний сік.** (You are drinking cold juice.)
+*   **Вони п'ють воду.** (They are drinking water.)
+
+> **Ми ча́сто їмо разом. Я їм ри́бу, а мій друг їсть м'ясо. Ми п'ємо воду.**
+> *We often eat together. I eat fish, and my friend eats meat. We drink water.*
+
+<FillIn client:only="react" items={[{"sentence": "Я ____ суп.", "answer": "їм", "options": ["їм", "їси", "їсть"]}, {"sentence": "Ми ____ чай.", "answer": "п'ємо", "options": ["п'ю", "п'ємо", "п'єте"]}, {"sentence": "Вона ____ хліб.", "answer": "їсть", "options": ["їсть", "їм", "їдять"]}, {"sentence": "Вони ____ воду.", "answer": "п'ють", "options": ["п'є", "п'ємо", "п'ють"]}, {"sentence": "Ти ____ рибу?", "answer": "їси", "options": ["їси", "їмо", "їсте"]}, {"sentence": "Ви ____ каву?", "answer": "п'єте", "options": ["п'єш", "п'єте", "п'ють"]}, {"sentence": "Він ____ сік.", "answer": "п'є", "options": ["п'ю", "п'є", "п'ють"]}, {"sentence": "Вони ____ кашу.", "answer": "їдять", "options": ["їдять", "їмо", "їсте"]}]} instruction={"Вставте правильну форму дієслова (Insert the correct verb form)"} />
+
+## Знахі́дний відмі́нок — неживе́ (Accusative Inanimate)
+
+In Ukrainian, the direct object after **їсти** and **пити** takes the accusative. A school-style way to check it is **Ба́чу що? кого?**; this matches the Grade 4 textbook approach noted in the plan and the beginner treatment in ULP Season 1, Episode 32.
+
+For Masculine and Neuter inanimate nouns, the rule is remarkably simple: they do not change at all. Their Accusative form is exactly the same as their Nominative (dictionary) form.
+
+These examples show the stability of masculine and neuter nouns:
+*   **хліб** (bread, masculine) → **Я їм хліб.** (I eat bread.)
+*   **сік** (juice, masculine) → **Я п'ю сік.** (I drink juice.)
+*   **суп** (soup, masculine) → **Він їсть суп.** (He eats soup.)
+*   **молоко** (milk, neuter) → **Ми п'ємо молоко.** (We drink milk.)
+*   **яйце́** (egg, neuter) → **Вони їдять яйце.** (They are eating an egg.)
+*   **м'ясо** (meat, neuter) → **Вона їсть м'ясо.** (She is eating meat.)
+
+So masculine and neuter food nouns stay in the dictionary form. The key A1 change is feminine **-а → -у** and **-я → -ю**:
+*   **ка́ва** (coffee) → **каву**: **Я п'ю каву.** (I drink coffee.)
+*   **вода́** (water) → **воду**: **Він п'є воду.** (He drinks water.)
+*   **ри́ба** (fish) → **рибу**: **Ми їмо рибу.** (We eat fish.)
+*   **ка́ша** (porridge) → **кашу**: **Ти їси кашу.** (You are eating porridge.)
+*   **карто́пля** (potato) → **карто́плю**: **Я їм картоплю.** (I am eating potatoes.)
+*   **смета́на** (sour cream) → **смета́ну**: **Вона лю́бить сметану.** (She loves sour cream.)
 
 :::tip
-**Pronouncing the letter Ї**
-The letter **ї** always represents two distinct sounds: the consonant **й** and the vowel **і**. You must pronounce it fully, sounding similar to the English word "yee". It is never reduced to just a single **і** sound.
+This ending shift applies to any verb that takes a direct object. Whether the sentence is **Я їм картоплю** (I eat potatoes), **Я п'ю воду** (I drink water), or **Я хочу каву** (I want coffee), the feminine ending must become **-у** or **-ю**.
 :::
 
-Here are three examples using different subjects to practice this sound:
-- **Я їм суп.** (I eat soup.)
-- **Ми їмо я́блуко.** (We eat an apple.)
-- **Діти їдять бана́н.** (The children eat a banana.)
-- **Він їсть сир.** (He eats cheese.)
+> **Сьогодні я готу́ю обід. Я маю картоплю і рибу. Я їм картоплю, але́ я не п'ю каву. Я п'ю воду.**
+> *Today I am cooking lunch. I have potatoes and fish. I am eating potatoes, but I do not drink coffee. I drink water.*
 
-The verb **пити** (to drink) is a bit friendlier for learners. It officially follows the Group I conjugation pattern, but it features a unique spelling shift in the present tense. Notice how the vowel **и** completely disappears from the stem, and the endings start with an apostrophe, resulting in the distinct sounds **'ю** or **'є**. This apostrophe indicates that the preceding consonant remains hard and the following vowel is pronounced as two distinct sounds. Here is the complete paradigm:
+<FillIn client:only="react" items={[{"sentence": "Я їм ____.", "answer": "рибу", "options": ["риба", "рибу"]}, {"sentence": "Вона п'є ____.", "answer": "воду", "options": ["вода", "воду"]}, {"sentence": "Він їсть ____.", "answer": "хліб", "options": ["хліб", "хлібу"]}, {"sentence": "Ми п'ємо ____.", "answer": "молоко", "options": ["молоко", "молоку"]}, {"sentence": "Вони їдять ____.", "answer": "кашу", "options": ["каша", "кашу"]}, {"sentence": "Ти п'єш ____.", "answer": "каву", "options": ["кава", "каву"]}, {"sentence": "Я їм ____.", "answer": "суп", "options": ["суп", "супу"]}, {"sentence": "Вона їсть ____.", "answer": "картоплю", "options": ["картопля", "картоплю"]}]} instruction={"Вставте іменник у правильній формі (Insert the noun in the correct form)"} />
 
-| English | Ukrainian |
-|---------|-----------|
-| I drink | я **п'ю** |
-| You (singular) drink | ти **п'єш** |
-| He/she drinks | він/вона **п'є** |
-| We drink | ми **п'ємо** |
-| You (plural/formal) drink | ви **п'єте** |
-| They drink | вони **п'ють** |
-
-Ukrainians use the direct verb **пити** for almost all beverages. Unlike English, where you might casually say "I am having a drink" or "I will take a coffee," in Ukrainian you must always explicitly state "I drink." It is a highly frequent verb that pairs directly with almost any liquid you can consume. Notice how the direct object immediately follows the verb:
-- **Я п'ю воду.** (I drink water.)
-- **Ти п'єш каву.** (You drink coffee.)
-- **Вони п'ють сік.** (They drink juice.)
-- **Ми п'ємо чай.** (We drink tea.)
-
-<FillIn client:only="react" items={[{"sentence": "Я ____ суп.", "answer": "їм", "options": ["їм", "їсть", "їси"]}, {"sentence": "Ми ____ чай.", "answer": "п'ємо", "options": ["п'є", "п'ємо", "п'ють"]}, {"sentence": "Вона ____ хліб.", "answer": "їсть", "options": ["їсть", "їм", "їдять"]}, {"sentence": "Вони ____ воду.", "answer": "п'ють", "options": ["п'є", "п'єте", "п'ють"]}, {"sentence": "Ти ____ рибу?", "answer": "їси", "options": ["їси", "їсте", "їмо"]}, {"sentence": "Ви ____ каву?", "answer": "п'єте", "options": ["п'ю", "п'єш", "п'єте"]}, {"sentence": "Він ____ сік.", "answer": "п'є", "options": ["п'є", "п'ють", "п'ємо"]}, {"sentence": "Вони ____ кашу.", "answer": "їдять", "options": ["їдять", "їмо", "їм"]}]} instruction={"Вставте правильну форму дієслова (їсти / пити)"} />
-
-A uniquely Ukrainian cultural quirk is the strict "Soup Rule." In Ukraine, you always "eat" (**їсти**) thick liquid dishes like soup and borscht with a spoon. You never "drink" them from a bowl, even if they are primarily liquid. Contrast this with true beverages like tea, juice, or fruit compote, which you always "drink" (**пити**). Using the wrong verb sounds immediately unnatural to a native speaker. For example: **Я їм борщ. Я п'ю чай.** (I eat borscht. I drink tea.)
-
-## Знахі́дний відмі́нок — неживе́
-
-When you eat or drink something, that food item becomes the direct object of your action. In Ukrainian grammar, the direct object requires a specific form called the Accusative Case (**Знахідний відмінок**). This case is the workhorse of everyday communication because you constantly interact with objects around you.
-
-:::note
-**The "Що?" Trigger**
-The Ukrainian school system effectively teaches students to identify the accusative case by asking the mental trigger question: «Ба́чу що? Бачу кого?» (I see what? I see whom?). When dealing with inanimate food items, asking yourself **що?** (what?) signals that you must use the accusative form for the noun that follows: **Я їм (що?) хліб. Я п'ю (що?) каву.**
-:::
-
-There is excellent news for masculine and neuter inanimate nouns: they undergo absolutely no change in this situation. The accusative form looks exactly the same as the standard dictionary (nominative) form. Therefore, masculine words like **хліб** (bread), **суп** (soup), **бутерброд** (sandwich), and **сік** (juice), as well as neuter words like **молоко** (milk) and **яйце́** (egg), remain completely identical when they become the object of your action. This makes learning the accusative case much easier for beginners, as you only need to focus on the sentence structure rather than changing the word.
-- **хліб** → **хліб**: **Я їм хліб.** (I eat bread.)
-- **суп** → **суп**: **Я їм суп.** (I eat soup.)
-- **сік** → **сік**: **Я п'ю сік.** (I drink juice.)
-- **молоко** → **молоко**: **Я п'ю молоко.** (I drink milk.)
-- **яйце** → **яйце**: **Я їм яйце.** (I eat an egg.)
-
-The primary grammatical change at the A1 level happens with feminine nouns. When a feminine noun ends in **-а**, it strictly shifts to **-у** in the accusative case. If it ends in **-я**, it shifts to **-ю**. This simple but crucial vowel change immediately signals to the listener that the noun is the direct object receiving the action. You must actively practice this transformation until it becomes a natural reflex. Notice how the endings transform in these highly common daily examples:
-- **вода́** → **воду**: **Я п'ю воду.** (I drink water.)
-- **ка́ва** → **каву**: **Я п'ю каву.** (I drink coffee.)
-- **ри́ба** → **ри́бу**: **Я їм рибу.** (I eat fish.)
-- **ка́ша** → **кашу**: **Я їм кашу.** (I eat porridge.)
-- **смета́на** → **смета́ну**: **Я хочу сметану.** (I want sour cream.)
-- **карто́пля** → **карто́плю**: **Я їм картоплю.** (I eat potato.)
-
-<FillIn client:only="react" items={[{"sentence": "Я їм ____ (риба).", "answer": "рибу"}, {"sentence": "Вона п'є ____ (вода).", "answer": "воду"}, {"sentence": "Він їсть ____ (хліб).", "answer": "хліб"}, {"sentence": "Ми п'ємо ____ (молоко).", "answer": "молоко"}, {"sentence": "Вони їдять ____ (каша).", "answer": "кашу"}, {"sentence": "Ти п'єш ____ (кава).", "answer": "каву"}, {"sentence": "Я їм ____ (суп).", "answer": "суп"}, {"sentence": "Вона їсть ____ (картопля).", "answer": "картоплю"}]} instruction={"Напишіть правильну форму слова (Знахідний відмінок)"} />
-
-<GroupSort client:only="react" groups={{"Змінюється (-у/-ю)": ["кава", "вода", "риба", "каша", "сметана", "картопля"], "Не змінюється": ["хліб", "сік", "молоко", "м'ясо", "суп", "яйце"]}} instruction={"Як слова змінюються у Знахідному відмінку? Розподіліть їх"} />
-
-This foundational accusative rule applies to many other essential verbs too, particularly the verb **хоті́ти** (to want). When you order food at a cafe or restaurant, you will often use the polite, fixed chunk **Ме́ні, будь ла́ска...** (To me, please...) followed immediately by the accusative object. Even though the main verb is implied rather than spoken out loud, the food item is still acting as the direct object receiving the action, so the accusative rules remain exactly the same.
-- **Мені, будь ласка, пі́цу і воду.** (To me, please, pizza and water.)
-- **Я хочу каву.** (I want coffee.)
-- **Він хо́че рибу і сік.** (He wants fish and juice.)
-- **Вона хоче чай.** (She wants tea.)
-
-<Quiz client:only="react" questions={[{"question": "Я п'ю...", "options": [{"text": "каву", "correct": true}, {"text": "кава", "correct": false}, {"text": "кави", "correct": false}]}, {"question": "Він їсть...", "options": [{"text": "рибу", "correct": true}, {"text": "риба", "correct": false}, {"text": "рибі", "correct": false}]}, {"question": "Ми п'ємо...", "options": [{"text": "сік", "correct": true}, {"text": "соку", "correct": false}, {"text": "соком", "correct": false}]}, {"question": "Вона їсть...", "options": [{"text": "м'ясо", "correct": true}, {"text": "м'ясу", "correct": false}, {"text": "м'яса", "correct": false}]}, {"question": "Вони п'ють...", "options": [{"text": "воду", "correct": true}, {"text": "вода", "correct": false}, {"text": "воді", "correct": false}]}, {"question": "Ти їш...", "options": [{"text": "кашу", "correct": true}, {"text": "каша", "correct": false}, {"text": "каші", "correct": false}]}]} instruction={"Оберіть правильний варіант"} />
+<Quiz client:only="react" questions={[{"question": "Я п'ю...", "options": [{"text": "каву", "correct": true}, {"text": "кава", "correct": false}, {"text": "кави", "correct": false}]}, {"question": "Він їсть...", "options": [{"text": "риба", "correct": false}, {"text": "рибу", "correct": true}, {"text": "рибі", "correct": false}]}, {"question": "Ми п'ємо...", "options": [{"text": "сік", "correct": true}, {"text": "соку", "correct": false}, {"text": "соком", "correct": false}]}, {"question": "Вона їсть...", "options": [{"text": "м'ясу", "correct": false}, {"text": "м'яса", "correct": false}, {"text": "м'ясо", "correct": true}]}, {"question": "Вони п'ють...", "options": [{"text": "вода", "correct": false}, {"text": "воду", "correct": true}, {"text": "воді", "correct": false}]}, {"question": "Ти їси...", "options": [{"text": "кашу", "correct": true}, {"text": "каша", "correct": false}, {"text": "каші", "correct": false}]}]} instruction={"Оберіть правильний варіант (Choose the correct option)"} />
 
 ## Підсумок — Summary
 
-The core grammar of eating and drinking relies heavily on two essential verbs and one critical case change. The verb **їсти** (to eat) is completely irregular and its unique forms (**я їм, ти їси, він їсть**) must be memorized through repetition. The verb **пити** (to drink) is a Group I verb with a specific spelling shift that adds an apostrophe (**я п'ю, ти п'єш**). Most importantly, you must remember that when you eat or drink a feminine item ending in **-а**, you must actively change that ending to **-у** (**вода** → **воду**).
+Summary: after **їсти**, **пити**, and similar verbs, inanimate direct objects take the accusative. Masculine and neuter nouns stay the same; feminine **-а / -я** changes to **-у / -ю**.
 
-:::caution
-**Watch out for Russianisms!**
-A very common mistake for beginners is using the Russian word *ко́фе* instead of the authentic Ukrainian noun **кава**. Always remember to order **каву**! Additionally, ensure you use the Ukrainian word **сир** for both hard cheese and cottage cheese at this level; actively avoid the Russianism *творог*.
-:::
+*   **Masculine and Neuter nouns do not change form.** Words like **хліб** (bread), **сік** (juice), and **молоко** (milk) stay exactly the same as they appear in the dictionary. A speaker can simply say **Я їм хліб** or **Я п'ю молоко** without any modifications to the noun.
+*   **Feminine nouns undergo a specific ending shift.** If a feminine noun ends in **-а**, that ending changes to **-у**. If it ends in **-я**, it changes to **-ю**. This is why **кава** becomes **каву**, and **картопля** becomes **картоплю**. This change is mandatory and highly frequent in spoken Ukrainian.
 
-To quickly recap the Accusative Inanimate rules: masculine and neuter nouns equal their dictionary nominative forms exactly, while feminine nouns take **-у** or **-ю**. You can clearly see this when you compare the masculine object **Я п'ю сік** (no change) with the feminine object **Я п'ю каву** (changed to **-у**).
+> **Ко́жного дня я сні́даю. Я їм кашу і п'ю чай. На обід я їм суп. Це ду́же смачно!**
+> *Every day I have breakfast. I eat porridge and drink tea. For lunch I eat soup. It is very tasty!*
 
-Test your memory of these critical concepts before you finish the module:
-- Can you conjugate the irregular verb **їсти** for all pronouns from memory? (Try recalling: **Я їм**, **ти їси**, **вони їдять**)
-- Can you conjugate the verb **пити** without looking at the table? (Try recalling: **Я п'ю**, **він п'є**, **ми п'ємо**)
-- Test yourself: **Я їм ___** (**риба** → **рибу**). **Я п'ю ___** (**вода** → **воду**).
-- Say three things you eat today, ensuring you use the correct accusative form: **Я їм...** (e.g., **суп, яблуко**)
-- Say three things you drink today, using the correct accusative form: **Я п'ю...** (e.g., **чай, сік**)
-- What is the correct accusative form of the feminine noun **картопля**? (Answer: **картоплю**)
+The following short self-check test ensures these vital patterns are internalized. Fill in the blanks using the correct Accusative form of the word in parentheses:
 
-If you can confidently answer these questions, you are ready to order your favorite meals in a Ukrainian cafe!
+*   Test: Я їм ___ (**риба** → **рибу**).
+*   Test: Я п'ю ___ (**вода** → **воду**).
+*   Test: Вона їсть ___ (**хліб** → **хліб**).
+*   Test: Ми хо́чемо ___ (**кава** → **каву**).
+*   Test: Ти п'єш ___ (**сік** → **сік**).
+
+As an active self-check, say three things you eat and three things you drink today out loud. Pay close attention to the gender of each word, and use the correct accusative form for each item. If the word is feminine, ensure the crucial shift to the "-у" ending is made.
 
 </TabItem>
 <TabItem label="Словник">
@@ -166,61 +203,94 @@ If you can confidently answer these questions, you are ready to order your favor
 
 | Слово | Переклад | Частина мови | Рід |
 |-------|----------|-------------|-----|
-| **ка́шу** | porridge | ім. | ж. |
-| **карто́плю** | potato | ім. | ж. |
-| **смета́ну** | sour cream | ім. | ж. |
-| **їсть** | he/she eats | дієсл. |  |
-| **п'є** | he/she drinks | дієсл. |  |
-| **їдя́ть** | they eat | дієсл. |  |
-| **п'ють** | they drink | дієсл. |  |
-| **пи́ти** | to drink | дієсл. |  |
-| **їм** | I eat | ім. |  |
-| **п'ю** | I drink | дієсл. |  |
-| **ка́ву** | coffee | ім. | ж. |
-| **воду́** | water | ім. | ж. |
-| **ри́бу** | fish | ім. | ж. |
 | **сніда́нок** | breakfast | ім. | ч. |
-| **ма́сло** | butter | ім. | с. |
-| **ді́ти** | children | ім. |  |
-| **яйце́** | egg | ім. | с. |
-| **молоко́** | milk | ім. | с. |
-| **сала́т** | salad | ім. | ч. |
-| **або́** | or | спол. |  |
-| **бутербро́д** | sandwich | ім. | ч. |
-| **теж** | also | присл. |  |
-| **хо́чу** | I want | дієсл. |  |
-| **замовля́ти** | to order | дієсл. |  |
-| **я́блуко** | apple | ім. | с. |
-| **бана́н** | banana | ім. | ч. |
-| **пі́ца** | pizza | ім. | ж. |
-| **їси́** | you eat (singular) | дієсл. |  |
+| **вече́ря** | dinner | ім. | ж. |
+| **зазвича́й** | usually | присл. |  |
+| **ї́сти** | to eat | дієсл. |  |
+| **їм** | I eat | ім. |  |
+| **їси́** | you eat (informal) | дієсл. |  |
+| **їш** | you eat (informal) |  |  |
+| **їсть** | he / she / it eats | дієсл. |  |
 | **їмо́** | we eat | дієсл. |  |
-| **їсте́** | you eat (plural/formal) | дієсл. |  |
-| **п'єш** | you drink (singular) | дієсл. |  |
+| **їсте́** | you eat (formal/plural) | дієсл. |  |
+| **їдя́ть** | they eat | дієсл. |  |
+| **пи́ти** | to drink | дієсл. |  |
+| **п'ю** | I drink | дієсл. |  |
+| **п'єш** | you drink (informal) | дієсл. |  |
+| **п'є** | he / she / it drinks | дієсл. |  |
 | **п'ємо́** | we drink | дієсл. |  |
-| **п'єте́** | you drink (plural/formal) | дієсл. |  |
+| **п'єте́** | you drink (formal/plural) | дієсл. |  |
+| **п'ють** | they drink | дієсл. |  |
+| **ка́ша** | porridge | ім. | ж. |
+| **ка́шу** | porridge (accusative) | ім. | ж. |
+| **ка́ва** | coffee | ім. | ж. |
+| **ка́ву** | coffee (accusative) | ім. | ж. |
+| **ма́сло** | butter | ім. | с. |
+| **зрозумі́ло** | understood | присл. |  |
+| **яйце́** | egg | ім. | с. |
+| **я́йця** | eggs | ім. | с. |
+| **молоко́** | milk | ім. | с. |
+| **сього́дні** | today | присл. |  |
+| **сала́т** | salad | ім. | ч. |
+| **сма́чно** | tasty | присл. |  |
+| **смачни́й** | tasty | прикм. |  |
+| **вода́** | water | ім. | ж. |
+| **воду́** | water (accusative) | ім. | ж. |
+| **або́** | or | спол. |  |
+| **хоті́ти** | to want | дієсл. |  |
+| **хо́чу** | I want | дієсл. |  |
+| **до́бре** | good | присл. |  |
+| **замовля́й** | order it! | дієсл. |  |
+| **м'я́со** | meat | ім. | с. |
+| **гаря́чий** | hot | прикм. |  |
+| **холо́дний** | cold | прикм. |  |
+| **ча́сто** | often | присл. |  |
+| **ра́зом** | together | ім. | ч. |
+| **ри́ба** | fish | ім. | ж. |
+| **ри́бу** | fish (accusative) | ім. | ж. |
+| **неживе́** | inanimate | прикм. |  |
+| **ба́чу** | I see | дієсл. |  |
+| **що?** | what? | спол. |  |
+| **кого?** | who? (whom?) | ім. | ч. |
+| **карто́пля** | potato | ім. | ж. |
+| **карто́плю** | potato (accusative) | ім. | ж. |
+| **смета́на** | sour cream | ім. | ж. |
+| **смета́ну** | sour cream (accusative) | ім. | ж. |
+| **лю́бить** | loves | дієсл. |  |
+| **готу́ю** | I am cooking | дієсл. |  |
+| **маю** | I have | дієсл. |  |
+| **але́** | but | спол. |  |
+| **сні́даю** | I have breakfast | дієсл. |  |
+| **ду́же** | very | присл. |  |
 
 ### Вирази
 
 | Вираз | Переклад |
 |-------|----------|
-| **Що ти їси?** | What are you eating? |
-| **Мені, будь ласка...** | To me, please... |
+| **обідня перерва** | lunch break |
+| **мій друг** | my friend |
+| **Знахідний відмінок** | Accusative case |
+| **Бачу що? кого?** | What/who do I see? |
+| **кожного дня** | every day |
 
 ### Картки — Flashcards
 
-<FlashcardDeck client:only="react" cards={[{ front: "ка́шу", back: "porridge", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "карто́плю", back: "potato", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "смета́ну", back: "sour cream", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "їсть", back: "he/she eats", subtitle: "дієсл." }, { front: "п&#39;є", back: "he/she drinks", subtitle: "дієсл." }, { front: "їдя́ть", back: "they eat", subtitle: "дієсл." }, { front: "п&#39;ють", back: "they drink", subtitle: "дієсл." }, { front: "пи́ти", back: "to drink", subtitle: "дієсл." }, { front: "їм", back: "I eat", subtitle: "ім." }, { front: "п&#39;ю", back: "I drink", subtitle: "дієсл." }, { front: "ка́ву", back: "coffee", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "воду́", back: "water", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ри́бу", back: "fish", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "сніда́нок", back: "breakfast", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ма́сло", back: "butter", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "ді́ти", back: "children", subtitle: "ім." }, { front: "яйце́", back: "egg", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "молоко́", back: "milk", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "сала́т", back: "salad", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "або́", back: "or", subtitle: "спол." }, { front: "бутербро́д", back: "sandwich", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "теж", back: "also", subtitle: "присл." }, { front: "хо́чу", back: "I want", subtitle: "дієсл." }, { front: "замовля́ти", back: "to order", subtitle: "дієсл." }, { front: "я́блуко", back: "apple", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "бана́н", back: "banana", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "пі́ца", back: "pizza", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "їси́", back: "you eat (singular)", subtitle: "дієсл." }, { front: "їмо́", back: "we eat", subtitle: "дієсл." }, { front: "їсте́", back: "you eat (plural/formal)", subtitle: "дієсл." }, { front: "п&#39;єш", back: "you drink (singular)", subtitle: "дієсл." }, { front: "п&#39;ємо́", back: "we drink", subtitle: "дієсл." }, { front: "п&#39;єте́", back: "you drink (plural/formal)", subtitle: "дієсл." }]} />
+<FlashcardDeck client:only="react" cards={[{ front: "сніда́нок", back: "breakfast", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "вече́ря", back: "dinner", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "зазвича́й", back: "usually", subtitle: "присл." }, { front: "ї́сти", back: "to eat", subtitle: "дієсл." }, { front: "їм", back: "I eat", subtitle: "ім." }, { front: "їси́", back: "you eat (informal)", subtitle: "дієсл." }, { front: "їш", back: "you eat (informal)" }, { front: "їсть", back: "he / she / it eats", subtitle: "дієсл." }, { front: "їмо́", back: "we eat", subtitle: "дієсл." }, { front: "їсте́", back: "you eat (formal/plural)", subtitle: "дієсл." }, { front: "їдя́ть", back: "they eat", subtitle: "дієсл." }, { front: "пи́ти", back: "to drink", subtitle: "дієсл." }, { front: "п&#39;ю", back: "I drink", subtitle: "дієсл." }, { front: "п&#39;єш", back: "you drink (informal)", subtitle: "дієсл." }, { front: "п&#39;є", back: "he / she / it drinks", subtitle: "дієсл." }, { front: "п&#39;ємо́", back: "we drink", subtitle: "дієсл." }, { front: "п&#39;єте́", back: "you drink (formal/plural)", subtitle: "дієсл." }, { front: "п&#39;ють", back: "they drink", subtitle: "дієсл." }, { front: "ка́ша", back: "porridge", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ка́шу", back: "porridge (accusative)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ка́ва", back: "coffee", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ка́ву", back: "coffee (accusative)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ма́сло", back: "butter", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "зрозумі́ло", back: "understood", subtitle: "присл." }, { front: "яйце́", back: "egg", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "я́йця", back: "eggs", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "молоко́", back: "milk", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "сього́дні", back: "today", subtitle: "присл." }, { front: "сала́т", back: "salad", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "сма́чно", back: "tasty", subtitle: "присл." }, { front: "смачни́й", back: "tasty", subtitle: "прикм." }, { front: "вода́", back: "water", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "воду́", back: "water (accusative)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "або́", back: "or", subtitle: "спол." }, { front: "хоті́ти", back: "to want", subtitle: "дієсл." }, { front: "хо́чу", back: "I want", subtitle: "дієсл." }, { front: "до́бре", back: "good", subtitle: "присл." }, { front: "замовля́й", back: "order it!", subtitle: "дієсл." }, { front: "м&#39;я́со", back: "meat", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "гаря́чий", back: "hot", subtitle: "прикм." }, { front: "холо́дний", back: "cold", subtitle: "прикм." }, { front: "ча́сто", back: "often", subtitle: "присл." }, { front: "ра́зом", back: "together", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ри́ба", back: "fish", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ри́бу", back: "fish (accusative)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "неживе́", back: "inanimate", subtitle: "прикм." }, { front: "ба́чу", back: "I see", subtitle: "дієсл." }, { front: "що?", back: "what?", subtitle: "спол." }, { front: "кого?", back: "who? (whom?)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "карто́пля", back: "potato", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "карто́плю", back: "potato (accusative)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "смета́на", back: "sour cream", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "смета́ну", back: "sour cream (accusative)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "лю́бить", back: "loves", subtitle: "дієсл." }, { front: "готу́ю", back: "I am cooking", subtitle: "дієсл." }, { front: "маю", back: "I have", subtitle: "дієсл." }, { front: "але́", back: "but", subtitle: "спол." }, { front: "сні́даю", back: "I have breakfast", subtitle: "дієсл." }, { front: "ду́же", back: "very", subtitle: "присл." }]} />
 
 </TabItem>
 <TabItem label="Зошит">
 
-<MatchUp client:only="react" pairs={[{"left": "Я", "right": "їм"}, {"left": "Ти", "right": "їси"}, {"left": "Він", "right": "їсть"}, {"left": "Ми", "right": "їмо"}, {"left": "Ви", "right": "їсте"}, {"left": "Вони", "right": "їдять"}]} instruction={"З'єднайте займенник із правильною формою дієслова 'їсти'"} />
+<MatchUp client:only="react" pairs={[{"left": "я", "right": "п'ю"}, {"left": "ти", "right": "їси"}, {"left": "він", "right": "п'є"}, {"left": "ми", "right": "їмо"}, {"left": "ви", "right": "п'єте"}, {"left": "вони", "right": "їдять"}, {"left": "вона", "right": "їсть"}]} instruction={"З'єднайте займенник із дієсловом (Match the pronoun with the verb)"} />
 
-<TrueFalse client:only="react" items={[{"statement": "Ірина їсть кашу на сніданок.", "isTrue": true, "explanation": "Так, Ірина каже: «Я їм кашу і п'ю каву»."}, {"statement": "Діти п'ють каву.", "isTrue": false, "explanation": "Ні, діти п'ють молоко."}, {"statement": "Слово 'суп' змінюється на 'супу' у знахідному відмінку.", "isTrue": false, "explanation": "Ні, чоловічий рід (неживий) не змінюється: я їм суп."}, {"statement": "Олена їсть хліб з маслом.", "isTrue": true, "explanation": "Так, вона їсть хліб з маслом і п'є чай."}, {"statement": "Слово 'кава' змінюється на 'каву' у знахідному відмінку.", "isTrue": true, "explanation": "Так, закінчення -а змінюється на -у."}, {"statement": "В Україні суп п'ють, а не їдять.", "isTrue": false, "explanation": "В Україні суп або борщ 'їдять' ложкою, а не п'ють."}]} instruction={"Правда чи ні? Прочитайте діалог і правила"} />
+<TrueFalse client:only="react" items={[{"statement": "Я п'ю каву.", "isTrue": true, "explanation": "Каву п'ють."}, {"statement": "Він їсть молоко.", "isTrue": false, "explanation": "Молоко п'ють, а не їдять."}, {"statement": "Ти їси хліб.", "isTrue": true, "explanation": "Хліб їдять."}, {"statement": "Ми п'ємо картоплю.", "isTrue": false, "explanation": "Картоплю їдять, а не п'ють."}, {"statement": "Вона їсть рибу.", "isTrue": true, "explanation": "Рибу їдять."}, {"statement": "Вони п'ють чай.", "isTrue": true, "explanation": "Чай п'ють."}, {"statement": "Я їм сік.", "isTrue": false, "explanation": "Сік п'ють, а не їдять."}]} instruction={"Правда чи ні? (True or false?)"} />
 
-<ErrorCorrection client:only="react" items={[{"sentence": "Я п'ю вода.", "errorWord": "вода", "correctForm": "воду", "options": ["воду", "воді", "водою"], "explanation": "Вода — жіночий рід. Знахідний відмінок має закінчення -у (воду)."}, {"sentence": "Ти їсть рибу.", "errorWord": "їсть", "correctForm": "їси", "options": ["їси", "їш", "їдять"], "explanation": "Для займенника 'ти' правильна форма дієслова 'їсти' — 'їси'."}, {"sentence": "Ми п'ють сік.", "errorWord": "п'ють", "correctForm": "п'ємо", "options": ["п'ємо", "п'є", "п'єте"], "explanation": "Для 'ми' правильна форма — 'п'ємо'."}, {"sentence": "Вона їсть картопля.", "errorWord": "картопля", "correctForm": "картоплю", "options": ["картоплю", "картоплі", "картоплею"], "explanation": "Картопля — жіночий рід на -я. У знахідному відмінку закінчення -ю (картоплю)."}, {"sentence": "Вони їмо бутерброд.", "errorWord": "їмо", "correctForm": "їдять", "options": ["їдять", "їм", "їсте"], "explanation": "Для 'вони' правильна форма — 'їдять'."}, {"sentence": "Я хочу кава.", "errorWord": "кава", "correctForm": "каву", "options": ["каву", "каві", "кавою"], "explanation": "Кава — жіночий рід. Знахідний відмінок має закінчення -у (каву)."}]} instruction={"Знайдіть і виправте помилку"} />
+<Unjumble client:only="react" items={[{"words": "кашу. / їм / Я", "answer": "Я їм кашу."}, {"words": "Ми / воду. / п'ємо", "answer": "Ми п'ємо воду."}, {"words": "їсть / Він / рибу.", "answer": "Він їсть рибу."}, {"words": "суп. / Вони / їдять", "answer": "Вони їдять суп."}, {"words": "п'є / Вона / каву.", "answer": "Вона п'є каву."}, {"words": "Ти / чай? / п'єш", "answer": "Ти п'єш чай?"}, {"words": "Ви / салат. / їсте", "answer": "Ви їсте салат."}]} instruction={"Складіть правильне речення зі слів (Form a correct sentence from the words)"} />
 
-<Translate client:only="react" questions={[{"source": "I eat fish.", "options": [{"text": "Я їм рибу.", "correct": true}, {"text": "Я їм риба.", "correct": false}, {"text": "Я їсть рибу.", "correct": false}]}, {"source": "We drink tea.", "options": [{"text": "Ми п'ємо чай.", "correct": true}, {"text": "Ми п'ють чай.", "correct": false}, {"text": "Ми п'ємо чаю.", "correct": false}]}, {"source": "They want water.", "options": [{"text": "Вони хочуть воду.", "correct": true}, {"text": "Вони хочуть вода.", "correct": false}, {"text": "Вони хоче воду.", "correct": false}]}, {"source": "She eats porridge.", "options": [{"text": "Вона їсть кашу.", "correct": true}, {"text": "Вона їсть каша.", "correct": false}, {"text": "Вона їси кашу.", "correct": false}]}, {"source": "He drinks coffee.", "options": [{"text": "Він п'є каву.", "correct": true}, {"text": "Він п'є кава.", "correct": false}, {"text": "Він п'ємо каву.", "correct": false}]}, {"source": "You (plural) drink milk.", "options": [{"text": "Ви п'єте молоко.", "correct": true}, {"text": "Ви п'єш молоко.", "correct": false}, {"text": "Ви п'єте молока.", "correct": false}]}]} instruction={"Оберіть правильний переклад"} />
+<Anagram client:only="react" items={[{"scrambled": "х л і б", "answer": "хліб"}, {"scrambled": "в о д а", "answer": "вода"}, {"scrambled": "р и б а", "answer": "риба"}, {"scrambled": "м о л о к о", "answer": "молоко"}, {"scrambled": "с і к", "answer": "сік"}, {"scrambled": "к а ш а", "answer": "каша"}, {"scrambled": "к а в а", "answer": "кава"}]} instruction={"Складіть слово з літер (Form a word from the letters)"} />
+
+<GroupSort client:only="react" groups={{"Їсти (To eat)": ["їм", "їси", "їсть", "їмо", "їсте", "їдять"], "Пити (To drink)": ["п'ю", "п'єш", "п'є", "п'ємо", "п'єте", "п'ють"]}} instruction={"Розподіліть форми дієслів (Sort the verb forms)"} />
+
+<FillIn client:only="react" items={[{"sentence": "Я хочу ____.", "answer": "воду", "options": ["вода", "воду"]}, {"sentence": "Вона їсть ____.", "answer": "м'ясо", "options": ["м'ясо", "м'ясу"]}, {"sentence": "Ми п'ємо ____.", "answer": "сік", "options": ["сік", "соку"]}, {"sentence": "Тарас їсть ____.", "answer": "кашу", "options": ["каша", "кашу"]}, {"sentence": "Ти п'єш ____?", "answer": "чай", "options": ["чай", "чаю"]}, {"sentence": "Вони їдять ____.", "answer": "сметану", "options": ["сметана", "сметану"]}, {"sentence": "Оксана п'є ____.", "answer": "каву", "options": ["кава", "каву"]}, {"sentence": "Діти їдять ____.", "answer": "яйця", "options": ["яйця", "яйцю"]}]} instruction={"Вставте правильне слово (Insert the correct word)"} />
 
 </TabItem>
 <TabItem label="Ресурси">

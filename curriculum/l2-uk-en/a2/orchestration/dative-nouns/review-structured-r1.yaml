@@ -2,50 +2,51 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 10
-  evidence: All plan points are covered, including the specific Заболотний style rule
-    and all the vocabulary words. The word count is above the 2000 target.
+  score: 7
+  evidence: Core content_outline points are covered, but search confirms 0 occurrences
+    of `Заболотний`, `Глазова`, and `Кравцова` in the module text, and recommended
+    terms `відміна`, `чергування`, `одержувач` are
 - dimension: 2
   name: Linguistic accuracy
   score: 7
-  evidence: 'Contains two critical factual errors: 1) stating that `подруга` is an
-    example of `к→ц` alternation, and 2) classifying `Дмитро` and `батько` as I declension
-    nouns (they are II declension).'
+  evidence: 'Incorrect claim: `In Ukrainian, the consonants **г**, **к**, and **х**
+    cannot stand directly before the vowel **-і**.`'
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: Excellent PPP flow. Concepts are introduced with clear explanations and
-    multiple contextual examples before the practice dialogues.
+  score: 6
+  evidence: The module opens with a long English theory block (`Welcome to the Dative
+    case... In this section, we will focus entirely on masculine nouns.`) before the
+    first Ukrainian example, which weakens PPP-st
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: All required (`студентові`, `сестрі`, `подарувати`, etc.) and recommended
-    (`відміна`, `чергування`, `немовля`) vocabulary is used naturally in the text.
+  score: 8
+  evidence: All required plan words appear in prose, but recommended vocabulary `відміна`,
+    `чергування`, and `одержувач` is missing.
 - dimension: 5
   name: Exercise quality
-  score: 8
-  evidence: The `group-sort` exercise tests feminine and neuter nouns but is placed
-    *before* those topics are taught, making it impossible for the learner to complete
-    based on the text read so far.
+  score: 9
+  evidence: All 5 planned exercise types are represented by markers and placed after
+    the relevant sections; no clustering problem.
 - dimension: 6
   name: Engagement & tone
-  score: 9
-  evidence: The tone is encouraging, but there is some generic enthusiasm ("Ukrainian
-    masculine nouns are incredibly rich in the Dative case because they offer choices")
-    that adds words without much substance.
+  score: 5
+  evidence: 'Repeated filler/generic enthusiasm: `Mastering them is a key step in
+    speaking beautiful, authentic Ukrainian.` and `a fundamental, natural phonological
+    law... beautifully.`'
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: Clean markdown, word count of 2133 exceeds the 2000 target, and all H2
-    headings are present.
+  evidence: All four H2 sections are present and ordered correctly; pipeline word
+    count is 2826, so the module is safely above target.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Uses authentic Ukrainian names and contexts (e.g., Lviv, thanking a neighbor)
-    and properly explains the nuances of respect in the Dative case endings.
+  evidence: No Russian-centric framing; Ukrainian is presented on its own terms with
+    locally appropriate examples.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: Dialogues are natural, especially the post office conversation, which
-    perfectly contextualizes the grammar in a real-world scenario.
+  score: 9
+  evidence: 'The post-office dialogue uses named speakers and directly matches the
+    plan’s situation: `Студентові Петренку — підручник. Сестрі Олені — листівка. А
+    дитині — іграшка.`'
 findings: []

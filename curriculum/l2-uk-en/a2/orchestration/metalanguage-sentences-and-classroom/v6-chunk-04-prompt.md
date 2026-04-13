@@ -30,7 +30,7 @@ Grand total: ~2000 words
 <previous_context>
 [...previous sections truncated...]
 
-деталей. (Such tasks wonderfully train your attention to details.) Ви вчитеся бачити текст як справжній редактор. (You learn to see the text like a real editor.) На уроках ми не тільки читаємо, але й багато аналізуємо. (In lessons we not only read, but also analyze a lot.) Для цього існують серйозні аналітичні дієслова. (For this there exist serious analytical verbs.) Найголовніше слово в українській граматиці — це **визначте** (determine). (The most important word in Ukrainian grammar is determine.) Кожна друга вправа просить вас: визначте відмінок. (Every second exercise asks you: determine the case.) Також вчитель може попросити: **порівняйте** (compare) ці два речення. (Also the teacher can ask: compare these two sentences.) Ви дивитеся на структуру і шукаєте різницю. (You look at the structure and look for the difference.) Якщо речення не закінчене, інструкція каже: **доповніть** (complete). (If the sentence is not finished, the instruction says: complete.) Це означає, що ви повинні додати свої власні слова. (This means that you must add your own words.) Наприкінці вправи вчитель завжди ставить запитання. (At the end of the exercise the teacher always asks a question.) Тоді він використовує фразу: **дайте відповідь** (give an answer). (Then he uses the phrase: give an answer.) Ця команда вимагає вашої активної реакції на матеріал. (This command requires your active reaction to the material.) Для успішного навчання вам потрібна спеціальна лексика. (For successful learning you need special vocabulary.) Ми використовуємо ці слова щодня в аудиторії та онлайн. (We use these words every day in the classroom and online.) Ваш головний інструмент — це **підручник** (textbook). (Your main tool is the textbook.) У ньому є кожна **сторінка** (page), яку ви відкриваєте на уроці. (In it is every page that you open in the lesson.) На сторінках розташована кожна практична **вправа** (exercise). (On the pages is located every practical exercise.) Вчитель може дати вам складне домашнє **завдання** (task). (The teacher can give you a complex homework task.) А якщо ви працюєте в інтернеті, вам надсилають **посилання** (link). (And if you work on the internet, they send you a link.) Ви натискаєте на посилання і бачите нову тему. (You click on the link and see a new topic.) Знати ці слова дуже корисно для спілкування. (Knowing these words is very useful for communication.) > — **Олена:** Максиме, ти розумієш цю вправу? *(Maksym, do you understand this exercise?)* > — **Максим:** Так, дивись сюди. Прочитай завдання. *(Yes, look here. Read the task.)* > — **Олена:** «Вставте пропущені букви». А що далі? *("Insert the missing letters". And what next?)* > — **Максим:** Тут треба виділити закінчення у кожному слові. *(Here it is necessary to highlight the ending in every word.)* > — **Олена:** Добре, я вже все написала. *(Good, I already wrote everything.)* > — **Максим:** Чудово. Порівняймо наші відповіді! *(Excellent. Let's compare our answers!)* > — **Олена:** У мене в першому реченні закінчення «-у». *(I have the ending "-u" in the first sentence.)* > — **Максим:** Правильно, у мене теж так. *(Correct, I also have it like that.)* <!-- INJECT_ACTIVITY: quiz-classroom-instructions -->
+an **обставина** (adverbial modifier). Knowing these formulas allows you to focus on the problem itself. У підручнику граматики ви бачите типові завдання. Дуже часто автори просять: «**Вставте** (insert — imperative) пропущені букви». Якщо ви аналізуєте речення, інструкція звучить так: «**Підкресліть** (underline — imperative) головні члени». Іноді текст має спеціальні дефекти. Тоді вам потрібно виконати іншу дію: «Знайдіть помилку». Ці стандартні фрази роблять ваше навчання логічним. :::note **Quick tip** The verb **підкресліть** literally means "draw a line under". In Ukrainian schools, students traditionally underline the **підмет** (subject) with one line and the **присудок** (predicate) with two lines. ::: As you learn more complex structures, the instructions demand deeper analysis. You will be asked to identify specific categories and relationships between words. These analytical verbs form the core of intermediate grammar drills. Найчастіший наказ на уроках — це слово «**визначте**» (determine — imperative). Вчитель може сказати: «Визначте відмінок іменника». Після цього підручник дає таку інструкцію: «Порівняйте ці два речення». Якщо речення неповне, ви бачите прохання: «Доповніть цей діалог». А коли викладач ставить питання, ви маєте відреагувати: «Дайте відповідь». > *The most frequent command in lessons is the word "determine" (identify). The teacher might say: "Determine the case of the noun". After this, the textbook gives the following instruction: "Compare these two sentences". If a sentence is incomplete, you see the request: "Complete this dialogue". And when the instructor asks a question, you must react: "Give an answer".* Beyond the action verbs, you must also be familiar with your study materials. Knowing the terminology for your learning tools helps you navigate smoothly. A physical course relies heavily on your **підручник** (textbook). Вчитель завжди називає цифру на початку уроку. Він каже: «Відкрийте свій підручник, це двадцята **сторінка** (page)». На цій сторінці зазвичай знаходиться ваша нова граматична **вправа** (exercise). Ви уважно читаєте інструкцію і починаєте працювати. If your class incorporates digital elements, the teacher will direct you to online resources to complete a specific **завдання** (task) or click a shared **посилання** (link). Якщо ви працюєте онлайн, викладач надсилає вам домашнє завдання у загальний чат. Він також може сказати: «Ось нове посилання на онлайн-тест, перейдіть за ним». > — **Марко:** Ти вже розумієш, що нам потрібно тут зробити? *(Do you already understand what we need to do here?)* > — **Олена:** Так, спочатку прочитай завдання. *(Yes, first read the task.)* > — **Марко:** Добре. Тут написано: «визначте будову слова». *(Okay. It says here: "determine the word structure".)* > — **Олена:** Точно. Тут треба виділити префікс, корінь, суфікс і закінчення. *(Exactly. Here we need to highlight the prefix, the root, the suffix, and the ending.)* > — **Марко:** Я думаю, що це слово не має префікса. *(I think this word doesn't have a prefix.)* > — **Олена:** Можливо. Порівняймо наші відповіді з правилом. *(Maybe. Let's compare our answers with the rule.)* > — **Марко:** Це гарна ідея, подивімося на п'яту сторінку. *(That's a good idea, let's look at page five.)* <!-- INJECT_ACTIVITY: quiz, Read a classroom instruction in Ukrainian and identify the correct action to take -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -525,7 +525,74 @@ Understanding the sentence is the central goal of syntax. It builds directly upo
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 6: A2 finale (A2 M51-M69)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 40%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 40% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 70-90% Ukrainian.
 LANGUAGE ROLES:
@@ -544,18 +611,65 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (4/4).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] речення (sentence)
+- [ ] підмет (subject)
+- [ ] присудок (predicate)
+- [ ] додаток (object)
+- [ ] означення (attribute)
+- [ ] обставина (adverbial modifier)
+- [ ] корінь (root)
+- [ ] префікс (prefix)
+- [ ] суфікс (suffix)
+- [ ] закінчення (ending)
+- [ ] прочитайте (read — imperative)
+- [ ] запишіть (write down — imperative)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Усе разом: аналізуємо текст (~400 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

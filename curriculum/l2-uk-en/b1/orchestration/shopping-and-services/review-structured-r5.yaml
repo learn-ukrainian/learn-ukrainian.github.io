@@ -1,0 +1,54 @@
+round: 5
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 6
+  evidence: All planned H2 sections are present, but the comparative-grammar section
+    says `одразу два рівноцінні варіанти`, while the plan/self-check require `за/від/ніж`;
+    the planned full store transaction dialo
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: 'No clear Russianisms/Surzhyk found, but two critical corruptions remain:
+    `граматикаقيقي` and `обвно`.'
+- dimension: 3
+  name: Pedagogical quality
+  score: 6
+  evidence: The module gives rich contexts and examples, but it under-teaches a key
+    planned grammar point by omitting the `від` comparison pattern and never models
+    the full enter-to-exit shop dialogue promised in
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 'Required plan vocabulary is well represented in prose: `знижка`, `готівка`,
+    `картка`, `чек`, `повернення`, `гарантія`, `розмір`, `примірочна`, `посилка`,
+    `обмін валют`, `курс`, `ремонт`, `бракований`.'
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: Marker inventory is complete and well placed after relevant teaching sections;
+    no marker is prematurely placed.
+- dimension: 6
+  name: Engagement & tone
+  score: 7
+  evidence: The module has concrete Ukrainian detail (`Бессарабський ринок`, `Привоз`,
+    `Нова Пошта`, `Укрпошта`) and teacher warmth without gamified fluff.
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: All H2 headings from the plan are present and ordered correctly, and the
+    deterministic word count is above target; the main structural blemish is the two
+    visible text-corruption artifacts in running p
+- dimension: 8
+  name: Cultural accuracy
+  score: 5
+  evidence: 'Some claims overreach: `Кожен українець має ... «Дія»`, the supermarket
+    checkout models `Решти не треба` as normal, and the return section states a passport
+    is obligatorily required.'
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 7
+  evidence: Dialogues have named speakers and multiple turns, but `У магазині` still
+    lacks the single full shopping dialogue from greeting to payment that the plan
+    explicitly asked for.
+findings: []

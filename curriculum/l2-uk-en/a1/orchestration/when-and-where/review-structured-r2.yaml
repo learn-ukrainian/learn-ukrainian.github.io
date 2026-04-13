@@ -1,0 +1,55 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 7
+  evidence: All outline points are covered, and `State Standard 2024 §4.3.2` plus
+    the Grade 5 textbook are cited in `Складне речення`, but the planned 300-word
+    sections run to 437, 433, 400, and 323 words.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: The module says `**що** and **де** as conjunctions` and later `new subordinating
+    conjunctions`; in examples like `Я знаю, де...`, `де` is being used as a `сполучне
+    слово`. `Де побачиш парк, зупинись.`
+- dimension: 3
+  name: Pedagogical quality
+  score: 6
+  evidence: PPP is visible, but large English meta-explanation blocks dilute the teaching,
+    e.g. `Without these connecting words, the conversation would feel completely disconnected
+    and choppy` and `The grammatica
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: All required words appear naturally (`що`, `де`, `коли`, `знати`, `думати`,
+    `казати`), and recommended items like `сказати`, `бачити`, `чути`, `розуміти`,
+    `речення`, `головне` also appear.
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: All four planned activity types have corresponding markers, and each marker
+    comes after the relevant teaching section; only marker logic is visible here,
+    not generated item content.
+- dimension: 6
+  name: Engagement & tone
+  score: 7
+  evidence: The teacher voice is calm, but filler like `crucial links`, `completely
+    disconnected and choppy`, `incredibly logical and consistent`, and `excellent
+    examples` pads the module without adding much inst
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All planned H2 sections are present and in order, markers are clean, and
+    the pipeline word count is 1718, which is above target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: No Russia-centered framing or cultural misstatements appear; the module
+    stays in everyday Ukrainian contexts.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 7
+  evidence: The first dialogue is functional, but the directions example `Де побачиш
+    парк, зупинись.` is stiff, and several lead-ins narrate the dialogue instead of
+    letting the dialogue do the teaching.
+findings: []

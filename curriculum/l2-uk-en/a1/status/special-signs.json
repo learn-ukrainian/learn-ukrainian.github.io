@@ -2,13 +2,13 @@
   "module": "special-signs",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-11T00:50:23.869794Z",
+  "last_audit": "2026-04-13T10:56:07.925364Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-11T00:50:23.273518Z",
+    "md": "2026-04-13T10:55:56.984739Z",
     "meta": null,
-    "activities": "2026-04-10T23:57:18.190754Z",
-    "vocabulary": "2026-04-09T00:33:50.892292Z",
+    "activities": "2026-04-12T19:34:08.827822Z",
+    "vocabulary": "2026-04-12T19:34:58.907094Z",
     "research": null,
     "plan": "2026-03-31T16:04:44.851608Z"
   },
@@ -21,17 +21,26 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2161/1200 (raw: 2219)"
+      "message": "1737/1200 (raw: 1795)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "7/0"
+      "message": "8/0"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "50/1"
+      "message": "54/1"
+    },
+    "vocab_progression": {
+      "status": "warn",
+      "violations": 0,
+      "message": "\u0394 -51 | premature=9 | gaps=12 | well-paced=3",
+      "delta": -51,
+      "premature": 9,
+      "gaps": 12,
+      "well_paced": 3
     },
     "naturalness": {
       "status": "info",

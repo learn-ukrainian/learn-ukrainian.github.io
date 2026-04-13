@@ -1,22 +1,23 @@
-# Section-by-Section Generation — Section 1/5
+# Section-by-Section Generation — Section 1/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 56: Своє та себе (A2, A2.8 [Refinement and Graduation])
-**Section to write:** Свій: чий саме? (Свій: Whose Exactly?) (~650 words total)
-**Word target for this section:** 650 words (aim for 715 to account for undershoot)
+**Section to write:** Свій: чий саме? (Свій: Whose Exactly?) (~660 words)
+**Word target for this section:** 660 words (aim for 726 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Свій: чий саме? (Свій: Whose Exactly?) (~650 words total)
-- P1 (~120 words): [Introduction to the concept of possession in Ukrainian. Contrast English ambiguity where "he is reading his book" could mean his own or someone else's, with the Ukrainian requirement for precision using `свій`. Introduce the primary rule: `свій` reflects the subject of the sentence.]
-- P2 (~130 words): [Detailed explanation of the 3rd person distinction. Use the "wife" example from the wiki: `Він любить свою дружину` (his own) vs. `Він любить його дружину` (another man's wife). Explain how `його/її/їхній` always points to someone *outside* the subject role in that clause.]
-- P3 (~130 words): [Usage in 1st and 2nd person. Explain that for `я`, `ти`, `ми`, `ви`, both the personal possessive (`мій`, `твій`, etc.) and `свій` are grammatically correct, but `свій` is often more natural for expressing "my own." Examples: `Я люблю свою маму` vs. `Я люблю мою маму`.]
-- P4 (~150 words): [Grammatical agreement. Explain that `свій` behaves like an adjective, matching the gender, number, and case of the *object possessed*, not the possessor. Contrast: `Він бачить свою сестру` (feminine object) vs. `Вона бачить свого брата` (masculine object).]
-- P5 (~120 words): [Short dialogue between a Brother, Sister, and Mom regarding misplaced items. Examples: `Це мій светр! Ні, це свій — я його купив собі! Вона взяла свою сумку, а не твою.` Mom uses `свій` to settle the ownership based on who the subject of the action is.]
-- <!-- INJECT_ACTIVITY: quiz-possessive-choice --> [Quiz, Choose свій or мій/його/її based on sentence context, 8 items]
+## Свій: чий саме? (Свій: Whose Exactly?) (~660 words)
+- P1 (~100 words): Introduce the concept of possessive pronouns and contrast English "my/his/her" with the unique Ukrainian pronoun "свій". Provide the first key example to set the stage: "Я читаю свою книгу." (I am reading my own book).
+- P2 (~120 words): Explain the core grammatical rule of "свій": it replaces мій/твій/його/її/їхній ONLY when the possessor is the subject of the sentence performing the action. Clearly contrast two sentences: "Він читає свою книгу" (his own book) versus "Він читає його книгу" (someone else's book).
+- P3 (~120 words): Explain the critical importance of "свій" in the 3rd person to avoid ambiguity. Point out that while English uses "his" for both situations, Ukrainian demands precision. Use the classic, high-stakes example: "Він любить свою дружину" (his own wife) vs. "Він любить його дружину" (another man's wife).
+- P4 (~120 words): Discuss the optional versus mandatory use of "свій". Clarify that in 1st and 2nd person (я, ти, ми, ви), using "мій" or "твій" is acceptable ("Я люблю мою маму" or "Я люблю свою маму" are both fine, though "свою" is more idiomatic). In the 3rd person (він, вона, вони), "свій" is strictly mandatory to mean "own".
+- P5 (~100 words): Set up the dialogue scenario: A family argument about whose things are whose, demonstrating the practical difference between мій/твій and свій in everyday life.
+- P6 (~100 words): Dialogue between Брат, Сестра, and Мама. Брат: "Це мій светр(m)!" Сестра: "Ні, він мій — я купив його собі сам!" Мама (розводить руками): "Вона взяла свою сумку(f), а не твою. А він дивиться на себе у дзеркало(n)."
+- <!-- INJECT_ACTIVITY: quiz-sviy-vs-possessive --> [quiz, Choose свій or мій/його/її based on sentence context, 8 items]
 
 ---
 ## Full Plan (for reference)
@@ -44,8 +45,8 @@ objectives:
     speech.
 dialogue_situations:
   - setting: 'Family argument about whose things are whose: Це мій светр (m)! Ні,
-      це свій — я його купив собі! Вона взяла свою сумку (f), а не твою. Він дивиться
-      на себе у дзеркало (n).'
+      він мій — я купив його собі сам! Вона взяла свою сумку (f), а не твою. Він
+      дивиться на себе у дзеркало (n).'
     speakers:
       - Брат
       - Сестра
@@ -502,14 +503,100 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
 
-TARGET: 70-90% Ukrainian.
+**You are in PHASE 6: A2 finale (A2 M51-M69)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 40%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 40% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
+
+TARGET: 70-90% Ukrainian. THIS IS A HARD GATE — the audit REJECTS modules outside this range.
+
 LANGUAGE ROLES:
-- PRIMARY: Ukrainian for everything.
-- ENGLISH: Only in vocabulary tables and one-line grammar notes where absolutely necessary.
-- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English.
-A2 register. Concrete everyday vocabulary. No literary language, no metaphors. Near-full Ukrainian immersion. Ukrainian sentences max 15 words. Max 2 clauses. All cases allowed. Simple subordinate clauses only. Full aspect pairs. No participles.
+- PRIMARY: Ukrainian for narrative, dialogues, examples, section intros, cultural notes, Reading Practice blocks, learning callouts.
+- METALANGUAGE: For abstract grammar terms, you may provide ONE parenthetical English translation on FIRST use only, e.g. `**доконаний вид** (perfective aspect)`. Subsequent uses must be Ukrainian only.
+- VOCABULARY TABLE: English glosses live here, not in prose.
+- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English. Never mix mid-sentence.
+
+⚠️ HARD STRUCTURAL RULES — READ THIS TWICE:
+- FORBIDDEN: long English narrative paragraphs explaining grammar. If a concept needs more than ONE sentence of English scaffolding, it goes in a `:::info` or `:::tip` callout, NOT in the main prose.
+- FORBIDDEN: mirroring a Ukrainian paragraph with an English translation paragraph. Write ONE paragraph in Ukrainian, move on.
+- FORBIDDEN: `> *English translation*` blockquotes after Ukrainian dialogues. They were required at A1 but they cap immersion below 50% — at A2-late they MUST be removed.
+
+ESCAPE HATCH (the 'Dual Ladder'):
+For genuinely abstract grammar concepts, you may use ONE `:::info` or `:::tip` callout written in English per section to clarify the concept. Because callouts are stripped from the immersion metric, this serves as on-demand scaffolding for struggling learners without penalising the immersion score. Do NOT abuse this — at most one English callout per major section.
+
+A2 register. Concrete everyday vocabulary. No literary language, no metaphors. Ukrainian sentences max 15 words. Max 2 clauses. All cases allowed. Simple subordinate clauses only (який/що/коли). Full aspect pairs. No participles.
+
+CHECKLIST (re-read before writing each section):
+- [ ] Every narrative paragraph in Ukrainian?
+- [ ] Zero `> *English translation*` blockquotes after dialogues?
+- [ ] At most ONE English `:::info` callout per major section?
+- [ ] Metalanguage terms parenthetically translated on first use only (max 2 per section)?
+- [ ] Reading Practice / Читаємо українською block in EVERY major section?
+
 
 GRAMMAR RULES:
 - Max 15 words per Ukrainian sentence
@@ -521,18 +608,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] свій (one's own)
+- [ ] себе (oneself, accusative/genitive)
+- [ ] собі (oneself, dative)
+- [ ] собою (oneself, instrumental)
+- [ ] почувати себе (to feel)
+- [ ] вести себе (to behave)
+- [ ] горджуся (I am proud)
+- [ ] уявити (to imagine)
+- [ ] дзеркало (mirror)
+- [ ] парасолька (umbrella)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Свій: чий саме? (Свій: Whose Exactly?) (~660 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

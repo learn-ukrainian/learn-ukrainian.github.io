@@ -1,27 +1,70 @@
-## Читання новин
+## Читання новин (~880 words total)
 
-Кожний якісний медіатекст має чітку, універсальну структуру, яка допомагає сучасному читачу максимально швидко знайти потрібну йому інформацію. Починається все із **заголовка** *(headline)*. Це коротка, влучна та інформативна фраза. Вона часто пишеться без дієслів, щоб миттєво привернути увагу аудиторії. Далі йде **лід** *(lead)* — перший і, мабуть, найважливіший абзац будь-якої новини. Хороший лід завжди дає вичерпні відповіді на п'ять базових питань журналістики: «Хто? Що зробив? Де? Коли? Чому?». Після ліду розташована розлога **основна частина** *(body)*, де автори додають дрібні деталі, експертні коментарі та історичну передісторію. Розглянемо простий приклад короткої місцевої новини: «Сьогодні вранці школярі Києва посадили сто дерев у центральному парку, щоб покращити екологію міста». Цей лід чудово і чітко пояснює всі елементи: хто (школярі), що (посадили дерева), де (у парку), коли (сьогодні вранці) та чому (для екології).
+To read a **новина** (news item) effectively, you must understand its standard structure. Every professional article begins with a **заголовок** (headline), a short phrase designed to grab attention. Following the headline is the «лід» (lead), the critical opening paragraph that answers five fundamental questions: «хто?», «що?», «де?», «коли?», and «чому?». After the lead comes the «основна частина» (body), providing background details and quotes. Recognizing this structure allows you to extract essential information quickly.
 
-Щоб впевнено читати щоденні новини, необхідно добре знати специфічну термінологію цієї сфери. Будь-яка важлива чи цікава ситуація в інформаційному просторі — це **подія** *(event)*. Коли журналіст розказує про неї своїй аудиторії, він створює інформаційне **повідомлення** *(report)*. Офіційні особи, такі як міністри чи мери, часто роблять публічну **заяву** *(statement)* для представників преси. Кожна надійна новина обов'язково має спиратися на перевірене **джерело** *(source)* інформації. В українському публіцистичному стилі вкрай важливо розрізняти нейтральні розмовні вислови та формальні офіційні звороти. Наприклад, звичайна нейтральна фраза «як кажуть люди» в офіційному тексті звучить серйозніше: «**згідно з даними**» *(according to the data)*. Якщо репортер не може або не хоче називати конкретні імена, він використовує популярний журналістський штамп «**як повідомляють джерела**» *(as sources report)*. Це додає тексту солідності, але також вимагає від читача максимальної обережності та розвиненого критичного мислення.
+Короткий новинний текст у сучасній українській журналістиці має чітку структуру. Заголовок: Відкриття парку в центрі столиці. Лід: Учора місцева громада урочисто відкрила великий парк відпочинку для мешканців району. Основна частина: На заході були присутні представники міської влади та активні жителі. Будівельні роботи тривали майже рік. Тепер цей простір стане головним місцем для проведення культурних подій.
 
-Дієслова, які спеціально використовують журналісти у своїх текстах, чудово допомагають зрозуміти їхнє справжнє ставлення до конкретної події. Дієслово «**повідомити**» *(to report)* є абсолютно нейтральним та об'єктивним. Його щоденно використовують для сухої передачі фактів без жодних емоцій. Слово «**заявити**» *(to state)* звучить дуже офіційно і вагомо. Його зазвичай вживають, коли прямо цитують відомих політиків або керівників: «Міністр оборони заявив про нові масштабні реформи». Натомість дієслово «**стверджувати**» *(to claim)* має зовсім інший, прихований відтінок. Воно означає, що певна людина наполягає на чомусь, але журналіст або все суспільство може мати обґрунтовані сумніви щодо правдивості цих слів. Слово «**наголосити**» *(to emphasize)* використовують, щоб яскраво виділити найважливішу деталь у довгій промові. Наприклад, фраза «Він заявив, що проєкт готовий» звучить як незаперечний офіційний факт. Тоді як фраза «Він стверджував, що проєкт готовий» одразу викликає легку недовіру та скепсис у досвідченого читача.
+> *A short news text in modern Ukrainian journalism has a clear structure. Headline: Opening of a park in the center of the capital. Lead: Yesterday, the local community ceremonially opened a large recreation park for the residents of the district. Body: Representatives of the city authorities and active residents were present at the event. The construction work lasted almost a year. Now this space will become the main venue for hosting cultural events.*
 
-Найважливіша і найкорисніша навичка сучасної медіаграмотності — це вміння швидко розрізняти **факт** *(fact)* та **думку** *(opinion)*. Факт — це об'єктивна і точна інформація, яку будь-хто завжди може перевірити на практиці. Наприклад, речення «Температура повітря сьогодні становить рівно 15 градусів» — це незаперечний факт, адже ми можемо просто подивитися на термометр. Натомість думка — це особиста, суб'єктивна оцінка або емоційне ставлення конкретної людини до цього факту. Фраза «Це надзвичайно тепла погода для холодного березня» є лише думкою журналіста або запрошеного експерта. Щоб допомогти своїм читачам, автори текстів часто використовують спеціальні граматичні маркери думки — вставні слова. Найпопулярніші з них в українській мові: «**на мою думку**» *(in my opinion)*, «**мабуть**» *(probably)*, та «**імовірно**» *(likely)*. Коли ви бачите ці характерні слова в статті, завжди пам'ятайте: перед вами зараз не стовідсотковий факт, а чиясь приватна інтерпретація поточних подій.
+When navigating the Ukrainian media landscape, you will encounter vocabulary used to present information objectively. A media text always revolves around a specific **подія** (event). To describe it accurately, journalists publish a **повідомлення** (report) or quote a direct statement from an official. 
 
-Офіційні ділові новини та гучні заголовки газет дуже часто використовують специфічну і впізнавану граматику. Надзвичайно популярними тут є безособові форми на -но, -то та різноманітні пасивні дієприкметники. Наприклад, замість активного речення «Депутати парламенту вчора прийняли новий закон», журналісти стисло напишуть: «Новий закон **прийнято**» *(is passed)*. Замість фрази «Міська мерія нарешті реалізувала цей складний проєкт», ви швидше прочитаєте: «Складний проєкт успішно **реалізовано**» *(is implemented)*. Або ж: «Сучасний центр **відкрито**» *(is opened)*. Чому цей сухий безособовий стиль такий популярний і поширений у публіцистичному стилі? Головна причина полягає в тому, що він дозволяє журналісту максимально сфокусувати увагу читача саме на кінцевому результаті важливої дії, а не на тому, хто конкретно її виконав. Це робить медіатекст більш коротким, об'єктивним, стриманим та офіційним.
+An essential element of journalistic integrity is citing the **джерело** (source) of the information. You will frequently see phrases that attribute information to others. For example, «згідно з даними» (according to the data) is used for statistical information, contrasting with the more ambiguous «як повідомляють джерела» (as sources report), which is used when the exact origin remains unnamed.
 
-Спробуймо разом прочитати і розібрати типову адаптовану українську новину для нашого рівня. «Сьогодні рано вранці в центрі Києва відбулася велика і дуже важлива **прес-конференція** *(press conference)*. Наш спеціальний **кореспондент** *(correspondent)* з місця подій повідомив, що в столиці вже незабаром відкриють новий інноваційний культурний центр для прогресивної молоді. Згідно з останніми офіційними даними уряду, масштабне будівництво повністю завершиться вже наступного року. Офіційні представники мерії вирішили максимально швидко **спростувати** *(to deny)* поширені в інтернеті чутки про те, що вхід у центр буде платним. Вони окремо наголосили: всі освітні програми, лекції та творчі гуртки залишаться абсолютно безкоштовними для місцевих школярів та усіх студентів. Очікується, що цей новий простір швидко стане головним осередком розвитку сучасного українського візуального мистецтва». Читаючи такі насичені тексти, завжди звертайте увагу на їхню логічну структуру. Заголовок для цієї новини міг би звучати дуже лаконічно: «Новий культурний простір у Києві: повністю безкоштовна освіта для талановитої молоді».
+:::tip
+**Did you know?**
+Journalists use specific introductory phrases to distance themselves from the information they present. Phrases like «за словами експертів» (according to experts) are standard tools in the publicistic register to attribute claims objectively without the author taking responsibility for their absolute truth.
+:::
 
-Сьогодні сучасні українці щоденно споживають гарячі новини не лише з традиційних газет чи новинних сайтів, але й безпосередньо із соціальних мереж. Величезну популярність у країні зараз мають такі відомі платформи, як Telegram та Twitter. Там мільйони людей надзвичайно швидко читають короткі новини через свій улюблений **канал** *(channel)* або через спеціальний автоматизований **чат-бот** *(chatbot)*. Це справді дуже зручно, адже важлива інформація поширюється буквально миттєво. Однак така шалена швидкість завжди має свою високу ціну: у соціальних мережах значно частіше зустрічається небезпечний **фейк** *(fake)*. Це повністю неправдива або викривлена інформація, яка була спеціально створена для хитрої маніпуляції емоціями довірливих читачів. Тому, швидко гортаючи стрічку новин у популярних Telegram-каналах, завжди критично запитуйте себе: «Яке саме першоджерело цієї сумнівної інформації?». Традиційні офіційні ЗМІ обов'язково витрачають дорогоцінний час на ретельну перевірку фактів. Натомість сумнівні анонімні канали часто безвідповідально жертвують надійністю заради швидкості та отримання яскравих емоційних реакцій від своїх підписників.
+The choice of reporting verb in an article carries significant weight and reveals the journalist's subtle attitude. The most neutral verb is **повідомити** (to report), which simply states that information was transferred. When an official makes a public declaration, journalists prefer to use **заявити** (to state). 
 
-Давайте наостанок детально проаналізуємо класичний лід із реального тексту про важливе урядове рішення. Ось текст нашої новини: «Вчора пізно ввечері український уряд виділив кошти на відновлення лікарень у східних регіонах країни, щоб забезпечити медичну допомогу постраждалим громадянам». Тепер проведемо уважний аналіз структури цього інформаційного повідомлення.
-Хто? — український уряд.
-Що зробив? — виділив кошти.
-Коли? — вчора пізно ввечері.
-Де? — у східних регіонах країни.
-Чому? — щоб забезпечити медичну допомогу постраждалим громадянам.
-Цей невеликий абзац є просто ідеальним прикладом правильного ліду, адже він одразу і дуже зрозуміло дає читачеві всю ключову інформацію в одному короткому, але змістовному реченні. Коли ви почнете писати власні українські новини або пости, завжди намагайтеся суворо дотримуватися цього золотого правила світової журналістики.
+However, if a text says **стверджувати** (to claim), it signals that the statement might be questionable or unverified. Conversely, if a speaker wants to draw attention to a crucial point, the text will use the verb «наголосити» (to emphasize). Understanding these nuances is critical for recognizing how the media frames a narrative.
 
-<!-- INJECT_ACTIVITY: essay-response, "Напишіть 5 речень, використовуючи нову лексику з розділу «Читання новин» (подія, джерело, повідомити)." -->
-<!-- INJECT_ACTIVITY: error-correction, "Знайдіть і виправте помилки у реченнях на тему читання новин (стилістичні та граматичні помилки)." -->
-<!-- INJECT_ACTIVITY: match-up, "З'єднайте терміни з розділу «Читання новин» з їхніми визначеннями." -->
+A cornerstone of critical reading is the ability to distinguish a verifiable **факт** (fact) from a subjective **думка** (opinion). A fact presents objective reality. 
+
+**Температура повітря становить 15 градусів.** — *The air temperature is 15 degrees.*
+
+An opinion, on the other hand, provides an assessment or evaluation of that reality.
+
+**Це надзвичайно тепла погода для березня.** — *This is exceptionally warm weather for March.*
+
+To quickly identify opinions in a Ukrainian text, look for specific introductory words, known as «вставні слова». Markers such as «на мою думку» (in my opinion), «мабуть» (probably), and «імовірно» (likely) clearly signal that the author is offering their personal interpretation.
+
+To maintain objectivity and focus on the results of actions rather than the people performing them, news writing relies heavily on passive constructions. The **публіцистичний стиль** (publicistic style) frequently employs passive participles ending in -но and -то. Compare a standard active sentence with its journalistic passive equivalent:
+
+**Парламент прийняв новий закон.** — *The parliament passed a new law.*
+**Новий закон прийнято.** — *A new law has been passed.*
+
+This grammatical choice shifts the reader's attention directly to the outcome. Forms like «проєкт реалізовано» (the project has been implemented) allow writers to deliver concise, impactful updates that sound highly professional.
+
+:::info
+**Grammar box**
+Passive participles ending in **-но** and **-то** act as impersonal predicates. They do not change for gender or number and are perfect for focusing entirely on the outcome of an event. Example: Будівлю зруйновано. (The building has been destroyed.)
+:::
+
+Учора в Києві відбулася велика прес-конференція, присвячена відкриттю культурного центру. Наш спеціальний кореспондент відвідав цей захід і поспілкувався з організаторами. Ініціатори проєкту змогли спростувати чутки про нестачу фінансування. Вони підтвердили, що кожен волонтер зробив величезний внесок у будівництво. Цей простір стане важливим місцем для розвитку сучасного мистецтва. За словами експертів, такі ініціативи значно покращують життя міста.
+
+> *Yesterday a large press conference took place in Kyiv, dedicated to the opening of a cultural center. Our special correspondent attended this event and spoke with the organizers. The initiators of the project were able to deny the rumors about a lack of funding. They confirmed that every volunteer made a huge contribution to the construction. This space will become an important venue for the development of modern art. According to experts, such initiatives significantly improve the life of the city.*
+
+Reading texts like this helps you internalize how a **кореспондент** (correspondent) or a dedicated **волонтер** (volunteer) might describe real-world events. Notice how the text balances factual reporting with attributed opinions from experts, providing a well-rounded view of the situation while employing standard media terminology.
+
+Today, traditional **засоби масової інформації** (mass media) are heavily supplemented by digital platforms. This shift is fundamentally changing how a modern **громадянин** (citizen) consumes daily updates. In modern Ukrainian **суспільство** (society), platforms like Telegram and Twitter have become the primary sources for immediate alerts. 
+
+Users subscribe to a specific «канал» (channel) to receive notifications, or interact with a «чат-бот» (chatbot) to report incidents. While this ecosystem allows information to travel at unprecedented speeds, it presents significant challenges regarding reliability. The rapid spread of a «фейк» (fake) can cause unnecessary panic. Therefore, reading news on social media demands critical thinking, requiring users to cross-reference rapid online updates with professional journalistic sources.
+
+To solidify your skills, let us perform a model analysis of a news lead to extract its core elements and check for potential **маніпулювання** (manipulation). Consider this short paragraph: «Сьогодні вранці уряд несподівано ухвалив рішення про підвищення податків для малого бізнесу, щоб стабілізувати економіку». We must dissect this sentence by asking our fundamental questions.
+
+**Хто?** — *уряд* (the government).
+**Що?** — *ухвалив рішення про підвищення податків* (made a decision to raise taxes).
+**Коли?** — *сьогодні вранці* (this morning).
+**Чому?** — *щоб стабілізувати економіку* (to stabilize the economy).
+
+Furthermore, the word «несподівано» (unexpectedly) introduces a subtle emotional coloring, hinting that the journalist is trying to influence your perception rather than just stating the facts.
+
+:::note
+**Quick tip**
+Always ask «Чому?» (Why?) when reading a news lead. Understanding the motivation or the cause of an event is often the most crucial piece of the puzzle and helps you identify the author's underlying angle.
+:::
+
+<!-- INJECT_ACTIVITY: essay-news-vocab -->
+<!-- INJECT_ACTIVITY: error-correction-news-grammar -->
+<!-- INJECT_ACTIVITY: match-up-news-terms -->

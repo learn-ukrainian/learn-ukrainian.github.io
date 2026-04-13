@@ -1,247 +1,146 @@
 {
-  "total_items": 90,
-  "grounded_items": 52,
+  "total_items": 73,
+  "grounded_items": 51,
   "ungrounded": [
     {
-      "word": "бачимо",
-      "exercise_type": "fill-in",
-      "context": "Ми бачимо, _____ це кафе.",
+      "word": "живеш",
+      "exercise_type": "quiz",
+      "context": "Де ти живеш?",
       "role": "context"
     },
     {
-      "word": "знаходиться",
-      "exercise_type": "fill-in",
-      "context": "Він не знає, _____ знаходиться магазин.",
-      "role": "context"
-    },
-    {
-      "word": "працювати",
-      "exercise_type": "fill-in",
-      "context": "Вона розуміє, _____ треба працювати.",
+      "word": "таке",
+      "exercise_type": "quiz",
+      "context": "Що це таке?",
       "role": "context"
     },
     {
       "word": "оберіть",
       "exercise_type": "quiz",
-      "context": "Оберіть правильний варіант:",
+      "context": "Оберіть правильне речення",
       "role": "context"
     },
     {
-      "word": "правильний",
+      "word": "правильне",
       "exercise_type": "quiz",
-      "context": "Оберіть правильний варіант:",
+      "context": "Оберіть правильне речення",
       "role": "context"
     },
     {
-      "word": "варіант",
-      "exercise_type": "quiz",
-      "context": "Оберіть правильний варіант:",
+      "word": "питання",
+      "exercise_type": "group-sort",
+      "context": "Питання (Question)",
       "role": "context"
     },
     {
-      "word": "яка",
-      "exercise_type": "quiz",
-      "context": "Яка роль слова 'де' у реченні 'Де ти зараз живеш?'",
+      "word": "зв'язка",
+      "exercise_type": "group-sort",
+      "context": "Зв'язка (Conjunction)",
       "role": "context"
     },
     {
-      "word": "роль",
-      "exercise_type": "quiz",
-      "context": "Яка роль слова 'де' у реченні 'Де ти зараз живеш?'",
-      "role": "context"
-    },
-    {
-      "word": "слова",
-      "exercise_type": "quiz",
-      "context": "Яка роль слова 'де' у реченні 'Де ти зараз живеш?'",
-      "role": "context"
-    },
-    {
-      "word": "де'",
-      "exercise_type": "quiz",
-      "context": "Яка роль слова 'де' у реченні 'Де ти зараз живеш?'",
-      "role": "context"
-    },
-    {
-      "word": "реченні",
-      "exercise_type": "quiz",
-      "context": "Яка роль слова 'де' у реченні 'Де ти зараз живеш?'",
-      "role": "context"
-    },
-    {
-      "word": "що'",
-      "exercise_type": "quiz",
-      "context": "Яка роль слова 'що' у реченні 'Що це на столі?'",
-      "role": "context"
-    },
-    {
-      "word": "коли'",
-      "exercise_type": "quiz",
-      "context": "Яка роль слова 'коли' у реченні 'Коли ти прийдеш додому?'",
-      "role": "context"
-    },
-    {
-      "word": "чуємо",
-      "exercise_type": "match-up",
-      "context": "Ми чуємо, де",
+      "word": "закінчиш",
+      "exercise_type": "group-sort",
+      "context": "Скажи, коли закінчиш.",
       "role": "answer"
-    },
-    {
-      "word": "думає",
-      "exercise_type": "error-correction",
-      "context": "Він думає, де це правильно.",
-      "role": "context"
-    },
-    {
-      "word": "новий",
-      "exercise_type": "error-correction",
-      "context": "Ми бачимо, коли це новий парк.",
-      "role": "context"
-    },
-    {
-      "word": "розумію",
-      "exercise_type": "error-correction",
-      "context": "Я розумію, де треба йти працювати.",
-      "role": "context"
-    },
-    {
-      "word": "школі",
-      "exercise_type": "error-correction",
-      "context": "Я знаю, що мій брат. Він у школі.",
-      "role": "context"
-    },
-    {
-      "word": "має",
-      "exercise_type": "true-false",
-      "context": "Складне речення має головне слово і залежну частину.",
-      "role": "context"
-    },
-    {
-      "word": "слово",
-      "exercise_type": "true-false",
-      "context": "Складне речення має головне слово і залежну частину.",
-      "role": "context"
-    },
-    {
-      "word": "залежну",
-      "exercise_type": "true-false",
-      "context": "Складне речення має головне слово і залежну частину.",
-      "role": "context"
-    },
-    {
-      "word": "частину",
-      "exercise_type": "true-false",
-      "context": "Складне речення має головне слово і залежну частину.",
-      "role": "context"
     },
     {
       "word": "перед",
       "exercise_type": "true-false",
-      "context": "Перед словами 'що', 'де', 'коли' кома не потрібна.",
+      "context": "Перед словом «що» у складному реченні завжди потрібна кома.",
       "role": "context"
     },
     {
-      "word": "словами",
+      "word": "словом",
       "exercise_type": "true-false",
-      "context": "Перед словами 'що', 'де', 'коли' кома не потрібна.",
+      "context": "Перед словом «що» у складному реченні завжди потрібна кома.",
       "role": "context"
     },
     {
-      "word": "кома",
+      "word": "складному",
       "exercise_type": "true-false",
-      "context": "Перед словами 'що', 'де', 'коли' кома не потрібна.",
+      "context": "Перед словом «що» у складному реченні завжди потрібна кома.",
       "role": "context"
     },
     {
-      "word": "потрібна",
+      "word": "реченні",
       "exercise_type": "true-false",
-      "context": "Перед словами 'що', 'де', 'коли' кома не потрібна.",
-      "role": "context"
-    },
-    {
-      "word": "може",
-      "exercise_type": "true-false",
-      "context": "Слово 'що' може бути запитанням і з'єднанням.",
-      "role": "context"
-    },
-    {
-      "word": "бути",
-      "exercise_type": "true-false",
-      "context": "Слово 'що' може бути запитанням і з'єднанням.",
-      "role": "context"
-    },
-    {
-      "word": "запитанням",
-      "exercise_type": "true-false",
-      "context": "Слово 'що' може бути запитанням і з'єднанням.",
-      "role": "context"
-    },
-    {
-      "word": "з'єднанням",
-      "exercise_type": "true-false",
-      "context": "Слово 'що' може бути запитанням і з'єднанням.",
-      "role": "context"
-    },
-    {
-      "word": "англійській",
-      "exercise_type": "true-false",
-      "context": "В англійській мові завжди потрібна кома перед 'that', як і в",
-      "role": "context"
-    },
-    {
-      "word": "мові",
-      "exercise_type": "true-false",
-      "context": "В англійській мові завжди потрібна кома перед 'that', як і в",
+      "context": "Перед словом «що» у складному реченні завжди потрібна кома.",
       "role": "context"
     },
     {
       "word": "завжди",
       "exercise_type": "true-false",
-      "context": "В англійській мові завжди потрібна кома перед 'that', як і в",
+      "context": "Перед словом «що» у складному реченні завжди потрібна кома.",
       "role": "context"
     },
     {
-      "word": "як",
+      "word": "потрібна",
       "exercise_type": "true-false",
-      "context": "В англійській мові завжди потрібна кома перед 'that', як і в",
+      "context": "Перед словом «що» у складному реченні завжди потрібна кома.",
       "role": "context"
     },
     {
-      "word": "українській",
+      "word": "кома",
       "exercise_type": "true-false",
-      "context": "В англійській мові завжди потрібна кома перед 'that', як і в",
+      "context": "Перед словом «що» у складному реченні завжди потрібна кома.",
       "role": "context"
     },
     {
-      "word": "відпочиваю'",
+      "word": "слово",
       "exercise_type": "true-false",
-      "context": "Речення 'Коли я вдома, я відпочиваю' — це складне речення.",
+      "context": "Слово «де» може бути тільки питанням.",
       "role": "context"
     },
     {
-      "word": "ти'",
+      "word": "бути",
       "exercise_type": "true-false",
-      "context": "У реченні 'Я знаю, де ти' головне дієслово — 'де'.",
+      "context": "Слово «де» може бути тільки питанням.",
       "role": "context"
     },
     {
-      "word": "дієслово",
+      "word": "тільки",
       "exercise_type": "true-false",
-      "context": "У реченні 'Я знаю, де ти' головне дієслово — 'де'.",
+      "context": "Слово «де» може бути тільки питанням.",
       "role": "context"
+    },
+    {
+      "word": "питанням",
+      "exercise_type": "true-false",
+      "context": "Слово «де» може бути тільки питанням.",
+      "role": "context"
+    },
+    {
+      "word": "телефон",
+      "exercise_type": "true-false",
+      "context": "«Де мій телефон?» — це питання.",
+      "role": "context"
+    },
+    {
+      "word": "мене",
+      "exercise_type": "fill-in",
+      "context": "Скажи їй, коли ____ мене.",
+      "role": "context"
+    },
+    {
+      "word": "чуємо",
+      "exercise_type": "fill-in",
+      "context": "чуємо",
+      "role": "answer"
+    },
+    {
+      "word": "кажуть",
+      "exercise_type": "fill-in",
+      "context": "кажуть",
+      "role": "answer"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 12,
-    "tested_in_exercises": 5,
+    "tested_in_exercises": 10,
     "not_tested": [
-      "бачити",
-      "думати",
       "знати",
-      "казати",
-      "розуміти",
-      "сказати",
-      "чути"
+      "казати"
     ]
   },
   "all_grounded": false

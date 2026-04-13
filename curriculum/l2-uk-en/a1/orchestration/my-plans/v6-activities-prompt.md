@@ -1,4 +1,4 @@
-<!-- version: 1.1.0 | updated: 2026-03-31 -->
+<!-- version: 1.2.0 | updated: 2026-04-12 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -11,6 +11,35 @@ Generate an `activities/my-plans.yaml` file for module **51: My Plans** (a1).
 
 ---
 
+## ⚠️ HARD COUNT TARGETS — READ TWICE
+
+These are the binding numerical contracts for THIS module. The audit will FAIL if you fall short.
+
+| Bucket | Min | Max | Notes |
+|---|---|---|---|
+| Total activities | 10 | 10+ | inline + workbook combined |
+| Inline (lesson tab) | 4 | 6 | one per `<!-- INJECT_ACTIVITY -->` marker, see below |
+| Workbook (Зошит tab) | 6 | 9 | extended practice |
+| Items per activity | 6 | — | each activity must have at least 6 items (unless its type cap is lower — see Activity Type Reference below) |
+
+**You MUST ship at least 4 inline activities AND at least 6 workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+
+**Type diversity is required.** The module (inline + workbook combined) MUST use at least **0** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level. (If `0` is `0`, the audit profile for this level does not enforce type diversity — but variety still produces a better lesson, so aim for 4+ types when the workbook allows it.)
+
+---
+
+## Allowed types for THIS level
+
+- **Inline (lesson) types:** image-to-letter, letter-grid, match-up, watch-and-repeat, quiz, true-false, fill-in, classify
+- **Inline priority (preferred):** image-to-letter, match-up, fill-in, quiz, watch-and-repeat
+- **Workbook types:** fill-in, match-up, group-sort, anagram, unjumble, quiz, true-false, classify, divide-words, count-syllables, pick-syllables, observe, phrase-table, odd-one-out
+- **Workbook priority (preferred):** fill-in, match-up, group-sort, anagram, unjumble
+- **FORBIDDEN at this level:** cloze, error-correction, mark-the-words, translate, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, highlight-morphemes, grammar-identify, select
+
+Pick from the allowed list. Lean heavily on the priority lists. Do not use any forbidden type — the build will reject it.
+
+---
+
 ## Inline vs Workbook Split
 
 Activities have two placement categories:
@@ -19,7 +48,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Rule of thumb:** inline = 2-3 quick checks after key teaching points. Workbook = 4-8 deeper practice exercises covering the full topic.
+**Rule of thumb:** inline = 4–6 quick checks after key teaching points. Workbook = 6–9 deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
 
 ---
 
@@ -27,8 +56,8 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: fill-in-days-time -->`
-- `<!-- INJECT_ACTIVITY: matching-invitations -->`
+- `<!-- INJECT_ACTIVITY: fill-in-schedule-time -->`
+- `<!-- INJECT_ACTIVITY: match-invitations -->`
 - `<!-- INJECT_ACTIVITY: fill-in-weekly-plan -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
@@ -98,137 +127,138 @@ required:
 <module_content>
 ## Dialogues
 
-As we approach the end of our A1 journey, our ability to communicate moves beyond describing the present moment and past events. We are now stepping into the future. Whether you are organizing your weekend, outlining your work schedule, or preparing for graduation, planning is the ultimate social tool. A typical group chat provides the perfect context for friends to coordinate their leisure time. Stating intentions in Ukrainian is surprisingly straightforward, relying on a simple two-part verb structure. The days of the week, specific times, and future verbs combine effortlessly into a complete schedule.
+Arranging a weekend get-together with friends is a perfect way to practice discussing the future. In Ukrainian, expressing a **план** (plan) is a practical skill you use every single day. When organizing your time, you will often need to state what you are doing, when you are doing it, and ask others if they are **вільний** (free). Read this group chat where three friends are trying to align their weekend schedules and find time to relax together.
 
-> **Оля:** Що ти будеш робити у суботу? *(What will you be doing on Saturday?)*
-> **Максим:** Зранку я буду прибирати квартиру. *(In the morning I will be cleaning the apartment.)*
-> **Іра:** А вдень? *(And in the afternoon?)*
-> **Максим:** Вдень я буду ходити в магазин. А ти? *(In the afternoon I will go to the store. And you?)*
-> **Іра:** Я буду відпочивати! Може, підемо в кафе ввечері? *(I will be resting! Maybe we'll go to a cafe in the evening?)*
-> **Оля:** Добре! О котрій? *(Good! At what time?)*
-> **Іра:** О шостій. Добре? *(At six. Good?)*
-> **Максим:** Чудово! До зустрічі у суботу! *(Wonderful! See you on Saturday!)*
+> **Оксана:** Що ти будеш робити у суботу? *(What will you be doing on Saturday?)*
+> **Максим:** Зранку я буду прибирати квартиру. *(In the morning, I will be cleaning the apartment.)*
+> **Оксана:** А вдень? *(And in the afternoon?)*
+> **Максим:** Вдень я буду ходити в магазин. А ти? *(In the afternoon, I will go to the store. And you?)*
+> **Дарина:** Я буду відпочивати! Може, підемо в кафе ввечері? *(I will be resting! Maybe we will go to a cafe in the evening?)*
+> **Оксана:** Добре! О котрій? *(Good! At what time?)*
+> **Дарина:** О шостій. Добре? *(At six. Good?)*
+> **Максим:** Чудово! До зустрічі у суботу! *(Great! See you on Saturday!)*
 
-Notice how **Оля** asks **Може, підемо в кіно?** in the plan context, or in this case, **Іра** suggests **Може, підемо в кафе ввечері?**. This is a natural way to propose an idea. The future actions are formed simply: **буду прибирати** (will be cleaning), **буду ходити** (will be going), and **буду відпочивати** (will be resting).
+This short conversation is rich with real-world communication patterns. Notice how Максим combines a time of day with a future action to structure his day. He uses the words **зранку** (in the morning) and **вдень** (in the afternoon) to divide his Saturday into clear segments. Дарина shifts the conversation from personal routines to a shared invitation. Then, Оксана quickly confirms the specific time using the question phrase **о котрій?** (at what time?). This flow moves logically from individual tasks to a shared group activity, representing exactly how friends communicate.
 
-:::note
-Notice how the word **план** (plan) behaves just like its English equivalent, but is usually pluralized when asking about general intentions: **У тебе є плани?** (Do you have plans?).
+Here is how someone might describe their simple plans for a single day:
+
+Сьогодні я буду відпочивати. Вдень я буду гуляти в парку. Ввечері я буду читати книгу.
+> *(Today I will rest. In the afternoon I will walk in the park. In the evening I will read a book.)*
+
+:::caution
+When discussing plans, avoid translating directly from English phrases like "I have plans." Instead, use the structure **У мене є плани** (I have plans), which relies on the possession pattern you already know.
 :::
 
-> **Марія:** У тебе є плани на тиждень? *(Do you have plans for the week?)*
-> **Петро:** Так, багато! У понеділок я буду працювати допізна. *(Yes, many! On Monday I will work until late.)*
-> **Петро:** У вівторок буду вчитися. У середу — зустріч з друзями. *(On Tuesday I will study. On Wednesday — a meeting with friends.)*
-> **Марія:** А у четвер? *(And on Thursday?)*
-> **Петро:** У четвер я буду готувати на вечірку. *(On Thursday I will cook for the party.)*
-> **Марія:** А в п'ятницю? *(And on Friday?)*
-> **Петро:** В п'ятницю — вечірка! Ти будеш? *(On Friday — the party! Will you be there?)*
-> **Марія:** Звичайно буду! *(Of course I will be!)*
+Now, read a different conversation about organizing a busy **тиждень** (week) filled with work, studies, and social events. Scheduling involves mapping out commitments day by day.
 
-**Петро** outlines his busy week using the word **тиждень** (week). Be careful not to confuse this with **неділя** (Sunday). While they sound similar to words in other Slavic languages, in Ukrainian, **тиждень** is the entire seven-day period, and **неділя** is specifically the day of rest at the end of it.
+> **Антон:** У тебе є плани на тиждень? *(Do you have plans for the week?)*
+> **Віктор:** Так, багато! *(Yes, many!)*
+> **Антон:** У понеділок я буду працювати допізна. *(On Monday, I will work until late.)*
+> **Віктор:** У вівторок буду вчитися. У середу — зустріч з друзями. *(On Tuesday, I will study. On Wednesday — a meeting with friends.)*
+> **Антон:** А у четвер? *(And on Thursday?)*
+> **Віктор:** У четвер я буду готувати на вечірку. *(On Thursday, I will prepare for a party.)*
+> **Антон:** А в п'ятницю? *(And on Friday?)*
+> **Віктор:** В п'ятницю — вечірка! Ти будеш? *(On Friday — a party! Will you be there?)*
+> **Антон:** Звичайно буду! *(Of course I will!)*
+
+This second dialogue shifts focus from a single day to the entire week. The speakers map out their obligations chronologically, from Monday to Friday. They use the days of the week alongside the future tense to create a clear timeline of events like a **зустріч** (meeting) or a **вечірка** (party). Notice the question **Ти будеш?** (Will you be there?) — this is a highly natural, conversational way to confirm attendance at an event. You do not always need a full verb like "attend"; the verb "to be" in the future tense is perfectly sufficient for asking if someone plans to show up.
 
 ## Планування (Planning)
 
-To say that an event happens *on* a certain day, English uses the preposition "on". Ukrainian uses the preposition **у** (or its phonetic variant **в**) followed by the day of the week. Because we are showing the time when an action takes place, the day of the week must change its ending if it is a feminine noun. This happens because we are using the temporal accusative case. The masculine and neuter days remain exactly the same, which makes them very easy to remember. The feminine days, however, change their final vowel to «у» or «ю».
+Scheduling requires combining the day of the week with the correct preposition. To say "on a certain day," use the temporal pattern **У/В** + Accusative case form of the day.
 
-- **у понеділок** (on Monday) — masculine, no change.
-- **у вівторок** (on Tuesday) — masculine, no change.
-- **у середу** (on Wednesday) — feminine, changes from **середа**.
-- **у четвер** (on Thursday) — masculine, no change.
-- **у п'ятницю** (on Friday) — feminine, changes from **п'ятниця**.
-- **у суботу** (on Saturday) — feminine, changes from **субота**.
-- **в неділю** (on Sunday) — feminine, changes from **неділя**.
+- **у понеділок** (on Monday)
+- **у вівторок** (on Tuesday)
+- **у середу** (on Wednesday)
+- **у четвер** (on Thursday)
+- **у п'ятницю** (on Friday)
+- **у суботу** (on Saturday)
+- **в неділю** (on Sunday)
 
-:::caution
-English speakers frequently attempt to translate the phrase "on the weekend" word-for-word. In Ukrainian, you must use the specific phrase **на вихідних** (on the weekend). Never use the preposition **в** for this context.
+:::note
+Notice the vowel ending change for feminine days. The days **середа**, **п'ятниця**, and **субота** change their final **-а** or **-я** to **-у** or **-ю**. Masculine days like **понеділок** remain unchanged.
 :::
 
-To specify the time of day, use the words **зранку** (in the morning), **вдень** (in the afternoon), and **ввечері** (in the evening). You can easily combine these with the days:
-- **У суботу ввечері я буду дивитися фільм.** *(On Saturday evening I will watch a film.)*
-
-When you want to ask someone "At what time?", the natural Ukrainian phrase is **О котрій годині?**. English speakers often try to translate "at seven o'clock" literally by using the preposition "в" (in). This is a common mistake that immediately sounds unnatural. In Ukrainian, you must always use the preposition **о** followed by an ordinal number (first, second, third) in the locative case. Think of it as answering "on which hour?".
+To specify the exact time of an event, use the preposition **о** (or **об** before a vowel) followed by the ordinal number in the Locative case. You can combine the hour with the parts of the day to be precise.
 
 - **о третій** (at three)
-- **о п'ятій** (at five)
 - **о шостій** (at six)
 - **о дев'ятій** (at nine)
-
-If the number starts with a vowel sound, the preposition smoothly changes to **об** to avoid two vowels clashing. This makes pronunciation much easier:
-
 - **об одинадцятій** (at eleven)
 
-Now that you can state the day and the time, you need the social tools to invite someone. You can use several natural communicative chunks to propose a plan to your friends or colleagues.
+You can easily pair the day, the time, and the part of the day.
+
+- У понеділок вранці я працюю. *(On Monday morning I work.)*
+- У суботу ввечері ми читаємо. *(On Saturday evening we read.)*
+- В неділю вдень вона гуляє. *(On Sunday afternoon she walks.)*
+
+To express what you plan to do at these times, use the compound future tense. This structure is very straightforward: use the future form of the verb "to be" (**бути**), which must match the subject (like **я буду**, **ти будеш**, **ми будемо**), and add an imperfective infinitive verb. The imperfective aspect emphasizes the process or the duration of the action, which is perfect for laying out a continuous schedule. The full structural formula is **У [day] о [time] я буду [verb]**.
+
+- У суботу о третій я буду готувати. *(On Saturday at three I will cook.)*
+- У вівторок ввечері ти будеш читати. *(On Tuesday evening you will read.)*
+- В неділю зранку ми будемо спати. *(On Sunday morning we will sleep.)*
+
+When you want to include others in your plans, you need functional chunks for making and responding to invitations.
 
 - **Ходімо в кафе!** *(Let's go to a cafe!)*
-- **Може, підемо в кіно?** *(Maybe we'll go to the cinema?)*
-- **Ти будеш вільний у суботу?** *(Will you be free on Saturday? — asking a male)*
-- **Ти будеш вільна у суботу?** *(Will you be free on Saturday? — asking a female)*
+- **Може, підемо в кіно?** *(Maybe we will go to the cinema?)*
+- **Ти будеш вільний у суботу?** *(Will you be free on Saturday? - masculine)*
+- **Ти будеш вільна у суботу?** *(Will you be free on Saturday? - feminine)*
 - **Давай зустрінемося о п'ятій!** *(Let's meet at five!)*
 
-When someone invites you, you need a polite response. If you are free and willing, you can accept warmly:
+Responding naturally keeps the conversation moving.
 
 - **Добре!** *(Good!)*
-- **Чудово!** *(Wonderful!)*
+- **Чудово!** *(Great!)*
 - **З задоволенням!** *(With pleasure!)*
-
-If you have other plans, you should decline politely and clearly:
-
 - **На жаль, не можу.** *(Unfortunately, I cannot.)*
 
-<!-- INJECT_ACTIVITY: fill-in-days-time -->
-<!-- INJECT_ACTIVITY: matching-invitations -->
+Here is how these scheduling elements look in a continuous thought:
+
+У п'ятницю я працюю допізна. У суботу ввечері ми будемо дивитися кіно. Давай зустрінемося о шостій біля кафе!
+> *(On Friday I work until late. On Saturday evening we will watch a movie. Let's meet at six near the cafe!)*
+
+<!-- INJECT_ACTIVITY: fill-in-schedule-time -->
+
+<!-- INJECT_ACTIVITY: match-invitations -->
 
 ## Мій тиждень (My Week)
 
-The Narrative Model: Taras's Busy Week. These grammatical pieces come together logically in a longer narrative. **Тарас** is planning his entire week, and he combines days, times, and activities into a clear schedule.
+When you connect your daily routines into a larger timeline, you form a cohesive narrative about your life. Look at this model monologue detailing Taras's entire week. Notice how he strings sentences together chronologically.
 
-- **У понеділок я буду працювати.** *(On Monday I will work.)*
-- **Після роботи буду вчити українську.** *(After work I will study Ukrainian.)*
-- **У вівторок я буду обідати з другом у кафе.** *(On Tuesday I will dine with a friend in a cafe.)*
-- **У середу ввечері я буду дивитися футбол.** *(On Wednesday evening I will watch football.)*
-- **У четвер я буду готувати вечерю для родини.** *(On Thursday I will cook dinner for the family.)*
-- **У п'ятницю я буду відпочивати — піду в кіно.** *(On Friday I will rest — I will go to the cinema.)*
-- **У суботу зранку буду прибирати, а вдень гуляти в парку.** *(On Saturday morning I will clean, and in the afternoon walk in the park.)*
-- **В неділю я буду спати довго!** *(On Sunday I will sleep long!)*
+У понеділок я буду працювати. Після роботи буду вчити українську. У вівторок я буду обідати в кафе. У середу ввечері я буду дивитися футбол. У четвер я буду готувати вечерю для родини. У п'ятницю я буду відпочивати. Я піду в кіно. У суботу зранку я буду прибирати. Вдень я буду гуляти в парку. В неділю я буду спати довго!
+> *(On Monday I will work. After work I will study Ukrainian. On Tuesday I will have lunch in a cafe. On Wednesday evening I will watch football. On Thursday I will prepare dinner for the family. On Friday I will rest. I will go to the cinema. On Saturday morning I will clean. In the afternoon I will walk in the park. On Sunday I will sleep long!)*
 
-Notice how **Тарас** anchors each activity to a specific time and place. He uses the future tense effortlessly. 
+Taras uses the same foundational structure for every single day, creating a steady rhythm. The action moves smoothly from the start of the week toward the weekend. By keeping his sentences short and focused, he communicates his entire weekly availability without using complicated grammar.
 
-:::tip
-The verb **бути** (to be) changes to match the speaker (**я буду**, **ми будемо**), but the second verb always remains in its infinitive dictionary form (**працювати**, **вчити**, **відпочивати**). You only conjugate the first word.
-:::
+Now, you can create your own weekly plan. Use the core template **У [day] я буду [activity]**. This template is your safest tool for building confidence. To make your sentences more descriptive, expand the basic template by adding specific details. Answer the question **о котрій?** (at what time?) to set a schedule. Answer **де?** (where?) to provide a location. Answer **з ким?** (with whom?) to include the people in your life.
 
-Guided Writing Workshop. Now it is your turn to build a schedule. Use the "My Week" template to create your own personalized plan. Start with the basic grammatical framework: **У** [день] **я буду** [що робити]. For example, you can write **У вівторок я буду працювати** (On Tuesday I will work). Once you have established the core sentence, you should add layers of detail to make your schedule richer and more descriptive. Ask yourself specific questions: **о котрій?** (at what time?), **де?** (where?), and **з ким?** (with whom?).
+For example, instead of just saying "I will walk," you can build a detailed sentence that paints a much clearer picture of your afternoon:
 
-- **У суботу о десятій я буду гуляти в парку з другом.** *(On Saturday at ten I will walk in the park with a friend.)*
+- У суботу я буду гуляти в парку з другом. *(On Saturday I will walk in the park with a friend.)*
+- У середу ввечері ми будемо читати вдома. *(On Wednesday evening we will read at home.)*
+- В неділю вдень вона буде обідати в кафе. *(On Sunday afternoon she will have lunch in a cafe.)*
 
-When you talk about your schedule, always remember to use the natural Ukrainian construction for possession: **У мене є плани** (I have plans). Do not use the direct English translation "Я маю плани". Using the correct structure makes your spoken Ukrainian sound authentic and natural. Try mapping out your next few days right now using all the vocabulary you know for places, food, people, and daily activities.
+Take a moment to map out your own upcoming days. Use the vocabulary you already know for places like your apartment, a restaurant, or the cinema. Include your daily activities like studying, working, cleaning, and resting.
 
 <!-- INJECT_ACTIVITY: fill-in-weekly-plan -->
 
 ## Summary
 
-Recap of the Planning Toolkit. You now possess the essential grammatical and social tools to organize your future effectively. The grammatical foundation of planning in Ukrainian is the compound future tense, which pairs the helper word **буду** (will) with an infinitive action verb. We anchor these future actions in time using the preposition **у** (or its phonetic variant **в**) for days of the week, and the preposition **о** (or **об**) for specific hours. This precise combination allows you to say exactly when and what you will be doing in any situation:
+The ability to structure your time and share your schedule is a major milestone in communication. The core grammatical formula for scheduling in this module is extremely reliable: Day + time + буду + infinitive. This pattern is the primary way you will express future plans in the early stages of your learning journey.
 
-- **У суботу о третій я буду готувати обід.** *(On Saturday at three I will cook lunch.)*
+У суботу о третій я буду готувати обід. Ввечері я буду відпочивати. У неділю я буду читати.
+> *(On Saturday at three I will prepare lunch. In the evening I will rest. On Sunday I will read.)*
 
-You also learned the key communicative chunks for making invitations: **Ходімо!**, **Може, підемо?**, and **Давай зустрінемося!**. You can reply with **Добре!**, **З задоволенням!**, or **На жаль, не можу.**
+When you want to turn your personal schedule into a social event, you rely on a few key invitation chunks. You can propose an outing with **Ходімо!** (Let's go!), suggest an idea with **Може, підемо?** (Maybe we will go?), or specify a time with **Давай зустрінемося!** (Let's meet!). You can then respond enthusiastically with **Добре!** (Good!) or **З задоволенням!** (With pleasure!), or politely decline using **На жаль, не можу** (Unfortunately, I cannot).
 
-Final Review of Days. Review the days of the week carefully. When used with the preposition **у** to indicate when something happens, it is absolutely vital to remember the difference between the masculine and feminine noun endings. The masculine days remain unchanged in this context, while the feminine days must change their final vowel to «у» or «ю»:
+To successfully navigate a calendar, you must retain the days of the week. Review the sequence to ensure they come to mind effortlessly: **понеділок**, **вівторок**, **середа**, **четвер**, **п'ятниця**, **субота**, **неділя**.
 
-- **понеділок** → **у понеділок**
-- **вівторок** → **у вівторок**
-- **середа** → **у середу**
-- **четвер** → **у четвер**
-- **п'ятниця** → **у п'ятницю**
-- **субота** → **у суботу**
-- **неділя** → **в неділю**
+:::tip
+Mental practice is one of the most effective ways to solidify new vocabulary. While riding the bus or waiting in line, try to list the days of the week silently to yourself.
+:::
 
-Self-Check. Before moving on to the next module, verify your skills with this checklist.
-
-- Can you say "On Wednesday at six I will be cleaning"? (**У середу о шостій я буду прибирати.**)
-- Can you invite a friend to a cafe? (**Може, підемо в кафе?**)
-- Can you politely decline an invitation? (**На жаль, не можу.**)
-- Can you plan your ideal weekend — what will you do on Saturday and Sunday?
-
+Now it is time for a self-check task. Mentally plan your ideal weekend using these new structures. Ask yourself: **Що ти будеш робити у суботу?** (What will you do on Saturday?). Think about Sunday: **А в неділю?** (And on Sunday?). Finally, consider the people you want to see: **З ким ти будеш зустрічатися?** (Who will you be meeting?). Formulate your answers in complete Ukrainian sentences to prove you can manage your own schedule.
 </module_content>
 
 ---
@@ -242,48 +272,68 @@ version: "1.0"
 module: my-plans
 level: a1
 
+# NOTE — these are SHAPE examples. The real targets are at the top of this prompt
+# (10 total / 4–6 inline / 6–9 workbook,
+# 6+ items per activity). The shapes below are TRUNCATED for readability;
+# YOUR output MUST hit those minimums.
+
 inline:
   - id: marker-id-here        # MUST match an <!-- INJECT_ACTIVITY: ... --> marker
     type: quiz                 # activity type
     instruction: "Оберіть правильний варіант"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - question: "_____ стіл"
-        options: ["мій", "моя", "моє"]
+        options: ["мій", "моя", "моє", "мої"]
         correct: 0             # 0-based index
+      - question: "Це ____ книга."
+        options: ["мій", "моя", "моє", "мої"]
+        correct: 1
+      # ... add at least 6 items total — never stop at 1-2
 
   - id: another-marker-id
     type: fill-in
     instruction: "Вставте правильне слово"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - sentence: "Це ____ кімната."
         answer: "моя"
         options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ вікно."
+        answer: "моє"
+        options: ["мій", "моя", "моє"]
+      # ... ≥ 6 items total
 
 workbook:
-  - type: match-up
+  - id: match-up-vocab
+    type: match-up
     instruction: "З'єднайте пари"
-    pairs:
+    pairs:                     # ← real output: ≥ 6 pairs
       - left: "стіл"
         right: "він"
       - left: "книга"
         right: "вона"
       - left: "вікно"
         right: "воно"
+      # ... ≥ 6 pairs total
 
-  - type: group-sort
+  - id: group-sort-gender
+    type: group-sort
     instruction: "Розподіліть слова за категоріями"
     groups:
-      - label: "Category A"
-        items: ["word1", "word2"]
-      - label: "Category B"
-        items: ["word3", "word4"]
+      - label: "Чоловічий рід"
+        items: ["стіл", "олівець", "будинок"]   # ≥ 3 items per group
+      - label: "Жіночий рід"
+        items: ["книга", "ручка", "школа"]
+      - label: "Середній рід"
+        items: ["вікно", "море", "молоко"]
 
-  - type: true-false
+  - id: true-false-grammar
+    type: true-false
     instruction: "Правда чи ні?"
-    items:
-      - statement: "Statement here"
-        correct: true
-        explanation: "Why it's true"
+    items:                     # ← real output: ≥ 6 items
+      - statement: "«Книга» — це чоловічий рід."
+        correct: false
+        explanation: "Книга закінчується на -а, отже жіночий рід."
+      # ... ≥ 6 items total
 
   - type: error-correction
     instruction: "Виправте помилку"
@@ -354,7 +404,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -450,10 +500,15 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 ## Quality Rules
 
-**ITEM COUNT MINIMUMS (non-negotiable):**
-- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
-- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
-- If you can't think of enough items, add more examples from the module's vocabulary and content.
+**ACTIVITY COUNT MINIMUMS (non-negotiable, audit-enforced):**
+- **Total: 10 activities.** Inline: 4–6. Workbook: 6–9. The audit gate FAILS the module if you ship fewer.
+- **Type diversity: workbook MUST cover ≥5 distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
+- **Match the inline markers exactly.** Every `<!-- INJECT_ACTIVITY: id -->` marker in the prose needs a matching inline activity with that exact id. Skipping markers means the lesson tab is broken.
+
+**ITEM COUNT MINIMUMS (non-negotiable, per-activity):**
+- **Default minimum: 6 items per activity.** Quiz, fill-in, match-up, true-false, anagram, error-correction, translate, cloze, mark-the-words, divide-words, count-syllables, odd-one-out, group-sort categories: all ≥ 6.
+- **Lower minimums for specific types only:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items, essay-response/critical-analysis = 1 prompt.
+- If you can't think of enough items, add more examples from the module's vocabulary and content. NEVER ship a 1-item or 2-item activity unless its type cap explicitly allows it.
 - **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
 - **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
@@ -560,6 +615,27 @@ IMPORTANT: After using tools, output your COMPLETE module content as plain text.
 1. Run `verify_words` on all Ukrainian words in your exercises — every word must exist in VESUM
 2. Run `query_cefr_level` on any word you're unsure about — it must be a1-appropriate
 3. For fill-in answers and distractors, verify the exact form (case, number, gender) with `verify_lemma`
+
+---
+
+## ⚠️ MANDATORY FINAL CHECKLIST — verify before emitting YAML
+
+Walk through this checklist explicitly before you start emitting. If ANY box is unchecked, fix it FIRST.
+
+- [ ] My output has **at least 4** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
+- [ ] My output has **at least 6** workbook activities.
+- [ ] **Total ≥ 10.**
+- [ ] **Every** activity has **at least 6** items, pairs, or statements (except types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3, essay-response=1).
+- [ ] The module (inline + workbook combined) uses **at least 0 distinct activity types** (or 4+ when 0 = 0 and the workbook size allows it). I am NOT shipping a wall of quizzes.
+- [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
+- [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
+- [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+- [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+- [ ] My inline count is between 4 and 6. I did NOT create more injection markers than 6.
+- [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
+- [ ] At B1+, all instructions are in Ukrainian (no English fallback).
+
+If you cannot tick all of these, REGENERATE the activities BEFORE outputting. Shipping under-spec means the build rejects you and the heal loop has to redo your work — wasting compute.
 
 ---
 

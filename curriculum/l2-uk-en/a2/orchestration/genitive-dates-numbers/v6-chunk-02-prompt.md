@@ -1,25 +1,23 @@
-# Section-by-Section Generation — Section 2/4
+# Section-by-Section Generation — Section 2/3
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 6: Скільки? Котра година? Яке число? (A2, A2.1 [Foundation and Aspect Introduction])
-**Section to write:** Рахуємо предмети: правило «1, 2-4, 5+» (~850 words total)
-**Word target for this section:** 850 words (aim for 935 to account for undershoot)
+**Section to write:** Рахуємо предмети: правило '1, 2-4, 5+' (Counting Items: The '1, 2-4, 5+' Rule) (~900 words)
+**Word target for this section:** 900 words (aim for 990 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Рахуємо предмети: правило «1, 2-4, 5+» (~850 words total)
-- P1 (~120 words): [The central hierarchy of counting in Ukrainian. Explain that the numeral determines the case and number of the noun. Introduce the three tiers: Tier 1 (number 1), Tier 2 (numbers 2, 3, 4), and Tier 3 (numbers 5 through 20). Use 'стіл' (table) as a consistent example throughout the explanation.]
-- P2 (~120 words): [The '1' Rule: Numerals ending in 'один' (1, 21, 31) take the Nominative Singular. Explain gender agreement: 'один стіл', 'одна книга', 'одне вікно'. Mention that even in large numbers like 101, the noun stays singular.]
-- P3 (~150 words): [The '2, 3, 4' Rule: Numerals ending in 2, 3, or 4 take the Nominative Plural. Contrast this with English where '2 tables' is just plural, but in Ukrainian it requires a specific plural form. Examples: 'два столи', 'три книги', 'чотири вікна'. Explicitly mention that feminine nouns like 'книги' use the Nom. Pl. ending -и.]
-- P4 (~150 words): [The '5-20' Rule (The Genitive Plural Tier): Numbers 5 through 20 (and 25-30, etc.) trigger the Genitive Plural. This is the biggest change for learners. Explain the endings: -ів for masculine (п'ять столів), zero ending for feminine (шість книг), and zero/ -ів for neuter (сім вікон). Contrast: 'одна книга' vs 'п'ять книг'.]
-- P5 (~100 words): [Compound numbers. Explain that for numbers like 22, 33, or 44, the rule follows the *last* word in the numeral. 'Двадцять два номери' (Nom. Pl.) vs 'Двадцять п'ять номерів' (Gen. Pl.). Use hotel room examples: 'двадцять один номер', 'двадцять чотири номери'.]
-- P6 (~100 words): [Special focus on feminine nouns. Address the potential confusion where Nominative Plural and Genitive Singular look identical (e.g., 'сестри'). Clarify that in 'дві сестри' (Nom. Pl.), the stress might shift or remain, but the grammatical function is 'counting 2-4'. Use examples like 'книги' and 'машини' to show the pattern.]
-- P7 (~110 words): [Dialogue: 'At the Hotel Reception'. Guest: 'Мені потрібно три номери'. Admin: 'На скільки людей?'. Guest: 'На п'ять гостей'. Admin: 'У нас є два великих номери і один малий'. Guest: 'Скільки це коштує?'. Focus on the '3', '5', '2', '1' agreement rules.]
-- <!-- INJECT_ACTIVITY: fill-in-counting-rule --> [fill-in, Counting Objects (1, 2-4, 5+ Rule), 8 items]
-- <!-- INJECT_ACTIVITY: match-up-quantity-qa --> [match-up, Q&A about quantities and dates, 8 items]
+## Рахуємо предмети: правило '1, 2-4, 5+' (Counting Items: The '1, 2-4, 5+' Rule) (~900 words)
+- P1 (~150 words): Introduce the fundamental rule for counting in Ukrainian. Explain that unlike English, where you simply use singular for one and plural for everything else, Ukrainian uses a specific "1, 2-4, 5+" rule. This rule dictates the case and number of the noun based on the last digit of the number.
+- P2 (~150 words): Detail the rule for 1 (and numbers ending in 1, like 21, 31... except 11). The noun is in the Nominative Singular. The number "один" must agree in gender with the noun: "один" (masc), "одна" (fem), "одне" (neuter). Examples: "один стіл", "одна книга", "одне вікно", "двадцять один студент".
+- P3 (~180 words): Detail the rule for 2, 3, 4 (and numbers ending in 2, 3, 4, like 22-24, 32-34... except 12-14). The noun takes the Nominative Plural. Examples for masculine: "два столи", "три столи", "чотири столи". For feminine: "дві книги", "три книги", "чотири книги" (emphasize the use of "дві" for feminine vs "два" for masculine/neuter). For neuter: "два вікна", "три вікна", "чотири вікна".
+- P4 (~200 words): Detail the rule for 5-20 (and all numbers ending in 5-9, and 0, like 25-30, 35-40, plus quantities like 'багато', 'скільки'). The noun takes the Genitive Plural. Explain this as a historical remnant where numbers 5 and above acted as nouns requiring the genitive. Examples: "п'ять столів", "шість столів", "десять книг", "дванадцять вікон". 
+- P5 (~120 words): Give special attention to feminine nouns when applying these rules. Explain that the Nominative Plural and Genitive Singular can sometimes look similar or identical (e.g., "сестри" can be both). Contrast the counting forms explicitly: "дві сестри" (Nom. Pl.) vs "п'ять сестер" (Gen. Pl. with a zero ending and an inserted vowel 'е'). Contrast "дві книги" vs "п'ять книг".
+- P6 (~100 words): Provide natural examples of counting in context to solidify the rules. Example 1: "Скільки учнів у твоєму класі?" (How many students are in your class? - using Gen. Pl.). Example 2: "Оборона аеропорту тривала 242 дні" (The defense of the airport lasted 242 days - using 'дні' in Nom. Pl. because of 'два').
+- <!-- INJECT_ACTIVITY: fill-in-counting-objects --> [fill-in, Counting Objects (1, 2-4, 5+ Rule), 8 items]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -27,7 +25,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-time?", use «О котрій годині?», placing the numeral in the Locative case. To say "half past," we use the preposition «на» followed by the *next* hour in the Accusative case. «Пів на другу» means "half toward the second hour" (1:30). Вибачте, котра зараз година? Зараз п'ята година. О котрій годині починається фільм? Фільм починається о дев'ятій годині. Коли у нас зустріч? Зустріч о пів на другу. Урок закінчується об одинадцятій. Ми йдемо додому о пів на шосту. > *Excuse me, what time is it now? It is five o'clock now. At what time does the movie start? The movie starts at nine o'clock. When is our meeting? The meeting is at half past one. The lesson ends at eleven. We are going home at half past five.* Here is a short conversation where a client is booking an appointment at a salon. Notice how the client and the administrator use both Nominative and Genitive forms for the dates. > — **Клієнтка:** Добрий день! Яке сьогодні число? *(Good day! What is the date today?)* > — **Адміністратор:** Добрий день! Сьогодні п'яте травня. *(Good day! Today is the fifth of May.)* > — **Клієнтка:** Я хочу записатися на стрижку. Коли у вас є вільний час? *(I want to book an appointment for a haircut. When do you have free time?)* > — **Адміністратор:** Ми маємо час завтра, шостого травня. *(We have time tomorrow, the sixth of May.)* > — **Клієнтка:** Чудово. Я хочу записатися на шосте травня. *(Great. I want to book for the sixth of May.)* > — **Адміністратор:** Добре, о котрій годині вам зручно? *(Good, at what time is convenient for you?)* > — **Клієнтка:** Об одинадцятій годині. А скільки коштує стрижка? *(At eleven o'clock. And how much does a haircut cost?)* > — **Адміністратор:** Триста гривень. Домовилися. Чекаємо на вас об одинадцятій. *(Three hundred hryvnias. Agreed. We are waiting for you at eleven.)* Here is another situation. Two friends are meeting at a train station. > — **Максим:** Привіт! Котра зараз година? *(Hi! What time is it now?)* > — **Анна:** Привіт! Зараз пів на десяту. *(Hi! It is half past nine now.)* > — **Максим:** О котрій годині прибуває поїзд з Одеси? *(At what time does the train from Odesa arrive?)* > — **Анна:** Поїзд прибуває о десятій годині. Ми маємо тридцять хвилин. *(The train arrives at ten o'clock. We have thirty minutes.)* > — **Максим:** Добре. Хочеш випити кави? *(Good. Do you want to drink coffee?)* > — **Анна:** Так, із задоволенням. *(Yes, with pleasure.)* ### Читаємо українською (Reading Practice) Сьогодні десяте березня. Зараз восьма година ранку. Я п'ю каву і планую свій день. Об одинадцятій годині у мене важлива зустріч у центрі міста. Після обіду, о пів на третю, я йду до лікаря. Завтра буде одинадцяте березня, і мій старший брат приїжджає до Києва. Ми зустрічаємо його о п'ятій годині вечора на центральному вокзалі. Я дуже чекаю цього дня, тому що ми рідко бачимося. Він працює в іншому місті з першого жовтня. <!-- INJECT_ACTIVITY: quiz-dates-drill -->
+masculine nouns. January becomes січня, and March becomes березня. April changes to квітня, and May to травня. June becomes червня, and July changes to липня. August becomes серпня, and September becomes вересня. October becomes жовтня, and December changes to грудня.* Є два важливі винятки з цього правила. Місяць **листопад** має закінчення **-а**, тому його форма — **листопада**. Місяць **лютий** відмінюється як прикметник, тому він стає **лютого**. > *There are two important exceptions to this rule. The month November has the ending -a, so its form is листопада. The month February declines like an adjective, so it becomes лютого.* :::tip **Did you know?** — Ukrainian month names are deeply connected to nature and the changing seasons. For instance, **листопад** literally means "falling of leaves", and **квітень** is related to flowers blooming. This is very different from English month names, which come from Latin. ::: Things change slightly when you want to state when an event happened, happens, or will happen. This is the most common way to talk about schedules. To answer the questions «Коли?» (When?) or «Якого числа?» (On what date?), the day also changes to the Genitive case. Коли ми говоримо про час події, день стає порядковим числівником у родовому відмінку чоловічого роду. Назва місяця також залишається в родовому відмінку. Це дуже важливе правило. > *When we talk about the time of an event, the day becomes an ordinal numeral in the Genitive case of the masculine gender. The name of the month also remains in the Genitive case. This is a very important rule.* This structure contrasts directly with simply stating the current date. Compare the question «Яке сьогодні число?» with «Коли він приїхав?». In the first case, we say «Сьогодні перше січня» (Today is January 1st). In the second case, we say «Він приїхав першого січня» (He arrived on January 1st). The phrase «двадцять четверте серпня» becomes «двадцять четвертого серпня» when discussing an event. Here are some natural and cultural examples of dates in action. These sentences focus on important historical events and everyday conversations. Notice how the Genitive case is used consistently for both the day and the month. Тарас Шевченко народився дев'ятого березня. Він дуже відомий український поет і художник. Прийнято Акт проголошення незалежності України двадцять четвертого серпня. Це головне свято в країні. > *Taras Shevchenko was born on March 9th. He is a very famous Ukrainian poet and artist. The Act of Declaration of Independence of Ukraine was adopted on August 24th. This is the main holiday in the country.* ### Читаємо українською (Reading Practice) Сьогодні п'ятнадцяте листопада. Це звичайний осінній день. Мій брат має день народження двадцятого листопада. Ми плануємо велике свято. Я купив йому подарунок ще десятого жовтня. Наші батьки приїдуть дев'ятнадцятого числа. > *Today is November 15th. This is a regular autumn day. My brother has his birthday on November 20th. We are planning a big celebration. I bought him a gift back on October 10th. Our parents will arrive on the nineteenth.* <!-- INJECT_ACTIVITY: quiz, What's the Date? (Drill) -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -691,6 +689,36 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] число (дата) (date)
+- [ ] місяць (month)
+- [ ] січень (січня) (January)
+- [ ] лютий (лютого) (February)
+- [ ] березень (березня) (March)
+- [ ] квітень (квітня) (April)
+- [ ] травень (травня) (May)
+- [ ] червень (червня) (June)
+- [ ] липень (липня) (July)
+- [ ] серпень (серпня) (August)
+- [ ] вересень (вересня) (September)
+- [ ] жовтень (жовтня) (October)
+- [ ] листопад (листопада) (November)
+- [ ] грудень (грудня) (December)
+- [ ] заперечення (negation)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Рахуємо предмети: правило '1, 2-4, 5+' (Counting Items: The '1, 2-4, 5+' Rule) (~900 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

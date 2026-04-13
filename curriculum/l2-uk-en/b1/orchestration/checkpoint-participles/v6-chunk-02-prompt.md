@@ -23,16 +23,27 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 ## Previous Sections (for continuity — do NOT repeat this content)
 
 <previous_context>
-## Вступ: як працювати з контрольною
+## Вступ: як працювати з контрольною (~380 words)
 
-Вітаю вас на шостому етапі **перевірки** *(check/verification)* знань! Ця **контрольна робота** *(test/assessment)* є важливим підсумком сьомого модуля (Phase 7). Цей етап повністю фокусується на складних формах дієслова, які роблять мову багатою та виразною. Ми детально вивчали **дієприкметники** *(participles)* та **дієприслівники** *(gerunds/adverbial participles)*. Ці форми є справжньою візитною карткою академічної та художньої української мови. Опанувавши ці складні граматичні явища, ви нарешті зможете вийти за межі простих і коротких речень. Ви навчитеся створювати витончені тексти з глибокими відтінками значень. Тепер ви можете замінити базову структуру «підмет-присудок-додаток» на елегантну та професійну прозу. Це величезний крок уперед у вашому вивченні мови. Ваші тексти та розповіді стануть набагато цікавішими для слухачів і читачів, адже ви зможете поєднувати кілька дій та описів в одному гармонійному реченні.
+Welcome to Checkpoint 6, the culmination of Phase 7 (B1.6). This phase has been dedicated to "complex verb forms"—specifically the participle (**дієприкметник**) and the gerund or adverbial participle (**дієприслівник**). These grammatical structures are the hallmark of academic and literary Ukrainian. By mastering them, you gain the ability to move beyond simple subject-verb-object sentences. You are learning to craft sophisticated, shaded prose that can convey multiple actions and descriptions simultaneously without creating clunky text.
 
-Давайте детально згадаємо, який саме матеріал ми будемо сьогодні перевіряти. Цей тест охоплює всі ключові теми від п'ятдесят сьомого до шістдесят четвертого уроку. Спочатку ми перевіримо, як ви утворюєте активні та пасивні дієприкметники, уникаючи російських кальок. Потім ми згадаємо, як працює **дієприкметниковий зворот** *(participle phrase)* та де потрібно ставити коми. Також ми перевіримо ваші знання про **короткі прикметники** *(short-form adjectives)*, такі як «потрібен» чи «певен», та їхню роль у сучасному мовленні. Окрему і дуже важливу увагу ми приділимо дієприслівникам недоконаного та доконаного виду. Ви маєте чітко розуміти їхній часовий зв'язок з основним дієсловом: чи це **одночасність** *(simultaneity)*, чи **різночасність** *(temporal non-simultaneity)*. Звісно, ми також перевіримо, як ви використовуєте **дієприслівниковий зворот** *(gerund phrase)*. Увесь цей матеріал ми об'єднали навколо лексичної теми «Освіта та університет». Пам'ятайте: хоча ці складні граматичні конструкції рідше звучать у повсякденному чи неформальному спілкуванні, вони є абсолютно необхідними для повноцінного життя в україномовному середовищі. Без них неможливо читати серйозні новини, аналітичні статті, наукові журнали чи класичну літературу Тараса Шевченка і Лесі Українки.
+Ця **контрольна робота** перевіряє ваше розуміння складних дієслівних форм. Ми розглянемо, як будується **дієприкметниковий зворот**, а також як правильно вживати **дієприслівниковий зворот**, щоб уникнути логічних помилок. Ці знання допоможуть вам писати та говорити значно вишуканіше. Хоча ці синтаксичні конструкції рідко звучать у швидкій повсякденній розмові, вони є абсолютно необхідними для повноцінного розуміння друкованих медіа, аналітичних текстів та класичної літератури.
 
-Тепер поговоримо про те, як найкраще працювати з цим тестом. Я дуже рекомендую вам підготувати окремий зошит і ручку для нотаток. Будь ласка, ставтеся до цієї роботи не як до страшного чи стресового іспиту. Сприймайте її як дуже корисний інструмент діагностики ваших знань. Ваша головна мета сьогодні — чесно зрозуміти, які граматичні теми ви вже засвоїли ідеально, а які правила ще потребують додаткової уваги та практики. Наприкінці ми пропонуємо просту систему для **самооцінки** *(self-assessment)*. Ви зможете оцінити себе за трьома критеріями: **впевнено** *(confidently)*, якщо правило зрозуміле; **потребую повторення** *(need review)*, якщо є сумніви; або **не розумію** *(don't understand)*, якщо тема здається надто складною. Важливе правило: якщо ви отримаєте менше сімдесяти відсотків за будь-який окремий розділ тесту, це чіткий сигнал. Вам варто повернутися до відповідного попереднього уроку для **повторення** *(review)* матеріалу. Не поспішайте під час виконання завдань. Уважно читайте кожне речення, аналізуйте структуру і пам'ятайте, що помилки на цьому етапі — це абсолютно нормальна частина процесу навчання. Бажаю вам успіхів та впевненості!
+> *This test/assessment checks your understanding of complex verb forms. We will examine how a participle phrase is built, as well as how to correctly use a gerund phrase to avoid logical errors. This knowledge will help you write and speak much more elegantly. Although these syntactic constructions rarely sound in fast everyday conversation, they are absolutely necessary for a full understanding of printed media, analytical texts, and classical literature.*
 
-<!-- INJECT_ACTIVITY: reading, "Прочитайте текст про вступ: як працювати з контрольною і дайте відповіді на запитання." -->
+The scope of Phase 7 covers a significant amount of advanced grammar, and this checkpoint will test all of it. We will evaluate your knowledge of active and passive participles (M57, M58) and their descriptive phrases (M59). We will also look at the traditional short-form adjective or **короткий прикметник** (M60). Crucially, we will test your command of gerunds across both aspects (M61, M62), requiring you to identify simultaneity (**одночасність**) and temporal non-simultaneity (**різночасність**) between actions (M63). Everything will be contextualized within the thematic vocabulary block on education (M64).
 
+Будь ласка, підготуйте зошит і ручку для записів. Сприймайте цю контрольну не як стресовий іспит, а як корисний інструмент для самодіагностики. Після кожного блоку вам буде запропонована система самооцінки. Оцініть власні знання чесно, обравши один із варіантів: «впевнено», «потребую повторення» або «не розумію».
+
+> *Please prepare a notebook and a pen for taking notes. Treat this test not as a stressful exam, but as a useful tool for self-diagnosis. After each block, you will be offered a self-assessment system. Evaluate your own knowledge honestly, choosing one of the options: "confidently", "I need a review", or "I do not understand".*
+
+If your score falls below 70% in any section, we recommend returning to the corresponding grammar module for a review. A solid foundation here is essential before moving into Phase 8, which will introduce the complex multi-clause sentence structures that rely heavily on the concepts you have just learned.
+
+:::info
+**Diagnostic approach** — Identifying a weak spot now allows you to reinforce it before these complex structures become critical components of larger sentences in the next phase.
+:::
+
+<!-- INJECT_ACTIVITY: reading, reading-checkpoint-logic -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -550,7 +561,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -563,18 +641,61 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] контрольна робота (test/assessment)
+- [ ] дієприкметник (participle)
+- [ ] дієприслівник (gerund/adverbial participle)
+- [ ] дієприкметниковий зворот (participle phrase)
+- [ ] дієприслівниковий зворот (gerund phrase)
+- [ ] короткий прикметник (short-form adjective)
+- [ ] одночасність (simultaneity)
+- [ ] різночасність (temporal non-simultaneity)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Блок 1: Дієприкметники (~650 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

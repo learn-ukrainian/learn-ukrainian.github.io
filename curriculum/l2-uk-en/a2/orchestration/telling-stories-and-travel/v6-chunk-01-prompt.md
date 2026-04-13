@@ -1,22 +1,22 @@
-# Section-by-Section Generation — Section 1/5
+# Section-by-Section Generation — Section 1/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 45: Розповіді та подорожі (A2, A2.6 [Aspect, Tenses, and Motion])
-**Section to write:** Сценарій 1: Що вчора трапилось? (~600 words total)
+**Section to write:** Сценарій 1: Що вчора трапилось? (~600 words)
 **Word target for this section:** 600 words (aim for 660 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Сценарій 1: Що вчора трапилось? (~600 words total)
-- P1 (~120 words): [Introduction to the architecture of a Ukrainian story (розповідь). Explain the "Stage vs. Action" principle: using Imperfective past for setting the background scene (був вечір, світило сонце, я читав) and Perfective past for the sequence of main events that move the plot forward (раптом хтось постукав, я відкрив двері).]
-- P2 (~100 words): [Deep dive into time connectors that act as logical glue for narratives. Explain usage of спочатку (at first), потім (then), раптом (suddenly), and нарешті (finally) to signal transitions between background states and sudden plot twists.]
-- P3 (~120 words): [Practical example: A short narrative about a mishap at the вокзал (train station). Describe the busy atmosphere (люди купували квитки, потяги стояли — Impf.) contrasted with the specific event of losing a ticket (я зрозумів, що загубив квиток — Pf.) and the resolution (я знайшов його в кишені — Pf.).]
-- P4 (~100 words): [Grammar spotlight: Formation of the past tense suffix -в/-ла/-ло/-ли. Explain gender agreement for the narrator (Я ходив vs Я ходила) and the phonetic stability of the Ukrainian -в suffix compared to neighboring languages, especially for verbs like міг, ніс, біг.]
-- P5 (~120 words): [Linguistic nuances of "What happened?" (Що трапилося?). Explain the difference between asking about a process (Що відбувалося? — What was going on?) vs. a completed event (Що трапилося? / Що сталося? — What happened?). Introduce vocabulary for reactions: я злякався (I got scared), я здивувався (I was surprised).]
-- <!-- INJECT_ACTIVITY: quiz-aspect-choice --> [Quiz: Read a short story about a rainy day and identify whether underlined verbs are background/process (Impf) or plot events (Pf). 8 items.]
+## Сценарій 1: Що вчора трапилось? (~600 words)
+- P1 (~120 words): [Dialogue: A funny thing happened at the вокзал (train station). Two friends, Андрій and Олена, share stories. Focus on using past tense imperfective vs. perfective. Include verbs like був, сидів, читав (background) vs. подзвонив, запросив, трапитися (events).]
+- P2 (~100 words): [Grammar explanation: The structure of storytelling. Explain that setting the scene requires imperfective verbs (процес, тло), while main plot events require perfective verbs (результат, подія). Provide the core example: "Був теплий вечір. Я сидів на балконі і читав книгу. Раптом подзвонив друг і запросив мене на вечерю."]
+- P3 (~100 words): [Vocabulary: Introduce essential time connectors for linking narratives chronologically: спочатку (at first), потім (then), після цього (after that), нарешті (finally), тим часом (meanwhile), раптом (suddenly), у цей момент (at that moment).]
+- P4 (~130 words): [Narrative example: A short, connected paragraph demonstrating the mix of aspects and time connectors in action. E.g., Waiting for a потяг at the вокзал. "Спочатку я чекав...", "Тим часом грала музика...", "Раптом мій потяг приїхав..."]
+- P5 (~150 words): [Guided analysis: Walk the learner through the narrative from P4. Explicitly point out which verbs act as background scenery (чекав, грала — impf.) and which verbs drive the plot forward as completed actions (побачив, приїхав — pf.).]
+- <!-- INJECT_ACTIVITY: quiz-past-trip-comprehension --> [quiz, Read a past trip description and answer comprehension questions about what happened, in what order, and how the person traveled, 8 items]
 
 ---
 ## Full Plan (for reference)
@@ -485,7 +485,74 @@ Teaching Ukrainian grammar requires a conscious effort to separate it from Russi
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -504,18 +571,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] подорож (trip, journey)
+- [ ] розповідати / розповісти (to tell/narrate — impf./pf.)
+- [ ] трапитися (to happen)
+- [ ] квиток (ticket)
+- [ ] потяг (train)
+- [ ] вокзал (station)
+- [ ] зупинитися (to stay, to stop — pf.)
+- [ ] доїхати (to reach by vehicle — pf.)
+- [ ] сподобатися (to like — pf.)
+- [ ] враження (impression)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Сценарій 1: Що вчора трапилось? (~600 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

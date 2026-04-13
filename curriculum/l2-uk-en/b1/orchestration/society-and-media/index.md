@@ -1,6 +1,6 @@
 # Build Summary: society-and-media (B1)
 
-Generated: 2026-04-10 03:39
+Generated: 2026-04-11 17:10
 
 ## Pipeline Phases
 
@@ -12,15 +12,17 @@ Generated: 2026-04-10 03:39
 | pre-verify | complete | 2026-04-10 01:09:05 |
 | write | complete | 2026-04-10 01:26:38 |
 | exercises | complete | 2026-04-10 01:26:38 |
-| activities | complete | 2026-04-10 01:29:50 |
+| activities | complete | 2026-04-11 14:54:49 |
 | verify-exercises | complete | 2026-04-10 01:29:50 |
 | annotate | complete | 2026-04-10 01:29:50 |
 | vocab | complete | 2026-04-10 01:30:37 |
 | enrich | complete | 2026-04-10 01:30:37 |
 | verify | complete | 2026-04-10 01:30:37 |
-| review | complete | 2026-04-10 01:39:37 |
 | stress | complete | 2026-04-10 01:39:37 |
-| publish | complete | 2026-04-10 01:39:41 |
+| repair | complete | 2026-04-11 14:43:56 |
+| review | complete | 2026-04-11 14:52:12 |
+| publish | complete | 2026-04-11 15:10:05 |
+| audit | complete | 2026-04-11 15:10:05 |
 
 ## Reviews
 
@@ -28,6 +30,8 @@ Generated: 2026-04-10 03:39
 |-------|------|
 | 1 | society-and-media-review-r1.md |
 | 2 | society-and-media-review-r2.md |
+| 3 | society-and-media-review-r3.md |
+| 4 | society-and-media-review-r4.md |
 
 ## Dispatch Log
 
@@ -36,18 +40,37 @@ Generated: 2026-04-10 03:39
 | pre-verify | gemini-tools (gemini-3-flash-preview) | 44s | ✅ |
 | skeleton | gemini (gemini-3-flash-preview) | 33s | ✅ |
 | activities | gemini-tools (gemini-3.1-pro-preview) | 193s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 0s | ❌ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 0s | ❌ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 0s | ❌ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 0s | ❌ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 0s | ❌ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 104s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 116s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 124s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 99s | ✅ |
 | vocab | gemini (gemini-3-flash-preview) | 38s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 150s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 390s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 0s | ❌ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 235s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 260s | ✅ |
+| write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 81s | ✅ |
 | write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 81s | ✅ |
 | write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 73s | ✅ |
+| write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 96s | ✅ |
 | write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 730s | ✅ |
+| write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 84s | ✅ |
 | write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 54s | ✅ |
+| write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 90s | ✅ |
 | write-chunk-05 | gemini-tools (gemini-3.1-pro-preview) | 65s | ✅ |
+| write-chunk-05 | gemini-tools (gemini-3.1-pro-preview) | 285s | ✅ |
 | write-chunk-06 | gemini-tools (gemini-3.1-pro-preview) | 50s | ✅ |
+| write-chunk-06 | gemini-tools (gemini-3.1-pro-preview) | 125s | ✅ |
 
 ## Files
 
+- `.build.lock`
 - `chunk-01.md`
 - `chunk-02.md`
 - `chunk-03.md`
@@ -59,6 +82,8 @@ Generated: 2026-04-10 03:39
 - `quick-verify.json`
 - `review-structured-r1.yaml`
 - `review-structured-r2.yaml`
+- `review-structured-r3.yaml`
+- `review-structured-r4.yaml`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

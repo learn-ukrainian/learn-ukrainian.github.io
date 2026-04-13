@@ -1,281 +1,424 @@
 {
-  "total_items": 156,
-  "grounded_items": 112,
+  "total_items": 236,
+  "grounded_items": 168,
   "ungrounded": [
     {
-      "word": "телевізор",
+      "word": "робив",
       "exercise_type": "quiz",
-      "context": "Вчора ввечері ми довго _____ телевізор.",
+      "context": "Що Андрій робив, коли подзвонив друг?",
       "role": "context"
     },
     {
-      "word": "загублений",
+      "word": "герой",
       "exercise_type": "quiz",
-      "context": "Нарешті я _____ свій загублений квиток!",
+      "context": "Куди вирішив поїхати герой тексту минулого тижня?",
       "role": "context"
     },
     {
-      "word": "вокзалі",
-      "exercise_type": "unjumble",
-      "context": "вокзалі",
-      "role": "answer"
-    },
-    {
-      "word": "розмовляли",
+      "word": "тексту",
       "exercise_type": "quiz",
-      "context": "Ми повільно _____ по місту і розмовляли.",
+      "context": "Куди вирішив поїхати герой тексту минулого тижня?",
       "role": "context"
     },
     {
-      "word": "побачив",
+      "word": "зробив",
       "exercise_type": "quiz",
-      "context": "Коли я побачив море, я дуже _____.",
+      "context": "Що він зробив спочатку?",
       "role": "context"
     },
     {
-      "word": "столиці",
-      "exercise_type": "match-up",
-      "context": "Рух до столиці України",
-      "role": "answer"
+      "word": "робили",
+      "exercise_type": "quiz",
+      "context": "Що робили інші люди, тим часом як він читав книгу?",
+      "role": "context"
     },
     {
-      "word": "води",
-      "exercise_type": "match-up",
-      "context": "Відпочинок біля води влітку",
-      "role": "answer"
+      "word": "яке",
+      "exercise_type": "quiz",
+      "context": "Яке дієслово показує раптову подію у тексті?",
+      "role": "context"
+    },
+    {
+      "word": "раптову",
+      "exercise_type": "quiz",
+      "context": "Яке дієслово показує раптову подію у тексті?",
+      "role": "context"
+    },
+    {
+      "word": "подію",
+      "exercise_type": "quiz",
+      "context": "Яке дієслово показує раптову подію у тексті?",
+      "role": "context"
+    },
+    {
+      "word": "тексті",
+      "exercise_type": "quiz",
+      "context": "Яке дієслово показує раптову подію у тексті?",
+      "role": "context"
+    },
+    {
+      "word": "того",
+      "exercise_type": "quiz",
+      "context": "Що герой зробив після того, як потяг рушив?",
+      "role": "context"
     },
     {
       "word": "влітку",
       "exercise_type": "match-up",
-      "context": "Відпочинок біля води влітку",
+      "context": "влітку ми поїдемо потягом",
       "role": "answer"
     },
     {
-      "word": "купити",
+      "word": "туристи",
       "exercise_type": "match-up",
-      "context": "Купити пропуск на потяг",
+      "context": "вчора туристи приїхали",
       "role": "answer"
     },
     {
-      "word": "пропуск",
+      "word": "готелю",
       "exercise_type": "match-up",
-      "context": "Купити пропуск на потяг",
-      "role": "answer"
-    },
-    {
-      "word": "йти",
-      "exercise_type": "match-up",
-      "context": "йти на вокзал",
+      "context": "до готелю",
       "role": "context"
     },
     {
-      "word": "виїхати",
+      "word": "літали",
       "exercise_type": "match-up",
-      "context": "виїхати зі Львова",
+      "context": "минулого тижня вони літали",
+      "role": "answer"
+    },
+    {
+      "word": "парижа",
+      "exercise_type": "match-up",
+      "context": "до Парижа",
       "role": "context"
     },
     {
-      "word": "небі",
-      "exercise_type": "match-up",
-      "context": "Подорожувати високо в небі",
-      "role": "answer"
-    },
-    {
-      "word": "залізниці",
-      "exercise_type": "match-up",
-      "context": "Подорожувати по залізниці",
-      "role": "answer"
-    },
-    {
-      "word": "пляжу",
+      "word": "повернувся",
       "exercise_type": "fill-in",
-      "context": "Вдень ми багато _____ по пляжу і просто дивилися на воду.",
+      "context": "Минулого літа я ____ до Львова і вже повернувся.",
       "role": "context"
     },
     {
-      "word": "воду",
+      "word": "містом",
       "exercise_type": "fill-in",
-      "context": "Вдень ми багато _____ по пляжу і просто дивилися на воду.",
+      "context": "Ми багато ____ містом і фотографували старі будинки.",
       "role": "context"
     },
     {
-      "word": "наші",
+      "word": "цікава",
       "exercise_type": "fill-in",
-      "context": "_____ хтось гучно постукав у наші двері.",
+      "context": "З нами ____ дуже цікава історія на вокзалі.",
       "role": "context"
     },
     {
-      "word": "сказала",
-      "exercise_type": "error-correction",
-      "context": "сказала",
+      "word": "ця",
+      "exercise_type": "unjumble",
+      "context": "ця",
       "role": "answer"
     },
     {
-      "word": "сказав",
-      "exercise_type": "error-correction",
-      "context": "Олена сказав: «Я поїхала до Києва».",
+      "word": "свого",
+      "exercise_type": "fill-in",
+      "context": "Я пив каву і просто ____ свого потяга.",
       "role": "context"
     },
     {
-      "word": "поїхала",
-      "exercise_type": "error-correction",
-      "context": "Олена сказав: «Я поїхала до Києва».",
+      "word": "потяга",
+      "exercise_type": "fill-in",
+      "context": "Я пив каву і просто ____ свого потяга.",
       "role": "context"
     },
     {
-      "word": "завтра",
-      "exercise_type": "error-correction",
-      "context": "Ми поїдемо на Львів завтра вранці.",
+      "word": "кафе",
+      "exercise_type": "fill-in",
+      "context": "Спочатку ми ____ каву в кафе.",
       "role": "context"
     },
     {
-      "word": "люблю",
-      "exercise_type": "error-correction",
-      "context": "Я дуже люблю літати з літаком.",
+      "word": "розмовляли",
+      "exercise_type": "fill-in",
+      "context": "розмовляли",
+      "role": "answer"
+    },
+    {
+      "word": "подорожі",
+      "exercise_type": "fill-in",
+      "context": "А потім ми довго ____ про наші подорожі.",
       "role": "context"
     },
     {
-      "word": "літати",
-      "exercise_type": "error-correction",
-      "context": "Я дуже люблю літати з літаком.",
+      "word": "зустріч",
+      "exercise_type": "fill-in",
+      "context": "Це була чудова зустріч, мені дуже ____.",
       "role": "context"
     },
     {
-      "word": "читала",
-      "exercise_type": "error-correction",
-      "context": "Вчора Тарас довго читала цікаву книгу.",
+      "word": "їхати",
+      "exercise_type": "group-sort",
+      "context": "їхати",
+      "role": "answer"
+    },
+    {
+      "word": "ходити",
+      "exercise_type": "group-sort",
+      "context": "ходити",
+      "role": "answer"
+    },
+    {
+      "word": "сидіти",
+      "exercise_type": "group-sort",
+      "context": "сидіти",
+      "role": "answer"
+    },
+    {
+      "word": "чекати",
+      "exercise_type": "group-sort",
+      "context": "чекати",
+      "role": "answer"
+    },
+    {
+      "word": "пити",
+      "exercise_type": "group-sort",
+      "context": "пити",
+      "role": "answer"
+    },
+    {
+      "word": "результат",
+      "exercise_type": "group-sort",
+      "context": "Результат / Раптова дія (Доконаний)",
       "role": "context"
     },
     {
-      "word": "подорожував",
+      "word": "раптова",
+      "exercise_type": "group-sort",
+      "context": "Результат / Раптова дія (Доконаний)",
+      "role": "context"
+    },
+    {
+      "word": "дія",
+      "exercise_type": "group-sort",
+      "context": "Результат / Раптова дія (Доконаний)",
+      "role": "context"
+    },
+    {
+      "word": "приїхати",
+      "exercise_type": "group-sort",
+      "context": "приїхати",
+      "role": "answer"
+    },
+    {
+      "word": "рушити",
+      "exercise_type": "group-sort",
+      "context": "рушити",
+      "role": "answer"
+    },
+    {
+      "word": "закінчилася",
       "exercise_type": "true-false",
-      "context": "Марко подорожував до моря літаком.",
+      "context": "Речення «Я їздив до Києва» означає, що поїздка вже закінчила",
       "role": "context"
     },
     {
-      "word": "зупинився",
+      "word": "повернулися",
       "exercise_type": "true-false",
-      "context": "Він зупинився у своїх друзів.",
+      "context": "Речення «Я їздив до Києва» означає, що поїздка вже закінчила",
       "role": "context"
     },
     {
-      "word": "своїх",
+      "word": "додому",
       "exercise_type": "true-false",
-      "context": "Він зупинився у своїх друзів.",
+      "context": "Речення «Мій брат поїхав до Києва» означає, що він вже повер",
       "role": "context"
     },
     {
-      "word": "кожного",
+      "word": "створюють",
       "exercise_type": "true-false",
-      "context": "Кожного дня Марко багато ходив.",
+      "context": "Дієслова «був», «сидів», «пив» — це дієслова недоконаного ви",
       "role": "context"
     },
     {
-      "word": "сонячна",
+      "word": "використовуючи",
       "exercise_type": "true-false",
-      "context": "Погода завжди була сонячна і тепла.",
+      "context": "Ми кажемо «ми поїдемо літаком», використовуючи орудний відмі",
       "role": "context"
     },
     {
-      "word": "тепла",
+      "word": "орудний",
       "exercise_type": "true-false",
-      "context": "Погода завжди була сонячна і тепла.",
+      "context": "Ми кажемо «ми поїдемо літаком», використовуючи орудний відмі",
       "role": "context"
     },
     {
-      "word": "сувеніри",
+      "word": "відмінок",
       "exercise_type": "true-false",
-      "context": "Марко купив сувеніри в кінці своєї подорожі.",
+      "context": "Ми кажемо «ми поїдемо літаком», використовуючи орудний відмі",
       "role": "context"
     },
     {
-      "word": "кінці",
+      "word": "транспорту",
       "exercise_type": "true-false",
-      "context": "Марко купив сувеніри в кінці своєї подорожі.",
+      "context": "Ми кажемо «ми поїдемо літаком», використовуючи орудний відмі",
       "role": "context"
     },
     {
-      "word": "своєї",
+      "word": "напрямку",
       "exercise_type": "true-false",
-      "context": "Марко купив сувеніри в кінці своєї подорожі.",
+      "context": "Для напрямку до міста використовується прийменник «на» (напр",
+      "role": "context"
+    },
+    {
+      "word": "використовується",
+      "exercise_type": "true-false",
+      "context": "Для напрямку до міста використовується прийменник «на» (напр",
+      "role": "context"
+    },
+    {
+      "word": "прийменник",
+      "exercise_type": "true-false",
+      "context": "Для напрямку до міста використовується прийменник «на» (напр",
+      "role": "context"
+    },
+    {
+      "word": "київ",
+      "exercise_type": "true-false",
+      "context": "Для напрямку до міста використовується прийменник «на» (напр",
+      "role": "context"
+    },
+    {
+      "word": "допомагає",
+      "exercise_type": "true-false",
+      "context": "Слово «тим часом» допомагає показати паралельні дії, які від",
+      "role": "context"
+    },
+    {
+      "word": "показати",
+      "exercise_type": "true-false",
+      "context": "Слово «тим часом» допомагає показати паралельні дії, які від",
+      "role": "context"
+    },
+    {
+      "word": "паралельні",
+      "exercise_type": "true-false",
+      "context": "Слово «тим часом» допомагає показати паралельні дії, які від",
+      "role": "context"
+    },
+    {
+      "word": "відбуваються",
+      "exercise_type": "true-false",
+      "context": "Слово «тим часом» допомагає показати паралельні дії, які від",
+      "role": "context"
+    },
+    {
+      "word": "одночасно",
+      "exercise_type": "true-false",
+      "context": "Слово «тим часом» допомагає показати паралельні дії, які від",
+      "role": "context"
+    },
+    {
+      "word": "фраза",
+      "exercise_type": "true-false",
+      "context": "Фраза «Мені дуже сподобалось» містить дієслово доконаного ви",
+      "role": "context"
+    },
+    {
+      "word": "містить",
+      "exercise_type": "true-false",
+      "context": "Фраза «Мені дуже сподобалось» містить дієслово доконаного ви",
+      "role": "context"
+    },
+    {
+      "word": "підсумовує",
+      "exercise_type": "true-false",
+      "context": "Фраза «Мені дуже сподобалось» містить дієслово доконаного ви",
       "role": "context"
     },
     {
       "word": "зупинятися",
-      "exercise_type": "group-sort",
-      "context": "зупинятися",
-      "role": "answer"
-    },
-    {
-      "word": "траплятися",
-      "exercise_type": "group-sort",
-      "context": "траплятися",
-      "role": "answer"
-    },
-    {
-      "word": "доїжджати",
-      "exercise_type": "group-sort",
-      "context": "доїжджати",
-      "role": "answer"
-    },
-    {
-      "word": "подобатися",
-      "exercise_type": "group-sort",
-      "context": "подобатися",
-      "role": "answer"
-    },
-    {
-      "word": "купили",
-      "exercise_type": "unjumble",
-      "context": "купили",
-      "role": "answer"
-    },
-    {
-      "word": "нових",
-      "exercise_type": "unjumble",
-      "context": "нових",
-      "role": "answer"
-    },
-    {
-      "word": "вихідних",
-      "exercise_type": "quiz",
-      "context": "На вихідних ми багато _____ в горах.",
+      "exercise_type": "error-correction",
+      "context": "Я вирішив поїхати в Карпати і зупинятися у друзів.",
       "role": "context"
     },
     {
-      "word": "цілий",
-      "exercise_type": "quiz",
-      "context": "Завтра у Львові ми цілий день _____ на екскурсії.",
+      "word": "іспанії",
+      "exercise_type": "error-correction",
+      "context": "з Іспанії",
+      "role": "answer"
+    },
+    {
+      "word": "вона",
+      "exercise_type": "error-correction",
+      "context": "Вона прилетіла на Іспанії.",
       "role": "context"
     },
     {
-      "word": "день",
-      "exercise_type": "quiz",
-      "context": "Завтра у Львові ми цілий день _____ на екскурсії.",
+      "word": "рушав",
+      "exercise_type": "error-correction",
+      "context": "Тим часом потяг рушав.",
       "role": "context"
     },
     {
-      "word": "онлайн",
-      "exercise_type": "quiz",
-      "context": "Я швидко _____ хатинку в Карпатах онлайн.",
+      "word": "купимо",
+      "exercise_type": "error-correction",
+      "context": "Ми купимо квиток на вокзалу.",
       "role": "context"
     },
     {
-      "word": "друзям",
+      "word": "вокзалу",
+      "exercise_type": "error-correction",
+      "context": "Ми купимо квиток на вокзалу.",
+      "role": "context"
+    },
+    {
+      "word": "прочитав",
+      "exercise_type": "error-correction",
+      "context": "Я сидів у вагоні і прочитав книгу.",
+      "role": "context"
+    },
+    {
+      "word": "почалася",
+      "exercise_type": "error-correction",
+      "context": "почалася",
+      "role": "answer"
+    },
+    {
+      "word": "починала",
+      "exercise_type": "error-correction",
+      "context": "Моя подорож починала тоді, коли я купив квиток.",
+      "role": "context"
+    },
+    {
+      "word": "свою",
+      "exercise_type": "error-correction",
+      "context": "свою",
+      "role": "answer"
+    },
+    {
+      "word": "хочуть",
+      "exercise_type": "error-correction",
+      "context": "Вони хочуть розповісти про їх подорож.",
+      "role": "context"
+    },
+    {
+      "word": "їх",
+      "exercise_type": "error-correction",
+      "context": "Вони хочуть розповісти про їх подорож.",
+      "role": "context"
+    },
+    {
+      "word": "завжди",
       "exercise_type": "quiz",
-      "context": "Ввечері я довго _____ друзям про свою подорож.",
+      "context": "Влітку ми завжди їздимо ____ Карпати.",
       "role": "context"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 17,
-    "tested_in_exercises": 12,
+    "tested_in_exercises": 13,
     "not_tested": [
-      "враження",
-      "потім",
+      "розповідати",
+      "сподобатися",
       "сувенір",
-      "тим",
-      "часом"
+      "трапитися"
     ]
   },
   "all_grounded": false

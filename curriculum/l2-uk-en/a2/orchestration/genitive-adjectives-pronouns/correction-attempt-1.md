@@ -1,7 +1,7 @@
 <correction_directive>
 CRITICAL: Your previous attempt failed the following checks. Fix ONLY the listed errors. Keep everything else exactly as is — do not rewrite sections that are working correctly.
 
-- FIX: Missing 4/10 required vocab: присвійний (possessive), вказівний (demonstrative), вчителька (female teacher), важливий (important)
+- FIX: Severe Russianisms: хорошо
 </correction_directive>
 
 LEARNINGS FROM PAST BUILDS (same error patterns seen before):

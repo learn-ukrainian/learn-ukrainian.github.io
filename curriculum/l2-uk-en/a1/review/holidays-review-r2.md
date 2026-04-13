@@ -1,71 +1,106 @@
 ## Linguistic Scan
-Found several critical issues regarding stress marks (which act as phonetic guides for learners):
-1. **Typographical double stress marks:** Several words were generated with two simultaneous combining acute accents, which is impossible in spoken Ukrainian and teaches incorrect phonetics (`**свя́та́**`, `**виши́ва́нка**`, `**захи́сникі́в**`, `**захи́сни́ць**`).
-2. **Incorrect plural stress:** The plural of *пи́санка* is *пи́санки* (stress on the first syllable), but the text generated `**писанки́**`.
-3. **Incorrect pronoun stress shift:** The text has `Ко́ли в тебе́ Різдво́?`. When the pronoun *тебе* follows a preposition like *в*, the stress shifts to the first syllable: `в те́бе`.
-
-No Russianisms, Surzhyk, calques, or case errors were found. The vocabulary choices (e.g., *салют*, *Свята вечеря*) are accurate and verified against СУМ-11.
+No linguistic errors found. I found no Russianisms, Surzhyk, calques, paronym errors, or forbidden Russian characters (`ы`, `э`, `ё`, `ъ`) in the Ukrainian text.
 
 ## Exercise Check
-All activity markers exactly match the plan's `activity_hints` sequence and are placed logically after the corresponding teaching block:
-- `<!-- INJECT_ACTIVITY: quiz-holiday-match -->` is injected correctly after the "Діалоги" section.
-- `<!-- INJECT_ACTIVITY: quiz-holiday-clues -->` is injected correctly after the "Українські свята" section.
-- `<!-- INJECT_ACTIVITY: group-sort-traditions -->` is injected correctly after the "Державні свята" section.
-- `<!-- INJECT_ACTIVITY: fill-in-greetings -->` is injected correctly at the end of the module.
+All 4 expected markers are present, and the IDs match the plan hints: `quiz-which-holiday`, `quiz-match-date`, `group-sort-traditions`, `fill-in-greetings`.
+
+The issue is placement. `quiz-which-holiday`, `quiz-match-date`, and `group-sort-traditions` are clustered after `## Державні свята`, so the Christmas/Easter material gets no immediate practice after it is taught. `fill-in-greetings` is placed correctly after the greetings summary.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 10/10 | The module flawlessly covers the entire outline. All expected elements—including the 2023 Christmas date shift, the 12 dishes, and the "З + instrumental" grammar rule—are accurately incorporated. |
-| 2. Linguistic accuracy | 8/10 | While vocabulary and grammar are solid, there are critical stress mark errors. Words like "свя́та́", "виши́ва́нка", and "захи́сникі́в" contain double stress marks. Plural of "пи́санка" is stressed incorrectly as "писанки́". The phrase "в тебе́" incorrectly places stress on the second syllable after a preposition. |
-| 3. Pedagogical quality | 10/10 | Excellent execution of the PPP flow. The module introduces holidays naturally via dialogue, subsequently breaking down the context, history, and finally offering a clear, pattern-based explanation of greetings with the instrumental case ("З + [holiday]"). |
-| 4. Vocabulary coverage | 10/10 | All required and recommended words (`свято`, `Різдво`, `Великдень`, `кутя`, `колядка`, `прапор`, `салют`) are naturally embedded into paragraphs and dialogues without resorting to bare lists. |
-| 5. Exercise quality | 10/10 | The 4 requested activity markers (`quiz-holiday-match`, `quiz-holiday-clues`, `group-sort-traditions`, `fill-in-greetings`) are present and accurately positioned to test what was just taught. |
-| 6. Engagement & tone | 10/10 | The tone is warm and encouraging. It uses specific, culturally deep details (e.g., "powerful visual symbol of Ukrainian identity") rather than relying on generic filler or empty enthusiasm. |
-| 7. Structural integrity | 10/10 | All required H2 headings from the plan are present and ordered correctly. The word count is 1536, comfortably above the 1200-word target. |
-| 8. Cultural accuracy | 10/10 | Outstanding decolonized perspective. Correctly notes the historical shift away from the Russian Orthodox calendar for Christmas and highlights the civic importance of Vyshyvanka Day and Defenders' Day. |
-| 9. Dialogue & conversation quality | 9/10 | Conversations are highly realistic. The exchanges capture both the casual nature of discussing holiday plans and the patriotic atmosphere of Independence Day. Using "ти" to address a family unit in an informal setting is acceptable and common. |
+| 1. Plan adherence | 6/10 | All planned sections exist, and planned vocabulary is covered, but the section pacing is far off the 300-word plan budget: `Діалоги` 486 words, `Українські свята` 537, `Державні свята` 408, `Підсумок` 344. The Independence dialogue also changes the planned evening detail from `салют` to `концерт`. |
+| 2. Linguistic accuracy | 10/10 | No Ukrainian language errors found; the module contains no Russian-only letters and the prompt’s VESUM data confirms the vocabulary used here. |
+| 3. Pedagogical quality | 6/10 | Too much space is spent on English meta-explanation instead of immediate Ukrainian input, e.g. `Ukrainian holidays are a central part of family life...`, `A **свято** is a time for rest...`, `Notice the word **подарунок**...`. Practice is also delayed by the late marker clustering. |
+| 4. Vocabulary coverage | 10/10 | All required plan words appear in prose (`свято`, `святкувати`, `Різдво`, `Великдень`, `Новий рік`, `вітати`), and the recommended cultural vocabulary is also used naturally. |
+| 5. Exercise quality | 6/10 | The marker inventory is complete, but `quiz-which-holiday`, `quiz-match-date`, and `group-sort-traditions` are stacked together late instead of following the holiday content they test. |
+| 6. Engagement & tone | 7/10 | The cultural topic is strong, but several lines are generic filler rather than concrete teaching, e.g. `It is a very important word for any celebration.` and `The rich traditions remain exactly the same.` |
+| 7. Structural integrity | 10/10 | All planned H2 headings are present and ordered correctly, and the deterministic pipeline count is above the 1200-word target. |
+| 8. Cultural accuracy | 8/10 | The module is broadly decolonized and culturally respectful, but `There must be exactly twelve meatless dishes` overstates a living tradition as an absolute rule. |
+| 9. Dialogue & conversation quality | 6/10 | The Independence dialogue is still mostly Q&A (`Що ви робите?`, `А ввечері?`) and repeats `концерт`, so it feels more like a checklist than a natural exchange. |
 
 ## Findings
-[2. Linguistic accuracy] [Critical]
-Location: `The plural form is **свя́та́** (holidays).`
-Issue: Double stress mark on a single word is typographically incorrect and teaches wrong phonetics.
-Fix: Remove the second stress mark to make it `**свя́та**`.
+[PLAN ADHERENCE] [SEVERITY: major]  
+Location: `Ukrainian holidays are a central part of family life and national identity...`; `A **свято** is a time for rest, family, and tradition...`; `Notice the word **подарунок** (gift). It is a very important word for any celebration.`  
+Issue: Generic English exposition bloats all four sections far past the plan’s 300-word budgets and weakens pacing.  
+Fix: Compress or remove these meta-explanations and keep the section focused on Ukrainian examples, greetings, and culture.
 
-[2. Linguistic accuracy] [Critical]
-Location: `> **Украї́нська роди́на:** Ко́ли в тебе́ Різдво́? *(When is your Christmas?)*`
-Issue: Incorrect stress shift. After a preposition ("в"), the stress on "тебе" shifts to the first syllable ("те́бе").
-Fix: Change "тебе́" to "те́бе".
+[DIALOGUE & CONVERSATION QUALITY] [SEVERITY: major]  
+Location: `> **Марко:** Що ви робите?... > **Сара:** Ввечері — концерт і святковий вечір з друзями.`  
+Issue: The Independence dialogue is unnatural, repetitive, and deviates from the plan by replacing the planned evening `салют` with a second `концерт`.  
+Fix: Replace the block with a more natural multi-turn exchange that keeps `парад`, `концерт`, and `салют`.
 
-[2. Linguistic accuracy] [Critical]
-Location: `During this time, Ukrainians create **писанки́** (decorated eggs).`
-Issue: Incorrect stress. The plural of "пи́санка" is "пи́санки" (stress on the first syllable), not "писанки́".
-Fix: Change "писанки́" to "пи́санки".
+[EXERCISE QUALITY] [SEVERITY: major]  
+Location: `<!-- INJECT_ACTIVITY: quiz-which-holiday -->` / `<!-- INJECT_ACTIVITY: quiz-match-date -->` / `<!-- INJECT_ACTIVITY: group-sort-traditions -->`  
+Issue: Three exercise markers are clustered late, so learners do not get practice immediately after the Christmas/Easter teaching they are supposed to reinforce.  
+Fix: Move `quiz-which-holiday` and `quiz-match-date` up to the end of `## Українські свята`; keep `group-sort-traditions` after the national-holidays section.
 
-[2. Linguistic accuracy] [Critical]
-Location: `unique cultural event called **День виши́ва́нки** (Vyshyvanka Day).` and `wearing a **виши́ва́нка** (embroidered shirt).`
-Issue: Double stress marks on a single word.
-Fix: Change both instances to `**День вишива́нки**` and `**вишива́нка**`.
-
-[2. Linguistic accuracy] [Critical]
-Location: `honor their military defenders on **День захи́сникі́в і захи́сни́ць** (Defenders' Day).`
-Issue: Double stress marks on "захисників" and "захисниць".
-Fix: Change to `**День захисникі́в і захисни́ць**`.
+[CULTURAL ACCURACY] [SEVERITY: major]  
+Location: `There must be exactly twelve meatless dishes, representing the twelve apostles.`  
+Issue: This presents a traditional custom as an absolute rule. That is too rigid for a living cultural practice.  
+Fix: Rephrase it as a tradition rather than a universal obligation.
 
 ## Verdict: REVISE
-The module's structure, vocabulary coverage, and cultural accuracy are excellent. However, there are multiple critical typography and phonetics issues related to stress placement (double stress marks, incorrect stress shift in pronouns, incorrect plural stress) that teach incorrect pronunciation. These issues must be revised before the module can pass.
+REVISE. There are no Ukrainian language errors, but there are multiple major quality problems: severe section-budget overrun from filler exposition, weak/misaligned Independence dialogue, late exercise clustering, and one overly absolute cultural claim. Those findings put several dimensions below 9, so this cannot pass as-is.
 
 <fixes>
-- find: "The plural form is **свя́та́** (holidays)."
-  replace: "The plural form is **свя́та** (holidays)."
-- find: "**Украї́нська роди́на:** Ко́ли в тебе́ Різдво́?"
-  replace: "**Украї́нська роди́на:** Ко́ли в те́бе Різдво́?"
-- find: "During this time, Ukrainians create **писанки́** (decorated eggs)."
-  replace: "During this time, Ukrainians create **пи́санки** (decorated eggs)."
-- find: "unique cultural event called **День виши́ва́нки** (Vyshyvanka Day)."
-  replace: "unique cultural event called **День вишива́нки** (Vyshyvanka Day)."
-- find: "wearing a **виши́ва́нка** (embroidered shirt)."
-  replace: "wearing a **вишива́нка** (embroidered shirt)."
-- find: "defenders on **День захи́сникі́в і захи́сни́ць** (Defenders' Day)."
-  replace: "defenders on **День захисникі́в і захисни́ць** (Defenders' Day)."
+- find: |-
+    Ukrainian holidays are a central part of family life and national identity. Knowing how to talk about celebrations is a natural way to connect with people. You will often hear questions about dates and specific traditions.
+  replace: |-
+    In Ukraine, holidays bring together family, food, songs, and greetings.
+
+- find: |-
+    The most important winter celebration is **Різдво** (Christmas). During the festive season, families gather to share special meals and sing traditional songs. Notice how the speakers discuss the recent date change for this holiday.
+  replace: |-
+    Here is a short Christmas dialogue about the holiday date and traditions.
+
+- find: |-
+    Let's break down the vocabulary. **Різдво** is the noun for Christmas, and the verb **святкувати** means to celebrate. A **колядка** is a traditional carol that children and adults sing. The word **кутя** refers to a special ritual dish eaten only during the winter holidays. When saying goodbye or raising a toast, Ukrainians use the phrase **З Різдвом!** (Merry Christmas!).
+  replace: |-
+    Key words here are **Різдво**, **святкувати**, **колядка**, **кутя**, and the greeting **З Різдвом!**.
+
+- find: |-
+    > **Марко:** Двадцять четверте серпня — День Незалежності! *(The twenty-fourth of August is Independence Day!)*
+    > **Сара:** Так, це головне державне свято України. *(Yes, this is the main state holiday of Ukraine.)*
+    > **Марко:** Що ви робите? *(What do you do?)*
+    > **Сара:** Ми дивимося парад і ходимо на концерт. *(We watch the parade and go to a concert.)*
+    > **Марко:** А ввечері? *(And in the evening?)*
+    > **Сара:** Ввечері — концерт і святковий вечір з друзями. *(In the evening — a concert and a festive evening with friends.)*
+    > **Марко:** З Днем Незалежності! *(Happy Independence Day!)*
+    > **Сара:** Слава Україні! *(Glory to Ukraine!)*
+  replace: |-
+    > **Марко:** Двадцять четверте серпня — День Незалежності! *(The twenty-fourth of August is Independence Day!)*
+    > **Сара:** Так, це головне державне свято України. Ти йдеш на парад? *(Yes, it is the main state holiday of Ukraine. Are you going to the parade?)*
+    > **Марко:** Так, а потім — на концерт. *(Yes, and then to a concert.)*
+    > **Сара:** Я теж. А ввечері буде салют і святковий вечір з друзями. *(Me too. And in the evening there will be fireworks and a festive evening with friends.)*
+    > **Марко:** З Днем Незалежності! *(Happy Independence Day!)*
+    > **Сара:** Слава Україні! *(Glory to Ukraine!)*
+
+- find: |-
+    A **свято** is a time for rest, family, and tradition. When you want to **вітати** (to greet) someone for a festive occasion but you do not know the exact phrase, you can always say **Зі святом!** (Happy Holiday!). It is a universal, polite phrase that works for almost any situation.
+  replace: |-
+    If you do not know the exact greeting, you can say **Зі святом!** (Happy holiday!).
+
+- find: |-
+    There must be exactly twelve meatless dishes, representing the twelve apostles.
+  replace: |-
+    Traditionally, families prepare twelve meatless dishes, symbolically linked to the twelve apostles.
+
+- find: |-
+    Notice the word **подарунок** (gift). It is a very important word for any celebration. The standard greeting as the clock strikes midnight is **З Новим роком!**.
+  replace: |-
+    **Подарунок** means “gift”. At midnight, the standard greeting is **З Новим роком!**.
+
+- find: |-
+    <!-- INJECT_ACTIVITY: quiz-which-holiday -->
+    <!-- INJECT_ACTIVITY: quiz-match-date -->
+    <!-- INJECT_ACTIVITY: group-sort-traditions -->
+  replace: |-
+    <!-- INJECT_ACTIVITY: group-sort-traditions -->
+
+- insert_after: |-
+    * Це красива українська традиція. *(This is a beautiful Ukrainian tradition.)*
+  content: |-
+    <!-- INJECT_ACTIVITY: quiz-which-holiday -->
+    <!-- INJECT_ACTIVITY: quiz-match-date -->
 </fixes>

@@ -1,0 +1,64 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T18-28-f26753c8.json
+phase: vocab
+prompt_chars: 19699
+response_chars: 1351
+prompt_words: 3189
+response_words: 141
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.0405
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.0117
+- name: plan
+  start: 1028
+  length: 18671
+  fraction: 0.9478
+large_sections:
+- plan
+directives_total: 9
+directives_covered: 0
+directives_missed:
+- kind: must
+  text: When an object directly receives an action, we must use the **знахідний**
+    (accusative) case.
+  covered: false
+  coverage_note: 3/10 keywords (30%)
+- kind: must
+  text: Every noun must be declined through these seven categories.
+  covered: false
+  coverage_note: 0/8 keywords (0%)
+- kind: must
+  text: This softening is completely mandatory for natural speech.
+  covered: false
+  coverage_note: 0/6 keywords (0%)
+- kind: must
+  text: You must apply the rule and change the «г» to a «з», resulting in the correct
+    and natural phrase «я даю подарунок подрузі».
+  covered: false
+  coverage_note: 2/12 keywords (17%)
+- kind: must
+  text: However, when a word begins with a heavy cluster of consonants, especially
+    those starting with sibilant sounds like «с», «ш», or «з», you must use «зі» to
+    make pronunciation easier.
+  covered: false
+  coverage_note: 2/19 keywords (11%)
+- kind: inject_activity
+  text: quiz-case-identification
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-phonological-alternations
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-euphony-choice
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: error-correction-euphony
+  covered: false
+  coverage_note: marker missing

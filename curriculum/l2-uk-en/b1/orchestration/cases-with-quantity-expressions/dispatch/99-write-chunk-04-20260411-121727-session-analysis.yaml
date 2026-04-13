@@ -1,0 +1,77 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T10-16-9befe2e7.json
+phase: write-chunk-04
+prompt_chars: 48326
+response_chars: 3479
+prompt_words: 6578
+response_words: 506
+sections:
+- name: header
+  start: 0
+  length: 430
+  fraction: 0.0089
+- name: skeleton
+  start: 430
+  length: 1001
+  fraction: 0.0207
+- name: prior_summary
+  start: 1431
+  length: 3824
+  fraction: 0.0791
+- name: plan
+  start: 5255
+  length: 16245
+  fraction: 0.3362
+- name: wiki
+  start: 15232
+  length: 26613
+  fraction: 0.5507
+- name: output_spec
+  start: 48113
+  length: 213
+  fraction: 0.0044
+large_sections:
+- wiki
+directives_total: 14
+directives_covered: 4
+directives_missed:
+- kind: checklist
+  text: неозначено-кількісний (indefinite-quantitative — багато, кілька)
+  covered: false
+  coverage_note: 0/6 keywords (0%)
+- kind: checklist
+  text: кілька (several — governs Р.в.)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: декілька (several — synonym of кілька)
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: checklist
+  text: чимало (quite a lot — governs Р.в.)
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: checklist
+  text: достатньо (enough — governs Р.в.)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: понад (more than — governs Зн.в.)
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: checklist
+  text: близько (about/approximately — governs Р.в.)
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: inject_activity
+  text: error-correction-declension
+  covered: false
+  coverage_note: marker missing

@@ -1,50 +1,44 @@
-## Який? Якого? Прикметники в родовому (Which? Whose? Adjectives in the Genitive)
+## Який? Якого? Прикметники в родовому (~770 words)
 
-> — **Власник:** Добрий день! Я шукаю сумку мого старшого брата. Ви не бачили цієї червоної парасольки? *(Good day! I am looking for my older brother's bag. Have you seen this red umbrella?)*
-> — **Працівник:** Добрий день. Хвилинку, я уважно подивлюся в комп'ютері. *(Good day. Just a minute, I will look carefully in the computer.)*
-> — **Власник:** Ми також загубили речі батьків. Тут немає нашого великого чемодану? *(We also lost our parents' things. Is our large suitcase not here?)*
-> — **Працівник:** Ні, тут немає вашого великого чемодану. Але є парасолька цієї маленької дівчини. *(No, your large suitcase is not here. But there is this little girl's umbrella.)*
-> — **Власник:** Це парасолька моєї молодшої сестри! Дуже дякую вам за допомогу. *(This is my younger sister's umbrella! Thank you very much for your help.)*
-> — **Працівник:** Будь ласка. Я обов'язково зателефоную, якщо ми знайдемо сумку. *(You're welcome. I will definitely call if we find the bag.)*
+> — **Власник:** Добрий день! Я шукаю загублені речі. Це сумка мого старшого брата, але тут немає моїх речей. *(Good day! I am looking for lost things. This is my older brother's bag, but my things are not here.)*
+> — **Працівник:** Добрий день. Що саме ви загубили? Ви не бачили цієї червоної парасольки? Можливо, вона ваша? *(Good day. What exactly did you lose? Have you not seen this red umbrella? Perhaps it is yours?)*
+> — **Власник:** Ні, це не наша парасолька. Ми шукаємо інше. Тут немає нашого великого чемодану. *(No, this is not our umbrella. We are looking for something else. Our large suitcase is not here.)*
+> — **Працівник:** Якого чемодану ви не бачите? Якого він кольору? *(Which suitcase do you not see? What color is it?)*
+> — **Власник:** Це був новий чемодан темного кольору. Ми залишили його біля того великого вікна. *(It was a new suitcase of a dark color. We left it near that large window.)*
 
-In Ukrainian, adjectives are loyal companions to their nouns. They always agree with the noun in gender, number, and case. This grammatical principle is called **узгодження** (agreement). You already know that nouns change their endings in the Genitive case, especially to show possession or after common prepositions like «без» (without), «для» (for), or «біля» (near). When you add an adjective to describe that noun, the adjective must also put on its Genitive uniform. It cannot stubbornly stay in the dictionary form while the noun changes around it.
+When you describe a missing object, talk about things you do not have, or specify the exact location of an item, you need to use the Genitive case. However, nouns rarely stand alone in a natural sentence. They are usually accompanied by a descriptive word, such as an **прикметник** (adjective). In Ukrainian grammar, these descriptive words cannot remain in their dictionary form when the main noun changes its case. They must strictly follow the rule of **узгодження** (grammatical agreement). This fundamental principle means that when a noun changes to the Genitive case—whether because of the word "немає", specific quantities, or certain prepositions—the adjective describing it must completely match that change. Instead of answering the standard question "який?" or "яка?", the adjective must now answer the question "якого?" for masculine and neuter nouns, or "якої?" for feminine nouns. This matching process ensures that every part of the phrase works together harmoniously in spoken and written communication.
 
-Прикметник завжди стоїть у тому самому відмінку, що й іменник. Якщо іменник змінюється, прикметник також обов'язково змінює своє закінчення. Це правило працює для всіх трьох родів.
+У студента немає нового підручника для цього складного уроку. Я зовсім не бачу великого будинку на цій вулиці. Вона довго шукає власника старої сумки. Без хорошого плану ми не можемо почати роботу.
 
-> *An adjective always stands in the same case as the noun. If the noun changes, the adjective also mandatorily changes its ending. This rule works for all three genders.*
+> *The student does not have a new textbook for this difficult lesson. I do not see a large building on this street at all. She is looking for the owner of the old bag for a long time. Without a good plan, we cannot start the work.*
 
-Let's start with masculine and neuter adjectives. For adjectives that end in a hard consonant in their dictionary form, such as «новий» (new), «старий» (old), or «великий» (large), the Genitive ending is **-ого**. This ending applies to both masculine and neuter nouns, making it quite efficient to learn. You simply drop the «-ий» or «-е» and attach the new suffix. 
+For masculine and neuter nouns, the Genitive adjective endings depend directly on whether the stem of the descriptive word is hard or soft. When you want to describe a **підручник** (textbook), you must use the correct ending. Most Ukrainian adjectives belong to the hard group and take the distinct ending **-ого**. For example, the basic word "новий" changes to "нового", and "великий" becomes "великого". You simply drop the original ending and attach the new one. If the adjective belongs to the soft group, which typically ends in "-ій", it takes the softer ending **-ього**. For instance, the color "синій" transforms into "синього", and "вечірній" becomes "вечірнього". Both masculine and neuter adjectives share these exact same forms, which makes remembering the patterns significantly easier.
 
-Я щодня проходжу біля старого будинку. У мене зараз немає нового підручника. Вона нещодавно приїхала з великого міста. Ми не бачили цього цікавого фільму.
-
-> *I walk past the old building every day. I do not have a new textbook right now. She recently arrived from a large city. We have not seen this interesting film.*
-
-:::note
-**Pronunciation Tip**
-The Ukrainian Genitive ending **-ого** is pronounced exactly as it is written: with a gentle [h] sound in the middle, similar to the English word "home". It sounds like [-oho]. Never pronounce it as [-ovo], which is a feature of the Russian language. Emphasizing the [h] sound makes your Ukrainian sound authentic, decolonized, and completely natural.
+:::info
+**Decolonization and Pronunciation**
+The Ukrainian Genitive ending **-ого** is pronounced exactly as it is written, with a clear, voiced `[h]` sound in the middle. It must never be pronounced with a `[v]` sound. This pronunciation is a fundamental, unique feature of the Ukrainian phonetic system and should be practiced carefully.
 :::
 
-Not all adjectives have hard stems. Some adjectives belong to the soft group. You can easily recognize them because their dictionary form ends in a soft consonant followed by «-ій», such as «синій» (blue), «вчорашній» (yesterday's), or «літній» (summer). For these masculine and neuter adjectives, the Genitive ending becomes **-ього**. The soft sign is crucial here because it ensures that the consonant right before the ending remains soft during pronunciation.
+Сьогодні ми гуляємо біля нового міського парку. У мого молодшого брата немає синього олівця. Я дійсно не знаю цього молодого чоловіка. Туристи ще не бачили вашого великого міста. Без смачного сніданку день починається погано.
 
-Сьогодні немає синього олівця на моєму столі. Ми дуже довго чекали цього теплого літнього дня. Він зовсім не пам'ятає вчорашнього вечора. Це був колір глибокого моря.
+> *Today we are walking near the new city park. My younger brother does not have a blue pencil. I really do not know this young man. The tourists have not yet seen your large city. Without a tasty breakfast, the day begins badly.*
 
-> *Today there is no blue pencil on my table. We waited a very long time for this warm summer day. He does not remember yesterday evening at all. It was the color of the deep sea.*
+Feminine adjectives have their own distinct set of endings in the Genitive case, which easily separates them from masculine and neuter forms. For feminine adjectives with a hard stem, the ending changes to **-ої**. For example, the dictionary form "нова" changes to "нової", and "стара" becomes "старої". If the feminine adjective has a soft stem, typically ending in "-я" in the dictionary form, it takes the ending **-ьої**. Therefore, the word "синя" transforms into "синьої", and "остання" becomes "останньої". These feminine endings are instantly recognizable and always answer the specific question "якої?". By mastering these two feminine variations, you can confidently describe any missing feminine object, or talk about a **вчителька** (female teacher) with precision.
 
-Feminine adjectives have entirely distinct Genitive endings. You do not use the «-ого» or «-ього» suffixes here. Instead, for hard stem feminine adjectives, you drop the «-а» and add the ending **-ої**. For soft stem adjectives, which typically end in «-я» in the Nominative case, you change the ending to **-ьої** or **-ньої**. This creates a beautiful, melodic sound that is very characteristic of spoken Ukrainian.
+У мене немає нової цікавої книги. Ми стоїмо біля старої дерев'яної церкви. Вона не хоче купувати синьої сукні. Для цієї складної роботи потрібен інший інструмент. У сестри немає останньої версії цього документа.
 
-Він уважно читає першу сторінку з нової книги. Я ніколи не бачив цієї гарної дівчини раніше. Вона купила дорогі ґудзики для синьої сукні. Учні повільно повертаються з вечірньої школи.
+> *I do not have a new interesting book. We are standing near the old wooden church. She does not want to buy a blue dress. A different tool is needed for this difficult work. The sister does not have the latest version of this document.*
 
-> *He carefully reads the first page from a new book. I have never seen this beautiful girl before. She bought expensive buttons for a blue dress. The students slowly return from evening school.*
+In real-life conversations, you will frequently use full phrases that include prepositions. When you construct a sentence with prepositions like "без", "біля", or "для", both the adjective and the noun must change together as a single grammatical unit. You cannot change the noun and leave the adjective in its dictionary form. They operate as an inseparable pair. For example, if you want to say "without a new textbook," you must combine the preposition with the masculine Genitive phrase to get "без нового підручника." If you are talking about a location, such as "near the old church," the entire feminine phrase shifts to "біля старої церкви." This principle of agreement applies seamlessly across all three genders, including soft stems like "без синього олівця." You will also apply this same logic when using a **вказівний** (demonstrative) or **присвійний** (possessive) **займенник** (pronoun).
 
-:::tip
-**Watch out for calques!**
-Notice that the Ukrainian feminine Genitive endings are **-ої** and **-ьої** (for example, «нової», «синьої»). They are distinct from the Russian endings. Pay close attention to pronouncing these Ukrainian vowels clearly to avoid mixing the two languages and to preserve the unique rhythm of Ukrainian.
-:::
+Він не може працювати без важливого документа. Студенти чекають біля нової школи. Діти граються біля високого дерева. Ми не можемо увійти туди без спеціального дозволу. Вона купила квіти для нашої найкращої вчительки.
 
-The most frequent and practical way you will use these Genitive adjectives is alongside prepositions that demand the Genitive case. Prepositions such as «без» (without), «для» (for), «біля» (near), and «від» (from) are your primary triggers. Whenever you use one of these words to build a phrase, you must expect both the descriptive adjective and the main noun to take their Genitive forms. Mastering these combinations will dramatically elevate your speaking ability.
+> *He cannot work without an important document. The students are waiting near the new school. The children are playing near the tall tree. We cannot enter there without special permission. She bought flowers for our best teacher.*
 
-Я справді не можу працювати без того важливого документа. Це спеціальний подарунок для нашої нової вчительки. Ми вчора зустрілися біля великого торгового центру. Вона нарешті отримала повідомлення від молодого лікаря.
+Recognizing this pattern is an **важливий** (important) step to build your fluency. Practicing common descriptive opposites in their Genitive forms will help you quickly describe what is missing or where something is located. Whether you are asking for **дозвіл** (permission) or looking for a lost **документ** (document), you need these endings. For the basic word "великий", the Genitive forms are "великого" for masculine and neuter objects, and "великої" for feminine objects. Its natural opposite, "маленький", logically becomes "маленького" and "маленької". The descriptive word "старий" shifts to "старого" and "старої", while "молодий" predictably changes to "молодого" and "молодої". Practicing these basic descriptive words in full phrases will make your spoken Ukrainian sound much more natural, fluid, and precise.
 
-> *I truly cannot work without that important document. This is a special gift for our new teacher. We met near the large shopping center yesterday. She finally received a message from the young doctor.*
+Тут немає великого стола, але є багато вільного місця. Вона не знає цього старого міста. Ми шукаємо власника маленької чорної сумки. У молодої дівчини немає жодних проблем із цим новим завданням.
 
-<!-- INJECT_ACTIVITY: fill-in, Put the adjective and noun into the correct Genitive form, 8 items -->
+> *There is no large table here, but there is a lot of free space. She does not know this old city. We are looking for the owner of the small black bag. The young girl has no problems at all with this new task.*
+
+<!-- INJECT_ACTIVITY: fill-in-genitive-adjectives -->

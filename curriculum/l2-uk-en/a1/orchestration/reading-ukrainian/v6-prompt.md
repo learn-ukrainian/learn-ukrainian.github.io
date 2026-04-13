@@ -249,27 +249,26 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-- Confirmed: яблуко, молоко, людина, вулиця, столиця, каша, пісня, університет, бібліотека, фотографія, шоколад.
-- Not found: None.
+- Confirmed: яблуко, молоко, людина, вулиця, столиця, каша, пісня, університет, бібліотека, фотографія, шоколад, Київ, України (Україна)
+- Not found: (None, all words confirmed)
 
 ## Grammar Rules
-- **Я, Ю, Є**: Правопис §4 — Букви я, ю, є позначають [йа], [йу], [йе] на початку слова, після голосного та апострофа; після приголосного вони позначають його м’якість.
-- **Буква Г**: Правопис §5 — Передає глотковий щілинний звук [г], зокрема в словах іншомовного походження (фотографія).
-- **Склади (Syllables)**: Textbooks (Bolshakova Gr1 p.25, Kravcova Gr2 p.13) — "У слові стільки складів, скільки голосних звуків" (There are as many syllables as there are vowel sounds). 
-- **Chin Test**: Kravcova Gr2 p.13 — Each time the chin touches the palm while speaking a word, it counts as one syllable.
+- Апостроф: Правопис §7 — Роздільність вимови я, ю, є, ї та попереднього твердого приголосного на письмі позначаємо апострофом.
+- М'який знак (Ь): Правопис §26 — Буквою ь позначаємо на письмі м’якість приголосних звуків.
 
 ## Calque Warnings
-- **Київ**: OK (ensure correct spelling vs. Russianism *Кієв*).
-- **Приймати участь**: Calque (though not in plan, useful for future) — use **брати участь**.
-- **Вірний**: In the sense of "correct/true" (вірний засіб), often a calque — use **правильний** or **певний**.
+- читати по складах: OK — (підтверджено в словниках як правильна форма)
+- звуковий аналіз: OK
+- ставити наголос: OK
 
 ## CEFR Check
-- **яблуко**: A1 — OK.
-- **молоко**: A1 — OK.
-- **вулиця**: A1 — OK.
-- **людина**: A1 — OK.
-- **університет**: A1 — OK.
-- *Note: CEFR verification tool encountered a technical error, but levels were cross-referenced with target A1 curriculum standards.*
+- яблуко: A1 — OK
+- молоко: A1 — OK
+- людина: A1 — OK
+- вулиця: A1 — OK
+- університет: A1 — OK
+- бібліотека: A1 — OK
+- фотографія: A1 — OK
 </pre_verified_facts>
 
 
@@ -580,12 +579,14 @@ These exercises, adapted from Ukrainian school materials, provide a gold standar
 
 ## Section Structure
 
-Write these sections as H2 headings, in this exact order:
+Write these sections as H2 headings, in this **exact** order:
 
 - `## Склади (Syllables)` (~250 words)
 - `## Голосні літери (Vowel Letters)` (~300 words)
 - `## Читання слів (Reading Words)` (~500 words)
 - `## Підсумок — Summary` (~150 words)
+
+**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim** as an `## H2` line. This includes the FINAL summary/transition section (`Підсумок: ...`, `Підсумок та перехід до M...`, etc.) — the writer's most common failure is silently dropping the closing section. Do NOT skip it. Do NOT renumber. Do NOT merge headings. The post-write quick-verify check will fail your build if any heading is missing, even if the prose itself is excellent.
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -631,6 +632,25 @@ PLAN-AWARE EXEMPTIONS: The following bans are RELAXED for this module because th
 - **Zero calques**: No приймати душ→брати душ, приймати рішення→ухвалювати рішення
 - **Zero paronyms**: тактична≠тактовна, ефектний≠ефективний — use the right word, not a similar-sounding one
 - **Natural Ukrainian**: Write how a Ukrainian teacher would explain this to a student. Not robotic, not textbook-dry, not overly casual.
+
+### FORBIDDEN WORDS — never write these (#1189)
+
+The following Russian words have leaked into past builds and broken modules. They are **hard-banned** — the post-write toxic-token scanner will fail your build the moment it sees one. Use the Ukrainian alternative every time, even in dialogues, even in casual prose, even when quoting a learner's mistake (use a `<!-- VERIFY -->` placeholder instead of typing the Russian form):
+
+| Russian (FORBIDDEN) | Ukrainian (USE THIS) |
+|---|---|
+| хорошо | добре |
+| конечно | звичайно / певна річ |
+| спасибо | дякую |
+| пожалуйста | будь ласка / прошу |
+| ничего | нічого |
+| сейчас | зараз |
+| тоже | теж / також |
+| здесь | тут |
+| кот | кіт |
+| кон | кін |
+
+This list is enforced word-for-word by `scripts/build/quick_verify.py` (SEVERE_RUSSIANISMS). If you produce any of these tokens — even inside a quoted example, even inside a dialogue line spoken by a Russian-speaking character — the build halts immediately. There is no exception.
 
 **Authority hierarchy (if uncertain about a word, check in this order):**
 VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (stress) → Антоненко-Давидович (style) → Грінченко (etymology).
@@ -745,41 +765,40 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Склади — Syllables (~275 words total)
-- P1 (~70 words): [Introduce the foundational Ukrainian syllable rule from Большакова Grade 1: "У слові стільки складів, скільки голосних звуків." (As many syllables as there are vowels). Contrast with English's complex syllable rules using simple examples: ма-ма (2), мо-ло-ко (3), банк (1).]
-- P2 (~70 words): [Explain the "Chin-test" from Кравцова Grade 2 as a physical tool for learners. Describe the process: palm under chin, say the word, count the drops. Practice with words like та-то and у-ні-вер-си-тет to feel the rhythmic nature of Ukrainian vowels.]
-- P3 (~65 words): [Introduce the Ukrainian sound notation system used in primary schools: [●] for vowels, [—] for hard consonants, and [=] for soft consonants. Explain why children are taught to visualize words this way before writing, using the word "мама" [— ● | — ●] as the first visual model.]
-- P4 (~70 words): [Explain "Syllable Chains" (складові ланцюжки) as the "bottom-up" reading method. Demonstrate building from a single sound to a syllable (М → ма, мо, му, ми), then reversing it (ам, ом, ум), and finally merging into a word (ма-ма). This establishes that reading is a process of blending, not spelling.]
-- <!-- INJECT_ACTIVITY: count-syllables-practice --> [count-syllables, focus: Apply vowel-counting rule to find syllable counts, 8 items]
-- <!-- INJECT_ACTIVITY: divide-words-practice --> [divide-words, focus: Physically dividing words like мо-ло-ко and ап-те-ка, 8 items]
+## Склади (~275 words total)
+- P1 (~60 words): Introduce the golden rule of Ukrainian reading from Grade 1: "У слові стільки складів, скільки голосних звуків" (Count the vowels, count the syllables). This rule never breaks. Provide examples: `ма-ма` (2 vowels = 2 syllables), `мо-ло-ко` (3 vowels = 3 syllables), `банк` (1 vowel = 1 syllable).
+- P2 (~65 words): Explain the "chin-test" for syllable counting (put your palm under your chin, say the word — each chin touch equals one syllable). Introduce basic Ukrainian sound notation: [●] represents a vowel sound (голосний).
+- P3 (~75 words): Explain how Ukrainian children learn to read using "складові ланцюжки" (syllable chains). You start with a consonant and vowel pair (М → ма, мо, му), then reverse them (ам, ом, ум), and finally build words (`ма-ма`, `мо-ло-ко`). Emphasize the bottom-up approach: sound → syllable → word.
+- P4 (~75 words): Introduce "Звуковий аналіз слова" (Sound analysis) as the systematic way to decode any word. The steps are: 1) Find the vowels, 2) Divide the word into syllables, 3) Place the stress, 4) Mark the consonants.
+- <!-- INJECT_ACTIVITY: count-syllables --> [count-syllables, Порахуй склади — скільки голосних, стільки й складів, 8 items]
 
-## Голосні літери — Vowel Letters (~330 words total)
-- P1 (~80 words): [Detail the 10:6 mapping—10 vowel letters mapping to 6 consistent vowel sounds. Start with the "simple" vowels: А [а], О [о], У [у], Ее [е], Ии [и], Іі [і]. Emphasize that unlike English, these letters don't shift their sound based on surrounding letters in the same way.]
-- P2 (~80 words): [Contrast the minimal pairs И vs І, the most critical distinction for A1 learners. Explain the retracted tongue position for И [ɪ] vs the fronted І [i], using the "Whale vs Cat" (кит vs кіт) and "Smoke vs House" (дим vs дім) examples to show how one vowel changes the whole meaning.]
-- P3 (~85 words): [Introduce Iotated Vowels (Я, Ю, Є, Ї) in their "two-sound" role. Explain they represent [й] + [vowel] at the start of words (яблуко, єнот) or after another vowel (моя, мрія). Highlight that Ї is unique—it is ALWAYS two sounds [йі] (їжак, Україна) and never softens.]
-- P4 (~85 words): [Explain the second function of Я, Ю, Є: softening the preceding consonant. Use the contrast of ЛА [la] vs ЛЯ [l'a] and ЛУ [lu] vs ЛЮ [l'u]. Introduce the word "пісня" to show how Я softens the Н and becomes a simple [а] sound. Explain that this is why they are called "iotated"—they carry a hidden [й] that either sounds out or disappears into the consonant.]
-- <!-- INJECT_ACTIVITY: iotated-vowels-components --> [match-up, focus: Matching letters like Я to their sound components [й]+[а] vs softening effect, 6 items]
+## Голосні літери (~330 words total)
+- P1 (~80 words): Review the core vowel system: 6 sounds mapped to 10 letters. First, introduce the 6 simple vowel letters: А [а], О [о], У [у], Е [е], И [и], І [і]. Emphasize that each of these simple letters makes exactly ONE consistent sound.
+- P2 (~90 words): Contrast the critical minimal pairs for И vs І. Explain that the difference is subtle but completely changes the meaning of a word. Give clear examples: `кит` (whale) vs `кіт` (cat), and `дим` (smoke) vs `дім` (house). Advise listening closely to pronunciation to distinguish them.
+- P3 (~80 words): Introduce the iotated vowels (Я, Ю, Є) and explain their first function: representing two sounds. This happens at the start of a word or after another vowel. Explain that Я = [йа] (`яблуко`), Ю = [йу], and Є = [йе].
+- P4 (~80 words): Explain the second function of Я, Ю, Є: when placed after a consonant, they represent one vowel sound but soften the preceding consonant (e.g., `пісня` — the Н is softened). Finally, introduce Ї: it ALWAYS makes two sounds [йі] and never softens (`Україна`).
+- <!-- INJECT_ACTIVITY: match-up --> [match-up, Match iotated vowels to their sound components: Я=[й]+[а], 6 items]
 
-## Читання слів — Reading Words (~550 words total)
-- P1 (~90 words): [Teach the 5-step Sound Analysis method (Звуковий аналіз слова): 1. Pronounce the word, 2. Identify vowels, 3. Split into syllables, 4. Locate the stress (наголос), 5. Categorize consonants. Walk through a complete analysis of the word "книга" (book) using the school symbols [— ● = ●].]
-- P2 (~90 words): [Practice reading one- and two-syllable words (односкладові та двоскладові). Use words like дім, сон, ліс (1) and та-то, во-да, ка-ша, ха-та (2). Emphasize blending the sounds into a single unit of breath rather than robotic letter-by-letter decoding.]
-- P3 (~90 words): [Move to three-syllable words (трискладові). Use ап-те-ка, мо-ло-ко, лю-ди-на, ву-ли-ця. Explain how the syllable rule helps manage longer strings of letters. Introduce the word "столиця" (capital) and link it to the phrase "Київ — столиця України" as a reading challenge.]
-- P4 (~100 words): [Reading multisyllable "internationalisms" as confidence boosters. Guide the learner through у-ні-вер-си-тет (5), біб-лі-о-те-ка (5), and фо-то-гра-фі-я (5). Explain that while these look long, they follow the exact same syllable rules as the word "мама".]
-- P5 (~90 words): [Reading Ukrainian geography. Use major city names to practice specific sounds: Ки-їв (И vs Ї), Льві-в (softening sign preview), О-де-са (simple), Хар-ків (І effect), Дні-про (cluster blend), Пол-та-ва (rhythmic).]
-- P6 (~90 words): [Preview of Special Signs for Module 3. Briefly explain the letter Щ (always [шч]), the Soft Sign Ь (silent but softens: сіль, день), and the Apostrophe (separates: м'ясо, сім'я). This provides "safety" for the learner when they encounter these common signs in current reading practice.]
-- <!-- INJECT_ACTIVITY: syllable-odd-one-out --> [odd-one-out, focus: Identifying the word with a different syllable count (e.g., a 1-syllable word in a list of 2-syllable words), 6 items]
-- <!-- INJECT_ACTIVITY: reading-meaning-quiz --> [quiz, focus: Reading a word (e.g., шоколад) and matching it to its English meaning/image, 6 items]
+## Читання слів (~530 words total)
+- P1 (~100 words): Explain how to apply syllable chains and sound analysis to real reading. Instruct learners not to read letter-by-letter, but syllable-by-syllable. Walk through an example: for the word `книга`, first find the vowels (И, А), split into syllables (`кни-га`), and then read it out loud.
+- P2 (~110 words): Introduce words by their Ukrainian classification, starting with 1-syllable (односкладові) and 2-syllable (двоскладові) words. Provide examples of 1-syllable words: `дім`, `сон`, `ліс`, `дуб`, `хліб`. Then provide 2-syllable words: `ма-ма`, `та-то`, `во-да`, `ру-ка`, `ха-та`, `ка-ша`.
+- <!-- INJECT_ACTIVITY: odd-one-out --> [odd-one-out, Яке слово зайве? — by syllable count (односкладове серед двоскладових), 6 items]
+- P3 (~120 words): Move up in difficulty to 3-syllable (трискладові) and 4+ syllable (багатоскладові) words. Give examples of 3 syllables: `ап-те-ка`, `мо-ло-ко`, `лю-ди-на`, `ву-ли-ця`, `шо-ко-лад`. Then show long words: `у-ні-вер-си-тет`, `біб-лі-о-те-ка`, `фо-то-гра-фі-я`. Emphasize that long words are easy if you just follow the syllable rule.
+- <!-- INJECT_ACTIVITY: divide-words --> [divide-words, Поділи слова на склади: мо-ло-ко, ап-те-ка, у-ні-вер-си-тет, 8 items]
+- P4 (~100 words): Use Ukrainian city names for practical reading practice, pointing out their different syllable structures. Examples: `Ки-їв` (2 syllables), `Львів` (1 syllable, 1 vowel), `О-де-са` (3 syllables), `Хар-ків` (2 syllables), `Дні-про` (2 syllables), `Пол-та-ва` (3 syllables). Mention the phrase `Київ — столиця України`.
+- P5 (~100 words): Provide a brief preview of special letter combinations that will be covered fully in the next module. Mention that Щ is always two sounds [шч] (`що`, `ще`), the soft sign Ь has no sound but softens consonants (`день`, `сіль`, `кінь`), and the apostrophe separates sounds (`сім'я`, `м'ясо`, `п'ять`).
+- <!-- INJECT_ACTIVITY: quiz --> [quiz, Read the word and choose its meaning, 6 items]
 
-## Підсумок — Summary (~150 words total)
-- P1 (~150 words): [Self-check checklist:
-  - How do you count syllables in a Ukrainian word? (Count the vowels!)
-  - What are the 6 basic vowel sounds? (А, О, У, Е, И, І)
-  - Which letter is always two sounds [йі]? (Ї)
-  - What is the difference between кит and кіт? (The И vs І sound changes the meaning from whale to cat)
-  - Count the syllables in біб-лі-о-те-ка. (5 vowels = 5 syllables)
-  - Recap: You can now sound out any Ukrainian word by breaking it into vowel-centered chunks.]
+## Підсумок — Summary (~160 words total)
+- P1 (~160 words): 
+  - How do you count syllables in a Ukrainian word? (Count the vowels).
+  - What are the 6 vowel sounds? ([а], [о], [у], [е], [и], [і]).
+  - Name the 4 iotated vowel letters. (Я, Ю, Є, Ї).
+  - What does Ь do? (It has no sound, but softens the preceding consonant).
+  - What does the apostrophe do? (It separates a hard consonant from a two-sound iotated vowel).
+  - Read this word: бібліотека — how many syllables? (5 syllables: біб-лі-о-те-ка, because it has 5 vowels).
 
-Grand total: ~1305 words
+Grand total: ~1295 words
 </skeleton>
 
 ## Output Format
@@ -787,11 +806,64 @@ Grand total: ~1305 words
 Write in Markdown. Use:
 - `## Section Title` for main sections
 - `### Subsection` for subsections within a section
-- `**bold**` for Ukrainian words being taught — EVERY bold Ukrainian word MUST have an English translation on first use, either in parentheses `**слово** (translation)` or inline `**слово** means "translation"`. No exceptions.
+- `**bold**` for Ukrainian words being taught. For **A1 and A2** levels, provide an English translation on first use (e.g. `**стіл** (table)`) because learners lack the vocabulary to infer meaning. For **B1 and above**, do NOT provide inline translations for standard vocabulary — the learner will use the module's словник (vocabulary table). You may provide ONE parenthetical English translation ONLY for highly abstract grammar/linguistic terms on first use (e.g. `**видова пара** (aspectual pair)`).
 - Tables for paradigms (conjugation, declension)
 - `:::tip` / `:::caution` / `:::note` for callout boxes
 - `<!-- INJECT_ACTIVITY: {id} -->` for exercise placement (markers only — do NOT write exercise content)
 
 Do NOT write MDX component syntax, JSON, or DSL exercise blocks (:::quiz, etc.). Plain Markdown with injection markers.
 
+---
+
+## MANDATORY FINAL CHECKLIST (#1189)
+
+Before you finish writing, verify the prose against this checklist. Failing any item will fail the build.
+
+### Section headings (verbatim)
+
+Every heading from "Section Structure" above MUST appear as an `## H2` in your output, in order, **including the closing `Підсумок:` / `Підсумок та перехід до M...` summary**. The single most common writer failure across the B1 build has been silently dropping the final summary section. Re-read your output before stopping. If the last section in the plan is missing, write it now.
+
+### Required vocabulary (every word must appear)
+
+You MUST use **every word** from the list below at least once in the prose, in a natural sentence with bold + English translation. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, прагматика, діагностика, дієвідмінювання, зворотний, двовидовий, одновидовий, неозначено-кількісний, etc.) is the most frequently dropped category — actively find homes for those words even if it means adding a sentence that defines them.
+
+- [ ] яблуко (apple) — Я at word start = [йа]
+- [ ] молоко (milk) — 3 syllables, all simple vowels
+- [ ] людина (person) — Л + Ю combination
+- [ ] вулиця (street) — Ц sound practice
+- [ ] столиця (capital) — Київ — столиця України
+- [ ] каша (porridge) — Ш sound practice
+- [ ] пісня (song) — softening by Я after consonant
+
+### Forbidden words (never produce)
+
+Do not write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use `<!-- VERIFY -->` instead). The post-write toxic-token scanner will fail the build immediately:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+### Level-specific immersion check
+
+The level-appropriate immersion rule was already injected at the top of
+this prompt as `IMMERSION RULE`. Re-read it now BEFORE you stop writing.
+If your level's rule contains a CHECKLIST block, walk through every item.
+If it doesn't, just verify your output matches the LANGUAGE ROLES and
+TARGET stated in that block.
+
+This used to hard-code a B1+ checklist that confused A1/A2 models (where
+translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+The single source of truth is now
+`scripts/pipeline/config_tables.py:IMMERSION_RULES`.
+
+---
+
 Begin writing now. Start with the first section heading.
+
+
+## Module-Specific Constraints (from past build learnings)
+
+**These are NON-NEGOTIABLE.** Previous builds of this module had these errors. You MUST avoid them:
+
+
+- **[MEDIUM]** 

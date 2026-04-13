@@ -1,39 +1,9 @@
 vocabulary:
-- word: столи́
-  translation: tables
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: стільці́
-  translation: chairs
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: ві́кна
-  translation: windows
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: кни́ги
-  translation: books
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
 - word: ручки
   translation: pens
   expression: false
   pos: ім.
   gender: ж.
-  verified: true
-- word: зо́шити
-  translation: notebooks
-  expression: false
-  pos: ім.
-  gender: ''
   verified: true
 - word: су́мки́
   translation: bags
@@ -47,6 +17,12 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
+- word: зо́шити
+  translation: notebooks
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
 - word: дзерка́ла
   translation: mirrors
   expression: false
@@ -59,100 +35,58 @@ vocabulary:
   pos: ім.
   gender: с.
   verified: true
-- word: лі́жка
-  translation: beds
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
 - word: ре́чі
   translation: things
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: ці
-  translation: these
+- word: столи́
+  translation: tables
   expression: false
-  pos: прикм.
+  pos: ім.
   gender: ''
   verified: true
-- word: ті
-  translation: those
+- word: кни́ги
+  translation: books
   expression: false
-  pos: прикм.
-  gender: ''
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ві́кна
+  translation: windows
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: стільці́
+  translation: chairs
+  expression: false
+  pos: ім.
+  gender: ч.
   verified: true
 - word: мої́
-  translation: my (plural)
+  translation: my
   expression: false
   pos: прикм.
   gender: ''
   verified: true
 - word: які́
-  translation: what kind? (plural)
+  translation: what kind
   expression: false
   pos: прикм.
   gender: ''
   verified: true
-- word: множина́
-  translation: plural
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: однина́
-  translation: singular
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: вели́кі
-  translation: big (plural)
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: нові́
-  translation: new (plural)
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: старі́
-  translation: old (plural)
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: черво́ні
-  translation: red (plural)
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: си́ні
-  translation: blue (plural)
+- word: Вчи́тель
+  translation: teacher
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: бі́лі
-  translation: white (plural)
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: чо́рні
-  translation: black (plural)
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: чи́сті
-  translation: clean (plural)
-  expression: false
-  pos: прикм.
+- word: Доброго ранку!
+  translation: Good morning!
+  expression: true
+  pos: ''
   gender: ''
   verified: true
 - word: Що тут є?
@@ -161,11 +95,23 @@ vocabulary:
   pos: ''
   gender: ''
   verified: true
-- word: У вас є...?
-  translation: Do you have...?
-  expression: true
-  pos: ''
-  gender: ''
+- word: У́чні
+  translation: students
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: Студе́нт
+  translation: student
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: Продаве́ць
+  translation: shop assistant
+  expression: false
+  pos: ім.
+  gender: ч.
   verified: true
 - word: Скі́льки
   translation: How many?
@@ -173,27 +119,99 @@ vocabulary:
   pos: присл.
   gender: ''
   verified: true
-- word: Будь ласка
-  translation: please
+- word: Ось, будь ласка.
+  translation: Here you go.
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: оди́н
-  translation: one
-  expression: false
-  pos: числ.
+- word: один предмет
+  translation: one item
+  expression: true
+  pos: ''
   gender: ''
   verified: true
-- word: бага́то
-  translation: many
-  expression: false
-  pos: присл.
+- word: багато предметів
+  translation: many items
+  expression: true
+  pos: ''
   gender: ''
   verified: true
-- word: предме́т
-  translation: item
+- word: телефо́ни
+  translation: phones
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: дні
+  translation: days
   expression: false
   pos: ім.
   gender: ч.
+  verified: true
+- word: лі́жка
+  translation: beds
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: сті́ни
+  translation: walls
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: вели́кі
+  translation: big
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: нові́
+  translation: new
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: старі́
+  translation: old
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: чи́сті
+  translation: clean
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: весе́лі
+  translation: cheerful
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: черво́ні
+  translation: red
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: си́ні
+  translation: blue
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: бі́лі
+  translation: white
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: чо́рні
+  translation: black
+  expression: false
+  pos: прикм.
+  gender: ''
   verified: true

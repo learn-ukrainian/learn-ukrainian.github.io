@@ -22,7 +22,7 @@ Grand total: ~4400 words
 <previous_context>
 [...previous sections truncated...]
 
-внутрішній світ і характер. Ця проста структура допомагає створити логічний і максимально повний образ. Щоб ваш текст був дійсно живим та емоційним, вам необхідно активно використовувати **художні засоби** *(artistic devices)*. Науковий чи діловий опис завжди є сухим і дуже точним, як офіційний поліцейський звіт. Натомість художній опис майстерно показує справжню душу людини. По-перше, використовуйте яскраві **епітети** *(epithets)*. Це емоційні, надзвичайно виразні прикметники, які створюють настрій. Замість того, щоб просто написати «старе біле волосся», ви можете використати фразу «**сивий, як голуб**» *(gray as a dove)* або «чистий, аж світиться». По-друге, використовуйте точні **порівняння** *(similes)*. Вони допомагають читачеві краще візуалізувати риси зовнішності. Ви можете написати, що у дівчини «**очі, як волошки**» *(eyes like cornflowers)*, або що молодий хлопець «стрункий, наче тополя». По-третє, українська мова є надзвичайно багатою на особливі **зменшувально-пестливі слова** *(diminutives)*. Ці слова переконливо показують вашу глибоку ніжність і теплоту до людини. Коли ми описуємо улюблену дитину чи рідну бабусю, ми часто пишемо «**оченята**» *(little eyes)* замість звичайного «очі», «**рученьки**» *(little hands)* замість «руки», або «**кучерики**» *(little curls)* замість «волосся». Ці короткі суфікси миттєво змінюють загальний емоційний тон вашого тексту з нейтрального на дуже лагідний. Ще один надзвичайно потужний письменницький інструмент — це унікальна **портретна деталь** *(portrait detail)*. Відомий підручник Олександра Авраменка для п'ятого класу визначає її як майстерне зображення лише однієї, але дуже прикметної та надзвичайно яскравої риси зовнішності певної людини. Вам далеко не завжди потрібно детально описувати абсолютно кожну частину обличчя, від високого чола аж до підборіддя. Іноді занадто довгий і монотонний перелік фізичних рис робить ваш опис нудним для читача. Натомість талановитий автор часто фокусується лише на одній унікальній деталі, яка повністю визначає всього персонажа. Це може бути цікавий шрам, кумедний кривий ніс, постійно чорні від важкої фізичної праці руки або несподівано світлий погляд на старому обличчі. Ця єдина яскрава деталь миттєво розповідає читачеві абсолютно все необхідне про складне життя людини, її щоденні звички та її справжній характер. Вдала портретна деталь робить ваш текст дійсно глибоким і незабутнім. Давайте уважно розглянемо практичний приклад. Ось якісний класичний портрет старого дідуся, який ілюструє всі ці правила: «Мій дідусь Василь — наймудріша і найсвітліша людина, яку я знаю у своєму житті. Він дуже невисокого зросту, але має надзвичайно міцну статуру і напрочуд рівну поставу. Його обличчя густо вкрите глибокими зморшками, мов стара географічна карта. Але з-під густих сивих брів завжди радісно світяться дуже добрі, блакитні, як чисте весняне небо, очі. Його великі, **натруджені** *(hard-working)* руки з коротко обрізаними пальцями постійно пахнуть свіжим теплим хлібом і сухими степовими травами. Мій дідусь зазвичай носить просту світлу лляну сорочку і старий солом'яний капелюх. Коли я мовчки дивлюся на нього, я завжди відчуваю абсолютну безпеку і домашній затишок». Цей короткий текст ідеально дотримується необхідної тричастинної структури шкільного твору. Перше речення — це чіткий і зрозумілий зачин. Основна частина послідовно описує зріст, фігуру та використовує сильну портретну деталь — великі робочі руки та живі добрі очі. Автор дуже вдало використовує красиве порівняння «як весняне небо» та сильний емоційний епітет «натруджені». Останнє речення дає правильну кінцівку, яка переконливо передає глибоке загальне враження автора. <!-- INJECT_ACTIVITY: free-write-portrait -->
+conclusion. Here we do not provide new details, but draw a conclusion and convey our personal impression.* When writing a literary portrait, your goal is not to create a police sketch. To make the description vivid and emotional, writers rely heavily on artistic devices, or «художні засоби». These linguistic tools transform a dry catalog of physical traits into a living, breathing image that evokes a specific feeling. Щоб зробити текст живим, українська мова пропонує багатий арсенал художніх засобів. Найчастіше ми використовуємо епітети та порівняння. Наприклад, замість того, щоб сказати «у нього біле волосся», ми кажемо, що він «сивий, як голуб». Очі можуть бути «як волошки». Якщо ми описуємо дуже близьку людину, ми часто вживаємо зменшувально-пестливі слова. Ми не кажемо просто «руки» чи «очі», а використовуємо теплі форми «рученьки» або «оченята». Ці слова одразу показують нашу любов до людини. :::info **Grammar box** A scientific description uses exact, objective terms like "зріст 180 см" or "овальне обличчя". An artistic description uses epithets, metaphors, and emotionally colored words to convey an impression, revealing the person's inner world. ::: Trying to describe every single feature can make a portrait forgettable. Renowned educator Oleksandr Avramenko highlights the power of the **портретна деталь** (portrait detail). Instead of listing the shape of the nose and the color of the eyes, a writer focuses on one striking, characteristic feature that defines the whole persona. Портретна деталь — це лише одна, але дуже яскрава риса зовнішності, яка запам'ятовується найкраще. Це може бути глибокий шрам на щоці, кумедна звичка мружити око або дуже теплі зморшки навколо очей. Така деталь працює як магніт для уваги читача. Вона допомагає розкрити внутрішній **характер** (character) героя. Часто одна влучна деталь може розповісти про важке життя людини або про її неймовірну доброту значно більше, ніж ціла сторінка звичайного опису. Let us look at a model portrait that brings all these elements together. Notice how the text smoothly transitions from the introduction to the main body, uses artistic devices, highlights a defining detail, and finishes with a strong emotional conclusion. Мій дідусь Василь — наймудріша людина в нашій родині. Він невисокого зросту, але його постава завжди пряма і горда. У нього сиве, як голуб, волосся і добре, хоча й втомлене обличчя. Його головна портретна деталь — це глибокі зморшки-промінчики навколо очей, які з'являються, коли він щиро сміється. У нього великі, мозолясті руки людини, яка все життя важко працювала. Я дуже поважаю свого дідуся, бо його зовнішність ідеально відображає його лагідну душу. This short text perfectly follows the Ukrainian school standard. The first sentence serves as the «зачин», introducing the grandfather. The body describes his posture, uses the simile "сиве, як голуб" (gray as a dove), and focuses on the portrait detail: the "зморшки-промінчики" (sunbeam-wrinkles) around his eyes, paired with his calloused hands. Finally, the «кінцівка» connects his physical appearance directly to his soul, wrapping up the portrait with a feeling of deep respect. <!-- INJECT_ACTIVITY: free-write-portrait --> [free-write, Write a structured portrait (зачин — основна частина — кінцівка) of a real or fictional person, 8-10 sentences]
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -634,7 +634,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -647,18 +714,69 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (7/7).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] зовнішність (appearance — a person's outward look)
+- [ ] характер (character — a person's inner qualities)
+- [ ] стосунки (interpersonal relationships — how people interact)
+- [ ] родичі (relatives — people connected by family)
+- [ ] знайомство (acquaintance / the act of meeting someone)
+- [ ] вродливий (beautiful/handsome — describing a person)
+- [ ] кремезний (stocky/sturdy — of strong build)
+- [ ] тендітний (slender/delicate — of light build)
+- [ ] щирий (sincere — genuine in feelings)
+- [ ] лагідний (gentle — soft in manner)
+- [ ] кмітливий (quick-witted — mentally sharp)
+- [ ] чуйний (sensitive/responsive — attentive to others)
+- [ ] подружжя (married couple — husband and wife together)
+- [ ] відрекомендуватися (to introduce oneself — formal register)
+- [ ] портретна деталь (portrait detail — one defining visual feature)
+- [ ] постава (posture/bearing — how a person holds their body)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Підсумок: людина у словах (~385 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

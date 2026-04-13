@@ -1,23 +1,27 @@
 ## VESUM Verification
-- Confirmed: людина, стосунок, характер, зовнішність, привітний, щирий, працьовитий, терплячий, сусід, описувати, впертий, чуйний, наполегливий, родич, знайомий.
-- Not found: [none]
+- Confirmed: людина, стосунок, характер, зовнішність, привітний, щирий, працьовитий, терплячий, сусід, описувати, впертий, чуйний, наполегливий, родич, знайомий
+- Not found: (None)
 
 ## Grammar Rules
-- Adjective-Noun Agreement: Правопис §33, §67-70 — Adjectives agree with nouns in gender, number, and case. In A2, the focus is on nominative (e.g., привітний сусід, щира людина) and the introduction of the instrumental case for descriptions (e.g., з карими очима).
-- Adjective Suffixes: Правопис §33 — Use of suffixes -н-(ий) and -н-(ій) for quality and relative adjectives (e.g., привітний, зовнішній).
+- Складні прикметники (напр. темноволосий, кароокий): Правопис §40 — Разом пишемо складні прикметники зі сполучними голосними о, е... утворені з іменника та узгодженого з ним прикметника (напр., високоврожайний, довгохвильовий).
 
 ## Calque Warnings
-- стосунки: OK — Use "стосунки" for personal/human relationships; avoid using "відношення" in this context (which refers to attitudes or mathematical ratios).
-- зовнішність: OK — Use "зовнішність" for physical appearance; avoid "вид" when describing a person's looks (as "вид" typically means view, type, or grammatical aspect).
-- чуйний: OK — Use "чуйний" (responsive/caring) as the correct equivalent for the Russian "отзывчивый".
+- стосунок (relationship): OK — правильний український відповідник замість росіянізму "відношення" (отношение)
+- люди навколо нас: OK — природна форма замість невластивого активного дієприкметника "оточуючі" (окружающие)
+- найкраща подруга: OK — природний вислів замість росіянізму "вірна подруга" (верная подруга)
 
 ## CEFR Check
 - людина: A1 — OK
-- сусід: A2 — OK
-- зовнішність: A2 — OK
+- сусід: A1 — OK
+- характер: A1 — OK
 - привітний: A2 — OK
-- щирий: A2 — OK
-- працьовитий: A2 — OK
-- впертий: A2 — OK
-- чуйний: B1 (Core) — ABOVE TARGET (Introduce as specific character trait with context).
-- наполегливий: B1 (Core) — ABOVE TARGET (Introduce as specific character trait with context).
+- родич: A2 — OK
+- знайомий: A2 — OK
+- описувати: A2 — OK
+- щирий: B1 — Above target (B1)
+- працьовитий: B1 — Above target (B1)
+- впертий: B1 — Above target (B1)
+- зовнішність: B1 — Above target (B1)
+- наполегливий: B2 — Above target (B2)
+- чуйний: Not found in PULS — Above target (unranked/B1+)
+- терплячий: Not found in PULS — Above target (unranked/B1+)

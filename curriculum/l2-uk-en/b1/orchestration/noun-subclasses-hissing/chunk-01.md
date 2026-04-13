@@ -1,19 +1,38 @@
-## Що таке мішана група?
+## Що таке мішана група? (~600 words total)
 
-Ми вже знаємо, що іменники першої та другої відмін поділяються на три основні групи. Цей граматичний поділ залежить від того, на який приголосний звук закінчується основа слова. Як зазначає мовознавець Ніна Голуб, іменники за кінцевим приголосним основи класифікують на тверду, м'яку і мішану групи. Ми вже детально вивчили правила для твердої групи, основа якої завжди закінчується на твердий приголосний звук, як-от у словах **завод** (factory) або **батько** (father). Ми також працювали з м'якою групою, де основа закінчується на м'який приголосний, як у словах **вчитель** (teacher) чи **край** (edge). Але чому українська граматика виділяє ще одну, спеціальну третю групу? Чому ці слова не можна просто віднести до твердих або м'яких? Відповідь ховається у самій назві «мішана». Ці іменники мають унікальну фонетичну природу. Вони не є повністю твердими за своїм звучанням, але й не є повністю м'якими. Тому їхня парадигма відмінювання — це своєрідний мікс закінчень, які вони запозичують у двох інших груп. Щоб говорити українською мовою правильно, нам потрібно зрозуміти логіку цієї гібридної системи.
+In previous phases, you discovered that Ukrainian nouns in the first and second declensions are categorized into different sub-groups. This classification is foundational because it dictates exactly which **закінчення** (ending) a word will take across the cases. According to the standard Ukrainian school curriculum, nouns are divided into three distinct groups based solely on the final consonant of their stem: hard (*тверда*), soft (*м'яка*), and mixed. Until now, we have mostly focused on the hard and soft groups, learning how words like *батько* and *завод* behave differently from *вчитель* or *край*. Today, we are shifting our focus entirely to the **мішана група** (mixed group), specifically looking at the second declension. This group requires special attention because it seamlessly blends the phonetic rules of the other two groups in ways that can trip up learners if they rely on simple guesswork.
 
-Ключовою ознакою мішаної групи є кінцевий звук основи слова. До цієї групи належать ті іменники, основа яких закінчується на специфічні приголосні звуки, які лінгвісти називають **шиплячими** (hissing). В українській фонетичній системі це чотири базові звуки: [ж], [ч], [ш], [щ], а також складний звук [дж]. Коли ви вимовляєте ці звуки, потік повітря створює характерний шум, який схожий на шипіння. Історично ці звуки утворилися внаслідок складних фонетичних процесів, тому сьогодні вони поводяться дуже незвичайно. У деяких граматичних відмінках вони вимагають таких самих закінчень, як і м'які приголосні, хоча самі не є м'якими. А в інших формах вони раптом починають вести себе як абсолютно тверді звуки. Саме через цю подвійну поведінку лінгвісти назвали групу мішаною. Давайте подивимося на найважливіші базові слова цієї групи. Це поширені іменники чоловічого роду другої відміни: **сторож** (watchman), **ніж** (knife), **кущ** (bush), **плащ** (raincoat), **читач** (reader), **слухач** (listener), **борщ** (borscht), а також **товариш** (companion).
+The defining feature of this category is the presence of a **шиплячий** (hissing consonant) at the end of the stem. These hissing sounds specifically include [ж], [ч], [ш], [щ], and the indivisible affricate [дж]. When a noun's dictionary form ends in one of these consonants, it automatically requires the mixed declension patterns.
 
-Чому вам так важливо навчитися розрізняти ці групи? Якщо ви помилитеся з визначенням групи, ви автоматично виберете неправильне закінчення. Найбільша різниця між твердою та мішаною групами проявляється в орудному відмінку однини. Згадайте класичну тверду групу: там ми завжди додаємо закінчення «-ом». Ми впевнено кажемо: я керую новим заводом, я пишаюся своїм старшим братом. Тепер згадайте типову м'яку групу: тут без винятків працює правило закінчення «-ем». Ми кажемо: я довго розмовляю з учителем, я милуюся рідним краєм. А що робить мішана група у цій ситуації? В однині вона повністю копіює логіку м'якої групи! Тому всі іменники з основою на шиплячий також отримують закінчення «-ем». Ми правильно говоримо: я розмовляю зі сторожем, я ріжу ножем, я ховаюся під плащем, я обідаю борщем. Використання варіанта із закінченням «-ом» (наприклад, форми «ножом» або «сторожом») є надзвичайно грубою граматичною помилкою. Це помилка, яка звучить дуже неприродно. Запам'ятайте головне правило: в орудному відмінку однини мішана група завжди має закінчення «-ем».
+Another common subgroup of this declension features the suffix "-ач". This naturally includes words like **читач** (reader) and **слухач** (listener). You will also consistently use these mixed patterns for certain professions and roles, such as the **сторож** (watchman).
 
-Давайте послухаємо, як ці іменники з шиплячими основами звучать у природному розмовному середовищі. Уявіть, що ви прийшли на екскурсію.
-> — **Екскурсовод:** (Guide) Вітаю вас у нашому етнографічному музеї! Подивіться на цей унікальний старовинний ніж.
-> — **Відвідувач:** (Visitor) Який він гострий! А чим саме різали цим ножем у давнину?
-> — **Екскурсовод:** Здебільшого тверду деревину. А ось тут поруч лежить дуже старий металевий **ключ** (key).
-> — **Відвідувач:** Він такий великий. Важко уявити людину з таким величезним ключем у кишені.
-> — **Екскурсовод:** Так, тоді механічні замки були зовсім іншими. До речі, тут є ще один цікавий експонат. Бачите цей темний плащ?
-> — **Відвідувач:** Так, він виглядає дуже теплим і надійним.
-> — **Екскурсовод:** Це традиційний одяг, який ідеально захищав під дощем. У такому плащі жодна погана погода не була страшною.
+Additionally, many everyday inanimate objects belong to this class. When you talk about wearing your **плащ** (raincoat) during bad weather, you are using a mixed-group noun.
+
+Ці звуки мають унікальну фонетичну природу: вони не є повністю твердими і водночас не є повністю м'якими. У деяких граматичних формах такі слова поводяться як іменники твердої групи, а в інших приймають закінчення м'якої групи. Сюди належать важливі слова чоловічого роду: сторож, ніж та плащ. До цієї ж категорії входять іменники із суфіксом «-ач», такі як читач та слухач. Ви також часто зустрінете слова борщ і товариш у повсякденному спілкуванні.
+
+> *These sounds have a unique phonetic nature: they are neither fully hard nor fully soft. In some grammatical forms, such words behave like hard-group nouns, while in others they take the endings of the soft group. This includes important masculine words: watchman, knife, and raincoat. This same category contains nouns with the suffix "-ach", such as reader and listener. You will also frequently encounter the words borscht and companion in everyday communication.*
+
+:::tip
+**Core Vocabulary**
+You already know several mixed-group nouns without even realizing it! Words like **товариш** (companion), **ніж** (knife), and the iconic **борщ** (borscht) all belong to this category and will follow the rules we cover in this module.
+:::
+
+Understanding the mixed group is critical for mastering the **відмінок** (grammatical case) system, particularly when dealing with the **орудний відмінок** (instrumental case) in the **однина** (singular number). If you mistakenly treat a mixed-group noun as a hard-group noun, your spoken Ukrainian will sound unnatural. Let us compare the endings directly. In the hard group, masculine nouns take the instrumental ending *-ом* (*завод* becomes *заводом*). In the soft group, they take *-ем* (*вчитель* becomes *вчителем*).
+
+Crucially, the mixed group completely follows the "soft" logic for singular instrumental endings. Therefore, a word like *сторож* becomes *сторожем*, and never *сторожом*. Applying the hard "o" ending to hissing consonants is a common error stemming from Russian interference. Additionally, this group has specific rules for the **кличний відмінок** (vocative case) and behaves uniquely in the **множина** (plural number). Even neuter nouns ending in a hissing consonant plus -е, such as **плече** (shoulder), follow these exact same phonetic patterns.
+
+:::info
+**Why is it called "mixed"?**
+The mixed group earns its name because it borrows rules from both sides. In the singular instrumental case, it acts like a soft noun. However, in the plural instrumental case, it suddenly acts like a hard noun (taking *-ами* instead of *-ями*).
+:::
+
+Before diving into the full declension tables, let us see how these hissing-stem nouns naturally appear in everyday conversation.
+
+> — **Екскурсовод:** Вітаю в нашому етнографічному музеї! Подивіться на цей старовинний ніж. *(Welcome to our ethnographic museum! Look at this ancient knife.)*
+> — **Відвідувачі:** Яка тонка робота! А чий це червоний плащ висить на стіні? *(What fine work! And whose red raincoat is hanging on the wall?)*
+> — **Екскурсовод:** Цей плащ належав відомому козаку. А поруч лежить великий залізний ключ від старої фортеці. *(This raincoat belonged to a famous Cossack. And nearby lies a large iron key from the old fortress.)*
+> — **Відвідувачі:** Мій товариш дуже цікавиться такою історичною зброєю. *(My companion is very interested in such historical weapons.)*
+> — **Екскурсовод:** Тоді йому варто поговорити з нашим головним сторожем, він знає багато легенд. *(Then he should talk to our main watchman, he knows many legends.)*
 
 <!-- INJECT_ACTIVITY: quiz-identify-group -->
 <!-- INJECT_ACTIVITY: group-sort-nouns -->

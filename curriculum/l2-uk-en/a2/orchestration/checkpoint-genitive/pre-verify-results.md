@@ -1,19 +1,19 @@
 ## VESUM Verification
-- Confirmed: прийменник, узгодження, множина, однина, закінчення, перевірка, помилка, виправити, впізнати, вибрати, родовий, відмінок.
-- Not found: All plan vocabulary words are verified (either as single words or components of the term "родовий відмінок").
+- Confirmed: родовий, відмінок, прийменник, узгодження, множина, однина, закінчення, перевірка, помилка, виправити, впізнати, вибрати
+- Not found: (None)
 
 ## Grammar Rules
-- **Родовий відмінок однини (II відміна)**: Правопис §95-97 (2019) — Masculine nouns ending in -а/-я for specific objects, persons, and terms (автобуса, лікаря, відмінка) and -у/-ю for abstract concepts, substances, and collective nouns (саду, болю, тексту).
-- **Родовий відмінок множини**: Правопис §104 — Masculine nouns usually take -ів/-їв (учнів, водіїв), but some take -ей (коней, гостей). Feminine and neuter nouns usually have a zero ending (шкіл, доріг), but exceptions exist (бабів, статей — zero ending is 'статей' but some prefer 'статтей' or 'статей' depending on the stem; specific plural-only nouns like 'грошей', 'радощів' are critical).
+- Вживання прийменника З та його варіантів ІЗ, ЗІ (ЗО): Правопис §25 — З уживаємо на початку речення перед буквою, що позначає голосний; всередині речення перед такою самою буквою незалежно від закінчення попереднього слова чи паузи. Варіанти із, зі (зо) вживаємо перед буквами, що передають важкі для вимови збіги приголосних, та для досягнення милозвучності.
 
 ## Calque Warnings
-- **вірний**: Calque when used as "correct" — Use **правильний** (правильна відповідь, правильний варіант). "Вірний" means "loyal/faithful".
-- **приймати участь**: Calque — Use **брати участь**.
-- **робити помилку**: Stylistically weaker — Use **припускатися помилки** (formal) or **помилятися** (verb).
+- правильна форма: OK
+- виправити помилку: OK
+- родовий відмінок: OK
 
 ## CEFR Check
-- **помилка**: A1 — Confirmed in Grade 5 textbooks.
-- **вибрати**: A1 — Confirmed in Grade 3/5 textbooks.
-- **виправити**: A2 — Standard vocabulary for "to correct/fix".
-- **перевірка**: A2 — Standard for "test/check".
-- **прийменник**: A2 — Essential metalanguage for Genitive case prepositions.
+- прийменник: B1 — Above target
+- помилка: A2 — OK
+- виправити: A2 — OK
+- вибрати: A2 — OK
+- перевірка: Not found in PULS (verb "перевірити" is A2) — Above target
+- впізнати: Not found in PULS — Above target

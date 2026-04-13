@@ -1,39 +1,44 @@
-## Давальний відмінок: Кому? (The Dative Case: To Whom?)
+## Давальний відмінок: Кому? (The Dative Case: To Whom?) (~550 words total)
 
-Welcome to a new grammatical case! The Dative case, or Давальний відмінок in Ukrainian, is one of the most intuitive and useful cases to learn at this level. Its grammatical name comes directly from the verb **давати** (to give). This name perfectly illustrates its primary function in a sentence: it always points to the recipient or the beneficiary of an action.
+Welcome to one of the most useful and rewarding cases in Ukrainian grammar: the **давальний відмінок** (dative case). The name itself gives away its primary function. It comes from the verb «давати» (to give). When you give something, you always give it to someone. This case answers the questions «кому?» (to whom?) and «чому?» (to what?).
 
-Давальний відмінок завжди відповідає на питання «кому?» або «чому?». Коли ми говоримо про людей або тварин, ми постійно запитуємо «кому?». Коли ж наша дія спрямована на предмети або абстрактні ідеї, ми використовуємо питання «чому?». Цей відмінок дуже важливий для щоденного спілкування.
+The core meaning of the dative case is the recipient of an action. It indicates the person who receives a physical object, the person who is told a piece of information, or the person for whom a specific action is performed. 
 
-> *The Dative case always answers the questions "to whom?" or "to what?". When we talk about people or animals, we constantly ask "to whom?". When our action is directed at objects or abstract ideas, we use the question "to what?". This case is very important for daily communication.*
+Давальний відмінок — це відмінок отримувача. Коли ми щось даруємо, ми даруємо це комусь. Коли ми розповідаємо історію, ми розповідаємо її комусь. Цей відмінок дуже часто працює з людьми та тваринами. Вони зазвичай отримують речі або нову інформацію.
 
-Think of the Dative case as the specific grammatical marker for the indirect object. To truly understand its role, let us contrast it with the cases you already know. The Nominative case marks the main doer of the action, the primary subject of the sentence. The Accusative case marks the direct object, which is the person or thing directly affected by the action. The Dative case, however, marks the person who benefits from the action or receives a physical object.
+> *The Dative case is the case of the recipient. When we gift something, we gift it to someone. When we tell a story, we tell it to someone. This case very often works with people and animals. They usually receive things or new information.*
 
-Я сьогодні даю нову книгу тобі. У цьому простому реченні займенник «я» стоїть у називному відмінку, бо це активний суб'єкт. Слово «книгу» стоїть у знахідному відмінку, бо це прямий об'єкт моєї дії. А займенник «тобі» показує фінального отримувача у давальному відмінку.
+To understand the dative case perfectly, it helps to contrast it with the cases you already know. Remember the Genitive case, which answers «кого?» and «чого?». We use it to show possession or absence. Then there is the Accusative case, answering «кого?» and «що?». The accusative marks the direct object—the thing or person directly experiencing the action.
 
-> *Today I give a new book to you. In this simple sentence, the pronoun "I" is in the nominative case because it is the active subject. The word "book" is in the accusative case because it is the direct object of my action. And the pronoun "to you" shows the final recipient in the dative case.*
+The dative case is different. It marks the indirect object. If you write a letter to your friend, the letter is the direct object (Accusative) because it is being written, but your friend is the indirect object (Dative) because they are receiving the final result. Every case has its own distinct job in a Ukrainian sentence.
 
-To start using the Dative case naturally and confidently, you need a solid starter kit of verbs that frequently trigger it. These are high-frequency transaction verbs that you already use every day. The most essential ones include **давати** (to give), **дарувати** (to gift), and **допомагати** (to help).
+Я маю подарунок для брата. Подарунок — це знахідний відмінок, бо я його маю. Але коли я даю цей подарунок братові, мій брат стає отримувачем. Тепер він стоїть у давальному відмінку. Кожен відмінок має свою особливу роль.
 
-You will also need verbs related to sharing information. These include **казати** (to say), **говорити** (to tell), and **писати** (to write). Whenever you use any of these verbs, the person receiving the physical item, hearing the message, or accepting the help must be placed in the Dative case.
+> *I have a gift for my brother. The gift is the accusative case because I have it. But when I give this gift to my brother, my brother becomes the recipient. Now he stands in the dative case. Every case has its own special role.*
 
-Я часто пишу тобі довгі електронні листи. Моя старша сестра завжди допомагає мені робити домашнє завдання. Мій друг завжди каже мені правду. Ми з радістю даруємо їй красиві квіти на свято. Вони дають йому гарячий чай.
-
-> *I often write long emails to you. My older sister always helps me do homework. My friend always tells me the truth. We joyfully gift her beautiful flowers for the holiday. They give him hot tea.*
-
-:::info
-**Grammatical direction**
-Notice a beautiful feature of Ukrainian grammar: we usually do not need extra prepositions like "to" or "for" when indicating the recipient. The Dative case ending itself acts as the built-in direction marker. You simply say «я даю тобі» instead of inserting an unnecessary preposition. This makes sentences highly efficient.
+:::note
+**Quick tip** — Unlike the genitive or locative cases, the dative case is very often used *without* any prepositions. The case ending itself contains the meaning of the English word "to" or "for".
 :::
 
-Let us look at a typical family scene where various gifts are being happily distributed at a birthday gathering. Notice how the Dative pronouns are used repeatedly in a natural way to indicate exactly who receives each specific item.
+Let's look at the dative case in action with some familiar, everyday verbs. The most classic structure you will use is «давати щось комусь» (to give something to someone). Another extremely common verb is «казати» (to say or to tell). 
 
-> — **Іменинник:** Що ви мені подаруєте сьогодні на свято? *(What will you gift to me today for the holiday?)*
-> — **Родина:** Ми маємо дуже багато чудових подарунків! *(We have very many wonderful gifts!)*
-> — **Іменинник:** Чудово! Кому ми даємо ці корисні речі? *(Great! To whom do we give these useful things?)*
-> — **Родина:** Мені — нову цікаву книгу. *(To me — a new interesting book.)*
-> — **Іменинник:** А тобі — солодкий шоколад. *(And to you — sweet chocolate.)*
-> — **Родина:** Йому ми даємо теплий зимовий шарф. *(To him we give a warm winter scarf.)*
-> — **Іменинник:** Їй — дуже красиві весняні квіти. *(To her — very beautiful spring flowers.)*
-> — **Родина:** А нам усім — неймовірно смачний торт! *(And to all of us — an incredibly tasty cake!)*
+Мама дає синові яблуко. Батько каже доньці правду. Вчитель пояснює студентам нове правило. У кожному реченні є хтось, хто робить дію. Також є той, хто отримує результат.
 
-<!-- INJECT_ACTIVITY: match-up, Match Nominative pronoun to its Dative form (я→мені, ти→тобі, ми→нам, ви→вам, він→йому, вона→їй, воно→йому, вони→їм), 8 items -->
+> *A mother gives her son an apple. A father tells his daughter the truth. A teacher explains a new rule to the students. In every sentence, there is someone doing the action. There is also someone who receives the result.*
+
+Imagine a lively family gathering. It is someone's birthday, and the relatives have brought a big pile of presents. The host is distributing the gifts to everyone in the room. Let's see how they use the dative pronouns: **мені** (to me), **тобі** (to you (informal)), **йому** (to him, to it), **їй** (to her), **нам** (to us), **вам** (to you (formal/plural)), and **їм** (to them).
+
+> — **Іменинник:** Так, давайте подивимося, що тут є. О, ця велика книга! Вона **мені**. *(Yes, let's see what is here. Oh, this big book! It is for me.)*
+> — **Мама:** А ця коробка шоколаду — **тобі**, сину. *(And this box of chocolate is for you, son.)*
+> — **Іменинник:** Дякую! А де дідусь? Цей теплий шарф — **йому**. *(Thank you! And where is grandpa? This warm scarf is for him.)*
+> — **Сестра:** А ці красиві квіти — **їй**, нашій бабусі. *(And these beautiful flowers are for her, our grandma.)*
+> — **Батько:** А цей великий і солодкий торт — **нам** усім! *(And this big and sweet cake is for all of us!)*
+> — **Іменинник:** Смачного **вам**! *(Bon appetit to you!)*
+
+In the dialogue above, notice how naturally the dative pronouns flow. The host did not need to use a preposition like "for" or "to" before the pronouns. The forms themselves instantly communicate the idea of a recipient. 
+
+This is the beauty and efficiency of the Ukrainian case system. By changing the pronoun, you immediately know who is getting the book, the scarf, or the flowers. We also saw that the dative case often appears when we want to wish someone well, like saying "смачного" (enjoy your meal) to a group of people.
+
+Займенники у давальному відмінку короткі та дуже зручні. Вони допомагають нам швидко сказати, хто є головним адресатом. Завтра ми будемо детально вивчати всі ці форми. А поки що, спробуйте просто запам'ятати їхнє звучання.
+
+> *Pronouns in the dative case are short and very convenient. They help us quickly say who the main addressee is. Tomorrow we will study all these forms in detail. For now, try to just remember how they sound.*

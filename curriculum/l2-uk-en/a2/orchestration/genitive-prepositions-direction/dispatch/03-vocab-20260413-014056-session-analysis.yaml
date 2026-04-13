@@ -1,0 +1,59 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T23-40-5914a8d6.json
+phase: vocab
+prompt_chars: 21211
+response_chars: 1581
+prompt_words: 3524
+response_words: 172
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.0376
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.0108
+- name: plan
+  start: 1028
+  length: 20183
+  fraction: 0.9515
+large_sections:
+- plan
+directives_total: 8
+directives_covered: 0
+directives_missed:
+- kind: must
+  text: '" In Ukrainian, when your destination is a person, you must use **до** plus
+    the Genitive case.'
+  covered: false
+  coverage_note: 1/11 keywords (9%)
+- kind: must
+  text: '> *Students must do this difficult task by Friday.'
+  covered: false
+  coverage_note: 0/6 keywords (0%)
+- kind: must
+  text: Whether the action takes up the entire time ("until") or must be completed
+    before the limit ("by"), the grammar remains identical.
+  covered: false
+  coverage_note: 1/13 keywords (8%)
+- kind: must
+  text: The most important rule is that both the starting point and the ending point
+    must be in the Genitive case.
+  covered: false
+  coverage_note: 0/11 keywords (0%)
+- kind: inject_activity
+  text: fill-in-complete-sentences-with-correct-genitive-noun-form
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-meaning-context
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-functions
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: group-sort-categories
+  covered: false
+  coverage_note: marker missing

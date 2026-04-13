@@ -1,224 +1,417 @@
 {
-  "total_items": 191,
+  "total_items": 223,
   "grounded_items": 156,
   "ungrounded": [
     {
+      "word": "прийшли",
+      "exercise_type": "fill-in",
+      "context": "Ми прийшли без ____ брата.",
+      "role": "context"
+    },
+    {
+      "word": "шукає",
+      "exercise_type": "fill-in",
+      "context": "Вона шукає ключі біля ____ церкви.",
+      "role": "context"
+    },
+    {
+      "word": "синьої",
+      "exercise_type": "fill-in",
+      "context": "синьої",
+      "role": "answer"
+    },
+    {
+      "word": "малюю",
+      "exercise_type": "fill-in",
+      "context": "Я малюю без ____ олівця.",
+      "role": "context"
+    },
+    {
+      "word": "чемодан",
+      "exercise_type": "match-up",
+      "context": "їхній великий чемодан",
+      "role": "answer"
+    },
+    {
+      "word": "лікарня",
+      "exercise_type": "match-up",
+      "context": "наша стара лікарня",
+      "role": "answer"
+    },
+    {
       "word": "молода",
       "exercise_type": "match-up",
-      "context": "молода мама",
+      "context": "твоя молода дівчина",
       "role": "answer"
     },
     {
-      "word": "мама",
+      "word": "те",
       "exercise_type": "match-up",
-      "context": "молода мама",
+      "context": "те велике місто",
       "role": "answer"
     },
     {
-      "word": "високе",
-      "exercise_type": "fill-in",
-      "context": "Ми стоїмо біля ____ (високе дерево).",
-      "role": "context"
-    },
-    {
-      "word": "дерево",
-      "exercise_type": "fill-in",
-      "context": "Ми стоїмо біля ____ (високе дерево).",
-      "role": "context"
-    },
-    {
-      "word": "п'ю",
-      "exercise_type": "fill-in",
-      "context": "Я не п'ю ____ (солодкий чай).",
-      "role": "context"
-    },
-    {
-      "word": "солодкий",
-      "exercise_type": "fill-in",
-      "context": "Я не п'ю ____ (солодкий чай).",
-      "role": "context"
-    },
-    {
-      "word": "гарячої",
-      "exercise_type": "fill-in",
-      "context": "гарячої кави",
-      "role": "answer"
-    },
-    {
-      "word": "гаряча",
-      "exercise_type": "fill-in",
-      "context": "Тут немає ____ (гаряча кава).",
-      "role": "context"
-    },
-    {
-      "word": "кава",
-      "exercise_type": "fill-in",
-      "context": "Тут немає ____ (гаряча кава).",
-      "role": "context"
-    },
-    {
-      "word": "балкону",
-      "exercise_type": "fill-in",
-      "context": "відкритого балкону",
-      "role": "answer"
-    },
-    {
-      "word": "відкритий",
-      "exercise_type": "fill-in",
-      "context": "Я шукаю вікно з ____ (відкритий балкон).",
-      "role": "context"
-    },
-    {
-      "word": "балкон",
-      "exercise_type": "fill-in",
-      "context": "Я шукаю вікно з ____ (відкритий балкон).",
-      "role": "context"
-    },
-    {
-      "word": "хліб",
-      "exercise_type": "fill-in",
-      "context": "У нього немає ____ (вчорашній хліб).",
-      "role": "context"
-    },
-    {
-      "word": "комп'ютер",
+      "word": "велике",
       "exercise_type": "match-up",
-      "context": "новий комп'ютер",
+      "context": "те велике місто",
       "role": "answer"
     },
     {
-      "word": "брат",
+      "word": "місто",
       "exercise_type": "match-up",
-      "context": "старший брат",
+      "context": "те велике місто",
       "role": "answer"
     },
     {
-      "word": "магазин",
+      "word": "чекали",
       "exercise_type": "fill-in",
-      "context": "Ми їдемо від ____ (цей великий магазин).",
+      "context": "Ми чекали біля ____ старого будинку.",
       "role": "context"
     },
     {
-      "word": "останній",
+      "word": "маю",
       "exercise_type": "fill-in",
-      "context": "Вона чекає після ____ (той останній урок).",
+      "context": "Я не маю дозволу ____ вчительки.",
       "role": "context"
     },
     {
-      "word": "урок",
+      "word": "копії",
       "exercise_type": "fill-in",
-      "context": "Вона чекає після ____ (той останній урок).",
+      "context": "У мене немає копії ____ документа.",
       "role": "context"
     },
     {
-      "word": "червона",
-      "exercise_type": "fill-in",
-      "context": "Ти не бачив ____ (ця червона ручка)?",
-      "role": "context"
-    },
-    {
-      "word": "ручка",
-      "exercise_type": "fill-in",
-      "context": "Ти не бачив ____ (ця червона ручка)?",
-      "role": "context"
-    },
-    {
-      "word": "стара",
-      "exercise_type": "fill-in",
-      "context": "Ми стоїмо навпроти ____ (та стара школа).",
-      "role": "context"
-    },
-    {
-      "word": "чоловік",
-      "exercise_type": "fill-in",
-      "context": "Я не знаю ____ (цей молодий чоловік).",
-      "role": "context"
-    },
-    {
-      "word": "ранкової",
-      "exercise_type": "error-correction",
-      "context": "Вони приїхали після ранкової дощу.",
-      "role": "context"
-    },
-    {
-      "word": "неї",
-      "exercise_type": "fill-in",
-      "context": "неї",
+      "word": "хто",
+      "exercise_type": "unjumble",
+      "context": "Хто",
       "role": "answer"
     },
     {
-      "word": "вас",
-      "exercise_type": "fill-in",
-      "context": "вас",
+      "word": "зробив",
+      "exercise_type": "unjumble",
+      "context": "зробив",
       "role": "answer"
     },
     {
-      "word": "них",
-      "exercise_type": "fill-in",
-      "context": "них",
-      "role": "answer"
-    },
-    {
-      "word": "вільного",
-      "exercise_type": "fill-in",
-      "context": "У ____ (вони) немає вільного часу.",
+      "word": "чол",
+      "exercise_type": "group-sort",
+      "context": "-ого / -ього (Чол. та Сер. рід)",
       "role": "context"
     },
     {
-      "word": "часу",
-      "exercise_type": "fill-in",
-      "context": "У ____ (вони) немає вільного часу.",
+      "word": "сер",
+      "exercise_type": "group-sort",
+      "context": "-ого / -ього (Чол. та Сер. рід)",
+      "role": "context"
+    },
+    {
+      "word": "правильний",
+      "exercise_type": "true-false",
+      "context": "Слово «їх» — це правильний присвійний займенник для родового",
+      "role": "context"
+    },
+    {
+      "word": "родового",
+      "exercise_type": "true-false",
+      "context": "Слово «їх» — це правильний присвійний займенник для родового",
+      "role": "context"
+    },
+    {
+      "word": "відмінка",
+      "exercise_type": "true-false",
+      "context": "Слово «їх» — це правильний присвійний займенник для родового",
+      "role": "context"
+    },
+    {
+      "word": "наприклад",
+      "exercise_type": "true-false",
+      "context": "Слово «їх» — це правильний присвійний займенник для родового",
+      "role": "context"
+    },
+    {
+      "word": "вимагають",
+      "exercise_type": "true-false",
+      "context": "Прийменники «без», «від», «для» та «біля» завжди вимагають р",
       "role": "context"
     },
     {
       "word": "змінюють",
       "exercise_type": "true-false",
-      "context": "Займенники «його» та «її» змінюють своє закінчення у родовом",
+      "context": "Займенники «його» та «її» змінюють своє закінчення, коли іме",
       "role": "context"
     },
     {
       "word": "своє",
       "exercise_type": "true-false",
-      "context": "Займенники «його» та «її» змінюють своє закінчення у родовом",
+      "context": "Займенники «його» та «її» змінюють своє закінчення, коли іме",
       "role": "context"
     },
     {
-      "word": "твердої",
+      "word": "читається",
       "exercise_type": "true-false",
-      "context": "Прикметники твердої групи чоловічого роду мають закінчення -",
+      "context": "Закінчення -ого завжди читається з чітким звуком «г», а не «",
       "role": "context"
     },
     {
-      "word": "групи",
+      "word": "чітким",
       "exercise_type": "true-false",
-      "context": "Прикметники твердої групи чоловічого роду мають закінчення -",
+      "context": "Закінчення -ого завжди читається з чітким звуком «г», а не «",
       "role": "context"
     },
     {
-      "word": "форму",
+      "word": "звуком",
       "exercise_type": "true-false",
-      "context": "Вказівний займенник «ця» у родовому відмінку має форму «цієї",
+      "context": "Закінчення -ого завжди читається з чітким звуком «г», а не «",
       "role": "context"
     },
     {
-      "word": "м'якої",
+      "word": "чоловічому",
       "exercise_type": "true-false",
-      "context": "Прикметники жіночого роду м'якої групи мають закінчення -ого",
+      "context": "Прикметники м'якої групи в чоловічому роді родового відмінка",
       "role": "context"
     },
     {
-      "word": "відмінюється",
+      "word": "роді",
       "exercise_type": "true-false",
-      "context": "Займенник «їхній» відмінюється як прикметник м'якої групи.",
+      "context": "Прикметники м'якої групи в чоловічому роді родового відмінка",
+      "role": "context"
+    },
+    {
+      "word": "мають",
+      "exercise_type": "true-false",
+      "context": "Прикметники м'якої групи в чоловічому роді родового відмінка",
+      "role": "context"
+    },
+    {
+      "word": "всі",
+      "exercise_type": "true-false",
+      "context": "У фразі «для цієї молодої дівчини» всі три слова стоять у ро",
+      "role": "context"
+    },
+    {
+      "word": "три",
+      "exercise_type": "true-false",
+      "context": "У фразі «для цієї молодої дівчини» всі три слова стоять у ро",
+      "role": "context"
+    },
+    {
+      "word": "стоять",
+      "exercise_type": "true-false",
+      "context": "У фразі «для цієї молодої дівчини» всі три слова стоять у ро",
+      "role": "context"
+    },
+    {
+      "word": "жіночого",
+      "exercise_type": "true-false",
+      "context": "Вказівний займенник жіночого роду «та» в родовому відмінку м",
+      "role": "context"
+    },
+    {
+      "word": "може",
+      "exercise_type": "true-false",
+      "context": "Вказівний займенник жіночого роду «та» в родовому відмінку м",
+      "role": "context"
+    },
+    {
+      "word": "мати",
+      "exercise_type": "true-false",
+      "context": "Вказівний займенник жіночого роду «та» в родовому відмінку м",
+      "role": "context"
+    },
+    {
+      "word": "так",
+      "exercise_type": "true-false",
+      "context": "Вказівний займенник жіночого роду «та» в родовому відмінку м",
+      "role": "context"
+    },
+    {
+      "word": "вийшла",
+      "exercise_type": "fill-in",
+      "context": "Вона вийшла з ____ великої лікарні.",
+      "role": "context"
+    },
+    {
+      "word": "спав",
+      "exercise_type": "fill-in",
+      "context": "Після ____ довгого дня я спав.",
+      "role": "context"
+    },
+    {
+      "word": "телефона",
+      "exercise_type": "error-correction",
+      "context": "Вона не знає телефона їїної сестри.",
+      "role": "context"
+    },
+    {
+      "word": "їїної",
+      "exercise_type": "error-correction",
+      "context": "Вона не знає телефона їїної сестри.",
+      "role": "context"
+    },
+    {
+      "word": "йогового",
+      "exercise_type": "error-correction",
+      "context": "Це подарунок для йогового брата.",
+      "role": "context"
+    },
+    {
+      "word": "вийшов",
+      "exercise_type": "error-correction",
+      "context": "Він вийшов з того великий будинку.",
+      "role": "context"
+    },
+    {
+      "word": "жити",
+      "exercise_type": "error-correction",
+      "context": "Ми не можемо жити без цеї проблеми.",
+      "role": "context"
+    },
+    {
+      "word": "цеї",
+      "exercise_type": "error-correction",
+      "context": "Ми не можемо жити без цеї проблеми.",
+      "role": "context"
+    },
+    {
+      "word": "яке",
+      "exercise_type": "quiz",
+      "context": "Яке закінчення мають прикметники твердої групи чоловічого ро",
+      "role": "context"
+    },
+    {
+      "word": "правильно",
+      "exercise_type": "quiz",
+      "context": "Як правильно сказати: «без ____ (їх) допомоги»?",
+      "role": "context"
+    },
+    {
+      "word": "сказати",
+      "exercise_type": "quiz",
+      "context": "Як правильно сказати: «без ____ (їх) допомоги»?",
+      "role": "context"
+    },
+    {
+      "word": "цих",
+      "exercise_type": "quiz",
+      "context": "Яке з цих слів НЕ змінюється у родовому відмінку, коли означ",
+      "role": "context"
+    },
+    {
+      "word": "слів",
+      "exercise_type": "quiz",
+      "context": "Яке з цих слів НЕ змінюється у родовому відмінку, коли означ",
+      "role": "context"
+    },
+    {
+      "word": "змінюється",
+      "exercise_type": "quiz",
+      "context": "Яке з цих слів НЕ змінюється у родовому відмінку, коли означ",
+      "role": "context"
+    },
+    {
+      "word": "означає",
+      "exercise_type": "quiz",
+      "context": "Яке з цих слів НЕ змінюється у родовому відмінку, коли означ",
+      "role": "context"
+    },
+    {
+      "word": "приналежність",
+      "exercise_type": "quiz",
+      "context": "Яке з цих слів НЕ змінюється у родовому відмінку, коли означ",
+      "role": "context"
+    },
+    {
+      "word": "оберіть",
+      "exercise_type": "quiz",
+      "context": "Оберіть правильну фразу в родовому відмінку:",
+      "role": "context"
+    },
+    {
+      "word": "правильну",
+      "exercise_type": "quiz",
+      "context": "Оберіть правильну фразу в родовому відмінку:",
+      "role": "context"
+    },
+    {
+      "word": "фразу",
+      "exercise_type": "quiz",
+      "context": "Оберіть правильну фразу в родовому відмінку:",
+      "role": "context"
+    },
+    {
+      "word": "прийменник",
+      "exercise_type": "quiz",
+      "context": "Який прийменник ЗАВЖДИ вимагає родового відмінка?",
+      "role": "context"
+    },
+    {
+      "word": "вимагає",
+      "exercise_type": "quiz",
+      "context": "Який прийменник ЗАВЖДИ вимагає родового відмінка?",
+      "role": "context"
+    },
+    {
+      "word": "яка",
+      "exercise_type": "quiz",
+      "context": "Яка форма вказівного займенника «та» є правильною для жіночо",
+      "role": "context"
+    },
+    {
+      "word": "форма",
+      "exercise_type": "quiz",
+      "context": "Яка форма вказівного займенника «та» є правильною для жіночо",
+      "role": "context"
+    },
+    {
+      "word": "вказівного",
+      "exercise_type": "quiz",
+      "context": "Яка форма вказівного займенника «та» є правильною для жіночо",
+      "role": "context"
+    },
+    {
+      "word": "займенника",
+      "exercise_type": "quiz",
+      "context": "Яка форма вказівного займенника «та» є правильною для жіночо",
+      "role": "context"
+    },
+    {
+      "word": "правильною",
+      "exercise_type": "quiz",
+      "context": "Яка форма вказівного займенника «та» є правильною для жіночо",
+      "role": "context"
+    },
+    {
+      "word": "перекласти",
+      "exercise_type": "quiz",
+      "context": "Як правильно перекласти «from my hometown»?",
+      "role": "context"
+    },
+    {
+      "word": "звук",
+      "exercise_type": "quiz",
+      "context": "Який звук ми вимовляємо в закінченні -ого (наприклад, «новог",
+      "role": "context"
+    },
+    {
+      "word": "вимовляємо",
+      "exercise_type": "quiz",
+      "context": "Який звук ми вимовляємо в закінченні -ого (наприклад, «новог",
+      "role": "context"
+    },
+    {
+      "word": "закінченні",
+      "exercise_type": "quiz",
+      "context": "Який звук ми вимовляємо в закінченні -ого (наприклад, «новог",
       "role": "context"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 14,
-    "tested_in_exercises": 11,
+    "tested_in_exercises": 10,
     "not_tested": [
-      "вчителька",
       "дозвіл",
+      "молодий",
+      "підручник",
       "узгодження"
     ]
   },

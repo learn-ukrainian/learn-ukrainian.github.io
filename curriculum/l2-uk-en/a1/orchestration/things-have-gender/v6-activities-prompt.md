@@ -1,4 +1,4 @@
-<!-- version: 1.1.0 | updated: 2026-03-31 -->
+<!-- version: 1.2.0 | updated: 2026-04-12 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -11,6 +11,35 @@ Generate an `activities/things-have-gender.yaml` file for module **8: Things Hav
 
 ---
 
+## ⚠️ HARD COUNT TARGETS — READ TWICE
+
+These are the binding numerical contracts for THIS module. The audit will FAIL if you fall short.
+
+| Bucket | Min | Max | Notes |
+|---|---|---|---|
+| Total activities | 10 | 10+ | inline + workbook combined |
+| Inline (lesson tab) | 4 | 6 | one per `<!-- INJECT_ACTIVITY -->` marker, see below |
+| Workbook (Зошит tab) | 6 | 9 | extended practice |
+| Items per activity | 6 | — | each activity must have at least 6 items (unless its type cap is lower — see Activity Type Reference below) |
+
+**You MUST ship at least 4 inline activities AND at least 6 workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+
+**Type diversity is required.** The module (inline + workbook combined) MUST use at least **0** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level. (If `0` is `0`, the audit profile for this level does not enforce type diversity — but variety still produces a better lesson, so aim for 4+ types when the workbook allows it.)
+
+---
+
+## Allowed types for THIS level
+
+- **Inline (lesson) types:** image-to-letter, letter-grid, match-up, watch-and-repeat, quiz, true-false, fill-in, classify
+- **Inline priority (preferred):** image-to-letter, match-up, fill-in, quiz, watch-and-repeat
+- **Workbook types:** fill-in, match-up, group-sort, anagram, unjumble, quiz, true-false, classify, divide-words, count-syllables, pick-syllables, observe, phrase-table, odd-one-out
+- **Workbook priority (preferred):** fill-in, match-up, group-sort, anagram, unjumble
+- **FORBIDDEN at this level:** cloze, error-correction, mark-the-words, translate, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, highlight-morphemes, grammar-identify, select
+
+Pick from the allowed list. Lean heavily on the priority lists. Do not use any forbidden type — the build will reject it.
+
+---
+
 ## Inline vs Workbook Split
 
 Activities have two placement categories:
@@ -19,7 +48,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Rule of thumb:** inline = 2-3 quick checks after key teaching points. Workbook = 4-8 deeper practice exercises covering the full topic.
+**Rule of thumb:** inline = 4–6 quick checks after key teaching points. Workbook = 6–9 deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
 
 ---
 
@@ -27,10 +56,10 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: quiz-pronoun-choice -->`
+- `<!-- INJECT_ACTIVITY: quiz-pronoun-test -->`
+- `<!-- INJECT_ACTIVITY: fill-in-possessive -->`
 - `<!-- INJECT_ACTIVITY: quiz-gender-endings -->`
-- `<!-- INJECT_ACTIVITY: group-sort-gender -->`
-- `<!-- INJECT_ACTIVITY: fill-in-possessives -->`
+- `<!-- INJECT_ACTIVITY: group-sort-objects -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -91,115 +120,72 @@ required:
 ## Module Content (the prose the learner reads before exercises)
 
 <module_content>
-## Діалоги — Dialogues
+## Діалоги (Dialogues)
 
-Imagine walking into a pet shop. You are looking at the different animals and the items they need. In English, unless you know the specific sex of an animal, you refer to it as an "it." The basket it sleeps in is definitely an "it." In Ukrainian, this perspective shifts entirely. Every single noun, whether it is a living breathing creature or a woven basket, has a specific grammatical gender. It is either masculine, feminine, or neuter. Observe a conversation between two friends to see how this works in practice.
+In Ukrainian, every single physical object you see around you possesses a distinct grammatical gender. This means that a table, a lamp, or a mirror is not just a generic "it." Every noun inherently belongs to a specific category, and this permanent identity profoundly affects how we talk about these objects in everyday life. Read this simple conversation between two friends to see this in action. They are having a video call to show off a newly decorated space.
 
-> **Марія:** Дивись, **кіт** (cat)! *(Look, a cat!)*
-> **Оленка:** Так, **він** (he) спить. Тут **кошик** (basket). *(Yes, he is sleeping. Here is a basket.)*
-> **Марія:** Кошик — він. *(A basket is a "he".)*
-> **Оленка:** А там моя улюблена **рибка** (fish). **Вона** (she) плаває. *(And there is my favorite fish. She is swimming.)*
-> **Марія:** Великий **акваріум** (aquarium)! Він дуже гарний. *(A big aquarium! He is very beautiful.)*
-> **Оленка:** О, дивись! **Черепаха** (turtle). Вона тут. *(Oh, look! A turtle. She is here.)*
-> **Марія:** Маленьке **кошеня** (kitten)! **Воно** (it) теж тут. *(A little kitten! It is also here.)*
-> **Оленка:** І велике **дзеркало** (mirror). Воно там. *(And a big mirror. It is there.)*
+> **Марія:** Привіт! Дивись, це моя кімната. *(Hi! Look, this is my room.)*
+> **Оленка:** Класно! У тебе є стіл? *(Cool! Do you have a table?)*
+> **Марія:** Так, у мене є стіл і ліжко. А ще мій новий комп'ютер. *(Yes, I have a table and a bed. And also my new computer.)*
+> **Оленка:** Дуже гарна кімната. *(A very nice room.)*
+> **Марія:** Дякую! А це моє нове вікно. *(Thanks! And this is my new window.)*
 
-Notice how Марія and Оленка talk about the animals and objects. The word **кіт** is masculine, so they use the pronoun **він**. The basket, **кошик**, is also masculine, so it is also a "he." The **рибка** and the **черепаха** are feminine, referred to as **вона**. The mirror, **дзеркало**, and the little **кошеня** are neuter, using **воно**.
+If you look closely at this exchange, you will notice a critical pattern emerging. The word for "my" changes depending on the object it describes. When talking about the room, Марія says **моя кімната** (my room). When mentioning the table, she uses **мій стіл** (my table). And when pointing out the bed and the window, she switches to **моє ліжко** (my bed) and **моє вікно** (my window). This shifting pattern is your first direct encounter with Ukrainian gender agreement.
 
-Now consider a different situation. You are on a video call with a friend, showing them your room. The furniture around you also follows these strict rules of grammatical gender.
-
-> **Олег:** Привіт! Дивись, це моя **кімната** (room). *(Hi! Look, this is my room.)*
-> **Анна:** Класно! У тебе є **стіл** (table)? *(Cool! Do you have a table?)*
-> **Олег:** Так, у мене є стіл. Це мій стіл. *(Yes, I have a table. This is my table.)*
-> **Анна:** А де **ліжко** (bed)? *(And where is the bed?)*
-> **Олег:** Моє ліжко тут. А там велика **шафа** (wardrobe). *(My bed is here. And there is a big wardrobe.)*
-
-In this brief exchange, the gender emerges naturally through the possessive words. Oleg says **моя кімната** (my room) because room is feminine. He says **мій стіл** (my table) because table is masculine, and **моє ліжко** (my bed) because bed is neuter.
-
-Finally, observe a quick conversation about everyday items you carry with you in a bag.
-
-> **Максим:** Що у тебе є? *(What do you have?)*
-> **Ірина:** У мене є **книга** (book), **телефон** (phone) і **фото** (photo). *(I have a book, a phone, and a photo.)*
-> **Максим:** А у мене є **ручка** (pen) і **зошит** (notebook). *(And I have a pen and a notebook.)*
-
-Even in a simple list, a Ukrainian speaker unconsciously categorizes these items: **телефон** and **зошит** are masculine, **книга** and **ручка** are feminine, while **фото** is neuter.
-
-## Він, вона, воно — The Gender Test
-
-For an English speaker, the idea that a table is masculine and a book is feminine feels abstract. English primarily reserves gender for living things with a biological sex. A table is an "it." A book is an "it." You must set this habit aside. In Ukrainian, grammatical gender, known as **рід** (gender), is a permanent, structural feature of every single noun. You cannot change a word's gender, just as you cannot change its core meaning.
-
-As outlined in Ukrainian primary school materials like the Grade 3 textbook by Ponomarova, the Ukrainian language divides all nouns into three categories. These are **чоловічий рід** (masculine gender), **жіночий рід** (feminine gender), and **середній рід** (neuter gender). To determine which category a word belongs to, students use a simple substitution test with personal pronouns. Can you replace the noun with "he," "she," or "it"? If the word is a **стіл**, you refer to it as **він**. If the word is a **книга**, you refer to it as **вона**. If the word is a **вікно** (window), you refer to it as **воно**.
-
-This concept becomes much more intuitive when you attach a possessive pronoun to the noun. This is known as the "My" test. Instead of just trying to memorize that a table is masculine, you practice saying "my table." The word for "my" changes depending on the gender of the noun it describes.
-
-If a noun is masculine, you use **мій** (my). You say **мій стіл** (my table) and **мій телефон** (my phone). This firmly establishes the word in the masculine category. If a noun is feminine, you use **моя** (my). You say **моя книга** (my book) and **моя кімната** (my room). If a noun is neuter, you use **моє** (my). You say **моє вікно** (my window) and **моє ліжко** (my bed). By consistently pairing the noun with the correct form of "my," your brain builds a strong associative link.
-
-<!-- INJECT_ACTIVITY: quiz-pronoun-choice -->
-
-While the "My" test helps you confirm a word's gender, you also need a way to predict the gender of a new word you encounter. Fortunately, Ukrainian spelling is highly systematic. You can predict the gender of approximately ninety percent of nouns simply by looking at the last letter of the word in its basic, dictionary form. The Vashulenko textbook for the third grade outlines these primary rules.
-
-If a noun ends in a consonant, it is almost certainly masculine. Look at words like **телефон**, **зошит**, and **ключ** (key). The final sounds are consonants, placing them firmly in the masculine category.
-
-If a noun ends in the vowel **-а** or the vowel **-я**, it is typically feminine. Consider words like **лампа** (lamp), **кімната**, **книга**, and **ручка**. The open vowel ending is the strongest indicator of the feminine gender.
-
-If a noun ends in the vowel **-о** or the vowel **-е**, it is neuter. Words such as **вікно**, **ліжко**, **місто** (city), and **дзеркало** all follow this exact pattern.
-
-:::tip
-There are a few exceptions to these rules, particularly words ending in a soft sign. However, at this stage, mastering the primary consonant, -а/-я, and -о/-е patterns allows you to correctly identify the vast majority of nouns you encounter.
+:::note
+In Ukrainian, possessive pronouns like **мій**, **моя**, and **моє** must agree with the object they describe, not the person who owns it. Whether a man or a woman says it, a table is always **мій стіл** because the word **стіл** itself is masculine.
 :::
+
+Observe another short dialogue where two people are discussing what they carry with them in their bags. This introduces new objects.
+
+> **Оленка:** Що у тебе є в сумці? *(What do you have in your bag?)*
+> **Марія:** У мене є книга, телефон і фото. А у тебе? *(I have a book, a phone, and a photo. And you?)*
+> **Оленка:** А у мене є ручка і зошит. *(And I have a pen and a notebook.)*
+> **Марія:** Це мій зошит! *(This is my notebook!)*
+> **Оленка:** Ой, так. *(Oh, yes.)*
+
+This brief conversation introduces even more daily objects into our vocabulary. We see the words **телефон** (phone), **фото** (photo), **ручка** (pen), and **зошит** (notebook). As we will explore next, each of these new words also belongs to one of three grammatical categories, permanently shaping how they interact with other words in a sentence.
+
+## Він, вона, воно (The Gender Test)
+
+The Ukrainian language divides all nouns into three permanent grammatical categories: **чоловічий рід** (masculine gender), **жіночий рід** (feminine gender), and **середній рід** (neuter gender). You cannot change a word's gender; it is a fixed part of its identity. To identify which category a word belongs to, Ukrainian students learn a simple test using pronouns. Imagine visiting a pet shop. If you look at a sleeping male **кіт** (cat) or a large **акваріум** (aquarium), you can point to them and say **він** (he). If you watch a swimming **рибка** (fish) or a resting **черепаха** (turtle), you can replace those words with **вона** (she). Finally, if you see a tiny **кошеня** (kitten), you would refer to it as **воно** (it).
+
+Building on this pronoun concept, the most practical tool for identifying gender is the "My" test. Instead of just replacing the noun, you pair it with a possessive pronoun. If you can naturally say **мій** (my, masculine) with the object, it is a "he-word." If **моя** (my, feminine) sounds right, it is a "she-word." If it requires **моє** (my, neuter), it is an "it-word." Apply this to the room vocabulary we saw earlier. You can say **мій стіл** (my table), which confirms the word is masculine. When you say **моя книга** (my book), you confirm it is feminine. Finally, saying **моє вікно** (my window) proves that the word is neuter.
+
+<!-- INJECT_ACTIVITY: quiz-pronoun-test -->
+<!-- INJECT_ACTIVITY: fill-in-possessive -->
+
+While the pronoun test is how native speakers feel gender, you can also identify a word's gender simply by looking at its final letter. Masculine nouns generally end in a consonant. Words like **стіл** (table), **телефон** (phone), and **зошит** (notebook) all end with a solid consonant sound, clearly marking them as masculine. Feminine nouns typically end in the vowels **-а** or **-я**. Look at **книга** (book), **лампа** (lamp), **кімната** (room), and **ручка** (pen) — that final **-а** is a strong feminine indicator. Finally, neuter nouns usually end in **-о** or **-е**. Words such as **вікно** (window), **ліжко** (bed), and the word for city, **місто** (city), follow this steady neuter pattern.
+
+:::caution
+Do not try to change a word's gender by changing its ending. Gender is a permanent trait. A table is always a "he" (**він стіл**), and you cannot make it feminine by saying something like "вона столиха."
+:::
+
+There are a few exceptions, such as words ending in the soft sign **-ь**, which can sometimes be feminine instead of masculine. However, do not worry about those right now. The reliable rules for consonant endings, **-а** / **-я**, and **-о** / **-е** will confidently cover about ninety percent of the nouns you are currently learning.
 
 <!-- INJECT_ACTIVITY: quiz-gender-endings -->
 
-## Предмети навколо — Objects Around Us
+## Предмети навколо (Objects Around Us)
 
-To make these rules concrete, organize common vocabulary by gender. We start with masculine objects you find in a study or carry in a bag. Read these words carefully and note the final consonant sound that defines their gender.
+Organize your physical environment by grouping everyday objects according to their grammatical gender. Start by expanding the list of masculine nouns. Look around your workspace. You might see a **стілець** (chair), a **комп'ютер** (computer), or perhaps a **ключ** (key). Notice how each of these words ends in a consonant. Because they share this characteristic, they belong to the masculine category. You can confidently pair them with the masculine pronouns we just learned: **він стілець** (he chair), **мій стілець** (my chair), **він комп'ютер** (he computer), **мій комп'ютер** (my computer), and **він ключ** (he key), **мій ключ** (my key).
 
-The word for a table is a **стіл**. The word for a chair is a **стілець** (chair). Your mobile device is a **телефон**, and your computer is a **комп'ютер** (computer). When you need to write something down, you use a **зошит**, and you unlock your door with a **ключ**. Every single one of these items belongs to the masculine gender. You refer to any of them as **він**, and if they belong to you, you use the possessive **мій**.
+Next, focus on the feminine objects that might be in the same room. You probably have a **сумка** (bag) nearby, and every room is surrounded by at least one **стіна** (wall). The final **-а** in these words is your visual and auditory signal that they belong to the feminine group. To reinforce this identity, practice pairing them with their matching pronouns: **вона сумка** (she bag), **моя сумка** (my bag), **вона стіна** (she wall), and **моя стіна** (my wall). This consistent pattern helps cement the gender of these objects in your mind.
 
-Now consider the feminine and neuter objects around you. The feminine words all share the characteristic open vowel endings. You read a **книга**. You turn on a **лампа** for light. You carry your belongings in a **сумка** (bag), write with a **ручка**, and sit inside a **кімната** surrounded by a **стіна** (wall). All of these end in **-а**, marking them as feminine (**вона**, **моя**).
+Finally, turn to the neuter objects in your environment. A comfortable room might feature a **крісло** (armchair), and you will often find a **дзеркало** (mirror) on the wall. These words end in **-о**, marking them clearly as neuter. They pair perfectly with the neuter pronouns: **воно крісло** (it armchair), **моє крісло** (my armchair), **воно дзеркало** (it mirror), and **моє дзеркало** (my mirror).
 
-Neuter nouns describe other essential items, clearly marked by their **-о** or **-е** endings. You look out a **вікно**. You sleep in a **ліжко**. You relax in a comfortable **крісло** (armchair). You check your reflection in a **дзеркало**, and you frame a **фото** for memories. These are all neuter objects (**воно**, **моє**).
+<!-- INJECT_ACTIVITY: group-sort-objects -->
 
-<!-- INJECT_ACTIVITY: group-sort-gender -->
-
-You previously learned how to talk about your family using the phrase **У мене є** (I have). You practiced saying things like "У мене є брат" (I have a brother) and "У мене є сестра" (I have a sister). This exact same grammatical construction is used to talk about inanimate objects. The gender of the object does not change the structure of the sentence. The phrase **У мене є** remains constant.
-
-If you want to state that you own a table, you simply combine the phrase with the vocabulary word. You say **У мене є стіл** (I have a table). If you want to state that you have a book, you say **У мене є книга** (I have a book). If you are describing a room and want to say it has a window, you say **У мене є вікно** (I have a window).
-
-This is a powerful pattern. By learning one fixed phrase, you can instantly communicate ownership or possession of any new vocabulary word you learn, regardless of whether that word is masculine, feminine, or neuter.
-
-:::note
-The phrase **У мене є** translates literally to "At me there is." The noun that follows it is the subject of the sentence, which is why it stays in its basic dictionary form. You do not need to change the ending of the object you possess in this specific construction.
+:::tip
+When you learn a new Ukrainian noun, try to memorize it with its matching possessive pronoun. Instead of just memorizing **стілець**, repeat **мій стілець** out loud. This naturally locks the gender into your memory without relying on abstract rules.
 :::
 
-<!-- INJECT_ACTIVITY: fill-in-possessives -->
+Now that you can classify the objects around you, put them to use. You previously learned the phrase **У мене є** (I have) when discussing family members. Expressing possession of physical objects works exactly the same way. You do not need to learn a new sentence structure; you simply swap the vocabulary. If you want to describe your workspace, you can say **У мене є стіл** (I have a table). To talk about your reading materials, you declare **У мене є книга** (I have a book). And to describe your room's layout, you state **У мене є вікно** (I have a window). The pattern remains perfectly consistent.
 
 ## Підсумок — Summary
 
-Determining the grammatical gender of a Ukrainian noun is a foundational skill. It dictates how you use pronouns, how you form plurals later on, and how adjectives change to match the noun. Master this process by following a reliable three-step strategy.
+Whenever you encounter a new noun in Ukrainian, determining its gender is essential because it dictates how the word interacts with adjectives and pronouns. You can master this process by following three reliable steps. First, try saying the core pronouns **він** (he), **вона** (she), or **воно** (it) alongside the noun to see which one fits naturally. Second, look closely at the word's final letter. A consonant almost always indicates masculine, an **-а** or **-я** ending points to feminine, and an **-о** or **-е** signals neuter. Third, test the word using the possessive pronoun series: **мій** (my, m), **моя** (my, f), or **моє** (my, n). Remember, gender is a permanent trait that commands agreement across the entire sentence.
 
-First, apply the pronoun test. Ask yourself which personal pronoun replaces the noun naturally. Does the object feel like a **він**, a **вона**, or a **воно**?
-
-Second, reinforce this with the "My" test. Pair the noun with a possessive pronoun to build a strong auditory and visual association. Say the combination out loud. Is it **мій** (masculine), **моя** (feminine), or **моє** (neuter)?
-
-Third, check the ending of the dictionary form of the word. This is your visual proof.
-
-Here is your quick-reference summary of the typical noun endings:
-
-*   **Чоловічий рід** (Masculine gender): The word ends in a consonant. Examples include **стіл**, **зошит**, and **телефон**. You use **він** and **мій**.
-*   **Жіночий рід** (Feminine gender): The word ends in the vowel **-а** or **-я**. Examples include **книга**, **сумка**, and **кімната**. You use **вона** and **моя**.
-*   **Середній рід** (Neuter gender): The word ends in the vowel **-о** or **-е**. Examples include **вікно**, **ліжко**, and **дзеркало**. You use **воно** and **моє**.
-
-Perform a self-check to ensure these concepts are clear.
-
-What gender is the word **стіл**? It is masculine (**чоловічий рід**). We know this because it ends in a consonant sound, and we refer to it by saying **мій стіл**.
-
-What gender is the word **книга**? It is feminine (**жіночий рід**). The visual proof is the **-а** ending, and we claim ownership by saying **моя книга**.
-
-What gender is the word **вікно**? It is neuter (**середній рід**). It ends in the vowel **-о**, and we pair it with the neuter possessive, saying **моє вікно**.
-
-Finally, how do you say "I have a chair" in Ukrainian? You combine the fixed possession phrase with the masculine noun for chair. The correct sentence is **У мене є стілець**. Keep practicing this structure with all the new objects around you.
-
+Run a quick self-check using the vocabulary from this lesson. What gender is the word **стіл**? It is masculine because you can say **він**, it ends in a consonant, and it pairs with the pronoun to become **мій стіл**. What gender is **книга**? It is feminine because you can replace it with **вона**, it ends in the vowel **-а**, and you say **моя книга**. What about **вікно**? It is clearly neuter because you refer to it as **воно**, it ends in **-о**, and it becomes **моє вікно**. Finally, try translating this thought: Say "I have a chair" in Ukrainian. You simply use the familiar structure and state **У мене є стілець**.
 </module_content>
 
 ---
@@ -213,48 +199,68 @@ version: "1.0"
 module: things-have-gender
 level: a1
 
+# NOTE — these are SHAPE examples. The real targets are at the top of this prompt
+# (10 total / 4–6 inline / 6–9 workbook,
+# 6+ items per activity). The shapes below are TRUNCATED for readability;
+# YOUR output MUST hit those minimums.
+
 inline:
   - id: marker-id-here        # MUST match an <!-- INJECT_ACTIVITY: ... --> marker
     type: quiz                 # activity type
     instruction: "Оберіть правильний варіант"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - question: "_____ стіл"
-        options: ["мій", "моя", "моє"]
+        options: ["мій", "моя", "моє", "мої"]
         correct: 0             # 0-based index
+      - question: "Це ____ книга."
+        options: ["мій", "моя", "моє", "мої"]
+        correct: 1
+      # ... add at least 6 items total — never stop at 1-2
 
   - id: another-marker-id
     type: fill-in
     instruction: "Вставте правильне слово"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - sentence: "Це ____ кімната."
         answer: "моя"
         options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ вікно."
+        answer: "моє"
+        options: ["мій", "моя", "моє"]
+      # ... ≥ 6 items total
 
 workbook:
-  - type: match-up
+  - id: match-up-vocab
+    type: match-up
     instruction: "З'єднайте пари"
-    pairs:
+    pairs:                     # ← real output: ≥ 6 pairs
       - left: "стіл"
         right: "він"
       - left: "книга"
         right: "вона"
       - left: "вікно"
         right: "воно"
+      # ... ≥ 6 pairs total
 
-  - type: group-sort
+  - id: group-sort-gender
+    type: group-sort
     instruction: "Розподіліть слова за категоріями"
     groups:
-      - label: "Category A"
-        items: ["word1", "word2"]
-      - label: "Category B"
-        items: ["word3", "word4"]
+      - label: "Чоловічий рід"
+        items: ["стіл", "олівець", "будинок"]   # ≥ 3 items per group
+      - label: "Жіночий рід"
+        items: ["книга", "ручка", "школа"]
+      - label: "Середній рід"
+        items: ["вікно", "море", "молоко"]
 
-  - type: true-false
+  - id: true-false-grammar
+    type: true-false
     instruction: "Правда чи ні?"
-    items:
-      - statement: "Statement here"
-        correct: true
-        explanation: "Why it's true"
+    items:                     # ← real output: ≥ 6 items
+      - statement: "«Книга» — це чоловічий рід."
+        correct: false
+        explanation: "Книга закінчується на -а, отже жіночий рід."
+      # ... ≥ 6 items total
 
   - type: error-correction
     instruction: "Виправте помилку"
@@ -325,7 +331,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -432,10 +438,15 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 ## Quality Rules
 
-**ITEM COUNT MINIMUMS (non-negotiable):**
-- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
-- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
-- If you can't think of enough items, add more examples from the module's vocabulary and content.
+**ACTIVITY COUNT MINIMUMS (non-negotiable, audit-enforced):**
+- **Total: 10 activities.** Inline: 4–6. Workbook: 6–9. The audit gate FAILS the module if you ship fewer.
+- **Type diversity: workbook MUST cover ≥5 distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
+- **Match the inline markers exactly.** Every `<!-- INJECT_ACTIVITY: id -->` marker in the prose needs a matching inline activity with that exact id. Skipping markers means the lesson tab is broken.
+
+**ITEM COUNT MINIMUMS (non-negotiable, per-activity):**
+- **Default minimum: 6 items per activity.** Quiz, fill-in, match-up, true-false, anagram, error-correction, translate, cloze, mark-the-words, divide-words, count-syllables, odd-one-out, group-sort categories: all ≥ 6.
+- **Lower minimums for specific types only:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items, essay-response/critical-analysis = 1 prompt.
+- If you can't think of enough items, add more examples from the module's vocabulary and content. NEVER ship a 1-item or 2-item activity unless its type cap explicitly allows it.
 - **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
 - **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
@@ -542,6 +553,27 @@ IMPORTANT: After using tools, output your COMPLETE module content as plain text.
 1. Run `verify_words` on all Ukrainian words in your exercises — every word must exist in VESUM
 2. Run `query_cefr_level` on any word you're unsure about — it must be a1-appropriate
 3. For fill-in answers and distractors, verify the exact form (case, number, gender) with `verify_lemma`
+
+---
+
+## ⚠️ MANDATORY FINAL CHECKLIST — verify before emitting YAML
+
+Walk through this checklist explicitly before you start emitting. If ANY box is unchecked, fix it FIRST.
+
+- [ ] My output has **at least 4** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
+- [ ] My output has **at least 6** workbook activities.
+- [ ] **Total ≥ 10.**
+- [ ] **Every** activity has **at least 6** items, pairs, or statements (except types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3, essay-response=1).
+- [ ] The module (inline + workbook combined) uses **at least 0 distinct activity types** (or 4+ when 0 = 0 and the workbook size allows it). I am NOT shipping a wall of quizzes.
+- [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
+- [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
+- [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+- [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+- [ ] My inline count is between 4 and 6. I did NOT create more injection markers than 6.
+- [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
+- [ ] At B1+, all instructions are in Ukrainian (no English fallback).
+
+If you cannot tick all of these, REGENERATE the activities BEFORE outputting. Shipping under-spec means the build rejects you and the heal loop has to redo your work — wasting compute.
 
 ---
 

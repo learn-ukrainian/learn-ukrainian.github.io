@@ -1,13 +1,41 @@
-## Сценарій 1: Що вчора трапилось?
+## Сценарій 1: Що вчора трапилось? (~600 words)
 
-Розповідати цікаві історії — це справжнє мистецтво. Коли ми говоримо про минуле, ми будуємо **розповідь** (narrative). In a Ukrainian story, we use two grammatical tools to build the scene. We use the imperfective and perfective past tenses. Think of it as the "Stage vs. Action" principle. We use the imperfective aspect to set the background scene. Це гарні декорації на вашій сцені. Ось типовий приклад: «Був теплий вечір, яскраво світило сонце, я читав цікаву книгу». The action is ongoing and continuous. Nothing has fundamentally changed yet in the story. Then, we use the perfective aspect for the main events. Ці події швидко рухають сюжет вперед. Це сама активна дія. Ось приклад: «Раптом хтось гучно постукав, і я швидко відкрив двері». The perfective verbs represent completed, punctual actions. They disrupt the calm background and drive the story forward.
+Вчора Андрій і Олена зустрілися на вокзалі. Андрій хотів **розповісти** *(to tell)* цікаву історію про свою нову **подорож** *(trip)*.
 
-Щоб історія була логічною та зрозумілою, нам потрібні слова-зв’язки. These connector words act as essential glue for your narrative. They help us clearly transition between background states and sudden plot twists. Ось кілька дуже важливих слів для розповіді: **спочатку** (at first), **потім** (then), **раптом** (suddenly), та **нарешті** (finally). Слово «спочатку» дає ідеальний старт вашій історії. Воно готує слухача до початку подій. Слово «потім» показує чітку хронологічну послідовність дій. Слово «раптом» — це завжди великий сюрприз. Воно миттєво показує швидку зміну ситуації. It usually signals the dramatic arrival of a perfective verb. Слово «нарешті» логічно показує кінець історії або важливий фінальний результат.
+> *Yesterday, Andriy and Olena met at the train station. Andriy wanted to tell an interesting story about his new trip.*
 
-Давайте уважно подивимось на один практичний приклад. Уявіть, що ви сьогодні приїхали на **вокзал** (train station). Вокзал — це завжди дуже багато людей і постійного шуму. Ось моя маленька історія для вас. Спочатку все навколо було дуже спокійно. Люди повільно купували **квитки** (tickets), а великі **потяги** (trains) довго стояли на платформі. Я сидів у кафе і спокійно пив гарячу каву. These verbs are all imperfective, perfectly setting our busy background scene. Then, the inevitable plot twist happens. Раптом я з жахом зрозумів, що загубив мій квиток! Я швидко почав шукати його скрізь. Нарешті я знайшов його в кишені моєї куртки. Verbs like the ones for realized, lost, and found are distinct perfective events. Вони показують конкретні завершені дії, які вирішують проблему.
+> — **Андрій:** Привіт, Олено! Ти не повіриш, що вчора **трапилося**! *(Hi, Olena! You won't believe what happened yesterday!)*
+> — **Олена:** Привіт! Що таке? Ти виглядаєш дуже щасливим. *(Hi! What is it? You look very happy.)*
+> — **Андрій:** Був теплий вечір. Я сидів у парку, пив чай і читав книгу. *(It was a warm evening. I was sitting in the park, drinking tea and reading a book.)*
+> — **Олена:** І що потім? Це звучить дуже спокійно. *(And then what? That sounds very calm.)*
+> — **Андрій:** Раптом подзвонив мій брат. Він запросив мене на концерт відомого гурту! *(Suddenly my brother called. He invited me to a concert of a famous band!)*
+> — **Олена:** Ого! А ти що зробив? *(Wow! And what did you do?)*
+> — **Андрій:** Я швидко встав, купив **квиток** онлайн і поїхав на **вокзал**. *(I quickly stood up, bought a ticket online and went to the station.)*
 
-Let's take a moment to review the grammar structure of the past tense. The Ukrainian past tense is formed using specific suffixes attached to the verb stem. They are -в, -ла, -ло, and -ли. The crucial rule here is strict gender agreement for the narrator in the singular form. Якщо розповідає чоловік, він обов'язково каже: «Я ходив, я бачив, я купив». Якщо розповідає жінка, вона має казати: «Я ходила, я бачила, я купила». For all plural subjects, we always use the -ли ending. Ми разом ходили і ми все бачили. Notice how incredibly stable the -в sound is for masculine verbs in Ukrainian. Even for verbs with challenging consonant stems like **міг** (could), **ніс** (carried), or **біг** (ran), Ukrainian stubbornly maintains its unique phonetic pattern compared to neighboring languages.
+When we tell a story about the past, we use a mix of imperfective and perfective verbs. The choice of aspect depends on the verb's role in the narrative. Imperfective verbs create the background, describe the setting, and show actions in progress. They answer the question "What was happening?". Perfective verbs, on the other hand, drive the plot forward by introducing sudden events or completed actions. They answer the question "What happened?".
 
-Як правильно запитати про цікаві події в минулому? We have two main questions depending on the specific verb aspect. Якщо ви хочете знати загальну інформацію про процес, ви питаєте: «Що відбувалося?». This specific question actively expects an imperfective answer about an ongoing, continuous situation. Але дуже часто ми хочемо знати про конкретну фінальну подію. Тоді ми прямо питаємо: «**Що трапилося?**» (What happened?). Ви також можете просто запитати: «Що сталося?». When you hear this direct question, you usually reply with perfective verbs to explain the result. We also frequently use specific verbs to describe our emotional reactions. Наприклад, ми дуже часто кажемо: **я злякався** (I got scared). Або, якщо це жінка: я злякалася. Ви також можете впевнено сказати: **я здивувався** (I was surprised). Усі ці емоційні слова допомагають зробити вашу історію неймовірно живою та дуже цікавою.
+Уявіть собі таку картину. Був теплий вечір. Я сидів на балконі і читав цікаву книгу. Раптом подзвонив мій давній друг і запросив мене на смачну вечерю.
 
-<!-- INJECT_ACTIVITY: quiz-aspect-choice -->
+> *Imagine such a picture. It was a warm evening. I was sitting on the balcony and reading an interesting book. Suddenly, my old friend called and invited me to a delicious dinner.*
+
+To link these background scenes and sudden events chronologically, we use special time connectors. They help your listener follow the exact order of the story and understand when each action took place. Words like **спочатку** (at first), **потім** (then), and **нарешті** (finally) create a clear sequence. Without these connectors, a story can sound like a confusing list of random facts.
+
+Ось ще кілька корисних слів для вашої історії. Ми часто використовуємо вираз «тим часом» для двох дій одночасно. Для дуже несподіваних подій ідеально підходять слова «раптом» або «у цей момент».
+
+> *Here are a few more useful words for your story. We often use the expression "тим часом" (meanwhile) for two actions at the same time. For very unexpected events, the words "раптом" (suddenly) or "у цей момент" (at that moment) are perfectly suitable.*
+
+Let's look at a longer narrative example. Here is a short story about waiting for a train at the station. Notice how the time connectors organize the events and how the verbs switch between aspects to build the scene and then move the action forward.
+
+Вчора ввечері я довго чекав на мій **потяг** *(train)*. Спочатку я сидів у маленькому кафе і пив гарячу каву. Тим часом на вокзалі грала тиха музика, а люди повільно ходили туди-сюди. У цей момент я побачив старого друга біля каси. Ми стояли і говорили десять хвилин. Раптом мій потяг швидко приїхав. Нарешті я зайшов у вагон, сів на своє місце, і ми поїхали.
+
+> *Yesterday evening I waited a long time for my train. At first, I sat in a small cafe and drank hot coffee. Meanwhile, quiet music was playing at the station, and people were walking slowly back and forth. At that moment, I saw an old friend near the ticket office. We stood and talked for ten minutes. Suddenly, my train arrived quickly. Finally, I entered the carriage, sat in my seat, and we left.*
+
+Let's break down exactly how this story works grammatically. The verbs «чекав» (was waiting), «сидів» (was sitting), «пив» (was drinking), «грала» (was playing), and «ходили» (were walking) are all imperfective. They set the scene and describe ongoing, continuous processes. Nothing new is happening to change the situation; this is just the background environment of the story. 
+
+Then, the actual plot moves forward. The verbs «побачив» (saw), «приїхав» (arrived), «зайшов» (entered), «сів» (sat), and «поїхали» (left) are perfective. These are completed, single events that interrupt the background state and advance the narrative timeline. The time connectors like «спочатку» and «раптом» act as helpful signposts, warning you when the background description ends and a new, important event begins.
+
+:::info
+**Grammar box** — Remember the movie director's rule. Imperfective verbs build the movie set. They tell us about the weather, the atmosphere, and what people were doing. Perfective verbs are the "Action!" moments that actually make the story happen.
+:::
+
+<!-- INJECT_ACTIVITY: quiz-past-trip-comprehension -->

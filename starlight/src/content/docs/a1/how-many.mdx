@@ -7,11 +7,12 @@ pipeline: v6
 build_status: draft
 ---
 
-import ErrorCorrection from '@site/src/components/ErrorCorrection';
+import Anagram from '@site/src/components/Anagram';
 import FillIn from '@site/src/components/FillIn';
 import FlashcardDeck from '@site/src/components/FlashcardDeck';
 import GroupSort from '@site/src/components/GroupSort';
 import MatchUp from '@site/src/components/MatchUp';
+import OddOneOut from '@site/src/components/OddOneOut';
 import Quiz from '@site/src/components/Quiz';
 import TrueFalse from '@site/src/components/TrueFalse';
 import Unjumble from '@site/src/components/Unjumble';
@@ -21,90 +22,139 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 <Tabs syncKey="module-tab">
 <TabItem label="Урок">
 
-## Діало́ги — Dialogues
+## Діало́ги (Dialogues)
 
-Numbers are the invisible architecture of our daily interactions. From the moment you wake up, you are surrounded by quantities, prices, and measurements. When you walk into a traditional Ukrainian bakery, you do not just point at items; you ask for a specific amount. You might need **оди́н хліб** (one bread) for the family dinner, **одна́ бу́лочка** (one bun) for a quick snack, or perhaps **одне́ ті́стечко** (one pastry) as a treat. You will inevitably need to ask the baker, **Скі́льки ко́шту́є торт? А три бу́лочки?** (How much does a cake cost? And three buns?). If you are packing a backpack for a language class, you check your supplies by counting: **один оліве́ць** (one pencil) for taking notes, and **дві ручки** (two pens) just in case one runs out of ink. Numbers allow us to navigate the practical realities of life, whether we are comparing prices or sharing personal details.
+In this module, you will use Ukrainian numbers in three practical A1 situations: asking prices, saying age, and reading phone numbers. Learn the patterns as ready-made chunks: **Скі́льки ко́шту́є?**, **Ме́ні ... ро́кі́в**, and number groups for prices and phone numbers.
 
-Let us look at how numbers naturally emerge when shopping at a bustling market stall. In this scenario, a customer is looking to buy a bag and needs to ask about the **ціна́** (price). Read the dialogue below to see how numbers are used in a real commercial context.
-
-<div class="dialogue">
-
-<div class="dialogue-line"><span class="speaker">Покупе́ць:</span> До́брий день! **Скільки коштує су́мка?** *(Good afternoon! How much does the bag cost?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Продаве́ць:</span> Добрий день! **Дві́сті гри́вень.** *(Good afternoon! Two hundred hryvnias.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Покупець:</span> **А мале́нька?** *(And the small one?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Продавець:</span> **Сто п'ятдеся́т.** *(One hundred fifty.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Покупець:</span> **До́бре, дякую!** *(Good, thank you!)*</div>
-
-</div>
-
-In this exchange, the customer uses the essential phrase **Скільки коштує?** (How much does it cost?) alongside the noun **сумка** (bag) and the adjective **маленька** (small). The seller responds using exact numbers: **двісті** (two hundred) and **сто п'ятдесят** (one hundred fifty).
-
-Numbers are also crucial when meeting someone new and expanding beyond basic greetings. A common follow-up question in any conversation is asking about age.
+Let us look at a typical interaction at a bakery. A customer is ordering for a family gathering.
 
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Анто́н:</span> Приві́т! **Скільки тобі́ ро́кі́в?** *(Hi! How old are you?)*</div>
+<div class="dialogue-line"><span class="speaker">Покупе́ць:</span> До́брий день! **Скільки коштує** торт? *(Good afternoon! How much does the cake cost?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Ві́ктор:</span> Привіт! **Ме́ні два́дцять п'ять. А тобі?** *(Hi! I am twenty-five. And you?)*</div>
+<div class="dialogue-line"><span class="speaker">Пекар:</span> **Дві́сті** гри́вень. *(Two hundred hryvnias.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Антон:</span> **Мені три́дцять два. А твоя́ сестра́?** *(I am thirty-two. And your sister?)*</div>
+<div class="dialogue-line"><span class="speaker">Покупець:</span> А **три бу́лочки**? *(And three buns?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Віктор:</span> **Їй вісімна́дцять.** *(She is eighteen.)*</div>
+<div class="dialogue-line"><span class="speaker">Пекар:</span> **Сто п'ятдеся́т**. *(One hundred fifty.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Покупець:</span> До́бре, **дякую**! І **оди́н хліб**, будь ла́ска. *(Good, thank you! And one loaf of bread, please.)*</div>
 
 </div>
 
-Here, we see the question **Скільки тобі років?** (How old are you?) and the response pattern **Мені...** (To me is...). They use the numbers **вісімнадцять** (eighteen), **двадцять п'ять** (twenty-five), and **тридцять два** (thirty-two). This formula is a fixed pattern you can memorize right now to share your own details.
+In this exchange, the phrase **скільки коштує** (how much does it cost) is your most important tool. The customer asks about **торт**, **булочки**, and **хліб**, and the baker replies with prices. The numbers emerge naturally through a bakery context. You do not need complex grammar to buy things. You just need the core question and the vocabulary for the numbers.
 
-## Чи́сла 1-20 — Numbers 1-20
+Now, let us look at another common situation. You are meeting someone new and sharing basic personal details.
 
-The absolute foundation of counting relies on the numbers from one to ten. These are the building blocks you will use every single day. The sequence is **один** (one), **два** (two), **три** (three), **чоти́ри** (four), **п'ять** (five), **шість** (six), **сім** (seven), **ві́сім** (eight), **де́в'ять** (nine), and **де́сять** (ten). Pronunciation here is critical. Pay close attention to the apostrophe in the words **п'ять** and **дев'ять**. The apostrophe tells you to pronounce the preceding consonant sharply and then transition distinctly into the following vowel, creating a slight pause. Furthermore, notice the clear **і** sound in both **сім** and **вісім**. It sounds like the "ee" in "meet" and must never be relaxed into a softer sound. 
+<div class="dialogue">
 
-Unlike English, where numbers are static words, Ukrainian numbers must harmonize with the objects they describe. The number one has three distinct forms that match the gender of the noun. You must say **один стіл** (one table) for a masculine noun, **одна кни́га** (one book) for a feminine noun, and **одне вікно́** (one window) for a neuter noun. The number two also changes, but it only has two forms. You use **два** for both masculine and neuter nouns, such as **два столи́** (two tables) or **два ві́кна** (two windows). However, when counting feminine objects, you must switch to the feminine form, which is **дві**. Therefore, you say **дві кни́ги** (two books).
+<div class="dialogue-line"><span class="speaker">А́нна:</span> Приві́т! **Скільки тобі́ років?** *(Hi! How old are you?)*</div>
 
-Once you have mastered the first ten numbers, learning the teens is remarkably straightforward because they follow a highly predictable pattern. You simply take the base number and add the suffix **-на́дцять**. The sequence is **одина́дцять** (eleven), **двана́дцять** (twelve), **трина́дцять** (thirteen), **чотирна́дцять** (fourteen), **п'ятна́дцять** (fifteen), **шістна́дцять** (sixteen), **сімна́дцять** (seventeen), **вісімнадцять** (eighteen), and **дев'ятна́дцять** (nineteen), leading up to **двадцять** (twenty). There is a crucial phonetic rule here: the stress always falls on the syllable **-на-**. You must pronounce it as **одинадцять** and **дванадцять**. 
+<div class="dialogue-line"><span class="speaker">Макси́м:</span> **Мені два́дцять п'ять років.** А тобі? *(I am twenty-five years old. And you?)*</div>
 
-:::caution
-A common mistake for learners is trying to place the stress at the beginning of the word, similar to English. Always emphasize the **-на-** syllable in these numbers.
-:::
+<div class="dialogue-line"><span class="speaker">Анна:</span> **Мені три́дцять два ро́ки́.** А твоя́ сестра́? *(I am thirty-two years old. And your sister?)*</div>
 
-When we count classroom objects, the nouns change their endings based on the number. You do not need to memorize complex grammatical tables yet; simply learn these high-frequency combinations as fixed patterns. Notice how the ending shifts depending on the quantity: **один зо́шит** (one notebook), **два зо́шити** (two notebooks), and **п'ять зо́шитів** (five notebooks). Similarly, we say **один підру́чник** (one textbook), **два підру́чники** (two textbooks), and **десять підру́чників** (ten textbooks). By learning these blocks together, you internalize the rhythm of the language without analyzing the underlying rules.
+<div class="dialogue-line"><span class="speaker">Максим:</span> **Їй вісімна́дцять років.** *(She is eighteen years old.)*</div>
 
-<FillIn client:only="react" items={[{"sentence": "15 = _____", "answer": "п'ятнадцять"}, {"sentence": "47 = сорок _____", "answer": "сім"}, {"sentence": "12 = _____", "answer": "дванадцять"}, {"sentence": "90 = _____", "answer": "дев'яносто"}, {"sentence": "25 = двадцять _____", "answer": "п'ять"}, {"sentence": "80 = _____", "answer": "вісімдесят"}, {"sentence": "16 = _____", "answer": "шістнадцять"}, {"sentence": "30 = _____", "answer": "тридцять"}, {"sentence": "55 = п'ятдесят _____", "answer": "п'ять"}, {"sentence": "18 = _____", "answer": "вісімнадцять"}]} instruction={"Напишіть цифри словами (Write the numbers in words)"} />
+</div>
 
-## Деся́тки і со́тні — Tens and Hundreds
+This dialogue uses a highly specific formula. To ask someone's age, you say **Скільки тобі років?** (How old are you?). To reply, use ready-made chunks: **мені двадцять п'ять років**, **мені тридцять два роки**, **їй вісімнадцять років**. Treat these whole phrases as memorized patterns and repeat them aloud.
 
-Larger numbers allow us to discuss broader concepts, prices, and quantities. The tens follow a fairly regular pattern, usually ending in the suffix **-дцять** or **-десят**. The sequence continues with **тридцять** (thirty), **п'ятдесят** (fifty), **шістдеся́т** (sixty), **сімдеся́т** (seventy), and **вісімдеся́т** (eighty). However, there are two critical irregular numbers you must memorize immediately: **со́рок** (forty) and **дев'яно́сто** (ninety). They do not follow the standard suffix rules. To create compound numbers, you simply place the ten and the unit next to each other, exactly as you do in English. For example, you combine them to say **сорок сім** (forty-seven), **двадцять один** (twenty-one), or **дев'яносто дев'ять** (ninety-nine). 
+<Quiz client:only="react" questions={[{"question": "25 (I am...)", "options": [{"text": "Мені двадцять років.", "correct": false}, {"text": "Мені двадцять п'ять років.", "correct": true}, {"text": "Тобі двадцять п'ять років.", "correct": false}, {"text": "Їй двадцять п'ять років.", "correct": false}]}, {"question": "18 (She is...)", "options": [{"text": "Мені вісімнадцять років.", "correct": false}, {"text": "Тобі вісімнадцять років.", "correct": false}, {"text": "Їй вісімнадцять років.", "correct": true}, {"text": "Їй вісім років.", "correct": false}]}, {"question": "32 (You are...)", "options": [{"text": "Тобі тридцять два роки.", "correct": true}, {"text": "Мені тридцять два роки.", "correct": false}, {"text": "Їй тридцять два роки.", "correct": false}, {"text": "Тобі тридцять років.", "correct": false}]}, {"question": "40 (I am...)", "options": [{"text": "Тобі сорок років.", "correct": false}, {"text": "Їй сорок років.", "correct": false}, {"text": "Мені чотирнадцять років.", "correct": false}, {"text": "Мені сорок років.", "correct": true}]}, {"question": "10 (You are...)", "options": [{"text": "Мені десять років.", "correct": false}, {"text": "Тобі десять років.", "correct": true}, {"text": "Їй десять років.", "correct": false}, {"text": "Тобі один рік.", "correct": false}]}, {"question": "21 (She is...)", "options": [{"text": "Мені двадцять один рік.", "correct": false}, {"text": "Тобі двадцять один рік.", "correct": false}, {"text": "Їй дванадцять років.", "correct": false}, {"text": "Їй двадцять один рік.", "correct": true}]}]} instruction={"How old are they? (**Скільки років?**) Choose the correct age phrase."} /> 
 
-When it comes to purchasing high-value items or discussing large sums, you need the hundreds. The base unit is **сто** (one hundred). The subsequent hundreds are built systematically, but their spellings must be memorized: **двісті** (two hundred), **три́ста** (three hundred), **чоти́риста** (four hundred), **п'ятсо́т** (five hundred), and finally **ти́сяча** (one thousand). Notice carefully that two hundred is written and pronounced as **двісті**, using the feminine root form, and never as "двасто". These hundreds combine easily with the tens and units you already know. If you want to say three hundred and fifty, you simply say **триста п'ятдесят**. 
+## Чи́сла 1-20 (Numbers 1-20)
 
-:::tip
-The number **тисяча** (thousand) is a feminine noun. If you want to say "one thousand," you must use the feminine form of one: **одна тисяча**.
-:::
+Let us start with the core building blocks: the numbers from one to ten. Listen carefully to how they sound. Ukrainian Lessons Season 1, Episode 5 focuses on this pronunciation set. 
 
-These larger numbers are indispensable when dealing with money and currency. The national currency of Ukraine is the **гри́вня** (hryvnia). Just like the classroom objects we counted earlier, the word for currency changes depending on the exact number preceding it. You must memorize these three core patterns. For amounts ending in one (except eleven), use the base form: **одна гривня** (one hryvnia). For amounts ending in two, three, or four (except the teens 12-14), the word changes: **дві гри́вні** (two hryvnias), **три гривні** (three hryvnias), or **чотири гривні** (four hryvnias). For all other numbers, including zero and the teens, the form changes again: **п'ять гривень** (five hryvnias), **десять гривень** (ten hryvnias), or **сто гривень** (one hundred hryvnias). Combine these patterns with the essential question **Скільки це коштує?** (How much does this cost?) to handle any shopping scenario confidently.
+*   **один** (one)
+*   **два** (two)
+*   **три** (three)
+*   **чоти́ри** (four)
+*   **п'ять** (five)
+*   **шість** (six)
+*   **сім** (seven)
+*   **ві́сім** (eight)
+*   **де́в'ять** (nine)
+*   **де́сять** (ten)
 
-<Quiz client:only="react" questions={[{"question": "200 гривень", "options": [{"text": "двісті", "correct": true}, {"text": "двасто", "correct": false}, {"text": "двадцять", "correct": false}, {"text": "два", "correct": false}]}, {"question": "150 гривень", "options": [{"text": "сто п'ятдесят", "correct": true}, {"text": "сто п'ятсот", "correct": false}, {"text": "сто п'ять", "correct": false}, {"text": "п'ятдесят сто", "correct": false}]}, {"question": "300 гривень", "options": [{"text": "тридцять", "correct": false}, {"text": "тристо", "correct": false}, {"text": "триста", "correct": true}, {"text": "трисот", "correct": false}]}, {"question": "40 гривень", "options": [{"text": "чотириста", "correct": false}, {"text": "сорок", "correct": true}, {"text": "чотирнадцять", "correct": false}, {"text": "чотири", "correct": false}]}, {"question": "500 гривень", "options": [{"text": "п'ятсот", "correct": true}, {"text": "п'ятдесят", "correct": false}, {"text": "п'ятнадцять", "correct": false}, {"text": "п'ять сто", "correct": false}]}, {"question": "1000 гривень", "options": [{"text": "одна тисяча", "correct": true}, {"text": "один тисяча", "correct": false}, {"text": "одне тисяча", "correct": false}, {"text": "тисячі", "correct": false}]}, {"question": "70 гривень", "options": [{"text": "сімнадцять", "correct": false}, {"text": "сімсот", "correct": false}, {"text": "сімдесят", "correct": true}, {"text": "сім", "correct": false}]}, {"question": "90 гривень", "options": [{"text": "дев'яносто", "correct": true}, {"text": "дев'ять", "correct": false}, {"text": "дев'ятнадцять", "correct": false}, {"text": "дев'ятсот", "correct": false}]}]} instruction={"Скільки коштує? Оберіть правильну ціну (How much does it cost? Choose the correct price)"} />
+Pronunciation requires special attention here. The words **п'ять** and **дев'ять** contain an apostrophe. In Ukrainian, the apostrophe shows that the consonant before the following vowel stays hard; it is not a pause sound. So in **п'ять** and **дев'ять**, pronounce the consonant clearly before the next vowel. The number **сім** has a clear Ukrainian **і** sound. 
+
+For now, learn the most common combinations as ready-made chunks: **один оліве́ць** (one pencil), **дві ручки** (two pens), **п'ять зо́шитів** (five notebooks), **один підру́чник** (one textbook).
+
+At this level, treat these as patterns you can repeat: **один рік** (one year), **два роки** (two years), **п'ять років** (five years), **десять гривень** (ten hryvnias). You do not need the grammar rule yet.
+ 
+
+Now, let us expand to the numbers from eleven to twenty. 
+
+*   **одина́дцять** (eleven)
+*   **двана́дцять** (twelve)
+*   **трина́дцять** (thirteen)
+*   **чотирна́дцять** (fourteen)
+*   **п'ятна́дцять** (fifteen)
+*   **шістна́дцять** (sixteen)
+*   **сімна́дцять** (seventeen)
+*   **вісімнадцять** (eighteen)
+*   **дев'ятна́дцять** (nineteen)
+*   **двадцять** (twenty)
+
+These numbers follow a clear pattern: a base number plus the suffix **-на́дцять**. This is exactly like the English "-teen". There are two crucial rules here. First, the stress always falls on the **-на-** syllable. You say **одинáдцять** and **дванáдцять**. Second, there is a spelling rule. There is no soft sign in the middle of these words. You write **п'ятнадцять**, not **п'ятьнадцять**.
+
+## Деся́тки і со́тні (Tens and Hundreds)
+
+Once you know the base numbers, learning the tens is mostly a matter of adding a suffix. Let us look at the tens from thirty to one hundred.
+
+*   **тридцять** (thirty)
+*   **со́рок** (forty)
+*   **п'ятдесят** (fifty)
+*   **шістдеся́т** (sixty)
+*   **сімдеся́т** (seventy)
+*   **вісімдеся́т** (eighty)
+*   **дев'яно́сто** (ninety)
+*   **сто** (one hundred)
+
+Pay close attention to the two historical irregulars in this list. The word for forty is **сорок**. It is completely unique and does not look like the word for four. The word for ninety is **дев'яносто**. It does not look like the other tens. You must memorize these two separately.
+
+Forming compound numbers is incredibly simple. You just combine the ten and the unit. There are no connecting words like "and". You place the words side by side. 
+*   **двадцять один** (twenty-one)
+*   **тридцять п'ять** (thirty-five)
+*   **сорок сім** (forty-seven)
+
+<FillIn client:only="react" items={[{"sentence": "15 → ____", "answer": "п'ятнадцять", "options": ["п'ятдесят", "п'ять", "п'ятнадцять"]}, {"sentence": "47 → ____", "answer": "сорок сім", "options": ["чотири сім", "сорок сім", "сорок вісім"]}, {"sentence": "12 → ____", "answer": "дванадцять", "options": ["двадцять", "дванадцять", "два"]}, {"sentence": "60 → ____", "answer": "шістдесят", "options": ["шістнадцять", "шістдесят", "шість"]}, {"sentence": "99 → ____", "answer": "дев'яносто дев'ять", "options": ["дев'яносто дев'ять", "дев'ять дев'ять", "дев'яносто десять"]}, {"sentence": "100 → ____", "answer": "сто", "options": ["нуль", "сто", "десять"]}, {"sentence": "21 → ____", "answer": "двадцять один", "options": ["двадцять два", "два один", "двадцять один"]}, {"sentence": "16 → ____", "answer": "шістнадцять", "options": ["шістнадцять", "шістдесят", "шість"]}, {"sentence": "35 → ____", "answer": "тридцять п'ять", "options": ["три п'ять", "тридцять п'ять", "тридцять п'ятдесят"]}, {"sentence": "83 → ____", "answer": "вісімдесят три", "options": ["вісімнадцять три", "вісім три", "вісімдесят три"]}]} instruction={"Write the number in words (**словами**)."} />
+
+To navigate Ukrainian markets, buy train tickets, or order coffee, you need to know the hundreds. These are essential vocabulary words.
+
+*   **сто** (one hundred)
+*   **двісті** (two hundred)
+*   **три́ста** (three hundred)
+*   **чоти́риста** (four hundred)
+*   **п'ятсо́т** (five hundred)
+*   **ти́сяча** (one thousand)
+
+Let us apply these numbers directly to prices. The national currency is the **гри́вня** (hryvnia), and smaller amounts use **копі́йка** (kopek). Ukrainian Lessons Season 1, Episode 9 teaches these numbers through real prices. It follows the same ready-made patterns we learned earlier. 
+*   1: **одна́ гривня** (one hryvnia)
+*   2-4: **дві гри́вні** (two hryvnias)
+*   5+: **п'ять гривень** (five hryvnias)
+
+Remember the question **Скільки коштує?** (How much does it cost?). You can use this everywhere. If you are in a bakery, you might ask **Скільки коштує торт?** (How much does the cake cost?). The baker will reply with the price, perhaps **триста гривень** (three hundred hryvnias). You might also ask **Скільки коштує хліб?** (How much does the bread cost?). The answer might be **тридцять гривень** (thirty hryvnias). 
+
+<Quiz client:only="react" questions={[{"question": "150 ₴", "options": [{"text": "п'ятдесят гривень", "correct": false}, {"text": "сто п'ятдесят гривень", "correct": true}, {"text": "сто гривень", "correct": false}, {"text": "п'ятсот гривень", "correct": false}]}, {"question": "200 ₴", "options": [{"text": "двісті гривень", "correct": true}, {"text": "двадцять гривень", "correct": false}, {"text": "дві гривні", "correct": false}, {"text": "сто гривень", "correct": false}]}, {"question": "30 ₴", "options": [{"text": "три гривні", "correct": false}, {"text": "тринадцять гривень", "correct": false}, {"text": "тридцять гривень", "correct": true}, {"text": "триста гривень", "correct": false}]}, {"question": "5 ₴", "options": [{"text": "п'ятдесят гривень", "correct": false}, {"text": "п'ятнадцять гривень", "correct": false}, {"text": "п'ятсот гривень", "correct": false}, {"text": "п'ять гривень", "correct": true}]}, {"question": "400 ₴", "options": [{"text": "сорок гривень", "correct": false}, {"text": "чотириста гривень", "correct": true}, {"text": "чотири гривні", "correct": false}, {"text": "чотирнадцять гривень", "correct": false}]}, {"question": "500 ₴", "options": [{"text": "п'ятдесят гривень", "correct": false}, {"text": "п'ять гривень", "correct": false}, {"text": "п'ятсот гривень", "correct": true}, {"text": "п'ятнадцять гривень", "correct": false}]}, {"question": "1000 ₴", "options": [{"text": "сто гривень", "correct": false}, {"text": "десять гривень", "correct": false}, {"text": "двісті гривень", "correct": false}, {"text": "тисяча гривень", "correct": true}]}, {"question": "70 ₴", "options": [{"text": "сімдесят гривень", "correct": true}, {"text": "сім гривень", "correct": false}, {"text": "сімнадцять гривень", "correct": false}, {"text": "сімсот гривень", "correct": false}]}]} instruction={"How much does it cost? (**Скільки коштує?**) Choose the correct price."} />
 
 ## Підсумок — Summary
 
-Stating your age in Ukrainian relies on a fixed formula. In Ukrainian, age is not something you "are" or "have"; rather, years are accumulated "to you." The structure **Мені... років** (To me is... years) is a fixed grammatical chunk. You use the dative pronoun **мені** (to me) followed by the number, and then the word for "years". The word for years changes based on the last digit of your age. If your age ends in one (except eleven), you use the singular form: **двадцять один рік** (twenty-one years). If your age ends in two, three, or four, you use the plural form: **тридцять три ро́ки́** (thirty-three years). For all other numbers, including zero and the teens, you use the third form: **сорок років** (forty years) or **вісімнадцять років** (eighteen years).
+Numbers have immense practical value. Let us review the three most common ways you will use them every single day. 
 
-Numbers are also essential for sharing contact information, specifically phone numbers. The word for a digit or a phone number is **но́мер** (number). When reciting a phone number, you will frequently use the word **нуль** (zero). Ukrainians typically read phone numbers by grouping the digits into blocks of two or three, rather than reciting them as single digits. For instance, the area code 067 is usually read as a single block: **нуль шістдесят сім** (zero sixty-seven). Alternatively, you might hear the digits separated out distinctly, such as **нуль, дев'ять, сім** (zero, nine, seven), before grouping the remaining digits into pairs like **сорок п'ять, шістдесят сім** (forty-five, sixty-seven).
+The first practical use is for prices. When you want to buy something, you use the question pattern **Скільки коштує?** (How much does it cost?). The seller will reply with a number and the word for currency. You might hear **двісті гривень** (two hundred hryvnias) or **сто п'ятдесят гривень** (one hundred fifty hryvnias). This pattern works in cafes, markets, and shops.
 
-The question word **Скільки** is highly versatile because it functions as both "how many" and "how much," depending on the context. When you ask **Скільки книг?** (How many books?), you are inquiring about the physical quantity of objects. However, when you ask **Скільки коштує книга?** (How much does the book cost?), the focus shifts entirely to the price. This single word serves as the gateway to unlocking both physical inventory and financial transactions in your daily life.
+The second practical use is for expressing age. You will often hear the question **Скільки тобі років?** (How old are you?). Use ready-made answers such as **мені двадцять три роки** (I am twenty-three years old) or **мені сорок років** (I am forty years old). At this level, memorize the whole pattern **мені + number + рік/роки/років** and repeat it as a chunk. 
 
-Before finishing this module, take a moment to perform a self-check:
-- Can you say your age? (**Мені ... років**)
-- Can you ask for a price? (**Скільки коштує ...?**)
-- Can you count to ten without looking?
-- Can you say your phone number in Ukrainian?
+The third practical use is for reading and sharing phone numbers. To do this, you need one more essential word: **нуль** (zero). When Ukrainians read phone numbers aloud, they typically group the digits into pairs or triplets. A full phone number statement sounds like this: **Мій но́мер — нуль дев'яносто сім, три два один, сорок п'ять, шістдесят сім** (My number is zero ninety-seven, three two one, forty-five, sixty-seven). 
 
-<Quiz client:only="react" questions={[{"question": "Мені 21 _____.", "options": [{"text": "рік", "correct": true}, {"text": "роки", "correct": false}, {"text": "років", "correct": false}, {"text": "року", "correct": false}]}, {"question": "Йому 33 _____.", "options": [{"text": "рік", "correct": false}, {"text": "роки", "correct": true}, {"text": "років", "correct": false}, {"text": "року", "correct": false}]}, {"question": "Їй 18 _____.", "options": [{"text": "рік", "correct": false}, {"text": "роки", "correct": false}, {"text": "років", "correct": true}, {"text": "року", "correct": false}]}, {"question": "Мені 25 _____.", "options": [{"text": "рік", "correct": false}, {"text": "роки", "correct": false}, {"text": "років", "correct": true}, {"text": "року", "correct": false}]}, {"question": "Брату 4 _____.", "options": [{"text": "рік", "correct": false}, {"text": "роки", "correct": true}, {"text": "років", "correct": false}, {"text": "року", "correct": false}]}, {"question": "Сестрі 30 _____.", "options": [{"text": "рік", "correct": false}, {"text": "роки", "correct": false}, {"text": "років", "correct": true}, {"text": "року", "correct": false}]}]} instruction={"Скільки років? Оберіть правильну форму (How old? Choose the correct form)"} />
-<FillIn client:only="react" items={[{"sentence": "097 = _____ дев'яносто сім", "answer": "нуль", "options": ["нуль", "один", "сто"]}, {"sentence": "067 = нуль шістдесят _____", "answer": "сім", "options": ["сім", "шість", "вісім"]}, {"sentence": "45 = сорок _____", "answer": "п'ять", "options": ["п'ять", "п'ятдесят", "п'ятнадцять"]}, {"sentence": "050 = нуль _____", "answer": "п'ятдесят", "options": ["п'ятдесят", "п'ять", "п'ятсот"]}, {"sentence": "063 = нуль шістдесят _____", "answer": "три", "options": ["три", "тридцять", "триста"]}, {"sentence": "22 = двадцять _____", "answer": "два", "options": ["два", "дві", "двісті"]}]} instruction={"Доповніть номер телефону словами (Complete the phone number with words)"} />
+<FillIn client:only="react" items={[{"sentence": "Мій номер 0 97: нуль ____ сім.", "answer": "дев'яносто", "options": ["дев'яносто", "дев'ять", "дев'ятнадцять"]}, {"sentence": "Три два один: три два ____.", "answer": "один", "options": ["один", "одинадцять", "нуль"]}, {"sentence": "Сорок п'ять: ____ п'ять.", "answer": "сорок", "options": ["сорок", "чотири", "чотирнадцять"]}, {"sentence": "Шістдесят сім: ____ сім.", "answer": "шістдесят", "options": ["шістдесят", "шістнадцять", "шість"]}, {"sentence": "Нуль п'ятдесят: нуль ____.", "answer": "п'ятдесят", "options": ["п'ятдесят", "п'ятнадцять", "п'ять"]}, {"sentence": "Вісімдесят дев'ять: ____ дев'ять.", "answer": "вісімдесят", "options": ["вісімдесят", "вісімнадцять", "вісім"]}]} instruction={"Read the phone number groupings and choose the missing number (**номер**)."} />
+
+Before you finish this module, perform these quick self-check tasks:
+*   Say your own age aloud in Ukrainian using the chunk **мені ... років**.
+*   Translate the price "250 hryvnias" aloud. It should be **двісті п'ятдесят гривень**.
+*   Read a fictional phone number aloud. Try saying "050 123 45 67" using the typical Ukrainian groupings.
 
 </TabItem>
 <TabItem label="Словник">
@@ -113,7 +163,19 @@ Before finishing this module, take a moment to perform a self-check:
 
 | Слово | Переклад | Частина мови | Рід |
 |-------|----------|-------------|-----|
+| **п'ятдеся́т** | fifty | числ. |  |
+| **шістдеся́т** | sixty | числ. |  |
+| **сімдеся́т** | seventy | числ. |  |
+| **вісімдеся́т** | eighty | числ. |  |
+| **дев'яно́сто** | ninety | числ. |  |
+| **дві́сті** | two hundred | числ. |  |
+| **три́ста** | three hundred | числ. |  |
+| **п'ятсо́т** | five hundred | числ. |  |
+| **копі́йка** | kopek | ім. | ж. |
+| **но́мер** | number | ім. | ч. |
+| **нуль** | zero | ім. | ч. |
 | **оди́н** | one | числ. |  |
+| **два** | two | числ. |  |
 | **три** | three | дієсл. |  |
 | **чоти́ри** | four | числ. |  |
 | **шість** | six | числ. |  |
@@ -121,6 +183,20 @@ Before finishing this module, take a moment to perform a self-check:
 | **ві́сім** | eight | числ. |  |
 | **де́в'ять** | nine | числ. |  |
 | **де́сять** | ten | числ. |  |
+| **два́дцять** | twenty | числ. |  |
+| **три́дцять** | thirty | числ. |  |
+| **со́рок** | forty | числ. |  |
+| **сто** | one hundred | числ. |  |
+| **ти́сяча** | one thousand | ім. | ж. |
+| **скі́льки** | how many | присл. |  |
+| **ко́шту́є** | costs | дієсл. |  |
+| **гри́вня** | hryvnia | ім. | ж. |
+| **рік** | year | дієсл. |  |
+| **ро́ки́** | years | ім. |  |
+| **ро́кі́в** | years | ім. |  |
+| **одна́** | one | числ. |  |
+| **одне́** | one | числ. |  |
+| **дві** | two | числ. |  |
 | **одина́дцять** | eleven | числ. |  |
 | **двана́дцять** | twelve | числ. |  |
 | **трина́дцять** | thirteen | числ. |  |
@@ -130,68 +206,42 @@ Before finishing this module, take a moment to perform a self-check:
 | **сімна́дцять** | seventeen | числ. |  |
 | **вісімна́дцять** | eighteen | числ. |  |
 | **дев'ятна́дцять** | nineteen | числ. |  |
-| **два́дцять** | twenty | числ. |  |
-| **три́дцять** | thirty | числ. |  |
-| **со́рок** | forty | числ. |  |
-| **п'ятдеся́т** | fifty | числ. |  |
-| **шістдеся́т** | sixty | числ. |  |
-| **сімдеся́т** | seventy | числ. |  |
-| **вісімдеся́т** | eighty | числ. |  |
-| **дев'яно́сто** | ninety | числ. |  |
-| **сто** | one hundred | числ. |  |
-| **дві́сті** | two hundred | числ. |  |
-| **три́ста** | three hundred | числ. |  |
 | **чоти́риста** | four hundred | числ. |  |
-| **п'ятсо́т** | five hundred | числ. |  |
-| **ти́сяча** | one thousand | ім. | ж. |
-| **нуль** | zero | ім. | ч. |
-| **скі́льки** | how many / how much | присл. |  |
-| **ко́шту́є** | costs | дієсл. |  |
-| **гри́вня** | hryvnia (currency) | ім. | ж. |
-| **копі́йка** | kopek | ім. | ж. |
-| **ціна́** | price | ім. | ж. |
-| **но́мер** | number (phone/room) | ім. | ч. |
-| **рік** | year | дієсл. |  |
-| **ро́ки́** | years | ім. |  |
-| **ро́кі́в** | years | ім. |  |
-| **бу́лочка** | bun | ім. | ж. |
-| **ті́стечко** | pastry | ім. | с. |
-| **торт** | cake | ім. | ч. |
+| **мені́** | to me | ім. |  |
+| **тобі́** | to you | ім. |  |
+| **їй** | to her | ім. | ж. |
+| **покупе́ць** | customer | ім. | ч. |
+| **продаве́ць** | seller | ім. | ч. |
 | **су́мка** | bag | ім. | ж. |
-| **мале́нька** | small | прикм. |  |
-| **сестра́** | sister | ім. | ж. |
-| **оліве́ць** | pencil | ім. | ч. |
-| **ру́чка** | pen | ім. | ж. |
-| **зо́шит** | notebook | ім. | ч. |
-| **підру́чник** | textbook | ім. | ч. |
+| **мале́нька** | small one | прикм. |  |
+| **торт** | cake | ім. | ч. |
 
 ### Вирази
 
 | Вираз | Переклад |
 |-------|----------|
 | **Скільки коштує?** | How much does it cost? |
-| **Скільки це коштує?** | How much does this cost? |
 | **Скільки тобі років?** | How old are you? |
 | **Мені ... років** | I am ... years old |
 
 ### Картки — Flashcards
 
-<FlashcardDeck client:only="react" cards={[{ front: "оди́н", back: "one", subtitle: "числ." }, { front: "три", back: "three", subtitle: "дієсл." }, { front: "чоти́ри", back: "four", subtitle: "числ." }, { front: "шість", back: "six", subtitle: "числ." }, { front: "сім", back: "seven", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "ві́сім", back: "eight", subtitle: "числ." }, { front: "де́в&#39;ять", back: "nine", subtitle: "числ." }, { front: "де́сять", back: "ten", subtitle: "числ." }, { front: "одина́дцять", back: "eleven", subtitle: "числ." }, { front: "двана́дцять", back: "twelve", subtitle: "числ." }, { front: "трина́дцять", back: "thirteen", subtitle: "числ." }, { front: "чотирна́дцять", back: "fourteen", subtitle: "числ." }, { front: "п&#39;ятна́дцять", back: "fifteen", subtitle: "числ." }, { front: "шістна́дцять", back: "sixteen", subtitle: "числ." }, { front: "сімна́дцять", back: "seventeen", subtitle: "числ." }, { front: "вісімна́дцять", back: "eighteen", subtitle: "числ." }, { front: "дев&#39;ятна́дцять", back: "nineteen", subtitle: "числ." }, { front: "два́дцять", back: "twenty", subtitle: "числ." }, { front: "три́дцять", back: "thirty", subtitle: "числ." }, { front: "со́рок", back: "forty", subtitle: "числ." }, { front: "п&#39;ятдеся́т", back: "fifty", subtitle: "числ." }, { front: "шістдеся́т", back: "sixty", subtitle: "числ." }, { front: "сімдеся́т", back: "seventy", subtitle: "числ." }, { front: "вісімдеся́т", back: "eighty", subtitle: "числ." }, { front: "дев&#39;яно́сто", back: "ninety", subtitle: "числ." }, { front: "сто", back: "one hundred", subtitle: "числ." }, { front: "дві́сті", back: "two hundred", subtitle: "числ." }, { front: "три́ста", back: "three hundred", subtitle: "числ." }, { front: "чоти́риста", back: "four hundred", subtitle: "числ." }, { front: "п&#39;ятсо́т", back: "five hundred", subtitle: "числ." }, { front: "ти́сяча", back: "one thousand", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "нуль", back: "zero", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "скі́льки", back: "how many / how much", subtitle: "присл." }, { front: "ко́шту́є", back: "costs", subtitle: "дієсл." }, { front: "гри́вня", back: "hryvnia (currency)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "копі́йка", back: "kopek", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ціна́", back: "price", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "но́мер", back: "number (phone/room)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "рік", back: "year", subtitle: "дієсл." }, { front: "ро́ки́", back: "years", subtitle: "ім." }, { front: "ро́кі́в", back: "years", subtitle: "ім." }, { front: "бу́лочка", back: "bun", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ті́стечко", back: "pastry", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "торт", back: "cake", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "су́мка", back: "bag", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "мале́нька", back: "small", subtitle: "прикм." }, { front: "сестра́", back: "sister", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "оліве́ць", back: "pencil", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ру́чка", back: "pen", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "зо́шит", back: "notebook", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "підру́чник", back: "textbook", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }]} />
+<FlashcardDeck client:only="react" cards={[{ front: "п&#39;ятдеся́т", back: "fifty", subtitle: "числ." }, { front: "шістдеся́т", back: "sixty", subtitle: "числ." }, { front: "сімдеся́т", back: "seventy", subtitle: "числ." }, { front: "вісімдеся́т", back: "eighty", subtitle: "числ." }, { front: "дев&#39;яно́сто", back: "ninety", subtitle: "числ." }, { front: "дві́сті", back: "two hundred", subtitle: "числ." }, { front: "три́ста", back: "three hundred", subtitle: "числ." }, { front: "п&#39;ятсо́т", back: "five hundred", subtitle: "числ." }, { front: "копі́йка", back: "kopek", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "но́мер", back: "number", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "нуль", back: "zero", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "оди́н", back: "one", subtitle: "числ." }, { front: "два", back: "two", subtitle: "числ." }, { front: "три", back: "three", subtitle: "дієсл." }, { front: "чоти́ри", back: "four", subtitle: "числ." }, { front: "шість", back: "six", subtitle: "числ." }, { front: "сім", back: "seven", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "ві́сім", back: "eight", subtitle: "числ." }, { front: "де́в&#39;ять", back: "nine", subtitle: "числ." }, { front: "де́сять", back: "ten", subtitle: "числ." }, { front: "два́дцять", back: "twenty", subtitle: "числ." }, { front: "три́дцять", back: "thirty", subtitle: "числ." }, { front: "со́рок", back: "forty", subtitle: "числ." }, { front: "сто", back: "one hundred", subtitle: "числ." }, { front: "ти́сяча", back: "one thousand", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "скі́льки", back: "how many", subtitle: "присл." }, { front: "ко́шту́є", back: "costs", subtitle: "дієсл." }, { front: "гри́вня", back: "hryvnia", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "рік", back: "year", subtitle: "дієсл." }, { front: "ро́ки́", back: "years", subtitle: "ім." }, { front: "ро́кі́в", back: "years", subtitle: "ім." }, { front: "одна́", back: "one", subtitle: "числ." }, { front: "одне́", back: "one", subtitle: "числ." }, { front: "дві", back: "two", subtitle: "числ." }, { front: "одина́дцять", back: "eleven", subtitle: "числ." }, { front: "двана́дцять", back: "twelve", subtitle: "числ." }, { front: "трина́дцять", back: "thirteen", subtitle: "числ." }, { front: "чотирна́дцять", back: "fourteen", subtitle: "числ." }, { front: "п&#39;ятна́дцять", back: "fifteen", subtitle: "числ." }, { front: "шістна́дцять", back: "sixteen", subtitle: "числ." }, { front: "сімна́дцять", back: "seventeen", subtitle: "числ." }, { front: "вісімна́дцять", back: "eighteen", subtitle: "числ." }, { front: "дев&#39;ятна́дцять", back: "nineteen", subtitle: "числ." }, { front: "чоти́риста", back: "four hundred", subtitle: "числ." }, { front: "мені́", back: "to me", subtitle: "ім." }, { front: "тобі́", back: "to you", subtitle: "ім." }, { front: "їй", back: "to her", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "покупе́ць", back: "customer", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "продаве́ць", back: "seller", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "су́мка", back: "bag", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "мале́нька", back: "small one", subtitle: "прикм." }, { front: "торт", back: "cake", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }]} />
 
 </TabItem>
 <TabItem label="Зошит">
 
-<MatchUp client:only="react" pairs={[{"left": "11", "right": "одинадцять"}, {"left": "12", "right": "дванадцять"}, {"left": "14", "right": "чотирнадцять"}, {"left": "17", "right": "сімнадцять"}, {"left": "19", "right": "дев'ятнадцять"}, {"left": "20", "right": "двадцять"}]} instruction={"З'єднайте числа (Match the numbers)"} />
+<MatchUp client:only="react" pairs={[{"left": "30", "right": "тридцять"}, {"left": "40", "right": "сорок"}, {"left": "50", "right": "п'ятдесят"}, {"left": "60", "right": "шістдесят"}, {"left": "90", "right": "дев'яносто"}, {"left": "100", "right": "сто"}]} instruction={"Match the numbers to their names (**назви**)."} />
 
-<TrueFalse client:only="react" items={[{"statement": "20 + 30 = п'ятдесят", "isTrue": true, "explanation": "20 (двадцять) + 30 (тридцять) = 50 (п'ятдесят)."}, {"statement": "100 - 10 = вісімдесят", "isTrue": false, "explanation": "100 (сто) - 10 (десять) = 90 (дев'яносто)."}, {"statement": "50 + 50 = сто", "isTrue": true, "explanation": "50 (п'ятдесят) + 50 (п'ятдесят) = 100 (сто)."}, {"statement": "300 + 200 = чотириста", "isTrue": false, "explanation": "300 (триста) + 200 (двісті) = 500 (п'ятсот)."}, {"statement": "40 + 20 = шістдесят", "isTrue": true, "explanation": "40 (сорок) + 20 (двадцять) = 60 (шістдесят)."}, {"statement": "1000 - 500 = триста", "isTrue": false, "explanation": "1000 (тисяча) - 500 (п'ятсот) = 500 (п'ятсот)."}]} instruction={"Правда чи ні? (True or false?)"} />
+<GroupSort client:only="react" groups={{"... гривня": ["один", "двадцять один", "тридцять один"], "... гривні": ["два", "тридцять три", "сорок чотири"], "... гривень": ["п'ять", "десять", "сто"]}} instruction={"Sort the numbers based on which form of **гривня** follows them."} />
 
-<GroupSort client:only="react" groups={{"1 - 10": ["один", "чотири", "сім", "десять"], "11 - 19": ["одинадцять", "п'ятнадцять", "вісімнадцять", "дев'ятнадцять"], "20 - 100": ["двадцять", "сорок", "дев'яносто", "сто"]}} instruction={"Розподіліть числа (Sort the numbers)"} />
+<Anagram client:only="react" items={[{"scrambled": "с о р о к", "answer": "сорок", "hint": "40"}, {"scrambled": "т и с я ч а", "answer": "тисяча", "hint": "1000"}, {"scrambled": "д в і с т і", "answer": "двісті", "hint": "200"}, {"scrambled": "н у л ь", "answer": "нуль", "hint": "0"}, {"scrambled": "т р и с т а", "answer": "триста", "hint": "300"}, {"scrambled": "д е с я т ь", "answer": "десять", "hint": "10"}]} instruction={"Unscramble the letters to form numbers (**числа**)."} />
 
-<ErrorCorrection client:only="react" items={[{"sentence": "Мені потрібен один книга.", "errorWord": "один", "correctForm": "одна", "options": ["одна", "одне", "одні"], "explanation": "Книга is feminine, so use одна."}, {"sentence": "Скільки коштує два вікно?", "errorWord": "вікно", "correctForm": "вікна", "options": ["вікна", "вікон", "вікні"], "explanation": "After два, neuter nouns usually take the nominative plural form like вікна."}, {"sentence": "Це коштує сто гривня.", "errorWord": "гривня", "correctForm": "гривень", "options": ["гривні", "гривень", "гривню"], "explanation": "Numbers ending in 0 (like 100) require гривень."}, {"sentence": "Йому сорок роки.", "errorWord": "роки", "correctForm": "років", "options": ["рік", "років", "року"], "explanation": "Numbers ending in 0 take років."}, {"sentence": "У мене є двадцять один гривні.", "errorWord": "гривні", "correctForm": "гривня", "options": ["гривня", "гривню", "гривень"], "explanation": "Numbers ending in 1 require the singular form гривня."}, {"sentence": "Це коштує двісто гривень.", "errorWord": "двісто", "correctForm": "двісті", "options": ["двісті", "двасто", "двасот"], "explanation": "Two hundred is двісті, not двісто."}]} instruction={"Знайдіть і виправте помилку (Find and fix the error)"} />
+<TrueFalse client:only="react" items={[{"statement": "Сорок — це 14.", "isTrue": false, "explanation": "Сорок (sorok) is 40. 14 is чотирнадцять."}, {"statement": "Дев'яносто — це 90.", "isTrue": true, "explanation": "Дев'яносто (dev'yanosto) is exactly 90."}, {"statement": "Правильно: Мені двадцять один років.", "isTrue": false, "explanation": "You must say 'двадцять один рік' because it ends in 1 (один)."}, {"statement": "Ми кажемо: один стіл, два столи.", "isTrue": true, "explanation": "Numbers 2, 3, and 4 pair with a plural noun (столи)."}, {"statement": "Правильно: тридцять п'ять гривень.", "isTrue": true, "explanation": "Numbers 5 and above take the 'гривень' form."}, {"statement": "П'ятнадцять — це 50.", "isTrue": false, "explanation": "П'ятнадцять is 15. The number 50 is п'ятдесят."}]} instruction={"Are these statements true or false? (**Правда чи ні?**)"} />
 
-<MatchUp client:only="react" pairs={[{"left": "Скільки тобі років?", "right": "Мені двадцять років."}, {"left": "Скільки коштує сумка?", "right": "Двісті гривень."}, {"left": "Який твій номер?", "right": "Нуль шістдесят сім..."}, {"left": "Скільки коштує хліб?", "right": "Тридцять гривень."}, {"left": "Скільки років сестрі?", "right": "Їй вісімнадцять."}, {"left": "Скільки коштує торт?", "right": "Триста п'ятдесят."}]} instruction={"З'єднайте запитання та відповідь (Match the question and answer)"} />
+<OddOneOut client:only="react" items={[{"words": ["сорок", "один", "два", "три"], "correct": 0, "explanation": "сорок (40) is a ten, the others are units 1-3."}, {"words": ["одинадцять", "тридцять", "дванадцять", "тринадцять"], "correct": 1, "explanation": "тридцять is 30, the others end in -надцять (teens)."}, {"words": ["сто", "двісті", "нуль", "триста"], "correct": 2, "explanation": "нуль is 0, the others are hundreds."}, {"words": ["п'ятдесят", "шістдесят", "сімдесят", "п'ятнадцять"], "correct": 3, "explanation": "п'ятнадцять is 15, the others are tens (50, 60, 70)."}, {"words": ["він", "мені", "тобі", "їй"], "correct": 0, "explanation": "він is 'he' (nominative), the others are dative pronouns used for age."}, {"words": ["гривня", "коштує", "гривні", "гривень"], "correct": 1, "explanation": "коштує is a verb (costs), the others are forms of the currency."}]} instruction={"Find the odd one out (**четверте зайве**)."} />
 
-<Unjumble client:only="react" items={[{"words": "коштує / Скільки / сумка?", "answer": "Скільки коштує сумка?"}, {"words": "роки. / Мені / тридцять / два", "answer": "Мені тридцять два роки."}, {"words": "коштує / п'ятдесят / Це / гривень.", "answer": "Це коштує п'ятдесят гривень."}, {"words": "тобі / років? / Скільки", "answer": "Скільки тобі років?"}, {"words": "вісімнадцять. / сестрі / Моїй", "answer": "Моїй сестрі вісімнадцять."}, {"words": "маленька? / коштує / А / скільки", "answer": "А скільки коштує маленька?"}]} instruction={"Складіть правильне речення (Form the correct sentence)"} />
+<Unjumble client:only="react" items={[{"words": "маленька / Скільки / сумка? / коштує", "answer": "Скільки коштує маленька сумка?", "hint": "How much does the small bag cost?"}, {"words": "п'ятдесят / гривень. / Двісті", "answer": "Двісті п'ятдесят гривень.", "hint": "250 hryvnias."}, {"words": "років? / Скільки / тобі", "answer": "Скільки тобі років?", "hint": "How old are you?"}, {"words": "двадцять / років. / Мені / п'ять", "answer": "Мені двадцять п'ять років.", "hint": "I am 25 years old."}, {"words": "років. / Їй / вісімнадцять", "answer": "Їй вісімнадцять років.", "hint": "She is 18 years old."}, {"words": "нуль / номер / сім. / Мій / дев'яносто", "answer": "Мій номер нуль дев'яносто сім.", "hint": "My number is 0 97."}]} instruction={"Put the words in the correct order to make a sentence (**речення**)."} />
 
 </TabItem>
 <TabItem label="Ресурси">
@@ -203,13 +253,8 @@ Before finishing this module, take a moment to perform a self-check:
 - [ULP Season 1, Episode 9](https://www.ukrainianlessons.com/episode9/)
   _Numbers 11-100 and prices._
 
-## Підручники (Textbooks)
-
-- [Караман С. О. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrmova-karaman-2018.pdf#page=167), стор. 167
-- [Авраменко О. М. — Українська мова, 11 клас (2019)](https://pidruchnyk.com.ua/uploads/book/11-klas-ukrajinska-mova-avramenko-2019.pdf#page=38), стор. 38
-- [Глазова О. П. — Українська мова, 11 клас (2019)](https://pidruchnyk.com.ua/uploads/book/11-klas-ukrajinska-mova-glazova-2019.pdf#page=34), стор. 34
-- [Кравцова Н. М. — Українська мова, 2 клас (2019)](https://pidruchnyk.com.ua/uploads/book/2-klas-ukrmova-kravcova-2019-1.pdf#page=93), стор. 93
-- [Угор О. М. — Українська мова, 5 клас (2022)](https://shkola.in.ua/5-klas-ukrainska-mova-uhor-2022.html), стор. 38
+### Підручники
+- [Авраменко. Українська мова, 6 клас (2023)](https://pidruchnyk.com.ua/2592-ukrmova-6-klas-avramenko.html)
 
 **Статті — Articles**
 

@@ -1,4 +1,4 @@
-<!-- version: 1.1.0 | updated: 2026-03-31 -->
+<!-- version: 1.2.0 | updated: 2026-04-12 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -11,6 +11,35 @@ Generate an `activities/euphony.yaml` file for module **28: Euphony** (a1).
 
 ---
 
+## ⚠️ HARD COUNT TARGETS — READ TWICE
+
+These are the binding numerical contracts for THIS module. The audit will FAIL if you fall short.
+
+| Bucket | Min | Max | Notes |
+|---|---|---|---|
+| Total activities | 10 | 10+ | inline + workbook combined |
+| Inline (lesson tab) | 4 | 6 | one per `<!-- INJECT_ACTIVITY -->` marker, see below |
+| Workbook (Зошит tab) | 6 | 9 | extended practice |
+| Items per activity | 6 | — | each activity must have at least 6 items (unless its type cap is lower — see Activity Type Reference below) |
+
+**You MUST ship at least 4 inline activities AND at least 6 workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+
+**Type diversity is required.** The module (inline + workbook combined) MUST use at least **0** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level. (If `0` is `0`, the audit profile for this level does not enforce type diversity — but variety still produces a better lesson, so aim for 4+ types when the workbook allows it.)
+
+---
+
+## Allowed types for THIS level
+
+- **Inline (lesson) types:** image-to-letter, letter-grid, match-up, watch-and-repeat, quiz, true-false, fill-in, classify
+- **Inline priority (preferred):** image-to-letter, match-up, fill-in, quiz, watch-and-repeat
+- **Workbook types:** fill-in, match-up, group-sort, anagram, unjumble, quiz, true-false, classify, divide-words, count-syllables, pick-syllables, observe, phrase-table, odd-one-out
+- **Workbook priority (preferred):** fill-in, match-up, group-sort, anagram, unjumble
+- **FORBIDDEN at this level:** cloze, error-correction, mark-the-words, translate, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, highlight-morphemes, grammar-identify, select
+
+Pick from the allowed list. Lean heavily on the priority lists. Do not use any forbidden type — the build will reject it.
+
+---
+
 ## Inline vs Workbook Split
 
 Activities have two placement categories:
@@ -19,7 +48,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Rule of thumb:** inline = 2-3 quick checks after key teaching points. Workbook = 4-8 deeper practice exercises covering the full topic.
+**Rule of thumb:** inline = 4–6 quick checks after key teaching points. Workbook = 6–9 deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
 
 ---
 
@@ -27,10 +56,10 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: quiz-u-v-choice -->`
-- `<!-- INJECT_ACTIVITY: quiz-naturalness-comparison -->`
-- `<!-- INJECT_ACTIVITY: quiz-i-y-choice -->`
+- `<!-- INJECT_ACTIVITY: quiz-u-or-v -->`
+- `<!-- INJECT_ACTIVITY: quiz-i-or-y -->`
 - `<!-- INJECT_ACTIVITY: fill-in-z-iz-zi -->`
+- `<!-- INJECT_ACTIVITY: quiz-euphony-comparison -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -81,95 +110,137 @@ required:
 ## Module Content (the prose the learner reads before exercises)
 
 <module_content>
-## Діалоги — Милозвучність у дії
-Ukrainian is not just a language of strict grammatical rules and rigid structures; it is fundamentally a language of music. The central concept that governs how words fit together in a sentence is called **милозвучність** (euphony, literally "sweet-soundingness"). This principle is the absolute secret to sounding like a native speaker. The core goal of **милозвучність** is avoiding difficult "clashes" of sounds. When too many consonants or too many vowels pile up next to each other, the language naturally alters a preposition or a conjunction to keep the air flowing smoothly from your mouth.
+## Діалоги (Dialogues)
 
-> **Студент:** Я працюю в городі. *(I work in the garden.)*
-> **Друг:** Краще сказати «у городі». Звук «в» тут важко вимовити. *(It is better to say "у городі". The sound "в" is hard to pronounce here.)*
-> **Студент:** Зрозумів. А як правильно: «в Києві» чи «у Києві»? Де ти живеш? *(Understood. And what is correct: "в Києві" or "у Києві"? Where do you live?)*
+Have you ever noticed that Ukrainian speech often sounds like a continuous, flowing stream of music? This is not just an accident or a stylistic choice made by poets. It is a fundamental grammatical feature of the language known as **милозвучність** (euphony, or sweet-soundingness). Ukrainian actively resists placing too many consonants or too many vowels right next to each other. When words collide and create a harsh cluster of sounds, the language simply changes the connecting words to smooth out the transition. This means that a single preposition or conjunction might change its entire form depending on the specific words that surround it. By understanding these sound patterns, your own sentences will immediately sound more natural and authentic to a native speaker.
+
+Imagine a situation where a student is writing a short essay about their city and the places they visit. A friend is reading the text aloud to check how the words flow together. They notice that some words need to change to make the sentences easier to pronounce.
+
+> **Студент:** Де ти живеш? *(Where do you live?)*
 > **Друг:** Я живу в Києві. А ти? *(I live in Kyiv. And you?)*
 > **Студент:** Я живу у Львові. *(I live in Lviv.)*
 > **Друг:** У Львові гарно! *(It is beautiful in Lviv!)*
 
-Let us carefully break down the prepositional choice from that first dialogue about a **город** (garden). When the speaker says **в Києві** (in Kyiv), the word immediately before it ends in a vowel (**живу** — I live), and the word **Києві** (Kyiv) starts with a crisp consonant (**К** — K). This creates a perfect, smooth transition. If they had said **у Києві** (in Kyiv), the two vowels (**у** and the **и** sound) would collide uncomfortably. Conversely, **у Львові** (in Lviv) is used instead of **в Львові** (in Lviv) because the latter option would create a massive, unpronounceable three-consonant cluster (**в-л-ь-в**). Euphony rules make sentences flow naturally.
+Notice how the **у/в** (in/at — alternating preposition) changes its form entirely based on context. The friend says **в Києві** (in Kyiv), using the letter **в**. But the student says **у Львові** (in Lviv), using the letter **у**. Both mean exactly the same thing. The change happens entirely because of the sounds around the word. 
 
-> **Студент:** Ти і Олена йдете в кіно? *(Are you and Olena going to the cinema?)*
-> **Друг:** Ти й Олена. Так швидше. *(You and Olena. It is faster this way.)*
-> **Студент:** А, добре. Ні, я і Максим йдемо в парк. *(Ah, good. No, I and Maksym are going to the park.)*
-> **Друг:** А Олена й Тарас? *(And Olena and Taras?)*
-> **Студент:** Вони йдуть у театр. *(They are going to the theater.)*
+Now, look at another everyday situation. Two friends are making plans for the weekend and listing the people who are coming along with them. 
 
-Now, let us closely analyze the conjunction choice from this second conversation. The word for "and" can alternate to maintain a musical rhythm across the sentence. The letter **й** (y) acts as a quick glide between two distinct vowels, allowing the voice to slide smoothly from the end of **ти** (you) to the start of **Олена** (Olena). Note how **й** sits perfectly between vowels (**ти й Олена** — you and Olena). In contrast, the letter **і** (i) is a full vowel that provides a necessary physical break between heavy consonants. When you say **я і Максим** (I and Maksym), the **і** acts as a comfortable bridge between the surrounding consonant clusters.
+> **Тарас:** Ти й Олена йдете в кіно? *(Are you and Olena going to the cinema?)*
+> **Максим:** Ні, я і Максим йдемо в парк. *(No, Maksym and I are going to the park.)*
+> **Тарас:** А Олена й Тарас? *(And Olena and Taras?)*
+> **Максим:** Вони йдуть у театр. *(They are going to the theater.)*
 
-## У чи В? Майстерність чергування
-As noted in **Авраменко Grade 5** (p.117), the alternation **у–в** ensures the euphony of the language (**чергування у–в забезпечує милозвучність мови**). The core rule for choosing between the alternating prepositions **у** (in/at) and **в** (in/at) revolves around carefully avoiding consonant clusters. Think of it as building a comfortable "V-C-V" (vowel-consonant-vowel) sandwich in your mouth. You should use **в** after a vowel before a consonant. This simple pattern completely prevents a vowel clash. Conversely, you must use **у** after a consonant before a consonant to avoid a tongue-twisting pile-up. 
-*   **Я живу в Києві.** (I live in Kyiv.)
-*   **Я працюю в офісі.** (I work in an office.)
-*   **Тарас у Львові.** (Taras is in Lviv.)
-*   **Максим у банку.** (Maksym is at the bank.)
+Here, the **і/й** (and — alternating conjunction) alternates between **й** and **і**. We see the combination **ти й Олена** (you and Olena) but a moment later we see **я і Максим** (I and Maksym). Again, the meaning is absolutely identical. The language simply chooses the option that avoids a phonetic traffic jam. The rules that govern these choices are highly logical and rely on basic phonetics.
 
-However, there is an important and specific exception regarding "difficult neighbors." Even if a preceding word ends neatly in a vowel, you must still use **у** if the following word starts with certain challenging consonant clusters. Specifically, use **у** before words starting with **в**, **ф**, **св**, or **льв**. This rule exists purely because these specific sounds are phonetically demanding to link directly with a **в**. 
-*   **Вона працює у Франції.** (She works in France. — not **в Франції**)
-*   **Я працюю у Львові.** (I work in Lviv.)
-*   **Вони грають у футбол.** (They play football.)
+## У чи В? (У or В?)
 
-Exceptions to know exist based on sentence position and natural pauses. The letter **У** is the absolute king at the start of a sentence. It provides a strong, clear, and resonant start, whereas starting with **в** would sound weak or muffled before another consonant. This exactly same logic applies immediately after a comma or a noticeable pause in your speech. 
-*   **У мене є братик.** (I have a little brother. — always **У**)
-*   **Так, у нас є час.** (Yes, we have time. — **У** after pause)
-*   **У понеділок ми працюємо.** (On Monday we work.)
+According to Ukrainian linguists, such as in the authoritative textbook by Avramenko (Grade 5, p. 117), the alternation between **у** and **в** ensures the euphony of the language. The core rule is simple but powerful: avoid consonant clusters. When you have a word ending in a vowel and the next word begins with a consonant, the transition is naturally smooth. But if a word ends in a consonant and the next word also begins with a consonant, saying them together requires a noticeable physical effort. The language solves this by inserting a vowel-like preposition. This is why we say **в Києві** (vowel + **в** + consonant) but **у Львові** (consonant + **у** + consonant). This rule applies not only to prepositions but also to some word prefixes, such as the alternating forms **вже** (already) and **уже** (already).
 
-Don't overthink it — native speakers use euphony instinctively. The goal is to create sentences that SOUND smooth, not to engage in rigid rule application. This foundational principle of euphony goes far beyond just independent prepositions. It also applies to the initial letters of certain common vocabulary words. This applies to both the preposition (**в** / **у**) and the prefix (**вже** / **уже** — already). Many Ukrainian words have twin forms that alternate their starting letter depending entirely on the previous word. For example, the word for teacher alternates freely between **учитель** (teacher) and **вчитель** (teacher).
-*   **Мій учитель читає текст.** (My teacher reads a text. — **у** after a consonant)
-*   **Моя вчителька читає текст.** (My teacher reads a text. — **в** after a vowel)
+The letter **в** is used primarily when it follows a vowel. This creates a perfect rhythm, especially before a consonant. 
 
-<!-- INJECT_ACTIVITY: quiz-u-v-choice -->
+*   **Я живу в Києві.** *(I live in Kyiv.)*
+*   **Я працюю в офісі.** *(I work in an office.)*
+*   **Мама йде в магазин.** *(Mom goes to the store.)*
 
-<!-- INJECT_ACTIVITY: quiz-naturalness-comparison -->
+In these examples, the word before the preposition ends in a vowel (**живу**, **працюю**, **мама**). The language prefers the consonant **в** here to keep the sentence moving forward without breaking the rhythm.
+
+The letter **у** is used to break up what would otherwise be a heavy block of sounds. You use it when the preceding word ends in a consonant and the following word begins with a consonant.
+
+*   **Тарас у Львові.** *(Taras is in Lviv.)*
+*   **Максим у банку.** *(Maksym is in the bank.)*
+*   **Мій брат у школі.** *(My brother is at school.)*
+
+If you tried to say «Тарас в Львові», your mouth would have to navigate four consonant sounds in a row. The vowel **у** acts as a much-needed phonetic cushion.
+
+:::tip
+When you are unsure, remember that the most common mistake for learners is saying **в** before a word that starts with **в** or **ф**. Always use **у** before these letters to avoid a harsh phonetic clash.
+:::
+
+There are a few key exceptions where **у** is always required, regardless of the surrounding sounds. At the very beginning of a sentence, always use **у** before a consonant. 
+
+*   **У мене є брат.** *(I have a brother.)*
+*   **У театрі цікаво.** *(It is interesting in the theater.)*
+
+Similarly, use **у** after a pause, a comma, or a period in speech. 
+
+*   **Так, у нас є час.** *(Yes, we have time.)*
+
+Do not overthink these rules during natural conversation. Native speakers do not run a mental checklist before every sentence; they simply use euphony instinctively because it feels better in the mouth. The ultimate goal is to build sentences that sound smooth, not to achieve rigid, robotic rule application. Read your sentences aloud and trust your ears.
+
+<!-- INJECT_ACTIVITY: quiz-u-or-v -->
 
 ## І чи Й? З, із, чи зі?
-According to **Літвінова Grade 5** (p.176), the **і/й** (and) alternation follows a very similar and highly intuitive logic. The letter **й** is a semivowel that creates a fast, natural glide between two full vowels in a sentence. You use **й** between vowels. On the other hand, **і** is a full, distinct vowel used between consonants to physically separate them.
-*   **Мама й тато вдома.** (Mom and dad are at home. — **Й** between vowels)
-*   **Вона й він читають.** (She and he are reading.)
-*   **Брат і сестра там.** (Brother and sister are there. — **І** between consonants)
-*   **Тарас і Максим там.** (Taras and Maksym are there.)
 
-Just like the strong initial **У** we studied earlier, we always use the full, robust vowel **І** at the start of a sentence or immediately after a pause. The semivowel **й** is simply too weak to start a new thought and can never be used as the first word of a sentence.
-*   **І він прийшов.** (And he arrived. — always **І**)
-*   **І ми працюємо там.** (And we work there.)
+The exact same principle of phonetic comfort applies to the conjunction meaning "and". The alternation between **і** and **й** (as noted in Litvinova, Grade 5, p. 176) exists purely to make sentences flow without interruption. 
 
-As highlighted in **Літвінова Grade 5** (p.177), the **з/із/зі** (with/from) alternation handles another set of consonant challenges. The preposition **з** is the standard, default form for indicating association or origin. It is a highly "sticky" consonant that naturally wants to attach itself to the following word. In most everyday situations, you will use **з** before vowels and most consonants.
-*   **Я їду з Одеси.** (I am traveling from Odesa.)
-*   **Він іде з другом.** (He is walking with a friend.)
-*   **Вона гуляє з братом.** (She is walking with a brother.)
+The conjunction **і** is used between two words when consonants surround it. It acts as a bridge, preventing the consonants from crashing into each other.
 
-To successfully prevent the **з** from sticking to already difficult consonant clusters, Ukrainian uses the extended variants **із** and **зі**. You use **із** between consonants to expertly avoid an uncomfortable cluster. The special, distinct form **зі** is reserved for use before **з**, **с**, **ш**, **щ** or thick consonant clusters, as well as the fixed phrase **зі мною** (with me). This is a smaller rule than **у/в**, but it is highly important for natural speech.
-*   **Він бере із шафи.** (He takes from the wardrobe.)
-*   **Максим із Семеном там.** (Maksym with Semen are there.)
-*   **Вітаємо зі святом.** (We congratulate with the holiday.)
-*   **Вони йдуть зі школи.** (They are walking from school.)
-*   **Він іде зі мною.** (He is walking with me.)
+*   **Брат і сестра** *(Brother and sister)*
+*   **Тарас і Максим** *(Taras and Maksym)*
+*   **Стіл і стілець** *(A table and a chair)*
 
-<!-- INJECT_ACTIVITY: quiz-i-y-choice -->
+Just like the preposition **у**, the conjunction **і** is always used at the very beginning of a sentence, no matter what word follows it. 
+
+*   **І він прийшов.** *(And he arrived.)*
+
+The conjunction **й** is used between two words that both end and begin with vowels, or when the preceding word ends in a vowel. Placing a full **і** between two vowels would force the speaker to make a tiny, unnatural pause. The **й** creates a seamless glide from one word to the next.
+
+*   **Мама й тато** *(Mom and dad)*
+*   **Вона й він** *(She and he)*
+*   **Олена й Андрій** *(Olena and Andriy)*
+
+<!-- INJECT_ACTIVITY: quiz-i-or-y -->
+
+:::note
+The conjunction **та** (and) is also very common in Ukrainian. It acts as a neutral alternative and can be used to add stylistic variety or to effortlessly avoid difficult consonant clusters when you cannot decide between **і** and **й**.
+:::
+
+Another important alternation involves the **з/із/зі** (with/from — alternating preposition). Litvinova (Grade 5, p. 177) outlines the rules for this word group. This is a smaller rule than the **у/в** alternation, but it remains highly important for natural, fluid speech. 
+
+The default form is **з**. You will use it before words starting with vowels and before words starting with most single consonants.
+
+*   **Він з Одеси.** *(He is from Odesa.)*
+*   **Я йду з другом.** *(I am going with a friend.)*
+*   **Вона говорить з братом.** *(She is talking with a brother.)*
+
+When a word begins with a difficult consonant cluster, the preposition adapts. The variant **із** is used between consonants to completely avoid a heavy phonetic cluster.
+
+*   **Максим із Семеном** *(Maksym with Semen)*
+*   **Лист із Києва** *(A letter from Kyiv)*
+
+The variant **зі** is reserved for the absolute most difficult clusters, particularly those starting with the letters **з**, **с**, **ш**, **щ**, or the specific combination **льв**. It provides maximum phonetic cushioning.
+
+*   **Вона зі мною.** *(She is with me.)*
+*   **Вітаємо зі святом!** *(Congratulations with the holiday!)*
+*   **Діти йдуть зі школи.** *(The children are walking from school.)*
+*   **Він їде зі Львова.** *(He is driving from Lviv.)*
 
 <!-- INJECT_ACTIVITY: fill-in-z-iz-zi -->
 
 ## Підсумок — Summary
-Ukrainian euphony operates like three distinct, well-oiled "gears" that keep your speech running smoothly without ever grinding the engine. First, the **у/в** alternation helps you expertly avoid consonant clusters or awkward vowel clashes, especially when discussing locations. Second, the **і/й** alternation ensures that the audible connections between your nouns remain perfectly musical and fluid. Third, the **з/із/зі** alternation cleanly handles the most difficult, "sticky" consonant clusters that would otherwise stop your speech in its tracks. Always remember that these essential rules are about making speech physically easier for the SPEAKER, not just the listener. 
 
-Here is a self-check list to review the three euphony pairs we have learned today:
-*   **Q:** What does the **у/в** pair do?
-    **A:** It helps avoid a consonant+consonant cluster. Say **у Львові** (in Lviv) or **в Києві** (in Kyiv).
-*   **Q:** What does the **і/й** pair do?
-    **A:** It helps avoid a vowel+vowel clash. Use it to cleanly link **брат і сестра** (brother and sister) or **мама й тато** (mom and dad).
-*   **Q:** When do we use the **з/із/зі** pair?
-    **A:** Use them before difficult clusters to maintain flow, such as **з другом** (with a friend), **із сестрою** (with a sister), or **зі мною** (with me).
-*   **Q:** Which is correct: "Я живу в Києві" or "Я живу у Києві"?
-    **A:** **Я живу в Києві.** (I live in Kyiv.)
-*   **Q:** Which is correct: "Мама і тато" or "Мама й тато"?
-    **A:** **Мама й тато.** (Mom and dad.)
+Ukrainian grammar is deeply intertwined with how the language sounds. The three euphonic pairs we covered in this module are not random exceptions; they are practical tools designed to make pronunciation completely effortless. The primary purpose of these alternations is to avoid harsh sound collisions. The **у/в** pair prevents consonant and consonant clashes from occurring. The **і/й** pair prevents vowel and vowel clashes from disrupting the rhythm. Finally, the **з/із/зі** group softens extremely difficult consonant clusters that would otherwise interrupt the melodic flow of everyday speech. 
 
-Practice time: read your own sentences aloud — do they flow smoothly? If you find your tongue twisting over a pile of consonants, check if you need to shift one of these three euphonic gears to keep the melody flowing.
+:::caution
+Do not confuse Ukrainian euphony with "optional" slang. These alternations are strict grammatical rules in the standard literary language. Applying them correctly is one of the most important steps to speaking authentic Ukrainian.
+:::
 
+Keep these key contrasting examples in mind for quick review and practice:
+*   **у Львові** (consonant + **у** + consonant) versus **в Києві** (vowel + **в** + consonant).
+*   **брат і сестра** (consonant + **і** + consonant) versus **мама й тато** (vowel + **й** + consonant).
+*   **з другом** (standard single consonant) versus **із сестрою** (avoiding a dense cluster) versus **зі мною** (softening a highly difficult cluster).
+
+Always remember the strict sentence-start exceptions. At the absolute beginning of a phrase, you must use the full vowel forms, regardless of the next word. **У мене є** (I have) and **І він** (And he) are fixed rules that do not change.
+
+Use these self-check questions to verify your understanding. Read them carefully and mentally select the correct form based on the surrounding sounds:
+
+*   Which is correct? Я живу (**в** / **у**) Києві.
+*   Which is correct? Мама (**і** / **й**) тато.
+*   Which is correct? Він іде (**зі** / **з**) школи.
+
+When practicing new vocabulary or reading texts, always try to read the sentences aloud. Ukrainian spelling is highly phonetic, meaning what you see is exactly what you hear. By speaking the language out loud, your mouth will physically feel when a cluster of consonants is too dense or a vowel clash is too abrupt. Over time, choosing the correct euphonic form will become an automatic reflex, allowing you to speak with the natural, rhythmic cadence of a native speaker.
+
+<!-- INJECT_ACTIVITY: quiz-euphony-comparison -->
 </module_content>
 
 ---
@@ -183,48 +254,68 @@ version: "1.0"
 module: euphony
 level: a1
 
+# NOTE — these are SHAPE examples. The real targets are at the top of this prompt
+# (10 total / 4–6 inline / 6–9 workbook,
+# 6+ items per activity). The shapes below are TRUNCATED for readability;
+# YOUR output MUST hit those minimums.
+
 inline:
   - id: marker-id-here        # MUST match an <!-- INJECT_ACTIVITY: ... --> marker
     type: quiz                 # activity type
     instruction: "Оберіть правильний варіант"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - question: "_____ стіл"
-        options: ["мій", "моя", "моє"]
+        options: ["мій", "моя", "моє", "мої"]
         correct: 0             # 0-based index
+      - question: "Це ____ книга."
+        options: ["мій", "моя", "моє", "мої"]
+        correct: 1
+      # ... add at least 6 items total — never stop at 1-2
 
   - id: another-marker-id
     type: fill-in
     instruction: "Вставте правильне слово"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - sentence: "Це ____ кімната."
         answer: "моя"
         options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ вікно."
+        answer: "моє"
+        options: ["мій", "моя", "моє"]
+      # ... ≥ 6 items total
 
 workbook:
-  - type: match-up
+  - id: match-up-vocab
+    type: match-up
     instruction: "З'єднайте пари"
-    pairs:
+    pairs:                     # ← real output: ≥ 6 pairs
       - left: "стіл"
         right: "він"
       - left: "книга"
         right: "вона"
       - left: "вікно"
         right: "воно"
+      # ... ≥ 6 pairs total
 
-  - type: group-sort
+  - id: group-sort-gender
+    type: group-sort
     instruction: "Розподіліть слова за категоріями"
     groups:
-      - label: "Category A"
-        items: ["word1", "word2"]
-      - label: "Category B"
-        items: ["word3", "word4"]
+      - label: "Чоловічий рід"
+        items: ["стіл", "олівець", "будинок"]   # ≥ 3 items per group
+      - label: "Жіночий рід"
+        items: ["книга", "ручка", "школа"]
+      - label: "Середній рід"
+        items: ["вікно", "море", "молоко"]
 
-  - type: true-false
+  - id: true-false-grammar
+    type: true-false
     instruction: "Правда чи ні?"
-    items:
-      - statement: "Statement here"
-        correct: true
-        explanation: "Why it's true"
+    items:                     # ← real output: ≥ 6 items
+      - statement: "«Книга» — це чоловічий рід."
+        correct: false
+        explanation: "Книга закінчується на -а, отже жіночий рід."
+      # ... ≥ 6 items total
 
   - type: error-correction
     instruction: "Виправте помилку"
@@ -295,7 +386,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -369,10 +460,15 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 ## Quality Rules
 
-**ITEM COUNT MINIMUMS (non-negotiable):**
-- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
-- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
-- If you can't think of enough items, add more examples from the module's vocabulary and content.
+**ACTIVITY COUNT MINIMUMS (non-negotiable, audit-enforced):**
+- **Total: 10 activities.** Inline: 4–6. Workbook: 6–9. The audit gate FAILS the module if you ship fewer.
+- **Type diversity: workbook MUST cover ≥5 distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
+- **Match the inline markers exactly.** Every `<!-- INJECT_ACTIVITY: id -->` marker in the prose needs a matching inline activity with that exact id. Skipping markers means the lesson tab is broken.
+
+**ITEM COUNT MINIMUMS (non-negotiable, per-activity):**
+- **Default minimum: 6 items per activity.** Quiz, fill-in, match-up, true-false, anagram, error-correction, translate, cloze, mark-the-words, divide-words, count-syllables, odd-one-out, group-sort categories: all ≥ 6.
+- **Lower minimums for specific types only:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items, essay-response/critical-analysis = 1 prompt.
+- If you can't think of enough items, add more examples from the module's vocabulary and content. NEVER ship a 1-item or 2-item activity unless its type cap explicitly allows it.
 - **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
 - **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
@@ -479,6 +575,27 @@ IMPORTANT: After using tools, output your COMPLETE module content as plain text.
 1. Run `verify_words` on all Ukrainian words in your exercises — every word must exist in VESUM
 2. Run `query_cefr_level` on any word you're unsure about — it must be a1-appropriate
 3. For fill-in answers and distractors, verify the exact form (case, number, gender) with `verify_lemma`
+
+---
+
+## ⚠️ MANDATORY FINAL CHECKLIST — verify before emitting YAML
+
+Walk through this checklist explicitly before you start emitting. If ANY box is unchecked, fix it FIRST.
+
+- [ ] My output has **at least 4** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
+- [ ] My output has **at least 6** workbook activities.
+- [ ] **Total ≥ 10.**
+- [ ] **Every** activity has **at least 6** items, pairs, or statements (except types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3, essay-response=1).
+- [ ] The module (inline + workbook combined) uses **at least 0 distinct activity types** (or 4+ when 0 = 0 and the workbook size allows it). I am NOT shipping a wall of quizzes.
+- [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
+- [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
+- [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+- [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+- [ ] My inline count is between 4 and 6. I did NOT create more injection markers than 6.
+- [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
+- [ ] At B1+, all instructions are in Ukrainian (no English fallback).
+
+If you cannot tick all of these, REGENERATE the activities BEFORE outputting. Shipping under-spec means the build rejects you and the heal loop has to redo your work — wasting compute.
 
 ---
 

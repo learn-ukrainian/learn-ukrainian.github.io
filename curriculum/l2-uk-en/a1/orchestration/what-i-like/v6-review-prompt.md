@@ -126,139 +126,115 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Діалоги (Dialogues)
+## Діалоги
 
-When you meet someone new, one of the first topics of conversation is usually hobbies and interests. Finding common ground is a great way to build a connection. In Ukrainian, expressing what you enjoy doing is quite straightforward, but it requires learning a specific sentence pattern. 
+Imagine it is your first day at a local language exchange event in Kyiv. You sit down with a cup of hot tea and are getting to know your new tandem partner, **Віктор** (Viktor). Sharing hobbies is a natural way to break the ice and practice simple Ukrainian.
 
-Let us look at a typical conversation. Anna is an English speaker attending her first language exchange meetup in Kyiv. She is paired with Viktor, a local tandem partner. They are having tea and getting to know each other. Pay attention to how they ask about and describe their favorite activities.
+Listen to how **Анна** (Anna) and Віктор meet and discuss their interests. They use the verb **любити** (to love/like) to express what they enjoy doing. Notice how they combine it with another action word.
 
-> **Віктор:** Привіт! **Що ти любиш робити?** *(Hi! What do you like to do?)*
-> **Анна:** Привіт! **Я люблю читати і слухати музику.** *(Hi! I like to read and listen to music.)*
-> **Віктор:** Цікаво! А **я люблю готувати.** *(Interesting! And I like to cook.)*
-> **Анна:** Правда? **Що ти готуєш?** *(Really? What do you cook?)*
+> **Віктор:** Привіт! Що ти любиш робити? *(Hi! What do you like to do?)*
+> **Анна:** Я люблю читати і слухати музику. *(I like to read and listen to music.)*
+> **Віктор:** А я люблю готувати. *(And I like to cook.)*
+> **Анна:** Правда? Що ти готуєш? *(Really? What do you cook?)*
 > **Віктор:** Я готую борщ. *(I cook borscht.)*
 
-In this first exchange, Viktor uses the phrase **Що ти любиш робити?** (What do you like to do?) to ask about Anna's general interests. Anna responds by pairing the verb **люблю** (I like/love) with the action words **читати** (to read) and **слухати** (to listen). 
+In this brief exchange, Анна and Віктор naturally use the structure **я люблю** followed by action words that end in the suffix **-ти**. This allows them to express their hobbies clearly and simply, directly stating the activities they are passionate about. You can use this same pattern to talk about your own hobbies.
 
-Later in their conversation, Viktor pulls out a novel and a DVD from his bag to ask Anna about her specific tastes regarding objects. Notice how the sentence structure completely changes when they switch from talking about *actions* to talking about *things*.
+Now, listen to a follow-up conversation between the two partners. Here, the focus shifts from liking specific activities to liking specific things and objects around them. They use a completely different structure, the phrase **подобатися** (to be pleasing — used as 'to like'), which acts as a ready-made chunk for expressing preferences. Pay close attention to how they use this new phrase to talk about items like a book or a movie.
 
-> **Віктор:** Дивись. **Тобі подобається ця книга?** *(Look. Do you like this book?)*
-> **Анна:** Так, **мені подобається.** *(Yes, I like it.)*
+> **Віктор:** Тобі подобається ця книга? *(Do you like this book?)*
+> **Анна:** Так, мені подобається. *(Yes, I like it.)*
 > **Віктор:** А цей фільм? *(And this film?)*
-> **Анна:** Ні, **мені не подобається цей фільм. Мені подобається музика.** *(No, I don't like this film. I like music.)*
+> **Анна:** Ні, мені не подобається. *(No, I don't like it.)*
+> **Віктор:** Мені подобається музика. *(I like music.)*
 
-If you look closely at the two dialogues, you will see a clear division in how preferences are expressed. When Anna and Viktor talked about *doing* things—the actions of reading or cooking—they used the word **люблю**. However, when they shifted the topic to *things*—the physical book, the film, and the music—they used the phrase **подобається**. 
+## Я люблю...
 
-This transition from verbs to nouns requires two different grammatical approaches in Ukrainian. We will break down both of these essential patterns so you can start sharing your own interests confidently.
-
-## Я люблю... (I Like...)
-
-When you want to talk about your active hobbies, passions, and the things you physically enjoy doing, the most direct way is to use the verb **любити** (to love/to like). The formula for building these sentences is very similar to English. 
-
-You start with the subject **Я** (I), follow it with the conjugated verb **люблю** (like/love), and finish with the action you enjoy. The action word must be in its basic, unaltered dictionary form, which we call the infinitive.
+To express what activities you enjoy doing in your free time, Ukrainian uses a very direct and intuitive structure: the verb **любити** followed immediately by another action. When you want to talk about a hobby or a favorite pastime, you start with the phrase **я люблю** (I love/like) and then add the specific activity. In this module, we use this structure for activities and hobbies. For example, to say that you enjoy getting lost in a good story, you would say:
 
 *   **Я люблю читати.** (I like to read.)
-*   **Я люблю малювати.** (I like to draw.)
-*   **Я люблю співати.** (I like to sing.)
 
-To use this structure, you need to be able to recognize a Ukrainian infinitive. The infinitive is the base form of a verb before it is changed to match a person or a tense. In English, we indicate the infinitive by putting the word "to" in front of the verb (to read, to walk). In Ukrainian, the infinitive is indicated by a specific suffix at the very end of the word. 
-
-The dictionary form of a Ukrainian verb always ends in the suffix **-ти**. When you look up a new action word, this is the form you will find. 
-
-*   **читати** (to read)
-*   **гуляти** (to walk)
-*   **слухати** (to listen)
-
-The most important rule to remember for this pattern is that the ending **-ти** never changes when it follows **Я люблю**. It functions as a single, locked unit. 
-
-Let us expand your vocabulary with some high-frequency verbs for free time. You can plug any of these directly into the formula. 
-
-*   **дивитися** (to watch)
-*   **грати** (to play)
-*   **подорожувати** (to travel)
-*   **готувати** (to cook)
-
-:::tip
-When you talk about playing games or instruments, Ukrainian uses specific prepositions that you must memorize as fixed phrases. If you are playing a sport or a game, use the preposition **у** (in). If you are playing a musical instrument, use the preposition **на** (on).
-*   **Я люблю грати у футбол.** (I like to play football.)
-*   **Я люблю грати на гітарі.** (I like to play the guitar.)
-:::
-
-<!-- INJECT_ACTIVITY: match-up-infinitives -->
-
-<!-- INJECT_ACTIVITY: fill-in-hobbies -->
-
-Of course, you will not enjoy every activity. To express a negative preference, the rule is incredibly simple. To say "I don't like", we simply place the negative particle **не** (not) directly before the verb. 
-
-In Ukrainian, **не** is always written as a completely separate word. It does not attach to the verb, and it does not change the spelling of the words around it. 
+To say that you enjoy taking a stroll outside, you use the same pattern:
 
 *   **Я люблю гуляти.** (I like to walk.)
-*   **Я не люблю гуляти.** (I do not like to walk.)
-*   **Я не люблю готувати.** (I do not like to cook.)
 
-## Мені подобається... (I Like...)
+And if spending time in the kitchen is your passion, you state:
 
-Now that you know how to talk about actions, we need to look at the second structure. When you want to say that you like a specific *thing*—a noun, an object, a place, or a piece of art—you will use the construction **Мені подобається** (I like). 
+*   **Я люблю готувати.** (I like to cook.)
 
-This phrase literally translates to "To me it is pleasing." At this stage in your learning, you should treat **Мені подобається** as a fixed, memorized chunk of language. Do not worry about analyzing why the word for "I" changes to **Мені**. Just memorize the phrase as a single unit and place the object you like directly after it.
+The form after **я люблю** is the **інфінітив** (infinitive), the basic dictionary form of the verb. In the examples in this module, these infinitives end in **-ти**: **читати, гуляти, готувати**. After **я люблю**, the second verb stays in this dictionary form.
 
-*   **Мені подобається книга.** (I like the book.)
-*   **Мені подобається музика.** (I like the music.)
+You can expand your vocabulary with some of the most common infinitive verbs used for daily hobbies and interests. You can plug any of these directly into the **я люблю** structure to talk about yourself. Notice that while they all share the exact same **-ти** ending, the pronunciation and the placement of the stress vary significantly across these verbs and must be memorized individually as you learn them:
+
+*   **слухати** (to listen) — **Я люблю слухати.** (I like to listen.)
+*   **дивитися** (to watch) — **Я люблю дивитися.** (I like to watch.)
+*   **грати** (to play) — **Я люблю грати.** (I like to play.)
+*   **малювати** (to draw) — **Я люблю малювати.** (I like to draw.)
+*   **подорожувати** (to travel) — **Я люблю подорожувати.** (I like to travel.)
+*   **співати** (to sing) — **Я люблю співати.** (I like to sing.)
+
+<!-- INJECT_ACTIVITY: match-infinitives -->
+<!-- INJECT_ACTIVITY: fill-in-activities -->
+
+## Мені подобається...
+
+You also need a second common pattern for likes: **мені подобається**. In this module, use **я люблю** + infinitive for activities and **мені подобається** + noun for things or places. This keeps the two beginner patterns clear without adding extra grammar yet.
+
+At this early stage in your learning journey, you should treat **мені подобається** as a fixed, memorized chunk of language. The grammatical mechanics behind it actually involve the dative case, which literally translates to 'to me it is pleasing', but we are not analyzing the underlying dative grammar yet. You just need to know that this chunk is the perfect, ready-to-use tool for expressing a general preference for a noun. Here are a few concrete examples showing how naturally it pairs with everyday things:
+
+*   **Мені подобається музика.** (I like music.)
+*   **Мені подобається ця книга.** (I like this book.)
 *   **Мені подобається Київ.** (I like Kyiv.)
 
-You might be wondering how to choose between the two structures. The distinction is pedagogical and helps you sound much more natural. The verb **любити** is reserved for active hobbies, deep passions, and things you truly "love." It carries a strong emotional weight. 
+:::tip
+For this module, keep the two patterns separate: use **люблю** with activities and **мені подобається** with things. This helps you practice the contrast clearly.
+:::
 
-*   **Я люблю читати.** (I love to read. This is my passion.)
+Expressing a dislike is just as straightforward, and the rule for forming the negative is identical for both of the structures we have covered today. You simply place the small negative word **не** directly before the verb you want to negate. When you want to state that you do not enjoy a particular action, you place it immediately before the main verb:
 
-The phrase **подобатися**, on the other hand, is used for general liking, everyday objects, and first impressions. It is a lighter, more objective evaluation. 
+*   **Я не люблю готувати.** (I do not like to cook.)
 
-*   **Мені подобається цей фільм.** (I like this film. It is a good movie.)
+When you want to state that a specific thing does not appeal to you, you place it directly before the chunk:
 
-To invite someone else to share their preferences, you need to know how to ask questions. Both structures can be easily turned into questions by changing your intonation and using the correct pronoun for "you."
+*   **Мені не подобається цей фільм.** (I do not like this film.)
+
+To turn these statements into questions and ask about someone else's preferences, you must adjust the phrases slightly. To ask a tandem partner about an activity, you use:
 
 *   **Ти любиш читати?** (Do you like to read?)
-*   **Тобі подобається цей фільм?** (Do you like this film?)
 
-If the answer is no, you apply the negative particle just as we did before. Place **не** directly before the verb **подобається**. Note that the word order in the question, such as **Тобі подобається** or **Подобається тобі**, can vary freely in conversational Ukrainian, but the core chunk remains intact.
+To ask them about a thing, you use the chunk:
 
-*   **Мені не подобається.** (I do not like it.)
-*   **Мені не подобається ця музика.** (I do not like this music.)
+*   **Тобі подобається?** (Do you like it?)
 
-<!-- INJECT_ACTIVITY: quiz-like-choice -->
+Briefly note that the verb **любити** changes form depending on the person speaking, shifting from **я люблю** to **ти любиш**. Rest assured, the full conjugation rules for these verbs will be covered deeply in module 17.
 
-<!-- INJECT_ACTIVITY: fill-in-negatives -->
-
-:::caution
-English speakers frequently make a critical mistake by trying to translate "I like" directly word-for-word when talking about objects. They will say **Я подобаюся футбол**. This is incorrect because it literally means "I am pleasing to football." 
-
-Always remember that in Ukrainian, the object (the football) is the thing doing the pleasing. You must use the fixed chunk: **Мені подобається футбол** (Football is pleasing to me).
-:::
+<!-- INJECT_ACTIVITY: quiz-like-structure -->
+<!-- INJECT_ACTIVITY: fill-in-negative -->
 
 ## Підсумок — Summary
 
- We have covered two distinct ways to say "I like," each serving a specific grammatical purpose. First, when you are talking about activities and actions, use the formula **Я люблю** followed by a verb in the infinitive. Remember that the infinitive is the dictionary form of the verb and always ends in the suffix **-ти**. 
+Here is a quick recap of the two beginner patterns from this module. Use **я люблю** + infinitive to talk about activities you enjoy doing, and use **мені подобається** + noun to talk about things or places you like. This contrast helps you practice two common sentence patterns clearly.
 
+We also summarized the universal negation rule for these statements. When you want to express a dislike or tell someone that something does not appeal to you, you must remember to simply place the small word **не** directly before the verb. This straightforward rule allows you to quickly create the negative phrases **не люблю** and **не подобається** without needing to change any other part of the sentence structure.
+
+A quick self-check ensures you can actively use these patterns in a real, unscripted conversation. First, think about your own hobbies and name three things you like doing using the **я люблю** structure. For example, you might say:
+
+*   **Я люблю читати.** (I like to read.)
 *   **Я люблю співати.** (I like to sing.)
+*   **Я люблю подорожувати.** (I like to travel.)
 
-Second, when you are talking about things, objects, or places, use the fixed phrase **Мені подобається** followed by a noun. Treat this phrase as a single memorized chunk.
+Next, look around your immediate environment and name two things that you like using the **мені подобається** chunk. For example, you might point out:
 
-*   **Мені подобається музика.** (I like the music.)
+*   **Мені подобається ця музика.** (I like this music.)
+*   **Мені подобається цей фільм.** (I like this film.)
 
-To express that you do not like something, the negative particle **не** always comes as a separate word directly before the verb. This works for both structures.
+Finally, name one thing or activity that you do not like by applying the negative rule to either structure:
 
-*   **Я не люблю готувати.** (I do not like to cook.)
-*   **Мені не подобається фільм.** (I do not like the film.)
-
-Before moving on to the next module, take a moment to test your understanding with this self-check checklist. Can you answer these prompts confidently?
-
-*   Can you name three hobbies using the correct verb structure? (**Я люблю читати, малювати, гуляти.**)
-*   Can you name two things or objects that you like? (**Мені подобається музика, книга.**)
-*   Do you know the defining suffix of a Ukrainian infinitive verb? (**-ти**).
-*   Can you tell a friend that you don't like a specific object? (**Мені не подобається...**).
-*   Do you know which preposition to use when talking about playing the guitar (**на**) versus playing football (**у**)?
+*   **Я не люблю малювати.** (I do not like to draw.)
+*   **Мені не подобається ця книга.** (I do not like this book.)
 </generated_module_content>
 
-**PIPELINE NOTE — Word count: 1386 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
+**PIPELINE NOTE — Word count: 1262 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -434,38 +410,169 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 39 words | Not found: 2 words
+Verified: 33 words | Not found: 2 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
   ✗ Анна — NOT IN VESUM
   ✗ Віктор — NOT IN VESUM
 
-All 39 other words are confirmed to exist in VESUM.
+All 33 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
-## Verification Tools (MCP)
+---
 
-You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
+## Verification Tools (Shell Commands)
 
-**Core Verification:**
-- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
-- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
+You have access to verification tools via shell commands. Use these to verify
+Ukrainian vocabulary, check grammar, and search textbook content **as you write**.
 
-**Content Quality:**
-- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+**IMPORTANT:** Run verification commands BEFORE finalizing any Ukrainian text.
+Batch multiple verifications together to minimize round-trips.
 
-**Reference:**
-- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp_rag_search_literary` — verify literary references against primary sources
-- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
+### 1. Batch-verify Ukrainian words exist in VESUM (preferred — one call for many words)
 
-**Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_words
+results = verify_words(['слово1', 'слово2', 'слово3'])
+for w, matches in results.items():
+    if matches:
+        print(f'{w}: FOUND — lemma={matches[0][\"lemma\"]}, pos={matches[0][\"pos\"]}')
+    else:
+        print(f'{w}: NOT FOUND — may not exist in standard Ukrainian')
+"
+```
+
+### 2. Verify a single Ukrainian word in VESUM (with full morphological tags)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_word
+results = verify_word('WORD_HERE')
+if results:
+    for m in results:
+        print(f'lemma={m[\"lemma\"]}, pos={m[\"pos\"]}, tags={m[\"tags\"]}')
+else:
+    print('NOT FOUND in VESUM')
+"
+```
+
+### 3. Get all inflected forms of a lemma (declension/conjugation)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_lemma
+forms = verify_lemma('LEMMA_HERE')
+for f in forms[:20]:
+    print(f'{f[\"word_form\"]:20s} {f[\"pos\"]:8s} {f[\"tags\"]}')
+print(f'... {len(forms)} forms total')
+"
+```
+
+### 4. Check CEFR level of a word (is it level-appropriate?)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import query_cefr_level
+results = query_cefr_level('WORD_HERE')
+for r in results:
+    print(f'{r[\"word\"]}: {r[\"level\"]} ({r[\"pos\"]})')
+if not results:
+    print('Not in CEFR database')
+"
+```
+
+### 5. Search textbook content (Ukrainian school textbooks, Grades 1-11)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_textbooks
+keywords = {'keyword1', 'keyword2'}
+results = search_textbooks(keywords, 5)
+for r in results:
+    title = r.get('section_title', r.get('title', ''))
+    grade = r.get('grade', '?')
+    text = r.get('text', '')[:200]
+    print(f'Grade {grade} | {title}')
+    print(f'  {text}')
+    print()
+"
+```
+
+### 6. Search style guide for calques/Russianisms (Антоненко-Давидович, 279 entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_style_guide
+results = search_style_guide('TOPIC_HERE', 3)
+for r in results:
+    print(f'--- {r.get(\"word\", \"\")} [{r.get(\"section\", \"\")}]')
+    print(r.get('text', '')[:300])
+    print()
+if not results:
+    print('No style guide entries found')
+"
+```
+
+### 7. Look up word definition in СУМ-11 (Ukrainian explanatory dictionary, 127K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_definitions
+results = search_definitions('WORD_HERE', 3)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+### 8. Search idioms (Фразеологічний словник, 25K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_idioms
+results = search_idioms('WORD_HERE', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"text\", r.get(\"definition\", \"\")))[:200]}')
+"
+```
+
+### 9. English-to-Ukrainian translation (Балла, 79K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import translate_en_uk
+results = translate_en_uk('ENGLISH_WORD', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+---
+
+**WHEN to use these tools:**
+
+1. **Before writing any Ukrainian text** — batch-verify all key vocabulary with
+   `verify_words` (tool 1). Any word that returns NOT FOUND must be replaced.
+2. **When you suspect a Russicism or calque** — search the style guide (tool 6)
+   and verify the correct Ukrainian form with `verify_word` (tool 2).
+3. **When writing for A1/A2** — check CEFR levels (tool 4) to ensure vocabulary
+   is level-appropriate.
+4. **When unsure about a case ending or conjugation** — use `verify_lemma` (tool 3)
+   to see the full paradigm.
+5. **When covering a grammar topic** — search textbooks (tool 5) to see how
+   Ukrainian school textbooks teach it.
+6. **When you need the precise Ukrainian meaning** — use СУМ-11 (tool 7).
+7. **When looking for natural Ukrainian expressions** — search idioms (tool 8).
+
+**Batching rule:** Collect all words you want to verify, then run ONE `verify_words`
+call instead of multiple `verify_word` calls. This is faster and uses fewer tokens.

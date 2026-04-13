@@ -3,21 +3,21 @@
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 37: Все разом (A2, A2.5 [Case Synthesis and Plurals])
-**Section to write:** Діалог 3: Подорож Україною (~550 words total)
-**Word target for this section:** 550 words (aim for 605 to account for undershoot)
+**Section to write:** Діалог 3: Подорож Україною (~600 words)
+**Word target for this section:** 600 words (aim for 660 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Діалог 3: Подорож Україною (~550 words total)
-- P1 (~60 words): Intro to the travel scenario. Taras and Iryna are planning a road trip across Ukraine. Introduces geography terms (місто, гори, річка, кордон).
-- P2 (~110 words): Dialogue Part 3A—Choosing the Route. Focused on Movement Cases: "Поїхати до Львова" (Gen.), "Відвідати Одесу" (Acc.), "Бути в Карпатах" (Loc. Plural).
-- P3 (~100 words): Explanation of case changes for cities and regions. Contrast between masculine "-а/-у" in Genitive (до Києва, до Харкова) and the pluralia tantum "Карпати" in various cases.
-- P4 (~110 words): Dialogue Part 3B—Transport and Companions. Focus on Instrumental Plural (Подорожувати потягами або машинами) and Genitive Plural (Багато цікавих місць).
-- P5 (~90 words): Grammatical focus on Instrumental endings "-ами/-ями" for transport and companions (з друзями, автобусами). Mentioning the unique "-ми" ending for "грошима/грішми".
-- P6 (~80 words): Dialogue Part 3C—Final Planning. Using Dative for destination targets (Львову пасує дощ) and Locative for surface movement (Гуляти по Хрещатику, по горах).
-- <!-- INJECT_ACTIVITY: match-up-case-triggers --> [match-up, Match sentence halves ensuring case agreement with prepositions/verbs, 8 items]
+## Діалог 3: Подорож Україною (~600 words)
+- P1 (~50 words): Introduction to the third scenario: two friends planning a trip (подорож) across Ukraine. Focus on geography, motion verbs, and travel logistics.
+- P2 (~150 words): Dialogue Part 1 (Origin and Destination). A 6-8 exchange dialogue focusing on Nominative, Genitive, and Accusative. Examples: "Київ — гарне місто" (Nom.), "Ми їдемо з Києва", "Квитки до Львова", "Там багато визначних місць" (Gen. of motion origin and quantity), "Треба відвідати Одесу", "Поїдемо через Умань" (Acc. direct object and motion path).
+- P3 (~100 words): Grammar breakdown of Part 1. Explain the cases of motion: "з" (from) and "до" (to) always take the Genitive, while "через" (through) takes the Accusative. Highlight the Genitive plural ending in "багато визначних місць".
+- P4 (~150 words): Dialogue Part 2 (Transport and Activities). A 6-8 exchange dialogue focusing on Dative, Instrumental, Locative, and Vocative. Examples: "Купимо сувеніри друзям у Львові", "Нам треба поспішати" (Dat.), "Краще поїхати потягом", "Я їду з подругою", "Будемо милуватися Карпатами" (Instr. means of transport, accompaniment, object of 'милуватися'), "Зустрінемося у Львові", "Гулятимемо по Хрещатику", "У 2024 році" (Loc.), "Тарасе!", "Друже!" (Voc.).
+- P5 (~100 words): Grammar breakdown of Part 2. Contrast Locative for static location ("у Львові") with Instrumental for means of transport ("потягом"). Highlight the pluralia tantum "Карпати" and its Instrumental form ("Карпатами"). Note the authentic Ukrainian use of "по" + Locative ("по Хрещатику").
+- P6 (~50 words): Phrases for planning and suggesting: "Давай поїдемо...", "Може, спочатку...", "А потім можна...". Show how these trigger specific infinitive and case patterns.
+- <!-- INJECT_ACTIVITY: fill-in-travel-dialogue --> [fill-in, Complete gaps in a dialogue with the correct case form — all 7 cases represented, both singular and plural, 8 items]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -25,7 +25,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-**Адміністраторка:** Ні, ви можете почекати біля кабінету. Кабінет лікаря Коваленка знаходиться на другому поверсі. > — **Петро:** А до лікарки Іванової зараз можна? Може, до неї немає черги? > — **Адміністраторка:** На жаль, без неї ми не можемо вас прийняти. Вона сьогодні не працює. Зачекайте біля кабінету Коваленка. When we use personal pronouns like «він» (he), «вона» (she), or «вони» (they) after a preposition, we must add the letter «н» at the beginning of the pronoun. The receptionist says «у нього» instead of «у його». This rule applies to all indirect cases when a preposition is present. For example, if Petro asks about a female doctor, he says «до неї» (to her). If the doctor is not there, we say «без неї» (without her). If Petro talks about the doctors in plural, he might ask: «Чи є ліки для них?» (Are there medicines for them?). Without a preposition, the letter «н» is simply dropped: «Я бачу його» (I see him). Петро піднімається на другий поверх і заходить до кабінету. > — **Лікар:** Добрий день, пане Петре. Сідайте, будь ласка. Що вас сьогодні турбує? > — **Петро:** Добрий день, лікарю. Мені дуже погано. > — **Лікар:** Розкажіть детальніше. Що саме у вас болить? > — **Петро:** У мене болить голова і горло. Також я прийшов з високою температурою і страшним кашлем. > — **Лікар:** Яка у вас **температура** *(temperature)* зараз? > — **Петро:** Тридцять вісім і п'ять. Я відчуваю сильну слабкість у всьому тілі. > — **Лікар:** Зрозуміло. Мені потрібно вас уважно оглянути. Відкрийте рот і скажіть "А-а-а". > — **Петро:** А-а-а. Це дуже неприємно. > — **Лікар:** Так, ваше горло дуже червоне. Ви маєте класичну застуду, пане Петре. Ваші легені чисті, це добре. Notice how Petro describes his health. In English, you say "I have a headache". In Ukrainian, the body part is the subject in the Nominative case, and it performs the action of hurting. The verb is «боліти» (to hurt). Petro says «у мене болить голова» (literally: "at me the head hurts"). If multiple things hurt, the verb changes to plural: «у мене болять очі» (my eyes hurt). When describing a general state, we use the Dative case with an adverb: «мені погано» (to me it is bad) or the reflexive verb «почуватися» (to feel). You can simply say «я погано почуваюся». > — **Лікар:** Я випишу вам **рецепт** *(prescription)*. Вам потрібно **приймати ліки** *(to take medicine)* тричі на день після їжі. Це дуже важливо. > — **Петро:** Дякую. А що ще мені потрібно робити вдома? > — **Лікар:** Я раджу вам багато спати. Пийте гарячий чай з лимоном і медом. Ваш організм потребує відпочинку. > — **Петро:** Добре. Коли мені прийти на наступний **огляд** *(examination)*? > — **Лікар:** Приходьте до мене через п'ять днів. Якщо вам раптом стане гірше, телефонуйте одразу. Бажаю вам міцного **здоров'я** *(health)*! > — **Петро:** Дуже дякую вам за допомогу, пане докторе! До побачення. <!-- INJECT_ACTIVITY: fill-in, Rewrite dialogue sentences changing singular to plural (e.g., один пацієнт → багато пацієнтів), 8 items -->
+next? I want to recover quickly.)* > — **Лікар:** Ви прийшли до мене з сильним кашлем і температурою. Вам треба регулярно приймати ці ліки. *(You came to me with a severe cough and a temperature. You need to take this medicine regularly.)* > — **Пацієнт:** Я можу купити їх просто так в аптеці? *(Can I buy them just like that in the pharmacy?)* > — **Лікар:** Ні, це серйозні препарати. Купіть їх за рецептом. Я зараз випишу потрібний документ. *(No, these are serious medications. Buy them with a prescription. I will write out the necessary document now.)* > — **Пацієнт:** Лікарю, а коли мені прийти до вас знову? *(Doctor, and when should I come to you again?)* > — **Лікар:** Ви зараз у лікарні на першому прийомі. Чекаю вас на огляд через один тиждень. *(You are currently in the hospital at the first appointment. I am waiting for you for a check-up in one week.)* > — **Пацієнт:** Дякую за допомогу! Я буду дуже уважно берегти своє здоров'я. *(Thank you for the help! I will protect my health very carefully.)* > — **Лікар:** Це головне правило. Здоров'я — найважливіше для кожної людини. *(That is the main rule. Health is the most important thing for every person.)* Тут ми зустрічаємо знахідний, орудний, місцевий та кличний відмінки в дії. Лікар каже «приймати ліки» і чекає пацієнта «на огляд» — це прямі об'єкти та напрямок дії у знахідному відмінку. Зверніть увагу, що слово «ліки» завжди вживається у множині, тому воно має відповідну форму. > *Here we meet the Accusative, Instrumental, Locative, and Vocative cases in action. The doctor says to "take medicine" and waits for the patient "for a check-up" — these are direct objects and the direction of action in the Accusative case. Note that the word "ліки" (medicine) is always used in the plural, so it has the corresponding form.* The Instrumental case describes accompanying symptoms or conditions, as seen in the phrases «з кашлем» and «за рецептом». The Locative case pins down the exact location of the action, such as «у лікарні» and «на прийомі». Finally, direct address triggers the Vocative case, which is why the patient says «Пане докторе» and «Лікарю». It is also important to understand how to change singular concepts to plural. For example, the phrase «один пацієнт» in the Nominative case changes completely in the Genitive plural to become «багато пацієнтів». Words that only exist in the plural, known as pluralia tantum, like **ліки** (medicine), stay the same in the Nominative and Accusative cases. However, they change to «ліків» in the Genitive case, such as when you say «багато ліків». :::info **Grammar box** When talking about health, avoid translating directly from English. Never use the direct translation «Я маю головний біль». Always use the natural Ukrainian structure for aches, such as **У мене болить голова** (My head aches). The word **лікар** (doctor) and the piece of paper they give you, the **рецепт** (prescription), are essential vocabulary for a successful hospital visit. ::: <!-- INJECT_ACTIVITY: match-up-health-cases -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -505,7 +505,74 @@ A phased approach is best for internalizing plural cases.
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -524,18 +591,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] вечірка (party)
+- [ ] подарунок (gift, present)
+- [ ] лікар (doctor)
+- [ ] пацієнт (patient)
+- [ ] здоров'я (health)
+- [ ] ліки (medicine)
+- [ ] подорож (trip, journey)
+- [ ] потяг (train)
+- [ ] визначне місце (landmark, sight)
+- [ ] запрошувати (to invite)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Діалог 3: Подорож Україною (~600 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

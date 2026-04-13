@@ -1,0 +1,81 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T10-17-14d650ed.json
+phase: write-chunk-05
+prompt_chars: 47994
+response_chars: 3101
+prompt_words: 6550
+response_words: 447
+sections:
+- name: header
+  start: 0
+  length: 426
+  fraction: 0.0089
+- name: skeleton
+  start: 426
+  length: 807
+  fraction: 0.0168
+- name: prior_summary
+  start: 1233
+  length: 3694
+  fraction: 0.077
+- name: plan
+  start: 4927
+  length: 16245
+  fraction: 0.3385
+- name: wiki
+  start: 14904
+  length: 26613
+  fraction: 0.5545
+- name: output_spec
+  start: 47785
+  length: 209
+  fraction: 0.0044
+large_sections:
+- wiki
+directives_total: 15
+directives_covered: 4
+directives_missed:
+- kind: checklist
+  text: збірний числівник (collective numeral — двоє, троє, четверо)
+  covered: false
+  coverage_note: 2/7 keywords (29%)
+- kind: checklist
+  text: неозначено-кількісний (indefinite-quantitative — багато, кілька)
+  covered: false
+  coverage_note: 0/6 keywords (0%)
+- kind: checklist
+  text: кілька (several — governs Р.в.)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: декілька (several — synonym of кілька)
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: checklist
+  text: чимало (quite a lot — governs Р.в.)
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: checklist
+  text: достатньо (enough — governs Р.в.)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: понад (more than — governs Зн.в.)
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: checklist
+  text: близько (about/approximately — governs Р.в.)
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 0/11 keywords (0%)
+- kind: inject_activity
+  text: match-up, match-up-collective-usage
+  covered: false
+  coverage_note: marker missing

@@ -1,6 +1,42 @@
 vocabulary:
+- word: довіря́ти
+  translation: to trust
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: вибача́ти
+  translation: to forgive
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: посміха́тися
+  translation: to smile (at someone)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: співчува́ти
+  translation: to sympathize (with someone)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: за́здрити
+  translation: to envy
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
 - word: допомага́ти
   translation: to help
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: дякувати
+  translation: to thank
   expression: false
   pos: дієсл.
   gender: ''
@@ -24,91 +60,55 @@ vocabulary:
   gender: ''
   verified: true
 - word: подо́батися
-  translation: to be pleasing to, to like
+  translation: to be pleasing to, to like (reversed syntax)
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
 - word: відповіда́ти
-  translation: to answer
+  translation: to answer (someone)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: рік
+  translation: year
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
 - word: ро́ки́
-  translation: years (used for age 2-4, 22-24...)
+  translation: years (2-4)
   expression: false
   pos: ім.
   gender: ''
   verified: true
 - word: ро́кі́в
-  translation: years (used for age 5-20, 25-30...)
+  translation: years (5+)
   expression: false
   pos: ім.
   gender: ''
   verified: true
-- word: телефонува́ти
-  translation: to phone
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: вибача́ти
-  translation: to forgive, to excuse
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: вік
-  translation: age
+- word: ко́му
+  translation: to whom
   expression: false
   pos: ім.
-  gender: ч.
+  gender: ж.
   verified: true
-- word: скі́льки
-  translation: how many
+- word: чому́
+  translation: to what
   expression: false
   pos: присл.
   gender: ''
   verified: true
-- word: дава́ти
-  translation: to give
+- word: скі́льки
+  translation: how much/many
   expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: розповіда́ти
-  translation: to tell, to narrate
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: кли́кати
-  translation: to call, to summon
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: Мені подобається
-  translation: 'I like (literally: it is pleasing to me)'
-  expression: true
-  pos: ''
+  pos: присл.
   gender: ''
   verified: true
 - word: Скільки тобі років?
   translation: How old are you?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: дякую тобі
-  translation: thank you (informal)
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: дякую вам
-  translation: thank you (formal/plural)
   expression: true
   pos: ''
   gender: ''

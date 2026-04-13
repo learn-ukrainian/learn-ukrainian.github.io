@@ -1,26 +1,26 @@
 ## VESUM Verification
 - Confirmed: готовий, вітаю, початок, сувенір, квиток, зустріти, круасан, карта, лінія, фільм, познайомитися, подорожувати, Лавра, готель
-- Not found: none
+- Not found: 
 
 ## Grammar Rules
-- Past Tense (Минулий час): Grade 6, Betsa §95; Grade 4, Zaharijchuk p. 106. Forms denote actions completed before the moment of speech. Suffixes: -в (masculine: жив, снідав), -ла (feminine: жила, снідала), -ло (neuter: жило), -ли (plural: жили, снідали).
-- Future Tense (Майбутній час): Grade 10, Karaman §73; Grade 6, Betsa §97. Three forms: 
-    - Simple (Проста): Perfective verbs (напишу, зустріну).
-    - Synthetic (Складна): Imperfective infinitive + -м- (писатиму, подорожуватиму).
-    - Analytic (Складена): 'бути' + infinitive (буду писати, буду подорожувати).
-- Imperative (Наказовий спосіб): Used for invitations (Ходімо!) and polite requests (Будь ласка, каву...).
+- [Велика буква]: Правопис §45 — З великої букви пишемо: Перше слово, яким починається текст. Перше слово в реченні: після крапки; після крапок, знака оклику й знака питання.
+- [Чергування У/В]: Правопис §23 — Позиції вживання прийменників і префіксів У та В: Щоб уникнути збігу букв на позначення приголосних звуків та досягти милозвучності, вживають "у" між приголосними, а "в" — між голосними.
 
 ## Calque Warnings
-- "рахувати": OK for counting (1, 2, 3), but avoid for "to think/consider". Use "вважати" instead.
-- "приймати участь": CALQUE (from Russian). Use "брати участь".
-- "вірний": OK for "faithful/loyal", but avoid for "correct". Use "правильний" instead.
-- "говорити на українській мові": CALQUE. Use "говорити українською" or "говорити українською мовою".
+- зелена лінія: OK — зелена лінія
+- добре говориш: OK — добре говориш
+- ходити в кіно: OK — ходити в кіно
+- по Хрещатику: OK — по Хрещатику (або Хрещатиком)
 
 ## CEFR Check
-- готовий: A1 — OK
+- фільм: A1 — OK
 - початок: A1 — OK
-- квиток: A1 — OK
-- готель: A1 — OK
 - подорожувати: A1 — OK
-- круасан/сувенір/фільм: A1 (Internationalisms) — OK
-- Лавра: A1 (Cultural proper noun) — OK
+- квиток: A1 — OK
+- зустріти: A1 — OK
+- готовий: A1 — OK
+- готель: A1 — OK
+- сувенір: A2 — above target
+- лінія: A2 — above target
+- круасан: A2 — above target
+- познайомитися: B1 — above target

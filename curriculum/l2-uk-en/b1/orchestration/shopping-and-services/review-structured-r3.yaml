@@ -1,0 +1,53 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: The module covers the planned domains and required vocab well, but the
+    store section never delivers the planned full scenario “from entering the store
+    to leaving”; it moves from explanation to a cashi
+- dimension: 2
+  name: Linguistic accuracy
+  score: 6
+  evidence: '`філянку` is non-standard/typo-level bad here, and the receipt paragraph
+    incorrectly teaches that the buyer always gets a printed paper check.'
+- dimension: 3
+  name: Pedagogical quality
+  score: 7
+  evidence: There is plenty of contextualized language, but the store section explains
+    shopping language at length without giving the integrated try-on/compare/pay dialogue
+    promised by the plan.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 'Required vocabulary is broadly present in prose: `знижка`, `готівка`,
+    `картка`, `чек`, `повернення`, `гарантія`, `розмір`, `примірочна`, `посилка`,
+    `обмін валют`, `курс`, `ремонт`, `бракований`.'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: All planned activity types are present as markers and are placed after
+    the relevant teaching sections.
+- dimension: 6
+  name: Engagement & tone
+  score: 6
+  evidence: The module has real cultural detail, but some prose is inflated with low-value
+    filler such as “На гарне завершення нашої сьогоднішньої важливої теми...”.
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: All H2 sections are present and ordered correctly; the pipeline word count
+    is 5487, which is safely above the 4000 target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 8
+  evidence: The module is strongly Ukrainian-centered overall, but the supermarket
+    cashier dialogue models “Решти не треба. Залиште це собі,” which is not a normal
+    retail script.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 7
+  evidence: The market and service dialogues are usable, but the shop section lacks
+    the promised end-to-end shopping conversation, and the cashier exchange becomes
+    unrealistic at the tip line.
+findings: []

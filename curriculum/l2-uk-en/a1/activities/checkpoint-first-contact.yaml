@@ -4,266 +4,386 @@ level: a1
 inline:
 - id: quiz-comprehensive-review
   type: quiz
-  instruction: Choose the correct answer based on what you have learned.
+  instruction: Choose the correct option for each question
   items:
-  - question: What is the fundamental difference in Ukrainian phonetics?
+  - question: Which letter represents the soft 'H' sound in Ukrainian?
     options:
-    - A звук (sound) you hear vs a літера (letter) you write.
-    - A літера (letter) you hear vs a звук (sound) you write.
-    - A звук is always a vowel, and a літера is a consonant.
-    - They mean exactly the same thing.
+    - Ґ
+    - И
+    - Г
+    - І
+    correct: 2
+  - question: Which letter represents the hard 'G' sound?
+    options:
+    - Г
+    - И
+    - І
+    - Ґ
+    correct: 3
+  - question: Which letter represents the deep 'Y' sound?
+    options:
+    - И
+    - І
+    - Ь
+    - Г
     correct: 0
-  - question: What is the function of the апостроф (apostrophe) in Ukrainian?
+  - question: Which letter represents the sharp 'I' sound?
     options:
-    - It acts as a hard boundary separating sounds.
+    - И
+    - Ґ
+    - І
+    - Ь
+    correct: 2
+  - question: What is the function of the apostrophe in Ukrainian?
+    options:
     - It softens the preceding consonant.
-    - It shows where the stress of the word falls.
-    - It indicates a missing letter like in English.
-    correct: 0
-  - question: What does the м'який знак (soft sign) do?
+    - It makes the vowel sound longer.
+    - It acts as a hard stop and prevents the consonant from softening.
+    - It makes the consonant silent.
+    correct: 2
+  - question: What is the function of the soft sign (Ь)?
     options:
-    - It softens the preceding consonant and has no sound of its own.
-    - It makes the preceding vowel longer.
-    - It acts as a hard boundary.
-    - It adds an extra 'y' sound to the word.
+    - It softens the preceding consonant.
+    - It hardens the preceding consonant.
+    - It makes a separate vowel sound.
+    - It acts as a hard stop.
     correct: 0
-  - question: What shapes the entire rhythm of a spoken Ukrainian word?
+  - question: How do you say 'Hi' informally in Ukrainian?
     options:
-    - Наголос (stress)
-    - Апостроф (apostrophe)
-    - Склад (syllable)
-    - Звук (sound)
-    correct: 0
-  - question: How do you say a basic formal greeting 'Good afternoon'?
-    options:
-    - Добрий день
+    - Мене звати
     - Привіт
-    - Навзаєм
+    - Добрий день
     - Дуже приємно
-    correct: 0
-  - question: Which word means 'mother'?
+    correct: 1
+  - question: How do you say 'Good afternoon' formally?
     options:
-    - мама
-    - тато
-    - сестра
-    - дружина
-    correct: 0
-  - question: Which word means 'father'?
+    - Привіт
+    - Я з України
+    - Дуже приємно
+    - Добрий день
+    correct: 3
+  - question: Which possessive pronoun goes with the masculine noun 'тато'?
     options:
-    - тато
-    - брат
-    - син
-    - чоловік
-    correct: 0
-  - question: Which word means 'brother'?
+    - моя
+    - мій
+    - мене
+    - я
+    correct: 1
+  - question: Which possessive pronoun goes with the feminine noun 'мама'?
     options:
-    - брат
-    - син
-    - тато
-    - чоловік
+    - моя
+    - мій
+    - мене
+    - я
     correct: 0
-  - question: Which word means 'sister'?
+  - question: Which possessive pronoun goes with the feminine noun 'дружина'?
     options:
-    - сестра
-    - мама
-    - дружина
-    - вчителька
-    correct: 0
-  - question: Why is there a dash in 'Я — студент'?
+    - мій
+    - мене
+    - моя
+    - я
+    correct: 2
+  - question: Which possessive pronoun goes with the masculine noun 'брат'?
     options:
-    - It replaces the missing verb 'to be' in the present tense.
-    - It means the speaker is pausing.
-    - It shows possession.
-    - It indicates a question.
-    correct: 0
-  - question: How do you correctly state your name in Ukrainian?
-    options:
-    - Мене звати Анна.
-    - Моє ім'я є Анна.
-    - Я є Анна.
-    - Це моя Анна.
-    correct: 0
-  - question: Which case must be used when calling a friend directly?
-    options:
-    - Vocative case (changing the ending of their name).
-    - Accusative case.
-    - The base dictionary form.
-    - Possessive form.
-    correct: 0
-  title: Choose the correct answer based on what you have learned.
-- id: match-up-q-and-a
+    - я
+    - моя
+    - мене
+    - мій
+    correct: 3
+  title: Choose the correct option for each question
+- id: match-up-questions-answers
   type: match-up
-  instruction: Match the questions with their logical answers.
+  instruction: Match the questions and statements with their correct responses
   pairs:
   - left: Як тебе звати?
-    right: Мене звати Тарас.
+    right: Мене звати Анна.
+  - left: Як вас звати?
+    right: Мене звати Богдан.
+  - left: А вас?
+    right: Моє ім'я — Соломія.
   - left: Звідки ти?
-    right: Я з Києва.
-  - left: А як Вас звати?
-    right: Моє прізвище — Коваль.
-  - left: А Ви звідки?
+    right: Я з України.
+  - left: Звідки ви, Богдане?
+    right: Я з Дніпра.
+  - left: Звідки ви, Соломіє?
     right: Я з Тернополя.
-  - left: Це Ваша дружина?
-    right: Так, це моя дружина.
-  - left: Хто це?
-    right: Це моя сім'я.
-  - left: Я — вчителька. А Ви?
-    right: Я — інженер.
-  - left: Рада знайомству!
-    right: Навзаєм!
-  title: Match the questions with their logical answers.
-- id: fill-in-self-intro
+  - left: Хто він?
+    right: Він інженер.
+  - left: Хто вона?
+    right: Вона вчителька.
+  - left: Що на фото?
+    right: Це моя дружина.
+  - left: Як звати маму?
+    right: Її звати Олена.
+  - left: Як звати тата?
+    right: Його звати Іван.
+  title: Match the questions and statements with their correct responses
+- id: fill-in-self-introduction
   type: fill-in
-  instruction: Complete the self-introduction monologue using the correct words.
+  instruction: Fill in the blanks to complete the self-introduction
   items:
-  - sentence: ____! (Hi!)
-    answer: Привіт
-    options:
-    - Привіт
-    - Добрий день
-    - Навзаєм
-  - sentence: ____ звати Богдан.
+  - sentence: ____ звати Анна.
     answer: Мене
     options:
-    - Моє
+    - Я
     - Мене
-    - Я
-  - sentence: ____ прізвище — Коваль.
-    answer: Моє
-    options:
-    - Мій
-    - Моя
     - Моє
-  - sentence: ____ з Дніпра.
-    answer: Я
+    - Мій
+  - sentence: Я ____ України.
+    answer: з
     options:
-    - Ти
-    - Я
-    - Він
-  - sentence: Я — ____. (teacher)
-    answer: вчителька
+    - в
+    - з
+    - на
+    - до
+  - sentence: Я живу ____ Києві.
+    answer: в
     options:
-    - вчителька
-    - інженер
-    - студент
-  - sentence: Це ____ сім'я.
+    - в
+    - з
+    - на
+    - до
+  - sentence: ____ моя сім'я.
+    answer: Це
+    options:
+    - Це
+    - Де
+    - Хто
+    - Що
+  - sentence: Це ____ мама.
     answer: моя
     options:
     - мій
     - моя
     - моє
-  - sentence: У ____ є син.
-    answer: мене
-    options:
-    - тебе
     - мене
-    - я
-  - sentence: Дуже ____. (Very nice to meet you.)
+  - sentence: ____ звати Олена.
+    answer: Її
+    options:
+    - Його
+    - Її
+    - Моє
+    - Моя
+  - sentence: Вона ____.
+    answer: вчителька
+    options:
+    - вчителька
+    - інженер
+    - тато
+    - студент
+  - sentence: Це ____ тато.
+    answer: мій
+    options:
+    - мій
+    - моя
+    - моє
+    - мене
+  - sentence: ____ звати Іван.
+    answer: Його
+    options:
+    - Його
+    - Її
+    - Моє
+    - Моя
+  - sentence: Він ____.
+    answer: інженер
+    options:
+    - вчителька
+    - інженер
+    - мама
+    - студентка
+  - sentence: Я ____.
+    answer: студентка
+    options:
+    - студентка
+    - брат
+    - тато
+    - сім'я
+  - sentence: Дуже ____!
     answer: приємно
     options:
     - приємно
-    - навзаєм
+    - гарно
     - звати
-  title: Complete the self-introduction monologue using the correct words.
+    - добрий
+  title: Fill in the blanks to complete the self-introduction
 workbook:
-- id: true-false-grammar
-  type: true-false
-  instruction: Is the statement about Ukrainian rules true or false?
-  items:
-  - statement: You must always capitalize proper nouns, including a person's first
-      name and surname.
-    correct: true
-    explanation: Proper names are central to Ukrainian identity and require a capital
-      letter.
-  - statement: Ukrainian spelling is highly phonetic, meaning what you see is exactly
-      what you hear.
-    correct: true
-    explanation: Trust the Cyrillic letters instead of English pronunciation rules.
-  - statement: It is natural to use the verb 'to be' when saying 'I am a student'
-      in the present tense.
-    correct: false
-    explanation: In Ukrainian, the present tense verb 'to be' is omitted. We say 'Я
-      — студент'.
-  - statement: When stating possession, we use 'У мене є' instead of a direct translation
-      of 'I have'.
-    correct: true
-    explanation: '''У мене є'' means ''At me there is''.'
-  - statement: Possessive pronouns like мій/моя do not need to agree with the grammatical
-      gender of the noun.
-    correct: false
-    explanation: 'They must always agree: мій тато (masc.), моя мама (fem.), моє ім''я
-      (neuter).'
-  - statement: Ukrainian has a Vocative case used when directly addressing or calling
-      someone.
-    correct: true
-    explanation: For example, Анна becomes Анно! and Тарас becomes Тарасе!
-  title: Is the statement about Ukrainian rules true or false?
-- id: group-sort-pronouns
+- id: group-sort-gender
   type: group-sort
-  instruction: Sort the nouns into groups based on which possessive pronoun they use.
+  instruction: Sort the words by gender
   groups:
-  - label: мій (masculine)
+  - label: Masculine (мій, він)
     items:
     - тато
     - брат
-    - чоловік
-    - син
-    - друг
+    - інженер
     - студент
-  - label: моя (feminine)
+    - Богдан
+    - Іван
+  - label: Feminine (моя, вона)
     items:
     - мама
     - сестра
-    - дружина
-    - сім'я
-    - лікарка
     - вчителька
-  - label: моє (neuter)
-    items:
-    - ім'я
-    - прізвище
-  title: Sort the nouns into groups based on which possessive pronoun they use.
-- id: count-syllables-practice
-  type: count-syllables
-  instruction: 'Count the number of syllables in each word. Hint: Count the vowels!'
+    - студентка
+    - Соломія
+    - Анна
+    - дружина
+  title: Sort the words by gender
+- id: true-false-review
+  type: true-false
+  instruction: Are these statements True or False?
   items:
-  - word: сім'я
-    correct: 2
-  - word: брат
-    correct: 1
-  - word: сестра
-    correct: 2
-  - word: вчителька
-    correct: 3
-  - word: студент
-    correct: 2
-  - word: прізвище
-    correct: 3
-  - word: привіт
-    correct: 2
-  - word: інженер
-    correct: 3
-  title: 'Count the number of syllables in each word. Hint: Count the vowels!'
-- id: divide-words-names
-  type: divide-words
-  instruction: Divide these proper names into syllables.
+  - statement: The phrase 'Мене звати' uses the accusative pronoun 'мене', meaning
+      you are literally saying 'They call me'.
+    correct: true
+    explanation: In Ukrainian, you say 'They call me' instead of 'My name is'.
+  - statement: The word 'Це' means 'This is' and is used to point things out.
+    correct: true
+    explanation: You use 'Це' plus a noun to introduce people or objects.
+  - statement: The phrase 'У мене є' means 'I want'.
+    correct: false
+    explanation: It means 'I have'.
+  - statement: The question 'Як тебе звати?' is the polite, formal way to ask someone's
+      name.
+    correct: false
+    explanation: It is the informal way. The formal way is 'Як вас звати?'.
+  - statement: The question 'Як вас звати?' is the formal way to ask someone's name.
+    correct: true
+    explanation: It uses the polite 'вас'.
+  - statement: The name form 'Богдане' is in the Vocative case, which is used for
+      direct address.
+    correct: true
+    explanation: The Vocative case is mandatory when addressing someone directly.
+  - statement: Proper nouns like names and cities are not capitalized in Ukrainian.
+    correct: false
+    explanation: Names and places always start with a capital letter, just like in
+      English.
+  - statement: The pronoun 'мій' is used for feminine nouns.
+    correct: false
+    explanation: It is used for masculine nouns.
+  - statement: The pronoun 'моя' is used for feminine nouns.
+    correct: true
+    explanation: It matches feminine nouns like 'мама' or 'дружина'.
+  - statement: The apostrophe in Ukrainian softens the preceding consonant.
+    correct: false
+    explanation: The apostrophe acts as a hard stop and prevents softening.
+  - statement: The soft sign (Ь) acts as a hard stop.
+    correct: false
+    explanation: The soft sign softens the preceding consonant.
+  - statement: The question 'Звідки ти?' means 'Where are you from?'.
+    correct: true
+    explanation: It is a fixed chunk used to ask about someone's origin.
+  title: Are these statements True or False?
+- id: anagram-vocabulary
+  type: anagram
+  instruction: Unscramble the letters to form vocabulary words
   items:
-  - word: Оксана
-    answer: О-кса-на
-    hint: Three syllables
-  - word: Микола
-    answer: Ми-ко-ла
-    hint: Three syllables
-  - word: Тарас
-    answer: Та-рас
-    hint: Two syllables
-  - word: Богдан
-    answer: Бог-дан
-    hint: Two syllables
-  - word: Соломія
-    answer: Со-ло-мі-я
-    hint: Four syllables
-  - word: Ковальчук
-    answer: Ко-валь-чук
-    hint: Three syllables
-  title: Divide these proper names into syllables.
+  - letters:
+    - с
+    - і
+    - м
+    - ''''
+    - я
+    answer: сім'я
+    hint: family
+  - letters:
+    - т
+    - а
+    - т
+    - о
+    answer: тато
+    hint: dad
+  - letters:
+    - м
+    - а
+    - м
+    - а
+    answer: мама
+    hint: mom
+  - letters:
+    - б
+    - р
+    - а
+    - т
+    answer: брат
+    hint: brother
+  - letters:
+    - с
+    - е
+    - с
+    - т
+    - р
+    - а
+    answer: сестра
+    hint: sister
+  - letters:
+    - д
+    - р
+    - у
+    - ж
+    - и
+    - н
+    - а
+    answer: дружина
+    hint: wife
+  - letters:
+    - і
+    - м
+    - ''''
+    - я
+    answer: ім'я
+    hint: first name
+  - letters:
+    - п
+    - р
+    - і
+    - з
+    - в
+    - и
+    - щ
+    - е
+    answer: прізвище
+    hint: surname
+  - letters:
+    - і
+    - н
+    - ж
+    - е
+    - н
+    - е
+    - р
+    answer: інженер
+    hint: engineer
+  - letters:
+    - п
+    - р
+    - и
+    - в
+    - і
+    - т
+    answer: привіт
+    hint: hi
+  - letters:
+    - с
+    - т
+    - у
+    - д
+    - е
+    - н
+    - т
+    answer: студент
+    hint: student (male)
+  - letters:
+    - с
+    - т
+    - у
+    - д
+    - е
+    - н
+    - т
+    - к
+    - а
+    answer: студентка
+    hint: student (female)
+  title: Unscramble the letters to form vocabulary words

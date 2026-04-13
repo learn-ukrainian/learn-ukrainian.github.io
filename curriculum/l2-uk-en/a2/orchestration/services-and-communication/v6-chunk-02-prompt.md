@@ -1,40 +1,29 @@
-# Section-by-Section Generation — Section 2/5
+# Section-by-Section Generation — Section 2/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 22: На пошті (A2, A2.3 [Dative Case])
-**Section to write:** Надіслати листа: Діалоги на пошті (~600 words total)
+**Section to write:** Надіслати листа: Діалоги на пошті (~600 words)
 **Word target for this section:** 600 words (aim for 660 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Надіслати листа: Діалоги на пошті (~600 words total)
-- P1 (~100 words): Dialogue 1: Buying supplies — a customer asks for envelopes and stamps ("Дайте мені, будь ласка, два конверти і марки"), asks for the price, and pays. Focus on the use of "мені" (to me) in service requests.
-- P2 (~100 words): Explanation of the Dative case for indirect objects — introducing the question "Кому?" (To whom?) and how it functions with verbs like "дати" (to give) and "продати" (to sell), using examples like "дати листоноші" and "продати клієнту".
-- P3 (~100 words): Dialogue 2: Sending a parcel — a detailed interaction where the clerk asks about the destination and contents, and the customer provides the recipient's name ("Я хочу надіслати цю посилку братові").
-- P4 (~100 words): Dative case endings for people (Masculine/Feminine) — focusing on the common endings -ові/-еві for masculine nouns (братові, другові) and -і for feminine nouns (сестрі, мамі, подрузі).
-- P5 (~100 words): Vocabulary of intent and location — using the "Я хочу + infinitive" and "Де можна + infinitive" structures from the wiki, such as "Я хочу забрати посилку" and "Де можна надіслати листівку?".
-- P6 (~100 words): Filling out the "To" and "From" fields — explaining the labels "Кому" (Recipient - Dative) and "Від кого" (Sender - Genitive) on a standard Ukrainian envelope or shipping form.
-- <!-- INJECT_ACTIVITY: fill-in-post-office-dative --> [fill-in, Complete post office dialogue lines with correct dative forms (Надішліть цю посилку ___), 8 items]
+## Надіслати листа: Діалоги на пошті (~600 words)
+- P1 (~150 words): Dialogue 1 — Sending a letter. Setting: A customer interacting with a postal worker (працівник пошти). Phrases include asking for materials and instructions: "Дайте мені два конверти і марки. Я хочу надіслати листа." "Заповніть бланк, будь ласка."
+- P2 (~150 words): Breakdown of Dialogue 1. Explain the communicative formula for stating intent using "Я хочу + perfective infinitive" (Я хочу відправити посилку). Explain how to ask for location or possibility using "Де можна + perfective infinitive" (Де можна надіслати листівку?).
+- P3 (~150 words): Dialogue 2 — Sending a parcel to a friend. Setting the context: "Це бандероль для сестри в Канаду." "Скільки коштує?" Clarifying roles when filling out the form: "Кому — одержувач, від кого — відправник". Asking about delivery times.
+- P4 (~150 words): Breakdown of Dialogue 2. Introduce polite request forms that naturally govern the Dative case: "Допоможіть мені, будь ласка," "Підкажіть мені, де..." Point out the use of Dative pronouns (мені) and how they function as the indirect object.
+- <!-- INJECT_ACTIVITY: fill-in-dialogue-dative --> [fill-in, Complete post office dialogue lines with correct dative forms (Надішліть цю посилку ___), 8 items]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
 
 <previous_context>
-## На пошті: Базова лексика
+[...previous sections truncated...]
 
-В Україні головна поштова служба — це **Укрпошта** (Ukrposhta, the national postal service). Кожна локальна філія називається **відділення** (branch, post office). На вулицях ви часто можете побачити жовті металеві коробки. Це **поштові скриньки** (postboxes), куди люди кидають свої листи. У відділенні завжди є клієнти, які хочуть надіслати або отримати щось важливе. Там працюють люди за спеціальними вікнами. The atmosphere is usually busy, especially during the morning hours. Understanding the basic vocabulary will help you navigate this environment confidently. When you enter, you need to find the correct window.
-
-Якщо ви хочете написати комусь текст на папері, вам потрібен **лист** (letter). Щоб відправити лист, ви маєте купити спеціальний паперовий пакет. Це **конверт** (envelope). На конверт обов'язково треба наклеїти маленьку картинку. Це **марка** (postage stamp). Без марки ваш лист не поїде до адресата. Якщо ви хочете надіслати гарне фото з коротким текстом, купіть інший предмет. Це **листівка** (postcard). Листівки часто відправляють без конверта, але марка все одно потрібна. Sometimes, local kiosks or souvenir shops also sell stamps and postcards for your convenience.
-
-Люди часто надсилають не тільки листи, але й великі речі. Якщо ви хочете надіслати одяг або іграшки, це **посилка** (parcel). Ви можете принести свої речі, і на пошті вам дадуть коробку. Якщо річ трохи менша і вже загорнута в папір, ми часто кажемо **пакунок** (package). Для книг, журналів або документів є спеціальне слово. Це **бандероль** (small parcel, book-post). Бандероль легша за посилку і коштує дешевше. It is useful to know these distinctions when you explain what you are sending. The price often depends on whether it is a document or a heavy object.
-
-На пошті працюють різні спеціалісти. Людина, яка сидить за вікном і допомагає вам, — це **оператор** (postal clerk) або **працівник пошти** (postal worker). Людина, яка приносить пошту до вашого дому, — це **листоноша** (mail carrier). Коли ви щось надсилаєте, у цьому процесі є дві головні ролі. Той, хто надсилає річ, — це **відправник** (sender). Той, хто має забрати цю річ, — це **одержувач** (recipient). Ці слова дуже важливі. You will see these terms on every envelope and parcel form. It is crucial not to mix them up to ensure your package arrives correctly.
-
-Які дії ми найчастіше робимо на пошті? Якщо ви віддаєте лист оператору, ви хочете його **надіслати** (to send) або **відправити** (to send, to dispatch). Коли приходить посилка, ви йдете у відділення. Ви хочете її **отримати** (to receive) або **забрати** (to pick up). Щоб надіслати річ, вам часто потрібно написати інформацію на спеціальному папері. Це означає **заповнити бланк** (to fill out a form). Після цього оператор просить вас поставити підпис. Це означає **підписати квитанцію** (to sign a receipt). These action verbs are typically used in their perfective forms because they describe completed actions.
-
+branch. The basic vocabulary for this task is very practical. Коли ви хочете написати родичам, ви берете паперовий лист. Ви кладете цей лист у білий конверт. Потім ви купуєте на пошті марку і клеїте її на конверт. На конверті також обов'язково треба написати правильну адресу та поштовий індекс. Після цього ви кидаєте конверт у жовту поштову скриньку, яка висить на стіні відділення. > *When you want to write to relatives, you take a paper letter. You put this letter into a white envelope. Then you buy a stamp at the post office and stick it on the envelope. On the envelope, you also absolutely must write the correct address and postal code. After this, you drop the envelope into the yellow postbox, which hangs on the wall of the branch.* :::note **Quick tip** Be careful with the word **адреса** (address). It refers to a physical location (street, city, building). There is a similar-sounding false friend **адрес**, but it means a formal written greeting, usually given for a jubilee or anniversary. Always use **адреса** when writing on an envelope. ::: For larger items, we use different words depending on the size and type of the object you are mailing. Якщо ви надсилаєте книги або журнали, це бандероль. Якщо ви хочете надіслати великий подарунок або одяг, вам потрібна посилка. В Україні люди також дуже часто використовують гарне слово пакунок. Ви віддаєте свій пакунок працівнику пошти. Після оплати ви обов'язково отримуєте чек або квитанцію. Ця квитанція має спеціальний номер для пошуку вашої речі. > *If you are sending books or magazines, it is a book post (small parcel). If you want to send a large gift or clothes, you need a parcel. In Ukraine, people also very often use the beautiful word package. You give your package to the postal worker. After payment, you must receive a receipt or a ticket. This receipt has a special number for tracking your item.* There are two main verb pairs for sending: **надсилати / надіслати** (to send mail or messages) and **відправляти / відправити** (to dispatch physical goods or transport). We also have the essential pair **отримувати / отримати** (to receive). The post office involves three specific roles: you are the sender, your friend is the recipient, and the worker who delivers it is the mail carrier. Головні люди тут — це відправник, одержувач і листоноша. Відправник хоче надіслати листа або відправити посилку. Одержувач чекає на цей пакунок. Листоноша приносить пошту до вашого дому. У відділенні ви зазвичай кажете: «Я хочу надіслати листівку» або «Я хочу забрати посилку». Кожна людина радіє, коли може отримати сюрприз. > *The main people here are the sender, the recipient, and the mail carrier. The sender wants to send a letter or dispatch a parcel. The recipient is waiting for this package. The mail carrier brings the mail to your home. In the branch, you usually say: "I want to send a postcard" or "I want to pick up a parcel". Every person is happy when they can receive a surprise.*
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -516,7 +505,74 @@ This vocabulary is essential for A1 checkpoint dialogues.
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -535,18 +591,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] пошта (post office, mail)
+- [ ] лист (letter)
+- [ ] конверт (envelope)
+- [ ] марка (stamp)
+- [ ] посилка (parcel, package)
+- [ ] адреса (address)
+- [ ] надіслати (to send)
+- [ ] отримати (to receive)
+- [ ] відправити (to send, to dispatch)
+- [ ] листоноша (mail carrier)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Надіслати листа: Діалоги на пошті (~600 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

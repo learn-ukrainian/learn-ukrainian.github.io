@@ -1,34 +1,36 @@
-## Що ми знаємо? (What Do We Know?) (~200 words)
-- P1 (~60 words): Introduction to the first major checkpoint. Frame the transition from learning individual sounds and letters to participating in a full conversation. Reflect on the milestone of completing the first six modules and establishing a Ukrainian linguistic foundation.
-- P2 (~70 words): A comprehensive checklist of skills acquired so far. Phonetic mastery (sounds, letters, apostrophe, soft sign), the concept of stress (`наголос`), basic greetings (`Привіт`, `Добрий день`), and the essential vocabulary for family members (`мама`, `тато`, `брат`, `сестра`).
-- P3 (~70 words): Setting expectations for the module. Explain that this is a "Self-Assessment" phase where the learner will prove they can read fluently and hold a basic introduction. Reiterate that no new vocabulary or grammar is introduced, ensuring a focus on consolidation.
-- <!-- INJECT_ACTIVITY: quiz-comprehensive-review --> [quiz, focus: comprehensive review of sounds, letters, greetings, and family, 12 items]
+## Що ми знаємо? (What Do We Know?) (~220 words total)
+- P1 (~60 words): Welcome to the first checkpoint. Set the stage: over the past six modules, you have learned the alphabet, sounds, basic greetings, and how to talk about your family. This module is where we put it all together.
+- P2 (~80 words): Self-assessment on sounds and letters. Ask the learner if they can read Cyrillic fluently. Remind them of the tricky letter pairs (Г vs Ґ, И vs І) and the crucial phonetic roles of the soft sign (Ь) and the apostrophe.
+- P3 (~80 words): Self-assessment on introductions and family. Ask if they can say who they are, where they are from, and who is in their family. Check if they can use basic possessive pronouns (мій, моя) correctly based on noun gender.
+- <!-- INJECT_ACTIVITY: quiz-comprehensive-review --> [quiz, Comprehensive review: sounds, letters, greetings, family, 12 items]
 
-## Читання (Reading Practice) (~250 words)
-- P1 (~50 words): Instructions for the reading aloud exercise. Emphasize the importance of "flow" and observing the stress marks provided in the text. Explain that reading aloud bridges the gap between recognizing letters and natural speech.
-- P2 (~150 words): A cohesive reading passage (~100 words) featuring "Оксана Ковальчук." Content: Оксана introduces herself, says she is from Kyiv, describes her profession (teacher), and introduces her family (husband is an engineer, son is a student). Examples: `Оксана — вчителька. Вона з Києва. Її чоловік — інженер.`
-- P3 (~50 words): Analysis of name components within the text. Distinguishing between the first name (`Оксана`), the surname (`Ковальчук`), and the inferred patronymic based on father's name patterns (`Миколаївна`). Reinforce the capitalization rule for proper nouns.
-- <!-- INJECT_ACTIVITY: match-up-q-and-a --> [match-up, focus: match questions like "Звідки ти?" with answers like "Я з Києва.", 8 items]
+## Читання (Reading Practice) (~280 words total)
+- P1 (~50 words): Introduce the reading task. Explain that the goal is to read a connected Ukrainian text aloud, building fluency. Note that it only uses familiar vocabulary from modules 1-6.
+- P2 (~120 words): The Reading Text. Write a short text (8-10 sentences) where a person introduces themselves and their family. Example content: "Привіт! Мене звати Анна. Я з України. Я живу в Києві. Це моя сім'я. Це моя мама. Її звати Олена. Вона вчителька. Це мій тато. Його звати Іван. Він інженер. Я студентка. Дуже приємно!"
+- P3 (~110 words): Reading comprehension and pronunciation focus. Point out the capitalization rule for proper nouns (Анна, Олена, Іван, Київ). Highlight how the short, simple sentences string together to form a complete narrative without needing complex grammar yet.
 
-## Граматика (Grammar Summary) (~200 words)
-- P1 (~60 words): Review of identity and identification. Explaining the `Це + noun` structure and the zero-copula rule where the verb "to be" is omitted in the present tense. Contrast English "I am a student" with Ukrainian `Я — студент`. Examples: `Це — мій друг`, `Вона — лікарка`.
-- P2 (~70 words): Review of possession and naming. Clarifying the difference between `У мене є...` (possession) and `Мене звати...` (being called). Focus on the accusative pronouns `мене`, `тебе`, `вас` as used in these fixed chunks.
-- P3 (~70 words): Review of gender agreement and the Vocative case. Remind learners that possessives must agree with the noun's gender: `мій тато` (masc.), `моя мама` (fem.), `моє ім'я` (neut.). Brief reminder of the Vocative endings for direct address: `Анно!`, `Оксано!`, `Тарасе!`.
+## Граматика (Grammar Summary) (~220 words total)
+- P1 (~70 words): Summarize identification and possession structures. Review "Це + noun" for pointing things out (Це мій брат) and "У мене є + noun" for possession (У мене є сестра). Remind them that the "is" verb is usually omitted in the present tense: "Я — студент".
+- P2 (~70 words): Summarize asking and answering about names. Contrast the chunks "Як тебе звати?" (informal) and "Як вас звати?" (formal). Explain that "Мене звати Анна" uses the accusative "мене" (me), avoiding the English "My name is" literal translation trap.
+- P3 (~80 words): Summarize possessive pronouns and origin. Review matching gender for "мій/моя/моє" (мій тато, моя мама). Reiterate the fixed chunk for origin: "Звідки ти? — Я з...".
+- <!-- INJECT_ACTIVITY: match-up-questions-answers --> [match-up, Match questions with answers (Як звати? → Мене звати...), 8 items]
 
-## Діалог (Capstone Dialogue) (~400 words)
-- P1 (~60 words): Setting the scene for the capstone dialogue. Two professionals, Богдан (engineer from Dnipro) and Соломія (teacher from Ternopil), meet during a conference coffee break. This setting justifies a full exchange of personal information.
-- P2 (~120 words): The Capstone Dialogue. A multi-turn exchange (~100 words) covering the full introduction cycle: Greeting → Name/Surname → Origin → Profession → Family (showing a photo) → Goodbye. Examples: `— Радий знайомству, Соломіє! — Навзаєм, Богдане!`
-- P3 (~70 words): Register analysis. Explain the use of the formal `Ви` and the respectful titles `Пане` / `Пані` in this professional context. Explain why Соломія uses `Пане Богдане` instead of just `Богдан`.
-- P4 (~150 words): Scaffolding the Graduation Monologue. Introduce the three-part structure used in Ukrainian schools: Зачин (Introduction: `Привіт!`), Основна частина (Body: `Я з... Я — ...`), and Кінцівка (Conclusion: `Це все. Дякую!`). Provide a 50-word model template for the learner to adapt.
-- <!-- INJECT_ACTIVITY: fill-in-self-intro --> [fill-in, focus: complete the full self-introduction monologue template, 8 items]
+## Діалог (Capstone Dialogue) (~440 words total)
+- P1 (~60 words): Introduce the capstone scenario: A coffee break at a professional conference. Богдан (an engineer from Dnipro) and Соломія (a teacher from Ternopil) meet for the first time.
+- P2 (~180 words): The Dialogue. Write a full introduction exchange. They greet ("Добрий день!"), ask names ("Як вас звати?"), express pleasure ("Дуже приємно"), ask about origin ("Звідки ви?"), state professions ("Я інженер / Я вчителька"), and briefly mention family ("Це моя дружина на фото"). 
+- P3 (~100 words): Breakdown of the dialogue's natural features. Point out the polite formal address using "ви" and "вас". Crucially, highlight the use of the Vocative case (Кличний відмінок) for direct address: note how Соломія says "Звідки ви, Богдане?" (masculine consonant adds -е), showing authentic Ukrainian politeness.
+- P4 (~100 words): Transition from dialogue to monologue. Explain how to string these individual answers into a connected graduation speech: "Мене звати Богдан. Я з Дніпра. Я інженер. Це моя сім'я." This is the core A1.1 milestone.
+- <!-- INJECT_ACTIVITY: fill-in-self-introduction --> [fill-in, Complete the full self-introduction monologue, 8 items]
 
-## Підсумок — Summary (~150 words)
-- P1 (~150 words): A final self-check list. Can you:
-  - Name the 33 letters of the alphabet?
-  - Use formal and informal greetings?
-  - Differentiate between `ім'я` and `прізвище`?
-  - Use `мій` and `моя` correctly with family members?
-  - Use the Vocative case to call a friend?
-  Conclude with encouragement for the transition to A1.2 "Things Have Gender."
+## Підсумок — Summary (~160 words total)
+- P1 (~160 words): Final self-check checklist.
+  - Can you read Ukrainian Cyrillic words, including those with Ь and apostrophe?
+  - Can you say hello informally (Привіт) and formally (Добрий день)?
+  - Can you introduce yourself using "Мене звати..."?
+  - Can you state your origin using "Я з..."?
+  - Can you state your profession using "Я..."?
+  - Can you introduce your family members using the correct gendered possessives (Це мій тато, це моя мама)?
+  - Can you ask someone else their name and where they are from?
+  If you can do all this, you are ready for the next step: understanding how objects have gender in Ukrainian!
 
-Grand total: ~1200 words
+Grand total: ~1320 words

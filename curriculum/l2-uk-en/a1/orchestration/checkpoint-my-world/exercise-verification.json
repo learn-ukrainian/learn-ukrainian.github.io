@@ -1,90 +1,36 @@
 {
   "total_items": 70,
-  "grounded_items": 56,
+  "grounded_items": 65,
   "ungrounded": [
     {
-      "word": "речі",
-      "exercise_type": "group-sort",
-      "context": "Речі (Objects)",
+      "word": "нова",
+      "exercise_type": "quiz",
+      "context": "нова книга → _____",
       "role": "context"
-    },
-    {
-      "word": "кольори",
-      "exercise_type": "group-sort",
-      "context": "Кольори (Colors)",
-      "role": "context"
-    },
-    {
-      "word": "жовтий",
-      "exercise_type": "group-sort",
-      "context": "жовтий",
-      "role": "answer"
     },
     {
       "word": "білий",
-      "exercise_type": "group-sort",
-      "context": "білий",
-      "role": "answer"
-    },
-    {
-      "word": "числа",
-      "exercise_type": "group-sort",
-      "context": "Числа (Numbers)",
-      "role": "context"
-    },
-    {
-      "word": "великий",
       "exercise_type": "quiz",
-      "context": "Цей великий стіл.",
+      "context": "білий килим → _____",
       "role": "context"
     },
     {
-      "word": "нове",
+      "word": "гарна",
       "exercise_type": "quiz",
-      "context": "Це нове вікно.",
+      "context": "гарна писанка → _____",
       "role": "context"
     },
     {
-      "word": "стара",
-      "exercise_type": "quiz",
-      "context": "Ця стара лампа.",
-      "role": "context"
-    },
-    {
-      "word": "зручний",
-      "exercise_type": "quiz",
-      "context": "Цей зручний стілець.",
-      "role": "context"
-    },
-    {
-      "word": "стілець",
-      "exercise_type": "quiz",
-      "context": "Цей зручний стілець.",
-      "role": "context"
-    },
-    {
-      "word": "стіна",
-      "exercise_type": "group-sort",
-      "context": "стіна",
-      "role": "answer"
-    },
-    {
-      "word": "старий",
+      "word": "книго",
       "exercise_type": "true-false",
-      "context": "старий ручка",
+      "context": "The plural of «книга» is «книго».",
       "role": "context"
     },
     {
-      "word": "нові",
-      "exercise_type": "true-false",
-      "context": "нові книги",
-      "role": "context"
-    },
-    {
-      "word": "там",
-      "exercise_type": "error-correction",
-      "context": "Там є три синій книги.",
-      "role": "context"
+      "word": "ті",
+      "exercise_type": "fill-in",
+      "context": "Ті",
+      "role": "answer"
     }
   ],
   "vocab_coverage": {},

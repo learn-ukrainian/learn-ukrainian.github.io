@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-**стілець** *(chair)* перетворюється на **стільчик** *(little chair)*. *(An ordinary chair turns into a little chair.)* Але цей суфікс також додає симпатії. *(But this suffix also adds sympathy.)* Ми кажемо **хлопчик** *(little boy)* замість «хлопець» *(boy)*. *(We say little boy instead of boy.)* Суфікс «-ок» частіше показує любов та родинний зв'язок. *(The suffix "-ok" more often shows love and family connection.)* Наприклад, слово «син» *(son)* стає ніжним словом **синок** *(dear son)*. *(For example, the word son becomes the tender word dear son.)* А суворе слово **батько** *(father)* може стати дуже теплим словом **батечко** *(dear father)*. *(And the strict word father can become the very warm word dear father.)* Для слів жіночого та середнього роду є свої красиві суфікси. *(For feminine and neuter words there are their own beautiful suffixes.)* Це суфікси **-ечк-**, **-очк-** та **-еньк-**. *(These are the suffixes -echk-, -ochk-, and -enk-.)* Наприклад, слово **квітка** *(flower)* перетворюється на миле слово **квіточка** *(little flower)*. *(For example, the word flower turns into the cute word little flower.)* Яскрава **зірка** *(star)* на небі стає словом **зірочка** *(little star)*. *(A bright star in the sky becomes the word little star.)* А слово **річка** *(river)* може стати ніжною формою **річечка** *(little river)*. *(And the word river can become the tender form little river.)* Ми також часто використовуємо суфікс «-еньк-» для прикметників. *(We also often use the suffix "-enk-" for adjectives.)* Це допомагає пом'якшити опис. *(This helps soften the description.)* Замість слова **малий** *(small)* ми говоримо **маленький** *(very small/cute)*. *(Instead of the word small we say very small/cute.)* А замість слова **гарний** *(pretty)* ми кажемо **гарненький** *(very pretty/cute)*. *(And instead of the word pretty we say very pretty/cute.)* Навіть **ніч** *(night)* може стати словом **ніченька** *(dear night)*. *(Even night can become the word dear night.)* Вони несуть багато позитивної енергії. *(They carry a lot of positive energy.)* В Україні ми дуже часто змінюємо імена людей. *(In Ukraine we very often change people's names.)* Зменшувальні форми імен показують нашу любов. *(Diminutive forms of names show our love.)* Наприклад, ім'я **Оксана** стає ласкавим іменем **Оксаночка**. *(For example, the name Oksana becomes the affectionate name Oksanochka.)* Ім'я **Іван** перетворюється на тепле ім'я **Іванко**. *(The name Ivan turns into the warm name Ivanko.)* А **Марія** часто стає формою **Марійка**. *(And Mariia often becomes the form Mariyka.)* Цікаво, що іноді ці суфікси повністю змінюють значення слова. *(Interestingly, sometimes these suffixes completely change the meaning of the word.)* Наприклад, слово **рука** *(arm/hand)* — це частина тіла. *(For example, the word arm/hand is a body part.)* Але форма **ручка** *(pen/handle)* може означати предмет, яким ми пишемо. *(But the form pen/handle can mean the object we write with.)* Слово **голова** *(head)* — це частина тіла людини. *(The word head is a body part of a person.)* А слово **головка** *(garlic head)* часто означає частину рослини. *(And the word garlic head often means a part of a plant.)* Контекст завжди дуже важливий. *(Context is always very important.)* <!-- INJECT_ACTIVITY: fill-in, Form diminutives from base words (e.g., мама, сонце, стіл) using correct suffixes, 8 items -->
+cozy table in a cafe is «столик». A chair is «стілець», but a small chair is «стільчик». The suffix **-ок** adds a strong sense of endearment. Українські чоловічі імена та слова часто отримують такі закінчення. Маленький хлопець — це «хлопчик». Якщо батько хоче тепло звернутися до сина, він каже «синок». А діти часто називають свого тата «батечко». Це ще одна цікава форма. Ці слова звучать дуже природно і щиро. Навіть серйозний чоловік може назвати свого собаку «песик» замість «пес». > *Ukrainian masculine names and words often get such endings. A small boy is a "хлопчик". If a father wants to warmly address his son, he says "синок". And children often call their dad "батечко". This is another interesting form. These words sound very natural and sincere. Even a serious man might call his dog "песик" instead of "пес".* Feminine and neuter words have their own beautiful suffixes, mainly **-ечк-**, **-очк-**, and **-еньк-**. They are extremely common in poetry, folk songs, and everyday speech. A star is «зоря», but a sweet little star is «зірочка». A flower is «квітка», but you would give your mother a «квіточка». A river is «ріка», but a gentle stream is «річечка». Суфікс «-еньк-» також часто додають до прикметників, щоб пом'якшити опис. Якщо ви бачите гарну дитину, ви не скажете просто «гарна». Ви скажете, що вона «гарненька». Слово «малий» часто замінюють на «маленький». Це створює дуже позитивну атмосферу. Слова «сонечко» або «серденько» — це найпопулярніші ласкаві звертання в українській мові. > *The suffix "-еньк-" is also often added to adjectives to soften the description. If you see a beautiful child, you will not just say "гарна". You will say that she is "гарненька". The word "малий" is often replaced by "маленький". This creates a very positive atmosphere. The words "сонечко" or "серденько" are the most popular affectionate addresses in the Ukrainian language.* Names get diminutives too. This is how friends and family show closeness. Oksana easily becomes «Оксаночка», Ivan becomes «Іванко», and Maria becomes «Марійка». However, you must be careful, because sometimes a diminutive form creates a completely new word with a different literal meaning. :::note **Quick tip** If a word already has a fixed meaning with a diminutive suffix, we translate it differently based on the context. ::: Деякі слова змінили своє значення через суфікси. Наприклад, «рука» — це частина тіла. Але «ручка» — це річ, якою ми пишемо на папері. Також це те, чим ми відкриваємо двері. Звичайна «голова» є у кожної людини. Але «головка» — це частина часнику. Тому завжди звертайте увагу на контекст, коли чуєте такі слова. > *Some words have changed their meaning because of suffixes. For example, "рука" is a body part. But "ручка" is a thing we write on paper with. Also, it is what we open a door with. Every person has a regular "голова". But "головка" is a part of garlic. Therefore, always pay attention to the context when you hear such words.* <!-- INJECT_ACTIVITY: fill-in-diminutives, Form diminutives from base words using correct suffixes, 8 items -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -470,7 +470,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 6: A2 finale (A2 M51-M69)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 40%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 40% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 70-90% Ukrainian.
 LANGUAGE ROLES:
@@ -489,18 +556,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] синонім (synonym)
+- [ ] антонім (antonym)
+- [ ] епітет (epithet)
+- [ ] метафора (metaphor)
+- [ ] зменшувальний (diminutive)
+- [ ] суфікс (suffix)
+- [ ] еліпсис (ellipsis)
+- [ ] повтор (repetition)
+- [ ] образний (figurative, expressive)
+- [ ] ласкавий (tender, affectionate)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Синтаксична стилістика: еліпсис і повтор (~580 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

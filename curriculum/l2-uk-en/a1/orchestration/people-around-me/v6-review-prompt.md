@@ -198,149 +198,138 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Діало́ги (Dialogues)
+## Діалоги (Dialogues)
 
-We have spent recent modules learning how to buy food, order drinks, and talk about objects in our daily environment. The Ukrainian language treats objects in a specific way. However, our world is mostly filled with people. We interact with family members, meet friends, and speak to professionals. When we talk about people rather than objects, Ukrainian grammar shifts its focus. The rules change because the language makes a sharp distinction between a living person and an inanimate object. We must now learn how to name the people around us when they are the target of our actions.
+We often talk about people as direct objects: **Я бачу маму**, **я знаю Олену**, **я шукаю друга**. In Ukrainian, that means using the accusative case for people.
 
-Read this conversation between a bride and her friend at a wedding reception. They are showing wedding photos and identifying people. Pay close attention to the word endings for people.
+«Це моя сім'я. Я дуже люблю маму і тата. У мене є брат. Ви знаєте мого брата? Він лікар. Я часто бачу брата вдома.»
+> *This is my family. I love mom and dad very much. I have a brother. Do you know my brother? He is a doctor. I often see my brother at home.*
 
-> **Друг:** Кого ти ба́чиш? *(Who do you see?)*
-> **Нарече́на:** Я ба́чу ма́му і та́та. *(I see mom and dad.)*
-> **Друг:** А хто це? *(And who is this?)*
-> **Наречена:** Це мій дя́дько. А це ті́тка. *(This is my uncle. And this is the aunt.)*
-> **Друг:** Зна́єш Оле́ну? *(Do you know Olena?)*
-> **Наречена:** Так. А це мій брат. Ти знаєш мого бра́та? *(Yes. And this is my brother. Do you know my brother?)*
-> **Друг:** Ні, я не зна́ю твого́ брата. *(No, I do not know your brother.)*
-> **Наречена:** Ході́мо! Я тебе́ познайо́млю! *(Let's go! I will introduce you!)*
-> **Друг:** Ось наречена і нарече́ний. *(Here is the bride and the groom.)*
+Let us look at a natural conversation. Two friends are looking at wedding photos and identifying people in them.
 
-Notice the Accusative animate forms: **маму** (feminine), **тата** (masculine), and **брата** (masculine). When the friend asks the question **Кого ти бачиш?** (Who do you see?), the bride answers with **Я бачу маму і тата** (I see mom and dad). The original dictionary words are **ма́ма** (mom) and **та́то** (dad). In previous modules, we saw that masculine objects did not change their endings. A word like **брат** (brother) is masculine. Yet, the bride asks **Ти знаєш мого брата?** (Do you know my brother?). The word **брат** changes to **брата**. The names of people change their endings because they are living beings.
+> **Наречена:** Дивись, це мої фотографії. *(Look, these are my photos.)*
+> **Друг:** Дуже гарні! **Кого ти бачиш?** *(Very beautiful! Whom do you see?)*
+> **Наречена:** **Я бачу маму і тата.** *(I see mom and dad.)*
+> **Друг:** **А хто це?** *(And who is this?)*
+> **Наречена:** **Це мій брат. Ти знаєш мого брата?** *(This is my brother. Do you know my brother?)*
+> **Друг:** **Ні, я не знаю твого брата.** *(No, I do not know your brother.)*
+> **Наречена:** **Ходімо, я тебе познайомлю!** *(Let's go, I will introduce you!)*
 
-This rule applies to all people around you, including professionals and colleagues. Read this short exchange between two colleagues at a school.
+Notice how the nouns for family members change their endings in this dialogue. In the dictionary, these nouns are **мама**, **тато**, and **брат**. However, when they become the object of the verb **бачити** (to see) or **знати** (to know), their endings must change. The noun **мама** becomes **маму**, **тато** becomes **тата**, and **брат** becomes **брата**. We call this the animate accusative form, and it is specifically used for living beings like people and animals. This is a fundamental pattern you will use when talking about your family and friends in Ukrainian.
 
-> **Коле́га 1:** Ти знаєш на́шу вчи́тельку? *(Do you know our teacher?)*
-> **Колега 2:** Так, я знаю Олену Петрі́вну. *(Yes, I know Olena Petrivna.)*
-> **Колега 1:** А ново́го лі́каря? *(And the new doctor?)*
-> **Колега 2:** Ні, я ще не знаю лікаря. *(No, I do not know the doctor yet.)*
-> **Колега 1:** Він ду́же до́брий. Я чека́ю йо́го за́раз. *(He is very kind. I am waiting for him right now.)*
+:::note
+In Ukrainian, it is very common to refer to professionals by their titles rather than their names. Discussing a **лікар** (doctor) or **вчитель** (teacher) in the accusative case is a standard way to talk about the people who help you in your daily life.
+:::
 
-The word for a female teacher is **вчи́телька**. It changes to **вчительку**. The female name **Оле́на Петрі́вна** becomes **Олену Петрівну**. The masculine word for a doctor is **лі́кар**. It changes to **лікаря**. These animate accusative patterns occur constantly with the people around you.
+Now consider a different setting. Two colleagues at work are discussing people they know or are waiting for.
+
+> **Олена:** Привіт! **Ти знаєш нашу вчительку?** *(Hi! Do you know our teacher?)*
+> **Максим:** **Так, я знаю Олену Петрівну.** *(Yes, I know Olena Petrivna.)*
+> **Олена:** **А нового лікаря?** *(And the new doctor?)*
+> **Максим:** **Ні, я ще не знаю лікаря.** *(No, I do not know the doctor yet.)*
+> **Олена:** **Він дуже добрий. Я чекаю його зараз.** *(He is very kind. I am waiting for him now.)*
+
+In this workplace setting, we observe the same grammatical pattern applied to professions and names. The noun for a female teacher is **вчителька** (teacher, f), but here it changes to **вчительку**. The name **Олена** becomes **Олену**. The noun for a male doctor is **лікар** (doctor, m), but it transforms into **лікаря**. When the first colleague says she is waiting for him, she uses the verb **чекати** (to wait for). Just like seeing or knowing someone, waiting for a person requires this specific object form. You will use these animate accusative forms constantly when interacting with people around you, whether speaking to a **колега** (colleague, m/f), a **викладач** (lecturer, m), a **продавець** (seller, m), or a **покупець** (buyer, m) in a shop.
 
 ## Кого? (Whom?)
 
-The Ukrainian language categorizes nouns into two groups based on whether they are living or not. We call these groups animate and inanimate. The Accusative case is the grammatical form we use for the direct object of an action. An object receives the action. Animate nouns represent people or animals. Inanimate nouns represent objects, concepts, or places. We learned the Accusative case for inanimate objects in Module 37.
+In the Ukrainian language, the accusative case draws a very strict boundary between inanimate objects and animate objects. Inanimate objects are lifeless things, such as food, furniture, or places. Animate objects are living beings, such as people and animals. This distinction is absolutely critical for masculine nouns. When a masculine inanimate noun is the direct object of a sentence, its ending does not change at all. For example, if you say «Я їм хліб» (I am eating bread), the masculine noun stays exactly the same as in the dictionary. However, when a masculine animate noun is the object, its ending must change. If you say «Я бачу брата» (I see a brother), the noun changes.
 
-You already know how to talk about food. You say **Я їм хліб** (I eat what? bread). For inanimate nouns, there is no change for the masculine. The masculine objects like **хліб** (bread) kept their dictionary form. Contrast those food items with a person. When you see your brother, you say **Я бачу брата** (I see whom? the brother). For animate nouns, the masculine changes! The masculine person changes, while the masculine object stays exactly the same.
+«Я йду в магазин. Я купую хліб і воду. Там я бачу сусіда. Я добре знаю сусіда. Ми часто говоримо.»
+> *I am going to the store. I am buying bread and water. There I see a neighbor. I know the neighbor well. We often talk.*
 
-To know which rule to follow, we rely on question words. The question word is the key. The word **що?** (what?) indicates inanimate things, and the masculine stays the same. When you hold an apple, you ask **Що це?** (What is this?). The word **кого?** (whom?) indicates animate people or animals, and the masculine changes. When you see your colleague, the correct question is **Кого ти бачиш?** (Whom do you see?). Your choice of question word dictates the ending of the masculine noun.
+To understand when to change the ending of a masculine noun, you must look at the question words that drive the sentence. In Ukrainian, the accusative case uses two different question words. For inanimate objects, the question word is **що?** (what?). When you ask **що?**, the inanimate masculine noun remains unchanged. For animate objects, the question word is **кого?** (whom?). This question word is the key trigger. When a verb answers the question **кого?**, it activates the animate rule. This explicitly dictates that masculine nouns will change their endings. This is why inanimate masculine nouns remain identical to their dictionary forms, while animate masculine nouns require a new grammatical suffix to show they are receiving the action.
 
-:::note
-**The Grammar Question Test**
-Ukrainian grammar is deeply connected to question words. When you learn a new grammatical case, memorize its question word. Asking **кого?** (whom?) instantly reminds your brain to apply the animate rule.
+:::tip
+A helpful mnemonic for remembering the animate question word: **Кого?** (whom?) is used for a **колега** (colleague) or a **кіт** (cat), both of which are animate. The word **Що?** (what?) is used for inanimate things.
 :::
 
-Ukrainian children learn this logic early in Grade 4. Their teachers use a specific mnemonic device based on the school approach. The children memorize the phrase: **Бачу кого? що?** (I see whom? what?). They ask both questions together. By asking these two questions simultaneously, students learn to identify the two patterns. If the noun is an object, the answer to **що?** (what?) confirms there is no change. The question **кого?** triggers the animate rule. The masculine animate in the Accusative case equals the Genitive form.
+In Ukrainian schools, children learn this grammar by memorizing the double question «Бачу кого? що?» (I see whom? what?). These two questions establish two separate patterns. The question **кого?** triggers the animate rule, which introduces a fascinating shortcut in Ukrainian grammar: for masculine animate nouns, the accusative form simply borrows the genitive case ending. You take the genitive form you already know and use it as the direct object.
 
-We have a reliable pattern for these masculine people. For a masculine person, we use the exact same ending we will later use to show possession. This is the key distinction for L2 learners. The object receives the action, and the ending marks the object as a living person. Observe how the words change:
+*   **друг** → **друга**: «Я знаю друга.» (I know a friend.)
+*   **тато** → **тата**: «Я люблю тата.» (I love dad.)
+*   **лікар** → **лікаря**: «Я чекаю лікаря.» (I am waiting for the doctor.)
+*   **сусід** (neighbor, m) → **сусіда**: «Я бачу сусіда.» (I see the neighbor.)
 
-*   **брат** → **брата** (brother)
-*   **друг** → **дру́га** (friend)
-*   **тато** → **тата** (dad)
-*   **лікар** → **лікаря** (doctor)
+This borrowed ending is exactly why the animate versus inanimate distinction matters so much. It forces masculine nouns representing people to change their shape, ensuring that the listener clearly understands who is receiving the action.
 
-This is why animate accusative matters — it changes masculine nouns.
+<!-- INJECT_ACTIVITY: group-sort-animate-inanimate -->
 
-<!-- INJECT_ACTIVITY: sort-animate-inanimate -->
+## Знахідний відмінок — живе (Accusative Animate)
 
-## Знахі́дний відмі́нок — живе́ (Accusative Animate)
+Let us first examine the rules for feminine animate nouns. There is excellent news for learners: feminine nouns follow the exact same accusative pattern regardless of whether they are animate or inanimate. Just like the inanimate word **кава** (coffee) becomes **каву**, the endings for feminine people change from **-а** to **-у** and from **-я** to **-ю**. There are no surprises or special rules here.
 
-Feminine animate nouns follow the same simple rule as inanimate objects. The ending **-а** changes to **-у**. The ending **-я** changes to **-ю**. There is no surprise here — it uses the same ending as Module 37, where **ка́ва** changes to **ка́ву**. This exact pattern applies to the women and girls in your life. The feminine animate is identical to the feminine inanimate.
+*   **мама** → **маму**: «Я бачу маму.» (I see mom.)
+*   **сестра** (sister) → **сестру**: «Я знаю сестру.» (I know the sister.)
+*   **Олена** → **Олену**: «Я чекаю Олену.» (I am waiting for Olena.)
+*   **подруга** → **подругу**: «Я люблю подругу.» (I love the friend.)
 
-*   **мама** → **маму** (mom)
-*   **сестра́** → **сестру́** (sister)
-*   **Олена** → **Олену** (Olena)
-*   **по́друга** → **по́другу** (female friend)
-*   **Я бачу маму.** (I see mom.)
-*   **Я знаю сестру.** (I know the sister.)
-*   **Я чекаю Олену.** (I wait for Olena.)
-*   **Я люблю́ подругу.** (I love the female friend.)
+«Я чекаю друга на вулиці. Мій друг — вчитель. Я бачу друга здалеку. Він теж чекає колегу. Ми бачимо колегу разом.»
+> *I am waiting for a friend on the street. My friend is a teacher. I see the friend from afar. He is also waiting for a colleague. We see the colleague together.*
 
-Masculine animate nouns introduce THE new rule. The Accusative case equals the Genitive case. The pattern dictates that masculine animate nouns in the Accusative take the genitive ending. Let us observe the pattern with high-frequency family words and social nouns. The noun **брат** (brother) becomes **брата**. The word **тато** (dad) is masculine, even though it ends in **-о**. It drops the **-о** and takes the **-а** ending to become **тата**. The noun **сусі́д** (male neighbor) becomes **сусі́да**. Compare an inanimate object with an animate person. You say **Я бачу хліб** (I see bread). This is inanimate — no change. But you say **Я бачу брата** (I see the brother). This is animate — it changes. The living brother requires the change.
+Now we must address the critical new rule for masculine animate nouns. As established earlier, the accusative form for masculine living beings is absolutely identical to the genitive form. Instead of remaining unchanged like inanimate objects, these masculine nouns take the **-а** or **-я** ending. Here are clear, everyday examples of this pattern in action:
 
-*   **брат** → **брата** (brother)
-*   **друг** → **друга** (male friend)
-*   **тато** → **тата** (dad)
-*   **сусід** → **сусіда** (male neighbor)
-*   **Я бачу брата.** (I see the brother.)
-*   **Я знаю друга.** (I know the friend.)
-*   **Я люблю тата.** (I love dad.)
-*   **Я бачу сусіда.** (I see the neighbor.)
+*   **брат** → **брата**: «Я бачу брата.» (I see a brother.)
+*   **друг** → **друга**: «Я шукаю друга.» (I am looking for a friend.)
+*   **тато** → **тата**: «Я люблю тата.» (I love dad.)
+*   **лікар** → **лікаря**: «Я чекаю лікаря.» (I am waiting for the doctor.)
+*   **вчитель** (teacher, m) → **вчителя**: «Я знаю вчителя.» (I know the teacher.)
+*   **сусід** → **сусіда**: «Я бачу сусіда.» (I see the neighbor.)
 
 :::caution
-**Don't Forget the Men!**
-English speakers easily remember to change feminine words like **мама** to **маму**. However, learners frequently forget to change masculine words because masculine objects like **телефо́н** do not change. Always pause and ask: "Is this masculine noun a living person?" If yes, add **-а** or **-я**.
+English speakers often forget to change the endings of masculine names and professions because English does not do this. Always pause and ask yourself: "Is this a living person?" If the answer is yes, you must use the animate accusative form (the **-а** or **-я** ending) when they are the object of the sentence.
 :::
 
-Some masculine nouns end in a soft consonant or the suffix **-ар**. These words require a soft vowel ending. They take the **-я** ending instead of the hard **-а**. Many professions fall into this category.
+To solidify this concept, let us summarize the masculine paradigm by contrasting the animate and inanimate forms side-by-side. Seeing them together makes the grammatical difference perfectly clear.
 
-*   **лікар** → **лікаря** (doctor)
-*   **вчи́тель** → **вчи́теля** (male teacher)
-*   **продаве́ць** → **продавця́** (male seller)
-*   **колега** → **коле́гу** (colleague)
-*   **Я чекаю лікаря.** (I wait for the doctor.)
-*   **Я знаю вчителя.** (I know the teacher.)
-*   **Я бачу продавця.** (I see the seller.)
-*   **Я знаю колегу.** (I know the colleague.)
+*   Inanimate (stays the same): «Я бачу стіл.» (I see a table.)
+*   Animate (gets the **-а** ending): «Я бачу брата.» (I see a brother.)
+*   Inanimate (stays the same): «Я бачу хліб.» (I see bread.)
+*   Animate (gets the **-а** ending): «Я бачу сусіда.» (I see a neighbor.)
 
-<!-- INJECT_ACTIVITY: fill-in-animate-transform -->
+This is the key contrast to remember: inanimate masculine nouns stay the same, but animate masculine nouns take the genitive-shaped form.
+
+<!-- INJECT_ACTIVITY: fill-in-accusative-forms -->
+<!-- INJECT_ACTIVITY: quiz-choose-correct-accusative -->
 
 ## Підсумок — Summary
 
-The complete picture of the Accusative case organizes these rules into a clear visual breakdown.  This Accusative summary provides the full picture.
+We can now construct a comprehensive summary of the accusative case for both animate and inanimate nouns. This chart presents the full picture of how word endings change depending on what you are talking about.
 
-| | Inanimate (що?) | Animate (кого?) |
+| Рід (Gender) | Inanimate (**що?**) | Animate (**кого?**) |
 | :--- | :--- | :--- |
-| **Masculine** | = nominative (**хліб**) | = genitive (**брата**) |
-| **Feminine** | **-а** → **-у** (**каву**) | **-а** → **-у** (**маму**) |
-| **Neuter** | = nominative (**молоко́**) | (rare at A1) |
+| Чоловічий (Masculine) | = nominative (**хліб**) | = genitive (**брата**) |
+| Жіночий (Feminine) | **-а/-я** → **-у/-ю** | **-а/-я** → **-у/-ю** |
+| Середній (Neuter) | = nominative (**молоко**) | (rare at A1) |
 
-The feminine nouns always change the final vowel. They change **-а** to **-у** and **-я** to **-ю**. The masculine nouns remain unchanged for inanimate objects. They adopt the genitive ending for living people. The neuter nouns do not change.
+As the chart illustrates, the masculine inanimate noun answers the question **що?** and equals the nominative form. The masculine animate noun answers the question **кого?** and equals the genitive form. The feminine noun follows the usual accusative pattern shown here: **-а** → **-у** and **-я** → **-ю**, regardless of animacy. Neuter animate nouns exist but are quite rare at the A1 level.
 
-Certain verbs appear constantly in social interactions. These key verbs with animate accusative require the change to identify the target of the action. You must memorize these words.
+«Це моя велика родина. Я дуже люблю дідуся і бабусю. Я часто бачу сестру. Сьогодні я чекаю брата і тата. Ми дуже любимо гостей.»
+> *This is my large family. I love grandfather and grandmother very much. I often see my sister. Today I am waiting for my brother and dad. We love guests very much.*
 
-*   **ба́чити** (to see)
-*   **зна́ти** (to know)
-*   **люби́ти** (to love)
-*   **чека́ти** (to wait for)
-*   **шука́ти** (to look for)
+There are several high-frequency verbs at the A1 level that frequently trigger this animate accusative case. When you use these verbs with people, you must apply the animate endings.
 
-These verbs connect you to the people around you. You use them daily. Note that the verb **чекати** (to wait) often uses the preposition **на** in natural speech. At the A1 level, we focus on the direct object pattern. We say **Я чекаю маму** (I wait for mom). We say **Я шука́ю сусіда** (I look for the neighbor).
+*   **бачити** (to see): «Я бачу викладача.» (I see the lecturer.)
+*   **знати** (to know): «Я знаю студента.» (I know the student.)
+*   **любити** (to love): «Я люблю тата.» (I love dad.)
+*   **чекати** (to wait for): «Я чекаю лікаря.» (I am waiting for the doctor.)
+*   **шукати** (to look for): «Я шукаю подругу.» (I am looking for a friend.)
 
-You can practice these patterns with simple questions and answers. Read the questions and notice the noun endings in the responses.
+Mastering these verbs will allow you to describe your interactions with the people around you accurately. Before moving to the exercises, perform a quick self-check to ensure you understand the core concepts.
 
-*   **Кого ти лю́биш?** (Whom do you love?)
-    **Я люблю маму і тата.** (I love mom and dad.)
-*   **Кого ти чека́єш?** (Whom are you waiting for?)
-    **Я чекаю друга.** (I am waiting for a friend.)
-*   **Кого ти знаєш у шко́лі?** (Whom do you know at school?)
-    **Я знаю вчителя.** (I know the teacher.)
-*   **Кого ти бачиш?** (Whom do you see?)
-    **Я бачу покупця́.** (I see the buyer.)
-*   **Кого ти шука́єш?** (Whom are you looking for?)
-    **Я шукаю викладача́.** (I am looking for the lecturer.)
+*   **Q: How do you say "I see mom"?**
+*   A: «Я бачу маму» (**мама** → **маму**).
+*   **Q: How do you say "I see brother"?**
+*   A: «Я бачу брата» (**брат** → **брата**).
+*   **Q: What is the question word for people in the accusative?**
+*   A: **Кого?**
 
-:::tip
-**Colleagues and Professions**
-The word **колега** (colleague) looks feminine but can describe a man or a woman. Because it ends in **-а**, you always change it to **колегу**, regardless of the person's gender.
-:::
+These simple checks confirm that the core pattern is clear: **кого?** triggers animate forms such as **маму** and **брата**.
 
-Check your understanding of the pattern. Let us complete this Self-check: **Я бачу ___**. For the word **мама**, the correct form is **маму**. For the word **брат**, the correct form is **брата**. Remember the core rule. If the noun is a person and it is masculine, you must add the ending. The action transfers directly to the living person.
-
-<!-- INJECT_ACTIVITY: quiz-ending-choice -->
-<!-- INJECT_ACTIVITY: fill-in-dialogue-logic -->
+<!-- INJECT_ACTIVITY: fill-in-dialogue-completion -->
 </generated_module_content>
 
-**PIPELINE NOTE — Word count: 1681 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
+**PIPELINE NOTE — Word count: 1734 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -516,63 +505,170 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 70 words | Not found: 27 words
+Verified: 108 words | Not found: 3 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
-  ✗ Діало — NOT IN VESUM
-  ✗ Знахі — NOT IN VESUM
-  ✗ Оле — NOT IN VESUM
   ✗ Олена — NOT IN VESUM
   ✗ Олену — NOT IN VESUM
-  ✗ Петрі — NOT IN VESUM
   ✗ Петрівну — NOT IN VESUM
-  ✗ биш — NOT IN VESUM
-  ✗ вна — NOT IN VESUM
-  ✗ вну — NOT IN VESUM
-  ✗ відмі — NOT IN VESUM
-  ✗ дний — NOT IN VESUM
-  ✗ дру — NOT IN VESUM
-  ✗ дько — NOT IN VESUM
-  ✗ каря — NOT IN VESUM
-  ✗ млю — NOT IN VESUM
-  ✗ нок — NOT IN VESUM
-  ✗ познайо — NOT IN VESUM
-  ✗ продаве — NOT IN VESUM
-  ✗ телефо — NOT IN VESUM
-  ✗ тель — NOT IN VESUM
-  ✗ телька — NOT IN VESUM
-  ✗ тельку — NOT IN VESUM
-  ✗ тка — NOT IN VESUM
-  ✗ чити — NOT IN VESUM
-  ✗ чиш — NOT IN VESUM
-  ✗ шко — NOT IN VESUM
 
-All 70 other words are confirmed to exist in VESUM.
+All 108 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
-## Verification Tools (MCP)
+---
 
-You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
+## Verification Tools (Shell Commands)
 
-**Core Verification:**
-- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
-- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
+You have access to verification tools via shell commands. Use these to verify
+Ukrainian vocabulary, check grammar, and search textbook content **as you write**.
 
-**Content Quality:**
-- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+**IMPORTANT:** Run verification commands BEFORE finalizing any Ukrainian text.
+Batch multiple verifications together to minimize round-trips.
 
-**Reference:**
-- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp_rag_search_literary` — verify literary references against primary sources
-- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
+### 1. Batch-verify Ukrainian words exist in VESUM (preferred — one call for many words)
 
-**Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_words
+results = verify_words(['слово1', 'слово2', 'слово3'])
+for w, matches in results.items():
+    if matches:
+        print(f'{w}: FOUND — lemma={matches[0][\"lemma\"]}, pos={matches[0][\"pos\"]}')
+    else:
+        print(f'{w}: NOT FOUND — may not exist in standard Ukrainian')
+"
+```
+
+### 2. Verify a single Ukrainian word in VESUM (with full morphological tags)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_word
+results = verify_word('WORD_HERE')
+if results:
+    for m in results:
+        print(f'lemma={m[\"lemma\"]}, pos={m[\"pos\"]}, tags={m[\"tags\"]}')
+else:
+    print('NOT FOUND in VESUM')
+"
+```
+
+### 3. Get all inflected forms of a lemma (declension/conjugation)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_lemma
+forms = verify_lemma('LEMMA_HERE')
+for f in forms[:20]:
+    print(f'{f[\"word_form\"]:20s} {f[\"pos\"]:8s} {f[\"tags\"]}')
+print(f'... {len(forms)} forms total')
+"
+```
+
+### 4. Check CEFR level of a word (is it level-appropriate?)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import query_cefr_level
+results = query_cefr_level('WORD_HERE')
+for r in results:
+    print(f'{r[\"word\"]}: {r[\"level\"]} ({r[\"pos\"]})')
+if not results:
+    print('Not in CEFR database')
+"
+```
+
+### 5. Search textbook content (Ukrainian school textbooks, Grades 1-11)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_textbooks
+keywords = {'keyword1', 'keyword2'}
+results = search_textbooks(keywords, 5)
+for r in results:
+    title = r.get('section_title', r.get('title', ''))
+    grade = r.get('grade', '?')
+    text = r.get('text', '')[:200]
+    print(f'Grade {grade} | {title}')
+    print(f'  {text}')
+    print()
+"
+```
+
+### 6. Search style guide for calques/Russianisms (Антоненко-Давидович, 279 entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_style_guide
+results = search_style_guide('TOPIC_HERE', 3)
+for r in results:
+    print(f'--- {r.get(\"word\", \"\")} [{r.get(\"section\", \"\")}]')
+    print(r.get('text', '')[:300])
+    print()
+if not results:
+    print('No style guide entries found')
+"
+```
+
+### 7. Look up word definition in СУМ-11 (Ukrainian explanatory dictionary, 127K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_definitions
+results = search_definitions('WORD_HERE', 3)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+### 8. Search idioms (Фразеологічний словник, 25K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_idioms
+results = search_idioms('WORD_HERE', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"text\", r.get(\"definition\", \"\")))[:200]}')
+"
+```
+
+### 9. English-to-Ukrainian translation (Балла, 79K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import translate_en_uk
+results = translate_en_uk('ENGLISH_WORD', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+---
+
+**WHEN to use these tools:**
+
+1. **Before writing any Ukrainian text** — batch-verify all key vocabulary with
+   `verify_words` (tool 1). Any word that returns NOT FOUND must be replaced.
+2. **When you suspect a Russicism or calque** — search the style guide (tool 6)
+   and verify the correct Ukrainian form with `verify_word` (tool 2).
+3. **When writing for A1/A2** — check CEFR levels (tool 4) to ensure vocabulary
+   is level-appropriate.
+4. **When unsure about a case ending or conjugation** — use `verify_lemma` (tool 3)
+   to see the full paradigm.
+5. **When covering a grammar topic** — search textbooks (tool 5) to see how
+   Ukrainian school textbooks teach it.
+6. **When you need the precise Ukrainian meaning** — use СУМ-11 (tool 7).
+7. **When looking for natural Ukrainian expressions** — search idioms (tool 8).
+
+**Batching rule:** Collect all words you want to verify, then run ONE `verify_words`
+call instead of multiple `verify_word` calls. This is faster and uses fewer tokens.

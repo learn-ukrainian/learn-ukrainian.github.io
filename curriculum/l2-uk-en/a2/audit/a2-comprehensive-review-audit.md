@@ -1,7 +1,7 @@
 # Audit Report: M67 — a2-comprehensive-review.md
 **Level:** A2 | **Module:** M67 | **Phase:** A2.10 | **Pedagogy:** Review | **Target:** 2000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-04-11 00:49:14
+**Generated:** 2026-04-11 18:59:26
 
 ## Configuration
 **Type:** A2
@@ -21,35 +21,39 @@
 | 1 | fill-in |  | 8 | 8 | ✅ |
 | 2 | quiz |  | 8 | 8 | ✅ |
 | 3 | group-sort |  | 8 | 8 | ✅ |
-| 4 | match-up |  | 7 | 8 | ❌ |
-| 5 | true-false |  | 6 | 8 | ❌ |
-| 6 | translate |  | 6 | 6 | ✅ |
+| 4 | match-up |  | 6 | 8 | ❌ |
+| 5 | fill-in |  | 6 | 8 | ❌ |
+| 6 | true-false |  | 6 | 8 | ❌ |
+| 7 | translate |  | 6 | 6 | ✅ |
 
 **Summary:**
-- Total activities: 6 (target: 0-4) ❌
+- Total activities: 7 (target: 0-4) ❌
 - Unique types: 6 (minimum: 0) ✅
 - Priority types used: 6/15 (fill-in, group-sort, match-up, quiz, translate, true-false) ✅
-- Low density activities: 2
+- Low density activities: 3
 
 ## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY]** match-up '' has 7 pairs (target: 8-14)
+- **[COMPLEXITY]** match-up '' has 6 pairs (target: 8-14)
   - FIX: Adjust number of pairs to 8-14.
+- **[COMPLEXITY]** fill-in '' has 6 items (minimum: 8)
+  - FIX: Add more items. A2 fill-in requires at least 8 items.
 - **[COMPLEXITY]** true-false '' has 6 items (minimum: 8)
   - FIX: Add more items. A2 true-false requires at least 8 items.
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: вид
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
+- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'чи ви...'.
+  - FIX: Vary sentence structure.
 
 ## Recommendation
-**📝 UPDATE** (severity 25/100)
+**📝 UPDATE** (severity 45/100)
 
-- 3 violations (minor)
-- Immersion 10% off target (minor)
+- Revision recommended (severity 45/100)
+- 4 violations (moderate)
+- Immersion 18% off target
 - Activity density below minimum
 
 ## Gates
-- **Words:** ✅ 3004/2000 (raw: 3049)
-- **Activities:** ✅ 6/0
-- **Density:** ❌ 2 < 8
+- **Words:** ✅ 3383/2000 (raw: 3468)
+- **Activities:** ✅ 7/0
+- **Density:** ❌ 3 < 8
 - **Unique_types:** ✅ 6/0 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ❌ 0/3
@@ -59,7 +63,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ❌ 55.2% LOW (target 65-90% (A2.3))
+- **Immersion:** ❌ 46.6% LOW (target 65-90% (A2.3))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -67,15 +71,16 @@
 ## Low Density Activities
 | Activity | Type | Items | Required | Fix |
 |----------|------|-------|----------|-----|
-|  | match-up | 7 | 8 | Add 1 more items |
+|  | match-up | 6 | 8 | Add 2 more items |
+|  | fill-in | 6 | 8 | Add 2 more items |
 |  | true-false | 6 | 8 | Add 2 more items |
 
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 557 | Included in Core |
-| **Дієслово: вид, час, спосіб** | ✅ | 838 | Included in Core |
-| **Прикметники, порівняння, займенники** | ✅ | 635 | Included in Core |
-| **Складне речення: з'єднуємо думки** | ✅ | 528 | Included in Core |
-| **Самооцінка і перехід до B1** | ✅ | 446 | Included in Core |
+| **Intro/Narrative** | ✅ | 747 | Included in Core |
+| **Дієслово: вид, час, спосіб (~500 words total)** | ✅ | 654 | Included in Core |
+| **Прикметники, порівняння, займенники (~450 words total)** | ✅ | 874 | Included in Core |
+| **Складне речення: з'єднуємо думки (~400 words total)** | ✅ | 543 | Included in Core |
+| **Самооцінка і перехід до B1 (~350 words total)** | ✅ | 565 | Included in Core |

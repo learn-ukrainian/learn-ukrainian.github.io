@@ -2,12 +2,12 @@
   "module": "aspect-future-tense",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-11T02:33:40.015753Z",
+  "last_audit": "2026-04-11T13:07:11.329177Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-11T02:32:43.625061Z",
+    "md": "2026-04-11T13:06:15.260943Z",
     "meta": null,
-    "activities": "2026-04-11T02:25:51.627132Z",
+    "activities": "2026-04-11T13:04:15.515381Z",
     "vocabulary": "2026-04-09T03:07:08.306245Z",
     "research": null,
     "plan": "2026-04-04T21:36:50.396618Z"
@@ -21,12 +21,12 @@
     "lesson": {
       "status": "fail",
       "violations": 3,
-      "message": "5563/4000 (raw: 5610) | engagement: 4/5 | immersion: 30.7% LOW (target 75-100% (B1.0 Bridge)) | richness: 53% < 95% min (grammar) - REWRITE needed"
+      "message": "5599/4000 (raw: 5646) | engagement: 4/5 | immersion: 31.1% LOW (target 75-100% (B1.0 Bridge)) | richness: 53% < 95% min (grammar) - REWRITE needed"
     },
     "activities": {
       "status": "fail",
       "violations": 1,
-      "message": "6/0 | density: 1 < 6"
+      "message": "8/0 | density: 3 < 6"
     },
     "vocabulary": {
       "status": "pass",

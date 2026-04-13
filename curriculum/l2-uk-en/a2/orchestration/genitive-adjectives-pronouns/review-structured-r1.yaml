@@ -2,52 +2,51 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 10
-  evidence: 'Covers all 3 sections perfectly. Adheres to word budgets. Incorporates
-    the specific dialogue situations provided in the plan (e.g., "Це сумка мого старшого
-    брата", "Ви не бачили цієї чорної сумки?"). '
+  score: 8
+  evidence: The 3 planned H2 sections are all present and the 5 activity markers match
+    the plan, but section 1 says `For masculine and neuter adjectives...` and then
+    models only `нового підручника`, `важливого до
 - dimension: 2
   name: Linguistic accuracy
-  score: 8
-  evidence: 'Contains morphological errors with Genitive noun endings: "чемодану"
-    (instead of "чемодана") and "балкону" (instead of "балкона"). Verified via VESUM
-    and СУМ-11. Adjective and pronoun declensions are '
+  score: 5
+  evidence: Critical error in `Я вчора отримав важливого листа...`; critical false
+    absolute in `Never use «їх» for possession!`.
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: 'Outstanding pedagogical breakdown. Excellent use of the PPP flow. The
-    writer explicitly calls out important phonetic differences ("It is pronounced
-    exactly as it is written: with a clear, deep «г» sou'
+  score: 7
+  evidence: The module has a PPP shape and plenty of examples, but `The natural Ukrainian
+    word order always places...` overstates a flexible syntax, and some prose is filler
+    instead of rule+example.
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: All required and recommended words (прикметник, узгодження, документ,
-    підручник, старший, дівчина, etc.) are integrated naturally into the text and
-    examples without feeling forced.
+  score: 9
+  evidence: 'Required plan vocabulary appears naturally in prose: `прикметник`, `займенник`,
+    `присвійний`, `вказівний`, `узгодження`, `дозвіл`, `підручник`, `документ`, `вчителька`,
+    `важливий`; recommended items a'
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: Exercise markers match the plan's intent precisely and test exactly what
-    was just taught in the preceding sections.
+  score: 9
+  evidence: All planned exercise types are represented by markers and placed after
+    the relevant teaching sections.
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: The tone is warm, encouraging, and academically grounded. It feels like
-    an actual teacher explaining the mechanics of the language clearly.
+  score: 6
+  evidence: Repeated filler such as `This skill allows you to be precise and specific
+    in everyday situations.` and `This makes the language very melodic.` adds words
+    without adding instruction.
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: Well-structured markdown. Proper headings. Word count is 2962, comfortably
-    exceeding the 2000-word target.
+  evidence: All sections are present and ordered correctly; pipeline word count is
+    2778, above target; markers and markdown are clean.
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: Factually correct about the direct Russian borrowing of short pronouns
-    for possession ("direct borrowing from Russian grammar... Always use the proper,
-    declinable forms").
+  score: 6
+  evidence: The `їх/їхній` “Decolonization Check” turns a usage preference into a
+    false prohibition, which is linguistically and culturally misleading.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: The opening lost-and-found dialogue flows naturally and organically integrates
-    the complex grammar points targeted in this module.
+  score: 8
+  evidence: The opening uses named speakers and a plausible lost-and-found setting
+    tied to the grammar target.
 findings: []

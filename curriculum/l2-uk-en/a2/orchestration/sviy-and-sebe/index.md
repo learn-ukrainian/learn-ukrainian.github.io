@@ -1,6 +1,6 @@
 # Build Summary: sviy-and-sebe (A2)
 
-Generated: 2026-04-08 19:30
+Generated: 2026-04-11 17:17
 
 ## Pipeline Phases
 
@@ -12,15 +12,15 @@ Generated: 2026-04-08 19:30
 | pre-verify | complete | 2026-04-08 13:35:33 |
 | write | complete | 2026-04-08 13:54:32 |
 | exercises | complete | 2026-04-08 13:54:32 |
-| activities | complete | 2026-04-08 14:28:40 |
+| activities | complete | 2026-04-11 15:12:17 |
 | verify-exercises | complete | 2026-04-08 14:28:40 |
 | annotate | complete | 2026-04-08 14:28:40 |
 | vocab | complete | 2026-04-08 14:29:26 |
 | enrich | complete | 2026-04-08 14:29:26 |
 | verify | complete | 2026-04-08 14:29:26 |
-| review | complete | 2026-04-08 17:30:33 |
 | stress | complete | 2026-04-08 17:30:33 |
-| publish | complete | 2026-04-08 17:30:43 |
+| publish | complete | 2026-04-11 15:17:16 |
+| audit | complete | 2026-04-11 15:17:16 |
 
 ## Reviews
 
@@ -36,13 +36,19 @@ Generated: 2026-04-08 19:30
 | skeleton | gemini (gemini-3-flash-preview) | 36s | ✅ |
 | activities | gemini-tools (gemini-3.1-pro-preview) | 900s | ❌ |
 | activities | gemini-tools (gemini-3.1-pro-preview) | 848s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 90s | ✅ |
 | vocab | gemini (gemini-3-flash-preview) | 38s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 495s | ✅ |
 | write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 354s | ✅ |
+| write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 75s | ✅ |
 | write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 129s | ✅ |
+| write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 45s | ✅ |
 | write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 330s | ✅ |
+| write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 45s | ✅ |
 | write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 276s | ✅ |
+| write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 70s | ✅ |
 | write-chunk-05 | gemini-tools (gemini-3.1-pro-preview) | 52s | ✅ |
+| write-chunk-05 | gemini-tools (gemini-3.1-pro-preview) | 50s | ✅ |
 
 ## Files
 

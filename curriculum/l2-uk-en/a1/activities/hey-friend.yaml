@@ -2,201 +2,150 @@ version: '1.0'
 module: hey-friend
 level: a1
 inline:
-- id: dialogue-flow-practice
+- id: fill-in-dialogue-completion
   type: fill-in
-  instruction: Доповніть діалог правильними словами (Complete the dialogue with the
-    correct words)
+  instruction: Вставте правильне слово (Insert the correct word)
   items:
-  - sentence: — _____, привіт! Як справи?
+  - sentence: — ____, привіт! Як справи?
     answer: Олено
     options:
     - Олено
     - Олена
-  - sentence: — Добре, дякую, _____!
+    - Олену
+  - sentence: — Добре, дякую, ____!
     answer: Тарасе
     options:
     - Тарасе
     - Тарас
-  - sentence: — _____, де мій телефон?
+    - Тарасу
+  - sentence: — ____, де мій телефон?
     answer: Мамо
     options:
     - Мамо
     - Мама
-  - sentence: — На столі, _____.
+    - Мамі
+  - sentence: — На столі, ____.
     answer: синку
     options:
     - синку
     - синок
-  - sentence: — _____, ми йдемо!
+    - синкув
+  - sentence: — ____, ми йдемо!
     answer: Бабусю
     options:
     - Бабусю
     - Бабуся
-  - sentence: — Добре, до побачення, _____!
+    - Бабусі
+  - sentence: — Добре, до побачення, ____!
     answer: Андрію
     options:
     - Андрію
     - Андрій
-- id: vocative-form-practice
-  type: fill-in
-  instruction: Утворіть кличний відмінок (Form the vocative case)
-  items:
-  - sentence: Олена → _____
-    answer: Олено
-    options:
-    - Олено
-    - Олені
-    - Олена
-  - sentence: Тарас → _____
-    answer: Тарасе
-    options:
-    - Тарасе
-    - Тарасу
-    - Тарас
-  - sentence: мама → _____
-    answer: мамо
-    options:
-    - мамо
-    - мамі
-    - мама
-  - sentence: Іван → _____
-    answer: Іване
-    options:
-    - Іване
-    - Івану
-    - Іван
-  - sentence: сестра → _____
-    answer: сестро
-    options:
-    - сестро
-    - сестрі
-    - сестра
-  - sentence: Андрій → _____
-    answer: Андрію
-    options:
-    - Андрію
-    - Андрія
-    - Андрій
-  - sentence: Марія → _____
-    answer: Маріє
-    options:
-    - Маріє
-    - Марії
-    - Марія
-  - sentence: бабуся → _____
-    answer: бабусю
-    options:
-    - бабусю
-    - бабусі
-    - бабуся
-- id: vocative-choice-quiz
+    - Андріє
+- id: quiz-vocative-choice
   type: quiz
-  instruction: Оберіть правильну форму кличного відмінка (Choose the correct vocative
-    form)
+  instruction: Оберіть правильний варіант (Choose the correct option)
   items:
-  - question: _____, привіт!
+  - question: ____, привіт!
     options:
     - Олено
     - Олена
-    - Олені
+    - Оленю
+    - Олену
     correct: 0
-  - question: Як справи, _____?
+  - question: Як справи, ____?
     options:
     - Тарасе
     - Тарас
     - Тарасу
+    - Тарасо
     correct: 0
-  - question: Дякую, _____!
+  - question: Дякую, ____!
     options:
     - мамо
     - мама
+    - маме
     - мамі
     correct: 0
-  - question: Ходи сюди, _____!
+  - question: Ходи сюди, ____!
     options:
     - Іване
     - Іван
     - Івану
+    - Івані
     correct: 0
-  - question: Будь обережний, _____!
-    options:
-    - синку
-    - синок
-    - сине
-    correct: 0
-  - question: Що ти робиш, _____?
+  - question: Що ти робиш, ____?
     options:
     - брате
     - брат
     - брату
+    - браті
     correct: 0
-  - question: Добрий день, _____!
+  - question: Добрий день, ____!
     options:
     - пане
     - пан
     - пану
+    - пано
     correct: 0
-  - question: Привіт, _____!
+  - question: Привіт, ____!
     options:
     - Андрію
     - Андрій
-    - Андрія
+    - Андріє
+    - Андрієй
     correct: 0
-- id: ending-sorting-activity
-  type: group-sort
-  instruction: Розподіліть слова за їхнім закінченням (Sort the words by their ending)
-  groups:
-  - label: -о
-    items:
-    - Олено
-    - мамо
-    - сестро
-    - подруго
-    - дочко
-  - label: -е
-    items:
-    - Тарасе
-    - Іване
-    - брате
-    - пане
-    - Богдане
-  - label: -ю
-    items:
-    - Андрію
-    - дідусю
-    - вчителю
-    - бабусю
-    - Сергію
-workbook:
-- id: reading-comprehension
-  type: true-false
-  instruction: Правда чи ні? (True or false?)
+- id: fill-in-vocative-forms
+  type: fill-in
+  instruction: Вставте правильну форму (Insert the correct form)
   items:
-  - statement: На дні народження Олена знайомиться з Тарасом. (At the birthday party,
-      Olena meets Taras.)
-    correct: false
-    explanation: Олена вже знає Тараса. Вона знайомиться з братом іменинника — Андрієм.
-  - statement: Телефон сина лежить на столі. (The son's phone is on the table.)
-    correct: true
-    explanation: 'Мама каже: ''На столі, синку.'''
-  - statement: Ключі дочки в кишені у тата. (The daughter's keys are in dad's pocket.)
-    correct: true
-    explanation: 'Тато каже: ''У кишені, дочко.'''
-  - statement: Бабуся йде додому. (Grandma is going home.)
-    correct: false
-    explanation: 'Син каже: ''Бабусю, ми йдемо!'' (The son is leaving, not grandma).'
-  - statement: В українській мові для звертання ми використовуємо називний відмінок.
-      (In Ukrainian we use the nominative case for addressing.)
-    correct: false
-    explanation: Для звертання завжди використовується кличний відмінок (Vocative
-      case).
-  - statement: Тарас — це брат іменинника. (Taras is the birthday person's brother.)
-    correct: false
-    explanation: Брат іменинника — Андрій.
-- id: match-up-vocative
+  - sentence: Олена → ____
+    answer: Олено
+    options:
+    - Олено
+    - Олена
+    - Олену
+  - sentence: Тарас → ____
+    answer: Тарасе
+    options:
+    - Тарасе
+    - Тарас
+    - Тарасу
+  - sentence: мама → ____
+    answer: мамо
+    options:
+    - мамо
+    - мама
+    - мамі
+  - sentence: Іван → ____
+    answer: Іване
+    options:
+    - Іване
+    - Іван
+    - Івану
+  - sentence: сестра → ____
+    answer: сестро
+    options:
+    - сестро
+    - сестра
+    - сестрі
+  - sentence: Андрій → ____
+    answer: Андрію
+    options:
+    - Андрію
+    - Андрій
+    - Андріє
+  - sentence: брат → ____
+    answer: брате
+    options:
+    - брате
+    - брат
+    - брату
+workbook:
+- id: match-up-nominative-vocative
   type: match-up
-  instruction: З'єднайте називний і кличний відмінки (Match nominative and vocative
-    cases)
+  instruction: 'З''єднайте слова: називний та кличний відмінки (Match the words: nominative
+    and vocative)'
   pairs:
   - left: друг
     right: друже
@@ -206,143 +155,198 @@ workbook:
     right: тату
   - left: дочка
     right: дочко
-  - left: пані
-    right: пані
-  - left: дідусь
-    right: дідусю
+  - left: син
+    right: синку
+  - left: пан
+    right: пане
   - left: вчитель
     right: вчителю
-- id: error-correction-vocative
-  type: error-correction
-  instruction: Виправте помилку у звертанні (Correct the mistake in the address)
-  items:
-  - sentence: Привіт, мій друг!
-    error: друг
-    correction: друже
-    error_type: word
-    options:
-    - друже
-    - друга
-    - другу
-    explanation: 'В українській мові використовується кличний відмінок: друже.'
-  - sentence: Мама, де мій телефон?
-    error: Мама
-    correction: Мамо
-    error_type: word
-    options:
-    - Мамо
-    - Мамі
-    - Маму
-    explanation: 'Жіночі імена на -а змінюються на -о: Мамо.'
-  - sentence: Дякую, сестра!
-    error: сестра
-    correction: сестро
-    error_type: word
-    options:
-    - сестро
-    - сестрі
-    - сестру
-    explanation: 'Жіночі імена на -а змінюються на -о: сестро.'
-  - sentence: Як справи, Андрій?
-    error: Андрій
-    correction: Андрію
-    error_type: word
-    options:
-    - Андрію
-    - Андрія
-    - Андрієві
-    explanation: 'Чоловічі імена на -й змінюються на -ю: Андрію.'
-  - sentence: До побачення, вчитель!
-    error: вчитель
-    correction: вчителю
-    error_type: word
-    options:
-    - вчителю
-    - вчителя
-    - вчителем
-    explanation: 'Слово ''вчитель'' у кличному відмінку: вчителю.'
-  - sentence: Добрий день, пан Тарас!
-    error: пан
-    correction: пане
-    error_type: word
-    options:
-    - пане
-    - пана
-    - пану
-    explanation: 'Слово ''пан'' у кличному відмінку: пане.'
-- id: true-false-rules
+  - left: дідусь
+    right: дідусю
+- id: true-false-vocative
   type: true-false
   instruction: Правда чи ні? (True or false?)
   items:
-  - statement: The vocative case is used to answer the question 'who?'.
+  - statement: Кличний відмінок слова «тато» — це «тате».
     correct: false
-    explanation: The vocative case does not answer questions; its only job is to get
-      someone's attention.
-  - statement: When addressing someone directly, their name or title must change.
+    explanation: 'Слово «тато» має особливе закінчення: тату.'
+  - statement: Слово «пані» не змінюється у кличному відмінку.
     correct: true
-    explanation: Yes, you must use the vocative form instead of the regular dictionary
-      form.
-  - statement: Feminine names ending in -а change to -о (e.g., Олена → Олено).
-    correct: true
-    explanation: This is the rule for feminine names ending in -a.
-  - statement: The word 'тато' changes to 'тате' in the vocative case.
+    explanation: Слово «пані» залишається без змін.
+  - statement: «Друг» у кличному відмінку буде «другу».
     correct: false
-    explanation: The word 'тато' is an exception and changes to 'тату'.
-  - statement: The title 'пані' does not change its form when addressing someone.
+    explanation: 'Правильно: друже. Літера «г» змінюється на «ж».'
+  - statement: Жіночі імена на -а (Олена, Оксана) змінюються на -о (Олено, Оксано).
     correct: true
-    explanation: The formal title 'пані' stays the same in the vocative case.
-  - statement: Masculine words ending in a soft consonant or -й add -ю in the vocative.
+    explanation: Це головне правило для жіночого роду на -а.
+  - statement: «Бабуся» у кличному відмінку — це «бабусю».
     correct: true
-    explanation: For example, Андрій → Андрію, вчитель → вчителю.
-- id: translate-vocative
-  type: translate
-  instruction: Оберіть правильний переклад (Choose the correct translation)
+    explanation: Слова на -ся змінюються на -сю.
+  - statement: «Брат» змінюється на «брату».
+    correct: false
+    explanation: 'Правильно: брате.'
+- id: unjumble-sentences
+  type: unjumble
+  instruction: Складіть правильне речення зі слів (Put the words in the correct order)
   items:
-  - source: Hi, mom!
+  - words:
+    - справи,
+    - Олено?
+    - Як
+    correct_order:
+    - Як
+    - справи,
+    - Олено?
+  - words:
+    - день,
+    - Добрий
+    - Іване!
+    - пане
+    correct_order:
+    - Добрий
+    - день,
+    - пане
+    - Іване!
+  - words:
+    - мій
+    - телефон?
+    - Мамо,
+    - де
+    correct_order:
+    - Мамо,
+    - де
+    - мій
+    - телефон?
+  - words:
+    - Андрію!
+    - побачення,
+    - до
+    - Добре,
+    correct_order:
+    - Добре,
+    - до
+    - побачення,
+    - Андрію!
+  - words:
+    - йдемо!
+    - ми
+    - Бабусю,
+    correct_order:
+    - Бабусю,
+    - ми
+    - йдемо!
+  - words:
+    - сюди,
+    - Тарасе!
+    - Ходи
+    correct_order:
+    - Ходи
+    - сюди,
+    - Тарасе!
+- id: anagram-names
+  type: anagram
+  instruction: Складіть слово з літер (Make a word from the letters)
+  items:
+  - letters:
+    - т
+    - а
+    - т
+    - у
+    answer: тату
+    hint: dad (vocative)
+  - letters:
+    - м
+    - а
+    - м
+    - о
+    answer: мамо
+    hint: mom (vocative)
+  - letters:
+    - б
+    - р
+    - а
+    - т
+    - е
+    answer: брате
+    hint: brother (vocative)
+  - letters:
+    - с
+    - и
+    - н
+    - к
+    - у
+    answer: синку
+    hint: son (vocative)
+  - letters:
+    - д
+    - р
+    - у
+    - ж
+    - е
+    answer: друже
+    hint: friend (vocative)
+  - letters:
+    - с
+    - е
+    - с
+    - т
+    - р
+    - о
+    answer: сестро
+    hint: sister (vocative)
+- id: fill-in-missing-vocative
+  type: fill-in
+  instruction: Вставте правильне слово (Insert the correct word)
+  items:
+  - sentence: Добрий день, ____ Оксано!
+    answer: пані
     options:
-    - text: Привіт, мамо!
-      correct: true
-    - text: Привіт, мама!
-      correct: false
-    - text: Привіт, мамі!
-      correct: false
-  - source: Good morning, sir!
+    - пані
+    - пане
+    - пан
+  - sentence: Привіт, ____! Як твої справи?
+    answer: друже
     options:
-    - text: Добрий ранок, пане!
-      correct: true
-    - text: Добрий ранок, пан!
-      correct: false
-    - text: Добрий ранок, пана!
-      correct: false
-  - source: Goodbye, friend!
+    - друже
+    - друг
+    - другу
+  - sentence: ____, де мій брат?
+    answer: Дідусю
     options:
-    - text: До побачення, друже!
-      correct: true
-    - text: До побачення, друг!
-      correct: false
-    - text: До побачення, другу!
-      correct: false
-  - source: Thank you, sister!
+    - Дідусю
+    - Дідусь
+    - Дідусе
+  - sentence: ____, я тут!
+    answer: Тату
     options:
-    - text: Дякую, сестро!
-      correct: true
-    - text: Дякую, сестра!
-      correct: false
-    - text: Дякую, сестрі!
-      correct: false
-  - source: How are you, brother?
+    - Тату
+    - Тато
+    - Тате
+  - sentence: Будь обережний, ____!
+    answer: синку
     options:
-    - text: Як справи, брате?
-      correct: true
-    - text: Як справи, брат?
-      correct: false
-    - text: Як справи, брату?
-      correct: false
-  - source: Come here, son!
+    - синку
+    - синок
+    - синке
+  - sentence: ____, привіт! Це Андрій.
+    answer: Наталко
     options:
-    - text: Ходи сюди, синку!
-      correct: true
-    - text: Ходи сюди, синок!
-      correct: false
-    - text: Ходи сюди, сине!
-      correct: false
+    - Наталко
+    - Наталка
+    - Наталку
+- id: group-sort-formal-informal
+  type: group-sort
+  instruction: Розподіліть фрази за категоріями (Sort the phrases by category)
+  groups:
+  - label: Неформально (Informal)
+    items:
+    - Олено, привіт!
+    - Тарасе, ходи сюди!
+    - Як справи, друже?
+    - Мамо, де ти?
+  - label: Формально / Ввічливо (Formal / Polite)
+    items:
+    - Добрий день, пане Іване!
+    - Пані Оксано, добрий вечір!
+    - Дякую, вчителю!
+    - Пане Тарасе!

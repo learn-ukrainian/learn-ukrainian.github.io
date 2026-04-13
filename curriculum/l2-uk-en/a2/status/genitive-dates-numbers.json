@@ -2,45 +2,45 @@
   "module": "genitive-dates-numbers",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-04-11T01:45:17.185498Z",
+  "last_audit": "2026-04-12T23:12:54.622197Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-11T01:45:14.057411Z",
+    "md": "2026-04-12T23:12:52.005028Z",
     "meta": null,
-    "activities": "2026-04-11T01:41:10.892724Z",
-    "vocabulary": "2026-04-07T21:51:09.313133Z",
+    "activities": "2026-04-12T22:52:47.392241Z",
+    "vocabulary": "2026-04-12T22:53:31.395214Z",
     "research": null,
     "plan": "2026-04-04T22:04:59.907784Z"
   },
   "gates": {
     "meta": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Valid Structure"
-    },
-    "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "3777/2000 (raw: 3825)"
-    },
-    "activities": {
       "status": "fail",
       "violations": 1,
-      "message": "6/0 | density: 1 < 8"
+      "message": "Missing '## Summary'"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "3427/2000 (raw: 3505) | engagement: 2/3"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "11/0"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "39/1"
+      "message": "47/1"
     },
     "vocab_progression": {
       "status": "warn",
       "violations": 0,
-      "message": "\u0394 +4 | premature=2 | gaps=0 | well-paced=7",
-      "delta": 4,
-      "premature": 2,
+      "message": "\u0394 -7 | premature=3 | gaps=0 | well-paced=4",
+      "delta": -7,
+      "premature": 3,
       "gaps": 0,
-      "well_paced": 7
+      "well_paced": 4
     },
     "naturalness": {
       "status": "info",
@@ -60,9 +60,11 @@
   },
   "overall": {
     "status": "fail",
-    "blocking_issues": [],
-    "pass_count": 5,
-    "fail_count": 1,
+    "blocking_issues": [
+      "Structure: Missing '## Summary'"
+    ],
+    "pass_count": 4,
+    "fail_count": 2,
     "deferred_count": 0
   }
 }

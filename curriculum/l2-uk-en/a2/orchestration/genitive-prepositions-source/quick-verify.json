@@ -2,17 +2,6 @@
   "attempt": 1,
   "passed": true,
   "errors": [],
-  "warnings": [
-    {
-      "check": "VOCABULARY",
-      "severity": "WARNING",
-      "message": "Missing 3/10 required vocab: джерело (source), сніданок (breakfast), канікули (vacation, holidays)"
-    },
-    {
-      "check": "EXERCISES",
-      "severity": "WARNING",
-      "message": "Plan expects 4 exercise(s) but content has 3"
-    }
-  ],
-  "timestamp": "2026-04-10T23:59:08.034154+00:00"
+  "warnings": [],
+  "timestamp": "2026-04-12T22:15:21.047571+00:00"
 }

@@ -1,0 +1,186 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T01-18-d20a51f6.json
+phase: activities
+prompt_chars: 64218
+response_chars: 734
+prompt_words: 8622
+response_words: 93
+sections:
+- name: preamble
+  start: 0
+  length: 1803
+  fraction: 0.0281
+- name: plan
+  start: 1803
+  length: 62307
+  fraction: 0.9702
+- name: output_spec
+  start: 64110
+  length: 108
+  fraction: 0.0017
+large_sections:
+- plan
+directives_total: 42
+directives_covered: 3
+directives_missed:
+- kind: must
+  text: '** Your very first character must be `version:`.'
+  covered: false
+  coverage_note: 0/6 keywords (0%)
+- kind: must
+  text: Each inline activity MUST have an `id` that matches one of these markers.
+  covered: false
+  coverage_note: 1/10 keywords (10%)
+- kind: must
+  text: Each inline activity's `id` must match one of these markers exactly (lowercase,
+    hyphenated).
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: must
+  text: You MUST create activities that cover all these hints.
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: must
+  text: '**Grounding rule:** Every Ukrainian word in your exercises must appear either
+    in the prose content or in this vocabulary list.'
+  covered: false
+  coverage_note: 0/15 keywords (0%)
+- kind: must
+  text: '**CRITICAL RULE: EVERY single activity object MUST include an `id` field
+    (a unique string like "quiz-grammar", "match-up-vocab").'
+  covered: false
+  coverage_note: 2/16 keywords (12%)
+- kind: must
+  text: 'Required: id, instruction, items[{sentence, answer}].'
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: must
+  text: 'Required: id, instruction, pairs[{left, right}].'
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: must
+  text: 'Required: id, instruction, groups[{label, items[]}].'
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: must
+  text: 'Required: id, instruction, items[{sentence, error, correction}].'
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: must
+  text: 'Required: id, instruction, items[{source}].'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: 'Required: id, instruction, items[{words[], correct_order[]}].'
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: must
+  text: 'Required: id, instruction, items[] (array of strings), correct_order[] (TOP-LEVEL
+    array of **integers** — zero-based indices into items).'
+  covered: false
+  coverage_note: 0/13 keywords (0%)
+- kind: must
+  text: 'Required: id, instruction, items[{word, answer}].'
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: must
+  text: 'Required: id, items[{word, correct}].'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: 'Required: id, syllables[], correctIndices[], category.'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: 'Required: id, items[{words[], correct, explanation}].'
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: must
+  text: 'Required: id, instruction, items[{image, letter}].'
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: must
+  text: 'Required: id, letters[{upper, lower}].'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: 'Required: id, items[{video}].'
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: must
+  text: '- **critical-analysis**: Required: id, prompt.'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: '**You MUST use these patterns.'
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: must
+  text: If the pattern lists divide-words, count-syllables, and odd-one-out — your
+    output MUST include all three.
+  covered: false
+  coverage_note: 0/15 keywords (0%)
+- kind: must
+  text: '**Answer must be in options** — for quiz items, `correct` must be a valid
+    index.'
+  covered: false
+  coverage_note: 1/8 keywords (12%)
+- kind: must
+  text: '**Test LANGUAGE, not trivia** — exercises must test Ukrainian language skills.'
+  covered: false
+  coverage_note: 0/8 keywords (0%)
+- kind: must
+  text: '- **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).'
+  covered: false
+  coverage_note: 0/9 keywords (0%)
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: vocab-match-up
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: vocab-group-sort
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-aspect-work
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-aspect-logic
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: role-play-interview
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: open-writing-bio
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: vocab-match-up
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: vocab-group-sort
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-aspect-work
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-aspect-logic
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: role-play-interview
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: open-writing-bio
+  covered: false
+  coverage_note: marker missing

@@ -1,0 +1,55 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 6
+  evidence: 'All planned H2 sections are present, but the dialogue section is far
+    under the plan budget: the current exchange ends at `> **Олена:** Так! *(Yes!)*`
+    and the section is only 143 words versus the plann'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: No Russianisms, Surzhyk, calques, paronym errors, or forbidden Russian
+    letters were found. I spot-checked borderline forms with the local tools (`десята`,
+    `ходімо`, `восени`, `йде`, `Олено`), and they
+- dimension: 3
+  name: Pedagogical quality
+  score: 6
+  evidence: 'The module reviews the right grammar scope, but `<!-- INJECT_ACTIVITY:
+    fill-in-day-description -->` comes before `## Граматика`, even though the planned
+    day-description activity uses sequence words su'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 8
+  evidence: 'Core review vocabulary is present in prose: `у понеділок`, `в суботу`,
+    `у січні`, `в серпні`, `взимку`, `навесні`, `влітку`, `восени`, and `завжди /
+    часто / іноді / рідко / ніколи`. Coverage is good, '
+- dimension: 5
+  name: Exercise quality
+  score: 7
+  evidence: Marker count matches the plan and the IDs align with the hinted exercise
+    types, but the day-description marker is placed before the section that teaches
+    the sequence/time review it is supposed to test
+- dimension: 6
+  name: Engagement & tone
+  score: 4
+  evidence: 'The summary leans on generic filler: `your Ukrainian learning journey`,
+    `Every new word and pattern you learn is a tool...`, and `Get ready to step out
+    into the Ukrainian streets...` add hype more tha'
+- dimension: 7
+  name: Structural integrity
+  score: 6
+  evidence: All planned H2 headings are present and ordered correctly, but the pipeline
+    word count is 1095, below the required 1200.
+- dimension: 8
+  name: Cultural accuracy
+  score: 9
+  evidence: No Russian-centered framing or inaccurate cultural claims. The module
+    presents Ukrainian on its own terms.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 5
+  evidence: 'Named speakers help, but the exchange is very short and one line is semantically
+    weak: `> **Андрій:** Добре! Я часто гуляю в суботу.` comes right after setting
+    a meeting time, so the planning feels st'
+findings: []

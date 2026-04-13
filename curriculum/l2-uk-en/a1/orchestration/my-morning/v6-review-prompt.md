@@ -127,24 +127,25 @@ references:
 <generated_module_content>
 ## Діало́ги — Dialogues
 
-Every morning has a distinct rhythm. We use specific verbs to describe daily routines, and in Ukrainian, many of these share a special feature because they describe actions performed on ourselves. Consider a typical morning scenario. Two roommates, **Лі́на** (Lina) and **На́стя** (Nastia), are in their shared kitchen on a Tuesday morning. The time is early, and the sun is just coming up. Lina is an early bird; she is already sitting at the table and drinking her morning coffee. Nastia, however, is just starting her daily routine and walks into the kitchen looking a bit sleepy. Lina asks Nastia about her timing, wanting to know exactly when her day begins. Nastia explains her sequence clearly.
+Two roommates, **Лі́на** and **На́стя**, are talking in the kitchen before work. Ліна asks about Настя's routine, and then they compare weekday and weekend habits.
 
 > **Ліна:** Ко́ли ти прокида́єшся? *(When do you wake up?)*
 > **Настя:** Я прокида́юся о сьо́мій. *(I wake up at seven.)*
 > **Ліна:** Що ти ро́биш по́тім? *(What do you do then?)*
 > **Настя:** Вмива́юся, одяга́юся і сні́даю. *(I wash up, get dressed, and have breakfast.)*
-> **Ліна:** А коли ти йдеш на робо́ту? *(And when do you go to work?)*
-> **Настя:** О во́сьмій. *(At eight.)*
+> **Ліна:** А я споча́тку п'ю ка́ву, а потім збира́юся. *(I drink coffee first, and then I get ready.)*
+> **Настя:** А коли ти йдеш на робо́ту? *(And when do you go to work?)*
+> **Ліна:** О во́сьмій. *(At eight.)*
 
 Notice the specific verbs Nastia uses to describe her routine. She says **прокидаюся** (I wake up), **вмиваюся** (I wash up), and **одягаюся** (I get dressed). These verbs all end in the same distinct suffix. However, when she mentions eating, she simply says **снідаю** (I have breakfast) without that special ending. The first three verbs reflect actions Nastia is doing to her own body, while having breakfast is an external action.
 
 Their conversation continues as they compare this busy weekday routine to their typical weekend habits. The pace of a weekend morning is entirely different.
 
 > **Настя:** У субо́ту ти теж поспіша́єш? *(Do you also hurry on Saturday?)*
-> **Ліна:** У суботу я не поспіша́ю. Прокидаюся пі́зно, лежу́, чита́ю нови́ни. *(On Saturday I do not hurry. I wake up late, lie down, read the news.)*
+> **Ліна:** У суботу я не поспіша́ю. Прокидаюся пі́зно, лежу́, чита́ю нови́ни. *(On Saturday I do not hurry. I wake up late, lie in bed, and read the news.)*
 > **Настя:** А я навча́юся вра́нці. Потім гуля́ю. *(And I study in the morning. Then I walk.)*
 
-In this weekend contrast, Lina uses the verb **прокидаюся** (I wake up) again, but follows it with regular, non-reflexive verbs like **лежу** (I lie down) and **читаю** (I read). Nastia mentions another verb with that special ending: **навчаюся** (I study). Mixing these different verb types is how you naturally describe your day in Ukrainian.
+In this weekend contrast, Lina uses the verb **прокидаюся** (I wake up) again, but follows it with regular, non-reflexive verbs like **лежу** (I lie / I am lying) and **читаю** (I read). Nastia mentions another verb with that special ending: **навчаюся** (I study). Mixing these different verb types is how you naturally describe your day in Ukrainian.
 
 ## Дієслова́ на -ся — Reflexive Verbs
 
@@ -153,15 +154,15 @@ The special verbs you saw in the dialogue are called reflexive verbs. As explain
 *   **вмива́ти** (to wash someone) → **вмива́тися** (to wash oneself)
 *   **одяга́ти** (to dress someone) → **одяга́тися** (to dress oneself)
 
-Conjugating these verbs is simple because the core mechanics do not change. You take the standard verb endings you already know from Group I and simply attach **-ся** to the very end. The reflexive suffix acts like a fixed addition hooked to the end of the conjugated form. The conjugation paradigm for the present tense demonstrates this consistent pattern.
+In the present tense, reflexive verbs keep the usual personal endings, but beginners should learn the full written forms: **вмиваюся**, **вмиваєшся**, **вмивається**. In writing, the 2nd-person form ends in **-шся**, and the 3rd-person form ends in **-ться / -ється**.
 
 | Займе́нник | Дієсло́во | Переклад |
 | --- | --- | --- |
-| Я | **вмива́ю-ся** | I wash myself |
-| Ти | **вмива́єш-ся** | You wash yourself |
-| Він / Вона́ | **вмива́є-ться** | He / She washes himself/herself |
+| Я | **вмива́юся** | I wash myself |
+| Ти | **вмива́єшся** | You wash yourself |
+| Він / Вона́ | **вмива́ється** | He / She washes himself/herself |
 
-Notice that the core endings (**-ю**, **-єш**, **-є**) remain perfectly regular. You just add the **-ся** (or **-ться** for "він / вона") suffix to the end.
+Notice the written pattern: **вмиваюся**, **вмиваєшся**, **вмивається**. For beginners, it is safer to memorize these full forms than to think of them as a mechanical add-on.
 
 While the spelling is perfectly regular, the pronunciation holds a secret. According to the textbook *Кравцо́ва Grade 4 (p. 113)*, there is a crucial pronunciation note you must memorize to sound natural. The letters combine to create completely new sounds, hiding the original consonants.
 
@@ -182,11 +183,11 @@ It is important to know exactly when to use these reflexive forms. A reflexive v
 
 With an understanding of how reflexive verbs work, we can build a complete morning timeline. The vocabulary for your morning routine relies heavily on these reflexive verbs, but it also includes some standard verbs for contrast.
 
-*   **прокидатися** (to wake up)
-*   **вмиватися** (to wash face/hands)
-*   **одягатися** (to get dressed)
-*   **збира́тися** (to get ready)
-*   **поверта́тися** (to return home)
+*   **прокидатися** — **Я прокидаюся о сьомій.** (I wake up at seven.)
+*   **вмиватися** — **Потім я вмиваюся.** (Then I wash up.)
+*   **одягатися** — **Після цього я одягаюся.** (After that I get dressed.)
+*   **збира́тися** — **Я швидко збира́юся на роботу.** (I get ready for work quickly.)
+*   **поверта́тися** — **Увечері я поверта́юся додому.** (In the evening I return home.)
 
 There is a conceptual difference between the first actions of the day. The verb **прокидатися** means to wake up, specifically the moment you open your eyes and become conscious. A different verb, **встава́ти**, means to physically get out of bed. Another essential daily action is **чи́стити зу́би** (to brush teeth), which is a common non-reflexive routine phrase. We also use non-reflexive verbs for consuming our morning food and drinks: **сні́дати** (to have breakfast) and **пи́ти ка́ву** (to drink coffee).
 
@@ -234,7 +235,7 @@ The core concepts of this module follow a clear pattern. The fundamental formula
 The sequence of a standard morning routine flows logically through these verbs: **прокидатися** → **вмиватися** → **одягатися** → **снідати** → **йти**. To connect these actions into a fluent story, you must use the sequencing adverbs: **спочатку**, **потім**, **після цього**, and **нарешті**.
 
 :::tip
-Phonetics play a massive role in making your speech sound natural. The written letters and the spoken sounds are entirely different for the **ти** and **він/вона** forms of reflexive verbs. The ending **-шся** must always be pronounced as a long, soft **[с':а]**. The ending **-ється** must always be pronounced as a long, soft **[ц':а]**. Focus heavily on these soft, merged sounds to develop an authentic Ukrainian accent.
+Practice these aloud: **вмиваєшся** → **[вмиваєс':а]**, **вмивається** → **[вмиваєц':а]**. The spelling stays the same, but the sound changes in fast speech.
 :::
 
 To ensure you have mastered this material, perform a quick self-check. Try to answer the following questions mentally or aloud. Use full sentences and incorporate the sequencing words where possible.
@@ -248,7 +249,7 @@ To ensure you have mastered this material, perform a quick self-check. Try to an
 Describe your morning in four to five sentences using the sequence words. If you can confidently answer these questions and build that short narrative, you are successfully mastering the mechanics of Ukrainian reflexive verbs.
 </generated_module_content>
 
-**PIPELINE NOTE — Word count: 1521 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
+**PIPELINE NOTE — Word count: 1470 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -424,7 +425,7 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 74 words | Not found: 41 words
+Verified: 81 words | Not found: 42 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
   ✗ Діало — NOT IN VESUM
@@ -433,6 +434,7 @@ Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dic
   ✗ Кравцо — NOT IN VESUM
   ✗ Ліна — NOT IN VESUM
   ✗ Настя — NOT IN VESUM
+  ✗ Настя' — NOT IN VESUM
   ✗ биш — NOT IN VESUM
   ✗ вану — NOT IN VESUM
   ✗ вмиваєс — NOT IN VESUM
@@ -469,32 +471,163 @@ Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dic
   ✗ ється — NOT IN VESUM
   ✗ єшся — NOT IN VESUM
 
-All 74 other words are confirmed to exist in VESUM.
+All 81 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
-## Verification Tools (MCP)
+---
 
-You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
+## Verification Tools (Shell Commands)
 
-**Core Verification:**
-- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
-- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
+You have access to verification tools via shell commands. Use these to verify
+Ukrainian vocabulary, check grammar, and search textbook content **as you write**.
 
-**Content Quality:**
-- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+**IMPORTANT:** Run verification commands BEFORE finalizing any Ukrainian text.
+Batch multiple verifications together to minimize round-trips.
 
-**Reference:**
-- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp_rag_search_literary` — verify literary references against primary sources
-- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
+### 1. Batch-verify Ukrainian words exist in VESUM (preferred — one call for many words)
 
-**Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_words
+results = verify_words(['слово1', 'слово2', 'слово3'])
+for w, matches in results.items():
+    if matches:
+        print(f'{w}: FOUND — lemma={matches[0][\"lemma\"]}, pos={matches[0][\"pos\"]}')
+    else:
+        print(f'{w}: NOT FOUND — may not exist in standard Ukrainian')
+"
+```
+
+### 2. Verify a single Ukrainian word in VESUM (with full morphological tags)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_word
+results = verify_word('WORD_HERE')
+if results:
+    for m in results:
+        print(f'lemma={m[\"lemma\"]}, pos={m[\"pos\"]}, tags={m[\"tags\"]}')
+else:
+    print('NOT FOUND in VESUM')
+"
+```
+
+### 3. Get all inflected forms of a lemma (declension/conjugation)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_lemma
+forms = verify_lemma('LEMMA_HERE')
+for f in forms[:20]:
+    print(f'{f[\"word_form\"]:20s} {f[\"pos\"]:8s} {f[\"tags\"]}')
+print(f'... {len(forms)} forms total')
+"
+```
+
+### 4. Check CEFR level of a word (is it level-appropriate?)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import query_cefr_level
+results = query_cefr_level('WORD_HERE')
+for r in results:
+    print(f'{r[\"word\"]}: {r[\"level\"]} ({r[\"pos\"]})')
+if not results:
+    print('Not in CEFR database')
+"
+```
+
+### 5. Search textbook content (Ukrainian school textbooks, Grades 1-11)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_textbooks
+keywords = {'keyword1', 'keyword2'}
+results = search_textbooks(keywords, 5)
+for r in results:
+    title = r.get('section_title', r.get('title', ''))
+    grade = r.get('grade', '?')
+    text = r.get('text', '')[:200]
+    print(f'Grade {grade} | {title}')
+    print(f'  {text}')
+    print()
+"
+```
+
+### 6. Search style guide for calques/Russianisms (Антоненко-Давидович, 279 entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_style_guide
+results = search_style_guide('TOPIC_HERE', 3)
+for r in results:
+    print(f'--- {r.get(\"word\", \"\")} [{r.get(\"section\", \"\")}]')
+    print(r.get('text', '')[:300])
+    print()
+if not results:
+    print('No style guide entries found')
+"
+```
+
+### 7. Look up word definition in СУМ-11 (Ukrainian explanatory dictionary, 127K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_definitions
+results = search_definitions('WORD_HERE', 3)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+### 8. Search idioms (Фразеологічний словник, 25K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_idioms
+results = search_idioms('WORD_HERE', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"text\", r.get(\"definition\", \"\")))[:200]}')
+"
+```
+
+### 9. English-to-Ukrainian translation (Балла, 79K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import translate_en_uk
+results = translate_en_uk('ENGLISH_WORD', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+---
+
+**WHEN to use these tools:**
+
+1. **Before writing any Ukrainian text** — batch-verify all key vocabulary with
+   `verify_words` (tool 1). Any word that returns NOT FOUND must be replaced.
+2. **When you suspect a Russicism or calque** — search the style guide (tool 6)
+   and verify the correct Ukrainian form with `verify_word` (tool 2).
+3. **When writing for A1/A2** — check CEFR levels (tool 4) to ensure vocabulary
+   is level-appropriate.
+4. **When unsure about a case ending or conjugation** — use `verify_lemma` (tool 3)
+   to see the full paradigm.
+5. **When covering a grammar topic** — search textbooks (tool 5) to see how
+   Ukrainian school textbooks teach it.
+6. **When you need the precise Ukrainian meaning** — use СУМ-11 (tool 7).
+7. **When looking for natural Ukrainian expressions** — search idioms (tool 8).
+
+**Batching rule:** Collect all words you want to verify, then run ONE `verify_words`
+call instead of multiple `verify_word` calls. This is faster and uses fewer tokens.

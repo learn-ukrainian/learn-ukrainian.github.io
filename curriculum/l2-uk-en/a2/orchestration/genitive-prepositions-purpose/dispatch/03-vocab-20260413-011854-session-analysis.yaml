@@ -1,0 +1,83 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T23-18-a6f5ddff.json
+phase: vocab
+prompt_chars: 23103
+response_chars: 1811
+prompt_words: 3700
+response_words: 198
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.0345
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.01
+- name: plan
+  start: 1028
+  length: 22075
+  fraction: 0.9555
+large_sections:
+- plan
+directives_total: 13
+directives_covered: 0
+directives_missed:
+- kind: must
+  text: Whenever you use these prepositions, the noun, adjective, or pronoun that
+    follows them must change its ending.
+  covered: false
+  coverage_note: 0/15 keywords (0%)
+- kind: must
+  text: The noun that follows this preposition provides the answer and must take the
+    Genitive case.
+  covered: false
+  coverage_note: 0/11 keywords (0%)
+- kind: must
+  text: Just like with inanimate objects, the person or animal receiving the item
+    must be put into the Genitive case.
+  covered: false
+  coverage_note: 0/13 keywords (0%)
+- kind: must
+  text: '**Quick tip** — When translating the English word "for", you must be careful
+    to choose the correct Ukrainian equivalent based on context.'
+  covered: false
+  coverage_note: 1/15 keywords (7%)
+- kind: must
+  text: When using personal pronouns, remember that they also have their own special
+    Genitive forms that you must memorize.
+  covered: false
+  coverage_note: 0/17 keywords (0%)
+- kind: must
+  text: The noun that follows **без** must always be in the Genitive case, answering
+    the questions **кого?** or **чого?**.
+  covered: false
+  coverage_note: 3/12 keywords (25%)
+- kind: must
+  text: '**Decolonization note** — When speaking Ukrainian, you must completely avoid
+    the word **возле**.'
+  covered: false
+  coverage_note: 1/11 keywords (9%)
+- kind: inject_activity
+  text: quiz-choose-or-to-complete-everyday-sentences
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: true-false-judge-whether-preposition-noun-form-combinations-are-grammatically-correct
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-complete-location-descriptions-with-correct-genitive-form
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-match-ukrainian-prepositional-phrases-to-their-english-equivalents
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: true-false-judge-whether-preposition-noun-form-combinations-are-grammatically-correct
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-choose-or-to-complete-everyday-sentences
+  covered: false
+  coverage_note: marker missing

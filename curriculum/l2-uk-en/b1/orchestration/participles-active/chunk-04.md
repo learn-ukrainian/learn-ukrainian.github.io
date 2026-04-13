@@ -1,0 +1,28 @@
+## Чого уникати: русизми у дієприкметниках (~660 words total)
+
+In Ukrainian, using the suffixes **-вш-** and **-ш-** to form past active participles is a critical violation of morphological norms. Words like *сказавший* meaning "having said", *прийшовший* meaning "having arrived", and *посинівший* meaning "having turned blue" are not Ukrainian. They are direct structural borrowings from Russian and are categorized as severe grammatical errors, or *суржик*. The authoritative school textbook by Glazova (Grade 11, p. 72) explicitly identifies these forms as a gross violation of the literary standard. Historically, the Ukrainian language developed its own distinct methods for expressing these concepts, favoring descriptive clauses or completely different morphological structures. When you use a word ending in **-вший**, it immediately signals that you are applying foreign grammar rules to Ukrainian vocabulary. Decolonizing your speech means entirely eliminating these suffixes from your active use. Instead of trying to force these unnatural participles into your sentences, you must rely on the authentic Ukrainian strategies that we will explore below.
+
+Найкращий і найприродніший спосіб замінити штучний активний дієприкметник — це використати описовий зворот. Ця синтаксична конструкція складається із займенника «який» або «що» та звичайного дієслова у відповідному часі. Наприклад, замість кальки «читаюча дівчина» ми завжди говоримо «дівчина, яка читає». Замість помилкового «сказавший чоловік» потрібно казати «чоловік, який сказав». Цей підхід є абсолютно нормативним для нейтрального та розмовного стилів сучасної української мови. Він робить ваше мовлення живим, легким і динамічним, уникаючи важких канцелярських конструкцій. Українська мова віддає перевагу дії, вираженій повноцінним дієсловом, а не скам'янілим формам. Тому використання підрядних речень є вашим головним інструментом для створення автентичних висловлювань.
+
+> *The best and most natural way to replace an artificial active participle is to use an **описовий зворот** (descriptive phrase). This syntactic construction consists of the pronoun "який" (which/who) or "що" (that) and a regular verb in the appropriate tense. For example, instead of the calque "читаюча дівчина" meaning a reading girl, we always say "дівчина, яка читає" meaning the girl who is reading. Instead of the erroneous "сказавший чоловік", you must say "чоловік, який сказав". This approach is absolutely normative for the neutral and conversational styles of the modern Ukrainian language. It makes your speech lively, light, and dynamic, avoiding heavy bureaucratic constructions. The Ukrainian language prefers action expressed by a full verb rather than fossilized forms. Therefore, the use of subordinate clauses is your main tool for creating authentic utterances.*
+
+Another powerful strategy for avoiding unnatural active participles is replacing them with dedicated nouns or adjectives. Many present active participles ending in **-учий** or **-ячий** have become deeply entrenched bureaucratic calques. For instance, the management word *керуючий* should always be replaced with the noun **керівник**. Similarly, instead of saying *завідуючий* for a department head, the correct Ukrainian noun is **завідувач**. When expressing the concept of something being currently in effect, you must avoid the Russian calque *діючий* and use the authentic Ukrainian adjective **чинний** (current, valid). We also see this distinction clearly in everyday household items. The word *миючий* implies the active process of washing right now, whereas **мийний** denotes the intended purpose of the item. Therefore, you buy a cleaning detergent called a **мийний засіб**, not a *миючий засіб*. By choosing precise nouns and purpose-driven adjectives over clumsy participles, your vocabulary becomes sharper and much more aligned with the natural elegance of the Ukrainian language.
+
+:::info
+**Grammar box**
+Always double-check words ending in **-учий**, **-ючий**, **-ачий**, and **-ячий**. If you can replace the word with a noun, a regular adjective, or a descriptive clause, that replacement is almost always the preferred Ukrainian standard.
+:::
+
+To speak authentic Ukrainian, you must memorize a few common false friends. These are direct calques from Russian that disguise themselves as Ukrainian active participles. They are widespread in careless speech and often sound correct to beginners, but they represent severe stylistic errors. Purging these specific calques from your vocabulary is a crucial step in decolonizing your language. Using their natural replacements immediately elevates your proficiency and proves that you are learning the true literary standard. Here is a quick reference table of these common errors and their correct Ukrainian equivalents.
+
+| ❌ Суржик (Calque) | ✅ Українська норма (Standard) | English Meaning |
+| :--- | :--- | :--- |
+| *слідуючий* | **наступний** | next (in a sequence) |
+| *бажаючий* | **охочий** | willing, eager (person) |
+| *лідируючий* | **провідний** | leading |
+| *існуючий* | **наявний** | existing, available |
+| *оточуючий* | **довколишній** | surrounding |
+
+By consciously substituting clunky, bureaucratic words like *існуючий* with the elegant adjective **наявний** (existing, available), you align your speech with the natural rhythms of the language. This attention to detail shows deep respect for authentic Ukrainian morphology.
+
+<!-- INJECT_ACTIVITY: error-correction-calques -->

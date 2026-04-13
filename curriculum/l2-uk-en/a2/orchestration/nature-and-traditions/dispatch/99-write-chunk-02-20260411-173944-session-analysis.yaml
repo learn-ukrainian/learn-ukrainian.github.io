@@ -1,0 +1,53 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T15-38-34f85fec.json
+phase: write-chunk-02
+prompt_chars: 44909
+response_chars: 4918
+prompt_words: 6336
+response_words: 731
+sections:
+- name: header
+  start: 0
+  length: 468
+  fraction: 0.0104
+- name: skeleton
+  start: 468
+  length: 1556
+  fraction: 0.0346
+- name: prior_summary
+  start: 2024
+  length: 3144
+  fraction: 0.07
+- name: plan
+  start: 5168
+  length: 11430
+  fraction: 0.2545
+- name: wiki
+  start: 10197
+  length: 28064
+  fraction: 0.6249
+- name: output_spec
+  start: 44662
+  length: 247
+  fraction: 0.0055
+large_sections:
+- wiki
+directives_total: 16
+directives_covered: 12
+directives_missed:
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 1/11 keywords (9%)
+- kind: inject_activity
+  text: quiz-holiday-traditions
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-seasons
+  covered: false
+  coverage_note: marker missing

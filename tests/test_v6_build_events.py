@@ -219,6 +219,56 @@ def test_main_emits_module_failed_event(
     assert events[1]["error"] == "Build FAILED at Step 2 (plan check)"
 
 
+def test_main_does_not_save_repair_state_when_regen_repair_fails(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    curriculum_root = _single_module_tree(tmp_path)
+
+    monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
+    monkeypatch.setattr(v6_build.ModuleBuildLock, "acquire", lambda self: True)
+    monkeypatch.setattr(v6_build.ModuleBuildLock, "release", lambda self: None)
+    monkeypatch.setattr(v6_build, "_inject_abetka_activities", lambda *args, **kwargs: None)
+
+    activity_path = curriculum_root / "a2" / "activities" / "a2-bridge.yaml"
+    activity_path.parent.mkdir(parents=True, exist_ok=True)
+    activity_path.write_text("- type: quiz\n", "utf-8")
+
+    repair_results = iter([(True, True), (False, False)])
+    repair_calls: list[tuple[str, int, str]] = []
+
+    def fake_repair(level: str, module_num: int, slug: str) -> tuple[bool, bool]:
+        repair_calls.append((level, module_num, slug))
+        return next(repair_results)
+
+    def fake_activities(*args, **kwargs) -> Path:
+        return activity_path
+
+    monkeypatch.setattr(v6_build, "step_repair", fake_repair)
+    monkeypatch.setattr(v6_build, "step_activities", fake_activities)
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["v6_build.py", "a2", "1", "--step", "repair", "--writer", "gemini"],
+    )
+
+    with pytest.raises(SystemExit) as exc:
+        v6_build.main()
+
+    assert exc.value.code == 1
+    assert repair_calls == [("a2", 1, "a2-bridge"), ("a2", 1, "a2-bridge")]
+
+    state_path = curriculum_root / "a2" / "orchestration" / "a2-bridge" / "state.json"
+    assert not state_path.exists()
+
+    events = _event_lines(capsys.readouterr().out)
+    assert events[0]["event"] == "module_start"
+    assert events[-1]["event"] == "module_failed"
+    assert events[-1]["phase"] == "repair"
+    assert events[-1]["error"] == "Build FAILED at Step 5f (repair)"
+
+
 def test_main_emits_module_done_after_publish(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

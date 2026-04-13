@@ -2,13 +2,13 @@
   "module": "euphony",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-11T00:58:06.884315Z",
+  "last_audit": "2026-04-13T21:14:54.827823Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-11T00:58:06.366156Z",
+    "md": "2026-04-13T21:14:41.344993Z",
     "meta": null,
-    "activities": "2026-04-09T11:54:42.999128Z",
-    "vocabulary": "2026-04-09T11:59:56.888588Z",
+    "activities": "2026-04-12T20:54:57.270868Z",
+    "vocabulary": "2026-04-12T20:55:37.103503Z",
     "research": null,
     "plan": "2026-03-30T22:17:20.656497Z"
   },
@@ -21,17 +21,26 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1652/1200 (raw: 1692)"
+      "message": "1419/1200 (raw: 1457)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "8/0"
+      "message": "9/0"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "26/1"
+      "message": "22/1"
+    },
+    "vocab_progression": {
+      "status": "warn",
+      "violations": 0,
+      "message": "\u0394 +1 | premature=0 | gaps=3 | well-paced=2",
+      "delta": 1,
+      "premature": 0,
+      "gaps": 3,
+      "well_paced": 2
     },
     "naturalness": {
       "status": "info",
@@ -50,10 +59,8 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "1 Outline Compliance Errors"
-    ],
+    "status": "pass",
+    "blocking_issues": [],
     "pass_count": 6,
     "fail_count": 0,
     "deferred_count": 0

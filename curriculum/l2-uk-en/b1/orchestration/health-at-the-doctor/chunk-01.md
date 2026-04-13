@@ -1,31 +1,44 @@
-## Здоров'я і самопочуття
+## Здоров'я і самопочуття (~720 words total)
 
-Здоров'я *(health)* — це найважливіше, що є в кожної людини. Коли ми здорові, ми рідко думаємо про лікарів чи ліки. Ми просто насолоджуємося життям, працюємо та спілкуємося з друзями. Але коли ми хворіємо *(get sick)*, нам одразу потрібна допомога медичних фахівців, щоб якнайшвидше одужати *(to recover)*.
+Health is the foundation of a happy life. When we are healthy, we rarely think about visiting doctors or going to hospitals. But when illness strikes, we suddenly realize that physical well-being is our most valuable asset. The Ukrainian word for health is **здоров'я** (health). This fundamental concept belongs to a rich lexical family built around the root "здоров-", which gives us the adjective "здоровий" (healthy) and the perfective verb **одужати** (to recover). When dealing with a serious **хвороба** (disease), you will need to see a professional **лікар** (doctor).
 
-Уся ця багата лексика будується навколо одного давнього кореня: **-здоров-** *(health)*. Від нього походять такі слова, як **здоровий** *(healthy)*, процес **оздоровлення** *(recovery/healing)*, дієслово **поздоровити** *(to congratulate)* і, звичайно, сам іменник **здоров'я**.
+Здоров'я — це найважливіше, що є в людини. Коли ми здорові, ми не думаємо про лікарів чи аптеки. Але коли починається серйозна хвороба, нам потрібен професійний лікар.
 
-Зверніть увагу на орфографію цього слова. Чому ми завжди пишемо його з апострофом? Згадаймо правила з першого етапу нашого курсу. Літера **«в»** позначає губний приголосний звук *(labial consonant)*. Коли після нього стоїть йотована літера **«я»**, яка позначає звуки [й] та [а], ми обов'язково маємо показати роздільну вимову. Апостроф чітко сигналізує, що губний звук [в] залишається твердим, а відразу після нього звучить звук [й]. Якби ми написали це слово без апострофа, літера «я» просто злилася б із попереднім приголосним і пом'якшила б звук [в]. Тому апостроф у слові «здоров'я» — це ключ до правильної та чіткої української вимови.
+> *Health is the most important thing a person has. When we are healthy, we do not think about doctors or pharmacies. But when a serious disease begins, we need a professional doctor.*
 
-Коли ми відчуваємо фізичний дискомфорт, критично важливо вміти правильно описати свої симптоми *(symptoms)*. В українській мові склалися дві основні граматичні конструкції для опису нашого фізичного стану.
+Let's look closely at the spelling of the noun "здоров'я". You will notice an apostrophe before the final letter «я». In Ukrainian orthography, the apostrophe acts as a crucial phonetic separator. It appears after labial consonants—like [в]—when they are directly followed by jotted vowels such as «я», «ю», «є», or «ї». The apostrophe tells you to pronounce the [в] hard and clear, and to pronounce the «я» as two distinct sounds: [й] + [а]. This rule preserves the phonetic integrity of the root.
 
-Перша конструкція найчастіше використовується для локалізованого болю. Це модель приналежності: **«У мене болить...»** *(I have a pain in...)*. У цій короткій фразі конкретна частина тіла виступає підметом у називному відмінку, а дієслово чітко узгоджується з нею в числі. Наприклад, ми правильно кажемо: «У мене болить **голова** *(head)*» (однина) або «У мене болять **очі** *(eyes)*» (множина). Пам'ятайте, що ми ніколи не кажемо «я маю біль» — це типова помилка і калька з англійської мови.
+When you need to describe how you feel physically, Ukrainian uses two distinct grammatical patterns. The first pattern is the possessive construction with the preposition «у». We use this specific structure to say that a specific body part hurts. The body part is the grammatical subject (in the Nominative case), and the verb agrees with it.
 
-Друга важлива конструкція описує загальний стан. Для цього ми використовуємо давальний відмінок особи *(Dative experiencer)* та відповідні безособові слова. Найпоширеніший приклад: **«Мені погано»** *(I feel bad)*. Виступаючи в ролі того, хто переживає цей стан, ви кажете «мені» замість активного «я». Ця ж логіка бездоганно працює і для інших відчуттів. Якщо температура в кімнаті надто низька, ви кажете: **«Мені холодно»** *(I am cold)*. Якщо ви відчуваєте дискомфорт у шлунку, використовується безособове дієслово: **«Мені нудить»** *(I am nauseous)*. Також часто можна почути паралельний варіант **«Мене нудить»** (зі знахідним відмінком). Обидві граматичні форми є абсолютно природними та описують стан, який ви не контролюєте.
+У мене болить голова. У дитини дуже сильно болить живіт. Якщо болять кілька різних частин тіла, ми використовуємо дієслово у формі множини. Наприклад, після тренування у мене болять ноги і спина.
 
-Тепер подивимося на медичну лексику крізь захопливу призму морфонології. Одним із найважливіших слів у цій темі є короткий іменник **біль** *(pain)*. Зверніть особливу увагу: в українській мові слово «біль» — виключно чоловічого роду! Тому ми завжди правильно кажемо **«сильний біль»** *(strong pain)*, **«головний біль»** *(headache)* або неприємний **«зубний біль»** *(toothache)*.
+The second pattern is the Dative experiencer construction. We use this when describing a general physical state or a sensation that happens to us, rather than a specific localized pain. In this structure, the person experiencing the state is in the Dative case, followed by an adverb of state or an impersonal verb. For example, if you suddenly get a high **температура** (temperature), you might use this pattern.
 
-Але що відбувається, коли ми беремо дієслово від цього ж кореня? Ми кажемо: «У мене **болить**». Корінь залишається той самий, але голосний звук змінився. Чому замість звука [і] з'явився звук [о]? Це класичне чергування голосних *(vowel alternation)*, яке ми з вами детально вивчали раніше. У слові «біль» склад повністю закритий, бо він закінчується на приголосний, тому ми маємо звук [і]. У формі «бо-лить» перший склад стає відкритим, він закінчується на голосний, і звук [і] закономірно перетворюється на звук [о].
+Мені сьогодні дуже погано. Мені холодно, бо у мене несподівано піднялася висока температура. Мене трохи нудить після поїздки в старому автобусі.
 
-Цей фундаментальний принцип стабільно працює при творенні нових слів. Візьмемо префікс **без-** *(without)* та додамо його до нашого кореня, щоб утворити прикметник **безболісний** *(painless)*. Це слово ділиться на склади так: без-бо-ліс-ний. Склад «бо» — знову відкритий, тому ми бачимо там звук [о]. Завдяки цьому чергуванню ви завжди можете легко простежити історичний зв'язок між іменником «біль», дієсловом «болить» та прикметником «безболісний». Це допомагає зрозуміти внутрішню логіку українського словотвору.
+Notice the grammatical difference: "my head hurts" takes the Nominative subject "голова" and the possessive "у мене". But "I feel bad" uses the dative "мені" with the adverb "погано". 
 
-Звичайно, медична тема неможлива без вивчення назв різних частин людського тіла. І тут нас знову привітно зустрічають добре знайомі фонетичні правила. Медичні слова не мають особливих «медичних винятків» — вони повністю підкоряються стандартним законам української мови.
+The medical vocabulary provides excellent examples of Ukrainian morphophonemic alternations. Let's carefully examine the noun **біль** (pain) and the verb "болить" (it hurts). This is a classic example of the [і] to [о] vowel shift.
 
-Візьмемо для початку таке слово, як **ніс** *(nose)*. Якщо у вас почався сильний **нежить** *(runny nose)*, ви використовуєте спеціальні аптечні краплі для носа. Слово «ніс» має закритий склад із голосним звуком [і]. Коли ми трохи змінюємо його форму в родовому відмінку — у фразі **«для носа»** *(for the nose)* — цей склад одразу відкривається, і звук [і] плавно переходить у звук [о]. Це те ж саме класичне чергування, що й у простій парі **«кіт — кота»** *(cat)*.
+В українській мові іменник «біль» належить до чоловічого роду. Ми завжди кажемо «сильний головний біль», а не «сильна». У називному відмінку це слово має закритий склад, тому ми чітко чуємо звук [і]. Але коли ми змінюємо форму слова, цей склад стає відкритим.
 
-Інший цікавий приклад — це слово **вухо** *(ear)*. Якщо ви відчуваєте там біль, ви обов'язково скажете лікареві: «У мене болить у **вусі** *(in the ear)*». Тут ми дуже яскраво бачимо чергування приголосних звуків у місцевому відмінку. Задньоязиковий твердий звук [х] перед закінченням [і] змінюється на свистячий м'який звук [с'].
+> *In the Ukrainian language, the noun "pain" belongs to the masculine gender. We always say "strong headache (masculine)," not "strong (feminine)." In the nominative case, this word has a closed syllable, so we clearly hear the sound [i]. But when we change the form of the word, this syllable becomes open.*
 
-Така ж сама ситуація щоразу відбувається зі словом **око** *(eye)*. Якщо туди щось випадково потрапило, ви скажете: «У мене щось в **оці** *(in the eye)*». Твердий звук [к] перед закінченням місцевого відмінка [і] закономірно змінюється на м'який звук [ц'].
+Because the syllable opens up when a vowel ending is added, the [і] naturally shifts back to [о]. This is exactly why the verb is "болить" and the genitive form is "болю". We can also trace this alternation in word formation. If we add the prefix «без-» (without) and the suffix «-н-», we create the adjective "безболісний" (painless). Here, the syllable containing the root vowel is closed once again, so the [і] safely returns.
 
-Як ви бачите, українська фонетика залишається логічною та системною. Вивчивши базове правило чергування на прикладі звичайних об'єктів, ви можете легко застосувати його до медичної лексики.
+This vowel alternation is a fundamental pattern of the Ukrainian language. We see the exact same [і] to [о] shift in many names for body parts. The word for nose is «ніс» (closed syllable), but if you want to say you don't have a runny nose, you say «немає носа» (open syllable). It is common to have a strong **нежить** (runny nose) or a deep **кашель** (cough) in winter. A blocked nose is a very unpleasant **симптом** (symptom).
 
-<!-- INJECT_ACTIVITY: match-medical-families -->
+Узимку люди часто мають сильний нежить і глибокий кашель. Коли людина має нежить, вона не може нормально дихати через ніс. Це дуже неприємний симптом.
+
+:::info
+**Grammar box**
+Remember that both «нежить» and «кашель» are masculine nouns of the second declension in Ukrainian. You will always use them with masculine adjectives, like "сильний нежить".
+:::
+
+Consonant alternations are equally important when discussing health. When we put body parts into the Locative case to say where something hurts, the final root consonant often shifts. The word "вухо" (ear) ends in the consonant [х], but in the Locative it becomes «у вусі» (the [х] changes to [с]).
+
+У мене несподівано стріляє у вусі. Лікар дуже уважно дивиться в оці пацієнта. Ці чергування приголосних звуків роблять українську мову такою мелодійною.
+
+Similarly, the word "око" (eye) ends in [к], which reliably shifts to [ц] in the Locative, giving us «в оці». These are the exact same consonant shifts you learned for places, like the noun **аптека** (pharmacy) becoming «в аптеці» (at the pharmacy). Recognizing these phonetic patterns helps you predict how new medical vocabulary will behave.
+
+<!-- INJECT_ACTIVITY: match-up, Match medical word families: лікар-лікувати-ліки, біль-болить-безболісний, 12 items -->

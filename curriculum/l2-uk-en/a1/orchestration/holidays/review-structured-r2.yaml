@@ -2,55 +2,53 @@ round: 2
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 10
-  evidence: The module flawlessly covers the entire outline. All expected elements—including
-    the 2023 Christmas date shift, the 12 dishes, and the "З + instrumental" grammar
-    rule—are accurately incorporated.
+  score: 6
+  evidence: 'All planned sections exist, and planned vocabulary is covered, but the
+    section pacing is far off the 300-word plan budget: `Діалоги` 486 words, `Українські
+    свята` 537, `Державні свята` 408, `Підсумок`'
 - dimension: 2
   name: Linguistic accuracy
-  score: 8
-  evidence: While vocabulary and grammar are solid, there are critical stress mark
-    errors. Words like "свя́та́", "виши́ва́нка", and "захи́сникі́в" contain double
-    stress marks. Plural of "пи́санка" is stressed inc
+  score: 10
+  evidence: No Ukrainian language errors found; the module contains no Russian-only
+    letters and the prompt’s VESUM data confirms the vocabulary used here.
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: 'Excellent execution of the PPP flow. The module introduces holidays naturally
-    via dialogue, subsequently breaking down the context, history, and finally offering
-    a clear, pattern-based explanation of '
+  score: 6
+  evidence: Too much space is spent on English meta-explanation instead of immediate
+    Ukrainian input, e.g. `Ukrainian holidays are a central part of family life...`,
+    `A **свято** is a time for rest...`, `Notice t
 - dimension: 4
   name: Vocabulary coverage
   score: 10
-  evidence: All required and recommended words (`свято`, `Різдво`, `Великдень`, `кутя`,
-    `колядка`, `прапор`, `салют`) are naturally embedded into paragraphs and dialogues
-    without resorting to bare lists.
+  evidence: All required plan words appear in prose (`свято`, `святкувати`, `Різдво`,
+    `Великдень`, `Новий рік`, `вітати`), and the recommended cultural vocabulary is
+    also used naturally.
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: The 4 requested activity markers (`quiz-holiday-match`, `quiz-holiday-clues`,
-    `group-sort-traditions`, `fill-in-greetings`) are present and accurately positioned
-    to test what was just taught.
+  score: 6
+  evidence: The marker inventory is complete, but `quiz-which-holiday`, `quiz-match-date`,
+    and `group-sort-traditions` are stacked together late instead of following the
+    holiday content they test.
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: The tone is warm and encouraging. It uses specific, culturally deep details
-    (e.g., "powerful visual symbol of Ukrainian identity") rather than relying on
-    generic filler or empty enthusiasm.
+  score: 7
+  evidence: The cultural topic is strong, but several lines are generic filler rather
+    than concrete teaching, e.g. `It is a very important word for any celebration.`
+    and `The rich traditions remain exactly the sa
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: All required H2 headings from the plan are present and ordered correctly.
-    The word count is 1536, comfortably above the 1200-word target.
+  evidence: All planned H2 headings are present and ordered correctly, and the deterministic
+    pipeline count is above the 1200-word target.
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: Outstanding decolonized perspective. Correctly notes the historical shift
-    away from the Russian Orthodox calendar for Christmas and highlights the civic
-    importance of Vyshyvanka Day and Defenders' Day
+  score: 8
+  evidence: The module is broadly decolonized and culturally respectful, but `There
+    must be exactly twelve meatless dishes` overstates a living tradition as an absolute
+    rule.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 9
-  evidence: Conversations are highly realistic. The exchanges capture both the casual
-    nature of discussing holiday plans and the patriotic atmosphere of Independence
-    Day. Using "ти" to address a family unit in an
+  score: 6
+  evidence: The Independence dialogue is still mostly Q&A (`Що ви робите?`, `А ввечері?`)
+    and repeats `концерт`, so it feels more like a checklist than a natural exchange.
 findings: []

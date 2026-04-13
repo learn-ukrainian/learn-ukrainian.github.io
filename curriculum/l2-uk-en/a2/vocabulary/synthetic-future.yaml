@@ -1,6 +1,6 @@
 vocabulary:
 - word: приї́хати
-  translation: to arrive (perfective)
+  translation: to arrive — pf.
   expression: false
   pos: дієсл.
   gender: ''
@@ -17,18 +17,12 @@ vocabulary:
   pos: дієсл.
   gender: ''
   verified: true
-- word: прибира́ти
-  translation: to clean up (imperfective)
+- word: прибира́ти / прибра́ти
+  translation: to clean up — impf./pf.
   expression: false
-  pos: дієсл.
+  pos: ''
   gender: ''
-  verified: true
-- word: прибра́ти
-  translation: to clean up (perfective)
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
+  verified: false
 - word: майбутній час
   translation: future tense
   expression: true
@@ -47,123 +41,69 @@ vocabulary:
   pos: прикм.
   gender: ''
   verified: true
-- word: сказа́ти
-  translation: to say, to tell (perfective)
+- word: сказа́ти / скажу́
+  translation: to say/tell — pf. future
   expression: false
-  pos: дієсл.
+  pos: ''
   gender: ''
-  verified: true
-- word: написа́ти
-  translation: to write (perfective)
+  verified: false
+- word: написа́ти / напишу́
+  translation: to write — pf. future
   expression: false
-  pos: дієсл.
+  pos: ''
   gender: ''
-  verified: true
-- word: зроби́ти
-  translation: to do, to make (perfective)
+  verified: false
+- word: зроби́ти / зроблю́
+  translation: to do — pf. future
   expression: false
-  pos: дієсл.
+  pos: ''
   gender: ''
-  verified: true
+  verified: false
 - word: бу́ду
-  translation: I will (auxiliary verb)
+  translation: I will — auxiliary
   expression: false
   pos: ім.
   gender: ж.
   verified: true
 - word: прочита́ти
-  translation: to read through, to finish reading
+  translation: to read through — pf.
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
 - word: подзвони́ти
-  translation: to call (by phone)
+  translation: to call — pf.
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
 - word: купи́ти
-  translation: to buy (perfective)
+  translation: to buy — pf.
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: щодня́
-  translation: every day
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: ча́сто
-  translation: often
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: за́вжди́
-  translation: always
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: ско́ро
-  translation: soon
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: враз
-  translation: suddenly
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: до́вго
-  translation: for a long time
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: якщо́
-  translation: if
-  expression: false
-  pos: спол.
-  gender: ''
-  verified: true
-- word: коли́
-  translation: when
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: заздалегі́дь
-  translation: in advance
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: цілий вечір
-  translation: the whole evening
+- word: складати / скласти іспит
+  translation: to take / pass an exam
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: о сьомій годині
-  translation: at seven o'clock
+- word: поба́чити
+  translation: to see
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: пої́хати
+  translation: to go (by vehicle) — pf.
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: Що ти будеш робити завтра?
+  translation: What will you be doing tomorrow?
   expression: true
   pos: ''
   gender: ''
-  verified: true
-- word: зви́чка
-  translation: habit
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: здоро́в'я
-  translation: health
-  expression: false
-  pos: ім.
-  gender: с.
   verified: true

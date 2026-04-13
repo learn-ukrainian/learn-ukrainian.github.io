@@ -1,0 +1,65 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T06-38-b90ed6fd.json
+phase: write-chunk-01
+prompt_chars: 42346
+response_chars: 3952
+prompt_words: 6266
+response_words: 652
+sections:
+- name: header
+  start: 0
+  length: 404
+  fraction: 0.0095
+- name: skeleton
+  start: 404
+  length: 1222
+  fraction: 0.0289
+- name: plan
+  start: 1626
+  length: 11789
+  fraction: 0.2784
+- name: wiki
+  start: 6923
+  length: 28725
+  fraction: 0.6783
+- name: output_spec
+  start: 42140
+  length: 206
+  fraction: 0.0049
+large_sections:
+- wiki
+directives_total: 20
+directives_covered: 13
+directives_missed:
+- kind: must
+  text: '- **Middle School (5-7 клас):** The focus shifts to the official, standardized
+    format of a postal address (`поштова адреса`) as required by Ukrposhta (`Укрпошта`).'
+  covered: false
+  coverage_note: 5/15 keywords (33%)
+- kind: must
+  text: '`) and the cases required for location.'
+  covered: false
+  coverage_note: 1/3 keywords (33%)
+- kind: must
+  text: '* **Fill-in-the-Blank (Aspect):** Create sentences where students must choose
+    between the imperfective and perfective verb.'
+  covered: false
+  coverage_note: 2/13 keywords (15%)
+- kind: must
+  text: '* **Understanding Bureaucracy:** Filling out forms is a key life skill in
+    any country, and this is a gentle introduction to the structured language required.'
+  covered: false
+  coverage_note: 1/16 keywords (6%)
+- kind: must
+  text: '` | `Привіт, Оксано!` | The **Vocative case** (`кличний відмінок`) is mandatory
+    for direct address in Ukrainian.'
+  covered: false
+  coverage_note: 2/10 keywords (20%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 4/11 keywords (36%)

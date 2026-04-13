@@ -1,6 +1,0 @@
-Section 1 "Давальний відмінок іменників чоловічого роду (Dative of Masculine Nouns)": ~650 words — [Explain the parallel -ові/-еві/-єві and -у/-ю endings, style rules, and I declension forms]
-Section 2 "Давальний відмінок іменників жіночого роду (Dative of Feminine Nouns)": ~500 words — [Explain -і/-ї endings, consonant alternations (к→ц, г→з, х→с), and III declension forms]
-Section 3 "Давальний відмінок іменників середнього роду (Dative of Neuter Nouns)": ~400 words — [Explain II declension -у/-ю and IV declension -аті/-яті]
-Section 4 "Давальний відмінок у реченні (Dative Nouns in Sentences)": ~600 words — [Explain the two-object pattern, verbs that take Dative, and contrast with Genitive]
-Summary: ~150 words
-Total: 2300 words

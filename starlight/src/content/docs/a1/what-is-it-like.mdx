@@ -7,13 +7,14 @@ pipeline: v6
 build_status: draft
 ---
 
-import ErrorCorrection from '@site/src/components/ErrorCorrection';
+import Anagram from '@site/src/components/Anagram';
+import CountSyllables from '@site/src/components/CountSyllables';
 import FillIn from '@site/src/components/FillIn';
 import FlashcardDeck from '@site/src/components/FlashcardDeck';
 import GroupSort from '@site/src/components/GroupSort';
 import MatchUp from '@site/src/components/MatchUp';
+import OddOneOut from '@site/src/components/OddOneOut';
 import Quiz from '@site/src/components/Quiz';
-import Translate from '@site/src/components/Translate';
 import TrueFalse from '@site/src/components/TrueFalse';
 import Unjumble from '@site/src/components/Unjumble';
 import YouTubeVideo from '@site/src/components/YouTubeVideo';
@@ -24,116 +25,129 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ## Діало́ги (Dialogues)
 
-It is the weekend, and the city center is bustling with activity. We visit a local weekend book fair, a popular gathering place where vendors display an interesting assortment of printed materials, vintage goods, and cultural artifacts. People browse through the stalls, carefully looking at items like maps, books, and posters, often picking them up to appreciate the quality of the paper or the vibrancy of the ink. We join **Тара́с** and **Софія** as they walk from table to table. They are examining the items on display and sharing their immediate impressions of what they see.
+Here are two short dialogues about describing things with adjectives. The first uses the familiar room-description pattern from **Вашуленко Grade 3, p.131**, and the second shows simple window-shopping questions and answers.
 
-The book fair is an excellent place to practice our new descriptive skills because the objects are constantly changing. One table might have historical artifacts, while another has modern textbooks. As our friends walk, they point out specific details that catch their eye. Examine their conversation below.
-
-As they stop at a large wooden stall, **Тарас** unrolls a massive poster while **Софія** picks up a thick, freshly printed volume and an antique photograph from a nearby stack.
+In the first dialogue, Taras asks Sofia to describe her room.
 
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Тарас:</span> Яки́й вели́кий плака́т! *(What a big poster!)*</div>
+<div class="dialogue-line"><span class="speaker">Тара́с:</span> Яка твоя́ кімна́та? *(What kind is your room?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Софія:</span> А яка ціка́ва кни́га! *(And what an interesting book!)*</div>
-
-<div class="dialogue-line"><span class="speaker">Тарас:</span> Це нови́й атлас? *(Is this a new atlas?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Софія:</span> Так, новий атлас. А там — старе́ фо́то. *(Yes, a new atlas. And there — an old photo.)*</div>
-
-<div class="dialogue-line"><span class="speaker">Тарас:</span> І мале́нька листі́вка. *(And a small postcard.)*</div>
-
-</div>
-
-They are doing more than just naming objects; they are actively describing them, assigning qualities to the things they see. Notice how the ending of the describing word changes depending on whether the object is masculine, feminine, or neuter. Describing objects at a market is useful, but the most common place we describe things is in our own homes. When you invite a guest over, or when you are simply talking about your living space with a new friend, you naturally want to communicate what your environment looks like. Listen to another conversation. This time, **Софія** is describing her personal space to **Тарас**, focusing on the everyday furniture items we learned about previously. This is a classic situation found in the Вашуленко Grade 3 textbook under the topic "Моя́ кімна́та" (My room).
-
-Listen to how **Софія** provides details about the size, age, and brightness of her room and the items inside it.
-
-<div class="dialogue">
-
-<div class="dialogue-line"><span class="speaker">Тарас:</span> Яка твоя́ кімната? *(What is your room like?)*</div>
-
-<div class="dialogue-line"><span class="speaker">Софія:</span> Моя кімната вели́ка і сві́тла. *(My room is big and bright.)*</div>
+<div class="dialogue-line"><span class="speaker">Софія:</span> Моя́ кімната вели́ка і сві́тла. *(My room is big and bright.)*</div>
 
 <div class="dialogue-line"><span class="speaker">Тарас:</span> А стіл? *(And the table?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Софія:</span> Стіл новий. А лі́жко — старе. *(The table is new. And the bed is old.)*</div>
+<div class="dialogue-line"><span class="speaker">Софія:</span> Стіл нови́й. А лі́жко — старе́. *(The table is new. And the bed is old.)*</div>
 
 </div>
 
-Here, the description feels very natural. The questions and the answers both rely on matching the describing word to the object being discussed.
+In this dialogue, **кімната** is feminine, so Sofia says **велика, світла**; **стіл** is masculine, so she says **новий**; **ліжко** is neuter, so she says **старе**. This is adjective-noun agreement in action.
 
-## Який? Яка? Яке́? (What kind?)
-
-To ask "What kind?" or "Which?" in English, you rely on fixed words that never change shape. In Ukrainian grammar, the reality is much more dynamic. A describing word is called a **прикме́тник** (adjective), a term that literally suggests it is a feature attached to an object. Its primary job is to tell you the qualities of a noun—its size, color, age, or value. However, you cannot simply memorize one single, unchanging word for "What kind?". Just as you learned that the word for "my" changes based on gender, strictly following the **мій**, **моя**, **моє́** pattern, the question word for descriptions must also adapt to precisely match the noun it asks about. The question "What kind?" changes by gender exactly like the possessive pronouns do, acting as a mirror to the noun.
-
-When you want to describe a masculine noun, you use the specific question word **який?** (what kind?). The answer to this question will typically be an adjective ending in the letters **-ий**. For example, if you are looking at a table, you ask **Який стіл?** (What kind of table?), and the accurate answer is **Великий стіл** (A big table) or **Новий атлас** (A new atlas). For feminine nouns, the entire system shifts to accommodate the feminine gender. The question word changes to **яка?**. Consequently, the describing word will end in the letter **-а**, giving you descriptive phrases like **Нова́ книга** (A new book) or **Велика листівка** (A big postcard).
-
-Neuter nouns require their own specific grammatical form to maintain this harmony. To ask about a neuter object, you must use the question word **яке?**. Following the established logic, the adjective that directly answers this neuter question will end in the letter **-е**. If you point to a window, you ask **Яке вікно́?** (What kind of window?), and the appropriate response is **Чи́сте вікно** (A clean window) or **Старе фото** (An old photo). Note that while some adjectives have soft-stem endings like **-ій**, **-я**, or **-є** (such as **си́ній**, which means dark blue), we will cover those exceptions in the next module about colors. For now, you must focus entirely on mastering the standard **-ий**, **-а**, **-е** pattern.
-
-Practicing this skill requires active listening. When you hear a native speaker describe an object, pay close attention to the ending of the adjective. You will notice that the ending always matches the gender of the noun it is attached to. This consistency is what makes Ukrainian grammar so logical once you grasp the foundational rules. It might seem like a lot of variations at first, but with practice, this matching process will become second nature.
-
-:::tip
-According to the Пономарова Grade 3 textbook (p.98), the fundamental rule is that an adjective has the same gender as the noun. Think of the noun as the boss, and the adjective as the loyal assistant that must put on the matching uniform!
+:::note
+In Ukrainian, adjectives do not have a fixed gender of their own. They are highly adaptable words that change their form entirely to match the noun they are describing.
 :::
 
-This means the noun dictates the gender, and the adjective obediently copies it without exception. For masculine words, you will always use **-ий** (**великий**, **новий**, **чи́стий**). For feminine words, you will use **-а** (**велика**, **нова**, **чи́ста**). For neuter words, you will use **-е** (**вели́ке**, **нове́**, **чисте**). This pattern of agreement will reappear in every single grammatical case as you continue learning the language, so you must learn it well right now to build a strong foundation for future fluency.
-
-<Quiz client:only="react" questions={[{"question": "_____ плакат!", "options": [{"text": "Який", "correct": true}, {"text": "Яка", "correct": false}, {"text": "Яке", "correct": false}]}, {"question": "_____ книга!", "options": [{"text": "Який", "correct": false}, {"text": "Яка", "correct": true}, {"text": "Яке", "correct": false}]}, {"question": "_____ вікно?", "options": [{"text": "Який", "correct": false}, {"text": "Яка", "correct": false}, {"text": "Яке", "correct": true}]}, {"question": "_____ стіл?", "options": [{"text": "Який", "correct": true}, {"text": "Яка", "correct": false}, {"text": "Яке", "correct": false}]}, {"question": "_____ ручка?", "options": [{"text": "Який", "correct": false}, {"text": "Яка", "correct": true}, {"text": "Яке", "correct": false}]}, {"question": "_____ фото?", "options": [{"text": "Який", "correct": false}, {"text": "Яка", "correct": false}, {"text": "Яке", "correct": true}]}]} instruction={"Choose the correct question word: **який**, **яка**, or **яке**."} />
-
-<FillIn client:only="react" items={[{"sentence": "Це _____ стіл.", "answer": "великий", "options": ["великий", "велика", "велике"]}, {"sentence": "Це _____ книга.", "answer": "нова", "options": ["новий", "нова", "нове"]}, {"sentence": "Там _____ вікно.", "answer": "чисте", "options": ["чистий", "чиста", "чисте"]}, {"sentence": "Це _____ фото.", "answer": "старе", "options": ["старий", "стара", "старе"]}, {"sentence": "Це _____ кімната.", "answer": "світла", "options": ["світлий", "світла", "світле"]}, {"sentence": "Це _____ телефон.", "answer": "дорогий", "options": ["дорогий", "дорога", "дороге"]}]} instruction={"Choose the correct **прикметник** (adjective) ending."} />
-
-## Прикме́тники (Common Adjectives)
-
-One of the most effective strategies for expanding your descriptive vocabulary quickly is to learn adjectives in opposite pairs. Human memory thrives on contrast, making it much easier to remember two interconnected words together than trying to memorize them in isolation. Start with the primary size and age pairs. For physical size, we have the word **великий** (big) and its direct opposite **мале́нький** (small). For the age of objects, we pair **новий** (new) with **стари́й** (old). You can immediately apply these new adjectives to the vocabulary objects you already know, creating useful combinations like **великий стіл** (a big table), **маленька ру́чка** (a small pen), **новий телефо́н** (a new phone), and **старе фото** (an old photo).
-
-Next, we expand the vocabulary set with quality and light pairs. To express whether something is visually pleasing, attractive, or generally good, use the adjective **га́рний** (nice, beautiful). Its direct opposite is **пога́ний** (bad). For measuring physical cleanliness, pair **чистий** (clean) with **брудни́й** (dirty). When talking about the amount of natural or artificial light in a space, use **сві́тлий** (light, bright) and **те́мний** (dark). These descriptive words are incredibly useful for everyday conversations. You might describe the weather as a **гарний день** (nice day), remark that the lake has **чиста вода́** (clean water), or say your office is a **світла кімната** (bright room).
-
-Consider how often you make judgments about the things around you. Every time you decide whether a shirt is clean or dirty, or whether a room is too dark to read in, you are using qualitative adjectives. Applying these new words to your immediate surroundings is the fastest way to memorize them. Look at your desk right now. Is your pen new or old? Is your coffee cup big or small? By constantly labeling your environment with these opposite pairs, you actively reinforce the vocabulary in your mind.
-
-When you are out shopping or discussing the financial value of everyday items, you need a completely different set of descriptors. The word for an item that costs a significant amount of money is **дороги́й** (expensive). The opposite descriptor, used for an item that is highly affordable, is **деше́вий** (cheap). Imagine you are window shopping in the city center and looking closely at a storefront display filled with various goods.
+In the second dialogue, they stop at a book fair stand and describe what they see.
 
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Софія:</span> Яка га́рна су́мка! *(What a beautiful bag!)*</div>
+<div class="dialogue-line"><span class="speaker">Софія:</span> Яка ціка́ва кни́га! *(What an interesting book!)*</div>
 
-<div class="dialogue-line"><span class="speaker">Тарас:</span> Так, але́ вона́ дорога́. *(Yes, but it is expensive.)*</div>
+<div class="dialogue-line"><span class="speaker">Тарас:</span> Так, а ось новий атлас. *(Yes, and here is a new atlas.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Софія:</span> А телефон? Який він? *(And the phone? What is it like?)*</div>
+<div class="dialogue-line"><span class="speaker">Софія:</span> А плака́т? Яки́й він? *(And the poster? What kind is it?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Тарас:</span> Він великий і дешевий. *(It is big and cheap.)*</div>
+<div class="dialogue-line"><span class="speaker">Тарас:</span> Він вели́кий. А листі́вка — мале́нька. *(It is big. And the postcard is small.)*</div>
 
 </div>
 
-:::note
-Notice the small connecting words used to build longer sentences. We use **і** (and) when two qualities exist in parallel harmony. We use **а** (and/but) to show a contrast between two different things.
+Here **цікава** and **маленька** match the feminine nouns **книга** and **листівка**, while **новий** and **великий** match the masculine nouns **атлас** and **плакат**.
+
+## Який? Яка? Яке́? (What kind?)
+
+To ask "what kind?" in Ukrainian, match the question word to the noun’s gender: **який** for masculine, **яка** for feminine, and **яке** for neuter. As **Пономарова Grade 3, p.98** teaches, the adjective then takes the same gender as the noun.
+
+When you are asking about a masculine noun, you must use the masculine question word **який** (what kind? — m). The answer will typically feature an adjective ending in the standard masculine suffix **-ий**. This ending acts as a clear signal that the description belongs to a masculine object.
+
+* **Який стіл?** (What kind of table?) → **Великий стіл.** (A big table.)
+* **Який плакат?** (What kind of poster?) → **Новий плакат.** (A new poster.)
+
+The question and the answer mirror each other perfectly.
+
+For a feminine noun, use **яка**, and the answer usually has a feminine adjective in **-а**.
+
+* **Яка книга?** (What kind of book?) → **Нова́ книга.** (A new book.)
+* **Яка листівка?** (What kind of postcard?) → **Маленька листівка.** (A small postcard.)
+
+:::tip
+Use the question word as a cheat code! The ending of the question word usually tells you the exact ending you need for the adjective. If you ask **Яка?**, expect the answer to end in **-а**.
 :::
 
-When building rich descriptions with the everyday objects you learned in the previous module, these tiny structural words are absolutely essential for fluency. By combining your known vocabulary, you can proudly say **У ме́не є великий стіл** (I have a big table). When explicitly linking parallel ideas, use **і**: **Вікно велике і чисте** (The window is big and clean). When highlighting a clear contrast, use **а**: **Стіле́ць старий, а ліжко — нове** (The chair is old, and/but the bed is new). Finally, you can use **але** (but) for slightly unexpected or surprising combinations: **Моя кімната маленька, але гарна** (My room is small, but nice).
+Finally, when inquiring about a neuter noun, you use the neuter question word **яке** (what kind? — n). The adjective providing the description will typically feature the neuter ending **-е**.
 
-<MatchUp client:only="react" pairs={[{"left": "великий", "right": "маленький"}, {"left": "новий", "right": "старий"}, {"left": "гарний", "right": "поганий"}, {"left": "чистий", "right": "брудний"}, {"left": "світлий", "right": "темний"}, {"left": "дорогий", "right": "дешевий"}]} instruction={"Match the **прикметники** (adjectives) with their opposites."} />
+* **Яке вікно́?** (What kind of window?) → **Чи́сте вікно.** (A clean window.)
+* **Яке фо́то?** (What kind of photo?) → **Старе фото.** (An old photo.)
 
-<FillIn client:only="react" items={[{"sentence": "Моя кімната велика _____ світла.", "answer": "і", "options": ["і", "а", "але"]}, {"sentence": "Стіл новий, _____ ліжко старе.", "answer": "а", "options": ["і", "а", "але"]}, {"sentence": "Кімната маленька, _____ гарна.", "answer": "але", "options": ["і", "а", "але"]}, {"sentence": "Вікно _____ і чисте.", "answer": "велике", "options": ["великий", "велика", "велике"]}, {"sentence": "Там є _____ ліжко.", "answer": "нове", "options": ["новий", "нова", "нове"]}, {"sentence": "Це мій _____ стіл.", "answer": "новий", "options": ["новий", "нова", "нове"]}]} instruction={"Choose the correct word to complete the description."} />
+Soft-stem forms in **-ій/-я/-є** will be practiced in the colors module.
+
+The golden rule for this grammatical behavior is taught early in Ukrainian schools: **прикме́тник ма́є таки́й рід, як іме́нник, з яки́м він зв'я́заний** (an adjective has the same gender as the noun it is connected to).
+
+<Quiz client:only="react" questions={[{"question": "____ телефон?", "options": [{"text": "Який", "correct": true}, {"text": "Яка", "correct": false}, {"text": "Яке", "correct": false}]}, {"question": "____ книга?", "options": [{"text": "Який", "correct": false}, {"text": "Яка", "correct": true}, {"text": "Яке", "correct": false}]}, {"question": "____ вікно?", "options": [{"text": "Який", "correct": false}, {"text": "Яка", "correct": false}, {"text": "Яке", "correct": true}]}, {"question": "____ атлас?", "options": [{"text": "Який", "correct": true}, {"text": "Яка", "correct": false}, {"text": "Яке", "correct": false}]}, {"question": "____ фото?", "options": [{"text": "Який", "correct": false}, {"text": "Яка", "correct": false}, {"text": "Яке", "correct": true}]}, {"question": "____ кімната?", "options": [{"text": "Який", "correct": false}, {"text": "Яка", "correct": true}, {"text": "Яке", "correct": false}]}]} instruction={"Choose the correct question word: **який**, **яка** or **яке**"} />
+<FillIn client:only="react" items={[{"sentence": "Це ____ книга.", "answer": "нова", "options": ["новий", "нова", "нове"]}, {"sentence": "Це ____ стіл.", "answer": "великий", "options": ["великий", "велика", "велике"]}, {"sentence": "Це ____ вікно.", "answer": "чисте", "options": ["чистий", "чиста", "чисте"]}, {"sentence": "Це ____ ліжко.", "answer": "старе", "options": ["старий", "стара", "старе"]}, {"sentence": "Це ____ сумка.", "answer": "гарна", "options": ["гарний", "гарна", "гарне"]}, {"sentence": "Це ____ телефон.", "answer": "дорогий", "options": ["дорогий", "дорога", "дороге"]}, {"sentence": "Це ____ кімната.", "answer": "маленька", "options": ["маленький", "маленька", "маленьке"]}, {"sentence": "Це ____ фото.", "answer": "погане", "options": ["поганий", "погана", "погане"]}, {"sentence": "Це ____ листівка.", "answer": "світла", "options": ["світлий", "світла", "світле"]}, {"sentence": "Це ____ плакат.", "answer": "дешевий", "options": ["дешевий", "дешева", "дешеве"]}]} instruction={"Choose the correct adjective form to match the **іменник** (noun)."} />
+
+## Прикме́тники (Common Adjectives)
+
+Learn these adjectives in opposite pairs and use them with nouns from the start. This makes the meanings easier to remember and keeps the endings visible in context.
+
+For size, use **великий** (big) and **мале́нький** (small). For age, use **новий** (new) and **стари́й** (old). For quality or appearance, the pair is **га́рний** (nice, beautiful) and **пога́ний** (bad). Seeing these words isolated is not enough; you must observe them in context to see the agreement rules in action.
+
+* **великий стіл** (a big table)
+* **маленька кімната** (a small room)
+* **нове́ ліжко** (a new bed)
+* **старе фото** (an old photo)
+
+Always practice these words alongside a noun to reinforce the correct endings.
+
+Add three more useful pairs: **чи́стий / брудни́й**, **дороги́й / деше́вий**, and **сві́тлий / те́мний**.
+
+* **доро́га су́мка** (an expensive bag)
+* **дешевий телефо́н** (a cheap phone)
+* **світла кімната** (a bright room)
+* **чисте вікно** (a clean window)
+
+Notice how the ending of each adjective perfectly matches the gender of the noun it modifies.
+
+You can now build complete, expressive sentences by combining these descriptions. When you want to link two similar qualities, use the conjunction **і** (and) for parallel ideas. If you need to express a contrast between two objects or qualities, use the conjunction **а** (and/but — contrast) or the word **але́** (but).
+
+* **Вікно вели́ке і чисте.** (The window is big and clean.)
+* **Стіле́ць старий, а ліжко — нове.** (The chair is old, but the bed is new.)
+* **Моя кімната маленька, але га́рна.** (My room is small, but beautiful.)
+
+:::caution
+Pay close attention to the small conjunctions. **і** simply adds information together. Both **а** and **але** can express contrast, but **а** is often milder when comparing two items, while **але** usually sounds stronger as “but.”
+:::
+
+These small connecting words help you join simple descriptions clearly.
+
+<MatchUp client:only="react" pairs={[{"left": "великий", "right": "маленький"}, {"left": "новий", "right": "старий"}, {"left": "гарний", "right": "поганий"}, {"left": "чистий", "right": "брудний"}, {"left": "дорогий", "right": "дешевий"}, {"left": "світлий", "right": "темний"}]} instruction={"Match the adjectives with their opposites."} />
+<FillIn client:only="react" items={[{"sentence": "Моя ____ велика і світла.", "answer": "кімната", "options": ["кімната", "стіл", "ліжко"]}, {"sentence": "Мій стіл новий, а ____ — старе.", "answer": "ліжко", "options": ["ліжко", "кімната", "вікно"]}, {"sentence": "Моє вікно ____ і чисте.", "answer": "велике", "options": ["великий", "велика", "велике"]}, {"sentence": "Моя кімната маленька, ____ гарна.", "answer": "але", "options": ["а", "і", "але"]}, {"sentence": "Стіл чистий, ____ ліжко брудне.", "answer": "а", "options": ["але", "а", "і"]}, {"sentence": "Він великий ____ дешевий.", "answer": "і", "options": ["а", "але", "і"]}]} instruction={"Complete the descriptions of the objects."} />
 
 ## Підсумок — Summary
 
-Describing your physical environment in Ukrainian requires paying close and constant attention to the nouns you are talking about. Every single describing word must perfectly match the grammatical gender of the noun it modifies. When you want to ask about the qualities of an object, your question word changes accordingly. For a masculine noun, you must ask **який?**, and the responding adjective will end in **-ий**, as seen in **великий**. For a feminine noun, the question logically shifts to **яка?**, leading to an adjective ending in **-а**, such as **велика**. For a neuter noun, you use **яке?**, and the adjective predictably takes the **-е** ending, exactly like **велике**. Remember that learning adjectives in direct contrasting pairs, such as pairing **новий** and **старий** or grouping **чистий** and **брудний**, makes vocabulary acquisition much more efficient and natural. Finally, when constructing your full sentences, use **і** to seamlessly connect matching parallel qualities, and use the contrastive conjunction **а** to boldly highlight the differences between two distinct items in your description.
+The core lesson of this module revolves around a single, unbreakable grammatical bond. Ukrainian adjectives exist exclusively to describe nouns, and they must always agree with those nouns in gender when used in the nominative case. You cannot simply memorize a descriptive word in isolation; you must always adapt its form to match the object it modifies. The core pattern is highly consistent and easy to remember. Masculine descriptions typically end in the suffix **-ий**, feminine descriptions take the ending **-а**, and neuter descriptions use the ending **-е**. Because the adjective takes its cue directly from the noun, knowing the grammatical gender of the noun is the absolute key to using descriptive language correctly. If you know the gender of the object, you automatically know the sound that must complete the adjective.
 
-The ability to accurately describe objects allows you to share your unique perspective and opinions. A table is no longer just a table; it is a big, new, clean table. A room is no longer just a room; it is a small but beautiful space.
+Review the grammatical patterns by answering the following questions aloud before checking the provided solutions. This simple self-check will solidify your understanding.
 
-Verify your understanding of these core descriptive patterns before you proceed to the next lesson. Mastery of these concepts is essential for your progression. Can you confidently answer these practical self-check questions without hesitation?
+* What ending does a masculine adjective have?
+  * The standard ending is **-ий** (and occasionally **-ій** for soft-stem words).
+* What ending does a feminine adjective have?
+  * The standard ending is **-а** (and occasionally **-я**).
+* What ending does a neuter adjective have?
+  * The standard ending is **-е** (and occasionally **-є**).
+* Can you describe your own room in three complete sentences using the adjectives you learned today?
+  * For example: **Моя кімната велика і світла.** (My room is big and bright.) **Стіл новий.** (The table is new.) **Ліжко велике.** (The bed is big.)
 
-*   Як бу́де "What kind of book?"
-    *   **Яка книга?** (Because the word for book is feminine).
-*   What ending does a masculine adjective have?
-    *   Masculine adjectives typically end in **-ий** (or sometimes **-ій**).
-*   What ending does a feminine adjective have?
-    *   Feminine adjectives typically end in **-а** (or **-я**).
-*   What ending does a neuter adjective have?
-    *   Neuter adjectives typically end in **-е** (or **-є**).
-*   Як сказа́ти "The table is big, but the chair is small"?
-    *   **Стіл великий, а стілець маленький.**
-
-**Завда́ння** (Task): Describe your room in 3 sentences using adjectives. Look around your space and practice out loud right now. Make sure you correctly match the gender of the furniture items to the adjectives you choose.
+Mastering this fundamental agreement ensures your Ukrainian sounds natural and accurate.
 
 </TabItem>
 <TabItem label="Словник">
@@ -142,7 +156,13 @@ Verify your understanding of these core descriptive patterns before you proceed 
 
 | Слово | Переклад | Частина мови | Рід |
 |-------|----------|-------------|-----|
-| **яки́й, яка, яке́** | what kind?, which? |  |  |
+| **пога́ний** | bad | прикм. |  |
+| **брудни́й** | dirty | прикм. |  |
+| **сві́тлий** | light, bright | прикм. |  |
+| **те́мний** | dark | прикм. |  |
+| **а** | and/but — contrast | спол. |  |
+| **але́** | but | спол. |  |
+| **яки́й, яка, яке́** | what kind? — m/f/n |  |  |
 | **вели́кий** | big | прикм. |  |
 | **мале́нький** | small | прикм. |  |
 | **нови́й** | new | прикм. |  |
@@ -151,47 +171,27 @@ Verify your understanding of these core descriptive patterns before you proceed 
 | **чи́стий** | clean | прикм. |  |
 | **дороги́й** | expensive | прикм. |  |
 | **деше́вий** | cheap | прикм. |  |
-| **пога́ний** | bad | прикм. |  |
-| **брудни́й** | dirty | прикм. |  |
-| **сві́тлий** | light, bright | прикм. |  |
-| **те́мний** | dark | прикм. |  |
-| **а** | and, but (to show contrast) | спол. |  |
-| **але́** | but | спол. |  |
 | **ціка́вий** | interesting | прикм. |  |
-| **плака́т** | poster | ім. | ч. |
-| **атлас** | atlas | ім. | ч. |
-| **фо́то** | photo | ім. | с. |
-| **листі́вка** | postcard | ім. | ж. |
-| **су́мка** | bag | ім. | ж. |
 | **і** | and | спол. |  |
-| **прикме́тник** | adjective | ім. | ч. |
-
-### Вирази
-
-| Вираз | Переклад |
-|-------|----------|
-| **Яка твоя кімната?** | What is your room like? |
 
 ### Картки — Flashcards
 
-<FlashcardDeck client:only="react" cards={[{ front: "яки́й, яка, яке́", back: "what kind?, which?" }, { front: "вели́кий", back: "big", subtitle: "прикм." }, { front: "мале́нький", back: "small", subtitle: "прикм." }, { front: "нови́й", back: "new", subtitle: "прикм." }, { front: "стари́й", back: "old", subtitle: "прикм." }, { front: "га́рний", back: "nice, beautiful", subtitle: "прикм." }, { front: "чи́стий", back: "clean", subtitle: "прикм." }, { front: "дороги́й", back: "expensive", subtitle: "прикм." }, { front: "деше́вий", back: "cheap", subtitle: "прикм." }, { front: "пога́ний", back: "bad", subtitle: "прикм." }, { front: "брудни́й", back: "dirty", subtitle: "прикм." }, { front: "сві́тлий", back: "light, bright", subtitle: "прикм." }, { front: "те́мний", back: "dark", subtitle: "прикм." }, { front: "а", back: "and, but (to show contrast)", subtitle: "спол." }, { front: "але́", back: "but", subtitle: "спол." }, { front: "ціка́вий", back: "interesting", subtitle: "прикм." }, { front: "плака́т", back: "poster", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "атлас", back: "atlas", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "фо́то", back: "photo", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "листі́вка", back: "postcard", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "су́мка", back: "bag", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "і", back: "and", subtitle: "спол." }, { front: "прикме́тник", back: "adjective", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }]} />
+<FlashcardDeck client:only="react" cards={[{ front: "пога́ний", back: "bad", subtitle: "прикм." }, { front: "брудни́й", back: "dirty", subtitle: "прикм." }, { front: "сві́тлий", back: "light, bright", subtitle: "прикм." }, { front: "те́мний", back: "dark", subtitle: "прикм." }, { front: "а", back: "and/but — contrast", subtitle: "спол." }, { front: "але́", back: "but", subtitle: "спол." }, { front: "яки́й, яка, яке́", back: "what kind? — m/f/n" }, { front: "вели́кий", back: "big", subtitle: "прикм." }, { front: "мале́нький", back: "small", subtitle: "прикм." }, { front: "нови́й", back: "new", subtitle: "прикм." }, { front: "стари́й", back: "old", subtitle: "прикм." }, { front: "га́рний", back: "nice, beautiful", subtitle: "прикм." }, { front: "чи́стий", back: "clean", subtitle: "прикм." }, { front: "дороги́й", back: "expensive", subtitle: "прикм." }, { front: "деше́вий", back: "cheap", subtitle: "прикм." }, { front: "ціка́вий", back: "interesting", subtitle: "прикм." }, { front: "і", back: "and", subtitle: "спол." }]} />
 
 </TabItem>
 <TabItem label="Зошит">
 
-<GroupSort client:only="react" groups={{"Він (Masculine)": ["великий", "новий", "старий", "чистий"], "Вона (Feminine)": ["маленька", "світла", "гарна", "брудна"], "Воно (Neuter)": ["нове", "старе", "велике", "темне"]}} instruction={"Sort the **прикметники** (adjectives) by gender."} />
+<GroupSort client:only="react" groups={{"Чоловічий рід (Який?)": ["телефон", "стіл", "атлас", "плакат"], "Жіночий рід (Яка?)": ["кімната", "сумка", "книга", "листівка"], "Середній рід (Яке?)": ["вікно", "ліжко", "фото"]}} instruction={"Sort the nouns into the correct gender groups: **чоловічий** (m), **жіночий** (f), and **середній** (n)."} />
 
-<TrueFalse client:only="react" items={[{"statement": "Великий кімната.", "isTrue": false, "explanation": "Кімната is feminine (вона), so it must be велика кімната."}, {"statement": "Нове вікно.", "isTrue": true, "explanation": "Вікно is neuter (воно), so it uses the neuter ending -е."}, {"statement": "Чистий стіл.", "isTrue": true, "explanation": "Стіл is masculine (він), so it uses the masculine ending -ий."}, {"statement": "Старе фото.", "isTrue": true, "explanation": "Фото is neuter (воно), so it uses the neuter ending -е."}, {"statement": "Дорогий сумка.", "isTrue": false, "explanation": "Сумка is feminine (вона), so it must be дорога сумка."}, {"statement": "Гарне день.", "isTrue": false, "explanation": "День is masculine (він), so it must be гарний день."}]} instruction={"Are these phrases grammatically correct? Choose True or False."} />
+<TrueFalse client:only="react" items={[{"statement": "The word «кімната» is a masculine noun.", "isTrue": false, "explanation": "Кімната ends in -а, so it is a feminine noun."}, {"statement": "The adjective «новий» correctly matches the noun «стіл».", "isTrue": true, "explanation": "Стіл is masculine, and новий is the masculine adjective form."}, {"statement": "To ask about «вікно», you should use the question word «яка».", "isTrue": false, "explanation": "Вікно is a neuter noun, so you must use the neuter question word «яке»."}, {"statement": "The adjectives «світла» and «темна» are both in the feminine form.", "isTrue": true, "explanation": "They both end in -а, which is the standard feminine ending."}, {"statement": "The correct question to ask about a «ліжко» is «який?».", "isTrue": false, "explanation": "Ліжко is neuter, so the question word should be «яке»."}, {"statement": "The phrase «старе фото» is grammatically correct.", "isTrue": true, "explanation": "Фото is a neuter noun, and старе is the neuter adjective form."}]} instruction={"Read the statements about Ukrainian grammar. Are they true or false?"} />
 
-<ErrorCorrection client:only="react" items={[{"sentence": "Це велика стіл.", "errorWord": "велика", "correctForm": "великий", "options": ["великий", "велика", "велике"], "explanation": "Стіл is masculine, so it should be великий."}, {"sentence": "Моя кімната новий.", "errorWord": "новий", "correctForm": "нова", "options": ["новий", "нова", "нове"], "explanation": "Кімната is feminine, so it should be нова."}, {"sentence": "Це чиста вікно.", "errorWord": "чиста", "correctForm": "чисте", "options": ["чистий", "чиста", "чисте"], "explanation": "Вікно is neuter, so it should be чисте."}, {"sentence": "Мій телефон стара.", "errorWord": "стара", "correctForm": "старий", "options": ["старий", "стара", "старе"], "explanation": "Телефон is masculine, so it should be старий."}, {"sentence": "Ця книга дороге.", "errorWord": "дороге", "correctForm": "дорога", "options": ["дорогий", "дорога", "дороге"], "explanation": "Книга is feminine, so it should be дорога."}, {"sentence": "Це погана фото.", "errorWord": "погана", "correctForm": "погане", "options": ["поганий", "погана", "погане"], "explanation": "Фото is neuter, so it should be погане."}]} instruction={"Find and correct the gender agreement error."} />
+<Anagram client:only="react" items={[{"scrambled": "г а р н и й", "answer": "гарний", "hint": "nice, beautiful"}, {"scrambled": "в е л и к и й", "answer": "великий", "hint": "big"}, {"scrambled": "с т а р и й", "answer": "старий", "hint": "old"}, {"scrambled": "д о р о г и й", "answer": "дорогий", "hint": "expensive"}, {"scrambled": "д е ш е в и й", "answer": "дешевий", "hint": "cheap"}, {"scrambled": "ч и с т и й", "answer": "чистий", "hint": "clean"}]} instruction={"Rearrange the letters to form Ukrainian adjectives."} />
 
-<Unjumble client:only="react" items={[{"words": "великий / Це / плакат.", "answer": "Це великий плакат."}, {"words": "кімната / Моя / світла.", "answer": "Моя кімната світла."}, {"words": "новий / Там / атлас.", "answer": "Там новий атлас."}, {"words": "вікно / чисте. / Це", "answer": "Це чисте вікно."}, {"words": "маленький / Стілець / і / старий.", "answer": "Стілець маленький і старий."}, {"words": "дорогий. / новий / і / Телефон", "answer": "Телефон новий і дорогий."}]} instruction={"Make correct sentences from the words."} />
+<Unjumble client:only="react" items={[{"words": "велика / Моя / кімната / і / світла.", "answer": "Моя кімната велика і світла."}, {"words": "великий. / новий / і / Стіл", "answer": "Стіл новий і великий."}, {"words": "Яка / твоя / кімната?", "answer": "Яка твоя кімната?"}, {"words": "старе. / ліжко / А / —", "answer": "А ліжко — старе."}, {"words": "Він / дешевий. / великий / і", "answer": "Він великий і дешевий."}, {"words": "дорога. / Так, / вона / але", "answer": "Так, але вона дорога."}]} instruction={"Put the words in the correct order to make a sentence."} />
 
-<Translate client:only="react" questions={[{"source": "A big table", "options": [{"text": "великий стіл", "correct": true}, {"text": "велика стіл", "correct": false}, {"text": "велике стіл", "correct": false}]}, {"source": "A new book", "options": [{"text": "нова книга", "correct": true}, {"text": "новий книга", "correct": false}, {"text": "нове книга", "correct": false}]}, {"source": "An old photo", "options": [{"text": "старе фото", "correct": true}, {"text": "стара фото", "correct": false}, {"text": "старий фото", "correct": false}]}, {"source": "A clean room", "options": [{"text": "чиста кімната", "correct": true}, {"text": "чистий кімната", "correct": false}, {"text": "чисте кімната", "correct": false}]}, {"source": "A bad day", "options": [{"text": "поганий день", "correct": true}, {"text": "погана день", "correct": false}, {"text": "погане день", "correct": false}]}, {"source": "A cheap pen", "options": [{"text": "дешева ручка", "correct": true}, {"text": "дешевий ручка", "correct": false}, {"text": "дешеве ручка", "correct": false}]}]} instruction={"Choose the correct Ukrainian translation."} />
+<CountSyllables client:only="react" items={[{"word": "великий", "correct": 3}, {"word": "стіл", "correct": 1}, {"word": "кімната", "correct": 3}, {"word": "новий", "correct": 2}, {"word": "гарний", "correct": 2}, {"word": "маленький", "correct": 3}]} instruction={"How many syllables are in these words?"} />
 
-<MatchUp client:only="react" pairs={[{"left": "стіл", "right": "великий"}, {"left": "кімната", "right": "світла"}, {"left": "фото", "right": "старе"}, {"left": "телефон", "right": "новий"}, {"left": "сумка", "right": "дорога"}, {"left": "вікно", "right": "чисте"}]} instruction={"Match the nouns with the correct **прикметники** (adjectives)."} />
-
-<TrueFalse client:only="react" items={[{"statement": "Плакат великий.", "isTrue": true, "explanation": "Тарас says: 'Який великий плакат!'"}, {"statement": "Фото нове.", "isTrue": false, "explanation": "Софія says: 'А там — старе фото.'"}, {"statement": "Атлас новий.", "isTrue": true, "explanation": "Тарас asks 'Це новий атлас?' and Софія says 'Так, новий атлас.'"}, {"statement": "Кімната Софії темна.", "isTrue": false, "explanation": "She says: 'Моя кімната велика і світла.'"}, {"statement": "Стіл Софії новий.", "isTrue": true, "explanation": "She says: 'Стіл новий.'"}, {"statement": "Ліжко Софії нове.", "isTrue": false, "explanation": "She says: 'А ліжко — старе.'"}]} instruction={"Read the dialogues and choose True or False."} />
+<OddOneOut client:only="react" items={[{"words": ["великий", "новий", "кімната", "чистий"], "correct": 2, "explanation": "Кімната is a noun (object), while the others are adjectives (descriptions)."}, {"words": ["стіл", "телефон", "вікно", "плакат"], "correct": 2, "explanation": "Вікно is a neuter noun, while the others are masculine."}, {"words": ["нова", "велике", "стара", "чиста"], "correct": 1, "explanation": "Велике is a neuter adjective, while the others are feminine."}, {"words": ["а", "і", "але", "новий"], "correct": 3, "explanation": "Новий is an adjective, while the others are small connecting words (conjunctions)."}, {"words": ["новий", "чистий", "гарний", "поганий"], "correct": 3, "explanation": "Поганий has a negative meaning, while the others have positive meanings."}, {"words": ["який", "яка", "кімната", "яке"], "correct": 2, "explanation": "Кімната is a noun, while the others are question words."}]} instruction={"Find the word that does not belong in the group."} />
 
 </TabItem>
 <TabItem label="Ресурси">

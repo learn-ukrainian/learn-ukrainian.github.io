@@ -1,0 +1,84 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T02-04-7c6eec8e.json
+phase: write-chunk-03
+prompt_chars: 48369
+response_chars: 4325
+prompt_words: 7282
+response_words: 714
+sections:
+- name: header
+  start: 0
+  length: 438
+  fraction: 0.0091
+- name: skeleton
+  start: 438
+  length: 2025
+  fraction: 0.0419
+- name: prior_summary
+  start: 2463
+  length: 3308
+  fraction: 0.0684
+- name: plan
+  start: 5771
+  length: 12901
+  fraction: 0.2667
+- name: wiki
+  start: 11045
+  length: 29487
+  fraction: 0.6096
+- name: output_spec
+  start: 48159
+  length: 210
+  fraction: 0.0043
+large_sections:
+- wiki
+directives_total: 24
+directives_covered: 13
+directives_missed:
+- kind: checklist
+  text: людина (person) / люди (people)
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: checklist
+  text: стаття (article)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: must
+  text: English speakers often struggle with the case changes required by Ukrainian
+    numerals, leading to predictable errors.
+  covered: false
+  coverage_note: 3/12 keywords (25%)
+- kind: must
+  text: '` | The learner incorrectly uses the Nominative Plural (`книги`) after `п''ять`,
+    instead of the required Genitive Plural (`книжок`).'
+  covered: false
+  coverage_note: 3/12 keywords (25%)
+- kind: must
+  text: Learners must use the standard cardinal numeral (`три`) instead.
+  covered: false
+  coverage_note: 2/8 keywords (25%)
+- kind: must
+  text: '`слів` required after five: `❌ п''ять слова` -> `✅ п''ять слів`.'
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: must
+  text: The student must supply the correct noun form.
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: must
+  text: '* **Cases (Відмінки):** The student must understand the concept of the Nominative
+    and Genitive cases (Source 14, 40).'
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: EVERY word in the checklist below MUST appear at least once with a bold Ukrainian
+    form and English translation in a natural sentence.
+  covered: false
+  coverage_note: 3/15 keywords (20%)
+- kind: inject_activity
+  text: quiz-genitive-endings
+  covered: false
+  coverage_note: marker missing

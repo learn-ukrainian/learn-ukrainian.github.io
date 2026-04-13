@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-фраза «**Дуже приємно** *(Very pleased)*» або більш повна і урочиста версія «Дуже приємно з вами познайомитися». Ці традиційні формули миттєво створюють правильний тон для подальшої офіційної розмови і переконливо показують ваш високий рівень культурного розвитку. Вони завжди звучать абсолютно природно, максимально стримано і надзвичайно професійно. У щоденному повсякденному житті, коли ми радісно зустрічаємося з друзями або просто добрими знайомими, наш мовний регістр одразу суттєво змінюється на простіший. Для типових напівофіційних ситуацій чудово підходить нейтральна фраза: «**Познайомтеся, будь ласка** *(Please, meet each other)*, це мій давній товариш». Вона є набагато менш суворою, ніж попередні офіційні формули, але надійно зберігає необхідний рівень загальної соціальної ввічливості. Якщо ж ви перебуваєте в абсолютно неформальному колі близьких друзів чи студентів, достатньо сказати дуже просто і прямо: «Це Андрій». У таких розслаблених ситуаціях ми зазвичай використовуємо лише короткі імена. Проте завжди пам'ятайте про критично важливу різницю в соціальних регістрах. Коли ви звертаєтеся до когось неформально, ви кажете просто «Марія». Але якщо ситуація вимагає підкресленої поваги до віку чи професійного статусу людини, ви обов'язково повинні використовувати повне ім'я та по батькові, наприклад, «Тетяна Іванівна». Цей швидкий і точний перехід між різними регістрами є надзвичайно важливою соціальною навичкою в сучасному українському суспільстві. Український мовний етикет має свої чіткі неписані правила, яких варто завжди суворо дотримуватися під час кожного публічного представлення. Головний і найважливіший принцип культурного протоколу полягає в тому, що молодшу за віком людину завжди обов'язково представляють старшій першою. Це традиційний вияв глибокої базової поваги до багаторічного життєвого досвіду. Так само давня традиція вимагає, щоб чоловіка першим урочисто представляли жінці, а не навпаки. Якщо ви випадково опинилися в ситуації, де поруч зовсім немає спільного знайомого для посередництва, ви можете цілком сміливо і дуже ввічливо представитися самостійно. Після успішного завершення першої ділової чи просто приємної світської розмови з новою людиною надзвичайно важливо залишити дійсно гарне фінальне враження. Замість звичайного сухого прощання, добре вихована людина часто з усмішкою каже: «**Дякую, що приділили час** *(Thank you for your time)*». Ця елегантна і тепла фраза одразу показує, що ви щиро цінуєте увагу свого нового співрозмовника. Знання таких тонких нюансів класичного етикету допомагає вам не лише граматично правильно говорити, але й поводитися як справжня інтелігентна людина в абсолютно будь-якому українському середовищі. Усі ці правила знайомства неможливо уявити без правильного використання однієї унікальної граматичної форми. Згадайте наш найважливіший інструмент для звертання — **кличний відмінок** *(vocative case)*. Коли ви звертаєтеся до людини напряму, ви ніколи не використовуєте базову словникову форму її імені. Це звучить грубо і неприродно. Якщо ви хочете привернути увагу товариша на ім'я Андрій, ви повинні голосно сказати: «Андрію!». Якщо ви кличете дівчину на ім'я Марія, ви обов'язково маєте сказати: «Маріє!». Форма «Маріє!» є єдиним правильним і природним способом звернутися до неї в українській мові. Це правило працює не лише з іменами, але й з поважними титулами чи професіями. У дуже формальних ситуаціях ми шанобливо кажемо: «Пане професоре!» або «Тетяно Іванівно!». Використання кличного відмінка — це не просто суха граматична вимога зі шкільного підручника. Це справжня душа української мови, яка робить ваше персональне звертання живим, теплим і неймовірно поважним. <!-- INJECT_ACTIVITY: role-play-introductions -->
+follow a traditional social protocol that dictates who is introduced to whom. The general rule of etiquette is based on age and gender: the younger person is always introduced to the older person first. For example, if you are introducing your university friend to your grandmother, you present your friend to her, not the other way around. Similarly, in traditional social settings, a man is typically introduced to a woman. If you arrive at an event and there is no intermediary available to introduce you, it is perfectly acceptable and polite to approach the group and introduce yourself. When the conversation naturally comes to an end, especially in a formal or professional setting, it is polite to close the interaction gracefully. A standard closing phrase is «Дякую, що приділили час» (Thank you for your time) or «Був радий познайомитися» (I was glad to meet you). В українській культурі існують чіткі правила етикету щодо того, як правильно знайомити людей між собою. Завжди пам'ятайте головне правило: молодшу людину першою представляють старшій людині. Наприклад, ви маєте сказати своїй бабусі: «Бабусю, познайомся, це мій студентський товариш». Також прийнято спочатку представляти чоловіка жінці, виявляючи таким чином повагу. Якщо розмова була офіційною або діловою, в кінці зустрічі варто ввічливо попрощатися і сказати: «Дякую, що приділили час». > *In Ukrainian culture, there are clear etiquette rules regarding how to correctly introduce people to each other. Always remember the main rule: the younger person is introduced first to the older person. For example, you should say to your grandmother: "Grandmother, meet my university friend." It is also customary to first introduce a man to a woman, thus showing respect. If the conversation was formal or business-like, at the end of the meeting you should politely say goodbye and say: "Thank you for your time."* Once you have met someone, you must know how to address them correctly to get their attention. The Vocative case (**Кличний відмінок**) is the only natural way to call out to someone or address them directly in Ukrainian. You already know basic forms like «Мамо!» or «Друже!». When addressing people by their names, the endings change to reflect this direct address. For masculine names ending in **-й**, you change the ending to **-ю**: «Андрій» becomes «Андрію!», and «Сергій» becomes «Сергію!». For feminine names ending in **-я**, the ending changes to **-є**: «Марія» becomes «Маріє!», and «Юлія» becomes «Юліє!». If you are in a formal setting, titles also take the Vocative case. You would say «пане професоре!» (Mr. Professor!) instead of the nominative form. Saying «Марія, йди сюди» sounds like you are reading a list; «Маріє, йди сюди» is the true, melodic Ukrainian way to speak. :::info **Grammar box** The Vocative case (**Кличний відмінок**) is mandatory for all direct addresses. It shows respect and natural fluency. Never use the Nominative case (the dictionary form) when calling someone by their name or title! ::: <!-- INJECT_ACTIVITY: role-play, Introduce a friend to a colleague (formal), then introduce the same person informally to another friend, 12 items -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -635,7 +635,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -648,18 +715,69 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] зовнішність (appearance — a person's outward look)
+- [ ] характер (character — a person's inner qualities)
+- [ ] стосунки (interpersonal relationships — how people interact)
+- [ ] родичі (relatives — people connected by family)
+- [ ] знайомство (acquaintance / the act of meeting someone)
+- [ ] вродливий (beautiful/handsome — describing a person)
+- [ ] кремезний (stocky/sturdy — of strong build)
+- [ ] тендітний (slender/delicate — of light build)
+- [ ] щирий (sincere — genuine in feelings)
+- [ ] лагідний (gentle — soft in manner)
+- [ ] кмітливий (quick-witted — mentally sharp)
+- [ ] чуйний (sensitive/responsive — attentive to others)
+- [ ] подружжя (married couple — husband and wife together)
+- [ ] відрекомендуватися (to introduce oneself — formal register)
+- [ ] портретна деталь (portrait detail — one defining visual feature)
+- [ ] постава (posture/bearing — how a person holds their body)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Опис людини: як писати портрет (~660 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

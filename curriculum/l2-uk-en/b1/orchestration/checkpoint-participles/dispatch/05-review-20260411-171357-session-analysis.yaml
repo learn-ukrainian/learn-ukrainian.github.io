@@ -1,0 +1,67 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T15-11-5559de06.json
+phase: review
+prompt_chars: 60019
+response_chars: 5418
+prompt_words: 8031
+response_words: 812
+sections:
+- name: preamble
+  start: 0
+  length: 456
+  fraction: 0.0076
+- name: plan
+  start: 456
+  length: 56124
+  fraction: 0.9351
+- name: output_spec
+  start: 56580
+  length: 3439
+  fraction: 0.0573
+large_sections:
+- plan
+directives_total: 16
+directives_covered: 6
+directives_missed:
+- kind: must
+  text: 'must choose correct suffix and apply consonant alternations: квітнути → ?'
+  covered: false
+  coverage_note: 2/8 keywords (25%)
+- kind: must
+  text: If you are not 100% certain a word/form/usage is wrong, you MUST flag it as
+    `[NEEDS RAG VERIFICATION]` instead of marking it as a definitive error.
+  covered: false
+  coverage_note: 5/17 keywords (29%)
+- kind: must
+  text: '**CRITICAL RULE: If you mention ANY error, mistake, or inaccuracy in the
+    evidence column of your scores table, you MUST also list it as a structured finding
+    below AND include it in your `<fixes>` block.'
+  covered: false
+  coverage_note: 6/22 keywords (27%)
+- kind: must
+  text: This is a language curriculum — every error you identify must be fixed.
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: inject_activity
+  text: reading
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: essay-response
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: error-correction
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up
+  covered: false
+  coverage_note: marker missing

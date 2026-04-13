@@ -1,197 +1,252 @@
 {
-  "total_items": 126,
-  "grounded_items": 96,
+  "total_items": 188,
+  "grounded_items": 149,
   "ungrounded": [
     {
-      "word": "десятому",
+      "word": "завтра",
       "exercise_type": "fill-in",
-      "context": "десятому",
+      "context": "Завтра буде ____ квітня.",
+      "role": "context"
+    },
+    {
+      "word": "третя",
+      "exercise_type": "fill-in",
+      "context": "третя",
       "role": "answer"
     },
     {
-      "word": "живемо",
+      "word": "моя",
       "exercise_type": "fill-in",
-      "context": "Ми живемо на _____ поверсі.",
+      "context": "Моя квартира — ____.",
       "role": "context"
     },
     {
-      "word": "зайняв",
+      "word": "зустрілися",
       "exercise_type": "fill-in",
-      "context": "Він зайняв _____ місце.",
+      "context": "Ми зустрілися в ____ день.",
       "role": "context"
-    },
-    {
-      "word": "місце",
-      "exercise_type": "fill-in",
-      "context": "Він зайняв _____ місце.",
-      "role": "context"
-    },
-    {
-      "word": "третю",
-      "exercise_type": "fill-in",
-      "context": "третю",
-      "role": "answer"
-    },
-    {
-      "word": "читаю",
-      "exercise_type": "fill-in",
-      "context": "Я читаю _____ книгу.",
-      "role": "context"
-    },
-    {
-      "word": "книгу",
-      "exercise_type": "fill-in",
-      "context": "Я читаю _____ книгу.",
-      "role": "context"
-    },
-    {
-      "word": "наша",
-      "exercise_type": "fill-in",
-      "context": "Це наша _____ зупинка.",
-      "role": "context"
-    },
-    {
-      "word": "роботі",
-      "exercise_type": "fill-in",
-      "context": "Сьогодні мій _____ день на роботі.",
-      "role": "context"
-    },
-    {
-      "word": "шістдесят",
-      "exercise_type": "group-sort",
-      "context": "шістдесят",
-      "role": "answer"
     },
     {
       "word": "мене",
-      "exercise_type": "quiz",
-      "context": "У мене є два _____.",
-      "role": "context"
-    },
-    {
-      "word": "там",
-      "exercise_type": "quiz",
-      "context": "Там стоять три _____.",
-      "role": "context"
-    },
-    {
-      "word": "стоять",
-      "exercise_type": "quiz",
-      "context": "Там стоять три _____.",
-      "role": "context"
-    },
-    {
-      "word": "класі",
-      "exercise_type": "quiz",
-      "context": "У класі сорок один _____.",
-      "role": "context"
-    },
-    {
-      "word": "потрібно",
-      "exercise_type": "quiz",
-      "context": "Мені потрібно кілька _____.",
-      "role": "context"
-    },
-    {
-      "word": "першій",
       "exercise_type": "fill-in",
-      "context": "Першій",
-      "role": "answer"
+      "context": "У мене є тільки ____ брат.",
+      "role": "context"
     },
     {
-      "word": "другій",
+      "word": "столі",
       "exercise_type": "fill-in",
-      "context": "Другій",
-      "role": "answer"
+      "context": "На столі лежить ____ книга.",
+      "role": "context"
     },
     {
-      "word": "лінії",
+      "word": "лежить",
       "exercise_type": "fill-in",
-      "context": "Це будинок на _____ лінії.",
+      "context": "На столі лежить ____ книга.",
       "role": "context"
     },
     {
-      "word": "маю",
-      "exercise_type": "error-correction",
-      "context": "Я маю два брата.",
+      "word": "другом",
+      "exercise_type": "fill-in",
+      "context": "Ми з другом з ____ міста.",
       "role": "context"
     },
     {
-      "word": "брата",
-      "exercise_type": "error-correction",
-      "context": "Я маю два брата.",
+      "word": "працюю",
+      "exercise_type": "fill-in",
+      "context": "Я сьогодні працюю ____.",
       "role": "context"
     },
     {
-      "word": "квитків",
-      "exercise_type": "error-correction",
-      "context": "квитків",
+      "word": "неї",
+      "exercise_type": "fill-in",
+      "context": "У неї є тільки ____ ножиці.",
+      "role": "context"
+    },
+    {
+      "word": "дівчиною",
+      "exercise_type": "fill-in",
+      "context": "Він гуляв з ____ дівчиною.",
+      "role": "context"
+    },
+    {
+      "word": "стою",
+      "exercise_type": "fill-in",
+      "context": "Я стою на ____ місці.",
+      "role": "context"
+    },
+    {
+      "word": "вона",
+      "exercise_type": "unjumble",
+      "context": "Вона",
       "role": "answer"
     },
     {
       "word": "купила",
-      "exercise_type": "error-correction",
-      "context": "Вона купила п'ять квитки.",
-      "role": "context"
-    },
-    {
-      "word": "гривні",
-      "exercise_type": "error-correction",
-      "context": "Це коштує двісті гривні.",
-      "role": "context"
-    },
-    {
-      "word": "києва",
       "exercise_type": "unjumble",
-      "context": "Києва.",
+      "context": "купила",
       "role": "answer"
     },
     {
-      "word": "живе",
-      "exercise_type": "unjumble",
-      "context": "живе",
+      "word": "лежать",
+      "exercise_type": "quiz",
+      "context": "На столі лежать три ____.",
+      "role": "context"
+    },
+    {
+      "word": "купили",
+      "exercise_type": "quiz",
+      "context": "Вони купили двадцять один ____.",
+      "role": "context"
+    },
+    {
+      "word": "яблуко",
+      "exercise_type": "match-up",
+      "context": "1 яблуко",
       "role": "answer"
     },
     {
-      "word": "триває",
+      "word": "кілограмів",
+      "exercise_type": "match-up",
+      "context": "10 кілограмів",
+      "role": "answer"
+    },
+    {
+      "word": "сини",
+      "exercise_type": "error-correction",
+      "context": "Вони мають дві сини.",
+      "role": "context"
+    },
+    {
+      "word": "нього",
+      "exercise_type": "error-correction",
+      "context": "У нього є одинадцять студенти.",
+      "role": "context"
+    },
+    {
+      "word": "маю",
+      "exercise_type": "unjumble",
+      "context": "маю",
+      "role": "answer"
+    },
+    {
+      "word": "моєму",
       "exercise_type": "fill-in",
-      "context": "Урок триває _____ години.",
+      "context": "Моєму братові сорок п'ять ____.",
+      "role": "context"
+    },
+    {
+      "word": "сестрі",
+      "exercise_type": "fill-in",
+      "context": "Моїй сестрі шістдесят ____.",
+      "role": "context"
+    },
+    {
+      "word": "шістдесят",
+      "exercise_type": "fill-in",
+      "context": "Моїй сестрі шістдесят ____.",
       "role": "context"
     },
     {
       "word": "другові",
       "exercise_type": "fill-in",
-      "context": "Моєму другові двадцять _____.",
+      "context": "Моєму другові одинадцять ____.",
       "role": "context"
     },
     {
-      "word": "цьому",
-      "exercise_type": "fill-in",
-      "context": "Цьому місту триста _____.",
+      "word": "використовується",
+      "exercise_type": "true-false",
+      "context": "Форма «одні» використовується з іменниками, які мають тільки",
       "role": "context"
     },
     {
-      "word": "місту",
-      "exercise_type": "fill-in",
-      "context": "Цьому місту триста _____.",
+      "word": "яке",
+      "exercise_type": "match-up",
+      "context": "Яке сьогодні число?",
+      "role": "answer"
+    },
+    {
+      "word": "вас",
+      "exercise_type": "match-up",
+      "context": "Скільки у вас яблук?",
+      "role": "answer"
+    },
+    {
+      "word": "якому",
+      "exercise_type": "match-up",
+      "context": "У якому ви кабінеті?",
+      "role": "answer"
+    },
+    {
+      "word": "кабінеті",
+      "exercise_type": "match-up",
+      "context": "У якому ви кабінеті?",
+      "role": "answer"
+    },
+    {
+      "word": "братів",
+      "exercise_type": "match-up",
+      "context": "Скільки братів у вас є?",
+      "role": "answer"
+    },
+    {
+      "word": "котра",
+      "exercise_type": "match-up",
+      "context": "Котра зараз година?",
+      "role": "answer"
+    },
+    {
+      "word": "година",
+      "exercise_type": "match-up",
+      "context": "Котра зараз година?",
+      "role": "answer"
+    },
+    {
+      "word": "десята",
+      "exercise_type": "match-up",
+      "context": "Десята година.",
       "role": "context"
     },
     {
-      "word": "триста",
+      "word": "звідки",
+      "exercise_type": "match-up",
+      "context": "Звідки ваш друг?",
+      "role": "answer"
+    },
+    {
+      "word": "чекаємо",
       "exercise_type": "fill-in",
-      "context": "Цьому місту триста _____.",
+      "context": "Ми чекаємо на ____ команду.",
+      "role": "context"
+    },
+    {
+      "word": "команду",
+      "exercise_type": "fill-in",
+      "context": "Ми чекаємо на ____ команду.",
+      "role": "context"
+    },
+    {
+      "word": "потрібне",
+      "exercise_type": "fill-in",
+      "context": "Мені потрібне тільки ____ яблуко.",
+      "role": "context"
+    },
+    {
+      "word": "живемо",
+      "exercise_type": "fill-in",
+      "context": "Ми живемо в ____ місті.",
       "role": "context"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 14,
-    "tested_in_exercises": 8,
+    "tested_in_exercises": 7,
     "not_tested": [
       "вік",
+      "десяток",
       "коштувати",
-      "кілограм",
       "кількісний",
       "порядковий",
+      "пів",
       "числівник"
     ]
   },

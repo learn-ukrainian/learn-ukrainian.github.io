@@ -1,4 +1,4 @@
-# Section-by-Section Generation — Section 3/5
+# Section-by-Section Generation — Section 3/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
@@ -11,11 +11,11 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 ## Section Skeleton (follow this exactly)
 
 ## Скільки тобі років? Вік у давальному відмінку (Age in the Dative) (~500 words)
-- P1 (~120 words): [Introduction to age construction. Explain that 'having' an age in Ukrainian is an experience happening 'to' someone. Pattern: [Person in Dative] + [Number] + [Year word]. Example: 'Мені (Dat) двадцять (Number) років (Year word)'.]
-- P2 (~150 words): [The three forms of 'year'. 1. **рік** (for numbers ending in 1, except 11): 'мені один рік'. 2. **роки** (for numbers ending in 2, 3, 4, except 12-14): 'йому двадцять три роки'. 3. **років** (for numbers 5-20 and those ending in 5, 6, 7, 8, 9, 0): 'їй сорок років'. Provide a clear table of examples.]
-- P3 (~110 words): [Asking questions about age. 'Скільки тобі років?' vs 'Скільки йому років?'. Explain that 'скільки' (how many) governs the Genitive plural of the noun, which is why we ask 'скільки років?', but the person remains Dative.]
-- P4 (~120 words): [Mini-dialogue practice. Asking about family members: 'Скільки років твоєму татові? — Йому п'ятдесят два роки. А твоїй мамі? — Їй сорок дев'ять років.']
-- <!-- INJECT_ACTIVITY: true-false-age --> [true-false, focus: judging the correctness of age expressions (Dative form + correct year noun agreement), 8 items]
+- P1 (~120 words): Introduce the construction for expressing age. Unlike English ("I am 20"), Ukrainian uses the Dative experiencer + number + the word for "years". Example: "Мені двадцять п'ять років", "Дідусеві вісімдесят років".
+- P2 (~150 words): Detail the number agreement rules for the word "year" (рік). 1 requires Nominative singular "рік" (один рік, двадцять один рік); 2, 3, 4 require Nominative plural "роки" (два/три/чотири роки); 5 and above (including 11-19) require Genitive plural "років" (п'ять років, десять років). Provide examples for all three groups: "Дитині один рік", "Братові три роки", "Сестрі п'ять років".
+- P3 (~130 words): Teach how to ask about age using the Dative pronoun/noun. Question pattern: "Скільки тобі років?", "Скільки їй років?", "Скільки років твоєму братові?".
+- P4 (~100 words): Short dialogue practice where speakers ask and state the ages of various family members and friends, reinforcing the Dative forms of nouns (e.g., мамі, татові, другу) combined with numbers.
+- <!-- INJECT_ACTIVITY: true-false-age --> [true-false, Judge whether age expressions use correct dative forms and number agreement, 8 items]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-that you like a book, you are literally saying "The book is pleasing to me." This structure is called the Experiencer Dative, and it is the most natural, authentic way to express personal preferences in the Ukrainian language. Моїй сестрі дуже подобається цей новий ресторан у центрі міста. Мені також подобається їхня смачна піца. Але моєму братові більше подобаються традиційні українські страви. Нам усім подобаються свіжі десерти, які вони готують щодня. Важливо розуміти, що закінчення дієслова завжди залежить від предмета. > *My sister really likes this new restaurant in the city center. I also like their delicious pizza. But my brother likes traditional Ukrainian dishes more. We all like the fresh desserts that they prepare every day. It is important to understand that the verb ending always depends on the object.* Because the thing you like is the actual subject of the sentence, the verb **подобатися** only has two forms in the present tense: **подобається** for singular subjects and **подобаються** for plural subjects. The verb never changes based on who is experiencing the feeling. Whether it is you, your friends, or your parents who like the restaurant, the verb remains exactly the same. To personalize the experience and state who is feeling the pleasure, you simply change the pronoun to its Dative form. :::info **The Dative Experiencer Pronouns** To state who is experiencing the pleasure, you must use the corresponding Dative pronoun: - **мені** means "to me" (I like) - **тобі** means "to you" (you like) - **йому** means "to him" (he likes) - **їй** means "to her" (she likes) - **нам** means "to us" (we like) - **вам** means "to you all" (you all like) - **їм** means "to them" (they like) ::: У дитинстві мені дуже подобалася ця стара казка. Моєму другові подобався цікавий фільм про космос. Нашій мамі подобалося шоколадне морозиво. У минулому часі дієслово узгоджується з предметом, а не з людиною. Тому ми використовуємо різні закінчення для кожного роду. Нам завжди подобалися довгі літні канікули. > *In childhood, I really liked this old fairy tale. My friend liked an interesting film about space. Our mom liked chocolate ice cream. In the past tense, the verb agrees with the object, and not with the person. Therefore, we use different endings for each gender. We always liked long summer vacations.* Тобі не подобається ця нова пісня? Мені дуже подобається читати українські тексти, але мені не подобається робити граматичні вправи. Якщо дія є предметом, ми використовуємо дієслово в однині та додаємо інфінітив. Тобі подобається вивчати нову мову щодня? Що вам найбільше подобається в Україні? Багатьом іноземцям дуже подобається наша сучасна культура. > *Do you not like this new song? I really like reading Ukrainian texts, but I do not like doing grammar exercises. If an action is the object, we use the verb in the singular and add an infinitive. Do you like studying a new language every day? What do you like most of all in Ukraine? Many foreigners really like our modern culture.* <!-- INJECT_ACTIVITY: match-up-like-syntax -->
+does not like working in the evening.* Because the thing you like is the grammatical subject of the sentence, the verb **подобатися** must agree with it, not with the person. In the present tense, you will mostly use two forms: the singular **подобається** and the plural **подобаються**. If you like one thing or an action, use the singular form. If you like multiple things, use the plural form. The Dative pronoun or noun at the beginning of the sentence does not change the verb ending at all. :::info **Grammar box** — Think of подобається as "it appeals" and подобаються as "they appeal." This mental translation helps you remember why the verb changes when the object is plural. ::: Мені подобається ця цікава книжка. Тобі подобаються ці нові фільми. Їй подобається велике місто, але йому подобаються маленькі села. Нам дуже подобається читати і писати українською мовою. Їм не подобаються ці старі фотографії. > *I like this interesting book. You like these new movies. She likes the big city, but he likes small villages. We really like reading and writing in the Ukrainian language. They do not like these old photos.* This reversed grammatical logic continues when you speak in the past tense. Since the verb agrees with the Nominative subject, it must take the gender and number of that specific noun. The past tense forms are подобався for masculine subjects and подобалася for feminine subjects. You also use подобалося for neuter subjects and подобалися for plural subjects. Once again, it does not matter who is doing the liking; it only matters what object or person is being liked. У дитинстві мені подобалася ця народна казка. Моєму братові дуже подобався цей старий фільм. Нам подобалося жити біля великого лісу. Їм подобалися ті смачні яблука з нашого саду. Тобі подобався той високий хлопець? > *In childhood, I liked this folk tale. My brother really liked this old movie. We liked living near the big forest. They liked those delicious apples from our garden. Did you like that tall guy?* When you want to ask someone about their preferences, you must choose your question words carefully. Put the question word in the Nominative case if you are asking about the object being liked, or use the Dative case if you are asking about the person who feels the liking. Use the word «що» (what) or «хто» (who) for the grammatical subject, and «кому» (to whom) for the experiencer. > — **Анна:** Що тобі подобається робити на вихідних? *(What do you like doing on the weekends?)* > — **Марко:** Мені дуже подобається спати і читати. *(I really like sleeping and reading.)* > — **Анна:** Чи подобається їм Київ? *(Do they like Kyiv?)* > — **Марко:** Так, їм подобається це місто. *(Yes, they like this city.)* > — **Анна:** Кому подобається ця гучна музика? *(Who likes this loud music?)* > — **Марко:** Вона подобається моєму сусідові! *(My neighbor likes it!)* <!-- INJECT_ACTIVITY: match-up, Match подобатися sentences to their English equivalents (reversed subject mapping), 8 items -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -622,6 +622,31 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] допомагати (to help)
+- [ ] дякувати (to thank)
+- [ ] дзвонити (to call, to phone)
+- [ ] радити (to advise)
+- [ ] заважати (to bother, to disturb)
+- [ ] подобатися (to be pleasing to, to like (reversed syntax))
+- [ ] відповідати (to answer (someone))
+- [ ] рік (year)
+- [ ] роки (years (2-4))
+- [ ] років (years (5+))
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Скільки тобі років? Вік у давальному відмінку (Age in the Dative) (~500 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

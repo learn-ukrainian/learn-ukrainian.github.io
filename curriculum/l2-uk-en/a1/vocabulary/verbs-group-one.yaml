@@ -6,7 +6,7 @@ vocabulary:
   gender: ''
   verified: true
 - word: вивча́ти
-  translation: to study/learn
+  translation: to study / to learn
   expression: false
   pos: дієсл.
   gender: ''
@@ -28,12 +28,6 @@ vocabulary:
   expression: false
   pos: ім.
   gender: ж.
-  verified: true
-- word: му́зика
-  translation: music
-  expression: false
-  pos: ім.
-  gender: ч.
   verified: true
 - word: чита́ти
   translation: to read
@@ -71,6 +65,12 @@ vocabulary:
   pos: дієсл.
   gender: ''
   verified: true
+- word: Що ти робиш?
+  translation: What are you doing?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
 - word: навча́тися
   translation: to study
   expression: false
@@ -83,44 +83,14 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: кни́га
-  translation: book
+- word: дієвідмі́нювання
+  translation: conjugation
   expression: false
   pos: ім.
-  gender: ж.
+  gender: с.
   verified: true
-- word: пі́сня
-  translation: song
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: пра́вда
-  translation: truth
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: ра́зом
-  translation: together
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: парк
-  translation: park
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: Що ти робиш?
-  translation: What are you doing?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Де ти працюєш?
-  translation: Where do you work?
+- word: перша дієвідміна
+  translation: First Conjugation
   expression: true
   pos: ''
   gender: ''

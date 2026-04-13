@@ -1,19 +1,22 @@
-# Section-by-Section Generation — Section 4/5
+# Section-by-Section Generation — Section 4/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 4: Яка вона людина? Описуємо людей навколо нас (A2, A2.1 [Foundation and Aspect Introduction])
-**Section to write:** Описуємо людину цілком (Describing a Person Fully) (~400 words total)
-**Word target for this section:** 400 words (aim for 440 to account for undershoot)
+**Section to write:** Описуємо людину цілком (~390 words total)
+**Word target for this section:** 390 words (aim for 429 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Описуємо людину цілком (Describing a Person Fully) (~400 words total)
-- P1 (~130 words): [Synthesis: Building a full profile. Pattern: 1) Who they are (relationship), 2) What they look like (appearance), 3) What they are like (character). Model paragraph: "Це мій найкращий друг Андрій. Він високий і спортивний. Андрій дуже веселий і завжди допомагає друзям."]
-- P2 (~120 words): [Practice examples. Comparison of two different people: a "працьовита колега" (hardworking colleague) vs. a "весела сусідка" (cheerful neighbor). Combining physical traits with personality adjectives.]
-- P3 (~150 words): [Cultural Note: The concept of "Добра людина". Explaining that in Ukrainian culture, describing someone as "добра людина" (a good/kind person) is often more significant than describing their physical beauty. Comparison of "гарна людина" (inner beauty) vs. "красива людина" (outer beauty).]
+## Описуємо людину цілком (~390 words total)
+- P1 (~110 words): Bringing it all together. Combine appearance, character, and relationship into a cohesive paragraph model. Example: "Мій друг Андрій — високий хлопець із карими очима. Він дуже веселий і щирий. Ми познайомилися в університеті."
+- P2 (~100 words): Guided practice framework. Provide the learner with a 3-step structure for their own descriptions: 1. Хто це? (Who is it?), 2. Яка зовнішність? (What do they look like?), 3. Який характер? (What is their character like?).
+- P3 (~90 words): Cultural note on values. Explain that Ukrainians often value inner qualities over physical appearance. The phrase "Добра людина" (A good person) is one of the highest compliments, emphasizing "душевна краса" (inner beauty).
+- P4 (~90 words): Summary and call to action. Recap the main goals achieved in the module and encourage the learner to write down a description of 2-3 people they know using the complete pattern.
+
+Grand total: ~2200 words
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -21,7 +24,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-people who live in the same building or on the same street form a unique social circle. Людина, яка живе поруч із вами, — це сусід або сусідка. В Україні сусіди часто не просто живуть поруч, а активно спілкуються і допомагають одне одному. Мій сусід живе поруч, на першому поверсі. Він дуже привітний і чуйний чоловік. Ми часто зустрічаємося вранці і бажаємо одне одному гарного дня. У нашому будинку всі сусіди — це одна велика команда. > *The person who lives next to you is a neighbor (male or female). In Ukraine, neighbors often don't just live nearby, but actively communicate and help each other. My neighbor lives nearby, on the first floor. He is a very friendly and responsive man. We often meet in the morning and wish each other a good day. In our building, all the neighbors are one big team.* :::tip **Did you know?** — In Ukrainian apartment buildings, it is very common to know your neighbors well. People might borrow sugar or salt, help water the plants when someone is on vacation, or collectively take care of the yard. A good **сусід** is considered a blessing. ::: Beyond our friends and neighbors, our core support system is our family. Let's recap some family vocabulary and practice using the descriptive adjectives we learned earlier to talk about our relatives. Звісно, найважливіші люди — це наша родина. Ми можемо легко описувати наших родичів. У мене є впертий, але веселий дядько і дуже терпляча тітка. Мій двоюрідний брат — наполегливий студент, він живе в іншому місті. Усі мої родичі — це дуже працьовиті люди. Ми часто зустрічаємося на свята. > *Of course, the most important people are our family. We can easily describe our relatives. I have a stubborn but cheerful uncle and a very patient aunt. My cousin is a determined student; he lives in another city. All my relatives are very hardworking people. We often meet for holidays.* When we describe our relationships, we often focus on how people treat each other and what actions define their connection. To express this, we use specific verbs of interaction. Notice that some verbs, like "to trust" and "to help", preview a new grammatical pattern — the Dative case, which points to the receiver of the action. У хороших стосунках люди завжди підтримують одне одного. Часто наші стосунки залежать від характеру людини. Я довіряю своєму другові, тому що він щирий. Вона мені довіряє свої таємниці. Ми поважаємо наших батьків і старших родичів. Мій сусід нам завжди допомагає, коли ми маємо проблеми. Це показує, що ми маємо міцні стосунки з людьми навколо нас. > *In good relationships, people always support each other. Often, our relationships depend on a person's character. I trust my friend because he is sincere. She trusts me with her secrets. We respect our parents and older relatives. My neighbor always helps us when we have problems. This shows that we have strong relationships with the people around us.* <!-- INJECT_ACTIVITY: fill-in-adjective-agreement --> <!-- INJECT_ACTIVITY: group-sort-traits -->
+so she is my best friend. We studied together at the university, he is my old mate. There was an acquaintance of mine at the party, but we barely talked. We really value sincere people.* :::tip **Did you know?** The word **знайомий** (acquaintance) acts like an adjective, but we use it as a noun to refer to a person we know. Its feminine form is **знайома**, and the plural is **знайомі**. ::: Our daily routines also force us to interact with people at work and at home. At your workplace, you interact with colleagues. At home, you share your street or building with a **сусід** (neighbor). It is wonderful when your neighbor is a **привітний** (friendly, welcoming) person. A good colleague is usually **працьовитий** (hardworking). Він мій сусід — живе поруч, завжди привітний і готовий допомогти. Моя нова колега дуже працьовитий спеціаліст, вона працює в нашому відділі. Зазвичай мої сусіди тихі, ми зустрічаємося тільки вранці. > *He is my neighbor — he lives nearby, is always friendly and ready to help. My new colleague is a very hardworking specialist, she works in our department. Usually, my neighbors are quiet, we only meet in the morning.* Relationships are defined by how we act toward one another. When we want to describe these dynamics, we use verbs paired with personal pronouns. Some verbs take the Accusative case, answering "who" receives the action, while others take the Dative case, answering "to whom" the action is directed. Моя сестра завжди каже правду, тому вона мені довіряє. Мій керівник дуже серйозний, але він мене поважає як професіонала. Мої батьки живуть далеко, проте вони нам допомагають. > *My sister always tells the truth, so she trusts me. My manager is very serious, but he respects me as a professional. My parents live far away, however, they help us.* :::info **Grammar box** Pay attention to the pronouns when describing actions in relationships: * **Довіряти** (to trust) and **допомагати** (to help) use the Dative case: **Вона мені довіряє** (She trusts me). * **Поважати** (to respect) uses the Accusative case: **Він мене поважає** (He respects me). ::: In real life, you will frequently need to properly **описувати** (to describe) people in short, natural exchanges. When looking at photos or introducing someone new, we often start with their identity, then mention their **зовнішність** (appearance) and their character traits. > — **Марія:** А хто це? *(And who is this?)* > — **Антон:** Це мій колега, Ігор. *(This is my colleague, Ihor.)* > — **Марія:** Який він? *(What is he like?)* > — **Антон:** Він дуже працьовитий і серйозний. *(He is very hardworking and serious.)* > — **Марія:** А це хто поруч із ним? *(And who is this next to him?)* > — **Антон:** Це наша спільна знайома. Вона чуйна людина. *(This is our mutual acquaintance. She is a caring person.)* Описувати людей навколо нас — це дуже корисна навичка. Коли ми знаємо правильні слова, ми можемо легко розповісти про свою родину або колег. <!-- INJECT_ACTIVITY: fill-in, sentence completion with adjectives -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -641,6 +644,31 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (4/4).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] людина (person, human being)
+- [ ] стосунок (relationship)
+- [ ] характер (character, personality)
+- [ ] зовнішність (appearance)
+- [ ] привітний (friendly, welcoming)
+- [ ] щирий (sincere, genuine)
+- [ ] працьовитий (hardworking)
+- [ ] терплячий (patient)
+- [ ] сусід (neighbor)
+- [ ] описувати (to describe)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Описуємо людину цілком (~390 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

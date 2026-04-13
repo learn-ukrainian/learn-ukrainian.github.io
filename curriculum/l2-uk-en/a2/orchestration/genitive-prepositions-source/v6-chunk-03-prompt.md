@@ -1,21 +1,26 @@
-# Section-by-Section Generation — Section 3/5
+# Section-by-Section Generation — Section 3/3
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 9: Звідки ти? З чого це зроблено? (A2, A2.2 [Genitive Case Complete])
-**Section to write:** Від кого? Від + родовий (From Whom? Від + Genitive) (~650 words total)
-**Word target for this section:** 650 words (aim for 715 to account for undershoot)
+**Section to write:** Що було потім? Після + родовий (What Happened Next? Після + Genitive) (~770 words)
+**Word target for this section:** 770 words (aim for 847 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Від кого? Від + родовий (From Whom? Від + Genitive) (~650 words total)
-- P1 (~150 words): [Origin from a person or entity using 'від'. Explain the Genitive endings for people. Examples: лист від мами (Fem -и), подарунок від друга (Masc -а), новини від сусіда (Masc -а), привіт від Олени (Fem -и).]
-- P2 (~150 words): [Contrast 'з' vs. 'від'. Explain that 'з' is for places/geography (з Києва) while 'від' is for persons (від Олени). Provide a comparison: "Я отримав лист з Одеси" (from the city) vs "Я отримав лист від брата" (from the person).]
-- P3 (~150 words): [Distance and proximity: Use 'від' to describe how far something is from a reference point. Examples: далеко від центру (masc -у), недалеко від вокзалу (masc -у), далеко від моря (neuter -я).]
-- P4 (~200 words): [Protection and specialized sources: Use 'від' for things that protect or provide relief. Examples: ліки від головного болю (masc -у), парасолька від дощу (masc -у), захист від сонця (neuter -я). Include the compound 'з-під' (from under) as a bonus: дістати з-під стола.]
-- <!-- INJECT_ACTIVITY: fill-in-vid-z-genitive --> [fill-in, Focus: Complete sentences with від or з + correct Genitive noun form, 8 items]
+## Що було потім? Після + родовий (What Happened Next? Після + Genitive) (~770 words)
+- P1 (~120 words): Introduce "після" (after). Explain that it denotes an event or period that follows another, and it always takes the Genitive case. Provide core examples: після уроку (after the lesson), після обіду (after lunch), після роботи (after work), після канікул (after vacation).
+- P2 (~130 words): Explain Genitive forms after "після" for masculine nouns. Discuss hard vs. soft stems. Provide examples: після екзамену (hard masc. taking -у), після дня (soft masc. taking -я). Remind learners that events and abstract concepts often take the -у/-ю ending.
+- P3 (~130 words): Explain Genitive forms after "після" for feminine and neuter nouns. Provide examples: після лекції (fem. -ія changes to -ії), після свята (hard neuter -о changes to -а). Revisit "після роботи" (fem. hard stem -а changes to -и).
+- P4 (~120 words): Demonstrate "після" in common daily routine sequences to show narrative flow. Provide a sequenced example: "після сніданку йду на роботу, після роботи готую вечерю, після вечері дивлюся фільм."
+- P5 (~120 words): Contrast "після" with "до" (before) to reinforce both prepositions. Explain that both express time sequencing and both take the Genitive. Provide contrasting pairs: до уроку vs. після уроку, до обіду vs. після обіду.
+- <!-- INJECT_ACTIVITY: match-up-preposition-phrases --> [match-up, Match preposition phrases to their English meanings (origin, material, time), 8 items]
+- <!-- INJECT_ACTIVITY: group-sort-prepositions --> [group-sort, Sort phrases into з (place/material) vs. від (person/protection) vs. після (time), 8 items]
+- P6 (~150 words): Module summary recap. Briefly recap the core rules covered: З/із/зі + Genitive for geographic origin, materials, and time start; Від + Genitive for source person, distance, and protection; Після + Genitive for sequencing events in time. Remind learners to always consider the rules of euphony for з/із/зі.
+
+Grand total: ~2160 words
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -23,7 +28,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-великий стіл з дерева. Я зробив його сам учора. *(This large table is made of wood. I made it myself yesterday.)* > — **Оксана:** Дуже добре. А що ти п'єш? Це сік? *(Very good. And what are you drinking? Is this juice?)* > — **Тарас:** Так, це свіжий сік з яблук. Будеш пити? *(Yes, this is fresh juice made of apples. Will you drink?)* > — **Оксана:** Ні, дякую. Я буду їсти пиріжки з калини. *(No, thank you. I will eat buns made of viburnum.)* ### Читаємо українською У моїй кімнаті стоїть новий стіл з дерева. Моя сестра купила прозору склянку зі скла. Мама одягнула красиву сукню з шовку на свято. Я люблю пити холодний сік з яблук влітку. Сьогодні на обід у нас смачні пиріжки з калини. > *In my room stands a new table made of wood. My sister bought a transparent glass made of glass. Mom put on a beautiful dress made of silk for the holiday. I like to drink cold juice made of apples in the summer. Today for lunch we have tasty buns made of viburnum.* Use **з** + Genitive to indicate the starting point of an action in time ("since" or "from"). We will contrast this later with the preposition **після** (after). Цей прийменник чудово показує час, коли саме почалася ваша дія. Це може бути певна частина дня, конкретний день тижня або довгий період життя. Українці постійно використовують такі зручні фрази. Вони допомагають нам бути точними у розмові. > *This preposition perfectly shows the time when your action exactly began. This can be a certain part of the day, a specific day of the week, or a long period of life. Ukrainians constantly use such convenient phrases. They help us to be precise in conversation.* > — **Ірина:** Ти виглядаєш дуже втомленим. Що сталося? *(You look very tired. What happened?)* > — **Олег:** Я інтенсивно працюю з ранку. Дуже багато складної роботи. *(I have been working intensively since morning. A lot of difficult work.)* > — **Ірина:** Тобі треба добре відпочити. Ми вільні з понеділка. *(You need to rest well. We are free since Monday.)* > — **Олег:** Це чиста правда. Я не спав нормально з канікул. *(That is the pure truth. I haven't slept normally since the holidays.)* ### Читаємо українською Я дуже багато працюю з ранку до вечора. Ми чекаємо на ці новини з понеділка. Мій дідусь знає цю пісню з дитинства. Студенти мають чудовий настрій з канікул. Час летить дуже швидко. The only correct way to say "from Ukraine" is **з України**. Українська мова має власну незалежну граматичну систему. Наша милозвучність та логіка використання прийменників сильно відрізняють українську мову від інших. Завжди свідомо використовуйте правильні форми. Це показує вашу щиру повагу до нашої культури. :::tip **Did you know?** Forms that use "на" and "з" for Ukraine treat the state as a region and are incorrect calques from Russian. Embracing **з України** and **зі Львова** is the best way to sound like an authentic, respectful speaker. ::: <!-- INJECT_ACTIVITY: quiz-euphony-variants -->
+of «від» is expressing physical distance between two points in space. When you want to explain how far or close something is, you pair this preposition with spatial adverbs like **далеко** (far) or **недалеко** (not far, nearby). The point you are measuring the distance from will always take the Genitive case. This structure is absolutely essential for giving clear directions or describing where you live relative to important landmarks in a city. Наш новий просторий офіс знаходиться дуже далеко від центру міста. Я спеціально орендував світлу квартиру недалеко від залізничного вокзалу. Моя стара школа стоїть зовсім недалеко від великого зеленого парку. Цей туристичний готель розташований дуже далеко від галасливої дороги. > *Our new spacious office is located very far from the city center. I specifically rented a bright apartment not far from the railway station. My old school stands quite not far from a large green park. This tourist hotel is located very far from the noisy road.* Beyond physical movement and measuring distance, «від» has a very specific use: protection. When you talk about things that shield, cure, or defend you against something unpleasant, you use this exact preposition. It acts as a linguistic barrier between you and the problem. The thing you are being protected against always goes into the Genitive case. Instead of saying "medicine for", Ukrainians literally say "medicine from". This applies to taking pills or simply carrying a **парасолька** (umbrella) in bad weather. В аптеці я купив ефективні ліки від сильного головного болю. У мене завжди є велика чорна парасолька від раптового дощу. Цей дорогий зимовий крем чудово захищає шкіру від сильного морозу. Влітку на пляжі ми носимо темні окуляри від яскравого сонця. > *At the pharmacy, I bought effective medicine for a severe headache. I always have a large black umbrella for sudden rain. This expensive winter cream perfectly protects the skin from severe frost. In summer on the beach, we wear dark glasses against the bright sun.* As you practice these communicative structures, quickly review how the Genitive case affects the nouns that follow «від». For feminine nouns, the ending typically changes to «-и» for hard stems and «-і» for soft ones, giving us forms like «від мами». For masculine nouns, you must carefully choose between «-а» and «-у». Nouns representing concrete people take «-а» to become «від друга» or «від сусіда». Abstract concepts or natural phenomena, such as pain or rain, take «-у», giving us «від болю» and «від дощу». Сьогодні ми уважно чекаємо на важливий дзвінок від генерального директора. Я хочу швидко сховатися в теплому будинку від холодного вітру. Вона несподівано отримала це дивне повідомлення від своєї старшої сестри. Ми довго стояли на вулиці далеко від ресторану. > *Today we are attentively waiting for an important call from the general director. I want to quickly hide in the warm house from the cold wind. She unexpectedly received this strange message from her older sister. We stood on the street for a long time far from the restaurant.* <!-- INJECT_ACTIVITY: fill-in-vid-z -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -598,6 +603,31 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (3/3).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] прийменник (preposition)
+- [ ] джерело (source)
+- [ ] походження (origin)
+- [ ] матеріал (material)
+- [ ] далеко (far)
+- [ ] недалеко (not far, nearby)
+- [ ] подарунок (gift)
+- [ ] сніданок (breakfast)
+- [ ] вечеря (dinner, supper)
+- [ ] канікули (vacation, holidays)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Що було потім? Після + родовий (What Happened Next? Після + Genitive) (~770 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

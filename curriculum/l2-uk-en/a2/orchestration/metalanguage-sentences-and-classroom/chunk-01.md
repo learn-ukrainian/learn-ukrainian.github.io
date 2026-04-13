@@ -1,35 +1,32 @@
-## Члени речення: хто що робить?
+## Члени речення: хто що робить? (~550 words total)
 
-Кожне речення в українській мові має свою основу. (Every sentence in the Ukrainian language has its foundation.) У школі діти вивчають, що це **граматична основа** (grammatical foundation). Вона складається з двох головних частин. Це головні **члени речення** (sentence members). Вони показують, про кого або про що йде мова, і що ця людина чи предмет робить у даний момент. (They show who or what is being discussed, and what this person or object is doing at the given moment.) Ця основа — це фундамент, на якому будується весь зміст нашої розмови. (This foundation is the base on which the entire meaning of our conversation is built.) Без граматичної основи речення просто не може існувати як закінчена думка. (Without a grammatical foundation, a sentence simply cannot exist as a complete thought.) Українська граматика вимагає чіткої структури. (Ukrainian grammar requires clear structure.)
+When Ukrainian children begin learning grammar in school, they are introduced to the grammatical foundation. Every complete thought forms a **речення** (sentence), and at its core lies a vital pair of words. This foundation is built on the interaction between two main members: the **підмет** (subject) and the **присудок** (predicate). These two parts work together to establish who is performing an action and what exactly is happening. Understanding this core is the first step in mastering how Ukrainian sentences are analyzed in a classroom.
 
-Перший головний член речення — це **підмет** (subject). Він завжди відповідає на питання «хто?» (who?) або «що?» (what?). Підмет — це головний герой нашої історії. (The subject is the main character of our story.) Зазвичай це іменник або займенник у називному відмінку. (Usually, this is a noun or pronoun in the nominative case.) У школі на уроках граматики діти підкреслюють підмет однією прямою лінією. (At school in grammar lessons, children underline the subject with one straight line.) Кожен учень знає це просте правило. (Every student knows this simple rule.)
-Розглянемо приклади:
-«Сонце сходить». (The sun rises.) Що? — сонце. Це підмет, який виконує дію. (This is the subject that performs the action.)
-«Вчитель пояснює нове правило». (The teacher explains the new rule.) Хто? — вчитель. Це також наш підмет у цьому реченні. (This is also our subject in this sentence.)
+Головний член речення, який означає особу або предмет, називається підмет. Він завжди відповідає на питання «хто?» або «що?». Зазвичай це іменник або займенник у називному відмінку. На уроці української мови вчителі просять учнів підкреслювати підмет однією суцільною лінією. Наприклад, у фразі «Сонце сходить» слово «сонце» відповідає на питання «що?» і є підметом. У фразі «Вчитель пояснює правило» слово «вчитель» відповідає на питання «хто?» і виконує дію.
 
-Другий головний член речення — це **присудок** (predicate). Присудок розказує, що саме робить підмет. (The predicate tells exactly what the subject does.) Він відповідає на питання «що робить?», «що зробив?», «що буде робити?» або «який він є?». Присудок — це дія або стан нашого головного героя. (The predicate is the action or state of our main character.) Найчастіше присудок виражений дієсловом. (Most often, the predicate is expressed by a verb.) За шкільним правилом української мови присудок завжди підкреслюють двома прямими лініями. (According to the school rule of the Ukrainian language, the predicate is always underlined with two straight lines.)
-Подивимося на приклади:
-«Річка дихала». (The river breathed.) Що робила річка? — дихала. Це присудок.
-«Вечір є дуже тихий». (The evening is very quiet.) Який є вечір? — тихий. У цьому реченні присудок описує стан. (In this sentence, the predicate describes a state.)
+> *The main sentence member that denotes a person or an object is called the subject. It always answers the questions "who?" or "what?". Usually, it is a noun or a pronoun in the nominative case. In a Ukrainian language lesson, teachers ask students to underline the subject with one solid line. For example, in the phrase "The sun rises," the word "sun" answers the question "what?" and is the subject. In the phrase "The teacher explains the rule," the word "teacher" answers the question "who?" and performs the action.*
 
-Інші слова в реченні — це **другорядні члени речення** (secondary sentence members). Вони додають важливі деталі до нашої розповіді. (They add important details to our story.) Їх є три основні види.
-Перший вид — це **додаток** (object). Він відповідає на питання непрямих відмінків: «кого?», «що?», «кому?», «ким?», «чим?».
-Другий вид — це **означення** (attribute). Означення описує предмет і відповідає на питання «який?», «яка?», «яке?», «чиє?».
-Третій вид — це **обставина** (adverbial modifier). Обставина показує місце, час, причину або спосіб дії. (The adverbial modifier shows the place, time, reason, or manner of action.) Вона відповідає на питання «де?», «коли?», «як?», «куди?».
-Проаналізуємо велике речення:
-«Моя подруга читає цікаву книгу ввечері». (My friend reads an interesting book in the evening.)
-Хто? — подруга (підмет). Подруга чия? — моя (означення). Що робить подруга? — читає (присудок). Читає що? — книгу (додаток). Книгу яку? — цікаву (означення). Читає коли? — ввечері (обставина). Тепер ви бачите всі члени речення. (Now you see all the sentence members.)
+Другий головний член речення називається присудок. Він описує дію або стан підмета. Присудок відповідає на питання «що робить?», «що зробив?» або «який він є?». У школі діти завжди підкреслюють присудок двома суцільними лініями. Наприклад, візьмемо речення «Річка дихала парою». Слово «дихала» відповідає на питання «що робила?» і є присудком. У реченні «Вечір тихий» слово «тихий» відповідає на питання «який є?». Воно також є присудком.
 
-Речення бувають різні за своєю будовою. (Sentences can be different by their structure.) Якщо речення має тільки одну граматичну основу, це **просте речення** (simple sentence). Якщо воно має дві або більше граматичних основ, це **складне речення** (compound sentence).
-Також просте речення може бути коротким або довгим. (Also, a simple sentence can be short or long.) Якщо в реченні є тільки підмет і присудок, це непоширене речення. (If a sentence has only a subject and a predicate, it is an unextended sentence.) Наприклад: «Ідуть дощі». (Rains are falling.) Тут є лише основа. (Here is only the foundation.)
-Але коли ми додаємо другорядні члени речення, воно стає набагато ширшим. (But when we add secondary sentence members, it becomes much broader.) **Поширене речення** (extended sentence) має багато деталей. Наприклад: «Сьогодні в лісі ідуть теплі дощі». (Today warm rains are falling in the forest.) Тут є обставини часу і місця («сьогодні», «в лісі») та означення («теплі»).
+> *The second main sentence member is called the predicate. It describes the action or state of the subject. The predicate answers the questions "what does it do?", "what did it do?", or "what is it like?". In school, children always underline the predicate with two solid lines. For example, let's take the sentence "The river breathed steam." The word "breathed" answers the question "what did it do?" and is the predicate. In the sentence "The evening is quiet," the word "quiet" answers the question "what is it like?". It is also the predicate.*
 
-> — **Марко:** Вибачте, пане вчителю. Як визначити підмет у цьому довгому реченні? *(Excuse me, Mr. Teacher. How to determine the subject in this long sentence?)*
-> — **Вчитель:** Це не дуже складно. Спочатку постав питання «хто?» або «що?». *(It is not very difficult. First, ask the question "who?" or "what?".)*
-> — **Марко:** Я розумію це правило. А далі що мені робити? *(I understand this rule. And then what should I do?)*
-> — **Вчитель:** Далі шукай іменник або займенник у називному відмінку. *(Next, look for a noun or pronoun in the nominative case.)*
-> — **Марко:** А якщо це слово відповідає на питання «як?»? Це також підмет? *(And if this word answers the question "how?"? Is it also a subject?)*
-> — **Вчитель:** Ні, Марку. Слово, яке відповідає на питання «де?», «коли?», або «як?», — це обставина. *(No, Marko. A word that answers the questions "where?", "when?", or "how?" is an adverbial modifier.)*
-> — **Марко:** Дуже дякую вам! Тепер я можу правильно підкреслити всі слова. *(Thank you very much! Now I can correctly underline all the words.)*
+Sentences often contain secondary members that add crucial details. The first is the **додаток** (object), which answers the questions of the indirect cases, such as «кого?» or «чим?». The next is the **означення** (attribute), which describes the qualities of a noun and answers questions like «який?» or «чия?». Finally, there is the **обставина** (adverbial modifier), which provides the context of the action by answering questions such as «де?» or «коли?». By identifying these parts, learners can break down complex ideas into simple components.
 
-<!-- INJECT_ACTIVITY: match-up, Match sentence member terms to their question words (хто? що?, де? коли?, який? чия?, кого? кому?), 8 items -->
+:::info
+**Grammar box**
+When analyzing a sentence like «Моя подруга читає цікаву книгу ввечері», you ask questions from the main members to the secondary ones:
+- Подруга (чия?) ➔ моя (attribute)
+- Читає (що?) ➔ книгу (object)
+- Книгу (яку?) ➔ цікаву (attribute)
+- Читає (коли?) ➔ ввечері (adverbial modifier)
+:::
+
+Understanding these roles allows us to classify sentences. A simple sentence contains only one grammatical foundation, meaning it has one core subject and predicate pair. If a sentence has two or more independent foundations, it is called a compound sentence. Simple sentences also vary in detail. A sentence like «Ідуть дощі» is considered unextended because it consists solely of the main members. However, when we add secondary members to provide more context, it becomes an extended sentence. For instance, «Сьогодні ідуть теплі дощі» is extended because it includes an attribute and an adverbial modifier.
+
+> — **Студент:** Як визначити підмет у цьому реченні? *(How do I determine the subject in this sentence?)*
+> — **Вчитель:** Знайдіть дію і поставте питання «хто?» або «що?». Шукайте іменник у називному відмінку. *(Find the action and ask the question "who?" or "what?". Look for a noun in the nominative case.)*
+> — **Студент:** А що робити з іншими словами? Підкресліть їх також? *(And what to do with the other words? Underline them too?)*
+> — **Вчитель:** Так. Запишіть питання і визначте всі частини. Якщо слово відповідає на питання «де?» або «коли?», то це обставина. *(Yes. Write down the questions and determine all parts. If a word answers the question "where?" or "when?", then it is an adverbial modifier.)*
+> — **Студент:** Дякую! Тепер я бачу всі члени речення. *(Thank you! Now I see all the sentence members.)*
+
+<!-- INJECT_ACTIVITY: match-up, Match sentence member terms to their question words (хто? що?, де? коли?, який? чия?, кого? кому?) -->

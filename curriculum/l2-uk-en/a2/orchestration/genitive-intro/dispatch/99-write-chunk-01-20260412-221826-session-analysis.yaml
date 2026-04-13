@@ -1,0 +1,50 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T20-17-a2f90808.json
+phase: write-chunk-01
+prompt_chars: 42360
+response_chars: 5331
+prompt_words: 6234
+response_words: 896
+sections:
+- name: header
+  start: 0
+  length: 492
+  fraction: 0.0116
+- name: skeleton
+  start: 492
+  length: 1825
+  fraction: 0.0431
+- name: plan
+  start: 2317
+  length: 11712
+  fraction: 0.2765
+- name: wiki
+  start: 6593
+  length: 28066
+  fraction: 0.6626
+- name: output_spec
+  start: 42095
+  length: 265
+  fraction: 0.0063
+large_sections:
+- wiki
+directives_total: 21
+directives_covered: 17
+directives_missed:
+- kind: must
+  text: For example, words for numbers like `п'ять` were originally nouns that required
+    the genitive plural (`п'ять братів` - literally "a five of brothers").
+  covered: false
+  coverage_note: 6/16 keywords (38%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 4/11 keywords (36%)
+- kind: inject_activity
+  text: quiz-possession-absence
+  covered: false
+  coverage_note: marker missing

@@ -1,0 +1,66 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T16-49-5c5c4aed.json
+phase: write-chunk-01
+prompt_chars: 47226
+response_chars: 4853
+prompt_words: 6611
+response_words: 769
+sections:
+- name: header
+  start: 0
+  length: 439
+  fraction: 0.0093
+- name: skeleton
+  start: 439
+  length: 1709
+  fraction: 0.0362
+- name: plan
+  start: 2148
+  length: 19027
+  fraction: 0.4029
+- name: wiki
+  start: 14671
+  length: 25819
+  fraction: 0.5467
+- name: output_spec
+  start: 46994
+  length: 232
+  fraction: 0.0049
+large_sections:
+- plan
+- wiki
+directives_total: 20
+directives_covered: 12
+directives_missed:
+- kind: checklist
+  text: гроші (money — pluralia tantum, Р. грошей, Ор. грішми/грошима)
+  covered: false
+  coverage_note: 2/7 keywords (29%)
+- kind: checklist
+  text: ворота (gate — pluralia tantum, Р. воріт, Ор. ворітьми/воротами)
+  covered: false
+  coverage_note: 2/7 keywords (29%)
+- kind: checklist
+  text: ліки (medicine — pluralia tantum, connects to M16)
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: checklist
+  text: родовий відмінок (genitive case)
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: must memorize which pattern each noun follows.
+  covered: false
+  coverage_note: 2/7 keywords (29%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 3/11 keywords (27%)
+- kind: inject_activity
+  text: quiz-identify-pluralia
+  covered: false
+  coverage_note: marker missing

@@ -32,12 +32,12 @@ objectives:
 - Learner can apply Genitive structures in real-life contexts (shopping, health, directions, time expressions).
 dialogue_situations:
 - setting: 'Role-play: tour guide describing Kyiv landmarks — using all genitive patterns: Біля Софійського
-    собору (m, cathedral). Без квитка (m, ticket) не можна. Для групи з десяти людей. До Хрещатику (m)
+    собору (m, cathedral). Без квитка (m, ticket) не можна. Для групи з десяти людей. До Хрещатика (m)
     п''ять хвилин.'
   speakers:
   - Гід
   - Туристи
-  motivation: 'All genitive patterns: біля собору, без квитка, для групи, до Хрещатику'
+  motivation: 'All genitive patterns: біля собору, без квитка, для групи, до Хрещатика'
 content_outline:
 - section: 'Частина 1: Впізнавання форм (Part 1: Recognizing Forms)'
   words: 450
@@ -110,146 +110,122 @@ references:
 <generated_module_content>
 ## Частина 1: Впізнавання форм (Part 1: Recognizing Forms)
 
-This module consolidates your knowledge of the **родовий відмінок** (genitive case) covered in modules M08-M13. The Genitive case is the most frequently used case in the Ukrainian language. We use it to express negation, possession, quantity, and movement. Before moving to more complex case interactions, this checkpoint ensures your foundation is solid. You must be able to recognize which **прийменник** (preposition) triggers the Genitive and correctly apply the **закінчення** (ending) for **однина** (singular) and plural nouns. Let's review the core preposition groups.
+In this module, we are conducting a comprehensive **перевірка** (check, review) of everything you have learned about the **родовий відмінок** (genitive case). This case is the engine of everyday Ukrainian communication. Let us start by looking at how frequently it appears in a simple conversation.
 
-Spatial prepositions describe physical location and proximity. The prepositions **біля** (near/by), **навпроти** (opposite/across from), **коло** (around/near), and **до** (to/towards) always require the Genitive case. When you hear these words, immediately anticipate a Genitive ending. The preposition **до** indicates direction towards a destination, while the others indicate static location. Notice the endings in the following examples.
+> **Гід** (Guide): Добрий день! Сьогодні ми гуляємо центром Києва. Зараз ми стоїмо **біля Софійського собору** (near Saint Sophia Cathedral).
+> **Туристка:** Який він гарний! А ми можемо зайти всередину?
+> **Гід:** Так, але **без квитка** (without a ticket) не можна. У мене є квитки **для групи з десяти людей** (for a group of ten people).
+> **Турист:** Чудово! А що ми будемо робити потім?
+> **Гід:** **Після екскурсії** (after the tour) ми підемо пити каву. 
+> **Туристка:** А далеко йти?
+> **Гід:** Ні, **до Хрещатика** (to Khreshchatyk) всього п'ять хвилин пішки.
 
-> **Читаємо українською:**
-> Ми стоїмо **біля собору**. (We are standing near the cathedral.)
-> Наш готель розташований **навпроти театру**. (Our hotel is located opposite the theater.)
-> Діти граються **коло школи**. (The children are playing near the school.)
-> Туристи йдуть **до станції**. (The tourists are walking to the station.)
-> Машина під'їхала **до будинку**. (The car drove up to the house.)
+Did you notice how often the noun endings changed? A **прийменник** (preposition) is a small functional word that connects different parts of a sentence. In Ukrainian, a specific group of prepositions completely dominates the genitive case. When you see words like **біля** (near), **без** (without), **для** (for), **з** (from/of), and **до** (to), they automatically force the following noun, adjective, and pronoun into the genitive form. To **впізнати** (to recognize) the genitive case, you first need to recognize its triggers.
 
-Source and time prepositions explain where something comes from or when an event occurs in a sequence. We use **від** (from/away from a person or object), **з / із / зі** (from/out of a place or material), and **після** (after). The preposition **з** takes the form **із** or **зі** to make pronunciation easier, especially before clusters of consonants.
+The most common triggers are prepositions of location and direction. These words tell you where something is or where it is going. When you describe space around an object, you use the genitive.
+*   **біля** (near, by): `Ми живемо біля старого парку.` (We live near the old park.)
+*   **навпроти** (opposite, across from): `Аптека знаходиться навпроти школи.` (The pharmacy is opposite the school.)
+*   **коло** (near, around — synonym for біля): `Діти граються коло дому.` (The children are playing near the house.)
+*   **до** (to, up to — direction): `Я йду до університету.` (I am going to the university.)
+*   **з / із / зі** (from, out of — origin): `Мій друг приїхав з Києва, а я йду зі школи.` (My friend arrived from Kyiv, and I am walking from school.)
 
-> **Читаємо українською:**
-> Цей лист **від мами**. (This letter is from mom.)
-> Я отримав повідомлення **від лікаря**. (I received a message from the doctor.)
-> Мій друг приїхав **зі Львова**. (My friend arrived from Lviv.)
-> Вона взяла книгу **з полиці**. (She took the book from the shelf.)
-> Ми підемо гуляти **після обіду**. (We will go for a walk after lunch.)
-> **Після роботи** я читаю новини. (After work, I read the news.)
+Another essential group includes prepositions of time, purpose, and absence. These establish the context of a situation.
+*   **після** (after): `Після роботи я завжди читаю.` (After work, I always read.)
+*   **для** (for — purpose/benefit): `Це подарунок для моєї сестри.` (This is a gift for my sister.)
+*   **від** (from — a person or a starting time): `Я працюю від вівторка до п'ятниці.` (I work from Tuesday to Friday.)
+*   **без** (without — absence): `Я п'ю каву без молока і без цукру.` (I drink coffee without milk and without sugar.)
 
-Purpose and lack prepositions define who benefits from an action or what is missing. The preposition **для** (for) indicates the recipient or purpose. The preposition **без** (without) indicates absence, similar to the negative construction with **немає**. These are essential for everyday situations like ordering food or buying gifts.
+Recognizing the correct form is just as important as knowing the preposition. You must learn to spot a **помилка** (mistake, error) instantly. For example, saying `до магазин` is incorrect because the noun did not change; it must be `до магазину`. Saying `без цукор` is wrong; it must be `без цукру`. The masculine **однина** (singular) form is often the trickiest because it splits into two possible endings: **-а/-я** or **-у/-ю**. Remember a broad tendency, not an absolute rule: many names of people and many concrete objects use **-а/-я** (`без брата`), while many abstract nouns, materials, and institutions use **-у/-ю** (`без цукру`, `до університету`). Some masculine nouns allow more than one genitive form, so it is best to learn common phrases individually. 
 
-> **Читаємо українською:**
-> Я купив подарунок **для сестри**. (I bought a gift for my sister.)
-> Ця кімната **для гостей**. (This room is for guests.)
-> Мені, будь ласка, чорний чай **без цукру**. (Black tea without sugar for me, please.)
-> Я не можу читати **без окулярів**. (I cannot read without glasses.)
-> Це **квиток для студента**. (This is a ticket for a student.)
-
-To recognize the function of a preposition, ask the question **кого?** (whom?) for people and animals, or **чого?** (what?) for objects and concepts. Distinguish between direction (**до кого? до чого?**), location (**біля кого? біля чого?**), and source (**від кого? з чого?**). When you identify the correct question, the Genitive ending follows naturally.
-
-<!-- INJECT_ACTIVITY: quiz-genitive-prepositions -->
+<!-- INJECT_ACTIVITY: quiz-preposition-identification -->
 
 ## Частина 2: Вибір правильної форми (Part 2: Choosing the Correct Form)
 
-When forming the Genitive case, we must maintain **узгодження** (agreement) between the noun and its modifiers. Adjectives and possessive pronouns must match the noun in gender, number, and case. For masculine and neuter singular words, the Genitive ending is **-ого** (for adjectives and pronouns). For feminine singular words, the ending is **-ої** (or **-єї** after soft consonants).
+Once you recognize the prepositions, you must build the phrase correctly. This requires proper **узгодження** (agreement) between the noun and any adjectives or pronouns attached to it. If the noun is in the genitive case, the adjectives and possessive pronouns must match it.
 
-> **Читаємо українською:**
-> Це рюкзак **мого нового друга**. (This is the backpack of my new friend.)
-> Я не бачив **твоєї старшої сестри**. (I haven't seen your older sister.)
-> Колір **цього старого стола** дуже темний. (The color of this old table is very dark.)
-> У нас немає **чистої води**. (We don't have clean water.)
-> Я чекаю **наступного автобуса**. (I am waiting for the next bus.)
+For masculine and neuter words, adjectives and pronouns take the ending **-ого**. 
+*   `Це телефон мого нового друга.` (This is my new friend's phone.)
+*   `Я не бачу цього синього моря.` (I do not see this blue sea.)
 
-Forming the Genitive **множина** (plural) is often the most challenging part of Ukrainian grammar. The endings depend on the noun's gender and declension group. Masculine nouns (and some neuter nouns) typically take the ending **-ів** or **-їв**. Feminine nouns (and most neuter nouns) usually have a zero ending, meaning the final vowel is dropped. A small group of nouns, primarily feminine nouns ending in a consonant and some irregular plurals, take the ending **-ей**.
+For feminine words, genitive forms commonly include **-ої** in adjectives and **-ої / -єї** in pronouns, depending on the word.
+*   `Я читаю сторінку моєї старої книги.` (I am reading a page of my old book.)
+*   `У цій газеті немає цікавої статті.` (There is no interesting article in this newspaper.)
 
-> **Читаємо українською:**
-> На вечірці було **десять друзів**. (There were ten friends at the party.)
-> Вона прочитала **п'ять книжок**. (She read five books.)
-> На вулиці **багато людей**. (There are many people on the street.)
-> Ми не спали **кілька ночей**. (We didn't sleep for a few nights.)
-> У мене немає **грошей**. (I don't have money.)
+For plural words of all genders, adjective and pronoun forms commonly end in **-их / -іх**, depending on the word.
+*   `Я чекаю моїх нових друзів.` (I am waiting for my new friends.)
 
-For inanimate masculine nouns in the singular, you must choose between the ending **-а / -я** and **-у / -ю**. The logic relies on how "concrete" the item is. Concrete objects, people, animals, and specific terms take **-а / -я**. Abstract concepts, collective nouns, materials, and phenomena take **-у / -ю**. 
+Forming the **множина** (plural) in the genitive case is where many learners stumble. The most frequent pattern for feminine and neuter nouns is the zero **закінчення** (ending), marked as **-ø**. This means you simply drop the final vowel. However, if dropping the vowel creates an unpronounceable cluster of consonants, Ukrainian inserts an **о** or **е** to make it melodic.
+*   `машина` → `багато машин` (many cars)
+*   `сестра` → `п'ять сестер` (five sisters)
+*   `вікно` → `немає вікон` (there are no windows)
+*   `пісня` → `кілька пісень` (several songs)
 
-> **Читаємо українською:**
-> Водій чекає біля **автобуса**. (The driver is waiting near the bus.) *Concrete object.*
-> У мене зовсім немає вільних годин, немає **часу**. (I have no free hours at all, I have no time.) *Abstract concept.*
-> Я дістав зошит з **рюкзака**. (I took a notebook from the backpack.) *Concrete object.*
-> Я п'ю каву без **цукру**. (I drink coffee without sugar.) *Material/substance.*
-> Тут немає **вітру**. (There is no wind here.) *Natural phenomenon.*
+For masculine nouns, and a few exceptions, we use specific suffixes. The most common masculine suffix is **-ів** (or **-їв** after a vowel/soft sign). For many third declension nouns and irregular plurals, the suffix is **-ей**. To **вибрати** (to choose) the right one, you must memorize the high-frequency patterns.
+*   **-ів / -їв**: `п'ять братів` (five brothers), `багато столів` (many tables), `десять трамваїв` (ten trams).
+*   **-ей**: `багато ночей` (many nights), `немає грошей` (no money), `п'ять дітей` (five children), `група людей` (a group of people), `кілька статей` (several articles).
 
-<!-- INJECT_ACTIVITY: fill-in-genitive-forms -->
+Mastering the genitive also means understanding the subtle nuances between similar prepositions. Compare these minimal pairs carefully:
+*   **з** vs. **від**: Use **з** when moving *out of* a place (`Я вийшов з кімнати` - I walked out of the room). Use **від** when moving *away from* a person (`Я йду від лікаря` - I am walking away from the doctor).
+*   **біля** vs. **навпроти**: **Біля** simply means proximity (`Стілець стоїть біля стола` - The chair stands near the table). **Навпроти** means facing directly across (`Шафа стоїть навпроти вікна` - The wardrobe stands opposite the window).
+*   **до** vs. **після**: These are direct opposites in time. **До** means up to a point (`Я працюю до вечора` - I work until evening), while **після** means subsequent to it (`Ми гуляємо після обіду` - We walk after lunch).
 
-Minimal pairs of prepositions often confuse learners. Compare **з** (from/out of a place) and **від** (from/away from a person). You return **з** роботи (from work), but you receive a letter **від** колеги (from a colleague). Compare **біля** (near/next to) and **навпроти** (opposite/facing). A park can be **біля** дому (near the house), while a pharmacy might be **навпроти** дому (across from the house). Remember that **з** changes to **зі** for phonetic ease when the next word starts with multiple consonants.
+To **виправити** (to correct) your own speech, watch out for the most common L2 errors. First, never translate English sentence structure directly. "I need help" translates to `Я потребую допомоги` (genitive), not `Я потребую допомогу`. Second, remember that the genitive is very common in negative constructions with words like `немає`: "I don't have a sister" is `У мене немає сестри`, never `У мене немає сестра`. Finally, remember the number rule: numbers 5 and above require the genitive plural. "Five books" is `п'ять книжок`, never `п'ять книга`.
 
-> **Читаємо українською:**
-> Він приїхав **зі Львова**. (He arrived from Lviv.)
-> Вона взяла зошит **зі столу**. (She took the notebook from the table.)
-> Лікарня розташована **навпроти парку**. (The hospital is located opposite the park.)
-> Ми зустрілися **біля парку**. (We met near the park.)
-
-A frequent **помилка** (mistake) among English speakers is leaving the noun in the Nominative case after **немає** or after prepositions. English does not change the noun's form to show absence. Another common error is using the Accusative case instead of the Genitive with certain verbs. For example, the verb **потребувати** (to need/require) always governs the Genitive case. Saying "Я потребую допомогу" (Accusative) is incorrect. The correct form is "Я потребую допомоги" (Genitive). You must **впізнати** (recognize) the trigger word to **виправити** (correct) the error.
-
-> **Читаємо українською:**
-> ❌ *У мене немає брат.* 
-> ✅ У мене немає **брата**. (I don't have a brother.)
-> ❌ *Я потребую допомогу.*
-> ✅ Я потребую **допомоги**. (I need help.)
-> ❌ *Він прийшов без квиток.*
-> ✅ Він прийшов **без квитка**. (He arrived without a ticket.)
-
-<!-- INJECT_ACTIVITY: error-correction-genitive-checks -->
+<!-- INJECT_ACTIVITY: fill-in-genitive-agreement -->
+<!-- INJECT_ACTIVITY: error-correction-genitive -->
 
 ## Частина 3: Вільне вживання (Part 3: Free Production)
 
-To truly master the Genitive case, you must apply it in real-world contexts. At the market, you will use it to specify quantities and measures. At the pharmacy, you will use the preposition **від** (from/against) to describe the purpose of medication, or **для** (for) to specify the body part. Let's look at how native speakers build these phrases.
+Now let us apply the genitive case to real-life situations. The most practical place to start is shopping and dealing with quantities or absences at the market.
 
-> **Читаємо українською:**
-> Дайте мені, будь ласка, **два кілограми яблук**. (Give me two kilograms of apples, please.)
-> Мені потрібна велика **пляшка води**. (I need a large bottle of water.)
-> У вас є **таблетки від болю**? (Do you have pills for pain?)
-> Я хочу купити **крем для рук**. (I want to buy hand cream.)
-> Скільки коштує кілограм **сиру**? (How much does a kilogram of cheese cost?)
+> **Покупець** (Customer): Добрий день! Дайте, будь ласка, **два кілограми яблук** (two kilograms of apples).
+> **Продавець** (Seller): Ось ваші яблука. З вас **сто гривень** (one hundred hryvnias).
+> **Покупець**: А у вас є свіжий хліб?
+> **Продавець**: Вибачте, сьогодні **немає свіжого хліба** (there is no fresh bread).
+> **Покупець**: Нічого страшного. Тоді ще одну каву **без цукру** (coffee without sugar), будь ласка.
 
-Let's observe a multi-turn dialogue. In this scenario, a tour guide shows a group around Kyiv. Notice how many times the Genitive case appears to express location, direction, purpose, and lack.
+Another critical scenario is visiting a doctor or a pharmacy. Here, you use the genitive to describe what you are treating, how you feel, and when events occurred.
 
-> **Гід:** Добрий день! Ми стоїмо **біля Золотих воріт**. *(Good day! We are standing near the Golden Gates.)*
-> **Туристи:** Яка краса! А куди ми йдемо далі? *(What beauty! And where are we going next?)*
-> **Гід:** Зараз ми йдемо **до Софійського собору**. Це близько. *(Now we are walking to St. Sophia's Cathedral. It is close.)*
-> **Туристи:** Скільки часу туди йти? *(How much time to walk there?)*
-> **Гід:** **До Хрещатика** десять хвилин, а до собору — п'ять. *(To Khreshchatyk it is ten minutes, and to the cathedral — five.)*
-> **Туристи:** Чи потрібен квиток? *(Is a ticket needed?)*
-> **Гід:** Так, **без квитка** заходити не можна. Але ця екскурсія **для туристів з України**, тому вхід безкоштовний! *(Yes, without a ticket you cannot enter. But this tour is for tourists from Ukraine, so entry is free!)*
+> **Пацієнт**: Добрий день. У вас є **ліки від болю** (medicine for pain)?
+> **Аптекар**: Так, звичайно. Що у вас болить?
+> **Пацієнт**: У мене дуже болить голова і зовсім **немає сил** (I have no strength).
+> **Аптекар**: Візьміть ці таблетки. А також ось хороший **сироп від кашлю** (cough syrup).
+> **Пацієнт**: Дякую. Їх треба пити **після операції** (after surgery)?
+> **Аптекар**: Ні, просто пийте їх **після обіду** (after lunch). І відпочивайте, бо я бачу, що у вас **немає настрою** (you have no mood).
 
-When translating from English to Ukrainian, you must adjust your strategy. English uses an apostrophe with an "s" ('s) or the preposition "of" to show possession. Ukrainian uses the Genitive case directly on the noun and its modifiers. Do not simply place two Nominative nouns next to each other.
+Navigating a city is impossible without the genitive case. You use it constantly to ask for directions, locate buildings, and understand timeframes.
 
-> **Читаємо українською:**
-> Це **машина мого брата**. (This is my brother's car.)
-> Де розташований **центр міста**? (Where is the city center?)
-> Ми читаємо **книгу відомого автора**. (We are reading the book of a famous author.)
-> Це **смак дитинства**. (This is the taste of childhood.)
+:::tip Орієнтування в місті (Navigating the city)
+Коли ви шукаєте дорогу, завжди використовуйте прийменник **до** (to, up to).
+`Перепрошую, як дійти до станції метро?` (Excuse me, how do I get to the subway station?)
+`Вам треба йти прямо, аптека знаходиться навпроти банку.` (You need to go straight, the pharmacy is located opposite the bank.)
+`Цей магазин працює від ранку до ночі.` (This store works from morning to night.)
+:::
 
-Quantity words always require the Genitive case. The words **багато** (a lot / many), **мало** (a little / few), and **кілька** (several / a few) behave like numbers. When dealing with countable objects, use the Genitive plural. When dealing with uncountable substances or abstract concepts, use the Genitive singular. You will **вибрати** (choose) the correct number form based on whether the noun is countable.
+The key to natural fluency is building full sentences automatically. Instead of pausing to calculate the grammar, memorize common question-and-answer pairs as complete chunks. When someone asks a question triggering the genitive, answer in the genitive.
+*   **Запитання:** `Звідки ви?` (Where are you from?)
+*   **Відповідь:** `Я з України.` (I am from Ukraine.)
+*   **Запитання:** `Для кого цей новий телефон?` (Who is this new phone for?)
+*   **Відповідь:** `Це подарунок для мого молодшого брата.` (This is a gift for my younger brother.)
+*   **Запитання:** `Скільки часу залишилося до поїзда?` (How much time is left until the train?)
+*   **Відповідь:** `До поїзда залишилося близько двох годин.` (There are about two hours left until the train.)
 
-> **Читаємо українською:**
-> У нього дуже **багато часу**. (He has a lot of time.) *Uncountable, singular.*
-> На лекції було **кілька студентів**. (There were several students at the lecture.) *Countable, plural.*
-> У річці залишилося **мало води**. (There is little water left in the river.) *Uncountable, singular.*
-> Ми купили **багато свіжих овочів**. (We bought many fresh vegetables.) *Countable, plural.*
+Practice these patterns out loud. The genitive case should feel like a rhythm, naturally following the prepositions that trigger it.
 
-<!-- INJECT_ACTIVITY: match-up-genitive-situational -->
-
-Consistent use of correct Genitive endings is a strong sign of A2 and early B1 proficiency. Native speakers naturally hear the difference between a concrete object and an abstract concept, or recognize the zero ending in the plural. You will make mistakes, and that is normal. The goal of a **перевірка** (review/check) is to identify your weak spots so you can practice them. Every time you correctly say "для мами" instead of "для мама", or "п'ять книжок" instead of "п'ять книги", you are thinking in Ukrainian. Pay attention to the prepositions you hear in daily conversations, and observe the endings that follow them. Your brain will gradually absorb these patterns.
+<!-- INJECT_ACTIVITY: match-up-situations -->
 
 ## Підсумок
 
-This checkpoint confirms your readiness to use the Genitive case in daily life. Use this self-assessment checklist to evaluate your progress. If you answer "yes" to these questions, you are ready to move on: 
+You have reached the end of this grammar review. Use this checklist as a final **перевірка** (check, review) to measure your comfort level with the genitive case.
 
-*   Чи можу я використати прийменники **до**, **біля**, **від**, **для** без помилок?
-*   Чи правильно я утворюю множину (**друзів**, **книжок**, **людей**)?
-*   Чи вмію я узгоджувати прикметники (**мого нового**) з іменниками?
-*   Чи розумію я різницю між **автобуса** та **часу**?
-*   Чи можу я пояснити напрямок або рецепт, використовуючи родовий відмінок?
+*   **Can I use all 9+ prepositions?** Test yourself: can you smoothly say `Я йду від лікаря до аптеки, яка знаходиться навпроти парку біля банку`?
+*   **Can I form the Genitive plural for all genders?** Check your reflexes with these core nouns: `стіл` becomes `багато столів`, `книга` becomes `немає книжок`, `море` becomes `немає морів`, and `ніч` becomes `кілька ночей`.
+*   **Can I agree adjectives and pronouns?** Take a simple phrase like "my new phone" and push it into the genitive: `екран мого нового телефону`. If you can effortlessly match the `-ого` ending across the phrase, your agreement is solid. 
 
-If you feel confident with these points, keep practicing, and always listen for the prepositions that signal a change in the ending.
+Mastering these patterns unlocks a massive portion of the Ukrainian language. Keep practicing, and the endings will soon become second nature.
 </generated_module_content>
 
-**PIPELINE NOTE — Word count: 1929 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
+**PIPELINE NOTE — Word count: 1674 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -425,38 +401,169 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 231 words | Not found: 2 words
+Verified: 247 words | Not found: 2 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
-  ✗ Львова — NOT IN VESUM
+  ✗ Києва — NOT IN VESUM
   ✗ Хрещатика — NOT IN VESUM
 
-All 231 other words are confirmed to exist in VESUM.
+All 247 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
-## Verification Tools (MCP)
+---
 
-You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
+## Verification Tools (Shell Commands)
 
-**Core Verification:**
-- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
-- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
+You have access to verification tools via shell commands. Use these to verify
+Ukrainian vocabulary, check grammar, and search textbook content **as you write**.
 
-**Content Quality:**
-- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+**IMPORTANT:** Run verification commands BEFORE finalizing any Ukrainian text.
+Batch multiple verifications together to minimize round-trips.
 
-**Reference:**
-- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp_rag_search_literary` — verify literary references against primary sources
-- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
+### 1. Batch-verify Ukrainian words exist in VESUM (preferred — one call for many words)
 
-**Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_words
+results = verify_words(['слово1', 'слово2', 'слово3'])
+for w, matches in results.items():
+    if matches:
+        print(f'{w}: FOUND — lemma={matches[0][\"lemma\"]}, pos={matches[0][\"pos\"]}')
+    else:
+        print(f'{w}: NOT FOUND — may not exist in standard Ukrainian')
+"
+```
+
+### 2. Verify a single Ukrainian word in VESUM (with full morphological tags)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_word
+results = verify_word('WORD_HERE')
+if results:
+    for m in results:
+        print(f'lemma={m[\"lemma\"]}, pos={m[\"pos\"]}, tags={m[\"tags\"]}')
+else:
+    print('NOT FOUND in VESUM')
+"
+```
+
+### 3. Get all inflected forms of a lemma (declension/conjugation)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_lemma
+forms = verify_lemma('LEMMA_HERE')
+for f in forms[:20]:
+    print(f'{f[\"word_form\"]:20s} {f[\"pos\"]:8s} {f[\"tags\"]}')
+print(f'... {len(forms)} forms total')
+"
+```
+
+### 4. Check CEFR level of a word (is it level-appropriate?)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import query_cefr_level
+results = query_cefr_level('WORD_HERE')
+for r in results:
+    print(f'{r[\"word\"]}: {r[\"level\"]} ({r[\"pos\"]})')
+if not results:
+    print('Not in CEFR database')
+"
+```
+
+### 5. Search textbook content (Ukrainian school textbooks, Grades 1-11)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_textbooks
+keywords = {'keyword1', 'keyword2'}
+results = search_textbooks(keywords, 5)
+for r in results:
+    title = r.get('section_title', r.get('title', ''))
+    grade = r.get('grade', '?')
+    text = r.get('text', '')[:200]
+    print(f'Grade {grade} | {title}')
+    print(f'  {text}')
+    print()
+"
+```
+
+### 6. Search style guide for calques/Russianisms (Антоненко-Давидович, 279 entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_style_guide
+results = search_style_guide('TOPIC_HERE', 3)
+for r in results:
+    print(f'--- {r.get(\"word\", \"\")} [{r.get(\"section\", \"\")}]')
+    print(r.get('text', '')[:300])
+    print()
+if not results:
+    print('No style guide entries found')
+"
+```
+
+### 7. Look up word definition in СУМ-11 (Ukrainian explanatory dictionary, 127K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_definitions
+results = search_definitions('WORD_HERE', 3)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+### 8. Search idioms (Фразеологічний словник, 25K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_idioms
+results = search_idioms('WORD_HERE', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"text\", r.get(\"definition\", \"\")))[:200]}')
+"
+```
+
+### 9. English-to-Ukrainian translation (Балла, 79K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import translate_en_uk
+results = translate_en_uk('ENGLISH_WORD', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+---
+
+**WHEN to use these tools:**
+
+1. **Before writing any Ukrainian text** — batch-verify all key vocabulary with
+   `verify_words` (tool 1). Any word that returns NOT FOUND must be replaced.
+2. **When you suspect a Russicism or calque** — search the style guide (tool 6)
+   and verify the correct Ukrainian form with `verify_word` (tool 2).
+3. **When writing for A1/A2** — check CEFR levels (tool 4) to ensure vocabulary
+   is level-appropriate.
+4. **When unsure about a case ending or conjugation** — use `verify_lemma` (tool 3)
+   to see the full paradigm.
+5. **When covering a grammar topic** — search textbooks (tool 5) to see how
+   Ukrainian school textbooks teach it.
+6. **When you need the precise Ukrainian meaning** — use СУМ-11 (tool 7).
+7. **When looking for natural Ukrainian expressions** — search idioms (tool 8).
+
+**Batching rule:** Collect all words you want to verify, then run ONE `verify_words`
+call instead of multiple `verify_word` calls. This is faster and uses fewer tokens.

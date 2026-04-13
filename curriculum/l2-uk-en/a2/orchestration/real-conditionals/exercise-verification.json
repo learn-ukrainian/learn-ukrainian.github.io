@@ -1,167 +1,196 @@
 {
-  "total_items": 166,
-  "grounded_items": 142,
+  "total_items": 211,
+  "grounded_items": 181,
   "ungrounded": [
     {
-      "word": "поспіши",
-      "exercise_type": "fill-in",
-      "context": "поспіши",
-      "role": "answer"
-    },
-    {
-      "word": "поспішатимеш",
-      "exercise_type": "error-correction",
-      "context": "Якщо ти зараз не поспішатимеш, ти запізнишся на поїзд.",
-      "role": "context"
-    },
-    {
-      "word": "можуть",
-      "exercise_type": "error-correction",
-      "context": "Якщо ти щодня запізнишся на роботу, тебе можуть звільнити.",
-      "role": "context"
-    },
-    {
-      "word": "звільнити",
-      "exercise_type": "error-correction",
-      "context": "Якщо ти щодня запізнишся на роботу, тебе можуть звільнити.",
-      "role": "context"
-    },
-    {
-      "word": "братимеш",
-      "exercise_type": "error-correction",
-      "context": "Якщо ти не братимеш парасольку сьогодні, ти змокнеш.",
-      "role": "context"
-    },
-    {
-      "word": "допомагаєш",
-      "exercise_type": "error-correction",
-      "context": "допомагаєш",
-      "role": "answer"
-    },
-    {
-      "word": "колегам",
-      "exercise_type": "error-correction",
-      "context": "Якщо ти завжди допоможеш своїм колегам, тебе будуть поважати",
-      "role": "context"
-    },
-    {
-      "word": "поважати",
-      "exercise_type": "error-correction",
-      "context": "Якщо ти завжди допоможеш своїм колегам, тебе будуть поважати",
-      "role": "context"
-    },
-    {
-      "word": "закінчиш",
-      "exercise_type": "error-correction",
-      "context": "закінчиш",
-      "role": "answer"
-    },
-    {
-      "word": "закінчуватимеш",
-      "exercise_type": "error-correction",
-      "context": "Якщо ти швидко закінчуватимеш роботу сьогодні, то ми підемо ",
-      "role": "context"
-    },
-    {
-      "word": "куплю",
-      "exercise_type": "error-correction",
-      "context": "Якщо я маю гроші, я завжди куплю свіжі продукти.",
-      "role": "context"
-    },
-    {
-      "word": "підготувати",
+      "word": "високо",
       "exercise_type": "quiz",
-      "context": "_____ ти хочеш, я допоможу тобі підготувати грядку.",
+      "context": "____ я був птахом, я б літав високо в небі.",
       "role": "context"
     },
     {
-      "word": "сказав",
+      "word": "небі",
       "exercise_type": "quiz",
-      "context": "_____ я знав відповідь, я б тобі сказав, але я не знаю.",
+      "context": "____ я був птахом, я б літав високо в небі.",
       "role": "context"
     },
     {
-      "word": "літати",
+      "word": "сумний",
       "exercise_type": "quiz",
-      "context": "_____ тільки я міг літати, як птах!",
+      "context": "Він дуже сумний. ____ я тільки знав усю правду!",
       "role": "context"
     },
     {
-      "word": "птах",
+      "word": "втомився",
       "exercise_type": "quiz",
-      "context": "_____ тільки я міг літати, як птах!",
+      "context": "Я дуже втомився, ____ хочу лягти спати.",
       "role": "context"
     },
     {
-      "word": "моя",
+      "word": "хочу",
       "exercise_type": "quiz",
-      "context": "Я обов'язково зателефоную тобі, _____ моя зустріч закінчитьс",
+      "context": "Я дуже втомився, ____ хочу лягти спати.",
+      "role": "context"
+    },
+    {
+      "word": "лягти",
+      "exercise_type": "quiz",
+      "context": "Я дуже втомився, ____ хочу лягти спати.",
       "role": "context"
     },
     {
       "word": "використовується",
       "exercise_type": "true-false",
-      "context": "Слово «якщо» використовується для фантастичних і неможливих ",
+      "context": "Слово «якщо» використовується для реальних планів і ситуацій",
       "role": "context"
     },
     {
-      "word": "неможливих",
+      "word": "фантазії",
       "exercise_type": "true-false",
-      "context": "Слово «якщо» використовується для фантастичних і неможливих ",
+      "context": "Ми використовуємо фантазії та мрії після слова «якщо».",
       "role": "context"
     },
     {
-      "word": "реальній",
+      "word": "мрії",
       "exercise_type": "true-false",
-      "context": "Після слова «якщо» в реальній умові ми ніколи не використову",
+      "context": "Ми використовуємо фантазії та мрії після слова «якщо».",
       "role": "context"
     },
     {
-      "word": "загальних",
+      "word": "умовного",
       "exercise_type": "true-false",
-      "context": "Для загальних істин (фізичних фактів) ми завжди використовує",
+      "context": "Перед другою частиною умовного речення завжди ставлять кому.",
       "role": "context"
     },
     {
-      "word": "істин",
+      "word": "ставлять",
       "exercise_type": "true-false",
-      "context": "Для загальних істин (фізичних фактів) ми завжди використовує",
+      "context": "Перед другою частиною умовного речення завжди ставлять кому.",
       "role": "context"
     },
     {
-      "word": "фізичних",
+      "word": "реальну",
       "exercise_type": "true-false",
-      "context": "Для загальних істин (фізичних фактів) ми завжди використовує",
+      "context": "Слово «якби» показує реальну умову, яка може статися завтра.",
       "role": "context"
     },
     {
-      "word": "порадах",
+      "word": "минулий",
       "exercise_type": "true-false",
-      "context": "У реченнях-порадах ми часто використовуємо теперішній час в ",
+      "context": "У частині з умовою (якщо) ми зазвичай використовуємо минулий",
       "role": "context"
     },
     {
-      "word": "додому",
-      "exercise_type": "unjumble",
-      "context": "додому,",
+      "word": "майбутніх",
+      "exercise_type": "true-false",
+      "context": "У частині з умовою (якщо) ми зазвичай використовуємо минулий",
+      "role": "context"
+    },
+    {
+      "word": "подій",
+      "exercise_type": "true-false",
+      "context": "У частині з умовою (якщо) ми зазвичай використовуємо минулий",
+      "role": "context"
+    },
+    {
+      "word": "візьмемо",
+      "exercise_type": "error-correction",
+      "context": "Якщо завтра буде сильний сонце, ми візьмемо парасольку.",
+      "role": "context"
+    },
+    {
+      "word": "вип'ю",
+      "exercise_type": "error-correction",
+      "context": "Якщо в мене болить голова, я вип'ю торт.",
+      "role": "context"
+    },
+    {
+      "word": "лікарю",
+      "exercise_type": "error-correction",
+      "context": "лікарю",
       "role": "answer"
+    },
+    {
+      "word": "вчителю",
+      "exercise_type": "error-correction",
+      "context": "Якщо вам буде гірше, зателефонуйте вчителю.",
+      "role": "context"
+    },
+    {
+      "word": "буду",
+      "exercise_type": "true-false",
+      "context": "Якщо болить голова, я буду голосно слухати музику.",
+      "role": "context"
+    },
+    {
+      "word": "голосно",
+      "exercise_type": "true-false",
+      "context": "Якщо болить голова, я буду голосно слухати музику.",
+      "role": "context"
+    },
+    {
+      "word": "прийдеш",
+      "exercise_type": "true-false",
+      "context": "Якщо ти не поспішиш, ти обов'язково прийдеш вчасно.",
+      "role": "context"
+    },
+    {
+      "word": "вчасно",
+      "exercise_type": "true-false",
+      "context": "Якщо ти не поспішиш, ти обов'язково прийдеш вчасно.",
+      "role": "context"
+    },
+    {
+      "word": "залишимося",
+      "exercise_type": "true-false",
+      "context": "Якщо завтра буде хороша погода, ми залишимося вдома.",
+      "role": "context"
+    },
+    {
+      "word": "граматичне",
+      "exercise_type": "true-false",
+      "context": "Якщо я не знаю граматичне правило, я запитаю викладача.",
+      "role": "context"
+    },
+    {
+      "word": "запитаю",
+      "exercise_type": "true-false",
+      "context": "Якщо я не знаю граматичне правило, я запитаю викладача.",
+      "role": "context"
+    },
+    {
+      "word": "одягнеш",
+      "exercise_type": "true-false",
+      "context": "Якщо ти одягнеш теплу куртку, ти дуже змерзнеш.",
+      "role": "context"
+    },
+    {
+      "word": "теплу",
+      "exercise_type": "true-false",
+      "context": "Якщо ти одягнеш теплу куртку, ти дуже змерзнеш.",
+      "role": "context"
+    },
+    {
+      "word": "куртку",
+      "exercise_type": "true-false",
+      "context": "Якщо ти одягнеш теплу куртку, ти дуже змерзнеш.",
+      "role": "context"
+    },
+    {
+      "word": "змерзнеш",
+      "exercise_type": "true-false",
+      "context": "Якщо ти одягнеш теплу куртку, ти дуже змерзнеш.",
+      "role": "context"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 15,
-    "tested_in_exercises": 4,
+    "tested_in_exercises": 11,
     "not_tested": [
-      "відпустка",
-      "допомогти",
-      "залишитися",
-      "запізнитися",
       "змокнути",
       "парасолька",
-      "порада",
       "поспішити",
-      "реальний",
-      "умова",
-      "якби"
+      "реальний"
     ]
   },
   "all_grounded": false

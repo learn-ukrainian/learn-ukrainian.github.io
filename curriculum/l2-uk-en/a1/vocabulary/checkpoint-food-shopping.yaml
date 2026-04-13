@@ -1,4 +1,16 @@
 vocabulary:
+- word: кафе́
+  translation: cafe
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: ри́нок
+  translation: market
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
 - word: ї́жа
   translation: food
   expression: false
@@ -11,164 +23,56 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: молоко́
-  translation: milk
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: я́блуко
-  translation: apple
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: помідо́р
-  translation: tomato
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: карто́пля
-  translation: potato
+- word: гри́вні
+  translation: hryvnias
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: яйце́
-  translation: egg
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: м'я́со
-  translation: meat
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: ри́ба
-  translation: fish
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: цу́кор
-  translation: sugar
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: вода́
-  translation: water
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: пи́во
-  translation: beer
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: продаве́ць
-  translation: seller
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: кілогра́м
-  translation: kilogram
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: огіро́к
-  translation: cucumber
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: лимо́н
-  translation: lemon
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: ма́ма
-  translation: mother
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: сніда́нок
-  translation: breakfast
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: ка́ша
-  translation: porridge
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: ри́нок
-  translation: market
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: кафе́
-  translation: cafe
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: звича́йно
-  translation: of course
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: де́шево
-  translation: cheap
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: господи́ня
-  translation: hostess
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: дава́ти
-  translation: to give
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: Мені каву, будь ласка
-  translation: Coffee for me, please
+- word: одна гривня
+  translation: one hryvnia
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: Рахунок, будь ласка
-  translation: The bill, please
+- word: дві гривні
+  translation: two hryvnias
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: Дуже приємно!
-  translation: Very nice to meet you!
+- word: п'ять гривень
+  translation: five hryvnias
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: Що ви хочете?
-  translation: What do you want?
+- word: Мені борщ, будь ласка.
+  translation: Borscht for me, please.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Дайте кілограм...
+  translation: Give me a kilogram...
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Рахунок, будь ласка.
+  translation: The bill, please.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Мені...
+  translation: For me...
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Дайте...
+  translation: Give me...
   expression: true
   pos: ''
   gender: ''

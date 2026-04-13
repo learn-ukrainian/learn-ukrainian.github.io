@@ -241,24 +241,27 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-- Confirmed: і (conj), та (conj), а (conj), але (conj), бо (conj), чому (adv), тому (adv/pron), також (adv), теж (adv), або (conj), чи (conj).
-- Not found: "тому що" (Note: This is a standard compound conjunction in Ukrainian, though treated as two separate tokens in morphological dictionaries like VESUM. Both "тому" and "що" are confirmed individually).
+- Confirmed: і, та, а, але, бо, тому, що, чому, також, теж, або, чи
+- Not found: None
 
 ## Grammar Rules
-- **Comma before contrastive conjunctions**: Comma is ALWAYS placed before **а, але** and **та** (when it means 'but'). (Grade 5 Textbook, § 16 / Grade 4 Textbook, p. 136).
-- **Comma before causal conjunctions**: Comma is placed before **бо** and **тому що**. (СУМ-11 definition of 'бо' / Grade 11 Avramenko, p. 131).
-- **Comma before connecting conjunctions**: Comma is NOT placed before **і, й, та (and), або, чи** when they connect homogeneous members (e.g., "кава і чай"). It IS placed when they connect clauses in a complex sentence. (Grade 5 Zabolotnyi, § 16).
+- Сполучники (тому що): Правопис §43 — Окремо пишемо складені сполучники: ... тому́ що (Примітка: Правила пунктуації щодо коми перед сполучниками в системі пошуку обмежені розділами 1-61, тому підтверджено правило написання складеного сполучника "тому що" окремо).
 
 ## Calque Warnings
-- **тому що**: OK — Standard Ukrainian conjunction of cause.
-- **теж / також**: OK — Both are correct Ukrainian equivalents for "also/too".
-- **і / та**: OK — Both are correct; "та" is often used to avoid repetition of "і" or for stylistic variety.
+- тому що: OK — 
+- а також: OK — 
+- бо: OK — 
+- або: OK — 
 
 ## CEFR Check
-- **і, а, але, або**: A1 — Foundational coordinating conjunctions.
-- **бо, чому, тому**: A1 — Essential for basic causal explanations.
-- **також, теж**: A1 — Basic additive particles/adverbs.
-- **тому що**: A1 — Standard compound conjunction taught at the basic level for reasons.
+- але: A1 — OK
+- бо: A1 — OK
+- тому: A1 — OK
+- також: A1 — OK
+- або: A1 — OK
+- а: A1 — OK
+- чи: A1 — OK
+- та: A2 — above target (in PULS DB, "та" is marked A2/B1, slightly above the A1 target, though commonly taught early)
 </pre_verified_facts>
 
 
@@ -578,12 +581,14 @@ These exercises, adapted from Ukrainian school materials, provide a gold standar
 
 ## Section Structure
 
-Write these sections as H2 headings, in this exact order:
+Write these sections as H2 headings, in this **exact** order:
 
 - `## Діалоги (Dialogues)` (~300 words)
 - `## Сполучники (Conjunctions)` (~300 words)
 - `## Бо і тому що (Because)` (~300 words)
 - `## Підсумок — Summary` (~300 words)
+
+**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim** as an `## H2` line. This includes the FINAL summary/transition section (`Підсумок: ...`, `Підсумок та перехід до M...`, etc.) — the writer's most common failure is silently dropping the closing section. Do NOT skip it. Do NOT renumber. Do NOT merge headings. The post-write quick-verify check will fail your build if any heading is missing, even if the prose itself is excellent.
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -591,16 +596,17 @@ Each section should follow the word budget specified. The total must reach 1200 
 
 ## Content Rules
 
-TARGET: 20-35% Ukrainian.
+TARGET: 20-35% Ukrainian. ⚠️ HARD GATE — the audit REJECTS modules below 20%.
 LANGUAGE ROLES:
-- THEORY & EXPLANATION: English prose — brief and clear. Show, don't tell.
+- THEORY & EXPLANATION: English prose — brief, 2-3 sentences per concept. No long expository paragraphs. Explain once, then show Ukrainian.
+- UKRAINIAN NARRATIVE PARAGRAPHS: **REQUIRED — minimum 1 per section.** A 3-6 sentence Ukrainian paragraph demonstrating the concept in use, followed IMMEDIATELY by a `> *English translation*` blockquote. This is the PRIMARY driver of hitting the immersion target. Without these paragraphs you cannot reach 20%.
 - PARADIGM TABLES: Conjugation/declension tables with all cells Ukrainian.
-- EXAMPLE LISTS: Ukrainian sentences in bulleted lists (each: Ukrainian — English gloss).
-- DIALOGUES: Mini-dialogues in blockquotes with English gloss per line.
+- EXAMPLE LISTS: Ukrainian sentences in bulleted lists (each: Ukrainian — English gloss). Minimum 5 per rule.
+- DIALOGUES: Mini-dialogues in blockquotes with English gloss per line. At least 1 dialogue per module.
 - PATTERN BOXES: Show transformations: `читати → читай → читайте`.
 - INLINE: Ukrainian words/phrases bolded in English prose.
-- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian. Full Ukrainian sentences go in tables, bulleted lists, dialogues, or pattern boxes.
-Ukrainian sentences max 10 words. Mix container types.
+- STRUCTURAL RULE: Every section MUST contain a Ukrainian narrative paragraph (3-6 sentences, translated in blockquote) PLUS supporting tables/lists/dialogues/pattern boxes. Pure-English sections are FORBIDDEN at M35+.
+Ukrainian sentences max 12 words. Mix container types.
 
 HARD GRAMMAR RULES (audit will reject violations):
 - Max 10 words per Ukrainian sentence (STRICT — count every word)
@@ -632,6 +638,25 @@ PLAN-AWARE EXEMPTIONS: The following bans are RELAXED for this module because th
 - **Zero calques**: No приймати душ→брати душ, приймати рішення→ухвалювати рішення
 - **Zero paronyms**: тактична≠тактовна, ефектний≠ефективний — use the right word, not a similar-sounding one
 - **Natural Ukrainian**: Write how a Ukrainian teacher would explain this to a student. Not robotic, not textbook-dry, not overly casual.
+
+### FORBIDDEN WORDS — never write these (#1189)
+
+The following Russian words have leaked into past builds and broken modules. They are **hard-banned** — the post-write toxic-token scanner will fail your build the moment it sees one. Use the Ukrainian alternative every time, even in dialogues, even in casual prose, even when quoting a learner's mistake (use a `<!-- VERIFY -->` placeholder instead of typing the Russian form):
+
+| Russian (FORBIDDEN) | Ukrainian (USE THIS) |
+|---|---|
+| хорошо | добре |
+| конечно | звичайно / певна річ |
+| спасибо | дякую |
+| пожалуйста | будь ласка / прошу |
+| ничего | нічого |
+| сейчас | зараз |
+| тоже | теж / також |
+| здесь | тут |
+| кот | кіт |
+| кон | кін |
+
+This list is enforced word-for-word by `scripts/build/quick_verify.py` (SEVERE_RUSSIANISMS). If you produce any of these tokens — even inside a quoted example, even inside a dialogue line spoken by a Russian-speaking character — the build halts immediately. There is no exception.
 
 **Authority hierarchy (if uncertain about a word, check in this order):**
 VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (stress) → Антоненко-Давидович (style) → Грінченко (etymology).
@@ -742,35 +767,27 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Діалоги — Dialogues (~330 words)
-- P1 (~110 words): [Dialogue 1: Making Plans] — A couple debates between coffee and tea in a cafe. The dialogue models coordinating conjunctions in a natural setting. Examples: "Ти хочеш каву чи чай?", "Каву, бо я дуже втомлений", "А я хочу чай, але без цукру", "Ходімо в кафе, і я візьму ще тістечко".
-- P2 (~110 words): [Dialogue 2: Talking About the Day] — Two friends discuss their busy day and missed calls. Focuses on sequence and reasons. Examples: "Я працював, а потім ходив у магазин", "Я хотів зателефонувати, але ти не відповів", "Вибач, бо телефон був без звуку".
-- P3 (~110 words): [Dialogue 3: Vacation Debate] — A couple compares going to the Carpathians (Карпати) vs. the sea (море). This models adjectives with contrasting conjunctions. Examples: "Гори гарні, але далеко", "Море тепле, бо зараз літо", "Я хочу в гори, а ти — на море", "Поїдемо в Карпати, бо там дешевше".
+## Діалоги (Dialogues) (~330 words total)
+- P1 (~165 words): Introduce Dialogue 1 — Making plans. A couple debates where to go on vacation (Карпати vs море) and what to eat. Feature sentences like: "Ти хочеш каву чи чай? — Каву, бо я дуже втомлений. — А я хочу чай, але без цукру. — Ходімо в кафе, і я візьму ще тістечко. — Я теж хочу, але я на дієті!" Highlight the natural flow and use of 'бо', 'а', 'але', 'і'.
+- P2 (~165 words): Introduce Dialogue 2 — Talking about the day. Feature everyday past actions and explanations: "Що ти робив сьогодні? — Я працював, а потім ходив у магазин. — Я хотів зателефонувати, але ти не відповів. — Вибач, бо телефон був без звуку. — Нічого! — Завтра я вільний, і ми можемо зустрітися." Emphasize how conjunctions make speech sound fluent and connected.
 
-## Сполучники — Conjunctions (~340 words)
-- P1 (~80 words): [Definition & Flow] — Explain the term "сполучник" (from "сполучити" — to connect). Contrast choppy, robotic sentences ("Я люблю каву. Я люблю чай.") with fluid, natural ones ("Я люблю каву і чай."). Define them as the "glue" of the Ukrainian language.
-- P2 (~85 words): [Addition: і, й, та] — Present the basic "and" conjunctions. Explain that "та" is a frequent synonym of "і" in writing and speech (хліб та молоко). Introduce the euphony rule for "й" after vowels (вона й він) to maintain the "melodicity" of Ukrainian.
-- P3 (~85 words): [Soft Contrast: а] — Explain "а" as a tool for comparison or switching focus, rather than strong opposition. Provide the classic L2 contrast: "Я — студент, а ти — вчитель." Contrast this with English, where "and" is often used where Ukrainian requires "а" to mark a shift in subject (Він працює, а вона відпочиває).
-- P4 (~90 words): [Strong Contrast: але] — Introduce "але" for contradictions or unexpected results. Use textbook examples of opposing qualities: "Суп гарячий, але смачний", "Я хочу піти, але не можу". Mention that "та" can also mean "but" in specific folk-style contexts (малий, та вдалий), though "але" is the A1 standard.
-- <!-- INJECT_ACTIVITY: fill-in-conjunction-choice --> [fill-in, Choose between і, а, але — 10 items]
-- <!-- INJECT_ACTIVITY: group-sort-categories --> [group-sort, Sort conjunctions into Addition (і/та) vs. Contrast (а/але) — 10 items]
+## Сполучники (Conjunctions) (~330 words total)
+- P1 (~100 words): Explain the concept of conjunctions ('сполучник', from 'сполучити' — to connect). Contrast choppy, disconnected sentences ("Я люблю каву. Я люблю чай." / "Я хочу піти. Я втомлений.") with natural, connected thoughts ("Я люблю каву і чай." / "Я хочу піти, бо я втомлений.").
+- P2 (~115 words): Introduce coordinating conjunctions (сполучники сурядності) for addition: 'і' and 'та'. Explain that 'та' is a common synonym for 'і', especially in writing. Provide examples: "мама і тато", "хліб та масло", "Я читаю і пишу."
+- P3 (~115 words): Introduce contrast conjunctions: 'а' (mild contrast or switch) and 'але' (stronger contrast, "but"). Provide examples for 'а': "Я люблю каву, а ти?", "Він працює, а вона відпочиває." Provide examples for 'але': "Я хочу, але не можу.", "Він молодий, але розумний." Address the common L2 error of using 'і' instead of 'а' when contrasting two different subjects.
 
-## Бо і тому що — Because (~330 words)
-- P1 (~80 words): [Reason Intro] — Present "бо" and "тому що" as equivalents for "because." Explain that "бо" is the "workhorse" of spoken Ukrainian — short, punchy, and natural. "Тому що" is presented as the neutral/formal counterpart (Я не йду, тому що я втомлений).
-- P2 (~80 words): [The Comma Rule] — Teach the non-negotiable punctuation rule: always place a comma before "а", "але", "бо", and "тому що". Contrast this with English "because" which usually lacks a comma. Example: "Ми вдома, бо йде дощ."
-- P3 (~80 words): [The Why-Because Loop] — Connect the question word "Чому?" (Why?) with the answer "Бо...". Show that in Ukrainian, unlike English, it is perfectly natural and grammatically correct to start an answer with "Бо". Example: "— Чому ти вчиш мову? — Бо я люблю Україну."
-- P4 (~90 words): [Syntax Trap: Full Structures] — Address the common L2 error of omitting the subject after a conjunction (e.g., "because interesting"). Explain that Ukrainian requires a full basis in the clause. Correct: "Я читаю, бо це цікаво" (not "бо цікаво").
-- <!-- INJECT_ACTIVITY: fill-in-reason-building --> [fill-in, Connect sentence pairs using бо or тому що — 6 items]
-- <!-- INJECT_ACTIVITY: quiz-conjunction-matching --> [quiz, Which conjunction fits the logic of the sentence? — 8 items]
+## Бо і тому що (Because) (~330 words total)
+- P1 (~110 words): Introduce how to build reasons and answer the question "Чому?" (Why?). Explain that Ukrainians explain things starting with "Бо" or "Тому що". Give examples: "— Чому ти вчиш українську? — Бо я люблю Україну.", "— Чому ви тут? — Бо ми чекаємо друга."
+- P2 (~110 words): Compare 'бо' and 'тому що'. Explain that 'бо' is short and extremely common in spoken language ("Я не йду, бо я хворий."), while 'тому що' is slightly longer and common in writing ("Я не йду, тому що я хворий."). Reassure that 'бо' is standard Ukrainian, not informal slang.
+- P3 (~110 words): Teach the punctuation rule: always put a comma before 'бо' and 'тому що', as well as before 'а' and 'але'. Contrast this with 'і', which only takes a comma when connecting two full independent sentences. Examples: "Я втомлений, бо багато працював.", "Ми не гуляємо, тому що йде дощ."
+- <!-- INJECT_ACTIVITY: fill-in-because --> [fill-in, Connect with бо/тому що: Я вчу українську, ___, 6 items]
+- <!-- INJECT_ACTIVITY: quiz-conjunction-choice --> [quiz, Which conjunction? Я не йду, ___ хворий. (і / а / бо), 8 items]
 
-## Підсумок — Summary (~320 words)
-- P1 (~160 words): [Quick Reference Recap] — Provide a consolidated summary of the four key types of linking: Addition (і, та), Soft Contrast (а), Strong Contrast (але), and Reason (бо, тому що). Reiterate the euphony rule (і vs й) and the "Always Comma" rule for contrast and reason.
-- P2 (~160 words): [Self-Check & Production] — Present a bulleted list of sentence pairs for the learner to mentally connect.
-    * Я хочу каву. Я не хочу чай. (Try with "а" or "але")
-    * Він вдома. Він хворий. (Try with "бо")
-    * Вона читає. Він пише. (Try with "а")
-    * Сьогодні сонце. Сьогодні холодно. (Try with "але")
-    * Заключне слово: Building longer sentences is the first step from "surviving" to "speaking" Ukrainian.
+## Підсумок — Summary (~330 words total)
+- P1 (~165 words): Quick reference summary. Provide a recap of all conjunctions covered: і/та (addition, "Я їм хліб і п'ю воду"), а (contrast, "Я читаю, а він пише"), але (opposition, "Я хочу, але не можу"), бо/тому що (reason, "Я не йду, бо хворий"). Reiterate the strict comma rules before а, але, бо, тому що.
+- P2 (~165 words): Self-check section. Present a bulleted Q&A list where learners must connect sentence pairs with the right conjunction. Examples: "Я люблю каву. Я не люблю чай. → Я люблю каву, а/але не люблю чай.", "Я не працюю. Я хворий. → Я не працюю, бо хворий."
+- <!-- INJECT_ACTIVITY: fill-in-all-conjunctions --> [fill-in, Choose: і, а, але, бо — Я хочу ___ не можу. Він працює, ___ вона відпочиває., 10 items]
+- <!-- INJECT_ACTIVITY: group-sort-conjunction-roles --> [group-sort, Sort: і/та (addition) vs а/але (contrast) vs бо/тому що (reason), 10 items]
 
 Grand total: ~1320 words
 </skeleton>
@@ -780,11 +797,55 @@ Grand total: ~1320 words
 Write in Markdown. Use:
 - `## Section Title` for main sections
 - `### Subsection` for subsections within a section
-- `**bold**` for Ukrainian words being taught — EVERY bold Ukrainian word MUST have an English translation on first use, either in parentheses `**слово** (translation)` or inline `**слово** means "translation"`. No exceptions.
+- `**bold**` for Ukrainian words being taught. For **A1 and A2** levels, provide an English translation on first use (e.g. `**стіл** (table)`) because learners lack the vocabulary to infer meaning. For **B1 and above**, do NOT provide inline translations for standard vocabulary — the learner will use the module's словник (vocabulary table). You may provide ONE parenthetical English translation ONLY for highly abstract grammar/linguistic terms on first use (e.g. `**видова пара** (aspectual pair)`).
 - Tables for paradigms (conjugation, declension)
 - `:::tip` / `:::caution` / `:::note` for callout boxes
 - `<!-- INJECT_ACTIVITY: {id} -->` for exercise placement (markers only — do NOT write exercise content)
 
 Do NOT write MDX component syntax, JSON, or DSL exercise blocks (:::quiz, etc.). Plain Markdown with injection markers.
+
+---
+
+## MANDATORY FINAL CHECKLIST (#1189)
+
+Before you finish writing, verify the prose against this checklist. Failing any item will fail the build.
+
+### Section headings (verbatim)
+
+Every heading from "Section Structure" above MUST appear as an `## H2` in your output, in order, **including the closing `Підсумок:` / `Підсумок та перехід до M...` summary**. The single most common writer failure across the B1 build has been silently dropping the final summary section. Re-read your output before stopping. If the last section in the plan is missing, write it now.
+
+### Required vocabulary (every word must appear)
+
+You MUST use **every word** from the list below at least once in the prose, in a natural sentence with bold + English translation. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, прагматика, діагностика, дієвідмінювання, зворотний, двовидовий, одновидовий, неозначено-кількісний, etc.) is the most frequently dropped category — actively find homes for those words even if it means adding a sentence that defines them.
+
+- [ ] і (and)
+- [ ] та (and — synonym of і)
+- [ ] а (and/but — contrast)
+- [ ] але (but)
+- [ ] бо (because)
+- [ ] тому що (because — longer form)
+
+### Forbidden words (never produce)
+
+Do not write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use `<!-- VERIFY -->` instead). The post-write toxic-token scanner will fail the build immediately:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+### Level-specific immersion check
+
+The level-appropriate immersion rule was already injected at the top of
+this prompt as `IMMERSION RULE`. Re-read it now BEFORE you stop writing.
+If your level's rule contains a CHECKLIST block, walk through every item.
+If it doesn't, just verify your output matches the LANGUAGE ROLES and
+TARGET stated in that block.
+
+This used to hard-code a B1+ checklist that confused A1/A2 models (where
+translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+The single source of truth is now
+`scripts/pipeline/config_tables.py:IMMERSION_RULES`.
+
+---
 
 Begin writing now. Start with the first section heading.

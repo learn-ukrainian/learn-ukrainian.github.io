@@ -1,4 +1,4 @@
-<!-- version: 1.1.0 | updated: 2026-03-31 -->
+<!-- version: 1.2.0 | updated: 2026-04-12 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -11,6 +11,35 @@ Generate an `activities/checkpoint-my-world.yaml` file for module **14: Checkpoi
 
 ---
 
+## ⚠️ HARD COUNT TARGETS — READ TWICE
+
+These are the binding numerical contracts for THIS module. The audit will FAIL if you fall short.
+
+| Bucket | Min | Max | Notes |
+|---|---|---|---|
+| Total activities | 8 | 8+ | inline + workbook combined |
+| Inline (lesson tab) | 3 | 5 | one per `<!-- INJECT_ACTIVITY -->` marker, see below |
+| Workbook (Зошит tab) | 5 | 8 | extended practice |
+| Items per activity | 10 | — | each activity must have at least 10 items (unless its type cap is lower — see Activity Type Reference below) |
+
+**You MUST ship at least 3 inline activities AND at least 5 workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+
+**Type diversity is required.** The module (inline + workbook combined) MUST use at least **0** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level. (If `0` is `0`, the audit profile for this level does not enforce type diversity — but variety still produces a better lesson, so aim for 4+ types when the workbook allows it.)
+
+---
+
+## Allowed types for THIS level
+
+- **Inline (lesson) types:** match-up, quiz, fill-in, true-false, classify, group-sort
+- **Inline priority (preferred):** match-up, fill-in, quiz
+- **Workbook types:** fill-in, match-up, group-sort, unjumble, quiz, true-false, classify, observe, phrase-table, odd-one-out, anagram
+- **Workbook priority (preferred):** fill-in, match-up, group-sort, unjumble, anagram
+- **FORBIDDEN at this level:** image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables, cloze, error-correction, mark-the-words, translate, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, highlight-morphemes, grammar-identify, select
+
+Pick from the allowed list. Lean heavily on the priority lists. Do not use any forbidden type — the build will reject it.
+
+---
+
 ## Inline vs Workbook Split
 
 Activities have two placement categories:
@@ -19,7 +48,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Rule of thumb:** inline = 2-3 quick checks after key teaching points. Workbook = 4-8 deeper practice exercises covering the full topic.
+**Rule of thumb:** inline = 3–5 quick checks after key teaching points. Workbook = 5–8 deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
 
 ---
 
@@ -27,10 +56,10 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: group-sort-categories -->`
-- `<!-- INJECT_ACTIVITY: transform-plural-sentences -->`
-- `<!-- INJECT_ACTIVITY: quiz-agreement-pairs -->`
-- `<!-- INJECT_ACTIVITY: fill-in-market-dialogue -->`
+- `<!-- INJECT_ACTIVITY: group-sort-vocabulary -->`
+- `<!-- INJECT_ACTIVITY: quiz-gender-agreement -->`
+- `<!-- INJECT_ACTIVITY: quiz-singular-plural -->`
+- `<!-- INJECT_ACTIVITY: fill-in-shopping-dialogue -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -76,85 +105,79 @@ required: []
 <module_content>
 ## Що ми знаємо? (What Do We Know?)
 
-You have reached a significant milestone in your Ukrainian learning journey. By completing this phase of the course, you have built the foundational skills needed to describe your immediate environment. You started by simply recognizing and naming isolated objects, and now you have the vocabulary and grammar to talk about everything from the furniture in your room to the items at a local marketplace. You can confidently identify what things are, what color they are, how many of them there are, and where they are in relation to you. This is the critical difference between knowing a few scattered words and actually building coherent descriptions in a new language. 
+You have reached the checkpoint for the "My World" phase. The pedagogical goal of this module is to help you transition from the simple recognition of individual words to actively describing the objects and people around us in Ukrainian. Up to this point, you have been building a mental catalog of nouns, adjectives, numbers, and basic structures. Now, it is time to bring those pieces together. Stepping back and reviewing what you have learned solidifies your foundation before moving forward.
 
-Before we test these skills in a real-world situation, let's make sure your vocabulary backpack is neatly organized. Ask yourself these specific questions to verify your progress:
-- Can you name twenty or more common objects around you right now?
-- Can you determine the grammatical gender of a word like **стіл** (table), **книга** (book), or **вікно** (window) just by looking at the ending?
-- Can you differentiate between the two distinct Ukrainian blues, **синій** (dark blue) and **блакитний** (light blue)?
-- Can you count from one to one hundred and ask for prices in **гривні** (hryvnias)?
-- Can you use demonstrative words like "this" and "that" to point at specific items accurately?
+Test your intuition with a few self-check questions covering your vocabulary and grammar. Can you determine noun gender with confidence? Apply the **він** (he), **вона** (she), and **воно** (it) test for words like **дім** (house), **книга** (book), and **вікно** (window). The final letter always reveals the answer. Can you describe things with adjectives? You must match the adjective endings to the noun, creating harmonious pairs like **новий стіл** (new table) or **велика лампа** (big lamp). Can you name colors, including the distinction between the two blues? Recall the difference between **синій** (dark blue) and **блакитний** (light blue).
 
-If you answered yes to these questions, you are ready to move forward. To truly consolidate this knowledge, we need to sort the words you already know into logical categories. Think about how an adjective like **зелений** (green) functions differently in a sentence from a number like **десять** (ten) or a noun like **лампа** (lamp). Grouping these words mentally will help your brain access them much faster when you need to speak in a real conversation.
+:::tip
+**Visualizing Gender**
+When learning a new noun, always memorize it with a matching adjective. Do not just learn **дім**; learn **великий дім**. This builds a natural intuition for gender without relying on rule memorization.
+:::
 
-<!-- INJECT_ACTIVITY: group-sort-categories -->
+Consider the practical side of your knowledge. Can you count and say prices? You should feel comfortable using numbers like **двадцять** (twenty) or **сто гривень** (one hundred hryvnias). Can you say "this" and "that" when pointing at objects? Practice distinguishing between **цей глечик** (this jug) and **та вишиванка** (that embroidered shirt). Can you make things plural? You know how to change singular items into groups, transforming them into **столи** (tables) and **вікна** (windows).
+
+<!-- INJECT_ACTIVITY: group-sort-vocabulary -->
 
 ## Читання (Reading Practice)
 
-Imagine you are visiting a friend's home in Ukraine for the very first time. When you step inside, you immediately notice the objects in their living space, the vibrant colors on the walls, and the arrangement of the furniture. Describing a physical space requires you to combine nouns, adjectives, and plural forms into a smooth, continuous flow of information. Reading a complete text aloud is the best way to practice this flow and internalize the natural rhythm of Ukrainian sentences. Focus on how the descriptive words match the objects they describe, and pay attention to how the endings change.
+Reading practice serves a specific purpose in your language development: it shifts your focus from a simple back-and-forth dialogue to a sustained monologue. When you read a continuous text, you train your brain to follow the flow of Ukrainian thought over multiple sentences. You will read a short text describing a room. This paragraph utilizes only known vocabulary from previous modules, ensuring that you can focus entirely on the structure and grammar without being distracted by any new words. Read the following text aloud to practice your pronunciation and rhythm.
 
-Read this short text titled **Моя кімната** (My room). Every single word in this description uses vocabulary you have already practiced in previous modules. There are no new surprises here. Read it aloud, slowly and clearly, to train your pronunciation and build muscle memory for these sentence structures:
+**Це моя кімната. Мій стіл великий і новий. Ця лампа біла, а та — жовта. У мене є три книги. Ці книги нові. Стіни білі. Це вікно велике, а те вікно мале. Той килим червоний. Я люблю свою кімнату.**
 
-- **Це моя кімната.** (This is my room.)
-- **Вона велика і світла.** (It is big and bright.)
-- **Ось мій стіл, він новий.** (Here is my table, it is new.)
-- **Тут є три сині книги і одна жовта лампа.** (Here are three dark blue books and one yellow lamp.)
-- **Це вікно велике, а те вікно мале.** (This window is big, and that window is small.)
-- **Мої стіни білі.** (My walls are white.)
-- **У мене є два стільці.** (I have two chairs.)
-- **Вони старі, але зручні.** (They are old but comfortable.)
+*(This is my room. My table is big and new. This lamp is white, and that one is yellow. I have three books. These books are new. The walls are white. This window is big, and that window is small. That carpet is red. I love my room.)*
 
-Notice how the description naturally shifts between singular items and groups of objects. Recognizing when to use a singular form versus a plural form is critical when talking about your environment, as it completely changes the endings of the words around the noun.
+Breaking down the text's structure reveals how Ukrainians build a simple narrative. The Ukrainian school model teaches a straightforward three-part format for any description or story. The first part is the **зачин** (introduction). Here, it is the simple statement **Це моя кімната** (This is my room), which sets the topic. The second part is the **основна частина** (main body). In our text, this consists of listing objects, their colors, and using demonstratives to point them out. You see sentences like **Стіни білі** (The walls are white) and **Мій стіл великий і новий** (My table is big and new) fleshing out the details. The final part is the **кінцівка** (conclusion). The text wraps up with a summarizing feeling: **Я люблю свою кімнату** (I love my room). Relying on this structure helps you organize your own thoughts when speaking or writing in Ukrainian.
 
-<!-- INJECT_ACTIVITY: transform-plural-sentences -->
+:::note
+**The Power of Three**
+The **зачин**, **основна частина**, and **кінцівка** structure is taught to every Ukrainian schoolchild. Using this simple three-part formula makes your spoken and written Ukrainian sound naturally organized.
+:::
 
 ## Граматика (Grammar Summary)
 
-The absolute core of describing your world relies on determining the grammatical gender of a noun. In Ukrainian, every object is categorized as masculine, feminine, or neuter. You can always identify the gender by looking at the final letter of the dictionary form of the word. Masculine nouns usually end in a consonant, like **стіл** (table). Feminine nouns typically end in **-а** or **-я**, like **ручка** (pen). Neuter nouns end in **-о** or **-е**, like **дзеркало** (mirror). The personal pronouns **він** (he/it), **вона** (she/it), and **воно** (it) are the essential keys that unlock the rest of the grammar patterns in a sentence.
+Understanding the patterns of Ukrainian grammar allows you to build endless combinations of words. The first core pattern is noun gender. The gender of a Ukrainian noun dictates the shape of the words around it. You can identify masculine words by their consonant endings, such as **брат** (brother) or **стіл** (table). Feminine words typically end in **-а** or **-я**, like **сестра** (sister) and **книга** (book). Neuter words almost always end in **-о** or **-е**, as seen in **вікно** (window) and **море** (sea).
 
-Once you know a noun's gender, you must make sure any adjective describing it agrees with that gender. Adjectives change their endings to match the noun perfectly. For a masculine noun, you use a masculine adjective, as in **гарний день** (beautiful day). A feminine noun requires a feminine adjective, like **гарна пісня** (beautiful song). A neuter noun takes a neuter adjective, such as **гарне фото** (beautiful photo). Remember that adjectives can have a hard stem, taking the ending **-ий** like **червоний** (red), or a soft stem, taking the ending **-ій** like **синій** (dark blue). 
+The second pattern is adjective agreement. Adjectives must change their endings to match the gender of the noun they describe. You must also pay attention to hard stems and soft stems. Hard-stem adjectives use the endings **-ий**, **-а**, and **-е**. This creates combinations like **великий стіл** (big table) and **велика книга** (big book). Soft-stem adjectives, which are less common, use the endings **-ій**, **-я**, and **-є**. A classic example is **синій зошит** (dark blue notebook) or **синя лампа** (dark blue lamp).
 
-When you want to point at a specific object, you use demonstrative pronouns. Just like adjectives, these pointing words must agree with the noun's gender. You use **цей**, **ця**, or **це** to say "this" for masculine, feminine, and neuter nouns respectively. To say "that", you use **той**, **та**, or **те**. When you are talking about multiple items, the rules become much simpler. In the plural form, the gender distinction entirely disappears. Both demonstrative pronouns and adjectives take the exact same plural ending. You will always use **ці** (these) and **ті** (those), and plural adjectives will always end in **-і**, such as **гарні** (beautiful) or **великі** (big).
+The third pattern involves demonstratives. When you want to point at objects, you contrast proximity using the words for "this" (here) versus "that" (there). Use **цей** (this masculine), **ця** (this feminine), or **це** (this neuter) for nearby objects. Use **той** (that masculine), **та** (that feminine), or **те** (that neuter) for objects farther away. If you are pointing at items on a table, you might contrast **цей глечик** (this jug) with **та вишиванка** (that embroidered shirt).
 
-Finally, counting objects and discussing prices involves using numbers as fixed vocabulary chunks. For now, you do not need to worry about complex case changes for the numbers themselves. You simply combine the number with the currency, such as **п'ятдесят гривень** (fifty hryvnias) or **сто гривень** (one hundred hryvnias). Recognizing these basic combinations allows you to handle simple transactions confidently in shops or markets.
+The final pattern is forming plurals. You have learned the nominative plural endings for basic nouns, such as turning **стіл** into **столи** (tables), **книга** into **книги** (books), and **вікно** into **вікна** (windows). There is a golden rule for adjectives when describing groups: in the plural, adjectives always take the **-і** ending, regardless of gender. This makes plural agreement incredibly simple, resulting in phrases like **великі столи** (big tables) and **нові книги** (new books).
 
-<!-- INJECT_ACTIVITY: quiz-agreement-pairs -->
+<!-- INJECT_ACTIVITY: quiz-gender-agreement -->
+<!-- INJECT_ACTIVITY: quiz-singular-plural -->
 
 ## Діалог (Connected Dialogue)
 
-A traditional Ukrainian street market, known as a **ярмарок** (market/fair), is the perfect place to practice describing objects, asking for prices, and pointing at things you want to buy. These markets are full of authentic cultural crafts and are a vibrant part of Ukrainian life. You will see items like a **вишиванка** (embroidered shirt), a traditional clay **глечик** (jug), a beautiful **намисто** (necklace), and colorfully decorated **писанки** (Easter eggs). Shopping for these items requires you to use every skill you have learned in this phase simultaneously: identifying gender, making adjectives agree, using demonstratives, and understanding numbers.
+A real-world situation requires you to combine multiple skills at once. Imagine you are walking through a bustling Ukrainian street market, known as a **ярмарок** (market). A tourist named Іванко and a local friend named Катя are browsing traditional handmade crafts. They stop to look at a **вишиванка** (embroidered shirt), a **глечик** (jug), and several **писанки** (decorated eggs). This scenario forces them to describe objects, count them, point at specific items, and negotiate a purchase.
 
-Read the conversation between Іванко, a tourist, and his local friend Катя as they browse the craft stalls at a bustling market. Pay attention to how they point at specific items and describe them before asking the vendor for the price.
+> **Іванко:** Добрий день! У вас є вишиванки? *(Good afternoon! Do you have embroidered shirts?)*
+> **Катя:** Так! Ця червона чи та синя? *(Yes! This red one or that blue one?)*
+> **Іванко:** Та синя. Скільки вона коштує? *(That blue one. How much does it cost?)*
+> **Катя:** Двісті гривень. *(Two hundred hryvnias.)*
+> **Іванко:** Добре. А ці писанки? Скільки коштує одна писанка? *(Good. And these decorated eggs? How much does one decorated egg cost?)*
+> **Катя:** П'ятдесят гривень. Ці нові, дуже гарні. *(Fifty hryvnias. These are new, very beautiful.)*
+> **Іванко:** Я беру три. А той глечик? *(I will take three. And that jug?)*
+> **Катя:** Сто гривень. *(One hundred hryvnias.)*
+> **Іванко:** Дуже дякую! *(Thank you very much!)*
 
-> **Іванко:** Подивись! Це вишиванка? *(Look! Is this an embroidered shirt?)*
-> **Катя:** Так, це гарна біла вишиванка. *(Yes, this is a beautiful white embroidered shirt.)*
-> **Іванко:** А та синя? *(And that dark blue one?)*
-> **Катя:** Той одяг теж гарний. *(That clothing is also beautiful.)*
-> **Катя:** А ось ці писанки — дуже красиві! *(And these decorated eggs — very beautiful!)*
+This conversation seamlessly integrates multiple foundational skills into a single interaction, proving that you do not need complex grammar to communicate effectively. Notice how the dialogue uses the phrase **Скільки коштує...?** (How much does it cost?) to ask for prices directly. The speakers constantly clarify their choices by pointing at specific items, using demonstratives like **ця** (this feminine), **та** (that feminine), **ці** (these plural), and **той** (that masculine).
 
-After choosing what they like, they need to find out how much the items cost to complete their purchase. Notice how the numbers and prices are stated directly and clearly.
+:::caution
+**Pointing with Precision**
+Remember that **цей** (this) and **той** (that) must match the noun's gender. Using **ця** for a masculine object sounds just as incorrect to a Ukrainian ear as using "he" for a woman does in English. Always check the noun first!
+:::
 
-> **Іванко:** Скільки коштує цей глечик? *(How much does this jug cost?)*
-> **Катя:** Він коштує сто гривень. *(It costs one hundred hryvnias.)*
-> **Іванко:** А ці намиста? *(And these necklaces?)*
-> **Катя:** Одне намисто — двісті гривень. *(One necklace — two hundred hryvnias.)*
-> **Катя:** У мене є триста гривень. Купуємо! *(I have three hundred hryvnias. We are buying!)*
+They use numbers purely as vocabulary to state prices, smoothly dropping in **двісті** (two hundred), **п'ятдесят** (fifty), **три** (three), and **сто** (one hundred). Finally, the conversation naturally employs plurals for the items being discussed in bulk, referring to **вишиванки** and **писанки**. This is what active language production looks like when all the individual grammar pieces work together in harmony.
 
-<!-- INJECT_ACTIVITY: fill-in-market-dialogue -->
+<!-- INJECT_ACTIVITY: fill-in-shopping-dialogue -->
 
 ## Підсумок — Summary
 
-You have successfully mastered the essential tools to describe your static world in Ukrainian. At the beginning of this phase, you could only name isolated objects and recognize basic letters. Now, you have the grammatical structure to identify exactly what things are, detail precisely what they look like in terms of size and color, specify how many there are, and pinpoint exactly where they are located relative to you. You are no longer just memorizing a static list of nouns; you are building complete, accurate descriptions. This ability to smoothly link nouns, adjectives, demonstratives, and numbers is the absolute core of practical communication.
+You can now successfully describe your world in Ukrainian. You recognize the genders of over twenty everyday objects and can accurately match them with descriptive adjectives. When you see a masculine, feminine, or neuter noun, you immediately know whether to pair it with **великий** (big masculine), **новий** (new masculine), **червона** (red feminine), or **синє** (dark blue neuter). This ability to automatically align endings means you are no longer translating word-by-word; you are beginning to feel the structural logic of the language.
 
-Review this checklist to confirm your progress and ensure you are ready before moving to the next level:
-- I can easily identify the gender of any A1 noun based on its final letter.
-- I can describe an object's color and size using the correct matching adjective ending.
-- I can accurately use "this" and "that" to point at specific things near or far from me.
-- I can correctly make nouns plural and describe groups of objects.
-- I can count items up to one hundred and ask for prices in a shop or market.
+Beyond abstract grammar, you have acquired highly practical functional skills that are useful in any Ukrainian city. You can confidently count objects and ask for prices at a market. You can point at specific things using the correct forms of "this" and "that," ensuring your listener knows exactly which object you mean without having to touch it. You can also talk about groups of things using the plural form, effortlessly turning a single item into many with a simple vowel change at the end of the word. These tools allow you to navigate basic daily scenarios with confidence and clarity.
 
-In the next module, your language skills will become much more dynamic and active. We will move away from simply describing what things are, and begin exploring what people actually do. Get ready for Phase A1.3, where we will introduce action verbs, common hobbies, and how to talk about what you like to do!
-
+Now that you can name and describe the "things" in your world, the next step is learning how to talk about "actions." The upcoming module phase will introduce you to verbs. You will discover how to express what you do every day, explain your daily routines, and talk about what you genuinely like or dislike. Describing your world was the first major milestone; interacting with it actively is the next.
 </module_content>
 
 ---
@@ -168,48 +191,68 @@ version: "1.0"
 module: checkpoint-my-world
 level: a1
 
+# NOTE — these are SHAPE examples. The real targets are at the top of this prompt
+# (8 total / 3–5 inline / 5–8 workbook,
+# 10+ items per activity). The shapes below are TRUNCATED for readability;
+# YOUR output MUST hit those minimums.
+
 inline:
   - id: marker-id-here        # MUST match an <!-- INJECT_ACTIVITY: ... --> marker
     type: quiz                 # activity type
     instruction: "Оберіть правильний варіант"
-    items:
+    items:                     # ← real output: ≥ 10 items
       - question: "_____ стіл"
-        options: ["мій", "моя", "моє"]
+        options: ["мій", "моя", "моє", "мої"]
         correct: 0             # 0-based index
+      - question: "Це ____ книга."
+        options: ["мій", "моя", "моє", "мої"]
+        correct: 1
+      # ... add at least 10 items total — never stop at 1-2
 
   - id: another-marker-id
     type: fill-in
     instruction: "Вставте правильне слово"
-    items:
+    items:                     # ← real output: ≥ 10 items
       - sentence: "Це ____ кімната."
         answer: "моя"
         options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ вікно."
+        answer: "моє"
+        options: ["мій", "моя", "моє"]
+      # ... ≥ 10 items total
 
 workbook:
-  - type: match-up
+  - id: match-up-vocab
+    type: match-up
     instruction: "З'єднайте пари"
-    pairs:
+    pairs:                     # ← real output: ≥ 10 pairs
       - left: "стіл"
         right: "він"
       - left: "книга"
         right: "вона"
       - left: "вікно"
         right: "воно"
+      # ... ≥ 10 pairs total
 
-  - type: group-sort
+  - id: group-sort-gender
+    type: group-sort
     instruction: "Розподіліть слова за категоріями"
     groups:
-      - label: "Category A"
-        items: ["word1", "word2"]
-      - label: "Category B"
-        items: ["word3", "word4"]
+      - label: "Чоловічий рід"
+        items: ["стіл", "олівець", "будинок"]   # ≥ 3 items per group
+      - label: "Жіночий рід"
+        items: ["книга", "ручка", "школа"]
+      - label: "Середній рід"
+        items: ["вікно", "море", "молоко"]
 
-  - type: true-false
+  - id: true-false-grammar
+    type: true-false
     instruction: "Правда чи ні?"
-    items:
-      - statement: "Statement here"
-        correct: true
-        explanation: "Why it's true"
+    items:                     # ← real output: ≥ 10 items
+      - statement: "«Книга» — це чоловічий рід."
+        correct: false
+        explanation: "Книга закінчується на -а, отже жіночий рід."
+      # ... ≥ 10 items total
 
   - type: error-correction
     instruction: "Виправте помилку"
@@ -280,7 +323,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -405,10 +448,15 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 ## Quality Rules
 
-**ITEM COUNT MINIMUMS (non-negotiable):**
-- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
-- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
-- If you can't think of enough items, add more examples from the module's vocabulary and content.
+**ACTIVITY COUNT MINIMUMS (non-negotiable, audit-enforced):**
+- **Total: 8 activities.** Inline: 3–5. Workbook: 5–8. The audit gate FAILS the module if you ship fewer.
+- **Type diversity: workbook MUST cover ≥5 distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
+- **Match the inline markers exactly.** Every `<!-- INJECT_ACTIVITY: id -->` marker in the prose needs a matching inline activity with that exact id. Skipping markers means the lesson tab is broken.
+
+**ITEM COUNT MINIMUMS (non-negotiable, per-activity):**
+- **Default minimum: 10 items per activity.** Quiz, fill-in, match-up, true-false, anagram, error-correction, translate, cloze, mark-the-words, divide-words, count-syllables, odd-one-out, group-sort categories: all ≥ 10.
+- **Lower minimums for specific types only:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items, essay-response/critical-analysis = 1 prompt.
+- If you can't think of enough items, add more examples from the module's vocabulary and content. NEVER ship a 1-item or 2-item activity unless its type cap explicitly allows it.
 - **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
 - **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
@@ -515,6 +563,27 @@ IMPORTANT: After using tools, output your COMPLETE module content as plain text.
 1. Run `verify_words` on all Ukrainian words in your exercises — every word must exist in VESUM
 2. Run `query_cefr_level` on any word you're unsure about — it must be a1-appropriate
 3. For fill-in answers and distractors, verify the exact form (case, number, gender) with `verify_lemma`
+
+---
+
+## ⚠️ MANDATORY FINAL CHECKLIST — verify before emitting YAML
+
+Walk through this checklist explicitly before you start emitting. If ANY box is unchecked, fix it FIRST.
+
+- [ ] My output has **at least 3** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
+- [ ] My output has **at least 5** workbook activities.
+- [ ] **Total ≥ 8.**
+- [ ] **Every** activity has **at least 10** items, pairs, or statements (except types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3, essay-response=1).
+- [ ] The module (inline + workbook combined) uses **at least 0 distinct activity types** (or 4+ when 0 = 0 and the workbook size allows it). I am NOT shipping a wall of quizzes.
+- [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
+- [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
+- [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+- [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+- [ ] My inline count is between 3 and 5. I did NOT create more injection markers than 5.
+- [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
+- [ ] At B1+, all instructions are in Ukrainian (no English fallback).
+
+If you cannot tick all of these, REGENERATE the activities BEFORE outputting. Shipping under-spec means the build rejects you and the heal loop has to redo your work — wasting compute.
 
 ---
 

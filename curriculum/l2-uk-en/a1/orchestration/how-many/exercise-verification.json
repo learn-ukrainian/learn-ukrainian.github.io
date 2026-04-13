@@ -1,73 +1,44 @@
 {
-  "total_items": 56,
-  "grounded_items": 47,
+  "total_items": 41,
+  "grounded_items": 37,
   "ungrounded": [
     {
-      "word": "йому",
-      "exercise_type": "quiz",
-      "context": "Йому 33 _____.",
+      "word": "це",
+      "exercise_type": "true-false",
+      "context": "Сорок — це 14.",
       "role": "context"
     },
     {
-      "word": "брату",
-      "exercise_type": "quiz",
-      "context": "Брату 4 _____.",
+      "word": "правильно",
+      "exercise_type": "true-false",
+      "context": "Правильно: Мені двадцять один років.",
       "role": "context"
     },
     {
-      "word": "сестрі",
-      "exercise_type": "match-up",
-      "context": "Скільки років сестрі?",
-      "role": "answer"
-    },
-    {
-      "word": "потрібен",
-      "exercise_type": "error-correction",
-      "context": "Мені потрібен один книга.",
+      "word": "ми",
+      "exercise_type": "true-false",
+      "context": "Ми кажемо: один стіл, два столи.",
       "role": "context"
     },
     {
-      "word": "мене",
-      "exercise_type": "error-correction",
-      "context": "У мене є двадцять один гривні.",
+      "word": "кажемо",
+      "exercise_type": "true-false",
+      "context": "Ми кажемо: один стіл, два столи.",
       "role": "context"
-    },
-    {
-      "word": "двісто",
-      "exercise_type": "error-correction",
-      "context": "Це коштує двісто гривень.",
-      "role": "context"
-    },
-    {
-      "word": "який",
-      "exercise_type": "match-up",
-      "context": "Який твій номер?",
-      "role": "answer"
-    },
-    {
-      "word": "твій",
-      "exercise_type": "match-up",
-      "context": "Який твій номер?",
-      "role": "answer"
-    },
-    {
-      "word": "моїй",
-      "exercise_type": "unjumble",
-      "context": "Моїй",
-      "role": "answer"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 32,
-    "tested_in_exercises": 24,
+    "tested_in_exercises": 23,
     "not_tested": [
       "вісім",
-      "дев'ять",
       "копійка",
       "п'ятсот",
+      "роки",
       "рік",
       "сімдесят",
       "тисяча",
+      "триста",
       "шість"
     ]
   },

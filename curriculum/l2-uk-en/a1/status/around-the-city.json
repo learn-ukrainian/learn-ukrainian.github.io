@@ -2,15 +2,15 @@
   "module": "around-the-city",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-11T00:58:42.712180Z",
+  "last_audit": "2026-04-13T21:16:21.648400Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-11T00:58:42.176318Z",
+    "md": "2026-04-13T21:16:08.382987Z",
     "meta": null,
-    "activities": "2026-04-09T00:56:04.295149Z",
-    "vocabulary": "2026-04-09T01:00:45.299072Z",
+    "activities": "2026-04-12T22:32:07.803963Z",
+    "vocabulary": "2026-04-12T22:33:12.560720Z",
     "research": null,
-    "plan": "2026-03-30T22:17:20.649902Z"
+    "plan": "2026-04-12T09:24:34.105929Z"
   },
   "gates": {
     "meta": {
@@ -21,17 +21,26 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1685/1200 (raw: 1813)"
+      "message": "1581/1200 (raw: 1670)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "9/0"
+      "message": "8/0"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "22/1"
+      "message": "33/1"
+    },
+    "vocab_progression": {
+      "status": "warn",
+      "violations": 0,
+      "message": "\u0394 -10 | premature=2 | gaps=0 | well-paced=0",
+      "delta": -10,
+      "premature": 2,
+      "gaps": 0,
+      "well_paced": 0
     },
     "naturalness": {
       "status": "info",

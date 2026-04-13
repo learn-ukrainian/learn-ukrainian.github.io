@@ -139,92 +139,122 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Вступ та діалог
+## Чому? Тому що... / Бо... (Why? Because...) (~770 words total)
 
-> — **Студент 1:** Привіт. Я сьогодні не піду в університет, **бо** *(because)* дуже втомився після роботи. Я працював до пізньої ночі.
-> — **Студент 2:** Привіт. Але тобі обов'язково треба йти сьогодні. Ти що, забув про наш розклад?
-> — **Студент 1:** А що там сьогодні таке? Чому я маю йти на цю пару?
-> — **Студент 2:** Тобі треба бути там, **тому що** *(because)* завтра буде дуже важлива **контрольна** *(test)* з історії.
-> — **Студент 1:** Ох, я зовсім забув про неї. Але я так хочу спати зараз.
-> — **Студент 2:** Розумію тебе. Слухай, **хоча** *(although)* я теж дуже втомився, я все одно піду. Ця **лекція** *(lecture)* буде дуже корисна.
-> — **Студент 1:** Добре, ти маєш рацію. Я зараз вип'ю велику чашку кави і теж піду на заняття.
+Університетське життя завжди повне складних рішень. Кожного дня студенти обирають: піти на лекцію чи залишитися вдома? Для цього ми використовуємо спеціальні слова, які допомагають нам будувати логічні аргументи. Послухайте коротку розмову двох друзів перед важливою парою.
 
-Прості речення — це добре для початку, але на рівні А2 цього вже замало. Вам треба вміти будувати довгі та складні речення. Ви маєте пояснювати свої дії та думки. Для цього вам потрібна **причина** *(reason)* та **допуст** *(concession)*. Ці маленькі слова роблять вашу мову дуже живою та природною. Сьогодні ми навчимося з'єднувати різні ідеї в одне ціле. Ми будемо активно використовувати сполучники «тому що», «бо» та «хоча».
+> *University life is always full of difficult decisions. Every day, students choose: to go to a lecture or stay home? To do this, we use special words that help us build logical arguments. Listen to a short conversation between two friends before an important class.*
 
-## Чому? Тому що... / Бо... (Why? Because...)
+> — **Студент 1:** Я сьогодні не піду на пару, бо дуже хворію. *(I won't go to class today, because I am very sick.)*
+> — **Студент 2:** Але тобі треба піти, тому що завтра важлива контрольна! *(But you need to go, because tomorrow is an important test!)*
+> — **Студент 1:** Ох... Хоча я страшенно втомився, я все одно піду. *(Oh... Even though I am terribly tired, I will go anyway.)*
 
-Ми часто запитуємо людей про різні речі. Ми хочемо знати причини подій та дій. Для цього ми використовуємо слово **чому** *(why)*. Коли ми відповідаємо, ми називаємо **причину** *(cause, reason)*. В українській мові є два головні слова для цього. Це слова «тому що» та «бо». Обидва слова означають одне і те саме. Вони з'єднують дві ідеї в одне логічне речення. Наприклад, ви можете сказати: «Я вдома, бо сьогодні дощ». Або ви можете сказати: «Я вдома, тому що сьогодні дощ». Це дуже проста і корисна граматика. In English, you generally use one main word for this purpose: "because". В українській мові ми маємо вибір. Ви можете вільно обрати те слово, яке вам більше подобається.
+When you want to explain the **причина** (reason) for an action, you need to answer the question «Чому?». In Ukrainian grammar, we use a **складне речення** (complex sentence) to connect the main action with its explanation. To link these two parts together, we use a special linking word called a **сполучник** (conjunction). The two most common causal conjunctions you will hear every day are «тому що» and «бо». Both of them translate directly to the English word "because". This matches the school-style explanation in Заболотний Grade 5, §28 and the Grade 6 section on conjunctions, and it also aligns with ULP: Ukrainian Conjunctions.
 
-Яка різниця між цими словами? Усе залежить від вашої ситуації та стилю спілкування. The word «бо» is the workhorse of spoken Ukrainian. Воно дуже коротке, швидке та максимально пряме. Українці постійно використовують «бо» у щоденному спілкуванні з друзями. Наприклад: «Я поспішаю, бо запізнююся на роботу». Ви дуже часто будете чути «бо» на вулиці або в кафе. The phrase «тому що» is the neutral, universal choice. Ця фраза ідеально підходить і для розмови, і для письма. Вона завжди звучить трохи серйозніше та офіційніше. Наприклад, у книзі ви прочитаєте: «Земля прекрасна, тому що на ній живуть люди». Отже, для швидкої розмови сміливо обирайте «бо». Для тексту чи офіційної бесіди беріть «тому що».
+While both «тому що» and «бо» mean "because", they feel slightly different in practice. The phrase «тому що» is neutral and versatile. You will see it in official documents and literature, but people also use it frequently in everyday speech. On the other hand, the short word «бо» is highly colloquial and native to Ukrainian. You will hear it constantly in casual conversations and friendly chats.
 
-Ці два слова мають дещо різні граматичні правила. У складному реченні вони стоять у різних місцях. The conjunction «бо» is strictly a connector that sits between two clauses. Ви ніколи не можете почати нове речення зі слова «бо». Воно завжди йде тільки після головної інформації. On the other hand, the phrase «тому що» is more flexible. Вона може спокійно стояти всередині вашого складного речення. Вона також може починати нове речення. Ми робимо так, коли даємо пряму відповідь на запитання. Подивіться на цей короткий діалог:
+Багато людей думають, що коротке слово «бо» — це неправильна мова або якийсь діалект. Але це велика помилка! Слово «бо» — це питоме українське слово, яке має дуже давню історію. Наші письменники та поети завжди використовували його у своїх творах. 
 
-> — **Олена:** Чому ти не прийшов учора?
-> — **Марко:** Тому що я був дуже зайнятий.
+> *Many people think that the short word "бо" is incorrect language or some kind of dialect. But this is a big mistake! The word "бо" is an authentic Ukrainian word that has a very long history. Our writers and poets have always used it in their works.*
 
-You cannot start a new sentence with «бо» to answer a direct question. Це звучить дуже неприродно для українців. Для першого слова у вашій відповіді ми завжди беремо «тому що».
+:::tip
+**Don't fear the short word**
+Some learners worry that the word «бо» sounds uneducated. This is a myth! It is a core part of the Ukrainian language, widely used across all regions and social groups.
+:::
 
-Зараз ми поговоримо про одну дуже типову помилку. English speakers often fall into the "Because-What" trap. Англійське слово "because" студенти часто перекладають як «тому що». Вони бачать там слово «що» і думають, що воно завжди потрібне. Тому вони часто помиляються і кажуть «бо що». Це велика проблема. Слово «бо» є повністю самостійним сполучником. Ніколи не додавайте маленьке «що» до «бо». Це **калька** *(calque)*, якої немає в українській мові. Правильно казати: «Я вчу мову, бо мені це подобається». Неправильно казати: «Я вчу мову, бо що мені це подобається». Запам'ятайте це просте правило назавжди. Слово «бо» чудово працює без сторонньої допомоги.
+When writing such sentences, punctuation is strict. You must always place a comma immediately before the conjunction that introduces the reason. So, the comma goes right before the word «бо», or right before the full phrase «тому що». Note that the comma never goes inside the phrase «тому що». You can start a sentence with «тому що» when directly answering a question, but you should avoid starting a sentence with «бо». 
 
-Тепер час подивитися на українську пунктуацію. Це надзвичайно важлива тема для правильного письма. У складному реченні ми маємо дві різні частини. Ці частини треба візуально розділяти. В українській мові **кома** *(comma)* працює як надійний прикордонник між двома ідеями. The comma is the strict border guard between the main clause and the cause clause. Ви повинні завжди ставити кому перед словами «тому що» та «бо». Це обов'язкове граматичне правило нашого синтаксису. Давайте подивимося на кілька гарних прикладів. «Вона вивчає українську мову, бо хоче розуміти своїх друзів». «Ми не пішли гуляти, тому що надворі був дощ». «Студенти уважно слухають, бо викладач розповідає цікаву історію». Зверніть увагу на коми у цих реченнях. Англійська мова часто зовсім не вимагає коми перед причиною. Але українська мова завжди вимагає кому перед цими важливими сполучниками.
+Let's look at a few real-life examples showing how we express cause:
 
-Як ми створюємо такі складні речення на практиці? Це дуже схоже на просту математику. Ми беремо два окремі факти і робимо з них один сильний аргумент. Уявіть, що у вас є перший факт: «Петро винайшов вулик». **Вулик** *(beehive)* — це спеціальний дерев'яний будинок для бджіл. Потім у вас є другий факт: «Він — відомий **бджоляр** *(beekeeper)*». Тепер ми хочемо пояснити причину його великої популярності. Ми просто з'єднуємо ці два факти разом. Результат буде такий: «Петро — найвідоміший бджоляр, тому що він винайшов вулик». Ми щойно перетворили два короткі речення на одне велике інформативне речення. Це робить вашу розповідь набагато цікавішою та багатшою. Ви можете легко робити так з будь-якими фактами у житті. Головне — знайти правильний логічний зв'язок між ними.
+* **Я не прийшов на зустріч, тому що був дуже зайнятий.** — *I didn't come to the meeting, because I was very busy.*
+* **Вона вивчає українську мову, бо хоче краще розуміти друзів.** — *She is studying the Ukrainian language, because she wants to better understand her friends.*
+* **Ми купили квитки заздалегідь, тому що вони були дешеві.** — *We bought tickets in advance, because they were cheap.*
+* **Я одягнув теплу куртку, бо надворі сильний вітер.** — *I put on a warm jacket, because there is a strong wind outside.*
 
-Також варто пам'ятати про правильну інтонацію. У причинових реченнях голос робить легкий рух угору (↗) перед сполучниками «тому що» або «бо», щоб показати, що далі буде пояснення. А вже в кінці підрядної частини голос спокійно падає вниз (↘). Наприклад: «Я не прийшов (↗), тому що був зайнятий (↘)». Це робить вашу мову дуже природною.
+Ці слова можна знайти не лише у побутових розмовах, але й у народній мудрості. Одне з найвідоміших прислів'їв каже: «Держімося землі, бо земля держить нас». Це означає, що ми маємо дбати про свою батьківщину, щоб вона дбала про нас.
 
-<!-- INJECT_ACTIVITY: fill-in-cause-clauses -->
+> *These words can be found not only in everyday conversations, but also in folk wisdom. One of the most famous proverbs says: "Let's hold on to the earth, because the earth holds us." This means that we must take care of our homeland so that it takes care of us.*
 
-## Хоча... (Although...)
+A great way to practice is to combine two simple sentences into one fluent thought. Imagine you have two facts: «Погода була погана.» (The weather was bad.) and «Ми залишилися вдома.» (We stayed home.). You can easily link them: «Ми залишилися вдома, тому що погода була погана.»
 
-У нашому житті часто трапляються різні великі перешкоди. Іноді ми маємо серйозну проблему, але все одно робимо свою роботу. Це називається **допуст** *(concession)*. У таких ситуаціях ми використовуємо дуже корисне слово: **хоча** *(although / even though)*. Concessive clauses introduce a fact that should logically prevent the main action, but the main action happens anyway. Це показує вашу внутрішню силу або несподіваний результат. Наприклад, на вулиці зараз дуже погана погода. Логічно просто залишитися вдома і пити гарячий чай. Але ми маємо зовсім інші великі плани. Подивіться на цей короткий студентський діалог:
+The word **тому** (therefore) flips the relationship. It introduces the *result* rather than the *cause*. Let's look at how the previous weather example changes when we use this new word:
 
-> — **Максим:** Чому ти тут? Ти ж хворієш. *(Why are you here? You are sick.)*
-> — **Оксана:** Я прийшла на лекцію, хоча почуваюся погано. *(I came to the lecture, although I feel bad.)*
+* **Погода була погана, тому ми залишилися вдома.** — *The weather was bad, therefore we stayed home.*
 
-Зверніть увагу на **контраст** *(contrast)* між поганою ситуацією та дією. Сполучник «хоча» допомагає нам будувати такі цікаві речення. Ви можете також сміливо використовувати коротку форму: **хоч** *(even though)*. Ці два слова однакові за значенням.
+Спробуйте будувати такі речення кожного дня. Коли ви йдете в магазин, скажіть собі: «Я йду в магазин, бо вдома немає хліба». Це дуже корисна вправа для вашого мозку.
 
-На відміну від слова «бо», сполучник «хоча» є дуже гнучким інструментом. Від нього може легко починатися ваше нове складне речення. Згадайте наше старе граматичне правило про кому. Ми завжди повинні візуально відокремлювати дві частини складного речення. Якщо частина зі словом «хоча» стоїть на початку, ми обов'язково ставимо кому. Ось гарний приклад з української класичної літератури: «Хоча було тільки **надвечір’я** *(early evening)*, **присмерки** *(twilight)* вже згусли». But you can also flip the grammatical structure completely. The dependent clause with "хоча" can comfortably sit in the second half of your sentence. У такому випадку ми просто ставимо кому прямо перед сполучником «хоча». Наприклад: «Я сьогодні дуже багато вчуся, хоча дуже втомився». Обидва ці варіанти звучать максимально природно і правильно. Вибирайте той варіант структури, який вам більше подобається під час розмови.
+## Хоча... (Although...) (~660 words total)
 
-Ви вже напевно добре знаєте популярне українське слово **але** *(but)*. Students often wonder when to use "але" and when to use "хоча", since both words show contrast. Звичайне «але» показує дуже просте **протиставлення** *(opposition)* двох рівних фактів. Наприклад: «Він зараз втомлений, але він активно працює». Це просто дві різні звичайні життєві ситуації. А ось наше нове слово «хоча» додає значно більше емоцій. Воно завжди показує велике **зусилля** *(effort)* або подолання серйозної перешкоди. Коли ви кажете: «Хоча він втомлений, він працює», ви підкреслюєте його силу. Це звучить набагато сильніше, цікавіше і багатше. The conjunction "хоча" makes one clause grammatically dependent on the other, creating a sense of an obstacle being actively overcome. Слово «але» просто нейтрально з'єднує дві незалежні ідеї разом. Тому для драматичних історій завжди краще брати сполучник «хоча».
+Things do not always happen the way we expect. To express a contrast between an expectation and the actual reality, we use the word **хоча** (although, even though). This word introduces a special type of dependent clause called a **допуст** (concession). It shows that the situation in one part of your sentence makes the action in the other part surprising.
 
-В українській мові історично існує ще одна цікава граматична традиція. When you start your complex sentence with a "хоча" clause, you can add an extra conjunction to the main clause. Ми досить часто додаємо коротке слово «а» або слово «але» у другу частину. Це робить ваш фінальний контраст ще більш яскравим і емоційним. Наприклад: «Хоч і тепло ще, а осінь вже підходить **крадькома** *(stealthily)*». Зверніть увагу, що ми маємо відразу два сполучники в одному реченні. Англійською мовою така конструкція звучить як велика помилка. Але українською мовою це нормальна літературна практика. You do not have to use this expressive double structure every time you speak. Однак ви часто будете бачити її в хорошій українській літературі. Ви також будете постійно чути її в живій щоденній розмові. Ця маленька деталь додає вашій мові автентичного українського колориту.
+Коли ми плануємо свій день, ми часто дивимося на прогноз погоди. Якщо на вулиці йде дощ або дуже холодно, логічно просто залишитися вдома. Але іноді наші плани або бажання є набагато сильнішими за зовнішні обставини. Наприклад, ми можемо сказати: «Хоча надворі холодно, ми пішли гуляти». У цьому короткому реченні перша частина описує погані умови. Друга частина показує нашу дію, яка успішно відбулася всупереч цим складним умовам. Це дуже корисна структура для повсякденного спілкування.
 
-Нарешті, давайте трохи поговоримо про правильну інтонацію у таких реченнях. Your voice needs to accurately guide the listener through the emotional contrast. Коли ви починаєте речення зі слова «хоча», ваш голос повинен іти вгору (↗). The rising intonation clearly signals to your conversation partner that they need to wait for a twist. Ви ніби загадково кажете їм: «Увага, зараз буде сюрприз!». А потім, коли ви говорите головну частину речення, ваш голос іде різко вниз (↘). The falling tone comfortably delivers the final unexpected result. Давайте зараз потренуємо це разом на одному красивому поетичному прикладі. Будь ласка, прочитайте це коротке складне речення вголос у своїй кімнаті: «Хоч земля вся укрита **снігами** *(snows)* ↗, моє серце в **цвіту** *(bloom)* ↘». Ви відчуваєте цю неймовірно красиву музику нашої рідної мови? Правильна українська інтонація гарантовано робить вас справжнім майстром спілкування.
+> *When we plan our day, we often look at the weather forecast. If it is raining or very cold outside, it is logical to simply stay home. But sometimes our plans or desires are much stronger than external circumstances. For example, we can say: "Although it is cold outside, we went for a walk." In this short sentence, the first part describes the bad conditions. The second part shows our action, which successfully happened despite these difficult conditions. This is a very useful structure for everyday communication.*
 
-<!-- INJECT_ACTIVITY: match-up-cause-concession -->
-<!-- INJECT_ACTIVITY: unjumble-complex-sentences -->
+Learners often confuse **хоча** with the simpler **сполучник** (conjunction) **але** (but). While both words express a contrast, they function differently. The word «але» simply connects two equal, contrasting facts. The word «хоча» makes one fact dependent on the other, putting the focus entirely on the unexpected outcome.
 
-## Складносурядне речення: і, та, але (Compound Sentences)
+Давайте порівняємо дві дуже схожі ситуації. Перший базовий варіант: «Він втомився, але продовжив працювати». Тут ми маємо два рівні прості факти. Людина має сильну втому, проте вона працює далі. Це звичайне протиставлення двох дій. Другий складніший варіант: «Хоча він втомився, він продовжив працювати». Тут ми робимо сильний акцент на тому, що його робота є несподіваним результатом. Ми підкреслюємо його зусилля, зважаючи на його втому. Важливо пам'ятати одну критичну річ про цю граматику. Студенти часто кажуть: «Хоча він втомився, але він працював». Для вашого рівня краще завжди уникати такої подвійної конструкції. Використовуйте у своєму реченні тільки один сполучник — або «хоча», або «але».
 
-На рівні А1 ви вже добре вивчили базові **сполучники** *(conjunctions)*: «і», «та», «але». Ви часто і успішно використовували їх щодня. Ви брали їх, щоб просто з'єднати два слова або дві короткі фрази. Наприклад: «хліб і молоко», «великий, але дорогий» або «швидко та смачно». Тепер ми переходимо до наступного дуже важливого етапу.  Ми будемо разом будувати великі **складносурядні речення** *(compound sentences)*. Це такі речення, де дві рівні частини спокійно працюють разом. Сполучники «і» та «та» мають однакове базове значення. Українці часто чергують їх у своїй щоденній розмові. We use "та" as a perfect synonym for "і" simply to avoid repeating the same sound too often. Наприклад, ми кажемо: «Я купив хліб і молоко, та ще взяв твердий сир». Це звучить дуже природно і мелодійно.
+> *Let's compare two very similar situations. The first basic variant: "He was tired, but he continued to work." Here we have two absolutely equal simple facts. The person has strong fatigue, yet they work further. This is a normal contrast of two actions. The second more complex variant: "Although he was tired, he continued to work." Here we put a strong emphasis on the fact that his work is an unexpected result. We highlight his effort, considering his fatigue. It is important to remember one critical thing about this grammar. Students often say: "Although he was tired, but he worked." For your level, it is better to always avoid such a double construction. Use only one conjunction in your sentence — either "although" or "but".*
 
-Що означають «рівні частини» в українській граматиці? Уявіть собі два окремі, самостійні прості речення. Кожне з них має свій власний суб'єкт і свою власну дію. Наприклад, перше речення: «Я ввечері прийшов додому». І друге окреме речення: «Ми разом смачно **повечеряли** *(had dinner)*». Compound sentences build a simple bridge between two ideas of equal importance and weight. Ми з'єднуємо їх так: «Я ввечері прийшов додому, і ми разом смачно повечеряли». Обидві ці частини можуть спокійно існувати окремо одна від одної. Згадайте наші попередні нові сполучники «тому що» або «хоча». Вони завжди створюють логічну залежність: одна частина є головною, а інша — залежною. A clause starting with "because" cannot logically stand alone as a complete thought. Але у складносурядному реченні зі словами «і» чи «але» всі частини є рівноправними незалежними партнерами. Ніхто нікому не підпорядковується.
+One of the great advantages of building a **складне речення** (complex sentence) with **хоча** is its positional flexibility. The dependent clause can easily be placed either at the very beginning of your sentence or in the second half. This allows you to decide which information your listener hears first. Just remember to always separate the two parts with a comma.
 
-Ви вже чудово знаєте і активно використовуєте популярне слово «але». Воно завжди прекрасно працює для простого **протиставлення** *(opposition)* у розмові. Наприклад: «Сергій хотів піти в кіно, але він не мав вільного часу». Проте на рівні А2 настав час розширити ваш активний словниковий запас. Українська мова має два чудові і красиві синоніми: **проте** *(however / yet)* та **однак** *(however)*. These words function exactly like "але", but they elevate your speech to a much more sophisticated, mature level. Ви будете часто бачити їх у новинах, книгах та статтях. Давайте уважно порівняємо дві схожі фрази. Перша: «Сергій хотів піти в кіно, але він не мав вільного часу». А тепер друга: «Сергій хотів піти в кіно, проте він не мав вільного часу». Значення залишається однаковим, але другий варіант звучить набагато елегантніше і професійніше. Сміливо використовуйте «проте» та «однак» у ваших розмовах.
+Ви можете вільно змінювати порядок частин у вашому складному реченні. Наприклад, ви можете сказати: «Ми пішли на прогулянку, хоча йшов дощ». У цьому випадку головна інформація звучить найпершою. Або ви можете повністю змінити структуру: «Хоча йшов дощ, ми пішли на прогулянку». Зміст залишається однаковим, але акцент трохи змінюється. Головне правило, яке ви повинні завжди пам'ятати, стосується пунктуації. Незалежно від того, де саме стоїть ця частина, ви завжди повинні відділяти її комою. Якщо вона стоїть на початку, кома ставиться після неї. Якщо вона стоїть другою, кома ставиться безпосередньо перед нею.
 
-Тепер давайте детально поговоримо про важливі правила української **пунктуації** *(punctuation)*. In Ukrainian, comma placement depends entirely on the specific grammatical structures you are connecting. Коли сполучники «і» або «та» з'єднують лише два слова, ми кому не ставимо. Наприклад, ми пишемо: «брат і сестра» або «сніг та дощ». Але граматична ситуація кардинально змінюється, коли ми будуємо велике складне речення. If "і" or "та" connect two completely independent clauses, a comma is strictly mandatory before the conjunction. Ми завжди повинні писати: «Світило яскраве сонце, і маленькі пташки весело співали». Тут ми маємо дві різні дії і два різні суб'єкти. Правила для слів «але», «проте» та «однак» є ще простішими. You must always, without any exception, put a comma before words expressing direct contrast. Ми завжди пишемо: «Я багато працював, однак я нічого не встиг». Це залізне правило української граматики.
+:::info
+**Мелодія мови (Speech melody)**
+В українській мові речення з цим сполучником мають дуже красиву інтонацію. Частина речення зі словом «хоча» зазвичай закінчується легким підвищенням голосу. Це показує, що думка ще не закінчена. Потім, у головній частині речення, голос повільно падає вниз. Ваша інтонація природно веде слухача до несподіваного результату.
 
-Ці маленькі сполучні слова роблять вашу українську мову живою та логічно зв'язною. Вони активно працюють як гнучка **сполучна тканина** *(connective tissue)* між вашими ідеями. Уявіть собі ситуацію, що ви розповідаєте другу про свій робочий день. Ви можете говорити короткими, дуже сухими фактами. «Він сьогодні багато працював. Він дуже сильно втомився. Він успішно закінчив свій новий **проєкт** *(project)*». Це звучить трохи як автоматичний робот, чи не так? Coordinating conjunctions allow you to seamlessly weave these isolated facts into a smooth, natural narrative flow. Давайте спробуємо гарно об'єднати ці три окремі думки. Ми скажемо так: «Він багато працював і сильно втомився, проте успішно закінчив проєкт». Тепер це вже справжня, красива і жива історія. Ваша розповідь стала динамічною, емоційною і дійсно цікавою для вашого слухача.
+> *In the Ukrainian language, sentences with this conjunction have a very beautiful intonation. The part of the sentence with the word "although" usually ends with a slight raising of the voice. This shows that the thought is not yet finished. Then, in the main part of the sentence, the voice slowly falls down. Your intonation naturally guides the listener to the unexpected result.*
+:::
 
-Насамкінець, зверніть особливу увагу на правильну мелодію таких речень. We previously discussed the dramatic rise-and-fall intonation of complex sentences that use the word "хоча". Складносурядні речення завжди звучать набагато спокійніше, рівніше і стабільніше. Тому що наші частини є рівноправними, ми використовуємо **рівну інтонацію** *(even intonation)*. Зазвичай обидві незалежні частини речення мають дуже схожий спокійний рух голосу вниз (↘). The falling intonation clearly marks the successful completion of each independent thought within the larger sentence. Ви ніби ставите невидиму крапку своїм голосом після кожної ідеї. Давайте зараз прочитаємо цей простий приклад разом. «Ми пішли в чудовий зелений парк (↘), і ми там довго гуляли (↘)». Ваша інтонація відразу показує вашу впевненість і емоційну стабільність. Завжди тренуйте цю спокійну мелодію, коли ви самостійно читаєте українські тексти вголос.
+In everyday conversations, you will frequently hear the shorter word **хоч** instead of the full «хоча». They are exact synonyms, but «хоч» sounds a bit more conversational. You might also encounter formal phrases like **незважаючи на те що** (despite the fact that), which you only need to recognize passively.
 
-<!-- INJECT_ACTIVITY: quiz-cause-choice -->
-<!-- INJECT_ACTIVITY: group-sort-conjunctions -->
+Давайте подивимося на кілька живих і дуже типових прикладів. Студент може сказати: «Хоча я вчу українську недовго, я вже розумію багато». Або інший приклад: «Хоч квитки були дорогі, ми поїхали на концерт». Обидва варіанти звучать надзвичайно природно і граматично правильно. У дуже формальних текстах ви також можете часто зустріти довгу фразу «незважаючи на те що». На цьому етапі вам зовсім не обов'язково активно використовувати її у своєму власному мовленні. Достатньо просто впізнавати цю фразу, коли ви читаєте українські новини.
 
-## Підсумок
+When translating directly from English, learners often make a structural mistake. In English, it is very common to add the word "though" at the very end of a sentence. However, in Ukrainian, the conjunction must always stand at the exact beginning of the dependent clause it introduces.
 
-Сьогодні ми вивчили дуже важливі слова для вашого щоденного спілкування. Вони допомагають будувати складні, логічні та красиві речення. Давайте коротко повторимо наші головні правила.
+Деякі іноземні студенти постійно пробують перекладати власні думки дослівно. Вони часто кажуть: «Він купив цю машину, вона була дуже стара хоча». Це дуже серйозна структурна помилка. В українській мові потрібно говорити: «Він купив цю машину, хоча вона була дуже стара». Це слово завжди відкриває нову думку, воно ніколи не закриває її. Інший гарний приклад з історії: «Радянська пропаганда так казала, хоча насправді це не було правдою». Зверніть увагу, як слово стоїть чітко на самому початку залежної частини речення. Ніколи не залишайте його наприкінці.
 
-По-перше, ми використовуємо **сполучники причини** *(causal conjunctions)* «тому що» та «бо». Вони завжди відповідають на питання «Чому?». Наприклад: «Я вивчаю українську мову, тому що я хочу жити в Києві». Це ваш основний інструмент для пояснення.
+> *Some foreign students constantly try to translate their own thoughts absolutely literally. They often say: "He bought this car, it was very old though." This is a very serious structural mistake. In the Ukrainian language, you must say: "He bought this car, although it was very old." This word always opens a new thought, it never closes it. Another good example from history: "Soviet propaganda said so, although in reality it was not true." Notice how the word stands clearly at the very beginning of the dependent part of the sentence. Never leave it at the end.*
 
-По-друге, ми тепер знаємо **сполучник допусту** *(concessive conjunction)* «хоча». Він показує цікавий контраст або несподіваний результат. Він відповідає на питання «Незважаючи на що?». Наприклад: «Хоча я дуже втомився, я читаю нову книгу». 
+<!-- INJECT_ACTIVITY: match-up-match-two-halves-of-sentences-with-with -->
+<!-- INJECT_ACTIVITY: unjumble-reorder-words-to-form-correct-compound-sentences-with-and -->
 
-По-третє, ми вміємо з'єднувати дві незалежні ідеї. Для цього ми беремо слова «і», «та», «але», «проте» або «однак». Завжди пам'ятайте про обов'язкові коми перед цими словами у великих складних реченнях!
+## Складносурядне речення: і, та, але (Compound Sentences: and, but) (~770 words total)
 
-Тепер час для невеликої самоперевірки. Спробуйте дати повні відповіді на два прості запитання. Чому ви зараз вивчаєте українську мову? Що ви зазвичай робите ввечері, хоча ви дуже втомилися після роботи? Спробуйте сказати це вголос або напишіть ці відповіді для себе. З цими маленькими словами ваша українська розповідь стає набагато багатшою і природнішою!
+You already know the basic words used to connect ideas from your earlier studies. Now, we will look at how a coordinating **сполучник** (conjunction) functions within a true **складне речення** (complex sentence). You are familiar with the word «і» (and) and the contrast word **але** (but). To vary your Ukrainian naturally, you can use stylistic alternatives. The word «та» is a common alternative to «і», especially when speakers want to avoid repetition. For expressing contrast, you can use conjunctions like «проте», «однак», and «зате». The word «навпаки» (on the contrary) is also useful, but it is not a coordinating conjunction: it introduces a reversed idea or correction.
+
+Коли ми говоримо, ми часто об'єднуємо дві рівноправні думки. Вони не залежать одна від одної. Ці частини просто існують разом. Наприклад: «Я прийшов додому, і ми разом повечеряли». Тут є дві повноцінні дії. Або інший приклад: «Сергій хотів піти в кіно, але не мав часу». Іноді українці використовують слово «та» замість «і». Вони роблять це, щоб уникнути частих повторень. Ми часто кажемо: «Сонце світить, та вітер дуже холодний». Якщо ви хочете показати сильний контраст, використовуйте «проте» або «однак». Наприклад: «Він довго шукав ключі, однак так і не знайшов їх». Це звучить дуже природно і літературно.
+
+> *When we speak, we often combine two equal thoughts. They do not depend on each other. These parts simply exist together. For example: "I came home, and we had dinner together." Here there are two complete actions. Or another example: "Serhiy wanted to go to the cinema, but did not have time." Sometimes Ukrainians use the word «та» instead of «і». They do this to avoid frequent repetitions. We often say: "The sun is shining, and the wind is very cold." If you want to show a strong contrast, use «проте» or «однак». For example: "He looked for the keys for a long time, however he never found them." This sounds very natural and literary.*
+
+It is important to understand the difference between coordinating conjunctions and subordinating conjunctions. Coordinating words like «і», «та», and «але» link two equal, independent clauses. Neither clause is more important than the other. In contrast, subordinating words link a main clause to a dependent one. For example, **тому що** (because) and **бо** (because — colloquial) introduce a **причина** (reason, cause). 
+
+The word **хоча** (although, even though) introduces a concession. To find the main clause, look for the part of the sentence that can stand completely alone as a logical statement. The dependent clause usually starts with the conjunction and explains why or despite what the main action happened. Because these structures are different, we use them for different purposes. **Тому** (therefore, that is why), it is crucial to choose the right connector for your logical flow.
+
+<!-- INJECT_ACTIVITY: group-sort-sort-conjunctions-into-vs-vs -->
+
+В українській мові є суворі правила щодо ком у складних реченнях. Ви повинні завжди ставити кому перед словами «але», «проте» та «однак». Це правило не має жодних винятків. Ситуація зі словами «і» та «та» є трохи іншою. Якщо ці слова з'єднують два окремі речення, кома потрібна обов'язково. Там має бути свій суб'єкт і своє дієслово. Наприклад: «Почався дощ, і ми швидко побігли додому». Тут є дощ, який почався. І також є ми, які побігли. Але якщо слово просто з'єднує два слова в одному списку, кома не ставиться. Наприклад: «Я купив молоко і хліб».
+
+> *In the Ukrainian language, there are strict rules regarding commas in complex sentences. You must always put a comma before the words «але», «проте», and «однак». This rule has no exceptions. The situation with the words «і» and «та» is a little different. If these words connect two separate sentences, a comma is absolutely necessary. There must be its own subject and its own verb. For example: "The rain started, and we quickly ran home." Here there is the rain that started. And also there are we who ran. But if the word simply connects two words in one list, a comma is not placed. For example: "I bought milk and bread."*
+
+Let us talk about the melody of these sentences. Intonation patterns are very specific when you use different types of conjunctions. In causal sentences, the main clause usually carries a falling tone. Then, the subordinate clause starting with «тому що» or «бо» begins with a slight rise in pitch before settling down at the end. This signals to the listener that an explanation is coming. Concessive sentences work differently. The clause starting with «хоча» usually rises at the end to signal the concession. This upward inflection holds the listener's attention. Then, the main clause follows with a falling tone to deliver the contrasting result. If you use coordinating contrast words like **проте** (however, yet) or **однак** (however), the intonation usually falls evenly on both clauses because they are independent.
+
+:::info
+**Intonation tip**
+When you use «хоча», always leave your voice slightly "hanging" or raised at the end of that clause. It tells the Ukrainian listener, "Wait, there is a twist coming!" Then drop your pitch for the final, unexpected outcome.
+:::
+
+Давайте подивимося, як використовувати ці слова на практиці. Уявіть таку ситуацію. Я прокинувся дуже пізно. Я зовсім не поснідав. Я дуже швидко побіг на роботу. На дорозі був великий затор. Я запізнився в офіс. Цей набір простих фраз звучить неприродно. Тепер ми об'єднаємо ці ідеї. «Хоча я прокинувся пізно, я встиг помитися під душем. Але я зовсім не поснідав вдома. Я побіг на роботу дуже швидко, тому що не хотів запізнитися. Проте я все одно приїхав пізно, бо на вулиці був затор». Цей новий текст має чудовий природний ритм. Він чудово показує причину, контраст і кінцевий результат.
+
+> *Let us see how to use these words in practice. Imagine such a situation. I woke up very late. I did not have breakfast at all. I ran to work very fast. There was a big traffic jam on the road. I was late to the office. This set of simple phrases sounds unnatural. Now we will combine these ideas. "Although I woke up late, I managed to take a shower. But I did not have breakfast at home at all. I ran to work very fast, because I did not want to be late. However I still arrived late, because there was a traffic jam on the street." This new text has a wonderful natural rhythm. It perfectly shows cause, contrast, and the final result.*
+
+<!-- INJECT_ACTIVITY: quiz-choose-the-correct-conjunction-to-complete-sentences -->
+<!-- INJECT_ACTIVITY: fill-in-complete-compound-sentences-by-adding-the-missing-clause-after-the-conjunction -->
 </generated_module_content>
 
-**PIPELINE NOTE — Word count: 2633 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
+**PIPELINE NOTE — Word count: 2861 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -400,40 +430,168 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 883 words | Not found: 4 words
+Verified: 529 words | Not found: 1 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
-  ✗ Оксана — NOT IN VESUM
-  ✗ Олена — NOT IN VESUM
-  ✗ Петро — NOT IN VESUM
   ✗ Сергій — NOT IN VESUM
 
-All 883 other words are confirmed to exist in VESUM.
+All 529 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
-## Verification Tools (MCP)
+---
 
-You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
+## Verification Tools (Shell Commands)
 
-**Core Verification:**
-- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
-- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
+You have access to verification tools via shell commands. Use these to verify
+Ukrainian vocabulary, check grammar, and search textbook content **as you write**.
 
-**Content Quality:**
-- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+**IMPORTANT:** Run verification commands BEFORE finalizing any Ukrainian text.
+Batch multiple verifications together to minimize round-trips.
 
-**Reference:**
-- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp_rag_search_literary` — verify literary references against primary sources
-- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
+### 1. Batch-verify Ukrainian words exist in VESUM (preferred — one call for many words)
 
-**Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_words
+results = verify_words(['слово1', 'слово2', 'слово3'])
+for w, matches in results.items():
+    if matches:
+        print(f'{w}: FOUND — lemma={matches[0][\"lemma\"]}, pos={matches[0][\"pos\"]}')
+    else:
+        print(f'{w}: NOT FOUND — may not exist in standard Ukrainian')
+"
+```
+
+### 2. Verify a single Ukrainian word in VESUM (with full morphological tags)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_word
+results = verify_word('WORD_HERE')
+if results:
+    for m in results:
+        print(f'lemma={m[\"lemma\"]}, pos={m[\"pos\"]}, tags={m[\"tags\"]}')
+else:
+    print('NOT FOUND in VESUM')
+"
+```
+
+### 3. Get all inflected forms of a lemma (declension/conjugation)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_lemma
+forms = verify_lemma('LEMMA_HERE')
+for f in forms[:20]:
+    print(f'{f[\"word_form\"]:20s} {f[\"pos\"]:8s} {f[\"tags\"]}')
+print(f'... {len(forms)} forms total')
+"
+```
+
+### 4. Check CEFR level of a word (is it level-appropriate?)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import query_cefr_level
+results = query_cefr_level('WORD_HERE')
+for r in results:
+    print(f'{r[\"word\"]}: {r[\"level\"]} ({r[\"pos\"]})')
+if not results:
+    print('Not in CEFR database')
+"
+```
+
+### 5. Search textbook content (Ukrainian school textbooks, Grades 1-11)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_textbooks
+keywords = {'keyword1', 'keyword2'}
+results = search_textbooks(keywords, 5)
+for r in results:
+    title = r.get('section_title', r.get('title', ''))
+    grade = r.get('grade', '?')
+    text = r.get('text', '')[:200]
+    print(f'Grade {grade} | {title}')
+    print(f'  {text}')
+    print()
+"
+```
+
+### 6. Search style guide for calques/Russianisms (Антоненко-Давидович, 279 entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_style_guide
+results = search_style_guide('TOPIC_HERE', 3)
+for r in results:
+    print(f'--- {r.get(\"word\", \"\")} [{r.get(\"section\", \"\")}]')
+    print(r.get('text', '')[:300])
+    print()
+if not results:
+    print('No style guide entries found')
+"
+```
+
+### 7. Look up word definition in СУМ-11 (Ukrainian explanatory dictionary, 127K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_definitions
+results = search_definitions('WORD_HERE', 3)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+### 8. Search idioms (Фразеологічний словник, 25K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_idioms
+results = search_idioms('WORD_HERE', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"text\", r.get(\"definition\", \"\")))[:200]}')
+"
+```
+
+### 9. English-to-Ukrainian translation (Балла, 79K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import translate_en_uk
+results = translate_en_uk('ENGLISH_WORD', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+---
+
+**WHEN to use these tools:**
+
+1. **Before writing any Ukrainian text** — batch-verify all key vocabulary with
+   `verify_words` (tool 1). Any word that returns NOT FOUND must be replaced.
+2. **When you suspect a Russicism or calque** — search the style guide (tool 6)
+   and verify the correct Ukrainian form with `verify_word` (tool 2).
+3. **When writing for A1/A2** — check CEFR levels (tool 4) to ensure vocabulary
+   is level-appropriate.
+4. **When unsure about a case ending or conjugation** — use `verify_lemma` (tool 3)
+   to see the full paradigm.
+5. **When covering a grammar topic** — search textbooks (tool 5) to see how
+   Ukrainian school textbooks teach it.
+6. **When you need the precise Ukrainian meaning** — use СУМ-11 (tool 7).
+7. **When looking for natural Ukrainian expressions** — search idioms (tool 8).
+
+**Batching rule:** Collect all words you want to verify, then run ONE `verify_words`
+call instead of multiple `verify_word` calls. This is faster and uses fewer tokens.

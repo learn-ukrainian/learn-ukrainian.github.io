@@ -1,0 +1,89 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T01-16-143f2c86.json
+phase: vocab
+prompt_chars: 21399
+response_chars: 1137
+prompt_words: 3512
+response_words: 136
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.0373
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.0107
+- name: plan
+  start: 1028
+  length: 20371
+  fraction: 0.952
+large_sections:
+- plan
+directives_total: 15
+directives_covered: 0
+directives_missed:
+- kind: must
+  text: When you use this connecting word in the Nominative case, it must perfectly
+    match the gender and number of the noun it is describing.
+  covered: false
+  coverage_note: 1/15 keywords (7%)
+- kind: must
+  text: Instead, it takes the case required by its specific role inside the subordinate
+    clause.
+  covered: false
+  coverage_note: 1/10 keywords (10%)
+- kind: must
+  text: You must always place a comma immediately before the connector word.
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: must
+  text: The comma and the connector word are absolutely mandatory.
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: must
+  text: 'Note: a comma before this connector word is mandatory.'
+  covered: false
+  coverage_note: 1/7 keywords (14%)
+- kind: must
+  text: Whenever your subordinate clause contains a verb of motion like «іти» or «їхати»,
+    you must switch your connector word.
+  covered: false
+  coverage_note: 2/15 keywords (13%)
+- kind: must
+  text: To truly master these relative adverbs, you must focus on the relationship
+    between the place and the action happening inside the relative clause.
+  covered: false
+  coverage_note: 2/15 keywords (13%)
+- kind: must
+  text: The relative pronoun is mandatory.
+  covered: false
+  coverage_note: 1/3 keywords (33%)
+- kind: must
+  text: These are new rules that we must remember.
+  covered: false
+  coverage_note: 1/7 keywords (14%)
+- kind: must
+  text: 'Punctuation is strict in Ukrainian: you must always place a comma before
+    the relative pronoun or adverb that introduces the clause.'
+  covered: false
+  coverage_note: 3/15 keywords (20%)
+- kind: inject_activity
+  text: fill-in-insert-the-correct-form-of-into-relative-clauses-matching-gender-and-number
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-choose-or-to-complete-sentences-about-places
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-combine-two-simple-sentences-into-one-using-a-relative-clause
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: true-false-judge-whether-relative-clauses-have-correct-agreement-and-comma-placement
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: unjumble-reorder-words-to-form-correct-relative-clauses-with-and
+  covered: false
+  coverage_note: marker missing

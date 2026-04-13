@@ -2,13 +2,13 @@
   "module": "checkpoint-time-nature",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-11T00:57:59.886922Z",
+  "last_audit": "2026-04-13T21:14:36.033680Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-11T00:57:59.361624Z",
+    "md": "2026-04-13T21:14:24.723763Z",
     "meta": null,
-    "activities": "2026-04-09T08:30:26.484367Z",
-    "vocabulary": "2026-04-09T08:36:04.511588Z",
+    "activities": "2026-04-13T20:10:48.106756Z",
+    "vocabulary": "2026-04-12T20:35:03.507578Z",
     "research": null,
     "plan": "2026-03-30T22:17:20.654251Z"
   },
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1535/1200 (raw: 1571)"
+      "message": "1225/1200 (raw: 1261)"
     },
     "activities": {
       "status": "pass",
@@ -31,7 +31,16 @@
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "34/1"
+      "message": "47/1"
+    },
+    "vocab_progression": {
+      "status": "warn",
+      "violations": 0,
+      "message": "\u0394 -5 | premature=1 | gaps=0 | well-paced=0",
+      "delta": -5,
+      "premature": 1,
+      "gaps": 0,
+      "well_paced": 0
     },
     "naturalness": {
       "status": "info",

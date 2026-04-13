@@ -1,21 +1,23 @@
-# Section-by-Section Generation — Section 4/5
+# Section-by-Section Generation — Section 4/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 21: Допомагати, дякувати, дзвонити (A2, A2.3 [Dative Case])
-**Section to write:** Давальний чи знахідний? Порівняння (Dative vs. Accusative with Verbs) (~490 words)
-**Word target for this section:** 490 words (aim for 539 to account for undershoot)
+**Section to write:** Давальний чи знахідний? Порівняння (Dative vs. Accusative with Verbs) (~500 words)
+**Word target for this section:** 500 words (aim for 550 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Давальний чи знахідний? Порівняння (Dative vs. Accusative with Verbs) (~490 words)
-- P1 (~120 words): [The 'Logic of the Case'. Contrast Accusative (direct action/target: бачити маму, знати мову) with Dative (indirect recipient/beneficiary: допомагати мамі, дякувати вчителеві). Use the visual of a direct hit (Acc) vs. a hand-off/delivery (Dat).]
-- P2 (~130 words): [Minimal pairs for clarity. Contrast: 'Я люблю маму' (Acc) vs 'Я допомагаю мамі' (Dat). 'Я бачу друга' (Acc) vs 'Я дзвоню другові' (Dat). 'Я чекаю подругу' (Acc) vs 'Я дякую подрузі' (Dat). Show how the endings change clearly for feminine nouns (-у vs -і).]
-- P3 (~120 words): [Verbs that take both. Explain **давати** (to give) and **розповідати** (to tell). Structure: Verb + [Who (Dat)] + [What (Acc)]. Examples: 'Я даю (кому?) мамі (що?) квіти'. 'Він розповідає (кому?) нам (що?) історію'.]
-- P4 (~120 words): [Strategic decision guide. If the person is the *destination* of the action (communication, help, gift) -> Dative. If the person is the *object* of the action (seeing, liking, calling/naming) -> Accusative. Mention the exception of **дзвонити** (call) as Dative vs **кликати** (call/summon) as Accusative.]
-- <!-- INJECT_ACTIVITY: quiz-case-choice --> [quiz, focus: choosing between Dative and Accusative for the noun/pronoun after specific verbs (e.g., 'Ми бачимо [брата/братові]'), 8 items]
+## Давальний чи знахідний? Порівняння (Dative vs. Accusative with Verbs) (~500 words)
+- P1 (~120 words): Contrast the Dative and Accusative cases conceptually. Accusative is for direct objects (who/what is directly acted upon). Dative is for indirect objects, recipients, or experiencers (to whom/for whom). Explain the decision strategy based on the verb's meaning.
+- P2 (~130 words): Review verbs that strictly require the Accusative case: бачити (to see), знати (to know), любити (to love), чекати (to wait for) — кого? що?. Examples: "Я бачу маму", "Він любить брата", "Ми чекаємо сестру".
+- P3 (~150 words): Provide contrastive minimal pairs, comparing Accusative verbs with the Dative verbs learned in this module. E.g., "Я бачу маму (Acc)" vs. "Я допомагаю мамі (Dat)"; "Він знає брата (Acc)" vs. "Він радить братові (Dat)"; "Ми любимо подругу (Acc)" vs. "Ми дзвонимо подрузі (Dat)". 
+- P4 (~100 words): Introduce verbs that can take both an indirect object (Dative) and a direct object (Accusative) simultaneously: давати (to give), розповідати (to tell). Pattern: дієслово + КОМУ (Dat.) + ЩО/ПРО ЩО (Acc.). Examples: "Я даю другові (Dat) книгу (Acc)", "Вона розповідає нам (Dat) історію (Acc)".
+- <!-- INJECT_ACTIVITY: quiz-dative-vs-accusative --> [quiz, Choose dative vs. accusative for the underlined noun/pronoun (допомагати мам_ vs. бачити мам_), 8 items]
+
+Grand total: ~2200 words
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -23,7 +25,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-what happens to you. Therefore, the person always stands in the Dative case. I am twenty years old now. My older brother is thirty-one years old. And our little sister is only four years old. We never use the verb "to be" in the present tense for age.* When expressing age, the word for "year" changes depending on the number that comes right before it. There are three different forms of this word: **рік**, **роки**, and **років**. For numbers that end in 1 (except 11), use the singular form. For numbers that end in 2, 3, or 4 (except 12, 13, and 14), use the plural form. For all other numbers, including 5 through 20 and all tens, use the genitive plural form. :::info **The Forms of Year** - Use **рік** for 1, 21, 31, 41... **Мені двадцять один рік.** — *I am twenty-one years old.* - Use **роки** for 2, 3, 4, 22, 23, 24... **Йому тридцять два роки.** — *He is thirty-two years old.* - Use **років** for 5-20, 25, 30, 50... **Їй сорок років.** — *She is forty years old.* ::: Моєму дідусеві шістдесят один рік. Моїй бабусі п'ятдесят чотири роки. Моїй мамі сорок років, і моєму татові також сорок років. Моєму другові дванадцять років, а його сестрі тринадцять років. > *My grandfather is sixty-one years old. My grandmother is fifty-four years old. My mom is forty years old, and my dad is also forty years old. My friend is twelve years old, and his sister is thirteen years old.* To ask someone their age, you use the question word **скільки** (how much / how many). After this word, the noun must always be in the Genitive plural form. That is why the question always uses the word **років**. However, the person you are asking about must still be in the Dative case. Скільки тобі років? Скільки років твоєму братові? Скільки років вашій мамі? У цих питаннях слово «скільки» вимагає родового відмінка множини для слова «рік». Але людина, про яку ми питаємо, завжди стоїть у давальному відмінку. > *How old are you? How old is your brother? How old is your mother? In these questions, the word "how many" requires the genitive plural case for the word "year". But the person we are asking about always stands in the dative case.* Let's look at a short conversation where two friends ask about their family members. Notice how the Dative case is used for every person whose age is mentioned. > — **Олена:** Привіт, Антоне! Скільки тобі років? *(Hi, Anton! How old are you?)* > — **Антон:** Мені двадцять два роки. А тобі? *(I am twenty-two years old. And you?)* > — **Олена:** Мені двадцять один рік. А скільки років твоєму братові? *(I am twenty-one years old. And how old is your brother?)* > — **Антон:** Йому двадцять п'ять років. А твоїй сестрі? *(He is twenty-five years old. And your sister?)* > — **Олена:** Їй тільки вісімнадцять років. *(She is only eighteen years old.)* <!-- INJECT_ACTIVITY: true-false-age -->
+you must use the Genitive plural form **років** (years (5+)). It is crucial to memorize these three distinct groups to speak naturally. Моїй маленькій дитині зараз один рік. Моєму старшому братові двадцять три роки. Моїй молодшій сестрі п'ять років, а моєму найкращому другові дванадцять років. Ми завжди змінюємо закінчення цього слова після різних цифр. Це дуже важливе правило для кожного студента. > *My small child is one year old now. My older brother is twenty-three years old. My younger sister is five years old, and my best friend is twelve years old. We always change the ending of this word after different numbers. This is a very important rule for every student.* :::info **Grammar box** — The counting rules for 1, 2-4, and 5+ always apply to the *last digit* of a compound number. Therefore, 21 uses **рік** (двадцять один рік) and 32 uses **роки** (тридцять два роки). However, the "teen" numbers 11, 12, 13, and 14 belong to the 5+ group and always use **років** (одинадцять років). ::: To ask someone about their age, you must also use the Dative case for the person you are asking about. The question word is «скільки» (how much/how many), which always requires the Genitive plural form «років». The conversational pattern is always structured as "how many years to someone." You do not change the question word itself, but you must carefully choose the correct Dative pronoun, such as «тобі» or «йому», or the correct Dative noun ending for the person. Скільки тобі років? Скільки їй років? Скільки років твоєму братові або твоїй сестрі? Коли ми хочемо знати вік нової людини, ми завжди питаємо саме так. Це дуже просте, але дуже корисне і важливе питання для знайомства з людьми. Вчителеві сорок років, а студентам двадцять років. > *How old are you? How old is she? How old is your brother or your sister? When we want to know the age of a new person, we always ask exactly like this. This is a very simple, but very useful and important question for getting to know people. The teacher is forty years old, and the students are twenty years old.* Let us look at a short conversation where two people ask and answer questions about the ages of different family members. This dialogue reinforces the combination of Dative nouns, Dative pronouns, and numbers with the correct word for "year." > — **Марко:** Привіт! Скільки тобі років? *(Hi! How old are you?)* > — **Анна:** Мені двадцять чотири роки. А тобі? *(I am twenty-four years old. And you?)* > — **Марко:** Мені двадцять вісім років. Скільки років твоїй молодшій сестрі? *(I am twenty-eight years old. How old is your younger sister?)* > — **Анна:** Моїй сестрі тільки один рік. А твоєму братові? *(My sister is only one year old. And your brother?)* > — **Марко:** Моєму старшому братові тридцять два роки. *(My older brother is thirty-two years old.)* <!-- INJECT_ACTIVITY: true-false-age, Judge whether age expressions use correct dative forms and number agreement, 8 items -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -622,6 +624,31 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (4/4).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] допомагати (to help)
+- [ ] дякувати (to thank)
+- [ ] дзвонити (to call, to phone)
+- [ ] радити (to advise)
+- [ ] заважати (to bother, to disturb)
+- [ ] подобатися (to be pleasing to, to like (reversed syntax))
+- [ ] відповідати (to answer (someone))
+- [ ] рік (year)
+- [ ] роки (years (2-4))
+- [ ] років (years (5+))
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Давальний чи знахідний? Порівняння (Dative vs. Accusative with Verbs) (~500 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

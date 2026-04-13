@@ -1,4 +1,4 @@
-<!-- version: 1.1.0 | updated: 2026-03-31 -->
+<!-- version: 1.2.0 | updated: 2026-04-12 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -11,6 +11,35 @@ Generate an `activities/free-time.yaml` file for module **26: Free Time** (a1).
 
 ---
 
+## ⚠️ HARD COUNT TARGETS — READ TWICE
+
+These are the binding numerical contracts for THIS module. The audit will FAIL if you fall short.
+
+| Bucket | Min | Max | Notes |
+|---|---|---|---|
+| Total activities | 10 | 10+ | inline + workbook combined |
+| Inline (lesson tab) | 4 | 6 | one per `<!-- INJECT_ACTIVITY -->` marker, see below |
+| Workbook (Зошит tab) | 6 | 9 | extended practice |
+| Items per activity | 6 | — | each activity must have at least 6 items (unless its type cap is lower — see Activity Type Reference below) |
+
+**You MUST ship at least 4 inline activities AND at least 6 workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+
+**Type diversity is required.** The module (inline + workbook combined) MUST use at least **0** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level. (If `0` is `0`, the audit profile for this level does not enforce type diversity — but variety still produces a better lesson, so aim for 4+ types when the workbook allows it.)
+
+---
+
+## Allowed types for THIS level
+
+- **Inline (lesson) types:** image-to-letter, letter-grid, match-up, watch-and-repeat, quiz, true-false, fill-in, classify
+- **Inline priority (preferred):** image-to-letter, match-up, fill-in, quiz, watch-and-repeat
+- **Workbook types:** fill-in, match-up, group-sort, anagram, unjumble, quiz, true-false, classify, divide-words, count-syllables, pick-syllables, observe, phrase-table, odd-one-out
+- **Workbook priority (preferred):** fill-in, match-up, group-sort, anagram, unjumble
+- **FORBIDDEN at this level:** cloze, error-correction, mark-the-words, translate, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, highlight-morphemes, grammar-identify, select
+
+Pick from the allowed list. Lean heavily on the priority lists. Do not use any forbidden type — the build will reject it.
+
+---
+
 ## Inline vs Workbook Split
 
 Activities have two placement categories:
@@ -19,7 +48,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Rule of thumb:** inline = 2-3 quick checks after key teaching points. Workbook = 4-8 deeper practice exercises covering the full topic.
+**Rule of thumb:** inline = 4–6 quick checks after key teaching points. Workbook = 6–9 deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
 
 ---
 
@@ -27,10 +56,9 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: fill-in-invitations -->`
-- `<!-- INJECT_ACTIVITY: match-up-hobbies -->`
-- `<!-- INJECT_ACTIVITY: preposition-check -->`
-- `<!-- INJECT_ACTIVITY: fill-in-frequency -->`
+- `<!-- INJECT_ACTIVITY: match-hobbies-verbs -->`
+- `<!-- INJECT_ACTIVITY: fill-in-prepositions-activities -->`
+- `<!-- INJECT_ACTIVITY: fill-in-invitations-frequency -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -104,97 +132,144 @@ required:
 ## Module Content (the prose the learner reads before exercises)
 
 <module_content>
-## Діалоги — Розкажи про плани
+## Діалоги (Dialogues)
 
-When you want to know what someone is doing in their **вільний час** (free time), the most natural approach is to ask about their upcoming weekend. By starting a conversation with **Що ти робиш у вихідні?** (What are you doing this weekend?), you can gauge their availability before suggesting an activity. This is the perfect way to begin a discussion about plans, hobbies, and how people prefer to spend their time outside of work or study.
+Community centers and public bulletin boards are common places to find out about local events, clubs, and activities in Ukraine. Imagine **Вітя** (Vitya) and **Оленка** (Olenka) standing in front of a colorful bulletin board at their local cultural center. They are reading posters about upcoming concerts, sports teams, and art classes. This is the perfect moment for them to talk about what they do for fun and make plans. In Ukrainian, when we want to ask someone about their hobbies or weekend plans, we use specific conversational patterns. Let's listen to how Вітя and Оленка discuss their free time.
 
-> **Вітя:** Привіт, Оленко! Що ти робиш у вихідні? *(Hi, Olenka! What are you doing this weekend?)*
-> **Оленка:** Привіт! Зазвичай я гуляю і читаю. *(Hi! Usually I walk and read.)*
-> **Вітя:** Ходімо в кіно в суботу! *(Let's go to the cinema on Saturday!)*
-> **Оленка:** Добре! О котрій годині? *(Okay! At what time?)*
+> **Вітя:** Привіт, Оленко! Що ти робиш у **вихідні**? *(Hi, Olenka! What do you do on the weekend?)*
+> **Оленка:** Привіт! **Зазвичай** я гуляю і читаю. *(Hi! Usually I walk and read.)*
+> **Вітя:** **Ходімо** в **кіно** в суботу! *(Let's go to the cinema on Saturday!)*
+> **Оленка:** Добре! О котрій? *(Good! At what time?)*
 > **Вітя:** О п'ятій. *(At five.)*
-> **Оленка:** Чудово! До зустрічі! *(Great! See you!)*
+> **Оленка:** Чудово! *(Great!)*
 
-:::tip Invitation Patterns
-When you want to invite someone to join you, use the imperative phrase **Ходімо!** (Let's go!). You might also hear native speakers use **Давай!** (Let's!), which is a very common informal and conversational alternative. However, **Ходімо!** is the standard, grammatically correct form to prioritize when suggesting a shared activity. 
+Notice how Вітя asks «Що ти робиш у вихідні?» (What do you do on the weekend?). The word **вихідні** (weekend) is always plural in Ukrainian. Olenka replies with «Зазвичай я гуляю і читаю» (Usually I walk and read), using the adverb **зазвичай** (usually) to describe her habit. When Вітя wants to invite her out, he uses the powerful invitation word **ходімо** (let's go!). He says «Ходімо в кіно в суботу!» (Let's go to the cinema on Saturday!). This pattern is very natural: you state the invitation, the place, and then the day. Finally, they confirm the time using the question «О котрій?» (At what time?) and the answer «О п'ятій» (At five).
+
+> **Оленка:** Вітю, ти любиш **спорт**? *(Vitya, do you like sport?)*
+> **Вітя:** Так, я граю у **футбол**. *(Yes, I play football.)*
+> **Оленка:** Як **часто**? *(How often?)*
+> **Вітя:** Двічі на тиждень, у вівторок і четвер. *(Twice a week, on Tuesday and Thursday.)*
+> **Оленка:** А ще? *(And what else?)*
+> **Вітя:** **Іноді** слухаю музику і малюю. *(Sometimes I listen to music and draw.)*
+
+In this second conversation, Olenka asks a direct question: «Ти любиш спорт?» (Do you like sport?). The word **спорт** (sport) is easy to recognize. Vitya answers affirmatively with «Так, я граю у футбол» (Yes, I play football), using the word **футбол** (football). Olenka wants to know more about his routine, so she asks «Як часто?» (How often?). The word **часто** means "often". Vitya gives a precise answer: «Двічі на тиждень» (Twice a week). He also adds more details about his other interests, saying «Іноді слухаю музику» (Sometimes I listen to music). The word **іноді** (sometimes) shows that this is an occasional hobby.
+
+:::note
+In Ukraine, many towns and cities have a «Будинок культури» (House of Culture). These are active community centers where people of all ages go to participate in art classes, sports, dance groups, and musical performances. Bulletin boards in these centers are great places to find a new hobby or join a club!
 :::
 
-> **Вітя:** Ти любиш спорт? *(Do you like sports?)*
-> **Оленка:** Так, я граю у футбол. *(Yes, I play football.)*
-> **Вітя:** Як часто? *(How often?)*
-> **Оленка:** Двічі на тиждень, у вівторок і четвер. *(Twice a week, on Tuesday and Thursday.)*
-> **Вітя:** А ще що ти робиш? *(And what else do you do?)*
-> **Оленка:** Іноді слухаю музику і малюю. *(Sometimes I listen to music and draw.)*
+## Хобі і спорт (Hobbies and Sports)
 
-<!-- INJECT_ACTIVITY: fill-in-invitations -->
+To start a conversation about hobbies, you can ask a very direct and polite question: «Що ти любиш робити у вільний час?» (What do you like to do in your free time?). We already know the verb «любити» (to love, to like). When we want to talk about our hobbies, we simply use «Я люблю» (I like) followed by the dictionary form (infinitive) of an action verb. For example, if your hobby is reading, you say «Я люблю читати» (I like to read). If you enjoy relaxing, you can say «Я люблю відпочивати» (I like to rest). This structure expands on what we learned previously and is the easiest way to express your interests.
 
-## Хобі і спорт — Що ти любиш?
+When we talk about playing sports or games, Ukrainian uses a very specific pattern. We take the verb «грати» (to play), add the preposition «у» or «в» (in/at), and then name the sport. Unlike English, which just says "play football", Ukrainian requires this preposition. It literally translates to "play in football".
 
-The simplest and most direct way to talk about your interests is to use the verb **любити** (to love/like) followed by an infinitive verb. This structure allows you to express your preferences without needing complex grammar rules. For example, if your hobby is reading, you simply combine the two verbs. Here are some common examples of activities you might enjoy:
-* **читати книги** (to read books)
-* **малювати вдома** (to draw at home)
-* **фотографувати** (to take photos)
-* **готувати** (to cook)
+*   **Я граю у футбол.** (I play football.)
+*   **Він грає у баскетбол.** (He plays basketball.)
+*   **Ми граємо у теніс.** (We play tennis.)
 
-When talking about sports and games, Ukrainian uses the verb **грати** (to play) with the preposition **у** (or **в**). This specific combination is required for any competitive sport or structured game. Remember that the preposition you choose depends on the first letter of the next word to maintain a smooth flow of sound. 
-* **грати у футбол** (to play football)
-* **грати у баскетбол** (to play basketball)
-* **грати у теніс** (to play tennis)
-* **грати у комп'ютерні ігри** (to play computer games)
-
-In contrast to sports, playing a musical instrument uses a completely different pattern. You still use the verb **грати**, but you must combine it with the preposition **на** (on) followed by the instrument. This is a fixed chunk of language that you should memorize as a single unit. It literally translates to "playing on" the instrument.
-* **грати на гітарі** (to play guitar)
-* **грати на піаніно** (to play piano)
-* **грати на скрипці** (to play violin)
-
-For places of entertainment, we use the verb **ходити** (to go habitually) to describe visiting them regularly. Just like with sports and instruments, different venues require different prepositions. We use the chunk **ходити в** for most buildings and physical structures, such as **ходити в кіно** (to go to the cinema), **ходити в театр** (to go to the theater), or **ходити в музей** (to go to a museum). However, for events and performances, we use the chunk **ходити на**. You would say **ходити на концерт** (to go to a concert) or **ходити на футбол** (to go to a football match).
-
-<!-- INJECT_ACTIVITY: match-up-hobbies -->
-<!-- INJECT_ACTIVITY: preposition-check -->
-
-## Як часто? — Прислівники частоти
-
-To describe how regularly you participate in your hobbies, you need adverbs of frequency. The most common positive frequency adverbs are **завжди** (always), **зазвичай** (usually), **часто** (often), and **іноді** or **інколи** (sometimes). In a Ukrainian sentence, these adverbs typically sit right before the main verb. This placement highlights the frequency of the action you are describing.
-* **Я часто гуляю в парку.** (I often walk in the park.)
-* **Ми зазвичай читаємо ввечері.** (We usually read in the evening.)
-* **Вона іноді фотографує місто.** (She sometimes photographs the city.)
-
-When expressing negative frequency, we use words like **рідко** (rarely) and **ніколи** (never). There is a critical grammatical rule regarding the word **ніколи**: it requires a double negation. This means it must always be followed by the particle **не** (not) and the main verb. The word **рідко**, on the other hand, stands alone and does not take a negative particle.
-* **Я ніколи не граю у футбол.** (I never play football.)
-* **Він ніколи не читає журнали.** (He never reads magazines.)
-* **Ми рідко ходимо в кіно.** (We rarely go to the cinema.)
-
-:::note Double Negation
-In English, double negatives are considered incorrect grammar. In Ukrainian, they are absolutely mandatory when using negative adverbs like **ніколи**. You must say "I never not do something" for the sentence to make sense.
+:::tip
+How do you know whether to use «у» or «в»? Ukrainian loves harmony and flow! If the previous word ends in a consonant and the next word starts with a consonant, we use «у» to break them up to make pronunciation easier. If there are vowels around, we prefer «в». This rule is called euphony, or "beautiful sounding."
 :::
 
-If you want to be more specific about your schedule, you can use numbers with the phrase **на тиждень** (per week) or **на місяць** (per month). These fixed expressions indicate exactly how many times an action occurs within a given timeframe. Another highly useful and common alternative is **кожен день** (every day), which serves as a more literal substitute for **завжди**.
-* **раз на тиждень** (once a week)
-* **двічі на тиждень** (twice a week)
-* **тричі на тиждень** (three times a week)
+However, if your hobby is playing a musical instrument, the pattern changes completely! Instead of the preposition «у» or «в», Ukrainian uses the preposition «на» (on) for instruments. You are literally saying that you "play on" the guitar or piano. This is a strict rule in Ukrainian. We play «у» sports, but we play «на» instruments. Think of your hands resting on the instrument to make music.
 
-You can synthesize all of these elements by combining the days of the week with your frequency adverbs and activity verbs. This allows you to describe a complete, detailed routine in a single sentence.
-* **У понеділок я завжди займаюся спортом.** (On Monday I always practice sports.)
-* **У п'ятницю ми часто ходимо в театр.** (On Friday we often go to the theater.)
+*   **Я граю на гітарі.** (I play the guitar.)
+*   **Вона грає на піаніно.** (She plays the piano.)
+*   **Ти граєш на скрипці?** (Do you play the violin?)
 
-<!-- INJECT_ACTIVITY: fill-in-frequency -->
+Of course, not everyone plays sports or instruments. There are many other relaxing activities you can describe using simple verbs. You can combine these action verbs with nouns to create full hobby phrases without needing any extra prepositions.
+
+*   **Я люблю слухати музику.** (I like to listen to music.)
+*   **Ми любимо дивитися фільми.** (We like to watch movies.)
+*   **Вони люблять дивитися серіали.** (They like to watch series.)
+*   **Я малюю.** (I draw.)
+*   **Він фотографує.** (He takes photos.)
+
+Notice how we use the verb «слухати» (to listen) directly with «музику» (music), or «дивитися» (to watch) directly with «фільми» (movies) or «серіали» (series).
+
+Another very important verb for free time is «ходити» (to go regularly). We use this verb to talk about places we visit for entertainment as a habit. For now, you should learn these phrases as fixed vocabulary chunks. The grammar behind these endings will be explained later.
+
+*   **Я ходжу в кіно.** (I go to the cinema.)
+*   **Він ходить у театр.** (He goes to the theater.)
+*   **Ми ходимо на концерт.** (We go to a concert.)
+*   **Вони ходять у музей.** (They go to a museum.)
+
+The words **театр** (theater), **концерт** (concert), and **музей** (museum) are very useful for making weekend plans. The word **кіно** (cinema) is special because it never changes its ending, no matter how we use it in a sentence!
+
+<!-- INJECT_ACTIVITY: match-hobbies-verbs -->
+
+<!-- INJECT_ACTIVITY: fill-in-prepositions-activities -->
+
+## Як часто? (How Often?)
+
+Once you know someone's hobbies, the next logical question is to ask about their routine. You can ask «Як часто?» (How often?). To answer this, we need a special group of words called frequency adverbs. These words tell us how regularly an action happens.
+
+*   **завжди** (always)
+*   **зазвичай** (usually)
+*   **часто** (often)
+*   **іноді** / **інколи** (sometimes)
+*   **рідко** (rarely)
+*   **ніколи** (never)
+
+The words **іноді** and «інколи» mean exactly the same thing. You can use whichever one you prefer. These adverbs are incredibly useful because they allow you to add detail and precision to your daily routine descriptions.
+
+In a Ukrainian sentence, frequency adverbs are almost always placed directly before the main verb. They describe the action, so they sit right next to it. 
+
+*   **Я часто гуляю.** (I often walk.)
+*   **Я іноді читаю.** (I sometimes read.)
+*   **Він зазвичай працює.** (He usually works.)
+
+There is one extremely important rule when using the word **ніколи** (never). Ukrainian requires a double negation. This means that if you use the word "never", you must also add the negative particle «не» (not) before the verb.
+
+*   **Я ніколи не працюю у неділю.** (I never work on Sunday.)
+*   **Ми ніколи не дивимося серіали.** (We never watch series.)
+
+:::caution
+English speakers often make a mistake with the word **ніколи** (never). In English, we say "I never work", using only one negative word. In Ukrainian, you must use a double negative! You have to say "I never *do not* work" («Я ніколи не працюю»). If you forget the «не», the sentence will sound completely broken to a native speaker.
+:::
+
+Sometimes adverbs like "often" or **рідко** (rarely) are not specific enough. When you want to give an exact schedule, you can use numbers combined with the word **раз** (once / one time). The word **раз** is used to count occurrences.
+
+*   **раз на тиждень** (once a week)
+*   **двічі на тиждень** (twice a week)
+*   **тричі на тиждень** (three times a week)
+*   **кожен день** (every day)
+
+You can place these specific frequency expressions at the end of your sentence to give clear details about your routine.
+
+*   **Я граю у футбол двічі на тиждень.** (I play football twice a week.)
+*   **Я ходжу в кіно раз на місяць.** (I go to the cinema once a month.)
+
+Now that you can talk about your hobbies and schedule, you might want to invite someone to join you! The most natural and authentic Ukrainian way to say "Let's go!" is **ходімо!**. This is a powerful, enthusiastic invitation that you can combine with activities, days, and times.
+
+*   **Ходімо в кіно у суботу!** (Let's go to the cinema on Saturday!)
+*   **Ходімо в парк!** (Let's go to the park!)
+
+If you are speaking casually with a good friend, you can also use the informal word **давай!** (let's!).
+
+*   **Давай грати у теніс!** (Let's play tennis!)
+*   **Давай дивитися фільм!** (Let's watch a movie!)
+
+<!-- INJECT_ACTIVITY: fill-in-invitations-frequency -->
 
 ## Підсумок — Summary
 
-You now possess the essential tools to discuss your free time, hobbies, and weekend plans in Ukrainian. You have learned how to use **любити** with an infinitive verb to express your general interests, and you have mastered the crucial difference between the phrases **грати у** for competitive sports and **грати на** for musical instruments. You also know how to invite a friend to an event using the standard imperative **Ходімо!**, and how to specify whether you are going into a building with **ходити в** or attending an event with **ходити на**. Finally, you can accurately describe the frequency of your activities using adverbs like **часто** and **ніколи**, remembering the vital rule of double negation for the latter.
+In this module, we expanded our ability to communicate about free time and entertainment. You learned how to state your hobbies clearly using the pattern «Я люблю» followed by an infinitive action verb. We also discovered that Ukrainian uses very specific prepositions for playing. Remember the rule: you use «у» or «в» for sports («Я граю у футбол», «Я граю в баскетбол»), but you must use «на» for musical instruments («Я граю на гітарі», «Я граю на піаніно»). Knowing this difference makes your Ukrainian sound much more natural and authentic.
 
-Use the following self-check questions to verify that you can confidently apply these new communication skills. Read the question, formulate your own answer, and then compare it to the provided model response.
-* **Що ви любите робити у вільний час?** (What do you like to do in your free time?)
-  * Model answer: **Я люблю читати і ходити в кіно.** (I like to read and go to the cinema.)
-* **Як часто ви граєте у футбол?** (How often do you play football?)
-  * Model answer: **Я граю у футбол двічі на тиждень.** (I play football twice a week.)
-* **Ви граєте на піаніно?** (Do you play the piano?)
-  * Model answer: **Ні, я ніколи не граю на піаніно, але я слухаю музику.** (No, I never play the piano, but I listen to music.)
-* **Як запросити друга в театр?** (How to invite a friend to the theater?)
-  * Model answer: **Ходімо в театр у суботу!** (Let's go to the theater on Saturday!)
+We also practiced how to make exciting weekend plans. To invite a friend out, the best word to use is **ходімо!** (let's go!). This single word is a complete invitation. You can combine it with places we like to visit, such as the cinema or the theater. For example, you can say «Ходімо в кіно!» or «Ходімо на концерт!». If you are talking to a close friend in a relaxed setting, you can also use the casual word **давай!** to suggest an activity.
 
-By combining your knowledge of time, weather, days of the week, and now free time activities, you can easily describe your perfect weekend routine. This comprehensive foundation prepares you to review all of these interconnected concepts in the upcoming Checkpoint module, where your ability to communicate about daily life will be put to the test.
+To add detail to your conversations, you now have a full set of vocabulary for expressing frequency. You can answer the question «Як часто?» (How often?) using general adverbs like **завжди** (always), **часто** (often), **іноді** (sometimes), **рідко** (rarely), and **ніколи** (never). Just remember the double negation rule: **ніколи** must be paired with «не». If you need to be precise, you can use numbered expressions like «раз на тиждень» (once a week) or «двічі на тиждень» (twice a week).
 
+:::tip
+The best way to remember these frequency words is to connect them to your actual life. Pick your favorite hobby and write down your schedule. Seeing your own routine written in Ukrainian will help lock these words into your memory!
+:::
+
+Now it is time to practice these new skills yourself. Try to complete this quick self-check to see how much you have remembered:
+
+*   Name 3 hobbies you have in Ukrainian using the «Я люблю» pattern.
+*   Look at your hobbies. How often do you do each one? Try to use a different frequency word for each.
+*   Think of a friend. Invite them to do something fun this weekend using the phrase **ходімо**.
 </module_content>
 
 ---
@@ -208,48 +283,68 @@ version: "1.0"
 module: free-time
 level: a1
 
+# NOTE — these are SHAPE examples. The real targets are at the top of this prompt
+# (10 total / 4–6 inline / 6–9 workbook,
+# 6+ items per activity). The shapes below are TRUNCATED for readability;
+# YOUR output MUST hit those minimums.
+
 inline:
   - id: marker-id-here        # MUST match an <!-- INJECT_ACTIVITY: ... --> marker
     type: quiz                 # activity type
     instruction: "Оберіть правильний варіант"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - question: "_____ стіл"
-        options: ["мій", "моя", "моє"]
+        options: ["мій", "моя", "моє", "мої"]
         correct: 0             # 0-based index
+      - question: "Це ____ книга."
+        options: ["мій", "моя", "моє", "мої"]
+        correct: 1
+      # ... add at least 6 items total — never stop at 1-2
 
   - id: another-marker-id
     type: fill-in
     instruction: "Вставте правильне слово"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - sentence: "Це ____ кімната."
         answer: "моя"
         options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ вікно."
+        answer: "моє"
+        options: ["мій", "моя", "моє"]
+      # ... ≥ 6 items total
 
 workbook:
-  - type: match-up
+  - id: match-up-vocab
+    type: match-up
     instruction: "З'єднайте пари"
-    pairs:
+    pairs:                     # ← real output: ≥ 6 pairs
       - left: "стіл"
         right: "він"
       - left: "книга"
         right: "вона"
       - left: "вікно"
         right: "воно"
+      # ... ≥ 6 pairs total
 
-  - type: group-sort
+  - id: group-sort-gender
+    type: group-sort
     instruction: "Розподіліть слова за категоріями"
     groups:
-      - label: "Category A"
-        items: ["word1", "word2"]
-      - label: "Category B"
-        items: ["word3", "word4"]
+      - label: "Чоловічий рід"
+        items: ["стіл", "олівець", "будинок"]   # ≥ 3 items per group
+      - label: "Жіночий рід"
+        items: ["книга", "ручка", "школа"]
+      - label: "Середній рід"
+        items: ["вікно", "море", "молоко"]
 
-  - type: true-false
+  - id: true-false-grammar
+    type: true-false
     instruction: "Правда чи ні?"
-    items:
-      - statement: "Statement here"
-        correct: true
-        explanation: "Why it's true"
+    items:                     # ← real output: ≥ 6 items
+      - statement: "«Книга» — це чоловічий рід."
+        correct: false
+        explanation: "Книга закінчується на -а, отже жіночий рід."
+      # ... ≥ 6 items total
 
   - type: error-correction
     instruction: "Виправте помилку"
@@ -320,7 +415,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -417,10 +512,15 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 ## Quality Rules
 
-**ITEM COUNT MINIMUMS (non-negotiable):**
-- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
-- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
-- If you can't think of enough items, add more examples from the module's vocabulary and content.
+**ACTIVITY COUNT MINIMUMS (non-negotiable, audit-enforced):**
+- **Total: 10 activities.** Inline: 4–6. Workbook: 6–9. The audit gate FAILS the module if you ship fewer.
+- **Type diversity: workbook MUST cover ≥5 distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
+- **Match the inline markers exactly.** Every `<!-- INJECT_ACTIVITY: id -->` marker in the prose needs a matching inline activity with that exact id. Skipping markers means the lesson tab is broken.
+
+**ITEM COUNT MINIMUMS (non-negotiable, per-activity):**
+- **Default minimum: 6 items per activity.** Quiz, fill-in, match-up, true-false, anagram, error-correction, translate, cloze, mark-the-words, divide-words, count-syllables, odd-one-out, group-sort categories: all ≥ 6.
+- **Lower minimums for specific types only:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items, essay-response/critical-analysis = 1 prompt.
+- If you can't think of enough items, add more examples from the module's vocabulary and content. NEVER ship a 1-item or 2-item activity unless its type cap explicitly allows it.
 - **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
 - **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
@@ -527,6 +627,27 @@ IMPORTANT: After using tools, output your COMPLETE module content as plain text.
 1. Run `verify_words` on all Ukrainian words in your exercises — every word must exist in VESUM
 2. Run `query_cefr_level` on any word you're unsure about — it must be a1-appropriate
 3. For fill-in answers and distractors, verify the exact form (case, number, gender) with `verify_lemma`
+
+---
+
+## ⚠️ MANDATORY FINAL CHECKLIST — verify before emitting YAML
+
+Walk through this checklist explicitly before you start emitting. If ANY box is unchecked, fix it FIRST.
+
+- [ ] My output has **at least 4** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
+- [ ] My output has **at least 6** workbook activities.
+- [ ] **Total ≥ 10.**
+- [ ] **Every** activity has **at least 6** items, pairs, or statements (except types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3, essay-response=1).
+- [ ] The module (inline + workbook combined) uses **at least 0 distinct activity types** (or 4+ when 0 = 0 and the workbook size allows it). I am NOT shipping a wall of quizzes.
+- [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
+- [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
+- [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+- [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+- [ ] My inline count is between 4 and 6. I did NOT create more injection markers than 6.
+- [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
+- [ ] At B1+, all instructions are in Ukrainian (no English fallback).
+
+If you cannot tick all of these, REGENERATE the activities BEFORE outputting. Shipping under-spec means the build rejects you and the heal loop has to redo your work — wasting compute.
 
 ---
 

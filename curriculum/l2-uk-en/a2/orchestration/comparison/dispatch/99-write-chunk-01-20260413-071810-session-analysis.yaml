@@ -1,0 +1,92 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T05-16-4e8d4745.json
+phase: write-chunk-01
+prompt_chars: 40858
+response_chars: 5711
+prompt_words: 5808
+response_words: 835
+sections:
+- name: header
+  start: 0
+  length: 447
+  fraction: 0.0109
+- name: skeleton
+  start: 447
+  length: 2049
+  fraction: 0.0501
+- name: plan
+  start: 2496
+  length: 12755
+  fraction: 0.3122
+- name: wiki
+  start: 7179
+  length: 25387
+  fraction: 0.6213
+- name: output_spec
+  start: 40638
+  length: 220
+  fraction: 0.0054
+large_sections:
+- wiki
+directives_total: 26
+directives_covered: 12
+directives_missed:
+- kind: checklist
+  text: Every narrative paragraph in Ukrainian?
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: checklist
+  text: Zero `> *English translation*` blockquotes after dialogues?
+  covered: false
+  coverage_note: 0/6 keywords (0%)
+- kind: checklist
+  text: At most ONE English `:::info` callout per major section?
+  covered: false
+  coverage_note: 3/8 keywords (38%)
+- kind: checklist
+  text: Metalanguage terms parenthetically translated on first use only (max 2 per
+    section)?
+  covered: false
+  coverage_note: 1/10 keywords (10%)
+- kind: checklist
+  text: Reading Practice / Читаємо українською block in EVERY major section?
+  covered: false
+  coverage_note: 0/8 keywords (0%)
+- kind: must
+  text: '**Learners must master these first.'
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: must
+  text: They must be memorized and drilled immediately.
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: must
+  text: Its grammar must be explained based on its own internal logic.
+  covered: false
+  coverage_note: 3/8 keywords (38%)
+- kind: must
+  text: '- `[[grammar/a1/adjectives]]`: Learners must be able to distinguish qualitative
+    adjectives.'
+  covered: false
+  coverage_note: 1/7 keywords (14%)
+- kind: must
+  text: '- `[[grammar/a2/adverbs]]`: Must know how adverbs are formed from adjectives.'
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: must
+  text: Subsequent uses must be Ukrainian only.
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: must
+  text: They were required at A1 but they cap immersion below 50% — at A2-late they
+    MUST be removed.
+  covered: false
+  coverage_note: 2/10 keywords (20%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 1/11 keywords (9%)

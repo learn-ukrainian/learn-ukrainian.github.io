@@ -1,33 +1,30 @@
-## Діалоги (~330 words total)
-- P1 (~30 words): Setting the scene in a historic Ukrainian city (Lviv), establishing the communicative need to navigate between Площа Ринок, the Opera House, and the High Castle.
-- P2 (~100 words): Dialogue 1 — Asking for directions. A tourist uses "Вибачте, як дістатися до..." to find the library and museum. The guide responds with "Ідіть прямо," "потім направо," and "на розі," while suggesting the metro for distant locations.
-- P3 (~100 words): Dialogue 2 — Describing a daily route. Two friends discuss how they get to work/school. Phrases used: "Спочатку йду на зупинку," "Потім їду автобусом до центру," and "Потім іду пішки п'ять хвилин."
-- P4 (~50 words): Linguistic analysis of the first dialogue, focusing on the polite opening "Вибачте" and the distinction between walking directions ("ідіть") and transport suggestions ("їдьте").
-- P5 (~50 words): Analysis of the second dialogue, highlighting sequence words ("спочатку," "потім") and the use of transport vocabulary in the instrumental case (автобусом, метро) vs. the adverb "пішки."
-- <!-- INJECT_ACTIVITY: match-navigation-responses --> [match-up, Match question to logical response for navigation, 6 items]
-
-## Де і куди разом (~320 words total)
-- P1 (~80 words): Explaining the fundamental logic of navigation: switching between "Static" (Де?) and "Direction" (Куди?). Contrast examples: "Я зараз у парку" (Locative: де?) vs. "Я йду в парк" (Accusative: куди?).
-- P2 (~80 words): Deep dive into the prepositional patterns for "в" and "на." Show the case endings side-by-side: "на вулиці / на площі" (Locative) vs. "на вулицю / на площу" (Accusative). Use "в офісі" vs. "в офіс" to show masculine zero-ending vs. locative -і.
-- P3 (~80 words): Synthesis table explanation. Categorizing information for the learner: Static (в/на + locative), Direction (в/на + accusative), Transport (автобусом), and Distance (далеко/близько).
-- P4 (~80 words): Introduction to the imperative "previews" for navigation. Explaining "Ідіть" (Go/Walk) and "Їдьте" (Go/Travel by transport) as formal, polite commands for strangers, emphasizing the -іть suffix for safety.
-- <!-- INJECT_ACTIVITY: quiz-de-vs-kudy --> [quiz, Де (locative) or Куди (accusative) in context, 6 items]
+## Діалоги (Dialogues) (~340 words)
+- P1 (~60 words): Introduction to the setting. Imagine a walking tour in the Lviv old town, going from Площа Ринок to the Opera house and High Castle. Emphasize the constant need to ask where things are and where to go next.
+- P2 (~140 words): Dialogue 1 — Asking for directions. A conversation between a guide and tourists. Includes phrases: "Вибачте, як дістатися до бібліотеки?", "Ідіть прямо, потім направо", "Бібліотека на розі", "А музей?", "Музей далеко. Їдьте на метро до центру." Demonstrates combining directions, transport, and city places.
 - <!-- INJECT_ACTIVITY: fill-in-directions --> [fill-in, Give directions using прямо, направо, наліво, 6 items]
+- P3 (~140 words): Dialogue 2 — Describing your route. Discussing daily commutes. Includes phrases: "Як ти дістаєшся на роботу?", "Спочатку йду на зупинку. Потім їду автобусом до центру", "А потім?", "Потім іду пішки п'ять хвилин. Робота в офісі на площі." Showcases daily routes using sequence words, transport, and places.
 
-## Мій район (~330 words total)
-- P1 (~80 words): Vocabulary for distance and proximity. Explaining the chunks "далеко від" and "близько від." Examples: "Школа далеко від дому," "Аптека близько, можна піти пішки." Introducing "поруч" as "nearby."
-- P2 (~80 words): Defining the neighborhood structure. Using the word "район" and describing locations relative to the "центр" (center) and "околиця" (outskirts). Explaining "на вулиці [Name]" as the standard way to state an address.
-- P3 (~80 words): Time-based navigation and landmarks. Introducing "хвилина" (minute) and the common phrase "п'ять хвилин пішки." Mentioning landmarks like "перехрестя" (intersection) and "зупинка" (stop).
-- P4 (~90 words): A cohesive sample text describing a personal neighborhood (вулиця Франка). Integration of places (парк, магазин, кафе, бібліотека), transport (треба їхати автобусом), and directions (на розі, прямо).
+## Де і куди разом (Where and Where To Together) (~330 words)
+- P1 (~110 words): Contrast between location (Де?) and direction (Куди?). Explain that real navigation constantly switches between the Locative and Accusative cases. Use clear examples: "Я зараз у парку" (де? — locative) versus "Я йду в магазин" (куди? — accusative). 
+- P2 (~110 words): Detail the preposition patterns for synthesis. Show a clear breakdown: "Де ти?" requires в/на + locative ("Магазин на вулиці Шевченка"). "Куди йдеш?" requires в/на + accusative ("Потім їду на роботу"). Explain how the verb dictates the case.
+- <!-- INJECT_ACTIVITY: quiz-locative-accusative --> [quiz, Де (locative) or Куди (accusative) in context, 6 items]
+- P3 (~110 words): Transport and distance mechanics. Explain how to answer "Як?" (How?) and "Чим?" (By what?). Introduce the forms "автобусом" and "на метро". Pair these with distance descriptors: "далеко", "близько", and the phrase "пішки".
+
+## Мій район (My Neighborhood) (~330 words)
+- P1 (~110 words): Describing where you live. Introduce vocabulary for immediate surroundings: "район", "біля мого дому". Provide a model description: "Я живу на вулиці Франка. Біля мого дому є парк і магазин."
+- P2 (~110 words): Combining neighborhood features with transport needs. Contrast what is near and far: "Школа далеко — треба їхати автобусом. Аптека близько, можна піти пішки." Mention typical neighborhood places: кафе, ресторан, бібліотека.
+- P3 (~110 words): Useful phrases and chunks for city life. Explain time and distance chunks like "пішки" (on foot) and "хвилина" (minute). Show examples: "П'ять хвилин пішки." Introduce location chunks: "далеко/близько від" (far/near from), "у центрі міста" (in the center), and "на околиці" (on the outskirts).
 - <!-- INJECT_ACTIVITY: fill-in-transport-route --> [fill-in, Describe route with transport (автобусом, пішки, на метро), 6 items]
 
-## Підсумок (~340 words total)
-- P1 (~100 words): Recap of the Urban Communication Toolkit. Summarizing the "Asking" phrases (Як дістатися до?), "Direction" adverbs (праворуч, ліворуч, прямо), and "Location" prepositions (в/на).
-- P2 (~110 words): Cultural and linguistic precision. Note on decolonized language: avoiding "Вибачаюся" (Russian calque) in favor of "Вибачте." Clarification of the critical distinction between "автовокзал" (bus) and "залізничний вокзал" (train).
-- P3 (~130 words): Self-check:
-    * Чи можете ви запитати дорогу? (Вибачте, де бібліотека?)
-    * Чи можете ви сказати "направо" і "наліво"?
-    * Чи знаєте ви різницю між "у центрі" (де?) та "в центр" (куди?)?
-    * Опишіть свій шлях: Як ви дістаєтеся на роботу чи в університет? (Спочатку йду... потім їду...)
+## Підсумок — Summary (~320 words)
+- P1 (~90 words): Recap of the urban communication toolkit. Summarize asking for places ("Де...?", "Як дістатися до...?") and giving formal directions ("ідіть/їдьте", "прямо", "направо", "наліво").
+- P2 (~100 words): Recap of grammatical navigation structures. Reiterate the core difference between location ("в/на" + locative) and direction ("в/на" + accusative), as well as transport methods ("автобусом", "на метро", "пішки").
+- <!-- INJECT_ACTIVITY: match-up-navigation-responses --> [match-up, Match question to logical response for navigation, 6 items]
+- P3 (~130 words): Self-check: Describe your route from home to work/school.
+  * Де ти живеш? (Я живу на...)
+  * Як ти дістаєшся на роботу/в школу? (Я їду...)
+  * Це далеко чи близько? (Це...)
+  * Скільки хвилин ти йдеш пішки? (Я йду пішки...)
+  * Що є біля твого дому? (Біля мого дому є...)
 
 Grand total: ~1320 words

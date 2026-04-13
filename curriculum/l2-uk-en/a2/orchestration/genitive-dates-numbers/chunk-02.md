@@ -1,71 +1,55 @@
-## Рахуємо предмети: правило «1, 2-4, 5+»
+## Рахуємо предмети: правило '1, 2-4, 5+' (Counting Items: The '1, 2-4, 5+' Rule) (~900 words)
 
-In English, counting objects is straightforward: you have one singular object or multiple plural objects. In Ukrainian, the number itself dictates the grammatical case and number of the noun that follows it. We divide counting into three distinct tiers based on the numeral. Tier one is for the number 1, tier two is for the numbers 2, 3, and 4, and tier three is for numbers 5 through 20. Let's use the word «стіл» to see how it changes.
+Counting objects in Ukrainian is quite different from English. In English, the rule is simple: if you have one item, you use the singular form of the noun. For any quantity greater than one, you use the plural form. Ukrainian grammar, however, relies on a more intricate system that depends on the last digit of the number you are using. We call this the "1, 2-4, 5+" **правило** (rule). This specific rule determines not only whether the noun should be singular or plural, but also which grammatical case it must take. Understanding this pattern is essential for basic communication, from shopping at the market to telling someone how many siblings you have. The case and number of the noun change systematically based on the **числівник** (numeral) that precedes it.
 
-У кімнаті стоїть один стіл. Поруч стоять два столи. А в ресторані є двадцять столів.
+Українська система числівників має унікальні правила узгодження. Коли ми рахуємо предмети, іменник змінює свою форму залежно від останньої цифри числа. Це правило вимагає від нас уважності до відмінків. Ми не можемо просто використовувати форму множини для всіх чисел більших за один. Ця особливість робить мову дуже точною та мелодійною.
 
-> *One table stands in the room. Two tables stand nearby. And in the restaurant, there are twenty tables.*
+> *The Ukrainian numeral system has unique rules of agreement. When we count objects, the noun changes its form depending on the last digit of the number. This rule requires us to pay attention to cases. We cannot simply use the plural form for all numbers greater than one. This feature makes the language very precise and melodic.*
 
-The first rule is the most logical one. The number «один» always takes a noun in the Nominative singular case. However, because it acts like an adjective, it must agree with the gender of the noun. You use «один» for masculine, «одна» for feminine, and «одне» for neuter. This rule applies to any compound number ending in one, such as twenty-one or one hundred and one. The noun remains singular because the final word in the number is singular.
+Let us start with the simplest category: the number one, and any compound number that ends with the digit one, such as twenty-one, thirty-one, or one hundred and one. The crucial exception here is the number eleven, which belongs to a different group. When a number ends in one, the noun that follows it must be in the Nominative singular case. Furthermore, the number one itself acts like an adjective and must agree in gender with the noun it modifies. We use «один» for masculine nouns, «одна» for feminine nouns, and «одне» for neuter nouns.
 
-У мене є один стіл, одна книга і одне вікно. У бібліотеці є двадцять одна книга. Мій друг має один комп'ютер. У квартирі є одна кімната. Тут працює тридцять одна людина. Це велика школа, тут працює сто один вчитель.
+Я маю один великий стіл у моїй кімнаті. На столі лежить одна цікава книга. У кімнаті є лише одне вікно. Мій брат має двадцять один рік. У нашій групі навчається тридцять один студент.
 
-> *I have one table, one book, and one window. There are twenty-one books in the library. My friend has one computer. There is one room in the apartment. Thirty-one people work here. This is a large school, one hundred and one teachers work here.*
-
-:::tip
-**Did you know?**
-Because «один» is treated as an adjective, it also changes depending on the case of the sentence. But for basic counting and quantities, you will always use its Nominative dictionary forms.
-:::
-
-The second tier applies to the numbers 2, 3, and 4. When you use these numbers, the noun must be in the Nominative plural case. While English simply makes the noun plural for any amount over one, Ukrainian has this dedicated category. For masculine nouns, you often add «-и» or «-і». Feminine nouns ending in «-а» change to «-и». Neuter nouns usually change «-о» to «-а». Remember that «два» has two forms: «два» for masculine and neuter, and «дві» for feminine.
-
-Я хочу купити два столи для нового офісу. Вона читає три книги. У цій кімнаті є чотири вікна. Він купив два квитки на концерт. На столі лежать три ручки. Ми маємо чотири дні на відпочинок. Мій брат має два телефони.
-
-> *I want to buy two tables for the new office. She is reading three books. There are four windows in this room. He bought two tickets to the concert. Three pens lie on the table. We have four days for rest. My brother has two phones.*
-
-The third tier is where the biggest shift happens. For numbers 5 through 20, the noun must be in the Genitive plural case. Historically, these numbers functioned as nouns meaning "a group of five", requiring the following noun to indicate "of what". Therefore, we literally say "five of tables". Masculine nouns typically take the ending «-ів» or «-їв». Feminine nouns often drop their ending vowel, taking a zero ending. Neuter nouns also frequently take a zero ending or «-ів». 
-
-В офісі стоїть п'ять столів. На полиці лежить шість книг. У великому будинку є десять вікон. У класі сидять дванадцять учнів. Я купив шість бананів. На вулиці стоять сім машин. Він має п'ятнадцять друзів. Студент знає двадцять слів.
-
-> *Five tables stand in the office. Six books lie on the shelf. There are ten windows in the large house. Twelve students sit in the class. I bought six bananas. Seven cars stand on the street. He has fifteen friends. The student knows twenty words.*
-
-Let's look at a short conversation at a market. Notice how the quantity changes the noun.
-
-> — **Покупець:** Дайте мені, будь ласка, два кілограми помідорів. *(Give me, please, two kilograms of tomatoes.)*
-> — **Продавець:** Ось, будь ласка. Що ще? *(Here, please. What else?)*
-> — **Покупець:** Ще один кілограм огірків і п'ять яблук. *(Another one kilogram of cucumbers and five apples.)*
-> — **Продавець:** Добре. З вас сто чотири гривні. *(Good. From you one hundred four hryvnias.)*
-
-When dealing with larger quantities, compound numbers strictly follow the rule of their final element. The first part of the number does not affect the noun at all. If you say twenty-two, the rule for two applies, meaning you use the Nominative plural. If you say twenty-five, the rule for five applies, meaning you use the Genitive plural. As you count upwards, the grammatical case alternates depending entirely on the last digit.
-
-Ми бронюємо двадцять один номер у готелі. Наша група займає двадцять чотири номери. Туристи замовили двадцять п'ять номерів. Вона прочитала двадцять дві сторінки. Студент написав тридцять п'ять слів. У цьому будинку сорок чотири квартири.
-
-> *We are booking twenty-one rooms in the hotel. Our group occupies twenty-four rooms. The tourists ordered twenty-five rooms. She read twenty-two pages. The student wrote thirty-five words. There are forty-four apartments in this house.*
+> *I have one large table in my room. There is one interesting book lying on the table. There is only one window in the room. My brother is twenty-one years old. Thirty-one students study in our group.*
 
 :::info
-**Grammar box**
-The word «гривня» follows these exact same counting rules: одна гривня, дві гривні, п'ять гривень. When you hear prices, pay attention to how the word changes based on the last digit.
+**Grammar box** — The number eleven is «одинадцять». Although it has the word «один» hidden inside it, it ends in the sound "-dtsiat" and behaves like the numbers five through twenty.
 :::
 
-Feminine nouns present a unique challenge because their Nominative plural form often looks identical to their Genitive singular form. When you see a phrase with a number between two and four, the noun is grammatically in the Nominative plural. While native speakers might shift the stress on the vowel to distinguish the forms, the spelling remains the same. You just need to remember the rule category.
+The next category includes the numbers two, three, and four, as well as any larger numbers that end in these digits, such as twenty-two, thirty-three, or fifty-four. Again, the numbers twelve, thirteen, and fourteen are exceptions that do not follow this pattern. When a quantity ends in two, three, or four, the accompanying noun must be in the Nominative plural case. You must also pay close attention to the number two, as it has two different forms. We use «два» for masculine and neuter nouns, but we use the special form «дві» exclusively for feminine nouns. The numbers three («три») and four («чотири») do not change their form based on gender.
 
-Тут стоять дві машини. Я бачу три сестри. Ми купуємо чотири книги. На парковці є дві вільні машини. У мене є три старші сестри. Вона купила чотири нові книги.
+У цьому кабінеті стоять два нові столи. Я бачу там три великі столи. Ми купили чотири столи для офісу. Вона прочитала дві книги за тиждень. Ми маємо три цікаві книги. У будинку є чотири нові вікна.
 
-> *Two cars stand here. I see three sisters. We are buying four books. There are two free cars in the parking lot. I have three older sisters. She bought four new books.*
+> *There are two new tables in this office. I see three large tables there. We bought four tables for the office. She read two books in a week. We have three interesting books. There are four new windows in the house.*
 
-Here is a conversation at a hotel reception that demonstrates these shifting rules in action.
+The final and largest category encompasses the numbers five through twenty, all numbers ending in zero, and all numbers ending in the digits five through nine. This group also includes words that express an unspecified quantity, such as «скільки» and «багато». For all of these numbers and quantity words, the noun must be in the Genitive plural case. This might seem unusual at first, but it has a fascinating historical origin. In Old East Slavic, the numbers five and above were actually considered nouns themselves, meaning something like "a group of five." Just as you would say "a group of people" in English, they said "a five of people," which naturally required the Genitive case to show possession or association. This ancient structure has been preserved in modern Ukrainian grammar.
 
-> — **Гість:** Добрий день! Мені потрібно три номери. *(Good day! I need three rooms.)*
-> — **Адміністратор:** Добрий день! На скільки людей? *(Good day! For how many people?)*
-> — **Гість:** На п'ять гостей. *(For five guests.)*
-> — **Адміністратор:** Добре. У нас є два великих номери і один малий. *(Good. We have two large rooms and one small.)*
-> — **Гість:** Чудово. Скільки це коштує? *(Great. How much does it cost?)*
-> — **Адміністратор:** Це коштує дві тисячі гривень за добу. *(It costs two thousand hryvnias per day.)*
-> — **Гість:** Я беру ці три номери. *(I'll take these three rooms.)*
+Ми замовили п'ять столів для нашого ресторану. На полиці стоїть шість нових книг. У цьому класі навчається десять розумних студентів. Ця стара будівля має дванадцять великих вікон. Скільки людей живе у цьому місті? Тут є дуже багато гарних парків.
+
+> *We ordered five tables for our restaurant. There are six new books on the shelf. Ten smart students study in this class. This old building has twelve large windows. How many people live in this city? There are a lot of beautiful parks here.*
+
+:::tip
+**Did you know?** — The fact that words like «багато» (many) and «скільки» (how many) require the Genitive plural is because they represent an amount "of" something, perfectly aligning with the core function of the Genitive case.
+:::
+
+When applying these rules, feminine nouns require special attention. Because the Nominative plural and the Genitive singular forms of many feminine nouns look identical, learners often confuse the categories. It is vital to explicitly contrast the counting forms. For example, when you say "two sisters", you use the Nominative plural: «дві сестри». But when you say "five sisters", you must use the Genitive plural. The Genitive plural of «сестра» has a zero ending and an inserted vowel "е" to make it easier to pronounce, becoming «п'ять сестер». Similarly, compare "two books" with "five books": you say «дві книги» but «п'ять книг». Recognizing these distinct plural forms is a key milestone in mastering Ukrainian counting.
+
+У моєї подруги є дві сестри. Вони дуже схожі між собою. А в цій великій родині є п'ять сестер. На столі лежать дві книги. У бібліотеці є багато старих книг. Ці форми часто бувають складними для студентів.
+
+> *My friend has two sisters. They are very similar to each other. And in this large family there are five sisters. Two books lie on the table. There are many old books in the library. These forms are often difficult for students.*
+
+To solidify these rules, it is helpful to see them used in natural, everyday contexts. Whether you are asking a question about quantities, stating a historical fact, or discussing a specific **число** (number), the rules of agreement remain consistent. The numeral dictates the case, and the noun follows suit. Let us look at a few examples that demonstrate these patterns in action. Notice how the noun changes depending on the numeral that precedes it.
+
+> — **Олена:** Скільки студентів у твоїй групі? *(How many students are in your group?)*
+> — **Марко:** У нашій групі двадцять один студент. *(There are twenty-one students in our group.)*
+> — **Олена:** А скільки там дівчат? *(And how many girls are there?)*
+> — **Марко:** У нас навчається дванадцять дівчат і дев'ять хлопців. *(Twelve girls and nine boys study with us.)*
+> — **Олена:** Це велика група! У нас лише п'ять студентів. *(That is a large group! We have only five students.)*
 
 ### Читаємо українською (Reading Practice)
 
-Вчора я був у магазині і купив багато речей для дому. Я взяв один великий хліб і дві пляшки свіжого молока. Потім я пішов у відділ фруктів. Я купив три кілограми червоних яблук і п'ять жовтих бананів. У магазині було дуже багато людей. Біля каси стояли чотири жінки і два чоловіки. Касир сказав, що мої покупки коштують сто двадцять одну гривню. Я дав йому двісті гривень. Він дав мені сімдесят дев'ять гривень здачі. Я сказав «дякую» і пішов додому. Я дуже люблю купувати продукти і рахувати гроші українською мовою.
+Скільки учнів у твоєму класі? У нашому класі навчається двадцять п'ять учнів. Скільки кімнат у вашій квартирі? Ми маємо три великі кімнати. Оборона аеропорту тривала двісті сорок два дні. Це дуже важливий історичний факт. Скільки коштує один квиток? Один квиток коштує сто гривень.
 
-<!-- INJECT_ACTIVITY: fill-in-counting-rule -->
-<!-- INJECT_ACTIVITY: match-up-quantity-qa -->
+> *How many students are in your class? Twenty-five students study in our class. How many rooms are in your apartment? We have three large rooms. The defense of the airport lasted 242 days. This is a very important historical fact. How much does one ticket cost? One ticket costs one hundred hryvnias.*
+
+<!-- INJECT_ACTIVITY: fill-in-counting-objects -->

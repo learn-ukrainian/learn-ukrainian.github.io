@@ -1,4 +1,4 @@
-<!-- version: 1.1.0 | updated: 2026-03-31 -->
+<!-- version: 1.2.0 | updated: 2026-04-12 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -11,6 +11,35 @@ Generate an `activities/checkpoint-first-contact.yaml` file for module **7: Chec
 
 ---
 
+## ⚠️ HARD COUNT TARGETS — READ TWICE
+
+These are the binding numerical contracts for THIS module. The audit will FAIL if you fall short.
+
+| Bucket | Min | Max | Notes |
+|---|---|---|---|
+| Total activities | 8 | 8+ | inline + workbook combined |
+| Inline (lesson tab) | 3 | 5 | one per `<!-- INJECT_ACTIVITY -->` marker, see below |
+| Workbook (Зошит tab) | 5 | 8 | extended practice |
+| Items per activity | 10 | — | each activity must have at least 10 items (unless its type cap is lower — see Activity Type Reference below) |
+
+**You MUST ship at least 3 inline activities AND at least 5 workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+
+**Type diversity is required.** The module (inline + workbook combined) MUST use at least **0** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level. (If `0` is `0`, the audit profile for this level does not enforce type diversity — but variety still produces a better lesson, so aim for 4+ types when the workbook allows it.)
+
+---
+
+## Allowed types for THIS level
+
+- **Inline (lesson) types:** match-up, quiz, fill-in, true-false, classify, group-sort
+- **Inline priority (preferred):** match-up, fill-in, quiz
+- **Workbook types:** fill-in, match-up, group-sort, unjumble, quiz, true-false, classify, observe, phrase-table, odd-one-out, anagram
+- **Workbook priority (preferred):** fill-in, match-up, group-sort, unjumble, anagram
+- **FORBIDDEN at this level:** image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables, cloze, error-correction, mark-the-words, translate, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, highlight-morphemes, grammar-identify, select
+
+Pick from the allowed list. Lean heavily on the priority lists. Do not use any forbidden type — the build will reject it.
+
+---
+
 ## Inline vs Workbook Split
 
 Activities have two placement categories:
@@ -19,7 +48,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Rule of thumb:** inline = 2-3 quick checks after key teaching points. Workbook = 4-8 deeper practice exercises covering the full topic.
+**Rule of thumb:** inline = 3–5 quick checks after key teaching points. Workbook = 5–8 deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
 
 ---
 
@@ -28,8 +57,8 @@ Activities have two placement categories:
 The writer placed these markers in the module content. Your inline activities must match them:
 
 - `<!-- INJECT_ACTIVITY: quiz-comprehensive-review -->`
-- `<!-- INJECT_ACTIVITY: match-up-q-and-a -->`
-- `<!-- INJECT_ACTIVITY: fill-in-self-intro -->`
+- `<!-- INJECT_ACTIVITY: match-up-questions-answers -->`
+- `<!-- INJECT_ACTIVITY: fill-in-self-introduction -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -74,107 +103,92 @@ required:
 <module_content>
 ## Що ми знаємо? (What Do We Know?)
 
-Welcome to the first major checkpoint on your Ukrainian language journey. You have made the critical transition from learning individual phonetic elements to participating in a full, meaningful conversation. We began by deciphering an entirely new alphabet, and now you have established a solid Ukrainian linguistic foundation. This module represents a milestone where you consolidate those foundational skills before moving forward.
+Welcome to the first checkpoint. Over the past six modules, you have learned the Cyrillic alphabet, essential sounds, basic greetings, and how to talk about your family. This module consolidates that knowledge. You will review everything covered so far, ensuring complete readiness to hold a basic conversation in Ukrainian.
 
-Consider the comprehensive checklist of what you have acquired so far. You have achieved phonetic mastery of the Cyrillic alphabet. You understand the fundamental rule of Ukrainian phonetics: distinguishing between a **звук** (sound) that you hear and a **літера** (letter) that you write. You understand how the **апостроф** (apostrophe) acts as a hard boundary separating sounds, and how the **м'який знак** (soft sign), while having no sound of its own, softens the preceding consonant. You grasp the vital concept of word **наголос** (stress) and how it shapes the entire rhythm of a spoken word. You confidently use basic greetings like **Привіт** (Hi) and **Добрий день** (Good afternoon), and you recognize the essential vocabulary for family members such as **мама** (mother), **тато** (father), **брат** (brother), and **сестра** (sister).
+Start with a self-assessment on sounds and letters. Can you read Ukrainian Cyrillic words fluently? You have learned to distinguish tricky letter pairs, such as the soft **Г** (H) versus the hard **Ґ** (G), and the deep **И** (Y) versus the sharp **І** (I). Recall the crucial phonetic roles of the **м'який знак** (soft sign, **Ь**), which softens the preceding consonant, and the **апостроф** (apostrophe). 
 
-This module serves as a dedicated self-assessment phase. You will prove that you can read fluently and hold a basic introduction in a realistic context. We introduce no new vocabulary or new grammar rules here. Instead, the entire focus remains on consolidation, ensuring that the structures you have already learned become automatic and natural. The goal is moving from translation to direct comprehension.
+:::note
+The apostrophe acts as a hard stop. It prevents the preceding consonant from softening and ensures the following vowel sounds clear and distinct.
+:::
+
+Next, evaluate your knowledge of introductions and family vocabulary. Can you say who you are and where you are from? Can you list the members of your family? Check if you can use basic possessive pronouns correctly, matching them to the noun gender. Identify when to use **мій** (my, masculine) and when to use **моя** (my, feminine). 
 
 <!-- INJECT_ACTIVITY: quiz-comprehensive-review -->
 
 ## Читання (Reading Practice)
 
-Reading aloud is the essential bridge between recognizing individual letters on a page and producing natural speech. For this exercise, focus on your reading flow and carefully observe the stress marks provided in the text. When you read a Ukrainian sentence, read it as a single continuous thought rather than a robotic list of isolated words. Speak clearly and confidently, allowing the syllables to connect smoothly. Reading aloud engages your muscle memory. It trains your tongue and lips to produce new phonetic combinations, making it easier to speak spontaneously in real-world situations. Do not rush through the text. Pace yourself and focus on pronunciation.
+Put your reading skills to the test. The goal of this task is to read a connected Ukrainian text aloud, building your reading fluency. This text uses only familiar vocabulary from the first six modules, so there are no new words to memorize. Read the sentences slowly and clearly.
 
-Read the following passage about a woman named **Оксана Ковальчук** (Oksana Kovalchuk). Focus on understanding the meaning without translating it into English in your head.
+This is a short narrative where a person introduces themselves, talks about their family members, and states everyone's professions. Every single phrase here is a pattern you have practiced before. Read the following sentences aloud, paying attention to the sounds and the natural rhythm of the language:
 
-> **Мене звати Оксана Ковальчук.** *(My name is Oksana Kovalchuk.)*
-> **Я з Києва.** *(I am from Kyiv.)*
-> **Я — вчителька.** *(I am a teacher.)*
-> **Це — моя сім'я.** *(This is my family.)*
-> **Мій чоловік — інженер.** *(My husband is an engineer.)*
-> **Його звати Микола.** *(His name is Mykola.)*
-> **У мене є син.** *(I have a son.)*
-> **Мій син — студент.** *(My son is a student.)*
-> **Ми живемо тут.** *(We live here.)*
-> **Дуже приємно.** *(Very nice to meet you.)*
+* **Привіт!** (Hi!)
+* **Мене звати Анна.** (My name is Anna.)
+* **Я з України.** (I am from Ukraine.)
+* **Я живу в Києві.** (I live in Kyiv.)
+* **Це моя сім'я.** (This is my family.)
+* **Це моя мама.** (This is my mom.)
+* **Її звати Олена.** (Her name is Olena.)
+* **Вона вчителька.** (She is a teacher.)
+* **Це мій тато.** (This is my dad.)
+* **Його звати Іван.** (His name is Ivan.)
+* **Він інженер.** (He is an engineer.)
+* **Я студентка.** (I am a student.)
+* **Дуже приємно!** (Very nice to meet you!)
 
-Analyzing the name components within this text reveals important cultural patterns. The woman's personal name is **Оксана** (first name). Her family name is **Ковальчук** (surname). In formal Ukrainian culture, people also use a patronymic based on their father's name. If her father was named Mykola, her patronymic would be **Миколаївна** (Mykolaivna). Remember the strict capitalization rule: every proper noun, including a person's **ім'я** (first name) and **прізвище** (surname), must always start with a capital letter. Proper names are central to Ukrainian identity, and writing them correctly is a sign of respect.
-
-:::tip
-When reading Ukrainian texts, remember that the spelling is highly phonetic. What you see is exactly what you hear. Trust the letters, and do not try to apply English pronunciation rules to Ukrainian words.
-:::
-
-<!-- INJECT_ACTIVITY: match-up-q-and-a -->
+Assess your reading comprehension and pronunciation. Did you pronounce the vowels clearly? Notice the capitalization rule for proper nouns: names like **Анна** (Anna), **Олена** (Olena), and **Іван** (Ivan), as well as places like **Київ** (Kyiv) and **Україна** (Ukraine), always start with a capital letter just like in English. Highlight how the short, simple sentences string together to form a complete narrative. By placing one basic fact after another, you build a descriptive paragraph. You can see how these straightforward phrases work together beautifully without needing complex grammar just yet. You already know enough to tell an authentic story about your own life.
 
 ## Граматика (Grammar Summary)
 
-Expressing identity and identification in Ukrainian relies on specific structural patterns. We use the **Це** (This is) + noun structure to introduce people or objects. When stating who someone is, Ukrainian employs a zero-copula rule, meaning the verb "to be" is completely omitted in the present tense. Compare the English sentence "I am a student" with the Ukrainian equivalent **Я — студент** (I am a student). The dash explicitly replaces the missing verb, indicating a direct relationship between the subject and the noun.
+Review the structures used for identification and possession. To point things out, you use the pattern **Це** (This is) plus a noun: **Це мій брат** (This is my brother). For possession, you use the fixed phrase **У мене є** (I have) plus a noun: **У мене є сестра** (I have a sister). Remember that the "is" verb is usually omitted in the present tense. You simply state the subject and the noun: **Я — студент** (I am a student).
 
-*   **Це — мій друг.** *(This is my friend.)*
-*   **Вона — лікарка.** *(She is a doctor.)*
-*   **Він — архітектор.** *(He is an architect.)*
+Recall how to ask and answer questions about names. There is a clear difference between the informal question **Як тебе звати?** (What are you called?) and the formal version **Як вас звати?** (What are you called?). When answering, use the phrase **Мене звати Анна** (They call me Anna). This chunk uses the accusative pronoun **мене** (me), successfully avoiding the literal translation trap of the English phrase "My name is".
 
-:::caution
-A common L2 error is using the verb "to be" when stating identity. English speakers often say **Я є студент** or **Моє ім'я є Анна**, which is a direct translation error. The correct forms are **Я — студент** and **Мене звати Анна**.
+:::tip
+Remember that **Мене звати** uses the accusative **мене**. You are literally saying "They call me," placing yourself as the object of the sentence rather than the subject.
 :::
 
-A clear structural difference exists between stating possession and naming someone. We use the construction **У мене є** (I have) to express possession of objects or family relationships. To state what someone is called, we use the fixed phrase **Мене звати** (My name is, literally: they call me). Notice that these fixed chunks require the accusative pronouns **мене** (me), **тебе** (you, informal), and **вас** (you, formal). Treat these phrases as solid vocabulary blocks. 
+Finally, review your possessive pronouns and expressions of origin. You must match the gender for your pronouns: use **мій** (my) for masculine nouns like **мій тато** (my dad), and **моя** (my) for feminine nouns like **моя мама** (my mom). When talking about your origin, reiterate the fixed chunk: **Звідки ти?** (Where are you from?), and answer clearly with **Я з...** (I am from...). This establishes your background immediately.
 
-*   **У мене є брат.** *(I have a brother.)*
-*   **У мене є сестра.** *(I have a sister.)*
-*   **Як тебе звати?** *(What is your name?)*
-*   **Його звати Тарас.** *(His name is Taras.)*
-
-When expressing origin, we use the specific preposition and case ending combination. The question **Звідки ти?** (Where are you from?) is answered with **Я з...** (I am from...) followed by the city or country name with its appropriate ending, such as **Києва** (Kyiv) or **Дніпра** (Dnipro). Memorize these origin phrases as complete units.
-
-Possessive pronouns must always agree with the grammatical gender of the noun they modify. You say **мій тато** (my dad) because the word is masculine, **моя мама** (my mom) because it is feminine, and **моє ім'я** (my name) because it is neuter. Also, recall the Vocative case endings for direct address. When calling someone, the ending changes: **Анна** becomes **Анно!**, **Оксана** becomes **Оксано!**, and **Тарас** becomes **Тарасе!**.
-
-:::note
-English does not have a vocative case, but in Ukrainian, it is mandatory when addressing someone directly. Forgetting to change the name ending can sound unnatural or blunt to a native speaker.
-:::
+<!-- INJECT_ACTIVITY: match-up-questions-answers -->
 
 ## Діалог (Capstone Dialogue)
 
-Imagine the following scene at a professional conference coffee break. Two professionals, **Богдан** (Bohdan), an engineer from the city of Dnipro, and **Соломія** (Solomiia), a teacher from the city of Ternopil, meet between sessions. This realistic setting justifies a full exchange of personal information with a new acquaintance. Pay attention to how they ask questions and respond politely.
+Examine the capstone scenario. Imagine a busy coffee break at a professional conference. **Богдан** (Bohdan), an engineer from Dnipro, and **Соломія** (Solomiya), a teacher from Ternopil, meet for the very first time. They use everything you have learned to introduce themselves politely, exchange basic background information, and share a detail about their families.
+
+Read their conversation aloud:
 
 > **Богдан:** Добрий день! *(Good afternoon!)*
-> **Соломія:** Добрий день! *(Good afternoon!)*
-> **Богдан:** Мене звати Богдан. А як Вас звати? *(My name is Bohdan. And what is your name?)*
-> **Соломія:** Мене звати Соломія. Моє прізвище — Коваль. *(My name is Solomiia. My surname is Koval.)*
-> **Богдан:** Дуже приємно, пані Соломіє! Я з Дніпра. А Ви звідки? *(Very nice to meet you, Ms. Solomiia! I am from Dnipro. And where are you from?)*
-> **Соломія:** Я з Тернополя. Я — вчителька. А Ви? *(I am from Ternopil. I am a teacher. And you?)*
-> **Богдан:** Я — інженер. Дивіться, це моя сім'я на фото. *(I am an engineer. Look, this is my family in the photo.)*
-> **Соломія:** Це Ваша дружина? *(Is this your wife?)*
-> **Богдан:** Так, це моя дружина. У мене є син. *(Yes, this is my wife. I have a son.)*
-> **Соломія:** Рада знайомству, пане Богдане! *(Glad to meet you, Mr. Bohdan!)*
-> **Богдан:** Навзаєм! *(Mutually!)*
+> **Соломія:** Добрий день! Як вас звати? *(Good afternoon! What is your name?)*
+> **Богдан:** Мене звати Богдан. А вас? *(My name is Bohdan. And you?)*
+> **Соломія:** Дуже приємно. Моє **ім'я** (first name) — Соломія. Моє **прізвище** (surname) — Коваль. Звідки ви, Богдане? *(Very nice to meet you. My first name is Solomiya. My surname is Koval. Where are you from, Bohdan?)*
+> **Богдан:** Я з Дніпра. Я інженер. Звідки ви, Соломіє? *(I am from Dnipro. I am an engineer. Where are you from, Solomiya?)*
+> **Соломія:** Я з Тернополя. Я вчителька. *(I am from Ternopil. I am a teacher.)*
+> **Богдан:** Це дуже цікаво. Це моя дружина на фото. *(This is very interesting. This is my wife in the photo.)*
+> **Соломія:** Дуже гарно! У вас гарна сім'я. *(Very nice! You have a nice family.)*
 
-Notice the register used in this exchange. Because this is a professional context, they use the formal pronoun **Ви** (you, formal). They also use the respectful titles **Пане** (Mr.) and **Пані** (Ms.). Соломія addresses him directly in the Vocative case as **Пане Богдане**, rather than just stating his basic name. This shows politeness and respect in a formal setting. The dialogue moves naturally from initial contact to sharing origins, professions, and personal details. 
+Analyze the natural features of this dialogue. Because they are meeting in a professional setting, they use the polite, formal address with the pronouns **ви** (you) and **вас** (you, accusative). Crucially, they use the **Кличний відмінок** (Vocative case) for direct address. Notice how Solomiya says **Богдане** (Bohdan) — the masculine consonant adds an **-е** ending. Bohdan replies with **Соломіє** (Solomiya). This shows authentic Ukrainian politeness. 
 
-When Богдан shows his photo, he uses the visual aid to transition the conversation from work to personal life. Using photos on your phone is an excellent, natural way to practice vocabulary with native speakers. The full introduction cycle is a predictable social script. Mastering this script allows you to navigate first encounters smoothly and build connections.
+:::tip
+The Vocative case (**Кличний відмінок**) is mandatory in Ukrainian when addressing someone directly. It instantly elevates your spoken language from beginner translation to authentic phrasing, showing that you understand the cultural importance of proper address.
+:::
 
-Creating your own graduation monologue is the final step. In Ukrainian primary schools, a simple text follows a strict three-part structure. First is the **Зачин** (Introduction), where you establish contact and state the topic. Second is the **Основна частина** (Main Part), where you provide the core details about your origin and profession. Third is the **Кінцівка** (Conclusion), where you offer a simple, polite closing sentence. This structure helps organize your thoughts logically.
+This dialogue serves as your model for transitioning from a back-and-forth conversation to a connected monologue. You can now string these individual answers together into your own continuous presentation. You might say: **Мене звати Богдан. Я з Дніпра. Я інженер. Це моя сім'я.** (My name is Bohdan. I am from Dnipro. I am an engineer. This is my family.) This continuous introduction is the core milestone for this level. Once you can seamlessly present these facts about yourself in one smooth speech, you have mastered the fundamentals of your first contact.
 
-Use this template to practice introducing yourself out loud:
-
-**Привіт!** *(Hi!)*
-**Мене звати...** *(My name is...)*
-**Моє прізвище...** *(My surname is...)*
-**Я з...** *(I am from...)*
-**Я — ...** *(I am a...)*
-**Це моя сім'я.** *(This is my family.)*
-**У мене є...** *(I have a...)*
-**Дуже приємно.** *(Very nice to meet you.)*
-
-<!-- INJECT_ACTIVITY: fill-in-self-intro -->
+<!-- INJECT_ACTIVITY: fill-in-self-introduction -->
 
 ## Підсумок — Summary
 
-You have reached the end of the first major phase of your language journey. Before you proceed to the next set of modules, take a moment for a final, comprehensive self-check. Can you name all 33 letters of the Ukrainian alphabet and confidently produce their corresponding sounds? Can you comfortably say hello using both formal and informal greetings depending on the specific social context? Do you clearly understand the cultural and linguistic difference between a person's **ім'я** (first name) and their **прізвище** (surname)?
+Here is your final self-check checklist. Evaluate your progress honestly.
 
-Make sure you know how to use the possessive pronouns **мій** (my, masc.) and **моя** (my, fem.) correctly when talking about your family members. Check if you can use the Vocative case to call a friend directly, changing the ending of their name appropriately so that it sounds natural to a native speaker. Can you confidently introduce yourself in five connected sentences using the specific patterns from this module? If you can answer yes to all these questions, you are fully prepared. Take pride in establishing a solid foundation. You are now ready to transition to the next phase of your studies, where you will discover that all objects in the Ukrainian language have grammatical gender.
+* Can you read Ukrainian Cyrillic words fluently, including those utilizing the **Ь** and the apostrophe?
+* Can you say hello informally with **Привіт** (Hi) and formally with **Добрий день** (Good afternoon)?
+* Can you introduce yourself using the essential phrase **Мене звати...** (My name is...)?
+* Can you state your origin using the chunk **Я з...** (I am from...)?
+* Can you state your profession using the direct pattern **Я...** (I am...)?
+* Can you introduce your family members using the correct gendered possessives, such as **Це мій тато** (This is my dad) and **Це моя мама** (This is my mom)?
+* Can you ask someone else their name, inquire about their **прізвище** (surname), and ask where they are from?
 
+If you can confidently do all of this, you are fully prepared and ready for the next step: understanding how objects have gender in Ukrainian!
 </module_content>
 
 ---
@@ -188,48 +202,68 @@ version: "1.0"
 module: checkpoint-first-contact
 level: a1
 
+# NOTE — these are SHAPE examples. The real targets are at the top of this prompt
+# (8 total / 3–5 inline / 5–8 workbook,
+# 10+ items per activity). The shapes below are TRUNCATED for readability;
+# YOUR output MUST hit those minimums.
+
 inline:
   - id: marker-id-here        # MUST match an <!-- INJECT_ACTIVITY: ... --> marker
     type: quiz                 # activity type
     instruction: "Оберіть правильний варіант"
-    items:
+    items:                     # ← real output: ≥ 10 items
       - question: "_____ стіл"
-        options: ["мій", "моя", "моє"]
+        options: ["мій", "моя", "моє", "мої"]
         correct: 0             # 0-based index
+      - question: "Це ____ книга."
+        options: ["мій", "моя", "моє", "мої"]
+        correct: 1
+      # ... add at least 10 items total — never stop at 1-2
 
   - id: another-marker-id
     type: fill-in
     instruction: "Вставте правильне слово"
-    items:
+    items:                     # ← real output: ≥ 10 items
       - sentence: "Це ____ кімната."
         answer: "моя"
         options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ вікно."
+        answer: "моє"
+        options: ["мій", "моя", "моє"]
+      # ... ≥ 10 items total
 
 workbook:
-  - type: match-up
+  - id: match-up-vocab
+    type: match-up
     instruction: "З'єднайте пари"
-    pairs:
+    pairs:                     # ← real output: ≥ 10 pairs
       - left: "стіл"
         right: "він"
       - left: "книга"
         right: "вона"
       - left: "вікно"
         right: "воно"
+      # ... ≥ 10 pairs total
 
-  - type: group-sort
+  - id: group-sort-gender
+    type: group-sort
     instruction: "Розподіліть слова за категоріями"
     groups:
-      - label: "Category A"
-        items: ["word1", "word2"]
-      - label: "Category B"
-        items: ["word3", "word4"]
+      - label: "Чоловічий рід"
+        items: ["стіл", "олівець", "будинок"]   # ≥ 3 items per group
+      - label: "Жіночий рід"
+        items: ["книга", "ручка", "школа"]
+      - label: "Середній рід"
+        items: ["вікно", "море", "молоко"]
 
-  - type: true-false
+  - id: true-false-grammar
+    type: true-false
     instruction: "Правда чи ні?"
-    items:
-      - statement: "Statement here"
-        correct: true
-        explanation: "Why it's true"
+    items:                     # ← real output: ≥ 10 items
+      - statement: "«Книга» — це чоловічий рід."
+        correct: false
+        explanation: "Книга закінчується на -а, отже жіночий рід."
+      # ... ≥ 10 items total
 
   - type: error-correction
     instruction: "Виправте помилку"
@@ -300,7 +334,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -403,10 +437,15 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 ## Quality Rules
 
-**ITEM COUNT MINIMUMS (non-negotiable):**
-- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
-- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
-- If you can't think of enough items, add more examples from the module's vocabulary and content.
+**ACTIVITY COUNT MINIMUMS (non-negotiable, audit-enforced):**
+- **Total: 8 activities.** Inline: 3–5. Workbook: 5–8. The audit gate FAILS the module if you ship fewer.
+- **Type diversity: workbook MUST cover ≥5 distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
+- **Match the inline markers exactly.** Every `<!-- INJECT_ACTIVITY: id -->` marker in the prose needs a matching inline activity with that exact id. Skipping markers means the lesson tab is broken.
+
+**ITEM COUNT MINIMUMS (non-negotiable, per-activity):**
+- **Default minimum: 10 items per activity.** Quiz, fill-in, match-up, true-false, anagram, error-correction, translate, cloze, mark-the-words, divide-words, count-syllables, odd-one-out, group-sort categories: all ≥ 10.
+- **Lower minimums for specific types only:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items, essay-response/critical-analysis = 1 prompt.
+- If you can't think of enough items, add more examples from the module's vocabulary and content. NEVER ship a 1-item or 2-item activity unless its type cap explicitly allows it.
 - **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
 - **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
@@ -513,6 +552,27 @@ IMPORTANT: After using tools, output your COMPLETE module content as plain text.
 1. Run `verify_words` on all Ukrainian words in your exercises — every word must exist in VESUM
 2. Run `query_cefr_level` on any word you're unsure about — it must be a1-appropriate
 3. For fill-in answers and distractors, verify the exact form (case, number, gender) with `verify_lemma`
+
+---
+
+## ⚠️ MANDATORY FINAL CHECKLIST — verify before emitting YAML
+
+Walk through this checklist explicitly before you start emitting. If ANY box is unchecked, fix it FIRST.
+
+- [ ] My output has **at least 3** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
+- [ ] My output has **at least 5** workbook activities.
+- [ ] **Total ≥ 8.**
+- [ ] **Every** activity has **at least 10** items, pairs, or statements (except types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3, essay-response=1).
+- [ ] The module (inline + workbook combined) uses **at least 0 distinct activity types** (or 4+ when 0 = 0 and the workbook size allows it). I am NOT shipping a wall of quizzes.
+- [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
+- [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
+- [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+- [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+- [ ] My inline count is between 3 and 5. I did NOT create more injection markers than 5.
+- [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
+- [ ] At B1+, all instructions are in Ukrainian (no English fallback).
+
+If you cannot tick all of these, REGENERATE the activities BEFORE outputting. Shipping under-spec means the build rejects you and the heal loop has to redo your work — wasting compute.
 
 ---
 

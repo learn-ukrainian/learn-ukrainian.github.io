@@ -1,4 +1,4 @@
-# Section-by-Section Generation — Section 2/5
+# Section-by-Section Generation — Section 2/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
@@ -11,12 +11,11 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 ## Section Skeleton (follow this exactly)
 
 ## Мені подобається: Давальний відмінок досвідника (The Experiencer Dative with подобатися) (~550 words)
-- P1 (~120 words): [Explain the 'reverse logic' of **подобатися**. In English 'I like the book', 'I' is the subject. In Ukrainian 'Мені подобається книжка', 'книжка' is the subject (Nominative) and 'мені' is the recipient (Dative). The verb literally means 'The book is pleasing to me'.]
-- P2 (~100 words): [Conjugation rules for **подобається** (singular) vs **подобаються** (plural). Examples: 'Мені подобається цей чай' (sing.) vs 'Мені подобаються ці квіти' (plur.). Emphasize that the verb ending depends on the object liked, not the person.]
-- P3 (~120 words): [Personalizing the 'like' experience with Dative pronouns. Provide a paradigm table in prose: 'тобі подобається' (you like), 'йому подобається' (he likes), 'їй подобається' (she likes), 'нам подобається' (we like), 'вам подобається' (you all like), 'їм подобаються' (they like).]
-- P4 (~110 words): [Past tense agreement. Explain how the verb agrees in gender with the Nominative subject: 'Мені подобався (m) фільм', 'Мені подобалася (f) кава', 'Мені подобалося (n) морозиво'.]
-- P5 (~100 words): [Negation and questions. Using 'не' before the verb: 'Тобі не подобається ця пісня?'. Practice common A2 questions: 'Що вам подобається в Україні?' or 'Тобі подобається вивчати українську мову?'.]
-- <!-- INJECT_ACTIVITY: match-up-like-syntax --> [match-up, focus: matching Ukrainian 'подобатися' sentences to English 'I like' equivalents to cement the subject/object shift, 8 items]
+- P1 (~130 words): Introduce the verb "подобатися" (to be pleasing to / to like) and its reversed syntax compared to English. Explain that the person who experiences the liking is in the Dative case, while the thing being liked is the grammatical subject in the Nominative case. Example: "Мені (Dat) подобається літо (Nom)" instead of "I (Nom) like summer (Acc)".
+- P2 (~150 words): Explain subject-verb agreement in the present tense. The verb "подобатися" must agree with the Nominative object, NOT the Dative person. Contrast singular "подобається" with plural "подобаються". Examples: "Мені подобається ця книжка" (singular subject) vs. "Тобі подобаються ці фільми" (plural subject).
+- P3 (~150 words): Explain agreement in the past tense. The verb takes the gender/number of the Nominative subject: подобався (m), подобалася (f), подобалося (n), подобалися (pl). Examples: "Мені подобалася ця пісня" (f), "Йому подобався цей фільм" (m), "Нам подобалися ці книги" (pl).
+- P4 (~120 words): Demonstrate how to ask questions about preferences and answer them in dialogue format. Examples: "Що тобі подобається?", "Чи подобається їм Київ?", "Кому подобається ця музика? — Мені!".
+- <!-- INJECT_ACTIVITY: match-up-podobatysia --> [match-up, Match подобатися sentences to their English equivalents (reversed subject mapping), 8 items]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -24,7 +23,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-дякую моєму другові за цю цікаву книгу. Ми дякуємо вам за вашу увагу! > *We always sincerely thank the teacher for the help at the lesson. Little children joyfully thank grandma for a very delicious lunch. I endlessly thank my friend for this interesting book. We thank you for your attention!* Another common verb that works exactly this way is «дзвонити» or its more formal synonym «телефонувати» (to call). In English, you "call someone" directly. In Ukrainian, the underlying logic is that you are sending a telephone signal *to* someone. Кожного вечора я обов'язково дзвоню моїй найкращій подрузі Марії. Мій чоловік дуже часто телефонує своєму колезі Андрієві, щоб обговорити важливу роботу. Ми завжди дзвонимо нашим батькам на вихідних. > *Every evening I definitely call my best friend Mariia. My husband very often calls his colleague Andrii to discuss important work. We always call our parents on the weekends.* Notice carefully that we do not use the preposition «до» (to) when calling a person. You simply use the direct Dative relationship. Saying «дзвоню до мами» is sometimes heard in casual spoken language, but the standard literary form is strictly the Dative without any preposition: «дзвоню мамі». Let's group three more very useful verbs that govern the Dative case: «радити» (to advise), «заважати» (to bother or disturb), and «відповідати» (to answer). These verbs are extremely common when making polite commands or requests. Будь ласка, не заважай мені зараз працювати! Я дуже раджу тобі подивитися цей новий український документальний фільм. Розумний учень завжди швидко і правильно відповідає вчителеві. > *Please, do not bother me while I work now! I highly advise you to watch this new Ukrainian documentary film. A smart student always answers the teacher quickly and correctly.* Just like with helping or thanking, the action of advising, bothering, or answering is clearly directed *toward* a person or a recipient. This inherent direction makes the Dative case the only correct grammatical choice for these verbs. Батьки часто радять дітям читати хороші книги. Учителі ніколи не заважають учням думати. Let's see all these important verbs in action during a typical volunteer day scenario. Listen to how the Dative case flows naturally. > — **Волонтер:** Сьогодні ми маємо дуже багато важливої роботи в нашому волонтерському центрі. *(Today we have a lot of important work in our volunteer center.)* > — **Координатор:** Кому ти допомагаєш сьогодні зранку? *(Who are you helping this morning?)* > — **Волонтер:** Спочатку я допомагаю літній сусідці Олені нести її важкі сумки. *(First, I help elderly neighbor Olena carry her heavy bags.)* > — **Волонтер:** Потім я дзвоню моєму другові Івану, щоб спитати про наш розклад. *(Then I call my friend Ivan to ask about our schedule.)* > — **Координатор:** Чудово. А я зараз телефоную нашому новому водієві. *(Great. And I am calling our new driver right now.)* > — **Волонтер:** Наприкінці цього довгого дня я щиро дякую йому за хорошу роботу! *(At the end of this long day, I sincerely thank him for the good work!)* <!-- INJECT_ACTIVITY: fill-in-dative-verbs -->
+в повсякденному спілкуванні. Форми давального відмінка для займенників потрібно просто запам'ятати. Вони звучать так: мені, тобі, йому, їй, нам, вам, їм. > *Most often, we use these verbs with personal pronouns. This is very convenient in everyday communication. The dative case forms for pronouns just need to be memorized. They sound like this: to me, to you, to him, to her, to us, to you (plural/formal), to them.* Let's look at how these pronouns work with our core verbs in practice. Notice how the pronoun form completely changes from the dictionary form to show who is receiving the action. Я часто допомагаю їй робити домашнє завдання. Він завжди дякує тобі за смачну вечерю. Ми дзвонимо їм кожного тижня у неділю. Чому ти не відповідаєш мені на повідомлення? Вони ніколи не заважають нам працювати. Я раджу йому прочитати цю нову книгу. > *I often help her do homework. He always thanks you for a delicious dinner. We call them every week on Sunday. Why are you not answering me to the message? They never bother us while working. I advise him to read this new book.* When you direct these actions to specific people rather than using pronouns, you need to change the noun endings. As a quick review, masculine nouns usually take the endings **-ові** or **-еві** (sometimes **-у** or **-ю**). Feminine nouns take the ending **-і**. :::info **Grammar box** — Remember that feminine nouns ending in **-га**, **-ка**, or **-ха** undergo consonant alternations before the **-і** ending. The consonants change: **г** → **з**, **к** → **ц**, **х** → **с**. For example, подруга becomes подрузі. ::: Я щодня дзвоню моєму найкращому другові. Моя сестра часто допомагає нашому братові. Ми щиро дякуємо новій подрузі за допомогу. Я раджу мамі подивитися цей цікавий фільм. Цей гучний шум дуже заважає вчительці. Директор зараз відповідає своєму колезі на важливий лист. > *I call my best friend every day. My sister often helps our brother. We sincerely thank the new friend (female) for the help. I advise mom to watch this interesting movie. This loud noise really bothers the teacher (female). The director is answering his colleague to an important letter right now.* These dative verbs are extremely common in negative sentences and commands (the imperative mood). When you tell someone to do or not do something, the Dative case rule still applies perfectly. Не заважай мені, будь ласка, я зараз читаю. Не дзвони їй так пізно ввечері. Допоможи мені приготувати обід для нашої родини. Обов'язково відповідай йому, коли він тебе питає. Завжди дякуйте батькам за їхню велику любов. Порадь нам гарний ресторан у центрі міста. > *Do not bother me, please, I am reading right now. Do not call her so late in the evening. Help me prepare lunch for our family. Be sure to answer him when he asks you. Always thank your parents for their great love. Advise us a good restaurant in the city center.* <!-- INJECT_ACTIVITY: fill-in, Complete sentences with the correct dative form after dative-governing verbs, 8 items -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -623,6 +622,31 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] допомагати (to help)
+- [ ] дякувати (to thank)
+- [ ] дзвонити (to call, to phone)
+- [ ] радити (to advise)
+- [ ] заважати (to bother, to disturb)
+- [ ] подобатися (to be pleasing to, to like (reversed syntax))
+- [ ] відповідати (to answer (someone))
+- [ ] рік (year)
+- [ ] роки (years (2-4))
+- [ ] років (years (5+))
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Мені подобається: Давальний відмінок досвідника (The Experiencer Dative with подобатися) (~550 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

@@ -1,0 +1,32 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T20-15-30f77967.json
+phase: pre-verify
+prompt_chars: 3606
+response_chars: 839
+prompt_words: 569
+response_words: 141
+sections:
+- name: preamble
+  start: 0
+  length: 548
+  fraction: 0.152
+- name: plan
+  start: 548
+  length: 2677
+  fraction: 0.7424
+- name: output_spec
+  start: 3225
+  length: 381
+  fraction: 0.1057
+large_sections:
+- plan
+directives_total: 2
+directives_covered: 0
+directives_missed:
+- kind: must
+  text: You MUST verify linguistic facts using the tools below BEFORE writing begins.
+  covered: false
+  coverage_note: 0/11 keywords (0%)
+- kind: must
+  text: Each task MUST include at least one tool call.
+  covered: false
+  coverage_note: 1/8 keywords (12%)

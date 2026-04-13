@@ -1,0 +1,162 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T09-15-73639afc.json
+phase: activities
+prompt_chars: 69238
+response_chars: 12291
+prompt_words: 10241
+response_words: 1345
+sections:
+- name: preamble
+  start: 0
+  length: 2096
+  fraction: 0.0303
+- name: plan
+  start: 2096
+  length: 67034
+  fraction: 0.9682
+- name: output_spec
+  start: 69130
+  length: 108
+  fraction: 0.0016
+large_sections:
+- plan
+directives_total: 62
+directives_covered: 32
+directives_missed:
+- kind: must
+  text: '** Your very first character must be `version:`.'
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: must
+  text: Each inline activity MUST have an `id` that matches one of these markers.
+  covered: false
+  coverage_note: 1/10 keywords (10%)
+- kind: must
+  text: Each inline activity's `id` must match one of these markers exactly (lowercase,
+    hyphenated).
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: must
+  text: You MUST create activities that cover all these hints.
+  covered: false
+  coverage_note: 2/9 keywords (22%)
+- kind: must
+  text: '**Grounding rule:** Every Ukrainian word in your exercises must appear either
+    in the prose content or in this vocabulary list.'
+  covered: false
+  coverage_note: 2/15 keywords (13%)
+- kind: must
+  text: 'To truly understand the soul of the Ukrainian verb, you must look beyond
+    simply when an action happens and ask yourself a completely different question:
+    is the action currently in progress, or is it fully done?'
+  covered: false
+  coverage_note: 2/22 keywords (9%)
+- kind: must
+  text: When you encounter a new verb in the dictionary or in conversation, you must
+    immediately ask either "Що робити?" or "Що зробити?".
+  covered: false
+  coverage_note: 3/13 keywords (23%)
+- kind: must
+  text: Because the simple future relies on present-tense conjugation patterns, you
+    must also apply the familiar consonant alternations.
+  covered: false
+  coverage_note: 4/15 keywords (27%)
+- kind: must
+  text: Unlike the simple future or the present tense, where you must constantly navigate
+    complex consonant alternations, the synthetic future protects the root of the
+    verb.
+  covered: false
+  coverage_note: 4/17 keywords (24%)
+- kind: must
+  text: They assume that if it looks like the present, it must mean the present.
+  covered: false
+  coverage_note: 1/8 keywords (12%)
+- kind: must
+  text: 'If you want to say that the process is happening right at this moment, you
+    must use the imperfective aspect: "I am reading.'
+  covered: false
+  coverage_note: 5/14 keywords (36%)
+- kind: must
+  text: The prompt says "Every section MUST contain at least one callout box.
+  covered: false
+  coverage_note: 1/10 keywords (10%)
+- kind: must
+  text: They assume that if it looks like the present, it must mean the present.
+  covered: false
+  coverage_note: 1/8 keywords (12%)
+- kind: must
+  text: 'If you want to say that the process is happening right at this moment, you
+    must use the imperfective aspect: "I am reading.'
+  covered: false
+  coverage_note: 5/14 keywords (36%)
+- kind: must
+  text: We naturally use perfective verbs to state clear goals and deliver results,
+    while we rely on imperfective verbs to describe the ongoing processes and meetings
+    required to reach those milestones.
+  covered: false
+  coverage_note: 0/20 keywords (0%)
+- kind: must
+  text: 'Start your sentence building by asking yourself one fundamental question:
+    "Do I need a result, or a process?" If you need to describe a completed action
+    or a specific goal, you must use the perfective aspect.'
+  covered: false
+  coverage_note: 4/22 keywords (18%)
+- kind: must
+  text: Conversely, if you are describing an ongoing process, a regular habit, or
+    an action without a defined endpoint, you must use the imperfective aspect.
+  covered: false
+  coverage_note: 2/16 keywords (12%)
+- kind: must
+  text: '- id: marker-id-here # MUST match an <!-- INJECT_ACTIVITY: .'
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: must
+  text: '**CRITICAL RULE: EVERY single activity object MUST include an `id` field
+    (a unique string like "quiz-grammar", "match-up-vocab").'
+  covered: false
+  coverage_note: 2/16 keywords (12%)
+- kind: must
+  text: 'Required: id, instruction, items[] (array of strings), correct_order[] (TOP-LEVEL
+    array of **integers** — zero-based indices into items).'
+  covered: false
+  coverage_note: 5/13 keywords (38%)
+- kind: must
+  text: 'Required: id, syllables[], correctIndices[], category.'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: 'Required: id, letters[{upper, lower}].'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: 'Required: id, items[{video}].'
+  covered: false
+  coverage_note: 1/3 keywords (33%)
+- kind: must
+  text: '- **critical-analysis**: Required: id, prompt.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**You MUST use these patterns.'
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: must
+  text: If the pattern lists divide-words, count-syllables, and odd-one-out — your
+    output MUST include all three.
+  covered: false
+  coverage_note: 2/15 keywords (13%)
+- kind: must
+  text: '**Test LANGUAGE, not trivia** — exercises must test Ukrainian language skills.'
+  covered: false
+  coverage_note: 0/8 keywords (0%)
+- kind: must
+  text: '- **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).'
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: '...'
+  covered: false
+  coverage_note: marker missing

@@ -1,61 +1,78 @@
-## Коли є багато або мало (When There Is a Lot or a Little)
+## Коли є багато або мало (When There Is a Lot or a Little) (~770 words)
 
-Now that you know how to say that one specific thing is missing, let's talk about quantities. Whenever you use words that express an amount, the noun that follows must be in the Genitive plural. The most common quantity words are **багато** (a lot), **мало** (a little), and **кілька** (a few). Think of the English phrase "a lot OF something". In Ukrainian, that concept is built directly into the ending of the noun.
+When you want to describe the quantity of objects, people, or even abstract concepts, you need to use the Genitive case. Words that express a large or small amount, such as **багато** (a lot, many, much) and **мало** (a little, few), always require the following noun to change its form. The same rule applies when you ask a question using **скільки** (how many, how much).
 
-While English uses a standard plural noun for phrases like "many cars", Ukrainian requires the Genitive case to show the relationship of quantity. You can think of these quantity words as containers that hold the objects. This rule applies universally across all situations, whether you have a lot of friends, a few apples, or little time to spare.
+You will also frequently use words like **кілька** (a few, several) for smaller, countable amounts. Because you are talking about multiple items rather than just one, you must use the **множина** (plural) form.
 
-**У мене багато машин.** — *I have a lot of cars.*
-**У неї є кілька книжок.** — *She has a few books.*
-**Там мало людей.** — *There are few people there.*
+It is crucial to distinguish this from the **однина** (singular) form of the **родовий відмінок** (genitive case) that we discussed in the previous section. While the singular is used for the absence of one specific thing, the plural is used for quantities.
 
-Forming the Genitive plural is where Ukrainian noun endings become a bit more complex, but they follow recognizable patterns. For masculine nouns, the dominant ending is **-ів**. If the word ends in a vowel, it takes the softer **-їв** instead. This is the most common pattern you will hear and use for masculine words in everyday life. If the noun ends in a hard consonant, you simply add the ending to the plural stem.
+У мене є багато друзів, але мало вільного часу. Скільки студентів зараз у класі? На столі лежить кілька зошитів. У цьому місті є багато красивих парків.
+> *I have many friends, but little free time. How many students are in the classroom right now? There are a few notebooks lying on the table. There are many beautiful parks in this city.*
 
-У нас працює багато хороших лікарів. На столі лежить кілька нових телефонів. У цьому місті є багато великих парків і красивих театрів. Для цього проєкту потрібно багато нових комп'ютерів. Також у мене є багато хороших друзів.
+> — **Анна:** Скільки зошитів тобі потрібно для школи? *(How many notebooks do you need for school?)*
+> — **Богдан:** Мені потрібно п'ять зошитів і кілька нових ручок. *(I need five notebooks and a few new pens.)*
+> — **Анна:** У нас вдома є багато ручок, але мало зошитів. *(We have many pens at home, but few notebooks.)*
+> — **Богдан:** Тоді я куплю кілька зошитів у магазині. *(Then I will buy a few notebooks in the store.)*
+> — **Анна:** Там зараз багато людей, бо сьогодні субота. *(There are a lot of people there now, because today is Saturday.)*
+> — **Богдан:** Не проблема. У мене є багато вільного часу. *(No problem. I have a lot of free time.)*
 
-> *We have a lot of good doctors working here. There are a few new phones lying on the table. In this city there are many large parks and beautiful theaters. For this project, a lot of new computers are needed. Also, I have a lot of good friends.*
+For masculine nouns, forming the plural is relatively straightforward. Most masculine nouns take the **закінчення** (ending (grammar)) «-ів» or «-їв». For example, «стіл» becomes «столів», «брат» becomes «братів», and «трамвай» becomes «трамваїв».
 
-:::note
-**The word for friends**
-The word for "friend" is **друг**, and its standard plural is **друзі**. Even though the Nominative plural form is irregular, its Genitive plural form **друзів** follows the standard masculine pattern. You will use this word constantly.
+Interestingly, this grammatical rule also applies to numbers from five and up. In Ukrainian, saying "five brothers" uses the exact same structure as "a lot of brothers": «п'ять братів». This means that whenever you count five or more objects, you will automatically use the Genitive plural.
+
+Він запросив на свято п'ять братів і багато друзів. Біля зупинки стоїть кілька нових трамваїв. У кімнаті немає великих столів, але є кілька зручних стільців. Ми купили десять кілограмів цукру і багато свіжих помідорів. У цьому магазині є багато різних сирів.
+> *He invited five brothers and a lot of friends to the holiday. A few new trams are standing near the stop. There are no large tables in the room, but there are a few comfortable chairs. We bought ten kilograms of sugar and many fresh tomatoes. There are many different cheeses in this store.*
+
+> — **Олег:** Скільки студентів сьогодні в класі? *(How many students are in the classroom today?)*
+> — **Марія:** Сьогодні є п'ять студентів і кілька нових викладачів. *(Today there are five students and a few new teachers.)*
+> — **Олег:** А де інші? У нас зазвичай багато людей. *(And where are the others? We usually have a lot of people.)*
+> — **Марія:** Я не знаю. Може, у них немає вільного часу. *(I don't know. Maybe they have no free time.)*
+> — **Олег:** Шкода. Сьогодні ми читаємо кілька цікавих текстів. *(A pity. Today we are reading a few interesting texts.)*
+
+:::tip
+**Did you know?**
+The rule requiring the Genitive case after numbers 5 and above is an ancient Slavic feature. Originally, words like "five" or "ten" were considered nouns rather than adjectives. Saying "five of brothers" was grammatically identical to saying "a group of brothers."
 :::
 
-Feminine and neuter nouns usually take a different approach called the zero ending. Instead of adding sounds to the end of the word, you actually chop off the final vowel that was there in the singular Nominative form. However, when you remove this vowel, you are often left with a cluster of consonants at the end of the word that is very difficult to pronounce naturally.
+Feminine and neuter nouns often form the Genitive plural in a completely different way: by dropping their vowel ending entirely. This phenomenon is known as a zero ending. For instance, the neuter noun «місто» (city) becomes «міст» in the plural when following a quantity word.
 
-To fix this crowded consonant problem, Ukrainian inserts a fleeting vowel between the final two consonants to make the word flow better. This is usually an "о" or an "е" sound. For example, **книжка** (book) becomes **книжок**, and **сестра** (sister) becomes **сестер**. The neuter word **вікно** (window) similarly becomes **вікон**.
+However, when dropping the ending leaves a cluster of consonants that is hard to pronounce, the Ukrainian language naturally inserts a "fleeting vowel" — usually «о» or «е» — to make the word flow better. Therefore, «вікно» becomes «вікон», and «сестра» becomes «сестер». The word «книга» can become «книг», or more commonly in spoken Ukrainian, «книжок» (from the diminutive «книжка»).
 
-У бібліотеці є багато цікавих книжок. На вулиці дуже мало вільних машин. У нашій сім'ї є кілька старших сестер. У цій кімнаті багато великих вікон. На столі лежить кілька стиглих яблук.
+It is highly recommended to learn these common forms as individual vocabulary items rather than trying to memorize complex insertion rules. Over time, your brain will naturally recognize which consonant clusters require a fleeting vowel.
 
-> *There are many interesting books in the library. There are very few free cars on the street. In our family there are several older sisters. In this room there are many large windows. There are a few ripe apples lying on the table.*
+У цьому будинку є багато великих вікон. У моєї мами є п'ять сестер і багато подруг. У бібліотеці є багато цікавих книжок, але мало нових журналів. Вона знає назви багатьох українських міст. На столі лежить кілька чистих тарілок і багато виделок.
+> *There are many large windows in this building. My mother has five sisters and many female friends. There are many interesting books in the library, but few new magazines. She knows the names of many Ukrainian cities. On the table lie a few clean plates and many forks.*
 
-There is a smaller, but critically important, group of nouns that take the ending **-ей** in the Genitive plural. This unique group spans across different genders and includes many ancient, foundational words. The most important survival word in this category is **гроші** (money), which becomes **грошей**. Other extremely common examples include **очі** (eyes) becoming **очей**, and **ночі** (nights) becoming **ночей**.
+A smaller, specific group of nouns takes the ending «-ей» in the Genitive plural. This group includes certain masculine and neuter nouns, such as «гості» (guests) becoming «гостей», «коні» (horses) becoming «коней», and «очі» (eyes) becoming «очей».
 
-Він працює багато днів і ночей. У дитини багато нових ідей. У мене зараз зовсім немає грошей. У цьому місті багато гостей.
+The word **немає** ((there) is not, (I) don't have) behaves exactly the same way when talking about plural objects. If you want to say that something is completely missing, and that object is usually plural, you must use this form.
 
-> *He works many days and nights. The child has a lot of new ideas. I have absolutely no money right now. There are many guests in this city.*
+This category also includes nouns that only exist in the plural, like the very important word «гроші» (money), which becomes «грошей». Finally, feminine nouns ending in a consonant, like «ніч» (night), also use this ending, becoming «ночей».
 
-<!-- INJECT_ACTIVITY: match-up-genitive-plural-quantity -->
-
-To use these quantity phrases in everyday conversation, you will often combine them with the question word **скільки** (how many). Just like the other quantity words, this question demands the Genitive plural. You can use it to ask about quantities of countable objects such as books or apples. If you are asking about an uncountable substance like water or time, you simply use the Genitive singular instead.
-
-### Читаємо українською (Reading Practice)
-> — **Студент:** Скільки у тебе книжок? *(How many books do you have?)*
-> — **Подруга:** У мене багато книжок, але мало вільного часу. *(I have a lot of books, but little free time.)*
-> — **Студент:** А скільки студентів у твоїй групі? *(And how many students are in your group?)*
-> — **Подруга:** У нас кілька нових студентів, але сьогодні їх немає. *(We have a few new students, but they are not here today.)*
-> — **Студент:** Скільки яблук нам потрібно купити? *(How many apples do we need to buy?)*
-> — **Подруга:** Купи п'ять великих яблук і кілька бананів. *(Buy five large apples and a few bananas.)*
-
-<!-- INJECT_ACTIVITY: match-up-translate-genitive -->
-<!-- INJECT_ACTIVITY: unjumble-genitive-phrases -->
-
-When learning to express absence or quantity, English speakers frequently make a specific set of errors that immediately mark them as language learners. The most common mistake is failing to change the ending, which leaves the noun in its basic dictionary form. Remember that the Ukrainian word for "there is no" is a unique grammatical marker of non-existence that actively forces a case change.
-
-❌ **У мене немає машина.** — *Incorrect.*
-✅ **У мене немає машини.** — *Correct.*
-
-It is not simply a direct translation of the English word for "no" or "not". Furthermore, when you learn the masculine singular endings, do not try to guess them based on the rules of other Slavic languages. Ukrainian has its own distinct logic for categorizing abstract concepts, materials, and specific objects, which reflects its unique historical development.
+У мене зараз немає вільного часу і немає грошей. Ми чекаємо багато гостей на вечірку. У цієї дитини немає синіх очей, її очі зелені. На півночі буває багато довгих ночей. Вона любить малювати красивих коней.
+> *Right now I don't have free time and I don't have money. We are expecting a lot of guests for the party. This child does not have blue eyes, her eyes are green. In the north, there are many long nights. She likes to draw beautiful horses.*
 
 :::info
-**Why numbers matter**
-We just learned that quantity words require the Genitive plural. You will soon learn that numbers from five onwards also behave exactly like these quantity words. Learning these plural endings now fully prepares you for counting objects in the real world!
+**Grammar box**
+The word «гроші» (money) is always plural in Ukrainian. Therefore, when you want to express the idea "I don't have money," you must always use the Genitive plural form: «У мене немає грошей».
 :::
+
+Let's combine the idea of absence with quantity. A common mistake for learners is to use the Nominative singular or plural after quantity words, saying things like "п'ять книга" instead of the correct "п'ять книжок".
+
+Remember that quantities and negative constructions both demand the Genitive case. You can even combine them in a single sentence to express complex ideas naturally. Focus on recognizing and practicing these high-frequency forms first, rather than worrying about every grammatical exception.
+
+> — **Іван:** Ти йдеш на концерт сьогодні? *(Are you going to the concert today?)*
+> — **Оксана:** Ні, у мене зовсім немає грошей. *(No, I have absolutely no money.)*
+> — **Іван:** Але ж квиток коштує дуже мало! *(But the ticket costs very little!)*
+> — **Оксана:** Для мене це багато. У мене є кілька проблем на роботі. *(For me it is a lot. I have a few problems at work.)*
+> — **Іван:** Розумію. Тоді можемо попити кави в парку? *(I understand. Then we can drink coffee in the park?)*
+> — **Оксана:** Добре. Там завжди багато людей і мало шуму. *(Good. There are always a lot of people and little noise there.)*
+
+### Читаємо українською (Reading Practice)
+
+Максим і Ганна планують велику вечірку. У них є багато друзів, але зараз у них немає грошей. Максим каже, що треба купити багато продуктів. У холодильнику є мало овочів і кілька яблук. Ганна хоче запросити п'ять сестер і десять колег. Вона знає, що для свята потрібно багато вільного часу. На жаль, у Максима немає часу, бо він багато працює. Вони вирішують зробити маленьку вечерю для кількох гостей.
+> *Maksym and Hanna are planning a big party. They have many friends, but right now they have no money. Maksym says that they need to buy a lot of groceries. In the fridge, there are few vegetables and a few apples. Hanna wants to invite five sisters and ten colleagues. She knows that for a holiday, a lot of free time is needed. Unfortunately, Maksym has no time because he works a lot. They decide to make a small dinner for a few guests.*
+
+<!-- INJECT_ACTIVITY: match-up-genitive-plural -->
+<!-- INJECT_ACTIVITY: match-up-translations -->
+<!-- INJECT_ACTIVITY: unjumble-genitive-phrases -->

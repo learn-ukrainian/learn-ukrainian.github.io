@@ -1,0 +1,98 @@
+round: 5
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'Covers all requested sections and textbook references. However, it is
+    missing the Consolidation Table from the summary section ("Consolidation table:
+    formation summary with all suffix groups..."), and'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: The module incorrectly claims that «рухаючий момент» is a valid technical
+    term for physicists. This is a calque of "движущий момент"; the correct scientific
+    term is "рушійний момент" (adjective, not p
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Exceptional pedagogy. The distinction between "квітнути" vs "квітучий"
+    (ongoing vs permanent) is brilliant. The logical explanation of nu-dropping is
+    very helpful.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: Covers 12/13 required words smoothly in context. Missed the recommended
+    word "збанкрутілий".
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Markers perfectly track the flow of information. Appropriate diversity
+    of tasks.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Authoritative, scholarly, but engaging (e.g., using "Imagine a word that
+    combines..."). Excellent tone.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: 5478 words easily clears the 4000 target. Sections are well-balanced.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: High standard of decolonized language and direct instruction on avoiding
+    Soviet-era calques.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The "Nature documentary narration" meets the specific prompt completely.
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'Covers all requested sections and textbook references smoothly. However,
+    it omitted the explicit Consolidation Table from the summary section ("Consolidation
+    table: formation summary with all suffix g'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: The module incorrectly claims that «рухаючий момент» is a valid technical
+    term for physicists. This is a Russian calque; the correct scientific term is
+    "рушійний момент" (adjective, not participle). A
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Exceptional pedagogy. The distinction between "квітнути" vs "квітучий"
+    (ongoing vs permanent) is brilliant. The logical explanation of nu-dropping is
+    very helpful.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: Covers all required words seamlessly in context. Missed the recommended
+    word "збанкрутілий".
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Markers perfectly track the flow of information. Appropriate diversity
+    of tasks matching the plan.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Authoritative, scholarly, yet engaging (e.g., "Imagine a word that combines...").
+    Excellent tone for B1 learners.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: At 5478 words, it safely clears the 4000 target. Sections are well-balanced
+    and properly sequenced.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: High standard of decolonized language and direct instruction on avoiding
+    Soviet-era calques. Use of Ukrainian literary examples (Stelmakh, Kotsiubynsky)
+    is excellent.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The "Nature documentary narration" meets the specific prompt completely,
+    utilizing natural descriptive clauses ("олень, що біжить").
+findings: []

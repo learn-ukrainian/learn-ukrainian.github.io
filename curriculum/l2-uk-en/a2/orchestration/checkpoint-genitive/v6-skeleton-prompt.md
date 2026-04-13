@@ -34,12 +34,12 @@ objectives:
 - Learner can apply Genitive structures in real-life contexts (shopping, health, directions, time expressions).
 dialogue_situations:
 - setting: 'Role-play: tour guide describing Kyiv landmarks — using all genitive patterns: Біля Софійського
-    собору (m, cathedral). Без квитка (m, ticket) не можна. Для групи з десяти людей. До Хрещатику (m)
+    собору (m, cathedral). Без квитка (m, ticket) не можна. Для групи з десяти людей. До Хрещатика (m)
     п''ять хвилин.'
   speakers:
   - Гід
   - Туристи
-  motivation: 'All genitive patterns: біля собору, без квитка, для групи, до Хрещатику'
+  motivation: 'All genitive patterns: біля собору, без квитка, для групи, до Хрещатика'
 content_outline:
 - section: 'Частина 1: Впізнавання форм (Part 1: Recognizing Forms)'
   words: 450

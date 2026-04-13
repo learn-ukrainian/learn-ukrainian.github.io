@@ -1,0 +1,163 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T12-35-9783b86d.json
+phase: activities
+prompt_chars: 61639
+response_chars: 10539
+prompt_words: 9042
+response_words: 1222
+sections:
+- name: preamble
+  start: 0
+  length: 1870
+  fraction: 0.0303
+- name: plan
+  start: 1870
+  length: 59661
+  fraction: 0.9679
+- name: output_spec
+  start: 61531
+  length: 108
+  fraction: 0.0018
+large_sections:
+- plan
+directives_total: 56
+directives_covered: 25
+directives_missed:
+- kind: must
+  text: '** Your very first character must be `version:`.'
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: must
+  text: Each inline activity MUST have an `id` that matches one of these markers.
+  covered: false
+  coverage_note: 1/10 keywords (10%)
+- kind: must
+  text: Each inline activity's `id` must match one of these markers exactly (lowercase,
+    hyphenated).
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: must
+  text: You MUST create activities that cover all these hints.
+  covered: false
+  coverage_note: 0/9 keywords (0%)
+- kind: must
+  text: '**Grounding rule:** Every Ukrainian word in your exercises must appear either
+    in the prose content or in this vocabulary list.'
+  covered: false
+  coverage_note: 1/15 keywords (7%)
+- kind: must
+  text: When you want to express the universal idea of "while X was happening, Y occurred,"
+    you must rely on this contrast.
+  covered: false
+  coverage_note: 0/14 keywords (0%)
+- kind: must
+  text: You must decide whether your future action is a prolonged process or a targeted
+    result.
+  covered: false
+  coverage_note: 1/11 keywords (9%)
+- kind: must
+  text: However, if your focus is on a routine, a habit, or how you will spend your
+    time, you must switch to the imperfective aspect.
+  covered: false
+  coverage_note: 1/14 keywords (7%)
+- kind: must
+  text: Saying «Сядьте на це місце!» or «Прочитайте цю сторінку!» is direct and focused
+    strictly on the required result.
+  covered: false
+  coverage_note: 3/10 keywords (30%)
+- kind: must
+  text: A directive like «Прочитайте цей текст до завтра» means the text must be finished.
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: must
+  text: The perfective imperative leaves no room for ambiguity about whether the task
+    is ongoing—it must reach a completed state.
+  covered: false
+  coverage_note: 1/13 keywords (8%)
+- kind: must
+  text: 'If you need the result specifically today, you absolutely must say: "Check
+    this report, please".'
+  covered: false
+  coverage_note: 1/12 keywords (8%)
+- kind: must
+  text: In Ukrainian, you must decide whether you are denying the existence of the
+    process itself or the achievement of a result.
+  covered: false
+  coverage_note: 0/12 keywords (0%)
+- kind: must
+  text: When you negate a sentence using the verb **мати** (to have), the object must
+    switch to the genitive case.
+  covered: false
+  coverage_note: 1/13 keywords (8%)
+- kind: must
+  text: 'To simply ask them to keep it closed because it''s cold, you must use the
+    imperfective: «Не відчиняйте вікно».'
+  covered: false
+  coverage_note: 2/14 keywords (14%)
+- kind: must
+  text: A fundamental rule of Ukrainian negation is that double, or even triple, negation
+    is not just allowed—it is mandatory.
+  covered: false
+  coverage_note: 1/12 keywords (8%)
+- kind: must
+  text: Now, you must integrate them into a unified system.
+  covered: false
+  coverage_note: 0/8 keywords (0%)
+- kind: must
+  text: However, if you are certain about the outcome, you must change the aspect.
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: must
+  text: '- id: marker-id-here # MUST match an <!-- INJECT_ACTIVITY: .'
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: must
+  text: '**CRITICAL RULE: EVERY single activity object MUST include an `id` field
+    (a unique string like "quiz-grammar", "match-up-vocab").'
+  covered: false
+  coverage_note: 2/16 keywords (12%)
+- kind: must
+  text: 'Required: id, instruction, items[] (array of strings), correct_order[] (TOP-LEVEL
+    array of **integers** — zero-based indices into items).'
+  covered: false
+  coverage_note: 3/13 keywords (23%)
+- kind: must
+  text: 'Required: id, syllables[], correctIndices[], category.'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: 'Required: id, letters[{upper, lower}].'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: 'Required: id, items[{video}].'
+  covered: false
+  coverage_note: 1/3 keywords (33%)
+- kind: must
+  text: '- **critical-analysis**: Required: id, prompt.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**You MUST use these patterns.'
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: must
+  text: If the pattern lists divide-words, count-syllables, and odd-one-out — your
+    output MUST include all three.
+  covered: false
+  coverage_note: 0/15 keywords (0%)
+- kind: must
+  text: '**Test LANGUAGE, not trivia** — exercises must test Ukrainian language skills.'
+  covered: false
+  coverage_note: 0/8 keywords (0%)
+- kind: must
+  text: '- **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).'
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: '...'
+  covered: false
+  coverage_note: marker missing

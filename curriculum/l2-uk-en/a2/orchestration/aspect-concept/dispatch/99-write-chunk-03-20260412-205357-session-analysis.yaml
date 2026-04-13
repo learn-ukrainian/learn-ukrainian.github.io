@@ -1,0 +1,57 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T18-52-d4008e03.json
+phase: write-chunk-03
+prompt_chars: 31081
+response_chars: 5312
+prompt_words: 4481
+response_words: 904
+sections:
+- name: header
+  start: 0
+  length: 489
+  fraction: 0.0157
+- name: skeleton
+  start: 489
+  length: 1529
+  fraction: 0.0492
+- name: prior_summary
+  start: 2018
+  length: 3254
+  fraction: 0.1047
+- name: plan
+  start: 5272
+  length: 11494
+  fraction: 0.3698
+- name: wiki
+  start: 10099
+  length: 14082
+  fraction: 0.4531
+- name: output_spec
+  start: 30848
+  length: 233
+  fraction: 0.0075
+large_sections:
+- wiki
+directives_total: 12
+directives_covered: 7
+directives_missed:
+- kind: checklist
+  text: повторення (repetition)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: робити / зробити (to do)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: inject_activity
+  text: fill-in-identify-aspect
+  covered: false
+  coverage_note: marker missing

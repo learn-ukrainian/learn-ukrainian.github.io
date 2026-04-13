@@ -1,0 +1,86 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T15-42-6f8b5f45.json
+phase: activities
+prompt_chars: 58841
+response_chars: 15100
+prompt_words: 7868
+response_words: 1804
+sections:
+- name: preamble
+  start: 0
+  length: 2293
+  fraction: 0.039
+- name: plan
+  start: 2293
+  length: 56440
+  fraction: 0.9592
+- name: output_spec
+  start: 58733
+  length: 108
+  fraction: 0.0018
+large_sections:
+- plan
+directives_total: 43
+directives_covered: 29
+directives_missed:
+- kind: must
+  text: Each inline activity MUST have an `id` that matches one of these markers.
+  covered: false
+  coverage_note: 3/10 keywords (30%)
+- kind: must
+  text: Each inline activity's `id` must match one of these markers exactly (lowercase,
+    hyphenated).
+  covered: false
+  coverage_note: 4/11 keywords (36%)
+- kind: must
+  text: You MUST create activities that cover all these hints.
+  covered: false
+  coverage_note: 2/9 keywords (22%)
+- kind: must
+  text: '**Grounding rule:** Every Ukrainian word in your exercises must appear either
+    in the prose content or in this vocabulary list.'
+  covered: false
+  coverage_note: 4/15 keywords (27%)
+- kind: must
+  text: Якщо ви маєте дві повноцінні граматичні основи, які поєднані сполучником «і»,
+    ви **зобов'язані** *(must)* поставити між ними кому.
+  covered: false
+  coverage_note: 5/15 keywords (33%)
+- kind: must
+  text: '**CRITICAL RULE: EVERY single activity object MUST include an `id` field
+    (a unique string like "quiz-grammar", "match-up-vocab").'
+  covered: false
+  coverage_note: 3/16 keywords (19%)
+- kind: must
+  text: 'Required: id, instruction, items[] (array of strings), correct_order[] (TOP-LEVEL
+    array of **integers** — zero-based indices into items).'
+  covered: false
+  coverage_note: 5/13 keywords (38%)
+- kind: must
+  text: 'Required: id, syllables[], correctIndices[], category.'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: 'Required: id, letters[{upper, lower}].'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: 'Required: id, items[{video}].'
+  covered: false
+  coverage_note: 1/3 keywords (33%)
+- kind: must
+  text: If the pattern lists divide-words, count-syllables, and odd-one-out — your
+    output MUST include all three.
+  covered: false
+  coverage_note: 5/15 keywords (33%)
+- kind: must
+  text: '**Test LANGUAGE, not trivia** — exercises must test Ukrainian language skills.'
+  covered: false
+  coverage_note: 1/8 keywords (12%)
+- kind: must
+  text: '- **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).'
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing

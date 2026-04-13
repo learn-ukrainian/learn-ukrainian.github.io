@@ -1,7 +1,7 @@
 # Audit Report: M08 — things-have-gender.md
 **Level:** A1 | **Module:** M08 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-11 00:53:15
+**Generated:** 2026-04-13 10:57:30
 
 ## Configuration
 **Type:** A1-grammar
@@ -19,26 +19,26 @@
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz |  | 8 | 6 | ✅ |
-| 2 | quiz |  | 6 | 6 | ✅ |
-| 3 | group-sort |  | 12 | 6 | ✅ |
-| 4 | fill-in |  | 8 | 6 | ✅ |
-| 5 | match-up |  | 6 | 6 | ✅ |
-| 6 | true-false |  | 6 | 6 | ✅ |
-| 7 | error-correction |  | 6 | 6 | ✅ |
+| 2 | fill-in |  | 8 | 6 | ✅ |
+| 3 | quiz |  | 6 | 6 | ✅ |
+| 4 | match-up |  | 6 | 6 | ✅ |
+| 5 | true-false |  | 6 | 6 | ✅ |
+| 6 | anagram |  | 6 | 6 | ✅ |
+| 7 | fill-in |  | 6 | 6 | ✅ |
 
 **Summary:**
 - Total activities: 7 (target: 0-4) ❌
-- Unique types: 6 (minimum: 0) ✅
-- Priority types used: 3/8 (fill-in, match-up, quiz) ✅
+- Unique types: 5 (minimum: 0) ✅
+- Priority types used: 4/8 (anagram, fill-in, match-up, quiz) ✅
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
 - **[INFO]** Dative case used at A1: 'чолові' (taught formally at A2)
   - FIX: No action needed — incidental dative exposure is acceptable.
-- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'if the...'.
-  - FIX: Vary sentence structure.
-- **[INLINE_ENGLISH_IN_PROSE]** Inline English translations in B1+ prose (3 occurrences): (Masculine gender), (Feminine gender), (Neuter gender) — breaks immersion target
-  - FIX: Remove inline English translations. Use context clues, Ukrainian definitions, or move translations to vocabulary section
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: рід
+  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
+- **[HINT_IN_ACTIVITY]** anagram activity 'Untitled' has item-level hint in item 1
+  - FIX: Remove all 'hint' fields from activity items (they break activities and provide no real pedagogical value)
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
@@ -46,19 +46,19 @@
 - 3 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1827/1200 (raw: 1866)
+- **Words:** ⚠️ 1079/1200 (raw: 1115) (121 short)
 - **Activities:** ✅ 7/0
 - **Density:** ✅ All > 6
-- **Unique_types:** ✅ 6/0 types
+- **Unique_types:** ✅ 5/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 2/0
+- **Engagement:** ✅ 3/0
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 36/1
+- **Vocab:** ✅ 37/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 13.8% (target 10-38% (M08))
+- **Immersion:** 🇺🇦 20.2% (target 10-38% (M08))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -66,7 +66,7 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 502 | Included in Core |
-| **Він, вона, воно — The Gender Test** | ✅ | 525 | Included in Core |
-| **Предме́ти навко́ло — Objects Around Us** | ✅ | 464 | Included in Core |
-| **Підсумок — Summary** | ✅ | 336 | Included in Core |
+| **Intro/Narrative** | ✅ | 293 | Included in Core |
+| **Він, вона, воно (The Gender Test)** | ✅ | 318 | Included in Core |
+| **Предме́ти навко́ло (Objects Around Us)** | ✅ | 359 | Included in Core |
+| **Підсумок — Summary** | ✅ | 109 | Included in Core |

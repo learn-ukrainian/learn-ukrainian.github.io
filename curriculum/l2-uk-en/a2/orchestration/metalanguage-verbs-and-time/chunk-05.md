@@ -1,23 +1,24 @@
-## Підсумок
+## Підсумок (~150 words)
 
-Ось і все! Цей урок був дуже важливим для вашого майбутнього. Тепер ви добре знаєте справжню українську граматичну термінологію. Зробімо невелику перевірку ваших нових знань.
+You now possess the terminology necessary to discuss grammar directly in Ukrainian, which is essential for intermediate studies. 
 
-*   Чи можете ви назвати три часи дієслова в українській мові? (Так, це минулий, теперішній і майбутній час).
-*   Чи можете ви швидко пояснити різницю між скороченнями «док.» та «недок.»? (Це доконаний і недоконаний вид дієслова).
-*   Чи точно ви знаєте, який саме рід означає коротке скорочення «ж.р.»? (Звісно, це жіночий рід).
+Чи можете ви назвати всі часи, які має **дієслово** (verb)? Чи розумієте ви, як взаємодіють **час** (tense) та **вид** (aspect)?
 
-Якщо ви легко відповіли «так» на ці запитання, ви повністю готові працювати з українськими словниками! 
+> *Can you name all the tenses that a **дієслово** (verb) has? Do you understand how **час** (tense) and **вид** (aspect) interact?*
 
-Для успішного переходу на наступний рівень B1 вам обов'язково потрібно пам'ятати ці десять критичних скорочень:
-1. **ім.** — іменник *(noun)*
-2. **прикм.** — прикметник *(adjective)*
-3. **дієсл.** — дієслово *(verb)*
-4. **займ.** — займенник *(pronoun)*
-5. **присл.** — прислівник *(adverb)*
-6. **ч.р.** — чоловічий рід *(masculine gender)*
-7. **ж.р.** — жіночий рід *(feminine gender)*
-8. **с.р.** — середній рід *(neuter gender)*
-9. **док.** — доконаний вид *(perfective aspect)*
-10. **недок.** — недоконаний вид *(imperfective aspect)*
+Спробуйте пояснити, чим відрізняється **доконаний** (perfective) вид і **недоконаний** (imperfective) вид. Також згадайте, що таке **спосіб** (mood).
 
-З цими новими знаннями ви зможете самостійно читати будь-які граматичні правила.
+> *Try to explain how the **доконаний** (perfective) aspect and the **недоконаний** (imperfective) aspect differ. Also remember what a **спосіб** (mood) is.*
+
+Згадайте, як визначається **особа** (person) або **дієвідміна** (conjugation class). Це допоможе вам уникати помилок у майбутньому.
+
+> *Remember how **особа** (person) or **дієвідміна** (conjugation class) is determined. This will help you avoid mistakes in the future.*
+
+Ви також успішно вивчили **прислівник** (adverb). Тепер відкрийте будь-який сучасний **словник** (dictionary) і знайдіть там знайомі граматичні скорочення.
+
+> *You have also successfully learned the **прислівник** (adverb). Now open any modern **словник** (dictionary) and find familiar grammatical abbreviations there.*
+
+:::note
+**Quick tip**
+Ensure you recognize these ten critical dictionary abbreviations before moving on: дієсл., ім., прикм., присл., док., недок., ч.р., ж.р., с.р., мн.
+:::

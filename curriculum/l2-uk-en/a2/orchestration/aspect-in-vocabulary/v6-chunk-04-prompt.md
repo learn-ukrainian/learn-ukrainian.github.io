@@ -1,22 +1,25 @@
-# Section-by-Section Generation — Section 4/5
+# Section-by-Section Generation — Section 4/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 3: Дієслова ходять парами (A2, A2.1 [Foundation and Aspect Introduction])
-**Section to write:** Спосіб 3: Зовсім інші слова (суплетивізм) (~440 words total)
-**Word target for this section:** 440 words (aim for 484 to account for undershoot)
+**Section to write:** Спосіб 3: Зовсім інші слова (суплетивізм) (Method 3: Completely Different Words) (~550 words)
+**Word target for this section:** 550 words (aim for 605 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Спосіб 3: Зовсім інші слова (суплетивізм) (~440 words total)
-- P1 (~120 words): Suppletion (different stems). Explain that some of the most basic verbs in human language use completely different words for process and result, just like English "go" vs. "went." The most critical pair to memorize is *брати / взяти* (to take).
-- P2 (~120 words): The "Speech" pair: *говорити / сказати*. Clarify that *говорити* is the act of speaking or talking (process), while *сказати* is the act of saying something specific (result). Give examples: "Ми довго говорили" vs. "Він сказав правду."
-- P3 (~100 words): The "Search vs. Find" distinction. Explain that while *шукати* (to search) and *знайти* (to find) are often learned together, they are technically different actions. Mention that the true perfective of *шукати* is *пошукати*, but in daily life, *знайти* is the result we usually look for. Add *ловити / піймати* (to catch).
-- P4 (~100 words): Review of the "A2 Essential 20" list. Provide a summary table of the most important pairs from the module, grouping them by formation type to help with memorization. Include *купувати / купити* (to buy) as a final essential suffix pair.
-- <!-- INJECT_ACTIVITY: match-up-blanks-pairs --> [match-up, Fill in the Blanks with the Correct Pair, 8 items]
-- <!-- INJECT_ACTIVITY: fill-in-aspect-choice --> [fill-in, Choose the Correct Aspect Partner, 8 items]
+## Спосіб 3: Зовсім інші слова (суплетивізм) (Method 3: Completely Different Words) (~550 words)
+- P1 (~110 words): Introduce Method 3: Suppletion (суплетивізм). Some of the oldest, most basic verbs have pairs that look completely different. You simply have to memorize (запам'ятовувати) them.
+- P2 (~110 words): Essential pair 1: брати (impf) / взяти (pf) (to take). Provide context: "я брав книгу" (process/attempt) vs. "я взяв книгу" (result).
+- P3 (~110 words): Essential pair 2: говорити (impf) / сказати (pf) (to speak / to say). Highlight the difference between the ongoing process of talking and delivering a single statement.
+- P4 (~110 words): Other common suppletive pairs to learn right now: ловити / піймати (to catch), класти / покласти (to put).
+- P5 (~110 words): The "false pair" trap. Warn learners about шукати (to search) and знайти (to find). While often taught together, they are not a true pair (шукати / пошукати; знаходити / знайти).
+- <!-- INJECT_ACTIVITY: fill-in-categorize --> [fill-in, Categorize by Formation Type, 8 items]
+- <!-- INJECT_ACTIVITY: fill-in-choose-partner --> [fill-in, Choose the Correct Aspect Partner, 8 items]
+
+Grand total: ~2300 words
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -24,7 +27,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-the narrower **-и-** for the perfective aspect. The **-а-** sound requires opening the mouth wider, which feels continuous. In contrast, the **-и-** sound feels "sharper" and more final, signaling the end of the action. Викладач може «відповідати» на питання студентів цілу годину. Але студент на іспиті має швидко «відповісти» на одне запитання. Ми можемо повільно «відчиняти» важкі двері в кімнату. Або ми можемо різко «відчинити» вікно вранці. > *A teacher can "відповідати" (be answering) students' questions for a whole hour. But a student at an exam must quickly "відповісти" (give an answer) to one question. We can slowly "відчиняти" (be opening) heavy doors into a room. Or we can sharply "відчинити" (open/throw open) a window in the morning.* :::info **Grammar box** When you see a verb ending in **-ати** or **-яти**, it is very often the imperfective partner. Its perfective twin will frequently end in **-ити**, providing a crisp conclusion. ::: Sometimes, stretching the verb requires changing a vowel right inside the root of the word. This internal change is called vowel alternation, or **чергування**. A common phonetic shift is changing the vowel **о** to the vowel **а** when moving from a perfective result to an imperfective process. The wider **а** sound physically opens the mouth more, reflecting the expanded duration of the ongoing action. Мій брат завжди готовий мені «допомагати» з ремонтом. Минулого тижня він зміг «допомогти» мені перевезти меблі. У першому слові корінь має звук «а», бо це довгий процес. У другому слові корінь має звук «о», бо це швидкий результат. > *My brother is always ready to "допомагати" (be helping) me with repairs. Last week he was able to "допомогти" (help/give help) me move furniture. In the first word, the root has the sound "a" because it is a long process. In the second word, the root has the sound "o" because it is a quick result.* Finally, there is a special suffix that works in the exact opposite direction. Instead of stretching the verb into a process, the suffix **-ну-** instantly compresses it. When you add **-ну-** to an imperfective verb, it immediately turns it into a perfective, lightning-fast action. It is the grammatical equivalent of a single burst of energy or a momentary event that happens in the blink of an eye. Хтось може довго «стукати» у ваші двері. Але вітер може раптом «стукнути» вікном лише один раз. Діти на вулиці можуть голосно «кричати» під час гри. Але перехожий може злякано «крикнути», якщо побачить небезпеку. Ніколи не можна «штовхати» людей у транспорті. Навіть випадково «штовхнути» людину дуже негарно. > *Someone can "стукати" (be knocking) on your door for a long time. But the wind can suddenly "стукнути" (give a knock) with a window just once. Children outside can loudly "кричати" (be shouting) during a game. But a passerby can frighteningly "крикнути" (let out a cry) if they see danger. One must never "штовхати" (be pushing) people in transport. Even to accidentally "штовхнути" (give a shove to) a person is very ugly.* <!-- INJECT_ACTIVITY: fill-in-categorize-formation -->
+shifts from a definitive result to an active effort. Студенти часто повинні вирішувати складні проблеми на уроках. Учора мій друг довго думав, але нарешті вирішив це складне завдання. > *Students often must solve complex problems in lessons. Yesterday my friend thought for a long time, but finally solved this complex task.* Let us examine another common example of this suffix change. The perfective verb «запитати» means to ask a single question and achieve a result. If we want to talk about asking questions frequently, we drop the simple ending and insert our continuous suffix to form «запитувати». The core meaning of inquiring remains intact, but the duration of the action changes. This pattern is incredibly consistent across hundreds of Ukrainian verbs. Діти люблять постійно запитувати батьків про все на світі. Вчителька сказала, що ми можемо запитати її про нову тему. > *Children love to constantly ask parents about everything in the world. The teacher said that we can ask her about the new topic.* Beyond adding suffixes, the second method also includes changing vowels directly inside the root. The most common vowel alternation is the shift from «о» to «а». This internal vowel change stretches the pronunciation of the word, mirroring the stretching of the action itself. For instance, the perfective verb «допомогти» means to help someone successfully once. To turn this single act into a regular habit, the root vowel «о» changes to «а», giving us «допомагати». Хороші друзі завжди готові допомагати один одному в біді. Учора мій брат допоміг мені зробити важку роботу. > *Good friends are always ready to help each other in trouble. Yesterday my brother helped me do heavy work.* Sometimes, you will encounter verbs where the suffix changes seem slightly irregular. A classic example is the highly common verb pair «відповідати» and «відповісти». The imperfective form «відповідати» means to answer regularly. Its perfective partner «відповісти» means to give a definitive answer once. While they do not follow the simplest rule, they clearly belong to this second method of altering the end of the word rather than just attaching a new prefix. Студенти повинні швидко відповідати на всі питання викладача. На іспиті він подумав і правильно відповів на питання. > *Students must quickly answer all the teacher's questions. On the exam, he thought and correctly answered the question.* It is crucial to understand the contrast between our first two methods. Method one is straightforward building: you take a basic imperfective verb like **читати** (to read) and construct a perfective version like **прочитати** (to read completely) by snapping a prefix onto the front. Method two is structural modification: you take an already complex perfective verb and modify its suffix to stretch it back into an imperfective process. Recognizing which direction a **пара** (pair) is built will dramatically accelerate your learning. :::info **Grammar box** When you see a verb ending in **-увати** or **-ювати**, it is almost always imperfective. This suffix is the strongest signal that an action is continuous or habitual! ::: <!-- INJECT_ACTIVITY: match-up-blanks -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -594,6 +597,29 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (4/4).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] пара (pair)
+- [ ] префікс (prefix)
+- [ ] суфікс (suffix)
+- [ ] корінь (root)
+- [ ] читати / прочитати (to read)
+- [ ] писати / написати (to write)
+- [ ] брати / взяти (to take)
+- [ ] говорити / сказати (to speak / to say)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Спосіб 3: Зовсім інші слова (суплетивізм) (Method 3: Completely Different Words) (~550 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

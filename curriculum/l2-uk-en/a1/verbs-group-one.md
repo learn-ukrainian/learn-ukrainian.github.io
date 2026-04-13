@@ -1,91 +1,98 @@
 ## Діало́ги (Dialogues)
 
-Up to this point, you have learned how to name objects, describe their qualities, and express basic states of being. Now, we will learn how to describe actions. Setting the scene in a shared kitchen, we can see how daily life unfolds through verbs like **чита́ти** (to read) and **готува́ти** (to cook). By paying close attention to the endings of these action words, you will discover how Ukrainian clearly indicates exactly who is performing the action without needing complex sentence structures.
+Verbs let you talk about actions: what you do, what another person does, and what is happening right now. In this module, you will learn the present-tense pattern for six common verbs and use them in short everyday sentences. 
+
+Let us start by looking at a very common situation. Imagine you are in a shared kitchen. One person is busy preparing a meal, and the other walks in, curious about what is happening. Read the conversation below and pay close attention to the action words. 
 
 > **Сашко́:** Приві́т! Що ти ро́биш? *(Hi! What are you doing?)*
-> **Ю́ля:** Я готу́ю вече́рю. А ти? *(I am cooking dinner. And you?)*
-> **Сашко:** Я не готую. Я чита́ю. *(I am not cooking. I am reading.)*
+> **Ю́ля:** Я чита́ю кни́гу. А ти? *(I am reading a book. And you?)*
+> **Сашко:** Я слу́хаю му́зику. *(I am listening to music.)*
 > **Юля:** А що ро́бить Оле́на? *(And what is Olena doing?)*
-> **Сашко:** Вона́ слу́хає му́зику. *(She is listening to music.)*
-> **Юля:** До́бре. *(Good.)*
+> **Сашко:** Вона́ готу́є вече́рю. *(She is cooking dinner.)*
 
-Take a moment to analyze the verb endings in that kitchen conversation. Notice how the ends of the action words shift depending on exactly who is speaking or who is being spoken about. When Yulia talks about herself, she says **готую** (I cook). When Sashko asks Yulia a direct question about her actions, he uses the form **робиш** (you do). When they both discuss Olena, who is a third person not directly addressed, Sashko says **слухає** (she listens). The central question **«Що ти робиш?»** (What are you doing?) is the essential question for present tense conversations and discovering what people are engaged in right now.
+If you look closely at this dialogue, you will notice a crucial feature of the Ukrainian language. The verb form changes depending on who is performing the action. When Sashko asks his question, he uses the form **робиш** (you do). When Yulia replies about herself, she says **читаю** (I read). When Sashko replies about his own action, he says **слухаю** (I listen). Finally, when they both discuss Olena, the verb shifts again to **готує** (she cooks). The ending of the verb acts like a built-in nametag, telling you exactly who the subject of the sentence is. 
 
-> **Макси́м:** Де ти працю́єш? *(Where do you work?)*
-> **А́нна:** Я працю́ю в о́фісі. А ти? *(I work in an office. And you?)*
-> **Максим:** Я не працюю, я навча́юся. *(I do not work, I am studying.)*
-> **Анна:** Ти зна́єш украї́нську? *(Do you know Ukrainian?)*
-> **Максим:** Так, я вивча́ю! *(Yes, I am learning!)*
+Now, let us look at another natural conversation. This time, two acquaintances are discussing their current occupations and what they are learning. 
+
+> **Марі́я:** Де ти працю́єш? *(Where do you work?)*
+> **Макси́м:** Я працю́ю в о́фісі. А ти? *(I work in an office. And you?)*
+> **Марія:** Я не працюю, я навча́юся. *(I do not work, I am studying.)*
+> **Максим:** Ти зна́єш украї́нську? *(Do you know Ukrainian?)*
+> **Марія:** Так, я вивча́ю! *(Yes, I am learning!)*
+
+In this practical, everyday context, you can see the same pattern emerging. When asking "Where do you work?", the verb is **працюєш**. When answering "I work", the verb becomes **працюю**. These shifting endings are the key to unlocking conversational Ukrainian, and they follow a highly predictable system that we will explore next.
 
 ## Пе́рша дієвідмі́на (Group I Verbs)
 
-Ukrainian verbs are organized into two main families, which grammarians call conjugations. We will focus entirely on **Перша дієвідміна** (First Conjugation) or Group I verbs. You can usually identify these verbs in their dictionary form, known as the infinitive, because they typically end with the marker **-а́ти** or sometimes **-увати**. However, the absolute most reliable method to prove a verb belongs to Group I is the "They Test". If the form for **вони́** (they) ends in **-уть** or **-ють**, then the verb firmly belongs to the First Conjugation. For instance, **вони чита́ють** (they read) proves that the verb is a Group I action word.
+To master Ukrainian verbs, you must understand the concept of **дієвідмі́нювання** (conjugation). Conjugation simply means changing the ending of a verb to match the person who is doing the action. Ukrainian textbooks for native speakers traditionally divide verbs into two main families, known as conjugations. Today, we are focusing exclusively on the First Conjugation, or **перша дієвідміна**. A more reliable way to recognize verbs in this conjugation is by the third-person plural form: they take **-уть/-ють** (for example, **чита́ють, зна́ють, працю́ють, слу́хають, гуля́ють, готу́ють**). 
 
-The conjugation table below demonstrates the complete present tense pattern for the verb **читати** (to read). To conjugate the verb, you drop the final **-ти** from the infinitive and attach specific personal endings to the remaining stem.
+According to standard grammar references like Varzatska Grade 4, the present tense for the First Conjugation follows a strictly reliable pattern. Let us take the model verb **чита́ти** (to read) and map out its full present tense table. 
 
-| Осо́ба (Person) | Займе́нник (Pronoun) | Фо́рма дієсло́ва (Verb Form) |
-| :--- | :--- | :--- |
-| 1-ша однини́ | **я** (I) | **читаю** (I read) |
-| 2-га однини | **ти** (you) | **чита́єш** (you read) |
-| 3-тя однини | **він / вона / воно́** (he / she / it) | **чита́є** (he / she / it reads) |
-| 1-ша множи́ни | **ми** (we) | **чита́ємо** (we read) |
-| 2-га множини | **ви** (you plural/formal) | **чита́єте** (you read) |
-| 3-тя множини | **вони** (they) | **читають** (they read) |
+| Person | Pronoun | Verb Form | Ending |
+|---|---|---|---|
+| I | **я** | **читаю** | **-ю** |
+| You (singular) | **ти** | **чита́єш** | **-єш** |
+| He/She/It | **він/вона/воно́** | **чита́є** | **-є** |
+| We | **ми** | **чита́ємо** | **-ємо** |
+| You (plural/formal) | **ви** | **чита́єте** | **-єте** |
+| They | **вони́** | **читають** | **-ють** |
 
-Notice the characteristic vowel **-є-** that elegantly links the stem to the ending for most persons. 
+Notice how the stem of the verb (чита́-) remains exactly the same, while the ending shifts to match the pronoun. The core vowels that define this First Conjugation pattern are **є** and **ю**. For the six model verbs in this module, the pattern is: stem + **-ю**, **-єш**, **-є**, **-ємо**, **-єте**, **-ють**.
 
-Let us dive deep into six essential Group I verbs that will form the absolute foundation of your active vocabulary: **читати** (to read), **зна́ти** (to know), **працюва́ти** (to work), **слу́хати** (to listen), **гуля́ти** (to walk), and **готувати** (to cook). Most of these follow the straightforward pattern of dropping the **-ти** and adding the endings. However, there is a special note regarding **працювати** and **готувати**. When conjugating verbs with the **-увати** suffix, the **-ва-** portion drops out entirely before adding the endings, resulting in the streamlined forms **я працюю** (I work) and **я готую** (I cook), rather than the incorrect forms "працюваю" or "готуваю".
+For this module, we will focus on six essential verbs that you will use every single day. All six of these verbs belong to the First Conjugation and follow the exact same rules.
+*   **читати** (to read)
+*   **зна́ти** (to know)
+*   **працюва́ти** (to work)
+*   **слу́хати** (to listen)
+*   **гуля́ти** (to walk)
+*   **готува́ти** (to cook)
 
-When pronouncing these verbs, give special phonetic focus to the characteristic vowel. The Ukrainian letter **є** in endings like **-єш** and **-є** sounds distinctly like "ye" when it follows another vowel. For example, in the word **знаєш** (you know), you must clearly pronounce the "ye" sound to ensure authentic pronunciation. Do not reduce it to a flat "e" sound. Emphasizing the clear, bright Ukrainian pronunciation of these specific endings is crucial for being understood correctly by native speakers and avoiding a foreign accent.
+If you know the pattern for one, you know the pattern for all of them. For instance, **я зна́ю** (I know), **ти працюєш** (you work), and **вона слу́хає** (she listens). Note that verbs ending in **-ювати** or **-увати** drop the **-ва-** when conjugated: **працювати** becomes **я працюю**, and **готувати** becomes **ти готу́єш**.
+
+These present tense verbs describe general habits, daily routines, and ongoing actions happening right now. Unlike English, which distinguishes between "I read every day" and "I am reading right now," Ukrainian uses the exact same present tense form for both situations. 
+
+<!-- INJECT_ACTIVITY: fill-in-conjugation -->
 
 <!-- INJECT_ACTIVITY: match-up-person-verb -->
-<!-- INJECT_ACTIVITY: fill-in-conjugation-drill -->
 
 ## Я, ти, він/вона (Persons)
 
-While it is important to understand the full paradigm of all six persons, we will prioritize the "Big Three" for your active usage. The forms for **я** (I), **ти** (you), and **він / вона** (he / she) will easily cover ninety percent of your beginner Ukrainian conversations. You talk about your own actions, you ask your conversation partner about theirs, and you describe what someone else is doing. The pattern is consistent: use the **-ю** ending for the self, the **-єш** ending for the partner, and the **-є** ending for the third person. Mastering these three endings allows you to express most daily actions.
+While it is important to understand the full conjugation table, conversational fluency requires you to prioritize. As a beginner, you should focus intensely on the three most common singular forms: **я** (I), **ти** (you, singular informal), and **він/вона** (he/she). These three persons will cover roughly 90% of your daily conversations at the A1 level. You must memorize their specific endings until they become automatic. 
+*   In the six model verbs in this module, **я** takes **-ю**
+*   In these same verbs, **ти** takes **-єш**
+*   In these same verbs, **він/вона** takes **-є**
 
-Now you can seamlessly combine these newly conjugated verbs with vocabulary you already know from previous modules. 
+Let us look at some contrasting examples focusing exclusively on these three persons.
+*   **Я слухаю музику.** *(I listen to music.)*
+*   **Ти слу́хаєш музику.** *(You listen to music.)*
+*   **Вона слухає ра́діо.** *(She listens to the radio.)*
 
-*   **Я читаю нову́ кни́гу.** (I am reading a new book.)
-*   **Ти знаєш цю пі́сню?** (Do you know this song?)
-*   **Вона слухає українську музику.** (She listens to Ukrainian music.)
+Because the verb ending makes the person so obvious, Ukrainians often drop the pronoun entirely in casual speech. It is perfectly natural to walk into a room and simply say **Працюю вдо́ма** (Working at home) instead of **Я працюю вдома**. The **-ю** ending already screams "I", so the pronoun **я** is optional.
 
-:::note
-You might notice that the object nouns change their final letters slightly, such as **кни́га** becoming **книгу** and **пі́сня** becoming **пісню**. This is the Ukrainian case system in action. For now, do not worry about the underlying grammar rules for the object; simply learn these specific combinations as memorized chunks.
-:::
+Building simple sentences in Ukrainian usually follows a straightforward Subject + Verb + Object structure. A highly useful conversational chunk to memorize right now is the question **Що ти робиш?** (What are you doing?). You can answer this question by combining your new verbs with vocabulary you already know from previous modules. 
+*   **Я читаю нову́ книгу.** *(I am reading a new book.)*
+*   **Вона готує вечерю.** *(She is cooking dinner.)*
+*   **Ти знаєш цю пі́сню?** *(Do you know this song?)*
 
-English speakers often fall into the trap of applying the "No-Be" Rule incorrectly. Because English uses the verb "to be" to create continuous present tense actions like "I am reading", learners frequently try to insert the Ukrainian equivalent **є** into their sentences, resulting in the incorrect phrase **«Я є читаю»**. You must firmly stress to your brain that in Ukrainian, the present tense verb form already contains the continuous action. The single word **читаю** simultaneously means "I read" generally and "I am reading" right at this exact moment.
+As an English speaker, you must be careful to avoid two very common mistakes. First, do not use the infinitive form for everything. In English, the verb barely changes ("I read, you read, we read"), which tricks learners into saying **Я читати книгу** ❌. This is incorrect; you must conjugate it: **Я читаю книгу** ✅. 
 
-While the singular persons dominate basic dialogue, plurality in action is equally important for recognizing group dynamics. The plural forms expand your world to include **ми** (we), **ви** (you plural or formal), and **вони** (they). You will encounter these collective actions frequently in narratives and group settings.
+Second, English speakers frequently try to translate "I am reading" literally by inserting the verb "to be". Never say **Він є читає** ❌. In Ukrainian, the present tense verb already contains the meaning of "is doing". The correct and only way to say it is simply **Він читає** ✅.
 
-*   **Ми працю́ємо ра́зом.** (We work together.)
-*   **Ви гуля́єте в парку.** (You walk in the park.)
-*   **Вони зна́ють пра́вду.** (They know the truth.)
-*   **Ми малю́ємо карти́ну.** (We are drawing a picture.)
-*   **Вони гра́ють.** (They are playing.)
+<!-- INJECT_ACTIVITY: quiz-correct-form -->
 
-<!-- INJECT_ACTIVITY: quiz-subject-verb-agreement -->
-<!-- INJECT_ACTIVITY: fill-in-complete-sentence -->
+<!-- INJECT_ACTIVITY: fill-in-sentences -->
 
 ## Підсумок — Summary
 
-Think of this as the "Formula of Actions": you start with the infinitive dictionary form ending in **-ати**, deliberately drop the final **-ти**, and firmly attach your specific personal ending: **-ю, -єш, -є, -ємо, -єте, -ють**. This consistent pattern applies to the six core verbs that will serve as the foundation of your daily communication. Whenever you encounter a new verb that follows this precise pattern, you can immediately conjugate it for all six persons.
+You can now describe simple actions using the First Conjugation, or **перша дієвідміна**. Remember that the present tense conjugation pattern for Group I verbs relies on a highly consistent set of endings. To match the subject, you attach the following endings to the verb stem: **-ю**, **-єш**, **-є**, **-ємо**, **-єте**, **-ють**. 
 
-As a highly practical cultural note, you should begin encouraging yourself to narrate your daily life using these verbs. As you move through your routine, silently construct simple thoughts in your mind. Think **«Я працюю»** when you sit down at your desk, or **«Вона готу́є»** when you see someone in the kitchen. Even these exceptionally simple two-word thoughts actively build the essential habit of thinking directly in Ukrainian instead of exhaustively translating word-for-word from English in your head.
+We introduced a core vocabulary list of six essential verbs: **читати** (to read), **знати** (to know), **працювати** (to work), **слухати** (to listen), **гуляти** (to walk), and **готувати** (to cook). Despite slight variations in their infinitive forms, reminding the learner that they all behave exactly the same way during conjugation is critical. The endings you use for **я слухаю** are the exact same endings you use for **я гуля́ю**.
 
-Use the following self-check questions to measure your structural understanding before advancing:
+When building sentences and aiming for clear communication goals, remember that the verb ending must always match the subject performing the action. In the six model verbs in this module, **ти** takes **-єш** and **вона** takes **-є**. Keep practicing the key conversational phrases from this module. Asking **Що ти робиш?** (What are you doing?) and confidently answering about your own activities will form the backbone of your early Ukrainian conversations.
 
-*   Can you conjugate the verb **слухати** (to listen) completely for **я**, **ти**, and **він/вона**?
-*   How exactly do you ask someone the fundamental question "What are you doing?" using the correct verb form?
-
-Review this essential checklist of verbs. You should be able to instantly recognize their meanings and confidently construct basic sentences with them:
-
-*   [ ] **читати** (to read)
-*   [ ] **знати** (to know)
-*   [ ] **працювати** (to work)
-*   [ ] **слухати** (to listen)
-*   [ ] **гуляти** (to walk)
-*   [ ] **готувати** (to cook)
-
-In Module 17, you will seamlessly transition from these **-ати** verbs to learn about the **-ити** family, which forms the Second Conjugation.
+Use the self-check questions below to verify your understanding before moving on:
+*   Як сказа́ти "I listen"? (**Я слухаю**)
+*   Яке́ закі́нчення для "ти" в пе́ршій дієвідмі́ні? (**-єш**, напри́клад: **ти працюєш**)
+*   Як запита́ти "What are you doing?" (**Що ти робиш?**)
+*   Як сказати "He cooks dinner"? (**Він готує вечерю**)
+*   Чи мо́жна сказати "Я є читаю"? (Ні, пра́вильно про́сто "**Я читаю**")

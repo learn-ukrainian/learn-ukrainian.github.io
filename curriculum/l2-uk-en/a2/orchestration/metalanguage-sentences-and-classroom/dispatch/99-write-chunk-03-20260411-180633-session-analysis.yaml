@@ -1,0 +1,92 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T16-04-fe0afc8d.json
+phase: write-chunk-03
+prompt_chars: 47859
+response_chars: 4641
+prompt_words: 6795
+response_words: 685
+sections:
+- name: header
+  start: 0
+  length: 439
+  fraction: 0.0092
+- name: skeleton
+  start: 439
+  length: 1430
+  fraction: 0.0299
+- name: prior_summary
+  start: 1869
+  length: 3448
+  fraction: 0.072
+- name: plan
+  start: 5317
+  length: 12910
+  fraction: 0.2698
+- name: wiki
+  start: 11760
+  length: 29418
+  fraction: 0.6147
+- name: output_spec
+  start: 47645
+  length: 214
+  fraction: 0.0045
+large_sections:
+- wiki
+directives_total: 27
+directives_covered: 15
+directives_missed:
+- kind: must
+  text: Ukrainian schools, starting from early grades (Grade 3), teach that for a
+    group of words to be a sentence, they must be connected logically and grammatically
+    (Source 4).
+  covered: false
+  coverage_note: 5/18 keywords (28%)
+- kind: must
+  text: '* A learner in any formal setting must master the vocabulary of education.'
+  covered: false
+  coverage_note: 2/8 keywords (25%)
+- kind: must
+  text: '` | The past tense verb must agree in gender and number with the subject.'
+  covered: false
+  coverage_note: 3/8 keywords (38%)
+- kind: must
+  text: A content writer must be vigilant, using dictionaries like the СУМ-11 and
+    style guides to choose authentic Ukrainian vocabulary and avoid calques.
+  covered: false
+  coverage_note: 4/16 keywords (25%)
+- kind: must
+  text: Students must label each one (`розповідне`, `питальне`, `спонукальне`) (Source
+    36).
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: must
+  text: '* **Дієвідмінювання (Verb Conjugation):** The predicate must agree with the
+    subject in person and number (present/future) and gender/number (past).'
+  covered: false
+  coverage_note: 4/13 keywords (31%)
+- kind: must
+  text: '* **Складні речення (Complex/Compound Sentences):** Mastery of the simple
+    sentence (`просте речення`) is required before a student can analyze or construct
+    sentences with multiple grammatical foundations (Source 3, 23).'
+  covered: false
+  coverage_note: 5/19 keywords (26%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: inject_activity
+  text: quiz-classroom-instructions
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-morphemes
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: group-sort-roots
+  covered: false
+  coverage_note: marker missing

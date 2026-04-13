@@ -1,0 +1,126 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T21-44-6bb59adc.json
+phase: skeleton
+prompt_chars: 32043
+response_chars: 4929
+prompt_words: 4549
+response_words: 789
+sections:
+- name: preamble
+  start: 0
+  length: 468
+  fraction: 0.0146
+- name: plan
+  start: 468
+  length: 5484
+  fraction: 0.1711
+- name: wiki
+  start: 5899
+  length: 23761
+  fraction: 0.7415
+- name: output_spec
+  start: 29713
+  length: 2330
+  fraction: 0.0727
+large_sections:
+- wiki
+directives_total: 23
+directives_covered: 1
+directives_missed:
+- kind: must
+  text: Your skeleton must budget every word.
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: must
+  text: Skim this for the key concepts, paradigms, and examples you must cover.
+  covered: false
+  coverage_note: 2/9 keywords (22%)
+- kind: must
+  text: The adjective must agree in gender with the noun it describes.
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: must
+  text: Gender agreement must be drilled relentlessly with food items, as they provide
+    a perfect, tangible set of masculine, feminine, and neuter nouns (`борщ`, `каша`,
+    `пюре`).
+  covered: false
+  coverage_note: 4/19 keywords (21%)
+- kind: must
+  text: '**Borscht is Ukrainian:** This must be stated unequivocally.'
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: must
+  text: The introduction must be carefully scaffolded to prevent cognitive overload.
+  covered: false
+  coverage_note: 1/7 keywords (14%)
+- kind: must
+  text: The module must provide extensive drills on changing feminine nouns ending
+    in `-а` to `-у` after verbs like `хочу`, `їм`, `п'ю`.
+  covered: false
+  coverage_note: 2/14 keywords (14%)
+- kind: must
+  text: These must be taught as distinct pairs.
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: must
+  text: '` | **Verb Conjugation:** Similar to `їсти`, the verb `пити` (to drink) has
+    a distinct conjugation that must be drilled.'
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: must
+  text: 'It must be explicitly taught that `ї` is *always* pronounced as two sounds:
+    `[йі]`, as in "Yee-sty".'
+  covered: false
+  coverage_note: 2/10 keywords (20%)
+- kind: must
+  text: The structure `Мені, будь ласка, [noun in Accusative]` must be drilled.
+  covered: false
+  coverage_note: 2/8 keywords (25%)
+- kind: must
+  text: The curriculum must teach Ukrainian on its own terms, completely independent
+    of Russian.
+  covered: false
+  coverage_note: 2/10 keywords (20%)
+- kind: must
+  text: Learners must build a new, distinct phonetic system for Ukrainian from zero.
+  covered: false
+  coverage_note: 3/10 keywords (30%)
+- kind: must
+  text: The word `кофе` is a Russianism and must be actively corrected.
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: must
+  text: '**Word budgets must sum to 1200+.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Section budgets must match the plan''s `content_outline` word allocations**
+    (±10%).'
+  covered: false
+  coverage_note: 2/8 keywords (25%)
+- kind: must
+  text: '**CRITICAL: An exercise must ONLY test concepts already taught above it.'
+  covered: false
+  coverage_note: 0/9 keywords (0%)
+- kind: must
+  text: 'Every plan `activity_hints` entry MUST have a corresponding `<!-- INJECT_ACTIVITY:
+    id -->` marker in the skeleton.'
+  covered: false
+  coverage_note: 2/10 keywords (20%)
+- kind: skeleton_para
+  text: 'P1 (150w): Follow the plan''s points for this section EXACTLY. If the plan
+    says "Self-check questions", output a bulleted Q&A list — NOT prose. If the plan
+    says "recap", write a brief recap.'
+  covered: false
+  coverage_note: 5/20 keywords (25%)
+- kind: inject_activity
+  text: activity-id
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: activity-id
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: descriptive-id
+  covered: false
+  coverage_note: marker missing

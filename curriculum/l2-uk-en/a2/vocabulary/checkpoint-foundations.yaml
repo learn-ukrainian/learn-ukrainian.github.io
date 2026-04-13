@@ -6,19 +6,19 @@ vocabulary:
   gender: ''
   verified: true
 - word: варіа́нт
-  translation: option, variant
+  translation: option
   expression: false
   pos: ім.
   gender: ч.
   verified: true
 - word: обра́ти
-  translation: to choose
+  translation: choose
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
 - word: написа́ти
-  translation: to write
+  translation: write
   expression: false
   pos: дієсл.
   gender: ''
@@ -30,7 +30,7 @@ vocabulary:
   gender: ж.
   verified: true
 - word: пере́ві́рка
-  translation: check, test
+  translation: check
   expression: false
   pos: ім.
   gender: ж.
@@ -65,40 +65,70 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
+- word: плу́таю
+  translation: I confuse
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: раху́єш
+  translation: you count
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: роди́на
+  translation: family
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: у́спіхів
+  translation: good luck
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: видова пара
+  translation: aspectual pair
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
 - word: нема́є
   translation: there is no
   expression: false
   pos: ''
   gender: ''
   verified: true
-- word: називний відмінок
-  translation: nominative case
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: дієсло́во
-  translation: verb
+- word: з
+  translation: from
   expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: день народження
-  translation: birthday
-  expression: true
-  pos: ''
+  pos: прийм.
   gender: ''
   verified: true
-- word: вихідні́
-  translation: weekend
+- word: без
+  translation: without
   expression: false
-  pos: прикм.
+  pos: прийм.
   gender: ''
   verified: true
-- word: брати участь
-  translation: to take part
-  expression: true
-  pos: ''
+- word: для
+  translation: for
+  expression: false
+  pos: прийм.
+  gender: ''
+  verified: true
+- word: за́вжди́
+  translation: always
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: до́вго
+  translation: for a long time
+  expression: false
+  pos: присл.
   gender: ''
   verified: true
 - word: наре́шті
@@ -107,87 +137,99 @@ vocabulary:
   pos: присл.
   gender: ''
   verified: true
-- word: правильна відповідь
-  translation: correct answer
+- word: кожного дня
+  translation: every day
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: три години
-  translation: three hours
+- word: за одну годину
+  translation: in one hour
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: за хвилину
-  translation: in a minute
+- word: родовий відмінок множини
+  translation: Genitive plural
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: стра́ва
-  translation: dish
+- word: стаття́
+  translation: article
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: пирі́г
-  translation: pie
+- word: дієвідмі́на
+  translation: conjugation
   expression: false
   pos: ім.
-  gender: ч.
+  gender: ж.
   verified: true
-- word: роби́ти
-  translation: to be doing
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: зроби́ти
-  translation: to get done
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: чита́ти
-  translation: to be reading
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: прочита́ти
-  translation: to finish reading
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: купува́ти
-  translation: to be buying
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: купи́ти
-  translation: to buy
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: говори́ти
-  translation: to be speaking
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: сказа́ти
-  translation: to say
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: повторення вивченого
-  translation: review of what has been learned
+- word: особове закінчення
+  translation: personal ending
   expression: true
   pos: ''
+  gender: ''
+  verified: true
+- word: потребува́ти
+  translation: to need
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: брати участь
+  translation: to participate
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: давно не бачилися
+  translation: haven't seen each other for a long time
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: відпочива́ла
+  translation: rested
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: пощасти́ло
+  translation: got lucky
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: му́сиш
+  translation: must
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: зо́всім
+  translation: absolutely
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: свіжі яйця
+  translation: fresh eggs
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ри́нок
+  translation: market
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: спокі́йний
+  translation: calm
+  expression: false
+  pos: прикм.
   gender: ''
   verified: true

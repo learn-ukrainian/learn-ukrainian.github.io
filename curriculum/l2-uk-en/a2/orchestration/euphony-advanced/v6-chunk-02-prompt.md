@@ -1,67 +1,30 @@
-# Section-by-Section Generation — Section 2/5
+# Section-by-Section Generation — Section 2/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 12: Милозвучність у складних контекстах (A2, A2.2 [Genitive Case Complete])
-**Section to write:** З, із чи зі? Правила перед збігами приголосних (600 words)
-**Word target for this section:** 300 words (aim for 330 to account for undershoot)
+**Section to write:** З, із чи зі? Правила перед збігами приголосних (Z, Iz, or Zi?) (~660 words)
+**Word target for this section:** 660 words (aim for 726 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## З, із чи зі? Правила перед збігами приголосних (600 words)
-- P1 (~100 words): [Introduction to the triple-form preposition **з/із/зі**. Explain that while **з** is the base, Ukrainian expands it to **із** or **зі** to "lubricate" difficult consonant clusters. Define the goal: to keep the air flowing without sudden stops.]
-- P2 (~120 words): [The use of **з**. Explain it is used before vowels (**з Оленою**) and single consonants that are not sibilants/hushing sounds (**з братом**, **з мамою**). Highlight the simplicity of this form when no phonetic friction exists.]
-- P3 (~120 words): [The use of **із**. Explain its role between two groups of consonants to create a vowel bridge. Examples: **лист із Бразилії** (consonant-ending word + cluster start), **зустріч із вчителем**. Also mention its use before sibilants (**з, с, ц, ш, ч, ж**) like **із задоволенням**.]
-- P4 (~130 words): [The use of **зі**. Focus on its role before clusters starting with **з, с, ш, щ** or other complex combinations. Provide the essential "must-know" examples: **зі школи** (not з школи), **зі мною** (fixed cluster 'мн'), and **зі Львова** (cluster 'льв'). Explain that **зі** acts as a "buffer" for the tongue.]
-- P5 (~130 words): [Connecting euphony to Genitive Case Complete (A2.2). Show how these prepositions behave with genitive endings in natural contexts: **з родини** (simple), **із сім'ї** (s-sibilant), **зі школи** (sh-cluster). Practice these as complete phonetic units rather than separate words.]
-- <!-- INJECT_ACTIVITY: fill-in-z-variants --> [fill-in, Complete sentences with the correct variant of z/iz/zi based on following nouns and pronouns, 8 items]
+## З, із чи зі? Правила перед збігами приголосних (Z, Iz, or Zi?) (~660 words)
+- P1 (~110 words): Introduce the base rules for З, ІЗ, ЗІ. State that 'з' is the default preposition ("з братом", "з Оленою"). Explain that this alternation exists to prevent heavy consonant clusters, especially before hissing or sibilant sounds (ш, щ, з, с).
+- P2 (~110 words): Using 'із'. Explain that 'із' is used between groups of consonants ("лист із Бразилії") or before words starting with з, с, ц, ш, ч, ж ("повернувся із села", "лист із Запоріжжя").
+- P3 (~110 words): Using 'зі' and 'зо'. Explain that 'зі' is reserved for complex initial clusters, especially those starting with з, с, ш, щ ("зі школи", "зі Львова"). Briefly mention that 'зо' is used with the numbers "два" and "три" ("зо два дні").
+- P4 (~120 words): Genitive contexts and pronouns. Apply the rules to A2.2 genitive phrases: "з родини", "із сім'ї", "зі школи". Discuss pronoun exceptions, contrasting the fixed phrase "зі мною" (due to the difficult 'мн-' cluster) with standard forms like "з ним" and "з нею".
+- P5 (~110 words): Common L2 errors. Address typical mistakes such as *з школи (which creates a harsh з-шк cluster and should be "зі школи") and *з мною (which creates з-мн and should be "зі мною"). Correct the over-application *зі ним to "з ним", since 'н' does not require a cluster break.
+- <!-- INJECT_ACTIVITY: error-correction --> [error-correction, Find euphony errors in sentences (e.g., *в вікно, *з школи, *і усі) and correct them, 8 items]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
 
 <previous_context>
-## У чи в? Складні випадки
+[...previous sections truncated...]
 
-Українська мова має одну дуже важливу рису — це милозвучність. Це не просто гарний стиль, а суворе фонетичне правило. Українці завжди намагаються уникати збігу приголосних або голосних звуків. Наша мова тече, як вода, і легко обходить важкі звукові камені.
-
-> *The Ukrainian language has one very important feature — euphony (melodiousness). This is not just a beautiful style, but a strict phonetic rule. Ukrainians always try to avoid a collision of consonant or vowel sounds. Our language flows like water and easily bypasses heavy sound stones.*
-
-Use **у** between consonants, and **в** between vowels. They are the same preposition, adapting to the phonetic environment. At the beginning of a sentence or after a comma, the context resets.
-
-**Читаємо українською**
-
-Мій брат живе у великому місті, а вона зараз мешкає в Одесі. У лісі сьогодні дуже волого. В Україні зима буває холодна. Ми гуляли в парку, а потім пішли у кіно. Наші друзі працюють у центрі.
-
-> *My brother lives in a big city, and she currently resides in Odesa. It is very humid in the forest today. Winter in Ukraine can be cold. We walked in the park, and then went to the cinema. Our friends work in the center.*
-
-:::note
-**Quick tip** — When reading aloud, take a breath at the comma. That breath is your "reset" button for euphony rules!
-:::
-
-The "Forbidden Clusters" rule makes **у** mandatory before words starting with **в**, **ф**, **хв**, **тв**, **св**, or **льв**. This alternation also applies to the initial letters of nouns like **учитель** and **вчитель**.
-
-**Читаємо українською**
-
-Мій знайомий раніше жив у Львові, а потім працював у фірмі. Він має великий успіх у творчості. Мій учитель дуже цікаво розповідає історію. Це наша нова вчителька, вона зараз працює у школі.
-
-> *My acquaintance used to live in Lviv, and later worked in a firm. He has great success in creativity. My teacher explains history very interestingly. This is our new teacher, she currently works at school.*
-
-Do not lock onto one form, such as saying «Я вчуся в школі». Break up heavy clusters with **у**. Listen to the natural flow when the rules are applied in conversation.
-
-> — **Марко:** Привіт! Ти зараз живеш у Львові? *(Hi! Do you live in Lviv now?)*
-> — **Ганна:** Так, я мешкаю у Львові, а працюю в аптеці.
-> — **Марко:** Твій син вчиться у школі чи в університеті?
-> — **Ганна:** Він уже вчиться в університеті.
-> — **Марко:** Він вивчає економіку чи медицину?
-> — **Ганна:** Він вивчає історію в університеті.
-> — **Марко:** А донька теж вчиться в Україні?
-> — **Ганна:** Ні, вона зараз у Франції. Вона живе у Парижі. *(No, she is in France right now. She lives in Paris.)*
-
-Тепер ви знаєте основні правила. Завжди звертайте увагу на сусідні слова. Ваша українська мова буде звучати дуже природно і красиво. Давайте перевіримо ваші знання на практиці.
-
-<!-- INJECT_ACTIVITY: quiz-euphony-variants -->
+was in Ivano-Frankivsk in the winter.* However, the phonetic context resets at clause boundaries and sentence starts. If a sentence begins before a consonant, we start with «у» to make the first word easy to pronounce. If it starts before a vowel, we start with «в» to avoid a vocalic pause. The exact same reset happens after a comma, a dash, or any natural pause in speech. В Україні зима зазвичай холодна, але в Одесі тепло. У лісі, у широкому полі завжди волого. Мабуть, в університеті зараз дуже тихо. > *In Ukraine, the winter is usually cold, but in Odesa, it is warm. In the forest, in the wide field, it is always damp. Probably, in the university, it is very quiet right now.* :::note **Quick tip** — When you see a comma, treat the next word as if it is the beginning of a completely new sentence. The phonetic context is broken, so the rules for euphony start fresh! ::: The surrounding sounds dictate the choice, not the word's base dictionary form. When noun cases change the ending of the previous word, the preposition must adapt immediately. This is why we say «у школі» (avoiding the harsh cluster in *в школі*) but «в університеті» (avoiding the awkward vowel clash in *у університеті*). Я щодня вчуся у школі, а він працює в університеті. Вчора студенти довго були в аудиторії. Ми несподівано зустрілися у великому парку біля театру. > *I study at school every day, and he works at the university. Yesterday, the students were in the lecture hall for a long time. We unexpectedly met in the large park near the theater.* This **чергування** (alternation) also applies to prefixes on verbs and nouns. It is common **вживати** (to use, to apply) different starting letters for the exact same word based on what comes right before it. For example, both «увійти» and «ввійти» exist, and the choice depends entirely on the flow of the sentence. Він увійшов до кімнати дуже тихо. Вона швидко ввійшла першою. Увечері ми сиділи вдома і читали цікаву книгу. Ввечері пішов сильний дощ. > *He entered the room very quietly. She quickly entered first. In the evening, we sat at home and read an interesting book. In the evening, heavy rain started.* When dealing with a **складний** (complex, compound) sentence, learners often make a specific mistake before words starting with «в», «ф», «хв», «св», or «льв». Ukrainian actively avoids doubling v-like or f-like sounds because they blur together. Therefore, you must always use «у» before these letters, regardless of the preceding sound. Saying *в вікно* is incorrect; it must be «у вікно». Вона довго дивилася у вікно на порожню вулицю. Мій старший брат зараз живе у Львові. Цей відомий художник швидко знайшов успіх у творчості. > *She looked into the window at the empty street for a long time. My older brother currently lives in Lviv. This famous artist quickly found success in creativity.* <!-- INJECT_ACTIVITY: match-up, Match sentence beginnings with euphonically correct continuations, 8 items -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -643,6 +606,31 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] милозвучність (euphony, melodiousness)
+- [ ] евфонія (euphony (technical term))
+- [ ] чергування (alternation)
+- [ ] голосний (vowel)
+- [ ] приголосний (consonant)
+- [ ] збіг (cluster, collision)
+- [ ] прийменник (preposition)
+- [ ] сполучник (conjunction)
+- [ ] вживати (to use, to apply)
+- [ ] складний (complex, compound)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## З, із чи зі? Правила перед збігами приголосних (Z, Iz, or Zi?) (~660 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

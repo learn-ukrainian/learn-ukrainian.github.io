@@ -1,25 +1,33 @@
-## Свій та себе у мовленні
+## Свій та себе у мовленні (Свій and Себе in Speech) (~440 words)
 
-Давайте подивимося, як ці важливі слова працюють у реальній розмові. Прочитайте цей короткий діалог між двома друзями. Вони зустрілися на вулиці і говорять про свої щоденні **звички** *(habits)* та плани на день. Зверніть увагу, як часто вони використовують форми «свій» та «себе».
+Using reflexive and possessive pronouns correctly is the secret to sounding natural and idiomatic in daily storytelling. The base possessive form **свій** (one's own) helps you connect actions directly to yourself without sounding repetitive. Let's look at a short reading text about a typical morning routine. This will show you exactly how these pronouns operate in a continuous, realistic context before you look into a **дзеркало** (mirror) and start your day.
 
-> — **Олег:** Привіт, Анно! Ти сьогодні маєш чудовий вигляд. Як твої справи?
-> — **Анна:** Привіт! Дякую. Я нарешті дуже добре виспалася у своєму новому ліжку. Тому я почуваю себе чудово. А ти як?
-> — **Олег:** Я теж почуваю себе дуже добре. Сьогодні вранці я купив собі новий великий телефон. Тепер я можу зручно читати новини у своєму улюбленому кріслі.
-> — **Анна:** Це чудово! Я завжди купую собі щось приємне після важкого тижня. А ти часто робиш собі такі подарунки?
-> — **Олег:** Не дуже часто. Зазвичай я просто беру із собою каву і гуляю у своєму районі. Я почуваю себе спокійно, коли багато ходжу пішки.
-> — **Анна:** Я теж люблю гуляти. Але сьогодні я забула свою **парасольку** *(umbrella)* вдома, а небо сіре. Тому я зараз швидко йду до своєї машини.
-> — **Олег:** Тоді гарного дня! Бережи себе.
+Я прокидаюся рано і відразу готую собі смачний сніданок. Потім я швидко збираю свої речі. Я завжди беру свою парасольку, бо погода мінлива. Я йду на свою роботу пішки, бо люблю гуляти. Я почуваю себе добре, коли все йде за планом. Я дивлюся на себе у велике дзеркало перед виходом. Я горджуся собою, коли встигаю зробити всі важливі справи.
 
-Тепер прочитайте невелику розповідь. Цей короткий текст називається «Мій ранок». Він чудово показує, як одне правило працює в кожному реченні. Коли ви виконуєте дію, ви використовуєте «свій» для своїх речей. А коли дія направлена на вас, ви кажете «себе» або «собі».
+> *I wake up early and immediately prepare a delicious breakfast for myself. Then I quickly gather my things. I always take my umbrella because the weather is changeable. I walk to my job because I love walking. I feel good when everything goes according to plan. I look at myself in the large mirror before leaving. I am proud of myself when I manage to do all important tasks.*
 
-«Зазвичай я прокидаюся дуже рано у своєму світлому ліжку. Я йду у ванну кімнату і довго дивлюся на себе у велике **дзеркало** *(mirror)*. Потім я йду на свою чисту кухню. Там я готую собі дуже міцну каву. Я ніколи не п'ю чай вранці. Я завжди роблю собі смачний сніданок зі свіжих продуктів. Під час сніданку я читаю цікаву книгу. Я люблю брати свою улюблену книгу із собою за стіл. Після сніданку я одягаю свій теплий **светр** *(sweater)*. Потім я беру свою важку сумку і виходжу на вулицю. Я сідаю у свою стару машину. Я вмикаю свою улюблену музику і їду на свою роботу. Я завжди почуваю себе бадьоро вранці, тому що я люблю свою роботу».
+Now we need to address typical direct-translation mistakes. English speakers often make predictable errors when translating phrases word-for-word into Ukrainian. First, remember the strict rule about possession and the direct object form **себе** (oneself, accusative/genitive).
 
-Наприкінці ми маємо поговорити про типові помилки. Студенти часто роблять кілька класичних помилок, коли вчать ці слова.
+Якщо ви кажете «він любить його дружину», це має інше значення. Це означає, що він любить дружину іншого чоловіка. Правильно казати «він любить свою дружину». Також ми не можемо просто сказати «я почуваю себе». Це речення є неповним. Нам потрібен прислівник, щоб показати стан. Можна сказати «я почуваю себе добре» або «погано».
 
-Перша помилка — це використання слова «його» або «її» замість «свій». Наприклад, студент каже: «Він любить його дружину». Українці зрозуміють це так, що цей чоловік любить дружину іншого чоловіка! Це дуже небезпечна помилка. Ви обов'язково повинні сказати: «Він любить свою дружину». Тоді все буде зрозуміло і правильно.
+> *If you say "he loves his wife" (using "yogo"), it has a different meaning. It means that he loves another man's wife. It is correct to say "he loves his own wife". Also, we cannot simply say "I feel myself". This sentence is incomplete. We need an adverb to show the state. You can say "I feel good" or "bad".*
 
-Друга типова помилка пов'язана з дієсловом «почувати себе». Англомовні люди часто кажуть просто: «Я почуваю себе», і роблять тут паузу. В українській мові це речення не має сенсу. Ви завжди маєте додати слово, яке відповідає на запитання «як?». Скажіть: «Я почуваю себе добре» або «Я почуваю себе погано».
+The third common mistake involves the English word "myself" when it implies doing something without help. In Ukrainian, you cannot use the reflexive pronoun for this specific meaning. 
 
-Третя проблема — це прямий переклад фрази «to behave oneself». Студенти часто кажуть: «Вона добре себе поводить». Українці теж так кажуть, і ви можете це почути. Але набагато краще і правильніше сказати: «Вона добре поводиться». Дієслово вже має короткий суфікс «-ся», який означає «себе». Тому вам не потрібно додавати окреме слово «себе».
+Неправильно казати «я зробив це себе». Чоловік повинен сказати «я зробив це сам». Жінка повинна сказати «я зробила це сама». Діти також часто кажуть батькам, що хочуть вести себе добре. Вони хочуть робити всі складні речі самі. Завжди важливо розуміти цей контекст.
 
-<!-- INJECT_ACTIVITY: error-correction-sviy-sebe -->
+> *It is incorrect to say "I did this myself" (using "sebe"). A man must say "I did this myself" (using "sam"). A woman must say "I did this myself" (using "sama"). Children also often tell their parents that they want to behave well. They want to do all difficult things themselves. It is always important to understand this context.*
+
+:::info
+**Grammar box** — Do not confuse the reflexive pronoun with the word **сам** (oneself / alone). Use the reflexive pronoun when an action reflects back to you, like looking in a mirror. Use **сам** or **сама** when you do something independently without any help.
+:::
+
+Finally, let's see a conversational dialogue demonstrating how these pronouns flow between two friends discussing their habits.
+
+> — **Олена:** Я завжди беру з собою парасольку. А ти? *(I always take an umbrella with me. And you?)*
+> — **Тарас:** А я довіряю своїй інтуїції і почуваю себе чудово. *(And I trust my intuition and feel great.)*
+> — **Олена:** Я теж завжди намагаюся вести себе добре. *(I also always try to behave well.)*
+> — **Тарас:** Я дивлюся на себе у дзеркало і горджуся собою. *(I look at myself in the mirror and I am proud of myself.)*
+> — **Олена:** Чи можеш ти уявити собі такий ідеальний день? *(Can you imagine such a perfect day?)*
+
+<!-- INJECT_ACTIVITY: error-correction, Find and fix incorrect usage of свій and себе -->

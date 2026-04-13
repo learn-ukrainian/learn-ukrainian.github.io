@@ -28,9 +28,9 @@ Activities have two placement categories:
 The writer placed these markers in the module content. Your inline activities must match them:
 
 - `<!-- INJECT_ACTIVITY: match-professions -->`
-- `<!-- INJECT_ACTIVITY: recipe-fill-in -->`
-- `<!-- INJECT_ACTIVITY: true-false-workday -->`
-- `<!-- INJECT_ACTIVITY: review-instrumental -->`
+- `<!-- INJECT_ACTIVITY: fill-in-complete-a-recipe-description-for-varenyky-with-correct-instrumental-forms-for-tools-and-ingredients -->`
+- `<!-- INJECT_ACTIVITY: quiz-identify-which-instrumental-function-tool-companion-profession-spatial-transport-is-used-in-each-sentence -->`
+- `<!-- INJECT_ACTIVITY: true-false-judge-whether-sentences-about-a-workday-use-correct-instrumental-forms-for-transport-and-prepositions -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -94,114 +94,183 @@ required:
 <module_content>
 ## Розмова про професії (Talking About Professions)
 
-Уявіть ситуацію: ви на веселій вечірці або на діловій зустрічі. Ви знайомитеся з новими цікавими людьми. Як почати приємну розмову? Спочатку ми запитуємо просту загальну інформацію. Ми кажемо: **«Хто ти?»** (Who are you?) або **«Звідки ти?»** (Where are you from?). Але коли ми хочемо знати про кар'єру, питання змінюється. Ми запитуємо: **«Хто ти за фахом?»** (What is your specialty?) або **«Ким ти працюєш?»** (What do you work as?). Розмова про професії та щоденні хобі допомагає знайти спільні інтереси. Це дуже важливий крок для кожного нового знайомства. Коли ми знаємо професію людини, ми можемо знайти багато чудових тем для розмови.
+Imagine you meet someone new at a party or a networking event. After the basic introductions, the conversation naturally shifts to work and hobbies. In Ukrainian, asking about someone's profession is different from simply asking who they are. While you can ask «Хто ти?» (Who are you?), a more natural way to ask about someone's career is «Хто ти за фахом?» (What is your profession?) or «Ким ти працюєш?» (Who do you work as?). Discussing what you do for a living and what you are passionate about is a great way to find common interests with new friends.
 
-In Ukrainian grammar, the verb **«працювати»** (to work) strictly requires the Instrumental case when you talk about professions. Unlike English, where you say "I work *as a* doctor", in the Ukrainian language, you literally say "I work *by means of a doctor*". This is a core rule you must remember.
+In English, you say "I work as a teacher". In Ukrainian, you do not use the word "as". Instead, the verb **працювати** (to work) always requires the noun to be in the Instrumental case. This answers the question **ким?** (by whom?). For most masculine professions ending in a consonant, you add the ending **-ом** or **-ем**. For feminine professions, which often end in the suffix **-ка**, you use the ending **-кою**.
 
-Для популярних чоловічих професій ми зазвичай додаємо закінчення **-ом** або **-ем** в орудному відмінку. Наприклад, слово **«програміст»** (programmer) стає **«програмістом»**. Слово **«лікар»** (doctor) змінюється на **«лікарем»**, а **«водій»** (driver) — на **«водієм»**. Для сучасних жіночих професій ми дуже часто використовуємо природний суфікс **-ка**. Наприклад, ми кажемо **«вчителька»** (female teacher), **«журналістка»** (female journalist), **«дизайнерка»** (female designer). Ці нові слова в орудному відмінку завжди мають закінчення **-ою**: працюю **«вчителькою»**, працюю **«журналісткою»**, працюю **«дизайнеркою»**.
+Мій брат працює програмістом у великій компанії. Моя сестра працює журналісткою, а мама працює лікаркою. Я зараз вчуся в університеті, але потім хочу працювати дизайнером. Мої друзі працюють будівельниками.
 
-The Instrumental case is also absolutely essential when you are talking about your personal hobbies, daily interests, and deep passions. We naturally use it after specific verbs.
+> *My brother works as a programmer in a large company. My sister works as a journalist, and my mom works as a doctor. I am currently studying at the university, but later I want to work as a designer. My friends work as builders.*
 
-Відоме дієслово **«захоплюватися»** (to be passionate about) завжди вимагає орудного відмінка. Наприклад, ви можете **«захоплюватися фотографією»** (to be passionate about photography). Дієслово **«цікавитися»** (to be interested in) також постійно працює з цим відмінком. Ви можете **«цікавитися спортом»** (to be interested in sport) або активно **«цікавитися мистецтвом»** (to be interested in art). Ми також використовуємо орудний відмінок, коли говоримо про мрії дитинства. Ми запитуємо друзів: **«Ким ти мріяв стати?»** (Who did you dream of becoming?). І відповідаємо: **«Я мріяв стати пілотом»** (I dreamed of becoming a pilot) або **«Я хотіла стати акторкою»** (I wanted to become an actress).
+:::info
+**Grammar box**
+Remember the endings for the Instrumental case:
+- Hard consonants take **-ом** (наприклад: програмістом, дизайнером).
+- Soft consonants and «р» take **-ем** (наприклад: лікарем, кухарем, водієм).
+- Feminine nouns ending in **-а** take **-ою** (наприклад: вчителькою, лікаркою).
+:::
 
-> — **Олексій:** Привіт! Мене звати Олексій. А тебе як звати? *(Hi! My name is Oleksiy. And what is your name?)*
-> — **Марина:** Привіт, Олексію! Я Марина. Дуже приємно познайомитися. Ким ти працюєш? *(Hi, Oleksiy! I am Maryna. Nice to meet you. What do you work as?)*
-> — **Олексій:** Я працюю кухарем у великому ресторані. А ти хто за фахом? *(I work as a chef in a large restaurant. And what is your specialty?)*
-> — **Марина:** Я працюю вчителькою в школі. Мені дуже подобається бути вчителькою. *(I work as a teacher in a school. I really like being a teacher.)*
-> — **Олексій:** Це надзвичайно цікава професія! А чим ти захоплюєшся у вільний час? *(That is an extremely interesting profession! And what are you passionate about in your free time?)*
-> — **Марина:** Я захоплююся сучасною музикою. А також я дуже цікавлюся подорожами. *(I am passionate about modern music. And I am also very interested in traveling.)*
-> — **Олексій:** О, у нас спільні інтереси! Я теж дуже люблю мандрувати. *(Oh, we have shared interests! I also really love to travel.)*
+The Instrumental case is also used when discussing your hobbies and passions. The verbs **захоплюватися** (to be passionate about) and **цікавитися** (to be interested in) require the noun to be in the Instrumental case. It answers the question **чим?** (with what?). You also use this case to talk about childhood dreams with the phrase «мріяти стати» (to dream of becoming).
 
-It is historically and culturally critical to use authentic Ukrainian terms for professions and actively avoid Russian calques. For example, a professional cook is **«кухар»** (cook), so you must never use the Russian word «повар». A skilled hairdresser is **«перукар»** (hairdresser), not the Russian «парикмахер». Using the correct terminology shows respect for the Ukrainian language.
+У вільний час я захоплююся фотографією та цікавлюся мистецтвом. Мій друг цікавиться спортом і любить грати в теніс. У дитинстві я мріяв стати пілотом, але зараз працюю інженером.
 
-Ось коротка таблиця популярних професій та їхніх правильних форм в орудному відмінку:
-*   **«продавець»** (seller) → я працюю **«продавцем»**
-*   **«будівельник»** (builder) → він працює **«будівельником»**
-*   «кухар» → мій брат працює **«кухарем»**
-*   «перукар» → вона працює **«перукарем»**
-*   **«менеджер»** (manager) → я працюю **«менеджером»**
-*   **«інженер»** (engineer) → мій тато працює **«інженером»**
+> *In my free time, I am passionate about photography and interested in art. My friend is interested in sports and likes to play tennis. In childhood, I dreamed of becoming a pilot, but now I work as an engineer.*
 
-Завжди звертайте пильну увагу на ці автентичні українські слова.
+:::note
+**Quick tip**
+The question words for the Instrumental case are **ким?** for people and professions, and **чим?** for objects and interests.
+:::
+
+Let's look at a conversation between Олексій, a chef, and Марина, a teacher, who meet at a party and discuss their work and hobbies.
+
+> — **Олексій:** Привіт! Мене звати Олексій. А тебе як звати? *(Hi! My name is Oleksii. And what is your name?)*
+> — **Марина:** Привіт! Я Марина. Дуже приємно познайомитися. *(Hi! I am Maryna. Nice to meet you.)*
+> — **Олексій:** Мені також. Ким ти працюєш? *(Me too. Who do you work as?)*
+> — **Марина:** Я працюю вчителькою в школі. Я викладаю історію. Мені дуже подобається бути вчителькою, бо я люблю працювати з дітьми. А хто ти за фахом? *(I work as a teacher at a school. I teach history. I really like being a teacher because I love working with children. And what is your profession?)*
+> — **Олексій:** Я кухар. Я працюю кухарем у ресторані. Це важка робота, але цікава. *(I am a cook. I work as a cook in a restaurant. It is hard work, but interesting.)*
+> — **Марина:** О, це чудово! Я люблю смачно поїсти. Ким ти мріяв стати в дитинстві? *(Oh, that's great! I love to eat deliciously. Who did you dream of becoming in childhood?)*
+> — **Олексій:** У дитинстві я мріяв стати лікарем, але зараз я цікавлюся кулінарією. А чим ти захоплюєшся у вільний час? *(In childhood I dreamed of becoming a doctor, but now I am interested in cooking. And what are you passionate about in your free time?)*
+> — **Марина:** Я захоплююся фотографією і дуже цікавлюся подорожами. *(I am passionate about photography and very interested in travel.)*
+> — **Олексій:** Це збіг! Я також цікавлюся подорожами. Ми можемо поговорити про це. *(What a coincidence! I am also interested in travel. We can talk about this.)*
+
+When talking about professions, it is important to use authentic Ukrainian vocabulary. Some learners mistakenly use Russian words that sound familiar, which leads to speaking Surzhyk. For example, the Ukrainian word for a cook is **кухар**, not the Russian *повар*. A hairdresser is **перукар**, not *парикмахер*. Similarly, a cleaner is **прибиральниця**, not *уборщиця*. Using the correct terms shows respect for the language and helps you sound natural.
+
+Here is a quick reference table of common A2 professions and their Instrumental forms:
+
+| Називний (Nominative) | Орудний (Instrumental) |
+| :--- | :--- |
+| продавець | продавцем |
+| будівельник | будівельником |
+| кухар | кухарем |
+| перукар | перукарем |
+| дизайнер | дизайнером |
+| журналістка | журналісткою |
 
 <!-- INJECT_ACTIVITY: match-professions -->
 
 ## На кухні: Готуємо разом (In the Kitchen: Cooking Together)
 
-Уявіть, що ви чекаєте гостей на святкову вечерю. *(Imagine that you are expecting guests for a festive dinner.)* Ви уважно плануєте смачне меню для друзів. *(You are carefully planning a delicious menu for friends.)* Ви хочете приготувати традиційні українські **страви** (dishes). Наприклад, ви будете готувати гарячі **вареники з картоплею** (dumplings with potatoes). Для них потрібна свіжа **картопля** (potato). Також ви робите свіжий **салат з помідорами** (salad with tomatoes), для якого ідеально підійде зелений **огірок** (cucumber). The Instrumental case is absolutely essential in the kitchen. We use it for two main reasons when we talk about the cooking process. First, we use it to talk about the physical tools we hold in our hands. Second, we use it to describe the tasty ingredients that go into a dish. Сьогодні ми будемо **готувати** (to cook) разом і вивчати ці корисні правила. *(Today we will cook together and learn these useful rules.)*
+Сьогодні ми готуємо традиційну українську вечерю. У нашому святковому меню будуть гарячі вареники з картоплею та свіжий салат з помідорами. Робота на кухні вимагає знання граматики, адже ми постійно використовуємо орудний відмінок. Він потрібен нам для двох важливих речей. По-перше, ми називаємо інструмент, яким ми готуємо їжу. По-друге, ми описуємо інгредієнти нашої страви.
 
-When you use a physical object to perform an action, you must use the Instrumental case without any preposition. Це дуже важливе правило української граматики. *(This is a very important rule of Ukrainian grammar.)* Наприклад, ми кажемо **«різати ножем»** (to cut with a knife). Слово **«ніж»** (knife) — це іменник чоловічого роду. Тому воно має закінчення **-ем**. А ось слово **«виделка»** (fork) — це жіночий рід. Жіночий рід зазвичай має стандартне закінчення **-ою**. Тому ми кажемо **«їсти виделкою»** (to eat with a fork) або **«мішати ложкою»** (to stir with a spoon). Особливу увагу зверніть на слово **«сіль»** (salt). Це жіночий рід, який закінчується на м'який приголосний. В орудному відмінку ми кажемо **«посипати сіллю»** (to sprinkle with salt) або **«поливати олією»** (to drizzle with oil). But be careful not to confuse cooking tools with physical locations. If you cook something on a hot surface, you need the Locative case. Ми правильно кажемо **«смажити на сковорідці»** (to fry on a pan), а не використовуємо орудну форму.
+> *Today we are preparing a traditional Ukrainian dinner. In our festive menu there will be hot varenyky with potato and a fresh salad with tomatoes. Work in the kitchen requires knowledge of grammar, because we constantly use the Instrumental case. We need it for two important things. First, we name the tool with which we cook food. Second, we describe the ingredients of our dish.*
 
-When we describe what a dish is made of or what it is served with, we use the preposition **«з»** (with) plus the Instrumental case. Ми часто запитуємо один одного: **«З чим це?»** (With what is this?). Відповідь детально описує інгредієнти. Наприклад, ми щоранку п'ємо гарячий **«чай з медом»** (tea with honey). Ми із задоволенням їмо смачний **«борщ зі сметаною»** (borscht with sour cream). Notice that we use the specific form **«зі»** instead of «з» before a word that starts with two consonants, like «сметана». Це робить швидку вимову значно легшою. *(This makes fast pronunciation significantly easier.)* Українці також дуже люблять літні солодкі **«вареники з вишнями»** (dumplings with cherries). У цьому смачному випадку ми використовуємо орудний відмінок множини.
+When we use an object to perform an action, the Instrumental case acts as the "instrument" or "tool". This function does not require any prepositions. You simply put the noun representing the tool into the Instrumental case to answer the question **чим?** (with what?).
 
-Уважно прочитаймо діалог двох хороших друзів. *(Let's carefully read a dialogue of two good friends.)* Іван та Олена готують святкову вечерю разом. *(Ivan and Olena are cooking a festive dinner together.)* Вони читають новий **рецепт** (recipe). *(They are reading a new recipe.)*
-> — **Іван:** Олено, я дуже хочу зробити салат. *(Olena, I really want to make a salad.)*
-> — **Олена:** Добре! Спочатку помий всі овочі теплою водою. *(Good! First, wash all the vegetables with warm water.)*
-> — **Іван:** Чим мені швидко різати цю цибулю? *(What should I quickly cut this onion with?)*
-> — **Олена:** Ріж цибулю цим великим гострим ножем. Потім додай свіжі помідори. *(Cut the onion with this big sharp knife. Then add fresh tomatoes.)*
-> — **Іван:** А що ми зараз робимо з варениками? *(And what are we doing with the dumplings now?)*
-> — **Олена:** Наші вареники вже повністю готові. Тепер ми будемо їх **подавати** (to serve). *(Our dumplings are already completely ready. Now we will serve them.)*
-> — **Іван:** З чим ми зазвичай подаємо вареники? *(What do we usually serve the dumplings with?)*
-> — **Олена:** Ми завжди подаємо їх зі шкварками та смаженою цибулею. *(We always serve them with cracklings and fried onion.)*
+Наприклад, ми можемо обережно різати хліб чи м'ясо гострим ножем. Ми їмо салат виделкою, а мішаємо гарячий суп великою ложкою. Також ми обов'язково посипаємо готову страву сіллю.
 
-There are a few common vocabulary traps to avoid in the Ukrainian kitchen. Many language learners confuse the everyday words for oil and butter. В українській мові **«олія»** (oil) — це завжди рідкий продукт, наприклад, соняшникова або оливкова олія. А **«масло»** (butter) — це завжди твердий продукт з коров'ячого молока. Також пам'ятайте про популярне слово **«сир»** (cheese). В Україні це коротке слово означає і твердий сир, і м'який кисломолочний сир. Finally, remember to use authentic Ukrainian cooking verbs. Коли ми готуємо м'ясо на сковорідці, ми повинні **«смажити»** (to fry). Ніколи не використовуйте російське слово «жарити». Ми завжди смажимо картоплю або рибу на обід. *(We always fry potatoes or fish for lunch.)*
+> *For example, we can carefully cut bread or meat with a sharp knife. We eat salad with a fork, and we stir hot soup with a large spoon. Also, we necessarily sprinkle the finished dish with salt.*
 
-<!-- INJECT_ACTIVITY: recipe-fill-in -->
+:::info
+**Grammar box: Tool vs. Location**
+Tools take the Instrumental without a preposition, but cooking *surfaces* or *locations* take the Locative case with **на** or **в**. We say **смажити на сковорідці** (to fry on a pan), not ~~смажити сковорідкою~~.
+:::
+
+The second major use of the Instrumental case in the kitchen is describing ingredients and side dishes. When a dish is made *with* something, we use the preposition **з** (or **зі** before double consonants to make pronunciation easier) followed by the Instrumental case. This answers the question **з чим?** (with what?).
+
+Українці дуже люблять пити гарячий чай з лимоном і медом. На обід ми часто їмо червоний борщ зі сметаною та свіжим хлібом. А на десерт можна приготувати солодкі вареники з вишнями.
+
+> *Ukrainians really love drinking hot tea with lemon and honey. For lunch we often eat red borscht with sour cream and fresh bread. And for dessert one can prepare sweet varenyky with cherries.*
+
+Let's see how these rules come together when Іван and Олена follow a recipe. Notice how they use imperative verb forms like **поріжте**, **додайте**, and **змішайте** alongside Instrumental tools and ingredients.
+
+> — **Іван:** Що ми будемо готувати спочатку? *(What will we cook first?)*
+> — **Олена:** Спочатку ми робимо салат. Поріжте помідори, огірки та перець. *(First we are making a salad. Cut the tomatoes, cucumbers, and pepper.)*
+> — **Іван:** Чим мені різати цибулю? *(With what should I cut the onion?)*
+> — **Олена:** Ріж цибулю цим ножем. Потім додай її в салат і змішай усе ложкою. *(Cut the onion with this knife. Then add it to the salad and mix everything with a spoon.)*
+> — **Іван:** Готово. А з чим ми подаємо вареники? *(Done. And with what are we serving the varenyky?)*
+> — **Олена:** Подаємо їх зі шкварками та сметаною. *(We are serving them with cracklings and sour cream.)*
+
+When talking about food, it is important to use authentic Ukrainian vocabulary and avoid Russian calques.
+
+Українська мова має чіткі назви для популярних продуктів. Наприклад, соняшникова рідина — це «олія», а твердий продукт із молока — це «масло». Також ми називаємо словом «сир» і твердий сир, і домашній кисломолочний продукт. Пам'ятайте, що м'ясо ми «смажимо», а не «жаримо».
+
+> *The Ukrainian language has clear names for popular products. For example, sunflower liquid is "oil" (олія), and the solid product from milk is "butter" (масло). Also, we call both hard cheese and homemade cottage cheese product with the word "cheese" (сир). Remember that we "fry" (смажимо) meat, not "жаримо" (Russian calque).*
+
+:::note
+**Quick tip: Олія vs Масло**
+Use **олія** for liquid plant-based oils and **масло** ONLY for dairy butter. The Russian word *творог* does not exist in Ukrainian; use **сир** or **домашній сир** for cottage cheese.
+:::
+
+<!-- INJECT_ACTIVITY: fill-in-complete-a-recipe-description-for-varenyky-with-correct-instrumental-forms-for-tools-and-ingredients -->
 
 ## Мій робочий день (My Workday)
 
-Ми вже знаємо, як говорити про наші професії та смачну їжу. *(We already know how to talk about our professions and delicious food.)* Тепер детально поговорімо про наш типовий **робочий день** (workday). Коли ми описуємо свою щоденну професійну рутину, ми постійно рухаємося в просторі та часі. Ми швидко їдемо на роботу, сидимо за робочим столом, смачно обідаємо з колегами. У всіх цих ситуаціях нам дуже допомагає орудний відмінок. Він показує не тільки зручний інструмент або приємну компанію. Орудний відмінок чудово описує, як саме ми подорожуємо містом і де точно ми працюємо. *(The Instrumental case perfectly describes exactly how we travel through the city and where exactly we work.)* When we talk about daily movement and schedules, the Instrumental case clearly expresses the core idea of "by means of".
+We have discussed how to talk about our professions and how to use tools in the kitchen. Now, let us connect these ideas to describe a full workday. When we talk about our daily routine, we often describe how we travel, who we spend time with, and where things are located in our workspace. The Instrumental case helps us express all these details smoothly. It allows us to move from simply stating who we are to describing how we navigate through the day, especially when expressing the concept of traveling "by means of" a specific vehicle.
 
-In Ukrainian, we don't need an extra preposition to say we travel "by" a certain type of transport. Ми просто використовуємо слово у правильній формі орудного відмінка. *(We simply use the word in the correct Instrumental case form.)* Наприклад, ми часто кажемо **«їхати автобусом»** (to go by bus), **«їхати машиною»** (to go by car), або **«їхати велосипедом»** (to go by bicycle). Пам'ятайте, що популярне слово **«метро»** (subway) ніколи не змінює свою форму. The Instrumental case is also absolutely essential for describing physical locations and time using specific prepositions. These important spatial and temporal prepositions are **«перед»** (before / in front of), **«за»** (behind / at), **«між»** (between), **«над»** (above), and **«під»** (under). Ми кажемо: **«Я завжди паркуюся за офісом»** (I always park behind the office). Або ми детально описуємо кімнату: **«Мій стіл стоїть між великим вікном і дверима»** (My desk stands between the big window and the door). Ми часто ховаємо сумку **під столом** (under the table).
+To say how you travel, use the Instrumental case without any prepositions. This expresses the idea of moving by means of a vehicle. For example, you can travel by bus, by car, or by tram. We also use the Instrumental case after specific spatial prepositions to describe locations around the office. These prepositions include words for in front of, behind, between, above, and under.
 
-Разом подивімося короткий відеоблог про типовий день менеджера. *(Let's watch a short vlog about a manager's typical day together.)* Ця цікава розповідь чудово поєднує різні корисні функції орудного відмінка. *(This interesting story perfectly combines various useful functions of the Instrumental case.)*
-> — **Менеджер:** Вранці я завжди їду на роботу **трамваєм** (by tram). *(In the morning I always go to work by tram.)*
-> — **Менеджер:** **Перед роботою** (Before work) я купую гарячу каву з молоком.
-> — **Менеджер:** Мій новий офіс — **над кав'ярнею** (above the coffee shop).
-> — **Менеджер:** Я майже весь день працюю **за комп'ютером** (at the computer).
-> — **Менеджер:** О першій годині я обідаю **з колегами** (with colleagues).
-> — **Менеджер:** Після смачного обіду я маю важливу **нараду** (meeting) з директором.
-> — **Менеджер:** Я завжди працюю **за розкладом** (according to schedule), а **між нарадами** (between meetings) п'ю каву.
-> — **Менеджер:** Ввечері я повертаюся додому машиною. *(In the evening I return home by car.)*
+Я щодня їду на роботу автобусом або машиною. Мій брат їде велосипедом, а сестра завжди їде метро. Я паркуюся перед офісом або за будинком. Мій стіл стоїть між вікном і дверима. Годинник висить над столом, а мій рюкзак лежить під столом.
 
-To make our sentences more natural and descriptive, we very often add adjectives and possessive pronouns. When the main noun changes to the Instrumental case, its connected adjectives and pronouns must change too. Для чоловічого та середнього роду ми використовуємо закінчення **-им** (або **-ім** для м'якої групи). *(For masculine and neuter genders, we use the ending -ym or -im.)* Наприклад, ми із задоволенням говоримо **«з моїм новим менеджером»** (with my new manager) або вішаємо лампу **«над великим столом»** (above the big table). Для жіночого роду ми використовуємо закінчення **-ою** (для прикметників) та **-єю** (для займенників). *(For the feminine gender, we use the ending -oyu for adjectives and -yeyu for pronouns.)* Наприклад, ми пишемо **«новою ручкою»** (with a new pen) або щодня працюємо **«з моєю новою директоркою»** (with my new director).
+> *I go to work every day by bus or by car. My brother goes by bicycle, and my sister always goes by subway. I park in front of the office or behind the building. My desk stands between the window and the door. The clock hangs above the desk, and my backpack lies under the desk.*
 
-| Рід (Gender) | Займенник (Pronoun) | Прикметник (Adjective) | Приклад (Example) |
-| :--- | :--- | :--- | :--- |
-| **Чоловічий / Середній** | мо**їм** | нов**им**, велик**им** | з мо**їм** нов**им** менеджером |
-| **Жіночий** | мо**єю** | нов**ою**, цікав**ою** | з мо**єю** нов**ою** директоркою |
+:::note
+**Quick tip: Transport**
+Remember that **метро** is a foreign loanword and never changes its ending in Ukrainian. We say **їхати автобусом**, but **їхати метро**.
+:::
 
-Ці граматичні закінчення роблять нашу українську мову красивою та дуже точною. *(These grammatical endings make our Ukrainian language beautiful and very precise.)* Тепер ви можете детально описати свій щоденний маршрут та звичайний робочий день. *(Now you can describe your daily route and regular workday in detail.)*
+Let us see how all these Instrumental functions work together in a real-life scenario. In this short vlog monologue, a project manager describes a typical morning and afternoon at the office. Pay attention to how transport, tools, companionship, and spatial locations are all expressed using the same grammatical case.
 
-<!-- INJECT_ACTIVITY: true-false-workday -->
+Вранці я їду на роботу трамваєм. Перед роботою я завжди купую каву з молоком. В офісі я багато працюю за комп'ютером. О першій годині я обідаю з колегами. Після обіду я маю важливу нараду з директором. Мій кабінет розташований над кав'ярнею, тому там завжди гарно пахне.
 
-## Практика: Розкажи про себе (Practice: Tell About Yourself)
+> *In the morning, I go to work by tram. Before work, I always buy coffee with milk. In the office, I work a lot at the computer. At one o'clock, I have lunch with colleagues. After lunch, I have an important meeting with the director. My office is located above the coffee shop, so it always smells nice there.*
 
-Зараз ми об'єднаємо всі наші знання про орудний відмінок. *(Now we will combine all our knowledge about the Instrumental case.)* Спробуйте написати коротку розповідь про себе, свою професію та інтереси. *(Try to write a short story about yourself, your profession, and interests.)* Your profile should be about eight to ten sentences long. Почніть з опису вашої роботи: **«Я працюю...»** (I work as...). *(Start with a description of your work: "I work as...".)* Далі розкажіть про ваше хобі: **«У вільний час я цікавлюся...»** (In my free time I am interested in...). *(Next, tell about your hobby: "In my free time I am interested in...".)* Не забудьте описати вашу улюблену страву: **«Я люблю салат з...»** (I love salad with...). *(Don't forget to describe your favorite dish: "I love salad with...".)* Наприкінці опишіть ваш типовий маршрут: **«Вранці я їду на роботу...»** (In the morning I go to work by...). *(At the end, describe your typical route: "In the morning I go to work by...".)* When writing, always check the gender of the noun. Remember that masculine and neuter nouns take the ending **-ом** or **-ем**, while feminine nouns take **-ою** or **-ею**. Уважно перевіряйте закінчення прикметників: **«з моїм новим колегою»** (with my new colleague) або **«з моєю новою колегою»** (with my new [female] colleague). *(Carefully check the endings of adjectives: "with my new colleague" or "with my new [female] colleague".)*
+When you add adjectives and possessive pronouns to these descriptions, they must also change to match the noun in the Instrumental case. For masculine and neuter words, adjectives take the ending **-им**. For feminine words, they take the ending **-ою**. Plural adjectives take the ending **-ими**. 
 
-А тепер попрактикуймо ці конструкції в реальній розмові. *(And now let's practice these constructions in a real conversation.)* Уявіть, що ви знайомитеся з новою людиною на вечірці. *(Imagine that you are meeting a new person at a party.)*
+Сьогодні я працюю з моїм новим колегою. Ми сидимо за великим круглим столом. Ввечері я їду додому і відпочиваю з цікавою книжкою. У вихідні ми часто гуляємо з нашими старими друзями.
 
-> — **Анна:** Привіт! Ми ще не знайомі. **Ким ти працюєш?** *(Hi! We haven't met yet. What do you do for a living?)*
-> — **Максим:** Привіт! Я працюю **програмістом** (programmer). А ти?
-> — **Анна:** А я працюю **вчителькою** (teacher). **Чим ти захоплюєшся** (What are you passionate about) після роботи?
-> — **Максим:** Я цікавлюся **фотографією** (photography). А також дуже люблю готувати!
-> — **Анна:** **Справді?** (Really?) Яку їжу ти любиш готувати?
-> — **Максим:** Найбільше я люблю робити великий бутерброд **з сиром** (with cheese) і **помідорами** (tomatoes).
-> — **Анна:** **Я теж!** (Me too!) Це дуже смачно. **Цікаво** (Interesting), де ти працюєш?
-> — **Максим:** Мій офіс розташований **між** (between) банком і парком.
+> *Today I am working with my new colleague. We sit at a large round table. In the evening I go home and relax with an interesting book. On weekends we often walk with our old friends.*
 
-**Підсумок** (Summary).  Цей відмінок є надзвичайно важливим для природного спілкування українською мовою. *(This case is extremely important for natural communication in Ukrainian.)* Before we finish this module, use this simple self-check list to review your new skills. Подумайте, чи можете ви відповісти «так» на всі ці запитання. *(Think if you can answer "yes" to all these questions.)*
+:::info
+**Grammar box: Instrumental Adjectives**
+Here is a quick reference for adjectives and possessive pronouns in the Instrumental case:
+*   **Masculine & Neuter:** ending **-им** (з новим проєктом).
+*   **Feminine:** ending **-ою** or **-єю** (з цікавою людиною).
+*   **Plural:** ending **-ими** (з хорошими колегами).
+:::
 
-* Can I confidently name my own profession and five others using the correct **-ом**, **-ем**, **-ою**, or **-ею** endings?
-* Can I accurately describe three ingredients in my favorite dish using the preposition **«з»** (with)?
-* Can I name three tools I regularly use in the kitchen, like **ножем** (with a knife) or **ложкою** (with a spoon)?
-* Can I explain exactly where my office or home is located using spatial prepositions like **«між»** (between), **«за»** (behind), or **«над»** (above)?
-* Do I remember NOT to use the Russian calques «повар» and «жарити», and instead use the correct Ukrainian words **кухар** (cook) and **смажити** (to fry)?
+<!-- INJECT_ACTIVITY: quiz-identify-which-instrumental-function-tool-companion-profession-spatial-transport-is-used-in-each-sentence -->
+<!-- INJECT_ACTIVITY: true-false-judge-whether-sentences-about-a-workday-use-correct-instrumental-forms-for-transport-and-prepositions -->
 
-Якщо ви відповіли «так», ви чудово засвоїли цей матеріал! *(If you answered "yes", you have mastered this material perfectly!)*
+## Підсумок — Практика: Розкажи про себе
 
-<!-- INJECT_ACTIVITY: review-instrumental -->
+In this final practice, your task is to write a comprehensive profile about yourself. You need to write eight to ten sentences describing your daily life, your job, your hobbies, and your favorite food. Use the Instrumental case to connect these ideas naturally and show your ability to hold a complex conversation.
 
+Тепер твоя черга розповісти про себе. Напиши вісім або десять речень про своє життя. Розкажи, ким ти працюєш. Напиши, чим ти цікавишся. Опиши свій звичайний робочий день. Напиши, чим ти їдеш на роботу. Розкажи також, з ким ти обідаєш. Не забудь розповісти про свою улюблену їжу. Використовуй орудний відмінок для цікавої розповіді.
+
+> *Now it is your turn to tell about yourself. Write eight or ten sentences about your life. Tell what you work as. Write what you are interested in. Describe your usual workday. Write what you travel to work by. Tell also who you have lunch with. Do not forget to tell about your favorite food. Use the Instrumental case for an interesting story.*
+
+When writing your profile, build your sentences around these core phrases: **Я працюю...**, **Я цікавлюся...**, **Я люблю...**, and **Я їду... перед...**. Pay close attention to the gender of the nouns you use. Remember that masculine and neuter nouns usually take the **-ом** or **-ем** endings, while feminine nouns take the **-ою** or **-ею** endings. Check your adjective endings as well to ensure perfect agreement.
+
+Уяви, що ти знайомишся з новою людиною на вечірці. Це чудова нагода попрактикувати нові конструкції в реальній розмові. Використовуй короткі реакції, щоб підтримати бесіду.
+
+> — **Олена:** Привіт! Ми ще не знайомі. Ким ти працюєш? *(Hi! We haven't met yet. What do you work as?)*
+> — **Марк:** Привіт! Я працюю архітектором. А ти? *(Hi! I work as an architect. And you?)*
+> — **Олена:** Я працюю вчителькою. А чим ти захоплюєшся у вільний час? *(I work as a teacher. And what are you passionate about in your free time?)*
+> — **Марк:** Я захоплююся фотографією. Також я люблю готувати. *(I am passionate about photography. Also, I love to cook.)*
+> — **Олена:** Справді? Я теж! Яку їжу ти найбільше любиш готувати? *(Really? Me too! What food do you like to cook the most?)*
+> — **Марк:** Я часто готую борщ з яловичиною або вареники з картоплею. А ти? *(I often cook borscht with beef or varenyky with potatoes. And you?)*
+> — **Олена:** Цікаво! А я обожнюю пекти торти з масляним кремом. *(Interesting! And I adore baking cakes with buttercream.)*
+
+The Instrumental case is one of the most versatile and powerful tools in Ukrainian. You have seen how it connects actions to the tools we use, the people we spend time with, our professions, and even where things are located in space. It is the key to speaking fluently about your daily routines and personal interests.
+
+Ось короткий список для самоперевірки. Прочитай ці питання і перевір свої знання.
+* Чи можу я назвати свою професію та ще п'ять інших?
+* Чи можу я описати три інгредієнти у страві за допомогою прийменника «з»?
+* Чи можу я назвати три інструменти на кухні, наприклад, ножем або ложкою?
+* Чи можу я пояснити розташування офісу словами «між» або «за»?
+* Чи я пам'ятаю, що не можна казати «повар» і «жарити»?
+
+> *Here is a short checklist for self-assessment. Read these questions and check your knowledge.*
+> - *Can I name my profession and five others?*
+> - *Can I describe three ingredients in a dish using the preposition "з" (with)?*
+> - *Can I name three tools in the kitchen, for example, with a knife or with a spoon?*
+> - *Can I explain the location of the office with the words "між" (between) or "за" (behind)?*
+> - *Do I remember that one must not say "повар" (cook) and "жарити" (to fry)?*
+
+:::info
+**Grammar box: Instrumental Summary**
+Use the Instrumental case to answer the questions "By whom?" or "With what?". It is essential for describing professions, tools, accompaniment, spatial locations, and transport. Always verify that you are using authentic Ukrainian vocabulary like **кухар** and **смажити**, avoiding Russian calques.
+:::
 </module_content>
 
 ---

@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-ставиться обов'язкова кома, щоб візуально та інтонаційно розділити ці дві незалежні смислові частини. Щоб ще глибше та краще зрозуміти справжню природу складносурядного зв'язку, дуже корисно порівняти його з іншим типом — **складнопідрядним реченням** *(complex-subordinate sentence)*. У складнопідрядному реченні завжди присутня жорстка структура влади: там є головна частина (яка виступає як господар) і залежна частина (яка виконує роль підлеглого слуги). Сам вибір сполучника миттєво змінює всю ієрархію поданої інформації. Візьмемо для прикладу дві прості ситуації: захід сонця на горизонті та швидке настання вечірньої темряви. Якщо ми об'єднаємо ці два факти рівноправним сурядним зв'язком, то отримаємо таке речення: «Сонце зайшло, і стало темно». Обидва факти подаються тут як абсолютно рівноцінні події, і ми просто констатуємо їхню хронологічну послідовність. Жодна з частин не домінує над іншою. Але якщо ми вирішимо використати підрядний часовий сполучник «коли», уся граматична структура кардинально зміниться: «Коли сонце зайшло, стало темно». Тепер друга частина («стало темно») стає безперечно головною, а перша («коли сонце зайшло») перетворилася на залежну обставину часу. Тепер ми можемо логічно поставити питання від головної частини до залежної: стало темно (коли саме?), коли сонце зайшло. Сурядний зв'язок дає нам чудову можливість зберігати демократичний баланс між ідеями, тоді як підрядний зв'язок змушує нас розставляти чіткі пріоритети та підпорядковувати одну думку іншій для більшої точності. А тепер погляньмо на практичний приклад того, як складносурядні речення природно працюють у нашому повсякденному реальному житті. Софія та Андрій зустрілися у затишній львівській кав'ярні, щоб спокійно обговорити свої плани на майбутні вихідні. Під час розмови вони активно та невимушено використовують єднальні, протиставні та розділові сполучники сурядності, щоб висловити свої побажання, запропонувати альтернативи та знайти компроміс. > — **Софія:** Я хочу піти в кіно, а Андрій мріє про театр. *(I want to go to the cinema, but Andriy dreams of the theater.)* > — **Андрій:** Ми можемо розділитися на цей вечір. Ти підеш на свій улюблений сеанс, а я з радістю подивлюся нову виставу. *(We can split up for this evening. You will go to your favorite screening, and I will gladly watch a new play.)* > — **Софія:** Ні, я хочу провести цей вільний час разом. Погода сьогодні дуже гарна, і ми могли б довго погуляти в Стрийському парку. *(No, I want to spend this free time together. The weather today is very nice, and we could take a long walk in Stryiskyi Park.)* > — **Андрій:** Це дійсно чудова ідея для вихідного. Або ми підемо на цікаву виставку, або просто залишимося вдома і замовимо велику піцу. *(That is a really great idea for the weekend. Either we will go to an interesting exhibition, or we will just stay home and order a large pizza.)* > — **Софія:** Домовилися, так і зробимо! Спочатку ми добре погуляємо на свіжому повітрі, і потім разом вирішимо щодо наших планів на вечір. *(Agreed, we will do just that! First we will take a good walk in the fresh air, and then together we will decide about our plans for the evening.)* <!-- INJECT_ACTIVITY: quiz, identifying ССР vs. simple sentences and the concept of equality, 12 items -->
+класичний приклад рівноправності. Ми просто констатуємо два факти, які відбулися послідовно. Друге речення: «Коли сонце зайшло, стало темно». Тут з'являється чітка ієрархія. Головна частина — «стало темно». Від неї ми можемо поставити питання «коли?» до підрядної частини: «Коли сонце зайшло». Підрядна частина повністю залежить від головної і не може існувати самостійно як повноцінна думка. The choice of conjunction completely alters the architecture of your sentence. Coordinating conjunctions are categorized into three main semantic groups. An **єднальний** (copulative — і, й, та) conjunction simply adds information. A **протиставний** (adversative — але, а, зате, проте) conjunction introduces a contrast. A **розділовий** (disjunctive — або, чи, то...то) conjunction presents alternatives. The true beauty of the compound sentence lies in its ability to express various semantic relationships between equal events. Depending on which conjunction you choose, you can paint an entirely different picture of how the clauses relate to one another. Кожен сполучник сурядності створює специфічний смисловий зв'язок між частинами речення. Наприклад, єднальний сполучник може виражати одночасність, коли події відбуваються паралельно. Якщо події йдуть одна за одною, ми маємо справу з таким явищем, як послідовність. З іншого боку, протиставний сполучник створює протиставлення, коли одна дія суперечить іншій. Також можливе просте зіставлення двох різних фактів без прямого конфлікту. These semantic links are what make your Ukrainian sound fluent and deeply expressive. A sentence might describe **одночасність** (simultaneity) or perhaps a logical **послідовність** (sequence) of events. Alternatively, you might use a conjunction to highlight a sharp **протиставлення** (opposition/contrast). By mastering the art of combining independent clauses, you move away from choppy, robotic speech and begin weaving your thoughts into a cohesive, elegant tapestry. Beyond direct conflicts, you can also use these structures for a gentle **зіставлення** (comparison/juxtaposition) of two different facts. Let's see how these principles work in a real-life conversation. Sofia and Andriy are sitting at a coffee shop in Lviv, trying to figure out their plans for the weekend. Notice how they use compound sentences to balance their preferences and describe alternatives. > — **Софія:** Я хочу піти в кіно, а ти мрієш про театр. *(I want to go to the cinema, but you dream about the theater.)* > — **Андрій:** Ми можемо знайти компроміс. Або ми підемо на нову виставку, або просто залишимося вдома. *(We can find a compromise. Either we will go to the new exhibition, or we will simply stay at home.)* > — **Софія:** Сьогодні погода дуже гарна, і ми могли б погуляти в Стрийському парку. *(The weather is very nice today, and we could take a walk in Stryiskyi Park.)* > — **Андрій:** Це чудова ідея. Сонце світить яскраво, але вітер трохи прохолодний. *(That is a great idea. The sun is shining brightly, but the wind is a bit chilly.)* > — **Софія:** Я візьму теплий шарф, і ми підемо пити каву на свіжому повітрі. *(I will take a warm scarf, and we will go drink coffee in the fresh air.)* `<!-- INJECT_ACTIVITY: quiz-concept-check, focus on identifying ССР vs. simple sentences and the concept of equality, 12 items -->`
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -508,7 +508,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -521,18 +588,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] складносурядне речення (compound sentence)
+- [ ] сполучник сурядності (coordinating conjunction)
+- [ ] єднальний (copulative — і, й, та)
+- [ ] протиставний (adversative — але, а, зате, проте)
+- [ ] розділовий (disjunctive — або, чи, то...то)
+- [ ] рівноправний (equal, coordinate — parts of equal status)
+- [ ] одночасність (simultaneity)
+- [ ] послідовність (sequence)
+- [ ] протиставлення (opposition/contrast)
+- [ ] зіставлення (comparison/juxtaposition)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Єднальні сполучники (~800 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

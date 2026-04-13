@@ -1,21 +1,21 @@
-# Section-by-Section Generation — Section 2/5
+# Section-by-Section Generation — Section 2/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 54: Більше, краще, найкраще (A2, A2.8 [Refinement and Graduation])
-**Section to write:** Найвищий ступінь: хто найкращий? (~520 words total)
-**Word target for this section:** 520 words (aim for 572 to account for undershoot)
+**Section to write:** Найвищий ступінь: хто найкращий? (~550 words)
+**Word target for this section:** 550 words (aim for 605 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Найвищий ступінь: хто найкращий? (~520 words total)
-- P1 (~120 words): Concept of the superlative. Formation of the synthetic superlative by adding the prefix **най-** to the comparative form. Emphasize that we use the comparative stem, not the base stem. Examples: солодший → найсолодший, цікавіший → найцікавіший, дорожчий → найдорожчий.
-- P2 (~80 words): The compound superlative: **найбільш** or **найменш** + the basic adjective. Used in more formal contexts. Examples: найбільш популярний, найбільш відомий.
-- P3 (~100 words): Intensifiers for the superlative: **якнай-** and **щонай-**. Explain how these add the meaning of "as ... as possible" or "the very ...". Examples: якнайшвидший (as fast as possible), щонайкращий (the very best).
-- P4 (~120 words): The "Самий" Trap (Decolonization focus). Explicitly forbid the use of the Russianism "самий" (e.g., *самий великий*) to form the superlative. Explain that Ukrainian uses the prefix **най-**. Compare ❌ "самий кращий" with ✅ "найкращий".
-- P5 (~100 words): Short narrative: "Українські рекорди". A text describing extreme points in Ukraine: the highest mountain (найвища гора Говерла), the biggest city (найбільше місто Київ), the deepest metro station (найглибша станція метро Арсенальна).
+## Найвищий ступінь: хто найкращий? (~550 words)
+- P1 (~90 words): Short dialogue with questions seeking the extreme. "Яке місто найбільше в Україні? Хто найкращий футболіст? Яка пора року найгарніша?" Sets the stage for superlatives.
+- P2 (~110 words): Explain the synthetic superlative degree. Show that it is formed simply by adding the prefix `най-` to the comparative stem. Examples: `най-` + `солодший` = `найсолодший`, `найтепліший`, `найдорожчий`.
+- P3 (~100 words): Explain the analytic superlative degree. Formed using `найбільш` / `найменш` + base adjective (`найбільш популярний`, `найменш відомий`). Remind learners again that the synthetic prefix `най-` is much more frequent in natural speech.
+- P4 (~120 words): Introduce intensified superlatives. Show how adding `якнай-` or `щонай-` adds strong emphasis ("the absolute best/most"). Examples: `якнайшвидше`, `щонайкращий`. Give a sentence: "Читай якнайскоріше, аби встигнути."
+- P5 (~130 words): Crucial decolonial warning: Explain that using the word `самий` to form a superlative (`*самий великий`, `*самий кращий`) is a direct Russianism and a major grammatical error in Ukrainian. Stress that Ukrainian exclusively uses the `най-` prefix (`найбільший`, `найкращий`).
 - <!-- INJECT_ACTIVITY: match-up-superlative --> [match-up, Match adjective to its superlative form, 8 items]
 
 ---
@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-легко стає словом **цікавіший** *(more interesting)*. Слово **теплий** *(warm)* швидко перетворюється на **тепліший** *(warmer)*. Ви також можете впевнено сказати **гарніший** *(nicer)* від слова **гарний** *(nice)*. Це абсолютно правильна регулярна **альтернатива** *(alternative)*. Цікаво, що слово **швидкий** *(fast)* має дві можливі форми. Ви можете сказати **швидший** або **швидкіший** *(faster)*. Обидва варіанти правильні та зрозумілі. Вибирайте той суфікс, який вам зараз легше вимовляти. Коли ми додаємо суфікс **-ш-**, дуже часто відбувається **чергування приголосних** *(consonant mutation)*. Це абсолютно природний фонетичний **процес** *(process)*. Звуки просто змінюються, щоб слово було набагато легше вимовляти. Є три головні правила, які вам треба запам'ятати. Перше правило: звуки **г**, **ж**, **з** плюс суфікс **-ш-** завжди дають новий звук **жч**. Наприклад, слово **дорогий** *(expensive)* стає словом **дорожчий** *(more expensive)*. Слово **близький** *(close)* стає **ближчий** *(closer)*. А слово **дужий** *(strong)* стає **дужчий** *(stronger)*. Друге правило: звук **с** плюс **-ш-** разом дають звук **щ**. Тому слово **високий** *(tall)* стає словом **вищий** *(taller)*. Третє правило: звуки **ст** плюс **-ш-** також дають звук **щ**. Наприклад, слово **товстий** *(thick)* має дві правильні форми: **товстіший** або **товщий** *(thicker)*. Особливо слова «дорожчий» та «вищий» є дуже популярними у щоденних розмовах. <!-- INJECT_ACTIVITY: fill-in, Form the comparative from the base adjective, 8 items --> В українській мові також успішно існує **складена форма** *(compound form)* порівняння. Для неї ми використовуємо спеціальні слова **більш** *(more)* або **менш** *(less)*. Після них завжди йде звичайна форма прикметника. Ця форма часто звучить трохи більш **офіційно** *(formally)* або книжно. Ми зазвичай використовуємо її для тонких **нюансів** *(nuances)*. Також вона дуже потрібна для довгих або складних багатоскладових слів. Наприклад, ми часто кажемо **більш відомий** *(more famous)*. Або ми можемо сказати **менш популярний** *(less popular)*. Це дійсно дуже простий спосіб порівняння, але прості форми з суфіксами звучать більш природно. Як правильно будувати цілі речення з порівнянням? В українській мові є дві правильні синтаксичні **конструкції** *(constructions)*. Вони мають абсолютно однакове значення, але зовсім різну граматику. Перша поширена конструкція використовує слово **ніж** *(than)* та **називний відмінок** *(Nominative case)*. Наприклад: «Цей новий телефон дорожчий, ніж той». Зверніть увагу на обов'язкову кому перед словом «ніж». Друга конструкція використовує прийменник **за** *(than)* та **знахідний відмінок** *(Accusative case)*. Наприклад: «Цей новий телефон дорожчий за той». Тут жодна кома не потрібна. Обидві форми дуже активно використовуються в розмовній мові. Ви можете сміливо вибирати ту конструкцію, яка вам зараз більше подобається. Прочитайте цей короткий діалог у магазині електроніки. Він добре показує, як звичайні люди щодня порівнюють різні речі в реальному житті. > — **Покупець:** Добрий день! Я зараз шукаю новий сучасний **смартфон** *(smartphone)*. > — **Консультант:** Добрий день! Будь ласка, подивіться на ці дві популярні моделі. > — **Покупець:** Цей екран **більший** *(bigger)*, але телефон також дуже дорогий. > — **Консультант:** Так, ви маєте рацію. Але ця чорна модель **дешевша** *(cheaper)* за ту. Вона має трохи **менший** *(smaller)* екран. > — **Покупець:** Розумію. Але мені дуже потрібен телефон, який працює швидше. > — **Консультант:** Тоді перший варіант точно **кращий** *(better)* для вас. Він значно **потужніший** *(more powerful)*, ніж цей другий варіант. <!-- INJECT_ACTIVITY: true-false, Identify correct and incorrect comparative constructions (ніж/за/Genitive traps), 8 items -->
+тонший. Ця річка дуже широка, але море набагато ширше. Широкий — ширший. В українській мові існує також складена форма порівняння. Вона утворюється за допомогою додаткових слів «більш» або «менш». Ми ставимо їх безпосередньо перед початковою формою прикметника. Ця форма часто використовується в офіційних текстах або вечірніх новинах. Наприклад, ми можемо сказати «більш солодкий» замість «солодший». Важливо пам'ятати, що проста форма завжди звучить більш природно в розмові. Проте складена форма дуже корисна, коли ви використовуєте довгі слова. Наприклад, цей метод більш ефективний, але той шлях більш небезпечний. Вона допомагає уникнути фонетичних труднощів зі складною вимовою. Але пам'ятайте одне суворе правило: ви ніколи не можете поєднувати обидві форми разом. Словосполучення «більш цікавіший» є дуже серйозною помилкою. Треба казати або «цікавіший», або «більш цікавий». Вам потрібно правильно побудувати ціле речення для порівняння двох об'єктів. В українській мові є два чудові способи зробити це. Перший спосіб — використовувати сполучник **ніж** (than) разом із називним відмінком. Наприклад: столиця Київ **більший** (bigger), ніж Львів. Міцна кава смачніша, ніж зелений чай. Цей спосіб дуже чіткий і часто використовується в мові. Другий спосіб — використовувати прийменники «за» або «від» із знахідним відмінком. Наприклад: Київ більший за Львів. А гарне місто Львів **менший** (smaller) за Київ. Мій старший брат вищий від сестри. Обидва граматичні способи є абсолютно правильними та повністю взаємозамінними. Ви можете вільно обрати той варіант, який вам більше подобається. Наприклад, ви можете сказати «цей новий комп'ютер **кращий** (better), ніж той». А якщо щось вам зовсім не подобається, новий результат **гірший** (worse) за попередній. :::info **Grammar box: How NOT to compare** When comparing two nouns, you must use either the conjunction **ніж** + Nominative case, or the preposition **за** / **від** + Accusative case. It is a common mistake for English speakers (and a very common Russianism) to form comparisons using just the Genitive case of the second noun. For example, saying `*сталь міцніше міді` is grammatically incorrect in modern standard Ukrainian. You must always include the linking word: ✅ Сталь міцніша **за** мідь. ✅ Сталь міцніша, **ніж** мідь. Using these natural Ukrainian structures will immediately make your speech sound more authentic and respectful of the language's true grammar. ::: **Читаємо українською: Вибір транспорту** Минулого тижня я планував цікаву поїздку до Карпат. Я довго думав, який зручний транспорт обрати. Спочатку я хотів швидко поїхати поїздом. Звичайний поїзд завжди дешевший, ніж квиток на літак. Він також значно безпечніший за старий автомобіль. Але довга дорога поїздом зазвичай займає багато часу. Тоді я серйозно подумав про вечірній автобус. Сучасний автобус швидший, ніж поїзд, але він менш зручний. У ньому досить важко спокійно спати, і там мало вільного місця. Моя найкраща подруга запропонувала поїхати її новим автомобілем. Власний автомобіль — це дуже зручно і завжди комфортно. Він набагато швидший за автобус, і ми можемо зупинятися будь-де. Звичайно, дорогий бензин коштує більше, ніж квиток на поїзд. Але якщо ми чесно поділимо спільні витрати, це буде зовсім недорого. Зрештою, ми остаточно вирішили, що весела подорож автомобілем цікавіша. Ця поїздка точно буде краща, ніж наша минулорічна відпустка. <!-- INJECT_ACTIVITY: fill-in-comparative --> <!-- INJECT_ACTIVITY: true-false-constructions -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -37,7 +37,7 @@ module: a2-054
 level: A2
 sequence: 54
 slug: comparison
-version: '1.0'
+version: '1.1'
 title: Більше, краще, найкраще
 subtitle: Ступені порівняння прикметників та прислівників
 focus: grammar
@@ -140,8 +140,7 @@ references:
     notes: Full presentation of comparative and superlative formation with 
       exercises
   - title: "ULP: Ukrainian Adjectives — Degrees of Comparison"
-    url: "https://www.ukrainianlessons.com/adjectives-comparison/"
-    notes: Synthetic vs analytic forms explained with examples
+    notes: Synthetic vs analytic forms explained with examples (URL removed — confirmed 404)
 
 </plan_content>
 
@@ -486,14 +485,100 @@ These examples are drawn from the source materials and demonstrate natural usage
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
 
-TARGET: 70-90% Ukrainian.
+**You are in PHASE 6: A2 finale (A2 M51-M69)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 40%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 40% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
+
+TARGET: 70-90% Ukrainian. THIS IS A HARD GATE — the audit REJECTS modules outside this range.
+
 LANGUAGE ROLES:
-- PRIMARY: Ukrainian for everything.
-- ENGLISH: Only in vocabulary tables and one-line grammar notes where absolutely necessary.
-- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English.
-A2 register. Concrete everyday vocabulary. No literary language, no metaphors. Near-full Ukrainian immersion. Ukrainian sentences max 15 words. Max 2 clauses. All cases allowed. Simple subordinate clauses only. Full aspect pairs. No participles.
+- PRIMARY: Ukrainian for narrative, dialogues, examples, section intros, cultural notes, Reading Practice blocks, learning callouts.
+- METALANGUAGE: For abstract grammar terms, you may provide ONE parenthetical English translation on FIRST use only, e.g. `**доконаний вид** (perfective aspect)`. Subsequent uses must be Ukrainian only.
+- VOCABULARY TABLE: English glosses live here, not in prose.
+- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English. Never mix mid-sentence.
+
+⚠️ HARD STRUCTURAL RULES — READ THIS TWICE:
+- FORBIDDEN: long English narrative paragraphs explaining grammar. If a concept needs more than ONE sentence of English scaffolding, it goes in a `:::info` or `:::tip` callout, NOT in the main prose.
+- FORBIDDEN: mirroring a Ukrainian paragraph with an English translation paragraph. Write ONE paragraph in Ukrainian, move on.
+- FORBIDDEN: `> *English translation*` blockquotes after Ukrainian dialogues. They were required at A1 but they cap immersion below 50% — at A2-late they MUST be removed.
+
+ESCAPE HATCH (the 'Dual Ladder'):
+For genuinely abstract grammar concepts, you may use ONE `:::info` or `:::tip` callout written in English per section to clarify the concept. Because callouts are stripped from the immersion metric, this serves as on-demand scaffolding for struggling learners without penalising the immersion score. Do NOT abuse this — at most one English callout per major section.
+
+A2 register. Concrete everyday vocabulary. No literary language, no metaphors. Ukrainian sentences max 15 words. Max 2 clauses. All cases allowed. Simple subordinate clauses only (який/що/коли). Full aspect pairs. No participles.
+
+CHECKLIST (re-read before writing each section):
+- [ ] Every narrative paragraph in Ukrainian?
+- [ ] Zero `> *English translation*` blockquotes after dialogues?
+- [ ] At most ONE English `:::info` callout per major section?
+- [ ] Metalanguage terms parenthetically translated on first use only (max 2 per section)?
+- [ ] Reading Practice / Читаємо українською block in EVERY major section?
+
 
 GRAMMAR RULES:
 - Max 15 words per Ukrainian sentence
@@ -505,18 +590,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] порівняння (comparison)
+- [ ] більший (bigger)
+- [ ] менший (smaller)
+- [ ] кращий (better)
+- [ ] гірший (worse)
+- [ ] найкращий (the best)
+- [ ] найбільший (the biggest)
+- [ ] солодший (sweeter)
+- [ ] цікавіший (more interesting)
+- [ ] ніж (than)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Найвищий ступінь: хто найкращий? (~550 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

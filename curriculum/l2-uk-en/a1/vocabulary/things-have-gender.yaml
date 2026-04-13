@@ -1,9 +1,51 @@
 vocabulary:
-- word: стіл
-  translation: table
+- word: зо́шит
+  translation: notebook
   expression: false
   pos: ім.
   gender: ч.
+  verified: true
+- word: ру́чка
+  translation: pen
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: су́мка
+  translation: bag
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: крі́сло
+  translation: armchair
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: дзе́ркало
+  translation: mirror
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: ключ
+  translation: key
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: фо́то
+  translation: photo
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: стіна́
+  translation: wall
+  expression: false
+  pos: ім.
+  gender: ж.
   verified: true
 - word: кни́га
   translation: book
@@ -53,54 +95,6 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: зо́шит
-  translation: notebook
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: ру́чка
-  translation: pen
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: су́мка
-  translation: bag
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: крі́сло
-  translation: armchair
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: дзе́ркало
-  translation: mirror
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: ключ
-  translation: key
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: фо́то
-  translation: photo
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: стіна́
-  translation: wall
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
 - word: вона́
   translation: she
   expression: false
@@ -113,65 +107,47 @@ vocabulary:
   pos: ім.
   gender: с.
   verified: true
-- word: моя́
-  translation: my (feminine)
+- word: Диви́сь
+  translation: Look
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: Кла́сно
+  translation: Cool
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: А ще
+  translation: And also
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: нови́й
+  translation: new
   expression: false
   pos: прикм.
   gender: ''
   verified: true
-- word: моє́
-  translation: my (neuter)
+- word: ду́же
+  translation: very
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: га́рний
+  translation: nice
   expression: false
   pos: прикм.
   gender: ''
   verified: true
-- word: ко́шик
-  translation: basket
+- word: Ой
+  translation: Oh
   expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: ри́бка
-  translation: fish
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: аква́ріум
-  translation: aquarium
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: черепа́ха
-  translation: turtle
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: кошеня́
-  translation: kitten
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: ша́фа
-  translation: wardrobe
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: мі́сто
-  translation: city
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: рід
-  translation: gender
-  expression: false
-  pos: ім.
-  gender: ч.
+  pos: виг.
+  gender: ''
   verified: true
 - word: чоловічий рід
   translation: masculine gender
@@ -191,27 +167,57 @@ vocabulary:
   pos: ''
   gender: ''
   verified: true
-- word: Що у тебе є?
-  translation: What do you have?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Приві́т
-  translation: Hi
+- word: аква́ріум
+  translation: aquarium
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: Диви́сь
-  translation: Look
+- word: ри́бка
+  translation: fish
   expression: false
-  pos: дієсл.
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: черепа́ха
+  translation: turtle
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: кошеня́
+  translation: kitten
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: мі́сто
+  translation: city
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: моя́
+  translation: my (feminine)
+  expression: false
+  pos: прикм.
   gender: ''
   verified: true
-- word: Кла́сно
-  translation: Cool
+- word: моє́
+  translation: my (neuter)
   expression: false
-  pos: присл.
+  pos: прикм.
   gender: ''
+  verified: true
+- word: предмети навколо
+  translation: objects around us
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: підсумок
+  translation: summary
+  expression: false
+  pos: ім.
+  gender: ч.
   verified: true

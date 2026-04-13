@@ -2,12 +2,6 @@
   "attempt": 1,
   "passed": true,
   "errors": [],
-  "warnings": [
-    {
-      "check": "VOCABULARY",
-      "severity": "WARNING",
-      "message": "Missing 3/10 required vocab: сказати / скажу (to say/tell — pf. future), написати / напишу (to write — pf. future), зробити / зроблю (to do — pf. future)"
-    }
-  ],
-  "timestamp": "2026-04-08T13:20:19.756879+00:00"
+  "warnings": [],
+  "timestamp": "2026-04-12T20:22:07.178609+00:00"
 }

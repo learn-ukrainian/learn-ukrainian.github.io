@@ -28,7 +28,7 @@ Grand total: ~4400 words
 <previous_context>
 [...previous sections truncated...]
 
-я отримав повідомлення»? Дієприслівники доконаного виду завжди роблять літературний текст набагато динамічнішим, лаконічнішим та стилістично більш зрілим. Вони ідеально передають швидку, чітку логічну та безперервну послідовність важливих дій детектива. Спочатку він отримав терміновий виклик, а потім миттєво виїхав на місце події. Це створює відчуття дуже точного професійного звіту, де немає жодного зайвого слова. Усі описані події чітко розташовані у строгій хронологічній послідовності без непотрібних відступів. Зверніть особливу увагу на зворотні форми дієслів, такі як *зустрівшись зі свідком*. Використання короткого зворотного постфікса «-сь» у цьому специфічному контексті яскраво підкреслює особистий людський контакт. Він свідчить про активну комунікацію та безпосередню фізичну залученість слідчого у процес розслідування. Детектив не просто побачив цього свідка здалеку, а вступив з ним у глибоку, цілеспрямовану словесну взаємодію. Крім того, цей короткий текст чудово демонструє дуже яскравий стилістичний контраст між двома граматичними видами. Дієприслівники недоконаного виду, такі як *йдучи під дощем* або *слухаючи пояснення*, навмисно уповільнюють загальний швидкий темп розповіді. Вони блискуче працюють як справжня кінематографічна камера у якісному фільмі. Ці форми створюють живу атмосферу, емоційний настрій та яскравий візуальний фон для головних рішучих подій. Поки детектив повільно йшов під дощем, він одночасно помітив підозрілі свіжі сліди. Поки він дуже уважно слухав охоронця, він паралельно фіксував усі необхідні деталі у блокноті. Таке гармонійне поєднання різних форм робить будь-яку розповідь стилістично багатою та дуже приємною для читання. Тепер настав час успішно застосувати ваші нові теоретичні знання на практиці у зручному форматі вільного письма. Уявіть, що ви повинні обов'язково написати невеликий надихаючий звіт про ваш «Найпродуктивніший ранок». Ви готуєте цей цікавий текст для престижного онлайн-курсу з ефективного тайм-менеджменту. Напишіть власний зв'язний, дуже логічний текст загальним обсягом від семи до десяти розгорнутих речень. Ваше головне завдання — правильно та доречно використати щонайменше чотири дієприслівники доконаного виду. Вони потрібні вам для точного опису послідовних завершених дій. Наприклад, ви можете сміливо використовувати такі красиві слова: *прокинувшись*, *поснідавши*, *написавши*, *спланувавши*, або *прочитавши*. Також використайте мінімум два дієприслівники недоконаного виду для опису фонових чи паралельних одночасних процесів. Тут вам ідеально підійдуть такі форми: *п'ючи каву*, *слухаючи подкаст*, або *дивлячись у велике вікно*. Обов'язково та дуже уважно слідкуйте за правильним логічним узгодженням у кожному вашому реченні. Пам'ятайте залізне правило: виконавець додаткової дії завжди має бути головним підметом всього речення! > [!model-answer] > **Мій найпродуктивніший ранок** *(My most productive morning)* > **Прокинувшись** *(Having woken up)* о шостій годині ранку без жодного будильника, я одразу відчув неймовірний приплив бадьорої енергії. > **Зробивши** *(Having done)* коротку, але дуже інтенсивну ранкову гімнастику, я із задоволенням пішов на свою світлу кухню. > **П'ючи** *(Drinking)* свою улюблену міцну чорну каву, я досить спокійно переглядав останні світові новини. > **Спланувавши** *(Having planned)* абсолютно всі найважливіші завдання на цей довгий день, я швидко відкрив робочий ноутбук. > **Слухаючи** *(Listening to)* тиху та розслаблюючу класичну музику, я працював над проєктом дуже зосереджено та максимально ефективно. > **Написавши** *(Having written)* свій найскладніший аналітичний звіт до дев'ятої ранку, я з великою гордістю закрив програму. > **Завершивши** *(Having finished)* цю надзвичайно важку інтелектуальну роботу так рано, я залишив собі багато вільного часу для творчості. <!-- INJECT_ACTIVITY: essay-narrative-production -->
+noticed several very suspicious details on his work uniform. Having examined the material evidence inside the building, I paid special attention to the complete absence of dirt traces near the broken glass. Having understood the true motive of this supposedly perfect crime, I unexpectedly asked the guard to show the soles of his heavy boots. Having found out the truth, I immediately ordered him to surrender. Having understood that he was exposed, the criminal tried to suddenly escape through the emergency exit, but tripped over a chair and fell. Having returned to my office early in the morning, I successfully closed this short case.* The narrative you just read, "Лист детектива", is an excellent example of how perfective and imperfective gerunds work together to create a dynamic, professional, and highly structured text. The author extensively uses the **дієприслівник доконаного виду** (perfective gerund) to establish a crisp sequence of completed actions. This grammatical tool creates a strong sense of **різночасність** (temporal non-simultaneity — gerund before main action), constantly driving the plot forward from one logical step to the next without the need for repetitive conjunctions. For instance, the detective writes "отримавши повідомлення" instead of using a standard subordinate clause like "коли я отримав повідомлення". Why does a professional investigator make this stylistic choice? Using the gerund highlights professional speed and direct consequence. The action of receiving the message is cleanly finished before the departure actually begins. This emphasizes **попередність** (precedence — action completed before the main one), making the police report sound concise, decisive, and highly formal, which is exactly what is expected in official or literary contexts. At the same time, the text smoothly integrates imperfective gerunds to provide background atmosphere and describe the ongoing environment. Phrases like "йдучи під дощем" and "уважно слухаючи пояснення" vividly demonstrate **одночасність** (simultaneity — imperfective gerund, review). These continuous actions happen at the exact same time as the main verbs "думав" and "стояв". They paint a clear picture of the scene and the detective's mental state without interrupting the chronological progression of the investigation itself. Furthermore, notice the strategic use of reflexive forms throughout the text. These specific reflexive gerunds do more than just sequence events on a timeline; they subtly emphasize the detective's personal, physical involvement in the scene. The reflexive suffix "-сь" draws the reader's attention back to the subject's direct participation in the completed action, making the narrative feel more intimate despite its formal tone. By the time the detective finishes his shift, **написавши** (having written — perfective gerund) his final report, the reader has experienced the entire chronological chain of events exclusively through his perspective. :::info **Grammar box** When analyzing or writing a complex text, always pay close attention to the interplay between the two aspects. A perfective form like **прочитавши** (having read — perfective gerund) acts as a stepping stone that pushes the chronological timeline forward. In contrast, an imperfective gerund pauses the timeline to describe the surrounding circumstances, emotions, or simultaneous background activities. ::: <!-- INJECT_ACTIVITY: essay-narrative-production -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -535,7 +535,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -548,18 +615,62 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (6/6).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] дієприслівник доконаного виду (perfective gerund)
+- [ ] різночасність (temporal non-simultaneity — gerund before main action)
+- [ ] одночасність (simultaneity — imperfective gerund, review)
+- [ ] прочитавши (having read — perfective gerund)
+- [ ] дізнавшись (having found out — reflexive perfective gerund)
+- [ ] повернувшись (having returned — reflexive perfective gerund)
+- [ ] написавши (having written — perfective gerund)
+- [ ] побачивши (having seen — perfective gerund)
+- [ ] попередність (precedence — action completed before the main one)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Підсумок та перехід до M63 (~440 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

@@ -2,51 +2,53 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 9
-  evidence: The module follows the plan perfectly, covering all required points, but
-    missed incorporating the `recommended` vocabulary block.
+  score: 8
+  evidence: All four planned H2 sections are present and each `activity_hints` item
+    has a corresponding marker, but the final comparison section overstates `чекати`
+    as accusative-only.
 - dimension: 2
   name: Linguistic accuracy
-  score: 7
-  evidence: Contains an English calque ("абсолютно критичне слово" for absolutely
-    critical), a poor translation ("слова для виклику людини" for calling a person),
-    and a common Russianism ("давайте" instead of the
+  score: 5
+  evidence: 'Critical defects: non-standard `досвідника`, wrong agreement in `Мені
+    дуже подобається тепле літо і море`, broken `об text об''єктом`, and the false
+    accusative-only rule for `чекати`.'
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: Excellent pedagogical flow. The contrast between English direct objects
-    and Ukrainian dative experiencers is explained clearly with great examples.
+  score: 6
+  evidence: The module gives many examples, but it undermines its own `подобатися`
+    agreement rule with `Мені дуже подобається тепле літо і море` and presents `чекати`
+    too categorically.
 - dimension: 4
   name: Vocabulary coverage
-  score: 7
-  evidence: All required vocabulary is used effectively in context, but all five `recommended`
-    words (довіряти, вибачати, посміхатися, співчувати, заздрити) are completely missing
-    from the prose.
+  score: 9
+  evidence: All required plan vocabulary appears in prose, including `допомагати`,
+    `дякувати`, `дзвонити`, `радити`, `заважати`, `подобатися`, `відповідати`, `рік`,
+    `роки`, `років`.
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: Placeholders match the `activity_hints` from the plan exactly in type,
-    focus, and count, and are positioned logically after their respective sections.
+  score: 8
+  evidence: All 4 planned markers are present, correctly sequenced, and aligned to
+    the taught sections; however the `match-up` marker still has raw scaffold text
+    after it.
 - dimension: 6
   name: Engagement & tone
-  score: 9
-  evidence: The tone is encouraging, but slightly robotic in the dialogue. Phrasing
-    like "Сьогодні ми вивчаємо дуже важливу тему" is natural for an instructor.
+  score: 8
+  evidence: The volunteer-day, preference, and age scenarios keep the lesson concrete,
+    and the tone stays teacherly rather than gamified.
 - dimension: 7
   name: Structural integrity
-  score: 9
-  evidence: Good use of headings and structure. Word count is high. However, the first
-    dialogue is structurally flawed (a monologue formatted with a repeated speaker
-    name).
+  score: 6
+  evidence: All core sections are present and the pipeline word count is 3070, but
+    there is a visible formatting artifact `об text об'єктом` and leftover scaffold
+    text after one activity marker.
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: Excellent point on `благодарить` vs `дякувати`, explicitly correcting
-    a common Russian interference error.
+  score: 9
+  evidence: The module explains Ukrainian structures on their own terms and does not
+    rely on Russian comparison framing.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 6
-  evidence: The first "dialogue" repeats "— **Волонтер:**" on every single line of
-    a continuous monologue instead of showing an interaction between the volunteer
-    and the people they are helping.
+  score: 8
+  evidence: The age dialogue is a natural gift-buying scenario and the `подобатися`
+    exchange is multi-turn rather than purely transactional.
 findings: []

@@ -2,27 +2,9 @@ version: '1.0'
 module: yesterday
 level: a1
 inline:
-- id: ordering-daily-routine
-  type: order
-  instruction: Розставте речення в правильному порядку (Put the sentences in the correct
-    order)
-  items:
-  - Зранку я прокинувся.
-  - Спочатку я поснідав.
-  - Потім я пішов на роботу.
-  - Вдень я обідав з колегою.
-  - Ввечері я повернувся і дивився серіал.
-  - Нарешті я ліг спати.
-  correct_order:
-  - 0
-  - 1
-  - 2
-  - 3
-  - 4
-  - 5
-- id: fill-in-narrative-flow
+- id: fill-in-time-markers
   type: fill-in
-  instruction: Вставте правильне слово (Insert the correct word)
+  instruction: Вставте правильне слово (Fill in the correct word)
   items:
   - sentence: Учора ____ я прокинулася о сьомій.
     answer: зранку
@@ -60,206 +42,83 @@ inline:
     - лягла
     - ліг
     - лягли
-- id: gender-consistency-drill
+- id: fill-in-gender-consistency
   type: fill-in
-  instruction: Оберіть форму для Анни (Choose the form for Anna)
+  instruction: Оберіть правильну форму для Анни (Choose the correct form for Anna)
   items:
   - sentence: Я мала звичайний день. Я ____ рано.
     answer: прокинулася
     options:
     - прокинулася
     - прокинувся
+    - прокинулися
   - sentence: Потім я ____.
     answer: поснідала
     options:
     - поснідала
     - поснідав
+    - поснідали
   - sentence: Після цього я ____ у магазин.
     answer: пішла
     options:
     - пішла
     - пішов
+    - пішли
   - sentence: Там я ____ продукти.
     answer: купила
     options:
     - купила
     - купив
+    - купили
   - sentence: Ввечері я ____ вечерю.
     answer: готувала
     options:
     - готувала
     - готував
-  - sentence: О десятій я ____ спати.
+    - готували
+  - sentence: Нарешті я ____ спати.
     answer: лягла
     options:
     - лягла
     - ліг
+    - лягли
 workbook:
-- id: group-sort-gender
+- id: match-up-verbs-male-female
+  type: match-up
+  instruction: З'єднайте форми дієслів (Match the verb forms)
+  pairs:
+  - left: він прокинувся
+    right: вона прокинулася
+  - left: він поснідав
+    right: вона поснідала
+  - left: він пішов
+    right: вона пішла
+  - left: він працював
+    right: вона працювала
+  - left: він повернувся
+    right: вона повернулася
+  - left: він ліг
+    right: вона лягла
+  - left: він обідав
+    right: вона обідала
+- id: group-sort-gender-verbs
   type: group-sort
   instruction: Розподіліть дієслова за родом (Sort the verbs by gender)
   groups:
-  - label: Чоловічий рід (Він)
+  - label: Він (Чоловічий рід)
     items:
     - прокинувся
-    - поснідав
     - пішов
-    - обідав
-    - повернувся
+    - поснідав
     - ліг
-  - label: Жіночий рід (Вона)
+    - обідав
+  - label: Вона (Жіночий рід)
     items:
     - прокинулася
-    - поснідала
     - пішла
+    - поснідала
+    - лягла
     - обідала
-    - повернулася
-    - лягла
-- id: quiz-reading-comprehension
-  type: quiz
-  instruction: Оберіть правильний варіант за текстом (Choose the correct option according
-    to the text)
-  items:
-  - question: Що вкрав чоловік у свідка?
-    options:
-    - велосипед
-    - кепку
-    - куртку
-    - каву
-    correct: 0
-  - question: Де свідок припаркував велосипед?
-    options:
-    - біля магазину
-    - в парку
-    - біля кав'ярні
-    - в офісі
-    correct: 0
-  - question: Куди Тарас пішов зранку?
-    options:
-    - на роботу
-    - в магазин
-    - в кав'ярню
-    - в парк
-    correct: 0
-  - question: З ким обідав Тарас?
-    options:
-    - з колегою
-    - з другом
-    - з подругою
-    - сам
-    correct: 0
-  - question: Що робила Ірина зранку в суботу?
-    options:
-    - ходила на ринок
-    - готувала обід
-    - гуляла в парку
-    - дивилася серіал
-    correct: 0
-  - question: О котрій годині Анна лягла спати?
-    options:
-    - о одинадцятій
-    - о десятій
-    - о дванадцятій
-    - о дев'ятій
-    correct: 0
-- id: match-up-pronouns
-  type: match-up
-  instruction: З'єднайте іменники з відповідними займенниками (Match the nouns with
-    the corresponding pronouns)
-  pairs:
-  - left: велосипед
-    right: він
-  - left: магазин
-    right: він
-  - left: кав'ярня
-    right: вона
-  - left: куртка
-    right: вона
-  - left: кепка
-    right: вона
-  - left: офіс
-    right: він
-- id: error-correction-verbs
-  type: error-correction
-  instruction: Знайдіть і виправте помилку в дієслові (Find and correct the error
-    in the verb)
-  items:
-  - sentence: Тарас прокинулася о сьомій.
-    error: прокинулася
-    correction: прокинувся
-    error_type: word
-    options:
-    - прокинувся
-    - прокидатися
-    - прокинулося
-    explanation: Тарас — це він (чоловічий рід).
-  - sentence: Анна ліг спати пізно.
-    error: ліг
-    correction: лягла
-    error_type: word
-    options:
-    - лягла
-    - лягло
-    - лягти
-    explanation: Анна — це вона (жіночий рід).
-  - sentence: 'Свідок сказав: Я бачила чоловіка.'
-    error: бачила
-    correction: бачив
-    error_type: word
-    options:
-    - бачив
-    - бачило
-    - бачити
-    explanation: Свідок (у цьому тексті) чоловік, тому вживаємо чоловічий рід.
-  - sentence: Мій друг пішла на роботу.
-    error: пішла
-    correction: пішов
-    error_type: word
-    options:
-    - пішов
-    - пішли
-    - піде
-    explanation: Друг — чоловічий рід.
-  - sentence: Моя подруга купив продукти.
-    error: купив
-    correction: купила
-    error_type: word
-    options:
-    - купила
-    - купили
-    - купило
-    explanation: Подруга — жіночий рід.
-  - sentence: Олег обідала в кафе.
-    error: обідала
-    correction: обідав
-    error_type: word
-    options:
-    - обідав
-    - обідали
-    - обідати
-    explanation: Олег — чоловічий рід.
-- id: true-false-narrative
-  type: true-false
-  instruction: Правда чи ні? (True or false?)
-  items:
-  - statement: Свідок бачив чоловіка в куртці та кепці.
-    correct: true
-    explanation: 'Так, свідок сказав: «Бачив чоловіка в куртці та кепці».'
-  - statement: Тарас зранку дивився фільм.
-    correct: false
-    explanation: Тарас дивився фільм ввечері.
-  - statement: Ірина ходила в ресторан з подругою.
-    correct: true
-    explanation: 'Так, вона сказала: «Ввечері ми з подругою ходили в ресторан».'
-  - statement: Анна снідала салатом і соком.
-    correct: false
-    explanation: Вона їла салат і сік на обід.
-  - statement: Вдень Анна готувала вечерю.
-    correct: false
-    explanation: Анна готувала вечерю ввечері.
-  - statement: Після роботи Анна купила продукти.
-    correct: true
-    explanation: Так, вона ходила в магазин і купила продукти.
 - id: unjumble-sentences
   type: unjumble
   instruction: Складіть правильне речення зі слів (Make a correct sentence from the
@@ -268,95 +127,229 @@ workbook:
   - words:
     - я
     - Зранку
-    - о
-    - сьомій.
-    - прокинувся
+    - поснідав.
     correct_order:
     - Зранку
     - я
+    - поснідав.
+  - words:
+    - роботу.
+    - пішла
+    - на
+    - Потім
+    - я
+    correct_order:
+    - Потім
+    - я
+    - пішла
+    - на
+    - роботу.
+  - words:
+    - колегою.
+    - обідав
+    - з
+    - Вдень
+    - я
+    correct_order:
+    - Вдень
+    - я
+    - обідав
+    - з
+    - колегою.
+  - words:
+    - у
+    - Я
+    - магазин.
+    - пішов
+    correct_order:
+    - Я
+    - пішов
+    - у
+    - магазин.
+  - words:
+    - дивилася
+    - Ввечері
+    - я
+    - серіал.
+    correct_order:
+    - Ввечері
+    - я
+    - дивилася
+    - серіал.
+  - words:
+    - Нарешті
+    - спати.
+    - лягла
+    - я
+    correct_order:
+    - Нарешті
+    - я
+    - лягла
+    - спати.
+- id: fill-in-male-perspective
+  type: fill-in
+  instruction: Оберіть правильну форму для Петра (Choose the correct form for Petro)
+  items:
+  - sentence: Учора був звичайний день. Я ____ рано.
+    answer: прокинувся
+    options:
     - прокинувся
+    - прокинулася
+    - прокинулися
+  - sentence: Спочатку я ____.
+    answer: поснідав
+    options:
+    - поснідав
+    - поснідала
+    - поснідали
+  - sentence: Потім я ____ на роботу.
+    answer: пішов
+    options:
+    - пішов
+    - пішла
+    - пішли
+  - sentence: Вдень я ____ з колегою.
+    answer: обідав
+    options:
+    - обідав
+    - обідала
+    - обідали
+  - sentence: Після цього я ____ додому.
+    answer: повернувся
+    options:
+    - повернувся
+    - повернулася
+    - повернулися
+  - sentence: Ввечері я дивився серіал і ____ спати.
+    answer: ліг
+    options:
+    - ліг
+    - лягла
+    - лягли
+- id: anagram-time-words
+  type: anagram
+  instruction: Складіть слово з літер (Make a word from the letters)
+  items:
+  - letters:
+    - з
+    - р
+    - а
+    - н
+    - к
+    - у
+    answer: зранку
+    hint: in the morning
+  - letters:
+    - в
+    - д
+    - е
+    - н
+    - ь
+    answer: вдень
+    hint: in the afternoon
+  - letters:
+    - в
+    - в
+    - е
+    - ч
+    - е
+    - р
+    - і
+    answer: ввечері
+    hint: in the evening
+  - letters:
+    - п
     - о
-    - сьомій.
-  - words:
-    - кафе.
-    - обідала
-    - я
-    - в
-    - Вдень
-    correct_order:
-    - Вдень
-    - я
-    - обідала
-    - в
-    - кафе.
-  - words:
-    - я
-    - Ввечері
-    - серіал.
-    - дивився
-    correct_order:
-    - Ввечері
-    - я
-    - дивився
-    - серіал.
-  - words:
-    - пішов
-    - на
-    - я
-    - Потім
-    - роботу.
-    correct_order:
-    - Потім
-    - я
-    - пішов
-    - на
-    - роботу.
-  - words:
-    - продукти.
-    - магазин
-    - я
+    - т
     - і
-    - купила
-    - Після
-    - роботи
-    - пішла
-    - в
-    correct_order:
-    - Після
-    - роботи
-    - я
-    - пішла
-    - в
-    - магазин
+    - м
+    answer: потім
+    hint: then
+  - letters:
+    - у
+    - ч
+    - о
+    - р
+    - а
+    answer: учора
+    hint: yesterday
+  - letters:
+    - н
+    - а
+    - р
+    - е
+    - ш
+    - т
     - і
-    - купила
-    - продукти.
+    answer: нарешті
+    hint: finally
+- id: true-false-routine
+  type: true-false
+  instruction: Правда чи ні? (True or false?)
+  items:
+  - statement: Слово «зранку» ми використовуємо для вечора.
+    correct: false
+    explanation: Зранку означає «in the morning».
+  - statement: Слово «потім» допомагає з'єднати події в історії.
+    correct: true
+    explanation: Потім (then) — це дуже корисне слово.
+  - statement: Чоловік каже «я пішла на роботу».
+    correct: false
+    explanation: Для чоловічого роду ми використовуємо форму «пішов».
+  - statement: Жінка каже «я лягла спати».
+    correct: true
+    explanation: Для жіночого роду ми використовуємо форму «лягла».
+  - statement: Слово «нарешті» зазвичай використовують наприкінці розповіді.
+    correct: true
+    explanation: Нарешті означає «finally».
+  - statement: Дієслова минулого часу змінюються за родами (чоловічий, жіночий).
+    correct: true
+    explanation: 'Наприклад: він пішов, вона пішла.'
+- id: odd-one-out-verbs
+  type: odd-one-out
+  instruction: Знайдіть зайве слово (Find the odd one out)
+  items:
   - words:
-    - спати.
+    - зранку
+    - вдень
+    - ввечері
+    - продукти
+    correct: 3
+    explanation: Продукти — це іменник (noun), а інші слова позначають час (time markers).
+  - words:
+    - поснідав
+    - прокинувся
     - лягла
-    - я
-    - Нарешті
-    correct_order:
-    - Нарешті
-    - я
-    - лягла
-    - спати.
-- id: match-up-sequence
-  type: match-up
-  instruction: З'єднайте українські слова з їхнім англійським значенням (Match the
-    Ukrainian words with their English meaning)
-  pairs:
-  - left: учора
-    right: yesterday
-  - left: зранку
-    right: in the morning
-  - left: вдень
-    right: in the afternoon
-  - left: ввечері
-    right: in the evening
-  - left: спочатку
-    right: first
-  - left: потім
-    right: then
-  - left: нарешті
-    right: finally
+    - пішов
+    correct: 2
+    explanation: Лягла — це форма для жінки (she), а інші — для чоловіка (he).
+  - words:
+    - повернулася
+    - працювала
+    - обідала
+    - ліг
+    correct: 3
+    explanation: Ліг — це форма для чоловіка (he), а інші — для жінки (she).
+  - words:
+    - спочатку
+    - колега
+    - потім
+    - нарешті
+    correct: 1
+    explanation: Колега — це людина (person), а інші слова — це маркери часу (sequence
+      markers).
+  - words:
+    - поснідати
+    - обідати
+    - вечеряти
+    - звичайний
+    correct: 3
+    explanation: Звичайний — це прикметник (adjective), а інші — дієслова (verbs).
+  - words:
+    - салат
+    - сік
+    - каша
+    - серіал
+    correct: 3
+    explanation: Серіал — це те, що ми дивимося. Інші слова — це їжа та напої (food
+      and drinks).

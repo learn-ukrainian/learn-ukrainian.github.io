@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-свято — **Великдень** *(Easter)*. Це найголовніше християнське свято в Україні. Традиційно **на Великдень** *(for Easter)* українці йдуть до церкви. Там вони святять спеціальні продукти у великому святковому кошику. Головний символ цього весняного свята — це красиві **писанки** *(decorated eggs)*. Писанки мають дуже складні, цікаві та унікальні візерунки. Кожен регіон України має свої особливі кольори та символи для писанок. Також українські жінки печуть солодкий традиційний хліб, який називається **паска** *(Easter bread)*. На Великдень люди не кажуть одне одному звичайне «Добрий день». Вони вітаються спеціальними словами: «Христос воскрес!» *(Christ is risen!)*. А інші люди радісно відповідають: «Воістину воскрес!» *(Truly He is risen!)*. Це дуже світле, тепле і радісне свято для всіх людей. Влітку українці також мають багато цікавих і давніх традицій. Найвідоміше літнє народне свято — це **Івана Купала** *(Ivan Kupala Day)*. Ми святкуємо його в теплу ніч на сьоме липня. Це дуже старе свято, яке тісно пов'язане з природою, водою та магічним вогнем. Молоді дівчата йдуть у поле і плетуть красивий **вінок** *(wreath)* з літніх квітів. Потім вони пускають ці зелені вінки на воду в річку. Ввечері українська молодь збирається разом, співає народні пісні та стрибає через велике **вогнище** *(bonfire)*. Люди здавна вірять, що вогонь очищає людину. Також існує популярна легенда про **цвіт папороті** *(fern flower)*. Кажуть, що ця магічна квітка цвіте тільки одну коротку ніч у році. Хто її знайде, той завжди буде багатий і щасливий. Наприкінці літа ми маємо найважливіше державне свято. Двадцять четвертого серпня ми гордо святкуємо **День Незалежності** *(Independence Day)* України. Восени ми також маємо дуже важливі національні дати. Першого жовтня Україна святкує **День захисників і захисниць України** *(Day of Defenders of Ukraine)*. У цей осінній день ми щиро дякуємо всім сміливим героям, які захищають нашу рідну країну. Ця дата обрана зовсім не випадково. Історично першого жовтня українські козаки завжди святкували велике свято — **Покрова** *(Intercession)*. Козаки глибоко вірили, що Свята Покрова надійно захищає їх у важкому бою. Сьогодні ми з гордістю продовжуємо цю славну традицію. Для нас надзвичайно важливо **шанувати традиції** *(to honor traditions)* наших мудрих предків. Українці дуже люблять збиратися разом у такі дні. Ми завжди намагаємося **святкувати разом** *(to celebrate together)*, тому що це робить нашу націю сильнішою. Кожне свято — це важлива частина нашої великої історії. Щоб правильно говорити про всі ці свята, нам треба знати, як українці називають дати. Це дуже просте і логічне граматичне правило. Ми використовуємо порядковий числівник у середньому роді та назву місяця. Назва місяця завжди стоїть у родовому відмінку *(Genitive case)*. Наприклад, ми правильно кажемо «перше вересня», «двадцять п'яте грудня», «сьоме січня». Зверніть увагу: ми обов'язково кажемо «двадцять п'яте», а не «двадцять п'ять». Якщо ми хочемо відповісти на питання «коли?», ми змінюємо перше слово. Ми ставимо всю фразу в родовий відмінок. Прийменник тут зовсім не потрібен. Наприклад: «Коли День Незалежності? — Двадцять четвертого серпня». «Коли Покрова? — Першого жовтня». «Коли приходить Святий Миколай? — Шостого грудня». Запам'ятайте цю дуже просту формулу: Порядковий числівник (Родовий відмінок) + Місяць (Родовий відмінок). Це нове правило допоможе вам правильно говорити про свої дні народження та ваші улюблені свята. <!-- INJECT_ACTIVITY: quiz-holiday-traditions -->
+that symbolizes ancestors.* As the cold winter fades, spring brings the most important religious celebration of the year. This holiday represents rebirth and renewal in both nature and faith. The season is marked by vibrant colors, special foods, and ancient symbols that have been passed down through generations. Коли настає **весна** (spring), ми святкуємо **Великдень** (Easter). На Великдень люди йдуть до церкви, а потім вітають одне одного словами «Христос воскрес!». У кожній родині є кошик із їжею. Там лежить солодка паска та красиві **писанки** (decorated Easter eggs). Українці люблять розмальовувати яйця різними кольорами, тому що писанка — це давній символ нового життя. > *When spring arrives, we celebrate Easter. On Easter, people go to church, and then greet each other with the words "Christ is risen!". Every family has a basket with food. There lies sweet paska and beautiful decorated Easter eggs. Ukrainians like to paint eggs with different colors, because the pysanka is an ancient symbol of new life.* Summer brings mystical folk celebrations and important national milestones. One of the most famous events is a midsummer night dedicated to youth, nature, and magic. The traditions involve weaving wreaths, jumping over a large bonfire to purify the spirit, and bravely searching the dark forest for the legendary fern flower. Тепле **літо** (summer) приносить магічні дні. Сьомого липня настає Івана Купала. У цей день дівчата плетуть **вінок** (wreath) і пускають його на воду. Увечері молодь стрибає через велике **вогнище** (bonfire). За легендою, у Купальську ніч у лісі розквітає цвіт папороті, який приносить щастя. Також влітку ми відзначаємо День Незалежності. Це головне державне свято двадцять четвертого серпня. Autumn transitions from joyful harvest festivals to solemn days of remembrance and profound gratitude. Historically, this season was significant for the Ukrainian Cossacks, and today it holds special meaning as the nation honors its modern defenders with deep respect. Золота **осінь** (autumn) має важливі дати. Навіть коли **погода** (weather) стає холодною, нас гріють спогади. Першого жовтня Україна відзначає День захисників і захисниць. Цей день пов'язаний зі святом Покрови, яке шанували козаки. Сьогодні ми знову активно шануємо давні **традиції** (traditions). Ми завжди дякуємо тим сміливим людям, які захищають нашу країну. When talking about these celebrations, you need to know how to state dates correctly in Ukrainian. You do this by combining a neuter ordinal numeral with the month in the Genitive case. This structure is essential for discussing birthdays, historical events, and national holidays. :::info **Grammar box** Use the formula: **Ordinal Numeral (Neuter) + Month (Genitive)**. For example, to say "December 25th", you use "двадцять п'яте грудня". "September 1st" is "перше вересня". ::: To answer the question «коли?» (when did an event happen on a specific date?), you put the entire date phrase into the Genitive case without adding any preposition. Ми святкуємо Різдво двадцять п'ятого грудня. Раніше багато людей святкували сьомого січня. День захисників і захисниць ми відзначаємо першого жовтня. Історично це **свято** (holiday) було чотирнадцятого жовтня. День Незалежності — двадцять четвертого серпня. <!-- INJECT_ACTIVITY: quiz, Identify which holiday a tradition belongs to -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -509,7 +509,74 @@ This topic is deeply intertwined with Ukrainian cultural and political identity,
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 6: A2 finale (A2 M51-M69)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 40%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 40% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 70-90% Ukrainian.
 LANGUAGE ROLES:
@@ -528,18 +595,64 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] пора року (season)
+- [ ] весна (spring)
+- [ ] літо (summer)
+- [ ] осінь (autumn)
+- [ ] зима (winter)
+- [ ] погода (weather)
+- [ ] свято (holiday)
+- [ ] Різдво (Christmas)
+- [ ] Великдень (Easter)
+- [ ] традиція (tradition)
+- [ ] писанка (decorated Easter egg)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Що ми робимо у кожну пора року? (Seasonal Activities) (~450 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

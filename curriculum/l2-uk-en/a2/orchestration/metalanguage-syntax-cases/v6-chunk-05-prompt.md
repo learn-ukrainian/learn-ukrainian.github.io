@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-роль додатка грає іменник або займенник. Наприклад, розглянемо гарне речення: «Даруйте людям радощі». Даруйте кому? Людям. Це наш перший додаток. Даруйте що? Радощі. Це наш другий додаток. Коли українські учні роблять синтаксичний аналіз, вони підкреслюють додаток пунктирною лінією. Вона виглядає так: - - - -. Ця лінія допомагає швидко побачити всі об'єкти дії в тексті. Додаток робить дію конкретною. Якщо ви просто кажете «я пишу», інформації мало. Але речення «я пишу лист мамі» має вже два додатки. Другий важливий другорядний член речення — це **означення** *(attribute)*. Означення завжди вказує на ознаку предмета, його якість або властивість. Цей член речення описує наш підмет або додаток. Означення відповідає на дуже прості питання: який? яка? яке? які? або чий? чия? чиє? чиї? У більшості випадків роль означення чудово виконує прикметник або займенник. Подивіться на цей цікавий приклад: «Наш двір прикрашає лелече гніздо». Двір чий? Наш. Це перше означення, воно показує приналежність. Гніздо яке? Лелече. Це друге означення, воно описує сам предмет. Щоб виділити означення на письмі, ми традиційно використовуємо красиву хвилясту лінію: ~~~~~~. Означення роблять нашу мову кольоровою та емоційною. Без них усі тексти були б дуже сухими. Вони були б схожі на офіційні інструкції. З означеннями світ навколо нас отримує форму, колір та унікальний характер. Третій другорядний член речення називається **обставина** *(adverbial modifier)*. Обставина називає спосіб дії, її точне місце, час або причину. Цей член речення переважно описує дієслово-присудок. Обставина відповідає на питання: як? де? куди? звідки? коли? чому? навіщо? Роль обставини найчастіше грає прислівник або іменник із прийменником. Розглянемо такий приклад: «Улітку гриби краще шукати в затінку дерев». Шукати коли? Улітку. Це обставина часу. Шукати як? Краще. Це обставина способу дії. Шукати де? В затінку. Це обставина місця. Під час синтаксичного розбору учні підкреслюють обставину лінією з крапкою: -.-.-.-. Обставини є своєрідними декораціями для нашого речення. Вони створюють важливий контекст. Вони показують умови, у яких відбувається головна дія нашого героя. Знати обставини дуже важливо для правильного розуміння кожної ситуації. Наприклад, фраза «ми зустрінемося» не має повного сенсу без обставин часу та місця. Давайте спочатку зробимо короткий підсумок усіх п'яти членів речення: - Підмет (хто? що?) — одна суцільна лінія. - Присудок (що робить? який є?) — дві суцільні лінії. - Додаток (усі непрямі відмінки) — пунктирна лінія (- - - -). - Означення (який? чий?) — красива хвиляста лінія (~~~~~~). - Обставина (як? де? коли? чому?) — лінія з крапкою (-.-.-.-). Тепер об'єднаємо ці знання і зробимо повний **синтаксичний розбір** *(syntactic analysis)*. Візьмемо для прикладу таке речення: «Веселі діти голосно співали пісню на вулиці». Крок перший: шукаємо основу. Хто виконує дію? Діти (це підмет, малюємо одну лінію). Що робили діти? Співали (це присудок, малюємо дві лінії). Крок другий: шукаємо всі другорядні члени. Діти які? Веселі (це означення, хвиляста лінія). Співали як? Голосно (це обставина способу дії, пунктир з крапкою). Співали що? Пісню (це додаток, пунктирна лінія). Співали де? На вулиці (це обставина місця, пунктир з крапкою). Цей детальний аналіз чудово допомагає глибоко розуміти справжню логіку української мови. <!-- INJECT_ACTIVITY: quiz, identify which secondary member a highlighted word represents, 8 items -->
+під словами «наш» і «лелече»: ~~~~~~. :::info **Grammar box** Remember that an attribute always depends on a noun. Wherever the noun goes, the attribute follows it, completely agreeing with the noun in gender, number, and case! Proper **пунктуація** (punctuation — rules for using punctuation marks) is usually not required between an attribute and its noun. ::: Finally, we need to provide context for the action. Where did it happen? When? How? Why? This is the job of the **обставина** (adverbial — secondary member answering як? де? коли?). Adverbials set the scene for the action and are incredibly versatile. Обставина — це другорядний член речення, який називає спосіб, місце, час або причину дії. Цей член речення найчастіше залежить від дієслова. Обставина відповідає на питання «як?», «де?», «куди?», «звідки?», «коли?», «чому?», «навіщо?». Часто роль обставини грає прислівник або іменник із прийменником. Ми підкреслюємо обставину пунктиром з крапкою. > *The adverbial modifier is a secondary sentence member that names the manner, place, time, or reason of an action. This sentence member most often depends on the verb. The adverbial answers the questions "how?", "where?", "to where?", "from where?", "when?", "why?", "what for?". Often, the role of an adverbial is played by an adverb or a noun with a preposition. We underline the adverbial with a dash-dot line.* Візьмемо таке речення: «Улітку гриби краще шукати в затінку дерев». Шукати (коли?) — улітку. Це обставина часу. Шукати (як?) — краще. Це обставина способу дії. Шукати (де?) — в затінку. Це обставина місця. Усі ці слова ми підкреслюємо так: -.-.-.-. Завдяки обставинам ми розуміємо всі деталі. Now let's perform a complete syntactic parsing of a sentence. In Ukrainian schools, this is called «синтаксичний розбір». It means we find the **підмет** (subject — main sentence member naming who/what acts) and the **присудок** (predicate — main sentence member naming the action/state) first, and then identify every secondary member by asking the right questions. Our sentence is: «Веселі діти голосно співали пісню на вулиці.» Спочатку шукаємо граматичну основу. Хто виконує дію? Діти (що робили?) співали. «Діти» — це підмет, «співали» — присудок. Тепер ставимо питання до інших слів. Діти (які?) — веселі. Це означення, підкреслюємо хвилястою лінією. Співали (як?) — голосно. Це обставина способу дії, підкреслюємо пунктиром з крапкою. Співали (кого? що?) — пісню. Це додаток, підкреслюємо пунктирною лінією. Співали (де?) — на вулиці. Це обставина місця, підкреслюємо пунктиром з крапкою. > *First, we look for the grammatical core. Who performs the action? The children (did what?) sang. "Children" is the subject, "sang" is the predicate. Now we ask questions to the other words. Children (what kind?) — cheerful. This is an attribute, we underline it with a wavy line. Sang (how?) — loudly. This is an adverbial modifier of manner, we underline it with a dash-dot line. Sang (whom? what?) — a song. This is an object, we underline it with a dashed line. Sang (where?) — on the street. This is an adverbial modifier of place, we underline it with a dash-dot line.* <!-- INJECT_ACTIVITY: quiz-sentence-members -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -495,7 +495,74 @@ Understanding cases is the gateway to Ukrainian syntax. It is not an isolated to
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 6: A2 finale (A2 M51-M69)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 40%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 40% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 70-90% Ukrainian.
 LANGUAGE ROLES:
@@ -514,18 +581,69 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] синтаксис (syntax — the study of sentence structure)
+- [ ] пунктуація (punctuation — rules for using punctuation marks)
+- [ ] словосполучення (word combination — two+ words linked by meaning and grammar)
+- [ ] підмет (subject — main sentence member naming who/what acts)
+- [ ] присудок (predicate — main sentence member naming the action/state)
+- [ ] додаток (object — secondary member answering indirect case questions)
+- [ ] означення (attribute — secondary member answering який? чий?)
+- [ ] обставина (adverbial — secondary member answering як? де? коли?)
+- [ ] складне речення (complex sentence — sentence with two+ grammatical cores)
+- [ ] просте речення (simple sentence — sentence with one grammatical core)
+- [ ] називний відмінок (nominative case — хто? що?)
+- [ ] родовий відмінок (genitive case — кого? чого?)
+- [ ] давальний відмінок (dative case — кому? чому?)
+- [ ] знахідний відмінок (accusative case — кого? що?)
+- [ ] орудний відмінок (instrumental case — ким? чим?)
+- [ ] місцевий відмінок (locative case — на кому? на чому?)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Складне речення (~550 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

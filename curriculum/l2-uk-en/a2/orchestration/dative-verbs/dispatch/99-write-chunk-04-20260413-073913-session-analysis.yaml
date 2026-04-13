@@ -1,0 +1,54 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T05-37-2defb88c.json
+phase: write-chunk-04
+prompt_chars: 41468
+response_chars: 4634
+prompt_words: 5946
+response_words: 745
+sections:
+- name: header
+  start: 0
+  length: 471
+  fraction: 0.0114
+- name: skeleton
+  start: 471
+  length: 1444
+  fraction: 0.0348
+- name: prior_summary
+  start: 1915
+  length: 3205
+  fraction: 0.0773
+- name: plan
+  start: 5120
+  length: 12332
+  fraction: 0.2974
+- name: wiki
+  start: 10709
+  length: 23765
+  fraction: 0.5731
+- name: output_spec
+  start: 41217
+  length: 251
+  fraction: 0.0061
+large_sections:
+- wiki
+directives_total: 15
+directives_covered: 11
+directives_missed:
+- kind: must
+  text: '* For all other numbers, including five and above, as well as the teen numbers
+    (eleven through nineteen) and zero, you must use the Genitive plural form.'
+  covered: false
+  coverage_note: 5/18 keywords (28%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: EVERY word in the checklist below MUST appear at least once with a bold Ukrainian
+    form and English translation in a natural sentence.
+  covered: false
+  coverage_note: 3/15 keywords (20%)
+- kind: inject_activity
+  text: true-false-age
+  covered: false
+  coverage_note: marker missing

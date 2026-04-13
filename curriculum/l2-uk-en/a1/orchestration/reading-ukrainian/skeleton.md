@@ -1,35 +1,34 @@
-## Склади — Syllables (~275 words total)
-- P1 (~70 words): [Introduce the foundational Ukrainian syllable rule from Большакова Grade 1: "У слові стільки складів, скільки голосних звуків." (As many syllables as there are vowels). Contrast with English's complex syllable rules using simple examples: ма-ма (2), мо-ло-ко (3), банк (1).]
-- P2 (~70 words): [Explain the "Chin-test" from Кравцова Grade 2 as a physical tool for learners. Describe the process: palm under chin, say the word, count the drops. Practice with words like та-то and у-ні-вер-си-тет to feel the rhythmic nature of Ukrainian vowels.]
-- P3 (~65 words): [Introduce the Ukrainian sound notation system used in primary schools: [●] for vowels, [—] for hard consonants, and [=] for soft consonants. Explain why children are taught to visualize words this way before writing, using the word "мама" [— ● | — ●] as the first visual model.]
-- P4 (~70 words): [Explain "Syllable Chains" (складові ланцюжки) as the "bottom-up" reading method. Demonstrate building from a single sound to a syllable (М → ма, мо, му, ми), then reversing it (ам, ом, ум), and finally merging into a word (ма-ма). This establishes that reading is a process of blending, not spelling.]
-- <!-- INJECT_ACTIVITY: count-syllables-practice --> [count-syllables, focus: Apply vowel-counting rule to find syllable counts, 8 items]
-- <!-- INJECT_ACTIVITY: divide-words-practice --> [divide-words, focus: Physically dividing words like мо-ло-ко and ап-те-ка, 8 items]
+## Склади (~275 words total)
+- P1 (~60 words): Introduce the golden rule of Ukrainian reading from Grade 1: "У слові стільки складів, скільки голосних звуків" (Count the vowels, count the syllables). This rule never breaks. Provide examples: `ма-ма` (2 vowels = 2 syllables), `мо-ло-ко` (3 vowels = 3 syllables), `банк` (1 vowel = 1 syllable).
+- P2 (~65 words): Explain the "chin-test" for syllable counting (put your palm under your chin, say the word — each chin touch equals one syllable). Introduce basic Ukrainian sound notation: [●] represents a vowel sound (голосний).
+- P3 (~75 words): Explain how Ukrainian children learn to read using "складові ланцюжки" (syllable chains). You start with a consonant and vowel pair (М → ма, мо, му), then reverse them (ам, ом, ум), and finally build words (`ма-ма`, `мо-ло-ко`). Emphasize the bottom-up approach: sound → syllable → word.
+- P4 (~75 words): Introduce "Звуковий аналіз слова" (Sound analysis) as the systematic way to decode any word. The steps are: 1) Find the vowels, 2) Divide the word into syllables, 3) Place the stress, 4) Mark the consonants.
+- <!-- INJECT_ACTIVITY: count-syllables --> [count-syllables, Порахуй склади — скільки голосних, стільки й складів, 8 items]
 
-## Голосні літери — Vowel Letters (~330 words total)
-- P1 (~80 words): [Detail the 10:6 mapping—10 vowel letters mapping to 6 consistent vowel sounds. Start with the "simple" vowels: А [а], О [о], У [у], Ее [е], Ии [и], Іі [і]. Emphasize that unlike English, these letters don't shift their sound based on surrounding letters in the same way.]
-- P2 (~80 words): [Contrast the minimal pairs И vs І, the most critical distinction for A1 learners. Explain the retracted tongue position for И [ɪ] vs the fronted І [i], using the "Whale vs Cat" (кит vs кіт) and "Smoke vs House" (дим vs дім) examples to show how one vowel changes the whole meaning.]
-- P3 (~85 words): [Introduce Iotated Vowels (Я, Ю, Є, Ї) in their "two-sound" role. Explain they represent [й] + [vowel] at the start of words (яблуко, єнот) or after another vowel (моя, мрія). Highlight that Ї is unique—it is ALWAYS two sounds [йі] (їжак, Україна) and never softens.]
-- P4 (~85 words): [Explain the second function of Я, Ю, Є: softening the preceding consonant. Use the contrast of ЛА [la] vs ЛЯ [l'a] and ЛУ [lu] vs ЛЮ [l'u]. Introduce the word "пісня" to show how Я softens the Н and becomes a simple [а] sound. Explain that this is why they are called "iotated"—they carry a hidden [й] that either sounds out or disappears into the consonant.]
-- <!-- INJECT_ACTIVITY: iotated-vowels-components --> [match-up, focus: Matching letters like Я to their sound components [й]+[а] vs softening effect, 6 items]
+## Голосні літери (~330 words total)
+- P1 (~80 words): Review the core vowel system: 6 sounds mapped to 10 letters. First, introduce the 6 simple vowel letters: А [а], О [о], У [у], Е [е], И [и], І [і]. Emphasize that each of these simple letters makes exactly ONE consistent sound.
+- P2 (~90 words): Contrast the critical minimal pairs for И vs І. Explain that the difference is subtle but completely changes the meaning of a word. Give clear examples: `кит` (whale) vs `кіт` (cat), and `дим` (smoke) vs `дім` (house). Advise listening closely to pronunciation to distinguish them.
+- P3 (~80 words): Introduce the iotated vowels (Я, Ю, Є) and explain their first function: representing two sounds. This happens at the start of a word or after another vowel. Explain that Я = [йа] (`яблуко`), Ю = [йу], and Є = [йе].
+- P4 (~80 words): Explain the second function of Я, Ю, Є: when placed after a consonant, they represent one vowel sound but soften the preceding consonant (e.g., `пісня` — the Н is softened). Finally, introduce Ї: it ALWAYS makes two sounds [йі] and never softens (`Україна`).
+- <!-- INJECT_ACTIVITY: match-up --> [match-up, Match iotated vowels to their sound components: Я=[й]+[а], 6 items]
 
-## Читання слів — Reading Words (~550 words total)
-- P1 (~90 words): [Teach the 5-step Sound Analysis method (Звуковий аналіз слова): 1. Pronounce the word, 2. Identify vowels, 3. Split into syllables, 4. Locate the stress (наголос), 5. Categorize consonants. Walk through a complete analysis of the word "книга" (book) using the school symbols [— ● = ●].]
-- P2 (~90 words): [Practice reading one- and two-syllable words (односкладові та двоскладові). Use words like дім, сон, ліс (1) and та-то, во-да, ка-ша, ха-та (2). Emphasize blending the sounds into a single unit of breath rather than robotic letter-by-letter decoding.]
-- P3 (~90 words): [Move to three-syllable words (трискладові). Use ап-те-ка, мо-ло-ко, лю-ди-на, ву-ли-ця. Explain how the syllable rule helps manage longer strings of letters. Introduce the word "столиця" (capital) and link it to the phrase "Київ — столиця України" as a reading challenge.]
-- P4 (~100 words): [Reading multisyllable "internationalisms" as confidence boosters. Guide the learner through у-ні-вер-си-тет (5), біб-лі-о-те-ка (5), and фо-то-гра-фі-я (5). Explain that while these look long, they follow the exact same syllable rules as the word "мама".]
-- P5 (~90 words): [Reading Ukrainian geography. Use major city names to practice specific sounds: Ки-їв (И vs Ї), Льві-в (softening sign preview), О-де-са (simple), Хар-ків (І effect), Дні-про (cluster blend), Пол-та-ва (rhythmic).]
-- P6 (~90 words): [Preview of Special Signs for Module 3. Briefly explain the letter Щ (always [шч]), the Soft Sign Ь (silent but softens: сіль, день), and the Apostrophe (separates: м'ясо, сім'я). This provides "safety" for the learner when they encounter these common signs in current reading practice.]
-- <!-- INJECT_ACTIVITY: syllable-odd-one-out --> [odd-one-out, focus: Identifying the word with a different syllable count (e.g., a 1-syllable word in a list of 2-syllable words), 6 items]
-- <!-- INJECT_ACTIVITY: reading-meaning-quiz --> [quiz, focus: Reading a word (e.g., шоколад) and matching it to its English meaning/image, 6 items]
+## Читання слів (~530 words total)
+- P1 (~100 words): Explain how to apply syllable chains and sound analysis to real reading. Instruct learners not to read letter-by-letter, but syllable-by-syllable. Walk through an example: for the word `книга`, first find the vowels (И, А), split into syllables (`кни-га`), and then read it out loud.
+- P2 (~110 words): Introduce words by their Ukrainian classification, starting with 1-syllable (односкладові) and 2-syllable (двоскладові) words. Provide examples of 1-syllable words: `дім`, `сон`, `ліс`, `дуб`, `хліб`. Then provide 2-syllable words: `ма-ма`, `та-то`, `во-да`, `ру-ка`, `ха-та`, `ка-ша`.
+- <!-- INJECT_ACTIVITY: odd-one-out --> [odd-one-out, Яке слово зайве? — by syllable count (односкладове серед двоскладових), 6 items]
+- P3 (~120 words): Move up in difficulty to 3-syllable (трискладові) and 4+ syllable (багатоскладові) words. Give examples of 3 syllables: `ап-те-ка`, `мо-ло-ко`, `лю-ди-на`, `ву-ли-ця`, `шо-ко-лад`. Then show long words: `у-ні-вер-си-тет`, `біб-лі-о-те-ка`, `фо-то-гра-фі-я`. Emphasize that long words are easy if you just follow the syllable rule.
+- <!-- INJECT_ACTIVITY: divide-words --> [divide-words, Поділи слова на склади: мо-ло-ко, ап-те-ка, у-ні-вер-си-тет, 8 items]
+- P4 (~100 words): Use Ukrainian city names for practical reading practice, pointing out their different syllable structures. Examples: `Ки-їв` (2 syllables), `Львів` (1 syllable, 1 vowel), `О-де-са` (3 syllables), `Хар-ків` (2 syllables), `Дні-про` (2 syllables), `Пол-та-ва` (3 syllables). Mention the phrase `Київ — столиця України`.
+- P5 (~100 words): Provide a brief preview of special letter combinations that will be covered fully in the next module. Mention that Щ is always two sounds [шч] (`що`, `ще`), the soft sign Ь has no sound but softens consonants (`день`, `сіль`, `кінь`), and the apostrophe separates sounds (`сім'я`, `м'ясо`, `п'ять`).
+- <!-- INJECT_ACTIVITY: quiz --> [quiz, Read the word and choose its meaning, 6 items]
 
-## Підсумок — Summary (~150 words total)
-- P1 (~150 words): [Self-check checklist:
-  - How do you count syllables in a Ukrainian word? (Count the vowels!)
-  - What are the 6 basic vowel sounds? (А, О, У, Е, И, І)
-  - Which letter is always two sounds [йі]? (Ї)
-  - What is the difference between кит and кіт? (The И vs І sound changes the meaning from whale to cat)
-  - Count the syllables in біб-лі-о-те-ка. (5 vowels = 5 syllables)
-  - Recap: You can now sound out any Ukrainian word by breaking it into vowel-centered chunks.]
+## Підсумок — Summary (~160 words total)
+- P1 (~160 words): 
+  - How do you count syllables in a Ukrainian word? (Count the vowels).
+  - What are the 6 vowel sounds? ([а], [о], [у], [е], [и], [і]).
+  - Name the 4 iotated vowel letters. (Я, Ю, Є, Ї).
+  - What does Ь do? (It has no sound, but softens the preceding consonant).
+  - What does the apostrophe do? (It separates a hard consonant from a two-sound iotated vowel).
+  - Read this word: бібліотека — how many syllables? (5 syllables: біб-лі-о-те-ка, because it has 5 vowels).
 
-Grand total: ~1305 words
+Grand total: ~1295 words

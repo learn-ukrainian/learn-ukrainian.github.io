@@ -2,49 +2,51 @@ round: 2
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 10
-  evidence: The module comprehensively covers all four outlined sections, including
-    required and recommended vocabulary (хай, нехай, будь, ходімо, здійснитися).
+  score: 8
+  evidence: 'All four planned sections are present and the required/recommended vocabulary
+    is covered, but the activity plan is over-implemented: there are 5 markers for
+    4 `activity_hints`, and the combined fill-i'
 - dimension: 2
   name: Linguistic accuracy
-  score: 9
-  evidence: 'Excellent Ukrainian overall, with great explanations of aspect. Deducted
-    1 point for the minor calques "кликати людину" instead of "звертатися до людини",
-    "показуємо повагу", and the use of "суб''єкт" '
+  score: 6
+  evidence: The Ukrainian forms themselves are solid and VESUM-safe, but the aspect
+    section incorrectly claims `There is a strict rule for negative imperatives...`
+    and `Perfective negative commands are only for a
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: Outstanding. The grammar rules are explained clearly with contextualized
-    English translations, followed by relatable Ukrainian examples (especially the
-    contrast between imperfective/perfective in comm
+  score: 6
+  evidence: 'Example density is good, but the `-мо` explanation is internally inconsistent:
+    it says `ends in a consonant` and then illustrates with `роби`, `скажи`; the negative-imperative
+    rule is also oversimplif'
 - dimension: 4
   name: Vocabulary coverage
   score: 10
-  evidence: All required and recommended words are successfully integrated into the
-    prose.
+  evidence: 'All required plan vocabulary appears in prose, and all recommended items
+    are also used naturally: `спокійний`, `уважний`, `живи`, `здійснитися`, `мрія`.'
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: Markers accurately reflect the planned activities and are positioned precisely
-    to test the newly acquired knowledge.
+  score: 6
+  evidence: Marker spread is mostly good, but the first fill-in tests future content
+    by ID, and the module contains one extra fill-in marker beyond the 4 planned activities.
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: The tone is warm, encouraging, and highly culturally informative. The
-    summary section effectively reinforces learning with three practical check-questions.
+  score: 7
+  evidence: The cooking-class framing and wishes/toasts material help, but there is
+    filler such as `This is a very simple and logical rule` and `Such words make our
+    life much brighter and warmer.`
 - dimension: 7
   name: Structural integrity
-  score: 10
-  evidence: Clean Markdown formatting. Word count (2800) securely exceeds the 2000
-    target. Sections flow logically.
+  score: 9
+  evidence: Clean H2 structure, correct section order, no dangling fragments, and
+    pipeline word count is 2998, above target.
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: Beautifully explains the deep cultural tradition behind Ukrainian blessings
-    and toasts ("Будьмо!", "будьте здорові").
+  score: 9
+  evidence: The wishes/toasts section grounds the grammar in Ukrainian usage and does
+    not center Russian comparisons.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: The cooking class dialogue is natural, varied, and perfectly models the
-    target grammar in a realistic context.
+  score: 7
+  evidence: Named speakers and a concrete setting help, but the dialogue is brief
+    and mostly functional rather than vivid or conversationally rich.
 findings: []

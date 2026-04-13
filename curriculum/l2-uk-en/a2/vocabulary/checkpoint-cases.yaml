@@ -59,41 +59,65 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: компас відмінків
-  translation: case compass
-  expression: true
-  pos: ''
+- word: дру́зі
+  translation: friends
+  expression: false
+  pos: ім.
   gender: ''
   verified: true
-- word: нарече́на
-  translation: bride
+- word: люди́на
+  translation: person
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: запро́шення
-  translation: invitation
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: подару́нок
-  translation: gift
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: молодя́та
-  translation: newlyweds
+- word: лю́ди
+  translation: people
   expression: false
   pos: ім.
   gender: ''
   verified: true
-- word: весі́лля
-  translation: wedding
+- word: дити́на
+  translation: child
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ді́ти
+  translation: children
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: о́ко
+  translation: eye
   expression: false
   pos: ім.
   gender: с.
+  verified: true
+- word: о́чі
+  translation: eyes
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: теля́
+  translation: calf
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: бага́то
+  translation: many
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ма́ло
+  translation: few
+  expression: false
+  pos: присл.
+  gender: ''
   verified: true
 - word: окуля́ри
   translation: glasses
@@ -107,63 +131,33 @@ vocabulary:
   pos: ім.
   gender: ''
   verified: true
-- word: две́рі
-  translation: doors
+- word: допомага́ти
+  translation: to help
   expression: false
-  pos: ім.
+  pos: дієсл.
   gender: ''
   verified: true
-- word: мо́лодь
-  translation: youth
+- word: ба́чити
+  translation: to see
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: кори́стува́тися
+  translation: to use
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: нарече́на
+  translation: bride
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: лю́дство
-  translation: humanity
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: курча́
-  translation: chick
-  expression: false
-  pos: виг.
-  gender: ''
-  verified: true
-- word: кошеня́
-  translation: kitten
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: ім'я́
-  translation: name
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: по́дорож
-  translation: trip, journey
+- word: по́друга
+  translation: female friend
   expression: false
   pos: ім.
   gender: ж.
-  verified: true
-- word: буді́вля
-  translation: building
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: за́ти́шний
-  translation: cozy
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: Кличний відмінок
-  translation: Vocative case
-  expression: true
-  pos: ''
-  gender: ''
   verified: true

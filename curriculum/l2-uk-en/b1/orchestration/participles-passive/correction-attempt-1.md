@@ -2,9 +2,7 @@
 CRITICAL: Your previous attempt failed the following checks. Fix ONLY the listed errors. Keep everything else exactly as is — do not rewrite sections that are working correctly.
 
 - FIX: Missing section heading: 'Підсумок та перехід до M59'
-- FIX: Too short: 2313 words (target: 4000, minimum: 3400)
-- NOTE: Missing 3/11 required vocab: вишитий (embroidered — passive participle from вишити), відкритий (opened — passive participle from відкрити), закручений (twisted — with [т]→[ч] alternation)
-- NOTE: Plan expects 6 exercise(s) but content has 4
+- FIX: Too short: 3084 words (target: 4000, minimum: 3400)
 </correction_directive>
 
 LEARNINGS FROM PAST BUILDS (same error patterns seen before):

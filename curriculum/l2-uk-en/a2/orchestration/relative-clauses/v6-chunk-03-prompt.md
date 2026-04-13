@@ -1,23 +1,27 @@
-# Section-by-Section Generation — Section 3/4
+# Section-by-Section Generation — Section 3/3
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 49: Той, який... (A2, A2.7 [Complex Sentences and Conditionals])
-**Section to write:** Описуємо людей, речі та місця (Describing People, Things, and Places) (~600 words total)
-**Word target for this section:** 600 words (aim for 660 to account for undershoot)
+**Section to write:** Описуємо людей, речі та місця (Describing People, Things, and Places) (~750 words)
+**Word target for this section:** 750 words (aim for 825 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Описуємо людей, речі та місця (Describing People, Things, and Places) (~600 words total)
-- P1 (~150 words): Synthesis of relative clauses. Show how to build complex descriptions of people by combining "який" with professions or habits. Example: *Мій брат, який працює лікарем, живе зараз у Польщі*. Contrast this with two short sentences: *Мій брат живе у Польщі. Він працює лікарем.* to show how the relative clause adds elegance and flow.
-- P2 (~120 words): Avoiding the "Redundant Pronoun" error. Explain that English speakers often want to repeat the subject inside the clause (*Книга, яку я читав її...*). Correct this by showing that "яку" already represents the book, so "її" is redundant. *Книга, яку я читав... (✅)*.
-- P3 (~120 words): Intonation and the "Breath Pause". Explain the prosody of a relative clause: the pitch drops slightly for the parenthetical insert (the sub-clause) and returns to normal for the rest of the main sentence. The comma isn't just a mark; it's a micro-pause for breath and processing.
-- P4 (~110 words): Stacking information. Show how to describe a place using multiple relative clauses naturally: *Це старий будинок, який стоїть на горі і де колись жив відомий поет*. This demonstrates the ability to combine place and quality in one complex sentence.
-- P5 (~100 words): Practical Production Prompt. Provide a model answer for describing a favorite object or person. *Мій улюблений предмет — це годинник, який подарував мені дідусь і який завжди показує точний час*. Encourage learners to think about the "history" or "location" of the items they describe.
-- <!-- INJECT_ACTIVITY: match-up-sentence-combine --> [match-up, focus: Combine two simple sentences into one using a relative clause, 8 items]
-- <!-- INJECT_ACTIVITY: unjumble-relative-clauses --> [unjumble, focus: Reorder words to form correct relative clauses with який/яка/яке and де/куди/звідки, 6 items]
+## Описуємо людей, речі та місця (Describing People, Things, and Places) (~750 words)
+- P1 (~120 words): Combining sentences to sound more advanced. Show how to stack information naturally. Instead of short, choppy sentences ("Це мій друг. Він живе у Києві. Він працює програмістом."), combine them: "Це мій друг, який живе у Києві і працює програмістом."
+- <!-- INJECT_ACTIVITY: match-up-combine --> [match-up, Combine two simple sentences into one using a relative clause, 8 items]
+- P2 (~150 words): Describing complex scenes using both relative pronouns and adverbs together. Example: "Ресторан, де ми вчора вечеряли, знаходиться біля парку, який ми дуже любимо." Explain how this builds narrative flow.
+- P3 (~150 words): Avoiding common L2 errors. 1) Omitting the relative pronoun (English "The book I read" vs. Ukrainian "Книга, яку я читав" — mandatory pronoun). 2) Redundant pronouns ("Книжка, яка вона цікава" = WRONG). 3) English "who/which" confusion — Ukrainian uses `який` for both humans and objects.
+- <!-- INJECT_ACTIVITY: true-false-agreement --> [true-false, Judge whether relative clauses have correct agreement and comma placement, 8 items]
+- P4 (~120 words): Intonation of означальні речення. Explain that the main clause begins with neutral intonation, the relative clause (after the comma) carries a slightly lower pitch as a parenthetical insert, and then returns to normal pitch. The comma signals the listener to expect a descriptive addition.
+- P5 (~100 words): Mention formal synonym `котрий`. Explain it means "which" and is recognizable in texts, but at A2, learners should actively use `який` or `що`.
+- P6 (~110 words): Practical production prompt. Encourage learners to think about how they would describe their favorite place, a person they admire, or an object they use daily using these relative clauses.
+- <!-- INJECT_ACTIVITY: unjumble-relative --> [unjumble, Reorder words to form correct relative clauses with який/яка/яке and де/куди/звідки, 6 items]
+
+Grand total: ~2200 words
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -25,7 +29,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-тому.» *(This is that new store where she quickly went in five minutes ago.)* «Я не знаю парк, куди вони пішли гуляти сьогодні вранці.» *(I do not know the park where they went for a walk this morning.)* Завжди уважно дивіться на дієслово. *(Always look carefully at the verb.)* Якщо це дієслово активного руху, як-от «йти», «бігти» або «їхати», використовуйте «куди». *(If it is a verb of active motion, like "to walk", "to run", or "to ride", use "where to".)* Нарешті, ми маємо цікаве слово «звідки». *(Finally, we have the interesting word "where from".)* Ми використовуємо його, коли говоримо про джерело або самий початок руху. *(We use it when we talk about the source or the very beginning of movement.)* It describes the specific place from which someone or something came. «Це маленьке село, звідки привезли це свіже молоко.» *(This is the small village where this fresh milk was brought from.)* «Я дуже хочу побачити країну, звідки він вчора приїхав.» *(I really want to see the country where he came from yesterday.)* «Ось та нова школа, звідки щойно вийшли радісні діти.» *(Here is that new school where the joyful children just came out from.)* Як і з іншими сполучними словами, перед «звідки» завжди стоїть кома. *(Like with the other connecting words, there is always a comma before "where from".)* Це важливе граматичне правило. *(This is an important grammar rule.)* Давайте прочитаємо короткий діалог. *(Let's read a short dialogue.)* Клієнт хоче купити нову простору квартиру і активно розпитує про район. *(A client wants to buy a new spacious apartment and actively asks about the neighborhood.)* > — **Покупець:** Цей новий район виглядає дуже тихим і спокійним. *(This new neighborhood looks very quiet and peaceful.)* Де знаходиться найближчий парк, куди ми можемо ходити гуляти з нашим собакою? *(Where is the nearest park where we can go for a walk with our dog?)* > — **Ріелтор:** Великий зелений парк зовсім близько. *(The big green park is very close.)* А ось широка вулиця, де є гарна пекарня і маленька кав'ярня. *(And here is a wide street where there is a nice bakery and a small coffee shop.)* > — **Покупець:** О, я вже відчуваю цей приємний запах. *(Oh, I already smell this pleasant smell.)* > — **Ріелтор:** Так, це саме те місце, звідки завжди пахне свіжою кавою і теплим хлібом. *(Yes, this is exactly the place where it always smells of fresh coffee and warm bread.)* > — **Покупець:** Це просто чудово. *(This is simply wonderful.)* Я дуже люблю місця, де є така затишна атмосфера. *(I really love places where there is such a cozy atmosphere.)* Отже, запам'ятайте це дуже просте правило. *(So, remember this very simple rule.)* We use «де» for static location ("at which" or "in which"), «куди» for dynamic direction towards a place ("to which"), and «звідки» for clear origin ("from which"). Ці три слова допомагають дуже легко і швидко описувати абсолютно будь-які локації. *(These three words help to very easily and quickly describe absolutely any locations.)* <!-- INJECT_ACTIVITY: quiz-place-connectors -->
+to describe a place where someone is located, we use the word "where". This word shows a static position. It completely replaces the complex structures "in which" or "on which". The word "where" never changes form. The cafe where we met was very cozy. The city where I was born is located in the west of Ukraine. The room where the child sleeps is warm and bright.* The strict comma rule still applies here. You must always place a comma right before the word `де` when it introduces a new **означальний** (attributive) clause. In this type of **речення** (sentence, clause), the connector specifically points to a location where an action is happening without any movement. Але ситуація змінюється, якщо ми використовуємо дієслова руху. Для напрямку ми завжди повинні використовувати слово «куди». Парк, куди ми ходимо гуляти, дуже великий. Магазин, куди я йду зараз, продає свіжий хліб. Країна, куди вони планують поїхати у відпустку, має теплий клімат. Ресторан, куди ми вчора ходили, відкрився недавно. > *But the situation changes if we use verbs of motion. For direction, we must always use the word "where to". The park where we go for a walk is very big. The store where I am going right now sells fresh bread. The country where they plan to go on vacation has a warm climate. The restaurant where we went yesterday opened recently.* :::info **Grammar box** In English, people frequently say "The store where I am going" using the static word "where". In Ukrainian, this is a strict error. If there is a destination or a verb of motion (іти, їхати), you must use **куди** (where to), never **де** (where). ::: Третій важливий напрямок — це рух із якогось місця. Коли ми говоримо про походження або точку старту, ми використовуємо слово «звідки». Воно замінює конструкції «з якого» або «з якої». Країна, звідки вона приїхала, — це Україна. Місто, звідки я щойно повернувся, має багату історію. Університет, звідки випустився мій брат, відомий на весь світ. > *The third important direction is movement from some place. When we talk about origin or a starting point, we use the word "where from". It replaces the structures "from which" (masculine/neuter) or "from which" (feminine). The country where she came from is Ukraine. The city where I just returned from has a rich history. The university where my brother graduated from is famous all over the world.* Одне і те ж місце може вимагати різних слів. Все залежить тільки від дії. Порівняйте ці варіанти. Місто, де я живу, дуже спокійне. Місто, куди я їду, галасливе. Місто, звідки я приїхав, знаходиться далеко. Місце завжди однакове, але дієслово диктує правильний вибір. > *The exact same place can require different words. Everything depends only on the action. Compare these options. The city where I live is very calm. The city where I am traveling to is noisy. The city where I arrived from is located far away. The place is always the same, but the verb dictates the correct choice.* <!-- INJECT_ACTIVITY: quiz-places -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -519,7 +523,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -538,18 +609,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (3/3).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] який (which, that — masc.)
+- [ ] яка (which, that — fem.)
+- [ ] яке (which, that — neut.)
+- [ ] які (which, that — pl.)
+- [ ] де (where — relative)
+- [ ] куди (where to — relative)
+- [ ] звідки (where from — relative)
+- [ ] означальний (attributive, defining)
+- [ ] описувати (to describe)
+- [ ] речення (sentence, clause)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Описуємо людей, речі та місця (Describing People, Things, and Places) (~750 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

@@ -2,7 +2,6 @@
 CRITICAL: Your previous attempt failed the following checks. Fix ONLY the listed errors. Keep everything else exactly as is — do not rewrite sections that are working correctly.
 
 - FIX: Missing section heading: 'Iнтегрована практика'
-- NOTE: Missing 1/7 required vocab: фразеологічний зворот (phraseological expression — exception to comma rule)
 </correction_directive>
 
 LEARNINGS FROM PAST BUILDS (same error patterns seen before):

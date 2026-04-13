@@ -1,89 +1,41 @@
 {
-  "total_items": 58,
-  "grounded_items": 42,
+  "total_items": 52,
+  "grounded_items": 43,
   "ungrounded": [
     {
-      "word": "два",
-      "exercise_type": "quiz",
-      "context": "Один стіл, а два...",
-      "role": "context"
-    },
-    {
-      "word": "одна",
-      "exercise_type": "quiz",
-      "context": "Одна сумка, а дві...",
-      "role": "context"
-    },
-    {
-      "word": "дві",
-      "exercise_type": "quiz",
-      "context": "Одна сумка, а дві...",
-      "role": "context"
-    },
-    {
-      "word": "одне",
-      "exercise_type": "quiz",
-      "context": "Одне крісло, а два...",
-      "role": "context"
-    },
-    {
-      "word": "річ",
-      "exercise_type": "quiz",
-      "context": "Одна річ, а три...",
-      "role": "context"
-    },
-    {
-      "word": "там",
+      "word": "це",
       "exercise_type": "fill-in",
-      "context": "Там є ____ вікна.",
+      "context": "Це стіл. А це — ____.",
       "role": "context"
     },
     {
-      "word": "мене",
-      "exercise_type": "fill-in",
-      "context": "У мене є ____ ручки.",
-      "role": "context"
+      "word": "дуже",
+      "exercise_type": "unjumble",
+      "context": "дуже",
+      "role": "answer"
     },
     {
-      "word": "маю",
-      "exercise_type": "fill-in",
-      "context": "Я маю ____ зошити.",
-      "role": "context"
-    },
-    {
-      "word": "стоять",
-      "exercise_type": "fill-in",
-      "context": "Там стоять ____ ліжка.",
-      "role": "context"
-    },
-    {
-      "word": "бачу",
-      "exercise_type": "fill-in",
-      "context": "Я бачу ____ дзеркала.",
-      "role": "context"
-    },
-    {
-      "word": "слова",
+      "word": "слово",
       "exercise_type": "true-false",
-      "context": "Множина слова «стіл» — це «столи».",
+      "context": "Слово «зошити» — це множина.",
       "role": "context"
     },
     {
-      "word": "книгі",
+      "word": "множина",
       "exercise_type": "true-false",
-      "context": "Множина слова «книга» — це «книгі».",
+      "context": "Слово «зошити» — це множина.",
       "role": "context"
     },
     {
-      "word": "має",
+      "word": "однина",
       "exercise_type": "true-false",
-      "context": "Слово «стільці» має закінчення -і.",
+      "context": "«Чисті вікна» — це однина.",
       "role": "context"
     },
     {
-      "word": "ліжки",
+      "word": "червона",
       "exercise_type": "true-false",
-      "context": "Множина слова «ліжко» — це «ліжки».",
+      "context": "«Червона ручка» — це множина.",
       "role": "context"
     },
     {
@@ -93,20 +45,23 @@
       "role": "context"
     },
     {
-      "word": "дуже",
-      "exercise_type": "error-correction",
-      "context": "Ці вікно дуже чисті.",
+      "word": "мають",
+      "exercise_type": "true-false",
+      "context": "Прикметники у множині завжди мають закінчення -і.",
+      "role": "context"
+    },
+    {
+      "word": "закінчення",
+      "exercise_type": "true-false",
+      "context": "Прикметники у множині завжди мають закінчення -і.",
       "role": "context"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 15,
-    "tested_in_exercises": 11,
+    "tested_in_exercises": 14,
     "not_tested": [
-      "крісла",
-      "речі",
-      "сумки",
-      "ті"
+      "крісла"
     ]
   },
   "all_grounded": false

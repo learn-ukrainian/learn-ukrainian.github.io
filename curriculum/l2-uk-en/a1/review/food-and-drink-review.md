@@ -1,44 +1,59 @@
 ## Linguistic Scan
-No linguistic errors found.
+- No Russianisms, Surzhyk, calques, paronym mistakes, or banned Russian letters (`ы э ё ъ`) found in the Ukrainian examples.
+- Factually misleading lexicon note: `There is no separate word for quark.` This is too absolute. The repo’s ULP notes include `дома́шній сир` = `cottage cheese`, so the note should be softened.
 
 ## Exercise Check
-- The `<!-- INJECT_ACTIVITY: match-up-food-vocab -->` marker is placed right before the "Напої (Drinks)" section. This is incorrect because the activity tests `вода` and `сік`, which are not introduced until the "Напої" section itself.
-- The `<!-- INJECT_ACTIVITY: group-sort-food-drinks -->`, `<!-- INJECT_ACTIVITY: fill-in-chunks -->`, and `<!-- INJECT_ACTIVITY: quiz-meals-dishes -->` markers are all clustered consecutively at the end of the "Напої" section, which violates the rule to spread markers out across the module and not cluster them.
+- Found 4 markers: `match-up-food-drink`, `group-sort-food-drinks`, `fill-in-chunks`, `quiz-meals-dishes`.
+- The marker set matches the 4 planned activity types semantically: match-up, group-sort, fill-in, quiz.
+- `match-up-food-drink` is placed too early. Before that marker, `вода` occurs 0 times and `сік` occurs 0 times in the prose, but both are in the planned match-up.
+- The other three markers are placed after the relevant teaching and are spread reasonably well.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 8/10 | The text misses the required `references` from the plan ("ULP Season 1, Episodes 11-13" and "State Standard 2024, Topic 3 (ресторан)"). All other plan points, including vocabulary, outline, and objectives, are meticulously covered. |
-| 2. Linguistic accuracy | 10/10 | Excellent. The generated text is free from Russianisms, Surzhyk, or calques. Accurate and natural phrasing is used throughout. No linguistic errors found. |
-| 3. Pedagogical quality | 10/10 | Strong PPP flow. The grammar rule (`з + noun`) is taught practically as a chunk without overwhelming the learner with instrumental case theory. |
-| 4. Vocabulary coverage | 10/10 | All required and recommended words are included and introduced in context rather than as bare lists. |
-| 5. Exercise quality | 7/10 | The `match-up-food-vocab` marker tests vocabulary before it is formally introduced. Furthermore, three markers are heavily clustered at the end of the "Напої" section. |
-| 6. Engagement & tone | 10/10 | Warm, inviting tone. The teacher persona effectively uses the culinary context to engage the learner naturally. |
-| 7. Structural integrity | 10/10 | All H2 headings are present. Word count (1520) exceeds the 1200 target. |
-| 8. Cultural accuracy | 10/10 | Accurate and respectful cultural details. Mentions `борщ` as UNESCO heritage, highlights the sacred role of `хліб`, and correctly includes `сало`, `вареники`, `компот`, and `узвар`. |
-| 9. Dialogue & conversation quality | 10/10 | Dialogues are realistic, culturally natural, and effectively use the target phrases in multi-turn exchanges. |
+| 1. Plan adherence | 8/10 | The core outline is covered: meals, food categories, drinks, `з + noun` chunks, and iconic dishes all appear. But the plan references are not integrated into the prose: `ULP`, `Episodes 11-13`, and `State Standard 2024` occur 0 times in the module text. |
+| 2. Linguistic accuracy | 8/10 | Ukrainian forms are clean and VESUM-backed, with no Russian letters. The weak point is the lexicon note: `There is no separate word for quark.` is too absolute and can misteach learners. |
+| 3. Pedagogical quality | 8/10 | The module broadly follows PPP: dialogues first, then vocabulary, then chunk practice, then summary. But the first exercise marker appears before some of its target vocabulary is taught, which breaks teach-then-test sequencing. |
+| 4. Vocabulary coverage | 9/10 | All required plan vocabulary appears in prose, including `їжа`, `напій`, `хліб`, `кава`, `чай`, `вода`, `молоко`, `сік`, `м'ясо`, `риба`, `суп`, `сніданок`, `обід`, `вечеря`. Recommended cultural items like `борщ`, `вареники`, `сало`, `сметана`, `компот` are also included. |
+| 5. Exercise quality | 7/10 | There are 4 markers and the planned exercise types are represented, but `match-up-food-drink` is misordered: `вода` and `сік` are not taught before the learner reaches it. |
+| 6. Engagement & tone | 9/10 | Tone is teacherly and concrete, with useful cultural detail around `борщ`, `вареники`, `сало`, and family meals. |
+| 7. Structural integrity | 10/10 | All planned H2 sections are present and ordered correctly. Markdown is clean, and the deterministic word count `1658` is above the `1200` target. |
+| 8. Cultural accuracy | 8/10 | The module stays Ukrainian-centered and avoids Russian comparison framing. The main cultural/lexical problem is the overgeneralized claim about `quark`/`сир`. |
+| 9. Dialogue & conversation quality | 9/10 | Named speakers and plausible situations are present: breakfast with `Бабуся`/`Онучка`, meal talk, and cafe ordering. |
 
 ## Findings
-[1. Plan adherence] [major]
-Location: Entire module text.
-Issue: The plan lists references (`ULP Season 1, Episodes 11-13`, `State Standard 2024, Topic 3 (ресторан)`) which are completely omitted from the text.
-Fix: Add a "Ресурси (Resources)" callout at the end of the Summary to point the learner to the required external materials.
+[LINGUISTIC ACCURACY / CULTURAL ACCURACY] [SEVERITY: critical]  
+Location: `Note that the word **сир** is uniquely used for both yellow hard cheese and soft quark (cottage cheese) in Ukrainian. There is no separate word for quark.`  
+Issue: The second sentence is too absolute and can teach a misleading lexical fact. The repo’s local ULP notes use `дома́шній сир` for `cottage cheese`, so “no separate word” overstates the situation.  
+Fix: Replace the note with a softer explanation that `сир` is broad and that learners may also hear `домашній сир` for cottage cheese.
 
-[5. Exercise quality] [major]
-Location: `<!-- INJECT_ACTIVITY: match-up-food-vocab -->` (placed right before `## Напо́ї (Drinks)`) and the cluster of three markers at the end of the `Напої` section.
-Issue: The match-up activity tests concepts (`вода`, `сік`) before they are taught. Markers are clustered together instead of being distributed naturally (e.g., placing comprehensive review activities in the Summary).
-Fix: Relocate `match-up-food-vocab`, `group-sort-food-drinks`, and `quiz-meals-dishes` to the `Підсумок — Summary` section. Keep `fill-in-chunks` at the end of the `Напої` section where the `з + noun` chunking is taught.
+[EXERCISE QUALITY / PEDAGOGICAL QUALITY] [SEVERITY: major]  
+Location: `<!-- INJECT_ACTIVITY: match-up-food-drink -->` immediately after the Dialogues section.  
+Issue: The planned match-up includes items such as `вода` and `сік`, but both occur 0 times before this marker. The exercise is testing vocabulary before it is taught.  
+Fix: Move this marker to the Drinks section, after the core drinks vocabulary has been introduced.
+
+[PLAN ADHERENCE] [SEVERITY: major]  
+Location: module-wide; the prose never cites the plan references.  
+Issue: The plan explicitly lists `ULP Season 1, Episodes 11-13` and `State Standard 2024, Topic 3 (ресторан)`, but the module text never integrates or mentions them.  
+Fix: Add one natural sentence in the cafe-ordering subsection that ties the dialogue to the State Standard restaurant situation and ULP episodes.
 
 ## Verdict: REVISE
-The text is linguistically solid and pedagogically excellent, but the missing references and the misplacement/clustering of the activity markers require a revision.
+REVISE — there is one critical factual lexicon issue and two major quality issues. Dimensions 1, 2, 3, 5, and 8 are below 9, so this cannot pass as-is.
 
 <fixes>
-- find: "**салат** (salad).\n\n<!-- INJECT_ACTIVITY: match-up-food-vocab -->\n\n## Напо́ї (Drinks)"
-  replace: "**салат** (salad).\n\n## Напо́ї (Drinks)"
-- find: "* **м'ясо з картоплею** — meat with potatoes\n\n<!-- INJECT_ACTIVITY: group-sort-food-drinks -->\n<!-- INJECT_ACTIVITY: fill-in-chunks -->\n<!-- INJECT_ACTIVITY: quiz-meals-dishes -->\n\n## Підсумок — Summary"
-  replace: "* **м'ясо з картоплею** — meat with potatoes\n\n<!-- INJECT_ACTIVITY: fill-in-chunks -->\n\n## Підсумок — Summary"
-- find: "sparkling water.)*\n\nBefore moving forward, verify that you can confidently answer the following questions:"
-  replace: "sparkling water.)*\n\n<!-- INJECT_ACTIVITY: match-up-food-vocab -->\n<!-- INJECT_ACTIVITY: group-sort-food-drinks -->\n<!-- INJECT_ACTIVITY: quiz-meals-dishes -->\n\nBefore moving forward, verify that you can confidently answer the following questions:"
-- find: "Name one traditional Ukrainian cold drink (**компот** or **узвар**).\n\nIf you can answer these questions and name your favorite foods, you are ready to practice."
-  replace: "Name one traditional Ukrainian cold drink (**компот** or **узвар**).\n\nIf you can answer these questions and name your favorite foods, you are ready to practice.\n\n:::note Ресурси (Resources)\nTo hear this vocabulary in action, listen to **Ukrainian Lessons Podcast (ULP), Season 1, Episodes 11-13**, where Anna introduces food and drink vocabulary and cafe ordering. This module's vocabulary also aligns with the communicative situations (restaurant, ordering food) outlined in the **Ukrainian State Standard 2024, Topic 3**.\n:::"
+- find: "Note that the word **сир** is uniquely used for both yellow hard cheese and soft quark (cottage cheese) in Ukrainian. There is no separate word for quark."
+  replace: "Note that the word **сир** covers cheese broadly in Ukrainian, and cottage cheese may also be specified as **домашній сир**. Do not assume a one-to-one match with English cheese labels."
+
+- find: |
+    <!-- INJECT_ACTIVITY: match-up-food-drink -->
+
+    ## Їжа (Food)
+  replace: |
+    ## Їжа (Food)
+
+- find: "Dairy drinks are also very common. You already know молоко, but you should also recognize **кефір** (kefir)."
+  replace: "<!-- INJECT_ACTIVITY: match-up-food-drink -->\n\nDairy drinks are also very common. You already know молоко, but you should also recognize **кефір** (kefir)."
+
+- find: "Here is a short dialogue about ordering drinks in a cafe:"
+  replace: "Here is a short dialogue about ordering drinks in a cafe, matching the restaurant situation in the State Standard 2024 and the cafe-ordering material in ULP Season 1, Episodes 11-13:"
 </fixes>

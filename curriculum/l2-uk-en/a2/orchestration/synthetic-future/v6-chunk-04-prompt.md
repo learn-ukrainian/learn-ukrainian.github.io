@@ -1,22 +1,24 @@
-# Section-by-Section Generation — Section 4/5
+# Section-by-Section Generation — Section 4/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 41: Я напишу! (A2, A2.6 [Aspect, Tenses, and Motion])
-**Section to write:** Як обрати вид для майбутнього (Choosing Aspect for the Future) (~450 words)
+**Section to write:** Як обрати вид для майбутнього (~450 words)
 **Word target for this section:** 450 words (aim for 495 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Як обрати вид для майбутнього (Choosing Aspect for the Future) (~450 words)
-- P1 (~120 words): [The "Result vs. Process" Decision Matrix. Provide side-by-side contrasts: "Я прочитаю цю статтю" (I will finish reading it) vs. "Я буду читати цю статтю" (I will be in the process of reading it). Use "напишу" vs "буду писати" as well.]
-- P2 (~110 words): [Time markers as aspect triggers. List adverbs that favor perfective (скоро, враз, за хвилину) vs. those that favor imperfective (довго, цілий вечір, часто, завжди).]
-- P3 (~120 words): [Future tenses in conditional "якщо" (if) and "коли" (when) sentences. Explain that unlike English, Ukrainian uses future tense in both clauses. Example: "Якщо ти прийдеш (pf), ми будемо пити (impf) чай."]
-- P4 (~100 words): [Final integration dialogue: "Weekend Coordination." A: "Що ти будеш робити завтра?" B: "Вранці я буду прибирати квартиру, а о другій годині я подзвоню тобі, і ми підемо в кіно."]
-- <!-- INJECT_ACTIVITY: quiz-aspect-choice --> [quiz, Choose between synthetic and analytical future based on situational context, 8 items]
-- <!-- INJECT_ACTIVITY: unjumble-future-sentences --> [unjumble, Reorder words to form correct future tense sentences (both types), 6 items]
+## Як обрати вид для майбутнього (~450 words)
+- P1 (~120 words): Provide a practical decision guide for learners. Ask the key questions: Will the action be completed with a final result? If yes, choose Perfective (synthetic). Will the action be ongoing, repeated, or is the duration the main point? If yes, choose Imperfective (analytical).
+- P2 (~130 words): Show contrastive pairs in realistic contexts. Compare a single action vs. a repeated habit: "Я подзвоню тобі ввечері" (I will call you tonight — a single call) versus "Я буду дзвонити тобі щодня" (I will call you every day — repeated). Compare result vs. process: "Він прочитає статтю" (He will finish reading the article) versus "Він буде читати статтю" (He will spend time reading the article).
+- P3 (~100 words): Discuss how these choices manifest in daily conversations like making plans, promises, or predictions. Introduce the classic question "Що ти будеш робити завтра?" (focusing on the general plan/process) and the mixed-aspect reply: "Я прибиратиму квартиру, а потім приготую вечерю" (I will be cleaning the apartment, and then I will cook dinner). Briefly note that "прибиратиму" is a stylish variant of "буду прибирати".
+- P4 (~100 words): Wrap up with a short summary emphasizing that choosing the correct future tense form is about expressing *how* you view the action unfolding, giving learners more expressive power in Ukrainian than they have in English.
+- <!-- INJECT_ACTIVITY: fill-in-future-aspect --> [fill-in, Complete sentences with the correct future form (synthetic perfective or analytical imperfective) based on context, 8 items]
+- <!-- INJECT_ACTIVITY: quiz-aspect-choice --> [quiz, Identify whether a future sentence uses synthetic or analytical future and explain the aspect choice, 8 items]
+
+Grand total: ~2000 words
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -24,7 +26,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-will comfortably occupy your free evening. Також ми регулярно використовуємо цей час для повторюваних дій. *(Also we regularly use this tense for repeated actions.)* When an action will happen repeatedly or habitually in the future, the compound form is strictly required. Слова-маркери дуже часто допомагають зрозуміти цю щоденну ситуацію. *(Marker words very often help to understand this daily situation.)* The repetition makes the action an imperfective process by definition, requiring the helper verb. Ви часто побачите слова **щодня** *(every day)*, **часто** *(often)* або **завжди** *(always)*. *(You will often see the words every day, often or always.)* Ці короткі слова завжди показують рутину. *(These short words always show a routine.)* Ви кажете: «Я буду **дзвонити** тобі щодня» *(I will be calling you every day)*. Це чітко означає, що дія буде повторюватися багато разів. *(This clearly means that the action will be repeated many times.)* Ви також можете сказати своїм друзям: «Ми будемо часто **зустрічатися**» *(We will be meeting often)*. Тут студенти дуже часто роблять серйозну граматичну помилку. *(Here students very often make a serious grammatical error.)* You must never combine the conjugated helper verb with a perfective infinitive. Це жахливий гібрид, який зовсім не існує в українській мові. *(This is a terrible hybrid that does not exist in the Ukrainian language at all.)* Форма «я буду написати» є абсолютно неправильною. *(The form "I will write" is absolutely incorrect.)* Ukrainian explicitly separates the idea of process and the idea of a finished result. Якщо ви хочете показати фінальний результат, ви завжди використовуєте просту форму: «Я **напишу** довгий емейл» *(I will write a long email)*. Тут важлива дія має чіткий кінець. *(Here the important action has a clear end.)* Якщо ви хочете показати процес, ви використовуєте складену форму: «Я **буду писати** емейл» *(I will be writing an email)*. Цей активний процес триває певний час. *(This active process lasts a certain time.)* You cannot mix these two distinct temporal concepts together. Давайте уважно подивимося, як друзі обговорюють свої нові звички. *(Let's carefully see how friends discuss their new habits.)* Вони серйозно говорять про свої амбітні плани на наступний рік. *(They are seriously talking about their ambitious plans for the next year.)* Вони обговорюють корисні речі, які скоро стануть їхньою новою рутиною. *(They are discussing useful things that will soon become their new routine.)* > — **Марта:** Що ти будеш **робити** в новому році? *(What will you be doing in the new year?)* > — **Олег:** Я буду щодня **бігати** у великому парку. *(I will be running in the large park every day.)* > — **Марта:** Це дуже корисна щоденна звичка для здоров'я. *(This is a very useful daily habit for health.)* > — **Олег:** А також я буду **вчити** українську кожну суботу. *(And also I will be studying Ukrainian every Saturday.)* > — **Марта:** Чудово, я буду **допомагати** тобі з домашнім завданням. *(Great, I will be helping you with homework.)* > — **Олег:** Дякую, ми будемо регулярно **практикувати** мову разом. *(Thank you, we will be practicing the language regularly together.)* <!-- INJECT_ACTIVITY: fill-in-compound-future -->
+I will be, you will be, he or she will be. In the plural, the forms are: we will be, you will be, they will be. This is the only word in the construction that changes. The main verb always remains in the infinitive and never loses its ending.* :::info **Grammar box** — The helper verb does all the grammatical work in the compound future tense. It shows exactly who is doing the action. The second verb just tells you what the action is, so it must stay in its basic dictionary form (usually ending in -ти). ::: Давайте подивимося на прості і життєві приклади. Увечері я буду читати цікаву статтю про історію. Завтра ми будемо працювати в офісі. Наступного року вони будуть вивчати українську мову в університеті. Ми будемо чекати на вас біля театру. > *Let's look at simple and real-life examples. In the evening I will be reading an interesting article about history. Tomorrow we will be working in the office. Next year they will be studying the Ukrainian language at the university. We will be waiting for you near the theater.* You will use this compound future tense for ongoing, repeated, or general actions in the future where the duration or process is important. The focus is entirely on the fact that the action will be happening, not on the completion or the final result of the task. If you want to say what you will be doing for a whole day, or what your general routine will be next month, you must use this specific form. It sets the scene and describes the background activity. Завтра я буду працювати весь день, тому я буду дуже зайнятий. Влітку вони будуть подорожувати по Європі автомобілем. Кожного ранку вона буде пити каву на балконі. > *Tomorrow I will be working all day, so I will be very busy. In summer they will be traveling around Europe by car. Every morning she will be drinking coffee on the balcony.* Let's draw a direct, clear contrast between the two future formations using the exact same root verb. If you use **написати / напишу** (to write — pf. future), you are using the **простий** (simple, synthetic) perfective future. It means "I will write the letter" — the task will be successfully completed and the letter will be ready. But if you say "Я буду писати листа", you are using the analytical imperfective future. This means "I will be writing the letter," focusing purely on the continuous process. You might spend hours on it, and you might not actually finish it by the end of the day. The choice of aspect completely changes the meaning of your future plans. Ви можете легко поєднувати ці форми у звичайній розмові. Вранці я буду прибирати квартиру, а потім я приготую смачний обід. Я буду довго читати книгу, а ввечері напишу короткий лист. <!-- INJECT_ACTIVITY: unjumble-future-sentences --> [unjumble, Reorder words to form correct future tense sentences using both synthetic (напишу) and analytical (буду писати) forms, 6 items]
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -58,10 +60,11 @@ objectives:
     process (imperfective).
 dialogue_situations:
   - setting: Making New Year's resolutions with friends — Я напишу книгу (f)! Я 
-      вивчу іспанську (f)! Він прочитає 50 книг! Вона здасть іспит (m, exam)!
+      вивчу іспанську (f)! Він прочитає 50 книг! Вона складе іспит (m, exam)!
     speakers:
       - Група друзів на Новий рік
-    motivation: 'Perfective future: написати→напишу, вивчити→вивчу, здати→здам'
+    motivation: 'Perfective future: написати→напишу, вивчити→вивчу, скласти→складу.
+      Note: Ukrainian says складати/скласти іспит (not the Russianism "здавати іспит").'
 content_outline:
   - section: Два майбутніх часи (Two Futures in Ukrainian)
     words: 450
@@ -478,7 +481,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -497,18 +567,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (4/4).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] майбутній час (future tense)
+- [ ] простий (simple, synthetic)
+- [ ] складений (compound, analytical)
+- [ ] сказати / скажу (to say/tell — pf. future)
+- [ ] написати / напишу (to write — pf. future)
+- [ ] зробити / зроблю (to do — pf. future)
+- [ ] буду (I will — auxiliary)
+- [ ] прочитати (to read through — pf.)
+- [ ] подзвонити (to call — pf.)
+- [ ] купити (to buy — pf.)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Як обрати вид для майбутнього (~450 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

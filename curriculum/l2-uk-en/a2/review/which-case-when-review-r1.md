@@ -1,98 +1,109 @@
 ## Linguistic Scan
-No linguistic errors found. The grammar explanations and case applications are completely correct, and no Russianisms, Surzhyk, or calques were detected. 
+- No Russianisms, Surzhyk, paronym errors, forbidden Russian characters, or confirmed calques found.
+- Critical grammar-teaching error: `Але для фраз зі словами «наступний» або «минулий» ми завжди обираємо родовий відмінок.` This is false as an absolute. The repo’s textbook corpus attests other standard patterns such as `наступну добу` and `минулої суботи`, so the rule must be narrowed to specific no-preposition time phrases, not taught as universal.
 
 ## Exercise Check
-- `<!-- INJECT_ACTIVITY: quiz-verb-case -->` is present and correctly placed after the verbs section. Matches the 'quiz' hint for case triggers.
-- `<!-- INJECT_ACTIVITY: group-sort-prepositions -->` is present and correctly placed after the prepositions section. Matches the 'group-sort' hint for prepositions.
-- `<!-- INJECT_ACTIVITY: fill-in-mixed-triggers -->` is present and correctly placed after the special cases section. Matches the 'fill-in' hint for mixed cases and time/characteristics.
-- `<!-- INJECT_ACTIVITY: true-false-case-logic -->` is present and correctly placed after the algorithm section. Matches the 'true-false' hint for case logic.
-All expected markers are present, logically placed, and aligned with the plan.
+- Marker inventory is complete: 4/4 markers are present, and the IDs match the plan’s `quiz`, `group-sort`, `fill-in`, and `true-false` hints.
+- Placement is weak: there is no practice marker after the first “Дієслово вирішує” section, while both `quiz-case-verb-prep` and `true-false-case-pairs` are clustered after the final section.
+- The fill-in marker line contains a stray inline annotation after the HTML comment, which looks like an artifact rather than publishable prose.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 8/10 | Missed specific examples required by `content_outline`: `читати`, `шукати`, `заважати`, `у четвер`, `у середу`, `у двадцять першому столітті`, `у дитинстві`, `жінка у білому пальті`, and the "Default Nom." decision tree point. |
-| 2. Linguistic accuracy | 10/10 | Flawless grammatical descriptions and usage of cases. No Russianisms or Surzhyk detected. |
-| 3. Pedagogical quality | 10/10 | Excellent pedagogical flow using vivid metaphors ("дієслово — це магніт", "компас відмінків") and clear PPP structure. |
-| 4. Vocabulary coverage | 9/10 | Incorporated almost all required vocabulary effectively. Missed the recommended word `керувати`. |
-| 5. Exercise quality | 10/10 | Markers perfectly track the plan's requirements and follow immediately after the relevant grammatical instruction blocks. |
-| 6. Engagement & tone | 10/10 | Warm, encouraging tone without any gamified clutter. The "grammar detective" narrative sets the stage effectively. |
-| 7. Structural integrity | 9/10 | Clean structure and word count is excellent (2870). A minor formatting artifact `(~400 слів)` was left in one of the H2 headings. |
-| 8. Cultural accuracy | 10/10 | Explains Ukrainian grammar naturally through its own logic rather than drawing comparisons to Russian or forcing English paradigms onto it. |
-| 9. Dialogue & conversation quality | 10/10 | Natural conversational start that immediately introduces the core grammatical anchor points in context. |
+| 1. Plan adherence | 8/10 | All four planned H2 sections are present, and core examples from the plan appear: `думати про майбутнє`, `у четвер`, `хлопець у червоному светрі`, `бігати по кімнаті`, `у 2014 році`. But the generated content contains no in-prose citation of `Заболотний` or `ULP`, despite the plan listing them as references. |
+| 2. Linguistic accuracy | 7/10 | The line `Але для фраз зі словами «наступний» або «минулий» ми завжди обираємо родовий відмінок` teaches a false absolute rule. The note below repeats the same overgeneralization. |
+| 3. Pedagogical quality | 7/10 | The algorithm section says to ask case questions such as `кого?`, `що?`, `кому?`, `ким?`, but omits Genitive and Locative prompts even though this module heavily teaches both. That makes the advertised “decision process” incomplete. |
+| 4. Vocabulary coverage | 10/10 | Required vocabulary is fully present in prose: `відмінок`, `прийменник`, `дієслово`, `напрямок`, `місце`, `час`, `характеристика`, `думати`, `боятися`, `користуватися`. Recommended vocabulary also appears naturally: `алгоритм`, `контекст`, `керувати`, `майбутнє`. |
+| 5. Exercise quality | 7/10 | The markers are not evenly distributed. `group-sort` comes after section 2, `fill-in` after section 3, but both `quiz-case-verb-prep` and `true-false-case-pairs` sit at the very end, so the verb-governed cases in section 1 get no immediate practice. |
+| 6. Engagement & tone | 9/10 | The teacherly frame is clear and useful, especially `Сьогодні ми граємо в граматичних детективів` and the steady use of concrete sentence examples. |
+| 7. Structural integrity | 8/10 | The module has all planned sections and exceeds the 2000-word target, but this line is a formatting artifact: `<!-- INJECT_ACTIVITY: fill-in-mixed-cases --> [fill-in, Complete sentences ...]`. |
+| 8. Cultural accuracy | 10/10 | The module stays Ukrainian-centered, makes no Russia-comparison shortcuts, and uses culturally neutral Ukrainian examples. |
+| 9. Dialogue & conversation quality | 7/10 | The opening exchange is mostly teacher interrogation with short answer retrieval: `Де тут називний відмінок?` → `Слово «президент».` → `А чому ми кажемо «з прем'єром»?` It is functional, but not a natural multi-turn conversation. |
 
 ## Findings
-[1. Plan adherence] [Major]
-Location: Section `Дієслово вирішує`, Verbs paragraph ("Найпопулярніші дієслова тут: бачити...")
-Issue: Missing verbs `читати`, `шукати` and their specific examples from the plan.
-Fix: Add the missing verbs to the list and provide their corresponding examples in the text.
+- [LINGUISTIC ACCURACY] [SEVERITY: critical]  
+Location: `Особливі випадки: Час, характеристика, шлях` — `Але для фраз зі словами «наступний» або «минулий» ми завжди обираємо родовий відмінок.`  
+Issue: This teaches a false absolute. Ukrainian also uses non-genitive time phrases with these adjectives.  
+Fix: Narrow the claim to common no-preposition expressions like `наступного тижня`, `минулого року`.
 
-[1. Plan adherence] [Major]
-Location: Section `Дієслово вирішує`, Dative verbs paragraph ("Сюди належать: допомагати...")
-Issue: Missing the verb `заважати` from the Dative verbs list.
-Fix: Add `заважати` and a supporting example sentence.
+- [LINGUISTIC ACCURACY] [SEVERITY: critical]  
+Location: note in `Особливі випадки` — `switch to the Genitive case for phrases with "next" or "last"`  
+Issue: The quick tip repeats the same wrong generalization.  
+Fix: Rephrase it so it refers only to common no-preposition time expressions.
 
-[4. Vocabulary coverage] [Major]
-Location: Section `Дієслово вирішує`, Instrumental verbs paragraph ("Запам'ятайте ці слова: користуватися...")
-Issue: Missing the recommended vocabulary word `керувати`.
-Fix: Add `керувати` to the list of Instrumental verbs to memorize.
+- [PEDAGOGICAL QUALITY] [SEVERITY: major]  
+Location: `Алгоритм вибору відмінка` — `ask the case question, such as «кого?», «що?», «кому?», or «ким?»`  
+Issue: The algorithm omits Genitive and Locative question patterns, so it does not actually support the full case set taught in the module.  
+Fix: Expand the list to include `кого? чого?` and locative prompts such as `у кому? у чому? / на кому? на чому?`.
 
-[1. Plan adherence] [Major]
-Location: Section `Особливі випадки`, Time paragraphs ("Наприклад: «Я працюю у вівторок..." and "Наприклад: «Він народився у 2024 році...")
-Issue: Missing the requested time expressions `у четвер`, `у середу`, `у двадцять першому столітті`, and `у дитинстві`.
-Fix: Expand the examples in the time expressions paragraphs to include these required phrases.
+- [EXERCISE QUALITY] [SEVERITY: major]  
+Location: marker placement — `<!-- INJECT_ACTIVITY: quiz-case-verb-prep -->` appears only at the very end, after section 4.  
+Issue: Practice is not evenly spaced; section 1 teaches verb-governed cases but gets no immediate check.  
+Fix: Move the quiz marker to the end of section 1, right after the `думати про + Acc.` teaching block.
 
-[1. Plan adherence] [Major]
-Location: Section `Особливі випадки`, Characteristics paragraph ("Наприклад: «Хто цей хлопець у синьому светрі?...")
-Issue: Missing the descriptive phrase `жінка у білому пальті` from the plan.
-Fix: Add `жінка у білому пальті` as an additional example.
+- [PLAN ADHERENCE] [SEVERITY: major]  
+Location: whole generated content — search in the generated-content block returned 0 hits for `Заболотний`, `ULP`, or `Ukrainian Cases Overview`.  
+Issue: The plan’s references are not integrated into the prose at all.  
+Fix: Add one short sentence in the introduction explicitly grounding the method in the listed references.
 
-[1. Plan adherence] [Major]
-Location: Section `Алгоритм вибору відмінка`, Step 3 paragraph ("Крок третій: перевіряємо себе питанням...")
-Issue: Missing the `Default Nom. (subject)` branch of the decision tree mentioned in the plan.
-Fix: Integrate the Nominative case default into the third step of the algorithm.
+- [STRUCTURAL INTEGRITY] [SEVERITY: minor]  
+Location: `<!-- INJECT_ACTIVITY: fill-in-mixed-cases --> [fill-in, Complete sentences ...]`  
+Issue: The bracketed note after the marker is a stray formatting artifact.  
+Fix: Leave only the HTML marker.
 
-[7. Structural integrity] [Minor]
-Location: Heading `## Алгоритм вибору відмінка (~400 слів)`
-Issue: The target word count artifact `(~400 слів)` was accidentally included in the printed heading.
-Fix: Remove the artifact from the heading.
+- [DIALOGUE & CONVERSATION QUALITY] [SEVERITY: major]  
+Location: opening dialogue block beginning `— **Вчитель:** Читаємо перший текст.`  
+Issue: The exchange is almost entirely teacher prompts plus one-line retrieval answers, which matches the rubric’s “interrogation” failure mode.  
+Fix: Replace it with a short collaborative exchange where students explain multiple forms in fuller turns.
 
 ## Verdict: REVISE
-The module is fundamentally excellent, utilizing strong metaphors and clear structural logic to teach the complex Ukrainian case system. However, it missed several specific vocabulary words and phrase examples mandated by the curriculum plan, and it retained a minor formatting artifact in a heading. These missing points must be added deterministically to achieve complete plan coverage.
+REVISE. There is a critical grammar-teaching error about `наступний/минулий` time phrases, plus major pedagogy, exercise-placement, reference-integration, and dialogue-quality issues. Multiple dimensions are below 9, and the identified errors require concrete fixes.
 
 <fixes>
+- find: "Сьогодні ми граємо в граматичних детективів. Ми читаємо українську газету і шукаємо кожен **відмінок** (grammatical case)."
+  replace: "Сьогодні ми граємо в граматичних детективів. Ми читаємо українську газету і шукаємо кожен **відмінок** (grammatical case). Такий спосіб аналізу спирається на шкільні підручники Заболотного та огляд ULP: спочатку визначаємо слово, яке керує формою, а потім обираємо закінчення."
+
 - find: |
-    Найпопулярніші дієслова тут: **бачити** *(to see)*, **знати** *(to know)*, **любити** *(to love)* та **купити** *(to buy)*. 
-    Наприклад: «Я **бачу друга** *(I see a friend)*» або «Ми **знаємо правду** *(We know the truth)*». Коли ви кажете: «Я **люблю Україну** *(I love Ukraine)*», ви використовуєте Знахідний відмінок. Те саме стосується фрази: «Я **куплю квиток** *(I will buy a ticket)*».
+    > — **Вчитель:** Читаємо перший текст. «Президент зустрівся з прем'єром. Для журналістів підготували зал». Де тут називний відмінок? *(Let's read the first text. "The president met with the prime minister. They prepared a hall for the journalists". Where is the nominative case here?)*
+    > — **Студенти:** Слово «президент». Це суб'єкт, він робить дію. *(The word "president". It is the subject, he is doing the action.)*
+    > — **Вчитель:** Правильно. А чому ми кажемо «з прем'єром»? *(Correct. And why do we say "with the prime minister"?)*
+    > — **Студенти:** Тому що тут є **прийменник** (preposition) «з». Це орудний відмінок. *(Because there is the preposition "with" here. It is the instrumental case.)*
+    > — **Вчитель:** Чудово! А слово «журналістів»? *(Great! And the word "journalists"?)*
+    > — **Студенти:** Це родовий відмінок після прийменника «для». *(It is the genitive case after the preposition "for".)*
+    > — **Вчитель:** А слово «зал»? *(And the word "hall"?)*
+    > — **Студенти:** Це знахідний відмінок. Це об'єкт дії «підготували». *(It is the accusative case. It is the object of the action "prepared".)*
   replace: |
-    Найпопулярніші дієслова тут: **бачити** *(to see)*, **знати** *(to know)*, **любити** *(to love)*, **читати** *(to read)*, **шукати** *(to look for)* та **купити** *(to buy)*. 
-    Наприклад: «Я **бачу друга** *(I see a friend)*», «Я **читаю книгу** *(I am reading a book)*» або «Ми **шукаємо ключі** *(We are looking for keys)*». Коли ви кажете: «Я **люблю Україну** *(I love Ukraine)*», ви використовуєте Знахідний відмінок. Те саме стосується фрази: «Я **куплю квиток** *(I will buy a ticket)*».
+    > — **Вчитель:** Читаємо перший текст. «Президент зустрівся з прем'єром. Для журналістів підготували зал». Які відмінки ви вже бачите? *(Let's read the first text. "The president met with the prime minister. They prepared a hall for the journalists". Which cases can you already see?)*
+    > — **Студенти:** «Президент» — це називний, бо це суб'єкт. «З прем'єром» — орудний, бо тут прийменник «з». *("President" is the nominative because it is the subject. "With the prime minister" is instrumental because of the preposition "з".)*
+    > — **Вчитель:** Добре. А як пояснити «для журналістів» і «зал»? *(Good. And how do we explain "for the journalists" and "hall"?)*
+    > — **Студенти:** «Для журналістів» — це родовий після прийменника «для», а «зал» — знахідний, бо це об'єкт дії «підготували». *("For the journalists" is genitive after the preposition "для", and "hall" is accusative because it is the object of the action "prepared".)*
+
+- find: "Для днів тижня ми використовуємо прийменник «у» або «в» та знахідний відмінок. Наприклад, ми часто кажемо «у четвер», «у середу» або «у п'ятницю». Іноді ми можемо сказати про час навіть без прийменника. Якщо ви хочете сказати про свої плани, ви можете сказати: «Цю неділю я відпочиваю». Але для фраз зі словами «наступний» або «минулий» ми завжди обираємо родовий відмінок. Наприклад, ми кажемо «наступного тижня» або «минулого року»."
+  replace: "Для днів тижня ми використовуємо прийменник «у» або «в» та знахідний відмінок. Наприклад, ми часто кажемо «у четвер», «у середу» або «у п'ятницю». Іноді ми можемо сказати про час навіть без прийменника. Якщо ви хочете сказати про свої плани, ви можете сказати: «Цю неділю я відпочиваю». Але в поширених часових фразах без прийменника, як-от «наступного тижня» або «минулого року», ми часто використовуємо родовий відмінок."
+
+- find: "**Quick tip** — Use the Accusative case for days of the week (`у понеділок`), but remember to switch to the Genitive case for phrases with \"next\" or \"last\" (`наступного вівторка`, `минулого тижня`)."
+  replace: "**Quick tip** — Use the Accusative case for days of the week (`у понеділок`), but remember that many common no-preposition time phrases use the Genitive case (`наступного тижня`, `минулого року`)."
+
 - find: |
-    Сюди належать: **допомагати** *(to help)*, **телефонувати** *(to call)*, **дякувати** *(to thank)* та **радити** *(to advise)*. 
-    Ми кажемо: «Я **допомагаю мамі** *(I help mom)*» або «Він **телефонує сестрі** *(He calls his sister)*». Якщо ми вдячні, ми кажемо: «Ми **дякуємо вчителю** *(We thank the teacher)*». А якщо даємо пораду: «Я **раджу другу** *(I advise a friend)*».
+    > *When you dream or think about something, you use the preposition "про" and the accusative case. I often think about the future. They dream about a trip. We are thinking about a new plan.*
+
+    ## Прийменник вирішує: Один прийменник — різні відмінки (~600 words)
   replace: |
-    Сюди належать: **допомагати** *(to help)*, **телефонувати** *(to call)*, **дякувати** *(to thank)*, **радити** *(to advise)* та **заважати** *(to disturb)*. 
-    Ми кажемо: «Я **допомагаю мамі** *(I help mom)*» або «Він **телефонує сестрі** *(He calls his sister)*». Якщо ми вдячні, ми кажемо: «Ми **дякуємо вчителю** *(We thank the teacher)*». А якщо даємо пораду: «Я **раджу другу** *(I advise a friend)*», або коли хтось шумить: «Ти **заважаєш другу** *(You are disturbing a friend)*».
+    > *When you dream or think about something, you use the preposition "про" and the accusative case. I often think about the future. They dream about a trip. We are thinking about a new plan.*
+
+    <!-- INJECT_ACTIVITY: quiz-case-verb-prep -->
+
+    ## Прийменник вирішує: Один прийменник — різні відмінки (~600 words)
+
 - find: |
-    Запам'ятайте ці слова: **користуватися** *(to use)*, **цікавитися** *(to be interested in)* та **займатися** *(to practice / to do)*. 
+    <!-- INJECT_ACTIVITY: quiz-case-verb-prep -->
+    <!-- INJECT_ACTIVITY: true-false-case-pairs -->
   replace: |
-    Запам'ятайте ці слова: **користуватися** *(to use)*, **цікавитися** *(to be interested in)*, **займатися** *(to practice / to do)* та **керувати** *(to manage / to drive)*. 
-- find: |
-    Наприклад: «Я працюю **у вівторок** *(I work on Tuesday)*» або «Ми відпочиваємо **у п'ятницю** *(We rest on Friday)*». We also use the Accusative case to say "this week" or "this year" without a preposition.
-  replace: |
-    Наприклад: «Я працюю **у вівторок** *(I work on Tuesday)*», «У **середу** я вдома *(On Wednesday I am at home)*» або «Ми відпочиваємо **у четвер** та **у п'ятницю** *(We rest on Thursday and Friday)*». We also use the Accusative case to say "this week" or "this year" without a preposition.
-- find: |
-    Наприклад: «Він народився **у 2024 році** *(He was born in 2024)*» або «Це сталося **у минулому році** *(It happened last year)*». We also use "у/в" plus Locative to describe what someone is wearing or what they look like.
-  replace: |
-    Наприклад: «Він народився **у 2024 році** *(He was born in 2024)*», «Це було **у дитинстві** *(It was in childhood)*» або «Ми живемо **у двадцять першому столітті** *(We live in the twenty-first century)*». We also use "у/в" plus Locative to describe what someone is wearing or what they look like.
-- find: |
-    Наприклад: «Хто цей **хлопець у синьому светрі**? *(Who is this boy in a blue sweater?)*». Або: «Там стоїть **дівчина в окулярах** *(A girl in glasses is standing there)*». The clothing or accessory must always be in the Locative case.
-  replace: |
-    Наприклад: «Хто цей **хлопець у синьому светрі**? *(Who is this boy in a blue sweater?)*», «Там стоїть **дівчина в окулярах** *(A girl in glasses is standing there)*» або «Це **жінка у білому пальті** *(This is a woman in a white coat)*». The clothing or accessory must always be in the Locative case.
-- find: |
-    Крок третій: перевіряємо себе питанням. *(Step three: we check ourselves with a question.)* Якщо ми сумніваємося, ставимо питання до слова: кого? що? кому? чим? *(If we doubt, we ask a question to the word: whom? what? to whom? with what?)* Це надійний тест. *(This is a reliable test.)*
-  replace: |
-    Крок третій: якщо немає прийменника чи дієслова, це часто Називний відмінок для підмета *(Step three: if there is no preposition or verb, it is often the Nominative case for the subject)*. Якщо ми все ще сумніваємося, ставимо питання: кого? що? кому? чим? *(If we still doubt, we ask a question: whom? what? to whom? with what?)* Це надійний тест. *(This is a reliable test.)*
-- find: "## Алгоритм вибору відмінка (~400 слів)"
-  replace: "## Алгоритм вибору відмінка"
+    <!-- INJECT_ACTIVITY: true-false-case-pairs -->
+
+- find: "<!-- INJECT_ACTIVITY: fill-in-mixed-cases --> [fill-in, Complete sentences with the correct noun form — mixed cases triggered by different prepositions and verbs, including time expressions (у четвер), characteristics (у червоному светрі), and path (по кімнаті), 8 items]"
+  replace: "<!-- INJECT_ACTIVITY: fill-in-mixed-cases -->"
+
+- find: "When you speak Ukrainian, choosing the correct **відмінок** (grammatical case) can feel overwhelming. To make it easier, we use a simple three-step algorithm. The first step is to look for a **прийменник** (preposition). If there is one, it usually dictates the case immediately. If there is no preposition, move to step two: check the **дієслово** (verb). Many verbs require a specific case for their object. Finally, step three: if you are still unsure, ask the case question, such as «кого?», «що?», «кому?», or «ким?»."
+  replace: "When you speak Ukrainian, choosing the correct **відмінок** (grammatical case) can feel overwhelming. To make it easier, we use a simple three-step algorithm. The first step is to look for a **прийменник** (preposition). If there is one, it usually dictates the case immediately. If there is no preposition, move to step two: check the **дієслово** (verb). Many verbs require a specific case for their object. Finally, step three: if you are still unsure, ask the case question, such as «кого? що?», «кого? чого?», «кому?», «ким?», or locative prompts like «у кому? у чому?» / «на кому? на чому?`."
 </fixes>

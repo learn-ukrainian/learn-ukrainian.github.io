@@ -1,23 +1,25 @@
-# Section-by-Section Generation — Section 3/5
+# Section-by-Section Generation — Section 3/3
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 47: Тому що, бо, хоча (A2, A2.7 [Complex Sentences and Conditionals])
-**Section to write:** Хоча... (Although...) (~600 words)
-**Word target for this section:** 600 words (aim for 660 to account for undershoot)
+**Section to write:** Складносурядне речення: і, та, але (Compound Sentences: and, but) (~770 words total)
+**Word target for this section:** 770 words (aim for 847 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Хоча... (Although...) (~600 words)
-- P1 (~120 words): [Introduction to "допуст" (concession). Explaining that "хоча" expresses an action happening despite an obstacle. Example: "Хоча надворі холодно, ми пішли гуляти."]
-- P2 (~120 words): [Position flexibility. Unlike cause conjunctions, the "хоча" clause can come first or second. Note the comma placement in both cases. Examples: "Хоча було тільки надвечір’я, присмерки вже згусли" and "Я вчуся, хоча втомився."]
-- P3 (~120 words): [Contrast: Concession vs. Opposition. Comparing "хоча" with "але". "Хоча він втомлений, він працює" (concession) vs. "Він втомлений, але працює" (contrast). "Хоча" adds more nuance to the effort involved.]
-- P4 (~120 words): [The "Double Conjunction" feature. Explaining that when "хоча" starts a sentence, the main clause often gains an emphatic "а" or "але" to boost the contrast. Example: "Хоч і тепло ще, а осінь вже підходить крадькома."]
-- P5 (~120 words): [Intonation of concession. Rising tone (↗) on the "хоча" clause to signal "wait for the twist," followed by a falling tone (↘) on the main clause to deliver the result. Practice with: "Хоч земля вся укрита снігами, моє серце в цвіту."]
-- <!-- INJECT_ACTIVITY: match-up-cause-concession --> [Match-up: Match "причина" (cause) with "наслідок" (result) or "допуст" (concession) with "результат", 8 items]
-- <!-- INJECT_ACTIVITY: group-sort-conjunctions --> [Group Sort: Sort conjunctions into "причина" (тому що, бо) vs. "допуст" (хоча) vs. "протиставлення" (але), 8 items]
+## Складносурядне речення: і, та, але (Compound Sentences: and, but) (~770 words total)
+- P1 (~120 words): [Review and expand on A1 coordinating conjunctions (сполучники) used in complex sentences (складні речення). Introduce 'і / та' (and) and 'але / проте / однак / зате' (but, however, on the other hand). Explain that 'та' is a stylistic alternative to 'і', while 'проте' and 'однак' provide variety for 'але'. Mention 'навпаки' (on the contrary) for strong contrast.]
+- P2 (~130 words): [Demonstrate building longer compound sentences. Show how these conjunctions link equal, independent clauses. Examples: "Я прийшов додому, і ми разом повечеряли." "Сергій хотів піти в кіно, але не мав часу." "Хоч вітри ідуть супроти, та незламні наші крила."]
+- P3 (~130 words): [Contrast coordinating conjunctions ('і', 'та', 'але' — linking equal clauses) with subordinating conjunctions ('тому що', 'бо', 'хоча' — linking a main clause to a dependent one). Explain how to logically identify the main clause in a sentence.]
+- <!-- INJECT_ACTIVITY: group-sort-conjunctions --> [group-sort, Sort conjunctions into причина (тому що, бо) vs. допуст (хоча) vs. протиставлення (але, проте, однак), 8 items]
+- P4 (~120 words): [Explain comma rules for compound sentences. Emphasize that a comma is ALWAYS required before 'але', 'проте', and 'однак'. Clarify that a comma is used before 'і' or 'та' when they join two full independent clauses (subject + verb), not just when joining two words in a list.]
+- P5 (~140 words): [Describe intonation patterns. Explain that in causal sentences (причинові), the main clause carries a falling tone (↘) and the subordinate clause with 'тому що/бо' has a slight rise (↗). In concessive sentences (допустові), the 'хоча' clause rises (↗) to signal the concession, followed by a falling tone (↘) in the main clause.]
+- P6 (~130 words): [Consolidation exercise walkthrough. Show a short, choppy paragraph composed of simple sentences, and then rewrite it into natural, connected prose using a mix of cause, concession, and coordination to demonstrate flow and stylistic maturity.]
+- <!-- INJECT_ACTIVITY: quiz-conjunction-choice --> [quiz, Choose the correct conjunction (тому що, бо, хоча, але) to complete sentences, 8 items]
+- <!-- INJECT_ACTIVITY: fill-in-compound --> [fill-in, Complete compound sentences by adding the missing clause after the conjunction, 8 items]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -25,7 +27,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-для швидкої розмови сміливо обирайте «бо». Для тексту чи офіційної бесіди беріть «тому що». Ці два слова мають дещо різні граматичні правила. У складному реченні вони стоять у різних місцях. The conjunction «бо» is strictly a connector that sits between two clauses. Ви ніколи не можете почати нове речення зі слова «бо». Воно завжди йде тільки після головної інформації. On the other hand, the phrase «тому що» is more flexible. Вона може спокійно стояти всередині вашого складного речення. Вона також може починати нове речення. Ми робимо так, коли даємо пряму відповідь на запитання. Подивіться на цей короткий діалог: > — **Олена:** Чому ти не прийшов учора? > — **Марко:** Тому що я був дуже зайнятий. You cannot start a new sentence with «бо» to answer a direct question. Це звучить дуже неприродно для українців. Для першого слова у вашій відповіді ми завжди беремо «тому що». Зараз ми поговоримо про одну дуже типову помилку. English speakers often fall into the "Because-What" trap. Англійське слово "because" студенти часто перекладають як «тому що». Вони бачать там слово «що» і думають, що воно завжди потрібне. Тому вони часто помиляються і кажуть «бо що». Це велика проблема. Слово «бо» є повністю самостійним сполучником. Ніколи не додавайте маленьке «що» до «бо». Це **калька** *(calque)*, якої немає в українській мові. Правильно казати: «Я вчу мову, бо мені це подобається». Неправильно казати: «Я вчу мову, бо що мені це подобається». Запам'ятайте це просте правило назавжди. Слово «бо» чудово працює без сторонньої допомоги. Тепер час подивитися на українську пунктуацію. Це надзвичайно важлива тема для правильного письма. У складному реченні ми маємо дві різні частини. Ці частини треба візуально розділяти. В українській мові **кома** *(comma)* працює як надійний прикордонник між двома ідеями. The comma is the strict border guard between the main clause and the cause clause. Ви повинні завжди ставити кому перед словами «тому що» та «бо». Це обов'язкове граматичне правило нашого синтаксису. Давайте подивимося на кілька гарних прикладів. «Вона вивчає українську мову, бо хоче розуміти своїх друзів». «Ми не пішли гуляти, тому що надворі був дощ». «Студенти уважно слухають, бо викладач розповідає цікаву історію». Зверніть увагу на коми у цих реченнях. Англійська мова часто зовсім не вимагає коми перед причиною. Але українська мова завжди вимагає кому перед цими важливими сполучниками. Як ми створюємо такі складні речення на практиці? Це дуже схоже на просту математику. Ми беремо два окремі факти і робимо з них один сильний аргумент. Уявіть, що у вас є перший факт: «Петро винайшов вулик». **Вулик** *(beehive)* — це спеціальний дерев'яний будинок для бджіл. Потім у вас є другий факт: «Він — відомий **бджоляр** *(beekeeper)*». Тепер ми хочемо пояснити причину його великої популярності. Ми просто з'єднуємо ці два факти разом. Результат буде такий: «Петро — найвідоміший бджоляр, тому що він винайшов вулик». Ми щойно перетворили два короткі речення на одне велике інформативне речення. Це робить вашу розповідь набагато цікавішою та багатшою. Ви можете легко робити так з будь-якими фактами у житті. Головне — знайти правильний логічний зв'язок між ними. <!-- INJECT_ACTIVITY: quiz-cause-choice --> <!-- INJECT_ACTIVITY: fill-in-cause-clauses -->
+the two clauses. Ми із задоволенням пішли на довгу прогулянку, хоча вранці йшов сильний дощ. Хоча вранці йшов сильний дощ, ми із задоволенням пішли на прогулянку. Я добре розумію цей текст, хоча я ніколи раніше не вивчав цю тему. > *We gladly went for a long walk, although it rained heavily in the morning. Although it rained heavily in the morning, we gladly went for a walk. I understand this text well, although I have never studied this topic before.* :::info **Grammar box** Always use a comma to separate the main clause and the dependent clause in a complex sentence. Whether you start with the main action or the condition, the comma acts as the strict boundary between the two separate ideas. ::: In everyday conversational Ukrainian, you will frequently hear a slightly shorter variant of this conjunction: **хоч** (although, even though). It is used in exactly the same way and means exactly the same thing, but it feels a bit more relaxed in informal speech. Native speakers use it constantly when telling stories or sharing daily experiences. As you read more advanced texts, you might also encounter the formal phrase **незважаючи на те що** (despite the fact that). For now, you only need to passively recognize this formal phrase when you see it in writing. Хоч я вчу українську мову зовсім недовго, я вже чудово розумію багато простих речей. Ми встигли на останній поїзд додому, хоч вийшли з театру дуже пізно. Хоч ціни в цьому ресторані високі, там завжди багато людей. > *Although I have been learning the Ukrainian language for a very short time, I already perfectly understand many simple things. We caught the last train home, although we left the theater very late. Although the prices in this restaurant are high, there are always many people there.* English speakers often fall into a specific trap when translating the conversational English word "though". In English, it is very common to add "though" at the very end of a sentence as an afterthought. You cannot do this in Ukrainian. The conjunction must absolutely introduce the dependent clause and stand firmly at its beginning. It cannot dangle at the end of the sentence. If you want to add a contrasting thought after finishing a statement, start a new clause with the conjunction. Alternatively, use words like **проте** (however, yet) or **однак** (however) at the beginning of a new sentence. Вона сказала мені неправду про ту ситуацію. Хоча насправді я вже знав усю історію від інших людей. Мій колега обіцяв швидко закінчити звіт. Однак він навіть не починав шукати інформацію. > *She told me an untruth about that situation. Although in reality I already knew the whole story from other people. My colleague promised to finish the report quickly. However, he did not even start looking for information.* <!-- INJECT_ACTIVITY: match-up, Match two halves of sentences — причина with наслідок, допуст with результат --> <!-- INJECT_ACTIVITY: unjumble, Reorder words to form correct compound sentences with тому що, бо, and хоча -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -498,7 +500,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -517,18 +586,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (3/3).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] тому що (because)
+- [ ] бо (because — colloquial)
+- [ ] хоча (although, even though)
+- [ ] але (but)
+- [ ] проте (however, yet)
+- [ ] однак (however)
+- [ ] причина (reason, cause)
+- [ ] сполучник (conjunction)
+- [ ] складне речення (complex sentence)
+- [ ] тому (therefore, that is why)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Складносурядне речення: і, та, але (Compound Sentences: and, but) (~770 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

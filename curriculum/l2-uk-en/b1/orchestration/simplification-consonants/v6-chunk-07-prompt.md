@@ -26,7 +26,7 @@ Grand total: ~4400 words
 <previous_context>
 [...previous sections truncated...]
 
-**спрощення** *(simplification)*. Хоча обидва явища роблять мовлення плавним, механізми їхньої роботи абсолютно різні. Давайте детально порівняємо їх, щоб ви могли аналізувати текст і ніколи не плутати правила під час письма. Коли ми говоримо про чергування, один звук просто перетворюється на інший через зміну граматичної форми. Наприклад, ми беремо базовий іменник **друг** *(friend)* і утворюємо форму для звертання — **кличний відмінок** *(vocative case)*. У цьому процесі звук «г» змінюється на шиплячий «ж», і ми отримуємо форму **друже** *(friend, vocative)*. Жоден приголосний звук тут не зникає, він лише закономірно трансформується. Ситуація зі спрощенням кардинально інша. Її головна **причина** *(trigger)* — це не зміна відмінка, а утворення фізично незручної групи з трьох приголосних. Візьмемо іменник **щастя** *(happiness)* і утворимо від нього прикметник. На стику кореня і суфікса зустрічаються звуки «стл». Українська мова не любить таких важких скупчень, тому звук «т» просто зникає. Ми отримуємо красиве слово **щасливий** *(happy)*. Отже, чергування — це заміна звука, а спрощення — це повне зникнення звука заради збереження милозвучності. Щоб безпомилково визначати, який саме процес відбувся у слові, я пропоную вам використовувати простий **діагностичний алгоритм** *(diagnostic algorithm)*. Це своєрідний чек-лист із трьох логічних кроків. Крок перший: знайдіть у слові **скупчення** *(cluster)* приголосних і подумки порівняйте похідне слово з його базовою формою. Крок другий: уважно подивіться, що саме змінилося в корені. Якщо у похідному слові приголосних стало менше, ніж у базовому, то тут гарантовано відбулося спрощення. Якщо ж загальна кількість приголосних залишилася однаковою, але один звук замінив інший, то це типове морфологічне чергування. Крок третій: обов'язково перевірте, чи не належить слово до нашого списку винятків, які зберігають літеру «т» на письмі. Давайте застосуємо цей алгоритм на практиці. Візьмемо звичне слово **сонце** *(sun)*. Ми також знаємо споріднений прикметник **сонячний** *(sunny)*. У слові «сонце» ми чітко відчуваємо відсутність звука «л» у порівнянні з історичним коренем, тому це класичний результат спрощення. А от у прикметнику «сонячний» базовий звук «ц» перетворився на «ч» перед додаванням суфікса. Кількість звуків тут не змінилася, тому ми маємо справу зі звичайним чергуванням. Тепер давайте подивимося, як обидва ці процеси органічно співіснують у реальному живому тексті. Прочитайте цей короткий абзац про подорож: «Це була надзвичайно **щаслива** *(happy)* поїздка до гір. Ми заздалегідь купили **тижневий** *(weekly)* квиток на поїзд. На **дорозі** *(road, locative)* до готелю ми зустріли багато цікавих людей. Було неймовірно **радісно** *(joyfully)* дивитися у вікно, коли ми швидко проїжджали повз ліси». У цьому невеличкому тексті заховано кілька фонетичних секретів. У слові «щаслива» ми бачимо спрощення складної групи «стл» до легкого варіанту «сл» (від слова «щастя»). Слово «тижневий» демонструє обов'язкове спрощення групи «ждн» до «жн» (від базового слова «тиждень»). У прислівнику «радісно» прогнозовано зник звук «т» з групи «стн» (від іменника «радість»). А тепер подивіться на форму «на дорозі». Тут ми бачимо зовсім інший процес — чергування. Базовий іменник **дорога** *(road)* закономірно змінив твердий звук «г» на м'який «з» перед закінченням «і» у місцевому відмінку. Як бачите, український текст буквально наповнений цими змінами. Вони роблять слова легшими для вимови та створюють унікальну милозвучність. <!-- INJECT_ACTIVITY: error-correction, finding and fixing spelling errors like *щастливий or *контрасний, 6 items -->
+| Sound A changes to Sound B | Sound A completely drops out | | **Example** | друг → друже ([г] → [ж]) | щастя → щасливий ([т] drops) | | **Trigger** | Morphological (case change) | Phonetic (cluster of 3+ consonants) | | **Reversible** | Yes (друже → друг) | Yes (щасливий → щастя) | У слові «друг» ми бачимо типове чергування. У кличному відмінку звук [г] змінюється на [ж], і ми кажемо «друже». Натомість у слові «щасливий» відбувається спрощення. Коли до іменника «щастя» додається суфікс, утворюється складна група [стл]. Щоб полегшити вимову, звук [т] мусить повністю зникнути. > *In the word "друг" (friend), we see a typical alternation. In the vocative case, the sound [г] changes to [ж], and we say "друже". Instead, in the word "щасливий" (happy), simplification occurs. When a suffix is added to the noun "щастя" (happiness), a complex group [стл] is formed. To ease pronunciation, the sound [т] must completely disappear.* How do you know which phonetic rule applies? Use a simple three-step diagnostic algorithm. First, identify the consonant cluster in the derived word. Second, compare the **основа** (stem — the word minus its ending) of the derived word with the base. If a consonant is changed, it is an alternation. If a consonant is missing, it had to **випадати** (to drop out — of a sound disappearing). Third, verify if the word is an **виняток** (exception — case that does not follow the rule). Розглянемо слова «сонце» та «сонячний». В іменнику «сонце» історично випав звук [л], і це яскравий приклад спрощення. Але у слові «сонячний» звук [ц] змінюється на [ч]. Звук не зникає, а лише перетворюється. Тому ми робимо висновок, що тут відбулося фонетичне чергування. :::info **Grammar box** When analyzing an **іменник** (noun), remember that a **закріплений** (fixed — reflected in standard spelling) simplification reduces the number of consonants in the stem. An alternation keeps the same number of consonants but introduces a new letter. ::: Both phenomena appear frequently together in authentic texts. Spotting them improves your mastery of Ukrainian **правопис** (orthography — correct spelling) because each change represents a specific **орфограма** (orthographic rule — spelling pattern requiring knowledge). This awareness also enhances your overall **вимова** (pronunciation — how words are spoken). Моя щаслива поїздка до міста почалася чудово. Я купив тижневий проїзний квиток для метро. На дорозі до вокзалу я зустрів свою подругу. Ми стояли на вулиці і радісно говорили про наші спільні плани. Notice how the **прикметник** (adjective) «щаслива» lost its [т] from «щастя» to ensure **милозвучність** (euphony — pleasant sound quality of speech). The same phonetic rule applies to «тижневий», where the [д] from «тиждень» is dropped. However, in the phrase «на дорозі» (on the road), the noun «дорога» changes its final consonant [г] to [з'] because of the locative case. This is a classic alternation found in Ukrainian **морфонологія** (morphophonology — sound changes in morphology). The adverb «радісно» returns to simplification, losing the [т] from «радість». <!-- INJECT_ACTIVITY: error-correction, find and fix spelling errors related to simplification -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -618,7 +618,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -631,18 +698,67 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (7/7).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] спрощення (simplification — dropping of a consonant from a cluster)
+- [ ] група приголосних (consonant cluster — sequence of consonants)
+- [ ] милозвучність (euphony — pleasant sound quality of speech)
+- [ ] випадати (to drop out — of a sound disappearing)
+- [ ] вимова (pronunciation — how words are spoken)
+- [ ] правопис (orthography — correct spelling)
+- [ ] закріплений (fixed — reflected in standard spelling)
+- [ ] виняток (exception — case that does not follow the rule)
+- [ ] словотворення (word formation — creating new words)
+- [ ] прикметник (adjective)
+- [ ] іменник (noun)
+- [ ] основа (stem — the word minus its ending)
+- [ ] орфограма (orthographic rule — spelling pattern requiring knowledge)
+- [ ] морфонологія (morphophonology — sound changes in morphology)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Підсумок (~310 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

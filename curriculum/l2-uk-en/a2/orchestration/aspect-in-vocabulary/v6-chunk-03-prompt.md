@@ -1,22 +1,23 @@
-# Section-by-Section Generation — Section 3/5
+# Section-by-Section Generation — Section 3/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 3: Дієслова ходять парами (A2, A2.1 [Foundation and Aspect Introduction])
-**Section to write:** Спосіб 2: Зміна в корені або суфіксі (~660 words total)
-**Word target for this section:** 660 words (aim for 726 to account for undershoot)
+**Section to write:** Спосіб 2: Зміна в корені або суфіксі (Method 2: Change in the Root or Suffix) (~650 words)
+**Word target for this section:** 650 words (aim for 715 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Спосіб 2: Зміна в корені або суфіксі (~660 words total)
-- P1 (~120 words): Suffixation logic. Explain that sometimes the "perfective" is the simpler form, and we "stretch" it with a suffix to create the "imperfective" process. This is common with verbs that already have a prefix.
-- P2 (~140 words): The *-ува-* and *-юва-* pattern. Focus on essential A2 verbs like *вирішувати / вирішити* (to decide) and *запитувати / запитати* (to ask). Explain how the extra syllables in *вирішувати* mimic the duration of the thinking process.
-- P3 (~140 words): Suffix shifts between *-а-* and *-и-*. Use the pair *відповідати / відповісти* (to answer) and *відчиняти / відчинити* (to open). Explain that the *-и-* ending in the perfective often feels "sharper" and more final, while the *-а-* feels continuous.
-- P4 (~140 words): Root vowel alternation (чергування). Explain the *о* to *а* shift when moving from a result to a process. Use the high-frequency example *допомогти / допомагати* (to help). Show how the root changes from *допомог-* to *допомаг-* to accommodate the imperfective suffix.
-- P5 (~120 words): The *-ну-* suffix for "instant" actions. Explain that adding *-ну-* to a verb like *стукати* (to knock) creates *стукнути* (to give a single knock). Other examples: *кричати / крикнути* (to shout / to let out a cry), *штовхати / штовхнути* (to push / to give a shove).
-- <!-- INJECT_ACTIVITY: fill-in-categorize-formation --> [fill-in, Categorize by Formation Type, 8 items]
+## Спосіб 2: Зміна в корені або суфіксі (Method 2: Change in the Root or Suffix) (~650 words)
+- P1 (~110 words): Introduce the second method: changing the suffix (суфікс) or the root (корінь). Explain the "reverse" pattern: we take a perfective verb (often with a prefix) and make it imperfective by altering its ending.
+- P2 (~110 words): The suffixes "-ува-" and "-юва-". This is a common way to stretch a one-time action into a process. Example: вирішити (pf) becomes вирішувати (impf).
+- P3 (~110 words): Another suffix change example: запитати (pf, to ask once) becomes запитувати (impf, to be asking). The core meaning remains, but the aspect shifts.
+- P4 (~110 words): Vowel alternation in the root. The most common shift is from "о" to "а". Example: допомогти (pf, to help once) becomes допомагати (impf, to help regularly).
+- P5 (~100 words): Irregular suffix pairs. Introduce the highly common pair відповідати (impf, to be answering) / відповісти (pf, to give an answer).
+- P6 (~110 words): Contrast Method 1 and Method 2. Method 1 builds the perfective from the basic imperfective. Method 2 builds the imperfective from a prefixed perfective base. 
+- <!-- INJECT_ACTIVITY: match-up-blanks --> [match-up, Fill in the Blanks with the Correct Pair, 8 items]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -24,7 +25,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-And in the evening he finally "намалював" (has drawn/painted) it. The prefix "про-" often shows time. A person can just "жити" (live) in a city, but they can "прожити" (live through) ten years there.* One of the most essential verbs, **робити** (to do/make), takes the prefix **з-** to form its perfective partner **зробити**. However, there is a strict phonetic rule that dictates how this prefix sounds and is written. Before certain voiceless consonants, the prefix **з-** changes to **с-**. You can remember these consonants using the mnemonic phrase «Кафе Птах» (Cafe Bird), which contains the letters K, P, T, F, and Kh. Префікс «з-» є дуже популярним, але він має свій секрет. Якщо корінь слова починається на глухий звук з фрази «Кафе Птах», ми пишемо префікс «с-». Тому ми маємо базову пару «робити» та «зробити». Але дієслово «казати» перетворюється на «сказати», бо слово починається на літеру «к». Так само дієслово «фотографувати» стає доконаним у формі «сфотографувати». > *The prefix "з-" is very popular, but it has its secret. If the root of the word begins with a voiceless sound from the phrase "Кафе Птах" (K, P, T, F, Kh), we write the prefix "с-". Therefore, we have the basic pair "робити" (to do/make) and "зробити" (to have done/made). But the verb "казати" (to say/tell) turns into "сказати", because the word begins with the letter "к". Similarly, the verb "фотографувати" (to photograph) becomes perfective in the form "сфотографувати".* :::info **Grammar box** The "Кафе Птах" rule only applies to the prefix **з-**. Whenever you see an imperfective verb starting with K, P, T, F, or Kh (к, п, т, ф, х) and it uses this prefix to become perfective, it will always change to **с-**. This makes the pronunciation much smoother! ::: Finally, you will often encounter the prefixes **ви-** and **за-**, which frequently deal with consumption, mastery, and transactions. The prefix **ви-** often implies exhausting a resource completely or taking something out, while **за-** is frequently used for actions that secure a result or close a deal. Коли ми повністю закінчуємо напій, ми використовуємо префікс «ви-». Можна «пити» каву повільно, але потім «випити» її до дна. Цей префікс також працює з навчанням. Якщо ви просто сидите з книгою, ви можете «вчити» слова. Але якщо ви знаєте їх напам'ять, ви змогли їх успішно «вивчити». Префікс «за-» дуже важливий у магазині. Там ви повинні не просто «платити» гроші, а обов'язково «заплатити» за товар. > *When we completely finish a drink, we use the prefix "ви-". One can "пити" (be drinking) coffee slowly, but then "випити" (drink up) it to the bottom. This prefix also works with studying. If you just sit with a book, you can "вчити" (be studying) words. But if you know them by heart, you managed to successfully "вивчити" (master/memorize) them. The prefix "за-" is very important in a store. There you must not simply "платити" (be paying) money, but necessarily "заплатити" (pay off/complete payment) for the goods.* <!-- INJECT_ACTIVITY: quiz-find-partner --> [quiz, Find the Partner (Verb Matching), 8 items]
+hardens into «с-». This simple change makes pronunciation much easier. Ми часто робимо вправи разом, але вчора я зробив усе сам. Мій брат любить фотографувати, і сьогодні він сфотографував рідкісного птаха. Вона завжди каже правду, і вчора вона також сказала мені правду. > *We often do exercises together, but yesterday I did everything by myself. My brother loves to photograph, and today he photographed a rare bird. She always tells the truth, and yesterday she also told me the truth.* :::info **Grammar box** The prefix **з-** changes to **с-** before the consonants **к, п, т, ф, х**. To remember them, use the mnemonic phrase «Кафе "Птах"» (Cafe "Bird"), which contains all these letters! This is why the perfective of **казати** (to say) is **сказати**. ::: When an action involves text or creating something on a surface, Ukrainian typically uses «про-» or «на-». For example, the verbs **читати / прочитати** (to read) and **писати / написати** (to write) follow this pattern perfectly. The prefix «про-» shows you have gone through something entirely, while «на-» indicates producing a tangible result. Студенти повинні читати книжки щодня. Я сподіваюся, що завтра я нарешті прочитаю цей роман. Я обожнюю писати листи, тому вчора написав довге повідомлення. Моя сестра гарно малює, і вона вже намалювала мій новий портрет. > *Students must read books every day. I hope that tomorrow I will finally read this novel. I adore writing letters, so yesterday I wrote a long message. My sister draws beautifully, and she has already drawn my new portrait.* For actions related to preparation, such as cooking, the prefix «при-» is the standard choice. Conversely, «ви-» is frequently used for actions that consume something completely, like emptying a glass or fully mastering a topic. These prefixes perfectly capture the transition from an ongoing effort to a finalized, exhaustive outcome. Мій тато обожнює готувати, і сьогодні він приготував дуже смачний борщ. Я завжди п'ю багато води, і зараз я вже випив цілу склянку. У школі діти вчать слова, щоб швидко вивчити їх напам'ять. > *My dad adores cooking, and today he prepared a very tasty borsch. I always drink a lot of water, and now I have already drunk a whole glass. At school, children study words to quickly learn them by heart.* While different prefixes can add slight nuances—like «про-» implying thoroughness or «ви-» implying exhaustion—their primary grammatical job is identical. They exist to flip the verb from a continuous, unbounded process into a successfully achieved result. As you build your vocabulary, always observe which specific prefix a verb uses to reach its destination. Префікси — це найпростіший інструмент для зміни виду дієслова. Вони чітко показують, що наша тривала дія має успішний фінал. Звертайте увагу на ці короткі частинки, коли ви зустрічаєте нові слова у текстах. > *Prefixes are the simplest tool for changing the aspect of a verb. They clearly show that our continuous action has a successful finale. Pay attention to these short parts when you meet new words in texts.* <!-- INJECT_ACTIVITY: quiz-find-partner -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -594,6 +595,29 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] пара (pair)
+- [ ] префікс (prefix)
+- [ ] суфікс (suffix)
+- [ ] корінь (root)
+- [ ] читати / прочитати (to read)
+- [ ] писати / написати (to write)
+- [ ] брати / взяти (to take)
+- [ ] говорити / сказати (to speak / to say)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Спосіб 2: Зміна в корені або суфіксі (Method 2: Change in the Root or Suffix) (~650 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

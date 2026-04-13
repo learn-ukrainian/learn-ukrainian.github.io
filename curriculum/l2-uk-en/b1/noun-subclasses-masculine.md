@@ -1,322 +1,201 @@
-## Вступ: Зустріч на Полтавщині
+## Вступ: Зустріч на Полтавщині (~120 слів)
 
-Полтавщина — це серце традиційних українських ремесел та колиска сучасної української літературної мови. Тут, серед мальовничих пейзажів, пагорбів та безкрайніх соняшникових полів, досі можна зустріти справжніх майстрів своєї справи, які зберігають давні секрети. Уявіть невелике, але гомінливе село Опішня, відоме на всю країну своїми керамічними виробами, або Решетилівку з її унікальною вишивкою. Сюди часто приїжджають люди з великих міст, щоб навчитися працювати руками, відчути зв'язок із минулим та просто відпочити від міського шуму. Сьогодні біля сільської ради зустрічають нового гостя зі столиці — молодого журналіста, який збирає матеріал для статті про талановитих ремісників.
+Welcome to the heart of Ukraine. Imagine you are traveling through the picturesque Poltava region, a place famous for its rich traditions and skilled artisans. When you visit a local village, you do not just meet people; you meet masters of their craft. In Ukrainian, the way we name a person's **професія** (profession) or their **походження** (origin) often follows beautiful, predictable patterns. Today, we will explore how specific endings transform everyday words into titles of respect and identity.
 
-> — **Сільський голова** *(village head)*: Доброго дня! Ласкаво просимо до нашого села. Як дісталися?
-> — **Гість:** Вітаю! Я — **киянин** *(Kyivan)*, приїхав сюди, щоб перейняти ваш унікальний досвід і написати велику статтю. Мене дуже цікавить робота з деревом та глиною.
-> — **Сільський голова:** О, ви потрапили саме туди, куди треба! У нас працюють найкращі майстри. Ось наш відомий **столяр** *(carpenter)*, пан Микола. Він створює справжні дива з дуба та ясена: меблі, вікна, двері.
-> — **Гість:** Дуже приємно познайомитися. Ваші вироби відомі навіть у Києві, їх високо цінують за якість і натуральність.
-> — **Микола:** Дякую на доброму слові! Я працюю тут уже тридцять років. А до речі, пане голово, де наш **бондар** *(cooper)* Петро? Він обіцяв принести нові дубові діжки для меду та солінь.
-> — **Сільський голова:** Бондар Петро зараз у своїй майстерні. Він закінчує велике замовлення для фермерів. А цей молодий хлопець поруч із нами — місцевий **полтавчанин** *(Poltavian)* Андрій, який постійно допомагає Петрові й навчається цього складного ремесла.
-> — **Гість:** Це чудово, що молодь переймає такі давні професії. А хто у вас працює з глиною?
-> — **Сільський голова:** За глину в нас відповідає **гончар** *(potter)* Василь. Його глечики та макітри — це справжні витвори мистецтва. Він саме зараз біля печі.
-> — **Гість:** А я ще чув, що у вашому селі живе відомий **бджоляр** *(beekeeper)*.
-> — **Сільський голова:** Так, це дід Іван. Його мед найкращий у районі. Він справжній майстер своєї справи.
-> — **Гість:** У мене є багато запитань до кожного з них. Мені дуже подобається ваша атмосфера!
+Село зустрічає нас запахом свіжого дерева та звуками роботи. Ми йдемо до місцевої майстерні, де працюють найкращі ремісники краю. Кожен майстер тут має свою історію, і навіть назва його справи звучить як пісня.
 
-У цьому діалозі ви почули кілька специфічних слів, які позначають професії та походження людей. Зверніть увагу на **іменники** *(nouns)* «столяр», «бондар», «гончар», «бджоляр». Вони мають спільну рису — закінчуються на **суфікс** *(suffix)* **-ар** або **-яр**. Це дуже поширений і питомо український спосіб утворення назв професій. Люди, які працюють із деревом, каменем, металом чи глиною, часто мають саме такі назви у своїх професіях.
+> *The village greets us with the smell of fresh wood and the sounds of work. We are walking to the local workshop, where the best artisans of the region work. Every master here has their own story, and even the name of their trade sounds like a song.*
 
-Також ви помітили слова «киянин» та «полтавчанин». Тут працює інший словотвірний суфікс — **-ин** (або **-янин**). Він чітко вказує на **походження** *(origin)* людини, місце її народження, проживання або до якої соціальної групи вона належить. 
+> — **Сільський голова:** Ласкаво просимо до нашої майстерні! Ось наш столяр. *(Welcome to our workshop! Here is our carpenter.)*
+> — **Гість:** Добрий день! Дуже приємно. А де бондар? *(Good day! Very nice to meet you. And where is the cooper?)*
+> — **Сільський голова:** Він зараз у дворі. До речі, знайомтеся: цей киянин приїхав учитися. *(He is in the yard right now. By the way, meet: this Kyiv resident came to learn.)*
+> — **Гість:** Зі столиці в село? Це чудово! А хто його вчить? *(From the capital to the village? That is wonderful! And who is teaching him?)*
+> — **Сільський голова:** А полтавчанин — наш майстер, він усе покаже. *(And the Poltavian is our master, he will show everything.)*
 
-Ці граматичні елементи — суфікси — є продуктивними в українській мові. Вони працюють як деталі конструктора: береш корінь слова (наприклад, дерево чи місто), додаєш правильний суфікс і отримуєш нове слово з чітким значенням. Ці слова важливі не лише для розширення словникового запасу. Вони мають свої граматичні секрети та особливі правила **відмінювання** *(declension)*. Наприклад, вони можуть поводитися несподівано у формі **множини** *(plural)* або коли ми використовуємо **кличний відмінок** *(vocative case)* під час звертання. Сьогодні ми детально розберемо ці особливості, щоб ви могли говорити про **професії** *(professions)* та походження впевнено і без граматичних помилок.
+Look closely at the words the village head used. To describe a person by their craft, he used words ending in **-ар** and **-яр**, like **столяр** (carpenter) and **бондар** (cooper). To describe a person by where they are from, he used the suffix **-ин**, as in **киянин** (Kyivan) and **полтавчанин** (Poltavian). These endings are incredibly productive. They take a root word—like the city of Kyiv or the act of making barrels—and turn it into a specific **іменник** (noun) denoting a person. In this module, we will learn exactly how to form these words and how their **відмінювання** (declension) works across different cases.
 
-## Суфікси -ар, -яр: хто що робить
+:::note
+**Quick tip** — When you see a masculine noun ending in **-ар** or **-яр**, it almost always indicates a person's occupation or habitual activity. If you see **-ин**, it usually points to their geographic origin, nationality, or civic identity.
+:::
 
-Українська мова дуже логічна і структурована, коли йдеться про словотворення. Якщо ми хочемо назвати людину за її професією, регулярною діяльністю або ремеслом, ми найчастіше використовуємо суфікси **-ар** або **-яр**. Цей суфікс додається до **кореня** *(root)* слова, яке означає об'єкт праці або саму дію.
+Ці маленькі частинки слова додають мові точності. Коли ви знаєте, як працюють ці суфікси, ви можете легко розуміти нові слова навіть без словника. Це відкриває перед вами справжню логіку українського словотворення.
 
-Давайте подивимося, як це працює на практиці у різних сферах життя.
+## Суфікси -ар, -яр: хто що робить (~720 слів)
 
-### Робота з деревом та металом
-У минулому люди часто отримували свої прізвища від назви свого ремесла, адже ремесло було головною ідентифікацією людини в суспільстві.
-*   **Столяр** *(carpenter)* — майстер, який працює з деревом, виготовляє меблі, двері. Слово походить від слова «стіл» *(table)*.
-*   **Бондар** *(cooper)* — це майстер, який робить дерев'яні діжки, бочки, відра. Слово походить від слова «бодня», що означає велику посудину.
-*   **Тесляр** *(carpenter/framer)* — людина, яка теше дерево, зводить дерев'яні будинки або дахи. Від дієслова «тесати» *(to hew)*.
-*   **Слюсар** *(locksmith/mechanic)* — фахівець, який обробляє метал, збирає або ремонтує механізми.
-*   **Токар** *(turner)* — робітник, який обробляє дерево чи метал на токарному верстаті.
+The Ukrainian language has a very logical system for creating new words. When we want to name a person by their **професія** (profession) or habitual activity, we often take a base word and add a specific **суфікс** (suffix — word-formation morpheme after the root). The most productive suffixes for this purpose are *-ар* and *-яр*.
 
-### Робота з їжею та продуктами
-Ця група слів також дуже велика, адже приготування їжі завжди було важливою частиною людського життя.
-*   **Пекар** *(baker)* — від дієслова «пекти» *(to bake)*. Людина, яка професійно випікає хліб та інші вироби з тіста.
-*   **Кухар** *(cook/chef)* — від дієслова «куховарити» або слова «кухня». Це людина, яка професійно готує їжу.
-*   **Сировар** *(cheesemaker)* — майстер, який варить сир. Тут ми бачимо два корені: «сир» та «вар» (від варити).
-*   **Бровар** *(brewer)* — людина, яка варить пиво. Від цього слова походить назва великого міста Бровари біля Києва.
+This pattern is everywhere in daily life. A person who bakes bread is a **пекар** (baker — person who bakes). Someone who treats illnesses is a **лікар** (doctor). And a child who attends classes is a **школяр** (student — person who attends school). 
 
-### Сільське господарство та природа
-Українці здавна були хліборобами та скотарями, тому мова має десятки слів для позначення людей, які доглядають за тваринами або землею.
-*   **Вівчар** *(shepherd)* — людина, яка випасає овець *(вівця)*. В українських Карпатах вівчарство досі є дуже важливою професією.
-*   **Коняр** *(horse breeder)* — фахівець, який розводить коней і доглядає за ними.
-*   **Свинар** *(swineherd)* — робітник, який доглядає за свинями.
-*   **Бджоляр** *(beekeeper)* — людина, яка розводить бджіл і збирає мед *(бджола)*.
-*   **Косар** *(mower/reaper)* — людина, яка косить траву або зерно сільськогосподарською косою.
+Багато традиційних ремесел мають назви, утворені за цією давньою схемою. Гончар майстерно працює з глиною, токар обробляє дерево на верстаті, а слюсар ремонтує металеві механізми. Цікаво, що слово бондар походить від старовинного слова «бодна», яке означало дерев'яну діжку.
 
-### Культура, наука та інші заняття
-Суфікси -ар та -яр обслуговують не лише фізичну працю, а й інтелектуальну чи творчу діяльність.
-*   **Лікар** *(doctor)* — від дієслова «лікувати» *(to treat/heal)*. Медичний працівник.
-*   **Друкар** *(printer)* — фахівець, який працює в друкарні *(printing house)* і друкує книги чи газети.
-*   **Школяр** *(schoolchild/student)* — учень школи, дитина, яка навчається.
-*   **Кобзар** *(kobza player)* — музикант, який грає на традиційному інструменті кобзі. Зверніть увагу: ми кажемо *грати на кобзі*, *грати на бандурі*. Прийменник *на* з музичними інструментами — це абстрактна граматична вимога, яку треба просто запам'ятати. Він не означає фізичне розташування «зверху на» інструменті.
-*   **Пісняр** *(songwriter/singer)* — людина, яка створює або виконує пісні.
-*   **Казкар** *(storyteller)* — той, хто пише або розповідає казки.
-*   **Маляр** *(painter)* — художник або робітник, який фарбує стіни.
+These suffixes can be added to actions, but they are also frequently attached to the names of instruments, objects, or even animals. For instance, a person who herds goats is a «козар», and someone who herds sheep is a «вівчар».
 
-Коли ви вимовляєте ці слова, зверніть увагу на звук [р] у кінці. Український звук [р] є твердим, чітким і дзвінким. Коли ви вимовляєте звук [р] у словах *кобзар* чи *лікар*, ви можете перевірити його дзвінкість: закрий долонями вуха і вимов звук — ви почуєте вібрацію голосових зв'язок. Це сонорний звук, і він ніколи не оглушується в кінці слова, як це буває в деяких інших слов'янських мовах.
+Український народний музикант, який грає на кобзі, — це кобзар. Людина, яка пише тексти та мелодії, — пісняр. А робітник, який важко працює в кар'єрі та видобуває камінь, — каменяр.
 
-В українській мові є й інші суфікси для позначення професій, наприклад, **-ник** у слові **працівник** *(worker)*, **-ець** у слові **борець** *(fighter)*, або **-тель** у слові **вчитель** *(teacher)*. Чому ж ми не кажемо «пекарець» або «лікарник»? Історично склалося так, що суфікси **-ар** та **-яр** є найпродуктивнішими саме в народній мові для позначення спеціалізованої ремісничої чи фізичної праці. Суфікс **-тель** частіше зустрічається в книжній та церковнослов'янській лексиці, а **-ник** часто означає загальну належність до певної професійної групи. Розуміння цих нюансів робить вашу мову багатшою.
+> *A Ukrainian folk musician who plays the kobza is a kobza player. A person who writes lyrics and melodies is a songwriter. And a worker who works hard in a quarry and extracts stone is a stonecutter.*
 
-Коли ви пишете ці слова в тексті, пам'ятайте про правила переносу частин слова з рядка на рядок. Наприклад, слово *гончар* можна переносити як *гон-чар* (це правильний поділ за Правописом 2019 §49). Аналогічно слово *сестра* ділиться як *сес-тра*, а *майстер* як *май-стер*. Фонетичний поділ на склади і типографічний перенос тексту — це різні речі, і обидва варіанти мають свої правила, які допускаються сучасним Правописом.
+:::tip
+**Did you know?** — The word **кобзар** (kobza player — traditional Ukrainian musician) is deeply symbolic. It is the title of Taras Shevchenko's most famous poetry collection. Similarly, «Каменяр» is the celebrated epithet of the writer Ivan Franko, symbolizing his hard work for the nation's cultural freedom.
+:::
+
+You might wonder why we use *-ар* and *-яр* here, but different suffixes for other jobs, like the *-ник* in «працівник» (worker), the *-ець* in «борець» (fighter), or the *-тель* in «вчитель» (teacher). The *-ар* and *-яр* endings carry a specific historical flavor of physical crafts and manual artisanship. While newer or more abstract professions might use different patterns, traditional trades almost always rely on these older endings.
+
+Understanding these suffixes is vital for correct grammar. Every such word is a masculine **іменник** (noun). Depending on its exact spelling and stress, it belongs to a specific group within the second **відміна** (declension class), which determines its **відмінювання** (declension — changing a word through cases).
+
+Ці слова можуть належати до твердої, м'якої або мішаної групи. Саме від цієї групи залежить, які закінчення слово отримає в різних відмінках. Тому важливо навчитися розпізнавати основу слова ще до того, як ми почнемо його відмінювати.
 
 <!-- INJECT_ACTIVITY: match-up-professions -->
 
-## Відмінювання іменників на -ар
+## Відмінювання іменників на -ар (~820 слів)
 
-Граматично всі ці іменники належать до **другої відміни** *(second declension)*. Але тут є одна дуже важлива і дещо складна деталь: суфікс впливає на те, до якої групи належатиме слово — до **твердої групи** *(hard group)* чи **м'якої групи** *(soft group)*. Це критично важливо, оскільки від групи залежать закінчення в усіх інших відмінках. Як їх розрізняти? Головний секрет ховається у наголосі.
+To determine how a word ending in **-ар** undergoes **відмінювання** (declension — changing a word through cases), we must first figure out if it belongs to the hard group or the soft group. Unlike words ending in a hissing consonant, which form a specific mixed group, nouns ending in **-ар** can be either hard or soft. The secret to classifying them lies entirely in the stress of the word. Ukrainian school textbooks teach a very reliable rule for this. If the **суфікс** (suffix — word-formation morpheme after the root) is always stressed and the stress never moves to the ending, the word belongs to the hard group. For example, a medical orderly is a санітар, and the stress stays fixed on the suffix, so it declines like a typical hard-stem noun. However, if the stress shifts from the suffix to the ending when the word changes its form, it belongs to the soft group. A classic example is the word for a spelling book: «буквар». In the **родовий відмінок** (genitive case), it becomes «букваря», with the stress jumping to the final vowel. Additionally, if the **-ар** suffix is never stressed at all—as in **лікар** (doctor) or **пекар** (baker — person who bakes)—the **іменник** (noun) also falls into the soft group. This stress-based classification system is a unique and elegant feature of Ukrainian word formation.
 
-### Тверда група
-До твердої групи належать іменники на **-ар**, якщо наголос у них падає на сам суфікс **-ар** і є **нерухомим** у всіх відмінках. Також сюди належать багато запозичених слів із постійним наголосом на основі.
-Приклади: **сировар, ювіляр, санітар, кулінар, сталевар, столяр**.
+Розгляньмо детальніше парадигму відмінювання в однині для іменників м'якої групи, використовуючи як приклад слово «пекар». Оскільки суфікс тут ненаголошений, це класична м'яка група, і всі закінчення будуть відповідними. У називному відмінку ми маємо початкову форму — пекар. Коли ми використовуємо родовий відмінок для позначення відсутності або приналежності, слово отримує закінчення -я: немає пекаря. Це ключова відмінність від твердої групи, де було б закінчення -а. У давальному відмінку ми зазвичай використовуємо паралельні закінчення -еві або -ю: я даю рецепт пекареві, або я даю рецепт пекарю. Знахідний відмінок для назв істот збігається з родовим: я бачу пекаря. В орудному відмінку з'являється характерне закінчення -ем: я захоплююся цим талановитим пекарем. І нарешті, у місцевому відмінку ми знову маємо два варіанти: на пекареві або на пекарю. Важливо пам'ятати, що саме родовий відмінок із закінченням -я є найкращим індикатором м'якої парадигми для таких іменників.
 
-Давайте розглянемо парадигму відмінювання на прикладі слова **сировар**.
+> *Let us look more closely at the singular declension paradigm for soft group nouns, using the word "baker" (пекар) as an example. Since the suffix here is unstressed, it is a classic soft group, and all endings will correspond accordingly. In the nominative case, we have the base form: пекар. When we use the genitive case to indicate absence or possession, the word takes the -я ending: немає пекаря (there is no baker). This is a key difference from the hard group, which would have an -а ending. In the dative case, we usually use the parallel endings -еві or -ю: я даю рецепт пекареві (I give the recipe to the baker). The accusative case for animate nouns matches the genitive: я бачу пекаря (I see the baker). In the instrumental case, the characteristic -ем ending appears: я захоплююся цим талановитим пекарем (I admire this talented baker). And finally, in the locative case, we again have two options: на пекареві or на пекарю. It is important to remember that the genitive case with the -я ending is the best indicator of the soft paradigm for such nouns.*
 
-| Відмінок | Однина (Singular) | Множина (Plural) |
-| :--- | :--- | :--- |
-| **Називний** (хто?) | сировар | сировари |
-| **Родовий** (кого?) | сировара | сироварів |
-| **Давальний** (кому?) | сироварові, сировару | сироварам |
-| **Знахідний** (кого?) | сировара | сироварів |
-| **Орудний** (ким?) | сироваром | сироварами |
-| **Місцевий** (на кому?) | на сироварові, на сироварі | на сироварах |
-| **Кличний** (звертання) | сироваре! | сировари! |
+When we shift from the **однина** (singular number) to the **множина** (plural number), these nouns continue to follow the soft paradigm of the second **відміна** (declension class). Let us look at how the word пекар changes when there are multiple bakers. In the nominative plural, the ending is **-і**: пекарі. This is a very helpful form to memorize because it instantly confirms that the noun belongs to the soft group. When we need the genitive case in the plural, these words take the **-ів** ending: багато пекарів (many bakers). This is a crucial point for learners because it directly contrasts with the zero ending we will see later in words denoting a person's **походження** (origin — where someone is from), such as **киянин** (Kyivan — resident of Kyiv) or **громадянин** (citizen). For the remaining plural cases, the pattern is consistent: the dative is пекарям, the accusative matches the genitive (пекарів), the instrumental is пекарями, and the locative is на пекарях. Understanding this plural paradigm allows you to confidently discuss groups of people sharing the same **професія** (profession).
 
-*Примітка: Запозичені слова та питомі слова з постійним наголосом на основі (як столяр) відмінюються суворо за твердою групою без відхилень: ювіляра, ювіляром, ювіляри, ювілярів, санітаром, столяром.*
+Another vital aspect of nouns denoting people is the **кличний відмінок** (vocative case). This form is actively used every time you address someone directly, such as a doctor or a **кобзар** (kobza player — traditional Ukrainian musician).
 
-### М'яка група
-Більшість українських назв професій на **-ар** мають **ненаголошений** суфікс (наголос падає на корінь слова) або наголос, який **переходить** із суфікса на закінчення (наприклад: буквар — букваря). Такі слова завжди і без винятків належать до м'якої групи.
-Приклади: **лікар, пекар, кобзар, друкар, токар, слюсар, крамар, вівчар, бондар, гончар, косар**.
+На відміну від російської мови, де ця форма зникла, в українській ви зобов'язані використовувати спеціальне закінчення під час звертання. Для іменників на -ар м'якої групи цим закінченням є -ю. Отже, якщо ви вітаєтеся зі своїм лікарем, ви повинні сказати «Добрий день, лікарю!» замість називного відмінка. Звертаючись до музиканта, ви скажете «кобзарю!», а розмовляючи з пекарем — «пекарю!». Використання правильної форми кличного відмінка є ключовим елементом ввічливої та природної української мови.
 
-Зверніть увагу: слова **гончар** і **косар** належать до м'якої групи, оскільки мають рухомий наголос (гонча́р — гончара́, коса́р — косаря́). Вони завжди отримують м'які закінчення в непрямих відмінках (я працюю гончарем, немає гончарів).
+> *Unlike Russian, where this form has disappeared, in Ukrainian you are obliged to use a special ending when addressing someone. For soft group nouns ending in -ар, this ending is -ю. Therefore, if you are greeting your doctor, you must say "Добрий день, лікарю!" instead of the nominative case. When addressing a musician, you would say "кобзарю!", and when speaking to a baker — "пекарю!". Using the correct vocative form is a key element of polite and natural Ukrainian.*
 
-Розглянемо парадигму відмінювання м'якої групи на прикладі слова **лікар** *(doctor)*.
+Although the stress rules work beautifully for most words, the Ukrainian language always has a few interesting exceptions. The most famous complex case is the word столяр (carpenter). If you look at the standard pronunciation of this word, the stress falls on the root (столяр). According to the basic rule, this should mean the word belongs to the hard group. However, it is an exception that declines according to the soft group, shifting its stress to the ending. Therefore, in the genitive case, we say немає столяра, and in the instrumental case, працює столярем.
 
-| Відмінок | Однина (Singular) | Множина (Plural) |
-| :--- | :--- | :--- |
-| **Називний** (хто?) | лікар | лікарі |
-| **Родовий** (кого?) | лікаря | лікарів |
-| **Давальний** (кому?) | лікареві, лікарю | лікарям |
-| **Знахідний** (кого?) | лікаря | лікарів |
-| **Орудний** (ким?) | лікарем | лікарями |
-| **Місцевий** (на кому?) | на лікареві, на лікарю | на лікарях |
-| **Кличний** (звертання) | **лікарю!** | лікарі! |
-
-Зверніть особливу увагу на **родовий відмінок** однини, адже закінчення **-я** є важливим маркером м'якості. Ми кажемо: *Сьогодні немає лікаря* (а не лікара). *Я чекаю на пекаря*. 
-
-В **орудному відмінку** ми кажемо: *Він працює лікарем*. *Мій брат хоче стати пекарем*. Орудний відмінок після дієслів «працювати», «стати», «бути» — це золотий стандарт української граматики для опису професій. Нам не потрібні прийменники на кшталт англійського "as a".
-
-У множині слова м'якої групи отримують закінчення **-і**: *пекарі, лікарі, букварі, гончарі*. У родовому відмінку множини вони мають закінчення **-ів**: *багато лікарів, багато пекарів*. Це дуже важливе правило. Українські слова чоловічого роду на приголосний звук у родовому відмінку множини майже завжди мають закінчення **-ів**, а не **нульове закінчення** *(zero ending)*. Далі відмінювання йде за передбачуваними правилами: давальний — *пекарям*, орудний — *пекарями*, місцевий — *на пекарях*.
-
-Тепер поговоримо про **кличний відмінок**. В українській мові це не просто стара чи поетична форма, а єдиний правильний спосіб звернутися до людини чи об'єкта. Використовувати називний відмінок для звертання (наприклад, казати "Пан лікар!") — це стилістична і граматична помилка, яку ми залишаємо в минулому. Для іменників м'якої групи ми завжди додаємо закінчення **-ю**: *пане лікарю! пане пекарю! мій кобзарю! пане бондарю!* Тут немає жодного чергування приголосних, основа залишається незмінною. Якщо ж це людина з твердої групи (як санітар), ми використовуємо закінчення **-е**: *пане ювіляре! пане санітаре!*
-
-Найкраща практична порада для перевірки сумнівних слів на -ар — утворити форму множини у називному відмінку. Якщо ви чуєте *кобзарі*, *лікарі*, *пекарі* (а не кобзари), значить, це м'яка група, і всі інші відмінки також будуть мати м'які закінчення.
+:::tip
+**Practical check** — The best advice for verifying the declension of a doubtful noun is to look at its plural form. If a word forms its plural with the **-і** ending—such as столярі, лікарі, or **школяр** (student — person who attends school) changing to школярі—you can be absolutely certain that it belongs to the soft group.
+:::
 
 <!-- INJECT_ACTIVITY: fill-in-ar-declension -->
 
-## Відмінювання іменників на -яр
+## Відмінювання іменників на -яр (~660 слів)
 
-Перейдемо до іменників із суфіксом **-яр**. Цей суфікс виконує ту саму важливу функцію — позначає людей за їхньою професією чи заняттям. Згадайте слова з нашого списку: **школяр** *(student)*, **каменяр** *(stonecutter)*, **пісняр** *(songwriter)*, **бджоляр** *(beekeeper)*, **скляр** *(glazier)*, **вугляр** *(coal miner)*, **цегляр** *(brickmaker)*.
+The **суфікс** (suffix — word-formation morpheme after the root) **-яр** is another common and highly productive way to form profession nouns in Ukrainian. Words like школяр and каменяр belong to a special category called the мішана група (mixed group) of the second declension. This happens specifically with profession nouns ending in `-яр` where the stress shifts to the ending during **відмінювання** (declension — changing a word through cases). While the basic stem ends in the `[р]` sound, the historical presence of the soft `[я]` before it, combined with the shifting stress, creates a unique paradigm that mixes hard and soft endings. This is a purely Ukrainian phonetic phenomenon.
 
-З точки зору граматики, більшість іменників на -яр, що означають людей, мають одну дуже цікаву особливість: вони належать до **мішаної групи** *(mixed group)*.
+Відмінювання слова «школяр» чудово показує особливості мішаної групи. У називному відмінку ми бачимо словникову форму. Коли ми використовуємо родовий відмінок, наголос переходить на закінчення: немає школяра. У давальному відмінку ми кажемо школяреві або школяру. Зверніть особливу увагу на орудний відмінок: тут використовується типове закінчення мішаної групи -ем, тому правильно казати «працює школярем». У місцевому відмінку форма буде «на школяреві» або «на школярі». Розуміння цього рухомого наголосу є дуже важливим для красивої та правильної вимови.
 
-Чому саме до мішаної? Як ми вже знаємо, розгадка ховається у наголосі. В іменниках на **-яр**, які позначають професії чи заняття, наголос зазвичай є **рухомим**. Він переходить із суфікса в називному відмінку (школяр) на закінчення у непрямих відмінках (школяра). Через цю фонетичну та історичну особливість основа слова починає поводитися так само, як мішана. Хоча звук [р] не є шиплячим (як приголосні [ж], [ч], [ш], [щ]), у цій конкретній групі слів він отримує такі ж граматичні закінчення, ніби основа закінчується на шиплячий. Це суто українське граматичне правило, яке відображає глибокі фонетичні процеси минулого і яке важливо запам'ятати.
+> *The declension of the word "школяр" perfectly shows the features of the mixed group. In the nominative case, we see the dictionary form. When we use the genitive case, the stress shifts to the ending: немає школяра. In the dative case, we say школяреві or школяру. Pay special attention to the instrumental case: here the typical mixed group ending -ем is used, so it is correct to say "працює школярем". In the locative case, the form will be "на школяреві" or "на школярі". Understanding this shifting stress is very important for beautiful and correct pronunciation.*
 
-Давайте розглянемо парадигму відмінювання на прикладі слова **школяр** *(student)*.
+:::info
+**Grammar box** — The **множина** (plural number) forms for the mixed group also feature the characteristic **-і** ending in the nominative case (школярі) and **-ів** in the **родовий відмінок** (genitive case), further demonstrating their connection to the soft group patterns.
+:::
 
-| Відмінок | Однина (Singular) | Множина (Plural) |
-| :--- | :--- | :--- |
-| **Називний** | школяр | школярі |
-| **Родовий** | школяра | школярів |
-| **Давальний** | школяреві, школяру | школярям |
-| **Знахідний** | школяра | школярів |
-| **Орудний** | школярем | школярями |
-| **Місцевий** | на школяреві, на школярі | на школярях |
-| **Кличний** | школяре! | школярі! |
+The vocative case perfectly illustrates why these **іменник** (noun) forms belong to the mixed group. According to Ukrainian grammar rules (such as those emphasized by linguist Oleksandr Avramenko), any noun of the mixed group with a stem ending in `-р` takes the **-е** ending. Therefore, when addressing a student, you must say «школяре!». Similarly, a stonecutter is addressed as «каменяре!», and a songwriter as «пісняре!». This directly contrasts with the soft group nouns we saw earlier: a **лікар** (doctor) becomes «лікарю!», and the word **кобзар** becomes «кобзарю!», while a **пекар** (baker — person who bakes) also takes «пекарю!». Remembering this `-е` vs `-ю` distinction helps you sound natural and respectful when speaking directly to people of various professions.
 
-У родовому відмінку ми скажемо: *Сьогодні у школі немає цього школяра*. У давальному відмінку правильно казати: *Я допомагаю школяреві* (або *школяру*). 
-
-Найважливішим маркером мішаної групи є **орудний відмінок**. Тут ми використовуємо закінчення **-ем**, яке є типовим і обов'язковим для мішаної групи. Тому ми скажемо: *Він був старанним школярем* (не «школяром»). *Мій батько все життя працював каменярем*. *Мій дід був бджолярем*. У місцевому відмінку форма буде: *на школяреві* або *на школярі*. У множині ці слова також мають свої особливості. У називному відмінку множини ми додаємо м'яке закінчення **-і**: *школярі, каменярі, піснярі, бджолярі*. А в родовому відмінку множини вони мають стандартне закінчення **-ів**: *сьогодні у класі немає багатьох школярів*.
-
-Тепер поговоримо про **кличний відмінок** для мішаної групи. Для іменників на **-яр**, які належать до мішаної групи, існує чітке і безкомпромісне правило. Усі вони в кличному відмінку однини мають закінчення **-е**.
-Тому ми звертаємося так:
-*   *Мій юний школяре!*
-*   *Пане каменяре!*
-*   *Відомий пісняре!*
-*   *Шановний бджоляре!*
-
-Студенти часто плутають ці слова з іменниками м'якої групи (як лікар - лікарю) і намагаються сказати «школярю» або «каменярю». Але Олександр Авраменко та інші відомі мовознавці у своїх підручниках чітко пояснюють логіку: загальні іменники мішаної групи з основою на **-р** (як-от школяр, тесляр, пісняр) завжди отримують закінчення **-е**. Це дуже логічно, адже мішана група зазвичай вимагає саме цього закінчення в кличному відмінку (порівняйте: *пане стороже!*, *мій друже!*). Отже, попри спокусу сказати «школярю» за аналогією до «лікарю», правильною і єдиною нормативною формою є тільки **школяре**.
-
-Нарешті, поглянемо на синтаксичну роль цих іменників у реченні. Коли ми говоримо про чиюсь професію, ідентичність або рід занять, українська мова найчастіше використовує орудний відмінок. Це дуже схоже на англійську конструкцію з прийменником "as a...". Наприклад, якщо ви хочете сказати "My father worked as a stonecutter", українською це буде: «Мій батько працював каменярем». Нам не потрібні жодні додаткові прийменники, сам відмінок ідеально передає цю ідею. Знаючи це правило і пам'ятаючи про мішану групу, ви зможете розповідати про заняття людей природно і граматично бездоганно.
+Syntactically, these nouns are most frequently used in sentences to discuss a person's profession, trade, or core identity. In Ukrainian, when you say "My father worked as a stonecutter", you do not use a preposition like the English "as a". Instead, you use the instrumental case directly without any extra words: «Мій батько працював каменярем». If you want to say "He is a student", you use the nominative case, referring to the **однина** (singular number) base form: «Він — школяр». Recognizing these `-яр` suffixes allows you to easily identify job titles and instantly apply the correct grammatical endings.
 
 <!-- INJECT_ACTIVITY: group-sort-ar-yar -->
 
-## Суфікс -ин/-янин: люди за походженням
+## Суфікс -ин/-янин: люди за походженням (~820 слів)
 
-Від професій перейдемо до походження. Українська мова має специфічні суфікси для позначення людей за їхнім місцем проживання, національністю, громадянством або приналежністю до певної соціальної чи історичної групи. Найпоширенішими є суфікси **-ин**, **-їн** та **-янин** (де -янин є історичною комбінацією суфіксів -ян- та -ин-).
+We have seen that suffixes like `-ар` and `-яр` are used to build words for a person's trade. In contrast, the **суфікс** (suffix — word-formation morpheme after the root) `-ин`, `-їн`, or `-янин` serves a completely different purpose. This word-formation pattern is used to indicate a person's **походження** (origin — where someone is from), nationality, or group membership. If you want to talk about a **киянин** (Kyivan — resident of Kyiv), a citizen, or a villager, you need to understand how this pattern behaves. 
 
-За допомогою них ми утворюємо слова у кількох великих категоріях:
+Коли ми говоримо про одну людину, ці слова належать до другої відміни твердої групи. Слово зберігає цей суфікс у всіх граматичних формах, якщо це **однина** (singular number). Наприклад, ми часто кажемо «я бачу киянина» або «я розмовляю з громадянином». Цей елемент слова чітко показує приналежність людини до певного міста або великої суспільної групи.
 
-1. **Мешканці міст та регіонів:**
-   *   **Киянин** *(Kyivan / Kyiv resident)* — житель столиці України, міста Києва.
-   *   **Львів'янин** *(Lvivian)* — житель Львова.
-   *   **Харків'янин** *(Kharkiv resident)* — житель Харкова.
-   *   **Галичанин** *(Galician)* — житель історичного регіону Галичини.
-   *   **Волинянин** *(Volhynian)* — житель Волині.
-   *   **Подолянин** *(Podolian)* — житель Поділля.
+> *When we talk about one person, these words belong to the second declension of the hard group. The word keeps this suffix in all grammatical forms if it is the singular number. For example, we often say "I see a Kyivan" or "I am talking with a citizen". This word element clearly shows a person's belonging to a certain city or large social group.*
 
-2. **Соціальні статуси та групи:**
-   *   **Громадянин** *(citizen)* — особа, що належить до постійного населення певної держави, має права та обов'язки.
-   *   **Селянин** *(villager / peasant)* — житель села, людина, що традиційно займається сільським господарством.
-   *   **Містянин** *(city dweller)* — житель міста (сучасний синонім до історичного слова "міщанин").
-   *   **Хуторянин** *(khutir resident)* — житель невеликого віддаленого поселення (хутора).
-   *   **Заробітчанин** *(migrant worker)* — людина, яка їде працювати в інший регіон або країну заради заробітку.
+The most critical rule for these words appears when we form the **множина** (plural number). According to Ukrainian grammatical norms, the `-ин-` ending completely drops in the plural. Therefore, one Kyivan is `киянин`, but many are `кияни` (never *киянини*). Similarly, one citizen is a **громадянин** (citizen), but citizens are `громадяни`, and a Bulgarian is `болгарин`, but Bulgarians are `болгари`. This dropping mechanism affects every single plural case.
 
-3. **Національності (деякі назви):**
-   *   **Болгарин** *(Bulgarian)*
-   *   **Вірменин** *(Armenian)*
-   *   **Грузин** *(Georgian)* — зверніть увагу, тут корінь "грузин", але історично суфікс злився з ним.
-   *   **Татарин** *(Tatar)*
-   *   **Осетин** *(Ossetian)*
+:::info
+**Grammar box** — The dropping of `-ин` in the plural is a strict rule for words denoting origin or group membership. Always remove `-ин` before adding plural endings.
+:::
 
-Усі ці слова в однині належать до **твердої групи** другої відміни. Проте їхня найважливіша граматична особливість проявляється під час утворення форми множини. Олександр Авраменко у своїх підручниках наголошує на критичному правилі: **у множині суфікс -ин- просто випадає (повністю зникає)**.
+Найбільше помилок виникає, коли студенти утворюють **родовий відмінок** (genitive case) множини. Для цих слів діє суворе правило нульового закінчення. Оскільки суфікс випадає, ми ніколи не додаємо стандартне закінчення «-ів». Правильно казати: на площі було багато киян, ми захищаємо права громадян, це стосується життя селян. Форми «киянів» або «громадянів» є грубою граматичною помилкою, якої треба уникати.
 
-Тому правильна форма від слова **киянин** — це **кияни** *(Kyivans)*, а не «киянини». Суфікс -ин- відтинається, і ми додаємо стандартне закінчення множини -и безпосередньо до залишеної основи -ян-.
+> *The most mistakes occur when students form the genitive case of the plural. For these words, the strict rule of the zero ending applies. Since the suffix drops, we never add the standard "-ів" ending. It is correct to say: there were many Kyivans on the square, we protect the rights of citizens, this concerns the life of villagers. The forms "киянів" or "громадянів" are a gross grammatical error that should be avoided.*
 
-Так само ми утворюємо інші форми множини:
-*   **громадянин** стає **громадяни**
-*   **селянин** змінюється на **селяни**
-*   **львів'янин** стає **львів'яни**
-*   **болгарин** стає **болгари**
-*   **татарин** стає **татари**
-
-Це фундаментальне правило, яке дозволяє уникати дуже поширених помилок серед іноземців, які часто механічно додають закінчення множини до повної форми слова, створюючи неприродні і важкі конструкції.
-
-Оскільки ці слова втрачають суфікс у множині, вони мають ще одну унікальну рису: **родовий відмінок множини отримує нульове закінчення**. Якщо ви хочете перекласти англійську фразу "a lot of citizens", правильно буде: *багато громадян* (не «громадянів»).
-Так само ми скажемо:
-*   *На вулиці Хрещатик сьогодні багато киян.* *(many Kyivans)*
-*   *У цьому селі мешкає багато працьовитих селян.* *(many villagers)*
-*   *На міжнародний фестиваль приїхало багато болгар і татар.*
-Форми із закінченням **-ів** (киянів, селянів, громадянів) для цих слів є грубою граматичною помилкою.
-
-Але українська мова має свої цікаві винятки. В українському правописі є назви народів, які закінчуються на -ин в однині, але зберігають закінчення **-ів** у родовому відмінку множини. Найвідоміші з них — це **грузинів** *(of Georgians)* та **осетинів** *(of Ossetians)*. Чому так відбувається? Називний відмінок множини від цих слів звучить як **грузини** та **осетини**. Суфікс **-ин-** у них не випадає, він міцно зрісся з основою слова і сприймається як її невід'ємна частина. Тому вони отримують стандартне для чоловічого роду закінчення **-ів**.
-
-Варто також пам'ятати, що не всі назви мешканців утворюються за допомогою цих суфіксів. Для багатьох українських міст використовуються інші словотворчі моделі:
-*   Мешканець Одеси — **одесит** *(Odesan)*.
-*   Житель Полтави — **полтавець** *(Poltava resident)*.
-*   Житель Чернігова — **чернігівець** *(Chernihiv resident)*.
-Ці слова утворюють множину за звичайними, класичними правилами без жодних випадань: **одесити** (родовий — багато **одеситів**), **полтавці** (родовий — багато **полтавців**). Саме тому важливо навчитися візуально та на слух розпізнавати слова із суфіксами **-ин** / **-янин** — щоб правильно застосовувати правило "зникнення" у множині.
+There are a few notable exceptions to the genitive plural rule, specifically with some nationalities like `грузин` (Georgian) and `осетин` (Ossetian). While they still drop the `-ин` in the nominative plural (`грузини`, `осетини`), their genitive plural keeps the `-ів` ending according to the official orthography: `багато грузинів`, `багато осетинів`. It is also important to note that not all city residents use this suffix, such as an `одесит` (Odesan) or a `полтавець` (Poltavan). Proper **відмінювання** (declension — changing a word through cases) requires recognizing which exact suffix an **іменник** (noun) has. You must identify its corresponding **відміна** (declension class) to choose the right endings.
 
 <!-- INJECT_ACTIVITY: quiz-plural-in -->
 <!-- INJECT_ACTIVITY: fill-in-genitive-plural-in -->
 
-## Відмінювання іменників на -ин в однині
+## Відмінювання іменників на -ин в однині (~660 слів)
 
-Тепер розглянемо детальніше, як ці слова поводяться в однині. Як ми вже згадували, усі іменники із суфіксом **-ин-**, що позначають людей, належать до **твердої групи** другої відміни. Їхнє відмінювання є стандартним і передбачуваним, якщо пам'ятати одне ключове правило: в однині суфікс **-ин-** нікуди не зникає. Він міцно тримається в основі слова у всіх семи відмінках.
+Now that we understand how these words lose their special suffix in the plural, let's examine how they behave when we discuss just one person. Declining these nouns in the singular is actually very straightforward because they follow a highly predictable and stable pattern.
 
-Давайте подивимося на повну парадигму відмінювання слова **громадянин** *(citizen)*:
+В однині ці слова належать до твердої групи другої відміни та відмінюються за звичайними правилами. Найголовніше пам’ятати, що в однині суфікс ніколи не зникає. Він надійно залишається на своєму місці у кожній формі. Наприклад, ми кажемо: немає киянина, дати громадянину, пишатися киянином або селянином. Усі відмінкові закінчення додаються строго після суфікса.
 
-| Відмінок | Однина (Singular) | Множина (Plural) |
-| :--- | :--- | :--- |
-| **Називний** | громадянин | громадяни |
-| **Родовий** | громадянина | громадян |
-| **Давальний** | громадянину, громадянинові | громадянам |
-| **Знахідний** | громадянина | громадян |
-| **Орудний** | громадянином | громадянами |
-| **Місцевий** | на громадянині, на громадянинові | на громадянах |
-| **Кличний** | громадянине! | громадяни! |
+> *In the singular, these words belong to the hard group of the second declension and decline according to regular rules. The most important thing to remember is that in the singular, the suffix never disappears. It reliably stays in its place in every form. For example, we say: there is no Kyivan, to give to a citizen, to be proud of a Kyivan or a villager. All case endings are added strictly after the suffix.*
 
-Як бачите, в однині слово зберігає свою повну довжину і всі свої букви. У родовому відмінку ми маємо форму **громадянина** (або *киянина*, *селянина*). У давальному відмінку ви можете використовувати паралельні закінчення, які є рівноправними в сучасній мові: **громадянину** або **громадянинові**. В орудному відмінку ми додаємо класичне закінчення твердої групи **-ом**: *я пишаюся цим мужнім киянином*. Місцевий відмінок також має два можливих варіанти: *на громадянині* або *на громадянинові*.
+A very important form to learn is the **кличний відмінок** (vocative case). Because these words belong to the hard group and their stem ends in the letter «н», they take a specific ending when we address someone directly.
 
-Окремої уваги та постійної практики потребує **кличний відмінок** *(vocative case)* для цієї групи слів. Оскільки ці іменники належать до твердої групи, а їхня основа закінчується на твердий приголосний звук [н], вони завжди отримують класичне закінчення **-е**.
-Відповідно, правильними формами звертання будуть:
-*   **Киянине!**
-*   **Громадянине!** *(citizen!)*
-*   **Селянине!** *(villager!)*
+Коли ми звертаємося до людини, ми повинні використовувати правильну форму. Ви можете сказати: шановний киянине, пане громадянине, або дорогий селянине. Ці форми звучать дуже урочисто, офіційно та поважно. Їх часто використовують у публічних промовах, на офіційних заходах або у відкритих листах до суспільства.
 
-Тут немає жодного чергування приголосних. З погляду стилістики, такі звертання (особливо слово "громадянине") звучать досить офіційно, формально або навіть трохи літературно-урочисто. У щоденній невимушеній розмові ви навряд чи скажете своєму другові: «Привіт, киянине! Як справи?». Проте форма **громадянине** є стандартним, робочим офіційним звертанням. Саме так до вас може звернутися поліцейський, прикордонник, суддя або працівник державної установи: «Шановний громадянине, покажіть, будь ласка, ваші документи».
+In practical application, you will often need to introduce yourself or a group of people. This requires an automatic reflex to switch between the singular form with the suffix and the plural form without it. You must practice this contrast until it feels completely natural.
 
-Для вільного та природного спілкування вам потрібно довести до автоматизму цей перехід між повною формою в однині та скороченою формою у множині. Це постійне перемикання є ключем до правильного звучання вашої української. Коли ви говорите про одну людину, ви завжди використовуєте форму із суфіксом:
-*   *Я — корінний киянин.*
-*   *Він — сумлінний громадянин України.*
-*   *Мій прадід був звичайним селянином.*
+Спробуйте автоматизувати цей перехід у своєму мовленні. Якщо ви говорите про себе, ви кажете: я — киянин, я — громадянин. Але якщо ви говорите про свою родину чи групу, форма миттєво змінюється: ми — кияни, ми — громадяни. Цей контраст є базовим ритмом української мови.
 
-Але щойно фокус зміщується на групу людей, суфікс має миттєво зникнути з вашої мови:
-*   *Ми — кияни.*
-*   *Усі вони — громадяни вільної країни.*
-*   *Місцеві селяни дуже працьовиті.*
+One of the most common errors learners make is trying to force the singular suffix into the plural, creating incorrect words like «киянини». You can avoid this trap by associating these words with the highly frequent word for citizens. If you know that citizens are «громадяни», you automatically know that Kyivans are «кияни».
 
-Цей контраст — довга однина і коротка множина — створює унікальний граматичний і фонетичний ритм української мови. Щоб говорити природно, вам потрібно звикнути відтинати цей суфікс, щойно ви уявляєте більше ніж одну особу. Аналіз типових помилок іноземних студентів показує, що найважче дається саме ця швидка відмова від суфікса. Студенти часто намагаються утворити множину за базовим правилом — просто додаючи закінчення -и до початкової форми слова («киянини» або «громадянини»). Щоб назавжди позбутися цієї помилки, створіть для себе міцну звукову асоціацію. Згадайте телевізійні новини або новорічні виступи політиків: ви завжди чуєте урочисте звернення «Шановні громадяни!», і ніколи — «Шановні громадянини!». Використовуйте слово **громадяни** як золотий еталон для всієї групи. Якщо ви сумніваєтеся, як сказати про жителів Львова (один **львів'янин**), просто згадайте модель слова «громадяни». За цією ж аналогією ви легко утворите правильну форму: **львів'яни**.
+:::info
+**Grammar box** — The **кличний відмінок** (vocative case) for nouns ending in `-ин` always takes the `-е` ending (киянине, громадянине). This is because the stem ends in a hard consonant, and the suffix prevents any consonant alternation.
+:::
 
 <!-- INJECT_ACTIVITY: error-correction-in -->
 
-## Культурний контекст: -ар/-яр у літературі та прізвищах
+## Культурний контекст: -ар/-яр у літературі (~380 слів)
 
-Суфікси **-ар** та **-яр** мають не лише граматичне, а й глибоке сакральне культурне значення в Україні. Деякі слова з цими суфіксами переросли своє первісне значення звичайної професії і стали могутніми національними символами.
+The word **кобзар** (kobza player) represents much more than just a traveling musician. Historically, these blind minstrels were the keepers of national memory across the Ukrainian lands. They traveled between villages, singing epic dumas about historical battles and folk heroes. This specific **іменник** (noun) carries a profound cultural weight that resonates today.
 
-Найвідоміший приклад — це слово **кобзар** *(kobza player)*. Історично кобзарі були мандрівними, часто сліпими музикантами, які грали на кобзі або старосвітській бандурі. Вони подорожували від села до села, але були не просто вуличними виконавцями. Кобзарі виконували важливу роль хранителів національної пам'яті. Століттями, коли Україна не мала власної держави, вони передавали з уст в уста історичні пісні та героїчні думи про козацьку славу, боротьбу за свободу та гірку долю невольників. Вони підтримували бойовий дух народу в найтяжчі часи репресій.
+Тарас Шевченко назвав свою найвідомішу збірку віршів «Кобзар», і це слово набуло справді сакрального значення. Сам поет швидко став символічним кобзарем для всієї нації. Він невтомно пробуджував національну свідомість своїм пророчим словом. Сьогодні цей іменник міцно асоціюється з культурною пам'яттю та незламністю українців.
 
-Саме тому Тарас Шевченко, найвидатніший український поет і художник, назвав свою першу і головну збірку поезій (видану в 1840 році) словом «Кобзар» *(The Kobzar)*. Згодом це слово стало його особистим почесним епітетом. Для українців кобзар — це сакральне поняття, що символізує правдивий голос народу, його чисту совість та незламний дух. Називаючи Шевченка Великим Кобзарем, українці підкреслюють його унікальну роль духовного лідера, який своїм словом пробудив націю.
+> *Taras Shevchenko named his most famous collection of poems "Kobzar", and this word acquired a truly sacred meaning. The poet himself quickly became a symbolic kobzar for the entire nation. He tirelessly awakened national consciousness with his prophetic word. Today, this noun is strongly associated with cultural memory and the resilience of Ukrainians.*
 
-Інший знаковий приклад використання суфікса **-яр** — це слово **каменяр** *(stonecutter)*. Цей термін назавжди пов'язаний з іменем ще одного генія української літератури, філософа та поліглота — Івана Франка. Його традиційно називають Великим Каменярем. Це шанобливе прізвисько походить від його знаменитого революційного вірша «Каменярі» *(The Stonecutters)*, написаного у 1878 році. У цьому філософському творі поет створив потужну метафору. Він описав сотні тисяч закутих у ланцюги людей, які важкою щоденною працею розбивають монолітну гранітну скелю: *«Лупайте сю скалу! Нехай ні жар, ні холод / Не спинить вас! Зносіть і труд, і спрагу, й голод, / Бо вам призначено скалу сю розбивать»*. Каменяр у цьому контексті виступає символом невтомного борця за національну свободу, людську гідність, науковий прогрес та соціальну справедливість. Суфікс -яр у цьому слові ідеально підкреслює активну, важку, цілеспрямовану дію людини. Завдяки Франку звичайна назва фізично важкої робітничої професії назавжди перетворилася на величний поетичний образ будівничого нового, вільного суспільства.
+Another iconic literary figure deeply associated with the `-яр` suffix is Ivan Franko. He is known universally across the country by the powerful epithet Великий Каменяр. The word каменяр comes directly from the root for stone. It is combined with a **суфікс** (suffix) denoting a person's demanding **професія** (profession).
 
-У сучаснішій українській культурі великої ваги набуло слово **пісняр**. Воно застосовується не стільки до співаків, скільки до видатних композиторів, які створювали українську естрадну та народну музику. Найвідомішим українським піснярем вважається Володимир Івасюк — автор легендарної пісні «Червона рута». Його мелодії змінили українську музику назавжди, зробивши її сучасною та популярною в усій Європі в 1970-х роках.
+У знаменитому вірші Франка «Каменярі» робітники завзято розбивають гранітні скелі важкими молотами. Вони роблять це, щоб прокласти новий шлях до свободи для майбутніх поколінь. Цей героїчний образ ідеально відображає титанічну працю письменника заради свого народу. Звичайний словотвірний суфікс перетворює важку фізичну роботу на величний життєвий подвиг.
 
-Словотворча модель на -ар та -яр також міцно закарбувалася в українській антропоніміці — науці, що вивчає власні імена. Багато сучасних українських прізвищ походять саме від назв давніх ремісничих професій, адже в минулому ремесло було найкращим способом ідентифікувати людину. Додавання патронімічних суфіксів -енко (син когось) або -ук (належність до родини) створило мільйони прізвищ.
-Наприклад:
-*   Прізвище видатного українського романіста Олеся Гончара буквально означає **гончар** *(potter)* — майстер, який робить посуд із глини.
-*   Від слова **бондар** *(cooper)* походять сотні тисяч українців із прізвищами Бондаренко та Бондарчук.
-*   Від слова **кухар** *(cook)* утворилося прізвище Кухаренко.
-*   Від професії **скляр** *(glazier)* походить прізвище Скляренко.
-*   Слово **крамар** *(shopkeeper)* дало життя прізвищу Крамаренко.
+These specific word-formation patterns extend far beyond literature and poetry. They reach directly into Ukrainian anthroponymy, the historical study of surnames. In the past, a person's geographic **походження** (origin) or daily trade became the primary basis for their family name. Because village life relied heavily on specialized craftsmen, these suffixes evolved into permanent identifiers.
 
-Варто згадати й історичне слово **швець** *(shoemaker)*, від якого утворилося найпопулярніше українське прізвище Шевченко. Хоча тут немає суфікса -ар, логіка утворення прізвища від професії залишається тією ж. Розуміння цих суфіксів допомагає не лише правильно відмінювати слова, але й значно глибше розуміти історію своєї родини та цікаве походження багатьох українських прізвищ.
+Наприклад, видатний письменник Олесь Гончар мав прізвище, яке означає майстра з виготовлення глиняного посуду. Прізвище засновника нової української літератури Івана Котляревського походить від слова «котляр» — майстра, який робить металеві котли. Такі поширені сьогодні прізвища, як Скляр, Бондар або Тесляр, є прямим відображенням тогочасного суспільного життя. Ці слова надійно зберігають історію давніх ремесел, перетворюючи звичайні назви на родинну спадщину.
 
-## Підсумок і практика
+:::info
+**Grammar box** — Surnames derived from historical occupations decline exactly like the common nouns they come from. If you are speaking about the famous author Oles Honchar, use the **родовий відмінок** (genitive case) for absence, and the **кличний відмінок** (vocative case) for addressing him.
 
-Час підбити підсумки та чітко структурувати наші нові знання. У цьому модулі ми детально розібрали три важливі суфікси, які допомагають українцям утворювати назви людей за їхньою щоденною професією, діяльністю або географічним походженням.
+**Немає Олеся Гончара.** — *There is no Oles Honchar.*
+**Пане Гончарю!** — *Mr. Honchar!*
+:::
 
-Давайте поглянемо на загальну підсумкову таблицю:
+## Підсумок і практика (~340 слів)
 
-| Суфікс | Значення | Відмінювання в однині | Відмінювання у множині |
-| :--- | :--- | :--- | :--- |
-| **-ар** | Професія або регулярна діяльність (ремесло) | Звичайна ІІ відміна (може бути тверда або м'яка група, залежно від наголосу) | Звичайна ІІ відміна відповідно до групи |
-| **-яр** | Професія або регулярна діяльність (ремесло) | Звичайна ІІ відміна: **мішана група** (з закінченням -ем в орудному) | М'які закінчення (-і, -ів, -ям) |
-| **-ин / -янин** | Географічне походження, громадянство або група | Зберігає суфікс **-ин** у всіх формах, тверда група | Суфікс **-ин** повністю зникає; родовий відмінок має нульове закінчення |
+Before we wrap up, let's review the key vocabulary. Every **суфікс** (suffix) plays an important role when we study a new **іменник** (noun). Their **відмінювання** (declension) is based on knowing the correct groups.
 
-Також обов'язково пам'ятайте ключові правила для утворення кличного відмінка *(vocative case)*.
-*   Іменники м'якої групи на **-ар** завжди мають закінчення **-ю** (наприклад, шановний **лікарю!** *(doctor!)*, дорогий **кобзарю!** *(kobza player!)*, пане **пекарю!** *(baker!)*).
-*   Іменники мішаної групи на **-яр** обов'язково отримують закінчення **-е** (дорогий **школяре!** *(student!)*, пане **каменяре!**).
-*   Для всіх слів на **-ин** у кличному відмінку ми також використовуємо тверде закінчення **-е** (шановний **киянине!** *(Kyivan!)*, **громадянине!**).
+The second **відміна** (declension class) unites words that denote someone's **походження** (origin) or indicate their **професія** (profession).
 
-Важлива деталь: під час утворення кличного відмінка для іменників із цими трьома суфіксами жодних додаткових чергувань приголосних звуків не відбувається.
+For example, a **пекар** (baker) and a **лікар** (doctor) belong to the soft group. Meanwhile, a modern **школяр** (student) belongs to the mixed group.
 
-Тепер перевірте себе за допомогою короткого блоку запитань та відповідей. Спробуйте спочатку відповісти самостійно, не підглядаючи у текст.
+A traditional **кобзар** (kobza player) also declines according to the mixed group. Notice how the **однина** (singular number) and **множина** (plural number) behave for these words.
 
-1. Як правильно утворити називний відмінок множини від слова **селянин** *(villager)*?
-Відповідь: **Селяни**. Завжди пам'ятайте, що суфікс **-ин** обов'язково зникає у формі множини.
+Every **киянин** (Kyivan) or conscious **громадянин** (citizen) knows about the loss of the stem in the plural.
 
-2. Яке правильне закінчення матиме слово **лікар** в орудному відмінку однини?
-Відповідь: **Лікарем**. Це популярне слово належить до м'якої групи, тому воно закономірно отримує закінчення **-ем**.
+Always use the **кличний відмінок** (vocative case) correctly in addresses. Do not forget about the **родовий відмінок** (genitive case) with a zero ending.
 
-3. Як правильно звернутися на вулиці до незнайомого **громадянина** *(citizen)*?
-Відповідь: **Громадянине!** Ми використовуємо типове закінчення **-е**, яке є характерним для іменників твердої групи другої відміни.
+| Суфікс | Значення | Парадигма в однині | Парадигма в множині |
+|---|---|---|---|
+| **-ар** | професія / заняття | ІІ відміна (м'яка або тверда) | стандартна (лікарі, лікарів) |
+| **-яр** | професія / заняття | ІІ відміна (мішана або м'яка) | стандартна (школярі, школярів) |
+| **-ин** | походження / житель | стандартна (киянин, киянина) | суфікс зникає (кияни, киян) |
 
-4. Хто такі **грузини** *(Georgians)* у родовому відмінку множини?
-Відповідь: Багато **грузинів**. Це дуже важливий виняток, адже зазвичай слова, що втрачають суфікс **-ин**, мають нульове закінчення (як мільйони **громадян** чи тисячі **киян**). Але слово "грузини" зберігає повну основу.
+:::note
+**Quick tip** — Nouns denoting residents (киянин) lose their suffix in the plural (кияни), leading to a zero ending in the genitive plural (киян).
+:::
 
-5. Як правильно звернутися до учня школи (школяра)?
-Відповідь: **Школяре!** Це слово належить до мішаної групи, яка вимагає закінчення -е.
+Перевірте свої знання за допомогою кількох коротких запитань. Спробуйте відповісти на них самостійно, перш ніж дивитися на правильні відповіді.
 
-6. Перекладіть фразу: "Мій дід був кобзаром" (My grandfather was a kobza player). Де тут помилка?
-Відповідь: Правильно казати: Мій дід був **кобзарем**. Орудний відмінок від слова кобзар має закінчення -ем, оскільки воно належить до м'якої групи.
+> *Test your knowledge with a few short questions. Try to answer them yourself before looking at the correct answers.*
 
-7. Яке прізвище утворилося від професії людини, що виготовляє дерев'яні діжки?
-Відповідь: **Бондаренко** або **Бондарчук** (від слова бондар).
+1. Як утворити множину від слова «селянин»?
+2. Яке закінчення в орудному відмінку однини має «лікар»?
+3. Як звернутися до офіційної особи, використовуючи слово «громадянин»?
+4. Хто такі грузини, і як звучить їхня назва у родовому відмінку множини?
 
-Сподіваюся, ви успішно впоралися з цими запитаннями. Практикуйтеся щодня, читайте більше українських текстів, прислухайтеся до новин, і ви більше ніколи не скажете штучне слово «киянини» або «громадянини». А в наступному модулі ми продовжимо досліджувати граматичні нюанси та детально розглянемо іменники на **ж**, **ч**, **ш**, **щ**, які формують особливу мішану групу.
+Відповіді для самоперевірки:
+
+1. Селяни. Суфікс зникає, тому ми ніколи не використовуємо повну форму.
+2. Лікарем. Це м'яка група, тому ми додаємо закінчення «-ем».
+3. Громадянине! Це типовий кличний відмінок для твердої групи.
+4. Грузинів. Це відомий виняток, який зберігає закінчення «-ів» замість нульового закінчення.
+
+У наступному модулі ми детально розберемо мішану групу іменників. Ви дізнаєтеся, як поводяться слова, що закінчуються на шиплячі звуки.

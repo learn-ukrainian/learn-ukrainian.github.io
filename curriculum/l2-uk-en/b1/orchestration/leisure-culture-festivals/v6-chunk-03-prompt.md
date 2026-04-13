@@ -25,7 +25,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-несподіваний результат. Наприклад: «Хоча квитки на цю ексклюзивну вечірню екскурсію були досить дорогі, ця неймовірна подія була того варта». Або розглянемо інший приклад: «Дарма що Олеський замок дуже старий, він прекрасно зберігся до наших днів завдяки сумлінній праці талановитих реставраторів». Такі допустові речення дозволяють нам створювати значно складніші та глибші описи. Вони показують, що певні несприятливі обставини зовсім не стають перешкодою для важливих процесів. Хоч старовинний Софійський собор зараз розташований у дуже галасливому центрі столиці, всередині нього завжди панує дивовижна тиша та спокій. Незважаючи на те, що сучасні архітектурні стилі постійно змінюються, такі класичні пам'ятки завжди залишатимуться невичерпним джерелом нашого натхнення. Сьогодні все більше людей чітко розуміють, наскільки важливо регулярно відвідувати культурні заходи. Але чому ми взагалі у свій вільний час ходимо в історичний **музей** *(museum)* або заздалегідь купуємо квитки на класичний **концерт** *(concert)* симфонічної музики? Відповідь на це дуже цікаве запитання неодмінно вимагає правильного використання складнопідрядних речень мети зі сполучниками «щоб» або «аби». Головна і найважливіша мета будь-якого справжнього мистецтва — це духовне збагачення нашого внутрішнього світу та глибокий емоційний розвиток. Наприклад, минулого тижня ми спеціально пішли в новий художній музей, щоб на власні очі побачити виставку картин відомої української художниці. Кожен справді талановитий митець бере в руки пензель або глину, аби максимально щиро виразити свої найглибші почуття та особисті переживання. Дбайливі батьки дуже часто водять своїх маленьких дітей у ляльковий театр, щоб з самого раннього дитинства виховати в них любов до рідної національної культури. Ми часто слухаємо спокійну класичну музику для того, щоб швидко знайти внутрішню гармонію та ефективно зняти щоденний стрес. Вправно використовуючи такі речення мети, ви завжди зможете дуже чітко та аргументовано пояснити свої власні мистецькі вподобання. У сучасному світовому культурному просторі дуже часто виникають палкі дискусії про те, що саме є кращим: перевірена часом класика чи дуже сміливе сучасне мистецтво. Класичні мистецькі твори зазвичай мають дуже чіткі зрозумілі правила, ідеальну форму та загальновизнану цінність. Натомість сучасні креативні митці постійно шукають нові нестандартні формати, часто шокують непідготовлену публіку та сміливо порушують гострі соціальні проблеми нашого суспільства. Коли ми критично порівнюємо ці два абсолютно різні напрямки, нам дуже допомагають складнопідрядні умовні речення зі сполучником «якщо». Якщо ви щиро любите постійні творчі експерименти та несподівані візуальні рішення, вам обов'язково сподобається цей новий авангардний театральний перформанс. З іншого боку, якщо людина шукає абсолютного душевного спокою та справжньої естетичної досконалості, класична симфонія буде для неї найкращим вибором. Такі умовні речення дозволяють нам легко будувати складні логічні гіпотези та давати дуже корисні рекомендації іншим людям. Якщо ви хочете краще зрозуміти внутрішній світ сучасного покоління, вам неодмінно варто частіше відвідувати різноманітні виставки абстрактного живопису. А якщо ми забудемо про нашу багату класичну культурну спадщину, ми можемо назавжди втратити важливий зв'язок із нашими історичними коріннями. Насправді, ідеальна гармонія завжди полягає у вдалому поєднанні різних художніх стилів та історичних епох. Кожен мистецький напрямок має свою власну унікальну цінність і обов'язково знайде свого вдячного глядача. Тому, якщо ви будете відкритими до нових яскравих вражень, ваше культурне життя завжди буде насиченим та неймовірно цікавим. <!-- INJECT_ACTIVITY: essay-response-art-vocab --> <!-- INJECT_ACTIVITY: match-up-art-definitions --> <!-- INJECT_ACTIVITY: error-correction-culture-syntax -->
+собор у Києві, який є шедевром архітектури часів Київської Русі, та Олеський замок на Львівщині, де зберігаються унікальні твори мистецтва. Коли ми ділимося враженнями від подорожей та огляду таких місць, ми часто стикаємося з необхідністю протиставити певні факти. Для цього ідеально підходять складнопідрядні допустові речення зі сполучниками «хоча» (або «хоч») та «дарма що». Ці конструкції допомагають показати, що певна обставина не завадила дії або враженню. Наприклад, ви можете сказати: «Хоча квитки до музею були доволі дорогі, ця унікальна виставка точно була того варта». Або описуючи старовинну будівлю: «Дарма що Олеський замок дуже старий, він чудово зберігся і вражає своєю величчю». Використання таких речень робить ваше мовлення більш виразним та природним, дозволяючи передати складніші нюанси ваших думок та оцінок. :::info **Граматика** — Допустові речення (Concessive clauses) Сполучники «хоча» та «дарма що» (although / even though) використовуються для вираження обставини, всупереч якій відбувається дія головного речення. Зверніть увагу, що перед цими сполучниками завжди ставиться кома. ::: Люди по-різному планують своє **дозвілля** (leisure) та відвідують культурні заходи з різних причин. Для когось мистецтво стає справжнім **захопленням** (passion), якому вони присвячують увесь свій вільний час. Хтось іде в театр або на концерт, щоб просто відпочити після напруженого робочого тижня і насолодитися живою музикою. Інші відвідують музеї та галереї, аби розширити свій світогляд і дізнатися щось нове про історію та видатних особистостей. Коли ми пояснюємо мету наших дій, ми використовуємо складнопідрядні речення мети зі сполучниками «щоб» або «аби». Наприклад: «Ми пішли в Національний художній музей, щоб побачити нову експозицію українського авангарду». У цьому реченні головна частина («ми пішли») доповнюється підрядною («щоб побачити»), яка чітко вказує на мету. Так само ми можемо говорити про наміри самих митців: «Талановитий художник малює свої картини, аби виразити глибокі почуття та звернути увагу суспільства на важливі проблеми». Вміння правильно формулювати речення мети є надзвичайно важливим для аргументованого спілкування на культурні теми. Сучасне мистецтво та класика часто стають темою для палких дискусій серед критиків та звичайних глядачів. Деякі люди віддають перевагу традиційному живопису, реалістичній скульптурі та класичній музиці, оскільки вважають їх перевіреними часом еталонами справжньої краси та майстерності. Вони цінують зрозумілі сюжети та гармонію форм. Інші ж захоплюються сучасними перформансами, провокативними інсталяціями та абстракцією, які кидають виклик звичним уявленням і змушують замислитися над актуальними соціальними проблемами. Для висловлення своєї позиції в таких дискусіях ми часто використовуємо порівняльну аргументацію та умовні конструкції. Складнопідрядні умовні речення зі сполучником «якщо» допомагають нам припустити певну ситуацію та описати її логічний результат. Наприклад: «Якщо ви любите сміливі експерименти та незвичні візуальні рішення, вам обов'язково сподобається цей сучасний театральний перформанс». Або навпаки, захищаючи класику: «Якщо людина шукає внутрішнього спокою та етичної гармонії, їй краще відвідати традиційний концерт симфонічної музики». Використання різноманітних складнопідрядних конструкцій дозволяє вам не просто констатувати сухі факти, а будувати глибокі логічні ланцюжки. Ви можете виражати складні ідеї, порівнювати різні мистецькі епохи та переконливо захищати свою власну точку зору в будь-якій розмові про культуру та естетику. Ваша здатність вільно та влучно оперувати цими синтаксичними структурами яскраво свідчить про високий рівень володіння українською мовою. <!-- INJECT_ACTIVITY: essay-response-art-vocab --> <!-- INJECT_ACTIVITY: match-up-art-definitions --> <!-- INJECT_ACTIVITY: error-correction-culture-syntax -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -525,7 +525,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -538,18 +605,71 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] дозвілля (leisure, free time)
+- [ ] захоплення (hobby, passion)
+- [ ] мистецтво (art)
+- [ ] виставка (exhibition)
+- [ ] вистава (performance, show)
+- [ ] Різдво (Christmas)
+- [ ] Великдень (Easter)
+- [ ] свято (holiday, celebration)
+- [ ] традиція (tradition)
+- [ ] культура (culture)
+- [ ] святкувати (to celebrate)
+- [ ] колядка (Christmas carol)
+- [ ] писанка (decorated Easter egg)
+- [ ] ресторан (restaurant)
+- [ ] меню (menu)
+- [ ] замовлення (order)
+- [ ] страва (dish)
+- [ ] шеф-кухар (chef)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Розділ 3: Українські свята і традиції (~830 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

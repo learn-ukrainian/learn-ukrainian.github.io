@@ -1,0 +1,54 @@
+round: 4
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 7
+  evidence: Core content is mostly covered, but planned references are not cited in
+    the prose (`Караман` 0, `Захарійчук` 0, `ULP` 0 in search), and the opening narration
+    promises “physical activities… exercise to
+- dimension: 2
+  name: Linguistic accuracy
+  score: 6
+  evidence: 'The verb forms themselves check out, but the module teaches wrong explanations:
+    “Because of this focus on melody, some Group II verbs change their last stem consonant”
+    and “this suffix generally indic'
+- dimension: 3
+  name: Pedagogical quality
+  score: 6
+  evidence: The PPP skeleton exists, but the reflexive paragraph goes beyond the planned
+    preview and gives misleading theory, and the consonant-alternation section explains
+    morphology through `милозвучність` inst
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: All required verbs appear in prose (`говорити`, `бачити`, `робити`, `вчити`,
+    `просити`, `ходити`), and the recommended items also appear (`дивитися`, `вчитися`,
+    `любити`, `трохи`, `добре`, `увечері`).
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: All 4 planned activity slots are present and follow relevant teaching
+    sections; there are no visible logic errors in the markers themselves.
+- dimension: 6
+  name: Engagement & tone
+  score: 6
+  evidence: The teacher voice is clear, but lines like “unlocks your fundamental ability”
+    and repeated “You must…” phrasing add filler and corporate/gamified tone the rubric
+    explicitly warns against.
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: All four H2 headings from the plan are present, marker count is correct,
+    and the pipeline word count is 1371, so the module clears the 1200-word minimum.
+- dimension: 8
+  name: Cultural accuracy
+  score: 9
+  evidence: No Russian-centric framing or cultural distortion; the main problems are
+    grammatical explanations, not cultural content.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 7
+  evidence: Named speakers and multi-turn exchanges help, but the first scene is framed
+    as a gym workout while the dialogue itself is about speaking Ukrainian, so the
+    setting feels disconnected from what the spea
+findings: []

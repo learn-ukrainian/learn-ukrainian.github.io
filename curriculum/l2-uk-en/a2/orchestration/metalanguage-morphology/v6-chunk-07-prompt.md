@@ -28,7 +28,7 @@ Grand total: ~4410 words
 <previous_context>
 [...previous sections truncated...]
 
-Це **службові частини мови** *(synsemantic/function parts of speech)*. Їх є тільки три типи. Це дуже специфічні та переважно короткі слова. Вони абсолютно не мають власного лексичного значення. Вони нічого не називають у нашому реальному світі. Ви ніколи не можете поставити до них граматичне питання. Вони також ніколи не бувають самостійними членами речення. Чому ж вони тоді існують? Службові слова — це спеціальний граматичний «клей» *(glue)*. Вони міцно тримають наші великі речення разом. Без цього невидимого граматичного клею наша мова просто розпадеться на окремі слова без сенсу. Ці маленькі слова виконують дуже важливу технічну роботу. Вони допомагають самостійним словам правильно та логічно взаємодіяти між собою у тексті. Перший важливий помічник у реченні — це **прийменник** *(preposition)*. Він активно допомагає іменникам або займенникам зв'язуватися з іншими словами. Прийменник майже завжди стоїть перед своїм головним словом. Найбільш популярні українські прийменники: «на» *(on)*, «в» *(in)*, «з» *(from/with)*, «до» *(to)*. Прийменник виконує критично важливу структурну функцію. Він суворо контролює **відмінок** *(case)* наступного слова. Наприклад, після прийменника «до» ми завжди маємо використовувати родовий відмінок. Ми правильно кажемо «до школи», а не «до школа». Прийменник і закінчення слова завжди працюють разом як одна команда. Другий важливий помічник — це гнучкий **сполучник** *(conjunction)*. Його головна робота — це надійно поєднувати різні елементи. Сполучник може поєднувати два окремих слова в одному короткому реченні. Наприклад: «брат **і** сестра» *(brother and sister)*. Також сполучник може з'єднувати дві великі частини одного складного речення. Найбільш популярні та часті сполучники: «і» *(and)*, «але» *(but)*, «бо» *(because)*, «щоб» *(in order to)*. Вони швидко будують логічні мости між нашими окремими думками. Наприклад: «Я не прийшов, **бо** був хворий». Тут сполучник «бо» чітко пояснює причину дії. Він з'єднує факт і його детальне пояснення. Наші прийменники та сполучники роблять наше мовлення дуже плавним, зв'язним і логічним. Третій помічник у цій технічній групі — це **частка** *(particle)*. Частка взагалі не зв'язує слова або речення між собою. Вона має зовсім інше граматичне завдання. Частка додає нові та цікаві відтінки значення до цілого речення. Вона ефективно працює як емоційна або специфічна граматична приправа. Найбільш відома і часта частка — це «не» *(not)*. Вона миттєво робить негативне речення з позитивного. Інша важлива частка — це «б» *(would)*. Вона допомагає нам створити уявну або умовну ситуацію. Наприклад: «Я **б** дуже хотів теплої кави» *(I would really like warm coffee)*. Частка «хай» *(let)* допомагає нам прямо висловити своє побажання. В українській мові також є ще одна дуже особлива категорія. Це емоційний **вигук** *(interjection)*. Вигук зовсім не є самостійною частиною мови. Але він також ніколи не є службовою частиною мови. Він завжди стоїть абсолютно окремо від усіх інших слів. Вигук тільки швидко виражає наші сильні емоції, але ніколи не називає їх. Наприклад: «ой!» *(oh!)*, «ах!» *(ah!)*, «гей!» *(hey!)*. Це дуже короткі емоційні сигнали або гучні вигуки раптового здивування. Вигуки роблять нашу щоденну розмову дуже живою, яскравою та природною. Вони дуже часто починають нове речення, коли ми раптово реагуємо на щось несподіване. Тепер ви чудово знаєте всі десять частин української мови. <!-- INJECT_ACTIVITY: group-sort, Focus: Sort words into самостійні vs службові частини мови, 10 items -->
+"near the noun" (при імені). A preposition links words together and always demands a specific case from the noun that follows it. For example, when you use the preposition «з» (with), the next word must take the Instrumental case endings. When you say «на» (on), it often dictates the Locative case. The second crucial helper is the conjunction, which is called **сполучник** (conjunction). Its primary job is to connect individual words or entire clauses. Simple conjunctions like «і» (and) or «але» (but) connect similar ideas in a smooth flow. More complex conjunctions like «бо» (because) or «щоб» (in order to) build logical bridges between different parts of a sentence. Прийменник завжди працює в парі з іменником або займенником. Він чітко показує напрямок, місце або час нашої дії. Сполучник також є дуже важливим для гарного та логічного мовлення. Він допомагає нам пояснювати різноманітні причини і наслідки. Коли ви кажете «я читаю, бо мені цікаво», це слово об'єднує дві думки. > *A preposition always works in a pair with a noun or pronoun. It clearly shows the direction, place, or time of our action. A conjunction is also very important for good and logical speech. It helps us explain various causes and effects. When you say "I am reading because I am interested," this word unites two thoughts.* The third function part of speech is the particle, known as **частка** (particle). Particles do not connect words or govern cases. Instead, they add special stylistic shades of meaning to a sentence. The most famous particle is «не» (not), which instantly creates a negation. Other particles, like «б» (would) or «хай» (let), help form new grammatical moods or express strong wishes. Finally, we have the interjection, or **вигук** (interjection). The interjection is unique because it is neither an independent nor a function word. It stands completely apart in the morphological system. Interjections are spontaneous emotional outbursts. Words like «ой», «ах», or «гей» do not name a specific emotion; they simply express it directly. They never change their form and do not connect to other words in the sentence. Частка може повністю змінити загальний зміст вашого речення. Лише одне маленьке слово «не» робить будь-яку дію протилежною. Вигуки роблять нашу щоденну мову дуже живою та емоційною. Коли вам раптом боляче, ви автоматично кажете «ой!». Ці особливі слова не мають ні основи, ні закінчення. Вони існують лише для вираження наших справжніх почуттів у момент розмови. > *A particle can completely change the overall meaning of your sentence. Just one little word "not" makes any action the opposite. Interjections make our daily language very alive and emotional. When you are suddenly in pain, you automatically say "oh!". These special words have neither a stem nor an ending. They exist only to express our true feelings at the moment of conversation.* :::info **Grammar box** Remember that function parts of speech never change their form. They are completely unchangeable and have no grammatical categories like gender, number, or case. They consist only of a stem. ::: <!-- INJECT_ACTIVITY: sort-pos-categories -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -456,7 +456,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 6: A2 finale (A2 M51-M69)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 40%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 40% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 70-90% Ukrainian.
 LANGUAGE ROLES:
@@ -475,18 +542,69 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (7/7).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] морфологія (morphology — the study of word forms and parts of speech)
+- [ ] корінь (root — the main meaningful part of a word)
+- [ ] префікс (prefix — meaningful part before the root)
+- [ ] суфікс (suffix — meaningful part after the root)
+- [ ] закінчення (ending — changeable part expressing grammatical meaning)
+- [ ] основа (stem — the part of a word without the ending)
+- [ ] спільнокореневий (cognate — words sharing the same root)
+- [ ] іменник (noun — names things, answers хто? що?)
+- [ ] прикметник (adjective — names qualities, answers який? чий?)
+- [ ] дієслово (verb — names actions, answers що робити?)
+- [ ] прислівник (adverb — names circumstances, answers як? де? коли?)
+- [ ] самостійний (content/autosemantic — part of speech with independent meaning)
+- [ ] службовий (function/synsemantic — part of speech without independent meaning)
+- [ ] прийменник (preposition — links words, governs case)
+- [ ] сполучник (conjunction — connects words or clauses)
+- [ ] частка (particle — adds shades of meaning)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Підсумок (~440 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

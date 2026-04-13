@@ -1,6 +1,6 @@
 # Build Summary: euphony-advanced (A2)
 
-Generated: 2026-04-11 02:14
+Generated: 2026-04-11 12:25
 
 ## Pipeline Phases
 
@@ -12,15 +12,15 @@ Generated: 2026-04-11 02:14
 | pre-verify | complete | 2026-04-07 19:58:09 |
 | write | complete | 2026-04-07 20:07:13 |
 | exercises | complete | 2026-04-07 21:27:50 |
-| activities | complete | 2026-04-11 00:10:53 |
+| activities | complete | 2026-04-11 10:20:26 |
 | verify-exercises | complete | 2026-04-07 21:27:50 |
 | annotate | complete | 2026-04-07 20:32:49 |
 | vocab | complete | 2026-04-07 20:35:34 |
 | enrich | complete | 2026-04-07 20:35:34 |
 | verify | complete | 2026-04-07 20:35:35 |
 | stress | complete | 2026-04-07 21:27:50 |
-| publish | complete | 2026-04-11 00:14:06 |
-| audit | complete | 2026-04-11 00:14:06 |
+| publish | complete | 2026-04-11 10:25:56 |
+| audit | complete | 2026-04-11 10:25:56 |
 
 ## Reviews
 
@@ -38,18 +38,24 @@ Generated: 2026-04-11 02:14
 | activities | gemini-tools (gemini-3.1-pro-preview) | 900s | ❌ |
 | activities | gemini-tools (auto) | 431s | ✅ |
 | activities | gemini-tools (gemini-3.1-pro-preview) | 60s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 170s | ✅ |
 | vocab | gemini (auto) | 159s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 626s | ✅ |
 | write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 145s | ✅ |
 | write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 70s | ✅ |
+| write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 44s | ✅ |
 | write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 83s | ✅ |
 | write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 25s | ✅ |
+| write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 50s | ✅ |
 | write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 59s | ✅ |
 | write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 30s | ✅ |
+| write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 65s | ✅ |
 | write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 57s | ✅ |
 | write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 30s | ✅ |
+| write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 120s | ✅ |
 | write-chunk-05 | gemini-tools (gemini-3.1-pro-preview) | 53s | ✅ |
 | write-chunk-05 | gemini-tools (gemini-3.1-pro-preview) | 25s | ✅ |
+| write-chunk-05 | gemini-tools (gemini-3.1-pro-preview) | 39s | ✅ |
 | write-fix | gemini-tools (gemini-3.1-pro-preview) | 146s | ✅ |
 
 ## Friction

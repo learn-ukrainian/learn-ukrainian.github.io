@@ -2,31 +2,31 @@
   "module": "aspect-in-narration",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-11T02:47:49.262763Z",
+  "last_audit": "2026-04-11T13:26:45.578073Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-11T02:46:53.377209Z",
+    "md": "2026-04-11T13:25:51.149797Z",
     "meta": null,
-    "activities": "2026-04-11T02:40:04.565490Z",
+    "activities": "2026-04-11T13:17:05.562718Z",
     "vocabulary": "2026-04-09T03:30:21.276117Z",
     "research": null,
     "plan": "2026-04-04T21:36:50.418639Z"
   },
   "gates": {
     "meta": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Valid Structure"
+      "status": "fail",
+      "violations": 1,
+      "message": "Valid Structure | Lint: 1 Format Errors"
     },
     "lesson": {
       "status": "fail",
       "violations": 3,
-      "message": "5534/4000 (raw: 5586) | engagement: 4/5 | immersion: 34.2% LOW (target 85-100% (B1.1 Aspect)) | richness: 50% < 95% min (grammar) - REWRITE needed"
+      "message": "6415/4000 (raw: 6503) | engagement: 2/5 | immersion: 28.1% LOW (target 85-100% (B1.1 Aspect)) | richness: 39% < 95% min (grammar) - REWRITE needed"
     },
     "activities": {
       "status": "fail",
       "violations": 1,
-      "message": "7/0 | density: 1 < 6"
+      "message": "7/0 | density: 2 < 6"
     },
     "vocabulary": {
       "status": "pass",
@@ -61,8 +61,8 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [],
-    "pass_count": 4,
-    "fail_count": 2,
+    "pass_count": 3,
+    "fail_count": 3,
     "deferred_count": 0
   }
 }

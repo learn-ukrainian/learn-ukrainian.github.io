@@ -1,13 +1,39 @@
-## Кличний + наказовий + орудний: Побажання (~550 words)
+## Вид дієслова в наказовому способі (Aspect in Imperatives) (~500 words)
 
-В українській мові є дуже красива і важлива конструкція для **побажання** *(wish, blessing)*. We often use a specific rhythmic pattern for wishes, greetings, and blessings. Ми поєднуємо **кличний відмінок** *(Vocative case)*, **наказовий спосіб** *(imperative mood)* та орудний відмінок. This powerful grammatical combination uses the Vocative case to address the person directly. It uses the imperative mood to command the state. Finally, it uses the Instrumental case to define exactly what that state is. Наприклад: «**Мамо** *(Mom)*, **будь** *(be)* **щасливою** *(happy)*!». You are literally commanding someone to exist in a specific, positive state of being. Це звучить дуже тепло, емоційно і природно. Ми активно використовуємо цю граматичну форму на всі свята і кожного дня. Зрозуміти цю логіку означає зрозуміти українську душу. 
+The choice of aspect drastically changes the tone of the **наказовий спосіб** (imperative mood). The imperfective aspect is used for general instructions, repeated actions, or polite invitations.
 
-Щоб побажання звучало щиро і поважно, ми завжди маємо правильно кликати людину. The direct address must always be strictly in the Vocative case for the wish to sound natural. Згадаймо базові форми для популярних імен та родичів. Let's quickly review the basic Vocative forms for names and family members. Іменник жіночого роду «**Олена**» *(Olena)* має теплу форму «**Оленко**» *(Olenko)*. Слово «**тато**» *(dad)* змінюється на форму «**тату**» *(tatu)*. Слово «**друг**» *(friend)* має відому форму «**друже**» *(druzhe)*. А форма множини для слова «**друзі**» *(friends)* або «**колеги**» *(colleagues)* завжди залишається такою ж. У кличному відмінку ми просто кажемо: «друзі», «колеги». Коли ми кажемо «Оленко, будь щасливою» або «Тату, будь здоровим», ми показуємо нашу велику повагу. Using the standard Nominative case here sounds unnatural and slightly rude in Ukrainian.
+Ми часто використовуємо недоконаний вид для порад. Наприклад, ви можете сказати: «Читай більше!» або «Пишіть щодня!». Коли приходять гості, ви ввічливо кажете: «Сідайте, будь ласка».
 
-Після дієслова «будь» або «**будьте**» *(be)* ми використовуємо прикметники саме в орудному відмінку. The Instrumental case answers the question "to be what or to be who?". Для чоловічого роду ми маємо закінчення «-им». Наприклад: «будь **здоровим**» *(healthy)*, «будь **спокійним**» *(calm)*. Для жіночого роду ми використовуємо гарне закінчення «-ою». Наприклад: «будь щасливою», «будь здоровою». У множині або для ввічливої форми на «ви» ми завжди додаємо закінчення «-ими». For plural groups or polite, formal addresses, we use the ending "-ими". Ми радісно кажемо: «Друзі, будьте **успішними** *(successful)*!». Або ми можемо сказати дітям: «**Діти** *(children)*, будьте **уважними** *(attentive)*!». Ця граматична структура робить ваші слова ідеальними. It shows that you are actively wishing them a continuous state of success or health.
+> *We often use the imperfective aspect for advice. For example, you can say: "Read more!" or "Write every day!". When guests arrive, you politely say: "Please sit down".*
 
-Ці щирі побажання — це не просто граматика. Це дуже важлива частина української культури та глибоких традицій. These phrases and structures are essential social tools in Ukraine. Ми часто говоримо їх на дні народження або під час теплих зустрічей. We use them during birthdays, national holidays, or regular social gatherings. Традиційний український святковий тост звучить дуже коротко і сильно: «Будьмо!». It is a powerful one-word toast that literally means "Let us be". Інша дуже популярна щоденна фраза — це «Будьте здорові!». Люди часто кажуть це, коли хтось чхає, або коли гості йдуть додому. Також ми часто кажемо: «**Живи** *(live)* довго!». Notice that in this specific, fixed phrase "Будьте здорові", we often use the Nominative plural instead of the Instrumental. It is a frozen historical idiom. Але для нових, персональних побажань ми завжди беремо орудний відмінок.
+The perfective imperative is entirely different. It is used for specific, one-time commands where you expect a concrete result right away. Whether you form commands directly or use **хай** (let) and **нехай** (let) for the third person, the aspect dictates the urgency.
 
-Ми також можемо поєднувати частку «**хай**» *(let)* з кличним відмінком. We can also combine the particle "хай" with Vocative addresses to create indirect blessings. У таких реченнях дія часто спрямована на людину. Тому ми додаємо займенники у давальному відмінку. We use the Dative case pronouns "тобі" or "вам" to show exactly who receives the positive action. Наприклад: «Друже, хай тобі **щастить** *(to be lucky)*!». This translates beautifully as: "May luck happen to you, my friend!". Інший дуже гарний і популярний приклад для свята: «Діти, **нехай** *(let)* **здійсняться** *(come true)* всі ваші **мрії** *(dreams)*!». Тут ми кличемо дітей. А потім ми використовуємо форму третьої особи для слова «мрії». These elegant combinations make your Ukrainian sound native, warm, and deeply respectful in any situation.
+Доконаний вид показує конкретний результат. Використовуйте його для термінових наказів. Наприклад, вчитель каже: «Прочитай цю статтю!». Або ви просите друга: «Напиши мені!». Якщо в кімнаті холодно, ви кажете: «Закрий двері!».
 
-<!-- INJECT_ACTIVITY: match-up-vocative-wishes -->
+> *The perfective aspect shows a concrete result. Use it for urgent commands. For example, a teacher says: "Read this article!". Or you ask a friend: "Write to me!". If it is cold in the room, you say: "Close the door!".*
+
+There is a strict rule for negative commands: they almost exclusively use the imperfective aspect. Telling someone NOT to do something implies an ongoing prohibition. This applies to direct commands and even when we suggest actions like **ходімо** (let's go), though we must completely avoid the Russian calque **давайте** (let's).
+
+Заперечні форми майже завжди використовують недоконаний вид. Ви кажете: «Не читай це!», якщо текст поганий. Або «Не відкривайте вікно!», якщо на вулиці йде дощ. Ви не хочете, щоб ця дія взагалі відбувалася.
+
+> *Negative forms almost always use the imperfective aspect. You say: "Don't read this!" if the text is bad. Or "Don't open the window!" if it is raining outside. You do not want this action to happen at all.*
+
+There is one notable exception. Using the perfective aspect in a negative command creates a harsh warning or expresses fear of an accidental, sudden result.
+
+Ми використовуємо доконаний вид із запереченням для попередження. Це означає страх перед раптовим результатом. Класичний приклад — це фраза «Не впади!». Ви кажете це дитині, яка швидко біжить.
+
+> *We use the perfective aspect with negation for a warning. This means a fear of a sudden result. A classic example is the phrase "Don't fall!". You say this to a child who is running fast.*
+
+:::info
+**Grammar box**
+General advice, polite invitations, and negative commands use the imperfective aspect. Specific tasks and urgent warnings use the perfective aspect.
+:::
+
+To wrap up this module, let's briefly review how we form a formal **побажання** (wish). We use the **кличний відмінок** (Vocative case) to address the person directly.
+
+Then, we use the imperative forms **будь** (be) or **будьте** (be). We finish the phrase with the Instrumental case. 
+
+This allows us to wish someone to be **щасливий** (happy) or **щасливою** (happy). You will also frequently hear toasts wishing everyone to be **здоровий** (healthy) or **здоровими** (healthy).
+
+<!-- INJECT_ACTIVITY: quiz-aspect-choice -->
+<!-- INJECT_ACTIVITY: unjumble-imperative-sentences -->

@@ -3,22 +3,21 @@
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 1: Ласкаво просимо до рівня А2 (A2, A2.1 [Foundation and Aspect Introduction])
-**Section to write:** Пригадуємо відмінки (Reviewing Cases) (~650 words total)
-**Word target for this section:** 650 words (aim for 715 to account for undershoot)
+**Section to write:** Пригадуємо відмінки (~660 words)
+**Word target for this section:** 660 words (aim for 726 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Пригадуємо відмінки (Reviewing Cases) (~650 words total)
-- P1 (~60 words): [Welcome to A2. Setting the scene for the "bridge" module. Motivation: before we build a skyscraper (complex Ukrainian), we must check the foundation (A1 grammar).]
-- P2 (~120 words): [Dialogue: Arrival at a Kyiv language school. Student and Teacher. Use specific phrases: "Я — новий студент (Nom)", "Я вивчаю українську мову (Acc)", "Я живу в Києві (Loc)", "Привіт, Оксано! (Voc)".]
-- P3 (~90 words): [Review of the Nominative (Називний) case. The "who/what" (хто? що?) dictionary form. Explain its role as the subject. Examples: "Урок починається", "Книга лежить".]
-- P4 (~100 words): [Review of the Accusative (Знахідний) case. Direct objects (кого? що?). Focus on feminine nouns in -у/-ю (каву, книжку) and masculine inanimate nouns staying the same (стіл, урок).]
-- P5 (~90 words): [Review of the Locative (Місцевий) case. Location (де?). Mandatory use of prepositions "у/в" or "на". Examples: "у школі", "в Ужгороді", "на заводі".]
-- P6 (~100 words): [Review of the Vocative (Кличний) case. Addressing people. Decolonization point: why it is a living marker of Ukrainian vs. Russian. Examples: "друже", "Олю", "вчителю".]
-- P7 (~90 words): [The Big Picture: Mapping all seven cases. Briefly list the three missing pieces for A2: Genitive (відсутність), Dative (адресат), and Instrumental (інструмент).]
-- <!-- INJECT_ACTIVITY: quiz-case-id --> [quiz, Case Identification Drill, 8 items]
+## Пригадуємо відмінки (~660 words)
+- P1 (~120 words): Dialogue: 'Arrival at a Kyiv language school on the first day of A2'. Characters: Новий студент, Викладач. Examples of A1 cases in action: "Я — студент" (Nominative), "Я вивчаю українську мову" (Accusative), "Я живу в Києві" (Locative), "Привіт, Оксано!" (Vocative).
+- P2 (~100 words): Welcome to A2 and an introduction to the concept of cases (відмінки). Explain how nouns change their endings (відмінювання) based on their grammatical role in the sentence, distinguishing between the direct subject and various types of objects.
+- P3 (~120 words): Deep dive into the Nominative (Називний) and Vocative (Кличний) cases. Explain the Nominative as the dictionary form answering Хто? Що? (the subject). Contrast this with the Vocative case, emphasizing it has no question and is mandatory for natural Ukrainian address (Оксанко, друже, тату). Include a decolonization note: Vocative is a living, essential feature of Ukrainian, unlike in Russian.
+- P4 (~120 words): Deep dive into the Accusative (Знахідний) and Locative (Місцевий) cases. Explain Accusative for direct objects answering Кого? Що? (e.g., Я бачу друга, читаю книгу). Explain Locative for location answering Де? На кому? На чому? (e.g., у школі, в Україні), highlighting that it *always* requires a preposition.
+- P5 (~100 words): Introduce the full case system map. List all 7 cases (Н., Р., Д., Зн., Ор., М., Кл.) and their primary functions. Mention a mnemonic phrase to remember the order: "Нашого Ромчика Дивує Зебра — Оця Маленька Красуня".
+- P6 (~100 words): Highlight the three new cases waiting in A2: Genitive (Родовий - absence/possession), Dative (Давальний - recipient), and Instrumental (Орудний - instrument/companion). Provide a brief preview of their usage, assuring learners they will master them soon.
+- <!-- INJECT_ACTIVITY: quiz-case-identification --> [quiz, Case Identification Drill, 8 items]
 
 ---
 ## Full Plan (for reference)
@@ -602,6 +601,30 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] відмінок (case)
+- [ ] називний (nominative)
+- [ ] знахідний (accusative)
+- [ ] місцевий (locative)
+- [ ] кличний (vocative)
+- [ ] чергування (alternation)
+- [ ] голосний (vowel)
+- [ ] приголосний (consonant)
+- [ ] наголос (stress (accent))
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Пригадуємо відмінки (~660 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-на твердий приголосний звук, ми зазвичай додаємо закінчення **-е**. Наприклад, **інженер** *(engineer)* стає «інженере». Слово **майстер** *(master, foreman)* стає «майстре». Якщо слово закінчується на м'який приголосний звук, ми додаємо закінчення **-ю**. Наприклад, **лікар** *(doctor)* має форму «лікарю», а **вчитель** *(teacher)* стає «вчителю». Слово **водій** *(driver)* також має форму «водію». There is an important note about masculine words ending in the -ер or -ор suffixes, like **професор** *(professor)* or **директор** *(director)*. These are hard stems in Ukrainian, so they always take the -е ending: «професоре», «директоре». Ми часто використовуємо ці форми в офіційній розмові. Українська мова має дуже красиву та важливу особливість. Ми активно, часто та природно використовуємо **фемінітиви** *(femininitives)* у повсякденному житті. Це жіночі форми назв професій та соціальних ролей. For women, we use the first declension pattern that you learned previously in the A1 level. Більшість таких сучасних слів закінчується на суфікс **-ка** або на літеру **-а**. У кличному відмінку ці слова завжди і без винятків мають закінчення **-о**. Наприклад, слово **вчителька** *(female teacher)* стає «вчителько». Слово **лікарка** *(female doctor)* має форму «лікарко», а **журналістка** *(female journalist)* легко стає «журналістко». Популярне слово **директорка** *(female director)* має правильну форму «директорко». This reinforces the "feminine-hard" declension pattern perfectly. Ми можемо сказати просто «лікарко». Або ми додаємо слово «пані» для більшої поваги: «пані лікарко». Це звучить дуже ввічливо, професійно та сучасно. Існують також спеціальні слова, які ми однаково використовуємо для чоловіків і для жінок. Наприклад, популярне слово **колега** *(colleague)*. Це слово має спільний рід. У кличному відмінку воно завжди має форму «колего». Ми з повагою кажемо «колего Андрію» або «колего Маріє». Інше важливе слово у цій групі — це **суддя** *(judge)*. Воно закінчується на м'який приголосний, тому в кличному відмінку завжди має форму «суддю». Також є класичне слово **товариш** *(friend, comrade)*. Це іменник мішаної групи. У кличному відмінку він має закінчення **-у**. Тому ми кажемо «товаришу». Пам'ятайте ці спеціальні форми, коли ви працюєте або навчаєтесь в українському колективі. Давайте подивимося, як це працює в реальному щоденному житті. Олег прийшов у поліклініку або **лікарню** *(clinic, hospital)*. Він має проблему зі здоров'ям і хоче поговорити з лікарем. Notice how Oleh starts the conversation with a formal title, and the doctor responds using Oleh's surname in the vocative case. This grammatical choice shows professional respect and social distance on both sides. > — **Пацієнт (Олег):** Добрий день! Пане лікарю, мені потрібна допомога. *(Good day! Mr. doctor, I need help.)* > — **Лікар:** Добрий день. Сідайте, будь ласка. Добре, пане Ковальчуку, що вас турбує? *(Good day. Sit down, please. Alright, Mr. Kovalchuk, what is bothering you?)* > — **Пацієнт (Олег):** У мене дуже сильно болить голова. *(I have a very bad headache.)* > — **Лікар:** Зрозуміло. Я дам вам ліки, пане Олегу. *(I understand. I will give you medicine, Mr. Oleh.)* > — **Пацієнт (Олег):** Дякую, лікарю. Ви дуже добрі. *(Thank you, doctor. You are very kind.)* У цьому короткому діалозі ми бачимо класичний приклад офіційної української поваги. Тепер ви знаєте, як правильно та ввічливо говорити з лікарем або зі своїм директором. <!-- INJECT_ACTIVITY: match-professions-vocative -->
+are also special nouns that denote common gender roles. For example, the word "колега" (colleague) can refer to both a man and a woman. Regardless of the person's gender, it always takes the **-о** ending, becoming "колего". Another important word is "суддя" (judge), which is a soft-group noun and takes the **-ю** ending to become "суддю". You might also hear the word "товариш" (comrade, mate), which is a mixed-declension noun and takes the **-у** ending, becoming "товаришу". Although "товариш" was used as the **офіційний** (official, formal) address during the Soviet era, today it mostly just means "companion" or **друг** (friend). Слово «колега» підходить і для чоловіків, і для жінок. У кличному відмінку ми завжди кажемо «колего» незалежно від статі людини. Слово «суддя» належить до м’якої групи, тому ми кажемо «пане суддю» або «пані суддю». Слово «товариш» має мішану відміну і отримує закінчення «у». Сьогодні ми рідко використовуємо слово «товаришу» як офіційний термін. Зазвичай це просто хороший знайомий або друг. > *The word «колега» is suitable for both men and women. In the vocative case, we always say «колего» regardless of the person's gender. The word «суддя» belongs to the soft group, so we say "Mr. judge" or "Ms. judge". The word «товариш» has a mixed declension and receives the ending «у». Today we rarely use the word «товаришу» as an official term. Usually, it is just a good acquaintance or friend.* Let's look at how you might use these forms in a real, everyday situation. Imagine you are visiting a medical clinic because you feel unwell. It is always considered **ввічливий** (polite) to use the formal vocative case when speaking to medical professionals. The patient will address the doctor directly by their professional title using **пан** (Mr., sir), and the doctor will likely respond using the patient's surname combined with the formal address. Observe how the vocative case shapes this interaction. > — **Олег:** Добрий день, пане лікарю! Мені потрібна ваша допомога. *(Good afternoon, doctor! I need your help.)* > — **Лікар:** Добрий день, пане Ковальчуку. Сідайте, будь ласка. Що вас турбує? *(Good afternoon, Mr. Kovalchuk. Please, sit down. What is bothering you?)* > — **Олег:** У мене дуже болить голова і спина. *(My head and back hurt a lot.)* > — **Лікар:** Я зрозумів. Нам треба зробити кілька тестів. *(I understand. We need to do a few tests.)* > — **Олег:** Дякую, лікарю. Я готовий. *(Thank you, doctor. I am ready.)* Notice how Oleh uses the full phrase «пане лікарю» at the beginning of the conversation. This establishes a highly respectful and formal tone right from the start. Later in the dialogue, as the conversation progresses, he simply says «лікарю». Both of these forms are perfectly acceptable, but combining the title «пан» with the profession creates the most formal register possible. The doctor replies with «пане Ковальчуку», making sure to change the patient's masculine surname into the vocative case with the **-у** ending. This mutual exchange of vocative forms demonstrates professional respect in Ukrainian culture. <!-- INJECT_ACTIVITY: match-professions-vocative -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -531,7 +531,74 @@ The vocative case is a powerful and immediate grammatical differentiator between
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -550,18 +617,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] кличний (vocative (case))
+- [ ] звертання (address, appeal)
+- [ ] пан (Mr., sir)
+- [ ] пані (Mrs., Ms., madam)
+- [ ] лікар (doctor)
+- [ ] вчитель (teacher)
+- [ ] друг (friend)
+- [ ] ввічливий (polite)
+- [ ] офіційний (official, formal)
+- [ ] професія (profession)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Друже мій, люба моя: емоційний кличний (Emotional Vocative) (~550 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

@@ -28,7 +28,7 @@ Grand total: ~4400 words
 <previous_context>
 [...previous sections truncated...]
 
-**уривок** *(passage)* художнього тексту. Уважно прочитайте цю коротку розповідь про захопливу літню подорож у гори: «Ми довго підіймалися вузькою і дуже крутою стежкою, а гаряче сонце безжально пекло прямо згори. Раптом з-за високого перевалу подув свіжий вітер, і дихати нам стало значно легше та приємніше. Ми могли зробити короткий привал біля холодного струмка, або нам довелося б іти до самої вершини без відпочинку. Усі мандрівники неймовірно втомилися після складного підйому, зате вечірній краєвид навколо був просто фантастичним». У цьому невеликому тексті автор майстерно використав кілька абсолютно різних типів складносурядних речень. Ваше головне завдання після уважного читання — знайти всі сполучники сурядності та правильно визначити смисловий зв'язок у кожному окремому випадку. Спробуйте самостійно відповісти на кілька запитань. Де саме ми бачимо чітке зіставлення двох паралельних подій? У якому реченні яскраво виражений несподіваний наслідок чи швидка послідовність дій? Де втомлені герої історії постають перед неминучим вибором? І в якому випадку найбільше відчувається сильне протиставлення з приємним відтінком **компенсації** *(compensation)* за докладені зусилля? Вміле використання складносурядних речень є надзвичайно важливим інструментом для створення плавних і природних **переходів** *(transitions)* у вашому власному письмі. Вони ефективно допомагають організувати логічну послідовність подій у будь-якій розповіді, щоб текст ніколи не виглядав як хаотичний набір уривчастих і коротких фраз. Майстерне і впевнене володіння цими базовими синтаксичними конструкціями є абсолютною і необхідною умовою для вашого подальшого прогресу. Саме зараз ми з вами успішно завершуємо тривалу роботу з повністю незалежними, граматично рівноправними частинами складного речення. Це базове лінгвістичне явище традиційно називається **сурядністю** *(coordination)*. Наступний великий і дуже важливий крок у нашому курсі — це глибоке вивчення **підрядності** *(subordination)*. У складнопідрядних реченнях одна частина буде завжди повністю залежати від іншої і підпорядковуватися їй. Глибоке практичне розуміння того, як саме працюють і взаємодіють між собою рівноправні синтаксичні елементи, є критично важливим фундаментом. Цей міцний фундамент допоможе вам набагато легше і швидше зрозуміти значно складнішу ієрархію та структурну залежність у текстах вищого рівня. Наостанок ми маємо обов'язково звернути особливу увагу на типові **русизми** *(Russianisms)* та кальки, яких необхідно суворо уникати при побудові українських складносурядних речень. Найчастіша і найбільш прикра проблема серед студентів — це постійна плутанина з багатозначним сполучником «та». Деякі учні помилково асоціюють його з російським словом «да» і тому намагаються взагалі його не вживати. Завжди пам'ятайте, що українське слово «та» є давнім, повноцінним і дуже красивим елементом літературної мови. Цей унікальний сполучник може означати як звичайне єднання («сад та город»), так і сильне протиставлення («світить, та абсолютно не гріє»). Його в жодному разі не треба уникати або вважати чимось неправильним. Інша дуже поширена помилка — це неконтрольоване і часте використання слова «но», яке є прямим лексичним запозиченням з російської мови. В сучасній українській мові для вираження будь-якого протиріччя існує надзвичайно багатий і стилістично різноманітний арсенал протиставних сполучників. Ви завжди можете вільно обирати між словами «але», «проте», «зате» або «однак» залежно від контексту. Регулярно використовуйте саме ці питомі слова, щоб ваше усне і писемне мовлення завжди залишалося чистим, багатим і максимально природним. <!-- INJECT_ACTIVITY: reading-narrative-analysis, focus on identifying and classifying 10 compound sentences within a narrative text about Lviv, 5 items -->
+copulative conjunctions. For example, you can regularly replace "і" with "та" in appropriate contexts. This adds necessary lightness to the sentences, improves the overall sound of the narrative, and demonstrates your deep understanding of the richness of the Ukrainian language.* Прочитайте цей короткий уривок про подорож у гори та зверніть особливу увагу на структуру складних речень. Ми вирушили в Карпати рано-вранці, і прохолодне гірське повітря швидко розбудило нас. Сонце ще ховалося за високими кам'янистими вершинами, але небо над нами вже поступово світлішало. Ми йшли вузькою звивистою стежкою, а навколо таємниче шумів старий густий ліс. То маленька пташка раптово заспіває високо над головою, то суха гілка несподівано трісне під важким черевиком. Досвідчений гід запропонував зробити коротку зупинку для відпочинку, проте ніхто з нашої групи ще не відчував справжньої втоми. Або ми дійдемо до запланованої вершини до обіду, або нам доведеться швидко повертатися назад у повній темряві. Спробуйте уважно проаналізувати та знайти у цьому тексті всі складносурядні речення. Після цього визначте тип кожного сполучника сурядності та поясніть логічний зв'язок між частинами речення. Using compound sentences effectively helps create a wonderfully smooth narrative **послідовність** (sequence) in your storytelling. When actions follow one another, a **сполучник сурядності** (coordinating conjunction) builds a natural bridge that carries the reader effortlessly from one event to the next without abrupt, jarring stops. Sometimes, you might use a **розділовий** (disjunctive — або, чи, то...то) conjunction to build suspense by offering two mutually exclusive outcomes. This mastery of coordinate structures is your final major milestone in the Phase 7 grammar curriculum. Thoroughly understanding how to connect equal, independent clauses lays the absolute essential groundwork for your progression into Phase 8, where you will face the new challenge of subordinate dependency. You simply cannot successfully build complex sentences with dependent clauses until you are entirely comfortable managing and punctuating independent clauses of equal grammatical weight. As you practice building these structures, you must remain constantly vigilant against common linguistic interference. You must carefully distinguish between a direct **протиставлення** (opposition/contrast) of facts and a simple **зіставлення** (comparison/juxtaposition) of different subjects. The most frequent and noticeable error learners make is unconsciously treating the authentic Ukrainian conjunction "та" as a direct equivalent to the Russian "да". In the Ukrainian language, "та" is a fully independent, highly versatile conjunction that can function either as a **єднальний** (copulative — і, й, та) "and" or an adversative "but", depending entirely on the surrounding context. Another extremely widespread issue is the accidental reliance on the Russian "но" instead of the correct Ukrainian conjunctions. You must actively and deliberately train your brain to reach for the correct **протиставний** (adversative — але, а, зате, проте) conjunctions whenever you need to express contradiction. Mastering this subtle distinction will instantly elevate the quality of your written and spoken Ukrainian. :::tip **Quick tip** When using the conjunction «та» to mean «але», the punctuation rule remains exactly the same as for any other adversative conjunction. You must always place a comma before it to correctly separate the conflicting ideas. ::: <!-- INJECT_ACTIVITY: reading-narrative-analysis -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -512,7 +512,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -525,18 +592,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (6/6).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] складносурядне речення (compound sentence)
+- [ ] сполучник сурядності (coordinating conjunction)
+- [ ] єднальний (copulative — і, й, та)
+- [ ] протиставний (adversative — але, а, зате, проте)
+- [ ] розділовий (disjunctive — або, чи, то...то)
+- [ ] рівноправний (equal, coordinate — parts of equal status)
+- [ ] одночасність (simultaneity)
+- [ ] послідовність (sequence)
+- [ ] протиставлення (opposition/contrast)
+- [ ] зіставлення (comparison/juxtaposition)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Підсумок та перехід до M67 (~550 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

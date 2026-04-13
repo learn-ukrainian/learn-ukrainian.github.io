@@ -1,18 +1,22 @@
-# Section-by-Section Generation — Section 1/6
+# Section-by-Section Generation — Section 1/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 36: Компас відмінків (A2, A2.5 [Case Synthesis and Plurals])
-**Section to write:** Вступ: Граматичний детектив (~200 слів)
-**Word target for this section:** 300 words (aim for 330 to account for undershoot)
+**Section to write:** Дієслово вирішує: Який відмінок після дієслова? (~600 words)
+**Word target for this section:** 600 words (aim for 660 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Вступ: Граматичний детектив (~200 слів)
-- P1 (~120 слів): [Dialogue — Вчитель і Студенти грають у "граматичного детектива". Вони аналізують уривок з газети: "Президент зустрівся з прем'єром. Для журналістів підготували зал." Вчитель пояснює, як розпізнати відмінки: Називний (Президент), Орудний (з прем'єром), Родовий (Для журналістів) та Знахідний (зал).]
-- P2 (~80 слів): [Introduction to the "Case Compass" (Компас відмінків) metaphor. Explanation that cases aren't random; they are governed by specific "anchors" — verbs and prepositions.]
+## Дієслово вирішує: Який відмінок після дієслова? (~600 words)
+- P1 (~120 words): Dialogue: A "Grammar detective game" setting. A teacher and students read a Ukrainian newspaper article: "Президент зустрівся з прем'єром. Для журналістів підготували зал." They identify the Nominative, Instrumental, Genitive, and Accusative cases, analyzing why each was used based on the governing verb or preposition.
+- P2 (~100 words): Explain verbs that take the Accusative case for direct objects. Most transitive verbs like "бачити", "знати", "любити", "читати", "купити", "шукати" require the Accusative. Provide examples: "Я читаю книгу", "Ми шукаємо ключі".
+- P3 (~100 words): Explain verbs that take the Dative case for the recipient of an action. Emphasize "допомагати", "телефонувати", "дякувати", "радити", "заважати". Highlight that in Ukrainian, one helps or thanks *to* someone. Provide examples: "Я допомагаю сестрі", "Ми дякуємо вчителям".
+- P4 (~100 words): Explain verbs that take the Instrumental case, often expressing a tool or management. Highlight "користуватися", "цікавитися", "займатися", "керувати". Provide examples: "Він користується комп'ютером", "Вона цікавиться історією".
+- P5 (~100 words): Explain verbs and constructions that require the Genitive case, particularly for absence, fear, or need. Focus on "немає", "боятися", "потребувати". Provide examples: "У мене немає часу", "Вона боїться темряви".
+- P6 (~80 words): Explain verbs that require a specific preposition followed by the Accusative case, specifically focusing on "думати про" and "мріяти про". Provide examples: "думати про майбутнє", "мріяти про подорож".
 
 ---
 ## Full Plan (for reference)
@@ -427,7 +431,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -446,18 +517,63 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] відмінок (grammatical case)
+- [ ] прийменник (preposition)
+- [ ] дієслово (verb)
+- [ ] напрямок (direction)
+- [ ] місце (place, location)
+- [ ] час (time)
+- [ ] характеристика (characteristic, description)
+- [ ] думати (to think)
+- [ ] боятися (to be afraid)
+- [ ] користуватися (to use)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Дієслово вирішує: Який відмінок після дієслова? (~600 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

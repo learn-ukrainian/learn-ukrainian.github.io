@@ -1,7 +1,7 @@
 <correction_directive>
 CRITICAL: Your previous attempt failed the following checks. Fix ONLY the listed errors. Keep everything else exactly as is — do not rewrite sections that are working correctly.
 
-- FIX: Activity marker '<!-- INJECT_ACTIVITY: match-up-voiced-voiceless -->' (line 63) tests 'г vs ґ' but appears BEFORE the section that teaches it (line 66). Move the marker after all tested concepts are taught.
+- FIX: Activity marker '<!-- INJECT_ACTIVITY: match-up-voiced-voiceless -->' (line 58) tests 'г vs ґ' but appears BEFORE the section that teaches it (line 61). Move the marker after all tested concepts are taught.
 </correction_directive>
 
 LEARNINGS FROM PAST BUILDS (same error patterns seen before):

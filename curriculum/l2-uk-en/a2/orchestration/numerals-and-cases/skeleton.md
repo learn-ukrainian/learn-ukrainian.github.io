@@ -1,35 +1,34 @@
-## Порядкові числівники: -ий та -ій (Ordinal Numerals: -ий and -ій) (~600 words total)
-- P1 (~120 words): [Introduction to ordinal numerals as descriptors of order rather than quantity. Explain that ordinals function like adjectives in Ukrainian, agreeing with nouns in gender, number, and case. Contrast cardinal 'два' (two) with ordinal 'другий' (second) using the examples: 'два квитки' (two tickets) vs 'другий квиток' (the second ticket).]
-- P2 (~130 words): [The hard declension pattern (-ий). List the most common ordinals: перший, другий, четвертий, п'ятий, десятий. Provide a declension table for 'п'ятий' in masculine singular across cases: п'ятого (Gen), п'ятому (Dat), п'ятим (Ins), (на) п'ятому/п'ятім (Loc).]
-- P3 (~120 words): [The soft declension pattern (-ій). Focus exclusively on 'третій' (third) as the primary example of this group. Explain the spelling shifts: 'третього' (Gen), 'третьому' (Dat), 'третім' (Ins), (на) третьому/третім (Loc). Mention that 'перший' has a mixed history but for A2 we treat it as a standard hard adjective.]
-- P4 (~110 words): [Gender agreement rules. Explain how ordinals change endings for feminine and neuter nouns. Examples: 'перший поверх' (1st floor, m.), 'перша зупинка' (1st stop, f.), 'перше вікно' (1st window, n.). Show the plural form: 'перші дні' (first days).]
-- P5 (~120 words): [Using ordinals for dates. Explain that in Ukrainian, when stating the date (day of the month), the ordinal is always in the Genitive case. Examples: 'двадцять першого березня' (March 21st), 'десятого квітня' (April 10th), 'першого січня' (January 1st).]
-- <!-- INJECT_ACTIVITY: fill-in-ordinals --> [fill-in, focus: Decline ordinal numerals in context of dates and addresses, 8 items]
+## Порядкові числівники: -ий та -ій (Ordinal Numerals: -ий and -ій) (~600 words)
+- P1 (~100 words): Dialogue: Organizing a school sports day. The teacher and students discuss teams, equipment, and prizes. Features the target grammar: "Перша команда — десять учнів. Другий забіг о десятій. Одного м'яча не вистачає. П'ять медалей для переможців."
+- P2 (~100 words): Introduce ordinal numerals (first, second, third) based on the dialogue (перша, другий). Explain that they function exactly like adjectives, meaning they must agree with their noun in gender, number, and case (перший день, перша зустріч, перше враження).
+- P3 (~130 words): Detail the hard declension pattern (-ий). Explain that most ordinals end in -ий (m), -а (f), -е (n), -і (pl) and decline like hard adjectives. Provide the paradigm for 'п'ятий' (п'ятий → п'ятого, п'ятому, п'ятим, п'ятою).
+- P4 (~130 words): Detail the soft declension pattern (-ій). Explain that 'третій' (3rd) is the main soft ordinal, declining like a soft adjective (третій → третього, третьому, третім). Note that 'перший' has a mixed pattern but mostly follows hard endings.
+- P5 (~140 words): Explain how to use ordinal numerals for dates and compound numbers. Explain that dates require the Genitive case of the ordinal (двадцять першого березня, другого квітня, п'ятнадцятого серпня). For compound ordinals, clarify that only the very last word changes its form (сто сорок п'ятий → сто сорок п'ятого).
+- <!-- INJECT_ACTIVITY: fill-in-ordinals --> [fill-in, Decline ordinal numerals in context (dates, addresses), 8 items]
 
-## Один/одна/одне у відмінках (One in All Cases) (~450 words total)
-- P1 (~110 words): [Introduction to the unique nature of the numeral 'один' (one). Unlike most numbers, it changes for all three genders and all seven cases, mimicking the behavior of hard adjectives. Example: 'один будинок' (one house), 'одна машина' (one car), 'одне дерево' (one tree).]
-- P2 (~110 words): [Full declension of 'один' (masculine/neuter). Key forms to memorize: одного (Gen), одному (Dat), одним (Ins), (на) одному/однім (Loc). Explain that Accusative depends on animacy: 'бачу один стіл' (inanimate) vs 'бачу одного хлопця' (animate).]
-- P3 (~110 words): [Full declension of 'одна' (feminine). Contrast the forms: однієї/одної (Gen), одній (Dat), одну (Acc), однією/одною (Ins), (на) одній (Loc). Use the example 'з однієї сторони' (from one side).]
-- P4 (~120 words): [Idiomatic meanings of 'один'. Explain how it can mean 'alone' ('я тут один'), 'a certain/some' ('один чоловік сказав'), or 'the same' ('ми з одного міста'). Provide sentences for each to show usage in different cases.]
-- <!-- INJECT_ACTIVITY: match-up-numeral-meanings --> [match-up, focus: Match numeral expressions (alone, certain, same) to their correct Ukrainian form, 8 items]
+## Один/одна/одне у відмінках (One in All Cases) (~450 words)
+- P1 (~100 words): Introduce the numeral "один" (one). Explain that unlike other numbers, it has full gender forms (один, одна, одне/одно) and a plural form (одні), behaving morphologically like an adjective.
+- P2 (~150 words): Present the full declension paradigm for "один" across all seven cases for all genders. Highlight the key indirect forms: одного, одному, одним (m./n.); однієї/одної, одній, однією (f.). Provide short examples (без одного м'яча, з однією сестрою, на одному місці).
+- P3 (~120 words): Discuss the extended usage of "один" beyond just counting. Explain its alternative meanings: "a certain" (один чоловік сказав...), "alone" (я один/одна), and "the same" (ми з одного міста). 
+- P4 (~80 words): Provide a few sentence-level examples demonstrating these alternative meanings of "один" in practical, everyday speech contexts to reinforce comprehension.
 
-## Скільки чого? Числівник + іменник (How Many? Numeral + Noun Agreement) (~650 words total)
-- P1 (~110 words): [Overview of the Ukrainian agreement cycle. Define the three tiers: 1 (Nom.Sg.), 2-4 (Nom.Pl.), and 5-20 (Gen.Pl.). Explicitly state the decolonization rule: after 2, 3, and 4, we use Nominative Plural (два столи, три крісла), NOT Genitive Singular as in Russian.]
-- P2 (~100 words): [Deep dive into the 2, 3, 4 rule. Explain that masculine/neuter use 'два' ('два брати', 'два вікна'), while feminine uses 'дві' ('дві сестри', 'дві стіни'). Note that 'три' and 'чотири' are gender-neutral.]
-- P3 (~110 words): [Deep dive into the 5-20 rule. Explain that these numerals trigger the Genitive Plural for nouns. Examples: 'п'ять студентів', 'десять гривень', 'вісім годин'. List common irregular plurals used with numbers: 'людей' (from людина), 'дітей' (from дитина).]
-- P4 (~110 words): [Compound numbers and the 'Rule of the Last Digit'. Explain that in numbers like 21, 32, or 45, only the final digit determines the case of the noun. Examples: 'двадцять один студент' (1 tier), 'тридцять три студенти' (2-4 tier), 'сорок сім студентів' (5-0 tier).]
-- P5 (~110 words): [Quantity expressions: 'багато' (many), 'мало' (few), 'кілька/декілька' (several), 'скільки' (how many). Explain that all these words function like the 5-20 group, requiring the Genitive Plural. Example: 'багато запитань' (many questions), 'кілька днів' (several days).]
-- P6 (~110 words): [Exceptions and special cases. Mention that 'пів' (half) and 'півтора' (one and a half) do not decline. Use 'півтора' with Genitive Singular: 'півтора кілограма', 'півтори години' (feminine version).]
-- <!-- INJECT_ACTIVITY: group-sort-agreement --> [group-sort, focus: Sort numerals by which noun case they require (Nom.Sg., Nom.Pl., Gen.Pl.), 8 items]
-- <!-- INJECT_ACTIVITY: quiz-noun-selection --> [quiz, focus: Choose the correct noun form after a numeral (Nom.Pl. vs Gen.Pl.), 8 items]
+## Скільки чого? Числівник + іменник (How Many? Numeral + Noun Agreement) (~650 words)
+- P1 (~100 words): Introduce the fundamental Ukrainian counting rules. Emphasize that counting in Ukrainian relies on a 3-step grammatical cycle, quite different from English. Start with the rule for 1: it takes the Nominative Singular (один студент, одна книга).
+- P2 (~150 words): Explain the 2-4 rule: numerals 2, 3, and 4 require the Nominative Plural of the noun (два студенти, три книги). Highlight the gender distinction for 2 (два брати vs дві сестри) and "both" (обидва vs обидві). Explicitly warn against the common Russian-interference error of using Genitive Singular (e.g., incorrect: "чотири брата", correct: "чотири брати").
+- P3 (~150 words): Explain the 5-20 rule: numerals 5 through 20 require the Genitive Plural of the noun (п'ять студентів, десять книг). Note that this rule covers all numbers ending in 5-9, 0, and the -teen numbers.
+- P4 (~120 words): Explain the rules for compound numbers beyond 20. Clarify that the cycle restarts based on the last digit: 21 студент (1-rule), 22 студенти (2-4 rule), 25 студентів (5-0 rule). Note the exception for 11-14, which always take Genitive Plural.
+- P5 (~130 words): Explain quantity expressions (кілька, декілька, багато, мало, скільки). Clarify that these words function like numbers 5+ and always require the Genitive Plural of the noun (багато людей, скільки кілограмів).
+- <!-- INJECT_ACTIVITY: quiz-noun-agreement --> [quiz, Choose the correct noun form after a numeral (Nom.Pl. vs Gen.Pl.), 8 items]
+- <!-- INJECT_ACTIVITY: sort-numeral-cases --> [group-sort, Sort numerals by which noun case they require (Nom.Sg., Nom.Pl., Gen.Pl.), 8 items]
 
-## Числа навколо нас (Numbers Around Us) (~500 words total)
-- P1 (~130 words): [Dialogue: At the Market. A teacher and students organizing a sports day buy equipment. 'Вчитель: Скільки коштують ці три м'ячі? Продавець: П'ятсот гривень. Вчитель: Дайте, будь ласка, п'ять м'ячів і два насоси.']
-- P2 (~120 words): [Addresses and Phone Numbers. Explain the hierarchy: вулиця (street), будинок (building), квартира (apartment). Use ordinals for streets if named by numbers: 'П'ята лінія'. Demonstrate phone number reading: 'мій номер — нуль дев'яносто шість...'.]
-- P3 (~130 words): [Ages and Time. Practice 'мені ... років'. Explain that 'рік' follows the agreement cycle: 'двадцять один рік', 'двадцять два роки', 'двадцять п'ять років'. Recap telling time with ordinals: 'о третій годині' (at 3 o'clock).]
-- P4 (~120 words): [Short Reading Text: Ukrainian Holidays. Mention Independence Day (24 серпня), Constitution Day (28 червня), and New Year (1 січня). Use these to reinforce the Genitive ordinal rule for dates.]
+## Числа навколо нас (Numbers Around Us) (~500 words)
+- P1 (~130 words): Dialogue: At the market. Characters ask for prices, discuss quantities, and bargain. ("Скільки коштує? Дайте, будь ласка, три кілограми. Це коштує сто гривень.")
+- P2 (~120 words): Break down the market dialogue, focusing on currency agreement rules. Demonstrate how "гривня" changes depending on the amount (одна гривня, дві гривні, п'ять гривень, сто гривень). 
+- P3 (~120 words): Reading practice: a short text discussing Ukrainian holidays with dates (e.g., 24 серпня), ages of historical figures, and distances between cities to show numbers in a narrative context. Review how to express age using Dative + numerals (Йому двадцять один рік, їй сорок два роки, їм п'ятдесят років).
+- P4 (~130 words): Discuss practical number formats: stating addresses and housing information. Provide examples: вулиця Хрещатик, будинок 22, квартира 5. 
+- <!-- INJECT_ACTIVITY: match-up-expressions --> [match-up, Match numeral expressions to their correct Ukrainian form, 8 items]
 
 ## Підсумок (~150 words)
-- P1 (~150 words): [Recap the distinction between -ий and -ій ordinals. Summarize the 1-2-5 agreement cycle as the most important practical rule. Provide 4 self-check questions: 1) Як сказати "May 5th"? 2) Яка форма іменника після "три"? 3) Чим відрізняється "третій" від "перший"? 4) Як перекласти "from one city"?]
+- P1 (~150 words): A brief recap of the module's core concepts. Summarize the difference between -ий and -ій ordinals. Remind learners of the declension of "один". Finally, provide a quick bulleted summary of the 1 (Nom.Sg), 2-4 (Nom.Pl), and 5-20 (Gen.Pl) counting cycle for quick reference.
 
 Grand total: ~2350 words

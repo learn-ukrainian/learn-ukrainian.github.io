@@ -1,18 +1,19 @@
 ## VESUM Verification
-- Confirmed: пошта, лист, конверт, марка, посилка, адреса, надіслати, отримати, відправити, листоноша, бандероль, квитанція, одержувач, відправник, індекс.
-- Not found: None.
+- Confirmed: пошта, лист, конверт, марка, посилка, адреса, надіслати, отримати, відправити, листоноша, бандероль, квитанція, одержувач, відправник, індекс, відділення, заповнити, підписати, бланк
+- Not found: None
 
 ## Grammar Rules
-- Dative Case Endings: Masculine nouns (especially persons) typically take **-ові, -еві, -єві** (братові, другові, професорові) or **-у, -ю** (брату, другу). In addresses, the long form (-ові) is often preferred for clarity and respect.
-- Gender: **Листоноша** is a common gender noun (іменник спільного роду).
-- Addressing: Adjectives and nouns in the Dative case must agree: "любій бабусі", "дорогому другові".
+- Давальний відмінок однини (закінчення -ові/-еві для чоловічого роду): Правопис §84 — Іменники чоловічого роду в давальному відмінку однини мають закінчення -ові, -еві, -єві або -у, -ю (Примітка: інструмент `query_pravopys` наразі підтримує лише параграфи 1-61, тому пошук за ключовим словом "давальний" повертає нерелевантний §15 про чергування приголосних).
 
 ## Calque Warnings
-- **адреса vs. адрес**: **Адреса** (fem.) is for a place of residence/postal address. **Адрес** (masc.) is a formal celebratory speech/greeting. Using "вірний адрес" for a postal address is a mistake; use "правильна адреса".
-- **надіслати по пошті**: While used, "надіслати поштою" (Instrumental) is often more idiomatic. Avoid Russian-influenced "по пошті" where possible.
-- **вірний**: Use **правильний** for addresses (правильна адреса), as "вірний" means "loyal/faithful".
+- адреса: OK — OK (немає застережень, слово "адреса" є правильним українським варіантом)
+- заповнити бланк: OK — OK (не знайдено як кальку в довіднику)
+- дякувати: OK — OK (немає застережень, але варто пам'ятати, що після дієслова "дякувати" завжди йде давальний відмінок: дякувати вам)
 
 ## CEFR Check
-- **пошта, лист, адреса, індекс**: A1/A2 level — confirmed in Grade 3-4 textbooks.
-- **листоноша, посилка, бандероль**: A2 level — confirmed in Grade 4-6 textbooks.
-- **одержувач, відправник**: A2 level — essential for functional literacy at the post office.
+- посилка: B1 — above target
+- бандероль: Not found — above target / unknown
+- листоноша: B1 — above target
+- одержувач: Not found — above target / unknown
+- відправник: Not found — above target / unknown
+- квитанція: B1 — above target

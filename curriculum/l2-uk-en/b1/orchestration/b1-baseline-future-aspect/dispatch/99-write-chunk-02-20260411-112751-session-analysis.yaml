@@ -1,0 +1,44 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T09-27-bb152ced.json
+phase: write-chunk-02
+prompt_chars: 50616
+response_chars: 6220
+prompt_words: 6725
+response_words: 1016
+sections:
+- name: header
+  start: 0
+  length: 444
+  fraction: 0.0088
+- name: skeleton
+  start: 444
+  length: 1395
+  fraction: 0.0276
+- name: prior_summary
+  start: 1839
+  length: 3432
+  fraction: 0.0678
+- name: plan
+  start: 5271
+  length: 18774
+  fraction: 0.3709
+- name: wiki
+  start: 19174
+  length: 26443
+  fraction: 0.5224
+- name: output_spec
+  start: 50488
+  length: 128
+  fraction: 0.0025
+large_sections:
+- wiki
+directives_total: 9
+directives_covered: 7
+directives_missed:
+- kind: inject_activity
+  text: quiz-aspect-identification
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-aspect-pairs
+  covered: false
+  coverage_note: marker missing

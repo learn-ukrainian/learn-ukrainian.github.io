@@ -1,0 +1,73 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T09-59-71fdac0c.json
+phase: write-chunk-03
+prompt_chars: 48038
+response_chars: 9775
+prompt_words: 6649
+response_words: 1508
+sections:
+- name: header
+  start: 0
+  length: 417
+  fraction: 0.0087
+- name: skeleton
+  start: 417
+  length: 1414
+  fraction: 0.0294
+- name: prior_summary
+  start: 1831
+  length: 3661
+  fraction: 0.0762
+- name: plan
+  start: 5492
+  length: 15737
+  fraction: 0.3276
+- name: wiki
+  start: 15186
+  length: 26624
+  fraction: 0.5542
+- name: output_spec
+  start: 47853
+  length: 185
+  fraction: 0.0039
+large_sections:
+- wiki
+directives_total: 14
+directives_covered: 5
+directives_missed:
+- kind: checklist
+  text: дата (date — uses ordinal in Р.в.)
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: checklist
+  text: поверх (floor/storey)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: століття (century)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: рік (year — року in Р.в.)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 3/11 keywords (27%)
+- kind: inject_activity
+  text: match-up-dates
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: error-correction-dates
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: essay-response-dates
+  covered: false
+  coverage_note: marker missing

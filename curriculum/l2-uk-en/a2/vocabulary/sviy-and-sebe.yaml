@@ -1,24 +1,6 @@
 vocabulary:
-- word: себе́
-  translation: oneself
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: собі́
-  translation: to/for oneself
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: собо́ю
-  translation: with/by oneself
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
 - word: вла́сний
-  translation: own
+  translation: own, one's own
   expression: false
   pos: прикм.
   gender: ''
@@ -39,6 +21,24 @@ vocabulary:
   translation: daily
   expression: false
   pos: прикм.
+  gender: ''
+  verified: true
+- word: себе́
+  translation: oneself (accusative/genitive)
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: собі́
+  translation: oneself (dative)
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: собо́ю
+  translation: oneself (instrumental)
+  expression: false
+  pos: ім.
   gender: ''
   verified: true
 - word: почувати себе
@@ -71,123 +71,45 @@ vocabulary:
   pos: ім.
   gender: с.
   verified: true
-- word: светр
-  translation: sweater
+- word: парасо́лька
+  translation: umbrella
   expression: false
   pos: ім.
-  gender: ч.
+  gender: ж.
   verified: true
-- word: кабіне́т
-  translation: office
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: о́чі
-  translation: eyes
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: одноду́мці
-  translation: kindred spirits
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: Усе буде у свій час
-  translation: Everything in its own time
+- word: у свій час
+  translation: in due time
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: мати свою думку
-  translation: to have one's own opinion
+- word: своя думка
+  translation: one's own opinion
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: знати своє місце
-  translation: to know one's place
+- word: знайти своє місце
+  translation: to find one's place
   expression: true
   pos: ''
   gender: ''
   verified: true
 - word: свої люди
-  translation: kindred spirits / our kind of people
+  translation: one's own people
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: сам по собі
-  translation: on one's own / by oneself
-  expression: true
-  pos: ''
+- word: сам
+  translation: oneself / alone (masculine)
+  expression: false
+  pos: прикм.
   gender: ''
   verified: true
-- word: мати чудовий вигляд
-  translation: to look great
-  expression: true
-  pos: ''
+- word: сама
+  translation: oneself / alone (feminine)
+  expression: false
+  pos: прикм.
   gender: ''
-  verified: true
-- word: бережи себе
-  translation: take care
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: ви́спатися
-  translation: to get enough sleep
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: лі́жко
-  translation: bed
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: крі́сло
-  translation: armchair
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: подару́нок
-  translation: gift
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: райо́н
-  translation: district / neighborhood
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: пі́шки
-  translation: on foot
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: бадьо́ро
-  translation: vigorously / with energy
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: ша́фа
-  translation: wardrobe
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: гамане́ць
-  translation: wallet
-  expression: false
-  pos: ім.
-  gender: ч.
   verified: true

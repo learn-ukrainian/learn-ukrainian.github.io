@@ -1,21 +1,20 @@
 ## VESUM Verification
 - Confirmed: автобус, метро, таксі, потяг, квиток, зупинка, трамвай, маршрутка, літак, направо, наліво, прямо, дістатися
-- Not found: none
+- Not found: (none)
 
 ## Grammar Rules
-- Instrumental for transport: Textbook (Grade 5, Uhor, p. 59) — Їхати/летіти + Instrumental (автобусом, потягом, літаком).
-- Locative with 'на' for transport: Textbook (Grade 5, Uhor, p. 59) — Їхати на + Locative (на метро, на таксі).
-- Indeclinable nouns: Pravopys § 103 — Nouns of foreign origin like 'метро', 'таксі' are indeclinable in all cases.
+- [Prepositions with transport locative (у/в вагоні, в автобусі)]: Правопис §23 — Позиції вживання прийменників і префіксів У та В (напр., "Сидимо у вагоні").
+- [Indeclinable foreign nouns (метро, таксі)]: Правопис §— (Tool limited to §1-61 index, could not retrieve the exact section for "невідмінювані іменники", but the rule is that nouns of foreign origin ending in -о, -і do not decline).
 
 ## Calque Warnings
-- відправляється (автобус/потяг): Calque — Use 'відбуває', 'виїжджає' (bus) or 'рушає' (train). (Source: Grade 10, Karaman, p. 188).
-- туди й назад: OK — Commonly used for round-trip tickets in textbooks (Source: Grade 3, Ponomarova, p. 104).
-- скільки коштує: OK — Standard question for price in textbooks (Source: Grade 3, Ponomarova, p. 104).
-- на здоров'я: OK/Contextual — Used as a polite response to 'дякую' (as in plan), though 'будь ласка' or 'прошу' are also common.
+- направо: OK — (no calque warning found in Антоненко-Давидович)
+- в один бік: OK — (no calque warning found in Антоненко-Давидович)
+- наступний потяг: OK — (no calque warning found in Антоненко-Давидович)
 
 ## CEFR Check
-- автобус: A1 — Found in Grade 1 textbooks (Bolshakova).
-- метро: A1 — Found in Grade 5 textbooks (Uhor) as basic transport.
-- квиток: A1 — Found in Grade 3 textbooks (Ponomarova).
-- зупинка: A1 — Found in Grade 7 textbooks in practical city contexts.
-- літак: A1 — Found in Grade 1 textbooks (Bolshakova).
+- автобус: A1 — OK
+- квиток: A1 — OK
+- метро: A1 — OK
+- потяг: A2 — Above target (A1)
+- зупинка: A1 — OK
+- направо: A1 — OK

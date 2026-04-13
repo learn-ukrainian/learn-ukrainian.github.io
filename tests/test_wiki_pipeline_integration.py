@@ -53,10 +53,11 @@ class TestIsSeminarTrack:
         assert _is_seminar_track("LIT-essay")
 
 
-# ── Tests: _build_seminar_packet ──────────────────────────────────────
+# ── Tests: _build_seminar_packet (REMOVED) ───────────────────────────
+# _build_seminar_packet was deleted as dead code in #1225.
 
 
-class TestBuildSeminarPacket:
+class _TestBuildSeminarPacket_DISABLED:
     """Test knowledge packet generation for seminar tracks."""
 
     def test_includes_wiki_context(self, tmp_path):
@@ -140,49 +141,6 @@ class TestBuildSeminarPacket:
             result = _build_seminar_packet("folk", "test-slug")
 
         assert "Knowledge Packet" in result  # Still produces a packet
-
-
-# ── Tests: _get_knowledge_packet_for_rewrite ──────────────────────────
-
-
-class TestGetKnowledgePacketForRewrite:
-    """Test knowledge packet loading for section rewrites."""
-
-    def test_loads_existing_packet(self, tmp_path):
-        from build.v6_build import _get_knowledge_packet_for_rewrite
-
-        research_dir = tmp_path / "folk" / "research"
-        research_dir.mkdir(parents=True)
-        (research_dir / "test-slug-knowledge-packet.md").write_text(
-            "# Knowledge Packet\nWiki content here.\n", "utf-8"
-        )
-
-        with patch("build.v6_build.CURRICULUM_ROOT", tmp_path):
-            result = _get_knowledge_packet_for_rewrite("folk", "test-slug")
-
-        assert "Wiki content here" in result
-
-    def test_returns_empty_when_no_packet(self, tmp_path):
-        from build.v6_build import _get_knowledge_packet_for_rewrite
-
-        with patch("build.v6_build.CURRICULUM_ROOT", tmp_path):
-            result = _get_knowledge_packet_for_rewrite("folk", "nonexistent")
-
-        assert result == ""
-
-    def test_truncates_large_packets(self, tmp_path):
-        from build.v6_build import _get_knowledge_packet_for_rewrite
-
-        research_dir = tmp_path / "folk" / "research"
-        research_dir.mkdir(parents=True)
-        large_content = "x" * 50_000
-        (research_dir / "test-slug-knowledge-packet.md").write_text(large_content, "utf-8")
-
-        with patch("build.v6_build.CURRICULUM_ROOT", tmp_path):
-            result = _get_knowledge_packet_for_rewrite("folk", "test-slug")
-
-        assert len(result) <= 31_000  # 30K + truncation message
-        assert "truncated" in result
 
 
 # ── Tests: Seminar write template ─────────────────────────────────────

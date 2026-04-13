@@ -1,0 +1,52 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 7
+  evidence: The reading plan says Anna “meets a friend and introduces her brother,”
+    but the text only gives `— Олено, привіт! Ти знаєш мого брата?` The hosting flow
+    also stops at `Я ставлю тарілки і склянки на ст
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: Accusative forms such as `каву`, `водy`, `Олену`, `брата` and the numeral
+    phrase `тридцять гривень` are correct; no Russian-only letters appear.
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: The grammar section gives clear examples (`Я п'ю воду.`, `Я бачу брата.`),
+    but the `Швидке сортування` task gives the sorted answers immediately instead
+    of making the learner perform the categorizatio
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 'Key plan vocabulary is integrated naturally: `продукти`, `вареники`,
+    `салат`, `тарілки`, `склянки`, `кава з молоком`, `ринок`.'
+- dimension: 5
+  name: Exercise quality
+  score: 6
+  evidence: There are only 3 inject markers, and the inline `Швидке сортування` block
+    is pre-solved (`Inanimate ... / Animate ...`), so one of the four planned activities
+    is not functioning as an exercise.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: 'The voice is teacherly and not gamified: `Look at the self-check questionnaire
+    below.` / `Treat them as reliable tools...`'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All planned H2 sections are present and ordered, and the pipeline word
+    count is 1196, which is above the 1000-word target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: The module presents Ukrainian food/shopping situations directly, without
+    Russian-centric framing or cultural distortion.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 7
+  evidence: 'Named speakers help, but the cafe scene is compressed into one narrated
+    turn: `Після ринку я заходжу в кафе: Мені борщ і воду, будь ласка. Рахунок, будь
+    ласка. Можна карткою?` That reads like summary,'
+findings: []

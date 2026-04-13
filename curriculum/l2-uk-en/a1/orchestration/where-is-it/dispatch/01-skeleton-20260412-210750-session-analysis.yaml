@@ -1,0 +1,82 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T19-07-02c53919.json
+phase: skeleton
+prompt_chars: 30654
+response_chars: 4090
+prompt_words: 4363
+response_words: 694
+sections:
+- name: preamble
+  start: 0
+  length: 455
+  fraction: 0.0148
+- name: plan
+  start: 455
+  length: 4523
+  fraction: 0.1476
+- name: wiki
+  start: 4925
+  length: 23346
+  fraction: 0.7616
+- name: output_spec
+  start: 28324
+  length: 2330
+  fraction: 0.076
+large_sections:
+- wiki
+directives_total: 20
+directives_covered: 8
+directives_missed:
+- kind: must
+  text: It must be taught as **`Київ` (Kyiv)**, not the Russian-derived `Киев` (Kiev).
+  covered: false
+  coverage_note: 2/9 keywords (22%)
+- kind: must
+  text: Learners must build a Ukrainian mental model from scratch, not by adapting
+    a Russian one.
+  covered: false
+  coverage_note: 3/12 keywords (25%)
+- kind: must
+  text: The curriculum must be based on contemporary Ukrainian sources, like the provided
+    podcasts and textbooks, not on bilingual dictionaries that may contain outdated
+    or Russian-influenced vocabulary.
+  covered: false
+  coverage_note: 5/20 keywords (25%)
+- kind: must
+  text: The introduction of descriptive language must be systematic and build from
+    the concrete to the abstract.
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: must
+  text: 'This must be taught explicitly (Джерело: `4-klas-ukrayinska-mova-ponomarova-2021-1_s0118`).'
+  covered: false
+  coverage_note: 2/10 keywords (20%)
+- kind: must
+  text: The learner must build a new, separate phonetic system for Ukrainian.
+  covered: false
+  coverage_note: 2/8 keywords (25%)
+- kind: must
+  text: '**Section budgets must match the plan''s `content_outline` word allocations**
+    (±10%).'
+  covered: false
+  coverage_note: 3/8 keywords (38%)
+- kind: must
+  text: '**CRITICAL: An exercise must ONLY test concepts already taught above it.'
+  covered: false
+  coverage_note: 2/9 keywords (22%)
+- kind: must
+  text: 'Every plan `activity_hints` entry MUST have a corresponding `<!-- INJECT_ACTIVITY:
+    id -->` marker in the skeleton.'
+  covered: false
+  coverage_note: 3/10 keywords (30%)
+- kind: inject_activity
+  text: activity-id
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: activity-id
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: descriptive-id
+  covered: false
+  coverage_note: marker missing

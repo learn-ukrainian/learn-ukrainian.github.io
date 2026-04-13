@@ -1,0 +1,41 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T12-26-89992969.json
+phase: write-chunk-06
+prompt_chars: 51187
+response_chars: 3644
+prompt_words: 6544
+response_words: 556
+sections:
+- name: header
+  start: 0
+  length: 415
+  fraction: 0.0081
+- name: skeleton
+  start: 415
+  length: 833
+  fraction: 0.0163
+- name: prior_summary
+  start: 1248
+  length: 3658
+  fraction: 0.0715
+- name: plan
+  start: 4906
+  length: 9637
+  fraction: 0.1883
+- name: wiki
+  start: 14543
+  length: 36448
+  fraction: 0.7121
+- name: output_spec
+  start: 50991
+  length: 196
+  fraction: 0.0038
+large_sections:
+- wiki
+directives_total: 16
+directives_covered: 15
+directives_missed:
+- kind: inject_activity
+  text: reading-comprehension, 12 questions based on the Saint Sophia and news report
+    texts, focusing on identifying the reason for commas in specific sentences
+  covered: false
+  coverage_note: marker missing

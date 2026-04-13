@@ -2,53 +2,52 @@ round: 2
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 10
-  evidence: Covers all 3 formation methods, includes the "shoe store" analogy for
-    importance, explains dictionary usage, highlights "Кафе Птах" phonetic rule, includes
-    20 essential pairs in a summary table.
+  score: 9
+  evidence: All planned H2 sections appear in order, core examples such as `писати
+    / написати`, `читати / прочитати`, `вирішувати / вирішити`, `брати / взяти`, `говорити
+    / сказати` are covered, and the references
 - dimension: 2
   name: Linguistic accuracy
-  score: 10
-  evidence: Flawless Ukrainian. Mnemonic "Кафе Птах" correctly explains `з-` to `с-`
-    assimilation. Examples perfectly demonstrate imperfective process vs. perfective
-    result (`Я жив там довго` vs `Я прожив там рік
+  score: 5
+  evidence: 'The module teaches false rules: `Every Ukrainian verb has its pair`;
+    `-ува-` / `-юва-` `almost always signal` imperfective; `дія стає довгою і повільною`;
+    and `класти / покласти` is mislabeled as supp'
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: Exceptional PPP flow. Introduces concept with relatable analogy, gives
-    clear examples before explaining rules, explicitly defines process vs. result.
-    The separation of `шукати/знайти` as a logical but
+  score: 6
+  evidence: 'Method 2 gives unreliable heuristics: `Коли ми використовуємо суфікс
+    «-ува-», дія стає довгою і повільною` and `almost always signal a continuous,
+    imperfective process` overteach aspect and can cause '
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: All required words (`пара`, `префікс`, `суфікс`, `корінь`, `читати / прочитати`,
-    `писати / написати`, `брати / взяти`, `говорити / сказати`) are used naturally
-    in prose and highlighted.
+  score: 9
+  evidence: 'Required vocabulary is integrated naturally in prose: `пара`, `префікс`,
+    `суфікс`, `корінь`, `читати / прочитати`, `писати / написати`, `брати / взяти`,
+    `говорити / сказати`.'
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: The 4 requested activity markers are injected logically at the end of
-    their respective sections.
+  score: 8
+  evidence: 'All 4 planned marker types are present, but `<!-- INJECT_ACTIVITY: fill-in-categorize
+    -->` and `<!-- INJECT_ACTIVITY: fill-in-choose-partner -->` are clustered at the
+    end instead of being spread more '
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: Warm, encouraging tone without being patronizing. Very natural teacher
-    phrasing ("Imagine going to a shoe store...", "Notice how she naturally switches...").
+  score: 8
+  evidence: The бабуся/онучка вареники frame is concrete and memorable, and the teacher
+    voice stays instructional rather than gamified.
 - dimension: 7
   name: Structural integrity
-  score: 9
-  evidence: Word count is well above target (3112 words). Headers match the outline.
-    However, there are two stray formatting artifacts (unintended line breaks) mid-sentence
-    in the prose.
+  score: 10
+  evidence: All planned sections are present, markdown is clean, and the pipeline
+    word count is 3068, which is above the 2000 target.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Varenyky cooking dialogue is highly authentic. Standard Ukrainian school
-    mnemonic "Кафе Птах" is used appropriately.
+  evidence: The module uses specifically Ukrainian framing (`вареники`, `Бабуся`,
+    `Онучка`) and avoids Russian-centered comparison.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 9
-  evidence: The grandmother-granddaughter dialogue is functional and perfectly demonstrates
-    the grammar, though slightly repetitive with two back-to-back grandmother lines.
-    Very minor issue, overall highly effect
+  score: 8
+  evidence: The opening dialogue has named speakers and a real situation; later examples
+    are useful but mostly illustrative rather than conversational.
 findings: []

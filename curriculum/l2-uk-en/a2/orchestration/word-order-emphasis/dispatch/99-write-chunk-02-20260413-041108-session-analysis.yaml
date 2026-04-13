@@ -1,0 +1,69 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T02-09-4f8314ff.json
+phase: write-chunk-02
+prompt_chars: 47365
+response_chars: 4117
+prompt_words: 6834
+response_words: 657
+sections:
+- name: header
+  start: 0
+  length: 473
+  fraction: 0.01
+- name: skeleton
+  start: 473
+  length: 1635
+  fraction: 0.0345
+- name: prior_summary
+  start: 2108
+  length: 3396
+  fraction: 0.0717
+- name: plan
+  start: 5504
+  length: 13126
+  fraction: 0.2771
+- name: wiki
+  start: 12112
+  length: 28507
+  fraction: 0.6019
+- name: output_spec
+  start: 47137
+  length: 228
+  fraction: 0.0048
+large_sections:
+- wiki
+directives_total: 14
+directives_covered: 6
+directives_missed:
+- kind: checklist
+  text: тема (theme, topic (linguistics))
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: checklist
+  text: наголос (stress, emphasis)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: інверсія (inversion)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: контраст (contrast)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: підкреслювати (to emphasize, to underline)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: inject_activity
+  text: quiz-identify-rheme
+  covered: false
+  coverage_note: marker missing

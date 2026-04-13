@@ -1,7 +1,7 @@
 # Audit Report: M39 — checkpoint-cases.md
 **Level:** A2 | **Module:** M39 | **Phase:** A2.5 | **Pedagogy:** Review | **Target:** 1500
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-04-11 00:49:20
+**Generated:** 2026-04-12 21:47:19
 
 ## Configuration
 **Type:** A2
@@ -18,118 +18,79 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | fill-in |  | 6 | 8 | ❌ |
-| 2 | fill-in |  | 6 | 8 | ❌ |
-| 3 | quiz |  | 6 | 8 | ❌ |
-| 4 | quiz |  | 6 | 8 | ❌ |
-| 5 | group-sort |  | 14 | 8 | ✅ |
-| 6 | fill-in |  | 6 | 8 | ❌ |
-| 7 | fill-in |  | 6 | 8 | ❌ |
-| 8 | fill-in |  | 8 | 8 | ✅ |
-| 9 | quiz |  | 8 | 8 | ✅ |
-| 10 | true-false |  | 6 | 8 | ❌ |
-| 11 | translate |  | 6 | 6 | ✅ |
+| 1 | group-sort |  | 21 | 8 | ✅ |
+| 2 | fill-in |  | 10 | 8 | ✅ |
+| 3 | quiz |  | 10 | 8 | ✅ |
+| 4 | match-up |  | 10 | 8 | ✅ |
+| 5 | true-false |  | 10 | 8 | ✅ |
+| 6 | fill-in |  | 10 | 8 | ✅ |
+| 7 | translate |  | 10 | 6 | ✅ |
+| 8 | error-correction |  | 10 | 6 | ✅ |
+| 9 | quiz |  | 10 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 11 (target: 0-4) ❌
-- Unique types: 5 (minimum: 0) ✅
-- Priority types used: 5/15 (fill-in, group-sort, quiz, translate, true-false) ✅
-- Low density activities: 7
+- Total activities: 9 (target: 0-4) ❌
+- Unique types: 7 (minimum: 0) ✅
+- Priority types used: 7/15 (error-correction, fill-in, group-sort, match-up, quiz, translate, true-false) ✅
+- Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY]** fill-in '' has 6 items (minimum: 8)
-  - FIX: Add more items. A2 fill-in requires at least 8 items.
-- **[COMPLEXITY]** fill-in '' has 6 items (minimum: 8)
-  - FIX: Add more items. A2 fill-in requires at least 8 items.
-- **[COMPLEXITY]** quiz '' has 6 items (minimum: 8)
-  - FIX: Add more items. A2 quiz requires at least 8 items.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q2 prompt length 4 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q3 prompt length 4 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q4 prompt length 4 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q5 prompt length 4 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q6 prompt length 4 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY]** quiz '' has 6 items (minimum: 8)
-  - FIX: Add more items. A2 quiz requires at least 8 items.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q1 prompt length 4 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q2 prompt length 4 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q6 prompt length 4 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
+- **[COMPLEXITY]** Sentence too long for A2: 20 words (max 15)
+  - FIX: Break into shorter sentences. First 5 words: 'Коли ми вивчаємо мову дуже...'
+- **[COMPLEXITY]** Sentence too long for A2: 22 words (max 15)
+  - FIX: Break into shorter sentences. First 5 words: 'Тому що ми постійно говоримо...'
+- **[COMPLEXITY]** Sentence too long for A2: 17 words (max 15)
+  - FIX: Break into shorter sentences. First 5 words: 'Наприклад ми купуємо свіжі продукти...'
+- **[COMPLEXITY]** Sentence too long for A2: 22 words (max 15)
+  - FIX: Break into shorter sentences. First 5 words: 'Ви просто повинні вивчити їх...'
+- **[COMPLEXITY]** Sentence too long for A2: 16 words (max 15)
+  - FIX: Break into shorter sentences. First 5 words: 'це використання неправильних відмінкових закінчень...'
+- **[COMPLEXITY]** Sentence too long for A2: 19 words (max 15)
+  - FIX: Break into shorter sentences. First 5 words: 'реальному житті українці постійно поєднують...'
+- **[COMPLEXITY]** Sentence too long for A2: 25 words (max 15)
+  - FIX: Break into shorter sentences. First 5 words: 'Коли ви захоплено говорите про...'
+- **[COMPLEXITY]** Sentence too long for A2: 16 words (max 15)
+  - FIX: Break into shorter sentences. First 5 words: 'Будь ласка ніколи не бійтеся...'
+- **[COMPLEXITY]** Sentence too long for A2: 16 words (max 15)
+  - FIX: Break into shorter sentences. First 5 words: 'Зверніть свою увагу на те...'
+- **[COMPLEXITY]** Sentence too long for A2: 46 words (max 15)
+  - FIX: Break into shorter sentences. First 5 words: 'це жива форма кличного відмінка...'
+- **[COMPLEXITY]** Sentence too long for A2: 18 words (max 15)
+  - FIX: Break into shorter sentences. First 5 words: 'Вам потрібно буде дуже акуратно...'
+- **[COMPLEXITY]** Sentence too long for A2: 20 words (max 15)
+  - FIX: Break into shorter sentences. First 5 words: 'Перед тим як сміливо рухатися...'
 - **[COMPLEXITY]** group-sort '' has 7 groups (target: 2-4)
   - FIX: Adjust number of sorting categories to 2-4.
-- **[COMPLEXITY]** fill-in '' has 6 items (minimum: 8)
-  - FIX: Add more items. A2 fill-in requires at least 8 items.
-- **[COMPLEXITY]** fill-in '' has 6 items (minimum: 8)
-  - FIX: Add more items. A2 fill-in requires at least 8 items.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q1 prompt length 3 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q2 prompt length 3 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q3 prompt length 3 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q4 prompt length 3 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q5 prompt length 3 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q6 prompt length 3 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q7 prompt length 3 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q8 prompt length 3 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY]** true-false '' has 6 items (minimum: 8)
-  - FIX: Add more items. A2 true-false requires at least 8 items.
-- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'the preposition...'.
-  - FIX: Vary sentence structure.
 
 ## Recommendation
-**🔄 REWRITE** (severity 80/100)
+**📝 UPDATE** (severity 60/100)
 
-- 25 violations (severe - consider revision)
-- Immersion 19% off target
-- Activity density below minimum
+- Revision recommended (severity 60/100)
+- 13 violations (severe - consider revision)
+- Immersion 10% off target (minor)
 
 ## Gates
-- **Words:** ✅ 2082/1500 (raw: 2150)
-- **Activities:** ✅ 11/0
-- **Density:** ❌ 7 < 8
-- **Unique_types:** ✅ 5/0 types
+- **Words:** ✅ 1766/1500 (raw: 1811)
+- **Activities:** ✅ 9/0
+- **Density:** ✅ All > 8
+- **Unique_types:** ✅ 7/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ❌ 0/3
+- **Engagement:** ✅ 3/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 28/1
+- **Vocab:** ✅ 27/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ❌ 30.9% LOW (target 50-80% (A2.2))
+- **Immersion:** ❌ 89.9% HIGH (target 50-80% (A2.2))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
 
-## Low Density Activities
-| Activity | Type | Items | Required | Fix |
-|----------|------|-------|----------|-----|
-|  | fill-in | 6 | 8 | Add 2 more items |
-|  | fill-in | 6 | 8 | Add 2 more items |
-|  | quiz | 6 | 8 | Add 2 more items |
-|  | quiz | 6 | 8 | Add 2 more items |
-|  | fill-in | 6 | 8 | Add 2 more items |
-|  | fill-in | 6 | 8 | Add 2 more items |
-|  | true-false | 6 | 8 | Add 2 more items |
-
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 278 | Included in Core |
-| **Частина 1: Форми множини (Part 1: Plural Forms)** | ✅ | 560 | Included in Core |
-| **Частина 2: Який відмінок? (Part 2: Which Case?)** | ✅ | 635 | Included in Core |
-| **Частина 3: Вільне мовлення (Part 3: Free Production)** | ➖ | 463 | Excluded Type |
-| **Підсумок** | ✅ | 146 | Included in Core |
+| **Intro/Narrative** | ✅ | 504 | Included in Core |
+| **Частина 2: Який відмінок? (Part 2: Which Case?)** | ✅ | 639 | Included in Core |
+| **Частина 3: Вільне мовлення (Part 3: Free Production)** | ➖ | 472 | Excluded Type |
+| **Підсумок** | ✅ | 151 | Included in Core |

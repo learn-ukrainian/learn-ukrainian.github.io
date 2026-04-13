@@ -53,80 +53,44 @@ vocabulary:
   pos: присл.
   gender: ''
   verified: true
-- word: тепло́
-  translation: warm (impersonal state)
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: су́мно
-  translation: sad (impersonal state)
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: заме́рзнути
-  translation: to freeze / to get very cold
+- word: дава́ти
+  translation: to give
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: поси́лка
-  translation: parcel / package
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: кружка́
-  translation: mug
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: шеф
-  translation: boss
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: Скільки років?
-  translation: How old?
+- word: на/у кому?
+  translation: on/in whom?
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: підпи́сувати
-  translation: to sign
+- word: на/у чому?
+  translation: on/in what?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ра́дити
+  translation: to advise
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: конве́рт
-  translation: envelope
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: вітальна листівка
-  translation: greeting card
+- word: Мені холодно.
+  translation: I am cold.
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: лю́бий
-  translation: dear / beloved
-  expression: false
-  pos: прикм.
+- word: Мені тридцять років.
+  translation: I am thirty years old.
+  expression: true
+  pos: ''
   gender: ''
   verified: true
-- word: шано́вний
-  translation: respected / honorable
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: місцевий відмінок
-  translation: locative case
+- word: Шановному пану директору
+  translation: To the respected Mr. Director
   expression: true
   pos: ''
   gender: ''

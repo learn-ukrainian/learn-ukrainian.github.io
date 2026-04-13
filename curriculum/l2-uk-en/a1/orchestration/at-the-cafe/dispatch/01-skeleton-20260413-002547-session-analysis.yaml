@@ -1,0 +1,91 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T22-25-d7f2e852.json
+phase: skeleton
+prompt_chars: 33097
+response_chars: 4163
+prompt_words: 4847
+response_words: 675
+sections:
+- name: preamble
+  start: 0
+  length: 465
+  fraction: 0.014
+- name: plan
+  start: 465
+  length: 6463
+  fraction: 0.1953
+- name: wiki
+  start: 6875
+  length: 23839
+  fraction: 0.7203
+- name: output_spec
+  start: 30767
+  length: 2330
+  fraction: 0.0704
+large_sections:
+- wiki
+directives_total: 16
+directives_covered: 2
+directives_missed:
+- kind: must
+  text: Your skeleton must budget every word.
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: must
+  text: Skim this for the key concepts, paradigms, and examples you must cover.
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: must
+  text: It must be actively flagged and corrected from the very first lesson.
+  covered: false
+  coverage_note: 2/8 keywords (25%)
+- kind: must
+  text: The learner must build a Ukrainian phonetic foundation from scratch, using
+    Ukrainian audio models.
+  covered: false
+  coverage_note: 3/11 keywords (27%)
+- kind: must
+  text: It is crucial to emphasize that when asking for directions from a stranger,
+    the formal `ви` form (`ідіть`, `поверніть`) is mandatory for politeness and respect
+    (Source 22).
+  covered: false
+  coverage_note: 5/16 keywords (31%)
+- kind: must
+  text: Content must explicitly state that these cities were often built upon or agglomerated
+    from pre-existing Cossack settlements.
+  covered: false
+  coverage_note: 5/17 keywords (29%)
+- kind: must
+  text: '**Word budgets must sum to 1200+.'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: '**Section budgets must match the plan''s `content_outline` word allocations**
+    (±10%).'
+  covered: false
+  coverage_note: 1/8 keywords (12%)
+- kind: must
+  text: '**CRITICAL: An exercise must ONLY test concepts already taught above it.'
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: skeleton_para
+  text: 'P1 (150w): Follow the plan''s points for this section EXACTLY. If the plan
+    says "Self-check questions", output a bulleted Q&A list — NOT prose. If the plan
+    says "recap", write a brief recap.'
+  covered: false
+  coverage_note: 7/20 keywords (35%)
+- kind: inject_activity
+  text: activity-id
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: activity-id
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: descriptive-id
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: id
+  covered: false
+  coverage_note: marker missing

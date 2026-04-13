@@ -1,0 +1,156 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T16-57-6d75e633.json
+phase: activities
+prompt_chars: 60262
+response_chars: 5624
+prompt_words: 8225
+response_words: 885
+sections:
+- name: preamble
+  start: 0
+  length: 1867
+  fraction: 0.031
+- name: plan
+  start: 1867
+  length: 58287
+  fraction: 0.9672
+- name: output_spec
+  start: 60154
+  length: 108
+  fraction: 0.0018
+large_sections:
+- plan
+directives_total: 42
+directives_covered: 10
+directives_missed:
+- kind: must
+  text: Each inline activity's `id` must match one of these markers exactly (lowercase,
+    hyphenated).
+  covered: false
+  coverage_note: 4/11 keywords (36%)
+- kind: must
+  text: 'Required: id, instruction, items[{sentence, answer}].'
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: must
+  text: 'Required: id, instruction, pairs[{left, right}].'
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: must
+  text: 'Required: id, instruction, groups[{label, items[]}].'
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: must
+  text: 'Required: id, instruction, items[{sentence, error, correction}].'
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: must
+  text: 'Required: id, instruction, items[{source}].'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: 'Required: id, instruction, items[{words[], correct_order[]}].'
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: must
+  text: 'Required: id, instruction, items[] (array of strings), correct_order[] (TOP-LEVEL
+    array of **integers** — zero-based indices into items).'
+  covered: false
+  coverage_note: 2/13 keywords (15%)
+- kind: must
+  text: 'Required: id, instruction, items[{word, answer}].'
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: must
+  text: 'Required: id, syllables[], correctIndices[], category.'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: 'Required: id, instruction, items[{image, letter}].'
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: must
+  text: 'Required: id, letters[{upper, lower}].'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: 'Required: id, items[{video}].'
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: must
+  text: '- **critical-analysis**: Required: id, prompt.'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: '- **essay-response**: Required: id, prompt.'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: If the pattern lists divide-words, count-syllables, and odd-one-out — your
+    output MUST include all three.
+  covered: false
+  coverage_note: 4/15 keywords (27%)
+- kind: must
+  text: '**Answer must be in options** — for quiz items, `correct` must be a valid
+    index.'
+  covered: false
+  coverage_note: 2/8 keywords (25%)
+- kind: must
+  text: '- **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).'
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-alternation-type
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-alternated-forms
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-declension-context
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: error-correction-morphophonemics
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: sort-noun-subclasses
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: comprehension-medical-grammar
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-alternation-type
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-alternated-forms
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-declension-context
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: error-correction-morphophonemics
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: sort-noun-subclasses
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: comprehension-medical-grammar
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: '...'
+  covered: false
+  coverage_note: marker missing

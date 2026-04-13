@@ -1,601 +1,326 @@
 {
   "total_items": 221,
-  "grounded_items": 124,
+  "grounded_items": 170,
   "ungrounded": [
-    {
-      "word": "новий",
-      "exercise_type": "fill-in",
-      "context": "Це новий ____ (стіл).",
-      "role": "context"
-    },
-    {
-      "word": "стіл",
-      "exercise_type": "fill-in",
-      "context": "Це новий ____ (стіл).",
-      "role": "context"
-    },
-    {
-      "word": "вулиці",
-      "exercise_type": "fill-in",
-      "context": "На вулиці граються ____ (дитина).",
-      "role": "context"
-    },
-    {
-      "word": "цікаві",
-      "exercise_type": "fill-in",
-      "context": "Це цікаві ____ (книжка).",
-      "role": "context"
-    },
-    {
-      "word": "книжка",
-      "exercise_type": "fill-in",
-      "context": "Це цікаві ____ (книжка).",
-      "role": "context"
-    },
-    {
-      "word": "бачимо",
-      "exercise_type": "fill-in",
-      "context": "Ми бачимо теплі ____ (море).",
-      "role": "context"
-    },
-    {
-      "word": "теплі",
-      "exercise_type": "fill-in",
-      "context": "Ми бачимо теплі ____ (море).",
-      "role": "context"
-    },
-    {
-      "word": "море",
-      "exercise_type": "fill-in",
-      "context": "Ми бачимо теплі ____ (море).",
-      "role": "context"
-    },
-    {
-      "word": "тарілка",
-      "exercise_type": "fill-in",
-      "context": "На столі немає ____ (тарілка).",
-      "role": "context"
-    },
-    {
-      "word": "нам",
-      "exercise_type": "fill-in",
-      "context": "Нам треба багато ____ (дошка).",
-      "role": "context"
-    },
-    {
-      "word": "треба",
-      "exercise_type": "fill-in",
-      "context": "Нам треба багато ____ (дошка).",
-      "role": "context"
-    },
-    {
-      "word": "союз",
-      "exercise_type": "fill-in",
-      "context": "Це союз різних ____ (земля).",
-      "role": "context"
-    },
-    {
-      "word": "різних",
-      "exercise_type": "fill-in",
-      "context": "Це союз різних ____ (земля).",
-      "role": "context"
-    },
-    {
-      "word": "десять",
-      "exercise_type": "quiz",
-      "context": "У кімнаті десять ____.",
-      "role": "context"
-    },
-    {
-      "word": "нас",
-      "exercise_type": "quiz",
-      "context": "У нас немає ____.",
-      "role": "context"
-    },
-    {
-      "word": "має",
-      "exercise_type": "quiz",
-      "context": "Він має багато ____.",
-      "role": "context"
-    },
-    {
-      "word": "допомагаємо",
-      "exercise_type": "quiz",
-      "context": "Ми завжди допомагаємо ____.",
-      "role": "context"
-    },
-    {
-      "word": "довго",
-      "exercise_type": "quiz",
-      "context": "Вона довго чекала ____.",
-      "role": "context"
-    },
-    {
-      "word": "чекала",
-      "exercise_type": "quiz",
-      "context": "Вона довго чекала ____.",
-      "role": "context"
-    },
-    {
-      "word": "щодня",
-      "exercise_type": "quiz",
-      "context": "Він щодня користується новим ____.",
-      "role": "context"
-    },
-    {
-      "word": "увечері",
-      "exercise_type": "quiz",
-      "context": "Увечері ми гуляємо по ____.",
-      "role": "context"
-    },
-    {
-      "word": "подякувати",
-      "exercise_type": "quiz",
-      "context": "Я хочу подякувати своїм ____.",
-      "role": "context"
-    },
-    {
-      "word": "люблять",
-      "exercise_type": "quiz",
-      "context": "Вони люблять подорожувати ____.",
-      "role": "context"
-    },
-    {
-      "word": "подорожувати",
-      "exercise_type": "quiz",
-      "context": "Вони люблять подорожувати ____.",
-      "role": "context"
-    },
     {
       "word": "називний",
       "exercise_type": "group-sort",
-      "context": "Називний",
+      "context": "Називний відмінок",
       "role": "context"
     },
     {
       "word": "давальний",
       "exercise_type": "group-sort",
-      "context": "Давальний",
+      "context": "Давальний відмінок",
       "role": "context"
     },
     {
       "word": "знахідний",
       "exercise_type": "group-sort",
-      "context": "Знахідний",
+      "context": "Знахідний відмінок",
       "role": "context"
     },
     {
       "word": "орудний",
       "exercise_type": "group-sort",
-      "context": "Орудний",
+      "context": "Орудний відмінок",
       "role": "context"
     },
     {
       "word": "місцевий",
       "exercise_type": "group-sort",
-      "context": "Місцевий",
+      "context": "Місцевий відмінок",
       "role": "context"
     },
     {
-      "word": "телефон",
-      "exercise_type": "error-correction",
-      "context": "Вона користується телефон.",
+      "word": "роки",
+      "exercise_type": "quiz",
+      "context": "У мене є п'ять (роки) досвіду.",
       "role": "context"
     },
     {
-      "word": "брат",
-      "exercise_type": "error-correction",
-      "context": "Я йду з брат.",
-      "role": "context"
-    },
-    {
-      "word": "студенті",
-      "exercise_type": "error-correction",
-      "context": "У кімнаті багато студенті.",
-      "role": "context"
-    },
-    {
-      "word": "люблю",
-      "exercise_type": "error-correction",
-      "context": "Я люблю моїх друзі.",
-      "role": "context"
-    },
-    {
-      "word": "моїх",
-      "exercise_type": "error-correction",
-      "context": "Я люблю моїх друзі.",
-      "role": "context"
-    },
-    {
-      "word": "п'ємо",
-      "exercise_type": "fill-in",
-      "context": "Ми п'ємо каву з ____ (молоко).",
+      "word": "словник",
+      "exercise_type": "quiz",
+      "context": "Вона користується новим (словник).",
       "role": "context"
     },
     {
       "word": "молоко",
-      "exercise_type": "fill-in",
-      "context": "Ми п'ємо каву з ____ (молоко).",
+      "exercise_type": "quiz",
+      "context": "Ми п'ємо чай з (молоко).",
       "role": "context"
     },
     {
-      "word": "потім",
-      "exercise_type": "fill-in",
-      "context": "Потім я купую багато ____ (яблука).",
+      "word": "сестра",
+      "exercise_type": "quiz",
+      "context": "Син допомагає (сестра).",
       "role": "context"
     },
     {
-      "word": "яблука",
-      "exercise_type": "fill-in",
-      "context": "Потім я купую багато ____ (яблука).",
+      "word": "полиця",
+      "exercise_type": "quiz",
+      "context": "Вона взяла книгу з (полиця).",
       "role": "context"
     },
     {
-      "word": "піца",
-      "exercise_type": "fill-in",
-      "context": "Увечері я їм смачну ____ (піца).",
+      "word": "ночі",
+      "exercise_type": "quiz",
+      "context": "Вони працювали п'ять (ночі).",
       "role": "context"
     },
     {
-      "word": "максиме",
-      "exercise_type": "fill-in",
-      "context": "Максиме! З ким ти розмовляв? — З ____ (батьки).",
+      "word": "своїми",
+      "exercise_type": "quiz",
+      "context": "Я дивлюся своїми (очі).",
       "role": "context"
     },
     {
-      "word": "родичі",
-      "exercise_type": "fill-in",
-      "context": "Кому ви будете дзвонити? — Нашим ____ (родичі).",
-      "role": "context"
-    },
-    {
-      "word": "відпочивати",
-      "exercise_type": "fill-in",
-      "context": "Де ви будете відпочивати? — У ____ (Карпати).",
-      "role": "context"
-    },
-    {
-      "word": "написали",
-      "exercise_type": "fill-in",
-      "context": "Ви вже написали їм ____ (запрошення)?",
-      "role": "context"
-    },
-    {
-      "word": "купили",
-      "exercise_type": "fill-in",
-      "context": "А ви вже купили цікаві ____ (сувеніри)?",
-      "role": "context"
-    },
-    {
-      "word": "моя",
-      "exercise_type": "fill-in",
-      "context": "Це моя ____ (помилка), я маю її виправити.",
-      "role": "context"
-    },
-    {
-      "word": "грошей",
-      "exercise_type": "fill-in",
-      "context": "грошей",
+      "word": "новому",
+      "exercise_type": "unjumble",
+      "context": "новому",
       "role": "answer"
     },
     {
-      "word": "цей",
-      "exercise_type": "fill-in",
-      "context": "У мене немає ____ (гроші) на цей дорогий ресторан.",
-      "role": "context"
-    },
-    {
-      "word": "дорогий",
-      "exercise_type": "fill-in",
-      "context": "У мене немає ____ (гроші) на цей дорогий ресторан.",
-      "role": "context"
-    },
-    {
-      "word": "студентам",
-      "exercise_type": "fill-in",
-      "context": "студентам",
+      "word": "комп'ютері",
+      "exercise_type": "unjumble",
+      "context": "комп'ютері.",
       "role": "answer"
     },
     {
-      "word": "ці",
-      "exercise_type": "fill-in",
-      "context": "Я даю ці нові книжки ____ (студенти).",
-      "role": "context"
-    },
-    {
-      "word": "студенти",
-      "exercise_type": "fill-in",
-      "context": "Я даю ці нові книжки ____ (студенти).",
-      "role": "context"
-    },
-    {
-      "word": "малюємо",
-      "exercise_type": "fill-in",
-      "context": "Ми малюємо новим ____ (олівець).",
-      "role": "context"
-    },
-    {
-      "word": "олівець",
-      "exercise_type": "fill-in",
-      "context": "Ми малюємо новим ____ (олівець).",
-      "role": "context"
-    },
-    {
-      "word": "хороші",
-      "exercise_type": "fill-in",
-      "context": "Мої хороші друзі зараз у ____ (Львів).",
-      "role": "context"
-    },
-    {
-      "word": "львів",
-      "exercise_type": "fill-in",
-      "context": "Мої хороші друзі зараз у ____ (Львів).",
-      "role": "context"
-    },
-    {
-      "word": "сергій",
-      "exercise_type": "fill-in",
-      "context": "Добрий день, ____ (Сергій)!",
-      "role": "context"
-    },
-    {
-      "word": "нашому",
-      "exercise_type": "fill-in",
-      "context": "У нашому місті з'явилося багато нових ____ (будівля).",
-      "role": "context"
-    },
-    {
-      "word": "з'явилося",
-      "exercise_type": "fill-in",
-      "context": "У нашому місті з'явилося багато нових ____ (будівля).",
-      "role": "context"
-    },
-    {
-      "word": "нових",
-      "exercise_type": "fill-in",
-      "context": "У нашому місті з'явилося багато нових ____ (будівля).",
-      "role": "context"
-    },
-    {
-      "word": "будівля",
-      "exercise_type": "fill-in",
-      "context": "У нашому місті з'явилося багато нових ____ (будівля).",
-      "role": "context"
-    },
-    {
-      "word": "нареченої",
-      "exercise_type": "fill-in",
-      "context": "нареченої",
+      "word": "працює",
+      "exercise_type": "unjumble",
+      "context": "працює",
       "role": "answer"
     },
     {
-      "word": "гарний",
-      "exercise_type": "fill-in",
-      "context": "Я вже маю гарний подарунок для ____ (наречена).",
+      "word": "кращими",
+      "exercise_type": "unjumble",
+      "context": "кращими",
+      "role": "answer"
+    },
+    {
+      "word": "машині",
+      "exercise_type": "unjumble",
+      "context": "машині.",
+      "role": "answer"
+    },
+    {
+      "word": "столів",
+      "exercise_type": "match-up",
+      "context": "столів",
       "role": "context"
     },
     {
-      "word": "оберіть",
-      "exercise_type": "quiz",
-      "context": "Оберіть правильне речення:",
+      "word": "студент",
+      "exercise_type": "match-up",
+      "context": "студент",
+      "role": "answer"
+    },
+    {
+      "word": "гість",
+      "exercise_type": "match-up",
+      "context": "гість",
+      "role": "answer"
+    },
+    {
+      "word": "річ",
+      "exercise_type": "match-up",
+      "context": "річ",
+      "role": "answer"
+    },
+    {
+      "word": "очей",
+      "exercise_type": "match-up",
+      "context": "очей",
       "role": "context"
     },
     {
-      "word": "правильне",
-      "exercise_type": "quiz",
-      "context": "Оберіть правильне речення:",
+      "word": "днів",
+      "exercise_type": "match-up",
+      "context": "днів",
       "role": "context"
     },
     {
-      "word": "речення",
-      "exercise_type": "quiz",
-      "context": "Оберіть правильне речення:",
-      "role": "context"
+      "word": "ніч",
+      "exercise_type": "match-up",
+      "context": "ніч",
+      "role": "answer"
     },
     {
-      "word": "родовому",
+      "word": "слова",
       "exercise_type": "true-false",
-      "context": "У Родовому відмінку множини слово 'книга' має форму 'книгів'",
+      "context": "Після слова «багато» ми використовуємо Називний відмінок.",
       "role": "context"
     },
     {
-      "word": "відмінку",
+      "word": "використовуємо",
       "exercise_type": "true-false",
-      "context": "У Родовому відмінку множини слово 'книга' має форму 'книгів'",
+      "context": "Після слова «багато» ми використовуємо Називний відмінок.",
       "role": "context"
     },
     {
       "word": "слово",
       "exercise_type": "true-false",
-      "context": "У Родовому відмінку множини слово 'книга' має форму 'книгів'",
+      "context": "Слово «окуляри» має тільки форму множини.",
       "role": "context"
     },
     {
-      "word": "книга'",
+      "word": "має",
       "exercise_type": "true-false",
-      "context": "У Родовому відмінку множини слово 'книга' має форму 'книгів'",
-      "role": "context"
-    },
-    {
-      "word": "форму",
-      "exercise_type": "true-false",
-      "context": "У Родовому відмінку множини слово 'книга' має форму 'книгів'",
-      "role": "context"
-    },
-    {
-      "word": "книгів'",
-      "exercise_type": "true-false",
-      "context": "У Родовому відмінку множини слово 'книга' має форму 'книгів'",
-      "role": "context"
-    },
-    {
-      "word": "дієслово",
-      "exercise_type": "true-false",
-      "context": "Дієслово 'дякувати' вимагає Знахідного відмінка (Accusative)",
-      "role": "context"
-    },
-    {
-      "word": "дякувати'",
-      "exercise_type": "true-false",
-      "context": "Дієслово 'дякувати' вимагає Знахідного відмінка (Accusative)",
-      "role": "context"
-    },
-    {
-      "word": "вимагає",
-      "exercise_type": "true-false",
-      "context": "Дієслово 'дякувати' вимагає Знахідного відмінка (Accusative)",
-      "role": "context"
-    },
-    {
-      "word": "знахідного",
-      "exercise_type": "true-false",
-      "context": "Дієслово 'дякувати' вимагає Знахідного відмінка (Accusative)",
-      "role": "context"
-    },
-    {
-      "word": "відмінка",
-      "exercise_type": "true-false",
-      "context": "Дієслово 'дякувати' вимагає Знахідного відмінка (Accusative)",
-      "role": "context"
-    },
-    {
-      "word": "слова",
-      "exercise_type": "true-false",
-      "context": "Слова 'гроші' та 'окуляри' мають тільки форму множини.",
-      "role": "context"
-    },
-    {
-      "word": "гроші'",
-      "exercise_type": "true-false",
-      "context": "Слова 'гроші' та 'окуляри' мають тільки форму множини.",
-      "role": "context"
-    },
-    {
-      "word": "окуляри'",
-      "exercise_type": "true-false",
-      "context": "Слова 'гроші' та 'окуляри' мають тільки форму множини.",
-      "role": "context"
-    },
-    {
-      "word": "мають",
-      "exercise_type": "true-false",
-      "context": "Слова 'гроші' та 'окуляри' мають тільки форму множини.",
+      "context": "Слово «окуляри» має тільки форму множини.",
       "role": "context"
     },
     {
       "word": "тільки",
       "exercise_type": "true-false",
-      "context": "Слова 'гроші' та 'окуляри' мають тільки форму множини.",
+      "context": "Слово «окуляри» має тільки форму множини.",
       "role": "context"
     },
     {
-      "word": "прийменник",
+      "word": "форму",
       "exercise_type": "true-false",
-      "context": "Прийменник 'з' з Орудним відмінком (Instrumental) означає ко",
+      "context": "Слово «окуляри» має тільки форму множини.",
       "role": "context"
     },
     {
-      "word": "з'",
+      "word": "родовому",
       "exercise_type": "true-false",
-      "context": "Прийменник 'з' з Орудним відмінком (Instrumental) означає ко",
+      "context": "Слово «гроші» у Родовому відмінку буде «грошей».",
       "role": "context"
     },
     {
-      "word": "орудним",
+      "word": "відмінку",
       "exercise_type": "true-false",
-      "context": "Прийменник 'з' з Орудним відмінком (Instrumental) означає ко",
+      "context": "Слово «гроші» у Родовому відмінку буде «грошей».",
       "role": "context"
     },
     {
-      "word": "відмінком",
+      "word": "прийменника",
       "exercise_type": "true-false",
-      "context": "Прийменник 'з' з Орудним відмінком (Instrumental) означає ко",
+      "context": "Після прийменника «без» завжди йде Знахідний відмінок.",
       "role": "context"
     },
     {
-      "word": "означає",
+      "word": "йде",
       "exercise_type": "true-false",
-      "context": "Прийменник 'з' з Орудним відмінком (Instrumental) означає ко",
+      "context": "Після прийменника «без» завжди йде Знахідний відмінок.",
       "role": "context"
     },
     {
-      "word": "компанію",
+      "word": "якщо",
       "exercise_type": "true-false",
-      "context": "Прийменник 'з' з Орудним відмінком (Instrumental) означає ко",
+      "context": "Якщо ми йдемо «в школу», це Знахідний відмінок (напрямок).",
       "role": "context"
     },
     {
-      "word": "наприклад",
+      "word": "напрямок",
       "exercise_type": "true-false",
-      "context": "Прийменник 'з' з Орудним відмінком (Instrumental) означає ко",
+      "context": "Якщо ми йдемо «в школу», це Знахідний відмінок (напрямок).",
       "role": "context"
     },
     {
-      "word": "братом'",
+      "word": "форма",
       "exercise_type": "true-false",
-      "context": "Прийменник 'з' з Орудним відмінком (Instrumental) означає ко",
+      "context": "Форма «п'ять студенти» — правильна.",
       "role": "context"
     },
     {
-      "word": "людина'",
+      "word": "правильна",
       "exercise_type": "true-false",
-      "context": "Слово 'людина' у множині — це 'людини'.",
+      "context": "Форма «п'ять студенти» — правильна.",
       "role": "context"
     },
     {
-      "word": "множині",
+      "word": "звертання",
       "exercise_type": "true-false",
-      "context": "Слово 'людина' у множині — це 'людини'.",
+      "context": "Для звертання до людини ми використовуємо Кличний відмінок.",
       "role": "context"
     },
     {
-      "word": "людини'",
+      "word": "людини",
       "exercise_type": "true-false",
-      "context": "Слово 'людина' у множині — це 'людини'.",
+      "context": "Для звертання до людини ми використовуємо Кличний відмінок.",
       "role": "context"
     },
     {
-      "word": "формі",
+      "word": "дієслово",
       "exercise_type": "true-false",
-      "context": "У формі Кличного відмінка слово 'мама' буде 'мамо'.",
+      "context": "Дієслово «допомагати» вимагає Знахідного відмінка.",
       "role": "context"
     },
     {
-      "word": "кличного",
+      "word": "знахідного",
       "exercise_type": "true-false",
-      "context": "У формі Кличного відмінка слово 'мама' буде 'мамо'.",
+      "context": "Дієслово «допомагати» вимагає Знахідного відмінка.",
       "role": "context"
     },
     {
-      "word": "мама'",
+      "word": "відмінка",
       "exercise_type": "true-false",
-      "context": "У формі Кличного відмінка слово 'мама' буде 'мамо'.",
+      "context": "Дієслово «допомагати» вимагає Знахідного відмінка.",
       "role": "context"
     },
     {
-      "word": "буде",
+      "word": "орудного",
       "exercise_type": "true-false",
-      "context": "У формі Кличного відмінка слово 'мама' буде 'мамо'.",
+      "context": "Дієслово «користуватися» вимагає Орудного відмінка.",
       "role": "context"
     },
     {
-      "word": "мамо'",
+      "word": "від",
       "exercise_type": "true-false",
-      "context": "У формі Кличного відмінка слово 'мама' буде 'мамо'.",
+      "context": "Множина від слова «друг» — «други».",
+      "role": "context"
+    },
+    {
+      "word": "други",
+      "exercise_type": "true-false",
+      "context": "Множина від слова «друг» — «други».",
+      "role": "context"
+    },
+    {
+      "word": "яблука",
+      "exercise_type": "error-correction",
+      "context": "Ми купили п'ять яблука.",
+      "role": "context"
+    },
+    {
+      "word": "светр",
+      "exercise_type": "error-correction",
+      "context": "Хлопець у жовтому светр.",
+      "role": "context"
+    },
+    {
+      "word": "четверг",
+      "exercise_type": "error-correction",
+      "context": "Ми зустрінемося у четверг.",
+      "role": "context"
+    },
+    {
+      "word": "будинку",
+      "exercise_type": "error-correction",
+      "context": "Я бачу великий будинку.",
+      "role": "context"
+    },
+    {
+      "word": "каву",
+      "exercise_type": "quiz",
+      "context": "Я п'ю каву з ____.",
       "role": "context"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 13,
-    "tested_in_exercises": 4,
+    "tested_in_exercises": 3,
     "not_tested": [
+      "виправити",
+      "вихідний",
       "впевнено",
-      "відмінок",
       "завдання",
       "контрольна",
-      "множина",
       "однина",
       "перевірка",
+      "помилка",
       "самоперевірка",
       "точка"
     ]

@@ -2,49 +2,52 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 8
-  evidence: Missing the explicitly required reference to "Заболотний Grade 6 p.210"
-    in the "Цей, ця, це (This)" section. Also missed recommended vocabulary `ось`
-    and `тут`.
+  score: 7
+  evidence: All planned H2 sections are present and both textbook references are cited,
+    but the plan’s motivating trio `телефон / камера / радіо` and recommended `ось`
+    never appear in the prose, despite the openi
 - dimension: 2
   name: Linguistic accuracy
-  score: 10
-  evidence: No Russianisms, Surzhyk, or calques. Demonstratives agree with nouns perfectly.
-    Phonetic descriptions and cases are correct.
+  score: 6
+  evidence: 'The Ukrainian examples are clean, but two grammar explanations are inaccurate:
+    `It acts exactly like the phrase "It is" in English.` and `All these words share
+    the identical logic and the exact same e'
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: Excellent PPP flow. Clear distinction made between identifying "це" (this
-    is) and demonstrative "це" (this). Clear comparison to possessives and adjectives.
+  score: 6
+  evidence: The module has examples and a basic PPP flow, but it spends too many words
+    on English meta-explanation after short dialogues (`The physical distance dictates
+    the exact vocabulary choice. ... You canno
 - dimension: 4
   name: Vocabulary coverage
-  score: 9
-  evidence: All required vocabulary is used beautifully in context. Recommended words
-    `ось` and `тут` were omitted.
+  score: 7
+  evidence: Required forms `цей/ця/це`, `той/та/те`, and `чи` are used naturally,
+    and `тут/там` appear, but recommended `ось` is absent.
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: The 4 activity markers are logically placed exactly after the concepts
-    are taught, and match the plan's hints perfectly.
+  score: 9
+  evidence: The marker inventory matches the plan exactly, and each marker comes after
+    the relevant teaching section. No exercise-logic errors are visible from the markers
+    alone.
 - dimension: 6
   name: Engagement & tone
-  score: 7
-  evidence: DEDUCTION for gamified language ("learning journey", "possess a highly
-    complete set") and empty filler ("Notice how naturally Ірина identifies various
-    objects... she makes her everyday speech flow inc
+  score: 5
+  evidence: The prose often pads simple points with generic statements instead of
+    teacherly, concrete guidance, especially around the dialogues and summary.
 - dimension: 7
   name: Structural integrity
-  score: 10
-  evidence: Word count is 1452 (well above the 1200 target). Markdown is clean, headings
-    match exactly.
+  score: 9
+  evidence: All planned H2 headings are present and ordered correctly, markers are
+    clean, and the pipeline word count is 1503, which is safely above the 1200 target.
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: Setting the dialogue in Kyiv and using natural Ukrainian shopping phrases
-    is authentic.
+  score: 9
+  evidence: Nothing here frames Ukrainian through Russian or makes a culturally misleading
+    claim.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: The dialogues are natural, contextual, and do a great job contrasting
-    the near and far demonstratives in a practical setting.
+  score: 6
+  evidence: Named speakers help, but the first narration sets up an electronics store
+    while the spoken exchange is about `ця сумка` and `цей рюкзак`, so the scene and
+    dialogue do not fully match.
 findings: []

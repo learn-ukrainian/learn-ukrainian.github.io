@@ -1,0 +1,45 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T01-20-37bd95fe.json
+phase: write-chunk-02
+prompt_chars: 41765
+response_chars: 4700
+prompt_words: 5685
+response_words: 716
+sections:
+- name: header
+  start: 0
+  length: 429
+  fraction: 0.0103
+- name: skeleton
+  start: 429
+  length: 1771
+  fraction: 0.0424
+- name: prior_summary
+  start: 2200
+  length: 3477
+  fraction: 0.0833
+- name: plan
+  start: 5677
+  length: 11139
+  fraction: 0.2667
+- name: wiki
+  start: 11488
+  length: 24821
+  fraction: 0.5943
+- name: output_spec
+  start: 41637
+  length: 128
+  fraction: 0.0031
+large_sections:
+- wiki
+directives_total: 9
+directives_covered: 7
+directives_missed:
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: inject_activity
+  text: fill-in, Put profession nouns into Instrumental after бути/стати/працювати,
+    8 items
+  covered: false
+  coverage_note: marker missing

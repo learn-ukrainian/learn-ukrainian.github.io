@@ -1,0 +1,60 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T01-11-5f285948.json
+phase: write-chunk-05
+prompt_chars: 50142
+response_chars: 4840
+prompt_words: 6575
+response_words: 734
+sections:
+- name: header
+  start: 0
+  length: 439
+  fraction: 0.0088
+- name: skeleton
+  start: 439
+  length: 1394
+  fraction: 0.0278
+- name: prior_summary
+  start: 1833
+  length: 3738
+  fraction: 0.0745
+- name: plan
+  start: 5571
+  length: 16010
+  fraction: 0.3193
+- name: wiki
+  start: 16720
+  length: 28433
+  fraction: 0.567
+- name: output_spec
+  start: 50014
+  length: 128
+  fraction: 0.0026
+large_sections:
+- wiki
+directives_total: 6
+directives_covered: 0
+directives_missed:
+- kind: must
+  text: 'The ending must agree with the noun: прочитана книга (ж.'
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: must
+  text: '**MANDATORY — never omit.'
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: inject_activity
+  text: reading-mariinskyi-palace
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: essay-response-description
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-participle-vs-adjective
+  covered: false
+  coverage_note: marker missing

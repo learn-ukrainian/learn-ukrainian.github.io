@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-щоденну мову багатою, точною та природною. Let us look at the most common verbs in this grammatical category. Вони будуть дуже корисні для щоденного спілкування з новими друзями. Два найпопулярніші дієслова для опису хобі — це «**захоплюватися**» *(to be passionate about)* та «**цікавитися**» *(to be interested in)*. Both verbs are reflexive, meaning they end in the particle -ся. They belong to different conjugation groups, so you must pay attention to their endings. Дієслово «захоплюватися» належить до першої дієвідміни. Ми кажемо: «Я **захоплююся** *(I am passionate about)* класичною музикою». «Він завжди захоплюється активним спортом». Дієслово «цікавитися» належить до другої дієвідміни. Pay close attention to the letter «л» that appears in the first person singular form. Ми кажемо: «Я **цікавлюся** *(I am interested in)* сучасною літературою». «Вона глибоко цікавиться історією України». Both verbs are followed directly by a noun in the Instrumental case. Чим ти цікавишся у вільний час? Мої нові друзі дуже захоплюються сучасним мистецтвом. Інша важлива група дієслів описує нашу щиру гордість та глибоке захоплення красою. Дієслово «**пишатися**» *(to be proud of)* є надзвичайно важливим у сучасній українській культурі. Ми дуже часто говоримо про те, що викликає у нас велику повагу. Ми кажемо: «Ми завжди пишаємося нашою незалежною країною». «Я пишаюся своїм розумним сином». «Вона пишається своїми професійними успіхами». Дієслово «**милуватися**» *(to admire)* ми зазвичай використовуємо, коли дивимося на щось дуже гарне. Usually, this beautiful verb describes a visual appreciation of nature, architecture, or art. Ми кажемо: «Іноземні туристи милуються неймовірним краєвидом». «Я дуже люблю милуватися яскравим зоряним небом». «Ми довго милуємося старою міською архітектурою». Ці дієслова також завжди вимагають орудного відмінка без жодних прийменників. Коли ми говоримо про нашу активну діяльність або глибокі практичні знання, ми використовуємо інші дієслова. Дієслово «**займатися**» *(to be engaged in, to do)* описує регулярну фізичну чи розумову активність. It is very important to distinguish the verb «займатися» from «працювати». We use «працювати» for our actual job title, but «займатися» for the broader field or activity. Ми кажемо: «Він працює головним менеджером, але успішно займається великим бізнесом». «Я займаюся спортивною йогою щоранку». Дієслово «**володіти**» *(to master, to possess)* ми найчастіше використовуємо для іноземних мов або спеціальних навичок. Ми кажемо: «Вона чудово володіє українською мовою». «Мій молодший брат добре володіє комп'ютером». Усі ці слова допомагають нам максимально точно описати наші реальні вміння. <!-- INJECT_ACTIVITY: match-verb-complement --> Тепер ми можемо успішно об'єднати інформацію про нашу професію та наші особисті інтереси. Це допомагає створювати граматично складні, але дуже природні речення. We can use multiple Instrumental nouns in one sentence if they are connected to different verbs. Наприклад, ми можемо сказати так: «За **фахом** *(profession, specialty)* я вчитель. Але зараз я працюю перекладачем і захоплююся художньою фотографією». Тут ми бачимо називний відмінок для базової ідентифікації. А потім ми використовуємо орудний відмінок для поточної роботи і хобі. Або ось інший чудовий приклад: «Моя старша сестра стала чудовою лікаркою. Вона цікавиться сучасною медициною і пишається своєю складною роботою». Такі розгорнуті конструкції звучать надзвичайно по-українськи. Ви можете тепер легко розповідати про себе, свої майбутні мрії та щоденні захоплення. <!-- INJECT_ACTIVITY: quiz-nom-vs-inst -->
+дуже **захоплюється** (to be passionate about) футболом і музикою. > *When we talk about our hobbies, we use the verbs "захоплюватися" and "цікавитися". Both require the Instrumental case. Pay attention to their conjugation. The verb "захоплюватися" belongs to the first conjugation: I am passionate about, you are passionate about. The verb "цікавитися" belongs to the second conjugation, and in the first person singular has the sound "л": I am interested in, you are interested in. She is interested in the history of Ukraine. Her brother is very passionate about football and music.* Інша важлива група дієслів виражає гордість та захоплення красою. Дієслово «пишатися» ми використовуємо, коли говоримо про наші досягнення, родину або країну. Дієслово «милуватися» означає довго і з приємністю дивитися на природу чи мистецтво. Ці дієслова завжди вимагають орудного відмінка. Ми **пишаємося** (to be proud of) нашою рідною культурою. Я пишаюся своїм сином. Туристи часто милуються краєвидом Карпат. > *Another important group of verbs expresses pride and admiration for beauty. We use the verb "пишатися" when we talk about our achievements, family, or country. The verb "милуватися" means to look at nature or art for a long time and with pleasure. These verbs always require the Instrumental case. We are proud of our native culture. I am proud of my son. Tourists often admire the landscape of the Carpathians.* Finally, we use the Instrumental case to talk about active engagement and mastery. The verb **займатися** (to be engaged in, to do (a sport/activity)) is very common. You must distinguish it from working a job. If you have a specific role or title, use "працювати": "Він працює менеджером". If you describe a general field, business, or sport, use "займатися": "Він займається бізнесом" or "Я займаюся йогою". Another useful verb is **володіти** (to master, to possess). We use it to describe fluency in foreign languages: "Вона чудово володіє українською мовою." :::info **Grammar box** Always remember the difference: use **працювати** for your job title (*працювати лікарем*), but use **займатися** for a general field, sport, or hobby (*займатися спортом, займатися бізнесом*). Both verbs require the Instrumental case! ::: <!-- INJECT_ACTIVITY: match-verb-complement --> Тепер ви можете поєднувати інформацію про вашу кар'єру та ваші захоплення в одному складному реченні. Ви можете використовувати іменник **фах** (profession, specialty), щоб пояснити вашу освіту. Наприклад: За фахом я **вчитель** (teacher (male)), але зараз працюю перекладачем і захоплююся фотографією. Моя сестра за фахом архітекторка, вона цікавиться сучасним дизайном і займається спортом. Кілька іменників в орудному відмінку можуть іти один за одним і робити ваше мовлення дуже детальним. > *Now you can combine information about your career and your hobbies in one complex sentence. You can use the noun "фах" to explain your education. For example: By profession I am a teacher, but now I work as a translator and I am passionate about photography. My sister is an architect by profession, she is interested in modern design and does sports. Several nouns in the Instrumental case can follow one another and make your speech very detailed.* <!-- INJECT_ACTIVITY: quiz-nom-vs-inst -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -469,7 +469,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -488,18 +555,65 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] професія (profession)
+- [ ] фах (profession, specialty)
+- [ ] працювати (to work)
+- [ ] стати (to become)
+- [ ] захоплюватися (to be passionate about)
+- [ ] цікавитися (to be interested in)
+- [ ] пишатися (to be proud of)
+- [ ] займатися (to be engaged in, to do (a sport/activity))
+- [ ] лікар (doctor)
+- [ ] вчитель (teacher (male))
+- [ ] вчителька (teacher (female))
+- [ ] інженер (engineer)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Хто ти за фахом? (~550 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

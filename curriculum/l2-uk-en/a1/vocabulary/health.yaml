@@ -24,7 +24,7 @@ vocabulary:
   gender: ч.
   verified: true
 - word: температу́ра
-  translation: fever / temperature
+  translation: fever/temperature
   expression: false
   pos: ім.
   gender: ж.
@@ -72,13 +72,13 @@ vocabulary:
   gender: ч.
   verified: true
 - word: рука́
-  translation: hand / arm
+  translation: hand/arm
   expression: false
   pos: ім.
   gender: ж.
   verified: true
 - word: нога́
-  translation: leg / foot
+  translation: leg/foot
   expression: false
   pos: ім.
   gender: ж.
@@ -95,32 +95,8 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: терапе́вт
-  translation: general practitioner
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: апте́кар
-  translation: pharmacist
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: засту́да
-  translation: a cold
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: лі́ки
-  translation: medicine
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: кра́плі
-  translation: drops
+- word: апте́ка
+  translation: pharmacy
   expression: false
   pos: ім.
   gender: ж.
@@ -137,8 +113,68 @@ vocabulary:
   pos: ''
   gender: ''
   verified: true
-- word: Скільки це коштує?
-  translation: How much does it cost?
+- word: У мене температура.
+  translation: I have a fever.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: У мене кашель.
+  translation: I have a cough.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: У мене нежить.
+  translation: I have a runny nose.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Мені холодно.
+  translation: I'm cold.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Мені погано.
+  translation: I feel bad.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Я хворий.
+  translation: I'm sick. (masculine speaker)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Я хвора.
+  translation: I'm sick. (feminine speaker)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: лі́ки
+  translation: medicine
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: засту́да
+  translation: cold
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: кра́плі
+  translation: drops
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: частини тіла
+  translation: body parts
   expression: true
   pos: ''
   gender: ''
@@ -149,20 +185,14 @@ vocabulary:
   pos: ''
   gender: ''
   verified: true
-- word: Мені погано
-  translation: I feel bad
+- word: від кашлю
+  translation: for a cough
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: Мені холодно
-  translation: I am cold
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: частини тіла
-  translation: body parts
+- word: від нежитю
+  translation: for a runny nose
   expression: true
   pos: ''
   gender: ''

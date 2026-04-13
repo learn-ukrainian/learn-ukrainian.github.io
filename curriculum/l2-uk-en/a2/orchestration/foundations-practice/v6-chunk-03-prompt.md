@@ -1,26 +1,26 @@
-# Section-by-Section Generation — Section 3/4
+# Section-by-Section Generation — Section 3/3
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 7: Перші кроки в А2 (A2, A2.1 [Foundation and Aspect Introduction])
-**Section to write:** Сценарій 3: Як пройшов твій день? (Scenario 3: How Was Your Day?) (~860 words)
-**Word target for this section:** 860 words (aim for 946 to account for undershoot)
+**Section to write:** Сценарій 3: Як пройшов твій день? (Scenario 3: How Was Your Day?) (~900 words)
+**Word target for this section:** 900 words (aim for 990 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Сценарій 3: Як пройшов твій день? (Scenario 3: How Was Your Day?) (~860 words)
-- P1 (~100 words): Introduction to the Past Tense challenge in A2. Moving beyond "I was there" to "I did it." The distinction between process (що робив?) and result (що зробив?).
-- P2 (~120 words): Dialogue between two colleagues at the end of the day. One describes their day as a series of ongoing activities ("Я цілий день писав звіти"), the other as a series of milestones ("Я написав три листи і провів зустріч").
-- P3 (~110 words): Deep dive into Imperfective Past. Focus on words that signal duration: довго (long), цілий день (all day), часто (often). Examples: "Я вчора довго читав книгу," "Ми весь вечір дивилися фільм."
-- P4 (~110 words): Deep dive into Perfective Past. Focus on the completion of the act. Sequence of events: "Спочатку я поснідав, потім пішов на роботу." Use of prefixes (по-, при-, з-) to create aspect pairs: снідати/поснідати, робити/зробити.
-- P5 (~120 words): Explaining the "Interruption Pattern" in one sentence. Using Imperfective for the background and Perfective for the sudden event. Example: "Я готував вечерю (process), коли ти подзвонив (result/interruption)." Use the logic of "The Movie vs. The Snapshot."
-- P6 (~100 words): Common L2 Error Alert: "Здавати" vs. "Складати" іспит. Explain that "здавати" is the process of taking the exam, but "скласти" (Perfective) means you actually passed it. This is a common Russianism (сдавать).
-- P7 (~100 words): Vocabulary focus: Aspect pairs for daily routine and work. Аналізувати/проаналізувати, обговорювати/обговорити, замовляти/замовити. Focus on internal stem changes like "вл" -> "в" in замовляти/замовити.
-- P8 (~100 words): Final reflection on Narrative flow. How choosing the right aspect creates a decolonized, natural Ukrainian story rather than a translated sequence of English "ed" verbs.
+## Сценарій 3: Як пройшов твій день? (Scenario 3: How Was Your Day?) (~900 words)
+- P1 (~50 words): Introduction to the final scenario. Two friends are catching up on how their day (день) went. This scenario highlights the core narrative difference between describing an ongoing process and reporting a completed result in the past tense.
+- P2 (~150 words): Dialogue. A conversation about past events, setting scenes, and listing completed actions. Incorporate verbs like "замовити", "знайти", and "обговорювати". 
+- P3 (~180 words): Analysis of Imperfective for setting the scene or describing an ongoing past action. Explain that imperfective verbs focus on the duration and process, not the endpoint. Use the example: "Я вчора довго читав цікаву книгу".
+- P4 (~180 words): Analysis of Perfective for sequential, completed actions. Explain how perfective verbs move a story forward by presenting actions as a chain of results. Provide the example: "Спочатку я поснідав, потім пішов на роботу, а ввечері подивився фільм".
+- P5 (~160 words): Analysis of contrasting aspects in a single sentence. Show how an imperfective action provides the background for a sudden perfective event. Use the classic interrupted action example: "Я писав листа, коли ти подзвонив" (I was writing a letter when you called).
+- P6 (~180 words): Contrast the key questions "Що ти робив?" vs. "Що ти зробив?". Explain that "Що ти робив?" asks about the process (imperfective), while "Що ти зробив?" asks what was accomplished (perfective). Address the common English speaker mistake of using imperfective for all past actions (e.g., using "читав" instead of "прочитав" when a book is finished).
 - <!-- INJECT_ACTIVITY: match-up-story-aspect --> [match-up, Story Completion: Choose the Right Aspect, 8 items]
-- <!-- INJECT_ACTIVITY: match-up-narrative-check --> [match-up, Answering questions about a short narrative, 8 items]
+- <!-- INJECT_ACTIVITY: match-up-narrative-questions --> [match-up, Answering questions about a short narrative, 8 items]
+
+Grand total: ~2200 words
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -28,7 +28,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-word **кілограм** as well. You ask for **один кілограм**, but **два кілограми** or **п'ять кілограмів**. The market is also the perfect place to practice the Genitive of negation and absence. When a vendor runs out of a product, they will use the word **немає**, which strictly requires the Genitive case. Вибачте, сьогодні у мене немає домашнього сиру, але є дуже смачне молоко. Я бачу жовті яблука, але я зовсім не бачу червоних помідорів на вашому столі. > *Excuse me, today I do not have cottage cheese, but there is very tasty milk. I see yellow apples, but I absolutely do not see red tomatoes on your table.* Notice how the shopper contrasts their statements. When they state what they see affirmatively, they use the simple Accusative case: **Я бачу жовті яблука.** But the moment they introduce a negative verb like **не бачу** (do not see) or express absence with **немає**, the object must immediately switch to the Genitive case. You must also differentiate between uncountable goods and individual items when dealing with feminine nouns. When you buy vegetables in bulk, you usually treat them as a single mass. Дайте мені, будь ласка, один кілограм картоплі і один кілограм моркви. Але я також хочу купити один кілограм солодких яблук і кілограм груш. > *Give me, please, one kilogram of potatoes and one kilogram of carrots. But I also want to buy one kilogram of sweet apples and a kilogram of pears.* Words like **картопля** (potatoes) and **морква** (carrots) remain in the Genitive singular because they are treated as an uncountable mass. However, items you can easily count individually, like **яблука** (apples) or **груші** (pears), take the Genitive plural ending after the word **кілограм**. :::tip **Did you know?** At a Ukrainian market, you will hear a wonderful variety of diminutive suffixes. Vendors use these affectionate word forms to build rapport, show the high quality of their goods, and create a welcoming atmosphere. ::: Продавці дуже часто пропонують покупцям свіжу картопельку, солодку морквочку або смачні ягідки. Якщо ви також використовуєте ці теплі слова, продавець може дати вам хорошу знижку. > *Vendors very often offer buyers fresh little potatoes, sweet little carrots, or tasty little berries. If you also use these warm words, the vendor might give you a good discount.* Using forms like **картопелька** instead of **картопля**, or **морквочка** instead of **морква**, demonstrates that you appreciate the local culture. It changes the interaction from a simple commercial transaction into a friendly conversation between neighbors. Before you grab your reusable bag and head to the stalls, let us review the essential market verbs. You will frequently need the imperfective verb **коштувати** (to cost) to ask about prices. When you are looking at the produce, you need time to **вибирати** (to choose, process), but eventually, you must **вибрати** (to choose, result) the best items. The vendor will then **важити** (to weigh) your purchases on the scale. Finally, after you hand over your cash, always remember to wait for your **решта** (change). <!-- INJECT_ACTIVITY: fill-in-market-genitive -->
+whatever it holds, similar to saying "a box of apples" in English. For exact numbers, the grammar rule splits into three distinct groups. The number one acts like an adjective and agrees with the noun in gender and case. Numbers two, three, and four require the Nominative plural for inanimate objects. However, numbers five and above demand the Genitive plural, reflecting a larger, collective quantity. Продавець дає покупцю один кілограм яблук. Жінка купує дві дині та чотири персики на десерт. Чоловік просить продати йому п'ять лимонів і десять яблук. > *The vendor gives the shopper one kilogram of apples. The woman buys two melons and four peaches for dessert. The man asks to sell him five lemons and ten apples.* Another essential use of the Genitive case happens when you talk about things that are absent, missing, or simply not there. If an action verb is negated with the particle "не" (not), its direct object frequently takes the Genitive case instead of the usual Accusative case. This grammatical shift is known as the Genitive of negation, and it strongly emphasizes the complete lack or absence of the object in question. You will hear this constantly when a store is sold out of a specific product or when you cannot locate what you need. Вибачте, у мене немає лимонів на продаж. Я не бачу червоних помідорів на цьому столі. Ми сьогодні не купували свіжого молока. > *Sorry, I don't have lemons for sale. I don't see red tomatoes on this table. We did not buy fresh milk today.* :::info **Genitive of Negation** When you state a positive fact, you use the Accusative case for the direct object. But when the verb is negated, it often triggers the Genitive case. This shift is especially common with verbs of perception, possession, and existence. **Я бачу помідори.** — *I see tomatoes.* **Я не бачу помідорів.** — *I do not see tomatoes.* ::: If you listen closely to the vendors as you walk between the colorful stalls, you will notice that they rarely use standard, dry dictionary words. Market vendors frequently add diminutive suffixes to their nouns to sound friendly, hospitable, and persuasive. This feature is a core part of Ukrainian "милозвучність" (euphony or melodic sound), effortlessly turning ordinary words into warm, emotional expressions. It is a genuine cultural marker of the language and a sign of good service, so do not mistake it for baby talk or something unserious. Візьміть до борщику зелений пучечок, цибульку і часничок. У нас є дуже смачні мандаринки. Їжте на здоров'ячко! > *Take a green bunch, a little onion, and a little garlic for your borsch. We have very tasty little mandarins. Eat for your good health!* :::tip **Avoiding Calques** When agreeing with a vendor, always use the Ukrainian word **так** (yes). Never use the Russian «да», which is a common and unwanted calque (borrowing) in casual speech. Keeping your vocabulary authentic helps you sound much more natural and respectful of the local culture. ::: <!-- INJECT_ACTIVITY: fill-in-shopping-groceries -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -596,6 +596,29 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (3/3).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] планувати / запланувати (to plan)
+- [ ] купувати / купити (to buy)
+- [ ] готувати / приготувати (to cook, prepare)
+- [ ] ринок (market)
+- [ ] коштувати (to cost)
+- [ ] кілограм (kilogram)
+- [ ] вечірка (party)
+- [ ] день (day)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Сценарій 3: Як пройшов твій день? (Scenario 3: How Was Your Day?) (~900 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

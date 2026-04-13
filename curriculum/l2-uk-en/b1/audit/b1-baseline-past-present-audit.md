@@ -1,7 +1,7 @@
 # Audit Report: M01 — b1-baseline-past-present.md
 **Level:** B1 | **Module:** M01 | **Phase:** B1.0 | **Pedagogy:** PPP | **Target:** 4000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-04-11 01:28:56
+**Generated:** 2026-04-11 12:06:17
 
 ## Configuration
 **Type:** B1-grammar
@@ -18,106 +18,80 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | group-sort | Розподіліть дієслова на першу та другу дієвідміну (I conjugation: -уть/-ють, II  | 10 | 6 | ✅ |
-| 2 | fill-in | Поставте дієслово в дужках у правильну форму теперішнього або минулого часу. | 8 | 8 | ✅ |
-| 3 | quiz | Визначте час і вид поданого дієслова. | 10 | 8 | ✅ |
-| 4 | match-up | З'єднайте видові пари (недоконаний вид ↔ доконаний вид). | 8 | 8 | ✅ |
-| 5 | fill-in | Вставте правильну форму дієслова за особою та числом. | 8 | 8 | ✅ |
-| 6 | match-up | З'єднайте особові займенники з відповідними формами дієслова «писати». | 6 | 8 | ❌ |
-| 7 | group-sort | Розподіліть дієслова за видами. | 12 | 6 | ✅ |
-| 8 | error-correction | Знайдіть і виправте помилку в узгодженні минулого часу. | 6 | 6 | ✅ |
-| 9 | fill-in | Оберіть правильну форму зворотного дієслова. | 6 | 8 | ❌ |
-| 10 | essay-response |  | 1 | 6 | ❌ |
+| 1 | group-sort | Розподіліть дієслова за дієвідмінами (І чи ІІ) | 10 | 6 | ✅ |
+| 2 | fill-in | Вставте правильну форму дієслова в теперішньому або минулому часі | 8 | 8 | ✅ |
+| 3 | quiz | Визначте час і вид дієслова у реченні | 10 | 8 | ✅ |
+| 4 | match-up | З'єднайте видові пари (недоконаний ↔ доконаний вид) | 8 | 8 | ✅ |
+| 5 | fill-in | Утворіть правильну форму минулого часу для дієслів з основою на приголосний | 6 | 8 | ❌ |
+| 6 | match-up | З'єднайте займенник із правильною формою дієслова 'вчитися' | 6 | 8 | ❌ |
+| 7 | essay-response |  | 1 | 6 | ❌ |
 
 **Summary:**
-- Total activities: 10 (target: 0-4) ❌
-- Unique types: 6 (minimum: 3) ✅
-- Priority types used: 5/7 (error-correction, essay-response, fill-in, match-up, quiz) ✅
+- Total activities: 7 (target: 0-4) ❌
+- Unique types: 5 (minimum: 3) ✅
+- Priority types used: 4/7 (essay-response, fill-in, match-up, quiz) ✅
 - Low density activities: 3
 
 ## PEDAGOGICAL VIOLATIONS
 - **[LEVEL_RESTRICTION]** Activity 'essay-response' not allowed at B1
   - FIX: Use level-appropriate activities. 'essay-response' is introduced at A2+.
-- **[RUSSIAN_CHARACTERS]** Found Russian-only characters: ё (lines: [32])
-  - FIX: Replace with Ukrainian equivalents: ы→и, э→е, ё→ьо/йо. These characters never appear in Ukrainian.
-- **[COMPLEXITY]** group-sort 'Розподіліть дієслова на першу та другу дієвідміну (I conjugation: -уть/-ють, II ' has 10 items (target: 12-999)
+- **[COMPLEXITY]** group-sort 'Розподіліть дієслова за дієвідмінами (І чи ІІ)' has 10 items (target: 12-999)
   - FIX: Adjust number of items to sort to 12-999.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначте час і вид поданого дієслова.' Q1 prompt length 1 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначте час і вид поданого дієслова.' Q2 prompt length 1 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначте час і вид поданого дієслова.' Q3 prompt length 1 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначте час і вид поданого дієслова.' Q4 prompt length 1 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначте час і вид поданого дієслова.' Q5 prompt length 1 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначте час і вид поданого дієслова.' Q6 prompt length 1 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначте час і вид поданого дієслова.' Q7 prompt length 1 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначте час і вид поданого дієслова.' Q8 prompt length 1 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначте час і вид поданого дієслова.' Q9 prompt length 1 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначте час і вид поданого дієслова.' Q10 prompt length 1 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY]** match-up 'З'єднайте видові пари (недоконаний вид ↔ доконаний вид).' has 8 pairs (target: 12-18)
+- **[COMPLEXITY]** match-up 'З'єднайте видові пари (недоконаний ↔ доконаний вид)' has 8 pairs (target: 12-18)
   - FIX: Adjust number of pairs to 12-18.
-- **[COMPLEXITY]** match-up 'З'єднайте особові займенники з відповідними формами дієслова «писати».' has 6 pairs (target: 12-18)
-  - FIX: Adjust number of pairs to 12-18.
-- **[COMPLEXITY]** fill-in 'Оберіть правильну форму зворотного дієслова.' has 6 items (minimum: 8)
+- **[COMPLEXITY]** fill-in 'Утворіть правильну форму минулого часу для дієслів з основою на приголосний' has 6 items (minimum: 8)
   - FIX: Add more items. B1 fill-in requires at least 8 items.
-- **[RUSSIAN_CHARACTERS]** Found Russian-only characters: ё (lines: [32])
-  - FIX: Replace with Ukrainian equivalents: ы→и, э→е, ё→ьо/йо. These characters never appear in Ukrainian.
-- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'if a...'.
+- **[COMPLEXITY]** match-up 'З'єднайте займенник із правильною формою дієслова 'вчитися'' has 6 pairs (target: 12-18)
+  - FIX: Adjust number of pairs to 12-18.
+- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'for the...'.
   - FIX: Vary sentence structure.
 
 ## Recommendation
-**🔄 REWRITE** (severity 100/100)
+**📝 UPDATE** (severity 65/100)
 
-- 18 violations (severe - consider revision)
-- Immersion 38% off target (major rebalancing needed)
+- Revision recommended (severity 65/100)
+- 6 violations (moderate)
+- Immersion 45% off target (major rebalancing needed)
 - Activity density below minimum
 
 ## Gates
-- **Words:** ✅ 5259/4000 (raw: 5453)
-- **Activities:** ✅ 10/0
+- **Words:** ✅ 6299/4000 (raw: 6391)
+- **Activities:** ✅ 7/0
 - **Density:** ❌ 3 < 6
-- **Unique_types:** ✅ 6/3 types
+- **Unique_types:** ✅ 5/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ❌ 3/5
+- **Engagement:** ❌ 2/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 88/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ❌ 36.6% LOW (target 75-100% (B1.0 Bridge))
-- **Richness:** ❌ 62% < 95% min (grammar) - REWRITE needed
+- **Immersion:** ❌ 29.7% LOW (target 75-100% (B1.0 Bridge))
+- **Richness:** ❌ 53% < 95% min (grammar) - REWRITE needed
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
 
 ## Richness Details
-**Score:** 62% (minimum: 95%)
+**Score:** 53% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 30 | 24 | 100% | 20% | 20.0% |
+| examples | 27 | 24 | 100% | 20% | 20.0% |
 | engagement | 0 | 5 | 0% | 15% | 0.0% |
 | dialogues | 0 | 4 | 0% | 15% | 0.0% |
-| variety | 0.95 | - | 95% | 10% | 9.5% |
-| cultural | 3 | 3 | 100% | 10% | 10.0% |
+| variety | 0.93 | - | 93% | 10% | 9.3% |
+| cultural | 1 | 3 | 33% | 10% | 3.3% |
 | realworld | 20 | 3 | 100% | 10% | 10.0% |
 | visual | 0 | 3 | 0% | 5% | 0.0% |
-| questions | 30 | 5 | 100% | 5% | 5.0% |
-| tables | 1 | 2 | 50% | 4% | 2.0% |
+| questions | 27 | 5 | 100% | 5% | 5.0% |
+| tables | 0 | 2 | 0% | 4% | 0.0% |
 | paragraph_var | 1.00 | - | 100% | 3% | 3.0% |
 | proverbs | 10 | 1 | 100% | 3% | 3.0% |
-| **TOTAL** | | | | | **62.5%** |
+| **TOTAL** | | | | | **53.6%** |
 
 ### Dryness Flags & Fixes
 - ❌ **NO_ENGAGEMENT**
@@ -157,21 +131,30 @@
     
     IMPORTANT: Dialogues OUTSIDE blockquotes (>) using **Speaker:** format are NOT detected.
     Place dialogues inside [!dialogue] callouts or blockquotes.
+- ❌ **NO_TABLES**
+  - FIX:
+    Address this issue to improve richness score
+- ❌ **LOW_CULTURAL_ANCHOR**
+  - FIX:
+    Add more cultural references (need 3+ total). Include:
+    - Named Ukrainian places (Поділ, Бесарабський ринок, Острозька академія)
+    - Ukrainian traditions or customs
+    - Contemporary Ukrainian life examples
 
 ## Low Density Activities
 | Activity | Type | Items | Required | Fix |
 |----------|------|-------|----------|-----|
-| З'єднайте особові займенники з відповідними формами дієслова «писати». | match-up | 6 | 8 | Add 2 more items |
-| Оберіть правильну форму зворотного дієслова. | fill-in | 6 | 8 | Add 2 more items |
+| Утворіть правильну форму минулого часу для дієслів з основою на приголосний | fill-in | 6 | 8 | Add 2 more items |
+| З'єднайте займенник із правильною формою дієслова 'вчитися' | match-up | 6 | 8 | Add 2 more items |
 |  | essay-response | 1 | 6 | Add 5 more items |
 
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 1126 | Included in Core |
-| **Минулий час: утворення і вживання** | ✅ | 1119 | Included in Core |
-| **Вид дієслова: доконаний і недоконаний** | ✅ | 974 | Included in Core |
-| **Вид у розповіді: послідовність і тло** | ✅ | 765 | Included in Core |
-| **Дієслова на -ся: зворотні дієслова** | ✅ | 798 | Included in Core |
-| **Підсумок** | ✅ | 477 | Included in Core |
+| **Intro/Narrative** | ✅ | 1473 | Included in Core |
+| **Минулий час: утворення і вживання (~850 words total)** | ✅ | 1267 | Included in Core |
+| **Вид дієслова: доконаний і недоконаний (~770 words total)** | ✅ | 967 | Included in Core |
+| **Вид у розповіді: послідовність і тло (~700 words total)** | ✅ | 1235 | Included in Core |
+| **Дієслова на -ся: зворотні дієслова (~650 words total)** | ✅ | 792 | Included in Core |
+| **Підсумок: від знання до вживання (~450 words)** | ✅ | 565 | Included in Core |

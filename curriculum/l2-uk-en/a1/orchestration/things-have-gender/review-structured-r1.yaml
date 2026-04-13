@@ -2,52 +2,52 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 10
-  evidence: The module strictly follows the outline, including all specific dialogues
-    (pet shop, video call, what's in your bag), textbook references (Ponomarova, Vashulenko),
-    and the 3-step summary.
+  score: 8
+  evidence: 'All planned sections are present and the prose covers the target vocabulary,
+    but the module integrates none of the cited sources from the plan: `Пономарова:
+    0`, `Вашуленко: 0`, `ULP: 0`, `Episode: 0` '
 - dimension: 2
   name: Linguistic accuracy
-  score: 10
-  evidence: No linguistic errors. Gender assignments and grammatical explanations
-    are flawless. All proper vocabulary uses correct forms.
+  score: 4
+  evidence: 'Repeated bad Ukrainian syntax: `він стіл`, `він стілець`, `вона сумка`,
+    `воно крісло`. Grade 3 textbook evidence gives `плащ (він, мій)` / `куртка (вона,
+    моя)` / `пальто (воно, моє)`, not pronoun+noun'
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: Excellent pedagogical pacing. Introduces the concept abstractly, then
-    uses possessives to make it concrete, then gives reliable spelling rules, followed
-    by practical application.
+  score: 5
+  evidence: '`Діалоги` opens with a long English theory paragraph before the first
+    exchange, then explains more than it demonstrates; A1 learners get abstract prose
+    like “Every noun inherently belongs to a specifi'
 - dimension: 4
   name: Vocabulary coverage
   score: 10
-  evidence: Every single required and recommended vocabulary word is integrated naturally
-    into the prose (e.g., seamlessly grouping them by gender in the "Objects Around
-    Us" section).
+  evidence: 'All required words appear naturally in prose: `стіл`, `книга`, `вікно`,
+    `кімната`, `ліжко`, `стілець`, `лампа`, `телефон`, `комп''ютер`, `він/вона/воно`.
+    All recommended items also appear.'
 - dimension: 5
   name: Exercise quality
-  score: 8
-  evidence: Two exercise markers (`quiz-pronoun-choice` and `fill-in-possessives`)
-    are misplaced relative to the concepts they test, which could cause a jarring
-    experience for learners.
+  score: 9
+  evidence: All 4 planned exercise markers are present and placed after the relevant
+    teaching. No visible logic issue in the placeholders.
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: The tone is highly engaging without being corporate or patronizing. Phrases
-    like "You must set this habit aside" provide strong, clear guidance.
+  score: 6
+  evidence: The voice is not gamified, but it is padded with generic filler such as
+    “Every noun inherently belongs to a specific category...” and “The pattern remains
+    perfectly consistent.”
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: All H2 headings match the plan perfectly. The word count is 1773 words,
-    which comfortably exceeds the 1200-word target.
+  evidence: All H2 sections from the plan are present and ordered correctly; markdown
+    is clean; pipeline word count is 1394, above target.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Beautifully incorporates real Ukrainian school textbooks (Ponomarova and
-    Vashulenko) as authoritative sources for the gender rules, reflecting authentic
-    education.
+  evidence: No Russian-centered framing and no cultural inaccuracies detected.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: Dialogues are natural, utilize named speakers, and organically demonstrate
-    the target grammar in relatable situations.
+  score: 6
+  evidence: 'Named speakers are present, but both dialogues are mostly inventory drills:
+    `У тебе є стіл?` → `Так, у мене є стіл...`; `Що у тебе є в сумці?` → `У мене є
+    книга, телефон і фото.`'
 findings: []

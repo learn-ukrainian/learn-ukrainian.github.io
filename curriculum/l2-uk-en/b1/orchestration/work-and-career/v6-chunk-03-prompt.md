@@ -27,7 +27,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-переконливо розповісти про стабільну, повторювану дію у вашому минулому досвіді, ви обов'язково повинні використовувати тільки недоконаний вид. Наприклад, на співбесіді ви гордо кажете: «На попередній роботі я щомісяця регулярно отримувала грошову премію за дуже хороші результати». Слово «отримувала» тут чітко означає вашу звичку, стабільність і регулярність. Це була ваша приємна щоденна рутина, ця дія повторювалася знову і знову кожного місяця. Досвідчений роботодавець одразу розуміє, що ви були стабільно хорошим і надійним працівником тривалий час. Але якщо ви хочете особливо підкреслити свій один винятковий великий успіх, одне конкретне яскраве досягнення, вам абсолютно необхідний доконаний вид. Ви впевнено скажете: «Я отримала дуже великий фінансовий бонус за цей надзвичайно складний проєкт». Тут ця дія відбулася лише один раз у вашому житті. Це був ваш чудовий фінальний результат ваших величезних зусиль. Якщо ви помилково скажете: «Я постійно отримувала великий бонус за цей конкретний складний проєкт», це звучатиме дуже дивно і навіть підозріло для носія української мови. Слухачеві здаватиметься, ніби за один і той самий виконаний проєкт керівництво чомусь платило вам премію багато разів кожного нового місяця. Так само граматично працює логіка з виконанням робочих завдань. Фраза «Я щотижня писав аналітичні звіти для головного керівництва» описує вашу загальну регулярну посадову функцію. А фраза «Я нарешті написав свій великий річний звіт» чітко означає, що цей важливий документ уже повністю готовий для вашого керівника. Тому завжди подумки запитуйте себе перед тим як сказати: ви зараз говорите про свою регулярну робочу функцію чи про своє унікальне фінальне досягнення? Вивчення видів українських дієслів завжди потребує від вас особливої уважності, адже тут існують певні неочевидні граматичні пастки, в які досить часто потрапляють навіть дуже досвідчені іноземні студенти. Найпоширеніша і найвідоміша логічна помилка зазвичай виникає тоді, коли студенти наполегливо намагаються поєднати вказівку на якийсь дуже тривалий час із дієсловом, яке за своєю семантичною природою категорично вимагає миттєвого і швидкого результату. Наприклад, під час розмови з друзями дуже часто можна випадково почути таку кумедну і помилкову фразу: «Я цілих три роки звільнялася з тієї жахливої компанії». Чому ж це звучить так дивно і абсолютно неправильно для українців? Справа в тому, що саме дієслово «звільнятися» означає сам юридичний процес розірвання вашого контракту або написання заяви. Якщо ви кажете «три роки звільнялася», ви буквально стверджуєте, що ви роками писали заяву, повільно збирали особисті речі і безкінечно прощалися з колегами. Звісно, в реальному житті це просто неможливо. Щоб легко і назавжди уникнути цієї популярної мовної пастки, ви повинні просто розділити вашу цікаву розповідь на дві окремі логічні частини: тривалий процес самої роботи та фінальний дуже короткий результат. Правильна, грамотна і максимально природна конструкція українською мовою звучить тільки так: «Я стабільно працювала у цій міжнародній компанії рівно три роки і нарешті вчора звільнилася». У цій правильній фразі дієслово недоконаного виду «працювала» логічно поєднується з тривалим часом «три роки». А дієслово доконаного виду «звільнилася» фіксує швидкий результат цієї довгої кар'єрної історії. Завжди міцно пам'ятайте, що такі важливі кар'єрні дієслова на зразок «звільнитися», «влаштуватися» чи «здобути» завжди граматично очікують чіткого семантичного результату, а зовсім не довгого і нудного розтягнутого процесу. <!-- INJECT_ACTIVITY: fill-in-aspect-work --> <!-- INJECT_ACTIVITY: quiz-aspect-logic -->
+«влаштуватися», and «отримувати» drops the «-ува-» to become «отримати». ::: One of the most nuanced uses of aspect is distinguishing between a habitual action and a single, concrete achievement. In a professional environment, many tasks are repetitive. If you perform a task every day, every week, or every month, it becomes a routine. Habitual actions always require the imperfective aspect, regardless of whether the individual action was completed on those specific days. For instance, if you want to say that you regularly met your targets, you must use the imperfective form because the repetition itself is a process. However, if you are highlighting a unique, one-time success that stands out from your routine, you switch to the perfective aspect. Perhaps your **керівник** (manager) or a **колега** (colleague) praised a specific project, and you want to highlight that exact moment. This distinction completely changes the meaning of a sentence. Порівняйте дві різні ситуації на роботі. Якщо ви скажете: «Я щомісяця отримувала премію за хороші результати», ви описуєте регулярну звичку в минулому. Слово «щомісяця» вимагає використання недоконаного виду. Але якщо ви скажете: «Я отримала великий бонус за цей складний проєкт», ви наголошуєте на унікальному, одноразовому досягненні. Ваш керівник високо оцінив вашу конкретну роботу, і ця подія більше не повторювалася. > *Compare two different situations at work. If you say: "I received a premium every month for good results," you are describing a regular habit in the past. The word "every month" requires the use of the imperfective aspect. But if you say: "I received a large bonus for this complex project," you emphasize a unique, one-time achievement. Your manager highly evaluated your specific work, and this event did not repeat.* English speakers often fall into aspect traps when translating directly from their native language. In English, you might say "I was quitting for three years," meaning the decision and the process of leaving took a long time. If you translate this directly into Ukrainian using the imperfective aspect and a duration of time, it sounds absurd. The sentence «я три роки звільнялася» implies that you stood in the HR office for three years continuously writing a resignation letter. Because an event like **звільнення** (dismissal) is inherently a momentary result, combining its imperfective form with a long duration creates a semantic conflict. Instead, you must separate the background process from the final result. The correct way to express this idea is to use the imperfective aspect for the period of employment, followed by the perfective aspect for the final decision. You should say: «я працювала три роки і нарешті звільнилася». This perfectly aligns with the Ukrainian expectation that certain verbs must convey a clean, finished result. :::note **Quick tip** Whenever a verb implies a sudden change of state (like getting hired, quitting, or graduating), be very careful about attaching time durations like "for a year" or "for three months" to its imperfective form. It is almost always better to describe the background activity instead. ::: <!-- INJECT_ACTIVITY: fill-in-aspect-work --> <!-- INJECT_ACTIVITY: quiz-aspect-logic -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -596,7 +596,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -609,18 +676,68 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] робота (work/job — general term for employment)
+- [ ] професія (profession — a trained occupation)
+- [ ] фах (specialty/field — area of expertise)
+- [ ] посада (position/role — specific job title in a company)
+- [ ] вакансія (vacancy — an open job position)
+- [ ] співбесіда (job interview — formal meeting with employer)
+- [ ] працевлаштування (employment — the process of getting hired)
+- [ ] резюме (CV/resume — невідмінюване, written job application)
+- [ ] обов'язок (duty/responsibility — pl. обов'язки)
+- [ ] досвід (experience — professional background)
+- [ ] підвищення (promotion/raise — career advancement)
+- [ ] зарплата (salary — розм. form of заробітна плата)
+- [ ] колега (colleague — спільного роду: мій/моя колега)
+- [ ] керівник (manager/supervisor — head of a team or department)
+- [ ] звільнення (dismissal/resignation — leaving a job)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## На співбесіді: ситуативне мовлення (~1100 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

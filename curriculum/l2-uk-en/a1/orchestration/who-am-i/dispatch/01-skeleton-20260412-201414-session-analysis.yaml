@@ -1,0 +1,97 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T18-12-5cb14617.json
+phase: skeleton
+prompt_chars: 30726
+response_chars: 4192
+prompt_words: 4325
+response_words: 679
+sections:
+- name: preamble
+  start: 0
+  length: 479
+  fraction: 0.0156
+- name: plan
+  start: 479
+  length: 5638
+  fraction: 0.1835
+- name: wiki
+  start: 6061
+  length: 22269
+  fraction: 0.7248
+- name: output_spec
+  start: 28386
+  length: 2340
+  fraction: 0.0762
+large_sections:
+- wiki
+directives_total: 24
+directives_covered: 9
+directives_missed:
+- kind: must
+  text: '` | The learner incorrectly uses the nominative pronoun `я` instead of the
+    required accusative `мене` (Джерело: `4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0089`).'
+  covered: false
+  coverage_note: 2/15 keywords (13%)
+- kind: must
+  text: This section is mandatory for ensuring an authentic, modern Ukrainian pedagogy.
+  covered: false
+  coverage_note: 2/8 keywords (25%)
+- kind: must
+  text: '**No Russian Phonetic Analogies:** The learner must build Ukrainian phonetic
+    categories from scratch.'
+  covered: false
+  coverage_note: 3/10 keywords (30%)
+- kind: must
+  text: The introduction must be carefully scaffolded to prevent cognitive overload.
+  covered: false
+  coverage_note: 2/7 keywords (29%)
+- kind: must
+  text: The module must provide extensive drills on changing feminine nouns ending
+    in `-а` to `-у` after verbs like `хочу`, `їм`, `п'ю`.
+  covered: false
+  coverage_note: 5/14 keywords (36%)
+- kind: must
+  text: '` | **Verb Conjugation:** Similar to `їсти`, the verb `пити` (to drink) has
+    a distinct conjugation that must be drilled.'
+  covered: false
+  coverage_note: 3/11 keywords (27%)
+- kind: must
+  text: The curriculum must teach Ukrainian on its own terms, completely independent
+    of Russian.
+  covered: false
+  coverage_note: 2/10 keywords (20%)
+- kind: must
+  text: The word `кофе` is a Russianism and must be actively corrected.
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: must
+  text: '**Section budgets must match the plan''s `content_outline` word allocations**
+    (±10%).'
+  covered: false
+  coverage_note: 3/8 keywords (38%)
+- kind: must
+  text: '**CRITICAL: An exercise must ONLY test concepts already taught above it.'
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: must
+  text: 'Every plan `activity_hints` entry MUST have a corresponding `<!-- INJECT_ACTIVITY:
+    id -->` marker in the skeleton.'
+  covered: false
+  coverage_note: 3/10 keywords (30%)
+- kind: skeleton_para
+  text: 'P1 (150w): Follow the plan''s points for this section EXACTLY. If the plan
+    says "Self-check questions", output a bulleted Q&A list — NOT prose. If the plan
+    says "recap", write a brief recap.'
+  covered: false
+  coverage_note: 6/20 keywords (30%)
+- kind: inject_activity
+  text: activity-id
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: activity-id
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: descriptive-id
+  covered: false
+  coverage_note: marker missing

@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-важливий виняток із загального правила стосується специфічної групи приголосних звуків нашої мови. Це так звані **губні звуки** *(labial consonants)* — [б], [п], [в], [м], [ф], а також твердий і дуже дзвінкий вібруючий звук [р]. Фонетична природа всіх цих звуків така, що вони є дуже стійкими, максимально твердими і ніколи не можуть подовжуватися в цій конкретній граматичній позиції. Замість очікуваного подвоєння тут починає активно працювати інше класичне правило української орфографії — відоме правило апострофа. Апостроф тут графічно показує, що попередній губний звук обов'язково вимовляється твердо, а наступна літера «ю» позначає одразу два окремі звуки: приголосний [й] та голосний [у]. Найкращий і найпопулярніший приклад цього явища — це чудове слово **любов** *(love)*. В орудному відмінку воно завжди отримує апостроф і стає формою **любов'ю** (вона щодня дивиться на свого маленького сина з великою **любов'ю**). Слово **кров** *(blood)* закономірно перетворюється на форму **кров'ю** (наша рідна земля рясно полита **кров'ю** героїв). А особливе слово **мати** *(mother)* у своїй розширеній формі **матір** також приймає апостроф і стає **матір'ю** (він завжди пишається своєю **матір'ю**). Під час детального вивчення цих орфографічних правил іноземні студенти дуже часто потрапляють у типові логічні пастки. Одна з найпоширеніших проблем завжди виникає зі словами, які закінчуються на специфічну літеру «щ» або на складне сполучення приголосних «вч». Наприклад, візьмемо для аналізу слово **жовч** *(bile / bitterness)*. Хоча воно формально закінчується на шиплячий звук [ч], перед ним чітко стоїть інший приголосний звук [в]. Це класичний, стовідсотковий збіг приголосних наприкінці слова, тому ми маємо писати форму **жовчю** без жодного подвоєння. Інший, ще більш цікавий випадок — це степова дика рослина **нехворощ** *(mugwort)*. Ми маємо завжди пам'ятати, що літера «щ» в українській абетці завжди позначає два окремі звуки: твердий [ш] і м'який [ч]. Тобто, в одному графічному символі вже захований готовий прихований збіг двох приголосних звуків. Саме тому орудний відмінок завжди матиме форму **нехворощю**, без будь-якого подвоєння. Для яскравого порівняння, просто подивіться на просте слово **річ** *(thing)*. Тут основа закінчується на один звук, тому ми маємо закономірне подвоєння — **річчю**. Контраст між формами **річчю** та **радістю** блискуче ілюструє різницю. На завершення нашої теми, давайте ще раз дуже детально зупинимося на критичній ролі апострофа у цій граматичній конструкції. В українській мові апостроф — це далеко не просто візуальний розділовий знак на письмі, це надзвичайно важливий фізичний сигнал для вашого артикуляційного апарату. Коли ви бачите перед собою написану форму **любов'ю**, цей апостроф буквально наказує вам зупинитися на коротку мілісекунду. Ви маєте вимовити попередній звук [в] абсолютно твердо, зовсім не пом'якшуючи його перед голосним. А вже відразу після цієї мікропаузи чітко вимовити м'який звук [й], який ховається на самому початку нашого закінчення **-ю**. Саме цей надзвичайно різкий, контрастний перехід від дуже твердого губного приголосного до м'якого звука [й] є характерною і неповторною рисою української фонетики. Студенти часто помилково ігнорують апостроф, намагаючись вимовити ці слова дуже м'яко. Але тверда вимова губних приголосних звуків перед апострофом — це фундаментальне фонетичне правило нашої мови. Пам'ятайте про це правило завжди, коли кажете: з великою **любов'ю**, з гарячою **кров'ю**, з нашою рідною **матір'ю**. <!-- INJECT_ACTIVITY: fill-in-instrumental --> <!-- INJECT_ACTIVITY: sort-doubling-rules --> <!-- INJECT_ACTIVITY: error-fix-instrumental -->
+**в**, **м**, **ф** або на сонорну літеру **р**, фонетичне подвоєння ніколи не відбувається. Ці звуки за своєю артикуляційною природою просто не можуть подовжуватися в такій позиції. Замість подвоєння ми завжди використовуємо апостроф, щоб показати чітку роздільну вимову. Найкращим прикладом є слово **любов**, яке в орудному відмінку перетворюється на **любов'ю**. Так само життєво важливе слово **кров** стає **кров'ю**, ідеально зберігаючи твердість губного звука безпосередньо перед суфіксом. Цей важливий виняток також охоплює особливий іменник **мати**, який у формі орудного відмінка отримує історично розширену основу і звучить як **матір'ю**. > *Another important exception concerns a specific group of sounds: the labial consonants and the sound "р". If the stem of a word ends in the letters "б", "п", "в", "м", "ф", or the sonorant letter "р", phonetic doubling never occurs. These sounds, by their articulatory nature, simply cannot lengthen in such a position. Instead of doubling, we always use an apostrophe to show a clear, separate pronunciation. The best example is the word "любов" (love), which in the instrumental case transforms into "любов'ю". Similarly, the vital word "кров" (blood) becomes "кров'ю", perfectly preserving the hardness of the labial sound immediately before the suffix. This important exception also covers the special noun "мати" (mother), which in the instrumental case form receives an historically expanded stem and sounds like "матір'ю".* Розуміння цих фонетичних меж чудово допомагає пояснити деякі орфографічні пастки та історичні особливості написання слів. Наприклад, студенти часто запитують, чому проста **річ** (thing) при відмінюванні подвоюється і стає **річчю**, тоді як слово **жовч** перетворюється лише на **жовчю** без жодного подвоєння. Секрет полягає у простому підрахунку приголосних наприкінці базової форми слова. Слово **річ** закінчується на один приголосний звук, тому воно підпорядковується стандартному правилу подовження. Однак **жовч** закінчується на збіг приголосних **-вч**, що автоматично скасовує будь-яке подовження. Подібна логіка застосовується до специфічних слів, що закінчуються на літеру **щ**, таких як **нехворощ**. Хоча **щ** пишеться як одна графіка, вона насправді передає два окремі звуки: [ш] та [ч]. Оскільки фонетично це справжній збіг приголосних, подвоєння тут ніколи не відбувається, і ми завжди отримуємо форму **нехворощю**. The mechanics of the apostrophe in this specific declension also deserve a much closer look to fully appreciate the sound system. When you write forms like **кров'ю** (with blood) or **любов'ю** (with love), the apostrophe serves a very specific and critical phonetic purpose: it acts as a rigid traffic light between a hard consonant and a soft vowel. The labial consonants (like the **в** in **кров**) are strictly pronounced hard, while the suffix **-ю** begins with the soft, gliding sound [й]. Without the presence of the apostrophe, the hard labial consonant would naturally try to soften and merge with the vowel, which goes entirely against the established rhythm and rules of Ukrainian phonetics. The apostrophe guarantees that you pronounce a crisp, clear, and unyielding [в] followed immediately by a distinct [йу]. This creates a sharp, energetic, and separated transition, ensuring that words expressing powerful concepts maintain their phonetic strength and structural integrity. <!-- INJECT_ACTIVITY: fill-in-instrumental --> <!-- INJECT_ACTIVITY: sort-doubling-rules --> <!-- INJECT_ACTIVITY: error-fix-instrumental -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -646,7 +646,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -659,18 +726,69 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] любов (love — III відміна, орудний: любов'ю)
+- [ ] осінь (autumn — III відміна, орудний: осінню)
+- [ ] радість (joy — III відміна, орудний: радістю, no подвоєння)
+- [ ] подорож (journey — III відміна, орудний: подорожжю)
+- [ ] ніч (night — III відміна, орудний: ніччю, чергування і→о)
+- [ ] піч (oven — III відміна, орудний: піччю, чергування і→е)
+- [ ] сіль (salt — III відміна, орудний: сіллю)
+- [ ] кров (blood — III відміна, орудний: кров'ю, no подвоєння)
+- [ ] мати (mother — III відміна, unique stem expansion -ер-/-ір-)
+- [ ] подвоєння (doubling — consonant doubling in орудний)
+- [ ] нульове закінчення (zero ending — no visible suffix in називний)
+- [ ] відміна (declension type — I through IV)
+- [ ] гордість (pride — abstract noun from гордий)
+- [ ] мудрість (wisdom — abstract noun from мудрий)
+- [ ] тінь (shadow — III відміна, орудний: тінню)
+- [ ] річ (thing — III відміна, чергування і→е, орудний: річчю)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Відмінювання у множині (~700 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

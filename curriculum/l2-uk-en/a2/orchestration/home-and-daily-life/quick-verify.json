@@ -2,12 +2,6 @@
   "attempt": 1,
   "passed": true,
   "errors": [],
-  "warnings": [
-    {
-      "check": "VOCABULARY",
-      "severity": "WARNING",
-      "message": "Missing 3/10 required vocab: вставати (to get up), снідати (to have breakfast), лягати спати (to go to bed)"
-    }
-  ],
-  "timestamp": "2026-04-08T02:17:41.897819+00:00"
+  "warnings": [],
+  "timestamp": "2026-04-12T19:21:38.269563+00:00"
 }

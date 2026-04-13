@@ -2,15 +2,15 @@
   "module": "checkpoint-actions",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-11T00:57:16.317148Z",
+  "last_audit": "2026-04-11T16:40:49.387584Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-11T00:57:15.760366Z",
+    "md": "2026-04-11T11:54:50.834733Z",
     "meta": null,
     "activities": "2026-04-09T05:55:52.476145Z",
     "vocabulary": "2026-04-09T05:57:16.922919Z",
     "research": null,
-    "plan": "2026-03-30T22:17:20.651543Z"
+    "plan": "2026-04-11T01:12:59.538082Z"
   },
   "gates": {
     "meta": {
@@ -32,6 +32,15 @@
       "status": "pass",
       "violations": 0,
       "message": "59/1"
+    },
+    "vocab_progression": {
+      "status": "warn",
+      "violations": 0,
+      "message": "\u0394 -44 | premature=10 | gaps=0 | well-paced=3",
+      "delta": -44,
+      "premature": 10,
+      "gaps": 0,
+      "well_paced": 3
     },
     "naturalness": {
       "status": "info",

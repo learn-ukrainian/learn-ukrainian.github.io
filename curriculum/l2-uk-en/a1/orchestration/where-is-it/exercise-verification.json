@@ -1,25 +1,7 @@
 {
-  "total_items": 88,
-  "grounded_items": 47,
+  "total_items": 49,
+  "grounded_items": 34,
   "ungrounded": [
-    {
-      "word": "працює",
-      "exercise_type": "quiz",
-      "context": "Де Тарас? Він працює _____.",
-      "role": "context"
-    },
-    {
-      "word": "олег",
-      "exercise_type": "quiz",
-      "context": "Де Олег? Він _____.",
-      "role": "context"
-    },
-    {
-      "word": "мій",
-      "exercise_type": "quiz",
-      "context": "Де мій телефон? Він _____.",
-      "role": "context"
-    },
     {
       "word": "ми",
       "exercise_type": "unjumble",
@@ -27,226 +9,88 @@
       "role": "answer"
     },
     {
-      "word": "живемо",
-      "exercise_type": "fill-in",
-      "context": "Ми живемо _____.",
-      "role": "context"
-    },
-    {
       "word": "лікар",
       "exercise_type": "fill-in",
-      "context": "Лікар _____.",
+      "context": "Лікар працює ____.",
       "role": "context"
     },
     {
-      "word": "концерт",
-      "exercise_type": "fill-in",
-      "context": "Концерт _____.",
-      "role": "context"
-    },
-    {
-      "word": "твій",
-      "exercise_type": "fill-in",
-      "context": "Твій телефон _____.",
-      "role": "context"
-    },
-    {
-      "word": "відкриті",
-      "exercise_type": "group-sort",
-      "context": "Він на... (відкриті простори, події)",
-      "role": "context"
-    },
-    {
-      "word": "простори",
-      "exercise_type": "group-sort",
-      "context": "Він на... (відкриті простори, події)",
-      "role": "context"
-    },
-    {
-      "word": "події",
-      "exercise_type": "group-sort",
-      "context": "Він на... (відкриті простори, події)",
-      "role": "context"
-    },
-    {
-      "word": "закриті",
-      "exercise_type": "group-sort",
-      "context": "Він у / в... (закриті простори, міста)",
-      "role": "context"
-    },
-    {
-      "word": "міста",
-      "exercise_type": "group-sort",
-      "context": "Він у / в... (закриті простори, міста)",
-      "role": "context"
-    },
-    {
-      "word": "живе",
+      "word": "працює",
       "exercise_type": "unjumble",
-      "context": "живе",
+      "context": "працює",
       "role": "answer"
     },
     {
-      "word": "паркі",
-      "exercise_type": "error-correction",
-      "context": "Діти зараз у паркі.",
+      "word": "купує",
+      "exercise_type": "fill-in",
+      "context": "Вона купує воду ____.",
       "role": "context"
     },
     {
-      "word": "слово",
-      "exercise_type": "true-false",
-      "context": "Слово «робота» використовує прийменник «на» (на роботі).",
+      "word": "воду",
+      "exercise_type": "fill-in",
+      "context": "Вона купує воду ____.",
       "role": "context"
     },
     {
-      "word": "використовує",
-      "exercise_type": "true-false",
-      "context": "Слово «робота» використовує прийменник «на» (на роботі).",
+      "word": "гроші",
+      "exercise_type": "fill-in",
+      "context": "Гроші ____.",
       "role": "context"
     },
     {
-      "word": "прийменник",
-      "exercise_type": "true-false",
-      "context": "Слово «робота» використовує прийменник «на» (на роботі).",
-      "role": "context"
-    },
-    {
-      "word": "для",
-      "exercise_type": "true-false",
-      "context": "Для країн та міст ми часто використовуємо прийменник «на» (н",
-      "role": "context"
-    },
-    {
-      "word": "країн",
-      "exercise_type": "true-false",
-      "context": "Для країн та міст ми часто використовуємо прийменник «на» (н",
-      "role": "context"
-    },
-    {
-      "word": "та",
-      "exercise_type": "true-false",
-      "context": "Для країн та міст ми часто використовуємо прийменник «на» (н",
-      "role": "context"
-    },
-    {
-      "word": "міст",
-      "exercise_type": "true-false",
-      "context": "Для країн та міст ми часто використовуємо прийменник «на» (н",
-      "role": "context"
-    },
-    {
-      "word": "часто",
-      "exercise_type": "true-false",
-      "context": "Для країн та міст ми часто використовуємо прийменник «на» (н",
-      "role": "context"
-    },
-    {
-      "word": "використовуємо",
-      "exercise_type": "true-false",
-      "context": "Для країн та міст ми часто використовуємо прийменник «на» (н",
-      "role": "context"
-    },
-    {
-      "word": "не",
-      "exercise_type": "true-false",
-      "context": "Слово «кафе» не змінює закінчення (в кафе).",
-      "role": "context"
-    },
-    {
-      "word": "змінює",
-      "exercise_type": "true-false",
-      "context": "Слово «кафе» не змінює закінчення (в кафе).",
-      "role": "context"
-    },
-    {
-      "word": "закінчення",
-      "exercise_type": "true-false",
-      "context": "Слово «кафе» не змінює закінчення (в кафе).",
-      "role": "context"
-    },
-    {
-      "word": "приміщення",
-      "exercise_type": "true-false",
-      "context": "Закриті приміщення (наприклад, магазин, аптека) зазвичай вик",
-      "role": "context"
-    },
-    {
-      "word": "наприклад",
-      "exercise_type": "true-false",
-      "context": "Закриті приміщення (наприклад, магазин, аптека) зазвичай вик",
-      "role": "context"
-    },
-    {
-      "word": "зазвичай",
-      "exercise_type": "true-false",
-      "context": "Закриті приміщення (наприклад, магазин, аптека) зазвичай вик",
-      "role": "context"
-    },
-    {
-      "word": "використовують",
-      "exercise_type": "true-false",
-      "context": "Закриті приміщення (наприклад, магазин, аптека) зазвичай вик",
+      "word": "стою",
+      "exercise_type": "fill-in",
+      "context": "Я стою ____.",
       "role": "context"
     },
     {
       "word": "правильно",
       "exercise_type": "true-false",
-      "context": "Правильно казати «на пошті» і «на вокзалі».",
+      "context": "Правильно говорити «на школі» (It is correct to say «на школ",
       "role": "context"
     },
     {
-      "word": "казати",
+      "word": "говорити",
       "exercise_type": "true-false",
-      "context": "Правильно казати «на пошті» і «на вокзалі».",
+      "context": "Правильно говорити «на школі» (It is correct to say «на школ",
       "role": "context"
     },
     {
-      "word": "всі",
-      "exercise_type": "true-false",
-      "context": "Всі слова чоловічого роду мають закінчення -і в місцевому ві",
+      "word": "живе",
+      "exercise_type": "fill-in",
+      "context": "Вона живе у ____.",
       "role": "context"
     },
     {
-      "word": "слова",
-      "exercise_type": "true-false",
-      "context": "Всі слова чоловічого роду мають закінчення -і в місцевому ві",
+      "word": "мій",
+      "exercise_type": "fill-in",
+      "context": "Мій тато зараз на ____.",
       "role": "context"
     },
     {
-      "word": "чоловічого",
-      "exercise_type": "true-false",
-      "context": "Всі слова чоловічого роду мають закінчення -і в місцевому ві",
+      "word": "тато",
+      "exercise_type": "fill-in",
+      "context": "Мій тато зараз на ____.",
       "role": "context"
     },
     {
-      "word": "роду",
-      "exercise_type": "true-false",
-      "context": "Всі слова чоловічого роду мають закінчення -і в місцевому ві",
+      "word": "п'ємо",
+      "exercise_type": "fill-in",
+      "context": "Ми п'ємо каву у ____.",
       "role": "context"
     },
     {
-      "word": "мають",
-      "exercise_type": "true-false",
-      "context": "Всі слова чоловічого роду мають закінчення -і в місцевому ві",
+      "word": "каву",
+      "exercise_type": "fill-in",
+      "context": "Ми п'ємо каву у ____.",
       "role": "context"
     },
     {
-      "word": "місцевому",
-      "exercise_type": "true-false",
-      "context": "Всі слова чоловічого роду мають закінчення -і в місцевому ві",
+      "word": "гуляють",
+      "exercise_type": "fill-in",
+      "context": "Вони гуляють на ____.",
       "role": "context"
-    },
-    {
-      "word": "відмінку",
-      "exercise_type": "true-false",
-      "context": "Всі слова чоловічого роду мають закінчення -і в місцевому ві",
-      "role": "context"
-    },
-    {
-      "word": "лежить",
-      "exercise_type": "unjumble",
-      "context": "лежить",
-      "role": "answer"
     }
   ],
   "vocab_coverage": {

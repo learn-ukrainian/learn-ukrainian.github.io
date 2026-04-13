@@ -1,6 +1,6 @@
 # Build Summary: health-at-the-doctor (B1)
 
-Generated: 2026-04-09 07:45
+Generated: 2026-04-11 16:34
 
 ## Pipeline Phases
 
@@ -12,21 +12,24 @@ Generated: 2026-04-09 07:45
 | pre-verify | complete | 2026-04-09 05:05:07 |
 | write | complete | 2026-04-09 05:24:54 |
 | exercises | complete | 2026-04-09 05:24:54 |
-| activities | complete | 2026-04-09 05:39:34 |
+| activities | complete | 2026-04-11 14:20:42 |
 | verify-exercises | complete | 2026-04-09 05:39:34 |
 | annotate | complete | 2026-04-09 05:39:34 |
 | vocab | complete | 2026-04-09 05:42:00 |
 | enrich | complete | 2026-04-09 05:42:00 |
 | verify | complete | 2026-04-09 05:42:00 |
-| review | complete | 2026-04-09 05:45:49 |
 | stress | complete | 2026-04-09 05:45:49 |
-| publish | complete | 2026-04-09 05:45:51 |
+| repair | complete | 2026-04-11 14:10:27 |
+| review | complete | 2026-04-11 14:17:33 |
+| publish | complete | 2026-04-11 14:34:19 |
+| audit | complete | 2026-04-11 14:34:19 |
 
 ## Reviews
 
 | Round | File |
 |-------|------|
 | 1 | health-at-the-doctor-review-r1.md |
+| 2 | health-at-the-doctor-review-r2.md |
 
 ## Dispatch Log
 
@@ -36,19 +39,36 @@ Generated: 2026-04-09 07:45
 | skeleton | gemini (gemini-3-flash-preview) | 47s | ✅ |
 | activities | gemini-tools (gemini-3.1-pro-preview) | 263s | ❌ |
 | activities | gemini-tools (gemini-3.1-pro-preview) | 317s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 0s | ❌ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 0s | ❌ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 0s | ❌ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 0s | ❌ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 0s | ❌ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 94s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 120s | ✅ |
 | vocab | gemini (gemini-3-flash-preview) | 138s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 228s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 0s | ❌ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 425s | ✅ |
 | write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 108s | ✅ |
+| write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 90s | ✅ |
 | write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 58s | ✅ |
+| write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 116s | ✅ |
 | write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 67s | ✅ |
+| write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 95s | ✅ |
 | write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 116s | ✅ |
+| write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 74s | ✅ |
 | write-chunk-05 | gemini-tools (gemini-3.1-pro-preview) | 77s | ✅ |
+| write-chunk-05 | gemini-tools (gemini-3.1-pro-preview) | 70s | ✅ |
 | write-chunk-06 | gemini-tools (gemini-3.1-pro-preview) | 67s | ✅ |
+| write-chunk-06 | gemini-tools (gemini-3.1-pro-preview) | 94s | ✅ |
 | write-fix | gemini-tools (gemini-3.1-pro-preview) | 613s | ✅ |
 | write-fix | gemini-tools (gemini-3.1-pro-preview) | 81s | ✅ |
+| write-fix | gemini-tools (gemini-3.1-pro-preview) | 134s | ✅ |
 
 ## Files
 
+- `.build.lock`
 - `chunk-01.md`
 - `chunk-02.md`
 - `chunk-03.md`
@@ -60,6 +80,7 @@ Generated: 2026-04-09 07:45
 - `pre-verify-results.md`
 - `quick-verify.json`
 - `review-structured-r1.yaml`
+- `review-structured-r2.yaml`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

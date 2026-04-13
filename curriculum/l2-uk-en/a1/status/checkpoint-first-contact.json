@@ -2,13 +2,13 @@
   "module": "checkpoint-first-contact",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-11T00:53:08.343443Z",
+  "last_audit": "2026-04-13T10:57:12.574755Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-11T00:53:07.808135Z",
+    "md": "2026-04-13T10:57:01.254623Z",
     "meta": null,
-    "activities": "2026-04-09T01:50:58.782198Z",
-    "vocabulary": "2026-04-09T01:54:31.546331Z",
+    "activities": "2026-04-12T21:02:50.570841Z",
+    "vocabulary": "2026-04-12T21:03:13.684280Z",
     "research": null,
     "plan": "2026-03-30T22:17:20.652921Z"
   },
@@ -21,17 +21,26 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1650/1200 (raw: 1686)"
+      "message": "1313/1200 (raw: 1349)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "5/0"
+      "message": "6/0"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "25/1"
+      "message": "2/1"
+    },
+    "vocab_progression": {
+      "status": "warn",
+      "violations": 0,
+      "message": "\u0394 -1 | premature=0 | gaps=1 | well-paced=0",
+      "delta": -1,
+      "premature": 0,
+      "gaps": 1,
+      "well_paced": 0
     },
     "naturalness": {
       "status": "info",

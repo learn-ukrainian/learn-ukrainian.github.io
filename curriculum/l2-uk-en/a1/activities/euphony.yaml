@@ -2,303 +2,454 @@ version: '1.0'
 module: euphony
 level: a1
 inline:
-- id: quiz-u-v-choice
+- id: quiz-u-or-v
   type: quiz
   instruction: Оберіть правильний варіант (Choose the correct option)
   items:
-  - question: Вона працює _____ театрі.
+  - question: Я живу ____ Києві.
     options:
-    - у
     - в
+    - у
     - і
-    correct: 0
-  - question: Я живу _____ Львові.
-    options:
-    - в
-    - у
-    - з
-    correct: 1
-  - question: Тарас _____ банку.
-    options:
     - й
-    - в
-    - у
-    correct: 2
-  - question: Ми граємо _____ футбол.
-    options:
-    - у
-    - в
-    - і
     correct: 0
-  - question: Я працюю _____ офісі.
+  - question: Тарас ____ Львові.
     options:
-    - у
     - в
+    - у
     - і
+    - й
     correct: 1
-  - question: Він живе _____ Києві.
+  - question: Мама йде ____ магазин.
     options:
-    - у
     - в
-    - з
+    - у
+    - і
+    - й
+    correct: 0
+  - question: Максим ____ банку.
+    options:
+    - в
+    - у
+    - і
+    - й
     correct: 1
-  - question: _____ понеділок ми працюємо.
+  - question: Я працюю ____ офісі.
+    options:
+    - в
+    - у
+    - і
+    - й
+    correct: 0
+  - question: Мій брат ____ школі.
+    options:
+    - в
+    - у
+    - і
+    - й
+    correct: 1
+  - question: ____ мене є брат.
     options:
     - В
     - У
     - І
+    - Й
     correct: 1
-  - question: Мама _____ парку.
+  - question: ____ театрі цікаво.
+    options:
+    - В
+    - У
+    - І
+    - Й
+    correct: 1
+  - question: Олена ____ кіно.
     options:
     - в
     - у
+    - і
+    - й
+    correct: 0
+  - question: Так, ____ нас є час.
+    options:
+    - в
+    - у
+    - і
     - й
     correct: 1
-  - question: Так, _____ нас є час.
-    options:
-    - у
-    - в
-    - з
-    correct: 0
-  - question: Вона працює _____ Франції.
-    options:
-    - в
-    - із
-    - у
-    correct: 2
-- id: quiz-naturalness-comparison
-  type: quiz
-  instruction: Яке речення звучить краще? (Which sentence sounds better?)
-  items:
-  - question: 'Оберіть найбільш природне речення:'
-    options:
-    - Я живу в Києві.
-    - Я живу у Києві.
-    - Я живу й Києві.
-    correct: 0
-  - question: 'Оберіть найбільш природне речення:'
-    options:
-    - Він працює із Львові.
-    - Він працює в Львові.
-    - Він працює у Львові.
-    correct: 2
-  - question: 'Оберіть найбільш природне речення:'
-    options:
-    - Мама зі тато вдома.
-    - Мама і тато вдома.
-    - Мама й тато вдома.
-    correct: 2
-  - question: 'Оберіть найбільш природне речення:'
-    options:
-    - Тарас й Максим там.
-    - Тарас і Максим там.
-    - Тарас в Максим там.
-    correct: 1
-  - question: 'Оберіть найбільш природне речення:'
-    options:
-    - Він іде з братом.
-    - Він іде із братом.
-    - Він іде зі братом.
-    correct: 0
-  - question: 'Оберіть найбільш природне речення:'
-    options:
-    - Вони йдуть з школи.
-    - Вони йдуть із школи.
-    - Вони йдуть зі школи.
-    correct: 2
-- id: quiz-i-y-choice
+- id: quiz-i-or-y
   type: quiz
   instruction: Оберіть правильний варіант (Choose the correct option)
   items:
-  - question: Ти _____ Олена йдете в кіно?
-    options:
-    - і
-    - й
-    - в
-    correct: 1
-  - question: Брат _____ сестра там.
-    options:
-    - й
-    - у
-    - і
-    correct: 2
-  - question: Вона _____ він читають.
-    options:
-    - й
-    - і
-    - з
-    correct: 0
-  - question: Я _____ Максим ідемо в парк.
-    options:
-    - і
-    - й
-    - в
-    correct: 0
-  - question: Олена _____ Тарас.
+  - question: Брат ____ сестра.
     options:
     - і
     - й
     - у
-    correct: 1
-  - question: _____ він прийшов.
+    - в
+    correct: 0
+  - question: Мама ____ тато.
     options:
-    - Й
+    - і
+    - й
+    - у
+    - в
+    correct: 1
+  - question: Тарас ____ Максим.
+    options:
+    - і
+    - й
+    - у
+    - в
+    correct: 0
+  - question: Олена ____ Андрій.
+    options:
+    - і
+    - й
+    - у
+    - в
+    correct: 1
+  - question: Стіл ____ стілець.
+    options:
+    - і
+    - й
+    - у
+    - в
+    correct: 0
+  - question: Вона ____ він.
+    options:
+    - і
+    - й
+    - у
+    - в
+    correct: 1
+  - question: Ти ____ Олена.
+    options:
+    - і
+    - й
+    - у
+    - в
+    correct: 1
+  - question: ____ він прийшов.
+    options:
     - І
+    - Й
+    - У
     - В
-    correct: 1
-  - question: Київ _____ Львів.
-    options:
-    - й
-    - з
-    - і
-    correct: 2
-  - question: _____ ми працюємо там.
-    options:
-    - І
-    - Й
-    - З
     correct: 0
 - id: fill-in-z-iz-zi
   type: fill-in
   instruction: Вставте правильне слово (Insert the correct word)
   items:
-  - sentence: Я їду ____ Одеси.
+  - sentence: Він ____ Одеси.
     answer: з
     options:
     - з
     - із
     - зі
-  - sentence: Він іде ____ другом.
+    - в
+  - sentence: Я йду ____ другом.
     answer: з
     options:
     - з
     - із
     - зі
-  - sentence: Максим ____ Семеном там.
+    - у
+  - sentence: Максим ____ Семеном.
     answer: із
     options:
     - з
     - із
     - зі
-  - sentence: Він бере ____ шафи.
+    - й
+  - sentence: Лист ____ Києва.
     answer: із
     options:
     - з
     - із
     - зі
-  - sentence: Вітаємо ____ святом.
+    - в
+  - sentence: Вона ____ мною.
     answer: зі
     options:
     - з
     - із
     - зі
-  - sentence: Вона іде ____ мною.
+    - і
+  - sentence: Він їде ____ Львова.
     answer: зі
     options:
     - з
     - із
     - зі
+    - у
+- id: quiz-euphony-comparison
+  type: quiz
+  instruction: Яке речення звучить природніше? (Which sentence sounds more natural?)
+  items:
+  - question: 'Оберіть найкращий варіант:'
+    options:
+    - Я живу в Києві.
+    - Я живу у Києві.
+    - Я живу з Києві.
+    correct: 0
+  - question: 'Оберіть найкращий варіант:'
+    options:
+    - Тарас в Львові.
+    - Тарас у Львові.
+    - Тарас зі Львові.
+    correct: 1
+  - question: 'Оберіть найкращий варіант:'
+    options:
+    - Мама і тато.
+    - Мама й тато.
+    - Мама в тато.
+    correct: 1
+  - question: 'Оберіть найкращий варіант:'
+    options:
+    - Брат й сестра.
+    - Брат і сестра.
+    - Брат із сестра.
+    correct: 1
+  - question: 'Оберіть найкращий варіант:'
+    options:
+    - Вона з мною.
+    - Вона зі мною.
+    - Вона із мною.
+    correct: 1
+  - question: 'Оберіть найкращий варіант:'
+    options:
+    - Лист з Києва.
+    - Лист із Києва.
+    - Лист зі Києва.
+    correct: 1
 workbook:
-- id: group-sort-sounds
+- id: fill-in-mixed-euphony
+  type: fill-in
+  instruction: Вставте правильне слово (Insert the correct word)
+  items:
+  - sentence: Я йду ____ парк.
+    answer: в
+    options:
+    - в
+    - у
+    - і
+    - й
+  - sentence: Вони йдуть ____ театр.
+    answer: у
+    options:
+    - в
+    - у
+    - і
+    - й
+  - sentence: Я ____ Максим йдемо в парк.
+    answer: і
+    options:
+    - і
+    - й
+    - в
+    - у
+  - sentence: Вітаємо ____ святом!
+    answer: зі
+    options:
+    - з
+    - із
+    - зі
+    - в
+  - sentence: Діти йдуть ____ школи.
+    answer: зі
+    options:
+    - з
+    - із
+    - зі
+    - у
+  - sentence: Вона говорить ____ братом.
+    answer: з
+    options:
+    - з
+    - із
+    - зі
+    - і
+- id: group-sort-conjunctions
   type: group-sort
-  instruction: Розподіліть слова за першим звуком (Sort words by their first sound)
+  instruction: Розподіліть фрази (Sort the phrases)
   groups:
-  - label: Починається на голосний (Starts with a vowel)
+  - label: І (між приголосними)
     items:
-    - офіс
-    - Олена
-    - Одеса
-  - label: Починається на приголосний (Starts with a consonant)
+    - брат і сестра
+    - Тарас і Максим
+    - стіл і стілець
+    - він і вона
+  - label: Й (після голосного)
     items:
-    - парк
-    - театр
-    - банк
-    - футбол
-- id: match-up-euphony
-  type: match-up
-  instruction: З'єднайте пари для правильного звучання (Connect pairs for correct
-    sound)
-  pairs:
-  - left: Я живу в
-    right: Києві
-  - left: Він працює у
-    right: Львові
-  - left: Мама й
-    right: Олена
-  - left: Максим і
-    right: Тарас
-  - left: Ідемо зі
-    right: школи
-  - left: Гуляє з
-    right: братом
-- id: true-false-rules
+    - мама й тато
+    - вона й він
+    - Олена й Андрій
+    - ти й Олена
+- id: true-false-euphony
   type: true-false
   instruction: Правда чи ні? (True or false?)
   items:
-  - statement: Ми завжди пишемо «у» на початку речення. (We always write «у» at the
-      beginning of a sentence.)
+  - statement: Фраза «Мама й тато» звучить природно українською.
     correct: true
-    explanation: «У» is used at the beginning of sentences to provide a strong, clear
-      start.
-  - statement: Після голосного ми використовуємо «в». (After a vowel we use «в».)
-    correct: true
-    explanation: We use «в» after a vowel (before a consonant) to avoid a vowel clash.
-  - statement: Слово «Франція» вимагає прийменника «в». (The word «Франція» requires
-      the preposition «в».)
+    explanation: Слово «Мама» закінчується на голосний, тому використовуємо «й».
+  - statement: Фраза «Тарас в Львові» написана правильно.
     correct: false
-    explanation: Words starting with ф, в, св, льв always require «у» because they
-      are difficult consonant clusters.
-  - statement: Ми кажемо «зі мною». (We say «зі мною».)
+    explanation: 'Після приголосного перед іншим приголосним треба писати «у»: «Тарас
+      у Львові».'
+  - statement: 'На початку речення завжди пишемо «У», наприклад: «У мене є брат».'
     correct: true
-    explanation: This is a fixed phrase that helps pronounce the difficult consonants
-      together.
-  - statement: Літера «й» може бути першим словом у реченні. (The letter «й» can be
-      the first word in a sentence.)
+    explanation: На початку речення перед приголосним завжди вживається «у».
+  - statement: Фраза «Вона з мною» є правильною.
     correct: false
-    explanation: «Й» is a weak semivowel and cannot start a sentence. We use «І» instead.
-  - statement: Милозвучність допомагає вимовляти слова легше. (Euphony helps pronounce
-      words more easily.)
+    explanation: 'Перед важким збігом приголосних «мн» краще вживати «зі»: «Вона зі
+      мною».'
+  - statement: Фраза «Брат і сестра» написана правильно.
     correct: true
-    explanation: Euphony rules exist to prevent difficult consonant and vowel clashes,
-      making speech flow naturally.
-- id: image-to-letter-vocab
-  type: image-to-letter
-  instruction: Яка перша літера у слові на картинці? (What is the first letter in
-    the word on the picture?)
+    explanation: Між приголосними використовується «і».
+  - statement: Фраза «Лист з Києва» звучить краще, ніж «Лист із Києва».
+    correct: false
+    explanation: 'Для уникнення збігу приголосних («ст» і «к») краще вживати «із»:
+      «Лист із Києва».'
+- id: match-up-euphony-pairs
+  type: match-up
+  instruction: З'єднайте частини фраз (Match the parts of the phrases)
+  pairs:
+  - left: Я працюю в
+    right: офісі
+  - left: Він з
+    right: Одеси
+  - left: Діти йдуть зі
+    right: школи
+  - left: Максим із
+    right: Семеном
+  - left: Брат і
+    right: сестра
+  - left: Мама й
+    right: тато
+- id: unjumble-sentences-euphony
+  type: unjumble
+  instruction: Складіть правильне речення зі слів (Form a correct sentence from the
+    words)
   items:
-  - image: 🏦
-    letter: б
-    options:
-    - б
-    - т
-    - п
-  - image: 🎭
-    letter: т
-    options:
-    - т
-    - п
-    - ф
-  - image: 🌳
-    letter: п
-    options:
-    - п
-    - ш
+  - words:
+    - Києві.
+    - в
+    - живу
+    - Я
+    correct_order:
+    - Я
+    - живу
+    - в
+    - Києві.
+  - words:
+    - у
+    - брат
+    - Мій
+    - школі.
+    correct_order:
+    - Мій
+    - брат
+    - у
+    - школі.
+  - words:
+    - кіно?
+    - в
+    - йдете
+    - Олена
+    - й
+    - Ти
+    correct_order:
+    - Ти
+    - й
+    - Олена
+    - йдете
+    - в
+    - кіно?
+  - words:
+    - театр.
+    - у
+    - йдуть
+    - Вони
+    correct_order:
+    - Вони
+    - йдуть
+    - у
+    - театр.
+  - words:
+    - Львова.
+    - зі
+    - їде
+    - Він
+    correct_order:
+    - Він
+    - їде
+    - зі
+    - Львова.
+  - words:
+    - є
+    - брат.
+    - мене
+    - У
+    correct_order:
+    - У
+    - мене
+    - є
+    - брат.
+- id: anagram-vocabulary
+  type: anagram
+  instruction: Складіть слово з літер (Make a word from the letters)
+  items:
+  - letters:
+    - К
+    - и
+    - ї
+    - в
+    answer: Київ
+    hint: Kyiv
+  - letters:
+    - Л
+    - ь
+    - в
+    - і
+    - в
+    answer: Львів
+    hint: Lviv
+  - letters:
     - о
-  - image: 🏢
-    letter: о
-    options:
-    - о
-    - б
     - ф
-  - image: ⚽
-    letter: ф
-    options:
-    - ф
-    - т
+    - і
+    - с
+    answer: офіс
+    hint: office
+  - letters:
     - п
-  - image: 👗
-    letter: ш
-    options:
-    - ш
+    - а
+    - р
+    - к
+    answer: парк
+    hint: park
+  - letters:
     - т
+    - е
+    - а
+    - т
+    - р
+    answer: театр
+    hint: theater
+  - letters:
+    - м
+    - а
+    - г
+    - а
+    - з
+    - и
+    - н
+    answer: магазин
+    hint: store
+  - letters:
     - б
+    - р
+    - а
+    - т
+    answer: брат
+    hint: brother

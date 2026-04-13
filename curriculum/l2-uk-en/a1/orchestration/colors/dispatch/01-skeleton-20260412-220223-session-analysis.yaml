@@ -1,0 +1,64 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T20-01-cbc86a65.json
+phase: skeleton
+prompt_chars: 35093
+response_chars: 5228
+prompt_words: 4678
+response_words: 795
+sections:
+- name: preamble
+  start: 0
+  length: 451
+  fraction: 0.0129
+- name: plan
+  start: 451
+  length: 5339
+  fraction: 0.1521
+- name: wiki
+  start: 5734
+  length: 26963
+  fraction: 0.7683
+- name: output_spec
+  start: 32753
+  length: 2340
+  fraction: 0.0667
+large_sections:
+- wiki
+directives_total: 15
+directives_covered: 7
+directives_missed:
+- kind: must
+  text: They often incorrectly use the nominative form (`цей`) after a preposition
+    instead of the required locative (`цьому`).
+  covered: false
+  coverage_note: 1/12 keywords (8%)
+- kind: must
+  text: '**Independent Phonetics:** The sound `[ц]` must be taught as a native Ukrainian
+    phoneme.'
+  covered: false
+  coverage_note: 2/8 keywords (25%)
+- kind: must
+  text: '**Section budgets must match the plan''s `content_outline` word allocations**
+    (±10%).'
+  covered: false
+  coverage_note: 3/8 keywords (38%)
+- kind: must
+  text: '**CRITICAL: An exercise must ONLY test concepts already taught above it.'
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: must
+  text: 'Every plan `activity_hints` entry MUST have a corresponding `<!-- INJECT_ACTIVITY:
+    id -->` marker in the skeleton.'
+  covered: false
+  coverage_note: 3/10 keywords (30%)
+- kind: inject_activity
+  text: activity-id
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: activity-id
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: descriptive-id
+  covered: false
+  coverage_note: marker missing

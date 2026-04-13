@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-голосу. Більшість українських приголосних утворюють логічні пари. Давайте уважно подивимося на цю таблицю базових парних звуків. Ось головні пари: [б] — [п], [д] — [т], [з] — [с], [ж] — [ш]. Ми також маємо пари складних звуків: [дж] — [ч] та [дз] — [ц]. Звук [г] має свою глуху пару [х]. А рідкісний звук [ґ] має глуху пару [к]. В українській мові також існує особлива група приголосних звуків. Їх традиційно називають **сонорні приголосні** *(sonorant consonants)*. Ці звуки є унікальними. У них голос завжди сильно переважає над шумом. Вони звучать дуже дзвінко, чисто і максимально мелодійно. Через цю акустичну особливість сонорні приголосні взагалі не мають глухих пар. До цієї специфічної групи належать звуки: [в], [м], [н], [л], [р] та [й]. Українські школярі часто використовують спеціальні веселі фрази для швидкого запам'ятовування. Найпопулярніша шкільна фраза — це «Ми винили рій» *(We blamed the swarm)*. У цій короткій фразі зібрані всі необхідні сонорні звуки. Інший популярний і дуже простий спосіб — запам'ятати ключове слово «МіНеРаЛоВиЙ» *(mineral)*. Тут також є всі сонорні приголосні. Якщо ви випадково бачите такий специфічний звук у слові, ви вже знаєте точно. Цей звук завжди є тільки сонорним. Тепер ми маємо вивчити критично важливе правило української вимови. Це правило робить українську фонетику унікальною серед інших слов'янських мов. Воно також показує головну фонетичну відмінність від російської чи німецької мов. В українській літературній мові дзвінкі приголосні ніколи не втрачають свою природну дзвінкість. Вони зберігають її навіть у кінці довгого слова. Це фонетичне правило дуже важливе для правильної вимови та ідеального українського акценту. Наприклад, візьмемо дуже популярне слово «хліб» *(bread)*. Ми завжди вимовляємо його чітко зі дзвінким звуком [б] у кінці: [хліб]. Ми ніколи не вимовляємо це красиве слово як глухе [хліп]. Це дуже типова і груба **орфоепічна помилка** *(pronunciation error)* для іноземців. Інший класичний приклад — це відоме слово «дуб» *(oak)*. Ми маємо чітко артикулювати дзвінкий звук [б]: [дуб]. Вимова слова як [дуп] є абсолютно неправильною та неприродною формою. Ви також маєте дуже чітко вимовляти звук [з] у кінці слова «мороз» *(frost)*. Запам'ятайте це фундаментальне правило вимови назавжди. Існує ще одна важлива вторинна класифікація українських приголосних звуків. Вона базується на тому, як саме ми утворюємо специфічний шум. Перша велика група — це **свистячі** *(whistling)* звуки: [з], [ц], [с], [дз]. Коли ми їх вимовляємо, повітря створює звук. Цей звук дуже схожий на звичайний свист. Друга група — це **шиплячі** *(hushing)* звуки: [ж], [ч], [ш], [дж]. Ці звуки завжди нагадують тихе шипіння змії або шум осіннього вітру. Третя важлива фонетична група — це **губні** *(labial)* приголосні: [б], [п], [в], [м], [ф]. Ми використовуємо наші губи, щоб заблокувати потік повітря для цих звуків. Навіщо нам потрібні ці додаткові складні категорії саме зараз? Вони є абсолютно необхідними для правильного розуміння майбутніх граматичних правил. У наших наступних граматичних модулях ми будемо активно вивчати складну асиміляцію. Також ми розглянемо дуже часте чергування різних приголосних. Ці фонетичні процеси майже завжди відбуваються всередині конкретних груп звуків. <!-- INJECT_ACTIVITY: quiz, Classify sounds: голосний чи приголосний? дзвінкий чи глухий? --> <!-- INJECT_ACTIVITY: group-sort, Sort consonants into дзвінкі / глухі / сонорні groups -->
+[м], [н], [л], [р], [в], [й]. Вони не мають глухої пари. Щоб легко запам'ятати всі сонорні приголосні, школярі вчать спеціальну фразу. Це фраза «Ми винили рій» або одне слово «МіНеРаЛоВиЙ». Усі приголосні в цьому слові є сонорними. > *This group includes the sounds [м], [н], [л], [р], [в], [й]. They do not have a voiceless pair. To easily remember all sonorant consonants, schoolchildren learn a special phrase. It is the phrase "Ми винили рій" (We blamed the swarm) or one word "МіНеРаЛоВиЙ" (Mineral). All consonants in this word are sonorants.* Now we arrive at one of the most critical pronunciation rules, and a major difference between Ukrainian and other languages like Russian or German. In those languages, a voiced consonant at the end of a word or **склад** (syllable) automatically loses its voice and sounds like its voiceless pair. This does NOT happen in Ukrainian. The strict anti-devoicing rule is a hallmark of authentic Ukrainian speech. Українські дзвінкі приголосні ніколи не оглушуються в кінці слова. Ми завжди маємо чітко вимовляти дзвінкий звук. Наприклад, слово «хліб» звучить виключно як [хліб]. Ми ніколи не кажемо [хліп], бо це помилка. Слово «дуб» завжди звучить як [дуб], а не [дуп]. Слово «мороз» має закінчуватися на дзвінкий [з], а не на глухий [с]. Це правило робить нашу мову дуже мелодійною. > *Ukrainian voiced consonants are never devoiced at the end of a word. We must always clearly pronounce the voiced sound. For example, the word "хліб" (bread) sounds exclusively like [хліб]. We never say [хліп], because it is a mistake. The word "дуб" (oak) always sounds like [дуб], and not [дуп]. The word "мороз" (frost) must end with a voiced [з], and not with a voiceless [с]. This rule makes our language very melodic.* :::info **Grammar box** — Always preserve the voicing of consonants at the ends of words. Devoicing words like **хліб** to sound like *[хліп]* is one of the most common foreign accents and immediately signals a non-native speaker. Keep your vocal cords active until the very end of the word! ::: Beyond voicing and sonority, consonants are also grouped by which part of the mouth creates them. We have sibilants, which we call **свистячі** (whistling). These include [з], [ц], [с], and [дз] because they produce a sharp air stream. We also have hushing sounds, known as **шиплячі** (hushing). These are [ж], [ч], [ш], and [дж], which sound like white noise. Finally, sounds made primarily with the lips are called **губні** (labials). Ця класифікація є дуже потрібною для майбутнього. Звуки часто впливають один на одного. Ви побачите це, коли будете вивчати складні граматичні правила. Свистячі та шиплячі звуки часто змінюють одні одних у словах. Тому важливо знати ці групи вже зараз. > *This classification is very necessary for the future. Sounds often influence each other. You will see this when you study complex grammar rules. Whistling and hushing sounds often change each other in words. Therefore, it is important to know these groups already now.* <!-- INJECT_ACTIVITY: quiz-sound-classification --> <!-- INJECT_ACTIVITY: group-sort-consonants -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -475,7 +475,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 6: A2 finale (A2 M51-M69)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 40%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 40% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 70-90% Ukrainian.
 LANGUAGE ROLES:
@@ -494,18 +561,69 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] фонетика (phonetics — the study of speech sounds)
+- [ ] звук (sound — what we hear and pronounce)
+- [ ] літера (letter — what we see and write)
+- [ ] фонема (phoneme — abstract sound unit that distinguishes meaning)
+- [ ] голосний (vowel — sound made with voice only)
+- [ ] приголосний (consonant — sound made with obstruction)
+- [ ] дзвінкий (voiced — consonant produced with voice + noise)
+- [ ] глухий (voiceless — consonant produced with noise only)
+- [ ] сонорний (sonorant — consonant where voice dominates over noise)
+- [ ] твердий (hard — non-palatalized consonant)
+- [ ] м'який (soft — palatalized consonant)
+- [ ] наголос (stress — emphasized pronunciation of a syllable)
+- [ ] наголошений (stressed — syllable bearing the stress)
+- [ ] ненаголошений (unstressed — syllable without stress)
+- [ ] транскрипція (transcription — phonetic notation in square brackets)
+- [ ] склад (syllable)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Приголосні звуки: тверді та м'які (~770 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

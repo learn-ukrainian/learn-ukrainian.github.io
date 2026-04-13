@@ -1,0 +1,69 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T19-24-c56d4ed9.json
+phase: write-chunk-03
+prompt_chars: 43154
+response_chars: 5866
+prompt_words: 6062
+response_words: 981
+sections:
+- name: header
+  start: 0
+  length: 493
+  fraction: 0.0114
+- name: skeleton
+  start: 493
+  length: 1315
+  fraction: 0.0305
+- name: prior_summary
+  start: 1808
+  length: 3569
+  fraction: 0.0827
+- name: plan
+  start: 5377
+  length: 11116
+  fraction: 0.2576
+- name: wiki
+  start: 9843
+  length: 26402
+  fraction: 0.6118
+- name: output_spec
+  start: 42895
+  length: 259
+  fraction: 0.006
+large_sections:
+- wiki
+directives_total: 12
+directives_covered: 4
+directives_missed:
+- kind: checklist
+  text: читати / прочитати (to read)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: писати / написати (to write)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: брати / взяти (to take)
+  covered: false
+  coverage_note: 1/3 keywords (33%)
+- kind: checklist
+  text: говорити / сказати (to speak / to say)
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 3/11 keywords (27%)
+- kind: inject_activity
+  text: match-up-blanks
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-find-partner
+  covered: false
+  coverage_note: marker missing

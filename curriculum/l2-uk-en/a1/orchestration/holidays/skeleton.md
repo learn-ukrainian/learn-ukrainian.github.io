@@ -1,32 +1,27 @@
-## Вступ: Що таке свято? (~120 words)
-- P1 (~120 words): Introduce the general concept of "свято" (holiday) in Ukraine. Categorize holidays into religious (релігійні), traditional (традиційні), and state (державні). Introduce the universal, all-purpose greeting "Зі святом!" (Happy Holiday!) and the verb "святкувати" (to celebrate). Explain that holidays are essential for understanding the Ukrainian soul.
+## Діалоги (Dialogues) (~330 words total)
+- P1 (~165 words): Dialogue 1 (Before Christmas). A Ukrainian host and foreign guest discuss the date of Christmas (Двадцять п'ятого грудня). The host explains that they used to celebrate on January 7, but now on Dec 25. They discuss traditions like singing carols (Ми співаємо колядки) and eating ritual food (їмо кутю). Ends with the greeting: З Різдвом! — З Різдвом Христовим! Focus vocabulary: Різдво, колядки, кутя, святкувати.
+- P2 (~165 words): Dialogue 2 (Independence Day). Two friends discuss August 24 (Двадцять четверте серпня — День Незалежності). They talk about plans for this major state holiday (головне державне свято): watching the parade (дивимося парад), going to a concert (ходимо на концерт), and seeing fireworks in the evening (ввечері — салют). Ends with the greeting: З Днем Незалежності! — Слава Україні! Focus vocabulary: День Незалежності, парад, концерт, салют.
 
-## Діалоги: Говоримо про свята (~330 words)
-- P1 (~110 words): Contextual introduction to the first dialogue. Two friends discuss the upcoming Christmas season. Mention the shift in the Ukrainian calendar: celebrating on December 25th (грудень) to align with Europe and break from the Russian Orthodox tradition.
-- P2 (~110 words): Dialogue 1 — Christmas Traditions. Two speakers (Українська родина та Іноземний гість) discuss what they do on Dec 24 and 25. Focus on: "Коли в тебе Різдво?", "Ми їмо кутю і співаємо колядки", and the specific greeting "З Різдвом Христовим!".
-- P3 (~110 words): Dialogue 2 — Independence Day. Setting: August 24th in a city center. Speakers discuss the atmosphere: "Сьогодні День Незалежності!", "Дивись, який гарний парад і прапори!", "Ввечері буде салют". End with the iconic exchange: "Слава Україні! — Героям слава!".
-- <!-- INJECT_ACTIVITY: quiz-holiday-match --> [quiz, Match holiday to date (e.g., Різдво → 25 грудня, День Незалежності → 24 серпня), 8 items]
+## Українські свята (Ukrainian Holidays) (~330 words total)
+- P1 (~110 words): Introduce the concept of a holiday (свято) and the universal greeting "Зі святом!" (Happy Holiday!). Explain that Ukrainian holidays are deeply tied to seasonal cycles and traditions.
+- P2 (~110 words): Різдво (Christmas) on December 25. Explicitly mention that Ukraine moved its official celebration from January 7 to December 25 to align with the rest of Europe. Detail the traditions of Свята вечеря (Holy Supper) on December 24, which features 12 страв (12 dishes), the most important being кутя (wheat porridge). Mention the living tradition of singing колядки (carols) by колядники.
+- P3 (~110 words): Великдень (Easter). Explain this is the biggest religious holiday in spring. Differentiate between the holiday (Великдень) and the traditional Easter bread (паска). Detail other traditions: creating unique decorated eggs (писанки) and blessing the basket at church (святити кошик). Introduce the traditional call-and-response greeting: "Христос воскрес!" — "Воістину воскрес!".
+- <!-- INJECT_ACTIVITY: quiz-which-holiday --> [quiz, Which holiday? Кутя, колядки, Свята вечеря → (Різдво / Великдень / Новий рік), 8 items]
 
-## Українські свята: Традиції та символи (~340 words)
-- P1 (~170 words): Christmas (Різдво) — The Winter Cycle. Detail the significance of December 25th. Describe "Свята вечеря" (Holy Supper) on Christmas Eve with its mandatory "12 страв" (12 dishes). Focus on "кутя" (ritual wheat porridge) as the most important dish. Explain "колядки" (carols) and "колядники" (carolers) who go door to door with a star. Mention the "дідух" (sheaf of wheat) as a traditional decoration.
-- P2 (~170 words): Easter (Великдень) — The Spring Cycle. Explain that this is the biggest religious celebration. Introduce "писанки" (artfully decorated eggs) as a unique Ukrainian art form. Distinguish between "Пасха" (the holiday name) and "паска" (the specific Easter bread). Describe the tradition of "святити кошик" (blessing the basket at church). Teach the ritual greeting: "Христос воскрес! — Воістину воскрес!".
-- <!-- INJECT_ACTIVITY: quiz-holiday-clues --> [quiz, Identify holiday based on clues (e.g., Кутя, колядки, 12 страв → Різдво), 8 items]
+## Державні свята (National Holidays) (~330 words total)
+- P1 (~110 words): День Незалежності (Independence Day). Highlight August 24, 1991, as the day Ukraine declared independence. Explain it as the most important державне свято (state holiday). Describe the celebrations: парад (parade), концерти, салют (fireworks), and displaying прапори (flags). Reiterate the greetings: З Днем Незалежності! and Слава Україні! — Героям слава!
+- P2 (~110 words): Новий рік (New Year). Highlight January 1 as the biggest secular celebration. Introduce associated vocabulary like ялинка (New Year tree) and подарунки (gifts). Mention the greeting З Новим роком!
+- P3 (~110 words): Other important civic and cultural days. Introduce Вишиванковий день (Vyshyvanka Day) on the third Thursday of May, where people wear a вишиванка (embroidered shirt) as a symbol of identity. Briefly mention День Конституції (Constitution Day) on June 28 and День захисників і захисниць (Defenders' Day) on October 1.
+- <!-- INJECT_ACTIVITY: quiz-match-date --> [quiz, Match holiday to date: Різдво → 25 грудня, День Незалежності → 24 серпня, 8 items]
+- <!-- INJECT_ACTIVITY: group-sort-traditions --> [group-sort, Sort traditions by holiday: Різдво vs Великдень vs День Незалежності, 10 items]
 
-## Державні свята: Громадянська ідентичність (~340 words)
-- P1 (~170 words): Independence Day (День Незалежності) — August 24, 1991. Explain that this is the most important "державне свято" (state holiday). Describe the festive atmosphere: military parades (парад), concerts, and the sea of blue and yellow flags (прапори). Use the phrase "вітати з Днем Незалежності" to show how we celebrate freedom and sovereignty.
-- P2 (~170 words): Other key celebrations. Introduce "Новий рік" (New Year, Jan 1) as the main secular holiday with the tree (ялинка) and gifts (подарунки). Explain "Вишиванковий день" (Vyshyvanka Day, 3rd Thursday of May) as a living tradition where everyone wears the embroidered shirt ("вишиванка") to show identity. Briefly mention Defenders' Day (October 1) and Constitution Day (June 28).
-- <!-- INJECT_ACTIVITY: group-sort-traditions --> [group-sort, Sort traditions and symbols by holiday: Різдво vs Великдень vs День Незалежності, 10 items]
+## Підсумок — Summary (~330 words total)
+- P1 (~130 words): Grammar pattern for holiday greetings: "З + instrumental case". Explain that learners already know this case from saying "with" (e.g., кава з молоком). Here, it literally means "(I greet you) with the holiday". Provide clear examples: З Різдвом! (Merry Christmas!), З Великоднем! (Happy Easter!), З Новим роком! (Happy New Year!), З Днем Незалежності! (Happy Independence Day!), and З днем народження! (Happy birthday!).
+- <!-- INJECT_ACTIVITY: fill-in-greetings --> [fill-in, Greetings: З ___! (Різдвом, Великоднем, Новим роком), 8 items]
+- P2 (~100 words): Quick calendar recap of the year's major dates: січень 1 — Новий рік, весна (changes yearly) — Великдень, серпень 24 — День Незалежності, грудень 25 — Різдво.
+- P3 (~100 words): Self-check questions (bulleted Q&A list): 
+  * How do you say "Merry Christmas" and "Happy New Year"? (З Різдвом! З Новим роком!)
+  * How do you reply to "Слава Україні!"? (Героям слава!)
+  * What is the difference between "Великдень" and "паска"? (Великдень is the holiday, паска is the bread).
 
-## Підсумок: Граматика вітань та побажань (~210 words)
-- P1 (~110 words): Grammar Recap — The Greeting Formula. Explain the pattern: "З + [Holiday in Instrumental Case]!". Show the transformations: Новий рік → "З Новим роком!", Різдво → "З Різдвом!", Великдень → "З Великоднем!", День народження → "З днем народження!". Relate this to the "з + noun" (with) construction they already know (e.g., кава з молоком).
-- P2 (~100 words): Wishes and the Calendar. Introduce the "Бажаю + Genitive" formula from the pedagogy brief: "Бажаю щастя, здоров'я, миру" (I wish you happiness, health, peace). Provide a quick calendar overview: 25.12, 01.01, 24.08. 
-- P3 (~60 words): Self-check Q&A. 
-  - Q: How do you greet someone on August 24? 
-  - A: З Днем Незалежності! 
-  - Q: What is the ritual response to "Христос воскрес!"? 
-  - A: Воістину воскрес! 
-  - Q: When is Christmas in Ukraine? 
-  - A: Двадцять п'ятого грудня.
-- <!-- INJECT_ACTIVITY: fill-in-greetings --> [fill-in, Complete the greeting: З ___! (Новим роком, Різдвом, Великоднем, святом), 8 items]
-
-Grand total: ~1340 words
+Grand total: ~1320 words

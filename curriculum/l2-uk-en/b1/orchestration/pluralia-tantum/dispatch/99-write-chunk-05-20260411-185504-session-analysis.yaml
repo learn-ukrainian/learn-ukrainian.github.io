@@ -1,0 +1,70 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T16-54-6c8656f6.json
+phase: write-chunk-05
+prompt_chars: 49968
+response_chars: 5062
+prompt_words: 7049
+response_words: 723
+sections:
+- name: header
+  start: 0
+  length: 425
+  fraction: 0.0085
+- name: skeleton
+  start: 425
+  length: 1115
+  fraction: 0.0223
+- name: prior_summary
+  start: 1540
+  length: 3364
+  fraction: 0.0673
+- name: plan
+  start: 4904
+  length: 19027
+  fraction: 0.3808
+- name: wiki
+  start: 17427
+  length: 25819
+  fraction: 0.5167
+- name: output_spec
+  start: 49750
+  length: 218
+  fraction: 0.0044
+large_sections:
+- wiki
+directives_total: 22
+directives_covered: 14
+directives_missed:
+- kind: checklist
+  text: ворота (gate — pluralia tantum, Р. воріт, Ор. ворітьми/воротами)
+  covered: false
+  coverage_note: 2/7 keywords (29%)
+- kind: checklist
+  text: ліки (medicine — pluralia tantum, connects to M16)
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: checklist
+  text: родовий відмінок (genitive case)
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: You must rely on the phonetic structure of the plural stem to predict how
+    it will behave in different cases.
+  covered: false
+  coverage_note: 4/13 keywords (31%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 1/11 keywords (9%)
+- kind: inject_activity
+  text: quiz, identify pluralia tantum nouns
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in, insert the correct родовий відмінок form
+  covered: false
+  coverage_note: marker missing

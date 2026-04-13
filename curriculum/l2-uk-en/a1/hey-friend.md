@@ -1,158 +1,127 @@
-## Діало́ги (Dialogues)
+## Діалоги (Dialogues)
 
-Imagine you are at a lively birthday party in Ukraine. The traditional music is playing loudly, people are talking in groups, and you need to get your friend's attention across the crowded room. In English, you would simply shout their name exactly as it is written. In Ukrainian, calling out to someone or addressing them directly requires a specific grammatical shift. You cannot just use their regular, dictionary-form name; you must change its ending to show that you are talking to them, rather than about them. 
+Imagine a busy and joyful birthday party. The large room is filled with people talking loudly, eating delicious food, and dancing to music. The birthday person (**іменинник**) needs to get the attention of different guests standing across the noisy room. In English, you would simply shout their names or relationships across the space: "Olena! Taras! Friend! Mom! Grandma! Grandpa!" In Ukrainian, getting someone's attention requires a specific grammatical change. You cannot simply use their base name. When calling out to these people, the speaker must adapt each word to show that they are addressing the person directly.
 
-Let us look at a typical interaction as guests arrive at the party. The birthday person is greeting friends as they walk through the door. Notice how the names change when they speak directly to each other. Pay special attention to how **Оле́на** (Olena), **Тара́с** (Taras), and **Андрі́й** (Andriy) are addressed.
+**Іменинник стоїть у кімнаті. Там його велика сім'я і друзі. Він голосно кличе гостей. Гості слухають його уважно. Вони радіють.**
+> *The birthday person stands in the room. His large family and friends are there. He calls the guests loudly. The guests listen to him carefully. They rejoice.*
 
-> **Імени́нник:** **Оле́но, приві́т! Як спра́ви?** *(Olena, hi! How are you?)*
-> **Олена:** **До́бре, дякую, Тара́се! А в тебе́?** *(Good, thanks, Taras! And you?)*
-> **Іменинник:** **Теж добре. Олено, ти зна́єш мого бра́та?** *(Also good. Olena, do you know my brother?)*
-> **Олена:** **Ні.** *(No.)*
-> **Іменинник:** **Андрію, хо́ди сюди́! Це Олена.** *(Andriy, come here! This is Olena.)*
-> **Іменинник:** **Олено, це Андрій.** *(Olena, this is Andriy.)*
+Friends greet each other using specific endings when addressing someone directly in a conversation.
 
-Later at the same party, the birthday person interacts with different family members in the kitchen. Family words also change their endings when you address them directly. Pay attention to how the words for mom, dad, son, daughter, and grandma transform in conversation when someone is asking a question or giving an instruction.
+> **Андрій:** **Олено**, привіт! Як справи? *(Olena, hi! How are you?)*
+> **Олена:** Добре, дякую, **Тарасе**! А в тебе? *(Good, thanks, Taras! And you?)*
+> **Андрій:** Теж добре. **Олено**, ти знаєш мого брата? *(Also good. Olena, do you know my brother?)*
+> **Олена:** Ні. *(No.)*
+> **Андрій:** **Андрію**, ходи сюди! Це Олена. **Олено**, це Андрій. *(Andriy, come here! This is Olena. Olena, this is Andriy.)*
 
-> **Син:** **Ма́мо, де мій телефо́н?** *(Mom, where is my phone?)*
-> **Ма́ма:** **На столі́, синку́.** *(On the table, son.)*
-> **Дочка́:** **Тату́, а де ключі́?** *(Dad, and where are the keys?)*
-> **Та́то:** **У кише́ні, до́чко.** *(In the pocket, daughter.)*
-> **Син:** **Бабу́сю, ми йдемо́!** *(Grandma, we are going!)*
-> **Бабу́ся:** **Добре, бу́дьте обере́жні!** *(Good, be careful!)*
-> **Бабуся:** **До поба́чення, Андрію!** *(Goodbye, Andriy!)*
+Family members constantly call out to one another from different rooms to ask questions or give instructions. The exact same grammatical principle applies to family terms.
 
-Did you notice the consistent pattern of direct address in those two dialogues? When the speaker talked about someone, they used the regular name, like saying **Це Олена** (This is Olena) or **Це Андрій** (This is Andriy). But when they spoke directly to them, **Олена** (Olena) became **Олено** (Olena), **Тарас** (Taras) became **Тарасе** (Taras), and **мама** (mom) became **мамо** (mom). This shift is not an optional stylistic choice; it is a fundamental rule of natural Ukrainian communication.
+> **Син:** **Мамо**, де мій телефон? *(Mom, where is my phone?)*
+> **Мама:** На столі, **синку**. *(On the table, son.)*
+> **Донька:** **Тату**, а де ключі? *(Dad, and where are the keys?)*
+> **Тато:** У кишені, **дочко**. *(In the pocket, daughter.)*
+> **Онуки:** **Бабусю**, ми йдемо! *(Grandma, we are going!)*
+> **Бабуся:** Добре, будьте обережні! *(Good, be careful!)*
 
-*   **До́брий ра́нок, па́не Іва́не!** *(Good morning, Mr. Ivan!)*
-*   **Добрий ве́чір, па́ні Окса́но!** *(Good evening, Ms. Oksana!)*
-*   **До побачення, вчи́телю!** *(Goodbye, teacher!)*
-*   **На добра́ніч, синку!** *(Good night, son!)*
-*   **Смачно́го, дру́зі!** *(Bon appetit, friends!)*
+Notice the clear pattern in these everyday conversations. The names and family terms changed their final letters when the person was being addressed. The name «Олена» became **«Олено»**, and «Тарас» became **«Тарасе»**. The word **«мама»** transformed into **«мамо»**, and **«бабуся»** (grandmother, f) changed to **«бабусю»**. The parents also used the special vocative forms **«синку»** (son — vocative, from син) and **«дочко»** (daughter — vocative, from дочка). This is not a random occurrence, but a strict grammatical rule that native speakers use automatically.
 
-<!-- INJECT_ACTIVITY: dialogue-flow-practice -->
+<!-- INJECT_ACTIVITY: fill-in-dialogue-completion -->
 
-## Кли́чний відмі́нок (The Vocative Case)
+## Кличний відмінок (The Vocative Case)
 
-Ukrainian grammar features seven cases, and one of them is used exclusively for calling, addressing, or getting someone's attention. This is called the **кличний відмінок** (Vocative Case). As you already know, Ukrainian relies on changing word endings to show grammatical relationships within a sentence. While the other six cases indicate who is doing an action or where an object is located, the vocative case serves a purely communicative function. In English you just say the name: "Olena, come here!". In Ukrainian the name CHANGES: **Олено, ходи сюди!** (Olena, come here!). When you address a person, you must alter their name or title to match this specific grammatical role. This is not optional — Ukrainians always use the vocative when addressing someone.
+Ukrainian has a special grammatical case specifically designed for calling, addressing, or getting someone's attention. This is called the Vocative case (**кличний відмінок**). In English, you just say the name exactly as it is written in your contacts list: "Olena, come here!" In Ukrainian, the name itself changes: «Олена» becomes **«Олено, ходи сюди!»** This change is absolutely not optional or just for formal writing. Ukrainians always use the Vocative case when addressing a person directly, whether speaking to a close friend or a stranger. In Ukrainian schools, fourth-grade textbooks use a helpful visual marker to teach this concept: «Кл. (!)». The exclamation mark serves as a strong reminder that you are calling someone, which means the ending of the noun must change.
 
-In Ukrainian elementary schools (such as in Zabolotnyi's Grade 4 textbook), students learn a simple but effective trick to remember when to use this form. Teachers introduce the vocative case with a Grade 4 helper word and punctuation mark: **Кл. (!)** (Voc. (!)). The exclamation mark acts as a visual reminder that you are "shouting," calling out, or directly addressing someone. This punctuation mark triggers the ending change. Whenever you use a person's name with an exclamation mark or a comma in direct speech, you must apply the vocative ending. This mental trigger ensures that the name correctly reflects the social interaction taking place.
+**Це мій новий друг. Мій друг уважно читає книгу. Я голосно кличу друга. Друже, читай уголос! Він читає дуже добре.**
+> *This is my new friend. My friend is reading a book carefully. I call the friend loudly. Friend, read aloud! He reads very well.*
 
-:::note
-The vocative case is entirely independent of the other cases. It does not answer any questions (like "who?" or "what?"), because its only job is to get someone's attention.
-:::
+Why does the Vocative case matter so much in daily speech? It creates a vital, polite distinction between talking *about* someone and talking *to* someone. Consider the sentence: **«Олена тут.»** (Olena is here.) Here, «Олена» is in the Nominative case because we are simply stating a fact about her. Now compare it to: **«Олено, ходи сюди!»** (Olena, come here!) Here, we are talking directly to her. Using the Nominative case to address someone sounds extremely unnatural to a Ukrainian ear. It feels exactly like saying "Hey, him!" instead of "Hey, you!" in English. It breaks the polite flow of natural communication.
 
-Understanding the difference between talking about someone and talking to someone is critical for your fluency. The nominative case is the dictionary form, used when someone is the subject of a sentence. Why the vocative matters: **Олена прийшла́.** (Olena came.) is in the nominative, because you are talking ABOUT her. However, if you want to address her, you must use the vocative: **Олено, ходи сюди!** (Olena, come here!), because you are talking TO her. Using the nominative to address a person sounds incredibly unnatural to native speakers. It feels as awkward as saying "Hey, him!" instead of "Hey, you!" in English. Let us compare these two states:
+This rule extends far beyond friends and family to formal situations. When addressing a teacher, a doctor, or an older stranger, you use formal titles. The words **«пан»** (Mr., m) and **«пані»** (Mrs./Ms., f) show formal respect and distance. The masculine title changes its ending in the Vocative case, while the feminine remains unchanged.
 
-**Називни́й відмінок** (Nominative):
-*   **Це мій тато.** *(This is my dad.)*
-*   **Тут працю́є вчи́тель.** *(A teacher works here.)*
-*   **Там стої́ть Олена.** *(Olena is standing there.)*
-*   **Мій брат чита́є.** *(My brother is reading.)*
+*   **Добрий день, пане Іване!** *(Good day, Mr. Ivan!)*
+*   **До побачення, пані Оксано!** *(Goodbye, Ms. Oksana!)*
+*   **Пробачте, пане, де тут банк?** *(Excuse me, sir, where is the bank here?)*
+*   **Дякую, пані!** *(Thank you, ma'am!)*
+*   **Шановний пане директоре!** *(Respected Mr. Director!)*
 
-**Кличний відмінок** (Vocative):
-*   **Тату, я тебе ба́чу!** *(Dad, I see you!)*
-*   **Вчителю, добрий ранок!** *(Teacher, good morning!)*
-*   **Олено, йди туди́!** *(Olena, go there!)*
-*   **Бра́те, що ти чита́єш?** *(Brother, what are you reading?)*
+<!-- INJECT_ACTIVITY: quiz-vocative-choice -->
 
-The vocative case is much more than just a grammatical rule; it is a living marker of Ukrainian linguistic identity. While this grammatical feature has mostly disappeared from standard Russian, surviving only in a few archaic religious terms, it remains vibrant and absolutely necessary in everyday Ukrainian conversation. By using the vocative case correctly, you are not just following a textbook rule. You are actively speaking authentic, decolonized Ukrainian and showing deep respect for the natural structure and historical continuity of the language. When you use the vocative case, native speakers instantly recognize that you are making a genuine effort to understand the rhythm of their language, rather than just translating English words directly into Ukrainian.
+## Закінчення кличного (Vocative Endings)
 
-## Закі́нчення кли́чного (Vocative Endings)
+To form the Vocative case correctly, you must look at the last letter of the person's name or title in its base dictionary form. The most common and predictable pattern is that feminine nouns ending in the vowel «-а» change this ending to «-о». This simple shift applies to names, family members, and general nouns. If the name ends in «-ка», it also faithfully follows this rule.
 
-Let us break down the specific rules for forming the vocative case, starting with feminine names and nouns that end in the letter **-а**. This is the most common feminine pattern you will encounter. To create the vocative form, you simply replace the final **-а** with the letter **-о**. 
+*   Олена → **Олено**
+*   мама → **мамо**
+*   **сестра** (sister, f) → **сестро**
+*   Оксана → **Оксано**
+*   **подруга** (friend, f) → **подруго**
+*   Наталка → **Наталко**
+*   Ірка → **Ірко**
+*   Катерина → **Катерино**
+*   Тетяна → **Тетяно**
 
-*   **Олена** → **Олено** (Olena)
-*   **мама** → **мамо** (mom)
-*   **сестра́** → **се́стро** (sister)
-*   **Окса́на** → **Оксано** (Oksana)
-*   **по́друга** → **по́друго** (friend, f)
+Other feminine endings follow predictable vowel shifts. If a feminine noun ends in the letters «-ія», the ending changes to «-іє». You must not use an «-о» here (it is never «Маріо»). Furthermore, affectionate feminine names and nouns ending in «-ся» change to «-сю».
 
-This rule also applies to informal or diminutive names ending in **-ка**, such as **Ната́лка** → **Ната́лко** (Natalka) and **Ірка** → **Ірко** (Irka). Furthermore, longer names ending in **-а** follow this exactly: **Катери́на** → **Катери́но** (Kateryna), **Тетя́на** → **Тетя́но** (Tetiana). Note that the polite title **пані** (Mrs. / Ms.) is an exception and does not change its form when used to address someone.
+*   Марія → **Маріє**
+*   Юлія → **Юліє**
+*   Вікторія → **Вікторіє**
+*   бабуся → **бабусю**
+*   Галя → **Галю**
+*   Наталя → **Наталю**
 
-*   **Олено, де мій зо́шит?** *(Olena, where is my notebook?)*
-*   **Мамо, я хо́чу ї́сти.** *(Mom, I want to eat.)*
-*   **Сестро, ти йдеш у кіно́?** *(Sister, are you going to the cinema?)*
-*   **Подруго, це твоя́ кни́га?** *(Friend, is this your book?)*
-*   **Катерино, добрий день!** *(Kateryna, good day!)*
+Masculine nouns follow different rules based entirely on their final consonant. Masculine names and nouns ending in a hard consonant take the ending «-е». This is highly common for men's names and formal titles. You will also encounter a historical consonant alternation (a sound shift) here: the letter «г» changes to «ж», and the letter «к» changes to «ч» before the «-е» ending. This makes the word much easier to pronounce.
 
-Feminine names that end in **-і́я** or the soft letter **-я** follow a slightly different but closely related pattern. If a name ends in **-ія**, the ending shifts to **-і́є**. For example, **Марі́я** (Mariia) becomes **Марі́є** (Mariia — vocative, never "Маріо!"). If a feminine word or name ends in a soft **-ся** or is a diminutive form ending in **-я**, the ending changes to **-ю**. 
+*   Тарас → **Тарасе**
+*   Іван → **Іване**
+*   **брат** (brother, m) → **брате**
+*   пан → **пане**
+*   **друг** (friend, m) → **друже** (г → ж)
+*   **козак** (Cossack, m) → **козаче** (к → ч)
 
-*   **Марія** → **Маріє** (Mariia)
-*   **Ю́лія** → **Ю́ліє** (Yuliia)
-*   **бабуся** → **бабусю** (grandma)
-*   **Га́ля** → **Галю** (Halia)
-*   **Ната́ля** → **Ната́лю** (Natalia)
+Finally, masculine nouns that end in a soft consonant or the letter «-й» take the ending «-ю». This makes the address sound softer and more fluid. There is also one highly important exception that you must simply memorize: the word for father takes a unique «-у» ending.
 
-Notice how the soft quality of the final consonant is preserved by using the soft vowel **-ю** or **-є**. 
+*   Андрій → **Андрію**
+*   Сергій → **Сергію**
+*   **дідусь** (grandfather, m) → **дідусю**
+*   **вчитель** (teacher, m) → **вчителю**
+*   Василь → **Василю**
+*   тато → **тату** (Exception: memorize this form)
 
-*   **Маріє, як справи?** *(Mariia, how are things?)*
-*   **Юліє, ходи сюди!** *(Yuliia, come here!)*
-*   **Бабусю, ти ду́же до́бра.** *(Grandma, you are very kind.)*
-*   **Наталю, де ти живе́ш?** *(Natalia, where do you live?)*
+**Моя старша сестра стоїть там. Вона бачить мене. Я гукаю сестру. Сестро, йди сюди! Вона йде швидко.**
+> *My older sister stands there. She sees me. I call out to the sister. Sister, come here! She walks fast.*
 
-:::caution
-Do not confuse the feminine ending **-ю** (like in **бабусю**) with the masculine soft ending **-ю** (like in **Андрію**). While they look identical, they come from different spelling patterns.
-:::
+<!-- INJECT_ACTIVITY: group-sort-endings -->
 
-Now let us look at masculine names and nouns. Most standard masculine words end in a hard consonant. To form the vocative for these words, you do not replace anything; you simply add the letter **-е** directly to the end of the hard consonant. This makes the word slightly longer and easier to call out across a room.
-
-*   **Тарас** → **Тарасе** (Taras)
-*   **Іва́н** → **Іване** (Ivan)
-*   **брат** → **брате** (brother)
-*   **пан** → **пане** (Mr. / sir)
-*   **Богдан** → **Богдане** (Bohdan)
-
-Whenever you use the formal title **пан**, it must also take this ending, as in **Добрий день, пане!** (Good day, sir!).
-
-*   **Тарасе, що ти ро́биш?** *(Taras, what are you doing?)*
-*   **Іване, це твій телефон?** *(Ivan, is this your phone?)*
-*   **Брате, йди сюди!** *(Brother, come here!)*
-*   **Пане, де тут апте́ка?** *(Sir, where is the pharmacy here?)*
-*   **Богдане, ти студе́нт?** *(Bohdan, are you a student?)*
-
-If a masculine word ends in a soft consonant or the letter **-й**, the added vowel changes to match the softness. Instead of adding **-е**, you must add the letter **-ю** to the end of the word. This maintains the softness of the final sound and creates a smooth, natural flow when speaking.
-
-*   **Андрій** → **Андрію** (Andriy)
-*   **Сергі́й** → **Сергі́ю** (Serhiy)
-*   **діду́сь** → **діду́сю** (grandpa)
-*   **вчитель** → **вчителю** (teacher, m)
-
-Replacing the **-й** with **-ю** is one of the most frequent transformations you will make when addressing Ukrainian men.
-
-*   **Андрію, ти ма́єш брата?** *(Andriy, do you have a brother?)*
-*   **Сергію, це твоя маши́на?** *(Serhiy, is this your car?)*
-*   **Дідусю, чита́й ка́зку!** *(Grandpa, read a fairy tale!)*
-*   **Вчителю, я маю пита́ння.** *(Teacher, I have a question.)*
-
-There are a few special cases and consonant alternations that you should memorize because they occur in very common words. The word for dad takes an exceptional **-у** ending: **тато** → **тату** (dad). You must memorize this. The word for son also takes an **-у** ending: **син** → **си́ну** (son). The affectionate form is **сино́к** → **синку**. Additionally, some masculine consonants change their sound entirely to make pronunciation easier. For example, the consonant **г** changes to **ж** in **друг** → **дру́же** (friend, m), and the consonant **к** changes to **ч** in **коза́к** → **коза́че** (Cossack).
-
-*   **Тату, я йду додо́му.** *(Dad, I am going home.)*
-*   **Синку, будь обере́жний!** *(Son, be careful!)*
-*   **Друже, ти маєш ра́цію.** *(Friend, you are right.)*
-*   **Козаче, куди́ ти йдеш?** *(Cossack, where are you going?)*
-
-<!-- INJECT_ACTIVITY: vocative-form-practice -->
-<!-- INJECT_ACTIVITY: vocative-choice-quiz -->
-<!-- INJECT_ACTIVITY: ending-sorting-activity -->
+<!-- INJECT_ACTIVITY: fill-in-vocative-forms -->
 
 ## Підсумок — Summary
 
-Mastering the vocative case is a crucial step in sounding like a natural, fluent Ukrainian speaker, aligning with the core communicative competencies of the State Standard 2024. Remember that you must always change the ending of a name or title when you are addressing someone directly. The core patterns are very consistent across the language: feminine words ending in **-а** shift to **-о**, masculine words ending in hard consonants add **-е**, and masculine words ending in soft consonants or **-й** add **-ю**. By applying these simple vowel shifts, you ensure that your greetings, questions, and daily interactions flow smoothly and respect the traditional rules of Ukrainian communication. You will quickly find that these vowel shifts become automatic as your brain learns to associate the act of calling someone with adding these specific soft or hard sounds.
+**Ми вчимо українську мову. Це дуже цікаво. Ми говоримо всі разом. Пане вчителю, ви слухаєте? Так, він уважно слухає нас.**
+> *We are learning the Ukrainian language. This is very interesting. We speak all together. Mr. Teacher, are you listening? Yes, he is listening to us carefully.*
 
-Keep this vocative quick reference guide handy as you practice forming the vocative case. It covers the most frequent patterns you will encounter in everyday conversation.
+The Vocative quick reference summary table below shows the correct ending based on the original Nominative form of the word. Memorizing these patterns will help you address people naturally and politely in any situation.
 
 | Pattern | Nominative → Vocative | Example |
 | :--- | :--- | :--- |
-| Feminine **-а** | **-а** → **-о** | **Олена** → **Олено**, **мама** → **мамо** |
-| Feminine **-ія** | **-ія** → **-іє** | **Марія** → **Маріє** |
-| Feminine **-ся** | **-ся** → **-сю** | **бабуся** → **бабусю** |
-| Masculine hard | + **-е** | **Тарас** → **Тарасе**, **брат** → **брате** |
-| Masculine **-й** / soft | + **-ю** | **Андрій** → **Андрію**, **вчитель** → **вчителю** |
-| Special (**г**, **к**) | **г**→**ж**, **к**→**ч** + **-е** | **друг** → **друже** |
-| Special (**-у**) | irregular | **тато** → **тату**, **син** → **сину** |
+| Feminine -а | -а → -о | Олена → **Олено**, мама → **мамо** |
+| Feminine -ія | -ія → -іє | Марія → **Маріє** |
+| Feminine -ся | -ся → -сю | бабуся → **бабусю** |
+| Masculine hard | + -е | Тарас → **Тарасе**, брат → **брате** |
+| Masculine soft/-й | + -ю | Андрій → **Андрію**, вчитель → **вчителю** |
+| Special (г, к) | г→ж, к→ч + -е | друг → **друже**, козак → **козаче** |
+| Exception | -о → -у | тато → **тату** |
+
+To ensure you have mastered these essential communication patterns, perform a quick self-check. Try to answer these questions aloud right now, paying close attention to how the endings shift when you address the person directly.
+
+*   How do you call your family?
+*   мама → **мамо!**
+*   тато → **тату!**
+*   брат → **брате!**
+*   сестра → **сестро!**
+*   бабуся → **бабусю!**
+*   дідусь → **дідусю!**
+*   How do you call your friend Taras? (Тарас → **Тарасе!**)
+*   How do you call your friend Olena? (Олена → **Олено!**)
 
 :::tip
-Whenever you say **Привіт!** (Hi!), **Добрий день!** (Good day!), or ask **Як справи?** (How are you?), immediately follow it with the vocative form of the person's name or title!
+Whenever you say "Hello" or "Goodbye" to someone using their name or title, remember the fourth-grade marker: «Кл. (!)». Always change the ending to show respect, acknowledge their presence, and speak beautiful, natural Ukrainian!
 :::
-
-Before moving on to the next module, take a moment to self-check your understanding of these rules. How do you call your family? **мама** (mom) → ? **тато** (dad) → ? **брат** (brother) → ? How do you correctly greet your friend Taras? Most importantly, do you clearly feel the functional difference between the sentence **Марія прийшла** (Mariia came) and the direct command **Маріє, ходи сюди!** (Mariia, come here!)? If you can confidently answer these questions and apply the correct endings, you are ready to use the vocative case in the real world! 

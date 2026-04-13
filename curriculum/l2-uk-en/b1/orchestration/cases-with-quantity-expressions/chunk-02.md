@@ -1,31 +1,21 @@
 ## 1. Узгодження кількісних числівників з іменниками (~850 слів)
 
-Let's begin with the simplest numeral, **один** (one). It behaves exactly like an adjective and fully agrees with the noun it modifies in gender, number, and case. This fundamental rule always applies, even in large compound numbers ending with one.
+The **узгодження** (agreement) between numbers and nouns is a fundamental concept in Ukrainian grammar. Every **кількісний числівник** (cardinal numeral) dictates the specific case and number of the noun that follows it. The simplest rule applies to the number one (*один*). It behaves exactly like an adjective, fully agreeing with the noun in gender, number, and case. You will say *один стіл* (masculine), *одна книжка* (feminine), and *одне вікно* (neuter). This exact logic also applies to compound numbers that end in one, such as *двадцять один студент* (twenty-one students) or *сто одна проблема* (one hundred and one problems).
 
-**Один стіл.** — *One table (masculine).*
-**Одна книжка.** — *One book (feminine).*
-**Одне вікно.** — *One window (neuter).*
+Числівники два, три та чотири мають інше правило. Після цих чисел іменник завжди повинен стояти у формі називного відмінка множини. Ми говоримо «два студенти», «три сценарії» або «чотири подруги». 
 
-Числівники «два», «три» та «чотири» мають власне важливе правило. Після них іменник завжди стоїть у формі називного відмінка множини. Наприклад, ми кажемо «два студенти», «три сценарії» або «чотири будинки». Особливу увагу варто звертати на жіночий рід: ми обов'язково використовуємо форму «дві», а не «два». Тому правильно казати «дві книжки», «дві подруги» чи «дві пісні».
-
-> *The numerals "два" (two), "три" (three), and "чотири" (four) have their own important rule. After them, the noun always takes the form of the nominative plural. For example, we say "два студенти", "три сценарії", or "чотири будинки". Special attention should be paid to the feminine gender: we must use the form "дві", not "два". Therefore, it is correct to say "дві книжки", "дві подруги", or "дві пісні".*
+Why do we say *два студенти* using the nominative plural, rather than the genitive singular? This is a critical feature that distinguishes Ukrainian from other Slavic languages like Russian, which uses the genitive singular (*два студента*). The Ukrainian structure preserves the ancient dual form from Old East Slavic, which eventually merged with the regular nominative plural. Saying *два студенти* immediately shows that you are speaking natural, authentic Ukrainian.
 
 :::info
-**Grammar box** — A unique historical legacy.
-
-This rule often causes difficulties, especially if you compare Ukrainian grammar with Russian, which requires the genitive singular after these specific numbers. The Ukrainian construction preserved the form of the Old East Slavic dual number, which over time merged with the nominative plural. Saying that you see two students using the genitive singular is a gross mistake and a calque.
-
-**Два студенти.** — *Two students.*
+**Grammar box** — Remember that *два* changes to *дві* when counting feminine nouns. You cannot say *два книжки*; it must always be *дві книжки*.
 :::
 
-Звісно, кожне правило має свої винятки. Якщо іменник чоловічого роду має суфікс «-ин-», який зникає у множині, то після чисел два, три і чотири він ставиться у родовий відмінок однини. Ми говоримо «два киянина», «три селянина» або «чотири громадянина». Також це стосується іменників четвертої відміни. Правильно казати «два поросяти» або «три імені».
+З цього правила є два винятки. Перший стосується іменників чоловічого роду із суфіксом -ин-, який зникає у множині. З числами два, три і чотири такі слова ставляться у родовому відмінку однини: два киянина, три селянина. Другий виняток — це іменники четвертої відміни. Ми кажемо два поросяти та три імені.
 
-With numerals from five to twenty, as well as with round tens like thirty or one hundred, the situation is completely different. These numbers strictly require the genitive plural form from the noun. This case is very important to remember for correct communication.
+> *There are two exceptions to this rule. The first concerns masculine nouns with the suffix -ин-, which disappears in the plural. With the numbers two, three, and four, such words are placed in the genitive singular: two Kyiv residents, three villagers. The second exception is nouns of the fourth declension. We say two piglets and three names.*
 
-**П'ять озер.** — *Five lakes.*
-**Десять метрів.** — *Ten meters.*
-**Сорок будинків.** — *Forty houses.*
+For numbers from five to twenty, as well as thirty and all round tens (*сорок*, *п'ятдесят*, *сто*), the rule changes again. These numbers require the noun to be in the genitive plural. Therefore, you will say *п'ять озер* (five lakes), *десять метрів* (ten meters), and *сто книжок* (a hundred books). 
 
-У складених числівниках форму іменника визначає лише останнє слово. Якщо число закінчується на одиницю, іменник стоїть в однині. Якщо на два, три чи чотири — у називному відмінку множини. А якщо число закінчується на п'ять і більше, ми використовуємо родовий відмінок множини. Тому ми говоримо «сорок один студент», «сорок два студенти» та «сорок п'ять студентів».
+When you use compound numerals, the grammatical form of the noun is determined exclusively by the last word. The noun ignores the tens or hundreds and only looks at the final digit. For example, *сорок один студент* uses the nominative singular. *Сорок два студенти* takes the nominative plural, while *сорок п'ять студентів* shifts to the genitive plural because the final word is five.
 
 <!-- INJECT_ACTIVITY: reading-numeral-agreement -->

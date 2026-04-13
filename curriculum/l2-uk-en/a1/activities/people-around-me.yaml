@@ -2,28 +2,9 @@ version: '1.0'
 module: people-around-me
 level: a1
 inline:
-- id: sort-animate-inanimate
-  type: group-sort
-  instruction: 'Розподіліть слова: істоти та неістоти (Sort the words: animate vs
-    inanimate)'
-  groups:
-  - label: Кого? (Animate)
-    items:
-    - брата
-    - маму
-    - друга
-    - лікаря
-    - Олену
-  - label: Що? (Inanimate)
-    items:
-    - хліб
-    - каву
-    - воду
-    - чай
-    - борщ
-- id: fill-in-animate-transform
+- id: fill-in-accusative-forms
   type: fill-in
-  instruction: Оберіть правильну форму слова (Choose the correct word form)
+  instruction: Вставте правильне слово (Fill in the correct word)
   items:
   - sentence: Я бачу ____.
     answer: маму
@@ -31,7 +12,7 @@ inline:
     - маму
     - мама
     - мами
-  - sentence: Я бачу ____.
+  - sentence: Я чекаю ____.
     answer: брата
     options:
     - брата
@@ -43,7 +24,7 @@ inline:
     - Олену
     - Олена
     - Олени
-  - sentence: Я знаю ____.
+  - sentence: Я шукаю ____.
     answer: друга
     options:
     - друга
@@ -56,111 +37,85 @@ inline:
     - тато
     - таті
   - sentence: Я чекаю ____.
-    answer: вчителя
+    answer: лікаря
     options:
-    - вчителя
-    - вчитель
-    - вчителю
-  - sentence: Я шукаю ____.
-    answer: подругу
-    options:
-    - подругу
-    - подруга
-    - подруги
+    - лікаря
+    - лікар
+    - лікарю
   - sentence: Я бачу ____.
     answer: сусіда
     options:
     - сусіда
     - сусід
     - сусіду
-  - sentence: Я чекаю ____.
-    answer: лікаря
-    options:
-    - лікаря
-    - лікар
-    - лікарю
-  - sentence: Я знаю ____.
-    answer: сестру
-    options:
-    - сестру
-    - сестра
-    - сестри
-- id: quiz-ending-choice
+- id: quiz-choose-correct-accusative
   type: quiz
   instruction: Оберіть правильний варіант (Choose the correct option)
   items:
   - question: Я знаю ____.
     options:
-    - Олену
     - Олена
+    - Олену
     - Олени
-    - Оленою
-    correct: 0
+    correct: 1
   - question: Я бачу ____.
     options:
     - брат
-    - брату
-    - брата
     - братом
+    - брата
     correct: 2
   - question: Я люблю ____.
     options:
     - подругу
     - подруга
     - подруги
-    - подругою
     correct: 0
   - question: Я чекаю ____.
     options:
     - сусід
-    - сусіда
-    - сусіду
     - сусідом
-    correct: 1
+    - сусіда
+    correct: 2
   - question: Я шукаю ____.
     options:
     - вчитель
-    - вчителю
     - вчителя
-    - вчителем
-    correct: 2
+    - вчителю
+    correct: 1
   - question: Я знаю ____.
     options:
     - лікар
-    - лікарю
-    - лікаря
     - лікарем
+    - лікаря
     correct: 2
   - question: Я бачу ____.
     options:
     - колега
-    - колегу
     - колеги
-    - колегою
-    correct: 1
+    - колегу
+    correct: 2
   - question: Я люблю ____.
     options:
-    - тато
-    - тату
     - тата
+    - тато
     - татом
-    correct: 2
-- id: fill-in-dialogue-logic
+    correct: 0
+- id: fill-in-dialogue-completion
   type: fill-in
-  instruction: Доповніть діалог (Complete the dialogue)
+  instruction: Вставте правильне слово (Fill in the correct word)
   items:
   - sentence: — Кого ти ____?
     answer: бачиш
     options:
+    - бачить
     - бачиш
     - бачити
-    - бачить
   - sentence: — Я бачу ____ і маму.
     answer: брата
     options:
-    - брата
     - брат
     - братом
+    - брата
   - sentence: — Ти знаєш мого ____ Тараса?
     answer: друга
     options:
@@ -170,240 +125,220 @@ inline:
   - sentence: — Ні, я не ____ твого друга.
     answer: знаю
     options:
-    - знаю
-    - знає
     - знати
+    - знає
+    - знаю
   - sentence: — А кого ти ____?
     answer: чекаєш
     options:
-    - чекаєш
     - чекати
+    - чекаєш
     - чекає
   - sentence: — Я чекаю ____.
     answer: лікаря
     options:
-    - лікаря
     - лікар
+    - лікаря
     - лікарем
 workbook:
-- id: match-up-animate-forms
+- id: match-up-animate
   type: match-up
-  instruction: З'єднайте початкову форму з формою знахідного відмінка (Match the base
-    form with the Accusative form)
+  instruction: З'єднайте словникову форму з формою знахідного відмінка (Match the
+    dictionary form with the accusative form)
   pairs:
-  - left: лікар (doctor)
+  - left: брат
+    right: брата
+  - left: лікар
     right: лікаря
-  - left: друг (friend)
+  - left: друг
     right: друга
-  - left: сусід (neighbor)
+  - left: сусід
     right: сусіда
-  - left: продавець (seller)
-    right: продавця
-  - left: викладач (lecturer)
+  - left: вчитель
+    right: вчителя
+  - left: викладач
     right: викладача
-  - left: колега (colleague)
-    right: колегу
-  - left: покупець (buyer)
-    right: покупця
-- id: error-correction-animate
-  type: error-correction
-  instruction: Знайдіть і виправте помилку (Find and correct the error)
+  - left: продавець
+    right: продавця
+- id: unjumble-sentences
+  type: unjumble
+  instruction: Складіть правильне речення зі слів (Put the words in the correct order)
   items:
-  - sentence: Я чекаю мій брат.
-    error: брат
-    correction: брата
-    error_type: word
-    options:
+  - words:
+    - брата.
+    - бачу
+    - Я
+    correct_order:
+    - Я
+    - бачу
+    - брата.
+  - words:
+    - лікаря.
+    - чекаю
+    - Я
+    correct_order:
+    - Я
+    - чекаю
+    - лікаря.
+  - words:
+    - знаєш
+    - сусіда?
+    - Ти
+    correct_order:
+    - Ти
+    - знаєш
+    - сусіда?
+  - words:
+    - подругу.
+    - Вона
+    - шукає
+    correct_order:
+    - Вона
+    - шукає
+    - подругу.
+  - words:
+    - маму.
+    - Я
+    - люблю
+    - дуже
+    correct_order:
+    - Я
+    - дуже
+    - люблю
+    - маму.
+  - words:
+    - знає
+    - вчителя.
+    - Він
+    correct_order:
+    - Він
+    - знає
+    - вчителя.
+- id: anagram-accusative
+  type: anagram
+  instruction: Складіть слово з літер (Make a word from the letters)
+  items:
+  - letters:
+    - б
+    - р
+    - а
+    - т
+    - а
+    answer: брата
+  - letters:
+    - м
+    - а
+    - м
+    - у
+    answer: маму
+  - letters:
+    - д
+    - р
+    - у
+    - г
+    - а
+    answer: друга
+  - letters:
+    - т
+    - а
+    - т
+    - а
+    answer: тата
+  - letters:
+    - л
+    - і
+    - к
+    - а
+    - р
+    - я
+    answer: лікаря
+  - letters:
+    - с
+    - у
+    - с
+    - і
+    - д
+    - а
+    answer: сусіда
+- id: group-sort-gender-acc
+  type: group-sort
+  instruction: Розподіліть слова за родами (Sort words by gender)
+  groups:
+  - label: Чоловічий рід (Masculine)
+    items:
     - брата
-    - брату
-    - братом
-    explanation: Брат (brother) is animate and masculine, so it changes to брата.
-  - sentence: Ти знаєш лікар?
-    error: лікар
-    correction: лікаря
-    error_type: word
-    options:
+    - друга
     - лікаря
-    - лікарю
-    - лікарем
-    explanation: Лікар (doctor) is animate and masculine, so it takes the -я ending.
-  - sentence: Ми любимо тато.
-    error: тато
-    correction: тата
-    error_type: word
-    options:
+    - сусіда
+    - вчителя
     - тата
-    - тату
-    - татом
-    explanation: Тато (dad) is animate and masculine, so -о changes to -а.
-  - sentence: Вона шукає сусід.
-    error: сусід
-    correction: сусіда
-    error_type: word
+  - label: Жіночий рід (Feminine)
+    items:
+    - маму
+    - сестру
+    - Олену
+    - подругу
+    - колегу
+    - вчительку
+- id: true-false-animate
+  type: true-false
+  instruction: Правда чи ні? (True or false?)
+  items:
+  - statement: «Я бачу брат» — це правильне речення.
+    correct: false
+    explanation: Брат — це жива істота (animate). Треба казати «Я бачу брата».
+  - statement: Для живих істот (людей) ми використовуємо питання «Кого?».
+    correct: true
+    explanation: Так, питання «Кого?» використовується для людей і тварин.
+  - statement: «Я їм хліба» — це правильне речення.
+    correct: false
+    explanation: Хліб — це неживий предмет (inanimate). Треба казати «Я їм хліб».
+  - statement: Слово «мама» у знахідному відмінку (Accusative) змінюється на «маму».
+    correct: true
+    explanation: Жіночий рід змінює закінчення -а на -у.
+  - statement: Чоловічі неживі іменники у знахідному відмінку не змінюють закінчення.
+    correct: true
+    explanation: Вони відповідають на питання «Що?» і залишаються як у словнику.
+  - statement: Слово «лікар» у знахідному відмінку буде «лікар».
+    correct: false
+    explanation: Лікар — це людина. Треба казати «лікаря».
+- id: fill-in-mixed
+  type: fill-in
+  instruction: Вставте правильне слово (Fill in the correct word)
+  items:
+  - sentence: Я купую ____.
+    answer: хліб
     options:
+    - хліб
+    - хліба
+    - хлібу
+  - sentence: Я бачу ____.
+    answer: сусіда
+    options:
+    - сусід
     - сусіда
     - сусіду
-    - сусідом
-    explanation: Сусід (neighbor) is animate and masculine, so it takes the -а ending.
-  - sentence: Я бачу новий продавець.
-    error: продавець
-    correction: продавця
-    error_type: word
+  - sentence: Ми п'ємо ____.
+    answer: каву
     options:
-    - продавця
+    - кава
+    - каву
+    - кави
+  - sentence: Він знає ____.
+    answer: викладача
+    options:
+    - викладач
+    - викладачу
+    - викладача
+  - sentence: Вона шукає ____.
+    answer: продавця
+    options:
+    - продавець
     - продавцю
-    - продавцем
-    explanation: Продавець (seller) is animate and masculine, so it changes to продавця.
-  - sentence: Ви знаєте ця колега?
-    error: колега
-    correction: колегу
-    error_type: word
+    - продавця
+  - sentence: Ти любиш ____?
+    answer: брата
     options:
-    - колегу
-    - колеги
-    - колегою
-    explanation: Колега (colleague) ends in -а, so it changes to -у in the Accusative
-      case.
-- id: unjumble-animate-sentences
-  type: unjumble
-  instruction: Складіть правильне речення зі слів (Put the words in the correct order
-    to make a sentence)
-  items:
-  - words:
-    - друга.
-    - Я
-    - мого
-    - чекаю
-    correct_order:
-    - Я
-    - чекаю
-    - мого
-    - друга.
-  - words:
-    - Ти
-    - лікаря?
-    - знаєш
-    - цього
-    correct_order:
-    - Ти
-    - знаєш
-    - цього
-    - лікаря?
-  - words:
-    - шукає
-    - брата.
-    - Олена
-    - свого
-    correct_order:
-    - Олена
-    - шукає
-    - свого
-    - брата.
-  - words:
-    - сусіда.
-    - бачу
-    - нашого
-    - Я
-    correct_order:
-    - Я
-    - бачу
-    - нашого
-    - сусіда.
-  - words:
-    - любиш
-    - Кого
-    - ти?
-    correct_order:
-    - Кого
-    - ти
-    - любиш?
-  - words:
-    - покупця.
-    - продавець
-    - бачить
-    - Новий
-    correct_order:
-    - Новий
-    - продавець
-    - бачить
-    - покупця.
-- id: order-wedding-dialogue
-  type: order
-  instruction: Розставте репліки діалогу в правильному порядку (Put the dialogue lines
-    in the correct order)
-  items:
-  - — Кого ти бачиш?
-  - — Я бачу маму і тата. А це мій брат.
-  - — Ти знаєш мого брата?
-  - — Ні, я не знаю твого брата.
-  - — Ходімо! Я тебе познайомлю!
-  correct_order:
-  - 0
-  - 1
-  - 2
-  - 3
-  - 4
-- id: translate-accusative-animate
-  type: translate
-  instruction: Оберіть правильний переклад (Choose the correct translation)
-  items:
-  - source: I am looking for the doctor.
-    options:
-    - text: Я шукаю лікаря.
-      correct: true
-    - text: Я шукаю лікар.
-      correct: false
-    - text: Я шукаю лікарю.
-      correct: false
-    - text: Я шукаю лікарем.
-      correct: false
-  - source: Do you know my brother?
-    options:
-    - text: Ти знаєш мого брата?
-      correct: true
-    - text: Ти знаєш мій брат?
-      correct: false
-    - text: Ти знаєш моєму брату?
-      correct: false
-    - text: Ти знаєш моїм братом?
-      correct: false
-  - source: I see a friend.
-    options:
-    - text: Я бачу друга.
-      correct: true
-    - text: Я бачу друг.
-      correct: false
-    - text: Я бачу другові.
-      correct: false
-    - text: Я бачу другом.
-      correct: false
-  - source: We are waiting for the teacher.
-    options:
-    - text: Ми чекаємо вчителя.
-      correct: true
-    - text: Ми чекаємо вчитель.
-      correct: false
-    - text: Ми чекаємо вчителю.
-      correct: false
-    - text: Ми чекаємо вчителем.
-      correct: false
-  - source: She loves dad.
-    options:
-    - text: Вона любить тата.
-      correct: true
-    - text: Вона любить тато.
-      correct: false
-    - text: Вона любить татові.
-      correct: false
-    - text: Вона любить татом.
-      correct: false
-  - source: Who do you see?
-    options:
-    - text: Кого ти бачиш?
-      correct: true
-    - text: Що ти бачиш?
-      correct: false
-    - text: Хто ти бачиш?
-      correct: false
-    - text: Ким ти бачиш?
-      correct: false
+    - брат
+    - брата
+    - брату

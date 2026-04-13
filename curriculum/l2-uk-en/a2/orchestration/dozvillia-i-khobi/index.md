@@ -1,6 +1,6 @@
 # Build Summary: dozvillia-i-khobi (A2)
 
-Generated: 2026-04-08 02:47
+Generated: 2026-04-11 14:30
 
 ## Pipeline Phases
 
@@ -12,15 +12,15 @@ Generated: 2026-04-08 02:47
 | pre-verify | complete | 2026-04-08 00:31:32 |
 | write | complete | 2026-04-08 00:35:15 |
 | exercises | complete | 2026-04-08 00:35:15 |
-| activities | complete | 2026-04-08 00:36:55 |
+| activities | complete | 2026-04-11 12:25:40 |
 | verify-exercises | complete | 2026-04-08 00:36:55 |
 | annotate | complete | 2026-04-08 00:36:55 |
 | vocab | complete | 2026-04-08 00:41:23 |
 | enrich | complete | 2026-04-08 00:41:23 |
 | verify | complete | 2026-04-08 00:41:23 |
-| review | complete | 2026-04-08 00:47:23 |
 | stress | complete | 2026-04-08 00:47:23 |
-| publish | complete | 2026-04-08 00:47:25 |
+| publish | complete | 2026-04-11 12:30:20 |
+| audit | complete | 2026-04-11 12:30:20 |
 
 ## Reviews
 
@@ -28,6 +28,7 @@ Generated: 2026-04-08 02:47
 |-------|------|
 | 1 | dozvillia-i-khobi-review-r1.md |
 | 2 | dozvillia-i-khobi-review-r2.md |
+| 3 | dozvillia-i-khobi-review-r3.md |
 
 ## Dispatch Log
 
@@ -35,18 +36,35 @@ Generated: 2026-04-08 02:47
 |-------|-------|----------|----|
 | pre-verify | gemini-tools (auto) | 273s | ✅ |
 | skeleton | gemini (auto) | 216s | ✅ |
+| write | gemini-tools (gemini-3.1-pro-preview) | 0s | ❌ |
 | activities | gemini-tools (gemini-3.1-pro-preview) | 100s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 0s | ❌ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 0s | ❌ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 0s | ❌ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 0s | ❌ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 0s | ❌ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 125s | ✅ |
 | vocab | gemini (auto) | 262s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 183s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 177s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 170s | ✅ |
 | write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 44s | ✅ |
+| write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 0s | ❌ |
+| write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 0s | ❌ |
+| write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 0s | ❌ |
+| write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 55s | ✅ |
 | write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 57s | ✅ |
+| write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 75s | ✅ |
 | write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 39s | ✅ |
+| write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 44s | ✅ |
 | write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 47s | ✅ |
+| write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 65s | ✅ |
 | write-chunk-05 | gemini-tools (gemini-3.1-pro-preview) | 36s | ✅ |
+| write-chunk-05 | gemini-tools (gemini-3.1-pro-preview) | 29s | ✅ |
 
 ## Files
 
+- `.build.lock`
 - `chunk-01.md`
 - `chunk-02.md`
 - `chunk-03.md`
@@ -57,6 +75,7 @@ Generated: 2026-04-08 02:47
 - `quick-verify.json`
 - `review-structured-r1.yaml`
 - `review-structured-r2.yaml`
+- `review-structured-r3.yaml`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`
@@ -66,5 +85,6 @@ Generated: 2026-04-08 02:47
 - `v6-chunk-04-prompt.md`
 - `v6-chunk-05-prompt.md`
 - `v6-pre-verify-prompt.md`
+- `v6-prompt.md`
 - `v6-review-prompt.md`
 - `v6-skeleton-prompt.md`

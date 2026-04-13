@@ -1,20 +1,49 @@
-## Давальний чи знахідний? Порівняння (Dative vs. Accusative with Verbs)
+## Давальний чи знахідний? Порівняння (Dative vs. Accusative with Verbs) (~500 words)
 
-Understanding when to use the Dative or the Accusative case is often a challenge for learners. The key is the logic of the action. The Accusative case is for direct actions where the person or object is the immediate target. Think of it as a direct hit. When you see someone, know a language, or love a person, the action lands directly on them. The Dative case, however, is for indirect actions where the person is a recipient or beneficiary. Think of it as a hand-off or a delivery. When you help someone, thank them, or call them on the phone, you are directing your help, gratitude, or communication toward them. They are receiving the result of your action, not being directly acted upon. This explains why English direct objects do not always translate to the Ukrainian Accusative case.
+Now that we know how to ask about someone's age and use the Dative case for experiences, we need to carefully compare it with the Accusative case. The Accusative case is reserved for direct objects. It answers the questions "who?" or "what?" is directly acted upon in a sentence. The Dative case is used for indirect objects, recipients, or experiencers. It answers the question "to whom?" or "for whom?" the action is being done. You must always look closely at the verb to decide which case is appropriate.
 
-Давайте порівняємо ці два відмінки на практиці. Зверніть увагу на закінчення. Коли дія пряма, ми використовуємо знахідний відмінок. Я люблю маму. Я бачу друга. Я чекаю подругу. Жіночий рід має закінчення «-у», а чоловічий — «-а». Але коли дія спрямована до людини, потрібен давальний відмінок. Я допомагаю мамі. Я дзвоню другові. Я дякую подрузі. Тепер жіночий рід має закінчення «-і», а чоловічий отримує «-ові». Ця зміна повністю змінює роль людини в реченні.
+Давайте детально згадаємо дієслова, які завжди вимагають знахідного відмінка. Це такі популярні дієслова як бачити, знати, любити та чекати. Вони завжди відповідають на питання «кого?» або «що?». Наприклад, я бачу маму на вулиці. Він дуже любить старшого брата. Ми чекаємо молодшу сестру біля школи. У цих реченнях дія прямо переходить на людину або предмет.
 
-> *Let's compare these two cases in practice. Pay attention to the endings. When the action is direct, we use the accusative case. I love my mom. I see a friend. I wait for a girlfriend. The feminine gender has the "-u" ending, and the masculine has "-a". But when the action is directed toward a person, the dative case is needed. I help my mom. I call a friend. I thank a girlfriend. Now the feminine gender has the "-i" ending, and the masculine receives "-ovi". This change completely changes the person's role in the sentence.*
+> *Let us remember in detail the verbs that always require the accusative case. These are such popular verbs as to see, to know, to love, and to wait for. They always answer the questions "who?" or "what?". For example, I see mom on the street. He really loves his older brother. We are waiting for our younger sister near the school. In these sentences, the action passes directly to the person or object.*
 
-Деякі дієслова можуть вимагати і давального, і знахідного відмінків одночасно. Найкращі приклади — це дієслова «давати» та «розповідати». Людина, яка отримує дію, завжди стоїть у давальному відмінку. А предмет, який ми передаємо, стоїть у знахідному відмінку. Наприклад, я даю мамі квіти. Тут слово «мамі» відповідає на питання «кому?», а слово «квіти» відповідає на питання «що?». Інший приклад: він розповідає нам історію. Слово «нам» — це адресат у давальному відмінку, а «історію» — це прямий об'єкт.
+Let us compare these direct actions with the Dative verbs we learned earlier. To master Ukrainian, you must memorize the core verbs that require the Dative case. These include **допомагати** (to help), **дякувати** (to thank), and **дзвонити** (to call, to phone). Notice how the noun ending changes in these pairs:
 
-> *Some verbs can require both the dative and the accusative cases simultaneously. The best examples are the verbs "to give" and "to tell". The person who receives the action always stands in the dative case. And the object that we transfer stands in the accusative case. For example, I give flowers to my mom. Here the word "to my mom" answers the question "to whom?", and the word "flowers" answers the question "what?". Another example: he tells us a story. The word "us" is the addressee in the dative case, and "story" is the direct object.*
+*Accusative:*
+**Я бачу маму.** — *I see mom.*
 
-Ask yourself about the nature of the action to decide which case it requires. If the person is the destination of your communication, help, or gift, use the Dative case. If the person is the physical object of the action, such as seeing or finding them, use the Accusative case. A perfect illustration is the English word "call". If you mean making a phone call to someone, you send a message to a destination. In Ukrainian, this is **дзвонити**, requiring the Dative case. If you mean physically calling someone over, they are the direct object. This is **кликати**, which strictly requires the Accusative case.
+*Dative:*
+**Я допомагаю мамі.** — *I help mom.*
+
+*Accusative:*
+**Ми любимо подругу.** — *We love our friend.*
+
+*Dative:*
+**Ми дзвонимо подрузі.** — *We call our friend.*
+
+You also need to use the Dative case with verbs of communication and disruption. Always use this case with **радити** (to advise), **заважати** (to bother, to disturb), and **відповідати** (to answer (someone)). These verbs describe actions directed toward a specific recipient.
+
+*Accusative:*
+**Він знає брата.** — *He knows his brother.*
+
+*Dative:*
+**Він радить братові.** — *He advises his brother.*
+
+*Accusative:*
+**Студент слухає вчителя.** — *The student listens to the teacher.*
+
+*Dative:*
+**Студент відповідає вчителеві.** — *The student answers the teacher.*
 
 :::info
-**Learn the question with the verb**
-When learning new vocabulary, write down the question word the verb demands. Memorize "**допомагати (кому?)**" instead of just "to help". This habit will prevent you from guessing cases based on English grammar.
+**Grammar box** — The choice between the Accusative and Dative cases depends entirely on the specific verb you use. You cannot simply guess the correct case based on English grammar, because English often uses direct objects where Ukrainian requires the Dative case. You must learn the case requirement together with every new Ukrainian verb you study.
 :::
 
-<!-- INJECT_ACTIVITY: quiz, quiz-case-choice -->
+We use the Dative case for experiencers. Remember the special syntax for **подобатися** (to be pleasing to, to like (reversed syntax)) when talking about things you enjoy. The thing you like is actually the grammatical subject of the sentence.
+
+You also use the Dative case when stating someone's age. Remember the number agreement rules for **рік** (year). You must use **роки** (years (2-4)) after the numbers two, three, and four. Finally, you use **років** (years (5+)) after five and all higher numbers.
+
+Існують також дієслова, які можуть приймати два об'єкти одночасно. Це дієслова давати, розповідати, показувати та дарувати. У таких реченнях ми використовуємо давальний відмінок для особи, а знахідний відмінок для предмета. Я даю другові нову цікаву книгу. Вона розповідає нам довгу історію. Вчитель показує новим студентам світлий клас. Ми даруємо мамі дуже гарні квіти. Це надзвичайно популярна і корисна граматична конструкція в українській мові.
+
+> *There are also verbs that can take two objects simultaneously. These are the verbs to give, to tell, to show, and to gift. In such sentences, we use the dative case for the person, and the accusative case for the object. I give a friend a new interesting book. She tells us a long story. The teacher shows the new students the bright classroom. We gift mom very beautiful flowers. This is an extremely popular and useful grammar construction in the Ukrainian language.*
+
+<!-- INJECT_ACTIVITY: quiz-dative-vs-accusative -->

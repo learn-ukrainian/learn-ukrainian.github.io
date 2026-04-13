@@ -1,0 +1,56 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 7
+  evidence: 'All planned sections are present, and the core content is covered, but
+    fidelity slips in specifics: the plan’s Lviv route is introduced as `Площа Ринок
+    ... Оперний театр ... Високий замок`, while the '
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: No Russianisms, Surzhyk, calques, paronym errors, or wrong case/gender
+    claims found. Checked suspect forms such as `направо`, `наліво`, `пішки`, `розі`,
+    `дістатися`, `трамваєм`; all are attested.
+- dimension: 3
+  name: Pedagogical quality
+  score: 7
+  evidence: The module does teach with examples (`Я зараз у парку.`, `Я йду в магазин.`,
+    `Магазин на вулиці Шевченка.`), but too much space goes to English meta-explanation
+    instead of learner-usable Ukrainian mod
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'All required plan words appear naturally in prose: `пішки`, `хвилина`,
+    `район`, `центр`, `Вибачте`. All recommended items also appear: `дістатися`, `ідіть`,
+    `їдьте`, `поруч`.'
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: 'The exercise inventory matches the plan exactly, and the markers follow
+    the relevant teaching sections: `fill-in-directions` after directions, `quiz-locative-accusative`
+    after `Де/Куди`, `fill-in-tran'
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: The tone is mostly teacherly and grounded, but several lines drift into
+    generic filler, e.g. `Measuring distance through the required mode of transport
+    is the most natural way to explain city geograph
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All H2 headings from the plan are present and ordered correctly; the markdown
+    is clean; the deterministic word count is 1581, so the module is safely above
+    target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: The module is anchored in Ukrainian context (`Lviv`, `Площа Ринок`, `Оперний
+    театр`, `Високий замок`) and does not frame Ukrainian through Russian comparison.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: The commute dialogue is functional and natural (`Спочатку йду на зупинку...
+    Потім іду пішки...`), but the first walking-tour dialogue is still a short prompt
+    chain rather than a fuller exchange with d
+findings: []

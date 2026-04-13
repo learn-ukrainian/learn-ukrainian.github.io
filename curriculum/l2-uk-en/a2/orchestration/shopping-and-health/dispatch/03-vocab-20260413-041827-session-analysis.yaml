@@ -1,0 +1,59 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T02-17-af7fecf8.json
+phase: vocab
+prompt_chars: 19181
+response_chars: 2712
+prompt_words: 3163
+response_words: 309
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.0416
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.012
+- name: plan
+  start: 1028
+  length: 18153
+  fraction: 0.9464
+large_sections:
+- plan
+directives_total: 9
+directives_covered: 1
+directives_missed:
+- kind: must
+  text: We must distinguish between uncountable substances and countable items.
+  covered: false
+  coverage_note: 0/7 keywords (0%)
+- kind: must
+  text: The Genitive case is strictly required after numbers five and above.
+  covered: false
+  coverage_note: 1/8 keywords (12%)
+- kind: must
+  text: In this structure, the body part that hurts is the actual subject of the sentence,
+    so it must be in the Nominative case.
+  covered: false
+  coverage_note: 2/12 keywords (17%)
+- kind: must
+  text: Whenever you want to state that you *do not* have a certain symptom, like
+    an **апетит** (appetite) or a **температура** (temperature, fever), you must use
+    the negative word **немає** followed by the symptom in the Genitive case.
+  covered: false
+  coverage_note: 8/23 keywords (35%)
+- kind: inject_activity
+  text: fill-in-complete-market-dialogue-lines-with-correct-quantity-genitive-forms
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-choose-the-correct-genitive-phrase-for-health-complaints-and-remedies
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-match-health-problems-to-their-remedies
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: true-false-judge-whether-shopping-and-health-phrases-use-the-genitive-correctly
+  covered: false
+  coverage_note: marker missing

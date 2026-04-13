@@ -1,6 +1,6 @@
 {
   "total_items": 80,
-  "grounded_items": 64,
+  "grounded_items": 63,
   "ungrounded": [
     {
       "word": "любила",
@@ -9,106 +9,109 @@
       "role": "answer"
     },
     {
-      "word": "читати",
+      "word": "наступного",
       "exercise_type": "fill-in",
-      "context": "У дитинстві вона ____ читати.",
+      "context": "Наступного року я ____.",
       "role": "context"
     },
     {
-      "word": "україні",
+      "word": "року",
       "exercise_type": "fill-in",
-      "context": "Сьогодні ми ____ в Україні.",
+      "context": "Наступного року я ____.",
       "role": "context"
     },
     {
-      "word": "японія",
+      "word": "читає",
+      "exercise_type": "group-sort",
+      "context": "читає",
+      "role": "answer"
+    },
+    {
+      "word": "ся",
       "exercise_type": "fill-in",
-      "context": "Моя ____ — це Японія.",
-      "role": "context"
-    },
-    {
-      "word": "вчилися",
-      "exercise_type": "group-sort",
-      "context": "вчилися",
+      "context": "ся",
       "role": "answer"
     },
     {
-      "word": "вчимося",
-      "exercise_type": "group-sort",
-      "context": "вчимося",
+      "word": "народив",
+      "exercise_type": "fill-in",
+      "context": "Він народив____ в селі.",
+      "role": "context"
+    },
+    {
+      "word": "лася",
+      "exercise_type": "fill-in",
+      "context": "лася",
       "role": "answer"
     },
     {
-      "word": "розповідаю",
-      "exercise_type": "group-sort",
-      "context": "розповідаю",
+      "word": "народи",
+      "exercise_type": "fill-in",
+      "context": "Вона народи____ в місті.",
+      "role": "context"
+    },
+    {
+      "word": "жи",
+      "exercise_type": "fill-in",
+      "context": "Дідусь жи____ в Канаді.",
+      "role": "context"
+    },
+    {
+      "word": "вся",
+      "exercise_type": "fill-in",
+      "context": "вся",
       "role": "answer"
     },
     {
-      "word": "тарас",
+      "word": "вчи",
+      "exercise_type": "fill-in",
+      "context": "Марко вчи____ в університеті.",
+      "role": "context"
+    },
+    {
+      "word": "слово",
       "exercise_type": "true-false",
-      "context": "Тарас народився в Києві.",
+      "context": "Слово «раніше» (earlier) часто використовують з минулим часо",
       "role": "context"
     },
     {
-      "word": "не",
+      "word": "часто",
       "exercise_type": "true-false",
-      "context": "Тарас не любить свою роботу.",
+      "context": "Слово «раніше» (earlier) часто використовують з минулим часо",
       "role": "context"
     },
     {
-      "word": "любить",
+      "word": "використовують",
       "exercise_type": "true-false",
-      "context": "Тарас не любить свою роботу.",
+      "context": "Слово «раніше» (earlier) часто використовують з минулим часо",
       "role": "context"
     },
     {
-      "word": "грає",
+      "word": "минулим",
       "exercise_type": "true-false",
-      "context": "У вільний час він грає у баскетбол.",
+      "context": "Слово «раніше» (earlier) часто використовують з минулим часо",
       "role": "context"
     },
     {
-      "word": "баскетбол",
+      "word": "часом",
       "exercise_type": "true-false",
-      "context": "У вільний час він грає у баскетбол.",
+      "context": "Слово «раніше» (earlier) часто використовують з минулим часо",
       "role": "context"
     },
     {
-      "word": "хоче",
+      "word": "майбутнім",
       "exercise_type": "true-false",
-      "context": "Далі Тарас хоче жити в Одесі.",
-      "role": "context"
-    },
-    {
-      "word": "подорожував",
-      "exercise_type": "error-correction",
-      "context": "Далі я подорожував.",
-      "role": "context"
-    },
-    {
-      "word": "жили",
-      "exercise_type": "error-correction",
-      "context": "жили",
-      "role": "answer"
-    },
-    {
-      "word": "закінчив",
-      "exercise_type": "error-correction",
-      "context": "Потім я переїхала в Київ і закінчив університет.",
+      "context": "Слово «зараз» (now) часто використовують з майбутнім часом.",
       "role": "context"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 16,
-    "tested_in_exercises": 8,
+    "tested_in_exercises": 11,
     "not_tested": [
-      "батьки",
-      "дитинство",
-      "закінчити",
+      "мрія",
       "народитися",
       "переїхати",
-      "програміст",
       "розповідати",
       "успіх"
     ]

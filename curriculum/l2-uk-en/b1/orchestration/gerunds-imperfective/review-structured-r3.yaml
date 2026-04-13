@@ -1,0 +1,51 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: Covers all 7 sections. Follows the morning jog situation, suffix rules,
+    logical subject, styles, and reading passage. Cites Lytvynova, Zabolotnyi, and
+    Avramenko naturally.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: 'Critical issue: teaching Russicisms (**"читаюча дівчина"**, **"сяючі
+    очі"**) as "classic" participle examples without noting their non-standard status.
+    Use of **"свіжі новини"** instead of **"останні '
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent PPP flow. Clear distinction between -учи/-ючи and -ачи/-ячи.
+    Deep explanation of the logical subject rule with clear "wrong" examples.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required vocabulary (дієприслівник, недоконаний вид, читаючи, слухаючи,
+    пишучи, говорячи, обставина, додаткова дія, одночасність, логічний підмет) and
+    recommended vocabulary (усміхаючись, дивлячис
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: 6 markers spread evenly. Types (fill-in, match, error-correction, essay)
+    match the plan exactly.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Encouraging teacher tone ("Уявіть типовий літній ранок...", "Розгляньмо
+    кожен із цих..."). Natural multi-turn dialogue.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Word count (4637) is well above the 4000 target. H2 headings match the
+    plan exactly.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: References Kyiv (Embankment, Dnipro Bridge), the Carpathians (Hoverla,
+    Smereky), and decolonized pedagogical terms.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The opening dialogue between "Бігун" and "Друг" is natural and effectively
+    models the grammar point in a real-life situation.
+findings: []

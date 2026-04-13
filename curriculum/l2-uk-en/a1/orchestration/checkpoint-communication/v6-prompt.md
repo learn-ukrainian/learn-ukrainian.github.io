@@ -225,26 +225,23 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-- Confirmed: різдво, кутя, колядка, вільний, святкувати, разом, двадцять, четвертий, принести, сказати, хотіти, свічка, привіт, гарний, купити, запросити, друг.
-- Not found: None (all plan words verified).
+- Confirmed: Олена, Тарас, кутя, колядки, Олено, Тарасе, Андрію, читай, дай, читайте, дайте, і, та, а, але, бо, що, де, коли, святкувати, разом, вільний, вільна, двадцять, четвертого, ходімо, принеси, принесу, купити, гарні, свічки, різдво
+- Not found: None
 
 ## Grammar Rules
-- Vocative Case: Grade 6 (betsa) §39 — І відміна тверда: -о (Олено); ІІ відміна тверда: -е (Тарасе); ІІ відміна м'яка: -ю (Андрію).
-- Imperative Mood: Grade 11 (avramenko) §17 — 2nd person sing: -∅/-и (скажи, принеси); 2nd person plur: -те/-іть (скажіть, принесіть). Note: Using "давай" is a calque; use synthetic forms or "хай".
-- Conjunctions: Grade 4 (varzatska) §73 — Coordinating (і, а, але, бо) and subordinating (що, де, коли) require proper comma usage before the conjunction in complex sentences.
-- Holiday Greetings: Phraseological usage — "З" + Instrumental case (З Різдвом!, З Новим роком!).
+- Vocative case (Кличний відмінок): Правопис § 74 (І відміна) та § 87 (ІІ відміна) — Іменники першої відміни мають закінчення -о, -е, -є, -ю; іменники другої відміни мають закінчення -у, -ю, -е у кличному відмінку.
 
 ## Calque Warnings
-- "Давай святкувати": Calque from Russian "давай" — OK: "святкуймо" or "хотілося б святкувати".
-- "Я думаю, що": Acceptable for A1, but "На мою думку" is a more authentic Ukrainian alternative.
-- "Прийди до мене": OK — standard imperative (Grade 7 avramenko §35).
+- приймати участь: calque — брати участь
+- задавати питання: calque — ставити питання
+- по імені: calque — на ім'я
 
 ## CEFR Check
-- різдво: A1 — OK (Core holiday vocabulary)
-- свято: A1 — OK
-- кутя: A1 — OK (Essential cultural term for A1.7 context)
-- запросити: A2 — Above target (Consider using "покликати" for A1, but "запросити" is acceptable for a checkpoint)
-- вільний: A1 — OK
+- святкувати: A1 — OK
+- свічка: A2 — above target
+- колядка: A2 — above target
+- вільний: A2 — above target
+- кутя: B1 — above target
 </pre_verified_facts>
 
 
@@ -557,7 +554,7 @@ These exercises are models for the content writer, demonstrating the native Ukra
 
 ## Section Structure
 
-Write these sections as H2 headings, in this exact order:
+Write these sections as H2 headings, in this **exact** order:
 
 - `## Що ми знаємо? (What Do We Know?)` (~200 words)
 - `## Читання (Reading Practice)` (~250 words)
@@ -565,22 +562,25 @@ Write these sections as H2 headings, in this exact order:
 - `## Діалог (Connected Dialogue)` (~200 words)
 - `## Підсумок — Summary` (~150 words)
 
+**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim** as an `## H2` line. This includes the FINAL summary/transition section (`Підсумок: ...`, `Підсумок та перехід до M...`, etc.) — the writer's most common failure is silently dropping the closing section. Do NOT skip it. Do NOT renumber. Do NOT merge headings. The post-write quick-verify check will fail your build if any heading is missing, even if the prose itself is excellent.
+
 Each section should follow the word budget specified. The total must reach 1000 words minimum.
 
 ---
 
 ## Content Rules
 
-TARGET: 20-35% Ukrainian.
+TARGET: 20-35% Ukrainian. ⚠️ HARD GATE — the audit REJECTS modules below 20%.
 LANGUAGE ROLES:
-- THEORY & EXPLANATION: English prose — brief and clear. Show, don't tell.
+- THEORY & EXPLANATION: English prose — brief, 2-3 sentences per concept. No long expository paragraphs. Explain once, then show Ukrainian.
+- UKRAINIAN NARRATIVE PARAGRAPHS: **REQUIRED — minimum 1 per section.** A 3-6 sentence Ukrainian paragraph demonstrating the concept in use, followed IMMEDIATELY by a `> *English translation*` blockquote. This is the PRIMARY driver of hitting the immersion target. Without these paragraphs you cannot reach 20%.
 - PARADIGM TABLES: Conjugation/declension tables with all cells Ukrainian.
-- EXAMPLE LISTS: Ukrainian sentences in bulleted lists (each: Ukrainian — English gloss).
-- DIALOGUES: Mini-dialogues in blockquotes with English gloss per line.
+- EXAMPLE LISTS: Ukrainian sentences in bulleted lists (each: Ukrainian — English gloss). Minimum 5 per rule.
+- DIALOGUES: Mini-dialogues in blockquotes with English gloss per line. At least 1 dialogue per module.
 - PATTERN BOXES: Show transformations: `читати → читай → читайте`.
 - INLINE: Ukrainian words/phrases bolded in English prose.
-- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian. Full Ukrainian sentences go in tables, bulleted lists, dialogues, or pattern boxes.
-Ukrainian sentences max 10 words. Mix container types.
+- STRUCTURAL RULE: Every section MUST contain a Ukrainian narrative paragraph (3-6 sentences, translated in blockquote) PLUS supporting tables/lists/dialogues/pattern boxes. Pure-English sections are FORBIDDEN at M35+.
+Ukrainian sentences max 12 words. Mix container types.
 
 HARD GRAMMAR RULES (audit will reject violations):
 - Max 10 words per Ukrainian sentence (STRICT — count every word)
@@ -612,6 +612,25 @@ PLAN-AWARE EXEMPTIONS: The following bans are RELAXED for this module because th
 - **Zero calques**: No приймати душ→брати душ, приймати рішення→ухвалювати рішення
 - **Zero paronyms**: тактична≠тактовна, ефектний≠ефективний — use the right word, not a similar-sounding one
 - **Natural Ukrainian**: Write how a Ukrainian teacher would explain this to a student. Not robotic, not textbook-dry, not overly casual.
+
+### FORBIDDEN WORDS — never write these (#1189)
+
+The following Russian words have leaked into past builds and broken modules. They are **hard-banned** — the post-write toxic-token scanner will fail your build the moment it sees one. Use the Ukrainian alternative every time, even in dialogues, even in casual prose, even when quoting a learner's mistake (use a `<!-- VERIFY -->` placeholder instead of typing the Russian form):
+
+| Russian (FORBIDDEN) | Ukrainian (USE THIS) |
+|---|---|
+| хорошо | добре |
+| конечно | звичайно / певна річ |
+| спасибо | дякую |
+| пожалуйста | будь ласка / прошу |
+| ничего | нічого |
+| сейчас | зараз |
+| тоже | теж / також |
+| здесь | тут |
+| кот | кіт |
+| кон | кін |
+
+This list is enforced word-for-word by `scripts/build/quick_verify.py` (SEVERE_RUSSIANISMS). If you produce any of these tokens — even inside a quoted example, even inside a dialogue line spoken by a Russian-speaking character — the build halts immediately. There is no exception.
 
 **Authority hierarchy (if uncertain about a word, check in this order):**
 VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (stress) → Антоненко-Давидович (style) → Грінченко (etymology).
@@ -721,45 +740,34 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Що ми знаємо? (~220 words total)
-- P1 (~100 words): Welcome the student to the A1.7 Checkpoint. Explain that this module is a "Communication Hub" where we integrate the social skills learned in M42–M46. Introduce the "Mission": You are helping friends organize a school event, which requires addressing people, giving clear orders, and explaining plans.
-- P2 (~120 words): A series of rhetorical self-check questions to activate prior knowledge. Ask the learner if they remember how to call a friend (Тарасе! Олено!), how to ask for help (Дай! Принеси!), and how to explain reasons (бо я не знаю..., тому що...). Mention the cultural context of holiday greetings (З Різдвом!).
+## Що ми знаємо? (What Do We Know?) (~220 words total)
+- P1 (~50 words): Introduction to the A1.7 Checkpoint. Explain that this module integrates the communication skills learned over the past five modules, shifting focus from isolated grammar to real-life conversational flow.
+- P2 (~170 words): Self-check bulleted list covering M42-M46 goals. Can you call someone by name using the vocative case (`Олено!`, `Тарасе!`)? Can you give instructions and make requests using the imperative (`Читай!`, `Дайте!`)? Can you logically connect ideas with conjunctions (`і`, `а`, `але`, `бо`)? Can you build complex sentences with subordinating words (`що`, `де`, `коли`)? Can you name Ukrainian holidays and greet people appropriately (`З Різдвом!`)?
 
-## Читання (~270 words total)
-- P1 (~100 words): Introduction to the reading text. Set the scene: Olena is calling her friend Taras to plan a community Christmas gathering at the school. This text will demonstrate how all communication tools (vocative, imperative, conjunctions) work together in a single flow.
-- P2 (~170 words): The Reading Text: "Лист або дзвінок Олени". Olena writes/speaks to Taras. Key sentences: "Тарасе, привіт! Прийди раніше, будь ласка. Принеси плакати і квитки. Я знаю, що ти маєш напої, але нам потрібні стільці, бо людей буде багато. Я хочу, щоб ми святкували Різдво разом. Скажи, коли ти будеш у школі." Includes vocabulary: плакат (poster), квиток (ticket), напій (drink), стілець (chair).
+## Читання (Reading Practice) (~280 words total)
+- P1 (~40 words): Introduction to the reading context. Set the scene: Olena is sending a message to her friend Taras to organize a holiday celebration.
+- P2 (~140 words): A short Ukrainian reading text incorporating all A1.7 skills. Text focuses on: "Тарасе, привіт! Ти пам'ятаєш, що скоро Різдво? Я думаю, що ми маємо святкувати разом. Прийди до мене в суботу! Принеси, будь ласка, кутю, бо я не маю часу готувати. Скажи, коли ти будеш."
+- P3 (~100 words): English translation and a brief contextual breakdown. Highlight how the text naturally chains together direct address (vocative), polite commands (imperative), and reasons (conjunction `бо`), creating a complete communicative loop.
 
-## Граматика (~240 words total)
-- P1 (~60 words): Vocative Case Recap. Review the three main patterns for A1 names: -а becomes -о (Оксано, Олено), hard consonants add -е (Петре, Тарасе, друже), and soft/й endings change to -ю (Андрію, матусю). Emphasize that in Ukraine, calling someone by their name in the Nominative (Оксана!) sounds like a command or a list, whereas the Vocative is for real communication.
-- P2 (~60 words): Imperative Mood Recap. Review forms for "ти" (читай, пиши, роби) and "ви" (читайте, пишіть, робіть). Remind learners to add "будь ласка" (please) for politeness. Contrast the informal "Дай" with the formal "Дайте".
-- <!-- INJECT_ACTIVITY: vocative-imperative-practice --> [fill-in, focus: Vocative + Imperative forms in a school fair context, 8 items]
-- P3 (~60 words): Conjunctions & Linking. Review the coordinating conjunctions: і/та (addition), а (mild contrast/and), але (strong contrast/but), and бо/тому що (reason/because). Explain when to use "а" (e.g., Мій чай гарячий, а твій холодний).
-- <!-- INJECT_ACTIVITY: conjunctions-quiz --> [quiz, focus: Choosing the correct conjunction (і / а / але / бо), 8 items]
-- P4 (~60 words): Complex Sentences with що, де, коли. Review how these words link a main clause to a sub-clause. CRITICAL: Reiterate the rule about the mandatory comma before these conjunctions in Ukrainian. Examples: "Я думаю, що..." (I think that...), "Вона знає, де..." (She knows where...), "Скажи, коли..." (Tell [me] when...).
-- <!-- INJECT_ACTIVITY: complex-sentences-fill-in --> [fill-in, focus: Completing sentences with що, де, or коли, 6 items]
+## Граматика (Grammar Summary) (~250 words total)
+- P1 (~60 words): Review of the Vocative case (Кличний відмінок) for direct address (`-а` → `-о` for Олена; hard consonant → `-е` for Тарас; soft consonant → `-ю` for Андрій) and the Imperative mood (`ти` form: `читай`, `дай`; `ви` form: `читайте`, `дайте`).
+- P2 (~60 words): Review of coordinating conjunctions. Distinguish between addition (`і`/`та`), mild contrast (`а`), strong contrast (`але`), and cause/reason (`бо`). Provide a quick example: `Я читаю, а ти спиш, бо вже пізно.`
+- P3 (~60 words): Review of subordinating conjunctions (`що` - that, `де` - where, `коли` - when). Emphasize the strict Ukrainian punctuation rule: a comma is always required before these words (e.g., `Я знаю, де ти`).
+- P4 (~70 words): Review of holiday vocabulary and greetings. Remind learners of the `З` + Instrumental case structure for congratulations (`З Різдвом!`, `З Великоднем!`).
+- <!-- INJECT_ACTIVITY: fill-in-vocative-imperative --> [fill-in, Vocative + imperative: ___(Олена), ___(читати) цей текст, будь ласка!, 8 items]
+- <!-- INJECT_ACTIVITY: quiz-conjunctions --> [quiz, Choose the conjunction: Я не йду, ___ хворий. (і / а / бо / що), 8 items]
+- <!-- INJECT_ACTIVITY: fill-in-complex-sentences --> [fill-in, Complete complex sentences: Я знаю, ___ він тут. Скажи, ___ ти прийдеш., 6 items]
 
-## Діалог (~240 words total)
-- P1 (~60 words): Context for the dialogue. Taras and Olena are finalizing their plans for the holiday gathering. They need to confirm the time, place, and what to bring.
-- P2 (~120 words): The Dialogue: "Різдвяні плани". 
-    — Олено, привіт! Ти знаєш, що скоро Різдво?
-    — Так, Тарасе! Я думаю, що ми можемо святкувати разом.
-    — Добре! Скажи, коли ти вільна, бо я хочу запросити друзів.
-    — Я вільна двадцять четвертого. Але я не знаю, де ми будемо.
-    — Ходімо до мене! Принеси кутю, будь ласка.
-    — Добре, принесу! І я знаю, де купити гарні свічки. З Різдвом!
-- P3 (~60 words): A brief cultural note on holiday greetings. Explain the formula "З + Instrumental case" (З Різдвом, З Великоднем, З Новим роком). Mention that responding with "Навзаєм!" (Likewise!) or "Вас також!" (You too!) is standard.
-- <!-- INJECT_ACTIVITY: holiday-greeting-match --> [quiz, focus: Matching the specific greeting to the holiday (e.g., З Різдвом! -> 7 січня), 8 items]
+## Діалог (Connected Dialogue) (~220 words total)
+- P1 (~30 words): Setting the scene for the dialogue: Planning a holiday gathering with friends.
+- P2 (~130 words): The dialogue script in Ukrainian. "— Олено, привіт! Ти знаєш, що скоро Різдво? — Так, Тарасе! Я думаю, що ми можемо святкувати разом. — Добре! Скажи, коли ти вільна, бо я хочу запросити друзів. — Я вільна двадцять четвертого. Але я не знаю, де ми будемо. — Ходімо до мене! Принеси кутю, будь ласка. — Добре, принесу! І я знаю, де купити гарні свічки. З Різдвом!"
+- P3 (~60 words): English translation and brief analysis of how the speakers negotiate plans using complex sentences (`Скажи, коли ти вільна`), contrast (`Але я не знаю...`), and polite requests (`Принеси кутю, будь ласка`).
+- <!-- INJECT_ACTIVITY: quiz-holiday-match --> [quiz, Holiday match: З Різдвом! / З Великоднем! — match greeting to holiday, 8 items]
 
-## Підсумок (~150 words)
-- P1 (~150 words): Achievement checklist for phase A1.7 Communication.
-    - You can address people correctly using the vocative case (Олено! Тарасе!).
-    - You can give instructions and make requests using the imperative mood (Читай! Дайте!).
-    - You can connect your ideas into longer sentences using conjunctions (і, а, але, бо).
-    - You can build complex sentences with the words що, де, коли (and you remember the comma!).
-    - You know how to greet people for major Ukrainian holidays using the Instrumental case.
-    Next: A1.8 — The final stage of A1, where we tackle the Past and Future tenses!
+## Підсумок — Summary (~160 words total)
+- P1 (~160 words): A1.7 achievement summary bulleted list. Recapping the milestone: You can address people properly in Ukrainian using the vocative case. You can ask people to do things, politely and informally, using the imperative. You can connect your ideas into longer, natural sentences using conjunctions. You can build complex sentences with `що`, `де`, `коли`. You can talk about Ukrainian holidays and congratulate people. Conclude with a look ahead: Next is A1.8, focusing on the Past tense, Future tense, and Graduation.
 
-Grand total: ~1120 words
+Grand total: ~1130 words
 </skeleton>
 
 ## Output Format
@@ -767,11 +775,50 @@ Grand total: ~1120 words
 Write in Markdown. Use:
 - `## Section Title` for main sections
 - `### Subsection` for subsections within a section
-- `**bold**` for Ukrainian words being taught — EVERY bold Ukrainian word MUST have an English translation on first use, either in parentheses `**слово** (translation)` or inline `**слово** means "translation"`. No exceptions.
+- `**bold**` for Ukrainian words being taught. For **A1 and A2** levels, provide an English translation on first use (e.g. `**стіл** (table)`) because learners lack the vocabulary to infer meaning. For **B1 and above**, do NOT provide inline translations for standard vocabulary — the learner will use the module's словник (vocabulary table). You may provide ONE parenthetical English translation ONLY for highly abstract grammar/linguistic terms on first use (e.g. `**видова пара** (aspectual pair)`).
 - Tables for paradigms (conjugation, declension)
 - `:::tip` / `:::caution` / `:::note` for callout boxes
 - `<!-- INJECT_ACTIVITY: {id} -->` for exercise placement (markers only — do NOT write exercise content)
 
 Do NOT write MDX component syntax, JSON, or DSL exercise blocks (:::quiz, etc.). Plain Markdown with injection markers.
+
+---
+
+## MANDATORY FINAL CHECKLIST (#1189)
+
+Before you finish writing, verify the prose against this checklist. Failing any item will fail the build.
+
+### Section headings (verbatim)
+
+Every heading from "Section Structure" above MUST appear as an `## H2` in your output, in order, **including the closing `Підсумок:` / `Підсумок та перехід до M...` summary**. The single most common writer failure across the B1 build has been silently dropping the final summary section. Re-read your output before stopping. If the last section in the plan is missing, write it now.
+
+### Required vocabulary (every word must appear)
+
+You MUST use **every word** from the list below at least once in the prose, in a natural sentence with bold + English translation. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, прагматика, діагностика, дієвідмінювання, зворотний, двовидовий, одновидовий, неозначено-кількісний, etc.) is the most frequently dropped category — actively find homes for those words even if it means adding a sentence that defines them.
+
+_(no required vocabulary defined for this module)_
+
+### Forbidden words (never produce)
+
+Do not write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use `<!-- VERIFY -->` instead). The post-write toxic-token scanner will fail the build immediately:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+### Level-specific immersion check
+
+The level-appropriate immersion rule was already injected at the top of
+this prompt as `IMMERSION RULE`. Re-read it now BEFORE you stop writing.
+If your level's rule contains a CHECKLIST block, walk through every item.
+If it doesn't, just verify your output matches the LANGUAGE ROLES and
+TARGET stated in that block.
+
+This used to hard-code a B1+ checklist that confused A1/A2 models (where
+translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+The single source of truth is now
+`scripts/pipeline/config_tables.py:IMMERSION_RULES`.
+
+---
 
 Begin writing now. Start with the first section heading.

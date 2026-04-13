@@ -1,0 +1,113 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T23-14-f89ab377.json
+phase: skeleton
+prompt_chars: 35588
+response_chars: 4666
+prompt_words: 5368
+response_words: 751
+sections:
+- name: preamble
+  start: 0
+  length: 470
+  fraction: 0.0132
+- name: plan
+  start: 470
+  length: 6132
+  fraction: 0.1723
+- name: wiki
+  start: 6549
+  length: 26656
+  fraction: 0.749
+- name: output_spec
+  start: 33258
+  length: 2330
+  fraction: 0.0655
+large_sections:
+- wiki
+directives_total: 21
+directives_covered: 3
+directives_missed:
+- kind: must
+  text: Your skeleton must budget every word.
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: must
+  text: They must learn that calling someone by name in Ukrainian requires changing
+    the ending.
+  covered: false
+  coverage_note: 4/11 keywords (36%)
+- kind: must
+  text: '**This is a mandatory section for all pedagogical briefs.'
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: must
+  text: Ukrainian `и` and `і` are distinct sounds that must be learned from native
+    audio examples.
+  covered: false
+  coverage_note: 4/11 keywords (36%)
+- kind: must
+  text: '**Avoid "False Friends" with Russian:** The writer must be aware of words
+    that exist in both languages but have different meanings or connotations.'
+  covered: false
+  coverage_note: 4/17 keywords (24%)
+- kind: must
+  text: Two columns are presented, and the learner must draw a line connecting the
+    person to their place of work.
+  covered: false
+  coverage_note: 5/13 keywords (38%)
+- kind: must
+  text: The learner is given a name or a title in the Nominative and must write it
+    in the Vocative.
+  covered: false
+  coverage_note: 2/8 keywords (25%)
+- kind: must
+  text: '* **Format:** A short paragraph with blanks where the learner must insert
+    the correct form of a personal pronoun.'
+  covered: false
+  coverage_note: 4/12 keywords (33%)
+- kind: must
+  text: It is crucial to emphasize that when asking for directions from a stranger,
+    the formal `ви` form (`ідіть`, `поверніть`) is mandatory for politeness and respect
+    (Source 22).
+  covered: false
+  coverage_note: 5/16 keywords (31%)
+- kind: must
+  text: Content must explicitly state that these cities were often built upon or agglomerated
+    from pre-existing Cossack settlements.
+  covered: false
+  coverage_note: 3/17 keywords (18%)
+- kind: must
+  text: '**Word budgets must sum to 1200+.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Section budgets must match the plan''s `content_outline` word allocations**
+    (±10%).'
+  covered: false
+  coverage_note: 1/8 keywords (12%)
+- kind: must
+  text: '**CRITICAL: An exercise must ONLY test concepts already taught above it.'
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: must
+  text: 'Every plan `activity_hints` entry MUST have a corresponding `<!-- INJECT_ACTIVITY:
+    id -->` marker in the skeleton.'
+  covered: false
+  coverage_note: 2/10 keywords (20%)
+- kind: skeleton_para
+  text: 'P1 (150w): Follow the plan''s points for this section EXACTLY. If the plan
+    says "Self-check questions", output a bulleted Q&A list — NOT prose. If the plan
+    says "recap", write a brief recap.'
+  covered: false
+  coverage_note: 5/20 keywords (25%)
+- kind: inject_activity
+  text: activity-id
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: activity-id
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: descriptive-id
+  covered: false
+  coverage_note: marker missing

@@ -1,218 +1,358 @@
 {
-  "total_items": 188,
-  "grounded_items": 155,
+  "total_items": 235,
+  "grounded_items": 178,
   "ungrounded": [
     {
-      "word": "чоловічий",
+      "word": "рід",
       "exercise_type": "group-sort",
-      "context": "Чоловічий та середній (-ому, -ьому)",
+      "context": "Чоловічий і середній рід",
       "role": "context"
     },
     {
-      "word": "середній",
+      "word": "усі",
       "exercise_type": "group-sort",
-      "context": "Чоловічий та середній (-ому, -ьому)",
+      "context": "Множина (усі роди)",
       "role": "context"
     },
     {
-      "word": "жіночий",
+      "word": "роди",
       "exercise_type": "group-sort",
-      "context": "Жіночий (-ій)",
+      "context": "Множина (усі роди)",
       "role": "context"
     },
     {
-      "word": "множина",
-      "exercise_type": "group-sort",
-      "context": "Множина (-им, -ім)",
-      "role": "context"
-    },
-    {
-      "word": "старим",
-      "exercise_type": "group-sort",
-      "context": "старим",
-      "role": "answer"
-    },
-    {
-      "word": "своя",
+      "word": "пояснює",
       "exercise_type": "quiz",
-      "context": "Він допомагає (своя) сестрі.",
+      "context": "Вчитель детально пояснює правило ____ студентці.",
       "role": "context"
     },
     {
-      "word": "твої",
+      "word": "допомагаємо",
       "exercise_type": "quiz",
-      "context": "Ми завжди радіємо (твої) новим ідеям.",
+      "context": "Ми з радістю допомагаємо ____ бабусі.",
       "role": "context"
     },
     {
-      "word": "ваші",
-      "exercise_type": "quiz",
-      "context": "Директор дає премію (ваші) працівникам.",
+      "word": "сестра",
+      "exercise_type": "match-up",
+      "context": "моя сестра",
+      "role": "answer"
+    },
+    {
+      "word": "вчителеві",
+      "exercise_type": "match-up",
+      "context": "нашому вчителеві",
       "role": "context"
     },
     {
-      "word": "ті",
+      "word": "ваша",
       "exercise_type": "match-up",
-      "context": "ті розумні студенти",
+      "context": "ваша мама",
       "role": "answer"
     },
     {
-      "word": "розумні",
+      "word": "мама",
       "exercise_type": "match-up",
-      "context": "ті розумні студенти",
+      "context": "ваша мама",
       "role": "answer"
     },
     {
-      "word": "розумним",
+      "word": "вашій",
       "exercise_type": "match-up",
-      "context": "тим розумним студентам",
+      "context": "вашій мамі",
       "role": "context"
     },
     {
-      "word": "маленька",
+      "word": "хлопець",
       "exercise_type": "match-up",
-      "context": "їхня маленька донька",
+      "context": "цей хлопець",
       "role": "answer"
     },
     {
-      "word": "постійний",
+      "word": "дівчина",
       "exercise_type": "match-up",
-      "context": "ваш постійний клієнт",
+      "context": "та дівчина",
       "role": "answer"
     },
     {
-      "word": "клієнт",
+      "word": "місто",
       "exercise_type": "match-up",
-      "context": "ваш постійний клієнт",
+      "context": "нове місто",
       "role": "answer"
     },
     {
-      "word": "постійному",
+      "word": "місту",
       "exercise_type": "match-up",
-      "context": "вашому постійному клієнту",
+      "context": "новому місту",
       "role": "context"
     },
     {
-      "word": "клієнту",
+      "word": "друзі",
       "exercise_type": "match-up",
-      "context": "вашому постійному клієнту",
-      "role": "context"
+      "context": "старі друзі",
+      "role": "answer"
     },
     {
-      "word": "улюблена",
+      "word": "купую",
       "exercise_type": "fill-in",
-      "context": "Ми купили квіти _____ (наша улюблена) вчительці.",
+      "context": "Я купую цікаву книгу ____ другу.",
       "role": "context"
     },
     {
-      "word": "коханий",
-      "exercise_type": "fill-in",
-      "context": "Вона присвятила пісню _____ (її коханий) чоловікові.",
-      "role": "context"
-    },
-    {
-      "word": "маленькі",
-      "exercise_type": "fill-in",
-      "context": "Що ви купили _____ (ваші маленькі) дітям?",
-      "role": "context"
-    },
-    {
-      "word": "постійні",
-      "exercise_type": "fill-in",
-      "context": "Він завжди допомагає _____ (свої постійні) клієнтам.",
-      "role": "context"
-    },
-    {
-      "word": "найкращій",
-      "exercise_type": "error-correction",
-      "context": "найкращій",
+      "word": "допомагає",
+      "exercise_type": "unjumble",
+      "context": "допомагає",
       "role": "answer"
     },
     {
-      "word": "пише",
+      "word": "старшій",
+      "exercise_type": "unjumble",
+      "context": "старшій",
+      "role": "answer"
+    },
+    {
+      "word": "найкращого",
       "exercise_type": "error-correction",
-      "context": "Вона пише повідомлення своїй найкраща подрузі.",
+      "context": "Я дарую гарний подарунок мого найкращого друга.",
       "role": "context"
     },
     {
-      "word": "найкраща",
+      "word": "щовечора",
       "exercise_type": "error-correction",
-      "context": "Вона пише повідомлення своїй найкраща подрузі.",
+      "context": "Вона щовечора телефонує їїй сестрі після роботи.",
       "role": "context"
     },
     {
-      "word": "молодший",
+      "word": "цього",
       "exercise_type": "error-correction",
-      "context": "Батько купив телефон своєму молодший синові.",
+      "context": "Я детально пояснюю завдання цього нового студента.",
       "role": "context"
     },
     {
-      "word": "хвора",
+      "word": "студента",
       "exercise_type": "error-correction",
-      "context": "Лікар дав ліки її хвора сестрі.",
+      "context": "Я детально пояснюю завдання цього нового студента.",
       "role": "context"
     },
     {
-      "word": "вірити",
+      "word": "купили",
+      "exercise_type": "error-correction",
+      "context": "Вони купили квитки в театр старих друзів.",
+      "role": "context"
+    },
+    {
+      "word": "старих",
+      "exercise_type": "error-correction",
+      "context": "Вони купили квитки в театр старих друзів.",
+      "role": "context"
+    },
+    {
+      "word": "друзів",
+      "exercise_type": "error-correction",
+      "context": "Вони купили квитки в театр старих друзів.",
+      "role": "context"
+    },
+    {
+      "word": "цікава",
+      "exercise_type": "error-correction",
+      "context": "Ця цікава книга для моєму другові.",
+      "role": "context"
+    },
+    {
+      "word": "книга",
+      "exercise_type": "error-correction",
+      "context": "Ця цікава книга для моєму другові.",
+      "role": "context"
+    },
+    {
+      "word": "старої",
+      "exercise_type": "error-correction",
+      "context": "Він уважно пише повідомлення старої знайомій.",
+      "role": "context"
+    },
+    {
+      "word": "твоєї",
+      "exercise_type": "error-correction",
+      "context": "Твоєї старшому другові потрібна наша допомога.",
+      "role": "context"
+    },
+    {
+      "word": "чоловічого",
+      "exercise_type": "true-false",
+      "context": "Прикметники чоловічого роду в давальному відмінку закінчують",
+      "role": "context"
+    },
+    {
+      "word": "роду",
+      "exercise_type": "true-false",
+      "context": "Прикметники чоловічого роду в давальному відмінку закінчують",
+      "role": "context"
+    },
+    {
+      "word": "закінчуються",
+      "exercise_type": "true-false",
+      "context": "Прикметники чоловічого роду в давальному відмінку закінчують",
+      "role": "context"
+    },
+    {
+      "word": "жіночого",
+      "exercise_type": "true-false",
+      "context": "Прикметники жіночого роду в давальному відмінку закінчуються",
+      "role": "context"
+    },
+    {
+      "word": "займенник",
+      "exercise_type": "true-false",
+      "context": "Займенник «його» (his) змінюється на «йогому» в давальному в",
+      "role": "context"
+    },
+    {
+      "word": "змінюється",
+      "exercise_type": "true-false",
+      "context": "Займенник «його» (his) змінюється на «йогому» в давальному в",
+      "role": "context"
+    },
+    {
+      "word": "множині",
+      "exercise_type": "true-false",
+      "context": "Прикметники в множині у давальному відмінку мають однакове з",
+      "role": "context"
+    },
+    {
+      "word": "мають",
+      "exercise_type": "true-false",
+      "context": "Прикметники в множині у давальному відмінку мають однакове з",
+      "role": "context"
+    },
+    {
+      "word": "однакове",
+      "exercise_type": "true-false",
+      "context": "Прикметники в множині у давальному відмінку мають однакове з",
+      "role": "context"
+    },
+    {
+      "word": "всіх",
+      "exercise_type": "true-false",
+      "context": "Прикметники в множині у давальному відмінку мають однакове з",
+      "role": "context"
+    },
+    {
+      "word": "родів",
+      "exercise_type": "true-false",
+      "context": "Прикметники в множині у давальному відмінку мають однакове з",
+      "role": "context"
+    },
+    {
+      "word": "слово",
+      "exercise_type": "true-false",
+      "context": "Слово «цієї» — це правильна форма давального відмінка.",
+      "role": "context"
+    },
+    {
+      "word": "цієї",
+      "exercise_type": "true-false",
+      "context": "Слово «цієї» — це правильна форма давального відмінка.",
+      "role": "context"
+    },
+    {
+      "word": "правильна",
+      "exercise_type": "true-false",
+      "context": "Слово «цієї» — це правильна форма давального відмінка.",
+      "role": "context"
+    },
+    {
+      "word": "форма",
+      "exercise_type": "true-false",
+      "context": "Слово «цієї» — це правильна форма давального відмінка.",
+      "role": "context"
+    },
+    {
+      "word": "давального",
+      "exercise_type": "true-false",
+      "context": "Слово «цієї» — це правильна форма давального відмінка.",
+      "role": "context"
+    },
+    {
+      "word": "відмінка",
+      "exercise_type": "true-false",
+      "context": "Слово «цієї» — це правильна форма давального відмінка.",
+      "role": "context"
+    },
+    {
+      "word": "граматично",
+      "exercise_type": "true-false",
+      "context": "Іменникова група «моїй другові» є граматично правильною.",
+      "role": "context"
+    },
+    {
+      "word": "правильною",
+      "exercise_type": "true-false",
+      "context": "Іменникова група «моїй другові» є граматично правильною.",
+      "role": "context"
+    },
+    {
+      "word": "змінюються",
+      "exercise_type": "true-false",
+      "context": "Прикметники «тиха» і «довга» змінюються на «тихій» і «довгій",
+      "role": "context"
+    },
+    {
+      "word": "дієслово",
+      "exercise_type": "true-false",
+      "context": "Дієслово «допомагати» завжди вимагає після себе родового від",
+      "role": "context"
+    },
+    {
+      "word": "вимагає",
+      "exercise_type": "true-false",
+      "context": "Дієслово «допомагати» завжди вимагає після себе родового від",
+      "role": "context"
+    },
+    {
+      "word": "себе",
+      "exercise_type": "true-false",
+      "context": "Дієслово «допомагати» завжди вимагає після себе родового від",
+      "role": "context"
+    },
+    {
+      "word": "родового",
+      "exercise_type": "true-false",
+      "context": "Дієслово «допомагати» завжди вимагає після себе родового від",
+      "role": "context"
+    },
+    {
+      "word": "молодшому",
       "exercise_type": "match-up",
-      "context": "вірити",
-      "role": "answer"
-    },
-    {
-      "word": "відмінок",
-      "exercise_type": "group-sort",
-      "context": "Давальний відмінок (кому? чому?)",
+      "context": "молодшому синові.",
       "role": "context"
     },
     {
-      "word": "чому",
-      "exercise_type": "group-sort",
-      "context": "Давальний відмінок (кому? чому?)",
+      "word": "студенту",
+      "exercise_type": "match-up",
+      "context": "новому студенту.",
       "role": "context"
     },
     {
-      "word": "кого",
-      "exercise_type": "group-sort",
-      "context": "Родовий відмінок (кого? чого?)",
+      "word": "красивій",
+      "exercise_type": "match-up",
+      "context": "красивій дівчині.",
       "role": "context"
     },
     {
-      "word": "чого",
-      "exercise_type": "group-sort",
-      "context": "Родовий відмінок (кого? чого?)",
+      "word": "добрим",
+      "exercise_type": "match-up",
+      "context": "добрим людям.",
       "role": "context"
-    },
-    {
-      "word": "моєї",
-      "exercise_type": "group-sort",
-      "context": "моєї сестри",
-      "role": "answer"
-    },
-    {
-      "word": "цих",
-      "exercise_type": "group-sort",
-      "context": "цих студентів",
-      "role": "answer"
-    },
-    {
-      "word": "студентів",
-      "exercise_type": "group-sort",
-      "context": "цих студентів",
-      "role": "answer"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 15,
-    "tested_in_exercises": 7,
+    "tested_in_exercises": 11,
     "not_tested": [
       "вказівний",
-      "група",
       "прикметник",
       "присвійний",
-      "тому",
-      "узгодження",
-      "іменникова",
-      "їхньому"
+      "узгодження"
     ]
   },
   "all_grounded": false

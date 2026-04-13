@@ -2,51 +2,54 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 10
-  evidence: The text adheres perfectly to the module plan, including all specific
-    narrative dialogs, sequencing words, and the "Anna's yesterday" narrative.
+  score: 8
+  evidence: The two planned day-narration dialogues, time markers, sequencing words,
+    model narrative, template, and summary are present, but the source-of-truth police-report
+    dialogue situation never appears in t
 - dimension: 2
   name: Linguistic accuracy
-  score: 9
-  evidence: 'There is one critical phonetic error in the time preposition: "О одинадцятій"
-    must be "Об одинадцятій" before a vowel. All other Ukrainian vocabulary, cases,
-    and gender agreements are correct.'
+  score: 4
+  evidence: 'The prose teaches false grammar rules: `"his past tense verbs all end
+    in the masculine suffix **-в** or **-вся**"` despite the same sentence listing
+    `**ліг**`, and later `"every single past tense verb'
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: Excellent breakdown of gendered past-tense verbs (like `ліг` dropping
-    the `-в` suffix) and a fantastic, explicit caution note distinguishing between
-    `вдень` (afternoon) and `в день` (on the day).
+  score: 6
+  evidence: 'The module has usable dialogues and examples, but long English framing
+    delays the teaching: `"Chaining events together in a logical order is a vital
+    skill..."`, `"A truly natural story is more than ju'
 - dimension: 4
   name: Vocabulary coverage
   score: 10
-  evidence: Every single required and recommended word from the plan's `vocabulary_hints`
-    is naturally included in the text and dialogues.
+  evidence: 'All required vocabulary appears in prose (`учора`, `зранку`, `вдень`,
+    `ввечері`, `потім`, `прокинутися`, `поснідати`, `обідати`), and recommended items
+    are also used naturally (`спочатку`, `нарешті`, '
 - dimension: 5
   name: Exercise quality
   score: 10
-  evidence: The three activity markers are placed logically and align perfectly with
-    the target concepts (chronological ordering, narrative flow, gender consistency).
+  evidence: Marker count matches the plan exactly, and each marker follows the teaching
+    it tests. The ordering marker comes after the verb/time-marker explanation; the
+    two fill-in markers come after the model nar
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: The writer adopts a clear, encouraging tone ("It is your turn to build
-    a narrative") that stays focused on teaching without resorting to corporate or
-    gamified filler.
+  score: 5
+  evidence: 'The teacher voice is consistent, but the module leans on generic metaphor
+    and filler: `"it is the key to sharing your life with others"`, `"it is a tapestry"`,
+    `"building a bridge across time"`, `"sou'
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: The generated word count (1506) comfortably exceeds the 1200 target. The
-    markdown uses accurate headings and perfectly ordered sections.
+  evidence: All planned H2 sections are present and in order, the activity markers
+    are intact, and the pipeline word count is 1857, safely above the 1200 target.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: The settings and actions are culturally accurate and everyday-appropriate
-    (using common spaces like `кав'ярня` and `кафе`, eating `каша`).
+  evidence: No Russian-centric framing, no decolonial issues, and no false cultural
+    claims. The examples stay within ordinary Ukrainian everyday contexts.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: The dialogues are incredibly natural and feature named characters. They
-    provide an excellent demonstration of sequencing (using "А потім?") in realistic
-    conversational patterns.
+  score: 8
+  evidence: The two included dialogues are clear and usable, with named speakers and
+    full-day sequencing, but the planned police-report exchange is missing, so the
+    dialogue set is less varied than the plan requir
 findings: []

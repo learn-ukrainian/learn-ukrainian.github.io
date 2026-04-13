@@ -1,0 +1,82 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T07-37-98077777.json
+phase: write
+prompt_chars: 66605
+response_chars: 11790
+prompt_words: 9715
+response_words: 1811
+sections:
+- name: preamble
+  start: 0
+  length: 6487
+  fraction: 0.0974
+- name: plan
+  start: 6487
+  length: 6290
+  fraction: 0.0944
+- name: wiki
+  start: 11737
+  length: 28053
+  fraction: 0.4212
+- name: rules
+  start: 40830
+  length: 9019
+  fraction: 0.1354
+- name: skeleton
+  start: 49849
+  length: 6313
+  fraction: 0.0948
+- name: output_spec
+  start: 56162
+  length: 10443
+  fraction: 0.1568
+large_sections:
+- wiki
+directives_total: 55
+directives_covered: 44
+directives_missed:
+- kind: checklist
+  text: No 'Let us...', 'In this section...', or formulaic openers
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: must
+  text: For A1 early modules, the learner cannot read Cyrillic — English must dominate.
+  covered: false
+  coverage_note: 2/9 keywords (22%)
+- kind: must
+  text: Your output must be original teaching prose at the correct CEFR level, not
+    a rephrased version of the article.
+  covered: false
+  coverage_note: 4/13 keywords (31%)
+- kind: must
+  text: '- **The Wall of Text:** 3+ paragraphs of English theory without a single
+    Ukrainian example — every concept must be anchored in immediate Ukrainian examples.'
+  covered: false
+  coverage_note: 5/15 keywords (33%)
+- kind: must
+  text: translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: must
+  text: '- **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).'
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-sounds-vs-letters
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-sounds-vs-letters
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-false-friends
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing

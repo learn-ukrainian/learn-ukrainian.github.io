@@ -1,6 +1,6 @@
 # Build Summary: genitive-adjectives-pronouns (A2)
 
-Generated: 2026-04-11 02:19
+Generated: 2026-04-11 12:33
 
 ## Pipeline Phases
 
@@ -12,15 +12,15 @@ Generated: 2026-04-11 02:19
 | pre-verify | complete | 2026-04-07 20:50:52 |
 | write | complete | 2026-04-07 20:58:48 |
 | exercises | complete | 2026-04-07 21:27:57 |
-| activities | complete | 2026-04-11 00:16:55 |
+| activities | complete | 2026-04-11 10:27:15 |
 | verify-exercises | complete | 2026-04-07 21:27:57 |
 | annotate | complete | 2026-04-07 21:00:55 |
 | vocab | complete | 2026-04-07 21:05:57 |
 | enrich | complete | 2026-04-07 21:05:57 |
 | verify | complete | 2026-04-07 21:05:57 |
 | stress | complete | 2026-04-07 21:27:57 |
-| publish | complete | 2026-04-11 00:19:41 |
-| audit | complete | 2026-04-11 00:19:41 |
+| publish | complete | 2026-04-11 10:33:09 |
+| audit | complete | 2026-04-11 10:33:09 |
 
 ## Reviews
 
@@ -36,16 +36,21 @@ Generated: 2026-04-11 02:19
 | skeleton | gemini (auto) | 203s | ✅ |
 | activities | gemini-tools (gemini-3.1-pro-preview) | 128s | ✅ |
 | activities | gemini-tools (gemini-3.1-pro-preview) | 165s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 75s | ✅ |
 | vocab | gemini (auto) | 296s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 183s | ✅ |
 | write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 103s | ✅ |
 | write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 49s | ✅ |
+| write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 120s | ✅ |
 | write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 149s | ✅ |
 | write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 53s | ✅ |
+| write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 59s | ✅ |
 | write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 57s | ✅ |
 | write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 33s | ✅ |
+| write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 129s | ✅ |
 | write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 26s | ✅ |
 | write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 20s | ✅ |
+| write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 35s | ✅ |
 | write-fix | gemini-tools (gemini-3.1-pro-preview) | 140s | ✅ |
 
 ## Files

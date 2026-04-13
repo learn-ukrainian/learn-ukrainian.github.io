@@ -269,26 +269,24 @@ You do NOT need to call tools yourself — the facts are already verified.
 <pre_verified_facts>
 ## VESUM Verification
 - Confirmed: народитися, жити, вчитися, переїхати, зараз, раніше, далі, розповідати, подорожувати, закінчити, дитинство, університет, програміст, успіх, мрія, батьки
-- Not found: [] (All words verified)
+- Not found: None
 
 ## Grammar Rules
-- Past Tense Endings: Правопис § 106 (implied) — Verbs in the past tense change by gender and number: -в (masc), -ла (fem), -ло (neut), -ли (plur). Examples verified in textbooks: народився, народилася.
-- Future Tense (Compound): Правопис § 107 (implied) — Future tense for imperfective verbs is formed with the auxiliary "бути" (я буду, ти будеш...) + infinitive. Examples verified in Grade 4 textbooks: "я буду працювати", "ліс буде цвісти".
+- Past tense (-в/-ла/-ло/-ли) and future tense (буду + інфінітив): Правопис §[Не знайдено] — Офіційний «Правопис 2019» є орфографічним довідником і не містить окремого параграфа про морфологічне утворення аналітичного майбутнього та форм минулого часу.
 
 ## Calque Warnings
-- розповідати про себе: OK — Standard phrase for self-introduction.
-- успіхів тобі: OK — Standard wish of success.
-- переїхати в/у [місто]: OK — Standard way to express moving to a location.
-- приймати участь: Calque — Use "брати участь" instead (Note: Although not in the plan, it's a critical check for A1 "My Story" contexts like hobbies/activities).
+- успіхів тобі: OK — OK
+- закінчити університет: OK — OK
+- у вільний час: OK — OK
+- розкажи про себе: OK — OK
 
 ## CEFR Check
-- народитися: A1 — Found in Grade 4 materials, essential for "about me" topics.
-- жити: A1 — Core vocabulary.
-- університет: A1 — Common internationalism, standard A1 vocabulary.
-- програміст: A1 — Common profession, standard A1 vocabulary.
-- мрія: A1 — Standard word for goals/dreams at basic levels.
-- успіх: A1 — Found in primary school textbooks.
-- подорожувати: A1 — Standard verb for travel/hobbies at A1 level.
+- програміст: A1 — OK
+- подорожувати: A1 — OK
+- народитися: A2 — Above target
+- успіх: A2 — Above target
+- переїхати: B1 — Above target
+- дитинство: B1 — Above target
 </pre_verified_facts>
 
 
@@ -600,12 +598,14 @@ The module should use activity formats that are common in Ukrainian primary and 
 
 ## Section Structure
 
-Write these sections as H2 headings, in this exact order:
+Write these sections as H2 headings, in this **exact** order:
 
 - `## Dialogues` (~300 words)
 - `## Три часи разом (Three Tenses Together)` (~300 words)
 - `## Моя історія (My Story)` (~300 words)
 - `## Summary` (~300 words)
+
+**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim** as an `## H2` line. This includes the FINAL summary/transition section (`Підсумок: ...`, `Підсумок та перехід до M...`, etc.) — the writer's most common failure is silently dropping the closing section. Do NOT skip it. Do NOT renumber. Do NOT merge headings. The post-write quick-verify check will fail your build if any heading is missing, even if the prose itself is excellent.
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -613,16 +613,17 @@ Each section should follow the word budget specified. The total must reach 1200 
 
 ## Content Rules
 
-TARGET: 20-35% Ukrainian.
+TARGET: 20-35% Ukrainian. ⚠️ HARD GATE — the audit REJECTS modules below 20%.
 LANGUAGE ROLES:
-- THEORY & EXPLANATION: English prose — brief and clear. Show, don't tell.
+- THEORY & EXPLANATION: English prose — brief, 2-3 sentences per concept. No long expository paragraphs. Explain once, then show Ukrainian.
+- UKRAINIAN NARRATIVE PARAGRAPHS: **REQUIRED — minimum 1 per section.** A 3-6 sentence Ukrainian paragraph demonstrating the concept in use, followed IMMEDIATELY by a `> *English translation*` blockquote. This is the PRIMARY driver of hitting the immersion target. Without these paragraphs you cannot reach 20%.
 - PARADIGM TABLES: Conjugation/declension tables with all cells Ukrainian.
-- EXAMPLE LISTS: Ukrainian sentences in bulleted lists (each: Ukrainian — English gloss).
-- DIALOGUES: Mini-dialogues in blockquotes with English gloss per line.
+- EXAMPLE LISTS: Ukrainian sentences in bulleted lists (each: Ukrainian — English gloss). Minimum 5 per rule.
+- DIALOGUES: Mini-dialogues in blockquotes with English gloss per line. At least 1 dialogue per module.
 - PATTERN BOXES: Show transformations: `читати → читай → читайте`.
 - INLINE: Ukrainian words/phrases bolded in English prose.
-- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian. Full Ukrainian sentences go in tables, bulleted lists, dialogues, or pattern boxes.
-Ukrainian sentences max 10 words. Mix container types.
+- STRUCTURAL RULE: Every section MUST contain a Ukrainian narrative paragraph (3-6 sentences, translated in blockquote) PLUS supporting tables/lists/dialogues/pattern boxes. Pure-English sections are FORBIDDEN at M35+.
+Ukrainian sentences max 12 words. Mix container types.
 
 HARD GRAMMAR RULES (audit will reject violations):
 - Max 10 words per Ukrainian sentence (STRICT — count every word)
@@ -652,6 +653,25 @@ HARD GRAMMAR RULES (audit will reject violations):
 - **Zero calques**: No приймати душ→брати душ, приймати рішення→ухвалювати рішення
 - **Zero paronyms**: тактична≠тактовна, ефектний≠ефективний — use the right word, not a similar-sounding one
 - **Natural Ukrainian**: Write how a Ukrainian teacher would explain this to a student. Not robotic, not textbook-dry, not overly casual.
+
+### FORBIDDEN WORDS — never write these (#1189)
+
+The following Russian words have leaked into past builds and broken modules. They are **hard-banned** — the post-write toxic-token scanner will fail your build the moment it sees one. Use the Ukrainian alternative every time, even in dialogues, even in casual prose, even when quoting a learner's mistake (use a `<!-- VERIFY -->` placeholder instead of typing the Russian form):
+
+| Russian (FORBIDDEN) | Ukrainian (USE THIS) |
+|---|---|
+| хорошо | добре |
+| конечно | звичайно / певна річ |
+| спасибо | дякую |
+| пожалуйста | будь ласка / прошу |
+| ничего | нічого |
+| сейчас | зараз |
+| тоже | теж / також |
+| здесь | тут |
+| кот | кіт |
+| кон | кін |
+
+This list is enforced word-for-word by `scripts/build/quick_verify.py` (SEVERE_RUSSIANISMS). If you produce any of these tokens — even inside a quoted example, even inside a dialogue line spoken by a Russian-speaking character — the build halts immediately. There is no exception.
 
 **Authority hierarchy (if uncertain about a word, check in this order):**
 VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (stress) → Антоненко-Давидович (style) → Грінченко (etymology).
@@ -760,42 +780,34 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Dialogues (~320 words total)
-- P1 (~30 words): Introduction to the importance of narrative in language learning — transitioning from simple facts to a life story that spans across time.
-- P2 (~100 words): Dialogue 1 — An interview between two friends. Speaker A asks about Speaker B's origins and plans. Content: "Я народився в Канаді... зараз я живу в Києві... я буду працювати тут і вчити мову." Focus on natural tense shifts.
-- P3 (~50 words): Analysis of Dialogue 1. Highlight how the speaker moves from the past ("народився") to the present ("живу") and then to the future ("буду працювати") in just three sentences.
-- P4 (~100 words): Dialogue 2 — Anna's story. She talks about her education and career path. Content: "Я народилася у Львові... закінчила університет... зараз я працюю вчителькою... я буду подорожувати в Японію." Focus on feminine gender agreement in the past tense.
-- P5 (~40 words): Analysis of Dialogue 2. Explain the sequence of life events: Birth → School → University → Job → Future Dream. Show how each stage requires a specific grammatical form.
+## Dialogues (~330 words)
+- P1 (~40 words): Introduce the module's goal: telling a cohesive life story by seamlessly shifting between the past, present, and future tenses in conversation.
+- P2 (~120 words): Dialogue 1 (Getting to know someone deeply). Two people talking: "Розкажи про себе!" Includes past ("Я народився в Канаді", "Я хотів вивчати"), present ("зараз я живу в Києві"), and future ("Я буду працювати тут і вчити мову").
+- P3 (~50 words): Analyze Dialogue 1, pointing out how the speakers naturally move through time to explain their current situation and future goals.
+- P4 (~120 words): Dialogue 2 (Anna's story). Continuous narrative flow from past to present to future. Includes "Я народилася у Львові", "Там я вчилася", "Зараз я працюю вчителькою", and "Я буду подорожувати".
 
-## Три часи разом (Three Tenses Together) (~350 words total)
-- P1 (~60 words): Theoretical overview of combining tenses. Explain the "Time Line" of a biography. Contrast the three main structures: Past (-в/-ла), Present (person endings), and Compound Future (буду + infinitive).
-- P2 (~80 words): Focus on the Past Tense (Минулий час). Teach the verbs "народитися" (to be born), "жити" (to live), and "вчитися" (to study). Provide examples with gender agreement: "Він жив у селі" vs. "Вона жила у місті."
-- P3 (~70 words): Focus on the Present Tense (Теперішній час). Using the adverb "зараз" (now) to ground the story in the present. Examples: "Я зараз працюю програмістом," "Я вивчаю українську мову."
-- P4 (~70 words): Focus on the Future Tense (Майбутній час). Using "буду" + infinitive for plans. Teach "потім" (then) and "далі" (further). Examples: "Потім я буду жити в Одесі," "Далі ми будемо подорожувати."
-- P5 (~70 words): Signal words table. List and explain: раніше (before), у дитинстві (in childhood), зараз (now), сьогодні (today), потім (then), наступного року (next year). Explain how these words trigger specific tense choices.
-- <!-- INJECT_ACTIVITY: matching-tense-category --> [matching, focus: Match the life event verb to the correct tense category, 6 pairs: народився, переїхала, живу, працюю, буду подорожувати, будемо вчитися]
-- <!-- INJECT_ACTIVITY: fill-in-signal-words --> [fill-in, focus: Use signal words to determine the correct tense, 5 items: раніше я {жив}, зараз я {працюю}, далі я {буду вивчати}, у дитинстві вона {любила}, сьогодні ми {живемо}]
+## Три часи разом (Three Tenses Together) (~330 words)
+- P1 (~50 words): Explain that a complete life story requires all three tenses to answer "Where are you from?", "What do you do?", and "What are your plans?".
+- P2 (~70 words): Review the PAST tense (минулий час). Focus on gender agreement for "I": masculine (-в) vs. feminine (-ла). Examples: Я народився/народилася, Я жив/жила, Я вчився/вчилася, Я працював/працювала.
+- P3 (~70 words): Review the PRESENT tense (теперішній час). Focus on standard person endings. Examples: Зараз я живу, Я працюю, Я вивчаю, Я люблю.
+- P4 (~70 words): Review the FUTURE tense (майбутній час) using the compound form "буду + infinitive". Examples: Я буду працювати, Я буду вивчати, Я буду жити, Я буду подорожувати.
+- P5 (~70 words): Introduce time signal words that mark tense shifts and act as "anchors" for the listener. Past: раніше, у дитинстві. Present: зараз, сьогодні. Future: потім, далі, наступного року.
+- <!-- INJECT_ACTIVITY: matching-tense --> [matching, Match the life event verb to the correct tense category, 6 pairs]
+- <!-- INJECT_ACTIVITY: fill-in-signal-words --> [fill-in, Use signal words to determine the correct tense, 5 items]
 
-## Моя історія (My Story) (~350 words total)
-- P1 (~120 words): Model Reading — "Taras's Story." A cohesive 10-sentence text. Content: Born in Odessa (1995), lived with parents, loved math, moved to Kyiv, works as a programmer, plans to travel and keep living in Kyiv.
-- P2 (~60 words): Deconstruction of Taras's story using the Ukrainian school structure: Зачин (Introduction - birth), Основна частина (Main Part - current life/job), and Кінцівка (Conclusion - future plans and feelings).
-- P3 (~70 words): Vocabulary focus: "переїхати" (to move), "закінчити" (to finish/graduate), "мрія" (dream). Explain how "переїхати" is a key narrative verb to change the setting from past to present.
-- P4 (~100 words): Writing Guide for the Student. Step-by-step instructions on how to build their own 8-10 sentence story. Provide sentence starters: "Я народився/народилася в...", "Я вчився/вчилася в...", "Зараз я...", "Я хочу...".
-- <!-- INJECT_ACTIVITY: ordering-life-events --> [ordering, focus: Put the life events in logical chronological order, 5 items: birth in Toronto -> childhood -> university -> work in Kyiv -> future travel]
-- <!-- INJECT_ACTIVITY: fill-in-biography-combined --> [fill-in, focus: Complete a biography combining all three tenses, 4 items: народилася (past), вчилася (past), працюю (present), буду подорожувати (future)]
+## Моя історія (My Story) (~330 words)
+- P1 (~50 words): Explain how to transition from individual sentences to a structured monologue (Зачин, Основна частина, Кінцівка) to tell a personal narrative.
+- P2 (~120 words): Present a model text — Taras's life story. "Я народився в Одесі... жив там з батьками. Потім я переїхав у Київ... Зараз я живу в Києві і працюю програмістом... Далі я буду подорожувати і жити в Києві".
+- P3 (~70 words): Deconstruct Taras's story, showing the chronological flow: Past (народився, жив, переїхав) → Present (живу, працюю, граю) → Future (буду подорожувати, буду вивчати).
+- P4 (~90 words): Provide scaffolding (a template) for the learner's own story. Start: Я народився/народилася в... Past: Я жив/жила... Present: Зараз я живу... Я працюю... Future: Я буду... Я хочу... Encourage using at least 3 verbs per tense.
+- <!-- INJECT_ACTIVITY: ordering-chronological --> [ordering, Put the life events in logical chronological order, 5 items]
+- <!-- INJECT_ACTIVITY: fill-in-biography --> [fill-in, Complete a biography combining all three tenses, 4 items]
 
-## Підсумок (~300 words total)
-- P1 (~100 words): Final summary of the three-tense system. A table recap:
-    - Past: -в (m), -ла (f), -ли (pl).
-    - Present: -ю, -еш, -є (person endings).
-    - Future: буду, будеш, буде + infinitive.
-- P2 (~100 words): Vocabulary check. List the 8 required words from the plan with definitions and a sample sentence for each: народитися, жити, вчитися, переїхати, зараз, раніше, далі, розповідати.
-- P3 (~100 words): Self-check checklist for the learner:
-    - Can you state where you were born (using gender agreement)?
-    - Can you use "зараз" to describe your current job or study?
-    - Can you list two things you will do next year using "буду"?
-    - Do you know the difference between "раніше" and "потім"?
-    - Have you written a 10-sentence narrative using all three tenses?
+## Summary (~330 words)
+- P1 (~100 words): Recap the grammar of the three tenses. Past uses gender endings (Я народився/жила). Present uses person endings (Я живу/працюю). Future uses "буду" + infinitive (Я буду працювати).
+- P2 (~80 words): Recap the crucial signal words that guide the narrative timeline: "раніше" for past, "зараз" for present, and "далі" or "потім" for future plans.
+- P3 (~100 words): Recap core biographical vocabulary (народитися, жити, вчитися, переїхати, подорожувати) and remind learners to use the instrumental case for professions (працюю лікарем/вчителькою).
+- P4 (~50 words): Self-check prompt: Write your own life story in 8-10 sentences using all three tenses, ensuring you include where you were born, where you live now, and your future plans.
 
 Grand total: ~1320 words
 </skeleton>
@@ -805,11 +817,57 @@ Grand total: ~1320 words
 Write in Markdown. Use:
 - `## Section Title` for main sections
 - `### Subsection` for subsections within a section
-- `**bold**` for Ukrainian words being taught — EVERY bold Ukrainian word MUST have an English translation on first use, either in parentheses `**слово** (translation)` or inline `**слово** means "translation"`. No exceptions.
+- `**bold**` for Ukrainian words being taught. For **A1 and A2** levels, provide an English translation on first use (e.g. `**стіл** (table)`) because learners lack the vocabulary to infer meaning. For **B1 and above**, do NOT provide inline translations for standard vocabulary — the learner will use the module's словник (vocabulary table). You may provide ONE parenthetical English translation ONLY for highly abstract grammar/linguistic terms on first use (e.g. `**видова пара** (aspectual pair)`).
 - Tables for paradigms (conjugation, declension)
 - `:::tip` / `:::caution` / `:::note` for callout boxes
 - `<!-- INJECT_ACTIVITY: {id} -->` for exercise placement (markers only — do NOT write exercise content)
 
 Do NOT write MDX component syntax, JSON, or DSL exercise blocks (:::quiz, etc.). Plain Markdown with injection markers.
+
+---
+
+## MANDATORY FINAL CHECKLIST (#1189)
+
+Before you finish writing, verify the prose against this checklist. Failing any item will fail the build.
+
+### Section headings (verbatim)
+
+Every heading from "Section Structure" above MUST appear as an `## H2` in your output, in order, **including the closing `Підсумок:` / `Підсумок та перехід до M...` summary**. The single most common writer failure across the B1 build has been silently dropping the final summary section. Re-read your output before stopping. If the last section in the plan is missing, write it now.
+
+### Required vocabulary (every word must appear)
+
+You MUST use **every word** from the list below at least once in the prose, in a natural sentence with bold + English translation. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, прагматика, діагностика, дієвідмінювання, зворотний, двовидовий, одновидовий, неозначено-кількісний, etc.) is the most frequently dropped category — actively find homes for those words even if it means adding a sentence that defines them.
+
+- [ ] народитися (to be born)
+- [ ] жити (to live)
+- [ ] вчитися (to study)
+- [ ] переїхати (to move)
+- [ ] зараз (now)
+- [ ] раніше (before/earlier)
+- [ ] далі (further/next)
+- [ ] розповідати (to tell/narrate)
+
+### Forbidden words (never produce)
+
+Do not write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use `<!-- VERIFY -->` instead). The post-write toxic-token scanner will fail the build immediately:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+### Level-specific immersion check
+
+The level-appropriate immersion rule was already injected at the top of
+this prompt as `IMMERSION RULE`. Re-read it now BEFORE you stop writing.
+If your level's rule contains a CHECKLIST block, walk through every item.
+If it doesn't, just verify your output matches the LANGUAGE ROLES and
+TARGET stated in that block.
+
+This used to hard-code a B1+ checklist that confused A1/A2 models (where
+translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+The single source of truth is now
+`scripts/pipeline/config_tables.py:IMMERSION_RULES`.
+
+---
 
 Begin writing now. Start with the first section heading.

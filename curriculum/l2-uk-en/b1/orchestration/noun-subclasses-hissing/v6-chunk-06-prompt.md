@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-називному відмінку склад закритий, тому ми маємо звук [і]. Але коли ми змінюємо слово, склад відкривається: немає **ножа** (no knife), лежить на **ножі** (on the knife). Подібна ситуація відбувається зі словом **ківш** (ladle) та **кіш** (Cossack camp). У закритому складі ми бачимо [і], але в родовому відмінку з'являється [о] — немає **ковша** (no ladle), немає **коша** (no camp). Історично це дуже давнє правило, яке допомагає мові уникати нагромадження приголосних та важких для вимови звукосполучень. Це чергування робить вимову плавною і дуже природною для української мови. Головне — пам'ятати, що шиплячий приголосний на кінці основи ніяк не скасовує базових законів фонетики. Ви завжди повинні бути уважними до закритих та відкритих складів, коли працюєте з новими іменниками. <!-- INJECT_ACTIVITY: quiz, Identify the група (тверда/м'яка/мішана) for given nouns --> А як щодо випадних голосних? У багатьох українських словах голосні [о] або [е] зникають під час відмінювання, щоб полегшити вимову. Згадайте слова м'якої групи: **учень** (student) змінюється на **учня** (student's), а слово із свистячим приголосним **хлопець** (boy) перетворюється на **хлопця** (boy's). Проте іменники мішаної групи зазвичай демонструють дивовижну стабільність основи. У словах типу **сторож** (watchman), **читач** (reader) чи **слухач** (listener) жодні голосні не випадають. Ми кажемо: бачу **сторожа** (I see a watchman), немає **читача** (no reader), звертаюся до **слухача** (to the listener). Корінь слова залишається монолітним і незмінним. Слово **вівчар** (shepherd) належить до м'якої групи, але воно також має стабільну основу — **вівчаря** (shepherd's). Це відбувається тому, що більшість іменників мішаної групи мають наголошені суфікси або міцні історичні корені, які не дозволяють голосним зникати. Щоб успішно прогнозувати поведінку слова, завжди звертайте увагу на його структуру. Якщо іменник закінчується на типові професійні суфікси **-ач**, **-ар** або має повний твердий корінь із шиплячим звуком, основа майже напевно залишиться цілою. Випадні голосні набагато частіше зустрічаються перед суфіксами **-ець** або **-ень**, які не характерні для класичної мішаної групи. Щоб остаточно закріпити ці знання, простежимо граматичну подорож одного історичного слова — **меч** (sword). Це класичний іменник чоловічого роду мішаної групи, який ідеально об'єднує в собі всі вивчені нами правила. У називному відмінку однини основа закінчується на міцний шиплячий звук [ч]. У родовому відмінку ми додаємо стандартне закінчення: немає **меча** (no sword). Коли ми хочемо сказати, ким або чим пишається воїн, ми використовуємо орудний відмінок із м'яким закінченням: він майстерно володіє **мечем** (with a sword). Пам'ятайте, що форма «мечом» є типовою помилкою, яку часто роблять через незнання правил мішаної групи. У місцевому відмінку ми скажемо: свіжа крапля на **мечі** (on the sword). А якщо ми звертаємося до цієї зброї поетично, як це робили давні лицарі, ми обов'язково використаємо кличний відмінок: мій вірний **мече** (o sword). Тепер перейдемо до множини. Тут це слово повністю і слухняно переходить до твердої парадигми: ми хоробро б'ємося **мечами** (with swords), стоїмо перед **мечами** (before swords). Одне просте історичне слово демонструє ідеальну гармонію української граматики, поєднуючи тверді та м'які елементи в єдину, надзвичайно логічну систему. <!-- INJECT_ACTIVITY: fill-in, Insert the correct відмінок ending for мішана група nouns in sentences --> <!-- INJECT_ACTIVITY: error-correction, Find and fix Russicisms in мішана група noun endings (*сторожом → сторожем) -->
+You already know that the vowels [о] and [е] routinely change to [і] when a syllable becomes closed. Let us examine the word **ніж** (knife). In the nominative case, the syllable is closed, so we hear the vowel [і]. When we decline this noun, we add the `-а` **закінчення** (ending), creating the form `ножа`. The syllable is now open, so the original [о] reappears. This exact logic applies whether you are ordering **борщ** (borscht) or asking for a ladle. The hissing consonant at the end of the stem never blocks this natural vowel shift. This rule is highly consistent across the vocabulary, governing everyday items like a **плащ** (raincoat) or even the neuter noun **плече** (shoulder). Their stems remain anchored to the same reliable phonetic patterns. <!-- INJECT_ACTIVITY: quiz, Identify the група (тверда/м'яка/мішана) for given nouns --> Another critical aspect of morphophonemics is the behavior of fleeting vowels. While some nouns drop their vowels when declined, mixed group stems generally exhibit remarkable stability. The noun **сторож** (watchman) remains intact across its paradigm. In the **однина** (singular number), the genitive is simply `сторожа`, and the **орудний відмінок** (instrumental case) is predictably `сторожем`. This stability makes declining hissing nouns much easier. :::info **Grammar box** Assume the stem is stable unless it has a clear [о] or [е] in a closed syllable. Words like **читач** (reader) or **слухач** (listener) will never lose their internal vowels when you apply a new **відмінок** (grammatical case). ::: To appreciate how these rules interlock, let us trace the journey of a single noun through the case system. We will use `меч` (sword), observing its forms across both the **множина** (plural number) and the singular, particularly when taking the **кличний відмінок** (vocative case). Уважно простежмо за граматичною поведінкою слова «меч» у різних ситуаціях. Історично кінцевий звук «ч» виник із давнього твердого приголосного, закріпивши це слово у мішаній групі. Якщо воїн знаходить гарну зброю, він каже, що бачить меч. У родовому відмінку ми додаємо стандартне закінчення, утворюючи форму «меча» зі стабільною основою. Справжній характер мішаної групи розкривається в орудному відмінку, коли основа вимагає м'якого закінчення «-ем», утворюючи форму «мечем». Якщо ж воїн звертається безпосередньо до своєї зброї, він використовує форму «мече». Це єдине слово ідеально демонструє гармонію історичних змін та унікальних закінчень. > *Let us carefully trace the grammatical behavior of the word "меч" in various situations. Historically, the final sound "ч" emerged from an ancient hard consonant, cementing this word in the mixed group. If a warrior finds a beautiful weapon, he says that he sees a sword. In the genitive case, we add the standard ending, creating the form "меча" with a stable stem. The true character of the mixed group is revealed in the instrumental case, when the stem requires the soft ending "-ем", creating the form "мечем". If the warrior addresses his weapon directly, he uses the form "мече". This single word perfectly demonstrates the harmony of historical changes and unique endings.* <!-- INJECT_ACTIVITY: match-up, Match nominative forms to their орудний and кличний forms -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -622,7 +622,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -635,18 +702,69 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] сторож (watchman — мішана група, masculine II відміна)
+- [ ] слухач (listener — мішана група, suffix -ач)
+- [ ] товариш (companion — мішана група)
+- [ ] мішана група (mixed group — nouns with шиплячий stem)
+- [ ] шиплячий (hissing consonant — ж, ч, ш, дж)
+- [ ] закінчення (ending — grammatical suffix in a word form)
+- [ ] відмінок (grammatical case)
+- [ ] орудний відмінок (instrumental case)
+- [ ] кличний відмінок (vocative case)
+- [ ] однина (singular number)
+- [ ] множина (plural number)
+- [ ] ніж (knife — мішана група, inanimate)
+- [ ] читач (reader — мішана група, suffix -ач)
+- [ ] плече (shoulder — neuter мішана група)
+- [ ] борщ (borscht — мішана група)
+- [ ] плащ (raincoat — мішана група, inanimate)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Типові помилки та практика (~650 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

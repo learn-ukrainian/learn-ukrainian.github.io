@@ -1,21 +1,38 @@
-## Словосполучення
+## Словосполучення (~550 words)
 
-Ми вже знаємо, що окремі слова — це лише маленькі будівельні цеглини. Але як саме ми будуємо з них міцні стіни нашого будинку? У мовознавстві є спеціальний граматичний термін для цього процесу. Це **словосполучення** *(word combination)*. Словосполучення — це органічне поєднання двох або більше самостійних слів. Ці слова завжди тісно пов'язані між собою за змістом і граматично. Наприклад, подивіться на ці фрази: «осіннє небо», «швидко читати цікаву книжку», «дуже добре працювати». Це не просто якийсь випадковий набір слів. Якщо ми просто скажемо «небо, читати, дуже», це точно не словосполучення. Це просто окремі слова без жодного логічного чи граматичного зв'язку. У справжньому словосполученні слова завжди працюють разом як одна команда. Вони створюють одну чітку картинку або детально описують одну конкретну дію. Українські школярі починають систематично вивчати цю структуру в п'ятому класі. Правила тут дуже логічні та зрозумілі. Одне слово завжди є головним, а інше — залежним. Цей невидимий зв'язок допомагає нам будувати правильні українські речення.
+When you communicate, you rarely use single, isolated words. Words alone are not enough to build a complete sentence. We need to connect them logically. In Ukrainian grammar, when we connect two or more words by meaning and grammar, we create a **словосполучення** (word combination — two+ words linked by meaning and grammar). It is the first critical step in building complex thoughts and expressing yourself clearly.
 
-Як саме працює ця граматична структура зсередини? Кожне класичне словосполучення має два обов'язкові структурні елементи. Це **головне слово** *(main word)* і **залежне слово** *(dependent word)*. Головне слово — це наш абсолютний командир. Воно повністю керує іншим словом. Залежне слово завжди слухає свого командира і підкоряється йому. Як ми практично знаходимо цей зв'язок у тексті? Ми завжди ставимо питання від головного слова до залежного. Уявіть собі невидиму стрілку, яка летить від командира до підлеглого. Наприклад, візьмемо просту фразу «осіннє небо». Слово «небо» — це головне слово. Ми ставимо від нього питання: небо (яке?) осіннє. Слово «осіннє» — це наше залежне слово. Інший популярний приклад: «читати книжку». Тут головне слово — це дієслово «читати». Читати (що?) книжку. Або візьмемо фразу «дуже швидко». Головне слово — «швидко». Швидко (як?) дуже. Ця проста логіка зі стрілками працює для всіх словосполучень в українській мові.
+Що таке словосполучення? Це поєднання двох або більше слів. Ці слова пов'язані за змістом і граматично. Наприклад: «осіннє небо», «читати книжку» або «дуже швидко». Це не просто набір слів, як-от «небо, читати, дуже». Це логічна і граматична єдність.
 
-Але тут є одне надзвичайно важливе правило для вас. Не кожна пара слів у реченні є словосполученням. Граматика має два великі та суворі винятки. Перший виняток: **підмет** *(subject)* і **присудок** *(predicate)* ніколи не утворюють словосполучення. Наприклад, візьмемо фразу: «Студент читає». Це вже не словосполучення, це повноцінна **граматична основа** *(grammatical core)* нашого речення. Ці два слова є абсолютно рівними партнерами, тут немає командира і підлеглого. Другий важливий виняток: самостійні слова з **прийменниками** *(prepositions)*. Наприклад, фраза «на столі» або «біля нової школи». Прийменник «на» не є самостійним словом. Він взагалі не має власного окремого значення. Він тільки допомагає іменнику «стіл» правильно змінити свою форму. Тому «на столі» — це просто одна маленька частина більшої конструкції. Щоб це стало справжнім словосполученням, нам обов'язково потрібне ще одне повноцінне слово. Наприклад: «лежати на столі». Лежати (де?) на столі.
+> *What is a word combination? It is a combination of two or more words. These words are connected by meaning and grammatically. For example: "autumn sky", "to read a book", or "very quickly". It is not just a set of words, like "sky, to read, very". It is a logical and grammatical unity.*
 
-> — **Репетитор:** Подивімося на це коротке речення. «Старий ліс тихо шелестить». Скільки тут словосполучень?
-> — **Студент:** Я думаю, що тут їх два?
-> — **Репетитор:** Правильно. Давай знайдемо перше. Яке тут головне слово?
-> — **Студент:** Напевно, іменник «ліс».
-> — **Репетитор:** Точно. Це наш підмет. Ставимо від нього питання до іншого слова. Ліс (який?) старий. Отже, «старий ліс» — це наше перше словосполучення. Головне слово — «ліс». Залежне слово — «старий». Тепер шукаємо друге словосполучення.
-> — **Студент:** Тепер беремо дієслово «шелестить»?
-> — **Репетитор:** Так. Це наш присудок і наше друге головне слово в цьому реченні. Яке питання ми ставимо від нього?
-> — **Студент:** Шелестить (як?) тихо.
-> — **Репетитор:** Чудово! «Тихо шелестить» — це друге словосполучення. А скажи мені, чи є фраза «ліс шелестить» словосполученням?
-> — **Студент:** Ні, це підмет і присудок. Це граматична основа речення. Вони рівні партнери.
-> — **Репетитор:** Абсолютно правильно. Ти дуже добре зрозумів цю логіку! Тепер ти бачиш структуру речення.
+Every phrase has a clear internal hierarchy that determines how endings change. One word acts as the boss, and the other word follows its grammatical orders. We call these the **головне слово** (main word) and the **залежне слово** (dependent word). Understanding this relationship is the secret to mastering Ukrainian cases.
 
-<!-- INJECT_ACTIVITY: mark-the-words, identify головне vs залежне слова in combinations, 6 items -->
+У кожному словосполученні є головне слово і залежне слово. Головне слово завжди керує залежним. Ми ставимо питання від головного слова до залежного. Наприклад, у фразі «осіннє небо» головне слово — «небо». Небо (яке?) осіннє. У фразі «читати книжку» головне слово — «читати». Читати (що?) книжку. Напрямок завжди один: від головного до залежного.
+
+> *In every word combination, there is a main word and a dependent word. The main word always controls the dependent one. We ask a question from the main word to the dependent word. For example, in the phrase "autumn sky", the main word is "sky". Sky (what kind?) autumn. In the phrase "to read a book", the main word is "to read". To read (what?) a book. The direction is always one: from the main to the dependent one.*
+
+:::info
+**Стрілка питання**
+Завжди малюйте уявну стрілку від головного слова до залежного. Це чудово допомагає зрозуміти логіку української граматики та правильно змінювати закінчення залежних слів.
+:::
+
+It is equally important to know what does NOT count as a phrase in Ukrainian syntax. There are two major exceptions that you must remember for future grammatical analysis. First, the **підмет** (subject — main sentence member naming who/what acts) and the **присудок** (predicate — main sentence member naming the action/state) never form a phrase together. Second, a noun with a preposition is not considered an independent phrase.
+
+Підмет і присудок ніколи не утворюють словосполучення. Це граматична основа речення, самостійна структура. Слова з прийменниками також не є словосполученнями. Наприклад, «на столі» або «перед будинком». Це слово та його службовий елемент, вони є частиною більшого речення.
+
+> *The subject and the predicate never form a word combination. This is the grammatical core of the sentence, an independent structure. Words with prepositions are also not word combinations. For example, "on the table" or "in front of the house". This is a word and its auxiliary element, they are a part of a larger sentence.*
+
+Let's see exactly how this theoretical knowledge works in practice. A tutor and a student are analyzing a simple sentence together to find the hidden phrases inside it.
+
+> — **Репетитор:** Прочитай це речення: «Старий ліс тихо шелестить». *(Read this sentence: "The old forest rustles quietly".)*
+> — **Студент:** Добре. Де тут словосполучення? *(Okay. Where are the word combinations here?)*
+> — **Репетитор:** Спочатку знайдемо граматичну основу. Що робить дію? *(First, let's find the grammatical core. What is doing the action?)*
+> — **Студент:** Ліс шелестить. *(The forest rustles.)*
+> — **Репетитор:** Правильно. «Ліс» — це підмет, а «шелестить» — це присудок. Це не словосполучення. *(Correct. "Forest" is the subject, and "rustles" is the predicate. This is not a word combination.)*
+> — **Студент:** Тоді які слова залежать від них? *(Then which words depend on them?)*
+> — **Репетитор:** Від підмета «ліс» залежить слово «старий». Ліс (який?) старий. Це перше словосполучення. *(The word "old" depends on the subject "forest". Forest (what kind?) old. This is the first word combination.)*
+> — **Студент:** А від присудка «шелестить» залежить «тихо»! Шелестить (як?) тихо. Це друге словосполучення! *(And "quietly" depends on the predicate "rustles"! Rustles (how?) quietly. This is the second word combination!)*
+> — **Репетитор:** Чудово! Ти знайшов два словосполучення. *(Excellent! You found two word combinations.)*
+
+<!-- INJECT_ACTIVITY: mark-phrase-parts -->

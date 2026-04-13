@@ -1,0 +1,66 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T22-57-ef1e90e0.json
+phase: vocab
+prompt_chars: 10480
+response_chars: 1179
+prompt_words: 1679
+response_words: 136
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.0761
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.0219
+- name: plan
+  start: 1028
+  length: 9452
+  fraction: 0.9019
+large_sections:
+- plan
+directives_total: 10
+directives_covered: 0
+directives_missed:
+- kind: must
+  text: To master Ukrainian verbs, you must understand the concept of **дієвідмінювання**
+    (conjugation).
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: must
+  text: You must memorize their specific endings until they become automatic.
+  covered: false
+  coverage_note: 1/10 keywords (10%)
+- kind: must
+  text: As an English speaker, you must be careful to avoid two very common mistakes.
+  covered: false
+  coverage_note: 1/10 keywords (10%)
+- kind: must
+  text: 'This is incorrect; you must conjugate it: **Я читаю книгу** ✅.'
+  covered: false
+  coverage_note: 1/7 keywords (14%)
+- kind: must
+  text: When building sentences and aiming for clear communication goals, remember
+    that the verb ending must always match the subject performing the action.
+  covered: false
+  coverage_note: 0/17 keywords (0%)
+- kind: must
+  text: If the subject is **вона**, the verb must end in **-є**.
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: inject_activity
+  text: fill-in-conjugation
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-person-verb
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-correct-form
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-sentences
+  covered: false
+  coverage_note: marker missing

@@ -1,0 +1,47 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T11-40-cf12f4e0.json
+phase: review
+prompt_chars: 49977
+response_chars: 8421
+prompt_words: 7142
+response_words: 1221
+sections:
+- name: preamble
+  start: 0
+  length: 459
+  fraction: 0.0092
+- name: plan
+  start: 459
+  length: 46509
+  fraction: 0.9306
+- name: output_spec
+  start: 46968
+  length: 3009
+  fraction: 0.0602
+large_sections:
+- plan
+directives_total: 18
+directives_covered: 13
+directives_missed:
+- kind: must
+  text: 'The ending must agree with the noun: прочитана книга (ж.'
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: must
+  text: 'This is perfectly logical: if an object has an attribute as a result of someone''s
+    action, that action must have already taken place.'
+  covered: false
+  coverage_note: 4/15 keywords (27%)
+- kind: must
+  text: '- How do I agree the participle **написаний** (written) with the noun **лист**
+    (letter) in the Genitive case? They must match entirely, becoming **написаного
+    листа**.'
+  covered: false
+  coverage_note: 4/17 keywords (24%)
+- kind: must
+  text: This is a language curriculum — every error you identify must be fixed.
+  covered: false
+  coverage_note: 2/9 keywords (22%)
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing

@@ -2,55 +2,50 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 8
-  evidence: Missed referencing "Большакова Grade 2 (p.38)" as the inspiration for
-    the first dialogue, which was explicitly required in the plan's `content_outline`.
-    All other plan points were executed flawlessly.
+  score: 7
+  evidence: The plan’s dialogue situations require `зелене листя` and `сіре пальто`;
+    the generated text has `Є також білі лілії та жовті соняшники.` and `А де мій
+    білий светр і коричневі черевики?` I searched the
 - dimension: 2
   name: Linguistic accuracy
-  score: 10
-  evidence: Excellent precision in phonetic and morphological descriptions. Flawless
-    gender agreement (`червоні троянди`, `зелене листя`, `синя ваза`). Accurate caution
-    against inventing hard-stem forms like `син
+  score: 6
+  evidence: '`голубий` is called “a Russian-influenced word,” but VESUM and СУМ attest
+    `голубий` as Ukrainian. The module also says the blue distinction is `strictly
+    required` and later `exclusively`, which overst'
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: Follows PPP flow perfectly. Introduces the familiar hard-stem paradigm
-    (`великий/велика`) to explicitly contrast with the new soft-stem paradigm (`синій/синя`),
-    making the morphology shift obvious.
+  score: 7
+  evidence: 'The hard/soft-stem contrast is explained well with `синій стіл`, `синя
+    книга`, `синє вікно`, but the blue section teaches nuance as dogma: `strictly
+    required` / `exclusively`.'
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: All required (`червоний`, `жовтий`, `синій`, `блакитний`, etc.) and recommended
-    (`помаранчевий`, `фіолетовий`, `світло-`, `темно-`) vocabulary is seamlessly integrated
-    into the text and dialogues.
+  score: 7
+  evidence: Core color vocabulary is present, but the plan-specific agreement models
+    `зелене листя` and `сіре пальто` never appear in the prose.
 - dimension: 5
   name: Exercise quality
-  score: 7
-  evidence: 'DEDUCT: The marker `<!-- INJECT_ACTIVITY: fill-in-gender-agreement -->`
-    is placed BEFORE the soft-stem pattern for `синій` is taught. The plan specifically
-    notes this exercise tests `син__ книга`, whi'
+  score: 9
+  evidence: All four planned activity markers are present and each comes after the
+    relevant teaching block.
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: Tone is encouraging and natural ("Colors bring the world to life," "Describing
-    personal belongings... brings these new words into your home"). No corporate gamification
-    filler.
+  score: 9
+  evidence: The module uses concrete settings and useful cultural hooks like the flag
+    and `вишиванка`, without falling into gamified nonsense.
 - dimension: 7
   name: Structural integrity
-  score: 8
-  evidence: 'DEDUCT: The module''s word count is 1197, which is slightly below the
-    strict 1200 word target. (Adding the missing Bolshakova reference will bring this
-    over the threshold).'
+  score: 9
+  evidence: All planned H2 sections are present and ordered correctly, marker syntax
+    is clean, and the pipeline word count is 1572, above target.
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: Beautiful integration of the `синьо-жовтий` meaning from Kravtsova Grade
-    2 and the regional embroidery styles of the `вишиванка` (Polissia vs Poltava).
+  score: 6
+  evidence: The `голубий` claim and the absolute `синій` / `блакитний` framing flatten
+    real Ukrainian usage instead of teaching it accurately.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: Dialogues are highly natural, contextual, and situational (shopping for
-    flowers, discussing outfits). They embed target vocabulary effortlessly without
-    reading like robotic lists.
+  score: 9
+  evidence: Both dialogues use named speakers and concrete objects rather than anonymous
+    drill lines.
 findings: []

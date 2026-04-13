@@ -1,0 +1,65 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T10-01-149b56ed.json
+phase: write-chunk-04
+prompt_chars: 47840
+response_chars: 5985
+prompt_words: 6597
+response_words: 939
+sections:
+- name: header
+  start: 0
+  length: 438
+  fraction: 0.0092
+- name: skeleton
+  start: 438
+  length: 1197
+  fraction: 0.025
+- name: prior_summary
+  start: 1635
+  length: 3638
+  fraction: 0.076
+- name: plan
+  start: 5273
+  length: 15737
+  fraction: 0.329
+- name: wiki
+  start: 14967
+  length: 26624
+  fraction: 0.5565
+- name: output_spec
+  start: 47634
+  length: 206
+  fraction: 0.0043
+large_sections:
+- wiki
+directives_total: 13
+directives_covered: 6
+directives_missed:
+- kind: checklist
+  text: дата (date — uses ordinal in Р.в.)
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: checklist
+  text: котра година (what time is it)
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: checklist
+  text: половина (half — о пів на п'яту)
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: checklist
+  text: хвилина (minute)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: рік (year — року in Р.в.)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 4/11 keywords (36%)
+- kind: inject_activity
+  text: quiz, time preposition rules
+  covered: false
+  coverage_note: marker missing

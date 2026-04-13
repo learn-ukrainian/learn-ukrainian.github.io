@@ -1,50 +1,61 @@
-## Тест на інтуїцію: що ви вже відчуваєте?
+## Тест на інтуїцію: що ви вже відчуваєте? (~850 words total)
 
-На рівні А2 ви вивчали форми минулого часу. Ви дізналися, як узгоджувати закінчення з родом і числом. Ви також запам'ятали базову різницю між доконаним і недоконаним видом дієслова. Тепер ми переходимо від простої побудови правильних речень до свідомого вибору. На цьому етапі головне завдання — не просто як сказати, а що саме ви хочете передати співрозмовнику. Ми будемо розвивати вашу мовну інтуїцію. Це означає відчувати мову зсередини, як це робить носій мови, коли описує минулі події.
+Welcome to the B1 level. Up until now, your primary focus has been on mastering the forms of the Ukrainian past tense. You learned how to conjugate verbs based on gender and number, ensuring that the subject and the action always agree. However, you likely noticed a recurring pattern in your vocabulary lists: there are almost always two verbs for the same action. You know how to form the past tense for both, but which one should you use? Now, we are shifting our focus from simply building the past tense to making the critical choice between the **доконаний вид** (perfective aspect) and the **недоконаний вид** (imperfective aspect).
 
-> *At the A2 level, you studied the forms of the past tense. You learned how to agree endings with gender and number. You also memorized the basic difference between the perfective and imperfective aspects of the verb. Now we are moving from simply building correct sentences to conscious choice. At this stage, the main task is not just how to say it, but what exactly you want to convey to your conversation partner. We will develop your language intuition. This means feeling the language from the inside, as a native speaker does when describing past events.*
+Ви переходите на новий етап вивчення мови, де граматичні правила стають гнучким інструментом для вираження ваших думок. Відтепер головне завдання полягає не лише в тому, щоб будувати речення без помилок. Найважливіше — це вибрати саме те слово, яке передає точний сенс вашої розповіді та ваші емоції. Для цього вам знадобиться розвивати мовну інтуїцію.
 
-Before we dive into the rules and explanations, let us see what your brain already knows. You have been exposed to a lot of Ukrainian text and audio up to this point. Often, your subconscious picks up on patterns before your conscious mind can explain them. Below are ten pairs of sentences. In each pair, the only difference is the aspect of the verb. Read them carefully and try to feel which situation requires the perfective aspect and which requires the imperfective. Do not worry about rules right now; just listen to your intuition.
+> *You are transitioning to a new stage of language learning, where grammatical rules become a flexible tool to express your thoughts. From now on, the main task is not just to build sentences without mistakes. The most important thing is to choose the exact word that conveys the precise meaning of your story and your emotions. For this, you will need to develop language intuition.*
 
-1. Вчора я (читав / прочитав) цю книжку до кінця. *(Yesterday I read this book to the end.)*
-2. Вчора я (читав / прочитав) увечері, бо мені було нудно. *(Yesterday I read in the evening because I was bored.)*
-3. Минулого тижня ми (робили / зробили) ремонт у кімнаті за два дні. *(Last week we did renovations in the room in two days.)*
-4. Минулого тижня ми (робили / зробили) ремонт, тому всюди був пил. *(Last week we were doing renovations, so there was dust everywhere.)*
-5. Тарас (писав / написав) три листи і пішов додому. *(Taras wrote three letters and went home.)*
-6. Тарас (писав / написав) листа, коли я йому зателефонувала. *(Taras was writing a letter when I called him.)*
-7. Вона (купувала / купила) новий телефон на розпродажі. *(She bought a new phone on sale.)*
-8. Вона завжди (купувала / купила) каву в цій маленькій кав'ярні. *(She always bought coffee in this small cafe.)*
-9. Я (брав / взяв) твій ноутбук на п'ять хвилин, щоб перевірити пошту. *(I took your laptop for five minutes to check my email.)*
-10. Я ніколи не (брав / взяв) чужі речі без дозволу. *(I never took other people's things without permission.)*
+Before we outline any strict rules, let's test the intuition you have naturally built up. In English, you might simply use the word "read" or "wrote" for both situations, relying on context to do the heavy lifting. In Ukrainian, however, the choice of verb fundamentally changes the entire picture. Read these minimal pairs and try to feel the internal logic of the situation. Are we talking about a continuous state of being, or are we looking at the absolute **завершеність** (completedness) of an action?
 
-Look at the internal logic of these sentences. Some phrases emphasize the completeness of an action, while others highlight a state of being or a process. For example, reading a book "to the end" signals a clear boundary, whereas reading "because I was bored" focuses on the activity itself to pass the time. 
+*   Вчора я читав / прочитав цю книжку до останньої сторінки.
+*   Вчора я читав / прочитав книжку увечері, бо мені було нудно.
+*   Минулого тижня я довго писав / написав складний звіт.
+*   Одного разу я брав / взяв ключі зі столу і побіг на роботу.
+*   Вона вчила / вивчила нові слова дві години, але нічого не запам'ятала.
+*   Я готував / приготував смачну вечерю, і тепер ми нарешті можемо їсти.
+*   Він говорив / сказав мені правду, і ця розмова змінила все.
+*   Ми гуляли / погуляли в центральному парку цілий день.
+*   Чи ти коли-небудь вчив / вивчив цю складну тему?
+*   Я щодня дзвонив / зателефонував мамі, коли жив за кордоном.
 
-You might have noticed that sometimes the lines blur. Let us analyze a very common scenario where both choices are grammatically flawless but carry entirely different social intents. The difference lies not in the grammar itself, but in the message you want to convey. Look at how a simple conversation can shift based on one verb.
+If a sentence feels like it needs a clear, undeniable endpoint, or describes an **однократність** (single occurrence) that happened **одного разу** (once), you are leaning toward the perfective. If the sentence feels like an ongoing flow of time, or describes something you did **щодня** (every day), your intuition points to the imperfective.
 
-Уявіть ситуацію: ви приходите на роботу, і колега запитує про ваш учорашній вечір. Ви можете відповісти: «Я дивився фільм» або «Я подивився фільм». Обидва варіанти правильні, але вони надсилають різні сигнали. Якщо ви кажете, що дивилися фільм, ви описуєте свій стан. Ви відпочивали, процес був приємним, і дія заповнила ваш час. Якщо ж ви кажете, що подивилися фільм, ви повідомляєте про результат. Можливо, це був відомий фільм, який усі обговорюють, і тепер ви теж знаєте сюжет і готові поділитися думками.
+It is crucial to understand that sometimes there is no grammatically "wrong" choice in a sentence, only a difference in social intent and focus. The **процес** (process) of doing something is just as valid to talk about as the final achievement. Imagine a friend asks you about your quiet evening at home. You could accurately answer «Я дивився фільм» або «Я подивився фільм». Both sentences directly translate to "I watched a movie," but they tell the listener two very different stories.
 
-> *Imagine a situation: you come to work, and a colleague asks about your yesterday evening. You can answer: "Я дивився фільм" or "Я подивився фільм". Both options are correct, but they send different signals. If you say that you "дивилися" (were watching) a film, you are describing your state. You were resting, the process was pleasant, and the action filled your time. If you say that you "подивилися" (watched) a film, you are reporting a result. Perhaps it was a famous film that everyone is discussing, and now you also know the plot and are ready to share your thoughts.*
+Коли ви кажете «Я дивився фільм», ви немов запрошуєте співрозмовника у свій вечір. Ви робите головний акцент на тому, як саме ви проводили час, як ви насолоджувалися атмосферою. Натомість фраза «Я подивився фільм» звучить як чіткий звіт про успіх. Ви повідомляєте про новий факт: фільм повністю закінчився, і тепер ви готові активно обговорювати його сюжет.
 
-In Ukrainian, your choice of aspect tells the listener what you value in that moment: the experience itself or the final completion.
+> *When you say "I watched a movie," you almost invite the interlocutor into your evening. You place the main emphasis on exactly how you spent your time, how you enjoyed the atmosphere. Conversely, the phrase "I watched a movie" (perfective) sounds like a clear report of success. You are stating a new fact: the movie has completely ended, and now you are ready to actively discuss its plot.*
 
-<!-- INJECT_ACTIVITY: quiz-aspect-intuition -->
+In Ukrainian, your choice of aspect acts as a spotlight. It tells the listener exactly what you value in the narrative: the immersive experience itself or the satisfaction of final completion. Let's practice this instinct before we formalize the rules. Read the contexts carefully and choose the aspect that best fits the speaker's hidden intent.
 
-To see how aspect colors the personality and tone of a speaker, let us listen to a conversation between two colleagues. Pay attention to how Taras and Oksana describe their days using different verb forms. Their choice of verbs reveals how they feel about their work. One feels successful, while the other feels drained.
+<!-- INJECT_ACTIVITY: quiz, choose доконаний or недоконаний вид in past-tense sentences based on context and intuition, 10 items -->
 
-> — **Тарас:** Привіт! Як твій день учора? Я вчора написав три звіти, відправив усі листи і зробив презентацію. *(Hi! How was your day yesterday? Yesterday I wrote three reports, sent all the letters, and made a presentation.)*
-> — **Оксана:** Привіт... А я цілий день писала один звіт, робила презентацію, намагалася знайти помилку в таблиці, але так нічого і не закінчила. *(Hi... And I spent the whole day writing one report, making a presentation, trying to find a mistake in the table, but I didn't finish anything.)*
-> — **Тарас:** Ого. Але ж ти працювала весь день? *(Wow. But you were working the whole day?)*
-> — **Оксана:** Так, я дуже втомилася, хоча результату немає. *(Yes, I am very tired, even though there is no result.)*
+Let's see how aspect colors the personality and tone of a speaker in a real, everyday conversation. Notice how one character focuses entirely on achievements, while the other feels stuck in an exhausting loop of effort. Sometimes people act this way **завжди** (always), and we can hear their exhaustion in the verbs they use.
 
-Notice the stark contrast in their language. Taras uses the perfective aspect («написав», «відправив», «зробив»). His narrative is a checklist of victories and completed tasks. He focuses purely on results. Oksana, on the other hand, relies heavily on the imperfective aspect («писала», «робила», «намагалася»). Her verbs convey an exhausting, continuous process that dragged on without reaching a conclusion. The grammar directly reflects their emotional states: triumph versus frustration.
+> — **Тарас:** Привіт! Як пройшов твій день? Я вчора написав три листи і швидко відправив фінансовий звіт. А потім зробив усі свої домашні справи. *(Hi! How did your day go? Yesterday I wrote three letters and quickly sent the financial report. And then I did all my household chores.)*
+> — **Оксана:** О, а я цілий день важко писала свій звіт, але так і не закінчила його. Потім ще дві довгі години готувала вечерю для гостей. *(Oh, and I was writing my report hard all day, but still didn't finish it. Then I was cooking dinner for the guests for another two long hours.)*
+> — **Тарас:** Але ж ти приготувала її? *(But did you cook it?)*
+> — **Оксана:** Так, нарешті ми змогли спокійно поїсти. *(Yes, finally we were able to eat peacefully.)*
 
-This brings us to the core concept of this module. In Ukrainian grammar, aspect is not just a rigid set of rules; it is a mindset. The Ukrainian metalanguage uses specific terms to describe this phenomenon. The word **результат** (result) aligns with the perfective aspect, emphasizing that a goal was reached. The word **процес** (process) aligns with the imperfective aspect, focusing on the flow of time.
+In this exchange, Тарас sounds highly productive and energized. Every verb he uses implies a closed, successfully managed task. Оксана, on the other hand, sounds incredibly tired. Her verbs stretch out over the timeline, emphasizing the heavy burden of the activity rather than the joy of finishing it. What if she wants to complain about the **повторюваність** (recurrence) of this situation, noting that it happens **щоразу** (every time) they host guests? Her verbs would stay exactly the same until she **нарешті** (finally) finishes the task.
+
+This stark contrast brings us to the core concept of this module: Aspect as a Mindset. You can describe the exact same event focusing on its **тривалість** (duration), or you can emphasize the final **результат** (result).
 
 :::info
-**Вид як спосіб мислення**
-When speaking Ukrainian, you must decide what your communicative goal is. Are you emphasizing **завершеність** (completeness) or simply stating that an activity took place? You are the director of your sentence.
+**Grammar box**
+A **видова пара** (aspectual pair) is a set of two verbs that describe the same core action but belong to different aspects. For example, **готувати** (to prepare/cook) focuses on the effort, while **приготувати** (to prepare/cook) focuses on the finished meal.
+
+Similarly, you might study a topic for hours, but your ultimate goal is to completely **вивчити** (to learn thoroughly) the material. Knowing when to use which verb is the key to natural speech.
 :::
 
-Коли ви розмовляєте українською, ви не просто вибираєте форму дієслова. Ви вирішуєте, як ваш слухач побачить цю подію. Вид дієслова — це ваш інструмент, щоб показати, що для вас було найважливішим у тій ситуації. Від цього залежить уся атмосфера вашої розповіді.
+Вибір між цими двома граматичними інструментами залежить тільки від вас як від автора історії. Якщо для вас важлива завершеність, ви свідомо обираєте дієслово доконаного виду. Якщо ж вас більше цікавить сам процес дії чи її повторюваність, ви використовуєте дієслово недоконаного виду. Українська граматика просто підкоряється вашому баченню світу.
 
-> *When you speak Ukrainian, you don't just choose a verb form. You decide how your listener will see this event. The verb aspect is your tool to show what was most important to you in that situation. The entire atmosphere of your story depends on this.*
+> *The choice between these two grammatical tools depends entirely on you as the author of the story. If completedness is important to you, you consciously choose a perfective verb. If, however, you are more interested in the process itself or its recurrence, you use an imperfective verb. Ukrainian grammar simply obeys your vision of the world.*
+
+:::note
+**Quick tip**
+Every time you want to talk about the past, ask yourself: "Do I care about the journey, or do I care about the destination?" Your answer will immediately point you to the correct aspect.
+
+Of course, **іноді** (sometimes) an action happens **раптом** (suddenly), interrupting the journey entirely. For instance, if you were reading a book and decided to **зателефонувати** (to call) a friend, that single, sudden action demands a perfective verb.
+:::

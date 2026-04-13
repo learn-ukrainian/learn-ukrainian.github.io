@@ -3,49 +3,51 @@ scores:
 - dimension: 1
   name: Plan adherence
   score: 8
-  evidence: 'Missed the English translation in the heading for Section 2: `## Присвійні
-    та вказівні займенники у давальному відмінку`. Inappropriately added unmapped
-    activity markers.'
+  evidence: 'All four planned sections are present and the five markers cover all
+    five `activity_hints`, but none of the planned references is cited in the prose
+    (`Заболотний`: 0, `Захарійчук`: 0, `ULP`: 0).'
 - dimension: 2
   name: Linguistic accuracy
-  score: 8
-  evidence: 'Factual error: claimed the plural Dative ending is *always* `-им` regardless
-    of whether the adjective is hard or soft. Soft stems take `-ім` (e.g. `синім`).'
+  score: 6
+  evidence: 'Critical rule error: `both hard and soft masculine adjectives comfortably
+    take the **-ому** ending...` Soft stems take `-ьому`; VESUM verifies `синьому`
+    and `останньому`.'
 - dimension: 3
   name: Pedagogical quality
   score: 7
-  evidence: 'Severe pedagogical confusion: stated "For masculine and neuter **nouns**
-    that end in a hard consonant (like новий...)" when referring to adjectives. This
-    is highly confusing for learners trying to gra'
+  evidence: Section 1 opens with a long all-English theory paragraph (`When you give
+    a gift...` to `This creates a beautiful harmony in the sentence.`) before any
+    Ukrainian example, which slows the PPP flow.
 - dimension: 4
   name: Vocabulary coverage
-  score: 9
-  evidence: Required terms like "прикметник" and "присвійний" were used only in section
-    headers rather than being naturally integrated into the explanatory prose itself.
+  score: 10
+  evidence: 'Required vocabulary is used in prose: `моєму`, `моїй`, `твоєму`, `нашій`,
+    `цьому`, `тому`, `новому`, `старшому`, `прикметник`, `присвійний`; recommended
+    `узгодження`, `іменникова група`, `їхньому` als'
 - dimension: 5
   name: Exercise quality
-  score: 8
-  evidence: The injected markers for the extra activities do not exist in the plan
-    and break the pipeline contract.
+  score: 10
+  evidence: All 5 planned exercise types have markers, and each marker appears after
+    the relevant teaching block. No observable marker-placement or scope problem.
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: Excellent teacher persona. Great mini-dialogues contextualizing the grammar
-    and clear "Читаємо українською" examples.
+  score: 7
+  evidence: 'The prose slips into generic praise instead of instruction: `This makes
+    the language melodic and highly predictable compared to other Slavic languages...`'
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: Word count is extremely healthy (3251). All sections are present and logically
-    ordered. Clean markdown.
+  evidence: All H2 sections are present and ordered correctly; marker count is complete;
+    pipeline word count is 2781, so the module clears the 2000-word target.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Naturally highlights the beauty of the Ukrainian language ("melodic",
-    "consistent") and contrasts with Russian forms appropriately without making the
-    entire explanation about Russian.
+  evidence: No Russian characters (`ы э ё ъ`) appear, and the module stays in ordinary
+    Ukrainian contexts without overt Russocentric framing.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: Realistic and engaging dialogue contexts (handing out tests, giving gifts,
-    calling friends).
+  score: 7
+  evidence: 'The only dialogue is a very short two-turn grading snippet: `Моєму найкращому
+    студентові — десятка!... / Дякуємо нашій добрій вчительці!` It is functional but
+    not a natural multi-turn exchange.'
 findings: []

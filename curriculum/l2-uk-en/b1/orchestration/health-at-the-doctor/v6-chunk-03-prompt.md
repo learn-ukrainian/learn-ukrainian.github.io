@@ -22,7 +22,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-чи дискомфорт, просто підніміть ліву руку, і я зупинюся. У цьому діалозі ми знову чітко бачимо, як фахівець керує процесом за допомогою простих та зрозумілих інструкцій: «відкрийте», «покажіть», «не рухайтеся». Форма наказового способу тут є природною та абсолютно необхідною. Також зверніть увагу на слово «ясна» — це іменник, який найчастіше вживається у множині (pluralia tantum) і позначає м'яку тканину навколо зубів. Тепер давайте детальніше поговоримо про граматику, адже українська медична лексика має свої дуже особливі правила керування відмінками *(case government)*. Коли ми говоримо про різні хвороби та симптоми, ми використовуємо специфічні дієслова, які вимагають після себе цілком певних прийменників та відмінків. Це одна з тих важливих сфер, де українська мова яскраво демонструє свою унікальну синтаксичну структуру та незалежність. Перше і найпоширеніше дієслово — **скаржитися** *(to complain)*. Коли ви тільки приходите до кабінету лікаря, він традиційно запитує: «На що скаржитесь?». Українською мовою ми завжди скаржимося **на** щось, обов'язково використовуючи прийменник «на» та знахідний відмінок *(Accusative case)*. Наприклад: «Я скаржуся на сильний головний біль», «Цей пацієнт постійно скаржиться на слабкість», «Вона скаржиться на гострий біль у горлі». Друге, надзвичайно важливе дієслово — це **хворіти** *(to be sick / to suffer from a disease)*. Саме тут ми маємо дуже чіткий маркер чистого українського синтаксису, який суттєво відрізняється від інших мов регіону. В українській мові ми завжди хворіємо **на** якусь хворобу. Ми знову використовуємо прийменник «на» та знахідний відмінок. Ми правильно кажемо: **хворіти на грип** *(to be sick with the flu)*, **хворіти на застуду** *(to have a cold)*, **хворіти на вірусну інфекцію**. Використання орудного відмінка *(Instrumental case)* без прийменника є грубою граматичною помилкою та семантичною калькою. Тому фраза «Я хворію грипом» є абсолютно неприйнятною. Єдина правильна та органічна українська форма — це «Я хворію на грип». Ця вишукана конструкція є справжньою візитною карткою правильної та грамотної медичної мови. Третє ключове дієслово, яке нам обов'язково знадобиться, — це **лікуватися** *(to be treated)*. Коли ми хочемо сказати, проти якої хвороби ми регулярно приймаємо таблетки або проходимо спеціальну терапію, ми використовуємо прийменник **від** *(from)* та родовий відмінок *(Genitive case)*. Ми лікуємося саме **від** чогось. Наприклад: **лікуватися від застуди** *(to be treated for a cold)*, «Мій дідусь зараз лікується від запалення легенів», «Ця пацієнтка успішно лікується від алергії». Цей самий логічний принцип діє і з іменниками: ми купуємо в аптеці «ліки від головного болю» або «сироп від кашлю». Використання прийменника «для» у таких контекстах (наприклад, «ліки для застуди») є граматично неправильним і звучить дуже неприродно, адже ми хочемо назавжди позбутися хвороби, а не зробити щось корисне для неї. Отже, міцно запам'ятайте цю золоту трійцю правильного медичного керування: 1. Скаржитися **на** + Знахідний відмінок (на що?). 2. Хворіти **на** + Знахідний відмінок (на що?). 3. Лікуватися **від** + Родовий відмінок (від чого?). Ці класичні конструкції допоможуть вам звучати максимально природно, грамотно та впевнено під час будь-якого візиту до української поліклініки. Використовуйте їх щоразу, коли ви детально говорите про своє самопочуття чи описуєте власну історію хвороби. Згодом ці корисні фрази стануть для вас повністю автоматичними. <!-- INJECT_ACTIVITY: fill-in, Complete doctor-patient dialogue with correct case forms (скаржитися на..., лікуватися від...) -->
+English, you might say you are "sick with" something, and in some other Slavic languages, you might use the instrumental case without a preposition. However, Ukrainian has its own strict, unique rules that you must follow to sound natural and fluent. Using the wrong case or preposition immediately marks your speech as foreign or influenced by a different language. Найпоширенішою синтаксичною помилкою є неправильне керування дієслова «хворіти». В українській мові ми завжди кажемо «хворіти на» та використовуємо іменник у знахідному відмінку. Наприклад, людина хворіє на грип або на тяжку застуду. Ця конструкція є важливою українською нормою, яку слід запам'ятати. > *The most common syntactic mistake is the incorrect government of the verb "to be sick". In the Ukrainian language, we always say "хворіти на" (to be sick with) and use the noun in the accusative case. For example, a person is sick with the flu or with a severe cold. This construction is an important Ukrainian norm that should be remembered.* Let us analyze the core medical verbs and the specific cases they govern. The verb **скаржитися** (to complain) requires the preposition "на" and the accusative case. When a patient arrives at the clinic, they might state that they are experiencing a terrible **симптом** (symptom). You would say "Я скаржуся на сильний головний біль" to accurately express your condition. Another crucial verb is **лікувати** (to treat), which is an imperfective action describing the medical process. If you are describing the process of receiving medical care, you use the reflexive form with the preposition "від" (from) and the genitive case. You might say that your friend is being treated for an infection by saying "Він лікується від інфекції". This preposition clearly marks the source of the ailment. After completing the prescribed course of treatment, the patient will finally **одужати** (to recover). Because recovery implies moving away from an illness, it logically takes the preposition "від" and the genitive case. The ultimate goal of any medical intervention is to protect your **здоров'я** (health). This successful recovery concludes the entire medical journey. During a consultation, the doctor might check your **температура** (temperature) to rule out a fever. If everything is clear, they will write a **рецепт** (prescription) for you. This piece of paper is essential for obtaining restricted treatments. It serves as an official authorization from your healthcare provider. You will then take this document to the nearest **аптека** (pharmacy) to purchase your supplies. You must remember that the word **ліки** (medicine) is a pluralia tantum noun, so all adjectives and verbs agreeing with it must be in the plural form. This means you cannot say that you need "one medicine" in Ukrainian. You must always treat it grammatically as a plural entity. :::info **Grammar box** Always verify the gender of medical nouns to ensure your adjectives agree correctly. Both **кашель** (cough) and **нежить** (runny nose) are masculine nouns in Ukrainian. You must say "сильний кашель" and "сильний нежить". Treating them as feminine is a common learner mistake. ::: <!-- INJECT_ACTIVITY: fill-in-medical-cases -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -604,7 +604,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -617,18 +684,69 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] здоров'я (health — noun, III відміна pattern with апостроф)
+- [ ] лікар (doctor — II відміна, -ар agent suffix)
+- [ ] хвороба (disease — I відміна feminine)
+- [ ] біль (pain — II відміна masculine, чергування: біль-болить)
+- [ ] температура (temperature — I відміна)
+- [ ] кашель (cough — II відміна masculine, м'яка група)
+- [ ] нежить (runny nose — II відміна masculine)
+- [ ] ліки (medicine — pluralia tantum)
+- [ ] рецепт (prescription)
+- [ ] аптека (pharmacy — I відміна)
+- [ ] діагноз (diagnosis — II відміна)
+- [ ] симптом (symptom — II відміна)
+- [ ] скаржитися (to complain — на + Зн.)
+- [ ] лікувати (to treat — imperfective)
+- [ ] одужати (to recover — perfective)
+- [ ] призначити (to prescribe — perfective)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Спеціалісти та обстеження (~720 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

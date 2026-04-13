@@ -1,18 +1,24 @@
-# Section-by-Section Generation — Section 1/6
+# Section-by-Section Generation — Section 1/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 18: Студентові, сестрі, дитині (A2, A2.3 [Dative Case])
-**Section to write:** Вступ: Кому ми даруємо радість? (~200 words total)
-**Word target for this section:** 200 words (aim for 220 to account for undershoot)
+**Section to write:** Давальний відмінок іменників чоловічого роду (~700 words total)
+**Word target for this section:** 700 words (aim for 770 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Вступ: Кому ми даруємо радість? (~200 words total)
-- P1 (~80 words): [Introduction to the Dative case (давальний відмінок) concept as the "giving case." Explain the primary questions "Кому?" (to whom?) and "Чому?" (to what?). Introduce the core example: "Я даю книгу (кому?) сестрі" to illustrate the recipient function.]
-- P2 (~120 words): [Dialogue at the post office: A sender (Відправник) and a postal worker (Працівник пошти). The sender addresses a package to a student (студентові), a postcard to a sister (сестрі), and a toy to a child (дитині). This natural dialogue previews the three gender endings -ові, -і, and -і (for neuter).]
+## Давальний відмінок іменників чоловічого роду (~700 words total)
+- P1 (~100 words): Introduce the Dative case (давальний відмінок) for nouns, answering the questions "кому? чому?" (to whom? to what?). Explain its primary function: designating the recipient of an action (адресат дії). Provide a clear starting example: "Я даю подарунок студентові."
+- P2 (~120 words): Focus on II declension masculine nouns. Introduce the unique parallel endings: -ові/-еві/-єві and -у/-ю. Stress that both are grammatically correct and interchangeable (братові = брату, лікареві = лікарю), but explicitly note that -ові/-еві is a rich, stylistic feature of Ukrainian, especially preferred for living beings.
+- P3 (~120 words): Break down the rules for the -ові/-еві/-єві endings. Explain that hard stems take -ові (студентові, другові, батькові). Soft stems and sibilants take -еві (вчителеві, товаришеві, читачеві). Stems ending in a vowel take -єві (героєві, Андрієві).
+- P4 (~100 words): Break down the rules for the -у/-ю endings. Explain that hard and mixed stems take -у (студенту, товаришу), while soft stems take -ю (лікарю). Reiterate that while valid, learners should actively practice the -ові group for natural-sounding speech.
+- P5 (~100 words): Introduce the stylistic rule from Заболотний for multiple consecutive masculine dative nouns. Explain that to avoid phonological monotony, speakers alternate the endings. Provide examples: "подякувати сусідові Данилу" (instead of сусідові Данилові) and "написати видавцеві Сергію".
+- P6 (~80 words): Address common I and II declension masculine nouns ending in -о (Дмитро, батько, тато). Explain that they reliably take -ові in the dative case (Дмитрові, батькові, татові), aligning nicely with the pattern for masculine people.
+- P7 (~80 words): Provide 3-4 short example sentences using common A1/A2 masculine vocabulary to solidify the concept: "Я допомагаю братові", "Він пише листа другові", "Ми дякуємо вчителеві".
+- <!-- INJECT_ACTIVITY: fill-in-dative-masculine --> [fill-in, Put the noun in brackets into the dative case (e.g., подарувати [брат] → братові), 8 items]
 
 ---
 ## Full Plan (for reference)
@@ -583,6 +589,31 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] студентові (to the student (dat.))
+- [ ] сестрі (to the sister (dat.))
+- [ ] другові (to the friend (dat.))
+- [ ] подарувати (to give as a gift)
+- [ ] показати (to show)
+- [ ] написати (to write)
+- [ ] розповісти (to tell, to narrate)
+- [ ] пояснити (to explain)
+- [ ] відповісти (to answer, to reply)
+- [ ] закінчення (ending (grammar))
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Давальний відмінок іменників чоловічого роду (~700 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

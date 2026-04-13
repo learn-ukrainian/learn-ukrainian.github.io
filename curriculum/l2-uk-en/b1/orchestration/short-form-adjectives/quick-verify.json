@@ -1,13 +1,13 @@
 {
-  "attempt": 2,
+  "attempt": 1,
   "passed": true,
   "errors": [],
   "warnings": [
     {
-      "check": "VOCABULARY",
+      "check": "TOXIC",
       "severity": "WARNING",
-      "message": "Missing 1/11 required vocab: народнопоетичний (folk-poetic register)"
+      "message": "Latin characters mixed with Cyrillic: n"
     }
   ],
-  "timestamp": "2026-04-09T23:40:15.576654+00:00"
+  "timestamp": "2026-04-11T13:07:05.486990+00:00"
 }

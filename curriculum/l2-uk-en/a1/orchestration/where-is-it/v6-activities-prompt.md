@@ -1,4 +1,4 @@
-<!-- version: 1.1.0 | updated: 2026-03-31 -->
+<!-- version: 1.2.0 | updated: 2026-04-12 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -11,6 +11,35 @@ Generate an `activities/where-is-it.yaml` file for module **29: Where Is It?** (
 
 ---
 
+## ⚠️ HARD COUNT TARGETS — READ TWICE
+
+These are the binding numerical contracts for THIS module. The audit will FAIL if you fall short.
+
+| Bucket | Min | Max | Notes |
+|---|---|---|---|
+| Total activities | 10 | 10+ | inline + workbook combined |
+| Inline (lesson tab) | 4 | 6 | one per `<!-- INJECT_ACTIVITY -->` marker, see below |
+| Workbook (Зошит tab) | 6 | 9 | extended practice |
+| Items per activity | 6 | — | each activity must have at least 6 items (unless its type cap is lower — see Activity Type Reference below) |
+
+**You MUST ship at least 4 inline activities AND at least 6 workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+
+**Type diversity is required.** The module (inline + workbook combined) MUST use at least **0** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level. (If `0` is `0`, the audit profile for this level does not enforce type diversity — but variety still produces a better lesson, so aim for 4+ types when the workbook allows it.)
+
+---
+
+## Allowed types for THIS level
+
+- **Inline (lesson) types:** image-to-letter, letter-grid, match-up, watch-and-repeat, quiz, true-false, fill-in, classify
+- **Inline priority (preferred):** image-to-letter, match-up, fill-in, quiz, watch-and-repeat
+- **Workbook types:** fill-in, match-up, group-sort, anagram, unjumble, quiz, true-false, classify, divide-words, count-syllables, pick-syllables, observe, phrase-table, odd-one-out
+- **Workbook priority (preferred):** fill-in, match-up, group-sort, anagram, unjumble
+- **FORBIDDEN at this level:** cloze, error-correction, mark-the-words, translate, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, highlight-morphemes, grammar-identify, select
+
+Pick from the allowed list. Lean heavily on the priority lists. Do not use any forbidden type — the build will reject it.
+
+---
+
 ## Inline vs Workbook Split
 
 Activities have two placement categories:
@@ -19,7 +48,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Rule of thumb:** inline = 2-3 quick checks after key teaching points. Workbook = 4-8 deeper practice exercises covering the full topic.
+**Rule of thumb:** inline = 4–6 quick checks after key teaching points. Workbook = 6–9 deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
 
 ---
 
@@ -27,10 +56,10 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: match-nom-loc -->`
-- `<!-- INJECT_ACTIVITY: quiz-loc-form -->`
-- `<!-- INJECT_ACTIVITY: quiz-v-na -->`
-- `<!-- INJECT_ACTIVITY: fill-in-de -->`
+- `<!-- INJECT_ACTIVITY: match-up-nominative-locative -->`
+- `<!-- INJECT_ACTIVITY: fill-in-answer-where -->`
+- `<!-- INJECT_ACTIVITY: quiz-v-or-na -->`
+- `<!-- INJECT_ACTIVITY: quiz-where-is-it -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -85,137 +114,88 @@ required:
 ## Module Content (the prose the learner reads before exercises)
 
 <module_content>
-## Діалоги — Dialogues
+## Діалоги (Dialogues)
 
-Moving to a new city means asking questions about where things are. During your first week in a new neighborhood, you quickly learn to rely on local residents. A friendly neighbor is often the best guide for practical navigation. You need to know the location of essential services like an **аптека** (pharmacy) for medicine, a **пошта** (post office) for packages, and a **банк** (bank) for financial tasks. Knowing how to ask about these places and understanding the answers helps you settle into the rhythm of daily life.
+Read this rapid-fire exchange about where different family members are located. Notice how the endings of the place names change when answering the question **де?**:
 
-> **Сусід:** Привіт! Ти тут живеш? *(Hi! Do you live here?)*  
-> **Новий мешканець:** Так, я новий сусід. *(Yes, I am a new neighbor.)*  
-> **Сусід:** Дуже приємно! *(Very nice to meet you!)*  
-> **Новий мешканець:** Де Олена? Вона тут? *(Where is Olena? Is she here?)*  
-> **Сусід:** Ні, вона **в школі**. *(No, she is at school.)*  
-> **Новий мешканець:** А Тарас? *(And Taras?)*  
-> **Сусід:** Він **на роботі**. *(He is at work.)*  
-> **Новий мешканець:** А діти де? *(And where are the children?)*  
-> **Сусід:** Вони **в парку**. *(They are in the park.)*  
-> **Новий мешканець:** А кішка? *(And the cat?)*  
-> **Сусід:** Вона **на дивані**! *(She is on the sofa!)*
+> **Новий мешканець:** Добрий день! Де Олена? *(Good day! Where is Olena?)*
+> **Сусід:** Вона в школі. *(She is at school.)*
+> **Новий мешканець:** А Тарас? *(And Taras?)*
+> **Сусід:** Він на роботі. *(He is at work.)*
+> **Новий мешканець:** А діти? *(And the children?)*
+> **Сусід:** Вони в парку. *(They are in the park.)*
+> **Новий мешканець:** А кішка? *(And the cat?)*
+> **Сусід:** Вона на дивані! *(She is on the sofa!)*
 
-Notice the clear contrast between the small words **в** and **на** in the dialogue above. Both translate broadly to English "in" or "at", but they sound distinct in Ukrainian and carry different spatial meanings.
+Answering the question **де?** (where?) naturally leads to using the locative case. You can see this in phrases like **в школі** (at school) and **на роботі** (at work). These phrases combine a preposition, usually **в** or **на**, with a changed noun ending. The word **школа** becomes **школі**, and the word **робота** becomes **роботі**. The preposition tells us the spatial relationship, and the ending confirms it.
 
-> **Сусід:** А де ти працюєш? *(And where do you work?)*  
-> **Новий мешканець:** Я працюю **в офісі**. *(I work in an office.)*  
-> **Сусід:** Це далеко? *(Is it far?)*  
-> **Новий мешканець:** Ні. Я живу **в Києві**, **на вулиці** Хрещатик. *(No. I live in Kyiv, on Khreshchatyk street.)*  
-> **Сусід:** Це дуже близько. *(That is very close.)*  
-> **Новий мешканець:** Так! Офіс **на другому поверсі**. *(Yes! The office is on the second floor.)*
+Now read a conversation about living and working:
 
-Notice the hierarchy of location used in the second dialogue. When talking about a city, we use **в** (as in **в Києві**). When narrowing down to a street, we switch to **на** (as in **на вулиці**). Finally, for a specific room or building, we use **в** or **у** again. You can also see that the ends of the nouns change: the basic word **школа** becomes **в школі**, **парк** turns into **у парку**, and **робота** changes to **на роботі**. This predictable change is called the **Місцевий відмінок** (Locative case). 
+> **Сусід:** Де ти живеш? *(Where do you live?)*
+> **Новий мешканець:** Я живу в Києві, на вулиці Хрещатик. *(I live in Kyiv, on Khreshchatyk street.)*
+> **Сусід:** А де ти працюєш? *(And where do you work?)*
+> **Новий мешканець:** В офісі, на другому поверсі. *(In an office, on the second floor.)*
 
-## Місцевий відмінок — The Locative Case
+Notice the preposition **на** is used for the street (**на вулиці**), while **в** is used for the city (**в Києві**) and the building (**в офісі**).
 
-The core function of the Locative case is to describe static location—where something is situated or where an action takes place without any movement toward a destination. It is the grammatical tool that specifically answers the question **Де?** (Where?). There is one crucial rule that makes this case unique among all Ukrainian grammatical cases: the Locative case *always* requires a preposition. You cannot use it on its own; it must be attached to **в**, **у**, or **на**.
+## Місцевий відмінок (The Locative Case)
 
-Ukrainian primary school textbooks teach a very practical method to identify and form the Locative case. In Grade 4 (Захарійчук p.74), students learn the "helper question" method for the **Місцевий відмінок**. You memorize the helper questions: **на кому? у чому?** (on whom? in what?). By asking these questions, you naturally prompt the correct case ending for the noun.
-* стіл → **у чому?** → **у столі** (in the table)
-* стіл → **на чому?** → **на столі** (on the table)
-* місто → **у чому?** → **у місті** (in the city)
+Ukrainian children learn grammar using specific helper questions, which naturally link grammatical cases to their real-world function. In the fourth grade, students learn that the locative case, or **місцевий відмінок**, answers the questions **на/у кому? на/у чому?** (on/in whom? on/in what?). The locative case is used exclusively to describe a static location — where something or someone currently IS, rather than the direction where they are going. Unlike other cases, the locative case ALWAYS needs a preposition to function. You cannot use it alone; it must be paired with a preposition, most commonly **в** (or its phonetic variant **у**) and **на**.
 
-Feminine and neuter nouns form the Locative case very consistently. The dominant ending for almost all of them is **-і**. You simply replace the final vowel of the base word.
+:::note
+The helper question **на/у кому? на/у чому?** is how Ukrainian native speakers identify the locative case. Memorize it to build your intuition!
+:::
+
+The most common ending for the locative case is **-і**. For feminine nouns ending in **-а** or **-я**, replace the final vowel with **-і**. For example, **лікарня** (hospital) becomes **у лікарні** (in the hospital). This same **-і** ending also applies to neuter nouns ending in **-о** or **-е**. The word **місто** (city) becomes **у місті** (in the city), and **море** (sea) becomes **на морі** (at the sea).
+
+Masculine nouns ending in a consonant also frequently take the **-і** ending. For instance, **офіс** (office) becomes **в офісі** (in the office), and **урок** (lesson) becomes **на уроці** (at the lesson). However, many common masculine places take a different ending entirely: **-у**. There is a historical linguistic reason for this difference, but for now, learn these specific masculine words as exceptions.
+
+Instead of trying to calculate every single ending on the fly, you should focus on memorizing the most common places as fixed phrases. Learn the preposition and the noun together as a single grammatical chunk:
+
 * школа → в школі (school)
 * робота → на роботі (work)
-* пошта → на пошті (at the post office)
-* вулиця → на вулиці (street)
-* місто → у місті (in the city)
-* вікно → на вікні (on the window)
-
-Some borrowed neuter nouns are indeclinable, meaning their endings never change regardless of the grammar rules. These are easy wins for learners: **кафе** always stays **кафе**, so you just say **в кафе** (in the café).
-
-Masculine nouns are slightly more complex because they split into two groups. Many standard masculine nouns take the same **-і** ending as feminine and neuter words.
-* офіс → в офісі (office)
-* театр → у театрі (in the theater)
-* стіл → на столі (on the table)
-
-However, a very common group of masculine nouns takes the **-у** ending. These are often high-frequency places and spaces that learners must memorize early on.
-* парк → у парку (park)
 * банк → у банку (bank)
-* сад → у саду (in the orchard)
 * магазин → у/в магазині (shop)
+* вулиця → на вулиці (street)
+* парк → у/в парку (park)
 
-<!-- INJECT_ACTIVITY: match-nom-loc -->
+<!-- INJECT_ACTIVITY: match-up-nominative-locative -->
 
-<!-- INJECT_ACTIVITY: quiz-loc-form -->
+<!-- INJECT_ACTIVITY: fill-in-answer-where -->
 
-## В чи на? — В or На?
+## В чи на? (В or На?)
 
-The basic logic for choosing between **в** and **на** comes down to the physical space you are describing. **В** (or its phonetic twin **у**) is used for enclosed spaces—places that have walls, boundaries, or a clear "inside."
-* **в офісі** (in the office)
-* **у магазині** (in the store)
-* **в аптеці** (in the pharmacy)
-* **у лікарні** (in the hospital)
+How do you choose between the prepositions **в** and **на**? The general rule for **в** (and its euphonic alternative **у**) is that it is used for enclosed spaces or being physically "inside" a structure with walls, a ceiling, or clear boundaries. When you are inside a building, you almost always use **в/у**. For example, you say **в школі** (in the school building), **у/в магазині** (in the shop), **у банку** (inside the bank branch), and **у лікарні** (in the hospital). Note that foreign borrowed words ending in a vowel, like **кафе** (café), are indeclinable: **у/в кафе** (in the café).
 
-Conversely, **на** is generally used for open spaces, flat surfaces, or when something is physically "atop" something else.
-* **на вулиці** (on the street)
-* **на площі** (on the square)
-* **на столі** (on the table)
-* **на дивані** (on the sofa)
-
-Beyond physical spaces, **на** is also used in a more abstract way for events and specific statuses. When you attend an activity or event, you are **на**. Furthermore, for the concept of being "at work," Ukrainian always uses **на**.
-* **на концерті** (at the concert)
-* **на уроці** (at the lesson)
-* **на футболі** (at the football game)
-* **на роботі** (at work)
-
-:::note 
-Remember that English uses "in the office," but Ukrainian separates the physical building (**в офісі**) from the abstract status of working (**на роботі**).
+:::tip
+To avoid awkward consonant clusters, Ukrainian uses **у** instead of **в** before words starting with consonants (like **у банку**), and **в** after vowels (like **Вона в школі**). 
 :::
 
-There are some conventional places that always use **на** regardless of whether they have walls or seem like an enclosed space. These must simply be learned as fixed phrases.
-* **на пошті** (at the post office)
-* **на вокзалі** (at the train station)
-* **на станції** (at the station)
+The preposition **на**, on the other hand, is generally used for open spaces, flat surfaces, or events. When you are standing on a surface or attending a public gathering, you use **на**. Clear examples include **на вулиці** (on the street), **на площі** (on the square), **на концерті** (at a concert), and **на уроці** (at a lesson). However, there are conventional exceptions that must be memorized. Some institutional concepts take **на** regardless of whether they have walls. You must say **на роботі** (at work), **на пошті** (at the post office, not в пошті), and **на вокзалі** (at the train station, not в вокзалі).
 
-The rule for countries and cities is very strict: always use **в** or **у**. It does not matter if a country is an island or a continent.
-* **в Україні** (in Ukraine)
-* **у Києві** (in Kyiv)
-* **у Львові** (in Lviv)
-* **в Одесі** (in Odesa)
+There is a strict rule regarding geographical locations. Countries, regions, and cities ALWAYS take the preposition **в/у**. You say **в Україні** (in Ukraine), **у Києві** (in Kyiv), **у Львові** (in Lviv), and **в Одесі** (in Odesa). Contrast this geographical rule with smaller local spaces like streets and squares, which typically take **на**. You say **на площі** (on the square) or **на Хрещатику** (on Khreshchatyk). The logic is that cities are seen as large, bounded territories (using **в**), while streets are viewed as open pathways or surfaces (using **на**).
 
-:::caution Decolonization Note
-You will sometimes hear Russian speakers say "на Украине" (on Ukraine). This is historically incorrect and politically offensive. Using "на" implies that Ukraine is merely a geographic territory or a region of an empire, rather than a sovereign state. A country always takes "в/у". You must always say **в Україні**.
+There is a critical cultural and political note regarding the name of the country. You must NEVER say **на Україні**. It is ЗАВЖДИ (always) **в Україні**. Historically, the incorrect preposition "на" was pushed by imperial policy to frame Ukraine as a mere territory or borderland rather than a fully independent state. Using **в Україні** is not just a grammatical rule; it is a matter of profound respect and national sovereignty.
+
+:::caution
+Never say **на Україні**. Using **в Україні** affirms Ukraine's status as an independent state, not a region. 
 :::
 
-<!-- INJECT_ACTIVITY: quiz-v-na -->
+<!-- INJECT_ACTIVITY: quiz-v-or-na -->
 
-<!-- INJECT_ACTIVITY: fill-in-de -->
+<!-- INJECT_ACTIVITY: quiz-where-is-it -->
 
 ## Підсумок — Summary
 
-The Locative case is your primary tool for expressing static location. Whenever you need to answer the question **Де?** (Where?), you will use this case. Here is a final recap of the logic:
+The locative case, or **місцевий відмінок**, is the essential grammatical tool you use to describe a static location. Whenever you are answering the core question **де?** (where?), you will need to use either **в/у** plus a locative ending or **на** plus a locative ending. Remember the Grade 4 helper phrase: **М. (на, у) — на/у кому? на/у чому?**. This case never appears on its own without a preposition.
 
-* **Question:** Де? (Where?)
-* **Prepositions:**
-  * **В/У** is for enclosed spaces, countries, and cities.
-  * **На** is for open spaces, surfaces, events, and specific concepts like work.
-* **Endings:**
-  * **-і** is the most common ending for almost all nouns (feminine, neuter, and many masculine).
-  * **-у** is used for a specific group of masculine nouns like **банк** and **парк**.
-* **Key Phrases to remember:**
-  * Я **в Україні**. (I am in Ukraine.)
-  * Я **у Києві**. (I am in Kyiv.)
-  * Я **на роботі**. (I am at work.)
+Focus your energy on learning the core vocabulary chunks as fixed phrases. If you learn these as single units, your speech will sound much more natural. And most importantly, always remember to say **в Україні** (in Ukraine).
 
-Now it is time to practice by applying these patterns to your own life. Answer the following questions about yourself, either aloud or in writing, using the Locative case:
+Can you answer these simple questions in Ukrainian?
 
-* **Де ви зараз?** (Where are you now?)
-  * Я **в**... / Я **на**...
-* **Де ви працюєте?** (Where do you work?)
-  * Я працюю **в**... / **на**...
-* **Де ви живете?** (Where do you live?)
-  * Я живу **в**... **на вулиці**...
-* **Де ваш телефон?** (Where is your phone?)
-  * Він **на**... / Він **у**...
-
+*   **Де ви зараз?** (Where are you right now?) Are you **вдома** (at home), **в офісі** (in the office), or perhaps **у/в кафе** (in a café)?
+*   **Де ви працюєте?** (Where do you work?) Do you work **на роботі** (at work) or **у/в лікарні** (in a hospital)?
+*   **Де ви живете?** (Where do you live?) Do you live **у/в місті** (in a city) or **на вулиці** (on a street)?
 </module_content>
 
 ---
@@ -229,48 +209,68 @@ version: "1.0"
 module: where-is-it
 level: a1
 
+# NOTE — these are SHAPE examples. The real targets are at the top of this prompt
+# (10 total / 4–6 inline / 6–9 workbook,
+# 6+ items per activity). The shapes below are TRUNCATED for readability;
+# YOUR output MUST hit those minimums.
+
 inline:
   - id: marker-id-here        # MUST match an <!-- INJECT_ACTIVITY: ... --> marker
     type: quiz                 # activity type
     instruction: "Оберіть правильний варіант"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - question: "_____ стіл"
-        options: ["мій", "моя", "моє"]
+        options: ["мій", "моя", "моє", "мої"]
         correct: 0             # 0-based index
+      - question: "Це ____ книга."
+        options: ["мій", "моя", "моє", "мої"]
+        correct: 1
+      # ... add at least 6 items total — never stop at 1-2
 
   - id: another-marker-id
     type: fill-in
     instruction: "Вставте правильне слово"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - sentence: "Це ____ кімната."
         answer: "моя"
         options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ вікно."
+        answer: "моє"
+        options: ["мій", "моя", "моє"]
+      # ... ≥ 6 items total
 
 workbook:
-  - type: match-up
+  - id: match-up-vocab
+    type: match-up
     instruction: "З'єднайте пари"
-    pairs:
+    pairs:                     # ← real output: ≥ 6 pairs
       - left: "стіл"
         right: "він"
       - left: "книга"
         right: "вона"
       - left: "вікно"
         right: "воно"
+      # ... ≥ 6 pairs total
 
-  - type: group-sort
+  - id: group-sort-gender
+    type: group-sort
     instruction: "Розподіліть слова за категоріями"
     groups:
-      - label: "Category A"
-        items: ["word1", "word2"]
-      - label: "Category B"
-        items: ["word3", "word4"]
+      - label: "Чоловічий рід"
+        items: ["стіл", "олівець", "будинок"]   # ≥ 3 items per group
+      - label: "Жіночий рід"
+        items: ["книга", "ручка", "школа"]
+      - label: "Середній рід"
+        items: ["вікно", "море", "молоко"]
 
-  - type: true-false
+  - id: true-false-grammar
+    type: true-false
     instruction: "Правда чи ні?"
-    items:
-      - statement: "Statement here"
-        correct: true
-        explanation: "Why it's true"
+    items:                     # ← real output: ≥ 6 items
+      - statement: "«Книга» — це чоловічий рід."
+        correct: false
+        explanation: "Книга закінчується на -а, отже жіночий рід."
+      # ... ≥ 6 items total
 
   - type: error-correction
     instruction: "Виправте помилку"
@@ -341,7 +341,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -425,10 +425,15 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 ## Quality Rules
 
-**ITEM COUNT MINIMUMS (non-negotiable):**
-- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
-- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
-- If you can't think of enough items, add more examples from the module's vocabulary and content.
+**ACTIVITY COUNT MINIMUMS (non-negotiable, audit-enforced):**
+- **Total: 10 activities.** Inline: 4–6. Workbook: 6–9. The audit gate FAILS the module if you ship fewer.
+- **Type diversity: workbook MUST cover ≥5 distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
+- **Match the inline markers exactly.** Every `<!-- INJECT_ACTIVITY: id -->` marker in the prose needs a matching inline activity with that exact id. Skipping markers means the lesson tab is broken.
+
+**ITEM COUNT MINIMUMS (non-negotiable, per-activity):**
+- **Default minimum: 6 items per activity.** Quiz, fill-in, match-up, true-false, anagram, error-correction, translate, cloze, mark-the-words, divide-words, count-syllables, odd-one-out, group-sort categories: all ≥ 6.
+- **Lower minimums for specific types only:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items, essay-response/critical-analysis = 1 prompt.
+- If you can't think of enough items, add more examples from the module's vocabulary and content. NEVER ship a 1-item or 2-item activity unless its type cap explicitly allows it.
 - **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
 - **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
@@ -535,6 +540,27 @@ IMPORTANT: After using tools, output your COMPLETE module content as plain text.
 1. Run `verify_words` on all Ukrainian words in your exercises — every word must exist in VESUM
 2. Run `query_cefr_level` on any word you're unsure about — it must be a1-appropriate
 3. For fill-in answers and distractors, verify the exact form (case, number, gender) with `verify_lemma`
+
+---
+
+## ⚠️ MANDATORY FINAL CHECKLIST — verify before emitting YAML
+
+Walk through this checklist explicitly before you start emitting. If ANY box is unchecked, fix it FIRST.
+
+- [ ] My output has **at least 4** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
+- [ ] My output has **at least 6** workbook activities.
+- [ ] **Total ≥ 10.**
+- [ ] **Every** activity has **at least 6** items, pairs, or statements (except types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3, essay-response=1).
+- [ ] The module (inline + workbook combined) uses **at least 0 distinct activity types** (or 4+ when 0 = 0 and the workbook size allows it). I am NOT shipping a wall of quizzes.
+- [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
+- [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
+- [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+- [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+- [ ] My inline count is between 4 and 6. I did NOT create more injection markers than 6.
+- [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
+- [ ] At B1+, all instructions are in Ukrainian (no English fallback).
+
+If you cannot tick all of these, REGENERATE the activities BEFORE outputting. Shipping under-spec means the build rejects you and the heal loop has to redo your work — wasting compute.
 
 ---
 

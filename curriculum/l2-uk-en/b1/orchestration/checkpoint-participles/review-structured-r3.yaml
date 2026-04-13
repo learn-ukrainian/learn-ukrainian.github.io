@@ -1,0 +1,47 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: Covers all major grammar points from Phase 7, but omits the specific "Cloze
+    passage" and "Production paragraph" prompts requested in the content outline for
+    Блок 6.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: Falsely claims "рад" has no full form and "варт" is an invariable impersonal
+    adverb.
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Superb explanation of "висячий дієприслівник" (dangling gerund) and temporal
+    simultaneity vs. non-simultaneity.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: Incorporates all required words (контрольна робота, дієприкметник, одночасність,
+    etc.) naturally.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Accurately maps the 6 plan hints to 6 injected markers.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: 'Encouraging, diagnostic tone: "Сприймайте її як дуже корисний інструмент
+    діагностики ваших знань."'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Word count is 4679 (exceeds 4000). Clean markdown structure.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Explicitly teaches avoiding Russian active participle calques and highlights
+    Ukrainian grammatical features as "не вада її, а її особливість."
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Dialogues demonstrate academic register well, but one sentence starts
+    with a lowercase letter ("точне і правильне спостереження!").
+findings: []

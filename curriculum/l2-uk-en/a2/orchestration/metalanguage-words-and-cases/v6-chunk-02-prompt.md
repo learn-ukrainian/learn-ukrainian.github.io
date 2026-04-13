@@ -25,7 +25,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-> — **Студент:** А слово «швидко»? *(And the word "quickly"?)* > — **Вчитель:** Це **прислівник** *(adverb)*. Воно показує, як саме ми робимо дію. *(It shows exactly how we do an action.)* Перша і найголовніша частина мови — це **іменник** *(noun)*. Українські школярі вчать, що іменник — це **назва предмета** *(name of an object)*. Слово «іменник» походить від слова «ім'я». Усі іменники відповідають на два головні питання. Якщо це жива людина або тварина, ми завжди питаємо **«хто?»** *(who?)*. Якщо це звичайний неживий предмет, явище природи або ідея, ми питаємо **«що?»** *(what?)*. Подивіться на ці приклади: * Хто? — **мама** *(mom)*, **собака** *(dog)*, **студент** *(student)*, **лікар** *(doctor)*. * Що? — **стіл** *(table)*, **радість** *(joy)*, **місто** *(city)*, **сонце** *(sun)*. Іменники мають дуже важливу роль у реченні. Вони бувають чоловічого, жіночого та середнього роду. Вони також мають однину і множину. Друга важлива частина мови — це **прикметник** *(adjective)*. Прикметник завжди показує **ознаку предмета** *(characteristic of an object)*. Колір, розмір, вік, характер — усе це прикметники. Ця частина мови ніби «приклеюється» до іменника і детально описує його. Прикметники відповідають на питання «який?», «яка?», «яке?» або «які?». Прикметник — дуже слухняне слово. Він завжди має такий самий рід, число і відмінок, як і його іменник. Подивіться на узгодження: * який стіл? — **великий стіл** *(big table)*. * яка мама? — **гарна мама** *(beautiful mom)*. * яке небо? — **синє небо** *(blue sky)*. * які дні? — **теплі дні** *(warm days)*. Без прикметників наша мова була б дуже бідною. Третя велика категорія слів — це **дієслово** *(verb)*. Назва цієї частини мови говорить сама за себе. Дієслово означає слово, яке показує дію. Українські підручники пишуть, що дієслово — це **дія предмета** *(action of an object)*. Усі дієслова в початковій формі відповідають на питання «що робити?» або «що зробити?». Наприклад: * що робити? — **читати** *(to read)*, **писати** *(to write)*, **бігати** *(to run)*. * що зробити? — **прочитати** *(to have read)*, **написати** *(to have written)*. Дієслова — це мотор нашого речення. Вони постійно змінюються. Дієслова змінюють свою форму за особами та за часом. Вони також мають доконаний та недоконаний вид. <!-- INJECT_ACTIVITY: match-up, Match Ukrainian grammar terms (іменник, дієслово, etc.) to English equivalents --> Крім цих трьох гігантів, в українській мові є інші частини мови. **Займенник** *(pronoun)*. Він працює як заміна для іменника або прикметника. Приклади: **я** *(I)*, **ти** *(you)*, **ми** *(we)*, **цей** *(this)*. **Числівник** *(numeral)*. Він показує точну кількість або порядок предметів при лічбі. Він відповідає на питання «скільки?» або «який?». Приклади: **один** *(one)*, **другий** *(second)*, **п'ять** *(five)*. Також є незмінні слова. Вони ніколи не змінюють своїх закінчень. **Прислівник** *(adverb)*. Він описує дію або іншу ознаку. Він відповідає на питання «як?», «де?», «коли?». Приклади: **тут** *(here)*, **завтра** *(tomorrow)*, **швидко** *(quickly)*. Є також службові слова, які допомагають будувати речення. **Прийменник** *(preposition)*. Він стоїть перед іменником. Приклади: **у** *(in)*, **на** *(on)*, **з** *(with)*, **до** *(to)*. **Сполучник** *(conjunction)*. Він з'єднує слова або частини речення між собою. Приклади: **і** *(and)*, **але** *(but)*, **бо** *(because)*. <!-- INJECT_ACTIVITY: group-sort, Sort a list of 24 words into five buckets: іменник, прикметник, дієслово, займенник, прислівник -->
+a certain group, and the most important of them is the noun. A noun names an object, person, animal, or abstract concept. This part of speech always answers the questions "who?" or "what?". Examples of nouns are the words mom, dog, table, and joy. In a dictionary, you always see a noun in a form called the nominative case. Additionally, every noun has its grammatical gender, which does not change.* Наступна важлива група слів — це **прикметник** (adjective). Він описує ознаку предмета і відповідає на питання «який?», «яка?» або «яке?». Прикметник завжди прилипає до іменника і дає нам більше інформації про нього. Наприклад, ми кажемо великий стіл, гарна мама або синє небо. Коли іменник змінює свою форму, прикметник змінюється разом із ним. > *The next important group of words is the adjective. It describes a characteristic of an object and answers the questions "which?" or "what kind?". The adjective always sticks to the noun and gives us more information about it. For example, we say a large table, a beautiful mom, or a blue sky. When a noun changes its form, the adjective changes along with it.* :::note **Quick tip** — When a **прикметник** (adjective) describes a noun, it must perfectly match that noun in gender, number, and case. If the noun is in **однина** (singular), the adjective must be singular too. ::: Коли ми хочемо описати дію предмета, ми використовуємо **дієслово** (verb). У початковій формі воно відповідає на питання «що робити?» або «що зробити?». Типові приклади дієслів: читати, писати, бігати. У звичайному реченні дієслово постійно змінюється. Його форма залежить від часу та від особи, яка виконує дію. Без дієслова дуже важко побудувати повноцінне речення. > *When we want to describe an action of an object, we use a verb. In its initial form, it answers the questions "what to do?" or "what to get done?". Typical examples of verbs: to read, to write, to run. In a normal sentence, the verb constantly changes. Its form depends on the time and on the person performing the action. Without a verb, it is very difficult to build a complete sentence.* <!-- INJECT_ACTIVITY: match-up-grammar-terms --> Besides the main categories, sentences rely on several other parts of speech to function properly. A **займенник** (pronoun) replaces a noun entirely, giving us words like «я» (I), «ти» (you), and «ми» (we). When we need to count things, a **числівник** (numeral) indicates quantity or order, such as «один» (one) or «другий» (second). There are also invariable words that never change their endings. A **прислівник** (adverb) describes how, when, or where an action happens, giving us words like «тут» (here) or «завтра» (tomorrow). Finally, we use small connecting words to glue everything together: a **прийменник** (preposition) like «у» (in), «на» (on), or «з» (with) helps show relationships. Sometimes you need a noun in the **родовий відмінок** (genitive case) right after a preposition. We also use a **сполучник** (conjunction) like «і» (and), «але» (but), or «бо» (because) to connect phrases and structure our thoughts. <!-- INJECT_ACTIVITY: group-sort-parts-of-speech -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -375,7 +375,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 6: A2 finale (A2 M51-M69)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 40%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 40% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 70-90% Ukrainian.
 LANGUAGE ROLES:
@@ -394,18 +461,65 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] іменник (noun)
+- [ ] прикметник (adjective)
+- [ ] дієслово (verb)
+- [ ] займенник (pronoun)
+- [ ] числівник (numeral)
+- [ ] прислівник (adverb)
+- [ ] прийменник (preposition)
+- [ ] сполучник (conjunction)
+- [ ] називний відмінок (nominative case)
+- [ ] родовий відмінок (genitive case)
+- [ ] рід (gender, grammatical)
+- [ ] однина (singular)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Сім відмінків: питання та назви (~600 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

@@ -1,0 +1,77 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T23-36-abdb51b2.json
+phase: write-chunk-02
+prompt_chars: 41390
+response_chars: 5185
+prompt_words: 6134
+response_words: 905
+sections:
+- name: header
+  start: 0
+  length: 439
+  fraction: 0.0106
+- name: skeleton
+  start: 439
+  length: 1560
+  fraction: 0.0377
+- name: prior_summary
+  start: 1999
+  length: 3218
+  fraction: 0.0777
+- name: plan
+  start: 5217
+  length: 11915
+  fraction: 0.2879
+- name: wiki
+  start: 9734
+  length: 24040
+  fraction: 0.5808
+- name: output_spec
+  start: 41172
+  length: 218
+  fraction: 0.0053
+large_sections:
+- wiki
+directives_total: 13
+directives_covered: 3
+directives_missed:
+- kind: checklist
+  text: напрямок (direction)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: мета (goal, purpose)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: лікар (doctor)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: бабуся (grandmother)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: екзамен (exam)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: побачення (meeting, date; goodbye in 'до побачення')
+  covered: false
+  coverage_note: 0/6 keywords (0%)
+- kind: checklist
+  text: список (list)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 4/11 keywords (36%)
+- kind: inject_activity
+  text: fill-in, Complete sentences with до + correct Genitive noun form, 8 items
+  covered: false
+  coverage_note: marker missing

@@ -1,228 +1,351 @@
 {
-  "total_items": 146,
-  "grounded_items": 111,
+  "total_items": 229,
+  "grounded_items": 174,
   "ungrounded": [
     {
-      "word": "нього",
-      "exercise_type": "quiz",
-      "context": "У нього є два _____.",
-      "role": "context"
-    },
-    {
-      "word": "друг",
+      "word": "старшої",
       "exercise_type": "fill-in",
-      "context": "Я чекаю свого старого (друг) _____.",
+      "context": "У мене немає старшої ____.",
       "role": "context"
     },
     {
-      "word": "парк",
-      "exercise_type": "fill-in",
-      "context": "парк",
-      "role": "answer"
-    },
-    {
-      "word": "місті",
-      "exercise_type": "fill-in",
-      "context": "Один великий (парк) _____ є в місті.",
-      "role": "context"
-    },
-    {
-      "word": "неї",
-      "exercise_type": "fill-in",
-      "context": "У неї є чотири (сестра) _____.",
-      "role": "context"
-    },
-    {
-      "word": "сестра",
-      "exercise_type": "group-sort",
-      "context": "сестра",
-      "role": "answer"
-    },
-    {
-      "word": "читали",
-      "exercise_type": "error-correction",
-      "context": "читали",
-      "role": "answer"
-    },
-    {
-      "word": "брала",
-      "exercise_type": "error-correction",
-      "context": "брала участь",
-      "role": "answer"
-    },
-    {
-      "word": "приймала",
-      "exercise_type": "error-correction",
-      "context": "Вона приймала участь у проекті.",
-      "role": "context"
-    },
-    {
-      "word": "проекті",
-      "exercise_type": "error-correction",
-      "context": "Вона приймала участь у проекті.",
-      "role": "context"
-    },
-    {
-      "word": "стола",
-      "exercise_type": "error-correction",
-      "context": "великого стола",
-      "role": "answer"
-    },
-    {
-      "word": "купити",
-      "exercise_type": "match-up",
-      "context": "купити",
-      "role": "context"
-    },
-    {
-      "word": "сказати",
-      "exercise_type": "match-up",
-      "context": "сказати",
-      "role": "context"
-    },
-    {
-      "word": "зустрічати",
-      "exercise_type": "match-up",
-      "context": "зустрічати",
-      "role": "answer"
-    },
-    {
-      "word": "зустріти",
-      "exercise_type": "match-up",
-      "context": "зустріти",
-      "role": "context"
-    },
-    {
-      "word": "один'",
+      "word": "після",
       "exercise_type": "true-false",
-      "context": "Після числа 'один' іменник стоїть у називному відмінку однин",
+      "context": "Після слова «немає» ми завжди використовуємо родовий відміно",
       "role": "context"
     },
     {
-      "word": "іменник",
+      "word": "використовуємо",
       "exercise_type": "true-false",
-      "context": "Після числа 'один' іменник стоїть у називному відмінку однин",
+      "context": "Після слова «немає» ми завжди використовуємо родовий відміно",
       "role": "context"
     },
     {
-      "word": "називному",
+      "word": "дієслово",
       "exercise_type": "true-false",
-      "context": "Після числа 'один' іменник стоїть у називному відмінку однин",
+      "context": "Дієслово «брати» використовуємо у фразі «брати участь».",
+      "role": "context"
+    },
+    {
+      "word": "фразі",
+      "exercise_type": "true-false",
+      "context": "Дієслово «брати» використовуємо у фразі «брати участь».",
+      "role": "context"
+    },
+    {
+      "word": "читати",
+      "exercise_type": "match-up",
+      "context": "читати",
+      "role": "answer"
+    },
+    {
+      "word": "кажемо",
+      "exercise_type": "true-false",
+      "context": "Ми кажемо «два брати», але «п'ять братів».",
+      "role": "context"
+    },
+    {
+      "word": "словосполучення",
+      "exercise_type": "true-false",
+      "context": "Словосполучення «без молока» стоїть у знахідному відмінку.",
+      "role": "context"
+    },
+    {
+      "word": "знахідному",
+      "exercise_type": "true-false",
+      "context": "Словосполучення «без молока» стоїть у знахідному відмінку.",
       "role": "context"
     },
     {
       "word": "відмінку",
       "exercise_type": "true-false",
-      "context": "Після числа 'один' іменник стоїть у називному відмінку однин",
-      "role": "context"
-    },
-    {
-      "word": "однини",
-      "exercise_type": "true-false",
-      "context": "Після числа 'один' іменник стоїть у називному відмінку однин",
-      "role": "context"
-    },
-    {
-      "word": "чисел",
-      "exercise_type": "true-false",
-      "context": "Після чисел 'два, три, чотири' ми використовуємо родовий від",
-      "role": "context"
-    },
-    {
-      "word": "чотири'",
-      "exercise_type": "true-false",
-      "context": "Після чисел 'два, три, чотири' ми використовуємо родовий від",
-      "role": "context"
-    },
-    {
-      "word": "п'ять'",
-      "exercise_type": "true-false",
-      "context": "Після числа 'п'ять' ми використовуємо родовий відмінок множи",
-      "role": "context"
-    },
-    {
-      "word": "слово",
-      "exercise_type": "true-false",
-      "context": "Слово 'немає' завжди вимагає родового відмінка.",
-      "role": "context"
-    },
-    {
-      "word": "немає'",
-      "exercise_type": "true-false",
-      "context": "Слово 'немає' завжди вимагає родового відмінка.",
+      "context": "Словосполучення «без молока» стоїть у знахідному відмінку.",
       "role": "context"
     },
     {
       "word": "вимагає",
       "exercise_type": "true-false",
-      "context": "Слово 'немає' завжди вимагає родового відмінка.",
+      "context": "Дієслово «потребувати» вимагає знахідного відмінка.",
       "role": "context"
     },
     {
-      "word": "недоконаного",
+      "word": "знахідного",
       "exercise_type": "true-false",
-      "context": "Дієслова недоконаного виду відповідають на питання 'що зроби",
+      "context": "Дієслово «потребувати» вимагає знахідного відмінка.",
       "role": "context"
     },
     {
-      "word": "виду",
+      "word": "відмінка",
       "exercise_type": "true-false",
-      "context": "Дієслова недоконаного виду відповідають на питання 'що зроби",
+      "context": "Дієслово «потребувати» вимагає знахідного відмінка.",
       "role": "context"
     },
     {
-      "word": "відповідають",
+      "word": "якщо",
       "exercise_type": "true-false",
-      "context": "Дієслова недоконаного виду відповідають на питання 'що зроби",
+      "context": "Якщо є слово «часто», ми зазвичай використовуємо недоконаний",
       "role": "context"
     },
     {
-      "word": "питання",
+      "word": "слово",
       "exercise_type": "true-false",
-      "context": "Дієслова недоконаного виду відповідають на питання 'що зроби",
+      "context": "Якщо є слово «часто», ми зазвичай використовуємо недоконаний",
       "role": "context"
     },
     {
-      "word": "вираз",
+      "word": "зазвичай",
       "exercise_type": "true-false",
-      "context": "Вираз 'приймати участь' є правильним українським варіантом.",
+      "context": "Якщо є слово «часто», ми зазвичай використовуємо недоконаний",
       "role": "context"
     },
     {
-      "word": "участь'",
+      "word": "результат",
       "exercise_type": "true-false",
-      "context": "Вираз 'приймати участь' є правильним українським варіантом.",
+      "context": "Якщо результат досягнуто швидко, використовуємо доконаний ви",
       "role": "context"
     },
     {
-      "word": "правильним",
+      "word": "досягнуто",
       "exercise_type": "true-false",
-      "context": "Вираз 'приймати участь' є правильним українським варіантом.",
+      "context": "Якщо результат досягнуто швидко, використовуємо доконаний ви",
       "role": "context"
     },
     {
-      "word": "українським",
+      "word": "форма",
       "exercise_type": "true-false",
-      "context": "Вираз 'приймати участь' є правильним українським варіантом.",
+      "context": "Форма «десять столів» є правильною для родового відмінка мно",
       "role": "context"
     },
     {
-      "word": "варіантом",
+      "word": "правильною",
       "exercise_type": "true-false",
-      "context": "Вираз 'приймати участь' є правильним українським варіантом.",
+      "context": "Форма «десять столів» є правильною для родового відмінка мно",
+      "role": "context"
+    },
+    {
+      "word": "родового",
+      "exercise_type": "true-false",
+      "context": "Форма «десять столів» є правильною для родового відмінка мно",
+      "role": "context"
+    },
+    {
+      "word": "фраза",
+      "exercise_type": "true-false",
+      "context": "Фраза «приймати душ» є правильною в українській мові.",
+      "role": "context"
+    },
+    {
+      "word": "українській",
+      "exercise_type": "true-false",
+      "context": "Фраза «приймати душ» є правильною в українській мові.",
+      "role": "context"
+    },
+    {
+      "word": "мові",
+      "exercise_type": "true-false",
+      "context": "Фраза «приймати душ» є правильною в українській мові.",
+      "role": "context"
+    },
+    {
+      "word": "прочитати",
+      "exercise_type": "match-up",
+      "context": "прочитати",
+      "role": "context"
+    },
+    {
+      "word": "робити",
+      "exercise_type": "match-up",
+      "context": "робити",
+      "role": "answer"
+    },
+    {
+      "word": "зробити",
+      "exercise_type": "match-up",
+      "context": "зробити",
+      "role": "context"
+    },
+    {
+      "word": "купувати",
+      "exercise_type": "match-up",
+      "context": "купувати",
+      "role": "answer"
+    },
+    {
+      "word": "вчити",
+      "exercise_type": "match-up",
+      "context": "вчити",
+      "role": "answer"
+    },
+    {
+      "word": "вивчити",
+      "exercise_type": "match-up",
+      "context": "вивчити",
+      "role": "context"
+    },
+    {
+      "word": "готувати",
+      "exercise_type": "match-up",
+      "context": "готувати",
+      "role": "answer"
+    },
+    {
+      "word": "приготувати",
+      "exercise_type": "match-up",
+      "context": "приготувати",
+      "role": "context"
+    },
+    {
+      "word": "шукати",
+      "exercise_type": "match-up",
+      "context": "шукати",
+      "role": "answer"
+    },
+    {
+      "word": "знайти",
+      "exercise_type": "match-up",
+      "context": "знайти",
+      "role": "context"
+    },
+    {
+      "word": "дивитися",
+      "exercise_type": "match-up",
+      "context": "дивитися",
+      "role": "answer"
+    },
+    {
+      "word": "подивитися",
+      "exercise_type": "match-up",
+      "context": "подивитися",
+      "role": "context"
+    },
+    {
+      "word": "відпочивати",
+      "exercise_type": "match-up",
+      "context": "відпочивати",
+      "role": "answer"
+    },
+    {
+      "word": "відпочити",
+      "exercise_type": "match-up",
+      "context": "відпочити",
+      "role": "context"
+    },
+    {
+      "word": "бачити",
+      "exercise_type": "match-up",
+      "context": "бачити",
+      "role": "answer"
+    },
+    {
+      "word": "побачити",
+      "exercise_type": "match-up",
+      "context": "побачити",
+      "role": "context"
+    },
+    {
+      "word": "називний",
+      "exercise_type": "group-sort",
+      "context": "Один (Називний однини)",
+      "role": "context"
+    },
+    {
+      "word": "однини",
+      "exercise_type": "group-sort",
+      "context": "Один (Називний однини)",
+      "role": "context"
+    },
+    {
+      "word": "яблуко",
+      "exercise_type": "group-sort",
+      "context": "одне яблуко",
+      "role": "answer"
+    },
+    {
+      "word": "дві",
+      "exercise_type": "group-sort",
+      "context": "дві сестри",
+      "role": "answer"
+    },
+    {
+      "word": "більше",
+      "exercise_type": "group-sort",
+      "context": "П'ять і більше (Родовий множини)",
+      "role": "context"
+    },
+    {
+      "word": "свій",
+      "exercise_type": "error-correction",
+      "context": "Він прийшов без свій телефон.",
+      "role": "context"
+    },
+    {
+      "word": "кімнаті",
+      "exercise_type": "error-correction",
+      "context": "У кімнаті є шість великих вікна.",
+      "role": "context"
+    },
+    {
+      "word": "вікна",
+      "exercise_type": "error-correction",
+      "context": "У кімнаті є шість великих вікна.",
+      "role": "context"
+    },
+    {
+      "word": "вашої",
+      "exercise_type": "error-correction",
+      "context": "вашої допомоги",
+      "role": "answer"
+    },
+    {
+      "word": "вашу",
+      "exercise_type": "error-correction",
+      "context": "Я потребую вашу допомогу.",
+      "role": "context"
+    },
+    {
+      "word": "вільний",
+      "exercise_type": "error-correction",
+      "context": "У мене немає вільний час.",
+      "role": "context"
+    },
+    {
+      "word": "брала",
+      "exercise_type": "error-correction",
+      "context": "брала",
+      "role": "answer"
+    },
+    {
+      "word": "приймала",
+      "exercise_type": "error-correction",
+      "context": "Вчора вона довго приймала душ.",
+      "role": "context"
+    },
+    {
+      "word": "робила",
+      "exercise_type": "fill-in",
+      "context": "робила",
+      "role": "answer"
+    },
+    {
+      "word": "своє",
+      "exercise_type": "fill-in",
+      "context": "Він швидко ____ своє завдання.",
       "role": "context"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 12,
-    "tested_in_exercises": 5,
+    "tested_in_exercises": 2,
     "not_tested": [
       "варіант",
       "вправа",
+      "відповідь",
       "контрольна",
       "обрати",
       "перевірка",
       "правильний",
+      "речення",
+      "текст",
       "точка"
     ]
   },

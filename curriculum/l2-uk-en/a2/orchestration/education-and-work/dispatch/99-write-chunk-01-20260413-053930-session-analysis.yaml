@@ -1,0 +1,72 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T03-35-feee9d7d.json
+phase: write-chunk-01
+prompt_chars: 43153
+response_chars: 7548
+prompt_words: 6071
+response_words: 1164
+sections:
+- name: header
+  start: 0
+  length: 485
+  fraction: 0.0112
+- name: skeleton
+  start: 485
+  length: 1831
+  fraction: 0.0424
+- name: plan
+  start: 2316
+  length: 13212
+  fraction: 0.3062
+- name: wiki
+  start: 7424
+  length: 27370
+  fraction: 0.6343
+- name: output_spec
+  start: 42898
+  length: 255
+  fraction: 0.0059
+large_sections:
+- wiki
+directives_total: 21
+directives_covered: 12
+directives_missed:
+- kind: checklist
+  text: Zero `> *English translation*` blockquotes after dialogues?
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: checklist
+  text: At most ONE English `:::info` callout per major section?
+  covered: false
+  coverage_note: 3/8 keywords (38%)
+- kind: checklist
+  text: Metalanguage terms parenthetically translated on first use only (max 2 per
+    section)?
+  covered: false
+  coverage_note: 2/10 keywords (20%)
+- kind: must
+  text: '* **Must-know:** `склянка води/молока`, `ложка цукру/солі`, `кілограм борошна/м''яса`.'
+  covered: false
+  coverage_note: 1/11 keywords (9%)
+- kind: must
+  text: '**MANDATORY:** Українська кулінарна та професійна лексика має суттєві відмінності
+    від російської.'
+  covered: false
+  coverage_note: 2/9 keywords (22%)
+- kind: must
+  text: Subsequent uses must be Ukrainian only.
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: must
+  text: They were required at A1 but they cap immersion below 50% — at A2-late they
+    MUST be removed.
+  covered: false
+  coverage_note: 2/10 keywords (20%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 2/11 keywords (18%)

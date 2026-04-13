@@ -2,46 +2,53 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 9
-  evidence: The module covers almost all points, but explicitly misses teaching the
-    intonation pattern for cause (тому що/бо) which was requested in the plan points
-    ("subordinate clause with тому що/бо has a slig
+  score: 8
+  evidence: 'All three planned H2 sections are present and near budget, and required
+    vocabulary is covered in prose. But the plan references are not integrated: searches
+    for `Заболотний`, `ULP`, and `Ukrainian Les'
 - dimension: 2
   name: Linguistic accuracy
-  score: 8
-  evidence: Found an artificial adverb "інтригуюче" (NOT IN VESUM) and a redundant
-    calque "зверніть свою увагу". The rest of the module is highly accurate and natural.
+  score: 6
+  evidence: 'Two confirmed teaching errors: `«...я встиг прийняти душ...»` uses a
+    calque, and `«навпаки»` is taught as if it were a coordinating conjunction even
+    though VESUM classifies it as an adverb.'
 - dimension: 3
   name: Pedagogical quality
-  score: 9
-  evidence: Excellent metaphors (the comma as a border guard) and a solid PPP flow.
+  score: 8
+  evidence: 'The module generally follows PPP well: dialogue, explanation, multiple
+    examples, then practice markers. But one explanation is less precise than it should
+    be because it teaches `навпаки` inside the co'
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: Required and recommended vocabulary like `допуст` are used naturally in
-    context.
+  score: 8
+  evidence: Required items such as `тому що`, `бо`, `хоча`, `але`, `причина`, `сполучник`,
+    `складне речення`, and `тому` all appear naturally. Recommended vocabulary is
+    also present, but `навпаки` is introduced w
 - dimension: 5
   name: Exercise quality
-  score: 7
-  evidence: The markers for the quiz and group sort are misplaced before the required
-    knowledge is taught, breaking the "can a learner complete this with knowledge
-    taught so far" rule.
+  score: 9
+  evidence: All five planned activity types are present and positioned after relevant
+    teaching. The prose itself gives enough content to support those task types.
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: The tone is warm, supportive, and highly engaging. Excellent conversational
-    examples.
+  score: 7
+  evidence: Several lines drift into generic booster language rather than concrete
+    teaching, e.g. `Using these alternatives instantly elevates your spoken and written
+    language to a higher level.`
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: Clean markdown, word count of 2581 comfortably exceeds the 2000 target.
+  evidence: Clean three-section structure, all H2 headings present and ordered, five
+    activity markers present, and pipeline word count is 2840, which is safely above
+    the 2000 target.
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: Uses authentic literary quotes (В. Сосюра) and cultural examples (бджоляр
-    Петро Прокопович).
+  score: 9
+  evidence: Ukrainian is presented on its own terms, with no Russian-centered framing;
+    the proverb and register notes are appropriate.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: The opening dialogue is natural and clearly establishes the target grammar.
+  score: 9
+  evidence: The opening class-skipping exchange is short but relevant to the plan
+    and uses the target conjunctions naturally enough for A2.
 findings: []

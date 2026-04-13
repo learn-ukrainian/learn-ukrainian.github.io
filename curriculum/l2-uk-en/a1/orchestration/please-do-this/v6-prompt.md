@@ -243,26 +243,22 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-- Confirmed: читати, писати, слухати, дивитися, говорити, дати, сказати, іти, відкрити, сісти, показати, запитати, підручник, сторінка, речення.
-- Not found: None. All planned words exist and are grammatically sound for A1.
+- Confirmed: читати, писати, слухати, дивитися, говорити, дати, сказати, іти, відкрити, сісти, показати, запитати, підручник, сторінка, речення
+- Not found: None
 
 ## Grammar Rules
-- The Imperative Mood (Наказовий спосіб): Правопис § 116 — Provides rules for forming imperatives with endings -и, -∅ (2nd sing); -імо, -ім, -мо (1st plur); -іть, -те (2nd plur).
-- Stem-based formation: Group I (-ати) mostly uses -й/-йте (читай, слухай, відкривай); Group II and consonant stems use -и/-іть (пиши, пишіть, кажи, скажіть).
+- Наказовий спосіб (Imperative Mood): Правопис §26 — Ь пишемо у дієслівних формах дійсного та наказового способу: будь, будьте, будьмо, лізь, лізьте, лізьмо, кинь, киньте, киньмо, трать, тратьте, тратьмо.
 
 ## Calque Warnings
-- "Давай" + infinitive: Potential calque from Russian — "давай читати" is incorrect. Correct Ukrainian uses the synthetic imperative: "читаймо" or "давай" + perfective future (but better avoid at A1). Use synthetic forms like "ходімо" (let's go) or "пишімо".
-- "Відкрийте підручники": OK — although "розгорніть" is more specific for books, "відкрийте" is standard and more accessible for A1 learners.
+- відкрити підручник: CALQUE — розгорнути підручник
+- будь ласка: OK
+- запитати: OK
 
 ## CEFR Check
 - читати: A1 — OK
 - писати: A1 — OK
-- слухати: A1 — OK
 - дивитися: A1 — OK
-- говорити: A1 — OK
-- іти: A1 — OK
 - підручник: A1 — OK
-- сторінка: A1 — OK
 - речення: A1 — OK
 </pre_verified_facts>
 
@@ -570,12 +566,14 @@ These exercises, adapted from Ukrainian school materials, provide a gold standar
 
 ## Section Structure
 
-Write these sections as H2 headings, in this exact order:
+Write these sections as H2 headings, in this **exact** order:
 
 - `## Діалоги (Dialogues)` (~300 words)
 - `## Наказовий спосіб (The Imperative Mood)` (~300 words)
 - `## Як утворити? (How to Form It)` (~300 words)
 - `## Підсумок — Summary` (~300 words)
+
+**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim** as an `## H2` line. This includes the FINAL summary/transition section (`Підсумок: ...`, `Підсумок та перехід до M...`, etc.) — the writer's most common failure is silently dropping the closing section. Do NOT skip it. Do NOT renumber. Do NOT merge headings. The post-write quick-verify check will fail your build if any heading is missing, even if the prose itself is excellent.
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -583,16 +581,17 @@ Each section should follow the word budget specified. The total must reach 1200 
 
 ## Content Rules
 
-TARGET: 20-35% Ukrainian.
+TARGET: 20-35% Ukrainian. ⚠️ HARD GATE — the audit REJECTS modules below 20%.
 LANGUAGE ROLES:
-- THEORY & EXPLANATION: English prose — brief and clear. Show, don't tell.
+- THEORY & EXPLANATION: English prose — brief, 2-3 sentences per concept. No long expository paragraphs. Explain once, then show Ukrainian.
+- UKRAINIAN NARRATIVE PARAGRAPHS: **REQUIRED — minimum 1 per section.** A 3-6 sentence Ukrainian paragraph demonstrating the concept in use, followed IMMEDIATELY by a `> *English translation*` blockquote. This is the PRIMARY driver of hitting the immersion target. Without these paragraphs you cannot reach 20%.
 - PARADIGM TABLES: Conjugation/declension tables with all cells Ukrainian.
-- EXAMPLE LISTS: Ukrainian sentences in bulleted lists (each: Ukrainian — English gloss).
-- DIALOGUES: Mini-dialogues in blockquotes with English gloss per line.
+- EXAMPLE LISTS: Ukrainian sentences in bulleted lists (each: Ukrainian — English gloss). Minimum 5 per rule.
+- DIALOGUES: Mini-dialogues in blockquotes with English gloss per line. At least 1 dialogue per module.
 - PATTERN BOXES: Show transformations: `читати → читай → читайте`.
 - INLINE: Ukrainian words/phrases bolded in English prose.
-- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian. Full Ukrainian sentences go in tables, bulleted lists, dialogues, or pattern boxes.
-Ukrainian sentences max 10 words. Mix container types.
+- STRUCTURAL RULE: Every section MUST contain a Ukrainian narrative paragraph (3-6 sentences, translated in blockquote) PLUS supporting tables/lists/dialogues/pattern boxes. Pure-English sections are FORBIDDEN at M35+.
+Ukrainian sentences max 12 words. Mix container types.
 
 HARD GRAMMAR RULES (audit will reject violations):
 - Max 10 words per Ukrainian sentence (STRICT — count every word)
@@ -624,6 +623,25 @@ PLAN-AWARE EXEMPTIONS: The following bans are RELAXED for this module because th
 - **Zero calques**: No приймати душ→брати душ, приймати рішення→ухвалювати рішення
 - **Zero paronyms**: тактична≠тактовна, ефектний≠ефективний — use the right word, not a similar-sounding one
 - **Natural Ukrainian**: Write how a Ukrainian teacher would explain this to a student. Not robotic, not textbook-dry, not overly casual.
+
+### FORBIDDEN WORDS — never write these (#1189)
+
+The following Russian words have leaked into past builds and broken modules. They are **hard-banned** — the post-write toxic-token scanner will fail your build the moment it sees one. Use the Ukrainian alternative every time, even in dialogues, even in casual prose, even when quoting a learner's mistake (use a `<!-- VERIFY -->` placeholder instead of typing the Russian form):
+
+| Russian (FORBIDDEN) | Ukrainian (USE THIS) |
+|---|---|
+| хорошо | добре |
+| конечно | звичайно / певна річ |
+| спасибо | дякую |
+| пожалуйста | будь ласка / прошу |
+| ничего | нічого |
+| сейчас | зараз |
+| тоже | теж / також |
+| здесь | тут |
+| кот | кіт |
+| кон | кін |
+
+This list is enforced word-for-word by `scripts/build/quick_verify.py` (SEVERE_RUSSIANISMS). If you produce any of these tokens — even inside a quoted example, even inside a dialogue line spoken by a Russian-speaking character — the build halts immediately. There is no exception.
 
 **Authority hierarchy (if uncertain about a word, check in this order):**
 VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (stress) → Антоненко-Давидович (style) → Грінченко (etymology).
@@ -734,36 +752,39 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Діалоги (~330 words)
-- P1 (~30 words): Introduction to the social contexts where instructions and requests are vital, setting the scene for two different registers of speech.
-- P2 (~100 words): Dialogue 1 — In the classroom. A teacher gives instructions to students: «Відкрийте підручники, будь ласка. Читайте текст. Пишіть три речення. Запитуйте, якщо є питання.» Focus on the plural/formal forms.
-- P3 (~50 words): Analysis of the classroom dialogue, highlighting the relationship between the teacher and students and the use of plural verbs for a group.
-- P4 (~100 words): Dialogue 2 — Between friends. Two friends discuss going to a café: «Слухай, ходімо! Подивись, яка погода. Дай мені меню. Скажи, що ти хочеш.» Focus on informal singular forms.
-- P5 (~50 words): Analysis of the informal dialogue, noting how the tone differs from the classroom setting despite the grammatical goal remaining the same.
+## Діалоги (Dialogues) (~330 words total)
+- P1 (~30 words): Introduce the context of the module: we use commands, requests, and instructions every day. Set the scene for observing two common situations: a formal classroom setting and an informal chat between friends.
+- P2 (~150 words): Dialogue 1 — In the classroom. Present a dialogue between a teacher and students. The teacher gives instructions: "Відкрийте підручники, будь ласка. Читайте текст." A student asks: "Вибачте, яку сторінку?" The teacher replies: "Сторінку двадцять три. Тепер пишіть. Напишіть три речення." Another student asks: "Можна запитати?" The teacher responds: "Так, запитуйте!" Highlight the classroom imperatives: відкрийте, читайте, пишіть, напишіть.
+- P3 (~150 words): Dialogue 2 — Between friends. Present an informal dialogue at a cafe. Friend A says: "Слухай, ходімо в кафе!" Friend B answers: "Добре, йди, я зараз." Friend A points out: "Подивись, яка гарна погода!" Friend B agrees: "Так! Сідай тут. Дай мені меню, будь ласка." Friend A replies: "Ось, дивись. Скажи, що ти хочеш?" Friend B decides: "Я хочу каву." Highlight the informal imperatives: слухай, подивись, сідай, дай, скажи.
 
-## Наказовий спосіб (~330 words)
-- P1 (~90 words): Defining the "Наказовий спосіб" (Imperative Mood) using Ukrainian Grade 5 terminology. Explain its primary functions: commands, requests, invitations, and warnings.
-- P2 (~80 words): Register awareness: Choosing between "ти" (informal singular) and "ви" (formal or plural). Explain that this choice mirrors the pronouns the learner already knows from earlier modules.
-- P3 (~90 words): Politeness and "Будь ласка." Explain the cultural nuance that while the imperative is direct, adding "будь ласка" (please) transforms a command into a standard polite request. Contrast "Дай!" with "Дай, будь ласка."
-- P4 (~70 words): Using names and titles to soften requests. Examples of addressing peers (Олено, читай) versus formal address (Пане Іване, читайте) using the vocative hint.
-- <!-- INJECT_ACTIVITY: group-sort-imperative-register --> [group-sort, Sort: ти-forms vs ви-forms (читай vs читайте, дай vs дайте, скажи vs скажіть), 10 items]
+## Наказовий спосіб (The Imperative Mood) (~330 words total)
+- P1 (~110 words): Introduce the grammatical term "наказовий спосіб" (imperative mood). Explain its function: giving commands, making requests, offering instructions, or extending invitations. State that at the A1 level, we focus on the two most practical forms: the "ти" form (informal, directed at one person) and the "ви" form (formal, or directed at multiple people). Provide a direct contrast: "Читай!" (Read! — to a friend) versus "Читайте!" (Read! — to a teacher or a group).
+- P2 (~110 words): Discuss the cultural perception of directness and politeness. Explain that Ukrainian imperatives are not inherently rude; they are a normal, direct part of daily speech used by teachers, parents, and friends. To transform any direct command into a polite request, simply add the magic phrase "будь ласка" (please). Show the transformation: "Дай!" (Give!) becomes "Дай, будь ласка" (Please give), and "Дайте!" becomes "Дайте, будь ласка."
+- P3 (~110 words): Explain the social nuance of tone and addressing people. Adding a person's name combined with a gentle tone makes an imperative sound friendly rather than bossy, e.g., "Олено, прочитай, будь ласка" (Olena, please read). Contrast this with English, where speakers often rely on modal verbs ("Could you read?") for politeness; emphasize that in Ukrainian, the standard approach is the imperative form plus "будь ласка".
+- <!-- INJECT_ACTIVITY: quiz-imperative-choice --> [quiz, Choose correct: ___, будь ласка! (дай / даєш / дати), 8 items]
 
-## Як утворити? (~330 words)
-- P1 (~80 words): Formation of the "ти" form for Group I verbs ending in -ати. Explain the stem extraction and adding -й: читати → читай, слухати → слухай, співати → співай.
-- P2 (~80 words): Formation of the "ти" form for Group II verbs ending in -ити. Explain the drop of the ending and the result: говорити → говори, ходити → ходи, сидіти → сиди. Mention the role of stress.
-- P3 (~80 words): Common irregular and short imperatives that every A1 learner needs. Examples: дати → дай, сказати → скажи, їсти → їж, іти → іди, відкрити → відкрий.
-- P4 (~90 words): Formation of the "ви" form for all verbs. The universal rule: take the "ти" form and add -те. Examples: читай + те = читайте, говори + те = говоріть (note the vowel shift for stress), дай + те = дайте.
-- <!-- INJECT_ACTIVITY: fill-in-imperative-formation --> [fill-in, Form imperative: читати → читай / читайте, писати → пиши / пишіть, 10 items]
-- <!-- INJECT_ACTIVITY: quiz-polite-choice --> [quiz, Choose correct: ___, будь ласка! (дай / даєш / дати) for context, 8 items]
+## Як утворити? (How to Form It) (~330 words total)
+- P1 (~85 words): Explain how to form the "ти" (informal singular) imperative for Group I (-ати) verbs. Show that you drop the infinitive ending and add "-й". Provide clear examples: читати → читай, слухати → слухай. For verbs like писати, show the stem change: писати → пиши. Note that this pattern creates short, punchy, one- or two-syllable words.
+- P2 (~85 words): Explain the "ти" form for Group II (-ити) verbs: говорити → говори, дивитися → дивись, ходити → ходи. Explicitly list common irregular verbs that must simply be memorized because of their high frequency in daily life: дати → дай, сказати → скажи, їсти → їж, іти → іди.
+- <!-- INJECT_ACTIVITY: group-sort-forms --> [group-sort, Sort: ти-forms vs ви-forms (читай vs читайте, дай vs дайте), 10 items]
+- P3 (~85 words): Explain how to form the "ви" (formal or plural) imperative. State the simple rule: take the established "ти" form and add the ending "-те". Provide straightforward examples showing this progression: читай → читайте, слухай → слухайте, дай → дайте. 
+- P4 (~75 words): Highlight the phonetic shift required for certain verbs. When the "ти" form ends in "-и" or a consonant (like пиши, сиди, скажи), the "ви" form takes the ending "-іть" (instead of "-ить"), and the stress often shifts to this new ending. Provide examples to illustrate this shift: пиши → пишіть, дивись → дивіться, скажи → скажіть, іди → ідіть.
+- <!-- INJECT_ACTIVITY: fill-in-imperative-forms --> [fill-in, Form imperative: читати → читай / читайте, писати → пиши / пишіть, 10 items]
+- <!-- INJECT_ACTIVITY: fill-in-polite-requests --> [fill-in, Complete: Олено, ___ книжку! Пане Іване, ___ книжку! (дай/дайте), 6 items]
 
-## Підсумок — Summary (~330 words)
-- P1 (~150 words): Comprehensive table of essential imperatives for daily life. List verbs: читати, писати, слухати, дивитися, говорити, іти, дати, сказати, сісти, відкрити. Provide the "ти" form, "ви" form, and English meaning for each.
-- P2 (~180 words): Self-check and practical application. 
-    - Q: How do you ask a friend to "look"? (A: Дивись!) 
-    - Q: How do you ask a group of people to "listen"? (A: Слухайте!)
-    - Q: What word makes any command polite? (A: Будь ласка.)
-    - Q: How do you say "Please say" to a boss? (A: Скажіть, будь ласка.)
-- <!-- INJECT_ACTIVITY: fill-in-contextual-names --> [fill-in, Complete: Олено, ___ книжку! Пане Іване, ___ книжку! (дай/дайте), 6 items]
+## Підсумок — Summary (~330 words total)
+- P1 (~165 words): Present a comprehensive summary table of essential imperatives for daily life. The table must include the following columns: Infinitive, Ти form, Ви form, and English Meaning. Populate the table with the core vocabulary: читати (читай / читайте), писати (пиши / пишіть), слухати (слухай / слухайте), дивитися (дивись / дивіться), говорити (говори / говоріть), іти (іди / ідіть), дати (дай / дайте), сказати (скажи / скажіть), сісти (сядь / сядьте), and відкрити (відкрий / відкрийте). 
+- P2 (~165 words): 
+  - Q: How do you tell a friend to look at something?
+  - A: Дивись!
+  - Q: How do you politely ask a teacher or a stranger to give you a menu?
+  - A: Дайте, будь ласка, меню.
+  - Q: How do you tell a group of friends to sit down?
+  - A: Сядьте!
+  - Q: What phrase should you always add to make an imperative command sound like a polite request?
+  - A: Будь ласка.
+  - Q: How do you command a friend to say something?
+  - A: Скажи!
 
 Grand total: ~1320 words
 </skeleton>
@@ -773,11 +794,57 @@ Grand total: ~1320 words
 Write in Markdown. Use:
 - `## Section Title` for main sections
 - `### Subsection` for subsections within a section
-- `**bold**` for Ukrainian words being taught — EVERY bold Ukrainian word MUST have an English translation on first use, either in parentheses `**слово** (translation)` or inline `**слово** means "translation"`. No exceptions.
+- `**bold**` for Ukrainian words being taught. For **A1 and A2** levels, provide an English translation on first use (e.g. `**стіл** (table)`) because learners lack the vocabulary to infer meaning. For **B1 and above**, do NOT provide inline translations for standard vocabulary — the learner will use the module's словник (vocabulary table). You may provide ONE parenthetical English translation ONLY for highly abstract grammar/linguistic terms on first use (e.g. `**видова пара** (aspectual pair)`).
 - Tables for paradigms (conjugation, declension)
 - `:::tip` / `:::caution` / `:::note` for callout boxes
 - `<!-- INJECT_ACTIVITY: {id} -->` for exercise placement (markers only — do NOT write exercise content)
 
 Do NOT write MDX component syntax, JSON, or DSL exercise blocks (:::quiz, etc.). Plain Markdown with injection markers.
+
+---
+
+## MANDATORY FINAL CHECKLIST (#1189)
+
+Before you finish writing, verify the prose against this checklist. Failing any item will fail the build.
+
+### Section headings (verbatim)
+
+Every heading from "Section Structure" above MUST appear as an `## H2` in your output, in order, **including the closing `Підсумок:` / `Підсумок та перехід до M...` summary**. The single most common writer failure across the B1 build has been silently dropping the final summary section. Re-read your output before stopping. If the last section in the plan is missing, write it now.
+
+### Required vocabulary (every word must appear)
+
+You MUST use **every word** from the list below at least once in the prose, in a natural sentence with bold + English translation. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, прагматика, діагностика, дієвідмінювання, зворотний, двовидовий, одновидовий, неозначено-кількісний, etc.) is the most frequently dropped category — actively find homes for those words even if it means adding a sentence that defines them.
+
+- [ ] читати (to read)
+- [ ] писати (to write)
+- [ ] слухати (to listen)
+- [ ] дивитися (to look/watch)
+- [ ] говорити (to speak)
+- [ ] дати (to give)
+- [ ] сказати (to say/tell)
+- [ ] іти (to go)
+
+### Forbidden words (never produce)
+
+Do not write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use `<!-- VERIFY -->` instead). The post-write toxic-token scanner will fail the build immediately:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+### Level-specific immersion check
+
+The level-appropriate immersion rule was already injected at the top of
+this prompt as `IMMERSION RULE`. Re-read it now BEFORE you stop writing.
+If your level's rule contains a CHECKLIST block, walk through every item.
+If it doesn't, just verify your output matches the LANGUAGE ROLES and
+TARGET stated in that block.
+
+This used to hard-code a B1+ checklist that confused A1/A2 models (where
+translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+The single source of truth is now
+`scripts/pipeline/config_tables.py:IMMERSION_RULES`.
+
+---
 
 Begin writing now. Start with the first section heading.

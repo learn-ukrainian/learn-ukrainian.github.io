@@ -122,75 +122,79 @@ references:
 <generated_module_content>
 ## Діалоги (Dialogues)
 
-Imagine standing in a bright, modern electronics store in the heart of Kyiv. You want to buy a few new gadgets for your home, but the shelves are completely packed with options. To get the right item quickly, you need to point effectively and accurately. **Ірина** (Iryna) is currently looking for a few things, including a bag for her equipment, and the **консультант** (shop assistant) is actively helping her navigate the many choices on display.
+A common daily situation involves pointing at things you want to buy. Imagine standing in a busy store. A customer, **Ірина**, is comparing different items on the shelves and can say **ось цей телефон**, **ось та камера**, or **ось це радіо**. She is talking with a helpful shop assistant, a **Консультант** (shop assistant). She physically points to things located near her body, and she points to other objects located far away across the aisle. This simple action requires specific vocabulary to ensure the assistant knows exactly what she means.
 
-> **Ірина:** Добрий день! Скільки коштує **ця сумка**? *(Good afternoon! How much does this bag cost?)*
-> **Консультант:** Добрий день! **Яка? Ця червона?** *(Good afternoon! Which one? This red one?)*
-> **Ірина:** **Ні, та синя.** *(No, that blue one.)*
-> **Консультант:** **Та сумка** коштує двісті гривень. *(That bag costs two hundred hryvnias.)*
-> **Ірина:** **А цей рюкзак?** *(And this backpack?)*
-> **Консультант:** **Цей — сто п'ятдесят.** *(This one is one hundred fifty.)*
-> **Ірина:** Добре. А **цей телефон**? *(Good. And this phone?)*
-> **Консультант:** **Це новий смартфон**. *(This is a new smartphone.)*
+The first dialogue takes place during a shopping trip. This conversation extends the colors and prices you already know. The customer asks about the price of an item right in front of her. The assistant needs clarification, so the customer points to a different item farther away on a high shelf.
 
-After leaving the store, Ірина returns to her home office. The room has various pieces of furniture, some close by and some across the room. She points out her workspace to a friend.
+> **Ірина:** Скільки коштує ця сумка? *(How much does this bag cost?)*
+> **Консультант:** Яка? Ця червона? *(Which one? This red one?)*
+> **Ірина:** Ні, та синя. *(No, that blue one.)*
+> **Консультант:** Та коштує двісті гривень. *(That one costs two hundred hryvnias.)*
+> **Ірина:** А цей рюкзак? *(And this backpack?)*
+> **Консультант:** Цей — сто п'ятдесят. *(This one — one hundred fifty.)*
 
-> **Друг:** **Що це?** *(What is this?)*
-> **Ірина:** **Це мій стіл.** *(This is my table.)*
-> **Друг:** **А те?** *(And that?)*
-> **Ірина:** **Те — крісло.** *(That is an armchair.)*
-> **Друг:** Яка гарна кімната! *(What a nice room!)*
-> **Ірина:** Дякую. **Цей стілець новий, а той — старий.** *(Thank you. This chair is new, and that one is old.)*
-> **Друг:** А **ця шафа**? *(And this wardrobe?)*
-> **Ірина:** **Ця шафа** нова, а **та книжкова полиця** стара. *(This wardrobe is new, but that bookshelf is old.)*
+In this dialogue, **цей/ця** points to the nearer item and **той/та** points to the farther one.
 
-Notice how naturally Ірина identifies various objects in her environment. She does not need to repeat the heavy names of the items constantly in every single sentence. By using short pointing words, she makes her everyday speech flow incredibly smoothly. She simply points to something right near her or across the large room, establishing a clear physical contrast while easily maintaining a natural, authentic conversation rhythm.
+The second dialogue takes place in a residential room. This conversation compares everyday furniture and uses noun vocabulary you already know from previous topics. A person identifies an object located close by, and then points to an object resting across the room. The contrast is clear.
+
+> **Брат:** Що це? *(What is this?)*
+> **Сестра:** Це мій стіл. *(This is my table.)*
+> **Брат:** А те? *(And that?)*
+> **Сестра:** Те — крісло. *(That is an armchair.)*
+> **Брат:** Цей стілець новий, а той — старий. *(This chair is new, and that one is old.)*
+
+The conversation contrasts near and far objects. The grammar directly reflects the physical reality of the room. The speaker's position relative to the object changes the descriptive word from this to that. The difference is immediately obvious to a native speaker.
 
 ## Цей, ця, це (This)
 
-When you want to identify an object in Ukrainian, the most universal tool at your disposal is the word **це** (this is / that is). You already know this essential word from the fundamental question **Що це?** (What is this?). In this direct context, **це** acts as a fixed, unchangeable identifier. You can point at absolutely anything and state **Це стіл** (This is a table) or **Це вікно** (This is a window) without worrying about gender. However, when you want to specifically point to a neuter object and describe it further, **це** also functions as a specific pointing word, as seen in the phrase **це велике поле** (this large field).
+The word **це** (this is / that is) is the universal identifier in the Ukrainian language. For basic identification questions like **Що це?** (What is this?), the answer is simply **Це стіл** (This is a table) or **Це книга** (This is a book). This use of **це** does not require gender agreement. In identification sentences, it often means "this is" or "it is" in English. You use it to identify an object, but **це** is also the neuter demonstrative in phrases like **це вікно**.
 
-When you point directly at an object near you to describe or select it, demonstrative pronouns follow the same gender pattern as **мій**, **моя**, **моє** and **який**, **яка**, **яке**. For masculine nouns, you use **цей** (this). For feminine nouns, you use **ця** (this). For neuter nouns, you use **це** (this). This pattern directly mirrors the personal pronouns **він** (he), **вона** (she), and **воно** (it). It perfectly aligns with the possessive words you learned earlier in your studies. For example, you say **цей стіл** (this table) for a masculine noun. You confidently say **ця книга** (this book) for a feminine noun. You easily identify **це вікно** (this window) for a neuter noun.
+When you point at a specific known object, you use the gendered pointers. These are **цей** (this, masculine), **ця** (this, feminine), and **це** (this, neuter). Ukrainian textbooks, such as Заболотний for Grade 6 (p. 210), explain that demonstrative pronouns change by gender to match the noun. For example, you say **Цей стіл** (this table), **Ця книга** (this book), and **Це вікно** (this window). At the current learning stage, we focus only on the nominative case.
 
-Ukrainian word order makes combining these pointing words with descriptive adjectives incredibly straightforward. The sequence is completely identical to English: Demonstrative + Adjective + Noun. The pointing word always takes the absolute lead position in the sentence. For a masculine item, you can say **цей великий червоний стіл** (this big red table). For a feminine item, the pattern remains identical: **ця нова синя сумка** (this new blue bag). For a neuter item, you describe it as **це маленьке біле вікно** (this small white window). The structure never changes, giving you a highly reliable template for building longer, more descriptive phrases as your daily vocabulary grows.
+A highly effective method to build a mental link for gender involves substitution and association. You connect the noun to its personal pronoun, its possessive word, and its demonstrative word. For a masculine noun, the training chain is: **стіл** (table) → **він** (he) → **мій** (my) → **цей** (this). Doing this creates a strong grammatical reflex. You automatically select the correct agreement for the noun. Repeating this sequence helps your brain map the grammatical categories naturally.
+
+You can easily combine these demonstrative words with adjectives and colors. The word order is identical to English. You place the demonstrative first, then the adjectives, and finally the noun. You say **Цей великий червоний стіл** (This big red table). You say **Ця нова синя сумка** (This new blue bag). You say **Це маленьке біле вікно** (This small white window). The sentence structure remains completely consistent.
+
+The plural pointer is **ці** (these). This single word is used for all genders in the plural form. You say **ці столи** (these tables) and **ці книги** (these books). A common error for English speakers is adding the verb "to be" after the pointer. Omitting this verb is standard in Ukrainian. You say **Цей стіл новий** (This table is new), not "Цей стіл є новий".
 
 <!-- INJECT_ACTIVITY: quiz-this-gender -->
 
-<!-- INJECT_ACTIVITY: match-up-this-possessive -->
-
 ## Той, та, те (That)
 
-Once you can point at objects right next to you, you immediately need the vocabulary to point at things further away, or things previously mentioned. In Ukrainian, you use the forms **той** (masculine), **та** (feminine), and **те** (neuter) to mean "that." These specific words establish a clear spatial link with the location word **там** (there). If a masculine object is located **там**, you point to it clearly by saying **той стіл** (that table). If a feminine object is far away, you identify it easily as **та книга** (that book). For a distant neuter object, you simply say **те вікно** (that window). This creates a highly logical distance mapping in your mind.
+The Ukrainian language uses the "far" pointers **той** (that, masculine), **та** (that, feminine), and **те** (that, neuter) to indicate objects farther away. You use these words to point at distant things across a room or a street. Examples include **Той стіл** (That table), **Та книга** (That book), and **Те вікно** (That window). While Ukrainian textbooks like Літвінова for Grade 6 (p. 273) provide a full declension table for **той**, we focus strictly on the nominative case right now.
 
-The true communicative power of these words emerges when you create direct contrast. Ukrainian relies heavily on the small conjunction **а** (but / and) to compare two different things in one breath. You can build binary comparison sentences effortlessly. For example, you might say **Цей олівець мій, а той — твій.** (This pencil is mine, and that one is yours). You can also actively contrast different qualities: **Ця книга цікава, а та — нудна.** (This book is interesting, but that one is boring). This parallel structure powerfully reinforces the near and far distinction.
+You contrast "this" versus "that" in practice by physically pointing. Sentences that compare proximity highlight the grammar effectively. You can say **Цей стілець тут, а той стілець там** (This chair is here, and that chair is there). You can also say **Цей стілець новий, а той — старий** (This chair is new, and that one is old). The words **тут** (here) and **там** (there) emphasize the physical location. The location of the object defines the exact pronoun.
 
-You must be aware of a small but highly important detail regarding the exact word **та**. In Ukrainian, **та** primarily functions as the feminine pointing word "that," as seen in the phrase **та жінка** (that woman). However, **та** also serves as a common conjunction meaning "and," identical in daily use to the word **і** (and). For example, you might say **мама та тато** (mom and dad). Context provides all the necessary rules for instant disambiguation. If **та** appears directly before a feminine noun, it points. If it sits safely between two nouns, it connects them together.
+A crucial warning involves a potential point of confusion. The word **та** can mean both "that" as a demonstrative pointer and "and" as a conjunction. Context makes the meaning completely clear. Consider the phrase **мама та тато** (mom and dad). Compare this to the phrase **та книга** (that book). The surrounding words reveal the correct function immediately.
 
-In practical daily usage, you often need to offer or make rapid choices. To form a clear choice, you use the question word **чи** (or). This allows you to ask highly practical "pointing" questions when organizing your life. If you are arranging furniture, you might simply ask **Який стіл? — Цей чи той?** (Which table? — This one or that one?). While shopping, you can turn and ask a friend **Яка сумка? — Ця червона чи та синя?** (Which bag? — This red one or that blue one?). For a neuter object, the pattern is exactly the same: **Яке вікно? — Це велике чи те маленьке?** (Which window? — This big one or that small one?).
+You demonstrate practical usage for pointing and choosing by using the word **чи** (or). The question structure is very straightforward and mimics the English pattern. You ask **Який стіл? — Цей чи той?** (Which table? — This one or that one?). You ask **Яка сумка? — Ця червона чи та синя?** (Which bag? — This red one or that blue one?). You ask **Яке вікно? — Це велике чи те маленьке?** (Which window? — This big one or that small one?). The choices are clear.
 
-<!-- INJECT_ACTIVITY: fill-in-near-far -->
+The plural form for all far objects is **ті** (those). This single short word is used for all genders. You say **ті столи** (those tables) and **ті книги** (those books). This completes the entire near and far demonstrative set. You now have the complete vocabulary toolset for pointing at any object in the world around you.
 
-<!-- INJECT_ACTIVITY: quiz-that-pointing -->
+<!-- INJECT_ACTIVITY: quiz-that-gender -->
+<!-- INJECT_ACTIVITY: fill-in-this-vs-that -->
 
 ## Підсумок — Summary
 
-At this stage in your learning journey, you possess a highly complete set of grammatical tools for identifying and describing the world around you. You can perfectly summarize all the critical patterns you have learned into one comprehensive Gender Agreement Table. This straightforward table clearly aligns all the foundational grammar markers for masculine, feminine, and neuter nouns in the Ukrainian language.
+First, review the core contrast: **цей/ця/це** points to something near you, and **той/та/те** points to something farther away. For example: **Цей стіл тут, а той стіл там. Ця книга нова, а та стара. Це вікно велике, а те маленьке.**
 
-| Category | Masculine | Feminine | Neuter |
-| :--- | :--- | :--- | :--- |
-| **Possessives** | **мій** | **моя** | **моє** |
-| **Questions** | **який?** | **яка?** | **яке?** |
-| **"This"** | **цей** | **ця** | **це** |
-| **"That"** | **той** | **та** | **те** |
+The grand gender agreement table brings together all patterns to show the remarkable consistency of the Ukrainian language. This chart is your roadmap for A1 grammar.
 
-Same endings, same logic — Ukrainian is highly consistent! The feminine forms overwhelmingly rely on the recognizable **-я** or **-а** vowel endings. The neuter forms consistently feature the distinct **-е** ending across all functional categories.
+| Type | Masculine | Feminine | Neuter |
+|---|---|---|---|
+| Possessives | **мій** | **моя** | **моє** |
+| Questions | **який** | **яка** | **яке** |
+| This | **цей** | **ця** | **це** |
+| That | **той** | **та** | **те** |
 
-A highly proactive approach to common conversational errors will drastically improve your speaking fluency. One of the most frequent mistakes learners make is trying to literally translate "What is this specific masculine thing?" by directly asking **Що цей?**. This is grammatically incorrect. You must never ask **Що цей?** or **Що ця?**. Always use the universal, neutral identifier for these identification questions: **Що це?** (What is this?). Furthermore, you must always remember the critical rule of description: in the present tense, you completely omit the verb "to be" (**є**). You simply say **Цей стіл великий.** (This table is big).
+All these words follow the same gender-agreement pattern, but their endings are not identical. In this table, the masculine forms often end in a consonant or **-й**, the feminine forms in **-я** or **-а**, and the neuter forms in **-е**. These structural patterns repeat systematically across different categories of words. When you memorize one pattern, you automatically understand how the other words behave. The grammatical system relies entirely on these predictable and reliable endings to build clear sentences. You do not have to guess; you simply apply the pattern.
 
-For a highly practical daily self-check, look around the room you are currently sitting in right now. Point at three distinct things near you and correctly name them aloud using **Цей**, **Ця**, or **Це**. Then, look completely across the room or out the open window. Point at three things far away and name them using **Той**, **Та**, or **Те**. Finally, systematically check yourself: does the specific ending you chose correctly match the noun's inherent gender?
+<!-- INJECT_ACTIVITY: match-up-gender-patterns -->
+
+Perform a self-check exercise to test your knowledge. Look around your room. Point at three things near you and name them using **цей**, **ця**, or **це**. For example, you can say **цей стіл** (this table), **ця ручка** (this pen), and **це ліжко** (this bed). Now look out the window or across the room. Point at three things far away and name them using **той**, **та**, or **те**. For example, you can say **той будинок** (that building), **та машина** (that car), and **те вікно** (that window). Practice this physical pointing routine every single day to build an automatic reflex for these vocabulary words.
 </generated_module_content>
 
-**PIPELINE NOTE — Word count: 1452 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
+**PIPELINE NOTE — Word count: 1409 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -366,37 +370,169 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 65 words | Not found: 1 words
+Verified: 58 words | Not found: 2 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
   ✗ Ірина — NOT IN VESUM
+  ✗ Літвінова — NOT IN VESUM
 
-All 65 other words are confirmed to exist in VESUM.
+All 58 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
-## Verification Tools (MCP)
+---
 
-You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
+## Verification Tools (Shell Commands)
 
-**Core Verification:**
-- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
-- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
+You have access to verification tools via shell commands. Use these to verify
+Ukrainian vocabulary, check grammar, and search textbook content **as you write**.
 
-**Content Quality:**
-- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+**IMPORTANT:** Run verification commands BEFORE finalizing any Ukrainian text.
+Batch multiple verifications together to minimize round-trips.
 
-**Reference:**
-- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp_rag_search_literary` — verify literary references against primary sources
-- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
+### 1. Batch-verify Ukrainian words exist in VESUM (preferred — one call for many words)
 
-**Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_words
+results = verify_words(['слово1', 'слово2', 'слово3'])
+for w, matches in results.items():
+    if matches:
+        print(f'{w}: FOUND — lemma={matches[0][\"lemma\"]}, pos={matches[0][\"pos\"]}')
+    else:
+        print(f'{w}: NOT FOUND — may not exist in standard Ukrainian')
+"
+```
+
+### 2. Verify a single Ukrainian word in VESUM (with full morphological tags)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_word
+results = verify_word('WORD_HERE')
+if results:
+    for m in results:
+        print(f'lemma={m[\"lemma\"]}, pos={m[\"pos\"]}, tags={m[\"tags\"]}')
+else:
+    print('NOT FOUND in VESUM')
+"
+```
+
+### 3. Get all inflected forms of a lemma (declension/conjugation)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_lemma
+forms = verify_lemma('LEMMA_HERE')
+for f in forms[:20]:
+    print(f'{f[\"word_form\"]:20s} {f[\"pos\"]:8s} {f[\"tags\"]}')
+print(f'... {len(forms)} forms total')
+"
+```
+
+### 4. Check CEFR level of a word (is it level-appropriate?)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import query_cefr_level
+results = query_cefr_level('WORD_HERE')
+for r in results:
+    print(f'{r[\"word\"]}: {r[\"level\"]} ({r[\"pos\"]})')
+if not results:
+    print('Not in CEFR database')
+"
+```
+
+### 5. Search textbook content (Ukrainian school textbooks, Grades 1-11)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_textbooks
+keywords = {'keyword1', 'keyword2'}
+results = search_textbooks(keywords, 5)
+for r in results:
+    title = r.get('section_title', r.get('title', ''))
+    grade = r.get('grade', '?')
+    text = r.get('text', '')[:200]
+    print(f'Grade {grade} | {title}')
+    print(f'  {text}')
+    print()
+"
+```
+
+### 6. Search style guide for calques/Russianisms (Антоненко-Давидович, 279 entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_style_guide
+results = search_style_guide('TOPIC_HERE', 3)
+for r in results:
+    print(f'--- {r.get(\"word\", \"\")} [{r.get(\"section\", \"\")}]')
+    print(r.get('text', '')[:300])
+    print()
+if not results:
+    print('No style guide entries found')
+"
+```
+
+### 7. Look up word definition in СУМ-11 (Ukrainian explanatory dictionary, 127K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_definitions
+results = search_definitions('WORD_HERE', 3)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+### 8. Search idioms (Фразеологічний словник, 25K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_idioms
+results = search_idioms('WORD_HERE', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"text\", r.get(\"definition\", \"\")))[:200]}')
+"
+```
+
+### 9. English-to-Ukrainian translation (Балла, 79K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import translate_en_uk
+results = translate_en_uk('ENGLISH_WORD', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+---
+
+**WHEN to use these tools:**
+
+1. **Before writing any Ukrainian text** — batch-verify all key vocabulary with
+   `verify_words` (tool 1). Any word that returns NOT FOUND must be replaced.
+2. **When you suspect a Russicism or calque** — search the style guide (tool 6)
+   and verify the correct Ukrainian form with `verify_word` (tool 2).
+3. **When writing for A1/A2** — check CEFR levels (tool 4) to ensure vocabulary
+   is level-appropriate.
+4. **When unsure about a case ending or conjugation** — use `verify_lemma` (tool 3)
+   to see the full paradigm.
+5. **When covering a grammar topic** — search textbooks (tool 5) to see how
+   Ukrainian school textbooks teach it.
+6. **When you need the precise Ukrainian meaning** — use СУМ-11 (tool 7).
+7. **When looking for natural Ukrainian expressions** — search idioms (tool 8).
+
+**Batching rule:** Collect all words you want to verify, then run ONE `verify_words`
+call instead of multiple `verify_word` calls. This is faster and uses fewer tokens.

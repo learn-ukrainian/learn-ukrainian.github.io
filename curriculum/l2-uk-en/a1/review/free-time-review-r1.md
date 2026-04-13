@@ -2,56 +2,89 @@
 No linguistic errors found.
 
 ## Exercise Check
-- `<!-- INJECT_ACTIVITY: fill-in-invitations -->`: Placed immediately after `Діалоги`. This tests frequency items ("Я ніколи не", "двічі на тиждень") BEFORE they are taught in the `Як часто?` section.
-- `<!-- INJECT_ACTIVITY: match-up-hobbies -->`: Correctly placed after `Хобі і спорт`.
-- `<!-- INJECT_ACTIVITY: preposition-check -->`: Correctly placed after `Хобі і спорт`.
-- `<!-- INJECT_ACTIVITY: fill-in-frequency -->`: Correctly placed after `Як часто?`.
-- **Issue**: The plan only specifies 3 activity hints. The writer injected 4 markers. The first marker is premature and redundant.
+Three activity markers are present: `match-hobbies-verbs`, `fill-in-prepositions-activities`, and `fill-in-invitations-frequency`. That matches the plan’s three `activity_hints`, and each marker appears after the relevant teaching material. No exercise-logic errors are visible in the prose-only module.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 8/10 | Missed the required vocabulary chunk `дивитися фільми / серіали (to watch movies/series)` replacing it with `готувати`. Failed to combine "weather" in the final synthesized examples. |
-| 2. Linguistic accuracy | 10/10 | All Ukrainian text is grammatically correct. Zero Russianisms, Surzhyk, or Calques. `у/в` and `на` rules are correctly applied. |
-| 3. Pedagogical quality | 10/10 | Excellent breakdown of `в` (buildings) vs `на` (events), and `грати у` (sports) vs `грати на` (instruments). Clear explanation of the double negative rule for `ніколи`. |
-| 4. Vocabulary coverage | 10/10 | All required words (`вихідні`, `спорт`, `футбол`, `кіно`, `часто`, `іноді`, `рідко`, `ходімо`) and recommended words (`завжди`, `зазвичай`, `ніколи`, `театр`, `концерт`, `музей`, `давай`, `раз`) are used naturally in context. |
-| 5. Exercise quality | 7/10 | Four markers were injected for three plan hints. The `fill-in-invitations` marker was placed prematurely before frequency adverbs were taught. |
-| 6. Engagement & tone | 8/10 | Used the forbidden gamified phrase "You now possess..." in the summary section. Otherwise, tone is encouraging and clear. |
-| 7. Structural integrity | 10/10 | Word count is exactly 1257 words (exceeds 1200 target). All H2 sections match the plan outline. Clean Markdown formatting. |
-| 8. Cultural accuracy | 10/10 | Decolonized approach. Accurate presentation of standard Ukrainian structures (`Ходімо`) vs informal (`Давай`). |
-| 9. Dialogue & conversation quality | 10/10 | Dialogues are natural, use names, and model real communicative situations effectively ("Що ти робиш у вихідні?"). |
+| 1. Plan adherence | 6/10 | All planned H2 sections are present, and the hobby/frequency/invitation content is broadly covered. But the objective “Combine all A1.4 skills: time + day + weather + activities” is not realized: searches for `погода`, `сонячно`, `дощ`, `холодно`, `тепло`, `вітер`, and `сніг` returned 0 occurrences in the module. Section pacing is also far off the 300-word plan budget: roughly 484 / 564 / 468 / 364 words by section. |
+| 2. Linguistic accuracy | 9/10 | The Ukrainian forms themselves are solid: `Вітю`, `ходімо`, `двічі на тиждень`, `грати на гітарі`, `ходити на концерт`, `ніколи не працюю`. No Russian letters or obvious Russianisms/surzhyk/calques found. |
+| 3. Pedagogical quality | 6/10 | There are enough examples, but too much English meta-explanation crowds out the target language. The caution box says `You have to say "I never *do not* work"`, which is a misleading way to explain Ukrainian double negation. |
+| 4. Vocabulary coverage | 10/10 | All required vocabulary appears naturally in prose: `вихідні`, `спорт`, `футбол`, `кіно`, `часто`, `іноді`, `рідко`, `ходімо`. Recommended words are also integrated: `завжди`, `зазвичай`, `ніколи`, `театр`, `концерт`, `музей`, `давай`, `раз`. |
+| 5. Exercise quality | 9/10 | The marker count matches the plan exactly, and placement is sensible: hobbies markers after the hobbies section, invitation/frequency marker after frequency teaching. No visible mismatch between marker purpose and taught material. |
+| 6. Engagement & tone | 6/10 | The lesson repeatedly pads itself with filler/hype instead of teaching: `This is the perfect moment`, `powerful invitation word`, `incredibly useful`, `most natural and authentic`, `much more natural and authentic`. This inflates word count without adding instructional value. |
+| 7. Structural integrity | 9/10 | Clean markdown, all required H2s are present and ordered correctly, markers are intact, and the pipeline word count is 1738, safely above target. |
+| 8. Cultural accuracy | 9/10 | The `Будинок культури` note is plausible and culturally grounded. The module presents Ukrainian on its own terms and avoids “like Russian” framing. |
+| 9. Dialogue & conversation quality | 7/10 | Dialogue 1 is natural and useful. Dialogue 2 is mostly an interview (`Ти любиш спорт?`, `Як часто?`, `А ще?`) and does not realize the plan’s bulletin-board motivation ending in a shared invitation (`Часто ходиш? Іноді. Ходімо разом!`). |
 
 ## Findings
-[Plan adherence] [Major]
-Location: `Хобі і спорт — Що ти любиш?` section, bulleted list of activities.
-Issue: The plan required introducing `дивитися фільми / серіали (to watch movies/series)`, but the writer substituted it with `готувати (to cook)`.
-Fix: Replace `готувати` with `дивитися фільми / серіали`.
+[PLAN ADHERENCE] [SEVERITY: major]  
+Location: plan objective `Combine all A1.4 skills: time + day + weather + activities`; module text contains time/day/activity examples but no weather-linked example.  
+Issue: One explicit plan objective is missing.  
+Fix: Add at least one short weather + activity example, e.g. `Сьогодні тепло. Ходімо в парк у суботу!` / `Сьогодні холодно. Я читаю вдома.`
 
-[Plan adherence] [Major]
-Location: `Як часто? — Прислівники частоти` section, final bulleted examples.
-Issue: The plan requested to "Combine all A1.4 skills: time + day + weather + activities". The examples successfully combine time, day, and activities, but omit weather entirely.
-Fix: Update the bulleted examples to include time ("о п'ятій") and a weather condition ("Коли у п'ятницю йде дощ").
+[ENGAGEMENT & TONE] [SEVERITY: major]  
+Location: opening and explanation prose such as `This is the perfect moment for them to talk about what they do for fun and make plans.`, `powerful invitation word`, `incredibly useful`, `most natural and authentic`.  
+Issue: The module is heavily padded with English filler, which pushes all four sections well past the plan’s 300-word budget and weakens pacing.  
+Fix: Replace hype and scene-setting with shorter teacherly explanations that keep the Ukrainian examples but cut redundant English prose.
 
-[Exercise quality] [Major]
-Location: After the `Діалоги` section.
-Issue: The `<!-- INJECT_ACTIVITY: fill-in-invitations -->` marker is placed before the `Як часто?` section. The corresponding plan activity tests frequency adverbs ("ніколи", "двічі на тиждень"), meaning the learner would be tested on untaught concepts. Additionally, the plan only specifies 3 activities, but 4 markers were injected.
-Fix: Remove the premature `fill-in-invitations` marker. The remaining 3 markers perfectly match the 3 plan hints.
+[PEDAGOGICAL QUALITY] [SEVERITY: major]  
+Location: `You have to say "I never *do not* work" («Я ніколи не працюю»).`  
+Issue: This is a misleading explanation of double negation and can confuse learners about what the Ukrainian sentence means.  
+Fix: Replace it with a precise rule: `In Ukrainian, ніколи is used together with не: «Я ніколи не працюю».`
 
-[Engagement & tone] [Minor]
-Location: First sentence of the `Підсумок — Summary` section.
-Issue: The phrase "You now possess the essential tools..." uses corporate/gamified language explicitly forbidden by the review rubric.
-Fix: Replace with "You are now ready to discuss...".
+[DIALOGUE & CONVERSATION QUALITY] [SEVERITY: major]  
+Location: second dialogue: `Оленка: ... Як часто? ... А ще?` / `Вітя: ... Іноді слухаю музику і малюю.`  
+Issue: The exchange stays one-sided and does not land on the shared invitation promised by the plan’s bulletin-board situation.  
+Fix: Add a closing invitation line, e.g. `Ходімо разом на концерт у суботу! — Давай!`
 
 ## Verdict: REVISE
-The module is linguistically flawless and features excellent pedagogical explanations for verbs of motion and prepositions. However, it requires minor revisions to align perfectly with the plan (adding missing vocabulary, integrating weather into examples, and removing a premature exercise marker) and fixing a single tone violation.
+The module is linguistically safe, but it misses a stated plan objective, overuses filler to the point that every section blows past its target budget, and contains one genuinely misleading grammar explanation. That is a `REVISE`, not a `PASS`.
 
 <fixes>
-- find: "*(Sometimes I listen to music and draw.)*\n\n<!-- INJECT_ACTIVITY: fill-in-invitations -->\n\n## Хобі і спорт — Що ти любиш?"
-  replace: "*(Sometimes I listen to music and draw.)*\n\n## Хобі і спорт — Що ти любиш?"
-- find: "* **читати книги** (to read books)\n* **малювати вдома** (to draw at home)\n* **фотографувати** (to take photos)\n* **готувати** (to cook)"
-  replace: "* **читати книги** (to read books)\n* **малювати вдома** (to draw at home)\n* **фотографувати** (to take photos)\n* **дивитися фільми / серіали** (to watch movies/series)"
-- find: "* **У понеділок я завжди займаюся спортом.** (On Monday I always practice sports.)\n* **У п'ятницю ми часто ходимо в театр.** (On Friday we often go to the theater.)"
-  replace: "* **У понеділок о п'ятій я завжди займаюся спортом.** (On Monday at five I always practice sports.)\n* **Коли у п'ятницю йде дощ, ми часто ходимо в театр.** (When it rains on Friday, we often go to the theater.)"
-- find: "You now possess the essential tools to discuss your free time, hobbies, and weekend plans in Ukrainian."
-  replace: "You are now ready to discuss your free time, hobbies, and weekend plans in Ukrainian."
+- find: |
+    Community centers and public bulletin boards are common places to find out about local events, clubs, and activities in Ukraine. Imagine **Вітя** (Vitya) and **Оленка** (Olenka) standing in front of a colorful bulletin board at their local cultural center. They are reading posters about upcoming concerts, sports teams, and art classes. This is the perfect moment for them to talk about what they do for fun and make plans. In Ukrainian, when we want to ask someone about their hobbies or weekend plans, we use specific conversational patterns. Let's listen to how Вітя and Оленка discuss their free time.
+  replace: |
+    At a community-center bulletin board, **Вітя** (Vitya) and **Оленка** (Olenka) talk about their hobbies and make a weekend plan. This gives us a simple model for asking about free time and inviting someone to an activity.
+
+- find: |
+    Notice how Вітя asks «Що ти робиш у вихідні?» (What do you do on the weekend?). The word **вихідні** (weekend) is always plural in Ukrainian. Olenka replies with «Зазвичай я гуляю і читаю» (Usually I walk and read), using the adverb **зазвичай** (usually) to describe her habit. When Вітя wants to invite her out, he uses the powerful invitation word **ходімо** (let's go!). He says «Ходімо в кіно в суботу!» (Let's go to the cinema on Saturday!). This pattern is very natural: you state the invitation, the place, and then the day. Finally, they confirm the time using the question «О котрій?» (At what time?) and the answer «О п'ятій» (At five).
+  replace: |
+    Notice the core pattern here: «Що ти робиш у вихідні?», «Ходімо в кіно в суботу!», and «О котрій? — О п'ятій». To connect this module to earlier A1.4 material, you can also combine activities with weather: **Сьогодні тепло. Ходімо в парк у суботу!** *(It is warm today. Let's go to the park on Saturday!)* **Сьогодні холодно. Я читаю вдома.** *(It is cold today. I read at home.)*
+
+- insert_after: |
+    > **Вітя:** **Іноді** слухаю музику і малюю. *(Sometimes I listen to music and draw.)*
+  replace: |
+    > **Оленка:** Клас! **Ходімо разом** на **концерт** у суботу! *(Great! Let's go to a concert together on Saturday!)*
+    > **Вітя:** **Давай!** *(Let's!)*
+
+- find: |
+    To start a conversation about hobbies, you can ask a very direct and polite question: «Що ти любиш робити у вільний час?» (What do you like to do in your free time?). We already know the verb «любити» (to love, to like). When we want to talk about our hobbies, we simply use «Я люблю» (I like) followed by the dictionary form (infinitive) of an action verb. For example, if your hobby is reading, you say «Я люблю читати» (I like to read). If you enjoy relaxing, you can say «Я люблю відпочивати» (I like to rest). This structure expands on what we learned previously and is the easiest way to express your interests.
+  replace: |
+    To talk about hobbies, ask: «Що ти любиш робити у вільний час?» (What do you like to do in your free time?). The basic pattern is **Я люблю + infinitive**: «Я люблю читати» (I like to read), «Я люблю відпочивати» (I like to rest).
+
+- find: |
+    When we talk about playing sports or games, Ukrainian uses a very specific pattern. We take the verb «грати» (to play), add the preposition «у» or «в» (in/at), and then name the sport. Unlike English, which just says "play football", Ukrainian requires this preposition. It literally translates to "play in football".
+  replace: |
+    To talk about sports, use **грати у / в + sport**: «Я граю у футбол», «Він грає у баскетбол», «Ми граємо у теніс».
+
+- find: |
+    However, if your hobby is playing a musical instrument, the pattern changes completely! Instead of the preposition «у» or «в», Ukrainian uses the preposition «на» (on) for instruments. You are literally saying that you "play on" the guitar or piano. This is a strict rule in Ukrainian. We play «у» sports, but we play «на» instruments. Think of your hands resting on the instrument to make music.
+  replace: |
+    For musical instruments, use **грати на + instrument**: «Я граю на гітарі», «Вона грає на піаніно», «Ти граєш на скрипці?»
+
+- find: |
+    Once you know someone's hobbies, the next logical question is to ask about their routine. You can ask «Як часто?» (How often?). To answer this, we need a special group of words called frequency adverbs. These words tell us how regularly an action happens.
+  replace: |
+    To ask about routine, say «Як часто?» (How often?). The answer usually uses a frequency adverb.
+
+- find: |
+    English speakers often make a mistake with the word **ніколи** (never). In English, we say "I never work", using only one negative word. In Ukrainian, you must use a double negative! You have to say "I never *do not* work" («Я ніколи не працюю»). If you forget the «не», the sentence will sound completely broken to a native speaker.
+  replace: |
+    English speakers often miss the extra **не** here. In Ukrainian, **ніколи** is used together with **не**: «Я ніколи не працюю». Without **не**, the sentence is ungrammatical.
+
+- find: |
+    In this module, we expanded our ability to communicate about free time and entertainment. You learned how to state your hobbies clearly using the pattern «Я люблю» followed by an infinitive action verb. We also discovered that Ukrainian uses very specific prepositions for playing. Remember the rule: you use «у» or «в» for sports («Я граю у футбол», «Я граю в баскетбол»), but you must use «на» for musical instruments («Я граю на гітарі», «Я граю на піаніно»). Knowing this difference makes your Ukrainian sound much more natural and authentic.
+  replace: |
+    In this module, you learned how to talk about free time with **Я люблю + infinitive**, **грати у / в + sport**, and **грати на + instrument**. These patterns let you describe hobbies clearly and naturally.
 </fixes>

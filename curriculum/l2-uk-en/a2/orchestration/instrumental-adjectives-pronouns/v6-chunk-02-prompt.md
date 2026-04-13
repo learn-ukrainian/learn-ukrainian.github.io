@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-прикметники твердої групи. Це слова з твердим приголосним звуком. Наприклад, **новий** *(new)*, **великий** *(big)* або **старий** *(old)*. Для чоловічого та середнього роду ми використовуємо закінчення **-им**. Наприклад, словосполучення «новий друг» змінюється на «з новим другом» в орудному відмінку. Both words get a completely new ending to show their grammatical role: «нов**им** друг**ом**». In English, you only need to add the preposition "with" to the phrase "a new friend". In Ukrainian, the preposition «з» automatically triggers the Instrumental case, which structurally changes both the adjective and the noun. Для середнього роду правило працює абсолютно так само. Ми кажемо: «Ми відпочиваємо під високим небом» *(We are resting under the high sky)*. Слово «високий» отримує закінчення «-им», як і слова чоловічого роду. Тепер детально поговоримо про жіночий рід твердої групи. Тут ми маємо красиве і дуже характерне закінчення **-ою**. Воно звучить глибоко, традиційно і мелодійно. Прикметники жіночого роду, такі як **гарна** *(beautiful)* або **нова** *(new)*, змінюються на **гарною** та **новою**. Ми часто використовуємо це закінчення, коли говоримо про людей або предмети жіночого роду. Наприклад: «Я йду в кіно з новою подругою» *(I am going to the cinema with a new friend)*. Або: «Мій телефон лежить за великою книжкою» *(My phone is lying behind the big book)*. The ending «-ою» is a very strong and clear phonetic marker of the Instrumental case for feminine nouns and adjectives. It is very hard to confuse it with any other case in the language. Notice how the adjective and noun rhyme: «нов**ою** подруг**ою**». В українській мові також є прикметники м'якої групи. Вони мають м'який приголосний звук перед закінченням. Наприклад, **синій** *(blue)*, **літній** *(summer)* або **домашній** *(domestic)*. Для цих прикметників закінчення будуть трохи іншими. Для чоловічого та середнього роду ми використовуємо закінчення **-ім**. Слово «синій» стає «синім». Наприклад: «Я пишу нотатки синім олівцем» *(I write notes with a blue pencil)*. Для жіночого роду ми маємо цікаве закінчення **-ьою**. Воно дуже схоже на тверде «-ою», але зберігає м'якість основи. Ми кажемо «синьою» або «домашньою». Наприклад: «Вона малює картину синьою ручкою» *(She is drawing a picture with a blue pen)*. The soft sign «ь» specifically shows that the consonant before it must remain soft when pronounced. This is an important distinction from the hard ending «-ою». В українських школах діти вивчають ці граматичні правила у четвертому класі. Для тих, хто вивчає українську як іноземну, дуже важливо чітко запам'ятати ці базові патерни. Here is a quick structural summary of the patterns for L2 learners. For masculine and neuter adjectives, use **-им** for hard stems and **-ім** for soft stems. For feminine adjectives, use **-ою** for hard stems and **-ьою** for soft stems. Давайте порівняємо ці форми на живій практиці. Ми можемо довго розмовляти «з добрим сусідом» *(with a kind neighbor)* — це тверда група. Або ми розмовляємо «з давнім знайомим» *(with an old acquaintance)* — це м'яка група. Practice these adjective and noun pairings together frequently to make them sound completely natural in your own speech. <!-- INJECT_ACTIVITY: fill-in, Add correct Instrumental adjective endings to complete noun phrases, 8 items -->
+has a masculine or neuter gender, we add the ending -им to the hard stem. For example, the dictionary word "big" turns into "великим". We often communicate with a new friend or walk under a high sky. This sound is characteristic of the Instrumental case of the masculine gender.* :::info **Grammar box** Prepositions like **з** (with) force the noun into the Instrumental case, and the noun then forces the adjective to follow suit. ::: For feminine nouns, adjectives in the Hard Group take the distinct ending **-ою**. This creates a rich, melodic sound that serves as a strong marker of the Instrumental case. When you hear this ending on both the adjective and the noun, you immediately understand their relationship. З іменниками жіночого роду ми використовуємо широке закінчення **-ою**. Базове слово «**гарна**» перетворюється на «гарною», а слово «стара» — на «старою». Ми часто йдемо в кіно з гарною подругою або сидимо за великою книжкою. Уся ця фраза звучить дуже ритмічно. > *With nouns of the feminine gender, we use the broad ending -ою. The base word "nice" turns into "гарною", and the word "old" into "старою". We often go to the cinema with a nice friend or sit behind a big book. This entire phrase sounds very rhythmic.* Adjectives from the Soft Group have roots ending in a soft consonant. For these adjectives, the masculine and neuter Instrumental ending shifts to **-ім**. The feminine ending becomes **-ьою**, which perfectly preserves the essential softness of the root consonant. М'яка група прикметників пропонує нам більш делікатні закінчення. Слово «синій» стає формою «синім» для чоловічого роду та «синьою» для жіночого. Ми можемо писати важливий лист синьою ручкою або милуватися спокійним синім морем. Закінчення **-ьою** надійно зберігає м'якість попереднього приголосного. > *The soft group of adjectives offers us more delicate endings. The word "blue" becomes the form "синім" for the masculine gender and "синьою" for the feminine. We can write an important letter with a blue pen or admire a calm blue sea. The ending -ьою reliably preserves the softness of the previous consonant.* :::tip **Did you know?** The feminine soft ending **-ьою** ensures words flow gracefully without harsh transitions. ::: Ukrainian school textbooks systematically introduce these exact adjective patterns to young students. The fundamental summary is straightforward: masculine and neuter adjectives end in either "-им" or "-ім", while feminine adjectives always end in either "-ою" or "-ьою". Українські школярі ретельно вивчають ці правила в молодших класах. Вони порівнюють різні групи слів, щоб побачити загальну систему. Наприклад, вони бачать різницю між фразами «з добрим **сусідом**» та «з давнім знайомим». Це порівняння допомагає інтуїтивно відчувати тверді та м'які звуки. > *Ukrainian schoolchildren carefully study these rules in the junior grades. They compare different groups of words to see the overall system. For example, they see the difference between the phrases "with a kind neighbor" and "with an old acquaintance." This comparison helps to intuitively feel hard and soft sounds.* <!-- INJECT_ACTIVITY: fill-in-adj-endings --> [fill-in, Add correct Instrumental adjective endings to complete noun phrases, 8 items]
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -551,7 +551,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 5: Late A2 (A2 M21-M50)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 3–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 60%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 60% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 55-75% Ukrainian.
 LANGUAGE ROLES:
@@ -570,18 +637,65 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] мій (my)
+- [ ] твій (your (informal))
+- [ ] наш (our)
+- [ ] ваш (your (formal/plural))
+- [ ] цей (this)
+- [ ] той (that)
+- [ ] новий (new)
+- [ ] старий (old)
+- [ ] великий (big, large)
+- [ ] гарний (nice, beautiful)
+- [ ] найкращий (the best)
+- [ ] сусід (neighbor (male))
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Присвійні та вказівні займенники (Possessive and Demonstrative Pronouns) (~550 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

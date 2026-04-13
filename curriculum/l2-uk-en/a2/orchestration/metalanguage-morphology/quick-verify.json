@@ -2,12 +2,6 @@
   "attempt": 2,
   "passed": true,
   "errors": [],
-  "warnings": [
-    {
-      "check": "TOXIC",
-      "severity": "WARNING",
-      "message": "Latin characters mixed with Cyrillic: n"
-    }
-  ],
-  "timestamp": "2026-04-08T22:04:21.096799+00:00"
+  "warnings": [],
+  "timestamp": "2026-04-11T16:36:02.109278+00:00"
 }

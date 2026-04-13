@@ -1,484 +1,432 @@
 {
-  "total_items": 178,
-  "grounded_items": 101,
+  "total_items": 230,
+  "grounded_items": 161,
   "ungrounded": [
     {
-      "word": "цікавий",
-      "exercise_type": "quiz",
-      "context": "Цей цікавий лист ... мого брата.",
-      "role": "context"
-    },
-    {
-      "word": "вони",
+      "word": "вона",
       "exercise_type": "unjumble",
-      "context": "Вони",
+      "context": "Вона",
       "role": "answer"
     },
     {
-      "word": "повернулися",
-      "exercise_type": "quiz",
-      "context": "Вони повернулися ... нового магазину.",
-      "role": "context"
-    },
-    {
-      "word": "магазину",
-      "exercise_type": "quiz",
-      "context": "Вони повернулися ... нового магазину.",
-      "role": "context"
-    },
-    {
-      "word": "чашка",
-      "exercise_type": "quiz",
-      "context": "Ця чашка чорної кави ... моєї сестри.",
-      "role": "context"
-    },
-    {
-      "word": "чорної",
-      "exercise_type": "quiz",
-      "context": "Ця чашка чорної кави ... моєї сестри.",
-      "role": "context"
-    },
-    {
-      "word": "кави",
-      "exercise_type": "quiz",
-      "context": "Ця чашка чорної кави ... моєї сестри.",
-      "role": "context"
-    },
-    {
-      "word": "моєї",
-      "exercise_type": "quiz",
-      "context": "Ця чашка чорної кави ... моєї сестри.",
-      "role": "context"
-    },
-    {
-      "word": "смачного",
-      "exercise_type": "quiz",
-      "context": "Ми підемо гуляти ... смачного обіду.",
-      "role": "context"
-    },
-    {
-      "word": "великого",
-      "exercise_type": "match-up",
-      "context": "Ми йдемо до великого...",
-      "role": "answer"
-    },
-    {
-      "word": "може",
-      "exercise_type": "quiz",
-      "context": "Вона не може читати ... нових окулярів.",
-      "role": "context"
-    },
-    {
-      "word": "нових",
-      "exercise_type": "quiz",
-      "context": "Вона не може читати ... нових окулярів.",
-      "role": "context"
-    },
-    {
-      "word": "вільного",
+      "word": "вийшла",
       "exercise_type": "unjumble",
-      "context": "вільного",
+      "context": "вийшла",
       "role": "answer"
     },
     {
-      "word": "живемо",
+      "word": "п'є",
       "exercise_type": "fill-in",
-      "context": "Ми живемо навпроти старого ____.",
+      "context": "Він п'є каву без ____ молока.",
       "role": "context"
     },
     {
-      "word": "цьому",
+      "word": "нової",
       "exercise_type": "fill-in",
-      "context": "У цьому місті немає чистої ____.",
+      "context": "нової",
+      "role": "answer"
+    },
+    {
+      "word": "дві",
+      "exercise_type": "match-up",
+      "context": "Залишилося дві години.",
       "role": "context"
     },
     {
-      "word": "місті",
+      "word": "години",
+      "exercise_type": "match-up",
+      "context": "Залишилося дві години.",
+      "role": "context"
+    },
+    {
+      "word": "йдіть",
+      "exercise_type": "match-up",
+      "context": "Йдіть прямо, вона навпроти банку.",
+      "role": "context"
+    },
+    {
+      "word": "ваша",
+      "exercise_type": "match-up",
+      "context": "Ось ваша кава, з вас сто гривень.",
+      "role": "context"
+    },
+    {
+      "word": "кава",
+      "exercise_type": "match-up",
+      "context": "Ось ваша кава, з вас сто гривень.",
+      "role": "context"
+    },
+    {
+      "word": "туди",
+      "exercise_type": "match-up",
+      "context": "Ні, без квитка туди не можна.",
+      "role": "context"
+    },
+    {
+      "word": "на",
       "exercise_type": "fill-in",
-      "context": "У цьому місті немає чистої ____.",
+      "context": "На вулиці багато ____.",
       "role": "context"
     },
     {
-      "word": "україна",
-      "exercise_type": "error-correction",
-      "context": "Україна потребує допомогу.",
+      "word": "вулиці",
+      "exercise_type": "fill-in",
+      "context": "На вулиці багато ____.",
       "role": "context"
     },
     {
-      "word": "потребує",
-      "exercise_type": "error-correction",
-      "context": "Україна потребує допомогу.",
+      "word": "неї",
+      "exercise_type": "fill-in",
+      "context": "У неї є п'ять ____.",
       "role": "context"
     },
     {
-      "word": "театр",
-      "exercise_type": "error-correction",
-      "context": "Він прийшов у театр без квиток.",
+      "word": "класі",
+      "exercise_type": "fill-in",
+      "context": "У класі багато ____.",
       "role": "context"
     },
     {
-      "word": "чекаємо",
-      "exercise_type": "error-correction",
-      "context": "Ми чекаємо свого друга після робота.",
+      "word": "кімнаті",
+      "exercise_type": "fill-in",
+      "context": "У цій кімнаті немає ____.",
       "role": "context"
     },
     {
-      "word": "свого",
-      "exercise_type": "error-correction",
-      "context": "Ми чекаємо свого друга після робота.",
+      "word": "знаємо",
+      "exercise_type": "fill-in",
+      "context": "Ми знаємо кілька українських ____.",
       "role": "context"
     },
     {
-      "word": "робота",
-      "exercise_type": "error-correction",
-      "context": "Ми чекаємо свого друга після робота.",
+      "word": "українських",
+      "exercise_type": "fill-in",
+      "context": "Ми знаємо кілька українських ____.",
       "role": "context"
     },
     {
-      "word": "пляшку",
-      "exercise_type": "error-correction",
-      "context": "Дайте мені, будь ласка, пляшку вода.",
+      "word": "працював",
+      "exercise_type": "fill-in",
+      "context": "Я працював багато ____.",
       "role": "context"
     },
     {
-      "word": "вода",
-      "exercise_type": "error-correction",
-      "context": "Дайте мені, будь ласка, пляшку вода.",
+      "word": "гуляє",
+      "exercise_type": "fill-in",
+      "context": "У парку гуляє п'ять ____.",
       "role": "context"
     },
     {
-      "word": "сир",
-      "exercise_type": "error-correction",
-      "context": "Скільки коштує кілограм сир?",
+      "word": "тут",
+      "exercise_type": "fill-in",
+      "context": "Тут чекає велика група ____.",
       "role": "context"
     },
     {
-      "word": "сьогодні",
-      "exercise_type": "error-correction",
-      "context": "На вулиці сьогодні багато люди.",
+      "word": "чекає",
+      "exercise_type": "fill-in",
+      "context": "Тут чекає велика група ____.",
       "role": "context"
     },
     {
-      "word": "люди",
-      "exercise_type": "error-correction",
-      "context": "На вулиці сьогодні багато люди.",
+      "word": "велика",
+      "exercise_type": "fill-in",
+      "context": "Тут чекає велика група ____.",
       "role": "context"
     },
     {
-      "word": "потрібні",
-      "exercise_type": "match-up",
-      "context": "Мені потрібні таблетки від...",
-      "role": "answer"
-    },
-    {
-      "word": "аптека",
-      "exercise_type": "match-up",
-      "context": "Аптека знаходиться навпроти...",
-      "role": "answer"
-    },
-    {
-      "word": "конкретні",
-      "exercise_type": "group-sort",
-      "context": "Закінчення -а / -я (конкретні об'єкти)",
+      "word": "центрі",
+      "exercise_type": "fill-in",
+      "context": "У центрі міста десять ____.",
       "role": "context"
     },
     {
-      "word": "об'єкти",
-      "exercise_type": "group-sort",
-      "context": "Закінчення -а / -я (конкретні об'єкти)",
+      "word": "міста",
+      "exercise_type": "fill-in",
+      "context": "У центрі міста десять ____.",
       "role": "context"
     },
     {
-      "word": "зошита",
-      "exercise_type": "group-sort",
-      "context": "зошита",
-      "role": "answer"
-    },
-    {
-      "word": "паспорта",
-      "exercise_type": "group-sort",
-      "context": "паспорта",
-      "role": "answer"
-    },
-    {
-      "word": "абстрактні",
-      "exercise_type": "group-sort",
-      "context": "Закінчення -у / -ю (абстрактні, речовини)",
-      "role": "context"
-    },
-    {
-      "word": "речовини",
-      "exercise_type": "group-sort",
-      "context": "Закінчення -у / -ю (абстрактні, речовини)",
-      "role": "context"
-    },
-    {
-      "word": "чаю",
-      "exercise_type": "group-sort",
-      "context": "чаю",
-      "role": "answer"
-    },
-    {
-      "word": "нашій",
-      "exercise_type": "quiz",
-      "context": "На нашій вулиці живе багато ...",
-      "role": "context"
-    },
-    {
-      "word": "живе",
-      "exercise_type": "quiz",
-      "context": "На нашій вулиці живе багато ...",
-      "role": "context"
-    },
-    {
-      "word": "вже",
-      "exercise_type": "quiz",
-      "context": "Вона прочитала вже п'ять ...",
-      "role": "context"
-    },
-    {
-      "word": "рецепта",
-      "exercise_type": "quiz",
-      "context": "Для цього рецепта треба кілька зелених ...",
-      "role": "context"
-    },
-    {
-      "word": "треба",
-      "exercise_type": "quiz",
-      "context": "Для цього рецепта треба кілька зелених ...",
-      "role": "context"
-    },
-    {
-      "word": "зелених",
-      "exercise_type": "quiz",
-      "context": "Для цього рецепта треба кілька зелених ...",
-      "role": "context"
-    },
-    {
-      "word": "міського",
+      "word": "цієї",
       "exercise_type": "unjumble",
-      "context": "міського",
+      "context": "цієї",
       "role": "answer"
     },
     {
-      "word": "твердого",
-      "exercise_type": "unjumble",
-      "context": "твердого",
+      "word": "лікарів",
+      "exercise_type": "group-sort",
+      "context": "лікарів",
       "role": "answer"
     },
     {
-      "word": "тільки",
-      "exercise_type": "unjumble",
-      "context": "тільки",
+      "word": "кілограмів",
+      "exercise_type": "group-sort",
+      "context": "кілограмів",
       "role": "answer"
     },
     {
-      "word": "києва",
-      "exercise_type": "unjumble",
-      "context": "Києва",
-      "role": "answer"
-    },
-    {
-      "word": "приїхали",
-      "exercise_type": "unjumble",
-      "context": "приїхали",
-      "role": "answer"
-    },
-    {
-      "word": "навпроти'",
-      "exercise_type": "true-false",
-      "context": "Прийменники 'навпроти' та 'біля' вимагають родового відмінка",
+      "word": "нульове",
+      "exercise_type": "group-sort",
+      "context": "нульове закінчення (-ø)",
       "role": "context"
     },
     {
-      "word": "біля'",
+      "word": "прийменника",
       "exercise_type": "true-false",
-      "context": "Прийменники 'навпроти' та 'біля' вимагають родового відмінка",
-      "role": "context"
-    },
-    {
-      "word": "вимагають",
-      "exercise_type": "true-false",
-      "context": "Прийменники 'навпроти' та 'біля' вимагають родового відмінка",
-      "role": "context"
-    },
-    {
-      "word": "родового",
-      "exercise_type": "true-false",
-      "context": "Прийменники 'навпроти' та 'біля' вимагають родового відмінка",
-      "role": "context"
-    },
-    {
-      "word": "відмінка",
-      "exercise_type": "true-false",
-      "context": "Прийменники 'навпроти' та 'біля' вимагають родового відмінка",
-      "role": "context"
-    },
-    {
-      "word": "слово",
-      "exercise_type": "true-false",
-      "context": "Слово 'час' у родовому відмінку має закінчення -а (часа).",
-      "role": "context"
-    },
-    {
-      "word": "час'",
-      "exercise_type": "true-false",
-      "context": "Слово 'час' у родовому відмінку має закінчення -а (часа).",
-      "role": "context"
-    },
-    {
-      "word": "родовому",
-      "exercise_type": "true-false",
-      "context": "Слово 'час' у родовому відмінку має закінчення -а (часа).",
-      "role": "context"
-    },
-    {
-      "word": "відмінку",
-      "exercise_type": "true-false",
-      "context": "Слово 'час' у родовому відмінку має закінчення -а (часа).",
-      "role": "context"
-    },
-    {
-      "word": "має",
-      "exercise_type": "true-false",
-      "context": "Слово 'час' у родовому відмінку має закінчення -а (часа).",
-      "role": "context"
-    },
-    {
-      "word": "часа",
-      "exercise_type": "true-false",
-      "context": "Слово 'час' у родовому відмінку має закінчення -а (часа).",
-      "role": "context"
-    },
-    {
-      "word": "дієслово",
-      "exercise_type": "true-false",
-      "context": "Дієслово 'потребувати' (to need) завжди використовується зі ",
-      "role": "context"
-    },
-    {
-      "word": "потребувати'",
-      "exercise_type": "true-false",
-      "context": "Дієслово 'потребувати' (to need) завжди використовується зі ",
-      "role": "context"
-    },
-    {
-      "word": "завжди",
-      "exercise_type": "true-false",
-      "context": "Дієслово 'потребувати' (to need) завжди використовується зі ",
-      "role": "context"
-    },
-    {
-      "word": "використовується",
-      "exercise_type": "true-false",
-      "context": "Дієслово 'потребувати' (to need) завжди використовується зі ",
-      "role": "context"
-    },
-    {
-      "word": "знахідним",
-      "exercise_type": "true-false",
-      "context": "Дієслово 'потребувати' (to need) завжди використовується зі ",
-      "role": "context"
-    },
-    {
-      "word": "відмінком",
-      "exercise_type": "true-false",
-      "context": "Дієслово 'потребувати' (to need) завжди використовується зі ",
-      "role": "context"
-    },
-    {
-      "word": "слова",
-      "exercise_type": "true-false",
-      "context": "Після слова 'багато' ми використовуємо іменники в родовому в",
-      "role": "context"
-    },
-    {
-      "word": "багато'",
-      "exercise_type": "true-false",
-      "context": "Після слова 'багато' ми використовуємо іменники в родовому в",
+      "context": "Після прийменника «без» завжди використовуємо родовий відмін",
       "role": "context"
     },
     {
       "word": "використовуємо",
       "exercise_type": "true-false",
-      "context": "Після слова 'багато' ми використовуємо іменники в родовому в",
+      "context": "Після прийменника «без» завжди використовуємо родовий відмін",
       "role": "context"
     },
     {
-      "word": "іменники",
+      "word": "слово",
       "exercise_type": "true-false",
-      "context": "Після слова 'багато' ми використовуємо іменники в родовому в",
+      "context": "Слово «цукор» у родовому відмінку має форму «цукра».",
       "role": "context"
     },
     {
-      "word": "від'",
+      "word": "родовому",
       "exercise_type": "true-false",
-      "context": "Слова 'від' та 'з' — це прийменники, які вказують на напрямо",
+      "context": "Слово «цукор» у родовому відмінку має форму «цукра».",
       "role": "context"
     },
     {
-      "word": "з'",
+      "word": "відмінку",
       "exercise_type": "true-false",
-      "context": "Слова 'від' та 'з' — це прийменники, які вказують на напрямо",
+      "context": "Слово «цукор» у родовому відмінку має форму «цукра».",
       "role": "context"
     },
     {
-      "word": "які",
+      "word": "має",
       "exercise_type": "true-false",
-      "context": "Слова 'від' та 'з' — це прийменники, які вказують на напрямо",
-      "role": "context"
-    },
-    {
-      "word": "вказують",
-      "exercise_type": "true-false",
-      "context": "Слова 'від' та 'з' — це прийменники, які вказують на напрямо",
-      "role": "context"
-    },
-    {
-      "word": "об'єкта",
-      "exercise_type": "true-false",
-      "context": "Слова 'від' та 'з' — це прийменники, які вказують на напрямо",
-      "role": "context"
-    },
-    {
-      "word": "множині",
-      "exercise_type": "true-false",
-      "context": "У множині слово 'люди' має форму 'людей' у родовому відмінку",
-      "role": "context"
-    },
-    {
-      "word": "люди'",
-      "exercise_type": "true-false",
-      "context": "У множині слово 'люди' має форму 'людей' у родовому відмінку",
+      "context": "Слово «цукор» у родовому відмінку має форму «цукра».",
       "role": "context"
     },
     {
       "word": "форму",
       "exercise_type": "true-false",
-      "context": "У множині слово 'люди' має форму 'людей' у родовому відмінку",
+      "context": "Слово «цукор» у родовому відмінку має форму «цукра».",
       "role": "context"
     },
     {
-      "word": "людей'",
+      "word": "цукра",
       "exercise_type": "true-false",
-      "context": "У множині слово 'люди' має форму 'людей' у родовому відмінку",
+      "context": "Слово «цукор» у родовому відмінку має форму «цукра».",
+      "role": "context"
+    },
+    {
+      "word": "може",
+      "exercise_type": "true-false",
+      "context": "Слово «стіл» у родовому відмінку може мати форму «стола».",
+      "role": "context"
+    },
+    {
+      "word": "мати",
+      "exercise_type": "true-false",
+      "context": "Слово «стіл» у родовому відмінку може мати форму «стола».",
+      "role": "context"
+    },
+    {
+      "word": "заперечення",
+      "exercise_type": "true-false",
+      "context": "Заперечення «немає» вимагає називного відмінка.",
+      "role": "context"
+    },
+    {
+      "word": "вимагає",
+      "exercise_type": "true-false",
+      "context": "Заперечення «немає» вимагає називного відмінка.",
+      "role": "context"
+    },
+    {
+      "word": "називного",
+      "exercise_type": "true-false",
+      "context": "Заперечення «немає» вимагає називного відмінка.",
+      "role": "context"
+    },
+    {
+      "word": "відмінка",
+      "exercise_type": "true-false",
+      "context": "Заперечення «немає» вимагає називного відмінка.",
+      "role": "context"
+    },
+    {
+      "word": "числівники",
+      "exercise_type": "true-false",
+      "context": "Числівники від 5 і більше вимагають родового відмінка множин",
+      "role": "context"
+    },
+    {
+      "word": "більше",
+      "exercise_type": "true-false",
+      "context": "Числівники від 5 і більше вимагають родового відмінка множин",
+      "role": "context"
+    },
+    {
+      "word": "вимагають",
+      "exercise_type": "true-false",
+      "context": "Числівники від 5 і більше вимагають родового відмінка множин",
+      "role": "context"
+    },
+    {
+      "word": "родового",
+      "exercise_type": "true-false",
+      "context": "Числівники від 5 і більше вимагають родового відмінка множин",
+      "role": "context"
+    },
+    {
+      "word": "множини",
+      "exercise_type": "true-false",
+      "context": "Числівники від 5 і більше вимагають родового відмінка множин",
+      "role": "context"
+    },
+    {
+      "word": "дієслово",
+      "exercise_type": "true-false",
+      "context": "Дієслово «потребувати» вимагає після себе родового відмінка.",
+      "role": "context"
+    },
+    {
+      "word": "потребувати",
+      "exercise_type": "true-false",
+      "context": "Дієслово «потребувати» вимагає після себе родового відмінка.",
+      "role": "context"
+    },
+    {
+      "word": "себе",
+      "exercise_type": "true-false",
+      "context": "Дієслово «потребувати» вимагає після себе родового відмінка.",
+      "role": "context"
+    },
+    {
+      "word": "означає",
+      "exercise_type": "true-false",
+      "context": "Прийменник «навпроти» означає рух усередину.",
+      "role": "context"
+    },
+    {
+      "word": "рух",
+      "exercise_type": "true-false",
+      "context": "Прийменник «навпроти» означає рух усередину.",
+      "role": "context"
+    },
+    {
+      "word": "усередину",
+      "exercise_type": "true-false",
+      "context": "Прийменник «навпроти» означає рух усередину.",
+      "role": "context"
+    },
+    {
+      "word": "слова",
+      "exercise_type": "true-false",
+      "context": "Множина слова «гроші» у родовому відмінку — «грошей».",
+      "role": "context"
+    },
+    {
+      "word": "гроші",
+      "exercise_type": "true-false",
+      "context": "Множина слова «гроші» у родовому відмінку — «грошей».",
+      "role": "context"
+    },
+    {
+      "word": "прикметники",
+      "exercise_type": "true-false",
+      "context": "Прикметники чоловічого роду в родовому відмінку мають закінч",
+      "role": "context"
+    },
+    {
+      "word": "чоловічого",
+      "exercise_type": "true-false",
+      "context": "Прикметники чоловічого роду в родовому відмінку мають закінч",
+      "role": "context"
+    },
+    {
+      "word": "роду",
+      "exercise_type": "true-false",
+      "context": "Прикметники чоловічого роду в родовому відмінку мають закінч",
+      "role": "context"
+    },
+    {
+      "word": "мають",
+      "exercise_type": "true-false",
+      "context": "Прикметники чоловічого роду в родовому відмінку мають закінч",
+      "role": "context"
+    },
+    {
+      "word": "прийменники",
+      "exercise_type": "true-false",
+      "context": "Прийменники «з» і «до» є антонімами напрямку.",
+      "role": "context"
+    },
+    {
+      "word": "антонімами",
+      "exercise_type": "true-false",
+      "context": "Прийменники «з» і «до» є антонімами напрямку.",
+      "role": "context"
+    },
+    {
+      "word": "напрямку",
+      "exercise_type": "true-false",
+      "context": "Прийменники «з» і «до» є антонімами напрямку.",
+      "role": "context"
+    },
+    {
+      "word": "старий",
+      "exercise_type": "error-correction",
+      "context": "Я читаю сторінку моєї старий книги.",
+      "role": "context"
+    },
+    {
+      "word": "чекаємо",
+      "exercise_type": "error-correction",
+      "context": "Ми чекаємо наших новий друзів.",
+      "role": "context"
+    },
+    {
+      "word": "наших",
+      "exercise_type": "error-correction",
+      "context": "Ми чекаємо наших новий друзів.",
+      "role": "context"
+    },
+    {
+      "word": "яблуко",
+      "exercise_type": "error-correction",
+      "context": "Дайте два кілограми яблуко.",
+      "role": "context"
+    },
+    {
+      "word": "київ",
+      "exercise_type": "error-correction",
+      "context": "Він приїхав з Київ.",
+      "role": "context"
+    },
+    {
+      "word": "дім",
+      "exercise_type": "error-correction",
+      "context": "Діти граються коло дім.",
+      "role": "context"
+    },
+    {
+      "word": "молоко",
+      "exercise_type": "error-correction",
+      "context": "Я п'ю каву без молоко.",
       "role": "context"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 12,
-    "tested_in_exercises": 1,
+    "tested_in_exercises": 5,
     "not_tested": [
       "вибрати",
       "виправити",
       "впізнати",
-      "відмінок",
-      "множина",
       "однина",
       "перевірка",
       "помилка",
-      "прийменник",
-      "родовий",
       "узгодження"
     ]
   },

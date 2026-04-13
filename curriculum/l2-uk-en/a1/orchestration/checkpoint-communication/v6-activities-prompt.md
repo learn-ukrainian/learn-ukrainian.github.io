@@ -1,4 +1,4 @@
-<!-- version: 1.1.0 | updated: 2026-03-31 -->
+<!-- version: 1.2.0 | updated: 2026-04-12 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -11,6 +11,35 @@ Generate an `activities/checkpoint-communication.yaml` file for module **47: Che
 
 ---
 
+## ⚠️ HARD COUNT TARGETS — READ TWICE
+
+These are the binding numerical contracts for THIS module. The audit will FAIL if you fall short.
+
+| Bucket | Min | Max | Notes |
+|---|---|---|---|
+| Total activities | 8 | 8+ | inline + workbook combined |
+| Inline (lesson tab) | 3 | 5 | one per `<!-- INJECT_ACTIVITY -->` marker, see below |
+| Workbook (Зошит tab) | 5 | 8 | extended practice |
+| Items per activity | 10 | — | each activity must have at least 10 items (unless its type cap is lower — see Activity Type Reference below) |
+
+**You MUST ship at least 3 inline activities AND at least 5 workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+
+**Type diversity is required.** The module (inline + workbook combined) MUST use at least **0** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level. (If `0` is `0`, the audit profile for this level does not enforce type diversity — but variety still produces a better lesson, so aim for 4+ types when the workbook allows it.)
+
+---
+
+## Allowed types for THIS level
+
+- **Inline (lesson) types:** match-up, quiz, fill-in, true-false, classify, group-sort
+- **Inline priority (preferred):** match-up, fill-in, quiz
+- **Workbook types:** fill-in, match-up, group-sort, unjumble, quiz, true-false, classify, observe, phrase-table, odd-one-out, anagram
+- **Workbook priority (preferred):** fill-in, match-up, group-sort, unjumble, anagram
+- **FORBIDDEN at this level:** image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables, cloze, error-correction, mark-the-words, translate, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, highlight-morphemes, grammar-identify, select
+
+Pick from the allowed list. Lean heavily on the priority lists. Do not use any forbidden type — the build will reject it.
+
+---
+
 ## Inline vs Workbook Split
 
 Activities have two placement categories:
@@ -19,7 +48,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Rule of thumb:** inline = 2-3 quick checks after key teaching points. Workbook = 4-8 deeper practice exercises covering the full topic.
+**Rule of thumb:** inline = 3–5 quick checks after key teaching points. Workbook = 5–8 deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
 
 ---
 
@@ -27,10 +56,10 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: vocative-imperative-practice -->`
-- `<!-- INJECT_ACTIVITY: conjunctions-quiz -->`
-- `<!-- INJECT_ACTIVITY: complex-sentences-fill-in -->`
-- `<!-- INJECT_ACTIVITY: holiday-greeting-match -->`
+- `<!-- INJECT_ACTIVITY: fill-in-vocative-imperative -->`
+- `<!-- INJECT_ACTIVITY: quiz-conjunctions -->`
+- `<!-- INJECT_ACTIVITY: fill-in-complex-sentences -->`
+- `<!-- INJECT_ACTIVITY: quiz-holiday-match -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -75,92 +104,122 @@ required: []
 <module_content>
 ## Що ми знаємо? (What Do We Know?)
 
-Welcome to the A1.7 Checkpoint. This module serves as your "Communication Hub", where we integrate all the social skills you have acquired in the previous five lessons. Language is a tool for connection, and in a real-world scenario, you do not just recite vocabulary; you use it to achieve a specific goal. Your mission in this module is practical: you are helping your friends organize a lively school event. This task requires addressing people directly, giving clear orders or polite requests, and explaining your plans with logical reasons.
+> **Друзі, привіт! Це наш новий етап. Ми знаємо багато слів. Ми розуміємо українську граматику. Тепер ми говоримо разом.**
+> *Friends, hi! This is our new stage. We know many words. We understand Ukrainian grammar. Now we speak together.*
 
-:::note
-**Checkpoint Modules**
-A Checkpoint module does not introduce new grammar rules. Instead, it tests your ability to combine what you already know into natural, flowing conversation.
-:::
+When you first started learning Ukrainian, your sentences were short and factual. You learned to identify objects, describe basic states, and ask simple questions. Over the past five modules, you have acquired the essential building blocks of interpersonal communication. We are now shifting our focus from isolated grammar rules to continuous, real-life conversational flow. 
 
-Do you remember how to call a friend by name? You cannot just say their name in the basic dictionary form. You must adapt it using the vocative case, such as **Тарасе!** (Taras!) or **Олено!** (Olena!). Do you remember how to ask for help? You need the commanding forms of the imperative mood, such as **Дай!** (Give!) or **Принеси!** (Bring!). Can you explain your reasons clearly? You need conjunctions to link your thoughts, such as **бо я не знаю...** (because I do not know...) or **тому що...** (because...). Finally, we integrate the cultural context of holiday greetings, such as **З Різдвом!** (Merry Christmas!), to ensure your speech is authentic. These elements combine to build real, effective conversations.
+The ability to link thoughts and address people directly marks the difference between reciting phrases and actually speaking the language. Before we move forward, let us verify your current foundation. 
+
+Can you confidently do the following?
+- Can you call someone by name using the vocative case (**Олено!**, **Тарасе!**)?
+- Can you give instructions and make requests using the imperative mood (**Читай!**, **Дайте!**)?
+- Can you logically connect ideas with coordinating conjunctions (**і**, **а**, **але**, **бо**)?
+- Can you build complex sentences with subordinating words (**що**, **де**, **коли**)?
+- Can you name Ukrainian holidays and greet people appropriately (**З Різдвом!**)?
+
+If you understand these concepts, you are ready to hold a natural, multi-turn conversation in Ukrainian.
 
 ## Читання (Reading Practice)
 
-Observe how these essential communication tools work together in a single, natural flow. Imagine the scene: Olena is contacting her friend Taras to plan a community Christmas gathering at the school. They are organizing a small fair, and she needs to coordinate the details quickly. She needs him to arrive early, bring specific items, and she needs to explain the reasons behind her requests clearly. This short reading text demonstrates how the vocative case, the imperative mood, and linking conjunctions function simultaneously in real Ukrainian communication.
+In real life, we rarely use just one grammar rule at a time. A simple text message to a friend combines greetings, direct address, statements of fact, requests, and reasons. 
 
-Read the message below carefully. Pay attention to how Olena builds her message and connects her ideas using short, precise sentences.
+Read this message from Olena to Taras. She is organizing a gathering for the upcoming winter holidays.
 
-**Лист Олени** (Olena's letter)
+> **Тарасе, привіт! Ти пам'ятаєш, що скоро Різдво? Я думаю, що ми маємо святкувати разом. Прийди до мене в суботу! Принеси, будь ласка, кутю, бо я не маю часу готувати. Скажи, коли ти будеш.**
+> *Taras, hi! Do you remember that Christmas is soon? I think that we must celebrate together. Come to me on Saturday! Bring kutia, please, because I do not have time to cook. Tell me when you will be here.*
 
-* **Тарасе, привіт!** (Taras, hello!)
-* **Прийди раніше, будь ласка.** (Come earlier, please.)
-* **Принеси плакати і квитки.** (Bring the posters and tickets.)
-* **Я знаю, що ти маєш напої.** (I know that you have the drinks.)
-* **Але нам потрібні стільці, бо людей буде багато.** (But we need chairs, because there will be many people.)
-* **Я хочу, щоб ми святкували Різдво разом.** (I want us to celebrate Christmas together.)
-* **Скажи, коли ти будеш у школі.** (Tell me when you will be at school.)
+This short text naturally chains together several important communication tools. It begins with direct address using the vocative case (**Тарасе**). It connects thoughts using a subordinate clause (**що скоро Різдво**). It includes polite commands using the imperative mood (**Прийди**, **Принеси**). Finally, it provides a logical reason using a conjunction (**бо я не маю часу**). This creates a complete, natural communicative loop.
 
-Notice the specific nouns she uses for the event: **плакат** (poster), **квиток** (ticket), **напій** (drink), and **стілець** (chair). She begins with the vocative **Тарасе!** to capture his attention immediately. She relies on the imperative verb forms **прийди** (come), **принеси** (bring), and **скажи** (tell) to issue direct instructions. Finally, she structures her thoughts smoothly using the conjunctions **і** (and), **що** (that), **але** (but), **бо** (because), and **коли** (when). Every grammatical tool serves a clear purpose.
+:::note
+**Cultural Context: Kutia**
+**Кутя** (kutia) is a traditional sweet grain pudding served on Christmas Eve in Ukraine. It is the most important dish of the holiday meal, making it a very natural topic of conversation when planning a winter gathering.
+:::
 
 ## Граматика (Grammar Summary)
 
-In Ukraine, calling someone by their name in the basic Nominative case (like "Оксана!") sounds like you are reading a list. For real communication, you must use the Vocative case. Review the three main patterns for A1 names. Feminine names ending in **-а** change to **-о**: **Оксана** becomes **Оксано**, and **Олена** becomes **Олено**. Masculine names ending in a hard consonant add **-е**: **Петро** becomes **Петре**, **Тарас** becomes **Тарасе**, and **друг** (friend) becomes **друже**. Names with a soft ending or ending in **-й** change to **-ю**: **Андрій** becomes **Андрію**, and **матуся** (mommy) becomes **матусю**.
+> **Мамо, іди сюди! Я читаю книгу, а ти спиш. Я знаю, де лежить твій телефон. Зі святом тебе!**
+> *Mom, come here! I am reading a book, and you are sleeping. I know where your phone lies. Happy holiday to you!*
 
-When you ask someone to do something, you rely on the Imperative mood. For informal situations speaking to one person (**ти**), use forms like **читай** (read), **пиши** (write), and **роби** (do). For formal or plural situations (**ви**), add the plural ending: **читайте** (read), **пишіть** (write), and **робіть** (do). Always add **будь ласка** (please) for politeness. Notice the difference between the informal **Дай!** (Give!) and the formal **Дайте!** (Give!).
+When you speak directly to a person, you must change the ending of their name. This is the **Кличний відмінок** (Vocative case). It is a mandatory feature of polite and natural Ukrainian speech. If you use the standard dictionary form to call someone, it sounds abrupt. Feminine names ending in **-а** change to **-о**. Masculine names ending in a hard consonant add **-е**, while those ending in a soft consonant take **-ю**. Once you have their attention, you can ask them to do something using the imperative form.
 
-<!-- INJECT_ACTIVITY: vocative-imperative-practice -->
+- **Олена → Олено, читай!** (Olena → Olena, read!)
+- **Тарас → Тарасе, дай!** (Taras → Taras, give!)
+- **Андрій → Андрію, слухай!** (Andriy → Andriy, listen!)
+- **Мама → Мамо, читайте!** (Mom → Mom, read! [formal/plural])
+- **Брат → Брате, дайте!** (Brother → Brother, give! [formal/plural])
 
-To make your speech flow naturally, you need coordinating conjunctions: **і** or **та** (and) for addition, **а** (and/but) for mild contrast, **але** (but) for strong contrast, and **бо** or **тому що** (because) for a reason. Use **а** when comparing two different things.
+<!-- INJECT_ACTIVITY: fill-in-vocative-imperative -->
 
-* **Мій чай гарячий, а твій холодний.** (My tea is hot, and yours is cold.)
+After getting someone's attention, you often need to explain your situation. Coordinating conjunctions connect simple sentences. Use **і** or **та** for addition. Use **а** for mild contrast and **але** for strong contrast. When you need to provide a reason, use **бо** (because).
 
-<!-- INJECT_ACTIVITY: conjunctions-quiz -->
+- **Брат і сестра читають.** (Brother and sister are reading.)
+- **Я працюю, а ти відпочиваєш.** (I am working, and you are resting.)
+- **Я хочу гуляти, але йде дощ.** (I want to walk, but it is raining.)
+- **Я сплю, бо вже пізно.** (I am sleeping, because it is already late.)
+- **Ми вдома, бо йде сніг.** (We are at home, because it is snowing.)
 
-You also need subordinating conjunctions to build complex sentences: **що** (that), **де** (where), and **коли** (when). 
+<!-- INJECT_ACTIVITY: quiz-conjunctions -->
 
-:::caution
-**The Mandatory Comma**
-In English, the comma before "because" or "that" is optional or stylistic. In Ukrainian, placing a comma before **що**, **де**, **коли**, and **бо** is a strict grammatical rule. Never skip it!
+To build more complex thoughts, you need subordinating conjunctions like **що** (that), **де** (where), and **коли** (when). 
+
+:::tip
+**The Comma Rule**
+English speakers often omit commas before words like "that" or "because". In Ukrainian, punctuation is strictly grammatical. You must always place a comma before subordinating conjunctions like **що**, **де**, and **коли**, as well as before coordinating conjunctions like **а**, **але**, and **бо**.
 :::
 
-* **Я думаю, що...** (I think that...)
-* **Вона знає, де...** (She knows where...)
-* **Скажи, коли...** (Tell me when...)
+- **Я знаю, що ти тут.** (I know that you are here.)
+- **Ти бачиш, що це дім.** (You see that this is a house.)
+- **Я знаю, де ти живеш.** (I know where you live.)
+- **Скажи, де мій телефон.** (Tell me where my phone is.)
+- **Скажи, коли ти вільна.** (Tell me when you are free.)
 
-<!-- INJECT_ACTIVITY: complex-sentences-fill-in -->
+<!-- INJECT_ACTIVITY: fill-in-complex-sentences -->
+
+Finally, you apply these structures to social situations, such as holiday celebrations. Remember the structure **З** + Instrumental case for congratulations.
+
+- **З Різдвом!** (Merry Christmas!)
+- **З Великоднем!** (Happy Easter!)
+- **З днем народження!** (Happy Birthday!)
+- **Зі святом!** (Happy holiday!)
+- **З Новим роком!** (Happy New Year!)
 
 ## Діалог (Connected Dialogue)
 
-Now Taras and Olena are finalizing their plans for the holiday gathering. They need to confirm the time, the place, and exactly what items to bring. Listen to how they use all the grammar rules we just reviewed in a realistic, connected conversation.
+Applying these grammar rules in real time is the ultimate goal of this checkpoint. Reading a textbook rule is one thing, but producing the correct ending while thinking about your weekend plans requires practice. 
 
-> **Тарас:** Олено, привіт! Ти знаєш, що скоро Різдво? *(Olena, hello! Do you know that Christmas is soon?)*
+Read the following conversation. Olena and Taras are planning a holiday gathering with friends. They must coordinate their schedules, delegate tasks, and express traditional holiday wishes.
+
+> **Тарас:** Олено, привіт! Ти знаєш, що скоро Різдво? *(Olena, hi! Do you know that Christmas is soon?)*
 > **Олена:** Так, Тарасе! Я думаю, що ми можемо святкувати разом. *(Yes, Taras! I think that we can celebrate together.)*
 > **Тарас:** Добре! Скажи, коли ти вільна, бо я хочу запросити друзів. *(Good! Tell me when you are free, because I want to invite friends.)*
 > **Олена:** Я вільна двадцять четвертого. Але я не знаю, де ми будемо. *(I am free on the twenty-fourth. But I do not know where we will be.)*
 > **Тарас:** Ходімо до мене! Принеси кутю, будь ласка. *(Let's go to my place! Bring kutia, please.)*
 > **Олена:** Добре, принесу! І я знаю, де купити гарні свічки. З Різдвом! *(Good, I will bring it! And I know where to buy beautiful candles. Merry Christmas!)*
 
-When Ukrainians celebrate holidays, they use a specific grammatical formula. The greeting always begins with the preposition **З** (With) followed by the holiday name in the Instrumental case. For example, you say **З Різдвом!** (Merry Christmas!), **З Великоднем!** (Happy Easter!), and **З Новим роком!** (Happy New Year!). 
+Notice how the speakers negotiate their plans using complex sentences (**Скажи, коли ти вільна**). They handle contrast and uncertainty naturally (**Але я не знаю...**). When they assign responsibilities, they use polite requests (**Принеси кутю, будь ласка**). The vocabulary is practical and goal-oriented.
 
-:::tip
-**Responding to Greetings**
-If you forget the specific greeting for a holiday, the phrase **Навзаєм!** (Likewise!) or **Вас також!** (You too!) is your universal, safe response to almost any positive wish in Ukrainian.
+:::caution
+**Polite Commands**
+The imperative mood is used to give commands, but in Ukrainian culture, direct commands among friends are not considered rude if spoken with a warm tone. However, always remember to add **будь ласка** (please) when asking someone to bring something or perform a specific task, as Taras does when asking for the **кутя**.
 :::
 
-<!-- INJECT_ACTIVITY: holiday-greeting-match -->
+<!-- INJECT_ACTIVITY: quiz-holiday-match -->
 
 ## Підсумок — Summary
 
-You have successfully reached the end of the A1.7 Communication phase. This is a major milestone in your Ukrainian journey. Review your new capabilities:
+> **Ви говорите українською добре! Ви знаєте, де живе ваш друг. Ви розумієте, що кажуть люди. Це дуже гарний результат.**
+> *You speak Ukrainian well! You know where your friend lives. You understand what people say. This is a very good result.*
 
-* You can address people correctly using the vocative case (**Олено! Тарасе!**).
-* You can give instructions and make requests using the imperative mood (**Читай! Дайте!**).
-* You can connect your ideas into longer sentences using conjunctions (**і, а, але, бо**).
-* You can build complex sentences with the words **що**, **де**, and **коли** (and you remember to use the mandatory comma!).
-* You know how to greet people for major Ukrainian holidays using the Instrumental case.
+You have reached a significant milestone in your Ukrainian learning journey. By completing this checkpoint, you have demonstrated that:
 
-You are now ready for A1.8, the final stage of this level, where we tackle the Past and Future tenses. These new tenses will unlock your ability to tell stories and plan your future in Ukrainian!
+- You can address people properly in Ukrainian using the vocative case.
+- You can ask people to do things, politely and informally, using the imperative.
+- You can connect your ideas into longer, natural sentences using conjunctions.
+- You can build complex sentences with **що**, **де**, and **коли**.
+- You can talk about Ukrainian holidays and congratulate people.
 
+In the next section, A1.8, you will expand your timeline. You will learn to discuss the past and the future, leading up to the final graduation from the A1 level.
 </module_content>
 
 ---
@@ -174,48 +233,68 @@ version: "1.0"
 module: checkpoint-communication
 level: a1
 
+# NOTE — these are SHAPE examples. The real targets are at the top of this prompt
+# (8 total / 3–5 inline / 5–8 workbook,
+# 10+ items per activity). The shapes below are TRUNCATED for readability;
+# YOUR output MUST hit those minimums.
+
 inline:
   - id: marker-id-here        # MUST match an <!-- INJECT_ACTIVITY: ... --> marker
     type: quiz                 # activity type
     instruction: "Оберіть правильний варіант"
-    items:
+    items:                     # ← real output: ≥ 10 items
       - question: "_____ стіл"
-        options: ["мій", "моя", "моє"]
+        options: ["мій", "моя", "моє", "мої"]
         correct: 0             # 0-based index
+      - question: "Це ____ книга."
+        options: ["мій", "моя", "моє", "мої"]
+        correct: 1
+      # ... add at least 10 items total — never stop at 1-2
 
   - id: another-marker-id
     type: fill-in
     instruction: "Вставте правильне слово"
-    items:
+    items:                     # ← real output: ≥ 10 items
       - sentence: "Це ____ кімната."
         answer: "моя"
         options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ вікно."
+        answer: "моє"
+        options: ["мій", "моя", "моє"]
+      # ... ≥ 10 items total
 
 workbook:
-  - type: match-up
+  - id: match-up-vocab
+    type: match-up
     instruction: "З'єднайте пари"
-    pairs:
+    pairs:                     # ← real output: ≥ 10 pairs
       - left: "стіл"
         right: "він"
       - left: "книга"
         right: "вона"
       - left: "вікно"
         right: "воно"
+      # ... ≥ 10 pairs total
 
-  - type: group-sort
+  - id: group-sort-gender
+    type: group-sort
     instruction: "Розподіліть слова за категоріями"
     groups:
-      - label: "Category A"
-        items: ["word1", "word2"]
-      - label: "Category B"
-        items: ["word3", "word4"]
+      - label: "Чоловічий рід"
+        items: ["стіл", "олівець", "будинок"]   # ≥ 3 items per group
+      - label: "Жіночий рід"
+        items: ["книга", "ручка", "школа"]
+      - label: "Середній рід"
+        items: ["вікно", "море", "молоко"]
 
-  - type: true-false
+  - id: true-false-grammar
+    type: true-false
     instruction: "Правда чи ні?"
-    items:
-      - statement: "Statement here"
-        correct: true
-        explanation: "Why it's true"
+    items:                     # ← real output: ≥ 10 items
+      - statement: "«Книга» — це чоловічий рід."
+        correct: false
+        explanation: "Книга закінчується на -а, отже жіночий рід."
+      # ... ≥ 10 items total
 
   - type: error-correction
     instruction: "Виправте помилку"
@@ -286,7 +365,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -359,10 +438,15 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 ## Quality Rules
 
-**ITEM COUNT MINIMUMS (non-negotiable):**
-- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
-- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
-- If you can't think of enough items, add more examples from the module's vocabulary and content.
+**ACTIVITY COUNT MINIMUMS (non-negotiable, audit-enforced):**
+- **Total: 8 activities.** Inline: 3–5. Workbook: 5–8. The audit gate FAILS the module if you ship fewer.
+- **Type diversity: workbook MUST cover ≥5 distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
+- **Match the inline markers exactly.** Every `<!-- INJECT_ACTIVITY: id -->` marker in the prose needs a matching inline activity with that exact id. Skipping markers means the lesson tab is broken.
+
+**ITEM COUNT MINIMUMS (non-negotiable, per-activity):**
+- **Default minimum: 10 items per activity.** Quiz, fill-in, match-up, true-false, anagram, error-correction, translate, cloze, mark-the-words, divide-words, count-syllables, odd-one-out, group-sort categories: all ≥ 10.
+- **Lower minimums for specific types only:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items, essay-response/critical-analysis = 1 prompt.
+- If you can't think of enough items, add more examples from the module's vocabulary and content. NEVER ship a 1-item or 2-item activity unless its type cap explicitly allows it.
 - **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
 - **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
@@ -469,6 +553,27 @@ IMPORTANT: After using tools, output your COMPLETE module content as plain text.
 1. Run `verify_words` on all Ukrainian words in your exercises — every word must exist in VESUM
 2. Run `query_cefr_level` on any word you're unsure about — it must be a1-appropriate
 3. For fill-in answers and distractors, verify the exact form (case, number, gender) with `verify_lemma`
+
+---
+
+## ⚠️ MANDATORY FINAL CHECKLIST — verify before emitting YAML
+
+Walk through this checklist explicitly before you start emitting. If ANY box is unchecked, fix it FIRST.
+
+- [ ] My output has **at least 3** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
+- [ ] My output has **at least 5** workbook activities.
+- [ ] **Total ≥ 8.**
+- [ ] **Every** activity has **at least 10** items, pairs, or statements (except types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3, essay-response=1).
+- [ ] The module (inline + workbook combined) uses **at least 0 distinct activity types** (or 4+ when 0 = 0 and the workbook size allows it). I am NOT shipping a wall of quizzes.
+- [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
+- [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
+- [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+- [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+- [ ] My inline count is between 3 and 5. I did NOT create more injection markers than 5.
+- [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
+- [ ] At B1+, all instructions are in Ukrainian (no English fallback).
+
+If you cannot tick all of these, REGENERATE the activities BEFORE outputting. Shipping under-spec means the build rejects you and the heal loop has to redo your work — wasting compute.
 
 ---
 

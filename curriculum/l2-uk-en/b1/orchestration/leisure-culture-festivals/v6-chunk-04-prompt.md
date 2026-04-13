@@ -25,7 +25,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-дуже ретельно **готували** *(prepared)* свої святкові **кошики** *(baskets)* перед ранковим походом до церкви. Жінки та молоді дівчата годинами терпляче **розписували** *(decorated)* яскраві **писанки** *(Easter eggs)* спеціальним гарячим воском та натуральними фарбами. Наші мудрі пращури щиро **вірили** *(believed)*, що ці складні геометричні орнаменти мають сильну магічну дію та надійно захищають їхній дім від зла. Сьогодні ми з великою радістю продовжуємо ці чудові старовинні традиції, щоб зберегти наш унікальний та нерозривний культурний зв'язок із багатим минулим. Ще одне надзвичайно колоритне та популярне літнє свято — це містичне свято **Івана Купала** *(Midsummer holiday)*. Воно має дуже глибокі дохристиянські язичницькі корені та традиційно святкується на початку спекотного липня. Магічна **купальська ніч** *(Kupala night)* завжди була сповнена таємничих давніх обрядів, веселих народних пісень та цікавих молодіжних розваг. Молоді неодружені пари міцно трималися за руки і високо стрибали через велике багаття для того, щоб очистити свою душу і назавжди залишитися разом. Незаміжні дівчата з надією пускали свої красиві сплетені **вінки** *(wreaths)* на швидку річкову воду, щоб якнайшвидше дізнатися свою майбутню щасливу долю. А найсміливіші та найвідважніші юнаки йшли глибоко у темний нічний ліс шукати цвіт міфічної **папороті** *(fern)*. Вони щиро та наївно вірили, що ця казкова чарівна квітка неодмінно принесе їм велике життєве щастя та незліченне матеріальне багатство на все життя. Жодне важливе українське свято ніколи не обходиться без нашого красивого традиційного національного вбрання та багатої народної символіки. Сьогодні наша яскрава святкова **вишиванка** *(embroidered shirt)* стала справжнім сучасним світовим трендом і потужним візуальним символом української свободи. Кожен дрібний орнамент на цій старовинній сорочці має своє особливе, дуже глибоке історичне значення. Відомі дослідники кажуть, що кожна справжня вишиванка містить свій унікальний генетичний код конкретного етнічного регіону України. Культурні експерти також детально пояснюють, що складні геометричні візерунки символізують життєдайне сонце, чисту воду та нескінченну енергію рідної землі. Іншим надзвичайно важливим та сакральним елементом нашої національної культури є вишитий **рушник** *(embroidered towel)*. Старші люди часто розповідають своїм онукам, що вишитий рушник завжди вірно супроводжував українця протягом усього його життя. Ця красива та зворушлива традиція чудово ілюструє той факт, як глибоко справжнє народне мистецтво проникає в наш щоденний родинний побут. Особливої уваги та детального пояснення заслуговує наша улюблена зимова традиція дарувати приємні подарунки маленьким слухняним дітям. Історично в українській культурі цією важливою благодійною справою завжди займався добрий **Святий Миколай** *(Saint Nicholas)*. Він є абсолютно реальним історичним християнським персонажем, який колись таємно допомагав дуже бідним людям та залишав їм приємні сюрпризи під подушкою. Натомість так званий **Дід Мороз** *(Ded Moroz / Grandfather Frost)* є повністю штучним і вигаданим радянським ідеологічним конструктом. Цей агресивний політичний персонаж був спеціально створений партією у тридцятих роках минулого століття, щоб швидко замінити справжні релігійні символи новою комуністичною ідеологією. Саме тому сьогодні для всіх нас так принципово важливо святкувати день Святого Миколая саме шостого грудня за новим календарем. Свідома відмова від нав'язаного радянського персонажа допомагає нам ефективно очистити свій ментальний та культурний простір. Коли ми сміливо повертаємося до власних давніх автентичних традицій, ми стаємо значно сильнішими. Завдяки цьому ми набагато краще та глибше розуміємо свою власну справжню національну ідентичність у сучасному вільному світі. <!-- INJECT_ACTIVITY: reading-holiday-traditions -->
+ми говоримо: «Щороку українці ретельно готували великодні кошики», замість доконаного виду. Ми також можемо сказати: «Напередодні свята дівчата розписували писанки складними візерунками». Інший приклад: «Люди йшли до церкви, щоб освятити їжу та воду». Недоконаний вид акцентує увагу на самому процесі та традиційності дії, а не на результаті. Багато українських святкових днів мають дохристиянські корені, які гармонійно переплелися з пізнішими традиціями. Яскравим прикладом є свято **Івана Купала** (Midsummer holiday), яке відзначають у розпал літа. Це час містики, єднання з природою та активного молодіжного **дозвілля** (leisure). Головні магічні події відбуваються, коли настає коротка купальська ніч. Молодь розпалює велике багаття, і хлопці та дівчата стрибають через вогонь. Дівчата обов'язково плетуть красивий **вінок** (wreath) із польових квітів і трав. Для пояснення мети цих ритуалів ми використовуємо складнопідрядні речення мети зі сполучниками «щоб» або «аби». Наприклад, ми говоримо: «Дівчата пускали вінки на воду, щоб дізнатися свою долю». Або згадаємо легенду: «Сміливці йшли в ліс, аби знайти містичний цвіт папороті». Речення мети допомагають нам розкривати глибокий сакральний зміст кожного народного обряду. :::info **Граматика** — Речення мети (Clauses of purpose) Для пояснення мети традицій або ритуалів використовуйте сполучники «щоб» або «аби». Пам'ятайте, що перед ними завжди ставиться кома. Наприклад: «Ми співаємо колядки, щоб привітати господарів». ::: Невід'ємною частиною будь-якого українського свята є національне вбрання та глибока символіка. Головним елементом тут виступає **вишиванка** (embroidered shirt) — традиційна сорочка, прикрашена складними орнаментами. Крім того, під час багатьох родинних обрядів використовується вишитий **рушник** (embroidered towel). Він є давнім символом життєвого шляху, надійного захисту та батьківського благословення. Розповідаючи про значення цих символів, ми постійно використовуємо складнопідрядні з'ясувальні речення зі сполучником «що». Ці граматичні конструкції необхідні для точної передачі думок, історичних фактів або народних переконань. Наприклад, ми можемо сказати: «Дослідники кажуть, що кожна вишиванка має свій унікальний код». Або: «Наші предки вірили, що вишитий рушник оберігає родину від бід і нещасть». Такі з'ясувальні речення дозволяють нам вільно посилатися на думку експертів та будувати складну аргументацію. Вони роблять вашу розповідь про традиційне **мистецтво** (art) більш переконливою та стилістично багатою. Сучасна українська **культура** (culture) також має своїх унікальних персонажів, навколо яких будуються зимові радощі. Сьогодні в Україні активно відновлюється звичай **святкувати** (to celebrate) день Святого Миколая шостого грудня. Святий Миколай — це глибоко вкорінений український символ доброчинності, турботи та справжнього дива. У багатьох театрах проходить спеціальна святкова **вистава** (performance), присвячена його добрим справам. Радянська влада намагалася стерти його з пам'яті, замінивши Дідом Морозом у тридцятих роках. Відмова від Діда Мороза — це важливий крок на шляху до відновлення нашої ідентичності. Розуміння цієї різниці допомагає краще осягнути, як історичні події впливають на суспільство. Хоча цей процес вимагає часу, сьогодні вивчення власних коренів стає справжнім захопленням для багатьох. Українські родини передають своїм дітям автентичні цінності, зберігаючи живу пам'ять свого народу. Кожне українське **свято** (holiday) — це не просто вільний час або веселе **захоплення** (hobby). Це можливість доторкнутися до вічного, зберегти свою ідентичність та передати її наступним поколінням. Коли в місті проходить тематична **виставка** (exhibition), присвячена народним ремеслам, ми відчуваємо живий зв'язок часів. Відвідуючи такі заходи, ми наповнюємо наше життя глибоким духовним сенсом. <!-- INJECT_ACTIVITY: reading-holiday-traditions -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -525,7 +525,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 8: Late B1 (B1 M31+)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–15 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 10%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 10% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -538,18 +605,71 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] дозвілля (leisure, free time)
+- [ ] захоплення (hobby, passion)
+- [ ] мистецтво (art)
+- [ ] виставка (exhibition)
+- [ ] вистава (performance, show)
+- [ ] Різдво (Christmas)
+- [ ] Великдень (Easter)
+- [ ] свято (holiday, celebration)
+- [ ] традиція (tradition)
+- [ ] культура (culture)
+- [ ] святкувати (to celebrate)
+- [ ] колядка (Christmas carol)
+- [ ] писанка (decorated Easter egg)
+- [ ] ресторан (restaurant)
+- [ ] меню (menu)
+- [ ] замовлення (order)
+- [ ] страва (dish)
+- [ ] шеф-кухар (chef)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Розділ 4: Гастрономія і ресторанна культура (~720 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

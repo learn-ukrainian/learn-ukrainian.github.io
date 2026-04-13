@@ -1,6 +1,6 @@
 # Build Summary: genitive-plural (A2)
 
-Generated: 2026-04-11 02:23
+Generated: 2026-04-11 12:37
 
 ## Pipeline Phases
 
@@ -19,8 +19,8 @@ Generated: 2026-04-11 02:23
 | enrich | complete | 2026-04-07 21:22:06 |
 | verify | complete | 2026-04-07 21:22:07 |
 | stress | complete | 2026-04-07 21:28:04 |
-| publish | complete | 2026-04-11 00:23:02 |
-| audit | complete | 2026-04-11 00:23:02 |
+| publish | complete | 2026-04-11 10:37:07 |
+| audit | complete | 2026-04-11 10:37:07 |
 
 ## Reviews
 
@@ -40,10 +40,13 @@ Generated: 2026-04-11 02:23
 | pre-verify-retry | gemini-tools (auto) | 420s | ✅ |
 | write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 123s | ✅ |
 | write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 55s | ✅ |
+| write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 70s | ✅ |
 | write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 135s | ✅ |
+| write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 80s | ✅ |
 | write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 80s | ✅ |
 | write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 94s | ✅ |
 | write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 55s | ✅ |
+| write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 75s | ✅ |
 
 ## Friction
 

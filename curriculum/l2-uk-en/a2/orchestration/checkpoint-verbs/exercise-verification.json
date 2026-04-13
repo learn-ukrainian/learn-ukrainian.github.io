@@ -1,6 +1,6 @@
 {
-  "total_items": 201,
-  "grounded_items": 122,
+  "total_items": 211,
+  "grounded_items": 111,
   "ungrounded": [
     {
       "word": "аналітичний",
@@ -9,189 +9,147 @@
       "role": "context"
     },
     {
+      "word": "будемо",
+      "exercise_type": "group-sort",
+      "context": "будемо робити",
+      "role": "answer"
+    },
+    {
       "word": "синтетичний",
       "exercise_type": "group-sort",
       "context": "Майбутній час (синтетичний)",
       "role": "context"
     },
     {
-      "word": "гарантую",
+      "word": "зроблю",
+      "exercise_type": "group-sort",
+      "context": "зроблю",
+      "role": "answer"
+    },
+    {
+      "word": "мамі",
       "exercise_type": "fill-in",
-      "context": "Я гарантую, що ____ цю роботу до вечора.",
+      "context": "Завтра я ____ листа мамі.",
       "role": "context"
     },
     {
-      "word": "заходить",
-      "exercise_type": "match-up",
-      "context": "Вона заходить",
+      "word": "вчора",
+      "exercise_type": "unjumble",
+      "context": "вчора",
       "role": "answer"
     },
     {
-      "word": "їдуть",
-      "exercise_type": "match-up",
-      "context": "Вони їдуть",
+      "word": "цю",
+      "exercise_type": "unjumble",
+      "context": "цю",
       "role": "answer"
+    },
+    {
+      "word": "цілий",
+      "exercise_type": "fill-in",
+      "context": "Я ____ цю книгу цілий тиждень.",
+      "role": "context"
+    },
+    {
+      "word": "тиждень",
+      "exercise_type": "fill-in",
+      "context": "Я ____ цю книгу цілий тиждень.",
+      "role": "context"
+    },
+    {
+      "word": "поїде",
+      "exercise_type": "fill-in",
+      "context": "поїде",
+      "role": "answer"
+    },
+    {
+      "word": "приготували",
+      "exercise_type": "fill-in",
+      "context": "приготували",
+      "role": "answer"
+    },
+    {
+      "word": "смачний",
+      "exercise_type": "unjumble",
+      "context": "смачний",
+      "role": "answer"
+    },
+    {
+      "word": "борщ",
+      "exercise_type": "fill-in",
+      "context": "У суботу ми швидко ____ смачний борщ.",
+      "role": "context"
+    },
+    {
+      "word": "ранку",
+      "exercise_type": "fill-in",
+      "context": "Кожного ранку я ____ до університету.",
+      "role": "context"
     },
     {
       "word": "оберіть",
       "exercise_type": "quiz",
-      "context": "Оберіть форму для 'Ти' (читати цей текст):",
+      "context": "Помилка: «Я буду прочитати книгу.» Оберіть правильний варіан",
       "role": "context"
     },
     {
-      "word": "форму",
+      "word": "правильний",
       "exercise_type": "quiz",
-      "context": "Оберіть форму для 'Ти' (читати цей текст):",
+      "context": "Помилка: «Я буду прочитати книгу.» Оберіть правильний варіан",
       "role": "context"
     },
     {
-      "word": "ти'",
+      "word": "варіант",
       "exercise_type": "quiz",
-      "context": "Оберіть форму для 'Ти' (читати цей текст):",
+      "context": "Помилка: «Я буду прочитати книгу.» Оберіть правильний варіан",
       "role": "context"
     },
     {
-      "word": "ви'",
+      "word": "йдемо",
       "exercise_type": "quiz",
-      "context": "Оберіть форму для 'Ви' (писати):",
+      "context": "Помилка: «Ми йдемо туди кожного літа відпочивати.»",
       "role": "context"
     },
     {
-      "word": "ми'",
+      "word": "оксано",
       "exercise_type": "quiz",
-      "context": "Оберіть форму для 'Ми' (Let's do it):",
+      "context": "Помилка: «Оксано, будь щаслива!»",
       "role": "context"
     },
     {
-      "word": "він'",
+      "word": "щаслива",
       "exercise_type": "quiz",
-      "context": "Оберіть форму для 'Він' (Let him read):",
+      "context": "Помилка: «Оксано, будь щаслива!»",
       "role": "context"
     },
     {
-      "word": "правильне",
+      "word": "приїхали",
       "exercise_type": "quiz",
-      "context": "Оберіть правильне побажання (Maria, be happy!):",
+      "context": "Помилка: «Завтра вони приїхали до Львова.»",
       "role": "context"
     },
     {
-      "word": "побажання",
+      "word": "цей",
       "exercise_type": "quiz",
-      "context": "Оберіть правильне побажання (Maria, be happy!):",
+      "context": "Помилка: «Хай він читати цей текст.»",
       "role": "context"
     },
     {
-      "word": "виправте",
+      "word": "текст",
       "exercise_type": "quiz",
-      "context": "Виправте помилку: 'Я іду на роботу на автобусі.'",
+      "context": "Помилка: «Хай він читати цей текст.»",
       "role": "context"
     },
     {
-      "word": "помилку",
-      "exercise_type": "unjumble",
-      "context": "помилку.",
+      "word": "писати",
+      "exercise_type": "match-up",
+      "context": "писати",
       "role": "answer"
     },
     {
-      "word": "кіно",
-      "exercise_type": "quiz",
-      "context": "Виправте помилку: 'Давай підемо в кіно!'",
-      "role": "context"
-    },
-    {
-      "word": "машині",
-      "exercise_type": "quiz",
-      "context": "Виправте помилку: 'Він ішов у магазин на машині.'",
-      "role": "context"
-    },
-    {
-      "word": "готовий",
-      "exercise_type": "quiz",
-      "context": "Виправте помилку: 'Друзі, будьте готовий!'",
-      "role": "context"
-    },
-    {
-      "word": "попрацювати",
-      "exercise_type": "error-correction",
-      "context": "Завтра о п'ятій я буду попрацювати.",
-      "role": "context"
-    },
-    {
-      "word": "зробимо",
-      "exercise_type": "error-correction",
-      "context": "Давай зробимо це завдання разом!",
-      "role": "context"
-    },
-    {
-      "word": "це",
-      "exercise_type": "error-correction",
-      "context": "Давай зробимо це завдання разом!",
-      "role": "context"
-    },
-    {
-      "word": "пішки",
-      "exercise_type": "error-correction",
-      "context": "Він їде до школи пішки.",
-      "role": "context"
-    },
-    {
-      "word": "зробив",
-      "exercise_type": "error-correction",
-      "context": "зробив",
-      "role": "answer"
-    },
-    {
-      "word": "улітку",
-      "exercise_type": "fill-in",
-      "context": "Улітку мій друг ____ до Києва.",
-      "role": "context"
-    },
-    {
-      "word": "день'",
-      "exercise_type": "fill-in",
-      "context": "Він сказав: 'Завтра я ____ місто цілий день'.",
-      "role": "context"
-    },
-    {
-      "word": "місця'",
-      "exercise_type": "fill-in",
-      "context": "Я відповів: 'Звичайно, я ____ тобі найкращі місця'.",
-      "role": "context"
-    },
-    {
-      "word": "нашої",
-      "exercise_type": "fill-in",
-      "context": "Друзі, ____ готові до нашої подорожі!",
-      "role": "context"
-    },
-    {
-      "word": "подорожі",
-      "exercise_type": "fill-in",
-      "context": "Друзі, ____ готові до нашої подорожі!",
-      "role": "context"
-    },
-    {
-      "word": "робити",
+      "word": "піти",
       "exercise_type": "match-up",
-      "context": "робити",
-      "role": "answer"
-    },
-    {
-      "word": "приготувати",
-      "exercise_type": "match-up",
-      "context": "приготувати",
-      "role": "context"
-    },
-    {
-      "word": "купувати",
-      "exercise_type": "match-up",
-      "context": "купувати",
-      "role": "answer"
-    },
-    {
-      "word": "купити",
-      "exercise_type": "match-up",
-      "context": "купити",
+      "context": "піти",
       "role": "context"
     },
     {
@@ -201,291 +159,460 @@
       "role": "answer"
     },
     {
-      "word": "наприклад",
-      "exercise_type": "true-false",
-      "context": "Синтетичний майбутній час (наприклад, 'працюватиму') утворює",
+      "word": "купити",
+      "exercise_type": "match-up",
+      "context": "купити",
       "role": "context"
     },
     {
-      "word": "працюватиму'",
-      "exercise_type": "true-false",
-      "context": "Синтетичний майбутній час (наприклад, 'працюватиму') утворює",
+      "word": "говорити",
+      "exercise_type": "match-up",
+      "context": "говорити",
+      "role": "answer"
+    },
+    {
+      "word": "поговорити",
+      "exercise_type": "match-up",
+      "context": "поговорити",
       "role": "context"
     },
     {
-      "word": "утворюється",
-      "exercise_type": "true-false",
-      "context": "Синтетичний майбутній час (наприклад, 'працюватиму') утворює",
-      "role": "context"
+      "word": "гуляти",
+      "exercise_type": "match-up",
+      "context": "гуляти",
+      "role": "answer"
     },
     {
-      "word": "тільки",
-      "exercise_type": "true-false",
-      "context": "Синтетичний майбутній час (наприклад, 'працюватиму') утворює",
-      "role": "context"
-    },
-    {
-      "word": "дієслів",
-      "exercise_type": "true-false",
-      "context": "Синтетичний майбутній час (наприклад, 'працюватиму') утворює",
-      "role": "context"
-    },
-    {
-      "word": "недоконаного",
-      "exercise_type": "true-false",
-      "context": "Синтетичний майбутній час (наприклад, 'працюватиму') утворює",
-      "role": "context"
-    },
-    {
-      "word": "виду",
-      "exercise_type": "true-false",
-      "context": "Синтетичний майбутній час (наприклад, 'працюватиму') утворює",
-      "role": "context"
-    },
-    {
-      "word": "конструкція",
-      "exercise_type": "true-false",
-      "context": "Конструкція 'давай підемо' є правильним українським варіанто",
-      "role": "context"
-    },
-    {
-      "word": "підемо'",
-      "exercise_type": "true-false",
-      "context": "Конструкція 'давай підемо' є правильним українським варіанто",
-      "role": "context"
-    },
-    {
-      "word": "правильним",
-      "exercise_type": "true-false",
-      "context": "Конструкція 'давай підемо' є правильним українським варіанто",
-      "role": "context"
-    },
-    {
-      "word": "українським",
-      "exercise_type": "true-false",
-      "context": "Конструкція 'давай підемо' є правильним українським варіанто",
-      "role": "context"
-    },
-    {
-      "word": "варіантом",
-      "exercise_type": "true-false",
-      "context": "Конструкція 'давай підемо' є правильним українським варіанто",
-      "role": "context"
-    },
-    {
-      "word": "наказового",
-      "exercise_type": "true-false",
-      "context": "Конструкція 'давай підемо' є правильним українським варіанто",
-      "role": "context"
-    },
-    {
-      "word": "способу",
-      "exercise_type": "true-false",
-      "context": "Конструкція 'давай підемо' є правильним українським варіанто",
-      "role": "context"
-    },
-    {
-      "word": "складається",
-      "exercise_type": "true-false",
-      "context": "Аналітичний майбутній час складається з дієслова 'бути' та і",
-      "role": "context"
-    },
-    {
-      "word": "бути'",
-      "exercise_type": "true-false",
-      "context": "Аналітичний майбутній час складається з дієслова 'бути' та і",
-      "role": "context"
-    },
-    {
-      "word": "інфінітива",
-      "exercise_type": "true-false",
-      "context": "Аналітичний майбутній час складається з дієслова 'бути' та і",
+      "word": "погуляти",
+      "exercise_type": "match-up",
+      "context": "погуляти",
       "role": "context"
     },
     {
       "word": "дієслово",
       "exercise_type": "true-false",
-      "context": "Дієслово 'ходити' описує рух в одному напрямку в конкретний ",
+      "context": "Дієслово «іти» означає рух пішки в одному напрямку.",
       "role": "context"
     },
     {
-      "word": "ходити'",
+      "word": "означає",
       "exercise_type": "true-false",
-      "context": "Дієслово 'ходити' описує рух в одному напрямку в конкретний ",
-      "role": "context"
-    },
-    {
-      "word": "описує",
-      "exercise_type": "true-false",
-      "context": "Дієслово 'ходити' описує рух в одному напрямку в конкретний ",
+      "context": "Дієслово «іти» означає рух пішки в одному напрямку.",
       "role": "context"
     },
     {
       "word": "рух",
       "exercise_type": "true-false",
-      "context": "Дієслово 'ходити' описує рух в одному напрямку в конкретний ",
+      "context": "Дієслово «іти» означає рух пішки в одному напрямку.",
+      "role": "context"
+    },
+    {
+      "word": "пішки",
+      "exercise_type": "true-false",
+      "context": "Дієслово «іти» означає рух пішки в одному напрямку.",
       "role": "context"
     },
     {
       "word": "одному",
       "exercise_type": "true-false",
-      "context": "Дієслово 'ходити' описує рух в одному напрямку в конкретний ",
+      "context": "Дієслово «іти» означає рух пішки в одному напрямку.",
       "role": "context"
     },
     {
       "word": "напрямку",
       "exercise_type": "true-false",
-      "context": "Дієслово 'ходити' описує рух в одному напрямку в конкретний ",
+      "context": "Дієслово «іти» означає рух пішки в одному напрямку.",
       "role": "context"
     },
     {
-      "word": "конкретний",
+      "word": "можемо",
       "exercise_type": "true-false",
-      "context": "Дієслово 'ходити' описує рух в одному напрямку в конкретний ",
+      "context": "Ми можемо використовувати «буду» з доконаним видом (наприкла",
       "role": "context"
     },
     {
-      "word": "момент",
+      "word": "використовувати",
       "exercise_type": "true-false",
-      "context": "Дієслово 'ходити' описує рух в одному напрямку в конкретний ",
+      "context": "Ми можемо використовувати «буду» з доконаним видом (наприкла",
       "role": "context"
     },
     {
-      "word": "часу",
+      "word": "доконаним",
       "exercise_type": "true-false",
-      "context": "Дієслово 'ходити' описує рух в одному напрямку в конкретний ",
+      "context": "Ми можемо використовувати «буду» з доконаним видом (наприкла",
       "role": "context"
     },
     {
-      "word": "щоб",
+      "word": "видом",
       "exercise_type": "true-false",
-      "context": "Щоб показати завершений результат у майбутньому, ми використ",
+      "context": "Ми можемо використовувати «буду» з доконаним видом (наприкла",
       "role": "context"
     },
     {
-      "word": "показати",
+      "word": "наприклад",
       "exercise_type": "true-false",
-      "context": "Щоб показати завершений результат у майбутньому, ми використ",
+      "context": "Ми можемо використовувати «буду» з доконаним видом (наприкла",
       "role": "context"
     },
     {
-      "word": "завершений",
+      "word": "слово",
       "exercise_type": "true-false",
-      "context": "Щоб показати завершений результат у майбутньому, ми використ",
+      "context": "Слово «щодня» часто використовується з дієсловами доконаного",
       "role": "context"
     },
     {
-      "word": "результат",
+      "word": "часто",
       "exercise_type": "true-false",
-      "context": "Щоб показати завершений результат у майбутньому, ми використ",
+      "context": "Слово «щодня» часто використовується з дієсловами доконаного",
       "role": "context"
     },
     {
-      "word": "майбутньому",
+      "word": "використовується",
       "exercise_type": "true-false",
-      "context": "Щоб показати завершений результат у майбутньому, ми використ",
+      "context": "Слово «щодня» часто використовується з дієсловами доконаного",
+      "role": "context"
+    },
+    {
+      "word": "дієсловами",
+      "exercise_type": "true-false",
+      "context": "Слово «щодня» часто використовується з дієсловами доконаного",
+      "role": "context"
+    },
+    {
+      "word": "доконаного",
+      "exercise_type": "true-false",
+      "context": "Слово «щодня» часто використовується з дієсловами доконаного",
+      "role": "context"
+    },
+    {
+      "word": "виду",
+      "exercise_type": "true-false",
+      "context": "Слово «щодня» часто використовується з дієсловами доконаного",
+      "role": "context"
+    },
+    {
+      "word": "форма",
+      "exercise_type": "true-false",
+      "context": "Форма «ходімо» — це наказовий спосіб для «ми».",
+      "role": "context"
+    },
+    {
+      "word": "транспортом",
+      "exercise_type": "true-false",
+      "context": "Дієслово «їздити» означає рух транспортом у різних напрямках",
+      "role": "context"
+    },
+    {
+      "word": "різних",
+      "exercise_type": "true-false",
+      "context": "Дієслово «їздити» означає рух транспортом у різних напрямках",
+      "role": "context"
+    },
+    {
+      "word": "напрямках",
+      "exercise_type": "true-false",
+      "context": "Дієслово «їздити» означає рух транспортом у різних напрямках",
+      "role": "context"
+    },
+    {
+      "word": "регулярно",
+      "exercise_type": "true-false",
+      "context": "Дієслово «їздити» означає рух транспортом у різних напрямках",
+      "role": "context"
+    },
+    {
+      "word": "префікс",
+      "exercise_type": "true-false",
+      "context": "Префікс «по-» у дієсловах руху означає прибуття на місце.",
+      "role": "context"
+    },
+    {
+      "word": "дієсловах",
+      "exercise_type": "true-false",
+      "context": "Префікс «по-» у дієсловах руху означає прибуття на місце.",
+      "role": "context"
+    },
+    {
+      "word": "прибуття",
+      "exercise_type": "true-false",
+      "context": "Префікс «по-» у дієсловах руху означає прибуття на місце.",
+      "role": "context"
+    },
+    {
+      "word": "місце",
+      "exercise_type": "true-false",
+      "context": "Префікс «по-» у дієсловах руху означає прибуття на місце.",
+      "role": "context"
+    },
+    {
+      "word": "дати",
+      "exercise_type": "true-false",
+      "context": "Щоб дати пораду другу, ми використовуємо наказовий спосіб.",
+      "role": "context"
+    },
+    {
+      "word": "пораду",
+      "exercise_type": "true-false",
+      "context": "Щоб дати пораду другу, ми використовуємо наказовий спосіб.",
+      "role": "context"
+    },
+    {
+      "word": "другу",
+      "exercise_type": "true-false",
+      "context": "Щоб дати пораду другу, ми використовуємо наказовий спосіб.",
       "role": "context"
     },
     {
       "word": "використовуємо",
       "exercise_type": "true-false",
-      "context": "Щоб показати завершений результат у майбутньому, ми використ",
+      "context": "Щоб дати пораду другу, ми використовуємо наказовий спосіб.",
       "role": "context"
     },
     {
-      "word": "після",
+      "word": "реченні",
       "exercise_type": "true-false",
-      "context": "Після дієслів руху з прийменником 'до' (наприклад, 'іти до')",
+      "context": "У реченні «Я довго читав книгу» дієслово «читав» має доконан",
       "role": "context"
     },
     {
-      "word": "прийменником",
+      "word": "має",
       "exercise_type": "true-false",
-      "context": "Після дієслів руху з прийменником 'до' (наприклад, 'іти до')",
+      "context": "У реченні «Я довго читав книгу» дієслово «читав» має доконан",
       "role": "context"
     },
     {
-      "word": "до'",
+      "word": "прийменник",
       "exercise_type": "true-false",
-      "context": "Після дієслів руху з прийменником 'до' (наприклад, 'іти до')",
+      "context": "З дієсловами руху ми використовуємо прийменник «на» + знахід",
       "role": "context"
     },
     {
-      "word": "іменник",
+      "word": "знахідний",
       "exercise_type": "true-false",
-      "context": "Після дієслів руху з прийменником 'до' (наприклад, 'іти до')",
+      "context": "З дієсловами руху ми використовуємо прийменник «на» + знахід",
       "role": "context"
     },
     {
-      "word": "стоїть",
+      "word": "відмінок",
       "exercise_type": "true-false",
-      "context": "Після дієслів руху з прийменником 'до' (наприклад, 'іти до')",
+      "context": "З дієсловами руху ми використовуємо прийменник «на» + знахід",
       "role": "context"
     },
     {
-      "word": "знахідному",
+      "word": "подій",
       "exercise_type": "true-false",
-      "context": "Після дієслів руху з прийменником 'до' (наприклад, 'іти до')",
+      "context": "З дієсловами руху ми використовуємо прийменник «на» + знахід",
       "role": "context"
     },
     {
-      "word": "відмінку",
+      "word": "відкритих",
       "exercise_type": "true-false",
-      "context": "Після дієслів руху з прийменником 'до' (наприклад, 'іти до')",
+      "context": "З дієсловами руху ми використовуємо прийменник «на» + знахід",
       "role": "context"
     },
     {
-      "word": "допомагає",
-      "exercise_type": "unjumble",
-      "context": "допомагає",
+      "word": "місць",
+      "exercise_type": "true-false",
+      "context": "З дієсловами руху ми використовуємо прийменник «на» + знахід",
+      "role": "context"
+    },
+    {
+      "word": "російська",
+      "exercise_type": "true-false",
+      "context": "Російська калька «давай поговоримо» є правильною українською",
+      "role": "context"
+    },
+    {
+      "word": "калька",
+      "exercise_type": "true-false",
+      "context": "Російська калька «давай поговоримо» є правильною українською",
+      "role": "context"
+    },
+    {
+      "word": "правильною",
+      "exercise_type": "true-false",
+      "context": "Російська калька «давай поговоримо» є правильною українською",
+      "role": "context"
+    },
+    {
+      "word": "українською",
+      "exercise_type": "true-false",
+      "context": "Російська калька «давай поговоримо» є правильною українською",
+      "role": "context"
+    },
+    {
+      "word": "формою",
+      "exercise_type": "true-false",
+      "context": "Російська калька «давай поговоримо» є правильною українською",
+      "role": "context"
+    },
+    {
+      "word": "іду",
+      "exercise_type": "fill-in",
+      "context": "іду",
       "role": "answer"
     },
     {
-      "word": "знайти",
-      "exercise_type": "unjumble",
-      "context": "знайти",
+      "word": "їздить",
+      "exercise_type": "fill-in",
+      "context": "їздить",
       "role": "answer"
     },
     {
-      "word": "ця",
-      "exercise_type": "unjumble",
-      "context": "Ця",
+      "word": "родина",
+      "exercise_type": "fill-in",
+      "context": "Моя родина кожного літа ____ на море.",
+      "role": "context"
+    },
+    {
+      "word": "море",
+      "exercise_type": "fill-in",
+      "context": "Моя родина кожного літа ____ на море.",
+      "role": "context"
+    },
+    {
+      "word": "ходить",
+      "exercise_type": "fill-in",
+      "context": "ходить",
       "role": "answer"
     },
     {
-      "word": "кожну",
-      "exercise_type": "unjumble",
-      "context": "кожну",
+      "word": "іде",
+      "exercise_type": "fill-in",
+      "context": "іде",
       "role": "answer"
     },
     {
-      "word": "утворюю",
-      "exercise_type": "unjumble",
-      "context": "утворюю",
+      "word": "дивись",
+      "exercise_type": "fill-in",
+      "context": "Дивись, он ____ наш новий вчитель!",
+      "role": "context"
+    },
+    {
+      "word": "он",
+      "exercise_type": "fill-in",
+      "context": "Дивись, он ____ наш новий вчитель!",
+      "role": "context"
+    },
+    {
+      "word": "наш",
+      "exercise_type": "fill-in",
+      "context": "Дивись, он ____ наш новий вчитель!",
+      "role": "context"
+    },
+    {
+      "word": "новий",
+      "exercise_type": "fill-in",
+      "context": "Дивись, он ____ наш новий вчитель!",
+      "role": "context"
+    },
+    {
+      "word": "автомобілем",
+      "exercise_type": "fill-in",
+      "context": "Ми ____ до Києва автомобілем просто зараз.",
+      "role": "context"
+    },
+    {
+      "word": "ходиш",
+      "exercise_type": "fill-in",
+      "context": "ходиш",
       "role": "answer"
     },
     {
-      "word": "тепер",
-      "exercise_type": "unjumble",
-      "context": "Тепер",
+      "word": "куди",
+      "exercise_type": "fill-in",
+      "context": "Куди ти ____ кожного ранку?",
+      "role": "context"
+    },
+    {
+      "word": "їздять",
+      "exercise_type": "fill-in",
+      "context": "їздять",
       "role": "answer"
     },
     {
-      "word": "кінця",
+      "word": "автобусі",
+      "exercise_type": "fill-in",
+      "context": "Вони завжди ____ на роботу на автобусі.",
+      "role": "context"
+    },
+    {
+      "word": "ходили",
+      "exercise_type": "fill-in",
+      "context": "ходили",
+      "role": "answer"
+    },
+    {
+      "word": "приїхав",
       "exercise_type": "unjumble",
-      "context": "кінця.",
+      "context": "приїхав",
+      "role": "answer"
+    },
+    {
+      "word": "важливу",
+      "exercise_type": "unjumble",
+      "context": "важливу",
+      "role": "answer"
+    },
+    {
+      "word": "потрібно",
+      "exercise_type": "unjumble",
+      "context": "потрібно",
+      "role": "answer"
+    },
+    {
+      "word": "помилку",
+      "exercise_type": "unjumble",
+      "context": "помилку.",
+      "role": "answer"
+    },
+    {
+      "word": "односпрямований",
+      "exercise_type": "group-sort",
+      "context": "Односпрямований рух (Зараз, конкретна поїздка)",
+      "role": "context"
+    },
+    {
+      "word": "конкретна",
+      "exercise_type": "group-sort",
+      "context": "Односпрямований рух (Зараз, конкретна поїздка)",
+      "role": "context"
+    },
+    {
+      "word": "поїздка",
+      "exercise_type": "group-sort",
+      "context": "Односпрямований рух (Зараз, конкретна поїздка)",
+      "role": "context"
+    },
+    {
+      "word": "різноспрямований",
+      "exercise_type": "group-sort",
+      "context": "Різноспрямований рух (Регулярно, звичка)",
+      "role": "context"
+    },
+    {
+      "word": "звичка",
+      "exercise_type": "group-sort",
+      "context": "Різноспрямований рух (Регулярно, звичка)",
+      "role": "context"
+    },
+    {
+      "word": "ходимо",
+      "exercise_type": "group-sort",
+      "context": "ходимо",
       "role": "answer"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 14,
-    "tested_in_exercises": 8,
+    "tested_in_exercises": 7,
     "not_tested": [
-      "виправити",
+      "впевнено",
+      "дієслова",
       "контрольна",
       "обрати",
       "перевірка",
-      "помилка",
+      "самоперевірка",
       "точка"
     ]
   },

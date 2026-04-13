@@ -1,7 +1,7 @@
 # Audit Report: M08 — aspect-in-negation.md
 **Level:** B1 | **Module:** M08 | **Phase:** B1.0 | **Pedagogy:** TTT | **Target:** 4000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-04-10 21:25:57
+**Generated:** 2026-04-11 14:05:04
 
 ## Configuration
 **Type:** B1-grammar
@@ -18,82 +18,79 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | quiz | quiz | 10 | 8 | ✅ |
-| 2 | fill-in | fill-in | 8 | 8 | ✅ |
-| 3 | group-sort | group-sort | 10 | 6 | ✅ |
-| 4 | error-correction | error-correction | 6 | 6 | ✅ |
-| 5 | match-up | match-up | 8 | 8 | ✅ |
-| 6 | essay-response | essay-response | 1 | 6 | ❌ |
-| 7 | true-false | true-false | 6 | 8 | ❌ |
-| 8 | translate | translate | 6 | 6 | ✅ |
+| 1 | quiz | Оберіть правильний варіант заперечення залежно від контексту. | 10 | 8 | ✅ |
+| 2 | fill-in | Вставте правильну форму дієслова (з часткою не або ще не) за змістом речення. | 8 | 8 | ✅ |
+| 3 | group-sort | Розподіліть речення за прагматичним значенням. | 10 | 6 | ✅ |
+| 4 | match-up | З'єднайте ситуацію з найбільш природною реакцією. | 8 | 8 | ✅ |
+| 5 | group-sort | Розподіліть дієслова за видами. | 15 | 6 | ✅ |
+| 6 | match-up | З'єднайте видові пари (недоконаний — доконаний вид). | 7 | 8 | ❌ |
+| 7 | translate | Оберіть правильний переклад. | 6 | 6 | ✅ |
+| 8 | essay-response |  | 1 | 6 | ❌ |
 
 **Summary:**
 - Total activities: 8 (target: 0-4) ❌
-- Unique types: 8 (minimum: 3) ✅
-- Priority types used: 5/7 (error-correction, essay-response, fill-in, match-up, quiz) ✅
+- Unique types: 6 (minimum: 3) ✅
+- Priority types used: 4/7 (essay-response, fill-in, match-up, quiz) ✅
 - Low density activities: 2
 
 ## PEDAGOGICAL VIOLATIONS
 - **[LEVEL_RESTRICTION]** Activity 'essay-response' not allowed at B1
   - FIX: Use level-appropriate activities. 'essay-response' is introduced at A2+.
-- **[COMPLEXITY]** group-sort '' has 10 items (target: 12-999)
+- **[COMPLEXITY]** group-sort 'Розподіліть речення за прагматичним значенням.' has 10 items (target: 12-999)
   - FIX: Adjust number of items to sort to 12-999.
-- **[COMPLEXITY]** match-up '' has 8 pairs (target: 12-16)
+- **[COMPLEXITY]** match-up 'З'єднайте ситуацію з найбільш природною реакцією.' has 8 pairs (target: 12-16)
   - FIX: Adjust number of pairs to 12-16.
-- **[COMPLEXITY]** true-false '' has 6 items (minimum: 8)
-  - FIX: Add more items. B1 true-false requires at least 8 items.
-- **[LLM_FINGERPRINT_REPETITION]** Repetitive LLM rhetorical patterns (10 total): 'не просто X, а Y' x7, 'не лише X, а й Y' x3 — robotic prose
-  - FIX: Vary sentence structures. Replace formulaic 'не просто X, а Y' with diverse rhetorical devices
-- **[INLINE_ENGLISH_IN_PROSE]** Inline English translations in B1+ prose (6 occurrences): (The topic never came up), (He is not working now), (He failed the exam) — breaks immersion target
-  - FIX: Remove inline English translations. Use context clues, Ukrainian definitions, or move translations to vocabulary section
-- **[PHASE_TRANSLATIONS_LOW]** Early B1 (B1 M01-M30) targets ~25% translated UK paragraphs — currently 0% (0/35)
-  - FIX: 
+- **[COMPLEXITY]** match-up 'З'єднайте видові пари (недоконаний — доконаний вид).' has 7 pairs (target: 12-16)
+  - FIX: Adjust number of pairs to 12-16.
+- **[STATE_STANDARD_LOW_IMMERSION]** Module 8 has 23.7% immersion (target: 90.0%+)
+  - FIX: Add more Ukrainian content to reach 90%+ immersion for full immersion modules
 
 ## Recommendation
-**📝 UPDATE** (severity 40/100)
+**📝 UPDATE** (severity 65/100)
 
-- Revision recommended (severity 40/100)
-- 7 violations (significant)
+- Revision recommended (severity 65/100)
+- 5 violations (moderate)
+- Immersion 61% off target (major rebalancing needed)
 - Activity density below minimum
 
 ## Gates
-- **Words:** ✅ 4629/4000 (raw: 4810)
+- **Words:** ✅ 6140/4000 (raw: 6200)
 - **Activities:** ✅ 8/0
 - **Density:** ❌ 2 < 6
-- **Unique_types:** ✅ 8/3 types
+- **Unique_types:** ✅ 6/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ❌ 0/5
+- **Engagement:** ❌ 2/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 35/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 92.0% (target 85-100% (B1.1 Aspect))
-- **Richness:** ❌ 59% < 95% min (grammar) - REWRITE needed
+- **Immersion:** ❌ 23.7% LOW (target 85-100% (B1.1 Aspect))
+- **Richness:** ❌ 56% < 95% min (grammar) - REWRITE needed
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
 
 ## Richness Details
-**Score:** 59% (minimum: 95%)
+**Score:** 56% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 51 | 24 | 100% | 20% | 20.0% |
+| examples | 35 | 24 | 100% | 20% | 20.0% |
 | engagement | 0 | 5 | 0% | 15% | 0.0% |
 | dialogues | 0 | 4 | 0% | 15% | 0.0% |
-| variety | 0.95 | - | 95% | 10% | 9.5% |
+| variety | 0.91 | - | 91% | 10% | 9.1% |
 | cultural | 2 | 3 | 67% | 10% | 6.7% |
 | realworld | 20 | 3 | 100% | 10% | 10.0% |
 | visual | 0 | 3 | 0% | 5% | 0.0% |
-| questions | 31 | 5 | 100% | 5% | 5.0% |
-| tables | 1 | 2 | 50% | 4% | 2.0% |
+| questions | 25 | 5 | 100% | 5% | 5.0% |
+| tables | 0 | 2 | 0% | 4% | 0.0% |
 | paragraph_var | 1.00 | - | 100% | 3% | 3.0% |
 | proverbs | 10 | 1 | 100% | 3% | 3.0% |
-| **TOTAL** | | | | | **59.2%** |
+| **TOTAL** | | | | | **56.8%** |
 
 ### Dryness Flags & Fixes
 - ❌ **NO_ENGAGEMENT**
@@ -133,18 +130,21 @@
     
     IMPORTANT: Dialogues OUTSIDE blockquotes (>) using **Speaker:** format are NOT detected.
     Place dialogues inside [!dialogue] callouts or blockquotes.
+- ❌ **NO_TABLES**
+  - FIX:
+    Address this issue to improve richness score
 
 ## Low Density Activities
 | Activity | Type | Items | Required | Fix |
 |----------|------|-------|----------|-----|
-| essay-response | essay-response | 1 | 6 | Add 5 more items |
-| true-false | true-false | 6 | 8 | Add 2 more items |
+| З'єднайте видові пари (недоконаний — доконаний вид). | match-up | 7 | 8 | Add 1 more items |
+|  | essay-response | 1 | 6 | Add 5 more items |
 
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 1071 | Included in Core |
-| **Не + недоконаний: загальне заперечення (~1150 words total)** | ✅ | 1277 | Included in Core |
-| **Ще не + доконаний: очікуване завершення (~1150 words total)** | ✅ | 1113 | Included in Core |
-| **Підсумок: заперечення як прагматичний вибір** | ✅ | 1168 | Included in Core |
+| **Intro/Narrative** | ✅ | 1465 | Included in Core |
+| **Не + недоконаний: загальне заперечення (~1150 words total)** | ✅ | 1421 | Included in Core |
+| **Ще не + доконаний: очікуване завершення (~1150 words total)** | ✅ | 1548 | Included in Core |
+| **Підсумок: заперечення як прагматичний вибір (~1200 words total)** | ✅ | 1706 | Included in Core |

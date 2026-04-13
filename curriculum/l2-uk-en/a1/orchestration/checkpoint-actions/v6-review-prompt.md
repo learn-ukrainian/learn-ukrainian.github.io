@@ -16,7 +16,7 @@ module: a1-021
 level: A1
 sequence: 21
 slug: checkpoint-actions
-version: '1.1'
+version: '1.2'
 title: 'Checkpoint: Actions'
 subtitle: Can you say what you do, want, and ask questions?
 focus: review
@@ -30,11 +30,13 @@ objectives:
 - Describe a routine using reflexive verbs and sequence words
 - Combine A1.1-A1.3 skills in connected speech
 dialogue_situations:
-- setting: Job interview — describing your typical day, skills, and schedule
+- setting: Meeting a new flatmate and swapping daily schedules — who cooks when,
+    who studies in the morning, who likes/can do which chore
   speakers:
-  - Кандидат (applicant)
-  - Менеджер
-  motivation: 'Consolidation: verbs, modals, questions, reflexives'
+  - Новий сусід по квартирі
+  - Давній мешканець
+  motivation: 'Consolidation: verbs, modals, questions, reflexives — in a casual,
+    A1-appropriate setting (not a job interview, which is B1+).'
 content_outline:
 - section: Що ми знаємо? (What Do We Know?)
   words: 200
@@ -73,8 +75,27 @@ content_outline:
     You can ask questions and negate statements. You can describe your daily routine.
     Next: A1.4 — Time and Nature (time, days, weather).'
 vocabulary_hints:
-  required: []
-  recommended: []
+  required:
+  - любити (to love/like)
+  - хотіти (to want)
+  - могти (to be able to)
+  - мусити (to have to, must)
+  - читати (to read)
+  - говорити (to speak)
+  - працювати (to work)
+  - дивитися (to watch)
+  - прокидатися (to wake up)
+  - вмиватися (to wash one's face)
+  recommended:
+  - снідати (to have breakfast)
+  - готувати (to cook)
+  - прибирати (to clean)
+  - допомагати (to help)
+  - танцювати (to dance)
+  - співати (to sing)
+  - грати (to play)
+  - гуляти (to walk)
+  - писати (to write)
 activity_hints:
 - type: quiz
   focus: 'Mixed conjugation: choose correct form for Group I and II verbs'
@@ -107,98 +128,98 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Що ми знаємо? (What Do We Know?)
+## Що ми зна́ємо? (What Do We Know?)
 
 Learning a new language is a step-by-step process of building communication skills. In our very first modules, we laid the foundation by learning how to name objects around us, identify people, and use basic adjectives. In the A1.3 phase, we started bringing those objects and people to life by adding actions. We moved from simply stating what we like in Module 15 to describing our entire morning routines in Module 20. 
 
 This checkpoint is a moment to pause, reflect, and consolidate everything we have built so far. Before we move forward to learning about time and nature in the next phase, we need to make sure these action blocks are solid. Can you comfortably describe what you do, what you want, and what you must do? 
 
 Take a moment to read through this structured self-check list. Do not just read the English translation; look closely at the Ukrainian examples and see if you understand exactly how the words are formed.
-*   Can you say what you like? For example, **мені подобається кава** (I like coffee) or **я люблю читати** (I love to read).
-*   Can you conjugate a Group I verb for all persons? Think about the verb **читати** (to read): **я читаю** (I read), **ти читаєш** (you read), **вони читають** (they read).
-*   Can you conjugate a Group II verb? Take the verb **говорити** (to speak): **я говорю** (I speak), **ти говориш** (you speak), **вони говорять** (they speak).
-*   Can you express a need, ability, or desire using modal verbs? For example, **я мушу йти** (I must go), **я хочу спати** (I want to sleep), or **я можу допомогти** (I can help).
-*   Can you ask basic questions using the seven core question words? For example, **де офіс?** (where is the office?) or **коли ти працюєш?** (when do you work?).
-*   Can you describe your morning using reflexive verbs? For example, **я прокидаюся** (I wake up) and **я вмиваюся** (I wash my face).
+*   Can you say what you like? For example, **мені́ подо́бається ка́ва** (I like coffee) or **я люблю́ чита́ти** (I love to read).
+*   Can you conjugate a Group I verb for all persons? Think about the verb **читати** (to read): **я чита́ю** (I read), **ти чита́єш** (you read), **вони́ чита́ють** (they read).
+*   Can you conjugate a Group II verb? Take the verb **говори́ти** (to speak): **я говорю́** (I speak), **ти гово́риш** (you speak), **вони гово́рять** (they speak).
+*   Can you express a need, ability, or desire using modal verbs? For example, **я му́шу йти** (I must go), **я хо́чу спа́ти** (I want to sleep), or **я мо́жу допомогти́** (I can help).
+*   Can you ask basic questions using the seven core question words? For example, **де о́фіс?** (where is the office?) or **коли́ ти працю́єш?** (when do you work?).
+*   Can you describe your morning using reflexive verbs? For example, **я прокида́юся** (I wake up) and **я вмива́юся** (I wash my face).
 
-If these patterns feel familiar, 
+If these patterns feel familiar, you are ready to see them in action.
 
-## Читання (Reading Practice)
+## Чита́ння (Reading Practice)
 
 Reading connected text is the best way to see how grammar works in the real world. Meet Pavlo. He is a designer from Kyiv. In the short text below, Pavlo describes his typical day. This narrative combines every verb group, modal verb, and sequence word you have studied so far into a single, cohesive story. As you read, pay attention to the endings of the verbs and how Pavlo connects his actions from morning until night. Read the text aloud to practice your pronunciation and rhythm.
 
-**Мій звичайний день** (My Typical Day)
-*   **Я прокидаюся о сьомій.** (I wake up at seven.)
-*   **Спочатку я вмиваюся, а потім снідаю.** (First I wash my face, and then I eat breakfast.)
-*   **Я дуже люблю каву.** (I really love coffee.)
-*   **О дев'ятій я вже працюю.** (At nine I am already working.)
-*   **Я дизайнер. Я багато думаю і малюю.** (I am a designer. I think and draw a lot.)
-*   **Удень я можу гуляти в парку.** (In the afternoon I can walk in the park.)
-*   **Увечері я мушу вчити англійську, але я хочу дивитися фільм.** (In the evening I must study English, but I want to watch a movie.)
-*   **Одинадцята вечора — я вже сплю.** (Eleven in the evening — I am already sleeping.)
+**Мій звича́йний день** (My Typical Day)
+*   **Я прокидаюся о сьо́мій.** (I wake up at seven.)
+*   **Споча́тку я вмиваюся, а по́тім сні́даю.** (First I wash my face, and then I eat breakfast.)
+*   **Я ду́же люблю ка́ву.** (I really love coffee.)
+*   **О дев'я́тій я вже працю́ю.** (At nine I am already working.)
+*   **Я диза́йнер. Я бага́то ду́маю і малю́ю.** (I am a designer. I think and draw a lot.)
+*   **Уде́нь я можу гуля́ти в парку.** (In the afternoon I can walk in the park.)
+*   **Уве́чері я мушу вчи́ти англі́йську, але́ я хочу диви́тися фільм.** (In the evening I must study English, but I want to watch a movie.)
+*   **Одина́дцята ве́чора — я вже сплю.** (Eleven in the evening — I am already sleeping.)
 
-We can analyze the lexical choices in Pavlo's story. Notice how he uses sequence markers to organize his timeline. The word **спочатку** (first/at first) sets the starting point of a sequence, while **потім** (then/after that) introduces the next action. You can also use **тоді** (then) in similar contexts. These small words anchor the verbs and turn a list of separate sentences into a flowing story. 
+We can analyze the lexical choices in Pavlo's story. Notice how he uses sequence markers to organize his timeline. The word **спочатку** (first/at first) sets the starting point of a sequence, while **потім** (then/after that) introduces the next action. You can also use **тоді́** (then) in similar contexts. These small words anchor the verbs and turn a list of separate sentences into a flowing story. 
 
-Also, look at how Pavlo expresses his preferences. He says **я дуже люблю каву** (I really love coffee) to state a general fact about his tastes. However, when talking about his immediate desire in the evening, he uses the modal verb **хотіти** (to want): **я хочу дивитися фільм** (I want to watch a movie). Understanding the difference between a general preference (**любити**) and a specific desire (**хотіти**) gives your Ukrainian much more precision.
+Also, look at how Pavlo expresses his preferences. He says **я дуже люблю каву** (I really love coffee) to state a general fact about his tastes. However, when talking about his immediate desire in the evening, he uses the modal verb **хоті́ти** (to want): **я хочу дивитися фільм** (I want to watch a movie). Understanding the difference between a general preference (**люби́ти**) and a specific desire (**хотіти**) gives your Ukrainian much more precision.
 
 <!-- INJECT_ACTIVITY: fill-in-describe-day -->
 
-## Граматика (Grammar Summary)
+## Грама́тика (Grammar Summary)
 
 The core grammar patterns make these actions possible. Ukrainian verbs fall into two main conjugation groups, which we identify by their endings in the present tense. All verbs start with the infinitive ending **-ти** (for example: **читати**, **говорити**, **хотіти**).
 
-Group I verbs typically have an infinitive ending in **-ати** or **-яти**. Their present tense endings follow this pattern: **-ю**, **-єш**, **-є**, **-ємо**, **-єте**, **-ють**. In the third-person plural ("they" form), they always end in **-уть** or **-ють**.
-*   **знати** (to know) → **вони знають** (they know)
-*   **працювати** (to work) → **вони працюють** (they work)
-*   **думати** (to think) → **вони думають** (they think)
+Group I verbs typically have an infinitive ending in **-а́ти** or **-яти**. Their present tense endings follow this pattern: **-ю**, **-єш**, **-є**, **-ємо**, **-єте**, **-ють**. In the third-person plural ("they" form), they always end in **-уть** or **-ють**.
+*   **зна́ти** (to know) → **вони зна́ють** (they know)
+*   **працюва́ти** (to work) → **вони працю́ють** (they work)
+*   **ду́мати** (to think) → **вони ду́мають** (they think)
 
-Group II verbs usually have an infinitive ending in **-ити** or **-іти**. Their present tense endings follow this pattern: **-ю** (or **-у**), **-иш**, **-ить**, **-имо**, **-ите**, **-ять** (or **-ать**). In the third-person plural, they end in **-ать** or **-ять**.
+Group II verbs usually have an infinitive ending in **-ити** or **-іти́**. Their present tense endings follow this pattern: **-ю** (or **-у**), **-иш**, **-ить**, **-имо**, **-ите**, **-ять** (or **-ать**). In the third-person plural, they end in **-ать** or **-ять**.
 *   **говорити** (to speak) → **вони говорять** (they speak)
-*   **робити** (to do/make) → **вони роблять** (they do/make)
-*   **бачити** (to see) → **вони бачать** (they see)
+*   **роби́ти** (to do/make) → **вони ро́блять** (they do/make)
+*   **ба́чити** (to see) → **вони ба́чать** (they see)
 
-Notice the stem change in the first person singular for some Group II verbs, like **бачити**: we say **я бачу** (I see), not "бачю".
+Notice the stem change in the first person singular for some Group II verbs, like **бачити**: we say **я ба́чу** (I see), not "бачю".
 
-Next, we have the modal verbs, which act as helpers to express ability, obligation, or desire. The big three are **хотіти** (to want), **могти** (to be able to/can), and **мусити** (must/to have to). The usage pattern is simple and strict: you conjugate the modal verb to match the subject, and the action verb that follows remains in the infinitive (unchanged).
+Next, we have the modal verbs, which act as helpers to express ability, obligation, or desire. The big three are **хотіти** (to want), **могти́** (to be able to/can), and **му́сити** (must/to have to). The usage pattern is simple and strict: you conjugate the modal verb to match the subject, and the action verb that follows remains in the infinitive (unchanged).
 *   **Я хочу говорити.** (I want to speak.)
-*   **Він може працювати.** (He can work.)
-*   **Ми мусимо йти.** (We must go.)
+*   **Він мо́же працювати.** (He can work.)
+*   **Ми му́симо йти.** (We must go.)
 
-To have a real conversation, you need to know how to ask questions and negate statements. We learned the seven core question words: **Хто** (Who), **Що** (What), **Де** (Where), **Куди** (Where to), **Коли** (When), **Чому** (Why), and **Як** (How). When you want to ask a question, remember an important naturalness rule: in Ukrainian, we say **ставити питання** (to ask a question), never the direct translation "задавати".
+To have a real conversation, you need to know how to ask questions and negate statements. We learned the seven core question words: **Хто** (Who), **Що** (What), **Де** (Where), **Куди́** (Where to), **Коли** (When), **Чо́му** (Why), and **Як** (How). When you want to ask a question, remember an important naturalness rule: in Ukrainian, we say **ста́вити пита́ння** (to ask a question), never the direct translation "задава́ти".
 
-For negation, simply place the particle **не** (not) directly before the verb: **я не знаю** (I do not know). Ukrainian also uses double negation, which is perfectly grammatical and required when using negative pronouns. If you use a word like **ніхто** (nobody) or **нічого** (nothing), you must still use **не** before the verb: **я нічого не знаю** (I know nothing).
+For negation, simply place the particle **не** (not) directly before the verb: **я не зна́ю** (I do not know). Ukrainian also uses double negation, which is perfectly grammatical and required when using negative pronouns. If you use a word like **ніхто́** (nobody) or **ні́чого** (nothing), you must still use **не** before the verb: **я нічого не знаю** (I know nothing).
 
 Finally, we covered reflexive verbs, which describe actions you perform on yourself. These verbs add the suffix **-ся** to the end of the conjugated form.
 *   **прокидатися** (to wake up)
-*   **вмиватися** (to wash oneself)
-*   **одягатися** (to get dressed)
+*   **вмива́тися** (to wash oneself)
+*   **одяга́тися** (to get dressed)
 
-Pay attention to a crucial phonetic rule regarding this suffix. The suffix **-ся** can reduce to **-сь** when the verb ending finishes with a vowel (**голосний**). Compare the full form **я вмиваюся** (I wash myself) with the shortened, but very common, form **я вмиваюсь**. However, after a consonant (**приголосний**), you must always use the full **-ся**, as in **ти вмиваєшся** (you wash yourself).
+Pay attention to a crucial phonetic rule regarding this suffix. The suffix **-ся** can reduce to **-сь** when the verb ending finishes with a vowel (**голосни́й**). Compare the full form **я вмиваюся** (I wash myself) with the shortened, but very common, form **я вмива́юсь**. However, after a consonant (**при́голосний**), you must always use the full **-ся**, as in **ти вмива́єшся** (you wash yourself).
 
 <!-- INJECT_ACTIVITY: group-sort-verbs -->
 <!-- INJECT_ACTIVITY: quiz-mixed-conjugation -->
 
-## Діалог (Connected Dialogue)
+## Діало́г (Connected Dialogue)
 
-These pieces work together in a natural setting. The context is a meeting between two friends, Olena and Viktor. Olena is busy with her tasks, but Viktor wants to hang out. This scenario forces the speakers to use questions to gather information, modal verbs to express their desires and limitations, and negation to turn down proposals. This is a classic example of the **розмовний** (conversational) register, exactly how people speak in real life.
+These pieces work together in a natural setting. The context is a meeting between two friends, Olena and Viktor. Olena is busy with her tasks, but Viktor wants to hang out. This scenario forces the speakers to use questions to gather information, modal verbs to express their desires and limitations, and negation to turn down proposals. This is a classic example of the **розмо́вний** (conversational) register, exactly how people speak in real life.
 
-> **Віктор:** Привіт! Що ти робиш? *(Hi! What are you doing?)*
-> **Олена:** Я зараз працюю, але дуже хочу каву. *(I am working right now, but I really want coffee.)*
-> **Віктор:** Ти можеш гуляти зараз? *(Can you walk right now?)*
-> **Олена:** Не можу, мушу працювати. Коли ти вільний? *(I cannot, I must work. When are you free?)*
-> **Віктор:** Я вільний о шостій. Де ми зустрічаємося? *(I am free at six. Where are we meeting?)*
-> **Олена:** У центрі. До зустрічі! *(In the center. See you!)*
+> **Ві́ктор:** Приві́т! Що ти ро́биш? *(Hi! What are you doing?)*
+> **Оле́на:** Я за́раз працюю, але дуже хочу каву. *(I am working right now, but I really want coffee.)*
+> **Віктор:** Ти мо́жеш гуляти зараз? *(Can you go for a walk right now?)*
+> **Олена:** Не можу, мушу працювати. Коли ти ві́льний? *(I cannot, I must work. When are you free?)*
+> **Віктор:** Я вільний о шо́стій. Де ми зустріча́ємося? *(I am free at six. Where are we meeting?)*
+> **Олена:** У це́нтрі. До зу́стрічі! *(In the center. See you!)*
 
 Several pedagogical mechanics are at play in this conversation. 
 
 First, notice the difference between location and direction. Viktor asks **де ми зустрічаємося?** (where are we meeting?). The word **де** (where) asks about a static location. If he were asking about a destination they were walking towards, he would use **куди** (where to).
 
-Second, look at Olena's refusal. When Viktor asks if she can walk, she doesn't just say **ні** (no). She says **не можу** (I cannot). In Ukrainian, repeating the negated verb is much more natural and polite than a blunt negative word. It shows that you are engaged in the conversation and providing a specific reason for your answer.
+Second, look at Olena's refusal. When Viktor asks if she can go for a walk, she doesn't just say **ні** (no). She says **не можу** (I cannot). In Ukrainian, repeating the negated verb is much more natural and polite than a blunt negative word. It shows that you are engaged in the conversation and providing a specific reason for your answer.
 
 Third, notice how Viktor states the time: **о шостій** (at six). When talking about hours on the clock, Ukrainian uses the preposition **о** (or **об** before a vowel) followed by the ordinal number. 
 
 :::tip
-If you ever need to interrupt or clarify something in a dialogue like this, remember to use the polite phrase **у мене є питання** (I have a question). This is the natural Ukrainian way to ask for clarification, rather than translating "I have a question" word-for-word from English.
+If you ever need to interrupt or clarify something in a dialogue like this, remember to use the polite phrase **у мене́ є питання** (I have a question). This is the natural Ukrainian way to ask for clarification, rather than translating "I have a question" word-for-word from English.
 :::
 
 <!-- INJECT_ACTIVITY: fill-in-dialogue-completion -->
@@ -211,10 +232,10 @@ You are no longer limited to just naming objects or saying what you like. You ca
 
 This is a massive step forward in your ability to communicate. You have mastered the "What" — the actions that make up daily life. Now, we need to add precision to those actions. 
 
-In the next phase, A1.4 [Time and Nature], we will focus on the "When" and the "Where" in much greater detail. You will learn how to read the clock and talk about specific times using **години** (hours). You will learn the **дні тижня** (days of the week) to schedule meetings and make plans with friends. We will also learn how to describe the world around us by talking about the **погода** (weather). You have the actions; now we will build the stage where those actions take place. Keep practicing your verbs, and get ready for the next level!
+In the next phase, A1.4 [Time and Nature], we will focus on the "When" and the "Where" in much greater detail. You will learn how to read the clock and talk about specific times using **годи́ни** (hours). You will learn the **дні ти́жня** (days of the week) to schedule meetings and make plans with friends. We will also learn how to describe the world around us by talking about the **пого́да** (weather). You have the actions; now we will build the stage where those actions take place. Keep practicing your verbs, and get ready for the next level!
 </generated_module_content>
 
-**PIPELINE NOTE — Word count: 1785 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
+**PIPELINE NOTE — Word count: 1799 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -390,50 +411,217 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 112 words | Not found: 14 words
+Verified: 90 words | Not found: 63 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
   ✗ Віктор — NOT IN VESUM
+  ✗ Діало — NOT IN VESUM
+  ✗ Одина — NOT IN VESUM
+  ✗ Оле — NOT IN VESUM
   ✗ Олена — NOT IN VESUM
-  ✗ ати — NOT IN VESUM
+  ✗ Приві — NOT IN VESUM
+  ✗ Споча — NOT IN VESUM
+  ✗ Уве — NOT IN VESUM
+  ✗ Уде — NOT IN VESUM
+  ✗ англі — NOT IN VESUM
   ✗ ать — NOT IN VESUM
+  ✗ бага — NOT IN VESUM
   ✗ бачю — NOT IN VESUM
+  ✗ бається — NOT IN VESUM
+  ✗ биш — NOT IN VESUM
+  ✗ вний — NOT IN VESUM
+  ✗ гово — NOT IN VESUM
+  ✗ годи — NOT IN VESUM
+  ✗ голосни — NOT IN VESUM
+  ✗ гуля — NOT IN VESUM
+  ✗ дев'я — NOT IN VESUM
+  ✗ диза — NOT IN VESUM
+  ✗ дцята — NOT IN VESUM
+  ✗ жеш — NOT IN VESUM
+  ✗ жня — NOT IN VESUM
+  ✗ задава — NOT IN VESUM
+  ✗ звича — NOT IN VESUM
   ✗ имо — NOT IN VESUM
   ✗ ите — NOT IN VESUM
   ✗ ити — NOT IN VESUM
   ✗ ить — NOT IN VESUM
-  ✗ уть — NOT IN VESUM
-  ✗ ють — NOT IN VESUM
-  ✗ яти — NOT IN VESUM
-  ✗ ємо — NOT IN VESUM
-  ✗ єте — NOT IN VESUM
+  ✗ йнер — NOT IN VESUM
+  ✗ йний — NOT IN VESUM
+  ✗ йську — NOT IN VESUM
+  ✗ ктор — NOT IN VESUM
+  ✗ льний — NOT IN VESUM
+  ✗ малю — NOT IN VESUM
+  ✗ ння — NOT IN VESUM
+  ✗ нтрі — NOT IN VESUM
+  ✗ пого — NOT IN VESUM
+  ✗ подо — NOT IN VESUM
+  ✗ працюва — NOT IN VESUM
+  ✗ риш — NOT IN VESUM
+  ✗ розмо — NOT IN VESUM
+  ✗ рять — NOT IN VESUM
+  ✗ симо — NOT IN VESUM
+  ✗ сити — NOT IN VESUM
+  ✗ сьо — NOT IN VESUM
+  ✗ тися — NOT IN VESUM
+  ✗ тку — NOT IN VESUM
 
-All 112 other words are confirmed to exist in VESUM.
+All 90 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
-## Verification Tools (MCP)
+---
 
-You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
+## Verification Tools (Shell Commands)
 
-**Core Verification:**
-- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
-- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
+You have access to verification tools via shell commands. Use these to verify
+Ukrainian vocabulary, check grammar, and search textbook content **as you write**.
 
-**Content Quality:**
-- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+**IMPORTANT:** Run verification commands BEFORE finalizing any Ukrainian text.
+Batch multiple verifications together to minimize round-trips.
 
-**Reference:**
-- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp_rag_search_literary` — verify literary references against primary sources
-- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
+### 1. Batch-verify Ukrainian words exist in VESUM (preferred — one call for many words)
 
-**Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_words
+results = verify_words(['слово1', 'слово2', 'слово3'])
+for w, matches in results.items():
+    if matches:
+        print(f'{w}: FOUND — lemma={matches[0][\"lemma\"]}, pos={matches[0][\"pos\"]}')
+    else:
+        print(f'{w}: NOT FOUND — may not exist in standard Ukrainian')
+"
+```
+
+### 2. Verify a single Ukrainian word in VESUM (with full morphological tags)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_word
+results = verify_word('WORD_HERE')
+if results:
+    for m in results:
+        print(f'lemma={m[\"lemma\"]}, pos={m[\"pos\"]}, tags={m[\"tags\"]}')
+else:
+    print('NOT FOUND in VESUM')
+"
+```
+
+### 3. Get all inflected forms of a lemma (declension/conjugation)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_lemma
+forms = verify_lemma('LEMMA_HERE')
+for f in forms[:20]:
+    print(f'{f[\"word_form\"]:20s} {f[\"pos\"]:8s} {f[\"tags\"]}')
+print(f'... {len(forms)} forms total')
+"
+```
+
+### 4. Check CEFR level of a word (is it level-appropriate?)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import query_cefr_level
+results = query_cefr_level('WORD_HERE')
+for r in results:
+    print(f'{r[\"word\"]}: {r[\"level\"]} ({r[\"pos\"]})')
+if not results:
+    print('Not in CEFR database')
+"
+```
+
+### 5. Search textbook content (Ukrainian school textbooks, Grades 1-11)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_textbooks
+keywords = {'keyword1', 'keyword2'}
+results = search_textbooks(keywords, 5)
+for r in results:
+    title = r.get('section_title', r.get('title', ''))
+    grade = r.get('grade', '?')
+    text = r.get('text', '')[:200]
+    print(f'Grade {grade} | {title}')
+    print(f'  {text}')
+    print()
+"
+```
+
+### 6. Search style guide for calques/Russianisms (Антоненко-Давидович, 279 entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_style_guide
+results = search_style_guide('TOPIC_HERE', 3)
+for r in results:
+    print(f'--- {r.get(\"word\", \"\")} [{r.get(\"section\", \"\")}]')
+    print(r.get('text', '')[:300])
+    print()
+if not results:
+    print('No style guide entries found')
+"
+```
+
+### 7. Look up word definition in СУМ-11 (Ukrainian explanatory dictionary, 127K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_definitions
+results = search_definitions('WORD_HERE', 3)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+### 8. Search idioms (Фразеологічний словник, 25K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_idioms
+results = search_idioms('WORD_HERE', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"text\", r.get(\"definition\", \"\")))[:200]}')
+"
+```
+
+### 9. English-to-Ukrainian translation (Балла, 79K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import translate_en_uk
+results = translate_en_uk('ENGLISH_WORD', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+---
+
+**WHEN to use these tools:**
+
+1. **Before writing any Ukrainian text** — batch-verify all key vocabulary with
+   `verify_words` (tool 1). Any word that returns NOT FOUND must be replaced.
+2. **When you suspect a Russicism or calque** — search the style guide (tool 6)
+   and verify the correct Ukrainian form with `verify_word` (tool 2).
+3. **When writing for A1/A2** — check CEFR levels (tool 4) to ensure vocabulary
+   is level-appropriate.
+4. **When unsure about a case ending or conjugation** — use `verify_lemma` (tool 3)
+   to see the full paradigm.
+5. **When covering a grammar topic** — search textbooks (tool 5) to see how
+   Ukrainian school textbooks teach it.
+6. **When you need the precise Ukrainian meaning** — use СУМ-11 (tool 7).
+7. **When looking for natural Ukrainian expressions** — search idioms (tool 8).
+
+**Batching rule:** Collect all words you want to verify, then run ONE `verify_words`
+call instead of multiple `verify_word` calls. This is faster and uses fewer tokens.

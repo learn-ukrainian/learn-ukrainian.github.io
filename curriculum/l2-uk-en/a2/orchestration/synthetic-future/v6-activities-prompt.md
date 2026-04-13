@@ -1,4 +1,4 @@
-<!-- version: 1.1.0 | updated: 2026-03-31 -->
+<!-- version: 1.2.0 | updated: 2026-04-12 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -11,6 +11,35 @@ Generate an `activities/synthetic-future.yaml` file for module **41: Я напи
 
 ---
 
+## ⚠️ HARD COUNT TARGETS — READ TWICE
+
+These are the binding numerical contracts for THIS module. The audit will FAIL if you fall short.
+
+| Bucket | Min | Max | Notes |
+|---|---|---|---|
+| Total activities | 12 | 12+ | inline + workbook combined |
+| Inline (lesson tab) | 4 | 6 | one per `<!-- INJECT_ACTIVITY -->` marker, see below |
+| Workbook (Зошит tab) | 8 | 11 | extended practice |
+| Items per activity | 8 | — | each activity must have at least 8 items (unless its type cap is lower — see Activity Type Reference below) |
+
+**You MUST ship at least 4 inline activities AND at least 8 workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+
+**Type diversity is required.** The module (inline + workbook combined) MUST use at least **0** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level. (If `0` is `0`, the audit profile for this level does not enforce type diversity — but variety still produces a better lesson, so aim for 4+ types when the workbook allows it.)
+
+---
+
+## Allowed types for THIS level
+
+- **Inline (lesson) types:** quiz, true-false, fill-in, match-up, group-sort, classify, mark-the-words
+- **Inline priority (preferred):** fill-in, match-up, true-false, quiz
+- **Workbook types:** cloze, error-correction, fill-in, unjumble, translate, match-up, group-sort, odd-one-out, observe, phrase-table, quiz, true-false, mark-the-words
+- **Workbook priority (preferred):** error-correction, cloze, unjumble, translate, fill-in
+- **FORBIDDEN at this level:** anagram, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables, highlight-morphemes, grammar-identify
+
+Pick from the allowed list. Lean heavily on the priority lists. Do not use any forbidden type — the build will reject it.
+
+---
+
 ## Inline vs Workbook Split
 
 Activities have two placement categories:
@@ -19,7 +48,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Rule of thumb:** inline = 2-3 quick checks after key teaching points. Workbook = 4-8 deeper practice exercises covering the full topic.
+**Rule of thumb:** inline = 4–6 quick checks after key teaching points. Workbook = 8–11 deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
 
 ---
 
@@ -27,10 +56,11 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: group-sort-future-forms -->`
-- `<!-- INJECT_ACTIVITY: fill-in-future-forms -->`
-- `<!-- INJECT_ACTIVITY: quiz-aspect-choice -->`
+- `<!-- INJECT_ACTIVITY: group-sort-sort-verb-forms-into-two-groups-synthetic-future-perfective-and-analytical-future-imperfective -->`
+- `<!-- INJECT_ACTIVITY: fill-in-complete-sentences-with-the-correct-synthetic-perfective-future-forms-based-on-context -->`
 - `<!-- INJECT_ACTIVITY: unjumble-future-sentences -->`
+- `<!-- INJECT_ACTIVITY: fill-in-future-aspect -->`
+- `<!-- INJECT_ACTIVITY: quiz-aspect-choice -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -91,85 +121,111 @@ required:
 ## Module Content (the prose the learner reads before exercises)
 
 <module_content>
-## Два майбутніх часи (Two Futures in Ukrainian)
+## Два майбутніх часи (~450 words)
 
-В англійській мові є лише один майбутній час. In English, there is only one future tense. English uses the word "will" to talk about any future action. В українській мові ми маємо два майбутніх часи. In Ukrainian, we have two future tenses. Your choice of tense depends strictly on the verbal aspect. Ми обираємо між завершеним результатом та тривалим процесом. We must decide if the action is a single finished event or a repeated habit. Це правило не залежить від формального чи неформального стилю. This rule does not depend on formal or informal style. This choice is purely about how the action unfolds in reality. Ukrainian grammar forces us to be specific about our intentions. Ви повинні одразу думати про мету вашої дії. You must immediately think about the goal of your action.
+Новий рік — це завжди особливий час для нових планів, великих мрій і важливих обіцянок. Група друзів зустрічається, щоб весело відсвяткувати це свято разом. Вони сидять за великим столом, їдять смачні традиційні страви і довго говорять про майбутнє. Кожен має свої цікаві цілі на наступний рік. Вони жваво обговорюють, що саме хочуть змінити у своєму житті. Хтось планує багато подорожувати, хтось хоче знайти нову престижну роботу або швидко вивчити іноземну мову. Усі друзі дуже радісні, енергійні та повні світлих надій.
 
-Перший варіант — це **простий майбутній час**. The first option is the simple future tense. We form this tense using perfective verbs. Дієслова **доконаного виду** не мають справжнього теперішнього часу. Verbs of the perfective aspect do not have a real present tense. Think about it logically: a completed action cannot be happening right now. Якщо дія повністю завершена, вона не може тривати зараз. If an action is completely finished, it cannot last right now. Because perfective verbs cannot logically exist in the present, their present-tense forms automatically point to the future. They look exactly like present tense verbs, but they carry a future meaning. Наприклад, ми беремо дієслово «писати». For example, we take the verb to write. У теперішньому часі ми кажемо: «Я **пишу** листа». In the present tense, we say: "I am writing a letter". This means you are doing the action right now. Але дієслово «написати» має доконаний вид. But the verb to write with the prefix "на-" has the perfective aspect. Форма «я **напишу** листа» означає завершену дію в майбутньому. The form "I will write a letter" means a completed action in the future. It means you will finish the letter completely.
+> *New Year is always a special time for new plans, big dreams, and important promises. A group of friends meets to merrily celebrate this holiday together. They sit at a large table, eat delicious traditional dishes, and talk for a long time about the future. Everyone has their own interesting goals for the next year. They actively discuss exactly what they want to change in their lives. Someone plans to travel a lot, someone wants to find a new prestigious job or quickly learn a foreign language. All the friends are very joyful, energetic, and full of bright hopes.*
 
-Другий варіант — це **складений майбутній час**. The second option is the compound future tense. We use this specific form with verbs of the imperfective aspect. Цей час показує тривалу або регулярну дію в майбутньому. This tense shows a continuous or regular action in the future. To build it, we need the auxiliary verb **бути** in its future forms. The verb "to be" helps us create this structure. До цього слова ми додаємо інфінітив дієслова **недоконаного виду**. To this word we add the infinitive of the imperfective aspect verb. For example, we combine "буду" and the infinitive "писати". Ми кажемо: «Завтра я **буду писати** листа». We say: "Tomorrow I will be writing a letter". This means the process will happen, but we do not guarantee the final completion. Можливо, я не закінчу цей довгий текст. Maybe I will not finish this long text. Ця форма також ідеально підходить для регулярних дій. This form is also ideally suited for regular actions. Кожного вечора я **буду читати** книгу. Every evening I will read a book. The grammatical structure is always the verb "бути" plus the dictionary form of the main verb.
+> — **Олена:** У новому році я обов'язково напишу книгу! *(In the new year, I will definitely write a book!)*
+> — **Марко:** А я вивчу іспанську мову. *(And I will learn Spanish.)*
+> — **Софія:** Мій брат прочитає п'ятдесят книг за рік! *(My brother will read fifty books in a year!)*
+> — **Максим:** А моя сестра нарешті складе важливий іспит. *(And my sister will finally pass an important exam.)*
 
-Давайте коротко порівняємо ці дві форми. Let's briefly compare these two forms. The simple future promises a clear result and a logical completion. Форма «я **напишу**» гарантує результат. The form "I will write" guarantees a result. The compound future focuses entirely on duration and repetition. Форма «я **буду писати**» показує лише активний процес. The form "I will be writing" shows only an active process. Choosing the wrong tense can change the meaning of your promise. Якщо ви кажете «я **зроблю**», люди чекають на результат. If you say "I will do", people wait for a result. If you say "я **буду робити**", you only promise to spend time on the task. Обидва часи дуже потрібні для щоденного спілкування українською мовою. Both tenses are very necessary for daily communication in the Ukrainian language.
+:::note
+**Quick tip:** When talking about academic tests, Ukrainian uses the phrase **складати / скласти іспит** (to take / pass an exam). Never use the Russian calque "здавати іспит".
+:::
 
-## Простий майбутній час (Perfective/Synthetic Future)
+When we listen to these friends, we notice something fascinating about how they express their goals. In English, there is one primary way to talk about the future, usually by simply adding the word "will" before the main verb. However, Ukrainian grammar has two distinct ways to form the **майбутній час** (future tense). The choice between these two forms has absolutely nothing to do with formality or style. Instead, it is entirely about the aspect of the verb.
 
-The simple future tense uses perfective verbs. Ми завжди використовуємо дієслова **доконаного виду** *(perfective aspect)*. To build this tense, we take a perfective verb and conjugate it exactly like a present-tense verb. Ми просто додаємо звичайні закінчення теперішнього часу. *(We simply add normal present-tense endings.)* Most perfective verbs are just imperfective verbs with a specific prefix added to the beginning. Наприклад, ми беремо популярний префікс **про-** і дієслово **читати** *(to read)*. *(For example, we take the popular prefix pro- and the verb to read.)* Разом ми отримуємо нове дієслово **прочитати** *(to read completely)*. This new verb belongs to the first conjugation. Ми відмінюємо його так: **я прочитаю** *(I will read)*, **ти прочитаєш** *(you will read)*, **він прочитає** *(he will read)*. У множині ми кажемо: **ми прочитаємо** *(we will read)*, **ви прочитаєте** *(you will read)*, **вони прочитають** *(they will read)*. The endings are absolutely identical to the present tense, but the prefix automatically makes the meaning future.
+The first type is the **простий** (simple, synthetic) future tense. It is formed using perfective verbs. Because perfective verbs describe completed actions, they do not have a true present tense. Instead, when you conjugate them, they automatically point to the future. For example, the pair **сказати / скажу** (to say/tell — pf. future) shows this shift. Similarly, **написати / напишу** (to write — pf. future) guarantees a finished text.
 
-The second conjugation follows the exact same structural logic. Ми беремо префікс і додаємо його до базової основи. *(We take a prefix and add it to the base stem.)* However, you must remember the specific consonant shifts that happen. Ці чергування приголосних звуків дуже важливі тут. *(These consonant sound shifts are very important here.)* For example, the consonant **б** changes to the cluster **бл** in the first person singular and third person plural. Дієслово **зробити** *(to do completely)* має форми **я зроблю** *(I will do)* та **вони зроблять** *(they will do)*. Інші форми залишаються нормальними: **ти зробиш** *(you will do)*, **він зробить** *(he will do)*, **ми зробимо** *(we will do)*, **ви зробите** *(you will do)*. Another common shift is **т** to **ч** in the first person singular. Від дієслова **заплатити** *(to pay)* ми легко утворюємо форму **я заплачу** *(I will pay)*. You will also frequently see the shift from **д** to **дж** in verbs like **порадити** *(to advise)*, which becomes **я пораджу** *(I will advise)*.
+You will use this synthetic future for single, completed actions. For instance, the pair **зробити / зроблю** (to do — pf. future) indicates a successfully completed task. If you plan to reach the end of a novel, you will use **прочитати** (to read through — pf.). If you need to acquire a new item, you choose **купити** (to buy — pf.). These forms ensure that the action will produce a final, tangible result.
 
-Some perfective verbs are absolutely essential for daily communication and simple transactions. Це головні дієслова для вашого щоденного виживання. *(These are the main verbs for your daily survival.)* You will use them constantly to make firm promises or state clear decisions. Якщо ви хочете щось сказати, ви кажете: «Я **скажу**» *(I will say)*. Якщо ви плануєте покупку в магазині, ви кажете: «Я **куплю**» *(I will buy)*. Notice that the verb **купити** *(to buy)* also features the consonant shift in the first person. Для розмови по телефону ми використовуємо дієслово **подзвонити** *(to call)*. Ви кажете своїм друзям: «Я **подзвоню** вам завтра» *(I will call you tomorrow)*. Якщо ви відправляєте важливе повідомлення, ви кажете: «Я **надішлю** довгий емейл» *(I will send a long email)*.
+When you need to contact someone quickly by phone, you will select **подзвонити** (to call — pf.). On the other hand, the second type of future is the **складений** (compound, analytical) future tense. We use this analytical form exclusively with imperfective verbs to describe ongoing or repeated actions. To build it, you only need to conjugate the auxiliary verb **буду** (I will — auxiliary) and add an imperfective infinitive.
 
-Motion verbs use specific prefixes to clearly show your concrete future travel plans. Дієслова руху дуже часто мають префікси **по-** або **при-**. *(Motion verbs very often have the prefixes po- or pry-.)* The prefix "по-" shows the active start of a trip or movement away from your current location. Якщо ви плануєте подорож машиною, ви кажете: «Я **поїду**» *(I will leave/go by vehicle)*. Якщо ви йдете кудись пішки, ви кажете: «Я **піду**» *(I will go by foot)*. The prefix "при-" always shows successful arrival at a destination. Якщо ви говорите про точний час, ви кажете: «Я **приїду** о сьомій годині» *(I will arrive at seven o'clock)*. Ці короткі слова ідеально підходять для планування маршруту. *(These short words are perfectly suited for planning a route.)*
+<!-- INJECT_ACTIVITY: group-sort-sort-verb-forms-into-two-groups-synthetic-future-perfective-and-analytical-future-imperfective -->
 
-Let's see how friends use these concrete forms when sharing their New Year's resolutions. Вони обговорюють свої цілі на новий рік. *(They are discussing their goals for the new year.)*
+## Простий майбутній час (~550 words)
 
-> — **Анна:** Які у вас плани на цей рік? *(What are your plans for this year?)*
-> — **Максим:** Я **напишу** книгу! А ти, Анно? *(I will write a book! And you, Anna?)*
-> — **Анна:** Я **вивчу** іспанську мову. Це моя головна мета. *(I will learn Spanish. This is my main goal.)*
-> — **Максим:** А що **зробить** наш друг Іван? *(And what will our friend Ivan do?)*
-> — **Анна:** Він **прочитає** п'ятдесят книг! А Олена **складе** свій іспит. *(He will read fifty books! And Olena will pass her exam.)*
+The **простий** (simple, synthetic) **майбутній час** (future tense) is formed exclusively using perfective verbs. Because perfective verbs describe an action that is fully completed, they cannot physically happen "right now" in the present moment. An action is either ongoing, or it is completely finished. Therefore, perfective verbs do not have a true present tense. When you conjugate a perfective verb using the standard present-tense endings you already know, the meaning automatically shifts to the future. It points to a completed action that will happen later.
 
-## Складений майбутній час (Imperfective/Analytical Future)
+Ми використовуємо цей час, коли говоримо про конкретний результат у майбутньому. Ви вже чудово знаєте, як відмінювати дієслова в теперішньому часі. Тепер ви просто берете доконане дієслово і додаєте ті самі закінчення.
 
-Зараз ми вивчимо інший спосіб говорити про майбутнє. *(Now we will learn another way to talk about the future.)* Це складений майбутній час. *(This is the compound future tense.)* English uses progressive forms to show an ongoing action in the future. Ukrainian uses a similar structure exclusively for imperfective verbs. Ця граматична конструкція показує тривалий процес. *(This grammatical structure shows a continuous process.)* You build it with a helper verb and an infinitive. Ось повна парадигма допоміжного дієслова **бути** *(to be)*. *(Here is the full paradigm of the helper verb to be.)* Зверніть увагу на закінчення. *(Pay attention to the endings.)* **Я буду** *(I will be)*, **ти будеш** *(you will be)*, **він буде** *(he will be)*, **вона буде** *(she will be)*, **ми будемо** *(we will be)*, **ви будете** *(you will be)*, **вони будуть** *(they will be)*. After this helper verb, you must always place an imperfective infinitive. Дієслово після слова «бути» ніколи не змінює свою форму. *(The verb after the word "to be" never changes its form.)* Ви кажете: «Я буду **працювати**» *(I will be working)*. Ви також кажете: «Вона буде **читати**» *(She will be reading)*. The helper verb changes to match the person, but the main action verb stays in the infinitive form.
+> *We use this tense when we talk about a concrete result in the future. You already know perfectly well how to conjugate verbs in the present tense. Now you simply take a perfective verb and add the exact same endings.*
 
-Ми використовуємо цю граматичну форму для опису тривалих дій. *(We use this grammatical form to describe continuous actions.)* The compound future tense is perfect when you want to emphasize the duration of a process. Ви фокусуєте увагу на самому процесі, а не на конкретному результаті. *(You focus attention on the process itself, and not on a specific result.)* If an action will take a long time, you must use the imperfective aspect. Наприклад, ви кажете: «Завтра я буду **працювати** весь день» *(Tomorrow I will be working all day)*. У цьому реченні важливий сам неперервний процес роботи. *(In this sentence, the continuous process of work itself is important.)* Інший популярний приклад: «Я буду **читати** книгу ввечері» *(I will be reading a book in the evening)*. Тут ви не обіцяєте прочитати всю книгу повністю до кінця. *(Here you do not promise to read the whole book completely to the end.)* Ви просто описуєте свій стан. *(You simply describe your state.)* The continuous process of reading will comfortably occupy your free evening.
+Let's look at the first conjugation. You simply take the stem of the perfective verb and apply the standard endings. There are no new endings to memorize here. For example, the perfective verb **прочитати** (to read through — pf.) uses these simple forms. You say: я прочитаю, ти прочитаєш, він прочитає. For multiple people: ми прочитаємо, ви прочитаєте, вони прочитають. This pattern is very reliable.
 
-Також ми регулярно використовуємо цей час для повторюваних дій. *(Also we regularly use this tense for repeated actions.)* When an action will happen repeatedly or habitually in the future, the compound form is strictly required. Слова-маркери дуже часто допомагають зрозуміти цю щоденну ситуацію. *(Marker words very often help to understand this daily situation.)* The repetition makes the action an imperfective process by definition, requiring the helper verb. Ви часто побачите слова **щодня** *(every day)*, **часто** *(often)* або **завжди** *(always)*. *(You will often see the words every day, often or always.)* Ці короткі слова завжди показують рутину. *(These short words always show a routine.)* Ви кажете: «Я буду **дзвонити** тобі щодня» *(I will be calling you every day)*. Це чітко означає, що дія буде повторюватися багато разів. *(This clearly means that the action will be repeated many times.)* Ви також можете сказати своїм друзям: «Ми будемо часто **зустрічатися**» *(We will be meeting often)*.
+Ще один важливий приклад — це дієслово «поїхати». Воно має такі самі знайомі закінчення. Ви кажете: я поїду, ти поїдеш, він поїде. У множині це: ми поїдемо, ви поїдете, вони поїдуть. Ця форма описує поїздку, яка точно відбудеться.
 
-Тут студенти дуже часто роблять серйозну граматичну помилку. *(Here students very often make a serious grammatical error.)* You must never combine the conjugated helper verb with a perfective infinitive. Це жахливий гібрид, який зовсім не існує в українській мові. *(This is a terrible hybrid that does not exist in the Ukrainian language at all.)* Форма «я буду написати» є абсолютно неправильною. *(The hybrid form "я буду написати" is absolutely incorrect.)* Ukrainian explicitly separates the idea of process and the idea of a finished result. Якщо ви хочете показати фінальний результат, ви завжди використовуєте просту форму: «Я **напишу** довгий емейл» *(I will write a long email)*. Тут важлива дія має чіткий кінець. *(Here the important action has a clear end.)* Якщо ви хочете показати процес, ви використовуєте складену форму: «Я **буду писати** емейл» *(I will be writing an email)*. Цей активний процес триває певний час. *(This active process lasts a certain time.)* You cannot mix these two distinct temporal concepts together.
+:::info
+**Grammar box** — Do not confuse the English "will" with the Ukrainian forms here. The Ukrainian synthetic future does not use an extra helper word. The future meaning is built directly into the perfective verb itself.
+:::
 
-Давайте уважно подивимося, як друзі обговорюють свої нові звички. *(Let's carefully see how friends discuss their new habits.)* Вони серйозно говорять про свої амбітні плани на наступний рік. *(They are seriously talking about their ambitious plans for the next year.)* Вони обговорюють корисні речі, які скоро стануть їхньою новою рутиною. *(They are discussing useful things that will soon become their new routine.)*
-> — **Марта:** Що ти будеш **робити** в новому році? *(What will you be doing in the new year?)*
-> — **Олег:** Я буду щодня **бігати** у великому парку. *(I will be running in the large park every day.)*
-> — **Марта:** Це дуже корисна щоденна звичка для здоров'я. *(This is a very useful daily habit for health.)*
-> — **Олег:** А також я буду **вчити** українську кожну суботу. *(And also I will be studying Ukrainian every Saturday.)*
-> — **Марта:** Чудово, я буду **допомагати** тобі з домашнім завданням. *(Great, I will be helping you with homework.)*
-> — **Олег:** Дякую, ми будемо регулярно **практикувати** мову разом. *(Thank you, we will be practicing the language regularly together.)*
+Now let's examine the second conjugation perfective verbs. The rules here are also identical to the present tense, including the consonant mutations in the first person singular. For instance, the perfective verb "побачити" (to see) changes the consonant "т" to "ч": я побачу, ти побачиш, він побачить, ми побачимо, ви побачите, вони побачать. Another common example is the verb **зробити / зроблю** (to do — pf. future).
 
-<!-- INJECT_ACTIVITY: group-sort-future-forms -->
+З цим дієсловом ми бачимо типове додавання літери «л» після губного приголосного «б». Подивіться на ці форми. В однині ми кажемо: я зроблю, ти зробиш, він зробить. У множині: ми зробимо, ви зробите, вони зроблять. Ви вже добре знаєте це правило з дієслова «робити».
 
-## Як обрати вид для майбутнього (Choosing Aspect for the Future)
+> *With this verb, we see the typical addition of the letter "л" after the labial consonant "б". Look at these forms. In the singular we say: я зроблю, ти зробиш, він зробить. In the plural: ми зробимо, ви зробите, вони зроблять. You already know this rule well from the verb "робити".*
 
-We now have two tools for the future. Are you focusing on the final result, or the ongoing process? Ваш вибір завжди залежить від головної мети. *(Your choice always depends on the main goal.)* Порівняйте ці два різні речення. *(Compare these two different sentences.)* «Я **прочитаю** *(will finish reading)* цю статтю» *(I will finish reading this article)* означає, що ви закінчите дію. *(means that you will finish the action.)* Але речення «Я **буду читати** *(will be reading)* цю статтю» *(But the sentence «I will be reading this article»)* означає тільки активний процес. *(means only an active process.)* Ви кажете «я **напишу**» *(I will write)*, коли хочете закінчити текст. *(You say «I will write» when you want to finish the text.)* Але ви кажете «я **буду писати**» *(I will be writing)*, коли описуєте свою роботу. *(But you say «I will be writing» when you describe your work.)*
+You will use the **простий** future tense exclusively for a single, completed action in the future that will produce a clear result. It focuses entirely on the successful achievement of a goal, not on the process or duration. You want to emphasize that the task will be done. For example, consider the verb **написати / напишу** (to write — pf. future).
 
-Деякі слова дуже допомагають обрати правильний вид. *(Some words help a lot to choose the correct aspect.)* When an action is a short, completed event, we use the simple future. Для доконаного виду ми часто використовуємо слова **скоро** *(soon)* або **за хвилину** *(in a minute)*. *(For the perfective aspect we often use the words soon or in a minute.)* Слово **враз** *(suddenly)* також показує швидку дію. *(The word suddenly also shows a fast action.)* Conversely, if you emphasize duration, you need the compound future. Це слова **довго** *(for a long time)* або **цілий вечір** *(the whole evening)*. *(These are the words for a long time or the whole evening.)* Для регулярних дій допомагають слова **часто** *(often)* та **завжди** *(always)*. *(For regular actions the words often and always help.)*
+Коли я кажу, що я напишу листа, це означає чудовий результат. Лист точно буде готовий. Я почну і повністю закінчу цю дію. Якщо мій брат прочитає книгу, він дочитає її до кінця.
 
-There is a very important difference between English and Ukrainian grammar in conditional sentences. Ви часто будете використовувати слова **якщо** *(if)* та **коли** *(when)*. *(You will often use the words if and when.)* In English, you use the present tense after "if" or "when" for future events. In Ukrainian, both parts of the sentence must be in the future tense. Якщо подія буде в майбутньому, ми використовуємо майбутній час двічі. *(If the event will be in the future, we use the future tense twice.)* Подивіться на це речення. *(Look at this sentence.)* «Якщо ти **прийдеш** *(will come)*, ми **будемо пити** *(will be drinking)* чай». *(If you come, we will be drinking tea.)* Обидва дієслова показують майбутній час. *(Both verbs show the future tense.)* Ви також можете сказати: «Коли я **приїду** *(will arrive)*, я **подзвоню** *(will call)* тобі». *(You can also say: When I arrive, I will call you.)* Ніколи не використовуйте теперішній час після слова «якщо» для майбутнього! *(Never use the present tense after the word "if" for the future!)*
+In daily life, Ukrainians constantly use specific perfective verbs to make firm plans and promises. These verbs are absolutely essential for everyday communication and building relationships. You will often hear verbs like **подзвонити** (to call — pf.), **купити** (to buy — pf.), or **сказати / скажу** (to say/tell — pf. future) when people arrange meetings, share news, or go shopping.
 
-Давайте подивимося, як друзі планують свої вихідні. *(Let's see how friends plan their weekend.)* Процеси та результати тут дуже зрозумілі. *(Processes and results are very clear here.)*
-> — **Анна:** Що ти будеш **робити** завтра? *(What will you be doing tomorrow?)*
-> — **Марко:** Вранці я буду **прибирати** квартиру. *(In the morning I will be cleaning the apartment.)* О другій годині я **подзвоню** тобі, і ми **підемо** в кіно. *(At two o'clock I will call you, and we will go to the cinema.)*
-> — **Анна:** Чудово! Я **куплю** квитки заздалегідь. *(Great! I will buy the tickets in advance.)*
-> — **Марко:** Добре, якщо ти **купиш** квитки, я **куплю** попкорн. *(Good, if you buy the tickets, I will buy the popcorn.)*
+Я обов'язково подзвоню тобі завтра вранці. Ми точно купимо свіжий хліб і молоко. Я швидко приїду на вокзал. Я скажу йому всю правду про цю ситуацію.
 
-<!-- INJECT_ACTIVITY: fill-in-future-forms -->
+> *I will definitely call you tomorrow morning. We will exactly buy fresh bread and milk. I will quickly arrive at the train station. I will tell him the whole truth about this situation.*
+
+<!-- INJECT_ACTIVITY: fill-in-complete-sentences-with-the-correct-synthetic-perfective-future-forms-based-on-context -->
+
+## Складений майбутній час (~550 words)
+
+Now let's look at the second way to talk about the future in Ukrainian. When we want to describe an action that is ongoing, continuous, or repeated, we must use imperfective verbs. However, imperfective verbs cannot express the future tense on their own because their conjugated forms describe the present. They need a helper word to point to the future. To form the **складений** (compound, analytical) future tense, we combine the conjugated future tense of the helper verb "бути" with the imperfective infinitive of the main verb. This structure might feel familiar because it is similar to how English uses "will be" plus an "-ing" verb. It specifically emphasizes the process, the duration, or the routine of the action.
+
+Допоміжне дієслово «бути» має свої спеціальні форми для майбутнього часу. Їх потрібно добре запам'ятати. Ось як ми його відмінюємо в однині. Я **буду**, ти будеш, він або вона буде. У множині форми такі: ми будемо, ви будете, вони будуть. Це єдине слово в конструкції, яке змінюється. Головне дієслово завжди залишається в інфінітиві і ніколи не втрачає своє закінчення.
+
+> *The auxiliary verb "бути" has its own special forms for the future tense. You need to remember them well. Here is how we conjugate it in the singular. I will be, you will be, he or she will be. In the plural, the forms are: we will be, you will be, they will be. This is the only word in the construction that changes. The main verb always remains in the infinitive and never loses its ending.*
+
+:::info
+**Grammar box** — The helper verb does all the grammatical work in the compound future tense. It shows exactly who is doing the action. The second verb just tells you what the action is, so it must stay in its basic dictionary form (usually ending in -ти).
+:::
+
+Давайте подивимося на прості і життєві приклади. Увечері я буду читати цікаву статтю про історію. Завтра ми будемо працювати в офісі. Наступного року вони будуть вивчати українську мову в університеті. Ми будемо чекати на вас біля театру.
+
+> *Let's look at simple and real-life examples. In the evening I will be reading an interesting article about history. Tomorrow we will be working in the office. Next year they will be studying the Ukrainian language at the university. We will be waiting for you near the theater.*
+
+You will use this compound future tense for ongoing, repeated, or general actions in the future where the duration or process is important. The focus is entirely on the fact that the action will be happening, not on the completion or the final result of the task. If you want to say what you will be doing for a whole day, or what your general routine will be next month, you must use this specific form. It sets the scene and describes the background activity.
+
+Завтра я буду працювати весь день, тому я буду дуже зайнятий. Влітку вони будуть подорожувати по Європі автомобілем. Кожного ранку вона буде пити каву на балконі.
+
+> *Tomorrow I will be working all day, so I will be very busy. In summer they will be traveling around Europe by car. Every morning she will be drinking coffee on the balcony.*
+
+Let's draw a direct, clear contrast between the two future formations using the exact same root verb. If you use **написати / напишу** (to write — pf. future), you are using the **простий** (simple, synthetic) perfective future. It means "I will write the letter" — the task will be successfully completed and the letter will be ready. But if you say "Я буду писати листа", you are using the analytical imperfective future. This means "I will be writing the letter," focusing purely on the continuous process. You might spend hours on it, and you might not actually finish it by the end of the day. The choice of aspect completely changes the meaning of your future plans.
+
+Ви можете легко поєднувати ці форми у звичайній розмові. Вранці я буду прибирати квартиру, а потім я приготую смачний обід. Я буду довго читати книгу, а ввечері напишу короткий лист.
+
+<!-- INJECT_ACTIVITY: unjumble-future-sentences --> [unjumble, Reorder words to form correct future tense sentences using both synthetic (напишу) and analytical (буду писати) forms, 6 items]
+
+## Як обрати вид для майбутнього (~450 words)
+
+When you need to speak about the **майбутній час** (future tense), your choice depends entirely on how you view the action. Here is a practical decision guide. Ask yourself a simple question: will the action be completed with a final result? If the answer is yes, you must choose the **простий** (simple, synthetic) perfective future. This form is perfect for single events where the outcome is guaranteed. However, ask yourself another question: will the action be ongoing, repeated, or is the duration itself the main point? If the answer is yes, you must choose the **складений** (compound, analytical) imperfective future. Understanding this difference is the key to speaking naturally and accurately.
+
+Щоб краще зрозуміти різницю, розгляньмо кілька життєвих ситуацій. Якщо дія разова і має результат, ми вибираємо доконаний вид. Наприклад: «Я подзвоню тобі ввечері». Це означає один конкретний дзвінок. Але для постійної дії ми скажемо інакше: «Я буду дзвонити тобі щодня». Порівняйте також результат і процес під час читання. Речення «Він прочитає статтю» означає кінцевий результат. Речення «Він буде читати статтю» просто описує довгий процес. Він витратить на це час.
+
+> *To better understand the difference, let's consider a few real-life situations. If the action is one-time and has a result, we choose the perfective aspect. For example: "I will call you in the evening." This means one specific call. But for a constant action, we will say differently: "I will be calling you every day." Compare also the result and process during reading. The sentence "He will read the article" means a final result. The sentence "He will be reading the article" simply describes a long process. He will spend time on it.*
+
+For the analytical future, you simply use the helper verb **буду** (I will — auxiliary) with an imperfective infinitive. To guarantee a result, you must know perfective verbs like **прочитати** (to read through — pf.) and **подзвонити** (to call — pf.). You will frequently mix these aspects in daily conversations when making plans, promises, or predictions. A classic question you will hear is «Що ти будеш робити завтра?». This focuses on your general process. The reply often mixes aspects: «Я прибиратиму квартиру, а потім приготую вечерю». Note that «прибиратиму» is just a stylish, one-word variant of «буду прибирати».
+
+If you need to promise an email, use **написати** / **напишу** (to write — pf. future). When you take responsibility for a task, say **зробити** / **зроблю** (to do — pf. future). If you promise to get groceries, use **купити** (to buy — pf.). Choosing the correct future tense form is ultimately about expressing *how* you view the action unfolding.
+
+:::info
+**Grammar box** — Master these choices! When you share information and guarantee you will do it, use **сказати** / **скажу** (to say/tell — pf. future). This gives you incredible expressive power in Ukrainian, letting you highlight nuance that you simply cannot express easily in English.
+:::
+
+<!-- INJECT_ACTIVITY: fill-in-future-aspect -->
 <!-- INJECT_ACTIVITY: quiz-aspect-choice -->
-<!-- INJECT_ACTIVITY: unjumble-future-sentences -->
-
-## Підсумок
-
-Let's review the two ways to talk about the future in Ukrainian. Усе залежить від виду дієслова. *(Everything depends on the verb aspect.)*
-
-*   **Простий майбутній час** *(Simple future tense)*: We use the **доконаний вид** *(perfective aspect)*. You add present tense endings to the perfective verb. Цей час показує результат або одну коротку дію. *(This tense shows a result or one short action.)* Наприклад: «Я **напишу**» *(For example: I will write)*.
-*   **Складений майбутній час** *(Compound future tense)*: We use the **недоконаний вид** *(imperfective aspect)*. You combine the conjugated word **буду** *(I will be)* with an imperfective infinitive. Цей час показує довгий процес або регулярну дію. *(This tense shows a long process or a regular action.)* Наприклад: «Я **буду писати**» *(For example: I will be writing)*.
-
-Now, answer these three questions to check your knowledge. Дайте відповіді на ці запитання. *(Answer these questions.)*
-
-1. How do you say «I will call» as a single, completed act?
-2. Why is the phrase «я буду написати» grammatically wrong?
-3. Which future form do you use with the word **щодня** *(every day)*?
-
 </module_content>
 
 ---
@@ -183,48 +239,68 @@ version: "1.0"
 module: synthetic-future
 level: a2
 
+# NOTE — these are SHAPE examples. The real targets are at the top of this prompt
+# (12 total / 4–6 inline / 8–11 workbook,
+# 8+ items per activity). The shapes below are TRUNCATED for readability;
+# YOUR output MUST hit those minimums.
+
 inline:
   - id: marker-id-here        # MUST match an <!-- INJECT_ACTIVITY: ... --> marker
     type: quiz                 # activity type
     instruction: "Оберіть правильний варіант"
-    items:
+    items:                     # ← real output: ≥ 8 items
       - question: "_____ стіл"
-        options: ["мій", "моя", "моє"]
+        options: ["мій", "моя", "моє", "мої"]
         correct: 0             # 0-based index
+      - question: "Це ____ книга."
+        options: ["мій", "моя", "моє", "мої"]
+        correct: 1
+      # ... add at least 8 items total — never stop at 1-2
 
   - id: another-marker-id
     type: fill-in
     instruction: "Вставте правильне слово"
-    items:
+    items:                     # ← real output: ≥ 8 items
       - sentence: "Це ____ кімната."
         answer: "моя"
         options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ вікно."
+        answer: "моє"
+        options: ["мій", "моя", "моє"]
+      # ... ≥ 8 items total
 
 workbook:
-  - type: match-up
+  - id: match-up-vocab
+    type: match-up
     instruction: "З'єднайте пари"
-    pairs:
+    pairs:                     # ← real output: ≥ 8 pairs
       - left: "стіл"
         right: "він"
       - left: "книга"
         right: "вона"
       - left: "вікно"
         right: "воно"
+      # ... ≥ 8 pairs total
 
-  - type: group-sort
+  - id: group-sort-gender
+    type: group-sort
     instruction: "Розподіліть слова за категоріями"
     groups:
-      - label: "Category A"
-        items: ["word1", "word2"]
-      - label: "Category B"
-        items: ["word3", "word4"]
+      - label: "Чоловічий рід"
+        items: ["стіл", "олівець", "будинок"]   # ≥ 3 items per group
+      - label: "Жіночий рід"
+        items: ["книга", "ручка", "школа"]
+      - label: "Середній рід"
+        items: ["вікно", "море", "молоко"]
 
-  - type: true-false
+  - id: true-false-grammar
+    type: true-false
     instruction: "Правда чи ні?"
-    items:
-      - statement: "Statement here"
-        correct: true
-        explanation: "Why it's true"
+    items:                     # ← real output: ≥ 8 items
+      - statement: "«Книга» — це чоловічий рід."
+        correct: false
+        explanation: "Книга закінчується на -а, отже жіночий рід."
+      # ... ≥ 8 items total
 
   - type: error-correction
     instruction: "Виправте помилку"
@@ -295,7 +371,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -415,10 +491,15 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 ## Quality Rules
 
-**ITEM COUNT MINIMUMS (non-negotiable):**
-- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
-- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
-- If you can't think of enough items, add more examples from the module's vocabulary and content.
+**ACTIVITY COUNT MINIMUMS (non-negotiable, audit-enforced):**
+- **Total: 12 activities.** Inline: 4–6. Workbook: 8–11. The audit gate FAILS the module if you ship fewer.
+- **Type diversity: workbook MUST cover ≥5 distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
+- **Match the inline markers exactly.** Every `<!-- INJECT_ACTIVITY: id -->` marker in the prose needs a matching inline activity with that exact id. Skipping markers means the lesson tab is broken.
+
+**ITEM COUNT MINIMUMS (non-negotiable, per-activity):**
+- **Default minimum: 8 items per activity.** Quiz, fill-in, match-up, true-false, anagram, error-correction, translate, cloze, mark-the-words, divide-words, count-syllables, odd-one-out, group-sort categories: all ≥ 8.
+- **Lower minimums for specific types only:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items, essay-response/critical-analysis = 1 prompt.
+- If you can't think of enough items, add more examples from the module's vocabulary and content. NEVER ship a 1-item or 2-item activity unless its type cap explicitly allows it.
 - **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
 - **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
@@ -525,6 +606,27 @@ IMPORTANT: After using tools, output your COMPLETE module content as plain text.
 1. Run `verify_words` on all Ukrainian words in your exercises — every word must exist in VESUM
 2. Run `query_cefr_level` on any word you're unsure about — it must be a2-appropriate
 3. For fill-in answers and distractors, verify the exact form (case, number, gender) with `verify_lemma`
+
+---
+
+## ⚠️ MANDATORY FINAL CHECKLIST — verify before emitting YAML
+
+Walk through this checklist explicitly before you start emitting. If ANY box is unchecked, fix it FIRST.
+
+- [ ] My output has **at least 4** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
+- [ ] My output has **at least 8** workbook activities.
+- [ ] **Total ≥ 12.**
+- [ ] **Every** activity has **at least 8** items, pairs, or statements (except types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3, essay-response=1).
+- [ ] The module (inline + workbook combined) uses **at least 0 distinct activity types** (or 4+ when 0 = 0 and the workbook size allows it). I am NOT shipping a wall of quizzes.
+- [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
+- [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
+- [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+- [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+- [ ] My inline count is between 4 and 6. I did NOT create more injection markers than 6.
+- [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
+- [ ] At B1+, all instructions are in Ukrainian (no English fallback).
+
+If you cannot tick all of these, REGENERATE the activities BEFORE outputting. Shipping under-spec means the build rejects you and the heal loop has to redo your work — wasting compute.
 
 ---
 

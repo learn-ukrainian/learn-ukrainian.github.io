@@ -26,7 +26,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-всередині слова (наприклад, перехід «о» в «і»). Ви вже добре знаєте, що українські слова можуть мати різні форми, і ці зміни є абсолютно систематичними. Якщо голосні звуки найчастіше чергуються в самому центрі слова, то **приголосні** *(consonants)* зазвичай змінюються на межі **кореня** *(root)* та суфікса або **закінчення** *(ending)*. Термін **чергування** *(alternation)* означає закономірну зміну звуків в одному й тому ж корені під час утворення нових слів або зміни їхніх граматичних форм. Це зовсім не виняток із правил, а строгий фонетичний закон, який робить українську мову такою милозвучною та плавною. Розуміючи ці процеси, ми не просто запам'ятовуємо окремі слова напам'ять, а бачимо глибоку структурну логіку їхньої побудови. Завдяки цьому ваша вимова стає природною, а граматика — передбачуваною. Сьогодні ми дуже детально розглянемо три особливі приголосні звуки: [г], [к] та [х]. В українській мовознавчій термінології їх традиційно називають **задньоязиковими** *(velar)* приголосними, оскільки під час їхньої вимови корінь язика піднімається глибоко в задній частині ротової порожнини. Ці три звуки мають одну надзвичайно цікаву властивість: кожен із них має по два «запасних обличчя» для різних життєвих ситуацій. Залежно від граматичного контексту та сусідніх літер, вони автоматично перетворюються на інші, зручніші для вимови звуки. Так утворюється знаменита потрійна система українських чергувань. Звук [г] системно змінюється на [з] або [ж]. Твердий звук [к] переходить у м'якший [ц] або [ч], а глухий [х] стає свистячим [с] або шиплячим [ш]. Це означає, що абсолютно кожне слово, основа якого закінчується на ці задньоязикові приголосні, буде беззаперечно підкорятися цьому чіткому та музичному ритму. Чому ж саме ці звуки так активно змінюються? Щоб зрозуміти справжню причину, нам треба поглянути на багату історію розвитку нашої мови. У давньоукраїнській мові сотні років тому діяв суворий, але дуже логічний фонетичний закон. Коли безпосередньо після глибоких задньоязикових звуків [г], [к], [х] з'являлися голосні переднього ряду (наприклад, звуки [і] або [е]), вимовляти їх разом було фізично незручно для мовного апарату людини. Тому ці приголосні поступово просувалися вперед, ближче до зубів і піднебіння, щоб полегшити артикуляцію. Цей тривалий історичний процес у мовознавстві науково називається **палаталізацією** *(palatalization)*, або просто пом'якшенням. Те, що багато століть тому виникло просто як фізіологічна зручність для швидкого мовлення, у сучасній мові остаточно закріпилося як непорушне граматичне правило. Отже, сучасні українські чергування — це зовсім не випадковість, а жива історія фонетики, яка надійно збереглася в наших щоденних словах. Щоб вам було легко і впевнено орієнтуватися в цих постійних змінах, нам потрібна чітка метамова та правильна термінологія. У цьому модулі ми будемо активно використовувати два головні поняття, які організують весь матеріал. **Перша палаталізація** *(first palatalization)* — це закономірний перехід задньоязикових звуків [г], [к], [х] у відповідні шиплячі приголосні [ж], [ч], [ш]. Вона дуже часто зустрічається під час утворення нових спільнокореневих слів за допомогою суфіксів, а також є візитною карткою у кличному відмінку чоловічого роду. Натомість **друга палаталізація** *(second palatalization)* — це послідовна зміна тих самих вихідних звуків на м'які свистячі приголосні [з'], [ц'], [с']. Цей граматичний процес ми будемо постійно й невідворотно бачити у формах давального та місцевого відмінків. Протягом цього модуля ви навчитеся безпомилково передбачати, який саме тип чергування потрібен у кожній конкретній граматичній позиції.
+newly attached ending. In Ukrainian terminology, the root is the **корінь** and the ending is the **закінчення**. At this boundary, a fascinating collision happens. Instead of resisting the change and creating an awkward pronunciation, Ukrainian consonants elegantly adapt to their new environment. This systematic substitution of one sound for another within the same word family is called alternation, or **чергування**. It is not a random exception, but a highly predictable phonetic law that makes the language flow rhythmically and smoothly. В українській мові є три особливі звуки: [г], [к] та [х]. Вони утворюються глибоко в ротовій порожнині. Коли до слова додається нове закінчення, цим звукам стає фізично незручно стояти поруч із голосними переднього ряду. Тому кожен із них має по два «запасні» обличчя для різних граматичних ситуацій. Так виникає знамените потрійне чергування: [г] змінюється на [з] або [ж], [к] перетворюється на [ц] або [ч], а [х] стає [с] або [ш]. > *In the Ukrainian language, there are three special sounds: [г], [к], and [х]. They are formed deep in the oral cavity. When a new ending is added to a word, these sounds become physically uncomfortable standing next to front vowels. Therefore, each of them has two "spare" faces for different grammatical situations. This is how the famous triple alternation arises: [г] changes to [з] or [ж], [к] turns into [ц] or [ч], and [х] becomes [с] or [ш].* Why exactly does this happen? The logic is purely historical and physical. Centuries ago, when a velar consonant — a **задньоязиковий приголосний** — like [г], [к], or [х] met a front vowel like [і] or [е], the speaker's tongue naturally had to shift forward abruptly. Over generations, this physical shift pulled the sound itself forward in the mouth, softening it into a hushing or sibilant sound. This biological process is palatalization, known as **палаталізація**. Today, native speakers no longer actively think about their tongue placement, but that ancient phonetic reflex has crystallized into a strict grammatical rule. Understanding this history proves that these spelling changes are not arbitrary rules designed to confuse learners, but natural anatomical adaptations. Linguists divide these changes into two main types based on their historical order. The first palatalization shifted [г], [к], and [х] into the hushing sounds [ж], [ч], and [ш]. You will see this specific transformation primarily when you address someone directly using the vocative case, known as the **кличний відмінок**, or when forming new diminutive words. The second palatalization shifted those same back consonants into the soft sibilants [з'], [ц'], and [с']. This second historical pattern is strictly triggered by the vowel [і], which you will encounter constantly when declining feminine nouns in the dative case and the locative case. These are the **давальний відмінок** and **місцевий відмінок**, respectively. :::info **Grammar box** The key to mastering these alternations is predicting the phonetic environment. You never have to guess whether a [к] turns into a [ч] or a [ц']. The specific grammatical case acting upon the root always dictates exactly which palatalization must occur. :::
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -637,7 +637,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -650,18 +717,67 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] чергування (alternation — systematic sound change between forms)
+- [ ] приголосний (consonant — sound made with obstruction)
+- [ ] палаталізація (palatalization — softening of a consonant)
+- [ ] кличний відмінок (vocative case — used for direct address)
+- [ ] давальний відмінок (dative case)
+- [ ] місцевий відмінок (locative case)
+- [ ] задньоязиковий (velar — consonant formed at the back of the mouth)
+- [ ] відміна (declension class — noun classification by ending pattern)
+- [ ] тверда група (hard group — nouns with hard stem-final consonant)
+- [ ] м'яка група (soft group — nouns with soft stem-final consonant)
+- [ ] мішана група (mixed group — nouns with шиплячий stem-final)
+- [ ] закінчення (ending — inflectional morpheme)
+- [ ] звертання (form of address — using кличний відмінок)
+- [ ] корінь (root — core morpheme of a word)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Перша палаталізація: [г/к/х] -> [ж/ч/ш] (~750 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

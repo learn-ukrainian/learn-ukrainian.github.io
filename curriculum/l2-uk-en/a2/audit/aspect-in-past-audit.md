@@ -1,7 +1,7 @@
 # Audit Report: M40 — aspect-in-past.md
 **Level:** A2 | **Module:** M40 | **Phase:** A2.6 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-04-11 00:49:18
+**Generated:** 2026-04-12 22:15:12
 
 ## Configuration
 **Type:** A2-grammar
@@ -18,77 +18,56 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | quiz |  | 8 | 8 | ✅ |
-| 2 | match-up |  | 8 | 8 | ✅ |
-| 3 | fill-in |  | 8 | 8 | ✅ |
-| 4 | group-sort |  | 14 | 8 | ✅ |
-| 5 | true-false |  | 6 | 8 | ❌ |
-| 6 | translate |  | 6 | 6 | ✅ |
+| 1 | quiz | Визначте вид дієслова та причину його використання | 8 | 8 | ✅ |
+| 2 | match-up | З'єднайте сигнальне слово з його значенням та видом дієслова | 8 | 8 | ✅ |
+| 3 | fill-in | Оберіть правильну форму дієслова (доконаний чи недоконаний вид) | 8 | 8 | ✅ |
+| 4 | group-sort | Розподіліть дієслова за видами (доконаний чи недоконаний) | 12 | 8 | ✅ |
+| 5 | translate | Оберіть правильний переклад речення | 8 | 6 | ✅ |
+| 6 | true-false | Правда чи ні? Визначте, чи правильне твердження про вид дієслова | 8 | 8 | ✅ |
+| 7 | fill-in | Вставте правильне дієслово (доконаний чи недоконаний вид) | 8 | 8 | ✅ |
+| 8 | error-correction | Знайдіть і виправте помилку у виборі виду дієслова | 8 | 6 | ✅ |
+| 9 | match-up | З'єднайте українське речення з англійським перекладом | 8 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 6 (target: 0-4) ❌
-- Unique types: 6 (minimum: 0) ✅
-- Priority types used: 6/15 (fill-in, group-sort, match-up, quiz, translate, true-false) ✅
-- Low density activities: 1
+- Total activities: 9 (target: 0-4) ❌
+- Unique types: 7 (minimum: 0) ✅
+- Priority types used: 7/15 (error-correction, fill-in, group-sort, match-up, quiz, translate, true-false) ✅
+- Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY]** Sentence too long for A2: 19 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Ці дієслова показують нам сам...'
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q1 prompt length 4 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q2 prompt length 4 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q3 prompt length 4 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q6 prompt length 4 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q7 prompt length 4 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q8 prompt length 4 (target: 5-15)
-  - FIX: Adjust prompt length to 5-15 words.
-- **[COMPLEXITY]** true-false '' has 6 items (minimum: 8)
-  - FIX: Add more items. A2 true-false requires at least 8 items.
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: вид
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[RUSSICISM_DETECTED]** Found 1 Russicism(s) in content: 'давайте подивимося' → подивімося
-  - FIX: Replace Russicisms with standard Ukrainian equivalents. These are Russian calques that have standard Ukrainian forms. See Phase B prompt 'Russianisms Pre-Output Scan' table.
+- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "Коли я готував смачну вечерю, раптом погасло світло.". Shares significant keywords with sentence at index 100.
+  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 
 ## Recommendation
-**📝 UPDATE** (severity 40/100)
+**📝 UPDATE** (severity 45/100)
 
-- Revision recommended (severity 40/100)
-- 10 violations (significant)
-- Activity density below minimum
+- Revision recommended (severity 45/100)
+- 1 violations (minor)
+- Immersion 18% off target
+- Structure issue: Missing '## Summary'
 
 ## Gates
-- **Words:** ✅ 2793/2000 (raw: 2831)
-- **Activities:** ✅ 6/0
-- **Density:** ❌ 1 < 8
-- **Unique_types:** ✅ 6/0 types
+- **Words:** ✅ 2972/2000 (raw: 3032)
+- **Activities:** ✅ 9/0
+- **Density:** ✅ All > 8
+- **Unique_types:** ✅ 7/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ❌ 0/3
+- **Engagement:** ❌ 1/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 22/1
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ✅ 17/1
+- **Structure:** ❌ Missing '## Summary'
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 55.1% (target 50-80% (A2.2))
+- **Immersion:** ❌ 31.9% LOW (target 50-80% (A2.2))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
 
-## Low Density Activities
-| Activity | Type | Items | Required | Fix |
-|----------|------|-------|----------|-----|
-|  | true-false | 6 | 8 | Add 2 more items |
-
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 589 | Included in Core |
-| **Коли вживати недоконаний вид** | ✅ | 603 | Included in Core |
-| **Коли вживати доконаний вид** | ✅ | 555 | Included in Core |
-| **Практика вибору виду** | ✅ | 858 | Included in Core |
-| **Підсумок** | ✅ | 188 | Included in Core |
+| **Intro/Narrative** | ✅ | 745 | Included in Core |
+| **Коли вживати недоконаний вид (~550 words)** | ✅ | 615 | Included in Core |
+| **Коли вживати доконаний вид (~550 words)** | ✅ | 893 | Included in Core |
+| **Практика вибору виду (~550 words)** | ✅ | 719 | Included in Core |

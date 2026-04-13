@@ -1,0 +1,50 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-12T18-54-4c5c108c.json
+phase: vocab
+prompt_chars: 11863
+response_chars: 2121
+prompt_words: 1924
+response_words: 233
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.0673
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.0194
+- name: plan
+  start: 1028
+  length: 10835
+  fraction: 0.9133
+large_sections:
+- plan
+directives_total: 6
+directives_covered: 0
+directives_missed:
+- kind: must
+  text: There are a few key exceptions where **у** is always required, regardless
+    of the surrounding sounds.
+  covered: false
+  coverage_note: 1/11 keywords (9%)
+- kind: must
+  text: At the absolute beginning of a phrase, you must use the full vowel forms,
+    regardless of the next word.
+  covered: false
+  coverage_note: 2/12 keywords (17%)
+- kind: inject_activity
+  text: quiz-u-or-v
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-i-or-y
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-z-iz-zi
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-euphony-comparison
+  covered: false
+  coverage_note: marker missing

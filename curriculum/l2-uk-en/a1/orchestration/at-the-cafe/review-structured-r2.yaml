@@ -1,0 +1,55 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 6
+  evidence: The prose never cites `ULP Season 1` or `State Standard 2024` (0 hits
+    on search), the planned section budgets of 300 words are missed badly (`Діалоги`
+    475, `Як замовити` 598, `Культура кафе` 538, `Під
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: 'Ukrainian forms are solid throughout: `Мені каву, будь ласка`, `Можна
+    карткою?`, `Все було дуже смачно!`; VESUM-confirmed vocabulary is used consistently
+    and no Russian-only letters appear.'
+- dimension: 3
+  name: Pedagogical quality
+  score: 6
+  evidence: 'The module introduces extra grammar metalanguage in `без ... genitive`
+    / `з ... instrumental` even though the lesson focus is accusative ordering patterns,
+    and long English commentary like `This is a '
+- dimension: 4
+  name: Vocabulary coverage
+  score: 8
+  evidence: All required plan vocabulary appears in prose (`кафе`, `меню`, `рахунок`,
+    `замовляти`, `офіціант`, `смачно`, `будь ласка`), and most recommended items are
+    also used naturally (`ресторан`, `чайові`, `г
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: The 4 markers match the 4 `activity_hints`, and each comes after the concept
+    it tests. The additional summary Q&A also checks usable phrases rather than trivia.
+- dimension: 6
+  name: Engagement & tone
+  score: 6
+  evidence: Several lines are filler rather than teaching, e.g. `You now have the
+    essential cafe communication toolkit to comfortably navigate dining out in Ukrainian.`
+    and `This is a crucial point for building a
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: All planned H2 sections are present and in the right order, the activity
+    markers are intact, and the pipeline word count is above target at 1818.
+- dimension: 8
+  name: Cultural accuracy
+  score: 9
+  evidence: 'The core culture points are appropriate and decentered: asking for the
+    bill directly, card/cash language, and polite cafe formulas are presented as Ukrainian
+    norms, not through Russian comparison.'
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 7
+  evidence: 'The actual dialogue turns are usable, but long English narration like
+    `Imagine a relaxing date...` and `After enjoying a pleasant meal and a long conversation...`
+    takes space away from learner-facing '
+findings: []

@@ -1,0 +1,73 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T01-03-0028dde2.json
+phase: review
+prompt_chars: 57901
+response_chars: 6744
+prompt_words: 7846
+response_words: 943
+sections:
+- name: preamble
+  start: 0
+  length: 459
+  fraction: 0.0079
+- name: plan
+  start: 459
+  length: 54211
+  fraction: 0.9363
+- name: output_spec
+  start: 54670
+  length: 3231
+  fraction: 0.0558
+large_sections:
+- plan
+directives_total: 18
+directives_covered: 6
+directives_missed:
+- kind: must
+  text: 'The ending must agree with the noun: прочитана книга (ж.'
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: must
+  text: If you are not 100% certain a word/form/usage is wrong, you MUST flag it as
+    `[NEEDS RAG VERIFICATION]` instead of marking it as a definitive error.
+  covered: false
+  coverage_note: 6/17 keywords (35%)
+- kind: must
+  text: This is a language curriculum — every error you identify must be fixed.
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: inject_activity
+  text: fill-in-participle-meaning
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-formation-suffixes
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: error-correction-alternations
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-agreement-in-case
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: reading-syntax-roles
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-participle-vs-adjective
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: reading
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: essay-response-5
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing

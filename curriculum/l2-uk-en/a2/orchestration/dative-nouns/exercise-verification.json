@@ -1,200 +1,457 @@
 {
-  "total_items": 131,
-  "grounded_items": 100,
+  "total_items": 207,
+  "grounded_items": 133,
   "ungrounded": [
     {
-      "word": "брат",
+      "word": "дівчина",
       "exercise_type": "fill-in",
-      "context": "Я пишу лист _____ (брат).",
+      "context": "Дівчина пише повідомлення ____.",
       "role": "context"
     },
     {
-      "word": "студент",
-      "exercise_type": "fill-in",
-      "context": "Що ти даси _____ (студент)?",
-      "role": "context"
-    },
-    {
-      "word": "слава",
-      "exercise_type": "fill-in",
-      "context": "Слава _____ (герой)!",
-      "role": "context"
-    },
-    {
-      "word": "герой",
-      "exercise_type": "fill-in",
-      "context": "Слава _____ (герой)!",
-      "role": "context"
-    },
-    {
-      "word": "лікар",
-      "exercise_type": "fill-in",
-      "context": "Я зателефоную _____ (лікар) завтра.",
-      "role": "context"
-    },
-    {
-      "word": "допомагає",
-      "exercise_type": "fill-in",
-      "context": "Він допомагає _____ (сусід).",
-      "role": "context"
-    },
-    {
-      "word": "сусід",
-      "exercise_type": "fill-in",
-      "context": "Він допомагає _____ (сусід).",
-      "role": "context"
-    },
-    {
-      "word": "друг",
-      "exercise_type": "fill-in",
-      "context": "Передай привіт нашому _____ (друг).",
-      "role": "context"
-    },
-    {
-      "word": "івану",
-      "exercise_type": "group-sort",
-      "context": "лікареві Івану",
-      "role": "answer"
-    },
-    {
-      "word": "дмитру",
-      "exercise_type": "group-sort",
-      "context": "товаришеві Дмитру",
-      "role": "answer"
-    },
-    {
-      "word": "максимові",
-      "exercise_type": "group-sort",
-      "context": "брату Максимові",
-      "role": "answer"
-    },
-    {
-      "word": "товаришу",
-      "exercise_type": "group-sort",
-      "context": "товаришу Дмитрові",
-      "role": "answer"
-    },
-    {
-      "word": "подарували",
+      "word": "новій",
       "exercise_type": "quiz",
-      "context": "Ми подарували квіти цій _____ (жінка).",
+      "context": "Я віддаю перевагу цій новій _____.",
       "role": "context"
     },
     {
-      "word": "цій",
+      "word": "віддає",
       "exercise_type": "quiz",
-      "context": "Ми подарували квіти цій _____ (жінка).",
+      "context": "Вона віддає перевагу цій _____.",
       "role": "context"
-    },
-    {
-      "word": "колега",
-      "exercise_type": "quiz",
-      "context": "Він допомагає своїй _____ (колега).",
-      "role": "context"
-    },
-    {
-      "word": "вони",
-      "exercise_type": "unjumble",
-      "context": "Вони",
-      "role": "answer"
-    },
-    {
-      "word": "маленькій",
-      "exercise_type": "quiz",
-      "context": "Вони купили іграшку маленькій _____ (дівчинка).",
-      "role": "context"
-    },
-    {
-      "word": "дівчинка",
-      "exercise_type": "quiz",
-      "context": "Вони купили іграшку маленькій _____ (дівчинка).",
-      "role": "context"
-    },
-    {
-      "word": "сестра",
-      "exercise_type": "quiz",
-      "context": "Я розповім про це моїй _____ (сестра).",
-      "role": "context"
-    },
-    {
-      "word": "повинні",
-      "exercise_type": "unjumble",
-      "context": "повинні",
-      "role": "answer"
     },
     {
       "word": "чоловічий",
       "exercise_type": "group-sort",
-      "context": "Чоловічий рід (-ові/-еві/-єві, -у/-ю)",
+      "context": "Чоловічий рід",
       "role": "context"
     },
     {
       "word": "рід",
       "exercise_type": "group-sort",
-      "context": "Чоловічий рід (-ові/-еві/-єві, -у/-ю)",
+      "context": "Чоловічий рід",
       "role": "context"
     },
     {
       "word": "жіночий",
       "exercise_type": "group-sort",
-      "context": "Жіночий рід (-і, -ї)",
+      "context": "Жіночий рід",
       "role": "context"
     },
     {
       "word": "середній",
       "exercise_type": "group-sort",
-      "context": "Середній рід (-у/-ю, -аті/-яті)",
+      "context": "Середній рід",
       "role": "context"
     },
     {
-      "word": "написали",
+      "word": "андрій",
       "exercise_type": "error-correction",
-      "context": "Ми написали лист подругі.",
+      "context": "Ми маємо допомогти Андрій.",
       "role": "context"
     },
     {
-      "word": "подругі",
+      "word": "вирішила",
       "exercise_type": "error-correction",
-      "context": "Ми написали лист подругі.",
+      "context": "Вона вирішила показати фотографії своїй мати.",
       "role": "context"
     },
     {
-      "word": "дала",
-      "exercise_type": "error-correction",
-      "context": "Мама дала молоко курчі.",
+      "word": "давальному",
+      "exercise_type": "true-false",
+      "context": "Слова чоловічого роду в давальному відмінку можуть мати пара",
       "role": "context"
     },
     {
-      "word": "молоко",
-      "exercise_type": "error-correction",
-      "context": "Мама дала молоко курчі.",
+      "word": "відмінку",
+      "exercise_type": "true-false",
+      "context": "Слова чоловічого роду в давальному відмінку можуть мати пара",
       "role": "context"
     },
     {
-      "word": "курчі",
-      "exercise_type": "error-correction",
-      "context": "Мама дала молоко курчі.",
+      "word": "можуть",
+      "exercise_type": "true-false",
+      "context": "Слова чоловічого роду в давальному відмінку можуть мати пара",
       "role": "context"
     },
     {
-      "word": "відправив",
-      "exercise_type": "error-correction",
-      "context": "Він відправив пакунок мама.",
+      "word": "паралельні",
+      "exercise_type": "true-false",
+      "context": "Слова чоловічого роду в давальному відмінку можуть мати пара",
       "role": "context"
     },
     {
-      "word": "радіє",
-      "exercise_type": "error-correction",
-      "context": "Вона дуже радіє сонце.",
+      "word": "або",
+      "exercise_type": "true-false",
+      "context": "Слова чоловічого роду в давальному відмінку можуть мати пара",
       "role": "context"
+    },
+    {
+      "word": "якщо",
+      "exercise_type": "true-false",
+      "context": "Якщо іменник закінчується на 'г', 'к', 'х', перед закінчення",
+      "role": "context"
+    },
+    {
+      "word": "іменник",
+      "exercise_type": "true-false",
+      "context": "Якщо іменник закінчується на 'г', 'к', 'х', перед закінчення",
+      "role": "context"
+    },
+    {
+      "word": "закінчується",
+      "exercise_type": "true-false",
+      "context": "Якщо іменник закінчується на 'г', 'к', 'х', перед закінчення",
+      "role": "context"
+    },
+    {
+      "word": "г'",
+      "exercise_type": "true-false",
+      "context": "Якщо іменник закінчується на 'г', 'к', 'х', перед закінчення",
+      "role": "context"
+    },
+    {
+      "word": "к'",
+      "exercise_type": "true-false",
+      "context": "Якщо іменник закінчується на 'г', 'к', 'х', перед закінчення",
+      "role": "context"
+    },
+    {
+      "word": "х'",
+      "exercise_type": "true-false",
+      "context": "Якщо іменник закінчується на 'г', 'к', 'х', перед закінчення",
+      "role": "context"
+    },
+    {
+      "word": "закінченням",
+      "exercise_type": "true-false",
+      "context": "Якщо іменник закінчується на 'г', 'к', 'х', перед закінчення",
+      "role": "context"
+    },
+    {
+      "word": "і'",
+      "exercise_type": "true-false",
+      "context": "Якщо іменник закінчується на 'г', 'к', 'х', перед закінчення",
+      "role": "context"
+    },
+    {
+      "word": "змінюються",
+      "exercise_type": "true-false",
+      "context": "Якщо іменник закінчується на 'г', 'к', 'х', перед закінчення",
+      "role": "context"
+    },
+    {
+      "word": "з'",
+      "exercise_type": "true-false",
+      "context": "Якщо іменник закінчується на 'г', 'к', 'х', перед закінчення",
+      "role": "context"
+    },
+    {
+      "word": "ц'",
+      "exercise_type": "true-false",
+      "context": "Якщо іменник закінчується на 'г', 'к', 'х', перед закінчення",
+      "role": "context"
+    },
+    {
+      "word": "с'",
+      "exercise_type": "true-false",
+      "context": "Якщо іменник закінчується на 'г', 'к', 'х', перед закінчення",
+      "role": "context"
+    },
+    {
+      "word": "книга'",
+      "exercise_type": "true-false",
+      "context": "Слово 'книга' у давальному відмінку буде 'книгі'.",
+      "role": "context"
+    },
+    {
+      "word": "буде",
+      "exercise_type": "true-false",
+      "context": "Слово 'книга' у давальному відмінку буде 'книгі'.",
+      "role": "context"
+    },
+    {
+      "word": "книгі'",
+      "exercise_type": "true-false",
+      "context": "Слово 'книга' у давальному відмінку буде 'книгі'.",
+      "role": "context"
+    },
+    {
+      "word": "іменники",
+      "exercise_type": "true-false",
+      "context": "Іменники середнього роду на позначення малят (немовля, курча",
+      "role": "context"
+    },
+    {
+      "word": "позначення",
+      "exercise_type": "true-false",
+      "context": "Іменники середнього роду на позначення малят (немовля, курча",
+      "role": "context"
+    },
+    {
+      "word": "малят",
+      "exercise_type": "true-false",
+      "context": "Іменники середнього роду на позначення малят (немовля, курча",
+      "role": "context"
+    },
+    {
+      "word": "мають",
+      "exercise_type": "true-false",
+      "context": "Іменники середнього роду на позначення малят (немовля, курча",
+      "role": "context"
+    },
+    {
+      "word": "суфікс",
+      "exercise_type": "true-false",
+      "context": "Іменники середнього роду на позначення малят (немовля, курча",
+      "role": "context"
+    },
+    {
+      "word": "батько'",
+      "exercise_type": "true-false",
+      "context": "Слово 'батько' у давальному відмінку має форму 'батьку', але",
+      "role": "context"
+    },
+    {
+      "word": "форму",
+      "exercise_type": "true-false",
+      "context": "Слово 'батько' у давальному відмінку має форму 'батьку', але",
+      "role": "context"
+    },
+    {
+      "word": "батьку'",
+      "exercise_type": "true-false",
+      "context": "Слово 'батько' у давальному відмінку має форму 'батьку', але",
+      "role": "context"
+    },
+    {
+      "word": "але",
+      "exercise_type": "true-false",
+      "context": "Слово 'батько' у давальному відмінку має форму 'батьку', але",
+      "role": "context"
+    },
+    {
+      "word": "ніколи",
+      "exercise_type": "true-false",
+      "context": "Слово 'батько' у давальному відмінку має форму 'батьку', але",
+      "role": "context"
+    },
+    {
+      "word": "не",
+      "exercise_type": "true-false",
+      "context": "Слово 'батько' у давальному відмінку має форму 'батьку', але",
+      "role": "context"
+    },
+    {
+      "word": "батькові'",
+      "exercise_type": "true-false",
+      "context": "Слово 'батько' у давальному відмінку має форму 'батьку', але",
+      "role": "context"
+    },
+    {
+      "word": "два",
+      "exercise_type": "true-false",
+      "context": "Якщо в реченні є два іменники чоловічого роду підряд (наприк",
+      "role": "context"
+    },
+    {
+      "word": "підряд",
+      "exercise_type": "true-false",
+      "context": "Якщо в реченні є два іменники чоловічого роду підряд (наприк",
+      "role": "context"
+    },
+    {
+      "word": "наприклад",
+      "exercise_type": "true-false",
+      "context": "Якщо в реченні є два іменники чоловічого роду підряд (наприк",
+      "role": "context"
+    },
+    {
+      "word": "пан",
+      "exercise_type": "true-false",
+      "context": "Якщо в реченні є два іменники чоловічого роду підряд (наприк",
+      "role": "context"
+    },
+    {
+      "word": "директор",
+      "exercise_type": "true-false",
+      "context": "Якщо в реченні є два іменники чоловічого роду підряд (наприк",
+      "role": "context"
+    },
+    {
+      "word": "краще",
+      "exercise_type": "true-false",
+      "context": "Якщо в реченні є два іменники чоловічого роду підряд (наприк",
+      "role": "context"
+    },
+    {
+      "word": "використовувати",
+      "exercise_type": "true-false",
+      "context": "Якщо в реченні є два іменники чоловічого роду підряд (наприк",
+      "role": "context"
+    },
+    {
+      "word": "однакові",
+      "exercise_type": "true-false",
+      "context": "Якщо в реченні є два іменники чоловічого роду підряд (наприк",
+      "role": "context"
+    },
+    {
+      "word": "директорові",
+      "exercise_type": "true-false",
+      "context": "Якщо в реченні є два іменники чоловічого роду підряд (наприк",
+      "role": "context"
+    },
+    {
+      "word": "відповідає",
+      "exercise_type": "true-false",
+      "context": "Давальний відмінок відповідає на питання 'кого? що?'.",
+      "role": "context"
+    },
+    {
+      "word": "кого",
+      "exercise_type": "true-false",
+      "context": "Давальний відмінок відповідає на питання 'кого? що?'.",
+      "role": "context"
+    },
+    {
+      "word": "що",
+      "exercise_type": "true-false",
+      "context": "Давальний відмінок відповідає на питання 'кого? що?'.",
+      "role": "context"
+    },
+    {
+      "word": "для",
+      "exercise_type": "true-false",
+      "context": "Для вираження віку людини (наприклад, 'Йому 20 років') викор",
+      "role": "context"
+    },
+    {
+      "word": "вираження",
+      "exercise_type": "true-false",
+      "context": "Для вираження віку людини (наприклад, 'Йому 20 років') викор",
+      "role": "context"
+    },
+    {
+      "word": "віку",
+      "exercise_type": "true-false",
+      "context": "Для вираження віку людини (наприклад, 'Йому 20 років') викор",
+      "role": "context"
+    },
+    {
+      "word": "людини",
+      "exercise_type": "true-false",
+      "context": "Для вираження віку людини (наприклад, 'Йому 20 років') викор",
+      "role": "context"
+    },
+    {
+      "word": "років'",
+      "exercise_type": "true-false",
+      "context": "Для вираження віку людини (наприклад, 'Йому 20 років') викор",
+      "role": "context"
+    },
+    {
+      "word": "використовується",
+      "exercise_type": "true-false",
+      "context": "Для вираження віку людини (наприклад, 'Йому 20 років') викор",
+      "role": "context"
+    },
+    {
+      "word": "вулиці",
+      "exercise_type": "fill-in",
+      "context": "____ дуже холодно на вулиці.",
+      "role": "context"
+    },
+    {
+      "word": "потрібно",
+      "exercise_type": "fill-in",
+      "context": "____ потрібно багато читати.",
+      "role": "context"
+    },
+    {
+      "word": "читати",
+      "exercise_type": "fill-in",
+      "context": "____ потрібно багато читати.",
+      "role": "context"
+    },
+    {
+      "word": "сумно",
+      "exercise_type": "fill-in",
+      "context": "____ сумно без друзів.",
+      "role": "context"
+    },
+    {
+      "word": "без",
+      "exercise_type": "fill-in",
+      "context": "____ сумно без друзів.",
+      "role": "context"
+    },
+    {
+      "word": "друзів",
+      "exercise_type": "fill-in",
+      "context": "____ сумно без друзів.",
+      "role": "context"
+    },
+    {
+      "word": "домашнім",
+      "exercise_type": "fill-in",
+      "context": "____ треба допомогти з домашнім завданням.",
+      "role": "context"
+    },
+    {
+      "word": "завданням",
+      "exercise_type": "fill-in",
+      "context": "____ треба допомогти з домашнім завданням.",
+      "role": "context"
+    },
+    {
+      "word": "цікаво",
+      "exercise_type": "fill-in",
+      "context": "____ цікаво вивчати нові слова.",
+      "role": "context"
+    },
+    {
+      "word": "вивчати",
+      "exercise_type": "fill-in",
+      "context": "____ цікаво вивчати нові слова.",
+      "role": "context"
+    },
+    {
+      "word": "тепло",
+      "exercise_type": "fill-in",
+      "context": "____ тепло в цій кімнаті.",
+      "role": "context"
+    },
+    {
+      "word": "друг",
+      "exercise_type": "group-sort",
+      "context": "друг",
+      "role": "answer"
+    },
+    {
+      "word": "тато",
+      "exercise_type": "group-sort",
+      "context": "тато",
+      "role": "answer"
+    },
+    {
+      "word": "товариш",
+      "exercise_type": "group-sort",
+      "context": "товариш",
+      "role": "answer"
+    },
+    {
+      "word": "видавець",
+      "exercise_type": "group-sort",
+      "context": "видавець",
+      "role": "answer"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 14,
-    "tested_in_exercises": 10,
+    "tested_in_exercises": 11,
     "not_tested": [
       "відміна",
-      "немовля",
       "одержувач",
       "чергування"
     ]

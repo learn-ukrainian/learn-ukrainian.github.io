@@ -2,9 +2,6 @@
 CRITICAL: Your previous attempt failed the following checks. Fix ONLY the listed errors. Keep everything else exactly as is — do not rewrite sections that are working correctly.
 
 - FIX: Missing section heading: 'Підсумок: ваш морфологічний словник'
-- FIX: Russian/archaic words: кон→кін
-- NOTE: Missing 3/16 required vocab: спільнокореневий (cognate — words sharing the same root), самостійний (content/autosemantic — part of speech with independent meaning), службовий (function/synsemantic — part of speech without independent meaning)
-- NOTE: Plan expects 6 exercise(s) but content has 5
 </correction_directive>
 
 LEARNINGS FROM PAST BUILDS (same error patterns seen before):

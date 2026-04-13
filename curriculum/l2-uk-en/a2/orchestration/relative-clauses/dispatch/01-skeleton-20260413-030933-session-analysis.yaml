@@ -1,0 +1,55 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T01-08-a2f6f713.json
+phase: skeleton
+prompt_chars: 34896
+response_chars: 5058
+prompt_words: 4997
+response_words: 788
+sections:
+- name: preamble
+  start: 0
+  length: 483
+  fraction: 0.0138
+- name: plan
+  start: 483
+  length: 5597
+  fraction: 0.1604
+- name: wiki
+  start: 6024
+  length: 26486
+  fraction: 0.759
+- name: output_spec
+  start: 32566
+  length: 2330
+  fraction: 0.0668
+large_sections:
+- wiki
+directives_total: 11
+directives_covered: 5
+directives_missed:
+- kind: must
+  text: '**Section budgets must match the plan''s `content_outline` word allocations**
+    (±10%).'
+  covered: false
+  coverage_note: 3/8 keywords (38%)
+- kind: must
+  text: '**CRITICAL: An exercise must ONLY test concepts already taught above it.'
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: skeleton_para
+  text: 'P1 (150w): Follow the plan''s points for this section EXACTLY. If the plan
+    says "Self-check questions", output a bulleted Q&A list — NOT prose. If the plan
+    says "recap", write a brief recap.'
+  covered: false
+  coverage_note: 3/20 keywords (15%)
+- kind: inject_activity
+  text: activity-id
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: activity-id
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: descriptive-id
+  covered: false
+  coverage_note: marker missing

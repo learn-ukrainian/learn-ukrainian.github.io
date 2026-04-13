@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-is by adding a prefix to the beginning of the word. For example, the base verb «читати» becomes «прочитати», and the base verb «робити» becomes «зробити». This prefixation strategy is extremely common, but the specific prefix used can vary depending on the verb. Another frequent method is suffixation, where the internal structure of the word changes rather than adding a prefix. In these cases, the perfective verb often looks shorter or simpler, while the imperfective verb relies on a longer, extended suffix like **-ува-**, **-ва-**, or **-а-**. For instance, the perfective «вирішити» pairs with the extended imperfective «вирішувати», and the perfective «показати» pairs with «показувати». Sometimes, a vowel inside the root alternates to mark the difference, such as the perfective «допомогти» pairing with the imperfective «допомагати». Найскладнішими для запам'ятовування є суплетивні пари. Це слова, які утворюють видову пару, але мають абсолютно різні корені. Вони виглядають як два зовсім різних слова, хоча описують одну дію. Найвідоміші приклади таких пар: «брати» і «взяти», «говорити» і «сказати», «шукати» і «знайти». Їх потрібно просто вивчити напам'ять, адже вони дуже часто зустрічаються в повсякденних розмовах. The choice between the two aspects depends entirely on your intention and the specific meaning you want to convey in a conversation. This semantic choice is what allows you to narrate events accurately and vibrantly. When you say «вона писала лист», you paint a picture of her sitting at a desk with a pen in hand for a period of time. You do not reveal whether the letter was ever finished. However, when you say «вона написала лист і пішла на пошту», you describe a completed milestone that allows the next action in the sequence to happen. The perfective aspect pushes the narrative forward, while the imperfective aspect provides the background details and the duration of events. Якщо ваш співрозмовник запитує «Що ти робив учора?», він цікавиться вашим процесом та тим, як ви витратили свій час. Відповідь «Я читав книжку дві години» ідеально підходить, адже вона описує тривалу дію без акценту на фіналі. Але якщо питання звучить як «Що ти зробив учора?», людину цікавить ваш конкретний результат або досягнення. Тоді ви повинні відповісти «Я прочитав книжку», що означає успішне завершення дії від початку до кінця. Mastering the correct use of aspect is a crucial step in sounding natural when speaking Ukrainian. Beginners often overuse imperfective verbs because they map directly to English past and present simple tenses. However, native speakers constantly shift between aspects to add nuance, emphasize achievements, or set a dynamic scene. When you use perfective verbs to highlight completed milestones, your sentences stop sounding like translated English and gain the authentic rhythm of native Ukrainian discourse. The feeling for verb aspect comes with practice and constant listening to live speech. When you read Ukrainian texts or listen to dialogues, always pay attention to which aspect the speaker chooses. Ask yourself why the process was used here instead of the result. Eventually, this choice will become completely intuitive for you. <!-- INJECT_ACTIVITY: quiz-aspect-id --> <!-- INJECT_ACTIVITY: match-up-aspect-pairs -->
+a perfective verb containing a short suffix, and you expand or stretch that suffix to create the imperfective form. A clear example is «вирішити» (to decide completely) becoming «вирішувати» (to be in the process of deciding). Finally, some everyday verbs use entirely different root words for their aspectual pairs. These are called suppletive pairs. You simply have to memorize that the continuous «брати» (to take) pairs with the abrupt «взяти», and the ongoing «говорити» (to speak) pairs with the definitive «сказати». :::info **Grammar box** Always memorize verbs as an aspectual pair from the very beginning. Instead of just learning that "to read" is «читати», learn that it is «читати / прочитати». This simple habit will save you from major grammatical confusion later. ::: Вибір між доконаним і недоконаним видом завжди залежить від вашого наміру та фокусу уваги. Коли хтось запитує «Що ти робив учора?», людину цікавить ваш процес або те, як ви витратили свій час. Ви можете відповісти: «Я читав книжку дві години». Ця фраза не дає жодної інформації про те, чи ви дочитали історію до кінця. Вона лише описує вашу діяльність. Але якщо вас запитають «Що ти зробив учора?», очікується почути про ваші досягнення. Тоді ви скажете: «Я прочитав книжку». Це означає, що ви закінчили її повністю, і дія має успішний фінал. Недоконаний вид створює широке тло вашої розповіді, а доконаний вид рухає сюжет уперед від однієї події до іншої. Завжди запитуйте себе, чи важливий для вас процес, чи фінальний результат. > *The choice between the perfective and imperfective aspect always depends on your intention and focus of attention. When someone asks "What were you doing yesterday?", the person is interested in your process or how you spent your time. You can answer: "I was reading a book for two hours". This phrase gives no information about whether you read the story to the end. It only describes your activity. But if you are asked "What did you get done yesterday?", the expectation is to hear about your achievements. Then you will say: "I read the book". This means that you finished it completely, and the action has a successful finale. The imperfective aspect creates the broad background of your narrative, while the perfective aspect moves the plot forward from one event to another. Always ask yourself whether the process or the final result is important to you.* Mastering this aspectual choice is the absolute key to sounding like a natural, confident native Ukrainian speaker. Beginners often try to translate their English thoughts word for word, accidentally applying the perfective aspect to situations that clearly require the imperfective. For example, using a perfective verb to describe how long you did something sounds incredibly unnatural, almost like saying you managed to finish a task continuously for three solid hours. When you fully embrace the inherent logic of aspect—choosing verbs based on whether you are painting a descriptive background scene or listing completed historical milestones—your Ukrainian will instantly gain an authentic, fluid rhythm. <!-- INJECT_ACTIVITY: quiz-aspect-id --> <!-- INJECT_ACTIVITY: match-up-aspect-pairs -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -721,6 +721,33 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] теперішній час (present tense)
+- [ ] минулий час (past tense)
+- [ ] дієвідміна (conjugation class — I or II)
+- [ ] особа (person — 1st, 2nd, 3rd)
+- [ ] число (number — однина, множина)
+- [ ] рід (gender — чоловічий, жіночий, середній)
+- [ ] доконаний вид (perfective aspect — completed action)
+- [ ] недоконаний вид (imperfective aspect — ongoing action)
+- [ ] інфінітив (infinitive — the base form ending in -ти/-тися)
+- [ ] дієвідмінювання (conjugation — changing verb by person and number)
+- [ ] зворотний (reflexive — verbs with -ся/-сь)
+- [ ] видова пара (aspectual pair — e.g., писати/написати)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Вид у розповіді: послідовність і тло (~700 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

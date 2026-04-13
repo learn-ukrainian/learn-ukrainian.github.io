@@ -2,13 +2,13 @@
   "module": "what-happened",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-11T01:01:06.879531Z",
+  "last_audit": "2026-04-13T21:20:27.251800Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-11T01:01:06.196516Z",
+    "md": "2026-04-13T21:20:16.069936Z",
     "meta": null,
-    "activities": "2026-04-09T05:39:20.155052Z",
-    "vocabulary": "2026-04-09T05:42:34.191233Z",
+    "activities": "2026-04-13T04:32:55.740061Z",
+    "vocabulary": "2026-04-13T04:33:29.786248Z",
     "research": null,
     "plan": "2026-03-30T22:17:20.668901Z"
   },
@@ -21,17 +21,26 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1468/1200 (raw: 1546)"
+      "message": "1582/1200 (raw: 1667)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "8/0"
+      "message": "9/0"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "22/1"
+      "message": "16/1"
+    },
+    "vocab_progression": {
+      "status": "warn",
+      "violations": 0,
+      "message": "\u0394 -10 | premature=2 | gaps=0 | well-paced=0",
+      "delta": -10,
+      "premature": 2,
+      "gaps": 0,
+      "well_paced": 0
     },
     "naturalness": {
       "status": "info",

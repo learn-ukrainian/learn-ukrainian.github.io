@@ -2,49 +2,52 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 10
-  evidence: Every point from the outline is covered meticulously, including all dialogue
-    prompts and grammatical concepts.
+  score: 7
+  evidence: 'All four planned H2 sections are present, but section pacing is far off
+    the 300-word plan budget: `Dialogues 468`, `Майбутній час 472`, `Практика 389`,
+    `Summary 297`. The planned dialogue lines `Вона '
 - dimension: 2
   name: Linguistic accuracy
-  score: 8
-  evidence: The text misidentifies "**прочитаю**" as the "synthetic future" ("Note
-    that the synthetic future (like **прочитаю**) exists in the language..."). "Прочитаю"
-    is the simple future (проста форма).
+  score: 7
+  evidence: The Ukrainian sentence forms are clean, but [what-will-happen.md](/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/what-will-happen.md:3)
+    teaches a “specific continuous form of the
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: Excellent PPP flow. Concepts are anchored well to English equivalents
-    ("will"), and the invariant infinitive rule is emphasized perfectly with clear
-    contrast against past and present tenses.
+  score: 6
+  evidence: The module has PPP structure, but it repeatedly buries A1 grammar under
+    long English exposition before examples. The opening dialogue section spends a
+    full paragraph of theory before the first Ukraini
 - dimension: 4
   name: Vocabulary coverage
-  score: 9
-  evidence: All required words are used. However, the recommended word "план" (plan)
-    was only used in English ("We make plans"), not introduced in Ukrainian.
+  score: 8
+  evidence: 'Required vocabulary is covered naturally: `завтра`, `буду/будеш/буде/будемо/будете/будуть`,
+    `робити`. Recommended items like `відпочивати`, `план`, `футбол`, `наступного
+    тижня` also appear, but the pl'
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: All 3 expected activity markers are present and injected at the correct
-    pedagogical moments based on the taught material.
+  score: 6
+  evidence: The three planned activity types are present and aligned to the teaching,
+    but both fill-in exercises in [what-will-happen.yaml](/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/act
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: The teacher persona is encouraging and natural ("Observe how...", "When
-    we talk about our lives...").
+  score: 5
+  evidence: Phrases like “This powerful grammatical structure,” “Now let us rigorously
+    apply,” and “You now firmly possess the grammatical tools” read as inflated filler
+    rather than direct teacher talk.
 - dimension: 7
   name: Structural integrity
-  score: 10
-  evidence: Word count is 1720 words (well above 1200 target). Clean formatting, proper
-    headers.
+  score: 9
+  evidence: Clean markdown, all planned H2 headings present and ordered correctly,
+    and the pipeline word count is `1571`, which is safely above target.
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: Authentic use of names, natural everyday situations, and the fun, culturally
-    recognizable trope of the fortune teller.
+  score: 9
+  evidence: No Russian-centering or cultural inaccuracies found; the `ворожка` setup
+    is plausible and locally grounded.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: Dialogues are natural, correctly translated, and demonstrate the target
-    grammar smoothly.
+  score: 6
+  evidence: The first “dialogue” is mostly a monologue by the fortune teller, and
+    the second is heavily question-driven. It is serviceable, but not a strong natural
+    conversation with balanced turns.
 findings: []

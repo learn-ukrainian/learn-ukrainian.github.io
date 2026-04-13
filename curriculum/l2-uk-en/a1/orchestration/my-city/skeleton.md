@@ -1,34 +1,29 @@
-## Діалоги — Dialogues (~300 words total)
-- P1 (~60 words): [Introductory paragraph establishing the setting: Alina is showing her friend Igor a hand-drawn map of her neighborhood in Kyiv (мій район у Києві). Concept of defining one's space.]
-- D1 (~120 words): [Dialogue 1: Igor is a tourist asking for help. Focus on polite opening (Вибачте, будь ласка) and asking for specific places: pharmacy (аптека), library (бібліотека), and park (парк). Response uses locative case: на вулиці Шевченка, у центрі, біля парку.]
-- D2 (~120 words): [Dialogue 2: Alina describes her immediate surroundings to Igor. Use of the existence marker "є" and the preposition "біля" with genitive chunks (біля дому, біля метро). Vocabulary includes shop (магазин), cafe (кафе), and school (школа).]
+## Діалоги (Dialogues) (~330 words)
+- P1 (~50 words): Introduction to navigating the city. Set the scene for learning to talk about places and asking for simple directions in a Ukrainian city.
+- P2 (~100 words): Dialogue 1 — New in the city. Present a conversation asking for directions: "— Вибачте, де тут аптека? — Аптека на вулиці Шевченка. — А бібліотека? — Бібліотека в центрі, біля парку. — Дякую! — Будь ласка!"
+- P3 (~50 words): Brief breakdown of Dialogue 1. Highlight the use of the question word "де" and the locative phrase "на вулиці" to pinpoint locations.
+- P4 (~130 words): Dialogue 2 — My neighborhood. Present a conversation describing a local area: "— Що є біля твого дому? — Біля дому є магазин і кафе. — А школа? — Школа далеко, у центрі міста." Briefly review the "в/на" + locative pattern for places.
 
-## Місця в місті — City Places (~330 words total)
-- P1 (~80 words): [Foundational vocabulary list of 15+ city places, grouped by gender to aid memory. Masculine: магазин, супермаркет, банк, готель, вокзал, музей, театр. Feminine: аптека, бібліотека, лікарня, пошта, церква, школа. Neuter: кафе, кіно (кінотеатр), озеро.]
-- P2 (~80 words): [Review and expansion of the Locative case (M.в.) specifically for city buildings. Explanation of the в/у vs. на distinction: standard enclosures (в аптеці, у банку, в готелі, у музеї) vs. platforms/open concepts (на пошті, на вокзалі, на стадіоні, на площі).]
-- P3 (~80 words): [Combining places with verbs of action to provide context. Examples: купувати ліки (в аптеці), читати книги (у бібліотеці), дивитися фільм (у кінотеатрі), купувати продукти (у магазині), обідати (у ресторані).]
-- <!-- INJECT_ACTIVITY: match-place-activity --> [match-up: Match the city place to the typical activity, 8 items: аптека ↔ купувати ліки, бібліотека ↔ читати.]
-- <!-- INJECT_ACTIVITY: quiz-preposition-v-na --> [quiz: Choose the correct preposition (в or на) for city locations, 8 items: ___ пошті, ___ банку, ___ вокзалі.]
-- P4 (~90 words): [Transportation hubs and infrastructure. Introducing the words вокзал (railway station), автовокзал (bus station), зупинка (bus stop), and аеропорт. Emphasize that "вокзал" by default implies trains in Ukraine.]
+## Місця в місті (City Places) (~350 words)
+- P1 (~100 words): Essential city vocabulary introduction. Introduce the core nouns for public places: аптека, бібліотека, лікарня, магазин, супермаркет, ресторан, кафе, банк, пошта, вокзал, готель, музей, театр, кінотеатр, церква, стадіон, університет.
+- P2 (~100 words): Using the Locative case with new places (review from M29). Explain which places take "в/у" (в аптеці, у бібліотеці, в магазині, у ресторані, у банку, у готелі, в музеї) and which take "на" (на пошті, на вокзалі, на стадіоні, на площі).
+- <!-- INJECT_ACTIVITY: quiz-v-or-na --> [quiz, В or на? Choose preposition for city places., 8 items]
+- P3 (~150 words): Connecting places to actions. Explain how to describe what you do at these locations by combining A1.3 verbs with locative places. Provide examples: "Я купую ліки в аптеці.", "Я читаю в бібліотеці.", "Я працюю в офісі.", "Я відпочиваю в парку."
+- <!-- INJECT_ACTIVITY: match-up-place-activity --> [match-up, Match place to activity: аптека ↔ купувати ліки, 8 items]
 
-## Де це? — Where Is It? (~330 words total)
-- P1 (~80 words): [Relative distance adverbs: тут (here), там (there), близько (near/close), далеко (far). Contrastive examples: Магазин тут, а школа далеко. Центр близько, а вокзал далеко.]
-- P2 (~80 words): [The preposition "біля" (near/next to). Introduce this as a functional chunk with Genitive endings for common places: біля дому, біля парку, біля університету, біля метро. Explain that "біля" is used for physical proximity.]
-- P3 (~90 words): [Existence and description with "є" (there is/are). Constructing sentences to describe a neighborhood: У моєму місті є великий парк. Тут є два музеї та один стадіон. Using numbers from previous modules to quantify places.]
-- <!-- INJECT_ACTIVITY: fill-in-describe-city --> [fill-in: Complete sentences describing a city scene using "є" and city vocabulary, 6 items: У моєму місті ___ велика площа.]
-- <!-- INJECT_ACTIVITY: quiz-situational-place --> [quiz: Situational comprehension — choose where you would go based on a need, 6 items: Мені потрібні гроші (I need money) → ___ (банк).]
-- P4 (~80 words): [Specific location markers: на розі (on the corner), у центрі (in the center), поруч (nearby). Practical examples for navigation: Аптека на розі вулиці. Музей поруч з готелем.]
+## Де це? (Where Is It?) (~340 words)
+- P1 (~100 words): Introduction to basic location adverbs. Teach the words "тут" (here), "там" (there), "далеко" (far), and "близько" (near/close). Provide simple contrasting examples: "Магазин тут, а школа там.", "Центр близько, а вокзал далеко."
+- P2 (~120 words): The phrase "біля" (near) and fixed location chunks. Explain that "біля" requires the genitive case, but teach it as pre-made chunks to avoid grammar overload: "біля парку", "біля дому", "біля університету". Also introduce "у центрі" (in the center) and "на розі" (on the corner).
+- P3 (~120 words): Describing your city using "є" (there is/are). Remind learners of the word "є" (from M06) and use it to describe urban environments. Give examples: "У моєму місті є великий парк і два музеї.", "Бібліотека біля університету.", "Магазин тут, біля дому."
+- <!-- INJECT_ACTIVITY: fill-in-describe-city --> [fill-in, Describe your city: У моєму місті є ___., 6 items]
+- <!-- INJECT_ACTIVITY: quiz-where-to-go --> [quiz, Where would you go? Choose the right place for each situation., 6 items]
 
-## Підсумок — Summary (~340 words total)
-- P1 (~150 words): [Comprehensive recap of city vocabulary with their required Locative prepositions. 
-  - В/У: аптеці, бібліотеці, банку, готелі, магазині, музеї, ресторані, лікарні, школі, університеті. 
-  - НА: пошті, вокзалі, стадіоні, зупинці, площі.]
-- P2 (~100 words): [Review of orientation and distance words: тут, там, далеко, близько, біля + Genitive. Contrast "близько" (adverb: near) with "біля" (preposition: near/by something).]
-- P3 (~90 words): [Self-check Q&A list for the learner to practice aloud:
-  - Де ви живете? (Я живу в...)
-  - Що є біля вашого дому? (Біля дому є...)
-  - Де ви купуєте ліки? (Я купую ліки в...)
-  - Центр міста далеко чи близько?
-  - Які музеї є у вашому місті?]
+## Підсумок — Summary (~300 words)
+- P1 (~150 words): Recap of city vocabulary and prepositions. Group the learned places clearly by their preposition: В/у (аптеці, бібліотеці, магазині, банку, готелі, ресторані) vs. На (пошті, вокзалі, стадіоні, площі). Summarize the location adverbs and chunks: тут, там, далеко, близько, біля.
+- P2 (~150 words): Self-check questions. Provide a bulleted Q&A list prompting the learner to describe their own environment based on the module's goals:
+  - Назвіть 5 місць біля вашого дому. (Name 5 places near your home.)
+  - Де ви купуєте продукти? (Where do you buy groceries?)
+  - Що ви робите в парку? (What do you do in the park?)
+  - Вокзал далеко чи близько? (Is the train station far or near?)
 
-Grand total: ~1300 words
+Grand total: ~1320 words

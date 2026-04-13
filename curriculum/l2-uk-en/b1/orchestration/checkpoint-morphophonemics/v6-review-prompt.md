@@ -349,7 +349,7 @@ references:
 > — **Учасник 1:** На щастя, ми мали із собою всі необхідні **ліки** (*medicine*). Я пив гарячий чай і приймав медичні препарати **з радістю** (*with joy*), адже вони швидко мені допомогли. Вже за два дні гострий **біль** (*pain*) минув, і ми змогли продовжити наш відпочинок.
 > — **Ведучий:** Чудова історія з щасливим кінцем! А тепер моє перше професійне запитання до вас. Ви щойно використали слово «вночі». Яке саме чергування голосних відбувається у базовому слові «**ніч**» (*night*), якщо ми почнемо його відмінювати?
 > — **Учасник 1:** Коли закритий склад стає відкритим, звук «і» змінюється на «о». Наприклад: Називний відмінок — це «ніч», але Родовий відмінок — це вже «**ночі**» (*of the night*).
-> — **Ведучий:** правильно! А чому ми кажемо «з радістю», без подвоєння приголосних літер?
+> — **Ведучий:** Правильно! А чому ми кажемо «з радістю», без подвоєння приголосних літер?
 > — **Учасник 1:** Тому що основа цього слова закінчується на збіг двох приголосних звуків — «с» та «т». У таких випадках мова скасовує **подвоєння** (*doubling*), щоб уникнути важкої вимови.
 > — **Ведучий:** Блискуче пояснення! Ви отримуєте максимальний бал за цей раунд.
 
@@ -542,7 +542,7 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 1815 words | Not found: 9 words
+Verified: 1816 words | Not found: 9 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
   ✗ Карпат — NOT IN VESUM
@@ -555,7 +555,7 @@ Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dic
   ✗ прийом — NOT IN VESUM
   ✗ товаришом — NOT IN VESUM
 
-All 1815 other words are confirmed to exist in VESUM.
+All 1816 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 

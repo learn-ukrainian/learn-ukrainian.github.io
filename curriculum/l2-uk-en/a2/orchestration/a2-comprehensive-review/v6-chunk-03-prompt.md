@@ -24,7 +24,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-— це доконаний вид. The first way is the perfective aspect. Дієслово змінюється як у теперішньому часі, але означає майбутнє. The verb changes like in the present tense, but means the future. Наприклад, ми кажемо «я **прочитаю** книгу». This means "I will read the book completely". Це означає, що я точно закінчу цю дію. This means I will finish the action. Другий спосіб — це складений майбутній час. The second way is the compound future tense. Ми використовуємо допоміжне слово «буду» та інфінітив. We use the auxiliary word "буду" and the infinitive. Наприклад, ми кажемо «я **буду читати**». This means "I will be reading". Це означає процес у майбутньому. This means a process in the future. Третій спосіб — це ще одна форма. The third way is another form. Ми додаємо закінчення прямо до інфінитива. We add an ending directly to the infinitive. Наприклад, ми кажемо «я **читатиму**». This translates to "I will be reading". Другий і третій способи абсолютно однакові за значенням. The second and third ways are identical in meaning. Ми також використовуємо умовний і наказовий спосіб. We also use the conditional and imperative moods. Умовний спосіб допомагає нам говорити про мрії або бажання. The conditional mood helps us talk about dreams or wishes. Ми використовуємо слово «якби» та частку «б» або «би». We use the word "якби" and the particle "б" or "би". Наприклад, ми кажемо «**якби** я мав час, я **б** поїхав у гори». This means "if I had time, I would go to the mountains". Наказовий спосіб потрібен для прохань або наказів. The imperative mood is needed for requests or commands. Його форма завжди залежить від ситуації спілкування. Its form depends on the communication situation. Ввічлива форма або форма для багатьох людей має закінчення «-те». The polite or plural form has the ending "-те". Наприклад, ми кажемо «**читайте** цей текст». This translates to "read this text". Дружня форма для однієї людини зазвичай коротша. The friendly form for one person is shorter. Наприклад, ми кажемо «**прочитай** цю статтю». This means "read this article completely". Давайте коротко згадаємо дієслова руху. Let's briefly remember verbs of motion. Вони традиційно бувають двох типів. They are traditionally of two types. Дієслова «іти» та «їхати» означають рух в один бік. The verbs "іти" and "їхати" mean movement in one direction. Дієслова «ходити» та «їздити» означають регулярний рух туди і назад. The verbs "ходити" and "їздити" mean regular movement back and forth. Різні префікси додають цим дієсловам новий просторовий зміст. Different prefixes add new spatial meaning to these verbs. Префікс «при-» завжди означає прибуття до мети. The prefix "при-" means arrival at a destination. Наприклад, ми кажемо «він **прийшов**». This translates to "he arrived". Префікс «ви-» означає рух назовні з приміщення. The prefix "ви-" means movement outward from a room. Наприклад, ми кажемо «вона **виїхала**». This translates to "she drove out". Префікс «по-» означає початок руху або відправлення. The prefix "по-" means the start of movement or departure. Наприклад, ми кажемо «поїзд **поїхав**». This means "the train departed". <!-- INJECT_ACTIVITY: quiz-aspect-choice -->
+Недоконаний вид описує тривалий процес або дії, які повторюються щодня. Ми кажемо: «Я довго говорив по телефону». Доконаний вид показує конкретний результат або завершену дію. Наприклад: «Я нарешті сказав правду». Такі видові пари, як «робити» та «зробити», є основою мови. Без них важко передати точний зміст вашої думки. > *When we learn a Ukrainian verb, we always look for its aspect. The imperfective aspect describes a long process or actions that repeat every day. We say: "I talked on the phone for a long time." The perfective aspect shows a specific result or a completed action. For example: "I finally said the truth." Aspect pairs like "to do" and "to have done" are the foundation of the language. Without them, it's hard to convey the exact meaning of your thought.* The future tense in Ukrainian offers three distinct paths for learners to navigate. If you want to emphasize a completed result, you use the perfective future. It looks like a single word: «я прочитаю». This simply means the action will be finished. However, for ongoing processes, you have two imperfective options. The compound future uses the verb «бути» and an infinitive, like «я буду читати». It is very common in spoken speech. The third way is the synthetic future, which has endings like «-му». You might hear «читатиму» in songs or read it in books. :::info **Grammar box** Remember that the **відмінок** (grammatical case) of the object depends on the verb aspect. Both aspects usually take the same case, but the meaning of the sentence changes from "doing" to "done". ::: На рівні А2 ми також вивчаємо різні способи вираження бажань та прохань. Умовний спосіб допомагає нам мріяти про майбутнє. Кожне **речення** (sentence) з часткою «б» звучить дуже м'яко. Наприклад: «Якби я мав час, я б поїхав у гори». Наказовий спосіб потрібен для команд або ввічливих порад. Ми розрізняємо дружнє прохання «прочитай» та офіційне звертання «читайте». Пам'ятайте, що в українській мові ці форми дуже важливі для етикету. > *At level A2, we also study different ways of expressing wishes and requests. The conditional mood helps us dream about the future. Every sentence with the particle "b" sounds very soft. For example: "If I had time, I would go to the mountains." The imperative mood is needed for commands or polite advice. We distinguish between a friendly request "read" and a formal address "read (plural/polite)". Remember that in the Ukrainian language, these forms are very important for etiquette.* Motion verbs can be tricky, but the logic is consistent. Unidirectional verbs like «іти» describe movement in one direction right now. Multidirectional verbs like «ходити» are for regular trips or movement without a specific goal. Prefixes add new layers of meaning to these bases. When someone «прийшов», they are already here. If a friend «виїхав», he has left his home. Finally, «поїхати» marks the very beginning of a journey. Use these forms carefully to avoid a **помилка** (error) in your directions. <!-- INJECT_ACTIVITY: quiz, Choose perfective or imperfective aspect for the context -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -555,7 +555,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 6: A2 finale (A2 M51-M69)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–10 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 40%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 40% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 TARGET: 70-90% Ukrainian.
 LANGUAGE ROLES:
@@ -574,18 +641,61 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] повторення (review, revision)
+- [ ] граматика (grammar)
+- [ ] відмінок (grammatical case)
+- [ ] дієслово (verb)
+- [ ] прикметник (adjective)
+- [ ] займенник (pronoun)
+- [ ] речення (sentence)
+- [ ] помилка (error, mistake)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Прикметники, порівняння, займенники (~450 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

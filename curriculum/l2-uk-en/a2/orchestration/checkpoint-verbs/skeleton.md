@@ -1,36 +1,31 @@
-## Частина 1: Вид дієслова — минулий і майбутній час (~460 words total)
-- P1 (~100 words): [Introductory motivation for the A2.6 Checkpoint. Explain why the "Verb Trinity" (Aspect, Tense, Motion) is the final hurdle to intermediate fluency. Set the stage for reviewing how a single prefix can change the entire meaning of a sentence from "I was doing it" to "I got it done."]
-- P2 (~120 words): [Aspect in the Past Tense: Process vs. Result. Contrast the imperfective (process/habit) with the perfective (completed action). Use specific pairs: "довго писав" (imperfective process) vs. "нарешті написав" (perfective result); "щовечора читала" (habit) vs. "прочитала за ніч" (single event).]
-- P3 (~120 words): [Aspect in the Future Tense: The Two Futures. Explain the logic of choosing between "буду робити" (imperfective/intent/process) and "зроблю" (perfective/guaranteed result). Provide examples of typical future markers like "завтра о п'ятій" (imperfective process) vs. "до вечора" (perfective deadline).]
-- P4 (~120 words): [The Unique Ukrainian Synthetic Future. Focus on the "-му, -меш, -ме" endings. Explain its historical origin (infinitive + мати) and its stylistic nuance as a more rhythmic, authentic alternative to "буду". Examples: "працюватиму" (I will be working), "знатимете" (you will know).]
-- <!-- INJECT_ACTIVITY: group-sort-verb-forms --> [group-sort, Categorize 8 verb forms into imperfective past, perfective past, synthetic future, and analytical future, 8 items]
-- <!-- INJECT_ACTIVITY: fill-in-aspect-choice --> [fill-in, Choose between imperfective/perfective in past and future contexts (e.g., "Вона довго ___ (готувати/приготувати) обід"), 8 items]
+## Частина 1: Вид дієслова — минулий і майбутній час (~450 words)
+- P1 (~80 words): Introduction to the checkpoint module. State the goal: reviewing the verb system, specifically aspect, tense, motion, and mood. Set the scene for Dialogue 1: a teacher conducting an oral review with a student about their weekend.
+- P2 (~120 words): Dialogue 1: Teacher (Вчитель) and Student (Студент) discussing the weekend. The student uses past imperfective for a process (`Я довго готував обід`) and perfective for a result (`Я приготував борщ`). The teacher asks about future plans, eliciting both future forms (`буду читати` vs `прочитаю`).
+- P3 (~125 words): Recap of Aspect in the Past Tense. Explain how Imperfective (`недоконаний вид`) focuses on the process, habit, or background action (`він довго писав листа`), while Perfective (`доконаний вид`) focuses on the result, sequence, or a single completed event (`він швидко написав листа`). Compare pairs: `робити / зробити`, `читати / прочитати`.
+- P4 (~125 words): Recap of Aspect in the Future Tense. Detail the formation: Imperfective uses the analytical form (`буду` + infinitive: `буду читати`), focusing on planned processes. Perfective uses the simple form (prefix + present endings: `прочитаю`), focusing on planned results. Explicitly warn against the common L2 error of mixing them (e.g., combining `буду` with a perfective infinitive like `буду прочитати` is strictly incorrect).
 
-## Частина 2: Дієслова руху та наказовий спосіб (~450 words total)
-- P1 (~110 words): [Unidirectional vs. Multidirectional Motion. Recap the "Two Pairs" logic: "іти/ходити" and "їхати/їздити". Contrast "Я зараз іду додому" (specific trip right now) with "Я щодня ходжу до парку" (regular habit). Mention the transport distinction (пішки vs. транспортом).]
-- P2 (~110 words): [Motion + Prepositions and Cases. Review the logic of directionality. "До + Genitive" (destination: до Львова), "З/Зі + Genitive" (origin: зі школи), and "На + Accusative" (event/location: на роботу). Contrast with "В/У + Accusative" (into: у магазин).]
-- P3 (~110 words): [Formation of Imperatives. Review the rules for 2nd person (читай/пиши), 2nd person plural (читайте/пишіть), and the 1st person plural "let's" form (читаймо/пишімо). Highlight the importance of stress: "рОбиш" vs. "зробИ".]
-- P4 (~120 words): [Indirect Imperatives and Wishes. Explain "хай/нехай" + 3rd person (Хай щастить!). Teach the "Vocative + Будь + Instrumental" wish construction for personal greetings. Examples: "Маріє, будь щасливою!", "Друже, будь обережним!"]
-- <!-- INJECT_ACTIVITY: motion-verb-preposition-match --> [fill-in, Match motion verbs with correct destinations and prepositions (e.g., "їздити ___ (Львів)"), 8 items]
-- <!-- INJECT_ACTIVITY: imperative-formation-drill --> [fill-in, Form imperatives for 2nd sing, 2nd plur, 1st plur, and 3rd person from given infinitives, 8 items]
+## Частина 2: Дієслова руху та наказовий спосіб (~450 words)
+- P1 (~80 words): Transition to verbs of motion. Introduce Dialogue 2 context: two friends (Оксана and Тарас) planning a hiking trip to the Carpathians, discussing logistics and giving commands.
+- P2 (~120 words): Dialogue 2: Friends planning the trip. They use unidirectional motion verbs for the specific plan (`ми їдемо`, `ми підемо`) and imperative mood for suggestions and commands (`візьми теплий одяг`, `ходімо разом`). 
+- P3 (~125 words): Recap of Motion Verbs. Explain the core difference: foot (`іти/ходити`) vs. transport (`їхати/їздити`), and unidirectional (specific trip, `я йду / їду`) vs. multidirectional (habitual, `я ходжу / їжджу`). Detail prefixes `по-` (start/future plan: `поїду`) and `при-` (arrival: `приїде`). Remind about case governance: `з` + Genitive (from), `до` + Genitive (to), `на` + Accusative (to an event/surface).
+- P4 (~125 words): Recap of the Imperative Mood (`наказовий спосіб`). Detail the forms: 2nd person singular/plural (`читай / читайте`, `роби / робіть`), 3rd person with `хай` (`хай читає`), and 1st person plural for suggestions (`читаймо`, `ходімо`). Emphasize avoiding the Russian calque `давай поговоримо` (use the proper Ukrainian form `поговорімо` замість цього).
+- <!-- INJECT_ACTIVITY: group-sort-verb-forms --> [group-sort, Sort verb forms into categories — imperfective past, perfective past, synthetic future, analytical future, imperative, 8 items]
 
-## Частина 3: Комплексні завдання (~600 words total)
-- P1 (~100 words): [Dialogue 1: The Oral Review. A teacher (пані Олена) asks a student (Марко) to retell his weekend. Marco uses "ходив" (past habit), "поїхав" (perfective trip), and "написав" (completed task). Marco makes a small error with "давай підемо", and the teacher corrects him to "ходімо".]
-- P2 (~120 words): [Deep Dive: Common L2 Logic Errors. Explain why English "to go" causes trouble and why "буду прочитати" is a grammatical impossible. Decolonization note: Explicitly forbid "давай(те)" for imperatives, replacing it with the authentic "ходімо" or "зробімо".]
-- P3 (~100 words): [Dialogue 2: Planning a Hike. Two friends (Андрій and Ірина) discuss a trip to the Carpathians. They use motion verbs for directions ("Ідіть до лісу") and imperatives for packing ("Візьми карту"). They express wishes for the trip: "Друзі, будьмо готові!"]
-- P4 (~130 words): [Integrated Narrative Context. Setting up a story about a traveler visiting Kyiv for the first time. The narrator describes arriving (приїхав), walking through the center (ішов), visiting churches (заходив), and plans for tomorrow (піду, оглядатиму).]
-- P5 (~150 words): [Synthesis of Aspect and Motion. Explaining how prefixes like "по-" and "при-" interact with aspect. Contrast "він ішов" (process of walking) with "він пішов" (he set off/left) and "він прийшов" (he arrived). Explain how these are used in integrated storytelling.]
-- <!-- INJECT_ACTIVITY: quiz-verb-errors --> [quiz, Identify and fix 8 sentences with verb errors (wrong aspect, motion type, or future tense construction), 8 items]
-- <!-- INJECT_ACTIVITY: error-correction-integrated --> [error-correction, Find and fix 6 specific verb form errors in a short paragraph context, 6 items]
-- <!-- INJECT_ACTIVITY: story-completion-verbs --> [fill-in, Complete a short narrative about a trip to the mountains using 8 mixed verb forms (aspect, motion, imperatives), 8 items]
+## Частина 3: Комплексні завдання (~600 words)
+- P1 (~120 words): Introduction to the integrated practice section. Emphasize that choosing the correct aspect, motion verb, and mood simultaneously is essential for natural, fluent Ukrainian storytelling. Briefly explain how these elements interact in a narrative sequence.
+- <!-- INJECT_ACTIVITY: fill-in-mixed-drill --> [fill-in, Mixed drill — complete sentences requiring aspect choice, motion verb selection, and imperative formation across all M35-40 topics, 8 items]
+- P2 (~160 words): Story Completion context. Present a short narrative text with blanks (modeling the upcoming exercise) about a person describing their habitual travel versus a specific upcoming trip. Contrast `їздимо` (multidirectional habit) with `поїдемо` (unidirectional future perfective), and `робили` (process) with `зробимо` (result).
+- <!-- INJECT_ACTIVITY: quiz-error-correction --> [quiz, Error correction — identify and fix verb errors (wrong aspect, motion type, imperative form, or future formation), 8 items]
+- P3 (~160 words): Common Pitfalls Review. Discuss typical mistakes to prepare learners for the final error correction task. Explain why specific sentences are wrong: e.g., correcting *`Він щодня зробив вправи` to `робив` (habit requires imperfective), *`Я буду поїхати` to `Я поїду` (future perfective), and *`Ми ідемо туди кожного літа` to `Ми їздимо` (multidirectional for recurring trips).
+- <!-- INJECT_ACTIVITY: error-correction-verb-forms --> [error-correction, Find and fix verb form errors — wrong aspect, wrong motion verb type, wrong imperative form, wrong future tense construction, 6 items]
+- P4 (~160 words): Guided Production Task prompt. Instruct the learner to write 8-10 sentences narrating a weekend trip. Detail the requirements: the text must include past tense aspect pairs (both imperfective and perfective), at least two motion verbs with corresponding prepositions, one imperative suggestion to a friend, and one wish using the Vocative case + `будь` + Instrumental case (e.g., `Олено, будь щасливою!`).
 
 ## Підсумок (~150 words)
-- P1 (~150 words): [Follow the plan exactly with a self-assessment checklist.
-*   Чи можу я обрати правильний вид у минулому часі? (Process vs. Result)
-*   Чи розрізняю я "буду читати" та "прочитаю"?
-*   Чи знаю я, коли використовувати "іти", а коли "ходити"?
-*   Чи вмію я утворювати наказовий спосіб для всіх осіб?
-*   Чи можу я побажати комусь здоров'я (Vocative + будь + Instrumental)?
-If you answered "так" to all, you are ready for A2.7!]
+- P1 (~150 words): 
+  - Can I confidently choose between imperfective and perfective aspect in past and future tenses (e.g., `читав` vs `прочитав`, `буду читати` vs `прочитаю`)?
+  - Do I know when to use unidirectional motion verbs (`іти`, `їхати`) versus multidirectional ones (`ходити`, `їздити`)?
+  - Can I form imperatives for all persons, especially avoiding the `давай` calque (e.g., using `ходімо`, `хай знає`)?
+  - Can I make wishes using the Vocative case and the Instrumental case (`будь здоровим`)?
+  - Am I ready to advance to module A2.7?
 
-Grand total: ~1660 words
+Grand total: ~1650 words

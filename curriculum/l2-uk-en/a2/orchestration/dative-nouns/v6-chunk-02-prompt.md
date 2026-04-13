@@ -1,50 +1,31 @@
-# Section-by-Section Generation — Section 2/6
+# Section-by-Section Generation — Section 2/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 18: Студентові, сестрі, дитині (A2, A2.3 [Dative Case])
-**Section to write:** Давальний відмінок іменників чоловічого роду (~650 words total)
-**Word target for this section:** 650 words (aim for 715 to account for undershoot)
+**Section to write:** Давальний відмінок іменників жіночого роду (~550 words total)
+**Word target for this section:** 550 words (aim for 605 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Давальний відмінок іменників чоловічого роду (~650 words total)
-- P1 (~100 words): [Explanation of II declension masculine nouns. Introduce the concept of "parallel endings" (-ові/-еві/-єві vs. -у/-ю), explaining that both are grammatically correct but have different stylistic weights in modern Ukrainian.]
-- P2 (~120 words): [Hard stems (-ові/-у). Explain that -ові is the uniquely Ukrainian ending and is highly preferred for people (animate nouns). Examples: студент → студентові/студенту, брат → братові/брату, батько → батькові/батьку, пан → панові/пану.]
-- P3 (~120 words): [Soft stems and sibilants (-еві/-ю). Explain the usage of -еві after soft consonants and sibilants (ж, ч, ш, щ). Examples: вчитель → учителеві/учителю, лікар → лікареві/лікарю, товариш → товаришеві/товаришу, хлопець → хлопцеві/хлопцю.]
-- P4 (~100 words): [Stems ending in vowels (-єві/-ю). Explain the iotation after vowels. Examples: герой → героєві/герою, Сергій → Сергієві/Сергію, Андрій → Андрієві/Андрію.]
-- P5 (~110 words): [Stylistic rule from Zabolotnyi. Explain the "avoidance of monotony" rule: when two masculine dative nouns appear together (e.g., a title and a name), one should use -ові/-еві and the other -у/-ю. Example: "подякувати сусідові Данилу" or "пану директорові".]
-- P6 (~100 words): [I declension masculine nouns (e.g., Микола, Ілля). Explain that nouns ending in -а/-я follow the feminine pattern (ending in -і). Examples: Микола → Миколі, Ілля → Іллі. Note that despite the gender, the ending follows the declension class.]
-- <!-- INJECT_ACTIVITY: fill-in-masculine-dat --> [fill-in, Put the masculine noun in brackets into the dative case using the preferred -ові/-еві ending, 8 items]
+## Давальний відмінок іменників жіночого роду (~550 words total)
+- P1 (~100 words): Introduce I declension feminine nouns. Explain that hard and soft stems both take -і in the dative case (мама → мамі, сестра → сестрі, земля → землі, пісня → пісні). Nouns ending in -ія take -ії (станція → станції, надія → надії).
+- P2 (~110 words): Introduce the crucial phonetic rule: consonant alternation before -і. Explain that the consonants г, к, х change to з, ц, с. Emphasize that this is a natural, predictable phonetic shift in Ukrainian, not a random exception.
+- P3 (~110 words): Provide clear examples of each alternation. Show г→з (подруга → подрузі, книга → книзі), к→ц (рука → руці, доріжка → доріжці), and х→с (муха → мусі, свекруха → свекрусі).
+- P4 (~80 words): Address L2 error prevention and decolonization. Explicitly emphasize that "подрузі" is the only correct form, contrasting it with Russian-influenced incorrect forms (like *подругі) that learners might mistakenly produce.
+- P5 (~70 words): Briefly cover III declension feminine nouns (nouns ending in a consonant). Explain that they also take -і in the dative case. Provide examples: ніч → ночі, мати → матері, любов → любові, радість → радості.
+- P6 (~80 words): Provide example sentences demonstrating feminine indirect objects in natural contexts: "Я хочу подарувати квіти мамі", "Вона написала листа подрузі", "Брат розповів історію сестрі".
+- <!-- INJECT_ACTIVITY: quiz-feminine-alternation --> [quiz, Choose the correct dative ending for nouns with consonant alternation (подруга→подрузі vs. *подругі), 8 items]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
 
 <previous_context>
-## Вступ: Кому ми даруємо радість?
+[...previous sections truncated...]
 
-Welcome to the Dative case, known in Ukrainian as **давальний відмінок**. As the name suggests, this is the "giving" case. We use it to show the recipient, the beneficiary, or the target of an action. It answers the critical questions **кому?** (to whom?) for people and animals, and **чому?** (to what?) for objects and concepts.
-
-Коли ми робимо приємний сюрприз, ми завжди використовуємо давальний відмінок. Наприклад, я даю цікаву книгу кому? Я даю книгу сестрі. Це означає, що сестра є одержувачем моєї дії.
-
-> *When we make a pleasant surprise, we always use the Dative case. For example, I give an interesting book to whom? I give a book to a sister. This means that the sister is the recipient of my action.*
-
-Давайте подивимося, як це працює на пошті, коли ми відправляємо різні речі.
-
-> *Let's see how this works at the post office when we send various things.*
-
-> — **Працівник пошти:** Добрий день! Кому ви відправляєте ці посилки? *(Good day! To whom are you sending these packages?)*
-> — **Відправник:** Добрий день! Цей великий підручник я відправляю студентові Петренку. *(Good day! I am sending this large textbook to the student Petrenko.)*
-> — **Працівник пошти:** Добре. А ця гарна листівка кому? *(Good. And to whom is this beautiful postcard?)*
-> — **Відправник:** Ця листівка — моїй старшій сестрі Олені. *(This postcard is for my older sister Olena.)*
-> — **Працівник пошти:** Зрозуміло. І залишилася маленька коробка. *(Understood. And a small box is left.)*
-> — **Відправник:** Так, там м'яка іграшка. Я відправляю її маленькій дитині. *(Yes, there is a soft toy in there. I am sending it to a small child.)*
-
-:::tip
-**Spot the endings!** Notice how the word *студент* changes to **студентові**, *сестра* becomes **сестрі**, and *дитина* changes to **дитині** to show who is receiving the items. These are the characteristic gender endings we will explore in this module.
-:::
+(to tell, to narrate) a story, the "-ові" group sounds much more authentic. :::info **Grammar box** — Ukrainian loves melody. Parallel endings let you choose the form that flows best. ::: Ви можете сказати «я допомагаю студенту» або «я допомагаю студентові». Обидва варіанти правильні і зрозумілі. Але другий варіант робить вашу мову багатшою. Українці часто вибирають довге закінчення для живих істот. Це гарна звичка для всіх студентів. Спробуйте використовувати довгі форми кожного дня. Ви швидко помітите, як гарно це звучить. When you need to **пояснити** (to explain) something using two consecutive masculine Dative nouns (like a title and name), alternate the endings. If the first takes "-ові", the second takes "-у" (e.g., директорові Олександру). > — **Секретар:** Кому мені передати ці документи? *(To whom should I hand over these documents?)* > — **Менеджер:** Передай їх директорові Олександру. *(Hand them over to director Oleksandr.)* > — **Секретар:** А цей лист кому? *(And this letter to whom?)* > — **Менеджер:** Цей лист треба відправити лікарю Максимові. *(This letter needs to be sent to doctor Maksym.)* > — **Секретар:** Зрозуміло. Я завжди чергую закінчення. *(Understood. I always alternate the endings.)* > — **Менеджер:** Так, це дуже правильний підхід. *(Yes, that is a very correct approach.)* Common masculine nouns ending in "-о" (Дмитро, батько, тато) reliably take the "-ові" ending when you **відповісти** (to answer, to reply) to them. This matches the pattern for living masculine beings (Дмитрові). Наш тато дуже любить читати нові книги. Кожного вечора ми даємо нову газету татові. А коли мій брат Дмитро приходить у гості, мама завжди готує смачну вечерю Дмитрові. Дідусь також любить розповідати цікаві історії батькові. Наша родина проводить багато часу разом. Ми завжди допомагаємо нашому татові в саду. > *Our dad really loves to read new books. Every evening we give a new newspaper to dad. And when my brother Dmytro comes to visit, mom always prepares a tasty dinner for Dmytro. Grandfather also loves to tell interesting stories to father. Our family spends a lot of time together. We always help our dad in the garden.* Notice how the Dative case marks the recipient when you need to **написати** (to write) to someone. > — **Марія:** Ти вже купила подарунок братові? *(Have you already bought a gift for the brother?)* > — **Анна:** Так, я купила йому цікаву книгу. *(Yes, I bought him an interesting book.)* > — **Марія:** А що ти подаруєш своєму вчителеві? *(And what will you give to your teacher?)* > — **Анна:** Я хочу написати вчителеві гарну листівку. *(I want to write a beautiful postcard to the teacher.)* > — **Марія:** Це чудова ідея! А своєму другові Андрієві? *(That is a great idea! And to your friend Andriy?)* > — **Анна:** Другові я подарую новий м'яч. *(To the friend I will give a new ball.)* > — **Марія:** Ти завжди робиш найкращі подарунки! *(You always make the best gifts!)* > — **Анна:** Дякую! Я люблю робити сюрпризи другові. *(Thank you! I love making surprises for a friend.)* <!-- INJECT_ACTIVITY: fill-in-dative-masculine -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -618,6 +599,31 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] студентові (to the student (dat.))
+- [ ] сестрі (to the sister (dat.))
+- [ ] другові (to the friend (dat.))
+- [ ] подарувати (to give as a gift)
+- [ ] показати (to show)
+- [ ] написати (to write)
+- [ ] розповісти (to tell, to narrate)
+- [ ] пояснити (to explain)
+- [ ] відповісти (to answer, to reply)
+- [ ] закінчення (ending (grammar))
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Давальний відмінок іменників жіночого роду (~550 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

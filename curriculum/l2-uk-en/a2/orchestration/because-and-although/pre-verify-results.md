@@ -1,25 +1,26 @@
 ## VESUM Verification
-- Confirmed: тому, що, бо, хоча, але, проте, однак, причина, сполучник, складний, речення, зате, навпаки, незважаючи
-- Not found: none
+- Confirmed: тому, що, бо, хоча, але, проте, однак, причина, сполучник, складне, речення, допуст, зате, навпаки, незважаючи, на
+- Not found: (none)
 
 ## Grammar Rules
-- Subordinate clauses of cause (тому що, бо): Правопис § 157 (standard punctuation) — A comma is placed before the subordinating conjunctions *бо*, *тому що*. 
-- Subordinate clauses of concession (хоча): Правопис § 157 — A comma is placed before *хоча*. If the *хоча*-clause comes first, a comma is placed after it.
-- Compound sentences (і, та, але, проте, однак): Правопис § 156 — A comma is placed between parts of a compound sentence connected by *але*, *проте*, *однак*, *зате*. A comma is generally placed before *і*, *та* when they connect parts of a compound sentence (unless they have a common member).
+- складені сполучники (тому що): Правопис §43 — Окремо пишемо складені сполучники: дарма́ що, для то́го щоб, зати́м що, з то́го ча́су як, зважа́ючи на те що, з о́гляду на те що, незважа́ючи (невважа́ючи) на те що, по́при те що, до то́го як, пі́сля то́го як, та й, так що, тимча́сом як, тоді́ як, тому́ що, че́рез те що й под.
+- складні сполучники (зате, проте): Правопис §43 — Разом пишемо складні сполучники, утворені внаслідок поєднання повнозначних чи службових слів із частками або прийменниками: ані́ж, зате́, мо́вби, на́чеб, на́чебто, немо́в, немо́вби, немо́вбито, нена́че, нена́чебто, ні́би, ні́бито, ніж, о́тже, ото́ж, причо́му, проте́, се́бто, то́бто, це́бто, щоб, якби́, якщо́.
 
 ## Calque Warnings
-- незважаючи на: OK — Correct Ukrainian form for "despite/notwithstanding". Can be replaced by "попри" for brevity.
-- тому що: OK — Neutral and standard Ukrainian conjunction.
-- навпаки: OK — Standard Ukrainian for "on the contrary".
+- тому що: OK
+- незважаючи на: OK
+- навпаки: OK
+- зате: OK
+- причина: OK
 
 ## CEFR Check
-- тому що: A1 — OK
+- хоча: B1/C1 — Above target
+- сполучник: B1 — Above target
+- проте: B1 — Above target
+- причина: B1 — Above target
+- однак: B2 — Above target
+- навпаки: B1 — Above target
 - бо: A1 — OK
-- хоча: A2 — OK
-- але: A1 — OK
-- проте: A2 — OK
-- однак: A2 — OK
-- причина: A2 — OK
-- сполучник: A2 (metalanguage) — OK
-- складне речення: A2 (metalanguage) — OK
-- допуст: B1 (metalanguage) — Above target, but acceptable as a technical term for grammatical category "concession".
+- але: A1/A2 — OK
+- тому: A1/A2 — OK
+- що: A1/A2 — OK

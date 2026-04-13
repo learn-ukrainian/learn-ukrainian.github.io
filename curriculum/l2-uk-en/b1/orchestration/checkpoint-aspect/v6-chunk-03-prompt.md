@@ -23,7 +23,7 @@ You are a lead ukrainian instructor (The Cultural Mentor), writing ONE SECTION o
 <previous_context>
 [...previous sections truncated...]
 
-отримує абсолютно нову психологічну функцію. Він ефективно регулює соціальну дистанцію та емоційний тон вашого особистого повідомлення. Недоконаний вид дієслова у наказовому способі завжди звучить дуже м'яко і привітно. Він традиційно використовується для ввічливих запрошень, загальних дружніх порад або для щирого заохочення. Уявіть ситуацію, що до вашого дому прийшли довгоочікувані гості. Ви привітно кажете їм: «Проходьте, будь ласка, і **сідайте**!» *(Come in, please, and sit down!)*. Дієслово «сідайте» є типовим недоконаним видом. Воно звучить надзвичайно тепло, як приємне запрошення до дуже комфортного процесу. Ви ніби кажете своїм гостям: «Влаштовуйтеся зручніше і спокійно відпочивайте у моєму домі». Інший класичний приклад — це різноманітні загальні життєві поради. Коли ви чуєте фразу «**Читайте** більше цікавих українських книжок!» *(Read more interesting Ukrainian books!)*, ви розумієте, що це не наказ зробити щось зараз. Це чудова дружня рекомендація на майбутнє, позитивний заклик до регулярної дії. З іншого боку, дієслова доконаного виду у наказовому способі завжди звучать дуже конкретно, категорично і вимогливо. Цей аспект використовується для одноразових суворих команд, де надзвичайно важливий швидкий і точний результат. Якщо ви сердито скажете комусь: «**Сядьте** негайно на це місце!» *(Sit down immediately in this seat!)*, це прозвучить як суворий наказ. Ви вказуєте людині конкретне місце і очікуєте, що вона негайно виконає вказівку. Коли керівник каже вам «**Прочитайте** цю статтю!» *(Read this article!)*, він дає вам чітке робоче завдання. Ця тонка змістова різниця є абсолютно критичною і дуже важливою в академічному або сучасному професійному середовищі. Досвідчені викладачі або керівники компаній постійно використовують вид дієслова для максимально точного налаштування своїх щоденних інструкцій. Якщо ви раптом не розумієте цієї важливої різниці, ви можете дуже легко неправильно зрозуміти своє робоче завдання. Давайте уявимо звичайний урок української мови. Ваш викладач суворо каже студентам: «**Прочитайте** цей складний текст до завтрашнього ранку» *(Read this complex text by tomorrow morning)*. Тут було свідомо використано доконаний вид «прочитайте». Це чітко означає, що у вас є абсолютно конкретний дедлайн. Ваш викладач очікує від вас фінального результату: завтра ви повинні добре знати зміст цього тексту. Ваша дія повинна мати статус «успішно виконано». Якщо ж цей викладач привітно скаже: «**Читайте** цікаві українські новини щоранку» *(Read interesting Ukrainian news every morning)*, це буде зовсім інше навчальне завдання. Недоконаний вид «читайте» відразу вказує на вашу регулярну мовну практику. Тут немає жодного дедлайну чи конкретного обсягу нової інформації, який вам конче треба засвоїти. Головне у цьому завданні — це сам приємний процес і поступове формування корисної звички. Абсолютно подібна ситуація може легко виникнути і в сучасному офісі. Ваш менеджер серйозно каже працівнику: «**Напишіть** фінансовий звіт до цієї п'ятниці» *(Write the financial report by this Friday)*. Це типове одноразове робоче завдання з дуже чітким результатом. Працівник повинен вчасно здати повністю готовий документ. Але якщо цей менеджер каже новій людині в команді: «**Пишіть** мені одразу, якщо у вас будуть проблеми» *(Write to me immediately if you have problems)*, це вже просто загальна інструкція. Дієслово «пишіть» встановлює базове правило комунікації на тривалий час. Глибоке розуміння цих нюансів обов'язково допоможе вам точно розуміти справжні очікування інших людей і правильно формулювати власні прохання. <!-- INJECT_ACTIVITY: group-sort-future-imperative --> <!-- INJECT_ACTIVITY: error-correction-imperative -->
+її з'їсти. Це ваша обіцянка результату. Але якщо ви описуєте свою нову корисну звичку, вам потрібні дієслова недоконаного виду. Наприклад: «Відтепер я готуватиму вечерю кожного вечора». Слово «кожного» автоматично перетворює унікальну подію на рутину. У таких ситуаціях процес стає важливішим за одноразовий результат, тому вибір виду змінюється відповідно до контексту. This aspectual logic extends powerfully into the **наказовий спосіб** (imperative mood). Here, the choice of aspect is not just about time or completion; it carries a strong social element regarding politeness, invitation, and expectation. The imperfective imperative is generally used for polite invitations, general advice, or encouraging someone to begin or continue an action. When a host says «Сідайте!» or a teacher says «Читайте більше!», they are offering an open-ended invitation or a general life instruction. It feels welcoming and non-demanding. Conversely, the perfective imperative is used for a specific, one-time command where the speaker expects a concrete result. Commands like «Сядьте на це місце!» or «Прочитайте цю сторінку!» are focused directives. Наказовий спосіб в українській мові дуже чутливо реагує на вибір виду. Коли ви запрошуєте гостей до столу або даєте дружню пораду, ви зазвичай використовуєте дієслова недоконаного виду. Форми на кшталт «заходьте», «сідайте» або «пригощайтеся» звучать м'яко, привітно і не створюють тиску на співрозмовника. Ви ніби пропонуєте людині почати процес, не вимагаючи від неї негайного звіту про виконання. Це ідеальний інструмент для створення комфортної соціальної дистанції. Натомість дієслова доконаного виду в наказах звучать набагато категоричніше. Вони вимагають від людини зосередитися на конкретному завданні і довести його до кінця. This distinction is crucial in academic and professional environments, serving as a form of **діагностика** (diagnostics) for your understanding of Ukrainian pragmatics. Consider how a manager or a professor gives instructions. If a professor says «Прочитайте цей текст до завтра», they are setting a firm deadline for a specific task; the perfective aspect indicates that the text must be fully consumed and understood by the next day. The focus is entirely on the finished state. However, if the same professor advises, «Читайте кожен день перед сном, щоб покращити словниковий запас», they are recommending a continuous habit. The imperfective aspect highlights the ongoing nature of the beneficial practice. Every **видова пара** (aspectual pair) gives you the tools to express exactly what kind of action you expect. Вміння розрізняти ці відтінки є ключовим для успішного професійного та академічного спілкування. Уявіть ситуацію на роботі: ваш керівник просить вас підготувати звіт. Якщо він каже «Напишіть цей звіт до п'ятниці», він очікує побачити готовий документ на своєму столі. Це конкретна мета. Але якщо він каже «Пишіть звіти уважніше», він вказує на загальний підхід до роботи в майбутньому. Кожна видова пара дає вам можливість філігранно керувати очікуваннями ваших співрозмовників. Правильний вибір дієслова допомагає уникнути непорозумінь і чітко пояснити, чи потрібен вам швидкий результат, чи вимагається тривала та систематична праця. <!-- INJECT_ACTIVITY: group-sort, focus: "Розподіліть дієслова за видом і контекстом: тло / подія / загальна інструкція / конкретна команда", 10 items --> <!-- INJECT_ACTIVITY: error-correction, focus: "Знайдіть і виправте помилки у вживанні виду в наказах", 8 items -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -548,7 +548,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -561,18 +628,68 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] доконаний вид (perfective aspect — completed, result-oriented action)
+- [ ] недоконаний вид (imperfective aspect — ongoing, unbounded action)
+- [ ] видова пара (aspectual pair — e.g., писати/написати)
+- [ ] тло розповіді (narrative background — imperfective setting/scene)
+- [ ] послідовність подій (sequence of events — perfective event chain)
+- [ ] наказовий спосіб (imperative mood — commands and requests)
+- [ ] заперечення (negation — negative constructions with aspect)
+- [ ] умовний спосіб (conditional mood — hypothetical actions with би/б)
+- [ ] результативність (resultativity — focus on outcome, triggers perfective)
+- [ ] тривалість (duration — focus on process length, triggers imperfective)
+- [ ] діагностика (diagnostics — self-assessment of aspect mastery)
+- [ ] повторення (review/repetition — consolidation of learned material)
+- [ ] контрольна робота (test/assessment — formal diagnostic check)
+- [ ] минулий час (past tense — time frame for aspect practice)
+- [ ] майбутній час (future tense — time frame for aspect practice)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Вид і заперечення (~1000 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

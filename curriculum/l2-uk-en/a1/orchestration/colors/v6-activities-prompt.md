@@ -1,4 +1,4 @@
-<!-- version: 1.1.0 | updated: 2026-03-31 -->
+<!-- version: 1.2.0 | updated: 2026-04-12 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -11,6 +11,35 @@ Generate an `activities/colors.yaml` file for module **10: Colors** (a1).
 
 ---
 
+## ⚠️ HARD COUNT TARGETS — READ TWICE
+
+These are the binding numerical contracts for THIS module. The audit will FAIL if you fall short.
+
+| Bucket | Min | Max | Notes |
+|---|---|---|---|
+| Total activities | 10 | 10+ | inline + workbook combined |
+| Inline (lesson tab) | 4 | 6 | one per `<!-- INJECT_ACTIVITY -->` marker, see below |
+| Workbook (Зошит tab) | 6 | 9 | extended practice |
+| Items per activity | 6 | — | each activity must have at least 6 items (unless its type cap is lower — see Activity Type Reference below) |
+
+**You MUST ship at least 4 inline activities AND at least 6 workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+
+**Type diversity is required.** The module (inline + workbook combined) MUST use at least **0** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level. (If `0` is `0`, the audit profile for this level does not enforce type diversity — but variety still produces a better lesson, so aim for 4+ types when the workbook allows it.)
+
+---
+
+## Allowed types for THIS level
+
+- **Inline (lesson) types:** image-to-letter, letter-grid, match-up, watch-and-repeat, quiz, true-false, fill-in, classify
+- **Inline priority (preferred):** image-to-letter, match-up, fill-in, quiz, watch-and-repeat
+- **Workbook types:** fill-in, match-up, group-sort, anagram, unjumble, quiz, true-false, classify, divide-words, count-syllables, pick-syllables, observe, phrase-table, odd-one-out
+- **Workbook priority (preferred):** fill-in, match-up, group-sort, anagram, unjumble
+- **FORBIDDEN at this level:** cloze, error-correction, mark-the-words, translate, essay-response, critical-analysis, reading, comparative-study, authorial-intent, etymology-trace, translation-critique, source-evaluation, debate, paleography-analysis, dialect-comparison, transcription, highlight-morphemes, grammar-identify, select
+
+Pick from the allowed list. Lean heavily on the priority lists. Do not use any forbidden type — the build will reject it.
+
+---
+
 ## Inline vs Workbook Split
 
 Activities have two placement categories:
@@ -19,7 +48,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Rule of thumb:** inline = 2-3 quick checks after key teaching points. Workbook = 4-8 deeper practice exercises covering the full topic.
+**Rule of thumb:** inline = 4–6 quick checks after key teaching points. Workbook = 6–9 deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
 
 ---
 
@@ -27,10 +56,10 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
-- `<!-- INJECT_ACTIVITY: quiz-color-match -->`
-- `<!-- INJECT_ACTIVITY: fill-in-gender-agreement -->`
-- `<!-- INJECT_ACTIVITY: group-sort-hard-soft -->`
-- `<!-- INJECT_ACTIVITY: quiz-blue-shade -->`
+- `<!-- INJECT_ACTIVITY: quiz-color-matching -->`
+- `<!-- INJECT_ACTIVITY: fill-in-color-agreement -->`
+- `<!-- INJECT_ACTIVITY: group-sort-hard-soft-stem -->`
+- `<!-- INJECT_ACTIVITY: quiz-blue-shades -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -90,92 +119,75 @@ required:
 ## Module Content (the prose the learner reads before exercises)
 
 <module_content>
-## Діалоги — Dialogues
+## Діалоги (Dialogues)
 
-Colors bring the world to life. From the vibrant streets to the quiet corners of your home, the ability to describe hues is essential for expressing yourself in Ukrainian. Today, the scene is a bustling outdoor flower market in Kyiv, where Natalka is choosing the perfect gift. Notice how the colors naturally flow as adjectives describing the beautiful items on display.
+You have learned how to identify objects and describe their general qualities. Now, it is time to add color to your world. Colors are some of the most frequently used adjectives in any language, and mastering them quickly improves your ability to describe your surroundings. Imagine **Наталка** at a bustling outdoor flower market on a sunny morning. She is looking for the perfect bouquet and is talking to a flower seller, the **продавець**, about buying a gift for a close friend. They discuss the vibrant colors of the different vases and the fresh flowers on display. This pleasant conversation establishes the natural context for using basic color adjectives in everyday life.
 
-Natalka approaches the flower seller to buy a bouquet and a gift bag.
+> **Наталка:** Яка гарна ваза! Якого вона кольору? *(What a beautiful vase! What color is it?)*
+> **Продавець:** Червона. А є ще синя і зелена. *(Red. And there is also dark blue and green.)*
+> **Наталка:** Мені подобається синя. А ці троянди якого кольору? *(I like the dark blue one. And these roses, what color are they?)*
+> **Продавець:** Червоні. Є також білі лілії та жовті соняшники. *(Red. There are also white lilies and yellow sunflowers.)*
+> **Наталка:** Чудово! *(Wonderful!)*
 
-> **Наталка:** Доброго ранку! Якого кольору ці квіти? *(Good morning! What color are these flowers?)*
-> **Продавець:** Це **червоні троянди**, **білі лілії** і **жовті соняшники**. *(These are red roses, white lilies, and yellow sunflowers.)*
-> **Наталка:** Дуже гарні. А ця ваза? *(Very beautiful. And this vase?)*
-> **Продавець:** Це **синя ваза**. Тут є **зелене листя**. *(This is a blue vase. Here are green leaves.)*
-> **Наталка:** **Яка гарна сумка! Якого вона кольору?** *(What a beautiful bag! What color is it?)*
-> **Продавець:** **Червона. А є ще синя і зелена.** *(Red. And there is also a blue and a green one.)*
-> **Наталка:** **Мені подобається синя.** *(I like the blue one.)*
-> **Продавець:** **А мені — жовта!** *(And I like the yellow one!)*
+Let's break down this conversation. Notice the very useful phrase **Мені подобається** (I like). This is a memorized chunk that you can use anytime to express a preference without worrying about complex grammar right now. The core question introduced here is **Якого кольору?** (What color?). When **Наталка** asks this about the vase, she uses the feminine pronoun **вона**. Because the word **ваза** (vase) is feminine, the seller naturally answers with the feminine adjectives **червона** (red), **синя** (dark blue), and **зелена** (green) to ensure proper grammatical agreement. The conversation flows smoothly because the adjective endings perfectly match the noun.
 
-:::tip
-**Мені подобається** is a very useful fixed phrase meaning "I like." You can memorize it as a single chunk for now, and we will explore its grammatical structure in a later module.
-:::
+Let's look at another common, everyday situation that involves describing objects. **Дмитро** and **Ліза** are getting ready for a party and are picking out their clothes from a wardrobe. They are extending their descriptive skills from previous modules by discussing the colors of the room's furniture as well as the specific clothing items they want to wear tonight. This scenario shows exactly how color adjectives work with a wide variety of nouns.
 
-Describing personal belongings and the immediate environment brings these new words into your home. As you build your vocabulary, detailing your room and your clothing becomes a practical daily activity.
+> **Дмитро:** Якого кольору твоя кімната? *(What color is your room?)*
+> **Ліза:** Біла. А стіл — коричневий, крісло — сіре. *(White. And the table is brown, the armchair is grey.)*
+> **Дмитро:** Гарно. А де мій білий светр і коричневі черевики? *(Nice. And where is my white sweater and brown shoes?)*
+> **Ліза:** Там, де моя чорна сукня. *(There, where my black dress is.)*
 
-Dmytro is visiting Liza. They are choosing outfits for an upcoming party, looking through her wardrobe and observing her room.
+The grammatical rules for gender agreement that you already know apply perfectly in this dialogue without any unexpected exceptions. The feminine noun **кімната** (room) naturally takes the feminine adjective **біла** (white). The masculine noun **стіл** (table) pairs perfectly with the masculine form **коричневий** (brown). The neuter noun **крісло** (armchair) takes the neuter ending in **сіре** (grey). Finally, the plural noun **черевики** (shoes) requires the plural adjective form **коричневі** (brown). Everything connects seamlessly.
 
-> **Дмитро:** **Якого кольору твоя кімната?** *(What color is your room?)*
-> **Ліза:** **Біла.** *(White.)*
-> **Дмитро:** **А стіл?** *(And the table?)*
-> **Ліза:** **Стіл коричневий. А крісло — сіре.** *(The table is brown. And the armchair is grey.)*
-> **Дмитро:** Добре. Де твоя **чорна сукня**? *(Good. Where is your black dress?)*
-> **Ліза:** Вона там. А де твій **білий светр**? *(It is there. And where is your white sweater?)*
-> **Дмитро:** Тут. У мене є **сіре пальто** і **коричневі черевики**. *(Here. I have a grey coat and brown shoes.)*
+## Кольори (Colors)
 
-## Кольори — Colors
+The Ukrainian word for color is **колір**. Just like any other descriptive adjectives you have studied so far, colors must match the gender of the noun they are describing. The vast majority of Ukrainian colors belong to what we call the **тверда група** (hard-stem group). They follow the exact same `-ий` for masculine, `-а` for feminine, `-е` for neuter, and `-і` for plural pattern that you learned in Module 09. This consistency makes learning most colors very straightforward and predictable for new learners.
 
-Color adjectives are your primary tool for describing physical objects. In Ukrainian, these words follow the same adjective patterns you learned previously. They must agree in gender with the noun they describe. The majority of Ukrainian colors belong to what is called the hard-stem group, meaning they take the standard endings: **-ий** for masculine, **-а** for feminine, and **-е** for neuter.
+Let's look at a detailed breakdown of the most common hard-stem colors. A red object is described as **червоний**, while a yellow object is **жовтий**. A green object is **зелений**. For the fundamental shades of dark and light, you will use **чорний** (black) and **білий** (white). A grey object is **сірий**. Because these words follow the standard pattern, you already know how to use them with familiar nouns. For example, you say **червоний борщ** (red borsch) because the soup is masculine. You say **зелена трава** (green grass) and **чорна кава** (black coffee) because those words are feminine. Finally, you would describe winter weather with **білий сніг** (white snow), another masculine noun.
 
-The "Hard-Stem Rainbow" contains our most common colors. Think of the natural world: we see the **червоне сонце** (red sun), the **жовте жито** (yellow rye), and the **зелена трава** (green grass). Here are the basic hard-stem colors, presented with their masculine, feminine, and neuter forms:
-* **чорний / чорна / чорне** (black)
-* **білий / біла / біле** (white)
-* **сірий / сіра / сіре** (grey)
-* **червоний / червона / червоне** (red)
-* **жовтий / жовта / жовте** (yellow)
-* **зелений / зелена / зелене** (green)
+However, there is one critical exception among the basic colors that you must be aware of right away. Adjectives that end in a soft sound belong to the **м'яка група** (soft-stem group). The only basic color in this specific group is **синій** (dark blue). Because its stem ends softly, its endings are `-ій`, `-я`, `-є`, and `-і`. You must memorize this word as a special grammatical case right now, as it will appear frequently in your reading and listening.
 
-<!-- INJECT_ACTIVITY: quiz-color-match -->
+Let's do a detailed comparison of how hard and soft stems agree with nouns so that we can see the contrast clearly. For a masculine noun like **стіл** (table), a standard hard stem is **великий стіл** (big table), while a soft stem is **синій стіл** (dark blue table). For a feminine noun like **книга** (book), the hard stem is **велика книга** versus the soft stem **синя книга**. For a neuter noun like **вікно** (window), it is **велике вікно** versus **синє вікно**. Notice exactly how the endings differ: the hard `а` becomes the soft `я`, and the hard `е` becomes the soft `є`.
 
-<!-- INJECT_ACTIVITY: fill-in-gender-agreement -->
+Here is a full vocabulary summary of these initial basic colors in their masculine dictionary forms. These words are the foundation of your descriptive vocabulary. Whenever someone asks you the question **Якого кольору...?**, you can confidently choose from this vibrant palette to provide your answer.
 
-While the hard-stem pattern covers most colors, there is an important exception. Among the basic colors, only **синій** (dark blue) follows the soft-stem pattern. As explained in textbooks like Vashulenko Grade 3 (p.130), adjectives divide into **тверда група** (hard group, ending in **-ий**) and **м'яка група** (soft group, ending in **-ій**). Notice the morphological shift in the soft group endings: masculine takes **-ій**, feminine takes **-я**, and neuter takes **-є**. Compare a standard hard adjective with our soft color: **новий стіл** (new table) versus **синій стіл** (dark blue table).
+*   **червоний** (red)
+*   **жовтий** (yellow)
+*   **зелений** (green)
+*   **чорний** (black)
+*   **білий** (white)
+*   **сірий** (grey)
+*   **синій** (dark blue)
 
-:::caution
-Pay close attention to **синій** (dark blue). It is the only basic color that uses the soft-stem endings (**-ій**, **-я**, **-є**). Do not accidentally write **синий** or **сина** using the hard-stem pattern!
-:::
+<!-- INJECT_ACTIVITY: quiz-color-matching -->
 
-The **синій** paradigm requires careful memorization because it sounds and looks distinct from the hard-stem words. Look at these explicit examples: a **синій олівець** (dark blue pencil) for masculine, a **синя ручка** (dark blue pen) for feminine, and a **синє вікно** (dark blue window) for neuter. Contrast this with a hard-stem adjective you know, like **великий** (big): the feminine form **велика** has an **-а**, while the feminine dark blue is **синя** with a **-я**.
+<!-- INJECT_ACTIVITY: fill-in-color-agreement -->
 
-<!-- INJECT_ACTIVITY: group-sort-hard-soft -->
+<!-- INJECT_ACTIVITY: group-sort-hard-soft-stem -->
 
-## Синій ≠ блакитний — Blue ≠ Blue
+## Синій ≠ блакитний (Blue ≠ Blue)
 
-Ukrainian has a unique distinction that English lacks: there are TWO distinct words for "blue," and they are not interchangeable. The word **синій** refers exclusively to dark, deep shades of blue. Think of the ink in your pen, the deep ocean (**синє море**), or the night sky (**синє небо вночі**). On the other hand, **блакитний** refers to light blue or sky blue, like a clear daytime sky (**блакитне небо вдень**). 
+The most important and fascinating difference between the English and Ukrainian color palettes involves the color blue. Ukrainian actually has two completely distinct basic blues, and enforcing this distinction in your speech is strictly required. The word **синій** means a dark, deep blue—like the deep sea, dark blue ink, or the night sky. On the other hand, the word **блакитний** means a light, sky blue—like a clear daytime sky or baby blue. While English comfortably uses the single word "blue" for both shades, Ukrainian treats them as two completely separate and unrelated colors.
 
-:::note
-You might occasionally hear the word **голубий** used for light blue in everyday speech, but this is a Russian-influenced word. Authentic Ukrainian strongly prefers **блакитний** for the color of the clear sky.
-:::
+The cultural context of the Ukrainian flag perfectly illustrates this important visual distinction. The flag is officially described as **синьо-жовтий** (blue and yellow). The **синій** stripe represents the deep, peaceful sky stretching over the country, while the **жовтий** stripe represents the vast, golden fields of wheat, known as **жито**. You might occasionally hear someone use the word **голубий** for light blue. However, you should know that this is a Russian-influenced word. As a dedicated learner of authentic Ukrainian, you should always prefer and use the proper native word **блакитний**.
 
-This distinction is beautifully illustrated by the colors of the Ukrainian flag (**прапор**). The flag is officially described as **синьо-жовтий** (blue-and-yellow). The textbook Kravtsova Grade 2 gives us a poetic memory aid: «**Синьо-жовтий прапор маєм: синє — небо, жовте — жито.**» (We have a blue-and-yellow flag: blue is the sky, yellow is the rye). Even though modern flags often use a lighter shade, the traditional word **синій** is preserved to symbolize the vast, deep, infinite nature of the sky above the golden fields.
+Let's expand your color palette with four more highly descriptive hard-stem adjectives. A brown object is called **коричневий**. A pink object is **рожевий**. An orange object is **помаранчевий**, and a purple object is **фіолетовий**. All of these new vocabulary words use the standard, familiar endings you already know so well. For example, you can describe an outfit using **коричневі черевики** (brown shoes), talk about a **рожева квітка** (pink flower) in the garden, or mention a beautiful **фіолетова сукня** (purple dress).
 
-<!-- INJECT_ACTIVITY: quiz-blue-shade -->
+Finally, you can create a wide variety of compound colors by simply using the descriptive prefixes **темно-** (dark) and **світло-** (light). You combine them with the base color using a simple hyphen. For example, **темно-зелений** is dark green, and **світло-синій** is a light blue-ish shade. This vocabulary is very useful when discussing the **вишиванка** (embroidered shirt). This iconic traditional cultural garment typically features beautiful **червоний і чорний** (red and black) threads in the northern Polissya region, or **червоний і синій** (red and dark blue) threads in the central Poltava region.
 
-A broader palette allows for richer descriptions. You will often need other common colors, which all conveniently follow the standard hard-stem pattern. These include **коричневий** (brown), **рожевий** (pink), **помаранчевий** (orange), and **фіолетовий** (purple). You can easily associate them with everyday objects: a **рожева квітка** (pink flower) or a **фіолетова фіалка** (purple violet).
-
-Sometimes you need a specific shade. You can create compound colors using the modifiers **темно-** (dark-) and **світло-** (light-). The grammar rule is simple: these prefixes are always joined to the color with a hyphen. For example, you can say **темно-зелений** (dark green) or **світло-синій** (light blue).
+<!-- INJECT_ACTIVITY: quiz-blue-shades -->
 
 ## Підсумок — Summary
 
-The essential rules for color agreement are straightforward. Just like the adjectives you learned in Module 09, colors must agree with the gender of the noun they describe. Comparing the two paradigms side-by-side reveals the pattern. The hard-stem pattern gives us **червоний стіл** (red table), **червона книга** (red book), and **червоне вікно** (red window). The soft-stem pattern gives us **синій стіл**, **синя книга** (dark blue book), and **синє вікно**. These rules also apply to plurals. In the plural, the ending is **-і** for all genders, so you would say **зелені дерева** (green trees) or **червоні яблука** (red apples).
+Let's review the core grammatical rules and essential vocabulary concepts from this module. First and foremost, remember that color adjective agreement strictly follows the gender of the noun it modifies. This operates exactly like the general descriptive adjectives you learned previously. However, you must always remember the crucial difference between the standard hard-stem endings and the unique soft-stem endings. The word **червоний** belongs to the hard group, seamlessly giving you the familiar patterns of **червоний стіл**, **червона книга**, and **червоне вікно**. The word **синій**, however, belongs to the soft group, giving you the softened patterns of **синій стіл**, **синя книга**, and **синє вікно**. Additionally, always remember the strict semantic difference between the two Ukrainian blues: **синій** is exclusively for a dark, deep blue, while **блакитний** is exclusively for a light, sky blue. You can also quickly specify the exact shade of any color by using the helpful prefixes **темно-** and **світло-**.
 
-Colors carry deep meaning in Ukrainian culture. Consider the traditional embroidered shirt, the **вишиванка**. The classic colors of the Polissia region are **червоний і чорний** (red and black), immortalized in the famous song «Два кольори» where red symbolizes love and black symbolizes sorrow. However, regional styles vary, and the embroidery of the Poltava region often features **червоний і синій** (red and blue).
+Now, take a moment to carefully test your knowledge with these self-check questions to ensure you have thoroughly mastered the material:
 
-A quick self-check ensures you have mastered these concepts:
-*   **Якого кольору прапор України?** (What color is the flag of Ukraine?) — **Синьо-жовтий: синє — небо, жовте — жито.**
-*   What is the difference between **синій** and **блакитний**? — **Синій** is dark or deep blue; **блакитний** is light or sky blue.
-*   What ending does the word **синій** take in the feminine gender? — It takes the ending **-я**: **синя**.
-*   How do you say "dark green" in Ukrainian? — **Темно-зелений**.
-*   Name three objects in your room and their colors. — For example: **біла шафа** (white wardrobe), **коричневий стіл**, **сіре крісло**.
-
+*   What color is the Ukrainian flag, or **прапор**? (**синьо-жовтий**)
+*   Describe three different things in your room right now using color adjectives. Ensure that the endings of your colors perfectly match the gender of the objects you are describing.
+*   What is the specific difference between the colors **синій** and **блакитний**, and why is this distinction so important in Ukrainian?
+*   How do you properly ask the question "What color is it?" in Ukrainian?
 </module_content>
 
 ---
@@ -189,48 +201,68 @@ version: "1.0"
 module: colors
 level: a1
 
+# NOTE — these are SHAPE examples. The real targets are at the top of this prompt
+# (10 total / 4–6 inline / 6–9 workbook,
+# 6+ items per activity). The shapes below are TRUNCATED for readability;
+# YOUR output MUST hit those minimums.
+
 inline:
   - id: marker-id-here        # MUST match an <!-- INJECT_ACTIVITY: ... --> marker
     type: quiz                 # activity type
     instruction: "Оберіть правильний варіант"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - question: "_____ стіл"
-        options: ["мій", "моя", "моє"]
+        options: ["мій", "моя", "моє", "мої"]
         correct: 0             # 0-based index
+      - question: "Це ____ книга."
+        options: ["мій", "моя", "моє", "мої"]
+        correct: 1
+      # ... add at least 6 items total — never stop at 1-2
 
   - id: another-marker-id
     type: fill-in
     instruction: "Вставте правильне слово"
-    items:
+    items:                     # ← real output: ≥ 6 items
       - sentence: "Це ____ кімната."
         answer: "моя"
         options: ["мій", "моя", "моє"]
+      - sentence: "Це ____ вікно."
+        answer: "моє"
+        options: ["мій", "моя", "моє"]
+      # ... ≥ 6 items total
 
 workbook:
-  - type: match-up
+  - id: match-up-vocab
+    type: match-up
     instruction: "З'єднайте пари"
-    pairs:
+    pairs:                     # ← real output: ≥ 6 pairs
       - left: "стіл"
         right: "він"
       - left: "книга"
         right: "вона"
       - left: "вікно"
         right: "воно"
+      # ... ≥ 6 pairs total
 
-  - type: group-sort
+  - id: group-sort-gender
+    type: group-sort
     instruction: "Розподіліть слова за категоріями"
     groups:
-      - label: "Category A"
-        items: ["word1", "word2"]
-      - label: "Category B"
-        items: ["word3", "word4"]
+      - label: "Чоловічий рід"
+        items: ["стіл", "олівець", "будинок"]   # ≥ 3 items per group
+      - label: "Жіночий рід"
+        items: ["книга", "ручка", "школа"]
+      - label: "Середній рід"
+        items: ["вікно", "море", "молоко"]
 
-  - type: true-false
+  - id: true-false-grammar
+    type: true-false
     instruction: "Правда чи ні?"
-    items:
-      - statement: "Statement here"
-        correct: true
-        explanation: "Why it's true"
+    items:                     # ← real output: ≥ 6 items
+      - statement: "«Книга» — це чоловічий рід."
+        correct: false
+        explanation: "Книга закінчується на -а, отже жіночий рід."
+      # ... ≥ 6 items total
 
   - type: error-correction
     instruction: "Виправте помилку"
@@ -301,7 +333,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -405,10 +437,15 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 ## Quality Rules
 
-**ITEM COUNT MINIMUMS (non-negotiable):**
-- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
-- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
-- If you can't think of enough items, add more examples from the module's vocabulary and content.
+**ACTIVITY COUNT MINIMUMS (non-negotiable, audit-enforced):**
+- **Total: 10 activities.** Inline: 4–6. Workbook: 6–9. The audit gate FAILS the module if you ship fewer.
+- **Type diversity: workbook MUST cover ≥5 distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
+- **Match the inline markers exactly.** Every `<!-- INJECT_ACTIVITY: id -->` marker in the prose needs a matching inline activity with that exact id. Skipping markers means the lesson tab is broken.
+
+**ITEM COUNT MINIMUMS (non-negotiable, per-activity):**
+- **Default minimum: 6 items per activity.** Quiz, fill-in, match-up, true-false, anagram, error-correction, translate, cloze, mark-the-words, divide-words, count-syllables, odd-one-out, group-sort categories: all ≥ 6.
+- **Lower minimums for specific types only:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items, essay-response/critical-analysis = 1 prompt.
+- If you can't think of enough items, add more examples from the module's vocabulary and content. NEVER ship a 1-item or 2-item activity unless its type cap explicitly allows it.
 - **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
 - **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
@@ -515,6 +552,27 @@ IMPORTANT: After using tools, output your COMPLETE module content as plain text.
 1. Run `verify_words` on all Ukrainian words in your exercises — every word must exist in VESUM
 2. Run `query_cefr_level` on any word you're unsure about — it must be a1-appropriate
 3. For fill-in answers and distractors, verify the exact form (case, number, gender) with `verify_lemma`
+
+---
+
+## ⚠️ MANDATORY FINAL CHECKLIST — verify before emitting YAML
+
+Walk through this checklist explicitly before you start emitting. If ANY box is unchecked, fix it FIRST.
+
+- [ ] My output has **at least 4** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
+- [ ] My output has **at least 6** workbook activities.
+- [ ] **Total ≥ 10.**
+- [ ] **Every** activity has **at least 6** items, pairs, or statements (except types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3, essay-response=1).
+- [ ] The module (inline + workbook combined) uses **at least 0 distinct activity types** (or 4+ when 0 = 0 and the workbook size allows it). I am NOT shipping a wall of quizzes.
+- [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
+- [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
+- [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
+- [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
+- [ ] My inline count is between 4 and 6. I did NOT create more injection markers than 6.
+- [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
+- [ ] At B1+, all instructions are in Ukrainian (no English fallback).
+
+If you cannot tick all of these, REGENERATE the activities BEFORE outputting. Shipping under-spec means the build rejects you and the heal loop has to redo your work — wasting compute.
 
 ---
 

@@ -1,63 +1,82 @@
 ## Linguistic Scan
-No linguistic errors found.
+No Russianisms, Surzhyk, paronym slips, or banned Russian characters (`ы, э, ё, ъ`) found.
+
+Factual issues found:
+- In `Звуки і літери`: `This means that what you see is almost always exactly what you hear... Once you learn the specific sounds that these 33 symbols represent, you will have the ability to read absolutely any Ukrainian word out loud.` This overstates Ukrainian phonetic transparency; the plan itself says `(mostly) what you hear`.
+- In `Приголосні звуки`: `This hard and soft distinction is a uniquely Slavic phonetic feature.` That cross-linguistic claim is too broad.
 
 ## Exercise Check
-- `<!-- INJECT_ACTIVITY: quiz-sounds-letters -->` - Placed correctly after section 1.
-- `<!-- INJECT_ACTIVITY: letter-grid-alphabet -->` - Placed correctly after section 1.
-- `<!-- INJECT_ACTIVITY: group-sort-sounds -->` - Placed at the end of section 2 (Vowels), but asks learners to sort sounds into Vowels vs Consonants. Consonants are not taught until section 3. This is a pedagogical sequence error.
-- `<!-- INJECT_ACTIVITY: match-up-letters -->` - Placed at the end of section 2, but tests consonant letters (М, К, Н) which haven't been introduced yet.
-- `<!-- INJECT_ACTIVITY: watch-repeat-pronunciation -->` - Placed correctly after section 3, covers both vowels and consonants.
-- `<!-- INJECT_ACTIVITY: fill-in-greeting -->` - Placed correctly after section 4.
+All 6 planned activity markers are present and spread through the module: `letter-grid`, `quiz-sounds-vs-letters`, `match-up-letters-to-sounds`, `group-sort-vowels-consonants`, `watch-and-repeat-alphabet`, `fill-in-greeting`.
+
+Issue found:
+- `<!-- INJECT_ACTIVITY: match-up-letters-to-sounds -->` appears right after the vowel section, but the plan says that exercise matches `А, О, У, М, К, Н` to sounds. Because `М, К, Н` are taught in the consonant section, this marker is placed before all prerequisite content.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 10/10 | Covers all required points including quotes from Большакова, Захарійчук, and Літвінова, successfully integrating the core phonetic theory. |
-| 2. Linguistic accuracy | 10/10 | No Russianisms or calques. Accurate descriptions of Ukrainian phonetics, including hard/soft distinctions and sound-to-letter counts. |
-| 3. Pedagogical quality | 9/10 | Excellent textbook-style instruction. Uses poems and rules from real Ukrainian grade schools. Deducting 1 point because some exercises testing consonants were placed before the consonant section. |
-| 4. Vocabulary coverage | 10/10 | Seamlessly integrates required vocabulary (звук, літера, привіт, як справи, добре, чудово) and contextualizes examples (мама, молоко, око). |
-| 5. Exercise quality | 8/10 | The activities themselves follow the plan, but `group-sort-sounds` and `match-up-letters` are placed prematurely at the end of the "Vowels" section. They test consonants, which are not introduced until the subsequent section. |
-| 6. Engagement & tone | 10/10 | Professional yet encouraging teacher tone. Uses clear, concrete explanations (e.g., comparing letters to sheet music and sounds to physical notes). |
-| 7. Structural integrity | 10/10 | Follows the exact H2 heading structure. Clean formatting. Word count of 1716 comfortably exceeds the 1200 target. |
-| 8. Cultural accuracy | 10/10 | Accurate cultural notes, particularly regarding the letter Ґ and its historical suppression, framing it as a symbol of linguistic identity. |
-| 9. Dialogue & conversation quality | 10/10 | The dialogue is brief but natural, appropriately demonstrating gendered responses ("Рада/Радий тебе бачити") alongside standard greetings. |
+| 1. Plan adherence | 7/10 | All planned H2 sections are present and the textbook references are integrated, but the plan’s `У-ля (one [у])` example is replaced by `**око**`, and `А у тебе?` is absent from the greeting teaching even though the plan explicitly includes it. |
+| 2. Linguistic accuracy | 8/10 | No Russianisms/Surzhyk/banned letters found, but `what you see is almost always exactly what you hear` and `uniquely Slavic phonetic feature` are factual overstatements. |
+| 3. Pedagogical quality | 7/10 | The module gives examples and moves into dialogue practice, but it drops the planned `[у]` listening example and fails to teach the reciprocal chunk `А у тебе?` where learners would need it. |
+| 4. Vocabulary coverage | 9/10 | Required vocabulary is covered in prose: `звук`, `літера`, `голосний`, `приголосний`, `привіт`, `як справи`, `добре`, `чудово`, `мама`, `молоко`; recommended items such as `тато`, `око`, `дім`, `ніс`, `сон`, `нормально` also appear. |
+| 5. Exercise quality | 7/10 | Marker count matches the 6 planned activities, but `match-up-letters-to-sounds` is placed before consonants are taught even though the planned item set includes `М`, `К`, `Н`. |
+| 6. Engagement & tone | 8/10 | Named speakers and classroom framing work, but phrases like `absolute foundation` and `absolutely any Ukrainian word` push the tone toward lecture-like absolutism. |
+| 7. Structural integrity | 10/10 | All planned H2 headings are present and in order; markdown is clean; pipeline word count `2086` is safely above the target. |
+| 8. Cultural accuracy | 10/10 | The module presents Ukrainian on its own terms, uses Ukrainian-school references, and avoids Russian-centered framing. |
+| 9. Dialogue & conversation quality | 8/10 | The dialogues use named speakers and plausible A1 situations, but the greeting exchange stops at `Добре, дякую!` instead of modeling the planned reciprocal `А у тебе?`. |
 
 ## Findings
-[5. Exercise quality] [Major]
-Location: Section "Голосні звуки (Vowel Sounds)" (end of section)
-Issue: Activity markers `<!-- INJECT_ACTIVITY: group-sort-sounds -->` and `<!-- INJECT_ACTIVITY: match-up-letters -->` are placed at the end of the Vowels section, but they test consonant letters (М, К, Н) and ask learners to sort sounds into Vowels vs Consonants. Consonants are not taught until the next section.
-Fix: Move these activity markers to the end of the "Приголосні звуки (Consonant Sounds)" section.
+[LINGUISTIC ACCURACY] [SEVERITY: critical]  
+Location: `This means that what you see is almost always exactly what you hear... Once you learn the specific sounds that these 33 symbols represent, you will have the ability to read absolutely any Ukrainian word out loud.`  
+Issue: This teaches an absolute rule about Ukrainian spelling-pronunciation correspondence. The plan says `(mostly) what you hear`; the generated prose removes that hedge and overpromises.  
+Fix: Soften the claim to “usually very close” / “relatively consistent” / “strong first reading attempt.”
+
+[LINGUISTIC ACCURACY] [SEVERITY: critical]  
+Location: `This hard and soft distinction is a uniquely Slavic phonetic feature.`  
+Issue: The cross-linguistic claim is too broad.  
+Fix: Rephrase it as a feature that is central to Ukrainian and unfamiliar to most English speakers.
+
+[PLAN ADHERENCE] [SEVERITY: major]  
+Location: `Finally, listen to the word **око** (eye), which also clearly features the [о] sound prominently.`  
+Issue: The plan explicitly specifies `У-ля (one [у])`; the module repeats another `[о]` example instead of giving the planned `[у]` listening example.  
+Fix: Replace the `око` sentence with a clear `[у]` example such as `У-ля`.
+
+[PLAN ADHERENCE] [SEVERITY: major]  
+Location: `When someone asks **як справи** (how are you), the most common and polite response is **добре** (fine, good).`  
+Issue: The plan explicitly includes the reciprocal chunk `А у тебе?`, and a search confirms that exact phrase never appears in the module. `А тебе?` in the name dialogue is a different ellipsis.  
+Fix: Expand this explanation to teach `чудово`, `нормально`, and `А у тебе?`.
+
+[EXERCISE QUALITY] [SEVERITY: major]  
+Location: `<!-- INJECT_ACTIVITY: match-up-letters-to-sounds -->` immediately after the vowel section.  
+Issue: The planned match-up activity includes consonant pairs `М ↔ [м], К ↔ [к], Н ↔ [н]`, so the marker is placed before all required teaching is complete.  
+Fix: Move this marker to after the consonant section.
 
 ## Verdict: REVISE
-The module is exceptionally well-written and pedagogically rich, hitting all plan points. However, two exercise markers testing consonant knowledge are misplaced before the consonant section, which would confuse learners. A quick structural fix is required.
+REVISE. The module is structurally complete and mostly strong on vocabulary coverage, but it contains two factual overstatements in phonetics and several concrete plan/exercise mismatches that need correction before shipping.
 
 <fixes>
 - find: |
-    When you watch the pronunciation videos for the vowel letters, focus heavily on mimicking that clear, unobstructed airflow.
-
-    <!-- INJECT_ACTIVITY: group-sort-sounds -->
-
-    <!-- INJECT_ACTIVITY: match-up-letters -->
-
-    ## Приголосні звуки (Consonant Sounds)
+    For English speakers, a major advantage is that Ukrainian spelling is highly phonetic. This means that what you see is almost always exactly what you hear. Unlike English, where the letter "a" sounds completely different in "cat," "father," and "late," Ukrainian letters are remarkably consistent. There are no silent letters hiding in words to trick you (except for the functional role of the soft sign Ь). There are no surprise pronunciations or unpredictable spelling rules to memorize. Once you learn the specific sounds that these 33 symbols represent, you will have the ability to read absolutely any Ukrainian word out loud.
   replace: |
-    When you watch the pronunciation videos for the vowel letters, focus heavily on mimicking that clear, unobstructed airflow.
-
-    ## Приголосні звуки (Consonant Sounds)
+    For English speakers, a major advantage is that Ukrainian spelling is highly phonetic. This means that what you see is usually very close to what you hear. Unlike English, where the letter "a" sounds completely different in "cat," "father," and "late," Ukrainian letters are relatively consistent. There are no silent letters hiding in words to trick you (except for the functional role of the soft sign Ь). Pronunciation patterns are much more predictable than in English, so once you learn the specific sounds that these 33 symbols represent, you will usually be able to make a strong first reading attempt aloud.
 - find: |
-    Finally, you will see the soft sign, **Ь**. As a reminder, this letter is the silent "helper" that changes the consonant standing directly before it from a hard sound into a soft one.
-
-    <!-- INJECT_ACTIVITY: watch-repeat-pronunciation -->
-
-    ## Привіт! (Hello!)
+    This hard and soft distinction is a uniquely Slavic phonetic feature. It does not exist in English, which means you will need to train your ear to hear the difference.
   replace: |
-    Finally, you will see the soft sign, **Ь**. As a reminder, this letter is the silent "helper" that changes the consonant standing directly before it from a hard sound into a soft one.
+    This hard and soft distinction is central to Ukrainian phonetics and unfamiliar to most English speakers, which means you will need to train your ear to hear the difference.
+- find: |
+    Finally, listen to the word **око** (eye), which also clearly features the [о] sound prominently.
+  replace: |
+    Finally, listen to the name **Уля**. It gives you a clear [у] example: У-ля.
+- find: |
+    In this short exchange, you see the formal greeting "Добрий день" used respectfully with a teacher, followed by the informal greeting **привіт** (hi). When someone asks **як справи** (how are you), the most common and polite response is **добре** (fine, good).
+  replace: |
+    In this short exchange, you see the formal greeting "Добрий день" used respectfully with a teacher, followed by the informal greeting **привіт** (hi). When someone asks **як справи** (how are you), you can answer **добре** (fine, good), **чудово** (great), or **нормально** (okay), and ask the question back with **А у тебе?** (And you?).
+- find: |
+    <!-- INJECT_ACTIVITY: match-up-letters-to-sounds -->
+  replace: ""
+- find: |
+    <!-- INJECT_ACTIVITY: group-sort-vowels-consonants -->
+  replace: |
+    <!-- INJECT_ACTIVITY: group-sort-vowels-consonants -->
 
-    <!-- INJECT_ACTIVITY: watch-repeat-pronunciation -->
-
-    <!-- INJECT_ACTIVITY: group-sort-sounds -->
-
-    <!-- INJECT_ACTIVITY: match-up-letters -->
-
-    ## Привіт! (Hello!)
+    <!-- INJECT_ACTIVITY: match-up-letters-to-sounds -->
 </fixes>

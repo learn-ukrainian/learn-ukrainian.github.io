@@ -1,0 +1,110 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T02-26-41d89551.json
+phase: skeleton
+prompt_chars: 34691
+response_chars: 4261
+prompt_words: 5033
+response_words: 682
+sections:
+- name: preamble
+  start: 0
+  length: 475
+  fraction: 0.0137
+- name: plan
+  start: 475
+  length: 5336
+  fraction: 0.1538
+- name: wiki
+  start: 5755
+  length: 26550
+  fraction: 0.7653
+- name: output_spec
+  start: 32361
+  length: 2330
+  fraction: 0.0672
+large_sections:
+- wiki
+directives_total: 22
+directives_covered: 4
+directives_missed:
+- kind: must
+  text: Your skeleton must budget every word.
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: must
+  text: The introduction must be gradual, building from the simplest, most frequent
+    forms to more complex ones.
+  covered: false
+  coverage_note: 0/12 keywords (0%)
+- kind: must
+  text: The learner must memorize this structural difference for possession.
+  covered: false
+  coverage_note: 2/7 keywords (29%)
+- kind: must
+  text: '" Ukrainian grammar must be explained on its own terms, using its own logic
+    and native pedagogical sources (e.'
+  covered: false
+  coverage_note: 2/12 keywords (17%)
+- kind: must
+  text: The curriculum must proactively teach and test this difference.
+  covered: false
+  coverage_note: 2/7 keywords (29%)
+- kind: must
+  text: 'Ukrainian pedagogy emphasizes that `година` is a feminine noun, so the ordinal
+    number must agree with it (Source: `6-klas-ukrmova-golub-2023_s0167`).'
+  covered: false
+  coverage_note: 4/16 keywords (25%)
+- kind: must
+  text: It must be explicitly marked as incorrect and foreign to the Ukrainian grammatical
+    system.
+  covered: false
+  coverage_note: 2/8 keywords (25%)
+- kind: must
+  text: The student must match them to the correct written description.
+  covered: false
+  coverage_note: 2/7 keywords (29%)
+- kind: must
+  text: '* **(Source: `6-klas-ukrmova-betsa-2023_s0164`)** This exercise systematically
+    drills the different forms and cases required.'
+  covered: false
+  coverage_note: 2/13 keywords (15%)
+- kind: must
+  text: '* **Task:** The student is given a list of time expressions, some of which
+    are incorrect, and must write the correct versions.'
+  covered: false
+  coverage_note: 3/14 keywords (21%)
+- kind: must
+  text: '**Word budgets must sum to 1200+.'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: '**Section budgets must match the plan''s `content_outline` word allocations**
+    (±10%).'
+  covered: false
+  coverage_note: 1/8 keywords (12%)
+- kind: must
+  text: '**CRITICAL: An exercise must ONLY test concepts already taught above it.'
+  covered: false
+  coverage_note: 0/9 keywords (0%)
+- kind: must
+  text: 'Every plan `activity_hints` entry MUST have a corresponding `<!-- INJECT_ACTIVITY:
+    id -->` marker in the skeleton.'
+  covered: false
+  coverage_note: 2/10 keywords (20%)
+- kind: skeleton_para
+  text: 'P1 (150w): Follow the plan''s points for this section EXACTLY. If the plan
+    says "Self-check questions", output a bulleted Q&A list — NOT prose. If the plan
+    says "recap", write a brief recap.'
+  covered: false
+  coverage_note: 7/20 keywords (35%)
+- kind: inject_activity
+  text: activity-id
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: activity-id
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: descriptive-id
+  covered: false
+  coverage_note: marker missing

@@ -2,47 +2,52 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 9
-  evidence: Covers all plan points completely, but the dialogue fill-in activity hint
-    (testing possessives) is mapped to a marker placed before possessives are taught.
+  score: 7
+  evidence: 'All planned sections and core points are present, but three sections
+    exceed the plan budget by more than 10%: `Діалоги` 458/400, `У мене є` 303/250,
+    `Мій, моя, моє` 229/200.'
 - dimension: 2
   name: Linguistic accuracy
-  score: 10
-  evidence: Flawless Ukrainian throughout. No Russianisms, Surzhyk, or calques. `його/її`
-    correctly described as unchanging.
+  score: 9
+  evidence: No Russian characters (`ы э ё ъ`) found. VESUM/local checks confirm forms
+    such as `фото`, `родина`, `чоловік`, `дружина`, `його`, `її`, `немає`, `тільки`,
+    `вчителька`, `інженер`.
 - dimension: 3
   name: Pedagogical quality
-  score: 9
-  evidence: The PPP flow is mostly excellent, but placing an activity that tests unlearned
-    grammar (`твій/мій` in section 1) violates the step-by-step progression.
+  score: 7
+  evidence: 'The explanation after Dialogue 1 is inaccurate: `"Mark uses the phrase
+    **у тебе є** ... and Olya answers..."` but the dialogue shows Olya asking and
+    Mark answering.'
 - dimension: 4
   name: Vocabulary coverage
   score: 10
-  evidence: 100% of required and recommended vocabulary from the plan is introduced
-    naturally in the text.
+  evidence: Required vocabulary is all present in prose, including `сім'я`, `мама`,
+    `тато`, `брат`, `сестра`, `бабуся`, `дідусь`, `мій/моя/моє/мої`, `твій/твоя/твоє`,
+    `у мене є`, `у тебе є`. Recommended items are
 - dimension: 5
   name: Exercise quality
-  score: 8
-  evidence: Marker placement for `fill-in-dialogue` asks learners to produce target
-    language before the practice phase.
+  score: 10
+  evidence: All 4 planned activity markers are present and placed after the relevant
+    teaching sections. No marker-ID mismatches found.
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: Warm, natural teaching voice. "Expressing possession in Ukrainian requires
-    a completely different mindset..." is great pedagogical framing.
+  score: 6
+  evidence: 'Several lines are generic filler rather than teaching: `"In Ukrainian
+    culture, family connections are very important."` and `"you take a major step
+    toward fluency"` add words without adding usable A1 '
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: All H2 headings match the plan exactly. Word count is 1456 (above 1200
-    target).
+  evidence: All H2 sections are present and ordered correctly; pipeline word count
+    is 1333, above target; no stray tags or broken formatting.
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: Correctly notes that asking about siblings is natural small talk in Ukraine,
-    and explains the lack of a single overarching word for "grandparents".
+  score: 8
+  evidence: No Russian-centered framing, but `"In Ukrainian culture, family connections
+    are very important."` is a broad cultural claim with no concrete Ukrainian detail.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: Dialogues are highly realistic and natural, matching the Anna episode
-    references perfectly.
+  score: 9
+  evidence: Named speakers, photo-sharing context, and multi-turn exchanges make the
+    dialogues usable and more natural than drill-only prompts.
 findings: []

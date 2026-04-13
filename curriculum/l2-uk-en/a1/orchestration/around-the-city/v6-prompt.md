@@ -117,7 +117,7 @@ module: a1-033
 level: A1
 sequence: 33
 slug: around-the-city
-version: '1.2'
+version: '1.3'
 title: Around the City
 subtitle: Де/куди + directions — navigating in Ukrainian
 focus: communication
@@ -239,6 +239,9 @@ register: розмовний
 references:
 - title: Synthesis of M28-M32 skills
   notes: Applied communication — no new grammar, just integration.
+- title: Большакова Grade 2, розділ «Моє місто»
+  notes: Basic directions vocabulary (прямо, направо, наліво), neighborhood descriptions,
+    asking/giving directions at A1 level.
 
 </plan_content>
 
@@ -256,26 +259,25 @@ You do NOT need to call tools yourself — the facts are already verified.
 
 <pre_verified_facts>
 ## VESUM Verification
-- Confirmed: пішки, хвилина, район, центр, вибачте, дістатися, ідіть, їдьте, поруч.
-- Not found: None.
+- Confirmed: пішки, хвилина, район, центр, вибачте, дістатися, ідіть, їдьте, поруч
+- Not found: 
 
 ## Grammar Rules
-- Наказовий спосіб (Imperative Mood): 2nd person plural (formal) uses the ending **-іть** or **-те**. For navigation: **ідіть** (or **йдіть**), **поверніть**, **вибачте**, **їдьте**. Note: "їхати" has the irregular imperative form **їдьте** (with a soft sign). [Based on Textbook Grade 6, betsa, p. 83-85 and VESUM].
-- Питання де? та куди?: Location (**Де?**) requires the Locative case (**в центрі**, **на вулиці**). Direction (**Куди?**) requires the Accusative case (**в центр**, **на вулицю**). [Based on Textbook Grade 5, uhor, p. 82].
+- Чергування прийменників У/В: Правопис §23 — Позиції вживання прийменників і префіксів У та В. "Щоб уникнути збігу букв на позначення приголосних звуків, що є важкими для вимови, та щоб досягти милозвучності, в українській мові вживають на письмі прийменник у... Щоб уникнути збігу букв, що передають голосні... вживають прийменник в"
 
 ## Calque Warnings
-- **вибачаюся**: CALQUE (reflexive form "I apologize myself") — **вибачте** (formal imperative) or **пробачте**.
-- **слідуюча зупинка**: CALQUE — **наступна зупинка**. [Based on Textbook Grade 11, avramenko, p. 57].
-- **їхати на метро**: OK — using "на + Locative" for transport is standard (**на метро**, **на автобусі**), alongside the Instrumental case (**метро**, **автобусом**).
+- на розі: OK — (not found in style guide as a calque)
+- поруч: OK — (not found in style guide as a calque)
+- дістатися до: OK — (not found in style guide as a calque)
 
 ## CEFR Check
-- **центр**: A1 — OK.
-- **хвилина**: A1 — OK.
-- **район**: A1 — OK.
-- **поруч**: A1 — OK.
-- **вибачте**: A1 — OK.
-- **пішки**: A1 — OK (listed in A1 boundary in wiki).
-- **дістатися**: A2 — Above target but pedagogically necessary for the "How to get to..." dialogue pattern.
+- пішки: A1 — OK
+- хвилина: A1 — OK
+- район: A1 — OK
+- центр: A1 — OK
+- вибачте (вибачити): A2 — Above target
+- поруч: A2/B1 — Above target
+- дістатися: Not found in PULS — Unknown level
 </pre_verified_facts>
 
 
@@ -613,6 +615,7 @@ Guidance for the writer on what pitfalls English-speaking learners will face and
 ## Plan References
 
 - 
+- 
 
 </knowledge_packet>
 
@@ -620,12 +623,14 @@ Guidance for the writer on what pitfalls English-speaking learners will face and
 
 ## Section Structure
 
-Write these sections as H2 headings, in this exact order:
+Write these sections as H2 headings, in this **exact** order:
 
 - `## Діалоги (Dialogues)` (~300 words)
 - `## Де і куди разом (Where and Where To Together)` (~300 words)
 - `## Мій район (My Neighborhood)` (~300 words)
 - `## Підсумок — Summary` (~300 words)
+
+**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim** as an `## H2` line. This includes the FINAL summary/transition section (`Підсумок: ...`, `Підсумок та перехід до M...`, etc.) — the writer's most common failure is silently dropping the closing section. Do NOT skip it. Do NOT renumber. Do NOT merge headings. The post-write quick-verify check will fail your build if any heading is missing, even if the prose itself is excellent.
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -673,6 +678,25 @@ PLAN-AWARE EXEMPTIONS: The following bans are RELAXED for this module because th
 - **Zero calques**: No приймати душ→брати душ, приймати рішення→ухвалювати рішення
 - **Zero paronyms**: тактична≠тактовна, ефектний≠ефективний — use the right word, not a similar-sounding one
 - **Natural Ukrainian**: Write how a Ukrainian teacher would explain this to a student. Not robotic, not textbook-dry, not overly casual.
+
+### FORBIDDEN WORDS — never write these (#1189)
+
+The following Russian words have leaked into past builds and broken modules. They are **hard-banned** — the post-write toxic-token scanner will fail your build the moment it sees one. Use the Ukrainian alternative every time, even in dialogues, even in casual prose, even when quoting a learner's mistake (use a `<!-- VERIFY -->` placeholder instead of typing the Russian form):
+
+| Russian (FORBIDDEN) | Ukrainian (USE THIS) |
+|---|---|
+| хорошо | добре |
+| конечно | звичайно / певна річ |
+| спасибо | дякую |
+| пожалуйста | будь ласка / прошу |
+| ничего | нічого |
+| сейчас | зараз |
+| тоже | теж / також |
+| здесь | тут |
+| кот | кіт |
+| кон | кін |
+
+This list is enforced word-for-word by `scripts/build/quick_verify.py` (SEVERE_RUSSIANISMS). If you produce any of these tokens — even inside a quoted example, even inside a dialogue line spoken by a Russian-speaking character — the build halts immediately. There is no exception.
 
 **Authority hierarchy (if uncertain about a word, check in this order):**
 VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (stress) → Антоненко-Давидович (style) → Грінченко (etymology).
@@ -783,37 +807,34 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Діалоги (~330 words total)
-- P1 (~30 words): Setting the scene in a historic Ukrainian city (Lviv), establishing the communicative need to navigate between Площа Ринок, the Opera House, and the High Castle.
-- P2 (~100 words): Dialogue 1 — Asking for directions. A tourist uses "Вибачте, як дістатися до..." to find the library and museum. The guide responds with "Ідіть прямо," "потім направо," and "на розі," while suggesting the metro for distant locations.
-- P3 (~100 words): Dialogue 2 — Describing a daily route. Two friends discuss how they get to work/school. Phrases used: "Спочатку йду на зупинку," "Потім їду автобусом до центру," and "Потім іду пішки п'ять хвилин."
-- P4 (~50 words): Linguistic analysis of the first dialogue, focusing on the polite opening "Вибачте" and the distinction between walking directions ("ідіть") and transport suggestions ("їдьте").
-- P5 (~50 words): Analysis of the second dialogue, highlighting sequence words ("спочатку," "потім") and the use of transport vocabulary in the instrumental case (автобусом, метро) vs. the adverb "пішки."
-- <!-- INJECT_ACTIVITY: match-navigation-responses --> [match-up, Match question to logical response for navigation, 6 items]
-
-## Де і куди разом (~320 words total)
-- P1 (~80 words): Explaining the fundamental logic of navigation: switching between "Static" (Де?) and "Direction" (Куди?). Contrast examples: "Я зараз у парку" (Locative: де?) vs. "Я йду в парк" (Accusative: куди?).
-- P2 (~80 words): Deep dive into the prepositional patterns for "в" and "на." Show the case endings side-by-side: "на вулиці / на площі" (Locative) vs. "на вулицю / на площу" (Accusative). Use "в офісі" vs. "в офіс" to show masculine zero-ending vs. locative -і.
-- P3 (~80 words): Synthesis table explanation. Categorizing information for the learner: Static (в/на + locative), Direction (в/на + accusative), Transport (автобусом), and Distance (далеко/близько).
-- P4 (~80 words): Introduction to the imperative "previews" for navigation. Explaining "Ідіть" (Go/Walk) and "Їдьте" (Go/Travel by transport) as formal, polite commands for strangers, emphasizing the -іть suffix for safety.
-- <!-- INJECT_ACTIVITY: quiz-de-vs-kudy --> [quiz, Де (locative) or Куди (accusative) in context, 6 items]
+## Діалоги (Dialogues) (~340 words)
+- P1 (~60 words): Introduction to the setting. Imagine a walking tour in the Lviv old town, going from Площа Ринок to the Opera house and High Castle. Emphasize the constant need to ask where things are and where to go next.
+- P2 (~140 words): Dialogue 1 — Asking for directions. A conversation between a guide and tourists. Includes phrases: "Вибачте, як дістатися до бібліотеки?", "Ідіть прямо, потім направо", "Бібліотека на розі", "А музей?", "Музей далеко. Їдьте на метро до центру." Demonstrates combining directions, transport, and city places.
 - <!-- INJECT_ACTIVITY: fill-in-directions --> [fill-in, Give directions using прямо, направо, наліво, 6 items]
+- P3 (~140 words): Dialogue 2 — Describing your route. Discussing daily commutes. Includes phrases: "Як ти дістаєшся на роботу?", "Спочатку йду на зупинку. Потім їду автобусом до центру", "А потім?", "Потім іду пішки п'ять хвилин. Робота в офісі на площі." Showcases daily routes using sequence words, transport, and places.
 
-## Мій район (~330 words total)
-- P1 (~80 words): Vocabulary for distance and proximity. Explaining the chunks "далеко від" and "близько від." Examples: "Школа далеко від дому," "Аптека близько, можна піти пішки." Introducing "поруч" as "nearby."
-- P2 (~80 words): Defining the neighborhood structure. Using the word "район" and describing locations relative to the "центр" (center) and "околиця" (outskirts). Explaining "на вулиці [Name]" as the standard way to state an address.
-- P3 (~80 words): Time-based navigation and landmarks. Introducing "хвилина" (minute) and the common phrase "п'ять хвилин пішки." Mentioning landmarks like "перехрестя" (intersection) and "зупинка" (stop).
-- P4 (~90 words): A cohesive sample text describing a personal neighborhood (вулиця Франка). Integration of places (парк, магазин, кафе, бібліотека), transport (треба їхати автобусом), and directions (на розі, прямо).
+## Де і куди разом (Where and Where To Together) (~330 words)
+- P1 (~110 words): Contrast between location (Де?) and direction (Куди?). Explain that real navigation constantly switches between the Locative and Accusative cases. Use clear examples: "Я зараз у парку" (де? — locative) versus "Я йду в магазин" (куди? — accusative). 
+- P2 (~110 words): Detail the preposition patterns for synthesis. Show a clear breakdown: "Де ти?" requires в/на + locative ("Магазин на вулиці Шевченка"). "Куди йдеш?" requires в/на + accusative ("Потім їду на роботу"). Explain how the verb dictates the case.
+- <!-- INJECT_ACTIVITY: quiz-locative-accusative --> [quiz, Де (locative) or Куди (accusative) in context, 6 items]
+- P3 (~110 words): Transport and distance mechanics. Explain how to answer "Як?" (How?) and "Чим?" (By what?). Introduce the forms "автобусом" and "на метро". Pair these with distance descriptors: "далеко", "близько", and the phrase "пішки".
+
+## Мій район (My Neighborhood) (~330 words)
+- P1 (~110 words): Describing where you live. Introduce vocabulary for immediate surroundings: "район", "біля мого дому". Provide a model description: "Я живу на вулиці Франка. Біля мого дому є парк і магазин."
+- P2 (~110 words): Combining neighborhood features with transport needs. Contrast what is near and far: "Школа далеко — треба їхати автобусом. Аптека близько, можна піти пішки." Mention typical neighborhood places: кафе, ресторан, бібліотека.
+- P3 (~110 words): Useful phrases and chunks for city life. Explain time and distance chunks like "пішки" (on foot) and "хвилина" (minute). Show examples: "П'ять хвилин пішки." Introduce location chunks: "далеко/близько від" (far/near from), "у центрі міста" (in the center), and "на околиці" (on the outskirts).
 - <!-- INJECT_ACTIVITY: fill-in-transport-route --> [fill-in, Describe route with transport (автобусом, пішки, на метро), 6 items]
 
-## Підсумок (~340 words total)
-- P1 (~100 words): Recap of the Urban Communication Toolkit. Summarizing the "Asking" phrases (Як дістатися до?), "Direction" adverbs (праворуч, ліворуч, прямо), and "Location" prepositions (в/на).
-- P2 (~110 words): Cultural and linguistic precision. Note on decolonized language: avoiding "Вибачаюся" (Russian calque) in favor of "Вибачте." Clarification of the critical distinction between "автовокзал" (bus) and "залізничний вокзал" (train).
-- P3 (~130 words): Self-check:
-    * Чи можете ви запитати дорогу? (Вибачте, де бібліотека?)
-    * Чи можете ви сказати "направо" і "наліво"?
-    * Чи знаєте ви різницю між "у центрі" (де?) та "в центр" (куди?)?
-    * Опишіть свій шлях: Як ви дістаєтеся на роботу чи в університет? (Спочатку йду... потім їду...)
+## Підсумок — Summary (~320 words)
+- P1 (~90 words): Recap of the urban communication toolkit. Summarize asking for places ("Де...?", "Як дістатися до...?") and giving formal directions ("ідіть/їдьте", "прямо", "направо", "наліво").
+- P2 (~100 words): Recap of grammatical navigation structures. Reiterate the core difference between location ("в/на" + locative) and direction ("в/на" + accusative), as well as transport methods ("автобусом", "на метро", "пішки").
+- <!-- INJECT_ACTIVITY: match-up-navigation-responses --> [match-up, Match question to logical response for navigation, 6 items]
+- P3 (~130 words): Self-check: Describe your route from home to work/school.
+  * Де ти живеш? (Я живу на...)
+  * Як ти дістаєшся на роботу/в школу? (Я їду...)
+  * Це далеко чи близько? (Це...)
+  * Скільки хвилин ти йдеш пішки? (Я йду пішки...)
+  * Що є біля твого дому? (Біля мого дому є...)
 
 Grand total: ~1320 words
 </skeleton>
@@ -823,11 +844,54 @@ Grand total: ~1320 words
 Write in Markdown. Use:
 - `## Section Title` for main sections
 - `### Subsection` for subsections within a section
-- `**bold**` for Ukrainian words being taught — EVERY bold Ukrainian word MUST have an English translation on first use, either in parentheses `**слово** (translation)` or inline `**слово** means "translation"`. No exceptions.
+- `**bold**` for Ukrainian words being taught. For **A1 and A2** levels, provide an English translation on first use (e.g. `**стіл** (table)`) because learners lack the vocabulary to infer meaning. For **B1 and above**, do NOT provide inline translations for standard vocabulary — the learner will use the module's словник (vocabulary table). You may provide ONE parenthetical English translation ONLY for highly abstract grammar/linguistic terms on first use (e.g. `**видова пара** (aspectual pair)`).
 - Tables for paradigms (conjugation, declension)
 - `:::tip` / `:::caution` / `:::note` for callout boxes
 - `<!-- INJECT_ACTIVITY: {id} -->` for exercise placement (markers only — do NOT write exercise content)
 
 Do NOT write MDX component syntax, JSON, or DSL exercise blocks (:::quiz, etc.). Plain Markdown with injection markers.
+
+---
+
+## MANDATORY FINAL CHECKLIST (#1189)
+
+Before you finish writing, verify the prose against this checklist. Failing any item will fail the build.
+
+### Section headings (verbatim)
+
+Every heading from "Section Structure" above MUST appear as an `## H2` in your output, in order, **including the closing `Підсумок:` / `Підсумок та перехід до M...` summary**. The single most common writer failure across the B1 build has been silently dropping the final summary section. Re-read your output before stopping. If the last section in the plan is missing, write it now.
+
+### Required vocabulary (every word must appear)
+
+You MUST use **every word** from the list below at least once in the prose, in a natural sentence with bold + English translation. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, прагматика, діагностика, дієвідмінювання, зворотний, двовидовий, одновидовий, неозначено-кількісний, etc.) is the most frequently dropped category — actively find homes for those words even if it means adding a sentence that defines them.
+
+- [ ] пішки (on foot)
+- [ ] хвилина (minute, f)
+- [ ] район (neighborhood, m)
+- [ ] центр (center, m)
+- [ ] вибачте (excuse me)
+
+### Forbidden words (never produce)
+
+Do not write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use `<!-- VERIFY -->` instead). The post-write toxic-token scanner will fail the build immediately:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+### Level-specific immersion check
+
+The level-appropriate immersion rule was already injected at the top of
+this prompt as `IMMERSION RULE`. Re-read it now BEFORE you stop writing.
+If your level's rule contains a CHECKLIST block, walk through every item.
+If it doesn't, just verify your output matches the LANGUAGE ROLES and
+TARGET stated in that block.
+
+This used to hard-code a B1+ checklist that confused A1/A2 models (where
+translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+The single source of truth is now
+`scripts/pipeline/config_tables.py:IMMERSION_RULES`.
+
+---
 
 Begin writing now. Start with the first section heading.

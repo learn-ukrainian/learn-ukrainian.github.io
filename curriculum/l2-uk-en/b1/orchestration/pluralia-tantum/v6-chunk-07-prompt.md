@@ -28,7 +28,7 @@ Grand total: ~4400 words
 <previous_context>
 [...previous sections truncated...]
 
-важливо знати правила їхньої взаємодії з іншими частинами мови. Це називається **узгодження** *(agreement)*. Оскільки іменники pluralia tantum існують винятково у формі множини, усі слова навколо них також повинні приймати форму множини. Це абсолютно залізне правило української граматики, яке не має жодних винятків. Навіть якщо ви говорите про один конкретний фізичний предмет, прикметники та дієслова поруч із ним завжди стоятимуть у множині. Наприклад, ви маєте казати «**великі двері**» *(big door)*, а не «великий двері». Якщо ваші окуляри впали, ви скажете: «**мої окуляри зламалися**» *(my glasses broke)*. Дієслово в минулому часі тут має типове для множини закінчення «-лися», а не «-вся» чи «-лася». Багато студентів роблять типову помилку: вони перекладають логіку своєї рідної мови. Вони думають про один об'єкт і автоматично ставлять прикметник в однину. Але словосполучення на зразок «новий ножиці» або «довгий штани» звучать для українців абсолютно неправильно. Правильно говорити тільки так: «**нові ножиці**» *(new scissors)* та «**довгі штани**» *(long trousers)*. Ваш мозок повинен перемикатися на режим множини, щойно ви бачите таке слово. Ще одна цікава та трохи складна тема — це використання числівників разом із такими іменниками. Як ви вже знаєте, сказати «одна двері» або «один гроші» неможливо. Але як тоді порахувати ці предмети? Для числа «один» українська мова пропонує елегантне рішення: ми використовуємо спеціальну форму множини числівника — «**одні**» *(one / some)*. Тому ви сміливо можете говорити «**одні двері**» *(one door)* або «**одні ножиці**» *(one pair of scissors)*. А що робити з числами два, три та чотири? Тут на допомогу приходять так звані **збірні числівники** *(collective numerals)*. Замість того, щоб намагатися поєднати звичайне число з множиною, ви берете спеціальну збірну форму. Ви кажете «**двоє дверей**» *(two doors)*, «**троє ножиць**» *(three pairs of scissors)* або «**четверо саней**» *(four sleighs)*. Хоча в сучасній розмовній мові ви іноді можете почути фрази на зразок «два двері», вони вважаються менш природними. Літературна норма вимагає використання саме збірних числівників для кількості від двох до чотирьох. Починаючи з п'яти, ви знову використовуєте звичайні числівники та родовий відмінок множини: «**п'ять дверей**» *(five doors)*. Тепер давайте подивимося на порядок слів та узгодження з присудком у реченні. В українській мові порядок слів є дуже гнучким, і дієслово може стояти як до, так і після іменника. Але граматичний статус pluralia tantum завжди контролює форму дієслова незалежно від його позиції. Якщо присудок стоїть перед підметом, він все одно зобов'язаний прийняти форму множини. Порівняйте ці два речення. Ви скажете: «На столі **лежали гроші**» *(money lay on the table)*. Дієслово «лежали» має закінчення множини. Для яскравого контрасту давайте згадаємо іменники singularia tantum. Наприклад, слово «**масло**» *(butter)* завжди є одниною. Тому ми скажемо: «На столі **лежало масло**» *(butter lay on the table)*. Тут дієслово стоїть у формі середнього роду однини. Цей контраст чудово ілюструє глибоку граматичну природу цих слів. Слово «гроші» вимагає множини, змушуючи всі залежні слова підпорядковуватися цьому правилу. Завжди уважно слідкуйте за закінченнями дієслів у минулому часі, коли описуєте ситуації з окулярами, ножицями, штанами або канікулами. Не дозволяйте гнучкому порядку слів заплутати вас під час розмови. <!-- INJECT_ACTIVITY: error-correction, Fix agreement errors with pluralia tantum (*великий двері, *один гроші), 6 items -->
+verb must match the number of the noun: "the glasses broke" (plural).* A common error for L2 learners is trying to "singularize" these nouns by using singular adjectives, such as saying «великий двері» (big door). Because English often uses "a pair of..." or a singular verb for things like "money is," learners struggle with the Ukrainian requirement to treat **гроші** (money) or **меблі** (furniture) as plural entities. You must train your brain to see these words as grammatically plural from the moment you learn them. Особливу увагу слід приділити числівникам, адже тут найчастіше трапляються помилки. В українській мові не можна сказати «один **ножиці**» чи «одна **двері**». Для позначення одного предмета ми використовуємо слово «одні»: «одні **ножиці** (scissors)», «одні **сани** (sleigh)». Коли ж ми рахуємо предмети від двох до чотирьох, зазвичай вживаються збірні числівники, які вимагають, щоб іменник стояв у формі **родовий відмінок** (genitive case). Ми кажемо «двоє **дверей**», «троє **ножиць**» або «четверо **саней**». > *Particular attention should be paid to numerals, as this is where mistakes most often occur. In Ukrainian, you cannot say "one scissors" or "one door" (using the singular "one"). To designate one object, we use the word "одні": "one pair of scissors," "one sleigh." When counting objects from two to four, collective numerals are usually used, which require the noun to be in the genitive case form. We say "two doors," "three pairs of scissors," or "four sleighs."* :::info **Grammar box** When counting pluralia tantum nouns, use "одні" for one, and collective numerals like "двоє" (2), "троє" (3), and "четверо" (4) for small quantities. Standard cardinal numerals like "два" or "три" are grammatically possible but sound less idiomatic with these nouns. ::: Another important aspect is the behavior of predicates. In Ukrainian, the plural status of the noun controls the verb even if the verb comes before the noun in the sentence. This is a great way to test your mastery of the category. If you are describing what is on a table, the choice between singular and plural verbs depends entirely on whether the noun is **однина** (singular number) or **множина** (plural number). Граматичне число іменника контролює дієслово незалежно від порядку слів у реченні. Навіть якщо присудок стоїть перед підметом, він все одно має бути у множині. Порівняйте: «На столі лежало масло» (однина) та «На столі лежали **гроші** (money)» (множина). У першому випадку слово «масло» є незлічуваним іменником, що вживається лише в однині, тому дієслово стоїть у середньому роді. Проте **гроші** вимагають форми «лежали». Те саме правило діє для географічних назв чи подій: «За лісом починалися **Карпати** (Carpathians)» або «Швидко минули мої **канікули** (holidays)». In professional or medical contexts, this consistency remains vital. When talking about **ліки** (medicine), you must remember that they are always "they." For instance, «ці **ліки** допомагають» (this medicine helps) uses a plural verb. The same applies to household items like **меблі** (furniture) or **ворота** (gate), and even kitchen ingredients like **дріжджі** (yeast). By maintaining this plural agreement, you demonstrate a deep understanding of Ukrainian linguistic logic. <!-- INJECT_ACTIVITY: error-correction-agreement -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -608,7 +608,74 @@ The following articles from the project wiki provide compiled knowledge relevant
 
 
 
-## Rules
+## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
+
+**You are in PHASE 7: Early B1 (B1 M01-M30)**
+- Ukrainian prose paragraphs: YES — write Ukrainian paragraphs with full English translation blocks
+- Paragraph length: 4–12 sentences
+- Frequency of Ukrainian paragraphs that get an English translation block: 25%
+
+**THE RULE (hard, non-negotiable):**
+
+Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
+OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
+same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
+
+A Ukrainian paragraph may be followed by its **full** English translation
+in a blockquote + italics:
+
+```
+Називний відмінок — це основна форма слова, яка відповідає на питання
+«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
+
+> *The Nominative case is the dictionary form, which answers the questions
+> "who?" or "what?". You always learn a new word in this form.*
+```
+
+The blockquote translates the WHOLE Ukrainian paragraph, not individual
+sentences.
+
+**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
+
+1. English prose with inline bolded UK terms + parenthetical translations:
+   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
+   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
+
+2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
+
+3. Sentence-by-sentence mixing:
+   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
+
+4. Writing the whole module in English with Ukrainian only appearing as
+   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
+   paragraphs — 25% with translation blocks, the rest bare).
+
+**ALLOWED patterns:**
+
+- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
+  ✅ `For masculine nouns, use the **-ий** ending.`
+     `**Гарний хлопчик.** — *A handsome boy.*`
+
+- Inline bolded vocabulary tooltips (up to 3 per paragraph):
+  ✅ `The word for cat is **кіт** (cat).`
+
+- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
+  the monolingual rule — see the dialog format below).
+
+**How to structure a section when Ukrainian paragraphs are allowed:**
+
+1. Open with an English explanation paragraph introducing the concept
+2. Write a Ukrainian paragraph demonstrating the concept in use
+3. Follow with a blockquote `> *English translation of the whole paragraph*`
+4. Write another English explanation or analysis
+5. Write another Ukrainian paragraph (translated or bare per the frequency target)
+
+Before submitting, re-read each paragraph and verify: "Is every sentence
+in this paragraph the same language?" If no, fix it.
+
+---
+
+## Other Rules
 
 Full Ukrainian immersion. Grammar explained IN Ukrainian. English only for disambiguation of false friends. Sentences max 30 words.
 
@@ -621,18 +688,68 @@ GRAMMAR RULES:
 
 
 
+- **Engagement callouts are REQUIRED.** Every section MUST contain at
+  least one callout box. The module as a whole MUST have ≥3 callouts,
+  so with 4-5 sections you're naturally covered. Use the supported
+  markers:
+  ```
+  :::note
+  **Quick tip** — short explanation or memory aid (1-3 sentences).
+  :::
+
+  :::tip
+  **Did you know?** — cultural or linguistic insight.
+  :::
+
+  :::info
+  **Grammar box** — a focused explanation of one rule.
+  :::
+  ```
+  Callouts are NOT optional decoration — the audit hard-fails the
+  module if it has fewer than 3 across the whole file. Pick the flavor
+  (note/tip/info) that matches what you're saying; the audit counts
+  any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
-- **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+- **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**This is the FINAL section (7/7).** Before you stop writing, review the prose you've written across this whole module. EVERY word in the checklist below MUST appear at least once with a bold Ukrainian form and English translation in a natural sentence. Sweep up any words that earlier sections did not include — even if it means adding a sentence or short paragraph that defines the term. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, etc.) is the most frequently dropped category and the build hard-fails for it.
+
+- [ ] двері (door — pluralia tantum, Р. дверей)
+- [ ] окуляри (glasses — pluralia tantum, Р. окулярів)
+- [ ] гроші (money — pluralia tantum, Р. грошей, Ор. грішми/грошима)
+- [ ] ворота (gate — pluralia tantum, Р. воріт, Ор. ворітьми/воротами)
+- [ ] ножиці (scissors — pluralia tantum, Р. ножиць)
+- [ ] Карпати (Carpathians — geographical pluralia tantum)
+- [ ] канікули (holidays/vacation — pluralia tantum)
+- [ ] ліки (medicine — pluralia tantum, connects to M16)
+- [ ] меблі (furniture — pluralia tantum)
+- [ ] сани (sleigh — pluralia tantum, Р. саней)
+- [ ] дріжджі (yeast — pluralia tantum)
+- [ ] однина (singular number)
+- [ ] множина (plural number)
+- [ ] родовий відмінок (genitive case)
+- [ ] узгодження (agreement — grammatical concord)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Підсумок (~450 words)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

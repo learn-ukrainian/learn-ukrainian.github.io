@@ -1,0 +1,77 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T11-16-89c04073.json
+phase: write-chunk-02
+prompt_chars: 45539
+response_chars: 5095
+prompt_words: 6370
+response_words: 842
+sections:
+- name: header
+  start: 0
+  length: 471
+  fraction: 0.0103
+- name: skeleton
+  start: 471
+  length: 1698
+  fraction: 0.0373
+- name: prior_summary
+  start: 2169
+  length: 3306
+  fraction: 0.0726
+- name: plan
+  start: 5475
+  length: 11674
+  fraction: 0.2564
+- name: wiki
+  start: 10703
+  length: 28132
+  fraction: 0.6178
+- name: output_spec
+  start: 45281
+  length: 258
+  fraction: 0.0057
+large_sections:
+- wiki
+directives_total: 21
+directives_covered: 11
+directives_missed:
+- kind: checklist
+  text: ручка (pen)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: олівець (pencil)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: фарба (paint)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: лінійка (ruler)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: ніж (knife)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: ложка (spoon)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 3/11 keywords (27%)
+- kind: inject_activity
+  text: match-up-transport
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in, Put the noun in Instrumental singular to express the tool of an action
+  covered: false
+  coverage_note: marker missing

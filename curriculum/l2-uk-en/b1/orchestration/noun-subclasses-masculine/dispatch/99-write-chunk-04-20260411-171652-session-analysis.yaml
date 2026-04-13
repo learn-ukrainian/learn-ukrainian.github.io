@@ -1,0 +1,69 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T15-14-815714d9.json
+phase: write-chunk-04
+prompt_chars: 47279
+response_chars: 3609
+prompt_words: 6633
+response_words: 547
+sections:
+- name: header
+  start: 0
+  length: 424
+  fraction: 0.009
+- name: skeleton
+  start: 424
+  length: 935
+  fraction: 0.0198
+- name: prior_summary
+  start: 1359
+  length: 3423
+  fraction: 0.0724
+- name: plan
+  start: 4782
+  length: 17906
+  fraction: 0.3787
+- name: wiki
+  start: 16298
+  length: 24381
+  fraction: 0.5157
+- name: output_spec
+  start: 47069
+  length: 210
+  fraction: 0.0044
+large_sections:
+- wiki
+directives_total: 21
+directives_covered: 13
+directives_missed:
+- kind: checklist
+  text: відміна (declension class)
+  covered: false
+  coverage_note: 1/3 keywords (33%)
+- kind: checklist
+  text: походження (origin — where someone is from)
+  covered: false
+  coverage_note: 1/5 keywords (20%)
+- kind: checklist
+  text: кобзар (kobza player — traditional Ukrainian musician)
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: checklist
+  text: киянин (Kyivan — resident of Kyiv)
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: checklist
+  text: громадянин (citizen)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 4/11 keywords (36%)
+- kind: inject_activity
+  text: fill-in-ar-declension
+  covered: false
+  coverage_note: marker missing

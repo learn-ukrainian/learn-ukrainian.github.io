@@ -1,15 +1,37 @@
-## Прийменник вирішує: Один прийменник — різні відмінки
+## Особливі випадки: Час, характеристика, шлях (~550 words)
 
-Часто прийменник працює як перемикач. *(Often a preposition works like a switch.)* One preposition can require different cases depending on the meaning of the sentence. Найпопулярніші прийменники — це **на** *(on/to)* та **у/в** *(in/into)*. Вони дружать із двома відмінками: Знахідним та Місцевим. *(They are friends with two cases: Accusative and Locative.)* 
+We have seen how a **дієслово** (verb) and a preposition dictate the **відмінок** (grammatical case) of the nouns that follow them. But sometimes the case helps us express specific abstract concepts, like **час** (time) or a person's physical appearance. Let's start with days of the week. When we want to say that an event happens *on* a specific day, we use the **прийменник** (preposition) «у» or «в» with the Accusative case. Since most days of the week are inanimate masculine nouns, their Accusative form often looks exactly like the Nominative. But you must pay close attention to the feminine days: «середа», «п'ятниця», «субота», «неділя».
 
-The choice depends on movement versus position. Якщо ми говоримо про напрямок руху, ми запитуємо «Куди?». *(If we talk about the direction of movement, we ask "Where to?".)* This is the Accusative case. Наприклад: «Я йду **на роботу** *(I am going to work)*» або «Діти йдуть **в школу** *(The children are going to school)*». Ми рухаємося до мети. *(We are moving towards a goal.)* Але якщо ми говоримо про статичне місце, ми запитуємо «Де?». *(But if we talk about a static place, we ask "Where?".)* This requires the Locative case. Наприклад: «Я працюю **на роботі** *(I work at work)*» або «Діти сидять **у школі** *(The children sit in school)*». Дія відбувається в одному місці. *(The action happens in one place.)*
+У середу ми йдемо в кіно, а у п'ятницю ми зазвичай відпочиваємо вдома. Цю неділю я теж планую провести з родиною. У четвер у нас буде дуже важлива зустріч на роботі.
 
-Прийменник **з/із** *(from/with)* також має два різні значення. *(The preposition "з/із" also has two different meanings.)* Коли він означає походження або старт руху, нам потрібен Родовий відмінок. *(When it means origin or start of movement, we need the Genitive case.)* Наприклад: «Я приїхав **з Києва** *(I arrived from Kyiv)*» або «Він вийшов **із дому** *(He went out of the house)*». But when "з/із" means companionship or combination, it takes the Instrumental case. Це означає «разом». *(It means "together".)* Наприклад: «Я пішов гуляти **з другом** *(I went for a walk with a friend)*». Або коли ми п'ємо напій: «Я люблю каву **з молоком** *(I like coffee with milk)*».
+> *On Wednesday we are going to the cinema, and on Friday we usually rest at home. This Sunday I also plan to spend with my family. On Thursday we will have a very important meeting at work.*
 
-Ще один цікавий прийменник — це **за** *(for/behind)*. *(Another interesting preposition is "за".)* We use it with the Accusative case to show exchange, price, or gratitude. Наприклад: «Я плачу **за квиток** *(I pay for the ticket)*» або «Ми дякуємо **за допомогу** *(We thank for the help)*». However, when "за" indicates a physical location behind or after something, we use the Instrumental case. Наприклад: «Ми сидимо **за столом** *(We are sitting at the table)*». Або якщо ми наздоганяємо транспорт: «Він біжить **за автобусом** *(He is running after the bus)*».
+Notice how we said «цю неділю» without any preposition. When you use words like "this" or "every" with time periods, the preposition is dropped, but the noun remains in the Accusative case. For instance, we say «кожен день» (every day) or «кожну середу» (every Wednesday). However, for expressions like "next week" or "last month", we completely change the pattern and use the Genitive case instead. For example, we say «наступного тижня» (next week) or «минулого місяця» (last month).
 
-Прийменник **по** *(along/around)* найчастіше працює з Місцевим відмінком. *(The preposition "по" most often works with the Locative case.)* It describes movement along a path or across a surface. Наприклад: «Ми любимо ходити **по вулиці** *(We like to walk along the street)*». Якщо ми вдома: «Кіт бігає **по кімнаті** *(The cat runs around the room)*». Або масштабно: «Ми подорожуємо **по Україні** *(We travel around Ukraine)*».
+Now let's talk about describing people. When you want to point someone out based on their clothing, accessories, or a physical **характеристика** (characteristic, description), you use the Locative case. The pattern is simple: you name the person, add the preposition «у» or «в», and follow it with the clothing item in the Locative case. Remember that any adjectives describing the clothing must also be in the Locative case. This is a very natural and common way to describe someone's appearance in everyday Ukrainian.
 
-Інші популярні прийменники зазвичай мають лише один відмінок. *(Other popular prepositions usually have only one case.)* Прийменник **для** *(for)* вказує на мету і вимагає Родового відмінка: «Це подарунок **для мами** *(This is a gift for mom)*». Прийменник **біля** *(near)* також любить Родовий відмінок: «Я стою **біля вікна** *(I stand near the window)*». Прийменник **до** *(to/towards)* показує фінальну точку маршруту: «Ми їдемо **до лісу** *(We are driving to the forest)*».
+Ти пам'ятаєш того високого хлопця у червоному светрі? Поруч із ним стояла серйозна дівчина в окулярах. А та літня жінка у білому пальті — це наша нова сусідка.
 
-<!-- INJECT_ACTIVITY: group-sort-prepositions -->
+> *Do you remember that tall guy in the red sweater? A serious girl in glasses stood next to him. And that elderly woman in the white coat is our new neighbor.*
+
+:::tip
+**Describing people** — In English, you might say a girl *with* glasses or a guy *in* a sweater. In Ukrainian, both use «у» / «в» + Locative case. We generally do not say "дівчина з окулярами" when identifying someone by what they wear.
+:::
+
+The Locative case is also essential for broader contexts of time, specifically when talking about months, years, centuries, or life stages. While days of the week take the Accusative case, these larger periods take the Locative case with «у» or «в». Notice how the adjectives for the year or century also take the Locative endings.
+
+У дві тисячі чотирнадцятому році багато речей змінилося. Зараз ми всі живемо у двадцять першому столітті. У дитинстві я дуже любив читати фантастичні казки. У серпні ми плануємо поїхати на море.
+
+> *In 2014, many things changed. Now we all live in the twenty-first century. In childhood, I really loved reading fantasy tales. In August we plan to go to the sea.*
+
+Finally, let's explore how we talk about paths of motion. When you move *across* a surface, *around* an area, or *through* a space, Ukrainian uses the preposition «по» followed by the Locative case. This describes movement that does not necessarily have a single strict **напрямок** (direction) or a specific **місце** (place, location) as a final destination. Instead, it shows that the continuous action covers a general area or a surface.
+
+Маленькі діти дуже люблять бігати по кімнаті. На вихідних ми часто гуляємо по старому парку або по вулиці. Влітку туристи люблять їздити по місту і дивитися на архітектуру. Ми також любимо подорожувати по Україні.
+
+> *Small children really love running around the room. On weekends we often walk around the old park or down the street. In summer, tourists like to ride around the city and look at the architecture. We also love traveling around Ukraine.*
+
+:::info
+**The preposition «по»** — This preposition can be tricky. In Ukrainian, «по» is mainly used with the Locative case to show movement over a surface (по столу, по вулиці) or distribution (по одному). Do not confuse it with Russian usage; we do not use it to mean "after" in time contexts or for missing someone.
+:::
+
+<!-- INJECT_ACTIVITY: fill-in-mixed-cases -->

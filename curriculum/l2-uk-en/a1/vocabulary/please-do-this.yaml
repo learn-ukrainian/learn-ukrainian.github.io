@@ -41,8 +41,32 @@ vocabulary:
   pos: ім.
   gender: с.
   verified: true
+- word: чита́ти
+  translation: to read
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
 - word: писа́ти
   translation: to write
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: слу́хати
+  translation: to listen
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: диви́тися
+  translation: to look / watch
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: говори́ти
+  translation: to speak
   expression: false
   pos: дієсл.
   gender: ''
@@ -54,7 +78,7 @@ vocabulary:
   gender: ж.
   verified: true
 - word: сказа́ти
-  translation: to say/tell
+  translation: to say / tell
   expression: false
   pos: дієсл.
   gender: ''
@@ -65,68 +89,63 @@ vocabulary:
   pos: дієсл.
   gender: ''
   verified: true
-- word: Добрий ранок!
-  translation: Good morning!
+- word: відкрити підручник
+  translation: to open the textbook
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: текст
-  translation: text
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: двадцять три
-  translation: twenty-three
+- word: розгорнути підручник
+  translation: to unfold the textbook
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: пита́ння
-  translation: question
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: кафе́
-  translation: café
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: га́рна
-  translation: beautiful
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: м'яч
-  translation: ball
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: две́рі
-  translation: doors
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: сиді́ти
-  translation: to sit
+- word: розгорну́ти
+  translation: to unfold
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: принести́
-  translation: to bring
+- word: наказовий спосіб
+  translation: imperative mood
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ду́мати
+  translation: to think
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: покла́сти
-  translation: to put/lay
+- word: зна́ти
+  translation: to know
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: каза́ти
+  translation: to say
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ходи́ти
+  translation: to walk / go
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: роби́ти
+  translation: to do / make
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ї́сти
+  translation: to eat
+  expression: false
   pos: дієсл.
   gender: ''
   verified: true

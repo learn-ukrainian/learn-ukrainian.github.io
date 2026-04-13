@@ -1,6 +1,6 @@
 vocabulary:
 - word: якщо́
-  translation: if (real condition)
+  translation: if
   expression: false
   pos: спол.
   gender: ''
@@ -12,7 +12,7 @@ vocabulary:
   gender: ж.
   verified: true
 - word: результа́т
-  translation: result, outcome
+  translation: result
   expression: false
   pos: ім.
   gender: ч.
@@ -42,13 +42,13 @@ vocabulary:
   gender: ''
   verified: true
 - word: ві́льний
-  translation: free, available
+  translation: free
   expression: false
   pos: прикм.
   gender: ''
   verified: true
 - word: зали́ши́тися
-  translation: to stay, to remain
+  translation: to stay
   expression: false
   pos: дієсл.
   gender: ''
@@ -60,7 +60,7 @@ vocabulary:
   gender: ж.
   verified: true
 - word: якби́
-  translation: if (hypothetical, unreal condition)
+  translation: if only
   expression: false
   pos: спол.
   gender: ''
@@ -84,104 +84,8 @@ vocabulary:
   gender: ж.
   verified: true
 - word: відпу́стка
-  translation: vacation, holiday
+  translation: vacation
   expression: false
   pos: ім.
   gender: ж.
-  verified: true
-- word: со́нце
-  translation: sun
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: насі́ння
-  translation: seeds
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: гря́дка
-  translation: garden bed
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: то
-  translation: then (particle marking the result clause)
-  expression: false
-  pos: спол.
-  gender: ''
-  verified: true
-- word: да́ча
-  translation: summer house, dacha
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: помідо́ри
-  translation: tomatoes
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: огірки́
-  translation: cucumbers
-  expression: false
-  pos: ім.
-  gender: ''
-  verified: true
-- word: табле́тка
-  translation: pill, tablet
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: вча́сно
-  translation: on time
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: мільйо́н
-  translation: million
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: краєви́д
-  translation: landscape, view
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: хоча́
-  translation: although
-  expression: false
-  pos: спол.
-  gender: ''
-  verified: true
-- word: ко́ма
-  translation: comma
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: різни́ця
-  translation: difference
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: Якщо все буде добре
-  translation: If everything is fine / If all goes well
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: теперішній час
-  translation: present tense
-  expression: true
-  pos: ''
-  gender: ''
   verified: true

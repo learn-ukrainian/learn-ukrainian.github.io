@@ -1,19 +1,7 @@
 {
-  "attempt": 1,
-  "passed": false,
-  "errors": [
-    {
-      "check": "VOCABULARY",
-      "severity": "ERROR",
-      "message": "Missing 5/10 required vocab: евфонія (euphony (technical term)), приголосний (consonant), сполучник (conjunction), вживати (to use, to apply), складний (complex, compound)"
-    }
-  ],
-  "warnings": [
-    {
-      "check": "EXERCISES",
-      "severity": "WARNING",
-      "message": "Plan expects 4 exercise(s) but content has 3"
-    }
-  ],
-  "timestamp": "2026-04-11T00:13:57.833890+00:00"
+  "attempt": 2,
+  "passed": true,
+  "errors": [],
+  "warnings": [],
+  "timestamp": "2026-04-13T01:03:22.664695+00:00"
 }

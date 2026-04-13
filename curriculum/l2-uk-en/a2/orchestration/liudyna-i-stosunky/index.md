@@ -1,6 +1,6 @@
 # Build Summary: liudyna-i-stosunky (A2)
 
-Generated: 2026-04-11 01:35
+Generated: 2026-04-11 11:49
 
 ## Pipeline Phases
 
@@ -12,15 +12,15 @@ Generated: 2026-04-11 01:35
 | pre-verify | complete | 2026-04-07 19:22:51 |
 | write | complete | 2026-04-07 19:28:04 |
 | exercises | complete | 2026-04-07 21:27:36 |
-| activities | complete | 2026-04-10 23:31:42 |
+| activities | complete | 2026-04-11 09:49:36 |
 | verify-exercises | complete | 2026-04-07 21:27:36 |
 | annotate | complete | 2026-04-07 19:37:05 |
 | vocab | complete | 2026-04-07 19:37:27 |
 | enrich | complete | 2026-04-07 19:37:27 |
 | verify | complete | 2026-04-07 19:37:27 |
 | stress | complete | 2026-04-07 21:27:36 |
-| publish | complete | 2026-04-10 23:35:13 |
-| audit | complete | 2026-04-10 23:35:13 |
+| publish | complete | 2026-04-11 09:49:44 |
+| audit | complete | 2026-04-11 09:49:44 |
 
 ## Reviews
 
@@ -42,6 +42,8 @@ Generated: 2026-04-11 01:35
 | activities | gemini-tools (gemini-3.1-pro-preview) | 104s | ✅ |
 | activities | gemini-tools (gemini-3.1-pro-preview) | 74s | ✅ |
 | activities | gemini-tools (gemini-3.1-pro-preview) | 100s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 124s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 75s | ✅ |
 | vocab | gemini (gemini-3-flash-preview) | 16s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 620s | ✅ |
 | review | gemini-tools (gemini-3.1-pro-preview) | 226s | ✅ |

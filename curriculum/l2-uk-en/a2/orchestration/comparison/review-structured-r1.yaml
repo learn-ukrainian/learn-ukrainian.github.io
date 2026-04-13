@@ -2,53 +2,52 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 9
-  evidence: Covered almost everything. Omitted the specific recommended vocabulary
-    word `навпаки` (0 occurrences found) and omitted the `к→ч, х→ш` alternation rules
-    (though their omission is pedagogically correct
+  score: 8
+  evidence: All four planned sections appear in order, the phone-comparison dialogue
+    is present, and the required comparison targets are taught; however the module
+    uses 8 activity markers even though the plan hin
 - dimension: 2
   name: Linguistic accuracy
-  score: 7
-  evidence: Found a hallucinated comparative form `швидкіший` which is not in standard
-    Ukrainian. Found a Russian calque `знаходиться` (instead of `розташована`). Found
-    unnatural collocation `більші ціни` (instea
+  score: 5
+  evidence: 'The module teaches two wrong grammar claims: `«за» або «від» та знахідний
+    відмінок` and `«г», «ж» або «з» ... перетворюються на «жч»`.'
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: Excellent flow from concept to examples. Good use of the PPP framework,
-    consistent provision of 3+ examples for phonetic rules, and clear presentation
-    of common errors like the Russianism "самий".
+  score: 6
+  evidence: The module follows dialogue → explanation → practice, but the inaccurate
+    case rule and inaccurate alternation rule appear in the presentation stage, so
+    learners are explicitly taught false grammar.
 - dimension: 4
   name: Vocabulary coverage
   score: 9
-  evidence: All required vocabulary was used properly in context. However, the recommended
-    word `навпаки` was absent from the prose.
+  evidence: 'Required vocabulary is well integrated in prose and examples: `порівняння`,
+    `більший`, `менший`, `кращий`, `гірший`, `найкращий`, `найбільший`, `солодший`,
+    `цікавіший`, `ніж`; recommended modifiers `н'
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: All 5 markers match the `activity_hints` exactly and are optimally placed
-    immediately following their relevant instructional text.
+  score: 6
+  evidence: The first five markers are well placed after the relevant teaching sections,
+    but the last three markers duplicate earlier activity types and are clustered
+    after the recap rather than after new instruc
 - dimension: 6
   name: Engagement & tone
-  score: 9
-  evidence: Warm, encouraging teacher persona ("Ви — найкращі!"). A slight overuse
-    of generic empty filler ("Ці красиві форми роблять вашу українську мову дуже природною,
-    багатою та глибокою").
+  score: 6
+  evidence: The teacherly voice is present, but lines like `Це покаже вашу повагу
+    до культури` turn grammar guidance into moralizing language-policing.
 - dimension: 7
   name: Structural integrity
-  score: 8
-  evidence: 'Word count is solid (2418 words). However, an editing artifact / empty
-    quotes pair (`або «».`) was left in the text: "«настільки сильно, наскільки це
-    можливо» або «»."'
+  score: 7
+  evidence: All H2 headings are present and the pipeline word count is 2278, but raw
+    `<!-- VERIFY -->` comments remain in learner-facing prose.
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: Correct facts regarding Ukrainian geography and records (Goverla, Kyiv,
-    Arsenalna). Proper linguistic stance against Russianisms ("самий великий").
+  score: 6
+  evidence: The module repeatedly frames Ukrainian through anti-Russian policing (`Це
+    пряме запозичення з російської граматики`, `Чиста українська мова`), instead of
+    primarily explaining the Ukrainian norm on its
 - dimension: 9
   name: Dialogue & conversation quality
   score: 9
-  evidence: Dialogues are well contextualized. "якість — це найкращий аргумент" is
-    slightly clunky for casual speech, but the multi-turn structures and use of target
-    grammar are effective.
+  evidence: The coffee/tea and phone-store dialogues are multi-turn, named-speaker
+    exchanges tied to real comparison tasks.
 findings: []

@@ -1,107 +1,110 @@
 ## Що ми зна́ємо? (What Do We Know?)
 
-The Food and Shopping phase combines vocabulary and grammar for practical use. Over the last five modules, you learned how to identify everyday foods, order a meal at a cafe, and navigate a local market. You also learned how to introduce the people around you. The primary goal of this checkpoint is to integrate talking about food, buying things, and interacting with people into a single, natural flow of communication.
+This checkpoint brings together the key material from A1.6. In this module, you review food vocabulary, practical shopping phrases, and the accusative case for both things and people in realistic, everyday scenarios.
 
-First, review your core vocabulary foundation. You should comfortably recognize general categories like **ї́жа** (food) and **напо́ї** (drinks), as well as ten essential food items: **хліб** (bread), **сир** (cheese), **молоко́** (milk), **я́блуко** (apple), **помідо́р** (tomato), **карто́пля** (potato), **яйце́** (egg), **м'я́со** (meat), **ри́ба** (fish), and **цу́кор** (sugar). You also need to know five basic drinks: **вода́** (water), **сік** (juice), **чай** (tea), **ка́ва** (coffee), and **пи́во** (beer). These words are the building blocks you need before we change their endings.
+This is your opportunity to step back and check what you can already do. Look at the self-check questionnaire below.
 
-In practical situations, you rely heavily on fixed functional phrases. At a cafe, the most important pattern is **Ме́ні ка́ву, будь ла́ска** (Coffee for me, please) when ordering your drink. At a market, your essential question is **Скі́льки ко́шту́є...?** (How much does ... cost?) when checking prices. When paying, always remember that the national currency of Ukraine is the **гри́вня** (hryvnia).
-
-:::tip
-The word **гривня** behaves like a regular feminine noun. It changes its ending based on numbers, which is an essential grammar rule for shopping!
-:::
-
-Evaluate your own progress. Can you confidently answer "yes" to these questions?
-* Can you name 10 foods and 5 drinks in Ukrainian?
-* Can you say what you eat and drink using the accusative case?
-* Can you order a meal and a drink at a cafe?
-* Can you ask for prices and buy products at a market?
-* Can you introduce a person using the correct accusative form?
-
-<!-- INJECT_ACTIVITY: group-sort-accusative-type -->
+*   **Ї́жа й напо́ї (Food and Drink):** Can you name 10 foods and 5 drinks?
+*   **Знахі́дний відмі́нок (Accusative):** Can you say what you eat or drink (for example, **Я їм ка́шу. Я п'ю воду́.**)?
+*   **Кафе́ (Cafe):** Can you order a meal at a cafe (for example, **Ме́ні борщ, будь ла́ска.**)?
+*   **Ри́нок (Market):** Can you ask for prices and buy things at the market (for example, **Скі́льки ко́шту́ють помідо́ри? Да́йте кілогра́м я́блук, будь ласка.**)?
+*   **Лю́ди (People):** Can you use the accusative case to talk about people (for example, **Я ба́чу бра́та. Я зна́ю Оле́ну.**)?
 
 ## Чита́ння (Reading Practice)
 
-Read the following text to put your skills into context. Meet Anna. She is a university student living in Kyiv. On a typical Saturday morning, she follows a classic routine: she goes to the local market to buy fresh food, stops by a small cafe for lunch, and then meets a friend. This short story tests every single skill you learned in this phase.
+Let us put these new skills into practice with a short reading text. Anna is having a very busy day running errands around the city. First, she goes to the local market (**ринок**) to buy some fresh groceries for dinner. After finishing her shopping, she relaxes at a nearby cafe (**кафе**). Notice how she uses the accusative case and common shopping chunks throughout her day.
 
-First, Anna goes to the market to buy some vegetables. She talks to the seller (**продаве́ць**).
-> **А́нна:** Скільки ко́шту́ють ці помідо́ри? *(How much do these tomatoes cost?)*
-> **Продавець:** Три́дцять гри́вень. *(Thirty hryvnias.)*
-> **Анна:** Це ду́же де́шево. Да́йте кілогра́м, будь ласка. *(This is very cheap. Give me a kilogram, please.)*
-> **Анна:** А скільки коштують огірки́? *(And how much do the cucumbers cost?)*
-> **Продавець:** Соро́к гривень. *(Forty hryvnias.)*
-> **Анна:** До́бре, дайте кілограм. *(Good, give me a kilogram.)*
+> **А́нна йде на ринок. Вона́ ба́чить помідори і я́блука.**
+> *(Anna goes to the market. She sees tomatoes and apples.)*
+> **— Скільки коштують помідори?**
+> *(— How much do the tomatoes cost?)*
+> **— Три́дцять гри́вень.**
+> *(— Thirty hryvnias.)*
+> **— До́бре. Дайте кілограм, будь ласка.**
+> *(— Good. Give me a kilogram, please.)*
+> **По́тім Анна йде у кафе. Вона бачить стіл.**
+> *(Then Anna goes to a cafe. She sees a table.)*
+> **— Тут ві́льно?**
+> *(— Is it free here?)*
+> **— Так, звича́йно.**
+> *(— Yes, of course.)*
+> **— Мені борщ і ка́ву з молоко́м, будь ласка.**
+> *(— Borscht and coffee with milk for me, please.)*
+> **Анна їсть борщ і п'є каву. Потім вона про́сить раху́нок.**
+> *(Anna eats borscht and drinks coffee. Then she asks for the bill.)*
+> **— Рахунок, будь ласка. Мо́жна ка́рткою?**
+> *(— The bill, please. Can I pay by card?)*
+> **— Так, будь ласка.**
+> *(— Yes, please.)*
+> **Ра́птом вона бачить Олену і свого́ брата.**
+> *(Suddenly she sees Olena and her brother.)*
+> **— Оле́но, приві́т! Це мій брат.**
+> *(— Olena, hi! This is my brother.)*
 
-After finishing her shopping, Anna transitions to a small cafe called «Сма́чно». She finds a free table.
-> **Офіціа́нт:** Що ви хо́чете? *(What do you want?)*
-> **Анна:** Мені борщ і воду́ з лимо́ном, будь ласка. *(Borsch and water with lemon for me, please.)*
-> **Офіціант:** Це все? *(Is that all?)*
-> **Анна:** Так, дякую. Раху́нок, будь ласка. *(Yes, thank you. The bill, please.)*
-> **Анна:** Мо́жна ка́рткою? *(Is it possible by card?)*
-> **Офіціант:** Так, звича́йно. *(Yes, of course.)*
-
-:::note
-Notice the use of **звичайно** (of course). It is a very common, polite way to agree or accept a request in conversational Ukrainian.
-:::
-
-Finally, Anna sees her friend Olena and introduces her brother Taras.
-> **Анна:** Оле́но, приві́т! *(Olena, hi!)*
-> **Оле́на:** Привіт, А́нно! Як спра́ви? *(Hi, Anna! How are things?)*
-> **Анна:** Добре. Олено, ти зна́єш мого бра́та Тара́са? *(Good. Olena, do you know my brother Taras?)*
-> **Олена:** Ні, я не зна́ю Тараса. Дуже приє́мно! *(No, I do not know Taras. Very nice to meet you!)*
-
-<!-- INJECT_ACTIVITY: quiz-shopping-situations -->
+This short text seamlessly combines functional shopping chunks (like **Рахунок, будь ласка.**) with the accusative case. Notice the accusative for inanimate objects when Anna orders food (**борщ**, **каву**), and the accusative for animate objects when she sees a friend (**Олену**) or mentions family (**брата**). You already know enough vocabulary and grammar to understand a full day of real-world activities in Ukrainian!
 
 ## Грама́тика (Grammar Summary)
 
-To describe your daily routine, use the nouns **їжа** (food) and **напої** (drinks), along with specific meals: **сніда́нок** (breakfast), **обід** (lunch), and **вече́ря** (dinner). When you eat or buy something, the object is the direct target of your action, requiring the accusative case. Masculine and neuter inanimate nouns do not change their endings: you buy **борщ** (borsch), **сік** (juice), or **яблуко** (apple). Feminine nouns ending in **-а** or **-я** change to **-у** or **-ю**. Therefore, **кава** becomes **каву**, and **вода** becomes **воду**.
+To succeed in everyday interactions, you need a strong grasp of essential food and drink vocabulary (**їжа**, **напої**). Crucial combinations often use the preposition **з** (with), creating useful chunks like **ка́ва з молоком** (coffee with milk) or **чай з лимо́ном** (tea with lemon). These are the fundamental building blocks of any market or cafe conversation in Ukraine, helping you sound more natural.
 
-The grammar rules shift slightly when the target of your action is a person. For animate nouns, feminine words follow the exact same pattern as objects: the ending **-а** changes to **-у**. You see **ма́му** (mom) and you know **Оле́ну** (Olena). However, masculine animate nouns take the genitive ending **-а** or **-я**. You see **брата** (brother) or wait for **дру́га** (friend).
+When we talk about the objects of our actions, we must use the accusative case. Remember the important difference between inanimate things (**що?** (what?)) and animate people (**кого?** (whom?)).
+For inanimate objects, masculine nouns stay the same (**Я їм борщ.**, **Я купу́ю хліб.**), while feminine nouns change their ending from **-а** to **-у** (**Я п'ю воду.**, **Я їм пі́цу.**).
+For animate objects, the feminine rule is exactly the same (**Я бачу Олену.**, **Я люблю́ ма́му.**). However, masculine animate nouns take the genitive ending **-а** or **-я** (**Я бачу брата.**, **Я чека́ю лі́каря.**, **Я знаю дру́га.**).
 
-When asking about prices, use the question **Скільки коштує?** (How much does it cost?). The form of the currency **гривня** changes depending on the number. For the number one, it is **одна́ гривня** (one hryvnia). For two, three, and four, the form is **дві гри́вні**, **три гривні**, **чоти́ри гривні**. For five or more, it changes to **п'ять гривень**, **де́сять гривень**, **два́дцять гривень**. 
+Finally, always remember the specific patterns for asking prices. Use **Скільки ко́шту́є?** (How much does it cost?) for a single item, and **Скільки коштують?** (How much do they cost?) for plural items. Keep the currency agreement in mind: **одна́ гри́вня** (one hryvnia), **дві гри́вні** (two hryvnias), but **п'ять гривень** (five hryvnias).
 
-Finally, remember that some phrases are best learned as complete chunks. When you order, say **Мені каву, будь ласка** (Coffee for me, please). Use the instrumental preposition **з** (with) for combinations like **кава з молоко́м** (coffee with milk). For quantities, use chunks like **кілограм я́блук** (a kilogram of apples). Learn them as single vocabulary items right now without worrying about the underlying case rules.
+### Швидке́ сортува́ння (Quick Sort)
+
+Sort these forms into two groups: борщ, хліб, сік, чай, сир, брата, лікаря, сусі́да, друга, вчи́теля.
 
 <!-- INJECT_ACTIVITY: quiz-accusative-forms -->
 
 ## Діало́г (Connected Dialogue)
 
-Consider a complete, realistic scenario: hosting a dinner party (**вечеря**) at your home. This situation involves the full cycle of preparation. You start with your morning breakfast, go to the local market to buy fresh ingredients, stop at a cafe for a quick break, and interact with a friend.
+This dialogue models a complete, realistic day of food and shopping. It combines talking about breakfast at home, buying fresh produce at the market, and ordering lunch at a cafe. Watch how the speakers use fixed phrases to get what they want smoothly and efficiently.
 
-Read this connected sequence of conversations. A host (**Господи́ня**) interacts with different people throughout the day.
+> **Оле́г:** Що ти їси́ на сніда́нок?
+> *(What do you eat for breakfast?)*
+> **Марі́я:** Я їм кашу і п'ю каву з молоком. Потім іду́ на ринок купува́ти проду́кти на вече́рю.
+> *(I eat porridge and drink coffee with milk. Then I go to the market to buy groceries for dinner.)*
+> **Продавчиня:** Що вам?
+> *(What would you like?)*
+> **Марія:** Скільки коштують помідори?
+> *(How much do the tomatoes cost?)*
+> **Продавчиня:** Тридцять гривень.
+> *(Thirty hryvnias.)*
+> **Марія:** Добре. Дайте кілограм помідо́рів, будь ласка. Я готу́ю варе́ники і сала́т.
+> *(Good. Give me a kilogram of tomatoes, please. I am making varenyky and salad.)*
+> **Олег:** А вдо́ма все гото́во?
+> *(Is everything ready at home?)*
+> **Марія:** Так. Я ста́влю тарілки́ і склянки́ на стіл для госте́й. Ось вареники і салат, прошу.
+> *(Yes. I am putting plates and glasses on the table for the guests. Here are the varenyky and salad.)*
+> **Марія:** Пі́сля ри́нку я заходжу в кафе.
+> *(After the market I stop at a cafe.)*
+> **Офіціа́нт:** Що бу́дете?
+> *(What would you like?)*
+> **Марія:** Мені борщ і воду, будь ласка.
+> *(Borscht and water for me, please.)*
+> **Офіціант:** Добре.
+> *(All right.)*
+> **Марія:** Рахунок, будь ласка. Можна карткою?
+> *(The bill, please. Can I pay by card?)*
+> **Марія:** А потім я бачу Олену. Олено, привіт! Ти зна́єш мого брата?
+> *(And then I see Olena. Olena, hi! Do you know my brother?)*
 
-First, she talks to a friend (**Друг**) at breakfast:
-> **Друг:** Що ти їш на сніданок? *(What do you eat for breakfast?)*
-> **Господиня:** Я їм ка́шу. І п'ю каву з молоком. *(I eat porridge. And I drink coffee with milk.)*
+Phrases like **Мені...** (For me...), **Дайте...** (Give me...), **Тут вільно?** (Is it free here?), and **Можна карткою?** (Can I pay by card?) are fixed communicative chunks. You do not need to analyze their deep grammar right now. Treat them as reliable tools: memorize them as complete units, and use them to communicate naturally in a Ukrainian market or cafe without hesitation.
 
-Then, she talks to a seller (**Продавець**) at the market:
-> **Господиня:** Скільки коштують помідори? *(How much do the tomatoes cost?)*
-> **Продавець:** Тридцять гривень. *(Thirty hryvnias.)*
-> **Господиня:** Дайте кілограм, будь ласка. *(Give me a kilogram, please.)*
+<!-- INJECT_ACTIVITY: fill-in-dialogue -->
 
-Later, ordering at a cafe:
-> **Господиня:** Мені борщ і воду, будь ласка. *(Borsch and water for me, please.)*
-
-Finally, she meets her friend Olena:
-> **Господиня:** О, я ба́чу Олену! Олено, привіт! Ти знаєш мого брата? *(Oh, I see Olena! Olena, hi! Do you know my brother?)*
-
-:::caution
-Do not translate the English phrase "I will have...". Instead, use the direct request **Дайте, будь ласка** (Give me, please) or state your desire with **Я хо́чу** (I want). This is the authentic way to communicate in a store or cafe.
-:::
-
-Notice how the dialogue focuses on concrete statements. Using verbs like **хоті́ти** (to want) and **дава́ти** (to give) makes your speech clear and direct.
-
-<!-- INJECT_ACTIVITY: fill-in-dialogue-completion -->
+<!-- INJECT_ACTIVITY: quiz-situational-phrases -->
 
 ## Підсумок — Summary
 
-The Food and Shopping phase covers essential daily interactions. You started by identifying simple foods, and you can now navigate a busy market, order a full meal at a cafe, pay your bill correctly, and introduce your friends to each other. You have built functional communicative competence.
+Here is a summary of what you can now do in Ukrainian:
 
-Verify that you can confidently do the following:
-* You can talk about common food and drinks.
-* You can use the accusative case correctly for inanimate objects.
-* You can use the accusative case correctly for people.
-* You can order food at a cafe and ask for the bill.
-* You can shop at a market and ask for prices.
-* You can pay for things using the correct form of the currency.
+*   You can talk confidently about everyday food and drinks, describing exactly what you eat for breakfast, lunch, or dinner.
+*   You can order a delicious meal at a cafe, check if a seat is free, and politely ask for the bill when you finish.
+*   You can shop at a market, accurately ask for prices, understand quantities, and handle amounts in **гривні**.
+*   You can correctly use the accusative case to talk about both inanimate things (like eating pizza or drinking water) AND animate people (like seeing a brother or waiting for a friend).
 
-Next: A1.7 — Communication. You will learn how to make phone calls, write simple emails, and make plans with your friends.
+You are building a strong foundation for real-world communication. Next, in A1.7, you will focus on Communication—learning how to make phone calls, write emails, and make exciting plans with friends!

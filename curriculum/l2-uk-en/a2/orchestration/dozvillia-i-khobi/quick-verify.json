@@ -2,12 +2,6 @@
   "attempt": 1,
   "passed": true,
   "errors": [],
-  "warnings": [
-    {
-      "check": "VOCABULARY",
-      "severity": "WARNING",
-      "message": "Missing 2/10 required vocab: розвага (entertainment), виставка (exhibition)"
-    }
-  ],
-  "timestamp": "2026-04-08T00:35:15.654494+00:00"
+  "warnings": [],
+  "timestamp": "2026-04-11T12:30:13.376291+00:00"
 }

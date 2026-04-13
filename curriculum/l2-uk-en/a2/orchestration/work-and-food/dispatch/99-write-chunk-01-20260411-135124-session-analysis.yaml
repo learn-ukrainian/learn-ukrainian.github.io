@@ -1,0 +1,86 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T11-49-e74f8826.json
+phase: write-chunk-01
+prompt_chars: 42088
+response_chars: 5050
+prompt_words: 5903
+response_words: 808
+sections:
+- name: header
+  start: 0
+  length: 453
+  fraction: 0.0108
+- name: skeleton
+  start: 453
+  length: 1924
+  fraction: 0.0457
+- name: plan
+  start: 2377
+  length: 12106
+  fraction: 0.2876
+- name: wiki
+  start: 7959
+  length: 27369
+  fraction: 0.6503
+- name: output_spec
+  start: 41852
+  length: 236
+  fraction: 0.0056
+large_sections:
+- wiki
+directives_total: 22
+directives_covered: 9
+directives_missed:
+- kind: checklist
+  text: різати (to cut)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: мішати (to stir, to mix)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: посипати (to sprinkle)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: подавати (to serve)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: вареники (varenyky, dumplings)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: checklist
+  text: картопля (potato)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: сіль (salt)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: олія (oil)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: виделка (fork)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: must
+  text: '* **Must-know:** `склянка води/молока`, `ложка цукру/солі`, `кілограм борошна/м''яса`.'
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: must
+  text: '**MANDATORY:** Українська кулінарна та професійна лексика має суттєві відмінності
+    від російської.'
+  covered: false
+  coverage_note: 0/9 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 2/11 keywords (18%)

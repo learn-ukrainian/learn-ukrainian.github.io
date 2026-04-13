@@ -5,20 +5,50 @@ vocabulary:
   pos: присл.
   gender: ''
   verified: true
+- word: з / із / зі
+  translation: from
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
 - word: Украї́на
   translation: Ukraine
   expression: false
   pos: ім.
   gender: ж.
   verified: true
+- word: Ки́їв
+  translation: Kyiv
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: Оде́са
+  translation: Odesa
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: Дніпро́
+  translation: Dnipro
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: Запорі́жжя
+  translation: Zaporizhzhia
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
 - word: Кана́да
   translation: Canada
   expression: false
   pos: ''
   gender: ''
   verified: false
-- word: Оде́са
-  translation: Odesa
+- word: Торо́нто
+  translation: Toronto
   expression: false
   pos: ''
   gender: ''
@@ -47,72 +77,6 @@ vocabulary:
   pos: ''
   gender: ''
   verified: false
-- word: додо́му
-  translation: home (direction)
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: Я з...
-  translation: I am from...
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Давно тут?
-  translation: Have you been here long?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: місяць тому
-  translation: a month ago
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Звідки ти йдеш?
-  translation: Where are you coming from?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: робо́та
-  translation: work
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: шко́ла
-  translation: school
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: Де?
-  translation: Where?
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: Куди́
-  translation: Where to?
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: мі́сто
-  translation: city
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: краї́на
-  translation: country
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
 - word: Фра́нція
   translation: France
   expression: false
@@ -131,32 +95,26 @@ vocabulary:
   pos: ''
   gender: ''
   verified: false
-- word: Дніпро́
-  translation: Dnipro
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: Запорі́жжя
-  translation: Zaporizhzhia
-  expression: false
-  pos: ''
-  gender: ''
-  verified: false
-- word: украї́нець
-  translation: Ukrainian (man)
+- word: робо́та
+  translation: work
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: англі́єць
-  translation: Englishman
+- word: шко́ла
+  translation: school
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: магази́н
+  translation: store
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: за́раз
-  translation: now
+- word: додо́му
+  translation: home
   expression: false
   pos: присл.
   gender: ''

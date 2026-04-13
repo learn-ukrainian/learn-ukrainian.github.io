@@ -1,0 +1,61 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-13T01-06-26b7d3f0.json
+phase: write-chunk-01
+prompt_chars: 44501
+response_chars: 6153
+prompt_words: 6310
+response_words: 965
+sections:
+- name: header
+  start: 0
+  length: 440
+  fraction: 0.0099
+- name: skeleton
+  start: 440
+  length: 2089
+  fraction: 0.0469
+- name: plan
+  start: 2529
+  length: 12573
+  fraction: 0.2825
+- name: wiki
+  start: 7672
+  length: 29182
+  fraction: 0.6558
+- name: output_spec
+  start: 44284
+  length: 217
+  fraction: 0.0049
+large_sections:
+- wiki
+directives_total: 14
+directives_covered: 7
+directives_missed:
+- kind: checklist
+  text: займенник (pronoun)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: присвійний (possessive)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: вказівний (demonstrative)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: дозвіл (permission)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: вчителька (female teacher)
+  covered: false
+  coverage_note: 0/3 keywords (0%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 1/4 keywords (25%)
+- kind: must
+  text: '**Required module vocabulary** — every word below MUST appear somewhere in
+    the module before it ends.'
+  covered: false
+  coverage_note: 3/11 keywords (27%)

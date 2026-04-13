@@ -1,0 +1,81 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-11T15-57-4fea1ced.json
+phase: write-chunk-03
+prompt_chars: 46944
+response_chars: 5514
+prompt_words: 6728
+response_words: 865
+sections:
+- name: header
+  start: 0
+  length: 441
+  fraction: 0.0094
+- name: skeleton
+  start: 441
+  length: 1379
+  fraction: 0.0294
+- name: prior_summary
+  start: 1820
+  length: 3237
+  fraction: 0.069
+- name: plan
+  start: 5057
+  length: 12262
+  fraction: 0.2612
+- name: wiki
+  start: 10905
+  length: 29404
+  fraction: 0.6264
+- name: output_spec
+  start: 46723
+  length: 221
+  fraction: 0.0047
+large_sections:
+- wiki
+directives_total: 28
+directives_covered: 19
+directives_missed:
+- kind: must
+  text: Ukrainian schools, starting from early grades (Grade 3), teach that for a
+    group of words to be a sentence, they must be connected logically and grammatically
+    (Source 4).
+  covered: false
+  coverage_note: 5/18 keywords (28%)
+- kind: must
+  text: '* Learners must be able to identify the subject and predicate, and understand
+    how secondary members add detail.'
+  covered: false
+  coverage_note: 3/12 keywords (25%)
+- kind: must
+  text: A content writer must be vigilant, using dictionaries like the СУМ-11 and
+    style guides to choose authentic Ukrainian vocabulary and avoid calques.
+  covered: false
+  coverage_note: 4/16 keywords (25%)
+- kind: must
+  text: Students must underline the subject (`підмет`) once and the predicate (`присудок`)
+    twice, as is standard in Ukrainian schools (Source 10).
+  covered: false
+  coverage_note: 4/13 keywords (31%)
+- kind: must
+  text: Students must label each one (`розповідне`, `питальне`, `спонукальне`) (Source
+    36).
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: must
+  text: Students must transform it into a yes/no question using intonation (`?`) and
+    the particle `чи`.
+  covered: false
+  coverage_note: 2/9 keywords (22%)
+- kind: must
+  text: '* **Складні речення (Complex/Compound Sentences):** Mastery of the simple
+    sentence (`просте речення`) is required before a student can analyze or construct
+    sentences with multiple grammatical foundations (Source 3, 23).'
+  covered: false
+  coverage_note: 5/19 keywords (26%)
+- kind: must
+  text: '- **Engagement callouts are REQUIRED.'
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: inject_activity
+  text: group-sort-verb-tense
+  covered: false
+  coverage_note: marker missing

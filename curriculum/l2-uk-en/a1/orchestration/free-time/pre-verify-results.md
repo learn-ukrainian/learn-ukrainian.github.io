@@ -1,23 +1,19 @@
 ## VESUM Verification
-- Confirmed: вихідні, спорт, футбол, кіно, часто, іноді, рідко, ходімо, завжди, зазвичай, ніколи, театр, концерт, музей, давай, раз, ходити, грати.
-- Not found: None.
+- Confirmed: вихідні, спорт, футбол, кіно, часто, іноді, рідко, ходімо, завжди, зазвичай, ніколи, театр, концерт, музей, давай, раз
+- Not found: (All words were verified successfully)
 
 ## Grammar Rules
-- Euphony (у/в): Правопис §23 — "у" is used between consonants or at the start of a sentence before a consonant; "в" is used between vowels or after a vowel before most consonants (e.g., "у вихідні", "в кіно").
-- Double Negation: Standard rule for "ніколи" requires "не" before the verb (e.g., "Я ніколи не працюю").
-- Prepositions for Hobbies: "грати у" + Accusative for sports (футбол); "грати на" + Locative for instruments (гітарі). "ходити в" + Accusative for buildings (кіно, музей); "ходити на" + Accusative for events (концерт).
-- Frequency: Adverbs usually precede the verb ("Я часто гуляю"). Frequency expressions use "на" + Accusative ("раз на тиждень").
+- Чергування У/В (для "ходити в кіно"): Правопис §23 — Позиції вживання прийменників і префіксів У та В. Щоб уникнути збігу букв на позначення приголосних звуків, що є важкими для вимови, та щоб досягти милозвучності, в українській мові вживають на письмі прийменник у та префікс у- на початку слів у таких позиціях (між приголосними тощо). А також прийменник в для уникнення збігу голосних.
 
 ## Calque Warnings
-- приймати участь: Calque — Use "брати участь" (confirmed by Grade 10 Avramenko textbook).
-- на вихідних: Acceptable in modern speech and some textbooks, but "у вихідні" is the preferred traditional form (Standard).
-- раз в тиждень: Potential Russism — "раз на тиждень" is the standard Ukrainian construction (confirmed in Grade 2 and 8 textbooks).
+- грати у футбол: OK — No warnings found in Антоненко-Давидович.
+- грати на гітарі: OK — No warnings found in Антоненко-Давидович.
+- раз на тиждень: OK — No warnings found in Антоненко-Давидович.
 
 ## CEFR Check
 - вихідні: A1 — OK
-- зазвичай: A1 — OK
-- футбол: A1 — OK
-- кіно: A1 — OK
-- театр: A1 — OK
+- спорт: A1 — OK
+- завжди: A1 — OK
 - іноді: A1 — OK
-- ходімо: A1 — OK (Functional language)
+- зазвичай: A2 — Above target (Target: A1)
+- рідко: A2 — Above target (Target: A1)

@@ -1,23 +1,25 @@
-# Section-by-Section Generation — Section 2/5
+# Section-by-Section Generation — Section 2/4
 
 You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 4: Яка вона людина? Описуємо людей навколо нас (A2, A2.1 [Foundation and Aspect Introduction])
-**Section to write:** Характер: яка вона людина? (Character: What Kind of Person Is She?) (~650 words total)
-**Word target for this section:** 650 words (aim for 715 to account for undershoot)
+**Section to write:** Характер: яка вона людина? (~660 words total)
+**Word target for this section:** 660 words (aim for 726 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Характер: яка вона людина? (Character: What Kind of Person Is She?) (~650 words total)
-- P1 (~120 words): [Defining "характер" (character/personality). Introduction of core positive traits: щирий (sincere), привітний (friendly/welcoming), добрий (kind). Focus on the construction: "Він дуже щира людина" (He is a very sincere person).]
-- P2 (~130 words): [Professional and social qualities: працьовитий (hardworking), відповідальний (responsible), терплячий (patient), наполегливий (persistent/determined). Explaining how these words describe a person's approach to tasks and life.]
-- P3 (~100 words): [Challenging traits and nuances. Introduction of: впертий (stubborn/persistent), ледачий (lazy), серйозний (serious), тихий (quiet). Cultural note: how "впертий" can describe a principled and persistent person in a positive light.]
-- P4 (~110 words): [Aspect integration: Habitual character traits vs. one-time actions. Explaining that habitual behavior uses imperfective: "Він завжди допомагає" (He always helps). One-time proof of character uses perfective: "Вчора він мені допоміг" (Yesterday he helped me).]
-- P5 (~90 words): [Dialogue 2: New colleague at work asking about the team. "Яка наша керівниця? — Вона дуже відповідальна і справедлива, але іноді буває дуже серйозна. А колеги? — Усі привітні, особливо Максим."]
-- <!-- INJECT_ACTIVITY: match-character-traits --> [match-up, Match personality adjectives to their definitions or example situations, 8 items]
-- <!-- INJECT_ACTIVITY: quiz-character-choice --> [quiz, Choose the correct adjective to complete a person description based on their actions, 8 items]
+## Характер: яка вона людина? (~660 words total)
+- P1 (~120 words): Dialogue 2: New colleague at work. "Хто ваш керівник? Який він? — Він дуже відповідальний і справедливий. А колеги? — Усі привітні, особливо Оксана — вона завжди підказує новим працівникам." (Shows character description in a professional context).
+- P2 (~90 words): Transition to describing character (характер). Introduce the question "Яка вона людина?". Emphasize that in Ukrainian culture, asking "який він?" usually prompts a description of character, not just appearance.
+- P3 (~110 words): Positive traits (позитивні риси). Introduce core vocabulary: привітний, щирий, чуйний, добрий, веселий, розумний, працьовитий, терплячий, відповідальний, наполегливий. Give sentence patterns: "Він дуже добрий. Вона — щира людина. Мій брат — працьовитий і відповідальний."
+- P4 (~90 words): Challenging traits (складні риси). Introduce vocabulary: впертий, сумний, ледачий, серйозний, тихий. Add a cultural note that "впертий" (stubborn) can often be a positive trait in Ukrainian (meaning persistent or principled).
+- <!-- INJECT_ACTIVITY: group-sort-traits --> [group-sort, Sort personality adjectives into positive traits and challenging traits, 8 items]
+- <!-- INJECT_ACTIVITY: match-up-definitions --> [match-up, Match personality adjectives to their definitions or example situations, 8 items]
+- P5 (~120 words): Grammar Integration: Aspect in character descriptions (Imperfective). Explain how habitual character traits are proven by repeated actions using the imperfective aspect. Example: "Він завжди допомагає" (he always helps, therefore he is helpful/щирий).
+- P6 (~130 words): Grammar Integration: Aspect in character descriptions (Perfective). Contrast habitual traits with a one-time proof of character using the perfective aspect. Example: "Він допоміг мені вчора" (he helped me yesterday). Compare "Вона завжди підказує" (impf) vs "Вона підказала мені вчора" (pf).
+- <!-- INJECT_ACTIVITY: quiz-aspect-choice --> [quiz, Choose the correct adjective to complete a person description based on aspect clues (Він завжди допомагає — він дуже ___: щирий/ледачий/сумний), 8 items]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -25,7 +27,7 @@ You are a lead ukrainian instructor (The Conversation Partner), writing ONE SECT
 <previous_context>
 [...previous sections truncated...]
 
-slightly stout man. He is old, but very active. And my mom is a middle-aged woman. She has a wonderful figure.* :::note **Quick tip** — When you want to describe someone with an average height or build, use the phrases **середнього зросту** (of average height) or **середньої статури** (of average build). ::: Next, we move to the face and the eyes. There are two common patterns for eye color. You can say someone *has* a certain color using «У неї...» or «У нього...». Alternatively, use a single adjective like **кароока** (brown-eyed). The most common eye colors are **сині**, **зелені**, **сірі**, and **карі**. We also describe facial features, such as a round face or a straight nose. У сестри великі карі очі та кругле обличчя. Її чоловік має зелені очі та прямий ніс. Моя донька блакитноока, як і мій батько. Мені подобаються люди, які мають виразні сірі очі. Коли людина усміхається, її обличчя стає набагато красивішим. > *My sister has large brown eyes and a round face. Her husband has green eyes and a straight nose. My daughter is blue-eyed, just like my father. I like people who have expressive grey eyes. When a person smiles, their face becomes much more beautiful.* Hair is a key part of any description. In Ukrainian, hair is **волосся**, which is a neuter singular noun. We describe it by color, length, and style. Common colors include **темне**, **світле**, **русяве**, **руде**, and **сиве**. Hair can be **коротке** or **довге**, and its texture **хвилясте** (wavy) or **пряме** (straight). For a specific cut, we use the word **зачіска**. Подруга Олена завжди мала довге русяве волосся. Але вчора вона зробила нову коротку зачіску. Тепер у неї стильне темне волосся. Її брат має руде хвилясте волосся, яке виглядає трохи неохайно. А наш дідусь має зовсім сиве волосся, але модну зачіску. > *My friend Olena always had long light brown hair. But yesterday she got a new short hairstyle. Now she has stylish dark hair. Her brother has red wavy hair that looks a bit messy. And our grandfather has completely grey hair, but a fashionable haircut.* Let's see how these descriptions work in a natural conversation. Two friends are looking at photos on a phone and describing the people they see. > — **Подруга 1:** Дивись, це моя сестра Олена. Вона дуже висока, має довге русяве волосся і великі зелені очі. *(Look, this is my sister Olena. She is very tall, has long light brown hair and large green eyes.)* > — **Подруга 2:** Вона дуже гарна дівчина! А хто цей чоловік поруч із нею? *(She is a very beautiful girl! And who is this man next to her?)* > — **Подруга 1:** А це мій сусід, пан Іван. Він уже старий, але дуже ставний чоловік. У нього гарна сива зачіска. *(And this is my neighbor, Mr. Ivan. He is already old, but a very imposing man. He has a nice grey haircut.)* > — **Подруга 2:** У нього справді дуже приємне обличчя. *(He really has a very pleasant face.)*
+**Подруга 2:** А це мій сусід. Він дуже привітний і працьовитий. *(And this is my neighbor. He is very friendly and hardworking.)* > — **Подруга 1:** Він хороший сусід? *(Is he a good neighbor?)* > — **Подруга 2:** Так, він терплячий і завжди допомагає. Учора допоміг мені з валізою. *(Yes, he is patient and always helps. Yesterday he helped me with a suitcase.)* To describe someone's height, build, and age, we use basic adjectives that must agree in gender and number with the noun they describe. The most common pairs are tall and short, thin and plump, young and old. Високий чоловік завжди привертає увагу, а висока жінка виглядає елегантно. Мій дідусь старий, але брат ще молодий. Худий хлопець швидко бігає, а повний чоловік іде повільно. Низький хлопчик стоїть поруч із мамою. > *A tall man always attracts attention, and a tall woman looks elegant. My grandfather is old, but my brother is still young. A thin guy runs fast, but a plump man walks slowly. A short boy stands next to his mom.* When describing a face, Ukrainian uses beautiful compound adjectives for hair and eyes, combining two words into one single descriptive word. You can also describe these features directly using simple adjectives. У нього темне волосся, тому він темноволосий. У неї сині очі, отже, вона синьоока. Її брат має світле волосся, він світловолосий. Якщо людина має карі очі, ми кажемо, що вона кароока. > *He has dark hair, so he is dark-haired. She has blue eyes, therefore, she is blue-eyed. Her brother has light hair, he is light-haired. If a person has brown eyes, we say that they are brown-eyed.* There are two main ways to state what physical features someone has. You can use the verb "to have" followed by the Accusative case, or the preposition "with" followed by the Instrumental case. Both options are natural when we want to **описувати** (to describe) someone. We will learn the full Instrumental case later. Вона має карі очі і довге темне волосся. Це дівчина з карими очима і довгим темним волоссям. Він має коротке русяве волосся. Це хлопець із коротким русявим волоссям. > *She has brown eyes and long dark hair. This is a girl with brown eyes and long dark hair. He has short blonde hair. This is a guy with short blonde hair.* When learning to describe people, English speakers often make literal translations that sound unnatural or incorrect in Ukrainian. It is important to think directly in Ukrainian structures. :::tip **Did you know?** When translating "She looks beautiful", do not use the literal «Вона виглядає гарно». In Ukrainian, this implies she is actively looking at something beautifully with her eyes! Instead, use «Вона гарна» (She is beautiful) or «Вона має гарний вигляд» (She has a good look). Also, avoid the Russian calque «самий високий» for "the tallest". The correct Ukrainian superlative uses the prefix **най-**, making it «найвищий». ::: <!-- INJECT_ACTIVITY: fill-in, Complete sentences describing people with the correct adjective form (agreement for gender) -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -645,6 +647,31 @@ GRAMMAR RULES:
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
+## REQUIRED VOCABULARY CHECKLIST (#1189)
+
+**Required module vocabulary** — every word below MUST appear somewhere in the module before it ends. If a word fits naturally in this section, include it now (bold + English translation). Otherwise leave it for a later section. The FINAL section will sweep up any unused words, but the more you place naturally now the better the prose flows.
+
+- [ ] людина (person, human being)
+- [ ] стосунок (relationship)
+- [ ] характер (character, personality)
+- [ ] зовнішність (appearance)
+- [ ] привітний (friendly, welcoming)
+- [ ] щирий (sincere, genuine)
+- [ ] працьовитий (hardworking)
+- [ ] терплячий (patient)
+- [ ] сусід (neighbor)
+- [ ] описувати (to describe)
+
+## FORBIDDEN WORDS — never produce (#1189)
+
+Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
+
+❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
+
+Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
+
+No ы, э, ё, ъ characters anywhere.
+
 ## Output
 
-Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## Характер: яка вона людина? (~660 words total)`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.

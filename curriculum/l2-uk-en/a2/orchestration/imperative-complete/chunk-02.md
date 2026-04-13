@@ -1,45 +1,32 @@
-## Хай і нехай: Наказ для третіх осіб
+## Читаймо! Ходімо! Перша особа множини (1st Person Plural Imperatives) (~500 words)
 
-Зазвичай ми звертаємося прямо до людини, з якою ми спілкуємося. Ми кажемо: «**Скажи** *(tell)* йому!», «**Зробіть** *(do)* це!», «**Слухай** *(listen)* уважно!». Ми використовуємо форми для «ти» або «ви». Але іноді нам потрібен наказ або побажання для іншої людини. Ми хочемо сказати про «нього», «неї» або «них». When we want to give an indirect command or express a wish for a third party, we use the third-person imperative. В українській мові ми використовуємо спеціальні слова для цього. Ми кажемо: «Хай він скаже!». Це дуже популярна конструкція в розмовній мові. We do not change the verb itself, but rather add a specific particle before it to show our intent. This is a very common structure in daily conversations and formal writing.
+When you want to invite someone to do something together, use the first-person plural **наказовий спосіб** (imperative mood). It is the Ukrainian equivalent of "Let's...". Forming this is wonderfully logical. Simply take the base of the second-person singular imperative (the "you" command) and add the suffix **-мо**. For example, the command `читай` becomes `читаймо` (let's read), and `ходи` becomes **ходімо** (let's go).
 
-Як ми утворюємо цей наказ? Це дуже просто. Ми беремо слово «хай» або «нехай» і додаємо дієслово у формі третьої особи. To form the third-person imperative, use the particle "хай" or "нехай" followed by the verb in the third-person present or future tense. Слово «хай» ми часто використовуємо щодня, коли говоримо з друзями. Воно коротке і зручне. Слово «нехай» — це більш офіційний, літературний варіант. Ви часто бачите його в книгах або офіційних документах. Вони означають абсолютно одне і те ж. The verb after "хай" or "нехай" is always in its normal third-person form (he/she/it/they). You only need to know the regular present or future tense conjugation, and you can easily create these commands.
+Якщо ти знаєш форму для однієї людини, ти легко утвориш форму для групи. Наприклад, дієслово «читати». Наказ для друга — це «читай». Додаємо суфікс і отримуємо «читаймо». Це означає спільну дію. Інший приклад — це слово «ходити». Звичайний наказ звучить як «ходи». Разом ми скажемо «ходімо». Це дуже просте і красиве правило.
 
-Наприклад:
-* «Хай він **читає** *(reads)*».
-* «Нехай вона **знає** *(knows)*».
-* «Хай вони **прийдуть** *(will come)*».
+> *If you know the form for one person, you will easily form the form for a group. For example, the verb "to read". The command for a friend is "read" (читай). We add the suffix and get "let's read" (читаймо). This means a joint action. Another example is the word "to walk". The usual command sounds like "walk" (ходи). Together we will say "let's go" (ходімо). This is a very simple and beautiful rule.*
 
-Коли ми використовуємо ці слова? Вони мають кілька важливих функцій у нашому житті. По-перше, це **дозвіл** *(permission)*. Наприклад, ви не проти, щоб людина щось зробила.
-«Хай він **іде** *(goes)*, я не проти».
+Sometimes, the base of the imperative ends in a consonant. When this happens, a connecting vowel **-і-** or a soft sign **-ь-** will appear before the **-мо** suffix. This happens naturally to make the word easier to pronounce. The rule remains exactly the same: find the base command form and attach the plural ending.
 
-По-друге, це непрямий **наказ** *(command)*. Ви кажете одній людині передати наказ іншій людині. Це дуже корисно на роботі або в школі.
-«Нехай вони **зачекають** *(wait)* у коридорі».
+Подивимося на дієслово «зробити». Форма для однієї людини — «зроби». Тут основа закінчується на приголосний звук, після якого йде голосний «и». Ми просто змінюємо «и» на «і» та додаємо наш суфікс. Виходить «зробімо». Якщо основа закінчується на м'який знак, він залишається. Наприклад, наказ від дієслова «поїхати» — це «поїдь». Форма для спільної дії буде «поїдьмо».
 
-По-третє, це **побажання** *(wishes)* або тости. Це дуже важлива частина української культури. Ми часто бажаємо щось хороше іншим людям на свята.
-«Хай вам **щастить**!» *(good luck to you!)*.
-«Нехай **здійсняться** *(come true)* ваші **мрії** *(dreams)*!».
+> *Let's look at the verb "to do" (зробити). The form for one person is "do it" (зроби). Here the base ends in a consonant sound, followed by the vowel "и". We simply change "и" to "і" and add our suffix. The result is "let's do it" (зробімо). If the base ends in a soft sign, it remains. For example, the command from the verb "to go by vehicle" is "drive" (поїдь). The form for a joint action will be "let's drive" (поїдьмо).*
 
-In all these cases, the grammatical structure is completely identical. The particle does the work of turning a regular statement of fact into a command, a permission, or a warm wish. This makes it a very flexible tool.
+You will often hear an alternative way to suggest a joint action: the word **давайте** (let's — suggestion particle). Many people use it with an infinitive, like `давайте читати` (let's read), or with the future tense, like `давайте поїдемо` (let's go). These constructions are widely understood and often sound softer, like a gentle suggestion rather than a direct command.
 
-Дієслово завжди залежить від суб'єкта. Якщо ми говоримо про одну людину, дієслово має форму однини. Якщо ми говоримо про багатьох людей, дієслово має форму множини. The verb must always agree with the subject in number, just like in any regular sentence.
+:::info
+**Grammar box**
+Although you will hear it often, strictly speaking, the construction `Давай(те)` followed by a first-person plural verb is a Russian calque. You should avoid it if you want to speak beautiful, literary Ukrainian. For example, `Давайте поговоримо` is incorrect (❌). The correct, elegant Ukrainian form is simply `Поговорімо` (✅).
+:::
 
-Наприклад, ми говоримо про одну **дитину** *(child)*:
-«Хай дитина **грається** *(plays)*».
+Українська мова має власні красиві форми. Використовувати слово «давайте» з дієсловом — це дуже поширена помилка. Багато українців кажуть так у щоденних розмовах, але це калька з російської мови. Ми маємо говорити і писати правильно. Замість «давайте зробимо», завжди кажи «зробімо». Замість «давайте заспіваємо», кажи «співаймо». Це робить твою мову набагато багатшою.
 
-Але якщо ми говоримо про багатьох дітей, ми обов'язково змінюємо форму дієслова:
-«Хай **діти** *(children)* граються на вулиці».
-«Нехай **батьки** *(parents)* **відпочинуть** *(rest)* вдома».
+> *The Ukrainian language has its own beautiful forms. Using the word "давайте" with a verb is a very common mistake. Many Ukrainians say this in daily conversations, but it is a calque from the Russian language. We should speak and write correctly. Instead of "давайте зробимо", always say "зробімо". Instead of "давайте заспіваємо", say "співаймо". This makes your language much richer.*
 
-This rule is strict and very logical. You cannot use a singular verb with a plural subject after these imperative particles. If the subject changes to plural, the verb must also change.
+These **-мо** forms are incredibly common in daily life. You can use them to motivate your friends or start a meeting. The aspect of the verb still matters here. An imperfective verb like `Читаймо` suggests a habitual action or a general process. A perfective verb like `Ходімо` focuses on a single, specific trip.
 
-Ми можемо використовувати дієслова **недоконаного** *(imperfective)* або **доконаного** *(perfective)* виду. Це дуже сильно змінює нюанс нашого наказу. "Хай" with an imperfective verb in the present tense describes an ongoing, repeated, or general action. "Хай" with a perfective verb in the future tense implies a specific, completed result that we urgently want to happen.
+Ось кілька дуже корисних фраз для щоденного спілкування. «Ходімо!» — це ідеальний спосіб запросити друзів на прогулянку. «Починаймо!» — так можна відкрити зустріч або урок. «Зробімо це!» — чудова фраза для мотивації команди. «Поговорімо» — коли ти хочеш обговорити важливу тему. Ці короткі слова мають багато енергії.
 
-Порівняйте ці речення:
-* «Хай він **пише** *(writes)* **щодня** *(every day)*». Це недоконаний вид, регулярна дія.
-* «Хай він **напише** *(will write)* цей лист сьогодні». Це доконаний вид, ми хочемо конкретний результат.
-* «Нехай вона **читає** *(reads)* цю книгу довго».
-* «Хай вона **прочитає** *(will read)* цей текст зараз».
+> *Here are some very useful phrases for daily communication. "Let's go!" (Ходімо!) is a perfect way to invite friends for a walk. "Let's start!" (Починаймо!) is how you can open a meeting or a lesson. "Let's do it!" (Зробімо це!) is a great phrase for motivating a team. "Let's talk" (Поговорімо) is for when you want to discuss an important topic. These short words have a lot of energy.*
 
-This aspect distinction helps you be extremely precise about what kind of action you are commanding or wishing for. It shows whether you care about the process or the final result.
-
-<!-- INJECT_ACTIVITY: fill-in-3rd-person-imperative -->
+<!-- INJECT_ACTIVITY: fill-in-imperatives-3rd-1st-plural -->

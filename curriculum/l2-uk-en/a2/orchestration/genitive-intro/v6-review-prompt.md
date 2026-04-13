@@ -118,223 +118,187 @@ references:
 ## Generated Content
 
 <generated_module_content>
-## Родовий відмінок: Коли чогось немає (The Genitive Case: When Something Isn't There)
+## Родовий відмінок: Коли чогось немає (The Genitive Case: When Something Isn't There) (~660 words)
 
-Welcome to a new grammatical concept. So far, you have learned how to talk about things that exist and things that you have. But how do you talk about the things that are missing? In Ukrainian, when something is not there, we use a special form of the noun. This form is called the **родовий відмінок** (Genitive case). It is one of the most frequently used cases in the Ukrainian language. The Genitive case answers the questions **Кого?** (Whom?) and **Чого?** (What?). Historically, this case was used to show origin, like where a person is from, or to show possession, like who owns a specific item. While those functions are still very important today, the first and most practical way you will use the Genitive case is to express absence.
+Imagine you are moving into a new apartment, and you quickly realize that several essential things are missing. Let us listen to a conversation between a new tenant and her neighbor to see how Ukrainians talk about absence.
 
-Let's look at the core construction for possession. You already know how to say «У мене є...» (I have...). When you use this positive phrase, the object you own remains in the **називний відмінок** (Nominative case), which is the basic dictionary form. For example, «У мене є брат» (I have a brother) or «У мене є сестра» (I have a sister). However, when you want to say that you do not have something, you must use the negative word **немає** ((there) is not / (I) don't have). This is where the rule applies: the word **немає** always forces the following noun to change into the Genitive case. So, the sentence becomes «У мене немає брата» (I don't have a brother) and «У мене немає сестри» (I don't have a sister).
+> — **Сусідка:** Добрий день! Як ваша нова квартира? *(Good day! How is your new apartment?)*
+> — **Нова мешканка:** Добрий день. Квартира гарна, але тут нічого немає. *(Good day. The apartment is nice, but there is nothing here.)*
+> — **Сусідка:** Як це нічого? *(What do you mean nothing?)*
+> — **Нова мешканка:** У мене немає холодильника! Немає плити! Немає дзеркала! *(I have no fridge! No stove! No mirror!)*
+> — **Сусідка:** Ого, це проблема. А що у вас є? *(Wow, that is a problem. And what do you have?)*
+> — **Нова мешканка:** Є багато коробок, але дуже мало меблів. *(There are a lot of boxes, but very little furniture.)*
 
-Let's see this in action. Imagine a situation where someone is moving into a new apartment. A neighbor comes to visit and sees an empty kitchen.
+When you want to say that something does not exist or that you do not have something, Ukrainian uses a special grammatical form called the **родовий відмінок** (genitive case). This case answers the questions «кого?» (whom?) or «чого?» (what?). Its first and most important key function for beginners is expressing absence or non-existence using the construction with the word **немає** ((there) is not, (I) don't have). If you look closely at the dialogue above, you will notice that the new tenant did not use the basic dictionary forms of the words. Instead, she changed them to fit the grammatical rules of absence: «холодильник» became «холодильника», «плита» became «плити», and «дзеркало» became «дзеркала».
 
-> — **Сусідка:** Добрий день! Ви нова мешканка? *(Good day! Are you the new tenant?)*
-> — **Нова мешканка:** Привіт! Так, це моя квартира. Але тут ще нічого немає. *(Hi! Yes, this is my apartment. But there is nothing here yet.)*
-> — **Сусідка:** Ого. Тут немає холодильника! *(Wow. There is no fridge here!)*
-> — **Нова мешканка:** Так, немає холодильника. І немає плити. *(Yes, there is no fridge. And there is no stove.)*
-> — **Сусідка:** А де ваші речі? Тут немає дзеркала, немає стола... *(And where are your things? There is no mirror here, no table...)*
-> — **Нова мешканка:** У мене є багато коробок. Але меблів ще немає. *(I have a lot of boxes. But there is no furniture yet.)*
-> — **Сусідка:** Розумію. Бажаю удачі! *(I understand. I wish you luck!)*
+Родовий відмінок — це дуже важлива тема в українській граматиці. Коли ми кажемо слово «немає», відмінюваний іменник після нього переходить у родовий відмінок. Але незмінювані слова не змінюють форми: ми кажемо «немає холодильника», але «немає метро».
 
-If we look closely at this dialogue, we can see the Genitive case in action. The dictionary form for a fridge is **холодильник** (fridge, masculine). But because the neighbor says it is missing, she uses the word **немає**, and the noun changes to **холодильника**. The same thing happens with the feminine noun **плита** (stove), which changes to **плити**. The neuter noun **дзеркало** (mirror) changes to **дзеркала**. You can think of the word **немає** as a powerful grammatical magnet. Whenever it appears in a sentence, it pulls the object that is missing out of its basic dictionary form and forces it to take a new Genitive ending. Notice that the new tenant says she has **багато коробок** (a lot of boxes). The word **багато** (a lot, many, much) also requires the Genitive case.
+> *The Genitive case is a very important topic in Ukrainian grammar. When we say the word "немає", the noun after it always changes its ending. This rule works for all words.*
 
-To build a strong habit, it is helpful to practice contrasting positive and negative statements. Look at how the nouns change when we switch from existence to absence.
+In English, negation does not change the form of the noun itself. You say "I have a brother" and "I do not have a brother." The word "brother" stays exactly the same. In Ukrainian, possession and absence are treated as structural opposites. When you possess something, you use the Nominative case, which is the standard dictionary form. When that thing is absent, you must shift to the Genitive case. The word «немає» is absolute and commands this grammatical change every single time.
 
-* **Тут є стіл.** *(There is a table here.)*
-* **Тут немає стола.** *(There is no table here.)*
-* **У мене є проблема.** *(I have a problem.)*
-* **У мене немає проблеми.** *(I don't have a problem.)*
-* **У нас є вікно.** *(We have a window.)*
-* **У нас немає вікна.** *(We don't have a window.)*
-* **В офісі є директор.** *(There is a director in the office.)*
-* **В офісі немає директора.** *(There is no director in the office.)*
-* **У тебе є вода?** *(Do you have water?)*
-* **Ні, у мене немає води.** *(No, I don't have water.)*
+У мене є старший брат. Це називний відмінок. Але мій друг каже, що у нього немає брата. Тут ми використовуємо родовий відмінок, бо говоримо про відсутність.
 
-In everyday casual speech, Ukrainians often shorten the word **немає** to simply **нема** (there is no). This short form means exactly the same thing and follows the exact same grammatical rule. It still acts as a magnet for the Genitive case. A very common example you will hear every day is «Часу нема» (There is no time), where **час** (time) becomes **часу**.
+> *I have an older brother. This is the nominative case. But my friend says that he does not have a brother. Here we use the genitive case, because we are talking about absence.*
 
-### Читаємо українською (Reading Practice)
+:::info
+**Grammar box**
+You will often hear Ukrainians use the short form **нема** instead of **немає** in everyday conversations. Both words mean exactly the same thing and both require the Genitive case. Do not confuse **немає/нема** with **не має**: we write **немає/нема** together when it means “there is no / do not have,” but **не має** separately only with personal forms of the verb **мати**.
+:::
 
-**Моя нова кімната дуже велика.** *(My new room is very big.)*
-**Але зараз вона порожня.** *(But right now it is empty.)*
-**Тут є тільки одне ліжко.** *(There is only one bed here.)*
-**У мене немає шафи.** *(I don't have a wardrobe.)*
-**У мене немає телевізора.** *(I don't have a television.)*
-**На вікні немає штори.** *(There is no curtain on the window.)*
-**Я хочу працювати, але в кімнаті немає стола.** *(I want to work, but there is no table in the room.)*
-**У мене є тільки багато планів.** *(I only have a lot of plans.)*
-**Завтра я куплю меблі.** *(Tomorrow I will buy furniture.)*
+Let us practice this transformation with some simple sentences. You need to build the habit of automatically changing the noun whenever you use «немає» or «нема». Historically, this word comes from the Old East Slavic phrase meaning "not to have," making this case requirement a core structural feature of the language rather than just a random modern rule. It is so fundamental that you will even see it in famous Ukrainian proverbs.
+
+У кімнаті є великий стіл. А в коридорі немає стола. На вулиці є зупинка автобуса. Біля парку немає зупинки. У природи нема поганої погоди. У нашому місті є театр, але немає метро.
+
+> *There is a large table in the room. And in the hallway there is no table. There is a bus stop on the street. Near the park there is no stop. Nature has no bad weather. In our city there is a theater, but there is no subway.*
+
+Notice how the words change their form: «стіл» (table) takes an «-а» ending, while «зупинка» (bus stop) changes its «-а» to an «-и». We will study the exact rules for every **закінчення** (ending (grammar)) in the next section, whether the noun is **однина** (singular) or **множина** (plural).
+
+Before we dive into the full grammatical paradigm, there are several high-frequency abstract phrases that you should memorize immediately as fixed chunks. These are extremely useful in daily conversations. You will notice that some abstract masculine nouns take a «-у» or «-ю» ending instead of «-а».
+
+Вибачте, але у мене зараз немає часу. Сьогодні у нас немає настрою працювати. Я думаю, що в цьому немає сенсу.
+
+> *Sorry, but I do not have time right now. Today we are not in the mood to work. I think there is no point in this.*
+
+By memorizing chunks like «немає часу» (no time), «немає настрою» (no mood), and «немає сенсу» (no sense/point), you can start speaking naturally right away. You will also need the Genitive case when talking about quantities with words like **багато** (a lot, many, much), **мало** (a little, few), **кілька** (a few, several), and when asking **скільки** (how many, how much). We will explore quantities later, but first, let us practice the difference between having something and not having it.
 
 <!-- INJECT_ACTIVITY: quiz-possession-vs-absence-drill-vs -->
 
-To summarize this section, remember the golden rule of absence in Ukrainian. Whenever something is missing, whether it is a person, a physical object in a room, or an abstract concept like time, you must use the word **немає** (or **нема**). And whenever you use that word, the missing noun must take the Genitive case. In the next section, we will learn exactly how to form these endings for all noun genders.
+## Закінчення родового відмінка однини (Genitive Singular Endings) (~770 words)
 
-## Закінчення родового відмінка однини (Genitive Singular Endings)
+Now that you understand when to use the Genitive case, we need to learn how to form it. We will look at the **закінчення** (ending (grammar)) for each gender in the **однина** (singular). The most straightforward group is the neuter gender. For neuter nouns, the rule is simple: words ending in «-о» change to «-а», and words ending in «-е» change to «-я». Words that already end in «-я» keep their «-я» ending.
 
-For masculine nouns, the Genitive singular presents an interesting challenge. Unlike feminine and neuter nouns, masculine nouns can take one of two different endings: **-а** (or the soft version **-я**) and **-у** (or the soft version **-ю**). The choice between these two endings depends entirely on the meaning of the word. The ending **-а** or **-я** is used for concrete, specific, and well-defined objects, as well as for living beings. If you can easily draw a picture of it, or if it is a specific person or animal, it takes this ending. This also includes specific units of measurement.
-* **Тут немає мого брата.** *(My brother is not here.)*
-* **У кімнаті немає стола.** *(There is no table in the room.)*
-* **Сьогодні немає автобуса.** *(There is no bus today.)*
-* **У мене немає одного метра.** *(I am missing one meter.)*
-* **У нас немає кілограма яблук.** *(We don't have a kilogram of apples.)*
+У моїй кімнаті є велике вікно. Але в коридорі немає вікна. Це Чорне море. У нашому місті немає моря. Я люблю спокійне життя. Без тебе немає спокійного життя.
 
-Notice how **брат** (brother), **стіл** (table), and **автобус** (bus) are all specific, physical things. They clearly take the **-а** ending.
+> *In my room there is a large window. But in the hallway there is no window. This is the Black Sea. In our city there is no sea. I love a peaceful life. Without you there is no peaceful life.*
 
-The second ending for masculine nouns is **-у** or **-ю**. This ending is reserved for abstract concepts, substances, liquids, powders, and large geographic areas. These are things that are difficult to define with a clear physical boundary. This ending is very common in everyday speech, especially when talking about things you lack.
-* **Вибачте, у мене немає часу.** *(Sorry, I don't have time.)*
-* **У каві немає цукру.** *(There is no sugar in the coffee.)*
-* **У нього немає досвіду.** *(He doesn't have experience.)*
-* **У її голосі немає смутку.** *(There is no sadness in her voice.)*
+Notice how «вікно» becomes «вікна», and «море» becomes «моря». This predictable pattern makes neuter nouns very easy to manage.
 
-Words like **час** (time), **цукор** (sugar), **досвід** (experience), and **смуток** (sadness) take the **-у** ending. An interesting contrast happens with places. A specific city like **Київ** (Kyiv) takes **-а**, becoming **Києва**. But a large, general region like **Крим** (Crimea) takes **-у**, becoming **Криму**.
-* **Я зараз не біля Києва.** *(I am not near Kyiv right now.)*
-* **Він ще не бачив Криму.** *(He hasn't seen Crimea yet.)*
+Next, let us look at feminine nouns, which typically end in «-а» or «-я». The Genitive ending depends on whether the final consonant before the ending is hard or soft. For hard stems ending in «-а», the ending changes to «-и». For soft stems ending in «-я», the ending changes to «-і» or «-ї». 
 
-Feminine nouns follow a much simpler rule. They split into two main endings: **-и** and **-і**. If the basic dictionary form ends in a hard consonant followed by **-а**, the Genitive ending is **-и**.
-* **У мене немає книги.** *(I don't have a book.)*
-* **Зараз немає мами.** *(Mom is not here right now.)*
-* **Сьогодні немає роботи.** *(There is no work today.)*
+:::note
+**Quick tip**
+Feminine words ending in a hissing consonant plus «-а» (like груш**а**, меж**а**) belong to a mixed group. They always take the soft ending **-і** in the Genitive case.
+:::
 
-If the word ends in **-я** or a soft consonant, it takes the **-і** ending.
-* **Тут немає сухої землі.** *(There is no dry land here.)*
-* **У плейлисті немає пісні.** *(There is no song in the playlist.)*
-* **У селі немає вулиці.** *(There is no street in the village.)*
+Моя нова машина дуже швидка. У мого брата немає машини. Моя сестра живе в Києві. Сьогодні вдома немає сестри. Ця книга дуже цікава. У бібліотеці немає цієї книги. Це наша рідна земля. На карті немає цієї землі. Гарна пісня лунає по радіо. У моєму плейлисті немає цієї пісні. Велика сім'я збирається за столом. У нього немає сім'ї. На столі лежить солодка груша. У мене немає груші.
 
-There is also a small group of feminine nouns that end in a consonant in their basic form, such as **ніч** (night) or **сіль** (salt). These also take the **-і** ending, becoming **ночі** and **солі**.
-* **У мене немає солі.** *(I don't have salt.)*
+> *My new car is very fast. My brother does not have a car. My sister lives in Kyiv. Today my sister is not at home. This book is very interesting. The library does not have this book. This is our native land. This land is not on the map. A beautiful song sounds from the radio. My playlist does not have this song. A large family gathers at the table. He does not have a family. A sweet pear lies on the table. I do not have a pear.*
 
-Neuter nouns are the easiest of all. They simply replace their final vowel. If the basic form ends in **-о**, it changes to **-а**. If it ends in **-е** or **-я**, it changes to **-я**. Listen closely when you speak, as the change from **-о** to **-а** can be a subtle but important shift in sound.
-* **Тут немає вікна.** *(There is no window here. — from **вікно**, window)*
-* **У місті немає моря.** *(There is no sea in the city. — from **море**, sea)*
-* **Без води немає життя.** *(Without water there is no life. — from **життя**, life)*
-* **У мене немає слова.** *(I don't have a word. — from **слово**, word)*
+Remember: hard «-а» becomes «-и» (машина → машини), while soft «-я» becomes «-і» or «-ї» (земля → землі, сім'я → сім'ї).
 
-To quickly remember these rules, it helps to build a simple mental chart and anchor it with common words. For masculine nouns, remember the concrete **телефон** (phone) which becomes **телефона**, and the abstract **час** (time) which becomes **часу**. For feminine nouns, remember the hard stem **кава** (coffee) which becomes **кави**, and the soft stem **вулиця** (street) which becomes **вулиці**. For neuter nouns, remember **слово** (word) which becomes **слова**.
+Now we arrive at the masculine nouns. This is often considered the biggest challenge in Ukrainian grammar. Unlike feminine and neuter nouns, masculine nouns that end in a consonant can take either an «-а»/«-я» ending or an «-у»/«-ю» ending. The choice depends entirely on the meaning of the word.
 
-Let's look at a short dialogue to see these endings in action.
-> — **Анна:** Привіт! У тебе є кава? *(Hi! Do you have coffee?)*
-> — **Марк:** Привіт! Ні, у мене немає кави. *(Hi! No, I don't have coffee.)*
-> — **Анна:** А чай є? *(And is there tea?)*
-> — **Марк:** Чаю теж немає. Немає води. *(There is no tea either. There is no water.)*
-> — **Анна:** Це проблема. А магазину тут немає? *(That is a problem. And is there no store here?)*
-> — **Марк:** Магазин є, але у мене немає часу. *(There is a store, but I have no time.)*
+Це мій старший брат. У мене немає брата. Там стоїть великий стіл. У кімнаті немає стола. Це мій новий комп'ютер. У мене немає комп'ютера. Київ — велике місто. На цій карті немає Києва.
+
+> *This is my older brother. I do not have a brother. There stands a large table. There is no table in the room. This is my new computer. I do not have a computer. Kyiv is a large city. There is no Kyiv on this map.*
+
+Notice that words like «брат» (brother), «стіл» (table), and «Київ» (Kyiv) all take the «-а» ending. We use «-а» or «-я» for concrete, specific, and animate items. This includes people, animals, distinct objects you can touch, and names of cities.
+
+Мені потрібен час. На жаль, у мене немає часу. Я люблю солодкий чай. У моїй каві немає цукру. Надворі сильний вітер. Сьогодні немає вітру. Це великий прогрес. У нашій роботі немає прогресу.
+
+> *I need time. Unfortunately, I do not have time. I like sweet tea. There is no sugar in my coffee. There is a strong wind outside. Today there is no wind. This is a great progress. There is no progress in our work.*
+
+Here, words like «час» (time), «цукор» (sugar), and «вітер» (wind) take the «-у» ending. We use «-у» or «-ю» for abstract concepts, substances, materials, natural phenomena, and institutions. Do not worry about memorizing every exception right now. Your goal at the A2 level is to focus on high-frequency words. Perfect mastery of masculine endings is a long-term goal for the B1 and B2 levels.
+
+:::info
+**Grammar box**
+When in doubt about a masculine noun, think about whether you can physically pick up the object and count it. If yes (like a phone or a table), it usually takes **-а**. If it is an abstract concept, a liquid, or a powder (like love, juice, or sand), it usually takes **-у**.
+:::
+
+Finally, we have a smaller group of feminine nouns that end in a consonant instead of a vowel. These are words like «ніч» (night), «сіль» (salt), and «любов» (love). For this group, the Genitive singular ending is always «-і».
+
+Сьогодні дуже тепла ніч. Влітку немає холодної ночі. Це морська сіль. У цьому супі немає солі. Материнська любов дуже сильна. Без довіри немає любові. Моя мати працює в школі. На фотографії немає матері.
+
+> *Today is a very warm night. In summer there is no cold night. This is sea salt. There is no salt in this soup. A mother's love is very strong. Without trust there is no love. My mother works at school. The mother is not in the photograph.*
+
+Notice that «мати» (mother) is an important exception. It takes the suffix «-ер-» before the ending, becoming «матері». For all other nouns in this category, simply add «-і» to the end of the word.
+
+Let us consolidate the rules with a concise summary chart. Recognizing these patterns is much more important than perfect memorization at this stage.
+
+| Рід (Gender) | Базове закінчення (Basic Ending) | Родовий відмінок (Genitive) | Приклад (Example) |
+| :--- | :--- | :--- | :--- |
+| **Середній** (Neuter) | -о, -е, -я | **-а, -я** | вікн**о** → вікн**а**, мор**е** → мор**я** |
+| **Жіночий** (Feminine) | -а, -я | **-и, -і, -ї** | машин**а** → машин**и**, сім'**я** → сім'**ї** |
+| **Жіночий** (Fem. Consonant) | приголосний (consonant) | **-і** | сіл**ь** → сол**і**, ніч → ноч**і** |
+| **Чоловічий** (Masculine) | приголосний, -о | **-а/-я** АБО **-у/-ю** | брат → брат**а**, час → час**у** |
 
 <!-- INJECT_ACTIVITY: fill-in-genitive-singular-formation -->
 
-As you practice these endings, watch out for a few common pitfalls. First, be careful with the word **гроші** (money). In Ukrainian, this word is always plural. Even if you are talking about a small amount in a singular context in English, you cannot use singular Genitive endings for it; it will take a special plural form we will learn later. Second, remember that the word **немає** (there is no) is written as one single word. Do not confuse it with **не має** (he/she/it does not have), which is written as two separate words.
-* **Тут немає стола.** *(There is no table here. — indicating absence)*
-* **Він не має стола.** *(He does not have a table. — indicating lack of possession)*
+## Коли є багато або мало (When There Is a Lot or a Little) (~770 words)
 
-Both require the Genitive case, but **немає** is the universal magnet for absence.
+We have already seen how to use the **родовий відмінок** (genitive case) when something is entirely absent. However, this case is also essential when we want to talk about quantity. Whenever you want to express that there is a large or small amount of something, you must use a new form. This happens after specific words like **багато** (a lot, many, much) and **мало** (a little, few).
 
-### Читаємо українською (Reading Practice)
-**Сьогодні дуже поганий день.** *(Today is a very bad day.)*
-**Я хочу працювати, але немає інтернету.** *(I want to work, but there is no internet.)*
-**У мене немає комп'ютера, тільки телефон.** *(I don't have a computer, only a phone.)*
-**На столі немає кави.** *(There is no coffee on the table.)*
-**У кухні немає цукру.** *(There is no sugar in the kitchen.)*
-**Я дивлюся у вікно, але там немає сонця.** *(I look out the window, but there is no sun there.)*
-**На вулиці немає автобуса.** *(There is no bus on the street.)*
-**У мене немає настрою працювати.** *(I have no mood to work.)*
+В українській мові ми завжди змінюємо слово після таких слів. Коли ви говорите про велику кількість предметів або людей, форма слова стає іншою. У мене є багато друзів, але зараз у мене мало часу.
 
-## Коли є багато або мало (When There Is a Lot or a Little)
+> *In the Ukrainian language, we always change the word after such words. When you talk about a large quantity of objects or people, the form of the word becomes different. I have many friends, but right now I have little time.*
 
-Now that you know how to say that one specific thing is missing, let's talk about quantities. When you want to express that you have "a lot of" or "a little of" something, Ukrainian uses the Genitive case, but in the plural form. Think of it as saying "a lot OF items." The most common quantity words are **багато** (a lot / many / much), **мало** (a little / few), and **кілька** or **декілька** (a few / several). Unlike English, which just uses the regular plural form ("many cars"), Ukrainian changes the ending of the noun to reflect this quantity. 
+You will also use this exact same grammatical structure when asking questions about quantity, or when indicating an imprecise number. Words such as **кілька / декілька** (a few, several) and **скільки** (how many, how much) trigger this change.
+ When we talk about multiple countable objects, we use the form called **множина** (plural).
 
-* **Тут багато людей.** *(There are a lot of people here.)*
-* **У місті мало парків.** *(There are few parks in the city.)*
-* **Він має декілька питань.** *(He has several questions.)*
-* **На столі лежить кілька яблук.** *(There are a few apples lying on the table.)*
+Скільки студентів сьогодні в аудиторії? На столі лежить кілька зошитів. Ми бачимо багато великих будинків.
 
-Forming the Genitive plural can seem tricky at first, so we will focus on the most important and common patterns. For most masculine nouns ending in a consonant, the dominant ending is **-ів** (or **-їв** after a vowel or soft sign). This is the easiest group to spot and use in daily conversation.
+> *How many students are in the classroom today? There are a few notebooks lying on the table. We see many large buildings.*
 
-* **брат** (brother) -> **багато братів** *(many brothers)*
-* **стіл** (table) -> **кілька столів** *(several tables)*
-* **трамвай** (tram) -> **мало трамваїв** *(few trams)*
-* **студент** (student) -> **багато студентів** *(many students)*
-* **комп'ютер** (computer) -> **кілька комп'ютерів** *(several computers)*
+Forming the plural in the Genitive case can seem challenging at first, as there are different patterns depending on the gender of the noun. The form for **однина** (singular) is no longer enough to express these ideas. Let us start with masculine nouns, which generally follow a very predictable and consistent pattern. For most masculine nouns ending in a consonant, the **закінчення** (ending (grammar)) in the Genitive plural is «-ів» або «-їв».
 
-One extremely high-frequency word has an irregular, but very important form. The word **друг** (friend) becomes **друзі** in the plural, and its Genitive plural form is **друзів**.
+Більшість іменників чоловічого роду отримують закінчення «-ів». Один брат — це називний відмінок, а кілька братів — це родовий відмінок. Іменники на «-й» часто мають закінчення «-їв»: наприклад, один трамвай стає багато трамваїв. Але слова на «-ь» і «-о» можуть мати інші форми: учитель → учителів, день → днів, батько → батьків.
 
-* **У мене дуже багато друзів.** *(I have very many friends.)*
+> *Most masculine nouns receive the "-ів" ending. One brother is the Nominative case, and a few brothers is the Genitive case. If the word ends in a vowel or a soft sign, we add "-їв". For example, one tram becomes many trams.*
 
-Feminine and neuter nouns usually take a different approach. Instead of adding a new ending, they often lose their final vowel, resulting in what we call a "zero ending" (**нульове закінчення**). 
+:::info
+**Grammar box**
+This rule applies not only to quantity words, but also to numbers. In Ukrainian, numbers from five upwards act like quantity words and require the Genitive plural. So, we say «один брат» (one brother), but «п'ять братів» (five brothers). This is an ancient feature of Slavic languages where numbers were originally treated as nouns meaning "a group of."
+:::
 
-* **машина** (car) -> **багато машин** *(many cars)*
-* **справа** (matter / business) -> **багато справ** *(many matters)*
-* **місце** (place) -> **мало місць** *(few places)*
+While masculine nouns usually add a visible suffix, feminine and neuter nouns often do the exact opposite. To form the Genitive plural for these words, we typically remove the final vowel, leaving what linguists call a zero ending.
 
-However, Ukrainian language does not like having too many consonants crowded together at the end of a word. When dropping the vowel leaves a difficult cluster of letters, a "fleeting vowel" (**о** or **е**) magically appears between the consonants to make pronunciation smooth and melodic.
+Для іменників жіночого та середнього роду ми часто просто забираємо останню букву. Слово «машина» стає «машин». Слово «озеро» перетворюється на «озер». У місті є багато великих площ і широких вулиць.
 
-* **книжка** (book) -> **кілька книжок** *(a few books)*
-* **сестра** (sister) -> **багато сестер** *(many sisters)*
-* **вікно** (window) -> **мало вікон** *(few windows)*
-* **пісня** (song) -> **багато пісень** *(many songs)*
+> *For feminine and neuter nouns, we often simply remove the last letter. The word "машина" (car) becomes "машин". The word "озеро" (lake) turns into "озер". In the city, there are many large squares and wide streets.*
 
-Finally, there is a small but essential group of nouns across all genders that take the ending **-ей** in the Genitive plural. You simply need to memorize the most common ones, as they are everyday survival words. The most critical word in this group is **гроші** (money). In Ukrainian, money is always grammatically plural, and after words like **багато** or **мало**, you must always use the form **грошей**.
+Sometimes, removing the final vowel leaves two consonants together at the end of the word, which can be difficult to pronounce. When this happens, the Ukrainian language naturally inserts a fleeting vowel—usually «о» or «е»—between those consonants to make the word sound melodic and smooth.
 
-* **гроші** (money) -> **багато грошей** *(a lot of money)*
-* **очі** (eyes) -> **кілька очей** *(a few eyes)*
-* **речі** (things) -> **багато речей** *(many things)*
-* **ночі** (nights) -> **кілька ночей** *(several nights)*
-* **гості** (guests) -> **багато гостей** *(many guests)*
+Якщо в кінці слова залишаються два приголосні звуки, між ними з'являється голосний. Наприклад, слово «сестра» змінюється на «сестер». Слово «вікно» має форму «вікон». Слово «книга» може бути «книг», але слово «книжка» завжди перетворюється на «книжок».
 
-<!-- INJECT_ACTIVITY: match-up-genitive-plural-quantity -->
+> *If two consonant sounds remain at the end of the word, a vowel appears between them. For example, the word "сестра" (sister) changes to "сестер". The word "вікно" (window) has the form "вікон". The word "книга" (book) can be "книг", but the word "книжка" (book) always turns into "книжок".*
 
-To ask "How many?" or "How much?", use the question word **Скільки**. Naturally, the noun following **Скільки** must also be in the Genitive case. When you ask about countable objects, use the Genitive plural.
+Instead of trying to memorize complex mathematical rules for when to insert vowels, it is much more effective to treat these common plural forms as individual vocabulary items. With practice, your ear will naturally expect the extra vowel. There is also a smaller, yet highly frequent, group of nouns that take the ending «-ей» in the Genitive plural. This group includes certain masculine and neuter nouns, plural-only nouns, and feminine nouns ending in a consonant.
 
-* **Скільки у тебе книжок?** *(How many books do you have?)*
-* **Скільки коштує квиток? У мене мало грошей.** *(How much does a ticket cost? I have little money.)*
-* **Скільки студентів тут живе?** *(How many students live here?)*
+Деякі дуже важливі слова завжди мають закінчення «-ей». Слово «гість» стає «гостей», а «кінь» перетворюється на «коней». Слово «око» має форму «очей». Це треба просто запам'ятати.
 
-Let's see these quantity phrases in a short conversation.
+> *Some very important words always have the "-ей" ending. The word "гість" (guest) becomes "гостей", and "кінь" (horse) turns into "коней". The word "око" (eye) has the form "очей". This simply needs to be memorized.*
 
-> — **Марко:** Привіт! Скільки у тебе вільного часу сьогодні? *(Hi! How much free time do you have today?)*
-> — **Олена:** Привіт! У мене зовсім немає часу. Є багато справ. *(Hi! I have absolutely no time. There are many matters.)*
-> — **Марко:** Шкода. А завтра? У мене є кілька квитків у кіно. *(A pity. And tomorrow? I have a few tickets to the cinema.)*
-> — **Олена:** Завтра я вільна. Скільки друзів іде з нами? *(Tomorrow I am free. How many friends are going with us?)*
-> — **Марко:** Тільки ми. У інших багато роботи. *(Only us. The others have a lot of work.)*
+The most common plural-only word you will use every day—money—also uses this exact ending. Let's look at a practical dialogue to see how the negative structure **немає** ((there) is not, (I) don't have) works with these plural forms in real life.
 
-<!-- INJECT_ACTIVITY: match-up-translate-genitive -->
+> — **Анна:** Ти хочеш піти в кіно сьогодні? *(Do you want to go to the cinema today?)*
+> — **Марк:** Вибач, я не можу. У мене зараз немає грошей. *(Sorry, I cannot. I don't have any money right now.)*
+> — **Анна:** Нічого, я можу купити квитки. *(It's okay, I can buy the tickets.)*
+> — **Марк:** Дякую! Але після таких довгих ночей я хочу просто спати. *(Thank you! But after such long nights I just want to sleep.)*
 
+Now that you have seen the different endings, it is time to integrate these concepts. The true test of your grammar skills is combining negation with quantity expressions and plural nouns in the same sentence. A very common mistake among English speakers is keeping the noun in the singular form after numbers or quantity words, saying something like "п'ять книга" instead of using the correct plural case.
+
+Завжди звертайте увагу на слова, які означають кількість. Якщо ви кажете «багато», іменник повинен змінитися. У мене є кілька нових книжок, але зовсім немає вільного часу їх читати.
+
+> *Always pay attention to words that mean quantity. If you say "багато" (a lot), the noun must change. I have a few new books, but I have absolutely no free time to read them.*
+
+:::tip
+**Quick tip**
+Do not stress about getting every single fleeting vowel or abstract ending perfectly right in conversation. Native speakers will always understand you if you use the wrong ending. Focus on recognizing the high-frequency forms like «грошей» (money), «людей» (people), «років» (years), and «друзів» (friends). Perfecting the entire system is a long-term goal!
+:::
+
+Mastering the Genitive plural will unlock your ability to talk freely about shopping, groups of people, distances, and absence. Practice combining these elements deliberately, and soon the patterns will feel like second nature. Let's review a few more examples.
+
+Він має багато ідей, але в нього немає хороших працівників. Скільки кілометрів до наступного міста? На вулиці мало машин, тому що сьогодні неділя.
+
+> *He has many ideas, but he has no good workers. How many kilometers to the next city? There are few cars on the street because today is Sunday.*
+
+<!-- INJECT_ACTIVITY: match-up-genitive-plural -->
+<!-- INJECT_ACTIVITY: match-up-translations -->
 <!-- INJECT_ACTIVITY: unjumble-genitive-phrases -->
-
-When learning the Genitive case, English speakers often make the mistake of using the Nominative case after **немає** or quantity words, saying «У мене немає машина» instead of the correct «У мене немає машини». Remember that the Ukrainian **немає** is a unique grammatical marker of non-existence, not just a direct translation of the English word "no". It acts as a magnet that demands the Genitive case for the object that is missing. 
-
-Furthermore, do not try to guess Ukrainian endings based on patterns from other languages. The masculine Genitive singular endings **-а** and **-у** have their own specific rules in Ukrainian. For example, abstract nouns often take **-у** (like **часу** for time or **настрою** for mood), while concrete objects usually take **-а** (like **стола** for table). Embrace the Ukrainian logic independently to build a strong foundation and sound truly natural.
-
-### Читаємо українською (Reading Practice)
-
-**У нашому місті є багато проблем.** *(In our city there are many problems.)*
-**Тут мало дерев і зовсім немає великих парків.** *(There are few trees here and absolutely no large parks.)*
-**На вулицях завжди багато машин і багато людей.** *(There are always many cars and many people on the streets.)*
-**Але у нас є кілька хороших музеїв і театрів.** *(But we have a few good museums and theaters.)*
-**Скільки грошей треба на квиток?** *(How much money is needed for a ticket?)*
-**Квиток коштує мало, але у студентів часто немає грошей.** *(The ticket costs little, but students often have no money.)*
-**У мене є кілька друзів у цьому місті.** *(I have a few friends in this city.)*
-**Ми маємо мало часу, але багато нових ідей.** *(We have little time, but many new ideas.)*
-
-## Підсумок — Summary
-
-Let's review the three golden rules we have learned in this module:
-
-1. **Negation requires the Genitive:** The word **немає** *(there is not / have not)* always acts as a magnet for the Genitive case.
-   * **У мене немає машини.** *(I don't have a car.)*
-2. **Quantity requires the Genitive plural:** Words like **багато** *(many/much)*, **мало** *(few/little)*, and **кілька** *(several)* must be followed by the Genitive plural when counting objects.
-   * **Тут є багато людей і мало дерев.** *(There are many people and few trees here.)*
-3. **Endings depend on gender and stems:** The correct ending relies on whether the noun is masculine, feminine, or neuter, and if its stem is hard or soft.
-
-**Самоперевірка** *(Self-check)*:
-* Do you use **-а** / **-я** for concrete masculine objects? (**немає стола** *(there is no table)*, **немає брата** *(there is no brother)*)
-* Do you use **-у** / **-ю** for abstract masculine concepts? (**немає часу** *(there is no time)*, **немає цукру** *(there is no sugar)*)
-* Do you remember the fleeing vowel in feminine plurals? (**книжка** *(book)* → **кілька книжок** *(several books)*)
-* Can you correctly say you don't have money? (**У мене немає грошей.** *(I have no money.)*)
-
-### Читаємо українською (Reading Practice)
-**Сьогодні у мене немає вільного часу.** *(Today I have no free time.)*
-**Я маю багато роботи і кілька нових завдань.** *(I have a lot of work and several new tasks.)*
-**На вулиці немає дощу, але також немає сонця.** *(There is no rain outside, but there is also no sun.)*
 </generated_module_content>
 
-**PIPELINE NOTE — Word count: 3245 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
+**PIPELINE NOTE — Word count: 2993 words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
 
 ---
 
@@ -510,42 +474,173 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 233 words | Not found: 6 words
+Verified: 337 words | Not found: 6 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
   ✗ Анна — NOT IN VESUM
   ✗ Києва — NOT IN VESUM
-  ✗ Крим — NOT IN VESUM
-  ✗ Криму — NOT IN VESUM
   ✗ Марк — NOT IN VESUM
-  ✗ Олена — NOT IN VESUM
+  ✗ вікн — NOT IN VESUM
+  ✗ ноч — NOT IN VESUM
+  ✗ сол — NOT IN VESUM
 
-All 233 other words are confirmed to exist in VESUM.
+All 337 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 
-## Verification Tools (MCP)
+---
 
-You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
+## Verification Tools (Shell Commands)
 
-**Core Verification:**
-- `mcp_rag_verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)
-- `mcp_rag_verify_lemma` — full declension/conjugation for a lemma
-- `mcp_rag_search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)
-- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.
-- `mcp_rag_query_pravopys` — verify orthography rules (Правопис 2019)
+You have access to verification tools via shell commands. Use these to verify
+Ukrainian vocabulary, check grammar, and search textbook content **as you write**.
 
-**Content Quality:**
-- `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
-- `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
-- `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
-- `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
-- `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)
+**IMPORTANT:** Run verification commands BEFORE finalizing any Ukrainian text.
+Batch multiple verifications together to minimize round-trips.
 
-**Reference:**
-- `mcp_rag_search_text` — check how textbooks teach the topic (Grades 1-11)
-- `mcp_rag_search_literary` — verify literary references against primary sources
-- `mcp_rag_query_wikipedia` — fact-check historical/cultural claims
+### 1. Batch-verify Ukrainian words exist in VESUM (preferred — one call for many words)
 
-**Evidence standard:** A review that says "this might be a Russicism" is WEAK. A review that says "`search_style_guide` confirms 'приймати участь' is a calque — correct form: 'брати участь'" is STRONG. Cite tool results.
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_words
+results = verify_words(['слово1', 'слово2', 'слово3'])
+for w, matches in results.items():
+    if matches:
+        print(f'{w}: FOUND — lemma={matches[0][\"lemma\"]}, pos={matches[0][\"pos\"]}')
+    else:
+        print(f'{w}: NOT FOUND — may not exist in standard Ukrainian')
+"
+```
+
+### 2. Verify a single Ukrainian word in VESUM (with full morphological tags)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_word
+results = verify_word('WORD_HERE')
+if results:
+    for m in results:
+        print(f'lemma={m[\"lemma\"]}, pos={m[\"pos\"]}, tags={m[\"tags\"]}')
+else:
+    print('NOT FOUND in VESUM')
+"
+```
+
+### 3. Get all inflected forms of a lemma (declension/conjugation)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from rag.query import verify_lemma
+forms = verify_lemma('LEMMA_HERE')
+for f in forms[:20]:
+    print(f'{f[\"word_form\"]:20s} {f[\"pos\"]:8s} {f[\"tags\"]}')
+print(f'... {len(forms)} forms total')
+"
+```
+
+### 4. Check CEFR level of a word (is it level-appropriate?)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import query_cefr_level
+results = query_cefr_level('WORD_HERE')
+for r in results:
+    print(f'{r[\"word\"]}: {r[\"level\"]} ({r[\"pos\"]})')
+if not results:
+    print('Not in CEFR database')
+"
+```
+
+### 5. Search textbook content (Ukrainian school textbooks, Grades 1-11)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_textbooks
+keywords = {'keyword1', 'keyword2'}
+results = search_textbooks(keywords, 5)
+for r in results:
+    title = r.get('section_title', r.get('title', ''))
+    grade = r.get('grade', '?')
+    text = r.get('text', '')[:200]
+    print(f'Grade {grade} | {title}')
+    print(f'  {text}')
+    print()
+"
+```
+
+### 6. Search style guide for calques/Russianisms (Антоненко-Давидович, 279 entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_style_guide
+results = search_style_guide('TOPIC_HERE', 3)
+for r in results:
+    print(f'--- {r.get(\"word\", \"\")} [{r.get(\"section\", \"\")}]')
+    print(r.get('text', '')[:300])
+    print()
+if not results:
+    print('No style guide entries found')
+"
+```
+
+### 7. Look up word definition in СУМ-11 (Ukrainian explanatory dictionary, 127K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_definitions
+results = search_definitions('WORD_HERE', 3)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+### 8. Search idioms (Фразеологічний словник, 25K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_idioms
+results = search_idioms('WORD_HERE', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"text\", r.get(\"definition\", \"\")))[:200]}')
+"
+```
+
+### 9. English-to-Ukrainian translation (Балла, 79K entries)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import translate_en_uk
+results = translate_en_uk('ENGLISH_WORD', 5)
+for r in results:
+    print(f'{r.get(\"word\", \"\")}: {str(r.get(\"definition\", r.get(\"text\", \"\")))[:200]}')
+"
+```
+
+---
+
+**WHEN to use these tools:**
+
+1. **Before writing any Ukrainian text** — batch-verify all key vocabulary with
+   `verify_words` (tool 1). Any word that returns NOT FOUND must be replaced.
+2. **When you suspect a Russicism or calque** — search the style guide (tool 6)
+   and verify the correct Ukrainian form with `verify_word` (tool 2).
+3. **When writing for A1/A2** — check CEFR levels (tool 4) to ensure vocabulary
+   is level-appropriate.
+4. **When unsure about a case ending or conjugation** — use `verify_lemma` (tool 3)
+   to see the full paradigm.
+5. **When covering a grammar topic** — search textbooks (tool 5) to see how
+   Ukrainian school textbooks teach it.
+6. **When you need the precise Ukrainian meaning** — use СУМ-11 (tool 7).
+7. **When looking for natural Ukrainian expressions** — search idioms (tool 8).
+
+**Batching rule:** Collect all words you want to verify, then run ONE `verify_words`
+call instead of multiple `verify_word` calls. This is faster and uses fewer tokens.
